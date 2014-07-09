@@ -1,0 +1,18 @@
+<?php echo $oPosicion->atras(); ?>
+<table><tr>
+<td class=esquerra nowrap>
+</td>
+<td>
+<span class=link onclick=fnjs_update_div('#main','<?= $godossiers ?>') ><img src=<?= core\ConfigGlobal::$web_icons ?>/dossiers.gif border=0 width=40 height=40 alt='<?= $alt ?>'>(<?= $dos ?>)</span>
+
+<td class=titulo><span class=link onclick=fnjs_update_div('#main','<?= $gohome ?>')><?= $titulo ?></span></td>
+<td class=contenido >(<?= $dl ?> - <?= $ctr ?>)</td>
+</table>
+<table border=1>
+<tr><td class=etiqueta>nacimiento</td><td class=contenido><?= $f_nacimiento ?></td><td class=etiqueta>santo</td><td class=contenido><?= $santo ?></td><td class=etiqueta>celebra</td><td class=contenido><?= $celebra ?></td></tr>
+<tr><td class=etiqueta>profesion</td><td class=contenido colspan=3><?= $profesion ?></td><td class=etiqueta>stgr</td><td class=contenido><?= $stgr ?></td></tr>
+<tr><td colspan=6>telfs: <?= $telfs ?></td></tr>
+<tr class=tab>
+	<td colspan=2 onclick="fnjs_update_div('#ficha_personas','<?= $go_breve ?>');"><?= _("ver ficha breve") ?></td>
+	<td colspan=4 onclick="fnjs_update_div('#ficha_personas','<?= $go_ficha ?>');"><?= _("editar") ?></td>
+</tr></table>

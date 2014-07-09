@@ -1,0 +1,260 @@
+<?php
+namespace permisos\controller;
+use permisos\model as permisos;
+use usuarios\model as usuarios;
+use menus\model as menus;
+use core;
+
+// INICIO Cabecera global de URL de controlador *********************************
+	require_once ("apps/core/global_header.inc");
+// Arxivos requeridos por esta url **********************************************
+	//include_once('classes/personas/ext_aux_usuarios.class');
+	//include_once('classes/personas/ext_aux_roles.class');
+
+// Crea los objectos de uso global **********************************************
+	require_once ("apps/core/global_object.inc");
+// Crea los objectos por esta url  **********************************************
+
+$session_config=array (
+	'region'=>'H',
+	'dele'=>'dlb',
+	'gestionActividades'=>2 // 1 => centralizada, 2 => por oficinas.
+	 );
+$_SESSION['config']=$session_config;
+
+// FIN de  Cabecera global de URL de controlador ********************************
+
+
+function cambiar_idioma() {
+	// Si no está determinado en las preferencias, miro el del navegador
+	if (empty($_SESSION['session_auth']['idioma'])) { 
+	// mirar el idioma del navegador
+		if (!empty($_SERVER["HTTP_ACCEPT_LANGUAGE"])){ # Verificamos que el visitante haya designado algún idioma
+			$a_idiomas = explode(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]); # Convertimos HTTP_ACCEPT_LANGUAGE en array
+			/* Recorremos el array hasta que encontramos un idioma del visitante que coincida con los idiomas
+			en que está disponible nuestra web */
+			for ($i=0; $i<count($a_idiomas); $i++){
+				if (!isset($idioma)){
+					if (substr($a_idiomas[$i], 0, 2) == "ca"){$idioma = "ca_ES.UTF-8";}
+					if (substr($a_idiomas[$i], 0, 2) == "es"){$idioma = "es_ES.UTF-8";}
+					//if (substr($a_idiomas[$i], 0, 2) == "en"){$idioma = "en";}
+					//if (substr($a_idiomas[$i], 0, 2) == "fr"){$idioma = "fr";}
+				}
+			}
+		}
+	} else {
+		$idioma = $_SESSION['session_auth']['idioma'];
+	}
+	# Si no hemos encontrado ningún idioma que nos convenga, mostramos la web en el idioma por defecto
+	if (!isset($idioma)){$idioma = core\ConfigGlobal::$x_default_idioma;}  
+
+	$domain="delegacion";
+	bindtextdomain($domain,core\ConfigGlobal::$dir_idiomas);
+	textdomain ($domain);
+	bind_textdomain_codeset($domain,'UTF-8');
+	putenv("LC_ALL=$idioma");
+	setlocale(LC_ALL,$idioma);
+}
+
+
+// ara a global_obj. $GLOBALS['oPerm'] = new permisos\PermDl();
+//$GLOBALS['oPermActiv'] = new PermActiv;
+
+if ( !isset($_SESSION['session_auth'])) { 
+	//el segon cop tinc el nom i el password
+	if (isset($_POST['username']) && isset($_POST['password'])) {
+		switch(core\ConfigGlobal::$auth_method) {
+			case "ldap":
+				$ds=ldap_connect(core\ConfigGlobal::$auth_ldap_server);
+				ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+				$r=ldap_bind($ds); // Autentificacion anonima, tipicamente con
+								   // acceso de lectura
+				$sr=ldap_search($ds,'ou=Users,dc=dlb,dc=es','uid='.$_POST['username']."'");
+				$info = ldap_get_entries($ds, $sr);
+				for ($i=0; $i<$info['count']; $i++) {
+					$dn=$info[$i]['dn'];
+					//echo "dn es: ". $dn ."<br>";
+					//echo "La primera entrada mail es: ". $info[$i]["mail"][0] ."<br>";
+				
+					$rta=@ldap_bind ( $ds , $dn , $_POST['password']);
+					//si existe, registro la sesion con los permisos
+					if ($rta) {	
+						if ( !isset($_SESSION['session_auth'])) { 
+							$session_auth=array (
+								'username'=>$_POST['username'],
+								'password'=>$_POST['password'],
+								'mi_oficina'=>$mi_oficina,
+								'expire'=>$expire
+								 );
+							$_SESSION['session_auth']=$session_auth;
+						}
+					} else { // si no existe, vuelvo a pedir el passwrod
+						$variables = array('error'=>1);
+						$oView = new core\View(__NAMESPACE__);
+						echo $oView->render('login_form.phtml',$variables);
+						exit;
+					}				
+				}
+				ldap_close($ds);
+			case "database":
+				$mail='';
+				if (core\ConfigGlobal::$ubicacion=='int' && core\ConfigGlobal::$portatil=='no') {
+					/* Para gestionar el correo, en dlb, el servidor de correo se autentifica con el servidor LDAP.
+					   Para esto el usuario y el password deben ser iguales...
+					   Cojo el valor mail del LDAP y no de la base de datos.
+					   */
+					/*
+					$ds=ldap_connect(ConfigGlobal::$auth_ldap_server);
+					ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+					$r=ldap_bind($ds); // Autentificacion anonima, tipicamente con
+									   // acceso de lectura
+					$sr=ldap_search($ds,"ou=Users,dc=dlb,dc=es", "uid=${_POST['username']}");
+					$info = ldap_get_entries($ds, $sr);
+					for ($i=0; $i<$info["count"]; $i++) {
+						$dn= empty($info[$i]["dn"])? '' : $info[$i]["dn"];
+						$a_mail= empty($info[$i]["mail"])? '' : $info[$i]["mail"];
+					}
+					$mail= $a_mail[0]; // cojo el principal??
+					*/
+				}
+
+				/* ---------- fin del mail ----------- */
+
+				$aWhere = array('usuario'=>$_POST['username']);
+				$region = $_POST['region'];
+				if (substr($region,-1)=='v') {
+					$oDB = new \PDO(core\ConfigGlobal::get_conexio_sv($region));
+					$sfsv = 1;
+				}
+				if (substr($region,-1)=='f') {
+					$oDB = new \PDO(core\ConfigGlobal::get_conexio_sf($region));
+					$sfsv = 2;
+				}
+				$query="SELECT * FROM aux_usuarios WHERE usuario = :usuario";
+				//$query="SELECT * FROM aux_usuarios LEFT JOIN public.aux_roles USING (id_role) WHERE usuario = :usuario";
+				//$query="SELECT * FROM \"H-dlb\".aux_usuarios LEFT JOIN \"H-dlb\".aux_roles USING (id_role) WHERE usuario = :usuario";
+
+				if (($oDBSt= $oDB->prepare($query)) === false) {
+					$sClauError = 'login_obj.prepare';
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, __LINE__, __FILE__);
+					return false;
+				}
+
+				if (($oDBSt->execute($aWhere)) === false) {
+					$sClauError = 'loguin_obj.execute';
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, __LINE__, __FILE__);
+					return false;
+				}
+
+				$sPasswd = null;
+				$oCrypt = new permisos\MyCrypt();
+				$oDBSt->bindColumn('password', $sPasswd, \PDO::PARAM_STR);
+				if ($row=$oDBSt->fetch(\PDO::FETCH_ASSOC)) {
+					if ($oCrypt->encode($_POST['password'],$sPasswd) == $sPasswd) {
+						$id_usuario = $row['id_usuario'];
+						$id_role = $row['id_role'];
+						//$sfsv = $row['sfsv']; // lo he eliminado del usuario. depende de la base de datos a la que conecto.
+						/* Encare no tinc el oDB i no puc fer servir objectes */
+						$oDBP = new \PDO(core\ConfigGlobal:: $str_conexio_public);
+						$queryr="SELECT * FROM aux_roles WHERE id_role = $id_role";
+						if (($oDBPSt= $oDBP->query($queryr)) === false) {
+							$sClauError = 'login_obj.prepare';
+							$_SESSION['oGestorErrores']->addErrorAppLastError($oDBP, $sClauError, __LINE__, __FILE__);
+							return false;
+						}
+						$row2=$oDBPSt->fetch(\PDO::FETCH_ASSOC);
+						$role_pau = $row2['pau'];
+						/*
+						//Para la oficina, de momento cojo la primera
+						$GesGMR = new menus\GestorGrupMenuRole();
+						$cGMR = $GesGMR->getGrupMenuRoles(array('id_role'=>$id_role));
+						$mi_oficina_menu=$cGMR[0];
+						*/
+								$perms_activ='';
+								$mi_oficina = '';
+								$mi_oficina_menu = '';
+
+						// si no tiene mail interior, cojo el exterior.
+						$mail = empty($mail)? $row['email'] : $mail;
+						$expire=""; //de moment, per fer servir més endevant...
+						// Para obligar a cambiar el password
+						if ($_POST['password'] == '1ªVegada') {
+							$expire=1;
+						}
+						// Idioma
+						$idioma='';
+						$query_idioma = sprintf( "select * from web_preferencias where id_usuario = '%s' and tipo = '%s' ",$id_usuario,"idioma");
+						$oDBStI=$oDB->query($query_idioma);
+						$row = $oDBStI->fetch(\PDO::FETCH_ASSOC);
+						$idioma = $row['preferencia'];
+
+						//si existe, registro la sesion con los permisos
+						if ( !isset($_SESSION['session_auth'])) { 
+							$session_auth=array (
+								'id_usuario'=>$id_usuario,
+								'sfsv'=>$sfsv,
+								'id_role'=>$id_role,
+								'role_pau'=>$role_pau,
+								'username'=>$_POST['username'],
+								'password'=>$_POST['password'],
+								'region'=>$_POST['region'],
+								'perms_activ'=>$perms_activ,
+								'mi_oficina'=>$mi_oficina,
+								'mi_oficina_menu'=>$mi_oficina_menu,
+								'expire'=>$expire,
+								'mail'=>$mail,
+								'idioma'=>$idioma
+								 );
+							$_SESSION['session_auth']=$session_auth;
+						}
+						//si existe, registro la sesion con la configuración
+						if ( !isset($_SESSION['config'])) { 
+							$session_config=array (
+								'id_role'=>$id_role,
+								'role_pau'=>$role_pau,
+								'username'=>$_POST['username'],
+								'password'=>$_POST['password'],
+								'perms_activ'=>$perms_activ,
+								'mi_oficina'=>$mi_oficina,
+								'mi_oficina_menu'=>$mi_oficina_menu,
+								'expire'=>$expire,
+								'mail'=>$mail,
+								'idioma'=>$idioma
+								 );
+							$_SESSION['config']=$session_config;
+						}
+						/* para la traducción. Después de registrar session_auth */
+						cambiar_idioma();
+					} else {
+						$variables = array('error'=>1);
+						$oView = new core\View(__NAMESPACE__);
+						echo $oView->render('login_form.phtml',$variables);
+						exit;
+					}
+				} else {
+					$variables = array('error'=>1);
+					$oView = new core\View(__NAMESPACE__);
+					echo $oView->render('login_form.phtml',$variables);
+					exit;
+				}
+		}
+	} else { // el primer cop
+		$oView = new core\View(__NAMESPACE__);
+		echo $oView->render('login_form.phtml');
+		exit;
+	}
+} else {
+	// ya esta registrado";
+	/* parece que los cambios con setlocale son para el proceso, no para session ni multithreaded, por tanto hay que hacerlo cada vez
+	   para la traducción */
+	cambiar_idioma();
+}
+
+if ( !isset($_SESSION['session_go_to'])) { 
+	$_SESSION['session_go_to']="a";
+	// para que la primera vez vaya a la pagina de inicio personalizada:
+	$primera=1;		
+}
+
+
+?>

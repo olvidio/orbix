@@ -1,0 +1,67 @@
+<?php
+use ubis\model as ubis;
+/**
+ * Está dentro de la función ficha.
+ * Muestra la ficha para modificar los datos de los ubis
+ *
+ * @package	delegacion
+ * @subpackage	actividades
+ * @author	Daniel Serrabou
+ * @since		15/5/02.
+ * @ajax		23/8/2007.
+ * @version 1.0
+ * @created 27/09/2010
+ *
+ */
+
+$campos_chk = '';
+
+$oTiposTeleco=new ubis\GestorTipoTeleco();
+$oDesplegableTiposTeleco=$oTiposTeleco->getListaTiposTelecoUbi();
+$oDesplegableTiposTeleco->setNombre('tipo_teleco');
+$oDesplegableTiposTeleco->setOpcion_sel($tipo_teleco);
+$oDesplegableTiposTeleco->setBlanco(true);
+
+$oHash = new web\Hash();
+$oHash->setcamposForm('mod!tipo_teleco!desc_teleco!num_teleco!observ');
+$oHash->setcamposNo('mod!'.$campos_chk);
+$a_camposHidden = array(
+		'campos_chk'=>$campos_chk,
+		'obj_pau'=>$obj_pau,
+		'id_ubi'=>$id_ubi,
+		'id_item'=>$id_item
+		);
+$oHash->setArraycamposHidden($a_camposHidden);
+
+?>
+<form id='frm2' >
+<?= $oHash->getCamposHtml(); ?>
+<input type="Hidden" id="mod"  name="mod" value="">
+<table>
+<tr><td class="etiqueta"><?= ucfirst(_("tipo teleco")) ?>
+	<?php
+	echo $oDesplegableTiposTeleco->desplegable();
+	?>
+</td></tr>
+<tr><td class="etiqueta"><?= ucfirst(_("descripción")) ?>
+	<input class="contenido" id="desc_teleco"  name="desc_teleco" value="<?= $desc_teleco ?>" size="30">
+</td></tr>
+<tr><td class="etiqueta"><?= ucfirst(_("número")) ?>
+	<input class="contenido" id="num_teleco"  name="num_teleco" value="<?= $num_teleco ?>" size="30">
+</td></tr>
+<tr><td class="etiqueta"><?= ucfirst(_("observaciones")) ?>
+	<input class="contenido" id="observ"  name="observ" value="<?= $observ ?>" size="50">
+</td></tr>
+</table>
+<?php
+// -----------------------------------  Botones  ----------------------
+if (!empty($botones)) {
+	echo "<table><tr class=botones>";
+	$txt_g=ucwords(_("guardar cambios"));
+	echo "<th class='link_inv' onclick='fnjs_guardar()'>$txt_g</th>"; 
+	echo "</tr></table><br>";
+}
+// fin ----------------------------  Botones  ----------------------
+?>
+</form>
+

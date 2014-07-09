@@ -1,0 +1,25 @@
+<h2 class=titulo><?php echo ucfirst(_("relación de dossiers")); ?></h2>
+<table border=1>
+<?php
+foreach ($a_filas as $i => $fila) {
+	 echo "<tr class=\"".$fila['clase']."\">";
+	 switch ($fila['perm_a']) { 
+		case 1: //no tiene permisos
+			$imagen=core\ConfigGlobal::$web_icons.'/folder.sec.gif';
+			?>
+			<td><img class="dossier" src='<?= $fila['imagen'] ?>' ></td>
+			<td></td><td><?= $fila['descripcion']; ?></td>
+			<?php break;
+		case 2: // sólo lectura
+			?>
+			<td><img class="dossier" src='<?= $fila['imagen'] ?>' ></td><td><span class="link" onclick="fnjs_update_div('#main','<?= $fila['href_ver'] ?>');"><font color="green"><?= $fila['descripcion'] ?></font></span></td>
+			<?php break;
+		case 3: //lectura y escritura
+			?>
+			<td><img class="dossier" src='<?= $fila['imagen'] ?>' ></td><td link="red"><span class="link" onclick="fnjs_update_div('#main','<?= $fila['href_ver'] ?>');"><?= $fila['descripcion'] ?></span></td>
+			<?php break;
+	 }
+	 echo "</tr>";
+ }
+ echo "</table>";
+?>

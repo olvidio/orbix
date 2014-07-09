@@ -1,0 +1,12 @@
+apps/ubis/controller/teleco_update.php
+apps/ubis/controller/ubis_editar.php
+apps/ubis/controller/teleco_tabla.php
+apps/ubis/controller/teleco_editar.php
+apps/ubis/controller/ubis_tabla.php
+apps/dossiers/controller/datos_update.php
+apps/dossiers/controller/datos_form.php
+apps/dossiers/controller/datos_sql.php
+apps/personas/controller/personas_editar.php
+apps/core/mod_tabla_sql.php
+apps/core/mod_tabla_update.php
+apps/core/mod_tabla_form.php

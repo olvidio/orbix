@@ -1,0 +1,127 @@
+<?php
+use personas\model as personas;
+/**
+* Esta es la página de presentación de la ficha de n, agd y sss+ de paso (copia de agd). 
+*
+* Esta presentación se incluye dentro del programa de visualización de
+* las fichas.
+* Existen 3 tipos de textos:
+*		- titulos (<th>)
+*		- etiquetas (<span class=etiqueta>) son links a helps
+*		- datos (class=datos) varios tipos: links, inputs
+*
+* @author Daniel Serrabou
+* @package fichas
+* @subpackage agd
+*/
+
+
+$GesSituacion = new personas\GestorSituacion();
+$aWhere['_ordre'] = 'situacion';
+$cSituaciones = $GesSituacion->getSituaciones($aWhere);
+
+$campos_chk = 'sacd';
+
+$oHash = new web\Hash();
+$oHash->setcamposForm('apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!f_situacion!inc!lengua!nom!nx1!nx2!observ!profesion!que!situacion!stgr!trato');
+$oHash->setcamposNo('que!'.$campos_chk);
+$a_camposHidden = array(
+		'campos_chk'=>$campos_chk,
+		'obj_pau'=>$obj_pau,
+		'id_nom'=>$id_nom
+		);
+$oHash->setArraycamposHidden($a_camposHidden);
+
+?>
+<form id='frm2' >
+<?= $oHash->getCamposHtml(); ?>
+<input type="Hidden" id="que"  name="que" value="">
+
+<table id="datospersonales">
+<tr><td class=titulo colspan="5">
+<?php print(strtoupper(_("datos personales"))); ?>
+</td></tr>
+<tr>
+	<td><span class=etiqueta ondblclick="fnjs_help('<?php //echo $dl_help_ref; ?>')" >Delegación</span></td>
+	<td><input class=datos size="6" name="dl" value="<?php echo $dl ?>" title="<?php //echo $dl_help; ?>"></TD>
+	</tr>
+<tr>
+<?php
+echo web\dibujar_campo($obj,"trato",7,1,0);
+echo web\dibujar_campo($obj,"nom",20,1,2);
+echo "</tr><tr><td></td>";
+echo web\dibujar_campo($obj,"apel_fam",20,1,2);
+echo "</tr><tr>";
+echo web\dibujar_campo($obj,"nx1",7,1,0);
+echo web\dibujar_campo($obj,"apellido1",25,1,2);
+echo "</tr><tr>";
+echo web\dibujar_campo($obj,"nx2",7,1,0);
+echo web\dibujar_campo($obj,"apellido2",25,1,2);
+echo "</tr><tr>";
+echo web\dibujar_campo($obj,"f_nacimiento",11,1,1);
+
+echo "</tr><tr>";
+?>
+	<td><span class=etiqueta ><?php echo ucfirst('situacion'); ?></span>
+	</td>
+	<td colspan=2>
+	<select class=contenido id="situacion" name="situacion" ">
+			<?php
+			foreach ($cSituaciones as $oSituacion) {
+				$situacion_db = $oSituacion->getSituacion();
+				$nombre_situacion = $oSituacion->getNombre_situacion();
+				if ($situacion==$situacion_db) { $sel="selected"; } else { $sel=""; }
+ 				echo "<option value=\"$situacion_db\" $sel>  $nombre_situacion </option>";
+			}
+			?>
+	</select></td>
+<?php
+echo web\dibujar_campo($obj,"f_situacion",11,1,1);
+echo "</tr><tr>";
+echo web\dibujar_campo($obj,"lengua",3,1,1);
+echo "</tr><tr>";
+echo web\dibujar_campo($obj,"profesion",30,1,2);
+echo "</tr><tr>";
+echo web\dibujar_campo($obj,"sacd",9,1,1);
+?>
+<td><span class=etiqueta ondblclick="fnjs_help('<?php //echo $stgr_help_ref; ?>')" >&nbsp;&nbsp;Stgr&nbsp;</span>
+			<select class=datos name="stgr" title="<?php //echo $stgr_help; ?>">
+			<option value="b" <?php if ($stgr=="b") { echo "selected"; } ?> >b</option>
+			<option value="c1" <?php if ($stgr=="c1") { echo "selected"; } ?> >c1</option>
+			<option value="c2" <?php if ($stgr=="c2") { echo "selected"; } ?> >c2</option>
+			<option value="r" <?php if ($stgr=="r") { echo "selected"; } ?> >r</option>
+			<option value="s" <?php if ($stgr=="s") { echo "selected"; } ?> >s</option>
+			<option value="n" <?php if ($stgr=="n") { echo "selected"; } ?> >n</option>
+			<option value="c" <?php if ($stgr=="c") { echo "selected"; } ?> >c (fuera uso)</option>
+		</select>
+</td>
+<?php
+echo web\dibujar_campo($obj,"eap",20,2,0);
+echo "</tr><tr>";
+echo web\dibujar_campo($obj,"inc",5,1,0);
+echo web\dibujar_campo($obj,"f_inc",11,1,1);
+echo "</tr><tr>";
+echo web\dibujar_campo($obj,"observ",60,1,4);
+echo "</tr><tr>";
+// -----------------------------------  Botones  ----------------------
+if (!empty($botones)) {
+	echo "<table><tr class=botones>";
+	$b=strtok($botones,",");
+	while ($b) {
+		if ($b==1){
+			$txt_g=ucwords(_("guardar cambios"));
+			echo "<th class='link_inv' onclick='fnjs_guardar()'>$txt_g</th>"; }
+		if ($b==2){
+			$txt_e=ucwords(_("eliminar"));
+			echo "<th class='link_inv' onclick='fnjs_eliminar()'>$txt_e</th>"; }
+		if ($b==3){
+			$txt_e=ucwords(_("formato texto"));
+			$pag="programas/ficha_texto.php?id_nom=$id_nom&obj_pau=".$_POST['obj_pau'];
+			echo "<th class='link_inv' onclick='fnjs_update_div('#main','$pag')'>$txt_e</th>"; }
+		$b=strtok(",");
+	} 
+	echo "</tr></table><br>";
+}
+// fin ----------------------------  Botones  ----------------------
+?>
+</form>

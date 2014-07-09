@@ -1,0 +1,189 @@
+<?php
+use ubis\model as ubis;
+/**
+ * Está dentro de la función ficha.
+ * Muestra la ficha para modificar los datos de los ubis
+ *
+ * @package	delegacion
+ * @subpackage	actividades
+ * @author	Daniel Serrabou
+ * @since		15/5/02.
+ * @ajax		23/8/2007.
+ * @version 1.0
+ * @created 27/09/2010
+ *
+ */
+
+// Aunque el tipo sea ctrdl, si es diferente a la mia, lo trato como ctrex.
+if ($dl != core\ConfigGlobal::mi_dele()) {
+	if ($tipo_ubi == 'ctrdl') $tipo_ubi = 'ctrex';
+	if ($tipo_ubi == 'cdcdl') $tipo_ubi = 'cdcex';
+}
+
+$oPermActiv=new ubis\CuadrosLabor();
+
+$chk = ($status=="t" OR $status=="true")? 'checked' :''; 
+$campos_chk = 'status!sv!sf';
+if ($tipo_ubi=="ctrdl" or $tipo_ubi=="ctrex" or $tipo_ubi=="ctrsf") $campos_chk .= '!cdc'; 
+
+$oHash = new web\Hash();
+$oHash->setcamposNo('que!'.$campos_chk);
+$camposForm = 'que!dl!tipo_ubi!status!region!nombre_ubi';
+if ($tipo_ubi=="ctrdl") { 
+	$camposForm .= '!num_pi!num_cartas!num_cartas_mensuales!plazas!num_habit_indiv!n_buzon!observ';
+}
+if ($tipo_ubi=="ctrdl" or $tipo_ubi=="ctrex" or $tipo_ubi=="ctrsf") {
+	$camposForm .= '!cdc!id_ctr_padre!tipo_ctr!tipo_labor';
+}
+if ($tipo_ubi=="cdcdl" or $tipo_ubi=="cdcex") {
+	$camposForm .= '!tipo_casa!plazas!plazas_min!num_sacd!sf!sv';
+}
+$oHash->setcamposForm($camposForm);
+$a_camposHidden = array(
+		'campos_chk'=>$campos_chk,
+		'obj_pau'=>$obj_pau,
+		'id_ubi'=>$id_ubi,
+		'id_direccion'=>$id_direccion
+		);
+$oHash->setArraycamposHidden($a_camposHidden);
+
+?>
+<form id='frm2' >
+<?= $oHash->getCamposHtml(); ?>
+<input type="Hidden" id="que"  name="que" value="">
+<table>
+<tr><td class="etiqueta"><?= ucfirst(_("tipo de ubi")) ?>
+	<input class="contenido" id="tipo_ubi"  name="tipo_ubi" value="<?= $tipo_ubi ?>" size="5">
+	<?= ucfirst(_("delegación")) ?><input class="contenido" name="dl"  value="<?= $dl ?>" size="6">
+	<?= ucfirst(_("en uso")) ?><input class="contenido" type="Checkbox" name="status" <?= $chk ?>>
+	<?= ucfirst(_("región")) ?><input class="contenido" name="region" value="<?= $region ?>" size="7">
+</td></TR>
+<?php
+if ($tipo_ubi=="ctrdl") { 
+	$chk_cdc = ($cdc=="t" OR $cdc=="true")? 'checked' :''; 
+?>
+	<tr><td class="etiqueta"><?= ucfirst(_("nombre del centro")) ?><input class="contenido" name="nombre_ubi" size="35" value="<?= $nombre_ubi ?>">
+		<?= ucfirst(_("¿puede ser cdc?")) ?><input class="contenido" type="Checkbox" name="cdc" <?= $chk_cdc ?>></td></TR>
+	<tr><td class="etiqueta">
+	    <?= ucfirst(_("tipo de centro")) ?><input class="contenido" name="tipo_ctr" size="9" value="<?= $tipo_ctr ?>"> 
+		<?= ucfirst(_("nºejemplares pi")) ?><input class="contenido" name="num_pi" size="3" value="<?= $num_pi ?>"> 
+		<?= ucfirst(_("nºcartas")) ?><input class="contenido" name="num_cartas" size="3" value="<?= $num_cartas ?>">
+		<?= ucfirst(_("nºcartas mensuales")) ?><input class="contenido" name="num_cartas_mensuales" size="3" value="<?= $num_cartas_mensuales ?>">
+		</td></TR>
+	<tr><td class="etiqueta"><?= ucfirst(_("tipo de labor")) ?></td></tr>
+	<tr><td>
+	<?php
+	$nomcamp="tipo_labor";
+	//cuadroslabor($nomcamp,$tipo_labor);
+	echo $oPermActiv->cuadros_check($nomcamp,$tipo_labor);
+	?>
+	</td></tr>
+	<tr><td class="etiqueta">
+		<?= ucfirst(_("habitaciones individuales")) ?><input class="contenido" name="num_habit_indiv" size="3" value="<?= $num_habit_indiv ?>">
+	    <?= ucfirst(_("plazas")) ?><input class="contenido" name="plazas" size="3" value="<?= $plazas ?>">
+		</td></TR>
+	<tr><td>
+		<?= ucfirst(_("nº de buzón")) ?><input class="contenido" name="n_buzon" size="5" value="<?= $n_buzon ?>"></td></tr>
+	<tr><td>	
+		<?= ucfirst(_("observaciones")) ?>
+		<textarea name="observ" rows="3" style="height: 40px; width: 300px; text-align: left;<S-Del>"><?= $observ ?></textarea>
+		</td></tr>
+<?php
+}
+if ($tipo_ubi=="ctrex" or $tipo_ubi=="ctrsf") {
+	$chk_cdc = ($cdc=="t" OR $cdc=="true")? 'checked' :''; 
+	$oTiposCentro=new ubis\GestorTipoCentro();
+	$oTiposCentroOpciones=$oTiposCentro->getListaTiposCentro();
+	$oDesplegableTiposCentro=new web\Desplegable('tipo_ctr',$oTiposCentroOpciones,$tipo_ctr,true);
+?>
+	<tr><td class="etiqueta">
+		<?= ucfirst(_("nombre del centro")) ?><input class="contenido" name="nombre_ubi" size="35" value="<?= $nombre_ubi ?>">
+		<?= ucfirst(_("¿puede ser cdc?")) ?><input class="contenido" type="Checkbox" name="cdc" <?= $chk_cdc ?>></td></TR>
+	<tr><td>
+    	<?= ucfirst(_("tipo de centro")) ?>
+		<?php
+		echo $oDesplegableTiposCentro->desplegable();
+		?>
+		</td></tr>
+	<tr><td class="etiqueta">
+		<?= ucfirst(_("tipo de labor")) ?></tr>
+	<tr><td>
+	<?php
+	$nomcamp="tipo_labor"; 
+	//cuadroslabor($nomcamp,$tipo_labor);
+	echo $oPermActiv->cuadros_check($nomcamp,$tipo_labor);
+	?>
+	</td></tr>
+<?php
+}
+if ($tipo_ubi=="ctrdl" or $tipo_ubi=="ctrex" or $tipo_ubi=="ctrsf") {
+	$GesCentro=new ubis\GestorCentro();
+	if (!empty($dl)) {
+		$sWhere = "WHERE dl = '$dl'";
+	} else if (!empty($region)) {
+		$sWhere = "WHERE region = '$region'"; //probar con la region
+	} else {
+		$sWhere = ''; // Hay muchos ctr que no tienen puesta la dl.
+	}
+	$oDesplCentros=$GesCentro->getListaCentros($sWhere);
+	$nnom = "id_ctr_padre";
+	$oDesplCentros->setNombre($nnom);
+	$oDesplCentros->setOpcion_sel($id_ctr_padre);
+	
+?>
+	<tr><td>
+    	<?= ucfirst(_("centro padre")) ?>
+		<?php
+		echo $oDesplCentros->desplegable();
+		?>
+		</td></tr>
+	<?php
+}
+if ($tipo_ubi=="cdcdl" or $tipo_ubi=="cdcex") {
+	$sv_chk = ($sv=="t" OR $sv=="true")? 'checked': ''; 
+	$sf_chk = ($sf=="t" OR $sf=="true")? 'checked' :''; 
+	$oTiposCasa=new ubis\GestorTipoCasa();
+	$oTiposCasaOpciones=$oTiposCasa->getListaTiposCasa();
+	$oDesplegableTiposCasa=new web\Desplegable('tipo_casa',$oTiposCasaOpciones,$tipo_casa,true);
+?>
+	<tr><td class="etiqueta">
+		<?=  ucfirst(_("nombre del centro")) ?><input class="contenido" name="nombre_ubi" size="35" value="<?= $nombre_ubi ?>"></td></tr>
+	<tr><td>
+		<?= ucfirst(_("plazas")) ?><input class="contenido" name="plazas" value="<?= $plazas ?>" size="3">
+		<?php if ($tipo_ubi=="cdcdl") { ?>
+		<?= ucfirst(_("minimo asistentes")) ?><input class="contenido" name="plazas_min" value="<?= $plazas_min ?>" size="3">
+		<?php } ?>
+		<?= ucfirst(_("nº máximo de sacd")) ?><input class="contenido" name="num_sacd" value="<?= $num_sacd ?>" size="3">
+		<?= _("sv") ?><input type="checkbox" id="sv" name="sv" <?= $sv_chk ?>>
+		<?= _("sf") ?><input type="checkbox" id="sf" name="sf" <?= $sf_chk ?>>
+		</td></tr>
+	<tr><td>
+		<?= ucfirst(_("tipo de casa")) ?>
+		<?php	
+		echo $oDesplegableTiposCasa->desplegable();
+		?>
+		</tr></td>
+<?php
+}
+?>
+</table>
+<?php
+// -----------------------------------  Botones  ----------------------
+if (!empty($botones)) {
+	echo "<table><tr class=botones>";
+	$b=strtok($botones,",");
+	while ($b) {
+		if ($b==1){
+			$txt_g=ucwords(_("guardar cambios"));
+			echo "<th class='link_inv' onclick='fnjs_guardar()'>$txt_g</th>"; }
+		if ($b==2){
+			$txt_e=ucwords(_("eliminar"));
+			echo "<th class='link_inv' onclick='fnjs_eliminar()'>$txt_e</th>"; }
+		$b=strtok(",");
+	} 
+	echo "</tr></table><br>";
+}
+// fin ----------------------------  Botones  ----------------------
+?>
+</form>
+

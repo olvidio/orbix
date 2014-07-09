@@ -1,0 +1,98 @@
+<?php
+/**
+* Esta es la página de presentación de la ficha de n, agd y sss+ de paso (copia de agd). 
+*
+* Esta presentación se incluye dentro del programa de visualización de
+* las fichas.
+* Existen 3 tipos de textos:
+*		- titulos (<th>)
+*		- etiquetas (<span class=etiqueta>) son links a helps
+*		- datos (class=datos) varios tipos: links, inputs
+*
+* @author Daniel Serrabou
+* @package fichas
+* @subpackage agd
+*/
+?>
+
+<!-- ------------------- DATOS PERSONALES ------------------------   -->
+
+<table id="datospersonales">
+<tr><td class=titulo colspan="5">
+<?php print(strtoupper(_("datos personales"))); ?>
+</td></tr>
+<tr>
+	<td colspan=2><span class=etiqueta ondblclick="fnjs_help('<?php echo $id_tabla_help_ref; ?>')" >n, agd o sss+:</span>
+	<select class=datos name="id_tabla">
+			<option value="pn" <?php if ($id_tabla=="pn") { echo "selected"; } ?> >numerario</option>
+			<option value="pa" <?php if ($id_tabla=="pa") { echo "selected"; } ?> >agregado</option>
+			<option value="psss" <?php if ($id_tabla=="psss") { echo "selected"; } ?> >sss+</option>
+	</select>
+	<td><span class=etiqueta ondblclick="fnjs_help('<?php echo $dl_help_ref; ?>')" >Delegación</span></td>
+	<td><input class=datos size="6" name="dl" value="<?php echo $dl ?>" title="<?php echo $dl_help; ?>"></TD>
+	</tr>
+<tr>
+<?php
+echo web\dibujar_campo($obj,"trato",7,1,0);
+echo web\dibujar_campo($obj,"nom",20,1,2);
+echo "</tr><tr><td></td>";
+echo web\dibujar_campo($obj,"apel_fam",20,1,2);
+echo "</tr><tr>";
+echo web\dibujar_campo($obj,"nx1",7,1,0);
+echo web\dibujar_campo($obj,"apellido1",25,1,2);
+echo "</tr><tr>";
+echo web\dibujar_campo($obj,"nx2",7,1,0);
+echo web\dibujar_campo($obj,"apellido2",25,1,2);
+echo "</tr><tr>";
+echo web\dibujar_campo($obj,"f_nacimiento",11,1,1);
+echo web\dibujar_campo($obj,"edad",4,1,1);
+echo "</tr><tr>";
+?>
+	<td><span class=etiqueta ><?php echo ucfirst('situacion'); ?></span>
+	</td>
+	<td>
+	<select class=contenido id="situacion" name="situacion" ">
+			<?php
+			$sql_t_situacion="SELECT u.situacion,u.nombre_situacion FROM xp_situacion u 
+							ORDER BY u.situacion ";
+			$oDBSt_t_situacion=$oDB->query($sql_t_situacion);
+			$i=0;
+foreach ($oDBSt_t_situacion->fetchAll() as $row_situacion) {
+				if ($situacion==$row_situacion['situacion']) { $sel="selected"; } else { $sel=""; }
+ 				echo "<option value=\"${row_situacion['situacion']}\" $sel>  ${row_situacion['situacion']} </option>";
+				$i++;
+  				}
+			?>
+	</select></td>
+<?php
+echo web\dibujar_campo($obj,"f_situacion",11,1,1);
+echo "</tr><tr>";
+echo web\dibujar_campo($obj,"lengua",3,1,1);
+echo "</tr><tr>";
+echo web\dibujar_campo($obj,"profesion",30,1,2);
+echo "</tr><tr>";
+$a_valores_campo=$GLOBALS['a_campos']["sacd"];
+echo "<td><span class=etiqueta ondblclick=\"fnjs_help('$sacd_help_ref')\" >".ucfirst($a_valores_campo["etiqueta"])."&nbsp;</span>";
+?>
+<input class=contenido id="sacd" name="sacd" type=checkbox <?php if ($sacd=="t"){ echo "checked";} ?> title="<?php echo $sacd_help; ?>">
+
+<td><span class=etiqueta ondblclick="fnjs_help('<?php echo $stgr_help_ref; ?>')" >&nbsp;&nbsp;Stgr&nbsp;</span>
+			<select class=datos name="stgr" title="<?php echo $stgr_help; ?>">
+			<option value="b" <?php if ($stgr=="b") { echo "selected"; } ?> >b</option>
+			<option value="c1" <?php if ($stgr=="c1") { echo "selected"; } ?> >c1</option>
+			<option value="c2" <?php if ($stgr=="c2") { echo "selected"; } ?> >c2</option>
+			<option value="r" <?php if ($stgr=="r") { echo "selected"; } ?> >r</option>
+			<option value="s" <?php if ($stgr=="s") { echo "selected"; } ?> >s</option>
+			<option value="n" <?php if ($stgr=="n") { echo "selected"; } ?> >n</option>
+			<option value="c" <?php if ($stgr=="c") { echo "selected"; } ?> >c (fuera uso)</option>
+		</select>
+</td>
+<?php
+echo web\dibujar_campo($obj,"eap",20,2,0);
+echo "</tr><tr>";
+echo web\dibujar_campo($obj,"inc",5,1,0);
+echo web\dibujar_campo($obj,"f_inc",11,1,1);
+echo "</tr><tr>";
+echo web\dibujar_campo($obj,"observ",60,1,4);
+echo "</tr><tr>";
+?>
