@@ -47,7 +47,7 @@ class PersonaPub Extends PersonaGlobal {
 			}
 		}
 		$this->setoDbl($oDbl);
-		//$this->setNomTabla('p_de_paso');
+		$this->setNomTabla('p_de_paso');
 	}
 
 	/* METODES PUBLICS ----------------------------------------------------------*/

@@ -44,6 +44,7 @@ jsForm.mandar=function(formulario,que){
 			break;
 		case "asis":
 			$('#queSel').val(que);
+			$('#id_dossier').val(3101);
 			this.action = "apps/dossiers/controller/dossiers_ver.php";
 			break;
 		case "list":

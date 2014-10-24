@@ -362,12 +362,11 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $oHashSel = new web\Hash();
-$oHashSel->setcamposForm('!sel!mod!queSel');
+$oHashSel->setcamposForm('!sel!mod!queSel!id_dossier');
 $a_camposHidden = array(
 		'tabla' =>'a_actividades',
 		'tabla_pau' =>'a_actividades',
 		'pau' =>'a',
-		'id_dossier' =>'',
 		'permiso' =>'3'
 		);
 $oHashSel->setArraycamposHidden($a_camposHidden);
@@ -434,6 +433,7 @@ $resultado=sprintf( _("%s actividades encontradas"),$num);
 <form id='seleccionados' name='seleccionados' action='' method='post'>
 	<?= $oHashSel->getCamposHtml(); ?>
 	<input type='hidden' id='queSel' name='queSel' value='' >
+	<input type='hidden' id='id_dossier' name='id_dossier' value="">
 	<input type='hidden' id='mod' name='mod' value="">
 <?php
 $oTabla = new web\Lista();
