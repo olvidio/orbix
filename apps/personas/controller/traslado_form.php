@@ -72,9 +72,17 @@ $hoy=date("d/m/Y");
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('new_ctr!f_ctr!new_dl!f_dl!situacion');
-$a_camposHidden = array(
+/*$a_camposHidden = array(
 		'id_pau' => $id_pau,
 		'tabla_pau' => $_POST['tabla'],
+		'id_ctr_o' => $id_ctr,
+		'ctr_o' => $nombre_ctr,
+		'dl' => $dl,
+		'go_to' => $go_to
+		);
+*/
+$a_camposHidden = array(
+		'id_pau' => $id_pau,
 		'id_ctr_o' => $id_ctr,
 		'ctr_o' => $nombre_ctr,
 		'dl' => $dl,

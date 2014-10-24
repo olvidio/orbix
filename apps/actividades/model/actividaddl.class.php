@@ -43,6 +43,7 @@ class ActividadDl Extends ActividadAll {
 		}
 		$this->setoDbl($oDbl);
 		$this->setNomTabla('a_actividades_dl');
+		$this->setId_tabla('dl');
 	}
 
 	/* METODES PUBLICS ----------------------------------------------------------*/

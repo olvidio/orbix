@@ -183,6 +183,7 @@ $id_dossier=strtok($id_dossier,"y");
 while  ($id_dossier) {
 	$oTipoDossier = new dossiers\TipoDossier($id_dossier);
 	$tabla_dossier=$oTipoDossier->getTabla_to();
+	$app=$oTipoDossier->getApp();
 
 	// según sean personas, ubis o actividades:
 	switch ($pau) {
@@ -201,8 +202,10 @@ while  ($id_dossier) {
 	// para el botón editar en la presentación general...
 	if ($permiso==3) { $edit=1; }
 	// Para presentaciones particulares
-	$pres_2="../model/datos_".$id_dossier.".php";
-	$pres="./sql_".$id_dossier.".php";
+	//$pres_2="../model/datos_".$id_dossier.".php";
+	//$pres="./sql_".$id_dossier.".php";
+	$pres_2="../../$app/model/datos_".$id_dossier.".php";
+	$pres="../../$app/controller/sql_".$id_dossier.".php";
 
 	$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?pau='.$pau.'&id_pau='.$id_pau.'&obj_pau='.$obj_pau.'&id_dossier='.$id_dossier.'&permiso='.$permiso);
 

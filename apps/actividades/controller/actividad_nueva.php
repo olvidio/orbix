@@ -102,7 +102,11 @@ $oDesplRepeticion->setOpcion_sel($id_repeticion);
 
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('status!id_tipo_activ!mod!dl_org!f_fin!f_ini!h_fin!h_ini!id_repeticion!id_ubi!lugar_esp!nivel_stgr!nom_activ!nombre_ubi!observ!precio!tarifa!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val');
+$camposForm = 'status!id_tipo_activ!mod!dl_org!f_fin!f_ini!h_fin!h_ini!id_repeticion!id_ubi!lugar_esp!nom_activ!nombre_ubi!observ!precio!tarifa!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val';
+if ($_SESSION['oPerm']->have_perm("est")) {
+	$camposForm .= '!nivel_stgr';
+}
+$oHash->setcamposForm($camposForm);
 //$oHash->setCamposNo('mod!que');
 $a_camposHidden = array(
 		'que' => $que,

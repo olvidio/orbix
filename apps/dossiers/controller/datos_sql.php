@@ -1,4 +1,5 @@
 <?php
+use dossiers\model as dossiers;
 /**
 * En el fichero config tenemos las variables genéricas del sistema
 */
@@ -16,7 +17,12 @@
 
 /***************  datos  **********************************/
 $padre='datos_sql'; // para indicarle al $dir_datos lo que quiero.
-$dir_datos=core\ConfigGlobal::$dir_web."/apps/dossiers/model/datos_${_POST['id_dossier']}.php";
+
+$oTipoDossier = new dossiers\TipoDossier($_POST['id_dossier']);
+$app=$oTipoDossier->getApp();
+
+//$dir_datos=core\ConfigGlobal::$dir_web."/apps/dossiers/model/datos_${_POST['id_dossier']}.php";
+$dir_datos=core\ConfigGlobal::$dir_web."/apps/$app/model/datos_${_POST['id_dossier']}.php";
 include($dir_datos);
 
 // para una persona: id_nom=id_pau

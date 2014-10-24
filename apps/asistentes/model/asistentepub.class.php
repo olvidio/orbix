@@ -265,6 +265,29 @@ class AsistentePub Extends core\ClasePropiedades {
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
 		if (array_key_exists('id_tabla',$aDades)) $this->setId_tabla($aDades['id_tabla']);
 	}
+	/**
+	 * retorna el valor de tots els atributs
+	 *
+	 * @param array $aDades
+	 */
+	function getAllAtributes() {
+		if (empty($aDades)) {
+			$aDades = array();
+			$aDades['id_activ'] = $this->getId_activ();
+			$aDades['id_nom'] = $this->getId_nom();
+			$aDades['propio'] = $this->getPropio();
+			$aDades['est_ok'] = $this->getEst_ok();
+			$aDades['cfi'] = $this->getCfi();
+			$aDades['cfi_con'] = $this->getCfi_con();
+			$aDades['falta'] = $this->getFalta();
+			$aDades['encargo'] = $this->getEncargo();
+			$aDades['cama'] = $this->getCama();
+			$aDades['observ'] = $this->getObserv();
+			$aDades['id_tabla'] = $this->getId_tabla();
+		} else {
+			return $aDades;
+		}
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/**

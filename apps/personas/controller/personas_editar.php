@@ -1,4 +1,5 @@
 <?php
+use ubis\model as ubis;
 /**
 * Funciones más comunes de la aplicación
 */
@@ -24,6 +25,7 @@ if (!empty($_POST['nuevo'])) {
 		$valor_predeterminado=$oDatosCampo->datos_campo($oDbl,'valor');
 		$a_campos[$camp] = $valor_predeterminado;
 	}
+	$a_campos['f_situacion'] = date('j/m/Y');
 	$a_campos['id_nom'] = '';
 	$a_campos['obj'] = $oPersona;
 } else {
@@ -41,8 +43,21 @@ if (!empty($_POST['nuevo'])) {
 	$oPersona = new $obj($id_nom);
 	$a_campos = $oPersona->getTot();
 	$a_campos['obj'] = $oPersona;
+	// para el ctr hay que buscar el nombre
+	$id_ctr = $a_campos['id_ctr'];
+	$oCentroDl = new ubis\CentroDl($id_ctr);
+	$a_campos['nom_ctr'] = $oCentroDl->getNombre_ubi();
 }
 
+// para el ctr, si es nuevo o está vacio
+if (empty($a_campos['nom_ctr'])) {
+	$id_ctr = $a_campos['id_ctr'];
+	$GesCentroDl = new ubis\GestorCentroDl();
+	$oDesplCentroDl = $GesCentroDl->getListaCentros();
+	$a_campos['nom_ctr'] = $oDesplCentroDl;
+	$oDesplCentroDl->setAction("fnjs_act_ctr('ctr')");
+	$oDesplCentroDl->setNombre("id_ctr");
+}
 
 $_POST['que'] = empty($_POST['que'])? '' : $_POST['que'];
 $_POST['breve'] = empty($_POST['breve'])? '' : $_POST['breve'];
@@ -52,6 +67,7 @@ $ok=0;
 $ok_txt=0;
 switch ($_POST['obj_pau']){
 	case "PersonaAgd":
+		$a_campos['id_tabla'] = 'a';
 		if ($_SESSION['oPerm']->have_perm("agd")) { $ok=1; } 
 		if (($_SESSION['oPerm']->have_perm("agd") or $_SESSION['oPerm']->have_perm("dtor")) and ($_POST['breve']!="true")) { 
 			$presentacion="p_agregados.phtml";
@@ -61,6 +77,7 @@ switch ($_POST['obj_pau']){
 		}
 		break;
 	case "PersonaN":
+		$a_campos['id_tabla'] = 'n';
 		if ($_SESSION['oPerm']->have_perm("sm")) { $ok=1; } 
 		if (($_SESSION['oPerm']->have_perm("sm") or $_SESSION['oPerm']->have_perm("dtor")) and ($_POST['breve']!="true")) { 
 			//$presentacion="p_numerarios.phtml";
@@ -71,6 +88,7 @@ switch ($_POST['obj_pau']){
 		}
 		break;
 	case "PersonaS":
+		$a_campos['id_tabla'] = 's';
 		if ($_SESSION['oPerm']->have_perm("sg")) { $ok=1; } 
 		if (($_SESSION['oPerm']->have_perm("sg") or $_SESSION['oPerm']->have_perm("dtor")) and ($_POST['breve']!="true")) { 
 			$presentacion="p_supernumerarios.phtml";
@@ -80,6 +98,7 @@ switch ($_POST['obj_pau']){
 		}
 		break;
 	case "PersonaSSS":
+		$a_campos['id_tabla'] = 'sss';
 		if ($_SESSION['oPerm']->have_perm("des") or $_SESSION['oPerm']->have_perm("vcsd")) { $ok=1; } 
 		if (($_SESSION['oPerm']->have_perm("des") or $_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("dtor")) and ($_POST['breve']!="true")) { 
 			$presentacion="p_sssc.phtml";
@@ -89,6 +108,7 @@ switch ($_POST['obj_pau']){
 		}
 		break;
 	case "PersonaEx":
+		$a_campos['id_tabla'] = 'pn';
 		$presentacion="persona_de_paso.phtml";
 		if ($_SESSION['oPerm']->have_perm("agd") or $_SESSION['oPerm']->have_perm("sm") or $_SESSION['oPerm']->have_perm("des") or $_SESSION['oPerm']->have_perm("est")) { $ok=1; } 
 		$ok_txt=1;
@@ -96,6 +116,10 @@ switch ($_POST['obj_pau']){
 }
 $presentacion="persona.phtml";
 $a_campos['obj_pau'] = $obj_pau;
+
+$ir_a_traslado="apps/personas/controller/traslado_form.php?pau=p&id_pau=$id_nom&obj_pau=$obj_pau";
+$a_campos['ir_a_traslado'] = $ir_a_traslado;
+
 
 /*
 $adossiers="programas/dossiers/dossiers_ver.php?pau=p&id_pau=$id_nom&obj_pau=".$_POST['obj_pau'];
@@ -131,6 +155,21 @@ $a_campos['botones'] = $botones;
 
 ?>
 <script>
+
+fnjs_act_ctr=function (camp) {
+	var centre, camp, idCamp;
+	var dDate = new Date();
+	var mes=dDate.getMonth()+1;
+	var fecha=dDate.getDate()+'/'+mes+'/'+dDate.getFullYear();
+	var f;
+	idCamp='#id_'+camp;
+	centre=$(idCamp).val();
+	$(camp).val(centre);
+	// también la fecha
+	//f='f_'+camp;
+	//$(f).val(fecha);
+}
+
 fnjs_guardar=function(){
 	var rr=fnjs_comprobar_campos('#frm2','<?= addslashes($obj) ?>');
 	//alert ("EEE "+rr);
