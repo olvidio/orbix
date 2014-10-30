@@ -60,7 +60,7 @@ foreach ($cRoles as $oRole) {
 		$str_GM .= $aGrupMenus[$id_grupmenu];
 	}
 
-	$pagina=web\Hash::Link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/role_form.php?id_role='.$id_role);
+	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/role_form.php?id_role='.$id_role);
 
 	$a_valores[$i][1]=$role;
 	$a_valores[$i][2]=$sf;

@@ -1,7 +1,5 @@
 <?php
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
+use dossiers\model as dossiers;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -9,9 +7,6 @@
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-
-//include_once("./func_dossiers.php");
-//include_once(core\core\ConfigGlobal::$dir_programas.'/func_web.php');
 
 // las claves primarias se usan para crear el objeto en el include $dir_datos.
 // También se pasan por formulario al update.
@@ -27,8 +22,11 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 /***************  datos  **********************************/
 $padre='datos_form'; // para indicarle al $dir_datos lo que quiero.
 
-$dir_datos=core\ConfigGlobal::$dir_web."/apps/dossiers/model/datos_${_POST['id_dossier']}.php";
-$web_datos=core\ConfigGlobal::getWeb()."/apps/dossiers/model/datos_${_POST['id_dossier']}.php";
+$oTipoDossier = new dossiers\TipoDossier($_POST['id_dossier']);
+$app=$oTipoDossier->getApp();
+
+$dir_datos=core\ConfigGlobal::$dir_web."/apps/$app/model/datos_${_POST['id_dossier']}.php";
+$web_datos=core\ConfigGlobal::getWeb()."/apps/$app/model/datos_${_POST['id_dossier']}.php";
 include($dir_datos);
 
 $formulario="";

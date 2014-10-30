@@ -162,8 +162,10 @@ foreach ($cNotas as $oPersonaNota) {
 	$aAprobadas[$n]['nombre_asig']= $oAsig->getNombre_asig();
 	$aAprobadas[$n]['acta']= $acta;
 	$aAprobadas[$n]['fecha']= $f_acta;
-	$oNota = new notas\Nota($id_situacion);
-	$aAprobadas[$n]['nota']= $oNota->getDescripcion();
+	//$oNota = new notas\Nota($id_situacion);
+	//$aAprobadas[$n]['nota']= $oNota->getDescripcion();
+	$nota = $oPersonaNota->getNota_txt();
+	$aAprobadas[$n]['nota']= $nota;
 }
 ksort($aAprobadas);
 $num_asig=count($cAsignaturas);

@@ -56,6 +56,9 @@ foreach ($cPersonaNotas as $oPersonaNota) {
 	$id_preceptor=$oPersonaNota->getId_preceptor();
 	$epoca=$oPersonaNota->getEpoca();
 	$id_activ=$oPersonaNota->getId_activ();
+
+	//$nota = $a_notas[$id_situacion];
+	$nota = $oPersonaNota->getNota_txt();
 	
 	$oAsignatura = new asignaturas\Asignatura($id_asignatura);
 	$nombre_corto=$oAsignatura->getNombre_corto();
@@ -80,8 +83,6 @@ foreach ($cPersonaNotas as $oPersonaNota) {
 		$preceptor.=" (".$nom_precptor.")";
 	}
 
-	$nota = $a_notas[$id_situacion];
-
 	if ($permiso==3) {
 		$a_valores[$i]['sel']="$id_nivel#$id_asignatura";
 	} else {
@@ -95,6 +96,21 @@ foreach ($cPersonaNotas as $oPersonaNota) {
 	$a_valores[$i][6]=$epoca;
 
 }
+
+
+$oHash = new web\Hash();
+$oHash->setcamposForm('sel!mod');
+$oHash->setcamposNo('mod');
+$a_camposHidden = array(
+		'pau' => $pau,
+		'id_pau' => $id_pau,
+		'obj_pau' => $_POST['obj_pau'],
+		'id_dossier' => '1011',
+		'permiso' => '3',
+		'go_to' => $go_to
+		);
+$oHash->setArraycamposHidden($a_camposHidden);
+
 ?>
 <script>
 fnjs_modificar=function(formulario){
@@ -120,14 +136,8 @@ fnjs_borrar=function(formulario){
 </script>
 <h3 class=subtitulo><?php echo ucfirst(_("notas del stgr")); ?></h3>
 <form id="seleccionados" name="seleccionados" action="" method="post">
+<?= $oHash->getCamposHtml(); ?>
 <input type="hidden" id="mod" name="mod" value="">
-<input type="hidden" id="pau" name="pau" value="<?= $pau ?>">
-<input type="hidden" id="id_pau" name="id_pau" value="<?= $id_pau ?>">
-<input type="hidden" id="tabla_pau" name="tabla_pau" value="<?= $_POST['tabla_pau'] ?>">
-<input type="hidden" id="id_dossier" name="id_dossier" value="1011">
-<input type="hidden" id="permiso" name="permiso" value="3">
-<input type="hidden" id="go_to" name="go_to" value="<?= $go_to ?>">
-
 <?php
 $oTabla = new web\Lista();
 $oTabla->setId_tabla('sql_1011');
@@ -145,7 +155,7 @@ echo $oTabla->mostrar_tabla();
 $go_to=urlencode($go_to);
 
 if ($permiso==3) {
-	$pagina="apps/notas/controller/form_1011.php?pau=$pau&id_pau=$id_pau&mod=nuevo&go_to=$go_to";
+	$pagina = web\Hash::link(core\ConfigGlobal::getWeb()."/apps/notas/controller/form_1011.php?pau=$pau&id_pau=$id_pau&obj_pau=".$_POST['obj_pau']."&id_dossier=1011&permiso=3&mod=nuevo&id_asignatura=nueva");
 	?>
 	<br><table><tr>
 	<td class=botones><span class=link_inv onclick="fnjs_update_div('#ficha_personas','<?= $pagina ?>');">
@@ -153,3 +163,4 @@ if ($permiso==3) {
 	</tr></table>
 	<?php
 }
+?>

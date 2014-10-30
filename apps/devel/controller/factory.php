@@ -401,6 +401,7 @@ $guardar_if='';
 $where='';
 $claus_isset='';
 $claus_query="";
+$claus_getPrimary="";
 foreach($aClaus2 as $clau=>$nom_clau) {
 	//$nom_clau="i".$clau;
 	if (!empty($claus_txt)) $claus_txt.=",";
@@ -429,6 +430,8 @@ foreach($aClaus2 as $clau=>$nom_clau) {
 	if ($i>0) $claus_isset.=" && ";
 	$claus_isset.='isset($this->'.$nom_clau.')';
 	$claus_query.="\n\t\t\t".'$'.$nom_clau.' = $aDades[\''.$clau.'\'];';
+	if (!empty($claus_getPrimary)) $claus_getPrimary.=",";
+	$claus_getPrimary.='\''.$clau.'\' => $this->'.$nom_clau;
 	$i++;
 }
 $txt.='
@@ -623,7 +626,7 @@ $txt.="\n\t".'}
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array(\''.$claus_txt.'\' => $this->'.$claus_txt.');
+			$this->aPrimary_key = array('.$claus_getPrimary.');
 		}
 		return $this->aPrimary_key;
 	}

@@ -39,7 +39,7 @@ switch($_POST['mod']) {
 		//$go_to="dossiers_ver.php?pau=p&id_pau=".$_POST['id_pau']."&id_dossier=1011";
 		break;
 	case 'nuevo': //------------ NUEVO --------
-		if ($_POST['id_asignatura']=='nueva' && empty($_POST['opcional'])) {
+		if ($_POST['id_asignatura']=='nueva' && $_POST['opcional'] == 'n') {
 			$id_nivel = $_POST['id_nivel'];
 			$oGesAsignaturas=new asignaturas\GestorAsignatura();
 			$cAsignaturas=$oGesAsignaturas->getAsignaturas(array('id_nivel'=>$id_nivel));
@@ -61,6 +61,8 @@ switch($_POST['mod']) {
 		if (!empty($_POST['detalle'])) $oPersonaNota->setDetalle($_POST['detalle']);
 		if (!empty($_POST['epoca'])) $oPersonaNota->setEpoca($_POST['epoca']);
 		if (!empty($_POST['id_activ'])) $oPersonaNota->setId_activ($_POST['id_activ']);
+		if (!empty($_POST['nota_num'])) $oPersonaNota->setNota_num($_POST['nota_num']);
+		if (!empty($_POST['nota_max'])) $oPersonaNota->setNota_max($_POST['nota_max']);
 		if ($oPersonaNota->DBGuardar() === false) {
 			echo _("Hay un error, no se ha guardado.");
 		}
@@ -93,6 +95,8 @@ switch($_POST['mod']) {
 		$oPersonaNota->setDetalle($_POST['detalle']);
 		$oPersonaNota->setEpoca($_POST['epoca']);
 		$oPersonaNota->setId_activ($_POST['id_activ']);
+		$oPersonaNota->setNota_num($_POST['nota_num']);
+		$oPersonaNota->setNota_max($_POST['nota_max']);
 		if ($oPersonaNota->DBGuardar() === false) {
 			echo _("Hay un error, no se ha guardado.");
 		}

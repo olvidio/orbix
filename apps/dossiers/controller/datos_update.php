@@ -20,9 +20,14 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 	empty($_POST['s_pkey'])? $s_pkey="" : $s_pkey=$_POST['s_pkey'];
 	$a_pkey=unserialize(core\urlsafe_b64decode($s_pkey));
 }
+
+$oTipoDossier = new dossiers\TipoDossier($_POST['id_dossier']);
+$app=$oTipoDossier->getApp();
+
 /***************  datos  **********************************/
 $padre='datos_update'; // para indicarle al $dir_datos lo que quiero.
-$dir_datos=core\ConfigGlobal::$dir_web."/apps/dossiers/model/datos_${_POST['id_dossier']}.php";
+$dir_datos=core\ConfigGlobal::$dir_web."/apps/$app/model/datos_${_POST['id_dossier']}.php";
+
 include($dir_datos);
 
 //------------ BORRAR --------

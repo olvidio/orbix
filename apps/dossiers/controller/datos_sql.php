@@ -1,8 +1,5 @@
 <?php
 use dossiers\model as dossiers;
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -11,17 +8,12 @@ use dossiers\model as dossiers;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-//include_once("func_dossiers.php");
-//include_once(core\ConfigGlobal::$dir_programas.'/func_web.php');
-
-
 /***************  datos  **********************************/
 $padre='datos_sql'; // para indicarle al $dir_datos lo que quiero.
 
 $oTipoDossier = new dossiers\TipoDossier($_POST['id_dossier']);
 $app=$oTipoDossier->getApp();
 
-//$dir_datos=core\ConfigGlobal::$dir_web."/apps/dossiers/model/datos_${_POST['id_dossier']}.php";
 $dir_datos=core\ConfigGlobal::$dir_web."/apps/$app/model/datos_${_POST['id_dossier']}.php";
 include($dir_datos);
 

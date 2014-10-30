@@ -283,7 +283,7 @@ foreach ($cPersonas as $oPersona) {
 	} 
 }
 
-$pagina=web\Hash::link("apps/personas/controller/personas_editar.php?obj_pau=$obj_pau&nuevo=1"); 
+$pagina=web\Hash::link(core\ConfigGlobal::getWeb()."apps/personas/controller/personas_editar.php?obj_pau=$obj_pau&nuevo=1"); 
 	
 $resultado=sprintf( _("%s personas encontradas"),$i);
 

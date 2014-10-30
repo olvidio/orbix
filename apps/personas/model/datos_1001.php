@@ -1,5 +1,5 @@
 <?php
-//namespace ubis\model;
+use ubis\model as ubis;
 //use web;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -15,25 +15,15 @@
 if (isset($_POST['padre'])) $padre=$_POST['padre'];
 
 switch ($_POST['obj_pau']) {
-	case 'Centro':
-		$_POST['permiso']=0;
-		$obj = 'ubis\\model\\TelecoCtr';
-		break;
+	case 'PersonaN':
+	case 'PersonaAgd':
+	case 'PersonaS':
+	case 'PersonaSSS':
 	case 'TelecoPersonaDl':
-		$obj = 'ubis\\model\\TelecoCtrDl';
+		$obj = 'personas\\model\\TelecoPersonaDl';
 		break;
-	case 'CentroEx':
-		$obj = 'ubis\\model\\TelecoCtrEx';
-		break;
-	case 'Casa':
-		$_POST['permiso']=0;
-		$obj = 'ubis\\model\\TelecoCdc';
-		break;
-	case 'CasaDl':
-		$obj = 'ubis\\model\\TelecoCdcDl';
-		break;
-	case 'CasaEx':
-		$obj = 'ubis\\model\\TelecoCdcEx';
+	case 'TelecoPersonaEX':
+		$obj = 'personas\\model\\TelecoPersonaEx';
 		break;
 }
 
@@ -42,7 +32,7 @@ switch ($padre) {
 		// para el datos_sql.php
 		$gestor = preg_replace('/\\\(\w*)$/', '\Gestor\1', $obj);
 		$oLista = new $gestor();
-		$Coleccion = $oLista->getTelecos(array('id_ubi'=>$_POST['id_pau']));
+		$Coleccion = $oLista->getTelecos(array('id_nom'=>$_POST['id_pau']));
 		break;
 	case 'datos_update':
 		$gestor = preg_replace('/\\\(\w*)$/', '\Gestor\1', $obj);
@@ -52,7 +42,7 @@ switch ($padre) {
 			if (!empty($a_pkey)) $oFicha = new $obj($a_pkey);
 		}
 		if ($_POST['mod'] == 'nuevo') {
-			$oFicha = new $obj(array('id_ubi'=>$_POST['id_pau']));
+			$oFicha = new $obj(array('id_nom'=>$_POST['id_pau']));
 		}
 		break;
 	case 'datos_form':
@@ -63,8 +53,8 @@ switch ($padre) {
 			$v1=$oFicha->tipo_teleco;	
 			$v2=$oFicha->desc_teleco;	
 			if (!empty($v2)) {
-				$oDepende = new GestorDescTeleco();
-				$aOpciones=$oDepende->getListaDescTelecoUbis($v1);
+				$oDepende = new ubis\GestorDescTeleco();
+				$aOpciones=$oDepende->getListaDescTelecoPersonas($v1);
 				$oDesplegable=new web\Desplegable('',$aOpciones,$v2,true);
 				$despl_depende = $oDesplegable->options();
 			} else {
@@ -78,8 +68,8 @@ switch ($padre) {
 		//caso de actualizar el campo depende
 		if (isset($_POST['acc'])){
 			if ($_POST['acc'] == 'desc_teleco') {
-				$oDepende = new GestorDescTeleco();
-				$aOpciones = $oDepende->getListaDescTelecoUbis($_POST['valor_depende']);
+				$oDepende = new ubis\GestorDescTeleco();
+				$aOpciones = $oDepende->getListaDescTelecoPersonas($_POST['valor_depende']);
 				$oDesplegable = new web\Desplegable('',$aOpciones,'',true);
 				echo $oDesplegable->options();
 			}
@@ -87,6 +77,6 @@ switch ($padre) {
 		break;
 }
 
-$tit_txt=_("Telecomunicaciones de un centro o casa");
+$tit_txt=_("Telecomunicaciones de una persona");
 $explicacion_txt="";
 ?>
