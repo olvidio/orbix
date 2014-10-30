@@ -211,7 +211,7 @@ Abstract class UbixDireccion Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('iid_ubi,iid_direccion' => $this->iid_ubi,iid_direccion);
+			$this->aPrimary_key = array('id_ubi' => $this->iid_ubi,'id_direccion' => $this->iid_direccion);
 		}
 		return $this->aPrimary_key;
 	}

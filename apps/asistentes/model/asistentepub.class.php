@@ -309,7 +309,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('iid_activ,iid_nom' => $this->iid_activ,iid_nom);
+			$this->aPrimary_key = array('id_activ' => $this->iid_activ,'id_nom' => $this->iid_nom);
 		}
 		return $this->aPrimary_key;
 	}

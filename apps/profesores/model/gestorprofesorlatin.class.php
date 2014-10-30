@@ -40,7 +40,7 @@ class GestorProfesorLatin Extends core\ClaseGestor {
 	 * @param string sQuery la query a executar.
 	 * @return array Una col·lecció d'objectes de tipus ProfesorLatin
 	 */
-	function getProfesroresLatinQuery($sQuery='') {
+	function getProfesoresLatinQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
 		$oProfesorLatinSet = new core\Set();
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
@@ -64,7 +64,7 @@ class GestorProfesorLatin Extends core\ClaseGestor {
 	 * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
 	 * @return array Una col·lecció d'objectes de tipus ProfesorLatin
 	 */
-	function getProfesroresLatin($aWhere=array(),$aOperators=array()) {
+	function getProfesoresLatin($aWhere=array(),$aOperators=array()) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		$oProfesorLatinSet = new core\Set();

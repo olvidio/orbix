@@ -267,7 +267,9 @@ class Profesor Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('iid_item,iid_nom,iid_departamento' => $this->iid_item,iid_nom,iid_departamento);
+			$this->aPrimary_key = array('id_item' => $this->iid_item,
+										'id_nom'  => $this->iid_nom,
+										'id_departamento' => $this->iid_departamento);
 		}
 		return $this->aPrimary_key;
 	}
@@ -432,7 +434,7 @@ class Profesor Extends core\ClasePropiedades {
 	 */
 	function getDatosCampos() {
 		$oProfesorSet = new core\Set();
-
+		$oProfesorSet->add($this->getDatosId_departamento());
 		$oProfesorSet->add($this->getDatosEscrito_nombramiento());
 		$oProfesorSet->add($this->getDatosF_nombramiento());
 		$oProfesorSet->add($this->getDatosId_tipo_profesor());
@@ -449,7 +451,7 @@ class Profesor Extends core\ClasePropiedades {
 	 */
 	function getDatosId_departamento() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_departamento'));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_departamento'));
 		$oDatosCampo->setEtiqueta(_("departamento"));
 		$oDatosCampo->setTipo('opciones');
 		$oDatosCampo->setArgument('asignaturas\model\Departamento'); // nombre del objeto relacionado
@@ -465,7 +467,7 @@ class Profesor Extends core\ClasePropiedades {
 	 */
 	function getDatosEscrito_nombramiento() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'escrito_nombramiento'));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'escrito_nombramiento'));
 		$oDatosCampo->setEtiqueta(_("escrito de nombramiento"));
 		$oDatosCampo->setTipo('texto');
 		$oDatosCampo->setArgument(30);
@@ -479,7 +481,7 @@ class Profesor Extends core\ClasePropiedades {
 	 */
 	function getDatosF_nombramiento() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_nombramiento'));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_nombramiento'));
 		$oDatosCampo->setEtiqueta(_("fecha de nombramiento"));
 		$oDatosCampo->setTipo('fecha');
 		return $oDatosCampo;
@@ -492,7 +494,7 @@ class Profesor Extends core\ClasePropiedades {
 	 */
 	function getDatosId_tipo_profesor() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_tipo_profesor'));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_tipo_profesor'));
 		$oDatosCampo->setEtiqueta(_("id_tipo_profesor"));
 		$oDatosCampo->setTipo('opciones');
 		$oDatosCampo->setArgument('profesores\model\ProfesorTipo'); // nombre del objeto relacionado
@@ -508,7 +510,7 @@ class Profesor Extends core\ClasePropiedades {
 	 */
 	function getDatosEscrito_cese() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'escrito_cese'));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'escrito_cese'));
 		$oDatosCampo->setEtiqueta(_("escrito de cese"));
 		$oDatosCampo->setTipo('texto');
 		$oDatosCampo->setArgument(30);
@@ -522,7 +524,7 @@ class Profesor Extends core\ClasePropiedades {
 	 */
 	function getDatosF_cese() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_cese'));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_cese'));
 		$oDatosCampo->setEtiqueta(_("fecha de cese"));
 		$oDatosCampo->setTipo('fecha');
 		return $oDatosCampo;

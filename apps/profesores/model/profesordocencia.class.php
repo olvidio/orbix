@@ -2,91 +2,97 @@
 namespace profesores\model;
 use core;
 /**
- * Fitxer amb la Classe que accedeix a la taula d_profesor_director
+ * Fitxer amb la Classe que accedeix a la taula d_docencia_stgr
  *
  * @package delegación
  * @subpackage model
  * @author Daniel Serrabou
  * @version 1.0
- * @created 08/04/2014
+ * @created 28/10/2014
  */
 /**
- * Classe que implementa l'entitat d_profesor_director
+ * Classe que implementa l'entitat d_docencia_stgr
  *
  * @package delegación
  * @subpackage model
  * @author Daniel Serrabou
  * @version 1.0
- * @created 08/04/2014
+ * @created 28/10/2014
  */
-class ProfesorDirector Extends core\ClasePropiedades {
+class ProfesorDocencia Extends core\ClasePropiedades {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/**
-	 * aPrimary_key de ProfesorDirector
+	 * aPrimary_key de ProfesorDocencia
 	 *
 	 * @var array
 	 */
 	 private $aPrimary_key;
 
 	/**
-	 * aDades de ProfesorDirector
+	 * aDades de ProfesorDocencia
 	 *
 	 * @var array
 	 */
 	 private $aDades;
 
 	/**
-	 * Id_item de ProfesorDirector
+	 * Id_schema de ProfesorDocencia
+	 *
+	 * @var integer
+	 */
+	 private $iid_schema;
+	/**
+	 * Id_item de ProfesorDocencia
 	 *
 	 * @var integer
 	 */
 	 private $iid_item;
 	/**
-	 * Id_nom de ProfesorDirector
+	 * Id_nom de ProfesorDocencia
 	 *
 	 * @var integer
 	 */
 	 private $iid_nom;
 	/**
-	 * Id_departamento de ProfesorDirector
+	 * Id_asignatura de ProfesorDocencia
 	 *
 	 * @var integer
 	 */
-	 private $iid_departamento;
+	 private $iid_asignatura;
 	/**
-	 * Escrito_nombramiento de ProfesorDirector
+	 * Id_activ de ProfesorDocencia
+	 *
+	 * @var integer
+	 */
+	 private $iid_activ;
+	/**
+	 * Tipo de ProfesorDocencia
 	 *
 	 * @var string
 	 */
-	 private $sescrito_nombramiento;
+	 private $stipo;
 	/**
-	 * F_nombramiento de ProfesorDirector
-	 *
-	 * @var date
-	 */
-	 private $df_nombramiento;
-	/**
-	 * Escrito_cese de ProfesorDirector
+	 * Curso de ProfesorDocencia
 	 *
 	 * @var string
 	 */
-	 private $sescrito_cese;
+	 private $scurso;
 	/**
-	 * F_cese de ProfesorDirector
+	 * Acta de ProfesorDocencia
 	 *
-	 * @var date
+	 * @var string
 	 */
-	 private $df_cese;
+	 private $sacta;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
-	 * oDbl de ProfesorDirector
+	 * oDbl de ProfesorDocencia
 	 *
 	 * @var object
 	 */
 	 protected $oDbl;
 	/**
-	 * NomTabla de ProfesorDirector
+	 * NomTabla de ProfesorDocencia
 	 *
 	 * @var string
 	 */
@@ -111,7 +117,7 @@ class ProfesorDirector Extends core\ClasePropiedades {
 			}
 		}
 		$this->setoDbl($oDbl);
-		$this->setNomTabla('d_profesor_director');
+		$this->setNomTabla('d_docencia_stgr');
 	}
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
@@ -126,28 +132,28 @@ class ProfesorDirector Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if ($this->DBCarregar('guardar') === false) { $bInsert=true; } else { $bInsert=false; }
 		$aDades=array();
-		$aDades['id_departamento'] = $this->iid_departamento;
-		$aDades['escrito_nombramiento'] = $this->sescrito_nombramiento;
-		$aDades['f_nombramiento'] = $this->df_nombramiento;
-		$aDades['escrito_cese'] = $this->sescrito_cese;
-		$aDades['f_cese'] = $this->df_cese;
+		$aDades['id_asignatura'] = $this->iid_asignatura;
+		$aDades['id_activ'] = $this->iid_activ;
+		$aDades['tipo'] = $this->stipo;
+		$aDades['curso'] = $this->scurso;
+		$aDades['acta'] = $this->sacta;
 		array_walk($aDades, 'core\poner_null');
 
 		if ($bInsert === false) {
 			//UPDATE
 			$update="
-					id_departamento          = :id_departamento,
-					escrito_nombramiento     = :escrito_nombramiento,
-					f_nombramiento           = :f_nombramiento,
-					escrito_cese             = :escrito_cese,
-					f_cese                   = :f_cese";
+					id_asignatura            = :id_asignatura,
+					id_activ                 = :id_activ,
+					tipo                     = :tipo,
+					curso                    = :curso,
+					acta                     = :acta";
 			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item' AND id_nom='$this->iid_nom'")) === false) {
-				$sClauError = 'ProfesorDirector.update.prepare';
+				$sClauError = 'ProfesorDocencia.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($qRs->execute($aDades) === false) {
-					$sClauError = 'ProfesorDirector.update.execute';
+					$sClauError = 'ProfesorDocencia.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
@@ -155,20 +161,20 @@ class ProfesorDirector Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_nom);
-			$campos="(id_nom,id_departamento,escrito_nombramiento,f_nombramiento,escrito_cese,f_cese)";
-			$valores="(:id_nom,:id_departamento,:escrito_nombramiento,:f_nombramiento,:escrito_cese,:f_cese)";		
+			$campos="(id_nom,id_asignatura,id_activ,tipo,curso,acta)";
+			$valores="(:id_nom,:id_asignatura,:id_activ,:tipo,:curso,:acta)";		
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-				$sClauError = 'ProfesorDirector.insertar.prepare';
+				$sClauError = 'ProfesorDocencia.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($qRs->execute($aDades) === false) {
-					$sClauError = 'ProfesorDirector.insertar.execute';
+					$sClauError = 'ProfesorDocencia.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
 			}
-			$this->id_item = $oDbl->lastInsertId('d_profesor_director_id_item_seq');
+			$this->id_item = $oDbl->lastInsertId('d_docencia_stgr_id_item_seq');
 		}
 		$this->setAllAtributes($aDades);
 		return true;
@@ -183,7 +189,7 @@ class ProfesorDirector Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iid_item) && isset($this->iid_nom)) {
 			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item='$this->iid_item' AND id_nom='$this->iid_nom'")) === false) {
-				$sClauError = 'ProfesorDirector.carregar';
+				$sClauError = 'ProfesorDocencia.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
@@ -212,7 +218,7 @@ class ProfesorDirector Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_item='$this->iid_item' AND id_nom='$this->iid_nom'")) === false) {
-			$sClauError = 'ProfesorDirector.eliminar';
+			$sClauError = 'ProfesorDocencia.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
@@ -231,17 +237,17 @@ class ProfesorDirector Extends core\ClasePropiedades {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_item',$aDades)) $this->setId_item($aDades['id_item']);
 		if (array_key_exists('id_nom',$aDades)) $this->setId_nom($aDades['id_nom']);
-		if (array_key_exists('id_departamento',$aDades)) $this->setId_departamento($aDades['id_departamento']);
-		if (array_key_exists('escrito_nombramiento',$aDades)) $this->setEscrito_nombramiento($aDades['escrito_nombramiento']);
-		if (array_key_exists('f_nombramiento',$aDades)) $this->setF_nombramiento($aDades['f_nombramiento']);
-		if (array_key_exists('escrito_cese',$aDades)) $this->setEscrito_cese($aDades['escrito_cese']);
-		if (array_key_exists('f_cese',$aDades)) $this->setF_cese($aDades['f_cese']);
+		if (array_key_exists('id_asignatura',$aDades)) $this->setId_asignatura($aDades['id_asignatura']);
+		if (array_key_exists('id_activ',$aDades)) $this->setId_activ($aDades['id_activ']);
+		if (array_key_exists('tipo',$aDades)) $this->setTipo($aDades['tipo']);
+		if (array_key_exists('curso',$aDades)) $this->setCurso($aDades['curso']);
+		if (array_key_exists('acta',$aDades)) $this->setActa($aDades['acta']);
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 
 	/**
-	 * Recupera tots els atributs de ProfesorDirector en un array
+	 * Recupera tots els atributs de ProfesorDocencia en un array
 	 *
 	 * @return array aDades
 	 */
@@ -253,7 +259,7 @@ class ProfesorDirector Extends core\ClasePropiedades {
 	}
 
 	/**
-	 * Recupera las claus primàries de ProfesorDirector en un array
+	 * Recupera las claus primàries de ProfesorDocencia en un array
 	 *
 	 * @return array aPrimary_key
 	 */
@@ -265,7 +271,26 @@ class ProfesorDirector Extends core\ClasePropiedades {
 	}
 
 	/**
-	 * Recupera l'atribut iid_item de ProfesorDirector
+	 * Recupera l'atribut iid_schema de ProfesorDocencia
+	 *
+	 * @return integer iid_schema
+	 */
+	function getId_schema() {
+		if (!isset($this->iid_schema)) {
+			$this->DBCarregar();
+		}
+		return $this->iid_schema;
+	}
+	/**
+	 * estableix el valor de l'atribut iid_schema de ProfesorDocencia
+	 *
+	 * @param integer iid_schema='' optional
+	 */
+	function setId_schema($iid_schema='') {
+		$this->iid_schema = $iid_schema;
+	}
+	/**
+	 * Recupera l'atribut iid_item de ProfesorDocencia
 	 *
 	 * @return integer iid_item
 	 */
@@ -276,7 +301,7 @@ class ProfesorDirector Extends core\ClasePropiedades {
 		return $this->iid_item;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_item de ProfesorDirector
+	 * estableix el valor de l'atribut iid_item de ProfesorDocencia
 	 *
 	 * @param integer iid_item
 	 */
@@ -284,7 +309,7 @@ class ProfesorDirector Extends core\ClasePropiedades {
 		$this->iid_item = $iid_item;
 	}
 	/**
-	 * Recupera l'atribut iid_nom de ProfesorDirector
+	 * Recupera l'atribut iid_nom de ProfesorDocencia
 	 *
 	 * @return integer iid_nom
 	 */
@@ -295,7 +320,7 @@ class ProfesorDirector Extends core\ClasePropiedades {
 		return $this->iid_nom;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_nom de ProfesorDirector
+	 * estableix el valor de l'atribut iid_nom de ProfesorDocencia
 	 *
 	 * @param integer iid_nom
 	 */
@@ -303,99 +328,99 @@ class ProfesorDirector Extends core\ClasePropiedades {
 		$this->iid_nom = $iid_nom;
 	}
 	/**
-	 * Recupera l'atribut iid_departamento de ProfesorDirector
+	 * Recupera l'atribut iid_asignatura de ProfesorDocencia
 	 *
-	 * @return integer iid_departamento
+	 * @return integer iid_asignatura
 	 */
-	function getId_departamento() {
-		if (!isset($this->iid_departamento)) {
+	function getId_asignatura() {
+		if (!isset($this->iid_asignatura)) {
 			$this->DBCarregar();
 		}
-		return $this->iid_departamento;
+		return $this->iid_asignatura;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_departamento de ProfesorDirector
+	 * estableix el valor de l'atribut iid_asignatura de ProfesorDocencia
 	 *
-	 * @param integer iid_departamento='' optional
+	 * @param integer iid_asignatura='' optional
 	 */
-	function setId_departamento($iid_departamento='') {
-		$this->iid_departamento = $iid_departamento;
+	function setId_asignatura($iid_asignatura='') {
+		$this->iid_asignatura = $iid_asignatura;
 	}
 	/**
-	 * Recupera l'atribut sescrito_nombramiento de ProfesorDirector
+	 * Recupera l'atribut iid_activ de ProfesorDocencia
 	 *
-	 * @return string sescrito_nombramiento
+	 * @return integer iid_activ
 	 */
-	function getEscrito_nombramiento() {
-		if (!isset($this->sescrito_nombramiento)) {
+	function getId_activ() {
+		if (!isset($this->iid_activ)) {
 			$this->DBCarregar();
 		}
-		return $this->sescrito_nombramiento;
+		return $this->iid_activ;
 	}
 	/**
-	 * estableix el valor de l'atribut sescrito_nombramiento de ProfesorDirector
+	 * estableix el valor de l'atribut iid_activ de ProfesorDocencia
 	 *
-	 * @param string sescrito_nombramiento='' optional
+	 * @param integer iid_activ='' optional
 	 */
-	function setEscrito_nombramiento($sescrito_nombramiento='') {
-		$this->sescrito_nombramiento = $sescrito_nombramiento;
+	function setId_activ($iid_activ='') {
+		$this->iid_activ = $iid_activ;
 	}
 	/**
-	 * Recupera l'atribut df_nombramiento de ProfesorDirector
+	 * Recupera l'atribut stipo de ProfesorDocencia
 	 *
-	 * @return date df_nombramiento
+	 * @return string stipo
 	 */
-	function getF_nombramiento() {
-		if (!isset($this->df_nombramiento)) {
+	function getTipo() {
+		if (!isset($this->stipo)) {
 			$this->DBCarregar();
 		}
-		return $this->df_nombramiento;
+		return $this->stipo;
 	}
 	/**
-	 * estableix el valor de l'atribut df_nombramiento de ProfesorDirector
+	 * estableix el valor de l'atribut stipo de ProfesorDocencia
 	 *
-	 * @param date df_nombramiento='' optional
+	 * @param string stipo='' optional
 	 */
-	function setF_nombramiento($df_nombramiento='') {
-		$this->df_nombramiento = $df_nombramiento;
+	function setTipo($stipo='') {
+		$this->stipo = $stipo;
 	}
 	/**
-	 * Recupera l'atribut sescrito_cese de ProfesorDirector
+	 * Recupera l'atribut scurso de ProfesorDocencia
 	 *
-	 * @return string sescrito_cese
+	 * @return string scurso
 	 */
-	function getEscrito_cese() {
-		if (!isset($this->sescrito_cese)) {
+	function getCurso() {
+		if (!isset($this->scurso)) {
 			$this->DBCarregar();
 		}
-		return $this->sescrito_cese;
+		return $this->scurso;
 	}
 	/**
-	 * estableix el valor de l'atribut sescrito_cese de ProfesorDirector
+	 * estableix el valor de l'atribut scurso de ProfesorDocencia
 	 *
-	 * @param string sescrito_cese='' optional
+	 * @param string scurso='' optional
 	 */
-	function setEscrito_cese($sescrito_cese='') {
-		$this->sescrito_cese = $sescrito_cese;
+	function setCurso($scurso='') {
+		$this->scurso = $scurso;
 	}
 	/**
-	 * Recupera l'atribut df_cese de ProfesorDirector
+	 * Recupera l'atribut sacta de ProfesorDocencia
 	 *
-	 * @return date df_cese
+	 * @return string sacta
 	 */
-	function getF_cese() {
-		if (!isset($this->df_cese)) {
+	function getActa() {
+		if (!isset($this->sacta)) {
 			$this->DBCarregar();
 		}
-		return $this->df_cese;
+		return $this->sacta;
 	}
 	/**
-	 * estableix el valor de l'atribut df_cese de ProfesorDirector
+	 * estableix el valor de l'atribut sacta de ProfesorDocencia
 	 *
-	 * @param date df_cese='' optional
+	 * @param string sacta='' optional
 	 */
-	function setF_cese($df_cese='') {
-		$this->df_cese = $df_cese;
+	function setActa($sacta='') {
+		$this->sacta = $sacta;
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
@@ -404,86 +429,88 @@ class ProfesorDirector Extends core\ClasePropiedades {
 	 *
 	 */
 	function getDatosCampos() {
-		$oProfesorDirectorSet = new core\Set();
+		$oProfesorDocenciaSet = new core\Set();
 
-		$oProfesorDirectorSet->add($this->getDatosId_departamento());
-		$oProfesorDirectorSet->add($this->getDatosEscrito_nombramiento());
-		$oProfesorDirectorSet->add($this->getDatosF_nombramiento());
-		$oProfesorDirectorSet->add($this->getDatosEscrito_cese());
-		$oProfesorDirectorSet->add($this->getDatosF_cese());
-		return $oProfesorDirectorSet->getTot();
+		$oProfesorDocenciaSet->add($this->getDatosId_asignatura());
+		$oProfesorDocenciaSet->add($this->getDatosId_activ());
+		$oProfesorDocenciaSet->add($this->getDatosTipo());
+		$oProfesorDocenciaSet->add($this->getDatosCurso());
+		$oProfesorDocenciaSet->add($this->getDatosActa());
+		return $oProfesorDocenciaSet->getTot();
 	}
 
-
-
 	/**
-	 * Recupera les propietats de l'atribut iid_departamento de ProfesorDirector
+	 * Recupera les propietats de l'atribut iid_asignatura de ProfesorDocencia
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return oject DatosCampo
 	 */
-	function getDatosId_departamento() {
+	function getDatosId_asignatura() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_departamento'));
-		$oDatosCampo->setEtiqueta(_("departamento"));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_asignatura'));
+		$oDatosCampo->setEtiqueta(_("asignatura"));
 		$oDatosCampo->setTipo('opciones');
-		$oDatosCampo->setArgument('asignaturas\model\Departamento'); // nombre del objeto relacionado
-		$oDatosCampo->setArgument2('departamento'); // clave con la que crear el objeto relacionado
-		$oDatosCampo->setArgument3('getListaDepartamentos'); // método con que crear la lista de opciones del Gestor objeto relacionado.
+		$oDatosCampo->setArgument('asignaturas\model\Asignatura'); // nombre del objeto relacionado
+		$oDatosCampo->setArgument2('nombre_corto'); // clave con la que crear el objeto relacionado
+		$oDatosCampo->setArgument3('getListaAsignaturas'); // método con que crear la lista de opciones del Gestor objeto relacionado.
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut sescrito_nombramiento de ProfesorDirector
+	 * Recupera les propietats de l'atribut iid_activ de ProfesorDocencia
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return oject DatosCampo
 	 */
-	function getDatosEscrito_nombramiento() {
+	function getDatosId_activ() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'escrito_nombramiento'));
-		$oDatosCampo->setEtiqueta(_("escrito de nombramiento"));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_activ'));
+		$oDatosCampo->setEtiqueta(_("actividad"));
+		$oDatosCampo->setTipo('opciones');
+		$oDatosCampo->setArgument('actividades\model\Actividad'); // nombre del objeto relacionado
+		$oDatosCampo->setArgument2('nom_activ'); // clave con la que crear el objeto relacionado
+		$oDatosCampo->setArgument3('getListaActividadesEstudios'); // método con que crear la lista de opciones del Gestor objeto relacionado.
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut stipo de ProfesorDocencia
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return oject DatosCampo
+	 */
+	function getDatosTipo() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'tipo'));
+		$oDatosCampo->setEtiqueta(_("tipo"));
+		$oDatosCampo->setTipo('array');
+        $oDatosCampo->setArgument(array( 'v'=> _("verano"), 'i'=> _("invierno") , 'p'=> _("preceptor") ));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut scurso de ProfesorDocencia
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return oject DatosCampo
+	 */
+	function getDatosCurso() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'curso'));
+		$oDatosCampo->setEtiqueta(_("curso"));
 		$oDatosCampo->setTipo('texto');
 		$oDatosCampo->setArgument(30);
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut df_nombramiento de ProfesorDirector
+	 * Recupera les propietats de l'atribut sacta de ProfesorDocencia
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return oject DatosCampo
 	 */
-	function getDatosF_nombramiento() {
+	function getDatosActa() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_nombramiento'));
-		$oDatosCampo->setEtiqueta(_("fecha de nombramiento"));
-		$oDatosCampo->setTipo('fecha');
-		return $oDatosCampo;
-	}
-	/**
-	 * Recupera les propietats de l'atribut sescrito_cese de ProfesorDirector
-	 * en una clase del tipus DatosCampo
-	 *
-	 * @return oject DatosCampo
-	 */
-	function getDatosEscrito_cese() {
-		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'escrito_cese'));
-		$oDatosCampo->setEtiqueta(_("escrito de cese"));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'acta'));
+		$oDatosCampo->setEtiqueta(_("acta"));
 		$oDatosCampo->setTipo('texto');
 		$oDatosCampo->setArgument(30);
-		return $oDatosCampo;
-	}
-	/**
-	 * Recupera les propietats de l'atribut df_cese de ProfesorDirector
-	 * en una clase del tipus DatosCampo
-	 *
-	 * @return oject DatosCampo
-	 */
-	function getDatosF_cese() {
-		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_cese'));
-		$oDatosCampo->setEtiqueta(_("fecha de cese"));
-		$oDatosCampo->setTipo('fecha');
 		return $oDatosCampo;
 	}
 }

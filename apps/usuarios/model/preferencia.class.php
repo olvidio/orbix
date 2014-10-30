@@ -213,7 +213,7 @@ class Preferencia Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('iid_usuario,stipo' => $this->iid_usuario,stipo);
+			$this->aPrimary_key = array('id_usuario' => $this->iid_usuario,'tipo' => $this->stipo);
 		}
 		return $this->aPrimary_key;
 	}

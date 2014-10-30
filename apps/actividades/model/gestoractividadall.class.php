@@ -160,6 +160,38 @@ class GestorActividadAll Extends core\ClaseGestor {
 	}
 
 	/**
+	 * retorna un Desplegable d'activitats
+	 *
+	 * @param string scondicion (debe empezar con AND)
+	 * @return array Una Llista.
+	 */
+	function getListaActividadesEstudios($scondicion='') {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$cond_nivel_stgr = "(nivel_stgr < 6 OR nivel_stgr=11)";
+		if (empty($scondicion)) {
+			$inicio = date("d/m/Y", mktime(0,0,0,9,1,core\ConfigGlobal::any_final_curs() - 2));
+			$scondicion = "AND f_ini > '$inicio'";
+		}
+		$sQuery="SELECT id_activ, nom_activ
+		   FROM $nom_tabla
+	   	   WHERE " . $cond_nivel_stgr. " $scondicion
+		   ORDER by f_ini";
+		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+			$sClauError = 'GestorActividadAll.ListaActividadesEstudios';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		$aOpciones=array();
+		foreach ($oDbl->query($sQuery) as $aClave) {
+			$clave=$aClave[0];
+			$val=$aClave[1];
+			$aOpciones[$clave]=$val;
+		}
+		return new web\Desplegable('',$aOpciones,'',true);
+	}
+
+	/**
 	 * retorna l'array de id d'Actividad
 	 *
 	 * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query

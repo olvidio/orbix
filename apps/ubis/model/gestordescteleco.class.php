@@ -38,7 +38,7 @@ class GestorDescTeleco Extends  core\ClaseGestor {
 	 *
 	 * @return array Una Llista
 	 */
-	function getListaDescTelecoPersona($sdepende) {
+	function getListaDescTelecoPersonas($sdepende) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		$sQuery="SELECT id_item, desc_teleco

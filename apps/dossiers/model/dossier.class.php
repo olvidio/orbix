@@ -264,9 +264,9 @@ class Dossier Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('stabla' => $this->stabla,
-										'iid_pau' => $this->iid_pau,
-										'iid_tipo_dossier' => $this->iid_tipo_dossier);
+			$this->aPrimary_key = array('tabla' => $this->stabla,
+										'id_pau' => $this->iid_pau,
+										'id_tipo_dossier' => $this->iid_tipo_dossier);
 		}
 		return $this->aPrimary_key;
 	}

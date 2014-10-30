@@ -223,7 +223,7 @@ class ProfesorJuramento Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('iid_item,iid_nom' => $this->iid_item,iid_nom);
+			$this->aPrimary_key = array('id_item' => $this->iid_item,'id_nom' => $this->iid_nom);
 		}
 		return $this->aPrimary_key;
 	}

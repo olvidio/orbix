@@ -56,13 +56,8 @@ class UsuarioGrupo Extends core\ClasePropiedades {
 		if (is_array($a_id)) { 
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
-				$nom_id='i'.$nom_id; //imagino que es un integer
-				if ($val_id !== '') $this->$nom_id = intval($val_id); // evitem SQL injection fent cast a integer
-			}
-		} else {
-			if (isset($a_id) && $a_id !== '') {
-				$this->iid_usuario = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('iid_usuario' => $this->iid_usuario);
+				if (($nom_id == 'id_usuario') && $val_id !== '') $this->iid_usuario = (int)$val_id; // evitem SQL injection fent cast a integer
+				if (($nom_id == 'id_grupo') && $val_id !== '') $this->iid_grupo = (int)$val_id; // evitem SQL injection fent cast a integer
 			}
 		}
 		$this->setoDbl($oDbl);
@@ -199,7 +194,7 @@ class UsuarioGrupo Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('iid_usuario,iid_grupo' => $this->iid_usuario,iid_grupo);
+			$this->aPrimary_key = array('id_usuario' => $this->iid_usuario,'id_grupo' => $this->iid_grupo);
 		}
 		return $this->aPrimary_key;
 	}

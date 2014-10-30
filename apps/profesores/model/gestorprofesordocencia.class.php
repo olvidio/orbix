@@ -2,18 +2,18 @@
 namespace profesores\model;
 use core;
 /**
- * GestorProfesorDirector
+ * GestorProfesorDocencia
  *
- * Classe per gestionar la llista d'objectes de la clase ProfesorDirector
+ * Classe per gestionar la llista d'objectes de la clase ProfesorDocencia
  *
  * @package delegación
  * @subpackage model
  * @author Daniel Serrabou
  * @version 1.0
- * @created 08/04/2014
+ * @created 28/10/2014
  */
 
-class GestorProfesorDirector Extends core\ClaseGestor {
+class GestorProfesorDocencia Extends core\ClaseGestor {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
@@ -28,47 +28,47 @@ class GestorProfesorDirector Extends core\ClaseGestor {
 	function __construct() {
 		$oDbl = $GLOBALS['oDB'];
 		$this->setoDbl($oDbl);
-		$this->setNomTabla('d_profesor_director');
+		$this->setNomTabla('d_docencia_stgr');
 	}
 
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
 	/**
-	 * retorna l'array d'objectes de tipus ProfesorDirector
+	 * retorna l'array d'objectes de tipus ProfesorDocencia
 	 *
 	 * @param string sQuery la query a executar.
-	 * @return array Una col·lecció d'objectes de tipus ProfesorDirector
+	 * @return array Una col·lecció d'objectes de tipus ProfesorDocencia
 	 */
-	function getProfesoresDirectoresQuery($sQuery='') {
+	function getProfesorDocenciasQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
-		$oProfesorDirectorSet = new core\Set();
+		$oProfesorDocenciaSet = new core\Set();
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorProfesorDirector.query';
+			$sClauError = 'GestorProfesorDocencia.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item'],
 							'id_nom' => $aDades['id_nom']);
-			$oProfesorDirector= new ProfesorDirector($a_pkey);
-			$oProfesorDirector->setAllAtributes($aDades);
-			$oProfesorDirectorSet->add($oProfesorDirector);
+			$oProfesorDocencia= new ProfesorDocencia($a_pkey);
+			$oProfesorDocencia->setAllAtributes($aDades);
+			$oProfesorDocenciaSet->add($oProfesorDocencia);
 		}
-		return $oProfesorDirectorSet->getTot();
+		return $oProfesorDocenciaSet->getTot();
 	}
 
 	/**
-	 * retorna l'array d'objectes de tipus ProfesorDirector
+	 * retorna l'array d'objectes de tipus ProfesorDocencia
 	 *
 	 * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
 	 * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-	 * @return array Una col·lecció d'objectes de tipus ProfesorDirector
+	 * @return array Una col·lecció d'objectes de tipus ProfesorDocencia
 	 */
-	function getProfesoresDirectores($aWhere=array(),$aOperators=array()) {
+	function getProfesorDocencias($aWhere=array(),$aOperators=array()) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		$oProfesorDirectorSet = new core\Set();
+		$oProfesorDocenciaSet = new core\Set();
 		$oCondicion = new core\Condicion();
 		$aCondi = array();
 		foreach ($aWhere as $camp => $val) {
@@ -91,23 +91,23 @@ class GestorProfesorDirector Extends core\ClaseGestor {
 		if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
 		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-			$sClauError = 'GestorProfesorDirector.llistar.prepare';
+			$sClauError = 'GestorProfesorDocencia.llistar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		if (($oDblSt->execute($aWhere)) === false) {
-			$sClauError = 'GestorProfesorDirector.llistar.execute';
+			$sClauError = 'GestorProfesorDocencia.llistar.execute';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item'],
 							'id_nom' => $aDades['id_nom']);
-			$oProfesorDirector= new ProfesorDirector($a_pkey);
-			$oProfesorDirector->setAllAtributes($aDades);
-			$oProfesorDirectorSet->add($oProfesorDirector);
+			$oProfesorDocencia= new ProfesorDocencia($a_pkey);
+			$oProfesorDocencia->setAllAtributes($aDades);
+			$oProfesorDocenciaSet->add($oProfesorDocencia);
 		}
-		return $oProfesorDirectorSet->getTot();
+		return $oProfesorDocenciaSet->getTot();
 	}
 
 	/* METODES PROTECTED --------------------------------------------------------*/

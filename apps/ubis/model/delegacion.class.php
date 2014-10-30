@@ -224,7 +224,7 @@ class Delegacion Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('sdl,sregion' => $this->sdl,sregion);
+			$this->aPrimary_key = array('dl' => $this->sdl,'region' => $this->sregion);
 		}
 		return $this->aPrimary_key;
 	}

@@ -259,7 +259,7 @@ class ProfesorAmpliacion Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('iid_item,iid_nom' => $this->iid_item,iid_nom);
+			$this->aPrimary_key = array('id_item'=>$this->iid_item,'id_nom'=>$this->iid_nom);
 		}
 		return $this->aPrimary_key;
 	}
@@ -428,7 +428,7 @@ class ProfesorAmpliacion Extends core\ClasePropiedades {
 		$oDatosCampo->setEtiqueta(_("asignatura"));
 		$oDatosCampo->setTipo('opciones');
 		$oDatosCampo->setArgument('asignaturas\model\Asignatura'); // nombre del objeto relacionado
-		$oDatosCampo->setArgument2('id_asignatura'); // clave con la que crear el objeto relacionado
+		$oDatosCampo->setArgument2('nombre_corto'); // clave con la que crear el objeto relacionado
 		$oDatosCampo->setArgument3('getListaAsignaturas'); // método con que crear la lista de opciones del Gestor objeto relacionado.
 	
 		return $oDatosCampo;
