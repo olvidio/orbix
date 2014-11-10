@@ -48,6 +48,7 @@ class GestorAsistente Extends core\ClaseGestor {
 	function getActividadesDeAsistente($id_nom,$aWhere=array(),$aOperators=array()) {
 		// todas las actividades de la persona
 		$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');
+		$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
 		$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
 
 		$namespace = __NAMESPACE__;
@@ -85,17 +86,36 @@ class GestorAsistente Extends core\ClaseGestor {
 
 		/* Mirar si la actividad es mia o no */
 		$oActividad = new actividades\Actividad($iid_activ);
+		$dl = $oActividad->getDl_org();
 		$id_tabla = $oActividad->getId_tabla();
+/*		if ($dl == core\ConfigGlobal::mi_dele()) {
+			Switch($obj_persona) {
+				case 'PersonaDl':
+					$oAsistente=new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+					break;
+				case 'PersonaIn':
+				case 'PersonaEx':
+					$oAsistente=new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+					break;
+			}
+		} else {
+			if ($id_tabla == 'dl') {
+				$oAsistente=new asistentes\AsistenteOut(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+			} else {
+				$oAsistente=new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+			}
+		}
+
+*/
 		switch($id_tabla) {
-			case 'dl': // AsistentesDl + ASistentesIn
+			case 'dl': // AsistentesDl + AsistentesIn
 				$gesAsistenteDl = new GestorAsistenteDl();
 				$cAsistentesDl = $gesAsistenteDl->getAsistentesDl(array('id_activ'=>$iid_activ));
-		$a_Clases = array('AsistenteDl','AsistenteIn','AsistenteOut');
-		$namespace = __NAMESPACE__;
-		return $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
-
+				$a_Clases = array('AsistenteDl','AsistenteIn','AsistenteOut');
+				$namespace = __NAMESPACE__;
+				return $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
 				break;
-			case 'ex': // asistemntesOut
+			case 'ex': // asistentesOut
 
 				break;
 		}
@@ -154,10 +174,25 @@ class GestorAsistente Extends core\ClaseGestor {
 	 * @return array Una col·lecció d'objectes de tipus Asistente
 	 */
 	function getAsistentes($aWhere=array(),$aOperators=array()) {
-		/* Buscar en los tres tipos de asistente: Dl, IN y Out. */
-		$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');
-		$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
-		$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
+		/* Mirar si la actividad es mia o no */
+		$iid_activ = $aWhere['id_activ'];
+		$oActividad = new actividades\Actividad($iid_activ);
+		$dl = $oActividad->getDl_org();
+		$id_tabla = $oActividad->getId_tabla();
+		if ($dl == core\ConfigGlobal::mi_dele()) {
+			// Todos los asistentes
+			/* Buscar en los tres tipos de asistente: Dl, IN y Out. */
+			$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');
+			$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
+			$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
+		} else {
+			if ($id_tabla == 'dl') {
+				$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
+			} else {
+				$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');
+				$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
+			}
+		}
 		$namespace = __NAMESPACE__;
 		return $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
 	}

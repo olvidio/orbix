@@ -33,6 +33,5 @@ class GestorActividadPub extends GestorActividadAll {
 
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
-
 }
 ?>

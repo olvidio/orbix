@@ -151,12 +151,6 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 */
 	 protected $sstgr;
 	/**
-	 * Edad de PersonaDl
-	 *
-	 * @var integer
-	 */
-	 protected $iedad;
-	/**
 	 * Profesion de PersonaDl
 	 *
 	 * @var string
@@ -615,25 +609,6 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 		$this->sstgr = $sstgr;
 	}
 	/**
-	 * Recupera l'atribut iedad de PersonaDl
-	 *
-	 * @return integer iedad
-	 */
-	function getEdad() {
-		if (!isset($this->iedad)) {
-			$this->DBCarregar();
-		}
-		return $this->iedad;
-	}
-	/**
-	 * estableix el valor de l'atribut iedad de PersonaDl
-	 *
-	 * @param integer iedad='' optional
-	 */
-	function setEdad($iedad='') {
-		$this->iedad = $iedad;
-	}
-	/**
 	 * Recupera l'atribut sprofesion de PersonaDl
 	 *
 	 * @return string sprofesion
@@ -1051,7 +1026,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	function getDatosApel_fam() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'apel_fam'));
-		$oDatosCampo->setEtiqueta(_("apel_fam"));
+		$oDatosCampo->setEtiqueta(_("apelativo familiar"));
 		return $oDatosCampo;
 	}
 	/**
@@ -1088,18 +1063,6 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'stgr'));
 		$oDatosCampo->setEtiqueta(_("stgr"));
-		return $oDatosCampo;
-	}
-	/**
-	 * Recupera les propietats de l'atribut iedad de PersonaDl
-	 * en una clase del tipus DatosCampo
-	 *
-	 * @return oject DatosCampo
-	 */
-	function getDatosEdad() {
-		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'edad'));
-		$oDatosCampo->setEtiqueta(_("edad"));
 		return $oDatosCampo;
 	}
 	/**

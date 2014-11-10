@@ -28,7 +28,14 @@ if (!empty($id_activ)) { //caso de modificar
 	$nom_activ=$oActividad->getNom_activ();
 	$id_tabla=$oActividad->getId_tabla();
 	if ($id_tabla == 'dl') { 
-		$oAsistente = new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$_POST['id_pau']));
+		switch ($_POST['obj_pau']) {
+			case 'PersonaDl':
+				$oAsistente = new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$_POST['id_pau']));
+				break;
+			case 'PersonaEx':
+				$oAsistente = new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$_POST['id_pau']));
+				break;
+		}
 	} 
 	if ($id_tabla == 'out') { 
 		$oAsistente = new asistentes\AsistenteOut(array('id_activ'=>$id_activ,'id_nom'=>$_POST['id_pau']));
@@ -71,22 +78,32 @@ if (!empty($id_activ)) { //caso de modificar
 	*/
 }
 
+$oHash = new web\Hash();
+$camposForm = 'observ';
+$oHash->setCamposNo('mod!propio!falta!est_ok');
+$a_camposHidden = array(
+		'id_nom' => $_POST['id_pau'],
+		'obj_pau'=> $_POST['obj_pau'],
+		'go_to'=> $go_to
+		);
+if (!empty($id_activ_real)) {
+	$a_camposHidden['id_activ'] = $id_activ_real;
+} else {
+	$camposForm .= '!id_activ';
+}
+$oHash->setcamposForm($camposForm);
+$oHash->setArraycamposHidden($a_camposHidden);
+
 ?>
 <form id="frm_1301" name="frm_1301" action="apps/asistentes/controller/update_3101.php" method="POST">
+<?= $oHash->getCamposHtml(); ?>
 <input type="Hidden" id="mod" name="mod" value=<?= $mod ?>>
 <table>
 <tr class=tab><th class=titulo_inv colspan=2><?php echo ucfirst(_("Asistencia a una actividad")); ?></th></tr>
 <?php
 if (!empty($id_activ_real)) {
-	echo "<input type=\"Hidden\" id=\"id_activ\" name=\"id_activ\" value=$id_activ_real>";
-	echo "<input type=\"Hidden\" id=\"id_nom\" name=\"id_nom\" value='".$_POST['id_pau']."'>";
-	echo "<input type=\"Hidden\" id=\"obj_pau\" name=\"obj_pau\" value='".$_POST['obj_pau']."'>";
-	echo "<input type=\"Hidden\" id=\"go_to\" name=\"go_to\" value=\"$go_to\">";
 	echo "<tr><td class=etiqueta>".ucfirst(_("actividad")).":</td><td class=contenido>$nom_activ</td>";
 } else {
-	echo "<input type=\"Hidden\" id=\"id_nom\" name=\"id_nom\" value='".$_POST['id_pau']."'>";
-	echo "<input type=\"Hidden\" id=\"obj_pau\" name=\"obj_pau\" value='".$_POST['obj_pau']."'>";
-	echo "<input type=\"Hidden\" id=\"go_to\" name=\"go_to\" value=\"$go_to\">";
 	echo "<tr><td class=etiqueta>".ucfirst(_("actividad")).":</td><td><select class=contenido id='id_activ' name='id_activ'>";
 	$i=0;
 	foreach ($cActividades as $oActividad) {

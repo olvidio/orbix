@@ -61,18 +61,6 @@ class DBTabla {
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
-	/**
-	 * Recupera l'atribut oDbl de Grupo
-	 *
-	 * @return object oDbl
-	 */
-	private function getoDbl() {
-		return $this->oDbl;
-	}
-	private function getUserDb() {
-		$this->sUserDb = 'dbCreate';
-		return $this->sUserDb;
-	}
 	public function getDir() {
 		$this->sdir = empty($this->sdir)? ConfigGlobal::$directorio.'/log/db' : $this->sdir;
 		return $this->sdir;
@@ -113,7 +101,7 @@ class DBTabla {
 		$this->sfileRef = $fileRef;
 	}
 	public function getFileLog() {
-		$this->sfileLog = empty($this->sfileLog)? $this->getDir().'/pg_dump_eror.sql': $this->sfileLog;
+		$this->sfileLog = empty($this->sfileLog)? $this->getDir().'/pg_error.'.$this->getDb().'.sql': $this->sfileLog;
 		return $this->sfileLog;
 	}
 	public function setFileLog($fileLog) {
@@ -128,12 +116,26 @@ class DBTabla {
 	}
 
 	public function cambiar_nombre() {
+		$esqemaRef = $this->getRef();
+		$crRef = strtok($esqemaRef,'-');
+		$dlRef = strtok('-');
+		$esqemaNew = $this->getNew();
+		$crNew = strtok($esqemaNew,'-');
+		$dlNew = strtok('-');
+
 		$dump = file_get_contents($this->getFileRef());
 		// cambiar nombre esquema
 		$dump_nou = str_replace($this->getRef(),$this->getNew(),$dump);
+		// cambiar nombre por defecto de la dl i r
+		$pattern = "/(SET DEFAULT\s*')$crRef(')/";
+		$replacement = "$1$crNew$2";
+		$dump_nou = preg_replace($pattern, $replacement, $dump_nou);
+		$pattern = "/(SET DEFAULT\s*')$dlRef(')/";
+		$replacement = "$1$dlNew$2";
+		$dump_nou = preg_replace($pattern, $replacement, $dump_nou);
+
 		$d = file_put_contents($this->getFileNew(), $dump_nou);
 		if ($d === false) exit (_("Error al escribir el fichero"));
-
 	}
 	public function leer() {
 		$sTablas = '';
@@ -143,13 +145,16 @@ class DBTabla {
 		// leer esquema
 		$command = "/usr/bin/pg_dump -a $sTablas";
 		$command .= "--file=".$this->getFileRef()." ";
-		$command .= "--user=dbCreate ";
+		$command .= "--user=\"".$this->getRef()."\"";
 		$command .= " ".$this->getDb()." > ".$this->getFileLog()." 2>&1"; 
 		passthru($command); // no output to capture so no need to store it
 		// read the file, if empty all's well
 		$error = file_get_contents($this->getFileLog());
-		if(trim($error) != '')
-			exit("PG_DUMP ERRROR IN COMMAND: $command\n-----\n$error\n");
+		if(trim($error) != '') {
+			if (!ConfigGlobal::is_debug_mode()) {
+				printf("PG_DUMP ERRROR IN COMMAND: $command<br>\n-----\n<br>$error\n");
+			}
+		}
 	}
 
 	public function importar() {
@@ -157,11 +162,16 @@ class DBTabla {
 		$command = "/usr/bin/psql -q ";
 		$command .= "--pset pager=off ";
 		$command .= "--file=".$this->getFileNew()." ";
-		$command .= "--user=dbCreate ";
+		$command .= "--user=\"".$this->getNew()."\"";
 		$command .= " ".$this->getDb()." > ".$this->getFileLog()." 2>&1"; 
 		passthru($command); // no output to capture so no need to store it
 		// read the file, if empty all's well
 		$error = file_get_contents($this->getFileLog());
+		if(trim($error) != '') {
+			if (!ConfigGlobal::is_debug_mode()) {
+				printf("PSQL ERRROR IN COMMAND: $command<br>\n-----\n<br>$error\n");
+			}
+		}
 	}
 
 	public function copiar() {

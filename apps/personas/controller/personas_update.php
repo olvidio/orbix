@@ -41,12 +41,12 @@ foreach ($cDatosCampo as $oDatosCampo) {
 	$valor = empty($_POST[$camp])? '' : $_POST[$camp];
 	if ($oDatosCampo->datos_campo($oDbl,'tipo') == "bool") { //si es un campo boolean, cambio los valores on, off... por true, false...
 		if ($valor=="on") {
-			$valor="true";
+			$valor='t';
 			$a_values_o[$camp] = $valor;
 		} else {
 			// compruebo que esté en la lista de campos enviados
 			if (in_array($camp,$campos_chk)) {
-				$valor="false";
+				$valor='f';
 				$a_values_o[$camp] = $valor;
 			}
 		}

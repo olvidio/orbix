@@ -35,8 +35,6 @@ use personas\model as personas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-//include_once ("./func_dossiers.php");
-
 if (!empty($_POST['sel'])) { //vengo de un checkbox
 	if ($_POST['pau']=="p") { $id_activ=strtok($_POST['sel'][0],"#"); $id_nom=$_POST['id_pau']; }
 	if ($_POST['pau']=="a") { $id_nom=strtok($_POST['sel'][0],"#"); $id_activ=$_POST['id_pau']; }
@@ -44,26 +42,42 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 	empty($_POST['id_activ'])? $id_activ="" : $id_activ=$_POST['id_activ'];
 	empty($_POST['id_nom'])? $id_nom="" : $id_nom=$_POST['id_nom'];
 }
-
+$msg_err = '';
 switch ($_POST['mod']) {
 	//------------ BORRAR --------
 	case "eliminar":
+		// hay que averiguar si la persona es de la dl o de fuera.
+		$oPersona = personas\Persona::NewPersona($id_nom);
+		$obj_persona = get_class($oPersona);
+		$obj_persona = str_replace("personas\\model\\",'',$obj_persona);
 		// hay que averiguar si la actividad es de la dl o de fuera.
 		$oActividad  = new actividades\Actividad($id_activ);
+		$dl = $oActividad->getDl_org();
 		$id_tabla = $oActividad->getId_tabla();
-		switch ($id_tabla) {
-			case 'dl':
-				$oAsistente=new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-				break;
-			case 'ex':
+		if ($dl == core\ConfigGlobal::mi_dele()) {
+			Switch($obj_persona) {
+				case 'PersonaDl':
+					$oAsistente=new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+					break;
+				case 'PersonaIn':
+					$msg_err = _("Debe eliminarlo la dl origen");
+					break;
+				case 'PersonaEx':
+					$oAsistente=new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+					break;
+			}
+		} else {
+			if ($id_tabla == 'dl') {
 				$oAsistente=new asistentes\AsistenteOut(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-				break;
-			default:
-				$oAsistente=new asistentes\Asistente(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+			} else {
+				$oAsistente=new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+			}
 		}
-		$oAsistente->DBCarregar();
-		if ($oAsistente->DBEliminar() === false) {
-			echo _('Hay un error, no se ha eliminado');
+		if (empty($msg_err)) { 
+			$oAsistente->DBCarregar();
+			if ($oAsistente->DBEliminar() === false) {
+				$msg_err = _('Hay un error, no se ha eliminado');
+			}
 		}
 		// hay que cerrar el dossier para esta persona/actividad/ubi, si no tiene más:
 		$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$id_nom,'id_tipo_dossier'=>1301));
@@ -91,68 +105,31 @@ switch ($_POST['mod']) {
 		//$oPersona->DBCarregar();
 		//$id_tabla_p = $oPersona->getId_tabla();
 		//print_r($oPersona);
-		if (!empty($_POST['tabla_p'])) {
-			Switch($_POST['tabla_p']) {
-				case 'p_numerarios':
-					$id_tabla_p = 'n';
-					break;
-				case 'p_agregados':
-					$id_tabla_p = 'a';
-					break;
-				case 'p_supernumerarios':
-					$id_tabla_p = 's';
-					break;
-				case 'p_sssc':
-					$id_tabla_p = 'sssc';
-					break;
-				case 'p_nax':
-					$id_tabla_p = 'x';
-					break;
-				case 'p_de_paso':
-					$id_tabla_p = 'pa';
-					break;
-			}
-		   
-		} elseif (!empty($_POST['obj_pau'])) {
-			Switch($_POST['obj_pau']) {
-				case 'PersonaN':
-					$id_tabla_p = 'n';
-					break;
-				case 'PersonaAgd':
-					$id_tabla_p = 'a';
-					break;
-				case 'PersonaS':
-					$id_tabla_p = 's';
-					break;
-				case 'PersonaSSSC':
-					$id_tabla_p = 'sssc';
-					break;
-				case 'PersonaNax':
-					$id_tabla_p = 'x';
-					break;
-				case 'PersonaEx':
-					$id_tabla_p = 'pa';
-					break;
-			}
-		}
 	case "editar":
-		$id_tabla_p = empty($id_tabla_p)? '' : $id_tabla_p;
+		// hay que averiguar si la persona es de la dl o de fuera.
+		$oPersona = personas\Persona::NewPersona($id_nom);
+		$obj_persona = get_class($oPersona);
+		$obj_persona = str_replace("personas\\model\\",'',$obj_persona);
 		// hay que averiguar si la actividad es de la dl o de fuera.
 		$oActividad  = new actividades\Actividad($id_activ);
+		$dl = $oActividad->getDl_org();
 		$id_tabla = $oActividad->getId_tabla();
-		switch ($id_tabla) {
-			case 'dl':
-				if ($id_tabla_p == 'pa' || $id_tabla_p == 'pn') {
-					$oAsistente=new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-				} else {
+		if ($dl == core\ConfigGlobal::mi_dele()) {
+			Switch($obj_persona) {
+				case 'PersonaDl':
 					$oAsistente=new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-				}
-				break;
-			case 'ex':
+					break;
+				case 'PersonaIn':
+				case 'PersonaEx':
+					$oAsistente=new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+					break;
+			}
+		} else {
+			if ($id_tabla == 'dl') {
 				$oAsistente=new asistentes\AsistenteOut(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-				break;
-			default:
-				$oAsistente=new asistentes\Asistente(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+			} else {
+				$oAsistente=new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+			}
 		}
 		$oAsistente->DBCarregar();
 		isset($_POST['encargo'])? $oAsistente->setEncargo($_POST['encargo']) : $oAsistente->setEncargo();
@@ -169,6 +146,10 @@ switch ($_POST['mod']) {
 		break;
 }
 
-$oPosicion->setId_div('ir_a');
-echo $oPosicion->atras();
+if (empty($msg_err)) { 
+	$oPosicion->setId_div('ir_a');
+	echo $oPosicion->atras();
+} else {
+	echo $msg_err;
+}	
 ?>

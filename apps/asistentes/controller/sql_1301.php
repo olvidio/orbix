@@ -26,9 +26,9 @@ $fincurs_ca=core\curso_est("fin",$any);
 //$curso="f_ini BETWEEN '$inicurs_ca' AND '$fincurs_ca' ";
 
 //$aWhere['id_nom'] = $id_pau;
-//$aWhere['_ordre'] = 'f_ini';
 $aWhere = array();
 $aOperator = array();
+$aWhere['_ordre'] = 'f_ini';
 
 if(empty($_POST['status'])) { $_POST['status']=0; }
 switch ($_POST['status']) {
@@ -57,27 +57,8 @@ switch ($_POST['status']) {
 		$aOperator['f_ini'] = 'BETWEEN';
 		break;
 }
-
-/*
-$query = "SELECT t.id_activ, a.nom_activ, dl_org, id_ubi, desc_activ, to_char(a.f_ini,'DD.RM.YY') as f_ini, to_char(a.f_fin,'DD.RM.YY') as f_fin,
-		t.propio, t.falta, t.est_ok, t.observ, a.id_tipo_activ, a.f_ini as orden
-		FROM d_asistentes_activ t, a_actividades a
-		WHERE t.id_nom='$id_pau' AND t.id_activ=a.id_activ $condicion $curso
-		ORDER BY orden" ;
-$oDBSt_result=$oDB->query($query);
-
-// Permisos según el tipo de persona: n, agd, s
-$sql_tabla = "SELECT id_tabla
-		FROM personas
-		WHERE id_nom='$id_pau' " ;
-		
-$id_tabla=$oDB->query($sql_tabla)->fetchColumn();
-$ref_perm = perm_activ_pers($id_tabla,1);
-*/
-
 $gesAsistente=new asistentes\GestorAsistente();
-
-$oPersona=new personas\PersonaDl($id_pau);
+$oPersona = personas\Persona::newPersona($id_pau);
 // permisos Según el tipo de persona: n, agd, s
 $id_tabla=$oPersona->getId_tabla();
 $ref_perm = dossiers\controller\perm_activ_pers($id_tabla,1);
@@ -92,7 +73,6 @@ $a_valores=array();
 
 $i=0;
 $cActividadesAsistente = $gesAsistente->getActividadesDeAsistente($id_pau,$aWhere,$aOperator);
-//print_r($cActividadesAsistente);
 foreach ($cActividadesAsistente as $oActividadAsistente) {
 	$i++;
 	$id_activ=$oActividadAsistente->getId_activ();
@@ -139,6 +119,19 @@ foreach ($cActividadesAsistente as $oActividadAsistente) {
 	$a_valores[$i][6]=$observ;
 }
 
+$oHash = new web\Hash();
+$oHash->setcamposForm('status');
+$oHash->setCamposNo('mod!sel');
+$a_camposHidden = array(
+		'pau' => $pau,
+		'id_pau' => $id_pau,
+		'obj_pau' => $_POST['obj_pau'],
+		'id_dossier' => $id_dossier,
+		'permiso' => 3,
+		'go_to' => $go_to
+		);
+$oHash->setArraycamposHidden($a_camposHidden);
+
 ?>
 <script>
 fnjs_actuales=function(formulario){
@@ -169,14 +162,8 @@ fnjs_borrar=function(formulario){
 </script>
 <h3 class=subtitulo><?php echo ucfirst(_("relación de actividades a las que asiste")); ?></h3>
 <form id="seleccionados" name="seleccionados" action="" method="post">
+<?= $oHash->getCamposHtml(); ?>
 <input type='hidden' id='mod' name='mod' value=''>
-<input type='hidden' id='pau' name='pau' value='<?= $pau ?>'>
-<input type='hidden' id='id_pau' name='id_pau' value='<?= $id_pau ?>'>
-<input type='hidden' id='obj_pau' name='obj_pau' value='<?= $_POST['obj_pau'] ?>'>
-<input type='hidden' id='id_dossier' name='id_dossier' value='<?= $id_dossier ?>'>
-<input type='hidden' id='permiso' name='permiso' value='3'>
-<input type='hidden' id='db' name='db' value='<?= core\ConfigGlobal::$db_dl ?>'>
-<input type='hidden' id='go_to' name='go_to' value='<?= $go_to ?>'>
 
 <table><tr><td>
 <input type='Radio' id='status' name='status' value=2 <?= $chk_1 ?> onclick=fnjs_actuales(this.form)><?= ucfirst(_("actuales")) ?>
@@ -205,7 +192,7 @@ if (!empty($ref_perm)) { // si es nulo, no tengo permisos de ningún tipo
 		$permis=$val["perm"];
 		$nom=$val["nom"];
 		if (!empty($permis)) {
-			$pagina="apps/asistentes/controller/form_1301.php?mod=nuevo&que_dl=".core\ConfigGlobal::mi_dele()."&pau=$pau&db=".core\ConfigGlobal::$db_dl."&id_tipo=$clave&obj_pau=$obj_pau&id_pau=$id_pau&go_to=$go_to";
+			$pagina=web\Hash::link("apps/asistentes/controller/form_1301.php?mod=nuevo&que_dl=".core\ConfigGlobal::mi_dele()."&pau=$pau&id_tipo=$clave&obj_pau=$obj_pau&id_pau=$id_pau&go_to=$go_to");
 			echo "<td class=botones><span class=link_inv onclick=\"fnjs_update_div('#ficha_personas','$pagina');\">$nom</span></td>";
 		}
 	}
@@ -215,7 +202,7 @@ if (!empty($ref_perm)) { // si es nulo, no tengo permisos de ningún tipo
 		$permis=$val["perm"];
 		$nom=$val["nom"];
 		if (!empty($permis)) {
-			$pagina="apps/asistentes/controller/form_1301.php?mod=nuevo&pau=$pau&db=".core\ConfigGlobal::$db_dl."&id_tipo=$clave&obj_pau=$obj_pau&id_pau=$id_pau&go_to=$go_to";
+			$pagina=web\Hash::link("apps/asistentes/controller/form_1301.php?mod=nuevo&pau=$pau&id_tipo=$clave&obj_pau=$obj_pau&id_pau=$id_pau&go_to=$go_to");
 			echo "<td class=botones><span class=link_inv onclick=\"fnjs_update_div('#ficha_personas','$pagina');\">$nom</span></td>";
 		}
 	}

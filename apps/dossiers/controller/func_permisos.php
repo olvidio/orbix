@@ -80,11 +80,10 @@ function perm_activ_pers($id_tabla,$sv) {
 	// actividades (según el tipo: nº) según el tipo de persona de que se trate y 
 	// quién seamos nosotros.
 	
-
-//para no repetir los permisos comunes a sr,sg
-if (empty($sv)) { $sv="1"; }  //aqui sólo es sv.
-$sf=2;
-$ref_perm_sg = array (
+	//para no repetir los permisos comunes a sr,sg
+	if (empty($sv)) { $sv="1"; }  //aqui sólo es sv.
+	$sf=2;
+	$ref_perm_sg = array (
 						$sv."11..." => array ( 'nom'=>"crt n", 	'perm'=> 0),
 						$sv."31..." => array ( 'nom'=>"crt agd", 	'perm'=> 0),
 						$sv."41..." => array ( 'nom'=>"crt s", 	'perm'=> 1),
@@ -102,7 +101,7 @@ $ref_perm_sg = array (
 						$sv."63..." => array ( 'nom'=>"cv sss+", 	'perm'=> 0),
 						$sv."64..." => array ( 'nom'=>"cve sss+",	'perm'=> 0)
 						);
-$ref_perm_sr = array (
+	$ref_perm_sr = array (
 						$sv."11..." => array ( 'nom'=>"crt n", 	'perm'=> 0),
 						$sv."31..." => array ( 'nom'=>"crt agd", 	'perm'=> 0),
 						$sv."41..." => array ( 'nom'=>"crt s", 	'perm'=> 0),
@@ -120,7 +119,7 @@ $ref_perm_sr = array (
 						$sv."63..." => array ( 'nom'=>"cv sss+", 	'perm'=> 0),
 						$sv."64..." => array ( 'nom'=>"cve sss+",	'perm'=> 0)
 					);
-$ref_perm_ss = array (
+	$ref_perm_ss = array (
 						$sv."11..." => array ( 'nom'=>"crt n", 	'perm'=> 1),
 						$sv."31..." => array ( 'nom'=>"crt agd", 	'perm'=> 1),
 						$sv."41..." => array ( 'nom'=>"crt s", 	'perm'=> 1),
@@ -139,11 +138,11 @@ $ref_perm_ss = array (
 						$sv."64..." => array ( 'nom'=>"cve sss+",	'perm'=> 1),
 						$sf."....." => array ( 'nom'=>"sf",	'perm'=> 1)
 					);
-switch ($id_tabla) {
-	case "n" : //------------------------- numerarios -------------------
-	case "pn": 
-		if ($_SESSION['oPerm']->have_perm("sm")) { 
-			$ref_perm = array (
+	switch ($id_tabla) {
+		case "n" : //------------------------- numerarios -------------------
+		case "pn": 
+			if ($_SESSION['oPerm']->have_perm("sm")) { 
+				$ref_perm = array (
 						$sv."11..." => array ( 'nom'=>"crt n", 	'perm'=> 1),
 						$sv."31..." => array ( 'nom'=>"crt agd", 	'perm'=> 1),
 						$sv."41..." => array ( 'nom'=>"crt s", 	'perm'=> 1),
@@ -161,9 +160,9 @@ switch ($id_tabla) {
 						$sv."63..." => array ( 'nom'=>"cv sss+", 	'perm'=> 0),
 						$sv."64..." => array ( 'nom'=>"cve sss+",	'perm'=> 0)	
 					);
-		}
-		if ($_SESSION['oPerm']->have_perm("agd")) {
-			$ref_perm = array (
+			}
+			if ($_SESSION['oPerm']->have_perm("agd")) {
+				$ref_perm = array (
 						$sv."11..." => array ( 'nom'=>"crt n", 	'perm'=> 0),
 						$sv."31..." => array ( 'nom'=>"crt agd", 	'perm'=> 1),
 						$sv."41..." => array ( 'nom'=>"crt s", 	'perm'=> 0),
@@ -181,15 +180,15 @@ switch ($id_tabla) {
 						$sv."63..." => array ( 'nom'=>"cv sss+", 	'perm'=> 0),
 						$sv."64..." => array ( 'nom'=>"cve sss+",	'perm'=> 0)	
 					);
-		}
-		if ($_SESSION['oPerm']->have_perm("sg")) {
-			$ref_perm = $ref_perm_sg;
-		}
-		if ($_SESSION['oPerm']->have_perm("sr")) {
-			$ref_perm = $ref_perm_sr;
-		}
-		if ($_SESSION['oPerm']->have_perm("est")) {
-			$ref_perm = array (
+			}
+			if ($_SESSION['oPerm']->have_perm("sg")) {
+				$ref_perm = $ref_perm_sg;
+			}
+			if ($_SESSION['oPerm']->have_perm("sr")) {
+				$ref_perm = $ref_perm_sr;
+			}
+			if ($_SESSION['oPerm']->have_perm("est")) {
+				$ref_perm = array (
 						$sv."11..." => array ( 'nom'=>"crt n", 	'perm'=> 0),
 						$sv."31..." => array ( 'nom'=>"crt agd", 	'perm'=> 0),
 						$sv."41..." => array ( 'nom'=>"crt s", 	'perm'=> 0),
@@ -207,15 +206,15 @@ switch ($id_tabla) {
 						$sv."63..." => array ( 'nom'=>"cv sss+", 	'perm'=> 0),
 						$sv."64..." => array ( 'nom'=>"cve sss+",	'perm'=> 0)	
 					);
-		}
-		if ($_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("des") ) {
-			$ref_perm = $ref_perm_ss;
-		}
-		break;
-	case "a" : //------------------------- agregados -------------------
-	case "pa":
-		if ($_SESSION['oPerm']->have_perm("sm")) { 
-			$ref_perm = array (
+			}
+			if ($_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("des") ) {
+				$ref_perm = $ref_perm_ss;
+			}
+			break;
+		case "a" : //------------------------- agregados -------------------
+		case "pa":
+			if ($_SESSION['oPerm']->have_perm("sm")) { 
+				$ref_perm = array (
 						$sv."11..." => array ( 'nom'=>"crt n", 	'perm'=> 0),
 						$sv."31..." => array ( 'nom'=>"crt agd", 	'perm'=> 0),
 						$sv."41..." => array ( 'nom'=>"crt s", 	'perm'=> 0),
@@ -233,9 +232,9 @@ switch ($id_tabla) {
 						$sv."63..." => array ( 'nom'=>"cv sss+", 	'perm'=> 0),
 						$sv."64..." => array ( 'nom'=>"cve sss+",	'perm'=> 0)	
 					);
-		}
-		if ($_SESSION['oPerm']->have_perm("agd")) {
-			$ref_perm = array (
+			}
+			if ($_SESSION['oPerm']->have_perm("agd")) {
+				$ref_perm = array (
 						$sv."11..." => array ( 'nom'=>"crt n", 	'perm'=> 0),
 						$sv."31..." => array ( 'nom'=>"crt agd", 	'perm'=> 1),
 						$sv."41..." => array ( 'nom'=>"crt s", 	'perm'=> 1),
@@ -253,15 +252,15 @@ switch ($id_tabla) {
 						$sv."63..." => array ( 'nom'=>"cv sss+", 	'perm'=> 0),
 						$sv."64..." => array ( 'nom'=>"cve sss+",	'perm'=> 0)	
 					);
-		}
-		if ($_SESSION['oPerm']->have_perm("sg")) {
-			$ref_perm = $ref_perm_sg;
-		}
-		if ($_SESSION['oPerm']->have_perm("sr")) {
-			$ref_perm = $ref_perm_sr;
-		}
-		if ($_SESSION['oPerm']->have_perm("est")) {
-			$ref_perm = array (
+			}
+			if ($_SESSION['oPerm']->have_perm("sg")) {
+				$ref_perm = $ref_perm_sg;
+			}
+			if ($_SESSION['oPerm']->have_perm("sr")) {
+				$ref_perm = $ref_perm_sr;
+			}
+			if ($_SESSION['oPerm']->have_perm("est")) {
+				$ref_perm = array (
 						$sv."11..." => array ( 'nom'=>"crt n", 	'perm'=> 0),
 						$sv."31..." => array ( 'nom'=>"crt agd", 	'perm'=> 0),
 						$sv."41..." => array ( 'nom'=>"crt s", 	'perm'=> 0),
@@ -279,38 +278,37 @@ switch ($id_tabla) {
 						$sv."63..." => array ( 'nom'=>"cv sss+", 	'perm'=> 0),
 						$sv."64..." => array ( 'nom'=>"cve sss+",	'perm'=> 0)	
 					);
-		}
-		if ($_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("des") ) {
-			$ref_perm = $ref_perm_ss;
-		}
+			}
+			if ($_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("des") ) {
+				$ref_perm = $ref_perm_ss;
+			}
+			break;
+		case "s": //------------------------- supernumerarios -------------------
+			if ($_SESSION['oPerm']->have_perm("agd") || $_SESSION['oPerm']->have_perm("sm") || $_SESSION['oPerm']->have_perm("sg")) {
+				$ref_perm = $ref_perm_sg;
+			}
+			if ($_SESSION['oPerm']->have_perm("sr")) {
+				$ref_perm = $ref_perm_sr;
+			}
+			if ($_SESSION['oPerm']->have_perm("est")) {
+				$ref_perm = $ref_perm_est;
+			}
+			if ($_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("des") ) {
+				$ref_perm = $ref_perm_ss;
+			}
+			break;
+		case "psss":
+		case "sss": //------------------------- sss+ -------------------
+			if ($_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("des") ) {
+				$ref_perm = $ref_perm_ss;
+			}
+		case "cp_sss": //------------------------- sss+ -------------------
+			if ($_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("des") ) {
+				$ref_perm = $ref_perm_ss;
+			}
 		break;
-	case "s": //------------------------- supernumerarios -------------------
-		if ($_SESSION['oPerm']->have_perm("agd") || $_SESSION['oPerm']->have_perm("sm") || $_SESSION['oPerm']->have_perm("sg")) {
-			$ref_perm = $ref_perm_sg;
-		}
-		if ($_SESSION['oPerm']->have_perm("sr")) {
-			$ref_perm = $ref_perm_sr;
-		}
-		if ($_SESSION['oPerm']->have_perm("est")) {
-			$ref_perm = $ref_perm_est;
-		}
-		if ($_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("des") ) {
-			$ref_perm = $ref_perm_ss;
-		}
-		break;
-	case "psss":
-	case "sss": //------------------------- sss+ -------------------
-		if ($_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("des") ) {
-			$ref_perm = $ref_perm_ss;
-		}
-	case "cp_sss": //------------------------- sss+ -------------------
-		if ($_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("des") ) {
-			$ref_perm = $ref_perm_ss;
-		}
-	break;
-	default;
-}
-
+		default;
+	}
 //$ref_perm = $ref_perm_sg;
 return $ref_perm;
 }

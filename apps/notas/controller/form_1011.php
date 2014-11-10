@@ -301,7 +301,7 @@ fnjs_guardar=function(){
 	var f_acta=document.f_1011.f_acta.value;
 	var situacion=document.f_1011.id_situacion.value;
 
-	if (situacion = 10) { // comprobar la nota numérica
+	if (situacion == 10) { // comprobar la nota numérica
 		var num = $('#nota_num').val();
 		var max = $('#nota_max').val();
 		num = parseFloat(num);

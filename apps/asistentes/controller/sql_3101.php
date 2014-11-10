@@ -40,7 +40,8 @@ $que = empty($que)? '' : $que;
 
 //pongo aqui el $go_to porque al ir al mismo update que las actividaes, no se donde voler
 //$go_to=core\ConfigGlobal::getWeb()."/programas/dossiers/dossiers_ver.php?pau=$pau&id_pau=$id_pau&obj_pau=${_POST['obj_pau']}&id_dossier=$id_dossier";
-		
+$go_to='';
+
 $gesAsistentes = new asistentes\GestorAsistente();
 //$oCargosEnActividad=new actividades\GestorActividadCargo();
 
@@ -48,15 +49,19 @@ $gesAsistentes = new asistentes\GestorAsistente();
 $oActividad=new actividades\Actividad($id_pau);
 $a_ref_perm = dossiers\controller\perm_pers_activ($oActividad->getId_tipo_activ());
 
-$a_botones=array(
-				array( 'txt' => _('modificar asistencia'), 'click' =>"fnjs_modificar(\"#seleccionados\")" ),
-				array( 'txt' => _('borrar asistencia'), 'click' =>"fnjs_borrar(\"#seleccionados\")" ),
-				array( 'txt' => _('añadir cargo'), 'click' =>"fnjs_add_cargo(\"#seleccionados\")" ),
-				array( 'txt' => _('modificar cargo'), 'click' =>"fnjs_mod_cargo(\"#seleccionados\")" ),
-				array( 'txt' => _('quitar cargo'), 'click' =>"fnjs_borrar_cargo(\"#seleccionados\")" ),
-				array( 'txt' => _('plan estudios'), 'click' =>"fnjs_matriculas(\"#seleccionados\")" ),
-				array( 'txt' => _("transferir a históricos"), 'click'=>"fnjs_transferir(this.form)")
-	);
+if (core\configGlobal::is_app_installed('asistentes')) {
+	$a_botones[] = array( 'txt' => _('modificar asistencia'), 'click' =>"fnjs_modificar(\"#seleccionados\")" );
+	$a_botones[] = array( 'txt' => _('borrar asistencia'), 'click' =>"fnjs_borrar(\"#seleccionados\")" );
+	$a_botones[] = array( 'txt' => _("transferir a históricos"), 'click'=>"fnjs_transferir(this.form)");
+}
+if (core\configGlobal::is_app_installed('actividadcargos')) {
+	$a_botones[] = array( 'txt' => _('añadir cargo'), 'click' =>"fnjs_add_cargo(\"#seleccionados\")" );
+	$a_botones[] = array( 'txt' => _('modificar cargo'), 'click' =>"fnjs_mod_cargo(\"#seleccionados\")" );
+	$a_botones[] = array( 'txt' => _('quitar cargo'), 'click' =>"fnjs_borrar_cargo(\"#seleccionados\")" );
+}
+if (core\configGlobal::is_app_installed('actividadestudios')) {
+	$a_botones[] = array( 'txt' => _('plan estudios'), 'click' =>"fnjs_matriculas(\"#seleccionados\")" );
+}
 
 $a_cabeceras=array( array('name'=>_("num"),'width'=>40), array('name'=>_("nombre y apellidos"),'width'=>300),array('name'=>_("propio"),'width'=>40),array('name'=>_("est. ok"),'width'=>40),array('name'=>_("falta"),'width'=>40),array('name'=>_("observ."),'width'=>150) );
 // primero el cl:
@@ -135,6 +140,7 @@ foreach($oCargosEnActividad->getActividadCargos($id_pau) as $oActividadCargo) {
 }
 */
 // ahora los asistentes sin los cargos
+$asistentes = array();
 foreach($gesAsistentes->getAsistentes(array('id_activ'=>$id_pau)) as $oAsistente) {
 	$c++;
 	$num++;
@@ -160,33 +166,44 @@ foreach($gesAsistentes->getAsistentes(array('id_activ'=>$id_pau)) as $oAsistente
 	}
 	$falta=='t' ? $chk_falta=_("si") : $chk_falta=_("no") ;
 	$est_ok=='t' ? $chk_est_ok=_("si") : $chk_est_ok=_("no") ;
-	$asis="t";
-	$a_valores[$c][3]=$chk_propio;
-	$a_valores[$c][4]=$chk_est_ok;
-	$a_valores[$c][5]=$chk_falta;
-
-	// permisos
-	/*
-	$a_act=$a_ref_perm[$oPersona->getId_tabla()];
-	if ($a_act["perm"]) { $permiso=3; } else { $permiso=1; }
-	*/
-// $permiso=1;
-	$propio=='t' ? $chk_propio="si" : $chk_propio="no" ;
-	$falta=='t' ? $chk_falta="si" : $chk_falta="no" ;
-	$est_ok=='t' ? $chk_est_ok="si" : $chk_est_ok="no" ;
 	if ($permiso==3) {
-		$a_valores[$c]['sel']="$id_nom";
+		//$a_valores[$c]['sel']="$id_nom";
+		$a_val['sel']="$id_nom";
 	} else {
-		$a_valores[$c]['sel']="";
+		//$a_valores[$c]['sel']="";
+		$a_val['sel']="";
 	}
 			
-	$a_valores[$c][1]="$num.-";
-	$a_valores[$c][2]="$nom  ($ctr_dl)";
-	$a_valores[$c][3]=$chk_propio;
-	$a_valores[$c][4]=$chk_est_ok;
-	$a_valores[$c][5]=$chk_falta;
-	$a_valores[$c][6]=$observ;
+	$a_val[2]="$nom  ($ctr_dl)";
+	$a_val[3]=$chk_propio;
+	$a_val[4]=$chk_est_ok;
+	$a_val[5]=$chk_falta;
+	$a_val[6]=$observ;
+	$asistentes[$nom] = $a_val;
 }
+uksort($asistentes,"core\strsinacentocmp");
+$c = 0;
+foreach ($asistentes as $nom => $val) {
+	$c++;
+	$val[1] = "$c.-";
+	$a_valores[$c] = $val;
+}
+
+
+
+$oHash = new web\Hash();
+$oHash->setcamposForm('');
+$oHash->setCamposNo('sel!mod!que');
+$a_camposHidden = array(
+		'pau' => $pau,
+		'id_pau' => $id_pau,
+		'id_dossier' => $id_dossier,
+		'permiso' => 3,
+		'go_to' => $go_to
+		);
+		//'obj_pau' => $_POST['obj_pau'],
+$oHash->setArraycamposHidden($a_camposHidden);
+
 /* ---------------------------------- html --------------------------------------- */
 ?>
 <script>
@@ -244,6 +261,7 @@ fnjs_borrar=function(formulario){
 						if (rta_txt.search('id="ir_a"') != -1) {
 							fnjs_mostra_resposta(rta,'#main'); 
 						} else {
+							alert (rta_txt);
 							if (go) fnjs_update_div('#main',go); 
 						}
 					}
@@ -295,14 +313,8 @@ fnjs_transferir=function(formulario){
 </script>
 <h2 class=titulo><?php echo ucfirst(_("relación de asistentes")); ?></h2>
 <form id="seleccionados" name="seleccionados" action="" method="post">
+<?= $oHash->getCamposHtml(); ?>
 <input type='hidden' id='mod' name='mod' value=''>
-<input type='hidden' id='pau' name='pau' value='<?= $pau ?>'>
-<input type='hidden' id='id_pau' name='id_pau' value='<?= $id_pau ?>'>
-<input type='hidden' id='id_activ' name='id_activ' value='<?= $id_pau ?>'>
-<input type='hidden' id='obj_pau' name='obj_pau' value='<?= $_POST['obj_pau'] ?>'>
-<input type='hidden' id='id_dossier' name='id_dossier' value='<?= $id_dossier ?>'>
-<input type='hidden' id='permiso' name='permiso' value='3'>
-<input type='hidden' id='go_to' name='go_to' value='<?= $go_to ?>'>
 <input type='hidden' id='que' name='que' value='<?= $que ?>'>
 <?php
 $oTabla = new web\Lista();
@@ -323,8 +335,8 @@ while (list ($clave, $val) = each ($a_ref_perm)) {
 	$tabla_p=$val["tabla"];
 	$nom=$val["nom"];
    	if (!empty($permis)) {
-		$pagina="apps/asistentes/controller/form_3101.php?que_dl=".core\ConfigGlobal::mi_dele()."&pau=$pau&tabla_p=$tabla_p&id_pau=$id_pau&go_to=$go_to";
-		echo "<td class=botones><span class=link_inv onclick=fnjs_update_div('#ficha_activ','$pagina')>".sprintf(_("añadir %s"),$nom)."</span></td>";
+		$pagina=web\Hash::link("apps/asistentes/controller/form_3101.php?que_dl=".core\ConfigGlobal::mi_dele()."&pau=$pau&tabla_p=$tabla_p&id_pau=$id_pau&go_to=$go_to");
+		echo "<td class=botones><span class=link_inv onclick=\"fnjs_update_div('#ficha_activ','$pagina');\">".sprintf(_("añadir %s"),$nom)."</span></td>";
 	}
 }
 ?>

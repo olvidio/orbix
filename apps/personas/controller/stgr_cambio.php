@@ -30,6 +30,9 @@ switch ($id_tabla) {
 		case "n":
 			$obj_pau="PersonaN";
 			break;	
+		case "x":
+			$obj_pau="PersonaNax";
+			break;	
 		case "a":
 			$obj_pau="PersonaAgd";
 			break;
@@ -37,7 +40,7 @@ switch ($id_tabla) {
 			$obj_pau="PersonaS";
 			break;	
 		case "cp_sss":
-			$obj_pau="PersonaSSS";
+			$obj_pau="PersonaSSSC";
 			break;	
 		case "pn":
 		case "pa":

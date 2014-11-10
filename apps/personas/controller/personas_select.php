@@ -125,18 +125,23 @@ if (!empty($aWhereCtr)) {
 
 switch ($tabla) {
 	case "p_sssc":
-		$obj_pau = 'PersonaSSS';
-		$GesPersona = new personas\GestorPersonaN();
+		$obj_pau = 'PersonaSSSC';
+		$GesPersona = new personas\GestorPersonaSSSC();
 		$cPersonas = $GesPersona->getPersonasDl($aWhere,$aOperador);
 	break;
 	case "p_supernumerarios":
 		$obj_pau = 'PersonaS';
-		$GesPersona = new personas\GestorPersonaN();
+		$GesPersona = new personas\GestorPersonaS();
 		$cPersonas = $GesPersona->getPersonasDl($aWhere,$aOperador);
 	break;
 	case "p_numerarios":
 		$obj_pau = 'PersonaN';
 		$GesPersona = new personas\GestorPersonaN();
+		$cPersonas = $GesPersona->getPersonasDl($aWhere,$aOperador);
+	break;
+	case "p_nax":
+		$obj_pau = 'PersonaNax';
+		$GesPersona = new personas\GestorPersonaNax();
 		$cPersonas = $GesPersona->getPersonasDl($aWhere,$aOperador);
 	break;
 	case "p_agregados":
@@ -203,21 +208,25 @@ if (core\configGlobal::is_app_installed('notas')) {
 		$script['fnjs_imp_tessera'] = 1;
 	}
 }
-if (core\configGlobal::is_app_installed('stgr2')) {
+if (core\configGlobal::is_app_installed('actividadestudios')) {
 	if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso")) {   
 		$a_botones[]= array( 'txt' => _('posibles ca'), 'click' =>"fnjs_posibles_ca(\"#seleccionados\")" ) ;
 		$script['fnjs_posibles_ca'] = 1;
 	}
-	if ($_SESSION['oPerm']->have_perm("est")){
+}
+if ($_SESSION['oPerm']->have_perm("est")){
+	if (core\configGlobal::is_app_installed('actividadestudios')) {
 		$a_botones[]=array( 'txt' => _("plan estudios"), 'click' =>"fnjs_matriculas(\"#seleccionados\")" );
 		$script['fnjs_matriculas'] = 1;
+	}
+	if (core\configGlobal::is_app_installed('profesores')) {
 		$a_botones[]=array( 'txt' => _('ficha profesor stgr'), 'click' =>"fnjs_ficha_profe(\"#seleccionados\")" );
 		$script['fnjs_ficha_profe'] = 1;
 	}
 }
 
 // en el caso de los de dre añado la posibilidad de listar la atencion a las actividades
-if (core\configGlobal::is_app_installed('activ4')) {
+if (core\configGlobal::is_app_installed('atnsacd')) {
 	if ($_SESSION['oPerm']->have_perm("des")){
 		$a_botones[]=array( 'txt' => _('atención actividades'), 'click' =>"fnjs_lista_activ(\"#seleccionados\")" );
 		$script['fnjs_lista_activ'] = 1;
@@ -243,8 +252,9 @@ if (!empty($situacion)) {
 
 } 
 
-$i=0;
-$a_valores=array();
+$i = 0;
+$a_valores = array();
+$a_personas = array();
 foreach ($cPersonas as $oPersona) {
 	$i++;
 	$id_tabla=$oPersona->getId_tabla();
@@ -264,26 +274,33 @@ foreach ($cPersonas as $oPersona) {
 	$condicion_2=urlencode($condicion_2);
 	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/home_persona.php?id_nom='.$id_nom.'&obj_pau='.$obj_pau.'&breve='.$breve.'&es_sacd='.$es_sacd);
 
-	$a_valores[$i]['sel']="$id_nom#$id_tabla";
-	$a_valores[$i][1]=$id_tabla;
-	$a_valores[$i][2]= array( 'ira'=>$pagina, 'valor'=>$nom);
+	$a_val['sel']="$id_nom#$id_tabla";
+	$a_val[1]=$id_tabla;
+	$a_val[2]= array( 'ira'=>$pagina, 'valor'=>$nom);
 	if ($tabla=="p_sssc") {
-		$a_valores[$i][3]=$row['socio'];
+		$a_val[3]=$row['socio'];
 	}
-	$a_valores[$i][4]=$nombre_ubi;
+	$a_val[4]=$nombre_ubi;
 	/*la siguiente instrucción es para que el campo stgr sólo se visualice
 	para los n y agd siempre que no estemos ante una selección para ver
 	un planning*/
 	if ((($tabla=='p_numerarios') or ($tabla=='p_agregados'))and ($tipo!='planning')) {
-		$a_valores[$i][5]=$oPersona->getStgr();
+		$a_val[5]=$oPersona->getStgr();
 	} 
 	if (!empty($situacion)) { 
-		$a_valores[$i][6]=$row['situacion'];
-		$a_valores[$i][7]=$row['f_situacion'];
+		$a_val[6]=$row['situacion'];
+		$a_val[7]=$row['f_situacion'];
 	} 
+	$a_personas[$nom] = $a_val;
+}
+uksort($a_personas,"core\strsinacentocmp");
+$c = 0;
+foreach ($a_personas as $nom => $val) {
+	$c++;
+	$a_valores[$c] = $val;
 }
 
-$pagina=web\Hash::link(core\ConfigGlobal::getWeb()."apps/personas/controller/personas_editar.php?obj_pau=$obj_pau&nuevo=1"); 
+$pagina=web\Hash::link(core\ConfigGlobal::getWeb()."/apps/personas/controller/personas_editar.php?obj_pau=$obj_pau&nuevo=1"); 
 	
 $resultado=sprintf( _("%s personas encontradas"),$i);
 

@@ -63,7 +63,7 @@ if ( ConfigGlobal::is_app_installed('menus') ) {
 }
 
 
-if ( ConfigGlobal::is_app_installed('fases') ) {
+if ( ConfigGlobal::is_app_installed('procesos') ) {
 	// para mantener los permisos por actividades en una variable
 	if (empty($_SESSION['oPermActividades'])) {
 		$_SESSION['oPermActividades'] = new permisos\PermisosActividades(ConfigGlobal::mi_id_usuario());

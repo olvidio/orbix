@@ -3,13 +3,12 @@ namespace permisos\controller;
 use permisos\model as permisos;
 use usuarios\model as usuarios;
 use menus\model as menus;
+use web;
 use core;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
-	//include_once('classes/personas/ext_aux_usuarios.class');
-	//include_once('classes/personas/ext_aux_roles.class');
 
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
@@ -239,8 +238,31 @@ if ( !isset($_SESSION['session_auth'])) {
 				}
 		}
 	} else { // el primer cop
+		// Lista de posibles esquemas (en comun)
+		$oDBP = new \PDO(core\ConfigGlobal:: $str_conexio_public);
+		$sQuery = "select nspname from pg_namespace where nspowner > 1000 ORDER BY nspname";
+		if (($oDblSt = $oDBP->query($sQuery)) === false) {
+			$sClauError = 'Schemas.lista';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		if (is_object($oDblSt)) {
+			$oDblSt->execute();
+			$txt = "<select id=\"region\" name=\"region\" >";
+			foreach($oDblSt as $row) {
+				if (!isset($row[1])) { $a = 0; } else { $a = 1; } // para el caso de sólo tener un valor.
+				if ($row[0] == 'public') continue;
+				if ($row[0] == 'resto') continue;
+				$sf = $row[0].'f';
+				$sv = $row[0].'v';
+				$txt .= "<option value=\"$sf\">$sf</option>";
+				$txt .= "<option value=\"$sv\">$sv</option>";
+			}
+			$txt .= '</select>';
+		}
+		$a_campos['DesplRegiones'] = $txt;
 		$oView = new core\View(__NAMESPACE__);
-		echo $oView->render('login_form.phtml');
+		echo $oView->render('login_form.phtml',$a_campos);
 		exit;
 	}
 } else {

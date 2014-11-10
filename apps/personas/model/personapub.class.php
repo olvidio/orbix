@@ -21,6 +21,12 @@ use core;
  */
 class PersonaPub Extends PersonaGlobal {
 	/* ATRIBUTS ----------------------------------------------------------------- */
+	/**
+	 * Edad de PersonaDl
+	 *
+	 * @var integer
+	 */
+	 protected $iedad;
 
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/* CONSTRUCTOR -------------------------------------------------------------- */
@@ -226,6 +232,26 @@ class PersonaPub Extends PersonaGlobal {
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
+	/**
+	 * Recupera l'atribut iedad de PersonaPub
+	 *
+	 * @return integer iedad
+	 */
+	function getEdad() {
+		if (!isset($this->iedad)) {
+			$this->DBCarregar();
+		}
+		return $this->iedad;
+	}
+	/**
+	 * estableix el valor de l'atribut iedad de PersonaPub
+	 *
+	 * @param integer iedad='' optional
+	 */
+	function setEdad($iedad='') {
+		$this->iedad = $iedad;
+	}
+
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
 	/**
@@ -259,5 +285,19 @@ class PersonaPub Extends PersonaGlobal {
 		$oPersonaPubSet->add($this->getDatosObserv());
 		return $oPersonaPubSet->getTot();
 	}
+
+	/**
+	 * Recupera les propietats de l'atribut iedad PersonaPub
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return oject DatosCampo
+	 */
+	function getDatosEdad() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'edad'));
+		$oDatosCampo->setEtiqueta(_("edad"));
+		return $oDatosCampo;
+	}
+
 
 }

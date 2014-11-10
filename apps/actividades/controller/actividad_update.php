@@ -41,6 +41,37 @@ function quitar_asistencia($id_activ,$sacd) {
 	$oDBSt_q=$oDB->exec($delete);
 }
 
+function borrar_actividad($id_activ) {
+	$oActividad = new actividades\Actividad($id_activ);
+	$oActividad->DBCarregar();
+	$dl = $oActividad->getDl_org();
+	$id_tabla = $oActividad->getId_tabla();
+	if ($dl == core\ConfigGlobal::mi_dele()) { // de la propia dl
+		$status = $oActividad->getStatus();
+		if (!empty($status) && $status == 1) { // si no esta en proyecto (status=1) no dejo borrar,
+			if ($oActividad->DBEliminar() === false) {
+				echo _('Hay un error, no se ha eliminado');
+			}
+		} else {
+			$oActividad->setStatus(4); // la pongo en estado borrable
+			if ($oActividad->DBGuardar() === false) {
+				echo _('Hay un error, no se ha guardado');
+			}
+		}
+	} else {
+		if ($id_tabla == 'dl') {
+			// No se puede eliminar una actividad de otra dl. Hay que borrarla como importada
+			$oImportada = new actividades\Importar($id_activ);
+			$oImportada->DBEliminar();
+		} else { // de otras dl en resto
+			$oActividad->setStatus(4); // la pongo en estado borrable
+			if ($oActividad->DBGuardar() === false) {
+				echo _('Hay un error, no se ha guardado');
+			}
+		}
+	}
+}
+
 
 switch ($_POST['mod']) {
 case 'importar':
@@ -133,36 +164,12 @@ case "eliminar": // Eliminar la actividad.
 	if (!empty($_POST['sel'])) { // puedo seleccionar más de uno.
 		foreach ($_POST['sel'] as $id) {
 			$id_activ=strtok($id,'#');
-			$oActividad = new actividades\Actividad($id_activ);
-			$oActividad->DBCarregar();
-			$status = $oActividad->getStatus();
-			if (!empty($status) && $status == 1) {
-				if ($oActividad->DBEliminar() === false) {
-					echo _('Hay un error, no se ha eliminado');
-				}
-			} else {
-				$oActividad->setStatus(4); // la pongo en estado borrable
-				if ($oActividad->DBGuardar() === false) {
-					echo _('Hay un error, no se ha guardado');
-				}
-			}
+			borrar_actividad($id_activ);
 		}
 	}
 	// si vengo desde la presentacion del planning, ya tengo el id_activ.
 	if (!empty($_POST['id_activ'])) {
-		$oActividad = new actividades\Actividad($_POST['id_activ']);
-		$oActividad->DBCarregar();
-		$status = $oActividad->getStatus();
-		if (!empty($status) && $status == 1) {
-			if ($oActividad->DBEliminar() === false) {
-				echo _('Hay un error, no se ha eliminado');
-			}
-		} else {
-			$oActividad->setStatus(4); // la pongo en estado borrable
-			if ($oActividad->DBGuardar() === false) {
-				echo _('Hay un error, no se ha guardado');
-			}
-		}
+		borrar_actividad($id_activ);
 	}
 	exit;
 	break;
@@ -245,7 +252,8 @@ case "editar": // editar la actividad.
 	isset($_POST['h_fin']) ? $oActividad->setH_fin($_POST['h_fin']) : '';
 	isset($_POST['publicado']) ? $oActividad->setPublicado($_POST['publicado']) : '';
 	if ($oActividad->DBGuardar() === false) { 
-		echo _('Hay un error, no se ha guardado');
+		echo '<br>'._('Hay un error, no se ha guardado');
+		$err = 1;
 	}
 	// Si cambio de dl_propia a otra (o al revés), hay que cambiar el proceso. Se hace al final para que la actividad ya tenga puesta la nueva dl
 	if(core\ConfigGlobal::is_app_installed('procesos')){
@@ -416,7 +424,22 @@ if ($_POST['origen'] != "calendario") {
 	}
 	//echo "go_to: $go_to<br>";
 	//$r=ir_a($go_to);
-	$oPosicion->setId_div('ir_a');
-	echo $oPosicion->atras();
+	if (empty($err)) {
+		$oPosicion->setId_div('ir_a');
+		echo $oPosicion->atras();
+	} else {
+		?>
+		<table>
+		<tr>
+		<td class="atras no_print">
+		<?= $oPosicion->atras2(); ?>
+		</td>
+		<td style="vertical-align: bottom;">
+		<h3>
+		<?php echo _("volver"); ?></h3></td>
+		</tr>
+		</table>
+	<?php
+	}
 }
 ?>

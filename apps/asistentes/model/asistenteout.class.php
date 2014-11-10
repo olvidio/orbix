@@ -1,5 +1,6 @@
 <?php
 namespace asistentes\model;
+use personas\model as personas;
 use core;
 /**
  * Fitxer amb la Classe que accedeix a la taula d_asistentes_out
@@ -45,6 +46,81 @@ class AsistenteOut Extends AsistentePub {
 	}
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
+
+	/**
+	 * Desa els atributs de l'objecte a la base de dades.
+	 * Si no hi ha el registre, fa el insert, si hi es fa el update.
+	 *
+	 */
+	public function DBGuardar() {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		if ($this->DBCarregar('guardar') === false) { $bInsert=true; } else { $bInsert=false; }
+		$aDades=array();
+		$aDades['propio'] = $this->bpropio;
+		$aDades['est_ok'] = $this->best_ok;
+		$aDades['cfi'] = $this->bcfi;
+		$aDades['cfi_con'] = $this->icfi_con;
+		$aDades['falta'] = $this->bfalta;
+		$aDades['encargo'] = $this->sencargo;
+		$aDades['cama'] = $this->scama;
+		$aDades['observ'] = $this->sobserv;
+		array_walk($aDades, 'core\poner_null');
+		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		if (empty($aDades['propio']) || ($aDades['propio'] === 'off') || ($aDades['propio'] === false) || ($aDades['propio'] === 'f')) { $aDades['propio']='f'; } else { $aDades['propio']='t'; }
+		if (empty($aDades['est_ok']) || ($aDades['est_ok'] === 'off') || ($aDades['est_ok'] === false) || ($aDades['est_ok'] === 'f')) { $aDades['est_ok']='f'; } else { $aDades['est_ok']='t'; }
+		if (empty($aDades['cfi']) || ($aDades['cfi'] === 'off') || ($aDades['cfi'] === false) || ($aDades['cfi'] === 'f')) { $aDades['cfi']='f'; } else { $aDades['cfi']='t'; }
+		if (empty($aDades['falta']) || ($aDades['falta'] === 'off') || ($aDades['falta'] === false) || ($aDades['falta'] === 'f')) { $aDades['falta']='f'; } else { $aDades['falta']='t'; }
+
+		if ($bInsert === false) {
+			//UPDATE
+			$update="
+					propio                   = :propio,
+					est_ok                   = :est_ok,
+					cfi                      = :cfi,
+					cfi_con                  = :cfi_con,
+					falta                    = :falta,
+					encargo                  = :encargo,
+					cama                     = :cama,
+					observ                   = :observ";
+			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_activ='$this->iid_activ' AND id_nom='$this->iid_nom'")) === false) {
+				$sClauError = get_class($this).'.update.prepare';
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				return false;
+			} else {
+				if ($qRs->execute($aDades) === false) {
+					$sClauError = get_class($this).'.update.execute';
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+					return false;
+				}
+			}
+		} else {
+			// INSERT
+			array_unshift($aDades, $this->iid_activ, $this->iid_nom);
+			$campos="(id_activ,id_nom,propio,est_ok,cfi,cfi_con,falta,encargo,cama,observ)";
+			$valores="(:id_activ,:id_nom,:propio,:est_ok,:cfi,:cfi_con,:falta,:encargo,:cama,:observ)";
+			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
+				$sClauError = get_class($this).'.insertar.prepare';
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				return false;
+			} else {
+				if ($qRs->execute($aDades) === false) {
+					$sClauError = get_class($this).'.insertar.execute';
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+					return false;
+				}
+			}
+			// Hay que copiar los datos del asistente a PersonaOut
+			$oPersona = personas\Persona::NewPersona($this->iid_nom);
+			$oPersona->DBCarregar();
+			$oPersonaOut =  new personas\PersonaOut($this->iid_nom);
+			$oPersonaOut->import($oPersona);
+			$oPersonaOut->DBGuardar();
+		}
+		$this->setAllAtributes($aDades);
+		return true;
+	}
+
 	/* METODES ALTRES  ----------------------------------------------------------*/
 	/* METODES PRIVATS ----------------------------------------------------------*/
 }

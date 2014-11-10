@@ -51,6 +51,15 @@ class PersonaOut Extends PersonaPub {
 
 	/* METODES ALTRES  ----------------------------------------------------------*/
 
+	public function import($object) {   
+        foreach (get_object_vars($object) as $key => $value) {
+			if ($key == 'sNomTabla') continue;
+			if (property_exists($this, $key)) { 
+            	$this->$key = $value;
+				if ($key == 'sid_tabla') $this->$key = 'p'.$value;
+			}
+        }
+    }
 	/* METODES PRIVATS ----------------------------------------------------------*/
 
 	/* METODES GET i SET --------------------------------------------------------*/

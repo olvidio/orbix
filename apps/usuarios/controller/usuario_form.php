@@ -107,7 +107,7 @@ if ($miRole < 4) {
 	$oDesplRoles->setNombre('id_role');
 
 	/*
-	if( (core\ConfigGlobal::is_app_installed('fases')) {
+	if( (core\ConfigGlobal::is_app_installed('procesos')) {
 		$oGesFases = new GestorActividadFase();
 		$oDesplFases= $oGesFases->getListaActividadFases();
 		$oDesplFases->setNombre('fase');
@@ -184,7 +184,7 @@ if ($miRole < 4) {
 					$oSelects->setBlanco('t');
 					$camposMas = 'id_sacd';
 				}
-				if (core\ConfigGlobal::is_app_installed('fases')) { 
+				if (core\ConfigGlobal::is_app_installed('procesos')) { 
 					$oGesPerm = new usuarios\GestorUsuarioPerm();
 					$oUsuarioUsuarioPerm = $oGesPerm->getUsuarioPerms(array('id_usuario'=>$id_usuario));
 				}
@@ -231,7 +231,7 @@ if ($miRole < 4) {
 				$seccion=$miSfsv;
 				$oGesPermMenu = new usuarios\GestorPermMenu();
 				$oGrupoGrupoPermMenu = $oGesPermMenu->getPermMenus(array('id_usuario'=>$id_usuario));
-				if (core\ConfigGlobal::is_app_installed('fases')) { 
+				if (core\ConfigGlobal::is_app_installed('procesos')) { 
 					$oGesPerm = new usuarios\GestorUsuarioPerm();
 					$oUsuarioUsuarioPerm = $oGesPerm->getUsuarioPerms(array('id_usuario'=>$id_usuario));
 				}
@@ -563,7 +563,7 @@ if ($miRole < 4) {
 	<br>
 	</form>
 	<?php
-	if ((core\ConfigGlobal::is_app_installed('fases')) && !empty($id_usuario)) { // si no hay usuario, no puedo poner permisos.
+	if ((core\ConfigGlobal::is_app_installed('procesos')) && !empty($id_usuario)) { // si no hay usuario, no puedo poner permisos.
 		//grupo
 		$oGesUsuarioGrupo = new usuarios\GestorUsuarioGrupo();
 		$oListaGrupos = $oGesUsuarioGrupo->getUsuariosGrupos(array('id_usuario'=>$id_usuario));

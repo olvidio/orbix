@@ -250,10 +250,15 @@ class ActividadAll Extends core\ClasePropiedades {
 
 		$a_pkey = $this->aPrimary_key;
 		$dl = $aDades['dl_org'];
+		$id_tabla = $aDades['id_tabla'];
 		if ($dl == core\ConfigGlobal::mi_dele()) {
 			$oActividadAll= new ActividadDl($a_pkey);
 		} else {
-			$oActividadAll= new ActividadEx($a_pkey);
+			if ($id_tabla == 'dl') {
+				$oActividadAll= new ActividadPub($a_pkey);
+			} else {
+				$oActividadAll= new ActividadEx($a_pkey);
+			}
 		}
 		$oActividadAll->setAllAtributes($aDades);
 
@@ -297,11 +302,19 @@ class ActividadAll Extends core\ClasePropiedades {
 	 */
 	public function DBEliminar() {
 		$a_pkey = $this->aPrimary_key;
-		$dl = $this->sdl_org;
+		$dl = $aDades['dl_org'];
+		$id_tabla = $aDades['id_tabla'];
 		if ($dl == core\ConfigGlobal::mi_dele()) {
 			$oActividadAll= new ActividadDl($a_pkey);
 		} else {
-			$oActividadAll= new ActividadEx($a_pkey);
+			if ($id_tabla == 'dl') {
+				// No se puede eliminar una actividad de otra dl. Hay que borrarla como importada
+				$oImportada = new Importada($a_pkey);
+				$oImportada->DBEliminar();
+				return true;
+			} else {
+				$oActividadAll= new ActividadEx($a_pkey);
+			}
 		}
 		$oActividadAll->DBEliminar();
 		return true;
@@ -348,7 +361,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 *
 	 * @return array aDades
 	 */
-	function getTot() {
+	public function getTot() {
 		if (!is_array($this->aDades)) {
 			$this->DBCarregar('tot');
 		}

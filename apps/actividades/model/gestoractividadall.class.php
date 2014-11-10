@@ -119,8 +119,6 @@ class GestorActividadAll Extends core\ClaseGestor {
 		if (isset($aWhere['_ordre']) && $aWhere['_ordre']!='') $sOrdre = ' ORDER BY '.$aWhere['_ordre'];
 		if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
 		$sQry = "SELECT id_ubi FROM $nom_tabla ".$sCondi." GROUP BY id_ubi".$sOrdre;
-		//print_r($aWhere);
-		//echo "<br>query: $sQry<br>";
 		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClauError = 'GestorActividadAll.llistar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -257,10 +255,15 @@ class GestorActividadAll Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_activ' => $aDades['id_activ']);
 			$dl = $aDades['dl_org'];
+			$id_tabla = $aDades['id_tabla'];
 			if ($dl == core\ConfigGlobal::mi_dele()) {
-				$oActividad= new ActividadDl($a_pkey);
+				$oActividad = new ActividadDl($a_pkey);
 			} else {
-				$oActividad= new ActividadEx($a_pkey);
+				if ($id_tabla == 'dl') {
+					$oActividad = new ActividadPub($a_pkey);
+				} else {
+					$oActividad = new ActividadEx($a_pkey);
+				}
 			}
 			$oActividad->setAllAtributes($aDades);
 			$oActividadSet->add($oActividad);
@@ -314,10 +317,15 @@ class GestorActividadAll Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_activ' => $aDades['id_activ']);
 			$dl = $aDades['dl_org'];
+			$id_tabla = $aDades['id_tabla'];
 			if ($dl == core\ConfigGlobal::mi_dele()) {
-				$oActividad= new ActividadDl($a_pkey);
+				$oActividad = new ActividadDl($a_pkey);
 			} else {
-				$oActividad= new ActividadEx($a_pkey);
+				if ($id_tabla == 'dl') {
+					$oActividad = new ActividadPub($a_pkey);
+				} else {
+					$oActividad = new ActividadEx($a_pkey);
+				}
 			}
 			$oActividad->setAllAtributes($aDades);
 			$oActividadSet->add($oActividad);

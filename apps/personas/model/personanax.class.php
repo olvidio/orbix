@@ -113,12 +113,12 @@ class PersonaNax Extends PersonaDl {
 					observ                   = :observ,
 					id_ctr                   = :id_ctr";
 			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_nom='$this->iid_nom'")) === false) {
-				$sClauError = 'PersonaN.update.prepare';
+				$sClauError = 'PersonaNax.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($qRs->execute($aDades) === false) {
-					$sClauError = 'PersonaN.update.execute';
+					$sClauError = 'PersonaNax.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
@@ -129,12 +129,12 @@ class PersonaNax Extends PersonaDl {
 			$campos="(id_cr,id_tabla,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,lengua,situacion,f_situacion,apel_fam,inc,f_inc,stgr,profesion,eap,observ,id_ctr)";
 			$valores="(:id_cr,:id_tabla,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:lengua,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:stgr,:profesion,:eap,:observ,:id_ctr)";		
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-				$sClauError = 'PersonaN.insertar.prepare';
+				$sClauError = 'PersonaNax.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($qRs->execute($aDades) === false) {
-					$sClauError = 'PersonaN.insertar.execute';
+					$sClauError = 'PersonaNax.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
@@ -153,7 +153,7 @@ class PersonaNax Extends PersonaDl {
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iid_nom)) {
 			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_nom='$this->iid_nom'")) === false) {
-				$sClauError = 'PersonaN.carregar';
+				$sClauError = 'PersonaNax.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
@@ -182,7 +182,7 @@ class PersonaNax Extends PersonaDl {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_nom='$this->iid_nom'")) === false) {
-			$sClauError = 'PersonaN.eliminar';
+			$sClauError = 'PersonaNax.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
@@ -233,31 +233,31 @@ class PersonaNax Extends PersonaDl {
 	 *
 	 */
 	function getDatosCampos() {
-		$oPersonaNSet = new core\Set();
+		$oPersonaNaxSet = new core\Set();
 
-		$oPersonaNSet->add($this->getDatosId_cr());
-		$oPersonaNSet->add($this->getDatosId_tabla());
-		$oPersonaNSet->add($this->getDatosDl());
-		$oPersonaNSet->add($this->getDatosSacd());
-		$oPersonaNSet->add($this->getDatosTrato());
-		$oPersonaNSet->add($this->getDatosNom());
-		$oPersonaNSet->add($this->getDatosNx1());
-		$oPersonaNSet->add($this->getDatosApellido1());
-		$oPersonaNSet->add($this->getDatosNx2());
-		$oPersonaNSet->add($this->getDatosApellido2());
-		$oPersonaNSet->add($this->getDatosF_nacimiento());
-		$oPersonaNSet->add($this->getDatosLengua());
-		$oPersonaNSet->add($this->getDatosSituacion());
-		$oPersonaNSet->add($this->getDatosF_situacion());
-		$oPersonaNSet->add($this->getDatosApel_fam());
-		$oPersonaNSet->add($this->getDatosInc());
-		$oPersonaNSet->add($this->getDatosF_inc());
-		$oPersonaNSet->add($this->getDatosStgr());
-		$oPersonaNSet->add($this->getDatosProfesion());
-		$oPersonaNSet->add($this->getDatosEap());
-		$oPersonaNSet->add($this->getDatosObserv());
-		$oPersonaNSet->add($this->getDatosId_ctr());
-		return $oPersonaNSet->getTot();
+		$oPersonaNaxSet->add($this->getDatosId_cr());
+		$oPersonaNaxSet->add($this->getDatosId_tabla());
+		$oPersonaNaxSet->add($this->getDatosDl());
+		$oPersonaNaxSet->add($this->getDatosSacd());
+		$oPersonaNaxSet->add($this->getDatosTrato());
+		$oPersonaNaxSet->add($this->getDatosNom());
+		$oPersonaNaxSet->add($this->getDatosNx1());
+		$oPersonaNaxSet->add($this->getDatosApellido1());
+		$oPersonaNaxSet->add($this->getDatosNx2());
+		$oPersonaNaxSet->add($this->getDatosApellido2());
+		$oPersonaNaxSet->add($this->getDatosF_nacimiento());
+		$oPersonaNaxSet->add($this->getDatosLengua());
+		$oPersonaNaxSet->add($this->getDatosSituacion());
+		$oPersonaNaxSet->add($this->getDatosF_situacion());
+		$oPersonaNaxSet->add($this->getDatosApel_fam());
+		$oPersonaNaxSet->add($this->getDatosInc());
+		$oPersonaNaxSet->add($this->getDatosF_inc());
+		$oPersonaNaxSet->add($this->getDatosStgr());
+		$oPersonaNaxSet->add($this->getDatosProfesion());
+		$oPersonaNaxSet->add($this->getDatosEap());
+		$oPersonaNaxSet->add($this->getDatosObserv());
+		$oPersonaNaxSet->add($this->getDatosId_ctr());
+		return $oPersonaNaxSet->getTot();
 	}
 
 }

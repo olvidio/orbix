@@ -2,12 +2,6 @@
 namespace core;
 class DBEsquema {
 	/**
-	 * oDbl de Esquema
-	 *
-	 * @var object
-	 */
-	 private $oDbl;
-	/**
 	 * Esquema de Referencia de Esquema
 	 *
 	 * @var string
@@ -67,24 +61,14 @@ class DBEsquema {
 	 *
 	 */
 	function __destruct() {
-		$this->deleteFile($this->getFileNew());
-		$this->deleteFile($this->getFileRef());
-		$this->deleteFile($this->getFileLog());
+		if (!ConfigGlobal::is_debug_mode()) {
+			$this->deleteFile($this->getFileNew());
+			$this->deleteFile($this->getFileRef());
+			$this->deleteFile($this->getFileLog());
+		}
    	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
-	/**
-	 * Recupera l'atribut oDbl de Grupo
-	 *
-	 * @return object oDbl
-	 */
-	private function getoDbl() {
-		return $this->oDbl;
-	}
-	private function getUserDb() {
-		$this->sUserDb = 'dbCreate';
-		return $this->sUserDb;
-	}
 	public function getDir() {
 		$this->sdir = empty($this->sdir)? ConfigGlobal::$directorio.'/log/db' : $this->sdir;
 		return $this->sdir;
@@ -92,13 +76,60 @@ class DBEsquema {
 	public function setDir($dir) {
 		$this->sdir = $dir;
 	}
+	public function getRegionRef() {
+		return $this->sRegionRef;
+	}
+	public function setRegionRef($region) {
+		$this->sRegionRef = $region;
+	}
+	public function getDlRef() {
+		return $this->sDlRef;
+	}
+	public function setDlRef($dl) {
+		$this->sDlRef = $dl;
+	}
+	public function getRegionNew() {
+		return $this->sRegionNew;
+	}
+	public function setRegionNew($region) {
+		$this->sRegionNew = $region;
+	}
+	public function getDlNew() {
+		return $this->sDlNew;
+	}
+	public function setDlNew($dl) {
+		$this->sDlNew = $dl;
+	}
+
 	public function getNew() {
+		$this->sNew = $this->getRegionNew().'-'.$this->getDlNew();
+		switch($this->getDb()) {
+			case 'comun':
+				break;
+			case 'sv':
+				$this->sNew .= 'v';
+				break;
+			case 'sf':
+				$this->sNew .= 'f';
+				break;
+		}
 		return $this->sNew;
 	}
 	public function setNew($esquema) {
 		$this->sNew = $esquema;
 	}
 	public function getRef() {
+		$this->sRef = $this->getRegionRef().'-'.$this->getDlRef();
+		switch($this->getDb()) {
+			case 'comun':
+				break;
+			case 'sv':
+				$this->sRef .= 'v';
+				break;
+			case 'sf':
+				$this->sRef .= 'f';
+				break;
+		}
 		return $this->sRef;
 	}
 	public function setRef($esquema) {
@@ -120,7 +151,7 @@ class DBEsquema {
 		$this->sDbRef = $db;
 	}
 	public function getFileRef() {
-		$this->sfileRef = empty($this->sfileRef)? $this->getDir().'/'.$this->getRef().'.'.$this->getDbRef().'.sql': $this->sfileRef;
+		$this->sfileRef = empty($this->sfileRef)? $this->getDir().'/'.$this->getRef().'.'.$this->getDb().'.sql': $this->sfileRef;
 		return $this->sfileRef;
 	}
 	public function setFileRef($fileRef) {
@@ -141,7 +172,7 @@ class DBEsquema {
 		$this->sfileNew = $fileNew;
 	}
 	public function getFileSeq() {
-		$this->sfileSeq = empty($this->sfileSeq)? $this->getDir().'/'.$this->getNew().'.reset.sql': $this->sfileSeq;
+		$this->sfileSeq = empty($this->sfileSeq)? $this->getDir().'/'.$this->getNew().'.reset_seq.sql': $this->sfileSeq;
 		return $this->sfileSeq;
 	}
 	public function setFileSeq($fileSeq) {
@@ -149,24 +180,38 @@ class DBEsquema {
 	}
 
 	public function cambiar_nombre() {
+		$esqemaRef = $this->getRef();
 		$dump = file_get_contents($this->getFileRef());
 		// cambiar nombre esquema
 		$dump_nou = str_replace($this->getRef(),$this->getNew(),$dump);
-		$d = file_put_contents($this->getFileNew(), $dump_nou);
-		if ($d === false) exit (_("Error al escribir el fichero"));
+		// comentar "CREATE SCHEMA; que ya está creado
+		$dump_nou = str_replace('CREATE SCHEMA','-- CREATE SCHEMA',$dump_nou);
+		// cambiar nombre por defecto de la dl i r
+		$pattern = "/(SET DEFAULT\s*')".$this->getRegionRef()."(')/";
+		$replacement = "$1".$this->getRegionNew()."$2";
+		$dump_nou = preg_replace($pattern, $replacement, $dump_nou);
+		$pattern = "/(SET DEFAULT\s*')".$this->getDlRef()."(')/";
+		$replacement = "$1".$this->getDlNew()."$2";
+		$dump_nou = preg_replace($pattern, $replacement, $dump_nou);
 
+		$d = file_put_contents($this->getFileNew(), $dump_nou);
+		if ($d === false) printf(_("Error al escribir el fichero"));
 	}
+
 	public function leer() {
 		// leer esquema
 		$command = "/usr/bin/pg_dump -s --schema=\\\"".$this->getRef()."\\\" ";
 		$command .= "--file=".$this->getFileRef()." ";
-		$command .= "--user=dbCreate ";
-		$command .= " ".$this->getDbRef()." > ".$this->getFileLog()." 2>&1"; 
+		$command .= "--user=\"".$this->getRef()."\"";
+		$command .= " ".$this->getDb()." > ".$this->getFileLog()." 2>&1"; 
 		passthru($command); // no output to capture so no need to store it
 		// read the file, if empty all's well
 		$error = file_get_contents($this->getFileLog());
-		if(trim($error) != '')
-			exit("PG_DUMP ERROR IN COMMAND: $command\n-----\n$error\n");
+		if(trim($error) != '') {
+			if (!ConfigGlobal::is_debug_mode()) {
+				printf("PSQL ERROR IN COMMAND: $command <br> mirar: ".$this->getFileLog()."<br>");
+			}
+		}
 	}
 
 	public function importar() {
@@ -174,13 +219,16 @@ class DBEsquema {
 		// Importar el esquema en la base de datos comun
 		$command = "/usr/bin/psql -q ";
 		$command .= "--file=".$this->getFileNew()." ";
-		$command .= "--user=dbCreate ";
+		$command .= "--user=\"".$this->getNew()."\" ";
 		$command .= " ".$this->getDb()." > ".$this->getFileLog()." 2>&1"; 
 		passthru($command); // no output to capture so no need to store it
 		// read the file, if empty all's well
 		$error = file_get_contents($this->getFileLog());
-		if(trim($error) != '')
-			exit("PSQL ERROR IN COMMAND: $command\n-----\n$error\n");
+		if(trim($error) != '') {
+			if (!ConfigGlobal::is_debug_mode()) {
+				printf("PSQL ERROR IN COMMAND: $command <br> mirar: ".$this->getFileLog()."<br>");
+			}
+		}
 	}
 
 	public function crear() {
@@ -194,56 +242,18 @@ class DBEsquema {
 		$sql = "DROP SCHEMA IF EXISTS \\\"".$esquema."\\\" CASCADE;";
 		$command = "/usr/bin/psql -q ";
 		$command .= " -c \"".$sql."\" ";
-		$command .= "--user=dbCreate ";
+		$command .= "--user=\"".$this->getNew()."\"";
 		$command .= " ".$this->getDb()." > ".$this->getFileLog()." 2>&1"; 
 		passthru($command); // no output to capture so no need to store it
 		// read the file, if empty all's well
 		$error = file_get_contents($this->getFileLog());
-		if(trim($error) != '')
-			exit("PSQL ERRROR IN COMMAND: $command\n-----\n$error\n");
+		if(trim($error) != '') {
+			if (!ConfigGlobal::is_debug_mode()) {
+				printf("PSQL ERROR IN COMMAND: $command <br> mirar: ".$this->getFileLog()."<br>");
+			}
+		}
 	}
 	
-	 /**
-	 * Fija las secuencias de un esquema
-	 * Busca todas las secuencias del esquema New, busca su valor máximo y cambia la secuencia a este valor
-	 *
-	 */
-	public function fix_seq() {
-		$esquema = $this->getNew();
-		// buscar todas las secuencias del esquema y crear la instruccion sql para poner el valor MAX.
-		// Guardo las instrucciones en un fichero.
-		$sql = "COPY (SELECT  'SELECT SETVAL(' ||quote_literal(quote_ident(PGT.schemaname)|| '.'||quote_ident(S.relname))|| ', MAX(' ||quote_ident(C.attname)|| ') ) FROM ' ||quote_ident(PGT.schemaname)|| '.'||quote_ident(T.relname)|| ';'
-			FROM pg_class AS S, pg_depend AS D, pg_class AS T, pg_attribute AS C, pg_tables AS PGT
-			WHERE S.relkind = 'S'
-				AND S.oid = D.objid
-				AND D.refobjid = T.oid
-				AND D.refobjid = C.attrelid
-				AND D.refobjsubid = C.attnum
-				AND T.relname = PGT.tablename
-			AND PGT.schemaname='$esquema'
-			ORDER BY S.relname)
-			TO '".$this->getFileSeq()."'
-			";
-		$command = "/usr/bin/psql -q ";
-		$command .= " -c \"".$sql."\" ";
-		$command .= "--user=dbCreate ";
-		$command .= " ".$this->getDb()." > ".$this->getFileLog()." 2>&1"; 
-		passthru($command); // no output to capture so no need to store it
-		// read the file, if empty all's well
-		$error = file_get_contents($this->getFileLog());
-		if(trim($error) != '')
-			exit("PSQL ERRROR IN COMMAND: $command\n-----\n$error\n");
-		// Ejecutar el fichero
-		$command = "/usr/bin/psql -Atq ";
-		$command .= " -f '".$this->getFileSeq()."' ";
-		$command .= "--user=dbCreate ";
-		$command .= " -o '".$this->getFileLog()."' ";
-		$command .= " ".$this->getDb(); 
-		passthru($command); // no output to capture so no need to store it
-
-		$this->deleteFile($this->getFileSeq());
-		$this->deleteFile($this->getFileLog());
-	}
 	private function deleteFile($file) {
 		$command = "/bin/rm -f ".$file; 
 		passthru($command); // no output to capture so no need to store it

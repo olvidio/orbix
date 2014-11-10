@@ -108,14 +108,16 @@ function data($data) {
 // -----------------------------
 
 // -----------------------------  cabecera ---------------------------------
+$caraA = web\Hash::link("apps/notas/controller/tessera_imprimir.php?cara=A&id_nom=$id_nom&id_tabla=$id_tabla");
+$caraB = web\Hash::link("apps/notas/controller/tessera_imprimir.php?cara=B&id_nom=$id_nom&id_tabla=$id_tabla");
 ?>
 <table class="no_print">
 <tr>
 <td class="atras">
 <?= $oPosicion->atras2(); ?>
 </td>
-<td align="center"><span class=link onclick="fnjs_update_div('#main','apps/notas/controller/tessera_imprimir.php?cara=A&id_nom=<?= $id_nom; ?>&id_tabla=<?= $id_tabla; ?>')"><?= _("Cara A (delante)"); ?></span></td>
-<td align="center"><span class=link onclick="fnjs_update_div('#main','apps/notas/controller/tessera_imprimir.php?cara=B&id_nom=<?= $id_nom; ?>&id_tabla=<?= $id_tabla; ?>')"><?= _("Cara B (detrás)"); ?></span></td>
+<td align="center"><span class=link onclick="fnjs_update_div('#main','<?= $caraA ?>')"><?= _("Cara A (delante)"); ?></span></td>
+<td align="center"><span class=link onclick="fnjs_update_div('#main','<?= $caraB ?>')"><?= _("Cara B (detrás)"); ?></span></td>
 </tr></table>
 <table class="A4" border=0 cellspacing="0" cellpadding="1">
 <col width=2%><col width=48%><col width=20%><col width=1%><col width=14%><col width=1%><col width=14%>

@@ -315,6 +315,8 @@ class NombreLatin Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nominativo'));
 		$oDatosCampo->setEtiqueta(_("nominativo"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument('50');
 		return $oDatosCampo;
 	}
 	/**
@@ -327,6 +329,8 @@ class NombreLatin Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'genitivo'));
 		$oDatosCampo->setEtiqueta(_("genitivo"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument('50');
 		return $oDatosCampo;
 	}
 }

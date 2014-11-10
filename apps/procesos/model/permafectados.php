@@ -1,5 +1,5 @@
 <?php
-namespace fases\model;
+namespace procesos\model;
 use permisos\model as permisos;
 class PermAfectados extends permisos\Xpermisos {
   public static $classname = "CuadrosPermActiv";

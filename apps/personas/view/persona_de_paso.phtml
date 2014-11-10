@@ -1,4 +1,5 @@
 <?php
+use personas\model as personas;
 /**
 * Esta es la página de presentación de la ficha de n, agd y sss+ de paso (copia de agd). 
 *
@@ -13,9 +14,27 @@
 * @package fichas
 * @subpackage agd
 */
-?>
 
-<!-- ------------------- DATOS PERSONALES ------------------------   -->
+$GesSituacion = new personas\GestorSituacion();
+$aWhere['_ordre'] = 'situacion';
+$cSituaciones = $GesSituacion->getSituaciones($aWhere);
+
+$campos_chk = 'sacd';
+
+$oHash = new web\Hash();
+$oHash->setcamposForm('id_tabla!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!edad!f_situacion!inc!lengua!nom!nx1!nx2!observ!profesion!que!situacion!stgr!trato');
+$oHash->setcamposNo('que!'.$campos_chk);
+$a_camposHidden = array(
+		'campos_chk'=>$campos_chk,
+		'obj_pau'=>$obj_pau,
+		'id_nom'=>$id_nom
+		);
+$oHash->setArraycamposHidden($a_camposHidden);
+
+?>
+<form id='frm2' >
+<?= $oHash->getCamposHtml(); ?>
+<input type="Hidden" id="que"  name="que" value="">
 
 <table id="datospersonales">
 <tr><td class=titulo colspan="5">
@@ -26,7 +45,7 @@
 	<select class=datos name="id_tabla">
 			<option value="pn" <?php if ($id_tabla=="pn") { echo "selected"; } ?> >numerario</option>
 			<option value="pa" <?php if ($id_tabla=="pa") { echo "selected"; } ?> >agregado</option>
-			<option value="psss" <?php if ($id_tabla=="psss") { echo "selected"; } ?> >sss+</option>
+			<option value="psss" <?php if ($id_tabla=="psssc") { echo "selected"; } ?> >sss+</option>
 	</select>
 	<td><span class=etiqueta ondblclick="fnjs_help('<?php echo $dl_help_ref; ?>')" >Delegación</span></td>
 	<td><input class=datos size="6" name="dl" value="<?php echo $dl ?>" title="<?php echo $dl_help; ?>"></TD>
@@ -50,18 +69,15 @@ echo "</tr><tr>";
 ?>
 	<td><span class=etiqueta ><?php echo ucfirst('situacion'); ?></span>
 	</td>
-	<td>
+	<td colspan=2>
 	<select class=contenido id="situacion" name="situacion" ">
 			<?php
-			$sql_t_situacion="SELECT u.situacion,u.nombre_situacion FROM xp_situacion u 
-							ORDER BY u.situacion ";
-			$oDBSt_t_situacion=$oDB->query($sql_t_situacion);
-			$i=0;
-foreach ($oDBSt_t_situacion->fetchAll() as $row_situacion) {
-				if ($situacion==$row_situacion['situacion']) { $sel="selected"; } else { $sel=""; }
- 				echo "<option value=\"${row_situacion['situacion']}\" $sel>  ${row_situacion['situacion']} </option>";
-				$i++;
-  				}
+			foreach ($cSituaciones as $oSituacion) {
+				$situacion_db = $oSituacion->getSituacion();
+				$nombre_situacion = $oSituacion->getNombre_situacion();
+				if ($situacion==$situacion_db) { $sel="selected"; } else { $sel=""; }
+ 				echo "<option value=\"$situacion_db\" $sel>  $nombre_situacion </option>";
+			}
 			?>
 	</select></td>
 <?php
@@ -71,11 +87,8 @@ echo web\dibujar_campo($obj,"lengua",3,1,1);
 echo "</tr><tr>";
 echo web\dibujar_campo($obj,"profesion",30,1,2);
 echo "</tr><tr>";
-$a_valores_campo=$GLOBALS['a_campos']["sacd"];
-echo "<td><span class=etiqueta ondblclick=\"fnjs_help('$sacd_help_ref')\" >".ucfirst($a_valores_campo["etiqueta"])."&nbsp;</span>";
+echo web\dibujar_campo($obj,"sacd",9,1,1);
 ?>
-<input class=contenido id="sacd" name="sacd" type=checkbox <?php if ($sacd=="t"){ echo "checked";} ?> title="<?php echo $sacd_help; ?>">
-
 <td><span class=etiqueta ondblclick="fnjs_help('<?php echo $stgr_help_ref; ?>')" >&nbsp;&nbsp;Stgr&nbsp;</span>
 			<select class=datos name="stgr" title="<?php echo $stgr_help; ?>">
 			<option value="b" <?php if ($stgr=="b") { echo "selected"; } ?> >b</option>
@@ -95,4 +108,25 @@ echo web\dibujar_campo($obj,"f_inc",11,1,1);
 echo "</tr><tr>";
 echo web\dibujar_campo($obj,"observ",60,1,4);
 echo "</tr><tr>";
+// -----------------------------------  Botones  ----------------------
+if (!empty($botones)) {
+	echo "<table><tr class=botones>";
+	$b=strtok($botones,",");
+	while ($b) {
+		if ($b==1){
+			$txt_g=ucwords(_("guardar cambios"));
+			echo "<th class='link_inv' onclick='fnjs_guardar()'>$txt_g</th>"; }
+		if ($b==2){
+			$txt_e=ucwords(_("eliminar"));
+			echo "<th class='link_inv' onclick='fnjs_eliminar()'>$txt_e</th>"; }
+		if ($b==3){
+			$txt_e=ucwords(_("formato texto"));
+			$pag="programas/ficha_texto.php?id_nom=$id_nom&obj_pau=".$_POST['obj_pau'];
+			echo "<th class='link_inv' onclick='fnjs_update_div('#main','$pag')'>$txt_e</th>"; }
+		$b=strtok(",");
+	} 
+	echo "</tr></table><br>";
+}
+// fin ----------------------------  Botones  ----------------------
 ?>
+</form>

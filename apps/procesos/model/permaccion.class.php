@@ -1,5 +1,5 @@
 <?php
-namespace fases\model;
+namespace procesos\model;
 use permisos\model as permisos;
 
 class PermAccion extends permisos\Xpermisos {

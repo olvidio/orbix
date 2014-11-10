@@ -6,9 +6,6 @@ use ubis\model as ubis;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
-	//require_once ("classes/personas/aux_menus_gestor.class");
-	//require_once ("classes/personas/ext_aux_menus_ext_gestor.class");
-	//require_once ("classes/web/desplegable.class");
 
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
@@ -17,15 +14,38 @@ use ubis\model as ubis;
 $oGesReg = new ubis\GestorRegion();
 $oDesplRegiones = $oGesReg->getListaRegiones();
 $oDesplRegiones->setNombre('region');
+$oDesplRegiones->setAction('fnjs_dl()');
 
 $oGesDl = new ubis\GestorDelegacion();
 $oDesplDelegaciones = $oGesDl->getListaDelegaciones();
 $oDesplDelegaciones->setNombre('dl');
-//$oDesplDelegacionesOrg->setOpcion_sel($dl);
 
 
+$oHash = new web\Hash();
+$oHash->setcamposForm('region!dl!sv!sf');
+$oHash->setcamposNo('sv!sf');
+
+$oHash1 = new web\Hash();
+$oHash1->setUrl(core\ConfigGlobal::getWeb().'/apps/devel/controller/db_ajax.php');
+$oHash1->setCamposForm('salida!entrada'); 
+$h = $oHash1->linkSinVal();
 ?>
 <script>
+fnjs_dl=function(){
+	var filtro_region=$('#region').val();
+	var url='<?= core\ConfigGlobal::getWeb().'/apps/devel/controller/db_ajax.php' ?>';
+	var parametros='salida=lugar&entrada='+filtro_region+'<?= $h ?>&PHPSESSID=<?php echo session_id(); ?>';
+	$.ajax({
+		data: parametros,
+		url: url,
+		type: 'post',
+		dataType: 'html',
+		complete: function (rta) {
+			rta_txt=rta.responseText;
+			$('#lst_dl').html(rta_txt);
+		}
+	});
+}
 fnjs_db_crear=function(){
 	$('#frm').attr('action','apps/devel/controller/db_crear_esquema.php');
 	fnjs_enviar_formulario('#frm','#main');
@@ -42,13 +62,14 @@ fnjs_db_eliminar=function(){
 </script>
 <h1>Nuevas dl</h1>
 <form id="frm" action="" method=post>
+<?= $oHash->getCamposHtml(); ?>
 <table>
  <tr valign=top align=left>
   <td><?= _("región") ?>:</td>
   <td><?= $oDesplRegiones->desplegable() ?>
   </td>
   <td><?= _("Delegación") ?>:</td>
-  <td><?= $oDesplDelegaciones->desplegable() ?>
+  <td id="lst_dl">
   </td>
  </tr>
  <tr>

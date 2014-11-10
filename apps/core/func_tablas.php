@@ -777,7 +777,8 @@ function comprobar_oficina($depende,$tabla) {
 */
 function strsinacentocmp($str1,$str2) {
 	$acentos = array('Á','É','Í','Ó','Ú','À','È','Ò','Ñ','á','é','í','ó','ú','à','è','ò','ñ');
-	$sin = array('a','e','i','o','u','ñ');
+	//$sin = array('a','e','i','o','u','ñ');
+	$sin = array('a','e','i','o','u','a','e','o','ñ','a','e','i','o','u','a','e','o','ñ');
 
 	$str1 = str_replace($acentos,$sin,$str1);
 	$str2 = str_replace($acentos,$sin,$str2);

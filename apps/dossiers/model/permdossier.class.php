@@ -75,16 +75,16 @@ class PermDossier {
 				case "n":
 					if (!$_SESSION['oPerm']->have_perm("sm")) { return 2; }
 					break;
+				case "x":
+					if (!$_SESSION['oPerm']->have_perm("sm")) { return 2; }
+					break;
 				case "a":
 					if (!$_SESSION['oPerm']->have_perm("agd")) { return 2; }
 					break;
 				case "s":
 					if (!$_SESSION['oPerm']->have_perm("sg")) { return 2; }
 					break;
-				case "sss":
-					if (!$_SESSION['oPerm']->have_perm("des")) { return 2; }
-					break;
-				case "cp_sss":
+				case "sssc":
 					if (!$_SESSION['oPerm']->have_perm("des")) { return 2; }
 					break;
 				case "pn":
@@ -93,7 +93,7 @@ class PermDossier {
 				case "pa":
 					if (!$_SESSION['oPerm']->have_perm("agd")) { return 2; }
 					break;
-				case "psss":
+				case "psssc":
 					if (!$_SESSION['oPerm']->have_perm("des")) { return 2; }
 					break;
 					default;
@@ -325,16 +325,11 @@ class PermDossier {
 				$ref_perm = $ref_perm_ss;
 			}
 			break;
-		case "psss":
-		case "sss": //------------------------- sss+ -------------------
+		case "psssc":
+		case "sssc": //------------------------- sss+ -------------------
 			if ($_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("des") ) {
 				$ref_perm = $ref_perm_ss;
 			}
-		case "cp_sss": //------------------------- sss+ -------------------
-			if ($_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("des") ) {
-				$ref_perm = $ref_perm_ss;
-			}
-		break;
 		default;
 	}
 
@@ -355,9 +350,8 @@ class PermDossier {
 							"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
 							"pn" => array ( 'nom'=> "n de paso", 'tabla'=>"p_de_paso&na=n", 	'perm'=> 0),
 							"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
-							"sss" => array ( 'nom'=> "sss+", 'tabla'=>"p_sssc", 	'perm'=> 0),
-							"psss" => array ( 'nom'=> "sss+ de paso", 'tabla'=>"p_de_paso&na=sss", 	'perm'=> 0),
-							"cp_sss" => array ( 'nom'=> "cp&ae sss+", 'tabla'=>"p_cp_ae_sssc&na=cp_sss", 	'perm'=> 0)
+							"sssc" => array ( 'nom'=> "sss+", 'tabla'=>"p_sssc", 	'perm'=> 0),
+							"psssc" => array ( 'nom'=> "sss+ de paso", 'tabla'=>"p_de_paso&na=sss", 	'perm'=> 0),
 						);
 	//para no repetir los permisos comunes a sr,sg est
 	$ref_perm_sg = array (
@@ -377,9 +371,8 @@ class PermDossier {
 				$ref_perm = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 1),
-								"psss" => array ( 'nom'=> "sss+ de paso", 'tabla'=>"p_de_paso&na=sss", 	'perm'=> 1),
-								"sss" => array ( 'nom'=> "sss+", 'tabla'=>"p_sssc",	'perm'=> 1),
-								"cp_sss" => array ( 'nom'=> "cp&ae sss+", 'tabla'=>"p_cp_ae_sssc", 	'perm'=> 1)
+								"psssc" => array ( 'nom'=> "sss+ de paso", 'tabla'=>"p_de_paso&na=sss", 	'perm'=> 1),
+								"sssc" => array ( 'nom'=> "sss+", 'tabla'=>"p_sssc",	'perm'=> 1),
 								);
 			}
 			break;
@@ -447,7 +440,7 @@ class PermDossier {
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
 								"pn" => array ( 'nom'=> "n de paso", 'tabla'=>"p_de_paso&na=n", 	'perm'=> 1),
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 1),
-								"sss" => array ( 'nom'=> "sss+", 'tabla'=>"p_sssc",	'perm'=> 1)
+								"sssc" => array ( 'nom'=> "sss+", 'tabla'=>"p_sssc",	'perm'=> 1)
 							);
 			}
 			if ($_SESSION['oPerm']->have_perm("est")) {
@@ -534,8 +527,8 @@ class PermDossier {
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
 								"pn" => array ( 'nom'=> "n de paso", 'tabla'=>"p_de_paso&na=n", 	'perm'=> 1),
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 1),
-								"sss" => array ( 'nom'=> "sss+", 'tabla'=>"p_sssc", 	'perm'=> 1),
-								"psss" => array ( 'nom'=> "sss+ de paso", 'tabla'=>"p_de_paso&na=sss", 	'perm'=> 1)
+								"sssc" => array ( 'nom'=> "sss+", 'tabla'=>"p_sssc", 	'perm'=> 1),
+								"psssc" => array ( 'nom'=> "sss+ de paso", 'tabla'=>"p_de_paso&na=sss", 	'perm'=> 1)
 							);
 			}
 			break;
@@ -583,8 +576,8 @@ class PermDossier {
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
 								"pn" => array ( 'nom'=> "n de paso", 'tabla'=>"p_de_paso&na=n", 	'perm'=> 1),
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 1),
-								"sss" => array ( 'nom'=> "sss+", 'tabla'=>"p_sssc", 	'perm'=> 1),
-								"psss" => array ( 'nom'=> "sss+ de paso", 'tabla'=>"p_de_paso&na=sss", 	'perm'=> 1)
+								"sssc" => array ( 'nom'=> "sss+", 'tabla'=>"p_sssc", 	'perm'=> 1),
+								"psssc" => array ( 'nom'=> "sss+ de paso", 'tabla'=>"p_de_paso&na=sss", 	'perm'=> 1)
 							);
 			}
 			break;

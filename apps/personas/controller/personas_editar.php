@@ -12,7 +12,7 @@ use ubis\model as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-if (isset($id_nom)) $_POST['id_nom'] = $id_nom;
+//if (isset($id_nom)) $_POST['id_nom'] = $id_nom;
 
 if (!empty($_POST['nuevo'])) {
 	$obj_pau = $_POST['obj_pau'];
@@ -44,14 +44,16 @@ if (!empty($_POST['nuevo'])) {
 	$a_campos = $oPersona->getTot();
 	$a_campos['obj'] = $oPersona;
 	// para el ctr hay que buscar el nombre
-	$id_ctr = $a_campos['id_ctr'];
-	$oCentroDl = new ubis\CentroDl($id_ctr);
-	$a_campos['nom_ctr'] = $oCentroDl->getNombre_ubi();
+	if (!empty($a_campos['id_ctr'])) {
+		$id_ctr = $a_campos['id_ctr'];
+		$oCentroDl = new ubis\CentroDl($id_ctr);
+		$a_campos['nom_ctr'] = $oCentroDl->getNombre_ubi();
+	}
 }
 
 // para el ctr, si es nuevo o está vacio
 if (empty($a_campos['nom_ctr'])) {
-	$id_ctr = $a_campos['id_ctr'];
+	//$id_ctr = $a_campos['id_ctr'];
 	$GesCentroDl = new ubis\GestorCentroDl();
 	$oDesplCentroDl = $GesCentroDl->getListaCentros();
 	$a_campos['nom_ctr'] = $oDesplCentroDl;
@@ -65,12 +67,14 @@ $_POST['es_sacd'] = empty($_POST['es_sacd'])? '' : $_POST['es_sacd'];
 
 $ok=0;
 $ok_txt=0;
+$presentacion="persona.phtml";
 switch ($_POST['obj_pau']){
 	case "PersonaAgd":
 		$a_campos['id_tabla'] = 'a';
 		if ($_SESSION['oPerm']->have_perm("agd")) { $ok=1; } 
-		if (($_SESSION['oPerm']->have_perm("agd") or $_SESSION['oPerm']->have_perm("dtor")) and ($_POST['breve']!="true")) { 
-			$presentacion="p_agregados.phtml";
+		if (($_SESSION['oPerm']->have_perm("agd") or $_SESSION['oPerm']->have_perm("dtor")) and ($_POST['breve']!="true")) {
+			//$presentacion="p_agregados.phtml";
+			$presentacion="persona.phtml";
 			$ok_txt=1;
 		} else {
 			$presentacion="p_public_personas.phtml";
@@ -87,21 +91,34 @@ switch ($_POST['obj_pau']){
 			$presentacion="p_public_personas.phtml";
 		}
 		break;
-	case "PersonaS":
-		$a_campos['id_tabla'] = 's';
-		if ($_SESSION['oPerm']->have_perm("sg")) { $ok=1; } 
-		if (($_SESSION['oPerm']->have_perm("sg") or $_SESSION['oPerm']->have_perm("dtor")) and ($_POST['breve']!="true")) { 
-			$presentacion="p_supernumerarios.phtml";
+	case "PersonaNax":
+		$a_campos['id_tabla'] = 'x';
+		if ($_SESSION['oPerm']->have_perm("sm")) { $ok=1; } 
+		if (($_SESSION['oPerm']->have_perm("sm") or $_SESSION['oPerm']->have_perm("dtor")) and ($_POST['breve']!="true")) { 
+			//$presentacion="p_numerarios.phtml";
+			$presentacion="persona.phtml";
 			$ok_txt=1;
 		} else {
 			$presentacion="p_public_personas.phtml";
 		}
 		break;
-	case "PersonaSSS":
-		$a_campos['id_tabla'] = 'sss';
+	case "PersonaS":
+		$a_campos['id_tabla'] = 's';
+		if ($_SESSION['oPerm']->have_perm("sg")) { $ok=1; } 
+		if (($_SESSION['oPerm']->have_perm("sg") or $_SESSION['oPerm']->have_perm("dtor")) and ($_POST['breve']!="true")) { 
+			//$presentacion="p_supernumerarios.phtml";
+			$presentacion="persona.phtml";
+			$ok_txt=1;
+		} else {
+			$presentacion="p_public_personas.phtml";
+		}
+		break;
+	case "PersonaSSSC":
+		$a_campos['id_tabla'] = 'sssc';
 		if ($_SESSION['oPerm']->have_perm("des") or $_SESSION['oPerm']->have_perm("vcsd")) { $ok=1; } 
 		if (($_SESSION['oPerm']->have_perm("des") or $_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("dtor")) and ($_POST['breve']!="true")) { 
-			$presentacion="p_sssc.phtml";
+			//$presentacion="p_sssc.phtml";
+			$presentacion="persona.phtml";
 			$ok_txt=1;
 		} else {
 			$presentacion="p_public_personas.phtml";
@@ -114,11 +131,12 @@ switch ($_POST['obj_pau']){
 		$ok_txt=1;
 		break;
 }
-$presentacion="persona.phtml";
 $a_campos['obj_pau'] = $obj_pau;
 
-$ir_a_traslado="apps/personas/controller/traslado_form.php?pau=p&id_pau=$id_nom&obj_pau=$obj_pau";
-$a_campos['ir_a_traslado'] = $ir_a_traslado;
+if (empty($_POST['nuevo'])) {
+	$ir_a_traslado=web\hash::link("apps/personas/controller/traslado_form.php?pau=p&id_pau=$id_nom&obj_pau=$obj_pau");
+	$a_campos['ir_a_traslado'] = $ir_a_traslado;
+}
 
 
 /*

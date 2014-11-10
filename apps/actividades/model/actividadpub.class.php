@@ -1,7 +1,6 @@
 <?php
 namespace actividades\model;
 use core;
-//require_once('classes/web/fechas.class');
 use cambios\model as cambios;
 use procesos\model as procesos;
 /**
@@ -54,7 +53,7 @@ class ActividadPub Extends ActividadAll {
 	 *@param bool optional $quiet : true per que no apunti els canvis. 0 (per defecte) apunta els canvis.
 	 */
 	public function DBGuardar($quiet=0) {
-			$aDades=array();
+		$aDades=array();
 		$aDades['id_tipo_activ'] = $this->iid_tipo_activ;
 		$aDades['dl_org'] = $this->sdl_org;
 		$aDades['nom_activ'] = $this->snom_activ;
@@ -75,19 +74,25 @@ class ActividadPub Extends ActividadAll {
 		$aDades['tarifa'] = $this->itarifa;
 		$aDades['id_repeticion'] = $this->iid_repeticion;
 		$aDades['publicado'] = $this->bpublicado;
+		$aDades['id_tabla'] = $this->sid_tabla;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
  		if (empty($aDades['publicado']) || ($aDades['publicado'] === 'off') || ($aDades['publicado'] === 'false') || ($aDades['publicado'] === 'f')) { $aDades['publicado']='f'; } else { $aDades['publicado']='t'; }
 
 		$a_pkey = $this->aPrimary_key;
 		$dl = $aDades['dl_org'];
+		$id_tabla = $aDades['id_tabla'];
 		if ($dl == core\ConfigGlobal::mi_dele()) {
 			$oActividad= new ActividadDl($a_pkey);
 		} else {
-			$oActividad= new ActividadEx($a_pkey);
+			if ($id_tabla == 'dl') {
+				// No se puede guardar cambios en una actividad de otra dl
+				return false;
+			} else {
+				$oActividad= new ActividadEx($a_pkey);
+			}
 		}
 		$oActividad->setAllAtributes($aDades);
-
 		$oActividad->DBGuardar($aDades);
 		return true;
 	}
@@ -132,7 +137,14 @@ class ActividadPub Extends ActividadAll {
 		if ($dl == core\ConfigGlobal::mi_dele()) {
 			$oActividadAll= new ActividadAllDl($a_pkey);
 		} else {
-			$oActividadAll= new ActividadAllEx($a_pkey);
+			if ($id_tabla == 'dl') {
+				//$oActividad = new ActividadPub($a_pkey);
+				// No se puede eliminar una actividad de otra dl
+				echo _("No se puede modificar una actividad de otra dl");
+				return false;
+			} else {
+				$oActividadAll = new ActividadEx($a_pkey);
+			}
 		}
 		$oActividadAll->DBEliminar();
 		return true;

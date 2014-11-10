@@ -1,4 +1,5 @@
 <?php
+use actividades\model as actividades;
 use asistentes\model as asistentes;
 use personas\model as personas;
 /**
@@ -22,7 +23,6 @@ use personas\model as personas;
  * @param string $_POST['observ'] optional
  * @param boolean $_POST['propio'] 
  * @param boolean $_POST['falta'] 
- * @param boolean $_POST['puede_agd'] 
  * @param boolean $_POST['puede_agd'] 
  * @param string $_POST['observ'] optional
  *
@@ -52,6 +52,13 @@ if (!empty($_POST['go_to'])) {
 
 $obj = 'asistentes\\model\\Asistente';
 
+/* Mirar si la actividad es mia o no */
+$oActividad = new actividades\Actividad($id_activ);
+$dl = $oActividad->getDl_org();
+$id_tabla_dl = $oActividad->getId_tabla();
+
+
+
 if (!empty($id_nom)) { //caso de modificar
 	$mod="editar";
 	$oPersona = personas\Persona::NewPersona($id_nom);
@@ -59,7 +66,35 @@ if (!empty($id_nom)) { //caso de modificar
 	$id_tabla = $oPersona->getId_tabla();
 	$id_nom_real = $id_nom;
 
-	$oAsistente=new asistentes\Asistente(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+	$obj_pau = str_replace("personas\\model\\",'',get_class($oPersona));
+	if ($dl == core\ConfigGlobal::mi_dele()) {
+		switch ($obj_pau) {
+			case 'PersonaDl':
+				$oAsistente=new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+				break;
+			case 'PersonaOut':
+				$oAsistente=new asistentes\AsistenteOut(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+				break;
+			case 'PersonaIn':
+				// Supongo que sólo debeía modificar la dl origen.
+				// $oAsistente=new asistentes\AsistenteIn(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+				exit (_("Los datos de asistencia los modifica la dl del asistente"));
+				break;
+			case 'PersonaEx':
+				$oAsistente=new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+				break;
+		}
+	} else {
+		switch ($obj_pau) {
+			case 'PersonaDl':
+				$oAsistente=new asistentes\AsistenteOut(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+				break;
+			case 'PersonaEx':
+				$oAsistente=new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+				break;
+		}
+	}
+
 	$propio=$oAsistente->getPropio();
 	$falta=$oAsistente->getFalta();
 	$est_ok=$oAsistente->getEst_ok();
@@ -78,14 +113,17 @@ if (!empty($id_nom)) { //caso de modificar
 			$oPersonas=new personas\GestorPersonaDl();
 			$oPersonasOpciones=$oPersonas->getListaPersonasTabla($_POST['tabla_p'],'');
 			$oDesplegablePersonas=new web\Desplegable('id_nom',$oPersonasOpciones,'',false);
+			$obj_pau = 'PersonaDl';
 			break;
 		case '':
 		case 'p_de_paso':
+		case 'p_de_paso_ex':
 		default:
 			empty($_POST['na'])? $tipo="" : $tipo="p".$_POST['na'];
 			$oPersonas=new personas\GestorPersonaEx();
 			$oPersonasOpciones=$oPersonas->getListaPersonasTabla($_POST['tabla_p'],$tipo);
 			$oDesplegablePersonas=new web\Desplegable('id_nom',$oPersonasOpciones,'',false);
+			$obj_pau = 'PersonaEx';
 			break;
 		/*
 		   default:
@@ -95,9 +133,26 @@ if (!empty($id_nom)) { //caso de modificar
 			*/
 	}
 }
-(!empty($propio) && $propio=="t") ? $propio_chk="checked" : $propio_chk="" ;
-(!empty($falta) && $falta=="t") ? $falta_chk="checked" : $falta_chk="" ;
-(!empty($est_ok) && $est_ok=="t") ? $est_chk="checked" : $est_chk="" ;
+$propio_chk = (!empty($propio) && $propio=='t') ? 'checked' : '' ;
+$falta_chk = (!empty($falta) && $falta=='t') ? 'checked' : '' ;
+$est_chk = (!empty($est_ok) && $est_ok=='t') ? 'checked' : '' ;
+
+
+$oHash = new web\Hash();
+$camposForm = 'observ';
+$oHash->setCamposNo('mod!propio!falta!est_ok');
+$a_camposHidden = array(
+		'id_activ' => $_POST['id_pau'],
+		'obj_pau'=> $obj_pau,
+		'go_to' => $go_to
+		);
+if (!empty($id_nom_real)) {
+	$a_camposHidden['id_nom'] = $id_nom_real;
+} else {
+	$camposForm .= '!id_nom';
+}
+$oHash->setcamposForm($camposForm);
+$oHash->setArraycamposHidden($a_camposHidden);
 
 ?>
 <!-- ------------------- html -----------------------------------------------  -->
@@ -130,16 +185,13 @@ fnjs_guardar=function(formulario){
 }
 </script>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="" method="POST">
-<input type="Hidden" id="id_activ" name="id_activ" value="<?= $_POST['id_pau'] ?>">
-<input type="Hidden" id="tabla_p" name="tabla_p" value="<?=  $tabla_p ?>">
-<input type="Hidden" id="go_to" name="go_to" value="<?= $go_to ?>">
+<?= $oHash->getCamposHtml(); ?>
 <input type="Hidden" id="mod" name="mod" value=<?= $mod ?>>
 <table>
 <tr class=tab><th class=titulo_inv colspan=2><?php echo ucfirst(_("Asistente a una actividad")); ?></th></tr>
 <tr><td class=etiqueta><?= ucfirst(_("asistente")) ?>:</td>
 <?php
 if (!empty($id_nom_real)) {
-	echo "<input type=\"Hidden\" id=\"id_nom\" name=\"id_nom\" value=$id_nom_real>";
 	echo "<td class=contenido>$ape_nom</td>";
 } else {
 	echo "<td>";

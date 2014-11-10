@@ -82,10 +82,18 @@ class Actividad Extends ActividadAll {
 
 		$a_pkey = $this->aPrimary_key;
 		$dl = $aDades['dl_org'];
+		$id_tabla = $aDades['id_tabla'];
 		if ($dl == core\ConfigGlobal::mi_dele()) {
-			$oActividad= new ActividadDl($a_pkey);
+			$oActividad = new ActividadDl($a_pkey);
 		} else {
-			$oActividad= new ActividadEx($a_pkey);
+			if ($id_tabla == 'dl') {
+				//$oActividad = new ActividadPub($a_pkey);
+				// No se puede eliminar una actividad de otra dl
+				echo _("No se puede modificar una actividad de otra dl");
+				return false;
+			} else {
+				$oActividad = new ActividadEx($a_pkey);
+			}
 		}
 		$oActividad->setAllAtributes($aDades);
 		$oActividad->DBGuardar();
@@ -130,10 +138,18 @@ class Actividad Extends ActividadAll {
 	public function DBEliminar() {
 		$a_pkey = $this->aPrimary_key;
 		$dl = $this->sdl_org;
+		$id_tabla = $this->sid_tabla;
 		if ($dl == core\ConfigGlobal::mi_dele()) {
 			$oActividadAll= new ActividadDl($a_pkey);
 		} else {
-			$oActividadAll= new ActividadEx($a_pkey);
+			if ($id_tabla == 'dl') {
+				// No se puede eliminar una actividad de otra dl. Hay que borrarla como importada
+				$oImportada = new Importada($a_pkey);
+				$oImportada->DBEliminar();
+				return true;
+			} else {
+				$oActividadAll= new ActividadEx($a_pkey);
+			}
 		}
 		$oActividadAll->DBEliminar();
 		return true;

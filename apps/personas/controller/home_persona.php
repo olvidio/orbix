@@ -39,18 +39,21 @@ if (!empty($id_tabla)) {
 		case "n":
 			$obj_pau="PersonaN";
 			break;	
+		case "x":
+			$obj_pau="PersonaNax";
+			break;	
 		case "a":
 			$obj_pau="PersonaAgd";
 			break;
 		case "s":
 			$obj_pau="PersonaS";
 			break;	
-		case "cp_sss":
-			$obj_pau="PersonaSSS";
+		case "sssc":
+			$obj_pau="PersonaSSSC";
 			break;	
 		case "pn":
 		case "pa":
-		case "pssc":
+		case "psssc":
 			$obj_pau="PersonaEx";
 			break;
 	}

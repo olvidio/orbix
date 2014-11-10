@@ -16,9 +16,10 @@ if (isset($_POST['padre'])) $padre=$_POST['padre'];
 
 switch ($_POST['obj_pau']) {
 	case 'PersonaN':
+	case 'PersonaNax':
 	case 'PersonaAgd':
 	case 'PersonaS':
-	case 'PersonaSSS':
+	case 'PersonaSSSC':
 	case 'TelecoPersonaDl':
 		$obj = 'personas\\model\\TelecoPersonaDl';
 		break;
