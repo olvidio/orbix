@@ -74,6 +74,21 @@ function borrar_actividad($id_activ) {
 
 
 switch ($_POST['mod']) {
+case 'publicar':
+	if (!empty($_POST['sel'])) { // puedo seleccionar más de uno.
+		foreach ($_POST['sel'] as $id) {
+			$id_activ=strtok($id,'#');
+			$oActividad = new actividades\Actividad($id_activ);
+			$oActividad->DBCarregar();
+			$oActividad->setPublicado('t');
+			if ($oActividad->DBGuardar() === false) { 
+				echo _('Hay un error, no se ha guardado');
+				$err = 1;
+			}
+		}
+	}
+	exit;
+	break;
 case 'importar':
 	if (!empty($_POST['sel'])) { // puedo seleccionar más de uno.
 		foreach ($_POST['sel'] as $id) {

@@ -25,7 +25,7 @@ use ubis\model as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$importar = empty($_POST['importar'])? '' : $_POST['importar'];
+$modo = empty($_POST['modo'])? '' : $_POST['modo'];
 
 if (empty($_POST['dl_org'])) { $_POST['dl_org']=''; }
 if (empty($_POST['listar_asistentes'])) $_POST['listar_asistentes']=""; 
@@ -42,6 +42,15 @@ $oGesDl = new ubis\GestorDelegacion();
 $oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones();
 $oDesplDelegacionesOrg->setNombre('dl_org');
 $oDesplDelegacionesOrg->setOpcion_sel($_POST['dl_org']);
+if ($modo == 'importar') {
+	$mi_dele = core\ConfigGlobal::mi_dele();
+	$oDesplDelegacionesOrg->setOpcion_no(array($mi_dele));
+}
+if ($modo == 'publicar') {
+	$mi_dele = core\ConfigGlobal::mi_dele();
+	$oDesplDelegacionesOrg->setOpciones(array($mi_dele=>$mi_dele));
+	$oDesplDelegacionesOrg->setBlanco(false);
+}
 
 $oDesplDelegaciones = $oGesDl->getListaDlURegionesFiltro();
 $oDesplDelegaciones->setAction('fnjs_lugar()');
@@ -81,7 +90,7 @@ $oHash = new web\Hash();
 $oHash->setcamposForm('dl_org!empiezamax!empiezamin!filtro_lugar!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!periodo!status!year');
 $oHash->setcamposNo('id_ubi');
 $a_camposHidden = array(
-		'importar' => $importar,
+		'modo' => $modo,
 		'listar_asistentes' => $_POST['listar_asistentes'],
 		'que' => $_POST['que']
 		);
@@ -93,7 +102,16 @@ $oHash1->setUrl(core\ConfigGlobal::getWeb().'/apps/actividades/controller/activi
 $oHash1->setCamposForm('salida!entrada!opcion_sel!isfsv'); 
 $h = $oHash1->linkSinVal();
 
-$titulo = empty($importar)? ucfirst(_("buscar actividad")) : ucfirst(_("buscar actividad de otras dl para importar"));
+switch ($modo) {
+	case 'importar':
+		$titulo = ucfirst(_("buscar actividad de otras dl para importar"));
+		break;
+	case 'publicar':
+		$titulo = ucfirst(_("buscar actividades de mi dl para publicar"));
+		break;
+	default:
+		$titulo = ucfirst(_("buscar actividad"));
+}
 ?>
 <script>
 fnjs_buscar=function(act){

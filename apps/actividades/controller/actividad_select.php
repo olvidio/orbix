@@ -45,7 +45,7 @@ $Qempiezamax = '';
 //Si vengo de vuelta de un go_to:
 if (!empty($_POST['atras'])) {
 	if ($_POST['atras'] == 2) $oPosicion->go(); //vengo de continuar y debo hacer la búsqueda anterior.
-	$Qimportar = $oPosicion->getParametro('importar');
+	$Qmodo = $oPosicion->getParametro('modo');
 	$Qque = $oPosicion->getParametro('que');
 	$Qid_tipo_activ = $oPosicion->getParametro('id_tipo_activ');
 	$Qfiltro_lugar = $oPosicion->getParametro('filtro_lugar');
@@ -57,7 +57,7 @@ if (!empty($_POST['atras'])) {
 	$Qdl_org=$oPosicion->getParametro('dl_org');
 	$Qstatus=$oPosicion->getParametro('status');
 } else { //si no vengo por goto.
-	$Qimportar = empty($_POST['importar'])? '' : $_POST['importar'];
+	$Qmodo = empty($_POST['modo'])? '' : $_POST['modo'];
 	$Qque = empty($_POST['que'])? '' : $_POST['que'];
 	$Qstatus = empty($_POST['status'])? 2 : $_POST['status'];
 	$Qid_tipo_activ = empty($_POST['id_tipo_activ'])? '' : $_POST['id_tipo_activ'];
@@ -132,7 +132,7 @@ if (!empty($Qdl_org)) {
 * Defino un array con los datos actuales, para saber volver después de navegar un rato
 */
 $aGoBack = array (
-				'importar'=>$Qimportar,
+				'modo'=>$Qmodo,
 				'que'=>$Qque,
 				'id_tipo_activ'=>$Qid_tipo_activ,
 				'id_ubi'=>$Qid_ubi,
@@ -149,9 +149,10 @@ $oPosicion->recordar();
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miRole=$oMiUsuario->getId_role();
 
-if (!empty($Qimportar)) {
+if (!empty($Qmodo)) {
 	$a_botones[] = array( 'txt' => _('datos'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"datos\")" );
-	$a_botones[] = array( 'txt' => _('importar'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"importar\")" );
+	if ($Qmodo == 'importar') $a_botones[] = array( 'txt' => _('importar'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"importar\")" );
+	if ($Qmodo == 'publicar') $a_botones[] = array( 'txt' => _('publicar'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"publicar\")" );
 	if (core\configGlobal::is_app_installed('asignaturas')) {
 		if ($_SESSION['oPerm']->have_perm("est")) {
 			$a_botones[]=array( 'txt'=> _('asignaturas'), 'click'=>"jsForm.mandar(\"#seleccionados\",\"asig\")");
@@ -222,7 +223,7 @@ $sin=0;
 $a_valores=array();
 $aWhere['_ordre'] = 'f_ini';
 
-if (!empty($Qimportar)) {
+if (!empty($modo) && $Qmodo == 'importar') {
 	$GesActividades = new actividades\GestorActividadPub();
 	$GesImportar = new actividades\GestorImportar();
 } else {
@@ -233,7 +234,7 @@ $cActividades = $GesActividades->getActividades($aWhere,$aOperador);
 $num_activ=count($cActividades);
 if ($num_activ > $num_max_actividades && empty($_POST['continuar'])) {
 	$go_avant=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_select.php?continuar=si&atras=2');
-	$go_atras=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_que.php?que='.$Qque.'&importar='.$Qimportar);
+	$go_atras=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_que.php?que='.$Qque.'&modo='.$Qmodo);
 	echo "<h2>".sprintf(_('son %s actividades a mostrar. ¿Seguro que quiere continuar?.'),$num_activ).'</h2>';
 	echo "<input type='button' onclick=fnjs_update_div('#main','".$go_avant."') value="._('continuar').">";
 	echo "<input type='button' onclick=fnjs_update_div('#main','".$go_atras."') value="._('volver').">";
@@ -242,7 +243,7 @@ if ($num_activ > $num_max_actividades && empty($_POST['continuar'])) {
 foreach($cActividades as $oActividad) {
 	extract($oActividad->getTot());
 	// Si es para importar, quito las que ya están importadas
-	if (!empty($Qimportar)) {
+	if (!empty($Qmodo) && $Qmodo == 'importar') {
 		$cImportadas = $GesImportar->getImportadas(array('id_activ'=>$id_activ));
 		if ($cImportadas != false && count($cImportadas) > 0) continue;
 	}
@@ -369,7 +370,7 @@ $a_camposHidden = array(
 		'id_ubi' => $Qid_ubi,
 		'filtro_lugar' => $Qfiltro_lugar,
 		'que' => $Qque,
-		'importar' => $Qimportar
+		'modo' => $Qmodo
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 

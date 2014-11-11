@@ -6,6 +6,7 @@ class Desplegable {
 	protected $sNombre;
 	protected $oOpciones;
 	protected $sOpcion_sel;
+	protected $aOpcion_no;
 	protected $bBlanco;
 	protected $sAction;
 	protected $iSize;
@@ -51,12 +52,14 @@ class Desplegable {
 			foreach($this->oOpciones as $row) {
 				if (!isset($row[1])) { $a = 0; } else { $a = 1; } // para el caso de sólo tener un valor.
 				if ($row[0] == $this->sOpcion_sel) { $sel = 'selected'; } else { $sel = ''; }
+				if (!empty($this->aOpcion_no) && is_array($this->aOpcion_no) && in_array($row[0], $this->aOpcion_no)) continue;
 				$txt .= "<option value=\"$row[0]\" $sel>$row[$a]</option>";
 			}
 		} else if (is_array($this->oOpciones)) {
 			reset($this->oOpciones);
 			foreach($this->oOpciones as $key=>$val) {
 				if ($key == $this->sOpcion_sel) { $sel = 'selected'; } else { $sel = ''; }
+				if (!empty($this->aOpcion_no) && is_array($this->aOpcion_no) && in_array($row[0], $this->aOpcion_no)) continue;
 				$txt .= "<option value=\"$key\" $sel>$val</option>";
 			}
 		} else {
@@ -76,6 +79,9 @@ class Desplegable {
 	}
 	public function setOpcion_sel($sOpcion_sel) {
 		$this->sOpcion_sel = $sOpcion_sel;
+	}
+	public function setOpcion_no($aOpcion_no) {
+		$this->aOpcion_no = $aOpcion_no;
 	}
 	public function setBlanco($bBlanco) {
 		$this->bBlanco = $bBlanco;

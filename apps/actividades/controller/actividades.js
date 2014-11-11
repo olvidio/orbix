@@ -24,7 +24,13 @@ jsForm.mandar=function(formulario,que){
 		case "datos":
 			this.action = "apps/actividades/controller/actividad_ver.php";
 			break;
+		case "publicar":
+			this.SoloUno = false;
+			$('#mod').val(que);
+			this.action = "apps/actividades/controller/actividad_update.php";
+			break;
 		case "importar":
+			this.SoloUno = false;
 			$('#mod').val(que);
 			this.action = "apps/actividades/controller/actividad_update.php";
 			break;
