@@ -16,6 +16,7 @@ use personas\model as personas;
 */
 
 
+
 $GesSituacion = new personas\GestorSituacion();
 $aWhere['_ordre'] = 'situacion';
 $cSituaciones = $GesSituacion->getSituaciones($aWhere);
@@ -97,9 +98,12 @@ echo web\dibujar_campo($obj,"lengua",3,1,1);
 echo "</tr><tr>";
 echo web\dibujar_campo($obj,"profesion",30,1,2);
 echo "</tr><tr>";
-echo web\dibujar_campo($obj,"sacd",9,1,1);
+
+if (core\ConfigGlobal::mi_sfsv() == 1) {
+	echo web\dibujar_campo($obj,"sacd",9,1,1);
+}
 ?>
-<td><span class=etiqueta ondblclick="fnjs_help('<?php //echo $stgr_help_ref; ?>')" >&nbsp;&nbsp;Stgr&nbsp;</span>
+<td><span class=etiqueta ondblclick="fnjs_help('<?php //echo $stgr_help_ref; ?>')" >Stgr&nbsp;</span>
 			<select class=datos name="stgr" title="<?php //echo $stgr_help; ?>">
 			<option value="b" <?php if ($stgr=="b") { echo "selected"; } ?> >b</option>
 			<option value="c1" <?php if ($stgr=="c1") { echo "selected"; } ?> >c1</option>

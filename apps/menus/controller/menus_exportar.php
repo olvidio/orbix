@@ -81,12 +81,12 @@ foreach ( $oDevel->query($sQry,PDO::FETCH_ASSOC) as $aDades) {
 	$campos="(id_menu,orden,menu,parametros,id_metamenu,menu_perm,id_grupmenu,ok)";
 	$valores="(:id_menu,:orden,:menu,:parametros,:id_metamenu,:menu_perm,:id_grupmenu,:ok)";
 	if (($qRs = $oDevelPC->prepare("INSERT INTO ref_menus $campos VALUES $valores")) === false) {
-		$sClauError = 'Exposrtar.insertar.prepare';
+		$sClauError = 'Exportar.insertar.prepare';
 		$_SESSION['oGestorErrores']->addErrorAppLastError($oDevelPC, $sClauError, __LINE__, __FILE__);
 		return false;
 	} else {
 		if ($qRs->execute($aDades) === false) {
-			$sClauError = 'Exposrtar.insertar.execute';
+			$sClauError = 'Exportar.insertar.execute';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDevelPC, $sClauError, __LINE__, __FILE__);
 			return false;
 		}

@@ -29,7 +29,6 @@ foreach ($cNotas as $oNota) {
 //Según el tipo de persona: n, agd, s
 $oPersona = personas\Persona::NewPersona($id_pau);
 $id_tabla = $oPersona->getId_Tabla();
-$ref_perm = dossiers\controller\perm_activ_pers($id_tabla,1);
 
 $a_botones=array(
 				array( 'txt' => _('modificar nota'), 'click' =>"fnjs_modificar(this.form)" ) ,

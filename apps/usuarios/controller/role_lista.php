@@ -67,7 +67,7 @@ foreach ($cRoles as $oRole) {
 	$a_valores[$i][3]=$sv;
 	$a_valores[$i][4]=$pau;
 	$a_valores[$i][5]=$str_GM;
-	if (($sf == 1 & $miSfsv == 2) OR ($sv == 1 & $miSfsv == 1)) {
+	if (($sf == 1 & $miSfsv == 2) OR ($sv == 1 & $miSfsv == 1) OR ($permiso == 1)) {
 		$a_valores[$i]['sel']="$id_role#";
 		$a_valores[$i][6]= array( 'ira'=>$pagina, 'valor'=>'editar');
 	}
@@ -75,8 +75,8 @@ foreach ($cRoles as $oRole) {
 }
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('que');
-$oHash->setcamposNo('que');
+$oHash->setcamposForm('');
+$oHash->setCamposNo('sel!que');
 
 ?>
 <script>
@@ -111,7 +111,7 @@ fnjs_eliminar=function(){
 	}
 }
 fnjs_actualizar=function(){
-	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/usuarios/controller/role_lista.php';
+	var url='<?= web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/role_lista.php'); ?>';
 	fnjs_update_div('#main',url);
 }
 </script>

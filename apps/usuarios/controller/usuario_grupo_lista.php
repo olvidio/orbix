@@ -17,10 +17,6 @@ if ($miRole > 3) exit(_('no tiene permisos para ver esto')); // no es administra
 // filtro por sf/sv
 $cond=array();
 $operator = array();
-if ($miRole != 1) {
-	$cond=array('sfsv'=>$sfsv);
-}
-
 $Qusername = empty($_POST['Qusername'])? '' : $_POST['Qusername'];
 
 $oPosicion->setParametros(array('Qusername'=>$Qusername));

@@ -2,6 +2,7 @@
 use actividades\model as actividades;
 use personas\model as personas;
 use asistentes\model as asistentes;
+use dossiers\model as dossiers;
 /**
  * Esta página muestra una tabla con los asistentes de una actividad.
  * Primero los miembros del cl y después el resto.
@@ -46,8 +47,10 @@ $gesAsistentes = new asistentes\GestorAsistente();
 //$oCargosEnActividad=new actividades\GestorActividadCargo();
 
 // Permisos según el tipo de actividad
-$oActividad=new actividades\Actividad($id_pau);
-$a_ref_perm = dossiers\controller\perm_pers_activ($oActividad->getId_tipo_activ());
+$oActividad = new actividades\Actividad($id_pau);
+$id_tipo_activ = $oActividad->getId_tipo_activ();
+$oPermDossier = new dossiers\PermDossier();
+$a_ref_perm = $oPermDossier->perm_pers_activ($id_tipo_activ);
 
 if (core\configGlobal::is_app_installed('asistentes')) {
 	$a_botones[] = array( 'txt' => _('modificar asistencia'), 'click' =>"fnjs_modificar(\"#seleccionados\")" );

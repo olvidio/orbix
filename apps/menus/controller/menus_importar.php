@@ -44,12 +44,12 @@ if ($seguro == 1) {
 		$campos="(id_grupmenu,grup_menu,orden)";
 		$valores="(:id_grupmenu,:grup_menu,:orden)";
 		if (($qRs = $oDB->prepare("INSERT INTO aux_grupmenu $campos VALUES $valores")) === false) {
-			$sClauError = 'Exposrtar.insertar.prepare';
+			$sClauError = 'Importar.insertar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, __LINE__, __FILE__);
 			return false;
 		} else {
 			if ($qRs->execute($aDades) === false) {
-				$sClauError = 'Exposrtar.insertar.execute';
+				$sClauError = 'Importar.insertar.execute';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
@@ -69,12 +69,12 @@ if ($seguro == 1) {
 		$campos="(id_item,id_grupmenu,id_role)";
 		$valores="(:id_item,:id_grupmenu,:id_role)";
 		if (($qRs = $oDB->prepare("INSERT INTO aux_grupmenu_rol $campos VALUES $valores")) === false) {
-			$sClauError = 'Exposrtar.insertar.prepare';
+			$sClauError = 'Importar.insertar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, __LINE__, __FILE__);
 			return false;
 		} else {
 			if ($qRs->execute($aDades) === false) {
-				$sClauError = 'Exposrtar.insertar.execute';
+				$sClauError = 'Importar.insertar.execute';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
@@ -94,12 +94,12 @@ if ($seguro == 1) {
 		$campos="(id_menu,orden,menu,parametros,id_metamenu,menu_perm,id_grupmenu,ok)";
 		$valores="(:id_menu,:orden,:menu,:parametros,:id_metamenu,:menu_perm,:id_grupmenu,:ok)";
 		if (($qRs = $oDB->prepare("INSERT INTO aux_menus $campos VALUES $valores")) === false) {
-			$sClauError = 'Exposrtar.insertar.prepare';
+			$sClauError = 'Importar.insertar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, __LINE__, __FILE__);
 			return false;
 		} else {
 			if ($qRs->execute($aDades) === false) {
-				$sClauError = 'Exposrtar.insertar.execute';
+				$sClauError = 'Importar.insertar.execute';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, __LINE__, __FILE__);
 				return false;
 			}

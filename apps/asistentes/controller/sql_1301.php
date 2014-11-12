@@ -2,6 +2,7 @@
 use actividades\model as actividades;
 use personas\model as personas;
 use asistentes\model as asistentes;
+use dossiers\model as dossiers;
 /**
 * En el fichero config tenemos las variables genéricas del sistema
 */
@@ -61,7 +62,8 @@ $gesAsistente=new asistentes\GestorAsistente();
 $oPersona = personas\Persona::newPersona($id_pau);
 // permisos Según el tipo de persona: n, agd, s
 $id_tabla=$oPersona->getId_tabla();
-$ref_perm = dossiers\controller\perm_activ_pers($id_tabla,1);
+$oPermDossier = new dossiers\PermDossier();
+$ref_perm = $oPermDossier->perm_activ_pers($id_tabla);
 
 $a_botones=array(
 				array( 'txt' => _('modificar asistencia'), 'click' =>"fnjs_modificar(\"#seleccionados\")" ) ,

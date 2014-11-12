@@ -27,8 +27,6 @@ use ubis\model as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-include_once ("func_permisos.php");
-
 if (!empty($_POST['sel'])) { //vengo de un checkbox
 	//$id_nom=$sel[0];
 	$id_pau=strtok($_POST['sel'][0],"#");

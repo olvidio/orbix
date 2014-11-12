@@ -23,7 +23,32 @@ $_SESSION['config']=$session_config;
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-
+function posibles_esquemas() {
+	$txt = '';
+	// Lista de posibles esquemas (en comun)
+	$oDBP = new \PDO(core\ConfigGlobal:: $str_conexio_public);
+	$sQuery = "select nspname from pg_namespace where nspowner > 1000 ORDER BY nspname";
+	if (($oDblSt = $oDBP->query($sQuery)) === false) {
+		$sClauError = 'Schemas.lista';
+		$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+		return false;
+	}
+	if (is_object($oDblSt)) {
+		$oDblSt->execute();
+		$txt = "<select id=\"region\" name=\"region\" >";
+		foreach($oDblSt as $row) {
+			if (!isset($row[1])) { $a = 0; } else { $a = 1; } // para el caso de sólo tener un valor.
+			if ($row[0] == 'public') continue;
+			if ($row[0] == 'resto') continue;
+			$sf = $row[0].'f';
+			$sv = $row[0].'v';
+			$txt .= "<option value=\"$sf\">$sf</option>";
+			$txt .= "<option value=\"$sv\">$sv</option>";
+		}
+		$txt .= '</select>';
+	}
+	return $txt;
+}
 function cambiar_idioma() {
 	// Si no está determinado en las preferencias, miro el del navegador
 	if (empty($_SESSION['session_auth']['idioma'])) { 
@@ -226,41 +251,21 @@ if ( !isset($_SESSION['session_auth'])) {
 						cambiar_idioma();
 					} else {
 						$variables = array('error'=>1);
+						$variables['DesplRegiones'] = posibles_esquemas();
 						$oView = new core\View(__NAMESPACE__);
 						echo $oView->render('login_form.phtml',$variables);
 						exit;
 					}
 				} else {
 					$variables = array('error'=>1);
+					$variables['DesplRegiones'] = posibles_esquemas();
 					$oView = new core\View(__NAMESPACE__);
 					echo $oView->render('login_form.phtml',$variables);
 					exit;
 				}
 		}
 	} else { // el primer cop
-		// Lista de posibles esquemas (en comun)
-		$oDBP = new \PDO(core\ConfigGlobal:: $str_conexio_public);
-		$sQuery = "select nspname from pg_namespace where nspowner > 1000 ORDER BY nspname";
-		if (($oDblSt = $oDBP->query($sQuery)) === false) {
-			$sClauError = 'Schemas.lista';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return false;
-		}
-		if (is_object($oDblSt)) {
-			$oDblSt->execute();
-			$txt = "<select id=\"region\" name=\"region\" >";
-			foreach($oDblSt as $row) {
-				if (!isset($row[1])) { $a = 0; } else { $a = 1; } // para el caso de sólo tener un valor.
-				if ($row[0] == 'public') continue;
-				if ($row[0] == 'resto') continue;
-				$sf = $row[0].'f';
-				$sv = $row[0].'v';
-				$txt .= "<option value=\"$sf\">$sf</option>";
-				$txt .= "<option value=\"$sv\">$sv</option>";
-			}
-			$txt .= '</select>';
-		}
-		$a_campos['DesplRegiones'] = $txt;
+		$a_campos['DesplRegiones'] = posibles_esquemas();
 		$oView = new core\View(__NAMESPACE__);
 		echo $oView->render('login_form.phtml',$a_campos);
 		exit;
