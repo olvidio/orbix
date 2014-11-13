@@ -48,9 +48,10 @@ if (!empty($id_activ)) { //caso de modificar
 } else { //caso de nuevo asistente
 	$mod="nuevo";
 	if (empty($_POST['id_tipo'])) {
-		$id_tipo="1.....";  //caso genérico para todas las actividades
+		$mi_sfsv = core\ConfigGlobal::mi_sfsv();
+		$id_tipo='^'.$mi_sfsv;  //caso genérico para todas las actividades
 	} else {
-		empty($_POST['id_tipo'])? $id_tipo="" : $id_tipo=$_POST['id_tipo'];
+		empty($_POST['id_tipo'])? $id_tipo="" : $id_tipo='^'.$_POST['id_tipo'];
 	}
 	if (!empty($_POST['que_dl'])) { 
 		$aWhere['dl_org']=$_POST['que_dl'];

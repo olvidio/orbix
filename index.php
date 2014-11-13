@@ -98,7 +98,8 @@ if (isset($primera)) {
 			break;
 		case "aniversarios":
 			$id_grupmenu=$mi_id_grupmenu;
-			$pag_ini=ConfigGlobal::$directorio."/programas/aniversarios.php";
+			//$pag_ini=ConfigGlobal::$directorio."/programas/aniversarios.php";
+			$pag_ini=ConfigGlobal::$directorio."/public/aniversarios.php";
 			break;
 		case "exterior":
 			$oficina=$mi_oficina_menu;

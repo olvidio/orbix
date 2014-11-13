@@ -53,7 +53,7 @@ foreach ($cDatosCampo as $oDatosCampo) {
 	} else {
 		if (!isset($_POST[$camp]) && !empty($_POST['id_nom'])) continue; // sólo si no es nuevo
 		//pongo el valor nulo, sobretodo para las fechas.
-		if (!is_array($_POST[$camp]) && (empty($_POST[$camp]) or trim($_POST[$camp])=="")) {
+		if (isset($_POST[$camp]) && (empty($_POST[$camp]) or trim($_POST[$camp])=="") && !is_array($_POST[$camp])) {
 			//si es un campo not null (y es null), pongo el valor por defecto
 			if ($oDatosCampo->datos_campo($oDbl,'nulo') == 't') {
 				$valor_predeterminado=$oDatosCampo->datos_campo($oDbl,'valor');

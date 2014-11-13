@@ -125,7 +125,7 @@ switch ($_POST['obj_pau']){
 		}
 		break;
 	case "PersonaEx":
-		$a_campos['id_tabla'] = 'pn';
+		if (empty($a_campos['id_tabla'])) $a_campos['id_tabla'] = 'pn';
 		$presentacion="persona_de_paso.phtml";
 		if ($_SESSION['oPerm']->have_perm("agd") or $_SESSION['oPerm']->have_perm("sm") or $_SESSION['oPerm']->have_perm("des") or $_SESSION['oPerm']->have_perm("est")) { $ok=1; } 
 		$ok_txt=1;

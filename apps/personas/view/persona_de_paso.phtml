@@ -43,9 +43,17 @@ $oHash->setArraycamposHidden($a_camposHidden);
 <tr>
 	<td colspan=2><span class=etiqueta ondblclick="fnjs_help('<?php echo $id_tabla_help_ref; ?>')" >n, agd o sss+:</span>
 	<select class=datos name="id_tabla">
-			<option value="pn" <?php if ($id_tabla=="pn") { echo "selected"; } ?> >numerario</option>
-			<option value="pa" <?php if ($id_tabla=="pa") { echo "selected"; } ?> >agregado</option>
-			<option value="psss" <?php if ($id_tabla=="psssc") { echo "selected"; } ?> >sss+</option>
+			<option value="pn" <?php if ($id_tabla=="pn") { echo "selected"; } ?> ><?= _("numerario") ?></option>
+			<option value="pa" <?php if ($id_tabla=="pa") { echo "selected"; } ?> ><?= _("agregado") ?></option>
+			<?php 
+			if (core\ConfigGlobal::mi_sfsv() == 2) {
+				$selected = ($id_tabla=="px")? 'selected': '';
+				echo "<option value=\"px\" $selected >". _("numeraria auxiliar") ."</option>";
+			} else {
+				$selected = ($id_tabla=="psssc")? 'selected': '';
+				echo "<option value=\"psssc\" $selected >". _("sss+") ."</option>";
+			}
+			?>
 	</select>
 	<td><span class=etiqueta ondblclick="fnjs_help('<?php echo $dl_help_ref; ?>')" >Delegación</span></td>
 	<td><input class=datos size="6" name="dl" value="<?php echo $dl ?>" title="<?php echo $dl_help; ?>"></TD>
@@ -87,9 +95,11 @@ echo web\dibujar_campo($obj,"lengua",3,1,1);
 echo "</tr><tr>";
 echo web\dibujar_campo($obj,"profesion",30,1,2);
 echo "</tr><tr>";
-echo web\dibujar_campo($obj,"sacd",9,1,1);
+if (core\ConfigGlobal::mi_sfsv() == 1) {
+	echo web\dibujar_campo($obj,"sacd",9,1,1);
+}
 ?>
-<td><span class=etiqueta ondblclick="fnjs_help('<?php echo $stgr_help_ref; ?>')" >&nbsp;&nbsp;Stgr&nbsp;</span>
+<td><span class=etiqueta ondblclick="fnjs_help('<?php echo $stgr_help_ref; ?>')" >Stgr&nbsp;</span>
 			<select class=datos name="stgr" title="<?php echo $stgr_help; ?>">
 			<option value="b" <?php if ($stgr=="b") { echo "selected"; } ?> >b</option>
 			<option value="c1" <?php if ($stgr=="c1") { echo "selected"; } ?> >c1</option>

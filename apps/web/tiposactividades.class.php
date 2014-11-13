@@ -457,6 +457,25 @@ class TiposActividades {
 		$this->aNom_tipo=$nom_tipo;
 		return $tipo_nom;
 	}
+	/**
+	 * Retorna els posibles id_tipo en format de array
+	 *
+	 * @param regexp expresió regular per tornar el id (substring('bla' from regexp) del postgresql). 
+	 * @return array
+	 */
+	public function getId_tipoPosibles($regexp='.*') {
+		$oDbl = $GLOBALS['oDBPC'];
+		$query="SELECT substring(id_tipo_activ::text from '".$regexp."') 
+		   	FROM a_tipos_actividad  where id_tipo_activ::text ~'".$this->getActividadRegexp()."' order by id_tipo_activ";
+		//echo $query;
+		$oDBPCASt_id=$oDbl->query($query);
+		$a_id_tipos = array();
+		foreach ($oDBPCASt_id->fetchAll() as $row) {
+			$id_tipo = $row[0];
+			$a_id_tipos[$id_tipo] = true;
+		}
+		return $a_id_tipos;
+	}
 
 }
 ?>

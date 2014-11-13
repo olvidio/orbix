@@ -18,6 +18,7 @@ use dossiers\model as dossiers;
 //$go_to=core\ConfigGlobal::getWeb()."/programas/dossiers/dossiers_ver.php?pau=$pau&id_pau=$id_pau&tabla_pau=${_POST['tabla_pau']}&id_dossier=$id_dossier";
 $go_to='';
 
+$mi_sfsv = core\ConfigGlobal::mi_sfsv();
 /* Pongo en la variable $curso el periodo del curso */
 $mes=date('m');
 if ($mes>9) { $any=date('Y')+1; } else { $any=date("Y"); }
@@ -90,13 +91,13 @@ foreach ($cActividadesAsistente as $oActividadAsistente) {
 	$est_ok=$oActividadAsistente->getEst_ok();
 	$observ=$oActividadAsistente->getObserv();
 
-	// para ver el nombre en caso de la sf.
 	$oTipoActividad = new web\TiposActividades($id_tipo_activ);
-	$ssfsv=$oTipoActividad->getSfsvText();
-	$sactividad=$oTipoActividad->getActividadText();
-
-	if ($ssfsv == "sf" && !($_SESSION['oPerm']->have_perm("des")) ) {
-	    $nom_activ="$ssfsv $sactividad";
+	$isfsv=$oTipoActividad->getSfsvId();
+	// para ver el nombre en caso de la otra sección
+	if ($mi_sfsv != $isfsv && !($_SESSION['oPerm']->have_perm("des")) ) {
+		$ssfsv=$oTipoActividad->getSfsvText();
+		$sactividad=$oTipoActividad->getActividadText();
+		$nom_activ="$ssfsv $sactividad";
 	}
 	// para modificar.
 	$id_tipo=substr($id_tipo_activ,0,3)."..."; //cojo los 3 primeros dígitos y "..."
@@ -188,7 +189,7 @@ echo $oTabla->mostrar_tabla();
 $go_to=urlencode($go_to);
 
 if (!empty($ref_perm)) { // si es nulo, no tengo permisos de ningún tipo
-	reset ($ref_perm);
+	reset($ref_perm);
 	echo "<br><table cellspacing=3  class=botones><tr class=botones><th width=25 align=RIGHT>"._("dl").":</th>";
 	while (list ($clave, $val) = each ($ref_perm)) {
 		$permis=$val["perm"];
@@ -198,7 +199,7 @@ if (!empty($ref_perm)) { // si es nulo, no tengo permisos de ningún tipo
 			echo "<td class=botones><span class=link_inv onclick=\"fnjs_update_div('#ficha_personas','$pagina');\">$nom</span></td>";
 		}
 	}
-	echo "</tr><tr><th  width=25 align=RIGHT>"._("otros").":</th>";
+	echo "</tr><tr class=botones><th  width=25 align=RIGHT>"._("otros").":</th>";
 	reset ($ref_perm);
 	while (list ($clave, $val) = each ($ref_perm)) {
 		$permis=$val["perm"];
