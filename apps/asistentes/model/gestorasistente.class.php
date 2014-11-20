@@ -55,7 +55,7 @@ class GestorAsistente Extends core\ClaseGestor {
 		$cAsistencias = $this->getConjunt($a_Clases,$namespace,$aWhereNom, array());
 		//$cAsistencias = $this->getConjunt($a_Clases,$namespace,array('id_nom'=>$id_nom), array());
 		// seleccionar las actividades segun los criterios de búsqueda.
-		$GesActividades = new actividades\GestorActividadPub();
+		$GesActividades = new actividades\GestorActividad();
 		$aListaIds = $GesActividades->getArrayIds($aWhere,$aOperators);
 		// descarto los que no estan.
 		$cActividadesOk = array();

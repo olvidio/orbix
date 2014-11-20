@@ -20,6 +20,7 @@ switch ($_POST['obj_pau']) {
 	case 'PersonaAgd':
 	case 'PersonaS':
 	case 'PersonaSSSC':
+	case 'PersonaDl':
 	case 'TelecoPersonaDl':
 		$obj = 'personas\\model\\TelecoPersonaDl';
 		break;
