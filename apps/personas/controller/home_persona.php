@@ -103,10 +103,10 @@ if ($obj_pau != 'PersonaEx') {
 }
 
 //if (empty($_POST['go_atras'])) { $go_atras="programas/personas_select.php"; } else { $go_atras=$_POST['go_atras']; }
-$gohome=web\Hash::link("apps/personas/controller/home_persona.php?id_nom=$id_nom&obj_pau=$obj_pau"); 
-$godossiers=web\Hash::link("apps/dossiers/controller/dossiers_ver.php?pau=$pau&id_pau=$id_nom&obj_pau=$obj_pau");
-$go_breve=web\Hash::link("apps/personas/controller/personas_editar.php?id_nom=$id_nom&obj_pau=$obj_pau&breve=true"); 
-$go_ficha=web\Hash::link("apps/personas/controller/personas_editar.php?id_nom=$id_nom&obj_pau=$obj_pau"); 
+$gohome=web\Hash::link('apps/personas/controller/home_persona.php?'.http_build_query(array('id_nom'=>$id_nom,'obj_pau'=>$obj_pau))); 
+$godossiers=web\Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_nom,'obj_pau'=>$obj_pau)));
+$go_breve=web\Hash::link('apps/personas/controller/personas_editar.php?'.http_build_query(array('id_nom'=>$id_nom,'obj_pau'=>$obj_pau,'breve'=>'true'))); 
+$go_ficha=web\Hash::link('apps/personas/controller/personas_editar.php?'.http_build_query(array('id_nom'=>$id_nom,'obj_pau'=>$obj_pau))); 
 
 $alt=_("ver dossiers");
 $dos=_("dossiers");

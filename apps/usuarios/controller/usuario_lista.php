@@ -71,7 +71,7 @@ foreach ($oUsuarioColeccion as $oUsuario) {
 	$oRole->DBCarregar();
 	$role= $oRole->getRole();
 
-	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?quien=usuario&id_usuario='.$id_usuario);
+	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?'.http_build_query(array('quien'=>'usuario','id_usuario'=>$id_usuario)));
 
 	$a_valores[$i]['sel']="$id_usuario#";
 	$a_valores[$i][1]=$usuario;

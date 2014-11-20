@@ -134,7 +134,7 @@ switch ($_POST['obj_pau']){
 $a_campos['obj_pau'] = $obj_pau;
 
 if (empty($_POST['nuevo'])) {
-	$ir_a_traslado=web\hash::link("apps/personas/controller/traslado_form.php?pau=p&id_pau=$id_nom&obj_pau=$obj_pau");
+	$ir_a_traslado=web\hash::link('apps/personas/controller/traslado_form.php?'.http_build_query(array('pau'=>'p','id_pau'=>$id_nom,'obj_pau'=>$obj_pau)));
 	$a_campos['ir_a_traslado'] = $ir_a_traslado;
 }
 
@@ -231,8 +231,8 @@ fnjs_eliminar=function(){
 </script>
 <?php
 if ($_POST['que'] == 'titulo') {
-	$gohome=web\Hash::link("apps/personas/controller/home_persona.php?id_nom=$id_nom&obj_pau=$obj_pau"); 
-	$godossiers=web\Hash::link("apps/dossiers/controller/dossiers_ver.php?pau=p&id_pau=$id_nom&obj_pau=$obj_pau");
+	$gohome=web\Hash::link('apps/personas/controller/home_persona.php?'.http_build_query(array('id_nom'=>$id_nom,'obj_pau'=>$obj_pau))); 
+	$godossiers=web\Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>'p','id_pau'=>$id_nom,'obj_pau'=>$obj_pau)));
 	$dos=_("dossiers");
 	$alt=_("ver dossiers");
 	$titulo = $oPersona->getNombreApellidos();

@@ -30,7 +30,7 @@ $aWhere = array('sfsv'=>$sfsv);
 if ($sv == 1 & $sf == 1) $aWhere = array();
 */
 
-$go_to= web\Hash::link('apps/usuarios/controller/role_form.php?id_role='.$id_role);
+$go_to= web\Hash::link('apps/usuarios/controller/role_form.php?'.http_build_query(array('id_role'=>$id_role)));
 
 
 // los que ya tengo:

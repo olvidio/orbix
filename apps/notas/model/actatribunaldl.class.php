@@ -136,8 +136,8 @@ class ActaTribunalDl Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_item);
-			$campos="(acta,examinador,orden,id_item)";
-			$valores="(:acta,:examinador,:orden,:id_item)";		
+			$campos="(acta,examinador,orden)";
+			$valores="(:acta,:examinador,:orden)";		
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'ActaTribunalDl.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);

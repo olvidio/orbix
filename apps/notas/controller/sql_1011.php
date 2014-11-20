@@ -154,7 +154,7 @@ echo $oTabla->mostrar_tabla();
 $go_to=urlencode($go_to);
 
 if ($permiso==3) {
-	$pagina = web\Hash::link(core\ConfigGlobal::getWeb()."/apps/notas/controller/form_1011.php?pau=$pau&id_pau=$id_pau&obj_pau=".$_POST['obj_pau']."&id_dossier=1011&permiso=3&mod=nuevo&id_asignatura=nueva");
+	$pagina = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/form_1011.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$_POST['obj_pau'],'id_dossier'=>1011,'permiso'=>3,'mod'=>'nuevo','id_asignatura'=>'nueva')));
 	?>
 	<br><table><tr>
 	<td class=botones><span class=link_inv onclick="fnjs_update_div('#ficha_personas','<?= $pagina ?>');">

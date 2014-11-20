@@ -28,8 +28,8 @@ foreach ($cTipoDossier as $oTipoDossier) {
 	$a_filas[$i]['descripcion'] = $descripcion;
 	$perm_a=$oPermDossier->permiso($permiso_lectura,$permiso_escritura,$depende_modificar,$pau,$id_pau);
 	 
-	$a_filas[$i]['href_ver']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?pau='.$pau.'&id_pau='.$id_pau.'&obj_pau='.$obj_pau.'&id_dossier='.$id_dossier.'&permiso='.$perm_a.'&depende='.$depende_modificar);
-	$a_filas[$i]['href_abrir']=web\Hash::link(core\ConfigGlobal::getWeb().'/programas/dossiers/dossier_abrir.php?pau='.$pau.'&id_pau='.$id_pau.'&obj_pau='.$obj_pau.'&id_dossier='.$id_dossier.'&tabla_to='.$tabla_to.'&permiso='.$perm_a);
+	$a_filas[$i]['href_ver']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier,'permiso'=>$perm_a,'depende'=>$depende_modificar)));
+	$a_filas[$i]['href_abrir']=web\Hash::link(core\ConfigGlobal::getWeb().'/programas/dossiers/dossier_abrir.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier,'tabla_to'=>$tabla_to,'permiso'=>$perm_a)));
 	$a_filas[$i]['perm_a'] = $perm_a;
 	$i++;
 }

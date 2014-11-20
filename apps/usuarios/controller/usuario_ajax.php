@@ -6,7 +6,7 @@ use usuarios\model as usuarios;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
-	include_once ("apps/web/func_web.php");
+
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
@@ -110,7 +110,8 @@ switch ($_POST['que']) {
 		if ($oUsuarioGrupo->DBGuardar() === false) {
 			echo _('Hay un error, no se ha guardado');
 		}
-		web\ir_a("usuario_form.php?quien=usuario&id_usuario=".$_POST['id_usuario']);
+		$oPosicion = new web\Posicion();
+		echo $oPosicion->ir_a("usuario_form.php?quien=usuario&id_usuario=".$_POST['id_usuario']);
 		break;
 	case "grupo_del":
 		// añado el grupo de permisos al usuario.
@@ -118,7 +119,8 @@ switch ($_POST['que']) {
 		if ($oUsuarioGrupo->DBEliminar() === false) {
 			echo _('Hay un error, no se ha eliminado');
 		}
-		web\ir_a("usuario_form.php?quien=usuario&id_usuario=".$_POST['id_usuario']);
+		$oPosicion = new web\Posicion();
+		echo $oPosicion->ir_a("usuario_form.php?quien=usuario&id_usuario=".$_POST['id_usuario']);
 		break;
 	case "asignar":
 		// miro si hay sacds encargados

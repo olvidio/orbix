@@ -32,7 +32,7 @@ if (!empty($id_item)) {
 	$oPermiso = new usuarios\PermMenu(array('id_usuario'=>$id_usuario));
 	$menu_perm=0;
 }
-$go_to = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?quien='.$_POST['quien'].'&id_usuario='.$id_usuario);
+$go_to = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?'.http_build_query(array('quien'=>$_POST['quien'],'id_usuario'=>$id_usuario)));
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('menu_perm');

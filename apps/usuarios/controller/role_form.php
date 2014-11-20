@@ -99,7 +99,7 @@ $oHash1->setArraycamposHidden($a_camposHidden);
 ?>
 <script>
 fnjs_del_grupmenu=function(formulario){
-	go='<?= web\Hash::link('apps/usuarios/controller/role_form.php?id_role='.$id_role) ?>';
+	go='<?= web\Hash::link('apps/usuarios/controller/role_form.php?'.http_build_query(array('id_role'=>$id_role))) ?>';
 	$('#que').val('del_grupmenu');
 	$(formulario).attr('action',"apps/usuarios/controller/role_update.php");
 	$(formulario).submit(function() {
@@ -123,7 +123,7 @@ fnjs_del_grupmenu=function(formulario){
 }
 
 fnjs_add_grupmenu=function(que){
-	go='<?= web\Hash::link('apps/usuarios/controller/role_grupmenu.php?id_role='.$id_role) ?>';
+	go='<?= web\Hash::link('apps/usuarios/controller/role_grupmenu.php?'.http_build_query(array('id_role'=>$id_role))) ?>';
 	fnjs_update_div('#main',go); 
 }
 fnjs_guardar=function(formulario){
@@ -133,7 +133,7 @@ fnjs_guardar=function(formulario){
 	//alert ("EEE "+rr);
 	if (rr=='ok') {
 		$('#que_user').val('<?= $que_user ?>');
-		go='<?= web\Hash::link('apps/usuarios/controller/role_form.php?id_role='.$id_role) ?>';
+		go='<?= web\Hash::link('apps/usuarios/controller/role_form.php?'.http_build_query(array('id_role'=>$id_role))) ?>';
 		$(formulario).attr('action',"apps/usuarios/controller/role_update.php");
 		$(formulario).submit(function() {
 			$.ajax({

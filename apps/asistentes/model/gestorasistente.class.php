@@ -45,18 +45,19 @@ class GestorAsistente Extends core\ClaseGestor {
 	 * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
 	 * @return array Una col·lecció d'objectes de tipus Asistente
 	 */
-	function getActividadesDeAsistente($id_nom,$aWhere=array(),$aOperators=array()) {
+	function getActividadesDeAsistente($aWhereNom,$aWhere=array(),$aOperators=array()) {
 		// todas las actividades de la persona
 		$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');
 		$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
 		$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
 
 		$namespace = __NAMESPACE__;
-		$cAsistencias = $this->getConjunt($a_Clases,$namespace,array('id_nom'=>$id_nom), array());
+		$cAsistencias = $this->getConjunt($a_Clases,$namespace,$aWhereNom, array());
+		//$cAsistencias = $this->getConjunt($a_Clases,$namespace,array('id_nom'=>$id_nom), array());
 		// seleccionar las actividades segun los criterios de búsqueda.
-		$GesActividades = new actividades\GestorActividad();
+		$GesActividades = new actividades\GestorActividadPub();
 		$aListaIds = $GesActividades->getArrayIds($aWhere,$aOperators);
-		// descarto los uqe no estan.
+		// descarto los que no estan.
 		$cActividadesOk = array();
 		foreach ($cAsistencias as $oAsistente) {
 			$id_activ = $oAsistente->getId_activ();
@@ -88,40 +89,25 @@ class GestorAsistente Extends core\ClaseGestor {
 		$oActividad = new actividades\Actividad($iid_activ);
 		$dl = $oActividad->getDl_org();
 		$id_tabla = $oActividad->getId_tabla();
-/*		if ($dl == core\ConfigGlobal::mi_dele()) {
-			Switch($obj_persona) {
-				case 'PersonaDl':
-					$oAsistente=new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-					break;
-				case 'PersonaIn':
-				case 'PersonaEx':
-					$oAsistente=new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-					break;
-			}
-		} else {
-			if ($id_tabla == 'dl') {
-				$oAsistente=new asistentes\AsistenteOut(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-			} else {
-				$oAsistente=new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-			}
-		}
-
-*/
+		$aWhere['id_activ'] = $iid_activ;
+		$aOperators = array();
+		$namespace = __NAMESPACE__;
 		switch($id_tabla) {
 			case 'dl': // AsistentesDl + AsistentesIn
 				$gesAsistenteDl = new GestorAsistenteDl();
 				$cAsistentesDl = $gesAsistenteDl->getAsistentesDl(array('id_activ'=>$iid_activ));
-				$a_Clases = array('AsistenteDl','AsistenteIn','AsistenteOut');
+				// todas las actividades de la persona
+				$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');
+				$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
 				$namespace = __NAMESPACE__;
 				return $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
 				break;
 			case 'ex': // asistentesOut
-
+				$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
+				$namespace = __NAMESPACE__;
+				return $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
 				break;
 		}
-
-
-
 		$oAsistenteSet = new core\Set();
 		$sQry = "SELECT * FROM av_asistentes a JOIN pv_personas USING (id_nom)
 				WHERE id_activ=$iid_activ

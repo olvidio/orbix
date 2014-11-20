@@ -1,4 +1,6 @@
 ﻿<?php
+use actividadcargos\model as actividadcargos;
+use personas\model as personas;
 /**
  * Muestra un formulario para introducir/cambiar los datos del objeto ActividadCargo
  * Si se crea un nuevo cargo, machaca el anteriro (si lo hubiere)
@@ -23,15 +25,11 @@
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("global_header.inc");
+	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
-	require_once ("classes/personas/personas_gestor.class");
-	require_once ("classes/activ-personas/d_cargos_activ.class");
-	require_once ("classes/personas/xd_orden_cargo_gestor.class");
-	require_once ("classes/web/desplegable.class");
 
 // Crea los objectos de uso global **********************************************
-	require_once ("global_object.inc");
+	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
@@ -50,43 +48,69 @@ if (!empty($_POST['go_to'])) {
 	empty($_POST['go_to'])? $go_to="" : $go_to=$_POST['go_to'];
 }
 
+$obj = 'actividadcargos\\model\\ActividadCargo';
+
+
 if (!empty($id_nom)) { //caso de modificar
-	$oPersona=new Persona($id_nom);
+	$oPersona=personas\Persona::NewPersona($id_nom);
 	$ape_nom=$oPersona->getApellidosNombre();
 	$id_tabla=$oPersona->getId_tabla();
 	$id_nom_real=$id_nom;
-	$oActividadCargo=new ActividadCargo(array('id_activ'=>$id_activ,'id_cargo'=>$id_cargo));
+	$oActividadCargo=new actividadcargos\ActividadCargo(array('id_activ'=>$id_activ,'id_cargo'=>$id_cargo));
 	$puede_agd=$oActividadCargo->getPuede_agd();
 	$observ=$oActividadCargo->getObserv();
 } else { //caso de nuevo cargo
 	$observ="";
 	if (!empty($_POST['tabla_p'])) {
 		empty($_POST['na'])? $tipo="" : $tipo="p".$_POST['na'];
-		$oPersonas=new GestorPersona();
+		$oPersonas=new personas\GestorPersonaDl();
 		$oPersonasOpciones=$oPersonas->getListaPersonasTabla($_POST['tabla_p'],$tipo);
-		$oDesplegablePersonas=new Desplegable('id_nom',$oPersonasOpciones,'',false);
+		$oDesplegablePersonas=new web\Desplegable('id_nom',$oPersonasOpciones,'',false);
 	} else {
-		$go_to=urlencode(ConfigGlobal::$web."/programas/dossiers/dossiers_ver.php?pau=$pau&id_pau=$id_pau&id_dossier=$id_dossier&tabla_pau=$tabla_pau&permiso=3");
-		/**
-		* Funciones que agilizan la navegación web
-		*/
-		include_once("../func_web.php");  
-		$r=ir_a($go_to);
+		$go_to=urlencode(core\core\core\ConfigGlobal::getWeb()."/programas/dossiers/dossiers_ver.php?pau=$pau&id_pau=$id_pau&id_dossier=$id_dossier&tabla_pau=$tabla_pau&permiso=3");
+		$oPosicion = new web\Posicion();
+		echo $oPosicion->ir_a($go_to);
 	}
 }
-$oCargos=new GestorCargo();
-$aOpciones=$oCargos->getCargosActividades();
-$oDesplegableCargos=new Desplegable('id_cargo',$aOpciones,$id_cargo,false);
-(!empty($puede_agd) && $puede_agd=="t") ? $chk="checked" : $chk="" ;
+$oCargos=new actividadcargos\GestorCargo();
+//$aOpciones=$oCargos->getCargos();
+//$oDesplegableCargos=new web\Desplegable('id_cargo',$aOpciones,$id_cargo,false);
+$oDesplegableCargos=$oCargos->getListaCargos();
+$oDesplegableCargos->setNombre('id_cargo');
+$oDesplegableCargos->setBlanco(false);
+$oDesplegableCargos->setopcion_sel($id_cargo);
+$chk = (!empty($puede_agd) && $puede_agd=='t')? 'checked' : '' ;
+
+
+$oHash = new web\Hash();
+$camposForm = 'id_cargo!observ';
+$camposNo = 'puede_agd';
+$a_camposHidden = array(
+		'id_activ' => $_POST['id_pau'],
+		'mod'=> $_POST['mod'],
+		'go_to' => $go_to
+		);
+		//'obj_pau'=> $obj_pau,
+if (!empty($id_nom_real)) {
+	$a_camposHidden['id_nom'] = $id_nom_real;
+} else {
+	if ($_POST['mod']=="nuevo") {
+		$camposNo .= '!asis';
+	}
+	$camposForm .= '!id_nom';
+}
+$oHash->setCamposNo($camposNo);
+$oHash->setcamposForm($camposForm);
+$oHash->setArraycamposHidden($a_camposHidden);
 ?>
 <!-- ------------------- html -----------------------------------------------  -->
 <script>
 fnjs_guardar=function(formulario){
-	var rr=fnjs_comprobar_campos(formulario,'d_cargos_activ','no');
+	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
 	//alert ("EEE "+rr);
 	if (rr=='ok') {
 		go=$('#go_to').val();
-		$(formulario).attr('action',"programas/dossiers/update_3102.php");
+		$(formulario).attr('action',"apps/actividadcargos/controller/update_3102.php");
 		$(formulario).submit(function() {
 			$.ajax({
 				data: $(this).serialize(),
@@ -113,15 +137,12 @@ fnjs_guardar=function(formulario){
 }
 </script>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="" method="POST">
-<input type="Hidden" id="id_activ" name="id_activ" value="<?= $_POST['id_pau'] ?>">
-<input type="Hidden" id="go_to" name="go_to" value="<?= $go_to ?>">
-<input type="Hidden" id="mod" name="mod" value=<?= $_POST['mod'] ?>>
+<?= $oHash->getCamposHtml(); ?>
 <table>
 <tr class=tab><th class=titulo_inv colspan=2><?php echo ucfirst(_("cargo de una actividad")); ?></th></tr>
 <tr><td class=etiqueta><?= ucfirst(_("asistente")) ?>:</td>
 <?php
 if (!empty($id_nom_real)) {
-	echo "<input type=\"Hidden\" id=\"id_nom\" name=\"id_nom\" value=$id_nom_real>";
 	echo "<td class=contenido>$ape_nom</td>";
 } else {
 	echo "<td>";

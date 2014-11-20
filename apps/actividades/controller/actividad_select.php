@@ -178,7 +178,7 @@ if (!empty($Qmodo)) {
 		if (core\configGlobal::is_app_installed('asistentes')) {
 			$a_botones[] = array( 'txt' => _('asistentes'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"asis\")");
 			$a_botones[] = array( 'txt' => _('lista'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"list\")");
-			$a_botones[] = array( 'txt' => _('transferir sasistentes a históricos'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"historicos\")");
+			//$a_botones[] = array( 'txt' => _('transferir sasistentes a históricos'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"historicos\")");
 		}
 		if (core\configGlobal::is_app_installed('procesos')) {
 			$a_botones[] = array( 'txt' => _('estado'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"estado\")");
@@ -223,18 +223,20 @@ $sin=0;
 $a_valores=array();
 $aWhere['_ordre'] = 'f_ini';
 
-if (!empty($modo) && $Qmodo == 'importar') {
+if (!empty($Qmodo) && $Qmodo == 'importar') {
 	$GesActividades = new actividades\GestorActividadPub();
 	$GesImportar = new actividades\GestorImportar();
+	$obj_pau = 'ActividadPub';
 } else {
 	$GesActividades = new actividades\GestorActividad();
+	$obj_pau = 'Actividad';
 }
 $cActividades = $GesActividades->getActividades($aWhere,$aOperador);
 
 $num_activ=count($cActividades);
 if ($num_activ > $num_max_actividades && empty($_POST['continuar'])) {
-	$go_avant=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_select.php?continuar=si&atras=2');
-	$go_atras=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_que.php?que='.$Qque.'&modo='.$Qmodo);
+	$go_avant=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_select.php?'.http_build_query(array('continuar'=>'si','atras'=>2)));
+	$go_atras=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_que.php?'.http_build_query(array('que'=>$Qque,'modo'=>$Qmodo)));
 	echo "<h2>".sprintf(_('son %s actividades a mostrar. ¿Seguro que quiere continuar?.'),$num_activ).'</h2>';
 	echo "<input type='button' onclick=fnjs_update_div('#main','".$go_avant."') value="._('continuar').">";
 	echo "<input type='button' onclick=fnjs_update_div('#main','".$go_atras."') value="._('volver').">";
@@ -290,11 +292,7 @@ foreach($cActividades as $oActividad) {
 		$oTarifa = new actividades\TipoTarifa($tarifa);
 		$tarifa_letra= $oTarifa->getLetra();
 
-		if (core\ConfigGlobal::$ubicacion == 'int') {
-			$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?pau=a&id_pau='.$id_activ.'&tabla_pau=a_actividades');
-		} else {
-			$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_ver.php?id_activ='.$id_activ.'&tabla=a_actividades');
-		}
+		$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>'a','id_pau'=>$id_activ,'obj_pau'=>$obj_pau)));
 		
 		$sacds="";
 		if (!core\ConfigGlobal::is_app_installed('procesos') || $oPermSacd->have_perm('ver') === true) { // sólo si tiene permiso
@@ -377,11 +375,12 @@ $oHash->setArraycamposHidden($a_camposHidden);
 $oHashSel = new web\Hash();
 $oHashSel->setcamposForm('!sel!mod!queSel!id_dossier');
 $a_camposHidden = array(
-		'tabla' =>'a_actividades',
-		'tabla_pau' =>'a_actividades',
+		'obj_pau' =>$obj_pau,
 		'pau' =>'a',
 		'permiso' =>'3'
 		);
+		//'tabla' =>'a_actividades',
+		//'tabla_pau' =>'a_actividades',
 $oHashSel->setArraycamposHidden($a_camposHidden);
 
 /* ---------------------------------- html --------------------------------------- */
@@ -465,7 +464,7 @@ echo $oTabla->mostrar_tabla();
 <?php
 if ($miRole != '9' && $miRole != '16') { //casa o centroSf
 ?>
-	<br><span class=link onclick="fnjs_update_div('#main','<?= web\Hash::link('apps/actividades/controller/actividad_nueva.php?id_tipo_activ='.$Qid_tipo_activ) ?>')" ><?= _("Nueva actividad") ?></span>
+	<br><span class=link onclick="fnjs_update_div('#main','<?= web\Hash::link('apps/actividades/controller/actividad_nueva.php?'.http_build_query(array('id_tipo_activ'=>$Qid_tipo_activ))) ?>')" ><?= _("Nueva actividad") ?></span>
 <?php } ?>
 </div>
 </div>

@@ -1,4 +1,8 @@
 <?php
+use actividades\model as actividades;
+use actividadcargos\model as actividadcargos;
+use dossiers\model as dossiers;
+use personas\model as personas;
 /**
  * Esta página muestra una tabla con los cargos de una actividad.
  *  Con los botones de modificar y quitar cargo.
@@ -20,29 +24,25 @@
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("global_header.inc");
+	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
-	require_once ("classes/personas/personas.class");
-	require_once ("classes/personas/xd_orden_cargo.class");
-	require_once ("classes/actividades/ext_a_actividades_gestor.class");
-	require_once ("classes/activ-personas/d_cargos_activ_gestor.class");
-	require_once ('classes/web/listas.class');
 
 // Crea los objectos de uso global **********************************************
-	require_once ("global_object.inc");
+	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-include_once(ConfigGlobal::$dir_programas.'/dossiers/func_dossiers.php');
-
-
 //pongo aqui el $go_to porque al ir al mismo update que las actividaes, no se donde voler
-$go_to=ConfigGlobal::$web."/programas/dossiers/dossiers_ver.php?pau=$pau&id_pau=$id_pau&tabla_pau=${_POST['tabla_pau']}&id_dossier=$id_dossier";
-	
-$oCargosEnActividad=new GestorActividadCargo();
+//$go_to=core\ConfigGlobal::$web."/programas/dossiers/dossiers_ver.php?pau=$pau&id_pau=$id_pau&tabla_pau=${_POST['tabla_pau']}&id_dossier=$id_dossier";
+
+$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'id_dossier'=>$id_dossier)));
+
+$oCargosEnActividad=new actividadcargos\GestorActividadCargo();
 
 // Permisos según el tipo de actividad
-$oActividad=new Actividad($id_pau);
-$a_ref_perm = perm_pers_activ($oActividad->getId_tipo_activ());
+$oActividad=new actividades\Actividad($id_pau);
+$id_tipo_activ = $oActividad->getId_tipo_activ();
+$oPermDossier = new dossiers\PermDossier();
+$a_ref_perm = $oPermDossier->perm_pers_activ($id_tipo_activ);
 
 $a_botones=array(
 				array( 'txt' => _('modificar cargo'), 'click' =>"fnjs_mod_cargo(this.form)" ) ,
@@ -52,12 +52,13 @@ $a_botones=array(
 $a_cabeceras=array( _("cargo"),	array('name'=>_("nombre y apellidos"),'width'=>300),_("puede ser agd?"),_("observaciones.")  );
 $c=0;
 $a_valores=array();
-foreach($oCargosEnActividad->getActividadCargos($id_pau) as $oActividadCargo) {
+$cCargosEnActividad = $oCargosEnActividad->getActividadCargos(array('id_activ'=>$id_pau));
+foreach($cCargosEnActividad as $oActividadCargo) {
 	$c++;
 	$id_nom=$oActividadCargo->getId_nom();
 	$id_cargo=$oActividadCargo->getId_cargo();
-	$oPersona=new Persona($id_nom);
-	$oCargo=new Cargo($id_cargo);
+	$oPersona=personas\Persona::NewPersona($id_nom);
+	$oCargo=new actividadcargos\Cargo($id_cargo);
 
 	$nom=$oPersona->getApellidosNombre();
 
@@ -75,7 +76,7 @@ foreach($oCargosEnActividad->getActividadCargos($id_pau) as $oActividadCargo) {
 	$puede_agd=='t' ? $chk_puede_agd="si" : $chk_puede_agd="no" ;
 
 	// Para los de des, elimino el cargo y la asistencia. Para el resto, sólo el cargo (no la asistencia).
-	if (($GLOBALS['oPerm']->have_perm("des")) or ($GLOBALS['oPerm']->have_perm("vcsd"))) { $eliminar=2; } else { $eliminar=1; }
+	if (($_SESSION['oPerm']->have_perm("des")) or ($_SESSION['oPerm']->have_perm("vcsd"))) { $eliminar=2; } else { $eliminar=1; }
 	if ($permiso==3) {
 		$a_valores[$c]['sel']="$id_nom#$id_cargo#$eliminar";
 	} else {
@@ -87,13 +88,26 @@ foreach($oCargosEnActividad->getActividadCargos($id_pau) as $oActividadCargo) {
 	$a_valores[$c][3]=$chk_puede_agd;
 	$a_valores[$c][4]=$observ;
 }
+
+$oHash = new web\Hash();
+$oHash->setcamposForm('');
+$oHash->setCamposNo('sel!mod');
+$a_camposHidden = array(
+		'pau' => $pau,
+		'id_pau' => $id_pau,
+		'id_dossier' => $id_dossier,
+		'permiso' => 3,
+		'go_to' => $go_to
+		);
+		//'tabla_pau' => $_POST['tabla_pau'],
+$oHash->setArraycamposHidden($a_camposHidden);
 ?>
 <script>
 fnjs_mod_cargo=function(formulario){
 	rta=fnjs_solo_uno(formulario);
 	if (rta==1) {
 		$('#mod').val("editar");
-  		$(formulario).attr('action',"programas/dossiers/form_3102.php");
+  		$(formulario).attr('action',"apps/actividadcargos/controller/form_3102.php");
   		fnjs_enviar_formulario(formulario,'#ficha_activ');
   	}
 }
@@ -101,14 +115,14 @@ fnjs_borrar_cargo=function(formulario){
 	rta=fnjs_solo_uno(formulario);
 	if (rta==1) {
 		<?php
-		if (($GLOBALS['oPerm']->have_perm("des")) or ($GLOBALS['oPerm']->have_perm("vcsd"))) { 
+		if (($_SESSION['oPerm']->have_perm("des")) or ($_SESSION['oPerm']->have_perm("vcsd"))) { 
 			$txt= _("Esto también borrará a esta persona de la lista de asistentes?");
 		}
 		?>
 		if (confirm("<?php echo _("¿Está seguro que desea quitar este cargo a esta persona?");?><?= $txt ?>") ) {
 			$('#mod').val("eliminar");
 			go=$('#go_to').val();
-			$(formulario).attr('action',"programas/dossiers/update_3102.php");
+			$(formulario).attr('action',"apps/actividadcargos/controller/update_3102.php");
 			$(formulario).submit(function() {
 				$.ajax({
 					data: $(this).serialize(),
@@ -133,15 +147,10 @@ fnjs_borrar_cargo=function(formulario){
 </script>
 <h2 class=titulo><?php echo ucfirst(_("relación de cargos")); ?></h2>
 <form id="seleccionados" name="seleccionados" action="" method="post">
+<?= $oHash->getCamposHtml(); ?>
 <input type='hidden' id='mod' name='mod' value=''>
-<input type="hidden" id="pau" name="pau" value="<?= $pau ?>">
-<input type="hidden" id="id_pau" name="id_pau" value="<?= $id_pau ?>">
-<input type="hidden" id="tabla_pau" name="tabla_pau" value="<?= $_POST['tabla_pau'] ?>">
-<input type="hidden" id="id_dossier" name="id_dossier" value="<?= $id_dossier ?>">
-<input type="hidden" id="permiso" name="permiso" value="3">
-<input type="hidden" id="go_to" name="go_to" value="<?= $go_to ?>">
 <?php
-$oTabla = new Lista();
+$oTabla = new web\Lista();
 $oTabla->setId_tabla('sql_3102');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
@@ -151,16 +160,15 @@ echo $oTabla->mostrar_tabla();
 </form>
 <?php
 // --------------  boton insert ----------------------
-$go_to=urlencode($go_to);
-
 reset ($a_ref_perm);
 echo "<div class='no_print'><br><table class=botones><tr class=botones><th align=RIGHT>"._("dl").":</th>";
+$mi_dele = core\ConfigGlobal::mi_dele();
 while (list ($clave, $val) = each ($a_ref_perm)) {
 	$perm=$val["perm"];
 	$tabla_p=$val["tabla"];
 	$nom=$val["nom"];
    	if (!empty($perm)) {
-		$pagina="programas/dossiers/form_3102.php?mod=nuevo&dele=".ConfigGlobal::$dele."&pau=$pau&db=".ConfigGlobal::$db_dl."&tabla_p=$tabla_p&id_pau=$id_pau&go_to=$go_to";
+		$pagina=web\Hash::link('apps/actividadcargos/controller/form_3102.php?'.http_build_query(array('mod'=>'nuevo','dele'=>$mi_dele,'pau'=>$pau,'tabla_p'=>$tabla_p,'id_pau'=>$id_pau,'go_to'=>$go_to)));
 		echo "<td class=botones><span class=link_inv onclick=\"fnjs_update_div('#ficha_activ','$pagina');\" >".sprintf(_("añadir %s"),$nom)."</span></td>";
 	}
 }

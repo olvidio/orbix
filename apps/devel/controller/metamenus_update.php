@@ -2,14 +2,10 @@
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("global_header.inc");
 // Arxivos requeridos por esta url **********************************************
-	require_once ("classes/personas/aux_menus_gestor.class");
-	require_once ("classes/personas/ext_aux_menus_ext_gestor.class");
 
 // Crea los objectos de uso global **********************************************
 	require_once ("global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-
-include_once(ConfigGlobal::$dir_programas.'/func_web.php');
 
 empty($_POST['filtro_of'])? $oficina='' : $oficina=$_POST['filtro_of'];
 
@@ -42,7 +38,6 @@ if (isset($_POST['del']) && $_POST['del']==1 ) {
 }
 
 $go_to="menus_get.php?filtro_of=$oficina|ficha";
-//echo "gg : $go_to<br>";
-ir_a($go_to);
-
+$oPosicion = new web\Posicion();
+echo $oPosicion->ir_a($go_to);
 ?>

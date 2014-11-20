@@ -17,7 +17,7 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 	//$id_nom=$sel[0];
 	$id_pau=strtok($_POST['sel'][0],"#");
 	$id_tabla=strtok("#");
-	$go_to="session@sel";
+	$go_to="atras";
 	$pau = empty($_POST['pau'])? "" : $_POST['pau'];
 } else {
 	$pau = empty($_POST['pau'])? "" : $_POST['pau'];
@@ -32,8 +32,7 @@ $top="top_personas";
 //si viene de la página de dossiers, no hace falta la cabecera
 // -----------------------------  cabecera ---------------------------------
 if (empty($_POST['cabecera']) || $_POST['cabecera']!="no") {
-	//if (empty($go_atras)) $go_atras=link_a("session@sel",1);
-	$godossiers=web\Hash::link(core\ConfigGlobal::getWeb()."/apps/dossiers/controller/dossiers_ver.php?pau=$pau&id_pau=$id_pau&obj_pau=".$_POST['obj_pau']);
+	$godossiers=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$_POST['obj_pau'])));
 	$alt=_("ver dossiers");
 	$dos=_("dossiers");
 
@@ -72,15 +71,6 @@ $hoy=date("d/m/Y");
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('new_ctr!f_ctr!new_dl!f_dl!situacion');
-/*$a_camposHidden = array(
-		'id_pau' => $id_pau,
-		'tabla_pau' => $_POST['tabla'],
-		'id_ctr_o' => $id_ctr,
-		'ctr_o' => $nombre_ctr,
-		'dl' => $dl,
-		'go_to' => $go_to
-		);
-*/
 $a_camposHidden = array(
 		'id_pau' => $id_pau,
 		'id_ctr_o' => $id_ctr,

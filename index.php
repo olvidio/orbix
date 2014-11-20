@@ -198,7 +198,8 @@ $num_menu_1="";
 		// hago las rutas absolutas, en vez de relativas:
 		$full_url = '';
 		if (!empty($url)) $full_url=ConfigGlobal::getWeb().'/'.$url;
-		$parametros = web\Hash::param($full_url,$parametros);
+		//$parametros = web\Hash::param($full_url,$parametros);
+		$parametros = web\Hash::add_hash($parametros,$full_url);
 		// quito las llaves "{}"
 		$orden=substr($orden,1,-1);
 		$array_orden=preg_split('/,/',$orden);
@@ -475,7 +476,9 @@ function fnjs_ir_a() {
 			parametros='&atras=1'; 
 		}
 	}
-	parametros=parametros+'&PHPSESSID=<?php echo session_id(); ?>'; 
+	if (parametros.indexOf("PHPSESSID") == -1) {
+		parametros=parametros+'&PHPSESSID=<?php echo session_id(); ?>'; 
+	}
 	
 	if ($('#left_slide').length) { $('#left_slide').hide(); } 
 
@@ -640,7 +643,7 @@ function fnjs_ref_absoluta(base,path) {
 function fnjs_enviar_formulario(id_form,bloque) {
 	if (!bloque) { bloque='#main'; }
 	$(id_form).submit(function() { // catch the form's submit event
-				$.ajax({ // create an AJAX call...
+			$.ajax({ // create an AJAX call...
 				data: $(this).serialize(), // get the form data
 				type: 'post', // GET or POST
 				url: $(this).attr('action'), // the file to call
@@ -823,8 +826,8 @@ if ($gm > 1) {
 	</form>
 </div>
 <div id="cargando" ><?= _('Cargando...') ?></div>
-<div id="left_slide" class="left-slide" >
-<span class=handle onClick="fnjs_ir_a();">ccc</span>
+<div id="left_slide" class="left-slide">
+<span class=handle onClick="fnjs_ir_a();" style="display: none;">cccc</span>
 </div>
 <div id="main" refe="<?= $pag_ini ?>">
 <?php

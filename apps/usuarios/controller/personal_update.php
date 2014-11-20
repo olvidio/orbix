@@ -73,7 +73,7 @@ switch ($_POST['que']) {
 		}
 
 		// volver a la página de configuración
-		$location=web\Hash::link(core\ConfigGlobal::getWeb().'/index.php?PHPSESSID='.session_id());
+		$location=web\Hash::link(core\ConfigGlobal::getWeb().'/index.php?'.http_build_query(array('PHPSESSID'=>session_id())));
 		echo "<body onload=\"$location\";></body>";
 }
 ?>

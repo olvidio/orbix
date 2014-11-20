@@ -46,7 +46,7 @@ $cDirecciones = $oGesDir->getDirecciones($aWhere,$aOperador);
 foreach ($cDirecciones as $oDireccion) {
 	$i++;
 	$id_direccion=$oDireccion->getId_direccion();
-	$pagina=web\Hash::link(core\ConfigGlobal::getWeb()."/apps/ubis/controller/direcciones_asignar.php?id_ubi=${_POST['id_ubi']}&id_direccion=$id_direccion&obj_dir=${_POST['obj_dir']}"); 
+	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/ubis/controller/direcciones_asignar.php?'.http_build_query(array('id_ubi'=>$_POST['id_ubi'],'id_direccion'=>$id_direccion,'obj_dir'=>$_POST['obj_dir']))); 
 	$a_valores[$i][1]=$id_direccion;
 	$a_valores[$i][2]= array( 'ira'=>$pagina, 'valor'=>'ok');
 	$a_valores[$i][3]=$oDireccion->getDireccion();
@@ -59,7 +59,7 @@ foreach ($cDirecciones as $oDireccion) {
 	$a_valores[$i][10]=$oDireccion->getObserv();
 }
  
-$pagina=web\Hash::link("apps/ubis/controller/direcciones_editar.php?mod=nuevo&id_ubi=${_POST['id_ubi']}&obj_dir=${_POST['obj_dir']}"); 
+$pagina=web\Hash::link('apps/ubis/controller/direcciones_editar.php?'.http_build_query(array('mod'=>'nuevo','id_ubi'=>$_POST['id_ubi'],'obj_dir'=>$_POST['obj_dir'])));
 ?>
 <h2 class=titulo><?php echo ucfirst(_("tabla de direcciones")); ?></h2>
 <?php

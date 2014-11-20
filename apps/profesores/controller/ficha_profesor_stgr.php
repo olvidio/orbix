@@ -83,8 +83,8 @@ $cosas['latin']="bloque=main&id_dossier=1022&tabla_dossier=d_profesor_latin&pau=
 if ($sacd=="t") { $sacd_txt="si"; }
 if ($latin=="t") { $latin_txt="si"; }
 
-/*
 $formato_fecha="'DD.RM.YYYY'";
+/*
 
 $sql_dep="SELECT  d.id_departamento,d.escrito_nombramiento,to_char(d.f_nombramiento,$formato_fecha) as ff_nombramiento,d.id_tipo_profesor,
 					dep.departamento, t.tipo_profesor,d.f_nombramiento,d.f_cese,d.escrito_cese

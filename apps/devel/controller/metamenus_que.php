@@ -6,16 +6,12 @@ use menus\model as menus;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
-	//require_once ("classes/personas/aux_menus_gestor.class");
-	//require_once ("classes/personas/ext_aux_menus_ext_gestor.class");
-	//require_once ("classes/web/desplegable.class");
 
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $filtro_mod= empty($_POST['filtro_mod'])? '' : $_POST['filtro_mod'];
-//include_once (core\ConfigGlobal::$dir_programas.'/func_web.php');
 
 $oLista=new menus\GestorMetamenu();
 

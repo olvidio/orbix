@@ -15,8 +15,6 @@ use personas\model as personas;
 * @subpackage agd
 */
 
-
-
 $GesSituacion = new personas\GestorSituacion();
 $aWhere['_ordre'] = 'situacion';
 $cSituaciones = $GesSituacion->getSituaciones($aWhere);

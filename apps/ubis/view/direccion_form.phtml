@@ -78,7 +78,7 @@ fnjs_adjuntar=function(act,id_direccion){
 }
 
 fnjs_otro=function(n){
-	go_dir='<?= web\Hash::link("apps/ubis/controller/direcciones_editar.php?id_ubi=$id_ubi&id_direccion=$id_direccion&obj_dir=$obj_dir&idx=$idx&hno=inc") ?>';
+	go_dir='<?= web\Hash::link('apps/ubis/controller/direcciones_editar.php?'.http_build_query(array('id_ubi'=>$id_ubi,'id_direccion'=>$id_direccion,'obj_dir'=>$obj_dir,'idx'=>$idx,'hno'=>'inc'))) ?>';
 	if (n==1) { 
 		go_dir=go_dir+'&inc=menos';
 	}

@@ -50,7 +50,7 @@ foreach ($oGrupoColeccion as $oGrupo) {
 	$id_usuario=$oGrupo->getId_usuario();
 	$usuario=$oGrupo->getUsuario();
 
-	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?quien=grupo&id_usuario='.$id_usuario);
+	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?'.http_build_query(array('quien'=>'grupo','id_usuario'=>$id_usuario)));
 
 	$a_valores[$i]['sel']="$id_usuario#";
 	$a_valores[$i][1]=$usuario;

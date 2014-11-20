@@ -114,7 +114,7 @@ $idioma_ca=($idioma=="ca_ES.UTF-8")? "selected":'';
 $idioma_es=($idioma=="es_ES.UTF-8")? "selected":'';
 
 $aniversarios=web\Hash::link(core\ConfigGlobal::getWeb().'/programas/aniversarios.php');
-$avisos=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?quien=usuario&id_usuario='.core\ConfigGlobal::mi_id_usuario());
+$avisos=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?'.http_build_query(array('quien'=>'usuario','id_usuario'=>$id_usuario)));
 $cambio_password=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form_pwd.php');
 
 

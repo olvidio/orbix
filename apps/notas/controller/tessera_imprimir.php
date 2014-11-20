@@ -108,8 +108,8 @@ function data($data) {
 // -----------------------------
 
 // -----------------------------  cabecera ---------------------------------
-$caraA = web\Hash::link("apps/notas/controller/tessera_imprimir.php?cara=A&id_nom=$id_nom&id_tabla=$id_tabla");
-$caraB = web\Hash::link("apps/notas/controller/tessera_imprimir.php?cara=B&id_nom=$id_nom&id_tabla=$id_tabla");
+$caraA = web\Hash::link('apps/notas/controller/tessera_imprimir.php?'.http_build_query(array('cara'=>'A','id_nom'=>$id_nom,'id_tabla'=>$id_tabla)));
+$caraB = web\Hash::link('apps/notas/controller/tessera_imprimir.php?'.http_build_query(array('cara'=>'B','id_nom'=>$id_nom,'id_tabla'=>$id_tabla)));
 ?>
 <table class="no_print">
 <tr>

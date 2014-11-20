@@ -385,7 +385,7 @@ if ($miRole < 4) {
 		//alert ("EEE "+rr);
 		if (rr=='ok') {
 			$('#que_user').val('<?= $que_user ?>');
-			go='<?= web\Hash::link('apps/usuarios/controller/usuario_form.php?quien='.$quien.'&id_usuario='.$id_usuario) ?>';
+			go='<?= web\Hash::link('apps/usuarios/controller/usuario_form.php?'.http_build_query(array('quien'=>$quien,'id_usuario'=>$id_usuario))) ?>';
 			$(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
 			$(formulario).submit(function() {
 				$.ajax({
@@ -683,11 +683,11 @@ if (!empty($id_usuario)) { // si no hay usuario, no puedo poner permisos.
 							id_usuario=$('#id_usuario').val();
 							if (formulario == '#permisos_menu') {
 								$('#que').val('perm_menu_eliminar');
-								go='<?= web\Hash::link('apps/usuarios/controller/usuario_form.php?quien=grupo&id_usuario='.$id_usuario) ?>';
+								go='<?= web\Hash::link('apps/usuarios/controller/usuario_form.php?'.http_build_query(array('quien'=>'grupo','id_usuario'=>$id_usuario))) ?>';
 							}	
 							if (formulario == '#permisos') {
 								$('#que').val('perm_eliminar');
-								go='<?= web\Hash::link('apps/usuarios/controller/usuario_form.php?quien=usuario&id_usuario='.$id_usuario) ?>';
+								go='<?= web\Hash::link('apps/usuarios/controller/usuario_form.php?'.http_build_query(array('quien'=>'usuario','id_usuario'=>$id_usuario))) ?>';
 							}	
 							$(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
 							$(formulario).submit(function() {
@@ -713,7 +713,7 @@ if (!empty($id_usuario)) { // si no hay usuario, no puedo poner permisos.
 					case '#avisos':
 						if (confirm("<?php echo _("¿Esta seguro que desea borrar este aviso?");?>") ) {
 							$('#av_que').val('aviso_eliminar');
-							go='<?= web\Hash::link('apps/usuarios/controller/usuario_form.php?quien=usuario&id_usuario='.$id_usuario) ?>';
+							go='<?= web\Hash::link('apps/usuarios/controller/usuario_form.php?'.http_build_query(array('quien'=>'usuario','id_usuario'=>$id_usuario))) ?>';
 							$(formulario).attr('action',"apps/usuarios/controller/usuario_aviso_update.php");
 							$(formulario).submit(function() {
 								$.ajax({

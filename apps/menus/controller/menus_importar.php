@@ -8,8 +8,6 @@ use menus\model as menus;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-include_once('apps/web/func_web.php');
-
 // Copiar de dlb a public roles-grupmenu, grupmenu, menus
 $oDB = $GLOBALS['oDB'];
 $oDBPC = $GLOBALS['oDBPC'];
@@ -22,7 +20,7 @@ if (core\ConfigGlobal::mi_dele() == 'dlb') {
 $seguro = empty($_POST['seguro'])? 2 : $_POST['seguro'];
 
 if ($seguro == 2) {
-	$go=web\Hash::link("apps/menus/controller/menus_importar.php?seguro=1");
+	$go=web\Hash::link('apps/menus/controller/menus_importar.php?'.http_build_query(array('seguro'=>1)));
 	$html = "Esto pondrá los menus por defecto. Se eliminaran todas las modificaciones que se hayan hecho en los menus y grupos de menu";
 	$html .= "<br>";
 	$html .= "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("continuar")."</span>";

@@ -101,8 +101,8 @@ if (isset($_POST['mod']) && $_POST['mod'] == 'nuevo' ) {
 	$a_campos['id_direccion_actual'] = $id_direccion_actual;
 	$a_campos['id_ubi'] = $_POST['id_ubi'];
 
-	$golistadir = web\Hash::link("apps/ubis/controller/direcciones_que.php?id_ubi=".$_POST['id_ubi']."&id_direccion=".$_POST['id_direccion']."&obj_dir=".$_POST['obj_dir']);
-	$quitardir = web\Hash::link("apps/ubis/controller/direcciones_quitar.php?id_ubi=".$_POST['id_ubi']."&id_direccion=".$_POST['id_direccion']."&obj_dir=".$_POST['obj_dir']."&hno=idx");
+	$golistadir = web\Hash::link('apps/ubis/controller/direcciones_que.php?'.http_build_query(array('id_ubi'=>$_POST['id_ubi'],'id_direccion'=>$_POST['id_direccion'],'obj_dir'=>$_POST['obj_dir'])));
+	$quitardir = web\Hash::link('apps/ubis/controller/direcciones_quitar.php?'.http_build_query(array('id_ubi'=>$_POST['id_ubi'],'id_direccion'=>$_POST['id_direccion'],'obj_dir'=>$_POST['obj_dir'],'hno'=>'idx')));
 }
 
 //----------------------------------Permisos según el usuario

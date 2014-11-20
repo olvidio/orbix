@@ -147,8 +147,12 @@ switch ($_POST['mod']) {
 }
 
 if (empty($msg_err)) { 
-	$oPosicion->setId_div('ir_a');
-	echo $oPosicion->atras();
+	if (!empty($_POST['go_to'])) {
+		echo $oPosicion->ir_a($_POST['go_to']);
+	} else {
+		$oPosicion->setId_div('ir_a');
+		echo $oPosicion->atras();
+	}
 } else {
 	echo $msg_err;
 }	

@@ -35,10 +35,10 @@ jsForm.mandar=function(formulario,que){
 			this.action = "apps/actividades/controller/actividad_update.php";
 			break;
 		case "lista_clase":
-			this.action = "apps/actividades/controller/lista_clases_ca.php";
+			this.action = "apps/actividadestudios/controller/lista_clases_ca.php";
 			break;
 		case "plan_estudios":
-			this.action = "apps/actividades/controller/plan_estudios_ca.php";
+			this.action = "apps/actividadestudios/controller/plan_estudios_ca.php";
 			break;
 		case "asig":
 			$('#queSel').val(que);

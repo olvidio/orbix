@@ -11,7 +11,6 @@ use ubis\model as ubis;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
-	include_once('apps/web/func_web.php');  
 
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");

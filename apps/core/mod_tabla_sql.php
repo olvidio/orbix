@@ -7,14 +7,10 @@ use web;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
-	//require_once ('classes/web/listas.class');
 
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-
-//include_once("func_dossiers.php");
-//include_once(ConfigGlobal::$dir_programas.'/func_web.php');
 
 if (empty($_POST['datos_buscar'])) $_POST['datos_buscar']="";
 if (empty($_POST['aSerieBuscar'])) $_POST['aSerieBuscar']="";
@@ -24,13 +20,17 @@ if (empty($eliminar_txt)) $eliminar_txt="";
 /***************  datos  **********************************/
 $padre='datos_sql'; // para indicarle al $dir_datos lo que quiero.
 
+$_POST['datos_tabla'] = urldecode($_POST['datos_tabla']);
+$_POST['datos_buscar'] = urldecode($_POST['datos_buscar']);
+$_POST['aSerieBuscar'] = urldecode($_POST['aSerieBuscar']);
+$_POST['k_buscar'] = urldecode($_POST['k_buscar']);
 include(ConfigGlobal::$directorio.'/'.$_POST['datos_tabla']);
 // En el caso de aop, la base de datos és distinta. Debo incluir en $_POST['datos_tabla'] la conexión:: $oDB;
 /*************** fin datos  **********************************/
-$go_to=web\Hash::link(ConfigGlobal::getWeb().'/apps/core/mod_tabla_sql.php?datos_tabla='.$_POST['datos_tabla'].'&datos_buscar='.$_POST['datos_buscar'].'&aSerieBuscar='.$_POST['aSerieBuscar'].'&k_buscar='.$_POST['k_buscar']);
+$a_dataUrl = array('datos_tabla'=>$_POST['datos_tabla'],'datos_buscar'=>$_POST['datos_buscar'],'aSerieBuscar'=>$_POST['aSerieBuscar'],'k_buscar'=>$_POST['k_buscar']);
+$go_to=web\Hash::link(ConfigGlobal::getWeb()."/apps/core/mod_tabla_sql.php?".http_build_query($a_dataUrl));
 ?>
 <script>
-
 fnjs_nuevo=function(formulario){
 	$('#mod').val("nuevo");
 	$(formulario).attr('action',"apps/core/mod_tabla_form.php");
@@ -82,7 +82,6 @@ fnjs_eliminar=function(formulario){
 $a_botones=array( array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(\"#seleccionados\")" ) ,
 				array( 'txt' => _('eliminar'), 'click' =>"fnjs_eliminar(\"#seleccionados\")" ) 
 				);
-
 
 $a_cabeceras=array();
 $a_valores=array();
@@ -143,7 +142,6 @@ $a_camposHidden1 = array(
 		'go_to' => $go_to
 		);
 $oHash1->setArraycamposHidden($a_camposHidden1);
-
 /* ---------------------------------- html --------------------------------------- */
 if (!empty($_POST['datos_buscar'])) {
 	include(ConfigGlobal::$directorio.'/'.$_POST['datos_buscar']);

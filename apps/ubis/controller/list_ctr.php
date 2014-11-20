@@ -185,7 +185,7 @@ foreach ($cUbis as $oCentro) {
 	$i++;
 	$row = $oCentro->getTot();
 	$id_ubi=$oCentro->getId_ubi();
-	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/ubis/controller/home_ubis.php?pau=u&id_ubi='.$id_ubi); 
+	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/ubis/controller/home_ubis.php?'.http_build_query(array('pau'=>'u','id_ubi'=>$id_ubi))); 
 	$ctr=$oCentro->getNombre_ubi();
 
 	if (strstr($obj,'Centro') !== false) { $tipo = $oCentro->getTipo_ctr(); }

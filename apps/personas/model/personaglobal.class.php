@@ -795,10 +795,17 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 				case 'p':
 					$ctr=$this->sdl;
 					break;
-				default:
+				case 'n':
+				case 'x':
+				case 'a':
+				case 's':
+				case 'sssc':
 					$sql='SELECT nombre_ubi FROM u_centros_dl u JOIN personas_dl p ON (u.id_ubi=p.id_ctr)
 					   		WHERE id_nom='.$this->getId_nom();
 					$ctr=$oDbl->query($sql)->fetchColumn();
+					break;
+				default:
+					$ctr = '';
 					break;
 			}
 			$this->sCentro_o_dl=$ctr;

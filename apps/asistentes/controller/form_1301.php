@@ -1,7 +1,6 @@
 <?php
 use actividades\model as actividades;
 use asistentes\model as asistentes;
-
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -10,11 +9,9 @@ use asistentes\model as asistentes;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-
 if (!empty($_POST['sel'])) { //vengo de un checkbox
 	$id_activ=strtok($_POST['sel'][0],"#");
 }
-
 
 if (!empty($_POST['go_to'])) {
 	$go_to=urldecode($_POST['go_to']);
@@ -27,8 +24,13 @@ if (!empty($id_activ)) { //caso de modificar
 	$oActividad = new actividades\Actividad(array('id_activ'=>$id_activ));
 	$nom_activ=$oActividad->getNom_activ();
 	$id_tabla=$oActividad->getId_tabla();
-	if ($id_tabla == 'dl') { 
+	if ($id_tabla == 'dl' OR $id_tabla == 'ex') { 
 		switch ($_POST['obj_pau']) {
+			case 'PersonaN':
+			case 'PersonaNax':
+			case 'PersonaAgd':
+			case 'PersonaS':
+			case 'PersonaSSSC':
 			case 'PersonaDl':
 				$oAsistente = new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$_POST['id_pau']));
 				break;
@@ -60,7 +62,7 @@ if (!empty($id_activ)) { //caso de modificar
 		$aOperadores['dl_org']='!=';
 	}
 	
-	$aWhere['id_tipo_activ']=$id_tipo;
+	$aWhere['id_tipo_activ'] = '^'.$id_tipo;
 	$aOperadores['id_tipo_activ']='~';
 	$aWhere['status']=2;
 	$aWhere['_ordre']='f_ini';

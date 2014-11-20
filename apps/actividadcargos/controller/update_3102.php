@@ -1,4 +1,8 @@
 ﻿<?php
+use actividades\model as actividades;
+use actividadcargos\model as actividadcargos;
+use asistentes\model as asistentes;
+use dossiers\model as dossiers;
 /**
  * Actualiza los datos de un objeto ActividadCargo.
  * Si asiste ($_POST['asis']), se crea el objeto ActividadAsistente y se pone como propio
@@ -23,19 +27,13 @@
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("global_header.inc");
+	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
-	require_once ("classes/actividades/ext_a_actividades.class");
-	require_once ("classes/activ-personas/d_asistentes_activ.class");
-	require_once ("classes/activ-personas/d_cargos_activ.class");
-	include_once('classes/web/tipo_actividad.class');
 
 // Crea los objectos de uso global **********************************************
-	require_once ("global_object.inc");
+	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-include_once ("./func_dossiers.php");
-		
 $_POST['elim_asis'] = '';
 
 if (!empty($_POST['sel'])) { //vengo de un checkbox
@@ -59,7 +57,7 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 switch ($_POST['mod']) {
 	//------------ BORRAR --------
 	case "eliminar":
-		$oActividadCargo=new ActividadCargo(array('id_activ'=>$id_activ,'id_cargo'=>$id_cargo));
+		$oActividadCargo=new actividadcargos\ActividadCargo(array('id_activ'=>$id_activ,'id_cargo'=>$id_cargo));
 		if (($oActividadCargo->DBEliminar()) === false) {
 			$sClauError = 'Dossiers.cargos_activ.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError('', $sClauError, __LINE__, __FILE__);
@@ -67,62 +65,75 @@ switch ($_POST['mod']) {
 		}
 	 	
 		// hay que cerrar el dossier para esta persona, si no tiene más actividades:
-		cerrar_dossier('p',$id_nom,'1302');
+		$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$id_nom,'id_tipo_dossier'=>1302));
+		$oDossier->cerrar();
+		$oDossier->DBGuardar();
+
 		// Borrar también la asistencia, también en el caso de actividades de s y sg
-		$oActividad = new Actividad($id_activ);
+		$oActividad = new actividades\Actividad($id_activ);
 		$id_tipo_activ = $oActividad->getId_tipo_activ();
 
-		$oTipoActiv= new TiposActividades($id_tipo_activ);
+		$oTipoActiv= new actividades\TiposActividades($id_tipo_activ);
 		$ssfsv=$oTipoActiv->getSfsvText();
 		$sasistentes=$oTipoActiv->getAsistentesText();
 		$sactividad=$oTipoActiv->getActividadText();
 		$snom_tipo=$oTipoActiv->getNom_tipoText();
 
 		if ($_POST['elim_asis']==2 || $sasistentes == 's' || $sasistentes == 'sg') {
-			$oActividadAsistente=new ActividadAsistente(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+			$oActividadAsistente=new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
 			if ($oActividadAsistente->DBEliminar() === false) {
 				echo _('Hay un error, no se ha eliminado');
 			}
-			cerrar_dossier('p',$id_nom,'1301'); 
+			$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$id_nom,'id_tipo_dossier'=>1301));
+			$oDossier->cerrar();
+			$oDossier->DBGuardar();
 		}	
 	break;
 	case "nuevo":
 		//------------ NUEVO --------
 		// Ahora machaca un cargo existente. Quiza podria avisar que ya existe
-		$oActividadCargo=new ActividadCargo(array('id_activ'=>$id_activ,'id_cargo'=>$id_cargo));
+		$oActividadCargo=new actividadcargos\ActividadCargo(array('id_activ'=>$id_activ,'id_cargo'=>$id_cargo));
 		$oActividadCargo->setId_nom($id_nom);
 		isset($_POST['observ'])? $oActividadCargo->setObserv($_POST['observ']) : $oActividadCargo->setObserv();
 		isset($_POST['puede_agd'])? $oActividadCargo->setPuede_agd('t') : $oActividadCargo->setPuede_agd('f');
 		
-
 		if (($oActividadCargo->DBGuardar()) === false) {
 			$sClauError = 'Dossiers.cargos_activ.nuevo';
-			$_SESSION['oGestorErrores']->addErrorAppLastError('', $sClauError, __LINE__, __FILE__);
+			//$_SESSION['oGestorErrores']->addErrorAppLastError('', $sClauError, __LINE__, __FILE__);
+			echo " $sClauError, ". __LINE__ .','. __FILE__ ;
 			return false;
 		}
 
 		// si no está abierto, hay que abrir el dossier para esta persona
-		abrir_dossier('p',$id_nom,'1302');
+		$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$id_nom,'id_tipo_dossier'=>1302));
+		$oDossier->abrir();
+		$oDossier->DBGuardar();
 		// ... y si es la primera persona, hay que abrir el dossier para esta actividad
-		abrir_dossier('a',$id_activ,'3102');
+		$oDossier = new dossiers\Dossier(array('tabla'=>'a','id_pau'=>$id_activ,'id_tipo_dossier'=>3102));
+		$oDossier->abrir();
+		$oDossier->DBGuardar();
 		
 		// También asiste:
 		if (!empty($_POST['asis'])) {
-			$oActividadAsistente=new ActividadAsistente(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+			$oActividadAsistente=new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
 			$oActividadAsistente->setPropio('t'); // por defecto lo pongo como propio
 			$oActividadAsistente->setFalta('f');
 			if ($oActividadAsistente->DBGuardar() === false) {
 				echo _('Hay un error, no se ha guardado');
 			}
 			// si no está abierto, hay que abrir el dossier para esta persona
-			abrir_dossier('p',$id_nom,'1301');
+			$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$id_nom,'id_tipo_dossier'=>1301));
+			$oDossier->abrir();
+			$oDossier->DBGuardar();
 			// ... y si es la primera persona, hay que abrir el dossier para esta actividad
-			abrir_dossier('a',$id_activ,'3101');
+			$oDossier = new dossiers\Dossier(array('tabla'=>'a','id_pau'=>$id_activ,'id_tipo_dossier'=>3101));
+			$oDossier->abrir();
+			$oDossier->DBGuardar();
 		}
 		break;
 	case "editar":
 	//------------ EDITAR --------
-		$oActividadCargo=new ActividadCargo(array('id_activ'=>$id_activ,'id_cargo'=>$id_cargo));
+		$oActividadCargo=new actividadcargos\ActividadCargo(array('id_activ'=>$id_activ,'id_cargo'=>$id_cargo));
 		$oActividadCargo->setId_nom($id_nom);
 		isset($_POST['observ'])? $oActividadCargo->setObserv($_POST['observ']) : $oActividadCargo->setObserv();
 		isset($_POST['puede_agd'])? $oActividadCargo->setPuede_agd('t') : $oActividadCargo->setPuede_agd('f');
@@ -130,7 +141,7 @@ switch ($_POST['mod']) {
 			echo _('Hay un error, no se ha guardado');
 		}
 		// Modifico la asistencia:
-		$oActividadAsistente=new ActividadAsistente(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+		$oActividadAsistente=new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
 		if ($oActividadAsistente->DBCarregar('guardar') === false) { //no existe
 			if (!empty($_POST['asis'])) { // lo añado
 				$oActividadAsistente->setPropio('t'); // por defecto lo pongo como propio
@@ -139,9 +150,13 @@ switch ($_POST['mod']) {
 					echo _('Hay un error, no se ha guardado');
 				}
 				// si no está abierto, hay que abrir el dossier para esta persona
-				abrir_dossier('p',$id_nom,'1301');
+				$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$id_nom,'id_tipo_dossier'=>1301));
+				$oDossier->abrir();
+				$oDossier->DBGuardar();
 				// ... y si es la primera persona, hay que abrir el dossier para esta actividad
-				abrir_dossier('a',$id_activ,'3101');
+				$oDossier = new dossiers\Dossier(array('tabla'=>'a','id_pau'=>$id_activ,'id_tipo_dossier'=>3101));
+				$oDossier->abrir();
+				$oDossier->DBGuardar();
 			}
 		} else {
 			if (isset($_POST['asis']) && empty($_POST['asis'])) { // lo borro
@@ -149,9 +164,13 @@ switch ($_POST['mod']) {
 					echo _('Hay un error, no se ha eliminado');
 				}
 				// si no está abierto, hay que abrir el dossier para esta persona
-				abrir_dossier('p',$id_nom,'1301');
+				$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$id_nom,'id_tipo_dossier'=>1301));
+				$oDossier->abrir();
+				$oDossier->DBGuardar();
 				// ... y si es la primera persona, hay que abrir el dossier para esta actividad
-				abrir_dossier('a',$id_activ,'3101');
+				$oDossier = new dossiers\Dossier(array('tabla'=>'a','id_pau'=>$id_activ,'id_tipo_dossier'=>3101));
+				$oDossier->abrir();
+				$oDossier->DBGuardar();
 			}
 		}
 		break;

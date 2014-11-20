@@ -20,7 +20,6 @@ use actividades\model as actividades;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
-	include_once("apps/web/func_web.php");
 
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
@@ -427,7 +426,8 @@ if ($_POST['origen'] != "calendario") {
 	if ($_POST['mod']=="nuevo" || $_POST['mod']=="duplicar") {
 		$tabla="a_actividades";
 		$go_to="actividad_ver.php?que=ver&id_activ=".$oActividad->getId_activ()."&tabla=$tabla";
-		web\ir_a($go_to);
+		$oPosicion = new web\Posicion();
+		echo $oPosicion->ir_a($go_to);
 		exit;
 	} else {
 		$tabla="a_actividades";

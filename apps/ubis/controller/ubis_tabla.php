@@ -321,12 +321,10 @@ $sGestorDir = core\urlsafe_b64encode(serialize($GestorDir));
 $go_to= '';
 //si no existe la ficha, hacer una nueva	
 if (is_array($cUbisTot) && count($cUbisTot) == 0) {
-	$go_to=urlencode("ubis_buscar.php?simple=1&tipo=$tipo");
+	$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_buscar.php?'.http_build_query(array('simple'=>1,'tipo'=>$tipo))); 
 	$nombre_ubi=urlencode($_POST['nombre_ubi']);
 	
-	//$sGestor= 'ubis\model\GestorCentroDl';
-
-	$pagina=web\Hash::link(core\ConfigGlobal::getWeb()."/apps/ubis/controller/ubis_editar.php?sGestor=$sGestor&nombre_ubi=$nombre_ubi&nuevo=1&go_to=$go_to"); 
+	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_editar.php?'.http_build_query(array('sGestor'=>$sGestor,'nombre_ubi'=>$nombre_ubi,'nuevo'=>1,'go_to'=>$go_to))); 
 	
 	if ($tipo=="tot" || $loc=="tot") {
 		echo _("No existe esta ficha.");
@@ -399,7 +397,7 @@ foreach($cUbisTot as $oUbi) {
 		$c_p= '';
 	}
 
-	$pagina=web\Hash::link("apps/ubis/controller/home_ubis.php?pau=u&id_ubi=$id_ubi"); 
+	$pagina=web\Hash::link('apps/ubis/controller/home_ubis.php?'.http_build_query(array('pau'=>'u','id_ubi'=>$id_ubi))); 
 
 	$a_valores[$i]['sel']=$id_ubi;
 	$a_valores[$i][1]= array( 'ira'=>$pagina, 'valor'=>$nombre_ubi);

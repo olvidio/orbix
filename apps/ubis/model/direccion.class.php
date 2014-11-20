@@ -26,7 +26,7 @@ class Direccion Extends core\ClasePropiedades {
 	/* METODES PUBLICS ----------------------------------------------------------*/
 	
 	public static function NewDireccion($id_direccion) { 
-		$gesDireccion = new GestorDirecccionCtr;
+		$gesDireccion = new GestorDireccionCtr;
 		$cDirecciones = $gesDireccion->getDirecciones(array('id_ubi'=>$id_direccion));
 		if (count($cDirecciones) > 0) {
 			$oDireccion = $cDirecciones[0];

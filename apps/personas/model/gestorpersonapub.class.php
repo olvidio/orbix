@@ -40,7 +40,7 @@ class GestorPersonaPub Extends core\ClaseGestor {
 	 * @param string sQuery la query a executar.
 	 * @return array Una col·lecció d'objectes de tipus PersonaPub
 	 */
-	function getPersonaPubesQuery($sQuery='') {
+	function getPersonasPubQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
 		$oPersonaPubSet = new core\Set();
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {

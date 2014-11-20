@@ -272,7 +272,7 @@ foreach ($cPersonas as $oPersona) {
 
 	$condicion_2="Where id_nom='".$id_nom."'";
 	$condicion_2=urlencode($condicion_2);
-	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/home_persona.php?id_nom='.$id_nom.'&obj_pau='.$obj_pau.'&breve='.$breve.'&es_sacd='.$es_sacd);
+	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/home_persona.php?'.http_build_query(array('id_nom'=>$id_nom,'obj_pau'=>$obj_pau,'breve'=>$breve,'es_sacd'=>$es_sacd)));
 
 	$a_val['sel']="$id_nom#$id_tabla";
 	$a_val[1]=$id_tabla;
@@ -300,7 +300,7 @@ foreach ($a_personas as $nom => $val) {
 	$a_valores[$c] = $val;
 }
 
-$pagina=web\Hash::link(core\ConfigGlobal::getWeb()."/apps/personas/controller/personas_editar.php?obj_pau=$obj_pau&nuevo=1"); 
+$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/personas_editar.php?'.http_build_query(array('obj_pau'=>$obj_pau,'nuevo'=>1)));
 	
 $resultado=sprintf( _("%s personas encontradas"),$i);
 
@@ -383,7 +383,7 @@ fnjs_matriculas=function(formulario){
 	if (rta==1) {
 		$('#que').val("matriculas");
 		$('#id_dossier').val("1303");
-  		$(formulario).attr('action',"programas/dossiers/dossiers_ver.php");
+  		$(formulario).attr('action',"apps/dossiers/controller/dossiers_ver.php");
   		fnjs_enviar_formulario(formulario);
   	}
 }

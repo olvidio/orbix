@@ -36,7 +36,6 @@ use personas\model as personas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-
 if (!empty($_POST['sel'])) { //vengo de un checkbox
 	$id_nom=strtok($_POST['sel'][0],"#");
 } else {
@@ -56,8 +55,6 @@ $obj = 'asistentes\\model\\Asistente';
 $oActividad = new actividades\Actividad($id_activ);
 $dl = $oActividad->getDl_org();
 $id_tabla_dl = $oActividad->getId_tabla();
-
-
 
 if (!empty($id_nom)) { //caso de modificar
 	$mod="editar";
@@ -128,8 +125,8 @@ if (!empty($id_nom)) { //caso de modificar
 		/*
 		   default:
 			$go_to=urlencode(core\ConfigGlobal::getWeb()."/programas/dossiers/dossiers_ver.php?pau=$pau&id_pau=${_POST['id_pau']}&id_dossier=$id_dossier&tabla_pau=$tabla_pau&permiso=3");
-			include_once(core\ConfigGlobal::$dir_programas.'/func_web.php');  
-			$r=ir_a($go_to);
+			$oPosicion = new web\Posicion();
+			echo $oPosicion->ir_a($go_to);
 			*/
 	}
 }

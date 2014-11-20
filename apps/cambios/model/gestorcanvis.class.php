@@ -82,14 +82,15 @@ class gestorCanvis {
 	function muestraMensaje($sClauError,$goto) {
 		//$_SESSION['oGestorErrores']->addErrorAppLastError($oDBSt, $sClauError, $file);
 		$txt=$this->leerErrorAppLastError();
-		include_once(ConfigGlobal::$dir_programas.'/func_web.php');  
 		$err=$oDBSt->errorInfo();
 		if (strstr($txt, 'duplicate key')) {
 			echo _("Ya existe un registro con esta información");
 		} else {
 			echo "\n dd".$txt."\n $sClauError <br>";
 		}
-		$seguir=link_a($goto,0);
+		$oPosicion = new web\Posicion();
+		$seguir = echo $oPosicion->link_a($goto,0);
+		//$seguir=link_a($goto,0);
 		echo "<br><span class='link' onclick=fnjs_update_div('#main',$seguir)>"._("continuar")."</span>";
 
 

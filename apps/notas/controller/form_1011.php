@@ -13,9 +13,6 @@ use profesores\model as profesores;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-//include_once(core\ConfigGlobal::$dir_programas.'/func_web.php');
-
-
 if (!empty($_POST['sel'])) { //vengo de un checkbox
 	if ($_POST['pau']=="p") { 
 		$id_nivel_real=strtok($_POST['sel'][0],"#"); 

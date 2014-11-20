@@ -103,12 +103,12 @@ switch ($tipo_ubi) {
 		print_r($_POST);
 }
 
-$gohome=web\Hash::link("apps/ubis/controller/home_ubis.php?id_ubi=$id_ubi&obj_pau=$obj_pau"); 
-$godossiers=web\Hash::link("apps/dossiers/controller/dossiers_ver.php?pau=$pau&id_pau=$id_pau&obj_pau=$obj_pau&go_atras=$go_atras");
+$gohome=web\Hash::link('apps/ubis/controller/home_ubis.php?'.http_build_query(array('id_ubi'=>$id_ubi,'obj_pau'=>$obj_pau))); 
+$godossiers=web\Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$go_atras)));
 
-$go_ubi=web\Hash::link("apps/ubis/controller/ubis_editar.php?id_ubi=$id_ubi&obj_pau=$obj_pau");
-$go_dir=web\Hash::link("apps/ubis/controller/direcciones_editar.php?id_ubi=$id_ubi&id_direccion=$id_direccion&obj_dir=$obj_dir"); 
-$go_tel=web\Hash::link("apps/ubis/controller/teleco_tabla.php?id_ubi=$id_ubi&obj_pau=$obj_pau");
+$go_ubi=web\Hash::link('apps/ubis/controller/ubis_editar.php?'.http_build_query(array('id_ubi'=>$id_ubi,'obj_pau'=>$obj_pau)));
+$go_dir=web\Hash::link('apps/ubis/controller/direcciones_editar.php?'.http_build_query(array('id_ubi'=>$id_ubi,'id_direccion'=>$id_direccion,'obj_dir'=>$obj_dir))); 
+$go_tel=web\Hash::link('apps/ubis/controller/teleco_tabla.php?'.http_build_query(array('id_ubi'=>$id_ubi,'obj_pau'=>$obj_pau)));
 
 $alt=_("ver dossiers");
 $dos=_("dossiers");

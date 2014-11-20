@@ -4,7 +4,6 @@ use ubis\model as ubis;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
-	include_once ('apps/web/func_web.php');
 
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
@@ -24,7 +23,7 @@ if (isset($_POST['sel'])) { //vengo de un checkbox
 $_POST['tipo'] = isset($_POST['tipo']) ? $_POST['tipo'] : '';
 $_POST['tabla'] = isset($_POST['tabla']) ? $_POST['tabla'] : '';
 
-$godossiers = web\Hash::link("apps/dossiers/controller/dossiers_ver.php?pau=a&id_pau=$id_activ&tabla_pau=".$_POST['tabla']);
+$godossiers = web\Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>'a','id_pau'=>$id_activ,'tabla_pau'=>$_POST['tabla'])));
 
 $a_status = array( 1 => _("proyecto"), 2 => _("actual"), 3 => _("terminada"), 4 => _("borrable"));
 

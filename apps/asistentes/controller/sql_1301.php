@@ -15,8 +15,7 @@ use dossiers\model as dossiers;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 //pongo aqui el $go_to porque al ir al mismo update que las actividaes, no se donde voler
-//$go_to=core\ConfigGlobal::getWeb()."/programas/dossiers/dossiers_ver.php?pau=$pau&id_pau=$id_pau&tabla_pau=${_POST['tabla_pau']}&id_dossier=$id_dossier";
-$go_to='';
+$go_to=core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'id_dossier'=>$id_dossier,'obj_pau' => $_POST['obj_pau'])); 
 
 $mi_sfsv = core\ConfigGlobal::mi_sfsv();
 /* Pongo en la variable $curso el periodo del curso */
@@ -65,7 +64,6 @@ $oPersona = personas\Persona::newPersona($id_pau);
 $id_tabla=$oPersona->getId_tabla();
 $oPermDossier = new dossiers\PermDossier();
 $ref_perm = $oPermDossier->perm_activ_pers($id_tabla);
-
 $a_botones=array(
 				array( 'txt' => _('modificar asistencia'), 'click' =>"fnjs_modificar(\"#seleccionados\")" ) ,
 				array( 'txt' => _('borrar asistencia'), 'click' =>"fnjs_borrar(\"#seleccionados\")" ) 
@@ -75,7 +73,7 @@ $a_cabeceras=array( array('name'=>_("fechas"),'width'=>150),array('name'=>_("nom
 $a_valores=array();
 
 $i=0;
-$cActividadesAsistente = $gesAsistente->getActividadesDeAsistente($id_pau,$aWhere,$aOperator);
+$cActividadesAsistente = $gesAsistente->getActividadesDeAsistente(array('id_nom'=>$id_pau),$aWhere,$aOperator);
 foreach ($cActividadesAsistente as $oActividadAsistente) {
 	$i++;
 	$id_activ=$oActividadAsistente->getId_activ();
@@ -100,7 +98,7 @@ foreach ($cActividadesAsistente as $oActividadAsistente) {
 		$nom_activ="$ssfsv $sactividad";
 	}
 	// para modificar.
-	$id_tipo=substr($id_tipo_activ,0,3)."..."; //cojo los 3 primeros dígitos y "..."
+	$id_tipo=substr($id_tipo_activ,0,3); //cojo los 3 primeros dígitos
 	$act=!empty($ref_perm[$id_tipo])? $ref_perm[$id_tipo] : '';
 
 	if (!empty($act["perm"])) { $permiso=3; } else { $permiso=1; }
@@ -186,8 +184,6 @@ echo $oTabla->mostrar_tabla();
 <?php
 // --------------  boton insert ----------------------
 
-$go_to=urlencode($go_to);
-
 if (!empty($ref_perm)) { // si es nulo, no tengo permisos de ningún tipo
 	reset($ref_perm);
 	echo "<br><table cellspacing=3  class=botones><tr class=botones><th width=25 align=RIGHT>"._("dl").":</th>";
@@ -195,7 +191,8 @@ if (!empty($ref_perm)) { // si es nulo, no tengo permisos de ningún tipo
 		$permis=$val["perm"];
 		$nom=$val["nom"];
 		if (!empty($permis)) {
-			$pagina=web\Hash::link("apps/asistentes/controller/form_1301.php?mod=nuevo&que_dl=".core\ConfigGlobal::mi_dele()."&pau=$pau&id_tipo=$clave&obj_pau=$obj_pau&id_pau=$id_pau&go_to=$go_to");
+			$mi_dele = core\ConfigGlobal::mi_dele();
+			$pagina=web\Hash::link('apps/asistentes/controller/form_1301.php?'.http_build_query(array('mod'=>'nuevo','que_dl'=>$mi_dele,'pau'=>$pau,'id_tipo'=>$clave,'obj_pau'=>$obj_pau,'id_pau'=>$id_pau,'go_to'=>$go_to)));
 			echo "<td class=botones><span class=link_inv onclick=\"fnjs_update_div('#ficha_personas','$pagina');\">$nom</span></td>";
 		}
 	}
@@ -205,7 +202,7 @@ if (!empty($ref_perm)) { // si es nulo, no tengo permisos de ningún tipo
 		$permis=$val["perm"];
 		$nom=$val["nom"];
 		if (!empty($permis)) {
-			$pagina=web\Hash::link("apps/asistentes/controller/form_1301.php?mod=nuevo&pau=$pau&id_tipo=$clave&obj_pau=$obj_pau&id_pau=$id_pau&go_to=$go_to");
+			$pagina=web\Hash::link('apps/asistentes/controller/form_1301.php?'.http_build_query(array('mod'=>'nuevo','pau'=>$pau,'id_tipo'=>$clave,'obj_pau'=>$obj_pau,'id_pau'=>$id_pau,'go_to'=>$go_to)));
 			echo "<td class=botones><span class=link_inv onclick=\"fnjs_update_div('#ficha_personas','$pagina');\">$nom</span></td>";
 		}
 	}

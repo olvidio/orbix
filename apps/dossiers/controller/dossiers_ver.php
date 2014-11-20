@@ -55,8 +55,8 @@ switch ($pau) {
 		$oPersona = new $clase($id_pau);
 		$nom = $oPersona->getNombreApellidos();
 
-		$goficha=web\Hash::link(core\ConfigGlobal::getWeb()."/apps/personas/controller/home_persona.php?id_nom=$id_pau&obj_pau=$obj_pau&go_atras=${_POST['go_atras']}"); 
-		$godossiers=web\Hash::link(core\ConfigGlobal::getWeb()."/apps/dossiers/controller/dossiers_ver.php?pau=$pau&id_pau=$id_pau&obj_pau=$obj_pau&go_atras=${_POST['go_atras']}");
+		$goficha=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/home_persona.php?'.http_build_query(array('id_nom'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$_POST['go_atras']))); 
+		$godossiers=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$_POST['go_atras'])));
 		$form_action=$_POST['go_atras'];
 		break;
 	case 'u':
@@ -66,8 +66,8 @@ switch ($pau) {
 		$oUbi = new $clase($id_pau);
 		$nom = $oUbi->getNombre_ubi();
 		
-		$goficha=web\Hash::link(core\ConfigGlobal::getWeb()."/apps/ubis/controller/home_ubis.php?id_ubi=$id_pau&obj_pau=$obj_pau&go_atras=${_POST['go_atras']}");
-		$godossiers=web\Hash::link(core\ConfigGlobal::getWeb()."/apps/dossiers/controller/dossiers_ver.php?pau=$pau&id_pau=$id_pau&obj_pau=$obj_pau&go_atras=${_POST['go_atras']}");
+		$goficha=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/ubis/controller/home_ubis.php?'.http_build_query(array('id_ubi'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$_POST['go_atras'])));
+		$godossiers=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$_POST['go_atras'])));
 		
 		if (!empty($id_direccion)) {
 			$goficha.='&id_direccion='.$id_direccion;
@@ -98,8 +98,8 @@ switch ($pau) {
 		$ficha="ficha_activ";
 		$oActividad  = new actividades\Actividad($id_pau);
 		$nom = $oActividad->getNom_activ();
-		$goficha=web\Hash::link(core\ConfigGlobal::getWeb()."/apps/actividades/controller/actividad_ver.php?id_activ=$id_pau&tabla=$obj_pau&go_atras=${_POST['go_atras']}"); 
-		$godossiers=web\Hash::link(core\ConfigGlobal::getWeb()."/apps/dossiers/controller/dossiers_ver.php?pau=$pau&id_pau=$id_pau&obj_pau=$obj_pau&go_atras=${_POST['go_atras']}");
+		$goficha=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_ver.php?'.http_build_query(array('id_activ'=>$id_pau,'tabla'=>$obj_pau,'go_atras'=>$_POST['go_atras']))); 
+		$godossiers=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$_POST['go_atras'])));
 		// según de donde venga, debo volver al mismo sitio...
 		if (!empty($_SESSION['session_go_to']['sel']['pag'])) {
 			$pag = $_SESSION['session_go_to']['sel']['pag']; //=>"lista_actividades_sg.php",
@@ -123,7 +123,7 @@ $titulo=$txt;
 
 // -----------------------------  cabecera ---------------------------------
 
-echo $oPosicion->atras();
+//echo $oPosicion->atras();
 ?>
 <div id=<?= $top ?>>
 <table><tr>
@@ -133,8 +133,9 @@ echo $oPosicion->atras();
 </div>
 <?php
 // -------------------------------------------------------------------------
-if (empty($_POST['que'])) $_POST['que']="" ;
-switch ($_POST['que']){
+if (empty($_POST['queSel'])) $_POST['queSel']='';
+//switch ($_POST['que']){
+switch ($_POST['queSel']){
 	case "activ": // actividades de un asistente
 		$pau="p";
 		$permiso=3;
@@ -205,7 +206,7 @@ while  ($id_dossier) {
 	$pres_2="../../$app/model/datos_".$id_dossier.".php";
 	$pres="../../$app/controller/sql_".$id_dossier.".php";
 
-	$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?pau='.$pau.'&id_pau='.$id_pau.'&obj_pau='.$obj_pau.'&id_dossier='.$id_dossier.'&permiso='.$permiso);
+	$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier,'permiso'=>$permiso)));
 
 	if (realpath($pres_2)){ //como file_exists
 		include ("datos_sql.php");
@@ -218,7 +219,7 @@ while  ($id_dossier) {
 	if ($permiso==3 && !file_exists($pres_2)){ 
 		switch($id_dossier) {
 			case 1004: //traslados de ctr o dl
-				$insert=web\Hash::link(core\ConfigGlobal::getWeb()."/apps/personas/controller/traslado_form.php?cabecera=no&id_pau=$id_pau&id_dossier=$id_dossier&obj_pau=".$obj_pau."&go_to=$go_to");
+				$insert=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/traslado_form.php?'.http_build_query(array('cabecera'=>'no','id_pau'=>$id_pau,'id_dossier'=>$id_dossier,'obj_pau'=>$obj_pau,'go_to'=>$go_to)));
 				echo "<p><span class=link onclick=fnjs_update_div('#main','$insert')>"._("insertar")."</span></p>";
 				break;
 			case 1303:
@@ -231,7 +232,7 @@ while  ($id_dossier) {
 				break; //nada, ya esta en el sql_3101
 		}
 		//para el botón cerrar dossier:
-		$cerrar=web\Hash::link(core\ConfigGlobal::getWeb()."/apps/dossiers/controller/dossiers_ver.php?accion=cerrar&pau=$pau&id_pau=$id_pau&id_tipo_dossier=$id_dossier&obj_pau=$obj_pau");
+		$cerrar=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('accion'=>'cerrar','pau'=>$pau,'id_pau'=>$id_pau,'id_tipo_dossier'=>$id_dossier,'obj_pau'=>$obj_pau)));
 		$etiqueta_cerrar= "<br><br><span class=link onclick=fnjs_update_div('#main','$cerrar')>cerrar dossier</span>";
 	} // fin del if permiso
 	$id_dossier=strtok("y");

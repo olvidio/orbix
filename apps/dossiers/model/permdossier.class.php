@@ -357,7 +357,7 @@ class PermDossier {
 								$sv."33" => array ( 'nom'=>"cv agd", 	'perm'=> 0),
 								$sv."43" => array ( 'nom'=>"cv s", 	'perm'=> 0),
 								$sv."73" => array ( 'nom'=>"cv sr", 	'perm'=> 0),
-								$sv."14" => array ( 'nom'=>"cve n", 	'perm'=> 1),
+								$sv."14" => array ( 'nom'=>"cve n", 	'perm'=> 0),
 								$sv."23" => array ( 'nom'=>"cv nax", 	'perm'=> 0),
 								$sv."34" => array ( 'nom'=>"cve agd", 	'perm'=> 0),
 								$sv."43" => array ( 'nom'=>"cve s", 	'perm'=> 0),
@@ -372,20 +372,20 @@ class PermDossier {
 					$ref_perm = array (
 								$sv."11" => array ( 'nom'=>"crt n", 	'perm'=> 0),
 								$sv."21" => array ( 'nom'=>"crt nax", 	'perm'=> 0),
-								$sv."31" => array ( 'nom'=>"crt agd", 	'perm'=> 1),
-								$sv."41" => array ( 'nom'=>"crt s", 	'perm'=> 1),
-								$sv."71" => array ( 'nom'=>"crt sr", 	'perm'=> 1),
+								$sv."31" => array ( 'nom'=>"crt agd", 	'perm'=> 0),
+								$sv."41" => array ( 'nom'=>"crt s", 	'perm'=> 0),
+								$sv."71" => array ( 'nom'=>"crt sr", 	'perm'=> 0),
 								$sv."12" => array ( 'nom'=>"ca n", 	'perm'=> 0),
 								$sv."22" => array ( 'nom'=>"ca nax", 	'perm'=> 0),
-								$sv."33" => array ( 'nom'=>"cv agd", 	'perm'=> 1),
-								$sv."43" => array ( 'nom'=>"cv s", 	'perm'=> 1),
-								$sv."73" => array ( 'nom'=>"cv sr", 	'perm'=> 1),
-								$sv."14" => array ( 'nom'=>"cve n", 	'perm'=> 1),
+								$sv."33" => array ( 'nom'=>"cv agd", 	'perm'=> 0),
+								$sv."43" => array ( 'nom'=>"cv s", 	'perm'=> 0),
+								$sv."73" => array ( 'nom'=>"cv sr", 	'perm'=> 0),
+								$sv."14" => array ( 'nom'=>"cve n", 	'perm'=> 0),
 								$sv."23" => array ( 'nom'=>"cv nax", 	'perm'=> 0),
-								$sv."34" => array ( 'nom'=>"cve agd", 	'perm'=> 1),
-								$sv."43" => array ( 'nom'=>"cve s", 	'perm'=> 1),
-								$sv."51" => array ( 'nom'=>"sg crt", 	'perm'=> 1),
-								$sv."53" => array ( 'nom'=>"sg cv", 	'perm'=> 1),
+								$sv."34" => array ( 'nom'=>"cve agd", 	'perm'=> 0),
+								$sv."43" => array ( 'nom'=>"cve s", 	'perm'=> 0),
+								$sv."51" => array ( 'nom'=>"sg crt", 	'perm'=> 0),
+								$sv."53" => array ( 'nom'=>"sg cv", 	'perm'=> 0),
 								$sv."61" => array ( 'nom'=>"crt sss+",	'perm'=> 0),
 								$sv."63" => array ( 'nom'=>"cv sss+", 	'perm'=> 0),
 								$sv."64" => array ( 'nom'=>"cve sss+",	'perm'=> 0)	
@@ -396,19 +396,19 @@ class PermDossier {
 								$sv."11" => array ( 'nom'=>"crt n", 	'perm'=> 0),
 								$sv."21" => array ( 'nom'=>"crt nax", 	'perm'=> 1),
 								$sv."31" => array ( 'nom'=>"crt agd", 	'perm'=> 0),
-								$sv."41" => array ( 'nom'=>"crt s", 	'perm'=> 1),
+								$sv."41" => array ( 'nom'=>"crt s", 	'perm'=> 0),
 								$sv."71" => array ( 'nom'=>"crt sr", 	'perm'=> 1),
 								$sv."12" => array ( 'nom'=>"ca n", 	'perm'=> 0),
 								$sv."22" => array ( 'nom'=>"ca nax", 	'perm'=> 1),
 								$sv."33" => array ( 'nom'=>"cv agd", 	'perm'=> 0),
-								$sv."43" => array ( 'nom'=>"cv s", 	'perm'=> 1),
+								$sv."43" => array ( 'nom'=>"cv s", 	'perm'=> 0),
 								$sv."73" => array ( 'nom'=>"cv sr", 	'perm'=> 1),
-								$sv."14" => array ( 'nom'=>"cve n", 	'perm'=> 1),
+								$sv."14" => array ( 'nom'=>"cve n", 	'perm'=> 0),
 								$sv."23" => array ( 'nom'=>"cv nax", 	'perm'=> 1),
-								$sv."34" => array ( 'nom'=>"cve agd", 	'perm'=> 1),
-								$sv."43" => array ( 'nom'=>"cve s", 	'perm'=> 1),
-								$sv."51" => array ( 'nom'=>"sg crt", 	'perm'=> 1),
-								$sv."53" => array ( 'nom'=>"sg cv", 	'perm'=> 1),
+								$sv."34" => array ( 'nom'=>"cve agd", 	'perm'=> 0),
+								$sv."43" => array ( 'nom'=>"cve s", 	'perm'=> 0),
+								$sv."51" => array ( 'nom'=>"sg crt", 	'perm'=> 0),
+								$sv."53" => array ( 'nom'=>"sg cv", 	'perm'=> 0),
 								$sv."61" => array ( 'nom'=>"crt sss+",	'perm'=> 0),
 								$sv."63" => array ( 'nom'=>"cv sss+", 	'perm'=> 0),
 								$sv."64" => array ( 'nom'=>"cve sss+",	'perm'=> 0)	
@@ -423,17 +423,17 @@ class PermDossier {
 				if ($_SESSION['oPerm']->have_perm("est")) {
 					$ref_perm = array (
 								$sv."11" => array ( 'nom'=>"crt n", 	'perm'=> 0),
-								$sv."21" => array ( 'nom'=>"crt nax", 	'perm'=> 1),
+								$sv."21" => array ( 'nom'=>"crt nax", 	'perm'=> 0),
 								$sv."31" => array ( 'nom'=>"crt agd", 	'perm'=> 0),
 								$sv."41" => array ( 'nom'=>"crt s", 	'perm'=> 0),
 								$sv."71" => array ( 'nom'=>"crt sr", 	'perm'=> 0),
 								$sv."12" => array ( 'nom'=>"ca n", 	'perm'=> 0),
-								$sv."22" => array ( 'nom'=>"ca nax", 	'perm'=> 1),
-								$sv."33" => array ( 'nom'=>"cv agd", 	'perm'=> 1),
+								$sv."22" => array ( 'nom'=>"ca nax", 	'perm'=> 0),
+								$sv."33" => array ( 'nom'=>"cv agd", 	'perm'=> 0),
 								$sv."43" => array ( 'nom'=>"cv s", 	'perm'=> 0),
 								$sv."73" => array ( 'nom'=>"cv sr", 	'perm'=> 0),
 								$sv."14" => array ( 'nom'=>"cve n", 	'perm'=> 0),
-								$sv."23" => array ( 'nom'=>"cv nax", 	'perm'=> 1),
+								$sv."23" => array ( 'nom'=>"cv nax", 	'perm'=> 0),
 								$sv."34" => array ( 'nom'=>"cve agd", 	'perm'=> 0),
 								$sv."43" => array ( 'nom'=>"cve s", 	'perm'=> 0),
 								$sv."51" => array ( 'nom'=>"sg crt", 	'perm'=> 0),
@@ -538,11 +538,11 @@ class PermDossier {
 			if ($_SESSION['oPerm']->have_perm("agd") AND ($id_tipo_activ=="114025" OR $id_tipo_activ=="114026")) {
 				$ref_perm = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 0),
-								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 1),
+								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
 								"x" => array ( 'nom'=> "nax", 'tabla'=>"p_nax",   'perm'=> 0),
 								"pn" => array ( 'nom'=> "n de paso", 'tabla'=>"p_de_paso&na=n", 	'perm'=> 0),
-								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 1),
+								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
 			}
@@ -551,31 +551,31 @@ class PermDossier {
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'tabla'=>"p_nax",   'perm'=> 1),
+								"x" => array ( 'nom'=> "nax", 'tabla'=>"p_nax",   'perm'=> 0),
 								"pn" => array ( 'nom'=> "n de paso", 'tabla'=>"p_de_paso&na=n", 	'perm'=> 0),
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
-								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 1)
+								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
 			}
 			if ($_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("des")) {
 				$ref_perm = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 1),
+								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
 								"x" => array ( 'nom'=> "nax", 'tabla'=>"p_nax",   'perm'=> 0),
 								"pn" => array ( 'nom'=> "n de paso", 'tabla'=>"p_de_paso&na=n", 	'perm'=> 1),
-								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 1),
+								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
 			}
 			if ($_SESSION['oPerm']->have_perm("est")) {
 				$ref_perm = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 1),
+								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
 								"x" => array ( 'nom'=> "nax", 'tabla'=>"p_nax",   'perm'=> 0),
 								"pn" => array ( 'nom'=> "n de paso", 'tabla'=>"p_de_paso&na=n", 	'perm'=> 1),
-								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 1),
+								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
 			}
@@ -608,10 +608,10 @@ class PermDossier {
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'tabla'=>"p_nax",   'perm'=> 1),
+								"x" => array ( 'nom'=> "nax", 'tabla'=>"p_nax",   'perm'=> 0),
 								"pn" => array ( 'nom'=> "n de paso", 'tabla'=>"p_de_paso&na=n", 	'perm'=> 0),
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
-								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 1)
+								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
 			}
 			if ($_SESSION['oPerm']->have_perm("des")) {
@@ -666,10 +666,10 @@ class PermDossier {
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'tabla'=>"p_nax",   'perm'=> 1),
+								"x" => array ( 'nom'=> "nax", 'tabla'=>"p_nax",   'perm'=> 0),
 								"pn" => array ( 'nom'=> "n de paso", 'tabla'=>"p_de_paso&na=n", 	'perm'=> 0),
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
-								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 1)
+								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
 			}
 			if ($_SESSION['oPerm']->have_perm("sg")) {
@@ -710,11 +710,11 @@ class PermDossier {
 			if ($_SESSION['oPerm']->have_perm("agd")) {
 				$ref_perm = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 0),
-								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 1),
+								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
 								"x" => array ( 'nom'=> "nax", 'tabla'=>"p_nax",   'perm'=> 0),
 								"pn" => array ( 'nom'=> "n de paso", 'tabla'=>"p_de_paso&na=n", 	'perm'=> 0),
-								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 1),
+								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
 			}
@@ -731,12 +731,12 @@ class PermDossier {
 			}
 			if ($_SESSION['oPerm']->have_perm("sg")) {
 				$ref_perm = array (
-								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 1),
-								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 1),
+								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 0),
+								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
+								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
 								"x" => array ( 'nom'=> "nax", 'tabla'=>"p_nax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'tabla'=>"p_de_paso&na=n", 	'perm'=> 1),
-								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 1),
+								"pn" => array ( 'nom'=> "n de paso", 'tabla'=>"p_de_paso&na=n", 	'perm'=> 0),
+								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
 			}
@@ -745,10 +745,10 @@ class PermDossier {
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 1),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'tabla'=>"p_nax",   'perm'=> 0),
+								"x" => array ( 'nom'=> "nax", 'tabla'=>"p_nax",   'perm'=> 1),
 								"pn" => array ( 'nom'=> "n de paso", 'tabla'=>"p_de_paso&na=n", 	'perm'=> 1),
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 1),
-								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
+								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 1)
 							);
 			}
 			break;
@@ -780,10 +780,10 @@ class PermDossier {
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'tabla'=>"p_nax",   'perm'=> 1),
+								"x" => array ( 'nom'=> "nax", 'tabla'=>"p_nax",   'perm'=> 0),
 								"pn" => array ( 'nom'=> "n de paso", 'tabla'=>"p_de_paso&na=n", 	'perm'=> 0),
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
-								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 1)
+								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
 			}
 			if ($_SESSION['oPerm']->have_perm("sg")) {

@@ -8,8 +8,6 @@ use menus\model as menus;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-include_once('apps/web/func_web.php');
-
 // Copiar de dlb a public roles-grupmenu, grupmenu, menus
 $oDevel = $GLOBALS['oDB'];
 $oDevelPC = $GLOBALS['oDBPC'];

@@ -121,18 +121,42 @@ if (isset($aPOST['h'])) {
 		unset($aPOST['hhc']);
 		unset($aPOST['hhorig']);
 		unset($aPOST['hno']);
+		unset($aPOST['hnov']);
 
 		// Que los campos hidden sean los mismos y con los mismos valores.
 
 		//lista de campos hidden
 		$a_campos = explode('!',$hhc);
+		$aCmpos = array();
+		foreach($a_campos as $campo) {
+			if (empty($campo)) continue;
+			//$sQuery .= empty($sQuery)? $campo.'=' : '&'.$campo.'=';
+			$aCampos[$campo] = !empty($aPOST[$campo])? $aPOST[$campo] : '';
+		}
+
+		$h2 = web\Hash::camposArray($aCampos)['hash'];
+		$sUrl = web\Hash::camposArray($aCampos)['orig'];
+
+/*
+
 		$sUrl = '';
 		sort($a_campos);
+		$aCampos = array();
+		foreach ($a_campos as $campo) {
+			if (empty($campo)) continue;
+			//$sQuery .= empty($sQuery)? $campo.'=' : '&'.$campo.'=';
+			$aCampos[$campo] = !empty($aPOST[$campo])? $aPOST[$campo] : '';
+		}
+		$sUrl .= http_build_query($aCampos);
+
 		foreach ($a_campos as $campo) {
 			$sUrl .= empty($sUrl)? $campo.'='.$aPOST[$campo] : '&'.$campo.'='.$aPOST[$campo];
 		}
+
 		$rta = web\Hash::md($sUrl);
 		$h2 = $rta['hash'];
+		$sUrl = $rta['orig'];
+		*/
 		if ($hh !== $h2) {
 			$salta = 1;
 			if (ConfigGlobal::is_debug_mode()) {
@@ -142,7 +166,8 @@ if (isset($aPOST['h'])) {
 		} else {
 			$rta = web\Hash::camposArray($aPOST,'sin_valor');
 			$h2 = $rta['hash'];
-			$sUrl = urldecode($rta['orig']);
+			//$sUrl = urldecode($rta['orig']);
+			$sUrl = $rta['orig'];
 			if ($h1 !== $h2) {
 				$salta = 1;
 				if (ConfigGlobal::is_debug_mode()) {
@@ -151,7 +176,7 @@ if (isset($aPOST['h'])) {
 			}
 		}
 	} else {
-		//si es 1 es para no tener en cuenta los valores de los parametros en el hash.
+		//si es hnov es 1, es para no tener en cuenta los valores de los parametros en el hash.
 		$hnov = empty($aPOST['hnov'])? '' : $aPOST['hnov'];
 		unset($aPOST['PHPSESSID']);
 		unset($aPOST['atras']);
@@ -164,15 +189,29 @@ if (isset($aPOST['h'])) {
 		unset($aPOST['hno']);
 		unset($aPOST['hnov']);
 		ksort($aPOST);
-		//print_r($aPOST);
+		if ($hnov == 1) { // borro posibles los valores de los campos
+			foreach($aPOST as $camp=>$valor){
+				$aPOST[$camp] = '';
+			}
+		}
+		/*
 		$query = '';
 		foreach($aPOST as $camp=>$valor){
 			if ($hnov == 1) $valor='';
 			$query .= empty($query)? '?'.$camp.'='.$valor : '&'.$camp.'='.$valor;
 		}
+		*/
 		// NO Puedo usar http_build_query porque codifica y en los originales está sin codificar.
 		//$sUrl = urlencode('//'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"].'?').http_build_query($aPOST);
-		$sUrl = '//'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"].$query;
+		//$sUrl = '//'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"].$query;
+		//$sUrl = web\Hash::ordenarParam($sUrl);
+		if (empty($aPOST)) {
+			$sUrl = '//'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+		} else {
+			$sUrl = '//'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"].'?'.http_build_query($aPOST);
+		}
+
+		//echo "ccc: $sUrl<br>";
 		$rta = web\Hash::md($sUrl);
 		$h2 = $rta['hash'];
 		$h2orig = $rta['orig'];
@@ -189,7 +228,7 @@ if (isset($aPOST['h'])) {
 			echo "url (h2) receptor: $sUrl<br>";
 			echo "h1: $h1; h2: $h2;  ".var_dump($h1===$h2);
 	   } else {
-			exit (_("No deberias cruzar el Missisipi, forastero"));
+			exit (_("No deberias cruzar el Missisipi..."));
 	   }
 	}
 } else {

@@ -1,8 +1,9 @@
 <?php
 use actividades\model as actividades;
-use personas\model as personas;
+use actividadcargos\model as actividadcargos;
 use asistentes\model as asistentes;
 use dossiers\model as dossiers;
+use personas\model as personas;
 /**
  * Esta página muestra una tabla con los asistentes de una actividad.
  * Primero los miembros del cl y después el resto.
@@ -35,16 +36,14 @@ use dossiers\model as dossiers;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-	
-//include_once(core\ConfigGlobal::$dir_programas.'/dossiers/func_dossiers.php');
 $que = empty($que)? '' : $que;
 
 //pongo aqui el $go_to porque al ir al mismo update que las actividaes, no se donde voler
 //$go_to=core\ConfigGlobal::getWeb()."/programas/dossiers/dossiers_ver.php?pau=$pau&id_pau=$id_pau&obj_pau=${_POST['obj_pau']}&id_dossier=$id_dossier";
-$go_to='';
+$a_dataUrl = array('queSel'=>'asis','pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$_POST['obj_pau'],'id_dossier'=>$id_dossier);
+$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query($a_dataUrl));
 
 $gesAsistentes = new asistentes\GestorAsistente();
-//$oCargosEnActividad=new actividades\GestorActividadCargo();
 
 // Permisos según el tipo de actividad
 $oActividad = new actividades\Actividad($id_pau);
@@ -63,7 +62,7 @@ if (core\configGlobal::is_app_installed('actividadcargos')) {
 	$a_botones[] = array( 'txt' => _('quitar cargo'), 'click' =>"fnjs_borrar_cargo(\"#seleccionados\")" );
 }
 if (core\configGlobal::is_app_installed('actividadestudios')) {
-	$a_botones[] = array( 'txt' => _('plan estudios'), 'click' =>"fnjs_matriculas(\"#seleccionados\")" );
+	$a_botones[] = array( 'txt' => _('plan estudios'), 'click' =>"fnjs_matriculas(\"#seleccionados\",\"#frm_matriculas\")" );
 }
 
 $a_cabeceras=array( array('name'=>_("num"),'width'=>40), array('name'=>_("nombre y apellidos"),'width'=>300),array('name'=>_("propio"),'width'=>40),array('name'=>_("est. ok"),'width'=>40),array('name'=>_("falta"),'width'=>40),array('name'=>_("observ."),'width'=>150) );
@@ -72,76 +71,79 @@ $c=0;
 $num=0;
 $a_valores=array();
 $aListaCargos=array();
-/*
-foreach($oCargosEnActividad->getActividadCargos($id_pau) as $oActividadCargo) {
-	$c++;
-	$num++; // número total de asistentes.
-	$id_nom=$oActividadCargo->getId_nom();
-	$aListaCargos[]=$id_nom;
-	$id_cargo=$oActividadCargo->getId_cargo();
-	$oPersona=new personas\Persona($id_nom);
-	$oCargo=new Cargo($id_cargo);
+// primero los cargos
+if (core\configGlobal::is_app_installed('actividadcargos')) {
+	$GesCargosEnActividad=new actividadcargos\GestorActividadCargo();
+	$cCargosEnActividad = $GesCargosEnActividad->getActividadCargos(array('id_activ'=>$id_pau));
+	foreach($cCargosEnActividad as $oActividadCargo) {
+		$c++;
+		$num++; // número total de asistentes.
+		$id_nom=$oActividadCargo->getId_nom();
+		$aListaCargos[]=$id_nom;
+		$id_cargo=$oActividadCargo->getId_cargo();
+		$oPersona = personas\Persona::NewPersona($id_nom);
+		$oCargo=new actividadcargos\Cargo($id_cargo);
 
-	$nom=$oPersona->getApellidosNombre();
+		$nom=$oPersona->getApellidosNombre();
 
-	$cargo=$oCargo->getCargo();
-	$puede_agd=$oActividadCargo->getPuede_agd();
-	$observ=$oActividadCargo->getObserv();
-	$ctr_dl=$oPersona->getCentro_o_dl();
-	// permisos (añado caso de cargo sin nombre = todos permiso)
-	if ($id_tabla=$oPersona->getId_tabla()) {
-		$a_act=$a_ref_perm[$id_tabla];
-		if ($a_act["perm"]) { $permiso=3; } else { $permiso=1; }
-	} else {
-		$permiso=3;
-	}
-
-	$puede_agd=='t' ? $chk_puede_agd="si" : $chk_puede_agd="no" ;
-
-	// Para los de des, elimino el cargo y la asistencia. Para el resto, sólo el cargo (no la asistencia).
-	if (($_SESSION['oPerm']->have_perm("des")) or ($_SESSION['oPerm']->have_perm("vcsd"))) { $eliminar=2; } else { $eliminar=1; }
-	if ($permiso==3) {
-		$a_valores[$c]['sel']="$id_nom#$id_cargo#$eliminar";
-	} else {
-		$a_valores[$c]['sel']="";
-	}
-
-	// ahora miro si también asiste:
-	$aWhere=array('id_activ'=>$id_pau,'id_nom'=>$id_nom);
-	$aOperador=array('id_activ'=>'=','id_nom'=>'=');
-	// me aseguro de que no sea un cargo vacío (sin id_nom)
-	if (!empty($id_nom) && $cAsistente=$oAsistentesEnActividad->getAsistentes($aWhere,$aOperador)) {
-		if(is_array($cAsistente) && count($cAsistente)>1) exit ("ERROR: más de un asistente con el mismo id_nom<br>");
-		$propio=$cAsistente[0]->getPropio();
-		$falta=$cAsistente[0]->getFalta();
-		$est_ok=$cAsistente[0]->getEst_ok();
-		$observ1=$cAsistente[0]->getObserv();
-
-		if ($propio=='t') {
-			$chk_propio=_("si");
-			$eliminar=1;
-		} else { 
-			$chk_propio=_("no") ;
-			$eliminar=2;  //si no es propio, al eliminar el cargo, elimino la asistencia
+		$cargo=$oCargo->getCargo();
+		$puede_agd=$oActividadCargo->getPuede_agd();
+		$observ=$oActividadCargo->getObserv();
+		$ctr_dl=$oPersona->getCentro_o_dl();
+		// permisos (añado caso de cargo sin nombre = todos permiso)
+		if ($id_tabla=$oPersona->getId_tabla()) {
+			$a_act=$a_ref_perm[$id_tabla];
+			if ($a_act["perm"]) { $permiso=3; } else { $permiso=1; }
+		} else {
+			$permiso=3;
 		}
-		$falta=='t' ? $chk_falta=_("si") : $chk_falta=_("no") ;
-		$est_ok=='t' ? $chk_est_ok=_("si") : $chk_est_ok=_("no") ;
-		$asis="t";
-		$a_valores[$c][3]=$chk_propio;
-		$a_valores[$c][4]=$chk_est_ok;
-		$a_valores[$c][5]=$chk_falta;
-	} else {
-		$a_valores[$c][3]= array( 'span'=>3, 'valor'=> _("no asiste"));
-		$observ1='';
-		$num--;
-		$asis="f";
-	}
 
-	$a_valores[$c][1]=$cargo;
-	$a_valores[$c][2]="$nom  ($ctr_dl)";
-	$a_valores[$c][6]="$observ $observ1";
+		$puede_agd=='t' ? $chk_puede_agd="si" : $chk_puede_agd="no" ;
+
+		// Para los de des, elimino el cargo y la asistencia. Para el resto, sólo el cargo (no la asistencia).
+		if (($_SESSION['oPerm']->have_perm("des")) or ($_SESSION['oPerm']->have_perm("vcsd"))) { $eliminar=2; } else { $eliminar=1; }
+		if ($permiso==3) {
+			$a_valores[$c]['sel']="$id_nom#$id_cargo#$eliminar";
+		} else {
+			$a_valores[$c]['sel']="";
+		}
+
+		// ahora miro si también asiste:
+		$aWhere=array('id_activ'=>$id_pau,'id_nom'=>$id_nom);
+		$aOperador=array('id_activ'=>'=','id_nom'=>'=');
+		// me aseguro de que no sea un cargo vacio (sin id_nom)
+		if (!empty($id_nom) && $cAsistente=$gesAsistentes->getAsistentes($aWhere,$aOperador)) {
+			if(is_array($cAsistente) && count($cAsistente)>1) exit ("ERROR: más de un asistente con el mismo id_nom<br>");
+			$propio=$cAsistente[0]->getPropio();
+			$falta=$cAsistente[0]->getFalta();
+			$est_ok=$cAsistente[0]->getEst_ok();
+			$observ1=$cAsistente[0]->getObserv();
+
+			if ($propio=='t') {
+				$chk_propio=_("si");
+				$eliminar=1;
+			} else { 
+				$chk_propio=_("no") ;
+				$eliminar=2;  //si no es propio, al eliminar el cargo, elimino la asistencia
+			}
+			$falta=='t' ? $chk_falta=_("si") : $chk_falta=_("no") ;
+			$est_ok=='t' ? $chk_est_ok=_("si") : $chk_est_ok=_("no") ;
+			$asis="t";
+			$a_valores[$c][3]=$chk_propio;
+			$a_valores[$c][4]=$chk_est_ok;
+			$a_valores[$c][5]=$chk_falta;
+		} else {
+			$a_valores[$c][3]= array( 'span'=>3, 'valor'=> _("no asiste"));
+			$observ1='';
+			$num--;
+			$asis="f";
+		}
+
+		$a_valores[$c][1]=$cargo;
+		$a_valores[$c][2]="$nom  ($ctr_dl)";
+		$a_valores[$c][6]="$observ $observ1";
+	}
 }
-*/
 // ahora los asistentes sin los cargos
 $asistentes = array();
 foreach($gesAsistentes->getAsistentes(array('id_activ'=>$id_pau)) as $oAsistente) {
@@ -185,14 +187,16 @@ foreach($gesAsistentes->getAsistentes(array('id_activ'=>$id_pau)) as $oAsistente
 	$asistentes[$nom] = $a_val;
 }
 uksort($asistentes,"core\strsinacentocmp");
+
 $c = 0;
+if (core\configGlobal::is_app_installed('actividadcargos')) {
+	$c = count($a_valores);
+}
 foreach ($asistentes as $nom => $val) {
 	$c++;
 	$val[1] = "$c.-";
 	$a_valores[$c] = $val;
 }
-
-
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('');
@@ -204,21 +208,36 @@ $a_camposHidden = array(
 		'permiso' => 3,
 		'go_to' => $go_to
 		);
-		//'obj_pau' => $_POST['obj_pau'],
 $oHash->setArraycamposHidden($a_camposHidden);
+
+// para el hash de las matrículas. Hago otro formulario, pues cambio demasiadas cosas
+$oHash1 = new web\Hash();
+$oHash1->setcamposForm('');
+$oHash1->setCamposNo('sel!mod');
+$a_camposHidden = array(
+		'que' => 'matriculas',
+		'pau' => 'p',
+		'id_pau' => $id_pau,
+		'obj_pau' => 'PersonaDl',
+		'id_dossier' => 1303,
+		'permiso' => 3,
+		'go_to' => $go_to
+		);
+$oHash1->setArraycamposHidden($a_camposHidden);
 
 /* ---------------------------------- html --------------------------------------- */
 ?>
 <script>
-fnjs_matriculas=function(formulario){
-	rta=fnjs_solo_uno(formulario);
+fnjs_matriculas=function(frm_sel,frm_enviar){
+	rta=fnjs_solo_uno(frm_sel);
 	if (rta==1) {
-		$('#que').val("matriculas");
-		$('#pau').val("p");
-		$('#obj_pau').val("personas");
-		$('#id_dossier').val("1303");
-  		$(formulario).attr('action',"apps/dossiers/controller/dossiers_ver.php");
-  		fnjs_enviar_formulario(formulario,'#ficha_activ');
+		var form=$(frm_sel).attr('id');
+		/* selecciono los elementos con class="sel" de las tablas del id=formulario */
+		var sel=$('#'+form+' input.sel:checked');
+		var id = sel.val();
+		$('#sel2').val(id);
+  		$(frm_enviar).attr('action',"apps/dossiers/controller/dossiers_ver.php");
+  		fnjs_enviar_formulario(frm_enviar,'#main');
   	}
 }
 fnjs_modificar=function(formulario){
@@ -234,7 +253,7 @@ fnjs_mod_cargo=function(formulario){
 	rta=fnjs_solo_uno(formulario);
 	if (rta==1) {
 		$('#mod').val("editar");
-  		$(formulario).attr('action',"programas/dossiers/form_3102.php");
+  		$(formulario).attr('action',"apps/actividadcargos/controller/form_3102.php");
   		fnjs_enviar_formulario(formulario,'#ficha_activ');
   	}
 }
@@ -242,7 +261,7 @@ fnjs_add_cargo=function(formulario){
 	rta=fnjs_solo_uno(formulario);
 	if (rta==1) {
 		$('#mod').val("nuevo");
-  		$(formulario).attr('action',"programas/dossiers/form_3102.php");
+  		$(formulario).attr('action',"apps/actividadcargos/controller/form_3102.php");
   		fnjs_enviar_formulario(formulario,'#ficha_activ');
   	}
 }
@@ -318,7 +337,6 @@ fnjs_transferir=function(formulario){
 <form id="seleccionados" name="seleccionados" action="" method="post">
 <?= $oHash->getCamposHtml(); ?>
 <input type='hidden' id='mod' name='mod' value=''>
-<input type='hidden' id='que' name='que' value='<?= $que ?>'>
 <?php
 $oTabla = new web\Lista();
 $oTabla->setId_tabla('sql_3101');
@@ -328,9 +346,13 @@ $oTabla->setDatos($a_valores);
 echo $oTabla->mostrar_tabla();
 ?>
 </form>
+<form id="frm_matriculas" name="frm_matriculas" action="" method="post">
+<?= $oHash1->getCamposHtml(); ?>
+<input type='hidden' id='mod' name='mod' value=''>
+<input type='hidden' id='sel2' name='sel[]' value=''>
+</form>
 <?php
 // --------------  boton insert ----------------------
-$go_to=urlencode($go_to);
 reset ($a_ref_perm);
 echo "<div class='no_print'><br><table><tr class=botones><th align=RIGHT>"._("dl").":</th>";
 while (list ($clave, $val) = each ($a_ref_perm)) {
@@ -338,7 +360,8 @@ while (list ($clave, $val) = each ($a_ref_perm)) {
 	$tabla_p=$val["tabla"];
 	$nom=$val["nom"];
    	if (!empty($permis)) {
-		$pagina=web\Hash::link("apps/asistentes/controller/form_3101.php?que_dl=".core\ConfigGlobal::mi_dele()."&pau=$pau&tabla_p=$tabla_p&id_pau=$id_pau&go_to=$go_to");
+		$mi_dele = core\ConfigGlobal::mi_dele();
+		$pagina=web\Hash::link('apps/asistentes/controller/form_3101.php?'.http_build_query(array('que_dl'=>$mi_dele,'pau'=>$pau,'tabla_p'=>$tabla_p,'id_pau'=>$id_pau,'go_to'=>$go_to)));
 		echo "<td class=botones><span class=link_inv onclick=\"fnjs_update_div('#ficha_activ','$pagina');\">".sprintf(_("añadir %s"),$nom)."</span></td>";
 	}
 }

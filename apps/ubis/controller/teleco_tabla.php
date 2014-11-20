@@ -11,10 +11,6 @@ use ubis\model as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-//include_once("func_dossiers.php");
-//include_once(core\ConfigGlobal::$dir_programas.'/func_web.php');
-
-
 /***************  datos  **********************************/
 
 // dossier="1001";

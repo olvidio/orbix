@@ -19,7 +19,6 @@ use ubis\model as ubis;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
-	include_once('apps/web/func_web.php');
 
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
@@ -76,11 +75,6 @@ $oFormP->setDesplPeriodosOpcion_sel($_POST['periodo']);
 $oFormP->setDesplAnysOpcion_sel($_POST['year']);
 $oFormP->setEmpiezaMin($_POST['empiezamin']);
 $oFormP->setEmpiezaMax($_POST['empiezamax']);
-
-$opciones_orden=array("nombre_ubi"=>_("lugar"),
-				"f_ini"=>_("empieza"),
-				"f_fin"=>_("termina"),
-				"apellido1"=>_("sacd"));
 
 $filtro_lugar="";
 $ctr=""; 
@@ -148,34 +142,6 @@ fnjs_lugar=function(){
 	});
 }
 
-fnjs_mas_orden=function(){
-	var num=$('#orden_num');
-	var orden=$('#mas_orden');
-	var id_orden=orden.value;
-					
-	var n=num.value;
-	var txt;
-	txt='<select id=orden['+n+'] name=orden['+n+'] class=contenido onchange=comprobar_orden(\'orden['+n+']\') ><option />';
-	txt += '<?=	web\options_var($opciones_orden,"",0); ?>';
-	txt += '</select>';
-
-	/* antes del desplegable de añadir */
-    $('#span_orden').append(txt);
-	/* selecciono el valor del desplegable */
-	var nom='orden['+n+']';
-	$(nom).val(id_orden);
-	$('#mas_orden').val(0);
-														
-	//ir_a('ref_prot_num['+n+']');
-	num.value=++n;
-}
-
-fnjs_comprobar_orden=function(orden){
-	var id_orden=$(orden).val();
-	if (!id_orden) {
-		$(orden).hide();
-	} 
-}
 fnjs_lugar();
 </script>
 <div id="exportar" export_modo="formulario">

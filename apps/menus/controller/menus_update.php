@@ -8,8 +8,6 @@ use menus\model as menus;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-include_once('apps/web/func_web.php');
-
 $id_grupmenu = empty($_POST['filtro_grupo'])? '' : $_POST['filtro_grupo'];
 $gm_new = empty($_POST['gm_new'])? '' : $_POST['gm_new'];
 
@@ -70,6 +68,6 @@ switch ($_POST['que']) {
 
 $go_to="menus_get.php?filtro_grupo=$id_grupmenu|ficha";
 //echo "gg : $go_to<br>";
-web\ir_a($go_to);
-
+$oPosicion = new web\Posicion();
+echo $oPosicion->ir_a($go_to);
 ?>
