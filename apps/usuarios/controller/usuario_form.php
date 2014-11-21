@@ -205,9 +205,8 @@ if ($miRole < 4) {
 			$camposForm = !empty($camposMas)? $camposForm.'!'.$camposMas : $camposForm;
 			$oHash = new web\Hash();
 			$oHash->setcamposForm($camposForm);
-			$oHash->setcamposNo('id_ctr!id_sacd!casas');
+			$oHash->setcamposNo('pass!password!id_ctr!id_sacd!casas');
 			$a_camposHidden = array(
-					'pass' => $pass,
 					'id_usuario' => $id_usuario,
 					'quien' => $quien
 					);
@@ -437,6 +436,7 @@ if ($miRole < 4) {
 	<h3><?= $usuario ?></h3>
 	<form id=frm_usuario  name=frm_usuario action='' method="post" >
 	<?= $oHash->getCamposHtml(); ?>
+	<input type=hidden id=pass  name=pass value='<?= $pass ?>'>
 	<input type=hidden id=que_user  name=que value=''>
 	<br>
 	<?= ucfirst(_("nombre")) ?>:<input type=text name=usuario value="<?= $usuario ?>">

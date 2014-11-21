@@ -108,10 +108,10 @@ fnjs_actualizar=function(){
 }
 </script>
 <h3>Buscar grupo</h3>
-<form id=frm_buscar  name=frm_buscar action="" method="post" >
+<form id=frm_buscar  name=frm_buscar action="" method="post" onkeypress="fnjs_enviar(event,this);" >
 <?= $oHash->getCamposHtml(); ?>
 <?= ucfirst(_("nombre")) ?>:<input type=text name=Qusername value="<?= $Qusername ?>">
-<input type=button onclick="fnjs_buscar();" value='<?= _("buscar") ?>'>
+<input type="button" onclick="fnjs_buscar();" id="ok" name="ok" value="<?= ucfirst(_("buscar")); ?>" class="btn_ok">
 <br>
 <input type=button onclick="fnjs_nuevo();" value='<?= _("nuevo grupo") ?>'>
 </form>

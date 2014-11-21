@@ -23,7 +23,7 @@ $_SESSION['config']=$session_config;
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-function posibles_esquemas() {
+function posibles_esquemas($default='') {
 	$txt = '';
 	// Lista de posibles esquemas (en comun)
 	$oDBP = new \PDO(core\ConfigGlobal:: $str_conexio_public);
@@ -35,15 +35,17 @@ function posibles_esquemas() {
 	}
 	if (is_object($oDblSt)) {
 		$oDblSt->execute();
-		$txt = "<select id=\"region\" name=\"region\" >";
+		$txt = "<select id=\"esquema\" name=\"esquema\" >";
 		foreach($oDblSt as $row) {
 			if (!isset($row[1])) { $a = 0; } else { $a = 1; } // para el caso de sólo tener un valor.
 			if ($row[0] == 'public') continue;
 			if ($row[0] == 'resto') continue;
 			$sf = $row[0].'f';
 			$sv = $row[0].'v';
-			$txt .= "<option value=\"$sf\">$sf</option>";
-			$txt .= "<option value=\"$sv\">$sv</option>";
+			if (!empty($default) && $sf == $default) { $sel_sf = 'selected'; } else { $sel_sf = ''; }
+			if (!empty($default) && $sv == $default) { $sel_sv = 'selected'; } else { $sel_sv = ''; }
+			$txt .= "<option value=\"$sf\" $sel_sf>$sf</option>";
+			$txt .= "<option value=\"$sv\" $sel_sv>$sv</option>";
 		}
 		$txt .= '</select>';
 	}
@@ -145,13 +147,13 @@ if ( !isset($_SESSION['session_auth'])) {
 				/* ---------- fin del mail ----------- */
 
 				$aWhere = array('usuario'=>$_POST['username']);
-				$region = $_POST['region'];
-				if (substr($region,-1)=='v') {
-					$oDB = new \PDO(core\ConfigGlobal::get_conexio_sv($region));
+				$esquema = $_POST['esquema'];
+				if (substr($esquema,-1)=='v') {
+					$oDB = new \PDO(core\ConfigGlobal::get_conexio_sv($esquema));
 					$sfsv = 1;
 				}
-				if (substr($region,-1)=='f') {
-					$oDB = new \PDO(core\ConfigGlobal::get_conexio_sf($region));
+				if (substr($esquema,-1)=='f') {
+					$oDB = new \PDO(core\ConfigGlobal::get_conexio_sf($esquema));
 					$sfsv = 2;
 				}
 				$query="SELECT * FROM aux_usuarios WHERE usuario = :usuario";
@@ -221,7 +223,7 @@ if ( !isset($_SESSION['session_auth'])) {
 								'role_pau'=>$role_pau,
 								'username'=>$_POST['username'],
 								'password'=>$_POST['password'],
-								'region'=>$_POST['region'],
+								'esquema'=>$_POST['esquema'],
 								'perms_activ'=>$perms_activ,
 								'mi_oficina'=>$mi_oficina,
 								'mi_oficina_menu'=>$mi_oficina_menu,
@@ -251,14 +253,14 @@ if ( !isset($_SESSION['session_auth'])) {
 						cambiar_idioma();
 					} else {
 						$variables = array('error'=>1);
-						$variables['DesplRegiones'] = posibles_esquemas();
+						$variables['DesplRegiones'] = posibles_esquemas($esquema);
 						$oView = new core\View(__NAMESPACE__);
 						echo $oView->render('login_form.phtml',$variables);
 						exit;
 					}
 				} else {
 					$variables = array('error'=>1);
-					$variables['DesplRegiones'] = posibles_esquemas();
+					$variables['DesplRegiones'] = posibles_esquemas($esquema);
 					$oView = new core\View(__NAMESPACE__);
 					echo $oView->render('login_form.phtml',$variables);
 					exit;
