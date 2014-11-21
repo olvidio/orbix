@@ -3,6 +3,7 @@ namespace asistentes\model;
 use core;
 use web;
 use actividades\model as actividades;
+use personas\model as personas;
 /**
  * GestorAsistente
  *
@@ -100,31 +101,23 @@ class GestorAsistente Extends core\ClaseGestor {
 				$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');
 				$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
 				$namespace = __NAMESPACE__;
-				return $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
+				$cAsistentes = $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
 				break;
 			case 'ex': // asistentesOut
 				$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
 				$namespace = __NAMESPACE__;
-				return $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
+				$cAsistentes = $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
 				break;
 		}
-		$oAsistenteSet = new core\Set();
-		$sQry = "SELECT * FROM av_asistentes a JOIN pv_personas USING (id_nom)
-				WHERE id_activ=$iid_activ
-				ORDER BY ".$sOrder;
-		if (($oDblSt = $oDbl->query($sQry)) === false) {
-			$sClauError = 'GestorActividadAsistente.query_order';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return false;
+		$cAsistentesOk = array();
+		foreach ($cAsistentes as $oAsistente) {
+			$id_nom = $oAsistente->getId_nom();
+			$oPersona = personas\Persona::NewPersona($id_nom);
+			$apellidos = $oPersona->getApellidosNombre();
+			$cAsistentesOk[$apellidos] = $oAsistente;
 		}
-		foreach ($oDbl->query($sQry) as $aDades) {
-			$a_pkey = array('id_activ' => $aDades['id_activ'],
-							'id_nom' => $aDades['id_nom']);
-			$oAsistente= new Asistente($a_pkey);
-			$oAsistente->setAllAtributes($aDades);
-			$oAsistenteSet->add($oAsistente);
-		}
-		return $oAsistenteSet->getTot();
+		uksort($cAsistentesOk,"core\strsinacentocmp");
+		return $cAsistentesOk;
 	}
 	/**
 	 * retorna l'array de id_nom d'Asistents

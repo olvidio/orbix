@@ -105,7 +105,7 @@ foreach ($cAsistencias as $oAsistente) {
 	$est_ok=$oAsistente->getEst_ok();
 	$oActividad = new actividades\Actividad(array('id_activ'=>$id_activ));
 	extract($oActividad->getTot());
-	$GesMatriculas = new actividadestudios\GestorMatriculaDl();
+	$GesMatriculas = new actividadestudios\GestorMatricula();
 	$cMatriculas = $GesMatriculas->getMatriculas(array('id_nom'=>$id_pau,'id_activ'=>$id_activ));
 	$form="seleccionados".$ca;
 	

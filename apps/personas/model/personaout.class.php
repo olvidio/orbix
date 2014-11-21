@@ -39,7 +39,8 @@ class PersonaOut Extends PersonaPub {
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
 				if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; // evitem SQL injection fent cast a integer
-			}	} else {
+			}
+		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_nom = intval($a_id); // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('iid_nom' => $this->iid_nom);

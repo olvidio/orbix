@@ -68,6 +68,7 @@ class PersonaPub Extends PersonaGlobal {
 		$nom_tabla = $this->getNomTabla();
 		if ($this->DBCarregar('guardar') === false) { $bInsert=true; } else { $bInsert=false; }
 		$aDades=array();
+		$aDades['id_nom'] = $this->iid_nom;
 		$aDades['id_cr'] = $this->iid_cr;
 		//$aDades['id_tabla'] = $this->sid_tabla;
 		$aDades['dl'] = $this->sdl;
@@ -98,6 +99,7 @@ class PersonaPub Extends PersonaGlobal {
 			//UPDATE
 					//id_tabla                 = :id_tabla,
 			$update="
+					id_nom                   = :id_nom,
 					id_cr                    = :id_cr,
 					dl                       = :dl,
 					sacd                     = :sacd,
@@ -133,8 +135,8 @@ class PersonaPub Extends PersonaGlobal {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_nom);
-			$campos="(id_cr,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,lengua,situacion,f_situacion,apel_fam,inc,f_inc,stgr,edad,profesion,eap,observ)";
-			$valores="(:id_cr,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:lengua,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:stgr,:edad,:profesion,:eap,:observ)";		
+			$campos="(id_nom,id_cr,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,lengua,situacion,f_situacion,apel_fam,inc,f_inc,stgr,edad,profesion,eap,observ)";
+			$valores="(:id_nom,:id_cr,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:lengua,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:stgr,:edad,:profesion,:eap,:observ)";		
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = get_class($this).'.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);

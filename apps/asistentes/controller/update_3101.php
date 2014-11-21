@@ -101,10 +101,6 @@ switch ($_POST['mod']) {
 		$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$id_nom,'id_tipo_dossier'=>1301));
 		$oDossier->abrir();
 		$oDossier->DBGuardar();
-		//$oPersona = new personas\PersonaPub($id_nom);
-		//$oPersona->DBCarregar();
-		//$id_tabla_p = $oPersona->getId_tabla();
-		//print_r($oPersona);
 	case "editar":
 		// hay que averiguar si la persona es de la dl o de fuera.
 		$oPersona = personas\Persona::NewPersona($id_nom);

@@ -51,8 +51,15 @@ switch ($pau) {
 	case 'p':
 		$top="top_personas";
 		$ficha="ficha_personas";
-		$clase = "personas\\model\\$obj_pau";
-		$oPersona = new $clase($id_pau);
+		//Hay que aclararse si la persona es de la dl o no
+		if ($obj_pau == 'Persona') {
+			$oPersona = personas\Persona::NewPersona($id_pau);
+			$clase = get_class($oPersona);
+			$obj_pau = join('', array_slice(explode('\\', $clase), -1));
+		} else {
+			$clase = "personas\\model\\$obj_pau";
+			$oPersona = new $clase($id_pau);
+		}
 		$nom = $oPersona->getNombreApellidos();
 
 		$goficha=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/home_persona.php?'.http_build_query(array('id_nom'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$_POST['go_atras']))); 

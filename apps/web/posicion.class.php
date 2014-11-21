@@ -73,7 +73,8 @@ class Posicion {
 		$url = $aPosition['url'];
 		$sparametros = Hash::add_hash($aParam,$url);
 
-		$html = '<div id="'.$id_div.'" style="display: none;">';
+		//$html = '<div id="'.$id_div.'" style="display: none;">';
+		$html = '<div id="'.$id_div.'" >';
 		$html .= '	<form id="go">';
 		$html .= '	url: <input id="url" type="text" value="' . $url .'" size=70><br>';
 		$html .= '	parametros: <input id="parametros" type="text" value="' . $sparametros . '" size=70><br>';
@@ -88,7 +89,8 @@ class Posicion {
 		$url = $aPosition['url'];
 		$sparametros = Hash::add_hash($aParam,$url);
 
-		$html = '<div style="display: none;">';
+		//$html = '<div style="display: none;">';
+		$html = '<div>';
 		$html .= '<form id="go">';
 		$html .= '	<input id="url" type="hidden" value="' . $url .'" size=70>';
 		$html .= '	<input id="parametros" type="hidden" value="' . $sparametros . '" size=70>';
