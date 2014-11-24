@@ -41,10 +41,11 @@ class GestorDelegacion Extends  core\ClaseGestor {
 	 * @return object Una Llista de delegacions i regions per filtrar.
 	 */
 	function getListaDlURegionesFiltro() {
+		$sf = (core\ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		
-			$sQuery="SELECT 'dl|'||dl, nombre_dl||' ('||dl||')'
+			$sQuery="SELECT 'dl|'||dl||'$sf', nombre_dl||' ('||dl||'$sf)'
 					FROM $nom_tabla
 					UNION 
 					SELECT 'r|'||u.region,u.nombre_region||' ('||region||')' 
@@ -65,18 +66,19 @@ class GestorDelegacion Extends  core\ClaseGestor {
 	 * @return object Una Llista de delegacions i regions.
 	 */
 	function getListaDelegacionesURegiones($bdl='t') {
+		$sf = (core\ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if ($bdl == 't') {
-			$sQuery="SELECT dl, nombre_dl||' ('||dl||')'
+			$sQuery="SELECT dl||'$sf', nombre_dl||' ('||dl||'$sf)'
 					FROM $nom_tabla
 					UNION 
 					SELECT u.region,u.nombre_region||' ('||region||')' 
 					FROM xu_region u 
 					ORDER BY 2";
 		} else {
-			$sQuery="SELECT dl, nombre_dl||' ('||dl||')'
-					FROM $nom_tabla WHERE dl != '".ConfigGlobal::$dele."'
+			$sQuery="SELECT dl||'$sf', nombre_dl||' ('||dl||'$sf)'
+					FROM $nom_tabla WHERE dl != '".ConfigGlobal::mi_dele()."'
 					UNION 
 					SELECT u.region,u.nombre_region||' ('||region||')' 
 					FROM xu_region u 
