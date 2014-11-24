@@ -28,7 +28,10 @@ class PermDl extends xPermisos {
 		$permission_users["actividades"] =  31735; //31735, // todos menos des(8) y vcsd(1024).
 		$permission_users["dir"] 	=  1<<15; //32768,
 		$permission_users["pendents"]=  1<<16; //65536,
-		$permission_users["admin"]   =  -1; //131071; // todo unos, depende de la máquina, 32 o 64 bits.
+
+		$permission_users["admin_sf"]   = 16776183; // En menus tiene 1<<18, cojo uno mayor 
+												// (1<<24 uno menos que sv) y le quito 8(des), 1024(vcsd) y 1
+		$permission_users["admin_sv"]   =  -1; //; // todo unos, depende de la máquina, 32 o 64 bits.
 
 		$this->permissions = $permission_users;
   }

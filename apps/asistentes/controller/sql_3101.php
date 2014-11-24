@@ -75,12 +75,20 @@ $aListaCargos=array();
 if (core\configGlobal::is_app_installed('actividadcargos')) {
 	$GesCargosEnActividad=new actividadcargos\GestorActividadCargo();
 	$cCargosEnActividad = $GesCargosEnActividad->getActividadCargos(array('id_activ'=>$id_pau));
+	$mi_sfsv = core\ConfigGlobal::mi_sfsv();
 	foreach($cCargosEnActividad as $oActividadCargo) {
 		$c++;
 		$num++; // número total de asistentes.
 		$id_nom=$oActividadCargo->getId_nom();
 		$aListaCargos[]=$id_nom;
 		$id_cargo=$oActividadCargo->getId_cargo();
+		$oCargo = new actividadcargos\Cargo(array('id_cargo'=>$id_cargo));
+		$tipo_cargo=$oCargo->getTipo_cargo();		
+		// para los sacd en sf
+		if ($tipo_cargo == 'sacd' && $mi_sfsv == 2) {
+			continue;
+		}
+
 		$oPersona = personas\Persona::NewPersona($id_nom);
 		$oCargo=new actividadcargos\Cargo($id_cargo);
 

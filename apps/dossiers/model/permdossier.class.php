@@ -515,17 +515,18 @@ class PermDossier {
 	switch ($asistentes) {
 		case "sss+" :
 			if ($_SESSION['oPerm']->have_perm("des")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 1),
 								"psssc" => array ( 'nom'=> "sss+ de paso", 'tabla'=>"p_de_paso&na=sss", 	'perm'=> 1),
 								"sssc" => array ( 'nom'=> "sss+", 'tabla'=>"p_sssc",	'perm'=> 1),
 								);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			break;
 		case "n" :
 			if ($_SESSION['oPerm']->have_perm("sm")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -534,9 +535,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("agd") AND ($id_tipo_activ=="114025" OR $id_tipo_activ=="114026")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -545,9 +547,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("nax")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -556,9 +559,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("des")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -567,9 +571,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("est")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -578,11 +583,12 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			break;
 		case "agd":
 			if ($_SESSION['oPerm']->have_perm("sm")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -591,9 +597,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("agd")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 1),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -602,9 +609,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 1),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("nax")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -613,9 +621,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("des")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 1),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -625,9 +634,10 @@ class PermDossier {
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0),
 								"sssc" => array ( 'nom'=> "sss+", 'tabla'=>"p_sssc",	'perm'=> 1)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("est")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 1),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -636,11 +646,12 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 1),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			break;
 		case "s":
 			if ($_SESSION['oPerm']->have_perm("sm")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -649,9 +660,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("agd")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 1),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -660,9 +672,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 1),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("nax")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -671,9 +684,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("sg")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 1),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 1),
@@ -682,9 +696,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 1),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("des")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 1),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -693,11 +708,12 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 1),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			break;
 		case "x":
 			if ($_SESSION['oPerm']->have_perm("sm")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -706,9 +722,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("agd")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -717,9 +734,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("nax")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -728,9 +746,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 1)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("sg")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -739,9 +758,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("des")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 1),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -750,11 +770,12 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 1),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 1)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			break;
 		case "sg":
 			if ($_SESSION['oPerm']->have_perm("sm")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -763,9 +784,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("agd")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 1),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -774,9 +796,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 1),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("nax")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -785,9 +808,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("sg")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 1),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 1),
@@ -796,9 +820,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 1),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("des")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 1),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -809,11 +834,12 @@ class PermDossier {
 								"sssc" => array ( 'nom'=> "sss+", 'tabla'=>"p_sssc", 	'perm'=> 1),
 								"psssc" => array ( 'nom'=> "sss+ de paso", 'tabla'=>"p_de_paso&na=sss", 	'perm'=> 1)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			break;
 		case "sr":
 			if ($_SESSION['oPerm']->have_perm("sm")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -822,9 +848,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("agd")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 1),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -833,9 +860,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 1),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("nax")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -844,9 +872,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 1)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("sg")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 0),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 1),
@@ -855,9 +884,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 0),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 0)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("sr")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 1),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 1),
@@ -866,9 +896,10 @@ class PermDossier {
 								"pa" => array ( 'nom'=> "agd de paso", 'tabla'=>"p_de_paso&na=a", 	'perm'=> 1),
 								"px" => array ( 'nom'=> "nax de paso", 'tabla'=>"p_de_paso&na=x", 	'perm'=> 1)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			if ($_SESSION['oPerm']->have_perm("des")) {
-				$ref_perm = array (
+				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'tabla'=>"p_numerarios", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'tabla'=>"p_agregados", 	'perm'=> 1),
 								"s" => array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
@@ -879,11 +910,36 @@ class PermDossier {
 								"sssc" => array ( 'nom'=> "sss+", 'tabla'=>"p_sssc", 	'perm'=> 1),
 								"psssc" => array ( 'nom'=> "sss+ de paso", 'tabla'=>"p_de_paso&na=sss", 	'perm'=> 1)
 							);
+				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			break;
+		}
+		return $ref_perm;
 	}
-	//$ref_perm = $ref_perm_sg;
-	return $ref_perm;
+
+	/**
+	  * Hago un or logico de los permisos por si un usuario tienen permiso para más de una oficina
+	  * que se quede con el máximo de permisos.
+	  *
+	  *
+	  */
+	function daniBoleanOr($ref_perm,$ref_perm_of){
+		$ref_perm_or = array();
+		foreach ($ref_perm as $asis=>$a) {
+			if (isset($ref_perm_of[$asis])) {
+				$b = $ref_perm_of[$asis];
+			} else {
+				$b = array('nom'=> $a['nom'],'tabla'=>$a['tabla'],'perm'=> 0);
+			}
+			//$a = array ( 'nom'=> "s", 'tabla'=>"p_supernumerarios", 	'perm'=> 0),
+			// Para asegurar:
+			$perm_or = 0;
+			if (($a['nom'] == $b['nom']) && ($a['tabla'] == $b['tabla'])) {
+				$perm_or = $a['perm']||$b['perm'];
+			}
+			$ref_perm_or[$asis] = array ( 'nom'=> $a['nom'], 'tabla'=>$a['tabla'],	'perm'=> $perm_or);
+		}
+		return $ref_perm_or;
 	}
 }
 ?>

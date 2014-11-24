@@ -471,13 +471,14 @@ function fnjs_ir_a() {
 		} else {
 			parametros=parametros.replace(/&atras=(0|1)?/,'');
 		}
+		if (parametros.indexOf("PHPSESSID") == -1) {
+			parametros=parametros+'&PHPSESSID=<?php echo session_id(); ?>'; 
+		}
 	} else {
 		if ($('#ir_atras').length) { // atras=1; 
 			parametros='&atras=1'; 
+			parametros=parametros+'&PHPSESSID=<?php echo session_id(); ?>'; 
 		}
-	}
-	if (parametros.indexOf("PHPSESSID") == -1) {
-		parametros=parametros+'&PHPSESSID=<?php echo session_id(); ?>'; 
 	}
 	
 	if ($('#left_slide').length) { $('#left_slide').hide(); } 
@@ -827,7 +828,7 @@ if ($gm > 1) {
 </div>
 <div id="cargando" ><?= _('Cargando...') ?></div>
 <div id="left_slide" class="left-slide">
-<span class=handle onClick="fnjs_ir_a();" style="display: none;">cccc</span>
+<span class=handle onClick="fnjs_ir_a();">cccc</span>
 </div>
 <div id="main" refe="<?= $pag_ini ?>">
 <?php

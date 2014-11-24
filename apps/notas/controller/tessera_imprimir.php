@@ -54,12 +54,12 @@ $nom=$trato.$nom_lat.$apellidos;
 
 function titulo($id_asignatura){
  $cabecera="<tr><td></td></tr><tr valign=\"bottom\"><td width=\"15\"></td>
-			<td class=\"cabecera\" width=\"400\">".strtoupper(_("disciplin&#198;"))."</td>
-			<td class=\"cabecera\" width=\"130\">".strtoupper(_("cum nota"))."</td>
+			<td class=\"cabecera\" width=\"380\">".strtoupper(_("disciplin&#198;"))."</td>
+			<td class=\"cabecera\" width=\"190\">".strtoupper(_("cum nota"))."</td>
 			<td class=\"cabecera\" width=\"20\"></td>
-			<td class=\"cabecera\" width=\"80\">".strtoupper(_("dies examinis"))."</td>
+			<td class=\"cabecera\" width=\"60\">".strtoupper(_("dies examinis"))."</td>
 			<td class=\"cabecera\" width=\"20\"></td>
-			<td class=\"cabecera\" width=\"80\">".strtoupper(_("numerus in actis"))."</td>
+			<td class=\"cabecera\" width=\"60\">".strtoupper(_("numerus in actis"))."</td>
 			<td width=\"10\"></td>
 			</tr>";
  switch ($id_asignatura){

@@ -44,6 +44,7 @@ if (!empty($id_tipo_activ))  {
 } else {
 	$oTipoActiv= new web\TiposActividades();
 	// puede ser que tenga parte del id_tipo_activ.
+	$_POST['ssfsv'] = empty($_POST['ssfsv'])? $miSfsv : $_POST['ssfsv'];
 	if ($_POST['ssfsv']) $oTipoActiv->setSfsvText($_POST['ssfsv']);
 	if ($_POST['sasistentes']) $oTipoActiv->setAsistentesText($_POST['sasistentes']);
 	if ($_POST['sactividad']) $oTipoActiv->setActividadText($_POST['sactividad']);

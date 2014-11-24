@@ -94,7 +94,7 @@ $situacion = $oPersona->getSituacion();
 $f_situacion = $oPersona->getF_situacion();
 $profesion = $oPersona->getProfesion();
 $stgr = $oPersona->getStgr();
-if ($obj_pau != 'PersonaEx') {
+if ($obj_pau != 'PersonaEx' && $obj_pau != 'PersonaIn') {
 	$id_ctr = $oPersona->getId_ctr();
 	$oCentroDl = new ubis\CentroDl($id_ctr);	
 	$ctr = $oCentroDl->getNombre_ubi();

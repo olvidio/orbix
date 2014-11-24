@@ -138,8 +138,6 @@ class Xpermisos {
 		$perms = $this->permissions;
 		$r = 0;
 		reset($p);
-		print_r($perms);
-		print_r($p);
 		while(list($key, $val) = each($p)) {
 		  echo "val: $val :: $key<br>";
 		  $r ^= $val;
@@ -240,7 +238,6 @@ class Xpermisos {
 		//si $bin es nulo, le pongo todo 0
 		if (empty($bin)) { $bin=0; }
 		$txt="";
-		print_r($a_perm);
 		foreach($this->permissions as $nom=>$num) {
 			if (in_array($num,$a_perm)) {$chk="checked";} else {$chk="";}
 			echo "$nom<br>";

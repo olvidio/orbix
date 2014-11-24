@@ -42,6 +42,8 @@ $Qempiezamin = '';
 $Qempiezamax = '';
 //$Qque = '';
 
+$mi_sfsv = core\ConfigGlobal::mi_sfsv();
+
 //Si vengo de vuelta de un go_to:
 if (!empty($_POST['atras'])) {
 	if ($_POST['atras'] == 2) $oPosicion->go(); //vengo de continuar y debo hacer la búsqueda anterior.
@@ -79,7 +81,11 @@ if ($Qstatus!=5) {
 }
 // Id tipo actividad
 if (empty($Qid_tipo_activ)) {
-	$ssfsv = empty($_POST['ssfsv'])? '.' : $_POST['ssfsv'];
+	if (empty($_POST['ssfsv'])) {
+		if ($mi_sfsv == 1) $_POST['ssfsv'] = 'sv';
+		if ($mi_sfsv == 2) $_POST['ssfsv'] = 'sf';
+	}
+	$ssfsv = $_POST['ssfsv'];
 	$sasistentes = empty($_POST['sasistentes'])? '.' : $_POST['sasistentes'];
 	$sactividad = empty($_POST['sactividad'])? '.' : $_POST['sactividad'];
 	$snom_tipo = empty($_POST['snom_tipo'])? '...' : $_POST['snom_tipo'];
@@ -256,8 +262,15 @@ foreach($cActividades as $oActividad) {
 		$oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
 		$oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
 	}
-
 	$oTipoActiv= new web\TiposActividades($id_tipo_activ);
+	$isfsv=$oTipoActiv->getSfsvId();
+	// para ver el nombre en caso de la otra sección
+	if ($mi_sfsv != $isfsv && !($_SESSION['oPerm']->have_perm("des")) ) {
+		$ssfsv=$oTipoActividad->getSfsvText();
+		$sactividad=$oTipoActividad->getActividadText();
+		$nom_activ="$ssfsv $sactividad";
+	}
+
 	$ssfsv=$oTipoActiv->getSfsvText();
 	$sasistentes=$oTipoActiv->getAsistentesText();
 	$sactividad=$oTipoActiv->getActividadText();

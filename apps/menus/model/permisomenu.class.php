@@ -56,8 +56,9 @@ class PermisoMenu extends permisos\Xpermisos {
 		$permissions["nax"]  	= 1<<14; //16384,
 		$permissions["dir"] 	=  1<<15; //32768,
 		$permissions["pendents"]=  1<<16; //65536,
-		$permissions["actividades"] =  1<<17;
-		$permissions["admin"]   =  1<<25; // uno que se grande, para que sea el último
+		$permissions["actividades"] =  1<<17; //131072,
+		$permissions["admin_sf"]   =  1<<18; //262144,
+		$permissions["admin_sv"]   =  1<<25; // uno que se grande, para que sea el último
 
 		$this->permissions = $permissions;
   }
