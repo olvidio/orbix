@@ -238,7 +238,6 @@ if (!empty($Qmodo) && $Qmodo == 'importar') {
 	$obj_pau = 'Actividad';
 }
 $cActividades = $GesActividades->getActividades($aWhere,$aOperador);
-
 $num_activ=count($cActividades);
 if ($num_activ > $num_max_actividades && empty($_POST['continuar'])) {
 	$go_avant=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_select.php?'.http_build_query(array('continuar'=>'si','atras'=>2)));

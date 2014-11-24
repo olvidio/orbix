@@ -81,7 +81,8 @@ class Actividad Extends ActividadAll {
  		if (empty($aDades['publicado']) || ($aDades['publicado'] === 'off') || ($aDades['publicado'] === 'false') || ($aDades['publicado'] === 'f')) { $aDades['publicado']='f'; } else { $aDades['publicado']='t'; }
 
 		$a_pkey = $this->aPrimary_key;
-		$dl = $aDades['dl_org'];
+		// si es de la sf quito la 'f'
+		$dl = preg_replace('/f$/', '', $aDades['dl_org']);
 		$id_tabla = $aDades['id_tabla'];
 		if ($dl == core\ConfigGlobal::mi_dele()) {
 			$oActividad = new ActividadDl($a_pkey);
@@ -137,7 +138,8 @@ class Actividad Extends ActividadAll {
 	 */
 	public function DBEliminar() {
 		$a_pkey = $this->aPrimary_key;
-		$dl = $this->sdl_org;
+		// si es de la sf quito la 'f'
+		$dl = preg_replace('/f$/', '', $this->sdl_org);
 		$id_tabla = $this->sid_tabla;
 		if ($dl == core\ConfigGlobal::mi_dele()) {
 			$oActividadAll= new ActividadDl($a_pkey);

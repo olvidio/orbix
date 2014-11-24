@@ -249,7 +249,8 @@ class ActividadAll Extends core\ClasePropiedades {
  		if (empty($aDades['publicado']) || ($aDades['publicado'] === 'off') || ($aDades['publicado'] === 'false') || ($aDades['publicado'] === 'f')) { $aDades['publicado']='f'; } else { $aDades['publicado']='t'; }
 
 		$a_pkey = $this->aPrimary_key;
-		$dl = $aDades['dl_org'];
+		// si es de la sf quito la 'f'
+		$dl = preg_replace('/f$/', '', $aDades['dl_org']);
 		$id_tabla = $aDades['id_tabla'];
 		if ($dl == core\ConfigGlobal::mi_dele()) {
 			$oActividadAll= new ActividadDl($a_pkey);
@@ -273,6 +274,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	public function DBCarregar($que=null) {
 		$oDbl = $this->getoDbl();
 		if (isset($this->iid_activ)) {
+			echo "SELECT * FROM av_actividades_all WHERE id_activ='$this->iid_activ'";
 			if (($qRs = $oDbl->query("SELECT * FROM av_actividades_all WHERE id_activ='$this->iid_activ'")) === false) {
 				$sClauError = 'ActividadAll.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -302,7 +304,8 @@ class ActividadAll Extends core\ClasePropiedades {
 	 */
 	public function DBEliminar() {
 		$a_pkey = $this->aPrimary_key;
-		$dl = $aDades['dl_org'];
+		// si es de la sf quito la 'f'
+		$dl = preg_replace('/f$/', '', $aDades['dl_org']);
 		$id_tabla = $aDades['id_tabla'];
 		if ($dl == core\ConfigGlobal::mi_dele()) {
 			$oActividadAll= new ActividadDl($a_pkey);

@@ -9,6 +9,7 @@ use notas\model as notas;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $mi_dele = core\ConfigGlobal::mi_dele();
+$mi_dele .= (core\ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
 $acta = empty($_POST['acta'])? '' : $_POST['acta'];
 $dl_acta = strtok($acta,' ');
 

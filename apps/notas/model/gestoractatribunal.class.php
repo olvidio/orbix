@@ -51,6 +51,8 @@ class GestorActaTribunalDl Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$dl = strtok($aDades['acta'],' ');
+			// si es de la sf quito la 'f'
+			$dl = preg_replace('/f$/', '',$dl);
 			if ($dl == core\ConfigGlobal::mi_dele()) {
 				$oActaTribunalDl= new ActaTribunalDl($a_pkey);
 			} else {
@@ -107,6 +109,8 @@ class GestorActaTribunalDl Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$dl = strtok($aDades['acta'],' ');
+			// si es de la sf quito la 'f'
+			$dl = preg_replace('/f$/', '',$dl);
 			if ($dl == core\ConfigGlobal::mi_dele()) {
 				$oActaTribunalDl= new ActaTribunalDl($a_pkey);
 			} else {

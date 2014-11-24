@@ -37,6 +37,7 @@ if (empty($_POST['dl_org'])) {
 	}
 	*/
 	$dl_org = core\ConfigGlobal::mi_dele(); 
+	$dl_org .= (core\ConfigGlobal::mi_sfsv() == 2)? 'f' : ''; 
 } else {
 	$dl_org = $_POST['dl_org'];
 }

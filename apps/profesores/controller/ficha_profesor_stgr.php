@@ -25,6 +25,9 @@ use ubis\model as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$dele = core\ConfigGlobal::mi_dele(); 
+$dele .= (core\ConfigGlobal::mi_sfsv==2)? 'f' : ''; 
+
 if (!empty($_POST['sel'])) { //vengo de un checkbox
 	//$id_nom=$sel[0];
 	$id_nom=strtok($_POST['sel'][0],"#");

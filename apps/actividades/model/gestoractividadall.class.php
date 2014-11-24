@@ -254,7 +254,8 @@ class GestorActividadAll Extends core\ClaseGestor {
 		}
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_activ' => $aDades['id_activ']);
-			$dl = $aDades['dl_org'];
+			// si es de la sf quito la 'f'
+			$dl = preg_replace('/f$/', '', $aDades['dl_org']);
 			$id_tabla = $aDades['id_tabla'];
 			if ($dl == core\ConfigGlobal::mi_dele()) {
 				$oActividad = new ActividadDl($a_pkey);
@@ -316,7 +317,8 @@ class GestorActividadAll Extends core\ClaseGestor {
 		}
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_activ' => $aDades['id_activ']);
-			$dl = $aDades['dl_org'];
+			// si es de la sf quito la 'f'
+			$dl = preg_replace('/f$/', '', $aDades['dl_org']);
 			$id_tabla = $aDades['id_tabla'];
 			if ($dl == core\ConfigGlobal::mi_dele()) {
 				$oActividad = new ActividadDl($a_pkey);

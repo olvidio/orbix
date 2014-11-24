@@ -156,7 +156,8 @@ class GestorAsistente Extends core\ClaseGestor {
 		/* Mirar si la actividad es mia o no */
 		$iid_activ = $aWhere['id_activ'];
 		$oActividad = new actividades\Actividad($iid_activ);
-		$dl = $oActividad->getDl_org();
+		// si es de la sf quito la 'f'
+		$dl = preg_replace('/f$/', '', $oActividad->getDl_org();
 		$id_tabla = $oActividad->getId_tabla();
 		if ($dl == core\ConfigGlobal::mi_dele()) {
 			// Todos los asistentes
