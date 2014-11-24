@@ -67,7 +67,7 @@ foreach ($cCtr as $oCentro) {
 	$nombre_ubi = $oCentro->getNombre_ubi();
 	$a_ubis[$nombre_ubi] = $oCentro;
 }
-
+/*
 if (!($_SESSION['oPerm']->have_perm("vcsd") OR $_SESSION['oPerm']->have_perm("des"))) {
 	//Ctrs sf
 	$GesCtrSf = new ubis\GestorCentrosEllas();
@@ -77,7 +77,7 @@ if (!($_SESSION['oPerm']->have_perm("vcsd") OR $_SESSION['oPerm']->have_perm("de
 		$a_ubis[$nombre_ubi] = $oCentro;
 	}
 }
-
+*/
 
 // oredenar los ubis
 uksort($a_ubis, "strnatcasecmp"); // case insensitive

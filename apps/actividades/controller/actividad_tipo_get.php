@@ -49,6 +49,7 @@ switch ($_POST['salida']) {
 		echo $oDespl->desplegable();
 	 break;
 	 case "lugar":
+	 /* Para que los de dre puedan introducir actividades de la sf habrá que hacer de otra manera... */
 		$donde='';
 		if (empty($_POST['entrada'])) exit;
 
@@ -66,29 +67,17 @@ switch ($_POST['salida']) {
 				$donde_ctr = "$donde AND cdc='t'";
 				break;
 		}
-		if (empty($_POST['isfsv'])) $_POST['isfsv']=0;
-		switch ($_POST['isfsv']) {
+		$isfsv = empty($_POST['isfsv'])? 0 : $_POST['isfsv'];
+		$_POST['ssfsv'] = empty($_POST['ssfsv'])? '' : $_POST['ssfsv'];
+		if ($_POST['ssfsv'] == 'sv') $isfsv = 1;
+		if ($_POST['ssfsv'] == 'sf') $isfsv = 2;
+		switch ($isfsv) {
 			case 1:
 				$donde_ctr = "$donde AND cdc='t'";
-				$tabla_ctr="u_centros";
 				$donde .= "AND sv='true' ";
 				break;
 			case 2:
 				$donde_ctr = "$donde AND cdc='t'";
-				$tabla_ctr="u_centros_sf";
-				$donde .= "AND sf='true' ";
-				break;
-		}
-		if (empty($_POST['ssfsv'])) $_POST['ssfsv']='';
-		switch ($_POST['ssfsv']) {
-			case "sv":
-				$donde_ctr = "$donde AND cdc='t'";
-				$tabla_ctr="u_centros";
-				$donde .= "AND sv='true' ";
-				break;
-			case "sf":
-				$donde_ctr = "$donde AND cdc='t'";
-				$tabla_ctr="u_centros_sf";
 				$donde .= "AND sf='true' ";
 				break;
 		}
@@ -96,15 +85,8 @@ switch ($_POST['salida']) {
 		if (!empty($donde)) { $donde.=" AND status='t'"; } else { $donde="WHERE status='t'"; }
 		$oGesCasas= new ubis\GestorCasa();
 		$oOpcionesCasas = $oGesCasas->getPosiblesCasas($donde);
-		switch($tabla_ctr) {
-			case 'u_centros':
-				$oGesCentros = new ubis\GestorCentroDl();
-				break;
-			case 'u_centros_sf':
-				$oGesCentros = new ubis\GestorCentroSf();
-				break;
-		}
-		
+	
+		$oGesCentros = new ubis\GestorCentroDl();
 		$oOpcionesCentros = $oGesCentros->getPosiblesCentros($donde_ctr);
 
 		$oDesplCasas = new web\Desplegable(array('oOpciones'=>$oOpcionesCasas));	
