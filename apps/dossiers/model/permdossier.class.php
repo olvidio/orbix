@@ -714,7 +714,7 @@ class PermDossier {
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
 			break;
-		case "x":
+		case "nax":
 			if ($_SESSION['oPerm']->have_perm("sm")) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),

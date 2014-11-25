@@ -1,9 +1,12 @@
 <?php
+$oCuadros=new dossiers\model\PermisoDossier();
 
-$campos_chk = 'permiso_lectura!permiso_escritura';
+$chk = ($depende_modificar == 't')? 'checked' : '';
+
+$campos_chk = 'depende_modificar!permiso_lectura!permiso_escritura';
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('id_tipo_dossier!id_tipo_dossier_rel!tabla_from!tabla_to!campo_to!descripcion!depende_modificar');
+$oHash->setcamposForm('id_tipo_dossier!id_tipo_dossier_rel!tabla_from!tabla_to!campo_to!descripcion');
 $oHash->setcamposNo('que!'.$campos_chk);
 $a_camposHidden = array(
 		'campos_chk'=>$campos_chk,
@@ -37,39 +40,15 @@ $oHash->setArraycamposHidden($a_camposHidden);
 ?>
 <tr>	
 	<td colspan=3><font ><?php echo _("descripción"); ?> </font><input name="descripcion"  value="<?php echo $descripcion; ?>" size="40"> </td>
-</TR>
-<tr>
-   	<td><font ><?php echo _("depende_modificar"); ?></font><input name="depende_modificar" value="<?php echo $depende_modificar; ?>"size="10"> </td>
 </tr>
 <tr>
-<td colspan="2"><?php echo ucfirst(_("depende_modificar=t implica que sólo podrá modificar la oficina correspondiente: agd para los agd, sm para los n, sg para los s, en dossiers que afectan a varios tipos de personas")); ?></td>
+<td><?php echo _("depende_modificar"); ?><input type=checkbox name="depende_modificar" value="<?= $depende_modificar; ?>" <?= $chk ?>> </td>
+<td colspan="2"><?php echo ucfirst(_("depende_modificar activo implica que sólo podrá modificar la oficina correspondiente: agd para los agd, sm para los n, sg para los s, en dossiers que afectan a varios tipos de personas")); ?></td>
 </tr>
-</table>
-<?php
-$nomcamp="permiso_lectura";
-$bin=$permiso_lectura;
-?>
-<table>
-<tr>
-<?php
-echo _("permisos de lectura");
-echo "<br>";
-//llamada a la función que genera los cuadros de permisos de lectura
-cuadros_perm_doss($nomcamp,$bin);  
-echo "<br>";
-?>
-</tr>
-<tr>
-<?php
-$nomcamp="permiso_escritura";
-$bin=$permiso_escritura;
-echo _("permisos de escritura");
-echo "<br>";
-//llamada a la función que genera asimismo los cuadros de permiso de escritura
-cuadros_perm_doss($nomcamp,$bin);  
-?>
-<br>
-</tr>				
+<tr><td><?= _("permisos de lectura"); ?></td></tr>
+<tr><td colspan=3><?= $oCuadros->cuadros_check('permiso_lectura',$permiso_lectura); ?></td></tr>
+<tr><td><?= _("permisos de escritura"); ?></td></tr>
+<tr><td colspan=3><?= $oCuadros->cuadros_check('permiso_escritura',$permiso_escritura); ?></td></tr>
 </table>
 <?php
 // -----------------------------------  Botones  ----------------------

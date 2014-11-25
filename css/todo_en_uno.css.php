@@ -138,7 +138,7 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	th.acc,td.acc { width: 4em; }
 
 	/* dossiers */
-	img.dossier { width: 1.5em; }
+	img.dossier { vertical-align: bottom; width: 1.5em; }
 
 	input.btn_ok  {
 		border-style:ridge;

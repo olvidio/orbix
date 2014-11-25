@@ -1,6 +1,9 @@
 <h2 class=titulo><?php echo ucfirst(_("relación de dossiers")); ?></h2>
 <table border=1>
 <?php
+$pencil=core\ConfigGlobal::$web_icons.'/pencil.png';
+$eye=core\ConfigGlobal::$web_icons.'/eye.png';
+$deny=core\ConfigGlobal::$web_icons.'/deny.png';
 foreach ($a_filas as $i => $fila) {
 	 echo "<tr class=\"".$fila['clase']."\">";
 	 switch ($fila['perm_a']) { 
@@ -8,15 +11,15 @@ foreach ($a_filas as $i => $fila) {
 			$imagen=core\ConfigGlobal::$web_icons.'/folder.sec.gif';
 			?>
 			<td><img class="dossier" src='<?= $fila['imagen'] ?>' ></td>
-			<td></td><td><?= $fila['descripcion']; ?></td>
+			<td><?= $fila['descripcion']; ?>     <img class="dossier" src='<?= $deny ?>'></td>
 			<?php break;
 		case 2: // sólo lectura
 			?>
-			<td><img class="dossier" src='<?= $fila['imagen'] ?>' ></td><td><span class="link" onclick="fnjs_update_div('#main','<?= $fila['href_ver'] ?>');"><font color="green"><?= $fila['descripcion'] ?></font></span></td>
+			<td><img class="dossier" src='<?= $fila['imagen'] ?>' ></td><td><span class="link" onclick="fnjs_update_div('#main','<?= $fila['href_ver'] ?>');"><font color="green"><?= $fila['descripcion'] ?></font>     <img class="dossier" src='<?= $eye ?>'></span></td>
 			<?php break;
 		case 3: //lectura y escritura
 			?>
-			<td><img class="dossier" src='<?= $fila['imagen'] ?>' ></td><td link="red"><span class="link" onclick="fnjs_update_div('#main','<?= $fila['href_ver'] ?>');"><?= $fila['descripcion'] ?></span></td>
+			<td><img class="dossier" src='<?= $fila['imagen'] ?>' ></td><td link="red"><span class="link" onclick="fnjs_update_div('#main','<?= $fila['href_ver'] ?>');"><?= $fila['descripcion'] ?>     <img class="dossier" src='<?= $pencil ?>'></span></td>
 			<?php break;
 	 }
 	 echo "</tr>";

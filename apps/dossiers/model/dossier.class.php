@@ -250,6 +250,29 @@ class Dossier Extends core\ClasePropiedades {
 	/* METODES GET i SET --------------------------------------------------------*/
 
 	/**
+	* Posa la data d'avuvi a f_status i status a true
+	*
+	* @return none
+	*/
+	function abrir() {
+	$this->DBCarregar();
+	$this->setF_status(date("d/m/Y"));
+	$this->setStatus_dossier('t');
+	$this->DBGuardar();
+	}
+	/**
+	* Posa la data d'avuvi a f_status i status a false
+	*
+	* @return none
+	*/
+	function cerrar() {
+	$this->DBCarregar();
+	$this->setF_status(date("d/m/Y"));
+	$this->setStatus_dossier('f');
+	$this->DBGuardar();
+	}
+
+	/**
 	 * Recupera tots els atributs de Dossier en un array
 	 *
 	 * @return array aDades
