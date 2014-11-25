@@ -50,6 +50,7 @@ if (!empty($_POST['go_to'])) {
 }
 
 $obj = 'asistentes\\model\\Asistente';
+$permiso =	empty($_POST['permiso'])? '' : $_POST['permiso'];
 
 /* Mirar si la actividad es mia o no */
 $oActividad = new actividades\Actividad($id_activ);
@@ -100,34 +101,27 @@ if (!empty($id_nom)) { //caso de modificar
 	$mod="nuevo";
 	$propio="t"; //valor por defecto
 	$observ=""; //valor por defecto
-	$_POST['tabla_p'] = !empty($_POST['tabla_p'])? $_POST['tabla_p'] : '';
-	switch ($_POST['tabla_p']) {
-		case 'p_numerarios':
-		case 'p_agregados':
-		case 'p_supernumerarios':
-		case 'p_sssc':
-		case 'p_nax':
-			$oPersonas=new personas\GestorPersonaDl();
-			$oPersonasOpciones=$oPersonas->getListaPersonasTabla($_POST['tabla_p'],'');
-			$oDesplegablePersonas=new web\Desplegable('id_nom',$oPersonasOpciones,'',false);
-			$obj_pau = 'PersonaDl';
+	$_POST['obj_pau'] = !empty($_POST['obj_pau'])? urldecode($_POST['obj_pau']) : '';
+	$obj_pau = strtok($_POST['obj_pau'],'&');
+	$na = strtok('&');
+	$na_txt = strtok($na,'=');
+	$na_val = 'p'.strtok('=');
+	switch ($obj_pau) {
+		case 'PersonaN':
+		case 'PersonaNax':
+		case 'PersonaAgd':
+		case 'PersonaS':
+		case 'PersonaSSSC':
+			$oPersonas=new personas\GestorPersonaN();
+			$oDesplegablePersonas = $oPersonas->getListaPersonas();
+			$oDesplegablePersonas->setNombre('id_nom');
 			break;
-		case '':
-		case 'p_de_paso':
-		case 'p_de_paso_ex':
-		default:
-			empty($_POST['na'])? $tipo="" : $tipo="p".$_POST['na'];
+		case 'PersonaEx':
 			$oPersonas=new personas\GestorPersonaEx();
-			$oPersonasOpciones=$oPersonas->getListaPersonasTabla($_POST['tabla_p'],$tipo);
-			$oDesplegablePersonas=new web\Desplegable('id_nom',$oPersonasOpciones,'',false);
+			$oDesplegablePersonas = $oPersonas->getListaPersonas($na_val);
+			$oDesplegablePersonas->setNombre('id_nom');
 			$obj_pau = 'PersonaEx';
 			break;
-		/*
-		   default:
-			$go_to=urlencode(core\ConfigGlobal::getWeb()."/programas/dossiers/dossiers_ver.php?pau=$pau&id_pau=${_POST['id_pau']}&id_dossier=$id_dossier&tabla_pau=$tabla_pau&permiso=3");
-			$oPosicion = new web\Posicion();
-			echo $oPosicion->ir_a($go_to);
-			*/
 	}
 }
 $propio_chk = (!empty($propio) && $propio=='t') ? 'checked' : '' ;

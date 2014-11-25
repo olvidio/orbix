@@ -167,16 +167,18 @@ echo $oTabla->mostrar_tabla();
 </form>
 <?php
 // --------------  boton insert ----------------------
-reset ($a_ref_perm);
-echo "<div class='no_print'><br><table class=botones><tr class=botones><th align=RIGHT>"._("dl").":</th>";
-$mi_dele = core\ConfigGlobal::mi_dele();
-while (list ($clave, $val) = each ($a_ref_perm)) {
-	$perm=$val["perm"];
-	$tabla_p=$val["tabla"];
-	$nom=$val["nom"];
-   	if (!empty($perm)) {
-		$pagina=web\Hash::link('apps/actividadcargos/controller/form_3102.php?'.http_build_query(array('mod'=>'nuevo','dele'=>$mi_dele,'pau'=>$pau,'tabla_p'=>$tabla_p,'id_pau'=>$id_pau,'go_to'=>$go_to)));
-		echo "<td class=botones><span class=link_inv onclick=\"fnjs_update_div('#ficha_activ','$pagina');\" >".sprintf(_("añadir %s"),$nom)."</span></td>";
+if ($permiso > 2) {
+	reset ($a_ref_perm);
+	echo "<div class='no_print'><br><table class=botones><tr class=botones><th align=RIGHT>"._("dl").":</th>";
+	$mi_dele = core\ConfigGlobal::mi_dele();
+	while (list ($clave, $val) = each ($a_ref_perm)) {
+		$perm=$val["perm"];
+		$obj_pau=$val["obj"];
+		$nom=$val["nom"];
+		if (!empty($perm)) {
+			$pagina=web\Hash::link('apps/actividadcargos/controller/form_3102.php?'.http_build_query(array('mod'=>'nuevo','dele'=>$mi_dele,'pau'=>$pau,'obj_pau'=>$obj_pau,'id_pau'=>$id_pau,'go_to'=>$go_to)));
+			echo "<td class=botones><span class=link_inv onclick=\"fnjs_update_div('#ficha_activ','$pagina');\" >".sprintf(_("añadir %s"),$nom)."</span></td>";
+		}
 	}
 }
 ?>

@@ -50,6 +50,7 @@ if (!empty($_POST['go_to'])) {
 
 $obj = 'actividadcargos\\model\\ActividadCargo';
 
+$permiso =	empty($_POST['permiso'])? '' : $_POST['permiso'];
 
 if (!empty($id_nom)) { //caso de modificar
 	$oPersona=personas\Persona::NewPersona($id_nom);
@@ -61,13 +62,31 @@ if (!empty($id_nom)) { //caso de modificar
 	$observ=$oActividadCargo->getObserv();
 } else { //caso de nuevo cargo
 	$observ="";
-	if (!empty($_POST['tabla_p'])) {
-		empty($_POST['na'])? $tipo="" : $tipo="p".$_POST['na'];
-		$oPersonas=new personas\GestorPersonaDl();
-		$oPersonasOpciones=$oPersonas->getListaPersonasTabla($_POST['tabla_p'],$tipo);
-		$oDesplegablePersonas=new web\Desplegable('id_nom',$oPersonasOpciones,'',false);
+	if (!empty($_POST['obj_pau'])) {
+		$_POST['obj_pau'] = !empty($_POST['obj_pau'])? urldecode($_POST['obj_pau']) : '';
+		$obj_pau = strtok($_POST['obj_pau'],'&');
+		$na = strtok('&');
+		$na_txt = strtok($na,'=');
+		$na_val = 'p'.strtok('=');
+		switch ($obj_pau) {
+			case 'PersonaN':
+			case 'PersonaNax':
+			case 'PersonaAgd':
+			case 'PersonaS':
+			case 'PersonaSSSC':
+				$oPersonas=new personas\GestorPersonaN();
+				$oDesplegablePersonas = $oPersonas->getListaPersonas();
+				$oDesplegablePersonas->setNombre('id_nom');
+				break;
+			case 'PersonaEx':
+				$oPersonas=new personas\GestorPersonaEx();
+				$oDesplegablePersonas = $oPersonas->getListaPersonas($na_val);
+				$oDesplegablePersonas->setNombre('id_nom');
+				$obj_pau = 'PersonaEx';
+				break;
+		}
 	} else {
-		$go_to=urlencode(core\core\core\ConfigGlobal::getWeb()."/programas/dossiers/dossiers_ver.php?pau=$pau&id_pau=$id_pau&id_dossier=$id_dossier&tabla_pau=$tabla_pau&permiso=3");
+		$go_to=urlencode(core\core\core\ConfigGlobal::getWeb()."/programas/dossiers/dossiers_ver.php?pau=$pau&id_pau=$id_pau&id_dossier=$id_dossier&permiso=$permiso");
 		$oPosicion = new web\Posicion();
 		echo $oPosicion->ir_a($go_to);
 	}

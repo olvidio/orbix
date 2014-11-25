@@ -16,7 +16,7 @@ use actividadestudios\model as actividadestudios;
 
 //pongo aqui el $go_to porque al ir al mismo update que las actividaes, no se donde voler
 //$go_to=core\ConfigGlobal::getWeb()."/apps/dossiers/controller/dossiers_ver.php?pau=$pau&id_pau=$id_pau&tabla_pau=".$_POST['tabla_pau']."&id_dossier=$id_dossier&permiso=$permiso";
-$a_dataUrl = array('pau'=>$pau,'id_pau'=>$id_pau,'tabla_pau'=>$_POST['tabla_pau'],'id_dossier'=>$id_dossier,'permiso'=>$permiso);
+$a_dataUrl = array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$_POST['obj_pau'],'id_dossier'=>$id_dossier,'permiso'=>$permiso);
 $go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query($a_dataUrl));
 
 $a_botones=array(

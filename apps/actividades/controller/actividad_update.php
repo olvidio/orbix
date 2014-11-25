@@ -44,7 +44,7 @@ function borrar_actividad($id_activ) {
 	$oActividad = new actividades\Actividad($id_activ);
 	$oActividad->DBCarregar();
 	// si es de la sf quito la 'f'
-	$dl = preg_replace('/f$/', '',$oActividad->getDl_org();
+	$dl = preg_replace('/f$/', '',$oActividad->getDl_org());
 	$id_tabla = $oActividad->getId_tabla();
 	if ($dl == core\ConfigGlobal::mi_dele()) { // de la propia dl
 		$status = $oActividad->getStatus();
@@ -114,7 +114,7 @@ case "nuevo":
 
 	$dl_org = empty($_POST['dl_org'])? '' : $_POST['dl_org'];
 	// si es de la sf quito la 'f'
-	$dele = preg_replace('/f$/', '',$dl_org;
+	$dele = preg_replace('/f$/', '',$dl_org);
 	if ($dele == core\ConfigGlobal::mi_dele()) {
 		$oActividad= new actividades\ActividadDl();
 	} else {

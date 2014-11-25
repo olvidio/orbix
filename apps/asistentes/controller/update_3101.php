@@ -53,7 +53,7 @@ switch ($_POST['mod']) {
 		// hay que averiguar si la actividad es de la dl o de fuera.
 		$oActividad  = new actividades\Actividad($id_activ);
 		// si es de la sf quito la 'f'
-		$dl = preg_replace('/f$/', '', $oActividad->getDl_org();
+		$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
 		$id_tabla = $oActividad->getId_tabla();
 		if ($dl == core\ConfigGlobal::mi_dele()) {
 			Switch($obj_persona) {
@@ -110,7 +110,7 @@ switch ($_POST['mod']) {
 		// hay que averiguar si la actividad es de la dl o de fuera.
 		$oActividad  = new actividades\Actividad($id_activ);
 		// si es de la sf quito la 'f'
-		$dl = preg_replace('/f$/', '', $oActividad->getDl_org();
+		$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
 		$id_tabla = $oActividad->getId_tabla();
 		if ($dl == core\ConfigGlobal::mi_dele()) {
 			Switch($obj_persona) {

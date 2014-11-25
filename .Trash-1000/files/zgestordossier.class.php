@@ -10,25 +10,22 @@ use core;
  * @subpackage model
  * @author Daniel Serrabou
  * @version 1.0
- * @created 25/11/2014
+ * @created 01/10/2010
  */
 
-class GestorDossier Extends core\ClaseGestor {
+class GestorDossier {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
-
 	/**
 	 * Constructor de la classe.
 	 *
-	 * @return $gestor
+	 * @return GestorDossier
 	 *
 	 */
 	function __construct() {
-		$oDbl = $GLOBALS['oDB'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('d_dossiers_abiertos');
+		// constructor buit
 	}
 
 
@@ -41,7 +38,7 @@ class GestorDossier Extends core\ClaseGestor {
 	 * @return array Una col·lecció d'objectes de tipus Dossier
 	 */
 	function getDossiersQuery($sQuery='') {
-		$oDbl = $this->getoDbl();
+		$oDbl = $GLOBALS['oDBPC'];
 		$oDossierSet = new core\Set();
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorDossier.query';
@@ -67,17 +64,16 @@ class GestorDossier Extends core\ClaseGestor {
 	 * @return array Una col·lecció d'objectes de tipus Dossier
 	 */
 	function getDossiers($aWhere=array(),$aOperators=array()) {
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
+		$oDbl = $GLOBALS['oDBPC'];
 		$oDossierSet = new core\Set();
 		$oCondicion = new core\Condicion();
 		$aCondi = array();
 		foreach ($aWhere as $camp => $val) {
-			if ($camp == '_ordre') continue;
+			if ($camp === '_ordre') continue;
 			$sOperador = isset($aOperators[$camp])? $aOperators[$camp] : '';
 			if ($a = $oCondicion->getCondicion($camp,$sOperador,$val)) $aCondi[]=$a;
-			// operadores que no requieren valores
-			if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL') unset($aWhere[$camp]);
+			// operadores que no requieren valores.
+			if ($sOperador === 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL') unset($aWhere[$camp]);
 		}
 		$sCondi = implode(' AND ',$aCondi);
 		if ($sCondi!='') $sCondi = " WHERE ".$sCondi;
@@ -90,14 +86,14 @@ class GestorDossier Extends core\ClaseGestor {
 		$sOrdre = '';
 		if (isset($aWhere['_ordre']) && $aWhere['_ordre']!='') $sOrdre = ' ORDER BY '.$aWhere['_ordre'];
 		if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
-		$sQry = "SELECT * FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
+		$sQry = "SELECT * FROM d_dossiers_abiertos ".$sCondi.$sOrdre.$sLimit;
 		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-			$sClauError = 'GestorDossier.llistar.prepare';
+			$sClauError = 'GestorDossier.llistar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		if (($oDblSt->execute($aWhere)) === false) {
-			$sClauError = 'GestorDossier.llistar.execute';
+			$sClauError = 'GestorDossier.llistar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
@@ -115,5 +111,6 @@ class GestorDossier Extends core\ClaseGestor {
 	/* METODES PROTECTED --------------------------------------------------------*/
 
 	/* METODES GET i SET --------------------------------------------------------*/
+
 }
 ?>
