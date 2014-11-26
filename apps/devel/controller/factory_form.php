@@ -11,8 +11,12 @@
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
+$oHash = new web\Hash();
+$oHash->setcamposForm('db!tabla!clase!clase_plural!grupo!aplicacion');
+
 ?>
 <form name="frm" action="apps/devel/controller/factory.php">
+<?= $oHash->getCamposHtml(); ?>
 Base de dades: <input type="text" name="db" value="test-dl_interior"><br>
 Nom de la taula: <input type="text" name="tabla" value='H-dlb.'><br>
 Nom de la Clase: <input type="text" name="clase" value=""><br>
@@ -21,5 +25,4 @@ app: <input type="text" name="grupo" value="personas"> (actividades,personas,ubi
 Nom de la Aplicacion: <input type="text" name="aplicacion" value="delegación"> (registro,...)<br>
 <br>
 <input TYPE="button" VALUE="<?php echo ucfirst(_("guardar cambios")); ?>"  onclick="fnjs_enviar_formulario(this.form)">
-
 </form>

@@ -37,9 +37,10 @@ class PermisoDossier extends permisos\Xpermisos {
 	}
 
   private function omplir() {
-		$permissions["adl"]	= 1;
-		$permissions["pr"]		= 1;
-		$permissions["agd"]	= 1<<1; // 2
+	  if (core\ConfigGlobal::mi_sfsv() == 1) $permissions["adl"] = 1;
+	  if (core\ConfigGlobal::mi_sfsv() == 2) $permissions["pr"] = 1;
+
+		$permissions["agd"]		= 1<<1; // 2
 		$permissions["aop"]    = 1<<2; //4,
 		$permissions["des"]    = 1<<3; //8,
 		$permissions["est"]    = 1<<4; //16,

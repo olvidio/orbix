@@ -11,9 +11,11 @@ require_once('apps/permisos/controller/login_obj.php');
 $_SESSION['oGestorErrores'] = new gestorErrores();
 
 //Definir Conexiones
-// public para todo el muindo
+// public para todo el mundo
 $oDBPC = new \PDO(ConfigGlobal::$str_conexio_public);
+$oDBPC ->exec('SET search_path TO public');
 $oDBRC = new \PDO(ConfigGlobal::$str_conexio_resto);
+$oDBRC ->exec('SET search_path TO resto');
 //comun
 $oDBC = new \PDO(ConfigGlobal::get_conexio_comu());
 $user_sfsv =$_SESSION['session_auth']['sfsv']; 
@@ -21,7 +23,9 @@ switch ($user_sfsv) {
 	case 1: //sv
 		$oDB = new \PDO(ConfigGlobal::get_conexio_sv());
 		$oDBP = new \PDO(ConfigGlobal::$str_conexio_publicv);
+		$oDBP->exec('SET search_path TO publicv');
 		$oDBR = new \PDO(ConfigGlobal::$str_conexio_restov);
+		$oDBR->exec('SET search_path TO restov');
 		//sf
 		$oDBE = new \PDO(ConfigGlobal::get_conexio_sf());
 		$oDBEP = new \PDO(ConfigGlobal::$str_conexio_publicf);
@@ -30,7 +34,9 @@ switch ($user_sfsv) {
 	case 2: //sf
 		$oDB = new \PDO(ConfigGlobal::get_conexio_sf());
 		$oDBP = new \PDO(ConfigGlobal::$str_conexio_publicf);
+		$oDBP->exec('SET search_path TO publicf');
 		$oDBR = new \PDO(ConfigGlobal::$str_conexio_restof);
+		$oDBR->exec('SET search_path TO restof');
 		//sv
 		$oDBE = new \PDO(ConfigGlobal::get_conexio_sv());
 		break;

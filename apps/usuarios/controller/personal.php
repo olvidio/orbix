@@ -100,6 +100,10 @@ if (is_array($aPref) && count($aPref) > 0) {
 } else {
 	$idioma='';
 }
+$oGesLocales = new usuarios\GestorLocal();
+$oDesplLocales = $oGesLocales->getListaLocales();
+$oDesplLocales->setNombre('idioma_nou');
+$oDesplLocales->setOpcion_sel($idioma);
 
 /*
 // si no tiene, grabo una prefernecia por defecto.
@@ -110,8 +114,6 @@ if (empty($idioma)) {
 }
 */
 
-$idioma_ca=($idioma=="ca_ES.UTF-8")? "selected":'';
-$idioma_es=($idioma=="es_ES.UTF-8")? "selected":'';
 
 $aniversarios=web\Hash::link(core\ConfigGlobal::getWeb().'/programas/aniversarios.php');
 $avisos=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?'.http_build_query(array('quien'=>'usuario','id_usuario'=>$id_usuario)));
@@ -173,10 +175,8 @@ $oHash->setcamposForm('inicio!oficina!estilo_color!tipo_menu!tipo_tabla!ordenApe
 </select></td></tr>
 <tr><td><?= ucfirst(_("idioma")) ?>:</td>
 <td>
-<select name=idioma_nou>
-	<option value="ca_ES.UTF-8" <?php echo $idioma_ca; ?>>Català</option>
-	<option value="es_ES.UTF-8" <?php echo $idioma_es; ?>>Castellano</option>	
-</select></td></tr>
+<?= $oDesplLocales->desplegable() ?>
+</td></tr>
 </table>
 <br>
 <input type="button" onclick=fnjs_enviar_formulario('#preferencias') value="guardar preferencias">

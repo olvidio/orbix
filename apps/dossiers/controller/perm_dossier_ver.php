@@ -24,6 +24,10 @@ use dossiers\model as dossiers;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+
+$a_dataUrl = array('tipo'=>$_POST['tipo']);
+$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/perm_dossiers.php?'.http_build_query($a_dataUrl));
+
 ?>
 <script>
 fnjs_eliminar=function(){
@@ -49,6 +53,7 @@ if ($_SESSION['oPerm']->have_perm("admin_sv") OR $_SESSION['oPerm']->have_perm("
 	$botones="1,2";
 }
 $a_campos['botones'] = $botones;
+$a_campos['go_to'] = $go_to;
 
 $oView = new core\View('dossiers\controller');
 echo $oView->render('perm_dossier_pres.phtml',$a_campos);

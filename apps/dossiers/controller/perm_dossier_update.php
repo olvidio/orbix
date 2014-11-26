@@ -46,6 +46,7 @@ foreach ($cDatosCampo as $oDatosCampo) {
 		}
 	} else {
 		if (!isset($_POST[$camp]) && !empty($_POST['id_tipo_dossier'])) continue; // sólo si no es nuevo
+
 		//cuando el campo es permiso_lectura, se pasa un array que hay que convertirlo en número.
 		if ($camp=="permiso_lectura"){
 			$byte=0;
@@ -79,6 +80,7 @@ foreach ($cDatosCampo as $oDatosCampo) {
 $oTipoDossier->setAllAtributes($a_values_o);
 $oTipoDossier->DBGuardar();
 
-$oPosicion->setId_div('ir_a');
-echo $oPosicion->atras();
+$oPosicion = new web\Posicion();
+echo $oPosicion->ir_a($_POST['go_to']);
+
 ?>
