@@ -675,10 +675,10 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	function getApellidos() {
 		if (!isset($this->sApellidos)) {
 			$this->DBCarregar();
-			$ap_nom= ($this->snx1)? $this->snx1.' ' : '';
+			$ap_nom= !empty($this->snx1)? $this->snx1.' ' : '';
 			$ap_nom.= $this->sapellido1;
-			$ap_nom.= ($this->snx2)? ' '.$this->snx2.' ' : ' ';
-			$ap_nom.= ($this->sapellido2)? $this->sapellido2 : '';
+			$ap_nom.= !empty($this->snx2)? ' '.$this->snx2.' ' : ' ';
+			$ap_nom.= !empty($this->sapellido2)? $this->sapellido2 : '';
 
 			$this->sApellidos=$ap_nom;
 		}
@@ -696,12 +696,12 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 				$ap_nom = '';
 			} else {
 				$ap_nom=$this->sapellido1;
-				$ap_nom.= ($this->snx2)? ' '.$this->snx2.' ' : ' ';
-				$ap_nom.= ($this->sapellido2)? $this->sapellido2 : '';
+				$ap_nom.= !empty($this->snx2)? ' '.$this->snx2.' ' : ' ';
+				$ap_nom.= !empty($this->sapellido2)? $this->sapellido2 : '';
 				$ap_nom.= ', ';
-				$ap_nom.= ($this->strato)? $this->strato.' ' : ' ';
-				$ap_nom.= ($this->sapel_fam)? $this->sapel_fam : $this->snom;
-				$ap_nom.= ($this->snx1)? ' '.$this->snx1 : '';
+				$ap_nom.= !empty($this->strato)? $this->strato.' ' : ' ';
+				$ap_nom.= !empty($this->sapel_fam)? $this->sapel_fam : $this->snom;
+				$ap_nom.= !empty($this->snx1)? ' '.$this->snx1 : '';
 			}
 			$this->sApellidosNombre=$ap_nom;
 		}
@@ -723,10 +723,10 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	function getApellidosNombreCr1_05() {
 		if (!isset($this->sApellidosNombreCr1_05)) {
 			$this->DBCarregar();
-			$ap_nom= ($this->snx1)? $this->snx1.' ' : '';
+			$ap_nom= !empty($this->snx1)? $this->snx1.' ' : '';
 			$ap_nom.= $this->sapellido1;
-			$ap_nom.= ($this->snx2)? ' '.$this->snx2.' ' : '';
-			$ap_nom.= ($this->sapellido2)? ' ' .$this->sapellido2 : '';
+			$ap_nom.= !empty($this->snx2)? ' '.$this->snx2.' ' : '';
+			$ap_nom.= !empty($this->sapellido2)? ' ' .$this->sapellido2 : '';
 			$ap_nom.= ', ';
 			$ap_nom.= $this->snom;
 
@@ -750,12 +750,12 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	public function getNombreApellidos() {
 		if (!isset($this->sNombreApellidos)) {
 			$this->DBCarregar();
-			$nom_ap = ($this->strato)? $this->strato.' ' : '';
-			$nom_ap.= ($this->sapel_fam)? $this->sapel_fam : $this->snom;
-			$nom_ap.= ($this->snx1)? ' '.$this->snx1 : '';
+			$nom_ap = !empty($this->strato)? $this->strato.' ' : '';
+			$nom_ap.= !empty($this->sapel_fam)? $this->sapel_fam : $this->snom;
+			$nom_ap.= !empty($this->snx1)? ' '.$this->snx1 : '';
 			$nom_ap.= ' '.$this->sapellido1;
-			$nom_ap.= ($this->snx2)? ' '.$this->snx2.' ' : ' ';
-			$nom_ap.= ($this->sapellido2)? $this->sapellido2 : '';
+			$nom_ap.= !empty($this->snx2)? ' '.$this->snx2.' ' : ' ';
+			$nom_ap.= !empty($this->sapellido2)? $this->sapellido2 : '';
 
 			$this->sNombreApellidos=$nom_ap;
 		}
@@ -771,10 +771,10 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 		if (!isset($this->sNombreApellidosCrSin)) {
 			$this->DBCarregar();
 			$nom_ap = $this->snom;
-			$nom_ap.= ($this->snx1)? ' '.$this->snx1 : '';
+			$nom_ap.= !empty($this->snx1)? ' '.$this->snx1 : '';
 			$nom_ap.= ' '.$this->sapellido1;
-			$nom_ap.= ($this->snx2)? ' '.$this->snx2.' ' : ' ';
-			$nom_ap.= ($this->sapellido2)? $this->sapellido2 : '';
+			$nom_ap.= !empty($this->snx2)? ' '.$this->snx2.' ' : ' ';
+			$nom_ap.= !empty($this->sapellido2)? $this->sapellido2 : '';
 
 			$this->sNombreApellidosCrSin=$nom_ap;
 		}

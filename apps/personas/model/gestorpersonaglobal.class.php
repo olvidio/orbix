@@ -81,7 +81,7 @@ abstract class GestorPersonaGlobal Extends core\ClaseGestor {
 				ORDER by apellido1,apellido2,nom";
 			//echo "qry: $sQuery<br>";
 		} else {
-			$sQuery="SELECT id_nom, ".$this->sApeNom." || ' (' || c.nombre_ubi || ')' as ape_nom
+			$sQuery="SELECT id_nom, ".$this->sApeNom." || ' (' ||   COALESCE(c.nombre_ubi, '-') || ')' as ape_nom
 				FROM $nom_tabla p LEFT JOIN u_centros_dl c ON (c.id_ubi=p.id_ctr)
 				WHERE p.situacion='A'
 				ORDER by apellido1,apellido2,nom";

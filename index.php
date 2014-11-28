@@ -274,6 +274,7 @@ img.calendar:hover { cursor: pointer; }
 <!-- jQuery -->
 <script type="text/javascript" src='<?php echo ConfigGlobal::$web_scripts.'/jquery-ui-latest/js/jquery-1.7.1.min.js'; ?>'></script>
 <script type="text/javascript" src='<?php echo ConfigGlobal::$web_scripts.'/jquery-ui-latest/js/jquery-ui-1.8.17.custom.min.js'; ?>'></script>
+<script type="text/javascript" src='<?php echo ConfigGlobal::$web_scripts.'/jquery-ui-latest/development-bundle/ui/i18n/jquery.ui.datepicker-es.js'; ?>'></script>
 <script type="text/javascript" src='<?php echo ConfigGlobal::$web_scripts.'/jquery-ui-latest/development-bundle/ui/i18n/jquery.ui.datepicker-ca.js'; ?>'></script>
 <link type="text/css" rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/jquery-ui-latest/css/smoothness/jquery-ui-1.8.17.custom.css'; ?>' />
 <!-- history.js -->
@@ -410,7 +411,6 @@ function fnjs_def_tabla(tabla) {
 }
 
 
-$.datepicker.setDefaults( $.datepicker.regional[ "ca" ] );
 
 function fnjs_logout() {
 	var parametros='logout=si&PHPSESSID=<?php echo session_id(); ?>'; 
@@ -787,6 +787,8 @@ function fnjs_dani2() {
     }
   );
 }
+
+
 </script>
 <?php
 if ($gm > 1) { 
@@ -843,11 +845,14 @@ if ($_SESSION['session_auth']['expire'] == 1) {
 }
 ?>
 <script>
-/* $(document).ready */
 $(function() {
 	fnjs_cambiar_base_link();
 	$('#left_slide').hide();  // hide it initially
 })
+/* Hay que ponerlo aqui, para asegurar que haya terminado de cargar todos los scripts. */
+$(document).ready(function(){
+	$.datepicker.setDefaults( $.datepicker.regional[ "<?= ConfigGlobal::mi_Idioma_short(); ?>" ] );
+});
 </script>
 </div>
 </body>
