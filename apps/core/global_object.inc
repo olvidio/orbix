@@ -143,26 +143,6 @@ if (isset($aPOST['h'])) {
 		$h2 = web\Hash::camposArray($aCampos)['hash'];
 		$sUrl = web\Hash::camposArray($aCampos)['orig'];
 
-/*
-
-		$sUrl = '';
-		sort($a_campos);
-		$aCampos = array();
-		foreach ($a_campos as $campo) {
-			if (empty($campo)) continue;
-			//$sQuery .= empty($sQuery)? $campo.'=' : '&'.$campo.'=';
-			$aCampos[$campo] = !empty($aPOST[$campo])? $aPOST[$campo] : '';
-		}
-		$sUrl .= http_build_query($aCampos);
-
-		foreach ($a_campos as $campo) {
-			$sUrl .= empty($sUrl)? $campo.'='.$aPOST[$campo] : '&'.$campo.'='.$aPOST[$campo];
-		}
-
-		$rta = web\Hash::md($sUrl);
-		$h2 = $rta['hash'];
-		$sUrl = $rta['orig'];
-		*/
 		if ($hh !== $h2) {
 			$salta = 1;
 			if (ConfigGlobal::is_debug_mode()) {
@@ -187,7 +167,6 @@ if (isset($aPOST['h'])) {
 		unset($aPOST['PHPSESSID']);
 		unset($aPOST['atras']);
 		unset($aPOST['h']);
-		//unset($aPOST['hc']);
 		unset($aPOST['horig']);
 		unset($aPOST['hh']);
 		unset($aPOST['hhc']);
@@ -200,21 +179,10 @@ if (isset($aPOST['h'])) {
 				$aPOST[$camp] = '';
 			}
 		}
-		/*
-		$query = '';
-		foreach($aPOST as $camp=>$valor){
-			if ($hnov == 1) $valor='';
-			$query .= empty($query)? '?'.$camp.'='.$valor : '&'.$camp.'='.$valor;
-		}
-		*/
-		// NO Puedo usar http_build_query porque codifica y en los originales está sin codificar.
-		//$sUrl = urlencode('//'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"].'?').http_build_query($aPOST);
-		//$sUrl = '//'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"].$query;
-		//$sUrl = web\Hash::ordenarParam($sUrl);
 		if (empty($aPOST)) {
-			$sUrl = '//'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+			$sUrl = '//'.$_SERVER["SERVER_NAME"].$_SERVER["SCRIPT_NAME"];
 		} else {
-			$sUrl = '//'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"].'?'.http_build_query($aPOST);
+			$sUrl = '//'.$_SERVER["SERVER_NAME"].$_SERVER["SCRIPT_NAME"].'?'.http_build_query($aPOST);
 		}
 
 		//echo "ccc: $sUrl<br>";

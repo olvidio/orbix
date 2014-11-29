@@ -153,20 +153,27 @@ $alum_cara_B=$num_alumnos-$alum_cara_A;
 $caraA = web\Hash::link('apps/notas/controller/acta_imprimir.php?'.http_build_query(array('cara'=>'A','acta'=>$acta)));
 $caraB = web\Hash::link('apps/notas/controller/acta_imprimir.php?'.http_build_query(array('cara'=>'B','acta'=>$acta)));
 
+$oHash = new web\Hash();
+$oHash->setUrl(core\ConfigGlobal::getWeb().'/apps/notas/controller/acta_2_mpdf.php');
+$oHash->setCamposForm('acta');
+$h = $oHash->linkSinVal();
+
 // ---------------------------------------------------------------------------------------
 if (empty($_POST['cara'])) { $cara="A"; } else { $cara=$_POST['cara']; }
 ?>
 <table class="no_print"><tr>
 <td align="center"><span class=link onclick="fnjs_update_div('#main','<?= $caraA ?>')"><?= _("Cara A (delante)"); ?></span></td>
 <td align="center"><span class=link onclick="fnjs_update_div('#main','<?= $caraB ?>')"><?= _("Cara B (detrás)"); ?></span></td>
+<td align="center"><span class=link onclick='window.open("<?= core\ConfigGlobal::getWeb() ?>/apps/notas/controller/acta_2_mpdf.php?acta=<?= urlencode($acta) ?><?= $h ?>&PHPSESSID=<?php echo session_id(); ?>", "sele");' >
+<?= _("PDF"); ?></span></td>
 </tr></table>
 
 <div class="A4" >
 <?php if ($cara=="A") { ?>
-   <cabecera><?php echo str_replace ("AE", "&#198&nbsp;", "PRAELATURA SANCTAE CRUCIS ET OPERIS DEI"); ?></cabecera>
-   <region><?php echo str_replace ("AE", "&#198", "STUDIUM GENERALE REGIONIS: &nbsp;HISPANIAE"); ?></region>
-   <curso><?php echo str_replace ("AE", "&#198",sprintf("CURSUS INSTITUTIONALES:&nbsp;&nbsp;  %s &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ANNUS: %s",$curso,$any)); ?></curso>
-   <curso><?php echo str_replace ("ae", "&#230", "DISCIPLINA: &nbsp;&nbsp;&nbsp;&nbsp;$nombre_asig"); ?></curso>
+   <cabecera><?php echo str_replace ("AE", "&#198;", "PRAELATURA SANCTAE CRUCIS ET OPERIS DEI"); ?></cabecera>
+   <region><?php echo str_replace ("AE", "&#198;", "STUDIUM GENERALE REGIONIS: &nbsp;HISPANIAE"); ?></region>
+   <curso><?php echo str_replace ("AE", "&#198;",sprintf("CURSUS INSTITUTIONALES:&nbsp;&nbsp;  %s &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ANNUS: %s",$curso,$any)); ?></curso>
+   <curso><?php echo str_replace ("ae", "&#230;", "DISCIPLINA: &nbsp;&nbsp;&nbsp;&nbsp;$nombre_asig"); ?></curso>
    <intro>Hisce litteris, quas propria uniuscuiusque subsignatione firmamus, fidem facimus hodierna die, coram infrascriptis Iudicibus, periculum de hac disciplina sequentes alumnos rite superasse:</intro>
 <table class="alumni" height="<?= $alum_cara_A ?>">
 <tr><td width=65% class=alumni>ALUMNI</td><td  width=10%>&nbsp;</td><td width=25% class=alumni>CUM NOTA</td></tr>
@@ -186,10 +193,10 @@ if (empty($_POST['cara'])) { $cara="A"; } else { $cara=$_POST['cara']; }
 	}
 	// linea final y linea de salto
 	if ($num_alumnos>$alum_cara_A) {
-		//echo "<tr><td colspan=3 class=linea >------------------------------------------------------------------------------------------------------------(.../...)</td></tr>";
+		//echo "<tr><td colspan=3 class=linea >---------------------------------------------------------------------------------------------------(.../...)</td></tr>";
 		echo "<tr><td colspan=2 class=linea ><hr></td><td>(.../...)</td></tr>";
 	} else {
-		//echo "<tr><td colspan=3 class=linea >------------------------------------------------------------------------------------------------------------</td></tr>";
+		//echo "<tr><td colspan=3 class=linea >----------------------------------------------------------------------------------------------------</td></tr>";
 		echo "<tr><td colspan=3 class=linea ><hr></td></tr>";
 	}
 	echo "</table>";
@@ -199,7 +206,7 @@ if ($cara=="B" && $alum_cara_B > 0 ) {
 	echo "<tbody><tr height=$alum_cara_B% ><td colspan=3 >";
 	echo "<table class=alumni>";
 	echo "<tr><td width=65% class=alumni></td><td  width=10%></td><td width=25%></td></tr>";
-	//echo "<tr><td colspan=3 class=linea >(.../...)------------------------------------------------------------------------------------------------------------</td></tr>";
+	//echo "<tr><td colspan=3 class=linea >(.../...)------------------------------------------------------------------------------------------------</td></tr>";
 	echo "<tr><td colspan=3>(.../...)<hr></td></tr>";
 	$i = 0;
 	foreach ($aPersonasNotas as $nom => $nota) {

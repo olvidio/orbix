@@ -138,6 +138,7 @@ $titulo=strtoupper(_("datos del acta"));
 ?>
 <script>
 $(function() { $( "#f_acta" ).datepicker(); });
+
 fnjs_guardar_acta=function(){
 	var rr=fnjs_comprobar_campos('#modifica','<?= addslashes($obj) ?>');
 	if (rr=='ok') {

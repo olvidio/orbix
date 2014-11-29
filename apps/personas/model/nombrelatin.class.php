@@ -85,7 +85,7 @@ class NombreLatin Extends core\ClasePropiedades {
 				if (($nom_id == 'nom') && $val_id !== '') $this->snom = (string)$val_id; // evitem SQL injection fent cast a string
 			}	} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->snom = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->snom = (string)$a_id; // evitem SQL injection fent cast a string
 				$this->aPrimary_key = array('snom' => $this->snom);
 			}
 		}

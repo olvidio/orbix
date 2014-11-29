@@ -52,49 +52,95 @@ while ($nom_v_i=strtok(" ")) ;
 
 $nom=$trato.$nom_lat.$apellidos;
 
+// conversion 
+$replace  = array(
+ 'AE' => '&#198;',
+ 'Ae' => '&#198;',
+ 'ae' => '&#230;',
+ 'OE' => '&#140;',
+ 'Oe' => '&#140;',
+ 'oe' => '&#156;'
+ );
+
 function titulo($id_asignatura){
- $cabecera="<tr><td></td></tr><tr valign=\"bottom\"><td width=\"15\"></td>
-			<td class=\"cabecera\" width=\"380\">".strtoupper(_("disciplin&#198;"))."</td>
-			<td class=\"cabecera\" width=\"190\">".strtoupper(_("cum nota"))."</td>
-			<td class=\"cabecera\" width=\"20\"></td>
-			<td class=\"cabecera\" width=\"60\">".strtoupper(_("dies examinis"))."</td>
-			<td class=\"cabecera\" width=\"20\"></td>
-			<td class=\"cabecera\" width=\"60\">".strtoupper(_("numerus in actis"))."</td>
-			<td width=\"10\"></td>
-			</tr>";
- switch ($id_asignatura){
- 	case 1101:
-		?> <tr><td></td><td colspan="7" class="curso"><?php echo strtoupper(_("cursus institutionales philosophi&#198;")); ?></td></tr>
-			 <?php echo $cabecera; ?>
-			<tr><td></td><td colspan="7" class="any"><?php echo strtoupper(_("annus"))." I"; ?></td></tr>
+	$cabecera='<tr><td class="space"></td></tr>
+	 		<tr valign="bottom"><td style="width: 2%"></td>
+			<td class="cabecera" style="width: 46%">DISCIPLIN&#198;</td>
+			<td class="cabecera" style="width: 25%">CUM NOTA</td>
+			<td class="cabecera" style="width: 1%"></td>
+			<td class="cabecera" style="width: 10%">DIES EXAMINIS</td>
+			<td class="cabecera" style="width: 1%"></td>
+			<td class="cabecera" style="width: 10%">NUMERUS IN ACTIS</td>
+			<td style="width: 1%"></td>
+			</tr>';
+	switch ($id_asignatura){
+		case 1101:
+				?> 
+				<tr><td class="space"></td></tr>
+				<tr><td></td><td colspan="7" class="curso">CURSUS INSTITUTIONALES FILOSOFI&#198;</td></tr>
+				<?php echo $cabecera; ?>
+				<tr><td class="space"></td></tr>
+				<tr><td></td><td colspan="7" class="any">ANNUS I</td></tr>
+				<tr><td class="space"></td></tr>
+				<?php
+			break;
+		case 1201:
+				?> 
+				<tr><td class="space"></td></tr>
+				<tr><td></td><td colspan="7" class="any">ANNUS II</td></tr>
+				<tr><td class="space"></td></tr>
+				<?php
+			break;
+		case 2101:
+				?> 
+				<tr><td class="space"></td></tr>
+				<tr><td></td><td colspan="7" class="curso">CURSUS INSTITUTIONALES S THEOLOGI&#198;</td></tr>
+				<?php echo $cabecera; ?>
+				<tr><td class="space"></td></tr>
+				<tr><td></td><td colspan="7" class="any">ANNUS I</td></tr>
+				<tr><td class="space"></td></tr>
+				<?php
+			break;
+		case 2108:
+			?>
+			</table>
+			</div>
+			<div class="A4">
+			<table class="A4">
+			<col style="width: 2%">
+				<col style="width: 46%">
+				<col style="width: 25%">
+				<col style="width: 1%">
+				<col style="width: 10%">
+				<col style="width: 1%">
+				<col style="width: 10%">
+				<col style="width: 1%">
+				<?php echo $cabecera; ?>
+				<tr><td class="space"></td></tr>
 			<?php
+			break;
+		case 2201:
+				?> 
+				<tr><td class="space"></td></tr>
+				<tr><td></td><td colspan="7" class="any">ANNUS II</td></tr>
+				<tr><td class="space"></td></tr>
+				<?php
+			break;
+		case 2301:
+				?> 
+				<tr><td class="space"></td></tr>
+				<tr><td></td><td colspan="7" class="any">ANNUS III</td></tr>
+				<tr><td class="space"></td></tr>
+				<?php
+			break;
+		case 2401:
+				?> 
+				<tr><td class="space"></td></tr>
+				<tr><td></td><td colspan="7" class="any">ANNUS IV</td></tr>
+				<tr><td class="space"></td></tr>
+				<?php
 		break;
-	case 1201:
-		?> <tr><td></td></tr><tr><td></td><td colspan="7" class="any"><?php echo strtoupper(_("annus"))." II"; ?></td></tr> <?php
-		break;
-	case 2101:
-		?> <tr><td></td></tr><tr><td><br></td></tr>
-			<tr><td></td><td colspan="7" class="curso"><?php echo strtoupper(_("cursus institutionales s. theologi&#198;")); ?></td></tr>
-			 <?php echo $cabecera; ?>
-			<tr><td></td><td colspan="7" class="any"><?php echo strtoupper(_("annus"))." I"; ?></td></tr>
-			<?php
-		break;
-	case 2108:
-		?>
-		<table class="A4" border=0 cellspacing="0" cellpadding="1">
-		 <?php echo $cabecera; ?>
-		<?php
-		break;
-	case 2201:
-		?> <tr><td></td></tr><tr><td></td><td colspan="7" class="any"><?php echo strtoupper(_("annus"))." II"; ?></td></tr> <?php
-		break;
-	case 2301:
-		?> <tr><td></td></tr><tr><td></td><td colspan="7" class="any"><?php echo strtoupper(_("annus"))." III"; ?></td></tr> <?php
-		break;
-	case 2401:
-		?> <tr><td></td></tr><tr><td></td><td colspan="7" class="any"><?php echo strtoupper(_("annus"))." IV"; ?></td></tr> <?php
-		break;
- }
+	}
 }
 
 function data($data) {
@@ -110,6 +156,12 @@ function data($data) {
 // -----------------------------  cabecera ---------------------------------
 $caraA = web\Hash::link('apps/notas/controller/tessera_imprimir.php?'.http_build_query(array('cara'=>'A','id_nom'=>$id_nom,'id_tabla'=>$id_tabla)));
 $caraB = web\Hash::link('apps/notas/controller/tessera_imprimir.php?'.http_build_query(array('cara'=>'B','id_nom'=>$id_nom,'id_tabla'=>$id_tabla)));
+
+$oHash = new web\Hash();
+$oHash->setUrl(core\ConfigGlobal::getWeb().'/apps/notas/controller/tessera_2_mpdf.php');
+$oHash->setCamposForm('id_nom!id_tabla'); 
+$h = $oHash->linkSinVal();
+
 ?>
 <table class="no_print">
 <tr>
@@ -118,16 +170,26 @@ $caraB = web\Hash::link('apps/notas/controller/tessera_imprimir.php?'.http_build
 </td>
 <td align="center"><span class=link onclick="fnjs_update_div('#main','<?= $caraA ?>')"><?= _("Cara A (delante)"); ?></span></td>
 <td align="center"><span class=link onclick="fnjs_update_div('#main','<?= $caraB ?>')"><?= _("Cara B (detrás)"); ?></span></td>
+<td align="center"><span class=link onclick='window.open("<?= core\ConfigGlobal::getWeb() ?>/apps/notas/controller/tessera_2_mpdf.php?id_nom=<?= $id_nom ?>&id_tabla=<?= $id_tabla ?><?= $h ?>&PHPSESSID=<?php echo session_id(); ?>", "sele");' >
+<?= _("PDF"); ?></span></td>
 </tr></table>
-<table class="A4" border=0 cellspacing="0" cellpadding="1">
-<col width=2%><col width=48%><col width=20%><col width=1%><col width=14%><col width=1%><col width=14%>
+<table class="A4">
+<col style="width: 2%">
+<col style="width: 46%">
+<col style="width: 25%">
+<col style="width: 1%">
+<col style="width: 10%">
+<col style="width: 1%">
+<col style="width: 10%">
+<col style="width: 1%">
 <?php 
 if ($_POST['cara']=="A") {
-	echo "<tr><td></td></tr><tr><td></td><td class=\"titulo\" colspan=6>".strtoupper(_("studium generale regionis")).": ".core\ConfigGlobal::$x_region."</td></tr>
-	<tr><td></td><td class=\"subtitulo\" colspan=6>".strtoupper(_("tessera studiorum domini")).": $nom</td></tr>
-	<tr><td><br></td></tr>";
+?>
+<tr><td class="space"></td></tr>
+<tr><td></td><td class="titulo" colspan="6">STUDIUM GENERALE REGIONIS: <?= core\ConfigGlobal::$x_region ?></td></tr>
+<tr><td></td><td class="subtitulo" colspan="6">TESSERA STUDIORUM DOMINI:  <?= $nom ?></td></tr>
+<?php
 }
-
 
 // Asignaturas posibles:
 $GesAsignaturas = new asignaturas\GestorAsignatura();
@@ -202,7 +264,7 @@ while ( $a < count($cAsignaturas)) {
 		$i % 2  ? 0: $clase = "par";
 		$i++;
 		titulo($oAsignatura->getId_nivel());
-		$nombre_asig=str_replace ("ae", "&#230", $oAsignatura->getNombre_asig());
+		$nombre_asig = strtr($oAsignatura->getNombre_asig(), $replace);
 		?>
 		<tr class="<?php echo $clase;?>" valign="bottom">
 		<td></td>    
@@ -227,7 +289,7 @@ while ( $a < count($cAsignaturas)) {
 		// para las opcionales
 		if ($row["id_asignatura"] > 3000 &&  $row["id_asignatura"] < 9000 ) {
 
-			$nombre_asig=str_replace ("ae", "&#230", $row["nombre_asig"]);
+			$nombre_asig=strtr ($row["nombre_asig"], $replace);
 			$algo=$oAsignatura->getNombre_asig()."<br>&nbsp;&nbsp;&nbsp;&nbsp;".$nombre_asig;
 			?>
 			<tr class="<?php echo $clase;?>" valign="bottom">
@@ -240,10 +302,11 @@ while ( $a < count($cAsignaturas)) {
 			<td class="dato"><?php echo $row["acta"];?>&nbsp;</td><td></td></tr>
 			<?php 
 		} else {
+			$nombre_asig = strtr($oAsignatura->getNombre_asig(), $replace);
 			?>
 			<tr class="<?php echo $clase;?>">
 			<td></td>
-			<td><?php echo $oAsignatura->getNombre_asig();?>&nbsp;</td>
+			<td><?= $nombre_asig; ?>&nbsp;</td>
 			<td class="dato"><?php echo $row["nota"];?>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td class="dato"><?php echo $row["fecha"];?>&nbsp;</td>
@@ -258,10 +321,11 @@ while ( $a < count($cAsignaturas)) {
 			$i % 2  ? 0: $clase = "par";
 			$i++;
 			titulo($oAsignatura->getId_asignatura());
+			$nombre_asig = strtr($oAsignatura->getNombre_asig(), $replace);
 			?>
 			<tr class="<?php echo $clase;?>">
 				<td></td>
-				<td><?php echo $oAsignatura->getNombre_asig();?>&nbsp;</td>
+				<td><?= $nombre_asig; ?>&nbsp;</td>
 				<td class="dato">&nbsp;</td>
 				<td>&nbsp;</td>
 				<td class="dato">&nbsp;</td>
@@ -273,5 +337,4 @@ while ( $a < count($cAsignaturas)) {
 }
 ?>
 </tr>
-<tr><td></td></tr>
 </table>
