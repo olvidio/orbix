@@ -35,6 +35,39 @@ class GestorActividadCargo Extends core\ClaseGestor {
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
 	/**
+	 * retorna l'array d'objectes tipus CargoOAsistente
+	 *
+	 * @param integer id_nom
+	 * @return array Una col·lecció d'arrays: id_activ,id_nom,propio,id_cargo;
+	 */
+	function getCargoOAsistente($iid_nom) {
+		$oDbl = $this->getoDbl();
+		// lista de id_activ ordenados, primero los propios.
+		$sQuery="SELECT id_activ,propio,0 as id_cargo FROM d_asistentes_dl WHERE id_nom=$iid_nom
+					UNION ALL
+				SELECT id_activ,'f' as propio,id_cargo FROM d_cargos_activ_dl WHERE id_nom=$iid_nom
+				ORDER BY 1,2 DESC";
+		//echo "sQuery: $sQuery<br>";
+		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+			$sClauError = 'GestorActividadAsistente.query';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+
+		$aAsis = array();
+		foreach ($oDbl->query($sQuery) as $aDades) {
+			if (array_key_exists($aDades['id_activ'],$aAsis)) { // si está repetido, el primero tiene propio=true.
+				// Añado al primero el id_cargo del segundo.
+				$aAsis[$id_activ]['id_cargo'] = $aDades['id_cargo'];
+				continue;
+			}
+			$id_activ = $aDades['id_activ'];
+			$aAsis[$id_activ] = array('id_activ'=>$id_activ,'id_nom'=>$iid_nom,'propio'=>$aDades['propio'],'id_cargo'=>$aDades['id_cargo']);
+		}
+		return $aAsis;
+	}
+
+	/**
 	 * retorna l'array d'objectes de tipus ActividadCargo
 	 *
 	 * @param string sQuery la query a executar.
@@ -76,7 +109,7 @@ class GestorActividadCargo Extends core\ClaseGestor {
 			$sOperador = isset($aOperators[$camp])? $aOperators[$camp] : '';
 			if ($a = $oCondicion->getCondicion($camp,$sOperador,$val)) $aCondi[]=$a;
 			// operadores que no requieren valores
-			if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL') unset($aWhere[$camp]);
+			if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
 		}
 		$sCondi = implode(' AND ',$aCondi);
 		if ($sCondi!='') $sCondi = " WHERE ".$sCondi;

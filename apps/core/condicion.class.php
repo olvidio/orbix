@@ -35,6 +35,14 @@ class Condicion {
 				case 'IS NULL':
 					$sCondi = "$campo $operador";
 					break;
+				case 'OR':
+					$sCondi = '';
+					$aVal = explode(',',$valor);
+					foreach ($aVal as $val) {
+						$sCondi .= empty($sCondi)? "$campo = $val" : " OR $campo = $val";
+					}
+					$sCondi = "($sCondi)";
+					break;
 				case 'BETWEEN':
 					$val1 = strtok($valor,',');
 					$val2 = strtok(',');

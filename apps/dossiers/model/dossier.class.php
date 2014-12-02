@@ -133,7 +133,6 @@ class Dossier Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if ($this->DBCarregar('guardar') === false) { $bInsert=true; } else { $bInsert=false; }
 		$aDades=array();
-		$aDades['id_schema'] = $this->iid_schema;
 		$aDades['f_ini'] = $this->df_ini;
 		$aDades['f_camb_dossier'] = $this->df_camb_dossier;
 		$aDades['status_dossier'] = $this->bstatus_dossier;
@@ -145,7 +144,6 @@ class Dossier Extends core\ClasePropiedades {
 		if ($bInsert === false) {
 			//UPDATE
 			$update="
-					id_schema                = :id_schema,
 					f_ini                    = :f_ini,
 					f_camb_dossier           = :f_camb_dossier,
 					status_dossier           = :status_dossier,
@@ -164,8 +162,8 @@ class Dossier Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->stabla, $this->sid_pau, $this->iid_tipo_dossier);
-			$campos="(id_schema,tabla,id_pau,id_tipo_dossier,f_ini,f_camb_dossier,status_dossier,f_status)";
-			$valores="(:id_schema,:tabla,:id_pau,:id_tipo_dossier,:f_ini,:f_camb_dossier,:status_dossier,:f_status)";		
+			$campos="(tabla,id_pau,id_tipo_dossier,f_ini,f_camb_dossier,status_dossier,f_status)";
+			$valores="(:tabla,:id_pau,:id_tipo_dossier,:f_ini,:f_camb_dossier,:status_dossier,:f_status)";		
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Dossier.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);

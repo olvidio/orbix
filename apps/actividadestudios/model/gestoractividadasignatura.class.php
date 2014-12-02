@@ -31,7 +31,6 @@ class GestorActividadAsignatura Extends core\ClaseGestor {
 		$this->setNomTabla('d_asignaturas_activ_dl');
 	}
 
-
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
 	/**
@@ -76,7 +75,7 @@ class GestorActividadAsignatura Extends core\ClaseGestor {
 			$sOperador = isset($aOperators[$camp])? $aOperators[$camp] : '';
 			if ($a = $oCondicion->getCondicion($camp,$sOperador,$val)) $aCondi[]=$a;
 			// operadores que no requieren valores
-			if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL') unset($aWhere[$camp]);
+			if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
 		}
 		$sCondi = implode(' AND ',$aCondi);
 		if ($sCondi!='') $sCondi = " WHERE ".$sCondi;

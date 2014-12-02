@@ -1,4 +1,3 @@
-normal 1G
-:%s/base64_encode/core\\urlsafe_b64encode/
-:%s/base64_decode/core\\urlsafe_b64decode/
-wq
+:%s/if (\$sOperador === 'BETWEEN'/if ($sOperador == 'BETWEEN'/
+:%s/\(if (\$sOperador == 'BETWEEN'.*\)) unset/\1 || $sOperador == 'OR') unset/
+:wq

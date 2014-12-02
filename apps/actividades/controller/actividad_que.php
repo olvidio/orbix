@@ -211,7 +211,7 @@ case "list_activ_compl" :
 	de un grupo de actividades*/
 break;
 case "list_cjto" :
-	$act=core\ConfigGlobal::getWeb().'/apps/actividades/controller/lista_asis_conjunto_activ.php';
+	$act=core\ConfigGlobal::getWeb().'/apps/asistentes/controller/lista_asis_conjunto_activ.php';
 	/*es el caso de querer sacar 
 	los asistentes o cargos 
 	de un conjunto de actividades*/

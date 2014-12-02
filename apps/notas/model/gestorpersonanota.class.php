@@ -47,8 +47,8 @@ class GestorPersonaNota Extends core\ClaseGestor {
 		$oCondicion = new core\Condicion();
 		$aCondi = array();
 		
-		$gesNotas = new GestorNotas();
-		$cNotas = $gesNotas->getNotas(array('superda'=>'t'));
+		$gesNotas = new GestorNota();
+		$cNotas = $gesNotas->getNotas(array('superada'=>'t'));
 		$superadas_txt = '';
 		foreach ($cNotas as $oNota) {
 			$id_situacion = $oNota->getId_situacion();
@@ -57,14 +57,14 @@ class GestorPersonaNota Extends core\ClaseGestor {
 		}
 
 		$sQry = "SELECT * FROM  $nom_tabla
-				WHERE id_nom=$id_nom AND id_situacion ~ '$superadas_txt'
+				WHERE id_nom=$id_nom AND id_situacion::text ~ '$superadas_txt'
 				";
 		if (($oDblSt = $oDbl->query($sQry)) === false) {
 			$sClauError = 'GestorPersonaNota.llistar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
-		foreach ($oDbl->query($sQry,PDO::FETCH_ASSOC) as $aDades) {
+		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_nom' => $aDades['id_nom'],
 							'id_asignatura' => $aDades['id_asignatura']);
 			$oPersonaNota= new PersonaNota($a_pkey);
@@ -116,7 +116,7 @@ class GestorPersonaNota Extends core\ClaseGestor {
 			$sOperador = isset($aOperators[$camp])? $aOperators[$camp] : '';
 			if ($a = $oCondicion->getCondicion($camp,$sOperador,$val)) $aCondi[]=$a;
 			// operadores que no requieren valores
-			if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL') unset($aWhere[$camp]);
+			if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
 		}
 		$sCondi = implode(' AND ',$aCondi);
 		if ($sCondi!='') $sCondi = " WHERE ".$sCondi;

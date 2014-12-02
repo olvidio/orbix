@@ -3,6 +3,7 @@ use actividades\model as actividades;
 use actividadestudios\model as actividadestudios;
 use asignaturas\model as asignaturas;
 use asistentes\model as asistentes;
+use personas\model as personas;
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
 */
@@ -16,8 +17,7 @@ use asistentes\model as asistentes;
 
 /* Pongo en la variable $curso el periodo del curso */
 $mes=date('m');
-//$any=date('Y');
-$any=2011;
+$any=date('Y');
 if ($mes>9) { $any=$any+1; } 
 $inicurs_ca=core\curso_est("inicio",$any);
 $fincurs_ca=core\curso_est("fin",$any);
@@ -37,6 +37,14 @@ if (empty($_POST['go_to'])) {
 	$go_to = $_POST['go_to'];
 }
 
+$aviso = '';
+// Compruebo si està de repaso...
+$oPersona = new personas\PersonaDl(array('id_nom'=>$id_pau));
+$stgr = $oPersona->getStgr();
+if ($stgr == 'r') $aviso .= _("Está de repaso");
+
+echo $oPosicion->atras();
+
 if (!empty($_POST['id_activ'])) {  // ¿? ya tengo una actividad concreta (vengo del dossier de esa actividad).
 	$sql_tabla = "SELECT a.nom_activ, asis.id_activ, asis.est_ok
 			FROM a_actividades a, d_asistentes_activ asis
@@ -52,10 +60,10 @@ if (!empty($_POST['id_activ'])) {  // ¿? ya tengo una actividad concreta (vengo
 
 	$cAsistencias = $GesAsistentes-> getActividadesDeAsistente(array('id_nom'=>$id_pau,'propio'=>'t'),$aWhere,$aOperadores);
 }
-$aviso='';
-if (is_array($cAsistencias) && count($cAsistencias) > 1) { 
-	$n=count($cAsistencias);
-	$aviso= _(sprintf("¡¡ojo!! tiene %s actividades de estudios asignadas como propias",$n));
+if (is_array($cAsistencias)) {
+	$n = count($cAsistencias);
+   	if ( $n == 0) { $aviso .= _(sprintf("No tiene asignado ningún ca como propio este curso: %s - %s",$inicurs_ca,$fincurs_ca)); }
+   	if ( $n > 1) { $aviso .= _(sprintf("¡¡ojo!! tiene %s actividades de estudios asignadas como propias",$n)); }
 }
 ?>
 <script>

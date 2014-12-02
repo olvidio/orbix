@@ -765,7 +765,7 @@ $txt2.='
 			$sOperador = isset($aOperators[$camp])? $aOperators[$camp] : \'\';
 			if ($a = $oCondicion->getCondicion($camp,$sOperador,$val)) $aCondi[]=$a;
 			// operadores que no requieren valores
-			if ($sOperador == \'BETWEEN\' || $sOperador == \'IS NULL\' || $sOperador == \'IS NOT NULL\') unset($aWhere[$camp]);
+			if ($sOperador == \'BETWEEN\' || $sOperador == \'IS NULL\' || $sOperador == \'IS NOT NULL\' || $sOperador == \'OR\') unset($aWhere[$camp]);
 		}';
 
 $txt2.="\n\t\t".'$sCondi = implode(\' AND \',$aCondi);

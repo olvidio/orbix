@@ -851,6 +851,7 @@ $(function() {
 })
 /* Hay que ponerlo aqui, para asegurar que haya terminado de cargar todos los scripts. */
 $(document).ready(function(){
+	$.datepicker.setDefaults( $.datepicker.regional[ "es" ] ); // Para que quee por defecto.
 	$.datepicker.setDefaults( $.datepicker.regional[ "<?= ConfigGlobal::mi_Idioma_short(); ?>" ] );
 });
 </script>

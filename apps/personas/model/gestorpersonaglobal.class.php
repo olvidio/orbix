@@ -43,6 +43,27 @@ abstract class GestorPersonaGlobal Extends core\ClaseGestor {
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
 	/**
+	 * retorna un array amb els id cels ctr
+	 *
+	 * @param string sdonde (condición del sql. debe empezar por AND).
+	 * @return array 
+	 */
+	function getListaCtr($sdonde='') {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$sQuery="SELECT id_ctr
+			FROM $nom_tabla
+		   	WHERE situacion='A' $sdonde
+			GROUP BY id_ctr
+		   	";
+		//echo "qry: $sQuery<br>";
+		$aLista=array();
+		foreach ($oDbl->query($sQuery) as $aDades) {
+			$aLista[$aDades['id_ctr']] = $aDades['id_ctr'];
+		}
+		return $aLista;
+	}
+	/**
 	 * retorna un objecte del tipus Desplegable
 	 * Els posibles Sacd
 	 *
@@ -195,7 +216,7 @@ abstract class GestorPersonaGlobal Extends core\ClaseGestor {
 			$sOperador = isset($aOperators[$camp])? $aOperators[$camp] : '';
 			if ($a = $oCondicion->getCondicion($camp,$sOperador,$val)) $aCondi[]=$a;
 			// operadores que no requieren valores
-			if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL') unset($aWhere[$camp]);
+			if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
 		}
 		$sCondi = implode(' AND ',$aCondi);
 		if ($sCondi!='') $sCondi = " WHERE ".$sCondi;
@@ -209,6 +230,7 @@ abstract class GestorPersonaGlobal Extends core\ClaseGestor {
 		if (isset($aWhere['_ordre']) && $aWhere['_ordre']!='') $sOrdre = ' ORDER BY '.$aWhere['_ordre'];
 		if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
+		//echo "query: $sQry<br>";
 		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClauError = 'GestorPersonaDl.llistar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);

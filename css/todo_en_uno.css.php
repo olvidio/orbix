@@ -14,11 +14,34 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 /*  ################ IMPRESORA #################### */
 @media print {
 	@page { size: 21cm 29.7cm; margin: 0cm }
+	
+	div.A4 { 
+         position:absolute;
+         z-index:15;
+         top:2%;
+         left:2%;
+         margin:10px 0 0 10px;
+    }
 
 	.no_print { visibility : hidden; }
    /* Uso la etiqueta <div> </div> para hacer un salto de página al imprimir */
 	.salta_pag {page-break-after:always;}
 
+	.vertical{
+		writing-mode:tb-rl;
+		-webkit-transform:rotate(-90deg);
+		-moz-transform:rotate(-90deg);
+		-o-transform: rotate(-90deg);
+		-ms-transform:rotate(-90deg);
+		white-space:nowrap;
+		display:block;
+		bottom:0;
+		width:20px;
+	}
+	th.vertical2 {
+		 vertical-align:bottom;
+		 padding-bottom: 10px;
+	}
 	BODY {text-align : left;
 			margin: 0pt;
 			background: white; 
@@ -32,6 +55,26 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 				border-color : Black;
 			}
 	
+	table.calendario  {
+		border-color: black;
+		border-style: solid;
+		border-width: thin;
+	}
+	th.calendario  {
+		color : black;
+		font-weight : bold;
+		border-color: black;
+		border-style: solid;
+		border-width: thin;
+	}
+	th.nom,td.nom { width: 12em; }
+	th  {
+		font-family : Arial;
+		font-size : 10pt;
+		color : black;
+		font-weight : bold;
+		background : white;
+	}
 	td { color : black;
 		font-size : 11pt;
 		font-family : Arial;
@@ -149,6 +192,22 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	body.otro  {
 		background-color : <?php echo $fondo_claro; ?>;
 	 }
+
+	.vertical{
+		writing-mode:tb-rl;
+		-webkit-transform:rotate(-90deg);
+		-moz-transform:rotate(-90deg);
+		-o-transform: rotate(-90deg);
+		-ms-transform:rotate(-90deg);
+		white-space:nowrap;
+		display:block;
+		bottom:0;
+		width:20px;
+	}
+	th.vertical2 {
+		 vertical-align:bottom;
+		 padding-bottom: 10px;
+	}
 	 /* link al ponerse encima*/
 	td.link:hover  {
 		text-decoration : none;
