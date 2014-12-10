@@ -404,21 +404,22 @@ if ($_POST['tipo']=='planning_cdc' || $_POST['tipo']=='casa') {
 		} else {
 			$persona[$p]="p#$id_nom#$nombre";
 		}
+		
+		$aWhere=array();
+		$aWhere['f_ini']="'$fin'";
+		$aOperador['f_ini']='<=';
+		$aWhere['f_fin']="'$inicio'";
+		$aOperador['f_fin']='>=';
 
 		if (core\ConfigGlobal::is_app_installed('actividadcargos')) {
 			$oGesActividadCargos = new actividadcargos\GestorActividadCargo();
-			$cActividades = $oGesActividadCargos ->getCargoOAsistente($id_nom);
+			$cActividades = $oGesActividadCargos ->getCargoOAsistente($id_nom,$aWhere,$aOperador);
 		} else {
 			$oGesAsistentes = new asistentes\GestorActividadCargo();
 			echo "ja veurem...";
 		}
 				
 		$a=0;
-		$aWhere=array();
-		$aWhere['f_ini']="'$fin'";
-		$aOperador['f_ini']='<=';
-		$aWhere['f_fin']="'$inicio'";
-		$aOperador['f_fin']='>=';
 		foreach ($cActividades as $oAsistente) {
 			$id_activ = $oAsistente['id_activ'];	
 			$propio = $oAsistente['propio'];	

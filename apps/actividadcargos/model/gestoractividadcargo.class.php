@@ -1,5 +1,7 @@
 <?php
 namespace actividadcargos\model;
+use actividades\model as actividades;
+use asistentes\model as asistentes;
 use core;
 /**
  * GestorActividadCargo
@@ -40,29 +42,42 @@ class GestorActividadCargo Extends core\ClaseGestor {
 	 * @param integer id_nom
 	 * @return array Una col·lecció d'arrays: id_activ,id_nom,propio,id_cargo;
 	 */
-	function getCargoOAsistente($iid_nom) {
+	function getCargoOAsistente($iid_nom,$aWhereAct=array(),$aOperadorAct=array()) {
 		$oDbl = $this->getoDbl();
-		// lista de id_activ ordenados, primero los propios.
-		$sQuery="SELECT id_activ,propio,0 as id_cargo FROM d_asistentes_dl WHERE id_nom=$iid_nom
-					UNION ALL
-				SELECT id_activ,'f' as propio,id_cargo FROM d_cargos_activ_dl WHERE id_nom=$iid_nom
-				ORDER BY 1,2 DESC";
-		//echo "sQuery: $sQuery<br>";
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorActividadAsistente.query';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return false;
-		}
-
-		$aAsis = array();
-		foreach ($oDbl->query($sQuery) as $aDades) {
-			if (array_key_exists($aDades['id_activ'],$aAsis)) { // si está repetido, el primero tiene propio=true.
-				// Añado al primero el id_cargo del segundo.
-				$aAsis[$id_activ]['id_cargo'] = $aDades['id_cargo'];
-				continue;
+		$GesAsistente = new asistentes\gestorAsistente();
+	   	$cAsistentes = $GesAsistente->getActividadesDeAsistente(array('id_nom'=>$iid_nom),$aWhereAct,$aOperadorAct);
+		$cCargos = $this->getActividadCargos(array('id_nom'=>$iid_nom));
+		// seleccionar las actividades segun los criterios de búsqueda.
+		$GesActividades = new actividades\GestorActividad();
+		$aListaIds = $GesActividades->getArrayIds($aWhereAct,$aOperadorAct);
+		// descarto los que no estan.
+		$cActividadesOk = array();
+		foreach ($cCargos as $oCargo) {
+			$id_activ = $oCargo->getId_activ();
+			if (in_array($id_activ,$aListaIds)) {
+				$oActividad = new actividades\Actividad($id_activ);
+				$f_ini = $oActividad->getF_ini();
+				$oFini= \DateTime::createFromFormat('j/m/Y', $f_ini);
+				$f_ini_iso = $oFini->format('Y-m-d'); 
+				$cActividadesOk[$id_activ] = $oCargo;
 			}
-			$id_activ = $aDades['id_activ'];
-			$aAsis[$id_activ] = array('id_activ'=>$id_activ,'id_nom'=>$iid_nom,'propio'=>$aDades['propio'],'id_cargo'=>$aDades['id_cargo']);
+		}
+		// lista de id_activ ordenados.
+		$aAsis = array();
+		foreach ($cAsistentes as $f_ini_iso=>$oAsistente) {
+			$id_activ = $oAsistente->getId_activ();
+			$propio = $oAsistente->getPropio();
+			$aAsis[$id_activ] = array('id_activ'=>$id_activ,'id_nom'=>$iid_nom,'propio'=>$propio);
+		}
+		// Añado los cargos
+		foreach ($cActividadesOk as $id_activ=>$oCargo) {
+			$oCargo = $cActividadesOk[$id_activ];
+			$id_cargo = $oCargo->getId_cargo();
+			if (array_key_exists ( $id_activ , $aAsis)) { // Añado al primero el id_cargo del segundo.
+				$aAsis[$id_activ]['id_cargo'] = $id_cargo;
+			} else { // añado la actividad
+				$aAsis[$id_activ] = array('id_activ'=>$id_activ,'id_nom'=>$iid_nom,'propio'=>'f','id_cargo'=>$id_cargo);
+			}
 		}
 		return $aAsis;
 	}

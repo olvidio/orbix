@@ -29,6 +29,18 @@ use ubis\model as ubis;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $ssfsv = empty($_POST['ssfsv'])? '' : $_POST['ssfsv'];
+
+if (core\ConfigGlobal::mi_sfsv() == 1 ) {
+	if ($ssfsv == 'sf' && (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des")))) {
+		$ssfsv = 'sf';
+	} else {
+		$ssfsv = 'sv';
+	}
+}
+if (core\ConfigGlobal::mi_sfsv() == 2 ) {
+	$ssfsv = 'sf';
+}
+
 $sasistentes = empty($_POST['sasistentes'])? '' : $_POST['sasistentes'];
 $sactividad  = empty($_POST['sactividad'])? '' : $_POST['sactividad'];
 empty($_POST['snom_tipo'])? $snom_tipo="" : $snom_tipo=$_POST['snom_tipo'];  

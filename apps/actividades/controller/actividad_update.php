@@ -87,7 +87,6 @@ case 'publicar':
 			}
 		}
 	}
-	exit;
 	break;
 case 'importar':
 	if (!empty($_POST['sel'])) { // puedo seleccionar más de uno.
@@ -99,7 +98,6 @@ case 'importar':
 			}
 		}
 	}
-	exit;
 	break;
 case "nuevo":
 	//Compruebo que estén todos los campos necesasrios
@@ -188,7 +186,6 @@ case "eliminar": // Eliminar la actividad.
 	if (!empty($_POST['id_activ'])) {
 		borrar_actividad($id_activ);
 	}
-	exit;
 	break;
 case "cmb_tipo": // sólo cambio el tipo a una actividad existente //____________________________
 	//echo "id_tipo de actividad: $id_tipo_activ<br>";
@@ -423,12 +420,12 @@ case "actualizar_ctr": // cambiar sólo los ctr encargados
 } // fin del switch de mod.
 
 
-if (empty($_POST['origen'])) { $_POST['origen']=""; }
+if (empty($_POST['origen'])) { $_POST['origen']=''; }
 
-if ($_POST['origen'] != "calendario") {
-	if ($_POST['mod']=="nuevo" || $_POST['mod']=="duplicar") {
-		$tabla="a_actividades";
-		$go_to="actividad_ver.php?que=ver&id_activ=".$oActividad->getId_activ()."&tabla=$tabla";
+if ($_POST['origen'] != 'calendario') {
+	if ($_POST['mod']=='nuevo' || $_POST['mod']=='duplicar') {
+		$tabla='a_actividades';
+		$go_to='actividad_ver.php?que=ver&id_activ='.$oActividad->getId_activ().'&tabla=$tabla';
 		$oPosicion = new web\Posicion();
 		echo $oPosicion->ir_a($go_to);
 		exit;

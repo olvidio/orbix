@@ -52,6 +52,12 @@ class Delegacion Extends core\ClasePropiedades {
 	 */
 	 private $snombre_dl;
 	/**
+	 * grupo_estudios de Delegacion
+	 *
+	 * @var string
+	 */
+	 private $sgrupo_estudios;
+	/**
 	 * Status de Delegacion
 	 *
 	 * @var boolean
@@ -97,6 +103,7 @@ class Delegacion Extends core\ClasePropiedades {
 		$aDades['dl'] = $this->sdl;
 		$aDades['region'] = $this->sregion;
 		$aDades['nombre_dl'] = $this->snombre_dl;
+		$aDades['grupo_estudios'] = $this->sgrupo_estudios;
 		$aDades['status'] = $this->bstatus;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
@@ -109,6 +116,7 @@ class Delegacion Extends core\ClasePropiedades {
 					dl                    	 = :dl,
 					region                   = :region,
 					nombre_dl                = :nombre_dl,
+					grupo_estudios           = :grupo_estudios,
 					status                   = :status";
 			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE dl='$this->sdl' AND region='$this->sregion'")) === false) {
 				$sClauError = 'Delegacion.update.prepare';
@@ -124,8 +132,8 @@ class Delegacion Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->sdl, $this->sregion);
-			$campos="(id_dl,dl,region,nombre_dl,status)";
-			$valores="(:id_dl,:dl,:region,:nombre_dl,:status)";		
+			$campos="(id_dl,dl,region,nombre_dl,status,grupo_estudios)";
+			$valores="(:id_dl,:dl,:region,:nombre_dl,:status,:grupo_estudios)";		
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Delegacion.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -201,6 +209,7 @@ class Delegacion Extends core\ClasePropiedades {
 		if (array_key_exists('dl',$aDades)) $this->setDl($aDades['dl']);
 		if (array_key_exists('region',$aDades)) $this->setRegion($aDades['region']);
 		if (array_key_exists('nombre_dl',$aDades)) $this->setNombre_dl($aDades['nombre_dl']);
+		if (array_key_exists('grupo_estudios',$aDades)) $this->setGrupo_estudios($aDades['grupo_estudios']);
 		if (array_key_exists('status',$aDades)) $this->setStatus($aDades['status']);
 	}
 
@@ -306,6 +315,25 @@ class Delegacion Extends core\ClasePropiedades {
 		$this->snombre_dl = $snombre_dl;
 	}
 	/**
+	 * Recupera l'atribut sgrupo_estudios de Delegacion
+	 *
+	 * @return string sgrupo_estudios
+	 */
+	function getGrupo_estudios() {
+		if (!isset($this->sgrupo_estudios)) {
+			$this->DBCarregar();
+		}
+		return $this->sgrupo_estudios;
+	}
+	/**
+	 * estableix el valor de l'atribut sgrupo_estudios de Delegacion
+	 *
+	 * @param string sgrupo_estudios='' optional
+	 */
+	function setGrupo_estudios($sgrupo_estudios='') {
+		$this->sgrupo_estudios = $sgrupo_estudios;
+	}
+	/**
 	 * Recupera l'atribut bstatus de Delegacion
 	 *
 	 * @return boolean bstatus
@@ -337,6 +365,7 @@ class Delegacion Extends core\ClasePropiedades {
 		$oDelegacionSet->add($this->getDatosRegion());
 		$oDelegacionSet->add($this->getDatosDl());
 		$oDelegacionSet->add($this->getDatosNombre_dl());
+		$oDelegacionSet->add($this->getDatosGrupo_estudios());
 		$oDelegacionSet->add($this->getDatosStatus());
 		return $oDelegacionSet->getTot();
 	}
@@ -381,6 +410,20 @@ class Delegacion Extends core\ClasePropiedades {
 		$oDatosCampo->setEtiqueta(_("nombre de la delegación"));
 		$oDatosCampo->setTipo('texto');
 		$oDatosCampo->setArgument(30);
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut sgrupo_estudios de Delegacion
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return oject DatosCampo
+	 */
+	function getDatosGrupo_estudios() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'grupo_estudios'));
+		$oDatosCampo->setEtiqueta(_("grupo del stgr"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument(3);
 		return $oDatosCampo;
 	}
 	/**

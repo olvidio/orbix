@@ -23,14 +23,16 @@ use ubis\model as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-if (empty($_POST['tipo'])) $_POST['tipo']=''; 
+$tipo = empty($_POST['tipo'])? '' : $_POST['tipo']; 
+$ssfsv = empty($_POST['ssfsv'])? '' : $_POST['ssfsv']; 
+
 switch ($_POST['lista']) {
 	case "profesion" :
 		$tituloGros=ucfirst(_("listado de profesiones por centros"));
 		$titulo=ucfirst(_("buscar en uno ó varios centros"));
 		$nomUbi=ucfirst(_("nombre del centro"));
 		$action="programas/sm-agd/lista_profesion.php";
-		$inputs="<input type=\"Hidden\" id=\"tipo\" name=\"tipo\" value=\"${_POST['tipo']}\" >"; 
+		$inputs="<input type=\"Hidden\" id=\"tipo\" name=\"tipo\" value=\"$tipo\" >"; 
 		break;
 	case "ctrex" :
 	case "list_activ" :
@@ -40,8 +42,8 @@ switch ($_POST['lista']) {
 		$action="apps/asistentes/controller/lista_activ_ctr.php";
 		
 		$a_camposHidden = array(
-			'tipo' => $_POST['tipo'],
-			'ssfsv' => $_POST['ssfsv'],
+			'tipo' => $tipo,
+			'ssfsv' => $ssfsv,
 			'sasistentes' => $_POST['sasistentes'],
 			'sactividad' => $_POST['sactividad']
 		);
@@ -51,8 +53,8 @@ switch ($_POST['lista']) {
 		$tituloGros=ucfirst(_("qué centro interesa?"));
 		$nomUbi=ucfirst(_("nombre del centro"));
 		$action="programas/sm-agd/lista_est_ctr.php";
-		$inputs = "<input type=\"Hidden\" id=\"tipo\" name=\"tipo\" value=\"${_POST['tipo']}\" >"; 
-		$inputs .= "<input type=\"Hidden\" id=\"ssfsv\" name=\"ssfsv\" value=\"${_POST['ssfsv']}\" >";
+		$inputs = "<input type=\"Hidden\" id=\"tipo\" name=\"tipo\" value=\"$tipo\" >"; 
+		$inputs .= "<input type=\"Hidden\" id=\"ssfsv\" name=\"ssfsv\" value=\"$ssfsv\" >";
 		$inputs .= "<input type=\"Hidden\" id=\"sasistentes\" name=\"sasistentes\" value=\"${_POST['sasistentes']}\" >";
 		$inputs .= "<input type=\"Hidden\" id=\"sactividad\" name=\"sactividad\" value=\"${_POST['sactividad']}\" >";
 		break;
@@ -64,6 +66,7 @@ $nj='';
 $nm='';
 $a='';
 $sss='';
+$nax='';
 
 switch ($_POST['n_agd']) {
 	case "n":
@@ -80,6 +83,9 @@ switch ($_POST['n_agd']) {
 		break;
 	case "sss":
 		$sss="checked";
+		break;
+	case "nax":
+		$nax="checked";
 		break;
 }
 
@@ -145,9 +151,14 @@ $('#oro').hide();
 </tr>
 <tr><td class="etiqueta" onclick="fnjs_otro(0);">
 <input type="radio" id="n_agd_2" name="n_agd" value="a" <?= $a ?> ><?= ucfirst(_("todos los agregados"))?></td></tr>
+<?php 
+if (core\ConfigGlobal::mi_sfsv() == 1) { ?>
 <tr><td class="etiqueta" onclick="fnjs_otro(0);">
 <input type="radio" id="n_agd_3" name="n_agd" value="sss" <?= $sss ?> ><?= ucfirst(_("todos los de sss+"))?></td></tr>
-
+<?php } else { ?>
+<tr><td class="etiqueta" onclick="fnjs_otro(0);">
+<input type="radio" id="n_agd_3" name="n_agd" value="nax" <?= $nax ?> ><?= ucfirst(_("todos los de nax"))?></td></tr>
+<?php } ?>
 
 <tr><td class="etiqueta"><input type="radio" id="n_agd_4" name="n_agd" value="c" onclick="fnjs_otro(1);"><?= ucfirst(_("otro..."))?></td>
 <td><span id="oro" class=etiqueta " ><?php echo $oDesplCentros->desplegable(); ?></span></td>

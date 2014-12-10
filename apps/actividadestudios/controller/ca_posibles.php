@@ -128,11 +128,17 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 	$aWhere['f_ini'] = "'$inicio','$fin'";
 	$aOperador['f_ini'] = 'BETWEEN';
 }
-$zona='';
 if ($_POST['todos']!=1) {
-	$aWhere['dl_org'] ="'dlb','dlz','dlva'";
-	$aOperador['dl_org'] = 'OR';
-	$zona="(dl_org='dlb' or dl_org='dlz' or dl_org='dlva') AND";
+	$grupo_estudios = $_POST['todos'];
+	$GesGrupoEst = new ubis\GestorDelegacion();
+	$cDelegaciones = $GesGrupoEst->getDelegaciones(array('grupo_estudios'=>$grupo_estudios));
+	if (count($cDelegaciones) > 1) $aOperador['dl_org'] = 'OR';
+	$mi_grupo = '';
+	foreach ($cDelegaciones as $oDelegacion) {
+		$mi_grupo .= empty($mi_grupo)? '' : ',';
+		$mi_grupo .= "'".$oDelegacion->getDl()."'";
+	}
+	$aWhere['dl_org'] = $mi_grupo;
 }
 
 $aWhere['status'] = 2;
@@ -151,15 +157,6 @@ switch ($na) {
 		$aOperador['id_tipo_activ'] = '~';
 		$GesActividades = new actividades\GestorActividadPub();
 		$cActividades = $GesActividades->getActividades($aWhere,$aOperador);
-		/*
-		$sQuery="SELECT * FROM a_actividades 
-			  WHERE status = 2 AND $condicion $zona 
-			  id_tipo_activ::text ~ '^133'
-				ORDER BY nivel_stgr,f_ini";
-		//echo "query: $sQuery<br>";
-		$GesActividades = new actividades\GestorActividad();
-		$cActividades = $GesActividades->getActividadesQuery($sQuery);
-		*/
 		break;
 	case "n":
 		// caso de n

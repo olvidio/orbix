@@ -9,6 +9,21 @@ use ubis\model as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+// Grupo de estudios
+$mi_dele = core\ConfigGlobal::mi_dele();
+$GesGrupoEst = new ubis\GestorDelegacion();
+$cMiDl = $GesGrupoEst->getDelegaciones(array('dl'=>$mi_dele));
+if (is_array($cMiDl) && !empty($cMiDl)) {
+	$grupo_estudios = $cMiDl[0]->getGrupo_estudios();
+	$cDelegaciones = $GesGrupoEst->getDelegaciones(array('grupo_estudios'=>$grupo_estudios));
+	$mi_grupo = '';
+	foreach ($cDelegaciones as $oDelegacion) {
+		$mi_grupo .= empty($mi_grupo)? '' : ',';
+		$mi_grupo .= $oDelegacion->getDl();
+	}
+} else {
+	$mi_grupo = _("No encuentro el grupo de estudios al que pertenece la dl");
+}
 
 // centros donde hay numerarios, aunque sean de agd
 $GesPersonas = new personas\GestorPersonaN();
@@ -149,7 +164,7 @@ fnjs_n_a=function(dd){
 <tr>
 <th colspan=5><?php echo _("selección por delegaciones"); ?></th>
 </tr>
-<tr><td colspan=4><input type="radio" id="todos" name="todos" value=0 checked><?= _("dlb, dlz, dlva") ?>    <input type="radio" name="todos" value=1 ><?= _("todos") ?></td></tr>
+<tr><td colspan=4><input type="radio" id="todos" name="todos" value=<?= $grupo_estudios?> checked><?= $mi_grupo ?>    <input type="radio" name="todos" value=1 ><?= _("todos") ?></td></tr>
 <tr><td><br></td></tr>
 <tr>
 <th colspan=5><?php echo _("formato del cuadro"); ?></th>

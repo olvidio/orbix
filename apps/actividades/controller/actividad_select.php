@@ -132,6 +132,10 @@ if (!empty($Qperiodo) && $Qperiodo == 'desdeHoy') {
 if (!empty($Qdl_org)) {
    $aWhere['dl_org'] = $Qdl_org; 
 }
+// Publicar
+if (!empty($Qmodo) && $Qmodo == 'publicar') {
+   $aWhere['publicado'] = 'f'; 
+}
 		
 
 /*
