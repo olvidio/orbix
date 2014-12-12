@@ -78,6 +78,19 @@ class Matricula Extends core\ClasePropiedades {
 	 * @var boolean
 	 */
 	 protected $bpreceptor;
+ 	/**
+	 * Nota_num de Nota
+	 *
+	 * @var integer
+	 */
+	 protected $inota_num;
+	/**
+	 * Nota_max de Nota
+	 *
+	 * @var integer
+	 */
+	 protected $inota_max;
+
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
 	 * oDbl de Matricula
@@ -91,6 +104,13 @@ class Matricula Extends core\ClasePropiedades {
 	 * @var string
 	 */
 	 protected $sNomTabla;
+	 /**
+	 * Nota_txt de Nota
+	 *
+	 * @var string
+	 */
+	 protected $sNota_txt;
+
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
 	/**
@@ -131,6 +151,8 @@ class Matricula Extends core\ClasePropiedades {
 		$aDades['id_nivel'] = $this->iid_nivel;
 		$aDades['id_situacion'] = $this->iid_situacion;
 		$aDades['preceptor'] = $this->bpreceptor;
+		$aDades['nota_num'] = $this->inota_num;
+		$aDades['nota_max'] = $this->inota_max;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if (empty($aDades['preceptor']) || ($aDades['preceptor'] === 'off') || ($aDades['preceptor'] === false) || ($aDades['preceptor'] === 'f')) { $aDades['preceptor']='f'; } else { $aDades['preceptor']='t'; }
@@ -140,7 +162,10 @@ class Matricula Extends core\ClasePropiedades {
 			$update="
 					id_nivel             	 = :id_nivel,
 					id_situacion             = :id_situacion,
-					preceptor                = :preceptor";
+					preceptor                = :preceptor,
+					nota_num                 = :nota_num,
+					nota_max                 = :nota_max";
+
 			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_activ='$this->iid_activ' AND id_asignatura='$this->iid_asignatura' AND id_nom='$this->iid_nom'")) === false) {
 				$sClauError = 'Matricula.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -155,8 +180,8 @@ class Matricula Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_activ, $this->iid_asignatura, $this->iid_nom);
-			$campos="(id_activ,id_asignatura,id_nom,id_nivel,id_situacion,preceptor)";
-			$valores="(:id_activ,:id_asignatura,:id_nom,:id_nivel,:id_situacion,:preceptor)";		
+			$campos="(id_activ,id_asignatura,id_nom,id_nivel,id_situacion,preceptor,nota_num,nota_max)";
+			$valores="(:id_activ,:id_asignatura,:id_nom,:id_nivel,:id_situacion,:preceptor,:nota_num,:nota_max)";		
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Matricula.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -235,6 +260,8 @@ class Matricula Extends core\ClasePropiedades {
 		if (array_key_exists('id_nivel',$aDades)) $this->setId_nivel($aDades['id_nivel']);
 		if (array_key_exists('id_situacion',$aDades)) $this->setId_situacion($aDades['id_situacion']);
 		if (array_key_exists('preceptor',$aDades)) $this->setPreceptor($aDades['preceptor']);
+		if (array_key_exists('nota_num',$aDades)) $this->setNota_num($aDades['nota_num']);
+		if (array_key_exists('nota_max',$aDades)) $this->setNota_max($aDades['nota_max']);
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
@@ -396,7 +423,77 @@ class Matricula Extends core\ClasePropiedades {
 	function setPreceptor($bpreceptor='f') {
 		$this->bpreceptor = $bpreceptor;
 	}
+		/**
+	 * Recupera l'atribut inota_num de PersonaNota
+	 *
+	 * @return integer inota_num
+	 */
+	function getNota_num() {
+		if (!isset($this->inota_num)) {
+			$this->DBCarregar();
+		}
+		return $this->inota_num;
+	}
+	/**
+	 * estableix el valor de l'atribut inota_num de PersonaNota
+	 *
+	 * @param integer inota_num='' optional
+	 */
+	function setNota_num($inota_num='') {
+		$this->inota_num = $inota_num;
+	}
+	/**
+	 * Recupera l'atribut inota_max de PersonaNota
+	 *
+	 * @return integer inota_max
+	 */
+	function getNota_max() {
+		if (!isset($this->inota_max)) {
+			$this->DBCarregar();
+		}
+		return $this->inota_max;
+	}
+	/**
+	 * estableix el valor de l'atribut inota_max de PersonaNota
+	 *
+	 * @param integer inota_max='' optional
+	 */
+	function setNota_max($inota_max='') {
+		$this->inota_max = $inota_max;
+	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
+	/**
+	 * Recupera la nota en forma de text
+	 *
+	 * @return string snota_txt
+	 */
+	function getNota_txt() {
+		$nota_txt = 'Hollla';
+		$id_situacion = $this->getId_situacion();
+		switch ($id_situacion) {
+			case '3': // Magna
+				$nota_txt = 'Magna cum laude (8,6-9,5/10)';
+				break;
+			case '4': // Summa
+				$nota_txt = 'Summa cum laude (9,6-10/10)';
+				break;
+			case '10': // Nota numérica
+				$num = $this->getNota_num();
+				$max = $this->getNota_max();
+				$nota_txt = $num.'/'.$max;
+				if ($max == 10) {
+					if ($num > 9.5) { $nota_txt .= ' ' ._("Summa cum laude"); 
+					} elseif ($num > 8.5) { $nota_txt .= ' ' ._("Magna cum laude"); 
+					}
+				}
+				break;
+			default:
+				$oNota = new Nota($id_situacion);
+				$nota_txt = $oNota->getDescripcion();
+				break;
+		}
+		return $nota_txt;
+	}
 
 	/**
 	 * Retorna una col·lecció d'objectes del tipus DatosCampo
@@ -409,7 +506,9 @@ class Matricula Extends core\ClasePropiedades {
 		$oMatriculaSet->add($this->getDatosId_nivel());
 		$oMatriculaSet->add($this->getDatosId_situacion());
 		$oMatriculaSet->add($this->getDatosPreceptor());
-		return $oMatriculaSet->getTot();
+		$oMatriculaSet->add($this->getDatosNota_num());
+		$oMatriculaSet->add($this->getDatosNota_max());
+		return $oPersonaNotaSet->getTot();
 	}
 
 
@@ -460,6 +559,30 @@ class Matricula Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'preceptor'));
 		$oDatosCampo->setEtiqueta(_("preceptor"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut inota_num de PersonaNota
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return oject DatosCampo
+	 */
+	function getDatosNota_num() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nota_num'));
+		$oDatosCampo->setEtiqueta(_("nota num"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut inota_max de PersonaNota
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return oject DatosCampo
+	 */
+	function getDatosNota_max() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nota_max'));
+		$oDatosCampo->setEtiqueta(_("nota max"));
 		return $oDatosCampo;
 	}
 }

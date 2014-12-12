@@ -394,8 +394,10 @@ $form_action=core\ConfigGlobal::getWeb().'/apps/personas/controller/personas_sel
 
 // -------------------------- si es una persona, saco un lista. -----------------------
 if (!empty($_POST['sel']) && $alum==1) { //vengo de un 'checkbox' => sólo una persona
-	$pagina=core\ConfigGlobal::$web.'/programas/dossiers/dossiers_ver.php?pau=p&que=activ&id_pau='.$id_nom.'&tabla_pau='.$tabla_pau.'&id_dossier=1301y1302';
-	
+	//$pagina=core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?pau=p&que=activ&id_pau='.$id_nom.'&tabla_pau='.$tabla_pau.'&id_dossier=1301y1302';
+	$aParamGo=array('que'=>'activ','pau'=>'p','id_pau'=>$id_nom,'obj_pau'=>$obj_pau,'id_dossier'=>'1301y1302');
+	$pagina=web\Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_build_query($aParamGo));
+
 	$f=0;
 	$a1=array();
 	foreach($cuadro as $a1) {
@@ -405,13 +407,8 @@ if (!empty($_POST['sel']) && $alum==1) { //vengo de un 'checkbox' => sólo una p
 		$stgr=$a1["stgr"];
 		$actividades=$a1["actividades"];
 	//las filas
+		echo $oPosicion->atras();
 		echo "<table>";
-		echo "<tr><th class=\"atras no_print\">
-<form id='frm_atras' action='$form_action'>
-	<input type='hidden' name='go_to' value='$go_to'><img onclick=fnjs_enviar_formulario('#frm_atras') src='".core\ConfigGlobal::$web_icons."/flechas/left_blanco.gif' border=0 height=40>
-</form>
-</th>
-";
 		echo "<th class=nom colspan=2>posibles ca de $nom ($ctr)</th><th>stgr: $stgr</th>";
 		foreach($actividades as $a3) {
 				   $nom_activ=$a3["nom_activ"];

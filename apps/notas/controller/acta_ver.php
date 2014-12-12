@@ -31,7 +31,7 @@ $pagina = '';
 $linea = '';
 $lugar = '';
 $observ = '';
-$notas = empty($_POST['notas'])? '': $_POST['notas'];
+//$notas = empty($_POST['notas'])? '': $_POST['notas'];
 
 //últimos
 $GesActas = new notas\GestorActa();
@@ -42,6 +42,7 @@ $ult_lin = $GesActas->getUltimaLinea($ult_lib);
 $obj = 'notas\\model\\ActaDl';
 
 if (!empty($_POST['sel']) && empty($notas)) { //vengo de un checkbox y no estoy en la página de acta_notas ($notas).
+	$notas = '';
 	$acta=urldecode(strtok($_POST['sel'][0],"#"));
 } else { // vengo de un link 
 	if (empty($acta) && !empty($_POST['acta'])) $acta=urldecode($_POST['acta']); // si estoy  en la página de acta_notas ya tengo el acta.
@@ -242,7 +243,7 @@ if ($notas=="acta") {
 	while(list($key, $value) = each($_POST['sel'])) $el_var .= "&sel[$key]=$value";
 	$el_var = substr($el_var, 1);
 
-	$_POST['go_to']="acta_notas.php?mod=".$_POST['mod']."&pau=".$_POST['pau']."&id_pau=".$_POST['id_pau']."&tabla_pau=".$_POST['tabla_pau']."&id_dossier=".$_POST['id_dossier']."&permiso=".$_POST['permiso']."&go_to=".$_POST['go_to'].$el_var;
+	$_POST['go_to']="acta_notas.php?mod=".$_POST['mod']."&pau=".$_POST['pau']."&id_pau=".$_POST['id_pau']."&id_dossier=".$_POST['id_dossier']."&permiso=".$_POST['permiso']."&go_to=".$_POST['go_to'].$el_var;
 
 }
 if (empty($_POST['go_to'])) $_POST['go_to']="acta_ver.php?acta=$acta";

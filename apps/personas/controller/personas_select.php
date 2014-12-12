@@ -155,7 +155,7 @@ switch ($tabla) {
 		}
 		$obj_pau = 'PersonaEx';
 		$GesPersona = new personas\GestorPersonaEx();
-		$cPersonas = $GesPersona->getPersonasEx($aWhere,$aOperador);
+		$cPersonas = $GesPersona->getPersonas($aWhere,$aOperador);
 	break;
 	case 'nada':
 		$cPersonas = array();
@@ -390,7 +390,7 @@ fnjs_matriculas=function(formulario){
 <?php } ?>
 <?php if (!empty($script['fnjs_posibles_ca'])) { ?>
 fnjs_posibles_ca=function(formulario){
-		$(formulario).attr('action',"est/cursos_anuales/posibles/ca_posibles.php");
+		$(formulario).attr('action',"apps/actividadestudios/controller/ca_posibles.php");
   		fnjs_enviar_formulario(formulario);
 }
 <?php } ?>

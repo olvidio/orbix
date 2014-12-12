@@ -32,7 +32,9 @@ switch ($_POST['lista']) {
 		$titulo=ucfirst(_("buscar en uno ó varios centros"));
 		$nomUbi=ucfirst(_("nombre del centro"));
 		$action="programas/sm-agd/lista_profesion.php";
-		$inputs="<input type=\"Hidden\" id=\"tipo\" name=\"tipo\" value=\"$tipo\" >"; 
+		$a_camposHidden = array(
+			'tipo' => $tipo
+		);
 		break;
 	case "ctrex" :
 	case "list_activ" :
@@ -52,11 +54,13 @@ switch ($_POST['lista']) {
 		$titulo=ucfirst(_("estudios en actividades de personas por centros de la delegación"));
 		$tituloGros=ucfirst(_("qué centro interesa?"));
 		$nomUbi=ucfirst(_("nombre del centro"));
-		$action="programas/sm-agd/lista_est_ctr.php";
-		$inputs = "<input type=\"Hidden\" id=\"tipo\" name=\"tipo\" value=\"$tipo\" >"; 
-		$inputs .= "<input type=\"Hidden\" id=\"ssfsv\" name=\"ssfsv\" value=\"$ssfsv\" >";
-		$inputs .= "<input type=\"Hidden\" id=\"sasistentes\" name=\"sasistentes\" value=\"${_POST['sasistentes']}\" >";
-		$inputs .= "<input type=\"Hidden\" id=\"sactividad\" name=\"sactividad\" value=\"${_POST['sactividad']}\" >";
+		$action="apps/asistentes/controller/lista_est_ctr.php";
+		$a_camposHidden = array(
+			'tipo' => $tipo,
+			'ssfsv' => $ssfsv,
+			'sasistentes' => $_POST['sasistentes'],
+			'sactividad' => $_POST['sactividad']
+		);
 		break;
 }
 

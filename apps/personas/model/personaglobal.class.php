@@ -37,6 +37,12 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 protected $aDades;
 
 	/**
+	 * Id_schema de PersonaDl
+	 *
+	 * @var integer
+	 */
+	 protected $iid_schema;
+	/**
 	 * Id_nom de PersonaDl
 	 *
 	 * @var integer
@@ -247,6 +253,25 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 		return $this->aPrimary_key;
 	}
 
+	/**
+	 * Recupera l'atribut iid_schema de PersonaDl
+	 *
+	 * @return integer iid_schema
+	 */
+	function getId_schema() {
+		if (!isset($this->iid_schema)) {
+			$this->DBCarregar();
+		}
+		return $this->iid_schema;
+	}
+	/**
+	 * estableix el valor de l'atribut iid_schema de PersonaDl
+	 *
+	 * @param integer iid_schema
+	 */
+	function setId_schema($iid_schema) {
+		$this->iid_schema = $iid_schema;
+	}
 	/**
 	 * Recupera l'atribut iid_nom de PersonaDl
 	 *

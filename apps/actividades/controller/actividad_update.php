@@ -72,6 +72,7 @@ function borrar_actividad($id_activ) {
 	}
 }
 
+$id_activ = empty($_POST['id_activ'])? '' : $_POST['id_activ'];
 
 switch ($_POST['mod']) {
 case 'publicar':
@@ -183,7 +184,7 @@ case "eliminar": // Eliminar la actividad.
 		}
 	}
 	// si vengo desde la presentacion del planning, ya tengo el id_activ.
-	if (!empty($_POST['id_activ'])) {
+	if (!empty($id_activ)) {
 		borrar_actividad($id_activ);
 	}
 	break;
@@ -200,7 +201,7 @@ case "cmb_tipo": // sólo cambio el tipo a una actividad existente //___________
 			exit;
 		}
 	}
-	$oActividad = new actividades\Actividad($_POST['id_activ']);
+	$oActividad = new actividades\Actividad($id_activ);
 	$oActividad->DBCarregar();
 	$oActividad->setId_tipo_activ($valor_id_tipo_activ);
 	if(isset($_POST['dl_org'])) {
@@ -231,7 +232,7 @@ case "cmb_tipo": // sólo cambio el tipo a una actividad existente //___________
 	}
 	break;
 case "editar": // editar la actividad.
-	$oActividad = new actividades\Actividad($_POST['id_activ']);
+	$oActividad = new actividades\Actividad($id_activ);
 	$oActividad->DBCarregar();
 	isset($_POST['id_tipo_activ']) ? $oActividad->setId_tipo_activ($_POST['id_tipo_activ']) : '';
 	if (isset($_POST['dl_org'])) {
@@ -283,18 +284,18 @@ case "actualizar_sacd": // para actualizar los sacd encargados.
 	    if (!empty($_POST['sacd1'])) {
 	      $update_sacd="UPDATE d_cargos_activ
 		                SET id_nom=".$_POST['sacd1']."
-			  	  	    WHERE id_activ=".$_POST['id_activ']." AND id_nom=".$_POST['sacd1_antiguo']." AND id_cargo='35'";
+			  	  	    WHERE id_activ=".$id_activ." AND id_nom=".$_POST['sacd1_antiguo']." AND id_cargo='35'";
 			// si es una actividad de sv le añado la asistencia
 			if (substr($id_tipo_activ,0,1)==1) {
-				quitar_asistencia($_POST['id_activ'],$_POST['sacd1_antiguo']);
-				poner_asistencia($_POST['id_activ'],$_POST['sacd1']);
+				quitar_asistencia($id_activ,$_POST['sacd1_antiguo']);
+				poner_asistencia($id_activ,$_POST['sacd1']);
 			}
 	    }  else  {
 	      $update_sacd="DELETE FROM d_cargos_activ
-		                WHERE id_activ=".$_POST['id_activ']." AND id_nom=".$_POST['sacd1_antiguo']." AND id_cargo='35'";  
+		                WHERE id_activ=".$id_activ." AND id_nom=".$_POST['sacd1_antiguo']." AND id_cargo='35'";  
 		   // si es una actividad de sv le quito la asistencia
 			if (substr($_POST['id_tipo_activ'],0,1)==1) {
-				quitar_asistencia($_POST['id_activ'],$_POST['sacd1_antiguo']);
+				quitar_asistencia($id_activ,$_POST['sacd1_antiguo']);
 			}
 	    } 
 	    $oDBSt_q=$oDB->query($update_sacd);
@@ -303,11 +304,11 @@ case "actualizar_sacd": // para actualizar los sacd encargados.
 	  if (!empty($_POST['sacd1'])) {
 	    $update_sacd="INSERT INTO d_cargos_activ
 		              (id_activ,id_cargo,id_nom)
-					  VALUES ('".$_POST['id_activ']."','35','".$_POST['sacd1']."')";
+					  VALUES ('".$id_activ."','35','".$_POST['sacd1']."')";
 	    $oDBSt_q=$oDB->query($update_sacd);
 		// si es una actividad de sv le añado la asistencia
 		if (substr($_POST['id_tipo_activ'],0,1)==1) {
-			poner_asistencia($_POST['id_activ'],$_POST['sacd1']);
+			poner_asistencia($id_activ,$_POST['sacd1']);
 		}
 	  }
 	}  
@@ -317,18 +318,18 @@ case "actualizar_sacd": // para actualizar los sacd encargados.
 	    if (!empty($_POST['sacd2'])){
 	      $update_sacd="UPDATE d_cargos_activ
 		                SET id_nom=".$_POST['sacd2']."
-		  			    WHERE id_activ=".$_POST['id_activ']." AND id_nom=".$_POST['sacd2_antiguo']." AND id_cargo='36'";
+		  			    WHERE id_activ=".$id_activ." AND id_nom=".$_POST['sacd2_antiguo']." AND id_cargo='36'";
 			// si es una actividad de sv le añado la asistencia
 			if (substr($_POST['id_tipo_activ'],0,1)==1) {
-				quitar_asistencia($_POST['id_activ'],$_POST['sacd2_antiguo']);
-				poner_asistencia($_POST['id_activ'],$_POST['sacd2']);
+				quitar_asistencia($id_activ,$_POST['sacd2_antiguo']);
+				poner_asistencia($id_activ,$_POST['sacd2']);
 			}
 	    } else {
 	      $update_sacd="DELETE FROM d_cargos_activ
-		                WHERE id_activ=".$_POST['id_activ']." AND id_nom=".$_POST['sacd2_antiguo']." AND id_cargo='36'"; 
+		                WHERE id_activ=".$id_activ." AND id_nom=".$_POST['sacd2_antiguo']." AND id_cargo='36'"; 
 		   // si es una actividad de sv le quito la asistencia
 			if (substr($_POST['id_tipo_activ'],0,1)==1) {
-				quitar_asistencia($_POST['id_activ'],$_POST['sacd2_antiguo']);
+				quitar_asistencia($id_activ,$_POST['sacd2_antiguo']);
 			}
 	    }
 	    $oDBSt_q=$oDB->query($update_sacd);
@@ -337,11 +338,11 @@ case "actualizar_sacd": // para actualizar los sacd encargados.
 	  if (!empty($_POST['sacd2'])) {
 	    $update_sacd="INSERT INTO d_cargos_activ
 		              (id_activ,id_cargo,id_nom)
-					  VALUES ('".$_POST['id_activ']."','36','".$_POST['sacd2']."')";
+					  VALUES ('".$id_activ."','36','".$_POST['sacd2']."')";
 	    $oDBSt_q=$oDB->query($update_sacd);
 		// si es una actividad de sv le añado la asistencia
 		if (substr($_POST['id_tipo_activ'],0,1)==1) {
-			poner_asistencia($_POST['id_activ'],$_POST['sacd2']);
+			poner_asistencia($id_activ,$_POST['sacd2']);
 		}
 	  }
 	}  
@@ -351,18 +352,18 @@ case "actualizar_sacd": // para actualizar los sacd encargados.
 	    if (!empty($_POST['sacd3'])){
 	      $update_sacd="UPDATE d_cargos_activ
 		                SET id_nom=".$_POST['sacd3']."
-			  		    WHERE id_activ=".$_POST['id_activ']." AND id_nom=".$_POST['sacd3_antiguo']." AND id_cargo='37'";
+			  		    WHERE id_activ=".$id_activ." AND id_nom=".$_POST['sacd3_antiguo']." AND id_cargo='37'";
 			// si es una actividad de sv le añado la asistencia
 			if (substr($_POST['id_tipo_activ'],0,1)==1) {
-				quitar_asistencia($_POST['id_activ'],$_POST['sacd3_antiguo']);
-				poner_asistencia($_POST['id_activ'],$_POST['sacd3']);
+				quitar_asistencia($id_activ,$_POST['sacd3_antiguo']);
+				poner_asistencia($id_activ,$_POST['sacd3']);
 			}
 	    } else {
 	      $update_sacd="DELETE FROM d_cargos_activ
-		                WHERE id_activ=".$_POST['id_activ']." AND id_nom=".$_POST['sacd3_antiguo']." AND id_cargo='37'"; 
+		                WHERE id_activ=".$id_activ." AND id_nom=".$_POST['sacd3_antiguo']." AND id_cargo='37'"; 
 			// si es una actividad de sv le quito la asistencia
 			if (substr($_POST['id_tipo_activ'],0,1)==1) {
-				quitar_asistencia($_POST['id_activ'],$_POST['sacd3_antiguo']);
+				quitar_asistencia($id_activ,$_POST['sacd3_antiguo']);
 			}
 	    }
 	    $oDBSt_q=$oDB->query($update_sacd);
@@ -371,11 +372,11 @@ case "actualizar_sacd": // para actualizar los sacd encargados.
 	  if (!empty($_POST['sacd3'])) {
 	    $update_sacd="INSERT INTO d_cargos_activ
 		              (id_activ,id_cargo,id_nom)
-					  VALUES ('".$_POST['id_activ']."','37','".$_POST['sacd3']."')";
+					  VALUES ('".$id_activ."','37','".$_POST['sacd3']."')";
 	    $oDBSt_q=$oDB->query($update_sacd);
 		// si es una actividad de sv le añado la asistencia
 		if (substr($_POST['id_tipo_activ'],0,1)==1) {
-			poner_asistencia($_POST['id_activ'],$_POST['sacd3']);
+			poner_asistencia($id_activ,$_POST['sacd3']);
 		}
 	  }
 	}  
@@ -394,11 +395,11 @@ case "actualizar_ctr": // cambiar sólo los ctr encargados
 				$ctr=$_POST['ctr'][$i];
 				$update_ctr="UPDATE d_encargados_activ
 							SET id_ubi=$ctr
-							WHERE id_activ=".$_POST['id_activ']." AND id_ubi=$ctr_antiguo AND num_orden='$i'";
+							WHERE id_activ=".$id_activ." AND id_ubi=$ctr_antiguo AND num_orden='$i'";
 				//echo "up: $update_ctr, $i<br>";
 			} else { // si es nulo lo elimino
 				$update_ctr="DELETE FROM d_encargados_activ
-							WHERE id_activ=".$_POST['id_activ']." AND id_ubi=$ctr_antiguo ";  
+							WHERE id_activ=".$id_activ." AND id_ubi=$ctr_antiguo ";  
 			} 
 			$oDBSt_q=$oDB->exec($update_ctr);
 		  }
@@ -407,7 +408,7 @@ case "actualizar_ctr": // cambiar sólo los ctr encargados
 			$update_ctr="INSERT INTO d_encargados_activ
 						  (id_activ,num_orden,id_ubi,encargo)
 						  VALUES (?,?,?,'organizador')";
-			$a_values=array($_POST['id_activ'],$i,$_POST['ctr'][$i]);
+			$a_values=array($id_activ,$i,$_POST['ctr'][$i]);
 			//echo "q: $update_ctr<br>";
 			//print_r($a_values);
 			//ejecuta
@@ -431,7 +432,7 @@ if ($_POST['origen'] != 'calendario') {
 		exit;
 	} else {
 		$tabla="a_actividades";
-		$go_to="actividad_ver.php?ssfsv=".$_POST['ssfsv']."&que=ver&id_activ=".$_POST['id_activ']."&tabla=$tabla";
+		$go_to="actividad_ver.php?que=ver&id_activ=".$id_activ."&tabla=$tabla";
 	}
 	//vuelve a la presentacion de la ficha.
 	if (!empty($_POST['mem'])) {

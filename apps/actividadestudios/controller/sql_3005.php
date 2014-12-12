@@ -92,7 +92,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 fnjs_actas=function(formulario){
 	rta=fnjs_solo_uno(formulario);
 	if (rta==1) {
-  		$(formulario).attr('action',"apps/notas/controller/acta_notas.php");
+  		$(formulario).attr('action',"apps/actividadestudios/controller/acta_notas.php");
   		fnjs_enviar_formulario(formulario,'#ficha_activ');
   	}
 }

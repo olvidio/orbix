@@ -2,6 +2,7 @@
 use asignaturas\model as asignaturas;
 use dossiers\model as dossiers;
 use notas\model as notas;
+use personas\model as personas;
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
 */
@@ -53,6 +54,10 @@ switch($_POST['mod']) {
 		$oPersonaNota->setId_nivel($id_nivel);
 		$oPersonaNota->setId_asignatura($id_asignatura);
 		$oPersonaNota->setId_nom($_POST['id_pau']);
+		// para saber a que schema pertenece la persona
+		$oPersona = personas\Persona::NewPersona($id_nom);
+		$id_schema = $oPersona->getId_schema();
+		$oPersonaNota->setId_schema($id_schema);
 		if (!empty($_POST['id_situacion'])) $oPersonaNota->setId_situacion($_POST['id_situacion']);
 		if (!empty($_POST['acta'])) $oPersonaNota->setActa($_POST['acta']);
 		if (!empty($_POST['f_acta'])) $oPersonaNota->setF_acta($_POST['f_acta']);

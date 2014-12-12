@@ -37,6 +37,12 @@ class PersonaNota Extends core\ClasePropiedades {
 	 protected $aDades;
 
 	/**
+	 * Id_schema de PersonaNota
+	 *
+	 * @var integer
+	 */
+	 protected $iid_schema;
+	/**
 	 * Id_nom de PersonaNota
 	 *
 	 * @var integer
@@ -150,6 +156,7 @@ class PersonaNota Extends core\ClasePropiedades {
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
 				if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; // evitem SQL injection fent cast a integer
+				if (($nom_id == 'id_asignatura') && $val_id !== '') $this->iid_asignatura = (int)$val_id; // evitem SQL injection fent cast a integer
 				if (($nom_id == 'id_nivel') && $val_id !== '') $this->iid_nivel = (int)$val_id; // evitem SQL injection fent cast a integer
 			}
 		}
@@ -170,6 +177,7 @@ class PersonaNota Extends core\ClasePropiedades {
 		if ($this->DBCarregar('guardar') === false) { $bInsert=true; } else { $bInsert=false; }
 		$aDades=array();
 		$aDades['id_asignatura'] = $this->iid_asignatura;
+		$aDades['id_nivel'] = $this->iid_nivel;
 		$aDades['id_situacion'] = $this->iid_situacion;
 		$aDades['acta'] = $this->sacta;
 		$aDades['f_acta'] = $this->df_acta;
@@ -188,6 +196,7 @@ class PersonaNota Extends core\ClasePropiedades {
 			//UPDATE
 			$update="
 					id_asignatura            = :id_asignatura,
+					id_nivel	             = :id_nivel,
 					id_situacion             = :id_situacion,
 					acta                     = :acta,
 					f_acta                   = :f_acta,
@@ -211,9 +220,10 @@ class PersonaNota Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			array_unshift($aDades, $this->iid_nom, $this->iid_nivel);
-			$campos="(id_nom,id_nivel,id_asignatura,id_situacion,acta,f_acta,detalle,preceptor,id_preceptor,epoca,id_activ,nota_num,nota_max)";
-			$valores="(:id_nom,:id_nivel,:id_asignatura,:id_situacion,:acta,:f_acta,:detalle,:preceptor,:id_preceptor,:epoca,:id_activ,:nota_num,:nota_max)";		
+			array_unshift($aDades, $this->iid_schema, $this->iid_nom, $this->iid_nivel);
+			$campos="(id_schema,id_nom,id_nivel,id_asignatura,id_situacion,acta,f_acta,detalle,preceptor,id_preceptor,epoca,id_activ,nota_num,nota_max)";
+			$valores="(:id_schema,:id_nom,:id_nivel,:id_asignatura,:id_situacion,:acta,:f_acta,:detalle,:preceptor,:id_preceptor,:epoca,:id_activ,:nota_num,:nota_max)";		
+			echo "INSERT INTO $nom_tabla $campos VALUES $valores";
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'PersonaNota.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -285,6 +295,7 @@ class PersonaNota Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_nom',$aDades)) $this->setId_nom($aDades['id_nom']);
 		if (array_key_exists('id_nivel',$aDades)) $this->setId_nivel($aDades['id_nivel']);
 		if (array_key_exists('id_asignatura',$aDades)) $this->setId_asignatura($aDades['id_asignatura']);
@@ -326,6 +337,25 @@ class PersonaNota Extends core\ClasePropiedades {
 		return $this->aPrimary_key;
 	}
 
+	/**
+	 * Recupera l'atribut iid_schema de PersonaNota
+	 *
+	 * @return integer iid_schema
+	 */
+	function getId_schema() {
+		if (!isset($this->iid_schema)) {
+			$this->DBCarregar();
+		}
+		return $this->iid_schema;
+	}
+	/**
+	 * estableix el valor de l'atribut iid_schema de PersonaNota
+	 *
+	 * @param integer iid_schema
+	 */
+	function setId_schema($iid_schema) {
+		$this->iid_schema = $iid_schema;
+	}
 	/**
 	 * Recupera l'atribut iid_nom de PersonaNota
 	 *

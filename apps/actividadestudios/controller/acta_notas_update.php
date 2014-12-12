@@ -1,30 +1,26 @@
 ﻿<?php
+use asignaturas\model as asignaturas;
+use actividadestudios\model as actividadestudios;
+use notas\model as notas;
+use personas\model as personas;
 /**
 * Funciones más comunes de la aplicación
 */
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("global_header.inc");
+	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
-	require_once ('classes/actividades/d_asignaturas_activ.class');
-	require_once ('classes/actividades/e_actas_gestor.class');
-	require_once ('classes/activ-personas/xa_asignaturas.class');
-	require_once ('classes/activ-personas/d_matriculas_activ_gestor.class');
-	require_once ('classes/personas/e_notas_gestor.class');
-	require_once ('classes/personas/e_notas_situacion_gestor.class');
 
 // Crea los objectos de uso global **********************************************
-	require_once ("global_object.inc");
+	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-include_once(ConfigGlobal::$dir_programas.'/func_web.php');
 
-
-if ($_POST['que']==3) { //paso las matrículas a notas definitivas
+if ($_POST['que']==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 	$aNivelOpcionales = array(1230,1231,1232,2430,2431,2432,2433,2434);
-	$GesNotas  = new GestorNota();
-	$aIdSuperadas = $GesNotas->getArrayNotasSuperadas();
+	$GesNotas  = new notas\GestorNota();
+	//$aIdSuperadas = $GesNotas->getArrayNotasSuperadas();
 	// miro el acta
-	$GesActas = new GestorActa();
+	$GesActas = new notas\GestorActa();
 	$cActas = $GesActas->getActas(array('id_activ'=>$_POST['id_activ'],'id_asignatura'=>$_POST['id_asignatura']));
 
 	if (is_array($cActas) && count($cActas) == 1) {
@@ -36,20 +32,26 @@ if ($_POST['que']==3) { //paso las matrículas a notas definitivas
 	}
 	if (!empty($error)) exit($error);
 
-	$GesMatriculas = new GestorMatricula();
+	$GesMatriculas = new actividadestudios\GestorMatricula();
 	$cMatriculados = $GesMatriculas->getMatriculas(array('id_asignatura'=>$_POST['id_asignatura'], 'id_activ'=>$_POST['id_activ']));
 	$i=0;
 	foreach ($cMatriculados as $oMatricula) {
 		$i++;
 		$id_nom=$oMatricula->getId_nom();
+		// para saber a que schema pertenece la persona
+		$oPersona = personas\Persona::NewPersona($id_nom);
+		$id_schema = $oPersona->getId_schema();
 		$id_situacion=$oMatricula->getId_situacion();
 		$preceptor=$oMatricula->getPreceptor();
+		$nota_num=$oMatricula->getNota_num();
+		$nota_max=$oMatricula->getNota_max();
 		
 		// Sólo grabo si está superada.
-		if (!in_array($id_situacion,$aIdSuperadas)) continue;
+		//if (!in_array($id_situacion,$aIdSuperadas)) continue;
+		if ($nota_num/$nota_max < 0.85) continue;
 				
 		if (!empty($preceptor)) { //miro cuál
-			$oActividadAsignatura = new ActividadAsignatura(array('id_activ'=>$_POST['id_activ'],'id_asignatura'=>$_POST['id_asignatura'])); 
+			$oActividadAsignatura = new actividadestudios\ActividadAsignatura(array('id_activ'=>$_POST['id_activ'],'id_asignatura'=>$_POST['id_asignatura'])); 
 			$id_preceptor = $oActividadAsignatura->getId_profesor();
 		} else {
 			$id_preceptor = '';
@@ -79,7 +81,7 @@ if ($_POST['que']==3) { //paso las matrículas a notas definitivas
 					$op_min=0;
 					$op_max=7;
 			}
-			$GesPersonaNotas = new GestorPersonaNota();
+			$GesPersonaNotas = new notas\GestorPersonaNota();
 			$aWhere['id_nom'] = $id_nom;
 			$aWhere['_ordre'] = 'id_nivel DESC';
 			$cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhere,$aOperadores);
@@ -91,7 +93,8 @@ if ($_POST['que']==3) { //paso las matrículas a notas definitivas
 				$id_op = $oPersonaNota->getId_nivel();
 				$id_situacion = $oPersonaNota->getId_situacion();
 				// compruebo que el id_situacion corresponde a 'superada'
-				if (in_array($id_situacion,$aIdSuperadas)) $aOpSuperadas[$j] = $id_op;
+				//if (in_array($id_situacion,$aIdSuperadas)) $aOpSuperadas[$j] = $id_op;
+				if ($nota_num/$nota_max >= 0.85)  $aOpSuperadas[$j] = $id_op;
 			}
 			for ($op=$op_min;$op<=$op_max;$op++) {
 				$id_nivel = $aNivelOpcionales[$op];
@@ -99,12 +102,11 @@ if ($_POST['que']==3) { //paso las matrículas a notas definitivas
 			}
 			//if ($nivel > $aNivelOpcionales[$op_max]) { $error.=sprintf (_("ha cursado una opcional que no tocaba (id_nom=%s)")."\n",$id_nom); continue; }
 		} else {
-			$oAsignatura = new Asignatura($_POST['id_asignatura']);
+			$oAsignatura = new asignaturas\Asignatura($_POST['id_asignatura']);
 			$id_nivel = $oAsignatura->getId_nivel();
 		}
 			
-		$oPersonaNota = new PersonaNota(array('id_nom'=>$id_nom,'id_asignatura'=>$_POST['id_asignatura']));
-		
+		$oPersonaNota = new notas\PersonaNota(array('id_nom'=>$id_nom,'id_asignatura'=>$_POST['id_asignatura']));
 		//compruebo que no existe ya la nota:
 		//	- si existe y es en mismo id_activ, actualizo
 		//  - si existe en otro id_activ, AVISO!!
@@ -116,6 +118,7 @@ if ($_POST['que']==3) { //paso las matrículas a notas definitivas
 			continue;
 		} else {
 			// guardo los datos
+			$oPersonaNota->setId_schema($id_schema);
 			$oPersonaNota->setId_nivel($id_nivel);
 			$oPersonaNota->setId_situacion($id_situacion);
 			$oPersonaNota->setActa($acta);
@@ -123,20 +126,24 @@ if ($_POST['que']==3) { //paso las matrículas a notas definitivas
 			$oPersonaNota->setId_activ($_POST['id_activ']);
 			$oPersonaNota->setPreceptor($preceptor);
 			$oPersonaNota->setId_preceptor($id_preceptor);
+			$oPersonaNota->setNota_num($nota_num);
+			$oPersonaNota->setNota_max($nota_max);
 			if ($oPersonaNota->DBGuardar() === false) {
 				echo _('Hay un error, no se ha guardado');
 			}
 		}
 	}
-	$go_to="acta_imprimir.php?acta=$acta|main";
+	$go_to=core\ConfigGlobal::getWeb()."/apps/notas/controller/acta_imprimir.php?acta=$acta|main";
 }
 
-if ($_POST['que']==1) {
+if ($_POST['que']==1) { // Grabar las notas en la matricula
 	for ($n=0;$n<$_POST['matriculados'];$n++) {
 		if (!empty($_POST['form_preceptor'][$n]) && $_POST['form_preceptor'][$n]=="p") { $preceptor="t"; } else { $preceptor="f"; }
-		$oMatricula = new Matricula(array('id_asignatura'=>$_POST['id_asignatura'],'id_activ'=>$_POST['id_activ'],'id_nom'=>$_POST['id_nom'][$n]));
-		$oMatricula->setId_situacion($_POST['id_situacion'][$n]);
+		$oMatricula = new actividadestudios\Matricula(array('id_asignatura'=>$_POST['id_asignatura'],'id_activ'=>$_POST['id_activ'],'id_nom'=>$_POST['id_nom'][$n]));
 		$oMatricula->setPreceptor($preceptor);
+		$oMatricula->setNota_num($_POST['nota_num'][$n]);
+		$oMatricula->setNota_max($_POST['nota_max'][$n]);
+		if ($_POST['nota_num'][$n] > 1) $oMatricula->setId_situacion(10);
 		if ($oMatricula->DBGuardar() === false) {
 			echo _('Hay un error, no se ha guardado');
 		}
@@ -150,7 +157,7 @@ if (empty($error)) {
    if (!empty($go_to)) {
 		$go_to=urlencode($go_to);
 		//echo "gou: $go_to<br>";
-		ir_a($go_to);
+		echo $oPosicion->ir_a($go_to);
    }
 } else {
 	echo $error;

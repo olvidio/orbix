@@ -85,7 +85,7 @@ switch ($_POST['mod']) {
 			if (count($cActividadAsignaturas) > 0) {
 				$tipo = ($_POST['preceptor']=='t')? 'p' : '';
 				$oActividadAsignatura = new actividadestudios\ActividadAsignatura();
-				$oActividadAsignatura->setId_activ($id_aciv);
+				$oActividadAsignatura->setId_activ($id_activ);
 				$oActividadAsignatura->setId_asignatura($id_asignatura);
 				$oActividadAsignatura->setTipo($tipo);
 				$oActividadAsignatura->DBGuardar();
