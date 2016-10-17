@@ -38,7 +38,12 @@ if (!empty($_POST['bloque'])) {
 }
 //if (empty($tabla_dossier)) $tabla_dossier=$_POST['tabla_dossier'];
 $tabla_dossier = empty($_POST['tabla_dossier'])? '' : $_POST['tabla_dossier'];
-$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$_POST['pau'],'id_pau'=>$_POST['id_pau'],'obj_pau'=>$_POST['obj_pau'],'id_dossier'=>$_POST['id_dossier'],'permiso'=>$_POST['permiso'],'depende'=>$_POST['depende'])));
+
+if (empty($_POST['go_to'])) {
+	$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$_POST['pau'],'id_pau'=>$_POST['id_pau'],'obj_pau'=>$_POST['obj_pau'],'id_dossier'=>$_POST['id_dossier'],'permiso'=>$_POST['permiso'],'depende'=>$_POST['depende'])));
+} else {
+	$go_to = urldecode($_POST['go_to']);
+}
 
 ?>
 <script>

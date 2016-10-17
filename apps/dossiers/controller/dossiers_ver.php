@@ -122,7 +122,7 @@ switch ($pau) {
 
 //echo "qq: $q_nom<br>";
 
-$go_to="session@sel"; //voy a buscar la última lista de seleccionados
+$go_to= empty($go_to)? 'session@sel' : $go_to; //voy a buscar la última lista de seleccionados
 $alt=_("ver dossiers");
 $dos=_("dossiers");
 $txt="<span class=link onclick=fnjs_update_div('#main','$goficha')>$nom</span>";

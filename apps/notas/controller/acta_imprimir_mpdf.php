@@ -13,12 +13,6 @@ use personas\model as personas;
 *		
 */
 
-
-/*$acta = empty($_GET['acta'])? '' : urldecode($_GET['acta']);
-$_POST['acta'] = $acta;
-$_POST['h'] = empty($_GET['h'])? '' : $_GET['h'];
-*/
-
 /**
 * En el fichero config tenemos las variables genéricas del sistema
 */
@@ -59,23 +53,9 @@ $nombre_corto=$oAsignatura->getNombre_corto();
 $nombre_asig=$oAsignatura->getNombre_asig();
 $any=$oAsignatura->getYear();
 
-switch (substr($id_asignatura, 0, 1)) {
-	case 1:
-		$curso="PHILOSOPHIAE";
-		break;
-	case 2:
-		$curso="S. TEOLOGIAE";
-		break;
-	case 3:
-		$op=substr($id_asignatura, 1, 1);
-		if ($op=1) $curso="PHILOSOPHIAE";
-		if ($op=2) $curso="S. TEOLOGIAE";
-		if ($op=3) {
-			if (stristr ($observ, "philo"))  $curso="PHILOSOPHIAE";
-			if (stristr ($observ, "teolo"))  $curso="S. TEOLOGIAE";
-		}
-		break;
-}
+$id_tipo=$oAsignatura->getId_tipo();
+$oAsignaturaTipo = new asignaturas\AsignaturaTipo($id_tipo);
+$curso = $oAsignaturaTipo->getTipo_latin();
 
 switch ($any) {
 	case 1:
@@ -105,6 +85,7 @@ $aIdSuperadas = $GesNotas->getArrayNotasSuperadas();
 
 // para ordenar
 $aPersonasNotas = array(); 
+$oGesNomLatin = new personas\GestorNombreLatin();
 foreach($cPersonaNotas as $oPersonaNota) {
 	
 	$id_situacion=$oPersonaNota->getId_situacion();
@@ -113,18 +94,13 @@ foreach($cPersonaNotas as $oPersonaNota) {
 	$apellidos=$oPersona->getApellidos();
 	$trato=$oPersona->getTrato();
 	$nom_v=$oPersona->getNom();
-	
-	// para el caso de nombre compuesto hay que hacer un bucle:
-	$nom_v_i=strtok($nom_v,' ');
-	$nom_lat='';
-	do {
-		$oNomLatin = new personas\NombreLatin(array('nom'=>$nom_v_i));
-		$nom_lat .= $oNomLatin->getNominativo()." ";
-	} while ($nom_v_i=strtok(" ")) ;
+	$nom_lat = $oGesNomLatin->getVernaculaLatin($nom_v);
 
 	//Ni la función del postgresql ni la del php convierten los acentos.
+	$apellidos = trim($apellidos);
+	if (empty($apellidos)) { continue; }
 	$apellidos=core\strtoupper_dlb($apellidos);
-	$nom=trim($apellidos).", ".$trato.$nom_lat;
+	$nom = $apellidos.", ".$trato.$nom_lat;
 		
 	//$oNota = new notas\Nota($id_situacion);
 	//$nota=$oNota->getDescripcion();
@@ -137,11 +113,11 @@ $num_alumnos=count($aPersonasNotas);
 
 // tribunal:
 $GesTribunal = new notas\GestorActaTribunalDl();
-$cTribunal = $GesTribunal->getActasTribunalesDl(array('acta'=>$acta,'_ordre'=>'orden')); 
+$cTribunal = $GesTribunal->getActasTribunales(array('acta'=>$acta,'_ordre'=>'orden')); 
 $num_examinadores=count($cTribunal);
 
 // Definición del número de lineas de las páginas y los numeros de alumnos----------------
-$lin_A4=45;										// número máximo de lineas en un A4
+$lin_A4=42;										// número máximo de lineas en un A4
 $lin_encabezado=16;								// número de lineas del encabezado asignatura + pie
 $lin_encabezado_tribunal=4;						// número de lineas del encabezado tribunal
 $lin_tribunal=$lin_encabezado_tribunal+2*$num_examinadores;  // número de lineas del tribunal
@@ -179,7 +155,7 @@ $tribunal_html .= "<div class=\"sello\">L.S.<br>Studii Generalis</div>";
 	foreach ($aPersonasNotas as $nom => $nota) {
 		$i++;
 		if ($i > $alum_cara_A) { continue;}
-				?>
+		?>
 		<tr class=alumno>
 		<td class=alumno><?php echo $nom; ?>
 		</td>

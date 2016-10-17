@@ -223,7 +223,7 @@ class PersonaNota Extends core\ClasePropiedades {
 			array_unshift($aDades, $this->iid_schema, $this->iid_nom, $this->iid_nivel);
 			$campos="(id_schema,id_nom,id_nivel,id_asignatura,id_situacion,acta,f_acta,detalle,preceptor,id_preceptor,epoca,id_activ,nota_num,nota_max)";
 			$valores="(:id_schema,:id_nom,:id_nivel,:id_asignatura,:id_situacion,:acta,:f_acta,:detalle,:preceptor,:id_preceptor,:epoca,:id_activ,:nota_num,:nota_max)";		
-			echo "INSERT INTO $nom_tabla $campos VALUES $valores";
+			//echo "INSERT INTO $nom_tabla $campos VALUES $valores";
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'PersonaNota.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -300,8 +300,9 @@ class PersonaNota Extends core\ClasePropiedades {
 		if (array_key_exists('id_nivel',$aDades)) $this->setId_nivel($aDades['id_nivel']);
 		if (array_key_exists('id_asignatura',$aDades)) $this->setId_asignatura($aDades['id_asignatura']);
 		if (array_key_exists('id_situacion',$aDades)) $this->setId_situacion($aDades['id_situacion']);
-		if (array_key_exists('acta',$aDades)) $this->setActa($aDades['acta']);
+		// la fecha debe estar antes del acta por si hay que usar la funcion inventarActa.
 		if (array_key_exists('f_acta',$aDades)) $this->setF_acta($aDades['f_acta']);
+		if (array_key_exists('acta',$aDades)) $this->setActa($aDades['acta']);
 		if (array_key_exists('detalle',$aDades)) $this->setDetalle($aDades['detalle']);
 		if (array_key_exists('preceptor',$aDades)) $this->setPreceptor($aDades['preceptor']);
 		if (array_key_exists('id_preceptor',$aDades)) $this->setId_preceptor($aDades['id_preceptor']);
@@ -582,6 +583,8 @@ class PersonaNota Extends core\ClasePropiedades {
 	 * @param integer inota_num='' optional
 	 */
 	function setNota_num($inota_num='') {
+		// adminto ',' como separador decimal.
+		$inota_num = str_replace(",", ".", $inota_num);
 		$this->inota_num = $inota_num;
 	}
 	/**
@@ -621,11 +624,25 @@ class PersonaNota Extends core\ClasePropiedades {
 				break;
 			case '10': // Nota numérica
 				$num = $this->getNota_num();
-				$max = $this->getNota_max();
-				$nota_txt = $num.'/'.$max;
+				//$a = new \NumberFormatter("es_ES.UTF-8", \NumberFormatter::DECIMAL);
+				// SI dejo el locale en blanco coje el que se ha definido por defecto en el usuario.
+				$a = new \NumberFormatter("", \NumberFormatter::DECIMAL);
+				$num_local = $a->format($num);
+                $max = $this->getNota_max();
+                $nota_txt = $num_local.'/'.$max;
 				if ($max == 10) {
-					if ($num > 9.5) { $nota_txt .= ' ' ._("Summa cum laude"); 
-					} elseif ($num > 8.5) { $nota_txt .= ' ' ._("Magna cum laude"); 
+					if ($num > 9.5) {
+						$nota_txt = _("Summa cum laude") . ' (' .$nota_txt .')'; 
+					} elseif ($num > 8.5) {
+						$nota_txt = _("Magna cum laude") . ' (' .$nota_txt .')'; 
+					} elseif ($num > 7.5) {
+						$nota_txt = _("Cum laude") . ' (' .$nota_txt .')'; 
+					} elseif ($num > 6.5) {
+						$nota_txt = _("Bene probatus") . ' (' .$nota_txt .')'; 
+					} elseif ($num >= 6) {
+						$nota_txt = _("Probatus") . ' (' .$nota_txt .')'; 
+					} else {
+						$nota_txt = _("Non probatus") . ' (' .$nota_txt .')'; 
 					}
 				}
 				break;
@@ -694,6 +711,11 @@ class PersonaNota Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'acta'));
 		$oDatosCampo->setEtiqueta(_("acta"));
+		// Las actcas de otras r sólo tienen la sigla de la r
+		$oDatosCampo->setRegExp("/^(\?|\w{2,6}\??)(\s+([0-9]{0,3})\/([0-9]{2})\??)?$/");
+		$txt = "No tienen el formato: 'dlxx nn/aa'. Debe tener sólo un espacio.";
+		$txt .= "\nSi sólo se sabe la region/dl poner la sigla.\nSi no se sabe nada poner ?.\n";
+		$oDatosCampo->setRegExpText(_($txt));
 		return $oDatosCampo;
 	}
 	/**

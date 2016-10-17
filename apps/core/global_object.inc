@@ -13,19 +13,26 @@ $_SESSION['oGestorErrores'] = new gestorErrores();
 //Definir Conexiones
 // public para todo el mundo
 $oDBPC = new \PDO(ConfigGlobal::$str_conexio_public);
-$oDBPC ->exec('SET search_path TO public');
+$oDBPC->exec('SET search_path TO public');
+$oDBPC->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
+
 $oDBRC = new \PDO(ConfigGlobal::$str_conexio_resto);
-$oDBRC ->exec('SET search_path TO resto');
+$oDBRC->exec('SET search_path TO resto');
+$oDBRC->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
 //comun
 $oDBC = new \PDO(ConfigGlobal::get_conexio_comu());
+$oDBC->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
 $user_sfsv =$_SESSION['session_auth']['sfsv']; 
 switch ($user_sfsv) {
 	case 1: //sv
 		$oDB = new \PDO(ConfigGlobal::get_conexio_sv());
+		$oDB->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
 		$oDBP = new \PDO(ConfigGlobal::$str_conexio_publicv);
 		$oDBP->exec('SET search_path TO publicv');
+		$oDBP->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
 		$oDBR = new \PDO(ConfigGlobal::$str_conexio_restov);
 		$oDBR->exec('SET search_path TO restov');
+		$oDBR->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
 		//sf
 		$oDBE = new \PDO(ConfigGlobal::get_conexio_sf());
 		$oDBEP = new \PDO(ConfigGlobal::$str_conexio_publicf);
@@ -33,10 +40,13 @@ switch ($user_sfsv) {
 		break;
 	case 2: //sf
 		$oDB = new \PDO(ConfigGlobal::get_conexio_sf());
+		$oDB->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
 		$oDBP = new \PDO(ConfigGlobal::$str_conexio_publicf);
 		$oDBP->exec('SET search_path TO publicf');
+		$oDBP->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
 		$oDBR = new \PDO(ConfigGlobal::$str_conexio_restof);
 		$oDBR->exec('SET search_path TO restof');
+		$oDBR->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
 		//sv
 		$oDBE = new \PDO(ConfigGlobal::get_conexio_sv());
 		break;
@@ -105,6 +115,7 @@ if (isset($aPOST['h'])) {
 			unset($aPOST[$campo]);
 		}
 	}
+	$hchk = empty($aPOST['hchk'])? '' : $aPOST['hchk']; 
 	//En el caso de comprobar_campos.php añado tres que hay que borrar
 	if ($_SERVER["REQUEST_URI"] == '/orbix/apps/core/comprobar_campos.php') {
 			unset($aPOST['cc_tabla']);
@@ -113,8 +124,12 @@ if (isset($aPOST['h'])) {
 	}
 	if (ConfigGlobal::is_debug_mode()) {
 		// Url original de la que se ha ehecho el hash. Para comparar con la actual.
-		$horig = empty($aPOST['horig'])? '' : urldecode($aPOST['horig']);
-		$hhorig = empty($aPOST['hhorig'])? '' : urldecode($aPOST['hhorig']);
+		$horig = empty($aPOST['horig'])? '' : $aPOST['horig'];
+		$hhorig = empty($aPOST['hhorig'])? '' : $aPOST['hhorig'];
+		/*
+		$horig = empty($aPOST['horig'])? '' : rawurldecode($aPOST['horig']);
+		$hhorig = empty($aPOST['hhorig'])? '' : rawurldecode($aPOST['hhorig']);
+		*/
 	}
 	// Si es un form, paso la lista de campos posibles.
 	if (isset($aPOST['hh'])) {
@@ -127,19 +142,23 @@ if (isset($aPOST['h'])) {
 		unset($aPOST['hhc']);
 		unset($aPOST['hhorig']);
 		unset($aPOST['hno']);
+		unset($aPOST['hchk']);
 		unset($aPOST['hnov']);
 
 		// Que los campos hidden sean los mismos y con los mismos valores.
-
 		//lista de campos hidden
 		$a_campos = explode('!',$hhc);
-		$aCmpos = array();
+		$aCampos = array();
 		foreach($a_campos as $campo) {
 			if (empty($campo)) continue;
-			//$sQuery .= empty($sQuery)? $campo.'=' : '&'.$campo.'=';
-			$aCampos[$campo] = !empty($aPOST[$campo])? $aPOST[$campo] : '';
+			// no puedo usar empty por los valores '0'
+			if(isset($aPOST[$campo])) {
+				//$aCampos[$campo] = rawurldecode($aPOST[$campo]);
+				$aCampos[$campo] = $aPOST[$campo];
+			} else {
+				$aCampos[$campo] = '';
+			}
 		}
-
 		$h2 = web\Hash::camposArray($aCampos)['hash'];
 		$sUrl = web\Hash::camposArray($aCampos)['orig'];
 
@@ -150,9 +169,16 @@ if (isset($aPOST['h'])) {
 				$horig = $hhorig;
 			}
 		} else {
+			// Que los campos checkbox sean los mismos sin tener en cuenta los mismos valores.
+			//lista de campos chck
+			$a_campos = explode('!',$hchk);
+			foreach($a_campos as $campo) {
+				if (empty($campo)) continue;
+				$aPOST[$campo] = '';
+			}
+
 			$rta = web\Hash::camposArray($aPOST,'sin_valor');
 			$h2 = $rta['hash'];
-			//$sUrl = urldecode($rta['orig']);
 			$sUrl = $rta['orig'];
 			if ($h1 !== $h2) {
 				$salta = 1;
@@ -172,6 +198,7 @@ if (isset($aPOST['h'])) {
 		unset($aPOST['hhc']);
 		unset($aPOST['hhorig']);
 		unset($aPOST['hno']);
+		unset($aPOST['hchk']);
 		unset($aPOST['hnov']);
 		ksort($aPOST);
 		if ($hnov == 1) { // borro posibles los valores de los campos
@@ -179,10 +206,16 @@ if (isset($aPOST['h'])) {
 				$aPOST[$camp] = '';
 			}
 		}
-		if (empty($aPOST)) {
-			$sUrl = '//'.$_SERVER["SERVER_NAME"].$_SERVER["SCRIPT_NAME"];
+		if (empty($_SERVER["SERVER_PORT"])) {
+			$port = '';
 		} else {
-			$sUrl = '//'.$_SERVER["SERVER_NAME"].$_SERVER["SCRIPT_NAME"].'?'.http_build_query($aPOST);
+			$port = ':'.$_SERVER["SERVER_PORT"];
+		}
+
+		if (empty($aPOST)) {
+			$sUrl = '//'.$_SERVER["SERVER_NAME"].$port.$_SERVER["SCRIPT_NAME"];
+		} else {
+			$sUrl = '//'.$_SERVER["SERVER_NAME"].$port.$_SERVER["SCRIPT_NAME"].'?'.http_build_query($aPOST);
 		}
 
 		//echo "ccc: $sUrl<br>";

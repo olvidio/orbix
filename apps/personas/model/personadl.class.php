@@ -45,7 +45,8 @@ class PersonaDl Extends PersonaGlobal {
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
 				if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; // evitem SQL injection fent cast a integer
-			}	} else {
+			}	
+		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_nom = intval($a_id); // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('iid_nom' => $this->iid_nom);
@@ -131,9 +132,16 @@ class PersonaDl Extends PersonaGlobal {
 			}
 		} else {
 			// INSERT
-			array_unshift($aDades, $this->iid_nom);
-			$campos="(id_nom,id_cr,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,lengua,situacion,f_situacion,apel_fam,inc,f_inc,stgr,profesion,eap,observ,id_ctr)";
-			$valores="(:id_nom,:id_cr,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:lengua,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:stgr,:profesion,:eap,:observ,:id_ctr)";		
+				$campos="id_cr,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,lengua,situacion,f_situacion,apel_fam,inc,f_inc,stgr,profesion,eap,observ,id_ctr";
+			$valores=":id_cr,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:lengua,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:stgr,:profesion,:eap,:observ,:id_ctr";
+			if (empty($this->iid_nom)) {
+				$campos="($campos)";
+				$valores="($valores)";
+			} else {
+				array_unshift($aDades, $this->iid_nom);
+				$campos="(id_nom,$campos)";
+				$valores="(:id_nom,$valores)";
+			}
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'PersonaDl.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -252,6 +260,30 @@ class PersonaDl Extends PersonaGlobal {
 		$this->iid_ctr = $iid_ctr;
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
+
+	/**
+	* Para clacular la edad a partir de la fecha de nacimiento
+	*
+	*
+	*@author    Daniel Serrabou
+	*@since     25/11/2010.
+	*       
+	*/
+	function getEdad() {
+		$f_nacimiento = $this->getF_nacimiento();
+		if (!empty($f_nacimiento)) {
+			list($d,$m,$a) = preg_split('/[\.\/-]/', $f_nacimiento );   //separo la fecha en dia, mes, año
+			$ah=date("Y");
+			$mh=date("m");
+			$inc_m=0 ;
+			$mh >= $m ? 0 : $inc_m=1 ;
+			$edad=$ah - $a - $inc_m;
+		} else {
+			$edad ="-";
+		}
+		return $edad;
+	}
+
 
 	/**
 	 * Retorna una col·lecció d'objectes del tipus DatosCampo

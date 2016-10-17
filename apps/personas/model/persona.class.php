@@ -34,12 +34,18 @@ class Persona {
 	/* METODES PUBLICS ----------------------------------------------------------*/
 	
 	public static function NewPersona($id_nom) { 
-		$gesPersonaDl = new GestorPersonaDl;
+		$gesPersonaDl = new GestorPersonaDl();
 		$cPersonasDl = $gesPersonaDl->getPersonasDl(array('id_nom'=>$id_nom));
 		if (count($cPersonasDl) > 0) {
 			$oPersona = $cPersonasDl[0];
 		} else {
-			$oPersona = new PersonaIn($id_nom);
+			$gesPersonaEx = new GestorPersonaEx();
+			$cPersonasEx = $gesPersonaEx->getPersonasEx(array('id_nom'=>$id_nom));
+			if (count($cPersonasEx) > 0) {
+				$oPersona = $cPersonasEx[0];
+			} else {
+				$oPersona = new PersonaIn($id_nom);
+			}
 		}
 		return $oPersona;
 	}

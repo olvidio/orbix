@@ -18,11 +18,13 @@ use ubis\model as ubis;
 
 switch ($_POST['salida']) {
 	case "tarifa":
+		/*
 		if (!empty($_POST['entrada'])) {
 			$id_tipo_activ=$_POST['entrada'];
 			$oTipoActivTarifa = new TipoActivTarifa(array('id_tipo_activ'=>$id_tipo_activ));
 			echo $oTipoActivTarifa->getTarifa();
 		}
+		*/
 	break;
 	case "asistentes":
 		$aux=$_POST['entrada'].'.....';

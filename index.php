@@ -94,16 +94,18 @@ if (isset($primera)) {
 			break;
 		case "avisos":
 			$id_grupmenu=$mi_id_grupmenu;
-			$pag_ini=ConfigGlobal::$directorio."/sistema/avisos_generar.php";
+			//$pag_ini=ConfigGlobal::$directorio."/sistema/avisos_generar.php";
+			$pag_ini='';
 			break;
 		case "aniversarios":
 			$id_grupmenu=$mi_id_grupmenu;
-			//$pag_ini=ConfigGlobal::$directorio."/programas/aniversarios.php";
-			$pag_ini=ConfigGlobal::$directorio."/public/aniversarios.php";
+			//$pag_ini=ConfigGlobal::$directorio."/public/aniversarios.php";
+			$pag_ini='';
 			break;
 		case "exterior":
 			$oficina=$mi_oficina_menu;
-			$pag_ini=ConfigGlobal::$directorio.'/public/exterior_home.php';
+			//$pag_ini=ConfigGlobal::$directorio.'/public/exterior_home.php';
+			$pag_ini='';
 			break;
 		default:
 			$id_grupmenu=$mi_id_grupmenu;
@@ -272,11 +274,17 @@ switch ($tipo_menu) {
 img.calendar:hover { cursor: pointer; }
 </style>
 <!-- jQuery -->
-<script type="text/javascript" src='<?php echo ConfigGlobal::$web_scripts.'/jquery-ui-latest/js/jquery-1.7.1.min.js'; ?>'></script>
-<script type="text/javascript" src='<?php echo ConfigGlobal::$web_scripts.'/jquery-ui-latest/js/jquery-ui-1.8.17.custom.min.js'; ?>'></script>
-<script type="text/javascript" src='<?php echo ConfigGlobal::$web_scripts.'/jquery-ui-latest/development-bundle/ui/i18n/jquery.ui.datepicker-es.js'; ?>'></script>
-<script type="text/javascript" src='<?php echo ConfigGlobal::$web_scripts.'/jquery-ui-latest/development-bundle/ui/i18n/jquery.ui.datepicker-ca.js'; ?>'></script>
-<link type="text/css" rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/jquery-ui-latest/css/smoothness/jquery-ui-1.8.17.custom.css'; ?>' />
+<!-- <link type="text/css" rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/jquery/ui/1.12/themes/cupertino/jquery-ui.css'; ?>' /> -->
+<!-- <link type="text/css" rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/jquery/ui/jquery-ui.custom.css'; ?>' /> -->
+<link type="text/css" rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/jquery/ui/1.12/jquery-ui.structure.min.css'; ?>' />
+<link type="text/css" rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/jquery/ui/1.12/themes/smoothness/theme.css'; ?>' />
+<script type="text/javascript" src='<?php echo ConfigGlobal::$web_scripts.'/jquery/jquery-1.12.3.min.js'; ?>'></script>
+<script type="text/javascript" src='<?php echo ConfigGlobal::$web_scripts.'/jquery/ui/1.12/jquery-ui.min.js'; ?>'></script>
+<script type="text/javascript" src='<?php echo ConfigGlobal::$web_scripts.'/jquery/ui/i18n/jquery.ui.datepicker-es.js'; ?>'></script>
+<script type="text/javascript" src='<?php echo ConfigGlobal::$web_scripts.'/jquery/ui/i18n/jquery.ui.datepicker-ca.js'; ?>'></script>
+
+<!-- jQuery TokenInput -->
+<script type="text/javascript" src='<?php echo ConfigGlobal::$web_scripts.'/jquery-tokeninput/src/jquery.tokeninput.js'; ?>'></script>
 <!-- history.js -->
 <script type="text/javascript" src='<?php echo ConfigGlobal::$web_scripts.'/history.js/scripts/bundled/html4+html5/jquery.history.js'; ?>'></script>
 
@@ -287,7 +295,7 @@ img.calendar:hover { cursor: pointer; }
 <!-- <link type='text/css' rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/examples/examples.css'; ?>' /> -->
 
 <script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/lib/firebugx.js'; ?>'></script>
-<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/lib/jquery.event.drag-2.0.min.js'; ?>'></script>
+<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/lib/jquery.event.drag-2.2.js'; ?>'></script>
 <script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/slick.core.js'; ?>'></script>
 <script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.autotooltips.js'; ?>'></script>
 <script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.rowselectionmodel.js'; ?>'></script>
@@ -544,12 +552,12 @@ function fnjs_update_div(bloque,ref) {
 	}
 	//var web_ref=ref.gsub(/\/var\//,'http://');  // cambio el directorio físico (/var/www) por el url (http://www)
 	$(bloque).attr('refe',path);
-		$.ajax({
-				url: path,
-				type: 'post',
-				data: parametros,
-				complete: function (resposta) { fnjs_mostra_resposta (resposta,bloque); }
-				});
+	$.ajax({
+			url: path,
+			type: 'post',
+			data: parametros,
+			complete: function (resposta) { fnjs_mostra_resposta (resposta,bloque); }
+			});
 	return false;
 }
 
@@ -575,7 +583,7 @@ function fnjs_ref_absoluta(base,path) {
 				url=path;
 				return url;
 		} else { // pruebo si ha subido un nivel, si ha subido más (../../../) no hay manera. El apache sube hasta nivel de servidor, no más.
-			ini=protocol+'<?= ConfigGlobal::$web_server ?>';
+			ini=protocol+'<?= ConfigGlobal::getWeb() ?>';
 			if (path.indexOf(ini) != -1) {
 				path=path.replace(ini,'');
 			} else {
@@ -611,7 +619,7 @@ function fnjs_ref_absoluta(base,path) {
 	a=4;
 			} else { if ( base.match(/^<?= addcslashes(ConfigGlobal::$dir_web,"/") ?>/) ){
 				base=base.replace('<?= ConfigGlobal::$dir_web ?>','');
-				inicio=protocol+'<?= ConfigGlobal::$web_server ?>';
+				inicio=protocol+'<?= ConfigGlobal::getWeb() ?>';
 	a=5;
 				}
 			}
@@ -676,7 +684,7 @@ function fnjs_mostra_resposta(resposta,bloque) {
 			var myText=resposta.responseText;
 			break;
 		case 'string':
-			var myText=resposta;
+			var myText=resposta.trim();
 			break;
 	}
 	//$(bloque).load(myText);
@@ -811,7 +819,7 @@ if ($gm > 1) {
 					<li><a class="nohref" onclick=fnjs_exportar('odft') title="Open Document Format texte">ODF text</a></li>
 			<li><a class="nohref" title="Help">Ajuda</a>
 				<ul>
-					<li><a class="nohref" onclick=window.open('<?= ConfigGlobal::$web_server ?>/mediawiki') >ajuda (wiki)</a></li>
+					<li><a class="nohref" onclick=window.open('<?= ConfigGlobal::getWeb() ?>/mediawiki') >ajuda (wiki)</a></li>
 				</ul>
 			</li>
 			-->
@@ -830,7 +838,7 @@ if ($gm > 1) {
 </div>
 <div id="cargando" ><?= _('Cargando...') ?></div>
 <div id="left_slide" class="left-slide">
-<span class=handle onClick="fnjs_ir_a();">cccc</span>
+<span class=handle onClick="fnjs_ir_a();"></span>
 </div>
 <div id="main" refe="<?= $pag_ini ?>">
 <?php
@@ -851,7 +859,7 @@ $(function() {
 })
 /* Hay que ponerlo aqui, para asegurar que haya terminado de cargar todos los scripts. */
 $(document).ready(function(){
-	$.datepicker.setDefaults( $.datepicker.regional[ "es" ] ); // Para que quee por defecto.
+	$.datepicker.setDefaults( $.datepicker.regional[ "es" ] ); // Para que quede por defecto.
 	$.datepicker.setDefaults( $.datepicker.regional[ "<?= ConfigGlobal::mi_Idioma_short(); ?>" ] );
 });
 </script>

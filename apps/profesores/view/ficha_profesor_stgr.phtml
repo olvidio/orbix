@@ -1,0 +1,171 @@
+<?php 
+use asignaturas\model as asignaturas;
+// INICIO Cabecera global de URL de controlador *********************************
+	require_once ("apps/core/global_header.inc");
+// Arxivos requeridos por esta url **********************************************
+
+// Crea los objectos de uso global **********************************************
+	require_once ("apps/core/global_object.inc");
+// FIN de  Cabecera global de URL de controlador ********************************
+
+include_once (core\ConfigGlobal::$dir_estilos.'/colores.php'); 
+?>
+<html>
+<head>
+<style>
+	h1 { text-transform : uppercase; }
+	table { width: 680; 
+		}
+	th {
+		text-align: left;
+	}
+	td.cabecera { text-align: left;
+	    font-weight : bold;
+	 }
+	table.lst, table.lst td{
+		border:1px solid #000;
+		border-collapse:collapse;
+		margin:0;
+		padding:6px;
+	}
+	table.lst td.cabecera { text-align: center;
+	    font-weight : bold;
+		text-transform : capitalize;
+		color : <?php echo $fondo_claro; ?>;
+		background : <?php echo $fondo_oscuro; ?>;
+	 }
+	td.derecha { text-align: right; }
+	 p { margin-left: 0;
+	    font-weight : bold;
+		}
+</style>
+</head>
+<body>
+
+<table><tr><td><h1>profesor de stgr</h1></td>
+	<td class=derecha><span onclick="fnjs_update_div('#main','<?= $go_cosas['print'] ?>')" class=link>[imprimir]</span></td></tr>
+<table>
+<table><col width="15%"><col width="60%"><col width="10%"><col width="15%">
+<tr><td>Nombre:</td><td><?= $nom_ap ?></td><td class=derecha>ctr: </td><td><?= $nombre_ubi ?></td></tr>
+<tr><td></td><td></td><td class=derecha>dl: </td><td><?= core\ConfigGlobal::mi_dele() ?></td></tr>
+<tr><td>Departamento:</td><td><?= $dep ?></td><td class=derecha>n: </td><td><?= $num_txt ?></td></tr>
+<tr><td></td><td></td><td class=derecha>agd: </td><td><?= $agd_txt ?></td></tr>
+<tr><td></td><td></td><td class=derecha>sacd: </td><td><?= $sacd_txt ?></td></tr>
+</table>
+<br>
+<table><tr><td><h3>Curriculum</h3></td>
+	<td class=derecha><span onclick="fnjs_update_div('#main','<?= $go_cosas['curriculum'] ?>')" class=link>[modificar]</span></td></tr>
+</table>
+<table class=lst>
+<tr><td class=cabecera>titulo</td><td class=cabecera>centro docente</td><td class=cabecera>año</td><td class=cabecera>eclesiástico</td></tr>
+<?php
+if (is_array($a_curriculum)) {
+foreach ($a_curriculum as $n => $row) {
+	if ($row['eclesiastico']=="t") { $eclesiastico_txt=_("si"); } else { $eclesiastico_txt=_("no"); }
+	echo "<tr><td>${row['titulo']}</td><td>${row['centro_dnt']}</td><td>${row['year']}</td><td>$eclesiastico_txt</td></tr>";
+}
+}
+?>
+</table>
+<br>
+<table><tr><td><h3>Nombramientos</h3></td>
+	<td class=derecha><span onclick="fnjs_update_div('#main','<?= $go_cosas['nombramientos'] ?>')" class=link>[modificar]</span></td></tr>
+</table>
+<table class=lst>
+<tr><td class=cabecera>departamento</td><td class=cabecera>categoría</td><td class=cabecera>fecha</td><td class=cabecera>aviso</td><td class=cabecera>fecha cese</td><td class=cabecera>aviso cese</td></tr>
+<?php
+if (is_array($a_nombramientos )) {
+foreach ($a_nombramientos as $n => $row) {
+	echo "<tr><td>${row['departamento']}</td><td>${row['tipo_profesor']}</td><td>${row['f_nombramiento']}</td><td>${row['escrito_nombramiento']}</td><td>${row['f_cese']}</td><td>${row['escrito_cese']}</td></tr>";
+}
+}
+?>
+</table>
+<br>
+<table><tr><td><h3>Director de departamento</h3></td>
+	<td class=derecha><span onclick="fnjs_update_div('#main','<?= $go_cosas['director'] ?>')" class=link>[modificar]</span></td></tr>
+</table>
+<table class=lst>
+<tr><td class=cabecera>departamento</td></td><td class=cabecera>fecha</td><td class=cabecera>aviso</td><td class=cabecera>fecha cese</td><td class=cabecera>aviso cese</td></tr>
+<?php
+if (is_array($a_director )) {
+foreach ($a_director as $n => $row) {
+	echo "<tr><td>${row['departamento']}</td></td><td>${row['f_nombramiento']}</td><td>${row['escrito_nombramiento']}</td><td>${row['f_cese']}</td><td>${row['escrito_cese']}</td></tr>";
+}
+}
+?>
+</table>
+<br>
+<table><tr><td><h3>Ampliación de docencia</h3></td>
+	<td class=derecha><span onclick="fnjs_update_div('#main','<?= $go_cosas['ampliacion'] ?>')" class=link>[modificar]</span></td></tr>
+<table>
+<table class=lst>
+<tr><td class=cabecera>asignaturas</td><td class=cabecera>aviso</td><td class=cabecera>fecha</td><td class=cabecera>fecha cese</td><td class=cabecera>aviso cese</td></tr>
+<?php
+if (is_array($a_ampliacion )) {
+foreach ($a_ampliacion as $n => $row) {
+	echo "<tr><td>${row['nombre_corto']}</td><td>${row['escrito_nombramiento']}</td><td>${row['f_nombramiento']}</td><td>${row['f_cese']}</td><td>${row['escrito_cese']}</td></tr>";
+}
+}
+?>
+</table>
+<br>
+<table><tr><td><h3>Profesor de latín:</h3></td>
+	<td><?= $latin_txt ?></td>
+	<td class=derecha><span onclick="fnjs_update_div('#main','<?= $go_cosas['latin'] ?>')" class=link>[modificar]</span></td></tr>
+</table>
+<br>
+<table><tr><td><h3>Fecha profesión de fe:</h3></td>
+	<td><?= $f_juramento ?></td>
+	<td class=derecha><span onclick="fnjs_update_div('#main','<?= $go_cosas['juramento'] ?>')" class=link>[modificar]</span></td></tr>
+</table>
+<br>
+<table><tr><td><h3>Convivencias y congresos</h3></td>
+	<td class=derecha><span onclick="fnjs_update_div('#main','<?= $go_cosas['congresos'] ?>')" class=link>[modificar]</span></td></tr>
+</table>
+<table class=lst>
+<tr><td class=cabecera>tipo</td><td class=cabecera>tema</td><td class=cabecera>lugar</td><td class=cabecera>inicio</td><td class=cabecera>fin</td><td class=cabecera>organiza</td></tr>
+<?php
+foreach($cProfesorCongresos as $oProfesorCongreso) {
+	$row = $oProfesorCongreso->getTot();
+	$array_tipo_c = $oProfesorCongreso->getDatosTipo()->getArgument();
+	$tipo_congreso=$array_tipo_c[$row['tipo']];
+	echo "<tr><td>$tipo_congreso</td><td>${row['congreso']}</td><td>${row['lugar']}</td><td>${row['f_ini']}</td><td>${row['f_fin']}</td><td>${row['organiza']}</td></tr>";
+}
+?>
+</table>
+<br>
+<table><tr><td><h3>Publicaciones</h3></td>
+	<td class=derecha><span onclick="fnjs_update_div('#main','<?= $go_cosas['publicaciones'] ?>')" class=link>[modificar]</span></td></tr>
+<table>
+<table class=lst>
+<tr><td class=cabecera>tipo</td><td class=cabecera>titulo</td><td class=cabecera>editorial</td><td class=cabecera>revista o colección</td><td class=cabecera>fecha publicación</td><td class=cabecera>pendiente</td><td class=cabecera>referencia</td><td class=cabecera>lugar</td><td class=cabecera>observaciones</td></tr>
+<?php
+if (is_array($a_publicaciones )) {
+foreach ($a_publicaciones as $n => $row) {
+	if ($row['pendiente']=="t") { $pendiente_txt=_("si"); } else { $pendiente_txt=_("no"); }
+	echo "<tr><td>${row['tipo_publicacion']}</td><td>${row['titulo']}</td><td>${row['editorial']}</td><td>${row['coleccion']}</td><td>${row['f_publicacion']}</td><td>$pendiente_txt</td><td>${row['referencia']}</td><td>${row['lugar']}</td><td>${row['observ']}</td></tr>";
+}
+}
+?>
+</table>
+<br>
+<table><tr><td><h3>Actividad docente</h3></td>
+	<td class=derecha><span onclick="fnjs_update_div('#main','<?= $go_cosas['docencia'] ?>')" class=link>[modificar]</span></td></tr>
+<table>
+<table class=lst>
+<tr><td class=cabecera>curso</td><td class=cabecera>asignatura</td><td class=cabecera>modo</td><td class=cabecera>acta</td></tr>
+<?php
+foreach($cDocencias as $oDocencia) {
+	$row = $oDocencia->getTot();
+	$id_asignatura = $row['id_asignatura'];
+	$array_tipo = $oDocencia->getDatosTipo()->getArgument();
+	$oAsignatura = new asignaturas\Asignatura($id_asignatura);
+	$nombre_corto = $oAsignatura->getNombre_corto();
+	$modo=$array_tipo[$row['tipo']];
+	echo "<tr><td>${row['curso']}</td><td>$nombre_corto</td><td>$modo</td><td>${row['acta']}</td></tr>";
+}
+?>
+</table>
+</body>
+</html>

@@ -13,14 +13,14 @@ use core;
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // Crea los objectos por esta url  **********************************************
-
+/*
 $session_config=array (
 	'region'=>'H',
 	'dele'=>'dlb',
 	'gestionActividades'=>2 // 1 => centralizada, 2 => por oficinas.
 	 );
 $_SESSION['config']=$session_config;
-
+*/
 // FIN de  Cabecera global de URL de controlador ********************************
 
 function posibles_esquemas($default='') {
@@ -91,60 +91,9 @@ if ( !isset($_SESSION['session_auth'])) {
 	if (isset($_POST['username']) && isset($_POST['password'])) {
 		switch(core\ConfigGlobal::$auth_method) {
 			case "ldap":
-				$ds=ldap_connect(core\ConfigGlobal::$auth_ldap_server);
-				ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
-				$r=ldap_bind($ds); // Autentificacion anonima, tipicamente con
-								   // acceso de lectura
-				$sr=ldap_search($ds,'ou=Users,dc=dlb,dc=es','uid='.$_POST['username']."'");
-				$info = ldap_get_entries($ds, $sr);
-				for ($i=0; $i<$info['count']; $i++) {
-					$dn=$info[$i]['dn'];
-					//echo "dn es: ". $dn ."<br>";
-					//echo "La primera entrada mail es: ". $info[$i]["mail"][0] ."<br>";
-				
-					$rta=@ldap_bind ( $ds , $dn , $_POST['password']);
-					//si existe, registro la sesion con los permisos
-					if ($rta) {	
-						if ( !isset($_SESSION['session_auth'])) { 
-							$session_auth=array (
-								'username'=>$_POST['username'],
-								'password'=>$_POST['password'],
-								'mi_oficina'=>$mi_oficina,
-								'expire'=>$expire
-								 );
-							$_SESSION['session_auth']=$session_auth;
-						}
-					} else { // si no existe, vuelvo a pedir el passwrod
-						$variables = array('error'=>1);
-						$oView = new core\View(__NAMESPACE__);
-						echo $oView->render('login_form.phtml',$variables);
-						exit;
-					}				
-				}
-				ldap_close($ds);
+				break;
 			case "database":
 				$mail='';
-				if (core\ConfigGlobal::$ubicacion=='int' && core\ConfigGlobal::$portatil=='no') {
-					/* Para gestionar el correo, en dlb, el servidor de correo se autentifica con el servidor LDAP.
-					   Para esto el usuario y el password deben ser iguales...
-					   Cojo el valor mail del LDAP y no de la base de datos.
-					   */
-					/*
-					$ds=ldap_connect(ConfigGlobal::$auth_ldap_server);
-					ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
-					$r=ldap_bind($ds); // Autentificacion anonima, tipicamente con
-									   // acceso de lectura
-					$sr=ldap_search($ds,"ou=Users,dc=dlb,dc=es", "uid=${_POST['username']}");
-					$info = ldap_get_entries($ds, $sr);
-					for ($i=0; $i<$info["count"]; $i++) {
-						$dn= empty($info[$i]["dn"])? '' : $info[$i]["dn"];
-						$a_mail= empty($info[$i]["mail"])? '' : $info[$i]["mail"];
-					}
-					$mail= $a_mail[0]; // cojo el principal??
-					*/
-				}
-
-				/* ---------- fin del mail ----------- */
 
 				$aWhere = array('usuario'=>$_POST['username']);
 				$esquema = $_POST['esquema'];
@@ -157,9 +106,6 @@ if ( !isset($_SESSION['session_auth'])) {
 					$sfsv = 2;
 				}
 				$query="SELECT * FROM aux_usuarios WHERE usuario = :usuario";
-				//$query="SELECT * FROM aux_usuarios LEFT JOIN public.aux_roles USING (id_role) WHERE usuario = :usuario";
-				//$query="SELECT * FROM \"H-dlb\".aux_usuarios LEFT JOIN \"H-dlb\".aux_roles USING (id_role) WHERE usuario = :usuario";
-
 				if (($oDBSt= $oDB->prepare($query)) === false) {
 					$sClauError = 'login_obj.prepare';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, __LINE__, __FILE__);
@@ -179,8 +125,6 @@ if ( !isset($_SESSION['session_auth'])) {
 					if ($oCrypt->encode($_POST['password'],$sPasswd) == $sPasswd) {
 						$id_usuario = $row['id_usuario'];
 						$id_role = $row['id_role'];
-						//$sfsv = $row['sfsv']; // lo he eliminado del usuario. depende de la base de datos a la que conecto.
-						/* Encare no tinc el oDB i no puc fer servir objectes */
 						$oDBP = new \PDO(core\ConfigGlobal:: $str_conexio_public);
 						$queryr="SELECT * FROM aux_roles WHERE id_role = $id_role";
 						if (($oDBPSt= $oDBP->query($queryr)) === false) {
@@ -207,6 +151,33 @@ if ( !isset($_SESSION['session_auth'])) {
 						if ($_POST['password'] == '1ªVegada') {
 							$expire=1;
 						}
+						
+						// APLICACIONES POSIBLES
+						$sQuery = "SELECT * FROM m0_apps";
+						$a_apps=array();
+						foreach ($oDBP->query($sQuery) as $aDades) {
+							$nom=$aDades['nom'];
+							$a_apps[$nom]=$aDades['id_app'];
+						}
+
+						// APLICACIONES INSTALADAS
+						$sQuery = "SELECT * FROM m0_modulos";
+						$a_mods_req=array();
+						$a_apps_req=array();
+						foreach ($oDBP->query($sQuery) as $aDades) {
+							$id_mod=$aDades['id_mod'];
+							$a_mods_req[$id_mod]=$aDades['mods_req'];
+							$a_apps_req[$id_mod]=$aDades['apps_req'];
+						}
+
+
+						$sQuery = "SELECT * FROM m0_mods_installed_dl WHERE status = 't'";
+						$a_mods_installed=array();
+						foreach ($oDB->query($sQuery) as $aDades) {
+							$id_mod=$aDades['id_mod'];
+							$a_mods_installed[$id_mod]=$aDades['param'];
+						}
+
 						// Idioma
 						$idioma='';
 						$query_idioma = sprintf( "select * from web_preferencias where id_usuario = '%s' and tipo = '%s' ",$id_usuario,"idioma");
@@ -245,7 +216,11 @@ if ( !isset($_SESSION['session_auth'])) {
 								'mi_oficina_menu'=>$mi_oficina_menu,
 								'expire'=>$expire,
 								'mail'=>$mail,
-								'idioma'=>$idioma
+								'idioma'=>$idioma,
+								'a_mods_installed'=>$a_mods_installed,
+								'a_mods_req'=>$a_mods_req,
+								'a_apps_req'=>$a_apps_req,
+								'a_apps'=>$a_apps
 								 );
 							$_SESSION['config']=$session_config;
 						}

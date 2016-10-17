@@ -70,14 +70,26 @@ if (!empty($id_nom)) { //caso de modificar
 		$na_val = 'p'.strtok('=');
 		switch ($obj_pau) {
 			case 'PersonaN':
-			case 'PersonaNax':
-			case 'PersonaAgd':
-			case 'PersonaS':
-			case 'PersonaSSSC':
 				$oPersonas=new personas\GestorPersonaN();
 				$oDesplegablePersonas = $oPersonas->getListaPersonas();
 				$oDesplegablePersonas->setNombre('id_nom');
 				break;
+			case 'PersonaNax':
+				$oPersonas=new personas\GestorPersonaNax();
+				$oDesplegablePersonas = $oPersonas->getListaPersonas();
+				$oDesplegablePersonas->setNombre('id_nom');
+				break;
+			case 'PersonaAgd':
+				$oPersonas=new personas\GestorPersonaAgd();
+				$oDesplegablePersonas = $oPersonas->getListaPersonas();
+				$oDesplegablePersonas->setNombre('id_nom');
+				break;
+			case 'PersonaS':
+				$oPersonas=new personas\GestorPersonaS();
+				$oDesplegablePersonas = $oPersonas->getListaPersonas();
+				$oDesplegablePersonas->setNombre('id_nom');
+				break;
+			case 'PersonaSSSC':
 			case 'PersonaEx':
 				$oPersonas=new personas\GestorPersonaEx();
 				$oDesplegablePersonas = $oPersonas->getListaPersonas($na_val);
@@ -86,7 +98,7 @@ if (!empty($id_nom)) { //caso de modificar
 				break;
 		}
 	} else {
-		$go_to=urlencode(core\core\core\ConfigGlobal::getWeb()."/programas/dossiers/dossiers_ver.php?pau=$pau&id_pau=$id_pau&id_dossier=$id_dossier&permiso=$permiso");
+		$go_to=urlencode(core\core\core\ConfigGlobal::getWeb()."/apps/dossiers/controller/dossiers_ver.php?pau=$pau&id_pau=$id_pau&id_dossier=$id_dossier&permiso=$permiso");
 		$oPosicion = new web\Posicion();
 		echo $oPosicion->ir_a($go_to);
 	}

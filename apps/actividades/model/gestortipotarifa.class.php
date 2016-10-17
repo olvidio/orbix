@@ -44,7 +44,7 @@ class GestorTipoTarifa Extends  core\ClaseGestor {
 		$sWhere = empty($isfsv)? '' : "WHERE sfsv=$isfsv"; 
 		$sQuery="SELECT tarifa,letra FROM $nom_tabla $sWhere ORDER BY tarifa";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorRole.lista';
+			$sClauError = 'GestorTipoTarifa.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
@@ -67,7 +67,7 @@ class GestorTipoTarifa Extends  core\ClaseGestor {
 		$nom_tabla = $this->getNomTabla();
 		$sQuery="SELECT tarifa,letra FROM $nom_tabla WHERE sfsv=$isfsv ORDER BY tarifa";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorRole.lista';
+			$sClauError = 'GestorTipoTarifa.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}

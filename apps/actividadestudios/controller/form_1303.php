@@ -12,8 +12,16 @@ use notas\model as notas;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
+$id_asignatura_real = '';
+
 if (!empty($_POST['sel'])) { //vengo de un checkbox
-	if ($_POST['pau']=="p") { $id_asignatura_real=strtok($_POST['sel'][0],"#"); }
+	if ($_POST['pau']=="p") {
+	   	$id_activ = strtok($_POST['sel'][0],'#'); 
+		$id_activ = !empty($_POST['id_activ'])? $_POST['id_activ'] : $id_activ;
+		$id_asignatura_real = strtok('#'); 
+		$id_nom = strtok('#'); 
+		$id_nom = !empty($_POST['id_pau'])? $_POST['id_pau'] : $id_nom;
+   	}
 }
 
 $go_to = empty($_POST['go_to'])? '' : $_POST['go_to'];

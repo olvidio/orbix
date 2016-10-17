@@ -13,6 +13,8 @@ use profesores\model as profesores;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$obj = 'notas\\model\\PersonaNota';
+
 if (!empty($_POST['sel'])) { //vengo de un checkbox
 	if ($_POST['pau']=="p") { 
 		$id_nivel_real=strtok($_POST['sel'][0],"#"); 
@@ -53,7 +55,7 @@ $GesAsignaturas = new asignaturas\GestorAsignatura();
 
 if (!empty($id_asignatura_real)) { //caso de modificar
 	$mod="editar";
-	$id_asignatura='';
+	$id_asignatura=$id_asignatura_real;
 	$_POST['opcional']='n';
 	$aWhere['id_nom'] = $_POST['id_pau'];
 	$aWhere['id_asignatura'] = $id_asignatura_real;
@@ -241,13 +243,14 @@ $a_camposHidden = array(
 
 if (!empty($id_asignatura_real)) { //caso de modificar
 	$a_camposHidden['id_asignatura_real'] = $id_asignatura_real;
+	$a_camposHidden['id_asignatura'] = $id_asignatura_real;
 	$a_camposHidden['id_nivel'] = $id_nivel;
 } else {
 	$camposForm .= '!id_nivel';
 	$camposNo .= '!id_nivel';
 	if ($_POST['opcional'] == 'n') {
 		//si no es opcional el id_asignatura es el mismo que id_nivel
-		$a_camposHidden['id_asignatura'] = 'nueva';
+		$a_camposHidden['id_asignatura'] = '1';
 	} else {
 		$camposForm .= '!id_asignatura';
 	}
@@ -257,6 +260,8 @@ $oHash->setcamposNo($camposNo);
 $oHash->setArraycamposHidden($a_camposHidden);
 ?>
 <script>
+$(function() { $( "#f_acta" ).datepicker(); });
+
 fnjs_nota=function(){
 	var num;
 	var max;
@@ -315,7 +320,9 @@ fnjs_guardar=function(){
 		$('#id_asignatura').val(document.f_1011.id_nivel.value);
 	}
 	
-	if (err!=1) {
+	var rr=fnjs_comprobar_campos('#f_1011','<?= addslashes($obj) ?>');
+	//alert ("EEE "+rr);
+	if (rr=='ok' && err!=1) {
 		if (mod=='nuevo') {
 			rta=confirm("¿Quiere guardar otra nota?");
 			if (rta) {
@@ -389,7 +396,9 @@ echo "<input type=\"text\" id=\"nota_max\" name=\"nota_max\" value=\"$nota_max\"
 echo "<td>"._("situación")."</td><td>";
 echo $oDesplNotas->desplegable();
 echo "</td></tr>";
-echo "<tr><td>"._("acta")."</td><td><input type=\"text\" id=\"acta\" name=\"acta\" value=\"$acta\" size=20></td></tr>";
+echo "<tr><td>"._("acta").'</td>';
+echo "<td colspan=2><input type=\"text\" id=\"acta\" name=\"acta\" value=\"$acta\" size=20>";
+echo '  ("?": '._("significa inventado").')   '._("Formato") .': "dlx nn/aa" o "dlx" o "region" o "?"'.'</td></tr>';
 echo "<tr><td>"._("fecha acta")."</td><td><input type=\"text\" id=\"f_acta\" name=\"f_acta\" value=\"$f_acta\" size=12></td></tr>";
 switch ($precep) { 
 	case "si":

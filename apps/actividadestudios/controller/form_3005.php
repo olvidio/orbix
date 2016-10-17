@@ -11,9 +11,11 @@ use profesores\model as profesores;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$obj = 'actividadestudios\\model\\ActividadAsignatura';
+
 if (!empty($_POST['sel'])) { //vengo de un checkbox
-	$id_asignatura=strtok($_POST['sel'][0],"#");
-	$id_activ=strtok("#");
+	$id_activ = strtok($_POST['sel'][0],"#");
+	$id_asignatura = strtok("#");
 } else {
 	empty($_POST['id_pau'])? $id_activ="" : $id_activ=$_POST['id_pau'];
 }
@@ -28,10 +30,13 @@ $chk_a='';
 $chk_c='';
 $chk=''; 
 
-$GesProfesores = new profesores\GestorProfesor();
-$oDesplProfesores = $GesProfesores->getListaProfesores();
+//$GesProfesores = new profesores\GestorProfesor();
+//$oDesplProfesores = $GesProfesores->getListaProfesores();
+$GesProfesores = new profesores\GestorProfesorActividad();
+$oDesplProfesores = $GesProfesores->getListaProfesoresActividad(array($id_activ));
 $oDesplProfesores->setNombre('id_profesor');
 $oDesplProfesores->setBlanco('t');
+$oDesplProfesores->setOpcion_sel(-1);
 
 if (!empty($id_asignatura)) { //caso de modificar
 	$mod="editar"; 
@@ -91,6 +96,15 @@ if (!empty($id_asignatura)) {
 $oHash->setcamposForm($camposForm);
 $oHash->setArraycamposHidden($a_camposHidden);
 
+
+$oHashTipo = new web\Hash();
+$oHashTipo->setUrl('apps/actividadestudios/controller/lista_profesores.php');
+$oHashTipo->setCamposForm('salida');
+$h = $oHashTipo->linkSinVal();
+
+$oHashTipo->setCamposForm('salida!id_activ');
+$h1 = $oHashTipo->linkSinVal();
+
 ?>
 <!-- ------------------- html -----------------------------------------------  -->
 <script>
@@ -108,12 +122,35 @@ $(function() {
 		});
 
 });
+fnjs_mas_profes=function(filtro){
+	var url='<?= core\ConfigGlobal::getWeb().'/apps/actividadestudios/controller/lista_profesores.php' ?>';
+	switch (filtro) {
+		case 'dl':
+			var parametros='salida=dl&id_activ=<?= $id_activ ?><?= $h1 ?>&PHPSESSID=<?php echo session_id(); ?>';
+			break;
+		case 'all':
+			var parametros='salida=todos<?= $h ?>&PHPSESSID=<?php echo session_id(); ?>';
+			break;
+	}
+	$.ajax({
+		data: parametros,
+		url: url,
+		type: 'post',
+		dataType: 'html',
+		complete: function (rta) {
+			rta_txt=rta.responseText;
+			$('#lst_profes').html(rta_txt);
+		}
+	});
+}
+
 fnjs_guardar=function(){
 	var err = 0;
 	if ($('#frm_sin_nombre').value != undefined && !fnjs_comprobar_fecha('#f_ini')) { err=1; }
 	if ($('#frm_sin_nombre').value != undefined && !fnjs_comprobar_fecha('#f_fin')) { err=1; }
 
-	var rr=fnjs_comprobar_campos('#frm_sin_nombre','',0,'d_asignaturas_activ_dl');
+	var rr=fnjs_comprobar_campos('#frm_sin_nombre','<?= addslashes($obj) ?>');
+
 	if (rr=='ok' && err==0) {
 		$('#frm_sin_nombre').attr('action','apps/actividadestudios/controller/update_3005.php');
 		fnjs_enviar_formulario('#frm_sin_nombre');
@@ -125,7 +162,7 @@ fnjs_guardar=function(){
 <?= $oHash->getCamposHtml(); ?>
 <input type="Hidden" id="mod" name="mod" value=<?= $mod ?>>
 <table>
-<tr class=tab><th class=titulo_inv colspan=2><?= ucfirst(_("asignatura de una actividad")); ?></th></tr>
+<tr class=tab><th class=titulo_inv colspan=4><?= ucfirst(_("asignatura de una actividad")); ?></th></tr>
 <?php
 if (!empty($id_asignatura)) {
 	echo "<tr><td class=etiqueta>".ucfirst(_("asignatura")).":</td><td class=contenido>$nombre_corto</td>";
@@ -136,10 +173,14 @@ if (!empty($id_asignatura)) {
 	echo "</td></tr>";
 }
 //voy
-echo "<tr><td class=etiqueta>".ucfirst(_("profesor")).":</td><td>";
-echo $oDesplProfesores->desplegable();
 ?>
-</td></tr>
+<tr><td class=etiqueta><?= ucfirst(_("profesor")) ?>:</td>
+<td id="lst_profes">
+<?= $oDesplProfesores->desplegable(); ?>
+</td>
+<td><input type=button onclick="fnjs_mas_profes('dl')" value="<?= _('dl y asistentes') ?>"></td>
+<td><input type=button onclick="fnjs_mas_profes('all')" value="<?= _('otros de paso') ?>"></td>
+</tr>
 
 <tr><td class=etiqueta><?= _("tipo") ?></td><td><select class=contenido id='tipo' name='tipo'>
 <option></option>

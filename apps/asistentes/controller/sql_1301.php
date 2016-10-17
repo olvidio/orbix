@@ -84,6 +84,7 @@ foreach ($cActividadesAsistente as $oActividadAsistente) {
 	$dl_org=$oActividad->getDl_org();
 	$f_ini=$oActividad->getF_ini();
 	$f_fin=$oActividad->getF_fin();
+
 	$propio=$oActividadAsistente->getPropio();
 	$falta=$oActividadAsistente->getFalta();
 	$est_ok=$oActividadAsistente->getEst_ok();

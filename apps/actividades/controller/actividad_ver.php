@@ -10,6 +10,7 @@ use ubis\model as ubis;
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$obj = 'actividades\\model\\ActividadAll';
 
 if (isset($_POST['sel'])) { //vengo de un checkbox
 	//$id_nom=$sel[0];
@@ -140,7 +141,7 @@ fnjs_guardar=function(){
 	if (!fnjs_comprobar_hora('#h_ini')) { err=1; }
 	if (!fnjs_comprobar_hora('#h_fin')) { err=1; }
 
-	var rr=fnjs_comprobar_campos('#modifica','',0,'a_actividades');
+	var rr=fnjs_comprobar_campos('#modifica','<?= addslashes($obj) ?>');
 	//alert ("EEE "+rr);
 	if (rr=='ok' && err==0) {
 		$('#mod').val('editar');
@@ -259,7 +260,7 @@ $txt_gen=ucfirst(_("generar"));
 <td><?php echo $oDesplPosiblesTipoTarifas->desplegable(); ?></td>
 <td class=etiqueta><?php echo ucfirst(_("precio")); ?>: </td>
   <td>
-  <input type=text class="contenido derecha" id="precio" name="precio" value='<?= $precio ?>' size="8" onblur="fnjs_comprobar_dinero('#precio');"> <?= _('€') ?>
+  <input type=text class="contenido derecha" id="precio" name="precio" value='<?= $precio ?>' size="8" > <?= _('€') ?>
 </td></tr>
 <tr><td class=etiqueta>
 <?= ucfirst(_("observaciones")); ?>:</td><td colspan=2><input class=contenido size="30" id="observ" name="observ" value="<?= htmlspecialchars($observ) ?>">

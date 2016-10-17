@@ -166,15 +166,15 @@ foreach ($aFaltan as $ap_nom=>$id_nom) {
 switch ($Qtipo_personas) {
 	case "n":
 		$GesPersonas = new personas\GestorPersonaN();
-		$cPersonas = $GesPersonas->getPersonas(array('situacion'=>'A','vida_familia'=>'z'));
+		$cPersonas = $GesPersonas->getPersonas(array('situacion'=>'A','situacion'=>'z'));
 		break;
 	case "agd":
 		$GesPersonas = new personas\GestorPersonaAgd();
-		$cPersonas = $GesPersonas->getPersonas(array('situacion'=>'A','vida_familia'=>'z'));
+		$cPersonas = $GesPersonas->getPersonas(array('situacion'=>'A','situacion'=>'z'));
 		break;
 	case "sacd":
 		$GesPersonas = new personas\GestorPersonaDl();
-		$cPersonas = $GesPersonas->getPersonas(array('sacd'=>'t','situacion'=>'A','vida_familia'=>'z'));
+		$cPersonas = $GesPersonas->getPersonas(array('sacd'=>'t','situacion'=>'A','situacion'=>'z'));
 		break;
 }
 

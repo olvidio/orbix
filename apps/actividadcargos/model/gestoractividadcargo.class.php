@@ -37,6 +37,38 @@ class GestorActividadCargo Extends core\ClaseGestor {
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
 	/**
+	 * retorna l'array d'objectes de tipus ActividadCargo
+	 *
+	 * @param integer id_nom. de la persona
+	 * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
+	 * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
+	 * @return array Una col·lecció d'objectes de tipus ActividadCargo
+	 */
+	function getActividadCargosDeAsistente($aWhereNom,$aWhere=array(),$aOperators=array()) {
+		// seleccionar las actividades segun los criterios de búsqueda.
+		$GesActividades = new actividades\GestorActividad();
+		$aListaIds = $GesActividades->getArrayIds($aWhere,$aOperators);
+	
+		$cCargos = $this->getActividadCargos($aWhereNom);
+		// descarto los que no estan.
+		$cCargosOk = array();
+		foreach ($cCargos as $oActividadCargo) {
+			$id_activ = $oActividadCargo->getId_activ();
+			if (in_array($id_activ,$aListaIds)) {
+				$oActividad = new actividades\Actividad($id_activ);
+				$f_ini = $oActividad->getF_ini();
+				$oFini= \DateTime::createFromFormat('j/m/Y', $f_ini);
+				$f_ini_iso = $oFini->format('Y-m-d'); 
+				$oActividadCargo->DBCarregar();
+				$cCargosOk[$f_ini_iso] = $oActividadCargo;
+			}
+		}
+		ksort($cCargosOk);
+		return $cCargosOk;
+	}
+
+
+	/**
 	 * retorna l'array d'objectes tipus CargoOAsistente
 	 *
 	 * @param integer id_nom

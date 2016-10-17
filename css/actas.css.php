@@ -28,7 +28,7 @@ div.A4 {
 	margin-left:	0.8cm;
 	top: -2cm;
 	width: 90% ;
-	height: 93%;
+	height: 750pt;
 	border-width : 1pt;
 	border-color : Black;
 	border-style : solid;

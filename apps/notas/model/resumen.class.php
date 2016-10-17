@@ -1,0 +1,905 @@
+<?php
+namespace notas\model;
+use core;
+use asignaturas\model as asignaturas;
+
+/**
+ * Fitxer amb la Classe que accedeix a la taula e_notas_situacion
+ *
+ * @package delegación
+ * @subpackage model
+ * @author Daniel Serrabou
+ * @version 1.0
+ * @created 07/04/2014
+ */
+/**
+ * Classe que implementa l'entitat e_notas_situacion
+ *
+ * @package delegación
+ * @subpackage model
+ * @author Daniel Serrabou
+ * @version 1.0
+ * @created 07/04/2014
+ */
+class Resumen Extends core\ClasePropiedades {
+	/* ATRIBUTS ----------------------------------------------------------------- */
+
+	/**
+	 * Lista. para indicar si devuelve la lista de nombres o sólo el número
+	 *
+	 * @var boolean
+	 */
+	 protected $blista;
+
+	protected $dinicurso;
+	protected $dfincurso;
+	protected $iany;
+	protected $iany2;
+	protected $diniverano;
+	protected $slugar_ce;
+
+	protected $a_asignaturas;
+	protected $a_creditos;
+
+	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
+	/**
+	 * oDbl de Acta
+	 *
+	 * @var object
+	 */
+	 protected $oDbl;
+	/**
+	 * NomTabla de Acta
+	 *
+	 * @var string
+	 */
+	 protected $sNomTabla;
+	 protected $sNomNotas;
+	 protected $sNomPersonas;
+	 protected $sNomAsignaturas;
+
+
+	 /* CONSTRUCTOR -------------------------------------------------------------- */
+
+	/**
+	 * Constructor de la classe.
+	 * Si només necessita un valor, se li pot passar un integer.
+	 * En general se li passa un array amb les claus primàries.
+	 *
+	 * @param integer|array iid_nom,iid_nivel
+	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
+	 */
+	function __construct($nom='') {
+		$oDbl = $GLOBALS['oDB'];
+
+		$tabla="tmp_est_".$nom;
+		$notas="tmp_notas_".$nom;
+		$asignaturas="tmp_asignaturas";
+		switch ($nom) {
+			case 'numerarios':
+				$personas="p_numerarios";
+				break;
+			case 'agd':
+			case 'agregados':
+				$personas="p_agregados";
+				break;
+			case 'profesores':
+				$personas="personas_dl";
+				break;
+		}
+
+		$this->setoDbl($oDbl);
+		$this->setNomTabla($tabla);
+		$this->setNomNotas($notas);
+		$this->setNomAsignaturas($asignaturas);
+		$this->setNomPersonas($personas);
+
+	}
+
+	/* METODES PUBLICS ----------------------------------------------------------*/
+
+	public function getNomPersonas() {
+		return $this->sNomPersonas;
+	}
+	public function setNomPersonas($personas) {
+			$this->sNomPersonas = $personas;
+	}
+	public function getNomNotas() {
+		return $this->sNomNotas;
+	}
+	public function setNomNotas($notas) {
+			$this->sNomNotas = $notas;
+	}
+	public function getNomAsignaturas() {
+		return $this->sNomAsignaturas;
+	}
+	public function setNomAsignaturas($asignaturas) {
+			$this->sNomAsignaturas = $asignaturas;
+	}
+	public function getLista() {
+		return $this->blista;
+	}
+	public function setLista($blista) {
+			$this->blista = $blista;
+	}
+	public function getLugar_ce() {
+		return $this->slugar_ce;
+	}
+	public function setLugar_ce($slugar_ce) {
+			$this->slugar_ce = $slugar_ce;
+	}
+	public function getAny() {
+		if (empty($this->iany)) {
+			//$this->iany = date("Y");
+			$this->iany = 2012;
+		}
+		return $this->iany;
+	}
+	public function setAny($iany) {
+			$this->iany = $iany;
+	}
+	public function getAny2() {
+		if (empty($this->iany2)) {
+			$this->iany2 = date("y", mktime(0, 0, 0, 1, 1, $this->getAny()));
+		}
+		return $this->iany2;
+	}
+	public function setAny2($iany2) {
+			$this->iany = $iany2;
+	}
+
+	public function getIniCurso() {
+		if (empty($this->dinicurso)) {
+			$any = $this->getAny();
+			$this->dinicurso= date("d/m/Y", mktime(0,0,0,10,1,$any-1)) ;
+		}
+		return $this->dinicurso;
+	}
+	public function setIniCurso($dinicurso) {
+			$this->dinicurso = $dinicurso;
+	}
+	public function getFinCurso() {
+		if (empty($this->dfincurso)) {
+			$any = $this->getAny();
+			$this->dfincurso= date("d/m/Y", mktime(0,0,0,9,30,$any)) ;
+		}
+		return $this->dfincurso;
+	}
+	public function setFinCurso($dfincurso) {
+			$this->dfincurso = $dfincurso;
+	}
+
+	/* Pongo en la variable $curso el periodo del curso */
+	public function getCurso() {
+		$curso = "BETWEEN '".$this->getInicurso()."' AND '".$this->getFincurso()."' ";
+		return $curso;
+	}
+	
+	/*
+	$tabla="tmp_est_numerarios";
+	$personas="p_numerarios";
+	$notas="tmp_notas_numerarios";
+	*/
+
+	public function nuevaTabla() {
+		$lista = $this->blista;
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+		$notas = $this->getNomNotas();
+		$asignaturas = $this->getNomAsignaturas();
+		$personas = $this->getNomPersonas();
+
+		$curs = $this->getCurso();
+		$fincurs = $this->getFincurso();
+
+		$any = $this->getAny();
+
+		$sqlDelete="DELETE FROM $tabla";
+		$sqlCreate="CREATE TABLE $tabla(
+										id_nom int4 NOT NULL PRIMARY KEY,
+										id_tabla char(6),
+										nom varchar(20),
+										apellido1  varchar(25),
+										apellido2  varchar(25),
+										stgr char(2),
+										situacion char(1),
+										f_situacion date, 
+										f_o date,
+										f_fl date,
+										f_orden date,
+										lugar_ce varchar(8),
+										ini_ce int2,
+										fin_ce int2,
+										sacd bool )";
+	
+		if( !$oDbl->query($sqlDelete) ) {
+				$oDbl->query($sqlCreate);
+				$oDbl->query("CREATE INDEX $tabla"."_apellidos"." ON $tabla (apellido1,apellido2,nom)");
+				$oDbl->query("CREATE INDEX $tabla"."_stgr"." ON $tabla (stgr)");
+		}
+		/*
+		   * OOJO De momento estos campos no existen:
+				f_o date,
+				f_fl date,
+				f_orden date,
+				lugar_ce varchar(8),
+				ini_ce int2,
+				fin_ce int2,
+				situacion char(1),
+
+		$sqlLlenar="INSERT INTO $tabla 
+				SELECT p.id_nom,p.id_tabla,p.nom,p.apellido1,p.apellido2,p.stgr,
+				p.situacion,p.f_situacion,p.f_o,p.f_fl,p.f_orden,p.lugar_ce,p.ini_ce,p.fin_ce,p.situacion,p.sacd
+				FROM $personas p
+				WHERE ((p.situacion='A' AND (p.f_situacion < '$fincurs' OR p.f_situacion IS NULL)) OR (p.situacion='D' AND (p.f_situacion $curs)) OR (p.situacion='L' AND (p.f_orden $curs)))
+				";
+		   */
+		
+		$sqlLlenar="INSERT INTO $tabla 
+				SELECT p.id_nom,p.id_tabla,p.nom,p.apellido1,p.apellido2,p.stgr,
+				p.situacion,p.f_situacion,
+				NULL,NULL,NULL,NULL,NULL,NULL,
+				p.sacd
+				FROM $personas p
+				WHERE ((p.situacion='A' AND (p.f_situacion < '$fincurs' OR p.f_situacion IS NULL)) OR (p.situacion='D' AND (p.f_situacion $curs)))
+				";
+		//echo "sql: $sqlLlenar<br>";
+		$oDbl->query($sqlLlenar);
+	
+		// Miro los que se han incorporado "recientemente": desde el 1-junio
+		$ssql= "SELECT  p.nom, p.apellido1, p.apellido2, p.stgr
+			FROM $tabla p
+			WHERE p.situacion='A' AND p.f_situacion > '1/6/$any'
+				AND (p.stgr='b' OR p.stgr ILIKE 'c%') "; 
+		//echo "qry: $ssql<br>";
+		$statement = $oDbl->query($ssql);
+		$nf=$statement->rowCount();
+		if ($lista && $nf!=0) {
+			echo "<p>Existen $nf Alumnos que se han incorporado \"recientemente\" (desde el 1-junio) a la dl<br>
+					Sí se cuentan en la estadística.</p>";
+			// Para sacar una lista
+			echo $this->Lista($ssql,"nom,apellido1,apellido2,stgr",1);
+		}
+
+		// Miro si existe alguna excepción: Alguien incorporado a la dl después del 1 de OCT 
+		$ssql= "SELECT  p.nom, p.apellido1, p.apellido2, p.stgr
+			FROM $tabla p
+			WHERE (p.stgr='b' OR p.stgr ILIKE 'c%')
+				AND (p.situacion='A' AND p.f_situacion > '$fincurs')"; 
+		$statement=$oDbl->query($ssql);
+		$nf=$statement->rowCount();
+		
+		if ($lista && $nf!=0) {
+			echo "<p>Existen $nf alumnos que se han incorporado después del 1-OCT a la dl<br>
+					No se van a contar</p>";
+			// Para sacar una lista
+			echo $this->Lista($ssql,"nom,apellido1,apellido2,stgr",1);
+		}
+	
+		//Pongo 'b' en stgr a los que han terminado el bienio este curso
+		$ssql="UPDATE $tabla SET stgr='b'
+				FROM e_notas_dl n
+				WHERE $tabla.id_nom=n.id_nom AND n.id_asignatura=9999 AND n.f_acta $curs
+				 "; 
+		$statement=$oDbl->query($ssql);
+		$nf=$statement->rowCount();
+		
+		//Pongo 'c2' en stgr a los que han terminado el cuadrienio este curso
+		$ssql="UPDATE $tabla SET stgr='c2'
+				FROM e_notas_dl n
+				WHERE $tabla.id_nom=n.id_nom AND n.id_asignatura=9998 AND n.f_acta $curs
+				 "; 
+		$statement=$oDbl->query($ssql);
+		$nf=$statement->rowCount();
+		
+		//Ahora las notas
+		$sqlDelete="DELETE FROM $notas";
+		$sqlCreate="CREATE TABLE $notas(
+										id_nom int4 NOT NULL,
+										id_asignatura int4 NOT NULL, 
+										id_nivel int4 NOT NULL,
+										superada bool,
+										epoca int2,
+										f_acta  date NOT NULL,
+										acta  varchar(50),
+										preceptor bool,
+										PRIMARY KEY (id_nom,id_asignatura)
+										 )";
+
+		if (!$oDbl->query($sqlDelete) ) {
+				$oDbl->query($sqlCreate);
+				$oDbl->query("CREATE INDEX $notas"."_nivel"." ON $notas (id_nivel)");
+				$oDbl->query("CREATE INDEX $notas"."_sup"." ON $notas (superada)");
+		}
+
+		$gesNotas = new gestorNota();
+		$a_superadas = $gesNotas->getArrayNotasSuperadas();
+		$case_superada = " id_situacion IN (".implode(',', $a_superadas).")";
+		$sqlLlenar="INSERT INTO $notas
+					SELECT n.id_nom,n.id_asignatura,n.id_nivel,
+						   $case_superada,
+						   n.epoca,n.f_acta,n.acta,n.preceptor
+					FROM $tabla p,e_notas_dl n
+					WHERE p.id_nom=n.id_nom AND n.f_acta $curs
+					";
+		//echo "sql: $sqlLlenar<br>";
+		$oDbl->query($sqlLlenar);
+
+		//Ahora las asignaturas
+		//Como ahora las asignaturas estan en otra base de datos(comun) hago una copia para poder hacer unions...
+		$sqlDelete="DELETE FROM $asignaturas";
+		$sqlCreate="CREATE TABLE $asignaturas(
+						id_asignatura integer,
+						id_nivel integer,
+						nombre_asig character varying(60) NOT NULL,
+						nombre_corto character varying(23),
+						creditos numeric(4,2),
+						year character varying(3),
+						id_sector smallint,
+						status boolean DEFAULT true NOT NULL,
+						id_tipo integer
+					 )";
+
+		if (!$oDbl->query($sqlDelete) ) {
+				$oDbl->query($sqlCreate);
+				$oDbl->query("CREATE INDEX $asignaturas"."_nivel"." ON $asignaturas (id_nivel)");
+				$oDbl->query("CREATE INDEX $asignaturas"."_id_asignatura"." ON $asignaturas (id_asignatura)");
+		}
+
+		$gesAsignaturas = new asignaturas\gestorAsignatura();
+		$cAsignaturas = $gesAsignaturas->getAsignaturas(array('status'=>'true'));
+
+		$prep = $oDbl->prepare("INSERT INTO $asignaturas VALUES(:id_asignatura, :id_nivel, :nombre_asig, :nombre_corto, :creditos, :year, :id_sector, :status, :id_tipo)");
+		foreach ($cAsignaturas as $oAsignatura) {
+			$aDades = $oAsignatura->getTot();
+			$prep->execute($aDades);
+		}
+	}
+
+	public function ListaAsig($a_Asql,$statement) {
+		$oDbl = $this->getoDbl();
+		// Para sacar una lista
+		$html = "<table>";
+		$id_nom=0;
+		$cont=0; // para saber cuánta gente le queda
+		$cont_asig=0;
+		$cont_nom=0;
+		$a_sql=$statement->fetchAll() ;
+		foreach ($a_sql as $nombre) {
+			$cont_nom++;
+			// Si cambio de persona, vuelvo a empezar con las asignaturas
+			if ($nombre["id_nom"]!=$id_nom){
+				$cont_asig=0;
+				$cont++;
+				$id_nom= $nombre["id_nom"];
+				$nom_ap=$nombre["nom_ap"];
+				$html .= "<tr><td colspan=2 class=titulo>$nom_ap</td></tr>";
+			}
+			if ($cont_asig >= 28) {
+				$html .= "Pasa de 28 asignaturas"; 
+			} else {
+				$asig_nivel=$a_Asql[$cont_asig]['id_nivel'];
+				$cont_asig++;
+				while ($nombre['id_nivel'] > $asig_nivel){
+					
+					$asig_nivel=$a_Asql[$cont_asig]['id_nivel'];
+					$asig_nombre_corto=$a_Asql[$cont_asig]['nombre_corto'];
+						
+					$html .= "<tr><td></td><td>$asig_nombre_corto</td></tr>";
+					$cont_asig++;
+					if ($cont_asig > 28) exit ("Pasa de 28 asignaturas!!");
+				}
+			}
+			//miro si el siguiente registro es de la misma persona, sino, pongo las asignaturas que quedan hasta acabar el bienio 
+			if (count($a_sql) > $cont_nom) {
+			$siguiente_id_nom=$a_sql[$cont_nom]['id_nom'];
+				if ($siguiente_id_nom != $id_nom){
+					while ($asig_nombre_corto=@$a_Asql[$cont_asig++]['nombre_corto']) {
+						$html .= "<tr><td></td><td>$asig_nombre_corto</td></tr>";
+					}
+					//$cont_asig=0;
+				}
+			}
+		}
+		
+		$html .= "<tr><td colspan=7><hr>";
+		$html .= "</table>";
+		// end lista 
+		$html .= "<p>Total: $cont</p>";
+		return $html;
+	}
+
+
+	public function Lista($sql,$campos,$cabecera) {
+		$oDbl = $this->getoDbl();
+		// $campos es un string con los campos que se quiere listar, separados por comas
+		$camp=explode(',',$campos);
+		$html = "<table>";
+		if (!empty($cabecera)) {
+			$html .= "<tr><td width=20></td>";
+			while ( list( $key, $titulo ) = each( $camp ) ) {
+				$html .= "<th>$titulo</th>";
+			}
+			$html .= "</tr>";
+			$p=reset($camp);
+		}
+		foreach ($oDbl->query($sql) as $fila=>$valor) {
+			$html .= "<tr><td width=20></td>";
+			while ( list( $key, $val ) = each( $camp ) ) {
+				$html .= "<td>$valor[$val]</td>";
+			}
+			$html .= "</tr>";
+			$p=reset($camp);
+		}
+		if (empty($cabecera)) $html .= "<tr><td colspan=7><hr>";
+		$html .= "</table>";
+
+		return $html;
+	}
+
+	public function enBienio() {
+		$lista = $this->blista;
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+
+		$ssql="SELECT p.id_nom,p.nom,p.apellido1,p.apellido2
+		FROM $tabla p
+		WHERE p.stgr='b' 
+		ORDER BY p.apellido1,p.apellido2,p.nom 
+		"; 
+		$statement = $oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
+
+	public function enCuadrienio($c='all') {
+		$lista = $this->blista;
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+		$where = '';
+		switch ($c) {
+			case 1:
+				$where = "WHERE p.stgr='c1'";
+				break;
+			case 2:
+				$where = "WHERE p.stgr='c2'";
+				break;
+			case 'all':
+				$where = "WHERE p.stgr ~ '^c'";
+				break;
+		}
+		$ssql="SELECT p.id_nom,p.nom,p.apellido1,p.apellido2
+				FROM $tabla p
+				$where 
+				ORDER BY p.apellido1,p.apellido2,p.nom 
+				"; 
+		$statement = $oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
+	public function enTotal() {
+		$lista = $this->blista;
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+
+		$ssql="SELECT p.id_nom,p.nom,p.apellido1,p.apellido2,p.stgr
+		FROM $tabla p
+		WHERE p.stgr='b' OR p.stgr ILIKE 'c%'
+		ORDER BY p.apellido1,p.apellido2,p.nom 
+		"; 
+		$statement = $oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,stgr",1);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
+	public function enStgrSinO() {
+		$lista = $this->blista;
+		$iniverano = $this->diniverano;
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+
+		/*
+		$ssql="SELECT p.nom, p.apellido1, p.apellido2
+		FROM $tabla p
+		WHERE p.f_fl IS NULL
+			AND (p.stgr='b' OR p.stgr ILIKE 'c%') AND (p.f_o > '$iniverano' OR p.f_o IS NULL)
+		ORDER BY p.apellido1,p.apellido2,p.nom 
+		"; 
+
+		$statement = $oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+		*/
+		return array('num'=>'?','lista'=>'falta poner fecha o en tablas');
+	}
+	public function enCe() {
+		$lista = $this->blista;
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+
+		/*
+	    $ssql="SELECT p.nom, p.apellido1, p.apellido2
+		FROM $tabla p
+		WHERE (p.stgr='b' OR p.stgr ILIKE 'c%')
+			AND ((p.lugar_ce='bm' AND p.fin_ce = '$any') OR p.situacion='n' OR p.situacion='m' OR p.situacion='k')
+		ORDER BY p.apellido1,p.apellido2,p.nom 
+		"; 
+
+		$statement = $oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+		*/
+		return array('num'=>'?','lista'=>'falta poner lugar ce, fechas y vida familia en tablas');
+	}
+	public function aprobadasCe() {
+		$lista = $this->blista;
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+		$notas = $this->getNomNotas();
+
+		/*
+	    $ssql="SELECT count(*)
+			FROM $tabla p, $notas n
+			WHERE p.id_nom=n.id_nom 
+				AND (n.id_nivel BETWEEN 1100 AND 1229 OR n.id_nivel BETWEEN 2100 AND 2429)
+				AND ((p.lugar_ce='bm' AND p.fin_ce = '$any') OR p.situacion='n' OR p.situacion='m' OR p.situacion='k')
+			 	AND (p.stgr='b' OR p.stgr ILIKE 'c%')
+			"; 
+
+		$statement=$oDbl->query($ssql);
+		$rta['num'] = $statement->fetchColumn();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = '';
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+		*/
+		return array('num'=>'?','lista'=>'falta poner lugar ce, fechas y vida familia en tablas');
+	}
+
+	public function bienioSinAcabar($actual=0) {
+		$lugar_ce = $this->getLugar_ce();
+		$any2 = $this->getAny2();
+		$lista = $this->blista;
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+		$notas = $this->getNomNotas();
+		$asignaturas = $this->getNomAsignaturas();
+
+		$sAsql="SELECT a.id_nivel, a.nombre_corto
+			FROM $asignaturas a
+			WHERE a.id_nivel BETWEEN 1100 AND 1300
+			ORDER BY a.id_nivel"; 
+		$statement=$oDbl->query($sAsql);
+		$a_Asql = $statement->fetchAll();
+			
+		if ($actual == 1) {
+			/*
+			$ssql="SELECT p.id_nom, p.nom||' '||p.apellido1||' '||p.apellido2 as nom_ap, a.nombre_corto,a.id_nivel
+				FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom), $asignaturas a
+				WHERE  p.fin_ce=$any2 AND p.lugar_ce = '$lugar_ce' AND p.stgr = 'b'
+					AND n.id_nivel=a.id_nivel
+					AND a.id_nivel BETWEEN 1100 AND 1300
+				ORDER BY p.apellido1,p.apellido2,p.nom, a.id_nivel  "; 
+			$statement=$oDbl->query($ssql);
+			$rta['num'] = '';
+			*/
+
+			$ssql="SELECT p.id_nom, p.nom||' '||p.apellido1||' '||p.apellido2 as nom_ap, a.nombre_corto,a.id_nivel
+				FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom), $asignaturas a
+				WHERE  p.stgr = 'b'
+					AND n.id_nivel=a.id_nivel
+					AND a.id_nivel BETWEEN 1100 AND 1300
+				ORDER BY p.apellido1,p.apellido2,p.nom, a.id_nivel  "; 
+			$statement=$oDbl->query($ssql);
+			$rta['num'] = '';
+
+			if ($this->blista == true && $rta['num'] > 0) {
+				$rta['lista'] = $this->ListaAsig($a_Asql,$statement);
+
+			} else {
+				$rta['lista'] = '';
+			}
+		} else {
+			/*
+			$ssql="SELECT p.id_nom, p.nom||' '||p.apellido1||' '||p.apellido2 as nom_ap, a.nombre_corto,a.id_nivel
+			FROM  $tabla p LEFT JOIN e_notas_dl n USING (id_nom), $asignaturas a
+			WHERE p.fin_ce != $any2	AND p.stgr = 'b'
+				AND n.id_nivel=a.id_nivel
+				AND a.id_nivel BETWEEN 1100 AND 1300
+			ORDER BY p.apellido1,p.apellido2,p.nom, a.id_nivel  "; 
+			$statement=$oDbl->query($ssql);
+			$rta['num'] = '';
+			*/
+			$ssql="SELECT p.id_nom, p.nom||' '||p.apellido1||' '||p.apellido2 as nom_ap, a.nombre_corto,a.id_nivel
+			FROM  $tabla p LEFT JOIN e_notas_dl n USING (id_nom), $asignaturas a
+			WHERE p.stgr = 'b'
+				AND n.id_nivel=a.id_nivel
+				AND a.id_nivel BETWEEN 1100 AND 1300
+			ORDER BY p.apellido1,p.apellido2,p.nom, a.id_nivel  "; 
+			$statement=$oDbl->query($ssql);
+			$rta['num'] = '';
+
+			if ($this->blista == true && $rta['num'] > 0) {
+				$rta['lista'] = $this->ListaAsig($a_Asql,$statement);
+
+			} else {
+				$rta['lista'] = '';
+			}
+
+		}
+		//return $rta;
+		return array('num'=>'?','lista'=>'falta poner lugar ce, fechas y vida familia en tablas');
+	}
+
+
+
+	public function aprobadasBienio() {
+		$lista = $this->blista;
+		$oDbl = $this->getoDbl();
+		$notas = $this->getNomNotas();
+
+	    $ssql="SELECT count(*)
+			FROM $notas n
+			WHERE (n.id_nivel BETWEEN 1100 AND 1232)
+		 	";
+
+		$statement=$oDbl->query($ssql);
+		$rta['num'] = $statement->fetchColumn();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = sprintf(_("Total de asignaturas superadas en bienio %s"),$rta['num']);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
+	public function aprobadasCuadrienio() {
+		$lista = $this->blista;
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+		$notas = $this->getNomNotas();
+
+		//Miro que no exista nadie de repaso que haya cursado alguna asignatura
+		$ssql="SELECT p.id_nom, p.nom, p.apellido1, p.apellido2
+				FROM $tabla p,$notas n
+				WHERE p.id_nom=n.id_nom
+					AND (n.id_nivel BETWEEN 2100 AND 2500)
+					AND p.stgr='r'
+				GROUP BY p.id_nom, p.nom, p.apellido1, p.apellido2
+				ORDER BY p.apellido1, p.apellido2, p.nom
+				";
+		$statement=$oDbl->query($ssql);
+		$nf=$statement->rowCount();
+		if ($nf >= 1){
+			$rta['error'] = true;
+			$rta['num'] = $nf;
+			if ($this->blista == true && $rta['num'] > 0) {
+				$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
+			} else {
+				$rta['lista'] = '';
+			}
+			return $rta;
+		}
+
+		$ssql="SELECT count(*)
+				FROM $notas n 
+				WHERE n.id_nivel BETWEEN 2100 AND 2500
+				 ";
+		$statement=$oDbl->query($ssql);
+		$rta['num'] = $statement->fetchColumn();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = sprintf(_("Total de asignaturas superadas en cuadrienio %s"),$rta['num']);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
+	public function masCreditosQue($creditos = '28.5') {
+		$lista = $this->blista;
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+		$notas = $this->getNomNotas();
+		$asignaturas = $this->getNomAsignaturas();
+
+		$ssql="SELECT n.id_nom, p.nom, p.apellido1, p.apellido2
+		FROM $tabla p,$notas n,$asignaturas a
+		WHERE p.id_nom=n.id_nom AND n.id_asignatura=a.id_asignatura
+			AND (n.id_nivel BETWEEN 2100 AND 2500)
+		GROUP BY n.id_nom, p.nom, p.apellido1, p.apellido2
+		HAVING SUM( CASE WHEN n.id_nivel < 2430 THEN a.creditos else 1 END) > $creditos
+		ORDER BY p.apellido1,p.apellido2,p.nom  ";
+
+		//echo "qry: $ssql<br>";
+		$statement=$oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
+	public function menosCreditosQue($creditos = '14') {
+		$lista = $this->blista;
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+		$notas = $this->getNomNotas();
+		$asignaturas = $this->getNomAsignaturas();
+		
+		$ssql="SELECT n.id_nom,p.nom, p.apellido1,p.apellido2
+		FROM $tabla p, $notas n, $asignaturas a
+		WHERE p.id_nom=n.id_nom AND  n.id_nivel=a.id_nivel
+			AND (p.stgr ILIKE 'c%' OR p.stgr='r')
+			AND (n.id_nivel BETWEEN 2100 AND 2500)
+		GROUP BY n.id_nom,p.nom, p.apellido1,p.apellido2
+		HAVING SUM( CASE WHEN n.id_nivel < 2430 THEN a.creditos else 1 END) <= $creditos
+		ORDER BY p.apellido1,p.apellido2,p.nom  ";
+
+		$statement=$oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
+	public function ningunaSuperada() {
+		$lista = $this->blista;
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+		$notas = $this->getNomNotas();
+		
+		$ssql="SELECT n.id_nom, p.nom, p.apellido1, p.apellido2
+		FROM $tabla p LEFT JOIN $notas n USING (id_nom)
+		WHERE p.stgr ~ '^c'
+			AND n.id_nom IS NULL
+		ORDER BY p.apellido1,p.apellido2,p.nom
+		"; 
+
+		$statement=$oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
+	public function conPreceptor() {
+		$lista = $this->blista;
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+		$notas = $this->getNomNotas();
+		
+		$ssql="SELECT n.id_nom, p.nom, p.apellido1, p.apellido2
+		FROM $notas n, $tabla p
+		WHERE n.id_nom=p.id_nom AND n.preceptor='t' 
+		GROUP BY n.id_nom, p.nom, p.apellido1, p.apellido2
+		ORDER BY p.apellido1,p.apellido2,p.nom "; 
+
+		$statement=$oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
+	public function terminadoCuadrienio() {
+		$lista = $this->blista;
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+		$notas = $this->getNomNotas();
+		
+		$ssql="SELECT n.id_nom, p.nom, p.apellido1, p.apellido2
+		FROM $tabla p, $notas n
+		WHERE p.id_nom=n.id_nom
+			AND (n.id_nivel=9998)
+		GROUP BY n.id_nom, p.nom, p.apellido1, p.apellido2
+		ORDER BY p.apellido1, p.apellido2,p.nom"; 
+
+		$statement=$oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
+
+	public function laicosConCuadrienio() {
+		$lista = $this->blista;
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+		$notas = $this->getNomNotas();
+		
+		$ssql="SELECT p.id_nom,p.nom, p.apellido1, p.apellido2
+			FROM $tabla p
+			WHERE p.stgr='r' AND p.sacd='f'
+			ORDER BY p.apellido1, p.apellido2,p.nom"; 
+
+		$statement=$oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
+
+	// -------------------- Profesores ------------------------------------------
+
+	public function nuevaTablaProfe() {
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+		$personas = $this->getNomPersonas();
+		
+		// posibles profesores (n y agd):
+		// posibles profesores asociados (añado s y sss+):
+		// Finalmente no distingo porque los cojo todos de la tabla padre (personas_dl)
+		$sqlCreate="CREATE TEMP TABLE $tabla AS
+		   				SELECT id_nom FROM $personas WHERE situacion='A' ORDER BY id_nom";
+	
+		$oDbl->query($sqlCreate);
+		$oDbl->query("CREATE INDEX $tabla"."_id_nom"." ON $tabla (id_nom)");
+	}
+
+	public function profesorDeTipo($id_tipo=0) {
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+
+		$where_tipo = '';
+		if ($id_tipo > 0) { $where_tipo = "id_tipo_profesor=$id_tipo AND"; }
+		$ssql="SELECT DISTINCT id_nom
+				FROM d_profesor_stgr JOIN $tabla USING (id_nom)
+				WHERE $where_tipo f_cese is null";
+		$statement=$oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+		return $rta;
+	}
+
+	public function profesorDeLatin() {
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+
+		$ssql="SELECT DISTINCT id_nom i
+				FROM d_profesor_latin JOIN $tabla USING (id_nom) 
+				WHERE latin='t'";
+		$statement=$oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+
+		return $rta;
+	}
+
+
+}
+?>

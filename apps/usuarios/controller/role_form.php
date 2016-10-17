@@ -9,6 +9,8 @@ use menus\model as menus;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$obj = 'usuarios\\model\\Role';
+
 echo $oPosicion->atras();
 
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
@@ -127,9 +129,7 @@ fnjs_add_grupmenu=function(que){
 	fnjs_update_div('#main',go); 
 }
 fnjs_guardar=function(formulario){
-	tabla = 'aux_roles';
-	obj='';
-	var rr=fnjs_comprobar_campos(formulario,obj,0,tabla);
+	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
 	//alert ("EEE "+rr);
 	if (rr=='ok') {
 		$('#que_user').val('<?= $que_user ?>');

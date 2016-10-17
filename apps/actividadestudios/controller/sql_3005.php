@@ -56,7 +56,7 @@ foreach ($cActivAsignaturas as $oActividadAsignatura) {
 	$f_fin=$oActividadAsignatura->getF_fin();
 	
 	if ($permiso==3) {
-		$a_valores[$c]['sel']="$id_asignatura#$id_activ";
+		$a_valores[$c]['sel']="$id_activ#$id_asignatura";
 	} else {
 		$a_valores[$c]['sel']="";
 	}

@@ -128,7 +128,7 @@ class DireccionCtrDl Extends DireccionCtr {
 				}
 			}
 			$aDades['id_auto'] = $oDbl->lastInsertId('u_dir_ctr_dl_id_auto_seq');
-			$aDades['id_direccion'] = $oDbl->query('SELECT id_direccion FROM $nom_tabla WHERE id_auto ='.$aDades['id_auto'])->fetchColumn();
+			$aDades['id_direccion'] = $oDbl->query("SELECT id_direccion FROM $nom_tabla WHERE id_auto =".$aDades['id_auto'])->fetchColumn();
 		}
 		$this->setAllAtributes($aDades);
 		return true;

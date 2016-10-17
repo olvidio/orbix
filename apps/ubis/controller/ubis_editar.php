@@ -37,7 +37,8 @@ if (!empty($_POST['nuevo'])) {
 		$valor_predeterminado=$oDatosCampo->datos_campo($oDbl,'valor');
 		$a_campos[$camp] = $valor_predeterminado;
 	}
-	$a_campos['nombre_ubi'] = empty($_POST['nombre_ubi'])? '' : $_POST['nombre_ubi'];
+	$nombre_ubi = empty($_POST['nombre_ubi'])? '' : $_POST['nombre_ubi'];
+	$a_campos['nombre_ubi'] = urldecode($nombre_ubi);
 	$a_campos['id_ubi'] = '';
 	$a_campos['id_direccion'] = '';
 	//print_r($a_campos);

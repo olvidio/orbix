@@ -46,7 +46,7 @@ $cDirecciones = $oGesDir->getDirecciones($aWhere,$aOperador);
 foreach ($cDirecciones as $oDireccion) {
 	$i++;
 	$id_direccion=$oDireccion->getId_direccion();
-	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/ubis/controller/direcciones_asignar.php?'.http_build_query(array('id_ubi'=>$_POST['id_ubi'],'id_direccion'=>$id_direccion,'obj_dir'=>$_POST['obj_dir']))); 
+	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/ubis/controller/direcciones_asignar.php?'.http_build_query(array('id_ubi'=>$_POST['id_ubi'],'id_direccion'=>$id_direccion,'obj_dir'=>$_POST['obj_dir'],'pais'=>$_POST['pais']))); 
 	$a_valores[$i][1]=$id_direccion;
 	$a_valores[$i][2]= array( 'ira'=>$pagina, 'valor'=>'ok');
 	$a_valores[$i][3]=$oDireccion->getDireccion();

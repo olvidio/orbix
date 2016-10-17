@@ -5,7 +5,7 @@
     <title>SlickGrid Model Benchmark</title>
 </head>
 <body>
-<script src="../lib/jquery-1.7.min.js"></script>
+<script src="../lib/jquery-1.11.2.min.js"></script>
 <script src="../slick.core.js"></script>
 <script src="../slick.dataview.js"></script>
 <script src="../slick.groupitemmetadataprovider.js"></script>
@@ -36,25 +36,38 @@
         d["duration"] =  Math.round(Math.random() * 14);
     }
 
-    var dv = new Slick.Data.DataView();
+    var dv = new Slick.Data.DataView({inlineFilters: true});
     dv.beginUpdate();
     dv.setItems(data);
     dv.setFilter(filter);
     dv.setFilterArgs(0);
     //dv.setPagingOptions({pageSize:25});
 
-    dv.groupBy(
-        "percentComplete",
-        function (g) {
-            return "Group:  " + g.value;
+    dv.setGrouping([
+        {
+            getter: "duration",
+            formatter: function (g) {
+                return "Duration:  " + g.value + "  <span style='color:green'>(" + g.count + " items)</span>";
+            },
+            aggregators: [
+                new Slick.Data.Aggregators.Avg("percentComplete"),
+                new Slick.Data.Aggregators.Sum("cost")
+            ],
+            aggregateCollapsed: true,
+            aggregateChildGroups: true
         },
-        function (a, b) {
-            return a.value - b.value;
+        {
+            getter: "effortDriven",
+            formatter: function (g) {
+                return "Effort-Driven:  " + (g.value ? "True" : "False") + "  <span style='color:green'>(" + g.count + " items)</span>";
+            },
+            aggregators: [
+                new Slick.Data.Aggregators.Avg("percentComplete"),
+                new Slick.Data.Aggregators.Sum("cost")
+            ],
+            aggregateCollapsed: false
         }
-    );
-    dv.setAggregators([
-        new Slick.Data.Aggregators.Avg("percentComplete")
-    ], false);
+    ]);
 
     dv.endUpdate();
 

@@ -343,8 +343,9 @@ $umr[$j++]='.udm h3,.udm h4,.udm h5,.udm h6{display:inline;}';
 $umr[$j++]='.udm h\\3,.udm h\\4,.udm h\\5,.udm h\\6{display:block;}';
 $umr[$j++]='ul[class^="udm"] h3,ul[class^="udm"] h4,ul[class^="udm"] h5,ul[class^="udm"] h6{display:block;}';
 $umr[$j++]='* html .udm h3,* html .udm h4,* html .udm h5,* html .udm h6{display:block;}';
-$umr[$j++]='* html .udm h3,* html .udm h4,* html .udm h5,* html .udm h6{width:expression("auto",this.runtimeStyle.width=this.parentNode.offsetWidth);width/**/:auto;}';
-$umr[$j++]='* html .udm ul h3,* html .udm ul h4,* html .udm ul h5,* html .udm ul h6{width:expression("auto",this.runtimeStyle.width=this.parentNode.currentStyle.width);width/**/:auto;}';
+//$umr[$j++]='* html .udm h3,* html .udm h4,* html .udm h5,* html .udm h6{width:expression("auto",this.runtimeStyle.width=this.parentNode.offsetWidth);width/**/:auto;}';
+$umr[$j++]='* html .udm h3,* html .udm h4,* html .udm h5,* html .udm h6{width:auto;}';
+$umr[$j++]='* html .udm ul h3,* html .udm ul h4,* html .udm ul h5,* html .udm ul h6{width:auto;}';
 }
 else
 {

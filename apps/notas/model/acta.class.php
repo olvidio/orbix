@@ -250,10 +250,11 @@ class Acta Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		// la fecha debe estar antes del acta por si hay que usar la funcion inventarActa.
+		if (array_key_exists('f_acta',$aDades)) $this->setF_acta($aDades['f_acta']);
 		if (array_key_exists('acta',$aDades)) $this->setActa($aDades['acta']);
 		if (array_key_exists('id_asignatura',$aDades)) $this->setId_asignatura($aDades['id_asignatura']);
 		if (array_key_exists('id_activ',$aDades)) $this->setId_activ($aDades['id_activ']);
-		if (array_key_exists('f_acta',$aDades)) $this->setF_acta($aDades['f_acta']);
 		if (array_key_exists('libro',$aDades)) $this->setLibro($aDades['libro']);
 		if (array_key_exists('pagina',$aDades)) $this->setPagina($aDades['pagina']);
 		if (array_key_exists('linea',$aDades)) $this->setLinea($aDades['linea']);
@@ -297,6 +298,34 @@ class Acta Extends core\ClasePropiedades {
 			$this->DBCarregar();
 		}
 		return $this->sacta;
+	}
+	/**
+	 * inventa el valor de l'atribut sacta de Acta
+	 *
+	 * @param string sacta
+	 */
+	function inventarActa($valor,$fecha='') {
+		// Se puede usar la funcion desde personaNota, por eso se puede pasar la fecha.
+		$fecha = !empty($fecha)? $fecha : $this->getF_acta();
+		if (empty($fecha)) {
+		   	$any = '?';
+			$num_acta = 'x';
+		} else {
+			$oData = \DateTime::createFromFormat('j/m/Y',$fecha);
+			$any = $oData->format('y');
+			// inventar acta.
+			$oGesActas = new gestorActa();
+			$num_acta = 1 + $oGesActas->getUltimaActa($valor,$any);
+		}
+		// no sé nada
+		if ( $valor == '?' ) {
+			// 'dl? xx/15?';
+			$valor = "dl? $num_acta/$any?";
+		} else {  // solo la región o dl
+			// 'region xx/15?';
+			$valor = "$valor $num_acta/$any?";
+		}
+		return $valor;
 	}
 	/**
 	 * estableix el valor de l'atribut sacta de Acta
@@ -467,6 +496,7 @@ class Acta Extends core\ClasePropiedades {
 	function getDatosCampos() {
 		$oActaSet = new core\Set();
 
+		$oActaSet->add($this->getDatosActa());
 		$oActaSet->add($this->getDatosId_asignatura());
 		$oActaSet->add($this->getDatosId_activ());
 		$oActaSet->add($this->getDatosF_acta());
@@ -478,6 +508,23 @@ class Acta Extends core\ClasePropiedades {
 		return $oActaSet->getTot();
 	}
 
+	/**
+	 * Recupera les propietats de l'atribut sacta de Acta
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return oject DatosCampo
+	 */
+	function getDatosActa() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'acta'));
+		$oDatosCampo->setEtiqueta(_("acta"));
+		// Las actcas de otras r sólo tienen la sigla de la r
+		$oDatosCampo->setRegExp("/^(\?|\w{2,6}\??)(\s+([0-9]{0,3})\/([0-9]{2})\??)?$/");
+		$txt = "No tienen el formato: 'dlxx nn/aa'. Debe tener sólo un espacio.";
+		$txt .= "\nSi sólo se sabe la region/dl poner la sigla.\nSi no se sabe nada poner ?.\n";
+		$oDatosCampo->setRegExpText(_($txt));
+		return $oDatosCampo;
+	}
 
 
 	/**

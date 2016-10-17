@@ -2,9 +2,9 @@
 namespace notas\model;
 use core;
 /**
- * GestorActaTribunalDl
+ * GestorActaTribunal
  *
- * Classe per gestionar la llista d'objectes de la clase ActaTribunalDl
+ * Classe per gestionar la llista d'objectes de la clase ActaTribunal
  *
  * @package delegación
  * @subpackage model
@@ -13,7 +13,7 @@ use core;
  * @created 07/04/2014
  */
 
-class GestorActaTribunalDl Extends core\ClaseGestor {
+class GestorActaTribunal Extends core\ClaseGestor {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
@@ -35,16 +35,50 @@ class GestorActaTribunalDl Extends core\ClaseGestor {
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
 	/**
-	 * retorna l'array d'objectes de tipus ActaTribunalDl
+	 * retorna JSON llista d'examinadors
 	 *
 	 * @param string sQuery la query a executar.
-	 * @return array Una col·lecció d'objectes de tipus ActaTribunalDl
+	 * @return object Json 
 	 */
-	function getActasTribunalesDlQuery($sQuery='') {
+	function getJsonExaminadores($sQuery='') {
 		$oDbl = $this->getoDbl();
-		$oActaTribunalDlSet = new core\Set();
+		$nom_tabla = $this->getNomTabla();
+		if (!empty($sQuery)) {
+			$sCondi = "WHERE public.sin_acentos(examinador::text)  ~* public.sin_acentos('$sQuery'::text)";
+		} else {
+			$sCondi = '';
+		}
+		$sOrdre = " ORDER BY examinador";
+		$sLimit = " LIMIT 25";
+		$sQry = "SELECT DISTINCT examinador FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
+		//echo "qry: $sQry<br>";
+		if (($oDblSt = $oDbl->query($sQry)) === false) {
+			$sClauError = 'GestorActaTribunalDl.examinador';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		$json = '[';
+		$i = 0;
+		foreach ($oDbl->query($sQry) as $aDades) {
+			$i++;
+			$json .= ($i > 1)? ',' : ''; 
+			$json .= "{\"name\":\"".$aDades['examinador']."\"}";
+		}
+		$json .= ']';
+		return $json;
+	}
+
+	/**
+	 * retorna l'array d'objectes de tipus ActaTribunal
+	 *
+	 * @param string sQuery la query a executar.
+	 * @return array Una col·lecció d'objectes de tipus ActaTribunal
+	 */
+	function getActasTribunalesQuery($sQuery='') {
+		$oDbl = $this->getoDbl();
+		$oActaTribunalSet = new core\Set();
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorActaTribunalDl.query';
+			$sClauError = 'GestorActaTribunal.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
@@ -54,27 +88,27 @@ class GestorActaTribunalDl Extends core\ClaseGestor {
 			// si es de la sf quito la 'f'
 			$dl = preg_replace('/f$/', '',$dl);
 			if ($dl == core\ConfigGlobal::mi_dele()) {
-				$oActaTribunalDl= new ActaTribunalDl($a_pkey);
+				$oActaTribunal= new ActaTribunalDl($a_pkey);
 			} else {
-				$oActaTribunalDl= new ActaTribunalEx($a_pkey);
+				$oActaTribunal= new ActaTribunalEx($a_pkey);
 			}
-			$oActaTribunalDl->setAllAtributes($aDades);
-			$oActaTribunalDlSet->add($oActaTribunalDl);
+			$oActaTribunal->setAllAtributes($aDades);
+			$oActaTribunalSet->add($oActaTribunal);
 		}
-		return $oActaTribunalDlSet->getTot();
+		return $oActaTribunalSet->getTot();
 	}
 
 	/**
-	 * retorna l'array d'objectes de tipus ActaTribunalDl
+	 * retorna l'array d'objectes de tipus ActaTribunal
 	 *
 	 * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
 	 * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-	 * @return array Una col·lecció d'objectes de tipus ActaTribunalDl
+	 * @return array Una col·lecció d'objectes de tipus ActaTribunal
 	 */
-	function getActasTribunalesDl($aWhere=array(),$aOperators=array()) {
+	function getActasTribunales($aWhere=array(),$aOperators=array()) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		$oActaTribunalDlSet = new core\Set();
+		$oActaTribunalSet = new core\Set();
 		$oCondicion = new core\Condicion();
 		$aCondi = array();
 		foreach ($aWhere as $camp => $val) {
@@ -97,12 +131,12 @@ class GestorActaTribunalDl Extends core\ClaseGestor {
 		if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
 		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-			$sClauError = 'GestorActaTribunalDl.llistar.prepare';
+			$sClauError = 'GestorActaTribunal.llistar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		if (($oDblSt->execute($aWhere)) === false) {
-			$sClauError = 'GestorActaTribunalDl.llistar.execute';
+			$sClauError = 'GestorActaTribunal.llistar.execute';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
@@ -112,14 +146,14 @@ class GestorActaTribunalDl Extends core\ClaseGestor {
 			// si es de la sf quito la 'f'
 			$dl = preg_replace('/f$/', '',$dl);
 			if ($dl == core\ConfigGlobal::mi_dele()) {
-				$oActaTribunalDl= new ActaTribunalDl($a_pkey);
+				$oActaTribunal= new ActaTribunalDl($a_pkey);
 			} else {
-				$oActaTribunalDl= new ActaTribunalEx($a_pkey);
+				$oActaTribunal= new ActaTribunalEx($a_pkey);
 			}
-			$oActaTribunalDl->setAllAtributes($aDades);
-			$oActaTribunalDlSet->add($oActaTribunalDl);
+			$oActaTribunal->setAllAtributes($aDades);
+			$oActaTribunalSet->add($oActaTribunal);
 		}
-		return $oActaTribunalDlSet->getTot();
+		return $oActaTribunalSet->getTot();
 	}
 
 	/* METODES PROTECTED --------------------------------------------------------*/

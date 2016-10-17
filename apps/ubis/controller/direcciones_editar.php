@@ -24,6 +24,9 @@ use ubis\model as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$id_ubi = empty($_POST['id_ubi'])? '' : $_POST['id_ubi'];
+$mod = empty($_POST['mod'])? '' : $_POST['mod'];
+
 switch ($_POST['obj_dir']) {
 	case 'DireccionCdc': // tipo dl pero no de la mia
 		$obj_x = 'ubis\\model\\CdcxDireccion';
@@ -52,10 +55,16 @@ switch ($_POST['obj_dir']) {
 }
 $obj = 'ubis\\model\\'.$_POST['obj_dir'];
 
-if (isset($_POST['mod']) && $_POST['mod'] == 'nuevo' ) {
-	$oUbi = new $obj();
-	$cDatosCampo = $oUbi->getDatosCampos();
-	$oDbl = $oUbi->getoDbl();
+if ($mod == 'nuevo') {
+
+	$oUbi = new $obj_ubi($id_ubi);
+	$sf = $oUbi->getSf();
+	$dl = $oUbi->getDl();
+	$tipo_ubi = $oUbi->getTipo_ubi();
+
+	$oDireccion = new $obj();
+	$cDatosCampo = $oDireccion->getDatosCampos();
+	$oDbl = $oDireccion->getoDbl();
 	foreach ($cDatosCampo as $oDatosCampo) {
 		$camp = $oDatosCampo->getNom_camp();
 		$valor_predeterminado=$oDatosCampo->datos_campo($oDbl,'valor');
@@ -63,7 +72,7 @@ if (isset($_POST['mod']) && $_POST['mod'] == 'nuevo' ) {
 
 	}
 	$a_campos['obj_dir'] = $_POST['obj_dir'];
-	$a_campos['id_ubi'] = empty($_POST['id_ubi'])? '' : $_POST['id_ubi'];
+	$a_campos['id_ubi'] = $id_ubi;
 	$a_campos['idx'] = 'nuevo';
 	$a_campos['id_direccion'] = '';
 	//print_r($a_campos);
@@ -82,13 +91,13 @@ if (isset($_POST['mod']) && $_POST['mod'] == 'nuevo' ) {
 	$id_direccion_actual = $a_id_direccion[$idx];
 	$oDireccion = new $obj($a_id_direccion[$idx]);
 
-	$xDireccion = new $obj_x(array('id_ubi'=>$_POST['id_ubi'],'id_direccion'=>$a_id_direccion[$idx]));
+	$xDireccion = new $obj_x(array('id_ubi'=>$id_ubi,'id_direccion'=>$a_id_direccion[$idx]));
 
 	$a_campos = $oDireccion->getTot();
 	$a_campos['propietario'] = $xDireccion->getPropietario();
 	$a_campos['principal'] = $xDireccion->getPrincipal();
 
-	$oUbi = new $obj_ubi($_POST['id_ubi']);
+	$oUbi = new $obj_ubi($id_ubi);
 	$sf = $oUbi->getSf();
 	$dl = $oUbi->getDl();
 	$tipo_ubi = $oUbi->getTipo_ubi();
@@ -99,10 +108,10 @@ if (isset($_POST['mod']) && $_POST['mod'] == 'nuevo' ) {
 	$a_campos['idx'] = $idx;
 	$a_campos['id_direccion'] = $_POST['id_direccion'];
 	$a_campos['id_direccion_actual'] = $id_direccion_actual;
-	$a_campos['id_ubi'] = $_POST['id_ubi'];
+	$a_campos['id_ubi'] = $id_ubi;
 
-	$golistadir = web\Hash::link('apps/ubis/controller/direcciones_que.php?'.http_build_query(array('id_ubi'=>$_POST['id_ubi'],'id_direccion'=>$_POST['id_direccion'],'obj_dir'=>$_POST['obj_dir'])));
-	$quitardir = web\Hash::link('apps/ubis/controller/direcciones_quitar.php?'.http_build_query(array('id_ubi'=>$_POST['id_ubi'],'id_direccion'=>$_POST['id_direccion'],'obj_dir'=>$_POST['obj_dir'],'hno'=>'idx')));
+	$golistadir = web\Hash::link('apps/ubis/controller/direcciones_que.php?'.http_build_query(array('id_ubi'=>$id_ubi,'id_direccion'=>$_POST['id_direccion'],'obj_dir'=>$_POST['obj_dir'])));
+	$quitardir = web\Hash::link('apps/ubis/controller/direcciones_quitar.php?'.http_build_query(array('id_ubi'=>$id_ubi,'id_direccion'=>$_POST['id_direccion'],'obj_dir'=>$_POST['obj_dir'],'hno'=>'idx')));
 }
 
 //----------------------------------Permisos según el usuario
@@ -133,7 +142,7 @@ if (strstr($_POST['obj_dir'],'Dl')) {
 $a_campos['botones'] = $botones;
 //------------------------------------------------------------------------
 
-if (empty($_POST['mod']) & empty($_POST['id_direccion'])) {
+if (empty($mod) & empty($_POST['id_direccion'])) {
  	?>
 	<table><tr><td><?= _("Este ubi no dispone de una dirección. Compruebe primero si existe, en este caso, asígnesela. En caso contrario cree una nueva.") ?></td></tr></table>
 	<br>
@@ -147,9 +156,12 @@ if (empty($_POST['mod']) & empty($_POST['id_direccion'])) {
 ?>
 <script>
 fnjs_guardar_dir=function(){
-   $('#que').val('direccion');
-   $('#frm2').attr('action','apps/ubis/controller/ubis_update.php');
-   fnjs_enviar_formulario('#frm2');
+	var rr=fnjs_comprobar_campos('#frm2','<?= addslashes($obj) ?>');
+	if (rr=='ok') {
+	   $('#que').val('direccion');
+	   $('#frm2').attr('action','apps/ubis/controller/ubis_update.php');
+	   fnjs_enviar_formulario('#frm2');
+	}
 }
 
 fnjs_nuevo=function(f,go){

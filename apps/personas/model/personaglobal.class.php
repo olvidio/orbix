@@ -1,6 +1,7 @@
 <?php
 namespace personas\model;
 use core;
+use ubis\model as ubis;
 /**
  * Fitxer amb la Classe que accedeix a la taula personas_dl
  *
@@ -205,6 +206,12 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @var string
 	 */
 	 protected $sApellidos;
+	 /**
+	 * Nombre en latin del porfesor, para las actas
+	 *
+	 * @var string
+	 */
+	 protected $sTituloNombreLatin;
 
 	/**
 	 * Centro_o_dl de Persona
@@ -218,9 +225,9 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	/**
 	 * Constructor de la classe.
 	 *
-	 */
 	function __construct($a_id='') {
 	}
+	 */
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
 	/* METODES ALTRES  ----------------------------------------------------------*/
@@ -806,31 +813,45 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 		return $this->sNombreApellidosCrSin;
 	}
 	/**
+	 * Recupera l'atribut sTituloNombreLatin de Persona
+	 * el nombre más los nexos más los apellidos (para des actas).
+	 *
+	 * @return string sTituloNombreLatin
+	 */
+	function getTituloNombreLatin() {
+		if (!isset($this->sTituloNombreLatin)) {
+			$this->DBCarregar();
+			$oGesNomLatin = new GestorNombreLatin();
+			$nom_ap = 'Dnus. Dr. ';
+			$nom_ap .= $oGesNomLatin->getVernaculaLatin($this->snom); 
+			$nom_ap .= !empty($this->snx1)? ' '.$this->snx1 : '';
+			$nom_ap .= ' '.$this->sapellido1;
+			$nom_ap .= !empty($this->snx2)? ' '.$this->snx2.' ' : ' ';
+			$nom_ap .= !empty($this->sapellido2)? $this->sapellido2 : '';
+
+			$this->sTituloNombreLatin=$nom_ap;
+		}
+		return $this->sTituloNombreLatin;
+	}
+	/**
 	 * Recupera l'atribut sCentro_o_dl de Persona
 	 *
 	 * @return string sCentro_o_dl
 	 */
 	function getCentro_o_dl() {
 		if (!isset($this->sCentro_o_dl)) {
-			$oDbl = $this->getoDbl();
-			$this->DBCarregar();
-			$id_tabla=$this->getId_tabla();
-			$ctr='';
-			switch($id_tabla[0]) {
-				case 'p':
-					$ctr=$this->sdl;
+			$classname = get_class($this);
+			if (preg_match('@\\\\([\w]+)$@', $classname, $matches)) {
+        		$classname = $matches[1];
+    		}
+			switch($classname) {
+				case 'PersonaEx':
+				case 'PersonaIn':
+					$ctr = $this->getDl();
 					break;
-				case 'n':
-				case 'x':
-				case 'a':
-				case 's':
-				case 'sssc':
-					$sql='SELECT nombre_ubi FROM u_centros_dl u JOIN personas_dl p ON (u.id_ubi=p.id_ctr)
-					   		WHERE id_nom='.$this->getId_nom();
-					$ctr=$oDbl->query($sql)->fetchColumn();
-					break;
-				default:
-					$ctr = '';
+				case 'PersonaDl':
+					$oCentroDl = new ubis\CentroDl($this->getId_ctr());
+					$ctr = $oCentroDl->getNombre_ubi();
 					break;
 			}
 			$this->sCentro_o_dl=$ctr;

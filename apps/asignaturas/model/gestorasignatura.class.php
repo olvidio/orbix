@@ -35,6 +35,49 @@ class GestorAsignatura Extends core\ClaseGestor {
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
 	/**
+	 * retorna JSON llista d'Asignaturas
+	 *
+	 * @param string sQuery la query a executar.
+	 * @return object Json 
+	 */
+	function getJsonAsignaturas($aWhere) {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$sCondi = '';
+		foreach ($aWhere as $camp => $val) {
+			if ($camp == 'nombre_asig' && !empty($val)) {
+				$sCondi .= "WHERE nombre_asig ILIKE '%$val%'";
+			}
+			if ($camp == 'id' && !empty($val)) {
+				if (!empty($sCondi)) {
+					$sCondi .= " AND id_asignatura = $val";
+				} else {
+					$sCondi .= "WHERE id_asignatura = $val";
+				}
+			}
+		}
+		$sOrdre = " ORDER BY id_nivel";
+		$sLimit = " LIMIT 25";
+		$sQuery = "SELECT DISTINCT id_asignatura,nombre_asig,id_nivel FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
+		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+			$sClauError = 'GestorAsignatura.lista';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		$json = '[';
+		$i = 0;
+		foreach ($oDbl->query($sQuery) as $aClave) {
+			$i++;
+			$id_asignatura = $aClave[0];
+			$nombre_asig = $aClave[1];
+			$json .= ($i > 1)? ',' : ''; 
+			$json .= "{\"id\":\"$id_asignatura\",\"name\":\"$nombre_asig\"}";
+		}
+		$json .= ']';
+		return $json;
+	}
+
+	/**
 	 * retorna un array del tipus: id_asignatura => credits
 	 *
 	 * @return array id_asignatura => credits

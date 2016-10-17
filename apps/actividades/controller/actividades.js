@@ -56,11 +56,11 @@ jsForm.mandar=function(formulario,que){
 			break;
 		case "list":
 			$('#queSel').val(que);
-			this.action = "apps/actividades/controller/lista_asistentes.php";
+			this.action = "apps/asistentes/controller/lista_asistentes.php";
 			break;
 		case "listcl":
 			$('#queSel').val(que);
-			this.action = "apps/actividades/controller/lista_asistentes.php";
+			this.action = "apps/asistentes/controller/lista_asistentes.php";
 			break;
 		case "duplicar":
 			$('#mod').val(que);

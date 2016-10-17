@@ -39,7 +39,6 @@ use personas\model as personas;
 $que = empty($que)? '' : $que;
 
 //pongo aqui el $go_to porque al ir al mismo update que las actividaes, no se donde voler
-//$go_to=core\ConfigGlobal::getWeb()."/programas/dossiers/dossiers_ver.php?pau=$pau&id_pau=$id_pau&obj_pau=${_POST['obj_pau']}&id_dossier=$id_dossier";
 $a_dataUrl = array('queSel'=>'asis','pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$_POST['obj_pau'],'id_dossier'=>$id_dossier);
 $go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query($a_dataUrl));
 
@@ -121,7 +120,15 @@ if (core\configGlobal::is_app_installed('actividadcargos')) {
 		$aOperador=array('id_activ'=>'=','id_nom'=>'=');
 		// me aseguro de que no sea un cargo vacio (sin id_nom)
 		if (!empty($id_nom) && $cAsistente=$gesAsistentes->getAsistentes($aWhere,$aOperador)) {
-			if(is_array($cAsistente) && count($cAsistente)>1) exit ("ERROR: más de un asistente con el mismo id_nom<br>");
+			if(is_array($cAsistente) && count($cAsistente)>1) {
+				$tabla = '';
+				foreach ($cAsistente as $Asistente) {
+					$tabla .= "<li>".$Asistente->getNomTabla()."</li>";
+				}
+				$msg_err = "ERROR: más de un asistente con el mismo id_nom<br>";
+				$msg_err .= "<br>$nom(".$oPersona->getId_tabla().")<br><br>En las tablas:<ul>$tabla</ul>";
+				exit ("$msg_err");
+			}
 			$propio=$cAsistente[0]->getPropio();
 			$falta=$cAsistente[0]->getFalta();
 			$est_ok=$cAsistente[0]->getEst_ok();
@@ -310,7 +317,7 @@ fnjs_borrar_cargo=function(formulario){
 		if (confirm("<?php echo _("¿Esta Seguro que desea quitar este cargo a esta persona?");?>") ) {
 			$('#mod').val("eliminar");
 			go=$('#go_to').val();
-			$(formulario).attr('action',"programas/dossiers/update_3102.php");
+			$(formulario).attr('action',"apps/actividadcargos/controller/update_3102.php");
 	  		//fnjs_enviar_formulario(formulario,'#ficha_activ');
 			$(formulario).submit(function() {
 				$.ajax({
@@ -335,7 +342,7 @@ fnjs_borrar_cargo=function(formulario){
 }
 fnjs_transferir=function(formulario){
 	if (confirm("<?php echo _("¿Esta Seguro que desea transferir todas las personas seleccionadas a históricos?");?>") ) {
-			$(formulario).attr('action',"programas/dossiers/historics_insert.php?");
+			$(formulario).attr('action',"apps/dossiers/historics_insert.php?");
 	  		fnjs_enviar_formulario(formulario,'#ficha_activ');
 	}
 }

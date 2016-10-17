@@ -30,7 +30,6 @@ $a_camposHidden = array(
 		'id_nom'=>$id_nom
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
-
 ?>
 <form id='frm2' >
 <?= $oHash->getCamposHtml(); ?>
@@ -48,7 +47,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 		?>
 		<td>
 		Centro-sede:
-		<?= $nom_ctr->desplegable() ?>
+		<?= $oDesplCentro->desplegable() ?>
 		<?php
 	} else {
 		echo "<td><span class=link onclick=\"fnjs_update_div('#main','$ir_a_traslado');\">&nbsp;Centro-sede:&nbsp;</span>";
@@ -84,7 +83,7 @@ echo "</tr><tr>";
 			foreach ($cSituaciones as $oSituacion) {
 				$situacion_db = $oSituacion->getSituacion();
 				$nombre_situacion = $oSituacion->getNombre_situacion();
-				if ($situacion==$situacion_db) { $sel="selected"; } else { $sel=""; }
+				if ($situacion == $situacion_db) { $sel="selected"; } else { $sel=""; }
  				echo "<option value=\"$situacion_db\" $sel>  $nombre_situacion </option>";
 			}
 			?>

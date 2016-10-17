@@ -17,6 +17,7 @@ use personas\model as personas;
 
 if ($_POST['que']==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 	$aNivelOpcionales = array(1230,1231,1232,2430,2431,2432,2433,2434);
+	$error = '';
 	$GesNotas  = new notas\GestorNota();
 	//$aIdSuperadas = $GesNotas->getArrayNotasSuperadas();
 	// miro el acta
@@ -26,9 +27,9 @@ if ($_POST['que']==3) { //paso las matrículas a notas definitivas (Grabar e imp
 	if (is_array($cActas) && count($cActas) == 1) {
 		$acta=$cActas[0]->getActa();
 		$f_acta=$cActas[0]->getF_acta();
-		if (!$acta || !$f_acta) $error=sprintf(_("debe introducir los datos del acta")."\n");
+		if (!$acta || !$f_acta) $error .= sprintf(_("debe introducir los datos del acta")."\n");
 	} else {
-		$error=sprintf(_("debe introducir los datos del acta. No se ha guardado nada.")."\n");
+		$error .= sprintf(_("debe introducir los datos del acta. No se ha guardado nada.")."\n");
 	}
 	if (!empty($error)) exit($error);
 
@@ -48,7 +49,11 @@ if ($_POST['que']==3) { //paso las matrículas a notas definitivas (Grabar e imp
 		
 		// Sólo grabo si está superada.
 		//if (!in_array($id_situacion,$aIdSuperadas)) continue;
-		if ($nota_num/$nota_max < 0.85) continue;
+		if ($nota_num/$nota_max < 0.6) {
+			$nn = $nota_num/$nota_max * 10;
+			$error .= sprintf(_("nota no guardada para %s porque la nota (%s) no llega al mínimo: 6"),$oPersona->getNombreApellidos(),$nn);
+			continue;
+		}
 				
 		if (!empty($preceptor)) { //miro cuál
 			$oActividadAsignatura = new actividadestudios\ActividadAsignatura(array('id_activ'=>$_POST['id_activ'],'id_asignatura'=>$_POST['id_asignatura'])); 
@@ -117,6 +122,7 @@ if ($_POST['que']==3) { //paso las matrículas a notas definitivas (Grabar e imp
 			$error.=sprintf (_("está intentando poner una nota que ya existe (id_nom=%s)")."\n",$id_nom);
 			continue;
 		} else {
+			if ($nota_num > 1) $id_situacion = 10;
 			// guardo los datos
 			$oPersonaNota->setId_schema($id_schema);
 			$oPersonaNota->setId_nivel($id_nivel);
@@ -161,5 +167,11 @@ if (empty($error)) {
    }
 } else {
 	echo $error;
+	echo "<br>";
+	
+	$go_avant = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/acta_imprimir.php?'.http_build_query(array('acta'=>$acta)));
+	echo "<input type='button' onclick=fnjs_update_div('#main','".$go_avant."') value="._('continuar').">";
+
+
 }
 ?>

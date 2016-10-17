@@ -126,7 +126,7 @@ class CasaDl Extends Casa {
 				}
 			}
 			$aDades['id_auto'] = $oDbl->lastInsertId('u_cdc_dl_id_auto_seq');
-			$aDades['id_ubi'] = $oDbl->query('SELECT id_ubi FROM $nom_tabla WHERE id_auto ='.$aDades['id_auto'])->fetchColumn();
+			$aDades['id_ubi'] = $oDbl->query("SELECT id_ubi FROM $nom_tabla WHERE id_auto =".$aDades['id_auto'])->fetchColumn();
 		}
 		$this->setAllAtributes($aDades);
 		return true;

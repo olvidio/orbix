@@ -37,6 +37,12 @@ class NombreLatin Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * Id_item de NombreLatin
+	 *
+	 * @var integer
+	 */
+	 private $iid_item;
+	/**
 	 * Nom de NombreLatin
 	 *
 	 * @var string
@@ -82,11 +88,11 @@ class NombreLatin Extends core\ClasePropiedades {
 		if (is_array($a_id)) { 
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
-				if (($nom_id == 'nom') && $val_id !== '') $this->snom = (string)$val_id; // evitem SQL injection fent cast a string
+				if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; // evitem SQL injection fent cast a string
 			}	} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->snom = (string)$a_id; // evitem SQL injection fent cast a string
-				$this->aPrimary_key = array('snom' => $this->snom);
+				$this->iid_item = (int)$a_id; // evitem SQL injection fent cast a string
+				$this->aPrimary_key = array('id_item' => $this->iid_item);
 			}
 		}
 		$this->setoDbl($oDbl);
@@ -105,6 +111,7 @@ class NombreLatin Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if ($this->DBCarregar('guardar') === false) { $bInsert=true; } else { $bInsert=false; }
 		$aDades=array();
+		$aDades['nom'] = $this->snom;
 		$aDades['nominativo'] = $this->snominativo;
 		$aDades['genitivo'] = $this->sgenitivo;
 		array_walk($aDades, 'core\poner_null');
@@ -112,9 +119,10 @@ class NombreLatin Extends core\ClasePropiedades {
 		if ($bInsert === false) {
 			//UPDATE
 			$update="
+					nom               		 = :nom,
 					nominativo               = :nominativo,
 					genitivo                 = :genitivo";
-			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE nom='$this->snom'")) === false) {
+			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item'")) === false) {
 				$sClauError = 'NombreLatin.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -127,7 +135,7 @@ class NombreLatin Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			array_unshift($aDades, $this->snom);
+			array_unshift($aDades, $this->iid_item);
 			$campos="(nom,nominativo,genitivo)";
 			$valores="(:nom,:nominativo,:genitivo)";		
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
@@ -153,8 +161,8 @@ class NombreLatin Extends core\ClasePropiedades {
 	public function DBCarregar($que=null) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (isset($this->snom)) {
-			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE nom='$this->snom'")) === false) {
+		if (isset($this->iid_item)) {
+			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item='$this->iid_item'")) === false) {
 				$sClauError = 'NombreLatin.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -183,7 +191,7 @@ class NombreLatin Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE nom='$this->snom'")) === false) {
+		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_item='$this->iid_item'")) === false) {
 			$sClauError = 'NombreLatin.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -227,11 +235,22 @@ class NombreLatin Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('snom' => $this->snom);
+			$this->aPrimary_key = array('id_item' => $this->iid_item);
 		}
 		return $this->aPrimary_key;
 	}
 
+	/**
+	 * Recupera l'atribut snom de NombreLatin
+	 *
+	 * @return string snom
+	 */
+	function getId_item() {
+		if (!isset($this->iid_item)) {
+			$this->DBCarregar();
+		}
+		return $this->iid_item;
+	}
 	/**
 	 * Recupera l'atribut snom de NombreLatin
 	 *
@@ -298,6 +317,7 @@ class NombreLatin Extends core\ClasePropiedades {
 	function getDatosCampos() {
 		$oNombreLatinSet = new core\Set();
 
+		$oNombreLatinSet->add($this->getDatosNom());
 		$oNombreLatinSet->add($this->getDatosNominativo());
 		$oNombreLatinSet->add($this->getDatosGenitivo());
 		return $oNombreLatinSet->getTot();
@@ -305,6 +325,20 @@ class NombreLatin Extends core\ClasePropiedades {
 
 
 
+	/**
+	 * Recupera les propietats de l'atribut snom de NombreLatin
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return oject DatosCampo
+	 */
+	function getDatosNom() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nom'));
+		$oDatosCampo->setEtiqueta(_("vernácula"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument('50');
+		return $oDatosCampo;
+	}
 	/**
 	 * Recupera les propietats de l'atribut snominativo de NombreLatin
 	 * en una clase del tipus DatosCampo

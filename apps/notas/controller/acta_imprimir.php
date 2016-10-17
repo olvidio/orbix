@@ -58,23 +58,9 @@ $nombre_corto=$oAsignatura->getNombre_corto();
 $nombre_asig=$oAsignatura->getNombre_asig();
 $any=$oAsignatura->getYear();
 
-switch (substr($id_asignatura, 0, 1)) {
-	case 1:
-		$curso="PHILOSOPHIAE";
-		break;
-	case 2:
-		$curso="S. TEOLOGIAE";
-		break;
-	case 3:
-		$op=substr($id_asignatura, 1, 1);
-		if ($op=1) $curso="PHILOSOPHIAE";
-		if ($op=2) $curso="S. TEOLOGIAE";
-		if ($op=3) {
-			if (stristr ($observ, "philo"))  $curso="PHILOSOPHIAE";
-			if (stristr ($observ, "teolo"))  $curso="S. TEOLOGIAE";
-		}
-		break;
-}
+$id_tipo=$oAsignatura->getId_tipo();
+$oAsignaturaTipo = new asignaturas\AsignaturaTipo($id_tipo);
+$curso = $oAsignaturaTipo->getTipo_latin();
 
 switch ($any) {
 	case 1:
@@ -103,7 +89,9 @@ $GesNotas  = new notas\GestorNota();
 $aIdSuperadas = $GesNotas->getArrayNotasSuperadas();
 
 // para ordenar
+$errores = '';
 $aPersonasNotas = array(); 
+$oGesNomLatin = new personas\GestorNombreLatin();
 foreach($cPersonaNotas as $oPersonaNota) {
 	
 	$id_situacion=$oPersonaNota->getId_situacion();
@@ -112,21 +100,21 @@ foreach($cPersonaNotas as $oPersonaNota) {
 	$apellidos=$oPersona->getApellidos();
 	$trato=$oPersona->getTrato();
 	$nom_v=$oPersona->getNom();
-	
-	// para el caso de nombre compuesto hay que hacer un bucle:
-	$nom_v_i=strtok($nom_v,' ');
-	$nom_lat='';
-	do {
-		$oNomLatin = new personas\NombreLatin(array('nom'=>$nom_v_i));
-		$nom_lat .= $oNomLatin->getNominativo()." ";
-	} while ($nom_v_i=strtok(" ")) ;
+	$nom_lat = $oGesNomLatin->getVernaculaLatin($nom_v);
 
 	//Ni la función del postgresql ni la del php convierten los acentos.
+	$apellidos = trim($apellidos);
+
+	if (empty($apellidos)) {
+		$errores .= "<br>".sprintf(_("Existe una nota de la que no se tiene acceso al nombre (id_nom = %s): es de otra dl o 'de paso' borrado."),$id_nom);
+		$errores .= " " . _("No aparece en la lista");
+		continue;
+	}
+	$apellidos = empty($apellidos)? '????' : $apellidos;
 	$apellidos=core\strtoupper_dlb($apellidos);
-	$nom=trim($apellidos).", ".$trato.$nom_lat;
+	$nom = $apellidos.", ".$trato.$nom_lat;
 		
-	//$oNota = new notas\Nota($id_situacion);
-	//$nota=$oNota->getDescripcion();
+	//echo "<br>$id_nom, $apellidos";
 	$nota = $oPersonaNota->getNota_txt();
 	$aPersonasNotas[$nom] = $nota;
 }
@@ -136,7 +124,7 @@ $num_alumnos=count($aPersonasNotas);
 
 // tribunal:
 $GesTribunal = new notas\GestorActaTribunalDl();
-$cTribunal = $GesTribunal->getActasTribunalesDl(array('acta'=>$acta,'_ordre'=>'orden')); 
+$cTribunal = $GesTribunal->getActasTribunales(array('acta'=>$acta,'_ordre'=>'orden')); 
 $num_examinadores=count($cTribunal);
 
 // Definición del número de lineas de las páginas y los numeros de alumnos----------------
@@ -166,7 +154,9 @@ if (empty($_POST['cara'])) { $cara="A"; } else { $cara=$_POST['cara']; }
 <td align="center"><span class=link onclick="fnjs_update_div('#main','<?= $caraB ?>')"><?= _("Cara B (detrás)"); ?></span></td>
 <td align="center"><span class=link onclick='window.open("<?= core\ConfigGlobal::getWeb() ?>/apps/notas/controller/acta_2_mpdf.php?acta=<?= urlencode($acta) ?><?= $h ?>&PHPSESSID=<?php echo session_id(); ?>", "sele");' >
 <?= _("PDF"); ?></span></td>
-</tr></table>
+</tr>
+<?php if (!empty($errores)) { echo "<tr><td colspan=4>$errores</td></tr>"; } ?>
+</table>
 
 <div class="A4" >
 <?php if ($cara=="A") { ?>

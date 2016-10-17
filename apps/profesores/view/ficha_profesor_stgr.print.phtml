@@ -1,3 +1,6 @@
+<?php
+use asignaturas\model as asignaturas;
+?>
 <html>
 <head>
 <style>
@@ -40,8 +43,8 @@
 <h3><?= ucfirst(_("curriculum")) ?></h3>
 <table class=lst>
 <?php
-if (!empty($curriculum) && is_array($curriculum)) {
-	foreach ($curriculum as $n => $row) {
+if (!empty($a_curriculum) && is_array($a_curriculum)) {
+	foreach ($a_curriculum as $n => $row) {
 		echo "<tr><td>${row['titulo']}</td><td>${row['centro_dnt']}</td><td>${row['year']}</td></tr>";
 	}
 }
@@ -53,7 +56,7 @@ if (!empty($curriculum) && is_array($curriculum)) {
 <?php
 if (!empty($a_nombramientos) && is_array($a_nombramientos)) {
 	foreach ($a_nombramientos as $n => $row) {
-		echo "<tr><td>${row['tipo_profesor']}</td><td>${row['ff_nombramiento']}</td><td>${row['escrito_nombramiento']}</td></tr>";
+		echo "<tr><td>${row['tipo_profesor']}</td><td>${row['f_nombramiento']}</td><td>${row['escrito_nombramiento']}</td></tr>";
 	}
 }
 ?>
@@ -64,18 +67,19 @@ if (!empty($a_nombramientos) && is_array($a_nombramientos)) {
 <?php
 if (!empty($ampliacion) && is_array($ampliacion)) {
 	foreach ($ampliacion as $n => $row) {
-		echo "<tr><td>${row['nombre_corto']}</td><td>${row['escrito_nombramiento']}</td><td>${row['ff_nombramiento']}</td></tr>";
+		echo "<tr><td>${row['nombre_corto']}</td><td>${row['escrito_nombramiento']}</td><td>${row['f_nombramiento']}</td></tr>";
 	}
 }
 ?>
 </table>
+<br>
 <p><?= ucfirst(_("profesor de latín")) ?>: <?= $latin_txt ?></p>
 <h3><?= ucfirst(_("convivencias y congresos")) ?></h3>
 <table class=lst>
 <tr><td class=cabecera><?= _("tema") ?></td><td class=cabecera><?= _("lugar") ?></td><td class=cabecera><?= _("inicio") ?></td><td class=cabecera><?= _("fin") ?></td></tr>
 <?php
-foreach($cCongresos as $oCongreso) {
-	$row = $oCongreso->getTot();
+foreach($cProfesorCongresos as $oProfesorCongreso) {
+	$row = $oProfesorCongreso->getTot();
 	echo "<tr><td>${row['congreso']}</td><td>${row['lugar']}</td><td>${row['f_ini']}</td><td>${row['f_fin']}</td></tr>";
 }
 ?>
@@ -87,7 +91,7 @@ foreach($cCongresos as $oCongreso) {
 foreach($cDocencias as $oDocencia) {
 	$row = $oDocencia->getTot();
 	$array_tipo = $oDocencia->getDatosTipo()->getArgument();
-	$oAsignatura = new Asignatura($row['id_asignatura']);
+	$oAsignatura = new asignaturas\Asignatura($row['id_asignatura']);
 	$nombre_corto = $oAsignatura->getNombre_corto();
 	$modo=$array_tipo[$row['tipo']];
 	echo "<tr><td>${row['curso']}</td><td>$nombre_corto</td><td>$modo</td></tr>";

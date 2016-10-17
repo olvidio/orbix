@@ -14,11 +14,11 @@ use personas\model as personas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$id_nom = empty($_POST['id_pau'])? '' : $_POST['id_pau'];
 if (!empty($_POST['sel'])) { //vengo de un checkbox
 	if ($_POST['pau']=="p") { 
 		$id_nivel=strtok($_POST['sel'][0],"#"); 
 		$id_asignatura=strtok("#"); 
-		empty($_POST['id_pau'])? $id_nom="" : $id_nom=$_POST['id_pau'];
 	}
 }
 
@@ -40,7 +40,7 @@ switch($_POST['mod']) {
 		//$go_to="dossiers_ver.php?pau=p&id_pau=".$_POST['id_pau']."&id_dossier=1011";
 		break;
 	case 'nuevo': //------------ NUEVO --------
-		if ($_POST['id_asignatura']=='nueva' && $_POST['opcional'] == 'n') {
+		if ($_POST['id_asignatura']=='1' && $_POST['opcional'] == 'n') {
 			$id_nivel = $_POST['id_nivel'];
 			$oGesAsignaturas=new asignaturas\GestorAsignatura();
 			$cAsignaturas=$oGesAsignaturas->getAsignaturas(array('id_nivel'=>$id_nivel));
@@ -59,8 +59,19 @@ switch($_POST['mod']) {
 		$id_schema = $oPersona->getId_schema();
 		$oPersonaNota->setId_schema($id_schema);
 		if (!empty($_POST['id_situacion'])) $oPersonaNota->setId_situacion($_POST['id_situacion']);
-		if (!empty($_POST['acta'])) $oPersonaNota->setActa($_POST['acta']);
 		if (!empty($_POST['f_acta'])) $oPersonaNota->setF_acta($_POST['f_acta']);
+		// comprobar valor del acta
+		if (!empty($_POST['acta'])) {
+			$oActa = new notas\Acta();
+			$valor = trim($_POST['acta']);
+			$reg_exp = "/^(\?|\w{1,6}\??)\s+([0-9]{0,3})\/([0-9]{2})\??$/";
+			if (preg_match ($reg_exp, $valor) == 1) {
+				} else {
+					// inventar acta.
+					$valor = $oActa->inventarActa($valor,$_POST['f_acta']);
+				}
+			$oPersonaNota->setActa($valor);
+		}
 		if (!empty($_POST['preceptor'])) $oPersonaNota->setPreceptor($_POST['preceptor']);
 		if (!empty($_POST['id_preceptor'])) $oPersonaNota->setId_preceptor($_POST['id_preceptor']);
 		if (!empty($_POST['detalle'])) $oPersonaNota->setDetalle($_POST['detalle']);
@@ -88,8 +99,19 @@ switch($_POST['mod']) {
 			$oPersonaNota = new notas\PersonaNota();
 		}
 		$oPersonaNota->setId_situacion($_POST['id_situacion']);
-		$oPersonaNota->setActa($_POST['acta']);
 		$oPersonaNota->setF_acta($_POST['f_acta']);
+		// comprobar valor del acta
+		if (!empty($_POST['acta'])) {
+			$oActa = new notas\Acta();
+			$valor = trim($_POST['acta']);
+			$reg_exp = "/^(\?|\w{1,6}\??)\s+([0-9]{0,3})\/([0-9]{2})\??$/";
+			if (preg_match ($reg_exp, $valor) == 1) {
+				} else {
+					// inventar acta.
+					$valor = $oActa->inventarActa($valor,$_POST['f_acta']);
+				}
+			$oPersonaNota->setActa($valor);
+		}
 		if (empty($_POST['preceptor'])) {
 			$oPersonaNota->setPreceptor('');
 			$oPersonaNota->setId_preceptor('');
@@ -110,17 +132,17 @@ switch($_POST['mod']) {
 
 if (!empty($_POST['go_to_que'])) {
 	switch ($_POST['go_to_que']) {
-		case 1:
-			empty($_POST['go_to'])? $go_to="" : $go_to=$_POST['go_to'];
+		case 1: // no mas notas
+			$oPosicion->setId_div('ir_a');
+			echo $oPosicion->atras();
 			break;
-		case 2:
+		case 2: // otra nota
 			empty($_POST['go_to_1'])? $go_to="" : $go_to=$_POST['go_to_1'];
+			echo $oPosicion->ir_a($go_to);
 			break;
 	}
 } else {
-	empty($_POST['go_to'])? $go_to="" : $go_to=$_POST['go_to'];
+	$oPosicion->setId_div('ir_a');
+	echo $oPosicion->atras();
 }
-
-$oPosicion->setId_div('ir_a');
-echo $oPosicion->atras();
 ?>

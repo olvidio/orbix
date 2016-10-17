@@ -40,16 +40,8 @@ $nom_vernacula = $oPersona->getNom();
 $apellidos = $oPersona->getApellidos();
 $trato = $oPersona->getTrato();
 
-// para el caso de nombre compuesto hay que hacer un bucle:
-$nom_v_i=strtok($nom_vernacula," ");
-$nom_lat='';
-do {
-	$oNombreLatin = new personas\NombreLatin($nom_v_i);
-	$nom_lat_i=$oNombreLatin->getGenitivo();
-	$nom_lat .= $nom_lat_i." ";
-}
-while ($nom_v_i=strtok(" ")) ;
-
+$oGesNomLatin = new personas\GestorNombreLatin();
+$nom_lat = $oGesNomLatin->getVernaculaLatin($nom_vernacula);
 $nom=$trato.$nom_lat.$apellidos;
 
 // conversion 

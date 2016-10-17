@@ -273,9 +273,10 @@ class ActividadAll Extends core\ClasePropiedades {
 	 */
 	public function DBCarregar($que=null) {
 		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iid_activ)) {
-			echo "SELECT * FROM av_actividades_all WHERE id_activ='$this->iid_activ'";
-			if (($qRs = $oDbl->query("SELECT * FROM av_actividades_all WHERE id_activ='$this->iid_activ'")) === false) {
+			//echo "SELECT * FROM $nom_tabla WHERE id_activ='$this->iid_activ'";
+			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_activ='$this->iid_activ'")) === false) {
 				$sClauError = 'ActividadAll.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -616,6 +617,8 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @param integer iprecio='' optional
 	 */
 	function setPrecio($iprecio='') {
+		// adminto ',' como separador decimal.
+		$iprecio = str_replace(",", ".", $iprecio);
 		$this->iprecio = $iprecio;
 	}
 	/**
@@ -1059,6 +1062,16 @@ class ActividadAll Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'precio'));
 		$oDatosCampo->setEtiqueta(_("precio"));
+		$oDatosCampo->setRegExp("/^(\d+)[,.]?\d{0,2}$/");
+		$txt =  _('tiene un formato no válido.');
+		$txt.=  "\n";
+		$txt.=  _('se adminte un separador para los decimales (máximo 2)');
+		$txt.=  "\n";
+		$txt.=  _('No se admite separador para los miles');
+		$txt.=  "\n";
+		$txt.=  _('ejemplo: 1254.56');
+		$oDatosCampo->setRegExpText($txt);
+
 		return $oDatosCampo;
 	}
 	/**

@@ -15,8 +15,8 @@ use personas\model as personas;
 
 $notas=1; // para indicar a la página de actas que está dentro de ésta.
 if (!empty($_POST['sel'])) { //vengo de un checkbox
-	$id_asignatura=strtok($_POST['sel'][0],"#");
-	empty($_POST['id_pau'])? $id_activ="" : $id_activ=$_POST['id_pau'];
+	$id_activ = strtok($_POST['sel'][0],"#");
+	$id_asignatura=strtok("#");
 } else {
 	empty($_POST['id_asignatura'])? $id_asignatura="" : $id_asignatura=$_POST['id_asignatura'];
 	empty($_POST['id_activ'])? $id_activ="" : $id_activ=$_POST['id_activ'];
@@ -27,22 +27,6 @@ $GesNotas = new notas\GestorNota();
 $oDesplNotas = $GesNotas->getListaNotas();
 $oDesplNotas->setNombre('id_situacion[]');
 
-/*
-
-$GesNotas = new notas\GestorNota();
-$cNotas = $GesNotas->getNotas();
-$aNotas = array();
-foreach ($cNotas as $oNota) {
-	$id = $oNota->getId_situacion();
-	$descripcion = $oNota->getDescripcion();
-	$aNotas[$id] = $descripcion;
-}
-$oDesplNotas = new web\Desplegable();
-$oDesplNotas->setNombre("id_situacion[]");
-$oDesplNotas->setOpciones($aNotas);
-$oDesplNotas->setBlanco(true);
-$oDesplNotas->setAction("fnjs_guardar()");
-*/
 
 $oActividad = new actividades\Actividad($id_activ);
 $nom_activ = $oActividad->getNom_activ();

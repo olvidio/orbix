@@ -50,6 +50,8 @@ $oHash->setArraycamposHidden($a_camposHidden);
 <tr>
 	<td class=etiqueta><?php echo ucfirst(_("país")); ?></td>
 	<td colspan="2"><input class=contenido id=pais name=pais ></td></tr>
+<?php } else { ?>
+	<input type=hidden id=pais name=pais ></td></tr>
 <?php } ?>
 </tbody>
 </table>

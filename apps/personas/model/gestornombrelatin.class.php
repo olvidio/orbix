@@ -34,27 +34,28 @@ class GestorNombreLatin Extends core\ClaseGestor {
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
+
 	/**
-	 * retorna l'array d'objectes de tipus NombreLatin
+	 * retorna string. Converteix nom de vernacula a llatí.
 	 *
-	 * @param string sQuery la query a executar.
-	 * @return array Una col·lecció d'objectes de tipus NombreLatin
+	 * @param string Nom en vernàcula.
+	 * @return string Nom en llatí.
 	 */
-	function getNombresLatinQuery($sQuery='') {
-		$oDbl = $this->getoDbl();
-		$oNombreLatinSet = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorNombreLatin.query';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return false;
-		}
-		foreach ($oDbl->query($sQuery) as $aDades) {
-			$a_pkey = array('nom' => $aDades['nom']);
-			$oNombreLatin= new NombreLatin($a_pkey);
-			$oNombreLatin->setAllAtributes($aDades);
-			$oNombreLatinSet->add($oNombreLatin);
-		}
-		return $oNombreLatinSet->getTot();
+	function getVernaculaLatin($sNomV='') {
+		$sNomV=empty($sNomV)? '????????' : $sNomV;
+		// para el caso de nombre compuesto hay que hacer un bucle:
+		$nom_v_i=strtok($sNomV,' ');
+		$nom_lat='';
+		do {
+			$cNomLatin = $this->getNombresLatin(array('nom'=>$nom_v_i));
+			if (!empty($cNomLatin) && $cNomLatin !== false) {
+				$nom_lat .= $cNomLatin[0]->getNominativo()." ";
+			} else {
+				$nom_lat .= $nom_v_i;
+			}
+		} while ($nom_v_i=strtok(' ')) ;
+
+		return $nom_lat;
 	}
 
 	/**
@@ -100,7 +101,7 @@ class GestorNombreLatin Extends core\ClaseGestor {
 			return false;
 		}
 		foreach ($oDblSt as $aDades) {
-			$a_pkey = array('nom' => $aDades['nom']);
+			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oNombreLatin= new NombreLatin($a_pkey);
 			$oNombreLatin->setAllAtributes($aDades);
 			$oNombreLatinSet->add($oNombreLatin);

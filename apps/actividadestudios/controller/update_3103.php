@@ -12,9 +12,11 @@ use dossiers\model as dossiers;
 
 if (!empty($_POST['sel'])) { //vengo de un checkbox
 	if ($_POST['pau']=='p') { 
-		$id_asignatura=strtok($_POST['sel'][0],'#'); 
-		$id_nom = empty($_POST['id_pau'])? '' : $_POST['id_pau'];
-		$id_activ=empty($_POST['id_activ'])? '' : $_POST['id_activ'];
+		$id_activ = strtok($_POST['sel'][0],'#'); 
+		$id_activ = !empty($_POST['id_activ'])? $_POST['id_activ'] : $id_activ;
+		$id_asignatura = strtok('#'); 
+		$id_nom = strtok('#'); 
+		$id_nom = !empty($_POST['id_pau'])? $_POST['id_pau'] : $id_nom;
 	}
 	if ($_POST['pau']=='a') {
 		$id_nom=strtok($_POST['sel'][0],'#'); 
@@ -37,14 +39,28 @@ switch ($_POST['mod']) {
 		break;
 	case 'eliminar': //------------ BORRAR --------
 		if ($_POST['pau']=="p") { 
-			$oMatricula = new actividadestudios\MatriculaDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'id_asignatura'=>$id_asignatura));
-			if ($oMatricula->DBEliminar() === false) {
-				$msg_err = _("Hay un error, no se ha borrado.");
+			// Para borrar varios
+			foreach ($_POST['sel'] as $sel) {
+				$id_activ = strtok($sel,'#'); 
+				$id_asignatura = strtok('#'); 
+				if (!empty($_POST['id_activ'])) {
+					$id_activ = $_POST['id_activ'];
+				}
+				if (!empty($_POST['id_pau'])) {
+					$id_nom = $_POST['id_pau'];
+				} else {
+					$id_nom = strtok('#'); 
+				}
+			
+				$oMatricula = new actividadestudios\MatriculaDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'id_asignatura'=>$id_asignatura));
+				if ($oMatricula->DBEliminar() === false) {
+					$msg_err = _("Hay un error, no se ha borrado.");
+				}
+				// hay que cerrar el dossier para esta persona, si no tiene más actividades:
+				$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$id_nom,'id_tipo_dossier'=>1303));
+				$oDossier->abrir();
+				$oDossier->DBGuardar();
 			}
-			// hay que cerrar el dossier para esta persona, si no tiene más actividades:
-			$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$id_nom,'id_tipo_dossier'=>1303));
-			$oDossier->abrir();
-			$oDossier->DBGuardar();
 		}
 		if ($_POST['pau']=="a") { 
 			$oMatricula = new actividadestudios\MatriculaDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'id_asignatura'=>$id_asignatura));

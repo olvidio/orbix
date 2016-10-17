@@ -96,6 +96,12 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * @var string
 	 */
 	 private $sapp;
+	/**
+	 * Class de TipoDossier
+	 *
+	 * @var string
+	 */
+	 private $sclass;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
 	 * oDbl de TipoDossier
@@ -156,6 +162,7 @@ class TipoDossier Extends core\ClasePropiedades {
 		$aDades['permiso_escritura'] = $this->ipermiso_escritura;
 		$aDades['depende_modificar'] = $this->bdepende_modificar;
 		$aDades['app'] = $this->sapp;
+		$aDades['class'] = $this->sclass;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if (empty($aDades['depende_modificar']) || ($aDades['depende_modificar'] === 'off') || ($aDades['depende_modificar'] === false) || ($aDades['depende_modificar'] === 'f')) { $aDades['depende_modificar']='f'; } else { $aDades['depende_modificar']='t'; }
@@ -171,7 +178,8 @@ class TipoDossier Extends core\ClasePropiedades {
 					permiso_lectura          = :permiso_lectura,
 					permiso_escritura        = :permiso_escritura,
 					depende_modificar        = :depende_modificar,
-					app                      = :app";
+					app                      = :app,
+					class                    = :class";
 			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_tipo_dossier='$this->iid_tipo_dossier'")) === false) {
 				$sClauError = 'TipoDossier.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -186,8 +194,8 @@ class TipoDossier Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_tipo_dossier);
-			$campos="(id_tipo_dossier,descripcion,tabla_from,tabla_to,campo_to,id_tipo_dossier_rel,permiso_lectura,permiso_escritura,depende_modificar,app)";
-			$valores="(:id_tipo_dossier,:descripcion,:tabla_from,:tabla_to,:campo_to,:id_tipo_dossier_rel,:permiso_lectura,:permiso_escritura,:depende_modificar,:app)";		
+			$campos="(id_tipo_dossier,descripcion,tabla_from,tabla_to,campo_to,id_tipo_dossier_rel,permiso_lectura,permiso_escritura,depende_modificar,app,class)";
+			$valores="(:id_tipo_dossier,:descripcion,:tabla_from,:tabla_to,:campo_to,:id_tipo_dossier_rel,:permiso_lectura,:permiso_escritura,:depende_modificar,:app,:class)";		
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'TipoDossier.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -269,6 +277,7 @@ class TipoDossier Extends core\ClasePropiedades {
 		if (array_key_exists('permiso_escritura',$aDades)) $this->setPermiso_escritura($aDades['permiso_escritura']);
 		if (array_key_exists('depende_modificar',$aDades)) $this->setDepende_modificar($aDades['depende_modificar']);
 		if (array_key_exists('app',$aDades)) $this->setApp($aDades['app']);
+		if (array_key_exists('class',$aDades)) $this->setClass($aDades['class']);
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
@@ -487,6 +496,25 @@ class TipoDossier Extends core\ClasePropiedades {
 	function setApp($sapp='') {
 		$this->sapp = $sapp;
 	}
+	/**
+	 * Recupera l'atribut sclass de TipoDossier
+	 *
+	 * @return string sclass
+	 */
+	function getClass() {
+		if (!isset($this->sclass)) {
+			$this->DBCarregar();
+		}
+		return $this->sclass;
+	}
+	/**
+	 * estableix el valor de l'atribut sclass de TipoDossier
+	 *
+	 * @param string sclass='' optional
+	 */
+	function setClass($sclass='') {
+		$this->sclass = $sclass;
+	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
 	/**
@@ -505,6 +533,7 @@ class TipoDossier Extends core\ClasePropiedades {
 		$oTipoDossierSet->add($this->getDatosPermiso_escritura());
 		$oTipoDossierSet->add($this->getDatosDepende_modificar());
 		$oTipoDossierSet->add($this->getDatosApp());
+		$oTipoDossierSet->add($this->getDatosClass());
 		return $oTipoDossierSet->getTot();
 	}
 
@@ -616,6 +645,18 @@ class TipoDossier Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'app'));
 		$oDatosCampo->setEtiqueta(_("app"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut sclass de TipoDossier
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return oject DatosCampo
+	 */
+	function getDatosClass() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'class'));
+		$oDatosCampo->setEtiqueta(_("class"));
 		return $oDatosCampo;
 	}
 }

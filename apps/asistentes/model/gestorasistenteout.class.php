@@ -90,6 +90,7 @@ class GestorAsistenteOut Extends GestorAsistentePub {
 		if (isset($aWhere['_ordre']) && $aWhere['_ordre']!='') $sOrdre = ' ORDER BY '.$aWhere['_ordre'];
 		if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
+		//echo "qry: $sQry<br>";
 		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClauError = 'GestorAsistenteOut.llistar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);

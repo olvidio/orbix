@@ -74,10 +74,11 @@ class Sector Extends core\ClasePropiedades {
 			}	} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_sector = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('iid_sector' => $this->iid_sector);
+				$this->aPrimary_key = array('id_sector' => $this->iid_sector);
 			}
 		}
 		$this->setoDbl($oDbl);
+		$this->setNomTabla('xe_sectores');
 	}
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
@@ -213,7 +214,7 @@ class Sector Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('iid_sector' => $this->iid_sector);
+			$this->aPrimary_key = array('id_sector' => $this->iid_sector);
 		}
 		return $this->aPrimary_key;
 	}

@@ -29,9 +29,9 @@ class GestorAsistente Extends core\ClaseGestor {
 	 *
 	 */
 	function __construct() {
-		$oDbl = $GLOBALS['oDB'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('d_asistentes_dl');
+		//$oDbl = $GLOBALS['oDB'];
+		//$this->setoDbl($oDbl);
+		//$this->setNomTabla('d_asistentes_dl');
 	}
 
 
@@ -51,6 +51,7 @@ class GestorAsistente Extends core\ClaseGestor {
 		$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');
 		$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
 		$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
+		$a_Clases[] = array('clase'=>'AsistenteEx','get'=>'getAsistentesEx');
 
 		$namespace = __NAMESPACE__;
 		$cAsistencias = $this->getConjunt($a_Clases,$namespace,$aWhereNom, array());
@@ -67,6 +68,7 @@ class GestorAsistente Extends core\ClaseGestor {
 				$f_ini = $oActividad->getF_ini();
 				$oFini= \DateTime::createFromFormat('j/m/Y', $f_ini);
 				$f_ini_iso = $oFini->format('Y-m-d'); 
+				$oAsistente->DBCarregar();
 				$cActividadesOk[$f_ini_iso] = $oAsistente;
 			}
 		}
@@ -83,7 +85,7 @@ class GestorAsistente Extends core\ClaseGestor {
 	 * @return array Una col·lecció d'objectes de tipus ActividadAsistente
 	 */
 	function getAsistentesDeActividad($iid_activ,$sOrder='') {
-		$oDbl = $this->getoDbl();
+		//$oDbl = $this->getoDbl();
 		if (empty($sOrder)) $sOrder='apellido1,apellido2,nom';
 
 		/* Mirar si la actividad es mia o no */
@@ -128,7 +130,7 @@ class GestorAsistente Extends core\ClaseGestor {
 	 * @return array llista de id_nom d'Asistents
 	 */
 	function getListaAsistentesDeActividad($iid_activ,$sOrder='') {
-		$oDbl = $this->getoDbl();
+		//$oDbl = $this->getoDbl();
 		if (empty($sOrder)) $sOrder='id_nom';
 		$a_Lista = array();
 		$sQry = "SELECT a.* FROM d_asistentes_activ a JOIN personas p USING (id_nom)

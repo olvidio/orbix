@@ -76,6 +76,18 @@ class DatosCampo {
 	 * @var array
 	 */
 	 private $alista;
+	/**
+	 * RegExp de DatosCampo
+	 *
+	 * @var string
+	 */
+	 private $sRegExp;
+	/**
+	 * RegExpText de DatosCampo
+	 *
+	 * @var string
+	 */
+	 private $sRegExpText;
 
 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
@@ -434,6 +446,44 @@ class DatosCampo {
 	 */
 	function setLista($alista) {
 		$this->alista = $alista;
+	}
+	/**
+	 * Recupera l'atribut sRegExp de DatosCampo
+	 *
+	 * @return string sRegExp
+	 */
+	function getRegExp() {
+		if (!isset($this->sRegExp)) {
+			//$this->DBCarregar();
+		}
+		return $this->sRegExp;
+	}
+	/**
+	 * estableix el valor de l'atribut sRegExp de DatosCampo
+	 *
+	 * @param string sRegExp
+	 */
+	function setRegExp($sRegExp) {
+		$this->sRegExp = $sRegExp;
+	}
+	/**
+	 * Recupera l'atribut sRegExpText de DatosCampo
+	 *
+	 * @return string sRegExpText
+	 */
+	function getRegExpText() {
+		if (!isset($this->sRegExpText)) {
+			//$this->DBCarregar();
+		}
+		return $this->sRegExpText;
+	}
+	/**
+	 * estableix el valor de l'atribut sRegExpText de DatosCampo
+	 *
+	 * @param string sRegExpText
+	 */
+	function setRegExpText($sRegExpText) {
+		$this->sRegExpText = $sRegExpText;
 	}
 }
 ?>

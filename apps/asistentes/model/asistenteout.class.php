@@ -1,6 +1,7 @@
 <?php
 namespace asistentes\model;
 use personas\model as personas;
+use profesores\model as profesores;
 use core;
 /**
  * Fitxer amb la Classe que accedeix a la taula d_asistentes_out
@@ -22,6 +23,15 @@ use core;
  */
 class AsistenteOut Extends AsistentePub {
 	/* ATRIBUTS ----------------------------------------------------------------- */
+
+	/**
+	 * btraslado de AsistenteOut
+	 *
+	 * @var boolean
+	 */
+	 protected $btraslado = 'f';
+
+
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
 	/**
@@ -111,14 +121,43 @@ class AsistenteOut Extends AsistentePub {
 				}
 			}
 			// Hay que copiar los datos del asistente a PersonaOut
-			$oPersona = personas\Persona::NewPersona($this->iid_nom);
-			$oPersona->DBCarregar();
-			$oPersonaOut =  new personas\PersonaOut($this->iid_nom);
-			$oPersonaOut->import($oPersona);
-			$oPersonaOut->DBGuardar();
+			// Excepto en el caso de estar copiando dossiers por traslado
+			if ($this->btraslado == 'f') {
+				$oPersona = personas\Persona::NewPersona($this->iid_nom);
+				$oPersona->DBCarregar();
+				$oPersonaOut =  new personas\PersonaOut($this->iid_nom);
+				$oPersonaOut->import($oPersona);
+				$oPersonaOut->DBGuardar();
+				// miro si es profesor
+				$cProfesores = array();
+				$gesProfesores = new profesores\GestorProfesor();
+				$cProfesores = $gesProfesores->getProfesores(array('id_nom'=>$this->iid_nom, 'f_cese'=>''),array('f_cese'=>'IS NULL'));
+				if (count($cProfesores > 0)) {
+					$oPersonaOut->setProfesor_stgr('t');
+					$oPersonaOut->DBGuardar();
+				}
+			}
 		}
 		$this->setAllAtributes($aDades);
 		return true;
+	}
+
+	/* METODES GET i SET --------------------------------------------------------*/
+	/**
+	 * Recupera l'atribut btraslado de AsistenteOut
+	 *
+	 * @return boolean btraslado
+	 */
+	function getTraslado() {
+		return $this->btraslado;
+	}
+	/**
+	 * estableix el valor de l'atribut btraslado de AsistenteOut
+	 *
+	 * @param boolean btraslado='f' optional
+	 */
+	function setTraslado($btraslado='f') {
+		$this->btraslado = $btraslado;
 	}
 
 	/* METODES ALTRES  ----------------------------------------------------------*/

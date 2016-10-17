@@ -28,6 +28,7 @@ if (!empty($_POST['nuevo'])) {
 	$a_campos['f_situacion'] = date('j/m/Y');
 	$a_campos['id_nom'] = '';
 	$a_campos['obj'] = $oPersona;
+	$a_campos['id_tabla'] = empty($_POST['id_tabla'])? '' : $_POST['id_tabla'];
 } else {
 	if (!empty($_POST['sel'])) { //vengo de un checkbox
 		//$id_nom=$sel[0];
@@ -56,7 +57,7 @@ if (empty($a_campos['nom_ctr'])) {
 	//$id_ctr = $a_campos['id_ctr'];
 	$GesCentroDl = new ubis\GestorCentroDl();
 	$oDesplCentroDl = $GesCentroDl->getListaCentros();
-	$a_campos['nom_ctr'] = $oDesplCentroDl;
+	$a_campos['oDesplCentro'] = $oDesplCentroDl;
 	$oDesplCentroDl->setAction("fnjs_act_ctr('ctr')");
 	$oDesplCentroDl->setNombre("id_ctr");
 }

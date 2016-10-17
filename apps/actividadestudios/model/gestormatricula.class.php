@@ -40,6 +40,38 @@ class GestorMatricula Extends core\ClaseGestor {
 	 * @param string sQuery la query a executar.
 	 * @return array Una col·lecció d'objectes de tipus Matricula
 	 */
+	function getMatriculasPendientes($id_nom='') {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$oMatriculaSet = new core\Set();
+
+		if (!empty($id_nom)) {
+			$sQry = "SELECT * FROM $nom_tabla Where id_nom = $id_nom AND id_situacion IS NULL";
+		} else {
+			$sQry = "SELECT * FROM $nom_tabla Where id_situacion IS NULL";
+		}
+
+		if (($oDblSt = $oDbl->query($sQry)) === false) {
+			$sClauError = 'GestorMatricula.query';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		foreach ($oDbl->query($sQry) as $aDades) {
+			$a_pkey = array('id_activ' => $aDades['id_activ'],
+							'id_asignatura' => $aDades['id_asignatura'],
+							'id_nom' => $aDades['id_nom']);
+			$oMatricula= new Matricula($a_pkey);
+			$oMatricula->setAllAtributes($aDades);
+			$oMatriculaSet->add($oMatricula);
+		}
+		return $oMatriculaSet->getTot();
+	}
+	/**
+	 * retorna l'array d'objectes de tipus Matricula
+	 *
+	 * @param string sQuery la query a executar.
+	 * @return array Una col·lecció d'objectes de tipus Matricula
+	 */
 	function getMatriculasQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
 		$oMatriculaSet = new core\Set();

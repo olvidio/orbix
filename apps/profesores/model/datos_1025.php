@@ -13,25 +13,25 @@ if (isset($_POST['padre'])) $padre=$_POST['padre'];
 switch ($padre) {
 	case 'datos_sql':
 		// para el datos_sql.php
-		$oLista=new GestorProfesorDocencia();
-		$Coleccion=$oLista->getProfesorDocencias(array('id_nom'=>$_POST['id_pau']));
+		$oLista=new GestorProfesorDocenciaStgr();
+		$Coleccion=$oLista->getProfesorDocenciasStgr(array('id_nom'=>$_POST['id_pau']));
 		break;
 	case 'datos_update':
 		// para el update
 		if ($_POST['mod'] == 'editar' || $_POST['mod'] == 'eliminar') {
-			if (!empty($a_pkey)) $oFicha = new ProfesorDocencia($a_pkey);
+			if (!empty($a_pkey)) $oFicha = new ProfesorDocenciaStgr($a_pkey);
 		}
 		if ($_POST['mod'] == 'nuevo') {
-			$oFicha = new ProfesorDocencia(array('id_nom'=>$_POST['id_pau']));
+			$oFicha = new ProfesorDocenciaStgr(array('id_nom'=>$_POST['id_pau']));
 		}
 		break;
 	case 'datos_form':
 		// para el form
 		if (!empty($a_pkey) && isset($_POST['mod']) && $_POST['mod'] == 'editar') {
-			$oFicha = new ProfesorDocencia($a_pkey);
+			$oFicha = new ProfesorDocenciaStgr($a_pkey);
 		}
 		if (isset($_POST['mod']) && $_POST['mod'] == 'nuevo') {
-			$oFicha = new ProfesorDocencia();
+			$oFicha = new ProfesorDocenciaStgr();
 		}
 		break;
 }

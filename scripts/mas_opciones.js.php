@@ -4,7 +4,7 @@
 /* segun se vayan necesitando.
 /* Función:
 /*   	fnjs_mas_inputs(evt,nom,ir_a_camp);
-/*   	mas_selects(evt,nom,ir_a_camp)  Además hay que tener una variable $var_options donde estén todas las opciones del desplegable
+/*   	fnjs_mas_selects(evt,nom,ir_a_camp)  Además hay que tener una variable $var_options donde estén todas las opciones del desplegable
 /*   los parámetros:
 /*	evt: evento
 /*	nom: nombre para identificar los campos y etiquetas id 
@@ -35,7 +35,7 @@
 $var_options = empty($var_options)? '' : $var_options;
 ?>
 <script>
-mas_selects = function(evt,nom,ir_a_camp) {
+fnjs_mas_selects = function(evt,nom,ir_a_camp) {
 	if(evt=="x") {
 		var valor=1;
 	} else {
@@ -58,7 +58,7 @@ mas_selects = function(evt,nom,ir_a_camp) {
 			var tab=8+n;
 			
 
-			txt='<select tabindex="'+tab+'" id=xcamp['+n+'] name=xcamp['+n+'] class=contenido onChange="comprobar_selects(\'xcamp['+n+']\',\'+ir_a_camp+\');"><option />';
+			txt='<select tabindex="'+tab+'" id=xcamp['+n+'] name=xcamp['+n+'] class=contenido onChange="fnjs_comprobar_selects(\'xcamp['+n+']\',\'+ir_a_camp+\');"><option />';
 			txt += '<?=	$var_options ?>';
 			txt += '</select>';
 
@@ -78,7 +78,7 @@ mas_selects = function(evt,nom,ir_a_camp) {
 	}
 }
 
-comprobar_selects = function (id_camp,ir_a_camp) {
+fnjs_comprobar_selects = function (id_camp,ir_a_camp) {
 	var val_camp=$(id_camp).val();
 	if (!val_camp) {
 		$(id_camp).hide();

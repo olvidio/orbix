@@ -23,6 +23,9 @@ $miSfsv = core\ConfigGlobal::mi_sfsv();
 $id_usuario = empty($_POST['id_usuario'])? '' : $_POST['id_usuario'];
 $quien = empty($_POST['quien'])? '' : $_POST['quien'];
 
+if ($quien=='usuario') $obj = 'usuarios\\model\\Usuario';
+if ($quien=='grupo') $obj = 'usuarios\\model\\Grupo';
+
 if( (core\ConfigGlobal::is_app_installed('avisos')) && (!empty($id_usuario)) && ($quien == 'usuario') ) {
 
 	// avisos
@@ -54,7 +57,7 @@ if( (core\ConfigGlobal::is_app_installed('avisos')) && (!empty($id_usuario)) && 
 
 		if ($dl_propia=='t') { $dl_propia_txt = core\ConfigGlobal::$dele; } else { $dl_propia_txt = _('otras'); }
 
-		$oTipoActividad = new TiposActividades($oCambioUsuarioTablaPref->getId_tipo_activ_txt());
+		$oTipoActividad = new web\TiposActividades($oCambioUsuarioTablaPref->getId_tipo_activ_txt());
 
 		$a_valores_avisos[$i]['sel']="$id_usuario#$id_item_usuario_tabla";
 		$a_valores_avisos[$i][1]=$dl_propia_txt;
@@ -376,11 +379,7 @@ if ($miRole < 4) {
 		  return false;
 		}
 
-		<?php 
-		if ($quien=='usuario') echo "tabla = 'aux_usuarios';";
-		if ($quien=='grupo') echo "tabla = 'aux_grupos_y_usuarios';";
-		?>
-		var rr=fnjs_comprobar_campos(formulario,'',0,tabla);
+		var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
 		//alert ("EEE "+rr);
 		if (rr=='ok') {
 			$('#que_user').val('<?= $que_user ?>');
@@ -596,7 +595,7 @@ if ($miRole < 4) {
 
 			if ($dl_propia=='t') { $dl_propia_txt = core\ConfigGlobal::$dele; } else { $dl_propia_txt = _('otras'); }
 
-			$oTipoActividad = new TiposActividades($oUsuarioPerm->getId_tipo_activ_txt());
+			$oTipoActividad = new web\TiposActividades($oUsuarioPerm->getId_tipo_activ_txt());
 
 			$a_valores[$i]['sel']="$id_usuario#$id_item";
 			$a_valores[$i][1]=$oTipoActividad->getNom();

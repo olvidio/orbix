@@ -54,7 +54,8 @@ $permiso =	empty($_POST['permiso'])? '' : $_POST['permiso'];
 
 /* Mirar si la actividad es mia o no */
 $oActividad = new actividades\Actividad($id_activ);
-$dl = $oActividad->getDl_org();
+// si es de la sf quito la 'f'
+$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
 $id_tabla_dl = $oActividad->getId_tabla();
 
 if (!empty($id_nom)) { //caso de modificar
@@ -67,6 +68,11 @@ if (!empty($id_nom)) { //caso de modificar
 	$obj_pau = str_replace("personas\\model\\",'',get_class($oPersona));
 	if ($dl == core\ConfigGlobal::mi_dele()) {
 		switch ($obj_pau) {
+			case 'PersonaN':
+			case 'PersonaNax':
+			case 'PersonaAgd':
+			case 'PersonaS':
+			case 'PersonaSSSC':
 			case 'PersonaDl':
 				$oAsistente=new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
 				break;
@@ -74,7 +80,7 @@ if (!empty($id_nom)) { //caso de modificar
 				$oAsistente=new asistentes\AsistenteOut(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
 				break;
 			case 'PersonaIn':
-				// Supongo que sólo debeía modificar la dl origen.
+				// Supongo que sólo debería modificar la dl origen.
 				// $oAsistente=new asistentes\AsistenteIn(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
 				exit (_("Los datos de asistencia los modifica la dl del asistente"));
 				break;
@@ -83,20 +89,17 @@ if (!empty($id_nom)) { //caso de modificar
 				break;
 		}
 	} else {
-		switch ($obj_pau) {
-			case 'PersonaDl':
+		if ($id_tabla_dl == 'dl') { 
 				$oAsistente=new asistentes\AsistenteOut(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-				break;
-			case 'PersonaEx':
-				$oAsistente=new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-				break;
+		} else {
+			$oAsistente=new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
 		}
 	}
-
 	$propio=$oAsistente->getPropio();
 	$falta=$oAsistente->getFalta();
 	$est_ok=$oAsistente->getEst_ok();
 	$observ=$oAsistente->getObserv();
+
 } else { //caso de nuevo asistente
 	$mod="nuevo";
 	$propio="t"; //valor por defecto
@@ -108,11 +111,27 @@ if (!empty($id_nom)) { //caso de modificar
 	$na_val = 'p'.strtok('=');
 	switch ($obj_pau) {
 		case 'PersonaN':
-		case 'PersonaNax':
-		case 'PersonaAgd':
-		case 'PersonaS':
-		case 'PersonaSSSC':
 			$oPersonas=new personas\GestorPersonaN();
+			$oDesplegablePersonas = $oPersonas->getListaPersonas();
+			$oDesplegablePersonas->setNombre('id_nom');
+			break;
+		case 'PersonaNax':
+			$oPersonas=new personas\GestorPersonaNax();
+			$oDesplegablePersonas = $oPersonas->getListaPersonas();
+			$oDesplegablePersonas->setNombre('id_nom');
+			break;
+		case 'PersonaAgd':
+			$oPersonas=new personas\GestorPersonaAgd();
+			$oDesplegablePersonas = $oPersonas->getListaPersonas();
+			$oDesplegablePersonas->setNombre('id_nom');
+			break;
+		case 'PersonaS':
+			$oPersonas=new personas\GestorPersonaS();
+			$oDesplegablePersonas = $oPersonas->getListaPersonas();
+			$oDesplegablePersonas->setNombre('id_nom');
+			break;
+		case 'PersonaSSSC':
+			$oPersonas=new personas\GestorPersonaSSSC();
 			$oDesplegablePersonas = $oPersonas->getListaPersonas();
 			$oDesplegablePersonas->setNombre('id_nom');
 			break;

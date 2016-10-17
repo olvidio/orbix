@@ -24,6 +24,8 @@ use ubis\model as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$obj = 'actividades\\model\\ActividadAll';
+
 $miSfsv=core\ConfigGlobal::mi_sfsv();
 
 $a_status = array( 1 => _("proyecto"), 2 => _("actual"), 3 => _("terminada"), 4 => _("borrable"));
@@ -178,7 +180,8 @@ fnjs_guardar=function(tipo){
 			$('#status_1').checked=true;
 		}
 	}
-	var rr=fnjs_comprobar_campos('#modifica','',0,'a_actividades');
+	
+	var rr=fnjs_comprobar_campos('#modifica','<?= addslashes($obj) ?>');
 	//alert ("EEE "+rr);
 	if (rr=='ok' && err==0) {
 		$('#mod').val(tipo);
@@ -247,7 +250,7 @@ fnjs_guardar=function(tipo){
   <td><?php echo $oDesplPosiblesTipoTarifas->desplegable(); ?></td>
 <td class=etiqueta><?php echo ucfirst(_("precio")); ?>: </td>
   <td>
-  <input type=text class="contenido derecha" id="precio" name="precio" value='<?= $precio ?>' size="8" onblur="fnjs_comprobar_dinero('#precio');"> <?= _('€') ?>
+  <input type=text class="contenido derecha" id="precio" name="precio" value='<?= $precio ?>' size="8" > <?= _('€') ?>
 </td></tr>
 <tr><td class=etiqueta><?php echo ucfirst(_("observaciones")); ?>:</td><td colspan=5><input class=contenido size="30" id="observ" name="observ" value="<?= htmlspecialchars($observ) ?>">
 </td></tr>

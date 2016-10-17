@@ -31,10 +31,13 @@ use personas\model as personas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+	
 //pongo aqui el $go_to porque al ir al mismo update que las actividaes, no se donde voler
-//$go_to=core\ConfigGlobal::$web."/programas/dossiers/dossiers_ver.php?pau=$pau&id_pau=$id_pau&tabla_pau=${_POST['tabla_pau']}&id_dossier=$id_dossier";
+$a_dataUrl = array('queSel'=>'asis','pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$_POST['obj_pau'],'id_dossier'=>$id_dossier);
+//			array('					 pau'=>$pau,'id_pau'=>$id_pau,'id_dossier'=>$id_dossier)));
 
-$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'id_dossier'=>$id_dossier)));
+$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query($a_dataUrl));
+			
 
 $oCargosEnActividad=new actividadcargos\GestorActividadCargo();
 
@@ -122,6 +125,7 @@ fnjs_borrar_cargo=function(formulario){
 	rta=fnjs_solo_uno(formulario);
 	if (rta==1) {
 		<?php
+		$txt = '';
 		if (($_SESSION['oPerm']->have_perm("des")) or ($_SESSION['oPerm']->have_perm("vcsd"))) { 
 			$txt= _("Esto también borrará a esta persona de la lista de asistentes?");
 		}

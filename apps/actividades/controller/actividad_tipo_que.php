@@ -184,7 +184,7 @@ fnjs_act_id_activ=function(){
 	} else {
 		// buscar la tarifa para este tipo de actividad
 		var url='<?= core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tipo_get.php' ?>';
-		var parametros='salida=tarifa&entrada='+id_tipo_activ+'=<?= $h ?>&PHPSESSID=<?php echo session_id(); ?>';
+		var parametros='salida=tarifa&entrada='+id_tipo_activ+'<?= $h ?>&PHPSESSID=<?php echo session_id(); ?>';
 		$.ajax({
 			url: url,
 			type: 'post',

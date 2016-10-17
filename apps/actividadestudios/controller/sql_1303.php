@@ -143,7 +143,7 @@ foreach ($cAsistencias as $oAsistente) {
 		$oAsignatura = new asignaturas\Asignatura($id_asignatura);
 		$nombre_corto=$oAsignatura->getNombre_corto();
 		
-		$a_valores[$i]['sel']="$id_asignatura";
+		$a_valores[$i]['sel']="$id_activ#$id_asignatura";
 		$a_valores[$i][1]=$preceptor;
 		$a_valores[$i][2]=$nombre_corto;
 	}

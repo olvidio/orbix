@@ -5,25 +5,6 @@
 */
 header('Content-Type: text/javascript; charset=UTF-8');
 ?>
-<!-- Esta funcion comprueba si un número cumple con la notación de moneda: ######.## --> 
-<!-- Sólo acepta una coma (o punto) para los valores decimales, no para los miles... --> 
-<!-- La función parseInt da un error si empieza por 0 (y el siguiente número no entra en el rango Octal 0-7), -->
-function fnjs_comprobar_dinero(id) {
-  var num = $(id).val();
-  if (num=="") return false;
-	if(/,/.test(num)) {
-  		num=num.replace(',','.');
-  		$(id).val(num);
-	}
-		
-	if(!/^(\d+)[,.]?\d{0,2}$/.test(num) && num.length) {
-		var txt1 = '<?= _('formato no válido') ?>';
-		var txt2 = '<?= _('se adminte un separador para los decimales (máximo 2)') ?>';
-		var txt3 = '<?= _('No se admite separador para los miles') ?>';
-		var txt4 = '<?= _('ejemplo: 1254.56') ?>';
-		alert(txt1+'\n'+txt2+'\n'+txt3+'\n'+txt4);
-	}
-}
 <!-- Esta funcion comprueba si una v_fecha es correcta --> 
 <!-- Esta funcion necesita que se le envie la v_fecha con formato d/m/y o dd/mm/yyyy --> 
 <!-- Ahora tambien acepta: d-m-y o dd-mm-yyyy --> 

@@ -90,7 +90,7 @@ if (empty($sWhere)) {
 	} else {
 		if (!$_SESSION['oPerm']->have_perm("dtor")) {
 			$aWhere['situacion'] = 'B';
-			$aOperados['situacion'] = '!=';
+			$aOperador['situacion'] = '!=';
 		}
 	}
 	//añado una condición más, para cuando me interesan solo los que son
@@ -123,6 +123,8 @@ if (!empty($aWhereCtr)) {
 	}
 }
 
+// por defecto no pongo valor, que lo coja de la base de datos. Sólo sirve para los de paso.
+$id_tabla = '';
 switch ($tabla) {
 	case "p_sssc":
 		$obj_pau = 'PersonaSSSC';
@@ -152,6 +154,7 @@ switch ($tabla) {
 	case "p_de_paso":
 		if (!empty($_POST['na'])) {
 			$aWhere['id_tabla'] = 'p'.$_POST['na'];
+			$id_tabla = 'p'.$_POST['na'];
 		}
 		$obj_pau = 'PersonaEx';
 		$GesPersona = new personas\GestorPersonaEx();
@@ -181,7 +184,6 @@ $aGoBack = array (
 				 );
 $oPosicion->setParametros($aGoBack);
 $oPosicion->recordar();
-
 
 $a_botones[] = array( 'txt' => _('cambio de ctr'), 'click' =>"fnjs_modificar_ctr(\"#seleccionados\")" );
 $script['fnjs_modificar_ctr'] = 1;
@@ -300,7 +302,7 @@ foreach ($a_personas as $nom => $val) {
 	$a_valores[$c] = $val;
 }
 
-$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/personas_editar.php?'.http_build_query(array('obj_pau'=>$obj_pau,'nuevo'=>1)));
+$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/personas_editar.php?'.http_build_query(array('obj_pau'=>$obj_pau,'id_tabla'=>$id_tabla,'nuevo'=>1)));
 	
 $resultado=sprintf( _("%s personas encontradas"),$i);
 

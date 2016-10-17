@@ -19,7 +19,7 @@ $GesSituacion = new personas\GestorSituacion();
 $aWhere['_ordre'] = 'situacion';
 $cSituaciones = $GesSituacion->getSituaciones($aWhere);
 
-$campos_chk = 'sacd';
+$campos_chk = 'sacd!profesor_stgr';
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('id_tabla!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!edad!f_situacion!inc!lengua!nom!nx1!nx2!observ!profesion!que!situacion!stgr!trato');
@@ -98,6 +98,7 @@ echo "</tr><tr>";
 if (core\ConfigGlobal::mi_sfsv() == 1) {
 	echo web\dibujar_campo($obj,"sacd",9,1,1);
 }
+echo web\dibujar_campo($obj,"profesor_stgr",9,1,1);
 ?>
 <td><span class=etiqueta ondblclick="fnjs_help('<?php echo $stgr_help_ref; ?>')" >Stgr&nbsp;</span>
 			<select class=datos name="stgr" title="<?php echo $stgr_help; ?>">
@@ -111,6 +112,7 @@ if (core\ConfigGlobal::mi_sfsv() == 1) {
 		</select>
 </td>
 <?php
+echo "</tr><tr>";
 echo web\dibujar_campo($obj,"eap",20,2,0);
 echo "</tr><tr>";
 echo web\dibujar_campo($obj,"inc",5,1,0);

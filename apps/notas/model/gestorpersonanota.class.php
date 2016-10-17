@@ -40,13 +40,16 @@ class GestorPersonaNota Extends core\ClaseGestor {
 	 * @param integer id_nom  de la persona.
 	 * @return array Una col·lecció d'objectes de tipus PersonaNota
 	 */
-	function getPersonaNotasSuperadas($id_nom) {
+	function getPersonaNotasSuperadas($id_nom,$nivel='') {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		$oPersonaNotaSet = new core\Set();
-		$oCondicion = new core\Condicion();
-		$aCondi = array();
 		
+		$cond_nivel = '';
+		if ($nivel == 't') {
+			$cond_nivel = "AND id_nivel >= 1100 AND id_nivel <= 2500 ";
+		}
+
 		$gesNotas = new GestorNota();
 		$cNotas = $gesNotas->getNotas(array('superada'=>'t'));
 		$superadas_txt = '';
@@ -57,7 +60,7 @@ class GestorPersonaNota Extends core\ClaseGestor {
 		}
 
 		$sQry = "SELECT * FROM  $nom_tabla
-				WHERE id_nom=$id_nom AND id_situacion::text ~ '$superadas_txt'
+				WHERE id_nom=$id_nom $cond_nivel AND id_situacion::text ~ '$superadas_txt' 
 				";
 		if (($oDblSt = $oDbl->query($sQry)) === false) {
 			$sClauError = 'GestorPersonaNota.llistar.prepare';
@@ -130,6 +133,7 @@ class GestorPersonaNota Extends core\ClaseGestor {
 		if (isset($aWhere['_ordre']) && $aWhere['_ordre']!='') $sOrdre = ' ORDER BY '.$aWhere['_ordre'];
 		if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
+		//echo "query: $sQry<br>";
 		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClauError = 'GestorPersonaNota.llistar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);

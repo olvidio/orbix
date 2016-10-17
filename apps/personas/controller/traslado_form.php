@@ -54,7 +54,7 @@ $gesCentroDl = new ubis\GestorCentroDl();
 $cCentrosDl = $gesCentroDl->getCentros($aWhere,$aOperador);
 
 $gesDl = new ubis\GestorDelegacion();
-$oDesplDlyR = $gesDl->getListaDelegacionesURegiones();
+$oDesplDlyR = $gesDl->getListaRegDele();
 $oDesplDlyR->setNombre('new_dl');
 
 $gesSituacion = new personas\GestorSituacion();
@@ -64,7 +64,8 @@ $cSituacion = $gesSituacion->getSituaciones(array('situacion'=>'[A|D|E|L|T|X]','
 $id_ctr = $oPersona->getId_ctr();
 $oUbi = new ubis\CentroDl($id_ctr);
 $nombre_ctr = $oUbi->getNombre_ubi();
-$dl = $oUbi->getDl();
+//$dl = $oUbi->getDl();
+$dl = $oPersona->getDl();
 
 
 $hoy=date("d/m/Y");

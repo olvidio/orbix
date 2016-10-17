@@ -1,4 +1,5 @@
 <?php
+use actividades\model as actividades;
 use asignaturas\model as asignaturas;
 use notas\model as notas;
 use personas\model as personas;
@@ -12,6 +13,27 @@ use personas\model as personas;
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
+
+// Aviso si le faltan notas por poner
+$gesMatriculas = new actividadestudios\model\gestorMatricula();
+$cMatriculasPendientes = $gesMatriculas->getMatriculasPendientes($id_pau);
+if (count($cMatriculasPendientes) > 0) {
+	$msg = '';
+	foreach ($cMatriculasPendientes as $oMatricula) {
+		$id_activ = $oMatricula->getId_activ();
+		$id_asignatura = $oMatricula->getId_asignatura();
+		$oActividad = new actividades\ActividadAll($id_activ);
+		$nom_activ = $oActividad->getNom_activ();
+		$oAsignatura = new asignaturas\Asignatura($id_asignatura);
+		$nombre_corto=$oAsignatura->getNombre_corto();
+		$msg .= empty($msg)? '' : '<br>';
+		$msg .= sprintf(_("ca: %s, asignatura: %s"),$nom_activ,$nombre_corto);
+	}
+	if (!empty($msg)) {
+		$msg = _("Tiene pendiente de poner las notas de:") .'<br>'.$msg;
+	}
+}
+
 
 $gesPersonaNotas = new notas\GestorPersonaNota();
 $cPersonaNotas = $gesPersonaNotas->getPersonaNotas(array('id_nom'=>$id_pau,'id_asignatura'=>9000,'_ordre'=>'id_nivel'),array('id_asignatura'=>'<'));
@@ -32,7 +54,7 @@ $id_tabla = $oPersona->getId_Tabla();
 
 $a_botones=array(
 				array( 'txt' => _('modificar nota'), 'click' =>"fnjs_modificar(this.form)" ) ,
-				array( 'txt' => _('borrar nota'), 'click' =>"fnjs_borrar(this.form)" ) 
+				array( 'txt' => _('borrar asignatura'), 'click' =>"fnjs_borrar(this.form)" ) 
 	);
 
 $a_cabeceras=array( _("asignatura"),_("nota"),_("acta"),
@@ -49,8 +71,8 @@ foreach ($cPersonaNotas as $oPersonaNota) {
 	$id_asignatura=$oPersonaNota->getId_asignatura();
 	
 	$id_situacion=$oPersonaNota->getId_situacion();
-	$acta=$oPersonaNota->getActa();
 	$f_acta=$oPersonaNota->getF_acta();
+	$acta=$oPersonaNota->getActa();
 	$preceptor=$oPersonaNota->getPreceptor();
 	$id_preceptor=$oPersonaNota->getId_preceptor();
 	$epoca=$oPersonaNota->getEpoca();
@@ -67,8 +89,12 @@ foreach ($cPersonaNotas as $oPersonaNota) {
 	if ($id_asignatura > 3000) {
 		$gesOpcionales = new asignaturas\GestorAsignatura();
 		$cOpcionales = $gesOpcionales->getAsignaturas(array('id_nivel'=>$id_nivel));
-		$nom_op=$cOpcionales[0]->getNombre_corto();
-		$nombre_corto=$nom_op." (".$nombre_corto.")";
+        if (empty($cOpcionales)) {
+            $nombre_corto= _("Opcional de extra");
+        } else {
+			$nom_op=$cOpcionales[0]->getNombre_corto();
+			$nombre_corto=$nom_op." (".$nombre_corto.")";
+		}
 	}
 	
 	if ($preceptor=="t") { $preceptor=_("si"); } else { $preceptor=_("no");}	
@@ -133,7 +159,10 @@ fnjs_borrar=function(formulario){
   	}
 }
 </script>
-<h3 class=subtitulo><?php echo ucfirst(_("notas del stgr")); ?></h3>
+<h2 class=titulo><?php echo ucfirst(_("notas del stgr")); ?></h2>
+<?php if (!empty($msg)) { ?>
+	<h3 class=subtitulo><?= $msg ?></h3>
+<?php } ?>
 <form id="seleccionados" name="seleccionados" action="" method="post">
 <?= $oHash->getCamposHtml(); ?>
 <input type="hidden" id="mod" name="mod" value="">

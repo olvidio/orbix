@@ -148,7 +148,7 @@ class Profesor Extends core\ClasePropiedades {
 					id_tipo_profesor         = :id_tipo_profesor,
 					escrito_cese             = :escrito_cese,
 					f_cese                   = :f_cese";
-			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item' AND id_nom='$this->iid_nom' AND id_departamento='$this->iid_departamento'")) === false) {
+			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item'")) === false) {
 				$sClauError = 'Profesor.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -188,8 +188,8 @@ class Profesor Extends core\ClasePropiedades {
 	public function DBCarregar($que=null) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (isset($this->iid_item) && isset($this->iid_nom) && isset($this->iid_departamento)) {
-			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item='$this->iid_item' AND id_nom='$this->iid_nom' AND id_departamento='$this->iid_departamento'")) === false) {
+		if (isset($this->iid_item)) {
+			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item='$this->iid_item'")) === false) {
 				$sClauError = 'Profesor.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -218,7 +218,7 @@ class Profesor Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_item='$this->iid_item' AND id_nom='$this->iid_nom' AND id_departamento='$this->iid_departamento'")) === false) {
+		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_item='$this->iid_item'")) === false) {
 			$sClauError = 'Profesor.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -267,9 +267,7 @@ class Profesor Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('id_item' => $this->iid_item,
-										'id_nom'  => $this->iid_nom,
-										'id_departamento' => $this->iid_departamento);
+			$this->aPrimary_key = array('id_item' => $this->iid_item);
 		}
 		return $this->aPrimary_key;
 	}

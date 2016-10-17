@@ -24,6 +24,9 @@ use notas\model as notas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$mi_dele = core\ConfigGlobal::mi_dele();
+$mi_dele .= (core\ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
+
 $go_to='atras';
 
 //Si vengo de vuelta de un go_to:
@@ -41,6 +44,23 @@ if (!empty($_POST['atras'])) {
 $aWhere = array();
 $aOperador = array();
 if (!empty($Qacta)) {
+	$dl_acta = strtok($Qacta,' ');
+
+	if ($dl_acta == $mi_dele || $dl_acta == "?") {
+		if ($dl_acta == "?") $Qacta = "\?";
+		$GesActas = new notas\GestorActaDl();
+	} else {
+		// si es número busca en la dl.
+		preg_match ("/^(\d*)(\/)?(\d*)/", $Qacta, $matches);
+		if (!empty($matches[1])) {
+			$Qacta = empty($matches[3])? "$mi_dele ".$matches[1].'/'.date("y") : "$mi_dele $Qacta";
+			$GesActas = new notas\GestorActaDl();
+		} else {
+		// Ojo si la dl ya existe no deberia hacerse
+			$GesActas = new notas\GestorActaEx();
+		}
+	}
+
 	$aWhere['acta'] = $Qacta;
 	$aOperador['acta'] = '~';
 	$titulo = $Qtitulo;
@@ -54,9 +74,9 @@ if (!empty($Qacta)) {
 	$aOperador['f_acta'] = 'BETWEEN';
 	
 	$titulo=ucfirst(sprintf(_("lista de actas del curso %s"),$txt_curso));
+	$GesActas = new notas\GestorActaDl();
 }
 
-$GesActas = new notas\GestorActa();
 $cActas = $GesActas->getActas($aWhere,$aOperador);
 
 /*

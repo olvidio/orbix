@@ -18,7 +18,7 @@
 */
 ?>
 <script>
-$(function() { $("#f_vida_familia_<?= $tabla[$f].$r ?>").datepicker(); });
+$(function() { $("#f_situacion<?= $tabla[$f].$r ?>").datepicker(); });
 $(function() { $("#f_fichero_<?= $tabla[$f].$r ?>").datepicker(); });
 $(function() { $("#f_procede_<?= $tabla[$f].$r ?>").datepicker(); });
 $(function() { $("#f_ap_<?= $tabla[$f].$r ?>").datepicker(); });
@@ -219,8 +219,8 @@ echo dibujar_campo("santo",4,1,1);
 	echo "</tr><tr>";
 	echo dibujar_campo("provincia_n",30,1,1);
 	echo "</tr><tr>";
-	echo dibujar_campo("f_vida_familia",11,1,1);
-	echo dibujar_campo("vida_familia",1,1,1);
+	echo dibujar_campo("f_situacion",11,1,1);
+	echo dibujar_campo("situacion",1,1,1);
 	echo "</tr><tr>";
 	echo dibujar_campo("f_fichero",11,1,1);
 ?>

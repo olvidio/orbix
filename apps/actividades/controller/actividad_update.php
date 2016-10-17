@@ -120,6 +120,7 @@ case "nuevo":
 		$oActividad= new actividades\ActividadEx();
 		$oActividad->setPublicado('t');
 		$oActividad->setId_tabla('ex');
+		$_POST['status'] = 2; // Que sea estado actual.
 	}
 	$oActividad->setDl_org($dl_org);
 	if (isset($_POST['id_tipo_activ'])) {
@@ -153,6 +154,14 @@ case "nuevo":
 	isset($_POST['h_fin']) ? $oActividad->setH_fin($_POST['h_fin']) : '';
 	if ($oActividad->DBGuardar() === false) { 
 		echo _('Hay un error, no se ha guardado');
+	}
+	// si estoy creando una actividad de otra dl es porque la quiero importar.
+	if ($dele != core\ConfigGlobal::mi_dele()) {
+		$id_activ = $oActividad->getId_activ();
+		$oImportar = new actividades\Importar($id_activ);
+		if ($oImportar->DBGuardar() === false) {
+			echo _('Hay un error, no se ha importado');
+		}
 	}
 	break;
 case "duplicar": // duplicar la actividad.
@@ -423,15 +432,15 @@ case "actualizar_ctr": // cambiar sólo los ctr encargados
 
 if (empty($_POST['origen'])) { $_POST['origen']=''; }
 
-if ($_POST['origen'] != 'calendario') {
+if ($_POST['origen'] != 'calendario' && $_POST['mod'] != 'eliminar') {
 	if ($_POST['mod']=='nuevo' || $_POST['mod']=='duplicar') {
-		$tabla='a_actividades';
-		$go_to='actividad_ver.php?que=ver&id_activ='.$oActividad->getId_activ().'&tabla=$tabla';
+		$tabla='Actividad';
+		$go_to='actividad_ver.php?que=ver&id_activ='.$oActividad->getId_activ()."&tabla=$tabla";
 		$oPosicion = new web\Posicion();
 		echo $oPosicion->ir_a($go_to);
 		exit;
 	} else {
-		$tabla="a_actividades";
+		$tabla="Actividad";
 		$go_to="actividad_ver.php?que=ver&id_activ=".$id_activ."&tabla=$tabla";
 	}
 	//vuelve a la presentacion de la ficha.

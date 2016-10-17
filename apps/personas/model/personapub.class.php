@@ -22,7 +22,13 @@ use core;
 class PersonaPub Extends PersonaGlobal {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 	/**
-	 * Edad de PersonaDl
+	 * Profesor strg de PersonaPub
+	 *
+	 * @var boolean
+	 */
+	 protected $bprofesor_stgr;
+	/**
+	 * Edad de PersonaPub
 	 *
 	 * @var integer
 	 */
@@ -69,7 +75,7 @@ class PersonaPub Extends PersonaGlobal {
 		if ($this->DBCarregar('guardar') === false) { $bInsert=true; } else { $bInsert=false; }
 		$aDades=array();
 		$aDades['id_cr'] = $this->iid_cr;
-		//$aDades['id_tabla'] = $this->sid_tabla;
+		$aDades['id_tabla'] = $this->sid_tabla;
 		$aDades['dl'] = $this->sdl;
 		$aDades['sacd'] = $this->bsacd;
 		$aDades['trato'] = $this->strato;
@@ -90,15 +96,17 @@ class PersonaPub Extends PersonaGlobal {
 		$aDades['profesion'] = $this->sprofesion;
 		$aDades['eap'] = $this->seap;
 		$aDades['observ'] = $this->sobserv;
+		$aDades['profesor_stgr'] = $this->bprofesor_stgr;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if (empty($aDades['sacd']) || ($aDades['sacd'] === 'off') || ($aDades['sacd'] === false) || ($aDades['sacd'] === 'f')) { $aDades['sacd']='f'; } else { $aDades['sacd']='t'; }
+		if (empty($aDades['profesor_stgr']) || ($aDades['profesor_stgr'] === 'off') || ($aDades['profesor_stgr'] === false) || ($aDades['profesor_stgr'] === 'f')) { $aDades['profesor_stgr']='f'; } else { $aDades['profesor_stgr']='t'; }
 
 		if ($bInsert === false) {
 			//UPDATE
-					//id_tabla                 = :id_tabla,
 			$update="
 					id_cr                    = :id_cr,
+					id_tabla                 = :id_tabla,
 					dl                       = :dl,
 					sacd                     = :sacd,
 					trato                    = :trato,
@@ -118,7 +126,8 @@ class PersonaPub Extends PersonaGlobal {
 					edad                     = :edad,
 					profesion                = :profesion,
 					eap                      = :eap,
-					observ                   = :observ";
+					observ                   = :observ,
+					profesor_stgr            = :profesor_stgr";
 			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_nom='$this->iid_nom'")) === false) {
 				$sClauError = get_class($this).'.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -133,8 +142,8 @@ class PersonaPub Extends PersonaGlobal {
 		} else {
 			// INSERT
 			//array_unshift($aDades, $this->iid_nom);
-			$campos="(id_cr,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,lengua,situacion,f_situacion,apel_fam,inc,f_inc,stgr,edad,profesion,eap,observ)";
-			$valores="(:id_cr,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:lengua,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:stgr,:edad,:profesion,:eap,:observ)";		
+			$campos="(id_cr,id_tabla,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,lengua,situacion,f_situacion,apel_fam,inc,f_inc,stgr,edad,profesion,eap,observ,profesor_stgr)";
+			$valores="(:id_cr,:id_tabla,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:lengua,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:stgr,:edad,:profesion,:eap,:observ,:profesor_stgr)";
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = get_class($this).'.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -230,6 +239,7 @@ class PersonaPub Extends PersonaGlobal {
 		if (array_key_exists('profesion',$aDades)) $this->setProfesion($aDades['profesion']);
 		if (array_key_exists('eap',$aDades)) $this->setEap($aDades['eap']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
+		if (array_key_exists('profesor_stgr',$aDades)) $this->setProfesor_stgr($aDades['profesor_stgr']);
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
@@ -251,6 +261,25 @@ class PersonaPub Extends PersonaGlobal {
 	 */
 	function setEdad($iedad='') {
 		$this->iedad = $iedad;
+	}
+	/**
+	 * Recupera l'atribut bprofesor_stgr de PersonaPub
+	 *
+	 * @return boolean bprofesor_stgr
+	 */
+	function getProfesor_stgr() {
+		if (!isset($this->bprofesor_stgr)) {
+			$this->DBCarregar();
+		}
+		return $this->bprofesor_stgr;
+	}
+	/**
+	 * estableix el valor de l'atribut bprofesor_stgr de PersonaPub
+	 *
+	 * @param boolean bprofesor_stgr='' optional
+	 */
+	function setProfesor_stgr($bprofesor_stgr='f') {
+		$this->bprofesor_stgr = $bprofesor_stgr;
 	}
 
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
@@ -284,6 +313,7 @@ class PersonaPub Extends PersonaGlobal {
 		$oPersonaPubSet->add($this->getDatosProfesion());
 		$oPersonaPubSet->add($this->getDatosEap());
 		$oPersonaPubSet->add($this->getDatosObserv());
+		$oPersonaPubSet->add($this->getDatosProfesor_stgr());
 		return $oPersonaPubSet->getTot();
 	}
 
@@ -297,6 +327,19 @@ class PersonaPub Extends PersonaGlobal {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'edad'));
 		$oDatosCampo->setEtiqueta(_("edad"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut iprofesor_stgr PersonaPub
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return oject DatosCampo
+	 */
+	function getDatosProfesor_stgr() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'profesor_stgr'));
+		$oDatosCampo->setEtiqueta(_("profesor stgr"));
+		$oDatosCampo->setTipo('check');
 		return $oDatosCampo;
 	}
 

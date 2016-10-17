@@ -84,6 +84,12 @@ class Posicion {
 		return $html;
 	}
 	public function atras2() {
+		// puede ser que no haya donde volver
+		if (empty($_SESSION['position'])) {
+			return '';
+		}
+		$id_div = $this->getId_div();
+		$id_div = empty($id_div)? 'ir_atras' : $id_div;
 		$aPosition = end($_SESSION['position']);
 		$aParam = $aPosition['parametros'];
 		$url = $aPosition['url'];
@@ -199,97 +205,67 @@ class Posicion {
 		$parametros='';
 		$frame='';
 		$go=strtok($go_to,"@");
-		/*
-		if ($go=="session" && isset($_SESSION['session_go_to']) ) {
-			$g=strtok("@");
+		$pag_sin_param = '';
+		$pagina=urldecode($go_to);
+		$pagina=strtok($pagina,"|");
+		$frame = strtok("|");
+		//echo "frame: $frame<br>";
 
-			empty($_SESSION['session_go_to'][$g]['pag'])? $pagina='' : $pagina=$_SESSION['session_go_to'][$g]['pag'];
-			empty($_SESSION['session_go_to'][$g]['dir_pag'])? $dir_pag='' : $dir_pag=$_SESSION['session_go_to'][$g]['dir_pag'];
-			empty($_SESSION['session_go_to'][$g]['target'])? $frame ='' : $frame = $_SESSION['session_go_to'][$g]['target'];
-			// separo la url de los parametros
-			if ($p=strpos($pagina,"?") || $p=strpos($pagina,"%3F") ) { //"%3F" es "?" cuando está encode) 
-				$pagina=substr($pagina,0,$p);
-				$parametros=substr($pagina,$p+1)."&go_to=$go_to";
-			} else {
-				$parametros="go_to=$go_to";
-			}
-			if (!empty($dir_pag)) {$dire=$dir_pag; } else {$dire=system("pwd"); }
-			$path= str_replace (core\ConfigGlobal::$directorio, "", $dire);
-			if (substr($pagina,0,1)=='#'){$pagina=substr($pagina,1); $path="";}
-			
-			$url=core\ConfigGlobal::getWeb().$path."/".$pagina;
-			
-			// mas parámetros que pueden estar registrados en la session:
-			foreach($_SESSION['session_go_to'][$g] as $clave => $valor) {
-				if ($clave!="dir_pag" && $clave!="pag" && $clave!="target" ) {
-					$parametros.="&$clave=$valor";
-				}
-			}
-
+		$_error_txt = "pagina1: $pagina<br>";
+		// separo la url de los parametros
+		$p=strpos($pagina,'?');
+		if ($p !== false ) {
+			$pag_sin_param=substr($pagina,0,$p);
+			$parametros=substr($pagina,$p+1);
+			$_error_txt .= "pag sin param: $pag_sin_param<br>";
+			$_error_txt .= "param: $parametros<br>";
 		} else {
+			$pag_sin_param=$pagina;
+		}
+		$posi=strpos($parametros,"condicion=");
+		if ($posi===false) {
+			//$cond=substr($parametros,$posi);
+		} else {
+			$cond1=substr($parametros,$posi+10);
+			//para asegurar que no tiene barras \
+			$cond1=stripslashes($cond1);	
+			$_error_txt .= "cond1: $cond1<br>";
+			$cond2=urlencode($cond1);
+			$_error_txt .= "cond2: $cond2<br>";
+			$parametros=str_replace($cond1,$cond2,$parametros);
+		}
+		
+		$pagina=$pag_sin_param; // quito la doble barra
+		if (strpos($pagina,core\ConfigGlobal::getWeb()) !== false ) { // Si es una referencia absoluta
+			$url=$pagina;
+		} else {
+			$_error_txt .= "pagina2: $pagina<br>";
+			$dire=getcwd();
+			$_error_txt .= "dire: $dire<br>";
+			$path= str_replace (core\ConfigGlobal::$directorio, "", $dire);
+			$_error_txt .= "path: $path<br>";
+			if (substr($path,-1)!='/'){$path.='/';} // me aseguro de que acabe en "/"
+			$_error_txt .= "path2: $path<br>";
+			$pagina=str_replace ($path,"",$pagina); //si la dirección ya es absoluta, la quito
+			$_error_txt .= "pagina3: $pagina<br>";
+			//echo "directorio: $dire, path: $path<br>";
+			//echo "pagina: $pagina<br>";
+			if (substr($pagina,0,1)=='#'){$pagina=substr($pagina,1); $path="";}
+			if (substr($pagina,0,2)=='./'){$pagina=substr($pagina,1);}
+			if (substr($pagina,0,3)=='../') { //quito un directorio de $path
+				$path = preg_replace('/\w+\/?$/', '', $path);
+				$pagina=substr($pagina,3);
+			}
+			$_error_txt .= "pagina4: $pagina<br>";
+			//echo "pagina2: $pagina<br>";
+			$url=core\ConfigGlobal::getWeb().$path.$pagina;
+		}
+		/*
+		if (core\ConfigGlobal::mi_id_usuario() == 443) {
+			echo "hola dani<br>";
+			echo $_error_txt;
+		}
 		*/
-			$pag_sin_param = '';
-			$pagina=urldecode($go_to);
-			$pagina=strtok($pagina,"|");
-			$frame = strtok("|");
-			//echo "frame: $frame<br>";
-
-			$_error_txt = "pagina1: $pagina<br>";
-			// separo la url de los parametros
-			$p=strpos($pagina,'?');
-			if ($p !== false ) {
-				$pag_sin_param=substr($pagina,0,$p);
-				$parametros=substr($pagina,$p+1);
-				$_error_txt .= "pag sin param: $pag_sin_param<br>";
-				$_error_txt .= "param: $parametros<br>";
-			} else {
-				$pag_sin_param=$pagina;
-			}
-			$posi=strpos($parametros,"condicion=");
-			if ($posi===false) {
-				//$cond=substr($parametros,$posi);
-			} else {
-				$cond1=substr($parametros,$posi+10);
-				//para asegurar que no tiene barras \
-				$cond1=stripslashes($cond1);	
-				$_error_txt .= "cond1: $cond1<br>";
-				$cond2=urlencode($cond1);
-				$_error_txt .= "cond2: $cond2<br>";
-				$parametros=str_replace($cond1,$cond2,$parametros);
-			}
-			
-			$pagina=$pag_sin_param; // quito la doble barra
-			if (strpos($pagina,core\ConfigGlobal::getWeb()) !== false ) { // Si es una referencia absoluta
-				$url=$pagina;
-			} else {
-				$_error_txt .= "pagina2: $pagina<br>";
-				$dire=getcwd();
-				$_error_txt .= "dire: $dire<br>";
-				$path= str_replace (core\ConfigGlobal::$directorio, "", $dire);
-				$_error_txt .= "path: $path<br>";
-				if (substr($path,-1)!='/'){$path.='/';} // me aseguro de que acabe en "/"
-				$_error_txt .= "path2: $path<br>";
-				$pagina=str_replace ($path,"",$pagina); //si la dirección ya es absoluta, la quito
-				$_error_txt .= "pagina3: $pagina<br>";
-				//echo "directorio: $dire, path: $path<br>";
-				//echo "pagina: $pagina<br>";
-				if (substr($pagina,0,1)=='#'){$pagina=substr($pagina,1); $path="";}
-				if (substr($pagina,0,2)=='./'){$pagina=substr($pagina,1);}
-				if (substr($pagina,0,3)=='../') { //quito un directorio de $path
-					$path = preg_replace('/\w+\/?$/', '', $path);
-					$pagina=substr($pagina,3);
-				}
-				$_error_txt .= "pagina4: $pagina<br>";
-				//echo "pagina2: $pagina<br>";
-				$url=core\ConfigGlobal::getWeb().$path.$pagina;
-			}
-			/*
-			if (core\ConfigGlobal::mi_id_usuario() == 443) {
-				echo "hola dani<br>";
-				echo $_error_txt;
-			}
-			*/
-		//}
 		if (empty($frame)) $frame="main";
 
 		// passarlo a array para usar la funcion add_hash
@@ -319,70 +295,50 @@ class Posicion {
 	*/
 	public function link_a($go_to,$form='') {
 		$go=strtok($go_to,"@");
-		if ($go=="session" && isset($_SESSION['session_go_to']) ) {
-			$g=strtok("@");
-			empty($_SESSION['session_go_to'][$g]['pag'])? $pagina='' : $pagina=$_SESSION['session_go_to'][$g]['pag']."?go_to=$go_to";
-			empty($_SESSION['session_go_to'][$g]['dir_pag'])? $dir_pag='' : $dir_pag=$_SESSION['session_go_to'][$g]['dir_pag'];
-			empty( $_SESSION['session_go_to'][$g]['target'])? $frame ='' : $frame = $_SESSION['session_go_to'][$g]['target'];
-			if (!empty($dir_pag)) {$dire=$dir_pag; } else { $dire=getcwd(); }
-			$path= str_replace (core\ConfigGlobal::$directorio, "", $dire);
-			// quito la barra inicial del path (si existe).
-			if (substr($path,0,1)=='/'){$path=substr($path,1);}
-			if (substr($pagina,0,1)=='#'){$pagina=substr($pagina,1); $path="";}
-			//para mantener el id de la session
-			if (!empty($form)) {
-				$location="$path/$pagina";
-			} else {
-				if (strstr($pagina,"?")){
-					$pagina.='&PHPSESSID='.session_id();
-				} else {
-					$pagina.='?PHPSESSID='.session_id();
-				}
-				$location="'http:".core\ConfigGlobal::getWeb()."/".$path."/".$pagina."'";
-			}
-			return $location;
-		} else {
-			$pagina=urldecode($go_to);
-			$pagina=str_replace (core\ConfigGlobal::getWeb(),"",$pagina); //si la dirección ya es absoluta, la quito
-			$dire=getcwd();
-			$path= str_replace (core\ConfigGlobal::$directorio, "", $dire);
-			if (substr($path,-1)!='/'){$path.='/';} // me aseguro de que acabe en "/"
-			$pagina=str_replace ($path,"",$pagina); //si la dirección ya es absoluta, la quito
-			//echo "directorio: $dire, path: $path<br>";
-			//echo "pagina: $pagina<br>";
-			if (substr($pagina,0,1)=='#'){$pagina=substr($pagina,1); $path="";}
-			if (substr($pagina,0,2)=='./'){$pagina=substr($pagina,1);}
-			if (substr($pagina,0,3)=='../') { //quito un directorio de $path
-				$path = preg_replace('/\w+\/?$/', '', $path);
-				$pagina=substr($pagina,3);
-			}
-			//echo "pagina2: $pagina<br>";
-			// separo la url de los parametros
-			if ($p=strpos($pagina,'?') ) { //"%3F" es "?" cuando está encode) 
-				$pag=substr($pagina,0,$p);
-				// no arrastro el goto, no sé porque estba aqui.
-				$parametros=substr($pagina,$p+1);
-				//$parametros=substr($pagina,$p+1)."&go_to=$go_to";
-				//echo "param: $parametros<br>";
-			} else {
-				$pag=$pagina;
-				//$parametros="go_to=$go_to";
-			}
-			$posi=strpos($parametros,"condicion=");
-			if ($posi===false) {
-				//$cond=substr($parametros,$posi);
-			} else {
-				$cond1=substr($parametros,$posi+10);
-				//para asegurar que no tiene barras \
-				$cond1=stripslashes($cond1);	
-				//echo "cond1: $cond1<br>";
-				$cond2=urlencode($cond1);
-				//echo "cond2: $cond2<br>";
-				$parametros=str_replace($cond1,$cond2,$parametros);
-			}
-			$url=core\ConfigGlobal::getWeb().$path.$pag;
-			return "'".$url."?".$parametros."'";
+		$pag_sin_param = '';
+		$pagina=urldecode($go_to);
+		$pagina=strtok($pagina,"|");
+		$frame = strtok("|");
+
+		$pagina=str_replace (core\ConfigGlobal::getWeb(),"",$pagina); //si la dirección ya es absoluta, la quito
+		$dire=getcwd();
+		$path= str_replace (core\ConfigGlobal::$directorio, "", $dire);
+		if (substr($path,-1)!='/'){$path.='/';} // me aseguro de que acabe en "/"
+		$pagina=str_replace ($path,"",$pagina); //si la dirección ya es absoluta, la quito
+		//echo "directorio: $dire, path: $path<br>";
+		//echo "pagina: $pagina<br>";
+		if (substr($pagina,0,1)=='#'){$pagina=substr($pagina,1); $path="";}
+		if (substr($pagina,0,2)=='./'){$pagina=substr($pagina,1);}
+		if (substr($pagina,0,3)=='../') { //quito un directorio de $path
+			$path = preg_replace('/\w+\/?$/', '', $path);
+			$pagina=substr($pagina,3);
 		}
+		//echo "pagina2: $pagina<br>";
+		// separo la url de los parametros
+		if ($p=strpos($pagina,'?') ) { //"%3F" es "?" cuando está encode) 
+			$pag=substr($pagina,0,$p);
+			// no arrastro el goto, no sé porque estba aqui.
+			$parametros=substr($pagina,$p+1);
+			//$parametros=substr($pagina,$p+1)."&go_to=$go_to";
+			//echo "param: $parametros<br>";
+		} else {
+			$pag=$pagina;
+			//$parametros="go_to=$go_to";
+		}
+		$posi=strpos($parametros,"condicion=");
+		if ($posi===false) {
+			//$cond=substr($parametros,$posi);
+		} else {
+			$cond1=substr($parametros,$posi+10);
+			//para asegurar que no tiene barras \
+			$cond1=stripslashes($cond1);	
+			//echo "cond1: $cond1<br>";
+			$cond2=urlencode($cond1);
+			//echo "cond2: $cond2<br>";
+			$parametros=str_replace($cond1,$cond2,$parametros);
+		}
+		$url=core\ConfigGlobal::getWeb().$path.$pag;
+		return "'".$url."?".$parametros."'";
 	}
 }
 ?>

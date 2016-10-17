@@ -1,5 +1,6 @@
 ﻿<?php
 use actividades\model as actividades;
+use actividadestudios\model as actividadestudios;
 use dossiers\model as dossiers;
 use asistentes\model as asistentes;
 use personas\model as personas;
@@ -42,6 +43,7 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 	empty($_POST['id_activ'])? $id_activ="" : $id_activ=$_POST['id_activ'];
 	empty($_POST['id_nom'])? $id_nom="" : $id_nom=$_POST['id_nom'];
 }
+
 $msg_err = '';
 switch ($_POST['mod']) {
 	//------------ BORRAR --------
@@ -57,11 +59,18 @@ switch ($_POST['mod']) {
 		$id_tabla = $oActividad->getId_tabla();
 		if ($dl == core\ConfigGlobal::mi_dele()) {
 			Switch($obj_persona) {
+				case 'PersonaN':
+                case 'PersonaNax':
+                case 'PersonaAgd':
+                case 'PersonaS':
+                case 'PersonaSSSC':				
 				case 'PersonaDl':
 					$oAsistente=new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
 					break;
 				case 'PersonaIn':
-					$msg_err = _("Debe eliminarlo la dl origen");
+					// Supongo que sólo debería modificar la dl origen.
+					// $oAsistente=new asistentes\AsistenteIn(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+					exit (_("Los datos de asistencia los modifica la dl del asistente"));
 					break;
 				case 'PersonaEx':
 					$oAsistente=new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
@@ -80,20 +89,20 @@ switch ($_POST['mod']) {
 				$msg_err = _('Hay un error, no se ha eliminado');
 			}
 		}
+
 		// hay que cerrar el dossier para esta persona/actividad/ubi, si no tiene más:
 		$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$id_nom,'id_tipo_dossier'=>1301));
 		$oDossier->cerrar();
 		$oDossier->DBGuardar();
 
 		// también borro las matriculas que pueda tener
-		/*
-		$oGestorMatricula=new GestorMatricula();
+		$oGestorMatricula=new actividadestudios\GestorMatricula();
 		foreach ($oGestorMatricula->getMatriculas(array('id_activ'=>$id_activ,'id_nom'=>$id_nom)) as $oMatricula) {
 			if ($oMatricula->DBEliminar() === false) {
-				echo _('Hay un error, no se ha eliminado');
+				$msg_err = _('Hay un error, no se ha eliminado');
 			}
 		}
-		*/
+		
 		break;
 	//------------ NUEVO --------
 	//------------ EDITAR --------
@@ -114,6 +123,11 @@ switch ($_POST['mod']) {
 		$id_tabla = $oActividad->getId_tabla();
 		if ($dl == core\ConfigGlobal::mi_dele()) {
 			Switch($obj_persona) {
+				case 'PersonaN':
+				case 'PersonaNax':
+				case 'PersonaAgd':
+				case 'PersonaS':
+				case 'PersonaSSSC':
 				case 'PersonaDl':
 					$oAsistente=new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
 					break;
@@ -139,7 +153,7 @@ switch ($_POST['mod']) {
 		isset($_POST['falta'])? $oAsistente->setFalta('t') : $oAsistente->setFalta('f');
 		isset($_POST['cfi_con'])? $oAsistente->setCfi_con($_POST['cfi_con']) : $oAsistente->setCfi_con();
 		if ($oAsistente->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			$msg_err = _('Hay un error, no se ha guardado');
 		}
 		break;
 }

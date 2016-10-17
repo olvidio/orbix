@@ -21,10 +21,14 @@ if (!empty($_POST['go_to'])) {
 
 if (!empty($id_activ)) { //caso de modificar
 	$mod="editar";
+	/* Mirar si la actividad es mia o no */
 	$oActividad = new actividades\Actividad(array('id_activ'=>$id_activ));
 	$nom_activ=$oActividad->getNom_activ();
-	$id_tabla=$oActividad->getId_tabla();
-	if ($id_tabla == 'dl' OR $id_tabla == 'ex') { 
+	// si es de la sf quito la 'f'
+	$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
+	$id_tabla_dl = $oActividad->getId_tabla();
+
+	if ($dl == core\ConfigGlobal::mi_dele()) {
 		switch ($_POST['obj_pau']) {
 			case 'PersonaN':
 			case 'PersonaNax':
@@ -34,13 +38,24 @@ if (!empty($id_activ)) { //caso de modificar
 			case 'PersonaDl':
 				$oAsistente = new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$_POST['id_pau']));
 				break;
+			case 'PersonaOut':
+				$oAsistente=new asistentes\AsistenteOut(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+				break;
+			case 'PersonaIn':
+				// Supongo que sólo debería modificar la dl origen.
+				// $oAsistente=new asistentes\AsistenteIn(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+				exit (_("Los datos de asistencia los modifica la dl del asistente"));
+				break;
 			case 'PersonaEx':
 				$oAsistente = new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$_POST['id_pau']));
 				break;
 		}
-	} 
-	if ($id_tabla == 'out') { 
-		$oAsistente = new asistentes\AsistenteOut(array('id_activ'=>$id_activ,'id_nom'=>$_POST['id_pau']));
+	} else { 
+		if ($id_tabla_dl == 'dl') { 
+			$oAsistente = new asistentes\AsistenteOut(array('id_activ'=>$id_activ,'id_nom'=>$_POST['id_pau']));
+		} else {
+			$oAsistente = new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$_POST['id_pau']));
+		}
 	} 
 	$id_activ_real=$id_activ;
 	$propio=$oAsistente->getPropio();

@@ -35,9 +35,11 @@ if (!empty($_POST['tabla'])) {
 	$nom_tabla=ucfirst(_("todos"));
 }
 if ($_POST['que']=="telf") {
-	$action= web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/personas_select_telf.php');
+	//$action= web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/personas_select_telf.php');
+	$action= core\ConfigGlobal::getWeb().'/apps/personas/controller/personas_select_telf.php';
 } else {
-	$action= web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/personas_select.php');
+	//$action= web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/personas_select.php');
+	$action= core\ConfigGlobal::getWeb().'/apps/personas/controller/personas_select.php';
 }
 $oHash = new web\Hash();
 $oHash->setcamposForm('nombre!apellido1!apellido2!centro!exacto!cmb');

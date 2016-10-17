@@ -43,6 +43,11 @@ if (!empty($_POST['atras'])) {
 } else {
 	$loc = empty($_POST['loc'])? '' : $_POST['loc'];
 	$tipo = empty($_POST['tipo'])? '' : $_POST['tipo'];
+	$simple = empty($_POST['simple'])? '' : $_POST['simple'];
+	if ($simple == 1) {
+		$tipo = 'tot';
+		$loc = 'tot';
+	}
 }
 
 /*miro las condiciones. las variables son: nombre_ubi,ciudad,region,pais */
@@ -244,6 +249,11 @@ if (empty($sWhere)) {
 	$metodo = $metodo;
 }
 
+if (empty($aWhere) && empty($aWhereD)) {
+	printf(_("Debe poner algún criterio de búsqueda"));
+	exit;
+}
+
 if (!empty($aWhere)) {
 	if (empty($_POST['cmb'])){
 		$aWhere['status']='t';
@@ -322,7 +332,7 @@ $go_to= '';
 //si no existe la ficha, hacer una nueva	
 if (is_array($cUbisTot) && count($cUbisTot) == 0) {
 	$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_buscar.php?'.http_build_query(array('simple'=>1,'tipo'=>$tipo))); 
-	$nombre_ubi=urlencode($_POST['nombre_ubi']);
+	$nombre_ubi=$_POST['nombre_ubi'];
 	
 	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_editar.php?'.http_build_query(array('sGestor'=>$sGestor,'nombre_ubi'=>$nombre_ubi,'nuevo'=>1,'go_to'=>$go_to))); 
 	
@@ -470,8 +480,7 @@ fnjs_borrar=function(formulario){
 </script>
 <form id="seleccionados" name="seleccionados" action="programas/ubis_tabla_total.php" method="post">
 <?= $oHash->getCamposHtml(); ?>
-<h2 class=titulo><?= $titulo; ?>
-<input id="tots els camps" name="tots els camps" type=button onclick=fnjs_enviar_formulario('#seleccionados') value="<?= _("listar todos los campos"); ?>"></h2>
+<h2 class=titulo><?= $titulo; ?></h2>
 <?php
 $oTabla = new web\Lista();
 $oTabla->setId_tabla('ubis_tabla');

@@ -1,6 +1,8 @@
 <?php 
 use asignaturas\model as asignaturas;
+use actividadestudios\model as actividadestudios;
 use notas\model as notas;
+use personas\model as personas;
 /**
 * Esta página muestra un formulario para modificar los datos de un acta.
 *
@@ -32,6 +34,7 @@ $linea = '';
 $lugar = '';
 $observ = '';
 //$notas = empty($_POST['notas'])? '': $_POST['notas'];
+$notas = empty($notas)? '': $notas;
 
 //últimos
 $GesActas = new notas\GestorActa();
@@ -77,10 +80,20 @@ if (empty($_POST['nuevo']) && !empty($acta))  { //significa que no es nuevo
 	*/
 	if ($notas=="nuevo") { //vengo de un ca
 		$id_asignatura_actual=$id_asignatura;
+		// Busco al profesor como examinador principal.
+		$oActividadAsignatura= new actividadestudios\ActividadAsignatura();
+		$oActividadAsignatura->setId_activ($id_activ);
+		$oActividadAsignatura->setId_asignatura($id_asignatura_actual);
+		$oActividadAsignatura->DBCarregar();
+		$id_profesor=$oActividadAsignatura->getId_profesor();
+		$oPersonaDl = new personas\PersonaDl($id_profesor);
+		$ap_nom = $oPersonaDl->getTituloNombreLatin();
+		$examinador = $ap_nom;
+		$json_examinadores = '[{name: "'.htmlspecialchars($examinador).'"}]';
 	} else { // estoy actualizando la página
 		if (!empty($_POST['sel']) && !empty($notas)) { //vengo de un checkbox y estoy en la página de acta_notas ($notas).
-			$id_asignatura = strtok($_POST['sel'][0],'#');
-			$id_activ = strtok('#');
+			$id_activ = strtok($_POST['sel'][0],'#');
+			$id_asignatura = strtok('#');
 			$cActas = $GesActas->getActas(array('id_activ'=>$id_activ,'id_asignatura'=>$id_asignatura));
 			$oActa = $cActas[0];
 			extract($oActa->getTot());
@@ -98,29 +111,36 @@ if (!empty($ult_acta)) { $ult_acta=sprintf(_("(última= %s)"),$ult_acta); }
 
 if (!empty($acta)) {
 	$GesTribunal = new notas\GestorActaTribunalDl();
-	$cTribunal = $GesTribunal->getActasTribunalesDl(array('acta'=>$acta,'_ordre'=>'orden')); 
+	$cTribunal = $GesTribunal->getActasTribunales(array('acta'=>$acta,'_ordre'=>'orden')); 
 } else {
 	$cTribunal = array();
 }
 
-
 $GesAsignaturas = new asignaturas\GestorAsignatura();
 $oDesplAsignaturas = $GesAsignaturas->getListaAsignaturas();
+if (!empty($id_asignatura_actual)) {
+	$jsonTodas = $GesAsignaturas->getJsonAsignaturas(array('id'=>$id_asignatura_actual));
+	$json_asignaturas = 'prePopulate: '.$jsonTodas.',';
+} else {
+	$json_asignaturas = '';
+}
 
 
 
 $oHash = new web\Hash();
-$sCamposForm = 'libro!linea!pagina!lugar!observ!id_asignatura!examinador_mas!examinador_num';
+//$sCamposForm = 'libro!linea!pagina!lugar!observ!id_asignatura!examinador_mas!examinador_num';
+$sCamposForm = 'libro!linea!pagina!lugar!observ!id_asignatura!f_acta';
 if (!empty($_POST['nuevo']) || $notas=="nuevo") { 
 	$sCamposForm .= '!acta';
 	$sCamposForm .= '!f_acta';
 }
 if(!empty($cTribunal)) {
-	$sCamposForm .= '!item';
-	$sCamposForm .= '!examinador';
+	//$sCamposForm .= '!item';
+	$sCamposForm .= '!examinadores';
 }
 $oHash->setcamposForm($sCamposForm);
-$oHash->setCamposNo('go_to!item!examinador');
+//$oHash->setCamposNo('go_to!item!examinador');
+$oHash->setCamposNo('go_to!examinadores');
 $a_camposHidden = array();
 if ($notas=="nuevo" || !empty($_POST['nuevo']) ) {
 	$a_camposHidden['nuevo'] = 1;
@@ -131,12 +151,13 @@ if ($notas=="nuevo" || !empty($_POST['nuevo']) ) {
 	}
 } else {
 	$a_camposHidden['acta'] = $acta;
-	$a_camposHidden['f_acta'] = $f_acta;
 }
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $titulo=strtoupper(_("datos del acta"));
 ?>
+<link rel="stylesheet" type="text/css" href="<?php echo core\ConfigGlobal::$web_scripts.'/jquery-tokeninput/styles/token-input.css' ?>" />
+
 <script>
 $(function() { $( "#f_acta" ).datepicker(); });
 
@@ -144,7 +165,26 @@ fnjs_guardar_acta=function(){
 	var rr=fnjs_comprobar_campos('#modifica','<?= addslashes($obj) ?>');
 	if (rr=='ok') {
 		$('#modifica').attr('action','apps/notas/controller/acta_update.php');
-		fnjs_enviar_formulario('#modifica');
+		<?php if (!empty($notas)) { ?>
+		$('#modifica').submit(function() {
+			$.ajax({
+				data: $(this).serialize(),
+				url: $(this).attr('action'),
+				type: 'post',
+				complete: function (rta) {
+					rta_txt=rta.responseText;
+					if (rta_txt != '' && rta_txt != '\n') {
+						alert (rta_txt);
+					}
+				}
+			});
+			return false;
+		});
+	$('#modifica').submit();
+	$('#modifica').off();
+	<?php } else { ?>
+	fnjs_enviar_formulario('#modifica');
+	<?php } ?>
 	}
 }
 
@@ -172,11 +212,7 @@ include(core\ConfigGlobal::$directorio.'/scripts/mas_opciones.js.php');
 	  </td></tr>
 <tr>
 	  <td class=etiqueta><?php echo ucfirst(_("fecha acta")); ?>: </td>
-	  <?php if (!empty($_POST['nuevo']) || $notas=="nuevo") {  ?>
-	  <td><input class="fecha" size="11" id="f_acta" id="f_acta" name="f_acta" value="<?php echo $f_acta; ?>">
-		<?php } else {
-			echo "<td colspan=8 class=contenido >$f_acta"; 
-		}?>
+	  <td><input class="fecha" size="11" id="f_acta" name="f_acta" value="<?php echo $f_acta; ?>">
 </td></tr>
 <tr>
 </tr><tr>
@@ -202,9 +238,12 @@ include(core\ConfigGlobal::$directorio.'/scripts/mas_opciones.js.php');
 </tr>
 <tr><td class=etiqueta><?= ucfirst(_("asignatura")) ?>:</td><td>
 <?php
-$oDesplAsignaturas->setNombre('id_asignatura');
+$oDesplAsignaturas->setNombre('id2_asignatura');
 $oDesplAsignaturas->setOpcion_sel($id_asignatura_actual);
-echo $oDesplAsignaturas->desplegable(); 
+//echo $oDesplAsignaturas->desplegable(); 
+
+
+echo "<input type='text'  size='60' id='id_asignatura' name='id_asignatura' value='' >";
 ?>
 </td></tr>
 </tr>
@@ -217,22 +256,34 @@ echo $oDesplAsignaturas->desplegable();
 <td colspan=8 id="col_examinador"><span id="examinador_span" >
 <?php
 	$e = 0;
-	foreach ($cTribunal as $oActaTribunal) {
-		$id_item=$oActaTribunal->getId_item();
-		$examinador=$oActaTribunal->getExaminador();
-		$orden=$oActaTribunal->getOrden();
-		?>
-		<input type='hidden' id='item[<?= $e ?>]' name='item[<?= $e ?>]' value='<?= $id_item ?>'>
-		<input type='text'  size='60' id='examinador_<?= $e ?>' name='examinador[<?= $e ?>]' value="<?= htmlspecialchars($examinador) ?>" onchange="fnjs_comprobar_input('examinador_<?= $e ?>','#g1');">
-		<?php
-		$e++;
+	$json_examinadores = '';
+	if (!empty($cTribunal)) { 
+		$json_examinadores = 'prePopulate: [';
+		foreach ($cTribunal as $oActaTribunal) {
+			$id_item=$oActaTribunal->getId_item();
+			$examinador=$oActaTribunal->getExaminador();
+			$orden=$oActaTribunal->getOrden();
+			$json_examinadores .= ($e > 0)? ',' : '';
+			$json_examinadores .= '{name: "'.htmlspecialchars($examinador).'"}';
+			?>
+			<!--
+			<input type='hidden' id='item[<?= $e ?>]' name='item[<?= $e ?>]' value='<?= $id_item ?>'>
+			<input type='text'  size='60' id='examinador_<?= $e ?>' name='examinador[<?= $e ?>]' value="<?= htmlspecialchars($examinador) ?>" onchange="fnjs_comprobar_input('examinador_<?= $e ?>','#g1');">
+			-->
+			<?php
+			$e++;
+		}
+		$json_examinadores .= '],';
 	}
+	echo "<input type='text'  size='60' id='examinadores' name='examinadores' value='' >";
 	echo "</span>";
 	// para que me salga una opción más en blanco
+	/*
 	echo "<input type='text' size='60' tabindex='89' id='examinador_mas' name='examinador_mas' class=contenido 
 	 onchange=\"fnjs_mas_inputs(event,'examinador','#g1',[['item','hidden',1],['examinador','text',60,'x']]);\" />";
 	echo "</td></tr>";
 	echo "<input type=hidden name='examinador_num' id='examinador_num' value=$e>";
+	*/
 ?>
 </td></tr>
 </table>
@@ -256,4 +307,41 @@ if (empty($_POST['go_to'])) $_POST['go_to']="acta_ver.php?acta=$acta";
 if ($notas=="nuevo") {
 	echo _("Primero debe guardar los valores del acta. Después las notas.");
 }
+
+$url = core\ConfigGlobal::getWeb().'/apps/notas/controller/acta_ajax.php';
+$oHash = new web\Hash();
+$oHash->setUrl($url);
+$oHash->setCamposForm('que!q'); 
+$h = $oHash->linkSinVal();
+
+$location = $url."?que=examinadores&$h&PHPSESSID=".session_id();
+$loc_asig = $url."?que=asignaturas&$h&PHPSESSID=".session_id();
+
 ?>
+<script type="text/javascript">
+$(document).ready(function () {
+    $("#id_asignatura").tokenInput("<?= $loc_asig ?>", {
+		method: "POST",
+		propertyToSearch: "name",
+		tokenValue: "id",
+		tokenLimit: 1,
+		<?= $json_asignaturas ?>
+		hintText: "<?= _("escriba parte del nombre para buscar") ?>",
+		noResultsText: "<?= _("no hay resultados") ?>",
+		searchingText: "<?= _("buscando...") ?>"
+	});
+    $("#examinadores").tokenInput("<?= $location ?>", {
+		method: "POST",
+		propertyToSearch: "name",
+		tokenValue: "name",
+		tokenLimit: 4,
+		tokenDelimiter: '#',
+		hintText: "<?= _("escriba un texto para buscar") ?>",
+		noResultsText: "<?= _("no hay resultados") ?>",
+		searchingText: "<?= _("buscando...") ?>",
+		<?= $json_examinadores ?>
+		allowCustomEntry: true,
+		allowFreeTagging: true
+	});
+});
+</script>

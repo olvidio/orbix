@@ -3,6 +3,8 @@ use actividades\model as actividades;
 use actividadcargos\model as actividadcargos;
 use asistentes\model as asistentes;
 use dossiers\model as dossiers;
+use personas\model as personas;
+
 /**
  * Actualiza los datos de un objeto ActividadCargo.
  * Si asiste ($_POST['asis']), se crea el objeto ActividadAsistente y se pone como propio
@@ -34,7 +36,9 @@ use dossiers\model as dossiers;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$_POST['elim_asis'] = '';
+$msg_err = '';
+//$_POST['elim_asis'] = '';
+$_POST['elim_asis'] = empty($_POST['elim_asis'])? '' : $_POST['elim_asis'];
 
 if (!empty($_POST['sel'])) { //vengo de un checkbox
 	if ($_POST['pau']=="p") {
@@ -73,16 +77,37 @@ switch ($_POST['mod']) {
 		$oActividad = new actividades\Actividad($id_activ);
 		$id_tipo_activ = $oActividad->getId_tipo_activ();
 
-		$oTipoActiv= new actividades\TiposActividades($id_tipo_activ);
+		$oTipoActiv= new web\TiposActividades($id_tipo_activ);
 		$ssfsv=$oTipoActiv->getSfsvText();
 		$sasistentes=$oTipoActiv->getAsistentesText();
 		$sactividad=$oTipoActiv->getActividadText();
 		$snom_tipo=$oTipoActiv->getNom_tipoText();
 
-		if ($_POST['elim_asis']==2 || $sasistentes == 's' || $sasistentes == 'sg') {
-			$oActividadAsistente=new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+		if ($_POST['elim_asis'] == 2 || $sasistentes == 's' || $sasistentes == 'sg') {
+			$oPersona = personas\Persona::NewPersona($id_nom);
+			$id_tabla_p = $oPersona->getId_Tabla();
+			$id_schema = $oPersona->getId_schema();
+			switch ($id_tabla_p) {
+				case 'n':
+				case 'nax':
+				case 'a':
+				case 's':
+				case 'sssc':
+					$id_tabla = 'dl';
+					break;
+				case 'pn':
+				case 'pa':
+					if ($id_schema == -1001 || $id_schema == -2001) {
+						$id_tabla = 'ex';
+					} else {
+						$id_tabla = 'out';
+					}
+					break;
+			}
+			$oActividadAsistente=new asistentes\Asistente(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+			$oActividadAsistente->setId_tabla($id_tabla);
 			if ($oActividadAsistente->DBEliminar() === false) {
-				echo _('Hay un error, no se ha eliminado');
+				$msg_err = _('Hay un error, no se ha eliminado');
 			}
 			$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$id_nom,'id_tipo_dossier'=>1301));
 			$oDossier->cerrar();
@@ -100,7 +125,7 @@ switch ($_POST['mod']) {
 		if (($oActividadCargo->DBGuardar()) === false) {
 			$sClauError = 'Dossiers.cargos_activ.nuevo';
 			//$_SESSION['oGestorErrores']->addErrorAppLastError('', $sClauError, __LINE__, __FILE__);
-			echo " $sClauError, ". __LINE__ .','. __FILE__ ;
+			$msg_err = " $sClauError, ". __LINE__ .','. __FILE__ ;
 			return false;
 		}
 
@@ -115,11 +140,32 @@ switch ($_POST['mod']) {
 		
 		// También asiste:
 		if (!empty($_POST['asis'])) {
-			$oActividadAsistente=new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+			$oPersona = personas\Persona::NewPersona($id_nom);
+			$id_tabla_p = $oPersona->getId_Tabla();
+			$id_schema = $oPersona->getId_schema();
+			switch ($id_tabla_p) {
+				case 'n':
+				case 'nax':
+				case 'a':
+				case 's':
+				case 'sssc':
+					$id_tabla = 'dl';
+					break;
+				case 'pn':
+				case 'pa':
+					if ($id_schema == -1001 || $id_schema == -2001) {
+						$id_tabla = 'ex';
+					} else {
+						$id_tabla = 'out';
+					}
+					break;
+			}
+			$oActividadAsistente=new asistentes\Asistente(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+			$oActividadAsistente->setId_tabla($id_tabla);
 			$oActividadAsistente->setPropio('t'); // por defecto lo pongo como propio
 			$oActividadAsistente->setFalta('f');
 			if ($oActividadAsistente->DBGuardar() === false) {
-				echo _('Hay un error, no se ha guardado');
+				$msg_err = _('Hay un error, no se ha guardado');
 			}
 			// si no está abierto, hay que abrir el dossier para esta persona
 			$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$id_nom,'id_tipo_dossier'=>1301));
@@ -138,7 +184,7 @@ switch ($_POST['mod']) {
 		isset($_POST['observ'])? $oActividadCargo->setObserv($_POST['observ']) : $oActividadCargo->setObserv();
 		isset($_POST['puede_agd'])? $oActividadCargo->setPuede_agd('t') : $oActividadCargo->setPuede_agd('f');
 		if ($oActividadCargo->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			$msg_err = _('Hay un error, no se ha guardado');
 		}
 		// Modifico la asistencia:
 		$oActividadAsistente=new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
@@ -147,7 +193,7 @@ switch ($_POST['mod']) {
 				$oActividadAsistente->setPropio('t'); // por defecto lo pongo como propio
 				$oActividadAsistente->setFalta('f');
 				if ($oActividadAsistente->DBGuardar() === false) {
-					echo _('Hay un error, no se ha guardado');
+					$msg_err = _('Hay un error, no se ha guardado');
 				}
 				// si no está abierto, hay que abrir el dossier para esta persona
 				$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$id_nom,'id_tipo_dossier'=>1301));
@@ -161,7 +207,7 @@ switch ($_POST['mod']) {
 		} else {
 			if (isset($_POST['asis']) && empty($_POST['asis'])) { // lo borro
 				if ($oActividadAsistente->DBEliminar() === false) {
-					echo _('Hay un error, no se ha eliminado');
+					$msg_err = _('Hay un error, no se ha eliminado');
 				}
 				// si no está abierto, hay que abrir el dossier para esta persona
 				$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$id_nom,'id_tipo_dossier'=>1301));
@@ -175,4 +221,16 @@ switch ($_POST['mod']) {
 		}
 		break;
 }
+
+if (empty($msg_err)) { 
+	if (!empty($_POST['go_to'])) {
+		echo $oPosicion->ir_a($_POST['go_to']);
+	} else {
+		$oPosicion->setId_div('ir_a');
+		echo $oPosicion->atras();
+	}
+} else {
+	echo $msg_err;
+}	
+
 ?>

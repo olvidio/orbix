@@ -45,6 +45,7 @@ class GestorPersona Extends core\ClaseGestor {
 		$a_Clases[] = array('clase'=>'PersonaDl','get'=>'getPersonasDl');
 		$a_Clases[] = array('clase'=>'PersonaIn','get'=>'getPersonasIn');
 		$a_Clases[] = array('clase'=>'PersonaOut','get'=>'getPersonasOut');
+		$a_Clases[] = array('clase'=>'PersonaEx','get'=>'getPersonasEx');
 		$namespace = __NAMESPACE__;
 		return $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
 	}

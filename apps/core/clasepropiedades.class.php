@@ -24,10 +24,11 @@ abstract class ClasePropiedades {
 	}
 	/**
 	 * estableix el valor de l'atribut oDbl de Grupo
+	 * El faig public per quan s'ha de copiar dades d'un esquema a un altre.
 	 *
 	 * @param object oDbl
 	 */
-	protected function setoDbl($oDbl) {
+	public function setoDbl($oDbl) {
 		$this->oDbl = $oDbl;
 	}
 	/**

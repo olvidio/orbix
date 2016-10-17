@@ -48,8 +48,9 @@ $GesPais = new ubis\GestorDireccionCtr();
 $oDesplPais = $GesPais->getListaPaises();
 $oDesplPais->setNombre('pais');
 
-if (empty($_POST['tipo'])) { $tipo="tot"; } else { $tipo=$_POST['tipo'];}
-if (empty($_POST['loc'])) { $loc="tot"; } else { $loc=$_POST['loc'];}
+$simple = empty($_POST['simple'])? 1 : $_POST['simple'];
+$tipo = empty($_POST['tipo'])? "tot" : $_POST['tipo'];
+$loc = empty($_POST['loc'])? "tot" : $_POST['loc'];
 
 switch ($tipo) {
 	case "ctrdl" :
@@ -99,26 +100,30 @@ switch ($tipo) {
 		$nomUbi=ucfirst(_("nombre de la casa o centro"));
 		break;
 }
-/*
-$camposForm1 = 'loc!nombre_ubi!opcion!pais!region!ciudad!tipo';
-$HashCamposForm1 = core\fun_hash_campos($camposForm1)['hash'];
-$HashCamposFormOrig1 = core\fun_hash_campos($camposForm1)['orig'];
-$camposHidden1 = 'tipo!loc';
-$a_camposHidden1 = array(
-		'tipo'=>$tipo,
-		'loc'=>$loc
-		);
-$HashHidden1 = core\fun_hash_a_campos($a_camposHidden1)['hash'];
-$HashHiddenOrig1 = core\fun_hash_a_campos($a_camposHidden1)['orig'];
-*/
+
 $oHash = new web\Hash();
-$oHash->setcamposForm('simple!nombre_ubi!opcion!pais!region!ciudad');
-$oHash->setcamposNo('simple');
-$a_camposHidden = array(
-		'tipo'=>$tipo,
-		'loc'=>$loc
-		);
-$oHash->setArraycamposHidden($a_camposHidden);
+
+$s_camposForm = 'simple!nombre_ubi!opcion!ciudad';
+$oHash->setcamposNo('simple!tipo_ctr!tipo_casa');
+
+if ($_POST['simple']==1) {
+	$s_camposForm .= '!region!pais';
+}
+if ($_POST['simple']==2) {
+	$s_camposForm .= '!tipo!loc';
+	if ($loc=="ex") {
+		$s_camposForm .= '!dl!region!pais';
+	}
+}
+$oHash->setcamposForm($s_camposForm);
+
+
+if ($simple==1) {
+	$pagina=web\Hash::link('apps/ubis/controller/ubis_buscar.php?'.http_build_query(array('simple'=>'2'))); 
+} else {
+	$pagina=web\Hash::link('apps/ubis/controller/ubis_buscar.php?'.http_build_query(array('simple'=>'1'))); 
+}
+
 ?>
 <script>
 fnjs_buscar=function(formulario){
@@ -142,29 +147,18 @@ fnjs_ver_solo=function(formulario){
 	});
 	$(formulario).show();
 }
-fnjs_ver_todos=function(){
-	// colección de todos los formularios
-	$('#condiciones form').each(function(i,f){
-		$(this).toggle();
-		$(this).attr('action',"");
-	});
-}
 
 fnjs_actualizar=function(formulario){
-	//var tipo=$('#tipo').val();
-	//var loc=$('#loc').val()
-	//var ref='apps/ubis/controller/ubis_buscar.php?simple=2&tipo='+tipo+'&loc='+loc;
-	//$('#simple').val(2)
 	$(formulario).attr('action','apps/ubis/controller/ubis_buscar.php');
 	fnjs_enviar_formulario(formulario,'#condiciones');
 }
 <?php 
-if ($_POST['simple']==1) {
+if ($simple==1) {
 	?>
 	fnjs_ver_solo('#frm_buscar_1');
 	<?php
 }
-if ($_POST['simple']==2) {
+if ($simple==2) {
 	?>
 	fnjs_ver_solo('#frm_buscar_2');
 	<?php
@@ -175,14 +169,14 @@ if ($_POST['simple']==2) {
 <form id="frm_buscar_1" name="frm_buscar_1" action="" onkeypress="fnjs_enviar(event,this);" >
 <?= $oHash->getCamposHtml(); ?>
 <input type="hidden" name="opcion" value="">
-<input type="hidden" name="simple" value="2">
+<input type="hidden" name="simple" value="1">
 <!-- Búsqueda simple --------------------------------------------- -->
 <table border=1>
 <thead><th class=titulo_inv colspan=4><?php echo ucfirst(_("buscar centro o casa")); ?></th>
 </thead>
 <tfoot>
 <tr>
-<td class=etiqueta align="RIGHT"><input type="checkbox" name="cmb"><?= _("buscar en fichero cmb"); ?></td>
+<td class=etiqueta align="RIGHT"><input type="checkbox" name="cmb"><?= _("buscar ubis fuera de uso"); ?></td>
 <td colspan=5 style="text-align:right;">
 <input id="ok" name="ok" TYPE="button" VALUE="<?php echo _("buscar"); ?>" onclick="fnjs_buscar('#frm_buscar_1')"  class="btn_ok" ></td></tr>
 </tfoot>
@@ -261,7 +255,7 @@ if ($tipo=="mail") { ?>
 <form id="frm_buscar_2" name="frm_buscar_2" action="" onkeypress="fnjs_enviar(event,this);" >
 <?= $oHash->getCamposHtml(); ?>
 <input type="hidden" name="opcion" value="">
-<input type="hidden" name="simple" value="1">
+<input type="hidden" name="simple" value="2">
 <table border=1>
 <thead><th class=titulo_inv colspan=4><?php echo ucfirst(_("buscar centro o casa")); ?></th></thead>
 <tfoot>
@@ -273,9 +267,9 @@ if ($tipo=="mail") { ?>
 </td><td>
 <select id="tipo" name="tipo" onchange="fnjs_actualizar('#frm_buscar_2')" class=contenido>
 <?php 
-	if ($_POST['tipo']=="ctr") { $ctr_selected="selected"; } else { $ctr_selected=""; }
-	if ($_POST['tipo']=="cdc") { $cdc_selected="selected"; } else { $cdc_selected=""; }
-	if ($_POST['tipo']=="tot") { $tot_selected="selected"; } else { $tot_selected=""; }
+	if ($tipo=="ctr") { $ctr_selected="selected"; } else { $ctr_selected=""; }
+	if ($tipo=="cdc") { $cdc_selected="selected"; } else { $cdc_selected=""; }
+	if ($tipo=="tot") { $tot_selected="selected"; } else { $tot_selected=""; }
 	echo "<option value='ctr' $ctr_selected>".ucfirst(_("centro"));
 	echo "<option value='cdc' $cdc_selected>".ucfirst(_("casa")); 
 	echo "<option value='tot' $tot_selected>".ucfirst(_("todos")); ?>
@@ -285,9 +279,9 @@ if ($tipo=="mail") { ?>
 </td><td>
 <select id="loc" name="loc" onchange="fnjs_actualizar('#frm_buscar_2')" class=contenido>
 <?php
-	if ($_POST['loc']=="dl") { $dl_selected="selected"; } else { $dl_selected=""; }
-	if ($_POST['loc']=="ex") { $ex_selected="selected"; } else { $ex_selected=""; }
-	if ($_POST['loc']=="tot") { $to_selected="selected"; } else { $to_selected=""; }
+	if ($loc=="dl") { $dl_selected="selected"; } else { $dl_selected=""; }
+	if ($loc=="ex") { $ex_selected="selected"; } else { $ex_selected=""; }
+	if ($loc=="tot") { $to_selected="selected"; } else { $to_selected=""; }
 	echo "<option value='dl' $dl_selected>"._("de dl");
 	echo "<option value='ex' $ex_selected>"._("de otra dl/cr");
 	echo "<option value='tot' $to_selected>"._("todos"); 
@@ -309,38 +303,36 @@ if ($tipo=="mail") { ?>
 	<td colspan="4"><input class=contenido id=ciudad name=ciudad size="60"></td>	
 </tr>
 
-<?php if ($_POST['loc']=="ex") { ?>
+<?php if ($loc=="ex") { ?>
+	<tr>
+		<td class=etiqueta><?php echo _("dl"); ?></td>
+		<td><input class=contenido id=dl name=dl size=1  style="HEIGHT: 22px; WIDTH: 62px"></td> 
+		<td class=etiqueta><?php echo ucfirst(_("región")); ?></td>
+		<td><input class=contenido id=region name=region size=1 style="HEIGHT: 22px; WIDTH: 62px"></td> 
+	</tr>
+	<tr>
+		<td class=etiqueta><?php echo ucfirst(_("país")); ?></td>
+		<td colspan="4"><input class=contenido id=pais name=pais size=1 style="HEIGHT: 22px; WIDTH: 250px"></td>
+	</tr>
+	<?php
 
-<tr>
-	<td class=etiqueta><?php echo _("dl"); ?></td>
-	<td><input class=contenido id=dl name=dl size=1  style="HEIGHT: 22px; WIDTH: 62px"></td> 
-	<td class=etiqueta><?php echo ucfirst(_("región")); ?></td>
-	<td><input class=contenido id=region name=region size=1 style="HEIGHT: 22px; WIDTH: 62px"></td> 
-</tr>
-<tr>
-	<td class=etiqueta><?php echo ucfirst(_("país")); ?></td>
-	<td colspan="4"><input class=contenido id=pais name=pais size=1 style="HEIGHT: 22px; WIDTH: 250px"></td>
-</tr>
-<?php
-
-if ($_POST['tipo']=="ctr" ) {
-?>
-	<tr><td class=etiqueta><?php echo _("tipo de centro"); ?></td>
-	<td><?= $oDesplTipoCentro->desplegable(); ?>
-	</td></tr>
-<?php
-}
-if ($_POST['tipo']=="cdc" ) {
-?>
-	<tr><td class=etiqueta><?php echo _("tipo de casa"); ?></td>
-	<td><?= $oDesplTipoCasa->desplegable(); ?>
-	</td></tr>
-<?php	
-}
-
+	if ($tipo=="ctr" ) {
+	?>
+		<tr><td class=etiqueta><?php echo _("tipo de centro"); ?></td>
+		<td><?= $oDesplTipoCentro->desplegable(); ?>
+		</td></tr>
+	<?php
+	}
+	if ($tipo=="cdc" ) {
+	?>
+		<tr><td class=etiqueta><?php echo _("tipo de casa"); ?></td>
+		<td><?= $oDesplTipoCasa->desplegable(); ?>
+		</td></tr>
+	<?php	
+	}
 }
 
-if ($_POST['tipo']=="mail") { ?>
+if ($tipo=="mail") { ?>
 <table align="justify">
 <tr></tr>
 <tr></tr>
@@ -393,9 +385,8 @@ if ($_POST['tipo']=="mail") { ?>
 }
 ?>
 </tbody></table>
-
 </form>
-<td><input id="b_mas" name="b_mas" TYPE="button" VALUE="<?php echo _("ver otras opciones"); ?>" onclick="fnjs_ver_todos()" ></td>
+<td><input id="b_mas" name="b_mas" TYPE="button" VALUE="<?php echo _("ver otras opciones"); ?>" onclick="fnjs_update_div('#main','<?= $pagina ?>')" ></td>
 </table>
 </div>
 <div id="resultados">

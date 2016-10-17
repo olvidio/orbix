@@ -1,0 +1,42 @@
+<?php
+use asignaturas\model as asignaturas;
+use notas\model as notas;
+/**
+* Esta página sirve para dar una lista de examinadores para los inputs autocomplete
+*
+*
+*@package	delegacion
+*@subpackage	estudios
+*@author	Daniel Serrabou
+*@since		19/08/15.
+*		
+*/
+
+/**
+* En el fichero config tenemos las variables genéricas del sistema
+*/
+// INICIO Cabecera global de URL de controlador *********************************
+	require_once ("apps/core/global_header.inc");
+// Arxivos requeridos por esta url **********************************************
+
+// Crea los objectos de uso global **********************************************
+	require_once ("apps/core/global_object.inc");
+// FIN de  Cabecera global de URL de controlador ********************************
+
+
+$que = empty($_POST['que'])? '' : $_POST['que'];
+$sQuery = empty($_POST['q'])? '' : $_POST['q'];
+
+switch($que) {
+	case 'examinadores':
+		$GesActaTribunalDl = new notas\GestorActaTribunalDl();
+		$json = $GesActaTribunalDl->getJsonExaminadores($sQuery);
+		break;
+	case 'asignaturas':
+		$GesAsignatura = new asignaturas\GestorAsignatura();
+		$json = $GesAsignatura->getJsonAsignaturas(array('nombre_asig'=>$sQuery));
+	break;
+}
+echo $json;
+
+?>

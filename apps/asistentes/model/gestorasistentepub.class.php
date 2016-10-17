@@ -35,6 +35,33 @@ class GestorAsistentePub Extends core\ClaseGestor {
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
 	/**
+	 * retorna l'array de id_nom
+	 *
+	 * @param array id_activ de las actividades seleccionadas.
+	 * @return array [id_nom]
+	 */
+	function getListaAsistentesDistintos($aId_activ=array()) {
+		$oDbl = $this->getoDbl();
+		$where = '';
+		if (!empty($aId_activ)) {
+			$where = 'WHERE id_activ=';
+			$where .= implode(' OR id_activ=',$aId_activ);
+		}
+		$sQuery = "SELECT DISTINCT id_nom from publicv.d_asistentes_de_paso $where";
+		//echo "qq: $sQuery<br>";
+		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+			$sClauError = 'GestorAsistentePub.lista.id_nom';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		$aId_nom = array();
+		foreach ($oDbl->query($sQuery) as $aDades) {
+			$aId_nom[] = $aDades['id_nom'];
+		}
+		return $aId_nom;
+	}
+
+	/**
 	 * retorna l'array d'objectes de tipus AsistentePub
 	 *
 	 * @param string sQuery la query a executar.

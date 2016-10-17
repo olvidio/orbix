@@ -250,6 +250,59 @@ abstract class GestorPersonaGlobal Extends core\ClaseGestor {
 		return $oPersonaDlSet->getTot();
 	}
 
+	/**
+	 * retorna l'array d'objectes del tipus que se li passa com a paràmetre
+	 *
+	 * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
+	 * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
+	 * @param string Nom del objecte
+	 * @return array Una col·lecció d'objectes de tipus PersonaDl
+	 */
+	function getPersonasObj($aWhere=array(),$aOperators=array(),$Obj) {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$oPersonaSet = new core\Set();
+		$oCondicion = new core\Condicion();
+		$aCondi = array();
+		foreach ($aWhere as $camp => $val) {
+			if ($camp == '_ordre') continue;
+			$sOperador = isset($aOperators[$camp])? $aOperators[$camp] : '';
+			if ($a = $oCondicion->getCondicion($camp,$sOperador,$val)) $aCondi[]=$a;
+			// operadores que no requieren valores
+			if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
+		}
+		$sCondi = implode(' AND ',$aCondi);
+		if ($sCondi!='') $sCondi = " WHERE ".$sCondi;
+		if (isset($GLOBALS['oGestorSessioDelegación'])) {
+		   	$sLimit = $GLOBALS['oGestorSessioDelegación']->getLimitPaginador('a_actividades',$sCondi,$aWhere);
+		} else {
+			$sLimit='';
+		}
+		if ($sLimit===false) return;
+		$sOrdre = '';
+		if (isset($aWhere['_ordre']) && $aWhere['_ordre']!='') $sOrdre = ' ORDER BY '.$aWhere['_ordre'];
+		if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
+		$sQry = "SELECT * FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
+		//echo "query: $sQry<br>";
+		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
+			$sClauError = 'GestorPersonaObj.llistar.prepare';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		if (($oDblSt->execute($aWhere)) === false) {
+			$sClauError = 'GestorPersonaObj.llistar.execute';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		foreach ($oDblSt as $aDades) {
+			$a_pkey = array('id_nom' => $aDades['id_nom']);
+			$oPersona= new $Obj($a_pkey);
+			$oPersona->setAllAtributes($aDades);
+			$oPersonaSet->add($oPersona);
+		}
+		return $oPersonaSet->getTot();
+	}
+
 	/* METODES PROTECTED --------------------------------------------------------*/
 
 	/* METODES GET i SET --------------------------------------------------------*/

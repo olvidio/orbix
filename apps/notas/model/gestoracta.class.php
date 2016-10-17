@@ -36,6 +36,31 @@ class GestorActa Extends core\ClaseGestor {
 
 	
 	/**
+	 * retorna l'última acta d'una regió.
+	 *
+	 * @param string regió/dl/? en el que buscar la últim número d'acta.
+	 * @return integer
+	 */
+	function getUltimaActa($sRegion='?',$any) {
+		$sRegion = ($sRegion=='?')? "\\".$sRegion : $sRegion;
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$sQuery = "SELECT  (regexp_matches(acta, '^\w{1,6}\s+(\d+)/$any') ) as num
+			FROM $nom_tabla WHERE acta ~* '^$sRegion.*/$any'
+			ORDER BY num DESC
+			LIMIT 1";
+		//echo "ss: $sQuery<br>";
+		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+			$sClauError = 'GestorActa.UltimaActa';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		// Quitar los {}.
+		$num = $oDblSt->fetchColumn();
+		$num = trim($num, '{}');
+		return $num;
+	}
+	/**
 	 * retorna l'última linea del llibre.
 	 *
 	 * @param integer iLibro libro en el que buscar la últmia linea.
@@ -143,6 +168,8 @@ class GestorActa Extends core\ClaseGestor {
 		if (isset($aWhere['_ordre']) && $aWhere['_ordre']!='') $sOrdre = ' ORDER BY '.$aWhere['_ordre'];
 		if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
+		//echo "Query: $sQry<br>";
+		//print_r($aWhere);
 		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClauError = 'GestorActa.llistar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);

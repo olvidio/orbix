@@ -37,6 +37,90 @@ class GestorProfesor Extends core\ClaseGestor {
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
 	/**
+	 * retorna un objecte del tipus array
+	 * Els posibles professors de paso (personaEx + PersonaIN)
+	 *
+	 * @return array Una Llista
+	 */
+	function getListaProfesoresPub() {
+		$gesPersonaPub = new personas\GestorPersonaPub();
+		$cPersonasPub = $gesPersonaPub->getPersonas(array('profesor_stgr' => 't'));
+
+		$aProfesores = array();
+		$aAp1 = array();
+		$aAp2 = array();
+		$aNom = array();
+		foreach ($cPersonasPub as $oPersona) {
+			$id_nom = $oPersona->getId_nom();
+			$ap_nom = $oPersona->getApellidosNombre();
+			$aProfesores[] = array('id_nom'=>$id_nom,'ap_nom'=>$ap_nom);
+			$aAp1[] = $oPersona->getApellido1();
+			$aAp2[] = $oPersona->getApellido2();
+			$aNom[] = $oPersona->getNom();
+		}
+		$multisort_args = array(); 
+		$multisort_args[] = $aAp1;
+		$multisort_args[] = SORT_ASC;
+		$multisort_args[] = SORT_STRING;
+		$multisort_args[] = $aAp2;
+		$multisort_args[] = SORT_ASC;
+		$multisort_args[] = SORT_STRING;
+		$multisort_args[] = $aNom;
+		$multisort_args[] = SORT_ASC;
+		$multisort_args[] = SORT_STRING;
+		$multisort_args[] = &$aProfesores;   // finally add the source array, by reference
+		call_user_func_array("array_multisort", $multisort_args);
+		$aOpciones=array();
+		foreach ($aProfesores as $aClave) {
+			$clave=$aClave['id_nom'];
+			$val=$aClave['ap_nom'];
+			$aOpciones[$clave]=$val;
+		}
+		return $aOpciones;
+	}
+	/**
+	 * retorna un objecte del tipus array
+	 * Els posibles professors de la dl
+	 *
+	 * @return array Una Llista
+	 */
+	function getListaProfesoresDl() {
+
+		$gesProfesores = $this->getProfesores(array('f_cese'=>''),array('f_cese'=>'IS NULL'));
+		$aProfesores = array();
+		$aAp1 = array();
+		$aAp2 = array();
+		$aNom = array();
+		foreach ($gesProfesores as $oProfesor) {
+			$id_nom = $oProfesor->getId_nom();
+			$oPersonaDl = new personas\PersonaDl($id_nom);
+			$ap_nom = $oPersonaDl->getApellidosNombre();
+			$aProfesores[] = array('id_nom'=>$id_nom,'ap_nom'=>$ap_nom);
+			$aAp1[] = $oPersonaDl->getApellido1();
+			$aAp2[] = $oPersonaDl->getApellido2();
+			$aNom[] = $oPersonaDl->getNom();
+		}
+		$multisort_args = array(); 
+		$multisort_args[] = $aAp1;
+		$multisort_args[] = SORT_ASC;
+		$multisort_args[] = SORT_STRING;
+		$multisort_args[] = $aAp2;
+		$multisort_args[] = SORT_ASC;
+		$multisort_args[] = SORT_STRING;
+		$multisort_args[] = $aNom;
+		$multisort_args[] = SORT_ASC;
+		$multisort_args[] = SORT_STRING;
+		$multisort_args[] = &$aProfesores;   // finally add the source array, by reference
+		call_user_func_array("array_multisort", $multisort_args);
+		$aOpciones=array();
+		foreach ($aProfesores as $aClave) {
+			$clave=$aClave['id_nom'];
+			$val=$aClave['ap_nom'];
+			$aOpciones[$clave]=$val;
+		}
+		return $aOpciones;
+	}
+	/**
 	 * retorna un objecte del tipus Desplegable
 	 * Els posibles professors
 	 *

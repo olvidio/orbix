@@ -164,7 +164,7 @@ foreach ($cCentros as $oCentro) {
 	$ctr++;
 	extract($oCentro->getTot());
 	//consulta para buscar personas de cada ctr		
-	// en caso de sss+ no hay campo vida_familia
+	// en caso de sss+ no hay campo situacion
 	if ($tabla=="p_sssc") {
 		$GesPersonas = new personas\GestorPersonaSSSC();
 		$cPersonas = $GesPersonas->getPersonas(array('id_ctr'=>$id_ubi,'situacion'=>'A','_ordre'=>'apellido1'));

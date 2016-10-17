@@ -65,6 +65,39 @@ class GestorDelegacion Extends  core\ClaseGestor {
 	 * @param boolean si se incluye la dl o no
 	 * @return object Una Llista de delegacions i regions.
 	 */
+	function getListaRegDele($bdl='t') {
+		$sf = (core\ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		if ($bdl == 't') {
+			$sQuery="SELECT region||'-'||dl||'$sf', nombre_dl||' ('||dl||'$sf)'
+					FROM $nom_tabla
+					UNION 
+					SELECT u.region||'-'||u.region,u.nombre_region||' ('||region||')' 
+					FROM xu_region u 
+					ORDER BY 2";
+		} else {
+			$sQuery="SELECT region||'-'||dl||'$sf', nombre_dl||' ('||dl||'$sf)'
+					FROM $nom_tabla WHERE dl != '".ConfigGlobal::mi_dele()."'
+					UNION 
+					SELECT u.region||'-'||u.region,u.nombre_region||' ('||region||')' 
+					FROM xu_region u 
+					ORDER BY 2";
+		}
+		//echo "sql: $sQuery<br>";
+		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+			$sClauError = 'GestorRole.lista';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		return new web\Desplegable('',$oDblSt,'',true);
+	}
+	/**
+	 * retorna un objecte del tipus Desplegable
+	 *
+	 * @param boolean si se incluye la dl o no
+	 * @return object Una Llista de delegacions i regions.
+	 */
 	function getListaDelegacionesURegiones($bdl='t') {
 		$sf = (core\ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
 		$oDbl = $this->getoDbl();
