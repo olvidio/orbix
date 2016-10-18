@@ -143,7 +143,7 @@ function data($data) {
 // -----------------------------  cabecera ---------------------------------
 ?>
 <head>
-<?php include_once(core\ConfigGlobal::$dir_estilos.'/tessera_mpdf.css'); ?>
+<?php include_once(core\ConfigGlobal::$dir_estilos.'/tessera_mpdf.css.php'); ?>
 </head>
 <div class="A4">
 <table class="A4">

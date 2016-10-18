@@ -216,7 +216,7 @@ echo dibujar_campo("santo",4,1,1);
 </table>
 <!-- ------------------- DATOS PROCEDENCIA ------------------------ -->
 <?php
-echo "<table id='datosprocedencia' border=1 style='{ display:none; }'>";
+echo "<table id='datosprocedencia' border=1 style='display:none;'>";
 echo "<tr><td class=titulo colspan='5'>".strtoupper(_("datos procedencia"))."</td></tr>";
 echo "<tr>";
 echo dibujar_campo("ciudad_n",30,1,3);
@@ -281,7 +281,7 @@ echo dibujar_campo("f_fichero",11,1,1);
 <input class=contenido type="hidden" name="id_ctr_<?php echo $tabla[$f].$r; ?>" value="<?php echo $id_ctr ?>" title="<?php echo $id_ctr_help; ?>">
 <input class=contenido type="hidden" name="id_ctr_cr_<?php echo $tabla[$f].$r; ?>" value="<?php echo $id_ctr_cr ?>" title="<?php echo $id_ctr_cr_help; ?>">
 
-<table id="incorporaciones" border=1 style='{ display:none; }'>
+<table id="incorporaciones" border=1 style='display:none;'>
 <tr><td class=titulo colspan="5"><?php print(strtoupper(_("incorporaciones"))); ?></td></tr>
 <tr>
 <?php
@@ -309,7 +309,7 @@ echo "</tr><tr>";
 echo "</table>";
 ?>
 <!-- CENTRO Y ENCARGOS ----------------------------------------------->
-<table id="centro" border=1 style='{ display:none; }'> 
+<table id="centro" border=1 style='display:none;'> 
 <tr><td class=titulo colspan="5"><?php print(strtoupper(_("centro y encargos"))); ?></td></tr>
 <tr>
 <td>
@@ -413,7 +413,7 @@ echo "</tr></table>";
 ?>
 <!-- DATOS FAMILIARES --------------------------------------------- -->
 <?php
-echo "<table id='datosfamiliares' border=1 style='{ display:none; }'>";
+echo "<table id='datosfamiliares' border=1 style='display:none;'>";
 echo "<tr><td class=titulo colspan='5'>".strtoupper(_("datos familiares"))."</td></tr>";
 echo "<tr>";
 echo dibujar_campo("direccion",50,1,1);

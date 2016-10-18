@@ -45,5 +45,5 @@ class GestorPersonaOut extends GestorPersonaGlobal {
 	/* METODES PROTECTED --------------------------------------------------------*/
 
 	/* METODES GET i SET --------------------------------------------------------*/
+        }    
 }
-?>

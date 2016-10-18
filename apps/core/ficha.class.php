@@ -141,35 +141,26 @@ $a_campos = $obj->getTot();
 	//
 
 	// -----------------------------------  Botones  ----------------------
-		if ($boton[$f]){
-			echo "<table><tr class=botones>";
-			$b=strtok($boton[$f],",");
-			while ($b) {
-				if ($b==1){
-					$txt_g=ucwords(_("guardar cambios"));
-					echo "<th class='link_inv' onclick='fnjs_guardar($f,\"$go_toG[$f]\")'>$txt_g</th>"; }
-				if ($b==2){
-					$txt_e=ucwords(_("eliminar"));
-					echo "<th class='link_inv' onclick='fnjs_eliminar($f,$r,\"$go_toE[$f]\")'>$txt_e</th>"; }
-				if ($b==3){
-					$txt_e=ucwords(_("eliminar"));
-					echo "<th class='link_inv' onclick='fnjs_eliminar($f,\"t\",\"$go_toE[$f]\")'>$txt_e</th>"; }
-				if ($b==4){
-					$txt_q=ucwords(_("quitar dirección"));
-					echo "<th class='link_inv' onclick='fnjs_quitar_dir($f,\"$go_toQ[$f]\")'>$txt_q</th>"; }
-				$b=strtok(",");
-			} 
-			echo "</tr></table><br>";
-		}
-	// fin ----------------------------  Botones  ----------------------
-	}
-
-
-}	// fin de for (para más de una tabla)
-?>
-</form>
-<?php
+	if ($boton[$f]){
+            echo "<table><tr class=botones>";
+            $b=strtok($boton[$f],",");
+            while ($b) {
+		if ($b==1){
+                    $txt_g=ucwords(_("guardar cambios"));
+                    echo "<th class='link_inv' onclick='fnjs_guardar($f,\"$go_toG[$f]\")'>$txt_g</th>"; }
+		if ($b==2){
+                    $txt_e=ucwords(_("eliminar"));
+                    echo "<th class='link_inv' onclick='fnjs_eliminar($f,$r,\"$go_toE[$f]\")'>$txt_e</th>"; }
+		if ($b==3){
+                    $txt_e=ucwords(_("eliminar"));
+                    echo "<th class='link_inv' onclick='fnjs_eliminar($f,\"t\",\"$go_toE[$f]\")'>$txt_e</th>"; }
+		if ($b==4){
+                    $txt_q=ucwords(_("quitar dirección"));
+                    echo "<th class='link_inv' onclick='fnjs_quitar_dir($f,\"$go_toQ[$f]\")'>$txt_q</th>"; }
+                    $b=strtok(",");
+		} 
+		echo "</tr></table><br>";
+        } // fin ----------------------------  Botones  ----------------------
+    echo '</form>';
+} // ------------------- fin de funcion ficha ----------------------
 }
-// ------------------- fin de funcion ficha ----------------------
-}
-

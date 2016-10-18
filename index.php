@@ -1,6 +1,7 @@
 <?php
 namespace core;
 use web;
+
 /**
 * llama a la plantilla de inicio con el nombre de la oficina
 *
@@ -51,7 +52,7 @@ ini_set ('include_path', $new_include_path);
 // FIN de  Cabecera global de URL de controlador ********************************
 
 //$oUsuario = new Usuario(array('id_usuario'=>113));
-//print_r($oUsuario);
+
 use usuarios\model as usuarios;
 use menus\model as menus;
 
@@ -242,6 +243,7 @@ $num_menu_1="";
 		}
 		$indice_old=$indice;
 	}
+
 for ($n=1;$n<$indice_old;$n++) {
 	$li_submenus.="</li></ul>";
 }
@@ -264,10 +266,10 @@ include_once(ConfigGlobal::$dir_estilos.'/todo_en_uno.css.php');
 echo "<style>";
 switch ($tipo_menu) {
 	case "horizontal":
-		include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css');
+		include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
 		break;
 	case "vertical":
-		include_once(ConfigGlobal::$dir_estilos.'/menu_vertical.css');
+		include_once(ConfigGlobal::$dir_estilos.'/menu_vertical.css.php');
 		break;
 }
 ?>

@@ -40,3 +40,4 @@ apps/web/hash.class.php
 .Trashes
 ehthumbs.db
 Thumbs.db
+/nbproject/private/

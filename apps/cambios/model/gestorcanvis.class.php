@@ -89,7 +89,7 @@ class gestorCanvis {
 			echo "\n dd".$txt."\n $sClauError <br>";
 		}
 		$oPosicion = new web\Posicion();
-		$seguir = echo $oPosicion->link_a($goto,0);
+		$seguir = $oPosicion->link_a($goto,0);
 		//$seguir=link_a($goto,0);
 		echo "<br><span class='link' onclick=fnjs_update_div('#main',$seguir)>"._("continuar")."</span>";
 

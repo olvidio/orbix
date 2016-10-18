@@ -220,7 +220,7 @@ class Local Extends core\ClasePropiedades {
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_locale',$aDades)) $this->setId_locale($aDades['id_locale']);
-		if (array_key_exists('nom_locale',$aDades)) $this->setNom Locale($aDades['nom_locale']);
+		if (array_key_exists('nom_locale',$aDades)) $this->setNom_Locale($aDades['nom_locale']);
 		if (array_key_exists('idioma',$aDades)) $this->setIdioma($aDades['idioma']);
 		if (array_key_exists('nom_idioma',$aDades)) $this->setNom_idioma($aDades['nom_idioma']);
 		if (array_key_exists('activo',$aDades)) $this->setActivo($aDades['activo']);
@@ -276,7 +276,7 @@ class Local Extends core\ClasePropiedades {
 	 *
 	 * @return string snom_locale
 	 */
-	function getNom Locale() {
+	function getNom_Locale() {
 		if (!isset($this->snom_locale)) {
 			$this->DBCarregar();
 		}
@@ -287,7 +287,7 @@ class Local Extends core\ClasePropiedades {
 	 *
 	 * @param string snom_locale='' optional
 	 */
-	function setNom Locale($snom_locale='') {
+	function setNom_Locale($snom_locale='') {
 		$this->snom_locale = $snom_locale;
 	}
 	/**
@@ -356,7 +356,7 @@ class Local Extends core\ClasePropiedades {
 	function getDatosCampos() {
 		$oLocalSet = new core\Set();
 
-		$oLocalSet->add($this->getDatosNom Locale());
+		$oLocalSet->add($this->getDatosNom_Locale());
 		$oLocalSet->add($this->getDatosIdioma());
 		$oLocalSet->add($this->getDatosNom_idioma());
 		$oLocalSet->add($this->getDatosActivo());
@@ -371,7 +371,7 @@ class Local Extends core\ClasePropiedades {
 	 *
 	 * @return oject DatosCampo
 	 */
-	function getDatosNom Locale() {
+	function getDatosNom_Locale() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nom_locale'));
 		$oDatosCampo->setEtiqueta(_("nom_locale"));

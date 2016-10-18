@@ -113,7 +113,6 @@ div.f7{
 	position: relative;
 	margin-top:	3mm;
 	margin-left:	1cm;
-	//left: -6.6cm;
 	text-align: left;
 	font-size: 6pt; 
 	}

@@ -332,7 +332,7 @@ foreach ($a_row_dio as $row) {
 <input type="hidden" name="id_ctr_cr_<?php echo $tabla[$f].$r; ?>" value="<?php echo $id_ctr_cr ?>" >
 <input type="hidden" name="ctr_cr_<?php echo $tabla[$f].$r; ?>" value="<?php echo $ctr_cr ?>" >
 
-<table id='incorporaciones'  border=1 style='{ display:none; }'>
+<table id='incorporaciones'  border=1 style="display:none;">
 <tr><td class=titulo colspan="5"><?php print(strtoupper(_("incorporaciones"))); ?></td></tr>
 <tr>
 <?php
@@ -393,7 +393,7 @@ echo "</tr></table>";
 
 ?>
 <!-- CENTRO Y ENCARGOS -------------------------------------------- --->
-<table id="centro" border=1 style='{ display:none; }'> 
+<table id="centro" border=1 style='display:none;'> 
 <tr><td class=titulo colspan="5"><?php print(strtoupper(_("centro y encargos"))); ?></td></tr>
 <tr>
 <td colspan="2">

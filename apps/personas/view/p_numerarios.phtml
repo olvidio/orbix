@@ -261,7 +261,7 @@ $query_dio="select id_diocesis, nombre_diocesis from xp_diocesis order by nombre
 $oDBSt_q_dio=$oDB->query($query_dio);
 $a_row_dio=$oDBSt_q_dio->fetchAll();
 
-echo "<table id='bautismo' border=1 style='{ display:none; }'>";
+echo "<table id='bautismo' border=1 style='display:none;'>";
 echo "<tr><td class=titulo colspan='5'>".strtoupper(_("bautismo"))."</td></tr>";
 echo "<tr><td>&nbsp;&nbsp;&nbsp;</td>";
 echo dibujar_campo("f_bautismo",11,1,1);
@@ -282,7 +282,7 @@ foreach ($a_row_dio as $row) {
 }
 
 echo "</select></td></tr>";
-echo "<table id='confirmacion' border=1 style='{ display:none; }'>";
+echo "<table id='confirmacion' border=1 style='display:none;'>";
 echo "<tr><td class=titulo colspan='5'>".strtoupper_dlb(_("confirmación"))."</td></tr>";
 echo "<tr><td>&nbsp;&nbsp;&nbsp;</td>";
 echo dibujar_campo("f_confirmacion",11,1,1);
@@ -309,7 +309,7 @@ foreach ($a_row_dio as $row) {
 <input type="hidden" id="id_ctr" name="id_ctr" value="<?php echo $id_ctr ?>" >
 <input type="hidden" id="id_ctr_cr" name="id_ctr_cr" value="<?php echo $id_ctr_cr ?>" >
 
-<table id="incorporaciones" border=1 style='{ display:none; }'>
+<table id="incorporaciones" border=1 style='display:none;'>
 <tr><td class=titulo colspan="5"><?php print(strtoupper(_("incorporaciones"))); ?></td></tr>
 <tr>
 <?php
@@ -336,7 +336,7 @@ echo dibujar_campo("f_pr_fl",11,1,1);
 echo "</tr><tr>";
 echo "</table>";
 $a_valores_campo=$GLOBALS['a_campos']["stgr"];
-echo "<table id='stgr' border=1 style='{ display:none; }'>";
+echo "<table id='stgr' border=1 style='display:none;'>";
 echo "<tr><td class=titulo colspan='5'>".strtoupper(_("stgr"))."</td></tr>";
 echo "<td><span class=etiqueta ondblclick=\"fnjs_help('$stgr_help_ref')\" >".ucfirst($a_valores_campo["etiqueta"])."&nbsp;</span></td>";
 echo "<td><select class=contenido id=\"stgr_$tabla[$f]$r\" name=\"stgr_$tabla[$f]$r\" title=\"$stgr_help\">";
@@ -370,7 +370,7 @@ echo dibujar_campo("f_in",11,2,0);
 ?>
 </table>
 <!--  -- CENTRO Y ENCARGOS --------------------------------------------- -->
-<table id="centro" border=1 style='{ display:none; }'> 
+<table id="centro" border=1 style='display:none;'> 
 <tr><td class=titulo colspan="5"><?php print(strtoupper(_("centro y encargos"))); ?></td></tr>
 <tr>
 <td colspan="2">
@@ -475,7 +475,7 @@ echo "</td></tr>";
 </TABLE>
 <!-- ------------------- PADRES ----------------------- -->
 <?php
-echo "<table  id='padres' border=1 style='{ display:none; }'>";
+echo "<table  id='padres' border=1 style='display:none;'>";
 echo "<tr><td class=titulo colspan='5'>".strtoupper(_("padre"))."</td></tr>";
 echo "<tr>";
 echo dibujar_campo("padre_nombre",25,1,1);
@@ -504,7 +504,7 @@ echo "</tr></table>";
 ?>
 <!-- DATOS FAMILIARES ---------------------------------------------  -->
 <?php 
-echo "<table id='datosfamiliares' border=1 style='{ display:none; }'>";
+echo "<table id='datosfamiliares' border=1 style='display:none;'>";
 echo "<tr><td class=titulo colspan='5'>".strtoupper(_("datos familiares"))."</td></tr>";
 echo "<tr>";
 echo dibujar_campo("direccion",50,1,1);
