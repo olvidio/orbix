@@ -67,9 +67,6 @@ $cmatch = 'udm-custom.ini';
 //override config with GET var
 //if(isset($_GET['config'])&&$_GET['config']!='') { $config=$_GET['config']; }
 
-//validate config value and import configuration file
-//if(ereg('^[-\_\.\/\\a-zA-Z0-9:]+$', $config) && ereg($cmatch, $config)) { @require_once($config); }
-
 //if speech module exists enforce vertical orientation and turn off repositioning
 if(isset($um['speech'])) { $um['orientation'][0]='vertical';$um['behaviors'][2]='no'; }
 

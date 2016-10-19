@@ -397,7 +397,7 @@ echo "<td>"._("situación")."</td><td>";
 echo $oDesplNotas->desplegable();
 echo "</td></tr>";
 echo "<tr><td>"._("acta").'</td>';
-echo "<td colspan=2><input type=\"text\" id=\"acta\" name=\"acta\" value=\"$acta\" size=20>";
+echo "<td colspan=3><input type=\"text\" id=\"acta\" name=\"acta\" value=\"$acta\" size=20>";
 echo '  ("?": '._("significa inventado").')   '._("Formato") .': "dlx nn/aa" o "dlx" o "region" o "?"'.'</td></tr>';
 echo "<tr><td>"._("fecha acta")."</td><td><input type=\"text\" id=\"f_acta\" name=\"f_acta\" value=\"$f_acta\" size=12></td></tr>";
 switch ($precep) { 

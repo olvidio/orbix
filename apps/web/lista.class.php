@@ -151,7 +151,7 @@ class Lista {
 							$Html.="<td $td_id class=\"$clase\"><span class=link onclick=\"".$valor['script']."\" >$val</span></td>";
 						}
 						if (!empty($valor['span'])) {
-							$Html.="<td $td_id class=\"$clase\" toggleFilterRow_$id_tabla()colspan=\"".$valor['span']."\">$val</td>";
+							$Html.="<td $td_id class=\"$clase\" onclick=\"toggleFilterRow_$id_tabla()\" colspan=\"".$valor['span']."\">$val</td>";
 						}
 						if (!empty($valor['clase'])) {
 							$Html.="<td $td_id class=\"$clase ".$valor['clase']."\">$val</td>";
@@ -432,302 +432,306 @@ class Lista {
 	
 
 		$tt = "
-  <style>
-    .cell-title {
-      font-weight: bold;
-    }
+			<style>
+				.cell-title {
+				  font-weight: bold;
+				}
 
-    .cell-effort-driven {
-      text-align: center;
-    }
+				.cell-effort-driven {
+				  text-align: center;
+				}
 
-    .cell-selection {
-      border-right-color: silver;
-      border-right-style: solid;
-      background: #f5f5f5;
-      color: gray;
-      text-align: right;
-      font-size: 10px;
-    }
+				.cell-selection {
+				  border-right-color: silver;
+				  border-right-style: solid;
+				  background: #f5f5f5;
+				  color: gray;
+				  text-align: right;
+				  font-size: 10px;
+				}
 
-    .slick-row.selected .cell-selection {
-      background-color: transparent; /* show default selected row background */
-    }
-  </style>
+				.slick-row.selected .cell-selection {
+				  background-color: transparent; /* show default selected row background */
+				}
+			</style>
 			";
 		$tt .= "
-		<script>
-  var dataView_$id_tabla;
-  var grid_$id_tabla;
-  var columns_$id_tabla = $sColumnsVisible;
-  var columnsAll_$id_tabla = $sColumns;
-  var data_$id_tabla = $sData;
+			<script>
+			var dataView_$id_tabla;
+			var grid_$id_tabla;
+			var columns_$id_tabla = $sColumnsVisible;
+			var columnsAll_$id_tabla = $sColumns;
+			var data_$id_tabla = $sData;
 
-  var options = {
-    enableCellNavigation: true
-    ,enableColumnReorder: true
- 	,forceFitColumns: true
-	,topPanelHeight: 50
-	,autoHeight: false
-  };
+			var options = {
+				enableCellNavigation: true
+				,enableColumnReorder: true
+				,forceFitColumns: true
+				,topPanelHeight: 50
+				,autoHeight: false
+			};
 
-var sortcol = \"".$sortcol."\";
-var sortdir = 1;
-var searchString = \"\";
-var columnFilters_$id_tabla = $sColumns;
+			var sortcol = \"".$sortcol."\";
+			var sortdir = 1;
+			var searchString = \"\";
+			var columnFilters_$id_tabla = $sColumns;
 
-  function clickFormatter(row, cell, value, columnDef, dataContext) {
-	if (ira=dataContext['ira']) {
-		return \"<span class=link onclick=fnjs_update_div('#main',\\\"\"+ira+\"\\\") >\"+value+\"</span>\";
-	}
-	if (ira=dataContext['script']) {
-		//return \"<span class=link onclick='\"+dataContext['script']+\"' >\"+value+\"</span>\";
-		return \"<span class=link onclick=\"+ira+\" >\"+value+\"</span>\";
-	}
-	return value;
-  }
-  function clickFormatter2(row, cell, value, columnDef, dataContext) {
-	if (ira=dataContext['ira2']) {
-		return \"<span class=link onclick=fnjs_update_div('#main',\\\"\"+ira+\"\\\") >\"+value+\"</span>\";
-	}
-	if (ira=dataContext['script2']) {
-		//return \"<span class=link onclick='\"+dataContext['script']+\"' >\"+value+\"</span>\";
-		return \"<span class=link onclick=\"+ira+\" >\"+value+\"</span>\";
-	}
-	return value;
-  }
-  function checkboxSelectionFormatter(row, cell, value, columnDef, dataContext) {
-   if (value == null || value === \"\") {
-      return \"\";
-    } else {
-	  // formato: checked#id#nom_activ [#otro#otro..n]
-	  var array_val=value.split('#');
-	  var chk = array_val[0];
-	  var val = '';
-	  $.each(array_val, function(index, value) {
-		if (index==0) return true;
-		if (index>1) {
-	  		val = val+'#';
-		}
-	  		val = val+value.replace(/\\\"/g,\"'\");
-	  });
-	  var id = 'a'+val;
-	  return  \"<input class=\\\"sel\\\" type=\\\"checkbox\\\" name=\\\"sel[]\\\" id=\\\"\"+id+\"\\\" value=\\\"\"+val+\"\\\" \"+chk+\">\";
-    }
-  }
-
-  ";
-  /*
-		$tt .= "
-function myFilter(item, args) {
-  if (args.searchString != \"\" && item[\"Actividad\"].indexOf(args.searchString) == -1) {
-    return false;
-  }
-  return true;
-}
-*/
-		$tt .= "
-// Define search filter
-function myFilter_$id_tabla(item,args) {
-	var searchFields = $sColFilters;
-	if (args.searchString != \"\") {
-		var searchWord = args.searchString.toUpperCase();
-		var itemFound = false;
-		for (var i = 0; i < searchFields.length; i++) {
-			if (item[searchFields[i]] != undefined){
-				if (item[searchFields[i]].toUpperCase().indexOf(searchWord) != -1){
-					itemFound = true;
+			function clickFormatter(row, cell, value, columnDef, dataContext) {
+				if (ira=dataContext['ira']) {
+					return \"<span class=link onclick=fnjs_update_div('#main',\\\"\"+ira+\"\\\") >\"+value+\"</span>\";
+				}
+				if (ira=dataContext['script']) {
+					//return \"<span class=link onclick='\"+dataContext['script']+\"' >\"+value+\"</span>\";
+					return \"<span class=link onclick=\"+ira+\" >\"+value+\"</span>\";
+				}
+				return value;
+			}
+			function clickFormatter2(row, cell, value, columnDef, dataContext) {
+				if (ira=dataContext['ira2']) {
+					return \"<span class=link onclick=fnjs_update_div('#main',\\\"\"+ira+\"\\\") >\"+value+\"</span>\";
+				}
+				if (ira=dataContext['script2']) {
+					//return \"<span class=link onclick='\"+dataContext['script']+\"' >\"+value+\"</span>\";
+					return \"<span class=link onclick=\"+ira+\" >\"+value+\"</span>\";
+				}
+				return value;
+			}
+			function checkboxSelectionFormatter(row, cell, value, columnDef, dataContext) {
+				if (value == null || value === \"\") {
+				  return \"\";
+				} else {
+				  // formato: checked#id#nom_activ [#otro#otro..n]
+				  var array_val=value.split('#');
+				  var chk = array_val[0];
+				  var val = '';
+				  $.each(array_val, function(index, value) {
+					if (index==0) return true;
+					if (index>1) {
+						val = val+'#';
+					}
+						val = val+value.replace(/\\\"/g,\"'\");
+				  });
+				  var id = 'a'+val;
+				  return  \"<input class=\\\"sel\\\" type=\\\"checkbox\\\" name=\\\"sel[]\\\" id=\\\"\"+id+\"\\\" value=\\\"\"+val+\"\\\" \"+chk+\">\";
 				}
 			}
-		}
-		if (itemFound === false){
-			return false;
-		}
-	}
-    return true;
-}
-function comparer(a,b) {
-	var dateformat = /^\d{1,2}(\-|\/|\.)\d{1,2}(\-|\/|\.)\d{2,4}$/;
-	var dateTimeFormat = /^\d{1,2}(\-|\/|\.)\d{1,2}(\-|\/|\.)\d{2,4} \d{2}:\d{2}:\d{2}$/;
 
-	if ( dateTimeFormat.test(a[sortcol]) && dateTimeFormat.test(b[sortcol]) ) {
-		var dateTime_a = a[sortcol].split(' ');
-		var dateTime_b = b[sortcol].split(' ');
-		var fecha_a = dateTime_a[0].split('/');
-		var hora_a = dateTime_a[1].split(':');
-		var fecha_b = dateTime_b[0].split('/');
-		var hora_b = dateTime_b[1].split(':');
-		var date_a = new Date(fecha_a[2], fecha_a[1], fecha_a[0], hora_a[0], hora_a[1], hora_a[2]);
-		var date_b = new Date(fecha_b[2], fecha_b[1], fecha_b[0], hora_b[0], hora_b[1], hora_b[2]);
-		var diff = date_a.getTime()-date_b.getTime();
-		return (diff==0?diff:diff/Math.abs(diff));
-	}
-	if ( dateformat.test(a[sortcol]) && dateformat.test(b[sortcol]) ) {
-		var tableau_a = a[sortcol].split('/');
-		var tableau_b = b[sortcol].split('/');
-		var date_a = new Date(tableau_a[2], tableau_a[1], tableau_a[0]);
-		var date_b = new Date(tableau_b[2], tableau_b[1], tableau_b[0]);
-		var diff = date_a.getTime()-date_b.getTime();
-		return (diff==0?diff:diff/Math.abs(diff));
-	} else {
-		var x = a[sortcol], y = b[sortcol];
-		if (isNaN(x) || isNaN(y)) {
-			x=x.toUpperCase();
-			y=y.toUpperCase();
-			return (x == y ? 0 : (x > y ? 1 : -1));
-		} else {
-			int_a=parseInt(a[sortcol],10);
-			int_b=parseInt(b[sortcol],10);
-			return (int_a == int_b ? 0 : (int_a > int_b ? 1 : -1));
-		}
-	}
-}
+			";
+		/*
+			$tt .= "
+			function myFilter(item, args) {
+			  if (args.searchString != \"\" && item[\"Actividad\"].indexOf(args.searchString) == -1) {
+				return false;
+			  }
+			  return true;
+			}
+		*/
+		$tt .= "
+			// Define search filter
+			function myFilter_$id_tabla(item,args) {
+				var searchFields = $sColFilters;
+				if (args.searchString != \"\") {
+					var searchWord = args.searchString.toUpperCase();
+					var itemFound = false;
+					for (var i = 0; i < searchFields.length; i++) {
+						if (item[searchFields[i]] != undefined){
+							if (item[searchFields[i]].toUpperCase().indexOf(searchWord) != -1){
+								itemFound = true;
+							}
+						}
+					}
+					if (itemFound === false){
+						return false;
+					}
+				}
+				return true;
+			}
+			function comparer(a,b) {
+				var dateformat = /^\d{1,2}(\-|\/|\.)\d{1,2}(\-|\/|\.)\d{2,4}$/;
+				var dateTimeFormat = /^\d{1,2}(\-|\/|\.)\d{1,2}(\-|\/|\.)\d{2,4} \d{2}:\d{2}:\d{2}$/;
 
+				if ( dateTimeFormat.test(a[sortcol]) && dateTimeFormat.test(b[sortcol]) ) {
+					var dateTime_a = a[sortcol].split(' ');
+					var dateTime_b = b[sortcol].split(' ');
+					var fecha_a = dateTime_a[0].split('/');
+					var hora_a = dateTime_a[1].split(':');
+					var fecha_b = dateTime_b[0].split('/');
+					var hora_b = dateTime_b[1].split(':');
+					var date_a = new Date(fecha_a[2], fecha_a[1], fecha_a[0], hora_a[0], hora_a[1], hora_a[2]);
+					var date_b = new Date(fecha_b[2], fecha_b[1], fecha_b[0], hora_b[0], hora_b[1], hora_b[2]);
+					var diff = date_a.getTime()-date_b.getTime();
+					return (diff==0?diff:diff/Math.abs(diff));
+				}
+				if ( dateformat.test(a[sortcol]) && dateformat.test(b[sortcol]) ) {
+					var tableau_a = a[sortcol].split('/');
+					var tableau_b = b[sortcol].split('/');
+					var date_a = new Date(tableau_a[2], tableau_a[1], tableau_a[0]);
+					var date_b = new Date(tableau_b[2], tableau_b[1], tableau_b[0]);
+					var diff = date_a.getTime()-date_b.getTime();
+					return (diff==0?diff:diff/Math.abs(diff));
+				} else {
+					var x = a[sortcol], y = b[sortcol];
+					if (isNaN(x) || isNaN(y)) {
+						x=x.toUpperCase();
+						y=y.toUpperCase();
+						return (x == y ? 0 : (x > y ? 1 : -1));
+					} else {
+						int_a=parseInt(a[sortcol],10);
+						int_b=parseInt(b[sortcol],10);
+						return (int_a == int_b ? 0 : (int_a > int_b ? 1 : -1));
+					}
+				}
+			}
+			";
+	$tt .= "
+			function toggleFilterRow_$id_tabla() {
+			  if ($(grid_$id_tabla.getTopPanel()).is(\":visible\")) {
+				grid_$id_tabla.setTopPanelVisibility(false);
+			  } else {
+				grid_$id_tabla.setTopPanelVisibility(true);
+			  }
+			}
+			";
 
-
-function toggleFilterRow_$id_tabla() {
-  if ($(grid_$id_tabla.getTopPanel()).is(\":visible\")) {
-    grid_$id_tabla.hideTopPanel();
-  } else {
-    grid_$id_tabla.showTopPanel();
-  }
-}
-
-";
 
 		$tt .= "
-$(\".grid-header .ui-icon\")
-        .addClass(\"ui-state-default ui-corner-all\")
-        .mouseover(function (e) {
-          $(e.target).addClass(\"ui-state-hover\")
-        })
-        .mouseout(function (e) {
-          $(e.target).removeClass(\"ui-state-hover\")
-        });
+			$(\".grid-header .ui-icon\")
+				.addClass(\"ui-state-default ui-corner-all\")
+				.mouseover(function (e) {
+				  $(e.target).addClass(\"ui-state-hover\")
+				})
+				.mouseout(function (e) {
+				  $(e.target).removeClass(\"ui-state-hover\")
+				});
 
 
-  $(function () {
-	//$('.slick-columnpicker').remove();
-
-	dataView_$id_tabla = new Slick.Data.DataView();
-  	grid_$id_tabla = new Slick.Grid(\"#grid_$id_tabla\", dataView_$id_tabla, columns_$id_tabla, options);
-	grid_$id_tabla.setSelectionModel(new Slick.RowSelectionModel());
-	grid_$id_tabla.registerPlugin(new Slick.AutoTooltips());
-
- 	var pager = new Slick.Controls.Pager(dataView_$id_tabla, grid_$id_tabla, $(\"#pager\"));
-	var columnpicker = new Slick.Controls.ColumnPicker(columnsAll_$id_tabla, grid_$id_tabla, options);
-
-  // move the filter panel defined in a hidden div into grid top panel
-  $(\"#inlineFilterPanel_".$id_tabla."\")
-      .appendTo(grid_$id_tabla.getTopPanel())
-      .show();
-
-	  
-  grid_$id_tabla.onCellChange.subscribe(function (e, args) {
-    dataView_$id_tabla.updateItem(args.item.id, args.item);
-  });
-
-  grid_$id_tabla.onAddNewRow.subscribe(function (e, args) {
-    var item = {\"num\": data_$id_tabla.length, \"id\": \"new_\" + (Math.round(Math.random() * 10000)), \"title\": \"New task\", \"duration\": \"1 day\", \"percentComplete\": 0, \"start\": \"01/01/2009\", \"finish\": \"01/01/2009\", \"effortDriven\": false};
-    $.extend(item, args.item);
-    dataView_$id_tabla.addItem(item);
-  });
-
-	grid_$id_tabla.onKeyDown.subscribe(function (e) {
-	  // select all rows on ctrl-a
-	  if (e.which != 65 || !e.ctrlKey) {
-		return false;
-	  }
-
-	  var rows = [];
-	  for (var i = 0; i < dataView_$id_tabla.getLength(); i++) {
-		rows.push(i);
-	  }
-
-	  grid_$id_tabla.setSelectedRows(rows);
-	  e.preventDefault();
-	});
-
-	grid_$id_tabla.onSort.subscribe(function (e, args) {
-		sortdir = args.sortAsc ? 1 : -1;
-		sortcol = args.sortCol.field;
-
-		dataView_$id_tabla.sort(comparer, args.sortAsc);
-  });
-  // wire up model events to drive the grid
-  dataView_$id_tabla.onRowCountChanged.subscribe(function (e, args) {
-    grid_$id_tabla.updateRowCount();
-    grid_$id_tabla.render();
-  });
-
-  dataView_$id_tabla.onRowsChanged.subscribe(function (e, args) {
-    grid_$id_tabla.invalidateRows(args.rows);
-    grid_$id_tabla.render();
-  });
-
-  dataView_$id_tabla.onPagingInfoChanged.subscribe(function (e, pagingInfo) {
-    var isLastPage = pagingInfo.pageSize * (pagingInfo.pageNum + 1) - 1 >= pagingInfo.totalRows;
-    var enableAddRow = isLastPage || pagingInfo.pageSize == 0;
-    var options = grid_$id_tabla.getOptions();
-
-    if (options.enableAddRow != enableAddRow) {
-      grid_$id_tabla.setOptions({enableAddRow: enableAddRow});
-    }
-  });
-
-  // wire up the search textbox to apply the filter to the model
-  $(\"#txtSearch_".$id_tabla."\").keyup(function (e) {
-    Slick.GlobalEditorLock.cancelCurrentEdit();
-
-    // clear on Esc
-    if (e.which == 27) {
-      this.value = \"\";
-    }
-
-    searchString = this.value;
-    updateFilter();
-  });
-
-  function updateFilter() {
-    dataView_$id_tabla.setFilterArgs({
-      searchString: searchString
-    });
-    dataView_$id_tabla.refresh();
-  }
-";
-
-if ($sortcol) {
-	$tt .= " data_$id_tabla.sort(comparer); ";
-}
-$tt .= "
-  // initialize the model after all the events have been hooked up
-  dataView_$id_tabla.beginUpdate();
-  dataView_$id_tabla.setItems(data_$id_tabla);
-  dataView_$id_tabla.setFilterArgs({
-    searchString: searchString
-  });
-  dataView_$id_tabla.setFilter(myFilter_$id_tabla);
-  dataView_$id_tabla.endUpdate();
-  $(\"#grid_$id_tabla\").resizable();
-
-";
-if ($bPanelVis) $tt .= "toggleFilterRow_$id_tabla();";
-  $tt .= "
-  })
-</script>
-";
 
 
- 	$tt.="<div id=\"GridContainer_".$id_tabla."\"  style=\"width:$grid_width;\" >
-	<div class=\"grid-header\">
-	  <span style=\"width:90%; display: inline-block;\">$botones</span>
-      <span style=\"float:right\" class=\"ui-icon ui-icon-disk\" title=\""._('guardar selección de columnas')."\"
-            onclick=\"fnjs_def_tabla('".$id_tabla."')\"></span>
-      <span style=\"float:right\" class=\"ui-icon ui-icon-search\" title=\""._('ver/ocultar panel de busqueda')."\"
-            onclick=\"toggleFilterRow_$id_tabla()\"></span>
-    </div>
-    <div id=\"grid_$id_tabla\"  style=\"width:$grid_width; height:$grid_height\"></div>
-";
+
+
+			$(function () {
+				//$('.slick-columnpicker').remove();
+
+				dataView_$id_tabla = new Slick.Data.DataView();
+				grid_$id_tabla = new Slick.Grid(\"#grid_$id_tabla\", dataView_$id_tabla, columns_$id_tabla, options);
+				grid_$id_tabla.setSelectionModel(new Slick.RowSelectionModel());
+				grid_$id_tabla.registerPlugin(new Slick.AutoTooltips());
+
+				var pager = new Slick.Controls.Pager(dataView_$id_tabla, grid_$id_tabla, $(\"#pager\"));
+				var columnpicker = new Slick.Controls.ColumnPicker(columnsAll_$id_tabla, grid_$id_tabla, options);
+
+				// move the filter panel defined in a hidden div into grid top panel
+				$(\"#inlineFilterPanel_".$id_tabla."\")
+				  .appendTo(grid_$id_tabla.getTopPanel())
+				  .show();
+
+				  
+				grid_$id_tabla.onCellChange.subscribe(function (e, args) {
+				dataView_$id_tabla.updateItem(args.item.id, args.item);
+				});
+
+				grid_$id_tabla.onAddNewRow.subscribe(function (e, args) {
+					var item = {\"num\": data_$id_tabla.length, \"id\": \"new_\" + (Math.round(Math.random() * 10000)), \"title\": \"New task\", \"duration\": \"1 day\", \"percentComplete\": 0, \"start\": \"01/01/2009\", \"finish\": \"01/01/2009\", \"effortDriven\": false};
+					$.extend(item, args.item);
+					dataView_$id_tabla.addItem(item);
+				});
+
+				grid_$id_tabla.onKeyDown.subscribe(function (e) {
+				  // select all rows on ctrl-a
+				  if (e.which != 65 || !e.ctrlKey) {
+					return false;
+				  }
+
+				  var rows = [];
+				  for (var i = 0; i < dataView_$id_tabla.getLength(); i++) {
+					rows.push(i);
+				  }
+
+				  grid_$id_tabla.setSelectedRows(rows);
+				  e.preventDefault();
+				});
+
+				grid_$id_tabla.onSort.subscribe(function (e, args) {
+					sortdir = args.sortAsc ? 1 : -1;
+					sortcol = args.sortCol.field;
+
+					dataView_$id_tabla.sort(comparer, args.sortAsc);
+				});
+				// wire up model events to drive the grid
+				dataView_$id_tabla.onRowCountChanged.subscribe(function (e, args) {
+					grid_$id_tabla.updateRowCount();
+					grid_$id_tabla.render();
+				});
+
+				dataView_$id_tabla.onRowsChanged.subscribe(function (e, args) {
+					grid_$id_tabla.invalidateRows(args.rows);
+					grid_$id_tabla.render();
+				});
+
+				dataView_$id_tabla.onPagingInfoChanged.subscribe(function (e, pagingInfo) {
+					var isLastPage = pagingInfo.pageSize * (pagingInfo.pageNum + 1) - 1 >= pagingInfo.totalRows;
+					var enableAddRow = isLastPage || pagingInfo.pageSize == 0;
+					var options = grid_$id_tabla.getOptions();
+
+					if (options.enableAddRow != enableAddRow) {
+					  grid_$id_tabla.setOptions({enableAddRow: enableAddRow});
+					}
+				});
+
+				// wire up the search textbox to apply the filter to the model
+				$(\"#txtSearch_".$id_tabla."\").keyup(function (e) {
+					Slick.GlobalEditorLock.cancelCurrentEdit();
+					// clear on Esc
+					if (e.which == 27) {
+					  this.value = \"\";
+					}
+					searchString = this.value;
+					updateFilter();
+				});
+
+			function updateFilter() {
+				dataView_$id_tabla.setFilterArgs({
+					searchString: searchString
+				});
+				dataView_$id_tabla.refresh();
+			}
+
+			";
+
+		if ($sortcol) {
+			$tt .= " data_$id_tabla.sort(comparer); ";
+		}
+
+		$tt .= "
+			// initialize the model after all the events have been hooked up
+			dataView_$id_tabla.beginUpdate();
+			dataView_$id_tabla.setItems(data_$id_tabla);
+			dataView_$id_tabla.setFilterArgs({
+				searchString: searchString
+			});
+			dataView_$id_tabla.setFilter(myFilter_$id_tabla);
+			dataView_$id_tabla.endUpdate();
+			$(\"#grid_$id_tabla\").resizable();
+		";
+
+		if ($bPanelVis) $tt .= "toggleFilterRow_$id_tabla();";
+		
+		$tt .= "
+			})
+		</script>
+		";
+
+
+		$tt.="<div id=\"GridContainer_".$id_tabla."\"  style=\"width:$grid_width;\" >
+		<div class=\"grid-header\">
+		  <span style=\"width:90%; display: inline-block;\">$botones</span>
+		  <span style=\"float:right\" class=\"ui-icon ui-icon-disk\" title=\""._('guardar selección de columnas')."\"
+				onclick=\"fnjs_def_tabla('".$id_tabla."')\"></span>
+		  <span style=\"float:right\" class=\"ui-icon ui-icon-search\" title=\""._('ver/ocultar panel de busqueda')."\"
+				onclick=\"toggleFilterRow_$id_tabla()\"></span>
+		</div>
+		<div id=\"grid_$id_tabla\"  style=\"width:$grid_width; height:$grid_height\"></div>
+		";
  	//$tt.="<div id=\"pager\" style=\"height:20px;\"></div>";
  	$tt.="</div>";
 

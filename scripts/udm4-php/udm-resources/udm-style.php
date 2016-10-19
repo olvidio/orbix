@@ -61,9 +61,6 @@ $cmatch = 'udm-custom.ini';
 //override config with GET var
 if(isset($_GET['config'])&&$_GET['config']!='') { $config=$_GET['config']; }
 
-//validate config value and import configuration file
-//if(ereg('^[-\_\.\/\\a-zA-Z0-9:]+$', $config) && ereg($cmatch, $config)) { @require_once($config); }
-
 //set default writing mode
 $umdir='left';
 
