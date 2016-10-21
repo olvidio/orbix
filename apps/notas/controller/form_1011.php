@@ -206,11 +206,11 @@ $oDesplActividades->setNombre('id_activ');
 $oDesplActividades->setOpcion_sel($id_activ);
 
 // miro cuales son las opcionales genéricas, para la funcion actualizar() de java.
-// la condicion es que tengan id_sector=0
+// la condicion es que tengan id_sector=1
 $aWhere=array();
 $aOperador=array();
 $aWhere['status']='t';
-$aWhere['id_sector']=0;
+$aWhere['id_sector']=1;
 $aWhere['id_nivel']=3000;
 $aOperador['id_nivel']='<';
 $aWhere['_ordre']='id_nivel';
