@@ -58,6 +58,7 @@ if (!empty($_POST['atras'])) {
 	$Qfin=$oPosicion->getParametro('fin');
 	$Qdl_org=$oPosicion->getParametro('dl_org');
 	$Qstatus=$oPosicion->getParametro('status');
+	$Qid_activ=$oPosicion->getParametro('id_activ');
 } else { //si no vengo por goto.
 	$Qmodo = empty($_POST['modo'])? '' : $_POST['modo'];
 	$Qque = empty($_POST['que'])? '' : $_POST['que'];
@@ -390,14 +391,14 @@ $oHash->setArraycamposHidden($a_camposHidden);
 
 $oHashSel = new web\Hash();
 $oHashSel->setcamposForm('!sel!mod!queSel!id_dossier');
-$a_camposHidden = array(
+$a_camposHiddenSel = array(
 		'obj_pau' =>$obj_pau,
 		'pau' =>'a',
 		'permiso' =>'3'
 		);
 		//'tabla' =>'a_actividades',
 		//'tabla_pau' =>'a_actividades',
-$oHashSel->setArraycamposHidden($a_camposHidden);
+$oHashSel->setArraycamposHidden($a_camposHiddenSel);
 
 /* ---------------------------------- html --------------------------------------- */
 ?>
@@ -423,7 +424,7 @@ fnjs_borrar=function(formulario,que_val){
 					},
 					success: function() { // tacho los marcados
 						$(formulario+' input.sel').each(function(i){
-							if($(this).prop('checked')== true){
+							if($(this).prop('checked') === true){
 								$(this).parent().siblings().addClass('tachado');
 								$(this).prop('checked',false);
 							}
@@ -436,7 +437,7 @@ fnjs_borrar=function(formulario,que_val){
 			$(formulario).off();
 		}
 	}
-}
+};
 fnjs_buscar=function(){
 	$('#modifica').attr('action','apps/actividades/controller/actividad_que.php');
 	$('#b_que').val("buscar");

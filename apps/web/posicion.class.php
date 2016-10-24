@@ -166,6 +166,30 @@ class Posicion {
 	}
 
 	/**
+	 * estableix el valor d'un parametre de Posicion 
+	 *
+	 * @param mixed nomParametre
+	 * @param mixed valor
+	 */
+	public function addParametro($nomParametre,$valor,$n=0) {
+		$aPosition = end($_SESSION['position']);
+		
+		$this->surl = $aPosition['url'];
+		$this->sbloque = $aPosition['bloque'];
+		$this->aParametros = $aPosition['parametros'];
+		$this->setParametro($nomParametre,$valor);
+		$this->recordar();
+	}	
+	/**
+	 * estableix el valor d'un parametre de Posicion 
+	 *
+	 * @param mixed nomParametre
+	 * @param mixed valor
+	 */
+	public function setParametro($nomParametre,$valor) {
+		$this->aParametros[$nomParametre] = $valor;
+	}
+	/**
 	 * estableix el valor de tots els atributs parametros de Posicion que se li passen en un array
 	 *
 	 * @param array aVars
@@ -182,6 +206,7 @@ class Posicion {
 	 * @param string nomParametre
 	 */
 	public function getParametro($nomParametre) {
+		if (!isset($this->aParametros[$nomParametre])) { return false; }
 		$valParametre = empty($this->aParametros[$nomParametre])? '' : $this->aParametros[$nomParametre];
 		return $valParametre;
 	}

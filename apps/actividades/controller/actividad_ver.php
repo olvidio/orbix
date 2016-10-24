@@ -21,6 +21,8 @@ if (isset($_POST['sel'])) { //vengo de un checkbox
 	empty($_POST['tabla'])? $tabla="" : $tabla=$_POST['tabla'];
 }
 
+$oPosicion->addParametro('id_activ',$id_activ);
+
 $_POST['tipo'] = isset($_POST['tipo']) ? $_POST['tipo'] : '';
 $_POST['tabla'] = isset($_POST['tabla']) ? $_POST['tabla'] : '';
 
@@ -133,7 +135,7 @@ fnjs_cambiar_ubi=function(){
 	var winPrefs="dependent=yes,width=950,height=700,screenX=200,screenY=200,titlebar=yes,scrollbars=yes";
 	top.newWin = window.open("<?= core\ConfigGlobal::getWeb() ?>/apps/actividades/controller/actividad_select_ubi.php?dl_org="+array_org[0]+"&ssfsv="+ssfsv+"<?= $h ?>&PHPSESSID=<?php echo session_id(); ?>", "sele", winPrefs);
 	top.newWin.focus();
-}
+};
 fnjs_guardar=function(){
 	var err = 0;
 	if (!fnjs_comprobar_fecha('#f_ini')) { err=1; }
@@ -149,24 +151,24 @@ fnjs_guardar=function(){
 		$('#modifica').attr('action','apps/actividades/controller/actividad_update.php');
 		fnjs_enviar_formulario('#modifica');
 	}
-}
+};
 
 fnjs_actualizar_sacd=function(){
 	$('#modifica').attr('action','programas/actividad_update.php');
 	$('#mod').val('actualizar_sacd');
 	fnjs_enviar_formulario('#modifica');
-}
+};
 fnjs_actualizar_ctr=function(){
 	$('#modifica').attr('action','programas/actividad_update.php');
 	$('#mod').val('actualizar_ctr');
 	fnjs_enviar_formulario('#modifica');
-}
+};
 
 fnjs_tipo_actividad=function(){
 	$('#modifica').attr('action','programas/actividad_nueva.php');
 	$('#que').val('cambiar_tipo');
 	fnjs_enviar_formulario('#modifica');
-}
+};
 </script>
 <!-- -----------------------------  cabecera --------------------------------- -->
 <table><tr>
