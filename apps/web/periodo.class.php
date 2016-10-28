@@ -1,5 +1,6 @@
 <?php
 namespace web;
+use core;
 /**
  * Classe que passa el periode amb texte a data inici i data fi.
  *
@@ -111,14 +112,20 @@ class Periodo {
 				}
 				break;
 			case "curso_ca":
+				$ini = core\ConfigGlobal::$est_inicio;
+				$fi = core\ConfigGlobal::$est_fin;
 				if ($mes>9) {
 					$any2=$any+1;
-					$inicio = "1/10/".$any;	
-					$fin = "30/9/".$any2;
+					//$inicio = "1/10/".$any;	
+					//$fin = "30/9/".$any2;
+					$inicio = "$ini/$any";	
+					$fin = "$fi/$any2";
 				} else {
 					$any2=$any-1;
-					$inicio = "1/10/".$any2;	
-					$fin = "30/9/".$any;
+					//$inicio = "1/10/".$any2;	
+					//$fin = "30/9/".$any;
+					$inicio = "$ini/$any2";	
+					$fin = "$fi/$any";
 				}
 				break;
 			case "trimestre":

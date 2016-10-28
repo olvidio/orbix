@@ -29,9 +29,10 @@ $dele = core\ConfigGlobal::mi_dele();
 $dele .= (core\ConfigGlobal::mi_sfsv()==2)? 'f' : ''; 
 
 if (!empty($_POST['sel'])) { //vengo de un checkbox
-	//$id_nom=$sel[0];
+	$id_sel=$_POST['sel'];
 	$id_nom=strtok($_POST['sel'][0],"#");
 	$id_tabla=strtok("#");
+	$oPosicion->addParametro('id_sel',$id_sel);
 } else {
 	$id_pau = empty($_POST['id_pau'])? '' : $_POST['id_pau'];
 	$id_nom = empty($_POST['id_nom'])? '' : $_POST['id_nom'];
@@ -233,6 +234,8 @@ $GesDocencias = new profesores\GestorProfesorDocenciaStgr();
 $cDocencias = $GesDocencias->getProfesorDocenciasStgr(array('id_nom'=>$id_nom,'_ordre'=>'curso,id_asignatura'));
 $cosas['id_dossier']=1025;
 $go_cosas['docencia']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/datos_sql.php?'.http_build_query($cosas));
+
+echo $oPosicion->atras();
 
 if (!empty($_POST['print'])) {
 	include("../view/ficha_profesor_stgr.print.phtml");

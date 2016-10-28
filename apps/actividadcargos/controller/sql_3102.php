@@ -111,6 +111,8 @@ $a_camposHidden = array(
 		);
 		//'tabla_pau' => $_POST['tabla_pau'],
 $oHash->setArraycamposHidden($a_camposHidden);
+
+echo $oPosicion->atras();
 ?>
 <script>
 fnjs_mod_cargo=function(formulario){

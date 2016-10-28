@@ -14,6 +14,12 @@ use actividadestudios\model as actividadestudios;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+if (!empty($_POST['sel'])) { //vengo de un checkbox
+	$id_sel=$_POST['sel'];
+	$id_activ=strtok($_POST['sel'][0],"#");
+	$oPosicion->addParametro('id_sel',$id_sel);
+}
+
 //pongo aqui el $go_to porque al ir al mismo update que las actividaes, no se donde voler
 //$go_to=core\ConfigGlobal::getWeb()."/apps/dossiers/controller/dossiers_ver.php?pau=$pau&id_pau=$id_pau&tabla_pau=".$_POST['tabla_pau']."&id_dossier=$id_dossier&permiso=$permiso";
 $a_dataUrl = array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$_POST['obj_pau'],'id_dossier'=>$id_dossier,'permiso'=>$permiso);
@@ -86,6 +92,7 @@ $a_camposHidden = array(
 
 $oHash->setArraycamposHidden($a_camposHidden);
 
+echo $oPosicion->atras();
 /* ---------------------------------- html --------------------------------------- */
 ?>
 <script>

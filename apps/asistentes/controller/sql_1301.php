@@ -134,6 +134,7 @@ $a_camposHidden = array(
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 
+echo $oPosicion->atras();
 ?>
 <script>
 fnjs_actuales=function(formulario){

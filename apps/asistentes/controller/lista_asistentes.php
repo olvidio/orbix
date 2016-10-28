@@ -34,13 +34,14 @@ $oPref = new usuarios\Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>'orden
 $Pref_ordenApellidos=$oPref->getPreferencia();
 
 if (!empty($_POST['sel'])) { //vengo de un checkbox
-    //$id_nom=$sel[0];
+	$id_sel=$_POST['sel'];
     $id_pau=strtok($_POST['sel'][0],"#");
     $nom_activ=strtok("#");
 	if (empty($nom_activ) && !empty($id_pau)) {
 		$oActividad = new actividades\Actividad($id_pau);
 		$nom_activ = $oActividad->getNom_activ();
 	}
+	$oPosicion->addParametro('id_sel',$id_sel);
 }
 
 $queSel = empty($_POST['queSel'])? '' : $_POST['queSel'];

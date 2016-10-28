@@ -58,7 +58,8 @@ if (!empty($_POST['atras'])) {
 	$Qfin=$oPosicion->getParametro('fin');
 	$Qdl_org=$oPosicion->getParametro('dl_org');
 	$Qstatus=$oPosicion->getParametro('status');
-	$Qid_activ=$oPosicion->getParametro('id_activ');
+	$Qid_sel=$oPosicion->getParametro('id_sel');
+	$Qscroll_id = $oPosicion->getParametro('scroll_id');
 } else { //si no vengo por goto.
 	$Qmodo = empty($_POST['modo'])? '' : $_POST['modo'];
 	$Qque = empty($_POST['que'])? '' : $_POST['que'];
@@ -229,11 +230,6 @@ if (core\ConfigGlobal::mi_id_role() != 8 && core\ConfigGlobal::mi_id_role() != 1
 $a_cabeceras[]= ucfirst(_("centro"));
 $a_cabeceras[]= ucfirst(_("observaciones"));
 
-$i=0;
-$sin=0;
-$a_valores=array();
-$aWhere['_ordre'] = 'f_ini';
-
 if (!empty($Qmodo) && $Qmodo == 'importar') {
 	$GesActividades = new actividades\GestorActividadPub();
 	$GesImportar = new actividades\GestorImportar();
@@ -242,6 +238,8 @@ if (!empty($Qmodo) && $Qmodo == 'importar') {
 	$GesActividades = new actividades\GestorActividad();
 	$obj_pau = 'Actividad';
 }
+
+$aWhere['_ordre'] = 'f_ini';
 $cActividades = $GesActividades->getActividades($aWhere,$aOperador);
 $num_activ=count($cActividades);
 if ($num_activ > $num_max_actividades && empty($_POST['continuar'])) {
@@ -252,6 +250,17 @@ if ($num_activ > $num_max_actividades && empty($_POST['continuar'])) {
 	echo "<input type='button' onclick=fnjs_update_div('#main','".$go_atras."') value="._('volver').">";
 	exit;
 }
+
+$i=0;
+$sin=0;
+$a_valores=array();
+if (isset($Qid_sel) &&!empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
+$sPrefs = '';
+$id_usuario= core\ConfigGlobal::mi_id_usuario();
+$tipo = 'tabla_presentacion';
+$oPref = new usuarios\Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>$tipo));
+$sPrefs=$oPref->getPreferencia();
 foreach($cActividades as $oActividad) {
 	extract($oActividad->getTot());
 	// Si es para importar, quito las que ya están importadas
@@ -282,6 +291,7 @@ foreach($cActividades as $oActividad) {
 	if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm('ocupado') === false) { $sin++; continue; } // no tiene permisos ni para ver.
 	if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm('ver') === false) { // sólo puede ver que està ocupado
 		$a_valores[$i]['sel']='';
+		$a_valores[$i]['select']='';
 		$a_valores[$i][1]=$f_ini;
 		$a_valores[$i][2]=$f_fin;
 		$a_valores[$i][3]=sprintf(_( 'ocupado %s (%s-%s)'),$ssfsv,$f_ini,$f_fin);
@@ -309,7 +319,7 @@ foreach($cActividades as $oActividad) {
 		$oTarifa = new actividades\TipoTarifa($tarifa);
 		$tarifa_letra= $oTarifa->getLetra();
 
-		$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>'a','id_pau'=>$id_activ,'obj_pau'=>$obj_pau)));
+		//$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>'a','id_pau'=>$id_activ,'obj_pau'=>$obj_pau)));
 		
 		$sacds="";
 		if (!core\ConfigGlobal::is_app_installed('procesos') || $oPermSacd->have_perm('ver') === true) { // sólo si tiene permiso
@@ -352,7 +362,13 @@ foreach($cActividades as $oActividad) {
 		}
 		$a_valores[$i][1]=$f_ini;
 		$a_valores[$i][2]=$f_fin;
-		$a_valores[$i][3]= array( 'ira'=>$pagina, 'valor'=>$nom_activ.$con);
+		if ($sPrefs == 'html') {
+			$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>'a','id_pau'=>$id_activ,'obj_pau'=>$obj_pau)));
+			$a_valores[$i][3]= array( 'ira'=>$pagina, 'valor'=>$nom_activ.$con);
+		} else {
+			$pagina='jsForm.mandar("#seleccionados","dossiers")';
+			$a_valores[$i][3]= array( 'script'=>$pagina, 'valor'=>$nom_activ.$con);
+		}
 		$a_valores[$i][4]=$h_ini;
 		$a_valores[$i][5]=$h_fin;
 		if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
@@ -391,6 +407,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 
 $oHashSel = new web\Hash();
 $oHashSel->setcamposForm('!sel!mod!queSel!id_dossier');
+$oHashSel->setcamposNo('scroll_id');
 $a_camposHiddenSel = array(
 		'obj_pau' =>$obj_pau,
 		'pau' =>'a',

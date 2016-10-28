@@ -25,12 +25,18 @@ use ubis\model as ubis;
 
 
 if (!empty($_POST['sel'])) { //vengo de un checkbox
-	//$id_nom=$sel[0];
+	$id_sel=$_POST['sel'];
 	$id_nom=strtok($_POST['sel'][0],"#");
 	$id_tabla=strtok("#");
+	$oPosicion->addParametro('id_sel',$id_sel);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id);
 } else {
 	$id_nom = empty($_POST['id_nom'])? '' : $_POST['id_nom'];
 	$id_tabla = empty($_POST['id_tabla'])? '' : $_POST['id_tabla'];
+	
+	$id_sel = array("$id_nom#$id_tabla");
+	$oPosicion->addParametro('id_sel',$id_sel);
 }
 
 

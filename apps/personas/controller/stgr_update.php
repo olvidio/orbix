@@ -25,6 +25,5 @@ if ($oPersona->DBGuardar() === false) {
 	echo _('Hay un error, no se ha guardado');
 }
 
-$oPosicion->setId_div('ir_a');
-echo $oPosicion->atras();
+echo $oPosicion->go_atras();
 ?>

@@ -13,15 +13,20 @@ use ubis\model as ubis;
 $obj = 'actividades\\model\\ActividadAll';
 
 if (isset($_POST['sel'])) { //vengo de un checkbox
-	//$id_nom=$sel[0];
+	$id_sel=$_POST['sel'];
 	$id_activ=strtok($_POST['sel'][0],"#");
 	$id_tabla=strtok("#");
+	$oPosicion->addParametro('id_sel',$id_sel);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id);
 } else {
-	empty($_POST['id_activ'])? $id_activ="" : $id_activ=$_POST['id_activ'];
-	empty($_POST['tabla'])? $tabla="" : $tabla=$_POST['tabla'];
+	$id_activ = empty($_POST['id_activ'])? '' : $_POST['id_activ'];
+	$tabla = empty($_POST['tabla'])? '' : $_POST['tabla'];
+	
+	$id_sel = array("$id_activ#$nom_activ");
+	$oPosicion->addParametro('id_sel',$id_sel);
 }
 
-$oPosicion->addParametro('id_activ',$id_activ);
 
 $_POST['tipo'] = isset($_POST['tipo']) ? $_POST['tipo'] : '';
 $_POST['tabla'] = isset($_POST['tabla']) ? $_POST['tabla'] : '';
@@ -37,7 +42,7 @@ extract($oActividad->getTot());
 	$_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
 	$oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
 
-	if ($oPermActiv->only_perm('ocupado')) exit();
+	if ($oPermActiv->only_perm('ocupado')) { exit(); }
 //}
 
 $oTipoActiv= new web\TiposActividades($id_tipo_activ);
@@ -170,10 +175,10 @@ fnjs_tipo_actividad=function(){
 	fnjs_enviar_formulario('#modifica');
 };
 </script>
-<!-- -----------------------------  cabecera --------------------------------- -->
+<!-- ============================== cabecera ============================= -->
 <table><tr>
 <td>
-<span class=link onclick="fnjs_update_div('#main','<?= $godossiers ?>')" ><img src=<?= core\ConfigGlobal::$web_icons ?>/dossiers.gif border=0 width=40 height=40 alt='<?= $alt ?>'>(<?= $dos ?>)</span>
+<span class="link" onclick="fnjs_update_div('#main','<?= $godossiers ?>')" ><img src=<?= core\ConfigGlobal::$web_icons ?>/dossiers.gif border=0 width=40 height=40 alt='<?= $alt ?>'>(<?= $dos ?>)</span>
 </td>
 <td class=titulo><?= $nom_activ ?></td>
 </table>
@@ -201,8 +206,9 @@ if(core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->only_perm('bo
 		<td><input type="radio" id="status_4" name="status" value="4" <?php if ($status==4) { echo "checked";} ?>><?php echo _("borrable"); ?></td>
 	<?php } else { ?>
 		<!-- Ara faig que no es pugui canviar. S'ha d'anar per les fases.  -->
-		<td><?= $a_status[$status] ?></td>
+		<td><?= $a_status[$status] ?>
 		<input type='hidden' id='status' name='status' value='<?= $status ?>'>
+		</td>
 	<?php } ?>
 </tr>
 <?php 

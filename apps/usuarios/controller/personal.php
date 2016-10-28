@@ -34,7 +34,7 @@ if (empty($inicio)) {
 	$oDBSt_q=$oDB->query($query_inicio);
 }
 */
-
+$ini_exterior = "";
 $ini_oficina=($inicio=="oficina")? "selected":'';
 $ini_personal=($inicio=="personal")? "selected":'';
 $ini_avisos=($inicio=="avisos")? "selected":'';

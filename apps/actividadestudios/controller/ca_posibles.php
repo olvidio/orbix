@@ -97,9 +97,10 @@ function contar_creditos($id_nom,$asignaturas) {
 
 // -----------------------------------------------------------------------------------------
 
+$obj_pau = empty($_POST['obj_pau'])? '' : $_POST['obj_pau'];
 // vengo directamente con un id:
 if (!empty($_POST['sel'])) { //vengo de un checkbox
-	//$id_nom=$sel[0];
+	$id_sel=$_POST['sel'];
 	$id_nom=strtok($_POST['sel'][0],"#");
 	$na=strtok("#"); // id_tabla
 	$_POST['todos']=1;
@@ -111,6 +112,7 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 		$empiezamax="30/10/".$next_year;
 	}
 	$condicion = " f_ini BETWEEN '$empiezamin' AND '$empiezamax' AND";
+	$oPosicion->addParametro('id_sel',$id_sel);
 } else {
 	empty($_POST['na'])? $na="" : $na=$_POST['na'];
 	$any=empty($_POST['year'])? date('Y')+1 : $_POST['year'];

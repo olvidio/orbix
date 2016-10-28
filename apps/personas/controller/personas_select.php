@@ -1,6 +1,7 @@
 <?php
 use personas\model as personas;
 use ubis\model as ubis;
+use usuarios\model as usuarios;
 /**
 * Esta página muestra una tabla con las personas que cumplen con la condicion.
 *
@@ -32,6 +33,8 @@ if (!empty($_POST['atras'])) {
 	$sOperador = $oPosicion->getParametro('sOperador');
 	$sWhereCtr = $oPosicion->getParametro('sWhereCtr');
 	$sOperadorCtr = $oPosicion->getParametro('sOperadorCtr');
+	$Qid_sel = $oPosicion->getParametro('id_sel');
+	$Qscroll_id = $oPosicion->getParametro('scroll_id');
 } else {
 	$tabla = empty($_POST['tabla'])? '' : $_POST['tabla'];
 	$breve = empty($_POST['breve'])? '' : $_POST['breve'];
@@ -257,6 +260,14 @@ if (!empty($situacion)) {
 $i = 0;
 $a_valores = array();
 $a_personas = array();
+if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
+
+$sPrefs = '';
+$id_usuario= core\ConfigGlobal::mi_id_usuario();
+$tipo = 'tabla_presentacion';
+$oPref = new usuarios\Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>$tipo));
+$sPrefs=$oPref->getPreferencia();
 foreach ($cPersonas as $oPersona) {
 	$i++;
 	$id_tabla=$oPersona->getId_tabla();
@@ -274,11 +285,16 @@ foreach ($cPersonas as $oPersona) {
 
 	$condicion_2="Where id_nom='".$id_nom."'";
 	$condicion_2=urlencode($condicion_2);
-	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/home_persona.php?'.http_build_query(array('id_nom'=>$id_nom,'obj_pau'=>$obj_pau,'breve'=>$breve,'es_sacd'=>$es_sacd)));
-
+	
 	$a_val['sel']="$id_nom#$id_tabla";
 	$a_val[1]=$id_tabla;
-	$a_val[2]= array( 'ira'=>$pagina, 'valor'=>$nom);
+	if ($sPrefs == 'html') {
+		$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/home_persona.php?'.http_build_query(array('id_nom'=>$id_nom,'id_tabla'=>$id_tabla,'obj_pau'=>$obj_pau,'breve'=>$breve,'es_sacd'=>$es_sacd)));
+		$a_val[2]= array( 'ira'=>$pagina, 'valor'=>$nom);
+	} else {
+		$pagina='fnjs_ficha("#seleccionados")';
+		$a_val[2]= array( 'script'=>$pagina, 'valor'=>$nom);
+	}
 	if ($tabla=="p_sssc") {
 		$a_val[3]=$row['socio'];
 	}
@@ -308,7 +324,7 @@ $resultado=sprintf( _("%s personas encontradas"),$i);
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('sel!que!id_dossier');
-$oHash->setcamposNo('que!id_dossier');
+$oHash->setcamposNo('que!id_dossier!scroll_id');
 $a_camposHidden = array(
 		'pau' => 'p',
 		'obj_pau' => $obj_pau,

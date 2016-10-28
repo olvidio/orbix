@@ -27,8 +27,10 @@ use personas\model as personas;
 include_once(core\ConfigGlobal::$dir_estilos.'/tessera.css.php'); 
 
 if (!empty($_POST['sel'])) { //vengo de un checkbox
+	$id_sel=$_POST['sel'];
 	$id_nom=strtok($_POST['sel'][0],"#");
 	$id_tabla=strtok("#");
+	$oPosicion->addParametro('id_sel',$id_sel);
 } else {
 	empty($_POST['id_nom'])? $id_nom="" : $id_nom=$_POST['id_nom'];
 	empty($_POST['id_tabla'])? $id_tabla="" : $id_tabla=$_POST['id_tabla'];
@@ -55,6 +57,7 @@ $replace  = array(
  );
 
 function titulo($id_asignatura){
+	$html = '';
 	$cabecera='<tr><td class="space"></td></tr>
 	 		<tr valign="bottom"><td style="width: 2%"></td>
 			<td class="cabecera" style="width: 46%">DISCIPLIN&#198;</td>
@@ -67,72 +70,73 @@ function titulo($id_asignatura){
 			</tr>';
 	switch ($id_asignatura){
 		case 1101:
-				?> 
-				<tr><td class="space"></td></tr>
-				<tr><td></td><td colspan="7" class="curso">CURSUS INSTITUTIONALES FILOSOFI&#198;</td></tr>
-				<?php echo $cabecera; ?>
-				<tr><td class="space"></td></tr>
-				<tr><td></td><td colspan="7" class="any">ANNUS I</td></tr>
-				<tr><td class="space"></td></tr>
-				<?php
+			$html = " 
+				<tr><td class=\"space\"></td></tr>
+				<tr><td></td><td colspan=\"7\" class=\"curso\">CURSUS INSTITUTIONALES FILOSOFI&#198;</td></tr>
+				$cabecera
+				<tr><td class=\"space\"></td></tr>
+				<tr><td></td><td colspan=\"7\" class=\"any\">ANNUS I</td></tr>
+				<tr><td class=\"space\"></td></tr>
+				";
 			break;
 		case 1201:
-				?> 
-				<tr><td class="space"></td></tr>
-				<tr><td></td><td colspan="7" class="any">ANNUS II</td></tr>
-				<tr><td class="space"></td></tr>
-				<?php
+			$html = " 
+				<tr><td class=\"space\"></td></tr>
+				<tr><td></td><td colspan=\"7\" class=\"any\">ANNUS II</td></tr>
+				<tr><td class=\"space\"></td></tr>
+				";
 			break;
 		case 2101:
-				?> 
-				<tr><td class="space"></td></tr>
-				<tr><td></td><td colspan="7" class="curso">CURSUS INSTITUTIONALES S THEOLOGI&#198;</td></tr>
-				<?php echo $cabecera; ?>
-				<tr><td class="space"></td></tr>
-				<tr><td></td><td colspan="7" class="any">ANNUS I</td></tr>
-				<tr><td class="space"></td></tr>
-				<?php
+			$html = " 
+				<tr><td class=\"space\"></td></tr>
+				<tr><td></td><td colspan=\"7\" class=\"curso\">CURSUS INSTITUTIONALES S THEOLOGI&#198;</td></tr>
+				$cabecera
+				<tr><td class=\"space\"></td></tr>
+				<tr><td></td><td colspan=\"7\" class=\"any\">ANNUS I</td></tr>
+				<tr><td class=\"space\"></td></tr>
+				";
 			break;
 		case 2108:
-			?>
+			$html = "
 			</table>
 			</div>
-			<div class="A4">
-			<table class="A4">
-			<col style="width: 2%">
-				<col style="width: 46%">
-				<col style="width: 25%">
-				<col style="width: 1%">
-				<col style="width: 10%">
-				<col style="width: 1%">
-				<col style="width: 10%">
-				<col style="width: 1%">
-				<?php echo $cabecera; ?>
-				<tr><td class="space"></td></tr>
-			<?php
+			<div class=\"A4\">
+			<table class=\"A4\">
+			<col style=\"width: 2%\">
+				<col style=\"width: 46%\">
+				<col style=\"width: 25%\">
+				<col style=\"width: 1%\">
+				<col style=\"width: 10%\">
+				<col style=\"width: 1%\">
+				<col style=\"width: 10%\">
+				<col style=\"width: 1%\">
+				$cabecera
+				<tr><td class=\"space\"></td></tr>
+			";
 			break;
 		case 2201:
-				?> 
-				<tr><td class="space"></td></tr>
-				<tr><td></td><td colspan="7" class="any">ANNUS II</td></tr>
-				<tr><td class="space"></td></tr>
-				<?php
+			$html = "
+				<tr><td class=\"space\"></td></tr>
+				<tr><td></td><td colspan=\"7\" class=\"any\">ANNUS II</td></tr>
+				<tr><td class=\"space\"></td></tr>
+			";
 			break;
 		case 2301:
-				?> 
-				<tr><td class="space"></td></tr>
-				<tr><td></td><td colspan="7" class="any">ANNUS III</td></tr>
-				<tr><td class="space"></td></tr>
-				<?php
+			$html = "
+				<tr><td class=\"space\"></td></tr>
+				<tr><td></td><td colspan=\"7\" class=\"any\">ANNUS III</td></tr>
+				<tr><td class=\"space\"></td></tr>
+			";
 			break;
 		case 2401:
-				?> 
-				<tr><td class="space"></td></tr>
-				<tr><td></td><td colspan="7" class="any">ANNUS IV</td></tr>
-				<tr><td class="space"></td></tr>
-				<?php
+			$html = "
+				<tr><td class=\"space\"></td></tr>
+				<tr><td></td><td colspan=\"7\" class=\"any\">ANNUS IV</td></tr>
+				<tr><td class=\"space\"></td></tr>
+			";
 		break;
 	}
+	return $html;
 }
 
 function data($data) {
@@ -255,7 +259,7 @@ while ( $a < count($cAsignaturas)) {
 		$clase = "impar";
 		$i % 2  ? 0: $clase = "par";
 		$i++;
-		titulo($oAsignatura->getId_nivel());
+		echo titulo($oAsignatura->getId_nivel());
 		$nombre_asig = strtr($oAsignatura->getNombre_asig(), $replace);
 		?>
 		<tr class="<?php echo $clase;?>" valign="bottom">
@@ -277,7 +281,7 @@ while ( $a < count($cAsignaturas)) {
 		$clase = "impar";
 		$i % 2  ? 0: $clase = "par";
 		$i++;
-		titulo($oAsignatura->getId_nivel());
+		echo titulo($oAsignatura->getId_nivel());
 		// para las opcionales
 		if ($row["id_asignatura"] > 3000 &&  $row["id_asignatura"] < 9000 ) {
 
@@ -312,7 +316,7 @@ while ( $a < count($cAsignaturas)) {
 			$clase = "impar";
 			$i % 2  ? 0: $clase = "par";
 			$i++;
-			titulo($oAsignatura->getId_asignatura());
+			echo titulo($oAsignatura->getId_asignatura());
 			$nombre_asig = strtr($oAsignatura->getNombre_asig(), $replace);
 			?>
 			<tr class="<?php echo $clase;?>">

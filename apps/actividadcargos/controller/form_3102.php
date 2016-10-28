@@ -3,7 +3,7 @@ use actividadcargos\model as actividadcargos;
 use personas\model as personas;
 /**
  * Muestra un formulario para introducir/cambiar los datos del objeto ActividadCargo
- * Si se crea un nuevo cargo, machaca el anteriro (si lo hubiere)
+ * Si se crea un nuevo cargo, machaca el anterior (si lo hubiere)
  * Si se cambia el cargo, crea uno nuevo, no elimina el anterior.
  *
  * @package	delegacion
@@ -133,6 +133,7 @@ if (!empty($id_nom_real)) {
 $oHash->setCamposNo($camposNo);
 $oHash->setcamposForm($camposForm);
 $oHash->setArraycamposHidden($a_camposHidden);
+
 ?>
 <!-- ------------------- html -----------------------------------------------  -->
 <script>

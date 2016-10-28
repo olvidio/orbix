@@ -472,7 +472,7 @@ function fnjs_ir_a() {
 	var bloque='#'+$('#id_div').val();
 	
 	if(parametros) {
-		if ($('#ir_atras').length) { // atras=1; 
+		if ($('#ir_atras').length || $('#ir_atras2').length || $('#go_atras').length) { // atras=1; 
 			if (parametros.indexOf("&atras") != -1) {
 				parametros=parametros.replace(/&atras=(0|1)?/,'&atras=1');
 			} else {
@@ -485,7 +485,7 @@ function fnjs_ir_a() {
 			parametros=parametros+'&PHPSESSID=<?php echo session_id(); ?>'; 
 		}
 	} else {
-		if ($('#ir_atras').length) { // atras=1; 
+		if ($('#ir_atras').length || $('#ir_atras2').length) { // atras=1; 
 			parametros='&atras=1'; 
 			parametros=parametros+'&PHPSESSID=<?php echo session_id(); ?>'; 
 		}
@@ -507,6 +507,7 @@ function fnjs_ir_a() {
 function fnjs_cambiar_link(id_div) {
 	// busco si hay un id=ir_a que es para ir a otra página
 	if ($('#ir_a').length) { fnjs_ir_a(); return false; } 
+	if ($('#go_atras').length) { fnjs_ir_a(); return false; } 
 	if ($('#ir_atras').length) { fnjs_dani(); return true; } 
 	var base=$(id_div).attr('refe');
 	if (base) {

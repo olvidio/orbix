@@ -61,6 +61,28 @@ class Posicion {
 		$_SESSION['position'][] = $aPosition;
 	}
 
+	public function go_atras() {
+		// puede ser que no haya donde volver
+		if (empty($_SESSION['position'])) {
+			return '';
+		}
+		$id_div = $this->getId_div();
+		$id_div = empty($id_div)? 'go_atras' : $id_div;
+		$aPosition = end($_SESSION['position']);
+		$aParam = $aPosition['parametros'];
+		$url = $aPosition['url'];
+		$sparametros = Hash::add_hash($aParam,$url);
+
+		//$html = '<div id="'.$id_div.'" style="display: none;">';
+		$html = '<div id="'.$id_div.'" style="display: none;">';
+		$html .= '	<form id="go">';
+		$html .= '	url: <input id="url" type="text" value="' . $url .'" size=70><br>';
+		$html .= '	parametros: <input id="parametros" type="text" value="' . $sparametros . '" size=70><br>';
+		$html .= '	bloque: <input id="id_div" type="text" value="' . $aPosition['bloque'] . '" size=70>';
+		$html .= '</form>';
+		$html .= '</div>';
+		return $html;
+	}
 	public function atras() {
 		// puede ser que no haya donde volver
 		if (empty($_SESSION['position'])) {
@@ -89,14 +111,15 @@ class Posicion {
 			return '';
 		}
 		$id_div = $this->getId_div();
-		$id_div = empty($id_div)? 'ir_atras' : $id_div;
+		$id_div = empty($id_div)? 'ir_atras2' : $id_div;
 		$aPosition = end($_SESSION['position']);
 		$aParam = $aPosition['parametros'];
 		$url = $aPosition['url'];
 		$sparametros = Hash::add_hash($aParam,$url);
 
 		//$html = '<div style="display: none;">';
-		$html = '<div style="display: none;">';
+		//$html = '<div style="display: none;">';
+		$html = '<div id="'.$id_div.'" style="display: none;">';
 		$html .= '<form id="go">';
 		$html .= '	<input id="url" type="hidden" value="' . $url .'" size=70>';
 		$html .= '	<input id="parametros" type="hidden" value="' . $sparametros . '" size=70>';

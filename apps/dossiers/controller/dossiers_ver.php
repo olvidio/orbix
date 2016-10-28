@@ -28,9 +28,12 @@ use ubis\model as ubis;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 if (!empty($_POST['sel'])) { //vengo de un checkbox
-	//$id_nom=$sel[0];
+ 	$id_sel=$_POST['sel'];
 	$id_pau=strtok($_POST['sel'][0],"#");
 	$id_tabla=strtok("#");
+	$oPosicion->addParametro('id_sel',$id_sel);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id);
 } else {
 	empty($_POST['id_pau'])? $id_pau="" : $id_pau=$_POST['id_pau'];
 }
@@ -116,7 +119,8 @@ switch ($pau) {
 		} else {
 			$form_action=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_select.php');
 		}
-
+		$id_sel = array("$id_pau#$nom");
+		$oPosicion->addParametro('id_sel',$id_sel);
 		break;
 }
 
@@ -132,9 +136,10 @@ $titulo=$txt;
 
 //echo $oPosicion->atras();
 ?>
+<?= $oPosicion->atras(); ?>
 <div id=<?= $top ?>>
 <table><tr>
-<td><span class=link onclick=fnjs_update_div('#main','<?= $godossiers ?>')><img src=<?= core\ConfigGlobal::$web_icons ?>/dossiers.gif border=0 width=40 height=40 alt='<?= $alt ?>'>(<?= $dos ?>)</span></td>
+<td><span class=link onclick= fnjs_update_div('#main','<?= $godossiers ?>')><img src=<?= core\ConfigGlobal::$web_icons ?>/dossiers.gif border=0 width=40 height=40 alt='<?= $alt ?>'>(<?= $dos ?>)</span></td>
 <td class=titulo><?= $titulo ?></td>
 </table>
 </div>

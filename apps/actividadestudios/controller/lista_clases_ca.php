@@ -17,7 +17,9 @@ use personas\model as personas;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 if (!empty($_POST['sel'])) { //vengo de un checkbox
+	$id_sel=$_POST['sel'];
 	$id_activ=strtok($_POST['sel'][0],"#");
+	$oPosicion->addParametro('id_sel',$id_sel);
 }
 
 // nombre de la actividad

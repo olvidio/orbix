@@ -1,6 +1,7 @@
-﻿<?php
+<?php
 use personas\model as personas;
 use ubis\model as ubis;
+
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
 */
@@ -14,11 +15,12 @@ use ubis\model as ubis;
 
 
 if (!empty($_POST['sel'])) { //vengo de un checkbox
-	//$id_nom=$sel[0];
+	$id_sel=$_POST['sel'];
 	$id_pau=strtok($_POST['sel'][0],"#");
 	$id_tabla=strtok("#");
 	$go_to="atras";
 	$pau = empty($_POST['pau'])? "" : $_POST['pau'];
+	$oPosicion->addParametro('id_sel',$id_sel);
 } else {
 	$pau = empty($_POST['pau'])? "" : $_POST['pau'];
 	$id_pau = empty($_POST['id_pau'])? "" : $_POST['id_pau'];
@@ -30,7 +32,7 @@ $titulo = $oPersona->getNombreApellidos();
 $top="top_personas";
 
 //si viene de la página de dossiers, no hace falta la cabecera
-// -----------------------------  cabecera ---------------------------------
+// ======================== cabecera =============================
 if (empty($_POST['cabecera']) || $_POST['cabecera']!="no") {
 	$godossiers=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$_POST['obj_pau'])));
 	$alt=_("ver dossiers");

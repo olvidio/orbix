@@ -348,6 +348,13 @@ class Lista {
 		$ahora=date("Hms");
 		$f=1;
 		$aFilas = array();
+		$scroll_id = !empty($a_valores['scroll_id'])? $a_valores['scroll_id'] : 0;
+		unset($a_valores['scroll_id']);
+		if (isset($a_valores['select'])) {
+			$a_valores_chk = $a_valores['select'];
+		} else {
+			$a_valores_chk = array();
+		}
 		foreach($a_valores as $num_fila=>$fila) {
 			$f++;
 			$id_fila=$f.$ahora;
@@ -367,6 +374,7 @@ class Lista {
 						$id=$valor;
 					}
 					if (!empty($id)) {
+						if ( in_array($id, $a_valores_chk)) { $chk ='checked'; } else { $chk = ''; }
 						$aFilas[$num_fila]["sel"] = $chk.'#'.addslashes($id);
 					} else { // no hay que dibujar el checkbox, pero si la columna
 						$aFilas[$num_fila]["sel"] = '';
@@ -384,11 +392,11 @@ class Lista {
 						}
 						if (!empty($valor['script']) ) {
 							$ira=$valor['script'];
-							$aFilas[$num_fila]['script'] = $ira;
+							$aFilas[$num_fila]['script'] = addslashes($ira);
 						}
 						if (!empty($valor['script2']) ) {
 							$ira=$valor['script2'];
-							$aFilas[$num_fila]['script2'] = $ira;
+							$aFilas[$num_fila]['script2'] = addslashes($ira);
 						}
 						if (!empty($valor['span'])) {
 							$span="$val";
@@ -431,7 +439,9 @@ class Lista {
 		}
 	
 
-		$tt = "
+		$tt = "<input id=\"scroll_id\" name=\"scroll_id\" value=\"$scroll_id\" type=\"hidden\">";
+			
+		$tt .= "
 			<style>
 				.cell-title {
 				  font-weight: bold;
@@ -450,8 +460,11 @@ class Lista {
 				  font-size: 10px;
 				}
 
+				.selected {
+				  background-color: #FBB; /* show default selected row background */
+				}
 				.slick-row.selected .cell-selection {
-				  background-color: transparent; /* show default selected row background */
+				  background-color: green; /* show default selected row background */
 				}
 			</style>
 			";
@@ -476,19 +489,26 @@ class Lista {
 			var searchString = \"\";
 			var columnFilters_$id_tabla = $sColumns;
 
+			function add_scroll_id(row) {
+				$(\"#scroll_id\").val(row);	
+				//console.log(row);
+			}
+					
 			function clickFormatter(row, cell, value, columnDef, dataContext) {
 				if (ira=dataContext['ira']) {
-					return \"<span class=link onclick=fnjs_update_div('#main',\\\"\"+ira+\"\\\") >\"+value+\"</span>\";
+					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"') \\\" >\"+value+\"</span>\";
 				}
 				if (ira=dataContext['script']) {
 					//return \"<span class=link onclick='\"+dataContext['script']+\"' >\"+value+\"</span>\";
-					return \"<span class=link onclick=\"+ira+\" >\"+value+\"</span>\";
+					//return \"<span class=link onclick='add_scroll_id(\"+row+\");\"+ira+\"' >\"+value+\"</span>\";
+					return \"<span class=link onclick='this.closest(\\\".slick-cell\\\").click();\"+ira+\";' >\"+value+\"</span>\";
 				}
 				return value;
 			}
 			function clickFormatter2(row, cell, value, columnDef, dataContext) {
 				if (ira=dataContext['ira2']) {
-					return \"<span class=link onclick=fnjs_update_div('#main',\\\"\"+ira+\"\\\") >\"+value+\"</span>\";
+					//return \"<span class=link onclick=fnjs_update_div('#main',\\\"\"+ira+\"\\\") >\"+value+\"</span>\";
+					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"') \\\" >\"+value+\"</span>\";
 				}
 				if (ira=dataContext['script2']) {
 					//return \"<span class=link onclick='\"+dataContext['script']+\"' >\"+value+\"</span>\";
@@ -503,6 +523,9 @@ class Lista {
 				  // formato: checked#id#nom_activ [#otro#otro..n]
 				  var array_val=value.split('#');
 				  var chk = array_val[0];
+				  if (chk.length) {
+				  	chk = 'checked=true';
+				  }
 				  var val = '';
 				  $.each(array_val, function(index, value) {
 					if (index==0) return true;
@@ -511,21 +534,12 @@ class Lista {
 					}
 						val = val+value.replace(/\\\"/g,\"'\");
 				  });
-				  var id = 'a'+val;
+				  var id = '#'+val;
 				  return  \"<input class=\\\"sel\\\" type=\\\"checkbox\\\" name=\\\"sel[]\\\" id=\\\"\"+id+\"\\\" value=\\\"\"+val+\"\\\" \"+chk+\">\";
 				}
 			}
 
 			";
-		/*
-			$tt .= "
-			function myFilter(item, args) {
-			  if (args.searchString != \"\" && item[\"Actividad\"].indexOf(args.searchString) == -1) {
-				return false;
-			  }
-			  return true;
-			}
-		*/
 		$tt .= "
 			// Define search filter
 			function myFilter_$id_tabla(item,args) {
@@ -593,7 +607,6 @@ class Lista {
 			}
 			";
 
-
 		$tt .= "
 			$(\".grid-header .ui-icon\")
 				.addClass(\"ui-state-default ui-corner-all\")
@@ -603,10 +616,6 @@ class Lista {
 				.mouseout(function (e) {
 				  $(e.target).removeClass(\"ui-state-hover\")
 				});
-
-
-
-
 
 
 			$(function () {
@@ -624,10 +633,20 @@ class Lista {
 				$(\"#inlineFilterPanel_".$id_tabla."\")
 				  .appendTo(grid_$id_tabla.getTopPanel())
 				  .show();
-
 				  
+				grid_$id_tabla.onClick.subscribe(function (e,args) {
+					add_scroll_id(args.row);
+					e.stopPropagation();
+				});
+					
+				grid_$id_tabla.onSelectedRowsChanged.subscribe(function (e,args) {
+					$.when($(\"input:checkbox\").prop('checked', false));
+					$.when($(\".selected input:checkbox\").prop('checked', true));
+					//e.stopPropagation();
+				});
+				
 				grid_$id_tabla.onCellChange.subscribe(function (e, args) {
-				dataView_$id_tabla.updateItem(args.item.id, args.item);
+					dataView_$id_tabla.updateItem(args.item.id, args.item);
 				});
 
 				grid_$id_tabla.onAddNewRow.subscribe(function (e, args) {
@@ -688,7 +707,7 @@ class Lista {
 					searchString = this.value;
 					updateFilter();
 				});
-
+				
 			function updateFilter() {
 				dataView_$id_tabla.setFilterArgs({
 					searchString: searchString
@@ -712,11 +731,21 @@ class Lista {
 			dataView_$id_tabla.setFilter(myFilter_$id_tabla);
 			dataView_$id_tabla.endUpdate();
 			$(\"#grid_$id_tabla\").resizable();
+			
+			//var chk = $(\"input:checked\");
+			//chk.closest(\".slick-row\").addClass(\"active\");
+			//chk.closest(\".slick-row\").find(\".slick-cell\").addClass(\"selected\");
 		";
+		
+		if (isset($scroll_id)) {
+			$tt .= " grid_$id_tabla.scrollRowToTop($scroll_id);";
+		}
 
 		if ($bPanelVis) $tt .= "toggleFilterRow_$id_tabla();";
 		
 		$tt .= "
+			var chk = $(\"input:checked\");
+			chk.click();
 			})
 		</script>
 		";
@@ -732,14 +761,14 @@ class Lista {
 		</div>
 		<div id=\"grid_$id_tabla\"  style=\"width:$grid_width; height:$grid_height\"></div>
 		";
- 	//$tt.="<div id=\"pager\" style=\"height:20px;\"></div>";
- 	$tt.="</div>";
+		//$tt.="<div id=\"pager\" style=\"height:20px;\"></div>";
+		$tt.="</div>";
 
-$tt.="
-<div id=\"inlineFilterPanel_".$id_tabla."\" style=\"display:none;background:#dddddd;padding:3px;color:black;\">
-  "._('Buscar en todas las columnas')." <input type=\"text\" id=\"txtSearch_".$id_tabla."\">
-</div>
-";
+		$tt.="
+		<div id=\"inlineFilterPanel_".$id_tabla."\" style=\"display:none;background:#dddddd;padding:3px;color:black;\">
+		  "._('Buscar en todas las columnas')." <input type=\"text\" id=\"txtSearch_".$id_tabla."\">
+		</div>
+		";
 		return $tt;
 	}
 
@@ -793,6 +822,13 @@ $tt.="
 		// Para generar un id único
 		$ahora=date("Hms");
 		$f=1;
+
+		if (isset($a_valores['select'])) {
+			$a_valores_chk = $a_valores['select'];
+		} else {
+			$a_valores_chk = array();
+		}
+		
 		foreach($a_valores as $num_fila=>$fila) {
 			$clase = "imp";
 			$f % 2  ? 0: $clase = "par";
@@ -814,6 +850,7 @@ $tt.="
 						$id=$valor;
 					}
 					if (!empty($id)) {
+						if ( in_array($id, $a_valores_chk)) { $chk ='checked'; } else { $chk = ''; }
 						$tbody.="<td tipo='sel' title='". _("clik para seleccionar")."'>";
 						$tbody.="<input class='sel' type='checkbox' $chk  name='sel[]' id='a$id' value='$id'>";
 						$tbody.="</td>";
@@ -831,12 +868,12 @@ $tt.="
 							$tbody.="<td><span class=\"link\" onclick=\"fnjs_update_div('#main','$ira')\" >$val</span></td>";
 						}
 						if (!empty($valor['script']) ) {
-							$ira=$valor['script'];
-							$tbody.="<td><span class=\"link\" onclick=\"$ira\" >$val</span></td>";
+							$ira= $valor['script'];
+							$tbody.="<td><span class=\"link\" onclick='$ira' >$val</span></td>";
 						}
 						if (!empty($valor['script2']) ) {
 							$ira=$valor['script2'];
-							$tbody.="<td><span class=\"link\" onclick=\"$ira\" >$val</span></td>";
+							$tbody.="<td><span class=\"link\" onclick='$ira' >$val</span></td>";
 						}
 						if (!empty($valor['span'])) {
 							$tbody.="<td colspan='".$valor['span']."'>$val</td>";
@@ -866,6 +903,15 @@ $tt.="
 		$tt.="$cabecera</thead><tbody>";
 		$tt.= $tbody;
 		$tt.="</tbody></table>\n";
+		$tt.="<script>
+			$(document).ready(function() {
+				var h = $('input:checked');
+				if (h.length) {
+					var h = (h.offset().top) - 300;
+					$('#main').scrollTop(h);
+				}
+			});
+			</script>";
 
 		return $tt;
 	}
@@ -965,11 +1011,11 @@ $tt.="
 							}
 							if (!empty($valor['script']) ) {
 								$ira=$valor['script'];
-								$tbody.="<td><span class=\"link\" onclick=\"$ira\" >$val</span></td>";
+								$tbody.="<td><span class=\"link\" onclick='$ira' >$val</span></td>";
 							}
 							if (!empty($valor['script2']) ) {
 								$ira=$valor['script2'];
-								$tbody.="<td><span class=\"link\" onclick=\"$ira\" >$val</span></td>";
+								$tbody.="<td><span class=\"link\" onclick='$ira' >$val</span></td>";
 							}
 							if (!empty($valor['span'])) {
 								$tbody.="<td colspan='".$valor['span']."'>$val</td>";

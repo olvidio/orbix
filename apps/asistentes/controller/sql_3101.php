@@ -241,6 +241,8 @@ $a_camposHidden = array(
 $oHash1->setArraycamposHidden($a_camposHidden);
 
 /* ---------------------------------- html --------------------------------------- */
+
+echo $oPosicion->atras();
 ?>
 <script>
 fnjs_matriculas=function(frm_sel,frm_enviar){

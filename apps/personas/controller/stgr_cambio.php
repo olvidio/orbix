@@ -22,8 +22,10 @@
 // FIN de  Cabecera global de URL de controlador ********************************
 
 if (!empty($_POST['sel'])) { //vengo de un checkbox
+	$id_sel=$_POST['sel'];
 	$id_nom=strtok($_POST['sel'][0],"#");
 	$id_tabla=strtok("#");
+	$oPosicion->addParametro('id_sel',$id_sel);
 }
 
 switch ($id_tabla) {

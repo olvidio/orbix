@@ -40,6 +40,10 @@ jsForm.mandar=function(formulario,que){
 		case "plan_estudios":
 			this.action = "apps/actividadestudios/controller/plan_estudios_ca.php";
 			break;
+		case "dossiers":
+			//$('#queSel').val(que);
+			this.action = "apps/dossiers/controller/dossiers_ver.php";
+			break;
 		case "asig":
 			$('#queSel').val(que);
 			this.action = "apps/dossiers/controller/dossiers_ver.php";
