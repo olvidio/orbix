@@ -17,6 +17,17 @@ use profesores\model as profesores;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 switch ($_POST['salida']) {
+	case "asignatura":
+		$id_asignatura = empty($_POST['id_asignatura'])? '' : $_POST['id_asignatura'];
+		$GesProfesores = new profesores\GestorProfesor();
+		$oDesplProfesores = $GesProfesores->getListaProfesoresAsignatura($id_asignatura);
+		
+		$oDesplProfesores->setNombre('id_profesor');
+		$oDesplProfesores->setBlanco('t');
+		$oDesplProfesores->setOpcion_sel(-1);
+
+		echo $oDesplProfesores->desplegable();
+	 break;
 	case "dl":
 		$id_activ = empty($_POST['id_activ'])? '' : $_POST['id_activ'];
 		$GesProfesores = new profesores\GestorProfesorActividad();
@@ -29,8 +40,6 @@ switch ($_POST['salida']) {
 		echo $oDesplProfesores->desplegable();
 	 break;
 	case "todos":
-		//$GesProfesores = new profesores\GestorProfesorActividad();
-		//$oDesplProfesores = $GesProfesores->getListaProfesoresActividad();
 		$GesProfesores = new profesores\GestorProfesor();
 		$aOpciones = $GesProfesores->getListaProfesoresPub();
 		

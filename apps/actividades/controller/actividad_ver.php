@@ -22,9 +22,6 @@ if (isset($_POST['sel'])) { //vengo de un checkbox
 } else {
 	$id_activ = empty($_POST['id_activ'])? '' : $_POST['id_activ'];
 	$tabla = empty($_POST['tabla'])? '' : $_POST['tabla'];
-	
-	$id_sel = array("$id_activ#$nom_activ");
-	$oPosicion->addParametro('id_sel',$id_sel);
 }
 
 
@@ -37,6 +34,11 @@ $a_status = array( 1 => _("proyecto"), 2 => _("actual"), 3 => _("terminada"), 4 
 
 $oActividad = new actividades\Actividad($id_activ);
 extract($oActividad->getTot());
+
+if (empty($id_sel)) {
+	$id_sel = array("$id_activ#$nom_activ");
+	$oPosicion->addParametro('id_sel',$id_sel);
+}
 // mirar permisos.
 //if(core\ConfigGlobal::is_app_installed('procesos')) {
 	$_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);

@@ -1,6 +1,7 @@
 <?php
 namespace profesores\model;
 use core;
+use personas\model as personas;
 /**
  * GestorProfesorAmpliacion
  *
@@ -33,7 +34,48 @@ class GestorProfesorAmpliacion Extends core\ClaseGestor {
 
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
-
+	
+	/**
+	 * retorna un objecte del tipus Array
+	 * Els posibles professors per una asignatura
+	 *
+	 * @return array Una Llista
+	 */
+	function getListaProfesoresAsignatura($id_asignatura) {
+		$gesProfesores = $this->getProfesorAmpliaciones(array('id_asignatura'=>$id_asignatura,'f_cese'=>''),array('f_cese'=>'IS NULL'));
+		$aProfesores = array();
+		$aAp1 = array();
+		$aAp2 = array();
+		$aNom = array();
+		foreach ($gesProfesores as $oProfesor) {
+			$id_nom = $oProfesor->getId_nom();
+			$oPersonaDl = new personas\PersonaDl($id_nom);
+			$ap_nom = $oPersonaDl->getApellidosNombre();
+			$aProfesores[] = array('id_nom'=>$id_nom,'ap_nom'=>$ap_nom);
+			$aAp1[] = $oPersonaDl->getApellido1();
+			$aAp2[] = $oPersonaDl->getApellido2();
+			$aNom[] = $oPersonaDl->getNom();
+		}
+		$multisort_args = array(); 
+		$multisort_args[] = $aAp1;
+		$multisort_args[] = SORT_ASC;
+		$multisort_args[] = SORT_STRING;
+		$multisort_args[] = $aAp2;
+		$multisort_args[] = SORT_ASC;
+		$multisort_args[] = SORT_STRING;
+		$multisort_args[] = $aNom;
+		$multisort_args[] = SORT_ASC;
+		$multisort_args[] = SORT_STRING;
+		$multisort_args[] = &$aProfesores;   // finally add the source array, by reference
+		call_user_func_array("array_multisort", $multisort_args);
+		$aOpciones=array();
+		foreach ($aProfesores as $aClave) {
+			$clave=$aClave['id_nom'];
+			$val=$aClave['ap_nom'];
+			$aOpciones[$clave]=$val;
+		}
+		return $aOpciones;
+	}
 	/**
 	 * retorna l'array d'objectes de tipus ProfesorAmpliacion
 	 *

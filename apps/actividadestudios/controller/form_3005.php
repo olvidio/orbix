@@ -30,16 +30,11 @@ $chk_a='';
 $chk_c='';
 $chk=''; 
 
-//$GesProfesores = new profesores\GestorProfesor();
-//$oDesplProfesores = $GesProfesores->getListaProfesores();
-$GesProfesores = new profesores\GestorProfesorActividad();
-$oDesplProfesores = $GesProfesores->getListaProfesoresActividad(array($id_activ));
-$oDesplProfesores->setNombre('id_profesor');
-$oDesplProfesores->setBlanco('t');
-$oDesplProfesores->setOpcion_sel(-1);
-
 if (!empty($id_asignatura)) { //caso de modificar
 	$mod="editar"; 
+	$GesProfesores = new profesores\GestorProfesor();
+	$oDesplProfesores = $GesProfesores->getListaProfesoresAsignatura($id_asignatura);
+	$oDesplProfesores->setOpcion_sel(-1);
 	
 	$oActividadAsignatura= new actividadestudios\ActividadAsignatura();
 	$oActividadAsignatura->setId_activ($id_activ);
@@ -66,6 +61,10 @@ if (!empty($id_asignatura)) { //caso de modificar
 	$primary_key_s="id_activ=$id_activ AND id_asignatura=$id_asignatura";
 } else { //caso de nueva asignatura
 	$mod="nuevo";
+	$GesProfesores = new profesores\GestorProfesorActividad();
+	$oDesplProfesores = $GesProfesores->getListaProfesoresActividad(array($id_activ));
+	$oDesplProfesores->setOpcion_sel(-1);
+	
 	$f_ini = '';
 	$f_fin = '';
 	$interes = 'f';
@@ -73,12 +72,16 @@ if (!empty($id_asignatura)) { //caso de modificar
 		$GesAsignaturas = new asignaturas\GestorAsignatura();
 		$oDesplAsignaturas = $GesAsignaturas->getListaAsignaturas();
 		$oDesplAsignaturas->setNombre('id_asignatura');
+		$oDesplAsignaturas->setAction("fnjs_mas_profes('asignatura')");
 	} else {
 		$go_to=urlencode(core\ConfigGlobal::getWeb()."/apps/dossiers/controller/dossiers_ver.php?pau=${_POST['pau']}&id_pau=${_POST['id_pau']}&id_dossier=${_POST['id_dossier']}&tabla_pau=${_POST['tabla_pau']}&permiso=3");
 		$oPosicion = new web\Posicion();
 		echo $oPosicion->ir_a($go_to);
 	}
 }
+
+$oDesplProfesores->setNombre('id_profesor');
+$oDesplProfesores->setBlanco('t');
 
 $oHash = new web\Hash();
 $camposForm = 'f_ini!f_fin!tipo!id_profesor';
@@ -105,6 +108,9 @@ $h = $oHashTipo->linkSinVal();
 $oHashTipo->setCamposForm('salida!id_activ');
 $h1 = $oHashTipo->linkSinVal();
 
+$oHashTipo->setCamposForm('salida!id_activ!id_asignatura');
+$h2 = $oHashTipo->linkSinVal();
+
 ?>
 <!-- ------------------- html -----------------------------------------------  -->
 <script>
@@ -125,6 +131,10 @@ $(function() {
 fnjs_mas_profes=function(filtro){
 	var url='<?= core\ConfigGlobal::getWeb().'/apps/actividadestudios/controller/lista_profesores.php' ?>';
 	switch (filtro) {
+		case 'asignatura':
+			id_asignatura = $("#id_asignatura").val();
+			var parametros='salida=asignatura&id_asignatura='+id_asignatura+'&id_activ=<?= $id_activ ?><?= $h2 ?>&PHPSESSID=<?php echo session_id(); ?>';
+			break;
 		case 'dl':
 			var parametros='salida=dl&id_activ=<?= $id_activ ?><?= $h1 ?>&PHPSESSID=<?php echo session_id(); ?>';
 			break;
@@ -160,9 +170,9 @@ fnjs_guardar=function(){
 </script>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="" method="POST">
 <?= $oHash->getCamposHtml(); ?>
-<input type="Hidden" id="mod" name="mod" value=<?= $mod ?>>
+<input type="Hidden" id="mod" name="mod" value="<?= $mod ?>" >
 <table>
-<tr class=tab><th class=titulo_inv colspan=4><?= ucfirst(_("asignatura de una actividad")); ?></th></tr>
+<tr class=tab><th class=titulo_inv colspan=5><?= ucfirst(_("asignatura de una actividad")); ?></th></tr>
 <?php
 if (!empty($id_asignatura)) {
 	echo "<tr><td class=etiqueta>".ucfirst(_("asignatura")).":</td><td class=contenido>$nombre_corto</td>";
@@ -178,6 +188,7 @@ if (!empty($id_asignatura)) {
 <td id="lst_profes">
 <?= $oDesplProfesores->desplegable(); ?>
 </td>
+<td><input type=button onclick="fnjs_mas_profes('asignatura')" value="<?= _('corresponde') ?>"></td>
 <td><input type=button onclick="fnjs_mas_profes('dl')" value="<?= _('dl y asistentes') ?>"></td>
 <td><input type=button onclick="fnjs_mas_profes('all')" value="<?= _('otros de paso') ?>"></td>
 </tr>
