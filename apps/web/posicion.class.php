@@ -229,7 +229,7 @@ class Posicion {
 	 * @param string nomParametre
 	 */
 	public function getParametro($nomParametre) {
-		if (!isset($this->aParametros[$nomParametre])) { return false; }
+		if (!isset($this->aParametros[$nomParametre])) { return ''; }
 		$valParametre = empty($this->aParametros[$nomParametre])? '' : $this->aParametros[$nomParametre];
 		return $valParametre;
 	}

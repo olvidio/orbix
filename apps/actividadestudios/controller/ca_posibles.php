@@ -394,7 +394,7 @@ foreach ($cOrdPersonas as $ctr=>$ctrPersonas) {
 // -----------------------------  cabecera ---------------------------------
 $form_action=core\ConfigGlobal::getWeb().'/apps/personas/controller/personas_select.php';
 
-// -------------------------- si es una persona, saco un lista. -----------------------
+// -------------------------- si es una persona, saco una lista. -----------------------
 if (!empty($_POST['sel']) && $alum==1) { //vengo de un 'checkbox' => sólo una persona
 	//$pagina=core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?pau=p&que=activ&id_pau='.$id_nom.'&tabla_pau='.$tabla_pau.'&id_dossier=1301y1302';
 	$aParamGo=array('que'=>'activ','pau'=>'p','id_pau'=>$id_nom,'obj_pau'=>$obj_pau,'id_dossier'=>'1301y1302');
@@ -437,7 +437,7 @@ if (!empty($_POST['sel']) && $alum==1) { //vengo de un 'checkbox' => sólo una p
 				}
 	}
 	echo "</table>";
-	echo "<h3><a href=\"$pagina\">ir a dossier de actividades</a></h3>";
+	echo "<h3><span class=link onclick=\"fnjs_update_div('#main','$pagina')\" >". _("ir a dossier de actividades")."</span></h3>";
 } else {
 // -------------------------- si es para el centro/s saco una tabla -------------------------
 	// Dibujar la tabla

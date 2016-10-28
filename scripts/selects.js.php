@@ -100,7 +100,6 @@ function fnjs_generarNomActiv(formulario) {
 		var tipo=$('#snom_tipo').val();
 		if (tipo=='(sin especificar)')	{ tipo=''; } else { tipo= '' + tipo; }
 		var tipus=sf+actividad + ' ' + asistentes + ' ' + tipo;
-
 	}
     nom = tipus + ' ' + lloc + ' (' + ini + '-' + fin +')';
     $('#nom_activ').val(nom);

@@ -35,7 +35,7 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
 	$oPosicion->addParametro('scroll_id',$scroll_id);
 } else {
-	empty($_POST['id_pau'])? $id_pau="" : $id_pau=$_POST['id_pau'];
+	empty($_POST['id_pau'])? $id_pau='' : $id_pau=$_POST['id_pau'];
 }
 if (empty($pau)) $pau=$_POST['pau'];
 if (empty($permiso) && !empty($_POST['permiso'])) {
