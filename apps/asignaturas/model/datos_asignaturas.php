@@ -19,8 +19,8 @@ switch ($padre) {
 		// para el datos_sql.php
 		// Si se quiere listar una selcción, $_POST['k_buscar']
 		if (!empty($_POST['k_buscar'])) {
-			$aWhere['nombre_corto']= $_POST['k_buscar'];
-			$aOperador['nombre_corto']='sin_acentos';
+			$aWhere['nombre_asig']= $_POST['k_buscar'];
+			$aOperador['nombre_asig']='sin_acentos';
 		}
 		$aWhere['id_asignatura']= 3000;
 		$aOperador['id_asignatura']='<';
