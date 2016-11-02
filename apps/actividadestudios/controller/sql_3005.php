@@ -18,6 +18,8 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 	$id_sel=$_POST['sel'];
 	$id_activ=strtok($_POST['sel'][0],"#");
 	$oPosicion->addParametro('id_sel',$id_sel);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id);
 }
 
 //pongo aqui el $go_to porque al ir al mismo update que las actividaes, no se donde voler

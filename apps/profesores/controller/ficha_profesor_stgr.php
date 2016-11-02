@@ -33,6 +33,8 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 	$id_nom=strtok($_POST['sel'][0],"#");
 	$id_tabla=strtok("#");
 	$oPosicion->addParametro('id_sel',$id_sel);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id);
 } else {
 	$id_pau = empty($_POST['id_pau'])? '' : $_POST['id_pau'];
 	$id_nom = empty($_POST['id_nom'])? '' : $_POST['id_nom'];

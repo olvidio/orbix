@@ -129,9 +129,9 @@ if (!empty($id_asignatura_real)) { //caso de modificar
 }
 
 // miro cuales son las opcionales genéricas, para la funcion actualizar() de java.
-// la condicion es que tengan id_sector=0
+// la condicion es que tengan id_sector=1
 $GesAsignaturasOpG = new asignaturas\GestorAsignatura();
-$cAsignaturasOpG = $GesAsignaturasOpG->getAsignaturas(array('id_nivel'=>'3000','id_sector'=>0,'status'=>'t'),array('id_nivel'=>'<'));
+$cAsignaturasOpG = $GesAsignaturasOpG->getAsignaturas(array('id_nivel'=>'3000','id_sector'=>1,'status'=>'t'),array('id_nivel'=>'<'));
 $condicion='';
 foreach ($cAsignaturasOpG as $oAsignaturaOp) {
 	$id_nivel_j = $oAsignaturaOp->getId_nivel();

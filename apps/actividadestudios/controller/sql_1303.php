@@ -23,6 +23,7 @@ $inicurs_ca=core\curso_est("inicio",$any);
 $fincurs_ca=core\curso_est("fin",$any);
 
 //$curso="AND f_ini BETWEEN '$inicurs_ca' AND '$fincurs_ca' ";
+$todos = empty($_POST['todos'])? '' : $_POST['todos'];
 
 if (!empty($_POST['sel'])) { //vengo de un checkbox
 	$id_pau=strtok($_POST['sel'][0],"#");
@@ -41,7 +42,7 @@ $aviso = '';
 // Compruebo si està de repaso...
 $oPersona = new personas\PersonaDl(array('id_nom'=>$id_pau));
 $stgr = $oPersona->getStgr();
-if ($stgr == 'r') $aviso .= _("Está de repaso");
+if ($stgr == 'r') $aviso .= _("Está de repaso")."<br>";
 
 echo $oPosicion->atras();
 
@@ -53,17 +54,46 @@ if (!empty($_POST['id_activ'])) {  // ¿? ya tengo una actividad concreta (vengo
 	echo "$sql_tabla";
 } else {
 	$GesAsistentes = new asistentes\GestorAsistente();
-	$aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
-	$aOperadores['f_ini'] = 'BETWEEN';
+	if (empty($todos)) {
+		$aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
+		$aOperadores['f_ini'] = 'BETWEEN';
+	}
 	$aWhere['id_tipo_activ'] = '^[12][13][23]';
 	$aOperadores['id_tipo_activ'] = '~';
 
-	$cAsistencias = $GesAsistentes-> getActividadesDeAsistente(array('id_nom'=>$id_pau,'propio'=>'t'),$aWhere,$aOperadores);
+	$cAsistencias = $GesAsistentes-> getActividadesDeAsistente(array('id_nom'=>$id_pau,'propio'=>'t'),$aWhere,$aOperadores,true);
 }
 if (is_array($cAsistencias)) {
 	$n = count($cAsistencias);
-   	if ( $n == 0) { $aviso .= _(sprintf("No tiene asignado ningún ca como propio este curso: %s - %s",$inicurs_ca,$fincurs_ca)); }
-   	if ( $n > 1) { $aviso .= _(sprintf("¡¡ojo!! tiene %s actividades de estudios asignadas como propias",$n)); }
+   	if ( $n == 0 && empty($todos)) {
+		$oHashA = new web\Hash();
+		$oHashA->setcamposForm('sel');
+		$oHashA->setcamposNo('scroll_id');
+		$a_camposHidden = array(
+					'pau' => 'p',
+					'obj_pau' => $_POST['obj_pau'],
+					'permiso' => '3',
+					'breve' => $_POST['breve'],
+					'es_sacd' => $_POST['es_sacd'],
+					'tabla' => $_POST['tabla'],
+					'que' => 'matriculas',
+					'id_dossier' => 1303,
+					'todos' => 1
+					);
+		$oHashA->setArraycamposHidden($a_camposHidden);
+		
+		$aviso .= _(sprintf("No tiene asignado ningún ca como propio este curso: %s - %s.",$inicurs_ca,$fincurs_ca)); 
+		$aviso .= "<form action='apps/dossiers/controller/dossiers_ver.php' method='post'>";
+		$aviso .= $oHashA->getCamposHtml();
+		$aviso .= "<input type=hidden name='sel[]' value='".$_POST['sel'][0]."' >";
+		$aviso .= "<input type=hidden name='scroll_id' value='".$_POST['scroll_id']."' >";
+		$aviso .= "<input type=button onclick=fnjs_enviar_formulario(this.form) value='"._("ver anteriores")."'>";
+		$aviso .= "</form>";
+	}
+   	if ( $n == 0 && !empty($todos)) {
+		$aviso .= _("No tiene asignado ningún ca."); 
+	}
+   	if ( $n > 1 && empty($todos)) { $aviso .= _(sprintf("¡¡ojo!! tiene %s actividades de estudios asignadas como propias.",$n)); }
 }
 ?>
 <script>

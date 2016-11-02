@@ -21,6 +21,8 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 	$go_to="atras";
 	$pau = empty($_POST['pau'])? "" : $_POST['pau'];
 	$oPosicion->addParametro('id_sel',$id_sel);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id);
 } else {
 	$pau = empty($_POST['pau'])? "" : $_POST['pau'];
 	$id_pau = empty($_POST['id_pau'])? "" : $_POST['id_pau'];
@@ -31,6 +33,9 @@ $oPersona = personas\Persona::newPersona($id_pau);
 $titulo = $oPersona->getNombreApellidos();
 $top="top_personas";
 
+if (get_class($oPersona) == 'personas\model\PersonaEx') {
+	exit(_("Con las personas de paso no tiene sentido."));
+}
 //si viene de la página de dossiers, no hace falta la cabecera
 // ======================== cabecera =============================
 if (empty($_POST['cabecera']) || $_POST['cabecera']!="no") {

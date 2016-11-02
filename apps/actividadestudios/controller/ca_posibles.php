@@ -113,6 +113,8 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 	}
 	$condicion = " f_ini BETWEEN '$empiezamin' AND '$empiezamax' AND";
 	$oPosicion->addParametro('id_sel',$id_sel);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id);
 } else {
 	empty($_POST['na'])? $na="" : $na=$_POST['na'];
 	$any=empty($_POST['year'])? date('Y')+1 : $_POST['year'];

@@ -12,8 +12,6 @@ use ubis\model as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-//if (isset($id_nom)) $_POST['id_nom'] = $id_nom;
-
 if (!empty($_POST['nuevo'])) {
 	$obj_pau = $_POST['obj_pau'];
 	$obj = 'personas\\model\\'.$_POST['obj_pau'];

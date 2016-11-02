@@ -499,8 +499,6 @@ class Lista {
 					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"') \\\" >\"+value+\"</span>\";
 				}
 				if (ira=dataContext['script']) {
-					//return \"<span class=link onclick='\"+dataContext['script']+\"' >\"+value+\"</span>\";
-					//return \"<span class=link onclick='add_scroll_id(\"+row+\");\"+ira+\"' >\"+value+\"</span>\";
 					return \"<span class=link onclick='this.closest(\\\".slick-cell\\\").click();\"+ira+\";' >\"+value+\"</span>\";
 				}
 				return value;
@@ -744,7 +742,7 @@ class Lista {
 		if ($bPanelVis) $tt .= "toggleFilterRow_$id_tabla();";
 		
 		$tt .= "
-			var chk = $(\"input:checked\");
+			var chk = $(\"#grid_$id_tabla input:checked\");
 			chk.click();
 			})
 		</script>

@@ -189,67 +189,66 @@ echo "<div id=$ficha>";
 if (empty($id_dossier)) { // enseña la lista de dossiers.
 	include ("lista_dossiers.php");
 } else {
-// Voy a intentar mostrar dossiers seguidos. Se supone que id_dossier es una lista de nº separados por 'y'
-$id_dossier=strtok($id_dossier,"y");
-while  ($id_dossier) {
-	$oTipoDossier = new dossiers\TipoDossier($id_dossier);
-	$tabla_dossier=$oTipoDossier->getTabla_to();
-	$app=$oTipoDossier->getApp();
+	// Voy a intentar mostrar dossiers seguidos. Se supone que id_dossier es una lista de nº separados por 'y'
+	$id_dossier=strtok($id_dossier,"y");
+	while  ($id_dossier) {
+		$oTipoDossier = new dossiers\TipoDossier($id_dossier);
+		$tabla_dossier=$oTipoDossier->getTabla_to();
+		$app=$oTipoDossier->getApp();
 
-	// según sean personas, ubis o actividades:
-	switch ($pau) {
-		case 'p':
-			$condicion="Where id_nom=$id_pau";
-			//$id_pau="id_nom";
-			break;
-		case 'u':
-			$condicion="Where id_ubi=$id_pau";
-			break;
-		case 'a':
-			$condicion="Where id_activ=$id_pau";
-			break;
-	}
-	
-	// para el botón editar en la presentación general...
-	if ($permiso==3) { $edit=1; }
-	// Para presentaciones particulares
-	//$pres_2="../model/datos_".$id_dossier.".php";
-	//$pres="./sql_".$id_dossier.".php";
-	$pres_2="../../$app/model/datos_".$id_dossier.".php";
-	$pres="../../$app/controller/sql_".$id_dossier.".php";
-
-	$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier,'permiso'=>$permiso)));
-
-	if (realpath($pres_2)){ //como file_exists
-		include ("datos_sql.php");
-	} elseif (realpath($pres)){
-		include ($pres);
-	} 
-	
-	// Poner o no el botón de inserta. En algunos casos ya está en la presentación particular.
-	// miro los permisos:
-	if ($permiso==3 && !file_exists($pres_2)){ 
-		switch($id_dossier) {
-			case 1004: //traslados de ctr o dl
-				$insert=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/traslado_form.php?'.http_build_query(array('cabecera'=>'no','id_pau'=>$id_pau,'id_dossier'=>$id_dossier,'obj_pau'=>$obj_pau,'go_to'=>$go_to)));
-				echo "<p><span class=link onclick=fnjs_update_div('#main','$insert')>"._("insertar")."</span></p>";
+		// según sean personas, ubis o actividades:
+		switch ($pau) {
+			case 'p':
+				$condicion="Where id_nom=$id_pau";
+				//$id_pau="id_nom";
 				break;
-			case 1303:
-			case 3103: //matriculas de un ca
-				break; //nada, ya esta en el sql_1303
-			case 1201:
-			case 2102: //cargos de un ctr
-				break; //nada, ya esta en el sql_2102
-			case 3101: //asistentes a un ca
-				break; //nada, ya esta en el sql_3101
+			case 'u':
+				$condicion="Where id_ubi=$id_pau";
+				break;
+			case 'a':
+				$condicion="Where id_activ=$id_pau";
+				break;
 		}
-		//para el botón cerrar dossier:
-		$cerrar=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('accion'=>'cerrar','pau'=>$pau,'id_pau'=>$id_pau,'id_tipo_dossier'=>$id_dossier,'obj_pau'=>$obj_pau)));
-		$etiqueta_cerrar= "<br><br><span class=link onclick=fnjs_update_div('#main','$cerrar')>cerrar dossier</span>";
-	} // fin del if permiso
-	$id_dossier=strtok("y");
-} //fin del while
+		
+		// para el botón editar en la presentación general...
+		if ($permiso==3) { $edit=1; }
+		// Para presentaciones particulares
+		//$pres_2="../model/datos_".$id_dossier.".php";
+		//$pres="./sql_".$id_dossier.".php";
+		$pres_2="../../$app/model/datos_".$id_dossier.".php";
+		$pres="../../$app/controller/sql_".$id_dossier.".php";
+
+		$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier,'permiso'=>$permiso)));
+
+		if (realpath($pres_2)){ //como file_exists
+			include ("datos_sql.php");
+		} elseif (realpath($pres)){
+			include ($pres);
+		} 
+		
+		// Poner o no el botón de inserta. En algunos casos ya está en la presentación particular.
+		// miro los permisos:
+		if ($permiso==3 && !file_exists($pres_2)){ 
+			switch($id_dossier) {
+				case 1004: //traslados de ctr o dl
+					$insert=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/traslado_form.php?'.http_build_query(array('cabecera'=>'no','id_pau'=>$id_pau,'id_dossier'=>$id_dossier,'obj_pau'=>$obj_pau,'go_to'=>$go_to)));
+					echo "<p><span class=link onclick=fnjs_update_div('#main','$insert')>"._("insertar")."</span></p>";
+					break;
+				case 1303:
+				case 3103: //matriculas de un ca
+					break; //nada, ya esta en el sql_1303
+				case 1201:
+				case 2102: //cargos de un ctr
+					break; //nada, ya esta en el sql_2102
+				case 3101: //asistentes a un ca
+					break; //nada, ya esta en el sql_3101
+			}
+			//para el botón cerrar dossier:
+			$cerrar=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('accion'=>'cerrar','pau'=>$pau,'id_pau'=>$id_pau,'id_tipo_dossier'=>$id_dossier,'obj_pau'=>$obj_pau)));
+			$etiqueta_cerrar= "<br><br><span class=link onclick=fnjs_update_div('#main','$cerrar')>cerrar dossier</span>";
+		} // fin del if permiso
+		$id_dossier=strtok("y");
+	} //fin del while
 } // fin del if que.
 //echo $etiqueta_cerrar;
 echo "</div>";
-?>

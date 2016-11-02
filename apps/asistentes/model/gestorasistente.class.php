@@ -46,12 +46,13 @@ class GestorAsistente Extends core\ClaseGestor {
 	 * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
 	 * @return array Una col·lecció d'objectes de tipus Asistente
 	 */
-	function getActividadesDeAsistente($aWhereNom,$aWhere=array(),$aOperators=array()) {
+	function getActividadesDeAsistente($aWhereNom,$aWhere=array(),$aOperators=array(),$reverse=FALSE) {
 		// todas las actividades de la persona
-		$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');
-		$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
-		$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
+		//Importa el orden, se queda con la última.
 		$a_Clases[] = array('clase'=>'AsistenteEx','get'=>'getAsistentesEx');
+		$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
+		$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
+		$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');
 
 		$namespace = __NAMESPACE__;
 		$cAsistencias = $this->getConjunt($a_Clases,$namespace,$aWhereNom, array());
@@ -72,7 +73,11 @@ class GestorAsistente Extends core\ClaseGestor {
 				$cActividadesOk[$f_ini_iso] = $oAsistente;
 			}
 		}
-		ksort($cActividadesOk);
+		if ($reverse === true) {
+			krsort($cActividadesOk);
+		} else {
+			ksort($cActividadesOk);
+		}
 		return $cActividadesOk;
 	}
 

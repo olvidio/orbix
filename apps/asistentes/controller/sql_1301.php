@@ -31,9 +31,9 @@ $aWhere = array();
 $aOperator = array();
 $aWhere['_ordre'] = 'f_ini';
 
-if(empty($_POST['status'])) { $_POST['status']=0; }
-switch ($_POST['status']) {
-	case "7" :
+if(empty($_POST['periodo'])) { $_POST['periodo']=1; }
+switch ($_POST['periodo']) {
+	case 2 :
 		$chk_1="";
 		$chk_2="checked";
 		$chk_3="";
@@ -41,13 +41,13 @@ switch ($_POST['status']) {
 		$aWhere['f_ini'] =  "'$inicurs_ca','$fincurs_ca'";
 		$aOperator['f_ini'] = 'BETWEEN';
 		break;
-	case 10:
+	case 3:
 		$chk_1="";
 		$chk_2="";
 		$chk_3="checked";
 		//$condicion="";
 		break;
-	case 2:
+	case 1:
 	default:
 		$chk_1="checked";
 		$chk_2="";
@@ -73,7 +73,7 @@ $a_cabeceras=array( array('name'=>_("fechas"),'width'=>150),array('name'=>_("nom
 $a_valores=array();
 
 $i=0;
-$cActividadesAsistente = $gesAsistente->getActividadesDeAsistente(array('id_nom'=>$id_pau),$aWhere,$aOperator);
+$cActividadesAsistente = $gesAsistente->getActividadesDeAsistente(array('id_nom'=>$id_pau),$aWhere,$aOperator,TRUE);
 foreach ($cActividadesAsistente as $oActividadAsistente) {
 	$i++;
 	$id_activ=$oActividadAsistente->getId_activ();
@@ -122,8 +122,8 @@ foreach ($cActividadesAsistente as $oActividadAsistente) {
 }
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('status');
-$oHash->setCamposNo('mod!sel');
+$oHash->setcamposForm('periodo');
+$oHash->setCamposNo('mod!sel!scroll_id');
 $a_camposHidden = array(
 		'pau' => $pau,
 		'id_pau' => $id_pau,
@@ -169,9 +169,9 @@ fnjs_borrar=function(formulario){
 <input type='hidden' id='mod' name='mod' value=''>
 
 <table><tr><td>
-<input type='Radio' id='status' name='status' value=2 <?= $chk_1 ?> onclick=fnjs_actuales(this.form)><?= ucfirst(_("actuales")) ?>
-<input type='Radio' id='status' name='status' value=7 <?= $chk_2 ?> onclick=fnjs_actuales(this.form)><?= ucfirst(_("todas las de este curso")) ?>
-<input type='Radio' id='status' name='status' value=10 <?= $chk_3 ?> onclick=fnjs_actuales(this.form)><?= ucfirst(_("todos los cursos")) ?>
+<input type='Radio' id='periodo' name='periodo' value=1 <?= $chk_1 ?> onclick=fnjs_actuales(this.form)><?= ucfirst(_("actuales")) ?>
+<input type='Radio' id='periodo' name='periodo' value=2 <?= $chk_2 ?> onclick=fnjs_actuales(this.form)><?= ucfirst(_("todas las de este curso")) ?>
+<input type='Radio' id='periodo' name='periodo' value=3 <?= $chk_3 ?> onclick=fnjs_actuales(this.form)><?= ucfirst(_("todos los cursos")) ?>
 </td></tr></table><br>
 
 <?php

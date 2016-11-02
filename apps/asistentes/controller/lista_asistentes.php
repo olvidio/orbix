@@ -42,6 +42,8 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 		$nom_activ = $oActividad->getNom_activ();
 	}
 	$oPosicion->addParametro('id_sel',$id_sel);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id);
 }
 
 $queSel = empty($_POST['queSel'])? '' : $_POST['queSel'];
