@@ -13,7 +13,9 @@ use personas\model as personas;
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-
+	
+$msg_err = '';
+	
 $id_nom = empty($_POST['id_pau'])? '' : $_POST['id_pau'];
 if (!empty($_POST['sel'])) { //vengo de un checkbox
 	if ($_POST['pau']=="p") { 
@@ -21,7 +23,6 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 		$id_asignatura=strtok("#"); 
 	}
 }
-
 
 switch($_POST['mod']) {
 	case 'eliminar': //------------ BORRAR --------
@@ -33,7 +34,7 @@ switch($_POST['mod']) {
 				$oPersonaNota->setId_nivel($id_nivel);	
 				$oPersonaNota->DBCarregar(); //perque agafi els valors que ja té.
 				if ($oPersonaNota->DBEliminar() === false) {
-					echo _("Hay un error, no se ha borrado.");
+					$msg_err = _("Hay un error, no se ha borrado.");
 				}
 			}
 		}
@@ -80,7 +81,7 @@ switch($_POST['mod']) {
 		if (!empty($_POST['nota_num'])) $oPersonaNota->setNota_num($_POST['nota_num']);
 		if (!empty($_POST['nota_max'])) $oPersonaNota->setNota_max($_POST['nota_max']);
 		if ($oPersonaNota->DBGuardar() === false) {
-			echo _("Hay un error, no se ha guardado.");
+			$msg_err = _("Hay un error, no se ha guardado.");
 		}
 		// si no está abierto, hay que abrir el dossier para esta persona
 		//abrir_dossier('p',$_POST['id_pau'],'1303',$oDB);
@@ -125,24 +126,20 @@ switch($_POST['mod']) {
 		$oPersonaNota->setNota_num($_POST['nota_num']);
 		$oPersonaNota->setNota_max($_POST['nota_max']);
 		if ($oPersonaNota->DBGuardar() === false) {
-			echo _("Hay un error, no se ha guardado.");
+			$msg_err = _("Hay un error, no se ha guardado.");
 		}
 		break;
 }
 
-if (!empty($_POST['go_to_que'])) {
-	switch ($_POST['go_to_que']) {
-		case 1: // no mas notas
-			$oPosicion->setId_div('ir_a');
-			echo $oPosicion->atras();
-			break;
-		case 2: // otra nota
-			empty($_POST['go_to_1'])? $go_to="" : $go_to=$_POST['go_to_1'];
-			echo $oPosicion->ir_a($go_to);
-			break;
+$go_to = empty($_POST['go_to'])? '' : $_POST['go_to'];
+
+if (empty($msg_err)) { 
+	if (!empty($go_to)) {
+		echo $oPosicion->ir_a($go_to);
+	} else {
+		$oPosicion->setId_div('ir_a');
+		echo $oPosicion->atras();
 	}
 } else {
-	$oPosicion->setId_div('ir_a');
-	echo $oPosicion->atras();
-}
-?>
+	echo $msg_err;
+}	

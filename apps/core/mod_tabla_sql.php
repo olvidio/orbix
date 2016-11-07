@@ -133,7 +133,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 
 $oHash1 = new web\Hash();
 $oHash1->setcamposForm('sel');
-$oHash1->setCamposNo('mod!sel');
+$oHash1->setCamposNo('mod!sel!scroll_id');
 $a_camposHidden1 = array(
 		'datos_tabla' => $_POST['datos_tabla'],
 		'datos_buscar' => $_POST['datos_buscar'],

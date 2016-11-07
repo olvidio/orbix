@@ -465,6 +465,21 @@ function fnjs_procesarError() {
 	alert('Error de pagina retornada');
 }
 
+function fnjs_mostrar_atras(id_div,htmlForm) {
+	var id_atras='#'+id_div;
+	
+	if ($(id_atras).length) {
+		$(id_atras).html(htmlForm);
+	} else {
+		html = '<div id="'+id_div+'" style="display: none;">';
+		html += htmlForm;
+		html += '</div>';
+		$(id_atras).prepend(html);
+		
+	}
+	fnjs_ir_a();
+}
+
 function fnjs_ir_a() {
 	var atras='';
 	var url=$('#url').val();
@@ -494,6 +509,10 @@ function fnjs_ir_a() {
 	if ($('#left_slide').length) { $('#left_slide').hide(); } 
 
 	$(bloque).attr('refe',url);
+	if ($('#ir_a').length) $('#ir_a').remove() ;
+	if ($('#ir_atras').length) $('#ir_atras').remove() ;
+	if ($('#ir_atras2').length) $('#ir_atras2').remove() ;
+	if ($('#go_atras').length) $('#go_atras').remove() ;
 	$.ajax({
 			url: url,
 			type: 'post',
@@ -513,26 +532,26 @@ function fnjs_cambiar_link(id_div) {
 	if (base) {
 		var selector=id_div+" a[href]";
 		$(selector).each(function(i) {
-				var aa=this.href;
-		if ("<?= ConfigGlobal::mi_usuario() ?>"=="dani") {
-			//alert ("div: "+id_div+"\n base "+base+"\n selector "+selector+"\naa: "+aa );
-		}
-				// si tiene una ref a name(#):
-				if (aa != undefined && aa.indexOf("#") != -1) {
-					part=aa.split("#");
+			var aa=this.href;
+			if ("<?= ConfigGlobal::mi_usuario() ?>"=="dani") {
+				//alert ("div: "+id_div+"\n base "+base+"\n selector "+selector+"\naa: "+aa );
+			}
+			// si tiene una ref a name(#):
+			if (aa != undefined && aa.indexOf("#") != -1) {
+				part=aa.split("#");
+				this.href="";
+				$(this).attr("onclick","location.hash = '#"+part[1]+"'; return false;");
+			} else {
+				url=fnjs_ref_absoluta(base,aa);
+				var path=aa.replace(/[\?#].*$/,''); // borro desde el '?' o el '#'
+				var extension=path.substr(-4);
+				if (extension==".php" || extension=="html" || extension==".htm" ) { // documento web
 					this.href="";
-					$(this).attr("onclick","location.hash = '#"+part[1]+"'; return false;");
+					$(this).attr("onclick","fnjs_update_div('"+id_div+"','"+url+"'); return false;");
 				} else {
-					url=fnjs_ref_absoluta(base,aa);
-					var path=aa.replace(/[\?#].*$/,''); // borro desde el '?' o el '#'
-					var extension=path.substr(-4);
-					if (extension==".php" || extension=="html" || extension==".htm" ) { // documento web
-						this.href="";
-						$(this).attr("onclick","fnjs_update_div('"+id_div+"','"+url+"'); return false;");
-					} else {
-						this.href=url;
-					}
+					this.href=url;
 				}
+			}
 		});
 	}
 }

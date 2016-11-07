@@ -83,6 +83,28 @@ class Posicion {
 		$html .= '</div>';
 		return $html;
 	}
+	public function js_atras() {
+		// puede ser que no haya donde volver
+		if (empty($_SESSION['position'])) {
+			return '';
+		}
+		$id_div = $this->getId_div();
+		$id_div = empty($id_div)? 'ir_atras' : $id_div;
+		$aPosition = end($_SESSION['position']);
+		$aParam = $aPosition['parametros'];
+		$url = $aPosition['url'];
+		$sparametros = Hash::add_hash($aParam,$url);
+
+		$html = '<form id="go">';
+		$html .= '	url: <input id="url" type="text" value="' . $url .'" size=70><br>';
+		$html .= '	parametros: <input id="parametros" type="text" value="' . $sparametros . '" size=70><br>';
+		$html .= '	bloque: <input id="id_div" type="text" value="' . $aPosition['bloque'] . '" size=70>';
+		$html .= '</form>';
+		
+		//$this->go(2);
+		return "<script>fnjs_mostrar_atras('$id_div','$html');</script>";
+		
+	}
 	public function atras() {
 		// puede ser que no haya donde volver
 		if (empty($_SESSION['position'])) {
@@ -249,6 +271,7 @@ class Posicion {
 	*/
 	public function ir_a($go_to) {
 		if ($go_to=='atras') { return self::atras(); }
+		$this->setId_div('ir_a');
 		$url='';
 		$parametros='';
 		$frame='';
@@ -324,6 +347,16 @@ class Posicion {
 		}
 		$parametros = Hash::add_hash($aParam,$url);
 		//<div id="ir_a" style="display: none;">
+
+		$html = '<form id="go">';
+		$html .= '	url: <input id="url" type="text" value="' . $url .'" size=70><br>';
+		$html .= '	parametros: <input id="parametros" type="text" value="' . $parametros . '" size=70><br>';
+		$html .= '	bloque: <input id="id_div" type="text" value="' . $frame . '" size=70>';
+		$html .= '</form>';
+		//return self::js_atras();
+
+		return "<script>fnjs_mostrar_atras('ir_atras','$html');</script>";
+		/*
 		?>
 		<div id="ir_a">
 			<form id="go">
@@ -333,6 +366,8 @@ class Posicion {
 			</form>
 		</div>
 		<?php
+		 * 
+		 */
 	}
 
 	/**

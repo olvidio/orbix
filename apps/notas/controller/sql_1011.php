@@ -13,7 +13,7 @@ use personas\model as personas;
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-
+	
 // Aviso si le faltan notas por poner
 $gesMatriculas = new actividadestudios\model\gestorMatricula();
 $cMatriculasPendientes = $gesMatriculas->getMatriculasPendientes($id_pau);
@@ -125,7 +125,7 @@ foreach ($cPersonaNotas as $oPersonaNota) {
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('sel!mod');
-$oHash->setcamposNo('mod');
+$oHash->setcamposNo('mod!scroll_id');
 $a_camposHidden = array(
 		'pau' => $pau,
 		'id_pau' => $id_pau,

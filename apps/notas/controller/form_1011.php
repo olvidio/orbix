@@ -224,8 +224,9 @@ foreach ($cOpcionalesGenericas as $oOpcional) {
 }
 $condicion=substr($condicion,0,-4);
 
-$go_to_1="form_1011.php?pau=".$_POST['pau']."&id_pau=".$_POST['id_pau']."&id_asignatura_real=$id_asignatura_real|ficha_personas";
-$go_to = empty($_POST['go_to'])? '' : $_POST['go_to'];
+$go_to_1="apps/dossiers/controller/dossiers_ver.php?id_dossier=1011&pau=".$_POST['pau']."&id_pau=".$_POST['id_pau']."&obj_pau=".$_POST['obj_pau']."&permiso=".$_POST['permiso'];
+
+$go_to = empty($_POST['go_to'])? $go_to_1 : $_POST['go_to'];
 
 $campos_chk = '!preceptor';
 
@@ -237,8 +238,7 @@ $a_camposHidden = array(
 		'mod' => $mod,
 		'pau' => $_POST['pau'],
 		'id_pau' => $_POST['id_pau'],
-		'go_to' => $go_to,
-		'go_to_1' => $go_to_1
+		'go_to' => $go_to
 		);
 
 if (!empty($id_asignatura_real)) { //caso de modificar
@@ -296,7 +296,7 @@ fnjs_actualizar=function(){
 	fnjs_enviar_formulario('#f_1011','#ficha_personas');
 }
 
-fnjs_guardar=function(){
+fnjs_guardar=function(formulario){
 	var err=0;
 	var mod=document.f_1011.mod.value;
 	var acta=document.f_1011.acta.value;
@@ -320,21 +320,33 @@ fnjs_guardar=function(){
 		$('#id_asignatura').val(document.f_1011.id_nivel.value);
 	}
 	
-	var rr=fnjs_comprobar_campos('#f_1011','<?= addslashes($obj) ?>');
+	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
 	//alert ("EEE "+rr);
 	if (rr=='ok' && err!=1) {
-		if (mod=='nuevo') {
-			rta=confirm("¿Quiere guardar otra nota?");
-			if (rta) {
-				$('#go_to_que').val(2);
-			} else {
-				$('#go_to_que').val(1);
-			}
-		} else {
-			$('#go_to_que').val(1);
-		}
-		$('#f_1011').attr('action',"apps/notas/controller/update_1011.php");
-		fnjs_enviar_formulario('#f_1011','#ficha_personas');
+		go=$('#go_to').val();
+		$(formulario).attr('action',"apps/notas/controller/update_1011.php");
+		$(formulario).submit(function() {
+			$.ajax({
+				data: $(this).serialize(),
+				url: $(this).attr('action'),
+				type: 'post',
+				complete: function (rta) {
+					rta_txt=rta.responseText;
+					if (rta_txt.search('id="ir_a"') != -1) {
+						fnjs_mostra_resposta(rta,'#main'); 
+					} else {
+						if (go) { 
+							fnjs_update_div('#main',go);
+						} else {
+							alert ('no se donde ir');
+						}
+					}
+				}
+			});
+			return false;
+		});
+		$(formulario).submit();
+		$(formulario).off();
 	}
 }
 </script>
@@ -423,5 +435,5 @@ echo "</td>";
 echo "<tr><td>"._("detalle")."</td><td><input type=\"text\" id=\"detalle\" name=\"detalle\" value=\"$detalle\" ></td></tr>";
 ?>	
 </tbody></table>
-<br><input type="button" value="<?php echo ucfirst(_("guardar")); ?>" onclick="fnjs_guardar()">
+<br><input type="button" value="<?php echo ucfirst(_("guardar")); ?>" onclick="fnjs_guardar(this.form)">
 </form>

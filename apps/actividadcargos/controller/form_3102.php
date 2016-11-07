@@ -98,7 +98,8 @@ if (!empty($id_nom)) { //caso de modificar
 				break;
 		}
 	} else {
-		$go_to=urlencode(core\core\core\ConfigGlobal::getWeb()."/apps/dossiers/controller/dossiers_ver.php?pau=$pau&id_pau=$id_pau&id_dossier=$id_dossier&permiso=$permiso");
+		//$go_to=urlencode(core\core\core\ConfigGlobal::getWeb()."/apps/dossiers/controller/dossiers_ver.php?pau=$pau&id_pau=$id_pau&id_dossier=$id_dossier&permiso=$permiso");
+		$go_to=urlencode(core\ConfigGlobal::getWeb()."/apps/dossiers/controller/dossiers_ver.php?pau=$pau&id_pau=$id_pau&id_dossier=$id_dossier&permiso=$permiso");
 		$oPosicion = new web\Posicion();
 		echo $oPosicion->ir_a($go_to);
 	}
@@ -115,7 +116,7 @@ $chk = (!empty($puede_agd) && $puede_agd=='t')? 'checked' : '' ;
 
 $oHash = new web\Hash();
 $camposForm = 'id_cargo!observ';
-$camposNo = 'puede_agd';
+$camposNo = 'puede_agd!scroll_id';
 $a_camposHidden = array(
 		'id_activ' => $_POST['id_pau'],
 		'mod'=> $_POST['mod'],
