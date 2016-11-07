@@ -59,7 +59,7 @@ $resultado=sprintf( _("Módulos instalados"));
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('sel!que!id_dossier');
-$oHash->setcamposNo('que!id_dossier');
+$oHash->setcamposNo('scroll_id!que!id_dossier');
 $a_camposHidden = array(
 		'pau' => 'p',
 		);

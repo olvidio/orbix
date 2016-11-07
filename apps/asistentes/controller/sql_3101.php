@@ -215,7 +215,7 @@ foreach ($asistentes as $nom => $val) {
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('');
-$oHash->setCamposNo('sel!mod!que');
+$oHash->setCamposNo('sel!scroll_id!mod!que');
 $a_camposHidden = array(
 		'pau' => $pau,
 		'id_pau' => $id_pau,
@@ -228,7 +228,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 // para el hash de las matrículas. Hago otro formulario, pues cambio demasiadas cosas
 $oHash1 = new web\Hash();
 $oHash1->setcamposForm('');
-$oHash1->setCamposNo('sel!mod');
+$oHash1->setCamposNo('sel!scroll_id!mod');
 $a_camposHidden = array(
 		'que' => 'matriculas',
 		'pau' => 'p',

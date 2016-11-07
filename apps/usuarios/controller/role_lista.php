@@ -76,7 +76,7 @@ foreach ($cRoles as $oRole) {
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('');
-$oHash->setCamposNo('sel!que');
+$oHash->setCamposNo('sel!scroll_id!que');
 
 ?>
 <script>

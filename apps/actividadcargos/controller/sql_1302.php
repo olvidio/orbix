@@ -146,7 +146,7 @@ foreach($cCargosEnActividad as $oActividadCargo) {
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('status');
-$oHash->setCamposNo('sel!mod');
+$oHash->setCamposNo('sel!mod!scroll_id');
 $a_camposHidden = array(
 		'pau' => $pau,
 		'id_pau' => $id_pau,

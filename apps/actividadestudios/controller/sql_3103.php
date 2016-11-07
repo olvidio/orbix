@@ -46,7 +46,7 @@ $a_cabeceras=array(_("asignatura"),_("alumno"));
 	
 $oHash = new web\Hash();
 $oHash->setcamposForm('');
-$oHash->setCamposNo('sel!mod!nuevo');
+$oHash->setCamposNo('sel!scroll_id!mod!nuevo');
 $a_camposHidden = array(
 		'pau' => $pau,
 		'id_pau' => $id_pau,

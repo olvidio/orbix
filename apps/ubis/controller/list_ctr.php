@@ -284,6 +284,7 @@ $oHash->setcamposForm('loc!que_lista');
 
 $oHash1 = new web\Hash();
 $oHash1->setcamposForm('sel');
+$oHash1->setcamposNo('scroll_id');
 $a_camposHidden1 = array(
 		'que_lista'=>$que_lista
 		);

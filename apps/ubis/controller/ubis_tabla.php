@@ -421,6 +421,7 @@ foreach($cUbisTot as $oUbi) {
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('!sel');
+$oHash->setcamposNo('!scroll_id');
 $a_camposHidden = array(
 		'tipo'=>$tipo,
 		'loc'=>$loc,

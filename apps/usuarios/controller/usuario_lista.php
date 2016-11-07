@@ -85,10 +85,12 @@ foreach ($oUsuarioColeccion as $oUsuario) {
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('Qusername');
+$oHash->setcamposNo('scroll_id');
 $oHash->setArraycamposHidden(array('quien'=>'usuario'));
 
 $oHash1 = new web\Hash();
 $oHash1->setcamposForm('sel');
+$oHash1->setcamposNo('scroll_id');
 $oHash1->setArraycamposHidden(array('que'=>'eliminar'));
 ?>
 <script>

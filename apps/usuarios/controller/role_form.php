@@ -93,6 +93,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 
 $oHash1 = new web\Hash();
 $oHash1->setcamposForm('que!sel');
+$oHash1->setcamposNo('scroll_id');
 $a_camposHidden = array(
 		'id_role' => $id_role,
 		);

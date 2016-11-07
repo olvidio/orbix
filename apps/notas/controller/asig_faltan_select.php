@@ -149,7 +149,7 @@ foreach ($aId_nom as $id_nom=>$aAsignaturas) {
 
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('sel');
+$oHash->setcamposForm('sel!scroll_id');
 $a_camposHidden = array(
 		'pau' => 'p',
 		'obj_pau' => $obj_pau,

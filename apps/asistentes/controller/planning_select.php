@@ -203,7 +203,7 @@ foreach ($cPersonas as $oPersona) {
 }
 
 $oHash = new web\Hash();
-$oHash->setcamposNo('sel!modelo!que!id_dossier');
+$oHash->setcamposNo('sel!scroll_id!modelo!que!id_dossier');
 $a_camposHidden = array(
 		'tipo' => $Qtipo,
 		'obj_pau' => $Qobj_pau,

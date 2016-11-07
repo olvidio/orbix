@@ -121,7 +121,7 @@ $oHash->setcamposForm('acta');
 
 $oHash1 = new web\Hash();
 $oHash1->setcamposForm('sel!nuevo');
-$oHash1->setCamposNo('sel!nuevo');
+$oHash1->setCamposNo('sel!scroll_id!nuevo');
 $a_camposHidden1 = array(
 		'go_to' => $go_to
 		);

@@ -81,7 +81,7 @@ foreach ($cActivAsignaturas as $oActividadAsignatura) {
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('');
-$oHash->setCamposNo('sel!mod');
+$oHash->setCamposNo('sel!scroll_id!mod');
 $a_camposHidden = array(
 		'pau' => $pau,
 		'id_pau' => $id_pau,

@@ -265,6 +265,7 @@ if ($miRole < 4) {
 	$oHash1 = new web\Hash();
 	$oHash1->setUrl($url_usuario_ajax);
 	$oHash1->setCamposForm('que!id_usuario'); 
+	$oHash1->setCamposNo('scroll_id'); 
 	$h1 = $oHash1->linkSinVal();
 
 	?>
@@ -534,6 +535,7 @@ if ($miRole < 4) {
 
 			$oHash2 = new web\Hash();
 			$oHash2->setcamposForm('que!sel');
+			$oHash2->setcamposNo('scroll_id');
 			$a_camposHidden = array(
 					'id_usuario' => $id_usuario,
 					'quien' => $quien

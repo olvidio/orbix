@@ -180,7 +180,7 @@ foreach ($cAsistencias as $oAsistente) {
 	
 	$oHash = new web\Hash();
 	$oHash->setcamposForm('est_ok');
-	$oHash->setCamposNo('sel!mod!go_to!go_to2');
+	$oHash->setCamposNo('sel!scroll_id!mod!go_to!go_to2');
 	$a_camposHidden = array(
 			'pau' => $pau,
 			'id_pau' => $id_pau,

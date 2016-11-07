@@ -82,7 +82,7 @@ foreach ($cMatriculasPendientes as $oMatricula) {
 }
 
 $oHash = new web\Hash();
-$oHash->setCamposNo('sel!mod!pau');
+$oHash->setCamposNo('sel!mod!pau!scroll_id');
 $a_camposHidden = array(
 		'id_dossier' => 3005,
 		'permiso' => 3,

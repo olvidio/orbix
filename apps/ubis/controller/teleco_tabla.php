@@ -165,7 +165,7 @@ foreach ($Coleccion as $oFila) {
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('mod!sel');
-$oHash->setcamposNo('mod!sel');
+$oHash->setcamposNo('mod!sel!scroll_id');
 $a_camposHidden = array(
 		'id_ubi'=>$_POST['id_ubi'],
 		'obj_pau'=>$_POST['obj_pau'],
