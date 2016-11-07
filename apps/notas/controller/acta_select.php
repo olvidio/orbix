@@ -65,12 +65,12 @@ if (!empty($Qacta)) {
 	$aOperador['acta'] = '~';
 	$titulo = $Qtitulo;
 } else {
-	$any=date("Y");
-	$inicio_curso="15/9/".($any-1);
-	$fin_curso="14/9/".$any;
-	$txt_curso=($any-1)."/".$any;
+	$mes=date('m');
+	if ($mes>9) { $any=date('Y')+1; } else { $any=date("Y"); }
+	$inicurs_ca=core\curso_est("inicio",$any);
+	$fincurs_ca=core\curso_est("fin",$any);
 	
-	$aWhere['f_acta'] = "'$inicio_curso','$fin_curso'";
+	$aWhere['f_acta'] = "'$inicurs_ca','$fincurs_ca'";
 	$aOperador['f_acta'] = 'BETWEEN';
 	
 	$titulo=ucfirst(sprintf(_("lista de actas del curso %s"),$txt_curso));
