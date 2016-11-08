@@ -15,8 +15,13 @@ use profesores\model as profesores;
 
 $obj = 'notas\\model\\PersonaNota';
 
+$pau = empty($_POST['pau'])? '' : $_POST['pau'];
+$id_pau = empty($_POST['id_pau'])? '' : $_POST['id_pau'];
+$obj_pau = empty($_POST['obj_pau'])? '' : $_POST['obj_pau'];
+$permiso = empty($_POST['permiso'])? '' : $_POST['permiso'];
+		
 if (!empty($_POST['sel'])) { //vengo de un checkbox
-	if ($_POST['pau']=="p") { 
+	if ($pau=="p") { 
 		$id_nivel_real=strtok($_POST['sel'][0],"#"); 
 		$id_asignatura_real=strtok("#");
 	}
@@ -57,7 +62,7 @@ if (!empty($id_asignatura_real)) { //caso de modificar
 	$mod="editar";
 	$id_asignatura=$id_asignatura_real;
 	$_POST['opcional']='n';
-	$aWhere['id_nom'] = $_POST['id_pau'];
+	$aWhere['id_nom'] = $id_pau;
 	$aWhere['id_asignatura'] = $id_asignatura_real;
 	$GesPersonaNotas = new notas\GestorPersonaNota();
 	$cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhere);
@@ -115,7 +120,7 @@ if (!empty($id_asignatura_real)) { //caso de modificar
 	$aOperador=array();
 	$aWhere['id_situacion']=$cond;
 	$aOperador['id_situacion']='~';
-	$aWhere['id_nom']=$_POST['id_pau'];
+	$aWhere['id_nom']=$id_pau;
 	$aWhere['id_nivel']=3000;
 	$aOperador['id_nivel']='<';
 	$aWhere['_ordre']='id_nivel';
@@ -224,7 +229,8 @@ foreach ($cOpcionalesGenericas as $oOpcional) {
 }
 $condicion=substr($condicion,0,-4);
 
-$go_to_1="apps/dossiers/controller/dossiers_ver.php?id_dossier=1011&pau=".$_POST['pau']."&id_pau=".$_POST['id_pau']."&obj_pau=".$_POST['obj_pau']."&permiso=".$_POST['permiso'];
+$go_to_1 = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>1011,'permiso'=>$permiso)));
+//$go_to_1="apps/dossiers/controller/dossiers_ver.php?id_dossier=1011&pau=$pau&id_pau=$id_pau&obj_pau=$obj_pau&permiso=$permiso";
 
 $go_to = empty($_POST['go_to'])? $go_to_1 : $_POST['go_to'];
 
@@ -236,8 +242,10 @@ $camposNo = 'go_to_que!id_preceptor!id_activ'.$campos_chk;
 $a_camposHidden = array(
 		'campos_chk'=>$campos_chk,
 		'mod' => $mod,
-		'pau' => $_POST['pau'],
-		'id_pau' => $_POST['id_pau'],
+		'pau' => $pau,
+		'id_pau' => $id_pau,
+		'obj_pau' => $obj_pau,
+		'permiso' => $permiso,
 		'go_to' => $go_to
 		);
 

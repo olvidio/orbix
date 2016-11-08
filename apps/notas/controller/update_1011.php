@@ -38,7 +38,6 @@ switch($_POST['mod']) {
 				}
 			}
 		}
-		//$go_to="dossiers_ver.php?pau=p&id_pau=".$_POST['id_pau']."&id_dossier=1011";
 		break;
 	case 'nuevo': //------------ NUEVO --------
 		if ($_POST['id_asignatura']=='1' && $_POST['opcional'] == 'n') {
