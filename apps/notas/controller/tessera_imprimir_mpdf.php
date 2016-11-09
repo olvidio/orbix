@@ -181,10 +181,10 @@ $aAprobadas=array();
 foreach ($cNotas as $oPersonaNota) {
 	extract($oPersonaNota->getTot());
 	$oAsig = new asignaturas\Asignatura($id_asignatura);
-	if ($oAsig->getStatus() != 't') continue;
 	if ($id_asignatura > 3000) {
 		$id_nivel_asig = $id_nivel;
 	} else {
+		if ($oAsig->getStatus() != 't') continue;
 		$id_nivel_asig = $oAsig->getId_nivel();
 	}
 	$n=$id_nivel_asig;
