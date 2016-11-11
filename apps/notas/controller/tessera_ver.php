@@ -237,7 +237,6 @@ while ( $a < count($cAsignaturas)) {
 		$enddate = new DateTime("2015-01-20");
 
 		if($oInicio <= $oFActa && $oFActa <= $oFin) {
-			echo "Yes";
 			$numasig_year ++;
 			$numcred_year += $oAsignatura->getCreditos(); 
 		}
