@@ -75,9 +75,28 @@ fnjs_borrar=function(formulario){
 	if (rta==1) {
 		mensaje='<?php echo _("¿Esta Seguro que desea quitar esta matricula?");?>'; 
 		if (confirm(mensaje) ) {
-	  		$('#mod').val("eliminar");
+			$('#mod').val("eliminar");
+			go=$('#go_to').val();
 			$(formulario).attr('action',"apps/actividadestudios/controller/update_3103.php");
-	  		fnjs_enviar_formulario(formulario);
+			$(formulario).submit(function() {
+				$.ajax({
+					data: $(this).serialize(),
+					url: $(this).attr('action'),
+					type: 'post',
+					complete: function (rta) {
+						rta_txt = rta.responseText;
+						if (rta_txt.search('id="ir_a"') != -1) {
+							fnjs_mostra_resposta(rta,'#main'); 
+						} else {
+							alert (rta_txt);
+							if (go) fnjs_update_div('#main',go); 
+						}
+					}
+				});
+				return false;
+			});
+			$(formulario).submit();
+			$(formulario).off();
 		}
   	}
 }

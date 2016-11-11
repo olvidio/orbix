@@ -35,7 +35,7 @@ class Persona {
 	
 	public static function NewPersona($id_nom) { 
 		$gesPersonaDl = new GestorPersonaDl();
-		$cPersonasDl = $gesPersonaDl->getPersonasDl(array('id_nom'=>$id_nom));
+		$cPersonasDl = $gesPersonaDl->getPersonasDl(array('id_nom'=>$id_nom,'situacion'=>'A'));
 		if (count($cPersonasDl) > 0) {
 			$oPersona = $cPersonasDl[0];
 		} else {

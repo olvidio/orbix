@@ -355,8 +355,8 @@ class Posicion {
 		$html .= '</form>';
 		//return self::js_atras();
 
-		return "<script>fnjs_mostrar_atras('ir_atras','$html');</script>";
-		/*
+		//return "<script>fnjs_mostrar_atras('ir_atras','$html');</script>";
+		
 		?>
 		<div id="ir_a">
 			<form id="go">
@@ -366,8 +366,6 @@ class Posicion {
 			</form>
 		</div>
 		<?php
-		 * 
-		 */
 	}
 
 	/**

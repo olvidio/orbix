@@ -14,8 +14,8 @@ use dossiers\model as dossiers;
 
 if (!empty($_POST['sel'])) { //vengo de un checkbox
 	if ($_POST['pau']=="a") { 
-			$id_asignatura=strtok($_POST['sel'][0],"#"); 
-			$id_activ=strtok("#");
+			$id_activ=strtok($_POST['sel'][0],"#"); 
+			$id_asignatura=strtok("#");
 	}
 } else {
 	empty($_POST['id_activ'])? $id_activ="" : $id_activ=$_POST['id_activ'];

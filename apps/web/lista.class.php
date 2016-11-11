@@ -217,6 +217,26 @@ class Lista {
 	/**
 	 * Muestra una tabla ordenable, con  botones en la cabecera y check box en cada lina.
 	 *
+	 * $a_cabeceras:  array( 
+   	 *		[col] = array('name'=>_("inicio"),'width'=>40,'class'=>'fecha', 'formatter'=>'clickFormatter')
+	 *				'name'=> texto de la cabecera de la columna
+	 * 				'width'=> ancho de la columna
+	 * 				'class'=> se añade al atributo class
+	 *				'formatter'=> ['clickFormatter'|'clickFormatter2'] post-formateo a aplicar en la columna. Para el caso de 'ira', 'script' y  'ira2', 'script2' respectivamente 
+	 * 
+	 * $a_valores:  array(
+	 * 	[fila]['clase'] = valor => añade añade 'valor' en el atributo class de la fila
+	 * 	[fila]['sel'] = valor => crea la colummna sel con un checkbox con id='#'.addslashes(valor)
+	 * 	[fila]['select'] = array(valor)	=> marca como checked los checkbox de la columna 'sel' con id = valor
+	 * 	[fila]['scroll_id'] = valor	=> ejecuta: " grid_$id_tabla.scrollRowToTop($scroll_id);" Que desplaza las filas hasta la linea correspondiente.
+	 * 	[fila][col] = txt
+	 * 	[fila][col] = array( 'ira'=>$pagina, 'valor'=>$txt) 
+	 * 				=> crea un 'link' que ejecuta "fnjs_update_div('#main','pagina'):
+	 * 			  	return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"') \\\" >\"+value+\"</span>\";
+	 * 	[fila][col] = array( 'script'=>$script, 'valor'=>$txt);
+	 * 				=> crea un 'link' que ejecuta  al funcion de $cript:
+					return \"<span class=link onclick='this.closest(\\\".slick-cell\\\").click();\"+ira+\";' >\"+value+\"</span>\";
+	 * 	[fila][col] = array( 'span'=>3, 'valor'=> $txt) => de momento no hace nada. Sirve para la funcion mostrar_tabla_html
 	 *@return Html Grid
 	 *
 	 */
@@ -362,7 +382,11 @@ class Lista {
 			$icol = 0;
 			$aFilas[$num_fila]["id"] = $id_fila;
 			foreach ($fila as $col=>$valor) {
-				if ($col=="clase") { continue; }
+				if ($col=="clase") {
+					$id=$valor;
+					$aFilas[$num_fila]["clase"] = addslashes($id);
+					continue;
+				}
 				if ($col=="order") { continue; }
 				if ($col=="sel") {
 					if (empty($b)) continue; // si no hay botones (por permisos...) no tiene sentido el checkbox
@@ -382,6 +406,10 @@ class Lista {
 				} else {
 					if(is_array($valor)) {
 						$val=$valor['valor'];
+						if ( !empty($valor['clase']) ) {
+							$ira=$valor['clase'];
+							$aFilas[$num_fila]['clase'] = $ira;
+						}
 						if ( !empty($valor['ira']) ) {
 							$ira=$valor['ira'];
 							$aFilas[$num_fila]['ira'] = $ira;
@@ -489,6 +517,22 @@ class Lista {
 			var searchString = \"\";
 			var columnFilters_$id_tabla = $sColumns;
 
+			function metadata(old_metadata_provider) {
+			  return function(row) {
+				var item = this.getItem(row);
+				var ret  = (old_metadata_provider(row) || {});
+				//console.log(item);
+				if (item) {
+				  ret.cssClasses = (ret.cssClasses || '');
+				  if (item.clase) {
+					ret.cssClasses += item.clase;
+				  }
+				}
+
+				return ret;
+			  }
+			}
+
 			function add_scroll_id(row) {
 				$(\"#scroll_id\").val(row);	
 				//console.log(row);
@@ -505,7 +549,6 @@ class Lista {
 			}
 			function clickFormatter2(row, cell, value, columnDef, dataContext) {
 				if (ira=dataContext['ira2']) {
-					//return \"<span class=link onclick=fnjs_update_div('#main',\\\"\"+ira+\"\\\") >\"+value+\"</span>\";
 					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"') \\\" >\"+value+\"</span>\";
 				}
 				if (ira=dataContext['script2']) {
@@ -632,6 +675,8 @@ class Lista {
 				  .appendTo(grid_$id_tabla.getTopPanel())
 				  .show();
 				  
+				dataView_$id_tabla.getItemMetadata = metadata(dataView_$id_tabla.getItemMetadata);
+
 				grid_$id_tabla.onClick.subscribe(function (e,args) {
 					add_scroll_id(args.row);
 					e.stopPropagation();
