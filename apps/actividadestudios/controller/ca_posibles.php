@@ -30,6 +30,14 @@ use ubis\model as ubis;
 
 //include_once(core\ConfigGlobal::$dir_estilos.'/cuadros_ca.css.php'); 
 
+$id_ctr_agd = empty($_POST['id_ctr_agd'])? '' : $_POST['id_ctr_agd'];
+$id_ctr_n = empty($_POST['id_ctr_n'])? '' : $_POST['id_ctr_n'];
+
+if (empty($id_ctr_agd) && empty($id_ctr_n)) { 
+	$msg_txt = _("Debe seleccionar un centro o grupo de centros");
+	exit($msg_txt);
+}
+
 /**
  * Array con las asignaturas=>creditos, para no tener que consultar cada vez a la base de datos.
  *
@@ -118,13 +126,14 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 } else {
 	empty($_POST['na'])? $na="" : $na=$_POST['na'];
 	$any=empty($_POST['year'])? date('Y')+1 : $_POST['year'];
-	if (empty($_POST['periodo']) || $_POST['periodo'] == 'otro') {
+	if ($_POST['periodo'] == 'otro') {
 		$inicio = empty($_POST['inicio'])? $_POST['empiezamin'] : $_POST['inicio'];
 		$fin = empty($_POST['fin'])? $_POST['empiezamax'] : $_POST['fin'];
 	} else {
+		$periodo = empty($_POST['periodo'])? 'curso_ca' : $_POST['periodo'];
 		$oPeriodo = new web\Periodo();
 		$oPeriodo->setAny($any);
-		$oPeriodo->setPeriodo($_POST['periodo']);
+		$oPeriodo->setPeriodo($periodo);
 		$inicio = $oPeriodo->getF_ini();
 		$fin = $oPeriodo->getF_fin();
 	}
@@ -148,6 +157,7 @@ if ($_POST['todos']!=1) {
 $aWhere['status'] = 2;
 $aWhere['_ordre'] = 'nivel_stgr,f_ini';
 
+$cActividades = array();
 switch ($na) {
 	case "agd":
 	case "a":
@@ -191,7 +201,8 @@ $alt=300;
 
 // -------------------------- lista de ca con sus asignaturas --------------------------
 //Si accedo via formulario, debo poner los ca escogidos; y sino los de las dlb, dlz, dlva
-$sql_where="";
+$sql_where = '';
+$msg_txt = '';
 if (!empty($_POST['idca'])){
        
 } else { //no vengo del formulario: es para todos los ca de la zona.
@@ -210,7 +221,7 @@ if (!empty($_POST['idca'])){
 		$nom_activ=trim ($nom_activ);
 		
 		if (empty($nivel_stgr)) { 
-			printf(_("El ca: %s no tiene puesto el nivel de stgr.")."<br>",$nom_activ);
+			$msg_txt .= sprintf(_("El ca: %s no tiene puesto el nivel de stgr.")."<br>",$nom_activ);
 			$nivel_stgr=generar_nivel_stgr($id_tipo_activ); 
 		}
 		if ($nivel_stgr==4 || $nivel_stgr==9 || $nivel_stgr==8 || $nivel_stgr==7) {  // repaso, mayores 30, menores 30, pa-ad
@@ -227,7 +238,7 @@ if (!empty($_POST['idca'])){
 				$asignaturas[$id_asignatura]=$aAsigCreditos[$id_asignatura];
 			}
 			if ($m==0 && $nivel_stgr) {
-				printf(_("El ca: %s no tiene puesta ninguna asignatura.")."<br>",$nom_activ);
+				$msg_txt .= sprintf(_("El ca: %s no tiene puesta ninguna asignatura.")."<br>",$nom_activ);
 				continue;
 			}
 		}
@@ -236,7 +247,7 @@ if (!empty($_POST['idca'])){
 						'nivel_stgr'=>$nivel_stgr,
 						'asignaturas'=>$asignaturas
 							);
-		/* Ya ha hecho posible con css
+		/* Ya se ha hecho posible con css
 		// codifico el nombre_activ a iso porque no me lo dibuja bien:
 		$nom_activ_iso=iconv("UTF-8","ISO-8859-1",$nom_activ);
 		// grabo un dibujo temporal con el nombre de la actividad en vertical
@@ -395,7 +406,7 @@ foreach ($cOrdPersonas as $ctr=>$ctrPersonas) {
 
 // -----------------------------  cabecera ---------------------------------
 $form_action=core\ConfigGlobal::getWeb().'/apps/personas/controller/personas_select.php';
-
+if (!empty($msg_txt)) { echo "<div class='no_print'>$msg_txt</div>"; } 
 // -------------------------- si es una persona, saco una lista. -----------------------
 if (!empty($_POST['sel']) && $alum==1) { //vengo de un 'checkbox' => sólo una persona
 	//$pagina=core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?pau=p&que=activ&id_pau='.$id_nom.'&tabla_pau='.$tabla_pau.'&id_dossier=1301y1302';
@@ -413,7 +424,7 @@ if (!empty($_POST['sel']) && $alum==1) { //vengo de un 'checkbox' => sólo una p
 	//las filas
 		echo $oPosicion->atras();
 		echo "<table>";
-		echo "<th class=nom colspan=2>posibles ca de $nom ($ctr)</th><th>stgr: $stgr</th>";
+		echo "<th class='ca_posibles_nom' colspan=2>posibles ca de $nom ($ctr)</th><th>stgr: $stgr</th>";
 		foreach($actividades as $a3) {
 				   $nom_activ=$a3["nom_activ"];
 				   $creditos=$a3["creditos"];
@@ -462,7 +473,7 @@ if (!empty($_POST['sel']) && $alum==1) { //vengo de un 'checkbox' => sólo una p
 					case 1:
 						$est=_("bienio");
 						$est_2="";
-						$titulo.="<th class='calendario' colspan=$num_cols style='border-color: black; border-style: solid; border-width: thin;'>$est</th>";
+						$titulo.="<th class='ca_posibles' colspan=$num_cols style='border-color: black; border-style: solid; border-width: thin;'>$est</th>";
 						break;
 					case 2:
 						$est=_("cuadrienio");
@@ -475,24 +486,24 @@ if (!empty($_POST['sel']) && $alum==1) { //vengo de un 'checkbox' => sólo una p
 						//if ($na=="n") $est_2=_("años II-IV");
 						$est_2=_("años II-IV");
 						$cols_c=$cols2+$num_cols;
-						$titulo.="<th class='calendario' colspan=$cols_c style='border-color: black; border-style: solid; border-width: thin;'>$est</th>";
+						$titulo.="<th class='ca_posibles' colspan=$cols_c style='border-color: black; border-style: solid; border-width: thin;'>$est</th>";
 						break;
 					case 4: 
 						$est=_("repaso");
 						$est_2="";
-						$titulo.="<th class='calendario' colspan=$num_cols style='border-color: black; border-style: solid; border-width: thin;'>$est</th>";
+						$titulo.="<th class='ca_posibles' colspan=$num_cols style='border-color: black; border-style: solid; border-width: thin;'>$est</th>";
 						break;
 					case 5: 
 						$est=_("ce");
 						$est_2="";
-						$titulo.="<th class='calendario' colspan=$num_cols style='border-color: black; border-style: solid; border-width: thin;'>$est</th>";
+						$titulo.="<th class='ca_posibles' colspan=$num_cols style='border-color: black; border-style: solid; border-width: thin;'>$est</th>";
 						break;
 					default: 
 						$est=_("otros");
-						$titulo.="<th class='calendario' colspan=$num_cols style='border-color: black; border-style: solid; border-width: thin;'>$est</th>";
+						$titulo.="<th class='ca_posibles' colspan=$num_cols style='border-color: black; border-style: solid; border-width: thin;'>$est</th>";
 						break;
 				}
-				$sub_titulo.="<th class='calendario' colspan=$num_cols>$est_2</th>";
+				$sub_titulo.="<th class='ca_posibles' colspan=$num_cols>$est_2</th>";
 			}
 			$num_cols=0;
 			$nivel_stgr_old=$nivel_stgr;
@@ -500,12 +511,12 @@ if (!empty($_POST['sel']) && $alum==1) { //vengo de un 'checkbox' => sólo una p
 		$num_cols++;
 		switch ($_POST['texto']) {
 			case "text":
-				$cabecera .= "<th class='calendario' >".ucfirst($nom_activ)."</th>";
+				$cabecera .= "<th class='ca_posibles' >".ucfirst($nom_activ)."</th>";
 				break;
 			case "image":
-	   			//$cabecera .= "<th><img src='".core\ConfigGlobal::getWeb()."/log/tmp/$id_activ' border=0 alt='".ucfirst($nom_activ)."'></th>";
 				$height = $max_len_activ * 7;
-	   			$cabecera .= "<th class='vertical2 calendario' height=$height ><div class='vertical'>".ucfirst($nom_activ)."</div></th>";
+	   			//$cabecera .= "<th class='vertical ca_posibles' height=$height >".ucfirst($nom_activ)."</th>";
+	   			$cabecera .= "<th class='centrado' height=$height ><span class='vertical'>".ucfirst($nom_activ)."</span></th>";
 				break;
 		}
 	}
@@ -515,7 +526,7 @@ if (!empty($_POST['sel']) && $alum==1) { //vengo de un 'checkbox' => sólo una p
 	switch ($nivel_stgr_old) {
 		case 1:
 			$est=_("bienio");
-			$titulo.="<th class='calendario' colspan=$num_cols>$est</th>";
+			$titulo.="<th class='ca_posibles' colspan=$num_cols>$est</th>";
 			break;
 		case 2:
 			$est=_("cuadrienio");
@@ -528,23 +539,23 @@ if (!empty($_POST['sel']) && $alum==1) { //vengo de un 'checkbox' => sólo una p
 			//if ($na=="n") $est_2=_("años II-IV");
 			$est_2=_("años II-IV");
 			$cols_c=$cols2+$num_cols;
-			$titulo.="<th class='calendario' colspan=$cols_c style='border-color: black; border-style: solid; border-width: thin;'>$est</th>";
+			$titulo.="<th class='ca_posibles' colspan=$cols_c style='border-color: black; border-style: solid; border-width: thin;'>$est</th>";
 			break;
 		case 4: 
 			$est=_("repaso");
-			$titulo.="<th class='calendario' colspan=$num_cols style='border-color: black; border-style: solid; border-width: thin;'>$est</th>";
+			$titulo.="<th class='ca_posibles' colspan=$num_cols style='border-color: black; border-style: solid; border-width: thin;'>$est</th>";
 			break;
 		case 5: 
 			$est=_("ce");
-			$titulo.="<th class='calendario' colspan=$num_cols style='border-color: black; border-style: solid; border-width: thin;'>$est</th>";
+			$titulo.="<th class='ca_posibles' colspan=$num_cols style='border-color: black; border-style: solid; border-width: thin;'>$est</th>";
 			break;
 		default: 
 			$est=_("otros");
-			$titulo.="<th class='calendario' colspan=$num_cols style='border-color: black; border-style: solid; border-width: thin;'>$est</th>";
+			$titulo.="<th class='ca_posibles' colspan=$num_cols style='border-color: black; border-style: solid; border-width: thin;'>$est</th>";
 			break;
 	}
 	$colgroups.="<colgroup span=$num_cols width=$gruix></colgruoup>";
-	$sub_titulo.="<th class='calendario' colspan=$num_cols>$est_2</th>";
+	$sub_titulo.="<th class='ca_posibles' colspan=$num_cols>$est_2</th>";
 	// fin del último -----------------------
 	$cabecera_tabla= "$colgroups<tbody>
 		<tr>
@@ -567,15 +578,15 @@ if (!empty($_POST['sel']) && $alum==1) { //vengo de un 'checkbox' => sólo una p
 			$ctr_old=$ctr;
 			if ($f!=1) { echo "</table><br>"; }
 	   		echo "<div class='A4'><table><tr><th align='LEFT'>$ctr</th><th align='RIGHT'>".$_POST['ref']."</th></tr></table>
-					<table rules='groups' CELLSPACING=0>
+					<table class='ca_posibles' rules='groups' CELLSPACING=0>
 					";
 			echo $cabecera_tabla;
 		}
 		//las filas
-		echo "<tr><td class=nom>$nom</td>";
+		echo "<tr><td class='ca_posibles_nom'>$nom</td>";
 		foreach($actividades as $a3) {
 				   $creditos=$a3["creditos"];
-				   echo "<td>$creditos</td>";
+				   echo "<td class='ca_posibles'>$creditos</td>";
 				}
 		echo "</tr>";
 	}
