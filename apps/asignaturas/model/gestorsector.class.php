@@ -35,6 +35,30 @@ class GestorSector Extends core\ClaseGestor {
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
 	/**
+	 * retorna un array
+	 * Els posibles sectors per departament.
+	 *
+	 * @return array
+	 */
+	function getArraySectores() {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$sQuery="SELECT id_sector,id_departamento FROM $nom_tabla ORDER BY id_departamento";
+		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+			$sClauError = 'GestorRole.lista';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		$aOpciones=array();
+		foreach ($oDbl->query($sQuery) as $aClave) {
+			$id_sector=$aClave[0];
+			$id_departamento=$aClave[1];
+			$a_1 = isset($aOpciones[$id_departamento])?$aOpciones[$id_departamento] : array();
+			$aOpciones[$id_departamento]= array_merge($a_1, array($id_sector));
+		}
+		return $aOpciones;
+	}
+	/**
 	 * retorna un objecte del tipus Desplegable
 	 * Els posibles sectors.
 	 *
