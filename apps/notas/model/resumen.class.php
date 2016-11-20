@@ -130,8 +130,7 @@ class Resumen Extends core\ClasePropiedades {
 	}
 	public function getAny() {
 		if (empty($this->iany)) {
-			//$this->iany = date("Y");
-			$this->iany = 2012;
+			$this->iany = date("Y");
 		}
 		return $this->iany;
 	}
@@ -858,19 +857,38 @@ class Resumen Extends core\ClasePropiedades {
 
 	// -------------------- Profesores ------------------------------------------
 
+	/*
+	 * Posibles Profesores
+	 * posibles profesores (n y agd)
+	 * posibles profesores asociados (añado s y sss+)
+	 */	
 	public function nuevaTablaProfe() {
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 		$personas = $this->getNomPersonas();
 		
-		// posibles profesores (n y agd):
-		// posibles profesores asociados (añado s y sss+):
 		// Finalmente no distingo porque los cojo todos de la tabla padre (personas_dl)
-		$sqlCreate="CREATE TEMP TABLE $tabla AS
-		   				SELECT id_nom FROM $personas WHERE situacion='A' ORDER BY id_nom";
-	
+		$sqlDelete="DROP TABLE $tabla";
+		$oDbl->query($sqlDelete);
+		$sqlCreate="CREATE TABLE $tabla AS
+						SELECT DISTINCT  p.id_nom,p.nom,p.apellido1,p.apellido2
+		   				FROM $personas p JOIN d_profesor_stgr d USING(id_nom)
+						WHERE situacion='A' ORDER BY id_nom";
 		$oDbl->query($sqlCreate);
-		$oDbl->query("CREATE INDEX $tabla"."_id_nom"." ON $tabla (id_nom)");
+		//echo "$sqlCreate<br>";
+	
+		/*
+		try {
+			$oDbl->query($sqlCreate);
+			$oDbl->query("CREATE INDEX $tabla"."_id_nom"." ON $tabla (id_nom)");
+		} catch (\PDOException $e) {
+			echo $e->getMessage();
+			$stmt = $oDbl->prepare($sqlDelete);
+        	$stmt->execute();
+			echo 'The number of row(s) deleted: ' . $deletedRows . '<br>';
+		}
+		 *
+		 */
 	}
 
 	public function profesorDeTipo($id_tipo=0) {
@@ -900,6 +918,122 @@ class Resumen Extends core\ClasePropiedades {
 		return $rta;
 	}
 
+	public function arrayProfesorDepartamento() {
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
 
+		$ssql="SELECT DISTINCT p.id_nom,d.id_departamento 
+				FROM $tabla p JOIN d_profesor_stgr d USING(id_nom)
+				WHERE d.f_cese is null";
+		$statement=$oDbl->prepare($ssql);
+		$statement->execute();
+		$result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+		
+		return $result;
+	}
+	
+	/*40. Número de profesores que dieron clase de su especialidad*/
+	public function profesorEspecialidad($otras=FALSE){
+		$oDbl = $this->getoDbl();
+		$curso_inicio = $this->getAny();
+		$oGesSectores = new \asignaturas\model\GestorSector();
+		$a_sectores = $oGesSectores->getArraySectores();
+		$asignaturas = $this->getNomAsignaturas();
+		$a_profe_dept = $this->arrayProfesorDepartamento();
+		$docencia_dep = array();
+		$docencia_no_dep = array();
+		foreach ($a_profe_dept as $row) {
+			$id_nom=$row['id_nom'];
+			$id_departamento=$row['id_departamento'];
+			// asignaturas (sector) por profesor
+			$ssql="SELECT DISTINCT d.id_nom,a.id_sector FROM d_docencia_stgr d JOIN $asignaturas a USING (id_asignatura)
+					WHERE d.id_nom=$id_nom AND curso_inicio=$curso_inicio ";
+			//echo "sql: $ssql<br>";
+			foreach($oDbl->query($ssql) as $row) {
+				$id_nom = $row['id_nom'];
+				$id_sector = $row['id_sector'];
+				if (in_array($id_sector, $a_sectores[$id_departamento])) {
+					$docencia_dep[$id_nom] = 1;
+				} else {
+					$docencia_no_dep[$id_nom] = 1;
+				}
+			}
+		}
+		if ($otras) {
+			$rta['num'] = count($docencia_no_dep);
+		} else {
+			$rta['num'] = count($docencia_dep);
+		}
+		if ($this->blista == true && $rta['num'] > 0) {
+			//$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
+			$rta['lista'] = '';
+		} else {
+			$rta['lista'] = '';
+		}
+
+		return $rta;
+	}
+	
+	/*42. Número de profesores asistentes a congresos...*/
+	public function ProfesorCongreso() {
+		$lista = $this->blista;
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+		$notas = $this->getNomNotas();
+		$curs = $this->getCurso();
+		
+		$ssql="SELECT DISTINCT  p.id_nom
+				FROM d_congresos JOIN $tabla p USING (id_nom) WHERE f_ini $curs ";
+		//echo "$ssql<br>";
+		$statement=$oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
+
+	// Profesores de Bienio.
+	public function ProfesoresEnBienio() {
+		$lista = $this->blista;
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+
+		$ssql="SELECT DISTINCT  p.id_nom,p.nom,p.apellido1,p.apellido2
+				FROM d_profesor_stgr JOIN $tabla p USING (id_nom) 
+				WHERE f_cese is null AND id_departamento=1
+				ORDER BY p.apellido1,p.apellido2,p.nom 
+				"; 
+		$statement = $oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
+	// Profesores de Cuadrienio.
+	public function ProfesoresEnCuadrienio() {
+		$lista = $this->blista;
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+
+		$ssql="SELECT DISTINCT  p.id_nom,p.nom,p.apellido1,p.apellido2
+				FROM d_profesor_stgr JOIN $tabla p USING (id_nom) 
+				WHERE f_cese is null AND id_departamento!=1
+				ORDER BY p.apellido1,p.apellido2,p.nom 
+				"; 
+		$statement = $oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
 }
 ?>
