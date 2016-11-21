@@ -44,7 +44,19 @@ class Persona {
 			if (count($cPersonasEx) > 0) {
 				$oPersona = $cPersonasEx[0];
 			} else {
-				$oPersona = new PersonaIn($id_nom);
+				$gesPersonaIn = new GestorPersonaIn();
+				$cPersonasIn = $gesPersonaIn->getPersonasIn(array('id_nom'=>$id_nom));
+				if (count($cPersonasIn) > 0) {
+					$oPersona = $cPersonasIn[0];
+				} else {
+					//Puede ser que este buscando una personaDl con situacion != 'A'
+					$cPersonasDl = $gesPersonaDl->getPersonasDl(array('id_nom'=>$id_nom));
+					if (count($cPersonasDl) > 0) {
+						$oPersona = $cPersonasDl[0];
+					} else {
+						return _("No encuentro a nadie");
+					}
+				}
 			}
 		}
 		return $oPersona;
