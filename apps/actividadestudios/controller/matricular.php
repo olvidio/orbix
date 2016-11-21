@@ -130,11 +130,10 @@ foreach($cAlumnos as $oPersonaDl) {
 					if ($id_asignatura > 3000) {
 						switch (substr ($id_asignatura, 1, 1)) {
 							case 1: //opcional sólo de bienio
-								$aWhere['id_nom']=$id_nom;
-								//$aWhere['id_nivel']="'123(0|1|2)'";
-								$aWhere['id_nivel']="'123[012]'";
-								$aOperador['id_nivel']='~';
-								$cPersonaNotas = $GesPersonaNotas->getPersonaNotas(array('id_nom'=>$id_nom));
+								$aWhereNota['id_nom']=$id_nom;
+								$aWhereNota['id_nivel']="'123[012]'";
+								$aOperadorNota['id_nivel']='~';
+								$cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhereNota,$aOperadorNota);
 								if (is_array($cPersonaNotas) && count($cPersonaNotas)<3) {
 									$oMatricula = new actividadestudios\MatriculaDl(array('id_activ'=>$id_activ_1,'id_asignatura'=>$id_asignatura,'id_nom'=>$id_nom));
 									$oMatricula->setPreceptor($preceptor);
@@ -146,11 +145,10 @@ foreach($cAlumnos as $oPersonaDl) {
 								}
 								break;
 							case 2: //opcional sólo de cuadrienio
-								$aWhere['id_nom']=$id_nom;
-								//$aWhere['id_nivel']="'243(0|1|2|3|4)'";
-								$aWhere['id_nivel']="'243[01234]'";
-								$aOperador['id_nivel']='~';
-								$cPersonaNotas = $GesPersonaNotas->getPersonaNotas(array('id_nom'=>$id_nom));
+								$aWhereNota['id_nom']=$id_nom;
+								$aWhereNota['id_nivel']="'243[01234]'";
+								$aOperadorNota['id_nivel']='~';
+								$cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhereNota,$aOperadorNota);
 								if (is_array($cPersonaNotas) && count($cPersonaNotas)<5) {
 									$oMatricula = new actividadestudios\MatriculaDl(array('id_activ'=>$id_activ_1,'id_asignatura'=>$id_asignatura,'id_nom'=>$id_nom));
 									$oMatricula->setPreceptor($preceptor);
@@ -162,10 +160,10 @@ foreach($cAlumnos as $oPersonaDl) {
 								}
 								break;
 							case 3: //opcional de bienio o cuadrienio
-								$aWhere['id_nom']=$id_nom;
-								$aWhere['id_nivel']="'123[012]|243[01234]'";
-								$aOperador['id_nivel']='~';
-								$cPersonaNotas = $GesPersonaNotas->getPersonaNotas(array('id_nom'=>$id_nom));
+								$aWhereNota['id_nom']=$id_nom;
+								$aWhereNota['id_nivel']="'123[012]|243[01234]'";
+								$aOperadorNota['id_nivel']='~';
+								$cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhereNota,$aOperadorNota);
 								if (is_array($cPersonaNotas) && count($cPersonaNotas)<8) {
 									$oMatricula = new actividadestudios\MatriculaDl(array('id_activ'=>$id_activ_1,'id_asignatura'=>$id_asignatura,'id_nom'=>$id_nom));
 									$oMatricula->setPreceptor($preceptor);
