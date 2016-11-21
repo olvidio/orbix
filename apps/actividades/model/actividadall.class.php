@@ -899,7 +899,44 @@ class ActividadAll Extends core\ClasePropiedades {
 		}
 		return $this->iduracion;
 	}
+	
 
+	/**
+	 * Retorna el nivel_sgtr calculat a partir del id_tipo_activ
+	 *
+	 * @return integer nivel_stgr
+	 */
+	function generarNivelStgr() {
+		//segun la tabla comun: public.xa_nivel_stgr
+		$id_tipo_activ = $this->getId_tipo_activ();
+		$nivel_stgr = '';
+		switch ($id_tipo_activ) {
+			case 112000: //bienio
+			case 112020:
+			case 133000:
+			case 133020:
+				$nivel_stgr=1;
+				break;
+			case 112021: //cuadrienio
+			case 112112: // semestre n
+				$nivel_stgr=2;
+				break;
+			case 133021:
+				$nivel_stgr=3;
+				break;
+			case 133105: // bienio y cuadrienio
+				$nivel_stgr=10;
+				break;
+			case 112023: //repaso
+			case 133023:
+				$nivel_stgr=4;
+				break;
+			case 133016: // ceagd
+				$nivel_stgr=5;
+				break;
+		}
+		return $nivel_stgr;
+	}
 	/**
 	 * Retorna una col·lecció d'objectes del tipus DatosCampo
 	 *
