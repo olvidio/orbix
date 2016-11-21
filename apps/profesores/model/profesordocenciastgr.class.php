@@ -75,9 +75,9 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 	/**
 	 * Curso_inicio de ProfesorDocenciaStgr
 	 *
-	 * @var string
+	 * @var smallinteger
 	 */
-	 private $scurso_inicio;
+	 private $icurso_inicio;
 	/**
 	 * Acta de ProfesorDocenciaStgr
 	 *
