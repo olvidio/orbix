@@ -367,7 +367,7 @@ if (!empty($_POST['sel']) && $alum==1) { //vengo de un 'checkbox' => sólo una p
 	echo "</table>";
 	echo "<h3><span class=link onclick=\"fnjs_update_div('#main','$pagina')\" >". _("ir a dossier de actividades")."</span></h3>";
 } else {
-// -------------------------- si es para el centro/s saco una tabla -------------------------
+	// -------------------------- si es para el centro/s saco una tabla -------------------------
 	// Dibujar la tabla
 	// la cabecera es la misma para todos: ----------------------------------------------------
 	$cabecera="";
@@ -491,8 +491,8 @@ if (!empty($_POST['sel']) && $alum==1) { //vengo de un 'checkbox' => sólo una p
 		$actividades=$a1["actividades"];
 		if ($ctr_old!=$ctr) { //nueva tabla
 			$ctr_old=$ctr;
-			if ($f!=1) { echo "</table><br>"; }
-	   		echo "<div class='A4'><table><tr><th align='LEFT'>$ctr</th><th align='RIGHT'>".$_POST['ref']."</th></tr></table>
+			if ($f!=1) { echo "</table></div><br>"; }
+	   		echo "<div class='salta_pag'><table><tr><th align='LEFT'>$ctr</th><th align='RIGHT'>".$_POST['ref']."</th></tr></table>
 					<table class='ca_posibles' rules='groups' CELLSPACING=0>
 					";
 			echo $cabecera_tabla;
@@ -506,12 +506,13 @@ if (!empty($_POST['sel']) && $alum==1) { //vengo de un 'checkbox' => sólo una p
 		echo "</tr>";
 	}
 	echo "</tbody></table>";
-?>
-<br>
-<table CELLSPACING=5><tr><td valign=top class=observ><?php echo _("observaciones").":"; ?></td>
-<td class=observ><textarea class=observ name="observ" cols="120" rows="5"></textarea></td>
-</tr>
-</table>
-</body></html>
-<?php
+	?>
+	<br>
+	<table CELLSPACING=5>
+		<tr><td valign=top class=observ><?php echo _("observaciones").":"; ?></td>
+		<td class=observ><textarea class=observ name="observ" cols="120" rows="5"></textarea></td>
+		</tr>
+	</table>
+	</div>
+	<?php
 } // fin del if id_nom (dibujar tabla)
