@@ -137,8 +137,10 @@ class GestorDelegacion Extends  core\ClaseGestor {
 		
 		$num_regiones=count($aRegiones);
 		if ($num_regiones > 0) {
-			$sCondicion="WHERE status = 't' AND region = ";
-			$sCondicion.=implode(' OR region = ',$aRegiones);
+			$sCondicion = "WHERE status = 't' AND region = ";
+			$sReg = implode("'OR region = '",$aRegiones);
+			$sReg = "'".$sReg."'";
+			$sCondicion .= $sReg;
 			$sQuery="SELECT u.dl,u.nombre_dl FROM $nom_tabla u 
 					$sCondicion
 					ORDER BY nombre_dl";
