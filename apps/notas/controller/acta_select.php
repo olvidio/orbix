@@ -61,6 +61,7 @@ if (!empty($Qacta)) {
 		}
 	}
 
+	$aWhere['_ordre'] = 'f_acta DESC';
 	$aWhere['acta'] = $Qacta;
 	$aOperador['acta'] = '~';
 	$titulo = $Qtitulo;
@@ -69,9 +70,11 @@ if (!empty($Qacta)) {
 	if ($mes>9) { $any=date('Y')+1; } else { $any=date("Y"); }
 	$inicurs_ca=core\curso_est("inicio",$any);
 	$fincurs_ca=core\curso_est("fin",$any);
+	$txt_curso = "$inicurs_ca - $fincurs_ca";
 	
 	$aWhere['f_acta'] = "'$inicurs_ca','$fincurs_ca'";
 	$aOperador['f_acta'] = 'BETWEEN';
+	$aWhere['_ordre'] = 'f_acta DESC';
 	
 	$titulo=ucfirst(sprintf(_("lista de actas del curso %s"),$txt_curso));
 	$GesActas = new notas\GestorActaDl();
@@ -127,7 +130,14 @@ $a_camposHidden1 = array(
 		);
 $oHash1->setArraycamposHidden($a_camposHidden1);
 
-
+$help = "<p>"._("ejemplos").":<br>"
+		." - ". _("23/15 (sólo número) => busca en las actas de la dl.")."<br>"
+		." - ". _("dlx .* => todas las de dlx")."<br>"
+		." - ". _("dlx .*/15 => todas las de dlx del año 15 ")."<br>"
+		." - ". _("midl => todas las de la dl")."<br>"
+		." - ". _("dl => todas las de otras dl")."<br>"
+		. "</p>";
+		
 /* ---------------------------------- html --------------------------------------- */
 ?>
 <script>
@@ -155,8 +165,12 @@ fnjs_modificar=function(formulario){
 <?= $oHash->getCamposHtml(); ?>
 <table>
 <th class=titulo_inv colspan=4><?php echo ucfirst(_("buscar un acta")); ?>
-&nbsp;&nbsp;&nbsp;<input class=contenido id="acta" name="acta" size="25"></th>
-<th colspan=4><input type="button" id="ok" name="ok" onclick="fnjs_enviar_formulario('#frm_sin_nombre');" value="<?php echo ucfirst(_("buscar")); ?>" class="btn_ok"></th>
+&nbsp;&nbsp;&nbsp;<input class=contenido id="acta" name="acta" size="25">
+<div class="help-tip"><?= $help ?></div>
+
+</th>
+<th colspan=4><input type="button" id="ok" name="ok" onclick="fnjs_enviar_formulario('#frm_sin_nombre');" value="<?php echo ucfirst(_("buscar")); ?>" class="btn_ok">
+</th>
 </table>
 </form>
 
