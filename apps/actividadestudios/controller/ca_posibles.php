@@ -38,70 +38,7 @@ if (empty($id_ctr_agd) && empty($id_ctr_n)) {
 	exit($msg_txt);
 }
 
-/**
- * Array con las asignaturas=>creditos, para no tener que consultar cada vez a la base de datos.
- *
- */
-$GesAsignaturas = new asignaturas\GestorAsignatura();
-$aAsigCreditos = $GesAsignaturas->getArrayAsignaturasCreditos();
-
-
-function generar_nivel_stgr($id_tipo_activ) {
-	$nivel_stgr = '';
-	switch ($id_tipo_activ) {
-		case 112000: //bienio
-		case 112020:
-		case 133000:
-		case 133020:
-			$nivel_stgr=1;
-			break;
-		case 112021: //cuadrienio
-		case 112112: // semestre n
-			$nivel_stgr=2;
-			break;
-		case 133021:
-			$nivel_stgr=3;
-			break;
-		case 133105: // bienio y cuadrienio
-			$nivel_stgr=10;
-			break;
-		case 112023: //repaso
-		case 133023:
-			$nivel_stgr=4;
-			break;
-		case 133016: // ceagd
-			$nivel_stgr=5;
-			break;
-	}
-	return $nivel_stgr;
-}
-
-function contar_creditos($id_nom,$asignaturas) {
-	$suma_creditos=0;
-	$GesNotas = new notas\GestorNota();
-	$cNotas = 	$GesNotas->getNotas(array('superada'=>'t'));
-	$aSuperadas = array();
-	foreach ($cNotas as $oNota) {
-		$id_situacion = $oNota->getId_situacion();
-		$aSuperadas[$id_situacion] = 't';
-	}
-	$GesPersonaNotas = new notas\GestorPersonaNota();
-	$cPersonaNotas = $GesPersonaNotas->getPersonaNotas(array('id_nom'=>$id_nom));
-	$a=0;
-	$todas_asig_p = array();
-	foreach ($cPersonaNotas as $oPersonaNota) {
-		$id_situacion = $oPersonaNota->getId_situacion();
-		$id_asignatura = $oPersonaNota->getId_asignatura();
-		if (array_key_exists($id_situacion,$aSuperadas)) {
-			$todas_asig_p[]=$id_asignatura;
-		}
-	}
-	foreach( $asignaturas as $id_asignatura => $creditos ) {
-		if (!in_array( $id_asignatura, $todas_asig_p)) { $suma_creditos += $creditos; }
-	}
-	return $suma_creditos;
-}
-
+$oPosiblesCa = new actividadestudios\PosiblesCa(); 
 
 // -----------------------------------------------------------------------------------------
 
@@ -194,10 +131,9 @@ switch ($na) {
 		*/
 	break;
 }
-//set_time_limit(0);
+
 // per les lletres verticals
 $gruix=20;
-$alt=300;
 
 // -------------------------- lista de ca con sus asignaturas --------------------------
 //Si accedo via formulario, debo poner los ca escogidos; y sino los de las dlb, dlz, dlva
@@ -210,6 +146,7 @@ if (!empty($_POST['idca'])){
 	$i=0;
 	$max_len_activ = 1;
 	foreach ($cActividades as $oActividad) {
+		$asignaturas=array();
 		$i++;
 		extract($oActividad->getTot());
 		// cambio el nombre de la actividad: borro cosas:
@@ -222,22 +159,15 @@ if (!empty($_POST['idca'])){
 		
 		if (empty($nivel_stgr)) { 
 			$msg_txt .= sprintf(_("El ca: %s no tiene puesto el nivel de stgr.")."<br>",$nom_activ);
-			$nivel_stgr=generar_nivel_stgr($id_tipo_activ); 
+			$nivel_stgr=$oActividad->generarNivelStgr(); 
 		}
 		if ($nivel_stgr==4 || $nivel_stgr==9 || $nivel_stgr==8 || $nivel_stgr==7) {  // repaso, mayores 30, menores 30, pa-ad
 			$asignaturas=array("dd");
 		} else {
 			// por cada ca creo un array con las asignaturas y los créditos.
 			$GesActividadAsignaturas = new actividadestudios\GestorActividadAsignatura();
-			$cActividadAsignaturas = $GesActividadAsignaturas->getActividadAsignaturas(array('id_activ'=>$id_activ,'tipo'=>'NULL'),array('tipo'=>'IS NULL'));
-			$m=0;
-			$asignaturas=array();
-			foreach ( $cActividadAsignaturas as $oActividadAsignatura) {
-				$m++;
-				$id_asignatura = $oActividadAsignatura->getId_asignatura();
-				$asignaturas[$id_asignatura]=$aAsigCreditos[$id_asignatura];
-			}
-			if ($m==0 && $nivel_stgr) {
+			$asignaturas = $GesActividadAsignaturas->getAsignaturasCa($id_activ);
+			if (count($asignaturas)==0 && $nivel_stgr) {
 				$msg_txt .= sprintf(_("El ca: %s no tiene puesta ninguna asignatura.")."<br>",$nom_activ);
 				continue;
 			}
@@ -247,22 +177,7 @@ if (!empty($_POST['idca'])){
 						'nivel_stgr'=>$nivel_stgr,
 						'asignaturas'=>$asignaturas
 							);
-		/* Ya se ha hecho posible con css
-		// codifico el nombre_activ a iso porque no me lo dibuja bien:
-		$nom_activ_iso=iconv("UTF-8","ISO-8859-1",$nom_activ);
-		// grabo un dibujo temporal con el nombre de la actividad en vertical
-		$im  = imagecreatetruecolor ($gruix, $alt);
-		$negre = imagecolorallocate ($im, 0, 0, 0);
-		$blanc = imagecolorallocate ($im, 255, 255, 255);
-		imagecolortransparent($im, $negre);
-
-		// Escribir el texto
-		imagestringup ($im,3, 3, $alt-10, $nom_activ_iso, $blanc);
-
-		// Guardar la imagen
-		imagepng($im, core\ConfigGlobal::$dir_web."/log/tmp/$id_activ");
-		imagedestroy($im);
-		*/
+		
 		$len = strlen($nom_activ);
 		$max_len_activ = ($max_len_activ < $len)? $len : $max_len_activ;
 	}
@@ -367,15 +282,15 @@ foreach ($cOrdPersonas as $ctr=>$ctrPersonas) {
 						if ($nivel_stgr==9 || $nivel_stgr==8 || $nivel_stgr==7) { $creditos='x'; } else { $creditos="-"; }
 						break;
 				case "b":
-						if ($nivel_stgr==1) { $creditos=contar_creditos($id_nom,$asignaturas); } else { $creditos="-"; }
+						if ($nivel_stgr==1) { $creditos=$oPosiblesCa->contar_creditos($id_nom,$asignaturas); } else { $creditos="-"; }
 						break;
 				case "c1":
-						if ($nivel_stgr==2) { $creditos=contar_creditos($id_nom,$asignaturas); 
-						} else if ($nivel_stgr==3) { $creditos=contar_creditos($id_nom,$asignaturas); 
+						if ($nivel_stgr==2) { $creditos=$oPosiblesCa->contar_creditos($id_nom,$asignaturas); 
+						} else if ($nivel_stgr==3) { $creditos=$oPosiblesCa->contar_creditos($id_nom,$asignaturas); 
 						} else { $creditos="-"; }
 						break;
 				case "c2":
-						if ($nivel_stgr==3) { $creditos=contar_creditos($id_nom,$asignaturas); } else { $creditos="-"; }
+						if ($nivel_stgr==3) { $creditos=$oPosiblesCa->contar_creditos($id_nom,$asignaturas); } else { $creditos="-"; }
 						break;
 				case "r":
 						if ($id_tabla_persona=='n') {
@@ -385,7 +300,7 @@ foreach ($cOrdPersonas as $ctr=>$ctrPersonas) {
 						}
 						break;
 				case "ce":
-						if ($nivel_stgr==5) { $creditos=contar_creditos($id_nom,$asignaturas); } else { $creditos="-"; }
+						if ($nivel_stgr==5) { $creditos=$oPosiblesCa->contar_creditos($id_nom,$asignaturas); } else { $creditos="-"; }
 						break;
 			}
 			$actividades[]=array(	'id_activ'=>$id_activ,
@@ -597,7 +512,6 @@ if (!empty($_POST['sel']) && $alum==1) { //vengo de un 'checkbox' => sólo una p
 <td class=observ><textarea class=observ name="observ" cols="120" rows="5"></textarea></td>
 </tr>
 </table>
-</div>
 </body></html>
 <?php
 } // fin del if id_nom (dibujar tabla)
