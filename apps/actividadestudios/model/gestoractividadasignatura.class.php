@@ -1,5 +1,6 @@
 <?php
 namespace actividadestudios\model;
+use asignaturas\model as asignaturas;
 use core;
 /**
  * GestorActividadAsignatura
@@ -33,6 +34,39 @@ class GestorActividadAsignatura Extends core\ClaseGestor {
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
+	
+	/**
+	 * retorna l'array amb les asignatures, credits i nivell stgr del ca
+	 *
+	 * @param biginteger id_activ
+	 * @param string tipo  tipo='p' para preceptor
+	 * @return array asignaturas es un array (id_asignatura=>Creditos);
+	 */
+	function getAsignaturasCa ($id_activ,$tipo='') { 
+		/**
+		 * Array con las asignaturas=>creditos, para no tener que consultar cada vez a la base de datos.
+		 *
+		 */
+		$GesAsignaturas = new asignaturas\GestorAsignatura();
+		$aAsigCreditos = $GesAsignaturas->getArrayAsignaturasCreditos();
+		
+		// por cada ca creo un array con las asignaturas y los créditos.
+		$aWhere['id_activ'] = $id_activ;
+		$aOperador = array();
+		if (empty($tipo)) {
+			$aWhere['tipo'] = 'NULL';
+			$aOperador['tipo'] = 'IS NULL';
+		} else {
+			$aWhere['tipo'] = $tipo;
+		}
+		$cActividadAsignaturas = $this->getActividadAsignaturas($aWhere,$aOperador);
+		$asignaturas=array();
+		foreach ( $cActividadAsignaturas as $oActividadAsignatura) {
+			$id_asignatura = $oActividadAsignatura->getId_asignatura();
+			$asignaturas[$id_asignatura]=$aAsigCreditos[$id_asignatura];
+		}
+		return $asignaturas;
+	}
 	/**
 	 * retorna l'array d'objectes de tipus ActividadAsignatura
 	 *
@@ -71,23 +105,23 @@ class GestorActividadAsignatura Extends core\ClaseGestor {
 		$oCondicion = new core\Condicion();
 		$aCondi = array();
 		foreach ($aWhere as $camp => $val) {
-			if ($camp == '_ordre') continue;
+			if ($camp == '_ordre') { continue; }
 			$sOperador = isset($aOperators[$camp])? $aOperators[$camp] : '';
-			if ($a = $oCondicion->getCondicion($camp,$sOperador,$val)) $aCondi[]=$a;
+			if ($a = $oCondicion->getCondicion($camp,$sOperador,$val)) { $aCondi[]=$a; }
 			// operadores que no requieren valores
-			if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
+			if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') { unset($aWhere[$camp]); }
 		}
 		$sCondi = implode(' AND ',$aCondi);
-		if ($sCondi!='') $sCondi = " WHERE ".$sCondi;
+		if ($sCondi!='') { $sCondi = " WHERE ".$sCondi; }
 		if (isset($GLOBALS['oGestorSessioDelegación'])) {
 		   	$sLimit = $GLOBALS['oGestorSessioDelegación']->getLimitPaginador('a_actividades',$sCondi,$aWhere);
 		} else {
 			$sLimit='';
 		}
-		if ($sLimit===false) return;
+		if ($sLimit===false) { return; }
 		$sOrdre = '';
-		if (isset($aWhere['_ordre']) && $aWhere['_ordre']!='') $sOrdre = ' ORDER BY '.$aWhere['_ordre'];
-		if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
+	if (isset($aWhere['_ordre']) && $aWhere['_ordre']!='') { $sOrdre = ' ORDER BY '.$aWhere['_ordre']; }
+	if (isset($aWhere['_ordre'])) { unset($aWhere['_ordre']); }
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
 		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClauError = 'GestorActividadAsignatura.llistar.prepare';
