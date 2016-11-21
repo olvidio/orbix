@@ -73,11 +73,11 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 	 */
 	 private $stipo;
 	/**
-	 * Curso de ProfesorDocenciaStgr
+	 * Curso_inicio de ProfesorDocenciaStgr
 	 *
 	 * @var string
 	 */
-	 private $scurso;
+	 private $scurso_inicio;
 	/**
 	 * Acta de ProfesorDocenciaStgr
 	 *
@@ -135,7 +135,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 		$aDades['id_asignatura'] = $this->iid_asignatura;
 		$aDades['id_activ'] = $this->iid_activ;
 		$aDades['tipo'] = $this->stipo;
-		$aDades['curso'] = $this->scurso;
+		$aDades['curso_inicio'] = $this->scurso_inicio;
 		$aDades['acta'] = $this->sacta;
 		array_walk($aDades, 'core\poner_null');
 
@@ -145,7 +145,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 					id_asignatura            = :id_asignatura,
 					id_activ                 = :id_activ,
 					tipo                     = :tipo,
-					curso                    = :curso,
+					curso_inicio             = :curso_inicio,
 					acta                     = :acta";
 			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item'")) === false) {
 				$sClauError = 'ProfesorDocenciaStgr.update.prepare';
@@ -161,8 +161,8 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_nom);
-			$campos="(id_nom,id_asignatura,id_activ,tipo,curso,acta)";
-			$valores="(:id_nom,:id_asignatura,:id_activ,:tipo,:curso,:acta)";		
+			$campos="(id_nom,id_asignatura,id_activ,tipo,curso_inicio,acta)";
+			$valores="(:id_nom,:id_asignatura,:id_activ,:tipo,:curso_inicio,:acta)";		
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'ProfesorDocenciaStgr.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -240,7 +240,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 		if (array_key_exists('id_asignatura',$aDades)) $this->setId_asignatura($aDades['id_asignatura']);
 		if (array_key_exists('id_activ',$aDades)) $this->setId_activ($aDades['id_activ']);
 		if (array_key_exists('tipo',$aDades)) $this->setTipo($aDades['tipo']);
-		if (array_key_exists('curso',$aDades)) $this->setCurso($aDades['curso']);
+		if (array_key_exists('curso_inicio',$aDades)) $this->setCurso_inicio($aDades['curso_inicio']);
 		if (array_key_exists('acta',$aDades)) $this->setActa($aDades['acta']);
 	}
 
@@ -385,23 +385,23 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 		$this->stipo = $stipo;
 	}
 	/**
-	 * Recupera l'atribut scurso de ProfesorDocenciaStgr
+	 * Recupera l'atribut scurso_inicio de ProfesorDocenciaStgr
 	 *
-	 * @return string scurso
+	 * @return string scurso_inicio
 	 */
-	function getCurso() {
-		if (!isset($this->scurso)) {
+	function getCurso_inicio() {
+		if (!isset($this->scurso_inicio)) {
 			$this->DBCarregar();
 		}
-		return $this->scurso;
+		return $this->scurso_inicio;
 	}
 	/**
-	 * estableix el valor de l'atribut scurso de ProfesorDocenciaStgr
+	 * estableix el valor de l'atribut scurso_inicio de ProfesorDocenciaStgr
 	 *
-	 * @param string scurso='' optional
+	 * @param string scurso_inicio='' optional
 	 */
-	function setCurso($scurso='') {
-		$this->scurso = $scurso;
+	function setCurso_inicio($scurso_inicio='') {
+		$this->scurso_inicio = $scurso_inicio;
 	}
 	/**
 	 * Recupera l'atribut sacta de ProfesorDocenciaStgr
@@ -434,7 +434,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 		$oProfesorDocenciaStgrSet->add($this->getDatosId_asignatura());
 		$oProfesorDocenciaStgrSet->add($this->getDatosId_activ());
 		$oProfesorDocenciaStgrSet->add($this->getDatosTipo());
-		$oProfesorDocenciaStgrSet->add($this->getDatosCurso());
+		$oProfesorDocenciaStgrSet->add($this->getDatosCurso_inicio());
 		$oProfesorDocenciaStgrSet->add($this->getDatosActa());
 		return $oProfesorDocenciaStgrSet->getTot();
 	}
@@ -486,17 +486,17 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut scurso de ProfesorDocenciaStgr
+	 * Recupera les propietats de l'atribut scurso_inicio de ProfesorDocenciaStgr
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return oject DatosCampo
 	 */
-	function getDatosCurso() {
+	function getDatosCurso_inicio() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'curso'));
-		$oDatosCampo->setEtiqueta(_("curso"));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'curso_inicio'));
+		$oDatosCampo->setEtiqueta(_("curso_inicio"));
 		$oDatosCampo->setTipo('texto');
-		$oDatosCampo->setArgument(30);
+		$oDatosCampo->setArgument(5);
 		return $oDatosCampo;
 	}
 	/**
