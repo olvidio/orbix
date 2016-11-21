@@ -48,17 +48,17 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 				border-color : Black;
 			}
 	
+
 	table.ca_posibles  {
 		border-color: black;
 		border-style: solid;
 		border-width: thin;
+		left : 0px;
+		top : 0px;
 	}
 	th.ca_posibles  {
 		color : black;
 		font-weight : bold;
-		border-color: black;
-		border-style: solid;
-		border-width: thin;
 	}
 	th.centrado  {
 		color : black;
