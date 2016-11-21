@@ -27,15 +27,9 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	.salta_pag {page-break-after:always;}
 
 	.vertical{
-		writing-mode:tb-rl;
-		-webkit-transform:rotate(-90deg);
-		-moz-transform:rotate(-90deg);
-		-o-transform: rotate(-90deg);
-		-ms-transform:rotate(-90deg);
-		white-space:nowrap;
-		display:block;
-		bottom:0;
-		width:20px;
+		writing-mode:sideways-lr;
+		vertical-align: bottom;
+		bottom: 0;
 	}
 	th.vertical2 {
 		 vertical-align:bottom;
@@ -54,15 +48,33 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 				border-color : Black;
 			}
 	
-	table.calendario  {
+	table.ca_posibles  {
 		border-color: black;
 		border-style: solid;
 		border-width: thin;
 	}
-	th.calendario  {
+	th.ca_posibles  {
 		color : black;
 		font-weight : bold;
 		border-color: black;
+		border-style: solid;
+		border-width: thin;
+	}
+	th.centrado  {
+		color : black;
+		font-weight : bold;
+		border-color: black;
+		border-style: solid;
+		border-width: thin;
+		vertical-align: bottom;
+	}
+	td.ca_posibles_nom  {
+		text-align : left;
+		border-bottom-style: solid;
+		border-width: thin;
+	}
+	td.ca_posibles  {
+		text-align : center;
 		border-style: solid;
 		border-width: thin;
 	}
@@ -134,6 +146,50 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	h2 {
 		font-size : 14pt;
 	}
+	/* tonos de color */
+	.tono1 {
+		background-color : <?php echo $tono1; ?> !important;
+	}
+	.tono2 {
+		background-color : <?php echo $tono2; ?> !important;
+	}
+	.tono3 {
+		background-color : <?php echo $tono3; ?> !important;
+	}
+	.tono4 {
+		background-color : <?php echo $tono4; ?> !important;
+	}
+	.tono5 {
+		background-color : <?php echo $tono5; ?> !important;
+	}
+	.tono6 {
+		background-color : <?php echo $tono6; ?> !important;
+	}
+	.tono7 {
+		background-color : <?php echo $tono7; ?> !important;
+	}
+	/* plazas */
+	/* pedida */
+	.plaza1 {
+		background: #FFFFFF !important;
+	}
+	/* en espera */
+	.plaza2 {
+		background: #F792C0 !important;
+	}
+	/* denegada */
+	.plaza3 {
+		background: #0EB4D3 !important;
+		text-decoration:line-through;
+	}
+	/* asignada */
+	.plaza4 {
+		background: #99F5A4 !important;
+	}
+	/* confirmada */
+	.plaza5 {
+		background: #9C9485 !important;
+	}
 	/* logout */
 	#logout {
 		position:absolute;
@@ -193,15 +249,9 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	 }
 
 	.vertical{
-		writing-mode:tb-rl;
-		-webkit-transform:rotate(-90deg);
-		-moz-transform:rotate(-90deg);
-		-o-transform: rotate(-90deg);
-		-ms-transform:rotate(-90deg);
-		white-space:nowrap;
-		display:block;
-		bottom:0;
-		width:20px;
+		writing-mode:sideways-lr;
+		vertical-align: bottom;
+		bottom: 0;
 	}
 	th.vertical2 {
 		 vertical-align:bottom;
@@ -347,17 +397,37 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 		border-color : <?php echo $lineas; ?>;
 		background-color : <?php echo $lineas; ?>;
 	 }
-	table.calendario  {
-		width : 80px;
+	table.ca_posibles  {
+		border-color: black;
+		border-style: solid;
+		border-width: thin;
 		left : 0px;
 		top : 0px;
-		border-color : black;
 		background : <?php echo $cru; ?>;
 	}
-	th.calendario  {
+	th.ca_posibles  {
 		color : black;
 		font-weight : bold;
 		background : <?php echo $fondo_claro; ?>;
+	}
+	th.centrado  {
+		color : black;
+		background : <?php echo $fondo_claro; ?>;
+		font-weight : bold;
+		border-color: black;
+		border-style: solid;
+		border-width: thin;
+		vertical-align: bottom;
+	}
+	td.ca_posibles_nom  {
+		text-align : left;
+		border-bottom-style: solid;
+		border-width: thin;
+	}
+	td.ca_posibles  {
+		text-align : center;
+		border-style: solid;
+		border-width: thin;
 	}
 	th  {
 		font-family : Arial;
