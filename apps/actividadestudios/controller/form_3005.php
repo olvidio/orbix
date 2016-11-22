@@ -33,7 +33,7 @@ $chk='';
 if (!empty($id_asignatura)) { //caso de modificar
 	$mod="editar"; 
 	$GesProfesores = new profesores\GestorProfesor();
-	$oDesplProfesores = $GesProfesores->getListaProfesoresAsignatura($id_asignatura);
+	$oDesplProfesores = $GesProfesores->getDesplProfesoresAsignatura($id_asignatura);
 	$oDesplProfesores->setOpcion_sel(-1);
 	
 	$oActividadAsignatura= new actividadestudios\ActividadAsignatura();

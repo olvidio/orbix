@@ -20,7 +20,7 @@ switch ($_POST['salida']) {
 	case "asignatura":
 		$id_asignatura = empty($_POST['id_asignatura'])? '' : $_POST['id_asignatura'];
 		$GesProfesores = new profesores\GestorProfesor();
-		$oDesplProfesores = $GesProfesores->getListaProfesoresAsignatura($id_asignatura);
+		$oDesplProfesores = $GesProfesores->getDesplProfesoresAsignatura($id_asignatura);
 		
 		$oDesplProfesores->setNombre('id_profesor');
 		$oDesplProfesores->setBlanco('t');
