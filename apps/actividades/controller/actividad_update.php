@@ -152,6 +152,7 @@ case "nuevo":
 	isset($_POST['tarifa']) ? $oActividad->setTarifa($_POST['tarifa']) : '';
 	isset($_POST['h_ini']) ? $oActividad->setH_ini($_POST['h_ini']) : '';
 	isset($_POST['h_fin']) ? $oActividad->setH_fin($_POST['h_fin']) : '';
+	isset($_POST['plazas']) ? $oActividad->setPlazas($_POST['plazas']) : '';
 	if ($oActividad->DBGuardar() === false) { 
 		echo _('Hay un error, no se ha guardado');
 	}
@@ -236,6 +237,7 @@ case "cmb_tipo": // sólo cambio el tipo a una actividad existente //___________
 	isset($_POST['tarifa']) ? $oActividad->setTarifa($_POST['tarifa']) : '';
 	isset($_POST['h_ini']) ? $oActividad->setH_ini($_POST['h_ini']) : '';
 	isset($_POST['h_fin']) ? $oActividad->setH_fin($_POST['h_fin']) : '';
+	isset($_POST['plazas']) ? $oActividad->setPlazas($_POST['plazas']) : '';
 	if ($oActividad->DBGuardar() === false) { 
 		echo _('Hay un error, no se ha guardado');
 	}
@@ -275,6 +277,7 @@ case "editar": // editar la actividad.
 	isset($_POST['h_ini']) ? $oActividad->setH_ini($_POST['h_ini']) : '';
 	isset($_POST['h_fin']) ? $oActividad->setH_fin($_POST['h_fin']) : '';
 	isset($_POST['publicado']) ? $oActividad->setPublicado($_POST['publicado']) : '';
+	isset($_POST['plazas']) ? $oActividad->setPlazas($_POST['plazas']) : '';
 	if ($oActividad->DBGuardar() === false) { 
 		echo '<br>'._('Hay un error, no se ha guardado');
 		$err = 1;

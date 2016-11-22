@@ -170,6 +170,12 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @var string
 	 */
 	 protected $sid_tabla;
+	/**
+	 * Plazas de ActividadAll
+	 *
+	 * @var smallinteger
+	 */
+	 protected $iplazas;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
 	 * duracion de ActividadAllrequire_once('classes/gestorCanvis.class');
@@ -244,6 +250,7 @@ class ActividadAll Extends core\ClasePropiedades {
 		$aDades['id_repeticion'] = $this->iid_repeticion;
 		$aDades['publicado'] = $this->bpublicado;
 		$aDades['id_tabla'] = $this->sid_tabla;
+		$aDades['plazas'] = $this->iplazas;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
  		if (empty($aDades['publicado']) || ($aDades['publicado'] === 'off') || ($aDades['publicado'] === 'false') || ($aDades['publicado'] === 'f')) { $aDades['publicado']='f'; } else { $aDades['publicado']='t'; }
@@ -356,6 +363,7 @@ class ActividadAll Extends core\ClasePropiedades {
 		if (array_key_exists('id_repeticion',$aDades)) $this->setId_repeticion($aDades['id_repeticion']);
 		if (array_key_exists('publicado',$aDades)) $this->setPublicado($aDades['publicado']);
 		if (array_key_exists('id_tabla',$aDades)) $this->setId_tabla($aDades['id_tabla']);
+		if (array_key_exists('plazas',$aDades)) $this->setPlazas($aDades['plazas']);
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
@@ -811,6 +819,25 @@ class ActividadAll Extends core\ClasePropiedades {
 	function setId_tabla($sid_tabla='') {
 		$this->sid_tabla = $sid_tabla;
 	}
+	/**
+	 * Recupera l'atribut iplazas de ActividadAll
+	 *
+	 * @return string iplazas
+	 */
+	function getPlazas() {
+		if (!isset($this->iplazas)) {
+			$this->DBCarregar();
+		}
+		return $this->iplazas;
+	}
+	/**
+	 * estableix el valor de l'atribut iplazas de ActividadAll
+	 *
+	 * @param string iplazas='' optional
+	 */
+	function setPlazas($iplazas='') {
+		$this->iplazas = $iplazas;
+	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 	/**
 	 * Recupera l'atribut idias de ActividadAll
@@ -964,6 +991,7 @@ class ActividadAll Extends core\ClasePropiedades {
 		$oActividadAllSet->add($this->getDatosTarifa());
 		$oActividadAllSet->add($this->getDatosId_repeticion());
 		$oActividadAllSet->add($this->getDatosId_tabla());
+		$oActividadAllSet->add($this->getDatosPlazas());
 		return $oActividadAllSet->getTot();
 	}
 
@@ -1231,6 +1259,18 @@ class ActividadAll Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_tabla'));
 		$oDatosCampo->setEtiqueta(_("id_tabla"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut iplazas de ActividadAll
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return oject DatosCampo
+	 */
+	function getDatosPlazas() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'plazas'));
+		$oDatosCampo->setEtiqueta(_("plazas"));
 		return $oDatosCampo;
 	}
 }

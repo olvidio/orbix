@@ -101,7 +101,7 @@ $dos=_("dossiers");
 
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('status!dl_org!f_fin!f_ini!h_fin!h_ini!id_repeticion!id_ubi!lugar_esp!mod!nivel_stgr!nom_activ!nombre_ubi!observ!precio!que!sactividad!sasistentes!snom_tipo!tarifa!publicado');
+$oHash->setcamposForm('status!dl_org!f_fin!f_ini!h_fin!h_ini!id_repeticion!id_ubi!lugar_esp!mod!nivel_stgr!nom_activ!nombre_ubi!observ!precio!que!sactividad!sasistentes!snom_tipo!tarifa!publicado!plazas');
 $oHash->setCamposNo('mod!que');
 $a_camposHidden = array(
 		'id_tipo_activ' => $id_tipo_activ,
@@ -252,10 +252,12 @@ $txt_gen=ucfirst(_("generar"));
 <?php
 ?>
 <tr><td class=etiqueta><?= _("dl/r que organiza") ?>:</td>
-<td colspan=3>
+<td colspan=2>
 	<?php echo $oDesplDelegacionesOrg->desplegable(); ?>
 	</td>
-	</tr>
+<td class=etiqueta><?php echo ucfirst(_("plazas totales")); ?>:</td>
+<td><input class=contenido size="6" id="plazas" name="plazas" value="<?= $plazas ?>" ></td>
+</tr>
 <tr>
 	  <td class=etiqueta>
 	    <?php echo ucfirst(_("lugar")); ?>: 

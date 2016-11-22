@@ -65,6 +65,7 @@ $id_repeticion = empty($_POST['id_repeticion'])? '' : $_POST['id_repeticion'];
 $observ_material = empty($_POST['observ_material'])? '' : $_POST['observ_material'];
 $lugar_esp = empty($_POST['lugar_esp'])? '' : $_POST['lugar_esp'];
 $tarifa = empty($_POST['tarifa'])? '' : $_POST['tarifa'];
+$plazas = empty($_POST['plazas'])? '' : $_POST['plazas'];
 
 $nombre_ubi=_("sin determinar");
 if ($id_ubi != 0) {
@@ -105,7 +106,7 @@ $oDesplRepeticion->setOpcion_sel($id_repeticion);
 
 
 $oHash = new web\Hash();
-$camposForm = 'status!id_tipo_activ!mod!dl_org!f_fin!f_ini!h_fin!h_ini!id_repeticion!id_ubi!lugar_esp!nom_activ!nombre_ubi!observ!precio!tarifa!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val';
+$camposForm = 'status!id_tipo_activ!mod!dl_org!f_fin!f_ini!h_fin!h_ini!id_repeticion!id_ubi!lugar_esp!nom_activ!nombre_ubi!observ!precio!tarifa!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val!plazas';
 if ($_SESSION['oPerm']->have_perm("est")) {
 	$camposForm .= '!nivel_stgr';
 }
@@ -249,9 +250,10 @@ fnjs_guardar=function(tipo){
 <td class=etiqueta><?php echo ucfirst(_("tarifa")); ?>: </td>
   <td><?php echo $oDesplPosiblesTipoTarifas->desplegable(); ?></td>
 <td class=etiqueta><?php echo ucfirst(_("precio")); ?>: </td>
-  <td>
-  <input type=text class="contenido derecha" id="precio" name="precio" value='<?= $precio ?>' size="8" > <?= _('€') ?>
-</td></tr>
+  <td><input type=text class="contenido derecha" id="precio" name="precio" value='<?= $precio ?>' size="8" > <?= _('€') ?></td>
+  <td class=etiqueta><?php echo ucfirst(_("plazas totales")); ?>:</td>
+  <td><input class=contenido size="6" id="plazas" name="plazas" value="<?= $plazas ?>" ></td>
+</tr>
 <tr><td class=etiqueta><?php echo ucfirst(_("observaciones")); ?>:</td><td colspan=5><input class=contenido size="30" id="observ" name="observ" value="<?= htmlspecialchars($observ) ?>">
 </td></tr>
 
