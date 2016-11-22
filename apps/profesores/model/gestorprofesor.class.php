@@ -37,12 +37,35 @@ class GestorProfesor Extends core\ClaseGestor {
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
 	/**
+	 * retorna un array
+	 * Els posibles professors per una asignatura
+	 *
+	 * @return array amd dues Llistes: departamento y ampliacion
+	 */
+	function getListaProfesoresAsignatura($id_asignatura) {
+		$oAsignatura = new asignaturas\Asignatura($id_asignatura);
+		$id_sector = $oAsignatura->getId_sector();
+		$oSector =new asignaturas\Sector($id_sector);
+		$id_departamento =$oSector->getId_departamento();
+		// Profesores departamento
+		$aProfesoresDepartamento = $this->getListaProfesoresDepartamento($id_departamento);
+		//profesor ampliacion
+		$gesProfesoresAmpliacion = new GestorProfesorAmpliacion();
+		$aProfesoresAmpliacion = $gesProfesoresAmpliacion->getListaProfesoresAsignatura($id_asignatura);
+		
+		$Opciones['departamento'] = $aProfesoresDepartamento;
+		$Opciones['ampliacion'] = $aProfesoresAmpliacion;
+
+		return $Opciones;
+	
+	}
+	/**
 	 * retorna un objecte del tipus Desplegable
 	 * Els posibles professors per una asignatura
 	 *
-	 * @return array Una Llista
+	 * @return obj Desplegable
 	 */
-	function getListaProfesoresAsignatura($id_asignatura) {
+	function getDesplProfesoresAsignatura($id_asignatura) {
 		$oAsignatura = new asignaturas\Asignatura($id_asignatura);
 		$id_sector = $oAsignatura->getId_sector();
 		$oSector =new asignaturas\Sector($id_sector);
