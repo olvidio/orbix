@@ -159,19 +159,21 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 		 right: 18px;
   		*/
 		text-align: center;
-		background-color: #BCDBEA;
+		/* background-color: #BCDBEA; */
+		background-color : <?php echo $fondo_claro; ?>;
 		border-radius: 50%;
 		width: 24px;
 		height: 24px;
 		font-size: 14px;
 		line-height: 26px;
 		cursor: default;
+		z-index: 10;
 	}
 
 	.help-tip:before{
 		content:'?';
 		font-weight: bold;
-		color:#fff;
+		color:<?php echo $letras; ?>;
 	}
 
 	.help-tip:hover p{
@@ -186,7 +188,8 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	.help-tip p{
 		display: none;
 		text-align: left;
-		background-color: #1E2021;
+		/* background-color: #1E2021; */
+		background-color: <?= $fondo_oscuro ?>;
 		padding: 20px;
 		width: 300px;
 		position: absolute;
