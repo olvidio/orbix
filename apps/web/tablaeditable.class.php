@@ -2,9 +2,8 @@
 namespace web;
 use usuarios\model as usuarios;
 use core;
-//require_once ("classes/personas/ext_web_preferencias.class");
 /**
- * Listas
+ * TablaEditable
  *
  * Classe per gestionar llistes de dades tipus taula.
  *
@@ -15,7 +14,7 @@ use core;
  * @created 18/10/2010
  */
 
-class Lista {
+class TablaEditable {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 	/**
 	 * sNombre del Lista
@@ -91,6 +90,12 @@ class Lista {
 	 * @var boolean
 	 */
 	protected $bRecordar = true;
+	/**
+	 * supdateUrl de la Lista
+	 *
+	 * @var array
+	 */
+	protected $supdateUrl = '';
 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
@@ -105,104 +110,14 @@ class Lista {
 	}
 
 	/**
-	 * Muestra una tabla simple
-	 *
-	 *@param ikey indice del array aDatos
-	 * @return Html
-	 *
-	 */
-	function lista() {
-		$aCabeceras=$this->aCabeceras;
-		$aDatos=$this->aDatos;
-		$key=$this->ikey;
-		$clase = 'lista';
-		//------------------------------------ html ------------------------------
-		$Html="<table class=\"$clase\"><tr>";
-		foreach ($aCabeceras as $cabecera) {
-			$Html.="<th>$cabecera</th>";
-		}
-		$Html.="</tr>";
-		if (!empty($key)) {
-			if (isset($aDatos[$key]) && is_array($aDatos[$key])) {
-				$aDades = $aDatos[$key];
-			} else {
-				return "<p>"._("No hay filas")."</p>";
-			}
-		} else {
-			$aDades = $aDatos;
-		}
-		$Html.="<tbody class=\"$clase\">";
-		foreach ($aDades as $aFila) {
-			$Html.="<tr>";
-			$clase = 'lista';
-			if (!empty($aFila['clase'])) { $clase.=" ".$aFila['clase']; }
-			foreach ($aFila as $col=>$valor) {
-				if ($col=="clase") { continue; }
-				if ($col=="order") { continue; }
-				if ($col=="sel") { continue; }
-				if(is_array($valor)) {
-						$val=$valor['valor'];
-						$td_id = empty($valor['id'])? '' : "id=\"".$valor['id']."\"";
-						if ( !empty($valor['ira']) ) {
-							$ira=$valor['ira'];
-							$Html.="<td $td_id class=\"$clase\"><span class=link onclick=fnjs_update_div('#main','$ira') >$val</span></td>";
-						}
-						if (!empty($valor['script']) ) {
-							$Html.="<td $td_id class=\"$clase\"><span class=link onclick=\"".$valor['script']."\" >$val</span></td>";
-						}
-						if (!empty($valor['span'])) {
-							$Html.="<td $td_id class=\"$clase\" onclick=\"toggleFilterRow_$id_tabla()\" colspan=\"".$valor['span']."\">$val</td>";
-						}
-						if (!empty($valor['clase'])) {
-							$Html.="<td $td_id class=\"$clase ".$valor['clase']."\">$val</td>";
-						}
-				} else {
-						// si es una fecha, pongo la clase fecha, para exportar a excel...
-						if (preg_match("/^(\d)+[\/-]\d\d[\/-](\d\d)+$/",$valor)) {
-							list( $d,$m,$y) = preg_split('/[:\/\.-]/',$valor);
-							$fecha_iso=date("Y-m-d",mktime(0,0,0,$m,$d,$y));
-							$clase ="fecha $clase";
-							$Html.="<td class=\"$clase\" fecha_iso='$fecha_iso'>$valor</td>";
-						} else {
-							$Html.="<td class=\"$clase\">$valor</td>";
-						}
-				}
-			}
-			$Html.="</tr>";
-		}
-		$Html.="</tbody></table>";
-		return $Html;
-	}
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return GestorProceso
-	 *
-	 */
-	function listaPaginada() {
-		$aGrupos=$this->aGrupos;
-		$aCabeceras=$this->aCabeceras;
-		$aDatos=$this->aDatos;
-		//------------------------------------ html ------------------------------
-		reset($aGrupos);
-		$Html='';
-		foreach ($aGrupos as $key => $titulo) {
-			$this->ikey = $key;
-			$Html.="<div class=salta_pag>";
-			$Html.="<h2>$titulo</h2>";
-			$Html.= $this->lista();
-			$Html.="</div>";
-		}
-		return $Html;
-	}
-
-	/**
 	 * Muestra una tabla ordenable, con  botones en la cabecera y check box en cada lina.
 	 *
 	 *@return Html
 	 *
 	 */
 	function mostrar_tabla() {
+		return $this->mostrar_tabla_slickgrid();
+		/*
 		$sPrefs = '';
 		$id_usuario= core\ConfigGlobal::mi_id_usuario();
 		$tipo = 'tabla_presentacion';
@@ -213,10 +128,12 @@ class Lista {
 		} else {
 			return $this->mostrar_tabla_slickgrid();
 		}
+		*/
 	}
+	
 	/**
 	 * Muestra una tabla ordenable, con  botones en la cabecera y check box en cada lina.
-	 *
+	 **
 	 * $a_cabeceras:  array( 
    	 *		[col] = array('name'=>_("inicio"),'width'=>40,'class'=>'fecha', 'formatter'=>'clickFormatter')
 	 *				'name'=> texto de la cabecera de la columna
@@ -237,8 +154,24 @@ class Lista {
 	 * 				=> crea un 'link' que ejecuta  al funcion de $cript:
 					return \"<span class=link onclick='this.closest(\\\".slick-cell\\\").click();\"+ira+\";' >\"+value+\"</span>\";
 	 * 	[fila][col] = array( 'span'=>3, 'valor'=> $txt) => de momento no hace nada. Sirve para la funcion mostrar_tabla_html
+	 * 
 	 *@return Html Grid
-	 *
+	 * 	
+	 * Slick.Editors.Text
+    	Slick.Editors.LongText
+    	Slick.Editors.PercentComplete
+    	Slick.Editors.Date
+	 * 
+	 *  "Editors": {
+        "Text": TextEditor,
+        "Integer": IntegerEditor,
+        "Date": DateEditor,
+        "YesNoSelect": YesNoSelectEditor,
+        "Checkbox": CheckboxEditor,
+        "PercentComplete": PercentCompleteEditor,
+        "LongText": LongTextEditor
+	 	}
+	 * 
 	 */
 	function mostrar_tabla_slickgrid() {
 		$a_botones = $this->aBotones;
@@ -321,9 +254,11 @@ class Lista {
 				$sortable = !empty($Cabecera['sortable'])? $Cabecera['sortable'] : 'true';
 				$width = !empty($Cabecera['width'])? $Cabecera['width'] : '';
 				$formatter = !empty($Cabecera['formatter'])? $Cabecera['formatter'] : '';
+				$editor = !empty($Cabecera['editor'])? $Cabecera['editor'] : '';
 				if (!empty($Cabecera['visible'])) {
 					if ($Cabecera['visible'] == 'No' || $Cabecera['visible'] == 'no' ) { $visible = FALSE; }
 				}
+				
 				$sDefCol = "id: \"$id\", name: \"$name\", field: \"$field\", sortable: $sortable".$class;
 				
 				if (isset($aColsWidth[$name_idx])) {
@@ -333,6 +268,7 @@ class Lista {
 				}
 
 				if (!empty($formatter)) $sDefCol .= ", formatter: $formatter";
+				if (!empty($editor)) $sDefCol .= ", editor: $editor";
 				$sDefCol = "{".$sDefCol."}";
 				$aFields[]=$field;
 			} else {
@@ -340,7 +276,6 @@ class Lista {
 				$name_idx = str_replace(' ','',$Cabecera); // quito posibles espacios en el indice
 				$sDefCol = "{id: \"$name_idx\", name: \"$name\", field: \"$name_idx\", sortable: true";
 				if (isset($aColsWidth[$name_idx])) {
-					//$sDefCol .= ", width: \"".$aColsWidth[$c]."\"";
 					$sDefCol .= ", width: ".$aColsWidth[$name_idx];
 				}
 				$sDefCol .= "}"; 
@@ -352,6 +287,13 @@ class Lista {
 				$sColumnsVisible .= $sDefCol;
 				$cv++;
 			}
+			/*
+			if ((is_array($aColsVisible) && in_array($c,$aColsVisible)) || !is_array($aColsVisible)) {
+				if ($cv>0) { $sColumnsVisible .= ','; }
+				$sColumnsVisible .= $sDefCol;
+				$cv++;
+			}
+			*/
 			if ($c>0) { $sColumns .= ','; $sColFilters .= ','; }
 			$sColumns .=  $sDefCol;
 			$sColFilters .= "\"$name_idx\"";
@@ -378,6 +320,7 @@ class Lista {
 			ksort($fila);
 			$icol = 0;
 			$aFilas[$num_fila]["id"] = $id_fila;
+			$aFilas[$num_fila]['editable'] = ''; 
 			foreach ($fila as $col=>$valor) {
 				if ($col=="clase") {
 					$id=$valor;
@@ -403,6 +346,15 @@ class Lista {
 				} else {
 					if(is_array($valor)) {
 						$val=$valor['valor'];
+						if ( !empty($valor['editable']) ) {
+							if ($valor['editable'] =='true') {
+								$aFilas[$num_fila]['editable'] .= (!empty($aFilas[$num_fila]['editable']))? ",".$aFields[$icol] : $aFields[$icol];
+							}
+						}
+						if ( !empty($valor['editor']) ) {
+							$ira=$valor['editor'];
+							$aFilas[$num_fila]['editor'] = $ira;
+						}
 						if ( !empty($valor['clase']) ) {
 							$ira=$valor['clase'];
 							$aFilas[$num_fila]['clase'] = $ira;
@@ -441,16 +393,16 @@ class Lista {
 			$f++;
 			if ($f>1) $sData .= ',';
 			$c=0;
+			$sEdit = '';
 			$sData .= '{';
 			foreach($fila as $camp=>$valor) {
 				$c++;
 				if ($c>1) $sData .= ',';
-				// Sólo elimino los saltos de lineas. las comillas las pone bien.
-				$remove = array("\r\n", "\n", "\r");
-				$valor = str_replace($remove, ' ', $valor);
-				$sData .= "\"$camp\": \"$valor\""; 
-				//$sData .= "\"$camp\": ".json_encode($valor); //para los saltos de linea. json ya pone comillas.
-				//$sData .= "\"$camp\": decodeURIComponent('". rawurlencode($valor)."')"; //para los saltos de linea.
+					$val=$valor;
+					// Sólo elimino los saltos de lineas. las comillas las pone bien.
+					$remove = array("\r\n", "\n", "\r");
+					$val = str_replace($remove, ' ', $val);
+					$sData .= "\"$camp\": \"$val\""; 
 			}
 			$sData .= '}';
 		}
@@ -468,6 +420,18 @@ class Lista {
 			
 		$tt .= "
 			<style>
+				/* Slick.Editors.Text, Slick.Editors.Date */
+				input.editor-text {
+				  width: 100%;
+				  height: 100%;
+				  border: 0;
+				  margin: 0;
+				  background: transparent;
+				  outline: 0;
+				  padding: 0;
+				  size:10px;
+
+				}
 				.cell-title {
 				  font-weight: bold;
 				}
@@ -502,7 +466,11 @@ class Lista {
 			var data_$id_tabla = $sData;
 
 			var options = {
-				enableCellNavigation: true
+				editable: true
+				,enableAddRow: false
+				,enableCellNavigation: true
+				,asyncEditorLoading: false
+				,autoEdit: true
 				,enableColumnReorder: true
 				,forceFitColumns: true
 				,topPanelHeight: 50
@@ -513,6 +481,21 @@ class Lista {
 			var sortdir = 1;
 			var searchString = \"\";
 			var columnFilters_$id_tabla = $sColumns;
+
+			function isCellEditable(row, cell, item) {
+				tit = grid_$id_tabla.getColumns()[cell].field;
+				if(item.editable.length) {
+					var strVale = item.editable;
+					arr = strVale.split(',');
+					if ($.inArray( tit, arr ) !== -1 ) {
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			}
 
 			function metadata(old_metadata_provider) {
 			  return function(row) {
@@ -528,7 +511,7 @@ class Lista {
 				return ret;
 			  }
 			}
-
+			
 			function add_scroll_id(row) {
 				$(\"#scroll_id\").val(row);	
 				//console.log(row);
@@ -545,6 +528,7 @@ class Lista {
 			}
 			function clickFormatter2(row, cell, value, columnDef, dataContext) {
 				if (ira=dataContext['ira2']) {
+					//return \"<span class=link onclick=fnjs_update_div('#main',\\\"\"+ira+\"\\\") >\"+value+\"</span>\";
 					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"') \\\" >\"+value+\"</span>\";
 				}
 				if (ira=dataContext['script2']) {
@@ -672,12 +656,18 @@ class Lista {
 				  .show();
 				  
 				dataView_$id_tabla.getItemMetadata = metadata(dataView_$id_tabla.getItemMetadata);
-
+					
 				grid_$id_tabla.onClick.subscribe(function (e,args) {
 					add_scroll_id(args.row);
 					e.stopPropagation();
 				});
-					
+				
+				grid_$id_tabla.onBeforeEditCell.subscribe(function(e,args) {
+				  if (!isCellEditable(args.row, args.cell, args.item)) {
+					return false;
+				  }
+				});
+
 				grid_$id_tabla.onSelectedRowsChanged.subscribe(function (e,args) {
 					$.when($(\"input:checkbox\").prop('checked', false));
 					$.when($(\".selected input:checkbox\").prop('checked', true));
@@ -685,7 +675,9 @@ class Lista {
 				});
 				
 				grid_$id_tabla.onCellChange.subscribe(function (e, args) {
-					dataView_$id_tabla.updateItem(args.item.id, args.item);
+					//Updated code as per comment.
+					//console.log(args); 
+					updateItem_$id_tabla(args);
 				});
 
 				grid_$id_tabla.onAddNewRow.subscribe(function (e, args) {
@@ -770,11 +762,17 @@ class Lista {
 			dataView_$id_tabla.setFilter(myFilter_$id_tabla);
 			dataView_$id_tabla.endUpdate();
 			$(\"#grid_$id_tabla\").resizable();
-			
-			//var chk = $(\"input:checked\");
-			//chk.closest(\".slick-row\").addClass(\"active\");
-			//chk.closest(\".slick-row\").find(\".slick-cell\").addClass(\"selected\");
 		";
+
+
+		if (!empty($this->getUpdateFunction())) {
+			$tt .= "function updateItem_$id_tabla(args) {\n";
+			$tt .= "     tit = grid_$id_tabla.getColumns()[args.cell].field;";
+			$tt .= "     $(\"input[name='data']\").val(JSON.stringify(args.item));";
+			$tt .= "     $(\"input[name='colName']\").val(JSON.stringify(tit));";
+			$tt .= $this->getUpdateFunction();
+			$tt .= "}";
+		}
 		
 		if (isset($scroll_id)) {
 			$tt .= " grid_$id_tabla.scrollRowToTop($scroll_id);";
@@ -808,286 +806,22 @@ class Lista {
 		  "._('Buscar en todas las columnas')." <input type=\"text\" id=\"txtSearch_".$id_tabla."\">
 		</div>
 		";
-		return $tt;
-	}
-
-
-
-
-	/**
-	 * Muestra una tabla ordenable, con  botones en la cabecera y check box en cada lina.
-	 *
-	 *@return Html
-	 *
-	 */
-	function mostrar_tabla_html() {
-		$a_botones = $this->aBotones;
-		$a_cabeceras = $this->aCabeceras;
-		$a_valores = $this->aDatos;
-		$id_tabla = $this->sid_tabla;
-
-		$botones="";
-		$cabecera="";
-		$tbody="";
-		$tt="";
-		$clase="";
-		$chk="";
-		if (empty($a_valores)) {
-			return	_("No hay ninguna fila");
-		}
-		if (!empty($a_botones)) {
-			if ($a_botones=="ninguno") {
-				$b="x";
-			} else {
-				$b=0;
-				foreach ($a_botones as $a_boton) {
-					$btn="btn".$b++;
-					$botones .= "<INPUT id='$btn' name='$btn' type=button value=\"".$a_boton['txt']."\" onClick='".$a_boton['click']."'>";
-				}
-				$botones.="</td></tr>";
-			}
-		}
-		$cab=1;
-		foreach ($a_cabeceras as $Cabecera) {
-			if (!empty($Cabecera)) {
-				if (is_array($Cabecera)) { $name = $Cabecera['name']; } else { $name = $Cabecera; }
-			   $cabecera .= "<th class=cabecera title='"._("ordenar por...")."'>".trim($name)."</th>\n";
-			} else {
-			   $cabecera .= "<th class=cabecera tipo='notext' ></th>\n"; 
-			}
-			   $cab++;
-		}
-		$cabecera.= "</tr>\n"; 
-		// Para generar un id único
-		$ahora=date("Hms");
-		$f=1;
-
-		if (isset($a_valores['select'])) {
-			$a_valores_chk = $a_valores['select'];
-		} else {
-			$a_valores_chk = array();
-		}
 		
-		foreach($a_valores as $num_fila=>$fila) {
-			$clase = "imp";
-			$f % 2  ? 0: $clase = "par";
-			$f++;
-			$id_fila=$f.$ahora;
-			ksort($fila);
-			if (!empty($fila['clase'])) { $clase.=" ".$fila['clase']; }
-			$tbody.="<tr id='$id_fila' class='$clase'>";
-			foreach ($fila as $col=>$valor) {
-				if ($col=="clase") { continue; }
-				if ($col=="order") { continue; }
-				if ($col=="sel") {
-					if (empty($b)) continue; // si no hay botones (por permisos...) no tiene sentido el checkbox
-					$col="";
-					if(is_array($valor)) {
-						if (!empty($valor['select'])) { $chk=$valor['select']; } else { $chk=""; }
-						$id=$valor['id'];
-					} else {
-						$id=$valor;
-					}
-					if (!empty($id)) {
-						if ( in_array($id, $a_valores_chk)) { $chk ='checked'; } else { $chk = ''; }
-						$tbody.="<td tipo='sel' title='". _("clik para seleccionar")."'>";
-						$tbody.="<input class='sel' type='checkbox' $chk  name='sel[]' id='a$id' value='$id'>";
-						$tbody.="</td>";
-					} else { // no hay que dibujar el checkbox, pero si la columna
-						$tbody.="<td></td>";
-					}
-				} elseif(is_array($valor)) {
-						$val=$valor['valor'];
-						if ( !empty($valor['ira']) ) {
-							$ira=$valor['ira'];
-							$tbody.="<td><span class=\"link\" onclick=\"fnjs_update_div('#main','$ira')\" >$val</span></td>";
-						}
-						if ( !empty($valor['ira2']) ) {
-							$ira=$valor['ira2'];
-							$tbody.="<td><span class=\"link\" onclick=\"fnjs_update_div('#main','$ira')\" >$val</span></td>";
-						}
-						if (!empty($valor['script']) ) {
-							$ira= $valor['script'];
-							$tbody.="<td><span class=\"link\" onclick='$ira' >$val</span></td>";
-						}
-						if (!empty($valor['script2']) ) {
-							$ira=$valor['script2'];
-							$tbody.="<td><span class=\"link\" onclick='$ira' >$val</span></td>";
-						}
-						if (!empty($valor['span'])) {
-							$tbody.="<td colspan='".$valor['span']."'>$val</td>";
-						}
-				} else {
-						// si es una fecha, pongo la clase fecha, para exportar a excel...
-						if (preg_match("/^(\d)+[\/-]\d\d[\/-](\d\d)+$/",$valor)) {
-							list( $d,$m,$y) = preg_split('/[:\/\.-]/',$valor);
-							$fecha_iso=date("Y-m-d",mktime(0,0,0,$m,$d,$y));
-							$tbody.="<td class='fecha' fecha_iso='$fecha_iso'>$valor</td>";
-						} else {
-							$tbody.="<td>$valor</td>";
-						}
-				}
-			}
-			$tbody.="</tr>\n";
-		}
-
-		if (!empty($b) && $b!="x") {
-			$botones="<tr class=botones><td colspan='$cab'>".$botones;
-		}
-		// No puedo poner los botones como thead y tbody porque el sorteable.js se hace un lio.
-		$tt="<table>$botones</table>\n";
-		$tt.="<table border=1  class='sortable' id='$id_tabla'>\n";
-		$tt.="<thead><tr>";
-		if (!empty($b)) $tt.="<th class='unsortable' tipo='notext'></th>";
-		$tt.="$cabecera</thead><tbody>";
-		$tt.= $tbody;
-		$tt.="</tbody></table>\n";
-		$tt.="<script>
-			$(document).ready(function() {
-				var h = $('input:checked');
-				if (h.length) {
-					var h = (h.offset().top) - 300;
-					$('#main').scrollTop(h);
-				}
-			});
-			</script>";
-
+		$oHash = new Hash();
+		$oHash->setCamposNo('data!colName');
+		$a_camposHidden = array( 'que' => 'update');
+		$oHash->setArraycamposHidden($a_camposHidden);
+		
+		$tt.="<form id=\"form_update\" action=\"?\" method=\"POST\">";
+		$tt.= $oHash->getCamposHtml();
+		$tt.="
+		  <input type=\"hidden\" name=\"data\" value=\"\">
+		  <input type=\"hidden\" name=\"colName\" value=\"\">
+		</form>
+		";
 		return $tt;
 	}
 
-
-
-	/**
-	 * Muestra una tabla ordenable, con  botones en la cabecera y check box en cada lina.
-	 * Pruebo de poner grupos.
-	 *
-	 *@return Html
-	 *
-	 */
-	function mostrar_tabla_html2() {
-		$aGrupos=$this->aGrupos;
-		$a_botones = $this->aBotones;
-		$a_cabeceras = $this->aCabeceras;
-		$a_valores = $this->aDatos;
-		$id_tabla = $this->sid_tabla;
-
-		$botones="";
-		$cabecera="";
-		$tbody="";
-		$tt="";
-		$clase="";
-		$chk="";
-		if (empty($a_valores)) {
-			return	_("No hay ninguna fila");
-		}
-		if (!empty($a_botones)) {
-			if ($a_botones=="ninguno") {
-				$b="x";
-			} else {
-				$b=0;
-				foreach ($a_botones as $a_boton) {
-					$btn="btn".$b++;
-					$botones .= "<INPUT id='$btn' name='$btn' type=button value=\"".$a_boton['txt']."\" onClick='".$a_boton['click']."'>";
-				}
-				$botones.="</td></tr>";
-			}
-		}
-		$cab=1;
-		foreach ($a_cabeceras as $Cabecera) {
-			if (!empty($Cabecera)) {
-				if (is_array($Cabecera)) { $name = $Cabecera['name']; } else { $name = $Cabecera; }
-			   $cabecera .= "<th class=cabecera title='"._("ordenar por...")."'>".trim($name)."</th>\n";
-			} else {
-			   $cabecera .= "<th class=cabecera tipo='notext' ></th>\n"; 
-			}
-			   $cab++;
-		}
-		$cabecera.= "</tr>\n"; 
-		// Para generar un id único
-		$ahora=date("Hms");
-		//Grupos
-		$g=1;
-		foreach ($aGrupos as $key => $titulo) {
-			$tbody.="<tr><td colspan=100>$titulo</td></tr>";
-			$a_valores2 = $a_valores[$key];
-			$f=1;
-			foreach($a_valores2 as $num_fila=>$fila) {
-				$clase = "imp";
-				$f % 2  ? 0: $clase = "par";
-				$f++;
-				$id_fila=$f.$ahora;
-				ksort($fila);
-				if (!empty($fila['clase'])) { $clase.=" ".$fila['clase']; }
-				$tbody.="<tr id='$id_fila' class='$clase'>";
-				foreach ($fila as $col=>$valor) {
-					if ($col=="clase") { continue; }
-					if ($col=="order") { continue; }
-					if ($col=="sel") {
-						if (empty($b)) continue; // si no hay botones (por permisos...) no tiene sentido el checkbox
-						$col="";
-						if(is_array($valor)) {
-							if (!empty($valor['select'])) { $chk=$valor['select']; } else { $chk=""; }
-							$id=$valor['id'];
-						} else {
-							$id=$valor;
-						}
-						if (!empty($id)) {
-							$tbody.="<td tipo='sel' title='". _("clik para seleccionar")."'>";
-							$tbody.="<input class='sel' type='checkbox' $chk  name='sel[]' id='a$id' value='$id'>";
-							$tbody.="</td>";
-						} else { // no hay que dibujar el checkbox, pero si la columna
-							$tbody.="<td></td>";
-						}
-					} elseif(is_array($valor)) {
-							$val=$valor['valor'];
-							if ( !empty($valor['ira']) ) {
-								$ira=$valor['ira'];
-								$tbody.="<td><span class=\"link\" onclick=\"fnjs_update_div('#main','$ira')\" >$val</span></td>";
-							}
-							if ( !empty($valor['ira2']) ) {
-								$ira=$valor['ira2'];
-								$tbody.="<td><span class=\"link\" onclick=\"fnjs_update_div('#main','$ira')\" >$val</span></td>";
-							}
-							if (!empty($valor['script']) ) {
-								$ira=$valor['script'];
-								$tbody.="<td><span class=\"link\" onclick='$ira' >$val</span></td>";
-							}
-							if (!empty($valor['script2']) ) {
-								$ira=$valor['script2'];
-								$tbody.="<td><span class=\"link\" onclick='$ira' >$val</span></td>";
-							}
-							if (!empty($valor['span'])) {
-								$tbody.="<td colspan='".$valor['span']."'>$val</td>";
-							}
-					} else {
-							// si es una fecha, pongo la clase fecha, para exportar a excel...
-							if (preg_match("/^(\d)+[\/-]\d\d[\/-](\d\d)+$/",$valor)) {
-								list( $d,$m,$y) = preg_split('/[:\/\.-]/',$valor);
-								$fecha_iso=date("Y-m-d",mktime(0,0,0,$m,$d,$y));
-								$tbody.="<td class='fecha' fecha_iso='$fecha_iso'>$valor</td>";
-							} else {
-								$tbody.="<td>$valor</td>";
-							}
-					}
-				}
-				$tbody.="</tr>\n";
-			}
-		}
-
-		if (!empty($b) && $b!="x") {
-			$botones="<tr class=botones><td colspan='$cab'>".$botones;
-		}
-		// No puedo poner los botones como thead y tbody porque el sorteable.js se hace un lio.
-		$tt="<table>$botones</table>\n";
-		$tt.="<table border=1  class='sortable' id='$id_tabla'>\n";
-		$tt.="<thead><tr>";
-		if (!empty($b)) $tt.="<th class='unsortable' tipo='notext'></th>";
-		$tt.="$cabecera</thead><tbody>";
-		$tt.= $tbody;
-		$tt.="</tbody></table>\n";
-
-		return $tt;
-	}
 
 	/* METODES GET i SET ----------------------------------------------------------*/
 
@@ -1120,6 +854,38 @@ class Lista {
 	}
 	public function setRecordar($bRecordar) {
 		 $this->bRecordar = $bRecordar;
+	}
+	public function getUpdateUrl() {
+		 return $this->supdateUrl;
+	}
+	public function setUpdateUrl($supdateUrl) {
+		 $this->supdateUrl = $supdateUrl;
+	}
+	
+	public function getUpdateFunction() {
+		$fnjs = '';
+		$url = $this->getUpdateUrl();
+		if (!empty($url)) {
+			$fnjs ="
+				var url='$url';
+				$('#form_update').submit(function() {
+					$.ajax({
+						url: url,
+						type: 'post',
+						data: $(this).serialize(),
+						complete: function (rta) {
+							rta_txt=rta.responseText;
+							if (rta_txt != '' && rta_txt != '\\n') {
+								alert ('respuesta: '+rta_txt);
+							}
+						}
+					});
+					return false;
+				});
+				$('#form_update').submit();
+				";
+		}
+		return $fnjs;
 	}
 }
 ?>
