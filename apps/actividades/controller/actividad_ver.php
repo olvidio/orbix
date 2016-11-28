@@ -53,7 +53,6 @@ $sasistentes=$oTipoActiv->getAsistentesText();
 $sactividad=$oTipoActiv->getActividadText();
 $snom_tipo=$oTipoActiv->getNom_tipoText();
 
-
 if (!empty($id_ubi) && $id_ubi != 1) {
 	$oCasa = ubis\Ubi::newUbi($id_ubi);
 	$nombre_ubi=$oCasa->getNombre_ubi();

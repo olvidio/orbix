@@ -272,7 +272,6 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	/* denegada */
 	.plaza3 {
 		background: #0EB4D3 !important;
-		text-decoration:line-through;
 	}
 	/* asignada */
 	.plaza4 {

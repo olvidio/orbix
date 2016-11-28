@@ -12,50 +12,60 @@
     }
 
     function getNavState() {
-      var cannotLeaveEditMode = !Slick.GlobalEditorLock.commitCurrentEdit();
+      var cannotLeaveEditMode = !grid.getEditorLock().commitCurrentEdit();
       var pagingInfo = dataView.getPagingInfo();
       var lastPage = pagingInfo.totalPages - 1;
 
       return {
-        canGotoFirst: !cannotLeaveEditMode && pagingInfo.pageSize != 0 && pagingInfo.pageNum > 0,
-        canGotoLast: !cannotLeaveEditMode && pagingInfo.pageSize != 0 && pagingInfo.pageNum != lastPage,
-        canGotoPrev: !cannotLeaveEditMode && pagingInfo.pageSize != 0 && pagingInfo.pageNum > 0,
-        canGotoNext: !cannotLeaveEditMode && pagingInfo.pageSize != 0 && pagingInfo.pageNum < lastPage,
+        canGotoFirst: !cannotLeaveEditMode && pagingInfo.pageSize !== 0 && pagingInfo.pageNum > 0,
+        canGotoLast: !cannotLeaveEditMode && pagingInfo.pageSize !== 0 && pagingInfo.pageNum != lastPage,
+        canGotoPrev: !cannotLeaveEditMode && pagingInfo.pageSize !== 0 && pagingInfo.pageNum > 0,
+        canGotoNext: !cannotLeaveEditMode && pagingInfo.pageSize !== 0 && pagingInfo.pageNum < lastPage,
         pagingInfo: pagingInfo
-      }
+      };
     }
 
     function setPageSize(n) {
       dataView.setRefreshHints({
         isFilterUnchanged: true
       });
-      dataView.setPagingOptions({pageSize: n});
+      dataView.setPagingOptions({
+        pageSize: n
+      });
     }
 
     function gotoFirst() {
       if (getNavState().canGotoFirst) {
-        dataView.setPagingOptions({pageNum: 0});
+        dataView.setPagingOptions({
+          pageNum: 0
+        });
       }
     }
 
     function gotoLast() {
       var state = getNavState();
       if (state.canGotoLast) {
-        dataView.setPagingOptions({pageNum: state.pagingInfo.totalPages - 1});
+        dataView.setPagingOptions({
+          pageNum: state.pagingInfo.totalPages - 1
+        });
       }
     }
 
     function gotoPrev() {
       var state = getNavState();
       if (state.canGotoPrev) {
-        dataView.setPagingOptions({pageNum: state.pagingInfo.pageNum - 1});
+        dataView.setPagingOptions({
+          pageNum: state.pagingInfo.pageNum - 1
+        });
       }
     }
 
     function gotoNext() {
       var state = getNavState();
       if (state.canGotoNext) {
-        dataView.setPagingOptions({pageNum: state.pagingInfo.pageNum + 1});
+        dataView.setPagingOptions({
+          pageNum: state.pagingInfo.pageNum + 1
+        });
       }
     }
 
@@ -71,12 +81,18 @@
 
       $settings.find("a[data]").click(function (e) {
         var pagesize = $(e.target).attr("data");
-        if (pagesize != undefined) {
-          if (pagesize == -1) {
+        if (pagesize != null) {
+          pagesize = parseInt(pagesize);
+          if (pagesize === -1) {
             var vp = grid.getViewport();
-            setPageSize(vp.bottom - vp.top);
+            // the viewport spans several rows, including possibly two partial rows, so the actual page height should account for those:
+            // this is calculated as the height in rows minus the invisible fraction at top minus the INvisible fraction at bottom:
+            //    var height = Math.floor(vp.bottomVisible - vp.top + 1 - vp.topInvisibleFraction - (1 - vp.bottomVisibleFraction));
+            // which reduces to:
+            var height = Math.floor(vp.bottomVisible - vp.top - vp.topInvisibleFraction + vp.bottomVisibleFraction);
+            setPageSize(height);
           } else {
-            setPageSize(parseInt(pagesize));
+            setPageSize(pagesize);
           }
         }
       });
@@ -86,7 +102,7 @@
 
       $(icon_prefix + "ui-icon-lightbulb" + icon_suffix)
           .click(function () {
-            $(".slick-pager-settings-expanded").toggle()
+            $(".slick-pager-settings-expanded").toggle();
           })
           .appendTo($settings);
 
@@ -121,19 +137,29 @@
       $container.find(".slick-pager-nav span").removeClass("ui-state-disabled");
       if (!state.canGotoFirst) {
         $container.find(".ui-icon-seek-first").addClass("ui-state-disabled");
+        $container.find(".ui-icon-seek-first").parent().addClass("ui-state-disabled");
       }
       if (!state.canGotoLast) {
         $container.find(".ui-icon-seek-end").addClass("ui-state-disabled");
+        $container.find(".ui-icon-seek-end").parent().addClass("ui-state-disabled");
       }
       if (!state.canGotoNext) {
         $container.find(".ui-icon-seek-next").addClass("ui-state-disabled");
+        $container.find(".ui-icon-seek-next").parent().addClass("ui-state-disabled");
       }
       if (!state.canGotoPrev) {
         $container.find(".ui-icon-seek-prev").addClass("ui-state-disabled");
+        $container.find(".ui-icon-seek-prev").parent().addClass("ui-state-disabled");
       }
 
-      if (pagingInfo.pageSize == 0) {
-        $status.text("Showing all " + pagingInfo.totalRows + " rows");
+      if (pagingInfo.pageSize === 0) {
+        var totalRowsCount = dataView.getItems().length;
+        var visibleRowsCount = pagingInfo.totalRows;
+        if (visibleRowsCount < totalRowsCount) {
+          $status.text("Showing " + visibleRowsCount + " of " + totalRowsCount + " rows");
+        } else {
+          $status.text("Showing all " + totalRowsCount + " rows");
+        }
       } else {
         $status.text("Showing page " + (pagingInfo.pageNum + 1) + " of " + pagingInfo.totalPages);
       }
@@ -143,5 +169,11 @@
   }
 
   // Slick.Controls.Pager
-  $.extend(true, window, { Slick:{ Controls:{ Pager:SlickGridPager }}});
+  $.extend(true, window, {
+    Slick: {
+      Controls: {
+        Pager: SlickGridPager
+      }
+    }
+  });
 })(jQuery);

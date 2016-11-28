@@ -15,6 +15,18 @@ use personas\model as personas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+/* Validate inputs $b = (string)filter_input(INPUT_GET, 'b'); */
+	
+$todos = (string)  filter_input(INPUT_POST, 'todos');
+$go_to = (string)  filter_input(INPUT_POST, 'go_to');
+$obj_pau = (string)  filter_input(INPUT_POST, 'obj_pau');
+$breve = (string)  filter_input(INPUT_POST, 'breve');
+$es_sacd = (string)  filter_input(INPUT_POST, 'es_sacd');
+$tabla = (string)  filter_input(INPUT_POST, 'tabla');
+$id_activ = (string)  filter_input(INPUT_POST, 'id_activ');
+$scroll_id = (string)  filter_input(INPUT_POST, 'scroll_id');
+$a_sel = (string)  filter_input(INPUT_POST, 'sel');
+	
 /* Pongo en la variable $curso el periodo del curso */
 $mes=date('m');
 $any=date('Y');
@@ -22,20 +34,15 @@ if ($mes>9) { $any=$any+1; }
 $inicurs_ca=core\curso_est("inicio",$any);
 $fincurs_ca=core\curso_est("fin",$any);
 
-//$curso="AND f_ini BETWEEN '$inicurs_ca' AND '$fincurs_ca' ";
-$todos = empty($_POST['todos'])? '' : $_POST['todos'];
-
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	$id_pau=strtok($_POST['sel'][0],"#");
+if (!empty($a_sel)) { //vengo de un checkbox
+	$id_pau=strtok($a_sel[0],"#");
 	$id_tabla=strtok("#");
 }
 
-if (empty($_POST['go_to'])) {
+if (empty($go_to)) {
 	//pongo aqui el $go_to porque al ir al mismo update que las actividaes, no se donde voler
-	$a_dataUrl = array('queSel'=>'matriculas','pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$_POST['obj_pau'],'id_dossier'=>$id_dossier);
+	$a_dataUrl = array('queSel'=>'matriculas','pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier);
 	$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query($a_dataUrl));
-} else {
-	$go_to = $_POST['go_to'];
 }
 
 $aviso = '';
@@ -46,7 +53,7 @@ if ($stgr == 'r') $aviso .= _("Está de repaso")."<br>";
 
 echo $oPosicion->atras();
 
-if (!empty($_POST['id_activ'])) {  // ¿? ya tengo una actividad concreta (vengo del dossier de esa actividad).
+if (!empty($id_activ)) {  // ¿? ya tengo una actividad concreta (vengo del dossier de esa actividad).
 	$sql_tabla = "SELECT a.nom_activ, asis.id_activ, asis.est_ok
 			FROM a_actividades a, d_asistentes_activ asis
 			WHERE a.id_activ=$id_activ AND asis.id_nom='$id_pau' AND asis.id_activ=a.id_activ
@@ -71,11 +78,11 @@ if (is_array($cAsistencias)) {
 		$oHashA->setcamposNo('scroll_id');
 		$a_camposHidden = array(
 					'pau' => 'p',
-					'obj_pau' => $_POST['obj_pau'],
+					'obj_pau' => $obj_pau,
 					'permiso' => '3',
-					'breve' => $_POST['breve'],
-					'es_sacd' => $_POST['es_sacd'],
-					'tabla' => $_POST['tabla'],
+					'breve' => $breve,
+					'es_sacd' => $es_sacd,
+					'tabla' => $tabla,
 					'que' => 'matriculas',
 					'id_dossier' => 1303,
 					'todos' => 1
@@ -85,8 +92,8 @@ if (is_array($cAsistencias)) {
 		$aviso .= _(sprintf("No tiene asignado ningún ca como propio este curso: %s - %s.",$inicurs_ca,$fincurs_ca)); 
 		$aviso .= "<form action='apps/dossiers/controller/dossiers_ver.php' method='post'>";
 		$aviso .= $oHashA->getCamposHtml();
-		$aviso .= "<input type=hidden name='sel[]' value='".$_POST['sel'][0]."' >";
-		$aviso .= "<input type=hidden name='scroll_id' value='".$_POST['scroll_id']."' >";
+		$aviso .= "<input type=hidden name='sel[]' value='".$a_sel[0]."' >";
+		$aviso .= "<input type=hidden name='scroll_id' value='".$scroll_id."' >";
 		$aviso .= "<input type=button onclick=fnjs_enviar_formulario(this.form) value='"._("ver anteriores")."'>";
 		$aviso .= "</form>";
 	}
@@ -185,7 +192,7 @@ foreach ($cAsistencias as $oAsistente) {
 			'pau' => $pau,
 			'id_pau' => $id_pau,
 			'id_activ' => $id_activ,
-			'obj_pau' => $_POST['obj_pau'],
+			'obj_pau' => $obj_pau,
 			'id_dossier' => $id_dossier,
 			'permiso' => 3
 			);

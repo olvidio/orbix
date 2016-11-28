@@ -229,80 +229,20 @@ class TablaEditable {
 			}
 		}
 
-		$c = 0;
-		$cv = 0;
-		$sColumns = '[';
-		$sColumnsVisible = '[';
-		$sColFilters = '[';
-		$aFields = array();
 		if ($b != 0 && $b != 'x') {
-			$c++;
 			$width = isset($aColsWidth['sel'])? $aColsWidth['sel'] : 30;
 			$sColumns.= "{id: \"sel\", name: \"sel\", field: \"sel\", width:$width, sortable: false, formatter: checkboxSelectionFormatter}";
 			if (!is_array($aColsVisible) || $aColsVisible['sel']=="true") {
 				$sColumnsVisible .= "{id: \"sel\", name: \"sel\", field: \"sel\", width:$width, sortable: false, formatter: checkboxSelectionFormatter},";
 			}
 		}
-		foreach($a_cabeceras as $Cabecera) {
-			$visible = TRUE;
-			if (is_array($Cabecera)) {
-				$name = $Cabecera['name']; // esta tiene que existir siempre
-				$name_idx = str_replace(' ','',$name); // quito posibles espacios en el indice
-				$id = !empty($Cabecera['id'])? $Cabecera['id'] : str_replace(' ','',$name); // quito posibles espacios en el indice
-				$field = !empty($Cabecera['field'])? $Cabecera['field'] :  str_replace(' ','',$name); // quito posibles espacios en el indice
-				$class = !empty($Cabecera['class'])? ", cssClass: \"${Cabecera['class']}\"" : '';
-				$sortable = !empty($Cabecera['sortable'])? $Cabecera['sortable'] : 'true';
-				$width = !empty($Cabecera['width'])? $Cabecera['width'] : '';
-				$formatter = !empty($Cabecera['formatter'])? $Cabecera['formatter'] : '';
-				$editor = !empty($Cabecera['editor'])? $Cabecera['editor'] : '';
-				if (!empty($Cabecera['visible'])) {
-					if ($Cabecera['visible'] == 'No' || $Cabecera['visible'] == 'no' ) { $visible = FALSE; }
-				}
-				
-				$sDefCol = "id: \"$id\", name: \"$name\", field: \"$field\", sortable: $sortable".$class;
-				
-				if (isset($aColsWidth[$name_idx])) {
-					$sDefCol .= ", width: ".$aColsWidth[$name_idx];
-				} else {
-					if (!empty($width)) $sDefCol .= ", width: $width";
-				}
 
-				if (!empty($formatter)) $sDefCol .= ", formatter: $formatter";
-				if (!empty($editor)) $sDefCol .= ", editor: $editor";
-				$sDefCol = "{".$sDefCol."}";
-				$aFields[]=$field;
-			} else {
-				$name = $Cabecera;
-				$name_idx = str_replace(' ','',$Cabecera); // quito posibles espacios en el indice
-				$sDefCol = "{id: \"$name_idx\", name: \"$name\", field: \"$name_idx\", sortable: true";
-				if (isset($aColsWidth[$name_idx])) {
-					$sDefCol .= ", width: ".$aColsWidth[$name_idx];
-				}
-				$sDefCol .= "}"; 
-				$aFields[]=$name_idx;
-			}
-			if ((is_array($aColsVisible) && !empty($aColsVisible[$name_idx]) && ($aColsVisible[$name_idx]=="true")) || !is_array($aColsVisible)) {
-				if (!$visible) continue;
-				if ($cv>0) { $sColumnsVisible .= ','; }
-				$sColumnsVisible .= $sDefCol;
-				$cv++;
-			}
-			/*
-			if ((is_array($aColsVisible) && in_array($c,$aColsVisible)) || !is_array($aColsVisible)) {
-				if ($cv>0) { $sColumnsVisible .= ','; }
-				$sColumnsVisible .= $sDefCol;
-				$cv++;
-			}
-			*/
-			if ($c>0) { $sColumns .= ','; $sColFilters .= ','; }
-			$sColumns .=  $sDefCol;
-			$sColFilters .= "\"$name_idx\"";
-			$c++;
-		}
-		$sColumns .= ']';
-		$sColumnsVisible .= ']';
-		$sColFilters .= ']';
-
+		$aCols = $this->getHeader($a_cabeceras);
+		$sColumns = $aCols['cols'];
+		$sColumnsVisible = $aCols['colsVivible'];
+		$sColFilters = $aCols['colFilters'];
+		$header_num =  $aCols['header_num'];
+		
 		// Para generar un id único
 		$ahora=date("Hms");
 		$f=1;
@@ -318,7 +258,6 @@ class TablaEditable {
 			$f++;
 			$id_fila=$f.$ahora;
 			ksort($fila);
-			$icol = 0;
 			$aFilas[$num_fila]["id"] = $id_fila;
 			$aFilas[$num_fila]['editable'] = ''; 
 			foreach ($fila as $col=>$valor) {
@@ -348,7 +287,7 @@ class TablaEditable {
 						$val=$valor['valor'];
 						if ( !empty($valor['editable']) ) {
 							if ($valor['editable'] =='true') {
-								$aFilas[$num_fila]['editable'] .= (!empty($aFilas[$num_fila]['editable']))? ",".$aFields[$icol] : $aFields[$icol];
+								$aFilas[$num_fila]['editable'] .= (!empty($aFilas[$num_fila]['editable']))? ",".$col : $col;
 							}
 						}
 						if ( !empty($valor['editor']) ) {
@@ -378,11 +317,10 @@ class TablaEditable {
 						if (!empty($valor['span'])) {
 							$span="$val";
 						}
-						$aFilas[$num_fila][$aFields[$icol]] = addslashes($val);
+						$aFilas[$num_fila][$col] = addslashes($val);
 					} else {
-						$aFilas[$num_fila][$aFields[$icol]] = addslashes($valor);
+						$aFilas[$num_fila][$col] = addslashes($valor);
 					}
-				$icol++;
 				}
 			}
 		}
@@ -410,7 +348,7 @@ class TablaEditable {
 
 		// calculo la altura de la tabla
 		if ($f < 12) {
-			$grid_height = (2+$f)*25; // +2 (cabecera y última linea en blanco). 25 = rowheight
+			$grid_height = ($header_num+1+$f)*25; // +2 (cabecera y última linea en blanco). 25 = rowheight
 		} else {
 			$grid_height = 350;
 		}
@@ -470,7 +408,7 @@ class TablaEditable {
 				,enableAddRow: false
 				,enableCellNavigation: true
 				,asyncEditorLoading: false
-				,autoEdit: true
+				,autoEdit: false
 				,enableColumnReorder: true
 				,forceFitColumns: true
 				,topPanelHeight: 50
@@ -481,8 +419,10 @@ class TablaEditable {
 			var sortdir = 1;
 			var searchString = \"\";
 			var columnFilters_$id_tabla = $sColumns;
-
-			function isCellEditable(row, cell, item) {
+		
+			function isCellEditable(row, cell) {
+			 	item = dataView_$id_tabla.getItem(row);	
+				//console.log(item);
 				tit = grid_$id_tabla.getColumns()[cell].field;
 				if(item.editable.length) {
 					var strVale = item.editable;
@@ -522,7 +462,7 @@ class TablaEditable {
 					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"') \\\" >\"+value+\"</span>\";
 				}
 				if (ira=dataContext['script']) {
-					return \"<span class=link onclick='this.closest(\\\".slick-cell\\\").click();\"+ira+\";' >\"+value+\"</span>\";
+					return \"<span class=link onclick='grid_$id_tabla.setSelectedRows([\"+row+\"]);\"+ira+\";' >\"+value+\"</span>\";
 				}
 				return value;
 			}
@@ -545,7 +485,8 @@ class TablaEditable {
 				  var array_val=value.split('#');
 				  var chk = array_val[0];
 				  if (chk.length) {
-				  	chk = 'checked=true';
+					chk = 'checked=\"checked\"';
+					grid_$id_tabla.setSelectedRows([row]);	
 				  }
 				  var val = '';
 				  $.each(array_val, function(index, value) {
@@ -562,6 +503,7 @@ class TablaEditable {
 
 			";
 		$tt .= "
+			
 			// Define search filter
 			function myFilter_$id_tabla(item,args) {
 				var searchFields = $sColFilters;
@@ -581,6 +523,7 @@ class TablaEditable {
 				}
 				return true;
 			}
+			
 			function comparer(a,b) {
 				var dateformat = /^\d{1,2}(\-|\/|\.)\d{1,2}(\-|\/|\.)\d{2,4}$/;
 				var dateTimeFormat = /^\d{1,2}(\-|\/|\.)\d{1,2}(\-|\/|\.)\d{2,4} \d{2}:\d{2}:\d{2}$/;
@@ -659,11 +602,19 @@ class TablaEditable {
 					
 				grid_$id_tabla.onClick.subscribe(function (e,args) {
 					add_scroll_id(args.row);
-					e.stopPropagation();
+					grid_$id_tabla.setSelectedRows([args.row]);
+					//e.stopPropagation();
 				});
 				
+				grid_$id_tabla.onDblClick.subscribe(function (e,args) {
+				  if (!isCellEditable(args.row, args.cell)) {
+					//return false;
+				    e.stopPropagation();
+				  }
+				});
+
 				grid_$id_tabla.onBeforeEditCell.subscribe(function(e,args) {
-				  if (!isCellEditable(args.row, args.cell, args.item)) {
+				  if (!isCellEditable(args.row, args.cell)) {
 					return false;
 				  }
 				});
@@ -677,7 +628,9 @@ class TablaEditable {
 				grid_$id_tabla.onCellChange.subscribe(function (e, args) {
 					//Updated code as per comment.
 					//console.log(args); 
-					updateItem_$id_tabla(args);
+				  	if (isCellEditable(args.row, args.cell)) {
+						updateItem_$id_tabla(args);
+					}
 				});
 
 				grid_$id_tabla.onAddNewRow.subscribe(function (e, args) {
@@ -781,8 +734,6 @@ class TablaEditable {
 		if ($bPanelVis) $tt .= "toggleFilterRow_$id_tabla();";
 		
 		$tt .= "
-			var chk = $(\"#grid_$id_tabla input:checked\");
-			chk.click();
 			})
 		</script>
 		";
@@ -822,7 +773,75 @@ class TablaEditable {
 		return $tt;
 	}
 
+	public function getHeader($aHeader){
+		global $aColsVisible;
+		$header_num = 1;
+		$sColumns = '';
+		$sColumnsVisible = '';
+		$sColFilters = '';
+		foreach($aHeader as $Cabecera) {
+			$visible = TRUE;
+			if (is_array($Cabecera)) {
+				$name = $Cabecera['name']; // esta tiene que existir siempre
+				$name_idx = str_replace(' ','',$name); // quito posibles espacios en el indice
+				$id = !empty($Cabecera['id'])? $Cabecera['id'] : str_replace(' ','',$name); // quito posibles espacios en el indice
+				//$field = !empty($Cabecera['field'])? $Cabecera['field'] :  str_replace(' ','',$name); // quito posibles espacios en el indice
+				$field = !empty($Cabecera['field'])? $Cabecera['field'] :  '';
+				$class = !empty($Cabecera['class'])? ", cssClass: \"${Cabecera['class']}\"" : '';
+				$sortable = !empty($Cabecera['sortable'])? $Cabecera['sortable'] : 'true';
+				$width = !empty($Cabecera['width'])? $Cabecera['width'] : '';
+				$formatter = !empty($Cabecera['formatter'])? $Cabecera['formatter'] : '';
+				$editor = !empty($Cabecera['editor'])? $Cabecera['editor'] : '';
+				if (!empty($Cabecera['visible'])) {
+					if ($Cabecera['visible'] == 'No' || $Cabecera['visible'] == 'no' ) { $visible = FALSE; }
+				}
+				
+				$sDefCol = "{id: \"$id\", name: \"$name\", sortable: $sortable".$class;
+				
+				if (!empty($field)) $sDefCol .= ", field: \"$field\" ";
 
+				if (isset($aColsWidth[$name_idx])) {
+					$sDefCol .= ", width: ".$aColsWidth[$name_idx];
+				} else {
+					if (!empty($width)) $sDefCol .= ", width: $width";
+				}
+
+				if (!empty($formatter)) $sDefCol .= ", formatter: $formatter";
+				if (!empty($editor)) $sDefCol .= ", editor: $editor";
+
+				if (!empty($Cabecera['children'])) {
+					$aColss = $this->getHeader($Cabecera['children']);
+					$sColss = $aColss['cols'];
+					$sDefCol .= ", children: $sColss";
+					// si tiene sub-titulos, amplio la altura de la tabla.
+					$header_num = 2;
+				}
+				$sDefCol .= "}";
+					
+			} else {
+				$name = $Cabecera;
+				$name_idx = str_replace(' ','',$Cabecera); // quito posibles espacios en el indice
+				$sDefCol = "{id: \"$name_idx\", name: \"$name\", field: \"$name_idx\", sortable: true";
+				if (isset($aColsWidth[$name_idx])) {
+					$sDefCol .= ", width: ".$aColsWidth[$name_idx];
+				}
+				$sDefCol .= "}"; 
+			}
+			if ((is_array($aColsVisible) && !empty($aColsVisible[$name_idx]) && ($aColsVisible[$name_idx]=="true")) || !is_array($aColsVisible)) {
+				if (!$visible) { continue; }
+				$sColumnsVisible .= empty($sColumnsVisible)? $sDefCol : ','.$sDefCol;
+			}
+			
+			$sColumns .= empty($sColumns)? $sDefCol : ','.$sDefCol;
+			$sColFilters .= empty($sColFilters)? "\"$name_idx\"" : ",\"$name_idx\"";
+			
+		}
+		$sColumns = '['.$sColumns.']';
+		$sColumnsVisible = '['.$sColumnsVisible.']';
+		$sColFilters = '['.$sColFilters.']';
+
+		return array('cols'=>$sColumns,'colsVivible'=>$sColumnsVisible,'colFilters'=>$sColFilters,'header_num'=>$header_num);
+	}
 	/* METODES GET i SET ----------------------------------------------------------*/
 
 	public function setGrupos($aGrupos) {

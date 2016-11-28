@@ -1,3 +1,23 @@
 .gitk*
 .idea/*
+*.orig
+.project
 .DS_Store
+.settings/
+.project
+.idea
+
+node_modules/
+
+# Editor backup files
+*~
+*.bak
+
+# utility forks analyze script caches
+__forks.info__/
+__forks__.bulk_dump
+
+# analyze_github script cache:
+__forks.info__/
+__forks__.bulk_dump
+

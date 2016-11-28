@@ -1,45 +1,48 @@
 (function ($) {
   // register namespace
   $.extend(true, window, {
-    "Slick": {
-      "RowSelectionModel": RowSelectionModel
+    Slick: {
+      RowSelectionModel: RowSelectionModel
     }
   });
 
   function RowSelectionModel(options) {
     var _grid;
     var _ranges = [];
+    var _rowIndexes = [];
     var _self = this;
     var _handler = new Slick.EventHandler();
-    var _inHandler;
+    var _dragging;
+    var _canvas;
     var _options;
     var _defaults = {
-      selectActiveRow: true
+      selectActiveRow: true,
+      dragToMultiSelect: false
     };
 
     function init(grid) {
       _options = $.extend(true, {}, _defaults, options);
       _grid = grid;
-      _handler.subscribe(_grid.onActiveCellChanged,
-          wrapHandler(handleActiveCellChange));
-      _handler.subscribe(_grid.onKeyDown,
-          wrapHandler(handleKeyDown));
-      _handler.subscribe(_grid.onClick,
-          wrapHandler(handleClick));
+      _handler.subscribe(_grid.onActiveCellChanged, handleActiveCellChange);
+      _handler.subscribe(_grid.onKeyDown, handleKeyDown);
+      _handler.subscribe(_grid.onClick, handleClick);
+
+      if (_options.dragToMultiSelect) {
+        if (_grid.getOptions().multiSelect) {
+          _handler.subscribe(_grid.onDragInit, handleDragInit)
+            .subscribe(_grid.onDragStart, handleDragStart)
+            .subscribe(_grid.onDrag, handleDrag)
+            .subscribe(_grid.onDragEnd, handleDragEnd);
+          _dragging = false;
+          _canvas = _grid.getCanvasNode();
+        } else {
+          console.log("Can't do drag to Multi Select unless multiSelect is enabled for the grid");
+        }
+      }
     }
 
     function destroy() {
       _handler.unsubscribeAll();
-    }
-
-    function wrapHandler(handler) {
-      return function () {
-        if (!_inHandler) {
-          _inHandler = true;
-          handler.apply(this, arguments);
-          _inHandler = false;
-        }
-      };
     }
 
     function rangesToRows(ranges) {
@@ -66,10 +69,50 @@
       for (i = from; i <= to; i++) {
         rows.push(i);
       }
-      for (i = to; i < from; i++) {
+      for (i = to; i <= from; i++) {
         rows.push(i);
       }
       return rows;
+    }
+
+    function unionArrays(x, y) {
+      var i;
+      var obj = {};
+      for (i = x.length - 1; i >= 0; i--) {
+        obj[x[i]] = x[i];
+      }
+      for (i = y.length - 1; i >= 0; i--) {
+        obj[y[i]] = y[i];
+      }
+      var res = [];
+      for (var k in obj) {
+        if (obj.hasOwnProperty(k)) {
+          res.push(obj[k]);
+        }
+      }
+      return res;
+    }
+
+    function xorArrays(x, y) {
+      var i;
+      var obj = {};
+      for (i = x.length - 1; i >= 0; i--) {
+        obj[x[i]] = x[i];
+      }
+      for (i = y.length - 1; i >= 0; i--) {
+        if (obj.hasOwnProperty(y[i])) {
+          delete obj[y[i]];
+        } else {
+          obj[y[i]] = y[i];
+        }
+      }
+      var res = [];
+      for (var k in obj) {
+        if (obj.hasOwnProperty(k)) {
+          res.push(obj[k]);
+        }
+      }
+      return res;
     }
 
     function getSelectedRows() {
@@ -81,10 +124,22 @@
     }
 
     function setSelectedRanges(ranges) {
-      // simle check for: empty selection didn't change, prevent firing onSelectedRangesChanged
-      if ((!_ranges || _ranges.length === 0) && (!ranges || ranges.length === 0)) { return; }
+      var
+        selectionIndexes = $.map(ranges, function(r) {
+          return r.fromRow;
+        }),
+        deleteIndexes = _rowIndexes.filter(function(elem) {
+          return selectionIndexes.indexOf(elem) === -1;
+        });
+
+      _rowIndexes = selectionIndexes;
       _ranges = ranges;
       _self.onSelectedRangesChanged.notify(_ranges);
+      _self.onSelectionChanged.notify({
+        deletes: deleteIndexes,
+        selection: selectionIndexes
+        //multiselect: multiselect === true
+      });
     }
 
     function getSelectedRanges() {
@@ -92,8 +147,8 @@
     }
 
     function handleActiveCellChange(e, data) {
-      if (_options.selectActiveRow && data.row != null) {
-        setSelectedRanges([new Slick.Range(data.row, 0, data.row, _grid.getColumns().length - 1)]);
+      if (_options.selectActiveRow && data.activeCell.row != null) {
+        setSelectedRanges([new Slick.Range(data.activeCell.row, 0, data.activeCell.row, _grid.getColumns().length - 1)]);
       }
     }
 
@@ -102,7 +157,7 @@
       if (activeRow && e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey && (e.which == 38 || e.which == 40)) {
         var selectedRows = getSelectedRows();
         selectedRows.sort(function (x, y) {
-          return x - y
+          return x - y;
         });
 
         if (!selectedRows.length) {
@@ -173,6 +228,91 @@
       return true;
     }
 
+    function handleDragInit(e, dd) {
+      // prevent the grid from cancelling drag'n'drop by default
+      e.stopImmediatePropagation();
+    }
+
+    function handleDragStart(e, dd) {
+      var cell = _grid.getCellFromEvent(e);
+
+      if (_grid.canCellBeSelected(cell.row, cell.cell)) {
+        _dragging = true;
+        e.stopImmediatePropagation();
+      }
+
+      if (!_dragging) {
+        return;
+      }
+
+      _grid.focus();
+
+      var x, y, o;
+      o = $(_canvas).offset();
+      x = dd.pageX - o.left;
+      y = dd.pageY - o.top;
+      var start = _grid.getCellFromPoint(x, y, {
+        clipToValidRange: true
+      });
+      assert(start);
+
+      var combinationMode = 'replace';
+      if (e.shiftKey) {
+        combinationMode = 'union';
+      }
+      if (e.ctrlKey || e.metaKey) {
+        combinationMode = 'xor';
+      }
+
+      dd.range = {
+        start: start, 
+        end: {}
+      };
+      dd.alreadySelectedRows = rangesToRows(_ranges);
+      dd.combinationMode = combinationMode;
+    }
+
+    function handleDrag(e, dd) {
+      if (!_dragging) {
+        return;
+      }
+      e.stopImmediatePropagation();
+
+      var x, y, o;
+      o = $(_canvas).offset();
+      x = e.pageX - o.left;
+      y = e.pageY - o.top;
+      var end = _grid.getCellFromPoint(x, y, {
+        clipToValidRange: true
+      });
+      assert(end);
+
+      if (!_grid.canCellBeSelected(end.row, end.cell)) {
+        return;
+      }
+      _grid.setActiveCell(end.row, end.cell);
+      dd.range.end = end;
+      var rows = getRowsRange(dd.range.start.row, dd.range.end.row);
+      if (dd.combinationMode === 'union') {
+        rows = unionArrays(rows, dd.alreadySelectedRows);
+      } else if (dd.combinationMode === 'xor') {
+        rows = xorArrays(rows, dd.alreadySelectedRows);
+      }
+
+      _ranges = rowsToRanges(rows);
+      setSelectedRanges(_ranges);
+      return true;
+    }
+
+    function handleDragEnd(e, dd) {
+      if (!_dragging) {
+        return;
+      }
+
+      _dragging = false;
+      e.stopImmediatePropagation();
+    }
+
     $.extend(this, {
       "getSelectedRows": getSelectedRows,
       "setSelectedRows": setSelectedRows,
@@ -183,7 +323,8 @@
       "init": init,
       "destroy": destroy,
 
-      "onSelectedRangesChanged": new Slick.Event()
+      "onSelectedRangesChanged": new Slick.Event(),
+      "onSelectionChanged": new Slick.Event()
     });
   }
 })(jQuery);

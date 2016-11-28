@@ -1,8 +1,8 @@
 (function ($) {
   // register namespace
   $.extend(true, window, {
-    "Slick": {
-      "RowMoveManager": RowMoveManager
+    Slick: {
+      RowMoveManager: RowMoveManager
     }
   });
 
@@ -32,19 +32,32 @@
     }
 
     function handleDragInit(e, dd) {
+      var cell = _grid.getCellFromEvent(e);
+      if (!cell) {
+        return;
+      }
+
+      if (!/move|selectAndMove/.test(_grid.getColumns()[cell.cell].behavior)) {
+        return;
+      }
+
       // prevent the grid from cancelling drag'n'drop by default
-      e.stopImmediatePropagation();
+      //e.stopImmediatePropagation();
+      e.preventDefault();
     }
 
     function handleDragStart(e, dd) {
       var cell = _grid.getCellFromEvent(e);
+      if (!cell) {
+        return;
+      }
 
       if (options.cancelEditOnDrag && _grid.getEditorLock().isActive()) {
         _grid.getEditorLock().cancelCurrentEdit();
       }
 
       if (_grid.getEditorLock().isActive() || !/move|selectAndMove/.test(_grid.getColumns()[cell.cell].behavior)) {
-        return false;
+        return;
       }
 
       _dragging = true;
@@ -52,7 +65,7 @@
 
       var selectedRows = _grid.getSelectedRows();
 
-      if (selectedRows.length == 0 || $.inArray(cell.row, selectedRows) == -1) {
+      if (selectedRows.length === 0 || $.inArray(cell.row, selectedRows) === -1) {
         selectedRows = [cell.row];
         _grid.setSelectedRows(selectedRows);
       }
@@ -91,8 +104,8 @@
       var insertBefore = Math.max(0, Math.min(Math.round(top / _grid.getOptions().rowHeight), _grid.getDataLength()));
       if (insertBefore !== dd.insertBefore) {
         var eventData = {
-          "rows": dd.selectedRows,
-          "insertBefore": insertBefore
+          rows: dd.selectedRows,
+          insertBefore: insertBefore
         };
 
         if (_self.onBeforeMoveRows.notify(eventData) === false) {
@@ -104,6 +117,9 @@
         }
 
         dd.insertBefore = insertBefore;
+
+        // TODO: Implement in a timer
+        _grid.scrollRowIntoView(insertBefore);
       }
     }
 
@@ -119,10 +135,10 @@
 
       if (dd.canMove) {
         var eventData = {
-          "rows": dd.selectedRows,
-          "insertBefore": dd.insertBefore
+          rows: dd.selectedRows,
+          insertBefore: dd.insertBefore
         };
-        // TODO:  _grid.remapCellCssClasses ?
+        // TODO: _grid.remapCellCssClasses ?
         _self.onMoveRows.notify(eventData);
       }
     }

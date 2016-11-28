@@ -467,33 +467,6 @@ class Lista {
 		$tt = "<input id=\"scroll_id\" name=\"scroll_id\" value=\"$scroll_id\" type=\"hidden\">";
 			
 		$tt .= "
-			<style>
-				.cell-title {
-				  font-weight: bold;
-				}
-
-				.cell-effort-driven {
-				  text-align: center;
-				}
-
-				.cell-selection {
-				  border-right-color: silver;
-				  border-right-style: solid;
-				  background: #f5f5f5;
-				  color: gray;
-				  text-align: right;
-				  font-size: 10px;
-				}
-
-				.selected {
-				  background-color: #FBB; /* show default selected row background */
-				}
-				.slick-row.selected .cell-selection {
-				  background-color: green; /* show default selected row background */
-				}
-			</style>
-			";
-		$tt .= "
 			<script>
 			var dataView_$id_tabla;
 			var grid_$id_tabla;
@@ -503,6 +476,7 @@ class Lista {
 
 			var options = {
 				enableCellNavigation: true
+				,enableAddRow: false
 				,enableColumnReorder: true
 				,forceFitColumns: true
 				,topPanelHeight: 50
@@ -539,7 +513,7 @@ class Lista {
 					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"') \\\" >\"+value+\"</span>\";
 				}
 				if (ira=dataContext['script']) {
-					return \"<span class=link onclick='this.closest(\\\".slick-cell\\\").click();\"+ira+\";' >\"+value+\"</span>\";
+					return \"<span class=link onclick='grid_$id_tabla.setSelectedRows([\"+row+\"]);\"+ira+\";' >\"+value+\"</span>\";
 				}
 				return value;
 			}
@@ -561,7 +535,8 @@ class Lista {
 				  var array_val=value.split('#');
 				  var chk = array_val[0];
 				  if (chk.length) {
-				  	chk = 'checked=true';
+				  	chk = 'checked=\"checked\"';
+					grid_$id_tabla.setSelectedRows([row]);
 				  }
 				  var val = '';
 				  $.each(array_val, function(index, value) {
@@ -675,7 +650,8 @@ class Lista {
 
 				grid_$id_tabla.onClick.subscribe(function (e,args) {
 					add_scroll_id(args.row);
-					e.stopPropagation();
+					grid_$id_tabla.setSelectedRows([args.row]);
+					//e.stopPropagation();
 				});
 					
 				grid_$id_tabla.onSelectedRowsChanged.subscribe(function (e,args) {
@@ -770,21 +746,12 @@ class Lista {
 			dataView_$id_tabla.setFilter(myFilter_$id_tabla);
 			dataView_$id_tabla.endUpdate();
 			$(\"#grid_$id_tabla\").resizable();
-			
-			//var chk = $(\"input:checked\");
-			//chk.closest(\".slick-row\").addClass(\"active\");
-			//chk.closest(\".slick-row\").find(\".slick-cell\").addClass(\"selected\");
 		";
 		
-		if (isset($scroll_id)) {
-			$tt .= " grid_$id_tabla.scrollRowToTop($scroll_id);";
-		}
-
-		if ($bPanelVis) $tt .= "toggleFilterRow_$id_tabla();";
+		if (isset($scroll_id)) { $tt .= " grid_$id_tabla.scrollRowToTop($scroll_id);"; }
+		if ($bPanelVis) { $tt .= "toggleFilterRow_$id_tabla();"; }
 		
 		$tt .= "
-			var chk = $(\"#grid_$id_tabla input:checked\");
-			chk.click();
 			})
 		</script>
 		";
@@ -808,6 +775,7 @@ class Lista {
 		  "._('Buscar en todas las columnas')." <input type=\"text\" id=\"txtSearch_".$id_tabla."\">
 		</div>
 		";
+		
 		return $tt;
 	}
 

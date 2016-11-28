@@ -292,13 +292,23 @@ img.calendar:hover { cursor: pointer; }
 
 <!-- Slick -->
 <link type='text/css' rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/slick.grid.css'; ?>' />
-<link type='text/css' rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick.pager.css'; ?>' />
-<link type='text/css' rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick.columnpicker.css'; ?>' />
-<!-- <link type='text/css' rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/examples/examples.css'; ?>' /> -->
+<link type='text/css' rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/slick-editors.css'; ?>' />
+<link type='text/css' rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick-pager.css'; ?>' />
+<link type='text/css' rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick-columnpicker.css'; ?>' />
+<!-- <link type='text/css' rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/examples/examples.css'; ?>' />  -->
+<link type='text/css' rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/orbix.css'; ?>' />
 
 <script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/lib/firebugx.js'; ?>'></script>
-<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/lib/jquery.event.drag-2.2.js'; ?>'></script>
+
+<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/lib/jquery-fixclick.js'; ?>'></script>
+<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/lib/_/jquery.event.drag.js'; ?>'></script>
+<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/lib/detect_browser.js'; ?>'></script>
+<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/lib/assert.js'; ?>'></script>
+
 <script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/slick.core.js'; ?>'></script>
+<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.cellrangedecorator.js'; ?>'></script>
+<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.cellrangeselector.js'; ?>'></script>
+<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.cellselectionmodel.js'; ?>'></script>
 <script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.autotooltips.js'; ?>'></script>
 <script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.rowselectionmodel.js'; ?>'></script>
 <script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.checkboxselectcolumn.js'; ?>'></script>
@@ -487,7 +497,7 @@ function fnjs_ir_a() {
 	var bloque='#'+$('#id_div').val();
 	
 	if(parametros) {
-		if ($('#ir_atras').length || $('#ir_atras2').length || $('#go_atras').length) { // atras=1; 
+		if ($('#ir_a').length || $('#ir_atras').length || $('#ir_atras2').length || $('#go_atras').length) { // atras=1; 
 			if (parametros.indexOf("&atras") != -1) {
 				parametros=parametros.replace(/&atras=(0|1)?/,'&atras=1');
 			} else {

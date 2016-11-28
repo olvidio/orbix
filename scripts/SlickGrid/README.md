@@ -1,58 +1,44 @@
-## This is the 6pac slickgrid repo
+# SlickGrid - A lightning fast JavaScript grid/spreadsheet
 
-I am maintaining this branch as a separate 'alternative master'. Check [my wiki](https://github.com/6pac/SlickGrid/wiki) for details.
+## Welcome to SlickGrid
 
-Once we take on SlickGrid we all add [my patch for my specific app requirement]. This 'application noise' makes it much harder to share updates to SlickGrid with other users, who may want some of the changes, but find others irrelevant.  
+Find documentation and examples in [the original wiki](https://github.com/mleibman/SlickGrid/wiki) and [this clone's wiki](https://github.com/GerHobbelt/SlickGrid/wiki).
+This is a fork of SlickGrid maintained by Ger Hobbelt / Visyond Inc. The new features that have been added / mixed in:
 
-This repo is deliberately **non-customised**. We have *only* kept jQuery up to date, made bug fixes where necessary and added small features carefully considered to enhance the overall usefulness of the grid.  
-Example pages showcase any new features.
+## This Fork's Features
 
-The following, in short, are the changes made since forking from the main MLeibman branch, a significant number in response to issues or pull requests.
-
-**Maintenance:**
-
-* update to jquery-1.11.2 and jquery-ui-1.11.3, with minor patches to accommodate the change
-* Fix bug in dataview causing model benchmark test to throw an error
-* Remove redundant slick pager code
-* Fix unnecessary horizontal scroll for autosized columns when viewport has fractional pixel width
-* Make default group comparer function more robust
-* fix grouping bug (issue #841 & #896 mleibman#898)
-* update DataView compiled-expression regex to deal with some forms of minification
-* Fix Issue #963 ajax example not working
-* additional version of ajax loading page, using Yahoo news and YQL as a source. the format of the grid rows is more in keeping with the newsfeed style of the original
-* Fix tooltip error with draggable columns 
-* Prevent useless onSelectedRangesChanged events in selectionmodels' setSelectedRanges
-* Fix jQueryUI css interfering with SlickGrid css issues
-* Fix column resizing issues with Bootstrap 3/box-sizing:border-box
-* Patch absBox for null element bug (MLeibman #1066)
-* fix bugs identified by JsHint
-* remove deprecated jquery .browser property
-* fix error in autotooltips test
-* add internal keycode enums
-* fix bug in compound editor example 'isValueChanged' method
-
-**New features:**
-
-* Add css manipulation so that grid initialises successfully if the parent element is hidden
-* Add jQueryUI accordion and Bootstrap 3 examples
-* Add multi grid on page example (example-multi-grid-basic)
-* Add async post render async cleanup
-* Allow custom editors to suppress automatic cell clear on edit
-* Add Floating Point editor
-* Add grid as member of args parameter for all events, and to column formatter. Add dataView as member of args parameter for all dataView events
-* add custom validator option to integer, float and date editors
-* Add example of dynamic tab and grid creation for basic grid 
-* Add example of dynamic tab and grid creation for grid with all the features of example-4-model
-
-# Original mleibman README follows:
+* Cells spanning arbitrary numbers of rows and/or columns (colspan / rowspan)
+* A footer row that mimics the behavior of the header row, with similar options and controls.
+* Enhanced info feed to/from Formatters and Editors
+* Formatters can now change/augment the cell's CSS classes (no more need for SPAN or DIV in cell plus fixup CSS to apply styling to *entire* cell)
+* Indirect data addressing via DataView
+* Formatters and Editors adapted for the above
+* Internal and external Copy/Cut/Paste through the usual keyboard shortcuts
+* Mouse & Touch support
+* `grid.updateColumnWidths()` API: very significant performance improvement; pull request with notes [here](https://github.com/mleibman/SlickGrid/pull/897)
+* `grid.getId()` lets you get the uid of the grid instance
+* Triggers existing event `onColumnsResized` when you change the column widths
+* Triggers a new event `onColumnsChanged` when you set the columns
+* Exposes the existing method `grid.setupColumnResize()`, which allows you to re-enable column resizing if you're manually screwing around with the headers.
+* Some new options on `setColumns` and `resizeCanvas` let you prevent some of the expensive calculations, useful if you're doing them yourself externally.
 
 
 
+This fork adds the following method:
+
+```
+grid.updateColumnWidths(columnDefinitions)
+```
+
+Using this method improves the performance of changing the width of one or more grid columns by a lot. The existing API only allows for a whole grid redraw, which can be very slow. Pull request with notes [here](https://github.com/mleibman/SlickGrid/pull/897). Use cases for fast column size adjustment may be: auto-sizing columns to fit content, responsive sizing cells to fill the screen, and similar. 
+
+Also exposes the existing method `grid.setupColumnResize`, which allows you to re-enable column resizing if you're manually screwing around with the headers.
 
 
-Find documentation and examples in [the wiki](https://github.com/mleibman/SlickGrid/wiki).
 
-# Welcome to SlickGrid
+### Message by Michael Leibman (@mleibman)
+
+**UPDATE:  March 5th, 2014 - I have too many things going on in my life right now to really give SlickGrid support and development the time and attention it deserves.  I am not stopping it, but I will most likely be unresponsive for some time.  Sorry.**
 
 ## SlickGrid is an advanced JavaScript grid/spreadsheet component
 
@@ -72,3 +58,17 @@ Some highlights:
 * Advanced detached & multi-field editors with undo/redo support.
 * “GlobalEditorLock” to manage concurrent edits in cases where multiple Views on a page can edit the same data.
 * Support for [millions of rows](http://stackoverflow.com/a/2569488/1269037)
+
+
+## TODO
+
+* extend the set of unit tests for DataView to help test grouping behaviour (which currently has bugs) and indirect access
+* extend set of examples, including external keyboard driver (e.g. keymaster.js)
+* 'pace' the new delayed render activity, etc. using an external 'clock': now everything is running on individual setTimeout()s and userland code needs more control over when these fire exactly.
+* enable Copy/Cut/Paste via externally triggered event or API call (so you can execute those commands from external controls)
+* integrate the fixed-row/column work by JLynch7; that merge branch is currently botched -- EDIT: do not do this; see https://github.com/mleibman/SlickGrid/issues/1033 (#1033)
+* unify Formatters and Editors' API in terms of info passed
+* using jsperf and tests/*.html performance measurements to check current performance and possibly improve it -- EDIT: already did a lot in the render code
+* update wiki with API changes re Formatters and Editors
+* run script / tool to extract/update contributor/author list
+

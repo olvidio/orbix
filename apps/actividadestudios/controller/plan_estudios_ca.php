@@ -69,8 +69,12 @@ foreach ( $cActividadAsignaturas as $oActividadAsignatura) {
 	$nombre_corto=$oAsignatura->getNombre_corto();
 	$creditos=$oAsignatura->getCreditos();
 
-	$oPersona = personas\Persona::NewPersona($id_profesor);
-	$nom_profesor=$oPersona->getApellidosNombre();
+	if (!empty($id_profesor)) {
+		$oPersona = personas\Persona::NewPersona($id_profesor);
+		$nom_profesor=$oPersona->getApellidosNombre();
+	} else {
+		$nom_profesor='?';
+	}
 	if (empty($tipo)) { $p=1; }
 	if ($tipo=="p") { $p=2; }
 	

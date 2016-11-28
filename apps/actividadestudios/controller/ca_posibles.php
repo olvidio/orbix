@@ -28,16 +28,6 @@ use ubis\model as ubis;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-//include_once(core\ConfigGlobal::$dir_estilos.'/cuadros_ca.css.php'); 
-
-$id_ctr_agd = empty($_POST['id_ctr_agd'])? '' : $_POST['id_ctr_agd'];
-$id_ctr_n = empty($_POST['id_ctr_n'])? '' : $_POST['id_ctr_n'];
-
-if (empty($id_ctr_agd) && empty($id_ctr_n)) { 
-	$msg_txt = _("Debe seleccionar un centro o grupo de centros");
-	exit($msg_txt);
-}
-
 $oPosiblesCa = new actividadestudios\PosiblesCa(); 
 
 // -----------------------------------------------------------------------------------------
@@ -61,6 +51,13 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
 	$oPosicion->addParametro('scroll_id',$scroll_id);
 } else {
+	$id_ctr_agd = empty($_POST['id_ctr_agd'])? '' : $_POST['id_ctr_agd'];
+	$id_ctr_n = empty($_POST['id_ctr_n'])? '' : $_POST['id_ctr_n'];
+
+	if (empty($id_ctr_agd) && empty($id_ctr_n)) { 
+		$msg_txt = _("Debe seleccionar un centro o grupo de centros");
+		exit($msg_txt);
+	}
 	empty($_POST['na'])? $na="" : $na=$_POST['na'];
 	$any=empty($_POST['year'])? date('Y')+1 : $_POST['year'];
 	if ($_POST['periodo'] == 'otro') {
