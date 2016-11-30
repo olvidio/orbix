@@ -17,8 +17,9 @@ $oDevelPC->exec('SET search_path TO public');
 
 $accion = empty($_POST['accion'])? '' : $_POST['accion'];
 
-$filename = "/var/www/orbix/log/menus/tot_menus.sql";
-$filelog = "/var/www/orbix/log/menus/log.txt";
+$dir_base = core\ConfigGlobal::$directorio;
+$filename = "$dir_base/log/menus/tot_menus.sql";
+$filelog = "$dir_base/log/menus/log.txt";
 
 if ($accion == 'importar') {
 	/* IMPORTANTE
@@ -54,8 +55,13 @@ if ($accion == 'importar') {
 if ($accion == 'exportar') {
 	// PASSAR A FICHEROS
 
+	/* IMPORTANTE
+	   Para tener permisos de escritura el directorio menus debe tener a+w
+	 * 
+	 */
+	
 	//************ METAMENUS **************
-	$file_metamenus = "/var/www/orbix/log/menus/comun.sql";
+	$file_metamenus = "$dir_base/log/menus/comun.sql";
 	$txt_comun = '';
 
 	$txt_comun .= 'TRUNCATE TABLE "public".aux_metamenus RESTART IDENTITY;'."\n";
@@ -63,19 +69,19 @@ if ($accion == 'exportar') {
 	$txt_comun .= 'COPY "public".aux_metamenus FROM \''.$file_metamenus.'\''.";\n";
 
 	//************ GRUPMENU **************
-	$file_refgrupmenu = "/var/www/orbix/log/menus/refgrupmenu.sql";
+	$file_refgrupmenu = "$dir_base/log/menus/refgrupmenu.sql";
 	$txt_comun .= 'TRUNCATE TABLE "public".ref_grupmenu RESTART IDENTITY;'."\n";
 	$oDevelPC->exec('COPY "public".ref_grupmenu TO \''.$file_refgrupmenu.'\' ');
 	$txt_comun .= 'COPY "public".ref_grupmenu FROM \''.$file_refgrupmenu.'\''.";\n";
 
 	//************ GRUPMENU_ROL **************
-	$file_refgrupmenu_rol = "/var/www/orbix/log/menus/refgrupmenu_rol.sql";
+	$file_refgrupmenu_rol = "$dir_base/log/menus/refgrupmenu_rol.sql";
 	$txt_comun .= 'TRUNCATE TABLE "public".ref_grupmenu_rol RESTART IDENTITY;'."\n";
 	$oDevelPC->exec('COPY "public".ref_grupmenu_rol TO \''.$file_refgrupmenu_rol.'\' ');
 	$txt_comun .= 'COPY "public".ref_grupmenu_rol FROM \''.$file_refgrupmenu_rol.'\''.";\n";
 
 	//************ MENUS **************
-	$file_refmenus = "/var/www/orbix/log/menus/refmenus.sql";
+	$file_refmenus = "$dir_base/log/menus/refmenus.sql";
 	$txt_comun .= 'TRUNCATE TABLE "public".ref_menus RESTART IDENTITY;'."\n";
 	$oDevelPC->exec('COPY "public".ref_menus TO \''.$file_refmenus.'\' ');
 	$txt_comun .= 'COPY "public".ref_menus FROM \''.$file_refmenus.'\''.";\n";
