@@ -99,11 +99,13 @@ if (!empty($id_nom)) { //caso de modificar
 	$falta=$oAsistente->getFalta();
 	$est_ok=$oAsistente->getEst_ok();
 	$observ=$oAsistente->getObserv();
+	$plaza=$oAsistente->getPlaza();
 
 } else { //caso de nuevo asistente
 	$mod="nuevo";
 	$propio="t"; //valor por defecto
 	$observ=""; //valor por defecto
+	$plaza=1; //valor por defecto
 	$_POST['obj_pau'] = !empty($_POST['obj_pau'])? urldecode($_POST['obj_pau']) : '';
 	$obj_pau = strtok($_POST['obj_pau'],'&');
 	$na = strtok('&');
@@ -147,9 +149,13 @@ $propio_chk = (!empty($propio) && $propio=='t') ? 'checked' : '' ;
 $falta_chk = (!empty($falta) && $falta=='t') ? 'checked' : '' ;
 $est_chk = (!empty($est_ok) && $est_ok=='t') ? 'checked' : '' ;
 
+$gesAsistentes = new asistentes\GestorAsistente();
+$oDesplegablePlaza = $gesAsistentes->getPosiblesPlaza();
+$oDesplegablePlaza->setNombre('plaza');
+$oDesplegablePlaza->setOpcion_sel($plaza);
 
 $oHash = new web\Hash();
-$camposForm = 'observ';
+$camposForm = 'observ!plaza';
 $oHash->setCamposNo('mod!propio!falta!est_ok');
 $a_camposHidden = array(
 		'id_activ' => $_POST['id_pau'],
@@ -218,6 +224,7 @@ if (!empty($id_nom_real)) {
 <td><input type="Checkbox" id="est_ok" name="est_ok" value="true" <?= $est_chk ?>></td></tr>
 <tr><td class=etiqueta><?php echo ucfirst(_("observaciones")); ?></td><td class=contenido>
 <textarea id="observ" name="observ" cols="40" rows="5"><?= htmlspecialchars($observ) ?></textarea></td></tr>
+<tr><td class=etiqueta><?= _("plaza") ?></td><td><?= $oDesplegablePlaza->desplegable(); ?></td></tr>
 </table>
 <br><input type="button" id="guardar" name="guardar" onclick="fnjs_guardar(this.form);" value="<?php echo ucfirst(_("guardar datos del asistente")); ?>" align="MIDDLE">
 </form>

@@ -263,6 +263,7 @@ if ($gm < 2) {
  	<link rel="stylesheet" type="text/css" href="<?= ConfigGlobal::$web_scripts ?>/udm4-php/udm-resources/udm-style.php?PHPSESSID=<?= session_id() ?>" media="screen, projection" /> 
 <?php
 include_once(ConfigGlobal::$dir_estilos.'/todo_en_uno.css.php');
+include_once(ConfigGlobal::$dir_estilos.'/slickgrid_orbix.css.php');
 echo "<style>";
 switch ($tipo_menu) {
 	case "horizontal":
@@ -296,7 +297,6 @@ img.calendar:hover { cursor: pointer; }
 <link type='text/css' rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick-pager.css'; ?>' />
 <link type='text/css' rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick-columnpicker.css'; ?>' />
 <!-- <link type='text/css' rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/examples/examples.css'; ?>' />  -->
-<link type='text/css' rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/orbix.css'; ?>' />
 
 <script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/lib/firebugx.js'; ?>'></script>
 

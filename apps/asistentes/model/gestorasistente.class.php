@@ -38,6 +38,22 @@ class GestorAsistente Extends core\ClaseGestor {
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
 	
+	
+	/**
+	 * retorna un objecte del tipus Desplegable
+	 * Les posibles asignatures
+	 *
+	 * @return object del tipus Desplegable
+	 */
+	function getPosiblesPlaza() {
+		$aOpciones[1] = _("pedida");
+		$aOpciones[2] = _("en espera");
+		$aOpciones[3] = _("denegada");
+		$aOpciones[4] = _("asignada");
+		$aOpciones[5] = _("confirmada");
+		return new web\Desplegable('',$aOpciones,'',true);
+	}
+	
 	/**
 	 * retorna l'array d'objectes de tipus Asistente
 	 *
@@ -79,6 +95,47 @@ class GestorAsistente Extends core\ClaseGestor {
 			ksort($cActividadesOk);
 		}
 		return $cActividadesOk;
+	}
+	
+	/**
+	 * retorna numero de places ocupades
+	 *
+	 * @param integer iid_activ el id de l'activitat.
+	 * @param string sdl sigla de la dl
+	 * @return integer
+	 */
+	function getPlazasOcupadasPorDl($iid_activ,$sdl='') {
+		$mi_dele = core\ConfigGlobal::mi_dele();
+		/* Mirar si la actividad es mia o no */
+		$oActividad = new actividades\Actividad($iid_activ);
+		$dl_org = $oActividad->getDl_org();
+		$id_tabla = $oActividad->getId_tabla();
+		$aWhere['id_activ'] = $iid_activ;
+		$aOperators = array();
+		$namespace = __NAMESPACE__;
+		
+		if ($sdl == $mi_dele) {
+			if ($dl_org == $sdl) {
+					$gesAsistenteDl = new GestorAsistenteDl();
+					$cAsistentes = $gesAsistenteDl->getAsistentesDl(array('id_activ'=>$iid_activ));
+			} else {
+				$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
+				$namespace = __NAMESPACE__;
+				$cAsistentes = $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
+			}
+		} else {
+			// No hace falta saber las plazas ocupadas de otra dl.
+			return -1;
+		}
+		
+		$numAsis = 0;
+		foreach ($cAsistentes as $oAsistente) {
+			$plaza= empty($oAsistente->getPlaza())? 1 : $oAsistente->getPlaza();
+			// sólo cuento las asignadas
+			if ($plaza < 4) continue;
+			$numAsis++; 
+		}
+		return $numAsis;
 	}
 
 	/**

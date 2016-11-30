@@ -219,6 +219,15 @@ if (core\configGlobal::is_app_installed('actividadestudios')) {
 		$script['fnjs_posibles_ca'] = 1;
 	}
 }
+if (core\configGlobal::is_app_installed('actividadplazas')) {
+	if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso")) {   
+		$tipo_activ = 'ca'; //ca
+		$a_botones[]= array( 'txt' => _('petición ca'), 'click' =>"fnjs_peticion_activ(\"#seleccionados\",\"$tipo_activ\")" ) ;
+		$tipo_activ = 'crt'; //crt
+		$a_botones[]= array( 'txt' => _('petición crt'), 'click' =>"fnjs_peticion_activ(\"#seleccionados\",\"$tipo_activ\")" ) ;
+		$script['fnjs_posibles_activ'] = 1;
+	}
+}
 if ($_SESSION['oPerm']->have_perm("est")){
 	if (core\configGlobal::is_app_installed('actividadestudios')) {
 		$a_botones[]=array( 'txt' => _("plan estudios"), 'click' =>"fnjs_matriculas(\"#seleccionados\")" );
@@ -409,6 +418,13 @@ fnjs_matriculas=function(formulario){
 <?php if (!empty($script['fnjs_posibles_ca'])) { ?>
 fnjs_posibles_ca=function(formulario){
 		$(formulario).attr('action',"apps/actividadestudios/controller/ca_posibles.php");
+  		fnjs_enviar_formulario(formulario);
+}
+<?php } ?>
+<?php if (!empty($script['fnjs_posibles_activ'])) { ?>
+fnjs_peticion_activ=function(formulario,tipo_activ){
+		$('#que').val(tipo_activ);
+		$(formulario).attr('action',"apps/actividadplazas/controller/peticiones_activ.php");
   		fnjs_enviar_formulario(formulario);
 }
 <?php } ?>

@@ -97,6 +97,12 @@ class AsistenteDl Extends core\ClasePropiedades {
 	 */
 	 protected $sobserv;
 	/**
+	 * plaza de AsistenteDl
+	 *
+	 * @var integer
+	 */
+	 protected $iplaza;
+	/**
 	 * Id_tabla de AsistenteDl
 	 *
 	 * @var string
@@ -146,6 +152,7 @@ class AsistenteDl Extends core\ClasePropiedades {
 		$aDades['encargo'] = $this->sencargo;
 		$aDades['cama'] = $this->scama;
 		$aDades['observ'] = $this->sobserv;
+		$aDades['plaza'] = $this->iplaza;
 		//$aDades['id_tabla'] = $this->sid_tabla;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
@@ -164,7 +171,8 @@ class AsistenteDl Extends core\ClasePropiedades {
 					falta                    = :falta,
 					encargo                  = :encargo,
 					cama                     = :cama,
-					observ                   = :observ";
+					observ                   = :observ,
+					plaza                    = :plaza";
 					//id_tabla                 = :id_tabla";
 			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_activ='$this->iid_activ' AND id_nom='$this->iid_nom'")) === false) {
 				$sClauError = 'AsistenteDl.update.prepare';
@@ -180,8 +188,8 @@ class AsistenteDl Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_activ, $this->iid_nom);
-			$campos="(id_activ,id_nom,propio,est_ok,cfi,cfi_con,falta,encargo,cama,observ)";
-			$valores="(:id_activ,:id_nom,:propio,:est_ok,:cfi,:cfi_con,:falta,:encargo,:cama,:observ)";		
+			$campos="(id_activ,id_nom,propio,est_ok,cfi,cfi_con,falta,encargo,cama,observ,plaza)";
+			$valores="(:id_activ,:id_nom,:propio,:est_ok,:cfi,:cfi_con,:falta,:encargo,:cama,:observ,:plaza)";		
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'AsistenteDl.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -263,6 +271,7 @@ class AsistenteDl Extends core\ClasePropiedades {
 		if (array_key_exists('encargo',$aDades)) $this->setEncargo($aDades['encargo']);
 		if (array_key_exists('cama',$aDades)) $this->setCama($aDades['cama']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
+		if (array_key_exists('plaza',$aDades)) $this->setPlaza($aDades['plaza']);
 		if (array_key_exists('id_tabla',$aDades)) $this->setId_tabla($aDades['id_tabla']);
 	}
 
@@ -482,6 +491,25 @@ class AsistenteDl Extends core\ClasePropiedades {
 		$this->sobserv = $sobserv;
 	}
 	/**
+	 * Recupera l'atribut iplaza de AsistenteDl
+	 *
+	 * @return integer iplaza
+	 */
+	function getPlaza() {
+		if (!isset($this->iplaza)) {
+			$this->DBCarregar();
+		}
+		return $this->iplaza;
+	}
+	/**
+	 * estableix el valor de l'atribut iplaza de AsistenteDl
+	 *
+	 * @param integer iplaza='' optional
+	 */
+	function setPlaza($iplaza='') {
+		$this->iplaza = $iplaza;
+	}
+	/**
 	 * Recupera l'atribut sid_tabla de AsistenteDl
 	 *
 	 * @return string sid_tabla
@@ -616,6 +644,18 @@ class AsistenteDl Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'observ'));
 		$oDatosCampo->setEtiqueta(_("observ"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut iplaza de AsistenteDl
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return oject DatosCampo
+	 */
+	function getDatosPlaza() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'plaza'));
+		$oDatosCampo->setEtiqueta(_("plaza"));
 		return $oDatosCampo;
 	}
 }

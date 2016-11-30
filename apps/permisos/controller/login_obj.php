@@ -82,6 +82,74 @@ function cambiar_idioma() {
 	setlocale(LC_ALL,$idioma);
 }
 
+// APLICACIONES POSIBLES
+function getAppsPosibles () {
+	$oDBP = new \PDO(core\ConfigGlobal:: $str_conexio_public);
+	$sQuery = "SELECT * FROM m0_apps";
+	$a_apps=array();
+	foreach ($oDBP->query($sQuery) as $aDades) {
+		$nom=$aDades['nom'];
+		$a_apps[$nom]=$aDades['id_app'];
+	}
+	return $a_apps;
+}
+
+// MODULOS POSIBLES
+function getModsPosibles () {
+	$oDBP = new \PDO(core\ConfigGlobal:: $str_conexio_public);
+	$sQuery = "SELECT * FROM m0_modulos";
+	$a_mods=array();
+	$a_mods_req=array();
+	$a_apps_req=array();
+	foreach ($oDBP->query($sQuery) as $aDades) {
+		$id_mod=$aDades['id_mod'];
+		$nom=$aDades['nom'];
+		$mods_req=$aDades['mods_req'];
+		$apps_req=$aDades['apps_req'];
+		$a_mods[$id_mod] = array('nom' => $nom, 'mods_req' => $mods_req, 'apps_req' => $apps_req);
+	}
+	return $a_mods;
+}
+
+// APLICACIONES INSTALADAS EN LA DL
+function getModsInstalados ($oDB) {
+	$sQuery = "SELECT * FROM m0_mods_installed_dl WHERE status = 't'";
+	$a_mods_installed=array();
+	foreach ($oDB->query($sQuery) as $aDades) {
+		$id_mod=$aDades['id_mod'];
+		$a_mods_installed[$id_mod]=$aDades['param'];
+	}
+	return $a_mods_installed;
+}
+
+function getAppsMods($id_mod) {
+	$apps = array();
+	$a_mods = getModsPosibles();
+	$ajson = $a_mods[$id_mod]['mods_req'];
+	if (preg_match('/^{(.*)}$/', $ajson, $matches)) {
+		$mod_in = str_getcsv($matches[1]);
+		foreach ($mod_in as $mod) {
+			$appsi = getApps($mod);
+			$apps = array_merge($apps,$appsi);
+		}
+	}
+	return $apps;
+}
+
+function getApps($id_mod) {
+	$apps = array();
+	$a_mods = getModsPosibles();
+	$ajson = $a_mods[$id_mod]['apps_req'];
+	if (preg_match('/^{(.*)}$/', $ajson, $matches)) {
+		$app_in = str_getcsv($matches[1]);
+
+		foreach ($app_in as $app) {
+			array_push($apps,$app);
+		}
+	}
+	return $apps;
+}
+
 
 // ara a global_obj. $GLOBALS['oPerm'] = new permisos\PermDl();
 //$GLOBALS['oPermActiv'] = new PermActiv;
@@ -152,32 +220,18 @@ if ( !isset($_SESSION['session_auth'])) {
 							$expire=1;
 						}
 						
-						// APLICACIONES POSIBLES
-						$sQuery = "SELECT * FROM m0_apps";
-						$a_apps=array();
-						foreach ($oDBP->query($sQuery) as $aDades) {
-							$nom=$aDades['nom'];
-							$a_apps[$nom]=$aDades['id_app'];
+						
+						$a_apps = getAppsPosibles();
+						$app_installed = array();
+
+						$a_mods_installed = getModsInstalados($oDB);
+						foreach ($a_mods_installed as $id_mod=>$param) {
+							$ap1 = getAppsMods($id_mod);
+							$ap2 = getApps($id_mod);
+							$app_installed = array_merge($app_installed,$ap1,$ap2);
+							$app_installed = array_unique($app_installed);
 						}
-
-						// APLICACIONES INSTALADAS
-						$sQuery = "SELECT * FROM m0_modulos";
-						$a_mods_req=array();
-						$a_apps_req=array();
-						foreach ($oDBP->query($sQuery) as $aDades) {
-							$id_mod=$aDades['id_mod'];
-							$a_mods_req[$id_mod]=$aDades['mods_req'];
-							$a_apps_req[$id_mod]=$aDades['apps_req'];
-						}
-
-
-						$sQuery = "SELECT * FROM m0_mods_installed_dl WHERE status = 't'";
-						$a_mods_installed=array();
-						foreach ($oDB->query($sQuery) as $aDades) {
-							$id_mod=$aDades['id_mod'];
-							$a_mods_installed[$id_mod]=$aDades['param'];
-						}
-
+			
 						// Idioma
 						$idioma='';
 						$query_idioma = sprintf( "select * from web_preferencias where id_usuario = '%s' and tipo = '%s' ",$id_usuario,"idioma");
@@ -217,9 +271,8 @@ if ( !isset($_SESSION['session_auth'])) {
 								'expire'=>$expire,
 								'mail'=>$mail,
 								'idioma'=>$idioma,
+								'app_installed'=>$app_installed,
 								'a_mods_installed'=>$a_mods_installed,
-								'a_mods_req'=>$a_mods_req,
-								'a_apps_req'=>$a_apps_req,
 								'a_apps'=>$a_apps
 								 );
 							$_SESSION['config']=$session_config;

@@ -62,6 +62,7 @@ if (!empty($id_activ)) { //caso de modificar
 	$falta=$oAsistente->getFalta();
 	$est_ok=$oAsistente->getEst_ok();
 	$observ=$oAsistente->getObserv();
+	$plaza=$oAsistente->getPlaza();
 } else { //caso de nuevo asistente
 	$mod="nuevo";
 	if (empty($_POST['id_tipo'])) {
@@ -89,15 +90,24 @@ if (!empty($id_activ)) { //caso de modificar
 	$falta="f"; //valor por defecto
 	$est_ok="f"; //valor por defecto
 	$observ=""; //valor por defecto
+	$plaza=1; //valor por defecto
 	/*
 	  
 	$sql_nom= "SELECT nom_activ, id_activ FROM a_actividades WHERE id_tipo_activ::text ~ '$id_tipo' AND status=2 $mis order by f_ini";
 	$oDBSt_query_lista=$oDB->query($sql_nom);
 	*/
 }
+$propio_chk = (!empty($propio) && $propio=='t') ? 'checked' : '' ;
+$falta_chk = (!empty($falta) && $falta=='t') ? 'checked' : '' ;
+$est_chk = (!empty($est_ok) && $est_ok=='t') ? 'checked' : '' ;
+
+$gesAsistentes = new asistentes\GestorAsistente();
+$oDesplegablePlaza = $gesAsistentes->getPosiblesPlaza();
+$oDesplegablePlaza->setNombre('plaza');
+$oDesplegablePlaza->setOpcion_sel($plaza);
 
 $oHash = new web\Hash();
-$camposForm = 'observ';
+$camposForm = 'observ!plaza';
 $oHash->setCamposNo('mod!propio!falta!est_ok');
 $a_camposHidden = array(
 		'id_nom' => $_POST['id_pau'],
@@ -134,21 +144,15 @@ if (!empty($id_activ_real)) {
 	}
 	echo "</select></td></tr>";
 }
-
-
-$propio=="t" ? $chk="checked" : $chk="" ;
-$chk_propio="<input type=\"Checkbox\" id=\"propio\" name=\"propio\" value=\"true\" $chk>";
-$falta=="t" ? $chk="checked" : $chk="" ;
-$chk_falta="<input type=\"Checkbox\" id=\"falta\" name=\"falta\" value=\"true\" $chk>";
-$est_ok=="t" ? $chk="checked" : $chk="" ;
-$chk_est_ok="<input type=\"Checkbox\" id=\"est_ok\" name=\"est_ok\" value=\"true\" $chk>";
-
-echo "<tr><td class=etiqueta>"._("propio")."</td><td>$chk_propio</td></tr>";
-echo "<tr><td class=etiqueta>"._("falta")."</td><td>$chk_falta</td></tr>";
-echo "<tr><td class=etiqueta>"._("estudios confirmados")."</td><td>$chk_est_ok</td></tr>";
-
 ?>	
+<tr><td class=etiqueta><?= _("propio") ?></td>
+<td><input type="Checkbox" id="propio" name="propio" value="true" <?= $propio_chk ?>></td></tr>
+<tr><td class=etiqueta><?= _("falta") ?></td>
+<td><input type="Checkbox" id="falta" name="falta" value="true" <?= $falta_chk ?>></td></tr>
+<tr><td class=etiqueta><?= _("estudios confirmados") ?></td>
+<td><input type="Checkbox" id="est_ok" name="est_ok" value="true" <?= $est_chk ?>></td></tr>
 <tr><td class=etiqueta><?php echo ucfirst(_("observaciones")); ?></td><td class=contenido>
 <textarea id="observ" name="observ" cols="40" rows="5"><?= htmlspecialchars($observ) ?></textarea></td></tr>
+<tr><td class=etiqueta><?= _("plaza") ?></td><td><?= $oDesplegablePlaza->desplegable(); ?></td></tr>
 </table>
 <br><input type="button" id="guardar" name="guardar" onclick="fnjs_enviar_formulario('#frm_1301');" value="<?php echo ucfirst(_("guardar")); ?>" align="MIDDLE">

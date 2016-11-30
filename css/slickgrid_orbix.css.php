@@ -1,8 +1,16 @@
-/*!
- * slickGrid v2.1.0 ()
- * Copyright 2011-2015 
- *  ()
- */
+<style>
+/* Slick.Editors.Text, Slick.Editors.Date */
+input.editor-text {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  margin: 0;
+  background: transparent;
+  outline: 0;
+  padding: 0;
+  size:10px;
+
+}
 .cell-title {
   font-weight: bold;
 }
@@ -31,3 +39,4 @@
 .active-row {
      background-color: #FFB;
 }
+</style>
