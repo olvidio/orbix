@@ -17,7 +17,8 @@ $oDevelPC->exec('SET search_path TO public');
 
 $accion = empty($_POST['accion'])? '' : $_POST['accion'];
 
-$dir_base = core\ConfigGlobal::$directorio;
+//$dir_base = core\ConfigGlobal::$directorio;
+$dir_base = "/var/www/orbix";
 $filename = "$dir_base/log/menus/tot_menus.sql";
 $filelog = "$dir_base/log/menus/log.txt";
 
