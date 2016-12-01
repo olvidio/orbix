@@ -62,12 +62,11 @@ $stgr = $oPersona->getStgr();
 
 //posibles valores de stgr
 $tipos= array (  "n"=> _("no cursa est."),
-				"s"=> _("si cursa est."),
 				"b"=> _("bienio"),
 				"c1"=>  _("cuadrienio año I"),
 				"c2"=> _("cuadrienio año II-IV"),
 				"r"=> _("repaso"),
-				"c"=> _("cuadrienio (obsoleto)") );
+				);
 
 //$go_to=stripslashes($go_to);
 $oDespl = new web\Desplegable();
