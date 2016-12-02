@@ -96,6 +96,9 @@ class GestorProfesor Extends core\ClaseGestor {
 		foreach ($gesProfesores as $oProfesor) {
 			$id_nom = $oProfesor->getId_nom();
 			$oPersonaDl = new personas\PersonaDl($id_nom);
+			// comprobar situación
+			$situacion = $oPersonaDl->getSituacion();
+			if ($situacion != 'A') { continue; }
 			$ap_nom = $oPersonaDl->getApellidosNombre();
 			$aProfesores[] = array('id_nom'=>$id_nom,'ap_nom'=>$ap_nom);
 			$aAp1[] = $oPersonaDl->getApellido1();
@@ -138,6 +141,9 @@ class GestorProfesor Extends core\ClaseGestor {
 		$aNom = array();
 		foreach ($cPersonasPub as $oPersona) {
 			$id_nom = $oPersona->getId_nom();
+			// comprobar situación
+			$situacion = $oPersona->getSituacion();
+			if ($situacion != 'A') { continue; }
 			$ap_nom = $oPersona->getApellidosNombre();
 			$aProfesores[] = array('id_nom'=>$id_nom,'ap_nom'=>$ap_nom);
 			$aAp1[] = $oPersona->getApellido1();
@@ -180,6 +186,9 @@ class GestorProfesor Extends core\ClaseGestor {
 		foreach ($gesProfesores as $oProfesor) {
 			$id_nom = $oProfesor->getId_nom();
 			$oPersonaDl = new personas\PersonaDl($id_nom);
+			// comprobar situación
+			$situacion = $oPersonaDl->getSituacion();
+			if ($situacion != 'A') { continue; }
 			$ap_nom = $oPersonaDl->getApellidosNombre();
 			$aProfesores[] = array('id_nom'=>$id_nom,'ap_nom'=>$ap_nom);
 			$aAp1[] = $oPersonaDl->getApellido1();
@@ -222,6 +231,9 @@ class GestorProfesor Extends core\ClaseGestor {
 		foreach ($gesProfesores as $oProfesor) {
 			$id_nom = $oProfesor->getId_nom();
 			$oPersonaDl = new personas\PersonaDl($id_nom);
+			// comprobar situación
+			$situacion = $oPersonaDl->getSituacion();
+			if ($situacion != 'A') { continue; }
 			$ap_nom = $oPersonaDl->getApellidosNombre();
 			$aProfesores[] = array('id_nom'=>$id_nom,'ap_nom'=>$ap_nom);
 			$aAp1[] = $oPersonaDl->getApellido1();
