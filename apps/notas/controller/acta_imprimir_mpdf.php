@@ -87,10 +87,14 @@ $aIdSuperadas = $GesNotas->getArrayNotasSuperadas();
 $aPersonasNotas = array(); 
 $oGesNomLatin = new personas\GestorNombreLatin();
 foreach($cPersonaNotas as $oPersonaNota) {
-	
 	$id_situacion=$oPersonaNota->getId_situacion();
 	$id_nom=$oPersonaNota->getId_nom();
 	$oPersona = personas\Persona::NewPersona($id_nom);
+if (!is_object($oPersona)) {
+		$errores .= "<br>".sprintf(_("Existe una nota de la que no se tiene acceso al nombre (id_nom = %s): es de otra dl o 'de paso' borrado."),$id_nom);
+		$errores .= " " . _("No aparece en la lista");
+		continue;
+	}
 	$apellidos=$oPersona->getApellidos();
 	$trato=$oPersona->getTrato();
 	$nom_v=$oPersona->getNom();
