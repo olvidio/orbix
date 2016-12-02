@@ -8,6 +8,16 @@ use menus\model as menus;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+/*
+ * Para que no de errror al ejecutar psql. usuario root no coincide con dani
+ * En el fichero /etc/postgresql/9.5/main/pg_hba.conf, hacia la line 90:
+ * Hay que poner 'trust'
+ * 
+ * # "local" is for Unix domain socket connections only
+*     local   all             all                                     trust
+ * 
+ */
+
 // Copiar de dlb a public roles-grupmenu, grupmenu, menus
 //$oDevelPC = $GLOBALS['oDBPC'];
 
