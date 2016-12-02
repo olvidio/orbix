@@ -51,7 +51,8 @@ if ($matriculados > 0) {
 $_POST['que'] = empty($_POST['que'])? '' : $_POST['que'];
 $_POST['id_pau'] = empty($_POST['id_pau'])? '' : $_POST['id_pau'];
 $_POST['opcional'] = empty($_POST['opcional'])? '' : $_POST['opcional'];
-$_POST['go_to'] = empty($_POST['go_to'])? '' : $_POST['go_to'];
+//$_POST['go_to'] = empty($_POST['go_to'])? '' : $_POST['go_to'];
+$_POST['go_to'] = 'acta_notas';
 $_POST['primary_key_s'] = empty($_POST['primary_key_s'])? '' : $_POST['primary_key_s'];
 $_POST['id_nivel'] = empty($_POST['id_nivel'])? '' : $_POST['id_nivel'];
 
@@ -109,6 +110,7 @@ fnjs_guardar_todo=function(){
 	$('#f_1303').attr('action',"apps/actividadestudios/controller/acta_notas_update.php");
 	fnjs_enviar_formulario('#f_1303');
 }
+
 fnjs_guardar=function(){
 	$('#que').val("1");
 	$('#f_1303').attr('action',"apps/actividadestudios/controller/acta_notas_update.php");
