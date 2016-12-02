@@ -124,8 +124,8 @@ $a_textos[45] = _("Nº de departamentos");
 
 // ---------------------------------- html ----------------------------------------------------
 ?>
-<p><?= $curso_txt ?></p>
-<table border=1><thead>PROFESORES STGR</thead>
+<p><?= \core\strtoupper_dlb(_("profesores stgr")) ?>   <?= $curso_txt ?></p>
+<table border=1>
 <?php
 foreach ($res as $n => $datos) {
 	$pos = strpos($n, ".");

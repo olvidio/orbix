@@ -1,7 +1,9 @@
 <?php
 namespace notas\model;
 use core;
+use actividades\model as actividades;
 use asignaturas\model as asignaturas;
+use personas\model as personas;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula e_notas_situacion
@@ -486,6 +488,26 @@ class Resumen Extends core\ClasePropiedades {
 		}
 		return $rta;
 	}
+
+	public function enRepaso() {
+		$lista = $this->blista;
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+
+		$ssql="SELECT p.id_nom,p.nom,p.apellido1,p.apellido2
+		FROM $tabla p
+		WHERE p.stgr='r' 
+		ORDER BY p.apellido1,p.apellido2,p.nom 
+		"; 
+		$statement = $oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
 	public function enTotal() {
 		$lista = $this->blista;
 		$oDbl = $this->getoDbl();
@@ -897,11 +919,16 @@ class Resumen Extends core\ClasePropiedades {
 
 		$where_tipo = '';
 		if ($id_tipo > 0) { $where_tipo = "id_tipo_profesor=$id_tipo AND"; }
-		$ssql="SELECT DISTINCT id_nom
-				FROM d_profesor_stgr JOIN $tabla USING (id_nom)
+		$ssql="SELECT DISTINCT p.id_nom,p.nom,p.apellido1,p.apellido2
+				FROM d_profesor_stgr JOIN $tabla p USING (id_nom)
 				WHERE $where_tipo f_cese is null";
 		$statement=$oDbl->query($ssql);
 		$rta['num'] = $statement->rowCount();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
+		} else {
+			$rta['lista'] = '';
+		}
 		return $rta;
 	}
 
@@ -909,12 +936,16 @@ class Resumen Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 
-		$ssql="SELECT DISTINCT id_nom i
-				FROM d_profesor_latin JOIN $tabla USING (id_nom) 
+		$ssql="SELECT DISTINCT p.id_nom,p.nom,p.apellido1,p.apellido2
+				FROM d_profesor_latin JOIN $tabla p USING (id_nom) 
 				WHERE latin='t'";
 		$statement=$oDbl->query($ssql);
 		$rta['num'] = $statement->rowCount();
-
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
+		} else {
+			$rta['lista'] = '';
+		}
 		return $rta;
 	}
 
@@ -942,31 +973,74 @@ class Resumen Extends core\ClasePropiedades {
 		$a_profe_dept = $this->arrayProfesorDepartamento();
 		$docencia_dep = array();
 		$docencia_no_dep = array();
+		$nombres = array();
 		foreach ($a_profe_dept as $row) {
 			$id_nom=$row['id_nom'];
 			$id_departamento=$row['id_departamento'];
 			// asignaturas (sector) por profesor
-			$ssql="SELECT DISTINCT d.id_nom,a.id_sector FROM d_docencia_stgr d JOIN $asignaturas a USING (id_asignatura)
+			$ssql="SELECT DISTINCT d.id_nom,d.id_activ,a.id_sector,a.nombre_corto FROM d_docencia_stgr d JOIN $asignaturas a USING (id_asignatura)
 					WHERE d.id_nom=$id_nom AND curso_inicio=$curso_inicio ";
 			//echo "sql: $ssql<br>";
 			foreach($oDbl->query($ssql) as $row) {
 				$id_nom = $row['id_nom'];
+				$id_activ = $row['id_activ'];
 				$id_sector = $row['id_sector'];
+				$nombre_corto = $row['nombre_corto'];
 				if (in_array($id_sector, $a_sectores[$id_departamento])) {
 					$docencia_dep[$id_nom] = 1;
 				} else {
 					$docencia_no_dep[$id_nom] = 1;
 				}
+
+				if ($this->blista == true ) {
+					$oPersonaDl = new personas\PersonaDl($id_nom);
+					$nom = $oPersonaDl->getNom();
+					$apellido1 = $oPersonaDl->getApellido1();
+					$apellido2 = $oPersonaDl->getApellido2();
+
+					$nom_activ = '';
+					if (!empty($id_activ)) {
+						$oActividad = new actividades\Actividad($id_activ);
+						$nom_activ = $oActividad->getNom_activ();
+					}
+					$nombres[$id_nom] = array('nom'=>$nom,
+												'apellido1'=>$apellido1,
+												'apellido2'=>$apellido2,
+												'asignatura'=>$nombre_corto,
+												'actividad'=>$nom_activ);
+				}
 			}
 		}
 		if ($otras) {
 			$rta['num'] = count($docencia_no_dep);
+			$a_docencia = $docencia_no_dep;
 		} else {
 			$rta['num'] = count($docencia_dep);
+			$a_docencia = $docencia_dep;
 		}
+
 		if ($this->blista == true && $rta['num'] > 0) {
 			//$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
-			$rta['lista'] = '';
+			$camp=explode(',','nom,apellido1,apellido2,asignatura,actividad');
+			$html = "<table>";
+			$html .= "<tr><td width=20></td>";
+			while ( list( $key, $titulo ) = each( $camp ) ) {
+				$html .= "<th>$titulo</th>";
+			}
+			$html .= "</tr>";
+			$p=reset($camp);
+			foreach ($a_docencia as $id_nom=>$valor) {
+				$html .= "<tr><td width=20></td>";
+				while ( list( $key, $val ) = each( $camp ) ) {
+					$html .= "<td>$nombres[$val]</td>";
+				}
+				$html .= "</tr>";
+				$p=reset($camp);
+			}
+			$html .= "<tr><td colspan=7><hr>";
+			$html .= "</table>";
+
+			$rta['lista'] = $html;
 		} else {
 			$rta['lista'] = '';
 		}
@@ -982,7 +1056,7 @@ class Resumen Extends core\ClasePropiedades {
 		$notas = $this->getNomNotas();
 		$curs = $this->getCurso();
 		
-		$ssql="SELECT DISTINCT  p.id_nom
+		$ssql="SELECT DISTINCT  p.id_nom,p.nom,p.apellido1,p.apellido2
 				FROM d_congresos JOIN $tabla p USING (id_nom) WHERE f_ini $curs ";
 		//echo "$ssql<br>";
 		$statement=$oDbl->query($ssql);

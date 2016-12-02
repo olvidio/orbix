@@ -33,8 +33,14 @@ use notas\model as notas;
 
 /* Pongo en la variable $curs el periodo del curso */
 $any=date("Y");
-
-$titulo_curso="Curso ".$any."-".($any-1);
+$mes=date("m");
+if ($mes>9) {
+	$any1=$any+1; 
+	$curso_txt="$any-$any1";
+} else { 
+	$any1=$any-1;
+	$curso_txt="$any1-$any";
+}
 
 //crear la tabla temporal de agregados y notas
 $lista = empty($_POST['lista'])? false : true;
@@ -98,10 +104,18 @@ $a_textos[28] = _("Número de agregados que han terminado el cuadrienio este cur
 $res[29] = $Resumen->laicosConCuadrienio();
 $a_textos[29] = _("Número de agregados laicos con el cuadrienio terminado");
 
+if ($lista) {
+	//x. Número de numerarios de repaso
+	$res['x'] = $Resumen->enRepaso();
+	$a_textos['x'] = _("Número de agregados de repaso");
+}
+
 // ---------------------------------- html ----------------------------------------------------
 
-echo "<table border=1><thead>ALUMNOS N<br></thead>";
-
+?>
+<p><?= \core\strtoupper_dlb(_("alumnos agregados")) ?>   <?= $curso_txt ?></p>
+<table border=1>
+<?php
 foreach ($res as $n => $datos) {
 	$pos = strpos($n, ".");
 	if ($pos !== false) {

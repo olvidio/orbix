@@ -29,6 +29,7 @@ $go['n_numeros']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/control
 $go['agd_listado']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/informe_stgr_agd.php?'.http_build_query(array('lista'=>1)));
 $go['agd_numeros']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/informe_stgr_agd.php?'.http_build_query(array('lista'=>0)));
 $go['profesores_numeros']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/informe_stgr_profesores.php?'.http_build_query(array('lista'=>0)));
+$go['profesores_listado']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/informe_stgr_profesores.php?'.http_build_query(array('lista'=>1)));
 $go['asig_faltan']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/asig_faltan_que.php');
 
 
@@ -54,6 +55,7 @@ if (($_SESSION['oPerm']->have_perm("est")) or ($_SESSION['oPerm']->have_perm("dt
 	</li>
 	<li><?php printf(_("Informe anual del Studium Generale para <b>%s</b>"),_("profesores")) ?>
 		<ul>
+			<li><span class="link" onclick="fnjs_update_div('#main','<?= $go['profesores_listado'] ?>');"><?= _("con listados") ?></span></li>
 			<li><span class="link" onclick="fnjs_update_div('#main','<?= $go['profesores_numeros'] ?>');"><?= _("sólo números") ?></span></li>
 		</ul>
 	</li>
