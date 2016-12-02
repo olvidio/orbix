@@ -118,6 +118,10 @@ foreach ($Coleccion as $oFila) {
 		$v++;
 		$nom_camp=$oDatosCampo->getNom_camp();	
 		$valor_camp=$oFila->$nom_camp;	
+		if (!$valor_camp) {
+			$a_valores[$c][$v]='';
+			continue;
+		}
 		$var_1=$oDatosCampo->getArgument();
 		$var_2=$oDatosCampo->getArgument2();
 		switch($oDatosCampo->getTipo()) {
@@ -177,4 +181,3 @@ if ($_POST['permiso']==3) {
 	</tr></table>
 	<?php
 }
-?>
