@@ -130,8 +130,8 @@ $a_cabeceras=array(
 		);
 foreach ($a_grupo as $dl => $id_dl) {
 	$sub_cabecera = array(
-		array('name'=>_("c"),'field'=>$dl."-c",'width'=>15,'editor'=>'Slick.Editors.Integer'),
-		array('name'=>_("p"),'field'=>$dl."-p",'width'=>15,'editor'=>'Slick.Editors.Integer')
+		array('name'=>_("c"),'title'=>_("concedidas"),'field'=>$dl."-c",'width'=>15,'editor'=>'Slick.Editors.Integer'),
+		array('name'=>_("p"),'title'=>_("pedidas"),'field'=>$dl."-p",'width'=>15,'editor'=>'Slick.Editors.Integer')
 	);
 	$a_cabeceras[] = array('name'=>$dl,'children'=>$sub_cabecera);
 }
