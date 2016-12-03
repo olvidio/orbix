@@ -50,6 +50,8 @@ class GestorProfesorDocenciaStgr Extends core\ClaseGestor {
 		}
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item'],
+							'id_activ'=> $aDades['id_activ'],
+							'id_asignatura'=> $aDades['id_asignatura'],
 							'id_nom' => $aDades['id_nom']);
 			$oProfesorDocenciaStgr= new ProfesorDocenciaStgr($a_pkey);
 			$oProfesorDocenciaStgr->setAllAtributes($aDades);
@@ -102,6 +104,8 @@ class GestorProfesorDocenciaStgr Extends core\ClaseGestor {
 		}
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item'],
+							'id_activ'=> $aDades['id_activ'],
+							'id_asignatura'=> $aDades['id_asignatura'],
 							'id_nom' => $aDades['id_nom']);
 			$oProfesorDocenciaStgr= new ProfesorDocenciaStgr($a_pkey);
 			$oProfesorDocenciaStgr->setAllAtributes($aDades);

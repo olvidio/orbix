@@ -114,6 +114,8 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 			foreach($a_id as $nom_id=>$val_id) {
 				if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; // evitem SQL injection fent cast a integer
 				if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; // evitem SQL injection fent cast a integer
+				if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; // evitem SQL injection fent cast a integer
+				if (($nom_id == 'id_asignatura') && $val_id !== '') $this->iid_asignatura = (int)$val_id; // evitem SQL injection fent cast a integer
 			}
 		}
 		$this->setoDbl($oDbl);
@@ -132,22 +134,18 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if ($this->DBCarregar('guardar') === false) { $bInsert=true; } else { $bInsert=false; }
 		$aDades=array();
-		$aDades['id_asignatura'] = $this->iid_asignatura;
-		$aDades['id_activ'] = $this->iid_activ;
 		$aDades['tipo'] = $this->stipo;
-		$aDades['curso_inicio'] = $this->scurso_inicio;
+		$aDades['curso_inicio'] = $this->icurso_inicio;
 		$aDades['acta'] = $this->sacta;
 		array_walk($aDades, 'core\poner_null');
 
 		if ($bInsert === false) {
 			//UPDATE
 			$update="
-					id_asignatura            = :id_asignatura,
-					id_activ                 = :id_activ,
 					tipo                     = :tipo,
 					curso_inicio             = :curso_inicio,
 					acta                     = :acta";
-			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item'")) === false) {
+			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_activ='$this->iid_activ' AND id_asignatura='$this->iid_asignatura' AND id_nom='$this->iid_nom'")) === false) {
 				$sClauError = 'ProfesorDocenciaStgr.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -160,7 +158,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			array_unshift($aDades, $this->iid_nom);
+			array_unshift($aDades, $this->iid_nom , $this->iid_asignatura, $this->iid_activ);
 			$campos="(id_nom,id_asignatura,id_activ,tipo,curso_inicio,acta)";
 			$valores="(:id_nom,:id_asignatura,:id_activ,:tipo,:curso_inicio,:acta)";		
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
@@ -188,7 +186,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iid_item) && isset($this->iid_nom)) {
-			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item='$this->iid_item'")) === false) {
+			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_asignatura='$this->iid_asignatura' AND id_nom='$this->iid_nom'")) === false) {
 				$sClauError = 'ProfesorDocenciaStgr.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -217,7 +215,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_item='$this->iid_item'")) === false) {
+		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_asignatura='$this->iid_asignatura' AND id_nom='$this->iid_nom'")) === false) {
 			$sClauError = 'ProfesorDocenciaStgr.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -265,7 +263,9 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('id_item' => $this->iid_item);
+			$this->aPrimary_key = array('id_activ'=>$this->iid_activ,
+										'id_asignatura'=>$this->iid_asignatura,
+										'id_nom'=>$this->iid_nom);
 		}
 		return $this->aPrimary_key;
 	}
@@ -385,23 +385,23 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 		$this->stipo = $stipo;
 	}
 	/**
-	 * Recupera l'atribut scurso_inicio de ProfesorDocenciaStgr
+	 * Recupera l'atribut icurso_inicio de ProfesorDocenciaStgr
 	 *
-	 * @return string scurso_inicio
+	 * @return string icurso_inicio
 	 */
 	function getCurso_inicio() {
-		if (!isset($this->scurso_inicio)) {
+		if (!isset($this->icurso_inicio)) {
 			$this->DBCarregar();
 		}
-		return $this->scurso_inicio;
+		return $this->icurso_inicio;
 	}
 	/**
-	 * estableix el valor de l'atribut scurso_inicio de ProfesorDocenciaStgr
+	 * estableix el valor de l'atribut icurso_inicio de ProfesorDocenciaStgr
 	 *
-	 * @param string scurso_inicio='' optional
+	 * @param string icurso_inicio='' optional
 	 */
-	function setCurso_inicio($scurso_inicio='') {
-		$this->scurso_inicio = $scurso_inicio;
+	function setCurso_inicio($icurso_inicio='') {
+		$this->icurso_inicio = $icurso_inicio;
 	}
 	/**
 	 * Recupera l'atribut sacta de ProfesorDocenciaStgr
@@ -486,7 +486,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut scurso_inicio de ProfesorDocenciaStgr
+	 * Recupera les propietats de l'atribut icurso_inicio de ProfesorDocenciaStgr
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return oject DatosCampo
@@ -494,7 +494,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 	function getDatosCurso_inicio() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'curso_inicio'));
-		$oDatosCampo->setEtiqueta(_("curso_inicio"));
+		$oDatosCampo->setEtiqueta(_("año inicio curso"));
 		$oDatosCampo->setTipo('texto');
 		$oDatosCampo->setArgument(5);
 		return $oDatosCampo;
