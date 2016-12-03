@@ -153,7 +153,6 @@
 846	{10,20}	listados	\N	48	131072	20	t
 854	{50}	actividades	\N	\N	131072	20	t
 855	{50,10}	buscar activ	que=ver	119	131072	20	t
-919	{37,130}	Incorporar 1ª peticion	tipo_activ=ca&na=n	172	16	12	t
 856	{50,10,10}	sv  n	id_tipo_activ=112....&status=2&periodo=desdeHoy	71	131072	20	t
 857	{50,10,20}	sv agd	id_tipo_activ=133....&status=2&periodo=desdeHoy	71	131072	20	t
 858	{50,10,30}	sv s y sg	id_tipo_activ=1[45]....&status=2&periodo=desdeHoy	71	131072	20	t
@@ -176,6 +175,8 @@
 912	{90,15}	importar cve	sasistentes=agd&sactividad=cve&que=ver&modo=importar	119	2	3	t
 913	{20,40}	Matr. Pendientes	\N	168	16	12	t
 915	{10,60}	importar desde ficheros	accion=importar	64	33554432	13	t
-916	{37,110}	Gestión de plazas	id_tipo_activ=112	169	16	12	t
-917	{37,120}	Balance de plazas	id_tipo_activ=112	170	16	12	t
 918	{10,40}	profesor para asignatura	\N	171	16	12	t
+152	{90,70}	actualizar docencia	\N	52	16	12	t
+917	{80,120}	Balance de plazas	id_tipo_activ=112	170	128	2	t
+916	{80,110}	Gestión de plazas	id_tipo_activ=112	169	128	2	t
+919	{80,130}	Incorporar 1ª peticion	tipo_activ=ca&na=n	172	128	2	t
