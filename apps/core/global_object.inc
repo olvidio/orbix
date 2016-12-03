@@ -4,7 +4,9 @@ use usuarios\model as usuarios;
 use permisos\model as permisos;
 use web;
 
-if (session_id() == "") session_start(); // if no active session we start a new one
+if (session_id() == "") {
+	session_start(); // if no active session we start a new one
+}
 
 require_once('apps/permisos/controller/login_obj.php');
 

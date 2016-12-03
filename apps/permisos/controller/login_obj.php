@@ -312,6 +312,3 @@ if ( !isset($_SESSION['session_go_to'])) {
 	// para que la primera vez vaya a la pagina de inicio personalizada:
 	$primera=1;		
 }
-
-
-?>
