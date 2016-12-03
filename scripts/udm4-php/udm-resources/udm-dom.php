@@ -1,4 +1,6 @@
 <?php
+namespace core;
+
 // UDMv4.6 //
 /***************************************************************\
                                                                  
@@ -8,20 +10,16 @@
   This script may not be used or distributed without license     
                                                                  
 \***************************************************************/
-namespace core;
 
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("apps/core/global_header.inc");
+require_once ("apps/core/global_header.inc");
                 
 // Arxivos requeridos por esta url **********************************************
-	use usuarios\model as usuarios;
+use usuarios\model as usuarios;
 
 // Crea los objectos de uso global **********************************************
-	require_once ("apps/core/global_object.inc");
+require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-
-
-
 
 $oGesPref = new usuarios\GestorPreferencia();
 
