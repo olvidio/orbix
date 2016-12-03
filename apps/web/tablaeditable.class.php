@@ -349,6 +349,8 @@ class TablaEditable {
 		// calculo la altura de la tabla
 		if ($f < 12) {
 			$grid_height = ($header_num+1+$f)*25; // +2 (cabecera y última linea en blanco). 25 = rowheight
+			// mínimo, porque sino al deplegar el cuadro de búsqueda tapa tota la información
+			$grid_height = ($grid_height < 120)? 120 : $grid_height;
 		} else {
 			$grid_height = 350;
 		}
