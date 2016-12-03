@@ -182,7 +182,10 @@ $a_valoresB = $a_plazasB['a_valores'];
 
 $a_valores = array_merge($a_valoresA,$a_valoresB);
 
-$txt = "Total $dlA->$dlB: $concedidasA2B, $dlB->$dlA: $concedidasB2A <br>";
+$txt = "<table>";
+$txt .= "<tr><td></td><td> de $dlA a $dlB: $concedidasA2B</td></tr>";
+$txt .= "<tr><td></td><td> de $dlB a $dlA: $concedidasB2A</td></tr>";
+$txt .= "</table>";
 
 $a_cabeceras=array( 
 		array('field'=>'id','name'=>_("id_activ"),'visible'=>'no'),

@@ -88,6 +88,11 @@ foreach ($cActividades as $oActividad) {
 	$a_valores[$i]['actividad'] = $nom;
 	$a_valores[$i]['dlorg'] = $dl_org;
 	$a_valores[$i]['tot'] = $plazas_totales;
+	if ($mi_dl == $dl_org) {
+		$a_valores[$i]['tot'] = array('editable' => 'true', 'valor' => $plazas_totales);
+	} else {
+		$a_valores[$i]['tot'] = array('editable' => 'false', 'valor' => $plazas_totales);
+	}
 	foreach ($a_grupo as $dl => $id_dl) {
 		$pedidas = '-';
 		$concedidas = '-';
@@ -125,8 +130,8 @@ foreach ($cActividades as $oActividad) {
 $a_cabeceras=array( 
 		array('name'=>_("id_activ"),'field'=>'id','visible'=>'no'),
 		array('name'=>_("actividad"),'field'=>'actividad','width'=>200,'formatter'=>'clickFormatter'),
-		array('name'=>_("org"),'field'=>"dlorg",'width'=>40),
-		array('name'=>_("tot"),'field'=>"tot",'width'=>40),
+		array('name'=>_("org"),'title'=>_("organiza"),'field'=>"dlorg",'width'=>40),
+		array('name'=>_("tot"),'title'=>_("totales actividad"),'field'=>"tot",'width'=>40,'editor'=>'Slick.Editors.Integer'),
 		);
 foreach ($a_grupo as $dl => $id_dl) {
 	$sub_cabecera = array(
@@ -144,4 +149,7 @@ $oTabla->setUpdateUrl($UpdateUrl);
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
+
+
+echo _("editar celdas con doble click");
 echo $oTabla->mostrar_tabla();
