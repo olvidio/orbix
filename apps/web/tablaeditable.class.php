@@ -750,6 +750,7 @@ class TablaEditable {
 				$id = !empty($Cabecera['id'])? $Cabecera['id'] : str_replace(' ','',$name); // quito posibles espacios en el indice
 				//$field = !empty($Cabecera['field'])? $Cabecera['field'] :  str_replace(' ','',$name); // quito posibles espacios en el indice
 				$field = !empty($Cabecera['field'])? $Cabecera['field'] :  '';
+				$toolTip = !empty($Cabecera['title'])? ", toolTip: \"${Cabecera['title']}\"" : ", toolTip: \"${Cabecera['name']}\"";
 				$class = !empty($Cabecera['class'])? ", cssClass: \"${Cabecera['class']}\"" : '';
 				$sortable = !empty($Cabecera['sortable'])? $Cabecera['sortable'] : 'true';
 				$width = !empty($Cabecera['width'])? $Cabecera['width'] : '';
@@ -759,7 +760,7 @@ class TablaEditable {
 					if ($Cabecera['visible'] == 'No' || $Cabecera['visible'] == 'no' ) { $visible = FALSE; }
 				}
 				
-				$sDefCol = "{id: \"$id\", name: \"$name\", sortable: $sortable".$class;
+				$sDefCol = "{id: \"$id\", name: \"$name\", sortable: $sortable".$class.$toolTip;
 				
 				if (!empty($field)) $sDefCol .= ", field: \"$field\" ";
 
@@ -784,7 +785,8 @@ class TablaEditable {
 			} else {
 				$name = $Cabecera;
 				$name_idx = str_replace(' ','',$Cabecera); // quito posibles espacios en el indice
-				$sDefCol = "{id: \"$name_idx\", name: \"$name\", field: \"$name_idx\", sortable: true";
+				$toolTip = ", toolTip: \"$name\"";
+				$sDefCol = "{id: \"$name_idx\", name: \"$name\", field: \"$name_idx\", sortable: true".$toolTip;
 				if (isset($aColsWidth[$name_idx])) {
 					$sDefCol .= ", width: ".$aColsWidth[$name_idx];
 				}
