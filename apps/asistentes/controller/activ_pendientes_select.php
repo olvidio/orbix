@@ -58,6 +58,9 @@ $txt_curso_2=($any_real)."/".($any_real+1);
 $txt_curso=($any-1)."/".$any;
 
 // tipo de personas
+$chk_n = '';
+$chk_agd = '';
+$chk_sacd = '';
 switch ($Qtipo_personas) {
 	case "n":
 		$chk_n="selected";
@@ -71,6 +74,8 @@ switch ($Qtipo_personas) {
 }
 
 // tipo de actividad
+$chk_ca = '';
+$chk_crt = '';
 switch ($Qsactividad) {
 	case 'ca':
 		if ($Qtipo_personas=='n') $id_tipo_activ='(112...)|(133...)';

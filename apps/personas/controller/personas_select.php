@@ -417,15 +417,21 @@ fnjs_matriculas=function(formulario){
 <?php } ?>
 <?php if (!empty($script['fnjs_posibles_ca'])) { ?>
 fnjs_posibles_ca=function(formulario){
+	rta=fnjs_solo_uno(formulario);
+	if (rta==1) {
 		$(formulario).attr('action',"apps/actividadestudios/controller/ca_posibles.php");
   		fnjs_enviar_formulario(formulario);
+	}
 }
 <?php } ?>
 <?php if (!empty($script['fnjs_posibles_activ'])) { ?>
 fnjs_peticion_activ=function(formulario,tipo_activ){
+	rta=fnjs_solo_uno(formulario);
+	if (rta==1) {
 		$('#que').val(tipo_activ);
 		$(formulario).attr('action',"apps/actividadplazas/controller/peticiones_activ.php");
   		fnjs_enviar_formulario(formulario);
+	}
 }
 <?php } ?>
 <?php if (!empty($script['fnjs_imp_tessera'])) { ?>

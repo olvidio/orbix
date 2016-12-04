@@ -516,7 +516,7 @@ function fnjs_ir_a() {
 		}
 	}
 	
-	if ($('#left_slide').length) { $('#left_slide').hide(); } 
+	fnjs_left_side_hide();
 
 	$(bloque).attr('refe',url);
 	if ($('#ir_a').length) $('#ir_a').remove() ;
@@ -537,7 +537,7 @@ function fnjs_cambiar_link(id_div) {
 	// busco si hay un id=ir_a que es para ir a otra página
 	if ($('#ir_a').length) { fnjs_ir_a(); return false; } 
 	if ($('#go_atras').length) { fnjs_ir_a(); return false; } 
-	if ($('#ir_atras').length) { fnjs_dani(); return true; } 
+	if ($('#ir_atras').length) { fnjs_left_side_show(); return true; } 
 	var base=$(id_div).attr('refe');
 	if (base) {
 		var selector=id_div+" a[href]";
@@ -806,8 +806,11 @@ var _isKHTML = false;
 var _isMacOS = false;
 var _isChrome = false;
 
-function fnjs_dani() {
-  $("#left_slide").show();
+function fnjs_left_side_show() {
+  if ($('#left_slide').length) { $('#left_slide').show(); } 
+}
+function fnjs_left_side_hide() {
+  if ($('#left_slide').length) { $('#left_slide').hide(); } 
 }
 function fnjs_dani2() {
   $("#left_slide").hover(
@@ -887,7 +890,7 @@ if ($_SESSION['session_auth']['expire'] == 1) {
 <script>
 $(function() {
 	fnjs_cambiar_base_link();
-	$('#left_slide').hide();  // hide it initially
+	fnjs_left_side_hide(); // hide it initially
 })
 /* Hay que ponerlo aqui, para asegurar que haya terminado de cargar todos los scripts. */
 $(document).ready(function(){
