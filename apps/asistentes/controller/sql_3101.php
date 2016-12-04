@@ -494,6 +494,8 @@ fnjs_guardar=function(formulario){
 	$(formulario).off();
 }
 fnjs_mover=function(formulario,id_activ){
+	rta=fnjs_solo_uno(formulario);
+	if (rta==1) {
 	$('#div_modificar').addClass('ventana');
 	$('#div_modificar').width('700');
 	$('#div_modificar').height('220');
@@ -506,6 +508,7 @@ fnjs_mover=function(formulario,id_activ){
 	var url='apps/asistentes/controller/form_mover.php';
 	var parametros='id_pau='+id_pau+'&id_activ='+id_activ+"<?= $h3 ?>";
 	fnjs_update_div('#div_modificar',url+'?'+parametros);
+	}
 }
 fnjs_cerrar=function(){
 	$('#div_modificar').html('');

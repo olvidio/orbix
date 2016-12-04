@@ -94,6 +94,8 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
 	$oPersona = personas\Persona::NewPersona($id_nom);
 	$obj_persona = get_class($oPersona);
 	$obj_persona = str_replace("personas\\model\\",'',$obj_persona);
+
+	//Comprobar que no tienen alguna actividad ya asignada como propia
 	//Con el tiempo habrá menos actividades (curso) que asistencias (todas). Miro por actividades:
 	$ya_tiene = 0;
 	foreach ($cActividades as $oActividad) {
@@ -110,24 +112,20 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
 				case 'PersonaS':
 				case 'PersonaSSSC':
 				case 'PersonaDl':
-					$oAsistenteNew = new asistentes\AsistenteDl();
 					$GesAsistentes = new asistentes\GestorAsistenteDl();
 					$cAsistentes = $GesAsistentes->getAsistentesDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'propio'=>'t'));
 					break;
 				case 'PersonaIn':
 				case 'PersonaEx':
-					$oAsistenteNew = new asistentes\AsistenteEx();
 					$GesAsistentes = new asistentes\GestorAsistenteEx();
 					$cAsistentes = $GesAsistentes->getAsistentesEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'propio'=>'t'));
 					break;
 			}
 		} else {
 			if ($id_tabla == 'dl') {
-				$oAsistenteNew = new asistentes\AsistenteOut();
 				$GesAsistentes = new asistentes\GestorAsistenteOut();
 				$cAsistentes = $GesAsistentes->getAsistentesOut(array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'propio'=>'t'));
 			} else {
-				$oAsistenteNew = new asistentes\AsistenteEx();
 				$GesAsistentes = new asistentes\GestorAsistenteEx();
 				$cAsistentes = $GesAsistentes->getAsistentesEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'propio'=>'t'));
 			}
@@ -138,7 +136,34 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
 			break;
 		}
 	}
+	
 	if ($ya_tiene == 0) {
+		$oActividad = new actividades\ActividadAll(array('id_activ'=>$id_activ_new));
+		// si es de la sf quito la 'f'
+		$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
+		$id_tabla = $oActividad->getId_tabla();
+		if ($dl == core\ConfigGlobal::mi_dele()) {
+			Switch($obj_persona) {
+				case 'PersonaN':
+				case 'PersonaNax':
+				case 'PersonaAgd':
+				case 'PersonaS':
+				case 'PersonaSSSC':
+				case 'PersonaDl':
+					$oAsistenteNew = new asistentes\AsistenteDl();
+					break;
+				case 'PersonaIn':
+				case 'PersonaEx':
+					$oAsistenteNew = new asistentes\AsistenteEx();
+					break;
+			}
+		} else {
+			if ($id_tabla == 'dl') {
+				$oAsistenteNew = new asistentes\AsistenteOut();
+			} else {
+				$oAsistenteNew = new asistentes\AsistenteEx();
+			}
+		}
 		//asignar uno nuevo.
 		$oAsistenteNew->setId_activ($id_activ_new);
 		$oAsistenteNew->setId_nom($id_nom);
@@ -151,3 +176,11 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
 		}
 	}
 }
+
+$txt = sprintf(_("No se incorporan las peticiones si la persona ya tiene una actividad como propia en el periodo: %s - %s."),$inicurs_ca,$fincurs_ca);
+
+?>
+<script>
+	fnjs_left_side_hide(); 
+</script>
+<?= $txt; ?>
