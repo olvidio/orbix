@@ -320,7 +320,8 @@ fnjs_guardar=function(formulario){
 		if (num < 0 || num > max) { alert ('<?= _("nota fuera de rango") ?>'); err=1; } 
 	}
 	
-	if (!acta) { alert("Debe llenar el campo del acta"); document.f_1011.acta.focus(); err=1; }
+	// situacion = 2 es para cursada
+	if (!acta && situacion != 2) { alert("Debe llenar el campo del acta"); document.f_1011.acta.focus(); err=1; }
 	if (f_acta) {
 		if (!fnjs_comprobar_fecha('#f_acta')) { err=1; }
 	}

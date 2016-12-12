@@ -233,7 +233,7 @@ if (!empty($nf)) {
 
 $sqlF="SELECT  p.id_nom,p.nom, p.apellido1, p.apellido2, n.f_acta, n.id_asignatura
 FROM $tabla p,e_notas_dl n
-WHERE p.id_nom=n.id_nom AND (n.f_acta) IS NULL
+WHERE p.id_nom=n.id_nom AND (n.f_acta) IS NULL AND NOT (n.id_situacion = 10 OR n.id_situacion::text ~ '[1345]')
 ORDER BY p.apellido1,p.apellido2 ";
 
 $oDBSt_sql=$oDB->query($sqlF);
