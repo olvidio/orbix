@@ -33,8 +33,30 @@ $godossiers = web\Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_b
 $a_status = array( 1 => _("proyecto"), 2 => _("actual"), 3 => _("terminada"), 4 => _("borrable"));
 
 $oActividad = new actividades\Actividad($id_activ);
-extract($oActividad->getTot());
-
+$aDades = $oActividad->getTot();
+$id_tipo_activ = $aDades['id_tipo_activ'];
+$dl_org = $aDades['dl_org'];
+$nom_activ = $aDades['nom_activ'];
+$id_ubi = $aDades['id_ubi'];
+//$desc_activ = $aDades['desc_activ'];
+$f_ini = $aDades['f_ini'];
+$h_ini = $aDades['h_ini'];
+$f_fin = $aDades['f_fin'];
+$h_fin = $aDades['h_fin'];
+//$tipo_horario = $aDades['tipo_horario'];
+$precio = $aDades['precio'];
+//$num_asistentes = $aDades['num_asistentes'];
+$status = $aDades['status'];
+$observ = $aDades['observ'];
+$nivel_stgr = $aDades['nivel_stgr'];
+//$observ_material = $aDades['observ_material'];
+$lugar_esp = $aDades['lugar_esp'];
+$tarifa = $aDades['tarifa'];
+$id_repeticion = $aDades['id_repeticion'];
+$publicado = $aDades['publicado'];
+//$id_tabla = $aDades['id_tabla'];
+$plazas = $aDades['plazas'];
+		
 if (empty($id_sel)) {
 	$id_sel = array("$id_activ#$nom_activ");
 	$oPosicion->addParametro('id_sel',$id_sel);
