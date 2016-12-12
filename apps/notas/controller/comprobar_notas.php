@@ -164,7 +164,7 @@ if ($actualizar=="9998") {
 /*1. Numerarios con el bienio terminado y sin poner que lo ha terminado */
 $sql="SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(*) as num_asig,stgr
 FROM $tabla p,e_notas_dl n
-WHERE p.id_nom=n.id_nom AND (n.id_situacion = 10 OR n.id_situacion::text ~ '[1345]')
+WHERE p.id_nom=n.id_nom AND $superada
 	AND (n.id_nivel BETWEEN 1000 AND 2000 OR n.id_nivel=9999)
 GROUP BY p.id_nom,p.nom, p.apellido1,p.apellido2,stgr
 HAVING count(*) >= 28 AND Max(n.id_nivel)<>9999
@@ -197,7 +197,7 @@ if (!empty($nf)) {
 /*2. Numerarios con el cuadrienio terminado y sin poner que lo ha terminado */
 $sql="SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(*) as num_asig,stgr
 		FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
-		WHERE (n.id_situacion = 10 OR n.id_situacion::text ~ '[1345]')
+		WHERE $superada
 			AND (n.id_nivel BETWEEN 2100 AND 2500 OR n.id_nivel=9998)
 		GROUP BY p.id_nom,p.nom, p.apellido1,p.apellido2,stgr
 		HAVING count(*) >= 52 AND Max(n.id_nivel)<>9998
@@ -233,7 +233,7 @@ if (!empty($nf)) {
 
 $sqlF="SELECT  p.id_nom,p.nom, p.apellido1, p.apellido2, n.f_acta, n.id_asignatura
 FROM $tabla p,e_notas_dl n
-WHERE p.id_nom=n.id_nom AND (n.f_acta) IS NULL AND NOT (n.id_situacion = 10 OR n.id_situacion::text ~ '[1345]')
+WHERE p.id_nom=n.id_nom AND (n.f_acta) IS NULL AND (n.id_situacion = 10 OR n.id_situacion::text ~ '[34]')
 ORDER BY p.apellido1,p.apellido2 ";
 
 $oDBSt_sql=$oDB->query($sqlF);
@@ -316,6 +316,30 @@ if (!empty($nf)) {
 	printf (_("Para poner c2 a todos los de la lista, hacer %s"),$pag);
 }
 
+/*7. Gente con asignaturas cursadas sin aprobar*/
+$sqlF="SELECT  p.id_nom,p.nom, p.apellido1, p.apellido2, n.f_acta, n.id_asignatura
+FROM $tabla p,e_notas_dl n
+WHERE p.id_nom=n.id_nom AND n.id_situacion = 2
+ORDER BY p.apellido1,p.apellido2 ";
+
+$oDBSt_sql=$oDB->query($sqlF);
+$nf=$oDBSt_sql->rowCount();
+echo "<br><p>7. $tabla_txt con asignaturas cursadas sin examinar: $nf</p>";
+
+/* Para sacar una lista*/
+echo "<table>";
+foreach ($oDBSt_sql->fetchAll() as $algo) {
+	$nom= $algo['apellido1']." ".$algo['apellido2'].", ".$algo['nom'];
+	$fecha= $algo['f_acta'];
+	$id_asignatura = $algo['id_asignatura'];
+	$oAsignatura = new asignaturas\Asignatura($id_asignatura);
+	$asig= $oAsignatura->getNombre_corto();
+	echo "<tr><td width=20></td>";
+	echo "<td>$nom</td><td>$fecha</td><td>$asig</td></tr>";
+}
+echo "<tr><td colspan=7><hr>";
+echo "</table>";
+/* end lista */
 
 echo "</body>";
 ?>
