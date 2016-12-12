@@ -122,7 +122,7 @@ if ($actualizar=="9998") {
 		WHERE $superada
 			AND (n.id_nivel BETWEEN 2100 AND 2500 OR n.id_nivel=9998)
 		GROUP BY p.id_nom,p.nom, p.apellido1,p.apellido2,stgr
-		HAVING count(*) >= 52 AND Max(n.id_nivel)<>9998
+		HAVING count(*) >= 53 AND Max(n.id_nivel)<>9998
 		ORDER BY p.apellido1,p.apellido2,nom ";
 	
 	$oDBSt_sql=$oDB->query($ssql);
@@ -200,7 +200,7 @@ $sql="SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(*) as num_asig,stgr
 		WHERE $superada
 			AND (n.id_nivel BETWEEN 2100 AND 2500 OR n.id_nivel=9998)
 		GROUP BY p.id_nom,p.nom, p.apellido1,p.apellido2,stgr
-		HAVING count(*) >= 52 AND Max(n.id_nivel)<>9998
+		HAVING count(*) >= 53 AND Max(n.id_nivel)<>9998
 		ORDER BY p.apellido1,p.apellido2,nom ";
 		
 $oDBSt_cuadrienio=$oDB->query($sql);
