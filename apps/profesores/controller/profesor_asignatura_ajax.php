@@ -68,6 +68,37 @@ foreach ($cProfesores['departamento'] as $id_nom => $ap_nom) {
 	$a_valores[$i][2]=$centro;
 	$a_valores[$i][3]=$telfs;
 	$a_valores[$i][4]=$mails;
+}
+// Para añadir los de apmpliación
+foreach ($cProfesores['ampliacion'] as $id_nom => $ap_nom) {
+	$i++;
+	$oPersonaDl = new personas\PersonaDl($id_nom);
+	$centro = $oPersonaDl->getCentro_o_dl();
+	$gesTelecoPersona = new personas\GestorTelecoPersonaDl();
+	$cTelecoPersona = $gesTelecoPersona->getTelecos(array('id_nom'=>$id_nom));
+	$telfs = '';	
+	$mails = '';
+	foreach($cTelecoPersona as $oTelecoPersona) {
+		$tipo = $oTelecoPersona->getTipo_teleco();
+		switch ($tipo){
+			case 'mail':
+			case 'e-mail':
+				$mails .= $oTelecoPersona->getNum_teleco();
+				break;
+			case 'movil':
+			case 'telf':
+				$telfs .= $oTelecoPersona->getNum_teleco();
+				break;
+		}
+	}
+	
+	$pagina = '';
+	
+	$a_valores[$i]['sel']="$id_nom";
+	$a_valores[$i][1]= array( 'ira'=>$pagina, 'valor'=>$ap_nom);
+	$a_valores[$i][2]=$centro;
+	$a_valores[$i][3]=$telfs;
+	$a_valores[$i][4]=$mails;
 
 }
 
