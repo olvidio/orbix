@@ -24,7 +24,7 @@ if ($dlA == $dlB) {	exit(); }
 //periodo
 //case "curso_ca":
 $mes = date("m");
-$any = date("Y")-1;
+$any = date("Y");
 $ini = core\ConfigGlobal::$est_inicio;
 $fi = core\ConfigGlobal::$est_fin;
 if ($mes>9) {
