@@ -7,7 +7,7 @@
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$id_tipo_activ = empty($_POST['id_tipo_activ'])? '' : '^'.$_POST['id_tipo_activ'];
+$Qid_tipo_activ = empty($_POST['id_tipo_activ'])? '' : $_POST['id_tipo_activ'];
 
 $aRegiones = array('H');
 $gesDelegacion = new ubis\model\GestorDelegacion();
@@ -20,7 +20,7 @@ $txt = sprintf(_("comparar %s con:"),$mi_dele);
 
 $oHash = new web\Hash();
 $oHash->setUrl(core\ConfigGlobal::getWeb().'/apps/actividadplazas/controller/balance_dl.php');
-$oHash->setCamposForm('dl!id_tipo_activ');
+$oHash->setCamposForm('dl!Qid_tipo_activ');
 $h = $oHash->linkSinVal();
 
 
@@ -29,7 +29,7 @@ $h = $oHash->linkSinVal();
 fnjs_comparativa=function(){
 	var filtro_dl=$('#dl').val();
 	var url='<?= core\ConfigGlobal::getWeb().'/apps/actividadplazas/controller/balance_dl.php' ?>';
-	var parametros='id_tipo_activ=<?= $id_tipo_activ ?>&dl='+filtro_dl+'<?= $h ?>&PHPSESSID=<?php echo session_id(); ?>';
+	var parametros='Qid_tipo_activ=<?= $Qid_tipo_activ ?>&dl='+filtro_dl+'<?= $h ?>&PHPSESSID=<?php echo session_id(); ?>';
 	$.ajax({
 		data: parametros,
 		url: url,

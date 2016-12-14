@@ -54,6 +54,7 @@ foreach ($cDelegaciones as $oDelegacion) {
 	$aWhere =array('dl_org'			=>$dl,
 					'id_tipo_activ'	=>$id_tipo_activ,
 					'status' 		=> $status,
+					'publicado' 		=> 't',
 					'f_ini' 		=> "'$inicio','$fin'",
 					'_ordre'		=>'f_ini');
 	$aOperador = array('id_tipo_activ'=>'~', 'f_ini'=>'BETWEEN');

@@ -10,7 +10,7 @@
 // FIN de  Cabecera global de URL de controlador ********************************
 
 // Sólo las del tipo...
-$id_tipo_activ = empty($_POST['id_tipo_activ'])? '' : '^'.$_POST['id_tipo_activ'];
+$Qid_tipo_activ = empty($_POST['Qid_tipo_activ'])? '' : '^'.$_POST['Qid_tipo_activ'];
 
 $dlA = core\ConfigGlobal::mi_dele();
 if (empty($_POST['dl'])) {
@@ -49,7 +49,7 @@ $grupo_estudios = $oMiDelegacion->getGrupo_estudios();
 $gesDelegacion = new ubis\model\GestorDelegacion();
 $cDelegaciones = $gesDelegacion->getDelegaciones(array('grupo_estudios'=>$grupo_estudios,'_ordre'=>'region,dl'));
 
-$gesActividadPlazas = new \actividadplazas\model\GestorActividadPlazas();
+$gesActividadPlazas = new actividadplazas\model\GestorActividadPlazas();
 // Seleccionar actividades exportadas de los id_dl
 
 $a_grupo = array();
@@ -74,7 +74,7 @@ foreach ($cDelegaciones as $oDelegacion) {
 }
 */
 function PlazasAB_por_actividad($dlA,$dlB,$clase) {
-	global $mi_dl,$id_tipo_activ,$status,$inicio,$fin;
+	global $mi_dl,$Qid_tipo_activ,$status,$inicio,$fin;
 	global $gesDelegacion;
 	global $gesActividades;
 	global $gesActividadPlazas;
@@ -89,7 +89,7 @@ function PlazasAB_por_actividad($dlA,$dlB,$clase) {
 	$id_dlB = $oDelegacionB->getId_dl();
 	
 	$aWhereA =array('dl_org'	=> $dlA,
-				'id_tipo_activ'	=> $id_tipo_activ,
+				'id_tipo_activ'	=> $Qid_tipo_activ,
 				'status' 		=> $status,
 				'f_ini' 		=> "'$inicio','$fin'",
 				'_ordre'		=>'f_ini');
@@ -105,7 +105,7 @@ function PlazasAB_por_actividad($dlA,$dlB,$clase) {
 	$dlB_l = $dlB.'-l';
 	foreach ($cActividadesA as $oActividad) {
 		$i++;
-		$id_tipo_activ = $oActividad->getId_tipo_activ();
+		//$id_tipo_activ = $oActividad->getId_tipo_activ();
 		$id_activ = $oActividad->getId_activ();
 		$nom = $oActividad->getNom_activ();
 		$dl_org = $oActividad->getDl_org();
