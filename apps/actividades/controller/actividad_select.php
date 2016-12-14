@@ -41,6 +41,7 @@ $num_max_actividades = 200;
 $Qempiezamin = '';
 $Qempiezamax = '';
 //$Qque = '';
+$mi_dele = core\ConfigGlobal::mi_dele();
 
 $mi_sfsv = core\ConfigGlobal::mi_sfsv();
 
@@ -232,6 +233,10 @@ $a_cabeceras[]= ucfirst(_("observaciones"));
 
 if (!empty($Qmodo) && $Qmodo == 'importar') {
 	$GesActividades = new actividades\GestorActividadPub();
+	if (empty($Qdl_org)) {
+   		$aWhere['dl_org'] = $mi_dele; 
+   		$aOperador['dl_org'] = '!='; 
+	}
 	$GesImportar = new actividades\GestorImportar();
 	$obj_pau = 'ActividadPub';
 } else {
