@@ -104,7 +104,7 @@ if (!empty($id_asignatura_real)) { //caso de modificar
 	$aWhere['status']='t';
 	$aWhere['id_nivel']='3000,5000';
 	$aOperador['id_nivel']='BETWEEN';
-	$aWhere['_ordre']='id_nivel';
+	$aWhere['_ordre']='nombre_corto';
 	$cOpcionales = $GesAsignaturas->getAsignaturas($aWhere,$aOperador);
 	// Asignaturas superadas
 	$GesNotas = new notas\GestorNota();
@@ -218,7 +218,7 @@ $aWhere['status']='t';
 $aWhere['id_sector']=1;
 $aWhere['id_nivel']=3000;
 $aOperador['id_nivel']='<';
-$aWhere['_ordre']='id_nivel';
+$aWhere['_ordre']='nombre_corto';
 $cOpcionalesGenericas = $GesAsignaturas->getAsignaturas($aWhere,$aOperador);
 $condicion='';
 $lista_nivel_op='';
