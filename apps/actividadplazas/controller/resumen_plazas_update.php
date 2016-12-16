@@ -33,6 +33,9 @@ switch ($que) {
 		
 		$json_cedidas = $oActividadPlazasDl->getCedidas();
 		$oCedidas = json_decode($json_cedidas);
+		if (empty($oCedidas)) {
+			$oCedidas = new stdClass;
+		}
 		if ($num_plazas == 0) {
 			unset($oCedidas->$dl);
 		} else {
