@@ -72,6 +72,12 @@ class actividadPlazas Extends core\ClasePropiedades {
 	 * @var string
 	 */
 	 protected $sdl_tabla;
+	/**
+	 * Cedidas de actividadPlazas
+	 *
+	 * @var JSON
+	 */
+	 protected $ocedidas;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
 	 * oDbl de actividadPlazas
@@ -123,13 +129,15 @@ class actividadPlazas Extends core\ClasePropiedades {
 		$aDades=array();
 		$aDades['plazas'] = $this->iplazas;
 		$aDades['cl'] = $this->scl;
+		$aDades['cedidas'] = $this->ocedidas;
 		array_walk($aDades, 'core\poner_null');
 
 		if ($bInsert === false) {
 			//UPDATE
 			$update="
 					plazas                   = :plazas,
-					cl                       = :cl";
+					cl                       = :cl,
+					cedidas                  = :cedidas";
 			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_activ='$this->iid_activ' AND id_dl='$this->iid_dl' AND dl_tabla='$this->sdl_tabla'")) === false) {
 				$sClauError = 'actividadPlazas.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -144,8 +152,8 @@ class actividadPlazas Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_activ, $this->iid_dl, $this->sdl_tabla);
-			$campos="(id_activ,id_dl,dl_tabla,plazas,cl)";
-			$valores="(:id_activ,:id_dl,:dl_tabla,:plazas,:cl)";		
+			$campos="(id_activ,id_dl,dl_tabla,plazas,cl,cedidas)";
+			$valores="(:id_activ,:id_dl,:dl_tabla,:plazas,:cl,:cedidas)";		
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'actividadPlazas.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -223,6 +231,7 @@ class actividadPlazas Extends core\ClasePropiedades {
 		if (array_key_exists('plazas',$aDades)) $this->setPlazas($aDades['plazas']);
 		if (array_key_exists('cl',$aDades)) $this->setCl($aDades['cl']);
 		if (array_key_exists('dl_tabla',$aDades)) $this->setDl_tabla($aDades['dl_tabla']);
+		if (array_key_exists('cedidas',$aDades)) $this->setCedidas($aDades['cedidas']);
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
@@ -364,6 +373,25 @@ class actividadPlazas Extends core\ClasePropiedades {
 	 */
 	function setDl_tabla($sdl_tabla) {
 		$this->sdl_tabla = $sdl_tabla;
+	}
+	/**
+	 * Recupera l'atribut ocedidas de actividadPlazas
+	 *
+	 * @return json ocedidas
+	 */
+	function getCedidas() {
+		if (!isset($this->ocedidas)) {
+			$this->DBCarregar();
+		}
+		return $this->ocedidas;
+	}
+	/**
+	 * estableix el valor de l'atribut ocedidas de actividadPlazas
+	 *
+	 * @param json ocedidas='' optional
+	 */
+	function setCedidas($ocedidas='') {
+		$this->ocedidas = $ocedidas;
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 

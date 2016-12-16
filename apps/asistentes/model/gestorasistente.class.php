@@ -125,11 +125,20 @@ class GestorAsistente Extends core\ClaseGestor {
 			}
 		} else {
 			// No hace falta saber las plazas ocupadas de otra dl.
-			return -1;
+			//return -1;
+			//o si:
+			$gesAsistenteIn = new GestorAsistenteIn();
+			$cAsistentes = $gesAsistenteIn->getAsistentesIn(array('id_activ'=>$iid_activ));
 		}
 		
 		$numAsis = 0;
 		foreach ($cAsistentes as $oAsistente) {
+			$id_nom = $oAsistente->getId_nom();
+			if ($sdl != $mi_dele) {
+				$oPersona = personas\Persona::NewPersona($id_nom);
+				$dl = $oPersona->getDl();
+				if ($sdl != $dl) continue;
+			}
 			$plaza= empty($oAsistente->getPlaza())? 1 : $oAsistente->getPlaza();
 			// sólo cuento las asignadas
 			if ($plaza < 4) continue;

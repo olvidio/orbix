@@ -58,6 +58,10 @@ jsForm.mandar=function(formulario,que){
 			$('#id_dossier').val(3101);
 			this.action = "apps/dossiers/controller/dossiers_ver.php";
 			break;
+		case "plazas":
+			$('#queSel').val(que);
+			this.action = "apps/actividadplazas/controller/resumen_plazas.php";
+			break;
 		case "list":
 			$('#queSel').val(que);
 			this.action = "apps/asistentes/controller/lista_asistentes.php";

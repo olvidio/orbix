@@ -193,6 +193,9 @@ if (!empty($Qmodo)) {
 			$a_botones[] = array( 'txt' => _('lista'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"list\")");
 			//$a_botones[] = array( 'txt' => _('transferir sasistentes a históricos'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"historicos\")");
 		}
+		if (core\configGlobal::is_app_installed('actividadplazas')) {
+			$a_botones[] = array( 'txt' => _('plazas'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"plazas\")");
+		}
 		if (core\configGlobal::is_app_installed('procesos')) {
 			$a_botones[] = array( 'txt' => _('estado'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"estado\")");
 		}
