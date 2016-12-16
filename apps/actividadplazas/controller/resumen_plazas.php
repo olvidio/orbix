@@ -96,6 +96,9 @@ foreach ($cActividadPlazas as $oActividadPlazas) {
 			$a_plazas[$id_dl]['cedidas'] = array();
 		}
 	}
+	$a_plazas[$id_dl]['conseguidas'] = array();
+	$a_plazas[$id_dl]['total_cedidas'] = 0;
+	$a_plazas[$id_dl]['total_conseguidas'] = 0;
 }
 //Calcular totales
 $tot_calendario = 0;
