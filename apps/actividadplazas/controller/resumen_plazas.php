@@ -80,12 +80,15 @@ foreach ($cActividadPlazas as $oActividadPlazas) {
 	$dl_tabla = $oActividadPlazas->getDl_tabla();
 	if ($dl_org == $dl_tabla) {
 		$a_plazas[$id_dl]['calendario'] = $oActividadPlazas->getPlazas();
-		$json_cedidas = $oActividadPlazas->getCedidas();
-		if (!empty($json_cedidas)){
-			$aCedidas = json_decode($json_cedidas,TRUE);
-			$a_plazas[$id_dl]['cedidas'] = $aCedidas;
-		} else {
-			$a_plazas[$id_dl]['cedidas'] = array();
+		// las cedidas se guardan en la tabla que pertenece a la dl
+		if($id_dl === $a_id_dele[$dl_org]) {
+			$json_cedidas = $oActividadPlazas->getCedidas();
+			if (!empty($json_cedidas)){
+				$aCedidas = json_decode($json_cedidas,TRUE);
+				$a_plazas[$id_dl]['cedidas'] = $aCedidas;
+			} else {
+				$a_plazas[$id_dl]['cedidas'] = array();
+			}
 		}
 	} else { //para plazas cedidas de una dl que no es la que organiza.
 		$json_cedidas = $oActividadPlazas->getCedidas();
