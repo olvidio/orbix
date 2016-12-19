@@ -41,7 +41,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 <?php print(strtoupper(_("datos personales"))); ?>
 </td></tr>
 <tr>
-	<td colspan=2><span class=etiqueta ondblclick="fnjs_help('<?php echo $id_tabla_help_ref; ?>')" >n, agd o sss+:</span>
+	<td colspan=2><span class=etiqueta ondblclick="fnjs_help('<?php //echo $id_tabla_help_ref; ?>')" >n, agd o sss+:</span>
 	<select class=datos name="id_tabla">
 			<option value="pn" <?php if ($id_tabla=="pn") { echo "selected"; } ?> ><?= _("numerario") ?></option>
 			<option value="pa" <?php if ($id_tabla=="pa") { echo "selected"; } ?> ><?= _("agregado") ?></option>
@@ -55,8 +55,8 @@ $oHash->setArraycamposHidden($a_camposHidden);
 			}
 			?>
 	</select>
-	<td><span class=etiqueta ondblclick="fnjs_help('<?php echo $dl_help_ref; ?>')" >Delegación</span></td>
-	<td><input class=datos size="6" name="dl" value="<?php echo $dl ?>" title="<?php echo $dl_help; ?>"></TD>
+	<td><span class=etiqueta ondblclick="fnjs_help('<?php //echo $dl_help_ref; ?>')" >Delegación</span></td>
+	<td><input class=datos size="6" name="dl" value="<?php echo $dl ?>" title="<?php //echo $dl_help; ?>"></TD>
 	</tr>
 <tr>
 <?php
@@ -100,8 +100,8 @@ if (core\ConfigGlobal::mi_sfsv() == 1) {
 }
 echo web\dibujar_campo($obj,"profesor_stgr",9,1,1);
 ?>
-<td><span class=etiqueta ondblclick="fnjs_help('<?php echo $stgr_help_ref; ?>')" >Stgr&nbsp;</span>
-			<select class=datos name="stgr" title="<?php echo $stgr_help; ?>">
+<td><span class=etiqueta ondblclick="fnjs_help('<?php //echo $stgr_help_ref; ?>')" >Stgr&nbsp;</span>
+			<select class=datos name="stgr" title="<?php //echo $stgr_help; ?>">
 			<option value="b" <?php if ($stgr=="b") { echo "selected"; } ?> >b</option>
 			<option value="c1" <?php if ($stgr=="c1") { echo "selected"; } ?> >c1</option>
 			<option value="c2" <?php if ($stgr=="c2") { echo "selected"; } ?> >c2</option>
