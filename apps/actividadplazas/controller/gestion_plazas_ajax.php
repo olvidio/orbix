@@ -44,6 +44,7 @@ switch ($_POST['que']) {
 			}
 			//Si es la dl_org, son plazas concedidas, sino pedidas.
 			$oActividadPlazasDl = new actividadplazas\ActividadPlazasDl(array('id_activ'=>$id_activ,'id_dl'=>$id_dl,'dl_tabla'=>$mi_dele));
+			$oActividadPlazasDl->DBCarregar();
 			$oActividadPlazasDl->setPlazas($plazas);
 				
 			//print_r($oActividadPlazasDl);

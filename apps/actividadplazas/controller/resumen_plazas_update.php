@@ -30,6 +30,8 @@ switch ($que) {
 		}
 		//Si es la dl_org, son plazas concedidas, sino pedidas.
 		$oActividadPlazasDl = new actividadplazas\ActividadPlazasDl(array('id_activ'=>$id_activ,'id_dl'=>$id_dl,'dl_tabla'=>$mi_dele));
+
+		$oActividadPlazasDl->DBCarregar();
 		
 		$json_cedidas = $oActividadPlazasDl->getCedidas();
 		$oCedidas = json_decode($json_cedidas);

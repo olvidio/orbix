@@ -78,10 +78,11 @@ $cActividadPlazas = $gesActividadPlazas->getActividadesPlazas(array('id_activ'=>
 foreach ($cActividadPlazas as $oActividadPlazas) {
 	$id_dl = $oActividadPlazas->getId_dl();
 	$dl_tabla = $oActividadPlazas->getDl_tabla();
+	$id_dl_org = $a_id_dele[$dl_org];
 	if ($dl_org == $dl_tabla) {
 		$a_plazas[$id_dl]['calendario'] = $oActividadPlazas->getPlazas();
 		// las cedidas se guardan en la tabla que pertenece a la dl
-		if($id_dl === $a_id_dele[$dl_org]) {
+		if($id_dl === $id_dl_org) {
 			$json_cedidas = $oActividadPlazas->getCedidas();
 			if (!empty($json_cedidas)){
 				$aCedidas = json_decode($json_cedidas,TRUE);
