@@ -103,6 +103,12 @@ class AsistentePub Extends core\ClasePropiedades {
 	 */
 	 protected $iplaza;
 	/**
+	 * Propietario de AsistentePub
+	 *
+	 * @var texet
+	 */
+	 protected $spropietario;
+	/**
 	 * id_tabla de AsistentePub
 	 *
 	 * @var string
@@ -153,6 +159,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$aDades['cama'] = $this->scama;
 		$aDades['observ'] = $this->sobserv;
 		$aDades['plaza'] = $this->iplaza;
+		$aDades['propietario'] = $this->spropietario;
 		//$aDades['id_tabla'] = $this->sid_tabla;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
@@ -172,7 +179,8 @@ class AsistentePub Extends core\ClasePropiedades {
 					encargo                  = :encargo,
 					cama                     = :cama,
 					observ                   = :observ,
-					plaza                    = :plaza";
+					plaza                    = :plaza,
+					propietario              = :propietario";
 					//id_tabla                 = :id_tabla";
 			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_activ='$this->iid_activ' AND id_nom='$this->iid_nom'")) === false) {
 				$sClauError = get_class($this).'.update.prepare';
@@ -188,8 +196,8 @@ class AsistentePub Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_activ, $this->iid_nom);
-			$campos="(id_activ,id_nom,propio,est_ok,cfi,cfi_con,falta,encargo,cama,observ,plaza)";
-			$valores="(:id_activ,:id_nom,:propio,:est_ok,:cfi,:cfi_con,:falta,:encargo,:cama,:observ,:plaza)";		
+			$campos="(id_activ,id_nom,propio,est_ok,cfi,cfi_con,falta,encargo,cama,observ,plaza,propietario)";
+			$valores="(:id_activ,:id_nom,:propio,:est_ok,:cfi,:cfi_con,:falta,:encargo,:cama,:observ,:plaza,:propietario)";		
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = get_class($this).'.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -272,6 +280,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		if (array_key_exists('cama',$aDades)) $this->setCama($aDades['cama']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
 		if (array_key_exists('plaza',$aDades)) $this->setPlaza($aDades['plaza']);
+		if (array_key_exists('propietario',$aDades)) $this->setPropietario($aDades['propietario']);
 		if (array_key_exists('id_tabla',$aDades)) $this->setId_tabla($aDades['id_tabla']);
 	}
 	/**
@@ -293,6 +302,7 @@ class AsistentePub Extends core\ClasePropiedades {
 			$aDades['cama'] = $this->getCama();
 			$aDades['observ'] = $this->getObserv();
 			$aDades['plaza'] = $this->getPlaza();
+			$aDades['propietario'] = $this->getPropietario();
 			$aDades['id_tabla'] = $this->getId_tabla();
 		} else {
 			return $aDades;
@@ -548,6 +558,25 @@ class AsistentePub Extends core\ClasePropiedades {
 		$this->iplaza = $iplaza;
 	}
 	/**
+	 * Recupera l'atribut spropietario de AsistentePub
+	 *
+	 * @return integer spropietario
+	 */
+	function getPropietario() {
+		if (!isset($this->spropietario)) {
+			$this->DBCarregar();
+		}
+		return $this->spropietario;
+	}
+	/**
+	 * estableix el valor de l'atribut spropietario de AsistentePub
+	 *
+	 * @param integer spropietario='' optional
+	 */
+	function setPropietario($spropietario='') {
+		$this->spropietario = $spropietario;
+	}
+	/**
 	 * Recupera l'atribut sid_tabla de AsistentePub
 	 *
 	 * @return string sid_tabla
@@ -694,6 +723,18 @@ class AsistentePub Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'plaza'));
 		$oDatosCampo->setEtiqueta(_("plaza"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut spropietario de AsistentePub
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return oject DatosCampo
+	 */
+	function getDatosPropietario() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'propietario'));
+		$oDatosCampo->setEtiqueta(_("propietario"));
 		return $oDatosCampo;
 	}
 }

@@ -225,6 +225,10 @@ foreach($gesAsistentes->getAsistentes(array('id_activ'=>$id_pau)) as $oAsistente
 	$est_ok=$oAsistente->getEst_ok();
 	$observ=$oAsistente->getObserv();
 
+	if (core\configGlobal::is_app_installed('actividadplazas')) {
+		$plaza=$oAsistente->getPlaza();
+		if ($plaza < 4) continue;
+	}
 	if ($propio=='t') {
 		$chk_propio=_("si");
 	} else { 

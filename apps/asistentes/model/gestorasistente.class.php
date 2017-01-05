@@ -102,9 +102,10 @@ class GestorAsistente Extends core\ClaseGestor {
 	 *
 	 * @param integer iid_activ el id de l'activitat.
 	 * @param string sdl sigla de la dl
+	 * @param string dl_hub sigla de la dl propietaria de las plazas
 	 * @return integer
 	 */
-	function getPlazasOcupadasPorDl($iid_activ,$sdl='') {
+	function getPlazasOcupadasPorDl($iid_activ,$sdl='',$dl_hub='') {
 		$mi_dele = core\ConfigGlobal::mi_dele();
 		/* Mirar si la actividad es mia o no */
 		$oActividad = new actividades\Actividad($iid_activ);
@@ -116,29 +117,49 @@ class GestorAsistente Extends core\ClaseGestor {
 		
 		if ($sdl == $mi_dele) {
 			if ($dl_org == $sdl) {
-					$gesAsistenteDl = new GestorAsistenteDl();
-					$cAsistentes = $gesAsistenteDl->getAsistentesDl(array('id_activ'=>$iid_activ));
+				//$gesAsistenteDl = new GestorAsistenteDl();
+				//$cAsistentes = $gesAsistenteDl->getAsistentesDl(array('id_activ'=>$iid_activ));
+				$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');
+				$cAsistentes = $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
 			} else {
 				$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
-				$namespace = __NAMESPACE__;
 				$cAsistentes = $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
 			}
 		} else {
 			// No hace falta saber las plazas ocupadas de otra dl.
 			//return -1;
 			//o si:
-			$gesAsistenteIn = new GestorAsistenteIn();
-			$cAsistentes = $gesAsistenteIn->getAsistentesIn(array('id_activ'=>$iid_activ));
+			if ($dl_org == $sdl) {
+				$cAsistentes = array();
+			} else {
+				if ($dl_org == $mi_dele) {
+					$a_Clases[] = array('clase'=>'AsistenteEx','get'=>'getAsistentesEx');
+					//$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
+					$cAsistentes = $this->getConjunt($a_Clases,$namespace,$aWhere, $aOperators);
+					//$gesAsistenteIn = new GestorAsistenteIn();
+					//$cAsistentes = $gesAsistenteIn->getAsistentesIn(array('id_activ'=>$iid_activ));
+				} else {
+					$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
+					$cAsistentes = $this->getConjunt($a_Clases,$namespace,$aWhere, $aOperators);
+					//$cAsistentes = array();
+
+				}
+			}
 		}
 		
 		$numAsis = 0;
 		foreach ($cAsistentes as $oAsistente) {
 			$id_nom = $oAsistente->getId_nom();
-			if ($sdl != $mi_dele) {
-				$oPersona = personas\Persona::NewPersona($id_nom);
-				$dl = $oPersona->getDl();
-				if ($sdl != $dl) continue;
-			}
+			$propietario = $oAsistente->getPropietario();
+			$padre = strtok($propietario,'>');
+			$child = strtok('>');
+			//if ($sdl != $mi_dele) {
+			if (!empty($dl_hub) && $dl_hub != $padre) continue;
+			if ($sdl != $child) continue;
+			$oPersona = personas\Persona::NewPersona($id_nom);
+			$dl = $oPersona->getDl();
+			if ($sdl != $dl) continue;
+			//}
 			$plaza= empty($oAsistente->getPlaza())? 1 : $oAsistente->getPlaza();
 			// sólo cuento las asignadas
 			if ($plaza < 4) continue;

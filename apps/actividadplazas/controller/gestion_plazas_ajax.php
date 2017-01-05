@@ -12,12 +12,15 @@ use actividadplazas\model as actividadplazas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$que = (string)  filter_input(INPUT_POST, 'que');
 
-switch ($_POST['que']) {
+switch ($que) {
 	case "update":
-		$obj = json_decode($_POST['data']);
+		$data = (string)  filter_input(INPUT_POST, 'data');
+		$colName = (string)  filter_input(INPUT_POST, 'colName');
+		$obj = json_decode($data);
 		//print_r($obj);
-		$dl = json_decode($_POST['colName']);
+		$dl = json_decode($colName);
 		//print_r($dl);
 		$id_activ =$obj->id;
 		$dl_org =$obj->dlorg;
@@ -54,5 +57,29 @@ switch ($_POST['que']) {
 			//$oPosicion = new web\Posicion();
 			//echo $oPosicion->ir_a("usuario_form.php?quien=usuario&id_usuario=".$_POST['id_usuario']);
 		}  
+		break;
+	case 'lst_propietarios':
+		$id_nom = (integer)  filter_input(INPUT_POST, 'id_nom');
+		$id_activ = (integer)  filter_input(INPUT_POST, 'id_activ');
+		
+		$oPersona = \personas\model\Persona::NewPersona($id_nom);
+		$obj_pau = str_replace("personas\\model\\",'',get_class($oPersona));
+		$dl_de_paso = FALSE;
+		if ($obj_pau === 'PersonaEx') {
+			if (!empty($id_nom)) { //caso de modificar
+				$dl_de_paso = $oPersona->getDl();
+			} else {
+			
+			}
+		}
+		// valor por defecto
+		$propietario = core\ConfigGlobal::mi_dele().">".$dl_de_paso;
+		$gesActividadPlazas = new \actividadplazas\model\GestorResumenPlazas();
+		$gesActividadPlazas->setId_activ($id_activ);
+		$oDesplPosiblesPropietarios = $gesActividadPlazas->getPosiblesPropietarios($dl_de_paso);
+		$oDesplPosiblesPropietarios->setNombre('propietario');
+		$oDesplPosiblesPropietarios->setOpcion_sel($propietario);
+		$oDesplPosiblesPropietarios->setBlanco(0);
+		echo $oDesplPosiblesPropietarios->desplegable();
 		break;
 }

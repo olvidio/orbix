@@ -49,13 +49,15 @@ if (!empty($_POST['go_to'])) {
 	empty($_POST['go_to'])? $go_to="" : $go_to=$_POST['go_to'];
 }
 
+$gesAsistentes = new asistentes\GestorAsistente();
+	
 $obj = 'asistentes\\model\\Asistente';
 $permiso =	empty($_POST['permiso'])? '' : $_POST['permiso'];
 
 /* Mirar si la actividad es mia o no */
 $oActividad = new actividades\Actividad($id_activ);
 // si es de la sf quito la 'f'
-$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
+$dl_org = preg_replace('/f$/', '', $oActividad->getDl_org());
 $id_tabla_dl = $oActividad->getId_tabla();
 
 if (!empty($id_nom)) { //caso de modificar
@@ -65,47 +67,37 @@ if (!empty($id_nom)) { //caso de modificar
 	$id_tabla = $oPersona->getId_tabla();
 	$id_nom_real = $id_nom;
 
+	$aWhere = array('id_activ'=>$id_activ,'id_nom'=>$id_nom);
+	$cAsistentes = $gesAsistentes->getAsistentes($aWhere);
+	$oAsistente = $cAsistentes[0];
+
 	$obj_pau = str_replace("personas\\model\\",'',get_class($oPersona));
-	if ($dl == core\ConfigGlobal::mi_dele()) {
-		switch ($obj_pau) {
-			case 'PersonaN':
-			case 'PersonaNax':
-			case 'PersonaAgd':
-			case 'PersonaS':
-			case 'PersonaSSSC':
-			case 'PersonaDl':
-				$oAsistente=new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-				break;
-			case 'PersonaOut':
-				$oAsistente=new asistentes\AsistenteOut(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-				break;
-			case 'PersonaIn':
-				// Supongo que sólo debería modificar la dl origen.
-				// $oAsistente=new asistentes\AsistenteIn(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-				exit (_("Los datos de asistencia los modifica la dl del asistente"));
-				break;
-			case 'PersonaEx':
-				$oAsistente=new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-				break;
-		}
-	} else {
-		if ($id_tabla_dl == 'dl') { 
-				$oAsistente=new asistentes\AsistenteOut(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-		} else {
-			$oAsistente=new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-		}
-	}
 	$propio=$oAsistente->getPropio();
 	$falta=$oAsistente->getFalta();
 	$est_ok=$oAsistente->getEst_ok();
 	$observ=$oAsistente->getObserv();
 	$plaza=$oAsistente->getPlaza();
+	$propietario=$oAsistente->getPropietario();
+	
+	if (core\configGlobal::is_app_installed('actividadplazas')) {
+		if (!empty($propietario)) {
+			$padre = strtok($propietario,'>');
+			$child = strtok('>');
+			//$obj_asis = str_replace("personas\\model\\",'',get_class($oAsistente));
+			//if ($obj_asis == 'AsistenteOut' && $padre != core\ConfigGlobal::mi_dele() ) {
+			// excepto los de paso
+			if ( $obj_pau != 'PersonaEx' && $child != core\ConfigGlobal::mi_dele() ) {
+				exit (sprintf(_("Los datos de asistencia los modifica el propietario de la plaza: %s"),$child));
+			}
+		}
+	}
 
 } else { //caso de nuevo asistente
 	$mod="nuevo";
 	$propio="t"; //valor por defecto
 	$observ=""; //valor por defecto
 	$plaza=1; //valor por defecto
+	$propietario=''; //valor por defecto
 	$_POST['obj_pau'] = !empty($_POST['obj_pau'])? urldecode($_POST['obj_pau']) : '';
 	$obj_pau = strtok($_POST['obj_pau'],'&');
 	$na = strtok('&');
@@ -144,18 +136,46 @@ if (!empty($id_nom)) { //caso de modificar
 			$obj_pau = 'PersonaEx';
 			break;
 	}
+	if (core\configGlobal::is_app_installed('actividadplazas')) {
+		$oDesplegablePersonas->setAction('fnjs_cmb_propietario()');
+	}
 }
 $propio_chk = (!empty($propio) && $propio=='t') ? 'checked' : '' ;
 $falta_chk = (!empty($falta) && $falta=='t') ? 'checked' : '' ;
 $est_chk = (!empty($est_ok) && $est_ok=='t') ? 'checked' : '' ;
 
-$gesAsistentes = new asistentes\GestorAsistente();
-$oDesplegablePlaza = $gesAsistentes->getPosiblesPlaza();
-$oDesplegablePlaza->setNombre('plaza');
-$oDesplegablePlaza->setOpcion_sel($plaza);
+if (core\configGlobal::is_app_installed('actividadplazas')) {
+	$oDesplegablePlaza = $gesAsistentes->getPosiblesPlaza();
+	$oDesplegablePlaza->setNombre('plaza');
+	$oDesplegablePlaza->setOpcion_sel($plaza);
+	
+	$dl_de_paso = FALSE;
+	if ($obj_pau === 'PersonaEx') {
+		if (!empty($id_nom)) { //caso de modificar
+			$dl_de_paso = $oPersona->getDl();
+		} else {
+		
+		}
+	}
+	$gesActividadPlazas = new \actividadplazas\model\GestorResumenPlazas();
+	$gesActividadPlazas->setId_activ($id_activ);
+	$oDesplPosiblesPropietarios = $gesActividadPlazas->getPosiblesPropietarios($dl_de_paso);
+	$oDesplPosiblesPropietarios->setNombre('propietario');
+	$oDesplPosiblesPropietarios->setOpcion_sel($propietario);
+
+	$url_ajax = core\ConfigGlobal::getWeb().'/apps/actividadplazas/controller/gestion_plazas_ajax.php';
+	$oHash1 = new web\Hash();
+	$oHash1->setUrl($url_ajax);
+	$oHash1->setCamposForm('que!id_activ!id_nom'); 
+	//$oHash1->setCamposNo('id_nom'); 
+	$h1 = $oHash1->linkSinVal();
+}
 
 $oHash = new web\Hash();
-$camposForm = 'observ!plaza';
+$camposForm = 'observ';
+if (core\configGlobal::is_app_installed('actividadplazas')) {
+	$camposForm .= '!plaza!propietario';
+}
 $oHash->setCamposNo('mod!propio!falta!est_ok');
 $a_camposHidden = array(
 		'id_activ' => $_POST['id_pau'],
@@ -173,6 +193,30 @@ $oHash->setArraycamposHidden($a_camposHidden);
 ?>
 <!-- ------------------- html -----------------------------------------------  -->
 <script>
+<?php
+if (core\configGlobal::is_app_installed('actividadplazas')) {
+?>
+fnjs_cmb_propietario=function(){
+	var id_nom=$('#id_nom').val();
+	alert ('nom: '+id_nom);
+	var url='<?= $url_ajax ?>';
+	var parametros='que=lst_propietarios&id_nom='+id_nom+'&id_activ=<?= $id_activ ?><?= $h1 ?>&PHPSESSID=<?php echo session_id(); ?>';
+		 
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta_txt) {
+			//rta_txt=rta.responseText;
+			//alert ('respuesta: '+rta_txt);
+			$('#lst_propietarios').html(rta_txt);
+		}
+	});
+}
+
+<?php	
+}
+?>
 fnjs_guardar=function(formulario){
 	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
 	//alert ("EEE "+rr);
@@ -204,13 +248,13 @@ fnjs_guardar=function(formulario){
 <?= $oHash->getCamposHtml(); ?>
 <input type="Hidden" id="mod" name="mod" value=<?= $mod ?>>
 <table>
-<tr class=tab><th class=titulo_inv colspan=2><?php echo ucfirst(_("Asistente a una actividad")); ?></th></tr>
+<tr class=tab><th class=titulo_inv colspan=4><?php echo ucfirst(_("Asistente a una actividad")); ?></th></tr>
 <tr><td class=etiqueta><?= ucfirst(_("asistente")) ?>:</td>
 <?php
 if (!empty($id_nom_real)) {
-	echo "<td class=contenido>$ape_nom</td>";
+	echo "<td class=contenido colspan=3>$ape_nom</td>";
 } else {
-	echo "<td>";
+	echo "<td colspan=3>";
 	echo $oDesplegablePersonas->desplegable();
 	echo "</td>";
 }
@@ -222,9 +266,20 @@ if (!empty($id_nom_real)) {
 <td><input type="Checkbox" id="falta" name="falta" value="true" <?= $falta_chk ?>></td></tr>
 <tr><td class=etiqueta><?= _("estudios confirmados") ?></td>
 <td><input type="Checkbox" id="est_ok" name="est_ok" value="true" <?= $est_chk ?>></td></tr>
-<tr><td class=etiqueta><?php echo ucfirst(_("observaciones")); ?></td><td class=contenido>
+<tr><td class=etiqueta><?php echo ucfirst(_("observaciones")); ?></td><td class=contenido colspan="3">
 <textarea id="observ" name="observ" cols="40" rows="5"><?= htmlspecialchars($observ) ?></textarea></td></tr>
-<tr><td class=etiqueta><?= _("plaza") ?></td><td><?= $oDesplegablePlaza->desplegable(); ?></td></tr>
+<?php
+if (core\configGlobal::is_app_installed('actividadplazas')) {
+?>
+	<tr><td class=etiqueta><?= _("plaza") ?></td><td><?= $oDesplegablePlaza->desplegable(); ?></td>
+	<td class=etiqueta><?= _("propiedad de") ?></td><td>
+	<div id='lst_propietarios'>
+	<?= $oDesplPosiblesPropietarios->desplegable(); ?>
+	</div></td>
+	</tr>
+<?php
+}
+?>
 </table>
 <br><input type="button" id="guardar" name="guardar" onclick="fnjs_guardar(this.form);" value="<?php echo ucfirst(_("guardar datos del asistente")); ?>" align="MIDDLE">
 </form>

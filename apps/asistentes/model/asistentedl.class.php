@@ -108,6 +108,12 @@ class AsistenteDl Extends core\ClasePropiedades {
 	 * @var string
 	 */
 	 protected $sid_tabla;
+	/**
+	 * Propietario de AsistenteDl
+	 *
+	 * @var string
+	 */
+	 protected $spropietario;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
@@ -153,6 +159,7 @@ class AsistenteDl Extends core\ClasePropiedades {
 		$aDades['cama'] = $this->scama;
 		$aDades['observ'] = $this->sobserv;
 		$aDades['plaza'] = $this->iplaza;
+		$aDades['propietario'] = $this->spropietario;
 		//$aDades['id_tabla'] = $this->sid_tabla;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
@@ -172,7 +179,8 @@ class AsistenteDl Extends core\ClasePropiedades {
 					encargo                  = :encargo,
 					cama                     = :cama,
 					observ                   = :observ,
-					plaza                    = :plaza";
+					plaza                    = :plaza,
+					propietario              = :propietario";
 					//id_tabla                 = :id_tabla";
 			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_activ='$this->iid_activ' AND id_nom='$this->iid_nom'")) === false) {
 				$sClauError = 'AsistenteDl.update.prepare';
@@ -188,8 +196,8 @@ class AsistenteDl Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_activ, $this->iid_nom);
-			$campos="(id_activ,id_nom,propio,est_ok,cfi,cfi_con,falta,encargo,cama,observ,plaza)";
-			$valores="(:id_activ,:id_nom,:propio,:est_ok,:cfi,:cfi_con,:falta,:encargo,:cama,:observ,:plaza)";		
+			$campos="(id_activ,id_nom,propio,est_ok,cfi,cfi_con,falta,encargo,cama,observ,plaza,propietario)";
+			$valores="(:id_activ,:id_nom,:propio,:est_ok,:cfi,:cfi_con,:falta,:encargo,:cama,:observ,:plaza,:propietario)";		
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'AsistenteDl.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -272,6 +280,7 @@ class AsistenteDl Extends core\ClasePropiedades {
 		if (array_key_exists('cama',$aDades)) $this->setCama($aDades['cama']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
 		if (array_key_exists('plaza',$aDades)) $this->setPlaza($aDades['plaza']);
+		if (array_key_exists('propietario',$aDades)) $this->setPropietario($aDades['propietario']);
 		if (array_key_exists('id_tabla',$aDades)) $this->setId_tabla($aDades['id_tabla']);
 	}
 
@@ -527,6 +536,25 @@ class AsistenteDl Extends core\ClasePropiedades {
 	 */
 	function setId_tabla($sid_tabla='') {
 		$this->sid_tabla = $sid_tabla;
+	}
+	/**
+	 * Recupera l'atribut spropietario de AsistenteDl
+	 *
+	 * @return string spropietario
+	 */
+	function getPropietario() {
+		if (!isset($this->spropietario)) {
+			$this->DBCarregar();
+		}
+		return $this->spropietario;
+	}
+	/**
+	 * estableix el valor de l'atribut spropietario de AsistenteDl
+	 *
+	 * @param string spropietario='' optional
+	 */
+	function setPropietario($spropietario='') {
+		$this->spropietario = $spropietario;
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 

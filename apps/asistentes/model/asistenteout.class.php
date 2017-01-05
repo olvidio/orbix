@@ -76,6 +76,7 @@ class AsistenteOut Extends AsistentePub {
 		$aDades['cama'] = $this->scama;
 		$aDades['observ'] = $this->sobserv;
 		$aDades['plaza'] = $this->iplaza;
+		$aDades['propietario'] = $this->spropietario;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if (empty($aDades['propio']) || ($aDades['propio'] === 'off') || ($aDades['propio'] === false) || ($aDades['propio'] === 'f')) { $aDades['propio']='f'; } else { $aDades['propio']='t'; }
@@ -94,7 +95,8 @@ class AsistenteOut Extends AsistentePub {
 					encargo                  = :encargo,
 					cama                     = :cama,
 					observ                   = :observ,
-					plaza                    = :plaza";
+					plaza                    = :plaza,
+					propietario              = :propietario";
 			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_activ='$this->iid_activ' AND id_nom='$this->iid_nom'")) === false) {
 				$sClauError = get_class($this).'.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -109,8 +111,8 @@ class AsistenteOut Extends AsistentePub {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_activ, $this->iid_nom);
-			$campos="(id_activ,id_nom,propio,est_ok,cfi,cfi_con,falta,encargo,cama,observ,plaza)";
-			$valores="(:id_activ,:id_nom,:propio,:est_ok,:cfi,:cfi_con,:falta,:encargo,:cama,:observ,:plaza)";
+			$campos="(id_activ,id_nom,propio,est_ok,cfi,cfi_con,falta,encargo,cama,observ,plaza,propietario)";
+			$valores="(:id_activ,:id_nom,:propio,:est_ok,:cfi,:cfi_con,:falta,:encargo,:cama,:observ,:plaza,:propietario)";
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = get_class($this).'.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -127,16 +129,20 @@ class AsistenteOut Extends AsistentePub {
 			if ($this->btraslado == 'f') {
 				$oPersona = personas\Persona::NewPersona($this->iid_nom);
 				$oPersona->DBCarregar();
-				$oPersonaOut =  new personas\PersonaOut($this->iid_nom);
-				$oPersonaOut->import($oPersona);
-				$oPersonaOut->DBGuardar();
-				// miro si es profesor
-				$cProfesores = array();
-				$gesProfesores = new profesores\GestorProfesor();
-				$cProfesores = $gesProfesores->getProfesores(array('id_nom'=>$this->iid_nom, 'f_cese'=>''),array('f_cese'=>'IS NULL'));
-				if (count($cProfesores > 0)) {
-					$oPersonaOut->setProfesor_stgr('t');
+				// No para los de paso:
+				$nom_tablaP = $oPersona->getNomTabla();
+				if ($nom_tablaP != 'p_de_paso_out') {
+					$oPersonaOut =  new personas\PersonaOut($this->iid_nom);
+					$oPersonaOut->import($oPersona);
 					$oPersonaOut->DBGuardar();
+					// miro si es profesor
+					$cProfesores = array();
+					$gesProfesores = new profesores\GestorProfesor();
+					$cProfesores = $gesProfesores->getProfesores(array('id_nom'=>$this->iid_nom, 'f_cese'=>''),array('f_cese'=>'IS NULL'));
+					if (count($cProfesores > 0)) {
+						$oPersonaOut->setProfesor_stgr('t');
+						$oPersonaOut->DBGuardar();
+					}
 				}
 			}
 		}
