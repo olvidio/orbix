@@ -217,13 +217,14 @@ class Posicion {
 	 * @param mixed valor
 	 */
 	public function addParametro($nomParametre,$valor,$n=0) {
-		$aPosition = end($_SESSION['position']);
-		
-		$this->surl = $aPosition['url'];
-		$this->sbloque = $aPosition['bloque'];
-		$this->aParametros = $aPosition['parametros'];
-		$this->setParametro($nomParametre,$valor);
-		$this->recordar();
+		if (!empty($_SESSION['position'])) {
+			$aPosition = end($_SESSION['position']);
+			$this->surl = $aPosition['url'];
+			$this->sbloque = $aPosition['bloque'];
+			$this->aParametros = $aPosition['parametros'];
+			$this->setParametro($nomParametre,$valor);
+			$this->recordar();
+		}
 	}	
 	/**
 	 * estableix el valor d'un parametre de Posicion 
