@@ -252,6 +252,11 @@ if ($gm < 2) {
 	$li_submenus.="<li><a href=\"#\" onclick=\"fnjs_logout();\" >| <?= ucfirst(_('salir')) ?></a></li>";
 }
 
+$oHash = new web\Hash();
+$oHash->setUrl(ConfigGlobal::getWeb().'/apps/usuarios/controller/personal_update.php');
+$oHash->setCamposForm('que!tabla!sPrefs');
+$h = $oHash->linkSinVal();
+
 // ------------- Html -------------------
 ?>
 <html>
@@ -335,8 +340,19 @@ function fnjs_slick_col_visible() {
 	// columnas vivibles
 	colsVisible={};
 	ci = 0;
-	$('.slick-columnpicker input').each(function(i){
+	v ="true";
+	$(".slick-header-columns .slick-column-name").each(function(i){
 		ci++;
+		// para saber el nombre
+		name=$(this).text();
+		name_idx = name.replace(/ /g,''); // quito posibles espacios en el indice
+		//alert ("name: "+name+" vis: "+v);
+		colsVisible[name_idx]=v;
+	});
+	/*
+	$("span", ".slick-columnpicker", "input").each(function(i){
+		ci++;
+		alert('hola');
 		id = $(this).attr('id');
 		var pattern=/columnpicker/;
 		if (pattern.test(id)) {
@@ -353,8 +369,9 @@ function fnjs_slick_col_visible() {
 			colsVisible[name_idx]=v;
 		}
 	});
+		*/
 	if (ci == 0) { colsVisible = 'noCambia'; }
-	//alert (ci+'  cols: '+cols);
+	//alert (ci+'  cols: '+colsVisible);
 	return colsVisible;
 }
 
@@ -372,9 +389,13 @@ function fnjs_slick_cols_width(tabla) {
 	// anchura de las columnas
 	colsWidth={};
 	$("#grid_"+tabla+" .slick-header-column").each(function(i){
-		styl = $(this).attr("style");
-		//alert("styl "+styl);
-		match = /width:\s*(\d*)(\.)?(.*)px;/i.exec(styl)
+		//styl = $(this).attr("style");
+		wid = $(this).css('width');
+		//alert (wid);
+		// quitar los 'px'
+		//match = /width:\s*(\d*)(\.)?(.*)px;/i.exec(styl)
+		regExp = /(\d*)(px)*/;
+		match = regExp.exec(wid);
 		w=0;
 		if (match != null) {
 			w = match[1];
@@ -382,6 +403,7 @@ function fnjs_slick_cols_width(tabla) {
 				w=0;
 			}
 		}
+		//alert (w);
 		// para saber el nombre
 		name=$(this).children(".slick-column-name").text();
 		name_idx = name.replace(/ /g,''); // quito posibles espacios en el indice
@@ -416,7 +438,7 @@ function fnjs_def_tabla(tabla) {
 	oPrefs = { "panelVis": panelVis, "colVisible": colsVisible, "colWidths": colsWidth, "widthGrid": widthGrid };
 	sPrefs = JSON.stringify(oPrefs);
 	url="<?= ConfigGlobal::getWeb() ?>/apps/usuarios/controller/personal_update.php";
-	parametros='que=slickGrid&tabla='+tabla+'&sPrefs='+sPrefs+'&PHPSESSID=<?php echo session_id(); ?>'; 
+	parametros='que=slickGrid&tabla='+tabla+'&sPrefs='+sPrefs+'<?= $h ?>&PHPSESSID=<?php echo session_id(); ?>'; 
 	$.ajax({
 			url: url,
 			type: 'post',
