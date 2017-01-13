@@ -329,11 +329,12 @@ foreach($cAsistentes as $oAsistente) {
 	$falta=$oAsistente->getFalta();
 	$est_ok=$oAsistente->getEst_ok();
 	$observ=$oAsistente->getObserv();
-	$plaza= empty($oAsistente->getPlaza())? 1 : $oAsistente->getPlaza();
+	$plaza = 1;
 	
 	// contar plazas
 	//if (core\configGlobal::is_app_installed('actividadplazas') && !empty($dl)) {
 	if (core\configGlobal::is_app_installed('actividadplazas')) {
+		$plaza= empty($oAsistente->getPlaza())? 1 : $oAsistente->getPlaza();
 		// las cuento todas y a la hora de enseñar miro si soy la dl org o no.
 		// propiedad de la plaza:
 		$propietario = $oAsistente->getPropietario();
