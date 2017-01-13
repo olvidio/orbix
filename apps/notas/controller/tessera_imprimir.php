@@ -40,6 +40,10 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 if (empty($_POST['cara'])) $_POST['cara']="A";
 
 $oPersona = personas\Persona::NewPersona($id_nom);
+if (!is_object($oPersona)) {
+	$msg_err = "<br>$oPersona con id_nom: $id_nom";
+	exit($msg_err);
+}
 $nom_vernacula = $oPersona->getNom();
 $apellidos = $oPersona->getApellidos();
 $trato = $oPersona->getTrato();

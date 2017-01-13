@@ -57,6 +57,7 @@ $c=0;
 $a_valores=array();
 $cCargosEnActividad = $oCargosEnActividad->getActividadCargos(array('id_activ'=>$id_pau));
 $mi_sfsv = core\ConfigGlobal::mi_sfsv();
+$msg_err = '';
 foreach($cCargosEnActividad as $oActividadCargo) {
 	$c++;
 	$id_nom=$oActividadCargo->getId_nom();
@@ -68,6 +69,10 @@ foreach($cCargosEnActividad as $oActividadCargo) {
 		continue;
 	}
 	$oPersona=personas\Persona::NewPersona($id_nom);
+	if (!is_object($oPersona)) {
+		$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+		continue;
+	}
 	$oCargo=new actividadcargos\Cargo($id_cargo);
 
 	$nom=$oPersona->getApellidosNombre();
@@ -112,6 +117,7 @@ $a_camposHidden = array(
 		//'tabla_pau' => $_POST['tabla_pau'],
 $oHash->setArraycamposHidden($a_camposHidden);
 
+if (!empty($msg_err)) { echo $msg_err; }
 echo $oPosicion->atras();
 ?>
 <script>

@@ -85,6 +85,10 @@ switch ($_POST['mod']) {
 
 		if ($_POST['elim_asis'] == 2 || $sasistentes == 's' || $sasistentes == 'sg') {
 			$oPersona = personas\Persona::NewPersona($id_nom);
+			if (!is_object($oPersona)) {
+				$msg_err = "<br>$oPersona con id_nom: $id_pau";
+				exit ($msg_err);
+			}
 			$id_tabla_p = $oPersona->getId_Tabla();
 			$id_schema = $oPersona->getId_schema();
 			switch ($id_tabla_p) {
@@ -141,6 +145,10 @@ switch ($_POST['mod']) {
 		// También asiste:
 		if (!empty($_POST['asis'])) {
 			$oPersona = personas\Persona::NewPersona($id_nom);
+			if (!is_object($oPersona)) {
+				$msg_err = "<br>$oPersona con id_nom: $id_pau";
+				exit ($msg_err);
+			}
 			$id_tabla_p = $oPersona->getId_Tabla();
 			$id_schema = $oPersona->getId_schema();
 			switch ($id_tabla_p) {

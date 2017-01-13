@@ -130,6 +130,7 @@ $c=0;
 $num=0;
 $a_valores=array();
 $aListaCargos=array();
+$msg_err = '';
 // primero los cargos
 if (core\configGlobal::is_app_installed('actividadcargos')) {
 	$GesCargosEnActividad=new actividadcargos\GestorActividadCargo();
@@ -149,8 +150,11 @@ if (core\configGlobal::is_app_installed('actividadcargos')) {
 		}
 
 		$oPersona = personas\Persona::NewPersona($id_nom);
+		if (!is_object($oPersona)) {
+			$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+			continue;
+		}
 		$oCargo=new actividadcargos\Cargo($id_cargo);
-
 		if ($Pref_ordenApellidos== 'nom_ap') {
 			$nom = $oPersona->getNombreApellidos();
 		} else {
@@ -174,7 +178,7 @@ if (core\configGlobal::is_app_installed('actividadcargos')) {
 				foreach ($cAsistente as $Asistente) {
 					$tabla .= "<li>".$Asistente->getNomTabla()."</li>";
 				}
-				$msg_err = "ERROR: más de un asistente con el mismo id_nom<br>";
+				$msg_err .= "ERROR: más de un asistente con el mismo id_nom<br>";
 				$msg_err .= "<br>$nom(".$oPersona->getId_tabla().")<br><br>En las tablas:<ul>$tabla</ul>";
 				exit ("$msg_err");
 			}
@@ -209,6 +213,7 @@ if (core\configGlobal::is_app_installed('actividadcargos')) {
 }
 // ahora los asistentes sin los cargos
 $asistentes = array();
+$msg_err = '';
 foreach($gesAsistentes->getAsistentes(array('id_activ'=>$id_pau)) as $oAsistente) {
 	$c++;
 	$num++;
@@ -217,6 +222,10 @@ foreach($gesAsistentes->getAsistentes(array('id_activ'=>$id_pau)) as $oAsistente
 	if(in_array($id_nom,$aListaCargos)) { $num--; continue; }
 
 	$oPersona = personas\Persona::NewPersona($id_nom);
+	if (!is_object($oPersona)) {
+		$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+		continue;
+	}
 	$nom=$oPersona->getApellidosNombre();
 	$ctr_dl=$oPersona->getCentro_o_dl();
 
@@ -258,6 +267,7 @@ foreach ($asistentes as $nom => $val) {
 }
 
 
+if (!empty($msg_err)) { echo $msg_err; }
 
 
 /* ---------------------------------- html --------------------------------------- */

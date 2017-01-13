@@ -51,6 +51,10 @@ function eliminar ($id_activ,$id_nom) {
 	$msg_err = '';
 	// hay que averiguar si la persona es de la dl o de fuera.
 	$oPersona = personas\Persona::NewPersona($id_nom);
+	if (!is_object($oPersona)) {
+		$msg_err = "<br>$oPersona con id_nom: $id_nom";
+		exit($msg_err);
+	}
 	$obj_persona = get_class($oPersona);
 	$obj_persona = str_replace("personas\\model\\",'',$obj_persona);
 	// hay que averiguar si la actividad es de la dl o de fuera.
@@ -112,6 +116,10 @@ function plaza($id_nom){
 	$plaza = (string)  filter_input(INPUT_POST, 'plaza');
 	// hay que averiguar si la persona es de la dl o de fuera.
 	$oPersona = personas\Persona::NewPersona($id_nom);
+	if (!is_object($oPersona)) {
+		$msg_err = "<br>$oPersona con id_nom: $id_nom";
+		exit($msg_err);
+	}
 	$obj_persona = get_class($oPersona);
 	$obj_persona = str_replace("personas\\model\\",'',$obj_persona);
 	// hay que averiguar si la actividad es de la dl o de fuera.
@@ -154,6 +162,10 @@ function editar($id_activ,$id_nom){
 	global $_POST;
 	// hay que averiguar si la persona es de la dl o de fuera.
 	$oPersona = personas\Persona::NewPersona($id_nom);
+	if (!is_object($oPersona)) {
+		$msg_err = "<br>$oPersona con id_nom: $id_nom";
+		exit($msg_err);
+	}
 	$obj_persona = get_class($oPersona);
 	$obj_persona = str_replace("personas\\model\\",'',$obj_persona);
 	// hay que averiguar si la actividad es de la dl o de fuera.

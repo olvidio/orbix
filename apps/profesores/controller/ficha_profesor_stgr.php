@@ -66,6 +66,10 @@ switch ($id_tabla) {
 }
 
 $oPersona = personas\Persona::NewPersona($id_nom);
+if (!is_object($oPersona)) {
+	$msg_err = "<br>$oPersona con id_nom: $id_nom";
+	exit($msg_err);
+}
 $nom_ap = $oPersona->getNombreApellidosCrSin();
 $sacd = $oPersona->getSacd();
 $id_ctr = $oPersona->getid_ctr();

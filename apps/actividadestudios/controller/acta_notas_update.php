@@ -36,11 +36,16 @@ if ($_POST['que']==3) { //paso las matrículas a notas definitivas (Grabar e imp
 	$GesMatriculas = new actividadestudios\GestorMatricula();
 	$cMatriculados = $GesMatriculas->getMatriculas(array('id_asignatura'=>$_POST['id_asignatura'], 'id_activ'=>$_POST['id_activ']));
 	$i=0;
+	$msg_err = '';
 	foreach ($cMatriculados as $oMatricula) {
 		$i++;
 		$id_nom=$oMatricula->getId_nom();
 		// para saber a que schema pertenece la persona
 		$oPersona = personas\Persona::NewPersona($id_nom);
+		if (!is_object($oPersona)) {
+			$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+			continue;
+		}
 		$id_schema = $oPersona->getId_schema();
 		$id_situacion=$oMatricula->getId_situacion();
 		$preceptor=$oMatricula->getPreceptor();
@@ -158,6 +163,7 @@ if ($_POST['que']==1) { // Grabar las notas en la matricula
 	$go_to = '';
 }
 
+if (!empty($msg_err)) { echo $msg_err; }
 //vuelve a la presentacion de la ficha.
 if (empty($error)) {
    if (!empty($go_to)) {

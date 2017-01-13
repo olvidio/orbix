@@ -43,9 +43,14 @@ $oDesplNotas->setNombre('id_situacion');
 $GesProfes = new profesores\GestorProfesor();
 $cProfesores= $GesProfes->getProfesores();
 $aProfesores=array();
+$msg_err = '';
 foreach ($cProfesores as $oProfesor) {
 	$id_nom=$oProfesor->getId_nom();
 	$oPersona = personas\Persona::NewPersona($id_nom);
+	if (!is_object($oPersona)) {
+		$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+		continue;
+	}
 	$ap_nom=$oPersona->getApellidosNombre();
 	$aProfesores[$id_nom]=$ap_nom;
 }
@@ -266,6 +271,8 @@ if (!empty($id_asignatura_real)) { //caso de modificar
 $oHash->setcamposForm($camposForm);
 $oHash->setcamposNo($camposNo);
 $oHash->setArraycamposHidden($a_camposHidden);
+
+if (!empty($msg_err)) { echo $msg_err; }
 ?>
 <script>
 $(function() { $( "#f_acta" ).datepicker(); });

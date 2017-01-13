@@ -57,6 +57,10 @@ switch ($pau) {
 		//Hay que aclararse si la persona es de la dl o no
 		if ($obj_pau == 'Persona') {
 			$oPersona = personas\Persona::NewPersona($id_pau);
+			if (!is_object($oPersona)) {
+				$msg_err = "<br>$oPersona con id_nom: $id_pau";
+				exit($msg_err);
+			}
 			$clase = get_class($oPersona);
 			$obj_pau = join('', array_slice(explode('\\', $clase), -1));
 		} else {

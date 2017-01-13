@@ -39,6 +39,7 @@ $GesActivAsignaturas = new actividadestudios\GestorActividadAsignatura();
 $cActivAsignaturas = $GesActivAsignaturas->getActividadAsignaturas(array('id_activ'=>$id_pau,'_ordre'=>'id_asignatura')); 
 $c=0;
 $a_valores=array();
+$msg_err = '';
 foreach ($cActivAsignaturas as $oActividadAsignatura) {
 	$c++;
 	$id_activ=$oActividadAsignatura->getId_activ();
@@ -50,6 +51,10 @@ foreach ($cActivAsignaturas as $oActividadAsignatura) {
 	$id_profesor=$oActividadAsignatura->getId_profesor();
 	if (!empty($id_profesor)) {
 		$oPersona = personas\Persona::NewPersona($id_profesor);
+		if (!is_object($oPersona)) {
+			$msg_err .= "<br>$oPersona con id_nom: $id_profesor";
+			continue;
+		}
 		$nom = $oPersona->getApellidosNombre();
 	} else {
 		$nom='';
@@ -94,6 +99,7 @@ $a_camposHidden = array(
 
 $oHash->setArraycamposHidden($a_camposHidden);
 
+if (!empty($msg_err)) { echo $msg_err; }
 echo $oPosicion->atras();
 /* ---------------------------------- html --------------------------------------- */
 ?>

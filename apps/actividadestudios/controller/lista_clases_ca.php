@@ -44,7 +44,12 @@ if (empty($id_nom_dtor_est)) {
 	$nom_director_est="<span class=no_print>". _("para nombrarlo, ir al dossier de cargos de la actividad"). "</span>";
 } else {
 	$oPersona = personas\Persona::NewPersona($id_nom_dtor_est);
-	$nom_director_est=$oPersona->getApellidosNombre();
+	if (!is_object($oPersona)) {
+		$msg_err .= "<br>$oPersona con id_nom: $id_nom_dtor_est";
+		$nom_director_est='';
+	} else {
+		$nom_director_est=$oPersona->getApellidosNombre();
+	}
 }
 
 echo $oPosicion->atras();
@@ -70,6 +75,10 @@ foreach ( $cActividadAsignaturas as $oActividadAsignatura) {
 	$creditos=$oAsignatura->getCreditos();
 	if (!empty($id_profesor)) {
 		$oPersona = personas\Persona::NewPersona($id_profesor);
+		if (!is_object($oPersona)) {
+			$msg_err .= "<br>$oPersona con id_nom: $id_profesor";
+			continue;
+		}
 		$nom_profesor=$oPersona->getApellidosNombre();
 	} else {
 		$nom_profesor = '';
@@ -98,6 +107,10 @@ foreach ( $cActividadAsignaturas as $oActividadAsignatura) {
 		$i++;
 		$id_nom=$oActividadAsistente->getId_nom();
 		$oPersona = personas\Persona::NewPersona($id_nom);
+		if (!is_object($oPersona)) {
+			$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+			continue;
+		}
 		$nom_persona=$oPersona->getApellidosNombre();
 		$ctr=$oPersona->getCentro_o_dl();
 		$stgr=$oPersona->getStgr();
@@ -114,4 +127,5 @@ foreach ( $cActividadAsignaturas as $oActividadAsignatura) {
 	echo "</tbody>";
 	echo "</table>";
 }
+if (!empty($msg_err)) { echo $msg_err; }
 ?>

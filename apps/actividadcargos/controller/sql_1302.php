@@ -80,6 +80,10 @@ switch ($_POST['status']) {
 
 
 $oPersona=personas\Persona::NewPersona($id_pau);
+if (!is_object($oPersona)) {
+	$msg_err = "<br>$oPersona con id_nom: $id_pau";
+	exit ($msg_err);
+}
 $nom=$oPersona->getApellidosNombre();
 $ctr_dl=$oPersona->getCentro_o_dl();
 

@@ -50,6 +50,10 @@ foreach ($cNotas as $oNota) {
 
 //Según el tipo de persona: n, agd, s
 $oPersona = personas\Persona::NewPersona($id_pau);
+if (!is_object($oPersona)) {
+	$msg_err = "<br>$oPersona con id_nom: $id_pau";
+	exit($msg_err);
+}
 $id_tabla = $oPersona->getId_Tabla();
 
 $a_botones=array(

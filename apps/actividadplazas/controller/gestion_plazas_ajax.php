@@ -63,6 +63,10 @@ switch ($que) {
 		$id_activ = (integer)  filter_input(INPUT_POST, 'id_activ');
 		
 		$oPersona = \personas\model\Persona::NewPersona($id_nom);
+		if (!is_object($oPersona)) {
+			$msg_err = "<br>$oPersona con id_nom: $id_nom";
+			exit($msg_err);
+		}
 		$obj_pau = str_replace("personas\\model\\",'',get_class($oPersona));
 		$dl_de_paso = FALSE;
 		if ($obj_pau === 'PersonaEx') {

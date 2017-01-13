@@ -128,6 +128,10 @@ class AsistenteOut Extends AsistentePub {
 			// Excepto en el caso de estar copiando dossiers por traslado
 			if ($this->btraslado == 'f') {
 				$oPersona = personas\Persona::NewPersona($this->iid_nom);
+				if (!is_object($oPersona)) {
+					$msg_err = "<br>$oPersona con id_nom: $id_nom";
+					exit($msg_err);
+				}
 				$oPersona->DBCarregar();
 				// No para los de paso:
 				$nom_tablaP = $oPersona->getNomTabla();

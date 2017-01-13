@@ -153,6 +153,7 @@ $c=0;
 $num=0;
 $a_valores=array();
 $aListaCargos=array();
+$msg_err = '';
 // primero los cargos
 if (core\configGlobal::is_app_installed('actividadcargos')) {
 	$GesCargosEnActividad=new actividadcargos\GestorActividadCargo();
@@ -172,6 +173,10 @@ if (core\configGlobal::is_app_installed('actividadcargos')) {
 		}
 
 		$oPersona = personas\Persona::NewPersona($id_nom);
+		if (!is_object($oPersona)) {
+			$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+			continue;
+		}
 		$oCargo=new actividadcargos\Cargo($id_cargo);
 
 		$nom=$oPersona->getApellidosNombre();
@@ -312,6 +317,10 @@ foreach($cAsistentes as $oAsistente) {
 	if(in_array($id_nom,$aListaCargos)) { $num--; continue; }
 
 	$oPersona = personas\Persona::NewPersona($id_nom);
+	if (!is_object($oPersona)) {
+		$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+		continue;
+	}
 	$nom=$oPersona->getApellidosNombre();
 	//$dl=$oPersona->getDl();
 	$ctr_dl=$oPersona->getCentro_o_dl();
@@ -632,6 +641,8 @@ $h4 = $oHash4->linkSinVal();
 //$godossiers=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier,'permiso'=>$perm_a,'depende'=>$depende_modificar)));
 $godossiers=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier,'permiso'=>3)));
 /* ---------------------------------- html --------------------------------------- */
+
+if (!empty($msg_err)) { echo $msg_err; }
 
 echo $oPosicion->atras();
 ?>

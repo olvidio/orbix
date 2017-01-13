@@ -83,6 +83,7 @@ foreach ($cActividades as $oActividad) {
 $gesPlazasPeticion = new \actividadplazas\model\GestorPlazaPeticion();
 $cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('tipo'=>$tipo_activ,'_ordre'=>'orden'));
 $id_nom_old = 0;
+$msg_err = '';
 foreach ($cPlazasPeticion as $oPlazaPeticion) {
 	// solo apunto la primera (segun orden)
 	$id_nom = $oPlazaPeticion->getId_nom();
@@ -92,6 +93,10 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
 
 	// hay que averiguar si la persona es de la dl o de fuera.
 	$oPersona = personas\Persona::NewPersona($id_nom);
+	if (!is_object($oPersona)) {
+		$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+		exit($msg_err);
+	}
 	$obj_persona = get_class($oPersona);
 	$obj_persona = str_replace("personas\\model\\",'',$obj_persona);
 
@@ -178,7 +183,7 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
 }
 
 $txt = sprintf(_("No se incorporan las peticiones si la persona ya tiene una actividad como propia en el periodo: %s - %s."),$inicurs_ca,$fincurs_ca);
-
+if (!empty($msg_err)) { echo $msg_err; }
 ?>
 <script>
 	fnjs_left_side_hide(); 

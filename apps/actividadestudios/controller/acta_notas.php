@@ -36,10 +36,15 @@ $cMatriculados = $GesMatriculas->getMatriculas(array('id_asignatura'=>$id_asigna
 $matriculados=count($cMatriculados);
 if ($matriculados > 0) {
 	// para ordenar
+	$msg_err = '';
 	$aPersonasMatriculadas = array(); 
 	foreach($cMatriculados as $oMatricula) {
 		$id_nom=$oMatricula->getId_nom();
 		$oPersona = personas\Persona::NewPersona($id_nom);
+		if (!is_object($oPersona)) {
+			$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+			continue;
+		}
 		$nom=$oPersona->getApellidosNombre();
 		$aPersonasMatriculadas[$nom] = $oMatricula;
 	}
@@ -83,7 +88,7 @@ $a_camposHidden1 = array(
 		);
 $oHash1->setArraycamposHidden($a_camposHidden1);
 
-
+if (!empty($msg_err)) { echo $msg_err; }
 ?>
 <script>
 fnjs_nota=function(n){

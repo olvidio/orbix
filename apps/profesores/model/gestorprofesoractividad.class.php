@@ -46,8 +46,13 @@ class GestorProfesorActividad Extends core\ClaseGestor {
 		$aAp1 = array();
 		$aAp2 = array();
 		$aNom = array();
+		$msg_err = '';
 		foreach($gesAsistentesIn->getListaAsistentesDistintos($aId_activ) as $id_nom) {
 			$oPersona = personas\Persona::NewPersona($id_nom);
+			if (!is_object($oPersona)) {
+				$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+				continue;
+			}
 			$obj_persona = get_class($oPersona);
 			$obj_persona = str_replace("personas\\model\\",'',$obj_persona);
 			if ($obj_persona == 'PersonaDl') continue;
@@ -83,7 +88,8 @@ class GestorProfesorActividad Extends core\ClaseGestor {
 		}
 			
 		$AllOpciones = $aOpciones + array("----------") + $aProfesoresDl;
-
+		
+		if (!empty($msg_err)) { echo $msg_err; }
 		return new web\Desplegable('',$AllOpciones,'',true);
 	}
 

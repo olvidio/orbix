@@ -56,6 +56,7 @@ $a_cabeceras=array(_("actividad"),_("asignatura"),_("alumno"),_('p'));
 
 $i=0;
 $a_valores=array();
+$msg_err = '';
 foreach ($cMatriculasPendientes as $oMatricula) {
 	$i++;
 	$id_nom=$oMatricula->getId_nom();
@@ -70,6 +71,10 @@ foreach ($cMatriculasPendientes as $oMatricula) {
 	$oActividad = new actividades\Actividad($id_activ);
 	$nom_activ=$oActividad->getNom_activ();
 	$oPersona = personas\Persona::newPersona($id_nom);
+	if (!is_object($oPersona)) {
+		$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+		continue;
+	}
 	$apellidos_nombre=$oPersona->getApellidosNombre();
 	$oAsignatura = new asignaturas\Asignatura($id_asignatura);
 	$nombre_corto=$oAsignatura->getNombre_corto();
@@ -92,7 +97,7 @@ $a_camposHidden = array(
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 
-
+if (!empty($msg_err)) { echo $msg_err; }
 /*
 // al grabar estudios vuelvo a la lista de gente
 $a_dataUrl = array('queSel'=>'asis','pau'=>'a','id_pau'=>$id_activ,'obj_pau'=>'ActividadDl','id_dossier'=>3103);

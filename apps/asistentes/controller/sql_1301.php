@@ -60,6 +60,10 @@ switch ($_POST['periodo']) {
 }
 $gesAsistente=new asistentes\GestorAsistente();
 $oPersona = personas\Persona::newPersona($id_pau);
+if (!is_object($oPersona)) {
+	$msg_err = "<br>$oPersona con id_nom: $id_pau";
+	exit($msg_err);
+}
 // permisos Según el tipo de persona: n, agd, s
 $id_tabla=$oPersona->getId_tabla();
 $oPermDossier = new dossiers\PermDossier();

@@ -107,6 +107,7 @@ if (($sasistentes=="s") AND ($sactividad=="cv")) {
 $k=0;
 $centros='';
 $aGrupos=array();
+$msg_err = '';
 foreach ($cActividades as $oActividad) {
 	$k++;  // recorro todas las actividades seleccionadas, utilizo el contador k
 	$id_activ=$oActividad->getId_activ();
@@ -170,6 +171,10 @@ foreach ($cActividades as $oActividad) {
 				$oCargo = new actividadcargos\Cargo($id_cargo);
 				$cargo_cl = $oCargo->getCargo();
 				$oPersona = personas\Persona::NewPersona($id_nom);
+				if (!is_object($oPersona)) {
+					$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+					continue;
+				}
 				$id_tabla = $oPersona->getId_tabla();
 				$ap_nom = $oPersona->getApellidosNombre();
 				$ctr_dl = $oPersona->getCentro_o_dl();
@@ -198,6 +203,10 @@ foreach ($cActividades as $oActividad) {
 			if (in_array($id_nom,$aIdCargos)) continue; // si ya está como cargo, no lo pongo.
 			$num++;
 			$oPersona = personas\Persona::NewPersona($id_nom);
+			if (!is_object($oPersona)) {
+				$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+				continue;
+			}
 			$id_tabla = $oPersona->getId_tabla();
 			$ap_nom = $oPersona->getApellidosNombre();
 			$ctr_dl = $oPersona->getCentro_o_dl();
@@ -216,4 +225,5 @@ $oLista->setGrupos($aGrupos);
 $oLista->setCabeceras($a_cabeceras);
 $oLista->setDatos($a_activ);
 echo $oLista->listaPaginada();
+if (!empty($msg_err)) { echo $msg_err; }
 ?>

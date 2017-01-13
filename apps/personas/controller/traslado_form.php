@@ -30,6 +30,10 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 }
 
 $oPersona = personas\Persona::newPersona($id_pau);
+if (!is_object($oPersona)) {
+	$msg_err = "<br>$oPersona con id_nom: $id_pau";
+	exit($msg_err);
+}
 $titulo = $oPersona->getNombreApellidos();
 $top="top_personas";
 

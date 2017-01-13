@@ -110,12 +110,17 @@ fnjs_borrar=function(formulario){
 <?php
 // por cada asignatura
 $a=0;
+$msg_err = '';
 foreach ($cActividadAsignaturas as $oActividadAsignatura) {
 	$a++;
 	$id_asignatura=$oActividadAsignatura->getId_asignatura();
 	$id_profesor=$oActividadAsignatura->getId_profesor();
 	if (!empty($id_profesor)) {
 		$oPersona = personas\Persona::NewPersona($id_profesor);
+		if (!is_object($oPersona)) {
+			$msg_err .= "<br>$oPersona con id_nom: $id_profesor";
+			continue;
+		}
 		$nom_profesor=$oPersona->getApellidosNombre();
 	} else {
 		$nom_profesor = '';
@@ -132,6 +137,10 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
 	foreach($cMatriculas as $oMatricula) {
 		$id_nom=$oMatricula->getId_nom();
 		$oPersona = personas\Persona::NewPersona($id_nom);
+		if (!is_object($oPersona)) {
+			$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+			continue;
+		}
 		$nom_persona=$oPersona->getApellidosNombre();
 		$ctr=$oPersona->getCentro_o_dl();
 		$stgr=$oPersona->getStgr();
@@ -151,4 +160,5 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
 	$oTabla->setDatos($a_valores);
 	echo $oTabla->mostrar_tabla();
 }
+if (!empty($msg_err)) { echo $msg_err; }
 ?>

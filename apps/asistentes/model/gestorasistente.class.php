@@ -114,6 +114,7 @@ class GestorAsistente Extends core\ClaseGestor {
 		$aWhere['id_activ'] = $iid_activ;
 		$aOperators = array();
 		$namespace = __NAMESPACE__;
+		$msg_err = '';
 		
 		if ($sdl == $mi_dele) {
 			if ($dl_org == $sdl) {
@@ -157,6 +158,10 @@ class GestorAsistente Extends core\ClaseGestor {
 			if (!empty($dl_hub) && $dl_hub != $padre) continue;
 			if ($sdl != $child) continue;
 			$oPersona = personas\Persona::NewPersona($id_nom);
+			if (!is_object($oPersona)) {
+				$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+				continue;
+			}
 			$dl = $oPersona->getDl();
 			if ($sdl != $dl) continue;
 			//}
@@ -165,6 +170,7 @@ class GestorAsistente Extends core\ClaseGestor {
 			if ($plaza < 4) continue;
 			$numAsis++; 
 		}
+		if (!empty($msg_err)) { echo $msg_err; }
 		return $numAsis;
 	}
 
@@ -187,6 +193,7 @@ class GestorAsistente Extends core\ClaseGestor {
 		$aWhere['id_activ'] = $iid_activ;
 		$aOperators = array();
 		$namespace = __NAMESPACE__;
+		$msg_err = '';
 		switch($id_tabla) {
 			case 'dl': // AsistentesDl + AsistentesIn
 				$gesAsistenteDl = new GestorAsistenteDl();
@@ -207,10 +214,15 @@ class GestorAsistente Extends core\ClaseGestor {
 		foreach ($cAsistentes as $oAsistente) {
 			$id_nom = $oAsistente->getId_nom();
 			$oPersona = personas\Persona::NewPersona($id_nom);
+			if (!is_object($oPersona)) {
+				$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+				continue;
+			}
 			$apellidos = $oPersona->getApellidosNombre();
 			$cAsistentesOk[$apellidos] = $oAsistente;
 		}
 		uksort($cAsistentesOk,"core\strsinacentocmp");
+		if (!empty($msg_err)) { echo $msg_err; }
 		return $cAsistentesOk;
 	}
 	/**

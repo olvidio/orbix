@@ -71,6 +71,10 @@ class PermDossier {
 		if ($depende=="t" && $rta==3 && $pau=="p"){
 			// busco el id_tabla para saber de quién se trata y ver si es de mi oficina.
 			$oPersona = personas\Persona::NewPersona($id_pau);
+			if (!is_object($oPersona)) {
+				$msg_err = "<br>$oPersona con id_nom: $id_pau";
+				exit($msg_err);
+			}
 			$id_tabla = $oPersona->getId_tabla();
 			switch ($id_tabla) {
 				case "n":

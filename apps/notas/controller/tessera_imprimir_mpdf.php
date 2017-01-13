@@ -31,6 +31,10 @@ use personas\model as personas;
 	$id_tabla = empty($_GET['id_tabla'])? '' : $_GET['id_tabla'];
 
 $oPersona = personas\Persona::NewPersona($id_nom);
+if (!is_object($oPersona)) {
+	$msg_err = "<br>$oPersona con id_nom: $id_nom";
+	exit($msg_err);
+}
 $nom_vernacula = $oPersona->getNom();
 $apellidos = $oPersona->getApellidos();
 $trato = $oPersona->getTrato();

@@ -63,6 +63,10 @@ $id_tabla_dl = $oActividad->getId_tabla();
 if (!empty($id_nom)) { //caso de modificar
 	$mod="editar";
 	$oPersona = personas\Persona::NewPersona($id_nom);
+	if (!is_object($oPersona)) {
+		$msg_err = "<br>$oPersona con id_nom: $id_nom";
+		exit($msg_err);
+	}
 	$ape_nom = $oPersona->getApellidosNombre();
 	$id_tabla = $oPersona->getId_tabla();
 	$id_nom_real = $id_nom;

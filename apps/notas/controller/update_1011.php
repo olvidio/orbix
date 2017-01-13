@@ -56,6 +56,10 @@ switch($_POST['mod']) {
 		$oPersonaNota->setId_nom($_POST['id_pau']);
 		// para saber a que schema pertenece la persona
 		$oPersona = personas\Persona::NewPersona($id_nom);
+		if (!is_object($oPersona)) {
+			$msg_err = "<br>$oPersona con id_nom: $id_nom";
+			exit($msg_err);
+		}
 		$id_schema = $oPersona->getId_schema();
 		$oPersonaNota->setId_schema($id_schema);
 		if (!empty($_POST['id_situacion'])) $oPersonaNota->setId_situacion($_POST['id_situacion']);

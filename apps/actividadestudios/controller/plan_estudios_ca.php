@@ -23,6 +23,7 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
 	$oPosicion->addParametro('scroll_id',$scroll_id);
 }
+$msg_err = '';
 
 // nombre de la actividad
 $oActividad = new actividades\Actividad($id_activ);
@@ -44,7 +45,12 @@ if (empty($id_nom_dtor_est)) {
 	$nom_director_est=_("para nombrarlo, ir al dossier de cargos de la actividad");
 } else {
 	$oPersona = personas\Persona::NewPersona($id_nom_dtor_est);
-	$nom_director_est=$oPersona->getApellidosNombre();
+	if (!is_object($oPersona)) {
+		$msg_err .= "<br>$oPersona con id_nom: $id_nom_dtor_est";
+		$nom_director_est = '';
+	} else {
+		$nom_director_est = $oPersona->getApellidosNombre();
+	}
 }
 
 echo $oPosicion->atras();
@@ -71,6 +77,10 @@ foreach ( $cActividadAsignaturas as $oActividadAsignatura) {
 
 	if (!empty($id_profesor)) {
 		$oPersona = personas\Persona::NewPersona($id_profesor);
+		if (!is_object($oPersona)) {
+			$msg_err .= "<br>$oPersona con id_nom: $id_profesor";
+			continue;
+		}
 		$nom_profesor=$oPersona->getApellidosNombre();
 	} else {
 		$nom_profesor='?';
@@ -99,6 +109,10 @@ foreach ($cAsistentes as $oActividadAsistente) {
 	$a++;
 	$id_nom=$oActividadAsistente->getId_nom();
 	$oPersona = personas\Persona::NewPersona($id_nom);
+	if (!is_object($oPersona)) {
+		$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+		continue;
+	}
 	$nom_persona=$oPersona->getApellidosNombre();
 	$ctr=$oPersona->getCentro_o_dl();
 	$stgr=$oPersona->getStgr();
@@ -138,5 +152,8 @@ foreach ($cAsistentes as $oActividadAsistente) {
 }
 
 echo "</table>";
+
+if (!empty($msg_err)) { echo $msg_err; }
+
 
 ?> 

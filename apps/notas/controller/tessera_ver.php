@@ -58,6 +58,10 @@ $oInicio = \DateTime::createFromFormat('d/m/Y', $inicio);
 $oFin = \DateTime::createFromFormat('d/m/Y', $fin);
 
 $oPersona = personas\Persona::NewPersona($id_nom);
+if (!is_object($oPersona)) {
+	$msg_err = "<br>$oPersona con id_nom: $id_nom";
+	exit($msg_err);
+}
 $ap_nom = $oPersona->getApellidosNombre();
 $centro = $oPersona->getCentro_o_dl();
 
