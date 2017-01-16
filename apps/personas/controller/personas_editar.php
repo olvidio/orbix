@@ -12,9 +12,11 @@ use ubis\model as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-if (!empty($_POST['nuevo'])) {
-	$obj_pau = $_POST['obj_pau'];
-	$obj = 'personas\\model\\'.$_POST['obj_pau'];
+$nuevo = (integer)  filter_input(INPUT_POST, 'nuevo');
+$obj_pau = (string)  filter_input(INPUT_POST, 'obj_pau');
+	
+if (!empty($nuevo)) {
+	$obj = 'personas\\model\\'.$obj_pau;
 	$oPersona = new $obj;
 	$cDatosCampo = $oPersona->getDatosCampos();
 	$oDbl = $oPersona->getoDbl();
@@ -41,8 +43,7 @@ if (!empty($_POST['nuevo'])) {
 		empty($_POST['id_tabla'])? $id_tabla="" : $id_tabla=$_POST['id_tabla'];
 	}
 
-	$obj_pau = $_POST['obj_pau'];
-	$obj = 'personas\\model\\'.$_POST['obj_pau'];
+	$obj = 'personas\\model\\'.$obj_pau;
 	$oPersona = new $obj($id_nom);
 	$a_campos = $oPersona->getTot();
 	$a_campos['obj'] = $oPersona;
@@ -71,7 +72,7 @@ $_POST['es_sacd'] = empty($_POST['es_sacd'])? '' : $_POST['es_sacd'];
 $ok=0;
 $ok_txt=0;
 $presentacion="persona.phtml";
-switch ($_POST['obj_pau']){
+switch ($obj_pau){
 	case "PersonaAgd":
 		$a_campos['id_tabla'] = 'a';
 		if ($_SESSION['oPerm']->have_perm("agd")) { $ok=1; } 
@@ -136,7 +137,7 @@ switch ($_POST['obj_pau']){
 }
 $a_campos['obj_pau'] = $obj_pau;
 
-if (empty($_POST['nuevo'])) {
+if (empty($nuevo)) {
 	$ir_a_traslado=web\hash::link('apps/personas/controller/traslado_form.php?'.http_build_query(array('pau'=>'p','id_pau'=>$id_nom,'obj_pau'=>$obj_pau)));
 	$a_campos['ir_a_traslado'] = $ir_a_traslado;
 }
@@ -197,35 +198,32 @@ fnjs_guardar=function(){
 	if (rr=='ok') {
 		$('#que').val('guardar');
 		$('#frm2').attr('action',"apps/personas/controller/personas_update.php");
-		$('#frm2').submit(function() {
-			$.ajax({
-				data: $(this).serialize(),
-				url: $(this).attr('action'),
-				type: 'post',
-				succes: function (rta_txt) {
-					//rta_txt = rta.responseText;
-					//if (rta_txt != '' && rta_txt != '\n') {
-					if (rta_txt.search('id="ir_a"') != -1) {
-						mostra_resposta (rta,'main'); 
+		<?php if (empty($nuevo)) { ?>
+			$('#frm2').submit(function() {
+				$.ajax({
+					data: $(this).serialize(),
+					url: $(this).attr('action'),
+					type: 'post',
+					succes: function (rta_txt) {
+						//rta_txt = rta.responseText;
+						//if (rta_txt != '' && rta_txt != '\n') {
+						if (rta_txt.search('id="ir_a"') != -1) {
+							mostra_resposta (rta,'main'); 
+						}
 					}
-				}
+				});
+				return false;
 			});
-			return false;
-		});
-		$('#frm2').submit();
-		$('#frm2').off();
+			$('#frm2').submit();
+			$('#frm2').off();
+		<?php } else { ?>
+			fnjs_enviar_formulario('#frm2');
+		<?php } ?>
 	}
 }
 
-fnjs_nuevo=function(f,go){
-   $('#onanar').val(f);
-   $('#go_to').val(go);
-   $('#frm2').attr('action',"programas/ficha_nueva.php");
-   fnjs_enviar_formulario('#frm2');
-}
-
 fnjs_eliminar=function(){
-	if (confirm("<?php echo _("¿Esta seguro que desea elimidar esta ficha?");?>") ) {
+	if (confirm("<?php echo _("¿Esta seguro que desea eliminar esta ficha?");?>") ) {
 		$('#que').val('eliminar');
 		$('#frm2').attr('action',"apps/personas/controller/personas_update.php");
 		fnjs_enviar_formulario('#frm2');
