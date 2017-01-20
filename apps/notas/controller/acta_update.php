@@ -23,9 +23,9 @@ if ($dl_acta == $mi_dele || $dl_acta == "?") {
 
 if (!empty($_POST['nuevo'])) { // nueva.
 	isset($_POST['id_asignatura']) ? $oActa->setId_asignatura($_POST['id_asignatura']) : '';
-	isset($_POST['id_activ']) ? $oActa->setId_activ($_POST['id_activ']) : '';
+	isset($_POST['id_activ'])? $oActa->setId_activ($_POST['id_activ']) : '';
 	// la fecha debe ir antes que el acta por si hay que inventar el acta, tener la referencia de la fecha
-	isset($_POST['f_acta']) ? $oActa->setF_acta($_POST['f_acta']) : '';
+	isset($_POST['f_acta'])? $oActa->setF_acta($_POST['f_acta']) : '';
 	// comprobar valor del acta
 	if (isset($acta)) {
 		$valor = trim($acta);
@@ -37,24 +37,25 @@ if (!empty($_POST['nuevo'])) { // nueva.
 		}
 		$oActa->setActa($valor);
 	}
-	isset($_POST['libro']) ? $oActa->setLibro($_POST['libro']) : '';
-	isset($_POST['pagina']) ? $oActa->setPagina($_POST['pagina']) : '';
-	isset($_POST['linea']) ? $oActa->setLinea($_POST['linea']) : '';
-	isset($_POST['lugar']) ? $oActa->setLugar($_POST['lugar']) : '';
-	isset($_POST['observ']) ? $oActa->setObserv($_POST['observ']) : '';
+	isset($_POST['libro'])? $oActa->setLibro($_POST['libro']) : '';
+	isset($_POST['pagina'])? $oActa->setPagina($_POST['pagina']) : '';
+	isset($_POST['linea'])? $oActa->setLinea($_POST['linea']) : '';
+	isset($_POST['lugar'])? $oActa->setLugar($_POST['lugar']) : '';
+	isset($_POST['observ'])? $oActa->setObserv($_POST['observ']) : '';
 	if ($oActa->DBGuardar() === false) {
 		echo _('Hay un error, no se ha guardado');
 	}
 } else { // editar.
 	$oActa->setActa($acta);
 	$oActa->DBCarregar();
-	isset($_POST['id_asignatura']) ? $oActa->setId_asignatura($_POST['id_asignatura']) : '';
-	isset($_POST['id_activ']) ? $oActa->setId_activ($_POST['id_activ']) : '';
-	isset($_POST['libro']) ? $oActa->setLibro($_POST['libro']) : '';
-	isset($_POST['pagina']) ? $oActa->setPagina($_POST['pagina']) : '';
-	isset($_POST['linea']) ? $oActa->setLinea($_POST['linea']) : '';
-	isset($_POST['lugar']) ? $oActa->setLugar($_POST['lugar']) : '';
-	isset($_POST['observ']) ? $oActa->setObserv($_POST['observ']) : '';
+	isset($_POST['id_asignatura'])? $oActa->setId_asignatura($_POST['id_asignatura']) : '';
+	isset($_POST['id_activ'])? $oActa->setId_activ($_POST['id_activ']) : '';
+	isset($_POST['f_acta'])? $oActa->setF_acta($_POST['f_acta']) : '';
+	isset($_POST['libro'])? $oActa->setLibro($_POST['libro']) : '';
+	isset($_POST['pagina'])? $oActa->setPagina($_POST['pagina']) : '';
+	isset($_POST['linea'])? $oActa->setLinea($_POST['linea']) : '';
+	isset($_POST['lugar'])? $oActa->setLugar($_POST['lugar']) : '';
+	isset($_POST['observ'])? $oActa->setObserv($_POST['observ']) : '';
 	if ($oActa->DBGuardar() === false) {
 		echo _('Hay un error, no se ha guardado');
 	}
