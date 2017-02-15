@@ -57,10 +57,10 @@ foreach ($cDepartamentos as $oDepartamento) {
 	$aProfesores['director'] = $aDirs;
 	// tipo de profesor: ayudante, encargado...
 	$oGesProfesor = new profesores\model\GestorProfesor();
-	$aProfes =array();
 	foreach ($cTipoProfesor as $id_tipo => $tipo) {
 		//$aProfesores[$tipo] = $oGesProfesor->getListaProfesoresDepartamento($id_departamento);
 		$cProfesores = $oGesProfesor->getProfesores(array('id_departamento'=>$id_departamento,'id_tipo_profesor' => $id_tipo),array('f_cese'=>'IS NULL'));
+		$aProfes =array();
 		foreach ($cProfesores as $oProfesor) {
 			$id_nom = $oProfesor->getId_nom();
 			$oPersonaDl = new personas\model\PersonaDl($id_nom);
