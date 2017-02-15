@@ -168,3 +168,6 @@
 171	stgr1	apps/profesores/controller/profesor_asignatura_que.php	\N	profesores para asignatura
 172	actividadplazas	apps/actividadplazas/controller/incorporar_peticion.php	\N	Incorporar peticiones de plazas
 52	actividadestudios	apps/actividadestudios/controller/actualizar_docencia.php	\N	guardar docencia ca en dossier
+173	stgr1	apps/profesores/controller/lista_por_departamentos.php	\N	listado claustro
+174	notas	apps/notas/controller/asignaturas_pendientes_resumen.php	\N	Resumen asig. pendientes
+175	notas	apps/notas/controller/asig_faltan_que.php	\N	Asignaturas pendientes
