@@ -1,1 +1,1 @@
-<img src="public/tardor.jpg" alt="Mountain View" style="width:900px;height:600px">
+<img src="public/hivern.jpg" alt="Mountain View" style="width:1000px;height:560px">
