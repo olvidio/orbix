@@ -84,6 +84,7 @@ foreach ($cDepartamentos as $oDepartamento) {
 $html = '';
 foreach ($aClaustro as $aDepartamento){
 	$titulo = $aDepartamento['departamento'];
+	$html .=  "<div class='salta_pag'>";
 	$html .=  "<h3>$titulo</h3>";
 	$html .=  "<table>";
 	$aProfesores = $aDepartamento['profesores'];
@@ -94,5 +95,6 @@ foreach ($aClaustro as $aDepartamento){
 		}
 	}
 	$html .=  "</table>";
+	$html .=  "</div>";
 }
 echo $html;
