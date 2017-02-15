@@ -216,6 +216,35 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
 		}
 		return $aId_nom;
 	}
+	public function personasQueLesFaltaAsignatura($id_asignatura,$curso) {
+		$lista = $this->blista;
+		$oDbl = $this->getoDbl();
+		$personas = $this->getNomPersonas();
+
+		$aCondicion = $this->condicion($curso);
+		$condicion_stgr = $aCondicion['condicion_stgr'];
+
+		$query="SELECT p.id_nom
+				FROM $personas p 
+				WHERE p.situacion = 'A' $condicion_stgr
+				";
+		$query_op="SELECT n.id_nom
+				FROM e_notas_dl n
+				WHERE n.id_asignatura = $id_asignatura";
+		
+		$query_tot="$query EXCEPT $query_op";
+		//echo "$query_tot<br>";
+		$aId_nom = array();
+		foreach ( $oDbl->query($query_tot) as $row) {
+			$id_nom = $row['id_nom'];
+			if ($lista == false) { // El numero de asignaturas que faltan
+				$aId_nom[$id_nom]++; 
+			} else { 
+				$aId_nom[$id_nom] = 'si';
+			}
+		}
+		return $aId_nom;
+	}
 
 	public function asignaturasQueFaltanPersona($id_nom,$curso) {
 		$oDbl = $this->getoDbl();
