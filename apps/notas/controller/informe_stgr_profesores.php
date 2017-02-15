@@ -95,6 +95,7 @@ $profB = $a_profB['num'];
 $ResumenN = new notas\Resumen('numerarios');
 $ResumenN->setLista($lista);
 $ResumenN->nuevaTabla();
+$Resumen->setLugar_ce('bm');
 $a_numB = $ResumenN->enBienio();
 $numB = $a_numB['num'];
 $ResumenA = new notas\Resumen('agregados');
@@ -103,7 +104,7 @@ $ResumenA->nuevaTabla();
 $a_agdB = $ResumenA->enBienio();
 $agdB = $a_agdB['num'];
 $ratioB=($numB+$agdB)/$profB;
-$res[43] = $ratioB;
+$res[43]['num'] = round($ratioB,2);
 $a_textos[43] = _("Ratio alumno/profesor en bienio");
 
 /*44. Ratio alumno/profesor en cuadrienio*/
@@ -114,7 +115,7 @@ $numC = $a_numC['num'];
 $a_agdC = $ResumenA->enBienio();
 $agdC = $a_agdC['num'];
 $ratioC=($numC+$agdC)/$profC;
-$res[44] = $ratioC;
+$res[44]['num'] = round($ratioC,2);
 $a_textos[44] = _("Ratio alumno/profesor en cuadrienio");
 
 

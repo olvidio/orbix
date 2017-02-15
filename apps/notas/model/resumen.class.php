@@ -1032,7 +1032,8 @@ class Resumen Extends core\ClasePropiedades {
 			foreach ($a_docencia as $id_nom=>$valor) {
 				$html .= "<tr><td width=20></td>";
 				while ( list( $key, $val ) = each( $camp ) ) {
-					$html .= "<td>$nombres[$val]</td>";
+					$data = $nombres[$id_nom][$val];
+					$html .= "<td>$data</td>";
 				}
 				$html .= "</tr>";
 				$p=reset($camp);
