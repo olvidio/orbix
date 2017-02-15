@@ -180,3 +180,6 @@
 917	{80,120}	Balance de plazas	id_tipo_activ=112	170	128	2	t
 916	{80,110}	Gestión de plazas	id_tipo_activ=112	169	128	2	t
 919	{80,130}	Incorporar 1ª peticion	tipo_activ=ca&na=n	172	128	2	t
+920	{10,50}	claustro	\N	173	16	12	t
+921	{20,50}	resumen pendientes	\N	174	16	12	t
+922	{20,60}	buscar asig. pendientes	\N	175	16	12	t
