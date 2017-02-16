@@ -26,17 +26,17 @@ use notas\model as notas;
 $any=date("Y");
 $mes=date("m");
 
-$inicurs= date("d/m/Y", mktime(0,0,0,10,1,$any-1)) ;
-$fincurs= date("d/m/Y", mktime(0,0,0,9,30,$any)) ;
-$curs="BETWEEN '$inicurs' AND '$fincurs' ";
-
 if ($mes>9) {
-	$any1=$any+1; 
-	$curso_txt="$any-$any1";
+	$any_ini=$any; 
+	$any_fi=$any+1; 
 } else { 
-	$any1=$any-1;
-	$curso_txt="$any1-$any";
+	$any_ini=$any-1;
+	$any_fi=$any; 
 }
+$curso_txt="$any_ini-$any_fi";
+$inicurs= date("d/m/Y", mktime(0,0,0,10,1,$any_ini)) ;
+$fincurs= date("d/m/Y", mktime(0,0,0,9,30,$any_fi)) ;
+$curs="BETWEEN '$inicurs' AND '$fincurs' ";
 
 $lista = empty($_POST['lista'])? false : true;
 
@@ -50,6 +50,7 @@ $lista = empty($_POST['lista'])? false : true;
 */
 $Resumen = new notas\Resumen('profesores');
 $Resumen->setLista($lista);
+$Resumen->setAny($any_ini);
 $Resumen->nuevaTablaProfe();
 
 //32. nº de profesores ordinarios:
@@ -119,7 +120,8 @@ $res[44]['num'] = round($ratioC,2);
 $a_textos[44] = _("Ratio alumno/profesor en cuadrienio");
 
 
-$res[45]['num'] = 'xx';
+/*45. Número de departamentos con director*/
+$res[45] = $Resumen->Departamentos();
 $a_textos[45] = _("Nº de departamentos");
 
 

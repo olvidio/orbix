@@ -29,21 +29,30 @@ $continuar = (string)  filter_input(INPUT_POST, 'continuar');
 	 $html .= "</span></p>";
  } else {
 	// seleccionar las posibles actividades:
-	$mes=date('m');
-	if ($mes>9)  { $any=date('Y')+1; } else { $any = date('Y'); }
-	$inicurs_ca=core\curso_est("inicio",$any);
-	$fincurs_ca=core\curso_est("fin",$any);
+	$any=date("Y");
+	$mes=date("m");
+	if ($mes>9) {
+		$any1=$any+1; 
+	} else { 
+		$any1=$any-1;
+	}
+	$inicurs_ca=core\curso_est("inicio",$any1);
+	$fincurs_ca=core\curso_est("fin",$any1);
 	
 	$aWhere['status'] = 3;
 	$aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
 	$aOperadores['f_ini'] = 'BETWEEN';
-	$aWhere['id_tipo_activ'] = '^[12][13][23]';
+	$mi_sfsv = core\ConfigGlobal::mi_sfsv();
+	$id_tipo='^'.$mi_sfsv.'[123][23]';  
+	$aWhere['id_tipo_activ'] = $id_tipo;
 	$aOperadores['id_tipo_activ'] = '~';
 	$GesActividades = new actividades\GestorActividadDl();	
 	$cActividades = $GesActividades->getActividades($aWhere,$aOperadores);
-	// busco los profesores que han dadao alguna asignatura en actividad.	
+	// busco los profesores que han dado alguna asignatura en actividad.	
 	foreach ($cActividades as $oActividad) {
 		$id_activ = $oActividad->getId_activ();
+		$f_ini = $oActividad->getF_ini();
+		list($ini_d,$ini_m,$ini_a) = preg_split('/[:\/\.-]/', $f_ini ); //los delimitadores pueden ser /, ., -, :
 		$GesAsignaturasCa = new actividadestudios\GestorActividadAsignatura();
 		$cActivAsignaturas = $GesAsignaturasCa->getActividadAsignaturas(array('id_activ'=>$id_activ),array('id_profesor'=>'IS NOT NULL'));
 		
@@ -63,7 +72,7 @@ $continuar = (string)  filter_input(INPUT_POST, 'continuar');
 			
 			$oProfesorDocencia = new profesores\ProfesorDocenciaStgr(array('id_activ'=>$id_activ,'id_asignatura'=>$id_asignatura,'id_nom'=>$id_profesor));
 			$oProfesorDocencia->DBCarregar();
-			$oProfesorDocencia->setCurso_inicio($any);
+			$oProfesorDocencia->setCurso_inicio($ini_a);
 			$oProfesorDocencia->setTipo($tipo);
 			$oProfesorDocencia->setActa($acta);
 			$oProfesorDocencia->DBGuardar();

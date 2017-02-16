@@ -1110,5 +1110,33 @@ class Resumen Extends core\ClasePropiedades {
 		}
 		return $rta;
 	}
+	// Numero de departamentos con director
+	public function Departamentos() {
+		$lista = $this->blista;
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+
+		$oGesDirectores = new \profesores\model\GestorProfesorDirector();
+		$cDirectores = $oGesDirectores->getProfesoresDirectores(array('f_cese'=>1), array('f_cese' => 'IS NULL'));
+		
+		$rta['num'] = count($cDirectores);
+		if ($this->blista == true && $rta['num'] > 0) {
+			$html = '<table>';
+			foreach ($cDirectores as $oDirector) {
+				$id_departamento = $oDirector->getId_departamento();
+				$id_nom = $oDirector->getId_nom();
+				$oDepartamento = new asignaturas\Departamento($id_departamento);
+				$nom_dep = $oDepartamento->getDepartamento();
+				$oPersonaDl = new personas\PersonaDl($id_nom);
+				$nom_persona = $oPersonaDl->getApellidosNombre();
+				$html .= "<tr><td>$nom_dep</td><td>$nom_persona</td></tr>";
+			}
+			$html .= '</table>';
+			$rta['lista'] = $html;
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
 }
 ?>

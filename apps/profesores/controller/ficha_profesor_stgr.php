@@ -237,7 +237,7 @@ $go_cosas['congresos']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossier
 
 // Actividad docente (id_dossier=1025) ////////////////////////////////////
 $GesDocencias = new profesores\GestorProfesorDocenciaStgr();
-$cDocencias = $GesDocencias->getProfesorDocenciasStgr(array('id_nom'=>$id_nom,'_ordre'=>'curso,id_asignatura'));
+$cDocencias = $GesDocencias->getProfesorDocenciasStgr(array('id_nom'=>$id_nom,'_ordre'=>'curso_inicio,id_asignatura'));
 $cosas['id_dossier']=1025;
 $go_cosas['docencia']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/datos_sql.php?'.http_build_query($cosas));
 

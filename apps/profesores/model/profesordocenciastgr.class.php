@@ -185,7 +185,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 	public function DBCarregar($que=null) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (isset($this->iid_item) && isset($this->iid_nom)) {
+		if (isset($this->iid_activ) && isset($this->iid_asignatura) && isset($this->iid_nom)) {
 			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_asignatura='$this->iid_asignatura' AND id_nom='$this->iid_nom'")) === false) {
 				$sClauError = 'ProfesorDocenciaStgr.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);

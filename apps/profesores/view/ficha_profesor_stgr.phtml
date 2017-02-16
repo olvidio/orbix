@@ -156,16 +156,18 @@ foreach ($a_publicaciones as $n => $row) {
 	<td class=derecha><span onclick="fnjs_update_div('#main','<?= $go_cosas['docencia'] ?>')" class=link>[modificar]</span></td></tr>
 <table>
 <table class=lst>
-<tr><td class=cabecera>curso</td><td class=cabecera>asignatura</td><td class=cabecera>modo</td><td class=cabecera>acta</td></tr>
+<tr><td class=cabecera>Inicio curso</td><td class=cabecera>asignatura</td><td class=cabecera>modo</td><td class=cabecera>acta</td></tr>
 <?php
 foreach($cDocencias as $oDocencia) {
-	$row = $oDocencia->getTot();
-	$id_asignatura = $row['id_asignatura'];
+	$id_asignatura = $oDocencia->getId_asignatura();
+	$tipo = $oDocencia->getTipo();
+	$curso_inicio = $oDocencia->getCurso_inicio();
+	$acta = $oDocencia->getActa();
 	$array_tipo = $oDocencia->getDatosTipo()->getArgument();
 	$oAsignatura = new asignaturas\Asignatura($id_asignatura);
 	$nombre_corto = $oAsignatura->getNombre_corto();
-	$modo=$array_tipo[$row['tipo']];
-	echo "<tr><td>${row['curso']}</td><td>$nombre_corto</td><td>$modo</td><td>${row['acta']}</td></tr>";
+	$modo = empty($tipo)? '' : $array_tipo[$tipo];
+	echo "<tr><td>$curso_inicio</td><td>$nombre_corto</td><td>$modo</td><td>$acta</td></tr>";
 }
 ?>
 </table>
