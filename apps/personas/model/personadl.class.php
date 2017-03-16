@@ -130,6 +130,7 @@ class PersonaDl Extends PersonaGlobal {
 					return false;
 				}
 			}
+			$this->setAllAtributes($aDades);
 		} else {
 			// INSERT
 				$campos="id_cr,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,lengua,situacion,f_situacion,apel_fam,inc,f_inc,stgr,profesion,eap,observ,id_ctr";
@@ -153,8 +154,16 @@ class PersonaDl Extends PersonaGlobal {
 					return false;
 				}
 			}
+			$id_auto = $oDbl->lastInsertId($nom_tabla.'_id_auto_seq');
+			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_auto=$id_auto")) === false) {
+				$sClauError = get_class($this).'.carregar.Last';
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				return false;
+			}
+			$aDadesLast = $qRs->fetch(\PDO::FETCH_ASSOC);
+			$this->aDades=$aDadesLast;
+			$this->setAllAtributes($aDadesLast);
 		}
-		$this->setAllAtributes($aDades);
 		return true;
 	}
 

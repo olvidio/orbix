@@ -139,6 +139,7 @@ class PersonaPub Extends PersonaGlobal {
 					return false;
 				}
 			}
+			$this->setAllAtributes($aDades);
 		} else {
 			// INSERT
 			//array_unshift($aDades, $this->iid_nom);
@@ -155,8 +156,16 @@ class PersonaPub Extends PersonaGlobal {
 					return false;
 				}
 			}
+			$id_auto = $oDbl->lastInsertId($nom_tabla.'_id_auto_seq');
+			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_auto=$id_auto")) === false) {
+				$sClauError = 'PersonaAgd.carregar.Last';
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				return false;
+			}
+			$aDadesLast = $qRs->fetch(\PDO::FETCH_ASSOC);
+			$this->aDades=$aDadesLast;
+			$this->setAllAtributes($aDadesLast);
 		}
-		$this->setAllAtributes($aDades);
 		return true;
 	}
 
