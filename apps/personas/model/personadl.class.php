@@ -27,6 +27,12 @@ class PersonaDl Extends PersonaGlobal {
 	 * @var integer
 	 */
 	 protected $iid_ctr;
+	/**
+	 * Lugar_nacimiento de PersonaDl
+	 *
+	 * @var string
+	 */
+	 protected $slugar_nacimiento;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
@@ -90,6 +96,7 @@ class PersonaDl Extends PersonaGlobal {
 		$aDades['eap'] = $this->seap;
 		$aDades['observ'] = $this->sobserv;
 		$aDades['id_ctr'] = $this->iid_ctr;
+		$aDades['lugar_nacimiento'] = $this->slugar_nacimiento;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if (empty($aDades['sacd']) || ($aDades['sacd'] === 'off') || ($aDades['sacd'] === false) || ($aDades['sacd'] === 'f')) { $aDades['sacd']='f'; } else { $aDades['sacd']='t'; }
@@ -118,7 +125,8 @@ class PersonaDl Extends PersonaGlobal {
 					profesion                = :profesion,
 					eap                      = :eap,
 					observ                   = :observ,
-					id_ctr                   = :id_ctr";
+					id_ctr                   = :id_ctr,
+					lugar_nacimiento         = :lugar_nacimiento";
 			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_nom='$this->iid_nom'")) === false) {
 				$sClauError = 'PersonaDl.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -133,8 +141,8 @@ class PersonaDl Extends PersonaGlobal {
 			$this->setAllAtributes($aDades);
 		} else {
 			// INSERT
-				$campos="id_cr,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,lengua,situacion,f_situacion,apel_fam,inc,f_inc,stgr,profesion,eap,observ,id_ctr";
-			$valores=":id_cr,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:lengua,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:stgr,:profesion,:eap,:observ,:id_ctr";
+				$campos="id_cr,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,lengua,situacion,f_situacion,apel_fam,inc,f_inc,stgr,profesion,eap,observ,id_ctr,lugar_nacimiento";
+			$valores=":id_cr,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:lengua,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:stgr,:profesion,:eap,:observ,:id_ctr,:lugar_nacimiento";
 			if (empty($this->iid_nom)) {
 				$campos="($campos)";
 				$valores="($valores)";
@@ -246,6 +254,7 @@ class PersonaDl Extends PersonaGlobal {
 		if (array_key_exists('eap',$aDades)) $this->setEap($aDades['eap']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
 		if (array_key_exists('id_ctr',$aDades)) $this->setId_ctr($aDades['id_ctr']);
+		if (array_key_exists('lugar_nacimiento',$aDades)) $this->setLugar_nacimiento($aDades['lugar_nacimiento']);
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
@@ -267,6 +276,25 @@ class PersonaDl Extends PersonaGlobal {
 	 */
 	function setId_ctr($iid_ctr='') {
 		$this->iid_ctr = $iid_ctr;
+	}
+	/**
+	 * Recupera l'atribut slugar_nacimiento de PersonaDl
+	 *
+	 * @return integer slugar_nacimiento
+	 */
+	function getLugar_nacimiento() {
+		if (!isset($this->slugar_nacimiento)) {
+			$this->DBCarregar();
+		}
+		return $this->slugar_nacimiento;
+	}
+	/**
+	 * estableix el valor de l'atribut slugar_nacimiento de PersonaDl
+	 *
+	 * @param integer slugar_nacimiento='' optional
+	 */
+	function setLugar_nacimiento($slugar_nacimiento='') {
+		$this->slugar_nacimiento = $slugar_nacimiento;
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
@@ -323,6 +351,7 @@ class PersonaDl Extends PersonaGlobal {
 		$oPersonaDlSet->add($this->getDatosEap());
 		$oPersonaDlSet->add($this->getDatosObserv());
 		$oPersonaDlSet->add($this->getDatosId_ctr());
+		$oPersonaDlSet->add($this->getDatosLugar_nacimiento());
 		return $oPersonaDlSet->getTot();
 	}
 
@@ -337,6 +366,18 @@ class PersonaDl Extends PersonaGlobal {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_ctr'));
 		$oDatosCampo->setEtiqueta(_("id_ctr"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut slugar_nacimiento de PersonaDl
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return oject DatosCampo
+	 */
+	function getDatosLugar_nacimiento() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'lugar_nacimiento'));
+		$oDatosCampo->setEtiqueta(_("lugar nacimiento"));
 		return $oDatosCampo;
 	}
 }

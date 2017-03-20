@@ -21,6 +21,30 @@ use core;
  */
 class PersonaN Extends PersonaDl {
 	/* ATRIBUTS ----------------------------------------------------------------- */
+	/**
+	 * ce de PersonaN
+	 *
+	 * @var integer
+	 */
+	 protected $ice;
+	/**
+	 * ce_ini de PersonaN
+	 *
+	 * @var integer
+	 */
+	 protected $ice_ini;
+	/**
+	 * ce_fin de PersonaN
+	 *
+	 * @var integer
+	 */
+	 protected $ice_fin;
+	/**
+	 * ce_lugar de PersonaN
+	 *
+	 * @var string
+	 */
+	 protected $sce_lugar;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
@@ -83,6 +107,11 @@ class PersonaN Extends PersonaDl {
 		$aDades['eap'] = $this->seap;
 		$aDades['observ'] = $this->sobserv;
 		$aDades['id_ctr'] = $this->iid_ctr;
+		$aDades['lugar_nacimiento'] = $this->slugar_nacimiento;
+		$aDades['ce'] = $this->ice;
+		$aDades['ce_ini'] = $this->ice_ini;
+		$aDades['ce_fin'] = $this->ice_fin;
+		$aDades['ce_lugar'] = $this->sce_lugar;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if (empty($aDades['sacd']) || ($aDades['sacd'] === 'off') || ($aDades['sacd'] === false) || ($aDades['sacd'] === 'f')) { $aDades['sacd']='f'; } else { $aDades['sacd']='t'; }
@@ -111,7 +140,13 @@ class PersonaN Extends PersonaDl {
 					profesion                = :profesion,
 					eap                      = :eap,
 					observ                   = :observ,
-					id_ctr                   = :id_ctr";
+					id_ctr                   = :id_ctr,
+					lugar_nacimiento         = :lugar_nacimiento,
+					ce         				 = :ce,
+					ce_ini         			 = :ce_ini,
+					ce_fin         			 = :ce_fin,
+					ce_lugar         		 = :ce_lugar";
+			
 			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_nom='$this->iid_nom'")) === false) {
 				$sClauError = 'PersonaN.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -126,8 +161,8 @@ class PersonaN Extends PersonaDl {
 			$this->setAllAtributes($aDades);
 		} else {
 			// INSERT
-			$campos="id_cr,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,lengua,situacion,f_situacion,apel_fam,inc,f_inc,stgr,profesion,eap,observ,id_ctr";
-			$valores=":id_cr,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:lengua,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:stgr,:profesion,:eap,:observ,:id_ctr";
+			$campos="id_cr,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,lengua,situacion,f_situacion,apel_fam,inc,f_inc,stgr,profesion,eap,observ,id_ctr,lugar_nacimiento,ce,ce_ini,ce_fin,ce_lugar";
+			$valores=":id_cr,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:lengua,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:stgr,:profesion,:eap,:observ,:id_ctr,:lugar_nacimiento,:ce,:ce_ini,:ce_fin,:ce_lugar";
 			if (empty($this->iid_nom)) {
 				$campos="($campos)";
 				$valores="($valores)";
@@ -239,10 +274,90 @@ class PersonaN Extends PersonaDl {
 		if (array_key_exists('eap',$aDades)) $this->setEap($aDades['eap']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
 		if (array_key_exists('id_ctr',$aDades)) $this->setId_ctr($aDades['id_ctr']);
+		if (array_key_exists('lugar_nacimiento',$aDades)) $this->setLugar_nacimiento($aDades['lugar_nacimiento']);
+		if (array_key_exists('ce',$aDades)) $this->setCe($aDades['ce']);
+		if (array_key_exists('ce_ini',$aDades)) $this->setCe_ini($aDades['ce_ini']);
+		if (array_key_exists('ce_fin',$aDades)) $this->setCe_fin($aDades['ce_fin']);
+		if (array_key_exists('ce_lugar',$aDades)) $this->setCe_lugar($aDades['ce_lugar']);
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
-
+	/**
+	 * Recupera l'atribut ice de PersonaN
+	 *
+	 * @return integer ice
+	 */
+	function getCe() {
+		if (!isset($this->ice)) {
+			$this->DBCarregar();
+		}
+		return $this->ice;
+	}
+	/**
+	 * estableix el valor de l'atribut ice de PersonaN
+	 *
+	 * @param integer ice='' optional
+	 */
+	function setCe($ice='') {
+		$this->ice = $ice;
+	}
+	/**
+	 * Recupera l'atribut ice_ini de PersonaN
+	 *
+	 * @return integer ice_ini
+	 */
+	function getCe_ini() {
+		if (!isset($this->ice_ini)) {
+			$this->DBCarregar();
+		}
+		return $this->ice_ini;
+	}
+	/**
+	 * estableix el valor de l'atribut ice_ini de PersonaN
+	 *
+	 * @param integer ice_ini='' optional
+	 */
+	function setCe_ini($ice_ini='') {
+		$this->ice_ini = $ice_ini;
+	}
+	/**
+	 * Recupera l'atribut ice_fin de PersonaN
+	 *
+	 * @return integer ice_fin
+	 */
+	function getCe_fin() {
+		if (!isset($this->ice_fin)) {
+			$this->DBCarregar();
+		}
+		return $this->ice_fin;
+	}
+	/**
+	 * estableix el valor de l'atribut ice_fin de PersonaN
+	 *
+	 * @param integer ice_fin='' optional
+	 */
+	function setCe_fin($ice_fin='') {
+		$this->ice_fin = $ice_fin;
+	}
+	/**
+	 * Recupera l'atribut sce_lugar de PersonaN
+	 *
+	 * @return integer sce_lugar
+	 */
+	function getCe_lugar() {
+		if (!isset($this->sce_lugar)) {
+			$this->DBCarregar();
+		}
+		return $this->sce_lugar;
+	}
+	/**
+	 * estableix el valor de l'atribut sce_lugar de PersonaN
+	 *
+	 * @param integer sce_lugar='' optional
+	 */
+	function setCe_lugar($sce_lugar='') {
+		$this->sce_lugar = $sce_lugar;
+	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
 	/**
@@ -274,8 +389,61 @@ class PersonaN Extends PersonaDl {
 		$oPersonaNSet->add($this->getDatosEap());
 		$oPersonaNSet->add($this->getDatosObserv());
 		$oPersonaNSet->add($this->getDatosId_ctr());
+		$oPersonaNSet->add($this->getDatosLugar_nacimiento());
+		$oPersonaNSet->add($this->getDatosCe());
+		$oPersonaNSet->add($this->getDatosCe_ini());
+		$oPersonaNSet->add($this->getDatosCe_fin());
+		$oPersonaNSet->add($this->getDatosCe_lugar());
 		return $oPersonaNSet->getTot();
 	}
 
+	/**
+	 * Recupera les propietats de l'atribut ice de PersonaN
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return oject DatosCampo
+	 */
+	function getDatosCe() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'ce'));
+		$oDatosCampo->setEtiqueta(_("ce"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut ice_ini de PersonaN
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return oject DatosCampo
+	 */
+	function getDatosCe_ini() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'ce_ini'));
+		$oDatosCampo->setEtiqueta(_("ce_ini"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut ice_fin de PersonaN
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return oject DatosCampo
+	 */
+	function getDatosCe_fin() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'ce_fin'));
+		$oDatosCampo->setEtiqueta(_("ce_fin"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut sce_lugar de PersonaN
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return oject DatosCampo
+	 */
+	function getDatosCe_lugar() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'ce_lugar'));
+		$oDatosCampo->setEtiqueta(_("ce_lugar"));
+		return $oDatosCampo;
+	}
 }
 ?>
