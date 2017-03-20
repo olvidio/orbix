@@ -1,7 +1,6 @@
 <?php
 namespace core;
 use web;
-
 /**
 * llama a la plantilla de inicio con el nombre de la oficina
 *
