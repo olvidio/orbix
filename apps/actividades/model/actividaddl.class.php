@@ -126,6 +126,7 @@ class ActividadDl Extends ActividadAll {
 				$oGestorCanvis = new cambios\GestorCanvis();
 				$oGestorCanvis->addCanvi("$nom_tabla", 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
 			}
+			$this->setAllAtributes($aDades);
 		} else {
 			// INSERT
 			$campos="(id_tipo_activ,dl_org,nom_activ,id_ubi,desc_activ,f_ini,h_ini,f_fin,h_fin,tipo_horario,precio,num_asistentes,status,observ,nivel_stgr,observ_material,lugar_esp,tarifa,id_repeticion,publicado,id_tabla,plazas)";
@@ -162,7 +163,6 @@ class ActividadDl Extends ActividadAll {
 				$oGestorCanvis->addCanvi("$nom_tabla", 'INSERT', $aDades['id_activ'], $aDades, array());
 			}
 		}
-		$this->setAllAtributes($aDades);
 		return true;
 	}
 
