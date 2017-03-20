@@ -12,7 +12,14 @@ require_once('apps/permisos/controller/login_obj.php');
 
 $_SESSION['oGestorErrores'] = new gestorErrores();
 
-//Definir Conexiones
+/*
+ * Definir Conexiones
+ *
+ * No conviene que las conexiones sean persistentes, pues en caso de algún bloqueo
+ *  o error afectan a toda la aplicación.
+ * De esta manera (no persistente) se cierra la conexión cada vez que acaba el script.
+ * 
+ */
 // public para todo el mundo
 $oDBPC = new \PDO(ConfigGlobal::$str_conexio_public);
 $oDBPC->exec('SET search_path TO public');
@@ -57,6 +64,22 @@ switch ($user_sfsv) {
 // para las tertulias.
 //$oDBT = new PDO(ConfigGlobal::$str_conexio_filmoteca);
 //$oDBA->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING );
+
+
+// Para sincronizar con listas Madrid (SQLSERVER)
+if (!isset($_SESSION['oDBListas'])){
+	try {
+		$oDBListas = new \PDO(ConfigGlobal::$dsn_conexio_listas,ConfigGlobal::$user_conexio_listas,ConfigGlobal::$password_conexio_listas, array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING));
+	} catch (\PDOException $e) {
+		//Hay que poner el mensaje entre /* ... */ para que el script que carga a continuación lo interprete como un comentario.
+		echo "/*";
+		echo _("No puedo conectar con  la base de datos de listas").':<br>';
+		echo $e->getMessage();
+		echo "*/";
+		$_SESSION['oDBListas'] = 'error';
+	}
+}
+
 
 
 if ( ConfigGlobal::is_app_installed('menus') ) {
