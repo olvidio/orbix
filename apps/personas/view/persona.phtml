@@ -22,7 +22,7 @@ $cSituaciones = $GesSituacion->getSituaciones($aWhere);
 $campos_chk = 'sacd';
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('id_ctr!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!f_situacion!inc!lengua!nom!nx1!nx2!observ!profesion!que!situacion!stgr!trato');
+$oHash->setcamposForm('id_ctr!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!f_situacion!inc!lengua!nom!nx1!nx2!observ!profesion!que!situacion!stgr!trato!lugar_nacimiento!ce!ce_lugar!ce_ini!ce_fin');
 $oHash->setcamposNo('que!'.$campos_chk);
 $a_camposHidden = array(
 		'campos_chk'=>$campos_chk,
@@ -71,7 +71,8 @@ echo "</tr><tr>";
 echo web\dibujar_campo($obj,"nx2",7,1,0);
 echo web\dibujar_campo($obj,"apellido2",25,1,2);
 echo "</tr><tr>";
-echo web\dibujar_campo($obj,"f_nacimiento",11,1,1);
+echo web\dibujar_campo($obj,"lugar_nacimiento",15,1,1);
+echo web\dibujar_campo($obj,"f_nacimiento",11,1,0);
 
 echo "</tr><tr>";
 ?>
@@ -89,7 +90,7 @@ echo "</tr><tr>";
 			?>
 	</select></td>
 <?php
-echo web\dibujar_campo($obj,"f_situacion",11,1,1);
+echo web\dibujar_campo($obj,"f_situacion",11,1,0);
 echo "</tr><tr>";
 echo web\dibujar_campo($obj,"lengua",3,1,1);
 echo "</tr><tr>";
@@ -116,6 +117,11 @@ echo web\dibujar_campo($obj,"eap",20,2,0);
 echo "</tr><tr>";
 echo web\dibujar_campo($obj,"inc",5,1,0);
 echo web\dibujar_campo($obj,"f_inc",11,1,1);
+echo "</tr><tr>";
+echo web\dibujar_campo($obj,"ce",2,1,0);
+echo web\dibujar_campo($obj,"ce_lugar",11,1,1);
+echo web\dibujar_campo($obj,"ce_ini",5,1,0);
+echo web\dibujar_campo($obj,"ce_fin",5,1,0);
 echo "</tr><tr>";
 echo web\dibujar_campo($obj,"observ",60,1,4);
 echo "</tr><tr>";
