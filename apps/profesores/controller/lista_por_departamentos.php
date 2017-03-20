@@ -49,6 +49,7 @@ foreach ($cDepartamentos as $oDepartamento) {
 	foreach ($cProfesorDirector as $oProfesorDirector) {
 		$id_nom = $oProfesorDirector->getId_nom();
 		$oPersonaDl = new personas\model\PersonaDl($id_nom);
+		if ($oPersonaDl->getSituacion() != 'A') { continue; }
 		$ap_orden = $oPersonaDl->getApellido1().$oPersonaDl->getApellido2().$oPersonaDl->getNom();
 		$ap_nom = $oPersonaDl->getApellidosNombre() ." (". $oPersonaDl->getCentro_o_dl() .")";
 		$aDirs[$ap_orden] = $ap_nom;
@@ -64,6 +65,7 @@ foreach ($cDepartamentos as $oDepartamento) {
 		foreach ($cProfesores as $oProfesor) {
 			$id_nom = $oProfesor->getId_nom();
 			$oPersonaDl = new personas\model\PersonaDl($id_nom);
+			if ($oPersonaDl->getSituacion() != 'A') { continue; }
 			$ap_orden = $oPersonaDl->getApellido1().$oPersonaDl->getApellido2().$oPersonaDl->getNom();
 			$ap_nom = $oPersonaDl->getApellidosNombre() ." (". $oPersonaDl->getCentro_o_dl() .")";
 			$aProfes[$ap_orden] = $ap_nom;
