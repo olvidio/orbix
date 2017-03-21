@@ -171,3 +171,4 @@
 173	stgr1	apps/profesores/controller/lista_por_departamentos.php	\N	listado claustro
 174	notas	apps/notas/controller/asignaturas_pendientes_resumen.php	\N	Resumen asig. pendientes
 175	notas	apps/notas/controller/asig_faltan_que.php	\N	Asignaturas pendientes
+176	dbextern	apps/dbextern/controller/sincro_listas.php	\N	Sincronizar con los datos de Listas

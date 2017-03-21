@@ -183,3 +183,5 @@
 920	{10,50}	claustro	\N	173	16	12	t
 921	{20,50}	resumen pendientes	\N	174	16	12	t
 922	{20,60}	buscar asig. pendientes	\N	175	16	12	t
+923	{15,40}	Actualizar datos de Listas	tipo=n	176	128	2	t
+414	{16,40}	sync	tipo=a	176	2	3	t
