@@ -256,7 +256,7 @@ fnjs_submit=function(formulario,mov){
 }
 </script>
 
-Personas en listas Madrid
+<h3><?= _("Personas en listas Madrid") ?></h3>
 <br>
 <?php
 if (empty($mov)) {
@@ -284,7 +284,8 @@ if (empty($mov)) {
 ?>
 </table>
 
-Posibles Coincidencias:
+<h3><?= _("Posibles Coincidencias") ?>:</h3>
+
 
 
 <table>
