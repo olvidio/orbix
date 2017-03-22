@@ -25,7 +25,9 @@ class GestorPersonaListas Extends core\ClaseGestor {
 	 *
 	 */
 	function __construct() {
-		if ($_SESSION['oDBListas'] == 'error') { exit(_("No se puede conectar con la base de datos de Listas")); }
+		if (!empty($_SESSION['oDBListas']) && $_SESSION['oDBListas'] == 'error') {
+			exit(_("No se puede conectar con la base de datos de Listas")); 
+		}
 		$oDbl = $GLOBALS['oDBListas'];
 		$this->setoDbl($oDbl);
 		$this->setNomTabla('dbo.q_dl_Estudios_b');
