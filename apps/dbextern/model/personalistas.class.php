@@ -162,8 +162,8 @@ class PersonaListas Extends core\ClasePropiedades {
 	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
 	 */
 	function __construct($a_id='') {
-		$oDbl = $_SESSION['oDBListas'];
-		if ($oDbl == 'error') { exit(_("No se puede conectar con la base de datos de Listas")); }
+		if ($_SESSION['oDBListas'] == 'error') { exit(_("No se puede conectar con la base de datos de Listas")); }
+		$oDbl = $GLOBALS['oDBListas'];
 		if (is_array($a_id)) { 
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
