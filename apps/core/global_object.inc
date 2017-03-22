@@ -71,7 +71,6 @@ if (configGlobal::is_app_installed('dbextern')) {
 	if (!isset($_SESSION['oDBListas'])){
 		try {
 			$oDBListas = new \PDO(ConfigGlobal::$dsn_conexio_listas,ConfigGlobal::$user_conexio_listas,ConfigGlobal::$password_conexio_listas, array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING));
-			$_SESSION['oDBListas'] = 'ok';
 		} catch (\PDOException $e) {
 			//Hay que poner el mensaje entre /* ... */ para que el script que carga a continuación lo interprete como un comentario.
 			echo "/*";
