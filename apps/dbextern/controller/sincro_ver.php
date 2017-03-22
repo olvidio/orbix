@@ -192,6 +192,8 @@ $oHash1->setUrl($url_sincro_ajax);
 $oHash1->setCamposForm('que!id_nom_listas!id!id_orbix'); 
 $h1 = $oHash1->linkSinVal();
 
+
+$html_reg = sprintf(_("registro %s de %s"),$new_id,$max);
 // ------------------ html ----------------------------------
 ?>
 <script>
@@ -253,7 +255,6 @@ fnjs_submit=function(formulario,mov){
 </script>
 
 <h3><?= _("Personas en listas Madrid") ?></h3>
-<br>
 <?php
 if (empty($mov)) {
 	echo sprintf(_("unidas automáticamente: %s"),$cont_sync);
@@ -262,27 +263,26 @@ if (empty($mov)) {
 <form id="movimiento" name="movimiento" action="">
 	<?= $oHash->getCamposHtml(); ?>
 	<input type="hidden" id="mov" name="mov" value="">
-	<input type="button" value="<?= _("anterior") ?>" onclick="fnjs_submit(this.form,'-')">
-	<input type="button" value="<?= _("siguiente") ?>" onclick="fnjs_submit(this.form,'+')">
+	<input type="button" value="< <?= _("anterior") ?>" onclick="fnjs_submit(this.form,'-')" />
+	<?= $html_reg ?>
+	<input type="button" value="<?= _("siguiente") ?> >" onclick="fnjs_submit(this.form,'+')" />
 	<br>
-	registro <?= $new_id ?> de  <?= $max ?> <br>
+	<br>
 	
 <table>
 <?php
 	echo "<tr>";
 	echo "<td>".$persona_listas['id_nom_listas'].'<td>';
-	echo "<td>".$persona_listas['ape_nom'].'<td>';
+	echo "<td class='titulo'>".$persona_listas['ape_nom'].'<td>';
 	echo "<td>".$persona_listas['nombre'].'<td>';
 	echo "<td>".$persona_listas['apellido1'].'<td>';
 	echo "<td>".$persona_listas['apellido2'].'<td>';
-	echo "<td>".$persona_listas['f_nacimiento'].'<td>';
+	echo "<td class='titulo'>".$persona_listas['f_nacimiento'].'<td>';
 	echo '</tr>';
 ?>
 </table>
 
 <h3><?= _("Posibles Coincidencias") ?>:</h3>
-
-
 
 <table>
 <?php
@@ -290,21 +290,18 @@ foreach ($a_lista_orbix as $persona_orbix) {
 	$id_orbix = $persona_orbix['id_nom'];
 	echo "<tr>";
 	echo "<td>".$persona_orbix['id_nom'].'<td>';
-	echo "<td>".$persona_orbix['ape_nom'].'<td>';
+	echo "<td class='contenido'>".$persona_orbix['ape_nom'].'<td>';
 	echo "<td>".$persona_orbix['nombre'].'<td>';
 	echo "<td>".$persona_orbix['apellido1'].'<td>';
 	echo "<td>".$persona_orbix['apellido2'].'<td>';
-	echo "<td>".$persona_orbix['f_nacimiento'].'<td>';
-	echo "<td><span class=link onClick='fnjs_unir($id_orbix)'>" . _("Unir") . '</span><td>';
+	echo "<td class='contenido'>".$persona_orbix['f_nacimiento'].'<td>';
+	echo "<td class='titulo'><span class=link onClick='fnjs_unir($id_orbix)'>" . _("Unir") . '</span><td>';
 	echo '</tr>';
 }
-
 ?>
 </table>
-
-
-
-	<input type="button" value="<?= _("crear nuevo") ?>" onclick="fnjs_crear()">
+<br>
+<input type="button" value="<?= _("crear nuevo") ?>" onclick="fnjs_crear()">
 </form>
 <br>
 <input type="button" value="<?= _("actualizar datos de Listas a orbix") ?>" onclick="fnjs_sincronizar()">

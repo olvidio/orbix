@@ -18,16 +18,19 @@ switch ($tipo_persona) {
 	case 'n':
 		if ($_SESSION['oPerm']->have_perm("sm")) {
 			$id_tipo = 1;
+			$obj_pau = 'GestorPersonaN';
 		}
 		break;
 	case 'a':
 		if ($_SESSION['oPerm']->have_perm("agd")) {
 			$id_tipo = 2;
+			$obj_pau = 'GestorPersonaAgd';
 		}
 		break;
 	case 's':
 		if ($_SESSION['oPerm']->have_perm("sg")) {
 			$id_tipo = 3;
+			$obj_pau = 'GestorPersonaS';
 		}
 		break;
 }
@@ -36,7 +39,6 @@ if (empty($id_tipo)) {
 	exit(_("No tiene permisos"));
 }
 
-$no_listas = 35;
 
 $Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE Dl='$dl' AND Identif LIKE '$id_tipo%'";
 // todos los de listas
@@ -56,8 +58,25 @@ foreach ($cPersonasListas as $oPersonaListas) {
 
 $no_orbix = $i;
 
+// todos los de orbix
+$obj = 'personas\\model\\'.$obj_pau;
+$GesPersonas = new $obj();
+$cPersonasOrbix = $GesPersonas->getPersonasDl(array('situacion'=>'A'));
+$i = 0;
+foreach ($cPersonasOrbix as $oPersonaOrbix) {
+	$id_nom_orbix = $oPersonaOrbix->getId_nom();
+
+	$oGesMatch = new dbextern\model\GestorIdMatchPersona();
+	$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_orbix'=>$id_nom_orbix));
+	if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
+		continue;
+	}
+	$i++;
+}
+$no_listas = $i;
+
 $ver_listas = web\Hash::link('apps/dbextern/controller/sincro_ver.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona)));
-$ver_orbix = web\Hash::link('apps/dbextern/controller/sincro_ver.php?'.http_build_query(array('que'=>'orbix')));
+$ver_orbix = web\Hash::link('apps/dbextern/controller/sincro_ver_orbix.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona)));
 
 ?>
 <table>
