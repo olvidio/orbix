@@ -167,7 +167,7 @@ foreach ($cPersonasDl as $oPersonaDl) {
 	$nombre = $oPersonaDl->getNom();
 	$apellido1 = $oPersonaDl->getApellido1();
 	$apellido2 = $oPersonaDl->getApellido2();
-	$f_nacimiento = $oPersonaDl->getF_nacimiento();
+	$f_nacimiento = empty($oPersonaDl->getF_nacimiento())? '??' : $oPersonaDl->getF_nacimiento();
 	$a_lista_orbix[$i] = 	array('id_nom'=>$id_nom,
 										'ape_nom'=>$ape_nom,
 										'nombre'=>$nombre,
