@@ -56,7 +56,7 @@ foreach ($cPersonasListas as $oPersonaListas) {
 	$i++;
 }
 
-$no_orbix = $i;
+$no_orbix = empty($i)? 0 : $i-1;
 
 // todos los de orbix
 $obj = 'personas\\model\\'.$obj_pau;
@@ -73,7 +73,7 @@ foreach ($cPersonasOrbix as $oPersonaOrbix) {
 	}
 	$i++;
 }
-$no_listas = $i;
+$no_listas = empty($i)? 0 : $i-1;
 
 $ver_listas = web\Hash::link('apps/dbextern/controller/sincro_ver.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona)));
 $ver_orbix = web\Hash::link('apps/dbextern/controller/sincro_ver_orbix.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona)));

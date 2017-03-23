@@ -47,8 +47,8 @@ function syncro_automatico($a_persona_lista,$tipo_persona) {
 	$aWhere['id_tabla'] = $tipo_persona;
 	$aWhere['apellido1'] = $apellido1_sinprep;
 	$aWhere['apellido2'] = $apellido2_sinprep;
-	$aWhere['f_nacimiento'] = $f_nacimiento;
-	$aWhere['nombre'] = $nombre;
+	$aWhere['f_nacimiento'] = "'$f_nacimiento'";
+	$aWhere['nom'] = trim($nombre);
 
 	$oGesPersonasDl = new personas\model\GestorPersonaDl();
 	$cPersonasDl = $oGesPersonasDl->getPersonasDl($aWhere,$aOperador);
@@ -62,6 +62,8 @@ function syncro_automatico($a_persona_lista,$tipo_persona) {
 		
 		if ($oIdMatch->DBGuardar() === false) {
 			echo _('Hay un error, no se ha guardado');
+			print_r($oIdMatch);
+			echo '<br>';
 			return false;
 		}
 		return true;

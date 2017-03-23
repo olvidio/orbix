@@ -192,8 +192,7 @@ function syncro($oPersonaListas,$id_orbix) {
 	$obj = 'personas\\model\\'.$obj_pau;
 	$oPersona = new $obj($id_orbix);
 
-	$oPersona->setSituacion('A');
-	$oPersona->setF_situacion(date('j/m/Y'));
+	$oPersona->DBCarregar();
 	$oPersona->setNom($nombre);
 	$oPersona->setNx1($nx1);
 	$oPersona->setApellido1($apellido1_sinprep);
