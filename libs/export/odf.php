@@ -12,13 +12,6 @@ Copyright: Juan Lao Tebar (juanlao@eyeos.org) and Jose Carlos Norte (jose@eyeos.
 https://sourceforge.net/projects/ods-php/
 
 */
-// INICIO Cabecera global de URL de controlador *********************************
-	//require_once ("global_header.inc");
-// Arxivos requeridos por esta url **********************************************
-
-// Crea los objectos de uso global **********************************************
-	//require_once ("global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 class odf {
 	var $fonts;
@@ -209,6 +202,7 @@ function parseOds($file) {
 }
 
 function saveOds($obj,$file,$txt_html,$conv_style,$doc_type) {
+	/*
 	$dir_estilos=ConfigGlobal::$dir_estilos;
 	if ($conv_style){
 		$estilo_propio=$dir_estilos."/ODF/".$conv_style."_styles.xml";
@@ -219,10 +213,21 @@ function saveOds($obj,$file,$txt_html,$conv_style,$doc_type) {
 		$estilo_propio=$dir_estilos."/ODF/styles.xml";
 		$settings_propio=$dir_estilos."/ODF/settings.xml";
 	}
+	 * 
+	 */
+	if ($conv_style){
+		$estilo_propio="ODF/".$conv_style."_styles.xml";
+		$settings_propio="ODF/".$conv_style."_settings.xml";
+		if(!file_exists($estilo_propio)) $estilo_propio="ODF/styles.xml";
+		if(!file_exists($settings_propio)) $settings_propio="ODF/settings.xml";
+	} else {
+		$estilo_propio="ODF/styles.xml";
+		$settings_propio="ODF/settings.xml";
+	}
 	$charset = ini_get('default_charset');
 	ini_set('default_charset', 'UTF-8');
 
-	$zip = new ZipArchive();
+	$zip = new \ZipArchive;
 	if ($zip->open($file, ZIPARCHIVE::CREATE)!==TRUE) {
 		exit("cannot open <$file>\n");
 	}

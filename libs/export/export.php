@@ -1,11 +1,4 @@
 <?php
-// INICIO Cabecera global de URL de controlador *********************************
-	require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
-
-// Crea los objectos de uso global **********************************************
-	require_once ("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 // --------------------- source_rtf.php ---------------------
 // Measurements
@@ -645,8 +638,8 @@ switch ($_POST['frm_export_tipo']) {
 		}
 		fclose($handle);
 		$conv_style="1";
-		$content_xml = shell_exec("xsltproc --html ".core\ConfigGlobal::$dir_estilos."/ODF/xslt/html2oo.xslt $file_txt");
-	//echo "content: $content_xml<br>";	
+		$content_xml = shell_exec("xsltproc --html ".getcwd()."/ODF/xslt/html2oo.xslt $file_txt");
+		//echo "<br>content: $content_xml<br>";	
 		$object = newOds(); //create a new ods file
 		$file_ods="/tmp/$nom.ods";
 		saveOds($object,$file_ods,$content_xml,$conv_style,$doc_type); //save the object to a ods file
@@ -719,7 +712,7 @@ switch ($_POST['frm_export_tipo']) {
 			$conv_style="1";
 		}
 		
-		$content_xml = shell_exec("xsltproc --html ".core\ConfigGlobal::$dir_estilos."/ODF/xslt/$xslt $file_txt");
+		$content_xml = shell_exec("xsltproc --html ".getcwd()."/ODF/xslt/$xslt $file_txt");
 		//echo "oo: $output<br>";
 		
 		$object = newOds(); //create a new ods file
@@ -740,5 +733,4 @@ switch ($_POST['frm_export_tipo']) {
 		unlink($file_txt);
 		break;
 }
-
 ?>
