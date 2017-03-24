@@ -883,7 +883,7 @@ if ($gm > 1) {
 </ul>
 </div>
 <div id="iframe_export" name="iframe_export" style="display:none;">
-	<form id="frm_export" method="POST" action="libs/export.php">
+	<form id="frm_export" method="POST" action="libs/export/export.php">
 	<input type="hidden" id="frm_export_orientation" name="frm_export_orientation" />
 	<input type="hidden" id="frm_export_ref" name="frm_export_ref" />
 	<input type="hidden" id="frm_export_titulo" name="frm_export_titulo" />
