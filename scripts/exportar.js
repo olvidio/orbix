@@ -55,9 +55,10 @@ function fnjs_slickToTable(node) {
 		tbody+="<tr>";
 		Fila=this;
 		metadata = window[dataView].getItemMetadata(f);
+		d = [];
 		if(metadata) d=metadata['columns'];
 		f++;
-		$.each(Columns,function(){
+		$.each(Columns,function(d){
 			colspan='';
 			nameId=this.id;
 			nameCol=this.name;
@@ -280,7 +281,7 @@ function fnjs_exportar(formato){
 	});
 
 	//alert ("rta:\n"+txt);
-	//return
+	//return;
 	//var myText=$(bloque).html();;
 	
 	switch (export_modo) {
