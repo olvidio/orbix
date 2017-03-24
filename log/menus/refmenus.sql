@@ -188,3 +188,4 @@
 414	{16,40}	Actualizar datos desde Listas	tipo=a	176	2	3	t
 415	{91,20}	Actualizar datos desde Listas	tipo=s	176	64	10	t
 819	{1,20}	exportar	\N	\N	33816575	1	t
+924	{1,20,20}	a ODF Text	\N	163	34078719	1	t

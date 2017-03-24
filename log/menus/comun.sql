@@ -143,7 +143,6 @@
 131	admin	apps/usuarios/controller/usuario_lista.php	\N	lista usuarios
 161	admin	apps/usuarios/controller/role_lista.php	\N	lista roles
 162	core	fnjs_exportar('odfc')	\N	exportar a odf calc
-163	exportar	fnjs_exportar('odft')	\N	exportar a odft txt
 164	usuarios	apps/usuarios/controller/personal.php	\N	preferencias usuario
 165	core	fnjs_windowopen('http://demo.dlb.es/mediawiki')	\N	Ayuda
 133	ubis	apps/ubis/controller/ubis_buscar.php	\N	buscar ubis
@@ -172,3 +171,4 @@
 174	notas	apps/notas/controller/asignaturas_pendientes_resumen.php	\N	Resumen asig. pendientes
 175	notas	apps/notas/controller/asig_faltan_que.php	\N	Asignaturas pendientes
 176	dbextern	apps/dbextern/controller/sincro_listas.php	\N	Sincronizar con los datos de Listas
+163	core	fnjs_exportar('odft')	\N	exportar a odft txt
