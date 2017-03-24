@@ -1,10 +1,10 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("global_header.inc");
+	//require_once ("global_header.inc");
 // Arxivos requeridos por esta url **********************************************
 
 // Crea los objectos de uso global **********************************************
-	require_once ("global_object.inc");
+	//require_once ("global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
@@ -523,8 +523,8 @@ switch ($_POST['frm_export_tipo']) {
 		 * @author Nicola Asuni
 		 * @since 2010-05-25
 		 */
-		require_once('tcpdf/config/lang/cat.php');
-		require_once('tcpdf/tcpdf.php');
+		//require_once('tcpdf/config/lang/cat.php');
+		//require_once('tcpdf/tcpdf.php');
 
 		// create new PDF document
 		//$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -627,7 +627,7 @@ switch ($_POST['frm_export_tipo']) {
 		}
 		$documento=$_POST['frm_export_ex'];
 		$doc_type="spreadsheet";
-		require_once("scripts/odf.php");
+		require_once("odf.php");
 		
 		$documento=html_entity_decode($documento,ENT_NOQUOTES,'UTF-8');		
 		$documento=stripslashes($documento);		
@@ -676,7 +676,7 @@ switch ($_POST['frm_export_tipo']) {
 		}
 		$documento=$_POST['frm_export_ex'];
 		$doc_type="text";
-		require_once("scripts/odf.php");
+		require_once("odf.php");
 		
 		$documento=html_entity_decode($documento,ENT_NOQUOTES,'UTF-8');		
 		$documento=stripslashes($documento);		
