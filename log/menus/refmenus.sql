@@ -10,6 +10,7 @@
 143	{40}	planning 	\N	\N	2064	12	t
 136	{37,90}	pendientes	sactividad=ca&tipo_personas=n	140	16	12	t
 140	{37,70}	lista por ctr	lista=list_activ&n_agd=n&sasistentes=n&sactividad=ca	147	2064	12	t
+820	{1,20,10}	a ODF Calc	\N	162	34078719	1	t
 119	{10,10}	num de paso	tabla=p_de_paso&na=n&tipo=persona	76	2064	12	t
 120	{10,20}	agd de paso	tabla=p_de_paso&na=a&tipo=persona	76	2064	12	t
 286	{15,20}	n de paso	tabla=p_de_paso&na=n&tipo=persona	76	144	2	t
@@ -69,6 +70,7 @@
 100	{55,10}	buscar activ	que=ver&ssfsv=sv&sasistentes=sss+	119	8	8	t
 270	{60,40}	lista grupos	\N	122	33816576	13	t
 144	{40,10}	persona dl	obj_pau=PersonaDl&tipo=planning	61	2064	12	t
+25	{70,20}	buscar crt	sasistentes=agd&sactividad=crt&que=ver	71	2050	3	t
 89	{55,29}	propuesta cl cv	ssfsv=sv&sasistentes=sss%2B&sactividad=cv&que=list_cjto	119	8	8	t
 32	{80,60}	list varias cv	ssfsv=sv&sasistentes=agd&sactividad=cv&que=list_cjto	119	2082	3	t
 129	{35,60}	list varias cv	ssfsv=sv&sasistentes=agd&sactividad=cv&que=list_cjto	119	2064	12	t
@@ -142,7 +144,6 @@
 316	{80,20}	buscar ca	sasistentes=n&sactividad=ca&que=ver	71	2208	2	t
 841	{82}	cve	\N	\N	18464	16	t
 229	{110,20}	buscar cv	sasistentes=s&sactividad=cv&que=ver	71	2112	10	t
-25	{70,20}	buscar crt	sasistentes=agd&sactividad=crt&que=ver	71	2050	3	t
 840	{80,20}	buscar ca	sasistentes=nax&sactividad=ca&que=ver	71	18464	16	t
 842	{82,20}	buscar cve	sasistentes=nax&sactividad=cve&que=ver	71	18464	16	t
 838	{70,20}	buscar crt	sasistentes=nax&sactividad=crt&que=ver	71	18464	16	t
@@ -186,3 +187,4 @@
 923	{15,40}	Actualizar datos desde Listas	tipo=n	176	128	2	t
 414	{16,40}	Actualizar datos desde Listas	tipo=a	176	2	3	t
 415	{91,20}	Actualizar datos desde Listas	tipo=s	176	64	10	t
+819	{1,20}	exportar	\N	\N	33816575	1	t
