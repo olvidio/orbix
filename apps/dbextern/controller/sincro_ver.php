@@ -100,10 +100,6 @@ if (empty($id)) {
 	$id=1;
 
 	$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE Dl='$dl' AND Identif LIKE '$id_tipo%'";
-	//$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE Dl='b' AND Identif LIKE '1%' ORDER BY ApeNom";
-	///$Query = "select * from dbo.q_dl_Estudios_b where (ApeNom LIKE '%Cierva%') OR (ApeNom LIKE '%Busquets%') ORDER BY ApeNom";
-	//$Query = "select * from dbo.q_dl_Estudios_b where Dl='b' AND Ctr='Raset'";
-	//$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE ctr='sgMontagut'";
 	// todos los de listas
 	$oGesListas = new dbextern\model\GestorPersonaListas();	
 	$cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
@@ -150,6 +146,7 @@ $aOperador = array();
 $aWhere['id_tabla'] = $tipo_persona;
 $aWhere['situacion'] = 'A';
 $aWhere['apellido1'] = $apellido1_sinprep;
+$aOperador['apellido1'] = 'sin_acentos';
 $aWhere['_ordre'] = 'apellido1, apellido2, nom';
 
 $oGesPersonasDl = new personas\model\GestorPersonaDl();
