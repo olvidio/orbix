@@ -200,19 +200,25 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 	$aWhere['_ordre']='apellido1,apellido2,nom';
 
 	$_POST['texto']="image";
+	$GesPersonaDl = new personas\GestorPersonaDl();
 } else {
+	switch ($id_tabla_persona) {
+		case 'n':
+			$aWhere['stgr']='n';
+			$aOperador['stgr']='<>';
+			$GesPersonaDl = new personas\GestorPersonaN();
+			break;
+		case 'a':
+			$GesPersonaDl = new personas\GestorPersonaAgd();
+			break;
+	}
 	$aWhere['situacion']='A';
 	$aWhere['sacd']='f'; // que no salgan los sacd
 	$aWhere['id_tabla']=$id_tabla_persona;
-	if ($id_tabla_persona == 'n') {
-		$aWhere['stgr']='n';
-		$aOperador['stgr']='<>';
-	}
 	$aWhere['_ordre']='id_ctr,apellido1,apellido2,nom';
 	if (!empty($id_ctr)) $aWhere['id_ctr']=$id_ctr;
 }
 
-$GesPersonaDl = new personas\GestorPersonaDl();
 $cPersonas = $GesPersonaDl->getPersonas($aWhere,$aOperador);
 
 // El bucle: para cada alumno miro los creditos posibles para cada ca
@@ -259,8 +265,12 @@ foreach ($cOrdPersonas as $ctr=>$ctrPersonas) {
 		$ctr = $oUbi->getNombre_ubi();
 		*/
 		$stgr=$oPersonaDl->getStgr(); //posibles: n,s,t,b,c1,c2,r
-		//$ce=$oPersonaDl->getCe(); //está en el ce? 1,2,3
-		$ce='';
+		
+		if (method_exists($oPersonaDl,'getCe')) {
+			$ce=$oPersonaDl->getCe(); //está en el ce? 1,2,3
+		} else {
+			$ce = '';
+		}
 		//echo "persona: $id_nom,$nom,$ctr,$stgr<br>";
 		$creditos=0;
 		// por cada ca:

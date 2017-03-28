@@ -38,7 +38,7 @@ class Resumen Extends core\ClasePropiedades {
 	protected $iany;
 	protected $iany2;
 	protected $diniverano;
-	protected $slugar_ce;
+	protected $sce_lugar;
 
 	protected $a_asignaturas;
 	protected $a_creditos;
@@ -124,11 +124,11 @@ class Resumen Extends core\ClasePropiedades {
 	public function setLista($blista) {
 			$this->blista = $blista;
 	}
-	public function getLugar_ce() {
-		return $this->slugar_ce;
+	public function getCe_lugar() {
+		return $this->sce_lugar;
 	}
-	public function setLugar_ce($slugar_ce) {
-			$this->slugar_ce = $slugar_ce;
+	public function setCe_lugar($sce_lugar) {
+			$this->sce_lugar = $sce_lugar;
 	}
 	public function getAny() {
 		if (empty($this->iany)) {
@@ -183,7 +183,6 @@ class Resumen Extends core\ClasePropiedades {
 	*/
 
 	public function nuevaTabla() {
-		$lista = $this->blista;
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 		$notas = $this->getNomNotas();
@@ -208,9 +207,9 @@ class Resumen Extends core\ClasePropiedades {
 										f_o date,
 										f_fl date,
 										f_orden date,
-										lugar_ce varchar(8),
-										ini_ce int2,
-										fin_ce int2,
+										ce_lugar varchar(40),
+										ce_ini int2,
+										ce_fin int2,
 										sacd bool )";
 	
 		if( !$oDbl->query($sqlDelete) ) {
@@ -223,14 +222,11 @@ class Resumen Extends core\ClasePropiedades {
 				f_o date,
 				f_fl date,
 				f_orden date,
-				lugar_ce varchar(8),
-				ini_ce int2,
-				fin_ce int2,
 				situacion char(1),
 
 		$sqlLlenar="INSERT INTO $tabla 
 				SELECT p.id_nom,p.id_tabla,p.nom,p.apellido1,p.apellido2,p.stgr,
-				p.situacion,p.f_situacion,p.f_o,p.f_fl,p.f_orden,p.lugar_ce,p.ini_ce,p.fin_ce,p.situacion,p.sacd
+				p.situacion,p.f_situacion,p.f_o,p.f_fl,p.f_orden,p.ce_lugar,p.ce_ini,p.ce_fin,p.situacion,p.sacd
 				FROM $personas p
 				WHERE ((p.situacion='A' AND (p.f_situacion < '$fincurs' OR p.f_situacion IS NULL)) OR (p.situacion='D' AND (p.f_situacion $curs)) OR (p.situacion='L' AND (p.f_orden $curs)))
 				";
@@ -239,7 +235,8 @@ class Resumen Extends core\ClasePropiedades {
 		$sqlLlenar="INSERT INTO $tabla 
 				SELECT p.id_nom,p.id_tabla,p.nom,p.apellido1,p.apellido2,p.stgr,
 				p.situacion,p.f_situacion,
-				NULL,NULL,NULL,NULL,NULL,NULL,
+				NULL,NULL,NULL,
+				p.ce_lugar,p.ce_ini,p.ce_fin,
 				p.sacd
 				FROM $personas p
 				WHERE ((p.situacion='A' AND (p.f_situacion < '$fincurs' OR p.f_situacion IS NULL)) OR (p.situacion='D' AND (p.f_situacion $curs)))
@@ -255,7 +252,7 @@ class Resumen Extends core\ClasePropiedades {
 		//echo "qry: $ssql<br>";
 		$statement = $oDbl->query($ssql);
 		$nf=$statement->rowCount();
-		if ($lista && $nf!=0) {
+		if ($this->blista && $nf!=0) {
 			echo "<p>Existen $nf Alumnos que se han incorporado \"recientemente\" (desde el 1-junio) a la dl<br>
 					Sí se cuentan en la estadística.</p>";
 			// Para sacar una lista
@@ -270,7 +267,7 @@ class Resumen Extends core\ClasePropiedades {
 		$statement=$oDbl->query($ssql);
 		$nf=$statement->rowCount();
 		
-		if ($lista && $nf!=0) {
+		if ($this->blista && $nf!=0) {
 			echo "<p>Existen $nf alumnos que se han incorporado después del 1-OCT a la dl<br>
 					No se van a contar</p>";
 			// Para sacar una lista
@@ -439,7 +436,6 @@ class Resumen Extends core\ClasePropiedades {
 	}
 
 	public function enBienio() {
-		$lista = $this->blista;
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 
@@ -459,7 +455,6 @@ class Resumen Extends core\ClasePropiedades {
 	}
 
 	public function enCuadrienio($c='all') {
-		$lista = $this->blista;
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 		$where = '';
@@ -490,7 +485,6 @@ class Resumen Extends core\ClasePropiedades {
 	}
 
 	public function enRepaso() {
-		$lista = $this->blista;
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 
@@ -509,7 +503,6 @@ class Resumen Extends core\ClasePropiedades {
 		return $rta;
 	}
 	public function enTotal() {
-		$lista = $this->blista;
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 
@@ -528,7 +521,6 @@ class Resumen Extends core\ClasePropiedades {
 		return $rta;
 	}
 	public function enStgrSinO() {
-		$lista = $this->blista;
 		$iniverano = $this->diniverano;
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
@@ -553,18 +545,19 @@ class Resumen Extends core\ClasePropiedades {
 		return array('num'=>'?','lista'=>'falta poner fecha o en tablas');
 	}
 	public function enCe() {
-		$lista = $this->blista;
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
+		$ce_lugar = $this->getCe_lugar();
+		$any = $this->getAny();
 
-		/*
 	    $ssql="SELECT p.nom, p.apellido1, p.apellido2
 		FROM $tabla p
 		WHERE (p.stgr='b' OR p.stgr ILIKE 'c%')
-			AND ((p.lugar_ce='bm' AND p.fin_ce = '$any') OR p.situacion='n' OR p.situacion='m' OR p.situacion='k')
+			AND ((p.ce_lugar='$ce_lugar' AND p.ce_fin = '$any') OR p.situacion='n' OR p.situacion='m' OR p.situacion='k')
 		ORDER BY p.apellido1,p.apellido2,p.nom 
 		"; 
 
+		//echo "sql: $ssql<br>";
 		$statement = $oDbl->query($ssql);
 		$rta['num'] = $statement->rowCount();
 		if ($this->blista == true && $rta['num'] > 0) {
@@ -573,21 +566,19 @@ class Resumen Extends core\ClasePropiedades {
 			$rta['lista'] = '';
 		}
 		return $rta;
-		*/
-		return array('num'=>'?','lista'=>'falta poner lugar ce, fechas y vida familia en tablas');
 	}
 	public function aprobadasCe() {
-		$lista = $this->blista;
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 		$notas = $this->getNomNotas();
+		$ce_lugar = $this->getCe_lugar();
+		$any = $this->getAny();
 
-		/*
 	    $ssql="SELECT count(*)
 			FROM $tabla p, $notas n
 			WHERE p.id_nom=n.id_nom 
 				AND (n.id_nivel BETWEEN 1100 AND 1229 OR n.id_nivel BETWEEN 2100 AND 2429)
-				AND ((p.lugar_ce='bm' AND p.fin_ce = '$any') OR p.situacion='n' OR p.situacion='m' OR p.situacion='k')
+				AND ((p.ce_lugar='$ce_lugar' AND p.ce_fin = '$any') OR p.situacion='n' OR p.situacion='m' OR p.situacion='k')
 			 	AND (p.stgr='b' OR p.stgr ILIKE 'c%')
 			"; 
 
@@ -599,14 +590,11 @@ class Resumen Extends core\ClasePropiedades {
 			$rta['lista'] = '';
 		}
 		return $rta;
-		*/
-		return array('num'=>'?','lista'=>'falta poner lugar ce, fechas y vida familia en tablas');
 	}
 
 	public function bienioSinAcabar($actual=0) {
-		$lugar_ce = $this->getLugar_ce();
+		$ce_lugar = $this->getCe_lugar();
 		$any2 = $this->getAny2();
-		$lista = $this->blista;
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 		$notas = $this->getNomNotas();
@@ -620,17 +608,16 @@ class Resumen Extends core\ClasePropiedades {
 		$a_Asql = $statement->fetchAll();
 			
 		if ($actual == 1) {
-			/*
 			$ssql="SELECT p.id_nom, p.nom||' '||p.apellido1||' '||p.apellido2 as nom_ap, a.nombre_corto,a.id_nivel
 				FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom), $asignaturas a
-				WHERE  p.fin_ce=$any2 AND p.lugar_ce = '$lugar_ce' AND p.stgr = 'b'
+				WHERE  p.ce_fin='$any2' AND p.ce_lugar = '$ce_lugar' AND p.stgr = 'b'
 					AND n.id_nivel=a.id_nivel
 					AND a.id_nivel BETWEEN 1100 AND 1300
 				ORDER BY p.apellido1,p.apellido2,p.nom, a.id_nivel  "; 
 			$statement=$oDbl->query($ssql);
-			$rta['num'] = '';
-			*/
+			$rta['num'] = $statement->fetchColumn();
 
+			/*
 			$ssql="SELECT p.id_nom, p.nom||' '||p.apellido1||' '||p.apellido2 as nom_ap, a.nombre_corto,a.id_nivel
 				FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom), $asignaturas a
 				WHERE  p.stgr = 'b'
@@ -639,6 +626,8 @@ class Resumen Extends core\ClasePropiedades {
 				ORDER BY p.apellido1,p.apellido2,p.nom, a.id_nivel  "; 
 			$statement=$oDbl->query($ssql);
 			$rta['num'] = '';
+			 * 
+			 */
 
 			if ($this->blista == true && $rta['num'] > 0) {
 				$rta['lista'] = $this->ListaAsig($a_Asql,$statement);
@@ -647,16 +636,16 @@ class Resumen Extends core\ClasePropiedades {
 				$rta['lista'] = '';
 			}
 		} else {
-			/*
 			$ssql="SELECT p.id_nom, p.nom||' '||p.apellido1||' '||p.apellido2 as nom_ap, a.nombre_corto,a.id_nivel
 			FROM  $tabla p LEFT JOIN e_notas_dl n USING (id_nom), $asignaturas a
-			WHERE p.fin_ce != $any2	AND p.stgr = 'b'
+			WHERE p.ce_fin != '$any2' AND p.stgr = 'b'
 				AND n.id_nivel=a.id_nivel
 				AND a.id_nivel BETWEEN 1100 AND 1300
-			ORDER BY p.apellido1,p.apellido2,p.nom, a.id_nivel  "; 
+			ORDER BY p.apellido1,p.apellido2,p.nom, a.id_nivel"; 
 			$statement=$oDbl->query($ssql);
 			$rta['num'] = '';
-			*/
+			$rta['num'] = $statement->fetchColumn();
+			/*
 			$ssql="SELECT p.id_nom, p.nom||' '||p.apellido1||' '||p.apellido2 as nom_ap, a.nombre_corto,a.id_nivel
 			FROM  $tabla p LEFT JOIN e_notas_dl n USING (id_nom), $asignaturas a
 			WHERE p.stgr = 'b'
@@ -665,6 +654,8 @@ class Resumen Extends core\ClasePropiedades {
 			ORDER BY p.apellido1,p.apellido2,p.nom, a.id_nivel  "; 
 			$statement=$oDbl->query($ssql);
 			$rta['num'] = '';
+			 * 
+			 */
 
 			if ($this->blista == true && $rta['num'] > 0) {
 				$rta['lista'] = $this->ListaAsig($a_Asql,$statement);
@@ -674,14 +665,12 @@ class Resumen Extends core\ClasePropiedades {
 			}
 
 		}
-		//return $rta;
-		return array('num'=>'?','lista'=>'falta poner lugar ce, fechas y vida familia en tablas');
+		return $rta;
 	}
 
 
 
 	public function aprobadasBienio() {
-		$lista = $this->blista;
 		$oDbl = $this->getoDbl();
 		$notas = $this->getNomNotas();
 
@@ -700,7 +689,6 @@ class Resumen Extends core\ClasePropiedades {
 		return $rta;
 	}
 	public function aprobadasCuadrienio() {
-		$lista = $this->blista;
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 		$notas = $this->getNomNotas();
@@ -741,7 +729,6 @@ class Resumen Extends core\ClasePropiedades {
 		return $rta;
 	}
 	public function masCreditosQue($creditos = '28.5') {
-		$lista = $this->blista;
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 		$notas = $this->getNomNotas();
@@ -766,7 +753,6 @@ class Resumen Extends core\ClasePropiedades {
 		return $rta;
 	}
 	public function menosCreditosQue($creditos = '14') {
-		$lista = $this->blista;
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 		$notas = $this->getNomNotas();
@@ -791,7 +777,6 @@ class Resumen Extends core\ClasePropiedades {
 		return $rta;
 	}
 	public function ningunaSuperada() {
-		$lista = $this->blista;
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 		$notas = $this->getNomNotas();
@@ -813,7 +798,6 @@ class Resumen Extends core\ClasePropiedades {
 		return $rta;
 	}
 	public function conPreceptor() {
-		$lista = $this->blista;
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 		$notas = $this->getNomNotas();
@@ -834,7 +818,6 @@ class Resumen Extends core\ClasePropiedades {
 		return $rta;
 	}
 	public function terminadoCuadrienio() {
-		$lista = $this->blista;
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 		$notas = $this->getNomNotas();
@@ -857,7 +840,6 @@ class Resumen Extends core\ClasePropiedades {
 	}
 
 	public function laicosConCuadrienio() {
-		$lista = $this->blista;
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 		$notas = $this->getNomNotas();
@@ -1051,7 +1033,6 @@ class Resumen Extends core\ClasePropiedades {
 	
 	/*42. Número de profesores asistentes a congresos...*/
 	public function ProfesorCongreso() {
-		$lista = $this->blista;
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 		$notas = $this->getNomNotas();
@@ -1072,7 +1053,6 @@ class Resumen Extends core\ClasePropiedades {
 
 	// Profesores de Bienio.
 	public function ProfesoresEnBienio() {
-		$lista = $this->blista;
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 
@@ -1092,7 +1072,6 @@ class Resumen Extends core\ClasePropiedades {
 	}
 	// Profesores de Cuadrienio.
 	public function ProfesoresEnCuadrienio() {
-		$lista = $this->blista;
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 
@@ -1112,7 +1091,6 @@ class Resumen Extends core\ClasePropiedades {
 	}
 	// Numero de departamentos con director
 	public function Departamentos() {
-		$lista = $this->blista;
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 

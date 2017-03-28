@@ -23,8 +23,21 @@ use notas\model as notas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-//include ("./funciones_est.php");
-
+//por aproximación:
+$a_ce = array('dlb'=>'Barcelona',
+				'dlgr' => 'Granada',
+				'dlmE' => 'Madrid (E)',
+				'dlmO' => 'Madrid (O)',
+				'dlp' => 'Pamplona',
+				'dls' => 'Sevilla',
+				'dlst' => 'Santiago',
+				'dlv' => 'Valladolid',
+				'dlva' => 'Valencia',
+				'dlz' => 'Zaragoza'
+	);
+$mi_dl = core\ConfigGlobal::mi_dele();
+$ce = $a_ce[$mi_dl];
+	
 /* Cálculo del informe cr 22/97. 
 	Se coge a las personas que dependen de la dl en el momento actual (Fichero=A)
 	Se incluyen los que estuvieron en la dl (Fecha cambio fichero entre 1/10/97 - FechaActual/98) y van a otra r, ci, (fichero= E(n),G(agd))
@@ -49,7 +62,7 @@ $Resumen = new notas\Resumen('numerarios');
 $Resumen->setLista($lista);
 $Resumen->nuevaTabla();
 
-$Resumen->setLugar_ce('bm');
+$Resumen->setCe_lugar($ce);
 
 //1. Numerarios en Bienio
 $res[1] = $Resumen->enBienio();

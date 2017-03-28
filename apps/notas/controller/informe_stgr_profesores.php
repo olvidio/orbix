@@ -96,7 +96,7 @@ $profB = $a_profB['num'];
 $ResumenN = new notas\Resumen('numerarios');
 $ResumenN->setLista($lista);
 $ResumenN->nuevaTabla();
-$Resumen->setLugar_ce('bm');
+$Resumen->setCe_lugar('bm');
 $a_numB = $ResumenN->enBienio();
 $numB = $a_numB['num'];
 $ResumenA = new notas\Resumen('agregados');

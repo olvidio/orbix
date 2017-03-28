@@ -49,7 +49,7 @@ $Resumen = new notas\Resumen('agregados');
 $Resumen->setLista($lista);
 $Resumen->nuevaTabla();
 
-$Resumen->setLugar_ce('bm');
+//$Resumen->setCe_lugar('bm');
 
 //18. Agregados en Bienio
 $res[18] = $Resumen->enBienio();
