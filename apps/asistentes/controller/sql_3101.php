@@ -87,6 +87,7 @@ if (core\configGlobal::is_app_installed('actividadcargos')) {
 }
 if (core\configGlobal::is_app_installed('actividadestudios')) {
 	$a_botones[] = array( 'txt' => _('plan estudios'), 'click' =>"fnjs_matriculas(\"#seleccionados\",\"#frm_matriculas\")" );
+	$a_botones[] = array( 'txt' => _('e43'), 'click' =>"fnjs_e43(\"#seleccionados\",\"#frm_matriculas\")" );
 }
 
 $a_cabeceras=array( array('name'=>_("num"),'width'=>40), array('name'=>_("nombre y apellidos"),'width'=>300),array('name'=>_("propio"),'width'=>40),array('name'=>_("est. ok"),'width'=>40),array('name'=>_("falta"),'width'=>40),array('name'=>_("observ."),'width'=>150) );
@@ -740,6 +741,18 @@ fnjs_cerrar=function(){
 	$('#resto').removeClass('sombra');
 }
 
+fnjs_e43=function(frm_sel,frm_enviar){
+	rta=fnjs_solo_uno(frm_sel);
+	if (rta==1) {
+		var form=$(frm_sel).attr('id');
+		/* selecciono los elementos con class="sel" de las tablas del id=formulario */
+		var sel=$('#'+form+' input.sel:checked');
+		var id = sel.val();
+		$('#sel2').val(id);
+  		$(frm_enviar).attr('action',"apps/actividadestudios/controller/e43.php");
+  		fnjs_enviar_formulario(frm_enviar,'#main');
+  	}
+}
 fnjs_matriculas=function(frm_sel,frm_enviar){
 	rta=fnjs_solo_uno(frm_sel);
 	if (rta==1) {
