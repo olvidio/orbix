@@ -84,6 +84,7 @@ class PersonaOut Extends PersonaPub {
 		$aDades['profesion'] = $this->sprofesion;
 		$aDades['eap'] = $this->seap;
 		$aDades['observ'] = $this->sobserv;
+		$aDades['lugar_nacimiento'] = $this->slugar_nacimiento;
 		$aDades['profesor_stgr'] = $this->bprofesor_stgr;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
@@ -115,6 +116,7 @@ class PersonaOut Extends PersonaPub {
 					profesion                = :profesion,
 					eap                      = :eap,
 					observ                   = :observ,
+					lugar_nacimiento         = :lugar_nacimiento,
 					profesor_stgr            = :profesor_stgr";
 			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_nom='$this->iid_nom'")) === false) {
 				$sClauError = get_class($this).'.update.prepare';
@@ -131,8 +133,8 @@ class PersonaOut Extends PersonaPub {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_nom);
-			$campos="(id_nom,id_cr,id_tabla,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,lengua,situacion,f_situacion,apel_fam,inc,f_inc,stgr,edad,profesion,eap,observ,profesor_stgr)";
-			$valores="(:id_nom,:id_cr,:id_tabla,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:lengua,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:stgr,:edad,:profesion,:eap,:observ,:profesor_stgr)";
+			$campos="(id_nom,id_cr,id_tabla,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,lengua,situacion,f_situacion,apel_fam,inc,f_inc,stgr,edad,profesion,eap,observ,lugar_nacimiento,profesor_stgr)";
+			$valores="(:id_nom,:id_cr,:id_tabla,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:lengua,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:stgr,:edad,:profesion,:eap,:observ,:lugar_nacimiento,:profesor_stgr)";
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = get_class($this).'.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);

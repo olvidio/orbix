@@ -96,6 +96,7 @@ class PersonaPub Extends PersonaGlobal {
 		$aDades['profesion'] = $this->sprofesion;
 		$aDades['eap'] = $this->seap;
 		$aDades['observ'] = $this->sobserv;
+		$aDades['lugar_nacimiento'] = $this->slugar_nacimiento;
 		$aDades['profesor_stgr'] = $this->bprofesor_stgr;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
@@ -127,6 +128,7 @@ class PersonaPub Extends PersonaGlobal {
 					profesion                = :profesion,
 					eap                      = :eap,
 					observ                   = :observ,
+					lugar_nacimiento         = :lugar_nacimiento,
 					profesor_stgr            = :profesor_stgr";
 			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_nom='$this->iid_nom'")) === false) {
 				$sClauError = get_class($this).'.update.prepare';
@@ -143,8 +145,8 @@ class PersonaPub Extends PersonaGlobal {
 		} else {
 			// INSERT
 			//array_unshift($aDades, $this->iid_nom);
-			$campos="(id_cr,id_tabla,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,lengua,situacion,f_situacion,apel_fam,inc,f_inc,stgr,edad,profesion,eap,observ,profesor_stgr)";
-			$valores="(:id_cr,:id_tabla,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:lengua,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:stgr,:edad,:profesion,:eap,:observ,:profesor_stgr)";
+			$campos="(id_cr,id_tabla,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,lengua,situacion,f_situacion,apel_fam,inc,f_inc,stgr,edad,profesion,eap,observ,lugar_nacimiento,profesor_stgr)";
+			$valores="(:id_cr,:id_tabla,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:lengua,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:stgr,:edad,:profesion,:eap,:observ,:lugar_nacimiento,:profesor_stgr)";
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = get_class($this).'.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -248,6 +250,7 @@ class PersonaPub Extends PersonaGlobal {
 		if (array_key_exists('profesion',$aDades)) $this->setProfesion($aDades['profesion']);
 		if (array_key_exists('eap',$aDades)) $this->setEap($aDades['eap']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
+		if (array_key_exists('lugar_nacimiento',$aDades)) $this->setLugar_nacimiento($aDades['lugar_nacimiento']);
 		if (array_key_exists('profesor_stgr',$aDades)) $this->setProfesor_stgr($aDades['profesor_stgr']);
 	}
 
@@ -322,6 +325,7 @@ class PersonaPub Extends PersonaGlobal {
 		$oPersonaPubSet->add($this->getDatosProfesion());
 		$oPersonaPubSet->add($this->getDatosEap());
 		$oPersonaPubSet->add($this->getDatosObserv());
+		$oPersonaPubSet->add($this->getDatosLugar_nacimiento());
 		$oPersonaPubSet->add($this->getDatosProfesor_stgr());
 		return $oPersonaPubSet->getTot();
 	}

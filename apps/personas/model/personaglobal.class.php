@@ -175,6 +175,12 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @var string
 	 */
 	 protected $sobserv;
+	 /**
+	 * Lugar_nacimiento de PersonaDl
+	 *
+	 * @var string
+	 */
+	 protected $slugar_nacimiento;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
  	 /**
 	 * ApellidosNombre de Persona
@@ -697,6 +703,25 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	function setObserv($sobserv='') {
 		$this->sobserv = $sobserv;
 	}
+	/**
+	 * Recupera l'atribut slugar_nacimiento de PersonaDl
+	 *
+	 * @return integer slugar_nacimiento
+	 */
+	function getLugar_nacimiento() {
+		if (!isset($this->slugar_nacimiento)) {
+			$this->DBCarregar();
+		}
+		return $this->slugar_nacimiento;
+	}
+	/**
+	 * estableix el valor de l'atribut slugar_nacimiento de PersonaDl
+	 *
+	 * @param integer slugar_nacimiento='' optional
+	 */
+	function setLugar_nacimiento($slugar_nacimiento='') {
+		$this->slugar_nacimiento = $slugar_nacimiento;
+	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
 	/**
@@ -1031,7 +1056,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	function getDatosF_nacimiento() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_nacimiento'));
-		$oDatosCampo->setEtiqueta(_("f_nacimiento"));
+		$oDatosCampo->setEtiqueta(_("fecha nacimiento"));
 		return $oDatosCampo;
 	}
 	/**
@@ -1152,6 +1177,18 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'observ'));
 		$oDatosCampo->setEtiqueta(_("observ"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut slugar_nacimiento de PersonaDl
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return oject DatosCampo
+	 */
+	function getDatosLugar_nacimiento() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'lugar_nacimiento'));
+		$oDatosCampo->setEtiqueta(_("lugar nacimiento"));
 		return $oDatosCampo;
 	}
 }

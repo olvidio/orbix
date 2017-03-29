@@ -23,18 +23,24 @@ if (!is_object($oPersona)) {
 	$msg_err .= "<br>$oPersona con id_nom: $id_nom";
 }
 
-$nom=$oPersona->getApellidosNombre();
-//$lugar_naciemiento=$oPersona->getlugar_naciemiento();
-$lugar_naciemiento='';
-$f_naciemiento='res';
-//$f_naciemiento=$oPersona->getF_naciemiento();
-$txt_nacimiento = "$lugar_naciemiento ($f_naciemiento)";
+$nom=$oPersona->getNombreApellidos();
+$lugar_nacimiento=$oPersona->getLugar_nacimiento();
+$f_nacimiento=$oPersona->getF_nacimiento();
+$txt_nacimiento = "$lugar_nacimiento ($f_nacimiento)";
 
 $dl_origen = core\ConfigGlobal::mi_dele();
 $dl_destino = $oPersona->getDl();
 
 $oActividad = new actividades\model\Actividad($id_activ);
 $nom_activ = $oActividad->getNom_activ();
+$id_ubi = $oActividad->getId_ubi();
+$f_ini = $oActividad->getF_ini();
+$f_fin = $oActividad->getF_fin();
+$oUbi = ubis\model\Ubi::NewUbi($id_ubi);
+$lugar = $oUbi->getNombre_ubi();
+
+$txt_actividad = "$lugar, $f_ini-$f_fin";
+
 
 $GesMatriculas = new actividadestudios\model\GestorMatricula();
 $cMatriculas = $GesMatriculas->getMatriculas(array('id_nom'=>$id_nom, 'id_activ'=>$id_activ));
@@ -78,9 +84,10 @@ if (!empty($msg_err)) { echo $msg_err; }
 <thead>
 	<tr><td><?= _("Nombre y apellidos"); ?>:</td><td><?= $nom ?></td></tr>
 	<tr><td><?= _("Lugar y fecha de nacimiento"); ?>:</td><td><?= $txt_nacimiento ?></td></tr>
-	<tr><td><?= _("Fecha y lugar del sem, ca o cv"); ?>:</td><td><?= $txt_activ ?></td></tr>
+	<tr><td><?= _("Fecha y lugar del sem, ca o cv"); ?>:</td><td><?= $txt_actividad ?></td></tr>
 </thead>
 <tbody>
+	<tr></tr>
 	<tr><td><?=	strtoupper(_("asignatura")) ?> (1)</td>
 		<td><?=	strtoupper(_("calificación")) ?></td>
 		<td><?=	strtoupper(_("fecha del acta")) ?></td>

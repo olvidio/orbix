@@ -22,7 +22,7 @@ $cSituaciones = $GesSituacion->getSituaciones($aWhere);
 $campos_chk = 'sacd!profesor_stgr';
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('id_tabla!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!edad!f_situacion!inc!lengua!nom!nx1!nx2!observ!profesion!que!situacion!stgr!trato');
+$oHash->setcamposForm('id_tabla!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!lugar_nacimiento!edad!f_situacion!inc!lengua!nom!nx1!nx2!observ!profesion!que!situacion!stgr!trato');
 $oHash->setcamposNo('que!'.$campos_chk);
 $a_camposHidden = array(
 		'campos_chk'=>$campos_chk,
@@ -71,7 +71,8 @@ echo "</tr><tr>";
 echo web\dibujar_campo($obj,"nx2",7,1,0);
 echo web\dibujar_campo($obj,"apellido2",25,1,2);
 echo "</tr><tr>";
-echo web\dibujar_campo($obj,"f_nacimiento",11,1,1);
+echo web\dibujar_campo($obj,"lugar_nacimiento",15,1,1);
+echo web\dibujar_campo($obj,"f_nacimiento",11,1,0);
 echo web\dibujar_campo($obj,"edad",4,1,1);
 echo "</tr><tr>";
 ?>

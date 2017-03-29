@@ -27,12 +27,6 @@ class PersonaDl Extends PersonaGlobal {
 	 * @var integer
 	 */
 	 protected $iid_ctr;
-	/**
-	 * Lugar_nacimiento de PersonaDl
-	 *
-	 * @var string
-	 */
-	 protected $slugar_nacimiento;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
@@ -277,25 +271,6 @@ class PersonaDl Extends PersonaGlobal {
 	function setId_ctr($iid_ctr='') {
 		$this->iid_ctr = $iid_ctr;
 	}
-	/**
-	 * Recupera l'atribut slugar_nacimiento de PersonaDl
-	 *
-	 * @return integer slugar_nacimiento
-	 */
-	function getLugar_nacimiento() {
-		if (!isset($this->slugar_nacimiento)) {
-			$this->DBCarregar();
-		}
-		return $this->slugar_nacimiento;
-	}
-	/**
-	 * estableix el valor de l'atribut slugar_nacimiento de PersonaDl
-	 *
-	 * @param integer slugar_nacimiento='' optional
-	 */
-	function setLugar_nacimiento($slugar_nacimiento='') {
-		$this->slugar_nacimiento = $slugar_nacimiento;
-	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
 	/**
@@ -366,18 +341,6 @@ class PersonaDl Extends PersonaGlobal {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_ctr'));
 		$oDatosCampo->setEtiqueta(_("id_ctr"));
-		return $oDatosCampo;
-	}
-	/**
-	 * Recupera les propietats de l'atribut slugar_nacimiento de PersonaDl
-	 * en una clase del tipus DatosCampo
-	 *
-	 * @return oject DatosCampo
-	 */
-	function getDatosLugar_nacimiento() {
-		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'lugar_nacimiento'));
-		$oDatosCampo->setEtiqueta(_("lugar nacimiento"));
 		return $oDatosCampo;
 	}
 }
