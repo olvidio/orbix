@@ -75,19 +75,20 @@ if ($matriculas > 0) {
 }
 
 
-if (!empty($msg_err)) { echo $msg_err; }
+if (!empty($msg_err)) { echo $msg_err."<br>"; }
 
-echo "<br><span class='link' onclick=fnjs_update_div('#main','$go_to')>"._("volver")."</span>";
 ?>
+<span class='no_print link' onclick="fnjs_update_div('#main','<?= $go_to ?>');"><?= _("volver") ?></span>
 <br><br>
 <div class="A4">
 <table><tr><td><?= $dl_destino ?></td><td class="derecha"><?= $dl_origen ?></td></tr></table>
-
-<table style="width: 70%">
+<br><br>
+<table style="width: 80%">
 	<tr><td><?= _("Nombre y apellidos"); ?>:</td><td><?= $nom ?></td></tr>
 	<tr><td><?= _("Lugar y fecha de nacimiento"); ?>:</td><td><?= $txt_nacimiento ?></td></tr>
 	<tr><td><?= _("Fecha y lugar del sem, ca o cv"); ?>:</td><td><?= $txt_actividad ?></td></tr>
 </table>
+<br>
 <table class="calif">
 	<tr></tr>
 	<tr><td class="calif"><?=	strtoupper(_("asignatura")) ?> (1)</td>
