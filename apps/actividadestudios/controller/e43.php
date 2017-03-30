@@ -11,12 +11,11 @@ $msg_err = '';
 
 if (!empty($_POST['sel'])) { //vengo de un checkbox
 	$id_nom = strtok($_POST['sel'][0],"#");
-	$id_activ = strtok("#");
 } else {
 	$id_nom = (integer)  filter_input(INPUT_POST, 'id_nom');
-	$id_activ = (integer)  filter_input(INPUT_POST, 'id_pau');
 }
 $id_activ = (integer)  filter_input(INPUT_POST, 'id_pau');
+$go_to = (string)  filter_input(INPUT_POST, 'go_to');
 
 $oPersona = personas\model\Persona::NewPersona($id_nom);
 if (!is_object($oPersona)) {
@@ -77,39 +76,47 @@ if ($matriculas > 0) {
 
 
 if (!empty($msg_err)) { echo $msg_err; }
-?>
-<table><tr><td><?= $dl_destino ?></td><td><?= $dl_origen ?></td></tr></table>
 
-<table border="1">
-<thead>
+echo "<br><span class='link' onclick=fnjs_update_div('#main','$go_to')>"._("volver")."</span>";
+?>
+<br><br>
+<div class="A4">
+<table><tr><td><?= $dl_destino ?></td><td class="derecha"><?= $dl_origen ?></td></tr></table>
+
+<table class="semi">
 	<tr><td><?= _("Nombre y apellidos"); ?>:</td><td><?= $nom ?></td></tr>
 	<tr><td><?= _("Lugar y fecha de nacimiento"); ?>:</td><td><?= $txt_nacimiento ?></td></tr>
 	<tr><td><?= _("Fecha y lugar del sem, ca o cv"); ?>:</td><td><?= $txt_actividad ?></td></tr>
-</thead>
-<tbody>
+</table>
+<table class="calif">
 	<tr></tr>
-	<tr><td><?=	strtoupper(_("asignatura")) ?> (1)</td>
-		<td><?=	strtoupper(_("calificación")) ?></td>
-		<td><?=	strtoupper(_("fecha del acta")) ?></td>
-		<td><?=	strtoupper(_("nº del acta")) ?> (2)</td>
+	<tr><td class="calif"><?=	strtoupper(_("asignatura")) ?> (1)</td>
+		<td class="calif"><?=	strtoupper(_("calificación")) ?></td>
+		<td class="calif"><?=	strtoupper(_("fecha del acta")) ?></td>
+		<td class="calif"><?=	strtoupper(_("nº del acta")) ?> (2)</td>
 	</tr>
 <?php
 if ($matriculas > 0) {
 	$i=0;
 	foreach ($aAsignaturasMatriculadas as $key=>$aAsignaturas) {
 		echo "<tr>";
-		echo "<td>".$aAsignaturas['nom_asignatura']."</td>";
-		echo "<td>".$aAsignaturas['nota']."</td>";
-		echo "<td>".$aAsignaturas['f_acta']."</td>";
-		echo "<td>".$aAsignaturas['acta']."</td>";
+		echo "<td class='calif'>".$aAsignaturas['nom_asignatura']."</td>";
+		echo "<td class='calif'>".$aAsignaturas['nota']."</td>";
+		echo "<td class='calif'>".$aAsignaturas['f_acta']."</td>";
+		echo "<td class='calif'>".$aAsignaturas['acta']."</td>";
 		echo "</tr>";
 	}
 }
 ?>	
-</tbody></table>
+</table>
 <br>
+<table><tr><td>
 (1) Deben anotare todas las asignaturas previstas, indicando en las observaciones los eventuales cambios en el plan de estudios.
-<br>
+</td></tr>
+<tr><td>
 (2) Rellenar después del ca, en la dl que organizó el ca, antes de enviar a la dl de procedencia del alumno.
-<br>
+</td></tr>
+<tr><td class="centrado">
 (OBSERVACIONES AL DORSO)
+</td></tr></table>
+<div>

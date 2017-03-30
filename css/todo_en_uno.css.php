@@ -649,5 +649,18 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 		top: 33px;
 		right: -3px;
 	}
+	/*	### e43 ### */
+	table.calif {
+		font-size : 12pt;
+		border-style: solid;
+		border-width: 3px 3px 3px 3px;
+
+	}
+	td.calif {
+		font-size : 12pt;
+		border-style: solid;
+		border-width: 1px 1px 1px 1px;
+
+	}
 }
 </style> 

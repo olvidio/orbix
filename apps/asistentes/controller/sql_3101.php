@@ -50,9 +50,9 @@ $mi_dele = core\ConfigGlobal::mi_dele();
 //pongo aqui el $go_to porque al ir al mismo update que las actividaes, no se donde voler
 $a_dataUrl = array('queSel'=>'asis','pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$_POST['obj_pau'],'id_dossier'=>$id_dossier);
 $go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query($a_dataUrl));
+ 
 
 $gesAsistentes = new asistentes\GestorAsistente();
-
 // Permisos según el tipo de actividad
 $oActividad = new actividades\Actividad($id_pau);
 $id_tipo_activ = $oActividad->getId_tipo_activ();
