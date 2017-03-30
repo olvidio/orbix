@@ -83,7 +83,7 @@ echo "<br><span class='link' onclick=fnjs_update_div('#main','$go_to')>"._("volv
 <div class="A4">
 <table><tr><td><?= $dl_destino ?></td><td class="derecha"><?= $dl_origen ?></td></tr></table>
 
-<table class="semi">
+<table style="width: 70%">
 	<tr><td><?= _("Nombre y apellidos"); ?>:</td><td><?= $nom ?></td></tr>
 	<tr><td><?= _("Lugar y fecha de nacimiento"); ?>:</td><td><?= $txt_nacimiento ?></td></tr>
 	<tr><td><?= _("Fecha y lugar del sem, ca o cv"); ?>:</td><td><?= $txt_actividad ?></td></tr>
@@ -116,7 +116,7 @@ if ($matriculas > 0) {
 <tr><td>
 (2) Rellenar después del ca, en la dl que organizó el ca, antes de enviar a la dl de procedencia del alumno.
 </td></tr>
-<tr><td class="centrado">
+<tr><td class="centro">
 (OBSERVACIONES AL DORSO)
 </td></tr></table>
 <div>
