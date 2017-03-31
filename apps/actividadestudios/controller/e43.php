@@ -83,9 +83,12 @@ $h = $oHash->linkSinVal();
 if (!empty($msg_err)) { echo $msg_err."<br><br>"; }
 
 ?>
+<script>
+	fnjs_left_side_hide(); 
+</script>
 <br>
 <table class="no_print"><tr>
-	<td align="center"><input type="button" class=link onclick="fnjs_update_div('#main','<?= $go_to ?>')" value="<< <?= _("volver"); ?>" ></td>
+	<td align="left"><input type="button" class=link onclick="fnjs_update_div('#main','<?= $go_to ?>')" value="<< <?= _("volver"); ?>" ></td>
 	<td align="center"></td>
 	<td align="center"><span class=link onclick='window.open("<?= core\ConfigGlobal::getWeb() ?>/apps/actividadestudios/controller/e43_2_mpdf.php?id_nom=<?= $id_nom ?>&id_activ=<?= $id_activ ?>&go_to=<?= urlencode($go_to) ?><?= $h ?>&PHPSESSID=<?php echo session_id(); ?>", "sele");' >
 <?= _("PDF"); ?></span></td>
