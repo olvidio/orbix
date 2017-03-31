@@ -2,20 +2,12 @@
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
-
+	include_once(core\ConfigGlobal::$dir_estilos.'/e43_mpdf.css.php'); 
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $msg_err = '';
-
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	$id_nom = strtok($_POST['sel'][0],"#");
-} else {
-	$id_nom = (integer)  filter_input(INPUT_POST, 'id_nom');
-}
-$id_activ = (integer)  filter_input(INPUT_POST, 'id_pau');
-$go_to = (string)  filter_input(INPUT_POST, 'go_to');
 
 $oPersona = personas\model\Persona::NewPersona($id_nom);
 if (!is_object($oPersona)) {
@@ -73,28 +65,16 @@ if ($matriculas > 0) {
 } else {
 	$msg_err .= _("No hay ninguna matricula de esta persona");
 }
-
-$oHash = new web\Hash();
-$oHash->setUrl(core\ConfigGlobal::getWeb().'/apps/actividadestudios/controller/e43_2_mpdf.php');
-$oHash->setCamposForm('id_nom!id_activ!go_to');
-$h = $oHash->linkSinVal();
-
-
-if (!empty($msg_err)) { echo $msg_err."<br><br>"; }
+// Una line en blanco
+$aAsignaturasMatriculadas[] = array('nom_asignatura' => ' ',
+									'nota' => '',
+									'f_acta' => '',
+									'acta' => '');
 
 ?>
-<br>
-<table class="no_print"><tr>
-	<td align="center"><input type="button" class=link onclick="fnjs_update_div('#main','<?= $go_to ?>')" value="<< <?= _("volver"); ?>" ></td>
-	<td align="center"></td>
-	<td align="center"><span class=link onclick='window.open("<?= core\ConfigGlobal::getWeb() ?>/apps/actividadestudios/controller/e43_2_mpdf.php?id_nom=<?= $id_nom ?>&id_activ=<?= $id_activ ?>&go_to=<?= urlencode($go_to) ?><?= $h ?>&PHPSESSID=<?php echo session_id(); ?>", "sele");' >
-<?= _("PDF"); ?></span></td>
-</tr></table>
-<hr>
-
-<br>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <div class="A4">
-<table><tr><td><?= $dl_destino ?></td><td class="derecha"><?= $dl_origen ?></td></tr></table>
+<table class="A4"><tr><td><?= $dl_destino ?></td><td class="derecha"><?= $dl_origen ?></td></tr></table>
 <br><br>
 <table style="width: 80%">
 	<tr><td><?= _("Nombre y apellidos"); ?>:</td><td><?= $nom ?></td></tr>
