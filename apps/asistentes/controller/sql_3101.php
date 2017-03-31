@@ -87,7 +87,7 @@ if (core\configGlobal::is_app_installed('actividadcargos')) {
 }
 if (core\configGlobal::is_app_installed('actividadestudios')) {
 	$a_botones[] = array( 'txt' => _('plan estudios'), 'click' =>"fnjs_matriculas(\"#seleccionados\",\"#frm_matriculas\")" );
-	$a_botones[] = array( 'txt' => _('e43'), 'click' =>"fnjs_e43(\"#seleccionados\",\"#frm_matriculas\")" );
+	$a_botones[] = array( 'txt' => _('E43'), 'click' =>"fnjs_e43(\"#seleccionados\",\"#frm_matriculas\")" );
 }
 
 $a_cabeceras=array( array('name'=>_("num"),'width'=>40), array('name'=>_("nombre y apellidos"),'width'=>300),array('name'=>_("propio"),'width'=>40),array('name'=>_("est. ok"),'width'=>40),array('name'=>_("falta"),'width'=>40),array('name'=>_("observ."),'width'=>150) );
