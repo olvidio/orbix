@@ -36,7 +36,7 @@ $a_ce = array('dlb'=>'Barcelona',
 				'dlz' => 'Zaragoza'
 	);
 $mi_dl = core\ConfigGlobal::mi_dele();
-$ce = $a_ce[$mi_dl];
+$ce_lugar = $a_ce[$mi_dl];
 	
 /* Cálculo del informe cr 22/97. 
 	Se coge a las personas que dependen de la dl en el momento actual (Fichero=A)
@@ -47,22 +47,26 @@ $ce = $a_ce[$mi_dl];
 /* Pongo en la variable $curs el periodo del curso */
 $any=date("Y");
 $mes=date("m");
-if ($mes>9) {
-	$any1=$any+1; 
-	$curso_txt="$any-$any1";
-} else { 
-	$any1=$any-1;
+if ($mes>3) {
+	$any1=$any-1; 
 	$curso_txt="$any1-$any";
+	$any_ini_curs = $any1;
+} else { 
+	$any1=$any-2;
+	$any--;
+	$curso_txt="$any1-$any";
+	$any_ini_curs = $any1;
 }
 
 //crear la tabla temporal de numerarios y notas
 $lista = empty($_POST['lista'])? false : true;
 
 $Resumen = new notas\Resumen('numerarios');
+$Resumen->setAnyIniCurs($any_ini_curs);
 $Resumen->setLista($lista);
 $Resumen->nuevaTabla();
 
-$Resumen->setCe_lugar($ce);
+$Resumen->setCe_lugar($ce_lugar);
 
 //1. Numerarios en Bienio
 $res[1] = $Resumen->enBienio();
@@ -80,7 +84,7 @@ $a_textos[4] = _("Número de numerarios en stgr");
 $res[5] = $Resumen->enStgrSinO();
 $a_textos[5] = _("Numerarios del stgr sin la o");
 //6. Numerarios en el ce
-$res[6] = $Resumen->enCe();
+$res[6] = $Resumen->finCe();
 $a_textos[6] = _("Numerarios que estuvieron en el ce");
 //6.1. Rendimiento de los alumnos del ce
 $nce = $res[6]['num'];

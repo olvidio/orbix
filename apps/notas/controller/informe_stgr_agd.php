@@ -34,18 +34,21 @@ use notas\model as notas;
 /* Pongo en la variable $curs el periodo del curso */
 $any=date("Y");
 $mes=date("m");
-if ($mes>9) {
-	$any1=$any+1; 
-	$curso_txt="$any-$any1";
-} else { 
-	$any1=$any-1;
+if ($mes>3) {
+	$any1=$any-1; 
 	$curso_txt="$any1-$any";
+	$any_ini_curs = $any1;
+} else { 
+	$any1=$any-2;
+	$any--;
+	$curso_txt="$any1-$any";
+	$any_ini_curs = $any1;
 }
-
 //crear la tabla temporal de agregados y notas
 $lista = empty($_POST['lista'])? false : true;
 
 $Resumen = new notas\Resumen('agregados');
+$Resumen->setAnyIniCurs($any_ini_curs);
 $Resumen->setLista($lista);
 $Resumen->nuevaTabla();
 

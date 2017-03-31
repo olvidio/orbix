@@ -130,29 +130,29 @@ class Resumen Extends core\ClasePropiedades {
 	public function setCe_lugar($sce_lugar) {
 			$this->sce_lugar = $sce_lugar;
 	}
-	public function getAny() {
+	public function getAnyIniCurs() {
 		if (empty($this->iany)) {
 			$this->iany = date("Y");
 		}
 		return $this->iany;
 	}
-	public function setAny($iany) {
+	public function setAnyIniCurs($iany) {
 			$this->iany = $iany;
 	}
-	public function getAny2() {
+	public function getAnyFiCurs() {
 		if (empty($this->iany2)) {
-			$this->iany2 = date("y", mktime(0, 0, 0, 1, 1, $this->getAny()));
+			$this->iany2 = $this->getAnyIniCurs()+1 ;
 		}
 		return $this->iany2;
 	}
-	public function setAny2($iany2) {
+	public function setAnyFiCurs($iany2) {
 			$this->iany = $iany2;
 	}
 
 	public function getIniCurso() {
 		if (empty($this->dinicurso)) {
-			$any = $this->getAny();
-			$this->dinicurso= date("d/m/Y", mktime(0,0,0,10,1,$any-1)) ;
+			$any = $this->getAnyIniCurs();
+			$this->dinicurso= date("d/m/Y", mktime(0,0,0,10,1,$any)) ;
 		}
 		return $this->dinicurso;
 	}
@@ -161,7 +161,7 @@ class Resumen Extends core\ClasePropiedades {
 	}
 	public function getFinCurso() {
 		if (empty($this->dfincurso)) {
-			$any = $this->getAny();
+			$any = $this->getAnyFiCurs();
 			$this->dfincurso= date("d/m/Y", mktime(0,0,0,9,30,$any)) ;
 		}
 		return $this->dfincurso;
@@ -192,13 +192,13 @@ class Resumen Extends core\ClasePropiedades {
 		$curs = $this->getCurso();
 		$fincurs = $this->getFincurso();
 
-		$any = $this->getAny();
+		$any = $this->getAnyIniCurs();
 
 		$sqlDelete="DELETE FROM $tabla";
 		$sqlCreate="CREATE TABLE $tabla(
 										id_nom int4 NOT NULL PRIMARY KEY,
 										id_tabla char(6),
-										nom varchar(20),
+										nom varchar(40),
 										apellido1  varchar(25),
 										apellido2  varchar(25),
 										stgr char(2),
@@ -544,11 +544,11 @@ class Resumen Extends core\ClasePropiedades {
 		*/
 		return array('num'=>'?','lista'=>'falta poner fecha o en tablas');
 	}
-	public function enCe() {
+	public function finCe() {
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 		$ce_lugar = $this->getCe_lugar();
-		$any = $this->getAny();
+		$any = $this->getAnyFiCurs();
 
 	    $ssql="SELECT p.nom, p.apellido1, p.apellido2
 		FROM $tabla p
@@ -572,7 +572,7 @@ class Resumen Extends core\ClasePropiedades {
 		$tabla = $this->getNomTabla();
 		$notas = $this->getNomNotas();
 		$ce_lugar = $this->getCe_lugar();
-		$any = $this->getAny();
+		$any = $this->getAnyFiCurs();
 
 	    $ssql="SELECT count(*)
 			FROM $tabla p, $notas n
@@ -594,7 +594,7 @@ class Resumen Extends core\ClasePropiedades {
 
 	public function bienioSinAcabar($actual=0) {
 		$ce_lugar = $this->getCe_lugar();
-		$any2 = $this->getAny2();
+		$any = $this->getAnyFiCurs();
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 		$notas = $this->getNomNotas();
@@ -610,24 +610,12 @@ class Resumen Extends core\ClasePropiedades {
 		if ($actual == 1) {
 			$ssql="SELECT p.id_nom, p.nom||' '||p.apellido1||' '||p.apellido2 as nom_ap, a.nombre_corto,a.id_nivel
 				FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom), $asignaturas a
-				WHERE  p.ce_fin='$any2' AND p.ce_lugar = '$ce_lugar' AND p.stgr = 'b'
+				WHERE  p.ce_fin='$any' AND p.ce_lugar = '$ce_lugar' AND p.stgr = 'b'
 					AND n.id_nivel=a.id_nivel
 					AND a.id_nivel BETWEEN 1100 AND 1300
 				ORDER BY p.apellido1,p.apellido2,p.nom, a.id_nivel  "; 
 			$statement=$oDbl->query($ssql);
 			$rta['num'] = $statement->fetchColumn();
-
-			/*
-			$ssql="SELECT p.id_nom, p.nom||' '||p.apellido1||' '||p.apellido2 as nom_ap, a.nombre_corto,a.id_nivel
-				FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom), $asignaturas a
-				WHERE  p.stgr = 'b'
-					AND n.id_nivel=a.id_nivel
-					AND a.id_nivel BETWEEN 1100 AND 1300
-				ORDER BY p.apellido1,p.apellido2,p.nom, a.id_nivel  "; 
-			$statement=$oDbl->query($ssql);
-			$rta['num'] = '';
-			 * 
-			 */
 
 			if ($this->blista == true && $rta['num'] > 0) {
 				$rta['lista'] = $this->ListaAsig($a_Asql,$statement);
@@ -638,24 +626,13 @@ class Resumen Extends core\ClasePropiedades {
 		} else {
 			$ssql="SELECT p.id_nom, p.nom||' '||p.apellido1||' '||p.apellido2 as nom_ap, a.nombre_corto,a.id_nivel
 			FROM  $tabla p LEFT JOIN e_notas_dl n USING (id_nom), $asignaturas a
-			WHERE p.ce_fin != '$any2' AND p.stgr = 'b'
+			WHERE p.ce_fin IS NOT NULL AND p.ce_fin != '$any' AND p.stgr = 'b'
 				AND n.id_nivel=a.id_nivel
 				AND a.id_nivel BETWEEN 1100 AND 1300
 			ORDER BY p.apellido1,p.apellido2,p.nom, a.id_nivel"; 
 			$statement=$oDbl->query($ssql);
 			$rta['num'] = '';
 			$rta['num'] = $statement->fetchColumn();
-			/*
-			$ssql="SELECT p.id_nom, p.nom||' '||p.apellido1||' '||p.apellido2 as nom_ap, a.nombre_corto,a.id_nivel
-			FROM  $tabla p LEFT JOIN e_notas_dl n USING (id_nom), $asignaturas a
-			WHERE p.stgr = 'b'
-				AND n.id_nivel=a.id_nivel
-				AND a.id_nivel BETWEEN 1100 AND 1300
-			ORDER BY p.apellido1,p.apellido2,p.nom, a.id_nivel  "; 
-			$statement=$oDbl->query($ssql);
-			$rta['num'] = '';
-			 * 
-			 */
 
 			if ($this->blista == true && $rta['num'] > 0) {
 				$rta['lista'] = $this->ListaAsig($a_Asql,$statement);
