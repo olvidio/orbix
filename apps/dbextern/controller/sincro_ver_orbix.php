@@ -154,6 +154,7 @@ fnjs_submit=function(formulario,mov){
 ?>
 </table>
 <br>
+Por el momento estos botones no hacen nada.
 <input type="button" value="<?= _("borrar") ?>" onclick="">
 <input type="button" value="<?= _("trasladar") ?>" onclick="">
 <input type="button" value="<?= _("baja") ?>" onclick="">
