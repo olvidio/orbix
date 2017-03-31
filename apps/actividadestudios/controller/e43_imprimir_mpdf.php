@@ -76,7 +76,7 @@ $aAsignaturasMatriculadas[] = array('nom_asignatura' => ' ',
 <div class="A4">
 <table class="A4"><tr><td><?= $dl_destino ?></td><td class="derecha"><?= $dl_origen ?></td></tr></table>
 <br><br>
-<table style="width: 80%">
+<table class="cabecera">
 	<tr><td><?= _("Nombre y apellidos"); ?>:</td><td><?= $nom ?></td></tr>
 	<tr><td><?= _("Lugar y fecha de nacimiento"); ?>:</td><td><?= $txt_nacimiento ?></td></tr>
 	<tr><td><?= _("Fecha y lugar del sem, ca o cv"); ?>:</td><td><?= $txt_actividad ?></td></tr>
@@ -104,7 +104,7 @@ if ($matriculas > 0) {
 ?>	
 </table>
 <br>
-<table><tr><td>
+<table class="pie"><tr><td>
 (1) Deben anotare todas las asignaturas previstas, indicando en las observaciones los eventuales cambios en el plan de estudios.
 </td></tr>
 <tr><td>

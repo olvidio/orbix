@@ -25,13 +25,31 @@ table.A4 {
 	height: 95%;
 	padding:	0pt;
 	}
+table.cabecera {  
+	display: block;
+	margin-left:	0cm;
+	top: 0cm;
+	width: 98% ;
+	height: 95%;
+	padding:	0pt;
+	font-size: 12pt; 
+	}
+table.pie {  
+	display: block;
+	margin-left:	0cm;
+	top: 0cm;
+	width: 98% ;
+	height: 95%;
+	padding:	0pt;
+	font-size: 9pt; 
+	}
 table.calif {  
 	border-collapse: collapse;
 	margin-top: 0cm;
 	width: 99% ;
 	height: 12pt;
 	font-family: 'Times new Roman';
-	font-size: 12pt; 
+	font-size: 10pt; 
 	border-width : 1pt;
 	border-color : Black;
 	border-style : none;
@@ -44,7 +62,6 @@ td.calif {
 	border-style : solid;
 	border-width : thin;
 	height: 24pt;
-	margin: 0pt;
 	}
 td.derecha {
    text-align : right;
