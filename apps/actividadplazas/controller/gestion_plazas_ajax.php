@@ -83,7 +83,7 @@ switch ($que) {
 		$oDesplPosiblesPropietarios = $gesActividadPlazas->getPosiblesPropietarios($dl_de_paso);
 		$oDesplPosiblesPropietarios->setNombre('propietario');
 		$oDesplPosiblesPropietarios->setOpcion_sel($propietario);
-		$oDesplPosiblesPropietarios->setBlanco(0);
+		$oDesplPosiblesPropietarios->setBlanco(1);
 		echo $oDesplPosiblesPropietarios->desplegable();
 		break;
 }

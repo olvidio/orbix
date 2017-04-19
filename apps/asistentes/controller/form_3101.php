@@ -202,7 +202,7 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 ?>
 fnjs_cmb_propietario=function(){
 	var id_nom=$('#id_nom').val();
-	alert ('nom: '+id_nom);
+	//alert ('nom: '+id_nom);
 	var url='<?= $url_ajax ?>';
 	var parametros='que=lst_propietarios&id_nom='+id_nom+'&id_activ=<?= $id_activ ?><?= $h1 ?>&PHPSESSID=<?php echo session_id(); ?>';
 		 

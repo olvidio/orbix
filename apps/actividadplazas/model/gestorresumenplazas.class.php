@@ -104,7 +104,8 @@ class GestorResumenPlazas {
 			$ocu = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$mi_dl,$mi_dl);
 			$a_dl["$mi_dl>$mi_dl"] = "$mi_dl ($ocu de $pl_propias)";
 		}
-		//return $a_dl;
+		// Debe haber al menos un valor para que se pase el campo y no dé error de 'llega distinto número de campos...'
+		if (count($a_dl) == 0 ) $a_dl["nadie"] = "nadie";
 		return new \web\Desplegable('',$a_dl,'',true);
 	}
 	
