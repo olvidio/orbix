@@ -60,7 +60,7 @@ foreach ($cAsignaturas as $oAsignatura) {
 	$nombre_corto = $oAsignatura->getNombre_corto();
 	$creditos = $oAsignatura->getCreditos();
 	$year = $oAsignatura->getYear();
-	$aPendientes[$id_asignatura] = array(
+	$aPendientes[$id_nivel] = array(
 		'def' => array('nombre'=>$nombre_corto,
 						'creditos'=>$creditos,
 						'year'=>$year),
@@ -93,7 +93,7 @@ foreach ($cAsignaturasTodas as $oAsignatura) {
 	$a_Asig_status[$id_asignatura] = $oAsignatura->getStatus();
 	$a_Asig_nivel[$id_asignatura] = $oAsignatura->getId_nivel();
 }
-
+//print_r($a_Asig_nivel);
 
 $aWhere=array();
 $aOperador=array();
@@ -149,9 +149,9 @@ foreach ($cPersonas as $oPersona) {
 
 
 	foreach ($cAsignaturas as $oAsignatura) {
-		$id_asignatura = $oAsignatura->getId_asignatura();
-		if (empty($aAprobadas[$id_asignatura])) {
-			$aPendientes[$id_asignatura][$tipo]++;
+		$id_nivel = $oAsignatura->getId_nivel();
+		if (empty($aAprobadas[$id_nivel])) {
+			$aPendientes[$id_nivel][$tipo]++;
 		}
 	}
 }
@@ -170,7 +170,7 @@ $html = '<table>';
 	$html .= '<th>ac2</th>';
 	$html .= '<th>atotal</th>';
 	$html .= '</tr>';
-foreach ($aPendientes as $id_asignatura => $Pendientes) {
+foreach ($aPendientes as $id_nivel => $Pendientes) {
 	$asignatura = $Pendientes['def'];
 	//$html .= '<tr><td colspan=14>';
 	$html .= '<tr><td>';
