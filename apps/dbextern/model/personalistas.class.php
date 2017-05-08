@@ -412,13 +412,13 @@ class PersonaListas Extends core\ClasePropiedades {
 		//$nombres    = mb_convert_case($nombres, MB_CASE_TITLE, 'UTF-8');
 		//$apellidos  = mb_convert_case($apellidos, MB_CASE_TITLE, 'UTF-8');
 
-		$this->snombre = $nombre;
-		$this->sapellido1 = $apellido1;
-		$this->sapellido2 = $apellido2;
-		$this->snx1 = $nx1;
-		$this->snx2 = $nx2;
+		$this->snombre = trim($nombre);
+		$this->sapellido1 = trim($apellido1);
+		$this->sapellido2 = trim($apellido2);
+		$this->snx1 = trim($nx1);
+		$this->snx2 = trim($nx2);
 
-		return array('nombre'=>$nombre, 'apellido1'=>$apellido1, 'apellido2'=>$apellido2);
+		return array('nombre'=>$this->snombre, 'apellido1'=>$this->sapellido1, 'apellido2'=>$this->sapellido2);
 	}
 	
 	/* METODES PRIVATS ----------------------------------------------------------*/
