@@ -43,7 +43,7 @@ if (!empty($_POST['atras'])) {
 	$QsaWhere= $oPosicion->getParametro('saWhere');
 	$QsaOperador=$oPosicion->getParametro('saOperador');
 	$QsaWhereCtr=$oPosicion->getParametro('saWhereCtr');
-	$QsaOperadosCtr=$oPosicion->getParametro('saOperadosCtr');
+	$QsaOperadorCtr=$oPosicion->getParametro('saOperadorCtr');
 	$Qid_sel=$oPosicion->getParametro('id_sel');
 	$Qscroll_id = $oPosicion->getParametro('scroll_id');
 
