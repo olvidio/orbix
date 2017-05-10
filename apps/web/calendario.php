@@ -384,11 +384,11 @@ for ($f=0;$f<$max_filas;$f++) {
 				}
 			}
 		}
-		if ( $d>$total_dias && $texto) {} else { 
-			$dia=bcdiv (($d-1), $dd, 0);
-			$p=$d-(($dia)*$dd);
+		if ( $d>$total_dias && $texto) {} else {
+			$dia = \bcdiv (($d-1), $dd, 0);
+			$p = $d-(($dia)*$dd);
 			if ($p>1) {$p=2;}
-			$w=date("w",mktime(0,0,0,$mini_0,$dini_0+$dia,$aini_0));
+			$w = \date("w",mktime(0,0,0,$mini_0,$dini_0+$dia,$aini_0));
 			if ($w==1) { //el lunes he de poner la linea que separa las semanas.
 				$diumenge="diumenge".$p;
 			} else {
@@ -480,5 +480,3 @@ function clase($id_tipo_activ,$propio){
 	return $clase;
 }
 //-----------------------------------------------------------------------------------
-
-?>

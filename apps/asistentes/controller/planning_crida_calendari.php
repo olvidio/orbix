@@ -46,10 +46,18 @@ switch($_POST['modelo']) {
 }
 
 if (!empty($_POST['sel'])) { //vengo de un checkbox
+	$id_sel=$_POST['sel'];
 	// puede ser más de uno
-	$aid_nom = array();
-	foreach ($_POST['sel'] as $nom_sel) {
-		$aid_nom[] = $nom_sel;
+	if (is_array($id_sel) && count($id_sel) > 1) {
+		$aid_nom = array();
+		foreach ($_POST['sel'] as $nom_sel) {
+			$aid_nom[] = $nom_sel;
+		}
+	} else {
+		$aid_nom[] = $id_sel[0];
+		$oPosicion->addParametro('id_sel',$id_sel);
+		$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+		$oPosicion->addParametro('scroll_id',$scroll_id);
 	}
 }
 	
@@ -519,7 +527,7 @@ if ($_POST['tipo']=='planning_cdc' || $_POST['tipo']=='casa') {
 
 // En el caso de personas doy la opción de volver a los seleccionados.
 if ($_POST['tipo']=='planning' || $_POST['tipo']=='p_de_paso' ) {
-	echo $oPosicion->atras2();
+	echo $oPosicion->atras();
 }
 
 // Listo varios centros.

@@ -44,6 +44,8 @@ if (!empty($_POST['atras'])) {
 	$QsaOperador=$oPosicion->getParametro('saOperador');
 	$QsaWhereCtr=$oPosicion->getParametro('saWhereCtr');
 	$QsaOperadosCtr=$oPosicion->getParametro('saOperadosCtr');
+	$Qid_sel=$oPosicion->getParametro('id_sel');
+	$Qscroll_id = $oPosicion->getParametro('scroll_id');
 
 	$aWhere=unserialize(base64_decode($QsaWhere));
 	$aOperador=unserialize(base64_decode($QsaOperador));
@@ -165,6 +167,8 @@ $aGoBack = array (
 				'na'=>$Qna,
 				'inicio'=>$Qinicio,
 				'fin'=>$Qfin,
+				'periodo'=>$Qperiodo,
+				'year'=>$Qyear,
 				'saWhere'=>$QsaWhere,
 				'saOperador'=>$QsaOperador,
 				'saWhereCtr'=>$QsaWhereCtr,
@@ -186,6 +190,8 @@ $a_cabeceras=array( _("tipo"),
 
 $i=0;
 $a_valores=array();
+if (isset($Qid_sel) &&!empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 foreach ($cPersonas as $oPersona) {
 	$i++;
 	$id_nom=$oPersona->getId_nom();
@@ -210,11 +216,13 @@ $a_camposHidden = array(
 		'na' => $Qna,
 		'inicio' => $Qinicio,
 		'fin' => $Qfin,
+		'periodo' => $Qperiodo,
+		'year' => $Qyear,
 		'pau' => 'p',
-		'go_atras' => 'apps/asistentes/controller/planning_select.php'
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 
+//		'go_atras' => urlencode('apps/asistentes/controller/planning_select.php')
 /* ---------------------------------- html --------------------------------------- */
 $resultado=sprintf( _("%s personas encontradas"),$i);
 ?>
