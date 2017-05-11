@@ -93,7 +93,8 @@ if (empty($id)) {
 	$_SESSION['DBOrbix'] = $a_lista;
 }
 
-$max = count($_SESSION['DBOrbix'])-1;
+
+$max = count($_SESSION['DBOrbix']);
 
 $new_id = otro($id,$mov,$max);
 $persona_orbix = $_SESSION['DBOrbix'][$new_id];

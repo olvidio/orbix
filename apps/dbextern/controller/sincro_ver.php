@@ -134,18 +134,21 @@ if (empty($id)) {
 	$_SESSION['DBListas'] = $a_lista;
 }
 
-$max = count($_SESSION['DBListas'])-1;
+$max = count($_SESSION['DBListas']);
 
 $new_id = otro($id,$mov,$max);
 // Buscar coincidentes en orix
 $persona_listas = $_SESSION['DBListas'][$new_id];
 $apellido1_sinprep = $persona_listas['apellido1_sinprep'];
+// Si tiene más de una palabra cojo la priemra
+$tokens = explode(' ', $apellido1_sinprep);
+$apellido1_sinprep_c = $tokens[0];
 $id_nom_listas = $persona_listas['id_nom_listas'];
 $aWhere = array();
 $aOperador = array();
 $aWhere['id_tabla'] = $tipo_persona;
 $aWhere['situacion'] = 'A';
-$aWhere['apellido1'] = $apellido1_sinprep;
+$aWhere['apellido1'] = $apellido1_sinprep_c;
 $aOperador['apellido1'] = 'sin_acentos';
 $aWhere['_ordre'] = 'apellido1, apellido2, nom';
 

@@ -320,21 +320,23 @@ class PersonaListas Extends core\ClasePropiedades {
 	public function sinPrep($apellido) {
 		/* separar el apellidos completo en espacios */
 		$tokens = explode(' ', trim($apellido));
-		$names = array();
+		$names = "";
 		/* palabras de apellidos compuetos */
 		$special_tokens = array('da', 'de', 'del', 'la', 'las', 'los', 'mac', 'mc', 'van', 'von', 'y', 'i', 'san', 'santa');
 
-		$prev = "";
+		//Sólo si la prep está al inicio
+		$i=0;
 		foreach($tokens as $token) {
-		  $_token = strtolower($token);
-		  if(in_array($_token, $special_tokens)) {
-			  $prev .= "$token ";
-		  } else {
-			  $names[] = $token;
-			  $prev = "";
-		  }
+			if ($i == 0) {
+			  $_token = strtolower($token);
+			  if(in_array($_token, $special_tokens)) {
+				  continue;
+			  }
+			}
+		    $names .= " ".$token;
+		    $i++;
 		}
-		return $names[0];
+		return trim($names);
 	}
 
 	public function dividirNombreCompleto() {	
