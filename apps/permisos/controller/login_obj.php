@@ -279,6 +279,8 @@ if ( !isset($_SESSION['session_auth'])) {
 						}
 						/* para la traducción. Después de registrar session_auth */
 						cambiar_idioma();
+						/* a ver si memoriza el esquema al que entro */
+						setcookie("esquema", $esquema, time() + (86400 * 30), "/"); // 86400 = 1 day
 					} else {
 						$variables = array('error'=>1);
 						$variables['DesplRegiones'] = posibles_esquemas($esquema);
@@ -295,7 +297,12 @@ if ( !isset($_SESSION['session_auth'])) {
 				}
 		}
 	} else { // el primer cop
-		$a_campos['DesplRegiones'] = posibles_esquemas();
+		if(!isset($_COOKIE["esquema"])) {
+			$esquema = "";
+		} else {
+			$esquema = $_COOKIE["esquema"];
+		}
+		$a_campos['DesplRegiones'] = posibles_esquemas($esquema);
 		$oView = new core\View(__NAMESPACE__);
 		echo $oView->render('login_form.phtml',$a_campos);
 		exit;
