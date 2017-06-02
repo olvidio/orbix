@@ -40,7 +40,6 @@ $lugar = $oUbi->getNombre_ubi();
 
 $txt_actividad = "$lugar, $f_ini-$f_fin";
 
-
 $GesMatriculas = new actividadestudios\model\GestorMatricula();
 $cMatriculas = $GesMatriculas->getMatriculas(array('id_nom'=>$id_nom, 'id_activ'=>$id_activ));
 $matriculas=count($cMatriculas);
