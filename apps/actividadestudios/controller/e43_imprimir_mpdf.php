@@ -73,6 +73,7 @@ $aAsignaturasMatriculadas[] = array('nom_asignatura' => ' ',
 
 ?>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<div id="exportar">
 <div class="A4">
 <table class="A4"><tr><td><?= $dl_destino ?></td><td class="derecha"><?= $dl_origen ?></td></tr></table>
 <br><br>
@@ -113,4 +114,5 @@ if ($matriculas > 0) {
 <tr><td class="centro">
 (OBSERVACIONES AL DORSO)
 </td></tr></table>
+<div>
 <div>

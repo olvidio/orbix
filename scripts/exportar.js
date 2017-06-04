@@ -238,7 +238,6 @@ function fnjs_convert(node){
 			//if (rec<30) alert ("tag: "+tag+"\nhtml: "+$(node).html());
 			break;
 	}
-	//alert ("rec: "+rec+" txt:\n"+rta);
 	tag="";
 	return rta;
 }
@@ -276,11 +275,11 @@ function fnjs_exportar(formato){
 	if(!(export_modo=$(bloque).attr('export_modo'))) {
 		export_modo="texto";
 	}
+
 	$(bloque+" > *").filter(":visible").each(function(i){
 		txt+=fnjs_convert(this);
 	});
 
-	//alert ("rta:\n"+txt);
 	//return;
 	//var myText=$(bloque).html();;
 	
@@ -363,6 +362,7 @@ function fnjs_exportar(formato){
 			}
 			break;
 	}
+	//alert ("rta:\n"+txt);
 
 	//var parametros='formato='+formato+'&ex=operario';
 	$('#frm_export_orientation').val(orientation);

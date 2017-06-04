@@ -79,7 +79,7 @@ $oHash->setCamposForm('id_nom!id_activ!go_to');
 $h = $oHash->linkSinVal();
 
 
-if (!empty($msg_err)) { echo $msg_err."<br><br>"; }
+if (!empty($msg_err)) { echo $msg_err."<br><br>";  }
 
 ?>
 <script>
@@ -95,6 +95,7 @@ if (!empty($msg_err)) { echo $msg_err."<br><br>"; }
 <hr>
 
 <br>
+<div id="exportar">
 <div class="A4">
 <table><tr><td><?= $dl_destino ?></td><td class="derecha"><?= $dl_origen ?></td></tr></table>
 <br><br>
@@ -135,4 +136,5 @@ if ($matriculas > 0) {
 <tr><td class="centro">
 (OBSERVACIONES AL DORSO)
 </td></tr></table>
+<div>
 <div>
