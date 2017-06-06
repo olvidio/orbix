@@ -432,10 +432,10 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 		$resumen_plazas = '';
 		foreach ($a_plazas_resumen as $padre => $aa) {
 			if ($padre != $mi_dele && $mi_dele != $dl_org) {	continue; }
-			$calendario = empty($aa['calendario'])? '' : $aa['calendario']; // calendario.
-			$conseguidas = empty($aa['conseguidas'])? '' : $aa['conseguidas']; // conseguidas.
-			$total_cedidas = empty($aa['total_cedidas'])? '' : $aa['total_cedidas'];
-			$disponibles = empty($aa['disponibles'])? '' : $aa['disponibles'];
+			$calendario = empty($aa['calendario'])? 0 : $aa['calendario']; // calendario.
+			$conseguidas = empty($aa['conseguidas'])? 0 : $aa['conseguidas']; // conseguidas.
+			$total_cedidas = empty($aa['total_cedidas'])? 0 : $aa['total_cedidas'];
+			$disponibles = empty($aa['disponibles'])? 0 : $aa['disponibles'];
 			$json_cedidas = empty($aa['json_cedidas'])? '' : $aa['json_cedidas'];
 			$total = $calendario + $conseguidas;
 			$aCed = array();
