@@ -61,8 +61,14 @@ $plazas_totales = $oActividad->getPlazas();
 if (empty($plazas_totales)) {
 	$id_ubi = $oActividad->getId_ubi();
 	$oCasa = ubis\model\Ubi::NewUbi($id_ubi);
-	$plazas_max = $oCasa->getPlazas();
-	$plazas_min = $oCasa->getPlazas_min();
+	// A veces por error se puede poner una actividad a un ctr...
+	if (method_exists($oCasa,'getPlazas')) {
+		$plazas_max = $oCasa->getPlazas();
+		$plazas_min = $oCasa->getPlazas_min();
+	} else {
+		$plazas_max = '';
+		$plazas_min = '';
+	}
 	$plazas_txt = _("Plazas casa (max - min)").": ";
 	$plazas_txt .= !empty($plazas_max)? $plazas_max : '?';
 	$plazas_txt .= !empty($plazas_min)? ' - '.$plazas_min : '';
