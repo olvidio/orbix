@@ -25,6 +25,7 @@ if (empty($_POST['es_sacd'])) $_POST['es_sacd']="";
 if (empty($_POST['na'])) $_POST['na']="";
 if (empty($_POST['breve'])) $_POST['breve']="";
 if (empty($_POST['que'])) $_POST['que']="";
+if (empty($_POST['tipo'])) $_POST['tipo']="";
 if (!empty($_POST['tabla'])) {
 	empty($_POST['tabla'])? $tabla="" : $tabla=$_POST['tabla'];
 	$nom_tabla=substr($tabla,2);

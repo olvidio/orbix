@@ -10,7 +10,8 @@
 // Debo incluuirlo aqui por que se abre en una página nueva
 include_once(core\ConfigGlobal::$dir_estilos.'/todo_en_uno.css.php');
 
-switch($_REQUEST['ssfsv']){
+$ssfsv = empty($_REQUEST['ssfsv'])? '' : $_REQUEST['ssfsv'];
+switch($ssfsv){
 	case "sv":
 		$donde_sfsv="AND sv='t'";
 		break;
@@ -18,7 +19,7 @@ switch($_REQUEST['ssfsv']){
 		$donde_sfsv="AND sf='t'";
 		break;
 	default:
-		$donde_sfsv;
+		$donde_sfsv='';
 }
 
 if (!empty($_REQUEST['dl_org'])) {
@@ -163,7 +164,7 @@ fnjs_enviar_form=function(id_form,bloque){
 fnjs_lugar=function(){
 	//var sfsv=$('#sfsv_val').val();
 	var isfsv=<?php
-		switch ($_REQUEST['ssfsv']) {
+		switch ($ssfsv) {
 			case "sv":
 				echo 1;
 				break;
