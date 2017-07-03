@@ -506,7 +506,7 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 				$ocupadas_otra = 0;
 				// ocupadas por la dl padre
 				foreach ($a_dl_plazas as $dl3 => $pla) {
-					$plazas = $pla['ocupadas'];
+					$plazas = empty($pla['ocupadas'])? array() : $pla['ocupadas'];
 					foreach ($plazas as $dl => $pl) {
 						foreach ($pl as $plaza => $num) {
 							if ($plaza == 1) { $decidir += $num; }
