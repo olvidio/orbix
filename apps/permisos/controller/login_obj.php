@@ -1,5 +1,6 @@
 <?php
 namespace permisos\controller;
+
 use permisos\model as permisos;
 use usuarios\model as usuarios;
 use menus\model as menus;
@@ -26,7 +27,7 @@ $_SESSION['config']=$session_config;
 function posibles_esquemas($default='') {
 	$txt = '';
 	// Lista de posibles esquemas (en comun)
-	$oDBP = new \PDO(core\ConfigGlobal:: $str_conexio_public);
+	$oDBP = new \PDO(core\ConfigGlobal::$str_conexio_public);
 	$sQuery = "select nspname from pg_namespace where nspowner > 1000 ORDER BY nspname";
 	if (($oDblSt = $oDBP->query($sQuery)) === false) {
 		$sClauError = 'Schemas.lista';
@@ -84,7 +85,7 @@ function cambiar_idioma() {
 
 // APLICACIONES POSIBLES
 function getAppsPosibles () {
-	$oDBP = new \PDO(core\ConfigGlobal:: $str_conexio_public);
+	$oDBP = new \PDO(core\ConfigGlobal::$str_conexio_public);
 	$sQuery = "SELECT * FROM m0_apps";
 	$a_apps=array();
 	foreach ($oDBP->query($sQuery) as $aDades) {
@@ -96,7 +97,7 @@ function getAppsPosibles () {
 
 // MODULOS POSIBLES
 function getModsPosibles () {
-	$oDBP = new \PDO(core\ConfigGlobal:: $str_conexio_public);
+	$oDBP = new \PDO(core\ConfigGlobal::$str_conexio_public);
 	$sQuery = "SELECT * FROM m0_modulos";
 	$a_mods=array();
 	$a_mods_req=array();
@@ -193,7 +194,7 @@ if ( !isset($_SESSION['session_auth'])) {
 					if ($oCrypt->encode($_POST['password'],$sPasswd) == $sPasswd) {
 						$id_usuario = $row['id_usuario'];
 						$id_role = $row['id_role'];
-						$oDBP = new \PDO(core\ConfigGlobal:: $str_conexio_public);
+						$oDBP = new \PDO(core\ConfigGlobal::$str_conexio_public);
 						$queryr="SELECT * FROM aux_roles WHERE id_role = $id_role";
 						if (($oDBPSt= $oDBP->query($queryr)) === false) {
 							$sClauError = 'login_obj.prepare';

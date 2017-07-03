@@ -22,6 +22,7 @@ use permisos\model as permisos;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $titulo = 0;
+$pagina = '';
 
 $GesModulos = new devel\GestorModulo();
 $cModulos = $GesModulos->getModulos();
@@ -93,4 +94,5 @@ echo $oTabla->mostrar_tabla();
 ?>
 </form>
 <br><table><tr><th>
-<span class=link_inv onclick="fnjs_update_div('#main','<?= $pagina ?>');"><?= core\strtoupper_dlb(_("Guardar")) ?></span>
+<span class=link_inv onclick="fnjs_update_div('#main','<?= $pagina ?>');"> 
+		<?= core\strtoupper_dlb(_("Guardar")) ?></span>
