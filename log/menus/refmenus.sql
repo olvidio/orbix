@@ -178,9 +178,7 @@
 915	{10,60}	importar desde ficheros	accion=importar	64	33554432	13	t
 918	{10,40}	profesor para asignatura	\N	171	16	12	t
 152	{90,70}	actualizar docencia	\N	52	16	12	t
-917	{80,120}	Balance de plazas	id_tipo_activ=112	170	128	2	t
-916	{80,110}	Gestión de plazas	id_tipo_activ=112	169	128	2	t
-919	{80,130}	Incorporar 1ª peticion	tipo_activ=ca&na=n	172	128	2	t
+917	{80,120}	Balance de plazas	sfsv=sv&sasistentes=n&sactividad=ca	170	128	2	t
 920	{10,50}	claustro	\N	173	16	12	t
 921	{20,50}	resumen pendientes	\N	174	16	12	t
 922	{20,60}	buscar asig. pendientes	\N	175	16	12	t
@@ -189,3 +187,14 @@
 415	{91,20}	Actualizar datos desde Listas	tipo=s	176	64	10	t
 819	{1,20}	exportar	\N	\N	33816575	1	t
 924	{1,20,20}	a ODF Text	\N	163	34078719	1	t
+925	{80,110}	Gestión de plazas	ssfsv=sv&sasistentes=n&sactividad=ca	169	128	2	t
+926	{70,110}	Gestión de plazas	ssfsv=sv&sasistentes=n&sactividad=crt	169	128	2	t
+927	{70,120}	Balance de plazas	ssfsv=sv&sasistentes=n&sactividad=crt	170	128	2	t
+928	{70,130}	Incorporar 1ª petición	sasistentes=n&sactividad=crt	172	128	2	t
+919	{80,130}	Incorporar 1ª petición	sasistentes=n&sactividad=ca	172	128	2	t
+930	{70,120}	Balance de plazas	ssfsv=sv&sasistentes=agd&sactividad=crt	170	2	3	t
+929	{70,130}	Incorporar 1ª petición	sasistentes=agd&sactividad=crt	172	2	3	t
+931	{70,110}	Gestión de plazas	ssfsv=sv&sasistentes=agd&sactividad=crt	169	2	3	t
+933	{80,120}	Balance de plazas	ssfsv=sv&sasistentes=agd&sactividad=cv	170	2	3	t
+932	{80,110}	Gestión de plazas	ssfsv=sv&sasistentes=agd&sactividad=cv	169	2	3	t
+934	{80,130}	Incorporar 1ª petición	sasistentes=agd&sactividad=cv	172	2	3	t
