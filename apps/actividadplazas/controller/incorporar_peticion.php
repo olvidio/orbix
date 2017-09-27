@@ -21,37 +21,46 @@ use personas\model as personas;
 
 /* Validate inputs $b = (string)filter_input(INPUT_GET, 'b'); */
 	
-$tipo_activ = (string)  filter_input(INPUT_POST, 'tipo_activ');
-$na = (string)  filter_input(INPUT_POST, 'na');
+$sactividad = (string)  filter_input(INPUT_POST, 'sactividad');
+$sasistentes = (string)  filter_input(INPUT_POST, 'sasistentes');
+
+$mi_sfsv = core\ConfigGlobal::mi_sfsv();
+if ($mi_sfsv == 1) $ssfsv = 'sv';
+if ($mi_sfsv == 2) $ssfsv = 'sf';
+$snom_tipo = '...';
+$oTipoActiv= new web\TiposActividades();
+$oTipoActiv->setSfsvText($ssfsv);
+$oTipoActiv->setAsistentesText($sasistentes);
+$oTipoActiv->setActividadText($sactividad);
+$Qid_tipo_activ=$oTipoActiv->getId_tipo_activ();
+$Qid_tipo_activ =  '^'.$Qid_tipo_activ;
 
 /* Pongo en la variable $curso el periodo del curso */
-$mes=date('m');
-$any=date('Y');
-if ($mes>9) { $any=$any+1; } 
-$inicurs_ca=core\curso_est("inicio",$any);
-$fincurs_ca=core\curso_est("fin",$any);
+$any=  core\ConfigGlobal::any_final_curs();
+switch ($sactividad) {
+	case 'ca':
+	case 'cv':
+		$inicurs=core\curso_est("inicio",$any,"est");
+		$fincurs=core\curso_est("fin",$any,"est");
+		break;
+	case 'crt':
+		$inicurs=core\curso_est("inicio",$any,"crt");
+		$fincurs=core\curso_est("fin",$any,"crt");
+		break;
+}
 
 //Actividades a las que afecta
 $cActividades = array();
-$sfsv = core\ConfigGlobal::mi_sfsv();
 $aWhereA['status'] = 2;
-$aWhereA['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
+$aWhereA['f_ini'] = "'$inicurs','$fincurs'";
 $aOperadorA['f_ini'] = 'BETWEEN';
-switch ($na) {
+switch ($sasistentes) {
 	case "agd":
 	case "a":
 		//caso de agd
 		$id_tabla_persona='a'; //el id_tabla entra en conflicto con el de actividad
 		$tabla_pau='p_agregados';
-		switch ($tipo_activ) {
-			case 'ca': //133
-				$id_tipo_activ = '^'.$sfsv.'33';
-				break;
-			case 'crt':
-				$id_tipo_activ = '^'.$sfsv.'31';
-				break;
-		}
-		$aWhereA['id_tipo_activ'] = $id_tipo_activ;
+		$aWhereA['id_tipo_activ'] = $Qid_tipo_activ;
 		$aOperadorA['id_tipo_activ'] = '~';
 		$GesActividades = new actividades\GestorActividadPub();
 		$cActividades = $GesActividades->getActividades($aWhereA,$aOperadorA);
@@ -60,15 +69,7 @@ switch ($na) {
 		// caso de n
 		$id_tabla_persona='n';
 		$tabla_pau='p_numerarios';
-		switch ($tipo_activ) {
-			case 'ca': //112
-				$id_tipo_activ = '^'.$sfsv.'12';
-				break;
-			case 'crt':
-				$id_tipo_activ = '^'.$sfsv.'11';
-				break;
-		}
-		$aWhereA['id_tipo_activ'] = $id_tipo_activ;
+		$aWhereA['id_tipo_activ'] = $Qid_tipo_activ;
 		$aOperadorA['id_tipo_activ'] = '~';
 		$GesActividades = new actividades\GestorActividadPub();
 		$cActividades = $GesActividades->getActividades($aWhereA,$aOperadorA);
@@ -81,7 +82,7 @@ foreach ($cActividades as $oActividad) {
 
 //Miro las peticiones actuales
 $gesPlazasPeticion = new \actividadplazas\model\GestorPlazaPeticion();
-$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('tipo'=>$tipo_activ,'_ordre'=>'orden'));
+$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('tipo'=>$sactividad,'_ordre'=>'orden'));
 $id_nom_old = 0;
 $msg_err = '';
 foreach ($cPlazasPeticion as $oPlazaPeticion) {
@@ -182,7 +183,7 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
 	}
 }
 
-$txt = sprintf(_("No se incorporan las peticiones si la persona ya tiene una actividad como propia en el periodo: %s - %s."),$inicurs_ca,$fincurs_ca);
+$txt = sprintf(_("No se incorporan las peticiones si la persona ya tiene una actividad como propia en el periodo: %s - %s."),$inicurs,$fincurs);
 if (!empty($msg_err)) { echo $msg_err; }
 ?>
 <script>

@@ -10,7 +10,10 @@
 // FIN de  Cabecera global de URL de controlador ********************************
 
 // Sólo las del tipo...
-$Qid_tipo_activ = empty($_POST['Qid_tipo_activ'])? '' : '^'.$_POST['Qid_tipo_activ'];
+$Qid_tipo_activ = empty($_POST['Qid_tipo_activ'])? '' : $_POST['Qid_tipo_activ'];
+
+$oTipoActiv= new web\TiposActividades($Qid_tipo_activ);
+$sactividad = $oTipoActiv->getActividadText();
 
 $dlA = core\ConfigGlobal::mi_dele();
 if (empty($_POST['dl'])) {
@@ -22,20 +25,20 @@ if (empty($_POST['dl'])) {
 if ($dlA == $dlB) {	exit(); }
 
 //periodo
-//case "curso_ca":
-$mes = date("m");
-$any = date("Y");
-$ini = core\ConfigGlobal::$est_inicio;
-$fi = core\ConfigGlobal::$est_fin;
-if ($mes>9) {
-	$any2=$any+1;
-	$inicio = "$ini/$any";	
-	$fin = "$fi/$any2";
-} else {
-	$any2=$any-1;
-	$inicio = "$ini/$any2";	
-	$fin = "$fi/$any";
+
+$any=  core\ConfigGlobal::any_final_curs();
+switch ($sactividad) {
+	case 'ca':
+	case 'cv':
+		$inicurs=core\curso_est("inicio",$any,"est");
+		$fincurs=core\curso_est("fin",$any,"est");
+		break;
+	case 'crt':
+		$inicurs=core\curso_est("inicio",$any,"crt");
+		$fincurs=core\curso_est("fin",$any,"crt");
+		break;
 }
+
 $status = 2; //actual
 
 // Seleccionar los id_dl del mismo grupo de estudios
@@ -65,7 +68,7 @@ foreach ($cDelegaciones as $oDelegacion) {
 	$aWhere =array('dl_org'			=>$dl,
 					'id_tipo_activ'	=>$id_tipo_activ,
 					'status' 		=> $status,
-					'f_ini' 		=> "'$inicio','$fin'",
+					'f_ini' 		=> "'$inicurs','$fincurs'",
 					'_ordre'		=>'f_ini');
 	$aOperador = array('id_tipo_activ'=>'~', 'f_ini'=>'BETWEEN');
 	$cActividades1 = $gesActividades->getActividades($aWhere,$aOperador);
@@ -74,7 +77,7 @@ foreach ($cDelegaciones as $oDelegacion) {
 }
 */
 function PlazasAB_por_actividad($dlA,$dlB,$clase) {
-	global $mi_dl,$Qid_tipo_activ,$status,$inicio,$fin;
+	global $mi_dl,$Qid_tipo_activ,$status,$inicurs,$fincurs;
 	global $gesDelegacion;
 	global $gesActividades;
 	global $gesActividadPlazas;
@@ -89,9 +92,9 @@ function PlazasAB_por_actividad($dlA,$dlB,$clase) {
 	$id_dlB = $oDelegacionB->getId_dl();
 	
 	$aWhereA =array('dl_org'	=> $dlA,
-				'id_tipo_activ'	=> $Qid_tipo_activ,
+				'id_tipo_activ'	=> '^'.$Qid_tipo_activ,
 				'status' 		=> $status,
-				'f_ini' 		=> "'$inicio','$fin'",
+				'f_ini' 		=> "'$inicurs','$fincurs'",
 				'_ordre'		=>'f_ini');
 	$aOperador = array('id_tipo_activ'=>'~', 'f_ini'=>'BETWEEN');
 	$cActividadesA = $gesActividades->getActividades($aWhereA,$aOperador);

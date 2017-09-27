@@ -10,8 +10,42 @@
 // FIN de  Cabecera global de URL de controlador ********************************
 
 // Sólo las del tipo...
-$id_tipo_activ = empty($_POST['id_tipo_activ'])? '' : '^'.$_POST['id_tipo_activ'];
+///$id_tipo_activ = empty($_POST['id_tipo_activ'])? '' : '^'.$_POST['id_tipo_activ'];
+
+$Qid_tipo_activ = (string)  filter_input(INPUT_POST, 'id_tipo_activ');
+// Id tipo actividad
+if (empty($Qid_tipo_activ)) {
+	if (empty($_POST['ssfsv'])) {
+		$mi_sfsv = core\ConfigGlobal::mi_sfsv();
+		if ($mi_sfsv == 1) $_POST['ssfsv'] = 'sv';
+		if ($mi_sfsv == 2) $_POST['ssfsv'] = 'sf';
+	}
+	$ssfsv = $_POST['ssfsv'];
+	$sasistentes = empty($_POST['sasistentes'])? '.' : $_POST['sasistentes'];
+	$sactividad = empty($_POST['sactividad'])? '.' : $_POST['sactividad'];
+	$snom_tipo = empty($_POST['snom_tipo'])? '...' : $_POST['snom_tipo'];
+	$oTipoActiv= new web\TiposActividades();
+	$oTipoActiv->setSfsvText($ssfsv);
+	$oTipoActiv->setAsistentesText($sasistentes);
+	$oTipoActiv->setActividadText($sactividad);
+	$Qid_tipo_activ=$oTipoActiv->getId_tipo_activ();
+}
+$Qid_tipo_activ =  '^'.$Qid_tipo_activ;
+
 //periodo
+$any=  core\ConfigGlobal::any_final_curs();
+switch ($sactividad) {
+	case 'ca':
+	case 'cv':
+		$inicurs=core\curso_est("inicio",$any,"est");
+		$fincurs=core\curso_est("fin",$any,"est");
+		break;
+	case 'crt':
+		$inicurs=core\curso_est("inicio",$any,"crt");
+		$fincurs=core\curso_est("fin",$any,"crt");
+		break;
+}
+/* antic
 //case "curso_ca":
 $mes = date("m");
 $any = date("Y");
@@ -26,6 +60,9 @@ if ($mes>9) {
 	$inicio = "$ini/$any2";	
 	$fin = "$fi/$any";
 }
+ * 
+ */
+
 $status = 2; //actual
 
 // Seleccionar los id_dl del mismo grupo de estudios
@@ -52,10 +89,10 @@ foreach ($cDelegaciones as $oDelegacion) {
 	$id_dl = $oDelegacion->getId_dl();
 	$a_grupo[$dl] = $id_dl;
 	$aWhere =array('dl_org'			=>$dl,
-					'id_tipo_activ'	=>$id_tipo_activ,
+					'id_tipo_activ'	=>$Qid_tipo_activ,
 					'status' 		=> $status,
 					'publicado' 		=> 't',
-					'f_ini' 		=> "'$inicio','$fin'",
+					'f_ini' 		=> "'$inicurs','$fincurs'",
 					'_ordre'		=>'f_ini');
 	$aOperador = array('id_tipo_activ'=>'~', 'f_ini'=>'BETWEEN');
 	$cActividades1 = $gesActividades->getActividades($aWhere,$aOperador);

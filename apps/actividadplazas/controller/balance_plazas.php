@@ -7,7 +7,24 @@
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qid_tipo_activ = empty($_POST['id_tipo_activ'])? '' : $_POST['id_tipo_activ'];
+$Qid_tipo_activ = (string)  filter_input(INPUT_POST, 'id_tipo_activ');
+// Id tipo actividad
+if (empty($Qid_tipo_activ)) {
+	if (empty($_POST['ssfsv'])) {
+		$mi_sfsv = core\ConfigGlobal::mi_sfsv();
+		if ($mi_sfsv == 1) $_POST['ssfsv'] = 'sv';
+		if ($mi_sfsv == 2) $_POST['ssfsv'] = 'sf';
+	}
+	$ssfsv = $_POST['ssfsv'];
+	$sasistentes = empty($_POST['sasistentes'])? '.' : $_POST['sasistentes'];
+	$sactividad = empty($_POST['sactividad'])? '.' : $_POST['sactividad'];
+	$snom_tipo = empty($_POST['snom_tipo'])? '...' : $_POST['snom_tipo'];
+	$oTipoActiv= new web\TiposActividades();
+	$oTipoActiv->setSfsvText($ssfsv);
+	$oTipoActiv->setAsistentesText($sasistentes);
+	$oTipoActiv->setActividadText($sactividad);
+	$Qid_tipo_activ=$oTipoActiv->getId_tipo_activ();
+}
 
 $aRegiones = array('H');
 $gesDelegacion = new ubis\model\GestorDelegacion();
