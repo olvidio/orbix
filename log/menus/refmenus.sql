@@ -169,7 +169,6 @@
 909	{70,15}	importar crt	sasistentes=agd&sactividad=crt&que=ver&modo=importar	119	2	3	t
 228	{110,60}	lista cargos	ssfsv=sv&sasistentes=s&sactividad=cv&que=list_cjto	119	2112	10	t
 23	{70,60}	list varios crt	ssfsv=sv&sasistentes=agd&sactividad=crt&que=list_cjto	119	2082	3	t
-906	{80,15}	importar ca	sasistentes=n&sactividad=ca&que=ver&modo=importar	119	8	2	t
 907	{80,15}	importar cv	sasistentes=agd&sactividad=cv&que=ver&modo=importar	119	2	3	t
 908	{70,15}	importar crt	sasistentes=n&sactividad=crt&que=ver&modo=importar	119	128	2	t
 911	{82,15}	importar cve	sasistentes=n&sactividad=cve&que=ver&modo=importar	119	128	2	t
@@ -178,6 +177,7 @@
 915	{10,60}	importar desde ficheros	accion=importar	64	33554432	13	t
 918	{10,40}	profesor para asignatura	\N	171	16	12	t
 152	{90,70}	actualizar docencia	\N	52	16	12	t
+906	{80,15}	importar ca	sasistentes=n&sactividad=ca&que=ver&modo=importar	119	128	2	t
 917	{80,120}	Balance de plazas	sfsv=sv&sasistentes=n&sactividad=ca	170	128	2	t
 920	{10,50}	claustro	\N	173	16	12	t
 921	{20,50}	resumen pendientes	\N	174	16	12	t
