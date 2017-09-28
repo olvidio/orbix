@@ -12,7 +12,7 @@ use actividadplazas\model as actividadplazas;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $id_nom = empty($_POST['id_nom'])? '' : $_POST['id_nom'];
-$tipo_activ = empty($_POST['tipo_activ'])? '' : $_POST['tipo_activ'];
+$sactividad = empty($_POST['sactividad'])? '' : $_POST['sactividad'];
 
 switch ($_POST['que']) {
 	case "update":
@@ -22,7 +22,7 @@ switch ($_POST['que']) {
 			if (empty($id_activ)) { continue; }
 			$oPlazaPeticion = new actividadplazas\PlazaPeticion(array('id_nom'=>$id_nom, 'id_activ'=>$id_activ));
 			$oPlazaPeticion->setOrden($i);
-			$oPlazaPeticion->setTipo($tipo_activ);
+			$oPlazaPeticion->setTipo($sactividad);
 			$oPlazaPeticion->DBGuardar();
 		}
 		$oPosicion->setId_div('ir_a');
@@ -30,7 +30,7 @@ switch ($_POST['que']) {
 		break;
 	case 'borrar';
 		$gesPlazasPeticion = new actividadplazas\GestorPlazaPeticion();
-		$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom'=>$id_nom, 'tipo'=>$tipo_activ));
+		$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom'=>$id_nom, 'tipo'=>$sactividad));
 		foreach ($cPlazasPeticion as $oPlazaPeticion) {
 			$oPlazaPeticion->DBEliminar();
 		}

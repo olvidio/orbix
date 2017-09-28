@@ -21,7 +21,7 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 	$id_nom=strtok($_POST['sel'][0],"#");
 	$na=strtok("#"); // id_tabla
 	
-	$tipo_activ = empty($_POST['que'])? '' : $_POST['que'];
+	$sactividad = empty($_POST['que'])? '' : $_POST['que'];
 	$todos = empty($todos)? 1 : $todos;
 	$oPosicion->addParametro('id_sel',$id_sel);
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
@@ -29,7 +29,7 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 } else { // vengo de actualizar
 	$id_nom = empty($_POST['id_nom'])? '' : $_POST['id_nom'];
 	$na = empty($_POST['na'])? '' : $_POST['na'];
-	$tipo_activ = empty($_POST['tipo_activ'])? '' : $_POST['tipo_activ'];
+	$sactividad = empty($_POST['sactividad'])? '' : $_POST['sactividad'];
 	
 }
 
@@ -38,7 +38,7 @@ $ap_nom = $oPersona->getApellidosNombre();
 
 //Miro los actuales
 $gesPlazasPeticion = new \actividadplazas\model\GestorPlazaPeticion();
-$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom'=>$id_nom,'tipo'=>$tipo_activ,'_ordre'=>'orden'));
+$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom'=>$id_nom,'tipo'=>$sactividad,'_ordre'=>'orden'));
 $sid_activ = '';
 foreach ($cPlazasPeticion as $oPlazaPeticion) {
 	$id_activ = $oPlazaPeticion->getId_activ();
@@ -58,14 +58,21 @@ if (!empty($todos) && $todos != 1) {
 	}
 	$aWhere['dl_org'] = $mi_grupo;
 }
-/* Pongo en la variable $curso el periodo del curso */
-$mes=date('m');
-$any=date('Y');
-if ($mes>9) { $any=$any+1; } 
-$inicurs_ca=core\curso_est("inicio",$any);
-$fincurs_ca=core\curso_est("fin",$any);
+//periodo
+$any=  core\ConfigGlobal::any_final_curs();
+switch ($sactividad) {
+	case 'ca':
+	case 'cv':
+		$inicurs=core\curso_est("inicio",$any,"est");
+		$fincurs=core\curso_est("fin",$any,"est");
+		break;
+	case 'crt':
+		$inicurs=core\curso_est("inicio",$any,"crt");
+		$fincurs=core\curso_est("fin",$any,"crt");
+		break;
+}
 
-$aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
+$aWhere['f_ini'] = "'$inicurs','$fincurs'";
 $aOperador['f_ini'] = 'BETWEEN';
 $aWhere['status'] = 2;
 $aWhere['_ordre'] = 'nivel_stgr,f_ini';
@@ -81,15 +88,15 @@ switch ($na) {
 		$id_tabla_persona='a'; //el id_tabla entra en conflicto con el de actividad
 		$tabla_pau='p_agregados';
 
-		switch ($tipo_activ) {
+		switch ($sactividad) {
 			case 'ca': //133
-				$id_tipo_activ = '^'.$sfsv.'33';
+				$Qid_tipo_activ = '^'.$sfsv.'33';
 				break;
 			case 'crt':
-				$id_tipo_activ = '^'.$sfsv.'31';
+				$Qid_tipo_activ = '^'.$sfsv.'31';
 				break;
 		}
-		$aWhere['id_tipo_activ'] = $id_tipo_activ;
+		$aWhere['id_tipo_activ'] = $Qid_tipo_activ;
 		$aOperador['id_tipo_activ'] = '~';
 		$GesActividades = new actividades\GestorActividadPub();
 		$cActividades = $GesActividades->getActividades($aWhere,$aOperador);
@@ -101,15 +108,15 @@ switch ($na) {
 		$id_tabla_persona='n';
 		$tabla_pau='p_numerarios';
 	
-		switch ($tipo_activ) {
+		switch ($sactividad) {
 			case 'ca': //112
-				$id_tipo_activ = '^'.$sfsv.'12';
+				$Qid_tipo_activ = '^'.$sfsv.'12';
 				break;
 			case 'crt':
-				$id_tipo_activ = '^'.$sfsv.'11';
+				$Qid_tipo_activ = '^'.$sfsv.'11';
 				break;
 		}
-		$aWhere['id_tipo_activ'] = $id_tipo_activ;
+		$aWhere['id_tipo_activ'] = $Qid_tipo_activ;
 		$aOperador['id_tipo_activ'] = '~';
 		$GesActividades = new actividades\GestorActividadPub();
 		$cActividades = $GesActividades->getActividades($aWhere,$aOperador);
@@ -134,7 +141,7 @@ $oHash->setcamposNo('que!actividades');
 $a_camposHidden = array(
 		'id_nom' => $id_nom,
 		'na' => $na,
-		'tipo_activ' => $tipo_activ,
+		'sactividad' => $sactividad,
 		'que' => ''
 		);
 $oHash->setArraycamposHidden($a_camposHidden);

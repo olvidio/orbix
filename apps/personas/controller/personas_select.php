@@ -221,10 +221,10 @@ if (core\configGlobal::is_app_installed('actividadestudios')) {
 }
 if (core\configGlobal::is_app_installed('actividadplazas')) {
 	if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso")) {   
-		$tipo_activ = 'ca'; //ca
-		$a_botones[]= array( 'txt' => _('petición ca'), 'click' =>"fnjs_peticion_activ(\"#seleccionados\",\"$tipo_activ\")" ) ;
-		$tipo_activ = 'crt'; //crt
-		$a_botones[]= array( 'txt' => _('petición crt'), 'click' =>"fnjs_peticion_activ(\"#seleccionados\",\"$tipo_activ\")" ) ;
+		$sactividad = 'ca'; //ca
+		$a_botones[]= array( 'txt' => _('petición ca'), 'click' =>"fnjs_peticion_activ(\"#seleccionados\",\"$sactividad\")" ) ;
+		$sactividad = 'crt'; //crt
+		$a_botones[]= array( 'txt' => _('petición crt'), 'click' =>"fnjs_peticion_activ(\"#seleccionados\",\"$sactividad\")" ) ;
 		$script['fnjs_posibles_activ'] = 1;
 	}
 }
@@ -425,10 +425,10 @@ fnjs_posibles_ca=function(formulario){
 }
 <?php } ?>
 <?php if (!empty($script['fnjs_posibles_activ'])) { ?>
-fnjs_peticion_activ=function(formulario,tipo_activ){
+fnjs_peticion_activ=function(formulario,sactividad){
 	rta=fnjs_solo_uno(formulario);
 	if (rta==1) {
-		$('#que').val(tipo_activ);
+		$('#que').val(sactividad);
 		$(formulario).attr('action',"apps/actividadplazas/controller/peticiones_activ.php");
   		fnjs_enviar_formulario(formulario);
 	}

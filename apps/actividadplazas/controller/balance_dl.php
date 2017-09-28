@@ -25,7 +25,6 @@ if (empty($_POST['dl'])) {
 if ($dlA == $dlB) {	exit(); }
 
 //periodo
-
 $any=  core\ConfigGlobal::any_final_curs();
 switch ($sactividad) {
 	case 'ca':
