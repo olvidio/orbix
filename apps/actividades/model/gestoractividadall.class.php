@@ -168,7 +168,7 @@ class GestorActividadAll Extends core\ClaseGestor {
 		$nom_tabla = $this->getNomTabla();
 		$cond_nivel_stgr = "(nivel_stgr < 6 OR nivel_stgr=11)";
 		if (empty($scondicion)) {
-			$inicio = date("d/m/Y", mktime(0,0,0,9,1,core\ConfigGlobal::any_final_curs() - 2));
+			$inicio = date("d/m/Y", mktime(0,0,0,9,1,core\ConfigGlobal::any_final_curs('est') - 2));
 			$scondicion = "AND f_ini > '$inicio'";
 		}
 		$sQuery="SELECT id_activ, nom_activ

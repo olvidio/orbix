@@ -36,14 +36,15 @@ $Qid_tipo_activ=$oTipoActiv->getId_tipo_activ();
 $Qid_tipo_activ =  '^'.$Qid_tipo_activ;
 
 /* Pongo en la variable $curso el periodo del curso */
-$any=  core\ConfigGlobal::any_final_curs();
 switch ($sactividad) {
 	case 'ca':
 	case 'cv':
+		$any=  core\ConfigGlobal::any_final_curs('est');
 		$inicurs=core\curso_est("inicio",$any,"est");
 		$fincurs=core\curso_est("fin",$any,"est");
 		break;
 	case 'crt':
+		$any=  core\ConfigGlobal::any_final_curs('crt');
 		$inicurs=core\curso_est("inicio",$any,"crt");
 		$fincurs=core\curso_est("fin",$any,"crt");
 		break;

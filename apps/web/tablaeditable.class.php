@@ -188,7 +188,7 @@ class TablaEditable {
 		$chk="";
 		$b=0;
 		if (empty($a_valores)) {
-			return	_("No hay ninguna fila");
+			return	'<br \>'._("No hay ninguna fila");
 		}
 		if (!empty($a_botones)) {
 			if ($a_botones=="ninguno") {
