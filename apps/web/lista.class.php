@@ -371,6 +371,7 @@ class Lista {
 		unset($a_valores['scroll_id']);
 		if (isset($a_valores['select'])) {
 			$a_valores_chk = $a_valores['select'];
+			unset($a_valores['select']);
 		} else {
 			$a_valores_chk = array();
 		}
@@ -540,7 +541,8 @@ class Lista {
 				  var chk = array_val[0];
 				  if (chk.length) {
 				  	chk = 'checked=\"checked\"';
-					grid_$id_tabla.setSelectedRows([row]);
+					// Desactivo el formateo, porque si se seleccionan varias filas, esto borra las anteriores.
+					//grid_$id_tabla.setSelectedRows([row]);
 				  }
 				  var val = '';
 				  $.each(array_val, function(index, value) {
@@ -655,6 +657,7 @@ class Lista {
 				grid_$id_tabla.onClick.subscribe(function (e,args) {
 					add_scroll_id(args.row);
 					grid_$id_tabla.setSelectedRows([args.row]);
+				//console.log(row);
 					//e.stopPropagation();
 				});
 					
@@ -836,6 +839,7 @@ class Lista {
 
 		if (isset($a_valores['select'])) {
 			$a_valores_chk = $a_valores['select'];
+			unset($a_valores['select']);
 		} else {
 			$a_valores_chk = array();
 		}
