@@ -39,6 +39,17 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 			margin: 0pt;
 			background: white; 
 		}
+	#main {text-align : left;
+            margin: 0pt;
+            padding: 0pt;
+            background: white;
+        }
+    #exportar {text-align : left;
+            margin: 0pt;
+            padding: 0pt;
+            background: white;
+        }
+
 	h2 {
 		font-size : 14pt;
 	}
@@ -92,6 +103,13 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 		padding-left: 1em;
 		padding-right: 1em;
 		}
+
+	td.tessera { color : black;
+        font-size : 8pt;
+        font-family : Arial;
+        padding-left: 1em;
+        padding-right: 1em;
+        }
 
 	td.line-top  {
 		border-top-style: solid;

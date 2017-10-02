@@ -129,7 +129,7 @@ td.dato {
 	border-bottom-width : 1pt;
 }
 TD.curso { color : black;
-	font-size : 12pt;
+	font-size : 10pt;
 	font-family : serif;
 	text-align : center;
 	font-weight : bold;

@@ -387,11 +387,12 @@ fnjs_actividades=function(formulario){
 <?php } ?>
 <?php if (!empty($script['fnjs_tessera'])) { ?>
 fnjs_tessera=function(formulario){
-	rta=fnjs_solo_uno(formulario);
+	/*rta=fnjs_solo_uno(formulario);
 	if (rta==1) {
+	*/
   		$(formulario).attr('action',"apps/notas/controller/tessera_ver.php");
   		fnjs_enviar_formulario(formulario);
-  	}
+  	/* } */
 }
 <?php } ?>
 <?php if (!empty($script['fnjs_lista_activ'])) { ?>
