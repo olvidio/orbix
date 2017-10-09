@@ -479,5 +479,7 @@ $oTabla->setDatos($a_valores);
 echo $oTabla->mostrar_tabla();
 ?>
 </form>
-<br><table><tr><th>
-<span class=link_inv onclick="fnjs_update_div('#main','<?= $pagina ?>');"><?= core\strtoupper_dlb(_("añadir persona")) ?></span>
+<br>
+<table><tr><th class="no_print">
+	<span class="link_inv" onclick="fnjs_update_div('#main','<?= $pagina ?>');"><?= core\strtoupper_dlb(_("añadir persona")) ?></span>
+</th></tr></table>
