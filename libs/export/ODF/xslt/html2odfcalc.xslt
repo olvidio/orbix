@@ -189,9 +189,9 @@ You should have received a copy of the GNU General Public License along with thi
 		</xsl:when>
 		<xsl:when test="child::h1|child::h2|child::h3|child::b">
 		 	<table:table-cell table:style-name="cebold" office:value-type="string" table:number-columns-spanned="3" table:number-rows-spanned="1">
-				<text:p>
+				<!-- <text:p> -->
 					<xsl:call-template name="text_applyer"/>
-				</text:p>
+				<!-- </text:p> -->
 			</table:table-cell>
 		</xsl:when>
 		<xsl:when test="@colspan">
@@ -229,6 +229,11 @@ You should have received a copy of the GNU General Public License along with thi
 
 <xsl:template name="text_applyer">
 	<xsl:choose>
+		<xsl:when test="h1|h2|h3|b">
+			<text:p>
+				<xsl:value-of select="current()"/>
+			</text:p>
+		</xsl:when>
 		<xsl:when test="number()">
 			<text:p>
 				<xsl:value-of select="normalize-space(string(.))"/>
@@ -238,9 +243,6 @@ You should have received a copy of the GNU General Public License along with thi
 			<text:p>
 				<xsl:value-of select="normalize-space(string(.))"/>
 			</text:p>
-		</xsl:when>
-		<xsl:when test="h1|h2|h3|b">
-			<xsl:value-of select="node()"/>
 		</xsl:when>
 		<xsl:otherwise>
 			<xsl:apply-templates select="node()"/>
