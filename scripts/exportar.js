@@ -109,7 +109,7 @@ function fnjs_convert(node){
 	//if (rec<30)	alert("1:\n"+tag);
 	tagId=$(node).attr("id");
 	if (tagId == undefined) tagId="";
-	if ($(node).hasClass("no_print")) return;
+	//if ($(node).hasClass("no_print")) return false;
 	//alert ("num: "+node+"\ntipo: "+tag+"\nid: "+tagId);
 	switch(tag){
 		case "style":
@@ -126,8 +126,8 @@ function fnjs_convert(node){
 			break;
 		case "input":
 			//alert("tipo: "+$(node).attr("type"));
-			if ($(node).attr("type")=="hidden" || $(node).attr("type")=="button") return;
-			if (tagId=="sel") return;
+			if ($(node).attr("type")=="hidden" || $(node).attr("type")=="button") return "";
+			if (tagId=="sel") return false;
 			rta=$(node).val();
 			break;
 		case "h1":
@@ -181,10 +181,13 @@ function fnjs_convert(node){
 			// buscar los textos huerfanos de tag.
 			txt=$(node).html();
 		    var m = /^([^<]*)(<.+>)([^>]*)$/.exec(txt);
+			//alert ("m: "+m);
+			break;
 		case "tbody":
 		case "tr":
 			if (m && m[1]) rta1+=m[1];
 			$(node).children().each(function(){
+				//alert ("WW"+this);
 					rta1+=fnjs_convert(this);
 				});
 			if (m && m[3]) rta1+=m[3];

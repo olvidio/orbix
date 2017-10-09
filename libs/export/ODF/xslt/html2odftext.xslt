@@ -28,32 +28,38 @@ You should have received a copy of the GNU General Public License along with thi
 
 <xsl:template match="body">
 	<office:body>
-	 <office:text>
-		<xsl:apply-templates select="node()"/>
+	 <office:text text:use-soft-page-breaks="true">
+	 	<xsl:apply-templates select="node()"/>
 	 </office:text>
 	</office:body>
 </xsl:template>
 
+<xsl:template match="div[@class='salta_pag']">
+	<xsl:apply-templates select="node()"/>
+	<text:h text:style-name="P3" text:outline-level="3" />
+	<!-- </text:h> -->
+</xsl:template>
+
 <xsl:template match="h1">
- <text:h text:style-name="Heading_20_1">
+ <text:h text:style-name="Heading_20_1" text:outline-level="1">
   <xsl:apply-templates select="node()"/>
  </text:h>
 </xsl:template>
 
 <xsl:template match="h2">
- <text:h text:style-name="Heading_20_2">
+ <text:h text:style-name="Heading_20_2" text:outline-level="1">
   <xsl:apply-templates select="node()"/>
  </text:h>
 </xsl:template>
 
 <xsl:template match="h3">
- <text:h text:style-name="Heading_20_3">
+ <text:h text:style-name="Heading_20_3" text:outline-level="1">
   <xsl:apply-templates select="node()"/>
  </text:h>
 </xsl:template>
 
 <xsl:template match="h4">
- <text:h text:style-name="Heading_20_4">
+ <text:h text:style-name="Heading_20_4" text:outline-level="1">
   <xsl:apply-templates select="node()"/>
  </text:h>
 </xsl:template>
@@ -75,85 +81,79 @@ You should have received a copy of the GNU General Public License along with thi
 </xsl:template>
 
 <xsl:template match="table">
-	<!-- <table:table table:name="Table1" table:style-name="Table1"> -->
 		<!-- <table:table-column table:style-name="Table1.A" table:number-columns-repeated="2"/> -->
 		<!-- FIXME: should not do this... instead simply apply on node() and have template matches for tr[th] -->
-		<xsl:for-each select="thead|tbody">
-			<xsl:for-each select="tr[th]">
-				<text:p text:style-name="P2">
-					<xsl:apply-templates select="th"/>
-				</text:p>
-			</xsl:for-each>
-			<xsl:for-each select="tr[td]">
-				<xsl:choose>
-					<xsl:when test="./td/p">
-						<text:p text:style-name="P2">
-							<xsl:apply-templates select="td"/>
-						</text:p>
-						<xsl:apply-templates select="td/p"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<text:p text:style-name="P2"><xsl:apply-templates select="td"/>
-						</text:p>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:for-each>
-		</xsl:for-each>
-		<!-- sin tbody -->
-		<xsl:for-each select="tr[th]">
-			<text:p text:style-name="P2">
-				<xsl:apply-templates select="th"/>
-			</text:p>
-		</xsl:for-each>
-		<xsl:for-each select="tr[td]">
-				<xsl:choose>
-					<xsl:when test="./td/p">
-						<text:p text:style-name="P2">
-							<xsl:apply-templates select="td"/>
-						</text:p>
-						<xsl:apply-templates select="td/p"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<text:p text:style-name="P2"><xsl:apply-templates select="td"/>
-						</text:p>
-					</xsl:otherwise>
-				</xsl:choose>
-		</xsl:for-each>
-	<!-- </table:table> -->
+		<xsl:if test="child::thead">
+			<xsl:apply-templates select="thead"/>
+		</xsl:if>
+		<xsl:if test="child::tbody">
+			<xsl:apply-templates select="tbody"/>
+		</xsl:if>
+		<xsl:if test="child::tr">
+			<xsl:apply-templates select="tr"/>
+		</xsl:if>
 </xsl:template>
 
-<xsl:template match="th">
+
+<xsl:template match="tbody|thead">
+	<xsl:apply-templates select="tr"/>
+</xsl:template>
+
+
+<xsl:template name="subtable">
 	<xsl:choose>
-		<xsl:when test="@tipo='notext'">
+		<xsl:when test="descendant::h3">
+			<xsl:apply-templates select="td"/>
+		</xsl:when>
+		<xsl:when test="child::td/h3|child::td/b">
+			<xsl:apply-templates select="td"/>
 		</xsl:when>
 		<xsl:otherwise>
-			<xsl:choose>
-				<xsl:when test="preceding-sibling::th[@tipo='notext']">
-					<!-- En la primera col no pongo tabulador (tampoco en el select) -->
-					<xsl:if test="position() > 2">
-						<text:tab />
-					</xsl:if>
-					<xsl:call-template name="text_applyer" />
-				</xsl:when>
-				<xsl:otherwise>
-					<!-- En la primera col no pongo tabulador -->
-					<xsl:if test="position() > 1">
-						<text:tab />
-					</xsl:if>
-					<xsl:call-template name="text_applyer" />
-				</xsl:otherwise>
-			</xsl:choose>
+			<text:p text:style-name="P2">
+				<xsl:apply-templates select="td"/>
+			</text:p>
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
-<xsl:template match="td">
+
+<xsl:template match="tr">
+	<xsl:call-template name="subtable"/>
+</xsl:template>
+		<!--
+		<xsl:if test="./td/p">
+			<text:p text:style-name="WP2">
+			<xsl:apply-templates select="td/p"/>
+			</text:p>
+		</xsl:if>
+		-->
+
+<xsl:template match="td|th">
 	<xsl:choose>
+		<xsl:when test="child::table">
+			<xsl:for-each select="table/thead/tr|table/tr">
+				<xsl:call-template name="subtable"/>
+			</xsl:for-each>
+			<xsl:for-each select="table/tbody/tr|table/tr">
+				<xsl:call-template name="subtable"/>
+			</xsl:for-each>
+		</xsl:when>
+		<xsl:when test="@tipo='no_print'">
+		</xsl:when>
+		<xsl:when test="@tipo='notext'">
+		</xsl:when>
 		<xsl:when test="@tipo='sel'">
 		</xsl:when>
 		<xsl:when test="./p">
 				<text:tab />
 				<xsl:value-of select="normalize-space(string(./p))"/>
 		</xsl:when>
+		<xsl:when test="descendant::h3">
+			<text:h text:style-name="Heading_20_3" text:outline-level="3"><xsl:value-of select="current()"/></text:h>
+		</xsl:when>
+		<xsl:when test="child::h3|child::b">
+			<xsl:call-template name="text_applyer" />
+		</xsl:when>
+
 		<xsl:otherwise>
 			<xsl:choose>
 				<xsl:when test="preceding-sibling::td[@tipo='sel']">
@@ -174,6 +174,7 @@ You should have received a copy of the GNU General Public License along with thi
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
+
 <xsl:template match="a">
 	<xsl:call-template name="text_applyer"/>
 </xsl:template>
@@ -210,11 +211,16 @@ You should have received a copy of the GNU General Public License along with thi
 
 <xsl:template name="text_applyer">
 	<xsl:choose>
+		<xsl:when test="h1|h2|h3|b">
+			<text:h text:style-name="Heading_20_3" text:outline-level="3">
+				<xsl:value-of select="node()"/>
+			</text:h>
+		</xsl:when>
 		<xsl:when test="text()">
 			<xsl:value-of select="normalize-space(string(.))"/>
 		</xsl:when>
 		<xsl:otherwise>
-			<xsl:apply-templates select="node()"/>
+				<xsl:apply-templates select="node()"/>
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
@@ -227,7 +233,7 @@ You should have received a copy of the GNU General Public License along with thi
 		<xsl:when test="@class='sortarrow'">
 		</xsl:when>
 		<xsl:otherwise>
-			<xsl:apply-templates select="node()"/>
+		<!--	<xsl:apply-templates select="node()"/> -->
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
@@ -243,11 +249,5 @@ You should have received a copy of the GNU General Public License along with thi
   <xsl:apply-templates select="node()"/>
  </text:p>
 </xsl:template>
-
-<xsl:template match="div[@class='salta_pag']">
- <text:p text:style-name="P3" />
-  <xsl:apply-templates select="node()"/>
-</xsl:template>
-
 
 </xsl:stylesheet>

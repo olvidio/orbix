@@ -638,7 +638,7 @@ switch ($_POST['frm_export_tipo']) {
 		}
 		fclose($handle);
 		$conv_style="1";
-		$content_xml = shell_exec("xsltproc --html ".getcwd()."/ODF/xslt/html2oo.xslt $file_txt");
+		$content_xml = shell_exec("xsltproc --html ".getcwd()."/ODF/xslt/html2odfcalc.xslt $file_txt");
 		//echo "<br>content: $content_xml<br>";	
 		$object = newOds(); //create a new ods file
 		$file_ods="/tmp/$nom.ods";
@@ -704,7 +704,7 @@ switch ($_POST['frm_export_tipo']) {
 					$conv_style="2";
 					break;
 				default:
-					$xslt="html2ootext.xslt";
+					$xslt="html2odftext.xslt";
 					$conv_style="1";
 			}
 		} else {

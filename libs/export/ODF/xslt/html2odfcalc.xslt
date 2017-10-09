@@ -40,6 +40,11 @@ You should have received a copy of the GNU General Public License along with thi
 		<number:number number:min-integer-digits="1"/>
 		</number:number-style>
 		<style:style style:name="cenumero" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="N0"/>
+
+		<style:style style:name="cebold" style:family="table-cell" style:parent-style-name="Default">
+			<style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
+		</style:style>
+
 	</office:automatic-styles>
 
 	<xsl:apply-templates select="body"/>
@@ -48,51 +53,27 @@ You should have received a copy of the GNU General Public License along with thi
 
 <xsl:template match="body">
 	<office:body>
-	 <office:text>
+	 <office:spreedsheet>
 	 <xsl:choose>
 	 	<xsl:when test="./div[@class='salta_pag']">
 				<xsl:apply-templates select="node()"/>
 		</xsl:when>
 		<xsl:otherwise>
-			  <table:table table:name="Table1" table:style-name="Table1">
+			<table:table table:name="Table1" table:style-name="Table1">
 				<xsl:apply-templates select="node()"/>
-			  </table:table>
+		</table:table>
 	  </xsl:otherwise>
 	  </xsl:choose>
-	 </office:text>
+	 </office:spreedsheet>
 	</office:body>
 </xsl:template>
 
-<xsl:template match="h1">
- <table:table-row><table:table-cell>
- <text:p text:style-name="Heading_20_1">
-  <xsl:apply-templates select="node()"/>
- </text:p>
- </table:table-cell></table:table-row>
-</xsl:template>
-
-<xsl:template match="h2">
- <table:table-row><table:table-cell>
- <text:p text:style-name="Heading_20_2">
-  <xsl:apply-templates select="node()"/>
- </text:p>
- </table:table-cell></table:table-row>
-</xsl:template>
-
-<xsl:template match="h3">
- <table:table-row><table:table-cell>
- <text:p text:style-name="Heading_20_3">
-  <xsl:apply-templates select="node()"/>
- </text:p>
- </table:table-cell></table:table-row>
-</xsl:template>
-
-<xsl:template match="h4">
- <table:table-row><table:table-cell>
- <text:p text:style-name="Heading_20_4">
-  <xsl:apply-templates select="node()"/>
- </text:p>
- </table:table-cell></table:table-row>
+<xsl:template match="h1|h2|h3">
+  <table:table-row>
+	<table:table-cell table:style-name="cebold" office:value-type="string" >
+		<xsl:call-template name="text_applyer"/>
+	</table:table-cell>
+  </table:table-row>
 </xsl:template>
 
 <xsl:template match="p">
@@ -127,49 +108,61 @@ You should have received a copy of the GNU General Public License along with thi
 		<!-- <table:table-column table:style-name="Table1.A" table:number-columns-repeated="2"/> -->
 		<!-- FIXME: should not do this... instead simply apply on node() and have template matches for tr[th] -->
 		<xsl:call-template name="table_cols_2"/>
-		<xsl:for-each select="thead|tbody">
-			<xsl:for-each select="tr[th]">
-				<table:table-header-rows>
-					<table:table-row>
-						<xsl:apply-templates select="th"/>
-					</table:table-row>
-				</table:table-header-rows>
-			</xsl:for-each>
-			<xsl:for-each select="tr[td]">
-				<table:table-row><xsl:apply-templates select="td"/>
-				</table:table-row>
-			</xsl:for-each>
-		</xsl:for-each>
-		<!-- sin tbody -->
-		<xsl:for-each select="tr[th]">
-			<table:table-header-rows>
-				<table:table-row>
-					<xsl:apply-templates select="th"/>
-				</table:table-row>
-			</table:table-header-rows>
-		</xsl:for-each>
-		<xsl:for-each select="tr[td]">
-			<xsl:for-each select="table">
-			</xsl:for-each>
-			<table:table-row><xsl:apply-templates select="td"/>
-			</table:table-row>
-		</xsl:for-each>
-	<!-- </table:table> -->
+		<xsl:if test="child::thead">
+			<xsl:apply-templates select="thead"/>
+		</xsl:if>
+		<xsl:if test="child::tbody">
+			<xsl:apply-templates select="tbody"/>
+		</xsl:if>
+		<xsl:if test="child::tr">
+			<xsl:apply-templates select="tr"/>
+		</xsl:if>
 </xsl:template>
 
-<xsl:template match="th">
+<xsl:template name="subtable">
+	<table:table-row>
+		<xsl:apply-templates select="td"/>
+	</table:table-row>
+</xsl:template>
+
+
+<xsl:template match="tbody|thead">
+	<xsl:apply-templates select="tr"/>
+</xsl:template>
+
+<xsl:template match="tr">
 	<xsl:choose>
-		<xsl:when test="@tipo='notext'">
+		<xsl:when test="descendant::table">
+			<xsl:apply-templates select="td"/>
 		</xsl:when>
-		<xsl:otherwise>
-			<table:table-cell table:style-name="ce3" office:value-type="string">
-				<xsl:call-template name="text_applyer"/>
-			</table:table-cell>
+		<xsl:when test="th">
+			<table:table-row>
+				<xsl:apply-templates select="th"/>
+			</table:table-row>
+		</xsl:when>
+		<xsl:otherwise test="td">
+			<table:table-row>
+				<xsl:apply-templates select="td"/>
+			</table:table-row>
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
-<xsl:template match="td">
+
+<xsl:template match="td|th">
 	<xsl:choose>
+		<xsl:when test="child::table">
+			<xsl:for-each select="table/thead/tr|table/tr">
+				<xsl:call-template name="subtable"/>
+			</xsl:for-each>
+			<xsl:for-each select="table/tbody/tr|table/tr">
+				<xsl:call-template name="subtable"/>
+			</xsl:for-each>
+		</xsl:when>
+
+		<xsl:when test="@class='no_print'">
+		</xsl:when>
+		<xsl:when test="@tipo='notext'">
+		</xsl:when>
 		<xsl:when test="@class='fecha_hora'">
 			<table:table-cell table:style-name="cefechaHora" office:value-type="date" office:date-value="{@fecha_iso}" >
 				<xsl:call-template name="text_applyer"/>
@@ -194,12 +187,23 @@ You should have received a copy of the GNU General Public License along with thi
 			</xsl:otherwise>
 			</xsl:choose>
 		</xsl:when>
+		<xsl:when test="child::h1|child::h2|child::h3|child::b">
+		 	<table:table-cell table:style-name="cebold" office:value-type="string" table:number-columns-spanned="3" table:number-rows-spanned="1">
+				<text:p>
+					<xsl:call-template name="text_applyer"/>
+				</text:p>
+			</table:table-cell>
+		</xsl:when>
 		<xsl:when test="@colspan">
 			<table:table-cell table:style-name="ce1" office:value-type="string" table:number-columns-spanned="{@colspan}" table:number-rows-spanned="1">
-				<xsl:call-template name="text_applyer"/>
+				<text:p>
+					<xsl:call-template name="text_applyer"/>
+				</text:p>
 			</table:table-cell>
 		</xsl:when>
 		<xsl:when test="@tipo='sel'">
+			<table:table-cell>
+			</table:table-cell>
 		</xsl:when>
 		<xsl:otherwise>
 			<table:table-cell office:value-type="string">
@@ -208,6 +212,7 @@ You should have received a copy of the GNU General Public License along with thi
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
+
 <xsl:template match="a">
 	<xsl:call-template name="text_applyer"/>
 </xsl:template>
@@ -233,6 +238,9 @@ You should have received a copy of the GNU General Public License along with thi
 			<text:p>
 				<xsl:value-of select="normalize-space(string(.))"/>
 			</text:p>
+		</xsl:when>
+		<xsl:when test="h1|h2|h3|b">
+			<xsl:value-of select="node()"/>
 		</xsl:when>
 		<xsl:otherwise>
 			<xsl:apply-templates select="node()"/>
