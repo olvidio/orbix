@@ -61,6 +61,7 @@ function titulo($id_nivel) {
 	$html = "";
 	switch ($id_nivel) {
 		case 1101:
+			//$html = '<tr><td colspan="3" align="CENTER"><h3>'
 			$html = '<tr><td colspan="3" align="CENTER"><h3>'
 				.ucfirst(_("filosofía")).
 				'</h3></td></tr> <tr><td colspan="3"><b>'
@@ -113,7 +114,9 @@ function data($data) {
 	echo "$fechaok";
 }
 
+$p = 0;
 foreach ($_POST['sel'] as $PersonaSel) {
+	$p++;
 	$id_nom=strtok($PersonaSel,"#");
 	$oPersona = personas\Persona::NewPersona($id_nom);
 	if (!is_object($oPersona)) {
@@ -126,18 +129,21 @@ foreach ($_POST['sel'] as $PersonaSel) {
 	// -----------------------------  cabecera ---------------------------------
 	?>
 	<div class="salta_pag">
-	<span id="span_exportar"  title="tesseras">
+		<span id="span_exportar"  title="tesseras"></span>
 	<table>
-	<tr>
-	<td class="atras no_print">
-	<?= $oPosicion->atras2(); ?>
-	</td>
-	<td style="vertical-align: bottom;">
-	<h3>
-	<?php echo ucfirst(sprintf(_("tessera de:  %s (%s)"),$ap_nom,$centro)); ?></h3></td>
-	</tr>
+		<tr>
+		<td class="atras no_print">
+		<?php 
+		// sólo pongo el primero, porque sino hay varios div con  el mismo id="ir_atras2"
+		if ($p==1) echo $oPosicion->atras2();
+		?>
+		</td>
+		<td style="vertical-align: bottom;">
+			<h3> <?php echo ucfirst(sprintf(_("tessera de:  %s (%s)"),$ap_nom,$centro)); ?> </h3>
+		</td>
+		</tr>
 	</table>
-	<table border=1  >
+	<table border=1>
 	<?php
 	// Asignaturas posibles:
 	$GesAsignaturas = new asignaturas\GestorAsignatura();
@@ -264,20 +270,19 @@ foreach ($_POST['sel'] as $PersonaSel) {
 		}
 	}
 	?>
-	</table></td></tr>
+	</table>
+	</td></tr>
 	<tr><td>
-	<?php
-	echo sprintf(_("Número de asignaturas hechas: %s (de %s)"),$numasig,$num_asig_total)."<br>";
-	echo sprintf(_("Número de créditos realizados: %s (de %s)"),$numcred,$num_creditos_total)."<br>";
-	?>
-		</td><td>
-	<?php
-	echo sprintf(_("Número de asignaturas cursadas el curso %s: %s"),$curso_txt,$numasig_year)."<br>";
-	echo sprintf(_("Número de créditos realizados el curso %s: %s"),$curso_txt,$numcred_year)."<br>";
-	?>
+	<?= sprintf(_("Número de asignaturas hechas: %s (de %s)"),$numasig,$num_asig_total); ?>
+	</td><td>
+	<?= sprintf(_("Número de asignaturas cursadas el curso %s: %s"),$curso_txt,$numasig_year); ?>
+	</td></tr>
+	<tr><td>
+	<?= sprintf(_("Número de créditos realizados: %s (de %s)"),$numcred,$num_creditos_total); ?>
+	</td><td>
+	<?= sprintf(_("Número de créditos realizados el curso %s: %s"),$curso_txt,$numcred_year); ?>
 	</td></tr>
 	</table>
-	</span>
 	</div>
 	<?php
 }
