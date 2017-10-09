@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+"http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+  <title>XForms Namespace</title>
+  <link rel="stylesheet" type="text/css"
+  href="http://www.w3.org/StyleSheets/TR/base">
+</head>
+
+<body>
+
+<div class="head">
+<a href="http://www.w3.org/"><img class="head"
+src="http://www.w3.org/Icons/WWW/w3c_home" alt="W3C"></a>
+
+<h1>XForms Namespace</h1>
+</div>
+
+<p>The namespace name <code>http://www.w3.org/2002/xforms</code> is used to
+define elements in the XForms markup language as defined in the W3C
+Recommendations for XForms: <a
+href="http://www.w3.org/TR/xforms/">http://www.w3.org/TR/xforms/</a>, now at
+version 1.1.</p>
+
+<p>For more information about XForms, please refer to <a
+href="http://www.w3.org/MarkUp/Forms/">the W3C XForms overview</a>. <br>
+For more information about XML, please refer to <a
+href="http://www.w3.org/TR/REC-xml">The Extensible Markup Language (XML) 1.0
+specification</a>. <br>
+For more information about XML namespaces, please refer to the <a
+href="http://www.w3.org/TR/REC-xml-names">Namespaces in XML
+specification</a>.</p>
+
+<p></p>
+<hr>
+<address>
+  <a href="http://www.cwi.nl/~steven">Steven Pemberton</a>, Team contact for
+  the XForms Working Group<br>
+  Last modified: $Date: 2010/06/30 09:34:39 $ 
+</address>
+</body>
+</html>
