@@ -25,8 +25,8 @@ $es_sacd = (string)  filter_input(INPUT_POST, 'es_sacd');
 $tabla = (string)  filter_input(INPUT_POST, 'tabla');
 $id_activ = (string)  filter_input(INPUT_POST, 'id_activ');
 $scroll_id = (string)  filter_input(INPUT_POST, 'scroll_id');
-$a_sel = (string)  filter_input(INPUT_POST, 'sel');
-	
+$a_sel   = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
 /* Pongo en la variable $curso el periodo del curso */
 $mes=date('m');
 $any=date('Y');
