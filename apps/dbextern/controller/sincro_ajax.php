@@ -55,7 +55,7 @@ switch ($que) {
 			$oPersona = new $obj();
 		
 			$oPersona->setSituacion('A');
-			$oPersona->setF_situacion(date('j/m/Y'));
+			$oPersona->setF_situacion(date("d/m/Y"));
 			$oPersona->setNom($nombre);
 			$oPersona->setNx1($nx1);
 			$oPersona->setApellido1($apellido1_sinprep);
