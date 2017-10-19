@@ -176,7 +176,8 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
 		$oAsistenteNew->setId_nom($id_nom);
 		$oAsistenteNew->DBCarregar();
 		$oAsistenteNew->setPropio('t');
-		$oAsistenteNew->setPlaza(1);
+		//1:pedida, 2:en espera, 3: denegada, 4:asignada, 5:confirmada
+		$oAsistenteNew->setPlaza(4);
 		if ($oAsistenteNew->DBGuardar() === false) {
 			$msg_err = _('Hay un error, no se ha guardado');
 			echo $msg_err;
