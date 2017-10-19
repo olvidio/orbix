@@ -33,14 +33,28 @@ if (!empty($id_activ_old) && !empty($id_nom)) {
 	$oActividad = new actividades\Actividad(array('id_activ'=>$id_activ_old));
 	$id_tipo = $oActividad->getId_tipo_activ();
 
-	$mes=date('m');
-	$any=date('Y');
-	if ($mes>9) { $any=$any+1; } 
-	$inicurs_ca=core\curso_est("inicio",$any);
-	$fincurs_ca=core\curso_est("fin",$any);
+	$oTipoActiv= new web\TiposActividades($id_tipo);
+	$ssfsv = $oTipoActiv->getSfsvText();
+	$sasistentes = $oTipoActiv->getAsistentesText();
+	$sactividad = $oTipoActiv->getActividadText();
+	
+	//periodo
+	switch ($sactividad) {
+		case 'ca':
+		case 'cv':
+			$any=  core\ConfigGlobal::any_final_curs('est');
+			$inicurs=core\curso_est("inicio",$any,"est");
+			$fincurs=core\curso_est("fin",$any,"est");
+			break;
+		case 'crt':
+			$any=  core\ConfigGlobal::any_final_curs('crt');
+			$inicurs=core\curso_est("inicio",$any,"crt");
+			$fincurs=core\curso_est("fin",$any,"crt");
+			break;
+	}
 
 	//Actividades a las que afecta
-	$aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
+	$aWhere['f_ini'] = "'$inicurs','$fincurs'";
 	$aOperador['f_ini'] = 'BETWEEN';
 
 	$aWhere['id_tipo_activ'] = '^'.$id_tipo;
@@ -56,9 +70,8 @@ if (!empty($id_activ_old) && !empty($id_nom)) {
 		//primero las que se han pedido
 		$cActividadesPreferidas = array();
 		//Miro los actuales
-		$tipo ='ca';
 		$gesPlazasPeticion = new \actividadplazas\model\GestorPlazaPeticion();
-		$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom'=>$id_nom,'tipo'=>$tipo,'_ordre'=>'orden'));
+		$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom'=>$id_nom,'tipo'=>$sactividad,'_ordre'=>'orden'));
 		$sid_activ = '';
 		foreach ($cPlazasPeticion as $oPlazaPeticion) {
 			$id_activ = $oPlazaPeticion->getId_activ();
