@@ -108,7 +108,7 @@ class TelecoPersonaDl Extends TelecoPersonaGlobal {
 	public function DBCarregar($que=null) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (isset($this->iid_item) && isset($this->iid_nom)) {
+		if (!empty($this->iid_item) && is_numeric($this->iid_item)) {
 			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item='$this->iid_item'")) === false) {
 				$sClauError = 'TelecoPersonaDl.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);

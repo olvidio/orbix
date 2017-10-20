@@ -79,6 +79,7 @@ class PersonaN Extends PersonaDl {
 	 * Desa els atributs de l'objecte a la base de dades.
 	 * Si no hi ha el registre, fa el insert, si hi es fa el update.
 	 *
+	 * Introduzco el parámetro insert, para obligar a insertar sin mirar primero si existe
 	 */
 	public function DBGuardar() {
 		$oDbl = $this->getoDbl();

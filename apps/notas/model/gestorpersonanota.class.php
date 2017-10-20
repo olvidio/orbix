@@ -147,7 +147,8 @@ class GestorPersonaNota Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_nom' => $aDades['id_nom'],
 							'id_nivel' => $aDades['id_nivel']);
-			$oPersonaNota= new PersonaNota($a_pkey);
+			if ($this->sNomTabla == "e_notas") $oPersonaNota= new PersonaNota($a_pkey);
+			if ($this->sNomTabla == "e_notas_dl") $oPersonaNota= new PersonaNotaDl($a_pkey);
 			$oPersonaNota->setAllAtributes($aDades);
 			$oPersonaNotaSet->add($oPersonaNota);
 		}

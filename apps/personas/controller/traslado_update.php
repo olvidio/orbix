@@ -80,13 +80,13 @@ if (!empty($new_dl) AND !empty($f_dl)){
 	}
 	// Trasladar persona
 	// Cambio la situación de la persona. Debo hacerlo lo primero, pues no puedo tener la misma persona en dos dl en la misma situación
+	if ($situacion == 'A') exit (_("OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio."));
 	$oPersonaDl->setSituacion($situacion);
 	$oPersonaDl->setF_situacion($f_dl);
 	$oPersonaDl->setDl($dl);
 	if ($oPersonaDl->DBGuardar() === false) {
 		$error .= '<br>'._('Hay un error, no se ha guardado');
 	}
-	if ($situacion == 'A') $error .= '<br>'. _("OJO: Debería cambiar el campo situación");
 
 	$oDbl = $GLOBALS['oDB'];
 	$sfsv_txt = (core\configGlobal::mi_sfsv() == 1)? 'v' :'f';
@@ -135,6 +135,30 @@ if (!empty($new_dl) AND !empty($f_dl)){
 			$error .= '<br>'._('Hay un error, no se ha guardado');
 		}
 		// Todos los dossiers
+		// Las Notas si o si (Aunque no se tenga el dossier abierto)
+		//case 'PersonaNotaDl':
+		// No cal fer res. Les notes són visibles per tothom.
+		// -->CAMBIADO: Las notas pertenecen a la dl destino, si se 
+		// borraran de la tabla porque no existe la persona, también
+		// se perderían para todos...
+		$gestor = "notas\model\GestorPersonaNotaDl";
+		$ges = new $gestor();
+		$colection = $ges->getPersonaNotas(array('id_nom'=>$id_pau));
+		if (!empty($colection)) {
+			foreach ($colection as $Objeto) {
+				$Objeto->DBCarregar();
+				//print_r($Objeto);
+				$NuevoObj = clone $Objeto;
+				if (method_exists($NuevoObj,'getId_item') === true) $NuevoObj->setId_item('');
+				$NuevoObj->setoDbl($oDBR);
+				if ($NuevoObj->DBGuardar() === false) {
+					$error .= '<br>'._('No se ha guardado la nota');
+				} else {
+					//borrar la origen:
+					$Objeto->DBEliminar();
+				}
+			}
+		}
 
 		//$GesDossiers = new dossiers\GestorDossier(array('tabla'=>'p','id_pau'=>$id_pau,'status_dossier'=>'t'));
 		$GesDossiers = new dossiers\GestorDossier();
@@ -202,12 +226,13 @@ if (!empty($new_dl) AND !empty($f_dl)){
 					break;
 				case 'PersonaNotaDl':
 					// No cal fer res. Les notes són visibles per tothom.
-					/*
-					$gestor = "$app\model\Gestor$class";
-					$ges = new $gestor();
-					$colection = $ges->getPersonaNotas(array('id_nom'=>$id_pau));
-					*/
-					break;
+					// -->CAMBIADO: Las notas pertenecen a la dl destino, si se 
+					// borraran de la tabla porque no existe la persona, también
+					// se perderían para todos...
+//					$gestor = "$app\model\Gestor$class";
+//					$ges = new $gestor();
+//					$colection = $ges->getPersonaNotas(array('id_nom'=>$id_pau));
+//					break;
 				case 'MatriculaDl':
 					/*
 					$gestor = "$app\model\Gestor$class";
