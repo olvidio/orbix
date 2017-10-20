@@ -145,12 +145,21 @@ if (!empty($new_dl) AND !empty($f_dl)){
 		$ges = new $gestor();
 		$colection = $ges->getPersonaNotas(array('id_nom'=>$id_pau));
 		if (!empty($colection)) {
+			// Para saber el nuevo id_schema de la dl destino:
+			if (($qRs = $oDbl->query("SELECT id FROM public.db_idschema WHERE schema = '$new_esquema'")) === false) {
+					$sClauError = 'Controller.Traslados';
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+					return false;
+				}
+			$aSchema = $qRs->fetch(\PDO::FETCH_ASSOC);
+			$id_schema = $aSchema['id'];
 			foreach ($colection as $Objeto) {
 				$Objeto->DBCarregar();
 				//print_r($Objeto);
 				$NuevoObj = clone $Objeto;
 				if (method_exists($NuevoObj,'getId_item') === true) $NuevoObj->setId_item('');
 				$NuevoObj->setoDbl($oDBR);
+				$NuevoObj->setId_schema($id_schema);
 				if ($NuevoObj->DBGuardar() === false) {
 					$error .= '<br>'._('No se ha guardado la nota');
 				} else {
