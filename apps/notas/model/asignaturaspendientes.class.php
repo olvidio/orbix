@@ -257,12 +257,12 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
 
 		$query="SELECT a.nombre_corto, Notas.id_asignatura
 				FROM $asignaturas a LEFT JOIN (SELECT id_asignatura from e_notas_dl where id_nom=$id_nom and id_asignatura < 3000) AS Notas USING (id_asignatura)
-				WHERE a.id_sector != 0 AND Notas.id_asignatura is null
+				WHERE a.id_tipo != 8 AND Notas.id_asignatura is null
 				$condicion
 				";
 		$query_op="SELECT a.nombre_corto, Notas.id_nivel
 				FROM $asignaturas a LEFT JOIN (SELECT id_nivel from e_notas_dl where id_nom=$id_nom and id_asignatura > 3000) AS Notas USING (id_nivel)
-				WHERE a.id_sector = 0 AND Notas.id_nivel is null
+				WHERE a.id_tipo = 8 AND Notas.id_nivel is null
 				$condicion
 				";
 		$query_tot="$query UNION $query_op  ORDER BY 2";

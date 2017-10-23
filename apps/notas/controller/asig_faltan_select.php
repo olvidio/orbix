@@ -133,7 +133,7 @@ foreach ($aId_nom as $id_nom=>$aAsignaturas) {
 	if ($Qlista == true) { //Hacer un listado de las asignaturas que le faltan
 		$as = '';
 		foreach ($aAsignaturas as $asig) {
-			$as .= empty($as)? '' : "\n";
+			$as .= empty($as)? '' : " / ";
 			$as .= $asig;
 		}
 	} else {
