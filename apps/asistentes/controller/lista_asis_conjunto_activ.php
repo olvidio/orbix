@@ -114,6 +114,7 @@ foreach ($cActividades as $oActividad) {
 	$nom_activ=$oActividad->getNom_activ();
 	$observ=$oActividad->getObserv();
 	$id_ubi_casa=$oActividad->getId_ubi();
+	$plazas=$oActividad->getPlazas();
 
 	// Plazas
 	$plazas_max = '';
@@ -121,7 +122,7 @@ foreach ($cActividades as $oActividad) {
 	$plazas_txt = '';
 	if (!empty($id_ubi_casa)) {
 		$oCasaDl = new ubis\CasaDl($id_ubi_casa);
-		$plazas_max = $oCasaDl->getPlazas();
+		$plazas_max = !empty($plazas)? $plazas : $oCasaDl->getPlazas();
 		$plazas_min = $oCasaDl->getPlazas_min();
 		$plazas_txt = _("Plazas").": ";
 		$plazas_txt .= !empty($plazas_max)? $plazas_max : '';
