@@ -152,7 +152,6 @@ foreach ($cActividades as $oActividad) {
 	}
 	$nom_activ = empty($txt_ctr)? $nom_activ : "$nom_activ [$txt_ctr]";
 	$nom_activ = empty($observ)? $nom_activ : "$nom_activ $observ";
-	$aGrupos[$id_activ]= empty($plazas_max)? $nom_activ : "$nom_activ; $plazas_txt";
 
 	if (!($sasistentes=="sss+" AND $sactividad=="cv")) {
 		if (core\configGlobal::is_app_installed('actividadcargos')) {
@@ -182,7 +181,7 @@ foreach ($cActividades as $oActividad) {
 				// ahora miro si también asiste:
 				$oGesAsistentes = new asistentes\GestorAsistente();
 				$cAsistentes  = $oGesAsistentes->getAsistentes(array('id_activ'=>$id_pau,'id_nom'=>$id_nom));
-
+				
 				if (is_array($cAsistentes) && count($cAsistentes) > 0) {
 					$asis="t";
 					$texto="";
@@ -201,6 +200,12 @@ foreach ($cActividades as $oActividad) {
 		foreach ($cAsistentes as $oAsistente) {
 			$id_nom=$oAsistente->getId_nom();
 			if (in_array($id_nom,$aIdCargos)) continue; // si ya está como cargo, no lo pongo.
+			// Sólo apunto los asignados/confirmados
+			if (core\configGlobal::is_app_installed('actividadplazas')) {
+				if($oAsistente->getPlaza() < 4) {
+					continue;
+				}
+			}
 			$num++;
 			$oPersona = personas\Persona::NewPersona($id_nom);
 			if (!is_object($oPersona)) {
@@ -215,6 +220,7 @@ foreach ($cActividades as $oActividad) {
 			$a_activ[$id_activ][$num]['ap_nom']="$ap_nom ($ctr_dl)";
 		}
 	}
+	$aGrupos[$id_activ]= empty($plazas_max)? $nom_activ : "$nom_activ; $plazas_txt, "._("ocupadas").": $num";
 }
 
 $a_cabeceras[]= _("num");
