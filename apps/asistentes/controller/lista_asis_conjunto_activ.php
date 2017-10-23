@@ -121,7 +121,7 @@ foreach ($cActividades as $oActividad) {
 	$plazas_min = '';
 	$plazas_txt = '';
 	if (!empty($id_ubi_casa)) {
-		$oCasaDl = new ubis\CasaDl($id_ubi_casa);
+		$oCasaDl = new ubis\Casa($id_ubi_casa);
 		$plazas_max = !empty($plazas)? $plazas : $oCasaDl->getPlazas();
 		$plazas_min = $oCasaDl->getPlazas_min();
 		$plazas_txt = _("Plazas").": ";
