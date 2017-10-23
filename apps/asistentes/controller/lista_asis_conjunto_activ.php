@@ -220,7 +220,12 @@ foreach ($cActividades as $oActividad) {
 			$a_activ[$id_activ][$num]['ap_nom']="$ap_nom ($ctr_dl)";
 		}
 	}
-	$aGrupos[$id_activ]= empty($plazas_max)? $nom_activ : "$nom_activ; $plazas_txt, "._("ocupadas").": $num";
+	if (!empty($plazas_max) && $num > $plazas_max) {
+		$num_txt = "<span style=\"color: red;\">$num</span>";
+	} else {
+		$num_txt = $num;
+	}
+	$aGrupos[$id_activ]= empty($plazas_max)? $nom_activ : "$nom_activ; $plazas_txt, "._("ocupadas").": $num_txt";
 }
 
 $a_cabeceras[]= _("num");
