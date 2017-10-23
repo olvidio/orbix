@@ -80,6 +80,7 @@ $aWhere['_ordre'] = 'nivel_stgr,f_ini';
 
 $cActividades = array();
 $sfsv = core\ConfigGlobal::mi_sfsv();
+$mi_dele = core\ConfigGlobal::mi_dele();
 switch ($na) {
 	case "agd":
 	case "a":
@@ -99,8 +100,17 @@ switch ($na) {
 		}
 		$aWhere['id_tipo_activ'] = $Qid_tipo_activ;
 		$aOperador['id_tipo_activ'] = '~';
-		$GesActividades = new actividades\GestorActividadPub();
-		$cActividades = $GesActividades->getActividades($aWhere,$aOperador);
+		//inicialmente estaba sólo con las activiades publicadas. 
+		//Ahora añado las no publicadas de midl.
+		$GesActividadesDl = new actividades\GestorActividadDl();
+		$cActividadesDl = $GesActividadesDl->getActividades($aWhere,$aOperador);
+		// Añado la condición para que no duplique las de midele:
+		$aWhere['dl_org'] = $mi_dele;
+		$aOperador['dl_org'] = '!=';
+		$GesActividadesPub = new actividades\GestorActividadPub();
+		$cActividadesPub = $GesActividadesPub->getActividades($aWhere,$aOperador);
+		
+		$cActividades = array_merge($cActividadesDl,array('-------'),$cActividadesPub);
 		break;
 	case "n":
 		// caso de n
@@ -119,16 +129,30 @@ switch ($na) {
 		}
 		$aWhere['id_tipo_activ'] = $Qid_tipo_activ;
 		$aOperador['id_tipo_activ'] = '~';
-		$GesActividades = new actividades\GestorActividadPub();
-		$cActividades = $GesActividades->getActividades($aWhere,$aOperador);
+		//inicialmente estaba sólo con las activiades publicadas. 
+		//Ahora añado las no publicadas de midl.
+		$GesActividadesDl = new actividades\GestorActividadDl();
+		$cActividadesDl = $GesActividadesDl->getActividades($aWhere,$aOperador);
+		// Añado la condición para que no duplique las de midele:
+		$aWhere['dl_org'] = $mi_dele;
+		$aOperador['dl_org'] = '!=';
+		$GesActividadesPub = new actividades\GestorActividadPub();
+		$cActividadesPub = $GesActividadesPub->getActividades($aWhere,$aOperador);
+		
+		$cActividades = array_merge($cActividadesDl,array('-------'),$cActividadesPub);
 	break;
 }
 
 $aOpciones = array();
 foreach ($cActividades as $oActividad) {
-	$id_activ = $oActividad->getId_activ();
-	$nom_activ = $oActividad->getNom_activ();
-	$aOpciones[$id_activ]=$nom_activ;
+	// para el separador '-------'
+	if (is_object($oActividad)) {
+		$id_activ = $oActividad->getId_activ();
+		$nom_activ = $oActividad->getNom_activ();
+		$aOpciones[$id_activ] = $nom_activ;
+	} else {
+		$aOpciones[1] = '--------';
+	}
 }
 
 $oSelects = new web\DesplegableArray($sid_activ,$aOpciones,'actividades');
