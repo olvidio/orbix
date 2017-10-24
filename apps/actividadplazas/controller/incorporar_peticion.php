@@ -83,7 +83,7 @@ foreach ($cActividades as $oActividad) {
 
 //Miro las peticiones actuales
 $gesPlazasPeticion = new \actividadplazas\model\GestorPlazaPeticion();
-$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('tipo'=>$sactividad,'_ordre'=>'orden'));
+$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('tipo'=>$sactividad,'_ordre'=>'id_nom,orden'));
 $id_nom_old = 0;
 $msg_err = '';
 foreach ($cPlazasPeticion as $oPlazaPeticion) {
