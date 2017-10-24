@@ -20,6 +20,11 @@ use core;
  * @created 07/04/2014
  */
 class PersonaNota Extends core\ClasePropiedades {
+	
+	// tipo_acta constants.
+    const TIPO_ACTA     = 1; // Acta.
+    const TIPO_CERTIFICADO    = 2; // Certificado.
+	
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/**
@@ -120,6 +125,12 @@ class PersonaNota Extends core\ClasePropiedades {
 	 * @var integer
 	 */
 	 protected $inota_max;
+	/**
+	 * Tipo_acta de Nota
+	 *
+	 * @var integer
+	 */
+	 protected $itipo_acta;
 
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
@@ -188,6 +199,7 @@ class PersonaNota Extends core\ClasePropiedades {
 		$aDades['id_activ'] = $this->iid_activ;
 		$aDades['nota_num'] = $this->inota_num;
 		$aDades['nota_max'] = $this->inota_max;
+		$aDades['tipo_acta'] = $this->itipo_acta;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if (empty($aDades['preceptor']) || ($aDades['preceptor'] === 'off') || ($aDades['preceptor'] === false) || ($aDades['preceptor'] === 'f')) { $aDades['preceptor']='f'; } else { $aDades['preceptor']='t'; }
@@ -206,7 +218,8 @@ class PersonaNota Extends core\ClasePropiedades {
 					epoca                    = :epoca,
 					id_activ                 = :id_activ,
 					nota_num                 = :nota_num,
-					nota_max                 = :nota_max";
+					nota_max                 = :nota_max,
+					tipo_acta                = :tipo_acta";
 			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_nom='$this->iid_nom' AND id_nivel='$this->iid_nivel'")) === false) {
 				$sClauError = 'PersonaNota.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -221,8 +234,8 @@ class PersonaNota Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_schema, $this->iid_nom, $this->iid_nivel);
-			$campos="(id_schema,id_nom,id_nivel,id_asignatura,id_situacion,acta,f_acta,detalle,preceptor,id_preceptor,epoca,id_activ,nota_num,nota_max)";
-			$valores="(:id_schema,:id_nom,:id_nivel,:id_asignatura,:id_situacion,:acta,:f_acta,:detalle,:preceptor,:id_preceptor,:epoca,:id_activ,:nota_num,:nota_max)";		
+			$campos="(id_schema,id_nom,id_nivel,id_asignatura,id_situacion,acta,f_acta,detalle,preceptor,id_preceptor,epoca,id_activ,nota_num,nota_max,tipo_acta)";
+			$valores="(:id_schema,:id_nom,:id_nivel,:id_asignatura,:id_situacion,:acta,:f_acta,:detalle,:preceptor,:id_preceptor,:epoca,:id_activ,:nota_num,:nota_max,:tipo_acta)";		
 			//echo "INSERT INTO $nom_tabla $campos VALUES $valores";
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'PersonaNota.insertar.prepare';
@@ -310,6 +323,7 @@ class PersonaNota Extends core\ClasePropiedades {
 		if (array_key_exists('id_activ',$aDades)) $this->setId_activ($aDades['id_activ']);
 		if (array_key_exists('nota_num',$aDades)) $this->setNota_num($aDades['nota_num']);
 		if (array_key_exists('nota_max',$aDades)) $this->setNota_max($aDades['nota_max']);
+		if (array_key_exists('tipo_acta',$aDades)) $this->setTipo_acta($aDades['tipo_acta']);
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
@@ -606,6 +620,25 @@ class PersonaNota Extends core\ClasePropiedades {
 	function setNota_max($inota_max='') {
 		$this->inota_max = $inota_max;
 	}
+	/**
+	 * Recupera l'atribut itipo_acta de PersonaNota
+	 *
+	 * @return integer itipo_acta
+	 */
+	function getTipo_acta() {
+		if (!isset($this->itipo_acta)) {
+			$this->DBCarregar();
+		}
+		return $this->itipo_acta;
+	}
+	/**
+	 * estableix el valor de l'atribut itipo_acta de PersonaNota
+	 *
+	 * @param integer itipo_acta='' optional
+	 */
+	function setTipo_acta($itipo_acta='') {
+		$this->itipo_acta = $itipo_acta;
+	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 	/**
 	 * Recupera la nota en forma de text
@@ -672,6 +705,7 @@ class PersonaNota Extends core\ClasePropiedades {
 		$oPersonaNotaSet->add($this->getDatosId_activ());
 		$oPersonaNotaSet->add($this->getDatosNota_num());
 		$oPersonaNotaSet->add($this->getDatosNota_max());
+		$oPersonaNotaSet->add($this->getDatosTipo_acta());
 		return $oPersonaNotaSet->getTot();
 	}
 
@@ -812,6 +846,18 @@ class PersonaNota Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nota_max'));
 		$oDatosCampo->setEtiqueta(_("nota max"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut itipo_acta de PersonaNota
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return oject DatosCampo
+	 */
+	function getDatosTipo_acta() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'tipo_acta'));
+		$oDatosCampo->setEtiqueta(_("tipo acta"));
 		return $oDatosCampo;
 	}
 

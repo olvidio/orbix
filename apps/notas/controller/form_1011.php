@@ -78,6 +78,7 @@ if (!empty($id_asignatura_real)) { //caso de modificar
 	$nota_num_real=$oPersonaNota->getNota_num();
 	$nota_max_real=$oPersonaNota->getNota_max();
 	$acta_real=$oPersonaNota->getActa();
+	$tipo_acta_real=$oPersonaNota->getTipo_acta();
 	$f_acta_real=$oPersonaNota->getF_acta();
 	$preceptor_real=$oPersonaNota->getPreceptor();
 	$id_preceptor_real=$oPersonaNota->getId_preceptor();
@@ -155,6 +156,7 @@ if ($mod == 'nuevo') {
 	$situacion = 10;
 
 	$acta=empty($_POST['acta'])? '': $_POST['acta'];
+	$tipo_acta=empty($_POST['tipo_acta'])? '': $_POST['tipo_acta'];
 	$f_acta=empty($_POST['f_acta'])? '': $_POST['f_acta'];
 	$epoca=empty($_POST['epoca'])? '': $_POST['epoca'];
 	$detalle=empty($_POST['detalle'])? '': $_POST['detalle'];
@@ -166,6 +168,7 @@ if ($mod == 'nuevo') {
 	$nota_max=empty($_POST['nota_max'])? $max: $_POST['nota_max'];
 } else {
 	$acta=!isset($_POST['acta'])? $acta_real : $_POST['acta'];
+	$tipo_acta=!isset($_POST['tipo_acta'])? $tipo_acta_real : $_POST['tipo_acta'];
 	$f_acta=!isset($_POST['f_acta'])? $f_acta_real : $_POST['f_acta'];
 	$epoca=!isset($_POST['epoca'])? $epoca_real : $_POST['epoca'];
 	$detalle=!isset($_POST['detalle'])? $detalle_real : $_POST['detalle'];
@@ -179,6 +182,14 @@ if ($mod == 'nuevo') {
 }
 $oDesplProfesores->setOpcion_sel($id_preceptor);
 $oDesplNotas->setOpcion_sel($id_situacion);
+
+if (!empty($tipo_acta_real)) {
+	if ($tipo_acta_real==notas\PersonaNota::TIPO_ACTA) { $chk_acta="checked"; } else { $chk_acta=""; }
+	if ($tipo_acta_real==notas\PersonaNota::TIPO_CERTIFICADO) { $chk_certificado="checked"; } else { $chk_certificado=""; }
+} else {
+	$chk_acta="checked";
+	$chk_certificado="";
+}
 
 if (!empty($f_acta_real)) { // 3 meses cerca de la fecha del acta.
 	$oData = DateTime::createFromFormat('j/m/Y',$f_acta_real);
@@ -242,7 +253,7 @@ $go_to = empty($_POST['go_to'])? $go_to_1 : $_POST['go_to'];
 $campos_chk = '!preceptor';
 
 $oHash = new web\Hash();
-$camposForm = 'precep!opcional!nota_num!nota_max!id_situacion!acta!f_acta!preceptor!id_preceptor!epoca!id_activ!detalle';
+$camposForm = 'precep!opcional!nota_num!nota_max!id_situacion!acta!tipo_acta!f_acta!preceptor!id_preceptor!epoca!id_activ!detalle';
 $camposNo = 'go_to_que!id_preceptor!id_activ'.$campos_chk;
 $a_camposHidden = array(
 		'campos_chk'=>$campos_chk,
@@ -424,9 +435,14 @@ echo "<input type=\"text\" id=\"nota_max\" name=\"nota_max\" value=\"$nota_max\"
 echo "<td>"._("situación")."</td><td>";
 echo $oDesplNotas->desplegable();
 echo "</td></tr>";
-echo "<tr><td>"._("acta").'</td>';
-echo "<td colspan=3><input type=\"text\" id=\"acta\" name=\"acta\" value=\"$acta\" size=20>";
+echo "<tr>";
+echo "<td><input type=\"radio\" id=\"tipo_acta_a\" name=\"tipo_acta\" value=\"".notas\PersonaNota::TIPO_ACTA."\" $chk_acta>"._("acta");
+echo " <input type=\"radio\" id=\"tipo_acta_c\" name=\"tipo_acta\" value=\"".notas\PersonaNota::TIPO_CERTIFICADO."\" $chk_certificado>"._("certificado");
+echo "<td colspan=1><input type=\"text\" id=\"acta\" name=\"acta\" value=\"$acta\" size=20>";
+echo "</td>";
+echo "<td colspan=2>";
 echo '  ("?": '._("significa inventado").')   '._("Formato") .': "dlx nn/aa" o "dlx" o "region" o "?"'.'</td></tr>';
+
 echo "<tr><td>"._("fecha acta")."</td><td><input type=\"text\" id=\"f_acta\" name=\"f_acta\" value=\"$f_acta\" size=12></td></tr>";
 switch ($precep) { 
 	case "si":

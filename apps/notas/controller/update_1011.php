@@ -64,17 +64,23 @@ switch($_POST['mod']) {
 		$oPersonaNota->setId_schema($id_schema);
 		if (!empty($_POST['id_situacion'])) $oPersonaNota->setId_situacion($_POST['id_situacion']);
 		if (!empty($_POST['f_acta'])) $oPersonaNota->setF_acta($_POST['f_acta']);
+		if (!empty($_POST['tipo_acta'])) $oPersonaNota->setTipo_acta($_POST['tipo_acta']);
 		// comprobar valor del acta
 		if (!empty($_POST['acta'])) {
-			$oActa = new notas\Acta();
-			$valor = trim($_POST['acta']);
-			$reg_exp = "/^(\?|\w{1,6}\??)\s+([0-9]{0,3})\/([0-9]{2})\??$/";
-			if (preg_match ($reg_exp, $valor) == 1) {
-				} else {
-					// inventar acta.
-					$valor = $oActa->inventarActa($valor,$_POST['f_acta']);
-				}
-			$oPersonaNota->setActa($valor);
+			if ($_POST['tipo_acta'] == notas\PersonaNota::TIPO_CERTIFICADO) {
+				$oPersonaNota->setActa($_POST['acta']);
+			}
+			if ($_POST['tipo_acta'] == notas\PersonaNota::TIPO_ACTA) {
+				$oActa = new notas\Acta();
+				$valor = trim($_POST['acta']);
+				$reg_exp = "/^(\?|\w{1,6}\??)\s+([0-9]{0,3})\/([0-9]{2})\??$/";
+				if (preg_match ($reg_exp, $valor) == 1) {
+					} else {
+						// inventar acta.
+						$valor = $oActa->inventarActa($valor,$_POST['f_acta']);
+					}
+				$oPersonaNota->setActa($valor);
+			}
 		}
 		if (!empty($_POST['preceptor'])) $oPersonaNota->setPreceptor($_POST['preceptor']);
 		if (!empty($_POST['id_preceptor'])) $oPersonaNota->setId_preceptor($_POST['id_preceptor']);
@@ -104,17 +110,23 @@ switch($_POST['mod']) {
 		}
 		$oPersonaNota->setId_situacion($_POST['id_situacion']);
 		$oPersonaNota->setF_acta($_POST['f_acta']);
+		$oPersonaNota->setTipo_acta($_POST['tipo_acta']);
 		// comprobar valor del acta
 		if (!empty($_POST['acta'])) {
-			$oActa = new notas\Acta();
-			$valor = trim($_POST['acta']);
-			$reg_exp = "/^(\?|\w{1,6}\??)\s+([0-9]{0,3})\/([0-9]{2})\??$/";
-			if (preg_match ($reg_exp, $valor) == 1) {
-				} else {
-					// inventar acta.
-					$valor = $oActa->inventarActa($valor,$_POST['f_acta']);
-				}
-			$oPersonaNota->setActa($valor);
+			if ($_POST['tipo_acta'] == notas\PersonaNota::TIPO_CERTIFICADO) {
+				$oPersonaNota->setActa($_POST['acta']);
+			}
+			if ($_POST['tipo_acta'] == notas\PersonaNota::TIPO_ACTA) {
+				$oActa = new notas\Acta();
+				$valor = trim($_POST['acta']);
+				$reg_exp = "/^(\?|\w{1,6}\??)\s+([0-9]{0,3})\/([0-9]{2})\??$/";
+				if (preg_match ($reg_exp, $valor) == 1) {
+					} else {
+						// inventar acta.
+						$valor = $oActa->inventarActa($valor,$_POST['f_acta']);
+					}
+				$oPersonaNota->setActa($valor);
+			}
 		}
 		if (empty($_POST['preceptor'])) {
 			$oPersonaNota->setPreceptor('');
