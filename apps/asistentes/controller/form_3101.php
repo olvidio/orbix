@@ -100,7 +100,7 @@ if (!empty($id_nom)) { //caso de modificar
 	$mod="nuevo";
 	$propio="t"; //valor por defecto
 	$observ=""; //valor por defecto
-	$plaza=1; //valor por defecto
+	$plaza=  asistentes\Asistente::PLAZA_PEDIDA; //valor por defecto
 	$propietario=''; //valor por defecto
 	$_POST['obj_pau'] = !empty($_POST['obj_pau'])? urldecode($_POST['obj_pau']) : '';
 	$obj_pau = strtok($_POST['obj_pau'],'&');

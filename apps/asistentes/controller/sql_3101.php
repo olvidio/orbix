@@ -229,7 +229,7 @@ if (core\configGlobal::is_app_installed('actividadcargos')) {
 			$falta=$oAsistente->getFalta();
 			$est_ok=$oAsistente->getEst_ok();
 			$observ1=$oAsistente->getObserv();
-			$plaza= empty($oAsistente->getPlaza())? 1 : $oAsistente->getPlaza();
+			$plaza= empty($oAsistente->getPlaza())? asistentes\Asistente::PLAZA_PEDIDA : $oAsistente->getPlaza();
 
 			// contar plazas
 			if (core\configGlobal::is_app_installed('actividadplazas')) {
@@ -257,7 +257,7 @@ if (core\configGlobal::is_app_installed('actividadcargos')) {
 				} else {  // En mi dl distingo las cedidas
 					// si no es de (la dl o de paso ) y no tiene la plaza asignada o confirmada no lo muestro
 					if ($child != $mi_dele) {
-						if ($plaza < 4) {
+						if ($plaza < asistentes\Asistente::PLAZA_ASIGNADA) {
 							continue;
 						} else {
 							incrementa($a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
@@ -336,12 +336,12 @@ foreach($cAsistentes as $oAsistente) {
 	$falta=$oAsistente->getFalta();
 	$est_ok=$oAsistente->getEst_ok();
 	$observ=$oAsistente->getObserv();
-	$plaza = 1;
+	$plaza = asistentes\Asistente::PLAZA_PEDIDA;
 	
 	// contar plazas
 	//if (core\configGlobal::is_app_installed('actividadplazas') && !empty($dl)) {
 	if (core\configGlobal::is_app_installed('actividadplazas')) {
-		$plaza= empty($oAsistente->getPlaza())? 1 : $oAsistente->getPlaza();
+		$plaza= empty($oAsistente->getPlaza())? asistentes\Asistente::PLAZA_PEDIDA : $oAsistente->getPlaza();
 		// las cuento todas y a la hora de enseñar miro si soy la dl org o no.
 		// propiedad de la plaza:
 		$propietario = $oAsistente->getPropietario();
@@ -351,7 +351,7 @@ foreach($cAsistentes as $oAsistente) {
 		//si es de otra dl no distingo cedidas.
 		// no muestro ni cuento las que esten en estado distinto al asignado o confirmado (>3)
 		if ($padre != $mi_dele) {
-			if ($plaza > 3) {
+			if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) {
 				incrementa($a_plazas_resumen[$padre]['ocupadas'][$dl][$plaza]);
 				if (!empty($child) && $child != $padre) {
 					incrementa($a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
@@ -366,7 +366,7 @@ foreach($cAsistentes as $oAsistente) {
 		} else {  // En mi dl distingo las cedidas
 			// si no es de (la dl o de paso ) y no tiene la plaza asignada o confirmada no lo muestro
 			if ($child != $mi_dele) {
-				if ($plaza < 4) {
+				if ($plaza < asistentes\Asistente::PLAZA_ASIGNADA) {
 					continue;
 				} else {
 					incrementa($a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
@@ -456,9 +456,9 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 			$plazas = empty($aa['ocupadas'][$padre])? array() : $aa['ocupadas'][$padre];
 			$ocupadas_dl = 0;
 			foreach ($plazas as $plaza => $num) {
-				if ($plaza == 1) { $decidir = $num; }
-				if ($plaza == 2) { $espera = $num; }
-				if ($plaza > 3) {
+				if ($plaza == asistentes\Asistente::PLAZA_PEDIDA) { $decidir = $num; }
+				if ($plaza == asistentes\Asistente::PLAZA_EN_ESPERA) { $espera = $num; }
+				if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) {
 					$ocupadas_dl += $num;
 				}
 			}
@@ -473,9 +473,9 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 				$i++;
 				$ocupadas_dl = 0;
 				foreach ($plazas as $plaza => $num) {
-					if ($plaza == 1) { $decidir = $num; }
-					if ($plaza == 2) { $espera = $num; }
-					if ($plaza > 3) {
+					if ($plaza == asistentes\Asistente::PLAZA_PEDIDA) { $decidir = $num; }
+					if ($plaza == asistentes\Asistente::PLAZA_EN_ESPERA) { $espera = $num; }
+					if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) {
 						$ocupadas_dl += $num;
 					}
 				}
@@ -515,9 +515,9 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 					$plazas = empty($pla['ocupadas'])? array() : $pla['ocupadas'];
 					foreach ($plazas as $dl => $pl) {
 						foreach ($pl as $plaza => $num) {
-							if ($plaza == 1) { $decidir += $num; }
-							if ($plaza == 2) { $espera += $num; }
-							if ($plaza > 3) { $ocupadas_otra += $num; }
+							if ($plaza == asistentes\Asistente::PLAZA_PEDIDA) { $decidir += $num; }
+							if ($plaza == asistentes\Asistente::PLAZA_EN_ESPERA) { $espera += $num; }
+							if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) { $ocupadas_otra += $num; }
 						}
 						if (!empty($ocupadas_otra)) { $resumen_plazas .= " + "; }
 						$txt = sprintf(_("(de las %s cedidas por %s)"),$pla['cedidas'],$dl3);
@@ -569,9 +569,9 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 			$plazas = $pla['ocupadas'];
 			foreach ($plazas as $dl => $pl) {
 				foreach ($pl as $plaza => $num) {
-					if ($plaza == 1) { $decidir += $num; }
-					if ($plaza == 2) { $espera += $num; }
-					if ($plaza > 3) { $ocupadas_dl += $num; }
+					if ($plaza == asistentes\Asistente::PLAZA_PEDIDA) { $decidir += $num; }
+					if ($plaza == asistentes\Asistente::PLAZA_EN_ESPERA) { $espera += $num; }
+					if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) { $ocupadas_dl += $num; }
 				}
 				$txt = sprintf(_("(de las %s cedidas por %s)"),$pla['cedidas'],$dl2);
 				$resumen_plazas2 .= $ocupadas_dl." ".$txt;

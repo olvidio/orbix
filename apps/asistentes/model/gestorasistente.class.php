@@ -46,11 +46,11 @@ class GestorAsistente Extends core\ClaseGestor {
 	 * @return object del tipus Desplegable
 	 */
 	function getPosiblesPlaza() {
-		$aOpciones[1] = _("pedida");
-		$aOpciones[2] = _("en espera");
-		$aOpciones[3] = _("denegada");
-		$aOpciones[4] = _("asignada");
-		$aOpciones[5] = _("confirmada");
+		$aOpciones[Asistente::PLAZA_PEDIDA] = _("pedida");
+		$aOpciones[Asistente::PLAZA_EN_ESPERA] = _("en espera");
+		$aOpciones[Asistente::PLAZA_DENEGADA] = _("denegada");
+		$aOpciones[Asistente::PLAZA_ASIGNADA] = _("asignada");
+		$aOpciones[Asistente::PLAZA_CONFIRMADA] = _("confirmada");
 		return new web\Desplegable('',$aOpciones,'',true);
 	}
 	
@@ -165,9 +165,9 @@ class GestorAsistente Extends core\ClaseGestor {
 			$dl = $oPersona->getDl();
 			if ($sdl != $dl) continue;
 			//}
-			$plaza= empty($oAsistente->getPlaza())? 1 : $oAsistente->getPlaza();
+			$plaza= empty($oAsistente->getPlaza())? Asistente::PLAZA_PEDIDA : $oAsistente->getPlaza();
 			// sólo cuento las asignadas
-			if ($plaza < 4) continue;
+			if ($plaza < Asistente::PLAZA_ASIGNADA) continue;
 			$numAsis++; 
 		}
 		if (!empty($msg_err)) { echo $msg_err; }

@@ -20,6 +20,14 @@ use core;
  * @created 11/03/2014
  */
 class Asistente Extends AsistentePub {
+	// tipo plaza constants.
+	//1:pedida, 2:en espera, 3: denegada, 4:asignada, 5:confirmada
+    const PLAZA_PEDIDA     = 1; // Pedida
+    const PLAZA_EN_ESPERA   = 2; // En espera.
+    const PLAZA_DENEGADA    = 3; // Denegada.
+    const PLAZA_ASIGNADA    = 4; // Asignada.
+    const PLAZA_CONFIRMADA  = 5; // Confirmada.
+	
 	/* ATRIBUTS ----------------------------------------------------------------- */
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 

@@ -90,7 +90,7 @@ if (!empty($id_activ)) { //caso de modificar
 	$falta="f"; //valor por defecto
 	$est_ok="f"; //valor por defecto
 	$observ=""; //valor por defecto
-	$plaza=1; //valor por defecto
+	$plaza=  asistentes\Asistente::PLAZA_PEDIDA; //valor por defecto
 	/*
 	  
 	$sql_nom= "SELECT nom_activ, id_activ FROM a_actividades WHERE id_tipo_activ::text ~ '$id_tipo' AND status=2 $mis order by f_ini";

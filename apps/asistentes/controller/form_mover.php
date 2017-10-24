@@ -99,7 +99,7 @@ $a_camposHidden = array(
 		'id_activ_old' => $id_activ_old,
 		'mod' => $mod,
 		'propio' => $propio,
-		'plaza' => 1,
+		'plaza' => asistentes\Asistente::PLAZA_ASIGNADA,
 		'go_to'=> $go_to
 		);
 $oHash->setcamposForm($camposForm);

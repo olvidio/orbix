@@ -177,7 +177,7 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
 		$oAsistenteNew->DBCarregar();
 		$oAsistenteNew->setPropio('t');
 		//1:pedida, 2:en espera, 3: denegada, 4:asignada, 5:confirmada
-		$oAsistenteNew->setPlaza(4);
+		$oAsistenteNew->setPlaza(actividadplazas\model\actividadPlazas::PLAZA_ASIGNADA);
 		if ($oAsistenteNew->DBGuardar() === false) {
 			$msg_err = _('Hay un error, no se ha guardado');
 			echo $msg_err;
