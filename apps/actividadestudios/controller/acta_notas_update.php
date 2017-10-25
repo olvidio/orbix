@@ -139,6 +139,7 @@ if ($_POST['que']==3) { //paso las matrículas a notas definitivas (Grabar e imp
 			$oPersonaNota->setId_preceptor($id_preceptor);
 			$oPersonaNota->setNota_num($nota_num);
 			$oPersonaNota->setNota_max($nota_max);
+			$oPersonaNota->setTipo_acta(notas\PersonaNota::FORMATO_ACTA);
 			if ($oPersonaNota->DBGuardar() === false) {
 				echo _('Hay un error, no se ha guardado');
 			}

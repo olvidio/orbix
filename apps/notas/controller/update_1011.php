@@ -67,10 +67,10 @@ switch($_POST['mod']) {
 		if (!empty($_POST['tipo_acta'])) $oPersonaNota->setTipo_acta($_POST['tipo_acta']);
 		// comprobar valor del acta
 		if (!empty($_POST['acta'])) {
-			if ($_POST['tipo_acta'] == notas\PersonaNota::TIPO_CERTIFICADO) {
+			if ($_POST['tipo_acta'] == notas\PersonaNota::FORMATO_CERTIFICADO) {
 				$oPersonaNota->setActa($_POST['acta']);
 			}
-			if ($_POST['tipo_acta'] == notas\PersonaNota::TIPO_ACTA) {
+			if ($_POST['tipo_acta'] == notas\PersonaNota::FORMATO_ACTA) {
 				$oActa = new notas\Acta();
 				$valor = trim($_POST['acta']);
 				$reg_exp = "/^(\?|\w{1,6}\??)\s+([0-9]{0,3})\/([0-9]{2})\??$/";
@@ -113,10 +113,10 @@ switch($_POST['mod']) {
 		$oPersonaNota->setTipo_acta($_POST['tipo_acta']);
 		// comprobar valor del acta
 		if (!empty($_POST['acta'])) {
-			if ($_POST['tipo_acta'] == notas\PersonaNota::TIPO_CERTIFICADO) {
+			if ($_POST['tipo_acta'] == notas\PersonaNota::FORMATO_CERTIFICADO) {
 				$oPersonaNota->setActa($_POST['acta']);
 			}
-			if ($_POST['tipo_acta'] == notas\PersonaNota::TIPO_ACTA) {
+			if ($_POST['tipo_acta'] == notas\PersonaNota::FORMATO_ACTA) {
 				$oActa = new notas\Acta();
 				$valor = trim($_POST['acta']);
 				$reg_exp = "/^(\?|\w{1,6}\??)\s+([0-9]{0,3})\/([0-9]{2})\??$/";

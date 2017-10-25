@@ -184,8 +184,8 @@ $oDesplProfesores->setOpcion_sel($id_preceptor);
 $oDesplNotas->setOpcion_sel($id_situacion);
 
 if (!empty($tipo_acta_real)) {
-	if ($tipo_acta_real==notas\PersonaNota::TIPO_ACTA) { $chk_acta="checked"; } else { $chk_acta=""; }
-	if ($tipo_acta_real==notas\PersonaNota::TIPO_CERTIFICADO) { $chk_certificado="checked"; } else { $chk_certificado=""; }
+	if ($tipo_acta_real==notas\PersonaNota::FORMATO_ACTA) { $chk_acta="checked"; } else { $chk_acta=""; }
+	if ($tipo_acta_real==notas\PersonaNota::FORMATO_CERTIFICADO) { $chk_certificado="checked"; } else { $chk_certificado=""; }
 } else {
 	$chk_acta="checked";
 	$chk_certificado="";
@@ -436,8 +436,8 @@ echo "<td>"._("situación")."</td><td>";
 echo $oDesplNotas->desplegable();
 echo "</td></tr>";
 echo "<tr>";
-echo "<td><input type=\"radio\" id=\"tipo_acta_a\" name=\"tipo_acta\" value=\"".notas\PersonaNota::TIPO_ACTA."\" $chk_acta>"._("acta");
-echo " <input type=\"radio\" id=\"tipo_acta_c\" name=\"tipo_acta\" value=\"".notas\PersonaNota::TIPO_CERTIFICADO."\" $chk_certificado>"._("certificado");
+echo "<td><input type=\"radio\" id=\"tipo_acta_a\" name=\"tipo_acta\" value=\"".notas\PersonaNota::FORMATO_ACTA."\" $chk_acta>"._("acta");
+echo " <input type=\"radio\" id=\"tipo_acta_c\" name=\"tipo_acta\" value=\"".notas\PersonaNota::FORMATO_CERTIFICADO."\" $chk_certificado>"._("certificado");
 echo "<td colspan=1><input type=\"text\" id=\"acta\" name=\"acta\" value=\"$acta\" size=20>";
 echo "</td>";
 echo "<td colspan=2>";

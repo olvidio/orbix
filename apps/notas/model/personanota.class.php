@@ -22,8 +22,8 @@ use core;
 class PersonaNota Extends core\ClasePropiedades {
 	
 	// tipo_acta constants.
-    const TIPO_ACTA     = 1; // Acta.
-    const TIPO_CERTIFICADO    = 2; // Certificado.
+    const FORMATO_ACTA     = 1; // Acta.
+    const FORMATO_CERTIFICADO    = 2; // Certificado.
 	
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
