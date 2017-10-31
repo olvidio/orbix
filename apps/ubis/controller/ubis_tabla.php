@@ -49,6 +49,7 @@ if (!empty($_POST['atras'])) {
 		$loc = 'tot';
 	}
 }
+$tipo_ubi = $tipo.$loc;
 
 /*miro las condiciones. las variables son: nombre_ubi,ciudad,region,pais */
 if (empty($sWhere)) {
@@ -334,7 +335,7 @@ if (is_array($cUbisTot) && count($cUbisTot) == 0) {
 	$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_buscar.php?'.http_build_query(array('simple'=>1,'tipo'=>$tipo))); 
 	$nombre_ubi=$_POST['nombre_ubi'];
 	
-	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_editar.php?'.http_build_query(array('sGestor'=>$sGestor,'nombre_ubi'=>$nombre_ubi,'nuevo'=>1,'go_to'=>$go_to))); 
+	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_editar.php?'.http_build_query(array('sGestor'=>$sGestor,'tipo_ubi'=>$tipo_ubi,'nombre_ubi'=>$nombre_ubi,'nuevo'=>1,'go_to'=>$go_to))); 
 	
 	if ($tipo=="tot" || $loc=="tot") {
 		echo _("No existe esta ficha.");

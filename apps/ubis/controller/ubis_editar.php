@@ -25,6 +25,8 @@ use usuarios\model as usuarios;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$tipo_ubi = empty($_POST['tipo_ubi'])? '' : $_POST['tipo_ubi'];
+
 if (!empty($_POST['nuevo'])) {
 	$Gestor = unserialize(core\urlsafe_b64decode($_POST['sGestor']));
 	$obj = str_replace('Gestor','',$Gestor);
@@ -51,8 +53,8 @@ if (!empty($_POST['nuevo'])) {
 }
 
 $sf = $oUbi->getSf();
-$tipo_ubi = $oUbi->getTipo_ubi();
 
+$a_campos['tipo_ubi'] = $tipo_ubi;
 $a_campos['obj_pau'] = $obj_pau;
 //----------------------------------Permisos según el usuario
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
