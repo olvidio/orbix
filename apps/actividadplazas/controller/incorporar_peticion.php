@@ -50,6 +50,7 @@ switch ($sactividad) {
 		break;
 }
 
+$mi_dele = core\ConfigGlobal::mi_dele();
 //Actividades a las que afecta
 $cActividades = array();
 $aWhereA['status'] = 2;
@@ -67,12 +68,12 @@ switch ($sasistentes) {
 		//inicialmente estaba sólo con las activiades publicadas. 
 		//Ahora añado las no publicadas de midl.
 		$GesActividadesDl = new actividades\GestorActividadDl();
-		$cActividadesDl = $GesActividadesDl->getActividades($aWhere,$aOperador);
+		$cActividadesDl = $GesActividadesDl->getActividades($aWhereA,$aOperadorA);
 		// Añado la condición para que no duplique las de midele:
-		$aWhere['dl_org'] = $mi_dele;
-		$aOperador['dl_org'] = '!=';
+		$aWhereA['dl_org'] = $mi_dele;
+		$aOperadorA['dl_org'] = '!=';
 		$GesActividadesPub = new actividades\GestorActividadPub();
-		$cActividadesPub = $GesActividadesPub->getActividades($aWhere,$aOperador);
+		$cActividadesPub = $GesActividadesPub->getActividades($aWhereA,$aOperadorA);
 		
 		$cActividades = array_merge($cActividadesDl,$cActividadesPub);
 		break;
@@ -85,12 +86,12 @@ switch ($sasistentes) {
 		//inicialmente estaba sólo con las activiades publicadas. 
 		//Ahora añado las no publicadas de midl.
 		$GesActividadesDl = new actividades\GestorActividadDl();
-		$cActividadesDl = $GesActividadesDl->getActividades($aWhere,$aOperador);
+		$cActividadesDl = $GesActividadesDl->getActividades($aWhereA,$aOperadorA);
 		// Añado la condición para que no duplique las de midele:
-		$aWhere['dl_org'] = $mi_dele;
-		$aOperador['dl_org'] = '!=';
+		$aWhereA['dl_org'] = $mi_dele;
+		$aOperadorA['dl_org'] = '!=';
 		$GesActividadesPub = new actividades\GestorActividadPub();
-		$cActividadesPub = $GesActividadesPub->getActividades($aWhere,$aOperador);
+		$cActividadesPub = $GesActividadesPub->getActividades($aWhereA,$aOperadorA);
 		
 		$cActividades = array_merge($cActividadesDl,$cActividadesPub);
 	break;
