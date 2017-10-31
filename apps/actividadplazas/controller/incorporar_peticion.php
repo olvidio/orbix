@@ -63,8 +63,18 @@ switch ($sasistentes) {
 		$tabla_pau='p_agregados';
 		$aWhereA['id_tipo_activ'] = $Qid_tipo_activ;
 		$aOperadorA['id_tipo_activ'] = '~';
-		$GesActividades = new actividades\GestorActividadPub();
-		$cActividades = $GesActividades->getActividades($aWhereA,$aOperadorA);
+
+		//inicialmente estaba sólo con las activiades publicadas. 
+		//Ahora añado las no publicadas de midl.
+		$GesActividadesDl = new actividades\GestorActividadDl();
+		$cActividadesDl = $GesActividadesDl->getActividades($aWhere,$aOperador);
+		// Añado la condición para que no duplique las de midele:
+		$aWhere['dl_org'] = $mi_dele;
+		$aOperador['dl_org'] = '!=';
+		$GesActividadesPub = new actividades\GestorActividadPub();
+		$cActividadesPub = $GesActividadesPub->getActividades($aWhere,$aOperador);
+		
+		$cActividades = array_merge($cActividadesDl,$cActividadesPub);
 		break;
 	case "n":
 		// caso de n
@@ -72,8 +82,17 @@ switch ($sasistentes) {
 		$tabla_pau='p_numerarios';
 		$aWhereA['id_tipo_activ'] = $Qid_tipo_activ;
 		$aOperadorA['id_tipo_activ'] = '~';
-		$GesActividades = new actividades\GestorActividadPub();
-		$cActividades = $GesActividades->getActividades($aWhereA,$aOperadorA);
+		//inicialmente estaba sólo con las activiades publicadas. 
+		//Ahora añado las no publicadas de midl.
+		$GesActividadesDl = new actividades\GestorActividadDl();
+		$cActividadesDl = $GesActividadesDl->getActividades($aWhere,$aOperador);
+		// Añado la condición para que no duplique las de midele:
+		$aWhere['dl_org'] = $mi_dele;
+		$aOperador['dl_org'] = '!=';
+		$GesActividadesPub = new actividades\GestorActividadPub();
+		$cActividadesPub = $GesActividadesPub->getActividades($aWhere,$aOperador);
+		
+		$cActividades = array_merge($cActividadesDl,$cActividadesPub);
 	break;
 }
 $a_id_activ = array();
