@@ -608,38 +608,35 @@ class Resumen Extends core\ClasePropiedades {
 		$a_Asql = $statement->fetchAll();
 			
 		if ($actual == 1) {
-			$ssql="SELECT p.id_nom, p.nom||' '||p.apellido1||' '||p.apellido2 as nom_ap, a.nombre_corto,a.id_nivel
-				FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom), $asignaturas a
+			$ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.stgr
+				FROM $tabla p
 				WHERE  p.ce_fin='$any' AND p.ce_lugar = '$ce_lugar' AND p.stgr = 'b'
-					AND n.id_nivel=a.id_nivel
-					AND a.id_nivel BETWEEN 1100 AND 1300
-				ORDER BY p.apellido1,p.apellido2,p.nom, a.id_nivel  "; 
+				ORDER BY p.apellido1,p.apellido2,p.nom  "; 
+			echo "$ssql<br>";
 			$statement=$oDbl->query($ssql);
 			$nf=$statement->rowCount();
 			if ($nf >= 1){
 				$rta['error'] = true;
 				$rta['num'] = $nf;
 				if ($this->blista == true && $rta['num'] > 0) {
-					$rta['lista'] = $this->ListaAsig($a_Asql,$statement);
+					$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,stgr",1);
 				} else {
 					$rta['lista'] = '';
 				}
 				return $rta;
 			}
 		} else {
-			$ssql="SELECT p.id_nom, p.nom||' '||p.apellido1||' '||p.apellido2 as nom_ap, a.nombre_corto,a.id_nivel
-			FROM  $tabla p LEFT JOIN e_notas_dl n USING (id_nom), $asignaturas a
-			WHERE p.ce_fin IS NOT NULL AND p.ce_fin != '$any' AND p.stgr = 'b'
-				AND n.id_nivel=a.id_nivel
-				AND a.id_nivel BETWEEN 1100 AND 1300
-			ORDER BY p.apellido1,p.apellido2,p.nom, a.id_nivel"; 
+			$ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.stgr
+				FROM $tabla p
+				WHERE  p.ce_fin != '$any' AND p.ce_lugar = '$ce_lugar' AND p.stgr = 'b'
+				ORDER BY p.apellido1,p.apellido2,p.nom  "; 
 			$statement=$oDbl->query($ssql);
 			$nf=$statement->rowCount();
 			if ($nf >= 1){
 				$rta['error'] = true;
 				$rta['num'] = $nf;
 				if ($this->blista == true && $rta['num'] > 0) {
-					$rta['lista'] = $this->ListaAsig($a_Asql,$statement);
+					$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,stgr",1);
 				} else {
 					$rta['lista'] = '';
 				}
