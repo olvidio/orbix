@@ -612,7 +612,6 @@ class Resumen Extends core\ClasePropiedades {
 				FROM $tabla p
 				WHERE  p.ce_fin='$any' AND p.ce_lugar = '$ce_lugar' AND p.stgr = 'b'
 				ORDER BY p.apellido1,p.apellido2,p.nom  "; 
-			echo "$ssql<br>";
 			$statement=$oDbl->query($ssql);
 			$nf=$statement->rowCount();
 			if ($nf >= 1){
