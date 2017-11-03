@@ -131,7 +131,7 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
 		// si es de la sf quito la 'f'
 		$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
 		$id_tabla = $oActividad->getId_tabla();
-		if ($dl == core\ConfigGlobal::mi_dele()) {
+		if ($dl == $mi_dele) {
 			Switch($obj_persona) {
 				case 'PersonaN':
 				case 'PersonaNax':
@@ -169,7 +169,7 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
 		// si es de la sf quito la 'f'
 		$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
 		$id_tabla = $oActividad->getId_tabla();
-		if ($dl == core\ConfigGlobal::mi_dele()) {
+		if ($dl == $mi_dele) {
 			Switch($obj_persona) {
 				case 'PersonaN':
 				case 'PersonaNax':
@@ -198,6 +198,8 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
 		$oAsistenteNew->setPropio('t');
 		//1:pedida, 2:en espera, 3: denegada, 4:asignada, 5:confirmada
 		$oAsistenteNew->setPlaza(asistentes\Asistente::PLAZA_ASIGNADA);
+		// IMPORTANT: Propietario del a plaza
+		$oAsistenteNew->setPropietario("$dl>$mi_dele");
 		if ($oAsistenteNew->DBGuardar() === false) {
 			$msg_err = _('Hay un error, no se ha guardado');
 			echo $msg_err;

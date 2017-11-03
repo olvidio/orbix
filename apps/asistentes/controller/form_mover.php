@@ -139,7 +139,7 @@ foreach ($cActividades as $oActividad) {
 				$libres = $concedidas - $ocupadas;
 			}
 			if (!empty($concedidas)) {
-				$txt_plazas = sprintf(_("plazas libres: %s"),$libres);
+				$txt_plazas = sprintf(_("plazas libres/concedidas: %s/%s"),$libres,$concedidas);
 			}
 		}
 		$txt_creditos = '';
