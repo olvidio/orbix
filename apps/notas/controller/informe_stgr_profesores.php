@@ -25,18 +25,16 @@ use notas\model as notas;
 /* Pongo en la variable $curs el periodo del curso */
 $any=date("Y");
 $mes=date("m");
-
-if ($mes>9) {
-	$any_ini=$any; 
-	$any_fi=$any+1; 
+if ($mes>3) {
+	$any1=$any-1; 
+	$curso_txt="$any1-$any";
+	$any_ini_curs = $any1;
 } else { 
-	$any_ini=$any-1;
-	$any_fi=$any; 
+	$any1=$any-2;
+	$any--;
+	$curso_txt="$any1-$any";
+	$any_ini_curs = $any1;
 }
-$curso_txt="$any_ini-$any_fi";
-$inicurs= date("d/m/Y", mktime(0,0,0,10,1,$any_ini)) ;
-$fincurs= date("d/m/Y", mktime(0,0,0,9,30,$any_fi)) ;
-$curs="BETWEEN '$inicurs' AND '$fincurs' ";
 
 $lista = empty($_POST['lista'])? false : true;
 
@@ -49,8 +47,8 @@ $lista = empty($_POST['lista'])? false : true;
 	6 Asociado
 */
 $Resumen = new notas\Resumen('profesores');
+$Resumen->setAnyIniCurs($any_ini_curs);
 $Resumen->setLista($lista);
-$Resumen->setAny($any_ini);
 $Resumen->nuevaTablaProfe();
 
 //32. nº de profesores ordinarios:

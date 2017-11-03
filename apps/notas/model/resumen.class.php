@@ -925,7 +925,8 @@ class Resumen Extends core\ClasePropiedades {
 	/*40. Número de profesores que dieron clase de su especialidad*/
 	public function profesorEspecialidad($otras=FALSE){
 		$oDbl = $this->getoDbl();
-		$curso_inicio = $this->getAny();
+		$any = $this->getAnyFiCurs();
+		$curso_inicio = $any-1;
 		$oGesSectores = new \asignaturas\model\GestorSector();
 		$a_sectores = $oGesSectores->getArraySectores();
 		$asignaturas = $this->getNomAsignaturas();
@@ -937,8 +938,9 @@ class Resumen Extends core\ClasePropiedades {
 			$id_nom=$row['id_nom'];
 			$id_departamento=$row['id_departamento'];
 			// asignaturas (sector) por profesor
-			$ssql="SELECT DISTINCT d.id_nom,d.id_activ,a.id_sector,a.nombre_corto FROM d_docencia_stgr d JOIN $asignaturas a USING (id_asignatura)
-					WHERE d.id_nom=$id_nom AND curso_inicio=$curso_inicio ";
+			$ssql="SELECT DISTINCT d.id_nom,d.id_activ,a.id_sector,a.nombre_corto"
+					. " FROM d_docencia_stgr d JOIN $asignaturas a USING (id_asignatura)"
+					. " WHERE d.id_nom=$id_nom AND curso_inicio=$curso_inicio ";
 			//echo "sql: $ssql<br>";
 			foreach($oDbl->query($ssql) as $row) {
 				$id_nom = $row['id_nom'];
