@@ -615,13 +615,16 @@ class Resumen Extends core\ClasePropiedades {
 					AND a.id_nivel BETWEEN 1100 AND 1300
 				ORDER BY p.apellido1,p.apellido2,p.nom, a.id_nivel  "; 
 			$statement=$oDbl->query($ssql);
-			$rta['num'] = $statement->fetchColumn();
-
-			if ($this->blista == true && $rta['num'] > 0) {
-				$rta['lista'] = $this->ListaAsig($a_Asql,$statement);
-
-			} else {
-				$rta['lista'] = '';
+			$nf=$statement->rowCount();
+			if ($nf >= 1){
+				$rta['error'] = true;
+				$rta['num'] = $nf;
+				if ($this->blista == true && $rta['num'] > 0) {
+					$rta['lista'] = $this->ListaAsig($a_Asql,$statement);
+				} else {
+					$rta['lista'] = '';
+				}
+				return $rta;
 			}
 		} else {
 			$ssql="SELECT p.id_nom, p.nom||' '||p.apellido1||' '||p.apellido2 as nom_ap, a.nombre_corto,a.id_nivel
@@ -631,16 +634,17 @@ class Resumen Extends core\ClasePropiedades {
 				AND a.id_nivel BETWEEN 1100 AND 1300
 			ORDER BY p.apellido1,p.apellido2,p.nom, a.id_nivel"; 
 			$statement=$oDbl->query($ssql);
-			$rta['num'] = '';
-			$rta['num'] = $statement->fetchColumn();
-
-			if ($this->blista == true && $rta['num'] > 0) {
-				$rta['lista'] = $this->ListaAsig($a_Asql,$statement);
-
-			} else {
-				$rta['lista'] = '';
+			$nf=$statement->rowCount();
+			if ($nf >= 1){
+				$rta['error'] = true;
+				$rta['num'] = $nf;
+				if ($this->blista == true && $rta['num'] > 0) {
+					$rta['lista'] = $this->ListaAsig($a_Asql,$statement);
+				} else {
+					$rta['lista'] = '';
+				}
+				return $rta;
 			}
-
 		}
 		return $rta;
 	}
