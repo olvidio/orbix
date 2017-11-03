@@ -204,11 +204,16 @@ class GestorAsistente Extends core\ClaseGestor {
 				$namespace = __NAMESPACE__;
 				$cAsistentes = $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
 				break;
-			case 'ex': // asistentesOut
-				$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
+			case 'ex': // asistentesEx
+				$a_Clases[] = array('clase'=>'AsistenteEx','get'=>'getAsistentesEx');
 				$namespace = __NAMESPACE__;
 				$cAsistentes = $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
 				break;
+//			case 'ex': // asistentesOut
+//				$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
+//				$namespace = __NAMESPACE__;
+//				$cAsistentes = $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
+//				break;
 		}
 		$cAsistentesOk = array();
 		foreach ($cAsistentes as $oAsistente) {

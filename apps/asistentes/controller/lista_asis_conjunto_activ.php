@@ -203,7 +203,7 @@ foreach ($cActividades as $oActividad) {
 			if (in_array($id_nom,$aIdCargos)) continue; // si ya está como cargo, no lo pongo.
 			// Sólo apunto los asignados/confirmados
 			if (core\configGlobal::is_app_installed('actividadplazas')) {
-				if($oAsistente->getPlaza() < 4) {
+				if($oAsistente->getPlaza() < asistentes\Asistente::PLAZA_ASIGNADA) {
 					continue;
 				}
 			}
