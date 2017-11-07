@@ -448,7 +448,6 @@ fnjs_borrar=function(formulario){
 	var seguro;
 	seguro=confirm("<?php echo _("¿Está Seguro que desea borrar este ubi?");?>");
 	if (seguro) {
-		/*$(formulario).attr('action',"programas/ubis_eliminar.php?tabla=<?= $tabla ?>");*/
 		$(formulario).submit(function() {
 			$.ajax({
 				data: $(this).serialize(),

@@ -63,6 +63,7 @@ if ($condta<>'......') {
 } 
 
  //para el caso especial de n que hacen su ca en cv de agd:
+$condta_plus = '......';
 if ($sasistentes=="n" && ($sactividad=="ca" || $sactividad=="crt")) {
 	if ($sactividad=="ca") { $activ="cv"; } else { $activ=$sactividad; }
 	$oTipoActiv= new web\TiposActividades();
