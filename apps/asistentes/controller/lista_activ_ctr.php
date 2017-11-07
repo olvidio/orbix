@@ -63,7 +63,7 @@ if ($condta<>'......') {
 } 
 
  //para el caso especial de n que hacen su ca en cv de agd:
-$condta_plus = '......';
+$condta_plus = '';
 if ($sasistentes=="n" && ($sactividad=="ca" || $sactividad=="crt")) {
 	if ($sactividad=="ca") { $activ="cv"; } else { $activ=$sactividad; }
 	$oTipoActiv= new web\TiposActividades();
@@ -88,15 +88,15 @@ $condta1 = "($condta1 OR id_tipo_activ::text ~ '^$condta_sr')";
 //echo "condta: $condta,condta_plus: $condta_plus,condta_sr: $condta_sr";
 $condtatot = array(0,0,0);
 if ($condtatot[0] != $condta[0]) $condtatot[0] = $condta[0];
-if ($condtatot[0] != $condta_plus[0]) $condtatot[0] .= $condta_plus[0];
+if (!empty($condta_plus[0]) && $condtatot[0] != $condta_plus[0]) $condtatot[0] .= $condta_plus[0];
 if ($condtatot[0] != $condta_sr[0]) $condtatot[0] .= $condta_sr[0];
 if ($condtatot[0] >9) $condtatot[0] = '['.$condtatot[0].']';
 if ($condtatot[1] != $condta[1]) $condtatot[1] = $condta[1];
-if ($condtatot[1] != $condta_plus[1]) $condtatot[1] .= $condta_plus[1];
+if (!empty($condta_plus[1]) && $condtatot[1] != $condta_plus[1]) $condtatot[1] .= $condta_plus[1];
 if ($condtatot[1] != $condta_sr[1]) $condtatot[1] .= $condta_sr[1];
 if ($condtatot[1] >9) $condtatot[1] = '['.$condtatot[1].']';
 if ($condtatot[2] != $condta[2]) $condtatot[2] = $condta[2];
-if ($condtatot[2] != $condta_plus[2]) $condtatot[2] .= $condta_plus[2];
+if (!empty($condta_plus[2]) && $condtatot[2] != $condta_plus[2]) $condtatot[2] .= $condta_plus[2];
 if ($condtatot[2] != $condta_sr[2]) $condtatot[2] .= $condta_sr[2];
 if ($condtatot[2] >9) $condtatot[2] = '['.$condtatot[2].']';
 
