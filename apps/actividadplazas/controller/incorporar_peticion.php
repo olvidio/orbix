@@ -61,7 +61,6 @@ switch ($sasistentes) {
 	case "a":
 		//caso de agd
 		$id_tabla_persona='a'; //el id_tabla entra en conflicto con el de actividad
-		$tabla_pau='p_agregados';
 		$aWhereA['id_tipo_activ'] = $Qid_tipo_activ;
 		$aOperadorA['id_tipo_activ'] = '~';
 
@@ -80,7 +79,6 @@ switch ($sasistentes) {
 	case "n":
 		// caso de n
 		$id_tabla_persona='n';
-		$tabla_pau='p_numerarios';
 		$aWhereA['id_tipo_activ'] = $Qid_tipo_activ;
 		$aOperadorA['id_tipo_activ'] = '~';
 		//inicialmente estaba sólo con las activiades publicadas. 
@@ -115,6 +113,9 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
 
 	// hay que averiguar si la persona es de la dl o de fuera.
 	$oPersona = personas\Persona::NewPersona($id_nom);
+	// Debo saltarme las asistencias de personas que no son del grupo (n, agd)
+	$id_tabla_p = $oPersona->getId_tabla();
+	if ($id_tabla_p != $id_tabla_persona) { continue; }
 	if (!is_object($oPersona)) {
 		$msg_err .= "<br>$oPersona con id_nom: $id_nom";
 		exit($msg_err);
