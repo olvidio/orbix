@@ -26,12 +26,18 @@ $oDelegacion = $cDelegaciones[0];
 $id_dl = $oDelegacion->getId_dl();
 
 //borrar el actual y poner la nueva
+$propietario = '';
 if (!empty($id_activ_old) && !empty($id_nom)) {
 	$mod="mover";
 	
 	//del mismo tipo que la anterior
 	$oActividad = new actividades\Actividad(array('id_activ'=>$id_activ_old));
 	$id_tipo = $oActividad->getId_tipo_activ();
+
+	// IMPORTANT: Propietario del a plaza
+	// si es de la sf quito la 'f'
+	$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
+	$propietario = "$dl>$mi_dele";
 
 	$oTipoActiv= new web\TiposActividades($id_tipo);
 	$ssfsv = $oTipoActiv->getSfsvText();
@@ -100,6 +106,7 @@ $a_camposHidden = array(
 		'mod' => $mod,
 		'propio' => $propio,
 		'plaza' => asistentes\Asistente::PLAZA_ASIGNADA,
+		'propietario' => $propietario,
 		'go_to'=> $go_to
 		);
 $oHash->setcamposForm($camposForm);
