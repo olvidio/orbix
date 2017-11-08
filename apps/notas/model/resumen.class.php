@@ -642,7 +642,6 @@ class Resumen Extends core\ClasePropiedades {
 				return $rta;
 			}
 		}
-		return $rta;
 	}
 
 
