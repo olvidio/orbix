@@ -92,7 +92,7 @@ SetType($nce,"double");
 $a_aprobadas = $Resumen->aprobadasCe();
 $aprobadas = $a_aprobadas['num'];
 if (!empty($nce)) { $nf=number_format(($aprobadas/$nce),2,',','.'); } else { $nf=0; }
-$res['6.1'] = $nf;
+$res['6.1']['num'] = $nf;
 $a_textos['6.1'] = _("Rendimiento de los alumnos del ce");
 $res['6.2'] = $Resumen->aprobadasCe();
 $a_textos['6.2'] = _("Total de asignaturas de B y C aprobadas por alumnos del ce");
