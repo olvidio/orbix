@@ -553,7 +553,7 @@ class Resumen Extends core\ClasePropiedades {
 	    $ssql="SELECT p.nom, p.apellido1, p.apellido2
 		FROM $tabla p
 		WHERE (p.stgr='b' OR p.stgr ILIKE 'c%')
-			AND ((p.ce_lugar='$ce_lugar' AND p.ce_fin = '$any') OR p.situacion='n' OR p.situacion='m' OR p.situacion='k')
+			AND (p.ce_lugar='$ce_lugar' AND p.ce_fin = '$any') 
 		ORDER BY p.apellido1,p.apellido2,p.nom 
 		"; 
 
@@ -578,7 +578,7 @@ class Resumen Extends core\ClasePropiedades {
 			FROM $tabla p, $notas n
 			WHERE p.id_nom=n.id_nom 
 				AND (n.id_nivel BETWEEN 1100 AND 1229 OR n.id_nivel BETWEEN 2100 AND 2429)
-				AND ((p.ce_lugar='$ce_lugar' AND p.ce_fin = '$any') OR p.situacion='n' OR p.situacion='m' OR p.situacion='k')
+				AND (p.ce_lugar='$ce_lugar' AND p.ce_fin = '$any')
 			 	AND (p.stgr='b' OR p.stgr ILIKE 'c%')
 			"; 
 
