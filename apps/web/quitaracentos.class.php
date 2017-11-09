@@ -39,3 +39,4 @@ class QuitarAcentos {
 		$target = preg_replace('/[^a-zA-Z0-9_.-]/', '', $target);
 		return $target;
 	}
+}
