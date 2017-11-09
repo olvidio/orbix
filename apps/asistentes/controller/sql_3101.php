@@ -513,6 +513,7 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 				// ocupadas por la dl padre
 				foreach ($a_dl_plazas as $dl3 => $pla) {
 					$plazas = empty($pla['ocupadas'])? array() : $pla['ocupadas'];
+					$pla['cedidas'] = empty($pla['cedidas'])? '?' : $pla['cedidas'];
 					foreach ($plazas as $dl => $pl) {
 						foreach ($pl as $plaza => $num) {
 							if ($plaza == asistentes\Asistente::PLAZA_PEDIDA) { $decidir += $num; }
@@ -566,7 +567,8 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 		// ocupadas por la dl padre
 		$resumen_plazas2 = "$mi_dele: ";
 		foreach ($a_dl_plazas as $dl2 => $pla) {
-			$plazas = $pla['ocupadas'];
+			$plazas = empty($pla['ocupadas'])? array() : $pla['ocupadas'];
+			$pla['cedidas'] = empty($pla['cedidas'])? '?' : $pla['cedidas'];
 			foreach ($plazas as $dl => $pl) {
 				foreach ($pl as $plaza => $num) {
 					if ($plaza == asistentes\Asistente::PLAZA_PEDIDA) { $decidir += $num; }
