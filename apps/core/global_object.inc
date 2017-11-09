@@ -95,6 +95,7 @@ if ( ConfigGlobal::is_app_installed('menus') ) {
 			$oGesPermMenu = new usuarios\GestorPermMenu();
 			$cPermMenu = $oGesPermMenu->getPermMenus(array('id_usuario'=>$id_grupo));
 			foreach ($cPermMenu as $oPermMenu) {
+				// Or (inclusive or) 	Bits that are set in either $a or $b are set.
 				$iperm_menu = $iperm_menu | $oPermMenu->getMenu_perm();
 			}
 		}
