@@ -21,21 +21,21 @@ class Xpermisos {
 		$this->iaccion = $iaccion;
 	}
 
-  function setAccion($iaccion) {
+	function setAccion($iaccion) {
 		$this->iaccion = $iaccion;
-  }
-  function getPermissions() {
+	}
+	function getPermissions() {
 		return $this->permissions;
-  }
-  function setPermissions($permissions) {
+	}
+	function setPermissions($permissions) {
 		$this->permissions = $permissions;
-  }
-  function getTodos() {
+	}
+	function getTodos() {
 		return $this->todos;
-  }
-  function perm_invalid($does_have, $must_have) {
-    include("perm_invalid.php");
-  }
+	}
+	function perm_invalid($does_have, $must_have) {
+		include("perm_invalid.php");
+	}
 
 	/**
 	 * diu si té el permís $p (integer).
@@ -184,36 +184,36 @@ class Xpermisos {
 		return array(true, $r);
 	}
   
-  ## Look for a match within an list of strints
+	## Look for a match within an list of strints
 
-  function perm_islisted($perms, $look_for) {
-    $permlist = explode( ",", $perms );
-    while( list($a,$b) = each($permlist) ) {
-      if( $look_for === $b ) { return true; };
-    };
-    return false;
-  }
+	function perm_islisted($perms, $look_for) {
+		$permlist = explode( ",", $perms );
+		while( list($a,$b) = each($permlist) ) {
+			if( $look_for === $b ) { return true; };
+		};
+		return false;
+	}
 
-  ## Return a complete <select> tag for permission
-  ## selection.
-  
-  function perm_sel($name, $current = "", $class = "") {
-    reset($this->permissions);
-    $ret = sprintf("<select multiple name=\"%s[]\"%s>\n",
-      $name,
-      ($class!="")?" class=$class":"");
-    while(list($k, $v) = each($this->permissions)) {
-      $ret .= sprintf(" <option%s%s>%s\n",
-                $this->perm_islisted($current,$k)?" selected":"",
-                ($class!="")?" class=$class":"",
-                $k);
-    }
-    $ret .= "</select>";
+	## Return a complete <select> tag for permission
+	## selection.
 
-    return $ret;
-  }
+	function perm_sel($name, $current = "", $class = "") {
+		reset($this->permissions);
+		$ret = sprintf("<select multiple name=\"%s[]\"%s>\n",
+					  $name,
+					  ($class!="")?" class=$class":"");
+		while(list($k, $v) = each($this->permissions)) {
+			$ret .= sprintf(" <option%s%s>%s\n",
+					$this->perm_islisted($current,$k)?" selected":"",
+					($class!="")?" class=$class":"",
+					$k);
+		}
+		$ret .= "</select>";
 
-  /**
+		return $ret;
+	}
+
+	/**
 	* dibuja una lista de radios
 	*
 	*/
@@ -228,7 +228,7 @@ class Xpermisos {
 		}
 		return $txt;
 	}
-  /**
+	/**
 	* dibuja una lista de checkbox
 	* Con el nombre exacto. No si contiene.
 	*
@@ -245,7 +245,7 @@ class Xpermisos {
 		}
 		return $txt;
 	}
-  /**
+	/**
 	* dibuja una lista de checkbox
 	*
 	*/
@@ -328,6 +328,5 @@ class Xpermisos {
 		}
 		return $txt;
 	}
-
 }
 ?>
