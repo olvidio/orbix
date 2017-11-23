@@ -1,4 +1,28 @@
 <?php
+/**
+ * Funció per eliminar els & que no són html
+ * 
+ * @param type $html
+ * @param type $offset
+ */
+function fixAmps(&$html, $offset) {
+    $positionAmp = strpos($html, '&', $offset);
+    $positionSemiColumn = strpos($html, ';', $positionAmp+1);
+
+    $string = substr($html, $positionAmp, $positionSemiColumn-$positionAmp+1);
+
+    if ($positionAmp !== false) { // If an '&' can be found.
+        if ($positionSemiColumn === false) { // If no ';' can be found.
+//            $html = substr_replace($html, '&amp;', $positionAmp, 1); // Replace straight away.
+            $html = substr_replace($html, '', $positionAmp, 1); // Lo elimino
+        } else if (preg_match('/&(#[0-9]+|[A-Z|a-z|0-9]+);/', $string) === 0) { // If a standard escape cannot be found.
+            $html = substr_replace($html, '&amp;', $positionAmp, 1); // This mean we need to escapa the '&' sign.
+            fixAmps($html, $positionAmp+5); // Recursive call from the new position.
+        } else {
+            fixAmps($html, $positionAmp+1); // Recursive call from the new position.
+        }
+    }
+}
 
 // --------------------- source_rtf.php ---------------------
 // Measurements
@@ -616,6 +640,8 @@ switch ($_POST['frm_export_tipo']) {
 			$nom="export".uniqid(); // per evitar emoblics si accedeixen varies persones a l'hora.
 		}
 		$documento=$_POST['frm_export_ex'];
+		fixAmps($documento, 0);
+		echo "<pre>";
 		$doc_type="spreadsheet";
 		require_once("odf.php");
 		
