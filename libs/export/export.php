@@ -523,6 +523,7 @@ switch ($_POST['frm_export_tipo']) {
 			$nom="export".uniqid(); // per evitar emoblics si accedeixen varies persones a l'hora.
 		}
 		$documento=$_POST['frm_export_ex'];
+		fixAmps($documento, 0);
 		$html=preg_replace('/web-width/', 'width', $documento); 
 		if ($_POST['frm_export_orientation']=='v') {
 			$orientation='P';
@@ -601,6 +602,7 @@ switch ($_POST['frm_export_tipo']) {
 			$nom="export";
 		}
 		$documento=$_POST['frm_export_ex'];
+		fixAmps($documento, 0);
 		header('Content-type: application/vnd.ms-excel');
 		header("Content-Disposition: attachment; filename=\"$nom.xls\"");
 		// quito las imágenes
@@ -616,6 +618,7 @@ switch ($_POST['frm_export_tipo']) {
 			$nom="export";
 		}
 		$documento=$_POST['frm_export_ex'];
+		fixAmps($documento, 0);
 		//echo "dd: $frm_export_ex<br>";
 		header('Content-type: application/vnd.ms-word');
 		header("Content-Disposition: attachment; filename=\"$nom.rtf\"");
@@ -691,6 +694,7 @@ switch ($_POST['frm_export_tipo']) {
 			$nom="export".uniqid(); // per evitar emoblics si accedeixen varies persones a l'hora.
 		}
 		$documento=$_POST['frm_export_ex'];
+		fixAmps($documento, 0);
 		$doc_type="text";
 		require_once("odf.php");
 		
