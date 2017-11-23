@@ -94,8 +94,16 @@ $aprobadas = $a_aprobadas['num'];
 if (!empty($nce)) { $nf=number_format(($aprobadas/$nce),2,',','.'); } else { $nf=0; }
 $res['6.1']['num'] = $nf;
 $a_textos['6.1'] = _("Rendimiento de los alumnos del ce");
-$res['6.2'] = $Resumen->aprobadasCe();
-$a_textos['6.2'] = _("Total de asignaturas de B y C aprobadas por alumnos del ce");
+//$res['6.2'] = $Resumen->aprobadasCe();
+//$a_textos['6.2'] = _("Total de asignaturas de B y C aprobadas por alumnos del ce");
+if (!$lista) {
+	//xx. Numerarios que han terminado el ce este curso y con el bienio sin acabar 
+	$res['6.2'] = $Resumen->bienioSinAcabar(1);
+	$a_textos['6.2'] = _("Numerarios que han terminado el ce este curso y con el bienio sin acabar");
+	//xxx. Numerarios que han terminado el ce (otros anos) y con el bienio sin acabar 
+	$res['6.3'] = $Resumen->bienioSinAcabar(0);
+	$a_textos['6.3'] = _("Numerarios que han terminado el ce (otros años) y con el bienio sin acabar");
+}
 //7. Media de asignaturas superadas por alumno en bienio
 $a_aprobadas = $Resumen->aprobadasBienio();
 $aprobadas = $a_aprobadas['num'];
@@ -145,16 +153,6 @@ if ($lista) {
 	$res['x'] = $Resumen->enRepaso();
 	$a_textos['x'] = _("Número de numerarios de repaso");
 }
-
-if (!$lista) {
-	//xx. Numerarios que han terminado el ce este curso y con el bienio sin acabar 
-	$res['xx'] = $Resumen->bienioSinAcabar(1);
-	$a_textos['xx'] = _("Numerarios que han terminado el ce este curso y con el bienio sin acabar");
-	//xxx. Numerarios que han terminado el ce (otros anos) y con el bienio sin acabar 
-	$res['xxx'] = $Resumen->bienioSinAcabar(0);
-	$a_textos['xxx'] = _("Numerarios que han terminado el ce (otros años) y con el bienio sin acabar");
-}
-
 
 // ---------------------------------- html ----------------------------------------------------
 ?>
