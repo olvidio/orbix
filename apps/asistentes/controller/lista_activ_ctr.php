@@ -50,17 +50,13 @@ if ($_POST['n_agd']=="sss") { //no me cabe el valor en el menú en sss+ (pasa de
 	$sasistentes="sss+";
 } 
 //desarrollamos la condición que filtre el tipo de actividad		
+$condta = '';
 $oTipoActiv= new web\TiposActividades();
 $oTipoActiv->setSfsvText($ssfsv);
 $oTipoActiv->setAsistentesText($sasistentes);
 $oTipoActiv->setActividadText($sactividad);
 // $oTipoActiv->setNom_tipoText($snom_tipo); // no té sentit
 $condta=$oTipoActiv->getId_tipo_activ();
-
-//echo "condta: $condta<br>";
-if ($condta<>'......') {
-	$condta1=" id_tipo_activ::text ~ '^$condta'";
-} 
 
  //para el caso especial de n que hacen su ca en cv de agd:
 $condta_plus = '';
@@ -72,35 +68,25 @@ if ($sasistentes=="n" && ($sactividad=="ca" || $sactividad=="crt")) {
 	$oTipoActiv->setActividadText($activ);
 	// $oTipoActiv->setNom_tipoText($snom_tipo); // no té sentit
 	$condta_plus=$oTipoActiv->getId_tipo_activ();
-	if ($condta_plus<>'......') {
-		$condta1 = "($condta1 OR id_tipo_activ::text ~ '^$condta_plus')";
-	}
 } 
+
 // para el caso de los ap. que han hecho el crt con sr.
+$condta_sr='';
 $oTipoActiv= new web\TiposActividades();
 $oTipoActiv->setSfsvText($ssfsv);
 $oTipoActiv->setAsistentesText('sr');
 $oTipoActiv->setActividadText('crt');
 // $oTipoActiv->setNom_tipoText($snom_tipo); // no té sentit
 $condta_sr=$oTipoActiv->getId_tipo_activ();
-$condta1 = "($condta1 OR id_tipo_activ::text ~ '^$condta_sr')";
+//$condta1 = "($condta1 OR id_tipo_activ::text ~ '^$condta_sr')";
 
 //echo "condta: $condta,condta_plus: $condta_plus,condta_sr: $condta_sr";
-$condtatot = array(0,0,0);
-if ($condtatot[0] != $condta[0]) $condtatot[0] = $condta[0];
-if (!empty($condta_plus[0]) && $condtatot[0] != $condta_plus[0]) $condtatot[0] .= $condta_plus[0];
-if ($condtatot[0] != $condta_sr[0]) $condtatot[0] .= $condta_sr[0];
-if ($condtatot[0] >9) $condtatot[0] = '['.$condtatot[0].']';
-if ($condtatot[1] != $condta[1]) $condtatot[1] = $condta[1];
-if (!empty($condta_plus[1]) && $condtatot[1] != $condta_plus[1]) $condtatot[1] .= $condta_plus[1];
-if ($condtatot[1] != $condta_sr[1]) $condtatot[1] .= $condta_sr[1];
-if ($condtatot[1] >9) $condtatot[1] = '['.$condtatot[1].']';
-if ($condtatot[2] != $condta[2]) $condtatot[2] = $condta[2];
-if (!empty($condta_plus[2]) && $condtatot[2] != $condta_plus[2]) $condtatot[2] .= $condta_plus[2];
-if ($condtatot[2] != $condta_sr[2]) $condtatot[2] .= $condta_sr[2];
-if ($condtatot[2] >9) $condtatot[2] = '['.$condtatot[2].']';
+$condicion = '';
+$condicion .= empty($condta)? '' : '^'.$condta;
+$condicion .= empty($condta_plus)? '' : '|^'.$condta_plus;
+$condicion .= empty($condta_sr)? '' : '|^'.$condta_sr;
 
-$aWhereAct['id_tipo_activ'] = "^".$condtatot[0].$condtatot[1].$condtatot[2];
+$aWhereAct['id_tipo_activ'] = $condicion;
 $aOperadorAct['id_tipo_activ'] = "~";
 
 /*generamos el período de la búsqueda de actividades
