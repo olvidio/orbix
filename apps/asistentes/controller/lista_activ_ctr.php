@@ -72,14 +72,15 @@ if ($sasistentes=="n" && ($sactividad=="ca" || $sactividad=="crt")) {
 
 // para el caso de los ap. que han hecho el crt con sr.
 $condta_sr='';
-$oTipoActiv= new web\TiposActividades();
-$oTipoActiv->setSfsvText($ssfsv);
-$oTipoActiv->setAsistentesText('sr');
-$oTipoActiv->setActividadText('crt');
-// $oTipoActiv->setNom_tipoText($snom_tipo); // no té sentit
-$condta_sr=$oTipoActiv->getId_tipo_activ();
-//$condta1 = "($condta1 OR id_tipo_activ::text ~ '^$condta_sr')";
-
+if ($sactividad=="crt") {
+	$oTipoActiv= new web\TiposActividades();
+	$oTipoActiv->setSfsvText($ssfsv);
+	$oTipoActiv->setAsistentesText('sr');
+	$oTipoActiv->setActividadText('crt');
+	// $oTipoActiv->setNom_tipoText($snom_tipo); // no té sentit
+	$condta_sr=$oTipoActiv->getId_tipo_activ();
+	//$condta1 = "($condta1 OR id_tipo_activ::text ~ '^$condta_sr')";
+}
 //echo "condta: $condta,condta_plus: $condta_plus,condta_sr: $condta_sr";
 $condicion = '';
 $condicion .= empty($condta)? '' : '^'.$condta;
