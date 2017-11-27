@@ -132,10 +132,8 @@ $oHash1->setArraycamposHidden($a_camposHidden1);
 
 $help = "<p>"._("ejemplos").":<br>"
 		." - ". _("23/15 (sólo número) => busca en las actas de la dl.")."<br>"
-		." - ". _("dlx .* => todas las de dlx")."<br>"
+		." - ". _("dlx .* => todas las de dlx Hay que dejar espacio")."<br>"
 		." - ". _("dlx .*/15 => todas las de dlx del año 15 ")."<br>"
-		." - ". _("midl => todas las de la dl")."<br>"
-		." - ". _("dl => todas las de otras dl")."<br>"
 		. "</p>";
 		
 /* ---------------------------------- html --------------------------------------- */
