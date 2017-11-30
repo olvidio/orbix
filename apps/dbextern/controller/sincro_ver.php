@@ -139,6 +139,7 @@ $max = count($_SESSION['DBListas']);
 
 $a_lista_orbix = array();
 $persona_listas = array();
+$new_id = 0;
 if (!empty($max)) {
 	$new_id = otro($id,$mov,$max);
 	// Buscar coincidentes en orix
