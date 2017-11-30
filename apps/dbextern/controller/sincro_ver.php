@@ -138,6 +138,7 @@ if (empty($id)) {
 $max = count($_SESSION['DBListas']);
 
 $a_lista_orbix = array();
+$persona_listas = array();
 if (!empty($max)) {
 	$new_id = otro($id,$mov,$max);
 	// Buscar coincidentes en orix
@@ -265,6 +266,7 @@ if (empty($mov)) {
 	echo sprintf(_("unidas automáticamente: %s"),$cont_sync);
 }
 ?>
+<?php if (!empty($persona_listas)) { ?>
 <form id="movimiento" name="movimiento" action="">
 	<?= $oHash->getCamposHtml(); ?>
 	<input type="hidden" id="mov" name="mov" value="">
@@ -286,6 +288,7 @@ if (empty($mov)) {
 	echo '</tr>';
 ?>
 </table>
+<?php } ?>
 
 <?php if (!empty($a_lista_orbix)) { ?>
 <h3><?= _("Posibles Coincidencias") ?>:</h3>
@@ -306,8 +309,10 @@ foreach ($a_lista_orbix as $persona_orbix) {
 ?>
 </table>
 <?php } ?>
+<?php if (!empty($persona_listas)) { ?>
 <br>
 <input type="button" value="<?= _("crear nuevo") ?>" onclick="fnjs_crear()">
 </form>
+<?php } ?>
 <br>
 <input type="button" value="<?= _("actualizar datos de Listas a orbix") ?>" onclick="fnjs_sincronizar()">
