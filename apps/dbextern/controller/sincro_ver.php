@@ -132,11 +132,13 @@ if (empty($id)) {
 		$i++;
 		$a_lista[$i] = $a_persona_lista;
 	}
-		$_SESSION['DBListas'] = $a_lista;
-	}
+	$_SESSION['DBListas'] = $a_lista;
+}
 
-	$max = count($_SESSION['DBListas']);
+$max = count($_SESSION['DBListas']);
 
+$a_lista_orbix = array();
+if (!empty($max)) {
 	$new_id = otro($id,$mov,$max);
 	// Buscar coincidentes en orix
 	$persona_listas = $_SESSION['DBListas'][$new_id];
@@ -156,7 +158,6 @@ if (empty($id)) {
 	$oGesPersonasDl = new personas\model\GestorPersonaDl();
 	$cPersonasDl = $oGesPersonasDl->getPersonasDl($aWhere,$aOperador);
 	$i = 0;
-	$a_lista_orbix = array();
 	foreach ($cPersonasDl as $oPersonaDl) {
 		$id_nom = $oPersonaDl->getId_nom();
 		$oGesMatch = new dbextern\model\GestorIdMatchPersona();
@@ -177,34 +178,35 @@ if (empty($id)) {
 											'f_nacimiento'=>$f_nacimiento);
 		$i++;
 	}
+}
 
-	$url_sincro_ver = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro_ver.php';
-	$oHash = new web\Hash();
-	$oHash->setUrl($url_sincro_ver);
-	$oHash->setcamposNo('mov');
-	$a_camposHidden = array(
-			'dl' => $dl,
-			'tipo_persona' => $tipo_persona,
-			'id' => $new_id,
-			);
-	$oHash->setArraycamposHidden($a_camposHidden);
+$url_sincro_ver = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro_ver.php';
+$oHash = new web\Hash();
+$oHash->setUrl($url_sincro_ver);
+$oHash->setcamposNo('mov');
+$a_camposHidden = array(
+		'dl' => $dl,
+		'tipo_persona' => $tipo_persona,
+		'id' => $new_id,
+		);
+$oHash->setArraycamposHidden($a_camposHidden);
 
-	$url_sincro_ajax = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro_ajax.php';
-	$oHash1 = new web\Hash();
-	$oHash1->setUrl($url_sincro_ajax);
-	$oHash1->setCamposForm('que!id_nom_listas!id!id_orbix'); 
-	$h1 = $oHash1->linkSinVal();
+$url_sincro_ajax = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro_ajax.php';
+$oHash1 = new web\Hash();
+$oHash1->setUrl($url_sincro_ajax);
+$oHash1->setCamposForm('que!id_nom_listas!id!id_orbix'); 
+$h1 = $oHash1->linkSinVal();
 
 
-	$html_reg = sprintf(_("registro %s de %s"),$new_id,$max);
-	// ------------------ html ----------------------------------
-	?>
-	<script>
-	fnjs_sincronizar=function(){
-		var url='<?= $url_sincro_ajax ?>';
-		var parametros='que=syncro&dl=<?= $dl ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>&PHPSESSID=<?php echo session_id(); ?>';
-				 
-		$.ajax({
+$html_reg = sprintf(_("registro %s de %s"),$new_id,$max);
+// ------------------ html ----------------------------------
+?>
+<script>
+fnjs_sincronizar=function(){
+	var url='<?= $url_sincro_ajax ?>';
+	var parametros='que=syncro&dl=<?= $dl ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>&PHPSESSID=<?php echo session_id(); ?>';
+			 
+	$.ajax({
 			url: url,
 			type: 'post',
 		data: parametros,
@@ -285,8 +287,8 @@ if (empty($mov)) {
 ?>
 </table>
 
+<?php if (!empty($a_lista_orbix)) { ?>
 <h3><?= _("Posibles Coincidencias") ?>:</h3>
-
 <table>
 <?php
 foreach ($a_lista_orbix as $persona_orbix) {
@@ -303,6 +305,7 @@ foreach ($a_lista_orbix as $persona_orbix) {
 }
 ?>
 </table>
+<?php } ?>
 <br>
 <input type="button" value="<?= _("crear nuevo") ?>" onclick="fnjs_crear()">
 </form>
