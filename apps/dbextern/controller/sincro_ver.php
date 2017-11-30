@@ -105,6 +105,7 @@ if (empty($id)) {
 	$cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
 	$i = 0;
 	$cont_sync = 0;
+	$a_lista = [];
 	foreach ($cPersonasListas as $oPersonaListas) {
 		$id_nom_listas = $oPersonaListas->getIdentif();
 
@@ -131,81 +132,81 @@ if (empty($id)) {
 		$i++;
 		$a_lista[$i] = $a_persona_lista;
 	}
-	$_SESSION['DBListas'] = $a_lista;
-}
-
-$max = count($_SESSION['DBListas']);
-
-$new_id = otro($id,$mov,$max);
-// Buscar coincidentes en orix
-$persona_listas = $_SESSION['DBListas'][$new_id];
-$apellido1_sinprep = $persona_listas['apellido1_sinprep'];
-// Si tiene más de una palabra cojo la priemra
-$tokens = explode(' ', $apellido1_sinprep);
-$apellido1_sinprep_c = $tokens[0];
-$id_nom_listas = $persona_listas['id_nom_listas'];
-$aWhere = array();
-$aOperador = array();
-$aWhere['id_tabla'] = $tipo_persona;
-$aWhere['situacion'] = 'A';
-$aWhere['apellido1'] = $apellido1_sinprep_c;
-$aOperador['apellido1'] = 'sin_acentos';
-$aWhere['_ordre'] = 'apellido1, apellido2, nom';
-
-$oGesPersonasDl = new personas\model\GestorPersonaDl();
-$cPersonasDl = $oGesPersonasDl->getPersonasDl($aWhere,$aOperador);
-$i = 0;
-$a_lista_orbix = array();
-foreach ($cPersonasDl as $oPersonaDl) {
-	$id_nom = $oPersonaDl->getId_nom();
-	$oGesMatch = new dbextern\model\GestorIdMatchPersona();
-	$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_orbix'=>$id_nom));
-	if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
-		continue;
+		$_SESSION['DBListas'] = $a_lista;
 	}
-	$ape_nom = $oPersonaDl->getApellidosNombre();
-	$nombre = $oPersonaDl->getNom();
-	$apellido1 = $oPersonaDl->getApellido1();
-	$apellido2 = $oPersonaDl->getApellido2();
-	$f_nacimiento = empty($oPersonaDl->getF_nacimiento())? '??' : $oPersonaDl->getF_nacimiento();
-	$a_lista_orbix[$i] = 	array('id_nom'=>$id_nom,
-										'ape_nom'=>$ape_nom,
-										'nombre'=>$nombre,
-										'apellido1'=>$apellido1,
-										'apellido2'=>$apellido2,
-										'f_nacimiento'=>$f_nacimiento);
-	$i++;
-}
 
-$url_sincro_ver = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro_ver.php';
-$oHash = new web\Hash();
-$oHash->setUrl($url_sincro_ver);
-$oHash->setcamposNo('mov');
-$a_camposHidden = array(
-		'dl' => $dl,
-		'tipo_persona' => $tipo_persona,
-		'id' => $new_id,
-		);
-$oHash->setArraycamposHidden($a_camposHidden);
+	$max = count($_SESSION['DBListas']);
 
-$url_sincro_ajax = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro_ajax.php';
-$oHash1 = new web\Hash();
-$oHash1->setUrl($url_sincro_ajax);
-$oHash1->setCamposForm('que!id_nom_listas!id!id_orbix'); 
-$h1 = $oHash1->linkSinVal();
+	$new_id = otro($id,$mov,$max);
+	// Buscar coincidentes en orix
+	$persona_listas = $_SESSION['DBListas'][$new_id];
+	$apellido1_sinprep = $persona_listas['apellido1_sinprep'];
+	// Si tiene más de una palabra cojo la priemra
+	$tokens = explode(' ', $apellido1_sinprep);
+	$apellido1_sinprep_c = $tokens[0];
+	$id_nom_listas = $persona_listas['id_nom_listas'];
+	$aWhere = array();
+	$aOperador = array();
+	$aWhere['id_tabla'] = $tipo_persona;
+	$aWhere['situacion'] = 'A';
+	$aWhere['apellido1'] = $apellido1_sinprep_c;
+	$aOperador['apellido1'] = 'sin_acentos';
+	$aWhere['_ordre'] = 'apellido1, apellido2, nom';
+
+	$oGesPersonasDl = new personas\model\GestorPersonaDl();
+	$cPersonasDl = $oGesPersonasDl->getPersonasDl($aWhere,$aOperador);
+	$i = 0;
+	$a_lista_orbix = array();
+	foreach ($cPersonasDl as $oPersonaDl) {
+		$id_nom = $oPersonaDl->getId_nom();
+		$oGesMatch = new dbextern\model\GestorIdMatchPersona();
+		$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_orbix'=>$id_nom));
+		if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
+			continue;
+		}
+		$ape_nom = $oPersonaDl->getApellidosNombre();
+		$nombre = $oPersonaDl->getNom();
+		$apellido1 = $oPersonaDl->getApellido1();
+		$apellido2 = $oPersonaDl->getApellido2();
+		$f_nacimiento = empty($oPersonaDl->getF_nacimiento())? '??' : $oPersonaDl->getF_nacimiento();
+		$a_lista_orbix[$i] = 	array('id_nom'=>$id_nom,
+											'ape_nom'=>$ape_nom,
+											'nombre'=>$nombre,
+											'apellido1'=>$apellido1,
+											'apellido2'=>$apellido2,
+											'f_nacimiento'=>$f_nacimiento);
+		$i++;
+	}
+
+	$url_sincro_ver = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro_ver.php';
+	$oHash = new web\Hash();
+	$oHash->setUrl($url_sincro_ver);
+	$oHash->setcamposNo('mov');
+	$a_camposHidden = array(
+			'dl' => $dl,
+			'tipo_persona' => $tipo_persona,
+			'id' => $new_id,
+			);
+	$oHash->setArraycamposHidden($a_camposHidden);
+
+	$url_sincro_ajax = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro_ajax.php';
+	$oHash1 = new web\Hash();
+	$oHash1->setUrl($url_sincro_ajax);
+	$oHash1->setCamposForm('que!id_nom_listas!id!id_orbix'); 
+	$h1 = $oHash1->linkSinVal();
 
 
-$html_reg = sprintf(_("registro %s de %s"),$new_id,$max);
-// ------------------ html ----------------------------------
-?>
-<script>
-fnjs_sincronizar=function(){
-	var url='<?= $url_sincro_ajax ?>';
-	var parametros='que=syncro&dl=<?= $dl ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>&PHPSESSID=<?php echo session_id(); ?>';
-			 
-	$.ajax({
-		url: url,
-		type: 'post',
+	$html_reg = sprintf(_("registro %s de %s"),$new_id,$max);
+	// ------------------ html ----------------------------------
+	?>
+	<script>
+	fnjs_sincronizar=function(){
+		var url='<?= $url_sincro_ajax ?>';
+		var parametros='que=syncro&dl=<?= $dl ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>&PHPSESSID=<?php echo session_id(); ?>';
+				 
+		$.ajax({
+			url: url,
+			type: 'post',
 		data: parametros,
 		success: function (rta_txt) {
 			//rta_txt=rta.responseText;
