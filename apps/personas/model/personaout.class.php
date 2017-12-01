@@ -146,12 +146,6 @@ class PersonaOut Extends PersonaPub {
 					return false;
 				}
 			}
-			$id_auto = $oDbl->lastInsertId($nom_tabla.'_id_auto_seq');
-			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_auto=$id_auto")) === false) {
-				$sClauError = get_class($this).'.carregar.Last';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-				return false;
-			}
 			$aDadesLast = $qRs->fetch(\PDO::FETCH_ASSOC);
 			$this->aDades=$aDadesLast;
 			$this->setAllAtributes($aDadesLast);
