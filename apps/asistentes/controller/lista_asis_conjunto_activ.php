@@ -220,7 +220,7 @@ foreach ($cActividades as $oActividad) {
 			$dl = $oPersona->getDl();
 
 			// Si no organizo, no veo a los que no son de la dl.
-			if ($dl_org_activ =! $mi_dele) {
+			if ($dl_org_activ != $mi_dele) {
 				if ($dl != $mi_dele) {
 					continue;
 				}
