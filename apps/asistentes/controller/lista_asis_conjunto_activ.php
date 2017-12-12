@@ -104,6 +104,7 @@ if (($sasistentes=="s") AND ($sactividad=="cv")) {
 	} 
 }
 
+$mi_dele = core\ConfigGlobal::mi_dele();
 $k=0;
 $centros='';
 $aGrupos=array();
@@ -113,6 +114,7 @@ foreach ($cActividades as $oActividad) {
 	$id_activ=$oActividad->getId_activ();
 	$nom_activ=$oActividad->getNom_activ();
 	$observ=$oActividad->getObserv();
+	$dl_org_activ=$oActividad->getDl_org();
 	$id_ubi_casa=$oActividad->getId_ubi();
 	$plazas=$oActividad->getPlazas();
 
@@ -207,7 +209,6 @@ foreach ($cActividades as $oActividad) {
 					continue;
 				}
 			}
-			$num++;
 			$oPersona = personas\Persona::NewPersona($id_nom);
 			if (!is_object($oPersona)) {
 				$msg_err .= "<br>$oPersona con id_nom: $id_nom";
@@ -216,7 +217,15 @@ foreach ($cActividades as $oActividad) {
 			$id_tabla = $oPersona->getId_tabla();
 			$ap_nom = $oPersona->getApellidosNombre();
 			$ctr_dl = $oPersona->getCentro_o_dl();
+			$dl = $oPersona->getDl();
 
+			// Si no organizo, no veo a los que no son de la dl.
+			if ($dl_org_activ =! $mi_dele) {
+				if ($dl != $mi_dele) {
+					continue;
+				}
+			}
+			$num++;
 			$a_activ[$id_activ][$num]['cargo']=$num;
 			$a_activ[$id_activ][$num]['ap_nom']="$ap_nom ($ctr_dl)";
 		}
