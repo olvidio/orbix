@@ -41,7 +41,12 @@ if (!empty($a_sel)) { //vengo de un checkbox
 
 if (empty($go_to)) {
 	//pongo aqui el $go_to porque al ir al mismo update que las actividaes, no se donde voler
-	$a_dataUrl = array('queSel'=>'matriculas','pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier);
+	$a_dataUrl = array('queSel'=>'matriculas',
+						'pau'=>$pau,
+						'id_pau'=>$id_pau,
+						'obj_pau'=>$obj_pau,
+						'id_dossier'=>$id_dossier,
+						'todos'=>$todos);
 	$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query($a_dataUrl));
 }
 
