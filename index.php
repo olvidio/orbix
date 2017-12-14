@@ -497,6 +497,7 @@ function fnjs_procesarError() {
 }
 
 function fnjs_mostrar_atras(id_div,htmlForm) {
+	fnjs_borrar_posibles_atras();
 	var id_atras='#'+id_div;
 	
 	if ($(id_atras).length) {
@@ -505,12 +506,19 @@ function fnjs_mostrar_atras(id_div,htmlForm) {
 		html = '<div id="'+id_div+'" style="display: none;">';
 		html += htmlForm;
 		html += '</div>';
-		$(id_atras).prepend(html);
+		$('#cargando').prepend(html);
 		
 	}
 	fnjs_ir_a();
 }
 
+function fnjs_borrar_posibles_atras() {
+	if ($('#ir_a').length) $('#ir_a').remove() ;
+	if ($('#ir_atras').length) $('#ir_atras').remove() ;
+	if ($('#ir_atras2').length) $('#ir_atras2').remove() ;
+	if ($('#go_atras').length) $('#go_atras').remove() ;
+}
+	
 function fnjs_ir_a() {
 	var atras='';
 	var url=$('#url').val();
@@ -540,10 +548,7 @@ function fnjs_ir_a() {
 	fnjs_left_side_hide();
 
 	$(bloque).attr('refe',url);
-	if ($('#ir_a').length) $('#ir_a').remove() ;
-	if ($('#ir_atras').length) $('#ir_atras').remove() ;
-	if ($('#ir_atras2').length) $('#ir_atras2').remove() ;
-	if ($('#go_atras').length) $('#go_atras').remove() ;
+	fnjs_borrar_posibles_atras();
 	$.ajax({
 			url: url,
 			type: 'post',
@@ -703,6 +708,7 @@ function fnjs_ref_absoluta(base,path) {
 	return url;
 }
 function fnjs_enviar_formulario(id_form,bloque) {
+	fnjs_borrar_posibles_atras();
 	if (!bloque) { bloque='#main'; }
 	$(id_form).submit(function() { // catch the form's submit event
 			$.ajax({ // create an AJAX call...
