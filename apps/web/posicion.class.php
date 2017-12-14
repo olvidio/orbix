@@ -359,13 +359,14 @@ class Posicion {
 		//return "<script>fnjs_mostrar_atras('ir_atras','$html');</script>";
 		
 		?>
-		<div id="ir_a">
+		<script>fnjs_mostrar_atras('ir_a','<?= $html ?>');</script>
+		<!--<div id="ir_a">
 			<form id="go">
 			url: <input id="url" type="text" value="<?= $url ?>" size=70><br>
 			parametros: <input id="parametros" type="text" value="<?= $parametros ?>" size=70><br>
 			bloque: <input id="id_div" type="text" value="<?= $frame ?>" size=70>
 			</form>
-		</div>
+		</div>-->
 		<?php
 	}
 
