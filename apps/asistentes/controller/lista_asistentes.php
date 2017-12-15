@@ -298,7 +298,8 @@ if ($queSel == "listcl") {
 }
 
 $txt_cl = '';
-foreach ($a_valores as $c => $val) {
+foreach ($a_valores as $k => $val) {
+	$c = $val[1];
 	$oPersona = $val[7];
     if ($queSel=="listcl") { $txt_cl= datos($oPersona,$tipo); }
     
