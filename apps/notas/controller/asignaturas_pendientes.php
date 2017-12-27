@@ -96,9 +96,11 @@ foreach ($cPersonas as $oPersona) {
 		$id_nivel = $oPersonaNota->getId_nivel();
 		$id_situacion = $oPersonaNota->getId_situacion();
 
-		//$oAsig = new asignaturas\Asignatura($id_asignatura);
-		//if ($oAsig->getStatus() != 't') continue;
-		if ($a_Asig_status[$id_asignatura] != 't') continue;
+		/* 
+		 * No se porqué está aqui. Aunque la asignatura esté fuera de uso,
+		 * si está aprobada cuenta no?
+		 */
+		//if ($a_Asig_status[$id_asignatura] != 't') continue;
 	
 		
 		if ($id_asignatura > 3000) {
