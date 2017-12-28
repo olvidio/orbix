@@ -53,7 +53,7 @@ $continuar = (string)  filter_input(INPUT_POST, 'continuar');
 		$id_activ = $oActividad->getId_activ();
 		$f_ini = $oActividad->getF_ini();
 		list($ini_d,$ini_m,$ini_a) = preg_split('/[:\/\.-]/', $f_ini ); //los delimitadores pueden ser /, ., -, :
-		$GesAsignaturasCa = new actividadestudios\GestorActividadAsignatura();
+		$GesAsignaturasCa = new actividadestudios\GestorActividadAsignaturaDl();
 		$cActivAsignaturas = $GesAsignaturasCa->getActividadAsignaturas(array('id_activ'=>$id_activ),array('id_profesor'=>'IS NOT NULL'));
 		
 		foreach ($cActivAsignaturas as $oActividadAsignatura) {

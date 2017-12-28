@@ -36,7 +36,7 @@ if (!empty($id_asignatura)) { //caso de modificar
 	$oDesplProfesores = $GesProfesores->getDesplProfesoresAsignatura($id_asignatura);
 	$oDesplProfesores->setOpcion_sel(-1);
 	
-	$oActividadAsignatura= new actividadestudios\ActividadAsignatura();
+	$oActividadAsignatura= new actividadestudios\ActividadAsignaturaDl();
 	$oActividadAsignatura->setId_activ($id_activ);
 	$oActividadAsignatura->setId_asignatura($id_asignatura);
 	$oActividadAsignatura->DBCarregar();

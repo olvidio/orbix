@@ -387,7 +387,7 @@ if ($_POST['tipo']=='planning_cdc' || $_POST['tipo']=='casa') {
 		$actividades[]=array($cdc[$p+1]=>array());
 	}
 } else {
-	$GesActividadAsignaturas = new actividadestudios\GestorActividadAsignatura();
+	$GesActividadAsignaturas = new actividadestudios\GestorActividadAsignaturaDl();
 	$aWhere = array('f_ini' => "'$inicio','$fin'");
 	$aOperador = array('f_ini' => 'BETWEEN');
 	$GesActividadAsignaturas->getActividadAsignaturas($aWhere,$aOperador);

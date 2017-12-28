@@ -26,7 +26,7 @@ $msg_err = '';
 switch ($_POST['mod']) {
 	case 'eliminar':  //------------ BORRAR --------
 		if ($_POST['pau']=="a") { 
-			$oActividadAsignatura = new actividadestudios\ActividadAsignatura();
+			$oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
 			$oActividadAsignatura->setId_activ($id_activ);
 			$oActividadAsignatura->setId_asignatura($id_asignatura);
 			if ($oActividadAsignatura->DBEliminar() === false) {
@@ -51,7 +51,7 @@ switch ($_POST['mod']) {
 		}
 		break;
 	case 'nuevo': //------------ NUEVO --------
-		$oActividadAsignatura = new actividadestudios\ActividadAsignatura();
+		$oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
 		$oActividadAsignatura->setId_activ($id_activ);
 		$oActividadAsignatura->setId_asignatura($id_asignatura);
 		if (!empty($_POST['interes'])) $oActividadAsignatura->setInteres($_POST['interes']); 
@@ -69,7 +69,7 @@ switch ($_POST['mod']) {
 		$oDossier->DBGuardar();
 		break;
 	case 'editar': //------------ EDITAR --------
-		$oActividadAsignatura = new actividadestudios\ActividadAsignatura();
+		$oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
 		$oActividadAsignatura->setId_activ($id_activ);
 		$oActividadAsignatura->setId_asignatura($id_asignatura);
 		$oActividadAsignatura->DBCarregar();

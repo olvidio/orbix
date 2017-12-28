@@ -152,7 +152,7 @@ foreach ($cActividades as $oActividad) {
 		$txt_creditos = '';
 		// creditos
 		// por cada ca creo un array con las asignaturas y los créditos.
-		$GesActividadAsignaturas = new actividadestudios\GestorActividadAsignatura();
+		$GesActividadAsignaturas = new actividadestudios\GestorActividadAsignaturaDl();
 		$asignaturas = $GesActividadAsignaturas->getAsignaturasCa($id_activ);
 		$creditos=$oPosiblesCa->contar_creditos($id_nom,$asignaturas);
 		if (!empty($creditos)) {

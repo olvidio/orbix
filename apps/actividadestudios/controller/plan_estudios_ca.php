@@ -65,7 +65,7 @@ echo $oPosicion->atras();
 // por cada asignatura
 $a=0;
 $tipo_old=0;
-$GesActividadAsignaturas = new actividadestudios\GestorActividadAsignatura();
+$GesActividadAsignaturas = new actividadestudios\GestorActividadAsignaturaDl();
 $cActividadAsignaturas = $GesActividadAsignaturas->getActividadAsignaturas(array('id_activ'=>$id_activ,'_ordre'=>'tipo'));
 foreach ( $cActividadAsignaturas as $oActividadAsignatura) {
 	$a++;

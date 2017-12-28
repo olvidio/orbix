@@ -27,9 +27,9 @@ class GestorActividadAsignatura Extends core\ClaseGestor {
 	 *
 	 */
 	function __construct() {
-		$oDbl = $GLOBALS['oDB'];
+		$oDbl = $GLOBALS['oDBP'];
 		$this->setoDbl($oDbl);
-		$this->setNomTabla('d_asignaturas_activ_dl');
+		$this->setNomTabla('d_asignaturas_activ_all');
 	}
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
@@ -84,7 +84,7 @@ class GestorActividadAsignatura Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_activ' => $aDades['id_activ'],
 							'id_asignatura' => $aDades['id_asignatura']);
-			$oActividadAsignatura= new ActividadAsignatura($a_pkey);
+			$oActividadAsignatura= new ActividadAsignaturaDl($a_pkey);
 			$oActividadAsignatura->setAllAtributes($aDades);
 			$oActividadAsignaturaSet->add($oActividadAsignatura);
 		}
@@ -136,7 +136,7 @@ class GestorActividadAsignatura Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_activ' => $aDades['id_activ'],
 							'id_asignatura' => $aDades['id_asignatura']);
-			$oActividadAsignatura= new ActividadAsignatura($a_pkey);
+			$oActividadAsignatura= new ActividadAsignaturaDl($a_pkey);
 			$oActividadAsignatura->setAllAtributes($aDades);
 			$oActividadAsignaturaSet->add($oActividadAsignatura);
 		}

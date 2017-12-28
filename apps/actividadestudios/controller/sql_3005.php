@@ -22,21 +22,32 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 	$oPosicion->addParametro('scroll_id',$scroll_id);
 }
 
-//pongo aqui el $go_to porque al ir al mismo update que las actividaes, no se donde voler
-//$go_to=core\ConfigGlobal::getWeb()."/apps/dossiers/controller/dossiers_ver.php?pau=$pau&id_pau=$id_pau&tabla_pau=".$_POST['tabla_pau']."&id_dossier=$id_dossier&permiso=$permiso";
-$a_dataUrl = array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$_POST['obj_pau'],'id_dossier'=>$id_dossier,'permiso'=>$permiso);
-$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query($a_dataUrl));
+$a_cabeceras=array( _("interés"),_("asignatura"),_("créditos"),_("tipo"),_("profesor"),_("prof. avisado"),_("inicio"),_("fin")  );
 
-$a_botones=array(
+// Añadir la posibilidad de ver el plan de estudios aunque la actividad sea importada
+$oActividad = new actividades\ActividadAll($id_pau);
+$dl_org = $oActividad->getDl_org();
+$mi_dele = core\ConfigGlobal::mi_dele();
+if ($mi_dele == $dl_org) {
+	$permiso = 3;
+	$a_botones=array(
 		            array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(this.form)" ) ,
 		            array( 'txt' => _('quitar asignatura'), 'click' =>"fnjs_borrar_asignatura(this.form)" ) ,
 		            array( 'txt' => _('actas'), 'click' =>"fnjs_actas(this.form)" ) 
 		);
-	
-$a_cabeceras=array( _("interés"),_("asignatura"),_("créditos"),_("tipo"),_("profesor"),_("prof. avisado"),_("inicio"),_("fin")  );
+	$GesActivAsignaturas = new actividadestudios\GestorActividadAsignaturaDl();
+	$cActivAsignaturas = $GesActivAsignaturas->getActividadAsignaturas(array('id_activ'=>$id_pau,'_ordre'=>'id_asignatura')); 
+} else {
+	$permiso = 1;
+	$a_botones=array();
+	$GesActivAsignaturas = new actividadestudios\GestorActividadAsignatura();
+	$cActivAsignaturas = $GesActivAsignaturas->getActividadAsignaturas(array('id_activ'=>$id_pau,'_ordre'=>'id_asignatura')); 
+}
 
-$GesActivAsignaturas = new actividadestudios\GestorActividadAsignatura();
-$cActivAsignaturas = $GesActivAsignaturas->getActividadAsignaturas(array('id_activ'=>$id_pau,'_ordre'=>'id_asignatura')); 
+//pongo aquí el $go_to porque al ir al mismo update que las actividades, no sé donde voler
+$a_dataUrl = array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$_POST['obj_pau'],'id_dossier'=>$id_dossier,'permiso'=>$permiso);
+$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query($a_dataUrl));
+
 $c=0;
 $a_valores=array();
 $msg_err = '';
@@ -52,10 +63,11 @@ foreach ($cActivAsignaturas as $oActividadAsignatura) {
 	if (!empty($id_profesor)) {
 		$oPersona = personas\Persona::NewPersona($id_profesor);
 		if (!is_object($oPersona)) {
-			$msg_err .= "<br>$oPersona con id_nom: $id_profesor";
-			continue;
+			$msg_err .= "<br>$oPersona con id_nom: $id_profesor (profesor)";
+			$nom='';
+		} else {
+			$nom = $oPersona->getApellidosNombre();
 		}
-		$nom = $oPersona->getApellidosNombre();
 	} else {
 		$nom='';
 	}
@@ -91,7 +103,7 @@ $a_camposHidden = array(
 		'pau' => $pau,
 		'id_pau' => $id_pau,
 		'id_dossier' => $id_dossier,
-		'permiso' => 3,
+		'permiso' => $permiso,
 		'go_to' => $go_to
 		);
 		//'obj_pau' => $_POST['obj_pau'],

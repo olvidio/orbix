@@ -61,7 +61,7 @@ if ($_POST['que']==3) { //paso las matrículas a notas definitivas (Grabar e imp
 		}
 				
 		if (!empty($preceptor)) { //miro cuál
-			$oActividadAsignatura = new actividadestudios\ActividadAsignatura(array('id_activ'=>$_POST['id_activ'],'id_asignatura'=>$_POST['id_asignatura'])); 
+			$oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl(array('id_activ'=>$_POST['id_activ'],'id_asignatura'=>$_POST['id_asignatura'])); 
 			$id_preceptor = $oActividadAsignatura->getId_profesor();
 		} else {
 			$id_preceptor = '';
@@ -104,7 +104,7 @@ if ($_POST['que']==3) { //paso las matrículas a notas definitivas (Grabar e imp
 				$id_situacion = $oPersonaNota->getId_situacion();
 				// compruebo que el id_situacion corresponde a 'superada'
 				//if (in_array($id_situacion,$aIdSuperadas)) $aOpSuperadas[$j] = $id_op;
-				if ($nota_num/$nota_max >= 0.85)  $aOpSuperadas[$j] = $id_op;
+				if ($nota_num/$nota_max >= 0.6)  $aOpSuperadas[$j] = $id_op;
 			}
 			for ($op=$op_min;$op<=$op_max;$op++) {
 				$id_nivel = $aNivelOpcionales[$op];
@@ -153,7 +153,9 @@ if ($_POST['que']==1) { // Grabar las notas en la matricula
 		if (!empty($_POST['form_preceptor'][$n]) && $_POST['form_preceptor'][$n]=="p") { $preceptor="t"; } else { $preceptor="f"; }
 		$oMatricula = new actividadestudios\Matricula(array('id_asignatura'=>$_POST['id_asignatura'],'id_activ'=>$_POST['id_activ'],'id_nom'=>$_POST['id_nom'][$n]));
 		$oMatricula->setPreceptor($preceptor);
-		$oMatricula->setNota_num($_POST['nota_num'][$n]);
+		// admitir coma y punto como separador decimal
+		$nn = str_replace(',', '.', $_POST['nota_num'][$n]);
+		$oMatricula->setNota_num($nn);
 		$oMatricula->setNota_max($_POST['nota_max'][$n]);
 		if ($_POST['nota_num'][$n] > 1) $oMatricula->setId_situacion(10);
 		if ($oMatricula->DBGuardar() === false) {

@@ -68,7 +68,9 @@ $GesActividadAsignaturas = new actividadestudios\GestorActividadAsignatura();
 $cActividadAsignaturas = $GesActividadAsignaturas->getActividadAsignaturas(array('id_activ'=>$id_activ));
 foreach ( $cActividadAsignaturas as $oActividadAsignatura) {
 	$a++;
-	extract($oActividadAsignatura->getTot());
+	//extract($oActividadAsignatura->getTot());
+	$id_asignatura = $oActividadAsignatura->getId_asignatura();
+	$tipo = $oActividadAsignatura->getTipo();
 
 	$oAsignatura = new asignaturas\Asignatura($id_asignatura);	
 	$nombre_corto=$oAsignatura->getNombre_corto();
@@ -76,10 +78,11 @@ foreach ( $cActividadAsignaturas as $oActividadAsignatura) {
 	if (!empty($id_profesor)) {
 		$oPersona = personas\Persona::NewPersona($id_profesor);
 		if (!is_object($oPersona)) {
-			$msg_err .= "<br>$oPersona con id_nom: $id_profesor";
-			continue;
+			$msg_err .= "<br>$oPersona con id_nom: $id_profesor (profesor)";
+			$nom_profesor = '';
+		} else {
+			$nom_profesor=$oPersona->getApellidosNombre();
 		}
-		$nom_profesor=$oPersona->getApellidosNombre();
 	} else {
 		$nom_profesor = '';
 	}

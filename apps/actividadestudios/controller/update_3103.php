@@ -96,11 +96,11 @@ switch ($_POST['mod']) {
 
 			// hay que añadir esta asignatura a las asignaturas que se dan en el ca
 			// compruebo que no existe:
-			$oGesActividadAsignatura = new actividadestudios\GestorActividadAsignatura();
+			$oGesActividadAsignatura = new actividadestudios\GestorActividadAsignaturaDl();
 			$cActividadAsignaturas = $oGesActividadAsignatura->getActividadAsignaturas(array('id_activ'=>$id_activ,'id_asignatura'=>$id_asignatura));
 			if (count($cActividadAsignaturas) > 0) {
 				$tipo = ($_POST['preceptor']=='t')? 'p' : '';
-				$oActividadAsignatura = new actividadestudios\ActividadAsignatura();
+				$oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
 				$oActividadAsignatura->setId_activ($id_activ);
 				$oActividadAsignatura->setId_asignatura($id_asignatura);
 				$oActividadAsignatura->setTipo($tipo);

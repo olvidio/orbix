@@ -28,22 +28,29 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 
 $oActividad = new actividades\Actividad($id_pau);
 $nom_activ = $oActividad->getNom_activ();
+$dl_org = $oActividad->getDl_org();
+$mi_dele = core\ConfigGlobal::mi_dele();
 
-$GesActividadAsignaturas = new actividadestudios\GestorActividadAsignatura();
-$cActividadAsignaturas = $GesActividadAsignaturas->getActividadAsignaturas(array('id_activ'=>$id_pau));
+$a_cabeceras=array(_("asignatura"),_("alumno"));
+if ($mi_dele == $dl_org) {
+	$permiso = 3;
+	$a_botones=array(
+				array( 'txt' => _('borrar matricula'), 'click' =>"fnjs_borrar(this.form)" ) 
+				);
+	$GesActividadAsignaturas = new actividadestudios\GestorActividadAsignaturaDl();
+	$cActividadAsignaturas = $GesActividadAsignaturas->getActividadAsignaturas(array('id_activ'=>$id_pau));
+} else {
+	$permiso = 1;
+	$a_botones=array();
+	$GesActividadAsignaturas = new actividadestudios\GestorActividadAsignatura();
+	$cActividadAsignaturas = $GesActividadAsignaturas->getActividadAsignaturas(array('id_activ'=>$id_pau));
+}
 
 if (is_array($cActividadAsignaturas) && count($cActividadAsignaturas)==0) {
 	echo _("Esta actividad no tiene ninguna asignatura");
 	exit;
 }
 
-$a_botones=array(
-			array( 'txt' => _('borrar matricula'), 'click' =>"fnjs_borrar(this.form)" ) 
-);
-
-$a_cabeceras=array(_("asignatura"),_("alumno"));
-
-	
 $oHash = new web\Hash();
 $oHash->setcamposForm('');
 $oHash->setCamposNo('sel!scroll_id!mod!nuevo');
@@ -52,7 +59,7 @@ $a_camposHidden = array(
 		'id_pau' => $id_pau,
 		'obj_pau' => $_POST['obj_pau'],
 		'id_dossier' => $id_dossier,
-		'permiso' => 3,
+		'permiso' => $permiso,
 		'go_to' => $go_to
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
@@ -118,10 +125,11 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
 	if (!empty($id_profesor)) {
 		$oPersona = personas\Persona::NewPersona($id_profesor);
 		if (!is_object($oPersona)) {
-			$msg_err .= "<br>$oPersona con id_nom: $id_profesor";
-			continue;
+			$msg_err .= "<br>$oPersona con id_nom: $id_profesor (profesor)";
+			$nom_profesor = '';
+		} else {
+			$nom_profesor=$oPersona->getApellidosNombre();
 		}
-		$nom_profesor=$oPersona->getApellidosNombre();
 	} else {
 		$nom_profesor = '';
 	}
@@ -153,6 +161,7 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
 		$a_valores[$i][1]="$nombre_corto";
 		$a_valores[$i][2]="$nom_persona ($ctr)";
 	}
+	if (count($a_valores) == 0) continue;
 	$oTabla = new web\Lista();
 	$oTabla->setId_tabla('sql_3103'.$a);
 	$oTabla->setCabeceras($a_cabeceras);

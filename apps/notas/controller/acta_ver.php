@@ -81,7 +81,7 @@ if (empty($_POST['nuevo']) && !empty($acta))  { //significa que no es nuevo
 	if ($notas=="nuevo") { //vengo de un ca
 		$id_asignatura_actual=$id_asignatura;
 		// Busco al profesor como examinador principal.
-		$oActividadAsignatura= new actividadestudios\ActividadAsignatura();
+		$oActividadAsignatura= new actividadestudios\ActividadAsignaturaDl();
 		$oActividadAsignatura->setId_activ($id_activ);
 		$oActividadAsignatura->setId_asignatura($id_asignatura_actual);
 		$oActividadAsignatura->DBCarregar();

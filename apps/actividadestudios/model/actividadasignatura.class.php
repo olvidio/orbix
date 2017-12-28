@@ -2,7 +2,7 @@
 namespace actividadestudios\model;
 use core;
 /**
- * Fitxer amb la Classe que accedeix a la taula d_asignaturas_activ_dl
+ * Fitxer amb la Classe que accedeix a la taula d_asignaturas_activ_all
  *
  * @package delegación
  * @subpackage model
@@ -11,7 +11,7 @@ use core;
  * @created 14/11/2014
  */
 /**
- * Classe que implementa l'entitat d_asignaturas_activ_dl
+ * Classe que implementa l'entitat d_asignaturas_activ_all
  *
  * @package delegación
  * @subpackage model
@@ -27,63 +27,63 @@ class ActividadAsignatura Extends core\ClasePropiedades {
 	 *
 	 * @var array
 	 */
-	 private $aPrimary_key;
+	protected $aPrimary_key;
 
 	/**
 	 * aDades de ActividadAsignatura
 	 *
 	 * @var array
 	 */
-	 private $aDades;
+	 protected  $aDades;
 
 	/**
 	 * Id_activ de ActividadAsignatura
 	 *
 	 * @var integer
 	 */
-	 private $iid_activ;
+	protected $iid_activ;
 	/**
 	 * Id_asignatura de ActividadAsignatura
 	 *
 	 * @var integer
 	 */
-	 private $iid_asignatura;
+	 protected  $iid_asignatura;
 	/**
 	 * Interes de ActividadAsignatura
 	 *
 	 * @var boolean
 	 */
-	 private $binteres;
+	 protected $binteres;
 	/**
 	 * Id_profesor de ActividadAsignatura
 	 *
 	 * @var integer
 	 */
-	 private $iid_profesor;
+	 protected $iid_profesor;
 	/**
 	 * Avis_profesor de ActividadAsignatura
 	 *
 	 * @var string
 	 */
-	 private $savis_profesor;
+	 protected $savis_profesor;
 	/**
 	 * Tipo de ActividadAsignatura
 	 *
 	 * @var string
 	 */
-	 private $stipo;
+	 protected $stipo;
 	/**
 	 * F_ini de ActividadAsignatura
 	 *
 	 * @var date
 	 */
-	 private $df_ini;
+	 protected $df_ini;
 	/**
 	 * F_fin de ActividadAsignatura
 	 *
 	 * @var date
 	 */
-	 private $df_fin;
+	 protected $df_fin;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
 	 * oDbl de ActividadAsignatura
@@ -108,7 +108,7 @@ class ActividadAsignatura Extends core\ClasePropiedades {
 	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
 	 */
 	function __construct($a_id='') {
-		$oDbl = $GLOBALS['oDB'];
+		$oDbl = $GLOBALS['oDBP'];
 		if (is_array($a_id)) { 
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
@@ -117,7 +117,7 @@ class ActividadAsignatura Extends core\ClasePropiedades {
 			}
 		}
 		$this->setoDbl($oDbl);
-		$this->setNomTabla('d_asignaturas_activ_dl');
+		$this->setNomTabla('d_asignaturas_activ_all');
 	}
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
