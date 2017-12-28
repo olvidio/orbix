@@ -65,6 +65,7 @@ function fnjs_solo_uno(formulario) {
 function fnjs_generarNomActiv(formulario) {
 	var ini=$('#f_ini').val();
 	var fin=$('#f_fin').val();
+	var dl_org=$('#dl_org').val();
 	
 	if ($('#isfsv_val').length) {
 		/*
@@ -101,6 +102,6 @@ function fnjs_generarNomActiv(formulario) {
 		if (tipo=='(sin especificar)')	{ tipo=''; } else { tipo= '' + tipo; }
 		var tipus=sf+actividad + ' ' + asistentes + ' ' + tipo;
 	}
-    nom = tipus + ' ' + lloc + ' (' + ini + '-' + fin +')';
+    nom = tipus + ' ' + lloc + ' (' + ini + '-' + fin +')-'+dl_org;
     $('#nom_activ').val(nom);
 }
