@@ -57,9 +57,9 @@
 	font-weight : bold;
 	font-size : 12pt;
 	border-style:none;
-	padding-top:0.2em;;
-	padding-right:0.2em;;
-	padding-left:0.2em;;
-	padding-bottom:1em;;
+	padding-top:0.2em;
+	padding-right:0.2em;
+	padding-left:0.2em;
+	padding-bottom:1em;
 }
 }
