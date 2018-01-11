@@ -92,7 +92,7 @@ switch ($estilo_color) {
 		$fondo_menu="#AAFFAA";
 
 		$oscuro="#363";
-		$claro="F8FBD0";
+		$claro="#F8FBD0";
 		//$oscuro2="#64915E";
 		$medio="#699F62";
 
