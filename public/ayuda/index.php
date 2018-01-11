@@ -42,7 +42,7 @@ echo "</style>";
     Trata aspectos aplicables en todo el entorno web<br>
     <br>
     <h4><b> 1.Preferencias</b></h4>
-    <h4> 2.Tabla slickGrid <span class="link" onClick="fnjs_windowopen('slickgrid.mp4')">(video)</span></h4>
+    <h4> 2.Tabla slickGrid <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::$web_public ?>/ayuda/slickgrid.mp4')">(video)</span></h4>
     Es la presentación de resultados por defecto. Se puede cambiar a la
     vista de tabla normal (html) en el menu de preferencias.<br>
     Posibilidades:<br>
@@ -90,37 +90,37 @@ echo "</style>";
     </h2>
     <ol>
       <li>
-		  <h4>Nuevo ca <span class="link" onClick="fnjs_windowopen('01-nuevoCa.mp4')">(video)</span></h4>
+		  <h4>Nuevo ca <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::$web_public ?>/ayuda/01-nuevoCa.mp4')">(video)</span></h4>
       </li>
       <li>
-        <h4>Asignaturas de ca <span class="link" onClick="fnjs_windowopen('02-asignaturas.mp4')">(video)</span></h4>
+        <h4>Asignaturas de ca <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::$web_public ?>/ayuda/02-asignaturas.mp4')">(video)</span></h4>
       </li>
       <li>
-        <h4>asistentes dl a ca <span class="link" onClick="fnjs_windowopen('03-asitentesDl.mp4')">(video)</span></h4>
+        <h4>asistentes dl a ca <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::$web_public ?>/ayuda/03-asitentesDl.mp4')">(video)</span></h4>
       </li>
       <li>
-        <h4>asistentes otras dl a ca <span class="link" onClick="fnjs_windowopen('04-asistentesOtrDl.mp4')">(video)</span></h4>
+        <h4>asistentes otras dl a ca <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::$web_public ?>/ayuda/04-asistentesOtrDl.mp4')">(video)</span></h4>
       </li>
       <li>
-        <h4>matriculaciones asignaturas ca <span class="link" onClick="fnjs_windowopen('05-matriculaciones.mp4')">(video)</span></h4>
+        <h4>matriculaciones asignaturas ca <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::$web_public ?>/ayuda/05-matriculaciones.mp4')">(video)</span></h4>
       </li>
       <li>
-        <h4>actas <span class="link" onClick="fnjs_windowopen('06-actas.mp4')">(video)</span></h4>
+        <h4>actas <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::$web_public ?>/ayuda/06-actas.mp4')">(video)</span></h4>
       </li>
 	  <li>
-        <h4>ca posibles por ctr <span class="link" onClick="fnjs_windowopen('07-caPosiblesPorCentro.mp4')">(video)</span></h4>
+        <h4>ca posibles por ctr <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::$web_public ?>/ayuda/07-caPosiblesPorCentro.mp4')">(video)</span></h4>
       </li>
       <li>
-        <h4>opciones ca <span class="link" onClick="fnjs_windowopen('08-opcionesCa.mp4')">(video)</span></h4>
+        <h4>opciones ca <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::$web_public ?>/ayuda/08-opcionesCa.mp4')">(video)</span></h4>
       </li>
       <li>
-        <h4>gestión de plazas de calendario <span class="link" onClick="fnjs_windowopen('09-gestionPlazasCalendario.mp4')">(video)</span></h4>
+        <h4>gestión de plazas de calendario <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::$web_public ?>/ayuda/09-gestionPlazasCalendario.mp4')">(video)</span></h4>
       </li>
       <li>
-        <h4>importar ca <span class="link" onClick="fnjs_windowopen('10-importarCa.mp4')">(video)</span></h4>
+        <h4>importar ca <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::$web_public ?>/ayuda/10-importarCa.mp4')">(video)</span></h4>
       </li>
       <li>
-        <h4>publicar ca <span class="link" onClick="fnjs_windowopen('11-publicarCa.mp4')">(video)</span></h4>
+        <h4>publicar ca <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::$web_public ?>/ayuda/11-publicarCa.mp4')">(video)</span></h4>
       </li>
     </ol>
   </body>

@@ -1,1 +1,23 @@
-<img src="public/hivern.jpg" alt="Mountain View" style="width:1000px;height:560px">
+<?php
+namespace core;
+use web;
+
+// INICIO Cabecera global de URL de controlador *********************************
+	require_once ("apps/core/global_header.inc");
+// Arxivos requeridos por esta url **********************************************
+
+// Crea los objectos de uso global **********************************************
+	require_once ("apps/core/global_object.inc");
+// FIN de  Cabecera global de URL de controlador ********************************
+
+?>
+
+<script> 
+  $(function(){
+      $("#includedContent").load("public/ayuda/index.php"); 
+  });
+</script>
+
+<div id=includedContent ></div>
+
+<img src="<?= ConfigGlobal::$web_public ?>/hivern.jpg" alt="Mountain View" style="width:1000px;height:560px">
