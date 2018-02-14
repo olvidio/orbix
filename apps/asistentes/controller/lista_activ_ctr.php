@@ -110,12 +110,12 @@ if (empty($_POST['periodo']) || $_POST['periodo'] == 'otro') {
 switch ($_POST['n_agd']) {
 	case "a":
 		$tabla="p_agregados";
-		$aWhere['tipo_ctr']='a.';
+		$aWhere['tipo_ctr']='a.*';
 		$aOperador['tipo_ctr']='~';
 		break;
 	case "n":
 		$tabla="p_numerarios";
-		$aWhere['tipo_ctr']='n.';
+		$aWhere['tipo_ctr']='n.*';
 		$aOperador['tipo_ctr']='~';
 		break;
 	case "nm":
