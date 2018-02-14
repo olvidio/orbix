@@ -105,7 +105,7 @@ if ($actualizar=="9999") {
 		//echo "f_actas: $ssql_1<br>";
 		$oDBSt_sql_1=$oDB->query($ssql_1);
 		$f_acta=$oDBSt_sql_1->fetchColumn();
-		if (is_empty($f_acta)) {
+		if (empty($f_acta)) {
 			//pongo la de hoy. creo que actualmente no se utiliza.
 			$f_acta = date('d/m/Y');
 		}
