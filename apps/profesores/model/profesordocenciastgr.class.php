@@ -114,8 +114,6 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 			foreach($a_id as $nom_id=>$val_id) {
 				if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; // evitem SQL injection fent cast a integer
 				if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; // evitem SQL injection fent cast a integer
-				if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; // evitem SQL injection fent cast a integer
-				if (($nom_id == 'id_asignatura') && $val_id !== '') $this->iid_asignatura = (int)$val_id; // evitem SQL injection fent cast a integer
 			}
 		}
 		$this->setoDbl($oDbl);
@@ -134,6 +132,8 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if ($this->DBCarregar('guardar') === false) { $bInsert=true; } else { $bInsert=false; }
 		$aDades=array();
+		$aDades['id_asignatura'] = $this->iid_asignatura;
+		$aDades['id_activ'] = $this->iid_activ;
 		$aDades['tipo'] = $this->stipo;
 		$aDades['curso_inicio'] = $this->icurso_inicio;
 		$aDades['acta'] = $this->sacta;
@@ -142,10 +142,12 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 		if ($bInsert === false) {
 			//UPDATE
 			$update="
+					id_asignatura            = :id_asignatura,
+					id_activ                 = :id_activ,
 					tipo                     = :tipo,
 					curso_inicio             = :curso_inicio,
 					acta                     = :acta";
-			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_activ='$this->iid_activ' AND id_asignatura='$this->iid_asignatura' AND id_nom='$this->iid_nom'")) === false) {
+			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item'")) === false) {
 				$sClauError = 'ProfesorDocenciaStgr.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -158,7 +160,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			array_unshift($aDades, $this->iid_nom , $this->iid_asignatura, $this->iid_activ);
+			array_unshift($aDades, $this->iid_nom);
 			$campos="(id_nom,id_asignatura,id_activ,tipo,curso_inicio,acta)";
 			$valores="(:id_nom,:id_asignatura,:id_activ,:tipo,:curso_inicio,:acta)";		
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
@@ -185,8 +187,8 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 	public function DBCarregar($que=null) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (isset($this->iid_activ) && isset($this->iid_asignatura) && isset($this->iid_nom)) {
-			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_asignatura='$this->iid_asignatura' AND id_nom='$this->iid_nom'")) === false) {
+		if (isset($this->iid_item) && isset($this->iid_nom)) {
+			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item='$this->iid_item'")) === false) {
 				$sClauError = 'ProfesorDocenciaStgr.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -215,7 +217,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_asignatura='$this->iid_asignatura' AND id_nom='$this->iid_nom'")) === false) {
+		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_item='$this->iid_item'")) === false) {
 			$sClauError = 'ProfesorDocenciaStgr.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -263,9 +265,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('id_activ'=>$this->iid_activ,
-										'id_asignatura'=>$this->iid_asignatura,
-										'id_nom'=>$this->iid_nom);
+			$this->aPrimary_key = array('id_item'=>$this->iid_item);
 		}
 		return $this->aPrimary_key;
 	}

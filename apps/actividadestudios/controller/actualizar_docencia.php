@@ -70,8 +70,10 @@ $continuar = (string)  filter_input(INPUT_POST, 'continuar');
 				$acta = '';	
 			}
 			
-			$oProfesorDocencia = new profesores\ProfesorDocenciaStgr(array('id_activ'=>$id_activ,'id_asignatura'=>$id_asignatura,'id_nom'=>$id_profesor));
-			$oProfesorDocencia->DBCarregar();
+			$oProfesorDocencia = new profesores\ProfesorDocenciaStgr();
+			$oProfesorDocencia->setId_activ($id_activ);
+			$oProfesorDocencia->setId_asignatura($id_asignatura);
+			$oProfesorDocencia->setId_nom($id_profesor);
 			$oProfesorDocencia->setCurso_inicio($ini_a);
 			$oProfesorDocencia->setTipo($tipo);
 			$oProfesorDocencia->setActa($acta);
