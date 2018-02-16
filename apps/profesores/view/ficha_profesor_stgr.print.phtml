@@ -86,7 +86,7 @@ foreach($cProfesorCongresos as $oProfesorCongreso) {
 </table>
 <h3><?= ucfirst(_("actividad docente")) ?></h3>
 <table class=lst>
-<tr><td class=cabecera><?= _("curso") ?></td><td class=cabecera><?= _("asignatura") ?></td><td class=cabecera><?= _("modo") ?></td></tr>
+<tr><td class=cabecera><?= _("inicio curso") ?></td><td class=cabecera><?= _("asignatura") ?></td><td class=cabecera><?= _("modo") ?></td></tr>
 <?php
 foreach($cDocencias as $oDocencia) {
 	$row = $oDocencia->getTot();
@@ -94,7 +94,7 @@ foreach($cDocencias as $oDocencia) {
 	$oAsignatura = new asignaturas\Asignatura($row['id_asignatura']);
 	$nombre_corto = $oAsignatura->getNombre_corto();
 	$modo=$array_tipo[$row['tipo']];
-	echo "<tr><td>${row['curso']}</td><td>$nombre_corto</td><td>$modo</td></tr>";
+	echo "<tr><td>${row['curso_inicio']}</td><td>$nombre_corto</td><td>$modo</td></tr>";
 }
 ?>
 </table>
