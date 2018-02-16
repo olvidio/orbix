@@ -28,7 +28,7 @@ class GestorActividad extends GestorActividadAll {
 	function __construct() {
 		$oDbl = $GLOBALS['oDBC'];
 		$this->setoDbl($oDbl);
-		$this->setNomTabla('av_actividades');
+		$this->setNomTabla('av_actividades_pub');
 	}
 
 

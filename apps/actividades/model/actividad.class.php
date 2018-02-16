@@ -42,7 +42,7 @@ class Actividad Extends ActividadAll {
 			}
 		}
 		$this->setoDbl($oDbl);
-		$this->setNomTabla('av_actividades');
+		$this->setNomTabla('av_actividades_pub');
 	}
 
 	/* METODES PUBLICS ----------------------------------------------------------*/

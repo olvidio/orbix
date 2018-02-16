@@ -25,6 +25,7 @@ if (isset($_POST['sel'])) { //vengo de un checkbox
 }
 
 
+$mod = isset($_POST['mod']) ? $_POST['mod'] : '';
 $_POST['tipo'] = isset($_POST['tipo']) ? $_POST['tipo'] : '';
 $_POST['tabla'] = isset($_POST['tabla']) ? $_POST['tabla'] : '';
 
@@ -315,7 +316,7 @@ $txt_gen=ucfirst(_("generar"));
 </table>
 <br>
 <?php
-if ($oPermActiv->have_perm('modificar')) {
+if ($oPermActiv->have_perm('modificar') && $mod != 'importar') {
 	echo "<input TYPE='button' VALUE='".ucfirst(_("guardar cambios"))."'  onclick='fnjs_guardar()'>";
 }
 ?>

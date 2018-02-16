@@ -235,6 +235,7 @@ $a_cabeceras[]= ucfirst(_("centro"));
 $a_cabeceras[]= ucfirst(_("observaciones"));
 
 if (!empty($Qmodo) && $Qmodo == 'importar') {
+	$mod = 'importar';
 	$GesActividades = new actividades\GestorActividadPub();
 	if (empty($Qdl_org)) {
    		$aWhere['dl_org'] = $mi_dele; 
@@ -243,6 +244,7 @@ if (!empty($Qmodo) && $Qmodo == 'importar') {
 	$GesImportar = new actividades\GestorImportar();
 	$obj_pau = 'ActividadPub';
 } else {
+	$mod = '';
 	$GesActividades = new actividades\GestorActividad();
 	$obj_pau = 'Actividad';
 }
@@ -397,7 +399,6 @@ foreach($cActividades as $oActividad) {
 $num=$i;
 
 $oHash = new web\Hash();
-//$oHash->setcamposForm('!sel!mod!que');
 $a_camposHidden = array(
 		'id_tipo_activ' => $Qid_tipo_activ,
 		'periodo' => $Qperiodo,
@@ -492,7 +493,7 @@ if (core\ConfigGlobal::is_app_installed('procesos')) {
 	<?= $oHashSel->getCamposHtml(); ?>
 	<input type='hidden' id='queSel' name='queSel' value='' >
 	<input type='hidden' id='id_dossier' name='id_dossier' value="">
-	<input type='hidden' id='mod' name='mod' value="">
+	<input type='hidden' id='mod' name='mod' value="<?= $mod ?>">
 <?php
 $oTabla = new web\Lista();
 $oTabla->setId_tabla('actividad_select');
