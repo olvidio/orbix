@@ -18,7 +18,9 @@ use personas\model as personas;
 /* Validate inputs $b = (string)filter_input(INPUT_GET, 'b'); */
 	
 $todos = (string)  filter_input(INPUT_POST, 'todos');
-$go_to = (string)  filter_input(INPUT_POST, 'go_to');
+if (empty($go_to)) {
+	$go_to = (string)  filter_input(INPUT_POST, 'go_to');
+}
 $obj_pau = (string)  filter_input(INPUT_POST, 'obj_pau');
 $breve = (string)  filter_input(INPUT_POST, 'breve');
 $es_sacd = (string)  filter_input(INPUT_POST, 'es_sacd');

@@ -150,7 +150,7 @@ $titulo=$txt;
 <?php
 // -------------------------------------------------------------------------
 if (empty($_POST['queSel'])) $_POST['queSel']='';
-//switch ($_POST['que']){
+
 switch ($_POST['queSel']){
 	case "activ": // actividades de un asistente
 		$pau="p";
@@ -222,7 +222,18 @@ if (empty($id_dossier)) { // enseña la lista de dossiers.
 		$pres_2="../../$app/model/datos_".$id_dossier.".php";
 		$pres="../../$app/controller/sql_".$id_dossier.".php";
 
-		$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier,'permiso'=>$permiso)));
+		/* GOTO */
+		switch($id_dossier) {
+			case 1303:
+				$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier,'permiso'=>$permiso,'que'=>'matriculas')));
+				break;
+			case 3103: //matriculas de un ca
+				$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier,'permiso'=>$permiso,'queSel'=>'asis')));
+				break; //nada, ya esta en el sql_1303
+			default:
+				$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier,'permiso'=>$permiso)));
+				break; //nada, ya esta en el sql_3101
+		}
 
 		if (realpath($pres_2)){ //como file_exists
 			include ("datos_sql.php");

@@ -93,7 +93,7 @@ foreach($cAlumnos as $oPersonaDl) {
 	switch (count($cAsistencias)) {
 		case 0:
 			$msg .= addslashes(sprintf(_("no se ha hecho nada con %s no tiene asignado ca"),$oPersonaDl->getApellidosNombre()));
-			$msg .= "<br>";
+			$msg .= '\n';
 		   	continue;
 			break;
 		case 1:
@@ -185,15 +185,15 @@ foreach($cAlumnos as $oPersonaDl) {
 					$m++;
 				}
 				$msg .= addslashes(sprintf(_("%s se ha matriculado de %s asignaturas"),$oPersonaDl->getApellidosNombre(),$m));
-				$msg .= "<br>";
+				$msg .= '\n';
 			} else {
 				$msg .= addslashes(sprintf(_("no se ha hecho nada com %s. ya tiene el plan de estudios confirmado"),$oPersonaDl->getApellidosNombre()));
-				$msg .= "<br>";
+				$msg .= '\n';
 			}
 			break;
 		default:
 			$msg .= addslashes(sprintf(_("no se ha hecho nada con %s, tiene asignado más de un ca"),$oPersonaDl->getApellidosNombre()));
-			$msg .= "<br>";
+			$msg .= '\n';
 	}
 
 }

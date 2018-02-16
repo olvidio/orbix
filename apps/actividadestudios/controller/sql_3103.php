@@ -13,11 +13,15 @@ use personas\model as personas;
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-
-//pongo aqui el $go_to porque al ir al mismo update que las actividaes, no se donde voler
-$a_dataUrl = array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$_POST['obj_pau'],'id_dossier'=>$id_dossier);
-$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query($a_dataUrl));
 	
+$go_to = (string)  filter_input(INPUT_POST, 'go_to');
+
+if (empty($go_to)) {
+	//pongo aqui el $go_to porque al ir al mismo update que las actividaes, no se donde voler
+	$a_dataUrl = array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$_POST['obj_pau'],'id_dossier'=>$id_dossier);
+	$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query($a_dataUrl));
+}
+
 /*
 if (!empty($_POST['sel'])) { //vengo de un checkbox
 	//$id_nom=$sel[0];
