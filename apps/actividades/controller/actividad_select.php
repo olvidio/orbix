@@ -235,6 +235,7 @@ $a_cabeceras[]= ucfirst(_("centro"));
 $a_cabeceras[]= ucfirst(_("observaciones"));
 
 if (!empty($Qmodo) && $Qmodo == 'importar') {
+	// actividades publicadas
 	$mod = 'importar';
 	$GesActividades = new actividades\GestorActividadPub();
 	if (empty($Qdl_org)) {
@@ -244,6 +245,7 @@ if (!empty($Qmodo) && $Qmodo == 'importar') {
 	$GesImportar = new actividades\GestorImportar();
 	$obj_pau = 'ActividadPub';
 } else {
+	//actividades de la dl más las importadas
 	$mod = '';
 	$GesActividades = new actividades\GestorActividad();
 	$obj_pau = 'Actividad';
