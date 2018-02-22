@@ -83,8 +83,9 @@ fnjs_db_eliminar=function(){
  </table>
  <table>
  <tr>
-  <td align=right><input type="button" name="bcrear" onclick="fnjs_db_crear()" value="<?= ("crear Esquema") ?>"></td>
-  <td align=right><input type="button" name="bimportar" onclick="fnjs_db_copiar()" value="<?= ("importar datos de resto") ?>"></td>
+  <td align=right><input type="button" name="bcrear" onclick="fnjs_db_crear()" value="<?= (" 1º crear Esquema") ?>"></td>
+  <td align=right><input type="button" name="bimportar" onclick="fnjs_db_copiar()" value="<?= ("2º importar datos de resto") ?>"></td>
   <td align=right><input type="button" name="beliminar" onclick="fnjs_db_eliminar()" value="<?= ("passar datos a resto y eliminar esquema") ?>"></td>
  </tr>
 </table>
+<br><p><?= _("hay que hacer los dos pasos") ?></p>
