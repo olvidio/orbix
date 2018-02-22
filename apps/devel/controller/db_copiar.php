@@ -45,7 +45,7 @@ $oTrasvase->fix_seq();
 if (!empty($sv)) {
 	$esquemaNew = $esquema.'v';
 	$esquemaRef = 'H-dlbv';
-	$aTablas = array("'aux*'","web_preferencias");
+	$aTablas = array("'aux*'","web_preferencias","m0_mods_installed_dl");
 	$oDBTabla = new core\DBTabla();
 	$oDBTabla->setDb('sv');
 	$oDBTabla->setRef($esquemaRef);
@@ -68,7 +68,7 @@ if (!empty($sv)) {
 if (!empty($sv)) {
 	$esquemaNew = $esquema.'f';
 	$esquemaRef = 'H-dlbf';
-	$aTablas = array("'aux*'","web_preferencias");
+	$aTablas = array("'aux*'","web_preferencias","m0_mods_installed_dl");
 	$oDBTabla = new core\DBTabla();
 	$oDBTabla->setDb('sf');
 	$oDBTabla->setRef($esquemaRef);
