@@ -46,7 +46,7 @@ class GestorAsignatura Extends core\ClaseGestor {
 		$sCondi = '';
 		foreach ($aWhere as $camp => $val) {
 			if ($camp == 'nombre_asig' && !empty($val)) {
-				$sCondi .= "WHERE nombre_asig ILIKE '%$val%'";
+				$sCondi .= "WHERE status=true AND nombre_asig ILIKE '%$val%'";
 			}
 			if ($camp == 'id' && !empty($val)) {
 				if (!empty($sCondi)) {
