@@ -329,7 +329,7 @@ class Resumen Extends core\ClasePropiedades {
 		$sqlCreate="CREATE TABLE $asignaturas(
 						id_asignatura integer,
 						id_nivel integer,
-						nombre_asig character varying(60) NOT NULL,
+						nombre_asig character varying(100) NOT NULL,
 						nombre_corto character varying(23),
 						creditos numeric(4,2),
 						year character varying(3),
