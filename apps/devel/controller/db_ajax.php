@@ -23,9 +23,8 @@ switch ($_POST['salida']) {
 		
 		$region = $_POST['entrada'];
 
-
 		$oGesDl = new ubis\GestorDelegacion();
-		$oDesplDelegaciones = $oGesDl->getListaDelegaciones(array("'$region'"));
+		$oDesplDelegaciones = $oGesDl->getListaDelegaciones(array("$region"));
 		$oDesplDelegaciones->setNombre('dl');
 		echo $oDesplDelegaciones->desplegable();
 		break;
