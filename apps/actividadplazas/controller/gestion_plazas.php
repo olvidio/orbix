@@ -114,7 +114,12 @@ foreach ($cActividades as $oActividad) {
 	if (empty($plazas_totales)) {
 		$id_ubi = $oActividad->getId_ubi();
 		$oCasa = ubis\model\Ubi::NewUbi($id_ubi);
-		$plazas_totales = $oCasa->getPlazas();
+		// Si la casa es un ctr de otra dl, no sé las plazas
+		if(method_exists($oCasa, 'getPlazas')){
+			$plazas_totales = $oCasa->getPlazas();
+		} else {
+			$plazas_totales = '';
+		}
 		if (empty($plazas_totales)) {
 			$plazas_totales = '?';
 		}
