@@ -40,9 +40,8 @@ class View {
 
         extract($variables);
 
-
         ob_start();
-		$dir_apps = '/orbix/apps';
+		$dir_apps = ConfigGlobal::$web_path.'/apps';
 		$base_dir = $_SERVER['DOCUMENT_ROOT'] . $dir_apps;
 
 		$new_dir = str_replace('controller','view',$this->snamespace);

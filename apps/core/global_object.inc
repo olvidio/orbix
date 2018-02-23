@@ -145,7 +145,7 @@ if (isset($aPOST['h'])) {
 	}
 	$hchk = empty($aPOST['hchk'])? '' : $aPOST['hchk']; 
 	//En el caso de comprobar_campos.php añado tres que hay que borrar
-	if ($_SERVER["REQUEST_URI"] == '/orbix/apps/core/comprobar_campos.php') {
+	if ($_SERVER["REQUEST_URI"] == ConfigGlobal::$web_path.'/apps/core/comprobar_campos.php') {
 			unset($aPOST['cc_tabla']);
 			unset($aPOST['cc_obj']);
 			unset($aPOST['cc_pau']);

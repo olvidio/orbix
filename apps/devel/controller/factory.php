@@ -657,7 +657,7 @@ $txt.='
 ?>';
 
 /* ESCRIURE LA CLASSSE ------------------------------------------------ */
-$filename = '/var/www/orbix/apps/'.$grupo.'/model/'.strtolower($_POST['clase']).'.class.php';
+$filename = '/var/www'.core\ConfigGlobal::$web_path.'/apps/'.$grupo.'/model/'.strtolower($_POST['clase']).'.class.php';
 
 
 // In our example we're opening $filename in append mode.
@@ -807,7 +807,7 @@ $txt2.='
 }
 ?>';
 /* ESCRIURE LA CLASSSE ------------------------------------------------ */
-$filename = '/var/www/orbix/apps/'.$grupo.'/model/gestor'.strtolower($_POST['clase']).'.class.php';
+$filename = '/var/www/'.core\ConfigGlobal::$web_path.'/apps/'.$grupo.'/model/gestor'.strtolower($_POST['clase']).'.class.php';
 
 
 // In our example we're opening $filename in append mode.
