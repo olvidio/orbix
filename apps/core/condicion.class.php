@@ -63,6 +63,15 @@ class Condicion {
 				case '&':
 					$sCondi = "($campo & :$campo) = :$campo";
 					break;
+				case 'ANY':
+					/* Uso: pasar un array de postgres, que el php tarta com una variable string:
+					 * $a_id_dir = array (1,3,7,90);
+					 * $v = "{".implode(', ',$aid_dir)."}";
+					 * $aWhere['id_direccion'] = $v;
+            		 * $aOperador['id_direccion'] = 'ANY';
+					 */
+					$sCondi = "$campo = ANY (:$campo)";
+					break;
 				default:
 					$sCondi = "$campo $operador :$campo";
 			}
