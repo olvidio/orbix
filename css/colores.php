@@ -125,7 +125,7 @@ switch ($estilo_color) {
 		$oscuro="#C73800";
 
 		$fondo_oscuro="#FF6600";
-		$fondo_claro="white";
+		$fondo_claro="oldlace";
 		$letras="black";
 		$letras_link="navy";
 		$letras_hover="#FF6600";
@@ -146,5 +146,8 @@ switch ($estilo_color) {
 		$tono7 = "#ff944d";
 
 	break;
+}
+if (ConfigGlobal::$web_root == '/pruebas') {
+		$fondo_claro="aquamarine";
 }
 ?>
