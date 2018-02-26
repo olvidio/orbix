@@ -11,7 +11,11 @@
 
 $tipo_persona = (string)  filter_input(INPUT_POST, 'tipo');	
 $mi_dl = \core\ConfigGlobal::mi_dele();
-$dl = substr($mi_dl, 2);
+if ($mi_dl == 'cr') {
+	$dl = 'Hcr';
+} else {
+	$dl = substr($mi_dl, 2);
+}
 
 $id_tipo = 0;
 switch ($tipo_persona) {

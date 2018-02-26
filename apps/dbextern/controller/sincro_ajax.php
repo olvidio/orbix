@@ -205,7 +205,11 @@ function syncro($oPersonaListas,$id_orbix) {
 	$oPersona->setCe_ini($ce_ini);
 	$oPersona->setCe_fin($ce_fin);
 
-	$oPersona->setDl('dl'.$dl);
+	if ($dl == 'Hcr') { 
+		$oPersona->setDl('cr');
+	} else {
+		$oPersona->setDl('dl'.$dl);
+	}
 	$oPersona->setId_ctr($id_ubi);
 
 		
