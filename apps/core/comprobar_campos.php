@@ -183,7 +183,7 @@ foreach ($cDatosCampos as $oDatosCampo) {
 		// Es necesario?
 		if ($not_null) {
 			//tiene un valor por defecto?
-			$default = $oDatosCampo->datos_campo($oDB,'valor');
+			$default = $oDatosCampo->datos_campo($oDbl,'valor');
 			if (empty($default)) {
 			   $errores[]=array('txt'=>_('El campo "%1$s" no puede estar vacío'),
 				   'camp'=>$nomcamp,
