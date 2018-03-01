@@ -76,7 +76,7 @@ switch ($sactividad) {
 $aWhere['f_ini'] = "'$inicurs','$fincurs'";
 $aOperador['f_ini'] = 'BETWEEN';
 $aWhere['status'] = 2;
-$aWhere['_ordre'] = 'nivel_stgr,f_ini';
+$aWhere['_ordre'] = 'f_ini,nivel_stgr';
 
 $cActividades = array();
 $sfsv = core\ConfigGlobal::mi_sfsv();
