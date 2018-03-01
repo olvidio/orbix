@@ -183,7 +183,7 @@ if ($permiso > 2) {
 	reset ($a_ref_perm);
 	echo "<div class='no_print'><br><table class=botones><tr class=botones><th align=RIGHT>"._("dl").":</th>";
 	$mi_dele = core\ConfigGlobal::mi_dele();
-	while (list ($clave, $val) = each ($a_ref_perm)) {
+	foreach ($a_ref_perm as $clave =>$val) {
 		$perm=$val["perm"];
 		$obj_pau=$val["obj"];
 		$nom=$val["nom"];
