@@ -138,7 +138,7 @@ class Xpermisos {
 		$perms = $this->permissions;
 		$r = 0;
 		reset($p);
-		while(list($key, $val) = each($p)) {
+		foreach ($p as $key => $val) {
 		  echo "val: $val :: $key<br>";
 		  $r ^= $val;
 		}
@@ -155,7 +155,7 @@ class Xpermisos {
 		  return array(false, 0);
 		}
 		$r = 0;
-		while(list($key, $val) = each($p)) {
+		foreach ($p as $key => $val) {
 		  $r |= $val;
 		}
 
@@ -173,7 +173,7 @@ class Xpermisos {
 		$perms = $this->permissions;
 		$r = 0;
 		reset($p);
-		while(list($key, $val) = each($p)) {
+		foreach ($p as $key => $val) {
 		  if (!isset($perms[$val])) {
 			//return array(false, 0);
 			continue; // si hi ha un permis que no és dels predefinits m'ho salto.
@@ -188,7 +188,7 @@ class Xpermisos {
 
 	function perm_islisted($perms, $look_for) {
 		$permlist = explode( ",", $perms );
-		while( list($a,$b) = each($permlist) ) {
+		foreach ($permlist as $a => $b) {
 			if( $look_for === $b ) { return true; };
 		};
 		return false;
@@ -202,7 +202,7 @@ class Xpermisos {
 		$ret = sprintf("<select multiple name=\"%s[]\"%s>\n",
 					  $name,
 					  ($class!="")?" class=$class":"");
-		while(list($k, $v) = each($this->permissions)) {
+		foreach ($this->permissions as $k => $v) {
 			$ret .= sprintf(" <option%s%s>%s\n",
 					$this->perm_islisted($current,$k)?" selected":"",
 					($class!="")?" class=$class":"",
