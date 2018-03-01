@@ -19,6 +19,7 @@ switch ($que) {
 	case "crear":
 		$id_nom_listas = (integer)  filter_input(INPUT_POST, 'id_nom_listas');
 		$id = (integer)  filter_input(INPUT_POST, 'id');
+		$tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
 		
 		$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE Identif = $id_nom_listas";
 		$oGesListas = new dbextern\model\GestorPersonaListas();	
@@ -77,10 +78,11 @@ switch ($que) {
 			$id_orbix = (integer)  filter_input(INPUT_POST, 'id_orbix');
 			$id_nom_listas = (integer)  filter_input(INPUT_POST, 'id_nom_listas');
 			$id = (integer)  filter_input(INPUT_POST, 'id');
+			$tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
 		}
 		$oIdMatch = new dbextern\model\IdMatchPersona($id_nom_listas);
 		$oIdMatch->setId_orbix($id_orbix);
-		$oIdMatch->setId_tabla('n');
+		$oIdMatch->setId_tabla($tipo_persona);
 		
 		if ($oIdMatch->DBGuardar() === false) {
 			echo _('Hay un error, no se ha guardado');
@@ -193,6 +195,11 @@ function syncro($oPersonaListas,$id_orbix) {
 	$oPersona = new $obj($id_orbix);
 
 	$oPersona->DBCarregar();
+	//Las personas en listas siempre están en situación 'A'
+	if ($oPersona->getSituacion() != 'A') {
+		$oPersona->setSituacion('A');
+		$oPersona->setF_situacion(date("d/m/Y"));
+	}
 	$oPersona->setNom($nombre);
 	$oPersona->setNx1($nx1);
 	$oPersona->setApellido1($apellido1_sinprep);

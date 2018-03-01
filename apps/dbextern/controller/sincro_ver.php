@@ -222,7 +222,7 @@ fnjs_sincronizar=function(){
 
 fnjs_crear=function(){
 	var url='<?= $url_sincro_ajax ?>';
-	var parametros='que=crear&id=<?= $new_id?>&id_nom_listas=<?= $id_nom_listas ?><?= $h1 ?>&PHPSESSID=<?php echo session_id(); ?>';
+	var parametros='que=crear&id=<?= $new_id?>&id_nom_listas=<?= $id_nom_listas ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>&PHPSESSID=<?php echo session_id(); ?>';
 			 
 	$.ajax({
 		url: url,
