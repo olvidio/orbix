@@ -899,7 +899,7 @@ echo $oTabla->mostrar_tabla();
 if ($permiso > 2) {
 	reset ($a_ref_perm);
 	echo "<div class='no_print'><br><table><tr class=botones><th align=RIGHT>"._("dl").":</th>";
-	while (list ($clave, $val) = each ($a_ref_perm)) {
+	foreach ($a_ref_perm as $clave => $val) {
 		$permis=$val["perm"];
 		$obj_pau=$val["obj"];
 		$nom=$val["nom"];
