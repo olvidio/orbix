@@ -291,7 +291,9 @@ echo "<input type='text'  size='60' id='id_asignatura' name='id_asignatura' valu
 $acta=urlencode($acta);
 if ($notas=="acta") { 
 	$el_var = '&';
-	while(list($key, $value) = each($_POST['sel'])) $el_var .= "&sel[$key]=$value";
+	foreach ($_POST['sel'] as $key => $value) {
+		$el_var .= "&sel[$key]=$value";
+	}
 	$el_var = substr($el_var, 1);
 
 	$_POST['go_to']="acta_notas.php?mod=".$_POST['mod']."&pau=".$_POST['pau']."&id_pau=".$_POST['id_pau']."&id_dossier=".$_POST['id_dossier']."&permiso=".$_POST['permiso']."&go_to=".$_POST['go_to'].$el_var;
