@@ -415,7 +415,7 @@ class Resumen Extends core\ClasePropiedades {
 		$html = "<table>";
 		if (!empty($cabecera)) {
 			$html .= "<tr><td width=20></td>";
-			while ( list( $key, $titulo ) = each( $camp ) ) {
+			foreach ($camp as $key => $titulo) {
 				$html .= "<th>$titulo</th>";
 			}
 			$html .= "</tr>";
@@ -423,7 +423,7 @@ class Resumen Extends core\ClasePropiedades {
 		}
 		foreach ($oDbl->query($sql) as $fila=>$valor) {
 			$html .= "<tr><td width=20></td>";
-			while ( list( $key, $val ) = each( $camp ) ) {
+			foreach ($camp as $key => $val) {
 				$html .= "<td>$valor[$val]</td>";
 			}
 			$html .= "</tr>";
@@ -985,14 +985,14 @@ class Resumen Extends core\ClasePropiedades {
 			$camp=explode(',','nom,apellido1,apellido2,asignatura,actividad');
 			$html = "<table>";
 			$html .= "<tr><td width=20></td>";
-			while ( list( $key, $titulo ) = each( $camp ) ) {
+			foreach ($camp as $key => $titulo) {
 				$html .= "<th>$titulo</th>";
 			}
 			$html .= "</tr>";
 			$p=reset($camp);
 			foreach ($a_docencia as $id_nom=>$valor) {
 				$html .= "<tr><td width=20></td>";
-				while ( list( $key, $val ) = each( $camp ) ) {
+				foreach ($camp as $key => $val) {
 					$data = $nombres[$id_nom][$val];
 					$html .= "<td>$data</td>";
 				}
