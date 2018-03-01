@@ -236,7 +236,7 @@ echo $oTabla->mostrar_tabla();
 if (!empty($ref_perm)) { // si es nulo, no tengo permisos de ningún tipo
 	reset($ref_perm);
 	echo "<br><table cellspacing=3  class=botones><tr class=botones><th width=25 align=RIGHT>"._("dl").":</th>";
-	while (list ($clave, $val) = each ($ref_perm)) {
+	foreach ($ref_perm as $clave =>$val) {
 		$permis=$val["perm"];
 		$nom=$val["nom"];
 		if (!empty($permis)) {
@@ -247,7 +247,7 @@ if (!empty($ref_perm)) { // si es nulo, no tengo permisos de ningún tipo
 	}
 	echo "</tr><tr class=botones><th  width=25 align=RIGHT>"._("otros").":</th>";
 	reset ($ref_perm);
-	while (list ($clave, $val) = each ($ref_perm)) {
+	foreach ($ref_perm as $clave =>$val) {
 		$permis=$val["perm"];
 		$nom=$val["nom"];
 		if (!empty($permis)) {
