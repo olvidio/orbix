@@ -103,7 +103,7 @@ class PermisoMenu extends permisos\Xpermisos {
 		if ($this->sPermLogin === 'admin') {
 			return true;
 		} else { 
-			while (list($a,$b) = each($llistaperm)) {
+			foreach ($llistaperm as $a => $b) {
 				$pos = strpos ($b, "!");
 				if ($pos !== false && $pos === 0) {
 					$neg = substr ($b, 1);    
