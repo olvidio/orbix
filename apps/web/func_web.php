@@ -80,7 +80,7 @@ function zdesplegable_2($nombre,$opciones,$selected,$blanco) {
 function zoptions_2($opciones,$selected,$blanco) {
 	if (!empty($blanco)) { echo "<option></option>"; }
 	reset ($opciones);
-	while (list ($clave, $valor) = each ($opciones)) {
+	foreach ($opciones as $clave => $valor) {
 		list( $clave, $val ) = preg_split('/#/', $valor );
 		if ($clave==$selected) { $sel="selected"; } else { $sel=""; }
 		echo "<option value=\"$clave\" $sel>$val</option>";
@@ -105,7 +105,7 @@ function zoptions($opciones,$selected,$blanco) {
 	if (!empty($blanco)) { echo "<option></option>"; }
 	if (is_array($opciones)) {
 		reset ($opciones);
-		while (list ($clave, $val) = each ($opciones)) {
+		foreach ($opciones as $clave => $val) {
 			if ($clave==$selected) { $sel="selected"; } else { $sel=""; }
 			echo "<option value=\"$clave\" $sel>$val</option>";
 		}
@@ -116,7 +116,7 @@ function zoptions_var($opciones,$selected,$blanco) {
 	$txt="";
 	if (!empty($blanco)) { $txt.="<option></option>"; }
 	reset ($opciones);
-	while (list ($clave, $val) = each ($opciones)) {
+	foreach ($opciones as $clave => $val) {
 		if ($clave==$selected) { $sel="selected"; } else { $sel=""; }
 		$txt.="<option value=\"$clave\" $sel>$val</option>";
 	}
@@ -252,7 +252,7 @@ function zgo_array($gg) {
 	$parametros = '';
 	$url = '';
 	$frame = '';
-	while (list ($clave, $val) = each ($gg)) {
+	foreach ($gg as $clave => $val) {
 		switch ($clave) {
 			case "pagina":
 				$url = $val;
