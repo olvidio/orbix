@@ -40,9 +40,10 @@ uksort($aCentrosOrden,"core\strsinacentocmp");
 $aCentrsoNExt = array();
 $aCentrosNExt[1] = _("todos los ctr");
 $aCentrosNExt[2] = "----------";
-foreach ($aCentrosOrden as $aCentros) {
-	$bar = each($aCentros);
-	$aCentrosNExt[$bar['key']] = $bar['value'];
+foreach ($aCentrosOrden as $aCentro) {
+	$key = key($aCentro);
+	$value = current($aCentro);
+	$aCentrosNExt[$key] = $value;
 }
 
 $oDesplCtrN = new web\Desplegable();
@@ -66,9 +67,10 @@ uksort($aCentrosOrden,"core\strsinacentocmp");
 $aCentrsoAgdExt = array();
 $aCentrosAgdExt[1] = _("todos los ctr");
 $aCentrosAgdExt[2] = "----------";
-foreach ($aCentrosOrden as $aCentros) {
-	$bar = each($aCentros);
-	$aCentrosAgdExt[$bar['key']] = $bar['value'];
+foreach ($aCentrosOrden as $aCentro) {
+	$key = key($aCentro);
+	$value = current($aCentro);
+	$aCentrosAgdExt[$key] = $value;
 }
 
 $oDesplCtrAgd = new web\Desplegable();
@@ -103,40 +105,42 @@ fnjs_n_a=function(dd){
 <input type="hidden" id="na" name="na" value="">
 <!-- Selección de centros -->
 <table>
-<tr>
-<th colspan=3><?php echo ucfirst(_("ver cuadro de posibles ca")); ?></th>
-</tr>
-<tr><td colsapan=3><?php echo _("Nota: Para que salgan los ca en el cuadro deben tener introducidas las asignaturas y el campo de nivel de stgr"); ?></td></tr>
-<tr>
-<td>
-<table style="width:250px">
 	<tr>
-	<th colspan=2><?php echo ucfirst(_("numerarios")); ?></th>
+		<th colspan=2><?php echo ucfirst(_("ver cuadro de posibles ca")); ?></th>
 	</tr>
 	<tr>
-	<td colspan=2 align=center>
-	<br>
-	</td></tr>
-	<tr>
-	<td><b><?= _("centro") ?></b></td>
-	<td><?= $oDesplCtrN->desplegable(); ?></td></tr>
-	</td></tr>
-</table>
-</td>
-<td>
-	<table style="width:250px">
-	<tr>
-	<th colspan=2><?php echo ucfirst(_("agregados")); ?></th>
+		<td colspan=2><?php echo _("Nota: Para que salgan los ca en el cuadro deben tener introducidas las asignaturas y el campo de nivel de stgr"); ?></td>
 	</tr>
 	<tr>
-	<td colspan=2 align=center>
-	<br>
+	<td>
+		<table style="width:250px">
+			<tr>
+			<th colspan=2><?php echo ucfirst(_("numerarios")); ?></th>
+			</tr>
+			<tr>
+			<td colspan=2 align=center>
+			<br>
+			</td></tr>
+			<tr>
+			<td><b><?= _("centro") ?></b></td>
+			<td><?= $oDesplCtrN->desplegable(); ?></td></tr>
+			</td></tr>
+		</table>
+	</td>
+	<td>
+		<table style="width:250px">
+			<tr>
+			<th colspan=2><?php echo ucfirst(_("agregados")); ?></th>
+			</tr>
+			<tr>
+			<td colspan=2 align=center>
+			<br>
+			</td></tr>
+			<tr>
+			<td><b><?= _("centro") ?></b></td>
+			<td><?= $oDesplCtrAgd->desplegable(); ?></td></tr>
+		</table>
 	</td></tr>
-	<tr>
-	<td><b><?= _("centro") ?></b></td>
-	<td><?= $oDesplCtrAgd->desplegable(); ?></td></tr>
-</table>
-</td></tr>
 </table>
 <!-- Selección de periodo -->
 <?php
