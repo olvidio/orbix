@@ -40,7 +40,8 @@ class GestorDossier Extends core\ClaseGestor {
 	 * @param string sQuery la query a executar.
 	 * @return array Una col·lecció d'objectes de tipus Dossier
 	 */
-	function comprobarDossiersAbiertos($pau='',$id='') {
+	function DossiersNotEmpty($pau='',$id='') {
+		$esquema = core\ConfigGlobal::mi_region();
 		$oDbl = $this->getoDbl();
 		$oDossierSet = new core\Set();
 		$gesTipoDossier = new GestorTipoDossier();
@@ -49,20 +50,27 @@ class GestorDossier Extends core\ClaseGestor {
 			$id_tipo_dossier = $oTipoDossier->getId_tipo_dossier();
 			$tabla_to = $oTipoDossier->getTabla_to();
 			$campo_to = $oTipoDossier->getCampo_to();
+			//comprobar que la tabla existe
+			if (empty($tabla_to)) {	continue; }
+			$sQry = "SELECT to_regclass('\"$esquema\".$tabla_to')";
+			$exist = $oDbl->query($sQry)->fetchColumn();
+			if (empty($exist)) {
+				continue;
+			}
+			//miro si tiene contenido
 			$sQuery = "SELECT * FROM $tabla_to WHERE $campo_to = $id LIMIT 2";
 			if (($oDblSt = $oDbl->query($sQuery)) === false) {
 				$sClauError = 'GestorDossier.comprobar.query';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
-			$aDades = $oDbl->query($sQuery);
-			if (count($aDades) > 0) {
+			if ($oDblSt->rowCount() > 0) {
 				$a_pkey = array('tabla' => $pau,
 								'id_pau' => $id,
 								'id_tipo_dossier' => $id_tipo_dossier);
 				$oDossier= new Dossier($a_pkey);
 				$oDossier->DBCarregar();
-				$oDossier->DBGuardar();
+				$oDossierSet->add($oDossier);
 			}
 		}
 		return $oDossierSet->getTot();
