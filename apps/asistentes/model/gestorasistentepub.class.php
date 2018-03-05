@@ -38,7 +38,7 @@ class GestorAsistentePub Extends core\ClaseGestor {
 	 * retorna l'array de id_nom
 	 *
 	 * @param array id_activ de las actividades seleccionadas.
-	 * @return array [id_nom]
+	 * @return array id_nom
 	 */
 	function getListaAsistentesDistintos($aId_activ=array()) {
 		$oDbl = $this->getoDbl();
