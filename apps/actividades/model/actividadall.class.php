@@ -873,7 +873,6 @@ class ActividadAll Extends core\ClasePropiedades {
 		} else {
 			$isoActivFin = $oFin->format('YmdHis');
 		}
-	//echo "<br>A: $nom_activ [$isoActivIni][$isoActivFin]<br>";
 	// miro si la actividad empieza y termina en el mismo periodo.
 		$iniPeriodo = $oIniTot->format('YmdHis');
 		$finPeriodo = $oFinTot->format('YmdHis');
