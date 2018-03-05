@@ -58,9 +58,9 @@ if (empty($_POST['cabecera']) || $_POST['cabecera']!="no") {
 	<?php
 } //fin if cabecera
 
-$aWhere ['tipo_ctr'] = '^[(cgi)|(igl)]';
-$aOperador ['tipo_ctr'] =  '!~';
-$aWhere ['_ordre'] = 'substr(tipo_ctr,1,1),nombre_ubi';
+$aWhere['tipo_ctr'] = '^[(cgi)|(igl)]';
+$aOperador['tipo_ctr'] =  '!~';
+$aWhere['_ordre'] = 'substr(tipo_ctr,1,1),nombre_ubi';
 $gesCentroDl = new ubis\GestorCentroDl();
 $cCentrosDl = $gesCentroDl->getCentros($aWhere,$aOperador);
 
