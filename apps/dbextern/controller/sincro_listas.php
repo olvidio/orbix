@@ -54,6 +54,7 @@ $oGesListas = new dbextern\model\GestorPersonaListas();
 $cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
 $i = 0;
 $s = 0;
+$a_ids_orbix = array();
 foreach ($cPersonasListas as $oPersonaListas) {
 	$id_nom_listas = $oPersonaListas->getIdentif();
 
@@ -65,7 +66,10 @@ foreach ($cPersonasListas as $oPersonaListas) {
 		$cPersonas = $GesPersonas->getPersonasDl(array('id_nom' => $id_orbix));
 		if (!empty($cPersonas) && count($cPersonas) > 0){
 			$situacion = $cPersonas[0]->getSituacion();
-			if ($situacion != 'A') { $s++; }
+			if ($situacion != 'A') {
+				$a_ids_orbix[] = $cPersonas[0]->getId_nom();
+				$s++;
+			}
 		}
 		continue;
 	}
@@ -73,6 +77,7 @@ foreach ($cPersonasListas as $oPersonaListas) {
 }
 
 $no_situacion = empty($s)? 0 : $s;
+$ids_orbix_text = json_encode($a_ids_orbix);
 $no_orbix = empty($i)? 0 : $i;
 
 // todos los de orbix
@@ -90,7 +95,7 @@ foreach ($cPersonasOrbix as $oPersonaOrbix) {
 }
 $no_listas = empty($i)? 0 : $i;
 
-$ver_situacion = web\Hash::link('apps/dbextern/controller/sincro_ver.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona)));
+$ver_situacion = web\Hash::link('apps/dbextern/controller/sincro_ver_situacion.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona,'ids_orbix_text'=>$ids_orbix_text)));
 $ver_listas = web\Hash::link('apps/dbextern/controller/sincro_ver.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona)));
 $ver_orbix = web\Hash::link('apps/dbextern/controller/sincro_ver_orbix.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona)));
 
@@ -101,12 +106,12 @@ $ver_orbix = web\Hash::link('apps/dbextern/controller/sincro_ver_orbix.php?'.htt
 		<td><?= $no_situacion ?></td>
 		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_situacion ?>')">ver</span></td>
 	</tr>
-	<tr><td>A.</td>
+	<tr><td>B.</td>
 		<td> Personas en listas sin correspondencia en orbix</td>
 		<td><?= $no_orbix ?></td>
 		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_listas ?>')">ver</span></td>
 	</tr>
-	<tr><td>B.</td>
+	<tr><td>C.</td>
 		<td> Personas en orbix sin correspondencia en listas</td>
 		<td><?= $no_listas ?></td>
 		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_orbix ?>')">ver</span></td>
