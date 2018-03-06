@@ -207,6 +207,43 @@ class TrasladoDl {
 		$oDBR->exec("SET search_path TO $this->path_org");
 	}
 	
+	/**
+	 * dado un id_nom, lo busca en todos los esquemas y si lo encuentra
+	 * devuelve el id_schema
+	 * 
+	 * @param integer id_mnom
+	 * @return array(id_schema, situacion, f_situacion)
+	 */
+	public function getEsquemas($id_orbix) {
+		// posibles esquemas
+		/*
+		 * @todo: filtrar por regiones?
+		 */
+		$qRs = $oDBR->query("SELECT DISTINCT schemaname FROM pg_stat_user_tables");
+		$aResultSql = $qRs->fetch(PDO::FETCH_ASSOC);
+		$aEsquemas = $aResultSql['schemaname'];
+		//elimino public, publicv, global
+		unset($aEsquemas['global']);	
+		$aEsquemas = array_diff($array, ['global', 'public', 'publicv']);
+		//Utilizo la conexión oDBR para cambiar momentáneamente el search_path.
+		$oDBR = $GLOBALS['oDBR'];
+		$qRs = $oDBR->query('SHOW search_path');
+		$aPath = $qRs->fetch(PDO::FETCH_ASSOC);
+		$path_org = addslashes($aPath['search_path']);
+		$aResult = [];
+		foreach ($aEsquemas as $esquemaName) {
+			$oDBR->exec("SET search_path TO public,\"$esquemaName\"");
+			$qRs = $oDBR->query("SELECT id_schema,situacion,f_situacion FROM personas_dl WHERE id_nom =$id_orbix");
+			$aResult[] = $qRs->fetchAll(PDO::FETCH_ASSOC);
+		}
+		
+		
+		//restaurarConexion($oDBR);
+		$oDBR->exec("SET search_path TO $path_org");
+		
+		return $aResult;
+	}
+	
 	public function copiarPersona() {
 		$oPersonaDl = new personas\model\PersonaDl($this->iid_nom);
 		$oPersonaDl->DBCarregar();

@@ -46,3 +46,4 @@ Thumbs.db
 !/log/menus/refmenus.sql
 !/log/menus/refgrupmenu_rol.sql
 !/log/menus/tot_menus.sql
+/apps/personas/controller/traslado_update (còpia).php

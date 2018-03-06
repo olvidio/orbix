@@ -1,5 +1,5 @@
 <?php
-//use usuarios\model as usuarios;
+use personas;
 /**
 * En el fichero config tenemos las variables genéricas del sistema
 */
@@ -16,6 +16,9 @@ $sfsv = core\ConfigGlobal::mi_sfsv();
 $que = (string)  filter_input(INPUT_POST, 'que');
 
 switch ($que) {
+	// 4 casos:
+	//	está en listas(midl), esta en orbix(otradl), está unido (si-no)
+	//	está en listas(midl), y NO esta en orbix, está unido (si-no)
 	case "crear":
 		$id_nom_listas = (integer)  filter_input(INPUT_POST, 'id_nom_listas');
 		$id = (integer)  filter_input(INPUT_POST, 'id');
@@ -52,6 +55,19 @@ switch ($que) {
 					$obj_pau = 'PersonaNax';
 				break;
 			}
+			// Buscar si está en orbix (otras dl)
+			// a) si ya está unida; b) si está sin unir.
+			$oGesMatch = new dbextern\model\GestorIdMatchPersona();
+			$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas'=>$id_nom_listas));
+			if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) { // (a) unida
+				$id_orbix = $cIdMatch[0]->getId_orbix();
+				$oTrasladoDl = new personas\model\trasladoDl();
+				$aaa = $oTrasladoDl->getEsquemas($id_orbix);
+				
+			} else { //(b) mala suerte!
+				
+			}
+			
 			$obj = 'personas\\model\\'.$obj_pau;
 			$oPersona = new $obj();
 		

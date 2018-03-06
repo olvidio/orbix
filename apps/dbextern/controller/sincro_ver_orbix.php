@@ -77,14 +77,14 @@ if (empty($id)) {
 		if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
 			continue;
 		}
-		$a_persona_orbix ['id_nom_orbix'] = $id_nom_orbix;
-		$a_persona_orbix ['ape_nom'] = $oPersonaOrbix->getApellidosNombre();
-		$a_persona_orbix ['nombre'] = $oPersonaOrbix->getNom();
-		$a_persona_orbix ['apellido1'] = $oPersonaOrbix->getApellido1();
-		$a_persona_orbix ['nx1'] = $oPersonaOrbix->getNx1();
-		$a_persona_orbix ['apellido2'] = $oPersonaOrbix->getApellido2();
-		$a_persona_orbix ['nx2'] = $oPersonaOrbix->getNx2();
-		$a_persona_orbix ['f_nacimiento'] = $oPersonaOrbix->getF_nacimiento();
+		$a_persona_orbix['id_nom_orbix'] = $id_nom_orbix;
+		$a_persona_orbix['ape_nom'] = $oPersonaOrbix->getApellidosNombre();
+		$a_persona_orbix['nombre'] = $oPersonaOrbix->getNom();
+		$a_persona_orbix['apellido1'] = $oPersonaOrbix->getApellido1();
+		$a_persona_orbix['nx1'] = $oPersonaOrbix->getNx1();
+		$a_persona_orbix['apellido2'] = $oPersonaOrbix->getApellido2();
+		$a_persona_orbix['nx2'] = $oPersonaOrbix->getNx2();
+		$a_persona_orbix['f_nacimiento'] = $oPersonaOrbix->getF_nacimiento();
 
 		// incremento antes para empezar en 1 y no en 0.
 		$i++;

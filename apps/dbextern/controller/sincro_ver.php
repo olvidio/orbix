@@ -114,14 +114,14 @@ if (empty($id)) {
 		if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
 			continue;
 		}
-		$a_persona_lista ['id_nom_listas'] = $id_nom_listas;
-		$a_persona_lista ['ape_nom'] = $oPersonaListas->getApeNom();
-		$a_persona_lista ['nombre'] = $oPersonaListas->getNombre();
-		$a_persona_lista ['apellido1'] = $oPersonaListas->getApellido1();
-		$a_persona_lista ['apellido1_sinprep'] = $oPersonaListas->getApellido1_sinprep();
-		$a_persona_lista ['apellido2'] = $oPersonaListas->getApellido2();
-		$a_persona_lista ['apellido2_sinprep'] = $oPersonaListas->getApellido2_sinprep();
-		$a_persona_lista ['f_nacimiento'] = $oPersonaListas->getFecha_Naci();
+		$a_persona_lista['id_nom_listas'] = $id_nom_listas;
+		$a_persona_lista['ape_nom'] = $oPersonaListas->getApeNom();
+		$a_persona_lista['nombre'] = $oPersonaListas->getNombre();
+		$a_persona_lista['apellido1'] = $oPersonaListas->getApellido1();
+		$a_persona_lista['apellido1_sinprep'] = $oPersonaListas->getApellido1_sinprep();
+		$a_persona_lista['apellido2'] = $oPersonaListas->getApellido2();
+		$a_persona_lista['apellido2_sinprep'] = $oPersonaListas->getApellido2_sinprep();
+		$a_persona_lista['f_nacimiento'] = $oPersonaListas->getFecha_Naci();
 		// Sólo la primera vez (mov = ''):
 		if (empty($mov) && syncro_automatico($a_persona_lista,$tipo_persona)) {
 			$cont_sync++;
