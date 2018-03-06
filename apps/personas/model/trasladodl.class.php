@@ -423,7 +423,7 @@ class TrasladoDl {
 						$oActividad = new ActividadAll($id_activ);
 						// si es de la sf quito la 'f'
 						$dl_org = preg_replace('/f$/', '', $oActividad->getDl_org());
-						if ($dl_org == $dl) {
+						if ($dl_org == $this->sdl_dst) {
 							$oAsistenteDl = new AsistenteDl();
 							$oAsistenteDl = $this->copiar($oAsistenteOut,$oAsistenteDl); 
 							$oAsistenteDl->setoDbl($oDBR);
