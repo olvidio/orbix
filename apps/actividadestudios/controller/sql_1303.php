@@ -42,7 +42,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 if (empty($go_to)) {
-	//pongo aqui el $go_to porque al ir al mismo update que las actividaes, no se donde voler
+	//pongo aqui el $go_to porque al ir al mismo update que las actividades, no se donde voler
 	$a_dataUrl = array('queSel'=>'matriculas',
 						'pau'=>$pau,
 						'id_pau'=>$id_pau,
@@ -72,7 +72,8 @@ if (!empty($id_activ)) {  // ¿? ya tengo una actividad concreta (vengo del doss
 		$aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
 		$aOperadores['f_ini'] = 'BETWEEN';
 	}
-	$aWhere['id_tipo_activ'] = '^[12][13][23]';
+	// todas las actividades de estudios (no crt)
+	$aWhere['id_tipo_activ'] = '^'.core\ConfigGlobal::mi_sfsv().'(12)|(22)|(33)|(325)'; // el 325 correponde al semestre de invierno.
 	$aOperadores['id_tipo_activ'] = '~';
 
 	$cAsistencias = $GesAsistentes-> getActividadesDeAsistente(array('id_nom'=>$id_pau,'propio'=>'t'),$aWhere,$aOperadores,true);
@@ -107,7 +108,17 @@ if (is_array($cAsistencias)) {
    	if ( $n == 0 && !empty($todos)) {
 		$aviso .= _("No tiene asignado ningún ca."); 
 	}
-   	if ( $n > 1 && empty($todos)) { $aviso .= _(sprintf("¡¡ojo!! tiene %s actividades de estudios asignadas como propias.",$n)); }
+   	if ( $n > 1 && empty($todos)) {
+		$nn = 0;
+		$id_sem_inv = (int)core\ConfigGlobal::mi_sfsv().'32500';
+		foreach ($cAsistencias as $oAsistente) {
+			$id_activ=$oAsistente->getId_activ();
+			$oActividad = new actividades\Actividad($id_activ);
+			$id_tipo_activ = $oActividad->getId_tipo_activ();
+			if ($id_tipo_activ != $id_sem_inv) $nn++;
+		}
+   		if ( $nn > 1) { $aviso .= _(sprintf("¡¡ojo!! tiene %s actividades de estudios asignadas como propias.",$n)); }
+	}
 }
 ?>
 <script>
