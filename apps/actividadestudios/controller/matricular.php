@@ -74,7 +74,7 @@ $aOperadores = array();
 $aWhere['status'] = 2;
 $aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
 $aOperadores['f_ini'] = 'BETWEEN';
-$aWhere['id_tipo_activ'] = '^[12][13][23]';
+$aWhere['id_tipo_activ'] = '^'.core\ConfigGlobal::mi_sfsv().'(12)|(22)|(33)'; // el 325 correponde al semestre de invierno
 $aOperadores['id_tipo_activ'] = '~';
 foreach($cAlumnos as $oPersonaDl) {
 	$id_nom=$oPersonaDl->getId_nom();
