@@ -43,28 +43,39 @@ if (empty($id_tipo)) {
 	exit(_("No tiene permisos"));
 }
 
+//Orbix
+$obj = 'personas\\model\\'.$obj_pau;
+$GesPersonas = new $obj();
 
+//listas
 $Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE Dl='$dl' AND Identif LIKE '$id_tipo%'";
 // todos los de listas
 $oGesListas = new dbextern\model\GestorPersonaListas();	
 $cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
 $i = 0;
+$s = 0;
 foreach ($cPersonasListas as $oPersonaListas) {
 	$id_nom_listas = $oPersonaListas->getIdentif();
 
 	$oGesMatch = new dbextern\model\GestorIdMatchPersona();
 	$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas'=>$id_nom_listas));
 	if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
+		//comprobar situación = 'A'
+		$id_orbix = $cIdMatch[0]->getId_orbix();
+		$cPersonas = $GesPersonas->getPersonasDl(array('id_nom' => $id_orbix));
+		if (!empty($cPersonas) && count($cPersonas) > 0){
+			$situacion = $cPersonas[0]->getSituacion();
+			if ($situacion != 'A') { $s++; }
+		}
 		continue;
 	}
 	$i++;
 }
 
+$no_situacion = empty($s)? 0 : $s;
 $no_orbix = empty($i)? 0 : $i;
 
 // todos los de orbix
-$obj = 'personas\\model\\'.$obj_pau;
-$GesPersonas = new $obj();
 $cPersonasOrbix = $GesPersonas->getPersonasDl(array('situacion'=>'A'));
 $i = 0;
 foreach ($cPersonasOrbix as $oPersonaOrbix) {
@@ -79,11 +90,17 @@ foreach ($cPersonasOrbix as $oPersonaOrbix) {
 }
 $no_listas = empty($i)? 0 : $i;
 
+$ver_situacion = web\Hash::link('apps/dbextern/controller/sincro_ver.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona)));
 $ver_listas = web\Hash::link('apps/dbextern/controller/sincro_ver.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona)));
 $ver_orbix = web\Hash::link('apps/dbextern/controller/sincro_ver_orbix.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona)));
 
 ?>
 <table>
+	<tr><td>A.</td>
+		<td> Personas en listas y en orbix, pero en situación incorrecta</td>
+		<td><?= $no_situacion ?></td>
+		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_situacion ?>')">ver</span></td>
+	</tr>
 	<tr><td>A.</td>
 		<td> Personas en listas sin correspondencia en orbix</td>
 		<td><?= $no_orbix ?></td>

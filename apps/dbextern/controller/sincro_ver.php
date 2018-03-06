@@ -140,9 +140,10 @@ $max = count($_SESSION['DBListas']);
 $a_lista_orbix = array();
 $persona_listas = array();
 $new_id = 0;
-if (!empty($max)) {
-	$new_id = otro($id,$mov,$max);
-	// Buscar coincidentes en orix
+if (!empty($max)) { $new_id = otro($id,$mov,$max); }
+// Buscar coincidentes en orix
+// assegurar que existe (al llegar al final)
+if (!empty($new_id) && isset($_SESSION['DBListas'][$new_id])) {
 	$persona_listas = $_SESSION['DBListas'][$new_id];
 	$apellido1_sinprep = $persona_listas['apellido1_sinprep'];
 	// Si tiene más de una palabra cojo la priemra
