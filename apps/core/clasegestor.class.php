@@ -19,7 +19,7 @@ abstract class ClaseGestor {
 	 *
 	 * @return object oDbl
 	 */
-	protected function getoDbl() {
+	public function getoDbl() {
 		return $this->oDbl;
 	}
 	/**
@@ -27,7 +27,7 @@ abstract class ClaseGestor {
 	 *
 	 * @param object oDbl
 	 */
-	protected function setoDbl($oDbl) {
+	public function setoDbl($oDbl) {
 		$this->oDbl = $oDbl;
 	}
 	/**
@@ -35,7 +35,7 @@ abstract class ClaseGestor {
 	 *
 	 * @return string sNomTabla
 	 */
-	protected function getNomTabla() {
+	public function getNomTabla() {
 		return $this->sNomTabla;
 	}
 	/**
