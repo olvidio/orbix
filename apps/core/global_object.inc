@@ -63,8 +63,8 @@ switch ($user_sfsv) {
 }
 
 // para las tertulias.
-//$oDBT = new PDO(ConfigGlobal::$str_conexio_filmoteca);
-//$oDBA->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING );
+//$oDBT = new \PDO(ConfigGlobal::$str_conexio_filmoteca);
+//$oDBA->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
 
 
 if (configGlobal::is_app_installed('dbextern')) {

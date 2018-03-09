@@ -33,9 +33,9 @@ case "eliminar":
 		$fichero=NULL;
 
 		$oDBSt_a=$GLOBALS['oDBPC']->prepare($sql_update);
-		$oDBSt_a->bindParam(":plano_nom", $nom, PDO::PARAM_STR);
-		$oDBSt_a->bindParam(":plano_extension", $extension, PDO::PARAM_STR);
-		$oDBSt_a->bindParam(":plano_doc", $fichero, PDO::PARAM_LOB);
+		$oDBSt_a->bindParam(":plano_nom", $nom, \PDO::PARAM_STR);
+		$oDBSt_a->bindParam(":plano_extension", $extension, \PDO::PARAM_STR);
+		$oDBSt_a->bindParam(":plano_doc", $fichero, \PDO::PARAM_LOB);
 
 		$oDBSt_a->execute();
 	}
@@ -47,10 +47,10 @@ case "comprobar":
 	//echo "sql: $sql_update<br>";
 	$stmt = $GLOBALS['oDBPC']->prepare($sql);
 	$stmt->execute(array($id_direccion));
-	$stmt->bindColumn(1, $plano_nom, PDO::PARAM_STR, 256);
-	$stmt->bindColumn(2, $plano_extension, PDO::PARAM_STR, 256);
-	$stmt->bindColumn(3, $plano_doc, PDO::PARAM_LOB);
-	$stmt->fetch(PDO::FETCH_BOUND);
+	$stmt->bindColumn(1, $plano_nom, \PDO::PARAM_STR, 256);
+	$stmt->bindColumn(2, $plano_extension, \PDO::PARAM_STR, 256);
+	$stmt->bindColumn(3, $plano_doc, \PDO::PARAM_LOB);
+	$stmt->fetch(\PDO::FETCH_BOUND);
 
 	if (empty($plano_doc)) {
 		$rta='no';
@@ -82,9 +82,9 @@ case "upload":
 			$fichero=empty($fichero)? '' : $fichero;
 
 			$oDBSt_a=$GLOBALS['oDBPC']->prepare($sql_update);
-			$oDBSt_a->bindParam(":plano_nom", $nom, PDO::PARAM_STR);
-			$oDBSt_a->bindParam(":plano_extension", $extension, PDO::PARAM_STR);
-			$oDBSt_a->bindParam(":plano_doc", $fichero, PDO::PARAM_LOB);
+			$oDBSt_a->bindParam(":plano_nom", $nom, \PDO::PARAM_STR);
+			$oDBSt_a->bindParam(":plano_extension", $extension, \PDO::PARAM_STR);
+			$oDBSt_a->bindParam(":plano_doc", $fichero, \PDO::PARAM_LOB);
 
 			$oDBSt_a->execute();
 		} else {
@@ -101,10 +101,10 @@ case "download":
 	//echo "sql: $sql_update<br>";
 	$stmt = $GLOBALS['oDBPC']->prepare($sql);
 	$stmt->execute(array($id_direccion));
-	$stmt->bindColumn(1, $plano_nom, PDO::PARAM_STR, 256);
-	$stmt->bindColumn(2, $plano_extension, PDO::PARAM_STR, 256);
-	$stmt->bindColumn(3, $plano_doc, PDO::PARAM_LOB);
-	$stmt->fetch(PDO::FETCH_BOUND);
+	$stmt->bindColumn(1, $plano_nom, \PDO::PARAM_STR, 256);
+	$stmt->bindColumn(2, $plano_extension, \PDO::PARAM_STR, 256);
+	$stmt->bindColumn(3, $plano_doc, \PDO::PARAM_LOB);
+	$stmt->fetch(\PDO::FETCH_BOUND);
 
 	if (empty($plano_doc)) {
 		exit( _("No existe un plano."));

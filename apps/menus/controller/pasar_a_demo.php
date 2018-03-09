@@ -59,7 +59,7 @@ if ($qRs = $oDemoPC->query($sql_del) === false) {
 }
 
 $sQry = 'SELECT * FROM "public".aux_metamenus';
-foreach ( $oDevelPC->query($sQry,PDO::FETCH_ASSOC) as $aDades) { 
+foreach ( $oDevelPC->query($sQry,\PDO::FETCH_ASSOC) as $aDades) { 
 	//print_r($aDades);
 	$campos="(id_metamenu,modulo,url,parametros,descripcion)";
 	$valores="(:id_metamenu,:modulo,:url,:parametros,:descripcion)";
@@ -84,7 +84,7 @@ if ($qRs = $oDemoPC->query($sql_del) === false) {
 }
 
 $sQry = 'SELECT * FROM "public".ref_grupmenu';
-foreach ( $oDevelPC->query($sQry,PDO::FETCH_ASSOC) as $aDades) { 
+foreach ( $oDevelPC->query($sQry,\PDO::FETCH_ASSOC) as $aDades) { 
 	//print_r($aDades);
 	$campos="(id_grupmenu,grup_menu,orden)";
 	$valores="(:id_grupmenu,:grup_menu,:orden)";
@@ -109,7 +109,7 @@ if ($qRs = $oDemoPC->query($sql_del) === false) {
 }
 
 $sQry = 'SELECT * FROM "public".ref_grupmenu_rol';
-foreach ( $oDevelPC->query($sQry,PDO::FETCH_ASSOC) as $aDades) { 
+foreach ( $oDevelPC->query($sQry,\PDO::FETCH_ASSOC) as $aDades) { 
 	//print_r($aDades);
 	$campos="(id_item,id_grupmenu,id_role)";
 	$valores="(:id_item,:id_grupmenu,:id_role)";
@@ -135,7 +135,7 @@ if ($qRs = $oDemoPC->query($sql_del) === false) {
 }
 
 $sQry = 'SELECT * FROM "public".ref_menus';
-foreach ( $oDevelPC->query($sQry,PDO::FETCH_ASSOC) as $aDades) { 
+foreach ( $oDevelPC->query($sQry,\PDO::FETCH_ASSOC) as $aDades) { 
 	//print_r($aDades);
 	$campos="(id_menu,orden,menu,parametros,id_metamenu,menu_perm,id_grupmenu,ok)";
 	$valores="(:id_menu,:orden,:menu,:parametros,:id_metamenu,:menu_perm,:id_grupmenu,:ok)";

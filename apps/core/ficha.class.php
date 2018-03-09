@@ -96,7 +96,7 @@ $a_campos = $obj->getTot();
 		  ///if ($llarg==0) {$llarg=pg_field_prtlen($q,0,$camp);}
 		  //para el caso de que no exista orden en la tabla: aux_orden:
 		  if ($oDBSt_rta->rowCount()!=0){	  
-			  $row=$oDBSt_rta->fetch(PDO::FETCH_ASSOC,0);
+			  $row=$oDBSt_rta->fetch(\PDO::FETCH_ASSOC,0);
 			  $orden=$row['orden'];
 			  //para que al ordenar: 3 sea menor que 17:
 			  if (strlen($orden)==1) {$orden="0".$orden;}

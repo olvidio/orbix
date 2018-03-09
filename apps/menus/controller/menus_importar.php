@@ -70,7 +70,7 @@ if ($seguro == 1) {
 		}
 
 		$sQry = 'SELECT * FROM ref_grupmenu';
-		foreach ( $oDBPC->query($sQry,PDO::FETCH_ASSOC) as $aDades) { 
+		foreach ( $oDBPC->query($sQry,\PDO::FETCH_ASSOC) as $aDades) { 
 			//print_r($aDades);
 			$campos="(id_grupmenu,grup_menu,orden)";
 			$valores="(:id_grupmenu,:grup_menu,:orden)";
@@ -95,7 +95,7 @@ if ($seguro == 1) {
 		}
 
 		$sQry = 'SELECT * FROM ref_grupmenu_rol';
-		foreach ( $oDBPC->query($sQry,PDO::FETCH_ASSOC) as $aDades) { 
+		foreach ( $oDBPC->query($sQry,\PDO::FETCH_ASSOC) as $aDades) { 
 			//print_r($aDades);
 			$campos="(id_item,id_grupmenu,id_role)";
 			$valores="(:id_item,:id_grupmenu,:id_role)";
@@ -120,7 +120,7 @@ if ($seguro == 1) {
 		}
 
 		$sQry = 'SELECT * FROM ref_menus';
-		foreach ( $oDBPC->query($sQry,PDO::FETCH_ASSOC) as $aDades) { 
+		foreach ( $oDBPC->query($sQry,\PDO::FETCH_ASSOC) as $aDades) { 
 			//print_r($aDades);
 			$campos="(id_menu,orden,menu,parametros,id_metamenu,menu_perm,id_grupmenu,ok)";
 			$valores="(:id_menu,:orden,:menu,:parametros,:id_metamenu,:menu_perm,:id_grupmenu,:ok)";

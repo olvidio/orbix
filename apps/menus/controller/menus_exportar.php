@@ -21,7 +21,7 @@ if ($qRs = $oDevelPC->query($sql_del) === false) {
 }
 
 $sQry = 'SELECT * FROM aux_grupmenu';
-foreach ( $oDevel->query($sQry,PDO::FETCH_ASSOC) as $aDades) { 
+foreach ( $oDevel->query($sQry,\PDO::FETCH_ASSOC) as $aDades) { 
 	unset($aDades['id_schema']);
 	//print_r($aDades);
 	$campos="(id_grupmenu,grup_menu,orden)";
@@ -47,7 +47,7 @@ if ($qRs = $oDevelPC->query($sql_del) === false) {
 }
 
 $sQry = 'SELECT * FROM aux_grupmenu_rol';
-foreach ( $oDevel->query($sQry,PDO::FETCH_ASSOC) as $aDades) { 
+foreach ( $oDevel->query($sQry,\PDO::FETCH_ASSOC) as $aDades) { 
 	unset($aDades['id_schema']);
 	//print_r($aDades);
 	$campos="(id_item,id_grupmenu,id_role)";
@@ -73,7 +73,7 @@ if ($qRs = $oDevelPC->query($sql_del) === false) {
 }
 
 $sQry = "SELECT * FROM aux_menus WHERE ok='t'";
-foreach ( $oDevel->query($sQry,PDO::FETCH_ASSOC) as $aDades) { 
+foreach ( $oDevel->query($sQry,\PDO::FETCH_ASSOC) as $aDades) { 
 	unset($aDades['id_schema']);
 	//print_r($aDades);
 	$campos="(id_menu,orden,menu,parametros,id_metamenu,menu_perm,id_grupmenu,ok)";
