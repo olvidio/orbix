@@ -42,7 +42,7 @@ switch ($sactividad) {
 $status = 2; //actual
 
 // Seleccionar los id_dl del mismo grupo de estudios
-$esquema = core\ConfigGlobal::mi_region();
+$esquema = core\ConfigGlobal::mi_region_dl();
 $a_reg = explode('-',$esquema);
 $mi_dl = substr($a_reg[1],0,-1); // quito la v o la f.
 $aWhere =array('region'=>$a_reg[0],'dl'=>$mi_dl);
