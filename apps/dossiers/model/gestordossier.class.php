@@ -41,7 +41,7 @@ class GestorDossier Extends core\ClaseGestor {
 	 * @return array Una col·lecció d'objectes de tipus Dossier
 	 */
 	function DossiersNotEmpty($pau='',$id='') {
-		$esquema = core\ConfigGlobal::mi_region();
+		$esquema = core\ConfigGlobal::mi_region_dl();
 		$oDbl = $this->getoDbl();
 		$oDossierSet = new core\Set();
 		$gesTipoDossier = new GestorTipoDossier();
