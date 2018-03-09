@@ -44,7 +44,10 @@ class GestorMatricula Extends core\ClaseGestor {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		$oMatriculaSet = new core\Set();
-
+		
+		$qRs = $oDbl->query('SHOW search_path');
+		$aPath = $qRs->fetch(\PDO::FETCH_ASSOC);
+		
 		if (!empty($id_nom)) {
 			$sQry = "SELECT * FROM $nom_tabla Where id_nom = $id_nom AND id_situacion IS NULL";
 		} else {
