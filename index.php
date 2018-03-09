@@ -156,7 +156,7 @@ foreach ($cGrupMenuRoles as $oGrupMenuRole) {
 ksort($html_gm);
 $html_barra .= implode($html_gm);
 $html_barra .= "<li onclick=\"fnjs_logout();\" >| ".ucfirst(_('salir'))."</li>";
-$html_barra .= "<li> (login as: ".$oUsuario->getUsuario().'['.configGlobal::mi_region()."])</li>";
+$html_barra .= "<li> (login as: ".$oUsuario->getUsuario().'['.configGlobal::mi_region_dl()."])</li>";
 $html_barra .= "</ul>";
 if ($gm == 1) { 
 	//asegurarme que el id_grupmenu seleccionado (pref) es el que se ve.
