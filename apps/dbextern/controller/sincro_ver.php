@@ -16,60 +16,41 @@ $id = (string)  filter_input(INPUT_POST, 'id');
 $mov = (string)  filter_input(INPUT_POST, 'mov');
 //$tipo_persona = 'a';
 
-$id_tipo = 0;
-switch ($tipo_persona) {
-	case 'n':
-		if ($_SESSION['oPerm']->have_perm("sm")) {
-			$id_tipo = 1;
-		}
-		break;
-	case 'a':
-		if ($_SESSION['oPerm']->have_perm("agd")) {
-			$id_tipo = 2;
-		}
-		break;
-	case 's':
-		if ($_SESSION['oPerm']->have_perm("sg")) {
-			$id_tipo = 3;
-		}
-		break;
-}
-
-function syncro_automatico($a_persona_lista,$tipo_persona) {
-	$id_nom_listas = $a_persona_lista['id_nom_listas'];
-	$apellido1_sinprep = $a_persona_lista['apellido1_sinprep'];
-	$apellido2_sinprep = $a_persona_lista['apellido2_sinprep'];
-	$f_nacimiento = $a_persona_lista['f_nacimiento'];
-	$nombre = $a_persona_lista['nombre'];
-	
-	$aWhere = array();
-	$aOperador = array();
-	$aWhere['id_tabla'] = $tipo_persona;
-	$aWhere['apellido1'] = $apellido1_sinprep;
-	$aWhere['apellido2'] = $apellido2_sinprep;
-	$aWhere['f_nacimiento'] = "'$f_nacimiento'";
-	$aWhere['nom'] = trim($nombre);
-
-	$oGesPersonasDl = new personas\model\GestorPersonaDl();
-	$cPersonasDl = $oGesPersonasDl->getPersonasDl($aWhere,$aOperador);
-	if ($cPersonasDl !== false && count($cPersonasDl) == 1) {
-		$oPersonaDl = $cPersonasDl[0];
-		$id_nom = $oPersonaDl->getId_nom();
-
-		$oIdMatch = new dbextern\model\IdMatchPersona($id_nom_listas);
-		$oIdMatch->setId_orbix($id_nom);
-		$oIdMatch->setId_tabla($tipo_persona);
-		
-		if ($oIdMatch->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
-			print_r($oIdMatch);
-			echo '<br>';
-			return false;
-		}
-		return true;
-	}
-	return false;
-}
+//function syncro_automatico($a_persona_lista,$tipo_persona) {
+//	$id_nom_listas = $a_persona_lista['id_nom_listas'];
+//	$apellido1_sinprep = $a_persona_lista['apellido1_sinprep'];
+//	$apellido2_sinprep = $a_persona_lista['apellido2_sinprep'];
+//	$f_nacimiento = $a_persona_lista['f_nacimiento'];
+//	$nombre = $a_persona_lista['nombre'];
+//	
+//	$aWhere = array();
+//	$aOperador = array();
+//	$aWhere['id_tabla'] = $tipo_persona;
+//	$aWhere['apellido1'] = $apellido1_sinprep;
+//	$aWhere['apellido2'] = $apellido2_sinprep;
+//	$aWhere['f_nacimiento'] = "'$f_nacimiento'";
+//	$aWhere['nom'] = trim($nombre);
+//
+//	$oGesPersonasDl = new personas\model\GestorPersonaDl();
+//	$cPersonasDl = $oGesPersonasDl->getPersonasDl($aWhere,$aOperador);
+//	if ($cPersonasDl !== false && count($cPersonasDl) == 1) {
+//		$oPersonaDl = $cPersonasDl[0];
+//		$id_nom = $oPersonaDl->getId_nom();
+//
+//		$oIdMatch = new dbextern\model\IdMatchPersona($id_nom_listas);
+//		$oIdMatch->setId_orbix($id_nom);
+//		$oIdMatch->setId_tabla($tipo_persona);
+//		
+//		if ($oIdMatch->DBGuardar() === false) {
+//			echo _('Hay un error, no se ha guardado');
+//			print_r($oIdMatch);
+//			echo '<br>';
+//			return false;
+//		}
+//		return true;
+//	}
+//	return false;
+//}
 
 function otro($id,$mov,$max) {
 	switch($mov) {
@@ -96,13 +77,16 @@ function otro($id,$mov,$max) {
 }
 
 
+$oSincroDB = new dbextern\model\sincroDB();
+$oSincroDB->setTipo_persona($tipo_persona);
+$oSincroDB->setDl($dl);
+
 if (empty($id)) {
 	$id=1;
 
-	$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE Dl='$dl' AND Identif LIKE '$id_tipo%'";
 	// todos los de listas
-	$oGesListas = new dbextern\model\GestorPersonaListas();	
-	$cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
+	$cPersonasListas = $oSincroDB->getPersonasListas();
+	
 	$i = 0;
 	$cont_sync = 0;
 	$a_lista = [];
@@ -114,6 +98,12 @@ if (empty($id)) {
 		if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
 			continue;
 		}
+		// Sólo la primera vez (mov = ''):
+		if (empty($mov) && $oSincroDB->union_automatico($oPersonaListas)) {
+			$cont_sync++;
+			continue;
+		}
+
 		$a_persona_lista['id_nom_listas'] = $id_nom_listas;
 		$a_persona_lista['ape_nom'] = $oPersonaListas->getApeNom();
 		$a_persona_lista['nombre'] = $oPersonaListas->getNombre();
@@ -122,12 +112,6 @@ if (empty($id)) {
 		$a_persona_lista['apellido2'] = $oPersonaListas->getApellido2();
 		$a_persona_lista['apellido2_sinprep'] = $oPersonaListas->getApellido2_sinprep();
 		$a_persona_lista['f_nacimiento'] = $oPersonaListas->getFecha_Naci();
-		// Sólo la primera vez (mov = ''):
-		if (empty($mov) && syncro_automatico($a_persona_lista,$tipo_persona)) {
-			$cont_sync++;
-			continue;
-		}
-
 		// incremento antes para empezar en 1 y no en 0.
 		$i++;
 		$a_lista[$i] = $a_persona_lista;
@@ -145,42 +129,9 @@ if (!empty($max)) { $new_id = otro($id,$mov,$max); }
 // assegurar que existe (al llegar al final)
 if (!empty($new_id) && isset($_SESSION['DBListas'][$new_id])) {
 	$persona_listas = $_SESSION['DBListas'][$new_id];
-	$apellido1_sinprep = $persona_listas['apellido1_sinprep'];
-	// Si tiene más de una palabra cojo la priemra
-	$tokens = explode(' ', $apellido1_sinprep);
-	$apellido1_sinprep_c = $tokens[0];
 	$id_nom_listas = $persona_listas['id_nom_listas'];
-	$aWhere = array();
-	$aOperador = array();
-	$aWhere['id_tabla'] = $tipo_persona;
-	$aWhere['situacion'] = 'A';
-	$aWhere['apellido1'] = $apellido1_sinprep_c;
-	$aOperador['apellido1'] = 'sin_acentos';
-	$aWhere['_ordre'] = 'apellido1, apellido2, nom';
-
-	$oGesPersonasDl = new personas\model\GestorPersonaDl();
-	$cPersonasDl = $oGesPersonasDl->getPersonasDl($aWhere,$aOperador);
-	$i = 0;
-	foreach ($cPersonasDl as $oPersonaDl) {
-		$id_nom = $oPersonaDl->getId_nom();
-		$oGesMatch = new dbextern\model\GestorIdMatchPersona();
-		$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_orbix'=>$id_nom));
-		if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
-			continue;
-		}
-		$ape_nom = $oPersonaDl->getApellidosNombre();
-		$nombre = $oPersonaDl->getNom();
-		$apellido1 = $oPersonaDl->getApellido1();
-		$apellido2 = $oPersonaDl->getApellido2();
-		$f_nacimiento = empty($oPersonaDl->getF_nacimiento())? '??' : $oPersonaDl->getF_nacimiento();
-		$a_lista_orbix[$i] = 	array('id_nom'=>$id_nom,
-											'ape_nom'=>$ape_nom,
-											'nombre'=>$nombre,
-											'apellido1'=>$apellido1,
-											'apellido2'=>$apellido2,
-											'f_nacimiento'=>$f_nacimiento);
-		$i++;
-	}
+	
+	$a_lista_orbix =$oSincroDB->posiblesOrbix($id_nom_listas);
 }
 
 $url_sincro_ver = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro_ver.php';

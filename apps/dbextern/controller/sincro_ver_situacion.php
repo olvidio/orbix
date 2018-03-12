@@ -13,7 +13,7 @@ $dl = (string)  filter_input(INPUT_POST, 'dl');
 $tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
 $ids_orbix_text = (string)  filter_input(INPUT_POST, 'ids_orbix_text');
 
-$a_ids_orbix = json_decode($ids_orbix_text);
+$a_ids_orbix = json_decode(urldecode($ids_orbix_text));
 
 $id = (string)  filter_input(INPUT_POST, 'id');
 $mov = (string)  filter_input(INPUT_POST, 'mov');
@@ -112,12 +112,13 @@ $a_camposHidden = array(
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$url_sincro_ajax = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro_ajax.php';
-$oHash1 = new web\Hash();
-$oHash1->setUrl($url_sincro_ajax);
-$oHash1->setCamposForm('que!id_nom_listas!id!id_orbix'); 
-$h1 = $oHash1->linkSinVal();
+//$url_sincro_ajax = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro_ajax.php';
+//$oHash1 = new web\Hash();
+//$oHash1->setUrl($url_sincro_ajax);
+//$oHash1->setCamposForm('que!id_nom_listas!id!id_orbix'); 
+//$h1 = $oHash1->linkSinVal();
 
+$url_sincro_ajax = web\Hash::link('apps/dbextern/controller/sincro_ajax.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona,'id_nom_orbix' => $id_nom_orbix)));
 
 $html_reg = sprintf(_("registro %s de %s"),$new_id,$max);
 // ------------------ html ----------------------------------
@@ -160,5 +161,5 @@ fnjs_submit=function(formulario,mov){
 </table>
 <br>
 Por el momento estos botones no hacen nada.
-<input type="button" value="<?= _("trasladar") ?>" onclick="">
+<input type="button" value="<?= _("trasladar") ?>" onclick="fnjs_update_div('#main','<?= $url_sincro_ajax ?>')">
 </form>

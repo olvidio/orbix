@@ -16,23 +16,19 @@ $id = (string)  filter_input(INPUT_POST, 'id');
 $mov = (string)  filter_input(INPUT_POST, 'mov');
 //$tipo_persona = 'a';
 
-$id_tipo = 0;
 switch ($tipo_persona) {
 	case 'n':
 		if ($_SESSION['oPerm']->have_perm("sm")) {
-			$id_tipo = 1;
 			$obj_pau = 'GestorPersonaN';
 		}
 		break;
 	case 'a':
 		if ($_SESSION['oPerm']->have_perm("agd")) {
-			$id_tipo = 2;
 			$obj_pau = 'GestorPersonaAgd';
 		}
 		break;
 	case 's':
 		if ($_SESSION['oPerm']->have_perm("sg")) {
-			$id_tipo = 3;
 			$obj_pau = 'GestorPersonaS';
 		}
 		break;

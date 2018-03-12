@@ -55,13 +55,13 @@ $old_dl = $oPersonaDl->getDl();
 $new_dl  = empty($_POST['new_dl'])? '' : $_POST['new_dl'];
 $f_dl  = empty($_POST['f_dl'])? '' : $_POST['f_dl'];
 $situacion  = empty($_POST['situacion'])? '' : $_POST['situacion'];
-$dl_o  = empty($_POST['dl'])? '' : $_POST['dl'];
+$reg_dl_org  = empty($_POST['dl'])? '' : core\ConfigGlobal::mi_region().'-'.$_POST['dl'];
 
 if (!empty($new_dl) AND !empty($f_dl)){
 	$TrasladoDl = new personas\trasladoDl();
 	$TrasladoDl->setId_nom($id_pau);
 	$TrasladoDl->setDl_persona($old_dl);
-	$TrasladoDl->setDl_org($dl_o);
+	$TrasladoDl->setReg_dl_org($reg_dl_org);
 	$TrasladoDl->setReg_dl_dst($new_dl);
 	$TrasladoDl->setF_dl($f_dl);
 	$TrasladoDl->setSituacion($situacion);

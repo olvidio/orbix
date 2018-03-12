@@ -8,7 +8,6 @@ use asistentes\model\AsistenteOut;
 use actividadestudios\model\gestorMatriculaDl;
 use core;
 use dossiers;
-use PDO;
 use personas;
 
 /**
@@ -36,13 +35,15 @@ class TrasladoDl {
 	private $iid_nom;
 	private $sdl_persona;
 	private $sdl_org;
-	private $sreg_dl_dst;
+	private $sreg_dl_org;
 	private $sdl_dst;
+	private $sreg_dl_dst;
 	private $ssituacion;
 	private $df_dl;
 	
 	/* para guardar el search path de la conexión a la base de datos */
-	private $path_org;
+	private $path_ini_org;
+	private $path_ini_dst;
 	private $snew_esquema;
 	/**
 	 * Recupera l'atribut iid_nom de Traslado
@@ -91,6 +92,25 @@ class TrasladoDl {
 	 */
 	function setDl_org($sdl_org) {
 		$this->sdl_org = $sdl_org;
+	}
+	/**
+	 * Recupera l'atribut sreg_dl_org de Traslado
+	 *
+	 * @return string sreg_dl_org
+	 */
+	function getReg_dl_org() {
+		return $this->sreg_dl_org;
+	}
+	/**
+	 * estableix el valor de l'atribut sreg_dl_org de Traslado
+	 *
+	 * @param string sreg_dl_org
+	 */
+	function setReg_dl_org($sreg_dl_org) {
+		$this->sreg_dl_org = $sreg_dl_org;
+
+		$a_reg = explode('-',$sreg_dl_org);
+		$this->sdl_org = $a_reg[1];
 	}
 	/**
 	 * Recupera l'atribut sreg_dl_dst de Traslado
@@ -143,6 +163,54 @@ class TrasladoDl {
 	function setF_dl($df_dl) {
 		$this->df_dl = $df_dl;
 	}
+	
+	private function conexionOrg() {
+		$sfsv_txt = (core\configGlobal::mi_sfsv() == 1)? 'v' :'f';
+		$this->snew_esquema = $this->sreg_dl_org.$sfsv_txt;
+		if (core\ConfigGlobal::mi_region_dl() == $this->snew_esquema) {
+			//Utilizo la conexión oDB para cambiar momentáneamente el search_path.
+			$oDB = $GLOBALS['oDB'];
+		} else {
+			// Sólo funciona con la conexión oDBR porque el usuario es orbixv que 
+			// tiene permiso de lectura para todos los esquemas
+			$oDB = $GLOBALS['oDBR'];
+		}
+		$qRs = $oDB->query('SHOW search_path');
+		$aPath = $qRs->fetch(\PDO::FETCH_ASSOC);
+		$this->path_ini_org = $aPath['search_path'];
+		$oDB->exec('SET search_path TO public,"'.$this->snew_esquema.'"');
+		return $oDB;
+	}
+	private function restaurarConexionOrg($oDB) {
+		// Volver oDB a su estado original:
+		$oDB->exec("SET search_path TO $this->path_ini_org");
+		//$GLOBALS['oDBR'] = $oDBR;
+	}
+	private function conexionDst() {
+		$sfsv_txt = (core\configGlobal::mi_sfsv() == 1)? 'v' :'f';
+		$this->snew_esquema = $this->sreg_dl_dst.$sfsv_txt;
+		//Utilizo la conexión oDBR para cambiar momentáneamente el search_path.
+		if (core\ConfigGlobal::mi_region_dl() == $this->snew_esquema) {
+			//Utilizo la conexión oDB para cambiar momentáneamente el search_path.
+			$oDB = $GLOBALS['oDB'];
+		} else {
+			// Sólo funciona con la conexión oDBR porque el usuario es orbixv que 
+			// tiene permiso de lectura para todos los esquemas
+			$oDB = $GLOBALS['oDBR'];
+		}
+		$qRs = $oDB->query('SHOW search_path');
+		$aPath = $qRs->fetch(\PDO::FETCH_ASSOC);
+		//$this->path_ini_dst = addslashes($aPath['search_path']);
+		$this->path_ini_dst = $aPath['search_path'];
+		$oDB->exec('SET search_path TO public,"'.$this->snew_esquema.'"');
+		return $oDB;
+	}
+	private function restaurarConexionDst($oDB) {
+		// Volver oDBR a su estado original:
+		$oDB->exec("SET search_path TO $this->path_ini_dst");
+	}
+	
+/* -----------------------------------------------------------------------*/
 
 	public function comprobar() {
 		if (!empty($this->sdl_dst) AND $this->sdl_dst == $this->sdl_persona) {
@@ -154,7 +222,12 @@ class TrasladoDl {
 
 	public function comprobarNotas() {
 		// Aviso si le faltan notas
+		$oDBorg = $this->conexionOrg();
+		$qRs = $oDBorg->query('SHOW search_path');
+		$aPath = $qRs->fetch(\PDO::FETCH_ASSOC);
+		
 		$gesMatriculas = new gestorMatriculaDl();
+		$gesMatriculas->setoDbl($oDBorg);
 		$cMatriculasPendientes = $gesMatriculas->getMatriculasPendientes($this->iid_nom);
 		$msg = '';
 		foreach ($cMatriculasPendientes as $oMatricula) {
@@ -167,6 +240,7 @@ class TrasladoDl {
 			$msg .= empty($msg)? '' : '<br>';
 			$msg .= sprintf(_("ca: %s, asignatura: %s"),$nom_activ,$nombre_corto);
 		}
+		$this->restaurarConexionOrg($oDBorg);
 		if (!empty($msg)) {
 			$error .= _("Tiene pendiente de poner las notas de:") .'<br>'.$msg;
 			return $error;
@@ -176,35 +250,23 @@ class TrasladoDl {
 
 	public function cambiarFichaPersona() {
 		// Cambio la situación de la persona. Debo hacerlo lo primero, pues no puedo tener la misma persona en dos dl en la misma situación
-		if ($this->ssituacion == 'A') exit (_("OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio."));
+//		if ($this->ssituacion == 'A') exit (_("OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio."));
 		
-		$oPersonaDl = new personas\model\PersonaDl($this->iid_nom);
+		$oDBorg = $this->conexionOrg();
+		$oPersonaDl = new personas\model\PersonaDl();
+		$oPersonaDl->setoDbl($oDBorg);
+		$oPersonaDl->setId_nom($this->iid_nom);
 		$oPersonaDl->DBCarregar();
 		$oPersonaDl->setSituacion($this->ssituacion);
 		$oPersonaDl->setF_situacion($this->df_dl);
 		$oPersonaDl->setDl($this->sdl_dst);
 		if ($oPersonaDl->DBGuardar() === false) {
 			$error .= '<br>'._('Hay un error, no se ha guardado');
+			$this->restaurarConexionOrg($oDBorg);
 			return false;
 		}
+		$this->restaurarConexionOrg($oDBorg);
 		return true;
-	}
-	
-	private function nuevaConexion() {
-		$sfsv_txt = (core\configGlobal::mi_sfsv() == 1)? 'v' :'f';
-		$this->snew_esquema = $this->sreg_dl_dst.$sfsv_txt;
-		//Utilizo la conexión oDBR para cambiar momentáneamente el search_path.
-		$oDBR = $GLOBALS['oDBR'];
-		$qRs = $oDBR->query('SHOW search_path');
-		$aPath = $qRs->fetch(PDO::FETCH_ASSOC);
-		$this->path_org = addslashes($aPath['search_path']);
-		$oDBR->exec("SET search_path TO public,\"$this->snew_esquema\"");
-		//$oDBR->exec("SET DATESTYLE TO '".ConfigGlexecobal::$datestyle."'");
-		return $oDBR;
-	}
-	private function restaurarConexion($oDBR) {
-		// Volver oDBR a su estado original:
-		$oDBR->exec("SET search_path TO $this->path_org");
 	}
 	
 	/**
@@ -219,8 +281,9 @@ class TrasladoDl {
 		/*
 		 * @todo: filtrar por regiones?
 		 */
+		$oDBR = $GLOBALS['oDBR'];
 		$qRs = $oDBR->query("SELECT DISTINCT schemaname FROM pg_stat_user_tables");
-		$aResultSql = $qRs->fetch(PDO::FETCH_ASSOC);
+		$aResultSql = $qRs->fetch(\PDO::FETCH_ASSOC);
 		$aEsquemas = $aResultSql['schemaname'];
 		//elimino public, publicv, global
 		unset($aEsquemas['global']);	
@@ -228,13 +291,14 @@ class TrasladoDl {
 		//Utilizo la conexión oDBR para cambiar momentáneamente el search_path.
 		$oDBR = $GLOBALS['oDBR'];
 		$qRs = $oDBR->query('SHOW search_path');
-		$aPath = $qRs->fetch(PDO::FETCH_ASSOC);
+		$aPath = $qRs->fetch(\PDO::FETCH_ASSOC);
 		$path_org = addslashes($aPath['search_path']);
 		$aResult = [];
 		foreach ($aEsquemas as $esquemaName) {
-			$oDBR->exec("SET search_path TO public,\"$esquemaName\"");
-			$qRs = $oDBR->query("SELECT id_schema,situacion,f_situacion FROM personas_dl WHERE id_nom =$id_orbix");
-			$aResult[] = $qRs->fetchAll(PDO::FETCH_ASSOC);
+			$esquemaName = addslashes($esquemaName);
+			$oDBR->exec("SET search_path TO public,$esquemaName");
+			$qRs = $oDBR->query("SELECT $esquemaName as schema,id_schema,situacion,f_situacion FROM personas_dl WHERE id_nom =$id_orbix");
+			$aResult[] = $qRs->fetchAll(\PDO::FETCH_ASSOC);
 		}
 		
 		
@@ -245,19 +309,21 @@ class TrasladoDl {
 	}
 	
 	public function copiarPersona() {
-		$oPersonaDl = new personas\model\PersonaDl($this->iid_nom);
+		$oDBorg = $this->conexionOrg();
+		$oPersonaDl = new personas\model\PersonaDl();
+		$oPersonaDl->setoDbl($oDBorg);
+		$oPersonaDl->setId_nom($this->iid_nom);
 		$oPersonaDl->DBCarregar();
 		// Trasladar persona
-		$oDbl = $GLOBALS['oDB'];
-		$oDBR = $this->nuevaConexion();
+		$oDBdst = $this->conexionDst();
 
 		// Copiar los datos a la dl destino si existe en orbix.
-		if (($qRs = $oDbl->query("SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = '$this->snew_esquema') AS existe")) === false) {
+		if (($qRs = $oDBorg->query("SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = '$this->snew_esquema') AS existe")) === false) {
 				$sClauError = 'Controller.Traslados';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDBorg, $sClauError, __LINE__, __FILE__);
 				return false;
 		}
-		$aDades = $qRs->fetch(PDO::FETCH_ASSOC);
+		$aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
 		// si existe el esquema (dl)
 		if (!empty($aDades['existe'])) {
 			$id_tabla = $oPersonaDl->getId_tabla();
@@ -278,10 +344,12 @@ class TrasladoDl {
 					$obj = 'personas\model\PersonaNax';
 					break;
 			}
-			$oPersona = new $obj($this->iid_nom);
+			$oPersona = new $obj();
+			$oPersona->setoDbl($oDBorg);
+			$oPersona->setId_nom($this->iid_nom);
 			$oPersona->DBCarregar();
 			$oPersonaNew = clone $oPersona;
-			$oPersonaNew->setoDbl($oDBR);
+			$oPersonaNew->setoDbl($oDBdst);
 			$oPersonaNew->setDl($this->sdl_dst);
 			$oPersonaNew->setSituacion('A');
 			$oPersonaNew->setF_situacion($this->df_dl);
@@ -290,7 +358,8 @@ class TrasladoDl {
 				$error .= '<br>'._('Hay un error, no se ha guardado');
 			}
 		}
-		$this->restaurarConexion($oDBR);
+		$this->restaurarConexionOrg($oDBorg);
+		$this->restaurarConexionDst($oDBdst);
 	}
 		
 	public function copiarNotas() {
@@ -299,27 +368,28 @@ class TrasladoDl {
 		// -->CAMBIADO: Las notas pertenecen a la dl destino, si se 
 		// borraran de la tabla porque no existe la persona, también
 		// se perderían para todos...
-		$oDbl = $GLOBALS['oDB'];
-		$oDBR = $this->nuevaConexion();
+		$oDBorg = $this->conexionOrg();
+		$oDBdst = $this->conexionDst();
 
 		$gestor = "notas\model\GestorPersonaNotaDl";
 		$ges = new $gestor();
+		$ges->setoDbl($oDBorg);
 		$colection = $ges->getPersonaNotas(array('id_nom'=>$this->iid_nom));
 		if (!empty($colection)) {
 			// Para saber el nuevo id_schema de la dl destino:
-			if (($qRs = $oDbl->query("SELECT id FROM public.db_idschema WHERE schema = '$this->snew_esquema'")) === false) {
+			if (($qRs = $oDBorg->query("SELECT id FROM public.db_idschema WHERE schema = '$this->snew_esquema'")) === false) {
 					$sClauError = 'Controller.Traslados';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDBorg, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
-			$aSchema = $qRs->fetch(PDO::FETCH_ASSOC);
+			$aSchema = $qRs->fetch(\PDO::FETCH_ASSOC);
 			$id_schema = $aSchema['id'];
 			foreach ($colection as $Objeto) {
 				$Objeto->DBCarregar();
 				//print_r($Objeto);
 				$NuevoObj = clone $Objeto;
 				if (method_exists($NuevoObj,'getId_item') === true) $NuevoObj->setId_item('');
-				$NuevoObj->setoDbl($oDBR);
+				$NuevoObj->setoDbl($oDBdst);
 				$NuevoObj->setId_schema($id_schema);
 				if ($NuevoObj->DBGuardar() === false) {
 					$error .= '<br>'._('No se ha guardado la nota');
@@ -329,12 +399,15 @@ class TrasladoDl {
 				}
 			}
 		}
-		$this->restaurarConexion($oDBR);
+		$this->restaurarConexionOrg($oDBorg);
+		$this->restaurarConexionDst($oDBdst);
 	}
 
 	public function trasladarDossiers () {
-		$oDBR = $this->nuevaConexion();
+		$oDBorg = $this->conexionOrg();
+		$oDBdst = $this->conexionDst();
 		$GesDossiers = new dossiers\model\GestorDossier();
+		$GesDossiers->setoDbl($oDBorg);
 		// Comprobar que estan apuntados.
 		$cDossiers = $GesDossiers->DossiersNotEmpty('p',$this->iid_nom);
 
@@ -350,51 +423,61 @@ class TrasladoDl {
 				case 'TelecoPersonaDl':
 					$gestor = "$app\model\GestorTelecoPersonaDl";
 					$ges = new $gestor();
+					$ges->setoDbl($oDBorg);
 					$colection = $ges->getTelecos(array('id_nom'=>$this->iid_nom));
 					break;
 				case 'Profesor':
 					$gestor = "$app\model\Gestor$class";
 					$ges = new $gestor();
+					$ges->setoDbl($oDBorg);
 					$colection = $ges->getProfesores(array('id_nom'=>$this->iid_nom));
 					break;
 				case 'ProfesorAmpliacion':
 					$gestor = "$app\model\Gestor$class";
 					$ges = new $gestor();
+					$ges->setoDbl($oDBorg);
 					$colection = $ges->getProfesorAmpliaciones(array('id_nom'=>$this->iid_nom));
 					break;
 				case 'ProfesorCongreso':
 					$gestor = "$app\model\Gestor$class";
 					$ges = new $gestor();
+					$ges->setoDbl($oDBorg);
 					$colection = $ges->getProfesorCongresos(array('id_nom'=>$this->iid_nom));
 					break;
 				case 'ProfesorDirector':
 					$gestor = "$app\model\Gestor$class";
 					$ges = new $gestor();
+					$ges->setoDbl($oDBorg);
 					$colection = $ges->getProfesoresDirectores(array('id_nom'=>$this->iid_nom));
 					break;
 				case 'ProfesorDocenciaStgr':
 					$gestor = "$app\model\Gestor$class";
 					$ges = new $gestor();
+					$ges->setoDbl($oDBorg);
 					$colection = $ges->getProfesorDocenciasStgr(array('id_nom'=>$this->iid_nom));
 					break;
 				case 'ProfesorJuramento':
 					$gestor = "$app\model\Gestor$class";
 					$ges = new $gestor();
+					$ges->setoDbl($oDBorg);
 					$colection = $ges->getProfesorJuramentos(array('id_nom'=>$this->iid_nom));
 					break;
 				case 'ProfesorLatin':
 					$gestor = "$app\model\Gestor$class";
 					$ges = new $gestor();
+					$ges->setoDbl($oDBorg);
 					$colection = $ges->getProfesoresLatin(array('id_nom'=>$this->iid_nom));
 					break;
 				case 'ProfesorPublicacion':
 					$gestor = "$app\model\Gestor$class";
 					$ges = new $gestor();
+					$ges->setoDbl($oDBorg);
 					$colection = $ges->getProfesorPublicaciones(array('id_nom'=>$this->iid_nom));
 					break;
 				case 'ProfesorTituloEst':
 					$gestor = "$app\model\Gestor$class";
 					$ges = new $gestor();
+					$ges->setoDbl($oDBorg);
 					$colection = $ges->getTitulosEst(array('id_nom'=>$this->iid_nom));
 					break;
 				case 'PersonaNotaDl':
@@ -404,18 +487,21 @@ class TrasladoDl {
 					/*
 					$gestor = "$app\model\Gestor$class";
 					$ges = new $gestor();
+					$ges->setoDbl($oDBorg);
 					$colection = $ges->getMatriculas(array('id_nom'=>$this->iid_nom));
 					*/
 					break;
 				case 'Traslado':
 					$gestor = "$app\model\Gestor$class";
 					$ges = new $gestor();
+					$ges->setoDbl($oDBorg);
 					$colection = $ges->getTraslados(array('id_nom'=>$this->iid_nom));
 					break;
 				case 'AsistenteDl':
 					// Los Out pasan a Dl si la dl destino es la que organiza.
 					$gestor = "$app\model\GestorAsistenteOut";
 					$ges = new $gestor();
+					$ges->setoDbl($oDBorg);
 					$colection = $ges->getAsistentesOut(array('id_nom'=>$this->iid_nom));
 					foreach ($colection as $oAsistenteOut) {
 						$oAsistenteOut->DBCarregar();
@@ -425,13 +511,13 @@ class TrasladoDl {
 						$dl_org = preg_replace('/f$/', '', $oActividad->getDl_org());
 						if ($dl_org == $this->sdl_dst) {
 							$oAsistenteDl = new AsistenteDl();
+							$oAsistenteDl->setoDbl($oDBdst);
 							$oAsistenteDl = $this->copiar($oAsistenteOut,$oAsistenteDl); 
-							$oAsistenteDl->setoDbl($oDBR);
 							$oAsistenteDl->DBGuardar();
 						} else{
 							$NuevoObj = clone $oAsistenteOut;
+							$NuevoObj->setoDbl($oDBdst);
 							if (method_exists($NuevoObj,'getId_item') === true) $NuevoObj->setId_item('');
-							$NuevoObj->setoDbl($oDBR);
 							$NuevoObj->setTraslado('t');
 							$NuevoObj->DBGuardar();
 						}
@@ -439,12 +525,13 @@ class TrasladoDl {
 					// Los Dl pasan a Out
 					$gestor = "$app\model\GestorAsistenteDl";
 					$ges = new $gestor();
+					$ges->setoDbl($oDBorg);
 					$colection = $ges->getAsistentesDl(array('id_nom'=>$this->iid_nom));
 					foreach ($colection as $oAsistenteDl) {
 						$oAsistenteDl->DBCarregar();
 						$oAsistenteOut = new AsistenteOut();
+						$oAsistenteOut->setoDbl($oDBdst);
 						$oAsistenteOut = $this->copiar($oAsistenteDl,$oAsistenteOut); 
-						$oAsistenteOut->setoDbl($oDBR);
 						$oAsistenteOut->setTraslado('t');
 						$oAsistenteOut->DBGuardar();
 					}
@@ -457,6 +544,7 @@ class TrasladoDl {
 					/*
 					$gestor = "$app\model\Gestor$class";
 					$ges = new $gestor();
+					$ges->setoDbl($oDBorg);
 					$colection = $ges->getActividadCargos(array('id_nom'=>$this->iid_nom));
 					*/
 					break;
@@ -466,23 +554,26 @@ class TrasladoDl {
 					$Objeto->DBCarregar();
 					//print_r($Objeto);
 					$NuevoObj = clone $Objeto;
+					$NuevoObj->setoDbl($oDBdst);
 					if (method_exists($NuevoObj,'getId_item') === true) $NuevoObj->setId_item('');
-					$NuevoObj->setoDbl($oDBR);
 					$NuevoObj->DBGuardar();
 				}
 			}
 			// también copia el estado del dossier
 			$NuevoObj = clone $oDossier;
-			$NuevoObj->setoDbl($oDBR);
+			$NuevoObj->setoDbl($oDBdst);
 			$NuevoObj->DBGuardar();
 		}
-		// Volver oDBR a su estado original:
-		$this->restaurarConexion($oDBR);
+		// Volver oDBdst a su estado original:
+		$this->restaurarConexionDst($oDBdst);
+		$this->restaurarConexionOrg($oDBorg);
 	}
 		
 	public function apuntar() {	
 		// apunto el traslado.
+		$oDBorg = $this->conexionOrg();
 		$oTraslado = new personas\model\Traslado();
+		$oTraslado->setoDbl($oDBorg);
 		$oTraslado->setId_nom($this->iid_nom);
 		$oTraslado->setF_traslado($this->df_dl);
 		$oTraslado->setTipo_cmb('dl');
@@ -493,6 +584,7 @@ class TrasladoDl {
 		if ($oTraslado->DBGuardar() === false) {
 			$error .= '<br>'._('Hay un error, no se ha guardado');
 		}
+		$this->restaurarConexionOrg($oDBorg);
 	}
 
 	private function copiar($oOrigen, $oDestino) {

@@ -101,18 +101,57 @@ $ver_orbix = web\Hash::link('apps/dbextern/controller/sincro_ver_orbix.php?'.htt
 
 ?>
 <table>
-	<tr><td>A.</td>
-		<td> Personas en listas y en orbix, pero en situación incorrecta</td>
-		<td><?= $no_situacion ?></td>
-		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_situacion ?>')">ver</span></td>
+	<tr><th colspan="4">Personas en listas.</th>
+	<tr><td>1.</td>
+		<td> Personas a sincronizar</td>
+		<td><?= $no_orbix ?></td>
+		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_listas ?>')">ver</span></td>
 	</tr>
-	<tr><td>B.</td>
+	<tr><td>2.</td>
 		<td> Personas en listas sin correspondencia en orbix</td>
 		<td><?= $no_orbix ?></td>
 		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_listas ?>')">ver</span></td>
 	</tr>
-	<tr><td>C.</td>
+	<tr><td>3.</td>
+		<td> Posiblemente esten en otra dl</td>
+		<td><?= $no_situacion ?></td>
+		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_situacion ?>')">ver</span></td>
+	</tr>
+	<tr><td>4.</td>
+		<td> Posiblemente esten en otra dl pero no estan unidas a listas</td>
+		<td><?= $no_situacion ?></td>
+		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_situacion ?>')">ver</span></td>
+	</tr>
+	<!-- Listas	unión	orbix -->
+	<!-- midl	si		no	-->
+	<tr><td>5.</td>
+		<td> Posiblemente esten en otra dl pero no estan unidas a listas</td>
+		<td><?= $no_situacion ?></td>
+		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_situacion ?>')">ver</span></td>
+	</tr>
+	<tr><td>6.</td>
+		<td> No están en orbix. Nuevo del todo.</td>
+		<td><?= $no_listas ?></td>
+		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_orbix ?>')">ver</span></td>
+	</tr>
+	<tr><th colspan="4">Personas en Orbix.</th>
+	<tr><td>7.</td>
+		<td> Personas en orbix con correspondencia en listas i desaparecidos de listas</td>
+		<td><?= $no_listas ?></td>
+		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_orbix ?>')">ver</span></td>
+	</tr>
+	<tr><td>8.</td>
 		<td> Personas en orbix sin correspondencia en listas</td>
+		<td><?= $no_listas ?></td>
+		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_orbix ?>')">ver</span></td>
+	</tr>
+	<tr><td>9.</td>
+		<td> Personas en orbix que deberían trasladarse desde otra dl</td>
+		<td><?= $no_listas ?></td>
+		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_orbix ?>')">ver</span></td>
+	</tr>
+	<tr><td>10.</td>
+		<td> Personas en orbix que deberían podrían estar en otra dl</td>
 		<td><?= $no_listas ?></td>
 		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_orbix ?>')">ver</span></td>
 	</tr>
