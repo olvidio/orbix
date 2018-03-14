@@ -78,6 +78,7 @@ if (!empty($_POST['atras'])) {
 }
 
 // Condiciones de búsqueda.
+$aWhere = array();
 // Status
 if ($Qstatus!=5) {
 	$aWhere['status'] = $Qstatus;
