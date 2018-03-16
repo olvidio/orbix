@@ -76,11 +76,11 @@ class gestorErrores {
 	function addErrorAppLastError(&$oDBSt, $sClauError,$line, $file) {
 		$ip = $_SERVER['REMOTE_ADDR'];
 		$user = ConfigGlobal::mi_usuario();
-		$region = ConfigGlobal::mi_region_dl();
+		$esquema = ConfigGlobal::mi_region_dl();
 		$ahora = date("d/m/Y H:i:s");
 		$server = $oDBSt->getAttribute(constant("\PDO::ATTR_SERVER_INFO"));
 		$err = $oDBSt->errorInfo();
-		$txt = "\n".$ahora." - ".$user."[$region]$ip  ($server)";
+		$txt = "\n".$ahora." - ".$user."[$esquema]$ip  ($server)";
 		$txt.= "\n\t->>  ".$err[2]."\n $sClauError en linea $line de: $file\n";
 		
 		$filename = ConfigGlobal::$directorio.'/log/errores.log';
