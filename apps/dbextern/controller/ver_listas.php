@@ -16,43 +16,6 @@ $tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
 
 $id = (string)  filter_input(INPUT_POST, 'id');
 $mov = (string)  filter_input(INPUT_POST, 'mov');
-//$tipo_persona = 'a';
-
-//function syncro_automatico($a_persona_lista,$tipo_persona) {
-//	$id_nom_listas = $a_persona_lista['id_nom_listas'];
-//	$apellido1_sinprep = $a_persona_lista['apellido1_sinprep'];
-//	$apellido2_sinprep = $a_persona_lista['apellido2_sinprep'];
-//	$f_nacimiento = $a_persona_lista['f_nacimiento'];
-//	$nombre = $a_persona_lista['nombre'];
-//	
-//	$aWhere = array();
-//	$aOperador = array();
-//	$aWhere['id_tabla'] = $tipo_persona;
-//	$aWhere['apellido1'] = $apellido1_sinprep;
-//	$aWhere['apellido2'] = $apellido2_sinprep;
-//	$aWhere['f_nacimiento'] = "'$f_nacimiento'";
-//	$aWhere['nom'] = trim($nombre);
-//
-//	$oGesPersonasDl = new personas\model\GestorPersonaDl();
-//	$cPersonasDl = $oGesPersonasDl->getPersonasDl($aWhere,$aOperador);
-//	if ($cPersonasDl !== false && count($cPersonasDl) == 1) {
-//		$oPersonaDl = $cPersonasDl[0];
-//		$id_nom = $oPersonaDl->getId_nom();
-//
-//		$oIdMatch = new dbextern\model\IdMatchPersona($id_nom_listas);
-//		$oIdMatch->setId_orbix($id_nom);
-//		$oIdMatch->setId_tabla($tipo_persona);
-//		
-//		if ($oIdMatch->DBGuardar() === false) {
-//			echo _('Hay un error, no se ha guardado');
-//			print_r($oIdMatch);
-//			echo '<br>';
-//			return false;
-//		}
-//		return true;
-//	}
-//	return false;
-//}
 
 function otro($id,$mov,$max) {
 	switch($mov) {
@@ -78,14 +41,12 @@ function otro($id,$mov,$max) {
 	}
 }
 
-
 $oSincroDB = new dbextern\model\sincroDB();
 $oSincroDB->setTipo_persona($tipo_persona);
 $oSincroDB->setDl($dl);
 
 if (empty($id)) {
 	$id=1;
-
 	// todos los de listas
 	$cPersonasListas = $oSincroDB->getPersonasListas();
 	

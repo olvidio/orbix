@@ -33,16 +33,7 @@ foreach ($a_ids_traslados_A as $id_nom_listas) {
 	$a_persona_listas[$i]['id_nom_orbix'] = $id_nom_orbix;
 	$a_persona_listas[$i]['id_nom_listas'] = $id_nom_listas;
 	$a_persona_listas[$i]['ape_nom'] = $oPersonaListas->getApeNom();
-//	$a_persona_orbix[$i]['nombre'] = $oPersonaOrbix->getNom();
-//	$a_persona_orbix[$i]['apellido1'] = $oPersonaOrbix->getApellido1();
-//	$a_persona_orbix[$i]['nx1'] = $oPersonaOrbix->getNx1();
-//	$a_persona_orbix[$i]['apellido2'] = $oPersonaOrbix->getApellido2();
-//	$a_persona_orbix[$i]['nx2'] = $oPersonaOrbix->getNx2();
-//	$a_persona_orbix[$i]['f_nacimiento'] = $oPersonaOrbix->getF_nacimiento();
-//	$a_persona_orbix[$i]['situacion'] = $oPersonaOrbix->getSituacion();
-//	$a_persona_orbix[$i]['f_situacion'] = $oPersonaOrbix->getF_situacion();
 	$a_persona_listas[$i]['dl'] = "dl". $oPersonaListas->getDl();
-
 }
 
 
@@ -53,12 +44,15 @@ $oHash->setUrl($url_sincro_ajax);
 $oHash->setCamposForm('que!dl!id_nom_orbix!tipo_persona'); 
 $h = $oHash->linkSinVal();
 
+$txt_alert =_("Se va a poner la fecha de hoy como fecha de traslado. Para cambiarlo ir al a ficha de la persona y al dossier de traslados")
 // ------------------ html ----------------------------------
 ?>
 <script>
 fnjs_trasladar=function(id_orbix,dl,fila){
 	var url='<?= $url_sincro_ajax ?>';
 	var parametros='que=trasladarA&dl='+dl+'&id_nom_orbix='+id_orbix+'&tipo_persona=<?= $tipo_persona ?><?= $h ?>&PHPSESSID=<?php echo session_id(); ?>';
+			 
+	alert ("<?= $txt_alert ?>");
 			 
 	$.ajax({
 		url: url,

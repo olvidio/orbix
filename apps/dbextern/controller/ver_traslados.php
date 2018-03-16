@@ -74,13 +74,16 @@ $oHash->setUrl($url_sincro_ajax);
 $oHash->setCamposForm('que!dl!id_nom_orbix!tipo_persona'); 
 $h = $oHash->linkSinVal();
 
+$txt_alert =_("Se va a poner la fecha de hoy como fecha de traslado. Para cambiarlo ir al a ficha de la persona y al dossier de traslados")
 // ------------------ html ----------------------------------
 ?>
 <script>
 fnjs_trasladar=function(id_orbix,dl,fila){
 	var url='<?= $url_sincro_ajax ?>';
 	var parametros='que=trasladar&dl='+dl+'&id_nom_orbix='+id_orbix+'&tipo_persona=<?= $tipo_persona ?><?= $h ?>&PHPSESSID=<?php echo session_id(); ?>';
-			 
+	
+	alert ("<?= $txt_alert ?>");		 
+	
 	$.ajax({
 		url: url,
 		type: 'post',

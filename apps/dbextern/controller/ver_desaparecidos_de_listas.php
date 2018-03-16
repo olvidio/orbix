@@ -35,6 +35,7 @@ $oHash->setUrl($url_sincro_ajax);
 $oHash->setCamposForm('que!id_nom_orbix!tipo_persona'); 
 $h = $oHash->linkSinVal();
 
+$txt_alert =_("Se va a poner la fecha de hoy como fecha de baja. Para cambiarlo ir al a ficha de la persona")
 // ------------------ html ----------------------------------
 ?>
 <script>
@@ -42,6 +43,8 @@ fnjs_baja=function(id_orbix,fila){
 	var url='<?= $url_sincro_ajax ?>';
 	var parametros='que=baja&id_nom_orbix='+id_orbix+'&tipo_persona=<?= $tipo_persona ?><?= $h ?>&PHPSESSID=<?php echo session_id(); ?>';
 			 
+	alert ("<?= $txt_alert ?>");
+
 	$.ajax({
 		url: url,
 		type: 'post',
