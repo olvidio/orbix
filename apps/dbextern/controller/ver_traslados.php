@@ -61,14 +61,6 @@ foreach ($a_ids_traslados as $id_nom_orbix) {
 
 	$a_persona_orbix[$i]['id_nom_orbix'] = $id_nom_orbix;
 	$a_persona_orbix[$i]['ape_nom'] = $oPersonaOrbix->getApellidosNombre();
-//	$a_persona_orbix[$i]['nombre'] = $oPersonaOrbix->getNom();
-//	$a_persona_orbix[$i]['apellido1'] = $oPersonaOrbix->getApellido1();
-//	$a_persona_orbix[$i]['nx1'] = $oPersonaOrbix->getNx1();
-//	$a_persona_orbix[$i]['apellido2'] = $oPersonaOrbix->getApellido2();
-//	$a_persona_orbix[$i]['nx2'] = $oPersonaOrbix->getNx2();
-//	$a_persona_orbix[$i]['f_nacimiento'] = $oPersonaOrbix->getF_nacimiento();
-//	$a_persona_orbix[$i]['situacion'] = $oPersonaOrbix->getSituacion();
-//	$a_persona_orbix[$i]['f_situacion'] = $oPersonaOrbix->getF_situacion();
 	$a_persona_orbix[$i]['dl'] = $oPersonaOrbix->getDl();
 
 	$oSincroDB->restaurarConexion($oDB);
@@ -85,7 +77,7 @@ $h = $oHash->linkSinVal();
 // ------------------ html ----------------------------------
 ?>
 <script>
-fnjs_trasladar=function(id_orbix,dl){
+fnjs_trasladar=function(id_orbix,dl,fila){
 	var url='<?= $url_sincro_ajax ?>';
 	var parametros='que=trasladar&dl='+dl+'&id_nom_orbix='+id_orbix+'&tipo_persona=<?= $tipo_persona ?><?= $h ?>&PHPSESSID=<?php echo session_id(); ?>';
 			 
@@ -96,10 +88,10 @@ fnjs_trasladar=function(id_orbix,dl){
 		success: function (rta) {
 			if (rta != true) { 
 				alert ('respuesta: '+rta);
+			} else {
+				//tachar la fila
+				$("#fila"+fila).addClass('tachado');
 			}
-			//rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta_txt);
-			//fnjs_submit('#movimiento','-');
 		}
 	});
 }
@@ -110,13 +102,15 @@ fnjs_trasladar=function(id_orbix,dl){
 <table>
 	<tr><th><?= _("nombre") ?></th><th><?= _("dl actual") ?></th><th></th></tr>
 <?php
+	$i = 0;
 	foreach($a_persona_orbix as $persona_orbix) {
+		$i++;
 		$id_orbix = $persona_orbix['id_nom_orbix'];
 		$dl = $persona_orbix['dl'];
-		echo "<tr>";
+		echo "<tr id=fila$i>";
 		echo "<td class='titulo'>".$persona_orbix['ape_nom'].'</td>';
 		echo "<td>".$persona_orbix['dl_actual'].'</td>';
-		echo "<td><span class=link onClick='fnjs_trasladar($id_orbix,\"$dl\")'>" . _("trasladar") . '</span><td>';
+		echo "<td><span class=link onClick='fnjs_trasladar($id_orbix,\"$dl\",$i)'>" . _("trasladar") . '</span><td>';
 		echo '</tr>';
 	}
 ?>

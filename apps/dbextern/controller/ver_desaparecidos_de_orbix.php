@@ -25,14 +25,6 @@ foreach ($a_ids_desaparecidos_de_orbix as $id_nom_listas) {
 
 	$a_persona_listas[$i]['id_nom_listas'] = $id_nom_listas;
 	$a_persona_listas[$i]['ape_nom'] = $oPersonaListas->getApeNom();
-//	$a_persona_orbix[$i]['nombre'] = $oPersonaOrbix->getNom();
-//	$a_persona_orbix[$i]['apellido1'] = $oPersonaOrbix->getApellido1();
-//	$a_persona_orbix[$i]['nx1'] = $oPersonaOrbix->getNx1();
-//	$a_persona_orbix[$i]['apellido2'] = $oPersonaOrbix->getApellido2();
-//	$a_persona_orbix[$i]['nx2'] = $oPersonaOrbix->getNx2();
-//	$a_persona_orbix[$i]['f_nacimiento'] = $oPersonaOrbix->getF_nacimiento();
-//	$a_persona_orbix[$i]['situacion'] = $oPersonaOrbix->getSituacion();
-//	$a_persona_orbix[$i]['f_situacion'] = $oPersonaOrbix->getF_situacion();
 	$a_persona_listas[$i]['dl'] = $oPersonaListas->getDl();
 
 }
@@ -48,7 +40,7 @@ $h = $oHash->linkSinVal();
 // ------------------ html ----------------------------------
 ?>
 <script>
-fnjs_desunir=function(id_listas){
+fnjs_desunir=function(id_listas,fila){
 	var url='<?= $url_sincro_ajax ?>';
 	var parametros='que=desunir&id_nom_listas='+id_listas+'&tipo_persona=<?= $tipo_persona ?><?= $h ?>&PHPSESSID=<?php echo session_id(); ?>';
 			 
@@ -59,10 +51,10 @@ fnjs_desunir=function(id_listas){
 		success: function (rta) {
 			if (rta != true) { 
 				alert ('respuesta: '+rta);
+			} else {
+				//tachar la fila
+				$("#fila"+fila).addClass('tachado');
 			}
-			//rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta_txt);
-			//fnjs_submit('#movimiento','-');
 		}
 	});
 }
@@ -73,13 +65,15 @@ fnjs_desunir=function(id_listas){
 <table>
 	<tr><th><?= _("nombre") ?></th><th><?= _("dl actual") ?></th><th></th></tr>
 <?php
+	$i = 0;
 	foreach($a_persona_listas as $persona_listas) {
+		$i++;
 		$id_listas = $persona_listas['id_nom_listas'];
 		$dl = $persona_listas['dl'];
-		echo "<tr>";
+		echo "<tr id=fila$i>";
 		echo "<td class='titulo'>".$persona_listas['ape_nom'].'</td>';
 		echo "<td>".$dl.'</td>';
-		echo "<td><span class=link onClick='fnjs_desunir($id_listas)'>" . _("desunir") . '</span><td>';
+		echo "<td><span class=link onClick='fnjs_desunir($id_listas,$i)'>" . _("desunir") . '</span><td>';
 		echo '</tr>';
 	}
 ?>

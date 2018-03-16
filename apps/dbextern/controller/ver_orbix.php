@@ -95,7 +95,7 @@ $max = count($_SESSION['DBOrbix']);
 $new_id = otro($id,$mov,$max);
 $persona_listas = $_SESSION['DBOrbix'][$new_id];
 
-$url_sincro_ver = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro_ver_orbix.php';
+$url_sincro_ver = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/ver_orbix.php';
 $oHash = new web\Hash();
 $oHash->setUrl($url_sincro_ver);
 $oHash->setcamposNo('mov');

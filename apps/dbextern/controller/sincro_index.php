@@ -149,13 +149,13 @@ foreach ($cPersonasOrbix as $oPersonaOrbix) {
 $ids_traslados_A = json_encode($a_ids_traslados_A);
 $ids_desaparecidos_de_listas = json_encode($a_ids_desaparecidos_de_listas);
 
-$ver_2 = Hash::link('apps/dbextern/controller/sincro_ver_traslados.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona,'ids_traslados'=>$ids_traslados)));
-$ver_3 = Hash::link('apps/dbextern/controller/sincro_ver_desaparecidos_de_orbix.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona,'ids_desaparecidos_de_orbix'=>$ids_desaparecidos_de_orbix)));
-$ver_456 = Hash::link('apps/dbextern/controller/sincro_ver_listas.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona)));
+$ver_2 = Hash::link('apps/dbextern/controller/ver_traslados.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona,'ids_traslados'=>$ids_traslados)));
+$ver_3 = Hash::link('apps/dbextern/controller/ver_desaparecidos_de_orbix.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona,'ids_desaparecidos_de_orbix'=>$ids_desaparecidos_de_orbix)));
+$ver_456 = Hash::link('apps/dbextern/controller/ver_listas.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona)));
 
 $ver_7 = Hash::link('apps/dbextern/controller/ver_orbix_otradl.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona,'ids_traslados_A'=>$ids_traslados_A)));
-$ver_8 = Hash::link('apps/dbextern/controller/sincro_ver_desaparecidos_de_listas.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona,'ids_desaparecidos_de_listas'=>$ids_desaparecidos_de_listas)));
-$ver_910 = Hash::link('apps/dbextern/controller/sincro_ver_orbix.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona)));
+$ver_8 = Hash::link('apps/dbextern/controller/ver_desaparecidos_de_listas.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona,'ids_desaparecidos_de_listas'=>$ids_desaparecidos_de_listas)));
+$ver_910 = Hash::link('apps/dbextern/controller/ver_orbix.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona)));
 
 $url_sincro_ajax = ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro_ajax.php';
 $oHash1 = new Hash();
