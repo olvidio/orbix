@@ -227,9 +227,9 @@ class sincroDB {
 		} else {
 			$id_ubi = 0;
 			if (empty($Ctr)) {
-				$msg .= sprintf(_("Parece que %s  no tiene puesto el ctr en \"listas\""),$ape_nom);
+				$msg = sprintf(_("Parece que %s  no tiene puesto el ctr en \"listas\""),$ape_nom);
 			} else {
-				$msg .= sprintf(_("No se encuentra el ctr %s en la lista de ctr"),$Ctr);
+				$msg = sprintf(_("No se encuentra el ctr %s en la lista de ctr"),$Ctr);
 			}
 		}
 		
@@ -331,7 +331,7 @@ class sincroDB {
 			}
 			
 		}
-		if (!empty($msg)) echo $msg;
+		return $msg;
 	}
 
 	public function buscarEnOrbix($id_orbix) {

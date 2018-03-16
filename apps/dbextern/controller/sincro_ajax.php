@@ -150,6 +150,7 @@ switch ($que) {
 		// todos los de listas
 		$cPersonasListas = $oSincroDB->getPersonasListas();
 		$i = 0;
+		$msg = '';
 		foreach ($cPersonasListas as $oPersonaListas) {
 			$id_nom_listas = $oPersonaListas->getIdentif();
 
@@ -157,11 +158,16 @@ switch ($que) {
 			$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas'=>$id_nom_listas));
 			if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
 				$id_orbix = $cIdMatch[0]->getId_orbix();
-				$oSincroDB->syncro($oPersonaListas,$id_orbix);
+				$rta = $oSincroDB->syncro($oPersonaListas,$id_orbix);
+				if (!empty($rta)) {
+					$msg .= !empty($msg)? "\n" : '';
+					$msg .= $rta;
+				}
 			} else {
 				continue;
 			}
 		}
+		if (!empty($msg)) echo $msg;
 		break;
 	case 'trasladar':
 		$dl = (string)  filter_input(INPUT_POST, 'dl');
@@ -203,12 +209,18 @@ switch ($que) {
 		$f_cmb = date('d/m/Y');
 		$sfsv_txt = (configGlobal::mi_sfsv() == 1)? 'v' :'f';
 		$esq_dst = "H-".$dl.$sfsv_txt;
+
+		if ($dl == 'cr') {
+			$situacion = 'D';
+		} else {
+			$situacion = 'L';
+		}
 			
 		$oTrasladoDl->setDl_persona($mi_dele);
 		$oTrasladoDl->setReg_dl_org($mi_esquema);
 		$oTrasladoDl->setReg_dl_dst($esq_dst);
 		$oTrasladoDl->setF_dl($f_cmb);
-		$oTrasladoDl->setSituacion('L');
+		$oTrasladoDl->setSituacion($situacion);
 		
 		echo $oTrasladoDl->trasladar();
 		

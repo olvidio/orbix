@@ -33,7 +33,13 @@ foreach ($a_ids_traslados_A as $id_nom_listas) {
 	$a_persona_listas[$i]['id_nom_orbix'] = $id_nom_orbix;
 	$a_persona_listas[$i]['id_nom_listas'] = $id_nom_listas;
 	$a_persona_listas[$i]['ape_nom'] = $oPersonaListas->getApeNom();
-	$a_persona_listas[$i]['dl'] = "dl". $oPersonaListas->getDl();
+	$dl_listas = $oPersonaListas->getDl();
+	if ($dl_listas == 'Hcr') {
+		$dl = 'cr';
+	} else {
+		$dl = "dl".$dl;
+	}
+	$a_persona_listas[$i]['dl'] = $dl;
 }
 
 

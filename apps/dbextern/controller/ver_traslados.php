@@ -101,9 +101,9 @@ fnjs_trasladar=function(id_orbix,dl,fila){
 
 </script>
 
-<h3><?= _("Personas en otras dl en Orbix") ?></h3>
+<h3><?= _("Personas en la dl que deben ser trasladadas desde otras dl") ?></h3>
 <table>
-	<tr><th><?= _("nombre") ?></th><th><?= _("dl actual") ?></th><th></th></tr>
+	<tr><th><?= _("nombre") ?></th><th><?= _("dl orbix") ?></th><th></th></tr>
 <?php
 	$i = 0;
 	foreach($a_persona_orbix as $persona_orbix) {

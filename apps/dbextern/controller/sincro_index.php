@@ -179,10 +179,8 @@ fnjs_sincronizar=function(){
 		url: url,
 		type: 'post',
 		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			alert ('respuesta: '+rta_txt);
-			//fnjs_submit('#movimiento','-');
+		success: function (rta) {
+			alert (rta);
 		}
 	});
 }
