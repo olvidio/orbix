@@ -204,6 +204,7 @@ class sincroDB {
 
 	
 	function syncro($oPersonaListas,$id_orbix) {
+		$msg = '';
 		$a_ctr = $GLOBALS['a_centros'];
 		
 		$id_nom_listas = $oPersonaListas->getIdentif();
@@ -220,7 +221,13 @@ class sincroDB {
 
 		$dl = $oPersonaListas->getDl();
 		$Ctr = $oPersonaListas->getCtr();
-		$id_ubi = $a_ctr[$Ctr];
+		//por alguna razón puede no exitir el centro en la lista
+		if (!empty($a_ctr[$Ctr])) {
+			$id_ubi = $a_ctr[$Ctr];
+		} else {
+			$id_ubi = 0;
+			$msg .= sprintf(_("No se encuentra el ctr %s en la lista de ctr"),$Ctr);
+		}
 		
 		$Email = $oPersonaListas->getEmail();
 		$Tfno_Movil = $oPersonaListas->getTfno_Movil();
@@ -320,6 +327,7 @@ class sincroDB {
 			}
 			
 		}
+		if (!empty($msg)) echo $msg;
 	}
 
 	public function buscarEnOrbix($id_orbix) {
