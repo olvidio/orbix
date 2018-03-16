@@ -1,5 +1,10 @@
 <?php
-use personas;
+
+use core\ConfigGlobal;
+use dbextern\model\GestorIdMatchPersona;
+use dbextern\model\GestorPersonaListas;
+use dbextern\model\IdMatchPersona;
+use ubis\model\GestorCentroDl;
 /**
 * En el fichero config tenemos las variables genéricas del sistema
 */
@@ -11,7 +16,7 @@ use personas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$sfsv = core\ConfigGlobal::mi_sfsv();
+$sfsv = ConfigGlobal::mi_sfsv();
 
 $que = (string)  filter_input(INPUT_POST, 'que');
 
@@ -25,7 +30,7 @@ switch ($que) {
 		$tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
 		
 		$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE Identif = $id_nom_listas";
-		$oGesListas = new dbextern\model\GestorPersonaListas();	
+		$oGesListas = new GestorPersonaListas();	
 		$cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
 		if ($cPersonasListas !== FALSE && count($cPersonasListas) == 1)  {
 			$oPersonaListas = $cPersonasListas[0];
@@ -57,12 +62,12 @@ switch ($que) {
 			}
 			// Buscar si está en orbix (otras dl)
 			// a) si ya está unida; b) si está sin unir.
-			$oGesMatch = new dbextern\model\GestorIdMatchPersona();
+			$oGesMatch = new GestorIdMatchPersona();
 			$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas'=>$id_nom_listas));
 			if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) { // (a) unida
 				$id_orbix = $cIdMatch[0]->getId_orbix();
 				$oTrasladoDl = new personas\model\trasladoDl();
-				$aaa = $oTrasladoDl->getEsquemas($id_orbix);
+				$aaa = $oTrasladoDl->getEsquemas($id_orbix,$tipo_persona);
 				
 			} else { //(b) mala suerte!
 				
@@ -96,7 +101,7 @@ switch ($que) {
 			$id = (integer)  filter_input(INPUT_POST, 'id');
 			$tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
 		}
-		$oIdMatch = new dbextern\model\IdMatchPersona($id_nom_listas);
+		$oIdMatch = new IdMatchPersona($id_nom_listas);
 		$oIdMatch->setId_orbix($id_orbix);
 		$oIdMatch->setId_tabla($tipo_persona);
 		
@@ -110,13 +115,26 @@ switch ($que) {
 		$_SESSION['DBListas'] = array_values($_SESSION['DBListas']);
 		
 		break;
+	case 'desunir':
+		$id_nom_listas = (integer)  filter_input(INPUT_POST, 'id_nom_listas');
+		$tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
+			
+		$oIdMatch = new IdMatchPersona($id_nom_listas);
+		$oIdMatch->setId_tabla($tipo_persona);
+		
+		if ($oIdMatch->DBEliminar() === false) {
+			echo _('Hay un error, no se ha eliminado');
+		}
+		break;
 	case 'syncro':
 		$dl = (string)  filter_input(INPUT_POST, 'dl');
 		$tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
 		
 		// prepara lista de ctr
-		$GesCentros = new \ubis\model\GestorCentroDl();
-		$cCentros = $GesCentros->getCentros(array('tipo_ctr'=>'^'.$tipo_persona),array('tipo_ctr'=>'~'));
+		$GesCentros = new GestorCentroDl();
+// Hay que asegurarse que ya no se distingue entre ctr de n y agd		
+//$cCentros = $GesCentros->getCentros(array('tipo_ctr'=>'^'.$tipo_persona),array('tipo_ctr'=>'~'));
+		$cCentros = $GesCentros->getCentros(array('tipo_ctr'=>'^[na]'),array('tipo_ctr'=>'~'));
 		$a_centros = array();
 		foreach ($cCentros as $oCentro) {
 			$id_ubi = $oCentro->getId_ubi();
@@ -135,7 +153,7 @@ switch ($que) {
 		foreach ($cPersonasListas as $oPersonaListas) {
 			$id_nom_listas = $oPersonaListas->getIdentif();
 
-			$oGesMatch = new dbextern\model\GestorIdMatchPersona();
+			$oGesMatch = new GestorIdMatchPersona();
 			$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas'=>$id_nom_listas));
 			if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
 				$id_orbix = $cIdMatch[0]->getId_orbix();
@@ -151,20 +169,75 @@ switch ($que) {
 		$id_nom_orbix = (string)  filter_input(INPUT_POST, 'id_nom_orbix');
 
 		$oTrasladoDl = new personas\model\TrasladoDl();
-		$TrasladoDl->setId_nom($id_nom_orbix);
-		$aEsquemas = $TrasladoDl->getEsquemas($id_nom_orbix);
+		$oTrasladoDl->setId_nom($id_nom_orbix);
+		
+		$aEsquemas = $oTrasladoDl->getEsquemas($id_nom_orbix,$tipo_persona);
 		//keys:  schema,id_schema,situacion,f_situacion
 		foreach ($aEsquemas as $esquema) {
 			if ($esquema['situacion'] == 'A'){
-				$esq_org = $esquema['schema'];
+				$esq_org = $esquema['schemaname'];
 			}
 		}
+		$mi_esquema = ConfigGlobal::mi_region_dl();
+		$f_cmb = date('d/m/Y');
+			
+		$oTrasladoDl->setDl_persona($dl);
+		$oTrasladoDl->setReg_dl_org($esq_org);
+		$oTrasladoDl->setReg_dl_dst($mi_esquema);
+		$oTrasladoDl->setF_dl($f_cmb);
+		$oTrasladoDl->setSituacion('L');
 		
-		$TrasladoDl->setDl_persona($old_dl);
-		$TrasladoDl->setDl_org($dl_o);
-		$TrasladoDl->setReg_dl_dst($new_dl);
-		$TrasladoDl->setF_dl($f_dl);
-		$TrasladoDl->setSituacion($situacion);
+		echo $oTrasladoDl->trasladar();
+		
+		break;
+	case 'trasladarA':
+		$dl = (string)  filter_input(INPUT_POST, 'dl');
+		$tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
+		$id_nom_orbix = (string)  filter_input(INPUT_POST, 'id_nom_orbix');
 
+		$oTrasladoDl = new personas\model\TrasladoDl();
+		$oTrasladoDl->setId_nom($id_nom_orbix);
+		
+		$mi_dele = ConfigGlobal::mi_dele();
+		$mi_esquema = ConfigGlobal::mi_region_dl();
+		$f_cmb = date('d/m/Y');
+		$sfsv_txt = (configGlobal::mi_sfsv() == 1)? 'v' :'f';
+		$esq_dst = "H-".$dl.$sfsv_txt;
+			
+		$oTrasladoDl->setDl_persona($mi_dele);
+		$oTrasladoDl->setReg_dl_org($mi_esquema);
+		$oTrasladoDl->setReg_dl_dst($esq_dst);
+		$oTrasladoDl->setF_dl($f_cmb);
+		$oTrasladoDl->setSituacion('L');
+		
+		echo $oTrasladoDl->trasladar();
+		
+		break;
+	case 'baja':
+		$dl = (string)  filter_input(INPUT_POST, 'dl');
+		$tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
+		$id_nom_orbix = (string)  filter_input(INPUT_POST, 'id_nom_orbix');
+
+		$oTrasladoDl = new personas\model\TrasladoDl();
+		$oTrasladoDl->setId_nom($id_nom_orbix);
+		
+		$mi_dele = ConfigGlobal::mi_dele();
+		$mi_esquema = ConfigGlobal::mi_region_dl();
+		$f_cmb = date('d/m/Y');
+		$sfsv_txt = (configGlobal::mi_sfsv() == 1)? 'v' :'f';
+		$esq_dst = "H-".$dl.$sfsv_txt;
+			
+		$oTrasladoDl->setDl_persona($mi_dele);
+		$oTrasladoDl->setReg_dl_org($mi_esquema);
+		$oTrasladoDl->setReg_dl_dst($esq_dst);
+		$oTrasladoDl->setF_dl($f_cmb);
+		$oTrasladoDl->setSituacion('B');
+		
+		if ($oTrasladoDl->cambiarFichaPersona() === false) {
+			echo _("OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio.");
+		} else {
+			echo true;
+		}
+		
 		break;
 }

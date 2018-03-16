@@ -110,7 +110,7 @@ class TrasladoDl {
 		$this->sreg_dl_org = $sreg_dl_org;
 
 		$a_reg = explode('-',$sreg_dl_org);
-		$this->sdl_org = $a_reg[1];
+		$this->sdl_org = substr($a_reg[1],0,-1); // quito la v o la f.
 	}
 	/**
 	 * Recupera l'atribut sreg_dl_dst de Traslado
@@ -129,7 +129,7 @@ class TrasladoDl {
 		$this->sreg_dl_dst = $sreg_dl_dst;
 
 		$a_reg = explode('-',$sreg_dl_dst);
-		$this->sdl_dst = $a_reg[1];
+		$this->sdl_dst = substr($a_reg[1],0,-1); // quito la v o la f.
 	}
 	/**
 	 * Recupera l'atribut ssituacion de Traslado
@@ -165,8 +165,7 @@ class TrasladoDl {
 	}
 	
 	private function conexionOrg() {
-		$sfsv_txt = (core\configGlobal::mi_sfsv() == 1)? 'v' :'f';
-		$this->snew_esquema = $this->sreg_dl_org.$sfsv_txt;
+		$this->snew_esquema = $this->sreg_dl_org;
 		if (core\ConfigGlobal::mi_region_dl() == $this->snew_esquema) {
 			//Utilizo la conexión oDB para cambiar momentáneamente el search_path.
 			$oDB = $GLOBALS['oDB'];
@@ -187,8 +186,7 @@ class TrasladoDl {
 		//$GLOBALS['oDBR'] = $oDBR;
 	}
 	private function conexionDst() {
-		$sfsv_txt = (core\configGlobal::mi_sfsv() == 1)? 'v' :'f';
-		$this->snew_esquema = $this->sreg_dl_dst.$sfsv_txt;
+		$this->snew_esquema = $this->sreg_dl_dst;
 		//Utilizo la conexión oDBR para cambiar momentáneamente el search_path.
 		if (core\ConfigGlobal::mi_region_dl() == $this->snew_esquema) {
 			//Utilizo la conexión oDB para cambiar momentáneamente el search_path.
@@ -211,17 +209,60 @@ class TrasladoDl {
 	}
 	
 /* -----------------------------------------------------------------------*/
+	public function trasladar() {
+		$msg = '';
+		if ($this->comprobar() === false) {
+			return true;
+			return $this->serror;
+		}
+		// Aviso si le faltan notas
+		if ($this->comprobarNotas() === false) {
+			$msg = $this->serror;
+		}
 
-	public function comprobar() {
-		if (!empty($this->sdl_dst) AND $this->sdl_dst == $this->sdl_persona) {
-			//"Ya esta trasladado. No se ha hecho ningún cambio."
-			return false;
+		// Cambio la situación de la persona. Debo hacerlo lo primero, pues no puedo
+		// tener la misma persona en dos dl en la misma situación
+		if ($this->cambiarFichaPersona() === false) {
+			$msg = $this->serror;
+			return _("OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio.").$msg;
+		}
+
+		// Trasladar persona
+		if ($this->copiarPersona() === false) {
+			return $this->serror;
+		}
+
+		if ($this->copiarNotas() === false) {
+			return $this->serror;
+		}
+		
+		// apunto el traslado. Lo pongo antes para que se copie trasladar dossiers.
+		if ($this->apuntar() === false) {
+			return $this->serror;
+		}
+		
+		if ($this->trasladarDossiers() === false) {
+			return $this->serror;
 		}
 		return true;
 	}
 
+	public function comprobar() {
+		$error = '';
+		if (!empty($this->sdl_dst) AND $this->sdl_dst == $this->sdl_persona) {
+			$error = _("Ya esta trasladado. No se ha hecho ningún cambio.");
+		}
+		if (empty($error)) {
+			return true;
+		} else {
+			$this->serror = $error;
+			return false;
+		}
+	}
+
 	public function comprobarNotas() {
 		// Aviso si le faltan notas
+		$error = '';
 		$oDBorg = $this->conexionOrg();
 		$qRs = $oDBorg->query('SHOW search_path');
 		$aPath = $qRs->fetch(\PDO::FETCH_ASSOC);
@@ -242,17 +283,23 @@ class TrasladoDl {
 		}
 		$this->restaurarConexionOrg($oDBorg);
 		if (!empty($msg)) {
-			$error .= _("Tiene pendiente de poner las notas de:") .'<br>'.$msg;
-			return $error;
+			$error = _("Tiene pendiente de poner las notas de:") .'<br>'.$msg;
 		}
-		return true;
+		if (empty($error)) {
+			return true;
+		} else {
+			$this->serror = $error;
+			return false;
+		}
 	}
 
 	public function cambiarFichaPersona() {
 		// Cambio la situación de la persona. Debo hacerlo lo primero, pues no puedo tener la misma persona en dos dl en la misma situación
 //		if ($this->ssituacion == 'A') exit (_("OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio."));
 		
+		$error = '';
 		$oDBorg = $this->conexionOrg();
+		// dar permisos al usuario orbixv para acceder a personas_dl (?) o buscar tipo de perona
 		$oPersonaDl = new personas\model\PersonaDl();
 		$oPersonaDl->setoDbl($oDBorg);
 		$oPersonaDl->setId_nom($this->iid_nom);
@@ -266,28 +313,30 @@ class TrasladoDl {
 			return false;
 		}
 		$this->restaurarConexionOrg($oDBorg);
-		return true;
+		if (empty($error)) {
+			return true;
+		} else {
+			$this->serror = $error;
+			return false;
+		}
 	}
 	
 	/**
 	 * dado un id_nom, lo busca en todos los esquemas y si lo encuentra
-	 * devuelve el id_schema
+	 * devuelve un array con la informacion del esquema
 	 * 
 	 * @param integer id_mnom
-	 * @return array(id_schema, situacion, f_situacion)
+	 * @return array(schemaName, id_schema, situacion, f_situacion)
 	 */
-	public function getEsquemas($id_orbix) {
+	public function getEsquemas($id_orbix,$tipo_persona) {
 		// posibles esquemas
 		/*
 		 * @todo: filtrar por regiones?
 		 */
 		$oDBR = $GLOBALS['oDBR'];
 		$qRs = $oDBR->query("SELECT DISTINCT schemaname FROM pg_stat_user_tables");
-		$aResultSql = $qRs->fetch(\PDO::FETCH_ASSOC);
-		$aEsquemas = $aResultSql['schemaname'];
-		//elimino public, publicv, global
-		unset($aEsquemas['global']);	
-		$aEsquemas = array_diff($array, ['global', 'public', 'publicv']);
+		$aResultSql = $qRs->fetchAll(\PDO::FETCH_ASSOC);
+		$aEsquemas = $aResultSql;
 		//Utilizo la conexión oDBR para cambiar momentáneamente el search_path.
 		$oDBR = $GLOBALS['oDBR'];
 		$qRs = $oDBR->query('SHOW search_path');
@@ -295,13 +344,38 @@ class TrasladoDl {
 		$path_org = addslashes($aPath['search_path']);
 		$aResult = [];
 		foreach ($aEsquemas as $esquemaName) {
-			$esquemaName = addslashes($esquemaName);
-			$oDBR->exec("SET search_path TO public,$esquemaName");
-			$qRs = $oDBR->query("SELECT $esquemaName as schema,id_schema,situacion,f_situacion FROM personas_dl WHERE id_nom =$id_orbix");
-			$aResult[] = $qRs->fetchAll(\PDO::FETCH_ASSOC);
+			$esquema = $esquemaName['schemaname'];
+			switch ($tipo_persona) {
+				case 'n':
+					$tabla_personas = 'p_numerarios';
+					break;
+				case 'a':
+					$tabla_personas = 'p_agregados';
+					break;
+				case 'nax':
+					$tabla_personas = 'p_nax';
+					break;
+				case 's':
+					$tabla_personas = 'p_supernumerarios';
+					break;
+			}
+			//elimino public, publicv, global
+			if ($esquema == 'global') { continue; }
+			if ($esquema == 'public') { continue; }
+			if ($esquema == 'publicv') { continue; }
+			if ($esquema == 'restov') { $tabla_personas = 'p_de_paso_ex'; }
+			$esquema_slash = '"'.$esquema.'"';
+			$oDBR->exec("SET search_path TO public,$esquema_slash");
+			$qRs = $oDBR->query("SELECT '$esquema' as schemaName,id_schema,situacion,f_situacion FROM $tabla_personas WHERE id_nom=$id_orbix");
+			$Result = $qRs->fetchAll(\PDO::FETCH_ASSOC);
+			if (!empty($Result)) {
+				if (count($Result) == 1) {
+					$aResult[] = $Result[0];
+				} else {
+					exit(_("No puede existir una persona con el mismo id!!"));
+				}
+			}
 		}
-		
-		
 		//restaurarConexion($oDBR);
 		$oDBR->exec("SET search_path TO $path_org");
 		
@@ -309,6 +383,7 @@ class TrasladoDl {
 	}
 	
 	public function copiarPersona() {
+		$error = '';
 		$oDBorg = $this->conexionOrg();
 		$oPersonaDl = new personas\model\PersonaDl();
 		$oPersonaDl->setoDbl($oDBorg);
@@ -325,7 +400,10 @@ class TrasladoDl {
 		}
 		$aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
 		// si existe el esquema (dl)
-		if (!empty($aDades['existe'])) {
+		if (empty($aDades['existe'])) {
+			$error = sprintf(_("No existe el esquema destino %s en la base de datos"),  $this->snew_esquema);
+		}
+		if (!empty($aDades['existe']) && $aDades['existe'] === true) {
 			$id_tabla = $oPersonaDl->getId_tabla();
 			switch ($id_tabla) {
 				case 'n':
@@ -360,6 +438,12 @@ class TrasladoDl {
 		}
 		$this->restaurarConexionOrg($oDBorg);
 		$this->restaurarConexionDst($oDBdst);
+		if (empty($error)) {
+			return true;
+		} else {
+			$this->serror = $error;
+			return false;
+		}
 	}
 		
 	public function copiarNotas() {
@@ -368,6 +452,7 @@ class TrasladoDl {
 		// -->CAMBIADO: Las notas pertenecen a la dl destino, si se 
 		// borraran de la tabla porque no existe la persona, también
 		// se perderían para todos...
+		$error = '';
 		$oDBorg = $this->conexionOrg();
 		$oDBdst = $this->conexionDst();
 
@@ -401,9 +486,16 @@ class TrasladoDl {
 		}
 		$this->restaurarConexionOrg($oDBorg);
 		$this->restaurarConexionDst($oDBdst);
+		if (empty($error)) {
+			return true;
+		} else {
+			$this->serror = $error;
+			return false;
+		}
 	}
 
 	public function trasladarDossiers () {
+		$error = '';
 		$oDBorg = $this->conexionOrg();
 		$oDBdst = $this->conexionDst();
 		$GesDossiers = new dossiers\model\GestorDossier();
@@ -567,9 +659,16 @@ class TrasladoDl {
 		// Volver oDBdst a su estado original:
 		$this->restaurarConexionDst($oDBdst);
 		$this->restaurarConexionOrg($oDBorg);
+		if (empty($error)) {
+			return true;
+		} else {
+			$this->serror = $error;
+			return false;
+		}
 	}
 		
-	public function apuntar() {	
+	public function apuntar() {
+		$error = '';
 		// apunto el traslado.
 		$oDBorg = $this->conexionOrg();
 		$oTraslado = new personas\model\Traslado();
@@ -585,6 +684,12 @@ class TrasladoDl {
 			$error .= '<br>'._('Hay un error, no se ha guardado');
 		}
 		$this->restaurarConexionOrg($oDBorg);
+		if (empty($error)) {
+			return true;
+		} else {
+			$this->serror = $error;
+			return false;
+		}
 	}
 
 	private function copiar($oOrigen, $oDestino) {

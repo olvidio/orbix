@@ -1,4 +1,6 @@
 <?php
+use dbextern\model;
+
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -123,6 +125,7 @@ $max = count($_SESSION['DBListas']);
 
 $a_lista_orbix = array();
 $persona_listas = array();
+$a_lista_orbix_otradl = array();
 $new_id = 0;
 if (!empty($max)) { $new_id = otro($id,$mov,$max); }
 // Buscar coincidentes en orix
@@ -132,9 +135,13 @@ if (!empty($new_id) && isset($_SESSION['DBListas'][$new_id])) {
 	$id_nom_listas = $persona_listas['id_nom_listas'];
 	
 	$a_lista_orbix =$oSincroDB->posiblesOrbix($id_nom_listas);
+	//si no encuentro, mirar en otras dl
+	if (empty($a_lista_orbix)) {
+		$a_lista_orbix_otradl =$oSincroDB->posiblesOrbixOtrasDl($id_nom_listas);
+	}
 }
 
-$url_sincro_ver = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro_ver.php';
+$url_sincro_ver = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro_ver_listas.php';
 $oHash = new web\Hash();
 $oHash->setUrl($url_sincro_ver);
 $oHash->setcamposNo('mov');
@@ -148,7 +155,8 @@ $oHash->setArraycamposHidden($a_camposHidden);
 $url_sincro_ajax = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro_ajax.php';
 $oHash1 = new web\Hash();
 $oHash1->setUrl($url_sincro_ajax);
-$oHash1->setCamposForm('que!id_nom_listas!id!id_orbix'); 
+//$oHash1->setArraycamposHidden($a_camposHidden);
+$oHash1->setCamposForm('que!id_nom_listas!id_orbix!dl!id!tipo_persona'); 
 $h1 = $oHash1->linkSinVal();
 
 
@@ -156,25 +164,9 @@ $html_reg = sprintf(_("registro %s de %s"),$new_id,$max);
 // ------------------ html ----------------------------------
 ?>
 <script>
-fnjs_sincronizar=function(){
-	var url='<?= $url_sincro_ajax ?>';
-	var parametros='que=syncro&dl=<?= $dl ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>&PHPSESSID=<?php echo session_id(); ?>';
-			 
-	$.ajax({
-			url: url,
-			type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta_txt);
-			fnjs_submit('#movimiento','-');
-		}
-	});
-}
-
 fnjs_crear=function(){
 	var url='<?= $url_sincro_ajax ?>';
-	var parametros='que=crear&id=<?= $new_id?>&id_nom_listas=<?= $id_nom_listas ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>&PHPSESSID=<?php echo session_id(); ?>';
+	var parametros='que=crear&dl=<?= $dl ?>&id=<?= $new_id?>&id_nom_listas=<?= $id_nom_listas ?>&id_orbix=&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>&PHPSESSID=<?php echo session_id(); ?>';
 			 
 	$.ajax({
 		url: url,
@@ -190,7 +182,7 @@ fnjs_crear=function(){
 
 fnjs_unir=function(id_orbix){
 	var url='<?= $url_sincro_ajax ?>';
-	var parametros='que=unir&id_orbix='+id_orbix+'&id=<?= $new_id?>&id_nom_listas=<?= $id_nom_listas ?><?= $h1 ?>&PHPSESSID=<?php echo session_id(); ?>';
+	var parametros='que=unir&dl=<?= $dl ?>&id_orbix='+id_orbix+'&id=<?= $new_id?>&id_nom_listas=<?= $id_nom_listas ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>&PHPSESSID=<?php echo session_id(); ?>';
 			 
 	$.ajax({
 		url: url,
@@ -217,6 +209,8 @@ fnjs_submit=function(formulario,mov){
 <?php
 if (empty($mov)) {
 	echo sprintf(_("unidas automáticamente: %s"),$cont_sync);
+	echo '<br>';
+	echo '<br>';
 }
 ?>
 <?php if (!empty($persona_listas)) { ?>
@@ -262,10 +256,27 @@ foreach ($a_lista_orbix as $persona_orbix) {
 ?>
 </table>
 <?php } ?>
+<?php if (!empty($a_lista_orbix_otradl)) { ?>
+<h3><?= _("Posibles Coincidencias en otras dl") ?>:</h3>
+<table>
+<?php
+foreach ($a_lista_orbix_otradl as $persona_orbix) {
+	$id_orbix = $persona_orbix['id_nom'];
+	echo "<tr>";
+	echo "<td>".$persona_orbix['id_nom'].'<td>';
+	echo "<td class='contenido'>".$persona_orbix['ape_nom'].'<td>';
+	echo "<td>".$persona_orbix['nombre'].'<td>';
+	echo "<td>".$persona_orbix['apellido1'].'<td>';
+	echo "<td>".$persona_orbix['apellido2'].'<td>';
+	echo "<td class='contenido'>".$persona_orbix['f_nacimiento'].'<td>';
+	echo "<td class='titulo'><span class=link onClick='fnjs_unir($id_orbix)'>" . _("Unir") . '</span><td>';
+	echo '</tr>';
+}
+?>
+</table>
+<?php } ?>
 <?php if (!empty($persona_listas)) { ?>
 <br>
 <input type="button" value="<?= _("crear nuevo") ?>" onclick="fnjs_crear()">
 </form>
 <?php } ?>
-<br>
-<input type="button" value="<?= _("actualizar datos de Listas a orbix") ?>" onclick="fnjs_sincronizar()">

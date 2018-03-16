@@ -58,35 +58,35 @@ $situacion  = empty($_POST['situacion'])? '' : $_POST['situacion'];
 $reg_dl_org  = empty($_POST['dl'])? '' : core\ConfigGlobal::mi_region().'-'.$_POST['dl'];
 
 if (!empty($new_dl) AND !empty($f_dl)){
-	$TrasladoDl = new personas\trasladoDl();
-	$TrasladoDl->setId_nom($id_pau);
-	$TrasladoDl->setDl_persona($old_dl);
-	$TrasladoDl->setReg_dl_org($reg_dl_org);
-	$TrasladoDl->setReg_dl_dst($new_dl);
-	$TrasladoDl->setF_dl($f_dl);
-	$TrasladoDl->setSituacion($situacion);
+	$oTrasladoDl = new personas\trasladoDl();
+	$oTrasladoDl->setId_nom($id_pau);
+	$oTrasladoDl->setDl_persona($old_dl);
+	$oTrasladoDl->setReg_dl_org($reg_dl_org);
+	$oTrasladoDl->setReg_dl_dst($new_dl);
+	$oTrasladoDl->setF_dl($f_dl);
+	$oTrasladoDl->setSituacion($situacion);
 
-	if ($TrasladoDl->comprobar() === false) {
+	if ($oTrasladoDl->comprobar() === false) {
 		exit (_("Ya esta trasladado. No se ha hecho ningún cambio."));
 	}
 	// Aviso si le faltan notas
-	if ($TrasladoDl->comprobarNotas() !== true) {
-		$error .= $TrasladoDl->comprobarNotas();
+	if ($oTrasladoDl->comprobarNotas() !== true) {
+		$error .= $oTrasladoDl->comprobarNotas();
 	}
 
 	// Trasladar persona
 	// Cambio la situación de la persona. Debo hacerlo lo primero, pues no puedo
 	// tener la misma persona en dos dl en la misma situación
-	if ($TrasladoDl->cambiarFichaPersona() !== true) {
+	if ($oTrasladoDl->cambiarFichaPersona() !== true) {
 		exit (_("OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio."));
 	}
 
-	$TrasladoDl->copiarPersona();
+	$oTrasladoDl->copiarPersona();
 
-	$TrasladoDl->copiarNotas();
+	$oTrasladoDl->copiarNotas();
 	// apunto el traslado. Lo pongo antes para que se copie trasladar dossiers.
-	$TrasladoDl->apuntar();
-	$TrasladoDl->trasladarDossiers();
+	$oTrasladoDl->apuntar();
+	$oTrasladoDl->trasladarDossiers();
 }
 
 

@@ -1,6 +1,12 @@
 <?php
 namespace dbextern\model;
 
+use core\ConfigGlobal;
+use PDO;
+use personas\model\GestorPersonaDl;
+use personas\model\GestorTelecoPersonaDl;
+use personas\model\TelecoPersonaDl;
+
 /**
  * Description of sincroDB
  *
@@ -70,7 +76,7 @@ class sincroDB {
 		if (empty($this->cPersonasListas)) {
 			$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE Dl='$this->dl' AND Identif LIKE '$this->id_tipo%'";
 			// todos los de listas
-			$oGesListas = new dbextern\model\GestorPersonaListas();	
+			$oGesListas = new GestorPersonaListas();	
 			$cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
 			$this->cPersonasListas = $cPersonasListas;
 		}
@@ -92,13 +98,13 @@ class sincroDB {
 		$aWhere['f_nacimiento'] = "'$f_nacimiento'";
 		$aWhere['nom'] = trim($nombre);
 
-		$oGesPersonasDl = new personas\model\GestorPersonaDl();
+		$oGesPersonasDl = new GestorPersonaDl();
 		$cPersonasDl = $oGesPersonasDl->getPersonasDl($aWhere,$aOperador);
 		if ($cPersonasDl !== false && count($cPersonasDl) == 1) {
 			$oPersonaDl = $cPersonasDl[0];
 			$id_nom = $oPersonaDl->getId_nom();
 
-			$oIdMatch = new dbextern\model\IdMatchPersona($id_nom_listas);
+			$oIdMatch = new IdMatchPersona($id_nom_listas);
 			$oIdMatch->setId_orbix($id_nom);
 			$oIdMatch->setId_tabla($this->tipo_persona);
 			
@@ -113,8 +119,39 @@ class sincroDB {
 		return false;
 	}
 	
-	public function posiblesOrbix($id_nom_listas) {
-		$oPersonaListas = new dbextern\model\PersonaListas($id_nom_listas);	
+	public function posiblesOrbixOtrasDl($id_nom_listas) {
+		// posibles esquemas
+		/*
+		 * @todo: filtrar por regiones?
+		 */
+		$oDBR = $GLOBALS['oDBR'];
+		$qRs = $oDBR->query("SELECT DISTINCT schemaname FROM pg_stat_user_tables");
+		$aResultSql = $qRs->fetchAll(\PDO::FETCH_ASSOC);
+		$aEsquemas = $aResultSql;
+		//Utilizo la conexión oDBR para cambiar momentáneamente el search_path.
+		$oDBR = $GLOBALS['oDBR'];
+		$qRs = $oDBR->query('SHOW search_path');
+		$aPath = $qRs->fetch(\PDO::FETCH_ASSOC);
+		$path_org = addslashes($aPath['search_path']);
+		$a_posibles = [];
+		foreach ($aEsquemas as $esquemaName) {
+			$esquema = $esquemaName['schemaname'];
+			//elimino public, publicv, global
+			if ($esquema == 'global') { continue; }
+			if ($esquema == 'public') { continue; }
+			if ($esquema == 'publicv') { continue; }
+			if ($esquema == 'restov') { continue; }
+//			$esquema_slash = '"'.$esquema.'"';
+//			$oDBR->exec("SET search_path TO public,$esquema_slash");
+			// buscar en cada esquema
+			$a_lista_orbix = $this->posiblesOrbix($id_nom_listas, $esquema);
+			$a_posibles = array_merge($a_posibles, $a_lista_orbix);
+		}
+		return $a_posibles;
+	}
+	
+	public function posiblesOrbix($id_nom_listas, $esquema='') {
+		$oPersonaListas = new PersonaListas($id_nom_listas);	
 		$oPersonaListas->DBCarregar();
 		
 		$apellido1_sinprep = $oPersonaListas->getApellido1_sinprep();
@@ -129,29 +166,38 @@ class sincroDB {
 		$aOperador['apellido1'] = 'sin_acentos';
 		$aWhere['_ordre'] = 'apellido1, apellido2, nom';
 
-		$oGesPersonasDl = new personas\model\GestorPersonaDl();
+		$oGesPersonasDl = new GestorPersonaDl();
+		if (!empty($esquema)) {
+			$oDB = $this->conexion($esquema);
+			$oGesPersonasDl->setoDbl($oDB);
+		}
 		$cPersonasDl = $oGesPersonasDl->getPersonasDl($aWhere,$aOperador);
 		$i = 0;
 		$a_lista_orbix = array();
 		foreach ($cPersonasDl as $oPersonaDl) {
 			$id_nom = $oPersonaDl->getId_nom();
-			$oGesMatch = new dbextern\model\GestorIdMatchPersona();
+			$oGesMatch = new GestorIdMatchPersona();
 			$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_orbix'=>$id_nom));
 			if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
 				continue;
 			}
 			$ape_nom = $oPersonaDl->getApellidosNombre();
 			$nombre = $oPersonaDl->getNom();
+			$dl_persona = $oPersonaDl->getDl();
 			$apellido1 = $oPersonaDl->getApellido1();
 			$apellido2 = $oPersonaDl->getApellido2();
 			$f_nacimiento = empty($oPersonaDl->getF_nacimiento())? '??' : $oPersonaDl->getF_nacimiento();
 			$a_lista_orbix[$i] = array('id_nom'=>$id_nom,
 										'ape_nom'=>$ape_nom,
 										'nombre'=>$nombre,
+										'dl_persona'=>$dl_persona,
 										'apellido1'=>$apellido1,
 										'apellido2'=>$apellido2,
 										'f_nacimiento'=>$f_nacimiento);
 			$i++;
+		}
+		if (!empty($esquema)) {
+			$this->restaurarConexion($oDB);
 		}
 		return $a_lista_orbix;
 	}
@@ -234,7 +280,7 @@ class sincroDB {
 		}
 
 		//Dossiers
-		$GesTeleco = new personas\model\GestorTelecoPersonaDl();
+		$GesTeleco = new GestorTelecoPersonaDl();
 		// Telf movil  --particular(5)
 		if (!empty($Tfno_Movil)) {
 			$cTelecos = $GesTeleco->getTelecos(array('id_nom'=>$id_orbix,'tipo_teleco'=>'móvil','desc_teleco'=>5));
@@ -243,7 +289,7 @@ class sincroDB {
 				$oTeleco->setNum_teleco($Tfno_Movil);
 				$oTeleco->setObserv('de listas');
 			} else {
-				$oTeleco = new personas\model\TelecoPersonaDl();
+				$oTeleco = new TelecoPersonaDl();
 				$oTeleco->setId_nom($id_orbix);
 				$oTeleco->setTipo_teleco('móvil');
 				$oTeleco->setDesc_teleco(5);
@@ -262,7 +308,7 @@ class sincroDB {
 				$oTeleco->setNum_teleco($Email);
 				$oTeleco->setObserv('de listas');
 			} else {
-				$oTeleco = new personas\model\TelecoPersonaDl();
+				$oTeleco = new TelecoPersonaDl();
 				$oTeleco->setId_nom($id_orbix);
 				$oTeleco->setTipo_teleco('e-mail');
 				$oTeleco->setDesc_teleco(13);
@@ -274,5 +320,41 @@ class sincroDB {
 			}
 			
 		}
+	}
+
+	public function buscarEnOrbix($id_orbix) {
+		$dl = '';
+		$oTrasladoDl = new \personas\model\TrasladoDl();
+		$a_esquemas = $oTrasladoDl->getEsquemas($id_orbix,$this->tipo_persona);
+		$esquema = '';
+		foreach ($a_esquemas as $info_eschema){
+			// array(schemaName,id_schema,situacion,f_situacion)
+			if ($info_eschema['situacion'] == 'A') {
+				$esquema = $info_eschema['schemaname'];
+			}
+		}
+		return $esquema;
+	}
+	
+	public function conexion($esquema) {
+		$sfsv_txt = (configGlobal::mi_sfsv() == 1)? 'v' :'f';
+		//Utilizo la conexión oDBR para cambiar momentáneamente el search_path.
+		if (ConfigGlobal::mi_region_dl() == $esquema) {
+			//Utilizo la conexión oDB para cambiar momentáneamente el search_path.
+			$oDB = $GLOBALS['oDB'];
+		} else {
+			// Sólo funciona con la conexión oDBR porque el usuario es orbixv que 
+			// tiene permiso de lectura para todos los esquemas
+			$oDB = $GLOBALS['oDBR'];
+		}
+		$qRs = $oDB->query('SHOW search_path');
+		$aPath = $qRs->fetch(PDO::FETCH_ASSOC);
+		$this->path_ini = $aPath['search_path'];
+		$oDB->exec('SET search_path TO public,"'.$esquema.'"');
+		return $oDB;
+	}
+	public function restaurarConexion($oDB) {
+		// Volver oDBR a su estado original:
+		$oDB->exec("SET search_path TO $this->path_ini");
 	}
 }
