@@ -226,7 +226,11 @@ class sincroDB {
 			$id_ubi = $a_ctr[$Ctr];
 		} else {
 			$id_ubi = 0;
-			$msg .= sprintf(_("No se encuentra el ctr %s en la lista de ctr"),$Ctr);
+			if (empty($Ctr)) {
+				$msg .= sprintf(_("Parece que %s  no tiene puesto el ctr en \"listas\""),$ape_nom);
+			} else {
+				$msg .= sprintf(_("No se encuentra el ctr %s en la lista de ctr"),$Ctr);
+			}
 		}
 		
 		$Email = $oPersonaListas->getEmail();
