@@ -79,7 +79,7 @@ fnjs_traslado=function($id_orbix){
 		echo "<td class='titulo'>".$persona_orbix['ape_nom'].'</td>';
 		echo "<td>".$dl.'</td>';
 		echo "<td><span class=link onClick='fnjs_baja($id_orbix,$i)'>" . _("baja") . '</span><td>';
-		echo "<td><span class=link onClick='fnjs_traslado($id_orbix,$i)'>" . _("traslado a otra r") . '</span><td>';
+		echo "<td><span class=link onClick='fnjs_traslado($id_orbix,$i)'>" . _("fallecido o traslado a otra r") . '</span><td>';
 		echo '</tr>';
 	}
 ?>

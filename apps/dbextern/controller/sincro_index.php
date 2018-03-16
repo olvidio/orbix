@@ -221,7 +221,7 @@ fnjs_sincronizar=function(){
 		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_7 ?>')"><?=_("ver")?></span></td>
 	</tr>
 	<tr><td>8.</td>
-		<td><?= _("Personas en orbix con correspondencia en listas i desaparecidos de listas") ?></td>
+		<td><?= _("Personas en orbix con correspondencia en listas y desaparecidos de listas") ?></td>
 		<td><?= $p8_orbix_unidas_desaparecidas ?></td>
 		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_8 ?>')"><?=_("ver")?></span></td>
 	</tr>
