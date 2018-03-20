@@ -165,7 +165,7 @@ fnjs_guardar_acta=function(){
 	var rr=fnjs_comprobar_campos('#modifica','<?= addslashes($obj) ?>');
 	if (rr=='ok') {
 		$('#modifica').attr('action','apps/notas/controller/acta_update.php');
-		<?php if (!empty($notas)) { ?>
+	<?php if (!empty($notas)) { ?>
 		$('#modifica').submit(function() {
 			$.ajax({
 				data: $(this).serialize(),
@@ -180,10 +180,33 @@ fnjs_guardar_acta=function(){
 			});
 			return false;
 		});
-	$('#modifica').submit();
-	$('#modifica').off();
+		$('#modifica').submit();
+		$('#modifica').off();
 	<?php } else { ?>
-	fnjs_enviar_formulario('#modifica');
+		$('#modifica').submit(function() {
+			$.ajax({
+				data: $(this).serialize(),
+				url: $(this).attr('action'),
+				type: 'post',
+				complete: function (rta) {
+					rta_txt=rta.responseText;
+					if (rta_txt != '' && rta_txt != '\n') {
+						alert (rta_txt);
+					} else {
+						<?php
+						$oPosicion = new web\Posicion();
+//						$oPosicion->setId_div('ir_a');
+						echo $oPosicion->js_atras();
+						?>
+					}
+				}
+			});
+			return false;
+		});
+		$('#modifica').submit();
+		$('#modifica').off();
+
+		//fnjs_enviar_formulario('#modifica');
 	<?php } ?>
 	}
 }

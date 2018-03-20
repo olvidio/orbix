@@ -102,7 +102,7 @@ class Posicion {
 		$html .= '</form>';
 		
 		//$this->go(2);
-		return "<script>fnjs_mostrar_atras('$id_div','$html');</script>";
+		return "fnjs_mostrar_atras('$id_div','$html');";
 		
 	}
 	public function atras() {

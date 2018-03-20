@@ -22,6 +22,9 @@ if ($dl_acta == $mi_dele || $dl_acta == "?") {
 }
 
 if (!empty($_POST['nuevo'])) { // nueva.
+	// Si se pone un acta ya existente, modificará los datos de ésta. Hay que avisar:
+	$oActa->setActa($acta);
+	if (!empty($oActa->getF_acta())) { exit(_("Esta acta ya existe")); }
 	isset($_POST['id_asignatura']) ? $oActa->setId_asignatura($_POST['id_asignatura']) : '';
 	isset($_POST['id_activ'])? $oActa->setId_activ($_POST['id_activ']) : '';
 	// la fecha debe ir antes que el acta por si hay que inventar el acta, tener la referencia de la fecha
@@ -93,8 +96,8 @@ if (strpos($go_to,"acta_notas") !== false) {
 } else {
 //vuelve a la presentacion de la ficha.
 //echo "gou: $go_to<br>";
-$oPosicion = new web\Posicion();
-$oPosicion->setId_div('ir_a');
-echo $oPosicion->ir_a($go_to);
+//$oPosicion = new web\Posicion();
+//$oPosicion->setId_div('ir_a');
+//echo $oPosicion->ir_a($go_to);
 }
 ?>
