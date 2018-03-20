@@ -95,6 +95,7 @@ if (strpos($go_to,"acta_notas") !== false) {
 	// No voy a ningun sitio
 } else {
 //vuelve a la presentacion de la ficha.
+//AHORA por javascript
 //echo "gou: $go_to<br>";
 //$oPosicion = new web\Posicion();
 //$oPosicion->setId_div('ir_a');
