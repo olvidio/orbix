@@ -195,7 +195,6 @@ fnjs_guardar_acta=function(){
 					} else {
 						<?php
 						$oPosicion = new web\Posicion();
-//						$oPosicion->setId_div('ir_a');
 						echo $oPosicion->js_atras();
 						?>
 					}
