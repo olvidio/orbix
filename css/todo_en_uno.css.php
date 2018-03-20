@@ -467,6 +467,10 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 		font-weight : bold;		
 		color : <?php echo $letras;?>;
 	}
+	.contenido_especial  {
+      	font-family : Arial;
+      	font-size : 8pt;
+		}
 	.fecha {
 		font-family : Arial;
 		font-size : 10pt;

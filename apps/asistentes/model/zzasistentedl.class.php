@@ -2,7 +2,7 @@
 namespace asistentes\model;
 use core;
 /**
- * Fitxer amb la Classe que accedeix a la taula d_asistentes_de_paso
+ * Fitxer amb la Classe que accedeix a la taula d_asistentes_dl
  *
  * @package delegación
  * @subpackage model
@@ -11,7 +11,7 @@ use core;
  * @created 11/03/2014
  */
 /**
- * Classe que implementa l'entitat d_asistentes_de_paso
+ * Classe que implementa l'entitat d_asistentes_dl
  *
  * @package delegación
  * @subpackage model
@@ -19,101 +19,101 @@ use core;
  * @version 1.0
  * @created 11/03/2014
  */
-class AsistentePub Extends core\ClasePropiedades {
+class AsistenteDl Extends core\ClasePropiedades {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/**
-	 * aPrimary_key de AsistentePub
+	 * aPrimary_key de AsistenteDl
 	 *
 	 * @var array
 	 */
 	 protected $aPrimary_key;
 
 	/**
-	 * aDades de AsistentePub
+	 * aDades de AsistenteDl
 	 *
 	 * @var array
 	 */
 	 protected $aDades;
 
 	/**
-	 * Id_activ de AsistentePub
+	 * Id_activ de AsistenteDl
 	 *
 	 * @var integer
 	 */
 	 protected $iid_activ;
 	/**
-	 * Id_nom de AsistentePub
+	 * Id_nom de AsistenteDl
 	 *
 	 * @var integer
 	 */
 	 protected $iid_nom;
 	/**
-	 * Propio de AsistentePub
+	 * Propio de AsistenteDl
 	 *
 	 * @var boolean
 	 */
 	 protected $bpropio;
 	/**
-	 * Est_ok de AsistentePub
+	 * Est_ok de AsistenteDl
 	 *
 	 * @var boolean
 	 */
 	 protected $best_ok;
 	/**
-	 * Cfi de AsistentePub
+	 * Cfi de AsistenteDl
 	 *
 	 * @var boolean
 	 */
 	 protected $bcfi;
 	/**
-	 * Cfi_con de AsistentePub
+	 * Cfi_con de AsistenteDl
 	 *
 	 * @var integer
 	 */
 	 protected $icfi_con;
 	/**
-	 * Falta de AsistentePub
+	 * Falta de AsistenteDl
 	 *
 	 * @var boolean
 	 */
 	 protected $bfalta;
 	/**
-	 * Encargo de AsistentePub
+	 * Encargo de AsistenteDl
 	 *
 	 * @var string
 	 */
 	 protected $sencargo;
 	/**
-	 * Cama de AsistentePub
+	 * Cama de AsistenteDl
 	 *
 	 * @var string
 	 */
 	 protected $scama;
 	/**
-	 * Observ de AsistentePub
+	 * Observ de AsistenteDl
 	 *
 	 * @var string
 	 */
 	 protected $sobserv;
 	/**
-	 * Plaza de AsistentePub
+	 * plaza de AsistenteDl
 	 *
 	 * @var integer
 	 */
 	 protected $iplaza;
 	/**
-	 * Propietario de AsistentePub
-	 *
-	 * @var texet
-	 */
-	 protected $spropietario;
-	/**
-	 * id_tabla de AsistentePub
+	 * Id_tabla de AsistenteDl
 	 *
 	 * @var string
 	 */
 	 protected $sid_tabla;
+	/**
+	 * Propietario de AsistenteDl
+	 *
+	 * @var string
+	 */
+	 protected $spropietario;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
@@ -126,7 +126,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
 	 */
 	function __construct($a_id='') {
-		$oDbl = $GLOBALS['oDBP'];
+		$oDbl = $GLOBALS['oDB'];
 		if (is_array($a_id)) { 
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
@@ -135,7 +135,7 @@ class AsistentePub Extends core\ClasePropiedades {
 			}
 		}
 		$this->setoDbl($oDbl);
-		$this->setNomTabla('d_asistentes_de_paso');
+		$this->setNomTabla('d_asistentes_dl');
 	}
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
@@ -183,12 +183,12 @@ class AsistentePub Extends core\ClasePropiedades {
 					propietario              = :propietario";
 					//id_tabla                 = :id_tabla";
 			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_activ='$this->iid_activ' AND id_nom='$this->iid_nom'")) === false) {
-				$sClauError = get_class($this).'.update.prepare';
+				$sClauError = 'AsistenteDl.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($qRs->execute($aDades) === false) {
-					$sClauError = get_class($this).'.update.execute';
+					$sClauError = 'AsistenteDl.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
@@ -199,12 +199,12 @@ class AsistentePub Extends core\ClasePropiedades {
 			$campos="(id_activ,id_nom,propio,est_ok,cfi,cfi_con,falta,encargo,cama,observ,plaza,propietario)";
 			$valores="(:id_activ,:id_nom,:propio,:est_ok,:cfi,:cfi_con,:falta,:encargo,:cama,:observ,:plaza,:propietario)";		
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-				$sClauError = get_class($this).'.insertar.prepare';
+				$sClauError = 'AsistenteDl.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($qRs->execute($aDades) === false) {
-					$sClauError = get_class($this).'.insertar.execute';
+					$sClauError = 'AsistenteDl.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
@@ -223,7 +223,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iid_activ) && isset($this->iid_nom)) {
 			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_nom='$this->iid_nom'")) === false) {
-				$sClauError = get_class($this).'.carregar';
+				$sClauError = 'AsistenteDl.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
@@ -252,7 +252,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_nom='$this->iid_nom'")) === false) {
-			$sClauError = get_class($this).'.eliminar';
+			$sClauError = 'AsistenteDl.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
@@ -279,39 +279,14 @@ class AsistentePub Extends core\ClasePropiedades {
 		if (array_key_exists('encargo',$aDades)) $this->setEncargo($aDades['encargo']);
 		if (array_key_exists('cama',$aDades)) $this->setCama($aDades['cama']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
-		if (array_key_exists('plaza',$aDades)) $this->setPlazaSinComprobar($aDades['plaza']);
+		if (array_key_exists('plaza',$aDades)) $this->setPlaza($aDades['plaza']);
 		if (array_key_exists('propietario',$aDades)) $this->setPropietario($aDades['propietario']);
 		if (array_key_exists('id_tabla',$aDades)) $this->setId_tabla($aDades['id_tabla']);
-	}
-	/**
-	 * retorna el valor de tots els atributs
-	 *
-	 * @param array $aDades
-	 */
-	function getAllAtributes() {
-		if (empty($aDades)) {
-			$aDades = array();
-			$aDades['id_activ'] = $this->getId_activ();
-			$aDades['id_nom'] = $this->getId_nom();
-			$aDades['propio'] = $this->getPropio();
-			$aDades['est_ok'] = $this->getEst_ok();
-			$aDades['cfi'] = $this->getCfi();
-			$aDades['cfi_con'] = $this->getCfi_con();
-			$aDades['falta'] = $this->getFalta();
-			$aDades['encargo'] = $this->getEncargo();
-			$aDades['cama'] = $this->getCama();
-			$aDades['observ'] = $this->getObserv();
-			$aDades['plaza'] = $this->getPlaza();
-			$aDades['propietario'] = $this->getPropietario();
-			$aDades['id_tabla'] = $this->getId_tabla();
-		} else {
-			return $aDades;
-		}
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/**
-	 * Recupera tots els atributs de AsistentePub en un array
+	 * Recupera tots els atributs de AsistenteDl en un array
 	 *
 	 * @return array aDades
 	 */
@@ -323,7 +298,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	}
 
 	/**
-	 * Recupera las claus primàries de AsistentePub en un array
+	 * Recupera las claus primàries de AsistenteDl en un array
 	 *
 	 * @return array aPrimary_key
 	 */
@@ -333,23 +308,9 @@ class AsistentePub Extends core\ClasePropiedades {
 		}
 		return $this->aPrimary_key;
 	}
-	/**
-	 * Estableix las claus primàries de AsistentePub en un array
-	 *
-	 * @return array aPrimary_key
-	 */
-	function setPrimary_key($a_id='') {
-		if (is_array($a_id)) { 
-			$this->aPrimary_key = $a_id;
-			foreach($a_id as $nom_id=>$val_id) {
-				if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; // evitem SQL injection fent cast a integer
-				if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; // evitem SQL injection fent cast a integer
-			}
-		}
-	}
 
 	/**
-	 * Recupera l'atribut iid_activ de AsistentePub
+	 * Recupera l'atribut iid_activ de AsistenteDl
 	 *
 	 * @return integer iid_activ
 	 */
@@ -360,7 +321,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		return $this->iid_activ;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_activ de AsistentePub
+	 * estableix el valor de l'atribut iid_activ de AsistenteDl
 	 *
 	 * @param integer iid_activ
 	 */
@@ -368,7 +329,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$this->iid_activ = $iid_activ;
 	}
 	/**
-	 * Recupera l'atribut iid_nom de AsistentePub
+	 * Recupera l'atribut iid_nom de AsistenteDl
 	 *
 	 * @return integer iid_nom
 	 */
@@ -379,7 +340,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		return $this->iid_nom;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_nom de AsistentePub
+	 * estableix el valor de l'atribut iid_nom de AsistenteDl
 	 *
 	 * @param integer iid_nom
 	 */
@@ -387,7 +348,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$this->iid_nom = $iid_nom;
 	}
 	/**
-	 * Recupera l'atribut bpropio de AsistentePub
+	 * Recupera l'atribut bpropio de AsistenteDl
 	 *
 	 * @return boolean bpropio
 	 */
@@ -398,7 +359,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		return $this->bpropio;
 	}
 	/**
-	 * estableix el valor de l'atribut bpropio de AsistentePub
+	 * estableix el valor de l'atribut bpropio de AsistenteDl
 	 *
 	 * @param boolean bpropio='f' optional
 	 */
@@ -406,7 +367,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$this->bpropio = $bpropio;
 	}
 	/**
-	 * Recupera l'atribut best_ok de AsistentePub
+	 * Recupera l'atribut best_ok de AsistenteDl
 	 *
 	 * @return boolean best_ok
 	 */
@@ -417,7 +378,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		return $this->best_ok;
 	}
 	/**
-	 * estableix el valor de l'atribut best_ok de AsistentePub
+	 * estableix el valor de l'atribut best_ok de AsistenteDl
 	 *
 	 * @param boolean best_ok='f' optional
 	 */
@@ -425,7 +386,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$this->best_ok = $best_ok;
 	}
 	/**
-	 * Recupera l'atribut bcfi de AsistentePub
+	 * Recupera l'atribut bcfi de AsistenteDl
 	 *
 	 * @return boolean bcfi
 	 */
@@ -436,7 +397,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		return $this->bcfi;
 	}
 	/**
-	 * estableix el valor de l'atribut bcfi de AsistentePub
+	 * estableix el valor de l'atribut bcfi de AsistenteDl
 	 *
 	 * @param boolean bcfi='f' optional
 	 */
@@ -444,7 +405,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$this->bcfi = $bcfi;
 	}
 	/**
-	 * Recupera l'atribut icfi_con de AsistentePub
+	 * Recupera l'atribut icfi_con de AsistenteDl
 	 *
 	 * @return integer icfi_con
 	 */
@@ -455,7 +416,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		return $this->icfi_con;
 	}
 	/**
-	 * estableix el valor de l'atribut icfi_con de AsistentePub
+	 * estableix el valor de l'atribut icfi_con de AsistenteDl
 	 *
 	 * @param integer icfi_con='' optional
 	 */
@@ -463,7 +424,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$this->icfi_con = $icfi_con;
 	}
 	/**
-	 * Recupera l'atribut bfalta de AsistentePub
+	 * Recupera l'atribut bfalta de AsistenteDl
 	 *
 	 * @return boolean bfalta
 	 */
@@ -474,7 +435,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		return $this->bfalta;
 	}
 	/**
-	 * estableix el valor de l'atribut bfalta de AsistentePub
+	 * estableix el valor de l'atribut bfalta de AsistenteDl
 	 *
 	 * @param boolean bfalta='f' optional
 	 */
@@ -482,7 +443,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$this->bfalta = $bfalta;
 	}
 	/**
-	 * Recupera l'atribut sencargo de AsistentePub
+	 * Recupera l'atribut sencargo de AsistenteDl
 	 *
 	 * @return string sencargo
 	 */
@@ -493,7 +454,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		return $this->sencargo;
 	}
 	/**
-	 * estableix el valor de l'atribut sencargo de AsistentePub
+	 * estableix el valor de l'atribut sencargo de AsistenteDl
 	 *
 	 * @param string sencargo='' optional
 	 */
@@ -501,7 +462,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$this->sencargo = $sencargo;
 	}
 	/**
-	 * Recupera l'atribut scama de AsistentePub
+	 * Recupera l'atribut scama de AsistenteDl
 	 *
 	 * @return string scama
 	 */
@@ -512,7 +473,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		return $this->scama;
 	}
 	/**
-	 * estableix el valor de l'atribut scama de AsistentePub
+	 * estableix el valor de l'atribut scama de AsistenteDl
 	 *
 	 * @param string scama='' optional
 	 */
@@ -520,7 +481,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$this->scama = $scama;
 	}
 	/**
-	 * Recupera l'atribut sobserv de AsistentePub
+	 * Recupera l'atribut sobserv de AsistenteDl
 	 *
 	 * @return string sobserv
 	 */
@@ -531,7 +492,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		return $this->sobserv;
 	}
 	/**
-	 * estableix el valor de l'atribut sobserv de AsistentePub
+	 * estableix el valor de l'atribut sobserv de AsistenteDl
 	 *
 	 * @param string sobserv='' optional
 	 */
@@ -539,7 +500,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$this->sobserv = $sobserv;
 	}
 	/**
-	 * Recupera l'atribut iplaza de AsistentePub
+	 * Recupera l'atribut iplaza de AsistenteDl
 	 *
 	 * @return integer iplaza
 	 */
@@ -550,65 +511,15 @@ class AsistentePub Extends core\ClasePropiedades {
 		return $this->iplaza;
 	}
 	/**
-	 * estableix el valor de l'atribut iplaza de AsistentePub
-	 * La distingo del setPlaza, porque al requerir getPlaza -> DBcarregar entra en un bucle.
-	 *
-	 * @param integer iplaza='' optional
-	 */
-	protected function setPlazaSinComprobar($iplaza='') {
-		$this->iplaza = $iplaza;
-	}
-	/**
-	 * estableix el valor de l'atribut iplaza de AsistentePub
+	 * estableix el valor de l'atribut iplaza de AsistenteDl
 	 *
 	 * @param integer iplaza='' optional
 	 */
 	function setPlaza($iplaza='') {
-		//hacer comprobaciones de plazas disponibles...
-		$plaza_actual = $this->getPlaza();
-
-		if ($plaza_actual < Asistente::PLAZA_DENEGADA && $iplaza > Asistente::PLAZA_DENEGADA) {
-			$gesActividadPlazasR = new \actividadplazas\model\GestorResumenPlazas();
-			$gesActividadPlazasR->setId_activ($this->iid_activ);
-			if ($gesActividadPlazasR->getLibres() > 0) {
-				$this->iplaza = $iplaza;
-				//debe asignarse un propietario. Sólo si es asignada o confirmada
-				$propiedad = $gesActividadPlazasR->getPropiedadPlazaLibre();
-				if (empty($propiedad)) {
-					exit (_("No debería pasar. No puede haber una plaza libre sin propietario"));
-				} else {
-					$prop = key($propiedad);
-					$this->setPropietario($prop);
-				}
-			} else {
-				$this->iplaza = Asistente::PLAZA_PEDIDA;
-			}
-		} else {
-			$this->iplaza = $iplaza;
-		}
-	}
-	
-	/**
-	 * Recupera l'atribut spropietario de AsistentePub
-	 *
-	 * @return integer spropietario
-	 */
-	function getPropietario() {
-		if (!isset($this->spropietario)) {
-			$this->DBCarregar();
-		}
-		return $this->spropietario;
+		$this->iplaza = $iplaza;
 	}
 	/**
-	 * estableix el valor de l'atribut spropietario de AsistentePub
-	 *
-	 * @param integer spropietario='' optional
-	 */
-	function setPropietario($spropietario='') {
-		$this->spropietario = $spropietario;
-	}
-	/**
-	 * Recupera l'atribut sid_tabla de AsistentePub
+	 * Recupera l'atribut sid_tabla de AsistenteDl
 	 *
 	 * @return string sid_tabla
 	 */
@@ -619,12 +530,31 @@ class AsistentePub Extends core\ClasePropiedades {
 		return $this->sid_tabla;
 	}
 	/**
-	 * estableix el valor de l'atribut sid_tabla de AsistentePub
+	 * estableix el valor de l'atribut sid_tabla de AsistenteDl
 	 *
 	 * @param string sid_tabla='' optional
 	 */
 	function setId_tabla($sid_tabla='') {
 		$this->sid_tabla = $sid_tabla;
+	}
+	/**
+	 * Recupera l'atribut spropietario de AsistenteDl
+	 *
+	 * @return string spropietario
+	 */
+	function getPropietario() {
+		if (!isset($this->spropietario)) {
+			$this->DBCarregar();
+		}
+		return $this->spropietario;
+	}
+	/**
+	 * estableix el valor de l'atribut spropietario de AsistenteDl
+	 *
+	 * @param string spropietario='' optional
+	 */
+	function setPropietario($spropietario='') {
+		$this->spropietario = $spropietario;
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
@@ -633,23 +563,23 @@ class AsistentePub Extends core\ClasePropiedades {
 	 *
 	 */
 	function getDatosCampos() {
-		$oAsistentePubSet = new core\Set();
+		$oAsistenteDlSet = new core\Set();
 
-		$oAsistentePubSet->add($this->getDatosPropio());
-		$oAsistentePubSet->add($this->getDatosEst_ok());
-		$oAsistentePubSet->add($this->getDatosCfi());
-		$oAsistentePubSet->add($this->getDatosCfi_con());
-		$oAsistentePubSet->add($this->getDatosFalta());
-		$oAsistentePubSet->add($this->getDatosEncargo());
-		$oAsistentePubSet->add($this->getDatosCama());
-		$oAsistentePubSet->add($this->getDatosObserv());
-		return $oAsistentePubSet->getTot();
+		$oAsistenteDlSet->add($this->getDatosPropio());
+		$oAsistenteDlSet->add($this->getDatosEst_ok());
+		$oAsistenteDlSet->add($this->getDatosCfi());
+		$oAsistenteDlSet->add($this->getDatosCfi_con());
+		$oAsistenteDlSet->add($this->getDatosFalta());
+		$oAsistenteDlSet->add($this->getDatosEncargo());
+		$oAsistenteDlSet->add($this->getDatosCama());
+		$oAsistenteDlSet->add($this->getDatosObserv());
+		return $oAsistenteDlSet->getTot();
 	}
 
 
 
 	/**
-	 * Recupera les propietats de l'atribut bpropio de AsistentePub
+	 * Recupera les propietats de l'atribut bpropio de AsistenteDl
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return oject DatosCampo
@@ -661,7 +591,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut best_ok de AsistentePub
+	 * Recupera les propietats de l'atribut best_ok de AsistenteDl
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return oject DatosCampo
@@ -673,7 +603,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut bcfi de AsistentePub
+	 * Recupera les propietats de l'atribut bcfi de AsistenteDl
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return oject DatosCampo
@@ -685,7 +615,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut icfi_con de AsistentePub
+	 * Recupera les propietats de l'atribut icfi_con de AsistenteDl
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return oject DatosCampo
@@ -697,7 +627,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut bfalta de AsistentePub
+	 * Recupera les propietats de l'atribut bfalta de AsistenteDl
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return oject DatosCampo
@@ -709,7 +639,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut sencargo de AsistentePub
+	 * Recupera les propietats de l'atribut sencargo de AsistenteDl
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return oject DatosCampo
@@ -721,7 +651,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut scama de AsistentePub
+	 * Recupera les propietats de l'atribut scama de AsistenteDl
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return oject DatosCampo
@@ -733,7 +663,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut sobserv de AsistentePub
+	 * Recupera les propietats de l'atribut sobserv de AsistenteDl
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return oject DatosCampo
@@ -745,7 +675,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut iplaza de AsistentePub
+	 * Recupera les propietats de l'atribut iplaza de AsistenteDl
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return oject DatosCampo
@@ -754,18 +684,6 @@ class AsistentePub Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'plaza'));
 		$oDatosCampo->setEtiqueta(_("plaza"));
-		return $oDatosCampo;
-	}
-	/**
-	 * Recupera les propietats de l'atribut spropietario de AsistentePub
-	 * en una clase del tipus DatosCampo
-	 *
-	 * @return oject DatosCampo
-	 */
-	function getDatosPropietario() {
-		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'propietario'));
-		$oDatosCampo->setEtiqueta(_("propietario"));
 		return $oDatosCampo;
 	}
 }

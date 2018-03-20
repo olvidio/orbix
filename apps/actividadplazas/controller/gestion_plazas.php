@@ -196,5 +196,8 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
 
+echo _("sólo se ven las actividades publicadas");
+echo '<br>';
 echo _("editar celdas con doble click");
+echo '<br>';
 echo $oTabla->mostrar_tabla();

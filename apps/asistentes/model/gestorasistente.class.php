@@ -45,12 +45,23 @@ class GestorAsistente Extends core\ClaseGestor {
 	 *
 	 * @return object del tipus Desplegable
 	 */
-	function getPosiblesPlaza() {
+	function getOpcionesPosiblesPlaza() {
 		$aOpciones[Asistente::PLAZA_PEDIDA] = _("pedida");
 		$aOpciones[Asistente::PLAZA_EN_ESPERA] = _("en espera");
-		$aOpciones[Asistente::PLAZA_DENEGADA] = _("denegada");
+//		$aOpciones[Asistente::PLAZA_DENEGADA] = _("denegada");
 		$aOpciones[Asistente::PLAZA_ASIGNADA] = _("asignada");
 		$aOpciones[Asistente::PLAZA_CONFIRMADA] = _("confirmada");
+		return $aOpciones;
+	}
+	
+	/**
+	 * retorna un objecte del tipus Desplegable
+	 * Les posibles asignatures
+	 *
+	 * @return object del tipus Desplegable
+	 */
+	function getPosiblesPlaza() {
+		$aOpciones =  $this->getOpcionesPosiblesPlaza();
 		return new web\Desplegable('',$aOpciones,'',true);
 	}
 	

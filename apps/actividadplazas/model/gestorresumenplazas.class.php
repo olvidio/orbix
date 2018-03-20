@@ -59,6 +59,9 @@ class GestorResumenPlazas {
 
 	/**
 	 * Posibles propietarios de la plaza: propias más cedidas
+	 * 
+	 * @param bool dl_de_paso
+	 * @return object Desplegable
 	 */
 	public function getPosiblesPropietarios($dl_de_paso = FALSE){
 		$id_activ = $this->getId_activ();
@@ -105,7 +108,8 @@ class GestorResumenPlazas {
 			$a_dl["$mi_dl>$mi_dl"] = "$mi_dl ($ocu de $pl_propias)";
 		}
 		// Debe haber al menos un valor para que se pase el campo y no dé error de 'llega distinto número de campos...'
-		if (count($a_dl) == 0 ) $a_dl["nadie"] = "nadie";
+		//if (count($a_dl) == 0 ) $a_dl["nadie"] = "nadie";
+		if (count($a_dl) == 0 ) $a_dl["$dl_org>$dl_org"] = $dl_org;
 		return new \web\Desplegable('',$a_dl,'',true);
 	}
 	
@@ -113,6 +117,7 @@ class GestorResumenPlazas {
 	 * Devuelve las plazas diponibles para una dl de una actividad
 	 */
 	public function getPlazasCalendario($dl) {
+		
 		$id_activ = $this->getId_activ();
 		$mi_dl = $dl;
 		$id_mi_dl = $this->getDlId($mi_dl);
@@ -208,6 +213,7 @@ class GestorResumenPlazas {
 	 * 
 	 */
 	public function getResumen() {
+		$a_plazas = array();
 		$id_activ = $this->getId_activ();
 		$gesActividadPlazas = new \actividadplazas\model\GestorActividadPlazas();
 		$gesAsistentes = new \asistentes\model\GestorAsistente();
@@ -221,6 +227,20 @@ class GestorResumenPlazas {
 			if (empty($plazas_totales)) {
 				$plazas_totales = '?';
 			}
+		}
+		// si la actividad no está pulicada, no hay plazas de otras dl. Todas para la dl org.
+		if ($oActividad->getPublicado() === false) {
+			
+			$ocupadas = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$dl_org);
+			
+			$a_plazas['total']['actividad'] = $plazas_totales;
+			$a_plazas['total']['calendario'] = $plazas_totales;
+			$a_plazas['total']['cedidas'] = 0;
+			$a_plazas['total']['conseguidas'] = 0;
+			$a_plazas['total']['actual'] = $plazas_totales;
+			$a_plazas['total']['ocupadas'] = $ocupadas;
+		
+			return $a_plazas;
 		}
 		// plazas de calendario de cada dl
 		$cActividadPlazas = $gesActividadPlazas->getActividadesPlazas(array('id_activ'=>$id_activ));
@@ -312,6 +332,102 @@ class GestorResumenPlazas {
 		$a_plazas['total']['ocupadas'] = $tot_ocupadas;
 		
 		return $a_plazas;
+	}
+	
+	/**
+	 * Plazas disponibles menos las ocupadas
+	 * 
+	 * @param string $dl delegación, si esta vacio: la mia.
+	 * @return integer numero de plazas libres para la dl
+	 * 
+	 */
+	public function getLibres($dl='') {
+		if (empty($dl)) {
+			$dl = core\ConfigGlobal::mi_dele();
+		}
+		
+		$a_plazas = $this->getResumen();
+		$libres = $a_plazas[$dl]['total_actual'] - $a_plazas[$dl]['ocupadas'];
+
+		return $libres;
+	}
+	
+	/**
+	 * Devuelve el nombre del popietario de la primera plaza libre
+	 * 
+	 * usa clases externas:
+	 *	asistentes\model\GestorAsistente();
+	 *	actividades\Actividad($id_activ);
+	 *  actividadplazas\model\GestorActividadPlazas();
+	 * 
+	 * @return array $propiedad key = "dl_propietaria>dl_cedida", value = texto explicativo. 
+	 * 
+	 */
+	public function getPropiedadPlazaLibre() {
+		/*
+		puede ser una plaza propia o una cedida.
+		 */
+		$gesAsistentes = new \asistentes\model\GestorAsistente();
+			
+		$propiedad = array();
+		$id_activ = $this->getId_activ();
+		$mi_dl = \core\ConfigGlobal::mi_dele();
+		
+		$oActividad = new \actividades\model\Actividad($id_activ);
+		$publicado = $oActividad->getPublicado();
+		// Si no está publicada no tiene plazas de calendario.
+		// Se toman todas la de la actividad como propias.
+		if ($publicado ===false) {
+			$pl_propias = $oActividad->getPlazas();
+		} else {
+			// las que me correponden por calendario - las cedidas
+			$pl_calendario = $this->getPlazasCalendario($mi_dl);
+			$pl_cedidas = $this->getPlazasCedidas($mi_dl);
+			$pl_propias = $pl_calendario - $pl_cedidas;
+		}
+		if ($pl_propias > 0) {
+			$ocu = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$mi_dl,$mi_dl);
+			if ($ocu < $pl_propias) {
+				$num = $pl_propias - $ocu;
+				$propiedad["$mi_dl>$mi_dl"] = "$mi_dl ($ocu de $pl_propias)";
+			}
+		}
+
+		// Si no quedan, ver si dispongo de otras
+		if (empty($propiedad)) {
+			$id_mi_dl = $this->getDlId($mi_dl);
+			$dl_org = $this->getDl_org();
+
+			//Conseguidas
+			$gesActividadPlazas = new \actividadplazas\model\GestorActividadPlazas();
+			// plazas de calendario de cada dl
+			$plazas_conseguidas = 0;
+			$cActividadPlazas = $gesActividadPlazas->getActividadesPlazas(array('id_activ'=>$id_activ));
+			foreach ($cActividadPlazas as $oActividadPlazas) {
+				$id_dl_otra = $oActividadPlazas->getId_dl();
+				$dl_otra = $this->getDlText($id_dl_otra);
+				$dl_tabla = $oActividadPlazas->getDl_tabla();
+				
+				$json_cedidas = $oActividadPlazas->getCedidas();
+				if (!empty($json_cedidas)){
+					$aCedidas = json_decode($json_cedidas,TRUE);
+					foreach ($aCedidas as $dl_2 => $num_plazas) {
+						if ($mi_dl == $dl_2) {
+							$ocu = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$mi_dl,$dl_otra);
+							$propiedad["$dl_otra>$dl_2"] = "$dl_otra ($ocu de $num_plazas)";
+						}
+						//Si son plazas cedidas a una dl de paso. Solo cuento las que he cedido yo
+						if ($dl_de_paso !== FALSE){
+							if ($dl_de_paso == $dl_2 && $id_dl_otra == $id_mi_dl) {
+								$ocu = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$dl_2,$mi_dl);
+								$propiedad["$mi_dl>$dl_2"] = "$dl_2 ($ocu de $num_plazas)";
+							}
+						}
+					}
+				}
+			}
+		}
+		return $propiedad;
 	}
 
 

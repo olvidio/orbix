@@ -84,7 +84,7 @@ class Actividad Extends ActividadAll {
 		$a_pkey = $this->aPrimary_key;
 		// si es de la sf quito la 'f'
 		$dl = preg_replace('/f$/', '', $aDades['dl_org']);
-		$id_tabla = $aDades['id_tabla'];
+		$id_tabla = $this->sid_tabla;
 		if ($dl == core\ConfigGlobal::mi_dele()) {
 			$oActividad = new ActividadDl($a_pkey);
 		} else {

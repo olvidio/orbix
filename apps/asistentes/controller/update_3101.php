@@ -205,7 +205,8 @@ function editar($id_activ,$id_nom){
 	isset($_POST['cfi'])? $oAsistente->setCfi('t') : $oAsistente->setCfi('f');
 	isset($_POST['falta'])? $oAsistente->setFalta('t') : $oAsistente->setFalta('f');
 	isset($_POST['cfi_con'])? $oAsistente->setCfi_con($_POST['cfi_con']) : $oAsistente->setCfi_con();
-	isset($_POST['propietario'])? $oAsistente->setPropietario($_POST['propietario']) : $oAsistente->setPropietario();
+	// Si no es epecificado, al poner la plaza ya se pone al propietario
+	!empty($_POST['propietario'])? $oAsistente->setPropietario($_POST['propietario']) : FALSE;
 	if ($oAsistente->DBGuardar() === false) {
 		$msg_err = _('Hay un error, no se ha guardado');
 	}

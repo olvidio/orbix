@@ -100,32 +100,52 @@ $a_cabeceras=array( array('name'=>_("num"),'width'=>40), array('name'=>_("nombre
 
 
 if (core\configGlobal::is_app_installed('actividadplazas')) {
-	// array para pasar id_dl a dl.
-	$gesDelegacion = new ubis\model\GestorDelegacion();
-	$a_dl = $gesDelegacion->getArrayDelegaciones(array("H"));
-	//print_r($a_dl);
-	
-	$gesActividadPlazasR = new \actividadplazas\model\GestorResumenPlazas();
-	$gesActividadPlazasR->setId_activ($id_pau);
-	
-	$gesActividadPlazas = new \actividadplazas\model\GestorActividadPlazas();
-	$cActividadPlazas = $gesActividadPlazas->getActividadesPlazas(array('id_activ'=>$id_pau));
-	$a_plazas_resumen =array();
-	$a_plazas_conseguidas =array();
-	foreach ($cActividadPlazas as $oActividadPlazas) {
-		$dl_tabla = $oActividadPlazas->getDl_tabla();
-		$id_dl = $oActividadPlazas->getId_dl();
-		$json_cedidas = $oActividadPlazas->getCedidas();
-		$dl = $a_dl[$id_dl];
-		$calendario = $gesActividadPlazasR->getPlazasCalendario($dl);
-		//if (empty($calendario)) { continue; }
-		$a_plazas_resumen[$dl]['calendario'] = $gesActividadPlazasR->getPlazasCalendario($dl);
-		$a_plazas_resumen[$dl]['conseguidas'] = $gesActividadPlazasR->getPlazasConseguidas($dl);
-		$a_plazas_resumen[$dl]['disponibles'] = $gesActividadPlazasR->getPlazasDisponibles($dl);
-		$a_plazas_resumen[$dl]['total_cedidas'] = $gesActividadPlazasR->getPlazasCedidas($dl);
-		if ($dl_org == $dl_tabla) {
-			// las cedidas se guardan en la tabla que pertenece a la dl
-			if($dl === $dl_org) {
+	// Si no esta publicada todas las plazas de la actividad son para la dl.
+	// No hay plazas de calendario.
+	if ( $oActividad->getPublicado() ===false) {
+		$dl = $dl_org;
+		$a_plazas_resumen[$dl]['calendario'] = $plazas_totales;
+		$a_plazas_resumen[$dl]['conseguidas'] = 0;
+		$a_plazas_resumen[$dl]['disponibles'] = $plazas_totales;
+		$a_plazas_resumen[$dl]['total_cedidas'] = 0;
+		$a_plazas_conseguidas =array();
+	} else {
+		// array para pasar id_dl a dl.
+		$gesDelegacion = new ubis\model\GestorDelegacion();
+		$a_dl = $gesDelegacion->getArrayDelegaciones(array("H"));
+		//print_r($a_dl);
+		
+		$gesActividadPlazasR = new \actividadplazas\model\GestorResumenPlazas();
+		$gesActividadPlazasR->setId_activ($id_pau);
+		
+		$gesActividadPlazas = new \actividadplazas\model\GestorActividadPlazas();
+		$cActividadPlazas = $gesActividadPlazas->getActividadesPlazas(array('id_activ'=>$id_pau));
+		$a_plazas_resumen =array();
+		$a_plazas_conseguidas =array();
+		foreach ($cActividadPlazas as $oActividadPlazas) {
+			$dl_tabla = $oActividadPlazas->getDl_tabla();
+			$id_dl = $oActividadPlazas->getId_dl();
+			$json_cedidas = $oActividadPlazas->getCedidas();
+			$dl = $a_dl[$id_dl];
+			$calendario = $gesActividadPlazasR->getPlazasCalendario($dl);
+			//if (empty($calendario)) { continue; }
+			$a_plazas_resumen[$dl]['calendario'] = $gesActividadPlazasR->getPlazasCalendario($dl);
+			$a_plazas_resumen[$dl]['conseguidas'] = $gesActividadPlazasR->getPlazasConseguidas($dl);
+			$a_plazas_resumen[$dl]['disponibles'] = $gesActividadPlazasR->getPlazasDisponibles($dl);
+			$a_plazas_resumen[$dl]['total_cedidas'] = $gesActividadPlazasR->getPlazasCedidas($dl);
+			if ($dl_org == $dl_tabla) {
+				// las cedidas se guardan en la tabla que pertenece a la dl
+				if($dl === $dl_org) {
+					if (!empty($json_cedidas)){
+						//$aCedidas = json_decode($json_cedidas,TRUE);
+						//$a_plazas_resumen[$dl]['cedidas'] = $aCedidas;
+						$a_plazas_resumen[$dl]['json_cedidas'] = $json_cedidas;
+					} else {
+						//$a_plazas_resumen[$dl]['cedidas'] = array();
+						$a_plazas_resumen[$dl]['json_cedidas'] = array();
+					}
+				}
+			} else {
 				if (!empty($json_cedidas)){
 					//$aCedidas = json_decode($json_cedidas,TRUE);
 					//$a_plazas_resumen[$dl]['cedidas'] = $aCedidas;
@@ -135,24 +155,14 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 					$a_plazas_resumen[$dl]['json_cedidas'] = array();
 				}
 			}
-		} else {
 			if (!empty($json_cedidas)){
-				//$aCedidas = json_decode($json_cedidas,TRUE);
-				//$a_plazas_resumen[$dl]['cedidas'] = $aCedidas;
-				$a_plazas_resumen[$dl]['json_cedidas'] = $json_cedidas;
-			} else {
-				//$a_plazas_resumen[$dl]['cedidas'] = array();
-				$a_plazas_resumen[$dl]['json_cedidas'] = array();
-			}
-		}
-		if (!empty($json_cedidas)){
-			$aCedidas = json_decode($json_cedidas,TRUE);
-			foreach ($aCedidas as $dl2 => $num) {
-				$a_plazas_conseguidas[$dl2][$dl]['cedidas'] = $num;
+				$aCedidas = json_decode($json_cedidas,TRUE);
+				foreach ($aCedidas as $dl2 => $num) {
+					$a_plazas_conseguidas[$dl2][$dl]['cedidas'] = $num;
+				}
 			}
 		}
 	}
-	$a_plazas =array(); 
 }
 
 // primero el cl:
@@ -416,24 +426,37 @@ if (core\configGlobal::is_app_installed('actividadcargos')) {
 //leyenda colores
 $leyenda_html = '';
 // resumen plazas
-$resumen_plazas = '';
 $disponibles ='';
 $resumen_plazas2 = '';
 if (core\configGlobal::is_app_installed('actividadplazas')) {
 	//leyenda colores
-	$leyenda_html ="<style>
+	$explicacion1 = _("plaza que contabiliza pero que las otras delegaciones no ven. Podría explicarse como una plaza que se desea pero no se puede conceder porque no hay sitio.");
+	$explicacion2 = _("como la plaza pedida, pero cuando ya se ha solicitado a la otra delegación que nos conceda ese plaza. Implica que por nuestra parte nos parece correcto que vaya pero necesitamos confirmación de que hay sitio.");
+	$explicacion4 = _("plaza ocupada en toda regla. Las delegaciones organizadoras ven a los nuestros. Si somos nosotros los organizadores, podemos ocupar más plazas de las previstas. Si son de otra delegación, no debería poder pasar a asignada si no hay plazas.");
+	$explicacion5 = _("como la anterior pero con el plus de que se ha comunicado al interesado y no hay cambio.");
+	
+	$leyenda_html = '<p class="contenido">';
+	$leyenda_html .= _("Para seleccionar varios: 'Ctrl+Click' o bien 'Mays+Click'");
+	$leyenda_html .= "<br><style>
 		.box {
 		display: inline;
 		height: 1em;
 		line-height: 3;
+		padding: 0.3em;
+		border-style: outset;
+		cursor: pointer;
 		}
 		</style>
-		<div class='box plaza1' onCLick=fnjs_cmb_plaza(\"#seleccionados\",'1') >"._("pedida")."</div>
-		<div class='box plaza2' onCLick=fnjs_cmb_plaza(\"#seleccionados\",'2') >"._("en espera")."</div>
-		<div class='box plaza3' onCLick=fnjs_cmb_plaza(\"#seleccionados\",'3') >"._("denegada")."</div>
-		<div class='box plaza4' onCLick=fnjs_cmb_plaza(\"#seleccionados\",'4') >"._("asignada")."</div>
-		<div class='box plaza5' onCLick=fnjs_cmb_plaza(\"#seleccionados\",'5') >"._("confirmada")."</div>
 		";
+	$oGesAsistente = new asistentes\GestorAsistente();
+	$aOpciones = $oGesAsistente->getOpcionesPosiblesPlaza();
+	foreach ($aOpciones as $plaza => $plaza_txt) {
+		$expl = "explicacion$plaza";
+		$explicacion = $$expl;
+		$leyenda_html .= "<div class='box plaza$plaza' onCLick=fnjs_cmb_plaza(\"#seleccionados\",'$plaza') title='$explicacion'>$plaza_txt</div>  ";
+	}
+	$leyenda_html .= "</p>";
+	////////////////////////////////////////////////////////////////////
 	if (array_key_exists($mi_dele, $a_plazas_resumen)) {
 		$resumen_plazas = '';
 		foreach ($a_plazas_resumen as $padre => $aa) {
@@ -458,9 +481,7 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 			foreach ($plazas as $plaza => $num) {
 				if ($plaza == asistentes\Asistente::PLAZA_PEDIDA) { $decidir = $num; }
 				if ($plaza == asistentes\Asistente::PLAZA_EN_ESPERA) { $espera = $num; }
-				if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) {
-					$ocupadas_dl += $num;
-				}
+				if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) { $ocupadas_dl += $num; }
 			}
 			$ocu_padre = $ocupadas_dl;
 			$ocupadas += $ocupadas_dl;
@@ -475,9 +496,7 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 				foreach ($plazas as $plaza => $num) {
 					if ($plaza == asistentes\Asistente::PLAZA_PEDIDA) { $decidir = $num; }
 					if ($plaza == asistentes\Asistente::PLAZA_EN_ESPERA) { $espera = $num; }
-					if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) {
-						$ocupadas_dl += $num;
-					}
+					if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) { $ocupadas_dl += $num; }
 				}
 				$ocupadas += $ocupadas_dl;
 				$resumen_plazas .= " + ";
