@@ -43,7 +43,7 @@ switch ($_POST['mod']) {
 			echo _('Hay un error, no se ha eliminado');
 		}
 		$oPosicion->setId_div('ir_a');
-		echo $oPosicion->atras();
+		echo $oPosicion->mostrar_left_slide();
 		exit;
 		break;
 	case 'teleco':
@@ -90,5 +90,5 @@ $oUbi->setAllAtributes($a_values_o);
 $oUbi->DBGuardar();
 
 $oPosicion->setId_div('ir_a');
-echo $oPosicion->atras();
+echo $oPosicion->mostrar_left_slide();
 ?>

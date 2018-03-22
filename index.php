@@ -858,6 +858,10 @@ function fnjs_dani2() {
   );
 }
 
+function fnjs_restet_form(){
+	$(this).not(':button, :submit, :reset, :hidden').val('').removeAttr('checked').removeAttr('selected');
+}
+
 
 </script>
 <?php

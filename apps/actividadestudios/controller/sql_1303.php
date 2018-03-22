@@ -58,7 +58,7 @@ $oPersona = new personas\PersonaDl(array('id_nom'=>$id_pau));
 $stgr = $oPersona->getStgr();
 if ($stgr == 'r') $aviso .= _("Está de repaso")."<br>";
 
-echo $oPosicion->atras();
+echo $oPosicion->mostrar_left_slide();
 
 if (!empty($id_activ)) {  // ¿? ya tengo una actividad concreta (vengo del dossier de esa actividad).
 	$sql_tabla = "SELECT a.nom_activ, asis.id_activ, asis.est_ok

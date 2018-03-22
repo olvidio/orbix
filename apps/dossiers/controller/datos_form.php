@@ -10,11 +10,25 @@ use dossiers\model as dossiers;
 
 // las claves primarias se usan para crear el objeto en el include $dir_datos.
 // También se pasan por formulario al update.
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	$s_pkey=explode('#',$_POST['sel'][0]);
+//if (!empty($_POST['sel'])) { //vengo de un checkbox
+//	$s_pkey=explode('#',$_POST['sel'][0]);
+//	// he cambiado las comillas dobles por simples. Deshago el cambio.
+//	$s_pkey = str_replace("'",'"',$s_pkey[0]);
+//	$a_pkey=unserialize(core\urlsafe_b64decode($s_pkey));
+//} else { // si es nuevo
+//	$s_pkey='';
+//}
+$sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($sel)) { //vengo de un checkbox
+	$s_pkey=explode('#',$sel[0]);
 	// he cambiado las comillas dobles por simples. Deshago el cambio.
 	$s_pkey = str_replace("'",'"',$s_pkey[0]);
 	$a_pkey=unserialize(core\urlsafe_b64decode($s_pkey));
+	// el scroll id es de la página anterior, hay que guardarlo allí
+ 	$id_sel=$sel;
+	$oPosicion->addParametro('id_sel',$id_sel,1);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else { // si es nuevo
 	$s_pkey='';
 }
@@ -117,7 +131,7 @@ $oHash1->setUrl($web_datos);
 $oHash1->setCamposForm('padre!id_dossier!acc!valor_depende'); 
 $h = $oHash1->linkSinVal();
 
-
+echo $oPosicion->mostrar_left_slide(1);
 ?>
 <script>
 fnjs_grabar=function(formulario){

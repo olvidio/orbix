@@ -26,7 +26,7 @@ switch ($_POST['que']) {
 			$oPlazaPeticion->DBGuardar();
 		}
 		$oPosicion->setId_div('ir_a');
-		echo $oPosicion->atras();
+		echo $oPosicion->mostrar_left_slide();
 		break;
 	case 'borrar';
 		$gesPlazasPeticion = new actividadplazas\GestorPlazaPeticion();

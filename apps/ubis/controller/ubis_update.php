@@ -23,7 +23,7 @@ switch ($_POST['que']) {
 			echo _('Hay un error, no se ha eliminado');
 		}
 		$oPosicion->setId_div('ir_a');
-		echo $oPosicion->atras();
+		echo $oPosicion->mostrar_left_slide();
 		exit;
 		break;
 	case 'ubi':
@@ -142,5 +142,5 @@ switch ($_POST['que']) {
 
 }
 $oPosicion->setId_div('ir_a');
-echo $oPosicion->atras();
+echo $oPosicion->mostrar_left_slide();
 ?>

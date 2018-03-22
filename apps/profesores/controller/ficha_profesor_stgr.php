@@ -241,7 +241,7 @@ $cDocencias = $GesDocencias->getProfesorDocenciasStgr(array('id_nom'=>$id_nom,'_
 $cosas['id_dossier']=1025;
 $go_cosas['docencia']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/datos_sql.php?'.http_build_query($cosas));
 
-echo $oPosicion->atras();
+echo $oPosicion->mostrar_left_slide();
 
 if (!empty($_POST['print'])) {
 	include("../view/ficha_profesor_stgr.print.phtml");

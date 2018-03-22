@@ -24,28 +24,54 @@ use ubis\model as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$modo = empty($_POST['modo'])? '' : $_POST['modo'];
+$stack = (integer)  filter_input(INPUT_POST, 'stack');
+//Si vengo de vuelta y le paso la referecia del stack donde está la información.
+if (!empty($stack)) {
+	$oPosicion->goStack($stack);
+	$Qmodo = $oPosicion->getParametro('modo');
+	$Qque = $oPosicion->getParametro('que');
+	$Qstatus = $oPosicion->getParametro('status');
+	$Qid_tipo_activ = $oPosicion->getParametro('id_tipo_activ');
+	$Qfiltro_lugar = $oPosicion->getParametro('filtro_lugar');
+	$Qid_ubi= $oPosicion->getParametro('id_ubi');
+	$Qperiodo=$oPosicion->getParametro('periodo');
+	$Qinicio=$oPosicion->getParametro('inicio');
+	$Qfin=$oPosicion->getParametro('fin');
+	$Qyear=$oPosicion->getParametro('year');
+	$Qdl_org=$oPosicion->getParametro('dl_org');
+	$Qempiezamin=$oPosicion->getParametro('empiezamin');
+	$Qempiezamax=$oPosicion->getParametro('empiezamax');
+	$Qlistar_asistentes=$oPosicion->getParametro('listar_asistentes');
+	$oPosicion->olvidar($stack);
+} else { //si tengo los parametros en el $_POST
+	$Qmodo = empty($_POST['modo'])? '' : $_POST['modo'];
+	$Qque = empty($_POST['que'])? '' : $_POST['que'];
+	$Qstatus = empty($_POST['status'])? 2 : $_POST['status'];
+	$Qid_tipo_activ = empty($_POST['id_tipo_activ'])? '' : $_POST['id_tipo_activ'];
+	$Qfiltro_lugar = empty($_POST['filtro_lugar'])? '' : $_POST['filtro_lugar'];
+	$Qid_ubi = empty($_POST['id_ubi'])? '' : $_POST['id_ubi'];
+	$Qperiodo = empty($_POST['periodo'])? '' : $_POST['periodo'];
+	$Qinicio = empty($_POST['inicio'])? '' : $_POST['inicio'];
+	$Qfin = empty($_POST['fin'])? '' : $_POST['fin'];
+	$Qyear = empty($_POST['year'])? '' : $_POST['year'];
+	$Qdl_org = empty($_POST['dl_org'])? '' : $_POST['dl_org'];
+	$Qempiezamax = empty($_POST['empiezamax'])? '' : $_POST['empiezamax'];
+	$Qempiezamin = empty($_POST['empiezamin'])? '' : $_POST['empiezamin'];
+	$Qlistar_asistentes = empty($_POST['listar_asistentes'])? '' : $_POST['listar_asistentes'];
+}
 
-if (empty($_POST['dl_org'])) { $_POST['dl_org']=''; }
-if (empty($_POST['listar_asistentes'])) $_POST['listar_asistentes']=""; 
-if (empty($_POST['periodo'])) $_POST['periodo']=""; 
-if (empty($_POST['year'])) $_POST['year']= date('Y'); 
-if (empty($_POST['empiezamin'])) $_POST['empiezamin']='';
-if (empty($_POST['empiezamax'])) $_POST['empiezamax']=''; 
-if (empty($_POST['filtro_lugar'])) $_POST['filtro_lugar']=""; 
-if (empty($_POST['id_ubi'])) $_POST['id_ubi']=""; 
-
-$id_tipo_activ = empty($_POST['id_tipo_activ'])? '' : $_POST['id_tipo_activ']; 
+//para la página actividad_tipo_que.php
+$id_tipo_activ = $Qid_tipo_activ;
 
 $oGesDl = new ubis\GestorDelegacion();
 $oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones();
 $oDesplDelegacionesOrg->setNombre('dl_org');
-$oDesplDelegacionesOrg->setOpcion_sel($_POST['dl_org']);
-if ($modo == 'importar') {
+$oDesplDelegacionesOrg->setOpcion_sel($Qdl_org);
+if ($Qmodo == 'importar') {
 	$mi_dele = core\ConfigGlobal::mi_dele();
 	$oDesplDelegacionesOrg->setOpcion_no(array($mi_dele));
 }
-if ($modo == 'publicar') {
+if ($Qmodo == 'publicar') {
 	$mi_dele = core\ConfigGlobal::mi_dele();
 	$oDesplDelegacionesOrg->setOpciones(array($mi_dele=>$mi_dele));
 	$oDesplDelegacionesOrg->setBlanco(false);
@@ -54,7 +80,7 @@ if ($modo == 'publicar') {
 $oDesplDelegaciones = $oGesDl->getListaDlURegionesFiltro();
 $oDesplDelegaciones->setAction('fnjs_lugar()');
 $oDesplDelegaciones->setNombre('filtro_lugar');
-$oDesplDelegaciones->setOpcion_sel($_POST['filtro_lugar']);
+$oDesplDelegaciones->setOpcion_sel($Qfiltro_lugar);
 
 $aOpciones =  array(
 					'tot_any' => _('todo el año'),
@@ -71,10 +97,10 @@ $aOpciones =  array(
 $oFormP = new web\PeriodoQue();
 $oFormP->setFormName('modifica');
 $oFormP->setPosiblesPeriodos($aOpciones);
-$oFormP->setDesplPeriodosOpcion_sel($_POST['periodo']);
-$oFormP->setDesplAnysOpcion_sel($_POST['year']);
-$oFormP->setEmpiezaMin($_POST['empiezamin']);
-$oFormP->setEmpiezaMax($_POST['empiezamax']);
+$oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
+$oFormP->setDesplAnysOpcion_sel($Qyear);
+$oFormP->setEmpiezaMin($Qempiezamin);
+$oFormP->setEmpiezaMax($Qempiezamax);
 
 $filtro_lugar="";
 $ctr=""; 
@@ -84,9 +110,9 @@ $oHash = new web\Hash();
 $oHash->setcamposForm('dl_org!empiezamax!empiezamin!filtro_lugar!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!periodo!status!year');
 $oHash->setcamposNo('id_ubi');
 $a_camposHidden = array(
-		'modo' => $modo,
-		'listar_asistentes' => $_POST['listar_asistentes'],
-		'que' => $_POST['que']
+		'modo' => $Qmodo,
+		'listar_asistentes' => $Qlistar_asistentes,
+		'que' => $Qque
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 
@@ -96,7 +122,7 @@ $oHash1->setUrl(core\ConfigGlobal::getWeb().'/apps/actividades/controller/activi
 $oHash1->setCamposForm('salida!entrada!opcion_sel!isfsv'); 
 $h = $oHash1->linkSinVal();
 
-switch ($modo) {
+switch ($Qmodo) {
 	case 'importar':
 		$titulo = ucfirst(_("buscar actividad de otras dl para importar"));
 		break;
@@ -125,7 +151,7 @@ fnjs_buscar=function(act){
 	fnjs_enviar_formulario('#modifica');
 }
 fnjs_lugar=function(){
-	var opcion_sel='<?= $_POST['id_ubi'] ?>';
+	var opcion_sel='<?= $Qid_ubi ?>';
 	var isfsv=$('#isfsv_val').val();
 	var filtro_lugar=$('#filtro_lugar').val();
 	var url='<?= core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tipo_get.php' ?>';
@@ -141,7 +167,7 @@ fnjs_lugar=function(){
 		}
 	});
 }
-
+fnjs_left_side_hide();
 fnjs_lugar();
 </script>
 <div id="exportar" export_modo="formulario">
@@ -157,11 +183,11 @@ include_once("actividad_tipo_que.php");
 <table>
 <tr>
 <td class=etiqueta><?php echo ucfirst(_("estado")); ?>:</td>
-	<td><input type="Radio" name="status" value="1" <?php if ($_POST['status']==1) { echo "checked='true'";} ?>><?php echo _("proyecto"); ?></td>
-	<td><input type="Radio" name="status" value="2" <?php if ($_POST['status']==2) { echo "checked='true'";} ?>><?php echo _("actual"); ?></td>
-	<td><input type="radio" name="status" value="3" <?php if ($_POST['status']==3) { echo "checked='true'";} ?>><?php echo _("terminada"); ?></td>
-	<td><input type="radio" name="status" value="4" <?php if ($_POST['status']==4) { echo "checked='true'";} ?>><?php echo _("borrable"); ?></td>
-	<td><input type="radio" name="status" value="5" <?php if ($_POST['status']==5) { echo "checked='true'";} ?>><?php echo _("cualquiera"); ?></td>
+	<td><input type="Radio" name="status" value="1" <?php if ($Qstatus==1) { echo "checked='true'";} ?>><?php echo _("proyecto"); ?></td>
+	<td><input type="Radio" name="status" value="2" <?php if ($Qstatus==2) { echo "checked='true'";} ?>><?php echo _("actual"); ?></td>
+	<td><input type="radio" name="status" value="3" <?php if ($Qstatus==3) { echo "checked='true'";} ?>><?php echo _("terminada"); ?></td>
+	<td><input type="radio" name="status" value="4" <?php if ($Qstatus==4) { echo "checked='true'";} ?>><?php echo _("borrable"); ?></td>
+	<td><input type="radio" name="status" value="5" <?php if ($Qstatus==5) { echo "checked='true'";} ?>><?php echo _("cualquiera"); ?></td>
 
 <td><input type='hidden' id='id_tipo_activ' name='id_tipo_activ'> </td>
 </tr>
@@ -203,7 +229,7 @@ de los casos particulares de algunos listados,
 en que vamos directamente a
 las páginas que los generan*/
 
-switch ($_POST['que']) {
+switch ($Qque) {
 case "list_activ" :
 case "list_activ_compl" :
 	$act=core\ConfigGlobal::getWeb().'/apps/actividades/controller/lista_activ.php';
@@ -227,7 +253,7 @@ break;
 ?>
 <br>
 <input TYPE="button" onclick="fnjs_buscar('<?php echo $act; ?>')" id="ok" name="ok" value="<?= ucfirst(_("buscar")); ?>" class="btn_ok">
-<input TYPE="reset" VALUE="borrar"> 
+<input TYPE="reset" VALUE="borrar" onclick="fnjs_reset_form();"> 
 </form>
 <script>
 fnjs_lugar(); 

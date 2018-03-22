@@ -52,7 +52,7 @@ if (empty($id_nom_dtor_est)) {
 	}
 }
 
-echo $oPosicion->atras();
+echo $oPosicion->mostrar_left_slide();
 
 $cabecera="<table><thead><tr>
 		<td colspan=4><h3>$nom_activ</h3></td></tr>

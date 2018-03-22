@@ -1,8 +1,11 @@
 <?php
-use dossiers\model as dossiers;
+
 use actividades\model as actividades;
+use core\ConfigGlobal;
+use dossiers\model as dossiers;
 use personas\model as personas;
-use ubis\model as ubis;
+use web\Hash;
+use web\Posicion;
 //use core;
 //use web;
 /**
@@ -26,14 +29,27 @@ use ubis\model as ubis;
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-
+	
+$stack = (integer)  \filter_input(INPUT_POST, 'stack');
+//Si vengo por medio de Posicion, borro la última
+if (!empty($stack)) {
+	// No me sirve el de global_object, sino el de la session
+	$oPosicion2 = new Posicion();
+	if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+		$Qid_sel=$oPosicion2->getParametro('id_sel');
+		$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+		$oPosicion2->olvidar($stack);
+	}
+}
+$oPosicion->recordar();
+// el scroll id es de la página anterior, hay que guardarlo allí
 if (!empty($_POST['sel'])) { //vengo de un checkbox
  	$id_sel=$_POST['sel'];
 	$id_pau=strtok($_POST['sel'][0],"#");
 	$id_tabla=strtok("#");
-	$oPosicion->addParametro('id_sel',$id_sel);
+	$oPosicion->addParametro('id_sel',$id_sel,1);
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
-	$oPosicion->addParametro('scroll_id',$scroll_id);
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else {
 	empty($_POST['id_pau'])? $id_pau='' : $id_pau=$_POST['id_pau'];
 }
@@ -69,8 +85,8 @@ switch ($pau) {
 		}
 		$nom = $oPersona->getNombreApellidos();
 
-		$goficha=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/home_persona.php?'.http_build_query(array('id_nom'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$_POST['go_atras']))); 
-		$godossiers=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$_POST['go_atras'])));
+		$goficha=Hash::link(ConfigGlobal::getWeb().'/apps/personas/controller/home_persona.php?'.http_build_query(array('id_nom'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$_POST['go_atras']))); 
+		$godossiers=Hash::link(ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$_POST['go_atras'])));
 		$form_action=$_POST['go_atras'];
 		break;
 	case 'u':
@@ -80,8 +96,8 @@ switch ($pau) {
 		$oUbi = new $clase($id_pau);
 		$nom = $oUbi->getNombre_ubi();
 		
-		$goficha=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/ubis/controller/home_ubis.php?'.http_build_query(array('id_ubi'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$_POST['go_atras'])));
-		$godossiers=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$_POST['go_atras'])));
+		$goficha=Hash::link(ConfigGlobal::getWeb().'/apps/ubis/controller/home_ubis.php?'.http_build_query(array('id_ubi'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$_POST['go_atras'])));
+		$godossiers=Hash::link(ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$_POST['go_atras'])));
 		
 		if (!empty($id_direccion)) {
 			$goficha.='&id_direccion='.$id_direccion;
@@ -102,7 +118,7 @@ switch ($pau) {
 		}
 
 		if (empty($_POST['go_atras'])) {
-			$form_action=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/ubis_tabla.php');
+			$form_action=Hash::link(ConfigGlobal::getWeb().'/apps/ubis_tabla.php');
 		} else {
 			$form_action=$_POST['go_atras'];
 		}
@@ -112,19 +128,19 @@ switch ($pau) {
 		$ficha="ficha_activ";
 		$oActividad  = new actividades\Actividad($id_pau);
 		$nom = $oActividad->getNom_activ();
-		$goficha=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_ver.php?'.http_build_query(array('id_activ'=>$id_pau,'tabla'=>$obj_pau,'go_atras'=>$_POST['go_atras']))); 
-		$godossiers=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$_POST['go_atras'])));
+		$goficha=Hash::link(ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_ver.php?'.http_build_query(array('id_activ'=>$id_pau,'tabla'=>$obj_pau,'go_atras'=>$_POST['go_atras']))); 
+		$godossiers=Hash::link(ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$_POST['go_atras'])));
 		// según de donde venga, debo volver al mismo sitio...
 		if (!empty($_SESSION['session_go_to']['sel']['pag'])) {
 			$pag = $_SESSION['session_go_to']['sel']['pag']; //=>"lista_actividades_sg.php",
 			$dir = $_SESSION['session_go_to']['sel']['dir_pag']; //=>core\ConfigGlobal::$directorio."/sg",
-			$dir = str_replace(core\ConfigGlobal::$directorio,'',$dir);
-			$form_action=web\Hash::link(core\ConfigGlobal::getWeb()."$dir/$pag");
+			$dir = str_replace(ConfigGlobal::$directorio,'',$dir);
+			$form_action=Hash::link(ConfigGlobal::getWeb()."$dir/$pag");
 		} else {
-			$form_action=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_select.php');
+			$form_action=Hash::link(ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_select.php');
 		}
 		$id_sel = array("$id_pau#$nom");
-		$oPosicion->addParametro('id_sel',$id_sel);
+		$oPosicion->addParametro('id_sel',$id_sel,1);
 		break;
 }
 
@@ -138,12 +154,11 @@ $titulo=$txt;
 
 // -----------------------------  cabecera ---------------------------------
 
-//echo $oPosicion->atras();
 ?>
-<?= $oPosicion->atras(); ?>
+<?= $oPosicion->mostrar_left_slide(1); ?>
 <div id=<?= $top ?>>
 <table><tr>
-<td><span class=link onclick= fnjs_update_div('#main','<?= $godossiers ?>')><img src=<?= core\ConfigGlobal::$web_icons ?>/dossiers.gif border=0 width=40 height=40 alt='<?= $alt ?>'>(<?= $dos ?>)</span></td>
+<td><span class=link onclick= fnjs_update_div('#main','<?= $godossiers ?>')><img src=<?= ConfigGlobal::$web_icons ?>/dossiers.gif border=0 width=40 height=40 alt='<?= $alt ?>'>(<?= $dos ?>)</span></td>
 <td class=titulo><?= $titulo ?></td>
 </table>
 </div>
@@ -225,13 +240,13 @@ if (empty($id_dossier)) { // enseña la lista de dossiers.
 		/* GOTO */
 		switch($id_dossier) {
 			case 1303:
-				$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier,'permiso'=>$permiso,'que'=>'matriculas')));
+				$go_to=Hash::link(ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier,'permiso'=>$permiso,'que'=>'matriculas')));
 				break;
 			case 3103: //matriculas de un ca
-				$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier,'permiso'=>$permiso,'queSel'=>'asis')));
+				$go_to=Hash::link(ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier,'permiso'=>$permiso,'queSel'=>'asis')));
 				break; //nada, ya esta en el sql_1303
 			default:
-				$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier,'permiso'=>$permiso)));
+				$go_to=Hash::link(ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier,'permiso'=>$permiso)));
 				break; //nada, ya esta en el sql_3101
 		}
 
@@ -246,7 +261,7 @@ if (empty($id_dossier)) { // enseña la lista de dossiers.
 		if ($permiso==3 && !file_exists($pres_2)){ 
 			switch($id_dossier) {
 				case 1004: //traslados de ctr o dl
-					$insert=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/traslado_form.php?'.http_build_query(array('cabecera'=>'no','id_pau'=>$id_pau,'id_dossier'=>$id_dossier,'obj_pau'=>$obj_pau,'go_to'=>$go_to)));
+					$insert=Hash::link(ConfigGlobal::getWeb().'/apps/personas/controller/traslado_form.php?'.http_build_query(array('cabecera'=>'no','id_pau'=>$id_pau,'id_dossier'=>$id_dossier,'obj_pau'=>$obj_pau,'go_to'=>$go_to)));
 					echo "<p><span class=link onclick=fnjs_update_div('#main','$insert')>"._("insertar")."</span></p>";
 					break;
 				case 1303:
@@ -259,7 +274,7 @@ if (empty($id_dossier)) { // enseña la lista de dossiers.
 					break; //nada, ya esta en el sql_3101
 			}
 			//para el botón cerrar dossier:
-			$cerrar=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('accion'=>'cerrar','pau'=>$pau,'id_pau'=>$id_pau,'id_tipo_dossier'=>$id_dossier,'obj_pau'=>$obj_pau)));
+			$cerrar=Hash::link(ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('accion'=>'cerrar','pau'=>$pau,'id_pau'=>$id_pau,'id_tipo_dossier'=>$id_dossier,'obj_pau'=>$obj_pau)));
 			$etiqueta_cerrar= "<br><br><span class=link onclick=fnjs_update_div('#main','$cerrar')>cerrar dossier</span>";
 		} // fin del if permiso
 		$id_dossier=strtok("y");

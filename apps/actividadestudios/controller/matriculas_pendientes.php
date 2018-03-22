@@ -1,9 +1,14 @@
 <?php
+
 use actividades\model as actividades;
 use actividadestudios\model as actividadestudios;
 use asignaturas\model as asignaturas;
-use asistentes\model as asistentes;
+use core\ConfigGlobal;
 use personas\model as personas;
+use web\Hash;
+use web\Lista;
+use web\Posicion;
+use function core\curso_est;
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
 */
@@ -19,24 +24,32 @@ use personas\model as personas;
 $mes=date('m');
 $any=date('Y');
 if ($mes>9) { $any=$any+1; } 
-$inicurs_ca=core\curso_est("inicio",$any);
-$fincurs_ca=core\curso_est("fin",$any);
+$inicurs_ca=curso_est("inicio",$any);
+$fincurs_ca=curso_est("fin",$any);
 
-//$curso="AND f_ini BETWEEN '$inicurs_ca' AND '$fincurs_ca' ";
+$stack = (integer)  \filter_input(INPUT_POST, 'stack');
+//Si vengo por medio de Posicion, borro la última
+if (!empty($stack)) {
+	// No me sirve el de global_object, sino el de la session
+	$oPosicion2 = new Posicion();
+	if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+		$Qid_sel=$oPosicion2->getParametro('id_sel');
+		$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+		$oPosicion2->olvidar($stack);
+	}
+}
+$oPosicion->recordar();
 
 if (empty($_POST['go_to'])) {
 	//pongo aqui el $go_to porque al ir al mismo update que las actividaes, no se donde voler
 	$a_dataUrl = array('queSel'=>'matriculas','pau'=>'p','id_pau'=>'id_pau');
-	$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividadestudios/controller/matriculas_pendientes_ver.php?'.http_build_query($a_dataUrl));
+	$go_to=Hash::link(ConfigGlobal::getWeb().'/apps/actividadestudios/controller/matriculas_pendientes_ver.php?'.http_build_query($a_dataUrl));
 } else {
 	$go_to = $_POST['go_to'];
 }
 
 $aviso = '';
 $form = '';
-
-echo $oPosicion->atras();
-
 $traslados = '';
 if (!empty($traslados)) {
 	// personas trasladadas con matriculas pendientes
@@ -47,6 +60,7 @@ if (!empty($traslados)) {
 	$cMatriculasPendientes = $gesMatriculas->getMatriculasPendientes();
 }
 
+$titulo = _("Lista de matrículas pendientes de poner nota");
 $a_botones=array(
 			array( 'txt' => _('ver asignaturas ca'), 'click' =>"fnjs_ver_ca(this.form)" ) ,
 			array( 'txt' => _('borrar matricula'), 'click' =>"fnjs_borrar(this.form)" ) 
@@ -56,6 +70,8 @@ $a_cabeceras=array(_("actividad"),_("asignatura"),_("alumno"),_('p'));
 
 $i=0;
 $a_valores=array();
+if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 $msg_err = '';
 foreach ($cMatriculasPendientes as $oMatricula) {
 	$i++;
@@ -86,7 +102,8 @@ foreach ($cMatriculasPendientes as $oMatricula) {
 	$a_valores[$i][4]=$preceptor;
 }
 
-$oHash = new web\Hash();
+
+$oHash = new Hash();
 $oHash->setCamposNo('sel!mod!pau!scroll_id');
 $a_camposHidden = array(
 		'id_dossier' => 3005,
@@ -98,11 +115,7 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 if (!empty($msg_err)) { echo $msg_err; }
-/*
-// al grabar estudios vuelvo a la lista de gente
-$a_dataUrl = array('queSel'=>'asis','pau'=>'a','id_pau'=>$id_activ,'obj_pau'=>'ActividadDl','id_dossier'=>3103);
-$go_to2=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query($a_dataUrl));
-*/
+echo $oPosicion->mostrar_left_slide(1);
 
 ?>
 <script>
@@ -128,13 +141,14 @@ fnjs_borrar=function(formulario){
 	}
 }
 </script>
+<h2 class=titulo><?= $titulo ?></h2>
 <h3><?php echo $aviso; ?></h3>
 <form id="seleccionados" name="seleccionados" action="" method="post">
 <?= $oHash->getCamposHtml(); ?>
 <input type="hidden" id="pau" name="pau" value="p">
 <input type="hidden" id="mod" name="mod" value="">
 <?php
-$oTabla = new web\Lista();
+$oTabla = new Lista();
 $oTabla->setId_tabla('mtr_pdte');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);

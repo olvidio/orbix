@@ -28,6 +28,12 @@ class Posicion {
 	 * @var array
 	 */
 	private $aParametros = array ();
+	/**
+	 * stack de Posicion
+	 *
+	 * @var integer
+	 */
+	private $stack = 0;
 
 	/* CONSTRUCTOR ------------------------------ */
 	function __construct($php_self='',$vars=array()) {
@@ -36,6 +42,17 @@ class Posicion {
 		$this->setParametros($vars);
 	}
 	
+	/**
+	 * coloca el cursor de posicion en la última posicion.
+	 *
+	 */
+	private function unGo() {
+		$aPosition = end($_SESSION['position']);
+		$this->stack = key($_SESSION['position']);
+		$this->surl = $aPosition['url'];
+		$this->sbloque = $aPosition['bloque'];
+		$this->aParametros = $aPosition['parametros'];
+	}
 	/**
 	 * coloca el cursor de posicion n posiciones atras.
 	 *
@@ -46,106 +63,174 @@ class Posicion {
 		for ($i=0; $i < $n; $i++) {
 			$aPosition = prev($_SESSION['position']);
 		}
-		//print_r($_SESSION['position']);
+		$this->stack = key($_SESSION['position']);
 		$this->surl = $aPosition['url'];
 		$this->sbloque = $aPosition['bloque'];
 		$this->aParametros = $aPosition['parametros'];
+	}
+	public function getStack(){
+		end($_SESSION['position']);
+		$this->stack = key($_SESSION['position']);
+		return $this->stack;
+	}
+	/**
+	 * coloca el cursor de posicion en stack.
+	 *
+	 * @var stack indice del array $_SESSION['position']);
+	 */
+	public function goStack($stack=0) {
+		if (!empty($stack)) {
+			if (isset($_SESSION['position'][$stack])) {
+				$aPosition = $_SESSION['position'][$stack];
+				$this->stack = key($_SESSION['position']);
+				$this->surl = $aPosition['url'];
+				$this->sbloque = $aPosition['bloque'];
+				$this->aParametros = $aPosition['parametros'];
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	public function olvidar($stack) {
+		if (!empty($stack)) {
+			// hasta el final
+			array_splice($_SESSION['position'], $stack);
+		}
 	}
 
 	public function recordar() {
 		//echo "<script>history.pushState({state:'new'},'New State','?new');</script>";
 		// evitar que sea muy grande
 		$this->limitar(20);
-
+		// poner en parametros el stack
+		//YA, pero si es null... OJO si es el primero tiene valor 0. (no usar empty)
+		if (empty($this->stack)) {
+			if (isset($_SESSION['position']) && is_array($_SESSION['position'])) { //para la primera
+				end($_SESSION['position']);
+				$stack = key($_SESSION['position']) + 1;
+			} else {
+				$stack = 0;
+			}
+		} else {
+			$stack = $this->stack + 1;
+		}
+		$this->setParametro('stack', $stack);
 		$aPosition = array('url'=>$this->surl,'bloque'=>$this->sbloque,'parametros'=>$this->aParametros);
 		$_SESSION['position'][] = $aPosition;
 	}
 
-	public function go_atras() {
+	private function guardar() {
+		if (!isset($this->stack)) { //OJO si es el primero tiene valor 0. (no usar empty)
+			end($_SESSION['position']);
+			$stack = key($_SESSION['position']);
+		} else {
+			$stack = $this->stack;
+		}
+		$_SESSION['position'][$stack] = array('url'=>$this->surl,'bloque'=>$this->sbloque,'parametros'=>$this->aParametros);
+	}
+
+	public function go_atras($n=0) {
+		$this->go($n);
 		// puede ser que no haya donde volver
-		if (empty($_SESSION['position'])) {
+		if (empty($this->surl)) {
 			return '';
 		}
 		$id_div = $this->getId_div();
 		$id_div = empty($id_div)? 'go_atras' : $id_div;
-		$aPosition = end($_SESSION['position']);
-		$aParam = $aPosition['parametros'];
-		$url = $aPosition['url'];
+		
+		$url = $this->surl;
+		$aParam = $this->aParametros;
 		$sparametros = Hash::add_hash($aParam,$url);
+		$bloque = $this->sbloque;
 
-		//$html = '<div id="'.$id_div.'" style="display: none;">';
 		$html = '<div id="'.$id_div.'" style="display: none;">';
 		$html .= '	<form id="go">';
 		$html .= '	url: <input id="url" type="text" value="' . $url .'" size=70><br>';
 		$html .= '	parametros: <input id="parametros" type="text" value="' . $sparametros . '" size=70><br>';
-		$html .= '	bloque: <input id="id_div" type="text" value="' . $aPosition['bloque'] . '" size=70>';
+		$html .= '	bloque: <input id="id_div" type="text" value="' . $bloque . '" size=70>';
 		$html .= '</form>';
 		$html .= '</div>';
+		// vuelvo el cursor al final.
+		$this->unGo();
 		return $html;
 	}
-	public function js_atras() {
+	
+	public function js_atras($n=0) {
+		$this->go($n);
 		// puede ser que no haya donde volver
-		if (empty($_SESSION['position'])) {
+		if (empty($this->surl)) {
 			return '';
 		}
+		
+		$url = $this->surl;
+		$aParam = $this->aParametros;
+		$sparametros = Hash::add_hash($aParam,$url);
+		$bloque = $this->sbloque;
+
 		$id_div = $this->getId_div();
 		$id_div = empty($id_div)? 'ir_atras' : $id_div;
-		$aPosition = end($_SESSION['position']);
-		$aParam = $aPosition['parametros'];
-		$url = $aPosition['url'];
-		$sparametros = Hash::add_hash($aParam,$url);
 
 		$html = '<form id="go">';
 		$html .= '	url: <input id="url" type="text" value="' . $url .'" size=70><br>';
 		$html .= '	parametros: <input id="parametros" type="text" value="' . $sparametros . '" size=70><br>';
-		$html .= '	bloque: <input id="id_div" type="text" value="' . $aPosition['bloque'] . '" size=70>';
+		$html .= '	bloque: <input id="id_div" type="text" value="' . $bloque . '" size=70>';
 		$html .= '</form>';
 		
-		//$this->go(2);
+		// vuelvo el cursor al final.
+		$this->unGo();
 		return "fnjs_mostrar_atras('$id_div','$html');";
-		
 	}
-	public function atras() {
+	
+	public function mostrar_left_slide($n=0) {
+		$this->go($n);
 		// puede ser que no haya donde volver
-		if (empty($_SESSION['position'])) {
+		if (empty($this->surl)) {
 			return '';
 		}
 		$id_div = $this->getId_div();
 		$id_div = empty($id_div)? 'ir_atras' : $id_div;
-		$aPosition = end($_SESSION['position']);
-		$aParam = $aPosition['parametros'];
-		$url = $aPosition['url'];
+		
+		$url = $this->surl;
+		$aParam = $this->aParametros;
 		$sparametros = Hash::add_hash($aParam,$url);
-
-		//$html = '<div id="'.$id_div.'" style="display: none;">';
+		$bloque = $this->sbloque;
+		
 		$html = '<div id="'.$id_div.'" style="display: none;">';
 		$html .= '	<form id="go">';
 		$html .= '	url: <input id="url" type="text" value="' . $url .'" size=70><br>';
 		$html .= '	parametros: <input id="parametros" type="text" value="' . $sparametros . '" size=70><br>';
-		$html .= '	bloque: <input id="id_div" type="text" value="' . $aPosition['bloque'] . '" size=70>';
+		$html .= '	bloque: <input id="id_div" type="text" value="' . $bloque . '" size=70>';
 		$html .= '</form>';
 		$html .= '</div>';
+
+		// vuelvo el cursor al final.
+		$this->unGo();
 		return $html;
 	}
-	public function atras2() {
+
+	public function mostrar_back_arrow($n=0) {
+		$this->go($n);
 		// puede ser que no haya donde volver
-		if (empty($_SESSION['position'])) {
+		if (empty($this->surl)) {
 			return '';
 		}
 		$id_div = $this->getId_div();
 		$id_div = empty($id_div)? 'ir_atras2' : $id_div;
-		$aPosition = end($_SESSION['position']);
-		$aParam = $aPosition['parametros'];
-		$url = $aPosition['url'];
+		
+		$url = $this->surl;
+		$aParam = $this->aParametros;
 		$sparametros = Hash::add_hash($aParam,$url);
-
-		//$html = '<div style="display: none;">';
-		//$html = '<div style="display: none;">';
+		$bloque = $this->sbloque;
+		
 		$html = '<div id="'.$id_div.'" style="display: none;">';
 		$html .= '<form id="go">';
 		$html .= '	<input id="url" type="hidden" value="' . $url .'" size=70>';
 		$html .= '	<input id="parametros" type="hidden" value="' . $sparametros . '" size=70>';
-		$html .= '	<input id="id_div" type="hidden" value="' . $aPosition['bloque'] . '" size=70>';
+		$html .= '	<input id="id_div" type="hidden" value="' . $bloque . '" size=70>';
 		$html .= '</form>';
 		$html .= '</div>';
 		$html .= "<img onclick=fnjs_ir_a() src=".core\ConfigGlobal::$web_icons.'/flechas/left.gif border=0 height=40>';
@@ -153,10 +238,16 @@ class Posicion {
 	}
 
 	private function limitar($n=10) {
-		//if (isset($_SESSION['position']) & is_array($_SESSION['position']) & (count($_SESSION['position']) > 2*$n)) {
+		// Cuando hay el doble, borro $n.
 		if (isset($_SESSION['position'])) { // No sé poruqe no deja poner todo junto
-			if(is_array($_SESSION['position']) & (count($_SESSION['position']) > 2*$n)) {
+			if (is_array($_SESSION['position']) & (count($_SESSION['position']) > 2*$n)) {
+				$eee = 'a borrra!!';
 				array_splice($_SESSION['position'], -$n); // negativo empieza por el final.
+				// hay que cambiar el indice stack
+				end($_SESSION['position']);
+				$stack = key($_SESSION['position']);
+				$this->stack = $stack;
+				//con los stack dentro de parammmmm
 			}
 		}
 	}
@@ -175,6 +266,9 @@ class Posicion {
 	 * @return string id_div
 	 */
 	function getId_div() {
+		if (empty($this->sid_div)) {
+			return '';
+		}
 		return $this->sid_div;
 	}
 	/**
@@ -218,12 +312,10 @@ class Posicion {
 	 */
 	public function addParametro($nomParametre,$valor,$n=0) {
 		if (!empty($_SESSION['position'])) {
-			$aPosition = end($_SESSION['position']);
-			$this->surl = $aPosition['url'];
-			$this->sbloque = $aPosition['bloque'];
-			$this->aParametros = $aPosition['parametros'];
+			$this->go($n);
 			$this->setParametro($nomParametre,$valor);
-			$this->recordar();
+			$this->guardar();
+			$this->unGo();
 		}
 	}	
 	/**
@@ -241,19 +333,31 @@ class Posicion {
 	 * @param array aVars
 	 */
 	public function setParametros($aVars) {
-
 		foreach ($aVars as $key=>$value) {
 			$this->aParametros[$key] = $value;
 		}
 	}
 	/**
-	 * recupera el valor de tots del parametre
+	 * recupera el valor del parametre
 	 *
 	 * @param string nomParametre
 	 */
-	public function getParametro($nomParametre) {
-		if (!isset($this->aParametros[$nomParametre])) { return ''; }
-		$valParametre = empty($this->aParametros[$nomParametre])? '' : $this->aParametros[$nomParametre];
+	public function getParametro($nomParametre,$n=0) {
+		if ($n == 0) {
+			if (!isset($this->aParametros[$nomParametre])) {
+				$valParametre = '';
+			} else {
+				$valParametre = empty($this->aParametros[$nomParametre])? '' : $this->aParametros[$nomParametre];
+			}
+		} else {
+			$this->go($n);
+			if (!isset($this->aParametros[$nomParametre])) {
+				$valParametre = '';
+			} else {
+				$valParametre = empty($this->aParametros[$nomParametre])? '' : $this->aParametros[$nomParametre];
+			}
+			$this->unGo();
+		}
 		return $valParametre;
 	}
 

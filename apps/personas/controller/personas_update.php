@@ -27,7 +27,7 @@ switch ($_POST['que']) {
 			}
 		}
 		$oPosicion->setId_div('ir_a');
-		echo $oPosicion->atras();
+		echo $oPosicion->mostrar_left_slide();
 		exit;
 		break;
 	case 'guardar':
@@ -74,5 +74,5 @@ $oPersona->setAllAtributes($a_values_o);
 $oPersona->DBGuardar();
 
 $oPosicion->setId_div('ir_a');
-echo $oPosicion->atras();
+echo $oPosicion->mostrar_left_slide();
 ?>

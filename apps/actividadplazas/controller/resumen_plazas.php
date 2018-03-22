@@ -69,7 +69,7 @@ $a_camposHidden1 = array(
 $oHash1->setArraycamposHidden($a_camposHidden1);
 
 /* ---------------------------------- html --------------------------------------- */
-echo $oPosicion->atras();
+echo $oPosicion->mostrar_left_slide();
 ?>
 <script>
 fnjs_guardar=function(formulario){

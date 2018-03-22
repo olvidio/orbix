@@ -1,5 +1,9 @@
 <?php
+
+use core\ConfigGlobal;
 use ubis\model as ubis;
+use web\Hash;
+use web\Posicion;
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
 */
@@ -11,19 +15,30 @@ use ubis\model as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-
-// si vengo por un listado...
-empty($_POST['obj_pau'])? $obj_pau='' : $obj_pau=$_POST['obj_pau'];
-if (!empty($_POST['id_ubi'])) {
-	empty($_POST['id_ubi'])? $id_ubi="" : $id_ubi=$_POST['id_ubi'];
-} elseif ($_POST['sel'][0]) {
-	$id_ubi=$_POST['sel'][0];
-	$id_ubi=strtok($id_ubi,'#');
-} else { //si vengo por un go_to:
-	if (!empty($_POST['atras'])) {
-		$obj_pau = $oPosicion->getParametro('obj_pau');
-		$id_ubi = $oPosicion->getParametro('id_ubi');
+$stack = (integer)  \filter_input(INPUT_POST, 'stack');
+//Si vengo por medio de Posicion, borro la última
+if (!empty($stack)) {
+	// No me sirve el de global_object, sino el de la session
+	$oPosicion2 = new Posicion();
+	if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+		$obj_pau = $oPosicion2->getParametro('obj_pau');
+		$id_ubi = $oPosicion2->getParametro('id_ubi');
+		$Qid_sel=$oPosicion2->getParametro('id_sel');
+		$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+		$oPosicion2->olvidar($stack);
 	}
+}
+$oPosicion->recordar();
+
+// el scroll id es de la página anterior, hay que guardarlo allí
+if (!empty($_POST['sel'])) { //vengo de un checkbox
+ 	$id_sel=$_POST['sel'];
+	$id_ubi=strtok($id_sel[0],"#");
+	$oPosicion->addParametro('id_sel',$id_sel,1);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
+} else {
+	empty($_POST['id_ubi'])? $id_ubi="" : $id_ubi=$_POST['id_ubi'];
 }
 
 // si vengo de los listados se scdl
@@ -62,7 +77,7 @@ foreach ($cDirecciones as $oDireccion) {
 $id_pau=$id_ubi;
 $pau="u";
 
-$mi_dele = core\ConfigGlobal::mi_dele();
+$mi_dele = ConfigGlobal::mi_dele();
 switch ($tipo_ubi) {
 	case "ctrdl":
 		if ($dl != $mi_dele) {
@@ -103,12 +118,12 @@ switch ($tipo_ubi) {
 		print_r($_POST);
 }
 
-$gohome=web\Hash::link('apps/ubis/controller/home_ubis.php?'.http_build_query(array('id_ubi'=>$id_ubi,'obj_pau'=>$obj_pau))); 
-$godossiers=web\Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$go_atras)));
+$gohome=Hash::link('apps/ubis/controller/home_ubis.php?'.http_build_query(array('id_ubi'=>$id_ubi,'obj_pau'=>$obj_pau))); 
+$godossiers=Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$go_atras)));
 
-$go_ubi=web\Hash::link('apps/ubis/controller/ubis_editar.php?'.http_build_query(array('id_ubi'=>$id_ubi,'obj_pau'=>$obj_pau)));
-$go_dir=web\Hash::link('apps/ubis/controller/direcciones_editar.php?'.http_build_query(array('id_ubi'=>$id_ubi,'id_direccion'=>$id_direccion,'obj_dir'=>$obj_dir))); 
-$go_tel=web\Hash::link('apps/ubis/controller/teleco_tabla.php?'.http_build_query(array('id_ubi'=>$id_ubi,'obj_pau'=>$obj_pau)));
+$go_ubi=Hash::link('apps/ubis/controller/ubis_editar.php?'.http_build_query(array('id_ubi'=>$id_ubi,'obj_pau'=>$obj_pau)));
+$go_dir=Hash::link('apps/ubis/controller/direcciones_editar.php?'.http_build_query(array('id_ubi'=>$id_ubi,'id_direccion'=>$id_direccion,'obj_dir'=>$obj_dir))); 
+$go_tel=Hash::link('apps/ubis/controller/teleco_tabla.php?'.http_build_query(array('id_ubi'=>$id_ubi,'obj_pau'=>$obj_pau)));
 
 $alt=_("ver dossiers");
 $dos=_("dossiers");
@@ -119,13 +134,13 @@ $telfs = $oUbi->getTeleco("telf","*"," / ") ;
 $fax = $oUbi->getTeleco("fax","*"," / ") ;
 $mails = $oUbi->getTeleco("e-mail","*"," / ") ;
 
-echo $oPosicion->atras();
+echo $oPosicion->mostrar_left_slide(1);
 ?>
 <div id="top_ubis" name="top_ubis">
 <table border=1><tr>
-<?php if (core\ConfigGlobal::$ubicacion == 'int') { ?>
+<?php if (ConfigGlobal::$ubicacion == 'int') { ?>
 <td>
-<span class=link onclick=fnjs_update_div('#main','<?= $godossiers ?>') ><img src=<?= core\ConfigGlobal::$web_icons ?>/dossiers.gif border=0 width=40 height=40 alt='<?= $alt ?>'>(<?= $dos ?>)</span>
+<span class=link onclick=fnjs_update_div('#main','<?= $godossiers ?>') ><img src=<?= ConfigGlobal::$web_icons ?>/dossiers.gif border=0 width=40 height=40 alt='<?= $alt ?>'>(<?= $dos ?>)</span>
 </td>
 <?php } ?>
 <td class=titulo><span class=link onclick=fnjs_update_div('#main','<?= $gohome ?>')><?= $titulo ?></span></td>
@@ -143,9 +158,8 @@ echo $oPosicion->atras();
 </div>
 <div id="ficha_ubis" name="ficha_ubis">
 <?php
-if (core\ConfigGlobal::$ubicacion == 'int') {
+if (ConfigGlobal::$ubicacion == 'int') {
 	include ("apps/dossiers/controller/lista_dossiers.php");
 }
 ?>
 </div>
-

@@ -11,6 +11,16 @@ use dossiers\model as dossiers;
 /***************  datos  **********************************/
 $padre='datos_sql'; // para indicarle al $dir_datos lo que quiero.
 
+$sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($sel)) { //vengo de un checkbox
+	// el scroll id es de la página anterior, hay que guardarlo allí
+ 	$id_sel=$sel;
+	$oPosicion->addParametro('id_sel',$id_sel,1);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
+}
+$oPosicion->recordar();
+
 $oTipoDossier = new dossiers\TipoDossier($_POST['id_dossier']);
 $app=$oTipoDossier->getApp();
 
@@ -45,6 +55,7 @@ if (empty($_POST['go_to'])) {
 	$go_to = urldecode($_POST['go_to']);
 }
 
+echo $oPosicion->mostrar_left_slide(1);
 ?>
 <script>
 fnjs_nuevo=function(formulario){
@@ -106,6 +117,8 @@ if ($_POST['permiso']==3) {
 
 $a_cabeceras=array();
 $a_valores=array();
+if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 $c=0;
 foreach ($Coleccion as $oFila) {
 	$v=0;	

@@ -1,6 +1,12 @@
 <?php
-use ubis\model as ubis;
+
+use core\ConfigGlobal;
 use usuarios\model as usuarios;
+use web\Hash;
+use web\Lista;
+use web\Posicion;
+use function core\urlsafe_b64decode;
+use function core\urlsafe_b64encode;
 /**
 * Esta página muestra una tabla con los ubis seleccionados.
 *
@@ -25,30 +31,37 @@ use usuarios\model as usuarios;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
-$miSfsv=core\ConfigGlobal::mi_sfsv();
+$oMiUsuario = new usuarios\Usuario(ConfigGlobal::mi_id_usuario());
+$miSfsv=ConfigGlobal::mi_sfsv();
 
-//Si vengo de vuelta de un go_to:
-if (!empty($_POST['atras'])) {
-	$tipo = $oPosicion->getParametro('tipo');
-	$loc = $oPosicion->getParametro('loc');
-	$sWhere = $oPosicion->getParametro('sWhere');
-	$sOperador = $oPosicion->getParametro('sOperador');
-	$sGestor = $oPosicion->getParametro('sGestor');
-	$sWhereD = $oPosicion->getParametro('sWhereD');
-	$sOperadorD = $oPosicion->getParametro('sOperadorD');
-	$sGestorDir = $oPosicion->getParametro('sGestorDir');
-	$metodo = $oPosicion->getParametro('metodo');
-	$titulo = $oPosicion->getParametro('titulo');
-} else {
-	$loc = empty($_POST['loc'])? '' : $_POST['loc'];
-	$tipo = empty($_POST['tipo'])? '' : $_POST['tipo'];
-	$simple = empty($_POST['simple'])? '' : $_POST['simple'];
-	if ($simple == 1) {
-		$tipo = 'tot';
-		$loc = 'tot';
+$stack = (integer)  \filter_input(INPUT_POST, 'stack');
+//Si vengo por medio de Posicion, borro la última
+if (!empty($stack)) {
+	// No me sirve el de global_object, sino el de la session
+	$oPosicion2 = new Posicion();
+	if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+		$Qid_sel=$oPosicion2->getParametro('id_sel');
+		$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+		$oPosicion2->olvidar($stack);
 	}
 }
+
+$loc = empty($_POST['loc'])? '' : $_POST['loc'];
+$tipo = empty($_POST['tipo'])? '' : $_POST['tipo'];
+$simple = empty($_POST['simple'])? '' : $_POST['simple'];
+if ($simple == 1) {
+	$tipo = 'tot';
+	$loc = 'tot';
+}
+$sWhere = empty($_POST['sWhere'])? '' : $_POST['sWhere'];
+$sOperador = empty($_POST['sOperador'])? '' : $_POST['sOperador']; 
+$sGestor = empty($_POST['sGestor'])? '' : $_POST['sGestor'];
+$sWhereD = empty($_POST['sWhereD'])? '' : $_POST['sWhereD'];
+$sOperadorD = empty($_POST['sOperadorD'])? '' : $_POST['sOperadorD'];
+$sGestorDir = empty($_POST['sGestorDir'])? '' : $_POST['sGestorDir'];
+$metodo = empty($_POST['metodo'])? '' : $_POST['metodo'];
+$titulo = empty($_POST['titulo'])? '' : $_POST['titulo'];
+
 $tipo_ubi = $tipo.$loc;
 
 /*miro las condiciones. las variables son: nombre_ubi,ciudad,region,pais */
@@ -241,12 +254,12 @@ if (empty($sWhere)) {
 	}
 
 } else {
-	$aWhere = unserialize(core\urlsafe_b64decode($sWhere));
-	$aOperador = unserialize(core\urlsafe_b64decode($sOperador));
-	$Gestor = unserialize(core\urlsafe_b64decode($sGestor));
-	$aWhereD = unserialize(core\urlsafe_b64decode($sWhereD));
-	$aOperadorD = unserialize(core\urlsafe_b64decode($sOperadorD));
-	$GestorDir = unserialize(core\urlsafe_b64decode($sGestorDir));
+	$aWhere = unserialize(urlsafe_b64decode($sWhere));
+	$aOperador = unserialize(urlsafe_b64decode($sOperador));
+	$Gestor = unserialize(urlsafe_b64decode($sGestor));
+	$aWhereD = unserialize(urlsafe_b64decode($sWhereD));
+	$aOperadorD = unserialize(urlsafe_b64decode($sOperadorD));
+	$GestorDir = unserialize(urlsafe_b64decode($sGestorDir));
 	$metodo = $metodo;
 }
 
@@ -322,20 +335,20 @@ foreach ($cUbis as $key => $oUbi) {
 	$nom[$key]  = strtolower($oUbi->getNombre_ubi());
 }
 
-$sWhere = core\urlsafe_b64encode(serialize($aWhere));
-$sOperador = core\urlsafe_b64encode(serialize($aOperador));
-$sGestor = core\urlsafe_b64encode(serialize($Gestor));
-$sWhereD = core\urlsafe_b64encode(serialize($aWhereD));
-$sOperadorD = core\urlsafe_b64encode(serialize($aOperadorD));
-$sGestorDir = core\urlsafe_b64encode(serialize($GestorDir));
+$sWhere = urlsafe_b64encode(serialize($aWhere));
+$sOperador = urlsafe_b64encode(serialize($aOperador));
+$sGestor = urlsafe_b64encode(serialize($Gestor));
+$sWhereD = urlsafe_b64encode(serialize($aWhereD));
+$sOperadorD = urlsafe_b64encode(serialize($aOperadorD));
+$sGestorDir = urlsafe_b64encode(serialize($GestorDir));
 
 $go_to= '';
 //si no existe la ficha, hacer una nueva	
 if (is_array($cUbisTot) && count($cUbisTot) == 0) {
-	$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_buscar.php?'.http_build_query(array('simple'=>1,'tipo'=>$tipo))); 
+	$go_to=Hash::link(ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_buscar.php?'.http_build_query(array('simple'=>1,'tipo'=>$tipo))); 
 	$nombre_ubi=$_POST['nombre_ubi'];
 	
-	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_editar.php?'.http_build_query(array('sGestor'=>$sGestor,'tipo_ubi'=>$tipo_ubi,'nombre_ubi'=>$nombre_ubi,'nuevo'=>1,'go_to'=>$go_to))); 
+	$pagina=Hash::link(ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_editar.php?'.http_build_query(array('sGestor'=>$sGestor,'tipo_ubi'=>$tipo_ubi,'nombre_ubi'=>$nombre_ubi,'nuevo'=>1,'go_to'=>$go_to))); 
 	
 	if ($tipo=="tot" || $loc=="tot") {
 		echo _("No existe esta ficha.");
@@ -384,6 +397,8 @@ $a_cabeceras=array( array('name'=>ucfirst(_("nombre del centro")),'formatter'=>'
 				);
 
 $a_valores=array();
+if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 $i=0;
 foreach($cUbisTot as $oUbi) {
 	$i++;
@@ -408,7 +423,7 @@ foreach($cUbisTot as $oUbi) {
 		$c_p= '';
 	}
 
-	$pagina=web\Hash::link('apps/ubis/controller/home_ubis.php?'.http_build_query(array('pau'=>'u','id_ubi'=>$id_ubi))); 
+	$pagina=Hash::link('apps/ubis/controller/home_ubis.php?'.http_build_query(array('pau'=>'u','id_ubi'=>$id_ubi))); 
 
 	$a_valores[$i]['sel']=$id_ubi;
 	$a_valores[$i][1]= array( 'ira'=>$pagina, 'valor'=>$nombre_ubi);
@@ -420,7 +435,7 @@ foreach($cUbisTot as $oUbi) {
 	$a_valores[$i][7]=$poblacion;
  }
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setcamposForm('!sel');
 $oHash->setcamposNo('!scroll_id');
 $a_camposHidden = array(
@@ -483,10 +498,9 @@ fnjs_borrar=function(formulario){
 <?= $oHash->getCamposHtml(); ?>
 <h2 class=titulo><?= $titulo; ?></h2>
 <?php
-$oTabla = new web\Lista();
+$oTabla = new Lista();
 $oTabla->setId_tabla('ubis_tabla');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 echo $oTabla->mostrar_tabla();
-?>

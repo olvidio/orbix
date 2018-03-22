@@ -43,8 +43,14 @@ function num_latin($num) {
 	return $latin;
 }	
 
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	$acta=urldecode(strtok($_POST['sel'][0],"#"));
+$sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($sel)) { //vengo de un checkbox
+	$acta=urldecode(strtok($sel[0],"#"));
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$id_sel=$sel;
+	$oPosicion->addParametro('id_sel',$id_sel,1);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else {
 	empty($_POST['acta'])? $acta="" : $acta=urldecode($_POST['acta']);
 }
@@ -149,6 +155,7 @@ $h = $oHash->linkSinVal();
 if (empty($_POST['cara'])) { $cara="A"; } else { $cara=$_POST['cara']; }
 ?>
 <table class="no_print"><tr>
+<td><?= $oPosicion->mostrar_back_arrow(1) ?></td>
 <td align="center"><span class=link onclick="fnjs_update_div('#main','<?= $caraA ?>')"><?= _("Cara A (delante)"); ?></span></td>
 <td align="center"><span class=link onclick="fnjs_update_div('#main','<?= $caraB ?>')"><?= _("Cara B (detrás)"); ?></span></td>
 <td align="center"><span class=link onclick='window.open("<?= core\ConfigGlobal::getWeb() ?>/apps/notas/controller/acta_2_mpdf.php?acta=<?= urlencode($acta) ?><?= $h ?>&PHPSESSID=<?php echo session_id(); ?>", "sele");' >

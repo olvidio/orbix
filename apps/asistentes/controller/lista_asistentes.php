@@ -272,7 +272,7 @@ if (!empty($msg_err)) { echo $msg_err; }
 
 /* ---------------------------------- html --------------------------------------- */
 
-echo $oPosicion->atras();
+echo $oPosicion->mostrar_left_slide();
 ?>
 <table cellpadding="2">
 <tr>

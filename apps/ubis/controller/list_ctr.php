@@ -1,6 +1,12 @@
 <?php
+
+use core\ConfigGlobal;
 use ubis\model as ubis;
 use usuarios\model as usuarios;
+use web\Desplegable;
+use web\Hash;
+use web\Lista;
+use web\Posicion;
 /**
 * Página para realizar algunos listados standard de ubis
 * 
@@ -29,18 +35,28 @@ use usuarios\model as usuarios;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
-$miSfsv=core\ConfigGlobal::mi_sfsv();
+$oMiUsuario = new usuarios\Usuario(ConfigGlobal::mi_id_usuario());
+$miSfsv=ConfigGlobal::mi_sfsv();
 
 $doss_tel='d_teleco_ubis';
 
-if (!empty($_POST['atras'])) {
-	$que_lista = $oPosicion->getParametro('que_lista');
-	$loc = $oPosicion->getParametro('loc');
-} else {
-	$que_lista = empty($_POST['que_lista'])? '' : $_POST['que_lista'];
-	$loc = empty($_POST['loc'])? '' : $_POST['loc'];
+$stack = (integer)  \filter_input(INPUT_POST, 'stack');
+//Si vengo por medio de Posicion, borro la última
+if (!empty($stack)) {
+	// No me sirve el de global_object, sino el de la session
+	$oPosicion2 = new Posicion();
+	if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+		$obj_pau = $oPosicion2->getParametro('obj_pau');
+		$id_ubi = $oPosicion2->getParametro('id_ubi');
+		$Qid_sel=$oPosicion2->getParametro('id_sel');
+		$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+		$oPosicion2->olvidar($stack);
+	}
 }
+
+$que_lista = empty($_POST['que_lista'])? '' : $_POST['que_lista'];
+$loc = empty($_POST['loc'])? '' : $_POST['loc'];
+	
 if (empty($loc)) $loc='dl';
 if (empty($que_lista)) $que_lista='ctr_n';
 
@@ -181,11 +197,13 @@ $a_cabeceras[]= ucfirst(_('teléfono'));
 	  
 $i=0;
 $a_valores = array();
+if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 foreach ($cUbis as $oCentro) {
 	$i++;
 	$row = $oCentro->getTot();
 	$id_ubi=$oCentro->getId_ubi();
-	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/ubis/controller/home_ubis.php?'.http_build_query(array('pau'=>'u','id_ubi'=>$id_ubi))); 
+	$pagina=Hash::link(ConfigGlobal::getWeb().'/apps/ubis/controller/home_ubis.php?'.http_build_query(array('pau'=>'u','id_ubi'=>$id_ubi))); 
 	$ctr=$oCentro->getNombre_ubi();
 
 	if (strstr($obj,'Centro') !== false) { $tipo = $oCentro->getTipo_ctr(); }
@@ -240,14 +258,14 @@ foreach ($cUbis as $oCentro) {
 	$a_valores[$i][7]=$tels;
 }
 
-$oDesplDl = new web\Desplegable();
+$oDesplDl = new Desplegable();
 $oDesplDl->setNombre('loc');
 $oDesplDl->setAction('fnjs_actualizar()');
 $oDesplDl->setOpciones(array('dl'=>_('de dl'),'ex'=>_('de otra dl/cr')));
 $oDesplDl->setOpcion_sel($loc);
 
 
-$oDesplLista = new web\Desplegable();
+$oDesplLista = new Desplegable();
 $oDesplLista->setNombre('que_lista');
 $oDesplLista->setAction('fnjs_actualizar()');
 if ($loc=='dl') {
@@ -279,10 +297,10 @@ if ($loc=='ex') {
 $oDesplLista->setOpciones($aOpciones);
 $oDesplLista->setOpcion_sel($que_lista);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setcamposForm('loc!que_lista');
 
-$oHash1 = new web\Hash();
+$oHash1 = new Hash();
 $oHash1->setcamposForm('sel');
 $oHash1->setcamposNo('scroll_id');
 $a_camposHidden1 = array(
@@ -304,6 +322,7 @@ fnjs_modificar=function(formulario){
   		fnjs_enviar_formulario(formulario);
   	}
 }
+fnjs_left_side_hide();
 </script>
 <form id=modifica name=modifica method="POST">
 <?= $oHash->getCamposHtml(); ?>
@@ -329,7 +348,7 @@ fnjs_modificar=function(formulario){
 <form id="seleccionados" name="seleccionados" action="" method="post">
 <?= $oHash1->getCamposHtml(); ?>
 <?php
-$oTabla = new web\Lista();
+$oTabla = new Lista();
 $oTabla->setId_tabla('list_ctr');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);

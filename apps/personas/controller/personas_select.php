@@ -24,23 +24,16 @@ use usuarios\model as usuarios;
 
 $titulo = 0;
 //Si vengo de vuelta de un go_to:
-if (!empty($_POST['atras'])) {
-	$tabla = $oPosicion->getParametro('tabla');
-	$breve = $oPosicion->getParametro('breve');
-	$tipo = $oPosicion->getParametro('tipo');
-	$es_sacd = $oPosicion->getParametro('es_sacd');
-	$sWhere = $oPosicion->getParametro('sWhere');
-	$sOperador = $oPosicion->getParametro('sOperador');
-	$sWhereCtr = $oPosicion->getParametro('sWhereCtr');
-	$sOperadorCtr = $oPosicion->getParametro('sOperadorCtr');
-	$Qid_sel = $oPosicion->getParametro('id_sel');
-	$Qscroll_id = $oPosicion->getParametro('scroll_id');
-} else {
-	$tabla = empty($_POST['tabla'])? '' : $_POST['tabla'];
-	$breve = empty($_POST['breve'])? '' : $_POST['breve'];
-	$tipo = empty($_POST['tipo'])? '' : $_POST['tipo'];
-	$es_sacd = empty($_POST['es_sacd'])? '' : $_POST['es_sacd'];
-}
+$tabla = empty($_POST['tabla'])? '' : $_POST['tabla'];
+$breve = empty($_POST['breve'])? '' : $_POST['breve'];
+$tipo = empty($_POST['tipo'])? '' : $_POST['tipo'];
+$es_sacd = empty($_POST['es_sacd'])? '' : $_POST['es_sacd'];
+$sWhere = empty($_POST['sWhere'])? '' : $_POST['sWhere'];
+$sOperador = empty($_POST['sOperador'])? '' : $_POST['sOperador'];
+$sWhereCtr = empty($_POST['sWhereCtr'])? '' : $_POST['sWhereCtr'];
+$sOperadorCtr = empty($_POST['sOperadorCtr'])? '' : $_POST['sOperadorCtr'];
+$Qid_sel = empty($_POST['id_sel'])? '' : $_POST['id_sel'];
+$Qscroll_id = empty($_POST['scroll_id'])? '' : $_POST['scroll_id'];
 
 /*miro las condiciones. las variables son: num, agd, sup, nombre, apellido1, apellido2 */
 if (empty($sWhere)) {

@@ -168,7 +168,7 @@ $h = $oHash->linkSinVal();
 <table class="no_print">
 <tr>
 <td class="atras">
-<?= $oPosicion->atras2(); ?>
+<?= $oPosicion->mostrar_back_arrow(); ?>
 </td>
 <td align="center"><span class=link onclick="fnjs_update_div('#main','<?= $caraA ?>')"><?= _("Cara A (delante)"); ?></span></td>
 <td align="center"><span class=link onclick="fnjs_update_div('#main','<?= $caraB ?>')"><?= _("Cara B (detrás)"); ?></span></td>

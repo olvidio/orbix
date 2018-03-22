@@ -14,14 +14,18 @@ use actividadestudios\model as actividadestudios;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	$id_sel=$_POST['sel'];
-	$id_activ=strtok($_POST['sel'][0],"#");
-	$oPosicion->addParametro('id_sel',$id_sel);
+$sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($sel)) { //vengo de un checkbox
+	$id_activ=strtok($sel[0],"#");
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$id_sel=$sel;
+	$oPosicion->addParametro('id_sel',$id_sel,1);
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
-	$oPosicion->addParametro('scroll_id',$scroll_id);
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 }
 
+$obj_pau = empty($_POST['obj_pau'])? '' : $_POST['obj_pau'];
+		
 $a_cabeceras=array( _("interés"),_("asignatura"),_("créditos"),_("tipo"),_("profesor"),_("prof. avisado"),_("inicio"),_("fin")  );
 
 // Añadir la posibilidad de ver el plan de estudios aunque la actividad sea importada
@@ -45,11 +49,14 @@ if ($mi_dele == $dl_org) {
 }
 
 //pongo aquí el $go_to porque al ir al mismo update que las actividades, no sé donde voler
-$a_dataUrl = array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$_POST['obj_pau'],'id_dossier'=>$id_dossier,'permiso'=>$permiso);
+$a_dataUrl = array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier,'permiso'=>$permiso);
 $go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query($a_dataUrl));
 
 $c=0;
 $a_valores=array();
+// Estas dos variables vienen de la pagina 'padre' dossiers_ver.php
+if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 $msg_err = '';
 foreach ($cActivAsignaturas as $oActividadAsignatura) {
 	$c++;
@@ -112,7 +119,6 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 if (!empty($msg_err)) { echo $msg_err; }
-echo $oPosicion->atras();
 /* ---------------------------------- html --------------------------------------- */
 ?>
 <script>
@@ -120,7 +126,8 @@ fnjs_actas=function(formulario){
 	rta=fnjs_solo_uno(formulario);
 	if (rta==1) {
   		$(formulario).attr('action',"apps/actividadestudios/controller/acta_notas.php");
-  		fnjs_enviar_formulario(formulario,'#ficha_activ');
+  		//fnjs_enviar_formulario(formulario,'#ficha_activ');
+  		fnjs_enviar_formulario(formulario,'#main');
   	}
 }
 fnjs_modificar=function(formulario){

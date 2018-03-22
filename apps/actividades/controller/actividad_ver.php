@@ -138,7 +138,7 @@ $oHash1->setUrl(core\ConfigGlobal::getWeb().'/apps/actividades/controller/activi
 $oHash1->setCamposForm('dl_org!ssfsv'); 
 $h = $oHash1->linkSinVal();
 
-echo $oPosicion->atras();
+echo $oPosicion->mostrar_left_slide();
 // ----------------------- cabecera ------------------------
 ?>
 <script>

@@ -47,7 +47,7 @@ if (empty($_POST['cabecera']) || $_POST['cabecera']!="no") {
 	$alt=_("ver dossiers");
 	$dos=_("dossiers");
 
-	echo $oPosicion->atras();
+	echo $oPosicion->mostrar_left_slide();
 	?>
 	<div id=<?= $top ?>>
 	<table><tr>

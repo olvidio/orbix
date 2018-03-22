@@ -118,7 +118,7 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 if (!empty($msg_err)) { echo $msg_err; }
-echo $oPosicion->atras();
+echo $oPosicion->mostrar_left_slide();
 ?>
 <script>
 fnjs_mod_cargo=function(formulario){

@@ -135,7 +135,7 @@ foreach ($_POST['sel'] as $PersonaSel) {
 		<td class="atras no_print">
 		<?php 
 		// sólo pongo el primero, porque sino hay varios div con  el mismo id="ir_atras2"
-		if ($p==1) echo $oPosicion->atras2();
+		if ($p==1) echo $oPosicion->mostrar_back_arrow();
 		?>
 		</td>
 		<td style="vertical-align: bottom;">

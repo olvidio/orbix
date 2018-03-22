@@ -1,8 +1,12 @@
 <?php
+
 use asignaturas\model as asignaturas;
+use core\ConfigGlobal;
 use notas\model as notas;
-use personas\model as personas;
 use ubis\model as ubis;
+use web\Hash;
+use web\Lista;
+use web\Posicion;
 /**
 * Esta página muestra una tabla con las personas que cumplen con la condicion.
 *
@@ -26,24 +30,24 @@ use ubis\model as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-//si vengo por un goto:
-if (!empty($_POST['atras'])) {
-	$Qid_asignatura = $oPosicion->getParametro('id_asignatura');
-	$Qpersonas_n = $oPosicion->getParametro('personas_n');
-	$Qpersonas_agd = $oPosicion->getParametro('personas_agd');
-	$Qtitulo = $oPosicion->getParametro('titulo');
-	$Qb_c = $oPosicion->getParametro('b_c');
-	$Qc1 = $oPosicion->getParametro('c1');
-	$Qc2 = $oPosicion->getParametro('c2');
-} else { //si no vengo por goto.
-	$Qid_asignatura = empty($_POST['id_asignatura'])? '' : $_POST['id_asignatura'];
-	$Qpersonas_n = empty($_POST['personas_n'])? '' : $_POST['personas_n'];
-	$Qpersonas_agd = empty($_POST['personas_agd'])? '' : $_POST['personas_agd'];
-	$Qtitulo = '';
-	$Qb_c = empty($_POST['b_c'])? '' : $_POST['b_c'];
-	$Qc1 = empty($_POST['c1'])? '' : $_POST['c1'];
-	$Qc2 = empty($_POST['c2'])? '' : $_POST['c2'];
+$stack = (integer)  \filter_input(INPUT_POST, 'stack');
+//Si vengo por medio de Posicion, borro la última
+if (!empty($stack)) {
+	// No me sirve el de global_object, sino el de la session
+	$oPosicion2 = new Posicion();
+	if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+		$Qid_sel=$oPosicion2->getParametro('id_sel');
+		$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+		$oPosicion2->olvidar($stack);
+	}
 }
+$Qid_asignatura = empty($_POST['id_asignatura'])? '' : $_POST['id_asignatura'];
+$Qpersonas_n = empty($_POST['personas_n'])? '' : $_POST['personas_n'];
+$Qpersonas_agd = empty($_POST['personas_agd'])? '' : $_POST['personas_agd'];
+$Qtitulo = '';
+$Qb_c = empty($_POST['b_c'])? '' : $_POST['b_c'];
+$Qc1 = empty($_POST['c1'])? '' : $_POST['c1'];
+$Qc2 = empty($_POST['c2'])? '' : $_POST['c2'];
 
 //miro las condiciones.
 if ($Qb_c == 'b'){ 
@@ -105,8 +109,10 @@ $a_botones=array( array( 'txt' => _('modificar stgr'), 'click' =>"fnjs_modificar
 
 $a_cabeceras=array( ucfirst(_("tipo")), array('name'=>_("nombre y apellidos"),'formatter'=>'clickFormatter'), ucfirst(_("centro")), ucfirst(_("stgr")));
 
-$i=0;
-$a_valores=array();
+$i = 0;
+$a_valores = array();
+if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 $obj = 'personas\\model\\'.$obj_pau;
 foreach ($aId_nom as $id_nom=>$aAsignaturas) {
 	$i++;
@@ -121,7 +127,7 @@ foreach ($aId_nom as $id_nom=>$aAsignaturas) {
 
 	$condicion_2="Where id_nom='".$id_nom."'";
 	$condicion_2=urlencode($condicion_2);
-	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/home_persona.php?'.http_build_query(array('id_nom'=>$id_nom,'obj_pau'=>$obj_pau)));
+	$pagina=Hash::link(ConfigGlobal::getWeb().'/apps/personas/controller/home_persona.php?'.http_build_query(array('id_nom'=>$id_nom,'obj_pau'=>$obj_pau)));
 
 	$a_valores[$i]['sel'] = "$id_nom#$id_tabla";
 	$a_valores[$i][1] = $id_tabla;
@@ -137,7 +143,7 @@ if (empty($titulo)) {
 }
 		
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setcamposForm('sel!scroll_id');
 $a_camposHidden = array(
 		'pau' => 'p',
@@ -169,7 +175,7 @@ fnjs_modificar=function(formulario){
 <form id='seleccionados' id='seleccionados' name='seleccionados' action='' method='post'>
 <?= $oHash->getCamposHtml(); ?>
 <?php
-$oTabla = new web\Lista();
+$oTabla = new Lista();
 $oTabla->setId_tabla('asig_faltan_select');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);

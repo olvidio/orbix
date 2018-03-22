@@ -152,6 +152,7 @@ fnjs_actualizar=function(formulario){
 	$(formulario).attr('action','apps/ubis/controller/ubis_buscar.php');
 	fnjs_enviar_formulario(formulario,'#condiciones');
 }
+fnjs_left_side_hide();
 <?php 
 if ($simple==1) {
 	?>

@@ -40,28 +40,33 @@ use usuarios\model as usuarios;
 $num_max_actividades = 200;
 $Qempiezamin = '';
 $Qempiezamax = '';
-//$Qque = '';
-$mi_dele = core\ConfigGlobal::mi_dele();
 
+$mi_dele = core\ConfigGlobal::mi_dele();
 $mi_sfsv = core\ConfigGlobal::mi_sfsv();
 
-//Si vengo de vuelta de un go_to:
-if (!empty($_POST['atras'])) {
-	if ($_POST['atras'] == 2) $oPosicion->go(); //vengo de continuar y debo hacer la búsqueda anterior.
+$continuar = (string)  filter_input(INPUT_POST, 'continuar');
+$stack = (integer)  filter_input(INPUT_POST, 'stack');
+
+//Si vengo de vuelta y le paso la referecia del stack donde está la información.
+if (!empty($continuar) && $continuar == 'si' && !empty($stack)) {
+	$oPosicion->goStack($stack);
 	$Qmodo = $oPosicion->getParametro('modo');
 	$Qque = $oPosicion->getParametro('que');
+	$Qstatus = $oPosicion->getParametro('status');
 	$Qid_tipo_activ = $oPosicion->getParametro('id_tipo_activ');
 	$Qfiltro_lugar = $oPosicion->getParametro('filtro_lugar');
 	$Qid_ubi= $oPosicion->getParametro('id_ubi');
 	$Qperiodo=$oPosicion->getParametro('periodo');
-	$Qyear=$oPosicion->getParametro('year');
 	$Qinicio=$oPosicion->getParametro('inicio');
 	$Qfin=$oPosicion->getParametro('fin');
+	$Qyear=$oPosicion->getParametro('year');
 	$Qdl_org=$oPosicion->getParametro('dl_org');
-	$Qstatus=$oPosicion->getParametro('status');
+	$Qempiezamin=$oPosicion->getParametro('empiezamin');
+	$Qempiezamax=$oPosicion->getParametro('empiezamax');
 	$Qid_sel=$oPosicion->getParametro('id_sel');
 	$Qscroll_id = $oPosicion->getParametro('scroll_id');
-} else { //si no vengo por goto.
+	$oPosicion->olvidar($stack); //limpio todos los estados hacia delante.
+} else { //si vengo de vuelta y tengo los parametros en el $_POST
 	$Qmodo = empty($_POST['modo'])? '' : $_POST['modo'];
 	$Qque = empty($_POST['que'])? '' : $_POST['que'];
 	$Qstatus = empty($_POST['status'])? 2 : $_POST['status'];
@@ -75,6 +80,8 @@ if (!empty($_POST['atras'])) {
 	$Qdl_org = empty($_POST['dl_org'])? '' : $_POST['dl_org'];
 	$Qempiezamin = empty($_POST['empiezamin'])? date('d/m/Y',mktime(0, 0, 0, date('m'), date('d')-40, date('Y'))) : $_POST['empiezamin'];
 	$Qempiezamax = empty($_POST['empiezamax'])? date('d/m/Y',mktime(0, 0, 0, date('m')+9, 0, date('Y'))) : $_POST['empiezamax'];
+	$Qid_sel = empty($_POST['id_sel'])? '' : $_POST['id_sel'];
+	$Qscroll_id = empty($_POST['scroll_id'])? '' : $_POST['scroll_id'];
 }
 
 // Condiciones de búsqueda.
@@ -145,17 +152,25 @@ if (!empty($Qmodo) && $Qmodo == 'publicar') {
 /*
 * Defino un array con los datos actuales, para saber volver después de navegar un rato
 */
+//$aGoBack = array (
+//				'modo'=>$Qmodo,
+//				'que'=>$Qque,
+//				'id_tipo_activ'=>$Qid_tipo_activ,
+//				'id_ubi'=>$Qid_ubi,
+//				'periodo'=>$Qperiodo,
+//				'year'=>$Qyear,
+//				'inicio'=>$Qinicio,
+//				'fin'=>$Qfin,
+//				'dl_org'=>$Qdl_org,
+//				'status'=>$Qstatus,
+//				'empiezamin'=>$Qempiezamin,
+//				'empiezamax'=>$Qempiezamax );
+//$oPosicion->setParametros($aGoBack);
+//Parámetros que pueden haber cambiado desde el POST
 $aGoBack = array (
-				'modo'=>$Qmodo,
-				'que'=>$Qque,
-				'id_tipo_activ'=>$Qid_tipo_activ,
-				'id_ubi'=>$Qid_ubi,
-				'periodo'=>$Qperiodo,
-				'year'=>$Qyear,
-				'inicio'=>$Qinicio,
-				'fin'=>$Qfin,
-				'dl_org'=>$Qdl_org,
-				'status'=>$Qstatus );
+				'status'=>$Qstatus,
+				'empiezamin'=>$Qempiezamin,
+				'empiezamax'=>$Qempiezamax );
 $oPosicion->setParametros($aGoBack);
 $oPosicion->recordar();
 
@@ -256,8 +271,8 @@ $aWhere['_ordre'] = 'f_ini';
 $cActividades = $GesActividades->getActividades($aWhere,$aOperador);
 $num_activ=count($cActividades);
 if ($num_activ > $num_max_actividades && empty($_POST['continuar'])) {
-	$go_avant=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_select.php?'.http_build_query(array('continuar'=>'si','atras'=>2)));
-	$go_atras=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_que.php?'.http_build_query(array('que'=>$Qque,'modo'=>$Qmodo)));
+	$go_avant=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_select.php?'.http_build_query(array('continuar'=>'si','stack'=>$oPosicion->getStack())));
+	$go_atras=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_que.php?'.http_build_query(array('stack'=>$oPosicion->getStack())));
 	echo "<h2>".sprintf(_('son %s actividades a mostrar. ¿Seguro que quiere continuar?.'),$num_activ).'</h2>';
 	echo "<input type='button' onclick=fnjs_update_div('#main','".$go_avant."') value="._('continuar').">";
 	echo "<input type='button' onclick=fnjs_update_div('#main','".$go_atras."') value="._('volver').">";
@@ -267,7 +282,7 @@ if ($num_activ > $num_max_actividades && empty($_POST['continuar'])) {
 $i=0;
 $sin=0;
 $a_valores=array();
-if (isset($Qid_sel) &&!empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
 if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 $sPrefs = '';
 $id_usuario= core\ConfigGlobal::mi_id_usuario();

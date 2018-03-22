@@ -14,7 +14,7 @@ use ubis\model as ubis;
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-echo $oPosicion->atras();
+echo $oPosicion->mostrar_left_slide();
 
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miRole=$oMiUsuario->getId_role();

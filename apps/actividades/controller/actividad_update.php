@@ -454,13 +454,13 @@ if ($_POST['origen'] != 'calendario' && $_POST['mod'] != 'eliminar') {
 	//$r=ir_a($go_to);
 	if (empty($err)) {
 		$oPosicion->setId_div('ir_a');
-		echo $oPosicion->atras();
+		echo $oPosicion->mostrar_left_slide();
 	} else {
 		?>
 		<table>
 		<tr>
 		<td class="atras no_print">
-		<?= $oPosicion->atras2(); ?>
+		<?= $oPosicion->mostrar_back_arrow(); ?>
 		</td>
 		<td style="vertical-align: bottom;">
 		<h3>

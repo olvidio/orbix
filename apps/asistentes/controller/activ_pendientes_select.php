@@ -25,20 +25,22 @@ use personas\model as personas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-//Si vengo de vuelta de un go_to:
-if (!empty($_POST['atras'])) {
-	$Qany = $oPosicion->getParametro('any');
-	$Qtipo_personas = $oPosicion->getParametro('tipo_personas');
-	$Qsactividad = $oPosicion->getParametro('sactividad');
-} else {
-	$Qany = empty($_POST['any'])? '' : $_POST['any'];
-	$Qtipo_personas = empty($_POST['tipo_personas'])? '' : $_POST['tipo_personas'];
-	$Qsactividad = empty($_POST['sactividad'])? '' : $_POST['sactividad'];
+$stack = (integer)  \filter_input(INPUT_POST, 'stack');
+//Si vengo por medio de Posicion, borro la última
+if (!empty($stack)) {
+	// No me sirve el de global_object, sino el de la session
+	$oPosicion2 = new Posicion();
+	if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+		$Qid_sel=$oPosicion2->getParametro('id_sel');
+		$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+		$oPosicion2->olvidar($stack);
+	}
 }
-
+$Qany = empty($_POST['any'])? '' : $_POST['any'];
+$Qtipo_personas = empty($_POST['tipo_personas'])? '' : $_POST['tipo_personas'];
+$Qsactividad = empty($_POST['sactividad'])? '' : $_POST['sactividad'];
 
 /*miro las condiciones. Si es la primera vez muestro las de este año */
-
 if (empty($Qany)) { $any=date("Y"); } else { $any=$Qany; }
 // curso
 switch ($any) {

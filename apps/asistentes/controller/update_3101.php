@@ -253,7 +253,7 @@ if (empty($msg_err)) {
 	} else {
 		if ($_POST['go_to'] != 'no') {
 			$oPosicion->setId_div('ir_a');
-			echo $oPosicion->atras();
+			echo $oPosicion->mostrar_left_slide();
 		}
 	}
 } else {

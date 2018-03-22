@@ -11,22 +11,25 @@ use personas\model as personas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-//include_once(core\ConfigGlobal::$dir_programas.'/func_web.php');
-
 $notas=1; // para indicar a la página de actas que está dentro de ésta.
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	$id_activ = strtok($_POST['sel'][0],"#");
+
+$sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($sel)) { //vengo de un checkbox
+	$id_activ = strtok($sel[0],"#");
 	$id_asignatura=strtok("#");
+	// el scroll id es de la página anterior, hay que guardarlo allí
+ 	$id_sel=$sel;
+	$oPosicion->addParametro('id_sel',$id_sel,0);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id,0);
 } else {
 	empty($_POST['id_asignatura'])? $id_asignatura="" : $id_asignatura=$_POST['id_asignatura'];
 	empty($_POST['id_activ'])? $id_activ="" : $id_activ=$_POST['id_activ'];
 }
 
-
 $GesNotas = new notas\GestorNota();
 $oDesplNotas = $GesNotas->getListaNotas();
 $oDesplNotas->setNombre('id_situacion[]');
-
 
 $oActividad = new actividades\Actividad($id_activ);
 $nom_activ = $oActividad->getNom_activ();
@@ -89,6 +92,7 @@ $a_camposHidden1 = array(
 $oHash1->setArraycamposHidden($a_camposHidden1);
 
 if (!empty($msg_err)) { echo $msg_err; }
+echo $oPosicion->mostrar_left_slide();
 ?>
 <script>
 fnjs_nota=function(n){

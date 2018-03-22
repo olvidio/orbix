@@ -1,6 +1,12 @@
 <?php
+
 use asignaturas\model as asignaturas;
+use core\ConfigGlobal;
 use notas\model as notas;
+use web\Hash;
+use web\Lista;
+use web\Posicion;
+use function core\curso_est;
 /**
 * Esta página muestra una tabla con las actas.
 *
@@ -24,21 +30,25 @@ use notas\model as notas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$mi_dele = core\ConfigGlobal::mi_dele();
-$mi_dele .= (core\ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
+$mi_dele = ConfigGlobal::mi_dele();
+$mi_dele .= (ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
 
 $go_to='atras';
 
-//Si vengo de vuelta de un go_to:
-if (!empty($_POST['atras'])) {
-	if ($_POST['atras'] == 2) $oPosicion->go(); //vengo de continuar y debo hacer la búsqueda anterior.
-	$Qtitulo = $oPosicion->getParametro('titulo');
-	$Qacta = $oPosicion->getParametro('acta');
-
-} else { //si no vengo por goto.
-	$Qtitulo = empty($_POST['titulo'])? '' : $_POST['titulo'];
-	$Qacta = empty($_POST['acta'])? '' : $_POST['acta'];
+$stack = (integer)  \filter_input(INPUT_POST, 'stack');
+//Si vengo por medio de Posicion, borro la última
+if (!empty($stack)) {
+	// No me sirve el de global_object, sino el de la session
+	$oPosicion2 = new Posicion();
+	if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+		$Qid_sel=$oPosicion2->getParametro('id_sel');
+		$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+		$oPosicion2->olvidar($stack);
+	}
 }
+
+$Qtitulo = empty($_POST['titulo'])? '' : $_POST['titulo'];
+$Qacta = empty($_POST['acta'])? '' : $_POST['acta'];
 
 /*miro las condiciones. Si es la primera vez muestro las de este año */
 $aWhere = array();
@@ -68,8 +78,8 @@ if (!empty($Qacta)) {
 } else {
 	$mes=date('m');
 	if ($mes>9) { $any=date('Y')+1; } else { $any=date("Y"); }
-	$inicurs_ca=core\curso_est("inicio",$any);
-	$fincurs_ca=core\curso_est("fin",$any);
+	$inicurs_ca=curso_est("inicio",$any);
+	$fincurs_ca=curso_est("fin",$any);
 	$txt_curso = "$inicurs_ca - $fincurs_ca";
 	
 	$aWhere['f_acta'] = "'$inicurs_ca','$fincurs_ca'";
@@ -101,6 +111,8 @@ $a_cabeceras=array( array('name'=>ucfirst(_("acta")),'formatter'=>'clickFormatte
 
 $i=0;
 $a_valores = array();
+if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 foreach ($cActas as $oActa) {
 	$i++;
 	$acta=$oActa->getActa();
@@ -112,17 +124,17 @@ foreach ($cActas as $oActa) {
 
 	$acta_2=urlencode($acta);
 	//$pagina="apps/notas/controller/acta_ver.php?acta=$acta_2";
-	$pagina=web\Hash::link('apps/notas/controller/acta_ver.php?'.http_build_query(array('acta'=>$acta)));
+	$pagina=Hash::link('apps/notas/controller/acta_ver.php?'.http_build_query(array('acta'=>$acta)));
 	$a_valores[$i]['sel']=$acta_2;
 	$a_valores[$i][1]=array( 'ira'=>$pagina, 'valor'=>$acta);
 	$a_valores[$i][2]=$f_acta;
 	$a_valores[$i][3]=$nombre_corto;
 }
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setcamposForm('acta');
 
-$oHash1 = new web\Hash();
+$oHash1 = new Hash();
 $oHash1->setcamposForm('sel!nuevo');
 $oHash1->setCamposNo('sel!scroll_id!nuevo');
 $a_camposHidden1 = array(
@@ -158,6 +170,7 @@ fnjs_modificar=function(formulario){
   		fnjs_enviar_formulario(formulario);
   	}
 }
+fnjs_left_side_hide();
 </script>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="apps/notas/controller/acta_select.php" method="post" onkeypress="fnjs_enviar(event,this);" >
 <?= $oHash->getCamposHtml(); ?>
@@ -177,7 +190,7 @@ fnjs_modificar=function(formulario){
 <?= $oHash1->getCamposHtml(); ?>
 <input type='Hidden' id='nuevo' name='nuevo' value=''>
 <?php
-$oTabla = new web\Lista();
+$oTabla = new Lista();
 $oTabla->setId_tabla('acta_select');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);

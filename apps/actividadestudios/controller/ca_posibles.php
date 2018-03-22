@@ -344,7 +344,7 @@ if (!empty($_POST['sel']) && $alum==1) { //vengo de un 'checkbox' => sólo una p
 		$stgr=$a1["stgr"];
 		$actividades=$a1["actividades"];
 	//las filas
-		echo $oPosicion->atras();
+		echo $oPosicion->mostrar_left_slide();
 		echo "<table>";
 		echo "<th class='ca_posibles_nom' colspan=2>posibles ca de $nom ($ctr)</th><th>stgr: $stgr</th>";
 		foreach($actividades as $a3) {

@@ -527,7 +527,7 @@ if ($_POST['tipo']=='planning_cdc' || $_POST['tipo']=='casa') {
 
 // En el caso de personas doy la opción de volver a los seleccionados.
 if ($_POST['tipo']=='planning' || $_POST['tipo']=='p_de_paso' ) {
-	echo $oPosicion->atras();
+	echo $oPosicion->mostrar_left_slide();
 }
 
 // Listo varios centros.

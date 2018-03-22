@@ -48,5 +48,5 @@ if ($oUbi->DBEliminar() === false) {
 }
 
 $oPosicion->setId_div('ir_a');
-echo $oPosicion->atras();
+echo $oPosicion->mostrar_left_slide();
 ?>

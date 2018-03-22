@@ -29,10 +29,10 @@ use ubis\model as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-
+$stack = (integer)  filter_input(INPUT_POST, 'stack');
 //Si vengo de vuelta de un go_to:
-if (!empty($_POST['atras'])) {
-	if ($_POST['atras'] == 2) $oPosicion->go(); //vengo de continuar y debo hacer la búsqueda anterior.
+if (!empty($stack)) {
+	$oPosicion->goStack($stack);
 	$Qtipo = $oPosicion->getParametro('tipo');
 	$Qobj_pau = $oPosicion->getParametro('obj_pau');
 	$Qna = $oPosicion->getParametro('na');
@@ -222,7 +222,6 @@ $a_camposHidden = array(
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 
-//		'go_atras' => urlencode('apps/asistentes/controller/planning_select.php')
 /* ---------------------------------- html --------------------------------------- */
 $resultado=sprintf( _("%s personas encontradas"),$i);
 ?>

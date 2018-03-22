@@ -1,8 +1,12 @@
-<?php 
-use asignaturas\model as asignaturas;
+<?php
+
 use actividadestudios\model as actividadestudios;
+use asignaturas\model as asignaturas;
+use core\ConfigGlobal;
 use notas\model as notas;
 use personas\model as personas;
+use web\Hash;
+use web\Posicion;
 /**
 * Esta página muestra un formulario para modificar los datos de un acta.
 *
@@ -25,6 +29,15 @@ use personas\model as personas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($sel)) { //vengo de un checkbox
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$id_sel=$sel;
+	$oPosicion->addParametro('id_sel',$id_sel,1);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
+}
+
 $ult_acta = '';
 $acta = '';
 $f_acta = '';
@@ -44,9 +57,9 @@ $ult_lin = $GesActas->getUltimaLinea($ult_lib);
 
 $obj = 'notas\\model\\ActaDl';
 
-if (!empty($_POST['sel']) && empty($notas)) { //vengo de un checkbox y no estoy en la página de acta_notas ($notas).
+if (!empty($sel) && empty($notas)) { //vengo de un checkbox y no estoy en la página de acta_notas ($notas).
 	$notas = '';
-	$acta=urldecode(strtok($_POST['sel'][0],"#"));
+	$acta=urldecode(strtok($sel[0],"#"));
 } else { // vengo de un link 
 	if (empty($acta) && !empty($_POST['acta'])) $acta=urldecode($_POST['acta']); // si estoy  en la página de acta_notas ya tengo el acta.
 }
@@ -91,8 +104,8 @@ if (empty($_POST['nuevo']) && !empty($acta))  { //significa que no es nuevo
 		$examinador = $ap_nom;
 		$json_examinadores = '[{name: "'.htmlspecialchars($examinador).'"}]';
 	} else { // estoy actualizando la página
-		if (!empty($_POST['sel']) && !empty($notas)) { //vengo de un checkbox y estoy en la página de acta_notas ($notas).
-			$id_activ = strtok($_POST['sel'][0],'#');
+		if (!empty($sel) && !empty($notas)) { //vengo de un checkbox y estoy en la página de acta_notas ($notas).
+			$id_activ = strtok($sel[0],'#');
 			$id_asignatura = strtok('#');
 			$cActas = $GesActas->getActas(array('id_activ'=>$id_activ,'id_asignatura'=>$id_asignatura));
 			$oActa = $cActas[0];
@@ -127,7 +140,7 @@ if (!empty($id_asignatura_actual)) {
 
 
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 //$sCamposForm = 'libro!linea!pagina!lugar!observ!id_asignatura!examinador_mas!examinador_num';
 $sCamposForm = 'libro!linea!pagina!lugar!observ!id_asignatura!f_acta';
 if (!empty($_POST['nuevo']) || $notas=="nuevo") { 
@@ -155,9 +168,10 @@ if ($notas=="nuevo" || !empty($_POST['nuevo']) ) {
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $titulo=strtoupper(_("datos del acta"));
-?>
-<link rel="stylesheet" type="text/css" href="<?php echo core\ConfigGlobal::$web_scripts.'/jquery-tokeninput/styles/token-input.css' ?>" />
 
+echo $oPosicion->mostrar_left_slide(1);
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo ConfigGlobal::$web_scripts.'/jquery-tokeninput/styles/token-input.css' ?>" />
 <script>
 $(function() { $( "#f_acta" ).datepicker(); });
 
@@ -194,7 +208,7 @@ fnjs_guardar_acta=function(){
 						alert (rta_txt);
 					} else {
 						<?php
-						$oPosicion = new web\Posicion();
+						$oPosicion = new Posicion();
 						echo $oPosicion->js_atras();
 						?>
 					}
@@ -216,7 +230,7 @@ fnjs_actualizar=function(){
 }
 </script>
 <?php
-include(core\ConfigGlobal::$directorio.'/scripts/mas_opciones.js.php');
+include(ConfigGlobal::$directorio.'/scripts/mas_opciones.js.php');
 ?>
 <form id="modifica" name="modifica" action="" method="POST" >
 <?= $oHash->getCamposHtml(); ?>
@@ -263,13 +277,10 @@ include(core\ConfigGlobal::$directorio.'/scripts/mas_opciones.js.php');
 $oDesplAsignaturas->setNombre('id2_asignatura');
 $oDesplAsignaturas->setOpcion_sel($id_asignatura_actual);
 //echo $oDesplAsignaturas->desplegable(); 
-
-
 echo "<input type='text'  size='60' id='id_asignatura' name='id_asignatura' value='' >";
 ?>
 </td></tr>
 </tr>
-
 </table>
 <br>
 <!--  --------------- TRIBUNAL --------------- -->
@@ -313,7 +324,7 @@ echo "<input type='text'  size='60' id='id_asignatura' name='id_asignatura' valu
 $acta=urlencode($acta);
 if ($notas=="acta") { 
 	$el_var = '&';
-	foreach ($_POST['sel'] as $key => $value) {
+	foreach ($sel as $key => $value) {
 		$el_var .= "&sel[$key]=$value";
 	}
 	$el_var = substr($el_var, 1);
@@ -332,8 +343,8 @@ if ($notas=="nuevo") {
 	echo _("Primero debe guardar los valores del acta. Después las notas.");
 }
 
-$url = core\ConfigGlobal::getWeb().'/apps/notas/controller/acta_ajax.php';
-$oHash = new web\Hash();
+$url = ConfigGlobal::getWeb().'/apps/notas/controller/acta_ajax.php';
+$oHash = new Hash();
 $oHash->setUrl($url);
 $oHash->setCamposForm('que!q'); 
 $h = $oHash->linkSinVal();

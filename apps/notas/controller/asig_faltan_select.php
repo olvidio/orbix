@@ -27,25 +27,14 @@ use ubis\model as ubis;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 //si vengo por un goto:
-if (!empty($_POST['atras'])) {
-	$Qnumero = $oPosicion->getParametro('numero');
-	$Qb_c = $oPosicion->getParametro('b_c');
-	$Qc1 = $oPosicion->getParametro('c1');
-	$Qc2 = $oPosicion->getParametro('c2');
-	$Qlista = $oPosicion->getParametro('lista');
-	$Qpersonas_n = $oPosicion->getParametro('personas_n');
-	$Qpersonas_agd = $oPosicion->getParametro('personas_agd');
-	$Qtitulo = $oPosicion->getParametro('titulo');
-} else { //si no vengo por goto.
-	$Qnumero = empty($_POST['numero'])? '' : $_POST['numero'];
-	$Qb_c = empty($_POST['b_c'])? '' : $_POST['b_c'];
-	$Qc1 = empty($_POST['c1'])? '' : $_POST['c1'];
-	$Qc2 = empty($_POST['c2'])? '' : $_POST['c2'];
-	$Qlista = empty($_POST['lista'])? false : true;
-	$Qpersonas_n = empty($_POST['personas_n'])? '' : $_POST['personas_n'];
-	$Qpersonas_agd = empty($_POST['personas_agd'])? '' : $_POST['personas_agd'];
-	$Qtitulo = '';
-}
+$Qnumero = empty($_POST['numero'])? '' : $_POST['numero'];
+$Qb_c = empty($_POST['b_c'])? '' : $_POST['b_c'];
+$Qc1 = empty($_POST['c1'])? '' : $_POST['c1'];
+$Qc2 = empty($_POST['c2'])? '' : $_POST['c2'];
+$Qlista = empty($_POST['lista'])? false : true;
+$Qpersonas_n = empty($_POST['personas_n'])? '' : $_POST['personas_n'];
+$Qpersonas_agd = empty($_POST['personas_agd'])? '' : $_POST['personas_agd'];
+$Qtitulo = empty($_POST['titulo'])? '' : $_POST['titulo'];
 
 //miro las condiciones.
 if ($Qb_c == 'b'){ 

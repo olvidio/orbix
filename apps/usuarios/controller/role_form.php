@@ -11,7 +11,7 @@ use menus\model as menus;
 
 $obj = 'usuarios\\model\\Role';
 
-echo $oPosicion->atras();
+echo $oPosicion->mostrar_left_slide();
 
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miRole=$oMiUsuario->getId_role();

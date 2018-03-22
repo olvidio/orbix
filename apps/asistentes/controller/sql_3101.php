@@ -673,7 +673,7 @@ $godossiers=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controlle
 
 if (!empty($msg_err)) { echo $msg_err; }
 
-echo $oPosicion->atras();
+echo $oPosicion->mostrar_left_slide();
 ?>
 <script>
 <?php

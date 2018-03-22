@@ -81,7 +81,7 @@ $oDossier->DBGuardar();
 
 if (empty($error)) {
 	$oPosicion->setId_div('ir_a');
-	echo $oPosicion->atras();
+	echo $oPosicion->mostrar_left_slide();
 } else {
 	echo $error;
 }

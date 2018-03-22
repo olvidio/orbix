@@ -53,7 +53,7 @@ if (empty($id_nom_dtor_est)) {
 	}
 }
 
-echo $oPosicion->atras();
+echo $oPosicion->mostrar_left_slide();
 ?>
 
 <table><tr>

@@ -235,7 +235,7 @@ if (empty($msg_err)) {
 		echo $oPosicion->ir_a($_POST['go_to']);
 	} else {
 		$oPosicion->setId_div('ir_a');
-		echo $oPosicion->atras();
+		echo $oPosicion->mostrar_left_slide();
 	}
 } else {
 	echo $msg_err;
