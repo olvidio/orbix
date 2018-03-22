@@ -169,7 +169,6 @@ $oHash->setArraycamposHidden($a_camposHidden);
 
 $titulo=strtoupper(_("datos del acta"));
 
-echo $oPosicion->mostrar_left_slide(1);
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo ConfigGlobal::$web_scripts.'/jquery-tokeninput/styles/token-input.css' ?>" />
 <script>
@@ -208,8 +207,8 @@ fnjs_guardar_acta=function(){
 						alert (rta_txt);
 					} else {
 						<?php
-						$oPosicion = new Posicion();
-						echo $oPosicion->js_atras();
+						$oPosicion3 = new Posicion();
+						echo $oPosicion3->js_atras();
 						?>
 					}
 				}
@@ -231,6 +230,8 @@ fnjs_actualizar=function(){
 </script>
 <?php
 include(ConfigGlobal::$directorio.'/scripts/mas_opciones.js.php');
+
+echo $oPosicion->mostrar_left_slide(1);
 ?>
 <form id="modifica" name="modifica" action="" method="POST" >
 <?= $oHash->getCamposHtml(); ?>

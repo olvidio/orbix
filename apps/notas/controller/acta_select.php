@@ -50,6 +50,15 @@ if (!empty($stack)) {
 $Qtitulo = empty($_POST['titulo'])? '' : $_POST['titulo'];
 $Qacta = empty($_POST['acta'])? '' : $_POST['acta'];
 
+/*
+* Defino un array con los datos actuales, para saber volver después de navegar un rato
+*/
+$aGoBack = array (
+				'titulo'=>$Qtitulo,
+				'acta'=>$Qacta );
+$oPosicion->setParametros($aGoBack);
+$oPosicion->recordar();
+
 /*miro las condiciones. Si es la primera vez muestro las de este año */
 $aWhere = array();
 $aOperador = array();
@@ -92,14 +101,6 @@ if (!empty($Qacta)) {
 
 $cActas = $GesActas->getActas($aWhere,$aOperador);
 
-/*
-* Defino un array con los datos actuales, para saber volver después de navegar un rato
-*/
-$aGoBack = array (
-				'titulo'=>$Qtitulo,
-				'acta'=>$Qacta );
-$oPosicion->setParametros($aGoBack);
-$oPosicion->recordar();
 
 $a_botones=array( array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(\"#seleccionados\")" ) ,
 				array( 'txt' => _('imprimir'), 'click' =>"fnjs_imprimir(\"#seleccionados\")" ) 
@@ -170,7 +171,6 @@ fnjs_modificar=function(formulario){
   		fnjs_enviar_formulario(formulario);
   	}
 }
-fnjs_left_side_hide();
 </script>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="apps/notas/controller/acta_select.php" method="post" onkeypress="fnjs_enviar(event,this);" >
 <?= $oHash->getCamposHtml(); ?>

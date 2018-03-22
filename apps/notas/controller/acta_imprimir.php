@@ -1,7 +1,11 @@
 <?php
+
 use asignaturas\model as asignaturas;
+use core\ConfigGlobal;
 use notas\model as notas;
 use personas\model as personas;
+use web\Hash;
+use function core\strtoupper_dlb;
 /**
 * Esta página sirve para las actas.
 *
@@ -19,7 +23,7 @@ use personas\model as personas;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
-	include_once(core\ConfigGlobal::$dir_estilos.'/actas.css.php'); 
+	include_once(ConfigGlobal::$dir_estilos.'/actas.css.php'); 
 
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
@@ -116,7 +120,7 @@ foreach($cPersonaNotas as $oPersonaNota) {
 	$apellidos = trim($apellidos);
 
 	$apellidos = empty($apellidos)? '????' : $apellidos;
-	$apellidos=core\strtoupper_dlb($apellidos);
+	$apellidos=strtoupper_dlb($apellidos);
 	$nom = $apellidos.", ".$trato.$nom_lat;
 		
 	//echo "<br>$id_nom, $apellidos";
@@ -143,11 +147,11 @@ $lin_max_cara_A=$lin_A4 - $lin_encabezado - 2; 	// número máximo de lineas en 
 if ($num_alumnos > $lin_max_cara_A) { $alum_cara_A=$lin_max_cara_A; } else { $alum_cara_A=$num_alumnos; }
 $alum_cara_B=$num_alumnos-$alum_cara_A;
 
-$caraA = web\Hash::link('apps/notas/controller/acta_imprimir.php?'.http_build_query(array('cara'=>'A','acta'=>$acta)));
-$caraB = web\Hash::link('apps/notas/controller/acta_imprimir.php?'.http_build_query(array('cara'=>'B','acta'=>$acta)));
+$caraA = Hash::link('apps/notas/controller/acta_imprimir.php?'.http_build_query(array('cara'=>'A','acta'=>$acta)));
+$caraB = Hash::link('apps/notas/controller/acta_imprimir.php?'.http_build_query(array('cara'=>'B','acta'=>$acta)));
 
-$oHash = new web\Hash();
-$oHash->setUrl(core\ConfigGlobal::getWeb().'/apps/notas/controller/acta_2_mpdf.php');
+$oHash = new Hash();
+$oHash->setUrl(ConfigGlobal::getWeb().'/apps/notas/controller/acta_2_mpdf.php');
 $oHash->setCamposForm('acta');
 $h = $oHash->linkSinVal();
 
@@ -158,7 +162,7 @@ if (empty($_POST['cara'])) { $cara="A"; } else { $cara=$_POST['cara']; }
 <td><?= $oPosicion->mostrar_back_arrow(1) ?></td>
 <td align="center"><span class=link onclick="fnjs_update_div('#main','<?= $caraA ?>')"><?= _("Cara A (delante)"); ?></span></td>
 <td align="center"><span class=link onclick="fnjs_update_div('#main','<?= $caraB ?>')"><?= _("Cara B (detrás)"); ?></span></td>
-<td align="center"><span class=link onclick='window.open("<?= core\ConfigGlobal::getWeb() ?>/apps/notas/controller/acta_2_mpdf.php?acta=<?= urlencode($acta) ?><?= $h ?>&PHPSESSID=<?php echo session_id(); ?>", "sele");' >
+<td align="center"><span class=link onclick='window.open("<?= ConfigGlobal::getWeb() ?>/apps/notas/controller/acta_2_mpdf.php?acta=<?= urlencode($acta) ?><?= $h ?>&PHPSESSID=<?php echo session_id(); ?>", "sele");' >
 <?= _("PDF"); ?></span></td>
 </tr>
 <?php if (!empty($errores)) { echo "<tr><td colspan=4>$errores</td></tr>"; } ?>
