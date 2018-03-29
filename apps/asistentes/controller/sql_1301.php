@@ -24,9 +24,6 @@ if ($mes>9) { $any=date('Y')+1; } else { $any=date("Y"); }
 $inicurs_ca=core\curso_est("inicio",$any);
 $fincurs_ca=core\curso_est("fin",$any);
 
-//$curso="f_ini BETWEEN '$inicurs_ca' AND '$fincurs_ca' ";
-
-//$aWhere['id_nom'] = $id_pau;
 $aWhere = array();
 $aOperator = array();
 $aWhere['_ordre'] = 'f_ini';
@@ -124,6 +121,10 @@ foreach ($cActividadesAsistente as $oActividadAsistente) {
 	$a_valores[$i][5]=$chk_falta;
 	$a_valores[$i][6]=$observ;
 }
+// Estas dos variables vienen de la pagina 'padre' dossiers_ver.php
+// las pongo al final, porque al contar los valores del array se despista.
+if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('periodo');

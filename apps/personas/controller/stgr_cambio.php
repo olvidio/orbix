@@ -82,6 +82,8 @@ $a_camposHidden = array(
 		'id_nom' => $id_nom
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
+
+echo $oPosicion->mostrar_left_slide();
 ?>
 <h2 class=titulo><?php echo ucfirst(_("cambiar el stgr")); ?></h2>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="apps/personas/controller/stgr_update.php" method="POST">

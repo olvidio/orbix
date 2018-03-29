@@ -22,14 +22,6 @@ if (empty($go_to)) {
 	$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query($a_dataUrl));
 }
 
-/*
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	//$id_nom=$sel[0];
-	$id_nom=strtok($_POST['sel'][0],"#");
-	$id_tabla=strtok("#");
-}
-*/
-
 $oActividad = new actividades\Actividad($id_pau);
 $nom_activ = $oActividad->getNom_activ();
 $dl_org = $oActividad->getDl_org();
@@ -68,7 +60,7 @@ $a_camposHidden = array(
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 
-echo $oPosicion->mostrar_left_slide();
+//echo $oPosicion->mostrar_left_slide();
 ?>	
 <script>
 fnjs_modificar=function(formulario){
@@ -166,6 +158,11 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
 		$a_valores[$i][2]="$nom_persona ($ctr)";
 	}
 	if (count($a_valores) == 0) continue;
+	// Estas dos variables vienen de la pagina 'padre' dossiers_ver.php
+	// las pongo al final, porque al contar los valores del array se despista.
+	if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+	if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
+
 	$oTabla = new web\Lista();
 	$oTabla->setId_tabla('sql_3103'.$a);
 	$oTabla->setCabeceras($a_cabeceras);
@@ -174,4 +171,3 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
 	echo $oTabla->mostrar_tabla();
 }
 if (!empty($msg_err)) { echo $msg_err; }
-?>

@@ -20,9 +20,14 @@ $id_pau = empty($_POST['id_pau'])? '' : $_POST['id_pau'];
 $obj_pau = empty($_POST['obj_pau'])? '' : $_POST['obj_pau'];
 $permiso = empty($_POST['permiso'])? '' : $_POST['permiso'];
 		
-if (!empty($_POST['sel'])) { //vengo de un checkbox
+$sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($sel)) { //vengo de un checkbox
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$oPosicion->addParametro('id_sel',$sel,1);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 	if ($pau=="p") { 
-		$id_nivel_real=strtok($_POST['sel'][0],"#"); 
+		$id_nivel_real=strtok($sel[0],"#"); 
 		$id_asignatura_real=strtok("#");
 	}
 } else {
@@ -32,6 +37,7 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 		$id_asignatura_real='';
 	}
 }
+$oPosicion->recordar();
 
 $_POST['id_nivel'] = empty($_POST['id_nivel'])? 'n': $_POST['id_nivel'];
 $_POST['opcional'] = empty($_POST['opcional'])? 'n': $_POST['opcional'];
@@ -284,6 +290,7 @@ $oHash->setcamposNo($camposNo);
 $oHash->setArraycamposHidden($a_camposHidden);
 
 if (!empty($msg_err)) { echo $msg_err; }
+echo $oPosicion->mostrar_left_slide(1);
 ?>
 <script>
 $(function() { $( "#f_acta" ).datepicker(); });

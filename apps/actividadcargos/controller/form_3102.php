@@ -32,21 +32,29 @@ use personas\model as personas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	$id_nom=strtok($_POST['sel'][0],"#");
+$go_to = (string)  \filter_input(INPUT_POST, 'go_to');
+if (!empty($go_to)) {
+	$go_to=urldecode($go_to);
+}
+	
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	$id_nom = strtok($a_sel[0],"#");
 	$id_cargo=strtok("#");
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$oPosicion->addParametro('id_sel',$a_sel,0);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id,0);
+	if (!empty($go_to)) {
+		// add stack:
+		$stack = $oPosicion->getStack();
+		$go_to .= "&stack=$stack";
+	}
 } else {
-	$id_nom="";
-	$id_cargo="";
+	$id_nom = empty($_POST['id_nom'])? "" : $_POST['id_nom'];
 }
-$id_activ=$_POST['id_pau'];
 
-if (!empty($_POST['go_to'])) {
-	$go_to=urldecode($_POST['go_to']);
-} else {
-	empty($_POST['go_to'])? $go_to="" : $go_to=$_POST['go_to'];
-}
+$id_activ = (integer)  \filter_input(INPUT_POST, 'id_pau');
 
 $obj = 'actividadcargos\\model\\ActividadCargo';
 
@@ -139,6 +147,7 @@ $oHash->setCamposNo($camposNo);
 $oHash->setcamposForm($camposForm);
 $oHash->setArraycamposHidden($a_camposHidden);
 
+echo $oPosicion->mostrar_left_slide();
 ?>
 <!-- ------------------- html -----------------------------------------------  -->
 <script>

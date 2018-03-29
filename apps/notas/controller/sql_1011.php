@@ -1,8 +1,13 @@
 <?php
+
 use actividades\model as actividades;
 use asignaturas\model as asignaturas;
+use core\ConfigGlobal;
 use notas\model as notas;
 use personas\model as personas;
+use web\Hash;
+use web\Lista;
+use web\Posicion;
 /**
 * En el fichero config tenemos las variables genéricas del sistema
 */
@@ -14,6 +19,28 @@ use personas\model as personas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 	
+$stack = (integer)  \filter_input(INPUT_POST, 'stack');
+//Si vengo por medio de Posicion, borro la última
+if (!empty($stack)) {
+	// No me sirve el de global_object, sino el de la session
+	$oPosicion2 = new Posicion();
+	if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+		$Qid_sel=$oPosicion2->getParametro('id_sel');
+		$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+		$oPosicion2->olvidar($stack);
+	}
+}
+	
+$sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($sel)) { //vengo de un checkbox
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$oPosicion->addParametro('id_sel',$sel,1);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
+}
+
+$oPosicion->recordar();
+
 // Aviso si le faltan notas por poner
 $gesMatriculas = new actividadestudios\model\gestorMatricula();
 $cMatriculasPendientes = $gesMatriculas->getMatriculasPendientes($id_pau);
@@ -67,6 +94,8 @@ $a_cabeceras=array( _("asignatura"),_("nota"),_("acta"),
 
 $i=0;
 $a_valores = array();
+if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 foreach ($cPersonaNotas as $oPersonaNota) {
 	$clase = "impar";
 	$i % 2  ? 0: $clase = "par";
@@ -127,7 +156,7 @@ foreach ($cPersonaNotas as $oPersonaNota) {
 }
 
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setcamposForm('sel!mod');
 $oHash->setcamposNo('mod!scroll_id');
 $a_camposHidden = array(
@@ -140,6 +169,7 @@ $a_camposHidden = array(
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 
+echo $oPosicion->mostrar_left_slide(1);
 ?>
 <script>
 fnjs_modificar=function(formulario){
@@ -171,7 +201,7 @@ fnjs_borrar=function(formulario){
 <?= $oHash->getCamposHtml(); ?>
 <input type="hidden" id="mod" name="mod" value="">
 <?php
-$oTabla = new web\Lista();
+$oTabla = new Lista();
 $oTabla->setId_tabla('sql_1011');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
@@ -187,7 +217,7 @@ echo $oTabla->mostrar_tabla();
 $go_to=urlencode($go_to);
 
 if ($permiso==3) {
-	$pagina = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/form_1011.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$_POST['obj_pau'],'id_dossier'=>1011,'permiso'=>3,'mod'=>'nuevo','id_asignatura'=>'nueva')));
+	$pagina = Hash::link(ConfigGlobal::getWeb().'/apps/notas/controller/form_1011.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$_POST['obj_pau'],'id_dossier'=>1011,'permiso'=>3,'mod'=>'nuevo','id_asignatura'=>'nueva')));
 	?>
 	<br><table><tr>
 	<td class=botones><span class=link_inv onclick="fnjs_update_div('#ficha_personas','<?= $pagina ?>');">
@@ -195,4 +225,3 @@ if ($permiso==3) {
 	</tr></table>
 	<?php
 }
-?>

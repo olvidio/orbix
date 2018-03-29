@@ -33,24 +33,8 @@ $id_usuario= core\ConfigGlobal::mi_id_usuario();
 $oPref = new usuarios\Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>'ordenApellidos'));
 $Pref_ordenApellidos=$oPref->getPreferencia();
 
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	$id_sel=$_POST['sel'];
-    $id_pau=strtok($_POST['sel'][0],"#");
-    $nom_activ=strtok("#");
-	if (empty($nom_activ) && !empty($id_pau)) {
-		$oActividad = new actividades\Actividad($id_pau);
-		$nom_activ = $oActividad->getNom_activ();
-	}
-	$oPosicion->addParametro('id_sel',$id_sel);
-	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
-	$oPosicion->addParametro('scroll_id',$scroll_id);
-}
-
 $queSel = empty($_POST['queSel'])? '' : $_POST['queSel'];
-
 $gesAsistentes = new asistentes\GestorAsistente();
-
-
 
 function datos($oPersona,$tipo) {
 	$estudios = '';
@@ -124,6 +108,18 @@ function datos($oPersona,$tipo) {
 
 // -----------------------------------------------------------
 
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+// el scroll id es de la página anterior, hay que guardarlo allí
+if (!empty($a_sel)) { //vengo de un checkbox
+	$id_pau=strtok($a_sel[0],"#");
+	$nom_activ=strtok("#");
+	$oPosicion->addParametro('id_sel',$a_sel,0);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id,0);
+} else {
+	empty($_POST['id_pau'])? $id_pau='' : $id_pau=$_POST['id_pau'];
+}
+if (empty($pau)) $pau=$_POST['pau'];
 
 // primero el cl:
 $c=0;
@@ -265,19 +261,19 @@ foreach ($asistentes as $nom => $val) {
 	$val[1] = "$c.-";
 	$a_valores[$c] = $val;
 }
-
+// las pongo al final, porque al contar los valores del array se despista.
+if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 
 if (!empty($msg_err)) { echo $msg_err; }
 
-
-/* ---------------------------------- html --------------------------------------- */
-
 echo $oPosicion->mostrar_left_slide();
+/* ---------------------------------- html --------------------------------------- */
 ?>
 <table cellpadding="2">
 <tr>
-<th class=titulo_inv colspan=6><?php echo $nom_activ;?></th>
-<tr><th class=subtitulo_inv colspan=6><?php echo ucfirst(_("relación de asistentes")); ?></th>
+<th class=titulo_inv colspan=8><?php echo $nom_activ;?></th>
+<tr><th class=subtitulo_inv colspan=8><?php echo ucfirst(_("relación de asistentes")); ?></th>
 </tr>
 <tr><tr><td><br></td></tr>
 <tr>

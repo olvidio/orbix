@@ -14,16 +14,6 @@ use actividadestudios\model as actividadestudios;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($sel)) { //vengo de un checkbox
-	$id_activ=strtok($sel[0],"#");
-	// el scroll id es de la página anterior, hay que guardarlo allí
-	$id_sel=$sel;
-	$oPosicion->addParametro('id_sel',$id_sel,1);
-	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
-	$oPosicion->addParametro('scroll_id',$scroll_id,1);
-}
-
 $obj_pau = empty($_POST['obj_pau'])? '' : $_POST['obj_pau'];
 		
 $a_cabeceras=array( _("interés"),_("asignatura"),_("créditos"),_("tipo"),_("profesor"),_("prof. avisado"),_("inicio"),_("fin")  );
@@ -191,4 +181,3 @@ if ($permiso==3) {
 	echo "<td class=botones><span class=link_inv onclick=\"fnjs_update_div('#ficha_activ','$pagina');\" >".sprintf(_("añadir asignatura"))."</span></td>";
 	echo "</tr></table>";
 }
-?>

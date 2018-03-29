@@ -620,6 +620,10 @@ foreach ($asistentes as $nom => $val) {
 	}
 	$a_valores[$c] = $val;
 }
+// Estas dos variables vienen de la pagina 'padre' dossiers_ver.php
+// las pongo al final, porque al contar los valores del array se despista.
+if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('');
@@ -672,8 +676,6 @@ $godossiers=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controlle
 /* ---------------------------------- html --------------------------------------- */
 
 if (!empty($msg_err)) { echo $msg_err; }
-
-echo $oPosicion->mostrar_left_slide();
 ?>
 <script>
 <?php

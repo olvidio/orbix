@@ -42,12 +42,13 @@ if (!empty($stack)) {
 	}
 }
 $oPosicion->recordar();
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 // el scroll id es de la página anterior, hay que guardarlo allí
-if (!empty($_POST['sel'])) { //vengo de un checkbox
- 	$id_sel=$_POST['sel'];
-	$id_pau=strtok($_POST['sel'][0],"#");
+if (!empty($a_sel)) { //vengo de un checkbox
+ 	$id_sel=$a_sel;
+	$id_pau=strtok($a_sel[0],"#");
 	$id_tabla=strtok("#");
-	$oPosicion->addParametro('id_sel',$id_sel,1);
+	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else {
@@ -139,8 +140,8 @@ switch ($pau) {
 		} else {
 			$form_action=Hash::link(ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_select.php');
 		}
-		$id_sel = array("$id_pau#$nom");
-		$oPosicion->addParametro('id_sel',$id_sel,1);
+//		$id_sel = array("$id_pau#$nom");
+//		$oPosicion->addParametro('id_sel',$id_sel,1);
 		break;
 }
 

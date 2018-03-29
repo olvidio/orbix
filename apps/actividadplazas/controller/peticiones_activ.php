@@ -172,6 +172,8 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $txt_guardar=_("guardar peticiones");
+
+echo $oPosicion->mostrar_left_slide();
 ?>
 <script>
 fnjs_mas_actividades=function(evt){

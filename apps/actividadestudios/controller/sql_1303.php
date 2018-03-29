@@ -189,6 +189,9 @@ foreach ($cAsistencias as $oAsistente) {
 	
 	$i=0;
 	$a_valores=array();
+	// Estas dos variables vienen de la pagina 'padre' dossiers_ver.php
+	if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+	if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 	foreach ($cMatriculas as $oMatricula) {
 		$i++;
 		$id_asignatura=$oMatricula->getId_asignatura();

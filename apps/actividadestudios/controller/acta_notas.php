@@ -13,19 +13,22 @@ use personas\model as personas;
 
 $notas=1; // para indicar a la página de actas que está dentro de ésta.
 
-$sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($sel)) { //vengo de un checkbox
-	$id_activ = strtok($sel[0],"#");
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	$id_activ = strtok($a_sel[0],"#");
 	$id_asignatura=strtok("#");
 	// el scroll id es de la página anterior, hay que guardarlo allí
- 	$id_sel=$sel;
-	$oPosicion->addParametro('id_sel',$id_sel,0);
+	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
-	$oPosicion->addParametro('scroll_id',$scroll_id,0);
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else {
 	empty($_POST['id_asignatura'])? $id_asignatura="" : $id_asignatura=$_POST['id_asignatura'];
 	empty($_POST['id_activ'])? $id_activ="" : $id_activ=$_POST['id_activ'];
 }
+/* Tengo que recordar la posicion, porque más abajo hay un include de 'acta_ver'
+ * que cambia el puntero.
+ */
+$oPosicion->recordar();
 
 $GesNotas = new notas\GestorNota();
 $oDesplNotas = $GesNotas->getListaNotas();
@@ -74,7 +77,6 @@ if (is_array($cActas) && count($cActas) == 1) {
 	$notas="nuevo";// para indicar a la página de actas que está dentro de ésta.
 }
 include_once ("apps/notas/controller/acta_ver.php"); 
-
 
 $oHash1 = new web\Hash();
 $oHash1->setcamposForm('id_nom!nota_num!nota_max!form_preceptor');

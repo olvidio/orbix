@@ -47,7 +47,8 @@ $mi_sfsv = core\ConfigGlobal::mi_sfsv();
 $continuar = (string)  filter_input(INPUT_POST, 'continuar');
 $stack = (integer)  filter_input(INPUT_POST, 'stack');
 
-//Si vengo de vuelta y le paso la referecia del stack donde está la información.
+//Si vengo de vuelta con el parámetro 'continuar', los datos no están en el POST,
+// sino en $Posicion. Le paso la referecia del stack donde está la información.
 if (!empty($continuar) && $continuar == 'si' && !empty($stack)) {
 	$oPosicion->goStack($stack);
 	$Qmodo = $oPosicion->getParametro('modo');

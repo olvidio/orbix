@@ -13,17 +13,28 @@ use profesores\model as profesores;
 
 $obj = 'actividadestudios\\model\\ActividadAsignatura';
 
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	$id_activ = strtok($_POST['sel'][0],"#");
-	$id_asignatura = strtok("#");
-} else {
-	empty($_POST['id_pau'])? $id_activ="" : $id_activ=$_POST['id_pau'];
+$go_to = (string)  \filter_input(INPUT_POST, 'go_to');
+if (!empty($go_to)) {
+	$go_to=urldecode($go_to);
 }
 
-if (!empty($_POST['go_to'])) {
-	$go_to=urldecode($_POST['go_to']);
+
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	$id_activ = strtok($a_sel[0],"#");
+	$id_asignatura=strtok("#");
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$oPosicion->addParametro('id_sel',$a_sel,0);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id,0);
+	if (!empty($go_to)) {
+		// add stack:
+		$stack = $oPosicion->getStack();
+		$go_to .= "&stack=$stack";
+	}
 } else {
-	empty($_POST['go_to'])? $go_to="" : $go_to=$_POST['go_to'];
+	$id_asignatura = empty($_POST['id_asignatura'])? "" : $_POST['id_asignatura'];
+	$id_activ = empty($_POST['id_pau'])? "" : $_POST['id_pau'];
 }
 
 $chk_a='';
@@ -68,15 +79,17 @@ if (!empty($id_asignatura)) { //caso de modificar
 	$f_ini = '';
 	$f_fin = '';
 	$interes = 'f';
-	if (!empty($_POST['id_pau'])) {
+	if (!empty($id_activ)) {
 		$GesAsignaturas = new asignaturas\GestorAsignatura();
 		$oDesplAsignaturas = $GesAsignaturas->getListaAsignaturas();
 		$oDesplAsignaturas->setNombre('id_asignatura');
 		$oDesplAsignaturas->setAction("fnjs_mas_profes('asignatura')");
 	} else {
-		$go_to=urlencode(core\ConfigGlobal::getWeb()."/apps/dossiers/controller/dossiers_ver.php?pau=${_POST['pau']}&id_pau=${_POST['id_pau']}&id_dossier=${_POST['id_dossier']}&tabla_pau=${_POST['tabla_pau']}&permiso=3");
-		$oPosicion = new web\Posicion();
-		echo $oPosicion->ir_a($go_to);
+		$id_dossier = (integer)  \filter_input(INPUT_POST, 'id_dossier');
+		$tabla_pau = (string)  \filter_input(INPUT_POST, 'tabla_pau');
+		$go_to=urlencode(core\ConfigGlobal::getWeb()."/apps/dossiers/controller/dossiers_ver.php?pau=a&id_pau=$id_activ&id_dossier=$id_dossier&tabla_pau=$tabla_pau&permiso=3");
+		$oPosicion2 = new web\Posicion();
+		echo $oPosicion2->ir_a($go_to);
 	}
 }
 
@@ -87,7 +100,7 @@ $oHash = new web\Hash();
 $camposForm = 'f_ini!f_fin!tipo!id_profesor';
 $oHash->setCamposNo('mod!avis_profesor!interes');
 $a_camposHidden = array(
-		'id_activ' => $_POST['id_pau'],
+		'id_activ' => $id_activ,
 		'go_to' => $go_to
 		);
 if (!empty($id_asignatura)) {
@@ -111,6 +124,7 @@ $h1 = $oHashTipo->linkSinVal();
 $oHashTipo->setCamposForm('salida!id_activ!id_asignatura');
 $h2 = $oHashTipo->linkSinVal();
 
+echo $oPosicion->mostrar_left_slide();
 ?>
 <!-- ------------------- html -----------------------------------------------  -->
 <script>

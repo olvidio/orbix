@@ -34,11 +34,9 @@ use personas\model as personas;
 	
 //pongo aqui el $go_to porque al ir al mismo update que las actividaes, no se donde voler
 $a_dataUrl = array('queSel'=>'asis','pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$_POST['obj_pau'],'id_dossier'=>$id_dossier);
-//			array('					 pau'=>$pau,'id_pau'=>$id_pau,'id_dossier'=>$id_dossier)));
 
 $go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query($a_dataUrl));
 			
-
 $oCargosEnActividad=new actividadcargos\GestorActividadCargo();
 
 // Permisos según el tipo de actividad
@@ -103,6 +101,10 @@ foreach($cCargosEnActividad as $oActividadCargo) {
 	$a_valores[$c][3]=$chk_puede_agd;
 	$a_valores[$c][4]=$observ;
 }
+// Estas dos variables vienen de la pagina 'padre' dossiers_ver.php
+// las pongo al final, porque al contar los valores del array se despista.
+if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('');
@@ -193,4 +195,3 @@ if ($permiso > 2) {
 		}
 	}
 }
-?>
