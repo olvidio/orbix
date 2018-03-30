@@ -53,7 +53,7 @@ if (!empty($stack)) {
 	$Qperiodo = empty($_POST['periodo'])? '' : $_POST['periodo'];
 	$Qinicio = empty($_POST['inicio'])? '' : $_POST['inicio'];
 	$Qfin = empty($_POST['fin'])? '' : $_POST['fin'];
-	$Qyear = empty($_POST['year'])? '' : $_POST['year'];
+	$Qyear = empty($_POST['year'])? (integer) date('Y') : $_POST['year'];
 	$Qdl_org = empty($_POST['dl_org'])? '' : $_POST['dl_org'];
 	$Qempiezamax = empty($_POST['empiezamax'])? '' : $_POST['empiezamax'];
 	$Qempiezamin = empty($_POST['empiezamin'])? '' : $_POST['empiezamin'];
