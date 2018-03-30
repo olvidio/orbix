@@ -229,7 +229,7 @@ class PeriodoQue {
 		return $this->oDesplPeriodos;
 	}
 	function getOpcionesAnys() {
-		$any = date('Y');
+		$any = (integer) date('Y');
 		$aOpcionesAnys[$any-2]=$any-2;
 		$aOpcionesAnys[$any-1]=$any-1;
 		$aOpcionesAnys[$any]=$any;
@@ -246,7 +246,7 @@ class PeriodoQue {
 	}
 	function getDesplAnys() {
 		if (!isset($this->oDesplAnys)) {
-			$any = date('Y');
+			$any = (integer) date('Y');
 			$aOpciones = $this->getOpcionesAnys();
 			$oDesplAnys = new Desplegable();
 			$oDesplAnys->setNombre('year');
