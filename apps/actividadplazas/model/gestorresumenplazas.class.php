@@ -291,6 +291,8 @@ class GestorResumenPlazas {
 				if ($dl != $dl_otra && array_key_exists($dl_otra,$a_plazas)) {
 					$a_plazas[$dl_otra]['conseguidas'][$dl] = $num_plazas;
 				} else {
+					$a_plazas[$dl_otra]['conseguidas'][$dl] = $num_plazas;
+					
 					$ocu = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$dl_otra);
 					$a_plazas[$dl][$dl_otra]['ocupadas'] = $ocu;
 					$tot_actual += $num_plazas;
@@ -309,8 +311,14 @@ class GestorResumenPlazas {
 			$a_plazas[$dl]['total_conseguidas'] = $total_conseguidas;
 		}
 		foreach ($a_plazas as $dl=>$aa) {
-			$pl_calendario = $aa['calendario'];
-			$pl_cedidas = $aa['total_cedidas'];
+			// si no tiene por calendario le pongo 0
+			if (!array_key_exists('calendario',$aa)) {
+				$pl_calendario = 0;
+				$pl_cedidas = 0;
+			} else {
+				$pl_calendario = $aa['calendario'];
+				$pl_cedidas = $aa['total_cedidas'];
+			}
 			$pl_conseguidas = $aa['total_conseguidas'];
 
 			$pl_actual = $pl_calendario - $pl_cedidas + $pl_conseguidas;
