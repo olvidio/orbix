@@ -101,6 +101,7 @@ class listaPlazas {
 			$dl_org_activ=$oActividad->getDl_org();
 			$id_ubi_casa=$oActividad->getId_ubi();
 			$plazas=$oActividad->getPlazas();
+			$publicado=$oActividad->getPublicado();
 
 			// Plazas
 			$gesActividadPlazas->setId_activ($id_activ);
@@ -258,10 +259,16 @@ class listaPlazas {
 				$pl_dif_txt = $pl_dif;
 			}
 
-			$plazas_txt = sprintf(_("Plazas (max-min): %s, para la dl: %s, ocupadas + pedidas: %s"),$plazas_casa,$pl_disponibles,$pl_ocupadas_pedidas);
-			// Nombre actividad y plazas:
-			$aGrupos[$id_activ] = $nom_activ;
-			$aGrupos[$id_activ] .= '<br>'." $plazas_txt, "._("dif").": $pl_dif_txt";
+			if ($publicado === true) {
+				$plazas_txt = sprintf(_("Plazas (max-min): %s, para la dl: %s, ocupadas + pedidas: %s"),$plazas_casa,$pl_disponibles,$pl_ocupadas_pedidas);
+				// Nombre actividad y plazas:
+				$aGrupos[$id_activ] = $nom_activ;
+				$aGrupos[$id_activ] .= '<br>'." $plazas_txt, "._("dif").": $pl_dif_txt";
+			} else {
+				$plazas_txt = sprintf(_("Plazas (max-min): %s, ocupadas: %s"),$plazas_casa,$num_txt);
+				$aGrupos[$id_activ] = $nom_activ;
+				$aGrupos[$id_activ] .= '<br>'." $plazas_txt";
+			}
 		}
 
 		$a_cabeceras[]= _("num");
