@@ -108,31 +108,36 @@ $aWhere['_ordre'] = 'f_ini';
 $mi_dele = core\ConfigGlobal::mi_dele();
 
 /////////////// actividades de mi dl ///////////////////
-if (empty($Qdl_org)) { // si se ha puesto en condición de búsqueda
+// si se ha puesto en condición de búsqueda
+if (empty($Qdl_org) || $Qdl_org == $mi_dele) {
 	$aWhere['dl_org'] = $mi_dele;
+
+	$oListaPlazasDl = new \asistentes\model\listaplazas();
+	$oListaPlazasDl->setMi_dele($mi_dele);
+	$oListaPlazasDl->setWhere($aWhere);
+	$oListaPlazasDl->setOperador($aOperador);
+	$oListaPlazasDl->setId_tipo_activ($Qid_tipo_activ);
+}
+/////////////// actividades de otras dl ///////////////////
+// si se ha puesto en condición de búsqueda
+if (empty($Qdl_org) || $Qdl_org != $mi_dele) {
+	$aWhere['dl_org'] = $mi_dele;
+	$aOperador['dl_org'] = '!=';
+
+	$oListaPlazasOtras = new \asistentes\model\listaplazas();
+	$oListaPlazasOtras->setMi_dele($mi_dele);
+	$oListaPlazasOtras->setWhere($aWhere);
+	$oListaPlazasOtras->setOperador($aOperador);
+	$oListaPlazasOtras->setId_tipo_activ($Qid_tipo_activ);
 }
 
-$oListaPlazas = new \asistentes\model\listaplazas();
-$oListaPlazas->setMi_dele($mi_dele);
-$oListaPlazas->setWhere($aWhere);
-$oListaPlazas->setOperador($aOperador);
-$oListaPlazas->setId_tipo_activ($Qid_tipo_activ);
 
 echo "<h3>"._("Actividades de la dl")."</h3>";
 // Lo pongo detrás del titulo, por si da error, saber que categoría hace referencia
-$oLista = $oListaPlazas->getLista();
-echo $oLista->listaPaginada();
-
-/////////////// actividades de otras dl ///////////////////
-if (empty($Qdl_org)) { // si se ha puesto en condición de búsqueda
-	$aWhere['dl_org'] = $mi_dele;
-	$aOperador['dl_org'] = '!=';
-}
-
-$oListaPlazas->setWhere($aWhere);
-$oListaPlazas->setOperador($aOperador);
+$oListaDl = $oListaPlazasDl->getLista();
+echo $oListaDl->listaPaginada();
 
 echo "<h3>"._("Actividades de otras dl")."</h3>";
 // Lo pongo detrás del titulo, por si da error, saber que categoría hace referencia
-$oLista = $oListaPlazas->getLista();
-echo $oLista->listaPaginada();
+$oListaOtras = $oListaPlazasOtras->getLista();
+echo $oListaOtras->listaPaginada();
