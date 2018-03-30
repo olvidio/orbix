@@ -457,8 +457,8 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 	}
 	$leyenda_html .= "</p>";
 	////////////////////////////////////////////////////////////////////
+	$resumen_plazas = '';
 	if (array_key_exists($mi_dele, $a_plazas_resumen)) {
-		$resumen_plazas = '';
 		foreach ($a_plazas_resumen as $padre => $aa) {
 			if ($padre != $mi_dele && $mi_dele != $dl_org) {	continue; }
 			$calendario = empty($aa['calendario'])? 0 : $aa['calendario']; // calendario.
