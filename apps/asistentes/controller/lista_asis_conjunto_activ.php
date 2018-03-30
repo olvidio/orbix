@@ -101,14 +101,16 @@ if (!empty($Qdl_org)) {
 if (!empty($Qmodo) && $Qmodo == 'publicar') {
    $aWhere['publicado'] = 'f'; 
 }
+$aWhere['_ordre'] = 'f_ini';
 
 //Para ver el tema plazas. Dos tablas:
 //Listar primero las que organiza la dl, después el resto
 $mi_dele = core\ConfigGlobal::mi_dele();
 
 /////////////// actividades de mi dl ///////////////////
-$aWhere['dl_org'] = $mi_dele;
-$aWhere['_ordre'] = 'f_ini';
+if (empty($Qdl_org)) { // si se ha puesto en condición de búsqueda
+	$aWhere['dl_org'] = $mi_dele;
+}
 
 $oListaPlazas = new \asistentes\model\listaplazas();
 $oListaPlazas->setMi_dele($mi_dele);
@@ -122,9 +124,10 @@ $oLista = $oListaPlazas->getLista();
 echo $oLista->listaPaginada();
 
 /////////////// actividades de otras dl ///////////////////
-$aWhere['dl_org'] = $mi_dele;
-$aOperador['dl_org'] = '!=';
-$aWhere['_ordre'] = 'f_ini';
+if (empty($Qdl_org)) { // si se ha puesto en condición de búsqueda
+	$aWhere['dl_org'] = $mi_dele;
+	$aOperador['dl_org'] = '!=';
+}
 
 $oListaPlazas->setWhere($aWhere);
 $oListaPlazas->setOperador($aOperador);
