@@ -29,6 +29,9 @@ if (empty($Qid_tipo_activ)) {
 	$oTipoActiv->setAsistentesText($sasistentes);
 	$oTipoActiv->setActividadText($sactividad);
 	$Qid_tipo_activ=$oTipoActiv->getId_tipo_activ();
+} else {
+	$oTipoActiv= new web\TiposActividades($Qid_tipo_activ);
+	$sactividad = $oTipoActiv->getActividadText();
 }
 $Qid_tipo_activ =  '^'.$Qid_tipo_activ;
 
@@ -46,23 +49,6 @@ switch ($sactividad) {
 		$fincurs=core\curso_est("fin",$any,"crt");
 		break;
 }
-/* antic
-//case "curso_ca":
-$mes = date("m");
-$any = date("Y");
-$ini = core\ConfigGlobal::$est_inicio;
-$fi = core\ConfigGlobal::$est_fin;
-if ($mes>9) {
-	$any2=$any+1;
-	$inicio = "$ini/$any";	
-	$fin = "$fi/$any2";
-} else {
-	$any2=$any-1;
-	$inicio = "$ini/$any2";	
-	$fin = "$fi/$any";
-}
- * 
- */
 
 $status = 2; //actual
 
