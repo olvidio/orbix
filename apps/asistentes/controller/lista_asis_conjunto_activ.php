@@ -121,9 +121,14 @@ if (empty($Qdl_org) || $Qdl_org == $mi_dele) {
 /////////////// actividades de otras dl ///////////////////
 // si se ha puesto en condición de búsqueda
 if (empty($Qdl_org) || $Qdl_org != $mi_dele) {
-	$aWhere['dl_org'] = $mi_dele;
-	$aOperador['dl_org'] = '!=';
-
+	if (!empty($Qdl_org)) {
+		$aWhere['dl_org'] = $Qdl_org;
+		$aOperador['dl_org'] = '=';
+	} else {
+		$aWhere['dl_org'] = $mi_dele;
+		$aOperador['dl_org'] = '!=';
+	}
+	
 	$oListaPlazasOtras = new \asistentes\model\listaplazas();
 	$oListaPlazasOtras->setMi_dele($mi_dele);
 	$oListaPlazasOtras->setWhere($aWhere);
