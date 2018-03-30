@@ -31,6 +31,9 @@ class Condicion {
 	public function getCondicion($campo,$operador,$valor) {
 	   if (isset($operador) && $operador !='') {
 			switch($operador) {
+				case '!=':
+					$sCondi = "$campo != :$campo";
+					break;
 				case 'IS NOT NULL':
 				case 'IS NULL':
 					$sCondi = "$campo $operador";
