@@ -285,8 +285,14 @@ class GestorResumenPlazas {
 		$tot_ocupadas = 0;
 		foreach ($a_plazas as $dl=>$aa) {
 			$total_cedidas = 0;
-			$num_plazas_calendario = $aa['calendario'];
-			$aCedidas = $aa['cedidas'];
+			// si no tiene por calendario le pongo 0
+			if (!array_key_exists('calendario',$aa)) {
+				$num_plazas_calendario = 0;
+				$aCedidas = array();
+			} else {
+				$num_plazas_calendario = $aa['calendario'];
+				$aCedidas = $aa['cedidas'];
+			}
 			foreach ($aCedidas as $dl_otra=>$num_plazas){
 				if ($dl != $dl_otra && array_key_exists($dl_otra,$a_plazas)) {
 					$a_plazas[$dl_otra]['conseguidas'][$dl] = $num_plazas;
