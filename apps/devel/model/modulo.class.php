@@ -132,12 +132,12 @@ class Modulo Extends core\ClasePropiedades {
 					apps_req                 = :apps_req";
 			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_mod='$this->iid_mod'")) === false) {
 				$sClauError = 'Modulo.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($qRs->execute($aDades) === false) {
 					$sClauError = 'Modulo.update.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
 			}
@@ -147,12 +147,12 @@ class Modulo Extends core\ClasePropiedades {
 			$valores="(:nom,:descripcion,:mods_req,:apps_req)";		
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Modulo.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($qRs->execute($aDades) === false) {
 					$sClauError = 'Modulo.insertar.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
 			}
@@ -172,7 +172,7 @@ class Modulo Extends core\ClasePropiedades {
 		if (isset($this->iid_mod)) {
 			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_mod='$this->iid_mod'")) === false) {
 				$sClauError = 'Modulo.carregar';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 			$aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
@@ -201,7 +201,7 @@ class Modulo Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_mod='$this->iid_mod'")) === false) {
 			$sClauError = 'Modulo.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		return true;

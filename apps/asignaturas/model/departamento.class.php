@@ -96,12 +96,12 @@ class Departamento Extends core\ClasePropiedades {
 					departamento             = :departamento";
 			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_departamento='$this->iid_departamento'")) === false) {
 				$sClauError = 'Departamento.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($qRs->execute($aDades) === false) {
 					$sClauError = 'Departamento.update.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
 			}
@@ -111,12 +111,12 @@ class Departamento Extends core\ClasePropiedades {
 			$valores="(:departamento)";		
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Departamento.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($qRs->execute($aDades) === false) {
 					$sClauError = 'Departamento.insertar.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
 			}
@@ -136,7 +136,7 @@ class Departamento Extends core\ClasePropiedades {
 		if (isset($this->iid_departamento)) {
 			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_departamento='$this->iid_departamento'")) === false) {
 				$sClauError = 'Departamento.carregar';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 			$aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
@@ -165,7 +165,7 @@ class Departamento Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_departamento='$this->iid_departamento'")) === false) {
 			$sClauError = 'Departamento.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		return true;

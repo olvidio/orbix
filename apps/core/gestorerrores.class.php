@@ -80,7 +80,7 @@ class gestorErrores {
 		$ahora = date("d/m/Y H:i:s");
 		$server = $oDBSt->getAttribute(constant("\PDO::ATTR_SERVER_INFO"));
 		$err = $oDBSt->errorInfo();
-		$txt = "\n".$ahora." - ".$user."[$esquema]$ip  ($server)";
+		$txt = "\n# ".$ahora." - ".$user."[$esquema]$ip  ($server)";
 		$txt.= "\n\t->>  ".$err[2]."\n $sClauError en linea $line de: $file\n";
 		
 		$filename = ConfigGlobal::$directorio.'/log/errores.log';

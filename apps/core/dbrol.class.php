@@ -95,12 +95,12 @@ class DBRol {
 
 		if (($qRs = $oDbl->prepare($sql)) === false) {
 			$sClauError = 'DBRol.addGrupo.prepare';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		} else {
 			if ($qRs->execute() === false) {
 				$sClauError = 'DBRol.addGrupo.execute';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 		}
@@ -111,12 +111,12 @@ class DBRol {
 
 		if (($qRs = $oDbl->prepare($sql)) === false) {
 			$sClauError = 'DBRol.delGrupo.prepare';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		} else {
 			if ($qRs->execute() === false) {
 				$sClauError = 'DBRol.delGrupo.execute';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 		}
@@ -127,12 +127,12 @@ class DBRol {
 
 		if (($qRs = $oDbl->prepare($sql)) === false) {
 			$sClauError = 'DBRol.crearSchema.prepare';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		} else {
 			if ($qRs->execute() === false) {
 				$sClauError = 'DBRol.crearSchema.execute';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 		}
@@ -145,12 +145,12 @@ class DBRol {
 
 		if (($qRs = $oDbl->prepare($sql)) === false) {
 			$sClauError = 'DBRol.crear.prepare';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		} else {
 			if ($qRs->execute() === false) {
 				$sClauError = 'DBRol.crear.execute';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 		}
@@ -161,12 +161,12 @@ class DBRol {
 
 		if (($qRs = $oDbl->prepare($sql)) === false) {
 			$sClauError = 'DBRol.eliminarSchema.prepare';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		} else {
 			if ($qRs->execute() === false) {
 				$sClauError = 'DBRol.eliminarSchema.execute';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 		}
@@ -178,12 +178,12 @@ class DBRol {
 
 		if (($qRs = $oDbl->prepare($sql)) === false) {
 			$sClauError = 'DBRol.eliminar.prepare';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		} else {
 			if ($qRs->execute() === false) {
 				$sClauError = 'DBRol.eliminar.execute';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 		}

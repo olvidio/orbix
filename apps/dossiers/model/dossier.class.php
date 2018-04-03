@@ -150,12 +150,12 @@ class Dossier Extends core\ClasePropiedades {
 					f_status                 = :f_status";
 			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE tabla='$this->stabla' AND id_pau='$this->sid_pau' AND id_tipo_dossier='$this->iid_tipo_dossier'")) === false) {
 				$sClauError = 'Dossier.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($qRs->execute($aDades) === false) {
 					$sClauError = 'Dossier.update.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
 			}
@@ -166,12 +166,12 @@ class Dossier Extends core\ClasePropiedades {
 			$valores="(:tabla,:id_pau,:id_tipo_dossier,:f_ini,:f_camb_dossier,:status_dossier,:f_status)";		
 			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Dossier.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($qRs->execute($aDades) === false) {
 					$sClauError = 'Dossier.insertar.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
 			}
@@ -190,7 +190,7 @@ class Dossier Extends core\ClasePropiedades {
 		if (isset($this->stabla) && isset($this->sid_pau) && isset($this->iid_tipo_dossier)) {
 			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE tabla='$this->stabla' AND id_pau='$this->sid_pau' AND id_tipo_dossier='$this->iid_tipo_dossier'")) === false) {
 				$sClauError = 'Dossier.carregar';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 			$aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
@@ -219,7 +219,7 @@ class Dossier Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE tabla='$this->stabla' AND id_pau='$this->sid_pau' AND id_tipo_dossier='$this->iid_tipo_dossier'")) === false) {
 			$sClauError = 'Dossier.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		return true;

@@ -31,7 +31,7 @@ function posibles_esquemas($default='') {
 	$sQuery = "select nspname from pg_namespace where nspowner > 1000 ORDER BY nspname";
 	if (($oDblSt = $oDBP->query($sQuery)) === false) {
 		$sClauError = 'Schemas.lista';
-		$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+		$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 		return false;
 	}
 	if (is_object($oDblSt)) {

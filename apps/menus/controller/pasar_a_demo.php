@@ -157,14 +157,14 @@ foreach ( $oDevelPC->query($sQry,\PDO::FETCH_ASSOC) as $aDades) {
 $sql_del = 'TRUNCATE TABLE aux_menus RESTART IDENTITY';
 if ($qRs = $oDbl->query($sql_del) === false) {
 	$sClauError = 'ImportarMenu.VaciarTabla';
-	$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+	$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 	return false;
 }
 
 $sql_copy = 'INSERT INTO aux_menus SELECT * FROM "public".ref_menus';
 if ($qRs = $oDbl->query($sql_copy) === false) {
 	$sClauError = 'ImportarMenu.LlenarTabla';
-	$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+	$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 	return false;
 }
 */

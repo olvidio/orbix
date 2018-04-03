@@ -134,7 +134,7 @@ class PermisosActividadesTrue {
 		//echo "<br>permActiv: $Qry<br>";
 		if (($qRs = $oDbl->query($Qry)) === false) {
 			$sClauError = 'ActividadCargo.carregarTrue';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		// per cada fila genero els permisos
