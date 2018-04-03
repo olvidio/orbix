@@ -25,30 +25,30 @@ $_SESSION['oGestorErrores'] = new gestorErrores();
 $oDBPC = new \PDO(ConfigGlobal::$str_conexio_public);
 $oDBPC->exec('SET search_path TO public');
 $oDBPC->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
-$oDBPC->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
+//$oDBPC->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
 
 $oDBRC = new \PDO(ConfigGlobal::$str_conexio_resto);
 $oDBRC->exec('SET search_path TO resto');
 $oDBRC->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
-$oDBRC->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
+//$oDBRC->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
 //comun
 $oDBC = new \PDO(ConfigGlobal::get_conexio_comu());
 $oDBC->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
-$oDBC->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
+//$oDBC->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
 $user_sfsv =$_SESSION['session_auth']['sfsv']; 
 switch ($user_sfsv) {
 	case 1: //sv
 		$oDB = new \PDO(ConfigGlobal::get_conexio_sv());
 		$oDB->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
-		$oDB->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
+//		$oDB->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
 		$oDBP = new \PDO(ConfigGlobal::$str_conexio_publicv);
 		$oDBP->exec('SET search_path TO publicv');
 		$oDBP->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
-		$oDBP->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
+//		$oDBP->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
 		$oDBR = new \PDO(ConfigGlobal::$str_conexio_restov);
 		$oDBR->exec('SET search_path TO restov');
 		$oDBR->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
-		$oDBR->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
+//		$oDBR->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
 		//sf
 		$oDBE = new \PDO(ConfigGlobal::get_conexio_sf());
 		$oDBEP = new \PDO(ConfigGlobal::$str_conexio_publicf);
@@ -57,15 +57,15 @@ switch ($user_sfsv) {
 	case 2: //sf
 		$oDB = new \PDO(ConfigGlobal::get_conexio_sf());
 		$oDB->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
-		$oDB->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
+//		$oDB->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
 		$oDBP = new \PDO(ConfigGlobal::$str_conexio_publicf);
 		$oDBP->exec('SET search_path TO publicf');
 		$oDBP->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
-		$oDBP->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
+//		$oDBP->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
 		$oDBR = new \PDO(ConfigGlobal::$str_conexio_restof);
 		$oDBR->exec('SET search_path TO restof');
 		$oDBR->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
-		$oDBR->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
+//		$oDBR->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
 		//sv
 		$oDBE = new \PDO(ConfigGlobal::get_conexio_sv());
 		break;

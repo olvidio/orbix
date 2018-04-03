@@ -78,9 +78,12 @@ class gestorErrores {
 		$user = ConfigGlobal::mi_usuario();
 		$esquema = ConfigGlobal::mi_region_dl();
 		$ahora = date("d/m/Y H:i:s");
-		$server = $oDBSt->getAttribute(constant("\PDO::ATTR_SERVER_INFO"));
+		// En algunos momentos interesa la info del servidor, pero debe ser con 
+		// la conexión  PDO, no con el Statement:
+		//		$server = $oDB->getAttribute(constant("\PDO::ATTR_SERVER_INFO"));
+		//		$txt = "\n# ".$ahora." - ".$user."[$esquema]$ip  ($server)";
 		$err = $oDBSt->errorInfo();
-		$txt = "\n# ".$ahora." - ".$user."[$esquema]$ip  ($server)";
+		$txt = "\n# ".$ahora." - ".$user."[$esquema]$ip ";
 		$txt.= "\n\t->>  ".$err[2]."\n $sClauError en linea $line de: $file\n";
 		
 		$filename = ConfigGlobal::$directorio.'/log/errores.log';
