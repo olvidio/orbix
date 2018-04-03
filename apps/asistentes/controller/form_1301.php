@@ -14,6 +14,11 @@ if (!empty($go_to)) {
 	$go_to=urldecode($go_to);
 }
 	
+$id_nom = (integer)  \filter_input(INPUT_POST, 'id_pau');
+$obj_pau = (string)  \filter_input(INPUT_POST, 'obj_pau');
+$id_tipo = (string)  \filter_input(INPUT_POST, 'id_tipo');
+$que_dl = (string)  \filter_input(INPUT_POST, 'que_dl');
+
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
 	$id_activ = strtok($a_sel[0],"#");
@@ -27,7 +32,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 		$go_to .= "&stack=$stack";
 	}
 } else {
-	$id_activ = (integer)  \filter_input(INPUT_POST, 'id_pau');
+	$id_activ = '';
 }
 
 if (!empty($id_activ)) { //caso de modificar
@@ -40,14 +45,14 @@ if (!empty($id_activ)) { //caso de modificar
 	$id_tabla_dl = $oActividad->getId_tabla();
 
 	if ($dl == core\ConfigGlobal::mi_dele()) {
-		switch ($_POST['obj_pau']) {
+		switch ($obj_pau) {
 			case 'PersonaN':
 			case 'PersonaNax':
 			case 'PersonaAgd':
 			case 'PersonaS':
 			case 'PersonaSSSC':
 			case 'PersonaDl':
-				$oAsistente = new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$_POST['id_pau']));
+				$oAsistente = new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
 				break;
 			case 'PersonaOut':
 				$oAsistente=new asistentes\AsistenteOut(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
@@ -58,14 +63,14 @@ if (!empty($id_activ)) { //caso de modificar
 				exit (_("Los datos de asistencia los modifica la dl del asistente"));
 				break;
 			case 'PersonaEx':
-				$oAsistente = new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$_POST['id_pau']));
+				$oAsistente = new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
 				break;
 		}
 	} else { 
 		if ($id_tabla_dl == 'dl') { 
-			$oAsistente = new asistentes\AsistenteOut(array('id_activ'=>$id_activ,'id_nom'=>$_POST['id_pau']));
+			$oAsistente = new asistentes\AsistenteOut(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
 		} else {
-			$oAsistente = new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$_POST['id_pau']));
+			$oAsistente = new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
 		}
 	} 
 	$id_activ_real=$id_activ;
@@ -76,14 +81,14 @@ if (!empty($id_activ)) { //caso de modificar
 	$plaza=$oAsistente->getPlaza();
 } else { //caso de nuevo asistente
 	$mod="nuevo";
-	if (empty($_POST['id_tipo'])) {
+	if (empty($id_tipo)) {
 		$mi_sfsv = core\ConfigGlobal::mi_sfsv();
 		$id_tipo='^'.$mi_sfsv;  //caso genérico para todas las actividades
 	} else {
-		empty($_POST['id_tipo'])? $id_tipo="" : $id_tipo='^'.$_POST['id_tipo'];
+		$id_tipo = empty($id_tipo)? "" : '^'.$id_tipo;
 	}
-	if (!empty($_POST['que_dl'])) { 
-		$aWhere['dl_org']=$_POST['que_dl'];
+	if (!empty($que_dl)) { 
+		$aWhere['dl_org']=$que_dl;
 	} else {
 		$aWhere['dl_org']=core\ConfigGlobal::mi_dele();
 		$aOperadores['dl_org']='!=';
@@ -121,8 +126,8 @@ $oHash = new web\Hash();
 $camposForm = 'observ!plaza';
 $oHash->setCamposNo('mod!propio!falta!est_ok');
 $a_camposHidden = array(
-		'id_nom' => $_POST['id_pau'],
-		'obj_pau'=> $_POST['obj_pau'],
+		'id_nom' => $id_nom,
+		'obj_pau'=> $obj_pau,
 		'go_to'=> $go_to
 		);
 if (!empty($id_activ_real)) {
@@ -150,7 +155,6 @@ if (!empty($id_activ_real)) {
 		$i++;
 		$id_activ=$oActividad->getId_activ();
 		$nom_activ=$oActividad->getNom_activ();
-		//$id_activ==$id_pau ? $chk="selected": $chk=""; 
 		echo "<option value=$id_activ>$nom_activ</option>";
 	
 	}
