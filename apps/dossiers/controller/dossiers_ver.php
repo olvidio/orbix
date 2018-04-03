@@ -42,25 +42,26 @@ if (!empty($stack)) {
 	}
 }
 $oPosicion->recordar();
+
+$id_pau = (integer)  \filter_input(INPUT_POST, 'id_pau');
+$pau = (string)  \filter_input(INPUT_POST, 'pau');
+$obj_pau = (string)  \filter_input(INPUT_POST, 'obj_pau');
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 // el scroll id es de la página anterior, hay que guardarlo allí
 if (!empty($a_sel)) { //vengo de un checkbox
  	$id_sel=$a_sel;
-	$id_pau=strtok($a_sel[0],"#");
+	$id_pau= empty($id_pau)? strtok($a_sel[0],"#") : $id_pau; //si ya lo tengo, prevalece. el sel puede ser otra cosa
 	$id_tabla=strtok("#");
 	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
-} else {
-	empty($_POST['id_pau'])? $id_pau='' : $id_pau=$_POST['id_pau'];
 }
-if (empty($pau)) $pau=$_POST['pau'];
+
 if (empty($permiso) && !empty($_POST['permiso'])) {
 	$permiso=$_POST['permiso'];
 } else {
 	$permiso="";
 }
-$obj_pau = empty($_POST['obj_pau'])? '' : $_POST['obj_pau'];
 
 $_POST['go_atras'] = empty($_POST['go_atras'])? '' : $_POST['go_atras'];
 // para las tablas que estan en el exterior:

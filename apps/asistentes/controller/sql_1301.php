@@ -14,8 +14,9 @@ use dossiers\model as dossiers;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$periodo = empty($_POST['periodo'])? 1 : $_POST['periodo'];
 //pongo aqui el $go_to porque al ir al mismo update que las actividaes, no se donde voler
-$go_to=core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'id_dossier'=>$id_dossier,'obj_pau' => $_POST['obj_pau'])); 
+$go_to=core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'id_dossier'=>$id_dossier,'obj_pau' => $_POST['obj_pau'],'periodo'=>$periodo)); 
 
 $mi_sfsv = core\ConfigGlobal::mi_sfsv();
 /* Pongo en la variable $curso el periodo del curso */
@@ -28,8 +29,7 @@ $aWhere = array();
 $aOperator = array();
 $aWhere['_ordre'] = 'f_ini';
 
-if(empty($_POST['periodo'])) { $_POST['periodo']=1; }
-switch ($_POST['periodo']) {
+switch ($periodo) {
 	case 2 :
 		$chk_1="";
 		$chk_2="checked";
