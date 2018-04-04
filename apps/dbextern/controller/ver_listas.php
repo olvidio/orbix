@@ -45,6 +45,7 @@ $oSincroDB = new dbextern\model\sincroDB();
 $oSincroDB->setTipo_persona($tipo_persona);
 $oSincroDB->setDl($dl);
 
+$id_nom_listas = '';
 if (empty($id)) {
 	$id=1;
 	// todos los de listas
