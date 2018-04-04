@@ -113,6 +113,13 @@ fnjs_actualizar=function(){
 	$d = 0;
 	foreach ($a_plazas as $dl=>$pl) {
 		if ($dl == 'total') { continue; }
+		// evitar errores si no existe el indice.
+		$pl['calendario'] = empty($pl['calendario'])? '-' : $pl['calendario'];
+		$pl['total_cedidas'] = empty($pl['total_cedidas'])? '-' : $pl['total_cedidas'];
+		$pl['total_conseguidas'] = empty($pl['total_conseguidas'])? '-' : $pl['total_conseguidas'];
+		$pl['total_actual'] = empty($pl['total_actual'])? '-' : $pl['total_actual'];
+		$pl['ocupadas'] = empty($pl['ocupadas'])? '-' : $pl['ocupadas'];
+		
 		$d++;
 		$clase = "tono$d";
 		echo "<tr class='$clase'>";
