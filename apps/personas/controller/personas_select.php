@@ -140,7 +140,9 @@ switch ($tabla) {
 	case "p_nax":
 		$obj_pau = 'PersonaNax';
 		$GesPersona = new personas\GestorPersonaNax();
-		$cPersonas = $GesPersona->getPersonasDl($aWhere,$aOperador);
+		if (($cPersonas = $GesPersona->getPersonasDl($aWhere,$aOperador)) === false) {
+			$cPersonas = array();
+		}
 	break;
 	case "p_agregados":
 		$obj_pau = 'PersonaAgd';
