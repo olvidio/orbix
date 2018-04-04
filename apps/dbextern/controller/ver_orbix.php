@@ -65,6 +65,7 @@ if (empty($id)) {
 	$GesPersonas = new $obj();
 	$cPersonasOrbix = $GesPersonas->getPersonasDl(array('situacion'=>'A','_ordre'=>'apellido1,apellido2,nom'));
 	$i = 0;
+	$a_lista = array();
 	foreach ($cPersonasOrbix as $oPersonaListas) {
 		$id_nom_orbix = $oPersonaListas->getId_nom();
 

@@ -46,6 +46,7 @@ $oSincroDB = new SincroDB();
 $oSincroDB->setTipo_persona($tipo_persona);
 
 $i = 0;
+$a_persona_orbix = array();
 foreach ($a_ids_traslados as $id_nom_orbix) {
 	$i++;
 	//Buscar en otras dl (formato: H-dlpv)
