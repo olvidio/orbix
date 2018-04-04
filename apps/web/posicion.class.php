@@ -59,6 +59,8 @@ class Posicion {
 	 * @var n número de posiciones a retroceder.
 	 */
 	public function go($n=0) {
+		if (!is_array($_SESSION['position'])) return;
+
 		$aPosition = end($_SESSION['position']);
 		for ($i=0; $i < $n; $i++) {
 			$aPosition = prev($_SESSION['position']);
