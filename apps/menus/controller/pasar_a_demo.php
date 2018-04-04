@@ -52,9 +52,9 @@ switch ($user_sfsv) {
 
 //************ METAMENUS **************
 $sql_del = 'TRUNCATE TABLE "public".aux_metamenus RESTART IDENTITY';
-if ($qRs = $oDemoPC->query($sql_del) === false) {
+if ($oDemoPCSt = $oDemoPC->query($sql_del) === false) {
 	$sClauError = 'ExportarMenu.VaciarTabla';
-	$_SESSION['oGestorErrores']->addErrorAppLastError($oDevelPC, $sClauError, __LINE__, __FILE__);
+	$_SESSION['oGestorErrores']->addErrorAppLastError($oDemoPCSt, $sClauError, __LINE__, __FILE__);
 	return false;
 }
 
@@ -63,23 +63,23 @@ foreach ( $oDevelPC->query($sQry,\PDO::FETCH_ASSOC) as $aDades) {
 	//print_r($aDades);
 	$campos="(id_metamenu,modulo,url,parametros,descripcion)";
 	$valores="(:id_metamenu,:modulo,:url,:parametros,:descripcion)";
-	if (($qRs = $oDemoPC->prepare("INSERT INTO public.aux_metamenus $campos VALUES $valores")) === false) {
+	if (($oDemoPCSt = $oDemoPC->prepare("INSERT INTO public.aux_metamenus $campos VALUES $valores")) === false) {
 		$sClauError = 'PassarADemo.insertar.prepare';
-		$_SESSION['oGestorErrores']->addErrorAppLastError($oDemoPC, $sClauError, __LINE__, __FILE__);
+		$_SESSION['oGestorErrores']->addErrorAppLastError($oDemoPCSt, $sClauError, __LINE__, __FILE__);
 		return false;
 	} else {
-		if ($qRs->execute($aDades) === false) {
+		if ($oDemoPCSt->execute($aDades) === false) {
 			$sClauError = 'PassarADemo.insertar.execute';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDemoPC, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDemoPCSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 	}
 }
 //************ GRUPMENU **************
 $sql_del = 'TRUNCATE TABLE "public".ref_grupmenu RESTART IDENTITY';
-if ($qRs = $oDemoPC->query($sql_del) === false) {
+if ($oDemoPCSt = $oDemoPC->query($sql_del) === false) {
 	$sClauError = 'ExportarMenu.VaciarTabla';
-	$_SESSION['oGestorErrores']->addErrorAppLastError($oDemoPC, $sClauError, __LINE__, __FILE__);
+	$_SESSION['oGestorErrores']->addErrorAppLastError($oDemoPCSt, $sClauError, __LINE__, __FILE__);
 	return false;
 }
 
@@ -88,23 +88,23 @@ foreach ( $oDevelPC->query($sQry,\PDO::FETCH_ASSOC) as $aDades) {
 	//print_r($aDades);
 	$campos="(id_grupmenu,grup_menu,orden)";
 	$valores="(:id_grupmenu,:grup_menu,:orden)";
-	if (($qRs = $oDemoPC->prepare("INSERT INTO public.ref_grupmenu $campos VALUES $valores")) === false) {
+	if (($oDemoPCSt = $oDemoPC->prepare("INSERT INTO public.ref_grupmenu $campos VALUES $valores")) === false) {
 		$sClauError = 'PassarADemo.insertar.prepare';
-		$_SESSION['oGestorErrores']->addErrorAppLastError($oDemoPC, $sClauError, __LINE__, __FILE__);
+		$_SESSION['oGestorErrores']->addErrorAppLastError($oDemoPCSt, $sClauError, __LINE__, __FILE__);
 		return false;
 	} else {
-		if ($qRs->execute($aDades) === false) {
+		if ($oDemoPCSt->execute($aDades) === false) {
 			$sClauError = 'PassarADemo.insertar.execute';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDemoPC, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDemoPCSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 	}
 }
 //************ GRUPMENU_ROL **************
 $sql_del = 'TRUNCATE TABLE "public".ref_grupmenu_rol RESTART IDENTITY';
-if ($qRs = $oDemoPC->query($sql_del) === false) {
+if ($oDemoPCSt = $oDemoPC->query($sql_del) === false) {
 	$sClauError = 'ExportarMenu.VaciarTabla';
-	$_SESSION['oGestorErrores']->addErrorAppLastError($oDevelPC, $sClauError, __LINE__, __FILE__);
+	$_SESSION['oGestorErrores']->addErrorAppLastError($oDemoPCSt, $sClauError, __LINE__, __FILE__);
 	return false;
 }
 
@@ -113,14 +113,14 @@ foreach ( $oDevelPC->query($sQry,\PDO::FETCH_ASSOC) as $aDades) {
 	//print_r($aDades);
 	$campos="(id_item,id_grupmenu,id_role)";
 	$valores="(:id_item,:id_grupmenu,:id_role)";
-	if (($qRs = $oDemoPC->prepare("INSERT INTO public.ref_grupmenu_rol $campos VALUES $valores")) === false) {
+	if (($oDemoPCSt = $oDemoPC->prepare("INSERT INTO public.ref_grupmenu_rol $campos VALUES $valores")) === false) {
 		$sClauError = 'PassarADemo.insertar.prepare';
-		$_SESSION['oGestorErrores']->addErrorAppLastError($oDemoPC, $sClauError, __LINE__, __FILE__);
+		$_SESSION['oGestorErrores']->addErrorAppLastError($oDemoPCSt, $sClauError, __LINE__, __FILE__);
 		return false;
 	} else {
-		if ($qRs->execute($aDades) === false) {
+		if ($oDemoPCSt->execute($aDades) === false) {
 			$sClauError = 'PassarADemo.insertar.execute';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDemoPC, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDemoPCSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 	}
@@ -128,9 +128,9 @@ foreach ( $oDevelPC->query($sQry,\PDO::FETCH_ASSOC) as $aDades) {
 
 //************ MENUS **************
 $sql_del = 'TRUNCATE TABLE "public".ref_menus RESTART IDENTITY';
-if ($qRs = $oDemoPC->query($sql_del) === false) {
+if ($oDemoPCSt = $oDemoPC->query($sql_del) === false) {
 	$sClauError = 'ExportarMenu.VaciarTabla';
-	$_SESSION['oGestorErrores']->addErrorAppLastError($oDevelPC, $sClauError, __LINE__, __FILE__);
+	$_SESSION['oGestorErrores']->addErrorAppLastError($oDemoPCSt, $sClauError, __LINE__, __FILE__);
 	return false;
 }
 
@@ -139,33 +139,15 @@ foreach ( $oDevelPC->query($sQry,\PDO::FETCH_ASSOC) as $aDades) {
 	//print_r($aDades);
 	$campos="(id_menu,orden,menu,parametros,id_metamenu,menu_perm,id_grupmenu,ok)";
 	$valores="(:id_menu,:orden,:menu,:parametros,:id_metamenu,:menu_perm,:id_grupmenu,:ok)";
-	if (($qRs = $oDemoPC->prepare("INSERT INTO public.ref_menus $campos VALUES $valores")) === false) {
+	if (($oDemoPCSt = $oDemoPC->prepare("INSERT INTO public.ref_menus $campos VALUES $valores")) === false) {
 		$sClauError = 'PassarADemo.insertar.prepare';
-		$_SESSION['oGestorErrores']->addErrorAppLastError($oDemoPC, $sClauError, __LINE__, __FILE__);
+		$_SESSION['oGestorErrores']->addErrorAppLastError($oDemoPCSt, $sClauError, __LINE__, __FILE__);
 		return false;
 	} else {
-		if ($qRs->execute($aDades) === false) {
+		if ($oDemoPCSt->execute($aDades) === false) {
 			$sClauError = 'PassarADemo.insertar.execute';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDemoPC, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDemoPCSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 	}
 }
-
-/*
-
-$sql_del = 'TRUNCATE TABLE aux_menus RESTART IDENTITY';
-if ($qRs = $oDbl->query($sql_del) === false) {
-	$sClauError = 'ImportarMenu.VaciarTabla';
-	$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-	return false;
-}
-
-$sql_copy = 'INSERT INTO aux_menus SELECT * FROM "public".ref_menus';
-if ($qRs = $oDbl->query($sql_copy) === false) {
-	$sClauError = 'ImportarMenu.LlenarTabla';
-	$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-	return false;
-}
-*/
-?>

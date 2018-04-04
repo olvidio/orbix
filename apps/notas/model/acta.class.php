@@ -163,12 +163,12 @@ class Acta Extends core\ClasePropiedades {
 					linea                    = :linea,
 					lugar                    = :lugar,
 					observ                   = :observ";
-			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE acta='$this->sacta'")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE acta='$this->sacta'")) === false) {
 				$sClauError = 'Acta.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'Acta.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -179,12 +179,12 @@ class Acta Extends core\ClasePropiedades {
 			array_unshift($aDades, $this->sacta);
 			$campos="(acta,id_asignatura,id_activ,f_acta,libro,pagina,linea,lugar,observ)";
 			$valores="(:acta,:id_asignatura,:id_activ,:f_acta,:libro,:pagina,:linea,:lugar,:observ)";		
-			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Acta.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'Acta.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -203,18 +203,18 @@ class Acta Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->sacta)) {
-			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE acta='$this->sacta'")) === false) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE acta='$this->sacta'")) === false) {
 				$sClauError = 'Acta.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
-			$aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
+			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
 					break;
 				case 'guardar':
-					if (!$qRs->rowCount()) return false;
+					if (!$oDblSt->rowCount()) return false;
 					break;
 				default:
 					$this->setAllAtributes($aDades);
@@ -232,7 +232,7 @@ class Acta Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE acta='$this->sacta'")) === false) {
+		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE acta='$this->sacta'")) === false) {
 			$sClauError = 'Acta.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;

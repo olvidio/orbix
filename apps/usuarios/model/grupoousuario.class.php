@@ -22,18 +22,18 @@ class GrupoOUsuario Extends Grupo {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iid_usuario)) {
-			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_usuario='$this->iid_usuario'")) === false) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_usuario='$this->iid_usuario'")) === false) {
 				$sClauError = 'Grupo.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
-			$aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
+			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
 					break;
 				case 'guardar':
-					if (!$qRs->rowCount()) return false;
+					if (!$oDblSt->rowCount()) return false;
 					break;
 				default:
 					$this->setAllAtributes($aDades);

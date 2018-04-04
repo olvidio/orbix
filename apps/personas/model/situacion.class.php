@@ -94,12 +94,12 @@ class Situacion Extends core\ClasePropiedades {
 			//UPDATE
 			$update="
 					nombre_situacion         = :nombre_situacion";
-			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE situacion='$this->ssituacion'")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE situacion='$this->ssituacion'")) === false) {
 				$sClauError = 'Situacion.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'Situacion.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -110,12 +110,12 @@ class Situacion Extends core\ClasePropiedades {
 			array_unshift($aDades, $this->ssituacion);
 			$campos="(situacion,nombre_situacion)";
 			$valores="(:situacion,:nombre_situacion)";		
-			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Situacion.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'Situacion.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -134,18 +134,18 @@ class Situacion Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->ssituacion)) {
-			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE situacion='$this->ssituacion'")) === false) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE situacion='$this->ssituacion'")) === false) {
 				$sClauError = 'Situacion.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
-			$aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
+			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
 					break;
 				case 'guardar':
-					if (!$qRs->rowCount()) return false;
+					if (!$oDblSt->rowCount()) return false;
 					break;
 				default:
 					$this->setAllAtributes($aDades);
@@ -163,7 +163,7 @@ class Situacion Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE situacion='$this->ssituacion'")) === false) {
+		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE situacion='$this->ssituacion'")) === false) {
 			$sClauError = 'Situacion.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;

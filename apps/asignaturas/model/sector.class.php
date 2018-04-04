@@ -102,12 +102,12 @@ class Sector Extends core\ClasePropiedades {
 			$update="
 					id_departamento          = :id_departamento,
 					sector                   = :sector";
-			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_sector='$this->iid_sector'")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_sector='$this->iid_sector'")) === false) {
 				$sClauError = 'Sector.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'Sector.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -117,12 +117,12 @@ class Sector Extends core\ClasePropiedades {
 			// INSERT
 			$campos="(id_departamento,sector)";
 			$valores="(:id_departamento,:sector)";		
-			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Sector.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'Sector.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -142,18 +142,18 @@ class Sector Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iid_sector)) {
-			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_sector='$this->iid_sector'")) === false) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_sector='$this->iid_sector'")) === false) {
 				$sClauError = 'Sector.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
-			$aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
+			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
 					break;
 				case 'guardar':
-					if (!$qRs->rowCount()) return false;
+					if (!$oDblSt->rowCount()) return false;
 					break;
 				default:
 					$this->setAllAtributes($aDades);
@@ -171,7 +171,7 @@ class Sector Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_sector='$this->iid_sector'")) === false) {
+		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_sector='$this->iid_sector'")) === false) {
 			$sClauError = 'Sector.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;

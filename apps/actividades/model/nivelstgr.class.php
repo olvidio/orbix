@@ -102,12 +102,12 @@ class NivelStgr Extends core\ClasePropiedades {
 					desc_nivel               = :desc_nivel,
 					desc_breve               = :desc_breve,
 					orden                    = :orden";
-			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE nivel_stgr='$this->inivel_stgr'")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE nivel_stgr='$this->inivel_stgr'")) === false) {
 				$sClauError = 'NivelStgr.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'NivelStgr.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -117,26 +117,26 @@ class NivelStgr Extends core\ClasePropiedades {
 			// INSERT
 			$campos="(desc_nivel,desc_breve,orden)";
 			$valores="(:desc_nivel,:desc_breve,:orden)";		
-			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'NivelStgr.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'NivelStgr.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
 				// també a l'exterior
 				if (ConfigGlobal::$ubicacion == 'int') {
-					if (($qRs = $oDblAA->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
+					if (($oDblAASt = $oDblAA->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 						$sClauError = 'Exterior.NivelStgr.insertar.prepare';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblAA, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblAASt, $sClauError, __LINE__, __FILE__);
 						return false;
 					} else {
-						if ($qRs->execute($aDades) === false) {
+						if ($oDblAASt->execute($aDades) === false) {
 							$sClauError = 'Exterior.NivelStgr.insertar.execute';
-							$_SESSION['oGestorErrores']->addErrorAppLastError($oDblAA, $sClauError, __LINE__, __FILE__);
+							$_SESSION['oGestorErrores']->addErrorAppLastError($oDblAASt, $sClauError, __LINE__, __FILE__);
 							return false;
 						}
 					}
@@ -156,18 +156,18 @@ class NivelStgr Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->inivel_stgr)) {
-			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE nivel_stgr='$this->inivel_stgr'")) === false) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE nivel_stgr='$this->inivel_stgr'")) === false) {
 				$sClauError = 'NivelStgr.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
-			$aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
+			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
 					break;
 				case 'guardar':
-					if (!$qRs->rowCount()) return false;
+					if (!$oDblSt->rowCount()) return false;
 					break;
 				default:
 					$this->setAllAtributes($aDades);
@@ -185,7 +185,7 @@ class NivelStgr Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE nivel_stgr='$this->inivel_stgr'")) === false) {
+		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE nivel_stgr='$this->inivel_stgr'")) === false) {
 			$sClauError = 'NivelStgr.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;

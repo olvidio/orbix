@@ -82,12 +82,12 @@ class TipoCentro Extends core\ClasePropiedades {
 			//UPDATE
 			$update="
 					nombre_tipo_ctr          = :nombre_tipo_ctr";
-			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE tipo_ctr='$this->stipo_ctr'")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE tipo_ctr='$this->stipo_ctr'")) === false) {
 				$sClauError = 'TipoCentro.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'TipoCentro.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -98,12 +98,12 @@ class TipoCentro Extends core\ClasePropiedades {
 			array_unshift($aDades, $this->stipo_ctr);
 			$campos="(tipo_ctr,nombre_tipo_ctr)";
 			$valores="(:tipo_ctr,:nombre_tipo_ctr)";		
-			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'TipoCentro.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'TipoCentro.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -122,18 +122,18 @@ class TipoCentro Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->stipo_ctr)) {
-			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE tipo_ctr='$this->stipo_ctr'")) === false) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE tipo_ctr='$this->stipo_ctr'")) === false) {
 				$sClauError = 'TipoCentro.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
-			$aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
+			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
 					break;
 				case 'guardar':
-					if (!$qRs->rowCount()) return false;
+					if (!$oDblSt->rowCount()) return false;
 					break;
 				default:
 					$this->setAllAtributes($aDades);
@@ -151,7 +151,7 @@ class TipoCentro Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE tipo_ctr='$this->stipo_ctr'")) === false) {
+		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE tipo_ctr='$this->stipo_ctr'")) === false) {
 			$sClauError = 'TipoCentro.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;

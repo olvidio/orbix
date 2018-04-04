@@ -138,12 +138,12 @@ class actividadPlazas Extends core\ClasePropiedades {
 					plazas                   = :plazas,
 					cl                       = :cl,
 					cedidas                  = :cedidas";
-			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_activ='$this->iid_activ' AND id_dl='$this->iid_dl' AND dl_tabla='$this->sdl_tabla'")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_activ='$this->iid_activ' AND id_dl='$this->iid_dl' AND dl_tabla='$this->sdl_tabla'")) === false) {
 				$sClauError = 'actividadPlazas.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'actividadPlazas.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -154,12 +154,12 @@ class actividadPlazas Extends core\ClasePropiedades {
 			array_unshift($aDades, $this->iid_activ, $this->iid_dl, $this->sdl_tabla);
 			$campos="(id_activ,id_dl,dl_tabla,plazas,cl,cedidas)";
 			$valores="(:id_activ,:id_dl,:dl_tabla,:plazas,:cl,:cedidas)";		
-			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'actividadPlazas.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'actividadPlazas.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -178,18 +178,18 @@ class actividadPlazas Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iid_activ) && isset($this->iid_dl) && isset($this->sdl_tabla)) {
-			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_dl='$this->iid_dl' AND dl_tabla='$this->sdl_tabla'")) === false) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_dl='$this->iid_dl' AND dl_tabla='$this->sdl_tabla'")) === false) {
 				$sClauError = 'actividadPlazas.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
-			$aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
+			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
 					break;
 				case 'guardar':
-					if (!$qRs->rowCount()) return false;
+					if (!$oDblSt->rowCount()) return false;
 					break;
 				default:
 					$this->setAllAtributes($aDades);
@@ -207,7 +207,7 @@ class actividadPlazas Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_dl='$this->iid_dl' AND dl_tabla='$this->sdl_tabla'")) === false) {
+		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_dl='$this->iid_dl' AND dl_tabla='$this->sdl_tabla'")) === false) {
 			$sClauError = 'actividadPlazas.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;

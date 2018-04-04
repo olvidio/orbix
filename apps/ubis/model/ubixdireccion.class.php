@@ -98,12 +98,12 @@ Abstract class UbixDireccion Extends core\ClasePropiedades {
 			$update="
 					propietario              = :propietario,
 					principal         	     = :principal";
-			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_ubi='$this->iid_ubi' AND id_direccion='$this->iid_direccion'")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_ubi='$this->iid_ubi' AND id_direccion='$this->iid_direccion'")) === false) {
 				$sClauError = 'UbixDireccion.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'UbixDireccion.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -114,12 +114,12 @@ Abstract class UbixDireccion Extends core\ClasePropiedades {
 			array_unshift($aDades, $this->iid_ubi, $this->iid_direccion);
 			$campos="(id_ubi,id_direccion,propietario,principal)";
 			$valores="(:id_ubi,:id_direccion,:propietario,:principal)";		
-			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'UbixDireccion.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'UbixDireccion.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -138,18 +138,18 @@ Abstract class UbixDireccion Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iid_ubi) && isset($this->iid_direccion)) {
-			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_ubi='$this->iid_ubi' AND id_direccion='$this->iid_direccion'")) === false) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_ubi='$this->iid_ubi' AND id_direccion='$this->iid_direccion'")) === false) {
 				$sClauError = 'UbixDireccion.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
-			$aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
+			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
 					break;
 				case 'guardar':
-					if (!$qRs->rowCount()) return false;
+					if (!$oDblSt->rowCount()) return false;
 					break;
 				default:
 					$this->setAllAtributes($aDades);
@@ -167,7 +167,7 @@ Abstract class UbixDireccion Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_ubi='$this->iid_ubi' AND id_direccion='$this->iid_direccion'")) === false) {
+		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_ubi='$this->iid_ubi' AND id_direccion='$this->iid_direccion'")) === false) {
 			$sClauError = 'UbixDireccion.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;

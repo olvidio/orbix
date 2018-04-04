@@ -93,12 +93,12 @@ class DBRol {
 		$oDbl = $this->getoDbl();
 		$sql = "GRANT \"$grupo\" TO \"$this->sUser\" ";
 
-		if (($qRs = $oDbl->prepare($sql)) === false) {
+		if (($oDblSt = $oDbl->prepare($sql)) === false) {
 			$sClauError = 'DBRol.addGrupo.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		} else {
-			if ($qRs->execute() === false) {
+			if ($oDblSt->execute() === false) {
 				$sClauError = 'DBRol.addGrupo.execute';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -109,12 +109,12 @@ class DBRol {
 		$oDbl = $this->getoDbl();
 		$sql = "REVOKE \"$grupo\" FROM \"$this->sUser\"";
 
-		if (($qRs = $oDbl->prepare($sql)) === false) {
+		if (($oDblSt = $oDbl->prepare($sql)) === false) {
 			$sClauError = 'DBRol.delGrupo.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		} else {
-			if ($qRs->execute() === false) {
+			if ($oDblSt->execute() === false) {
 				$sClauError = 'DBRol.delGrupo.execute';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -125,12 +125,12 @@ class DBRol {
 		$oDbl = $this->getoDbl();
 		$sql = "CREATE SCHEMA \"$this->sUser\" AUTHORIZATION \"$this->sUser\";";
 
-		if (($qRs = $oDbl->prepare($sql)) === false) {
+		if (($oDblSt = $oDbl->prepare($sql)) === false) {
 			$sClauError = 'DBRol.crearSchema.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		} else {
-			if ($qRs->execute() === false) {
+			if ($oDblSt->execute() === false) {
 				$sClauError = 'DBRol.crearSchema.execute';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -143,12 +143,12 @@ class DBRol {
 
 		$sql = "CREATE ROLE \"$this->sUser\" PASSWORD '$this->sPwd' $this->sOptions;";
 
-		if (($qRs = $oDbl->prepare($sql)) === false) {
+		if (($oDblSt = $oDbl->prepare($sql)) === false) {
 			$sClauError = 'DBRol.crear.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		} else {
-			if ($qRs->execute() === false) {
+			if ($oDblSt->execute() === false) {
 				$sClauError = 'DBRol.crear.execute';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -159,12 +159,12 @@ class DBRol {
 		$oDbl = $this->getoDbl();
 		$sql = "DROP SCHEMA \"$this->sUser\" CASCADE";
 
-		if (($qRs = $oDbl->prepare($sql)) === false) {
+		if (($oDblSt = $oDbl->prepare($sql)) === false) {
 			$sClauError = 'DBRol.eliminarSchema.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		} else {
-			if ($qRs->execute() === false) {
+			if ($oDblSt->execute() === false) {
 				$sClauError = 'DBRol.eliminarSchema.execute';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -176,12 +176,12 @@ class DBRol {
 
 		$sql = "DROP ROLE IF EXISTS \"$this->sUser\";";
 
-		if (($qRs = $oDbl->prepare($sql)) === false) {
+		if (($oDblSt = $oDbl->prepare($sql)) === false) {
 			$sClauError = 'DBRol.eliminar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		} else {
-			if ($qRs->execute() === false) {
+			if ($oDblSt->execute() === false) {
 				$sClauError = 'DBRol.eliminar.execute';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;

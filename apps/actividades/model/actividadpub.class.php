@@ -106,18 +106,18 @@ class ActividadPub Extends ActividadAll {
 	public function DBCarregar($que=null) {
 		$oDbl = $this->getoDbl();
 		if (isset($this->iid_activ)) {
-			if (($qRs = $oDbl->query("SELECT * FROM av_actividades_pub WHERE id_activ='$this->iid_activ'")) === false) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM av_actividades_pub WHERE id_activ='$this->iid_activ'")) === false) {
 				$sClauError = 'Actividad.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
-			$aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
+			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
 					break;
 				case 'guardar':
-					if (!$qRs->rowCount()) return false;
+					if (!$oDblSt->rowCount()) return false;
 					$this->aDadesActuals=$aDades;
 					break;
 				default:

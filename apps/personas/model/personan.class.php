@@ -148,12 +148,12 @@ class PersonaN Extends PersonaDl {
 					ce_fin         			 = :ce_fin,
 					ce_lugar         		 = :ce_lugar";
 			
-			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_nom='$this->iid_nom'")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_nom='$this->iid_nom'")) === false) {
 				$sClauError = 'PersonaN.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'PersonaN.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -172,24 +172,24 @@ class PersonaN Extends PersonaDl {
 				$campos="(id_nom,$campos)";
 				$valores="(:id_nom,$valores)";
 			}
-			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'PersonaN.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'PersonaN.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
 			}
 			$id_auto = $oDbl->lastInsertId($nom_tabla.'_id_auto_seq');
-			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_auto=$id_auto")) === false) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_auto=$id_auto")) === false) {
 				$sClauError = get_class($this).'.carregar.Last';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
-			$aDadesLast = $qRs->fetch(\PDO::FETCH_ASSOC);
+			$aDadesLast = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 			$this->aDades=$aDadesLast;
 			$this->setAllAtributes($aDadesLast);
 		}
@@ -204,18 +204,18 @@ class PersonaN Extends PersonaDl {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iid_nom)) {
-			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_nom='$this->iid_nom'")) === false) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_nom='$this->iid_nom'")) === false) {
 				$sClauError = 'PersonaN.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
-			$aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
+			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
 					break;
 				case 'guardar':
-					if (!$qRs->rowCount()) return false;
+					if (!$oDblSt->rowCount()) return false;
 					break;
 				default:
 					$this->setAllAtributes($aDades);
@@ -233,7 +233,7 @@ class PersonaN Extends PersonaDl {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_nom='$this->iid_nom'")) === false) {
+		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_nom='$this->iid_nom'")) === false) {
 			$sClauError = 'PersonaN.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;

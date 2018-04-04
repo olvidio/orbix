@@ -395,10 +395,10 @@ class TrasladoDl {
 		// Copiar los datos a la dl destino si existe en orbix.
 		if (($qRs = $oDBorg->query("SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = '$this->snew_esquema') AS existe")) === false) {
 				$sClauError = 'Controller.Traslados';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDBorg, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($qRs, $sClauError, __LINE__, __FILE__);
 				return false;
 		}
-		$aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
+		$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 		// si existe el esquema (dl)
 		if (empty($aDades['existe'])) {
 			$error = sprintf(_("No existe el esquema destino %s en la base de datos"),  $this->snew_esquema);
@@ -464,7 +464,7 @@ class TrasladoDl {
 			// Para saber el nuevo id_schema de la dl destino:
 			if (($qRs = $oDBorg->query("SELECT id FROM public.db_idschema WHERE schema = '$this->snew_esquema'")) === false) {
 					$sClauError = 'Controller.Traslados';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDBorg, $sClauError, __LINE__, __FILE__);
+					$_SESSION['oGestorErrores']->addErrorAppLastError($qRs, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
 			$aSchema = $qRs->fetch(\PDO::FETCH_ASSOC);

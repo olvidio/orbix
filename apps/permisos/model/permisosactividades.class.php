@@ -122,7 +122,7 @@ class PermisosActividades {
 			ORDER BY id_usuario DESC
 			";
 		//echo "<br>permActiv: $Qry<br>";
-		if (($qRs = $oDbl->query($Qry)) === false) {
+		if (($oDblSt = $oDbl->query($Qry)) === false) {
 			$sClauError = 'ActividadCargo.carregar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;

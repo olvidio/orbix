@@ -118,12 +118,12 @@ class PersonaOut Extends PersonaPub {
 					observ                   = :observ,
 					lugar_nacimiento         = :lugar_nacimiento,
 					profesor_stgr            = :profesor_stgr";
-			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_nom='$this->iid_nom'")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_nom='$this->iid_nom'")) === false) {
 				$sClauError = get_class($this).'.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = get_class($this).'.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -135,18 +135,18 @@ class PersonaOut Extends PersonaPub {
 			array_unshift($aDades, $this->iid_nom);
 			$campos="(id_nom,id_cr,id_tabla,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,lengua,situacion,f_situacion,apel_fam,inc,f_inc,stgr,edad,profesion,eap,observ,lugar_nacimiento,profesor_stgr)";
 			$valores="(:id_nom,:id_cr,:id_tabla,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:lengua,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:stgr,:edad,:profesion,:eap,:observ,:lugar_nacimiento,:profesor_stgr)";
-			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = get_class($this).'.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = get_class($this).'.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
 			}
-			$aDadesLast = $qRs->fetch(\PDO::FETCH_ASSOC);
+			$aDadesLast = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 			$this->aDades=$aDadesLast;
 			$this->setAllAtributes($aDadesLast);
 		}

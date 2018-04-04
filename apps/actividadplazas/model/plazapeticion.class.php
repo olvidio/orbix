@@ -123,12 +123,12 @@ class PlazaPeticion Extends core\ClasePropiedades {
 			$update="
 					orden                    = :orden,
 					tipo                     = :tipo";
-			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_nom='$this->iid_nom' AND id_activ='$this->iid_activ'")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_nom='$this->iid_nom' AND id_activ='$this->iid_activ'")) === false) {
 				$sClauError = 'PlazaPeticion.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'PlazaPeticion.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -139,12 +139,12 @@ class PlazaPeticion Extends core\ClasePropiedades {
 			array_unshift($aDades, $this->iid_nom, $this->iid_activ);
 			$campos="(id_nom,id_activ,orden,tipo)";
 			$valores="(:id_nom,:id_activ,:orden,:tipo)";		
-			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'PlazaPeticion.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'PlazaPeticion.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -163,18 +163,18 @@ class PlazaPeticion Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iid_nom) && isset($this->iid_activ)) {
-			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_nom='$this->iid_nom' AND id_activ='$this->iid_activ'")) === false) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_nom='$this->iid_nom' AND id_activ='$this->iid_activ'")) === false) {
 				$sClauError = 'PlazaPeticion.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
-			$aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
+			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
 					break;
 				case 'guardar':
-					if (!$qRs->rowCount()) return false;
+					if (!$oDblSt->rowCount()) return false;
 					break;
 				default:
 					$this->setAllAtributes($aDades);
@@ -192,7 +192,7 @@ class PlazaPeticion Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_nom='$this->iid_nom' AND id_activ='$this->iid_activ'")) === false) {
+		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_nom='$this->iid_nom' AND id_activ='$this->iid_activ'")) === false) {
 			$sClauError = 'PlazaPeticion.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;

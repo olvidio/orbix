@@ -87,12 +87,12 @@ class TipoCasa Extends core\ClasePropiedades {
 			//UPDATE
 			$update="
 					nombre_tipo_casa         = :nombre_tipo_casa";
-			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE tipo_casa='$this->stipo_casa'")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE tipo_casa='$this->stipo_casa'")) === false) {
 				$sClauError = 'TipoCasa.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'TipoCasa.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -103,12 +103,12 @@ class TipoCasa Extends core\ClasePropiedades {
 			array_unshift($aDades, $this->stipo_casa);
 			$campos="(tipo_casa,nombre_tipo_casa)";
 			$valores="(:tipo_casa,:nombre_tipo_casa)";		
-			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'TipoCasa.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'TipoCasa.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -127,18 +127,18 @@ class TipoCasa Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->stipo_casa)) {
-			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE tipo_casa='$this->stipo_casa'")) === false) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE tipo_casa='$this->stipo_casa'")) === false) {
 				$sClauError = 'TipoCasa.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
-			$aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
+			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
 					break;
 				case 'guardar':
-					if (!$qRs->rowCount()) return false;
+					if (!$oDblSt->rowCount()) return false;
 					break;
 				default:
 					$this->setAllAtributes($aDades);
@@ -156,7 +156,7 @@ class TipoCasa Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE tipo_casa='$this->stipo_casa'")) === false) {
+		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE tipo_casa='$this->stipo_casa'")) === false) {
 			$sClauError = 'TipoCasa.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;

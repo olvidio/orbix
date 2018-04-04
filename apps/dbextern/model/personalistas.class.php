@@ -216,12 +216,12 @@ class PersonaListas Extends core\ClasePropiedades {
 					Tfno_Movil              = :Tfno_Movil,
 					Ce              		= :Ce,
 					ID_TABLA 			    = :ID_TABLA";
-			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE Identif='$this->iIdentif'")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE Identif='$this->iIdentif'")) === false) {
 				$sClauError = 'Listas.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'Listas.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -231,12 +231,12 @@ class PersonaListas Extends core\ClasePropiedades {
 			// INSERT
 			$campos="(ApeNom,Dl,Ctr,Lugar_Naci,Fecha_Naci,Email,Tfno_Movil,Ce,ID_TABLA)";
 			$valores="(:ApeNom,:Dl,:Ctr,:Lugar_Naci,:Fecha_Naci,:Email,:Tfno_Movil,:Ce,:ID_TABLA)";		
-			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Listas.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'Listas.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -256,18 +256,18 @@ class PersonaListas Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iIdentif)) {
-			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE Identif='$this->iIdentif'")) === false) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE Identif='$this->iIdentif'")) === false) {
 				$sClauError = 'Listas.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
-			$aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
+			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
 					break;
 				case 'guardar':
-					if (!$qRs->rowCount()) return false;
+					if (!$oDblSt->rowCount()) return false;
 					break;
 				default:
 					$this->setAllAtributes($aDades);
@@ -285,7 +285,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE Identif='$this->iIdentif'")) === false) {
+		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE Identif='$this->iIdentif'")) === false) {
 			$sClauError = 'Listas.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;

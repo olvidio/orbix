@@ -109,12 +109,12 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 					tipo_breve               = :tipo_breve,
 					año                     = :año,
 					tipo_latin               = :tipo_latin";
-			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_tipo='$this->iid_tipo'")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_tipo='$this->iid_tipo'")) === false) {
 				$sClauError = 'AsignaturaTipo.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'AsignaturaTipo.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -125,12 +125,12 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 			array_unshift($aDades, $this->iid_tipo);
 			$campos="(id_tipo,tipo_asignatura,tipo_breve,año,tipo_latin)";
 			$valores="(:id_tipo,:tipo_asignatura,:tipo_breve,:año,:tipo_latin)";		
-			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'AsignaturaTipo.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = 'AsignaturaTipo.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -149,18 +149,18 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iid_tipo)) {
-			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_tipo='$this->iid_tipo'")) === false) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_tipo='$this->iid_tipo'")) === false) {
 				$sClauError = 'AsignaturaTipo.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
-			$aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
+			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
 					break;
 				case 'guardar':
-					if (!$qRs->rowCount()) return false;
+					if (!$oDblSt->rowCount()) return false;
 					break;
 				default:
 					$this->setAllAtributes($aDades);
@@ -178,7 +178,7 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_tipo='$this->iid_tipo'")) === false) {
+		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_tipo='$this->iid_tipo'")) === false) {
 			$sClauError = 'AsignaturaTipo.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;

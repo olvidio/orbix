@@ -498,12 +498,12 @@ $txt.="\n\n\t\t".'if ($bInsert === false) {
 ';
 $txt.=$update.'";';
 $txt.='
-			if (($qRs = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE '.$where.'")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE '.$where.'")) === false) {
 				$sClauError = \''.$clase.'.update.prepare\';
 				$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = \''.$clase.'.update.execute\';
 					$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -519,12 +519,12 @@ $txt.=$campos.')";'."\n";
 $txt.="\t\t\t".'$valores="(';
 $txt.=$valores.')";';
 $txt.='		
-			if (($qRs = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = \''.$clase.'.insertar.prepare\';
 				$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($qRs->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === false) {
 					$sClauError = \''.$clase.'.insertar.execute\';
 					$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -553,18 +553,18 @@ $txt.="\n\t\t".'}
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if ('.$claus_isset.') {
-			if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE '.$where.'")) === false) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE '.$where.'")) === false) {
 				$sClauError = \''.$clase.'.carregar\';
 				$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
-			$aDades = $qRs->fetch(\\PDO::FETCH_ASSOC);
+			$aDades = $oDblSt->fetch(\\PDO::FETCH_ASSOC);
 			switch ($que) {
 				case \'tot\':
 					$this->aDades=$aDades;
 					break;
 				case \'guardar\':
-					if (!$qRs->rowCount()) return false;
+					if (!$oDblSt->rowCount()) return false;
 					break;
 				default:
 					$this->setAllAtributes($aDades);
@@ -582,7 +582,7 @@ $txt.="\n\t\t".'}
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($qRs = $oDbl->exec("DELETE FROM $nom_tabla WHERE '.$where.'")) === false) {
+		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE '.$where.'")) === false) {
 			$sClauError = \''.$clase.'.eliminar\';
 			$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;
