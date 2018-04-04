@@ -33,6 +33,10 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 	
 }
 
+if (($na == 'a' || $na == 'agd') && $sactividad == 'ca') {
+	$sactividad = 'cv';
+}
+
 $oPersona = new personas\PersonaDl($id_nom);
 $ap_nom = $oPersona->getApellidosNombre();
 
@@ -92,6 +96,7 @@ switch ($na) {
 
 		switch ($sactividad) {
 			case 'ca': //133
+			case 'cv': //133
 				$Qid_tipo_activ = '^'.$sfsv.'33';
 				break;
 			case 'crt':
