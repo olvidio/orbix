@@ -439,13 +439,6 @@ class GestorResumenPlazas {
 							$ocu = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$mi_dl,$dl_otra);
 							$propiedad["$dl_otra>$dl_2"] = "$dl_otra ($ocu de $num_plazas)";
 						}
-						//Si son plazas cedidas a una dl de paso. Solo cuento las que he cedido yo
-						if ($dl_de_paso !== FALSE){
-							if ($dl_de_paso == $dl_2 && $id_dl_otra == $id_mi_dl) {
-								$ocu = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$dl_2,$mi_dl);
-								$propiedad["$mi_dl>$dl_2"] = "$dl_2 ($ocu de $num_plazas)";
-							}
-						}
 					}
 				}
 			}
