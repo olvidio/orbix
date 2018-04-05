@@ -141,4 +141,3 @@ foreach($a_valores as $fila) {
 		<td><?= $fila[7] ?></td></tr>
 		<?php
 }
-?>
