@@ -162,7 +162,7 @@ foreach ($cAsistencias as $oAsistente) {
 	$ca++;
 	$id_activ=$oAsistente->getId_activ();
 	$propio=$oAsistente->getPropio();
-	if ($propio != 't')  echo "Dani t'has colat";
+	if ($propio != 't')  echo _("No está como propio, no debería tener plan de estudios");
 	$est_ok=$oAsistente->getEst_ok();
 	$oActividad = new actividades\Actividad(array('id_activ'=>$id_activ));
 	extract($oActividad->getTot());
