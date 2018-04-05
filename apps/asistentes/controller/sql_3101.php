@@ -102,7 +102,7 @@ $a_cabeceras=array( array('name'=>_("num"),'width'=>40), array('name'=>_("nombre
 if (core\configGlobal::is_app_installed('actividadplazas')) {
 	// Si no esta publicada todas las plazas de la actividad son para la dl.
 	// No hay plazas de calendario.
-	if ( $oActividad->getPublicado() ===false) {
+	if ( $oActividad->getPublicado() === false) {
 		$dl = $dl_org;
 		$a_plazas_resumen[$dl]['calendario'] = $plazas_totales;
 		$a_plazas_resumen[$dl]['conseguidas'] = 0;
@@ -427,6 +427,7 @@ if (core\configGlobal::is_app_installed('actividadcargos')) {
 $leyenda_html = '';
 // resumen plazas
 $disponibles ='';
+$resumen_plazas = '';
 $resumen_plazas2 = '';
 if (core\configGlobal::is_app_installed('actividadplazas')) {
 	//leyenda colores
@@ -457,150 +458,152 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 	}
 	$leyenda_html .= "</p>";
 	////////////////////////////////////////////////////////////////////
-	$resumen_plazas = '';
-	if (array_key_exists($mi_dele, $a_plazas_resumen)) {
-		foreach ($a_plazas_resumen as $padre => $aa) {
-			if ($padre != $mi_dele && $mi_dele != $dl_org) {	continue; }
-			$calendario = empty($aa['calendario'])? 0 : $aa['calendario']; // calendario.
-			$conseguidas = empty($aa['conseguidas'])? 0 : $aa['conseguidas']; // conseguidas.
-			$total_cedidas = empty($aa['total_cedidas'])? 0 : $aa['total_cedidas'];
-			$disponibles = empty($aa['disponibles'])? 0 : $aa['disponibles'];
-			$json_cedidas = empty($aa['json_cedidas'])? '' : $aa['json_cedidas'];
-			$total = $calendario + $conseguidas;
-			$aCed = array();
-			if (!empty($json_cedidas)){
-				$aCed = json_decode($json_cedidas,TRUE);
-			}
-			$decidir = 0;
-			$espera = 0;
-			$ocupadas = 0;
-			$resumen_plazas .= "$padre: " 	;
-			// ocupadas por la dl padre
-			$plazas = empty($aa['ocupadas'][$padre])? array() : $aa['ocupadas'][$padre];
-			$ocupadas_dl = 0;
-			foreach ($plazas as $plaza => $num) {
-				if ($plaza == asistentes\Asistente::PLAZA_PEDIDA) { $decidir = $num; }
-				if ($plaza == asistentes\Asistente::PLAZA_EN_ESPERA) { $espera = $num; }
-				if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) { $ocupadas_dl += $num; }
-			}
-			$ocu_padre = $ocupadas_dl;
-			$ocupadas += $ocupadas_dl;
-			$resumen_plazas .= 	"$ocupadas_dl($padre)";
-
-			// ocupadas por las dl cedidas
-			$i = 0;
-			foreach ($aCed as $dl2 => $numCedidas) {
-				$plazas = empty($aa['ocupadas'][$dl2])? array() : $aa['ocupadas'][$dl2];
-				$i++;
+	// Si no está publicada no hace falta el resumen de plazas
+	if ($oActividad->getPublicado() === true) {
+		if (array_key_exists($mi_dele, $a_plazas_resumen)) {
+			foreach ($a_plazas_resumen as $padre => $aa) {
+				if ($padre != $mi_dele && $mi_dele != $dl_org) {	continue; }
+				$calendario = empty($aa['calendario'])? 0 : $aa['calendario']; // calendario.
+				$conseguidas = empty($aa['conseguidas'])? 0 : $aa['conseguidas']; // conseguidas.
+				$total_cedidas = empty($aa['total_cedidas'])? 0 : $aa['total_cedidas'];
+				$disponibles = empty($aa['disponibles'])? 0 : $aa['disponibles'];
+				$json_cedidas = empty($aa['json_cedidas'])? '' : $aa['json_cedidas'];
+				$total = $calendario + $conseguidas;
+				$aCed = array();
+				if (!empty($json_cedidas)){
+					$aCed = json_decode($json_cedidas,TRUE);
+				}
+				$decidir = 0;
+				$espera = 0;
+				$ocupadas = 0;
+				$resumen_plazas .= "$padre: " 	;
+				// ocupadas por la dl padre
+				$plazas = empty($aa['ocupadas'][$padre])? array() : $aa['ocupadas'][$padre];
 				$ocupadas_dl = 0;
 				foreach ($plazas as $plaza => $num) {
 					if ($plaza == asistentes\Asistente::PLAZA_PEDIDA) { $decidir = $num; }
 					if ($plaza == asistentes\Asistente::PLAZA_EN_ESPERA) { $espera = $num; }
 					if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) { $ocupadas_dl += $num; }
 				}
+				$ocu_padre = $ocupadas_dl;
 				$ocupadas += $ocupadas_dl;
-				$resumen_plazas .= " + ";
-				$resumen_plazas .= 	"$ocupadas_dl($dl2)";
-				$a_plazas_resumen[$padre]['cedidas'][$dl2] = array('ocupadas' => $ocupadas_dl);
-				// pongo los de otras dl, que todavia no estan asignados como genéricos:
-				if ($mi_dele != $dl2 && $dl2 != $dl_org) {
-					$pl = empty($aCed[$dl2])? 0 : $aCed[$dl2];
-					if (!array_key_exists($dl2, $a_plazas_resumen)) {
-						for ($i=$ocupadas_dl+1; $i <= $pl ;$i++ ) {
-							$nom = "$dl2----$i";
-							$a_val['sel'] = '';
-							$a_val['clase'] = 'plaza4';
-							$a_val[2] = $nom;
-							$a_val[3] = ''; 
-							$a_val[4] = ''; 
-							$a_val[5] = ''; 
-							$a_val[6] = ''; 
-							
-							$asistentes[$nom] = $a_val;
-						}
-						//$pl_relleno[$dl2] = $i-1;
-					}
-					$pl_relleno[$dl2] = $pl-$ocupadas_dl;
-				}
-			}
-			// Conseguidas	
-			if (array_key_exists($padre, $a_plazas_conseguidas)) {
-				$a_dl_plazas = $a_plazas_conseguidas[$padre];
-				//$decidir = 0;
-				//$espera = 0;
-				$ocupadas_otra = 0;
-				// ocupadas por la dl padre
-				foreach ($a_dl_plazas as $dl3 => $pla) {
-					$plazas = empty($pla['ocupadas'])? array() : $pla['ocupadas'];
-					$pla['cedidas'] = empty($pla['cedidas'])? '?' : $pla['cedidas'];
-					foreach ($plazas as $dl => $pl) {
-						foreach ($pl as $plaza => $num) {
-							if ($plaza == asistentes\Asistente::PLAZA_PEDIDA) { $decidir += $num; }
-							if ($plaza == asistentes\Asistente::PLAZA_EN_ESPERA) { $espera += $num; }
-							if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) { $ocupadas_otra += $num; }
-						}
-						if (!empty($ocupadas_otra)) { $resumen_plazas .= " + "; }
-						$txt = sprintf(_("(de las %s cedidas por %s)"),$pla['cedidas'],$dl3);
-						$resumen_plazas .= $ocupadas_otra." ".$txt;
-					}
-				}
-				$ocupadas += $ocupadas_otra;
-				$ocu_padre += $ocupadas_otra;
-			}
+				$resumen_plazas .= 	"$ocupadas_dl($padre)";
 
-			$resumen_plazas .= 	"  => "._("ocupadas")."=$ocupadas/($total)";
-			if (!empty($json_cedidas)) { $resumen_plazas .= " "._("cedidas")."=$total_cedidas $json_cedidas"; }
-			$libres = $disponibles - $ocu_padre;
-			if (($libres < 0)) {
-				$resumen_plazas .= 	"<span style='background-color: red'> disponibles= $libres</span>";
-			} else {
-				$resumen_plazas .= 	" disponibles=$libres";
-			}
-			if ($mi_dele == $padre) {
-				if (!empty($espera)) { $resumen_plazas .= " ".sprintf(_("(%s en espera)"),$espera); }
-				if (!empty($decidir)) { $resumen_plazas .= " ".sprintf(_("(%s por decidir)"),$decidir); }
-			}
-			$resumen_plazas .= ";<br>";
-			// pongo los de otras dl, que todavia no estan asignados como genéricos:
-			if ($mi_dele != $padre && $padre != $dl_org) {
-				$ocu_relleno = $total - $libres;
-				for ($i=$ocu_relleno+1; $i <= $total ;$i++ ) {
-					$nom = "$padre-$i";
-					$a_val['sel'] = '';
-					$a_val['clase'] = 'plaza4';
-					$a_val[2] = $nom;
-					$a_val[3] = ''; 
-					$a_val[4] = ''; 
-					$a_val[5] = ''; 
-					$a_val[6] = ''; 
-					
-					$asistentes[$nom] = $a_val;
+				// ocupadas por las dl cedidas
+				$i = 0;
+				foreach ($aCed as $dl2 => $numCedidas) {
+					$plazas = empty($aa['ocupadas'][$dl2])? array() : $aa['ocupadas'][$dl2];
+					$i++;
+					$ocupadas_dl = 0;
+					foreach ($plazas as $plaza => $num) {
+						if ($plaza == asistentes\Asistente::PLAZA_PEDIDA) { $decidir = $num; }
+						if ($plaza == asistentes\Asistente::PLAZA_EN_ESPERA) { $espera = $num; }
+						if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) { $ocupadas_dl += $num; }
+					}
+					$ocupadas += $ocupadas_dl;
+					$resumen_plazas .= " + ";
+					$resumen_plazas .= 	"$ocupadas_dl($dl2)";
+					$a_plazas_resumen[$padre]['cedidas'][$dl2] = array('ocupadas' => $ocupadas_dl);
+					// pongo los de otras dl, que todavia no estan asignados como genéricos:
+					if ($mi_dele != $dl2 && $dl2 != $dl_org) {
+						$pl = empty($aCed[$dl2])? 0 : $aCed[$dl2];
+						if (!array_key_exists($dl2, $a_plazas_resumen)) {
+							for ($i=$ocupadas_dl+1; $i <= $pl ;$i++ ) {
+								$nom = "$dl2----$i";
+								$a_val['sel'] = '';
+								$a_val['clase'] = 'plaza4';
+								$a_val[2] = $nom;
+								$a_val[3] = ''; 
+								$a_val[4] = ''; 
+								$a_val[5] = ''; 
+								$a_val[6] = ''; 
+								
+								$asistentes[$nom] = $a_val;
+							}
+							//$pl_relleno[$dl2] = $i-1;
+						}
+						$pl_relleno[$dl2] = $pl-$ocupadas_dl;
+					}
+				}
+				// Conseguidas	
+				if (array_key_exists($padre, $a_plazas_conseguidas)) {
+					$a_dl_plazas = $a_plazas_conseguidas[$padre];
+					//$decidir = 0;
+					//$espera = 0;
+					$ocupadas_otra = 0;
+					// ocupadas por la dl padre
+					foreach ($a_dl_plazas as $dl3 => $pla) {
+						$plazas = empty($pla['ocupadas'])? array() : $pla['ocupadas'];
+						$pla['cedidas'] = empty($pla['cedidas'])? '?' : $pla['cedidas'];
+						foreach ($plazas as $dl => $pl) {
+							foreach ($pl as $plaza => $num) {
+								if ($plaza == asistentes\Asistente::PLAZA_PEDIDA) { $decidir += $num; }
+								if ($plaza == asistentes\Asistente::PLAZA_EN_ESPERA) { $espera += $num; }
+								if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) { $ocupadas_otra += $num; }
+							}
+							if (!empty($ocupadas_otra)) { $resumen_plazas .= " + "; }
+							$txt = sprintf(_("(de las %s cedidas por %s)"),$pla['cedidas'],$dl3);
+							$resumen_plazas .= $ocupadas_otra." ".$txt;
+						}
+					}
+					$ocupadas += $ocupadas_otra;
+					$ocu_padre += $ocupadas_otra;
+				}
+
+				$resumen_plazas .= 	"  => "._("ocupadas")."=$ocupadas/($total)";
+				if (!empty($json_cedidas)) { $resumen_plazas .= " "._("cedidas")."=$total_cedidas $json_cedidas"; }
+				$libres = $disponibles - $ocu_padre;
+				if (($libres < 0)) {
+					$resumen_plazas .= 	"<span style='background-color: red'> disponibles= $libres</span>";
+				} else {
+					$resumen_plazas .= 	" disponibles=$libres";
+				}
+				if ($mi_dele == $padre) {
+					if (!empty($espera)) { $resumen_plazas .= " ".sprintf(_("(%s en espera)"),$espera); }
+					if (!empty($decidir)) { $resumen_plazas .= " ".sprintf(_("(%s por decidir)"),$decidir); }
+				}
+				$resumen_plazas .= ";<br>";
+				// pongo los de otras dl, que todavia no estan asignados como genéricos:
+				if ($mi_dele != $padre && $padre != $dl_org) {
+					$ocu_relleno = $total - $libres;
+					for ($i=$ocu_relleno+1; $i <= $total ;$i++ ) {
+						$nom = "$padre-$i";
+						$a_val['sel'] = '';
+						$a_val['clase'] = 'plaza4';
+						$a_val[2] = $nom;
+						$a_val[3] = ''; 
+						$a_val[4] = ''; 
+						$a_val[5] = ''; 
+						$a_val[6] = ''; 
+						
+						$asistentes[$nom] = $a_val;
+					}
 				}
 			}
-		}
-	} elseif (array_key_exists($mi_dele, $a_plazas_conseguidas)) {  // No es una dl organizadora/colaboradora
-		$a_dl_plazas = $a_plazas_conseguidas[$mi_dele];
-		$decidir = 0;
-		$espera = 0;
-		$ocupadas_dl = 0;
-		// ocupadas por la dl padre
-		$resumen_plazas2 = "$mi_dele: ";
-		foreach ($a_dl_plazas as $dl2 => $pla) {
-			$plazas = empty($pla['ocupadas'])? array() : $pla['ocupadas'];
-			$pla['cedidas'] = empty($pla['cedidas'])? '?' : $pla['cedidas'];
-			foreach ($plazas as $dl => $pl) {
-				foreach ($pl as $plaza => $num) {
-					if ($plaza == asistentes\Asistente::PLAZA_PEDIDA) { $decidir += $num; }
-					if ($plaza == asistentes\Asistente::PLAZA_EN_ESPERA) { $espera += $num; }
-					if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) { $ocupadas_dl += $num; }
+		} elseif (array_key_exists($mi_dele, $a_plazas_conseguidas)) {  // No es una dl organizadora/colaboradora
+			$a_dl_plazas = $a_plazas_conseguidas[$mi_dele];
+			$decidir = 0;
+			$espera = 0;
+			$ocupadas_dl = 0;
+			// ocupadas por la dl padre
+			$resumen_plazas2 = "$mi_dele: ";
+			foreach ($a_dl_plazas as $dl2 => $pla) {
+				$plazas = empty($pla['ocupadas'])? array() : $pla['ocupadas'];
+				$pla['cedidas'] = empty($pla['cedidas'])? '?' : $pla['cedidas'];
+				foreach ($plazas as $dl => $pl) {
+					foreach ($pl as $plaza => $num) {
+						if ($plaza == asistentes\Asistente::PLAZA_PEDIDA) { $decidir += $num; }
+						if ($plaza == asistentes\Asistente::PLAZA_EN_ESPERA) { $espera += $num; }
+						if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) { $ocupadas_dl += $num; }
+					}
+					$txt = sprintf(_("(de las %s cedidas por %s)"),$pla['cedidas'],$dl2);
+					$resumen_plazas2 .= $ocupadas_dl." ".$txt;
+					if (!empty($espera)) { $resumen_plazas2 .= " ".sprintf(_("(%s en espera)"),$espera); }
+					if (!empty($decidir)) { $resumen_plazas2 .= " ".sprintf(_("(%s por decidir)"),$decidir); }
 				}
-				$txt = sprintf(_("(de las %s cedidas por %s)"),$pla['cedidas'],$dl2);
-				$resumen_plazas2 .= $ocupadas_dl." ".$txt;
-				if (!empty($espera)) { $resumen_plazas2 .= " ".sprintf(_("(%s en espera)"),$espera); }
-				if (!empty($decidir)) { $resumen_plazas2 .= " ".sprintf(_("(%s por decidir)"),$decidir); }
 			}
+			$resumen_plazas2 .= ";<br>";
 		}
-		$resumen_plazas2 .= ";<br>";
 	}
 }
 

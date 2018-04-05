@@ -228,12 +228,12 @@ switch ($_POST['mod']) {
 		break;
 	//------------ MOVER --------
 	case "mover":
-		$msg_err = eliminar ($id_activ_old,$id_nom);
+		$msg_err = eliminar($id_activ_old,$id_nom);
 		$msg_err .= editar($id_activ,$id_nom);
 		break;
 	//------------ BORRAR --------
 	case "eliminar":
-	$msg_err = eliminar ($id_activ,$id_nom);
+	$msg_err = eliminar($id_activ,$id_nom);
 		break;
 	//------------ NUEVO --------
 	//------------ EDITAR --------

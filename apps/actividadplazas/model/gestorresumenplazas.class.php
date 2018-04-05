@@ -189,7 +189,7 @@ class GestorResumenPlazas {
 		
 	}
 	/**
-	 * Devuelce las plazas diponibles para una dl de un actividad
+	 * Devuelve las plazas diponibles para una dl de una actividad
 	 */
 	public function getPlazasDisponibles($dl) {
 		$plazas_calendario = $this->getPlazasCalendario($dl);
@@ -199,6 +199,30 @@ class GestorResumenPlazas {
 		$plazas_disponibles = $plazas_calendario + $plazas_conseguidas - $plazas_cedidas;
 
 		return $plazas_disponibles;
+	}
+	/**
+	 * Devuelve las plazas totales de una actividad, o las de la casa.
+	 */
+	public function getPlazasTotales() {
+		$id_activ = $this->getId_activ();
+		$oActividad = new \actividades\model\Actividad($id_activ);
+		$dl_org = $oActividad->getDl_org();
+		$plazas_totales = $oActividad->getPlazas();
+		if (empty($plazas_totales)) {
+			$id_ubi = $oActividad->getId_ubi();
+			$oCasa = \ubis\model\Ubi::NewUbi($id_ubi);
+			// Si la casa es un ctr de otra dl, no sé las plazas
+			if(method_exists($oCasa, 'getPlazas')){
+				$plazas_totales = $oCasa->getPlazas();
+			} else {
+				$plazas_totales = '';
+			}
+			if (empty($plazas_totales)) {
+				$plazas_totales = '?';
+			}
+		}
+
+		return $plazas_totales;
 	}
 	
 	/**
@@ -219,31 +243,25 @@ class GestorResumenPlazas {
 		$gesAsistentes = new \asistentes\model\GestorAsistente();
 		$oActividad = new \actividades\model\Actividad($id_activ);
 		$dl_org = $oActividad->getDl_org();
-		$plazas_totales = $oActividad->getPlazas();
-		if (empty($plazas_totales)) {
-			$id_ubi = $oActividad->getId_ubi();
-			$oCasa = \ubis\model\Ubi::NewUbi($id_ubi);
-			// Si la casa es un ctr de otra dl, no sé las plazas
-			if(method_exists($oCasa, 'getPlazas')){
-				$plazas_totales = $oCasa->getPlazas();
-			} else {
-				$plazas_totales = '';
-			}
-			if (empty($plazas_totales)) {
-				$plazas_totales = '?';
-			}
-		}
+		$plazas_totales = $this->getPlazasTotales();
 		// si la actividad no está pulicada, no hay plazas de otras dl. Todas para la dl org.
 		if ($oActividad->getPublicado() === false) {
 			
 			$ocupadas = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$dl_org);
+			if ($ocupadas < 0) { // No se sabe
+				$a_plazas[$dl_org]['ocupadas'] = '?';
+				$a_plazas['total']['ocupadas'] = $ocupadas;
+			} else {
+				$a_plazas[$dl_org]['ocupadas'] = $ocupadas;
+				$a_plazas['total']['ocupadas'] = $ocupadas;
+			}
 			
 			$a_plazas['total']['actividad'] = $plazas_totales;
 			$a_plazas['total']['calendario'] = $plazas_totales;
 			$a_plazas['total']['cedidas'] = 0;
 			$a_plazas['total']['conseguidas'] = 0;
 			$a_plazas['total']['actual'] = $plazas_totales;
-			$a_plazas['total']['ocupadas'] = $ocupadas;
+			$a_plazas[$dl_org]['total_actual'] = $plazas_totales;
 		
 			return $a_plazas;
 		}
@@ -400,8 +418,8 @@ class GestorResumenPlazas {
 		$publicado = $oActividad->getPublicado();
 		// Si no está publicada no tiene plazas de calendario.
 		// Se toman todas la de la actividad como propias.
-		if ($publicado ===false) {
-			$pl_propias = $oActividad->getPlazas();
+		if ($publicado === false) {
+			$pl_propias = $this->getPlazasTotales();
 		} else {
 			// las que me correponden por calendario - las cedidas
 			$pl_calendario = $this->getPlazasCalendario($mi_dl);
