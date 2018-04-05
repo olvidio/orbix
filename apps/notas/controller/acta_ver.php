@@ -33,9 +33,9 @@ $sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_
 if (!empty($sel)) { //vengo de un checkbox
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$id_sel=$sel;
-	$oPosicion->addParametro('id_sel',$id_sel,1);
+	$oPosicion->addParametro('id_sel',$id_sel,0);
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
-	$oPosicion->addParametro('scroll_id',$scroll_id,1);
+	$oPosicion->addParametro('scroll_id',$scroll_id,0);
 }
 
 $ult_acta = '';
@@ -231,7 +231,7 @@ fnjs_actualizar=function(){
 <?php
 include(ConfigGlobal::$directorio.'/scripts/mas_opciones.js.php');
 
-echo $oPosicion->mostrar_left_slide(1);
+echo $oPosicion->mostrar_left_slide();
 ?>
 <form id="modifica" name="modifica" action="" method="POST" >
 <?= $oHash->getCamposHtml(); ?>
