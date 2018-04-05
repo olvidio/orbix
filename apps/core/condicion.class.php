@@ -67,7 +67,7 @@ class Condicion {
 					$sCondi = "($campo & :$campo) = :$campo";
 					break;
 				case 'ANY':
-					/* Uso: pasar un array de postgres, que el php tarta com una variable string:
+					/* Uso: pasar un array de postgres, que el php trata com una variable string:
 					 * $a_id_dir = array (1,3,7,90);
 					 * $v = "{".implode(', ',$aid_dir)."}";
 					 * $aWhere['id_direccion'] = $v;
