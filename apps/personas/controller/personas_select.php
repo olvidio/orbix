@@ -105,15 +105,14 @@ if (empty($sWhere)) {
 if (!empty($aWhereCtr)) {
 	$gesCentros = new ubis\GestorCentroDl();
 	$cCentros = $gesCentros->getCentros($aWhereCtr,$aOperadorCtr);
-	$id_ctrs = '';
+	$aId_ctrs = [];
 	foreach ($cCentros as $oCentro) {
-		$id_ubi = $oCentro->getId_ubi();
-		$id_ctrs .= empty($id_ctrs)? '' : '|';
-		$id_ctrs .= $id_ubi;
+		$aId_ctrs[] = $oCentro->getId_ubi();
 	}
-	if (!empty($id_ctrs)) {
-		$aWhere['id_ctr'] = $id_ctrs;
-		$aOperador['id_ctr'] = '~';
+	if (!empty($aId_ctrs)) {
+		$v = "{".implode(', ',$aId_ctrs)."}";
+        $aWhere['id_ctr'] = $v;
+        $aOperador['id_ctr'] = 'ANY';
 	} else {
 		$tabla = 'nada';
 	}
