@@ -51,7 +51,7 @@ class GestorAsistentePub Extends core\ClaseGestor {
 		//echo "qq: $sQuery<br>";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorAsistentePub.lista.id_nom';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		$aId_nom = array();
@@ -72,7 +72,7 @@ class GestorAsistentePub Extends core\ClaseGestor {
 		$oAsistentePubSet = new core\Set();
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorAsistentePub.query';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		foreach ($oDbl->query($sQuery) as $aDades) {
@@ -119,7 +119,7 @@ class GestorAsistentePub Extends core\ClaseGestor {
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
 		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClauError = 'GestorAsistentePub.llistar.prepare';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		if (($oDblSt->execute($aWhere)) === false) {

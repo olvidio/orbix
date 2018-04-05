@@ -47,7 +47,7 @@ class GestorTipoCasa Extends  core\ClaseGestor {
 				ORDER BY tipo_casa";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorTipoCasa.lista';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		return $oDblSt;
@@ -65,7 +65,7 @@ class GestorTipoCasa Extends  core\ClaseGestor {
 		$oTipoCasaSet = new core\Set();
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorTipoCasa.query';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		foreach ($oDbl->query($sQuery) as $aDades) {
@@ -111,7 +111,7 @@ class GestorTipoCasa Extends  core\ClaseGestor {
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
 		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClauError = 'GestorTipoCasa.llistar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		if (($oDblSt->execute($aWhere)) === false) {

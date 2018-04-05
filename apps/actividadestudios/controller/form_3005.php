@@ -81,7 +81,7 @@ if (!empty($id_asignatura)) { //caso de modificar
 	$interes = 'f';
 	if (!empty($id_activ)) {
 		$GesAsignaturas = new asignaturas\GestorAsignatura();
-		$oDesplAsignaturas = $GesAsignaturas->getListaAsignaturas();
+		$oDesplAsignaturas = $GesAsignaturas->getListaAsignaturas(false);
 		$oDesplAsignaturas->setNombre('id_asignatura');
 		$oDesplAsignaturas->setAction("fnjs_mas_profes('asignatura')");
 	} else {

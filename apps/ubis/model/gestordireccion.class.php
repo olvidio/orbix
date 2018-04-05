@@ -46,7 +46,7 @@ class GestorDireccion Extends  core\ClaseGestor {
 				ORDER BY initcap(poblacion)";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorDireccion.lista';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		return new web\Desplegable('',$oDblSt,'',true);
@@ -67,7 +67,7 @@ class GestorDireccion Extends  core\ClaseGestor {
 				ORDER BY initcap(pais)";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorDireccion.lista';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		return new web\Desplegable('',$oDblSt,'',true);

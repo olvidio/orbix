@@ -54,7 +54,7 @@ class GestorDelegacion Extends  core\ClaseGestor {
 
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorRole.lista';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		return new web\Desplegable('',$oDblSt,'',true);
@@ -87,7 +87,7 @@ class GestorDelegacion Extends  core\ClaseGestor {
 		//echo "sql: $sQuery<br>";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorRole.lista';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		return new web\Desplegable('',$oDblSt,'',true);
@@ -120,7 +120,7 @@ class GestorDelegacion Extends  core\ClaseGestor {
 		//echo "sql: $sQuery<br>";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorRole.lista';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		return new web\Desplegable('',$oDblSt,'',true);
@@ -151,7 +151,7 @@ class GestorDelegacion Extends  core\ClaseGestor {
 		}
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorRole.lista';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		return new web\Desplegable('',$oDblSt,'',true);
@@ -202,7 +202,7 @@ class GestorDelegacion Extends  core\ClaseGestor {
 		$oDelegacionSet = new core\Set();
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorDelegacion.query';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		foreach ($oDbl->query($sQuery) as $aDades) {
@@ -249,7 +249,7 @@ class GestorDelegacion Extends  core\ClaseGestor {
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
 		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClauError = 'GestorDelegacion.llistar.prepare';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		if (($oDblSt->execute($aWhere)) === false) {

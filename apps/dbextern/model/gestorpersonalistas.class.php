@@ -50,7 +50,7 @@ class GestorPersonaListas Extends core\ClaseGestor {
 	/*
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorPersonaListas.query';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 	 * 
@@ -99,7 +99,7 @@ class GestorPersonaListas Extends core\ClaseGestor {
 		echo "qry: $sQry<br>";
 		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClauError = 'GestorPersonaListas.llistar.prepare';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		if (($oDblSt->execute($aWhere)) === false) {
