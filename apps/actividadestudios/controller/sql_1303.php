@@ -25,7 +25,7 @@ $obj_pau = (string)  filter_input(INPUT_POST, 'obj_pau');
 $breve = (string)  filter_input(INPUT_POST, 'breve');
 $es_sacd = (string)  filter_input(INPUT_POST, 'es_sacd');
 $tabla = (string)  filter_input(INPUT_POST, 'tabla');
-$id_activ = (string)  filter_input(INPUT_POST, 'id_activ');
+$id_activ = (string)  filter_input(INPUT_POST, 'id_pau');
 $scroll_id = (string)  filter_input(INPUT_POST, 'scroll_id');
 $a_sel   = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
@@ -60,14 +60,12 @@ if ($stgr == 'r') $aviso .= _("Está de repaso")."<br>";
 
 echo $oPosicion->mostrar_left_slide();
 
+$GesAsistentes = new asistentes\GestorAsistente();
 if (!empty($id_activ)) {  // ¿? ya tengo una actividad concreta (vengo del dossier de esa actividad).
-	$sql_tabla = "SELECT a.nom_activ, asis.id_activ, asis.est_ok
-			FROM a_actividades a, d_asistentes_activ asis
-			WHERE a.id_activ=$id_activ AND asis.id_nom='$id_pau' AND asis.id_activ=a.id_activ
-			";
-	echo "$sql_tabla";
+	$aWhere['id_activ'] = $id_activ;
+	$aOperadores = array();
+	$cAsistencias = $GesAsistentes-> getActividadesDeAsistente(array('id_nom'=>$id_pau,'id_activ'=>$id_activ),$aWhere,$aOperadores,true);
 } else {
-	$GesAsistentes = new asistentes\GestorAsistente();
 	if (empty($todos)) {
 		$aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
 		$aOperadores['f_ini'] = 'BETWEEN';
