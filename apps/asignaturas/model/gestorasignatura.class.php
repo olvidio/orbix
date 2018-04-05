@@ -61,7 +61,7 @@ class GestorAsignatura Extends core\ClaseGestor {
 		$sQuery = "SELECT DISTINCT id_asignatura,nombre_asig,id_nivel FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorAsignatura.lista';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		$json = '[';
@@ -86,10 +86,10 @@ class GestorAsignatura Extends core\ClaseGestor {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		$oTipoCentroSet = new core\Set();
-		$sQuery="SELECT id_asignatura, creditos FROM $nom_tabla order by id_nivel";
+		$sQuery="SELECT id_asignatura, creditos FROM $nom_tabla ORDER BY id_nivel";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorAsignatura.lista';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		$aOpciones=array();
@@ -105,16 +105,22 @@ class GestorAsignatura Extends core\ClaseGestor {
 	 * retorna un objecte del tipus Desplegable
 	 * Les posibles asignatures
 	 *
+	 * @param bool $op_genericas listar o no opcionales genéricas (opcional I...)
 	 * @return object del tipus Desplegable
 	 */
-	function getListaAsignaturas() {
+	function getListaAsignaturas($op_genericas = true) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		$oTipoCentroSet = new core\Set();
-		$sQuery="SELECT id_asignatura, nombre_corto FROM $nom_tabla order by id_nivel";
+		$sWhere="WHERE status = 't' ";
+		if (!$op_genericas) {
+			$genericas = "1230,1231,1232,2430,2431,2432,2433,2434";
+			$sWhere .= " AND id_nivel NOT IN ($genericas)";
+		}
+		$sQuery="SELECT id_asignatura, nombre_corto FROM $nom_tabla $sWhere ORDER BY nombre_corto";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorAsignatura.lista';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		$aOpciones=array();
@@ -138,7 +144,7 @@ class GestorAsignatura Extends core\ClaseGestor {
 		$oAsignaturaSet = new core\Set();
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorAsignatura.query';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		foreach ($oDbl->query($sQuery) as $aDades) {
@@ -184,7 +190,7 @@ class GestorAsignatura Extends core\ClaseGestor {
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
 		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClauError = 'GestorAsignatura.llistar.prepare';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		if (($oDblSt->execute($aWhere)) === false) {
