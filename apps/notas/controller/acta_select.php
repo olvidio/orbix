@@ -171,6 +171,7 @@ fnjs_modificar=function(formulario){
   		fnjs_enviar_formulario(formulario);
   	}
 }
+fnjs_left_side_hide();
 </script>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="apps/notas/controller/acta_select.php" method="post" onkeypress="fnjs_enviar(event,this);" >
 <?= $oHash->getCamposHtml(); ?>
