@@ -50,7 +50,8 @@ $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIR
 // el scroll id es de la página anterior, hay que guardarlo allí
 if (!empty($a_sel)) { //vengo de un checkbox
  	$id_sel=$a_sel;
-	$id_pau= empty($id_pau)? strtok($a_sel[0],"#") : $id_pau; //si ya lo tengo, prevalece. el sel puede ser otra cosa
+	//$id_pau= empty($id_pau)? strtok($a_sel[0],"#") : $id_pau; //si ya lo tengo, prevalece. el sel puede ser otra cosa
+	$id_pau= strtok($a_sel[0],"#");
 	$id_tabla=strtok("#");
 	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
