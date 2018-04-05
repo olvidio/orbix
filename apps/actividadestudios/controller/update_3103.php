@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 use asistentes\model as asistentes;
 use actividadestudios\model as actividadestudios;
 use dossiers\model as dossiers;

@@ -25,7 +25,9 @@ $obj_pau = (string)  filter_input(INPUT_POST, 'obj_pau');
 $breve = (string)  filter_input(INPUT_POST, 'breve');
 $es_sacd = (string)  filter_input(INPUT_POST, 'es_sacd');
 $tabla = (string)  filter_input(INPUT_POST, 'tabla');
-$id_activ = (string)  filter_input(INPUT_POST, 'id_pau');
+$pau = (string)  filter_input(INPUT_POST, 'pau');
+if ($pau == 'p') $id_pau = (integer)  filter_input(INPUT_POST, 'id_pau');
+if ($pau == 'a') $id_activ = (integer)  filter_input(INPUT_POST, 'id_pau');
 $scroll_id = (string)  filter_input(INPUT_POST, 'scroll_id');
 $a_sel   = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
@@ -167,7 +169,7 @@ foreach ($cAsistencias as $oAsistente) {
 	$oActividad = new actividades\Actividad(array('id_activ'=>$id_activ));
 	extract($oActividad->getTot());
 	$GesMatriculas = new actividadestudios\GestorMatricula();
-	$cMatriculas = $GesMatriculas->getMatriculas(array('id_nom'=>$id_pau,'id_activ'=>$id_activ));
+	$cMatriculas = $GesMatriculas->getMatriculas(array('id_nom'=>$id_pau,'id_activ'=>$id_activ,'_ordre'=>'id_nivel'));
 	$form="seleccionados".$ca;
 	
 	if ($est_ok=="t") {

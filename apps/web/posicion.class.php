@@ -97,10 +97,12 @@ class Posicion {
 		}
 	}
 
-	public function olvidar($stack) {
+	public function olvidar($stack='') {
 		if (!empty($stack)) {
 			// hasta el final
 			array_splice($_SESSION['position'], $stack);
+		} elseif (!empty($this->stack)) { // borrar el actual
+			array_splice($_SESSION['position'], $this->stack);
 		}
 	}
 

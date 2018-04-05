@@ -23,8 +23,8 @@ if (!empty($go_to)) {
 $id_nom = empty($_POST['id_pau'])? '' : $_POST['id_pau'];
 $id_activ = empty($_POST['id_activ'])? '' : $_POST['id_activ'];
 $opcional = empty($_POST['opcional'])? '': $_POST['opcional'];
-$id_nivel = empty($_POST['id_nivel'])? '': $_POST['id_nivel'];
-$id_asignatura = empty($_POST['id_asignatura'])? '': $_POST['id_asignatura'];
+$Qid_nivel = empty($_POST['id_nivel'])? '': $_POST['id_nivel'];
+$Qid_asignatura = empty($_POST['id_asignatura'])? '': $_POST['id_asignatura'];
 
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
@@ -146,12 +146,12 @@ if (!empty($id_asignatura_real)) { //caso de modificar
 // la condicion es que tengan id_sector=1
 $GesAsignaturasOpG = new asignaturas\GestorAsignatura();
 $cAsignaturasOpG = $GesAsignaturasOpG->getAsignaturas(array('id_nivel'=>'3000','id_sector'=>1,'status'=>'t'),array('id_nivel'=>'<'));
-$condicion='';
+$condicion_js='';
 foreach ($cAsignaturasOpG as $oAsignaturaOp) {
 	$id_nivel_j = $oAsignaturaOp->getId_nivel();
-	$condicion.="id==".$id_nivel_j." || ";
+	$condicion_js .= "id==".$id_nivel_j." || ";
 }
-$condicion=substr($condicion,0,-4);
+$condicion_js=substr($condicion_js,0,-4);
 
 $oHash = new web\Hash();
 $camposForm = '';
@@ -177,7 +177,7 @@ echo $oPosicion->mostrar_left_slide();
 <script>
 fnjs_actualizar=function(){
 	var id=document.f_1303.id_nivel.value;
-	if (<?php echo $condicion; ?>) {
+	if (<?php echo $condicion_js; ?>) {
 		$('#opcional').val(1);
 	} else {
 		$('#opcional').val(0);
@@ -185,7 +185,6 @@ fnjs_actualizar=function(){
 	$('#f_1303').attr('action',"apps/actividadestudios/controller/form_1303.php");
 	fnjs_enviar_formulario('#f_1303','#ficha_personas');
 }
-
 fnjs_guardar=function(){
 	if ($('#id_asignatura').value=="") {
 		$('#id_asignatura').value=document.f_1303.id_nivel.value;
@@ -216,7 +215,7 @@ if (!empty($id_asignatura_real)) { //caso de modificar
 		$i++;
 		$asignatura=$oAsignatura->getNombre_corto();
 		$list_id_nivel=$oAsignatura->getId_nivel();
-		if (!empty($id_nivel) && $list_id_nivel==$id_nivel) { $chk="selected"; } else { $chk=""; }
+		if (!empty($Qid_nivel) && $list_id_nivel==$Qid_nivel) { $chk="selected"; } else { $chk=""; }
 		echo "<option value=$list_id_nivel $chk>$asignatura</option>";
 	}
 	echo "</select></td>";
@@ -230,14 +229,14 @@ if (!empty($id_asignatura_real)) { //caso de modificar
 			$i++;
 			$asignatura=$oAsignatura->getNombre_corto();
 			$id_asignatura=$oAsignatura->getId_asignatura();
-			if (!empty($id_asignatura) && $id_asignatura==$id_asignatura_real) { $chk="selected"; } else { $chk=""; }
+			if (!empty($Qid_asignatura) && $Qid_asignatura==$id_asignatura_real) { $chk="selected"; } else { $chk=""; }
 			echo "<option value=$id_asignatura $chk>$asignatura</option>";
 		}
 		echo "</select></td>";
 	} else { //si no es opcional 
-		if (!empty($id_nivel)) {
+		if (!empty($Qid_nivel)) {
 			$GesAsigaturas = new asignaturas\GestorAsignatura();
-			$cAsignatura = $GesAsignaturas->getAsignaturas(array('id_nivel'=>$id_nivel));
+			$cAsignatura = $GesAsignaturas->getAsignaturas(array('id_nivel'=>$Qid_nivel));
 			$id_asignatura=$cAsignatura[0]->getId_asignatura();
 		} else {
 			$id_asignatura='';
