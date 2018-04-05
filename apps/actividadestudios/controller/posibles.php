@@ -174,8 +174,8 @@ fnjs_n_a=function(dd){
 <th colspan=5><?php echo _("formato del cuadro"); ?></th>
 </tr>
 <tr><td><?php echo ucfirst(_("escrito de referencia")).":"; ?><input type=text name=ref></td></tr>
-<tr><td><input type="Radio" name="texto" value="text"><?php echo ucfirst(_("texto cabezera horizontal (excel)")); ?></td>
-<td colspan=4><input type="Radio" name="texto" value="image" checked><?php echo ucfirst(_("texto cabezera vertical (imprimir)")); ?></td></tr>
+<tr><td><input type="Radio" name="texto" value="text"><?php echo ucfirst(_("texto cabecera horizontal (excel)")); ?></td>
+<td colspan=4><input type="Radio" name="texto" value="image" checked><?php echo ucfirst(_("texto cabecera vertical (imprimir)")); ?></td></tr>
 <tr><td>
 <?php
 	$btn1="<input name='btn1' type=button onclick=fnjs_enviar_formulario('#modifica') value='"._("ver cuadro")."' >";
