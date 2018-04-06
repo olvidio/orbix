@@ -31,26 +31,20 @@ use web\Posicion;
 // FIN de  Cabecera global de URL de controlador ********************************
 	
 $atras = (integer)  \filter_input(INPUT_POST, 'atras');
-$stack = (integer)  \filter_input(INPUT_POST, 'stack');
 //Si vengo por medio de Posicion, borro la última
-if (!empty($stack)) {
-	// No me sirve el de global_object, sino el de la session
-	$oPosicion2 = new Posicion();
-	if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
-		$Qid_sel=$oPosicion2->getParametro('id_sel');
-		$Qscroll_id = $oPosicion2->getParametro('scroll_id');
-		$oPosicion2->olvidar($stack);
+if (isset($_POST['stack'])) {
+	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+	if ($stack != '') {
+		// No me sirve el de global_object, sino el de la session
+		$oPosicion2 = new Posicion();
+		if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+			$Qid_sel=$oPosicion2->getParametro('id_sel');
+			$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+			$oPosicion2->olvidar($stack);
+		}
 	}
-} elseif (!empty ($atras)){ // vengo por un go_to (fnjs_ir_a, fnjs_mostrar_atras...
-	$oPosicion2 = new Posicion();
-	if ($oPosicion2->go(1)) { // devuelve false si no puede ir
-		$Qid_sel=$oPosicion2->getParametro('id_sel');
-		$Qscroll_id = $oPosicion2->getParametro('scroll_id');
-		$oPosicion2->olvidar();
-	}
-} else {
-	$oPosicion->recordar();
-}
+} 
+$oPosicion->recordar();
 
 $id_pau = (integer)  \filter_input(INPUT_POST, 'id_pau');
 $pau = (string)  \filter_input(INPUT_POST, 'pau');

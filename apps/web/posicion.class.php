@@ -81,27 +81,23 @@ class Posicion {
 	 * @var stack indice del array $_SESSION['position']);
 	 */
 	public function goStack($stack=0) {
-		if (!empty($stack)) {
-			if (isset($_SESSION['position'][$stack])) {
-				$aPosition = $_SESSION['position'][$stack];
-				$this->stack = key($_SESSION['position']);
-				$this->surl = $aPosition['url'];
-				$this->sbloque = $aPosition['bloque'];
-				$this->aParametros = $aPosition['parametros'];
-				return true;
-			} else {
-				return false;
-			}
+		if (isset($_SESSION['position'][$stack])) {
+			$aPosition = $_SESSION['position'][$stack];
+			$this->stack = key($_SESSION['position']);
+			$this->surl = $aPosition['url'];
+			$this->sbloque = $aPosition['bloque'];
+			$this->aParametros = $aPosition['parametros'];
+			return true;
 		} else {
 			return false;
 		}
 	}
 
-	public function olvidar($stack='') {
-		if (!empty($stack)) {
+	public function olvidar($stack='*') {
+		if ($stack != '*') { //pongo '*' para distinguirlo del 0.
 			// hasta el final
 			array_splice($_SESSION['position'], $stack);
-		} elseif (!empty($this->stack)) { // borrar el actual
+		} elseif (isset($this->stack)) { // borrar el actual
 			array_splice($_SESSION['position'], $this->stack);
 		}
 	}
@@ -111,13 +107,12 @@ class Posicion {
 		// evitar que sea muy grande
 		$this->limitar(20);
 		// poner en parametros el stack
-		//YA, pero si es null... OJO si es el primero tiene valor 0. (no usar empty)
-		if (empty($this->stack)) {
+		if (!isset($this->stack)) { //OJO si es el primero tiene valor 0. (no usar empty)
 			if (isset($_SESSION['position']) && is_array($_SESSION['position'])) { //para la primera
 				end($_SESSION['position']);
 				$stack = key($_SESSION['position']) + 1;
 			} else {
-				$stack = 0;
+				$stack = 1;
 			}
 		} else {
 			$stack = $this->stack + 1;
@@ -452,7 +447,7 @@ class Posicion {
 		$aParam = array();
 		foreach (explode('&',$parametros) as $param) {
 			$aa = explode('=',$param);
-			$aParam[$aa[0]] = empty($aa[1])? '' : $aa[1];
+			$aParam[$aa[0]] = isset($aa[1])? $aa[1] : ''; //ojo con el empty y el 0.
 		}
 		$parametros = Hash::add_hash($aParam,$url);
 		//<div id="ir_a" style="display: none;">

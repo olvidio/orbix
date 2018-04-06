@@ -127,8 +127,9 @@ switch ($_POST['mod']) {
 
 $go_to = urldecode($_POST['go_to']);
 if (empty($msg_err)) { 
-	$oPosicion = new web\Posicion();
-	echo $oPosicion->ir_a($go_to);
+	$oPosicion2 = new web\Posicion();
+	$oPosicion2->go(3);
+	echo $oPosicion2->ir_a($go_to);
 } else {
 	echo $msg_err;
 }	

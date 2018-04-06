@@ -34,17 +34,19 @@ use function core\urlsafe_b64encode;
 $oMiUsuario = new usuarios\Usuario(ConfigGlobal::mi_id_usuario());
 $miSfsv=ConfigGlobal::mi_sfsv();
 
-$stack = (integer)  \filter_input(INPUT_POST, 'stack');
 //Si vengo por medio de Posicion, borro la última
-if (!empty($stack)) {
-	// No me sirve el de global_object, sino el de la session
-	$oPosicion2 = new Posicion();
-	if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
-		$Qid_sel=$oPosicion2->getParametro('id_sel');
-		$Qscroll_id = $oPosicion2->getParametro('scroll_id');
-		$oPosicion2->olvidar($stack);
+if (isset($_POST['stack'])) {
+	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+	if ($stack != '') {
+		// No me sirve el de global_object, sino el de la session
+		$oPosicion2 = new Posicion();
+		if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+			$Qid_sel=$oPosicion2->getParametro('id_sel');
+			$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+			$oPosicion2->olvidar($stack);
+		}
 	}
-}
+} 
 
 $loc = empty($_POST['loc'])? '' : $_POST['loc'];
 $tipo = empty($_POST['tipo'])? '' : $_POST['tipo'];

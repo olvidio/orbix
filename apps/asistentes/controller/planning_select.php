@@ -29,28 +29,30 @@ use ubis\model as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$stack = (integer)  filter_input(INPUT_POST, 'stack');
-//Si vengo de vuelta de un go_to:
-if (!empty($stack)) {
-	$oPosicion->goStack($stack);
-	$Qtipo = $oPosicion->getParametro('tipo');
-	$Qobj_pau = $oPosicion->getParametro('obj_pau');
-	$Qna = $oPosicion->getParametro('na');
-	$Qinicio = $oPosicion->getParametro('inicio');
-	$Qfin=$oPosicion->getParametro('fin');
-	$Qperiodo=$oPosicion->getParametro('periodo');
-	$Qyear=$oPosicion->getParametro('year');
-	$QsaWhere= $oPosicion->getParametro('saWhere');
-	$QsaOperador=$oPosicion->getParametro('saOperador');
-	$QsaWhereCtr=$oPosicion->getParametro('saWhereCtr');
-	$QsaOperadorCtr=$oPosicion->getParametro('saOperadorCtr');
-	$Qid_sel=$oPosicion->getParametro('id_sel');
-	$Qscroll_id = $oPosicion->getParametro('scroll_id');
+//Si vengo por medio de Posicion, borro la última
+if (isset($_POST['stack'])) {
+	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+	if ($stack != '') {
+		$oPosicion->goStack($stack);
+		$Qtipo = $oPosicion->getParametro('tipo');
+		$Qobj_pau = $oPosicion->getParametro('obj_pau');
+		$Qna = $oPosicion->getParametro('na');
+		$Qinicio = $oPosicion->getParametro('inicio');
+		$Qfin=$oPosicion->getParametro('fin');
+		$Qperiodo=$oPosicion->getParametro('periodo');
+		$Qyear=$oPosicion->getParametro('year');
+		$QsaWhere= $oPosicion->getParametro('saWhere');
+		$QsaOperador=$oPosicion->getParametro('saOperador');
+		$QsaWhereCtr=$oPosicion->getParametro('saWhereCtr');
+		$QsaOperadorCtr=$oPosicion->getParametro('saOperadorCtr');
+		$Qid_sel=$oPosicion->getParametro('id_sel');
+		$Qscroll_id = $oPosicion->getParametro('scroll_id');
 
-	$aWhere=unserialize(base64_decode($QsaWhere));
-	$aOperador=unserialize(base64_decode($QsaOperador));
-	$aWhereCtr=unserialize(base64_decode($QsaWhereCtr));
-	$aOperadorCtr=unserialize(base64_decode($QsaOperadorCtr));
+		$aWhere=unserialize(base64_decode($QsaWhere));
+		$aOperador=unserialize(base64_decode($QsaOperador));
+		$aWhereCtr=unserialize(base64_decode($QsaWhereCtr));
+		$aOperadorCtr=unserialize(base64_decode($QsaOperadorCtr));
+	}
 } else { //si no vengo por goto.
 	$Qmodo = empty($_POST['modo'])? '' : $_POST['modo'];
 	$Qtipo=empty($_POST['tipo'])? '' : $_POST['tipo'];

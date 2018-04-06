@@ -24,25 +24,27 @@ use ubis\model as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$stack = (integer)  filter_input(INPUT_POST, 'stack');
 //Si vengo de vuelta y le paso la referecia del stack donde está la información.
-if (!empty($stack)) {
-	$oPosicion->goStack($stack);
-	$Qmodo = $oPosicion->getParametro('modo');
-	$Qque = $oPosicion->getParametro('que');
-	$Qstatus = $oPosicion->getParametro('status');
-	$Qid_tipo_activ = $oPosicion->getParametro('id_tipo_activ');
-	$Qfiltro_lugar = $oPosicion->getParametro('filtro_lugar');
-	$Qid_ubi= $oPosicion->getParametro('id_ubi');
-	$Qperiodo=$oPosicion->getParametro('periodo');
-	$Qinicio=$oPosicion->getParametro('inicio');
-	$Qfin=$oPosicion->getParametro('fin');
-	$Qyear=$oPosicion->getParametro('year');
-	$Qdl_org=$oPosicion->getParametro('dl_org');
-	$Qempiezamin=$oPosicion->getParametro('empiezamin');
-	$Qempiezamax=$oPosicion->getParametro('empiezamax');
-	$Qlistar_asistentes=$oPosicion->getParametro('listar_asistentes');
-	$oPosicion->olvidar($stack);
+if (isset($_POST['stack'])) {
+	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+	if ($stack != '') {
+		$oPosicion->goStack($stack);
+		$Qmodo = $oPosicion->getParametro('modo');
+		$Qque = $oPosicion->getParametro('que');
+		$Qstatus = $oPosicion->getParametro('status');
+		$Qid_tipo_activ = $oPosicion->getParametro('id_tipo_activ');
+		$Qfiltro_lugar = $oPosicion->getParametro('filtro_lugar');
+		$Qid_ubi= $oPosicion->getParametro('id_ubi');
+		$Qperiodo=$oPosicion->getParametro('periodo');
+		$Qinicio=$oPosicion->getParametro('inicio');
+		$Qfin=$oPosicion->getParametro('fin');
+		$Qyear=$oPosicion->getParametro('year');
+		$Qdl_org=$oPosicion->getParametro('dl_org');
+		$Qempiezamin=$oPosicion->getParametro('empiezamin');
+		$Qempiezamax=$oPosicion->getParametro('empiezamax');
+		$Qlistar_asistentes=$oPosicion->getParametro('listar_asistentes');
+		$oPosicion->olvidar($stack);
+	}
 } else { //si tengo los parametros en el $_POST
 	$Qmodo = empty($_POST['modo'])? '' : $_POST['modo'];
 	$Qque = empty($_POST['que'])? '' : $_POST['que'];

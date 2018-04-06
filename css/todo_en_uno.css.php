@@ -515,7 +515,7 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 		left : 0px;
 		top : 0px;
 		border-color : <?php echo $lineas; ?>;
-		background : <?php echo $cru; ?>;
+		background : <?php echo $fondo_claro; ?>;
 		empty-cells: show;
 	 }
 	table.semi  {
@@ -537,7 +537,7 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 		border-width: thin;
 		left : 0px;
 		top : 0px;
-		background : <?php echo $cru; ?>;
+		background : <?php echo $fondo_claro; ?>;
 	}
 	th.ca_posibles  {
 		color : black;

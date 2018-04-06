@@ -40,19 +40,21 @@ $miSfsv=ConfigGlobal::mi_sfsv();
 
 $doss_tel='d_teleco_ubis';
 
-$stack = (integer)  \filter_input(INPUT_POST, 'stack');
 //Si vengo por medio de Posicion, borro la última
-if (!empty($stack)) {
-	// No me sirve el de global_object, sino el de la session
-	$oPosicion2 = new Posicion();
-	if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
-		$obj_pau = $oPosicion2->getParametro('obj_pau');
-		$id_ubi = $oPosicion2->getParametro('id_ubi');
-		$Qid_sel=$oPosicion2->getParametro('id_sel');
-		$Qscroll_id = $oPosicion2->getParametro('scroll_id');
-		$oPosicion2->olvidar($stack);
+if (isset($_POST['stack'])) {
+	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+	if ($stack != '') {
+		// No me sirve el de global_object, sino el de la session
+		$oPosicion2 = new Posicion();
+		if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+			$obj_pau = $oPosicion2->getParametro('obj_pau');
+			$id_ubi = $oPosicion2->getParametro('id_ubi');
+			$Qid_sel=$oPosicion2->getParametro('id_sel');
+			$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+			$oPosicion2->olvidar($stack);
+		}
 	}
-}
+} 
 
 $que_lista = empty($_POST['que_lista'])? '' : $_POST['que_lista'];
 $loc = empty($_POST['loc'])? '' : $_POST['loc'];
