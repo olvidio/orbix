@@ -41,7 +41,7 @@ $txt_alert =_("Se va a poner la fecha de hoy como fecha de baja. Para cambiarlo 
 <script>
 fnjs_baja=function(id_orbix,fila){
 	var url='<?= $url_sincro_ajax ?>';
-	var parametros='que=baja&id_nom_orbix='+id_orbix+'&tipo_persona=<?= $tipo_persona ?><?= $h ?>&PHPSESSID=<?= session_id(); ?>';
+	var parametros='que=baja&id_nom_orbix='+id_orbix+'&tipo_persona=<?= $tipo_persona ?><?= $h ?>';
 			 
 	alert ("<?= $txt_alert ?>");
 

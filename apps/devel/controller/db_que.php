@@ -31,7 +31,7 @@ $h = $oHash1->linkSinVal();
 fnjs_dl=function(){
 	var filtro_region=$('#region').val();
 	var url='<?= core\ConfigGlobal::getWeb().'/apps/devel/controller/db_ajax.php' ?>';
-	var parametros='salida=lugar&entrada='+filtro_region+'<?= $h ?>&PHPSESSID=<?= session_id(); ?>';
+	var parametros='salida=lugar&entrada='+filtro_region+'<?= $h ?>';
 	$.ajax({
 		data: parametros,
 		url: url,

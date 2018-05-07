@@ -43,7 +43,7 @@ fnjs_ver_dir=function(){
 
 fnjs_ver_documento=function(id_direccion){
 	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/ubis/controller/plano_bytea.php';
-	var parametros='act=comprobar&id_direccion='+id_direccion+'&PHPSESSID=<?= session_id(); ?>';
+	var parametros='act=comprobar&id_direccion='+id_direccion;
 		 
 	$.ajax({
 		url: url,

@@ -21,7 +21,7 @@ $oDespl->setNombre('filtro_mod');
 fnjs_lista_menus=function(id_ubi){
 	var filtro_mod=$('#filtro_mod').val();
 	var url='<?= core\ConfigGlobal::getWeb().'/apps/devel/controller/metamenus_get.php'; ?>';
-	var parametros='filtro_mod='+filtro_mod+'&PHPSESSID=<?= session_id(); ?>';
+	var parametros='filtro_mod='+filtro_mod;
 	$.ajax({
 		data: parametros,
 		url: url,
@@ -37,7 +37,7 @@ fnjs_lista_menus=function(id_ubi){
 fnjs_ver_ficha=function(id_menu){
 	var filtro_mod=$('#filtro_mod').val();
 	var url='<?= core\ConfigGlobal::getWeb().'/apps/devel/controller/metamenus_get.php'; ?>';
-	var parametros='id_menu='+id_menu+'&filtro_mod='+filtro_mod+'&PHPSESSID=<?= session_id(); ?>';
+	var parametros='id_menu='+id_menu+'&filtro_mod='+filtro_mod;
 	$.ajax({
 		data: parametros,
 		url: url,

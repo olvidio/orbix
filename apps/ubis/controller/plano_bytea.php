@@ -153,7 +153,7 @@ case 'adjuntar':
 		var id_direccion=$('#id_direccion').val();
 
 		var url='<?= core\ConfigGlobal::getWeb() ?>/apps/ubis/controller/plano_bytea.php';
-		var parametros='act=comprobar&id_direccion='+id_direccion+'&PHPSESSID=<?= session_id(); ?>';
+		var parametros='act=comprobar&id_direccion='+id_direccion;
 			 
 		$.ajax({
 			url: url,

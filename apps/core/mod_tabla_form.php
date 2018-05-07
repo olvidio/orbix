@@ -141,7 +141,7 @@ fnjs_cancelar=function(formulario){
 }
 fnjs_actualizar_depende=function(camp,accion){
 var valor_depende=$('#'+camp).val();
-	var parametros='clase_info=<?= $clase_info?>&accion='+accion+'&valor_depende='+valor_depende+'<?= $h ?>&PHPSESSID=<?= session_id(); ?>';
+	var parametros='clase_info=<?= $clase_info?>&accion='+accion+'&valor_depende='+valor_depende+'<?= $h ?>';
 	//var url='apps/core/mod_tabla_actualizar.php';
 	var url='<?= $web_depende ?>';
 	$.ajax({

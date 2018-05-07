@@ -35,7 +35,7 @@ $h2 = $oHash2->linkSinVal();
 fnjs_lista_menus=function(id_ubi){
 	var filtro_grupo=$('#filtro_grupo').val();
 	var url='<?= $url ?>';
-	var parametros='filtro_grupo='+filtro_grupo+'<?= $h1 ?>&PHPSESSID=<?= session_id(); ?>';
+	var parametros='filtro_grupo='+filtro_grupo+'<?= $h1 ?>';
 	$.ajax({
 		data: parametros,
 		url: url,
@@ -51,7 +51,7 @@ fnjs_lista_menus=function(id_ubi){
 fnjs_ver_ficha=function(id_menu){
 	var filtro_grupo=$('#filtro_grupo').val();
 	var url='<?= $url ?>';
-	var parametros='id_menu='+id_menu+'&filtro_grupo='+filtro_grupo+'<?= $h2 ?>&PHPSESSID=<?= session_id(); ?>';
+	var parametros='id_menu='+id_menu+'&filtro_grupo='+filtro_grupo+'<?= $h2 ?>';
 	$.ajax({
 		data: parametros,
 		url: url,

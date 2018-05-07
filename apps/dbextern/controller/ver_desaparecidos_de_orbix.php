@@ -42,7 +42,7 @@ $h = $oHash->linkSinVal();
 <script>
 fnjs_desunir=function(id_listas,fila){
 	var url='<?= $url_sincro_ajax ?>';
-	var parametros='que=desunir&id_nom_listas='+id_listas+'&tipo_persona=<?= $tipo_persona ?><?= $h ?>&PHPSESSID=<?= session_id(); ?>';
+	var parametros='que=desunir&id_nom_listas='+id_listas+'&tipo_persona=<?= $tipo_persona ?><?= $h ?>';
 			 
 	$.ajax({
 		url: url,

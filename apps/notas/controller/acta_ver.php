@@ -190,8 +190,8 @@ $oHashLink->setUrl($url);
 $oHashLink->setCamposForm('que!q'); 
 $h = $oHashLink->linkSinVal();
 
-$location = $url."?que=examinadores&$h&PHPSESSID=".session_id();
-$loc_asig = $url."?que=asignaturas&$h&PHPSESSID=".session_id();
+$location = "{$url}?que=examinadores&$h";
+$loc_asig = "{$url}?que=asignaturas&$h";
 
 
 $a_campos = ['obj' => $obj,

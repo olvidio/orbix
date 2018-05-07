@@ -7,7 +7,7 @@ fnjs_asistentes=function(){
 		fnjs_nom_tipo();
 	} else {
 		var url='<?= core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tipo_get.php' ?>';
-		var parametros='salida=asistentes&entrada='+isfsv+'<?= $h ?>&PHPSESSID=<?= session_id(); ?>';
+		var parametros='salida=asistentes&entrada='+isfsv+'<?= $h ?>';
 
 		$.ajax({
 			data: parametros,
@@ -29,7 +29,7 @@ fnjs_actividad=function(){
 	var isfsv=$('#isfsv_val').val();
 	var iasistentes=$('#iasistentes_val').val();
 	var url='<?= core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tipo_get.php' ?>';
-	var parametros='salida=actividad&entrada='+isfsv+iasistentes+'<?= $h ?>&PHPSESSID=<?= session_id(); ?>';
+	var parametros='salida=actividad&entrada='+isfsv+iasistentes+'<?= $h ?>';
 	$.ajax({
 		data: parametros,
 		url: url,
@@ -46,7 +46,7 @@ fnjs_nom_tipo=function(){
 	var iasistentes=$('#iasistentes_val').val();
 	var iactividad=$('#iactividad_val').val();
 	var url='<?= core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tipo_get.php' ?>';
-	var parametros='salida=nom_tipo&entrada='+isfsv+iasistentes+iactividad+'<?= $h ?>&PHPSESSID=<?= session_id(); ?>';
+	var parametros='salida=nom_tipo&entrada='+isfsv+iasistentes+iactividad+'<?= $h ?>';
 	$.ajax({
 		data: parametros,
 		url: url,
@@ -72,7 +72,7 @@ fnjs_act_id_activ=function(){
 	} else {
 		// buscar la tarifa para este tipo de actividad
 		var url='<?= core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tipo_get.php' ?>';
-		var parametros='salida=tarifa&entrada='+id_tipo_activ+'<?= $h ?>&PHPSESSID=<?= session_id(); ?>';
+		var parametros='salida=tarifa&entrada='+id_tipo_activ+'<?= $h ?>';
 		$.ajax({
 			url: url,
 			type: 'post',

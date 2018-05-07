@@ -329,7 +329,7 @@ if ($miRole < 4) {
 	fnjs_actualizar_permisos=function(){
 		/* obtener el listado de periodos */
 		var url='<?= core\ConfigGlobal::getWeb() ?>/des/activ_sacd_ajax.php';
-		var parametros='que=get&id_activ='+id_activ+'&PHPSESSID=<?= session_id(); ?>';
+		var parametros='que=get&id_activ='+id_activ;
 			 
 		$.ajax({
 			url: url,
@@ -349,7 +349,7 @@ if ($miRole < 4) {
 
 	fnjs_add_grup=function(){
 		var url='<?= $url_usuario_ajax ?>';
-		var parametros='que=grupo_lst&id_usuario=<?= $id_usuario ?><?= $h1 ?>&PHPSESSID=<?= session_id(); ?>';
+		var parametros='que=grupo_lst&id_usuario=<?= $id_usuario ?><?= $h1 ?>';
 			 
 		$.ajax({
 			url: url,
@@ -365,7 +365,7 @@ if ($miRole < 4) {
 
 	fnjs_del_grup=function(){
 		var url='<?= $url_usuario_ajax ?>';
-		var parametros='que=grupo_del_lst&id_usuario=<?= $id_usuario ?><?= $h1 ?>&PHPSESSID=<?= session_id(); ?>';
+		var parametros='que=grupo_del_lst&id_usuario=<?= $id_usuario ?><?= $h1 ?>';
 			 
 		$.ajax({
 			url: url,

@@ -20,7 +20,7 @@ fnjs_lugar=function(){
 	var isfsv=$('#isfsv_val').val();
 	var filtro_lugar=$('#filtro_lugar').val();
 	var url='<?= core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tipo_get.php' ?>';
-	var parametros='salida=lugar&entrada='+filtro_lugar+'&opcion_sel='+opcion_sel+'&isfsv='+isfsv+'<?= $h ?>&PHPSESSID=<?= session_id(); ?>';
+	var parametros='salida=lugar&entrada='+filtro_lugar+'&opcion_sel='+opcion_sel+'&isfsv='+isfsv+'<?= $h ?>';
 	$.ajax({
 		data: parametros,
 		url: url,

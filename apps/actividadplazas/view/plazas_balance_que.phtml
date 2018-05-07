@@ -2,7 +2,7 @@
 fnjs_comparativa=function(){
 	var filtro_dl=$('#dl').val();
 	var url='<?= core\ConfigGlobal::getWeb().'/apps/actividadplazas/controller/plazas_balance_dl.php' ?>';
-	var parametros='id_tipo_activ=<?= $Qid_tipo_activ ?>&dl='+filtro_dl+'<?= $h ?>&PHPSESSID=<?= session_id(); ?>';
+	var parametros='id_tipo_activ=<?= $Qid_tipo_activ ?>&dl='+filtro_dl+'<?= $h ?>';
 	$.ajax({
 		data: parametros,
 		url: url,

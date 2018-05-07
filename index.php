@@ -451,7 +451,7 @@ function fnjs_def_tabla(tabla) {
 	oPrefs = { "panelVis": panelVis, "colVisible": colsVisible, "colWidths": colsWidth, "widthGrid": widthGrid, "heightGrid": heightGrid };
 	sPrefs = JSON.stringify(oPrefs);
 	url="<?= ConfigGlobal::getWeb() ?>/apps/usuarios/controller/personal_update.php";
-	parametros='que=slickGrid&tabla='+tabla+'&sPrefs='+sPrefs+'<?= $h ?>&PHPSESSID=<?= session_id(); ?>'; 
+	parametros='que=slickGrid&tabla='+tabla+'&sPrefs='+sPrefs+'<?= $h ?>'; 
 	$.ajax({
 			url: url,
 			type: 'post',

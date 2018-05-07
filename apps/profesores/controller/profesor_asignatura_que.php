@@ -36,7 +36,7 @@ $h = $oHash->linkSinVal();
 fnjs_profes=function(){
 	var url='<?= core\ConfigGlobal::getWeb().'/apps/profesores/controller/profesor_asignatura_ajax.php' ?>';
 	id_asignatura = $("#id_asignatura").val();
-	var parametros='id_asignatura='+id_asignatura+'<?= $h ?>&PHPSESSID=<?= session_id(); ?>';
+	var parametros='id_asignatura='+id_asignatura+'<?= $h ?>';
 	$.ajax({
 		data: parametros,
 		url: url,

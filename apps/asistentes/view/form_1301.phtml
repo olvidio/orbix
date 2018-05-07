@@ -5,7 +5,7 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 fnjs_cmb_propietario=function(){
 	var id_activ=$('#id_activ').val();
 	var url='<?= $url_ajax ?>';
-	var parametros='que=lst_propietarios&id_nom=<?= $id_nom ?>&id_activ='+id_activ+'<?= $h1 ?>&PHPSESSID=<?= session_id(); ?>';
+	var parametros='que=lst_propietarios&id_nom=<?= $id_nom ?>&id_activ='+id_activ+'<?= $h1 ?>';
 		 
 	$.ajax({
 		url: url,

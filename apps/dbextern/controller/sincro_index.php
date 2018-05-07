@@ -173,7 +173,7 @@ $explicacion_txt .= _("Al efectuar alguna acción dentro de las listas, las pers
 <script>
 fnjs_sincronizar=function(){
 	var url='<?= $url_sincro_ajax ?>';
-	var parametros='que=syncro&dl=<?= $dl ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>&PHPSESSID=<?= session_id(); ?>';
+	var parametros='que=syncro&dl=<?= $dl ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>';
 			 
 	$.ajax({
 		url: url,

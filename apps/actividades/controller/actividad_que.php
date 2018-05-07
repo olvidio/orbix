@@ -68,7 +68,7 @@ $oActividadTipo->setNom_tipo($Qsnom_tipo);
 if (empty($Qstatus)) { $Qstatus = 2; }
 $oDesplegableCasas = array();
 if (!empty($Qid_ubi)) {
-	$oActividadLugar = new \actividades\model\entity\ActividadLugar();
+	$oActividadLugar = new \actividades\model\ActividadLugar();
 	$Qfiltro_lugar = $oActividadLugar->getFiltroLugar($Qid_ubi); 
 }
 

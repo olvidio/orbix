@@ -7,7 +7,7 @@ fnjs_cmb_plaza=function(formulario,plaza){
 	//var lista_json=$('#'+form+' input.sel:checked');
 	var lista_json=JSON.stringify($('#'+form+' input.sel:checked').serializeArray());
 	var url='apps/asistentes/controller/update_3101.php';
-	var parametros='mod=plaza&plaza='+plaza+'&lista_json='+lista_json+'&id_activ=<?= $id_pau ?><?= $h4 ?>&PHPSESSID=<?= session_id(); ?>';
+	var parametros='mod=plaza&plaza='+plaza+'&lista_json='+lista_json+'&id_activ=<?= $id_pau ?><?= $h4 ?>';
 	$(formulario).submit(function() {
 		$.ajax({
 			data: parametros,
