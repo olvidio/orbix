@@ -1,7 +1,7 @@
 <?php
 use asignaturas\model\entity as asignaturas;
 use core\ConfigGlobal;
-use notas\model\entity as notas;
+use notas\model as notas;
 use ubis\model\entity as ubis;
 use web\Hash;
 use web\Lista;

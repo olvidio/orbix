@@ -1,6 +1,6 @@
 <?php
 use asignaturas\model\entity as asignaturas;
-use notas\model\entity as notas;
+use notas\model as notas;
 use personas\model\entity as personas;
 use ubis\model\entity as ubis;
 /**
