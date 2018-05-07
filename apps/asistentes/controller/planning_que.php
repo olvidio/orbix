@@ -1,5 +1,5 @@
 <?php 
-use usuarios\model as usuarios;
+use usuarios\model\entity as usuarios;
 /**
 * Página que presentará los formularios de los distintos plannings 
 * Según sea el submenú seleccionado seleccionará el formulario
@@ -85,19 +85,19 @@ switch ($_POST['tipo']) {
 	<?= $oHash->getCamposHtml(); ?>
 		<table>
 		<tr><th class=titulo_inv colspan="2">
-		<?php echo core\strtoupper_dlb(_('búsqueda de personas en la obj_pau')); ?></th></tr>
+		<?= core\strtoupper_dlb(_('búsqueda de personas en la obj_pau')); ?></th></tr>
 	    <tr>
-		<td class=etiqueta><?php echo ucfirst(_('nombre')); ?></td> 
+		<td class=etiqueta><?= ucfirst(_('nombre')); ?></td> 
 		<td><input class=contenido id="nombre" name="nombre" size="30"></td></tr>
 		<tr>
-		<td class=etiqueta><?php echo ucfirst(_('primer apellido')); ?></td>
+		<td class=etiqueta><?= ucfirst(_('primer apellido')); ?></td>
 		<td><input class=contenido id="apellido1" name="apellido1" size="40"></td></tr>
 		<tr> 
-		<td class=etiqueta><?php echo ucfirst(_('segundo apellido')); ?></td>
+		<td class=etiqueta><?= ucfirst(_('segundo apellido')); ?></td>
 		<td><input class=contenido id="apellido2" name="apellido2" size="40"></td></tr>
 		<?php if ($_POST['tipo']=='planning') { ?>
 			<tr>
-			<td class=etiqueta><?php echo ucfirst(_('centro')); ?></td>
+			<td class=etiqueta><?= ucfirst(_('centro')); ?></td>
 			<td><input class=contenido id="centro" name="centro"></td>
 			</tr>
 		<?php }
@@ -112,16 +112,16 @@ switch ($_POST['tipo']) {
 	<?= $oHash1->getCamposHtml(); ?>
 	<table>
 		<tr><th class=titulo_inv colspan="4">
-		<?php echo strtoupper(_('actividades de las personas de un centro')); ?></th></tr>
+		<?= strtoupper(_('actividades de las personas de un centro')); ?></th></tr>
 	    <tr>
-		<td class=etiqueta><?php echo ucfirst(_('centro')); ?></td>
-		<td><input class=contenido id="ctr" name="ctr"></td><td class=etiqueta colspan="1"><?php echo ucfirst(_('(por defecto saldrán todos los n y agd ordenados por ctr)')); ?></td>
+		<td class=etiqueta><?= ucfirst(_('centro')); ?></td>
+		<td><input class=contenido id="ctr" name="ctr"></td><td class=etiqueta colspan="1"><?= ucfirst(_('(por defecto saldrán todos los n y agd ordenados por ctr)')); ?></td>
 		</tr>
 		<tr><td class=etiqueta colspan=9>
-		<input type="Checkbox" id="todos_n" name="todos_n" value="t" ><?php echo _('todos los ctr con n'); ?>
-		<input type="Checkbox" id="todos_agd" name="todos_agd" value="t" ><?php echo _('todos los ctr con agd'); ?>	
+		<input type="Checkbox" id="todos_n" name="todos_n" value="t" ><?= _('todos los ctr con n'); ?>
+		<input type="Checkbox" id="todos_agd" name="todos_agd" value="t" ><?= _('todos los ctr con agd'); ?>	
 		</td></tr>
-		<tr><td class=etiqueta colspan=9><?php echo _('incluir sacd:'); ?><input type="Radio" id="sacd" name="sacd" value=0 checked><?php echo _('no'); ?><input type="Radio" name="sacd" value=1><?php echo _('si'); ?></td></tr>	
+		<tr><td class=etiqueta colspan=9><?= _('incluir sacd:'); ?><input type="Radio" id="sacd" name="sacd" value=0 checked><?= _('no'); ?><input type="Radio" name="sacd" value=1><?= _('si'); ?></td></tr>	
 	</table>
 	<?php 
 	break;
@@ -188,9 +188,9 @@ switch ($_POST['tipo']) {
 <tr class=botones>
 <?php 
 if ($_POST['tipo']=='planning_ctr' || $_POST['tipo']=='planning_cdc' ) { ?>
-<td><input TYPE="button" onclick="fnjs_ver_planning(this.form,1)" value="<?php echo ucfirst(_('planning vista tabla')); ?>" ></td>
-<td><input TYPE="button" onclick="fnjs_ver_planning(this.form,3)" value="<?php echo ucfirst(_('planning vista grid')); ?>" ></td>
-<td colspan=2><input TYPE="button" onclick="fnjs_ver_planning(this.form,2)" value="<?php echo _('Vista para imprimir'); ?>"></td>
+<td><input TYPE="button" onclick="fnjs_ver_planning(this.form,1)" value="<?= ucfirst(_('planning vista tabla')); ?>" ></td>
+<td><input TYPE="button" onclick="fnjs_ver_planning(this.form,3)" value="<?= ucfirst(_('planning vista grid')); ?>" ></td>
+<td colspan=2><input TYPE="button" onclick="fnjs_ver_planning(this.form,2)" value="<?= _('Vista para imprimir'); ?>"></td>
 <?php } else { ?>
 <td><input TYPE="button" onclick="fnjs_ver_planning(this.form,0)" id="ok" name="ok" value="<?= ucfirst(_('buscar')); ?>" class="btn_ok" ></td>
 <?php } ?>

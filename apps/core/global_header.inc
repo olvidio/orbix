@@ -29,32 +29,16 @@ namespace orbix\apps\core {
 	}
 }
 
-
 namespace orbix\apps {
 	//permisos/login_inc
 	use permisos\model\mycrypt;
 	use permisos\model\perm;
 
-	//require_once ('classes/global.class');
 	use core\clasepropiedades;
 	use core\datoscampo;
 	use core\condicion;
 	use core\set;
 
-	//require_once ('config_global.class');
 	use core\configglobal;
-
-	//require_once ('classes/gestorErrores.class');
 	use core\gestorerrores;
-
-	/*
-	if (in_array('menu',$_SESSION['config']['app_on'])) {
-		//require_once ('classes/activ-personas/perm_activ.class');
-		//use menus\model as menus;
-	}
-	if (in_array('perm_activ',$_SESSION['config']['app_on'])) {
-		//require_once ('classes/activ-personas/permActividades.class');
-	}
-	*/
 }
-?>

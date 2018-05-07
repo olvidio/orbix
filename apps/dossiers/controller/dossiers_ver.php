@@ -1,23 +1,11 @@
 <?php
 
-use actividades\model as actividades;
+use actividades\model\entity as actividades;
 use core\ConfigGlobal;
-use dossiers\model as dossiers;
-use personas\model as personas;
+use dossiers\model\entity as dossiers;
+use personas\model\entity as personas;
 use web\Hash;
 use web\Posicion;
-//use core;
-//use web;
-/**
-* Esta página pone el titulo en el frame superior.
-*
-*
-*@package	delegacion
-*@subpackage	dossiers
-*@author	Daniel Serrabou
-*@since		15/5/02.
-*		
-*/
 
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
@@ -30,8 +18,21 @@ use web\Posicion;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 	
-$atras = (integer)  \filter_input(INPUT_POST, 'atras');
-//Si vengo por medio de Posicion, borro la última
+$Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
+$oPosicion->recordar($Qrefresh);
+
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+// Si vengo de eliminar, hay que borrar el 'sel' que ha identificado el registro,
+//  pues ya no existe
+$Qmod = (string)  \filter_input(INPUT_POST, 'mod');
+if (isset($a_sel) && ($Qmod == 'eliminar' OR $Qmod == 'nuevo')) {
+	unset($a_sel);
+}
+
+$Qid_sel = '';
+$Qscroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+// Hay que usar isset y empty porque puede tener el valor =0.
+// Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
 	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
 	if ($stack != '') {
@@ -43,99 +44,132 @@ if (isset($_POST['stack'])) {
 			$oPosicion2->olvidar($stack);
 		}
 	}
-} 
-$oPosicion->recordar();
-
-$id_pau = (integer)  \filter_input(INPUT_POST, 'id_pau');
-$pau = (string)  \filter_input(INPUT_POST, 'pau');
-$obj_pau = (string)  \filter_input(INPUT_POST, 'obj_pau');
-$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-// el scroll id es de la página anterior, hay que guardarlo allí
-if (!empty($a_sel)) { //vengo de un checkbox
- 	$id_sel=$a_sel;
-	//$id_pau= empty($id_pau)? strtok($a_sel[0],"#") : $id_pau; //si ya lo tengo, prevalece. el sel puede ser otra cosa
-	$id_pau= strtok($a_sel[0],"#");
-	$id_tabla=strtok("#");
+} elseif (!empty($a_sel)) { //vengo de un checkbox
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$Qid_sel = $a_sel;
 	$oPosicion->addParametro('id_sel',$a_sel,1);
-	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
-	$oPosicion->addParametro('scroll_id',$scroll_id,1);
+	$Qscroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$Qscroll_id,1);
+}
+	
+$Qid_pau = (integer)  \filter_input(INPUT_POST, 'id_pau');
+$pau = (string)  \filter_input(INPUT_POST, 'pau');
+$Qobj_pau = (string)  \filter_input(INPUT_POST, 'obj_pau');
+$Qid_dossier = (string)  \filter_input(INPUT_POST, 'id_dossier');
+$Qpermiso = (string)  \filter_input(INPUT_POST, 'permiso');
+$QqueSel = (string)  \filter_input(INPUT_POST, 'queSel');
+
+// si vengo de modificar el dossier, 
+//			$clase_info = "$app\\model\\entity\\datos$id_dossier";
+$Qclase_info = (string)  \filter_input(INPUT_POST, 'clase_info');
+if (empty($Qid_dossier) && !empty($Qclase_info)) {
+	// Tiene que ser en dos pasos.
+	$obj = urldecode($Qclase_info);
+	$oInfoClase = new $obj();
+	$Qid_dossier = $oInfoClase->getId_dossier();
+	$pau = $oInfoClase->getPau();
 }
 
-if (empty($permiso) && !empty($_POST['permiso'])) {
-	$permiso=$_POST['permiso'];
+/*
+//No está claro quien manda. En actividades de una persona, cunado se hace actualizar, 
+// no importa que este alguna seleccionada, se debe mantener el id_pau original...
+ * */
+// Si vengo de actualizar (Qrefresh) No hay que hacer caso del $a_sel, puede estar seleccionada cualquier cosa
+if (!empty($Qrefresh)) {
+	$id_pau = $Qid_pau;
+} elseif (!empty($a_sel)) {
+	$id_pau= strtok($a_sel[0],"#");
 } else {
-	$permiso="";
+	$id_pau = $Qid_pau;
+	
 }
 
-$_POST['go_atras'] = empty($_POST['go_atras'])? '' : $_POST['go_atras'];
-// para las tablas que estan en el exterior:
-//$oDB = que_DB($_POST['obj_pau']);
+switch ($QqueSel){
+	case "activ": // actividades de un asistente
+		$pau="p";
+		$Qpermiso=3;
+		break;
+	case "matriculas": // actividades de un asistente
+		$pau="p";
+		$Qpermiso=3;
+		// En asistentes de un ca, ver plan estudios, Machaco el id_pau que tenga (que es id_activ)
+//		if (!empty($a_sel)) { //vengo de un checkbox
+//			$id_pau= strtok($a_sel[0],"#");
+//		} else {
+//			$id_pau = $Qid_pau;
+//		}
+		break;
+	case "asis": // asistentes a una actividad
+		$pau="a";
+		$Qpermiso=3;
+		$Qid_dossier=3101;
+		break;
+	case "asig": // asignaturas de una actividad
+		$pau="a";
+		$Qpermiso=3;
+		$Qid_dossier=3005;
+		break;
+	case "carg":
+		$pau="a";
+		$Qpermiso=3;
+		$Qid_dossier=3102;
+		break;
+	default: // enseña la lista de dossiers.
+}
 
+
+$sQuery = http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$Qobj_pau));
+$godossiers = Hash::link(ConfigGlobal::getWeb()."/apps/dossiers/controller/dossiers_ver.php?$sQuery");
 // según sean personas, ubis o actividades:
 switch ($pau) {
 	case 'p':
-		$top="top_personas";
-		$ficha="ficha_personas";
 		//Hay que aclararse si la persona es de la dl o no
-		if ($obj_pau == 'Persona') {
+		if ($Qobj_pau == 'Persona') {
 			$oPersona = personas\Persona::NewPersona($id_pau);
 			if (!is_object($oPersona)) {
-				$msg_err = "<br>$oPersona con id_nom: $id_pau";
+				$msg_err = "<br>$oPersona con id_nom: $id_pau en  ".__FILE__.": line ". __LINE__;
 				exit($msg_err);
 			}
 			$clase = get_class($oPersona);
-			$obj_pau = join('', array_slice(explode('\\', $clase), -1));
+			$Qobj_pau = join('', array_slice(explode('\\', $clase), -1));
 		} else {
-			$clase = "personas\\model\\$obj_pau";
+			$clase = "personas\\model\\entity\\$Qobj_pau";
 			$oPersona = new $clase($id_pau);
 		}
-		$nom = $oPersona->getNombreApellidos();
+		$nom_cabecera = $oPersona->getNombreApellidos();
 
-		$goficha=Hash::link(ConfigGlobal::getWeb().'/apps/personas/controller/home_persona.php?'.http_build_query(array('id_nom'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$_POST['go_atras']))); 
-		$godossiers=Hash::link(ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$_POST['go_atras'])));
-		$form_action=$_POST['go_atras'];
+		$sQuery = http_build_query(array('id_nom'=>$id_pau,'obj_pau'=>$Qobj_pau)); 
+		$goHome=Hash::link(ConfigGlobal::getWeb()."/apps/personas/controller/home_persona.php?$sQuery"); 
+		
 		break;
 	case 'u':
-		$top="top_ubis";
-		$ficha="ficha_ubis";
-		$clase = "ubis\\model\\$obj_pau";
+		$clase = "ubis\\model\\entity\\$Qobj_pau";
 		$oUbi = new $clase($id_pau);
-		$nom = $oUbi->getNombre_ubi();
+		$nom_cabecera = $oUbi->getNombre_ubi();
 		
-		$goficha=Hash::link(ConfigGlobal::getWeb().'/apps/ubis/controller/home_ubis.php?'.http_build_query(array('id_ubi'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$_POST['go_atras'])));
-		$godossiers=Hash::link(ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$_POST['go_atras'])));
-		
-		if (!empty($id_direccion)) {
-			$goficha.='&id_direccion='.$id_direccion;
-			$godossiers.='&id_direccion='.$id_direccion;
-		}	
-		if (!empty($tipo)) {
-			$goficha.='&tipo='.$tipo;
-			$godossiers.='&tipo='.$tipo;
-		}	
-		if (!empty($sin_dir)) {
-			$goficha.='&sin_dir='.$sin_dir;
-			$godossiers.='&sin_dir='.$sin_dir;
-		}	
-		
-		// si vengo de los listados se scdl
-		if (isset($_SESSION['session_go_to']) ) {
-			//$_POST['go_atras']=$_SESSION['session_go_to']['sel']['go_atras'];
-		}
-
-		if (empty($_POST['go_atras'])) {
-			$form_action=Hash::link(ConfigGlobal::getWeb().'/apps/ubis_tabla.php');
-		} else {
-			$form_action=$_POST['go_atras'];
-		}
+		$sQuery = http_build_query(array('id_ubi'=>$id_pau,'obj_pau'=>$Qobj_pau));
+		$goHome = Hash::link(ConfigGlobal::getWeb()."/apps/ubis/controller/home_ubis.php?$sQuery");
+//		
+//		if (!empty($id_direccion)) {
+//			$goHome.='&id_direccion='.$id_direccion;
+//			$godossiers.='&id_direccion='.$id_direccion;
+//		}	
+//		if (!empty($tipo)) {
+//			$goHome.='&tipo='.$tipo;
+//			$godossiers.='&tipo='.$tipo;
+//		}	
+//		if (!empty($sin_dir)) {
+//			$goHome.='&sin_dir='.$sin_dir;
+//			$godossiers.='&sin_dir='.$sin_dir;
+//		}	
 		break;
 	case 'a':
-		$top="top_activ";
-		$ficha="ficha_activ";
 		$oActividad  = new actividades\Actividad($id_pau);
-		$nom = $oActividad->getNom_activ();
-		$goficha=Hash::link(ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_ver.php?'.http_build_query(array('id_activ'=>$id_pau,'tabla'=>$obj_pau,'go_atras'=>$_POST['go_atras']))); 
-		$godossiers=Hash::link(ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$_POST['go_atras'])));
+		$nom_cabecera = $oActividad->getNom_activ();
+		
+		$sQuery = http_build_query(array('id_activ'=>$id_pau,'obj_pau'=>$Qobj_pau));
+		$goHome = Hash::link(ConfigGlobal::getWeb()."/apps/actividades/controller/actividad_ver.php?$sQuery");
+
 		// según de donde venga, debo volver al mismo sitio...
 		if (!empty($_SESSION['session_go_to']['sel']['pag'])) {
 			$pag = $_SESSION['session_go_to']['sel']['pag']; //=>"lista_actividades_sg.php",
@@ -145,146 +179,159 @@ switch ($pau) {
 		} else {
 			$form_action=Hash::link(ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_select.php');
 		}
-//		$id_sel = array("$id_pau#$nom");
-//		$oPosicion->addParametro('id_sel',$id_sel,1);
 		break;
 }
+		
 
-//echo "qq: $q_nom<br>";
-
-$go_to= empty($go_to)? 'session@sel' : $go_to; //voy a buscar la última lista de seleccionados
 $alt=_("ver dossiers");
 $dos=_("dossiers");
-$txt="<span class=link onclick=fnjs_update_div('#main','$goficha')>$nom</span>";
-$titulo=$txt;
+$titulo="<span class=link onclick=fnjs_update_div('#main','$goHome')>$nom_cabecera</span>";
 
 // -----------------------------  cabecera ---------------------------------
 
+echo $oPosicion->mostrar_left_slide(1);
 ?>
-<?= $oPosicion->mostrar_left_slide(1); ?>
-<div id=<?= $top ?>>
+<div id="top">
 <table><tr>
-<td><span class=link onclick= fnjs_update_div('#main','<?= $godossiers ?>')><img src=<?= ConfigGlobal::$web_icons ?>/dossiers.gif border=0 width=40 height=40 alt='<?= $alt ?>'>(<?= $dos ?>)</span></td>
-<td class=titulo><?= $titulo ?></td>
+<td><span class="link" onclick="fnjs_update_div('#main','<?= $godossiers ?>')" ><img src=<?= ConfigGlobal::$web_icons ?>/dossiers.gif border=0 width=40 height=40 alt='<?= $alt ?>'>(<?= $dos ?>)</span></td>
+<td class="titulo"><?= $titulo ?></td>
 </table>
 </div>
 <?php
-// -------------------------------------------------------------------------
-if (empty($_POST['queSel'])) $_POST['queSel']='';
-
-switch ($_POST['queSel']){
-	case "activ": // actividades de un asistente
-		$pau="p";
-		$permiso=3;
-		empty($_POST['id_dossier'])? $id_dossier="" : $id_dossier=$_POST['id_dossier'];
-		break;
-	case "matriculas": // actividades de un asistente
-		$pau="p";
-		$permiso=3;
-		empty($_POST['id_dossier'])? $id_dossier="" : $id_dossier=$_POST['id_dossier'];
-		break;
-	case "asis": // asistentes a una actividad
-		$pau="a";
-		$permiso=3;
-		$id_dossier=3101;
-		break;
-	case "asig": // asignaturas de una actividad
-		$pau="a";
-		$permiso=3;
-		$id_dossier=3005;
-		break;
-	case "carg":
-		$pau="a";
-		$permiso=3;
-		$id_dossier=3102;
-		break;
-	default: // enseña la lista de dossiers.
-	//	$id_dossier="";
-		empty($_POST['id_dossier'])? $id_dossier="" : $id_dossier=$_POST['id_dossier'];
-}
 if (!empty($accion)) {
 	cerrar_dossier($pau,$id_pau,$id_tipo_dossier,$oDB);
-	$go_to="dossiers_lista.php?pau=$pau&id_pau=$id_pau&obj_pau=".$obj_pau."";
+	$go_to="dossiers_lista.php?pau=$pau&id_pau=$id_pau&obj_pau=".$Qobj_pau."";
 	ir_a($go_to);
 }
 
 // ------------------------- cuerpo -----------------------------
-echo "<div id=$ficha>";
-//echo "id_dossier: $id_dossier<br>";
-if (empty($id_dossier)) { // enseña la lista de dossiers.
+if (empty($Qid_dossier)) { // enseña la lista de dossiers.
+	echo "<div id=\"ficha\">";
 	include ("lista_dossiers.php");
+	echo "</div>";
 } else {
 	// Voy a intentar mostrar dossiers seguidos. Se supone que id_dossier es una lista de nº separados por 'y'
-	$id_dossier=strtok($id_dossier,"y");
+	$id_dossier=strtok($Qid_dossier,"y");
 	while  ($id_dossier) {
+		// nombre del id div actual
+		$bloque = 'ficha'.$id_dossier;
+		echo "<div id=\"$bloque\">";
 		$oTipoDossier = new dossiers\TipoDossier($id_dossier);
 		$tabla_dossier=$oTipoDossier->getTabla_to();
 		$app=$oTipoDossier->getApp();
 
-		// según sean personas, ubis o actividades:
-		switch ($pau) {
-			case 'p':
-				$condicion="Where id_nom=$id_pau";
-				//$id_pau="id_nom";
-				break;
-			case 'u':
-				$condicion="Where id_ubi=$id_pau";
-				break;
-			case 'a':
-				$condicion="Where id_activ=$id_pau";
-				break;
-		}
-		
 		// para el botón editar en la presentación general...
-		if ($permiso==3) { $edit=1; }
-		// Para presentaciones particulares
-		//$pres_2="../model/datos_".$id_dossier.".php";
-		//$pres="./sql_".$id_dossier.".php";
-		$pres_2="../../$app/model/datos_".$id_dossier.".php";
-		$pres="../../$app/controller/sql_".$id_dossier.".php";
-
-		/* GOTO */
-		switch($id_dossier) {
-			case 1303:
-				$go_to=Hash::link(ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier,'permiso'=>$permiso,'que'=>'matriculas')));
-				break;
-			case 3103: //matriculas de un ca
-				$go_to=Hash::link(ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier,'permiso'=>$permiso,'queSel'=>'asis')));
-				break; //nada, ya esta en el sql_1303
-			default:
-				$go_to=Hash::link(ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>$id_dossier,'permiso'=>$permiso)));
-				break; //nada, ya esta en el sql_3101
-		}
-
-		if (realpath($pres_2)){ //como file_exists
-			include ("datos_sql.php");
-		} elseif (realpath($pres)){
-			include ($pres);
-		} 
+		if ($Qpermiso==3) { $edit=1; }
 		
-		// Poner o no el botón de inserta. En algunos casos ya está en la presentación particular.
-		// miro los permisos:
-		if ($permiso==3 && !file_exists($pres_2)){ 
-			switch($id_dossier) {
-				case 1004: //traslados de ctr o dl
-					$insert=Hash::link(ConfigGlobal::getWeb().'/apps/personas/controller/traslado_form.php?'.http_build_query(array('cabecera'=>'no','id_pau'=>$id_pau,'id_dossier'=>$id_dossier,'obj_pau'=>$obj_pau,'go_to'=>$go_to)));
-					echo "<p><span class=link onclick=fnjs_update_div('#main','$insert')>"._("insertar")."</span></p>";
-					break;
-				case 1303:
-				case 3103: //matriculas de un ca
-					break; //nada, ya esta en el sql_1303
-				case 1201:
-				case 2102: //cargos de un ctr
-					break; //nada, ya esta en el sql_2102
-				case 3101: //asistentes a un ca
-					break; //nada, ya esta en el sql_3101
+		// Para presentaciones particulares
+		$nameClaseSelect = "$app\\model\\Select".$id_dossier;
+		$claseSelect = new $nameClaseSelect();
+		if (is_object($claseSelect)){
+			$claseSelect->setId_dossier($id_dossier);
+			$claseSelect->setPau($pau);
+			$claseSelect->setObj_pau($Qobj_pau);
+			$claseSelect->setId_pau($id_pau);
+			$claseSelect->setPermiso($Qpermiso);
+			$claseSelect->setBloque($bloque);
+			$claseSelect->setQueSel($QqueSel);
+
+			// sólo si vengo de vuelta, sino el scroll corresponde a la grid 
+			// de la selección que me trae aqui.
+			if (isset($_POST['stack']) && $stack != '') {
+				$claseSelect->setQId_sel($Qid_sel);
+				$claseSelect->setQScroll_id($Qscroll_id);
 			}
-			//para el botón cerrar dossier:
-			$cerrar=Hash::link(ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('accion'=>'cerrar','pau'=>$pau,'id_pau'=>$id_pau,'id_tipo_dossier'=>$id_dossier,'obj_pau'=>$obj_pau)));
-			$etiqueta_cerrar= "<br><br><span class=link onclick=fnjs_update_div('#main','$cerrar')>cerrar dossier</span>";
-		} // fin del if permiso
+			
+			switch ($id_dossier) {
+				case 1301:
+				case 1302:
+					// propio del 1302	
+					$Qmodo_curso = (integer) \filter_input(INPUT_POST,'modo_curso');
+					$claseSelect->setModo_curso($Qmodo_curso);
+				break;
+			}
+			echo $claseSelect->getHtml();
+		} else {
+			// para presentacion genérica, con la info tipo info1012.class.php
+			// datos del dossier:
+			$oTipoDossier = new dossiers\TipoDossier($id_dossier);
+			$app=$oTipoDossier->getApp();
+			// No sé porque no acepa aqui el '_' en el nombre de la clase.
+			$clase_info = "$app\\model\\entity\\datos$id_dossier";
+			// Tiene que ser en dos pasos.
+			$obj = $clase_info;
+			$oInfoClase = new $obj();
+			$oInfoClase->setId_pau($id_pau);
+			$oInfoClase->setObj_pau($Qobj_pau);
+			
+			$oDatosTabla = new core\DatosTabla();
+			$oDatosTabla->setBloque($bloque);
+			$oDatosTabla->setExplicacion_txt($oInfoClase->getTxtExplicacion());
+			$oDatosTabla->setEliminar_txt($oInfoClase->getTxtEliminar());
+			$oDatosTabla->setColeccion($oInfoClase->getColeccion());
+			$oDatosTabla->setId_sel($Qid_sel);
+			$oDatosTabla->setScroll_id($Qscroll_id);
+
+			$aQuery = array(
+					'clase_info' => $Qclase_info,
+					'id_pau' => $id_pau,
+					'bloque' => $bloque,
+					'permiso' => $Qpermiso,
+					);
+			$aQuery['obj_pau'] = $Qobj_pau;
+			$sQuery = http_build_query($aQuery);
+			$Qgo_to=web\Hash::link(core\ConfigGlobal::getWeb()."/apps/dossiers/controller/dossiers_ver.php?$sQuery");
+			$oDatosTabla->setAction_tabla($Qgo_to);
+			
+			$oHashSelect = new web\Hash();
+			$oHashSelect->setCamposForm('mod');
+			$oHashSelect->setCamposNo('sel!scroll_id!mod');
+			$a_camposHidden = array(
+					'clase_info' => $clase_info,
+					'pau' => $pau,
+					'id_pau' => $id_pau, // Hace falta para el boton nuevo
+					'obj_pau' => $Qobj_pau,
+					'permiso' => $Qpermiso,
+					'bloque' => $bloque,
+					'go_to' => $go_to
+					);
+			$oHashSelect->setArraycamposHidden($a_camposHidden);
+		
+			$html = '';
+			$html .= '<script>';
+			$html .= $oDatosTabla->getScript();
+			$html .= '</script>';
+			$html .= "<h3 class=subtitulo>".$oInfoClase->getTxtTitulo()."</h3>
+				<form id='seleccionados' id='seleccionados' name='seleccionados' action='' method='post'>";
+			$html .= $oHashSelect->getCamposHtml();
+			$html .= "<input type='hidden' id='mod' name='mod' value=''>";
+			
+			$oTabla = new web\Lista();
+			$oTabla->setId_tabla('datos_sql'.  $id_dossier);
+			$oTabla->setCabeceras($oDatosTabla->getCabeceras());
+			$oTabla->setBotones($oDatosTabla->getBotones());
+			$oTabla->setDatos($oDatosTabla->getValores());
+			
+			if (!empty($oDatosTabla->getValores())) {
+				$html .= $oTabla->mostrar_tabla();
+			}
+			
+			// Poner o no el botón de inserta. En algunos casos ya está en la presentación particular.
+			if ($Qpermiso == 3) {
+				$html .= "<br><table cellspacing=3  class=botones><tr class=botones>
+					<td class=botones><input name=\"btn_new\" type=\"button\" value=\"";
+				$html .= _("nuevo");
+				// caso especial para traslados:
+				if ($id_dossier == 1004) {
+					$insert=Hash::link(ConfigGlobal::getWeb().'/apps/personas/controller/traslado_form.php?'.http_build_query(array('cabecera'=>'no','id_pau'=>$id_pau,'id_dossier'=>$id_dossier,'obj_pau'=>$Qobj_pau,'go_to'=>$go_to)));
+					$html .= "\" onclick=\"fnjs_update_div('#main','$insert');\"></td></tr></table>";
+				} else {
+					$html .= "\" onclick=\"fnjs_nuevo('#seleccionados');\"></td></tr></table>";
+				}
+			}
+			echo $html;
+		} 
+		echo "</div>";
 		$id_dossier=strtok("y");
-	} //fin del while
-} // fin del if que.
-//echo $etiqueta_cerrar;
-echo "</div>";
+	}
+}

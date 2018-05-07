@@ -1,0 +1,64 @@
+<script>
+fnjs_modificar=function(formulario){
+	rta=fnjs_solo_uno(formulario);
+	if (rta==1) {
+		$('#mod').val("editar");
+  		$(formulario).attr('action',"apps/asistentes/controller/form_1301.php");
+  		fnjs_enviar_formulario(formulario,'#<?= $bloque ?>');
+  	}
+}
+fnjs_borrar=function(formulario){
+	rta=fnjs_solo_uno(formulario);
+	if (rta==1) {
+		if (confirm("<?= $txt_eliminar ?>") ) {
+			$('#mod').val("eliminar");
+			$(formulario).attr('action',"apps/asistentes/controller/update_3101.php");
+			$(formulario).submit(function() {
+				$.ajax({
+					data: $(this).serialize(),
+					url: $(this).attr('action'),
+					type: 'post',
+					complete: function (rta) {
+						rta_txt = rta.responseText;
+						if (rta_txt != '' && rta_txt != '\\n') {
+							alert ('respuesta: '+rta_txt);
+						}
+					},
+					success: function() { fnjs_actualizar(formulario) }
+				});
+				return false;
+			});
+			$(formulario).submit();
+			$(formulario).off();
+		}
+	}
+}
+fnjs_actualizar=function(formulario){
+	var campo = '<input type="hidden" name="refresh" value=1>';
+	$(formulario).attr('action',"apps/dossiers/controller/dossiers_ver.php");
+	$(formulario).append(campo);
+	fnjs_enviar_formulario(formulario,'#main');
+}
+</script>
+<h3 class=subtitulo><?= ucfirst(_("relación de actividades a las que asiste")); ?></h3>
+<form id="frm_1301" name="frm_1301" action="" method="post">
+<?= $oHashSelect->getCamposHtml(); ?>
+<input type='hidden' id='mod' name='mod' value=''>
+
+<table><tr><td>
+	<?= $oBotonesCurso->getRadioHtml() ?>
+</td></tr></table>
+<br>
+<?= $oTabla->mostrar_tabla(); ?>
+</form>
+
+<!--  boton insert  -->
+<br><table cellspacing=3  class="botones"><tr class="botones"><th width=25 align=RIGHT><?= _("dl") ?>:</th>
+<?php foreach ($aLinks_dl as $nom => $pagina) { ?>
+	<td class="botones"><span class=link_inv onclick="fnjs_update_div('#<?= $bloque ?>','<?= $pagina ?>');"><?= $nom ?></span></td>
+<?php } ?>
+</tr><tr class="botones"><th  width=25 align=RIGHT><?= _("otros") ?>:</th>
+<?php foreach ($aLinks_otros as $nom => $pagina) { ?>
+	<td class="botones"><span class=link_inv onclick="fnjs_update_div('#<?= $bloque ?>','<?= $pagina ?>');"><?= $nom ?></span></td>
+<?php } ?>
+</tr></table>

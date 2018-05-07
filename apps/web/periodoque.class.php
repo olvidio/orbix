@@ -252,7 +252,7 @@ class PeriodoQue {
 			$oDesplAnys->setNombre('year');
 			$oDesplAnys->setOpciones($aOpciones);
 			$oDesplAnys->setBlanco(false);
-			$oDesplAnys->setOpcion_sel($any+1);
+			$oDesplAnys->setOpcion_sel($any);
 			$this->oDesplAnys = $oDesplAnys;
 		}
 		return $this->oDesplAnys;
@@ -264,7 +264,10 @@ class PeriodoQue {
 		if (!isset($this->oDesplAnys)) {
 			$this->getDesplAnys();
 		}
-		$this->oDesplAnys->setOpcion_sel($sOpcion_sel);
+		// si está en blanco pongo la opción por defecto
+		if(!empty($sOpcion_sel)) {
+			$this->oDesplAnys->setOpcion_sel($sOpcion_sel);
+		}
 	}
 	function setFormName($sFormName) {
 		$this->sFormName=$sFormName;

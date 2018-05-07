@@ -1,7 +1,7 @@
 <?php
-use personas\model as personas;
-use ubis\model as ubis;
-use usuarios\model as usuarios;
+use personas\model\entity as personas;
+use ubis\model\entity as ubis;
+use usuarios\model\entity as usuarios;
 /**
 * Esta página muestra una tabla con las personas que cumplen con la condicion.
 *
@@ -23,6 +23,21 @@ use usuarios\model as usuarios;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $titulo = 0;
+
+$oPosicion->recordar();
+//Si vengo por medio de Posicion, borro la última
+if (isset($_POST['stack'])) {
+	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+	if ($stack != '') {
+		$oPosicion2 = new web\Posicion();
+		if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+			$Qid_sel=$oPosicion2->getParametro('id_sel');
+			$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+			$oPosicion2->olvidar($stack);
+		}
+	}
+}
+
 //Si vengo de vuelta de un go_to:
 $tabla = empty($_POST['tabla'])? '' : $_POST['tabla'];
 $breve = empty($_POST['breve'])? '' : $_POST['breve'];
@@ -35,6 +50,36 @@ $sOperadorCtr = empty($_POST['sOperadorCtr'])? '' : $_POST['sOperadorCtr'];
 $Qid_sel = empty($_POST['id_sel'])? '' : $_POST['id_sel'];
 $Qscroll_id = empty($_POST['scroll_id'])? '' : $_POST['scroll_id'];
 
+$Qque = empty($_POST['que'])? '' : $_POST['que'];
+$Qexacto = empty($_POST['exacto'])? '' : $_POST['exacto'];
+$Qcmb = empty($_POST['cmb'])? '' : $_POST['cmb'];
+$Qnombre = empty($_POST['nombre'])? '' : $_POST['nombre'];
+$Qapellido1 = empty($_POST['apellido1'])? '' : $_POST['apellido1'];
+$Qapellido2 = empty($_POST['apellido2'])? '' : $_POST['apellido2'];
+$Qcentro = empty($_POST['centro'])? '' : $_POST['centro'];
+
+/*
+* Defino un array con los datos actuales, para saber volver 
+*/
+$aGoBack = array (
+				'que' => $Qque,
+				'exacto' => $Qexacto,
+				'cmb' => $Qcmb,
+				'nombre' => $Qnombre,
+				'apellido1' => $Qapellido1,
+				'apellido2' => $Qapellido2,
+				'centro' => $Qcentro,
+				'tabla' => $tabla,
+				'breve' => $breve,
+				'tipo' => $tipo,
+				'es_sacd' => $es_sacd,
+				'sWhere' => $sWhere,
+				'sOperador' => $sOperador,
+				'sWhereCtr' => $sWhereCtr,
+				'sOperadorCtr' => $sOperadorCtr
+				 );
+$oPosicion->setParametros($aGoBack,1);
+
 /*miro las condiciones. las variables son: num, agd, sup, nombre, apellido1, apellido2 */
 if (empty($sWhere)) {
 	$aWhere=array();
@@ -42,46 +87,46 @@ if (empty($sWhere)) {
 	$aWhereCtr=array();
 	$aOperadorCtr=array();
 
-	if (!empty($_POST['apellido1'])){ 
-		$aWhere['apellido1'] = $_POST['apellido1'];
-		if (empty($_POST['exacto'])){
+	if (!empty($Qapellido1)){ 
+		$aWhere['apellido1'] = $Qapellido1;
+		if (empty($Qexacto)){
 			$aWhere['apellido1'] = '^'.$aWhere['apellido1'];
 			$aOperador['apellido1'] = 'sin_acentos';
 		}
 	}
 
-	if (!empty($_POST['apellido2'])){ 
-		$aWhere['apellido2'] = $_POST['apellido2'];
-		if (empty($_POST['exacto'])){
+	if (!empty($Qapellido2)){ 
+		$aWhere['apellido2'] = $Qapellido2;
+		if (empty($Qexacto)){
 			$aWhere['apellido2'] = '^'.$aWhere['apellido2'];
 			$aOperador['apellido2'] = 'sin_acentos';
 		}
 	}
-	if (!empty($_POST['nombre'])){ 
-		$aWhere['nom'] = $_POST['nombre'];
-		if (empty($_POST['exacto'])){
+	if (!empty($Qnombre)){ 
+		$aWhere['nom'] = $Qnombre;
+		if (empty($Qexacto)){
 			$aWhere['nom'] = '^'.$aWhere['nom'];
 			$aOperador['nom'] = 'sin_acentos';
 		}
 	}
 		
 	/*Si está puesto el nombre del centro, saco una lista de todos los del centro*/
-	if (!empty($_POST['centro'])){ 
-		if (!empty($_POST['exacto'])){
-			$_POST['centro']=addslashes(strtr($_POST['centro'],"+","."));
-			if ($_POST['tabla']=="p_cp_ae_sssc") {
-			$condicion=$condicion . " p.ctr_depende = '".$_POST['centro']."' AND";
+	if (!empty($Qcentro)){ 
+		if (!empty($Qexacto)){
+			$Qcentro=addslashes(strtr($Qcentro,"+","."));
+			if ($Qtabla=="p_cp_ae_sssc") {
+			$condicion=$condicion . " p.ctr_depende = '".$Qcentro."' AND";
 			} else {
-			$condicion=$condicion . " u.nombre_ubi = '".$_POST['centro']."' AND";
+			$condicion=$condicion . " u.nombre_ubi = '".$Qcentro."' AND";
 			}	
 		} else {
-			$nom_ubi = str_replace("+", "\+", $_POST['centro']); // para los centros de la sss+
+			$nom_ubi = str_replace("+", "\+", $Qcentro); // para los centros de la sss+
 			$nom_ubi = addslashes($nom_ubi);
 			$aWhereCtr['nombre_ubi'] = '^'.$nom_ubi;
 			$aOperadorCtr['nombre_ubi'] = 'sin_acentos';
 		}
 	}
-	if (empty($_POST['cmb'])){
+	if (empty($Qcmb)){
 		$aWhere['situacion'] = 'A';
 	} else {
 		if (!$_SESSION['oPerm']->have_perm("dtor")) {
@@ -91,7 +136,7 @@ if (empty($sWhere)) {
 	}
 	//añado una condición más, para cuando me interesan solo los que son
 	//sacd. La variable es sacd=1 la hago llegar a través de menús
-	empty($_POST['es_sacd'])? $es_sacd="" : $es_sacd=$_POST['es_sacd'];
+	empty($Qes_sacd)? $es_sacd="" : $es_sacd=$Qes_sacd;
 	if ($es_sacd==1){ 
 		$aWhere['sacd'] = 't';
 	}
@@ -149,9 +194,9 @@ switch ($tabla) {
 		$cPersonas = $GesPersona->getPersonasDl($aWhere,$aOperador);
 	break;
 	case "p_de_paso":
-		if (!empty($_POST['na'])) {
-			$aWhere['id_tabla'] = 'p'.$_POST['na'];
-			$id_tabla = 'p'.$_POST['na'];
+		if (!empty($Qna)) {
+			$aWhere['id_tabla'] = 'p'.$Qna;
+			$id_tabla = 'p'.$Qna;
 		}
 		$obj_pau = 'PersonaEx';
 		$GesPersona = new personas\GestorPersonaEx();
@@ -166,21 +211,6 @@ $sWhere = core\urlsafe_b64encode(serialize($aWhere));
 $sOperador = core\urlsafe_b64encode(serialize($aOperador));
 $sWhereCtr = core\urlsafe_b64encode(serialize($aWhereCtr));
 $sOperadorCtr = core\urlsafe_b64encode(serialize($aOperadorCtr));
-/*
-* Defino un array con los datos actuales, para saber volver después de navegar un rato
-*/
-$aGoBack = array (
-				'tabla' => $tabla,
-				'breve' => $breve,
-				'tipo' => $tipo,
-				'es_sacd' => $es_sacd,
-				'sWhere' => $sWhere,
-				'sOperador' => $sOperador,
-				'sWhereCtr' => $sWhereCtr,
-				'sOperadorCtr' => $sOperadorCtr
-				 );
-$oPosicion->setParametros($aGoBack);
-$oPosicion->recordar();
 
 $a_botones[] = array( 'txt' => _('cambio de ctr'), 'click' =>"fnjs_modificar_ctr(\"#seleccionados\")" );
 $script['fnjs_modificar_ctr'] = 1;
@@ -339,6 +369,7 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 /* ---------------------------------- html --------------------------------------- */
 ?>
+<?= $oPosicion->mostrar_left_slide(1); ?>
 <script>
 <?php if (!empty($script['fnjs_modificar_ctr'])) { ?>
 fnjs_modificar_ctr=function(formulario){

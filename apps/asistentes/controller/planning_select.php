@@ -1,6 +1,6 @@
 <?php
-use personas\model as personas;
-use ubis\model as ubis;
+use personas\model\entity as personas;
+use ubis\model\entity as ubis;
 /**
 * Página de selección de las personas para las que se trazará un planning 
 * Presenta una lista de personas que cumplen la condición fijada en el formulario

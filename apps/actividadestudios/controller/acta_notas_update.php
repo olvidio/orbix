@@ -1,11 +1,9 @@
 ﻿<?php
-use asignaturas\model as asignaturas;
-use actividadestudios\model as actividadestudios;
-use notas\model as notas;
-use personas\model as personas;
-/**
-* Funciones más comunes de la aplicación
-*/
+use asignaturas\model\entity as asignaturas;
+use actividadestudios\model\entity as actividadestudios;
+use notas\model\entity as notas;
+use personas\model\entity as personas;
+
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -43,7 +41,7 @@ if ($_POST['que']==3) { //paso las matrículas a notas definitivas (Grabar e imp
 		// para saber a que schema pertenece la persona
 		$oPersona = personas\Persona::NewPersona($id_nom);
 		if (!is_object($oPersona)) {
-			$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+			$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 			continue;
 		}
 		$id_schema = $oPersona->getId_schema();

@@ -1,8 +1,9 @@
 <?php
-use actividades\model as actividades;
-use actividadestudios\model as actividadestudios;
-use notas\model as notas;
-use personas\model as personas;
+use actividades\model\entity as actividades;
+use actividadestudios\model\entity as actividadestudios;
+use notas\model\entity as notas;
+use personas\model\entity as personas;
+
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -10,6 +11,8 @@ use personas\model as personas;
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
+
+$oPosicion->recordar();
 
 $notas=1; // para indicar a la página de actas que está dentro de ésta.
 
@@ -22,13 +25,9 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else {
-	empty($_POST['id_asignatura'])? $id_asignatura="" : $id_asignatura=$_POST['id_asignatura'];
-	empty($_POST['id_activ'])? $id_activ="" : $id_activ=$_POST['id_activ'];
+	$id_asignatura = (integer) \filter_input(INPUT_POST, 'id_asignatura');
+	$id_activ = (integer) \filter_input(INPUT_POST, 'id_activ');
 }
-/* Tengo que recordar la posicion, porque más abajo hay un include de 'acta_ver'
- * que cambia el puntero.
- */
-$oPosicion->recordar();
 
 $GesNotas = new notas\GestorNota();
 $oDesplNotas = $GesNotas->getListaNotas();
@@ -40,15 +39,15 @@ $nom_activ = $oActividad->getNom_activ();
 $GesMatriculas = new actividadestudios\GestorMatricula();
 $cMatriculados = $GesMatriculas->getMatriculas(array('id_asignatura'=>$id_asignatura, 'id_activ'=>$id_activ));
 $matriculados=count($cMatriculados);
+$aPersonasMatriculadas = array(); 
 if ($matriculados > 0) {
 	// para ordenar
 	$msg_err = '';
-	$aPersonasMatriculadas = array(); 
 	foreach($cMatriculados as $oMatricula) {
 		$id_nom=$oMatricula->getId_nom();
 		$oPersona = personas\Persona::NewPersona($id_nom);
 		if (!is_object($oPersona)) {
-			$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+			$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 			continue;
 		}
 		$nom=$oPersona->getApellidosNombre();
@@ -59,13 +58,11 @@ if ($matriculados > 0) {
 	echo _("No hay ninguna persona matriculada de esta asignatura");
 }
 
-$_POST['que'] = empty($_POST['que'])? '' : $_POST['que'];
-$_POST['id_pau'] = empty($_POST['id_pau'])? '' : $_POST['id_pau'];
-$_POST['opcional'] = empty($_POST['opcional'])? '' : $_POST['opcional'];
-//$_POST['go_to'] = empty($_POST['go_to'])? '' : $_POST['go_to'];
-$_POST['go_to'] = 'acta_notas';
-$_POST['primary_key_s'] = empty($_POST['primary_key_s'])? '' : $_POST['primary_key_s'];
-$_POST['id_nivel'] = empty($_POST['id_nivel'])? '' : $_POST['id_nivel'];
+$Qque = (string) \filter_input(INPUT_POST, 'que');
+$Qid_pau = (integer) \filter_input(INPUT_POST, 'id_pau');
+$Qopcional = (string) \filter_input(INPUT_POST, 'opcional');
+$Qprimary_key_s = (string) \filter_input(INPUT_POST, 'primary_key_s');
+$Qid_nivel = (integer) \filter_input(INPUT_POST, 'id_nivel');
 
 $GesActas = new notas\GestorActa();
 $cActas = $GesActas->getActas(array('id_activ'=>$id_activ,'id_asignatura'=>$id_asignatura));
@@ -76,116 +73,31 @@ if (is_array($cActas) && count($cActas) == 1) {
 } else {
 	$notas="nuevo";// para indicar a la página de actas que está dentro de ésta.
 }
-include_once ("apps/notas/controller/acta_ver.php"); 
 
-$oHash1 = new web\Hash();
-$oHash1->setcamposForm('id_nom!nota_num!nota_max!form_preceptor');
-$oHash1->setCamposNo('que');
+$oHashNotas = new web\Hash();
+$oHashNotas->setcamposForm('id_nom!nota_num!nota_max!form_preceptor');
+$oHashNotas->setCamposNo('que');
 $a_camposHidden1 = array(
-		'id_pau' => $_POST['id_pau'],
+		'id_pau' => $Qid_pau,
 		'id_activ' => $id_activ,
-		'opcional' => $_POST['opcional'],
-		'go_to' => $_POST['go_to'],
-		'primary_key_s' => $_POST['primary_key_s'],
+		'opcional' => $Qopcional,
+		'primary_key_s' => $Qprimary_key_s,
 		'id_asignatura' => $id_asignatura,
-		'id_nivel' => $_POST['id_nivel'],
+		'id_nivel' => $Qid_nivel,
 		'matriculados' => $matriculados
 		);
-$oHash1->setArraycamposHidden($a_camposHidden1);
+$oHashNotas->setArraycamposHidden($a_camposHidden1);
 
 if (!empty($msg_err)) { echo $msg_err; }
-echo $oPosicion->mostrar_left_slide();
-?>
-<script>
-fnjs_nota=function(n){
-	var num;
-	var max;
-	var sit;
-	
-	num = $('#nota_num'+n).val();
-	max = $('#nota_max'+n).val();
-/*	sit = $('#id_situacion').val();
-	if (!num)  $('#id_situacion').val('0');
-	num = parseFloat(num);
-	if (typeof num == 'number' && num > 1) {
- 		$('#id_situacion').val(10);
-	}
-	*/
-	max_default = <?= core\ConfigGlobal::nota_max(); ?>;
-	if (!max)  $('#nota_max'+n).val(max_default);
-	fnjs_guardar();
-}
 
-fnjs_guardar_todo=function(){
-	$('#que').val("3");
-	$('#f_1303').attr('action',"apps/actividadestudios/controller/acta_notas_update.php");
-	fnjs_enviar_formulario('#f_1303');
-}
+// El formulario del acta:
+include_once ("apps/notas/controller/acta_ver.php"); 
 
-fnjs_guardar=function(){
-	$('#que').val("1");
-	$('#f_1303').attr('action',"apps/actividadestudios/controller/acta_notas_update.php");
-	$('#f_1303').submit(function() {
-		$.ajax({
-			data: $(this).serialize(),
-			url: $(this).attr('action'),
-			type: 'post',
-			complete: function (rta) {
-				rta_txt=rta.responseText;
-				if (rta_txt != '' && rta_txt != '\n') {
-					alert (rta_txt);
-				}
-			}
-		});
-		return false;
-	});
-	$('#f_1303').submit();
-	$('#f_1303').off();
-}
-</script>
-<form id="f_1303" name="f_1303" action="" method="POST">
-<?= $oHash1->getCamposHtml(); ?>
-<input type="Hidden" id="que" name="que" value="<?= $_POST['que'] ?>">
-<table>
-<thead><tr><th class=titulo_inv colspan=5><?= strtoupper(_("notas del acta")); ?></th></tr>
-<tr><th><?= _("alumno"); ?></th><th><?= _("preceptor"); ?></th><th colspan=3><?= _("nota"); ?></th></tr>
-</thead>
-<tbody>
-<?php
-if ($matriculados > 0) {
-	$i=0;
-	foreach ($aPersonasMatriculadas as $key=>$oMatricula) {
-		$i++;
-		
-		$nom=$key;
-		$id_nom=$oMatricula->getId_nom();
-		$nota_num=$oMatricula->getNota_num();
-		$nota_max=$oMatricula->getNota_max();
-		$id_situacion=$oMatricula->getId_situacion();
-		$preceptor=$oMatricula->getPreceptor();
+$a_campos = ['oPosicion' => $oPosicion,
+			'oHashNotas' => $oHashNotas,
+			'Qque' => $Qque,
+			'aPersonasMatriculadas' => $aPersonasMatriculadas,
+			];
 
-		$oDesplNotas->setOpcion_sel($id_situacion);
-
-		echo "<input type=\"Hidden\" id=\"id_nom[]\" name=\"id_nom[]\" value=\"$id_nom\">";
-		echo "<tr><td>$nom</td>";
-		if ($preceptor=="t") { $chk_tipo="selected"; } else { $chk_tipo=""; }
-		echo "<td><select id=\"form_preceptor[]\" name=\"form_preceptor[]\" onchange=\"javascript:fnjs_guardar()\">
-				<option />
-				<option value=\"p\" $chk_tipo>"._("preceptor")."</option>
-			</select>
-			</td>";
-		echo "<td class=contenido>";
-
-		echo "<input type=\"text\" id=\"nota_num$i\" name=\"nota_num[]\" value=\"$nota_num\" size=2 onchange='fnjs_nota($i)'>";
-		echo ' ' . _("sobre") . ' ';
-		echo "<input type=\"text\" id=\"nota_max$i\" name=\"nota_max[]\" value=\"$nota_max\" size=2>";
-		//echo "<td>"._("situación")."</td><td>";
-		//echo $oDesplNotas->desplegable();
-
-		echo "</td></tr>";
-	}
-}
-?>	
-</tbody></table>
-</form>
-<br><input type="button" value="<?php echo strtoupper(_("grabar e imprimir")); ?>" onclick="fnjs_guardar_todo()">
+$oView = new core\View('actividadestudios/controller');
+echo $oView->render('acta_notas.phtml',$a_campos);

@@ -1,10 +1,7 @@
 <?php
 namespace menus\controller;
-use menus\model as menus;
+use menus\model\entity as menus;
 use core;
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************

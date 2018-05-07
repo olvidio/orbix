@@ -1,8 +1,5 @@
 <?php
-use menus\model as menus;
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
+use menus\model\entity as menus;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -24,7 +21,7 @@ $oDespl->setNombre('filtro_mod');
 fnjs_lista_menus=function(id_ubi){
 	var filtro_mod=$('#filtro_mod').val();
 	var url='<?= core\ConfigGlobal::getWeb().'/apps/devel/controller/metamenus_get.php'; ?>';
-	var parametros='filtro_mod='+filtro_mod+'&PHPSESSID=<?php echo session_id(); ?>';
+	var parametros='filtro_mod='+filtro_mod+'&PHPSESSID=<?= session_id(); ?>';
 	$.ajax({
 		data: parametros,
 		url: url,
@@ -40,7 +37,7 @@ fnjs_lista_menus=function(id_ubi){
 fnjs_ver_ficha=function(id_menu){
 	var filtro_mod=$('#filtro_mod').val();
 	var url='<?= core\ConfigGlobal::getWeb().'/apps/devel/controller/metamenus_get.php'; ?>';
-	var parametros='id_menu='+id_menu+'&filtro_mod='+filtro_mod+'&PHPSESSID=<?php echo session_id(); ?>';
+	var parametros='id_menu='+id_menu+'&filtro_mod='+filtro_mod+'&PHPSESSID=<?= session_id(); ?>';
 	$.ajax({
 		data: parametros,
 		url: url,
@@ -55,7 +52,7 @@ fnjs_ver_ficha=function(id_menu){
 </script>
 <table><tr>
 <th class=titulo_inv colspan=3><?= _("modulo") ?>:&nbsp;&nbsp;&nbsp;
-	<?php echo $oDespl->desplegable(); ?>
+	<?= $oDespl->desplegable(); ?>
 </th>
 </tr>
 </table>

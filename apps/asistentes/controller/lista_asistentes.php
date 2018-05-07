@@ -1,10 +1,10 @@
 <?php 
-use actividades\model as actividades;
-use actividadcargos\model as actividadcargos;
-use asistentes\model as asistentes;
-use personas\model as personas;
-use usuarios\model as usuarios;
-use ubis\model as ubis;
+use actividades\model\entity as actividades;
+use actividadcargos\model\entity as actividadcargos;
+use asistentes\model\entity as asistentes;
+use personas\model\entity as personas;
+use usuarios\model\entity as usuarios;
+use ubis\model\entity as ubis;
 
 /**
 * Esta página lista los asistentes a una actividad seleccionada
@@ -29,21 +29,37 @@ use ubis\model as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$oPosicion->recordar();
+
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	$id_pau = strtok($a_sel[0],"#");
+	$nom_activ=strtok("#");
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$oPosicion->addParametro('id_sel',$a_sel,1);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
+} else {
+	$id_pau = (integer) \filter_input(INPUT_POST, 'id_pau');
+}
+
+$pau = (string) \filter_input(INPUT_POST, 'pau');
+
 $id_usuario= core\ConfigGlobal::mi_id_usuario();
 $oPref = new usuarios\Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>'ordenApellidos'));
 $Pref_ordenApellidos=$oPref->getPreferencia();
 
-$queSel = empty($_POST['queSel'])? '' : $_POST['queSel'];
+$queSel = (string) \filter_input(INPUT_POST, 'queSel');
 $gesAsistentes = new asistentes\GestorAsistente();
 
-function datos($oPersona,$tipo) {
+function datos($oPersona) {
 	$estudios = '';
 	$profesion = '';
 	$edad = '';
 	$eap = '';
 	$observ = '';
 	$obj_persona = get_class($oPersona);
-	$obj_persona = str_replace("personas\\model\\",'',$obj_persona);
+	$obj_persona = str_replace("personas\\model\\entity\\",'',$obj_persona);
 	Switch($obj_persona) {
 		case 'PersonaN':
 		case 'PersonaNax':
@@ -62,25 +78,6 @@ function datos($oPersona,$tipo) {
 				$f_inc=$oPersona->$get;
 			}
 			$edad=$oPersona->getEdad();
-
-			//$estudios=$oPersona->getEstudios();
-			// cargos
-			/*
-			$oGesCargo = new GestorCargoCl();
-			$aWhere['id_nom'] = $id_nom;
-			$aWhere['f_cese'] = '';
-			$aOperadores['f_cese'] = 'IS NULL';
-			$aWhere['f_ult_nombramiento'] = '';
-			$aOperadores['f_ult_nombramiento'] = 'IS NOT NULL';
-			$aWhere['tipo_cargo'] = 'of-';
-			$aOperadores['tipo_cargo'] = '!~';
-			$oGesCargos = new GestorCargoCl();
-			$cCargos = $oGesCargos->getCargosCl($aWhere,$aOperadores);
-
-			$eap='';
-			if ($id_tabla == 'a' && ($oPersona->getCel() == 's')) { $eap="cel"; }
-			if (is_array($cCargos) && count($cCargos) > 0) $eap="cl";
-			*/
 			$eap='?';
 			break;
 		case 'PersonaIn':
@@ -97,29 +94,18 @@ function datos($oPersona,$tipo) {
 			break;
 	}
 
-	// ahora los de sm no quieren la inc:
-	if ( $tipo == 1 ) {
-	    $txt_cl="<td class=contenido_especial>$estudios</td><td class=contenido_especial>$profesion</td><td class=contenido_especial>$edad</td><td class=contenido_especial>$eap</td><td class=contenido_especial>$observ</td>";
-	} else {
-	    $txt_cl="<td class=contenido_especial>$estudios</td><td class=contenido_especial>$profesion</td><td class=contenido_especial>$edad</td><td class=contenido_especial>$inc: $f_inc</td><td class=contenido_especial>$eap</td><td class=contenido_especial>$observ</td>";
-	}
-    return $txt_cl;
+	$a_datos_cl = [
+				'estudios' => $estudios,
+				'profesion' => $profesion,
+				'edad' => $edad,
+				'f_inc' => $f_inc,
+				'eap' => $eap,
+				'observ' => $observ,
+				];
+    return $a_datos_cl;
 }
 
 // -----------------------------------------------------------
-
-$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-// el scroll id es de la página anterior, hay que guardarlo allí
-if (!empty($a_sel)) { //vengo de un checkbox
-	$id_pau=strtok($a_sel[0],"#");
-	$nom_activ=strtok("#");
-	$oPosicion->addParametro('id_sel',$a_sel,0);
-	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
-	$oPosicion->addParametro('scroll_id',$scroll_id,0);
-} else {
-	empty($_POST['id_pau'])? $id_pau='' : $id_pau=$_POST['id_pau'];
-}
-if (empty($pau)) $pau=$_POST['pau'];
 
 // primero el cl:
 $c=0;
@@ -147,7 +133,7 @@ if (core\configGlobal::is_app_installed('actividadcargos')) {
 
 		$oPersona = personas\Persona::NewPersona($id_nom);
 		if (!is_object($oPersona)) {
-			$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+			$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 			continue;
 		}
 		$oCargo=new actividadcargos\Cargo($id_cargo);
@@ -219,7 +205,7 @@ foreach($gesAsistentes->getAsistentes(array('id_activ'=>$id_pau)) as $oAsistente
 
 	$oPersona = personas\Persona::NewPersona($id_nom);
 	if (!is_object($oPersona)) {
-		$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+		$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 		continue;
 	}
 	$nom=$oPersona->getApellidosNombre();
@@ -256,51 +242,34 @@ $c = 0;
 if (core\configGlobal::is_app_installed('actividadcargos')) {
 	$c = count($a_valores);
 }
+
+//cargos y a continuación añado asistentes 
 foreach ($asistentes as $nom => $val) {
 	$c++;
 	$val[1] = "$c.-";
 	$a_valores[$c] = $val;
 }
-// las pongo al final, porque al contar los valores del array se despista.
-if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
-if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 
-if (!empty($msg_err)) { echo $msg_err; }
-
-echo $oPosicion->mostrar_left_slide();
-/* ---------------------------------- html --------------------------------------- */
-?>
-<table cellpadding="2">
-<tr>
-<th class=titulo_inv colspan=8><?php echo $nom_activ;?></th>
-<tr><th class=subtitulo_inv colspan=8><?php echo ucfirst(_("relación de asistentes")); ?></th>
-</tr>
-<tr><tr><td><br></td></tr>
-<tr>
-<?php 
-$tipo =  '';
-if ($queSel == "listcl") {
-    // los de sm no quieren la inc
-    // busco el tipo de actividad para no poner la inc en caso de n
-	$oActividad = new actividades\Actividad(array('id_activ'=>$id_pau));
-	$id_tipo_activ = $oActividad->getId_tipo_activ();
-    $tipo=substr($id_tipo_activ,1,1); // 1 para los n
-    if ( $tipo == 1 ) { //n.
-		$etiqueta_inc="";
-    } else {
-		$etiqueta_inc="<th class=subtitulo_inv>inc</th>";
-    }
-    echo "<tr><th></th><th class=subtitulo_inv>".ucfirst(_("nombre"))."</th><th></th><th class=subtitulo_inv>".ucfirst(_("estudios"))."</th><th class=subtitulo_inv>".ucfirst(_("profesión"))."</th><th class=subtitulo_inv>".ucfirst(_("edad"))."</th>$etiqueta_inc<th class=subtitulo_inv>"._("eap")."</th><th class=subtitulo_inv>".ucfirst(_("observaciones"))."</th></tr>";
-}
-
+// nuevo array parra pasar a la vista
 $txt_cl = '';
+$aAsistentes = array();
 foreach ($a_valores as $k => $val) {
 	$c = $val[1];
 	$oPersona = $val[7];
-    if ($queSel=="listcl") { $txt_cl= datos($oPersona,$tipo); }
+	$a_datos_cl = array();
+    if ($queSel=="listcl") { $a_datos_cl = datos($oPersona); }
     
-	echo "<tr><td class=contenido_especial align=RIGHT>$c</td><td class=contenido_especial>$val[2]</td><td class=contenido_especial></td>$txt_cl</tr>";
-}
+	$aAsistentes[$c]=array('nombre' => $val[2],
+							'a_datos_cl' => $a_datos_cl
+							);
+}	
 
-?>
-</table>
+$a_campos = [
+			'oPosicion' => $oPosicion,
+			'nom_activ' => $nom_activ,
+			'queSel' => $queSel,
+			'aAsistentes' => $aAsistentes,
+			];
+
+$oView = new core\View('asistentes/controller');
+echo $oView->render('lista_asistentes.phtml',$a_campos);

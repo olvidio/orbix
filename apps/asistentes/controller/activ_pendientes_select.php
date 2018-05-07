@@ -1,22 +1,21 @@
 <?php
-use actividades\model as actividades;
-use asistentes\model as asistentes;
-use personas\model as personas;
 /**
-* Esta página muestra una tabla con las personas con el ca pendiente.
-*
-*
-*@package	delegacion
-*@subpackage	estudios
-*@author	Daniel Serrabou
-*@since		7/11/03.
-*@ajax		23/8/2007.		
-*		
-*/
+ * Este controlador muestra una tabla con las personas que tienen la actividad
+ * (ca|crt) pendiente para este curso.
+ *
+ *
+ *@package	orbix
+ *@subpackage	asistentes
+ *@author	Daniel Serrabou
+ *@since		7/11/03.
+ *@ajax		23/8/2007.		
+ *		
+ */
 
-/**
-* Para asegurar que inicia la sesion, y poder acceder a los permisos
-*/
+use actividades\model\entity as actividades;
+use asistentes\model\entity as asistentes;
+use personas\model\entity as personas;
+
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -25,22 +24,9 @@ use personas\model as personas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
  
-//Si vengo por medio de Posicion, borro la última
-if (isset($_POST['stack'])) {
-	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-	if ($stack != '') {
-		// No me sirve el de global_object, sino el de la session
-		$oPosicion2 = new Posicion();
-		if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
-			$Qid_sel=$oPosicion2->getParametro('id_sel');
-			$Qscroll_id = $oPosicion2->getParametro('scroll_id');
-			$oPosicion2->olvidar($stack);
-		}
-	}
-} 
-$Qany = empty($_POST['any'])? '' : $_POST['any'];
-$Qtipo_personas = empty($_POST['tipo_personas'])? '' : $_POST['tipo_personas'];
-$Qsactividad = empty($_POST['sactividad'])? '' : $_POST['sactividad'];
+$Qany = (integer)  \filter_input(INPUT_POST, 'any');
+$Qtipo_personas = (string)  \filter_input(INPUT_POST, 'tipo_personas');
+$Qsactividad = (string)  \filter_input(INPUT_POST, 'sactividad');
 
 /*miro las condiciones. Si es la primera vez muestro las de este año */
 if (empty($Qany)) { $any=date("Y"); } else { $any=$Qany; }
@@ -77,6 +63,7 @@ switch ($Qtipo_personas) {
 		break;
 }
 
+$mi_dele = core\ConfigGlobal::mi_dele();
 // tipo de actividad
 $chk_ca = '';
 $chk_crt = '';
@@ -121,17 +108,17 @@ foreach ($cActividades as $oActividad) {
 switch ($Qtipo_personas) {
 	case "n":
 		$GesPersonas = new personas\GestorPersonaN();
-		$cPersonas = $GesPersonas->getPersonas(array('situacion'=>'A'));
+		$cPersonas = $GesPersonas->getPersonas(array('situacion'=>'A', 'dl'=>$mi_dele));
 		$obj_pau = 'PersonaN';
 		break;
 	case "agd":
 		$GesPersonas = new personas\GestorPersonaAgd();
-		$cPersonas = $GesPersonas->getPersonas(array('situacion'=>'A'));
+		$cPersonas = $GesPersonas->getPersonas(array('situacion'=>'A', 'dl'=>$mi_dele));
 		$obj_pau = 'PersonaAgd';
 		break;
 	case "sacd":
 		$GesPersonas = new personas\GestorPersonaDl();
-		$cPersonas = $GesPersonas->getPersonas(array('sacd'=>'t','situacion'=>'A'));
+		$cPersonas = $GesPersonas->getPersonas(array('sacd'=>'t','situacion'=>'A', 'dl'=>$mi_dele));
 		$obj_pau = 'PersonaDl';
 		break;
 }
@@ -142,117 +129,94 @@ foreach ($cPersonas as $oPersona) {
 	$ap_nom = $oPersona->getApellidosNombre();
 	$aFaltan[$ap_nom] = $id_nomP;
 }
-ksort($aFaltan);
+uksort($aFaltan,"core\strsinacentocmp");
 
 $titulo=ucfirst(sprintf(_("lista de %s sin %s en el curso %s"),$Qtipo_personas,$Qsactividad,$txt_curso));
 
-/*
-* Defino un array con los datos actuales, para saber volver después de navegar un rato
-*/
-$aGoBack = array (
-				'any'=>$Qany,
-				'tipo_personas'=>$Qtipo_personas,
-				'sactividad'=>$Qsactividad
-				);
-$oPosicion->setParametros($aGoBack);
-$oPosicion->recordar();
-
 $a_cabeceras=array( _("nº"),array('name'=>ucfirst(_("nombre de la persona")),'formatter'=>'clickFormatter'));
 $i=0;
-$a_valores[$i] = array();
 foreach ($aFaltan as $ap_nom=>$id_nom) {
 	$i++;
 	
-	//$pagina="programas/dossiers/home_persona.php?id_nom=$id_nom&tabla_pau=$tabla_p";
-
-	$pagina=web\Hash::link('apps/personas/controller/home_persona.php?'.http_build_query(array('obj_pau'=>$obj_pau,'id_nom'=>$id_nom)));
+	$aQuery = array('obj_pau'=>$obj_pau,'id_nom'=>$id_nom);
+	$pagina=web\Hash::link('apps/personas/controller/home_persona.php?'.http_build_query($aQuery));
 
 	$a_valores[$i][1]=$i;
 	$a_valores[$i][2]= array( 'ira'=>$pagina, 'valor'=>$ap_nom);
 }
-// Al final añado la lista de personas que no estan en la dl, pero dependen de aqui. (probablemente haran la actividad en su region actual)
-/*
+
+
+// Al final añado la lista de personas que no estan en la dl, pero dependen de aqui.
+//  (probablemente haran la actividad en su region actual)
+$aWhere['situacion'] = 'A';
+$aWhere['dl'] = $mi_dele;
+$aOperador['dl'] = '!=';
 switch ($Qtipo_personas) {
 	case "n":
 		$GesPersonas = new personas\GestorPersonaN();
-		$cPersonas = $GesPersonas->getPersonas(array('situacion'=>'A','situacion'=>'z'));
+		$cPersonasOtras = $GesPersonas->getPersonas($aWhere,$aOperador);
 		break;
 	case "agd":
 		$GesPersonas = new personas\GestorPersonaAgd();
-		$cPersonas = $GesPersonas->getPersonas(array('situacion'=>'A','situacion'=>'z'));
+		$cPersonasOtras = $GesPersonas->getPersonas($aWhere,$aOperador);
 		break;
 	case "sacd":
+		$aWhere['sacd'] = 't';
 		$GesPersonas = new personas\GestorPersonaDl();
-		$cPersonas = $GesPersonas->getPersonas(array('sacd'=>'t','situacion'=>'A','situacion'=>'z'));
+		$cPersonasOtras = $GesPersonas->getPersonas($aWhere,$aOperador);
 		break;
 }
 
-$j=0;
-$a_valores_2[$j] = array();
-foreach ($cPersonas as $oPersona) {
-	$j++;
-	$id_nom = $oPersona->getId_nom();
+foreach ($cPersonasOtras as $oPersona) {
+	$id_nomP = $oPersona->getId_nom();
+	if (in_array($id_nomP, $aAsistentes)) continue;
 	$ap_nom = $oPersona->getApellidosNombre();
-	
-	$pagina="programas/dossiers/home_persona.php?id_nom=$id_nom&tabla_pau=$tabla_p";
-	
-	$a_valores_2[$j][1]=$j;
-	$a_valores_2[$j][2]= array( 'ira'=>$pagina, 'valor'=>$ap_nom);
+	$aFaltanOtras[$ap_nom] = $id_nomP;
 }
-*/
-$a_valores_2[0] = array();
+uksort($aFaltanOtras,"core\strsinacentocmp");
+
+$i=0;
+foreach ($aFaltanOtras as $ap_nom=>$id_nom) {
+	$i++;
+	
+	$aQuery = array('obj_pau'=>$obj_pau,'id_nom'=>$id_nom);
+	$pagina=web\Hash::link('apps/personas/controller/home_persona.php?'.http_build_query($aQuery));
+
+	$a_valores_2[$i][1]=$i;
+	$a_valores_2[$i][2]= array( 'ira'=>$pagina, 'valor'=>$ap_nom);
+}
 
 
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('tipo_personas!sactividad!any');
 
-// ------------------- seleccion de parámetros ---------------
-?>
-<form id="que_pdte" action="<?= core\ConfigGlobal::getWeb() ?>/apps/asistentes/controller/activ_pendientes_select.php" method="post"  onkeypress="fnjs_enviar(event,this);" >
-<?= $oHash->getCamposHtml(); ?>
-<table>
-<thead>
-<th class=titulo_inv colspan=4><?php echo ucfirst(_("personas")); ?>
-&nbsp;&nbsp;&nbsp;
-<select name="tipo_personas" size="1">
-	<option value="n" label="n" <?php echo $chk_n; ?>>n</option>
-	<option value="agd" label="agd" <?php echo $chk_agd; ?>>agd</option>
-	<option value="sacd" label="sacd" <?php echo $chk_sacd; ?>>sacd</option>
-</select>
-</th>
-<th class=titulo_inv colspan=4><?php echo ucfirst(_("actividad")); ?>
-&nbsp;&nbsp;&nbsp;
-<select name="sactividad" size="1">
-	<option value="ca" label="ca" <?php echo $chk_ca; ?>>ca</option>
-	<option value="crt" label="crt" <?php echo $chk_crt; ?>>crt</option>
-</select>
-</th>
-<th class=titulo_inv colspan=4><?php echo ucfirst(_("curso")); ?>
-&nbsp;&nbsp;&nbsp;
-<select name="any" size="1">
-	<option value='<?= $any_real ?>' <?= $chk_any_1 ?>><?= $txt_curso_1 ?></option>
-	<option value='<?= ($any_real+1) ?>' <?= $chk_any_2 ?>><?= $txt_curso_2 ?></option>
-</select>
-</th>
-<th colspan=4><input type="button" onclick="fnjs_enviar_formulario('#que_pdte')" name="ok" value="<?php echo ucfirst(_("buscar")); ?>" class="btn_ok"></th>
-</thead>
-</TABLE>
-</FORM>
-<!--  *********************  Listado   *********************     -->
-<h2 class=subtitulo><?= $titulo ?></h2>
-<?php
-$oTabla = new web\Lista();
-$oTabla->setId_tabla('activ_pendientes_select');
-$oTabla->setCabeceras($a_cabeceras);
-$oTabla->setDatos($a_valores);
-echo $oTabla->mostrar_tabla();
-?>
-<h2 class=subtitulo><?= _("personas en otras r") ?></h2>
-<?php
-$oTabla = new web\Lista();
-$oTabla->setId_tabla('activ_pendientes_select_otras');
-$oTabla->setCabeceras($a_cabeceras);
-$oTabla->setDatos($a_valores_2);
-echo $oTabla->mostrar_tabla();
-?>
+$oTablaDl = new web\Lista();
+$oTablaDl->setId_tabla('activ_pendientes_select');
+$oTablaDl->setCabeceras($a_cabeceras);
+$oTablaDl->setDatos($a_valores);
+
+$oTablaOtrasDl = new web\Lista();
+$oTablaOtrasDl->setId_tabla('activ_pendientes_select_otras');
+$oTablaOtrasDl->setCabeceras($a_cabeceras);
+$oTablaOtrasDl->setDatos($a_valores_2);
+
+$a_campos = [
+			'oHash' => $oHash,
+			'chk_n' => $chk_n,
+			'chk_agd' => $chk_agd,
+			'chk_sacd' => $chk_sacd,
+			'chk_ca' => $chk_ca,
+			'chk_crt' => $chk_crt,
+			'any_real' => $any_real,
+			'chk_any_1' => $chk_any_1,
+			'txt_curso_1' => $txt_curso_1,
+			'chk_any_2' => $chk_any_2,
+			'txt_curso_2' => $txt_curso_2,
+			'titulo' => $titulo,
+			'oTablaDl' => $oTablaDl,
+			'oTablaOtrasDl' => $oTablaOtrasDl,
+			];
+
+$oView = new core\View('asistentes/controller');
+echo $oView->render('activ_pendientes.phtml',$a_campos);

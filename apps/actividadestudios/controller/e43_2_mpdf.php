@@ -4,7 +4,7 @@ $_POST = $_GET;
 
 $id_nom = (integer)  filter_input(INPUT_GET, 'id_nom');
 $id_activ = (integer)  filter_input(INPUT_GET, 'id_activ');
-$go_to = (string) urldecode(filter_input(INPUT_GET, 'go_to'));
+//$go_to = (string) urldecode(filter_input(INPUT_GET, 'go_to'));
 
 
 // get the HTML

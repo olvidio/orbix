@@ -20,26 +20,26 @@ $oHash->setArraycamposHidden($a_camposHidden);
 <input type="Hidden" id="que"  name="que" value="">
 
 <table>
-<th align="left" colspan="5"><?php echo ucfirst(_("Permisos de acceso a dossier seleccionado")); ?></th>
+<th align="left" colspan="5"><?= ucfirst(_("Permisos de acceso a dossier seleccionado")); ?></th>
 
 <?php if ($_SESSION['oPerm']->have_perm("admin_sv") OR $_SESSION['oPerm']->have_perm("admin_sf")) { ?> 
 <tr>
-   	<td><font ><?php echo _("id_tipo_dossier"); ?></font><input name="id_tipo_dossier" value="<?php echo $id_tipo_dossier; ?>"size="10"> </td>
-	<td><font ><?php echo _("id_tipo_dossier_rel"); ?></font><input name="id_tipo_dossier_rel"  value="<?php echo $id_tipo_dossier_rel ; ?>" size="10"></td>
+   	<td><font ><?= _("id_tipo_dossier"); ?></font><input name="id_tipo_dossier" value="<?= $id_tipo_dossier; ?>"size="10"> </td>
+	<td><font ><?= _("id_tipo_dossier_rel"); ?></font><input name="id_tipo_dossier_rel"  value="<?= $id_tipo_dossier_rel ; ?>" size="10"></td>
 </tr>
 <tr>
-	<td><font ><?php echo _("tabla_from"); ?> </font><input name="tabla_from"  value="<?php echo $tabla_from; ?>" size="2"> </td>
-	<td><font ><?php echo _("tabla_to"); ?> </font><input name="tabla_to"  value="<?php echo $tabla_to; ?>" size="15"> </td>
-	<td><font ><?php echo _("campo_to"); ?> </font><input name="campo_to"  value="<?php echo $campo_to; ?>" size="10"> </td>
+	<td><font ><?= _("tabla_from"); ?> </font><input name="tabla_from"  value="<?= $tabla_from; ?>" size="2"> </td>
+	<td><font ><?= _("tabla_to"); ?> </font><input name="tabla_to"  value="<?= $tabla_to; ?>" size="15"> </td>
+	<td><font ><?= _("campo_to"); ?> </font><input name="campo_to"  value="<?= $campo_to; ?>" size="10"> </td>
 </TR>
 <?php } 
 ?>
 <tr>	
-	<td colspan=3><font ><?php echo _("descripción"); ?> </font><input name="descripcion"  value="<?php echo $descripcion; ?>" size="40"> </td>
+	<td colspan=3><font ><?= _("descripción"); ?> </font><input name="descripcion"  value="<?= $descripcion; ?>" size="40"> </td>
 </tr>
 <tr>
-<td><?php echo _("depende_modificar"); ?><input type=checkbox name="depende_modificar" value="on" <?= $chk ?>> </td>
-<td colspan="2"><?php echo ucfirst(_("depende_modificar activo implica que sólo podrá modificar la oficina correspondiente: agd para los agd, sm para los n, sg para los s, en dossiers que afectan a varios tipos de personas")); ?></td>
+<td><?= _("depende_modificar"); ?><input type=checkbox name="depende_modificar" value="on" <?= $chk ?>> </td>
+<td colspan="2"><?= ucfirst(_("depende_modificar activo implica que sólo podrá modificar la oficina correspondiente: agd para los agd, sm para los n, sg para los s, en dossiers que afectan a varios tipos de personas")); ?></td>
 </tr>
 <tr><td colspan=2><?echo _("permisos de lectura")." ($permiso_lectura)" ?></td></tr>
 <tr><td colspan=3><?= $oCuadros->cuadros_check('permiso_lectura',$permiso_lectura); ?></td></tr>

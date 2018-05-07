@@ -1,9 +1,32 @@
 <?php
-use actividades\model as actividades;
-use asignaturas\model as asignaturas;
-use notas\model as notas;
-use personas\model as personas;
-use profesores\model as profesores;
+/**
+ * Muestra un formulario para introducir/cambiar las notas de una persona
+ * 
+ *
+ * @package	orbix
+ * @subpackage	notas
+ * @author	Daniel Serrabou
+ * @since		15/5/02.
+ * @version 1.0  refactoring: separar vistas
+ * @created Mayo 2018
+ *
+ * @param string $_POST['pau']  para el controlador dossiers_ver
+ * @param integer $_POST['id_pau']  para el controlador dossiers_ver
+ * @param string $_POST['obj_pau']  para el controlador dossiers_ver
+ * @param integer $_POST['id_dossier']  para el controlador dossiers_ver
+ * @param string $_POST['mod']  para el controlador dossiers_ver
+ * En el caso de modificar:
+ * @param integer $_POST['permiso'] valores 1, 2, 3
+ * @param integer $_POST['scroll_id'] 
+ * @param array $_POST['sel'] con id_activ#id_asignatura
+ * 
+ */
+
+use actividades\model\entity as actividades;
+use asignaturas\model\entity as asignaturas;
+use notas\model\entity as notas;
+use personas\model\entity as personas;
+use profesores\model\entity as profesores;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -13,12 +36,15 @@ use profesores\model as profesores;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$obj = 'notas\\model\\PersonaNota';
+$oPosicion->recordar();
 
-$pau = empty($_POST['pau'])? '' : $_POST['pau'];
-$id_pau = empty($_POST['id_pau'])? '' : $_POST['id_pau'];
-$obj_pau = empty($_POST['obj_pau'])? '' : $_POST['obj_pau'];
-$permiso = empty($_POST['permiso'])? '' : $_POST['permiso'];
+$obj = 'notas\\model\\entity\\PersonaNota';
+
+$Qpau = (string) \filter_input(INPUT_POST, 'pau');
+$Qid_pau = (integer) \filter_input(INPUT_POST, 'id_pau');
+$Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
+$Qpermiso = (integer) \filter_input(INPUT_POST, 'permiso');
+$Qmod = (string) \filter_input(INPUT_POST, 'mod');
 		
 $sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($sel)) { //vengo de un checkbox
@@ -26,82 +52,93 @@ if (!empty($sel)) { //vengo de un checkbox
 	$oPosicion->addParametro('id_sel',$sel,1);
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
-	if ($pau=="p") { 
+	if ($Qpau=="p") { 
 		$id_nivel_real=strtok($sel[0],"#"); 
-		$id_asignatura_real=strtok("#");
+		$Qid_asignatura_real=strtok("#");
 	}
 } else {
-	if (!empty($_POST['mod']) && $_POST['mod']!='nuevo') {
-		$id_asignatura_real=$_POST['id_asignatura_real']; 
+	if (!empty($Qmod) && $Qmod != 'nuevo') {
+		$Qid_asignatura_real = (string) \filter_input(INPUT_POST, 'id_asignatura_real');
 	} else {
-		$id_asignatura_real='';
+		$Qid_asignatura_real='';
 	}
 }
-$oPosicion->recordar();
-
-$_POST['id_nivel'] = empty($_POST['id_nivel'])? 'n': $_POST['id_nivel'];
-$_POST['opcional'] = empty($_POST['opcional'])? 'n': $_POST['opcional'];
 
 $GesNotas = new notas\GestorNota();
 $oDesplNotas = $GesNotas->getListaNotas();
 $oDesplNotas->setNombre('id_situacion');
 
-$GesProfes = new profesores\GestorProfesor();
-$cProfesores= $GesProfes->getProfesores();
-$aProfesores=array();
-$msg_err = '';
-foreach ($cProfesores as $oProfesor) {
-	$id_nom=$oProfesor->getId_nom();
-	$oPersona = personas\Persona::NewPersona($id_nom);
-	if (!is_object($oPersona)) {
-		$msg_err .= "<br>$oPersona con id_nom: $id_nom";
-		continue;
-	}
-	$ap_nom=$oPersona->getApellidosNombre();
-	$aProfesores[$id_nom]=$ap_nom;
-}
-asort($aProfesores);
-$oDesplProfesores = new web\Desplegable();
-$oDesplProfesores->setOpciones($aProfesores);
-$oDesplProfesores->setBlanco(1);
-$oDesplProfesores->setNombre('id_preceptor');
-
 $GesActividades = new actividades\GestorActividad();
 $GesAsignaturas = new asignaturas\GestorAsignatura();
 
-if (!empty($id_asignatura_real)) { //caso de modificar
+if (!empty($Qid_asignatura_real)) { //caso de modificar
 	$mod="editar";
-	$id_asignatura=$id_asignatura_real;
-	$_POST['opcional']='n';
-	$aWhere['id_nom'] = $id_pau;
-	$aWhere['id_asignatura'] = $id_asignatura_real;
+	$id_asignatura=$Qid_asignatura_real;
+	$aWhere['id_nom'] = $Qid_pau;
+	$aWhere['id_asignatura'] = $Qid_asignatura_real;
 	$GesPersonaNotas = new notas\GestorPersonaNota();
 	$cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhere);
 
-	$oPersonaNota = $cPersonaNotas[0]; // solo debeeria existir una.
+	$oPersonaNota = $cPersonaNotas[0]; // solo deberia existir una.
+	$id_situacion=$oPersonaNota->getId_situacion();
+	$nota_num=$oPersonaNota->getNota_num();
+	$nota_max=$oPersonaNota->getNota_max();
+	$acta=$oPersonaNota->getActa();
+	$tipo_acta=$oPersonaNota->getTipo_acta();
+	$f_acta=$oPersonaNota->getF_acta();
+	$preceptor=$oPersonaNota->getPreceptor();
+	$id_preceptor=$oPersonaNota->getId_preceptor();
+	$detalle=$oPersonaNota->getDetalle();
+	$epoca=$oPersonaNota->getEpoca();
+	$id_activ=$oPersonaNota->getId_activ();
 
-	$id_situacion_real=$oPersonaNota->getId_situacion();
-	$nota_num_real=$oPersonaNota->getNota_num();
-	$nota_max_real=$oPersonaNota->getNota_max();
-	$acta_real=$oPersonaNota->getActa();
-	$tipo_acta_real=$oPersonaNota->getTipo_acta();
-	$f_acta_real=$oPersonaNota->getF_acta();
-	$preceptor_real=$oPersonaNota->getPreceptor();
-	$id_preceptor_real=$oPersonaNota->getId_preceptor();
-	$detalle_real=$oPersonaNota->getDetalle();
-	$epoca_real=$oPersonaNota->getEpoca();
-	$id_activ_real=$oPersonaNota->getId_activ();
-
-	$oAsignatura = new asignaturas\Asignatura($id_asignatura_real);
+	$oAsignatura = new asignaturas\Asignatura($Qid_asignatura_real);
 	$nombre_corto=$oAsignatura->getNombre_corto();
 	if ($oPersonaNota->getId_asignatura() > 3000) {
 		$id_nivel=$oPersonaNota->getId_nivel();
 	} else {
 		$id_nivel=$oAsignatura->getId_nivel();
 	}
+	
+	$GesProfes = new profesores\GestorProfesor();
+	$cProfesores= $GesProfes->getProfesores();
+	$aProfesores=array();
+	$msg_err = '';
+	foreach ($cProfesores as $oProfesor) {
+		$id_nom=$oProfesor->getId_nom();
+		$oPersona = personas\Persona::NewPersona($id_nom);
+		if (!is_object($oPersona)) {
+			$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
+			continue;
+		}
+		$ap_nom=$oPersona->getApellidosNombre();
+		$aProfesores[$id_nom]=$ap_nom;
+	}
+	uasort($aProfesores,'core\strsinacentocmp');
 
+	$oDesplProfesores = new web\Desplegable();
+	$oDesplProfesores->setNombre('id_preceptor');
+	$oDesplProfesores->setOpciones($aProfesores);
+	$oDesplProfesores->setOpcion_sel($id_preceptor);
+	$oDesplProfesores->setBlanco(1);
+	
+	$cOpcionales = array();
+	$aFaltan=array();
+	$oDesplNiveles = array();
 } else { //caso de nueva asignatura
 	$mod="nuevo";
+	$id_situacion='';
+	$nota_num='';
+	$nota_max='';
+	$acta='';
+	$tipo_acta='';
+	$f_acta='';
+	$preceptor='';
+	$id_preceptor='';
+	$detalle='';
+	$epoca='';
+	$id_activ='';
+	$oDesplProfesores =array();
 	// todas las asignaturas
 	$aWhere=array();
 	$aOperador=array();
@@ -132,7 +169,7 @@ if (!empty($id_asignatura_real)) { //caso de modificar
 	$aOperador=array();
 	$aWhere['id_situacion']=$cond;
 	$aOperador['id_situacion']='~';
-	$aWhere['id_nom']=$id_pau;
+	$aWhere['id_nom']=$Qid_pau;
 	$aWhere['id_nivel']=3000;
 	$aOperador['id_nivel']='<';
 	$aWhere['_ordre']='id_nivel';
@@ -153,52 +190,36 @@ if (!empty($id_asignatura_real)) { //caso de modificar
 		if (array_key_exists($id_nivel,$aSuperadas)) continue;
 		$aFaltan[$id_nivel]=$nombre_corto;
 	}
+
+	$oDesplNiveles = new web\Desplegable();
+	$oDesplNiveles->setNombre('id_nivel');
+	$oDesplNiveles->setOpciones($aFaltan);
+	$oDesplNiveles->setBlanco(1);
+	$oDesplNiveles->setAction('fnjs_cmb_opcional()');
 }
 
-if ($mod == 'nuevo') {
-	// Valores por defecto
-	$max = core\ConfigGlobal::nota_max();
-	$max = empty($max)? '': $max;
-	$situacion = 10;
+// Valores por defecto
+$max = core\ConfigGlobal::nota_max();
+$nota_max = empty($nota_max)? $max : $nota_max;
+$id_situacion = empty($id_situacion)? 10 : $id_situacion;
 
-	$acta=empty($_POST['acta'])? '': $_POST['acta'];
-	$tipo_acta=empty($_POST['tipo_acta'])? '': $_POST['tipo_acta'];
-	$f_acta=empty($_POST['f_acta'])? '': $_POST['f_acta'];
-	$epoca=empty($_POST['epoca'])? '': $_POST['epoca'];
-	$detalle=empty($_POST['detalle'])? '': $_POST['detalle'];
-	$id_activ=empty($_POST['id_activ'])? '': $_POST['id_activ'];
-	$precep=empty($_POST['precep'])? 'no' : $_POST['precep'];
-	$id_preceptor=empty($_POST['id_preceptor'])? '': $_POST['id_preceptor'];
-	$id_situacion=empty($_POST['id_situacion'])? $situacion : $_POST['id_situacion'];
-	$nota_num=empty($_POST['nota_num'])? '': $_POST['nota_num'];
-	$nota_max=empty($_POST['nota_max'])? $max: $_POST['nota_max'];
+if (!empty($preceptor)) {
+	$chk_preceptor = "checked";
 } else {
-	$acta=!isset($_POST['acta'])? $acta_real : $_POST['acta'];
-	$tipo_acta=!isset($_POST['tipo_acta'])? $tipo_acta_real : $_POST['tipo_acta'];
-	$f_acta=!isset($_POST['f_acta'])? $f_acta_real : $_POST['f_acta'];
-	$epoca=!isset($_POST['epoca'])? $epoca_real : $_POST['epoca'];
-	$detalle=!isset($_POST['detalle'])? $detalle_real : $_POST['detalle'];
-	$id_activ=!isset($_POST['id_activ'])? $id_activ_real : $_POST['id_activ'];
-	$precep=!isset($_POST['precep'])? '' : $_POST['precep'];
-	if (empty($precep)) $precep= empty($preceptor_real)? 'no' : 'si';
-	$id_preceptor=!isset($_POST['id_preceptor'])? $id_preceptor_real : $_POST['id_preceptor'];
-	$id_situacion=!isset($_POST['id_situacion'])? $id_situacion_real : $_POST['id_situacion'];
-	$nota_num=!isset($_POST['nota_num'])? $nota_num_real : $_POST['nota_num'];
-	$nota_max=!isset($_POST['nota_max'])? $nota_max_real : $_POST['nota_max'];
+	$chk_preceptor = "";
 }
-$oDesplProfesores->setOpcion_sel($id_preceptor);
 $oDesplNotas->setOpcion_sel($id_situacion);
 
-if (!empty($tipo_acta_real)) {
-	if ($tipo_acta_real==notas\PersonaNota::FORMATO_ACTA) { $chk_acta="checked"; } else { $chk_acta=""; }
-	if ($tipo_acta_real==notas\PersonaNota::FORMATO_CERTIFICADO) { $chk_certificado="checked"; } else { $chk_certificado=""; }
+if (!empty($tipo_acta)) {
+	if ($tipo_acta==notas\PersonaNota::FORMATO_ACTA) { $chk_acta="checked"; } else { $chk_acta=""; }
+	if ($tipo_acta==notas\PersonaNota::FORMATO_CERTIFICADO) { $chk_certificado="checked"; } else { $chk_certificado=""; }
 } else {
 	$chk_acta="checked";
 	$chk_certificado="";
 }
 
-if (!empty($f_acta_real)) { // 3 meses cerca de la fecha del acta.
-	$oData = DateTime::createFromFormat('j/m/Y',$f_acta_real);
+if (!empty($f_acta)) { // 3 meses cerca de la fecha del acta.
+	$oData = DateTime::createFromFormat('j/m/Y',$f_acta);
 	$oData2 = clone $oData;
 	$oData->add(new \DateInterval('P3M'));
 	$f_fin = $oData->format('d/m/Y');
@@ -232,7 +253,8 @@ $oDesplActividades->setBlanco(1);
 $oDesplActividades->setNombre('id_activ');
 $oDesplActividades->setOpcion_sel($id_activ);
 
-// miro cuales son las opcionales genéricas, para la funcion actualizar() de java.
+// miro cuales son las opcionales genéricas, para la funcion
+//  fnjs_cmb_opcional de javascript.
 // la condicion es que tengan id_sector=1
 $aWhere=array();
 $aOperador=array();
@@ -249,230 +271,70 @@ foreach ($cOpcionalesGenericas as $oOpcional) {
 	$condicion.="id==".$id_nivel_j." || ";
 	$lista_nivel_op.=$id_nivel_j.",";
 }
-$condicion=substr($condicion,0,-4);
+$condicion_js=substr($condicion,0,-4);
 
-$go_to_1 = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'id_dossier'=>1011,'permiso'=>$permiso)));
-//$go_to_1="apps/dossiers/controller/dossiers_ver.php?id_dossier=1011&pau=$pau&id_pau=$id_pau&obj_pau=$obj_pau&permiso=$permiso";
-
-$go_to = empty($_POST['go_to'])? $go_to_1 : $_POST['go_to'];
-
-$campos_chk = '!preceptor';
 
 $oHash = new web\Hash();
-$camposForm = 'precep!opcional!nota_num!nota_max!id_situacion!acta!tipo_acta!f_acta!preceptor!id_preceptor!epoca!id_activ!detalle';
-$camposNo = 'go_to_que!id_preceptor!id_activ'.$campos_chk;
+$campos_chk = '!preceptor';
+$camposForm = 'preceptor!nota_num!nota_max!id_situacion!acta!tipo_acta!f_acta!preceptor!id_preceptor!epoca!id_activ!detalle';
+$camposNo = 'refresh!id_preceptor!id_activ'.$campos_chk;
 $a_camposHidden = array(
 		'campos_chk'=>$campos_chk,
 		'mod' => $mod,
-		'pau' => $pau,
-		'id_pau' => $id_pau,
-		'obj_pau' => $obj_pau,
-		'permiso' => $permiso,
-		'go_to' => $go_to
+		'pau' => $Qpau,
+		'id_pau' => $Qid_pau,
+		'obj_pau' => $Qobj_pau,
+		'permiso' => $Qpermiso,
 		);
 
-if (!empty($id_asignatura_real)) { //caso de modificar
-	$a_camposHidden['id_asignatura_real'] = $id_asignatura_real;
-	$a_camposHidden['id_asignatura'] = $id_asignatura_real;
+if (!empty($Qid_asignatura_real)) { //caso de modificar
+	$a_camposHidden['id_asignatura_real'] = $Qid_asignatura_real;
+	$a_camposHidden['id_asignatura'] = $Qid_asignatura_real;
 	$a_camposHidden['id_nivel'] = $id_nivel;
 } else {
-	$camposForm .= '!id_nivel';
-	$camposNo .= '!id_nivel';
-	if ($_POST['opcional'] == 'n') {
-		//si no es opcional el id_asignatura es el mismo que id_nivel
-		$a_camposHidden['id_asignatura'] = '1';
-	} else {
-		$camposForm .= '!id_asignatura';
-	}
+	$camposForm .= '!id_nivel!id_asignatura';
+	$camposNo .= '!id_nivel!id_asignatura';
 }
 $oHash->setcamposForm($camposForm);
 $oHash->setcamposNo($camposNo);
 $oHash->setArraycamposHidden($a_camposHidden);
 
-if (!empty($msg_err)) { echo $msg_err; }
-echo $oPosicion->mostrar_left_slide(1);
-?>
-<script>
-$(function() { $( "#f_acta" ).datepicker(); });
+$url_ajax = core\ConfigGlobal::getWeb().'/apps/notas/controller/notas_ajax.php';
+$oHash1 = new web\Hash();
+$oHash1->setUrl($url_ajax);
+$oHash1->setCamposForm('que!id_nom'); 
+//$oHash1->setCamposNo('id_nom'); 
+$h1 = $oHash1->linkSinVal();
+$oHash2 = new web\Hash();
+$oHash2->setUrl($url_ajax);
+$oHash2->setCamposForm('que'); 
+$h2 = $oHash2->linkSinVal();
 
-fnjs_nota=function(){
-	var num;
-	var max;
-	var sit;
-	
-	num = $('#nota_num').val();
-	max = $('#nota_max').val();
-	sit = $('#id_situacion').val();
-	if (!num)  $('#id_situacion').val('0');
-	num = parseFloat(num);
-	if (typeof num == 'number' && num > 1) {
- 		$('#id_situacion').val(10);
-	}
-	max_default = <?= core\ConfigGlobal::nota_max(); ?>;
-	if (!max)  $('#nota_max').val(max_default);
-}
+$a_campos = [
+			'obj' => $obj, //sirve para comprobar campos
+			'oPosicion' => $oPosicion,
+			'oHash' => $oHash,
+			'url_ajax' => $url_ajax,
+			'h1' => $h1,
+			'h2' => $h2,
+			'condicion_js' => $condicion_js,
+			'Qid_asignatura_real' => $Qid_asignatura_real,
+			'nombre_corto' => $nombre_corto,
+			'oDesplNiveles' => $oDesplNiveles,
+			'nota_num' => $nota_num,
+			'nota_max' => $nota_max,
+			'oDesplNotas' => $oDesplNotas,
+			'chk_acta' => $chk_acta,
+			'chk_certificado' => $chk_certificado,
+			'acta' => $acta,
+			'f_acta' => $f_acta,
+			'chk_preceptor' => $chk_preceptor,
+			'id_preceptor' => $id_preceptor,
+			'oDesplProfesores' => $oDesplProfesores,
+			'epoca' => $epoca,
+			'oDesplActividades' => $oDesplActividades,
+			'detalle' => $detalle,
+			];
 
-fnjs_actualizar=function(){
-	var p=document.f_1011.preceptor.checked;
-	if (p) {
-		$('#precep').val("si");
-	} else {
-		$('#precep').val("no");
-	}
-	var id=document.f_1011.id_nivel.value;
-	if (<?php echo $condicion; ?>) {
-		$('#opcional').val('s');
-	} else {
-		$('#opcional').val('n');
-	}
-	$('#f_1011').attr('action',"apps/notas/controller/form_1011.php");
-	fnjs_enviar_formulario('#f_1011','#ficha_personas');
-}
-
-fnjs_guardar=function(formulario){
-	var err=0;
-	var mod=document.f_1011.mod.value;
-	var acta=document.f_1011.acta.value;
-	var f_acta=document.f_1011.f_acta.value;
-	var situacion=document.f_1011.id_situacion.value;
-
-	if (situacion == 10) { // comprobar la nota numérica
-		var num = $('#nota_num').val();
-		var max = $('#nota_max').val();
-		num = parseFloat(num);
-		max = parseFloat(max);
-		if (isNaN(num)) { alert ('<?= _("valor de nota no válido") ?>'); err=1; } 
-		if (num < 0 || num > max) { alert ('<?= _("nota fuera de rango") ?>'); err=1; } 
-	}
-	
-	// situacion = 2 es para cursada
-	if (!acta && situacion != 2) { alert("Debe llenar el campo del acta"); document.f_1011.acta.focus(); err=1; }
-	if (f_acta) {
-		if (!fnjs_comprobar_fecha('#f_acta')) { err=1; }
-	}
-	if ($('#id_asignatura').val()=="") {
-		$('#id_asignatura').val(document.f_1011.id_nivel.value);
-	}
-	
-	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
-	//alert ("EEE "+rr);
-	if (rr=='ok' && err!=1) {
-		go=$('#go_to').val();
-		$(formulario).attr('action',"apps/notas/controller/update_1011.php");
-		$(formulario).submit(function() {
-			$.ajax({
-				data: $(this).serialize(),
-				url: $(this).attr('action'),
-				type: 'post',
-				complete: function (rta) {
-					rta_txt=rta.responseText;
-					if (rta_txt.search('id="ir_a"') != -1) {
-						fnjs_mostra_resposta(rta,'#main'); 
-					} else {
-						if (go) { 
-							fnjs_update_div('#main',go);
-						} else {
-							alert ('no se donde ir');
-						}
-					}
-				}
-			});
-			return false;
-		});
-		$(formulario).submit();
-		$(formulario).off();
-	}
-}
-</script>
-<form id="f_1011" name="f_1011" action="" method="POST">
-<?= $oHash->getCamposHtml(); ?>
-<input type="hidden" id="precep" name="precep" value="<?= $precep ?>">
-<input type="hidden" id="go_to_que" name="go_to_que" value="">
-<input type="hidden" id="opcional" name="opcional" value="<?= $_POST['opcional'] ?>">
-<table>
-<thead><tr><th colspan=4><?= _("asignaturas aprobadas") ?></th></tr></thead>
-<tbody>
-<?php
-if (!empty($id_asignatura_real)) { //caso de modificar
-	?>
-	<tr><td><?= ucfirst(_("asignatura")) ?>:</td><td class=contenido><?= $nombre_corto ?></td></tr>
-	<?php
-} else {
-	//niveles posibles (los no aprobados)
-	echo "<tr><td>".ucfirst(_("asignatura")).":</td>";
-	echo "<td><select id='id_nivel' name='id_nivel' onchange='fnjs_actualizar()'><option></option>";
-	$ninguno_sel=1;
-	foreach ($aFaltan as $list_id_nivel=>$nombre_corto) {
-		if ($list_id_nivel==$_POST['id_nivel']) { $chk="selected"; $ninguno_sel=0; } else { $chk=""; }
-		echo "<option value=$list_id_nivel $chk>$nombre_corto</option>";
-	}
-	echo "</select></td>";
-	
-	// Si la primera vez que se muestra la página, y la primera asignatura es una opcional,
-	// hay que tenerlo en cuenta, sino las opcionales sólo se muestran al seleccionar una asignatura.
-	if ($ninguno_sel==1) {
-		reset($aFaltan);
-		$id=key($aFaltan);
-		if (strstr($lista_nivel_op, $id)) { $_POST['opcional']='s'; } else { $_POST['opcional']='n'; }
-	}
-	
-	// opcionales posibles
-	if (!empty($_POST['opcional']) && $_POST['opcional'] == 's') {
-		echo "<td>".ucfirst(_("opcional")).":</td>";
-		echo "<td><select id='id_asignatura' name='id_asignatura' >";
-		$i=0;
-		foreach ($cOpcionales as $oOpcional) {
-			$i++;
-			$asignatura=$oOpcional->getNombre_corto();
-			$id_asignatura_list=$oOpcional->getId_asignatura();
-			if ($id_asignatura_list==$_POST['id_asignatura']) { $chk="selected"; } else { $chk=""; }
-			echo "<option value=$id_asignatura_list $chk>$asignatura</option>";
-		}
-		echo "</select></td>";
-	} else { //si no es opcional el id_asignatura es el mismo que id_nivel
-		//echo "<input type=\"hidden\" id=\"id_asignatura\" name=\"id_asignatura\" value=\"nueva\">";
-	}
-	echo "</tr>";
-}
-
-echo "<tr><td>"._("nota")."</td><td>";
-echo "<input type=\"text\" id=\"nota_num\" name=\"nota_num\" value=\"$nota_num\" size=2 onchange='fnjs_nota()'>";
-echo ' ' . _("sobre") . ' ';
-echo "<input type=\"text\" id=\"nota_max\" name=\"nota_max\" value=\"$nota_max\" size=2>";
-echo "<td>"._("situación")."</td><td>";
-echo $oDesplNotas->desplegable();
-echo "</td></tr>";
-echo "<tr>";
-echo "<td><input type=\"radio\" id=\"tipo_acta_a\" name=\"tipo_acta\" value=\"".notas\PersonaNota::FORMATO_ACTA."\" $chk_acta>"._("acta");
-echo " <input type=\"radio\" id=\"tipo_acta_c\" name=\"tipo_acta\" value=\"".notas\PersonaNota::FORMATO_CERTIFICADO."\" $chk_certificado>"._("certificado");
-echo "<td colspan=1><input type=\"text\" id=\"acta\" name=\"acta\" value=\"$acta\" size=20>";
-echo "</td>";
-echo "<td colspan=2>";
-echo '  ("?": '._("significa inventado").')   '._("Formato") .': "dlx nn/aa" o "dlx" o "region" o "?"'.'</td></tr>';
-
-echo "<tr><td>"._("fecha acta")."</td><td><input type=\"text\" id=\"f_acta\" name=\"f_acta\" value=\"$f_acta\" size=12></td></tr>";
-switch ($precep) { 
-	case "si":
-		$chk="checked";
-		echo "<tr><td>"._("preceptor")."</td>";
-		echo "<td><input type=\"Checkbox\" id=\"preceptor\" name=\"preceptor\" value=\"true\" $chk onclick='fnjs_actualizar()'></td>";
-		echo "<td colspan=2 class=contenido>";
-		echo $oDesplProfesores->desplegable();
-		echo "</td>";
-		break;
-	case "no":
-		$chk="";
-		echo "<tr><td>"._("preceptor")."</td>";
-		echo "<td><input type=\"Checkbox\" id=\"preceptor\" name=\"preceptor\" value=\"true\" $chk onclick='fnjs_actualizar()'></td>";
-		break;
-}
-echo "</tr><tr><td>"._("epoca")."</td><td><input type=\"text\" id=\"epoca\" name=\"epoca\" value=\"$epoca\" size=2></td></tr>";
-echo "<tr><td>"._("cursada en")."</td>";
-echo "<td class=contenido colspan=3>";
-echo $oDesplActividades->desplegable();
-echo "</td>";
-echo "<tr><td>"._("detalle")."</td><td><input type=\"text\" id=\"detalle\" name=\"detalle\" value=\"$detalle\" ></td></tr>";
-?>	
-</tbody></table>
-<br><input type="button" value="<?php echo ucfirst(_("guardar")); ?>" onclick="fnjs_guardar(this.form)">
-</form>
+$oView = new core\View('notas/model');
+echo $oView->render('form_1011.phtml',$a_campos);

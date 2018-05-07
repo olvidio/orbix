@@ -1,8 +1,8 @@
 ﻿<?php
 
 use core\ConfigGlobal;
-use dossiers\model as dossiers;
-use personas\model as personas;
+use dossiers\model\entity as dossiers;
+use personas\model\entity as personas;
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
 */
@@ -80,8 +80,7 @@ $oDossier->abrir(); // ya pone la fecha de hoy.
 $oDossier->DBGuardar();
 
 if (empty($error)) {
-	$oPosicion->setId_div('ir_a');
-	echo $oPosicion->mostrar_left_slide();
+	echo $oPosicion->go_atras(1);
 } else {
 	echo $error;
 }

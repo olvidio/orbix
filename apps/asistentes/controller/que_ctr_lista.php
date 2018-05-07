@@ -1,5 +1,5 @@
 <?php 
-use ubis\model as ubis;
+use ubis\model\entity as ubis;
 /**
 * Formulario para ctr de los listados de profesión y de los asistentes a actividades
 *
@@ -12,9 +12,6 @@ use ubis\model as ubis;
 *@since		15/5/02.
 *		
 */
-/**
-* Funciones más comunes de la aplicación
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -23,10 +20,15 @@ use ubis\model as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$tipo = empty($_POST['tipo'])? '' : $_POST['tipo']; 
-$ssfsv = empty($_POST['ssfsv'])? '' : $_POST['ssfsv']; 
+$oPosicion->recordar();
 
-switch ($_POST['lista']) {
+$tipo = (string) \filter_input(INPUT_POST, 'tipo');
+$ssfsv = (string) \filter_input(INPUT_POST, 'ssfsv');
+$Qlista = (string) \filter_input(INPUT_POST, 'lista');
+$Qsasistentes = (string) \filter_input(INPUT_POST, 'sasistentes');
+$Qsactividad = (string) \filter_input(INPUT_POST, 'sactividad');
+
+switch ($Qlista) {
 	case "profesion" :
 		$tituloGros=ucfirst(_("listado de profesiones por centros"));
 		$titulo=ucfirst(_("buscar en uno ó varios centros"));
@@ -46,8 +48,8 @@ switch ($_POST['lista']) {
 		$a_camposHidden = array(
 			'tipo' => $tipo,
 			'ssfsv' => $ssfsv,
-			'sasistentes' => $_POST['sasistentes'],
-			'sactividad' => $_POST['sactividad']
+			'sasistentes' => $Qsasistentes,
+			'sactividad' => $Qsactividad
 		);
 		break;
 	case "list_est" :
@@ -58,8 +60,8 @@ switch ($_POST['lista']) {
 		$a_camposHidden = array(
 			'tipo' => $tipo,
 			'ssfsv' => $ssfsv,
-			'sasistentes' => $_POST['sasistentes'],
-			'sactividad' => $_POST['sactividad']
+			'sasistentes' => $Qsasistentes,
+			'sactividad' => $Qsactividad
 		);
 		break;
 }
@@ -104,73 +106,8 @@ $oHash->setcamposForm('n_agd!empiezamax!empiezamin!periodo!year!iactividad_val!i
 $oHash->setcamposNo('id_ubi');
 $oHash->setArraycamposHidden($a_camposHidden);
 
-?>
-<script>
-fnjs_buscar=function(form){
-	var err=0;
-	// Hay opciones que no muestran el periodo.
-	if ($(form).periodo) {
-		// comprobar que tiene el periodo.
-		var periodo = $(form).periodo.value;
-		if (!periodo) { err=1; }
-		if (periodo == 'otro') {
-			var min = $(form).empiezamin.value;
-			var max = $(form).empiezamax.value;
-			if (min && max) {
-				err=0;
-			} else {
-				err=1;
-			}
-		}
-	}
-	if (err==1) {
-		alert ("<?= _("debe introducir un periodo") ?>");
-	} else {
-		fnjs_enviar_formulario(form);
-	}
-}
-
-fnjs_otro=function(v){
-	if (v==1) {
-		$('#oro').show();
-		$('#n_agd_4').checked="true";
-	} else {
-		$('#oro').hide();	
-	}
- }
-// por defecto escondido.
-$('#oro').hide();	
-</script>
-<div>
-<h2 class="subtitulo"><?= $tituloGros ?></h2>
-<form id="modifica" name="modifica" action="<?= $action ?>" method="POST">
-<?= $oHash->getCamposHtml(); ?>
-<table>
-<thead><th class="titulo_inv" colspan=6><?= $titulo ?></th></thead>
-<tbody>
-<tr><td class="etiqueta" onclick="fnjs_otro(0);">
-	<input type="radio" id="n_agd_1" name="n_agd" value="n" <?= $n ?> ><?= ucfirst(_("todos los numerarios"))?></td>
-	<td class="etiqueta"><input type="radio" id="n_agd_11" name="n_agd" value="nj" <?= $nj ?> ><?= ucfirst(_("todos ctr numerarios jóvenes"))?></td>
-	<td class="etiqueta"><input type="radio" id="n_agd_12" name="n_agd" value="nm" <?= $nm ?> ><?= ucfirst(_("todos ctr numerarios mayores"))?></td>
-</tr>
-<tr><td class="etiqueta" onclick="fnjs_otro(0);">
-<input type="radio" id="n_agd_2" name="n_agd" value="a" <?= $a ?> ><?= ucfirst(_("todos los agregados"))?></td></tr>
-<?php 
-if (core\ConfigGlobal::mi_sfsv() == 1) { ?>
-<tr><td class="etiqueta" onclick="fnjs_otro(0);">
-<input type="radio" id="n_agd_3" name="n_agd" value="sss" <?= $sss ?> ><?= ucfirst(_("todos los de sss+"))?></td></tr>
-<?php } else { ?>
-<tr><td class="etiqueta" onclick="fnjs_otro(0);">
-<input type="radio" id="n_agd_3" name="n_agd" value="nax" <?= $nax ?> ><?= ucfirst(_("todos los de nax"))?></td></tr>
-<?php } ?>
-
-<tr><td class="etiqueta"><input type="radio" id="n_agd_4" name="n_agd" value="c" onclick="fnjs_otro(1);"><?= ucfirst(_("otro..."))?></td>
-<td><span id="oro" class=etiqueta " ><?php echo $oDesplCentros->desplegable(); ?></span></td>
-
-</tbody>
-</table>
-<?php
-if ($_POST['lista']=="list_activ" || $_POST['lista']=="list_est") {
+$oFormP = array();
+if ($Qlista=="list_activ" || $Qlista=="list_est") {
 	$aOpciones =  array(
 						'curso_ca'=>_('curso ca'),
 						'curso_crt'=>_('curso crt'),
@@ -182,7 +119,7 @@ if ($_POST['lista']=="list_activ" || $_POST['lista']=="list_est") {
 	$oFormP->setFormName('modifica');
 	$oFormP->setTitulo(core\strtoupper_dlb(_('período de inicio o finalización de las actividades')));
 	$oFormP->setPosiblesPeriodos($aOpciones);
-	switch ($_POST['sactividad']) {
+	switch ($Qsactividad) {
 		case 'ca':
 			$oFormP->setDesplPeriodosOpcion_sel('curso_ca');
 			break;
@@ -194,14 +131,22 @@ if ($_POST['lista']=="list_activ" || $_POST['lista']=="list_est") {
 			break;
 	}
 	$oFormP->setDesplAnysOpcion_sel(date('Y'));
-	echo $oFormP->getHtml();
 }
-?>
-<table>
-<tfoot>
-<tr>
-	<th colspan=6><input type="button" id="ok" name="ok" onclick="fnjs_buscar('#modifica');" value="<?= ucfirst(_("buscar")) ?>">
-	<input TYPE="reset" value="<?= ucfirst(_("borrar")) ?>"></th>
-</tr>
-</tfoot>
-</table>
+
+$a_campos = [
+			'tituloGros' => $tituloGros,
+			'action' => $action,
+			'oHash' => $oHash,
+			'titulo' => $titulo,
+			'n' => $n,
+			'nj' => $nj,
+			'nm' => $nm,
+			'a' => $a,
+			'sss' => $sss,
+			'nax' => $nax,
+			'oDesplCentros' => $oDesplCentros,
+			'oFormP' => $oFormP,
+			];
+
+$oView = new core\View('asistentes/controller');
+echo $oView->render('que_ctr_lista.phtml',$a_campos);

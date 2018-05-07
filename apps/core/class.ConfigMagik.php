@@ -56,7 +56,7 @@ class ConfigMagik{
 			}else{
 				// try to load and parse ini-file at specified path
 				$loaded = $this->load( $path);
-				if ( !$loaded) exit();
+				if ( !$loaded) die();
 			}
 		}
 	}

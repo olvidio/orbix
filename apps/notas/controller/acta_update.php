@@ -1,5 +1,5 @@
 ﻿<?php
-use notas\model as notas;
+use notas\model\entity as notas;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -10,8 +10,9 @@ use notas\model as notas;
 
 $mi_dele = core\ConfigGlobal::mi_dele();
 $mi_dele .= (core\ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
-$acta = empty($_POST['acta'])? '' : $_POST['acta'];
-$dl_acta = strtok($acta,' ');
+
+$Qacta = (string) \filter_input(INPUT_POST, 'acta');
+$dl_acta = strtok($Qacta,' ');
 
 if ($dl_acta == $mi_dele || $dl_acta == "?") {
 	$oActa = new notas\ActaDl();
@@ -23,15 +24,15 @@ if ($dl_acta == $mi_dele || $dl_acta == "?") {
 
 if (!empty($_POST['nuevo'])) { // nueva.
 	// Si se pone un acta ya existente, modificará los datos de ésta. Hay que avisar:
-	$oActa->setActa($acta);
+	$oActa->setActa($Qacta);
 	if (!empty($oActa->getF_acta())) { exit(_("Esta acta ya existe")); }
 	isset($_POST['id_asignatura']) ? $oActa->setId_asignatura($_POST['id_asignatura']) : '';
 	isset($_POST['id_activ'])? $oActa->setId_activ($_POST['id_activ']) : '';
 	// la fecha debe ir antes que el acta por si hay que inventar el acta, tener la referencia de la fecha
 	isset($_POST['f_acta'])? $oActa->setF_acta($_POST['f_acta']) : '';
 	// comprobar valor del acta
-	if (isset($acta)) {
-		$valor = trim($acta);
+	if (isset($Qacta)) {
+		$valor = trim($Qacta);
 		$reg_exp = "/^(\?|\w{1,6}\??)\s+([0-9]{0,3})\/([0-9]{2})\??$/";
 		if (preg_match ($reg_exp, $valor) == 1) {
 		} else {
@@ -49,7 +50,7 @@ if (!empty($_POST['nuevo'])) { // nueva.
 		echo _('Hay un error, no se ha guardado');
 	}
 } else { // editar.
-	$oActa->setActa($acta);
+	$oActa->setActa($Qacta);
 	$oActa->DBCarregar();
 	isset($_POST['id_asignatura'])? $oActa->setId_asignatura($_POST['id_asignatura']) : '';
 	isset($_POST['id_activ'])? $oActa->setId_activ($_POST['id_activ']) : '';
@@ -68,7 +69,7 @@ if (!empty($_POST['nuevo'])) { // nueva.
 
 //borrar todos (y despues poner los nuevos)
 $oGesActaTribunal = new notas\GestorActaTribunalDl();
-$cActaTribunal = $oGesActaTribunal->getActasTribunales(array('acta'=>$acta));
+$cActaTribunal = $oGesActaTribunal->getActasTribunales(array('acta'=>$Qacta));
 foreach ($cActaTribunal as $oActaTribunal) {
 	if ($oActaTribunal->DBEliminar() === false) {
 		echo _('Hay un error, no se ha eliminado');
@@ -81,7 +82,7 @@ if (!empty($_POST['examinadores'])) {
     foreach($examinadores as $examinador){
 		$i++;
 		$oActaTribunal = new notas\ActaTribunalDl();
-		$oActaTribunal->setActa($acta);
+		$oActaTribunal->setActa($Qacta);
 		$oActaTribunal->setExaminador($examinador);
 		$oActaTribunal->setOrden($i);
 		if ($oActaTribunal->DBGuardar() === false) {
@@ -89,16 +90,3 @@ if (!empty($_POST['examinadores'])) {
 		}
     }
 }
-
-$go_to = empty($_POST['go_to'])? "" : $_POST['go_to'];
-if (strpos($go_to,"acta_notas") !== false) {
-	// No voy a ningun sitio
-} else {
-//vuelve a la presentacion de la ficha.
-//AHORA por javascript
-//echo "gou: $go_to<br>";
-//$oPosicion = new web\Posicion();
-//$oPosicion->setId_div('ir_a');
-//echo $oPosicion->ir_a($go_to);
-}
-?>

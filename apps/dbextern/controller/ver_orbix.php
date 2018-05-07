@@ -61,7 +61,7 @@ function otro($id,$mov,$max) {
 
 if (empty($id)) {
 	$id=1;
-	$obj = 'personas\\model\\'.$obj_pau;
+	$obj = 'personas\\model\\entity\\'.$obj_pau;
 	$GesPersonas = new $obj();
 	$cPersonasOrbix = $GesPersonas->getPersonasDl(array('situacion'=>'A','_ordre'=>'apellido1,apellido2,nom'));
 	$i = 0;
@@ -69,7 +69,7 @@ if (empty($id)) {
 	foreach ($cPersonasOrbix as $oPersonaListas) {
 		$id_nom_orbix = $oPersonaListas->getId_nom();
 
-		$oGesMatch = new dbextern\model\GestorIdMatchPersona();
+		$oGesMatch = new dbextern\model\entity\GestorIdMatchPersona();
 		$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_orbix'=>$id_nom_orbix));
 		if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
 			continue;

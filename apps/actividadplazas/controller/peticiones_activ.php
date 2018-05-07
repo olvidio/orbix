@@ -1,11 +1,8 @@
 <?php
-use actividades\model as actividades;
-use personas\model as personas;
-use ubis\model as ubis;
+use actividades\model\entity as actividades;
+use personas\model\entity as personas;
+use ubis\model\entity as ubis;
 
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -14,18 +11,37 @@ use ubis\model as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$todos = empty($_POST['todos'])? '' : $_POST['todos'];
+$Qtodos = (string) \filter_input(INPUT_POST, 'todos');
 
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	$id_sel=$_POST['sel'];
-	$id_nom=strtok($_POST['sel'][0],"#");
-	$na=strtok("#"); // id_tabla
-	
-	$sactividad = empty($_POST['que'])? '' : $_POST['que'];
-	$todos = empty($todos)? 1 : $todos;
-	$oPosicion->addParametro('id_sel',$id_sel);
+$oPosicion->recordar();
+//Si vengo de actualizar borro la ultima posicion
+if (isset($_POST['stack'])) {
+	$stack2 = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+	if ($stack2 != '') {
+		$oPosicion2 = new web\Posicion();
+		if ($oPosicion2->goStack($stack2)) { // devuelve false si no puede ir
+			$Qid_sel=$oPosicion2->getParametro('id_sel');
+			$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+			$oPosicion2->olvidar($stack2);
+		}
+	}
+}
+
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	$id_nom = strtok($a_sel[0],"#");
+	$na=strtok("#");
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
-	$oPosicion->addParametro('scroll_id',$scroll_id);
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
+	if (!empty($go_to)) {
+		// add stack:
+		$stack = $oPosicion->getStack(1);
+		$go_to .= "&stack=$stack";
+	}
+	$sactividad = empty($_POST['que'])? '' : $_POST['que'];
+	$Qtodos = empty($Qtodos)? 1 : $Qtodos;
 } else { // vengo de actualizar
 	$id_nom = empty($_POST['id_nom'])? '' : $_POST['id_nom'];
 	$na = empty($_POST['na'])? '' : $_POST['na'];
@@ -41,7 +57,7 @@ $oPersona = new personas\PersonaDl($id_nom);
 $ap_nom = $oPersona->getApellidosNombre();
 
 //Miro los actuales
-$gesPlazasPeticion = new \actividadplazas\model\GestorPlazaPeticion();
+$gesPlazasPeticion = new \actividadplazas\model\entity\GestorPlazaPeticion();
 $cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom'=>$id_nom,'tipo'=>$sactividad,'_ordre'=>'orden'));
 $sid_activ = '';
 foreach ($cPlazasPeticion as $oPlazaPeticion) {
@@ -50,8 +66,8 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
 }
 
 // Posibles:
-if (!empty($todos) && $todos != 1) {
-	$grupo_estudios = $todos;
+if (!empty($Qtodos) && $Qtodos != 1) {
+	$grupo_estudios = $Qtodos;
 	$GesGrupoEst = new ubis\GestorDelegacion();
 	$cDelegaciones = $GesGrupoEst->getDelegaciones(array('grupo_estudios'=>$grupo_estudios));
 	if (count($cDelegaciones) > 1) $aOperador['dl_org'] = 'OR';
@@ -164,6 +180,9 @@ $oSelects = new web\DesplegableArray($sid_activ,$aOpciones,'actividades');
 $oSelects->setBlanco('t');
 $oSelects->setAccionConjunto('fnjs_mas_actividades(event)');
 
+// En el caso de actualizar la misma página (fnjs_actualizar) solo me quedo con la última.
+$stack = $oPosicion->getStack(0);
+
 $oHash = new web\Hash();
 $camposForm = 'actividades!actividades_mas!actividades_num';
 $oHash->setcamposForm($camposForm);
@@ -172,78 +191,21 @@ $a_camposHidden = array(
 		'id_nom' => $id_nom,
 		'na' => $na,
 		'sactividad' => $sactividad,
-		'que' => ''
+		'que' => '',
+		'stack' => $stack
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $txt_guardar=_("guardar peticiones");
 
-echo $oPosicion->mostrar_left_slide();
-?>
-<script>
-fnjs_mas_actividades=function(evt){
-	if(evt=="x") {
-		var valor=1;
-	} else {
-		var id_campo=evt.currentTarget.id;
-		var valor=$(id_campo).val();
-		evt.preventDefault();
-		evt.stopPropagation();
-	}
-	if (evt.keyCode==9 || evt.type=="change" || evt=="x") {
-		if (valor!=0) {
-			<?php
-				echo $oSelects->ListaSelectsJs();
-			?>
-		} else {
-			//ir_a('f_entrada');
-		}
-	}
-}
-fnjs_guardar=function(formulario){
-	$('#que').val('update');
-	$(formulario).attr('action',"apps/actividadplazas/controller/peticiones_activ_ajax.php");
-	fnjs_enviar_formulario(formulario);
-}
-fnjs_borrar=function(formulario){
-	$('#que').val('borrar');
-	$(formulario).attr('action',"apps/actividadplazas/controller/peticiones_activ_ajax.php");
-	$(formulario).submit(function() {
-		$.ajax({
-			data: $(this).serialize(),
-			type: 'post',
-			url: $(this).attr('action'),
-			complete: function (rta) { 
-				rta_txt=rta.responseText;
-				if (rta_txt != '' && rta_txt != '\n') {
-					alert (rta_txt);
-				}
-			},
-			success: function() { fnjs_actualizar() }
-		});
-		return false;
-	});
-	$(formulario).submit();
-	$(formulario).off();
-}
 
-fnjs_actualizar=function(){
-	$('#frm_peticiones').attr('action','apps/actividadplazas/controller/peticiones_activ.php');
-	fnjs_enviar_formulario('#frm_peticiones');
-}
+$a_campos = [
+			'oPosicion' => $oPosicion,
+			'oHash' => $oHash,
+			'oSelects' => $oSelects,
+			'ap_nom' => $ap_nom,
+			'txt_guardar' =>$txt_guardar,
+			];
 
-<?php
-echo $oSelects->ComprobarSelectJs();
-?>
-</script>
-<h3><?= $ap_nom ?></h3>
-<form id=frm_peticiones  name=frm_peticiones action='' method="post" >
-<?= $oHash->getCamposHtml(); ?>
-<table>
-	<tr>
-	<td class=etiqueta width="30%"><?php echo _("actividades"); ?>:</td>	
-	<td id="col_actividades"> <?= $oSelects->ListaSelects(); ?></td></tr>
-</table>
-	<input type=button onclick="fnjs_guardar(this.form);" value="<?= $txt_guardar ?>">
-	<input type=button onclick="fnjs_borrar(this.form);" value="<?= _("borrar") ?>">
-</form>
+$oView = new core\View('actividadplazas/controller');
+echo $oView->render('peticiones_activ.phtml',$a_campos);

@@ -1,6 +1,6 @@
 <?php
 namespace menus\controller;
-use menus\model as menus;
+use menus\model\entity as menus;
 use core;
 use web;
 // INICIO Cabecera global de URL de controlador *********************************
@@ -35,7 +35,7 @@ $h2 = $oHash2->linkSinVal();
 fnjs_lista_menus=function(id_ubi){
 	var filtro_grupo=$('#filtro_grupo').val();
 	var url='<?= $url ?>';
-	var parametros='filtro_grupo='+filtro_grupo+'<?= $h1 ?>&PHPSESSID=<?php echo session_id(); ?>';
+	var parametros='filtro_grupo='+filtro_grupo+'<?= $h1 ?>&PHPSESSID=<?= session_id(); ?>';
 	$.ajax({
 		data: parametros,
 		url: url,
@@ -51,7 +51,7 @@ fnjs_lista_menus=function(id_ubi){
 fnjs_ver_ficha=function(id_menu){
 	var filtro_grupo=$('#filtro_grupo').val();
 	var url='<?= $url ?>';
-	var parametros='id_menu='+id_menu+'&filtro_grupo='+filtro_grupo+'<?= $h2 ?>&PHPSESSID=<?php echo session_id(); ?>';
+	var parametros='id_menu='+id_menu+'&filtro_grupo='+filtro_grupo+'<?= $h2 ?>&PHPSESSID=<?= session_id(); ?>';
 	$.ajax({
 		data: parametros,
 		url: url,
@@ -66,7 +66,7 @@ fnjs_ver_ficha=function(id_menu){
 </script>
 <table><tr>
 <th class=titulo_inv colspan=3><?= _("grupo") ?>:&nbsp;&nbsp;&nbsp;
-	<?php echo $oDespl->desplegable(); ?>
+	<?= $oDespl->desplegable(); ?>
 </th>
 </tr>
 </table>

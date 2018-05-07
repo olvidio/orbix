@@ -1,7 +1,7 @@
 <?php
 namespace notas\model;
 use core;
-use asignaturas\model as asignaturas;
+use asignaturas\model\entity as asignaturas;
 
 /**
  * Classe que implementa l'entitat e_notas_situacion

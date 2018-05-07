@@ -1,7 +1,4 @@
 <?php
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -24,5 +21,5 @@ Plural de Nom de la Clase: <input type="text" name="clase_plural" value=""><br>
 app: <input type="text" name="grupo" value="personas"> (actividades,personas,ubis)<br>
 Nom de la Aplicacion: <input type="text" name="aplicacion" value="delegación"> (registro,...)<br>
 <br>
-<input TYPE="button" VALUE="<?php echo ucfirst(_("guardar cambios")); ?>"  onclick="fnjs_enviar_formulario(this.form)">
+<input TYPE="button" VALUE="<?= ucfirst(_("guardar cambios")); ?>"  onclick="fnjs_enviar_formulario(this.form)">
 </form>

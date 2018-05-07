@@ -1,9 +1,6 @@
 <?php
 namespace core;
 use web;
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -12,168 +9,126 @@ use web;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-if (empty($_POST['datos_buscar'])) $_POST['datos_buscar']="";
-if (empty($_POST['aSerieBuscar'])) $_POST['aSerieBuscar']="";
-if (empty($_POST['k_buscar'])) $_POST['k_buscar']="";
-if (empty($ficha)) $ficha="main";
-if (empty($eliminar_txt)) $eliminar_txt="";
-/***************  datos  **********************************/
-$padre='datos_sql'; // para indicarle al $dir_datos lo que quiero.
-
-$_POST['datos_tabla'] = urldecode($_POST['datos_tabla']);
-$_POST['datos_buscar'] = urldecode($_POST['datos_buscar']);
-$_POST['aSerieBuscar'] = urldecode($_POST['aSerieBuscar']);
-$_POST['k_buscar'] = urldecode($_POST['k_buscar']);
-include(ConfigGlobal::$directorio.'/'.$_POST['datos_tabla']);
-// En el caso de aop, la base de datos és distinta. Debo incluir en $_POST['datos_tabla'] la conexión:: $oDB;
-/*************** fin datos  **********************************/
-$a_dataUrl = array('datos_tabla'=>$_POST['datos_tabla'],'datos_buscar'=>$_POST['datos_buscar'],'aSerieBuscar'=>$_POST['aSerieBuscar'],'k_buscar'=>$_POST['k_buscar']);
-$go_to=web\Hash::link(ConfigGlobal::getWeb()."/apps/core/mod_tabla_sql.php?".http_build_query($a_dataUrl));
-?>
-<script>
-fnjs_nuevo=function(formulario){
-	$('#mod').val("nuevo");
-	$(formulario).attr('action',"apps/core/mod_tabla_form.php");
-  	fnjs_enviar_formulario(formulario,'#<?= $ficha ?>');
+$oPosicion->recordar();
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+// Si vengo de eliminar, hay que borrar el 'sel' que ha identificado el registro,
+//  pues ya no existe
+$Qmod = (string)  \filter_input(INPUT_POST, 'mod');
+if ($Qmod == 'eliminar' && isset($a_sel)) {
+	unset($a_sel);
 }
-fnjs_modificar=function(formulario){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-		$('#mod').val("editar");
-		$(formulario).attr('action',"apps/core/mod_tabla_form.php");
-	  	fnjs_enviar_formulario(formulario,'#<?= $ficha ?>');
-	}
-}
-fnjs_eliminar=function(formulario){
-	var err;
-	var eliminar;
-	eliminar="<?= $eliminar_txt ?>";
 
-	if (!eliminar) eliminar="<?= _("¿Está seguro que desea eliminar este registro?") ?>";
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-		if (confirm(eliminar) ) {
-			go=$('#go_to').val();
-			$('#mod').val("eliminar");
-			$(formulario).attr('action',"apps/core/mod_tabla_update.php");
-			$(formulario).submit(function() {
-				$.ajax({
-					data: $(this).serialize(),
-					url: $(this).attr('action'),
-					type: 'post',
-					complete: function (rta) {
-						rta_txt=rta.responseText;
-						if (rta_txt != "") {
-							alert(rta_txt); 
-						} else {
-							if (go) fnjs_update_div('#main',go); 
-						}
-					}
-				});
-				return false;
-			});
-			$(formulario).submit();
-			$(formulario).off();
-		}
-  	}
-}
-</script>
-<?php
-$a_botones=array( array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(\"#seleccionados\")" ) ,
-				array( 'txt' => _('eliminar'), 'click' =>"fnjs_eliminar(\"#seleccionados\")" ) 
-				);
-
-$a_cabeceras=array();
-$a_valores=array();
-$c=0;
-if (is_array($Coleccion)) { // para el caso de estar vacío
-foreach ($Coleccion as $oFila) {
-	$v=0;	
-	$pks=urlsafe_b64encode(serialize($oFila->getPrimary_key()));
-	$a_valores[$c]['sel']=$pks;
-	//$a_valores[$c]['sel']='a';
-	foreach ($oFila->getDatosCampos() as $oDatosCampo) {
-		if ($c==0) $a_cabeceras[]=ucfirst($oDatosCampo->getEtiqueta());
-		$v++;
-		$nom_camp=$oDatosCampo->getNom_camp();	
-		$valor_camp=$oFila->$nom_camp;	
-		$var_1=$oDatosCampo->getArgument();
-		$var_2=$oDatosCampo->getArgument2();
-		switch($oDatosCampo->getTipo()) {
-			case "array":
-				$alista=$oDatosCampo->getLista();
-				$a_valores[$c][$v]=$alista[$valor_camp];
-				break;
-			case 'depende':
-			case 'opciones':
-				$oRelacionado = new $var_1($valor_camp);
-				$var=$oRelacionado->$var_2;
-				if (empty($var)) $var=$valor_camp;
-				$a_valores[$c][$v]=$var;	
-				break;
-			case "check":
-				if ($valor_camp=="t") { $a_valores[$c][$v]= _("si"); } else { $a_valores[$c][$v] = _("no"); }
-				break;
-			default:
-				$a_valores[$c][$v]=$valor_camp;
+//Si vengo por medio de Posicion, borro la última
+$Qid_sel = empty($_POST['id_sel'])? '' : $_POST['id_sel'];
+$Qscroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+if (isset($_POST['stack'])) {
+	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+	if ($stack != '') {
+		// No me sirve el de global_object, sino el de la session
+		$oPosicion2 = new web\Posicion();
+		if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+			$Qid_sel=$oPosicion2->getParametro('id_sel');
+			$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+			$oPosicion2->olvidar($stack);
 		}
 	}
-	$c++;
-}
+} elseif (!empty($a_sel)) { //vengo de un checkbox
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$oPosicion->addParametro('id_sel',$a_sel,1);
+	$Qscroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$Qscroll_id,1);
 }
 
-$oHash = new web\Hash();
-$oHash->setcamposForm('k_buscar');
-$a_camposHidden = array(
-		'datos_tabla' => $_POST['datos_tabla'],
-		'datos_buscar' => $_POST['datos_buscar'],
-		'aSerieBuscar' => $_POST['aSerieBuscar']
-		);
-$oHash->setArraycamposHidden($a_camposHidden);
+$Qclase_info = (string) \filter_input(INPUT_POST, 'clase_info');
+$Qdatos_buscar = (string) \filter_input(INPUT_POST, 'datos_buscar');
+$QaSerieBuscar = (string) \filter_input(INPUT_POST, 'aSerieBuscar');
+$Qk_buscar = (string) \filter_input(INPUT_POST, 'k_buscar');
+$Qpermiso = (integer) \filter_input(INPUT_POST, 'permiso');
+if (empty($Qpermiso)) $Qpermiso=3;
+	
+$Qclase_info = urldecode($Qclase_info);
+$Qdatos_buscar = urldecode($Qdatos_buscar);
+$QaSerieBuscar = urldecode($QaSerieBuscar);
+$Qk_buscar = urldecode($Qk_buscar);
 
-$oHash1 = new web\Hash();
-$oHash1->setcamposForm('sel');
-$oHash1->setCamposNo('mod!sel!scroll_id');
-$a_camposHidden1 = array(
-		'datos_tabla' => $_POST['datos_tabla'],
-		'datos_buscar' => $_POST['datos_buscar'],
-		'aSerieBuscar' => $_POST['aSerieBuscar'],
-		'k_buscar' => $_POST['k_buscar'],
-		'go_to' => $go_to
+// Tiene que ser en dos pasos.
+$obj = $Qclase_info;
+$oInfoClase = new $obj();
+
+$oDatosTabla = new DatosTabla();
+$oDatosTabla->setExplicacion_txt($oInfoClase->getTxtExplicacion());
+$oDatosTabla->setEliminar_txt($oInfoClase->getTxtEliminar());
+if (!empty($Qk_buscar)) {
+	$oInfoClase->setK_buscar($Qk_buscar);
+}
+$oDatosTabla->setColeccion($oInfoClase->getColeccion());
+$oDatosTabla->setId_sel($Qid_sel);
+$oDatosTabla->setScroll_id($Qscroll_id);
+
+$oHashBuscar = new web\Hash();
+$oHashBuscar->setcamposForm('k_buscar');
+$a_camposHiddenBuscar = array(
+		'clase_info' => $Qclase_info,
+		'datos_buscar' => $Qdatos_buscar,
+		'aSerieBuscar' => $QaSerieBuscar
 		);
-$oHash1->setArraycamposHidden($a_camposHidden1);
-/* ---------------------------------- html --------------------------------------- */
-if (!empty($_POST['datos_buscar'])) {
-	include(ConfigGlobal::$directorio.'/'.$_POST['datos_buscar']);
-} else { ?>
-<form id="frm_buscar" name="frm_buscar" action="<?= ConfigGlobal::getWeb() ?>/apps/core/mod_tabla_sql.php" method="post" onkeypress="fnjs_enviar(event,this);" >
-<?= $oHash->getCamposHtml(); ?>
-<table>
-<thead>
-<th class=titulo_inv colspan=4><?= ucfirst($tit_buscar) ?>
-&nbsp;&nbsp;&nbsp;<input class=contenido id="frm_buscar_nom" name="k_buscar" size="25" value="<?= $_POST['k_buscar'] ?>"></th>
-<th colspan=4><input type="button" id="ok" name="ok" onclick="fnjs_enviar_formulario(this.form);" value="<?php echo ucfirst(_("buscar")); ?>" class="btn_ok"></th>
-</thead>
-</table>
-</form>
-<?php } ?>
-<h3 class=subtitulo><?= ucfirst($tit_txt) ?></h3>
-<form id='seleccionados' name='seleccionados' action='' method='post'>
-<?= $oHash1->getCamposHtml(); ?>
-<input type="hidden" id="mod" name="mod" value="" >
-<?php
+$oHashBuscar->setArraycamposHidden($a_camposHiddenBuscar);
+
+$oHashSelect = new web\Hash();
+$oHashSelect->setcamposForm('sel');
+$oHashSelect->setCamposNo('mod!sel!scroll_id');
+$a_camposHiddenSelect = array(
+		'clase_info' => $Qclase_info,
+		'datos_buscar' => $Qdatos_buscar,
+		'aSerieBuscar' => $QaSerieBuscar,
+		'k_buscar' => $Qk_buscar,
+		);
+$oHashSelect->setArraycamposHidden($a_camposHiddenSelect);
+
+$html = '';
+$html .= '<script>';
+$html .= $oDatosTabla->getScript();
+$html .= '</script>';
+
+if (!empty($Qdatos_buscar)) {
+	include(ConfigGlobal::$directorio.'/'.$Qdatos_buscar);
+} 
+$html .= "<form id=\"frm_buscar\" name=\"frm_buscar\" action=\"".ConfigGlobal::getWeb()."/apps/core/mod_tabla_sql.php\" method=\"post\" onkeypress=\"fnjs_enviar(event,this);\" >";
+$html .= $oHashBuscar->getCamposHtml();
+$html .= "<table>";
+$html .= "<thead>";
+$html .= "<th class=titulo_inv colspan=4>".$oInfoClase->getTxtBuscar();
+$html .= "&nbsp;&nbsp;&nbsp;<input class=contenido id=\"frm_buscar_nom\" name=\"k_buscar\" size=\"25\" value=\"$Qk_buscar\"></th>";
+$html .= "<th colspan=4><input type=\"button\" id=\"ok\" name=\"ok\" onclick=\"fnjs_enviar_formulario(this.form);\" value=\"".ucfirst(_("buscar"))."\" class=\"btn_ok\"></th>";
+$html .= "</thead>";
+$html .= "</table>";
+$html .= "</form>";
+
+$html .= "<h3 class=subtitulo>".$oInfoClase->getTxtTitulo()."</h3>";
+$html .= "<form id='seleccionados' id='seleccionados' name='seleccionados' action='' method='post'>";
+$html .= $oHashSelect->getCamposHtml();
+$html .= "<input type='hidden' id='mod' name='mod' value=''>";
+
 $oTabla = new web\Lista();
-// para el id_tabla, convierto los posibles '/' en '_' i tambien quito '.php'
-$id_tabla = str_replace('/','_',$_POST['datos_tabla']); 
+// para el id_tabla, convierto los posibles '/' y '\' en '_' i tambien quito '.php'
+//$oTabla->setId_tabla('datos_sql'.  $this->id_dossier);
+$id_tabla = str_replace('/','_',$Qclase_info); 
+$id_tabla = str_replace('\\','_',$Qclase_info); 
 $id_tabla = str_replace('.php','',$id_tabla); 
 $id_tabla = 'mod_tabla_sql_'.$id_tabla;
 $oTabla->setId_tabla($id_tabla);
-$oTabla->setCabeceras($a_cabeceras);
-$oTabla->setBotones($a_botones);
-$oTabla->setDatos($a_valores);
-echo $oTabla->mostrar_tabla();
-// ---------- BOTON DE NUEVO ----------
-?>
-<br><table cellspacing=3  class=botones><tr class=botones>
-<td class=botones><input name="btn_new" type="button" value="<?= _("nuevo") ?>" onclick="fnjs_nuevo('#seleccionados');"></td>
-</tr></table>
+$oTabla->setCabeceras($oDatosTabla->getCabeceras());
+$oTabla->setBotones($oDatosTabla->getBotones());
+$oTabla->setDatos($oDatosTabla->getValores());
+		
+$html .= $oTabla->mostrar_tabla();
+
+if ($Qpermiso == 3) {
+	$html .= "<br><table cellspacing=3  class=botones><tr class=botones>
+		<td class=botones><input name=\"btn_new\" type=\"button\" value=\"";
+	$html .= _("nuevo");
+	$html .= "\" onclick=\"fnjs_nuevo('#seleccionados');\"></td></tr></table>";
+}
+
+echo $oPosicion->mostrar_left_slide(1);
+echo $html;

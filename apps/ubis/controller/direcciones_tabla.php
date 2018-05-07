@@ -1,7 +1,4 @@
 <?php
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -11,7 +8,7 @@
 // FIN de  Cabecera global de URL de controlador ********************************
 
 	
-$obj = 'ubis\\model\\Gestor'.$_POST['obj_dir'];
+$obj = 'ubis\\model\\entity\\Gestor'.$_POST['obj_dir'];
 $oGesDir = new $obj();
 
 /*miro las condiciones. las variables son: centro,ciudad */
@@ -61,7 +58,7 @@ foreach ($cDirecciones as $oDireccion) {
  
 $pagina=web\Hash::link('apps/ubis/controller/direcciones_editar.php?'.http_build_query(array('mod'=>'nuevo','id_ubi'=>$_POST['id_ubi'],'obj_dir'=>$_POST['obj_dir'])));
 ?>
-<h2 class=titulo><?php echo ucfirst(_("tabla de direcciones")); ?></h2>
+<h2 class=titulo><?= ucfirst(_("tabla de direcciones")); ?></h2>
 <?php
 $oTabla = new web\Lista();
 $oTabla->setId_tabla('direcciones_tabla');

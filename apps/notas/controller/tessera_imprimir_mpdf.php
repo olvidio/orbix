@@ -1,7 +1,7 @@
 <?php
-use asignaturas\model as asignaturas;
-use notas\model as notas;
-use personas\model as personas;
+use asignaturas\model\entity as asignaturas;
+use notas\model\entity as notas;
+use personas\model\entity as personas;
 /**
 * Esta página sirve para la tessera de una persona.
 *
@@ -32,7 +32,7 @@ use personas\model as personas;
 
 $oPersona = personas\Persona::NewPersona($id_nom);
 if (!is_object($oPersona)) {
-	$msg_err = "<br>$oPersona con id_nom: $id_nom";
+	$msg_err = "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 	exit($msg_err);
 }
 $nom_vernacula = $oPersona->getNom();
@@ -69,7 +69,7 @@ function titulo($id_asignatura){
 			?> 
 			<tr><td class="space"></td></tr>
 			<tr><td></td><td colspan="7" class="curso">CURSUS INSTITUTIONALES FILOSOFI&#198;</td></tr>
-			<?php echo $cabecera; ?>
+			<?= $cabecera; ?>
 			<tr><td class="space"></td></tr>
 			<tr><td></td><td colspan="7" class="any">ANNUS I</td></tr>
 			<tr><td class="space"></td></tr>
@@ -86,7 +86,7 @@ function titulo($id_asignatura){
 			?> 
 			<tr><td class="space"></td></tr>
 			<tr><td></td><td colspan="7" class="curso">CURSUS INSTITUTIONALES S THEOLOGI&#198;</td></tr>
-			<?php echo $cabecera; ?>
+			<?= $cabecera; ?>
 			<tr><td class="space"></td></tr>
 			<tr><td></td><td colspan="7" class="any">ANNUS I</td></tr>
 			<tr><td class="space"></td></tr>
@@ -106,7 +106,7 @@ function titulo($id_asignatura){
 			<col style="width: 1%">
 			<col style="width: 10%">
 			<col style="width: 1%">
-		 	<?php echo $cabecera; ?>
+		 	<?= $cabecera; ?>
 			<tr><td class="space"></td></tr>
 		<?php
 		break;
@@ -223,7 +223,7 @@ while ( $a < count($cAsignaturas)) {
 		?>
 		<tr>
 		<td></td>    
-		<td><?php echo $nombre_asig;?>&nbsp;</td>
+		<td><?= $nombre_asig;?>&nbsp;</td>
 		<td class="dato">&nbsp;</td>
 		<td>&nbsp;</td>
 		<td class="dato">&nbsp;</td>
@@ -244,12 +244,12 @@ while ( $a < count($cAsignaturas)) {
 			?>
 			<tr>
 			<td></td>
-			<td class="opcional"><?php echo $algo;?>&nbsp;</td>
-			<td class="dato opcional"><?php echo $row["nota"];?>&nbsp;</td>
+			<td class="opcional"><?= $algo;?>&nbsp;</td>
+			<td class="dato opcional"><?= $row["nota"];?>&nbsp;</td>
 			<td>&nbsp;</td>
-			<td class="dato opcional"><?php echo $row["fecha"];?>&nbsp;</td>
+			<td class="dato opcional"><?= $row["fecha"];?>&nbsp;</td>
 			<td>&nbsp;</td>
-			<td class="dato opcional"><?php echo $row["acta"];?>&nbsp;</td><td></td></tr>
+			<td class="dato opcional"><?= $row["acta"];?>&nbsp;</td><td></td></tr>
 			<tr><td class="space"></td></tr>
 			<?php 
 		} else {
@@ -258,11 +258,11 @@ while ( $a < count($cAsignaturas)) {
 			<tr>
 			<td></td>
 			<td><?= $nombre_asig; ?>&nbsp;</td>
-			<td class="dato"><?php echo $row["nota"];?>&nbsp;</td>
+			<td class="dato"><?= $row["nota"];?>&nbsp;</td>
 			<td>&nbsp;</td>
-			<td class="dato"><?php echo $row["fecha"];?>&nbsp;</td>
+			<td class="dato"><?= $row["fecha"];?>&nbsp;</td>
 			<td>&nbsp;</td>
-			<td class="dato"><?php echo $row["acta"];?>&nbsp;</td><td></td></tr>
+			<td class="dato"><?= $row["acta"];?>&nbsp;</td><td></td></tr>
 			<?php 
 		}
 		$num_asig ++;

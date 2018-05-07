@@ -1,6 +1,6 @@
 <?php
 namespace core;
-use usuarios\model as usuarios;
+use usuarios\model\entity as usuarios;
 if (empty($estilo_color)) {
 	// INICIO Cabecera global de URL de controlador *********************************
 		require_once ("apps/core/global_header.inc");

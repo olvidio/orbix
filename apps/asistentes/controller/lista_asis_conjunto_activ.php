@@ -1,9 +1,8 @@
 <?php 
-use actividades\model as actividades;
-use actividadcargos\model as actividadcargos;
-use asistentes\model as asistentes;
-use personas\model as personas;
-use ubis\model as ubis;
+use actividades\model\entity as actividades;
+use actividadcargos\model\entity as actividadcargos;
+use personas\model\entity as personas;
+use ubis\model\entity as ubis;
 
 /**
 * Lista los asistentes de una relación de actividades seleccionada

@@ -1,8 +1,8 @@
 <?php
 use core\ConfigGlobal;
-use dbextern\model\GestorIdMatchPersona;
-use dbextern\model\GestorPersonaListas;
-use dbextern\model\PersonaListas;
+use dbextern\model\entity\GestorIdMatchPersona;
+use dbextern\model\entity\GestorPersonaListas;
+use dbextern\model\entity\PersonaListas;
 use dbextern\model\SincroDB;
 use web\Hash;
 
@@ -49,7 +49,7 @@ if (empty($id_tipo)) {
 }
 
 //Orbix
-$obj = 'personas\\model\\'.$obj_pau;
+$obj = 'personas\\model\\entity\\'.$obj_pau;
 $GesPersonas = new $obj();
 
 //listas
@@ -173,7 +173,7 @@ $explicacion_txt .= _("Al efectuar alguna acción dentro de las listas, las pers
 <script>
 fnjs_sincronizar=function(){
 	var url='<?= $url_sincro_ajax ?>';
-	var parametros='que=syncro&dl=<?= $dl ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>&PHPSESSID=<?php echo session_id(); ?>';
+	var parametros='que=syncro&dl=<?= $dl ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>&PHPSESSID=<?= session_id(); ?>';
 			 
 	$.ajax({
 		url: url,

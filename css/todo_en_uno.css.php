@@ -177,6 +177,16 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 }
 
 /*  ################      PANTALLA    #################### */
+/* Planos del z-index (sólo afecta a los que engan posicion)
+* - Algo de la slickgrid está en 100 =>
+div.A4 z-index:15;
+#submenu z-index: 95;
+.help-tip z-index: 100;
+#overlay z-index: 150;
+div.ventana z-index: 160;
+#logout z-index: 22000;
+**/
+
 @media screen {
 	.d_visible { visibility : visible; }
 	.d_novisible { visibility : hidden; }
@@ -199,20 +209,20 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
   		*/
 		text-align: center;
 		/* background-color: #BCDBEA; */
-		background-color : <?php echo $fondo_claro; ?>;
+		background-color : <?= $fondo_claro; ?>;
 		border-radius: 50%;
 		width: 24px;
 		height: 24px;
 		font-size: 14px;
 		line-height: 26px;
 		cursor: default;
-		z-index: 10;
+		z-index: 100;
 	}
 
 	.help-tip:before{
 		content:'?';
 		font-weight: bold;
-		color:<?php echo $letras; ?>;
+		color:<?= $letras; ?>;
 	}
 
 	.help-tip:hover p{
@@ -279,25 +289,25 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 
 	/* tonos de color */
 	.tono1 {
-		background-color : <?php echo $tono1; ?> !important;
+		background-color : <?= $tono1; ?> !important;
 	}
 	.tono2 {
-		background-color : <?php echo $tono2; ?> !important;
+		background-color : <?= $tono2; ?> !important;
 	}
 	.tono3 {
-		background-color : <?php echo $tono3; ?> !important;
+		background-color : <?= $tono3; ?> !important;
 	}
 	.tono4 {
-		background-color : <?php echo $tono4; ?> !important;
+		background-color : <?= $tono4; ?> !important;
 	}
 	.tono5 {
-		background-color : <?php echo $tono5; ?> !important;
+		background-color : <?= $tono5; ?> !important;
 	}
 	.tono6 {
-		background-color : <?php echo $tono6; ?> !important;
+		background-color : <?= $tono6; ?> !important;
 	}
 	.tono7 {
-		background-color : <?php echo $tono7; ?> !important;
+		background-color : <?= $tono7; ?> !important;
 	}
 	/* plazas */
 	/* pedida */
@@ -326,33 +336,37 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 		cursor: pointer;
 		z-index: 22000;
 		<?php if (ConfigGlobal::$ubicacion == 'int') { ?>
-			top:5;
-			right:9;
-			color : <?php echo $letras_hover; ?>;
+			top:5px;
+			right:9px;
+			color : <?= $letras_hover; ?>;
 		<?php } else { ?>
-			top:14;
-			right:14;
-			color : <?php echo $fondo_claro; ?>;
+			top:14px;
+			right:14px;
+			color : <?= $fondo_claro; ?>;
 		<?php } ?>
 	}
 	/* ventanas pop up */
-	div.sombra {
-		background: #000000;
-		position: absolute;
-		left: 0; top: 0;
+	#overlay {
+		position: fixed;
+		display: none;
 		width: 100%;
 		height: 100%;
-		z-index: 1001;
-		opacity: .75; /* opacidad para Firefox */
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: rgba(0,0,0,0.7);
+		z-index: 150;
+		cursor: pointer;
 	}
 	div.ventana {
 		background: #FFFFFF;
 		position: absolute;
 		overflow: auto;
-		z-index:1002;
-		padding: 25;
-		left: 200;  top: 200; /* la posición de la ventana modal */
-		width: 800; height: 300; /* el tamaño de la ventana modal */
+		z-index: 160; /* algo de la slickgrigd está en 90 */
+		padding: 25px;
+		left: 100px;  top: 200px; /* la posición de la ventana modal */
+		width: 800px; height: 300px; /* el tamaño de la ventana modal */
 		/* cualquier otra propeidad, colores, márgenes, fondo */
 	}
 	/* ## INCORPORACIONES ## */
@@ -375,13 +389,13 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	 }
 
 	body.otro  {
-		background-color : <?php echo $fondo_claro; ?>;
+		background-color : <?= $fondo_claro; ?>;
 	 }
 
 	.vertical{
 		writing-mode:sideways-lr;
 		vertical-align: bottom;
-		bottom: 0;
+		bottom: 0px;
 	}
 	th.vertical2 {
 		 vertical-align:bottom;
@@ -390,27 +404,30 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	 /* link al ponerse encima*/
 	td.link:hover  {
 		text-decoration : none;
-		color : <?php echo $letras_hover; ?>;
+		color : <?= $letras_hover; ?>;
 		cursor: pointer;
+	}
+	.alert  {
+		color : red;
 	}
 	span.link:hover  {
 		text-decoration : none;
-		color : <?php echo $letras_hover; ?>;
+		color : <?= $letras_hover; ?>;
 		cursor: pointer;
 	 }
 	.link:hover  {
 		text-decoration : none;
-		color : <?php echo $letras_hover; ?>;
+		color : <?= $letras_hover; ?>;
 		cursor: pointer;
 	 }
 	.link  {
 		text-decoration : none;
-		color : <?php echo $letras_link; ?>;
+		color : <?= $letras_link; ?>;
 		cursor: pointer;
 	 }
 	.link_inv  {
 		text-decoration : none;
-		color :  <?php echo $fondo_claro; ?>;
+		color :  <?= $fondo_claro; ?>;
 		cursor: pointer;
 	}
 	.tachado {
@@ -430,25 +447,25 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	   font-size : 14pt;
 	   text-align : left;
 	   font-weight : bold;
-	   color : <?php echo $fondo_oscuro; ?>;
+	   color : <?= $fondo_oscuro; ?>;
 	}
 	.titulo_inv  {
 	   font-family : Arial;
 	   font-size : 14pt;
 	   text-align : left;
 	   font-weight : bold;
-	   color : <?php echo $fondo_claro; ?>;
+	   color : <?= $fondo_claro; ?>;
 	}
 	.subtitulo {
 		font-family : Arial;
 		font-size : 10pt;
-		color: <?php echo $fondo_oscuro; ?>;
+		color: <?= $fondo_oscuro; ?>;
 		font-weight : bold;
 	}
 	.etiqueta  {
 		font-family : Arial;
 		font-size : 10pt;
-		color : <?php echo $letras;?>;
+		color : <?= $letras;?>;
 		text-align: left;
 	}
 	.alerta  {
@@ -459,13 +476,13 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	.gris  {
 		font-family : Arial;
 		font-size : 10pt;
-		background-color : <?php echo $gris_claro; ?>;
+		background-color : <?= $gris_claro; ?>;
 	}
 	.contenido  {
 		font-family : Arial;
 		font-size : 10pt;
 		font-weight : bold;		
-		color : <?php echo $letras;?>;
+		color : <?= $letras;?>;
 	}
 	.contenido_especial  {
       	font-family : Arial;
@@ -475,27 +492,31 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 		font-family : Arial;
 		font-size : 10pt;
 		font-weight : bold;
-		color : <?php echo $letras;?>;
+		color : <?= $letras;?>;
 	}
 	.fecha_hora {
 		font-family : Arial;
 		font-size : 10pt;
 		font-weight : bold;
-		color : <?php echo $letras;?>;
+		color : <?= $letras;?>;
 	}
 	.slick-cell  {
 		font-family : Arial;
 		font-size : 10pt;
-		color : <?php echo $letras;?>;
+		color : <?= $letras;?>;
 		text-align: left;
 	}
 	/* ### menu ### */
 	#menu li {
 		font-size : 11pt;
 	}
+	#submenu {
+		position: relative;
+		z-index: 95;
+	}
 	A:hover  {
 		text-decoration : none;
-		color : <?php echo $letras_hover; ?>;
+		color : <?= $letras_hover; ?>;
 	 }
 	A  {
 		text-decoration : none;
@@ -503,19 +524,19 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	 }
 	A.cabecera  {
 		text-decoration : none;
-		color : <?php echo $fondo_claro; ?>;
+		color : <?= $fondo_claro; ?>;
 	 }
 
 	A.tab  {
 		text-decoration : none;
-		color : <?php echo $fondo_claro;?>;
+		color : <?= $fondo_claro;?>;
 	}
 	table  {
 		width : 900px;
 		left : 0px;
 		top : 0px;
-		border-color : <?php echo $lineas; ?>;
-		background : <?php echo $fondo_claro; ?>;
+		border-color : <?= $lineas; ?>;
+		background : <?= $fondo_claro; ?>;
 		empty-cells: show;
 	 }
 	table.semi  {
@@ -528,8 +549,8 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	table.botones  {
 		left : 0px;
 		top : 0px;
-		border-color : <?php echo $lineas; ?>;
-		background-color : <?php echo $lineas; ?>;
+		border-color : <?= $lineas; ?>;
+		background-color : <?= $lineas; ?>;
 	 }
 	table.ca_posibles  {
 		border-color: black;
@@ -537,16 +558,16 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 		border-width: thin;
 		left : 0px;
 		top : 0px;
-		background : <?php echo $fondo_claro; ?>;
+		background : <?= $fondo_claro; ?>;
 	}
 	th.ca_posibles  {
 		color : black;
 		font-weight : bold;
-		background : <?php echo $fondo_claro; ?>;
+		background : <?= $fondo_claro; ?>;
 	}
 	th.centrado  {
 		color : black;
-		background : <?php echo $fondo_claro; ?>;
+		background : <?= $fondo_claro; ?>;
 		font-weight : bold;
 		border-color: black;
 		border-style: solid;
@@ -566,38 +587,38 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	th  {
 		font-family : Arial;
 		font-size : 10pt;
-		color : <?php echo $fondo_claro; ?>;
+		color : <?= $fondo_claro; ?>;
 		font-weight : bold;
-		background : <?php echo $fondo_oscuro; ?>;
+		background : <?= $fondo_oscuro; ?>;
 	}
 	tr:hover  {
-	   background-color : <?php echo $lineas; ?>;
+	   background-color : <?= $lineas; ?>;
 	}
 	tr.impar  {
-	   background-color : <?php echo $fondo_uno; ?>;
+	   background-color : <?= $fondo_uno; ?>;
 	}
 	tr.imp  {
-	   background-color : <?php echo $fondo_uno; ?>;
+	   background-color : <?= $fondo_uno; ?>;
 	}
 	tr.par  {
-	   background-color : <?php echo $fondo_dos; ?>;
+	   background-color : <?= $fondo_dos; ?>;
 	} 
 	tr.sf  {
-	   background-color : <?php echo $fondo_tres; ?>;
+	   background-color : <?= $fondo_tres; ?>;
 	} 
 	tr.botones  {
 	   text-align : center;
-	   background-color : <?php echo $fondo_uno; ?>;
+	   background-color : <?= $fondo_uno; ?>;
 	}
 	tr.tab  {
-	   height : 15;
+	   height : 15px;
 	   font-weight : bold;
 	   font-family : Arial;
 	   font-size : 12pt;
-	   background : <?php echo $fondo_oscuro;?>;
+	   background : <?= $fondo_oscuro;?>;
 	}
 	tr.tab td {
-		color : <?php echo $fondo_claro; ?>;
+		color : <?= $fondo_claro; ?>;
 		cursor: pointer;
 	}
 	tr.delgada {
@@ -613,8 +634,8 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	td  {
 		font-family : Arial;
 		font-size : 10pt;
-		color : <?php echo $letras;	?>;
-		height : 15;
+		color : <?= $letras;	?>;
+		height : 15px;
 		vertical-align: top;
 	}
 	td.line-top  {
@@ -624,22 +645,22 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	td.botones  {
 		font-family : Arial;
 		font-size : 10pt;
-		color : <?php echo $fondo_claro; ?>;
-		background-color : <?php echo $fondo_oscuro;?>;
-		height : 15;
+		color : <?= $fondo_claro; ?>;
+		background-color : <?= $fondo_oscuro;?>;
+		height : 15px;
 	}
 	td.inactivo  {
 		font-family : Arial;
 		font-size : 10pt;
-		color : <?php echo $letras; ?>;
-		height : 15;
-		background : <?php echo $fondo_uno; ?>;
+		color : <?= $letras; ?>;
+		height : 15px;
+		background : <?= $fondo_uno; ?>;
 	}
 	/* ## listas ## */
 	div.lista {
 		font-family : Arial;
 		font-size : 9pt;
-		color : <?php echo $letras;?>;
+		color : <?= $letras;?>;
 	}
 	div.lista *.etiqueta {
 		font-size : 12pt;
@@ -666,7 +687,7 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	}
 	div.left-slide {
 		display: none;
-		line-height: 1;
+		line-height: 1px;
 		position: fixed;
 		height: 286px;
 		top: 200px;
@@ -681,7 +702,7 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 		width: 0px;
 		height: 0px;
 		border-style: solid;
-		border-width: 80px 35px 80px 0;
+		border-width: 80px 35px 80px 0px;
 		border-color: transparent <?= $medio ?> transparent transparent;
 
 		opacity: .75; /* opacidad para Firefox */

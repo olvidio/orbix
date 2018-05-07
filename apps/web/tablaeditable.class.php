@@ -1,6 +1,6 @@
 <?php
 namespace web;
-use usuarios\model as usuarios;
+use usuarios\model\entity as usuarios;
 use core;
 /**
  * TablaEditable
@@ -178,7 +178,8 @@ class TablaEditable {
 		$a_cabeceras = $this->aCabeceras;
 		$a_valores = $this->aDatos;
 		$id_tabla = $this->sid_tabla;
-		$grid_width = '900px';
+		$grid_width = '900';
+		$heigth_width = '400';
 
 		$sortcol=$this->ssortCol;
 		$botones="";
@@ -222,8 +223,11 @@ class TablaEditable {
 					$aColsWidth = $aPrefs['colWidths'];
 				}
 				// Anchura del grid
-				$grid_width = (!empty($aPrefs['widthGrid']))? $aPrefs['widthGrid'] : '900px';
-				break; // sale dell bucle.
+				$grid_width = (!empty($aPrefs['widthGrid']))? $aPrefs['widthGrid'] : '900';
+				// Altura del grid
+				$grid_height = (!empty($aPrefs['heightGrid']))? $aPrefs['heightGrid'] : '500';
+				
+				break; // sale del bucle.
 			} else { // buscar las opciones por defecto
 				continue;
 			}
@@ -346,15 +350,15 @@ class TablaEditable {
 		}
 		$sData .= ']';
 
+		
 		// calculo la altura de la tabla
-		if ($f < 12) {
-			$grid_height = ($header_num+1+$f)*25; // +2 (cabecera y última linea en blanco). 25 = rowheight
+		if (empty($grid_height) && $f < 12) {
+			$grid_height = (4+$f)*25; // +4 (cabecera y última linea en blanco). 25 = rowheight
 			// mínimo, porque sino al deplegar el cuadro de búsqueda tapa tota la información
-			$grid_height = ($grid_height < 120)? 120 : $grid_height;
+			$grid_height = ($grid_height < 200)? 200 : $grid_height;
 		} else {
-			$grid_height = 350;
+			$grid_height = empty($grid_height)? 350 : $grid_height;
 		}
-	
 
 		$tt = "<input id=\"scroll_id\" name=\"scroll_id\" value=\"$scroll_id\" type=\"hidden\">";
 			
@@ -697,12 +701,16 @@ class TablaEditable {
 		if ($bPanelVis) $tt .= "toggleFilterRow_$id_tabla();";
 		
 		$tt .= "
-			})
+			var container = $(grid_$id_tabla.getContainerNode());
+			var h_header =  $('.grid-header').height();
+			var vph = $grid_height - h_header;
+			container.height(vph); 
+			grid_$id_tabla.resizeCanvas();
+		  })
 		</script>
 		";
 
-
-		$tt.="<div id=\"GridContainer_".$id_tabla."\"  style=\"width:$grid_width;\" >
+		$tt.="<div id=\"GridContainer_".$id_tabla."\"  style=\"width:{$grid_width}px; height:{$grid_height}px;\" >
 		<div class=\"grid-header\">
 		  <span style=\"width:90%; display: inline-block;\">$botones</span>
 		  <span style=\"float:right\" class=\"ui-icon ui-icon-disk\" title=\""._('guardar selección de columnas')."\"
@@ -710,11 +718,10 @@ class TablaEditable {
 		  <span style=\"float:right\" class=\"ui-icon ui-icon-search\" title=\""._('ver/ocultar panel de busqueda')."\"
 				onclick=\"toggleFilterRow_$id_tabla()\"></span>
 		</div>
-		<div id=\"grid_$id_tabla\"  style=\"width:$grid_width; height:$grid_height\"></div>
+		<div id=\"grid_$id_tabla\"  style=\"width:{$grid_width}px;\"></div>
 		";
-		//$tt.="<div id=\"pager\" style=\"height:20px;\"></div>";
 		$tt.="</div>";
-
+		
 		$tt.="
 		<div id=\"inlineFilterPanel_".$id_tabla."\" style=\"display:none;background:#dddddd;padding:3px;color:black;\">
 		  "._('Buscar en todas las columnas')." <input type=\"text\" id=\"txtSearch_".$id_tabla."\">

@@ -1,8 +1,11 @@
 <?php
-use actividadplazas\model as actividadplazas;
 /**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
+ * Controlador para las peticiones ajax desde peticiones_activ.php
+ * 
+ * acción (que): update|borrar
+ */
+use actividadplazas\model\entity as actividadplazas;
+
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -11,26 +14,27 @@ use actividadplazas\model as actividadplazas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$id_nom = empty($_POST['id_nom'])? '' : $_POST['id_nom'];
-$sactividad = empty($_POST['sactividad'])? '' : $_POST['sactividad'];
+$Qid_nom = (integer) \filter_input(INPUT_POST, 'id_nom');
+$Qsactividad = (string) \filter_input(INPUT_POST, 'sactividad');
+$Qque = (string) \filter_input(INPUT_POST, 'que');
 
-switch ($_POST['que']) {
+switch ($Qque) {
 	case "update":
 		$i = 0;
-		foreach ($_POST['actividades'] as $id_activ) {
+		$a_actividades = (array)  \filter_input(INPUT_POST, 'actividades', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+		foreach ($a_actividades as $id_activ) {
 			$i++;
 			if (empty($id_activ)) { continue; }
-			$oPlazaPeticion = new actividadplazas\PlazaPeticion(array('id_nom'=>$id_nom, 'id_activ'=>$id_activ));
+			$oPlazaPeticion = new actividadplazas\PlazaPeticion(array('id_nom'=>$Qid_nom, 'id_activ'=>$id_activ));
 			$oPlazaPeticion->setOrden($i);
-			$oPlazaPeticion->setTipo($sactividad);
+			$oPlazaPeticion->setTipo($Qsactividad);
 			$oPlazaPeticion->DBGuardar();
 		}
-		$oPosicion->setId_div('ir_a');
-		echo $oPosicion->mostrar_left_slide();
+		echo $oPosicion->go_atras(1);
 		break;
 	case 'borrar';
 		$gesPlazasPeticion = new actividadplazas\GestorPlazaPeticion();
-		$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom'=>$id_nom, 'tipo'=>$sactividad));
+		$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom'=>$Qid_nom, 'tipo'=>$Qsactividad));
 		foreach ($cPlazasPeticion as $oPlazaPeticion) {
 			$oPlazaPeticion->DBEliminar();
 		}

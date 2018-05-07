@@ -1,0 +1,68 @@
+<script type="text/javascript" src="<?= 'apps/actividades/controller/actividades.js?'.rand(); ?>"></script>
+<script>
+fnjs_borrar=function(formulario,que_val){
+	rta=fnjs_solo_uno(formulario);
+	if (rta==1) {
+		if (confirm("<?= _("¿Esta seguro que desea borrar esta actividad?");?>") ) {
+			$('#mod').val(que_val);
+			$(formulario).attr('action',"apps/actividades/controller/actividad_update.php");
+			$(formulario).submit(function() {
+				$.ajax({
+					data: $(this).serialize(),
+					url: $(this).attr('action'),
+					type: 'post',
+					complete: function (rta) {
+						rta_txt = rta.responseText;
+						if (rta_txt != '' && rta_txt != '\n') {
+							alert (rta_txt);
+						}
+					},
+					success: function() { // tacho los marcados
+						$(formulario+' input.sel').each(function(i){
+							if($(this).prop('checked') === true){
+								$(this).parent().siblings().addClass('tachado');
+								$(this).prop('checked',false);
+							}
+						});
+				   	}
+				});
+				return false;
+			});
+			$(formulario).submit();
+			$(formulario).off();
+		}
+	}
+};
+fnjs_buscar=function(){
+	$('#modifica').attr('action','apps/actividades/controller/actividad_que.php');
+	$('#b_que').val("buscar");
+	fnjs_enviar_formulario('#modifica','#main');
+}
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<div id="condiciones" class="no_print">
+	<form id="modifica" name="modifica" action="">
+	<?= $oHash->getCamposHtml(); ?>
+	<table><tr><td class="derecha">
+		<input id="b_buscar" name="b_buscar" TYPE="button" VALUE="<?= _("realizar otra busqueda"); ?>" onclick="fnjs_buscar()" >
+	</td></tr>
+	</table>
+	</form>
+</div>
+<div id="resultados" >
+<h3><?= $resultado ?></h3>
+<form id='seleccionados' name='seleccionados' action='' method='post'>
+	<?= $oHashSel->getCamposHtml(); ?>
+	<input type='hidden' id='queSel' name='queSel' value='' >
+	<input type='hidden' id='id_dossier' name='id_dossier' value="">
+	<input type='hidden' id='mod' name='mod' value="<?= $mod ?>">
+<?= $oTabla->mostrar_tabla(); ?>
+</form>
+<div class="no_print">
+<?php
+if ($miRole != '9' && $miRole != '16') { //casa o centroSf
+?>
+	<br><span class=link onclick="fnjs_update_div('#main','<?= web\Hash::link('apps/actividades/controller/actividad_ver.php?'.http_build_query(array('id_tipo_activ'=>$Qid_tipo_activ))) ?>')" ><?= _("Nueva actividad") ?></span>
+<?php } ?>
+</div>
+</div>

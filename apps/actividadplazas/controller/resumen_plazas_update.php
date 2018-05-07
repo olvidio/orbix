@@ -1,9 +1,6 @@
 <?php
-use actividades\model as actividades;
-use actividadplazas\model as actividadplazas;
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
+use actividades\model\entity as actividades;
+use actividadplazas\model\entity as actividadplazas;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -23,7 +20,7 @@ switch ($que) {
 		$mi_dele = core\ConfigGlobal::mi_dele();
 		// buscar el id de la dl
 		$id_dl = 0;
-		$gesDelegacion = new ubis\model\GestorDelegacion();
+		$gesDelegacion = new ubis\model\entity\GestorDelegacion();
 		$cDelegaciones = $gesDelegacion->getDelegaciones(array('dl'=>$mi_dele));
 		if (is_array($cDelegaciones) && count($cDelegaciones)) {
 			$id_dl = $cDelegaciones[0]->getId_dl();

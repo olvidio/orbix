@@ -1,5 +1,5 @@
 ﻿<?php
-use dossiers\model as dossiers;
+use dossiers\model\entity as dossiers;
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
 */
@@ -17,9 +17,8 @@ switch ($_POST['que']) {
 		if ($oTipoDossier->DBEliminar() === false) {
 			echo _('Hay un error, no se ha eliminado');
 		}
-		$oPosicion->setId_div('ir_a');
-		echo $oPosicion->mostrar_left_slide();
-		exit;
+		echo $oPosicion->go_atras(1);
+		die();
 		break;
 	case 'guardar':
 		$oTipoDossier = new dossiers\TipoDossier($_POST['id_tipo_dossier']);

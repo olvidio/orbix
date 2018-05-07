@@ -1,8 +1,8 @@
 <?php
 namespace permisos\model;
-use actividades\model as actividades;
-use procesos\model as procesos;
-use usuarios\model as usuarios;
+use actividades\model\entity as actividades;
+use procesos\model\entity as procesos;
+use usuarios\model\entity as usuarios;
 /**
  * Classe que genera un array amb els permisos per cada usuari. Es guarda a la sesió per tenir-ho a l'abast en qualsevol moment:
  *
@@ -248,7 +248,7 @@ class PermisosActividades {
 
 	public function getPermisos($id_tipo_activ_txt='') {
 		//echo "tipo_activ: $id_tipo_activ_txt, propia: ".$this->bpropia."<br>";
-		//if ($this->btop === true) {echo "ERROR2"; exit;}
+		//if ($this->btop === true) {echo "ERROR2"; die();}
 		if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->iid_tipo_activ;
 		if ($this->bpropia === true) {
 			if (array_key_exists($id_tipo_activ_txt,$this->aPermDl)) {

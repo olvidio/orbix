@@ -1,0 +1,138 @@
+<link rel="stylesheet" type="text/css" href="<?= core\ConfigGlobal::$web_scripts.'/jquery-tokeninput/styles/token-input.css' ?>" />
+<script>
+$(function() { $( "#f_acta" ).datepicker(); });
+
+fnjs_guardar_acta=function(formulario){
+	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
+	if (rr=='ok') {
+		$(formulario).attr('action','apps/notas/controller/acta_update.php');
+	<?php if (!empty($notas)) { ?>
+		$(formulario).submit(function() {
+			$.ajax({
+				data: $(this).serialize(),
+				url: $(this).attr('action'),
+				type: 'post',
+				complete: function (rta) {
+					rta_txt=rta.responseText;
+					if (rta_txt != '' && rta_txt != '\\n') {
+						alert ('respuesta: '+rta_txt);
+					}
+				}
+			});
+			return false;
+		});
+		$(formulario).submit();
+		$(formulario).off();
+	<?php } else { ?>
+		$(formulario).submit(function() {
+			$.ajax({
+				data: $(this).serialize(),
+				url: $(this).attr('action'),
+				type: 'post',
+				complete: function (rta) {
+					rta_txt=rta.responseText;
+					if (rta_txt != '' && rta_txt != '\\n') {
+						alert ('respuesta: '+rta_txt);
+					} else {
+						<?= $oPosicion->js_atras(1); ?>
+					}
+				}
+			});
+			return false;
+		});
+		$(formulario).submit();
+		$(formulario).off();
+	<?php } ?>
+	}
+}
+</script>
+<?php
+if (empty($notas)) {
+	echo $oPosicion->mostrar_left_slide(1);
+}
+?>
+<form id="frm_acta" name="frm_acta" action="" method="POST" >
+<?= $oHashActa->getCamposHtml(); ?>
+<table>
+<tr><th colspan='3' class=titulo_inv><?= $titulo ?></Th>
+<tr>
+	<td class=etiqueta><?= ucfirst(_("acta")); ?>:
+	</td>
+	<?php if (!empty($nuevo) || $notas=="nuevo") { 
+	  	echo "<td colspan=8><input class=contenido size='25' id='acta' name='acta' value=\"$acta\">"; 
+	  	echo "&nbsp;&nbsp;$ult_acta";
+	} else {
+		echo "<td colspan=8 class=contenido >$acta"; 
+	}?>
+	</td>
+</tr>
+<tr>
+	<td class=etiqueta><?= ucfirst(_("fecha acta")); ?>: </td>
+	<td><input class="fecha" size="11" id="f_acta" name="f_acta" value="<?= $f_acta; ?>"></td>
+</tr>
+<tr></tr>
+<tr>
+	<td class=etiqueta><?= ucfirst(_("libro")); ?>:</td>
+	<td colspan=2><input class=contenido size="10" id="libro" name="libro" value="<?= $libro ?>">&nbsp;&nbsp;<?= $ult_lib; ?></td>
+</tr><tr>
+	<td class=etiqueta><?= ucfirst(_("página")); ?>:</td>
+	<td colspan=2><input class=contenido size="10" id="pagina" name="pagina" value="<?= $pagina ?>">&nbsp;&nbsp;<?= $ult_pag; ?></td>
+</tr><tr>
+	<td class=etiqueta><?= ucfirst(_("línea")); ?>:</td>
+	<td colspan=2><input class=contenido size="10" id="linea" name="linea" value="<?= $linea ?>">&nbsp;&nbsp;<?= $ult_lin; ?></td>
+</tr><tr>
+	<td class=etiqueta><?= ucfirst(_("lugar")); ?>:</td>
+	<td colspan=2><input class=contenido size="30" id="lugar" name="lugar" value="<?= htmlspecialchars($lugar) ?>"></td> 
+</tr><tr>
+	<td class=etiqueta><?= ucfirst(_("observaciones")); ?>:</td>
+	<td colspan=2><input class=contenido size="60" id="observ" name="observ" value="<?= htmlspecialchars($observ) ?>"></td>
+</tr>
+<tr><td class=etiqueta><?= ucfirst(_("asignatura")) ?>:</td>
+	<td><input type='text'  size='60' id='id_asignatura' name='id_asignatura' value='' ></td></tr>
+</table>
+<br>
+<!--  --------------- TRIBUNAL --------------- -->
+<table>
+	<tr><th class=titulo_inv colspan=4><?= ucfirst(_("tribunal")); ?></th></tr>
+	<tr><td class=subtitulo valign='TOP'><?= ucfirst(_("examinador")) ?>:</td>
+		<td colspan=8 id="col_examinador"><span id="examinador_span" >
+			<input type='text'  size='60' id='examinadores' name='examinadores' value='' >
+		</span>
+		</td></tr>
+</table>
+<br>
+<?php if (empty($notas)) {
+	//echo _("Primero debe guardar los valores del acta. Después las notas.");
+?>
+<input id="g1" TYPE="button" VALUE="<?= ucfirst(_("guardar cambios acta")); ?>"  onclick="fnjs_guardar_acta(this.form)">
+<?php
+}
+?>
+</form>
+<script type="text/javascript">
+$(document).ready(function () {
+    $("#id_asignatura").tokenInput("<?= $loc_asig ?>", {
+		method: "POST",
+		propertyToSearch: "name",
+		tokenValue: "id",
+		tokenLimit: 1,
+		<?= $json_asignaturas ?>
+		hintText: "<?= _("escriba parte del nombre para buscar") ?>",
+		noResultsText: "<?= _("no hay resultados") ?>",
+		searchingText: "<?= _("buscando...") ?>"
+	});
+    $("#examinadores").tokenInput("<?= $location ?>", {
+		method: "POST",
+		propertyToSearch: "name",
+		tokenValue: "name",
+		tokenLimit: 4,
+		tokenDelimiter: '#',
+		hintText: "<?= _("escriba un texto para buscar") ?>",
+		noResultsText: "<?= _("no hay resultados") ?>",
+		searchingText: "<?= _("buscando...") ?>",
+		<?= $json_examinadores ?>
+		allowCustomEntry: true,
+		allowFreeTagging: true
+	});
+});
+</script>

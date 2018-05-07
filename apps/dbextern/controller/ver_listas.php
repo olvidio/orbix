@@ -57,7 +57,7 @@ if (empty($id)) {
 	foreach ($cPersonasListas as $oPersonaListas) {
 		$id_nom_listas = $oPersonaListas->getIdentif();
 
-		$oGesMatch = new dbextern\model\GestorIdMatchPersona();
+		$oGesMatch = new dbextern\model\entity\GestorIdMatchPersona();
 		$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas'=>$id_nom_listas));
 		if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
 			continue;
@@ -128,7 +128,7 @@ $html_reg = sprintf(_("registro %s de %s"),$new_id,$max);
 <script>
 fnjs_crear=function(){
 	var url='<?= $url_sincro_ajax ?>';
-	var parametros='que=crear&dl=<?= $dl ?>&id=<?= $new_id?>&id_nom_listas=<?= $id_nom_listas ?>&id_orbix=&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>&PHPSESSID=<?php echo session_id(); ?>';
+	var parametros='que=crear&dl=<?= $dl ?>&id=<?= $new_id?>&id_nom_listas=<?= $id_nom_listas ?>&id_orbix=&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>&PHPSESSID=<?= session_id(); ?>';
 			 
 	$.ajax({
 		url: url,
@@ -144,7 +144,7 @@ fnjs_crear=function(){
 
 fnjs_unir=function(id_orbix){
 	var url='<?= $url_sincro_ajax ?>';
-	var parametros='que=unir&dl=<?= $dl ?>&id_orbix='+id_orbix+'&id=<?= $new_id?>&id_nom_listas=<?= $id_nom_listas ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>&PHPSESSID=<?php echo session_id(); ?>';
+	var parametros='que=unir&dl=<?= $dl ?>&id_orbix='+id_orbix+'&id=<?= $new_id?>&id_nom_listas=<?= $id_nom_listas ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>&PHPSESSID=<?= session_id(); ?>';
 			 
 	$.ajax({
 		url: url,

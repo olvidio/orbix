@@ -1,7 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
-use usuarios\model as usuarios;
+use usuarios\model\entity as usuarios;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
@@ -19,9 +19,6 @@ use function core\urlsafe_b64encode;
 *		
 */
 
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -118,33 +115,33 @@ if (empty($sWhere)) {
 			switch ($loc) {
 				case "dl":
 					$titulo=ucfirst(_("tabla de centros de la delegación"));
-					$Gestor= 'ubis\model\GestorCentroDl';
+					$Gestor= 'ubis\model\entity\GestorCentroDl';
 					$metodo = 'getCentros';
-					$GestorDir = 'ubis\model\GestorDireccionCtrDl';
+					$GestorDir = 'ubis\model\entity\GestorDireccionCtrDl';
 					break;
 				case "ex":
-					$Gestor= "ubis\model\GestorCentroEx";
+					$Gestor= "ubis\model\entity\GestorCentroEx";
 					$metodo = 'getCentros';
-					$GestorDir = 'ubis\model\GestorDireccionCtrEx';
+					$GestorDir = 'ubis\model\entity\GestorDireccionCtrEx';
 					$titulo=ucfirst(_("tabla de centros de fuera de la delegación"));
 					break;
 				case "sf":
 					if (($_SESSION['oPerm']->have_perm("vcsd")) OR ($_SESSION['oPerm']->have_perm("des"))) { 
-						$Gestor= "ubis\model\GestorCentroDl";
+						$Gestor= "ubis\model\entity\GestorCentroDl";
 						$Gestor->setoDbl( $GLOBALS['oDBE']);
 						$metodo = 'getCentros';
-						$GestorDir = 'ubis\model\GestorDireccionCtrDl';
+						$GestorDir = 'ubis\model\entity\GestorDireccionCtrDl';
 						$titulo=ucfirst(_("tabla de centros de la delegación femenina"));
 					}
 					break;
 				case "tot":
-					$Gestor= "ubis\model\GestorCentro";
+					$Gestor= "ubis\model\entity\GestorCentro";
 					$metodo = 'getCentros';
 					$titulo=ucfirst(_("tabla de toda las casas y centros"));
 					switch ($miSfsv) {
 						case 1: // sv
 							$aWhere['sv']='t';
-							$GestorDir = 'ubis\model\GestorDireccionCtr';
+							$GestorDir = 'ubis\model\entity\GestorDireccionCtr';
 							break;
 						case 2: //sf
 							$aWhere['sf']='t';
@@ -157,47 +154,47 @@ if (empty($sWhere)) {
 		case "cdc":
 			switch ($loc) {
 				case "dl":
-					$Gestor= "ubis\model\GestorCasaDl";
+					$Gestor= "ubis\model\entity\GestorCasaDl";
 					$metodo = 'getCasas';
 					$titulo=ucfirst(_("tabla de casas de la delegación"));
-					$GestorDir = 'ubis\model\GestorDireccionCdcDl'; // Las casas tienen las mismas direcciones que sv.
+					$GestorDir = 'ubis\model\entity\GestorDireccionCdcDl'; // Las casas tienen las mismas direcciones que sv.
 					break;
 				case "ex":
-					$Gestor= "ubis\model\GestorCasaEx";
+					$Gestor= "ubis\model\entity\GestorCasaEx";
 					$metodo = 'getCasas';
 					$titulo=ucfirst(_("tabla de casas de fuera de la delegación"));
-					$GestorDir = 'ubis\model\GestorDireccionCdcEx';
+					$GestorDir = 'ubis\model\entity\GestorDireccionCdcEx';
 					break;
 				case "sf":
 					if (($_SESSION['oPerm']->have_perm("vcsd")) OR ($_SESSION['oPerm']->have_perm("des"))) {
-						$Gestor= "ubis\model\GestorCasaDl";
+						$Gestor= "ubis\model\entity\GestorCasaDl";
 						$metodo = 'getCasas';
-						$GestorDir = 'ubis\model\GestorDireccionCdcDl';
+						$GestorDir = 'ubis\model\entity\GestorDireccionCdcDl';
 						$aWhere['sf']='t';
 						$titulo=ucfirst(_("tabla de casas de la sf"));
 					}
 					break;
 				case "tot":
-					$Gestor= "ubis\model\GestorCasa";
+					$Gestor= "ubis\model\entity\GestorCasa";
 					$metodo = 'getCasas';
 					$titulo=ucfirst(_("tabla de toda las casas y centros"));
-					$GestorDir = 'ubis\model\GestorDireccionCdc';
+					$GestorDir = 'ubis\model\entity\GestorDireccionCdc';
 					break;
 			}
 			break;
 		case "tot":
 			switch ($loc) {
 				case "dl":
-					$Gestor= "ubis\model\GestorUbi";
+					$Gestor= "ubis\model\entity\GestorUbi";
 					$metodo = 'getUbis';
 					$titulo=ucfirst(_("tabla de casas y centros de la delegación"));
-					$GestorDir = 'ubis\model\GestorDireccion';
+					$GestorDir = 'ubis\model\entity\GestorDireccion';
 					break;
 				case "ex":
-					$Gestor= "ubis\model\GestorUbi";
+					$Gestor= "ubis\model\entity\GestorUbi";
 					$metodo = 'getUbis';
 					$titulo=ucfirst(_("tabla de casas y centros de fuera de la delegación"));
-					$GestorDir = 'ubis\model\GestorDireccion';
+					$GestorDir = 'ubis\model\entity\GestorDireccion';
 					/*
 					switch ($miSfsv) {
 						case 1: // sv
@@ -226,7 +223,7 @@ if (empty($sWhere)) {
 					break;
 				case "sf":
 					/*
-					$Gestor= "ubis\model\GestorUbi";
+					$Gestor= "ubis\model\entity\GestorUbi";
 					$metodo = 'getUbis';
 					$titulo=ucfirst(_("tabla de toda las casas y centros"));
 					switch ($miSfsv) {
@@ -246,9 +243,9 @@ if (empty($sWhere)) {
 					*/
 					break;
 				case "tot":
-					$Gestor= "ubis\model\GestorUbi";
+					$Gestor= "ubis\model\entity\GestorUbi";
 					$metodo = 'getUbis';
-					$GestorDir = 'ubis\model\GestorDireccion';
+					$GestorDir = 'ubis\model\entity\GestorDireccion';
 					$titulo=ucfirst(_("tabla de toda las casas y centros"));
 					break;
 			}
@@ -267,7 +264,7 @@ if (empty($sWhere)) {
 
 if (empty($aWhere) && empty($aWhereD)) {
 	printf(_("Debe poner algún criterio de búsqueda"));
-	exit;
+	die();
 }
 
 if (!empty($aWhere)) {
@@ -359,7 +356,7 @@ if (is_array($cUbisTot) && count($cUbisTot) == 0) {
 	} else {
 		printf(_("no existe esta ficha, puede crear una nueva, hacer click <span class=link onclick=fnjs_update_div('#main','%s') > aquí </span>"),$pagina);
 	}
-	exit;
+	die();
 } else {
 	array_multisort($region,SORT_LOCALE_STRING, SORT_ASC,$nom,SORT_LOCALE_STRING, SORT_ASC, $cUbisTot);
 }
@@ -463,7 +460,7 @@ fnjs_modificar=function(formulario){
 }
 fnjs_borrar=function(formulario){
 	var seguro;
-	seguro=confirm("<?php echo _("¿Está Seguro que desea borrar este ubi?");?>");
+	seguro=confirm("<?= _("¿Está Seguro que desea borrar este ubi?");?>");
 	if (seguro) {
 		$(formulario).submit(function() {
 			$.ajax({

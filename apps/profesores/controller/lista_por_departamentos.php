@@ -22,7 +22,7 @@
 // FIN de  Cabecera global de URL de controlador ********************************
 
 // tipos de profesores
-$oGesProfesorTipo = new profesores\model\GestorProfesorTipo();
+$oGesProfesorTipo = new profesores\model\entity\GestorProfesorTipo();
 $cProfesorTipo = $oGesProfesorTipo->getProfesorTipos();
 $cTipoProfesor = array();
 foreach ($cProfesorTipo as $oProfesorTipo) {
@@ -31,7 +31,7 @@ foreach ($cProfesorTipo as $oProfesorTipo) {
 	$cTipoProfesor[$id_tipo] = $tipo;
 }
 //lista de departamentos.
-$oGesDepartamentos = new asignaturas\model\GestorDepartamento();
+$oGesDepartamentos = new asignaturas\model\entity\GestorDepartamento();
 $cDepartamentos = $oGesDepartamentos->getDepartamentos(array('_ordre'=>'departamento'));
 
 
@@ -42,13 +42,13 @@ foreach ($cDepartamentos as $oDepartamento) {
 	$id_departamento = $oDepartamento->getId_departamento();
 	$departamento = $oDepartamento->getDepartamento();
 	// director.
-	$oGesProfesorDirector = new profesores\model\GestorProfesorDirector();
+	$oGesProfesorDirector = new profesores\model\entity\GestorProfesorDirector();
 	$cProfesorDirector = $oGesProfesorDirector->getProfesoresDirectores(array('id_departamento'=>$id_departamento),  array('f_cese' => 'IS NULL'));
 	$aProfesores =array();
 	$aDirs =array();
 	foreach ($cProfesorDirector as $oProfesorDirector) {
 		$id_nom = $oProfesorDirector->getId_nom();
-		$oPersonaDl = new personas\model\PersonaDl($id_nom);
+		$oPersonaDl = new personas\model\entity\PersonaDl($id_nom);
 		if ($oPersonaDl->getSituacion() != 'A') { continue; }
 		$ap_orden = $oPersonaDl->getApellido1().$oPersonaDl->getApellido2().$oPersonaDl->getNom();
 		$ap_nom = $oPersonaDl->getApellidosNombre() ." (". $oPersonaDl->getCentro_o_dl() .")";
@@ -57,14 +57,14 @@ foreach ($cDepartamentos as $oDepartamento) {
 	ksort($aDirs);
 	$aProfesores['director'] = $aDirs;
 	// tipo de profesor: ayudante, encargado...
-	$oGesProfesor = new profesores\model\GestorProfesor();
+	$oGesProfesor = new profesores\model\entity\GestorProfesor();
 	foreach ($cTipoProfesor as $id_tipo => $tipo) {
 		//$aProfesores[$tipo] = $oGesProfesor->getListaProfesoresDepartamento($id_departamento);
 		$cProfesores = $oGesProfesor->getProfesores(array('id_departamento'=>$id_departamento,'id_tipo_profesor' => $id_tipo),array('f_cese'=>'IS NULL'));
 		$aProfes =array();
 		foreach ($cProfesores as $oProfesor) {
 			$id_nom = $oProfesor->getId_nom();
-			$oPersonaDl = new personas\model\PersonaDl($id_nom);
+			$oPersonaDl = new personas\model\entity\PersonaDl($id_nom);
 			if ($oPersonaDl->getSituacion() != 'A') { continue; }
 			$ap_orden = $oPersonaDl->getApellido1().$oPersonaDl->getApellido2().$oPersonaDl->getNom();
 			$ap_nom = $oPersonaDl->getApellidosNombre() ." (". $oPersonaDl->getCentro_o_dl() .")";

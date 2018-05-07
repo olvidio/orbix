@@ -1,5 +1,5 @@
 ﻿<?php
-use menus\model as menus;
+use menus\model\entity as menus;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -67,7 +67,4 @@ switch ($_POST['que']) {
 }
 
 $go_to="menus_get.php?filtro_grupo=$id_grupmenu|ficha";
-//echo "gg : $go_to<br>";
-$oPosicion = new web\Posicion();
-echo $oPosicion->ir_a($go_to);
-?>
+echo $oPosicion->go_atras(1);

@@ -52,8 +52,9 @@ ini_set ('include_path', $new_include_path);
 
 //$oUsuario = new Usuario(array('id_usuario'=>113));
 
-use usuarios\model as usuarios;
+use usuarios\model\entity as usuarios;
 use menus\model as menus;
+use menus\model\entity as menusEntity;
 
 $oGesPref = new usuarios\GestorPreferencia();
 
@@ -77,7 +78,7 @@ if (is_array($aPref) && count($aPref) > 0) {
 	list($inicio,$mi_id_grupmenu) = preg_split('/#/',$preferencia);
 } else {
 	$inicio='';
-	$GesGMR = new menus\GestorGrupMenuRole();
+	$GesGMR = new menusEntity\GestorGrupMenuRole();
 	$cGMR = $GesGMR->getGrupMenuRoles(array('id_role'=>$id_role));
 	$mi_id_grupmenu=$cGMR[0]->getId_grupmenu();
 }
@@ -133,7 +134,7 @@ if (is_array(($aPref)) && count($aPref) > 0) {
 }
 
 $aWhere = array('id_role'=>$oUsuario->getId_role());
-$gesGMR=new menus\GestorGrupMenuRole();
+$gesGMR=new menusEntity\GestorGrupMenuRole();
 $cGrupMenuRoles=$gesGMR->getGrupMenuRoles($aWhere);
 $html_barra = "<ul id=\"menu\" class=\"menu\">";
 $gm = 0;
@@ -142,10 +143,10 @@ foreach ($cGrupMenuRoles as $oGrupMenuRole) {
 	$gm++;
 	$id_gm = $oGrupMenuRole->getId_grupmenu();
 	// comprobar que tiene algún submenú.
-	$gesMenuDb = new menus\GestorMenuDb();
+	$gesMenuDb = new menusEntity\GestorMenuDb();
 	$cMenuDbs=$gesMenuDb ->getMenuDbs(array('id_grupmenu'=>$id_gm));
 	if (is_array($cMenuDbs) && count($cMenuDbs) < 1) continue;
-	$oGrupMenu = new menus\GrupMenu($id_gm);
+	$oGrupMenu = new menusEntity\GrupMenu($id_gm);
 	$grup_menu = $oGrupMenu->getGrup_menu();
 	$iorden = $oGrupMenu->getOrden();
 	if ($iorden < 1) continue;
@@ -169,7 +170,7 @@ $aOperador = array();
 $aWhere['id_grupmenu'] = "^1$|^$id_grupmenu$";
 $aOperador['id_grupmenu'] = "~";
 $aWhere['_ordre'] = 'orden';
-$oLista=new menus\GestorMenuDb();
+$oLista=new menusEntity\GestorMenuDb();
 $oMenuDbs=$oLista->getMenuDbs($aWhere,$aOperador);
 $li_submenus="";
 $indice=1;
@@ -179,7 +180,7 @@ $num_menu_1="";
 	foreach ($oMenuDbs as $oMenuDb) {
 		$m++;
 		extract($oMenuDb->getTot());
-		$oMetamenu = new menus\Metamenu($id_metamenu);
+		$oMetamenu = new menusEntity\Metamenu($id_metamenu);
 		$url = $oMetamenu ->getUrl();
 		//echo "m: $perm_menu,l: $perm_login, ".visible($perm_menu,$perm_login) ;
 		// primero si està instalado:
@@ -258,7 +259,8 @@ $h = $oHash->linkSinVal();
 
 // ------------- Html -------------------
 ?>
-<html>
+<!DOCTYPE html>
+<html manifest="orbix.appcache">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Pàgina inicial de la web de la dl</title>
@@ -281,51 +283,49 @@ switch ($tipo_menu) {
 img.calendar:hover { cursor: pointer; }
 </style>
 <!-- jQuery -->
-<!-- <link type="text/css" rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/jquery/ui/1.12/themes/cupertino/jquery-ui.css'; ?>' /> -->
-<!-- <link type="text/css" rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/jquery/ui/jquery-ui.custom.css'; ?>' /> -->
-<link type="text/css" rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/jquery/ui/1.12/jquery-ui.structure.min.css'; ?>' />
-<link type="text/css" rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/jquery/ui/1.12/themes/smoothness/theme.css'; ?>' />
-<script type="text/javascript" src='<?php echo ConfigGlobal::$web_scripts.'/jquery/jquery-1.12.3.min.js'; ?>'></script>
-<script type="text/javascript" src='<?php echo ConfigGlobal::$web_scripts.'/jquery/ui/1.12/jquery-ui.min.js'; ?>'></script>
-<script type="text/javascript" src='<?php echo ConfigGlobal::$web_scripts.'/jquery/ui/i18n/jquery.ui.datepicker-es.js'; ?>'></script>
-<script type="text/javascript" src='<?php echo ConfigGlobal::$web_scripts.'/jquery/ui/i18n/jquery.ui.datepicker-ca.js'; ?>'></script>
+<!-- <link type="text/css" rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/jquery/ui/1.12/themes/cupertino/jquery-ui.css'; ?>' /> -->
+<!-- <link type="text/css" rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/jquery/ui/jquery-ui.custom.css'; ?>' /> -->
+<link type="text/css" rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/jquery/ui/1.12/jquery-ui.structure.min.css'; ?>' />
+<link type="text/css" rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/jquery/ui/1.12/themes/smoothness/theme.css'; ?>' />
+<script type="text/javascript" src='<?= ConfigGlobal::$web_scripts.'/jquery/jquery-1.12.3.min.js'; ?>'></script>
+<script type="text/javascript" src='<?= ConfigGlobal::$web_scripts.'/jquery/ui/1.12/jquery-ui.min.js'; ?>'></script>
+<script type="text/javascript" src='<?= ConfigGlobal::$web_scripts.'/jquery/ui/i18n/jquery.ui.datepicker-es.js'; ?>'></script>
+<script type="text/javascript" src='<?= ConfigGlobal::$web_scripts.'/jquery/ui/i18n/jquery.ui.datepicker-ca.js'; ?>'></script>
 
 <!-- jQuery TokenInput -->
-<script type="text/javascript" src='<?php echo ConfigGlobal::$web_scripts.'/jquery-tokeninput/src/jquery.tokeninput.js'; ?>'></script>
-<!-- history.js -->
-<script type="text/javascript" src='<?php echo ConfigGlobal::$web_scripts.'/history.js/scripts/bundled/html4+html5/jquery.history.js'; ?>'></script>
+<script type="text/javascript" src='<?= ConfigGlobal::$web_scripts.'/jquery-tokeninput/src/jquery.tokeninput.js'; ?>'></script>
 
 <!-- Slick -->
-<link type='text/css' rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/slick.grid.css'; ?>' />
-<link type='text/css' rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/slick-editors.css'; ?>' />
-<link type='text/css' rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick-pager.css'; ?>' />
-<link type='text/css' rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick-columnpicker.css'; ?>' />
-<!-- <link type='text/css' rel='stylesheet' href='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/examples/examples.css'; ?>' />  -->
+<link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.grid.css'; ?>' />
+<link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick-editors.css'; ?>' />
+<link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick-pager.css'; ?>' />
+<link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick-columnpicker.css'; ?>' />
+<!-- <link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/SlickGrid/examples/examples.css'; ?>' />  -->
 
-<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/lib/firebugx.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/lib/firebugx.js'; ?>'></script>
 
-<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/lib/jquery-fixclick.js'; ?>'></script>
-<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/lib/_/jquery.event.drag.js'; ?>'></script>
-<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/lib/detect_browser.js'; ?>'></script>
-<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/lib/assert.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/lib/jquery-fixclick.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/lib/_/jquery.event.drag.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/lib/detect_browser.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/lib/assert.js'; ?>'></script>
 
-<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/slick.core.js'; ?>'></script>
-<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.cellrangedecorator.js'; ?>'></script>
-<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.cellrangeselector.js'; ?>'></script>
-<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.cellselectionmodel.js'; ?>'></script>
-<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.autotooltips.js'; ?>'></script>
-<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.rowselectionmodel.js'; ?>'></script>
-<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.checkboxselectcolumn.js'; ?>'></script>
-<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/slick.formatters.js'; ?>'></script>
-<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/slick.editors.js'; ?>'></script>
-<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/slick.grid.js'; ?>'></script>
-<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/slick.dataview.js'; ?>'></script>
-<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick.pager.js'; ?>'></script>
-<script type='text/javascript' src='<?php echo ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick.columnpicker.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.core.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.cellrangedecorator.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.cellrangeselector.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.cellselectionmodel.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.autotooltips.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.rowselectionmodel.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.checkboxselectcolumn.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.formatters.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.editors.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.grid.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.dataview.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick.pager.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick.columnpicker.js'; ?>'></script>
 
-<script type="text/javascript" src="<?php echo ConfigGlobal::$web_scripts.'/fechas.js.php?'.rand(); ?>"></script>
-<script type="text/javascript" src="<?php echo ConfigGlobal::$web_scripts.'/selects.js.php?'.rand(); ?>"></script>
-<script type="text/javascript" src="<?php echo ConfigGlobal::$web_scripts.'/exportar.js?'.rand(); ?>"></script>
+<script type="text/javascript" src="<?= ConfigGlobal::$web_scripts.'/fechas.js.php?'.rand(); ?>"></script>
+<script type="text/javascript" src="<?= ConfigGlobal::$web_scripts.'/selects.js.php?'.rand(); ?>"></script>
+<script type="text/javascript" src="<?= ConfigGlobal::$web_scripts.'/exportar.js?'.rand(); ?>"></script>
 </head>
 <body class="otro">
 <script type="text/javascript">
@@ -412,7 +412,7 @@ function fnjs_slick_cols_width(tabla) {
 }
 function fnjs_slick_grid_width(tabla) {
 	// anchura de toda la grid
-	var widthGrid;
+	var widthGrid = '';
 	styl = $('#grid_'+tabla).attr('style');
 	match = /(^|\s)width:\s*(\d*)(\.)?(.*)px;/i.exec(styl)
 	if (match != null) {
@@ -422,6 +422,19 @@ function fnjs_slick_grid_width(tabla) {
 		}
 	}
 	return widthGrid;
+}
+function fnjs_slick_grid_height(tabla) {
+	// altura de toda la grid
+	var heightGrid = '';
+	styl = $('#grid_'+tabla).attr('style');
+	match = /(^|\s)height:\s*(\d*)(\.)?(.*)px;/i.exec(styl)
+	if (match != null) {
+		h = match[2];
+		if (h!=undefined) {
+			heightGrid=h;
+		}
+	}
+	return heightGrid;
 }
 function fnjs_def_tabla(tabla) {
 	// si es la tabla por defecto, no puedo guardar las preferencias.
@@ -433,11 +446,12 @@ function fnjs_def_tabla(tabla) {
 	colsWidth=fnjs_slick_cols_width(tabla);
 	//alert(JSON.stringify(colsWidth));
 	widthGrid=fnjs_slick_grid_width(tabla);
+	heightGrid=fnjs_slick_grid_height(tabla);
 
-	oPrefs = { "panelVis": panelVis, "colVisible": colsVisible, "colWidths": colsWidth, "widthGrid": widthGrid };
+	oPrefs = { "panelVis": panelVis, "colVisible": colsVisible, "colWidths": colsWidth, "widthGrid": widthGrid, "heightGrid": heightGrid };
 	sPrefs = JSON.stringify(oPrefs);
 	url="<?= ConfigGlobal::getWeb() ?>/apps/usuarios/controller/personal_update.php";
-	parametros='que=slickGrid&tabla='+tabla+'&sPrefs='+sPrefs+'<?= $h ?>&PHPSESSID=<?php echo session_id(); ?>'; 
+	parametros='que=slickGrid&tabla='+tabla+'&sPrefs='+sPrefs+'<?= $h ?>&PHPSESSID=<?= session_id(); ?>'; 
 	$.ajax({
 			url: url,
 			type: 'post',
@@ -454,7 +468,7 @@ function fnjs_def_tabla(tabla) {
 
 
 function fnjs_logout() {
-	var parametros='logout=si&PHPSESSID=<?php echo session_id(); ?>'; 
+	var parametros='logout=si&PHPSESSID=<?= session_id(); ?>'; 
 	top.location.href='index.php?'+parametros;
 }
 function fnjs_windowopen(url) { //para poder hacerlo por el menu
@@ -462,7 +476,7 @@ function fnjs_windowopen(url) { //para poder hacerlo por el menu
 	window.open(url+'?'+parametros);
 }
 function fnjs_link_menu(id_grupmenu) {
-	var parametros='id_grupmenu='+id_grupmenu+'&PHPSESSID=<?php echo session_id(); ?>'; 
+	var parametros='id_grupmenu='+id_grupmenu+'&PHPSESSID=<?= session_id(); ?>'; 
 	
 	if (id_grupmenu=='web_externa') {
 		top.location.href='http://www/exterior/cl/index.html';
@@ -473,9 +487,9 @@ function fnjs_link_menu(id_grupmenu) {
 }
 function fnjs_link_submenu(url,parametros) {
 	if(parametros) {
-		parametros=parametros+'&PHPSESSID=<?php echo session_id(); ?>'; 
+		parametros=parametros+'&PHPSESSID=<?= session_id(); ?>'; 
 	} else {
-		parametros='PHPSESSID=<?php echo session_id(); ?>'; 
+		parametros='PHPSESSID=<?= session_id(); ?>'; 
 	}
 	if (!url) return false;
 	// para el caso de editar webs
@@ -536,12 +550,12 @@ function fnjs_ir_a() {
 			parametros=parametros.replace(/&atras=(0|1)?/,'');
 		}
 		if (parametros.indexOf("PHPSESSID") == -1) {
-			parametros=parametros+'&PHPSESSID=<?php echo session_id(); ?>'; 
+			parametros=parametros+'&PHPSESSID=<?= session_id(); ?>'; 
 		}
 	} else {
 		if ($('#ir_atras').length || $('#ir_atras2').length) { // atras=1; 
 			parametros='&atras=1'; 
-			parametros=parametros+'&PHPSESSID=<?php echo session_id(); ?>'; 
+			parametros=parametros+'&PHPSESSID=<?= session_id(); ?>'; 
 		}
 	}
 	
@@ -600,13 +614,14 @@ function fnjs_cambiar_base_link() {
 }
 
 function fnjs_update_div(bloque,ref) {
+	fnjs_borrar_posibles_atras();
 	var path=ref.replace(/\?.*$/,'');
 	var pattern=/\?/;
 	if (pattern.test(ref)) {
 		parametros=ref.replace(/^[^\?]*\?/,'');
-		parametros=parametros+'&PHPSESSID=<?php echo session_id(); ?>'; 
+		parametros=parametros+'&PHPSESSID=<?= session_id(); ?>'; 
 	} else {
-		parametros='PHPSESSID=<?php echo session_id(); ?>'; 
+		parametros='PHPSESSID=<?= session_id(); ?>'; 
 	}
 	//var web_ref=ref.gsub(/\/var\//,'http://');  // cambio el directorio físico (/var/www) por el url (http://www)
 	$(bloque).attr('refe',path);
@@ -746,8 +761,7 @@ function fnjs_mostra_resposta(resposta,bloque) {
 			var myText=resposta.trim();
 			break;
 	}
-	//$(bloque).load(myText);
-	$(bloque).html(myText);
+	$(bloque).empty().append(myText);
 	fnjs_cambiar_link(bloque); 
 }
 /*
@@ -765,7 +779,7 @@ fnjs_comprobar_campos=function(formulario,obj,ccpau,tabla){
 	var rta_txt="";
 	if (tabla==undefined) tabla='x';
 	if (obj==undefined)  { obj='x'; }
-	//var parametros=$(formulario).serialize()+'&tabla='+tabla+'&ficha='+ficha+'&pau='+pau+'&exterior='+exterior+'&PHPSESSID=<?php echo session_id(); ?>';
+	//var parametros=$(formulario).serialize()+'&tabla='+tabla+'&ficha='+ficha+'&pau='+pau+'&exterior='+exterior+'&PHPSESSID=<?= session_id(); ?>';
 	var parametros=$(formulario).serialize()+'&cc_tabla='+tabla+'&cc_obj='+obj+'&cc_pau='+ccpau;
 
 	url='apps/core/comprobar_campos.php';
@@ -872,7 +886,11 @@ if ($gm > 1) {
 <!-- menu tree -->
 <div id="submenu">
 <!-- PHP generated menu script [must come *before* any other modules or extensions] -->
-<script type="text/javascript" src="<?= ConfigGlobal::$web_scripts ?>/udm4-php/udm-resources/udm-dom.php?PHPSESSID=<?= session_id() ?>"></script>
+<script>
+<?php
+	require_once (ConfigGlobal::$dir_scripts."/udm4-php/udm-resources/udm-dom.php");
+?>
+</script>
 <!-- keyboard navigation module -->
 <!-- <script type="text/javascript" src="/udm4-php/udm-resources/udm-mod-keyboard.js"></script> -->
 <ul id="udm" class="udm">

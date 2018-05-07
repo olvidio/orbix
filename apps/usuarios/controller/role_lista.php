@@ -1,6 +1,6 @@
 <?php
-use usuarios\model as usuarios;
-use menus\model as menus;
+use usuarios\model\entity as usuarios;
+use menus\model\entity as menus;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -87,7 +87,7 @@ fnjs_nuevo=function(){
 fnjs_eliminar=function(){
 	rta=fnjs_solo_uno('#seleccionados');
 	if (rta==1) {
-		if (confirm("<?php echo _("¿Esta seguro que desea borrar este rol?");?>") ) {
+		if (confirm("<?= _("¿Esta seguro que desea borrar este rol?");?>") ) {
 			var url='<?= core\ConfigGlobal::getWeb() ?>/apps/usuarios/controller/usuario_ajax.php';
 			$('#que').val('eliminar_role');
 			$('#seleccionados').submit(function() {

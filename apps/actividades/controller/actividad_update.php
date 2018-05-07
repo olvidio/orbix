@@ -1,5 +1,4 @@
 <?php
-use actividades\model as actividades;
 /**
 * Esta página actualiza la tabla de las actividades.
 *
@@ -14,6 +13,7 @@ use actividades\model as actividades;
 *@param string $origen 'calendario' sirve para volver (si no es calendario).
 */
 
+use actividades\model\entity as actividades;
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
 */
@@ -24,7 +24,6 @@ use actividades\model as actividades;
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-
 
 function poner_asistencia($id_activ,$sacd) {
 	$insert="INSERT INTO d_asistentes_activ
@@ -72,12 +71,14 @@ function borrar_actividad($id_activ) {
 	}
 }
 
-$id_activ = empty($_POST['id_activ'])? '' : $_POST['id_activ'];
+$Qid_activ = (integer) \filter_input(INPUT_POST, 'id_activ');
+$Qmod = (string) \filter_input(INPUT_POST, 'mod');
 
-switch ($_POST['mod']) {
+switch ($Qmod) {
 case 'publicar':
-	if (!empty($_POST['sel'])) { // puedo seleccionar más de uno.
-		foreach ($_POST['sel'] as $id) {
+	$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+	if (!empty($a_sel)) { // puedo seleccionar más de uno.
+		foreach ($a_sel as $id) {
 			$id_activ=strtok($id,'#');
 			$oActividad = new actividades\Actividad($id_activ);
 			$oActividad->DBCarregar();
@@ -90,8 +91,9 @@ case 'publicar':
 	}
 	break;
 case 'importar':
-	if (!empty($_POST['sel'])) { // puedo seleccionar más de uno.
-		foreach ($_POST['sel'] as $id) {
+	$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+	if (!empty($a_sel)) { // puedo seleccionar más de uno.
+		foreach ($a_sel as $id) {
 			$id_activ=strtok($id,'#');
 			$oImportar = new actividades\Importar($id_activ);
 			if ($oImportar->DBGuardar() === false) {
@@ -101,60 +103,85 @@ case 'importar':
 	}
 	break;
 case "nuevo":
+	$Qid_tipo_activ = (integer) \filter_input(INPUT_POST, 'id_tipo_activ');
+	$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
+	$Qnum_asistentes = (integer) \filter_input(INPUT_POST, 'num_asistentes');
+	$Qstatus = (integer) \filter_input(INPUT_POST, 'status');
+	$Qid_repeticion = (integer) \filter_input(INPUT_POST, 'id_repeticion');
+	$Qplazas = (integer) \filter_input(INPUT_POST, 'plazas');
+	$Qtarifa = (integer) \filter_input(INPUT_POST, 'tarifa');
+	$Qprecio = (float) \filter_input(INPUT_POST, 'precio');
+	
+	$Qdl_org = (string) \filter_input(INPUT_POST, 'dl_org');
+	$Qnom_activ = (string) \filter_input(INPUT_POST, 'nom_activ');
+	$Qlugar_esp = (string) \filter_input(INPUT_POST, 'lugar_esp');
+	$Qdesc_activ = (string) \filter_input(INPUT_POST, 'desc_activ');
+	$Qf_ini = (string) \filter_input(INPUT_POST, 'f_ini');
+	$Qf_fin = (string) \filter_input(INPUT_POST, 'f_fin');
+	$Qtipo_horario = (string) \filter_input(INPUT_POST, 'tipo_horario');
+	$Qobserv = (string) \filter_input(INPUT_POST, 'observ');
+	$Qnivel_stgr = (string) \filter_input(INPUT_POST, 'nivel_stgr');
+	$Qobserv_material = (string) \filter_input(INPUT_POST, 'observ_material');
+	$Qh_ini = (string) \filter_input(INPUT_POST, 'h_ini');
+	$Qh_fin = (string) \filter_input(INPUT_POST, 'h_fin');
+	$Qpublicado = (string) \filter_input(INPUT_POST, 'publicado');
+	
 	//Compruebo que estén todos los campos necesasrios
 	if (empty($_POST['nom_activ']) or empty($_POST['f_ini']) or empty($_POST['f_fin']) or empty($_POST['status']) or empty($_POST['dl_org']) ) {
 		echo _("Debe llenar todos los campos que tengan un (*)")."<br>";
-		exit;
+		die();
 	}
 	if (empty($_POST['inom_tipo_val']) || strstr($_POST['inom_tipo_val'],'.')) {
 		echo _("Debe seleccionar un tipo de actividad")."<br>";
-		exit;
+		die();
 	}
 
-	$dl_org = empty($_POST['dl_org'])? '' : $_POST['dl_org'];
 	// si es de la sf quito la 'f'
-	$dele = preg_replace('/f$/', '',$dl_org);
+	$dele = preg_replace('/f$/', '',$Qdl_org);
 	if ($dele == core\ConfigGlobal::mi_dele()) {
 		$oActividad= new actividades\ActividadDl();
 	} else {
 		$oActividad= new actividades\ActividadEx();
 		$oActividad->setPublicado('t');
 		$oActividad->setId_tabla('ex');
-		$_POST['status'] = 2; // Que sea estado actual.
+		$Qstatus = 2; // Que sea estado actual.
 	}
-	$oActividad->setDl_org($dl_org);
-	if (isset($_POST['id_tipo_activ'])) {
-	   if ($oActividad->setId_tipo_activ($_POST['id_tipo_activ']) === false) {
+	$oActividad->setDl_org($Qdl_org);
+	if (isset($Qid_tipo_activ)) {
+	   if ($oActividad->setId_tipo_activ($Qid_tipo_activ) === false) {
 		 echo _("Tipo de actividad incorrecto");
-		 exit;
+		 die();
 	   }
 	}
-	isset($_POST['nom_activ']) ? $oActividad->setNom_activ($_POST['nom_activ']) : '';
+	$oActividad->setNom_activ($Qnom_activ);
+
 	// En el caso de tener id_ubi (!=1) borro el campo lugar_esp.
-	if (!empty($_POST['id_ubi']) && $_POST['id_ubi'] != 1 ) {
-		$oActividad->setId_ubi($_POST['id_ubi']);
+	if (!empty($Qid_ubi) && $Qid_ubi != 1 ) {
+		$oActividad->setId_ubi($Qid_ubi);
 		$oActividad->setLugar_esp('');
 	} else {
-		$oActividad->setId_ubi($_POST['id_ubi']);
-		$oActividad->setLugar_esp($_POST['lugar_esp']);
+		$oActividad->setId_ubi($Qid_ubi);
+		$oActividad->setLugar_esp($Qlugar_esp);
 	}
-	isset($_POST['desc_activ']) ? $oActividad->setDesc_activ($_POST['desc_activ']) : '';
-	isset($_POST['f_ini']) ? $oActividad->setF_ini($_POST['f_ini']) : '';
-	isset($_POST['f_fin']) ? $oActividad->setF_fin($_POST['f_fin']) : '';
-	isset($_POST['tipo_horario']) ? $oActividad->setTipo_horario($_POST['tipo_horario']) : '';
-	isset($_POST['precio']) ? $oActividad->setPrecio($_POST['precio']) : '';
-	isset($_POST['num_asistentes']) ? $oActividad->setNum_asistentes($_POST['num_asistentes']) : '';
-	isset($_POST['status']) ? $oActividad->setStatus($_POST['status']) : '';
-	isset($_POST['observ']) ? $oActividad->setObserv($_POST['observ']) : '';
-	isset($_POST['nivel_stgr']) ? $oActividad->setNivel_stgr($_POST['nivel_stgr']) : '';
-	isset($_POST['id_repeticion']) ? $oActividad->setId_repeticion($_POST['id_repeticion']) : '';
-	isset($_POST['observ_material']) ? $oActividad->setObserv_material($_POST['observ_material']) : '';
-	isset($_POST['tarifa']) ? $oActividad->setTarifa($_POST['tarifa']) : '';
-	isset($_POST['h_ini']) ? $oActividad->setH_ini($_POST['h_ini']) : '';
-	isset($_POST['h_fin']) ? $oActividad->setH_fin($_POST['h_fin']) : '';
-	isset($_POST['plazas']) ? $oActividad->setPlazas($_POST['plazas']) : '';
+	$oActividad->setDesc_activ($Qdesc_activ);
+	$oActividad->setF_ini($Qf_ini);
+	$oActividad->setF_fin($Qf_fin);
+	$oActividad->setTipo_horario($Qtipo_horario);
+	$oActividad->setPrecio($Qprecio);
+	$oActividad->setNum_asistentes($Qnum_asistentes);
+	$oActividad->setStatus($Qstatus);
+	$oActividad->setObserv($Qobserv);
+	$oActividad->setNivel_stgr($Qnivel_stgr);
+	$oActividad->setId_repeticion($Qid_repeticion);
+	$oActividad->setObserv_material($Qobserv_material);
+	$oActividad->setTarifa($Qtarifa);
+	$oActividad->setH_ini($Qh_ini);
+	$oActividad->setH_fin($Qh_fin);
+	$oActividad->setPublicado($Qpublicado);
+	$oActividad->setPlazas($Qplazas);
 	if ($oActividad->DBGuardar() === false) { 
-		echo _('Hay un error, no se ha guardado');
+		echo '<br>'._('Hay un error, no se ha guardado');
+		$err = 1;
 	}
 	// si estoy creando una actividad de otra dl es porque la quiero importar.
 	if ($dele != core\ConfigGlobal::mi_dele()) {
@@ -166,8 +193,9 @@ case "nuevo":
 	}
 	break;
 case "duplicar": // duplicar la actividad.
-	if (!empty($_POST['sel'])) {
-		$id_activ=strtok($_POST['sel'][0],'#');
+	$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+	if (!empty($a_sel)) { 
+		$id_activ=strtok($a_sel[0],'#');
 		$oActividadAll = new actividades\Actividad($id_activ);
 		$dl = $oActividadAll->getDl_org();
 		if ($dl == core\ConfigGlobal::mi_dele()) {
@@ -187,15 +215,16 @@ case "duplicar": // duplicar la actividad.
 	}
 	break;
 case "eliminar": // Eliminar la actividad.
-	if (!empty($_POST['sel'])) { // puedo seleccionar más de uno.
-		foreach ($_POST['sel'] as $id) {
+	$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+	if (!empty($a_sel)) { // puedo seleccionar más de uno.
+		foreach ($a_sel as $id) {
 			$id_activ=strtok($id,'#');
 			borrar_actividad($id_activ);
 		}
 	}
 	// si vengo desde la presentacion del planning, ya tengo el id_activ.
-	if (!empty($id_activ)) {
-		borrar_actividad($id_activ);
+	if (!empty($Qid_activ)) {
+		borrar_actividad($Qid_activ);
 	}
 	break;
 case "cmb_tipo": // sólo cambio el tipo a una actividad existente //____________________________
@@ -208,7 +237,7 @@ case "cmb_tipo": // sólo cambio el tipo a una actividad existente //___________
 			$valor_id_tipo_activ = $condta;
 		} else {
 			echo _("Debe seleccionar un tipo de actividad")."<br>";
-			exit;
+			die();
 		}
 	}
 	$oActividad = new actividades\Actividad($id_activ);
@@ -243,41 +272,66 @@ case "cmb_tipo": // sólo cambio el tipo a una actividad existente //___________
 	}
 	break;
 case "editar": // editar la actividad.
-	$oActividad = new actividades\Actividad($id_activ);
+	$Qid_tipo_activ = (integer) \filter_input(INPUT_POST, 'id_tipo_activ');
+	$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
+	$Qnum_asistentes = (integer) \filter_input(INPUT_POST, 'num_asistentes');
+	$Qstatus = (integer) \filter_input(INPUT_POST, 'status');
+	$Qid_repeticion = (integer) \filter_input(INPUT_POST, 'id_repeticion');
+	$Qplazas = (integer) \filter_input(INPUT_POST, 'plazas');
+	$Qtarifa = (integer) \filter_input(INPUT_POST, 'tarifa');
+	$Qprecio = (float) \filter_input(INPUT_POST, 'precio');
+	
+	$Qdl_org = (string) \filter_input(INPUT_POST, 'dl_org');
+	$Qnom_activ = (string) \filter_input(INPUT_POST, 'nom_activ');
+	$Qlugar_esp = (string) \filter_input(INPUT_POST, 'lugar_esp');
+	$Qdesc_activ = (string) \filter_input(INPUT_POST, 'desc_activ');
+	$Qf_ini = (string) \filter_input(INPUT_POST, 'f_ini');
+	$Qf_fin = (string) \filter_input(INPUT_POST, 'f_fin');
+	$Qtipo_horario = (string) \filter_input(INPUT_POST, 'tipo_horario');
+	$Qobserv = (string) \filter_input(INPUT_POST, 'observ');
+	$Qnivel_stgr = (string) \filter_input(INPUT_POST, 'nivel_stgr');
+	$Qobserv_material = (string) \filter_input(INPUT_POST, 'observ_material');
+	$Qh_ini = (string) \filter_input(INPUT_POST, 'h_ini');
+	$Qh_fin = (string) \filter_input(INPUT_POST, 'h_fin');
+	$Qpublicado = (string) \filter_input(INPUT_POST, 'publicado');
+	
+	$oActividad = new actividades\Actividad($Qid_activ);
 	$oActividad->DBCarregar();
-	isset($_POST['id_tipo_activ']) ? $oActividad->setId_tipo_activ($_POST['id_tipo_activ']) : '';
-	if (isset($_POST['dl_org'])) {
+
+	$oActividad->setId_tipo_activ($Qid_tipo_activ);
+	if (isset($Qdl_org)) {
 		$dl_orig=$oActividad->getDl_org();
-		$dl_org = strtok($_POST['dl_org'],'#');
+		$dl_org = strtok($Qdl_org,'#');
 		$oActividad->setDl_org($dl_org);
 	} else {	
 		$oActividad->setDl_org('');
 	}	
-	isset($_POST['nom_activ']) ? $oActividad->setNom_activ($_POST['nom_activ']) : '';
+	$oActividad->setNom_activ($Qnom_activ);
+	
 	// En el caso de tener id_ubi (!=1) borro el campo lugar_esp.
-	if (!empty($_POST['id_ubi']) && $_POST['id_ubi'] != 1 ) {
-		$oActividad->setId_ubi($_POST['id_ubi']);
+	if (!empty($Qid_ubi) && $Qid_ubi != 1 ) {
+		$oActividad->setId_ubi($Qid_ubi);
 		$oActividad->setLugar_esp('');
 	} else {
-		$oActividad->setId_ubi($_POST['id_ubi']);
-		$oActividad->setLugar_esp($_POST['lugar_esp']);
+		$oActividad->setId_ubi($Qid_ubi);
+		$oActividad->setLugar_esp($Qlugar_esp);
 	}
-	isset($_POST['desc_activ']) ? $oActividad->setDesc_activ($_POST['desc_activ']) : '';
-	isset($_POST['f_ini']) ? $oActividad->setF_ini($_POST['f_ini']) : '';
-	isset($_POST['f_fin']) ? $oActividad->setF_fin($_POST['f_fin']) : '';
-	isset($_POST['tipo_horario']) ? $oActividad->setTipo_horario($_POST['tipo_horario']) : '';
-	isset($_POST['precio']) ? $oActividad->setPrecio($_POST['precio']) : '';
-	isset($_POST['num_asistentes']) ? $oActividad->setNum_asistentes($_POST['num_asistentes']) : '';
-	isset($_POST['status']) ? $oActividad->setStatus($_POST['status']) : '';
-	isset($_POST['observ']) ? $oActividad->setObserv($_POST['observ']) : '';
-	isset($_POST['nivel_stgr']) ? $oActividad->setNivel_stgr($_POST['nivel_stgr']) : '';
-	isset($_POST['id_repeticion']) ? $oActividad->setId_repeticion($_POST['id_repeticion']) : '';
-	isset($_POST['observ_material']) ? $oActividad->setObserv_material($_POST['observ_material']) : '';
-	isset($_POST['tarifa']) ? $oActividad->setTarifa($_POST['tarifa']) : '';
-	isset($_POST['h_ini']) ? $oActividad->setH_ini($_POST['h_ini']) : '';
-	isset($_POST['h_fin']) ? $oActividad->setH_fin($_POST['h_fin']) : '';
-	isset($_POST['publicado']) ? $oActividad->setPublicado($_POST['publicado']) : '';
-	isset($_POST['plazas']) ? $oActividad->setPlazas($_POST['plazas']) : '';
+	$oActividad->setDesc_activ($Qdesc_activ);
+	$oActividad->setF_ini($Qf_ini);
+	$oActividad->setF_fin($Qf_fin);
+	$oActividad->setTipo_horario($Qtipo_horario);
+	$oActividad->setPrecio($Qprecio);
+	$oActividad->setNum_asistentes($Qnum_asistentes);
+	$oActividad->setStatus($Qstatus);
+	$oActividad->setObserv($Qobserv);
+	$oActividad->setNivel_stgr($Qnivel_stgr);
+	$oActividad->setId_repeticion($Qid_repeticion);
+	$oActividad->setObserv_material($Qobserv_material);
+	$oActividad->setTarifa($Qtarifa);
+	$oActividad->setH_ini($Qh_ini);
+	$oActividad->setH_fin($Qh_fin);
+	$oActividad->setPublicado($Qpublicado);
+	$oActividad->setPlazas($Qplazas);
 	if ($oActividad->DBGuardar() === false) { 
 		echo '<br>'._('Hay un error, no se ha guardado');
 		$err = 1;
@@ -296,18 +350,18 @@ case "actualizar_sacd": // para actualizar los sacd encargados.
 	    if (!empty($_POST['sacd1'])) {
 	      $update_sacd="UPDATE d_cargos_activ
 		                SET id_nom=".$_POST['sacd1']."
-			  	  	    WHERE id_activ=".$id_activ." AND id_nom=".$_POST['sacd1_antiguo']." AND id_cargo='35'";
+			  	  	    WHERE id_activ=".$Qid_activ." AND id_nom=".$_POST['sacd1_antiguo']." AND id_cargo='35'";
 			// si es una actividad de sv le añado la asistencia
 			if (substr($id_tipo_activ,0,1)==1) {
-				quitar_asistencia($id_activ,$_POST['sacd1_antiguo']);
-				poner_asistencia($id_activ,$_POST['sacd1']);
+				quitar_asistencia($Qid_activ,$_POST['sacd1_antiguo']);
+				poner_asistencia($Qid_activ,$_POST['sacd1']);
 			}
 	    }  else  {
 	      $update_sacd="DELETE FROM d_cargos_activ
-		                WHERE id_activ=".$id_activ." AND id_nom=".$_POST['sacd1_antiguo']." AND id_cargo='35'";  
+		                WHERE id_activ=".$Qid_activ." AND id_nom=".$_POST['sacd1_antiguo']." AND id_cargo='35'";  
 		   // si es una actividad de sv le quito la asistencia
 			if (substr($_POST['id_tipo_activ'],0,1)==1) {
-				quitar_asistencia($id_activ,$_POST['sacd1_antiguo']);
+				quitar_asistencia($Qid_activ,$_POST['sacd1_antiguo']);
 			}
 	    } 
 	    $oDBSt_q=$oDB->query($update_sacd);
@@ -316,11 +370,11 @@ case "actualizar_sacd": // para actualizar los sacd encargados.
 	  if (!empty($_POST['sacd1'])) {
 	    $update_sacd="INSERT INTO d_cargos_activ
 		              (id_activ,id_cargo,id_nom)
-					  VALUES ('".$id_activ."','35','".$_POST['sacd1']."')";
+					  VALUES ('".$Qid_activ."','35','".$_POST['sacd1']."')";
 	    $oDBSt_q=$oDB->query($update_sacd);
 		// si es una actividad de sv le añado la asistencia
 		if (substr($_POST['id_tipo_activ'],0,1)==1) {
-			poner_asistencia($id_activ,$_POST['sacd1']);
+			poner_asistencia($Qid_activ,$_POST['sacd1']);
 		}
 	  }
 	}  
@@ -330,18 +384,18 @@ case "actualizar_sacd": // para actualizar los sacd encargados.
 	    if (!empty($_POST['sacd2'])){
 	      $update_sacd="UPDATE d_cargos_activ
 		                SET id_nom=".$_POST['sacd2']."
-		  			    WHERE id_activ=".$id_activ." AND id_nom=".$_POST['sacd2_antiguo']." AND id_cargo='36'";
+		  			    WHERE id_activ=".$Qid_activ." AND id_nom=".$_POST['sacd2_antiguo']." AND id_cargo='36'";
 			// si es una actividad de sv le añado la asistencia
 			if (substr($_POST['id_tipo_activ'],0,1)==1) {
-				quitar_asistencia($id_activ,$_POST['sacd2_antiguo']);
-				poner_asistencia($id_activ,$_POST['sacd2']);
+				quitar_asistencia($Qid_activ,$_POST['sacd2_antiguo']);
+				poner_asistencia($Qid_activ,$_POST['sacd2']);
 			}
 	    } else {
 	      $update_sacd="DELETE FROM d_cargos_activ
-		                WHERE id_activ=".$id_activ." AND id_nom=".$_POST['sacd2_antiguo']." AND id_cargo='36'"; 
+		                WHERE id_activ=".$Qid_activ." AND id_nom=".$_POST['sacd2_antiguo']." AND id_cargo='36'"; 
 		   // si es una actividad de sv le quito la asistencia
 			if (substr($_POST['id_tipo_activ'],0,1)==1) {
-				quitar_asistencia($id_activ,$_POST['sacd2_antiguo']);
+				quitar_asistencia($Qid_activ,$_POST['sacd2_antiguo']);
 			}
 	    }
 	    $oDBSt_q=$oDB->query($update_sacd);
@@ -350,11 +404,11 @@ case "actualizar_sacd": // para actualizar los sacd encargados.
 	  if (!empty($_POST['sacd2'])) {
 	    $update_sacd="INSERT INTO d_cargos_activ
 		              (id_activ,id_cargo,id_nom)
-					  VALUES ('".$id_activ."','36','".$_POST['sacd2']."')";
+					  VALUES ('".$Qid_activ."','36','".$_POST['sacd2']."')";
 	    $oDBSt_q=$oDB->query($update_sacd);
 		// si es una actividad de sv le añado la asistencia
 		if (substr($_POST['id_tipo_activ'],0,1)==1) {
-			poner_asistencia($id_activ,$_POST['sacd2']);
+			poner_asistencia($Qid_activ,$_POST['sacd2']);
 		}
 	  }
 	}  
@@ -364,18 +418,18 @@ case "actualizar_sacd": // para actualizar los sacd encargados.
 	    if (!empty($_POST['sacd3'])){
 	      $update_sacd="UPDATE d_cargos_activ
 		                SET id_nom=".$_POST['sacd3']."
-			  		    WHERE id_activ=".$id_activ." AND id_nom=".$_POST['sacd3_antiguo']." AND id_cargo='37'";
+			  		    WHERE id_activ=".$Qid_activ." AND id_nom=".$_POST['sacd3_antiguo']." AND id_cargo='37'";
 			// si es una actividad de sv le añado la asistencia
 			if (substr($_POST['id_tipo_activ'],0,1)==1) {
-				quitar_asistencia($id_activ,$_POST['sacd3_antiguo']);
-				poner_asistencia($id_activ,$_POST['sacd3']);
+				quitar_asistencia($Qid_activ,$_POST['sacd3_antiguo']);
+				poner_asistencia($Qid_activ,$_POST['sacd3']);
 			}
 	    } else {
 	      $update_sacd="DELETE FROM d_cargos_activ
-		                WHERE id_activ=".$id_activ." AND id_nom=".$_POST['sacd3_antiguo']." AND id_cargo='37'"; 
+		                WHERE id_activ=".$Qid_activ." AND id_nom=".$_POST['sacd3_antiguo']." AND id_cargo='37'"; 
 			// si es una actividad de sv le quito la asistencia
 			if (substr($_POST['id_tipo_activ'],0,1)==1) {
-				quitar_asistencia($id_activ,$_POST['sacd3_antiguo']);
+				quitar_asistencia($Qid_activ,$_POST['sacd3_antiguo']);
 			}
 	    }
 	    $oDBSt_q=$oDB->query($update_sacd);
@@ -384,11 +438,11 @@ case "actualizar_sacd": // para actualizar los sacd encargados.
 	  if (!empty($_POST['sacd3'])) {
 	    $update_sacd="INSERT INTO d_cargos_activ
 		              (id_activ,id_cargo,id_nom)
-					  VALUES ('".$id_activ."','37','".$_POST['sacd3']."')";
+					  VALUES ('".$Qid_activ."','37','".$_POST['sacd3']."')";
 	    $oDBSt_q=$oDB->query($update_sacd);
 		// si es una actividad de sv le añado la asistencia
 		if (substr($_POST['id_tipo_activ'],0,1)==1) {
-			poner_asistencia($id_activ,$_POST['sacd3']);
+			poner_asistencia($Qid_activ,$_POST['sacd3']);
 		}
 	  }
 	}  
@@ -407,11 +461,11 @@ case "actualizar_ctr": // cambiar sólo los ctr encargados
 				$ctr=$_POST['ctr'][$i];
 				$update_ctr="UPDATE d_encargados_activ
 							SET id_ubi=$ctr
-							WHERE id_activ=".$id_activ." AND id_ubi=$ctr_antiguo AND num_orden='$i'";
+							WHERE id_activ=".$Qid_activ." AND id_ubi=$ctr_antiguo AND num_orden='$i'";
 				//echo "up: $update_ctr, $i<br>";
 			} else { // si es nulo lo elimino
 				$update_ctr="DELETE FROM d_encargados_activ
-							WHERE id_activ=".$id_activ." AND id_ubi=$ctr_antiguo ";  
+							WHERE id_activ=".$Qid_activ." AND id_ubi=$ctr_antiguo ";  
 			} 
 			$oDBSt_q=$oDB->exec($update_ctr);
 		  }
@@ -420,7 +474,7 @@ case "actualizar_ctr": // cambiar sólo los ctr encargados
 			$update_ctr="INSERT INTO d_encargados_activ
 						  (id_activ,num_orden,id_ubi,encargo)
 						  VALUES (?,?,?,'organizador')";
-			$a_values=array($id_activ,$i,$_POST['ctr'][$i]);
+			$a_values=array($Qid_activ,$i,$_POST['ctr'][$i]);
 			//echo "q: $update_ctr<br>";
 			//print_r($a_values);
 			//ejecuta
@@ -431,43 +485,3 @@ case "actualizar_ctr": // cambiar sólo los ctr encargados
 		}  
 	}	
 } // fin del switch de mod.
-
-
-if (empty($_POST['origen'])) { $_POST['origen']=''; }
-
-if ($_POST['origen'] != 'calendario' && $_POST['mod'] != 'eliminar') {
-	if ($_POST['mod']=='nuevo' || $_POST['mod']=='duplicar') {
-		$tabla='Actividad';
-		$go_to='actividad_ver.php?que=ver&id_activ='.$oActividad->getId_activ()."&tabla=$tabla";
-		$oPosicion = new web\Posicion();
-		echo $oPosicion->ir_a($go_to);
-		exit;
-	} else {
-		$tabla="Actividad";
-		$go_to="actividad_ver.php?que=ver&id_activ=".$id_activ."&tabla=$tabla";
-	}
-	//vuelve a la presentacion de la ficha.
-	if (!empty($_POST['mem'])) {
-		$go_to="session@sel";
-	}
-	//echo "go_to: $go_to<br>";
-	//$r=ir_a($go_to);
-	if (empty($err)) {
-		$oPosicion->setId_div('ir_a');
-		echo $oPosicion->mostrar_left_slide();
-	} else {
-		?>
-		<table>
-		<tr>
-		<td class="atras no_print">
-		<?= $oPosicion->mostrar_back_arrow(); ?>
-		</td>
-		<td style="vertical-align: bottom;">
-		<h3>
-		<?php echo _("volver"); ?></h3></td>
-		</tr>
-		</table>
-	<?php
-	}
-}
-?>

@@ -1,6 +1,6 @@
 <?php
-use asignaturas\model as asignaturas;
-use profesores\model as profesores;
+use asignaturas\model\entity as asignaturas;
+use profesores\model\entity as profesores;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -36,7 +36,7 @@ $h = $oHash->linkSinVal();
 fnjs_profes=function(){
 	var url='<?= core\ConfigGlobal::getWeb().'/apps/profesores/controller/profesor_asignatura_ajax.php' ?>';
 	id_asignatura = $("#id_asignatura").val();
-	var parametros='id_asignatura='+id_asignatura+'<?= $h ?>&PHPSESSID=<?php echo session_id(); ?>';
+	var parametros='id_asignatura='+id_asignatura+'<?= $h ?>&PHPSESSID=<?= session_id(); ?>';
 	$.ajax({
 		data: parametros,
 		url: url,

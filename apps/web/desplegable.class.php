@@ -8,6 +8,7 @@ class Desplegable {
 	protected $sOpcion_sel;
 	protected $aOpcion_no;
 	protected $bBlanco;
+	protected $valorBlanco;
 	protected $sAction;
 	protected $iSize;
 	protected $bMultiple;
@@ -46,7 +47,13 @@ class Desplegable {
 
 	public function options() {
 		$txt = '';
-		if (!empty($this->bBlanco)) { $txt .= '<option></option>'; }
+		if (!empty($this->bBlanco)) {
+			if (!empty($this->valorBlanco)) {
+				$txt .= "<option value=\"$this->valorBlanco\"></option>";
+			} else {
+				$txt .= '<option></option>';
+			}
+		}
 		if (is_object($this->oOpciones)) {
 			$this->oOpciones->execute();
 			foreach($this->oOpciones as $row) {
@@ -85,6 +92,9 @@ class Desplegable {
 	}
 	public function setBlanco($bBlanco) {
 		$this->bBlanco = $bBlanco;
+	}
+	public function setValBlanco($valorBlanco) {
+		$this->valorBlanco = $valorBlanco;
 	}
 	public function setAction($sAction) {
 		$this->sAction = $sAction;

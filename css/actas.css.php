@@ -9,7 +9,7 @@
 
 include_once (core\ConfigGlobal::$dir_estilos.'/colores.php'); 
 ?>
-<!-- PAGINA DE ESTILO: <?php echo __FILE__; ?> -->
+<!-- PAGINA DE ESTILO: <?= __FILE__; ?> -->
 <style>
  
 @page { 

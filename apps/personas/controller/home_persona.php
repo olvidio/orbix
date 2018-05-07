@@ -1,6 +1,6 @@
 <?php
-use personas\model as personas;
-use ubis\model as ubis;
+use personas\model\entity as personas;
+use ubis\model\entity as ubis;
 /**
 * Esta página pone el titulo en el frame superior.
 *
@@ -20,20 +20,19 @@ use ubis\model as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-// Si vengo de un link antiguo:
-//if (!empty($tabla)) $tabla_pau=$tabla;
-
+$oPosicion->recordar();
 
 if (!empty($_POST['sel'])) { //vengo de un checkbox
 	$id_sel=$_POST['sel'];
 	$id_nom=strtok($_POST['sel'][0],"#");
 	$id_tabla=strtok("#");
-	$oPosicion->addParametro('id_sel',$id_sel);
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
-	$oPosicion->addParametro('scroll_id',$scroll_id);
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else {
-	$id_nom = empty($_POST['id_nom'])? '' : $_POST['id_nom'];
-	$id_tabla = empty($_POST['id_tabla'])? '' : $_POST['id_tabla'];
+	$id_nom = (integer) \filter_input(INPUT_POST, 'id_nom');
+	$id_tabla = (string) \filter_input(INPUT_POST, 'id_tabla');
 	
 	$id_sel = array("$id_nom#$id_tabla");
 	$oPosicion->addParametro('id_sel',$id_sel);
@@ -43,33 +42,33 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 if (!empty($id_tabla)) {
 	switch ($id_tabla) {
 		case "n":
-			$obj_pau="PersonaN";
+			$Qobj_pau="PersonaN";
 			break;	
 		case "x":
-			$obj_pau="PersonaNax";
+			$Qobj_pau="PersonaNax";
 			break;	
 		case "a":
-			$obj_pau="PersonaAgd";
+			$Qobj_pau="PersonaAgd";
 			break;
 		case "s":
-			$obj_pau="PersonaS";
+			$Qobj_pau="PersonaS";
 			break;	
 		case "sssc":
-			$obj_pau="PersonaSSSC";
+			$Qobj_pau="PersonaSSSC";
 			break;	
 		case "pn":
 		case "pa":
 		case "psssc":
-			$obj_pau="PersonaEx";
+			$Qobj_pau="PersonaEx";
 			break;
 	}
 } else {
-	empty($_POST['obj_pau'])? $obj_pau="" : $obj_pau=$_POST['obj_pau'];
+	$Qobj_pau = (string) filter_input(INPUT_POST,'obj_pau');
 }
 
 // Si vengo de planning_select u otros, puede que la tabla sea más genérica (p_de_casa) y no sepa como resolver algunas cosas.
 if (isset($_SESSION['session_go_to']['sel']['tabla'])) {
-	$_SESSION['session_go_to']['sel']['tabla']=$obj_pau;
+	$_SESSION['session_go_to']['sel']['tabla']=$Qobj_pau;
 }
 
 $id_pau = $id_nom;
@@ -86,7 +85,7 @@ $select_de_paso="";
 $from="";
 
 // según sean numerarios...
-$obj = 'personas\\model\\'.$obj_pau;
+$obj = 'personas\\model\\entity\\'.$Qobj_pau;
 $oPersona = new $obj($id_nom);
 
 
@@ -100,7 +99,7 @@ $situacion = $oPersona->getSituacion();
 $f_situacion = $oPersona->getF_situacion();
 $profesion = $oPersona->getProfesion();
 $stgr = $oPersona->getStgr();
-if ($obj_pau != 'PersonaEx' && $obj_pau != 'PersonaIn') {
+if ($Qobj_pau != 'PersonaEx' && $Qobj_pau != 'PersonaIn') {
 	$id_ctr = $oPersona->getId_ctr();
 	$oCentroDl = new ubis\CentroDl($id_ctr);	
 	$ctr = $oCentroDl->getNombre_ubi();
@@ -108,11 +107,10 @@ if ($obj_pau != 'PersonaEx' && $obj_pau != 'PersonaIn') {
 	$ctr = '';
 }
 
-//if (empty($_POST['go_atras'])) { $go_atras="programas/personas_select.php"; } else { $go_atras=$_POST['go_atras']; }
-$gohome=web\Hash::link('apps/personas/controller/home_persona.php?'.http_build_query(array('id_nom'=>$id_nom,'obj_pau'=>$obj_pau))); 
-$godossiers=web\Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_nom,'obj_pau'=>$obj_pau)));
-$go_breve=web\Hash::link('apps/personas/controller/personas_editar.php?'.http_build_query(array('id_nom'=>$id_nom,'obj_pau'=>$obj_pau,'breve'=>'true'))); 
-$go_ficha=web\Hash::link('apps/personas/controller/personas_editar.php?'.http_build_query(array('id_nom'=>$id_nom,'obj_pau'=>$obj_pau))); 
+$gohome=web\Hash::link('apps/personas/controller/home_persona.php?'.http_build_query(array('id_nom'=>$id_nom,'obj_pau'=>$Qobj_pau))); 
+$godossiers=web\Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_nom,'obj_pau'=>$Qobj_pau)));
+$go_breve=web\Hash::link('apps/personas/controller/personas_editar.php?'.http_build_query(array('id_nom'=>$id_nom,'obj_pau'=>$Qobj_pau,'breve'=>'true'))); 
+$go_ficha=web\Hash::link('apps/personas/controller/personas_editar.php?'.http_build_query(array('id_nom'=>$id_nom,'obj_pau'=>$Qobj_pau))); 
 
 $alt=_("ver dossiers");
 $dos=_("dossiers");
@@ -124,5 +122,5 @@ $titulo=$nom;
 $telfs = '';
 
 ?>
-<div id="top_personas"  name="top_personas"><?php include ("../view/home_persona.phtml"); ?></div>
-<div id="ficha_personas" name="ficha_personas"><?php include ("apps/dossiers/controller/lista_dossiers.php"); ?></div>
+<div id="top"  name="top"><?php include ("../view/home_persona.phtml"); ?></div>
+<div id="ficha" name="ficha"><?php include ("apps/dossiers/controller/lista_dossiers.php"); ?></div>

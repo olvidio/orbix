@@ -1,8 +1,8 @@
 ﻿<?php
-use asignaturas\model as asignaturas;
-use dossiers\model as dossiers;
-use notas\model as notas;
-use personas\model as personas;
+use asignaturas\model\entity as asignaturas;
+use dossiers\model\entity as dossiers;
+use notas\model\entity as notas;
+use personas\model\entity as personas;
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
 */
@@ -40,7 +40,7 @@ switch($_POST['mod']) {
 		}
 		break;
 	case 'nuevo': //------------ NUEVO --------
-		if ($_POST['id_asignatura']=='1' && $_POST['opcional'] == 'n') {
+		if ($_POST['id_asignatura']=='1') {
 			$id_nivel = $_POST['id_nivel'];
 			$oGesAsignaturas=new asignaturas\GestorAsignatura();
 			$cAsignaturas=$oGesAsignaturas->getAsignaturas(array('id_nivel'=>$id_nivel));
@@ -57,7 +57,7 @@ switch($_POST['mod']) {
 		// para saber a que schema pertenece la persona
 		$oPersona = personas\Persona::NewPersona($id_nom);
 		if (!is_object($oPersona)) {
-			$msg_err = "<br>$oPersona con id_nom: $id_nom";
+			$msg_err = "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 			exit($msg_err);
 		}
 		$id_schema = $oPersona->getId_schema();
@@ -146,15 +146,7 @@ switch($_POST['mod']) {
 		break;
 }
 
-$go_to = empty($_POST['go_to'])? '' : $_POST['go_to'];
 
-if (empty($msg_err)) { 
-	if (!empty($go_to)) {
-		echo $oPosicion->ir_a($go_to);
-	} else {
-		$oPosicion->setId_div('ir_a');
-		echo $oPosicion->mostrar_left_slide();
-	}
-} else {
+if (!empty($msg_err)) { 
 	echo $msg_err;
 }	

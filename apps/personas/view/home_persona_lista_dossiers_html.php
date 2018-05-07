@@ -1,4 +1,4 @@
-<h2 class=titulo><?php echo ucfirst(_("relación de dossiers")); ?></h2>
+<h2 class=titulo><?= ucfirst(_("relación de dossiers")); ?></h2>
 <?php
 $lista_doss="SELECT * 
 			FROM  d_tipos_dossiers dt 
@@ -46,7 +46,7 @@ foreach ($oDBSt_d_lista->fetchAll() as $row) {
 	 switch ($perm_a) { 
 		case 1: //no tiene permisos
 			$imagen=ConfigGlobal::$web_icons.'/images/folder.sec.gif';
-			?> <td></td><td><?php echo $descripcion; ?></td>
+			?> <td></td><td><?= $descripcion; ?></td>
 			<?php break;
 		case 2: // sólo lectura
 			?> <td><img class="dossier" src='<?= $imagen ?>' ></td><td><span class="link" onclick="fnjs_update_div('#main','<?= $href_ver ?>');"><font color="green"><?= $descripcion ?></font></span></td>

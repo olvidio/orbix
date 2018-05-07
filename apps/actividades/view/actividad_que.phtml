@@ -1,0 +1,91 @@
+<script>
+fnjs_buscar=function(act){
+	/* genero el id_tipo_actividad */
+	var isfsv=$('#isfsv_val').val();
+	var iasistentes=$('#iasistentes_val').val();
+	var iactividad=$('#iactividad_val').val();
+	var inom_tipo=$('#inom_tipo_val').val();
+	if (!isfsv) isfsv=".";
+	if (!iasistentes) iasistentes=".";
+	if (!iactividad) iactividad=".";
+	if (!inom_tipo) inom_tipo="...";
+	var id=isfsv+iasistentes+iactividad+inom_tipo;
+
+	$('#id_tipo_activ').val(id);
+	$('#modifica').attr('action',act);
+	fnjs_enviar_formulario('#modifica');
+}
+fnjs_lugar=function(){
+	var opcion_sel='<?= $Qid_ubi ?>';
+	var isfsv=$('#isfsv_val').val();
+	var filtro_lugar=$('#filtro_lugar').val();
+	var url='<?= core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tipo_get.php' ?>';
+	var parametros='salida=lugar&entrada='+filtro_lugar+'&opcion_sel='+opcion_sel+'&isfsv='+isfsv+'<?= $h ?>&PHPSESSID=<?= session_id(); ?>';
+	$.ajax({
+		data: parametros,
+		url: url,
+		type: 'post',
+		dataType: 'html',
+		complete: function (rta) {
+			rta_txt=rta.responseText;
+			$('#lst_lugar').html(rta_txt);
+		}
+	});
+}
+fnjs_left_side_hide();
+</script>
+<div id="exportar" export_modo="formulario">
+<form id="modifica"name="modifica" action="" method="post" onkeypress="fnjs_enviar(event,this);" >
+<?= $oHash->getCamposHtml(); ?>
+<h3 class=subtitulo><?= $titulo; ?></h3>
+<table>
+<tr><th colspan=3 class=titulo_inv><?php  echo ucfirst(_("escoger el tipo de actividad")); ?></th></tr>
+</table>
+<?= $oActividadTipo->getHtml() ?>
+<table>
+<tr>
+<td class=etiqueta><?= ucfirst(_("estado")); ?>:</td>
+	<td><input type="Radio" name="status" value="1" <?php if ($Qstatus==1) { echo "checked='true'";} ?>><?= _("proyecto"); ?></td>
+	<td><input type="Radio" name="status" value="2" <?php if ($Qstatus==2) { echo "checked='true'";} ?>><?= _("actual"); ?></td>
+	<td><input type="radio" name="status" value="3" <?php if ($Qstatus==3) { echo "checked='true'";} ?>><?= _("terminada"); ?></td>
+	<td><input type="radio" name="status" value="4" <?php if ($Qstatus==4) { echo "checked='true'";} ?>><?= _("borrable"); ?></td>
+	<td><input type="radio" name="status" value="5" <?php if ($Qstatus==5) { echo "checked='true'";} ?>><?= _("cualquiera"); ?></td>
+<td><input type='hidden' id='id_tipo_activ' name='id_tipo_activ'> </td>
+</tr>
+</table>
+<br>
+<table>
+<tr><th colspan=6 class=titulo_inv><?php  echo ucfirst(_("escoger la actividad")); ?></th></tr>
+<?php
+if (core\ConfigGlobal::mi_id_role() != 8 && core\ConfigGlobal::mi_id_role() != 16) { //centros
+?>
+<tr>
+	<td class=etiqueta><?= _("lugar según país o dl"); ?>:</TD>
+	<td colspan=3>
+	<?= $oDesplFiltroLugar->desplegable() ?>
+	</TD>
+	<td class=etiqueta><?= _("lugar"); ?></TD>
+	<td id='lst_lugar' colspan=1>
+		<?php if (!empty($oDesplegableCasas)) { echo $oDesplegableCasas->desplegable(); } ?>
+	</TD>
+</TR>
+<tr>
+	<td class=etiqueta><?= _("organiza"); ?>:</TD>
+	<td colspan=3>
+	<?= $oDesplDelegacionesOrg->desplegable(); ?>
+	</TD>
+</TR>
+<?php
+}
+?>
+<tr><td class=etiqueta><?= _("periodo"); ?>:</TD>
+	<?= $oFormP->getTd(); ?>
+</tr>
+</table>
+<br>
+<input TYPE="button" onclick="fnjs_buscar('<?= $accion; ?>')" id="ok" name="ok" value="<?= ucfirst(_("buscar")); ?>" class="btn_ok">
+<input TYPE="reset" VALUE="borrar" onclick="fnjs_update_div('#main','<?= $Link_borrar ?>')" >
+</form>
+<script>
+fnjs_lugar(); 
+</script>

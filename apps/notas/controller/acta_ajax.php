@@ -1,6 +1,6 @@
 <?php
-use asignaturas\model as asignaturas;
-use notas\model as notas;
+use asignaturas\model\entity as asignaturas;
+use notas\model\entity as notas;
 /**
 * Esta página sirve para dar una lista de examinadores para los inputs autocomplete
 *
@@ -12,9 +12,6 @@ use notas\model as notas;
 *		
 */
 
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -24,10 +21,10 @@ use notas\model as notas;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$que = empty($_POST['que'])? '' : $_POST['que'];
-$sQuery = empty($_POST['q'])? '' : $_POST['q'];
+$Qque = (string) \filter_input(INPUT_POST, 'que');
+$sQuery = (string) \filter_input(INPUT_POST, 'q');
 
-switch($que) {
+switch($Qque) {
 	case 'examinadores':
 		$GesActaTribunalDl = new notas\GestorActaTribunalDl();
 		$json = $GesActaTribunalDl->getJsonExaminadores($sQuery);
@@ -38,5 +35,3 @@ switch($que) {
 	break;
 }
 echo $json;
-
-?>

@@ -1,5 +1,5 @@
 <?php
-use usuarios\model as usuarios;
+use usuarios\model\entity as usuarios;
 /**
 * Formulario para cambiar el password por parte del usuario.
 */
@@ -65,7 +65,7 @@ input {
 	background-color: #bcfcb1;
 	}
 </style>
-<script type='text/javascript' src='<?php echo core\ConfigGlobal::$web_scripts.'/jquery.password_strength.js'; ?>'></script>
+<script type='text/javascript' src='<?= core\ConfigGlobal::$web_scripts.'/jquery.password_strength.js'; ?>'></script>
 <h3><?= $usuario ?></h3>
 <?= _("Deberías cambiar el password") ?>
 <form id=frm_usuario  name=frm_usuario action='' method="post" >

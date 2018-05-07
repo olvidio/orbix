@@ -10,9 +10,6 @@
 *		
 */
 
-/**
-* Para asegurar que inicia la sesion, y poder acceder a los permisos
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -33,33 +30,9 @@ $go['profesores_listado']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/nota
 $go['asig_faltan']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/asig_faltan_que.php');
 
 
-// --------------------------- html -------------------------------------------------------------------------------------
-?>
-<ul>
-<?php if ($_SESSION['oPerm']->have_perm("est")){ ?>
-	<li><span class="link" onclick="fnjs_update_div('#main','<?= $go['comprobar_n'] ?>');"><?= _("Comprobar los datos del fichero de notas para numerarios") ?></span></li>
-	<li><span class="link" onclick="fnjs_update_div('#main','<?= $go['comprobar_a'] ?>');"><?= _("Comprobar los datos del fichero de notas para agregados") ?></span></li>
-<?php }
-if (($_SESSION['oPerm']->have_perm("est")) or ($_SESSION['oPerm']->have_perm("dtor"))) { ?>
-	<li><?php printf(_("Informe anual del Studium Generale para <b>%s</b>"),_("numerarios")) ?>
-		<ul>
-			<li><span class="link" onclick="fnjs_update_div('#main','<?= $go['n_listado'] ?>');"><?= _("con listados") ?></span></li>
-			<li><span class="link" onclick="fnjs_update_div('#main','<?= $go['n_numeros'] ?>');"><?= _("sólo números") ?></span></li>
-		</ul>
-	</li>
-	<li><?php printf(_("Informe anual del Studium Generale para <b>%s</b>"),_("agregados")) ?>
-		<ul>
-			<li><span class="link" onclick="fnjs_update_div('#main','<?= $go['agd_listado'] ?>');"><?= _("con listados") ?></span></li>
-			<li><span class="link" onclick="fnjs_update_div('#main','<?= $go['agd_numeros'] ?>');"><?= _("sólo números") ?></span></li>
-		</ul>
-	</li>
-	<li><?php printf(_("Informe anual del Studium Generale para <b>%s</b>"),_("profesores")) ?>
-		<ul>
-			<li><span class="link" onclick="fnjs_update_div('#main','<?= $go['profesores_listado'] ?>');"><?= _("con listados") ?></span></li>
-			<li><span class="link" onclick="fnjs_update_div('#main','<?= $go['profesores_numeros'] ?>');"><?= _("sólo números") ?></span></li>
-		</ul>
-	</li>
-	<br><br>
-	<li><span class="link" onclick="fnjs_update_div('#main','<?= $go['asig_faltan'] ?>');"><?= _("listar por asignaturas que faltan") ?></span></li>
-<?php } ?>
-</ul>
+$a_campos = [
+			'go' => $go
+			];
+
+$oView = new core\View('notas/model');
+echo $oView->render('resumen_anual.phtml',$a_campos);

@@ -19,6 +19,9 @@ You should have received a copy of the GNU General Public License along with thi
 			</style:paragraph-properties>
 		</style:style>
 		<style:style style:name="P1" style:family="paragraph" style:parent-style-name="Standard" />
+		<style:style style:name="T2" style:family="text">
+			<style:text-properties fo:background-color="#fff200" loext:char-shading-value="0"/>
+		</style:style>
 		<xsl:call-template name="table_cols"/>
 	</office:automatic-styles>
 
@@ -103,14 +106,17 @@ You should have received a copy of the GNU General Public License along with thi
 <xsl:template name="subtable">
 	<xsl:choose>
 		<xsl:when test="descendant::h3">
-			<xsl:apply-templates select="td"/>
+			<xsl:apply-templates select="node()"/>
 		</xsl:when>
 		<xsl:when test="child::td/h3|child::td/b">
 			<xsl:apply-templates select="td"/>
 		</xsl:when>
+		<xsl:when test="child::th/h3|child::th/b">
+			<xsl:apply-templates select="th"/>
+		</xsl:when>
 		<xsl:otherwise>
 			<text:p text:style-name="P2">
-				<xsl:apply-templates select="td"/>
+				<xsl:apply-templates select="node()"/>
 			</text:p>
 		</xsl:otherwise>
 	</xsl:choose>
@@ -136,6 +142,12 @@ You should have received a copy of the GNU General Public License along with thi
 			<xsl:for-each select="table/tbody/tr|table/tr">
 				<xsl:call-template name="subtable"/>
 			</xsl:for-each>
+		</xsl:when>
+		<xsl:when test="@class='alert'">
+			<text:tab />
+			<text:span text:style-name="T2">
+				<xsl:value-of select="node()"/>
+			</text:span>
 		</xsl:when>
 		<xsl:when test="@tipo='no_print'">
 		</xsl:when>
@@ -229,6 +241,11 @@ You should have received a copy of the GNU General Public License along with thi
 	<xsl:choose>
 		<xsl:when test="@class='link'">
 			<xsl:call-template name="text_applyer"/>
+		</xsl:when>
+		<xsl:when test="@class='alert'">
+			<text:span text:style-name="T2">
+				<xsl:value-of select="node()"/>
+			</text:span>
 		</xsl:when>
 		<xsl:when test="@class='sortarrow'">
 		</xsl:when>

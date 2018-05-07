@@ -1,10 +1,10 @@
 <?php
 
-use actividades\model as actividades;
-use actividadestudios\model as actividadestudios;
-use asignaturas\model as asignaturas;
+use actividades\model\entity as actividades;
+use actividadestudios\model\entity as actividadestudios;
+use asignaturas\model\entity as asignaturas;
 use core\ConfigGlobal;
-use personas\model as personas;
+use personas\model\entity as personas;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
@@ -90,7 +90,7 @@ foreach ($cMatriculasPendientes as $oMatricula) {
 	$nom_activ=$oActividad->getNom_activ();
 	$oPersona = personas\Persona::newPersona($id_nom);
 	if (!is_object($oPersona)) {
-		$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+		$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 		continue;
 	}
 	$apellidos_nombre=$oPersona->getApellidosNombre();
@@ -134,7 +134,7 @@ fnjs_ver_ca=function(formulario,n){
 
 fnjs_borrar=function(formulario){
 	var mensaje;
-	mensaje="<?php echo _("¿Esta Seguro que desea borrar todas las matrículas seleccionadas?");?>"; 
+	mensaje="<?= _("¿Esta Seguro que desea borrar todas las matrículas seleccionadas?");?>"; 
 	if (confirm(mensaje) ) {
 		var mod="#mod";
 		$(mod).val("eliminar");
@@ -144,7 +144,7 @@ fnjs_borrar=function(formulario){
 }
 </script>
 <h2 class=titulo><?= $titulo ?></h2>
-<h3><?php echo $aviso; ?></h3>
+<h3><?= $aviso; ?></h3>
 <form id="seleccionados" name="seleccionados" action="" method="post">
 <?= $oHash->getCamposHtml(); ?>
 <input type="hidden" id="pau" name="pau" value="p">

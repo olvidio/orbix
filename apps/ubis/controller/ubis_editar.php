@@ -1,7 +1,7 @@
 <?php
 namespace ubis\controller;
 use core;
-use usuarios\model as usuarios;
+use usuarios\model\entity as usuarios;
 /**
 * Es el frame inferior. Muestra la ficha de los ubis
 *
@@ -13,9 +13,6 @@ use usuarios\model as usuarios;
 *@author	Daniel Serrabou
 *@since		15/5/02.
 *		
-*/
-/**
-* En el fichero config tenemos las variables genéricas del sistema
 */
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -31,7 +28,7 @@ if (!empty($_POST['nuevo'])) {
 	$Gestor = unserialize(core\urlsafe_b64decode($_POST['sGestor']));
 	$obj = str_replace('Gestor','',$Gestor);
 	$oUbi = new $obj();
-	$obj_pau = str_replace('ubis\\model\\','',$obj);
+	$obj_pau = str_replace('ubis\\model\\entity\\','',$obj);
 	$cDatosCampo = $oUbi->getDatosCampos();
 	$oDbl = $oUbi->getoDbl();
 	foreach ($cDatosCampo as $oDatosCampo) {
@@ -46,7 +43,7 @@ if (!empty($_POST['nuevo'])) {
 	$a_campos['tipo_ubi'] = $tipo_ubi;
 	//print_r($a_campos);
 } else {
-	$obj = 'ubis\\model\\'.$_POST['obj_pau'];
+	$obj = 'ubis\\model\\entity\\'.$_POST['obj_pau'];
 	$oUbi = new $obj($_POST['id_ubi']);
 	$obj_pau = $_POST['obj_pau'];
 	$a_campos = $oUbi->getTot();
@@ -100,12 +97,12 @@ fnjs_guardar=function(){
    if (!error) {
 	   $('#que').val('ubi');
 	   $('#frm2').attr('action','apps/ubis/controller/ubis_update.php');
-	   fnjs_enviar_formulario('#frm2','#ficha_ubis');
+	   fnjs_enviar_formulario('#frm2','#ficha');
    }
 }
 
 fnjs_eliminar=function(r,go){
-	if (confirm("<?php echo _("¿Esta seguro que desea borrar este ubi?");?>") ) {
+	if (confirm("<?= _("¿Esta seguro que desea borrar este ubi?");?>") ) {
 	   $('#que').val('eliminar_ubi');
 	   $('#frm2').attr('action','apps/ubis/controller/ubis_update.php');
 	   fnjs_enviar_formulario('#frm2');

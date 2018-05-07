@@ -1,8 +1,4 @@
 <?php
-use actividadestudios\model as actividadestudios;
-use asistentes\model as asistentes;
-use notas\model as notas;
-use personas\model as personas;
 /**
 * Esta página sirve para matricular a todas las personas.
 *
@@ -13,9 +9,11 @@ use personas\model as personas;
 *@since		28/05/03.
 *		
 */
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
+use actividadestudios\model\entity as actividadestudios;
+use asistentes\model\entity as asistentes;
+use notas\model\entity as notas;
+use personas\model\entity as personas;
+
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -24,13 +22,18 @@ use personas\model as personas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	//$id_nom=$sel[0];
-	$id_nom=strtok($_POST['sel'][0],"#");
-	$id_tabla=strtok("#");
+$msg='';
+
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	$Qid_nom = strtok($a_sel[0],"#");
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$oPosicion->addParametro('id_sel',$a_sel,1);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else {
-	empty($_POST['id_nom'])? $id_nom="" : $id_nom=$_POST['id_nom'];
-	empty($_POST['id_activ'])? $id_activ="" : $id_activ=$_POST['id_activ'];
+	$Qid_nom = (integer) \filter_input(INPUT_POST, 'id_pau');
+	$Qid_activ = (integer) \filter_input(INPUT_POST, 'id_activ');
 }
 
 $mes=date('m');
@@ -41,17 +44,23 @@ $fincurs_ca=core\curso_est("fin",$any);
 // no miro los de rapaso:
 //   " stgr != 'r' ";
 // si no hay id_nom, es para todos los alumnos
-if (!empty($id_nom)) {
-	$aWhere['id_nom']=$id_nom;
+if (!empty($Qid_nom)) {
+	$aWhere['id_nom']=$Qid_nom;
 	$aWhere['stgr'] = 'r';
 	$aOperador['stgr'] = '!=';
 	// miro si es de paso
-	if ($id_nom{0} == 5) {
-		$GesPersonasDePaso = new personas\GestorPersonaDePaso();
-		$cAlumnos = $GesPersonasDePaso->getPersonasDePaso($aWhere,$aOperador);
+	
+	$oPersona = personas\Persona::NewPersona($Qid_nom);
+	$classname = get_class($oPersona);
+	if ($classname == 'PersonaEx') {
+		$GesPersonasDePaso = new personas\GestorPersonaEx();
+		$cAlumnos = $GesPersonasDePaso->getPersonasEx($aWhere,$aOperador);
 	} else {
 		$GesPersonasDl = new personas\GestorPersonaDl();
 		$cAlumnos = $GesPersonasDl->getPersonasDl($aWhere,$aOperador);
+	}
+	if (empty($cAlumnos)) {
+		$msg = _("está de repaso");
 	}
 	$modo_aviso = 'alert';
 } else {
@@ -63,11 +72,9 @@ if (!empty($id_nom)) {
 	$cAlumnos = $GesPersonasDl->getPersonasDl($aWhere,$aOperador);
 	$modo_aviso = '';
 }
-//$GesPersonasDl = new GestorPersonaDl();
-//$cAlumnos = $GesPersonasDl->getPersonasDl($aWhere,$aOperador);
+
 // para cada persona:
 $m=0;
-$msg="";
 $aWhere = array();
 $aOperadores = array();
 // de estudios ca-n, cv-agd
@@ -80,12 +87,12 @@ foreach($cAlumnos as $oPersonaDl) {
 	$id_nom=$oPersonaDl->getId_nom();
 	$cAsistencias = array();
 	// después me interesa el id_activ, asi que lo busco primero:
-	if (empty($id_activ)) { 
+	if (empty($Qid_activ)) { 
 		$GesAsistentes  = new asistentes\GestorAsistenteDl();
 		$aWhereNom = array('id_nom'=>$id_nom,'propio'=>'t');
 		$cAsistencias  = $GesAsistentes->getActividadesDeAsistente($aWhereNom,$aWhere,$aOperadores);
 	} else { // puede ser que ya le pase la actividad
-		$oAsistente = new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+		$oAsistente = new asistentes\AsistenteDl(array('id_activ'=>$Qid_activ,'id_nom'=>$id_nom));
 		$oAsistente->DBCarregar();
 		$cAsistencias[0] = $oAsistente;
 	}
@@ -94,16 +101,17 @@ foreach($cAlumnos as $oPersonaDl) {
 		case 0:
 			$msg .= addslashes(sprintf(_("no se ha hecho nada con %s no tiene asignado ca"),$oPersonaDl->getApellidosNombre()));
 			$msg .= '\n';
+			$msg .= '<br>';
 		   	continue;
 			break;
 		case 1:
-			$oAsistente = current($cAsistencias); // En le caso de varias, el indice es la f_ini (para poder ordenar en otros casos).
+			$oAsistente = current($cAsistencias); // En el caso de varias, el indice es la f_ini (para poder ordenar en otros casos).
 			$id_activ_1=$oAsistente->getId_activ();
 			$est_ok=$oAsistente->getEst_ok();
 			if ($est_ok != 1 ) {
 				//borro el plan de estudios de esta persona.
 				$GesMatriculas = new actividadestudios\GestorMatriculaDl();
-				$cMatriculas = $GesMatriculas->getMatriculas(array('id_nom'=>$id_nom));
+				$cMatriculas = $GesMatriculas->getMatriculas(array('id_nom'=>$id_nom,'id_activ'=>$id_activ_1));
 				foreach ($cMatriculas as $oMatricula) {
 					if ($oMatricula->DBEliminar() === false) {
 						echo _("Hay un error, no se ha eliminado");
@@ -119,7 +127,9 @@ foreach($cAlumnos as $oPersonaDl) {
 				}
 				//busco las asignaturas de su ca
 				$GesAsignaturasCa = new actividadestudios\GestorActividadAsignatura();
-				// Ojo. Se ha ido cambiando: 1. que también coja las asig con preceptor... 2. Que no coja las asignaturas con preceptor...
+				// Ojo. Se ha ido cambiando:
+				//  1. que también coja las asig con preceptor...
+				//  2. Que no coja las asignaturas con preceptor...
 				$cAsignaturasCa = $GesAsignaturasCa->getActividadAsignaturas(array('id_activ'=>$id_activ_1,'tipo'=>'x'),array('tipo'=>'IS NULL'));
 				foreach ($cAsignaturasCa as $oActividadAsignatura) {
 					$id_asignatura = $oActividadAsignatura->getId_asignatura(); 
@@ -185,15 +195,15 @@ foreach($cAlumnos as $oPersonaDl) {
 					$m++;
 				}
 				$msg .= addslashes(sprintf(_("%s se ha matriculado de %s asignaturas"),$oPersonaDl->getApellidosNombre(),$m));
-				$msg .= '\n';
+				$msg .= "\n";
 			} else {
 				$msg .= addslashes(sprintf(_("no se ha hecho nada com %s. ya tiene el plan de estudios confirmado"),$oPersonaDl->getApellidosNombre()));
-				$msg .= '\n';
+				$msg .= "\n";
 			}
 			break;
 		default:
 			$msg .= addslashes(sprintf(_("no se ha hecho nada con %s, tiene asignado más de un ca"),$oPersonaDl->getApellidosNombre()));
-			$msg .= '\n';
+			$msg .= "\n";
 	}
 
 }
@@ -202,12 +212,4 @@ if (empty($msg)) {
 	$msg = addslashes(_("no se ha hecho nada"));
 }
 
-if ($modo_aviso == 'alert') {
-	echo "<script>alert('$msg')</script>";
-	if (!empty($_POST['go_to'])) {
-		$oPosicion->ir_a($_POST['go_to']);
-	}
-} else {
-	echo "$msg";
-}
-?>
+echo $msg;

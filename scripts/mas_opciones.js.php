@@ -13,7 +13,7 @@
 /* Desde la página hay que tener algo asi:  (nom=oficinas)
 /*
 /*	<tr>
-/*		<td class=etiqueta><?php echo _("oficina"); ?>:</td>	
+/*		<td class=etiqueta><?= _("oficina"); ?>:</td>	
 /*		<td id="col_oficinas" colspan=8><span id="oficinas_span" ></span>
 /*	<?php
 /*		// para que me salga una opción más en blanco

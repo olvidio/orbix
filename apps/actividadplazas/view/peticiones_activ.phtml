@@ -1,0 +1,65 @@
+<script>
+fnjs_mas_actividades=function(evt){
+	if(evt=="x") {
+		var valor=1;
+	} else {
+		var id_campo=evt.currentTarget.id;
+		var valor=$(id_campo).val();
+		evt.preventDefault();
+		evt.stopPropagation();
+	}
+	if (evt.keyCode==9 || evt.type=="change" || evt=="x") {
+		if (valor!=0) {
+			<?php
+				echo $oSelects->ListaSelectsJs();
+			?>
+		} else {
+			//ir_a('f_entrada');
+		}
+	}
+}
+fnjs_guardar=function(formulario){
+	$('#que').val('update');
+	$(formulario).attr('action',"apps/actividadplazas/controller/peticiones_activ_ajax.php");
+	fnjs_enviar_formulario(formulario);
+}
+fnjs_borrar=function(formulario){
+	$('#que').val('borrar');
+	$(formulario).attr('action',"apps/actividadplazas/controller/peticiones_activ_ajax.php");
+	$(formulario).submit(function() {
+		$.ajax({
+			data: $(this).serialize(),
+			type: 'post',
+			url: $(this).attr('action'),
+			complete: function (rta) { 
+				rta_txt=rta.responseText;
+				if (rta_txt != '' && rta_txt != '\n') {
+					alert (rta_txt);
+				}
+			},
+			success: function() { fnjs_actualizar() }
+		});
+		return false;
+	});
+	$(formulario).submit();
+	$(formulario).off();
+}
+
+fnjs_actualizar=function(){
+	$('#frm_peticiones').attr('action','apps/actividadplazas/controller/peticiones_activ.php');
+	fnjs_enviar_formulario('#frm_peticiones');
+}
+<?= $oSelects->ComprobarSelectJs(); ?>
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<h3><?= $ap_nom ?></h3>
+<form id=frm_peticiones  name=frm_peticiones action='' method="post" >
+<?= $oHash->getCamposHtml(); ?>
+<table>
+	<tr>
+	<td class=etiqueta width="30%"><?= _("actividades"); ?>:</td>	
+	<td id="col_actividades"> <?= $oSelects->ListaSelects(); ?></td></tr>
+</table>
+	<input type=button onclick="fnjs_guardar(this.form);" value="<?= $txt_guardar ?>">
+	<input type=button onclick="fnjs_borrar(this.form);" value="<?= _("borrar") ?>">
+</form>

@@ -33,20 +33,30 @@ class Posicion {
 	 *
 	 * @var integer
 	 */
-	private $stack = 0;
+	private $stack;
+	/**
+	 * constructor de Posicion.
+	 * Sirve para indicar si estoy dentro de _construct()
+	 *
+	 * @var bool
+	 */
+	private $constructor = false;
 
 	/* CONSTRUCTOR ------------------------------ */
 	function __construct($php_self='',$vars=array()) {
+		$this->constructor = true;
 		$this->surl = $php_self;
 		$this->sbloque = 'main';
 		$this->setParametros($vars);
+		$this->constructor = false;
 	}
 	
 	/**
 	 * coloca el cursor de posicion en la última posicion.
 	 *
 	 */
-	private function unGo() {
+	private function goEnd() {
+		if (!is_array($_SESSION['position'])) return;
 		$aPosition = end($_SESSION['position']);
 		$this->stack = key($_SESSION['position']);
 		$this->surl = $aPosition['url'];
@@ -55,11 +65,12 @@ class Posicion {
 	}
 	/**
 	 * coloca el cursor de posicion n posiciones atras.
+	 * para n=0, no se usa el valor en $_SESSION['position'], sino el actual.
 	 *
 	 * @var n número de posiciones a retroceder.
 	 */
 	public function go($n=0) {
-		if (!is_array($_SESSION['position'])) return;
+		if ($n == 0 OR !is_array($_SESSION['position'])) return;
 
 		$aPosition = end($_SESSION['position']);
 		for ($i=0; $i < $n; $i++) {
@@ -70,8 +81,11 @@ class Posicion {
 		$this->sbloque = $aPosition['bloque'];
 		$this->aParametros = $aPosition['parametros'];
 	}
-	public function getStack(){
+	public function getStack($n=0){
 		end($_SESSION['position']);
+		for ($i=0; $i < $n; $i++) {
+			$aPosition = prev($_SESSION['position']);
+		}
 		$this->stack = key($_SESSION['position']);
 		return $this->stack;
 	}
@@ -80,10 +94,11 @@ class Posicion {
 	 *
 	 * @var stack indice del array $_SESSION['position']);
 	 */
-	public function goStack($stack=0) {
+	public function goStack($stack='*') { //pongo '*' para distinguirlo del 0.
 		if (isset($_SESSION['position'][$stack])) {
 			$aPosition = $_SESSION['position'][$stack];
-			$this->stack = key($_SESSION['position']);
+			//$this->stack = key($_SESSION['position']);
+			$this->stack = $aPosition['stack'];
 			$this->surl = $aPosition['url'];
 			$this->sbloque = $aPosition['bloque'];
 			$this->aParametros = $aPosition['parametros'];
@@ -96,40 +111,55 @@ class Posicion {
 	public function olvidar($stack='*') {
 		if ($stack != '*') { //pongo '*' para distinguirlo del 0.
 			// hasta el final
-			array_splice($_SESSION['position'], $stack);
+			array_splice($_SESSION['position'], $stack+1);
 		} elseif (isset($this->stack)) { // borrar el actual
 			array_splice($_SESSION['position'], $this->stack);
 		}
 	}
-
-	public function recordar() {
+	
+	/*
+	 * @param $parar Para el incremento de la pila. por defecto 0. El 1 sirve par el caso de actualizar una misma página.
+	 */
+	public function recordar($parar=0) {
 		//echo "<script>history.pushState({state:'new'},'New State','?new');</script>";
 		// evitar que sea muy grande
 		$this->limitar(20);
 		// poner en parametros el stack
-		if (!isset($this->stack)) { //OJO si es el primero tiene valor 0. (no usar empty)
+		if (empty($this->stack)) { //OJO si es el primero tiene valor 0.
 			if (isset($_SESSION['position']) && is_array($_SESSION['position'])) { //para la primera
 				end($_SESSION['position']);
-				$stack = key($_SESSION['position']) + 1;
+				if (empty($parar)) {
+					$stack = key($_SESSION['position']) + 1;
+				}else {
+					$stack = key($_SESSION['position']);
+				}
 			} else {
-				$stack = 1;
+				$stack = 0;
 			}
 		} else {
-			$stack = $this->stack + 1;
+			if (empty($parar)) {
+				$stack = $this->stack + 1;
+			} else {
+				$stack = $this->stack;
+			}
 		}
 		$this->setParametro('stack', $stack);
-		$aPosition = array('url'=>$this->surl,'bloque'=>$this->sbloque,'parametros'=>$this->aParametros);
-		$_SESSION['position'][] = $aPosition;
+		$aPosition = array('url'=>$this->surl,'bloque'=>$this->sbloque,'parametros'=>$this->aParametros,'stack'=>$stack);
+		$_SESSION['position'][$stack] = $aPosition;
 	}
 
 	private function guardar() {
 		if (!isset($this->stack)) { //OJO si es el primero tiene valor 0. (no usar empty)
-			end($_SESSION['position']);
-			$stack = key($_SESSION['position']);
+			if (is_array($_SESSION['position'])) {
+				end($_SESSION['position']);
+				$stack = key($_SESSION['position']);
+			} else {
+				$stack = 0;
+			}
 		} else {
 			$stack = $this->stack;
 		}
-		$_SESSION['position'][$stack] = array('url'=>$this->surl,'bloque'=>$this->sbloque,'parametros'=>$this->aParametros);
+		$_SESSION['position'][$stack] = array('url'=>$this->surl,'bloque'=>$this->sbloque,'parametros'=>$this->aParametros,'stack'=>$stack);
 	}
 
 	public function go_atras($n=0) {
@@ -154,7 +184,7 @@ class Posicion {
 		$html .= '</form>';
 		$html .= '</div>';
 		// vuelvo el cursor al final.
-		$this->unGo();
+		$this->goEnd();
 		return $html;
 	}
 	
@@ -180,7 +210,7 @@ class Posicion {
 		$html .= '</form>';
 		
 		// vuelvo el cursor al final.
-		$this->unGo();
+		$this->goEnd();
 		return "fnjs_mostrar_atras('$id_div','$html');";
 	}
 	
@@ -207,7 +237,7 @@ class Posicion {
 		$html .= '</div>';
 
 		// vuelvo el cursor al final.
-		$this->unGo();
+		$this->goEnd();
 		return $html;
 	}
 
@@ -314,7 +344,7 @@ class Posicion {
 			$this->go($n);
 			$this->setParametro($nomParametre,$valor);
 			$this->guardar();
-			$this->unGo();
+			$this->goEnd();
 		}
 	}	
 	/**
@@ -331,9 +361,21 @@ class Posicion {
 	 *
 	 * @param array aVars
 	 */
-	public function setParametros($aVars) {
-		foreach ($aVars as $key=>$value) {
-			$this->aParametros[$key] = $value;
+	public function setParametros($aVars,$n=0) {
+		// Si es del constructor no guardo los cambios aqui.
+		if ($this->constructor) {
+			foreach ($aVars as $key=>$value) {
+				$this->aParametros[$key] = $value;
+			}
+		} else {
+			if (!empty($_SESSION['position'])) {
+				$this->go($n);
+				foreach ($aVars as $key=>$value) {
+					$this->aParametros[$key] = $value;
+				}
+				$this->guardar();
+				$this->goEnd();
+			}
 		}
 	}
 	/**
@@ -355,7 +397,7 @@ class Posicion {
 			} else {
 				$valParametre = empty($this->aParametros[$nomParametre])? '' : $this->aParametros[$nomParametre];
 			}
-			$this->unGo();
+			$this->goEnd();
 		}
 		return $valParametre;
 	}
@@ -450,26 +492,14 @@ class Posicion {
 			$aParam[$aa[0]] = isset($aa[1])? $aa[1] : ''; //ojo con el empty y el 0.
 		}
 		$parametros = Hash::add_hash($aParam,$url);
-		//<div id="ir_a" style="display: none;">
 
 		$html = '<form id="go">';
 		$html .= '	url: <input id="url" type="text" value="' . $url .'" size=70><br>';
 		$html .= '	parametros: <input id="parametros" type="text" value="' . $parametros . '" size=70><br>';
 		$html .= '	bloque: <input id="id_div" type="text" value="' . $frame . '" size=70>';
 		$html .= '</form>';
-		//return self::js_atras();
-
-		//return "<script>fnjs_mostrar_atras('ir_atras','$html');</script>";
-		
 		?>
 		<script>fnjs_mostrar_atras('ir_a','<?= $html ?>');</script>
-		<!--<div id="ir_a">
-			<form id="go">
-			url: <input id="url" type="text" value="<?= $url ?>" size=70><br>
-			parametros: <input id="parametros" type="text" value="<?= $parametros ?>" size=70><br>
-			bloque: <input id="id_div" type="text" value="<?= $frame ?>" size=70>
-			</form>
-		</div>-->
 		<?php
 	}
 

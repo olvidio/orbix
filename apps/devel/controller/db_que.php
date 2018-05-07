@@ -1,8 +1,5 @@
 <?php
-use ubis\model as ubis;
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
+use ubis\model\entity as ubis;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -34,7 +31,7 @@ $h = $oHash1->linkSinVal();
 fnjs_dl=function(){
 	var filtro_region=$('#region').val();
 	var url='<?= core\ConfigGlobal::getWeb().'/apps/devel/controller/db_ajax.php' ?>';
-	var parametros='salida=lugar&entrada='+filtro_region+'<?= $h ?>&PHPSESSID=<?php echo session_id(); ?>';
+	var parametros='salida=lugar&entrada='+filtro_region+'<?= $h ?>&PHPSESSID=<?= session_id(); ?>';
 	$.ajax({
 		data: parametros,
 		url: url,

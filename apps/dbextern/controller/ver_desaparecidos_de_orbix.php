@@ -21,7 +21,7 @@ $i = 0;
 foreach ($a_ids_desaparecidos_de_orbix as $id_nom_listas) {
 	$i++;
 	
-	$oPersonaListas = new dbextern\model\PersonaListas($id_nom_listas);
+	$oPersonaListas = new dbextern\model\entity\PersonaListas($id_nom_listas);
 
 	$a_persona_listas[$i]['id_nom_listas'] = $id_nom_listas;
 	$a_persona_listas[$i]['ape_nom'] = $oPersonaListas->getApeNom();
@@ -42,7 +42,7 @@ $h = $oHash->linkSinVal();
 <script>
 fnjs_desunir=function(id_listas,fila){
 	var url='<?= $url_sincro_ajax ?>';
-	var parametros='que=desunir&id_nom_listas='+id_listas+'&tipo_persona=<?= $tipo_persona ?><?= $h ?>&PHPSESSID=<?php echo session_id(); ?>';
+	var parametros='que=desunir&id_nom_listas='+id_listas+'&tipo_persona=<?= $tipo_persona ?><?= $h ?>&PHPSESSID=<?= session_id(); ?>';
 			 
 	$.ajax({
 		url: url,

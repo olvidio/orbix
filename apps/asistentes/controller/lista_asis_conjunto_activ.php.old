@@ -1,9 +1,9 @@
 <?php 
-use actividades\model as actividades;
-use actividadcargos\model as actividadcargos;
-use asistentes\model as asistentes;
-use personas\model as personas;
-use ubis\model as ubis;
+use actividades\model\entity as actividades;
+use actividadcargos\model\entity as actividadcargos;
+use asistentes\model\entity as asistentes;
+use personas\model\entity as personas;
+use ubis\model\entity as ubis;
 
 /**
 * Lista los asistentes de una relación de actividades seleccionada
@@ -106,7 +106,7 @@ $aWhere['_ordre'] = 'f_ini';
 $GesActividades = new actividades\GestorActividad();
 $cActividades = $GesActividades->getActividades($aWhere,$aOperador);
 
-if (is_array($cActividades) && count($cActividades) < 1) { echo core\strtoupper_dlb(_("No existe ninguna actividad con esta condición.")); exit;}
+if (is_array($cActividades) && count($cActividades) < 1) { echo core\strtoupper_dlb(_("No existe ninguna actividad con esta condición.")); die();}
 
 if (($sasistentes=="s") AND ($sactividad=="cv")) { 
 	$titulo = core\strtoupper_dlb(_("relación de cargos en las cv de s"));
@@ -188,7 +188,7 @@ foreach ($cActividades as $oActividad) {
 				$cargo_cl = $oCargo->getCargo();
 				$oPersona = personas\Persona::NewPersona($id_nom);
 				if (!is_object($oPersona)) {
-					$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+					$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 					continue;
 				}
 				$id_tabla = $oPersona->getId_tabla();
@@ -225,7 +225,7 @@ foreach ($cActividades as $oActividad) {
 			}
 			$oPersona = personas\Persona::NewPersona($id_nom);
 			if (!is_object($oPersona)) {
-				$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+				$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 				continue;
 			}
 			$id_tabla = $oPersona->getId_tabla();

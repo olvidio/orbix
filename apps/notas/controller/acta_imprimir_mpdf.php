@@ -1,7 +1,7 @@
 <?php
-use asignaturas\model as asignaturas;
-use notas\model as notas;
-use personas\model as personas;
+use asignaturas\model\entity as asignaturas;
+use notas\model\entity as notas;
+use personas\model\entity as personas;
 /**
 * Esta página sirve para las actas.
 *
@@ -13,9 +13,6 @@ use personas\model as personas;
 *		
 */
 
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -147,10 +144,10 @@ $tribunal_html .= "<div class=\"sello\">L.S.<br>Studii Generalis</div>";
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <div class="A4" >
 <?php if ($cara=="A") { ?>
-<div class="cabecera"><?php echo str_replace ("AE", "&#198;", "PRAELATURA SANCTAE CRUCIS ET OPERIS DEI"); ?></div>
-<div class="region"><?php echo str_replace ("AE", "&#198;", "STUDIUM GENERALE REGIONIS: &nbsp;HISPANIAE"); ?></div>
-<div class="curso"><?php echo str_replace ("AE", "&#198;",sprintf("CURSUS INSTITUTIONALES:&nbsp;&nbsp;  %s &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ANNUS: %s",$curso,$any)); ?></div><br>
-<div class="curso"><?php echo str_replace ("ae", "&#230;", "DISCIPLINA: &nbsp;&nbsp;&nbsp;&nbsp;$nombre_asig"); ?></div><br>
+<div class="cabecera"><?= str_replace ("AE", "&#198;", "PRAELATURA SANCTAE CRUCIS ET OPERIS DEI"); ?></div>
+<div class="region"><?= str_replace ("AE", "&#198;", "STUDIUM GENERALE REGIONIS: &nbsp;HISPANIAE"); ?></div>
+<div class="curso"><?= str_replace ("AE", "&#198;",sprintf("CURSUS INSTITUTIONALES:&nbsp;&nbsp;  %s &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ANNUS: %s",$curso,$any)); ?></div><br>
+<div class="curso"><?= str_replace ("ae", "&#230;", "DISCIPLINA: &nbsp;&nbsp;&nbsp;&nbsp;$nombre_asig"); ?></div><br>
 <div class="intro">Hisce litteris, quas propria uniuscuiusque subsignatione firmamus, fidem facimus hodierna die, coram infrascriptis Iudicibus, periculum de hac disciplina sequentes alumnos rite superasse:</div>
 <table class="alumni" height="<?= $alum_cara_A ?>">
 <tr><td width=55% class=alumni>ALUMNI</td><td  width=10%>&nbsp;</td><td width=35% class=alumni>CUM NOTA</td></tr>
@@ -161,10 +158,10 @@ $tribunal_html .= "<div class=\"sello\">L.S.<br>Studii Generalis</div>";
 		if ($i > $alum_cara_A) { continue;}
 		?>
 		<tr class=alumno>
-		<td class=alumno><?php echo $nom; ?>
+		<td class=alumno><?= $nom; ?>
 		</td>
 		<td>&nbsp;</td>
-		<td class=nota><?php echo $nota; ?></td>
+		<td class=nota><?= $nota; ?></td>
 		</tr>
 		<?php
 	}
@@ -192,11 +189,11 @@ if ($cara=="A") {
 <div class="pie">
 <div class="libro">
 <b>Reg.</b> StgrH &nbsp;
-<b>lib.</b> <?php echo $libro; ?> &nbsp;
-<b>pág.</b>  <?php echo $pagina; ?>
-<b> n.</b> <?php echo $linea; ?>
+<b>lib.</b> <?= $libro; ?> &nbsp;
+<b>pág.</b>  <?= $pagina; ?>
+<b> n.</b> <?= $linea; ?>
 </div>
-<div class="acta">(N <?php echo $acta; ?>)</div>
+<div class="acta">(N <?= $acta; ?>)</div>
 </div>
 <div class="f7">F7</div>
 <?php
@@ -216,10 +213,10 @@ if ($cara=="B" && $alum_cara_B > 0 ) {
 		if ($i <= $lin_max_cara_A) continue;
 		?>
 		<tr class=alumno>
-		<td class=alumno><?php echo $nom; ?>
+		<td class=alumno><?= $nom; ?>
 		</td>
 		<td>&nbsp;</td>
-		<td class=nota><?php echo $nota; ?></td>
+		<td class=nota><?= $nota; ?></td>
 		</tr>
 		<?php
 	}

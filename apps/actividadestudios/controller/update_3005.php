@@ -1,6 +1,6 @@
 ﻿<?php
-use actividadestudios\model as actividadestudios;
-use dossiers\model as dossiers;
+use actividadestudios\model\entity as actividadestudios;
+use dossiers\model\entity as dossiers;
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
 */
@@ -12,23 +12,32 @@ use dossiers\model as dossiers;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	if ($_POST['pau']=="a") { 
-			$id_activ=strtok($_POST['sel'][0],"#"); 
-			$id_asignatura=strtok("#");
+$msg_err = '';
+$Qmod = (string) \filter_input(INPUT_POST,'mod');
+$Qpau = (string) \filter_input(INPUT_POST,'pau');
+
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	if ($Qpau=="a") { 
+		$Qid_activ = strtok($a_sel[0],"#");
+		$Qid_asignatura=strtok("#");
 	}
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$oPosicion->addParametro('id_sel',$a_sel,1);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else {
-	empty($_POST['id_activ'])? $id_activ="" : $id_activ=$_POST['id_activ'];
-	empty($_POST['id_asignatura'])? $id_asignatura="" : $id_asignatura=$_POST['id_asignatura'];
+	$Qid_activ = (integer) \filter_input(INPUT_POST,'id_activ');
+	$Qid_asignatura = (integer) \filter_input(INPUT_POST,'id_asignatura');
 }
 
 $msg_err = '';
-switch ($_POST['mod']) {
+switch ($Qmod) {
 	case 'eliminar':  //------------ BORRAR --------
-		if ($_POST['pau']=="a") { 
+		if ($Qpau=="a") { 
 			$oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
-			$oActividadAsignatura->setId_activ($id_activ);
-			$oActividadAsignatura->setId_asignatura($id_asignatura);
+			$oActividadAsignatura->setId_activ($Qid_activ);
+			$oActividadAsignatura->setId_asignatura($Qid_asignatura);
 			if ($oActividadAsignatura->DBEliminar() === false) {
 				$msg_err = _("Hay un error, no se ha borrado.");
 			}
@@ -52,8 +61,8 @@ switch ($_POST['mod']) {
 		break;
 	case 'nuevo': //------------ NUEVO --------
 		$oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
-		$oActividadAsignatura->setId_activ($id_activ);
-		$oActividadAsignatura->setId_asignatura($id_asignatura);
+		$oActividadAsignatura->setId_activ($Qid_activ);
+		$oActividadAsignatura->setId_asignatura($Qid_asignatura);
 		if (!empty($_POST['interes'])) $oActividadAsignatura->setInteres($_POST['interes']); 
 		if (!empty($_POST['id_profesor'])) $oActividadAsignatura->setId_profesor($_POST['id_profesor']); 
 		if (!empty($_POST['avis_profesor'])) $oActividadAsignatura->setAvis_profesor($_POST['avis_profesor']); 
@@ -64,14 +73,14 @@ switch ($_POST['mod']) {
 			$msg_err = _("Hay un error, no se ha creado.");
 		}
 		// si es la primera asignatura, hay que abrir el dossier para esta actividad
-		$oDossier = new dossiers\Dossier(array('tabla'=>'a','id_pau'=>$id_activ,'id_tipo_dossier'=>3005));
+		$oDossier = new dossiers\Dossier(array('tabla'=>'a','id_pau'=>$Qid_activ,'id_tipo_dossier'=>3005));
 		$oDossier->abrir();
 		$oDossier->DBGuardar();
 		break;
 	case 'editar': //------------ EDITAR --------
 		$oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
-		$oActividadAsignatura->setId_activ($id_activ);
-		$oActividadAsignatura->setId_asignatura($id_asignatura);
+		$oActividadAsignatura->setId_activ($Qid_activ);
+		$oActividadAsignatura->setId_asignatura($Qid_asignatura);
 		$oActividadAsignatura->DBCarregar();
 		$_POST['interes'] = empty($_POST['interes'])? 'f' : 't'; 
 		$oActividadAsignatura->setInteres($_POST['interes']); 
@@ -86,12 +95,6 @@ switch ($_POST['mod']) {
 		break;
 }
 
-$go_to = urldecode($_POST['go_to']);
-//echo "ir_a ".$go_to;
 if (empty($msg_err)) { 
-	$oPosicion = new web\Posicion();
-	echo $oPosicion->ir_a($go_to);
-} else {
 	echo $msg_err;
 }	
-?>

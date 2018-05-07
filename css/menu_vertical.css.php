@@ -28,8 +28,8 @@
 #main {
 	margin-left:0em;
 	height:75%;
-	overflow-x:scroll;
-	overflow-y:scroll;
+	overflow-x:auto;
+	overflow-y:auto;
 	padding-bottom:6em;
 	padding-left:1em;
 	padding-right:6em;

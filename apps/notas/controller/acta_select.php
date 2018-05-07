@@ -1,16 +1,7 @@
 <?php
-
-use asignaturas\model as asignaturas;
-use core\ConfigGlobal;
-use notas\model as notas;
-use web\Hash;
-use web\Lista;
-use web\Posicion;
-use function core\curso_est;
 /**
 * Esta página muestra una tabla con las actas.
 *
-* Es llamado desde que_actas.php
 *
 *@package	delegacion
 *@subpackage	estudios
@@ -19,9 +10,14 @@ use function core\curso_est;
 *		
 */
 
-/**
-* Para asegurar que inicia la sesion, y poder acceder a los permisos
-*/
+use asignaturas\model\entity as asignaturas;
+use core\ConfigGlobal;
+use notas\model\entity as notas;
+use web\Hash;
+use web\Lista;
+use web\Posicion;
+use function core\curso_est;
+
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -33,24 +29,23 @@ use function core\curso_est;
 $mi_dele = ConfigGlobal::mi_dele();
 $mi_dele .= (ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
 
-$go_to='atras';
+$oPosicion->recordar();
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
 	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
 	if ($stack != '') {
-		// No me sirve el de global_object, sino el de la session
-		$oPosicion2 = new Posicion();
+		$oPosicion2 = new web\Posicion();
 		if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
 			$Qid_sel=$oPosicion2->getParametro('id_sel');
 			$Qscroll_id = $oPosicion2->getParametro('scroll_id');
 			$oPosicion2->olvidar($stack);
 		}
 	}
-} 
+}
 
-$Qtitulo = empty($_POST['titulo'])? '' : $_POST['titulo'];
-$Qacta = empty($_POST['acta'])? '' : $_POST['acta'];
+$Qtitulo = (string) \filter_input(INPUT_POST, 'titulo');
+$Qacta = (string) \filter_input(INPUT_POST, 'acta');
 
 /*
 * Defino un array con los datos actuales, para saber volver después de navegar un rato
@@ -58,8 +53,7 @@ $Qacta = empty($_POST['acta'])? '' : $_POST['acta'];
 $aGoBack = array (
 				'titulo'=>$Qtitulo,
 				'acta'=>$Qacta );
-$oPosicion->setParametros($aGoBack);
-$oPosicion->recordar();
+$oPosicion->setParametros($aGoBack,1);
 
 /*miro las condiciones. Si es la primera vez muestro las de este año */
 $aWhere = array();
@@ -114,8 +108,6 @@ $a_cabeceras=array( array('name'=>ucfirst(_("acta")),'formatter'=>'clickFormatte
 
 $i=0;
 $a_valores = array();
-if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
-if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 foreach ($cActas as $oActa) {
 	$i++;
 	$acta=$oActa->getActa();
@@ -133,6 +125,8 @@ foreach ($cActas as $oActa) {
 	$a_valores[$i][2]=$f_acta;
 	$a_valores[$i][3]=$nombre_corto;
 }
+if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 
 $oHash = new Hash();
 $oHash->setcamposForm('acta');
@@ -140,66 +134,19 @@ $oHash->setcamposForm('acta');
 $oHash1 = new Hash();
 $oHash1->setcamposForm('sel!nuevo');
 $oHash1->setCamposNo('sel!scroll_id!nuevo');
-$a_camposHidden1 = array(
-		'go_to' => $go_to
-		);
-$oHash1->setArraycamposHidden($a_camposHidden1);
 
-$help = "<p>"._("ejemplos").":<br>"
-		." - ". _("23/15 (sólo número) => busca en las actas de la dl.")."<br>"
-		." - ". _("dlx .* => todas las de dlx Hay que dejar espacio")."<br>"
-		." - ". _("dlx .*/15 => todas las de dlx del año 15 ")."<br>"
-		. "</p>";
-		
-/* ---------------------------------- html --------------------------------------- */
-?>
-<script>
-fnjs_imprimir=function(formulario){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-  		$(formulario).attr('action',"apps/notas/controller/acta_imprimir.php");
-  		fnjs_enviar_formulario(formulario);
-  	}
-}
-fnjs_nuevo=function(formulario){
-	$('#nuevo').val("1");
-	$(formulario).attr('action',"apps/notas/controller/acta_ver.php");
-  	fnjs_enviar_formulario(formulario,'#main');
-}
-fnjs_modificar=function(formulario){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-  		$(formulario).attr('action',"apps/notas/controller/acta_ver.php");
-  		fnjs_enviar_formulario(formulario);
-  	}
-}
-fnjs_left_side_hide();
-</script>
-<form id="frm_sin_nombre" name="frm_sin_nombre" action="apps/notas/controller/acta_select.php" method="post" onkeypress="fnjs_enviar(event,this);" >
-<?= $oHash->getCamposHtml(); ?>
-<table>
-<th class=titulo_inv colspan=4><?php echo ucfirst(_("buscar un acta")); ?>
-&nbsp;&nbsp;&nbsp;<input class=contenido id="acta" name="acta" size="25">
-<div class="help-tip"><?= $help ?></div>
-
-</th>
-<th colspan=4><input type="button" id="ok" name="ok" onclick="fnjs_enviar_formulario('#frm_sin_nombre');" value="<?php echo ucfirst(_("buscar")); ?>" class="btn_ok">
-</th>
-</table>
-</form>
-
-<h3 class=subtitulo><?= $titulo ?></h3>
-<form id='seleccionados' id='seleccionados' name='seleccionados' action='' method='post'>
-<?= $oHash1->getCamposHtml(); ?>
-<input type='Hidden' id='nuevo' name='nuevo' value=''>
-<?php
 $oTabla = new Lista();
 $oTabla->setId_tabla('acta_select');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
-echo $oTabla->mostrar_tabla();
-?>
-</form>
-<br><table><tr class=botones>
-<td class=botones><span class=link_inv onclick="fnjs_nuevo('#seleccionados');" ><?= _("añadir acta") ?></span></td>
+
+$a_campos = ['oPosicion' => $oPosicion,
+			'oHash' => $oHash,
+			'oHash1' => $oHash1,
+			'titulo' => $titulo,
+			'oTabla' => $oTabla,
+			];
+
+$oView = new core\View('notas/controller');
+echo $oView->render('acta_select.phtml',$a_campos);

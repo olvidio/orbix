@@ -1,6 +1,6 @@
 ﻿<?php
-use usuarios\model as usuarios;
-use ubis\model as ubis;
+use usuarios\model\entity as usuarios;
+use ubis\model\entity as ubis;
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
 */
@@ -17,28 +17,27 @@ $miSfsv=core\ConfigGlobal::mi_sfsv();
 
 switch ($_POST['que']) {
 	case 'eliminar_ubi':
-		$obj = 'ubis\\model\\'.$_POST['obj_pau'];
+		$obj = 'ubis\\model\\entity\\'.$_POST['obj_pau'];
 		$oUbi = new $obj($_POST['id_ubi']);
 		if ($oUbi->DBEliminar() === false) {
 			echo _('Hay un error, no se ha eliminado');
 		}
-		$oPosicion->setId_div('ir_a');
-		echo $oPosicion->mostrar_left_slide();
-		exit;
+		echo $oPosicion->go_atras(1);
+		die();
 		break;
 	case 'ubi':
-		$obj = 'ubis\\model\\'.$_POST['obj_pau'];
+		$obj = 'ubis\\model\\entity\\'.$_POST['obj_pau'];
 		$oUbi = new $obj($_POST['id_ubi']);
 		break;
 	case 'direccion':
 		$idx = empty($_POST['idx'])? 0 : $_POST['idx'];
 		if ($idx === 'nuevo') {
-			$obj = 'ubis\\model\\'.$_POST['obj_dir'];
+			$obj = 'ubis\\model\\entity\\'.$_POST['obj_dir'];
 			$oUbi = new $obj();
 		} else {
 			// puede haber más de una dirección
 			$a_id_direccion = explode(',',$_POST['id_direccion']);
-			$obj = 'ubis\\model\\'.$_POST['obj_dir'];
+			$obj = 'ubis\\model\\entity\\'.$_POST['obj_dir'];
 			$oUbi = new $obj($a_id_direccion[$idx]);
 		}
 		break;
@@ -141,6 +140,4 @@ switch ($_POST['que']) {
 		break;
 
 }
-$oPosicion->setId_div('ir_a');
-echo $oPosicion->mostrar_left_slide();
-?>
+echo $oPosicion->go_atras(1);

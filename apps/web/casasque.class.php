@@ -1,6 +1,6 @@
 <?php
 namespace web;
-use ubis\model as ubis;
+use ubis\model\entity as ubis;
 /**
  * Classe que presenta un quadre per buscar diferents cases.
  *

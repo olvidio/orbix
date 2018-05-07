@@ -1,6 +1,9 @@
 <?php
 namespace core;
 
+use usuarios\model\entity as usuarios;
+
+/* Lo pongo como include!! en el index */
 // UDMv4.6 //
 /***************************************************************\
                                                                  
@@ -13,9 +16,7 @@ namespace core;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
-                
 // Arxivos requeridos por esta url **********************************************
-use usuarios\model as usuarios;
 
 // Crea los objectos de uso global **********************************************
 require_once ("apps/core/global_object.inc");
@@ -470,10 +471,10 @@ if($um['orientation'][0]=='popup')
 
 
 //set private cache control
-header("Cache-Control: private");
+//header("Cache-Control: private");
 
 //send javascript mime-type header
-header("Content-Type: text/javascript");
+//header("Content-Type: text/javascript");
 
 //output copyright notice
 echo("/* UDMv4.6 */\n/***************************************************************\\\n\n  ULTIMATE DROP DOWN MENU Version 4.6 by Brothercake\n  http://www.udm4.com/\n\n  This script may not be used or distributed without license\n\n\\***************************************************************/\n");

@@ -1,8 +1,5 @@
 <?php
-use ubis\model as ubis;
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
+use ubis\model\entity as ubis;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -18,28 +15,28 @@ use ubis\model as ubis;
 	
 switch ($_POST['obj_pau']) {
 	case 'Casa': // tipo dl pero no de la mia
-		$obj_ges_tel = 'ubis\\model\\GestorTelecoCdc';
-		$obj_ubi = 'ubis\\model\\Casa';
+		$obj_ges_tel = 'ubis\\model\\entity\\GestorTelecoCdc';
+		$obj_ubi = 'ubis\\model\\entity\\Casa';
 		break;
 	case 'CasaDl':
-		$obj_ges_tel = 'ubis\\model\\GestorTelecoCdcDl';
-		$obj_ubi = 'ubis\\model\\CasaDl';
+		$obj_ges_tel = 'ubis\\model\\entity\\GestorTelecoCdcDl';
+		$obj_ubi = 'ubis\\model\\entity\\CasaDl';
 		break;
 	case 'CasaEx':
-		$obj_ges_tel = 'ubis\\model\\GestorTelecoCdcEx';
-		$obj_ubi = 'ubis\\model\\CentroEx';
+		$obj_ges_tel = 'ubis\\model\\entity\\GestorTelecoCdcEx';
+		$obj_ubi = 'ubis\\model\\entity\\CentroEx';
 		break;
 	case 'Centro': // tipo dl pero no de la mia
-		$obj_ges_tel = 'ubis\\model\\GestorTelecoCtr';
-		$obj_ubi = 'ubis\\model\\Centro';
+		$obj_ges_tel = 'ubis\\model\\entity\\GestorTelecoCtr';
+		$obj_ubi = 'ubis\\model\\entity\\Centro';
 		break;
 	case 'CentroDl':
-		$obj_ges_tel = 'ubis\\model\\GestorTelecoCtrDl';
-		$obj_ubi = 'ubis\\model\\CentroDl';
+		$obj_ges_tel = 'ubis\\model\\entity\\GestorTelecoCtrDl';
+		$obj_ubi = 'ubis\\model\\entity\\CentroDl';
 		break;
 	case 'CentroEx':
-		$obj_ges_tel = 'ubis\\model\\GestorTelecoCtrEx';
-		$obj_ubi = 'ubis\\model\\CentroEx';
+		$obj_ges_tel = 'ubis\\model\\entity\\GestorTelecoCtrEx';
+		$obj_ubi = 'ubis\\model\\entity\\CentroEx';
 		break;
 }
 
@@ -67,7 +64,7 @@ if (strstr($_POST['obj_pau'],'Dl')) {
 }
 
 $tit_txt=_("Telecomunicaciones de un centro o casa");
-$ficha="ficha_ubis";
+$ficha="ficha";
 ?>
 <script>
 fnjs_nuevo=function(formulario){

@@ -1,9 +1,10 @@
 <?php
 namespace notas\model;
 use core;
-use actividades\model as actividades;
-use asignaturas\model as asignaturas;
-use personas\model as personas;
+use actividades\model\entity as actividades;
+use asignaturas\model\entity as asignaturas;
+use personas\model\entity as personas;
+use profesores\model\entity as profesores;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula e_notas_situacion
@@ -927,7 +928,7 @@ class Resumen Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$any = $this->getAnyFiCurs();
 		$curso_inicio = $any-1;
-		$oGesSectores = new \asignaturas\model\GestorSector();
+		$oGesSectores = new asignaturas\GestorSector();
 		$a_sectores = $oGesSectores->getArraySectores();
 		$asignaturas = $this->getNomAsignaturas();
 		$a_profe_dept = $this->arrayProfesorDepartamento();
@@ -1073,7 +1074,7 @@ class Resumen Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 
-		$oGesDirectores = new \profesores\model\GestorProfesorDirector();
+		$oGesDirectores = new profesores\GestorProfesorDirector();
 		$cDirectores = $oGesDirectores->getProfesoresDirectores(array('f_cese'=>1), array('f_cese' => 'IS NULL'));
 		
 		$rta['num'] = count($cDirectores);

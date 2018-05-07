@@ -1,5 +1,5 @@
 <?php
-use usuarios\model as usuarios;
+use usuarios\model\entity as usuarios;
 /**
 * Es el frame inferior. Muestra la ficha de los ubis
 *
@@ -11,9 +11,6 @@ use usuarios\model as usuarios;
 *@author	Daniel Serrabou
 *@since		15/5/02.
 *		
-*/
-/**
-* En el fichero config tenemos las variables genéricas del sistema
 */
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -36,22 +33,22 @@ $obj_pau = $_POST['obj_pau'];
 
 switch ($obj_pau) {
 	case 'Centro': // tipo dl pero no de la mia
-		$obj = 'ubis\\model\\TelecoCtr';
+		$obj = 'ubis\\model\\entity\\TelecoCtr';
 		break;
 	case 'CentroDl':
-		$obj = 'ubis\\model\\TelecoCtrDl';
+		$obj = 'ubis\\model\\entity\\TelecoCtrDl';
 		break;
 	case 'CentroEx':
-		$obj = 'ubis\\model\\TelecoCtrEx';
+		$obj = 'ubis\\model\\entity\\TelecoCtrEx';
 		break;
 	case 'Casa': // tipo dl pero no de la mia
-		$obj = 'ubis\\model\\TelecoCdc';
+		$obj = 'ubis\\model\\entity\\TelecoCdc';
 		break;
 	case 'CasaDl':
-		$obj = 'ubis\\model\\TelecoCdcDl';
+		$obj = 'ubis\\model\\entity\\TelecoCdcDl';
 		break;
 	case 'CasaEx':
-		$obj = 'ubis\\model\\TelecoCdcEx';
+		$obj = 'ubis\\model\\entity\\TelecoCdcEx';
 		break;
 }
 
@@ -88,7 +85,7 @@ $botones = 0;
 switch($obj_pau) {
 	case 'CentroDl':
 	case 'CasaDl':
-		$objfull = 'ubis\\model\\'.$obj_pau;
+		$objfull = 'ubis\\model\\entity\\'.$obj_pau;
 		$oUbi = new $objfull($_POST['id_ubi']);
 		$dl = $oUbi->getDl();
 		if ($dl == core\ConfigGlobal::mi_dele()) {
@@ -114,7 +111,7 @@ fnjs_guardar=function(){
    var error=0;
    $('#mod').val('teleco');
    $('#frm2').attr('action','apps/ubis/controller/teleco_update.php');
-   fnjs_enviar_formulario('#frm2','#ficha_ubis');
+   fnjs_enviar_formulario('#frm2','#ficha');
 }
 </script>
 <?php

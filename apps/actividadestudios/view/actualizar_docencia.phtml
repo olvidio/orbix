@@ -1,0 +1,12 @@
+<br><h3><?= _("Actualización de los datos de docencia") ?></h3>
+<?php if($mod == 'inicio') { ?>
+<p>
+<?= _("Esta acción llenará el dossier de actividad docente con los datos de los cursos anuales. Sólo se tendrán en cuenta los ca que se han marcado como terminados. Así nos aseguramos de copiar todos los datos (actas...)"); ?>
+</p>
+<br>
+<input type="button" onclick="fnjs_update_div('#main','<?= $pagina ?>');" value="<?= _("continuar") ?>" >
+<?php } else { ?>
+<p>
+	<?= _("Ya está"); ?>
+</p>
+<?php } ?>

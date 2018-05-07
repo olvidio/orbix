@@ -1,7 +1,7 @@
 <?php
-use usuarios\model as usuarios;
-use permisos\model as permisos;
-use menus\model as menus;
+use usuarios\model\entity as usuarios;
+use permisos\model\entity as permisos;
+use menus\model\entity as menus;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -76,7 +76,7 @@ fnjs_grabar=function(formulario){
 <br>
 <table>
 <tr>
-<td class=etiqueta><?php echo ucfirst(_("oficina o grupo")); ?>:</td>
+<td class=etiqueta><?= ucfirst(_("oficina o grupo")); ?>:</td>
 <td colspan=5>
 <?php
 echo $oCuadros->cuadros_radio('menu_perm',$menu_perm);

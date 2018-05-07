@@ -2,8 +2,7 @@
 namespace permisos\controller;
 
 use permisos\model as permisos;
-use usuarios\model as usuarios;
-use menus\model as menus;
+use usuarios\model\entity as usuarios;
 use web;
 use core;
 
@@ -287,14 +286,14 @@ if ( !isset($_SESSION['session_auth'])) {
 						$variables['DesplRegiones'] = posibles_esquemas($esquema);
 						$oView = new core\View(__NAMESPACE__);
 						echo $oView->render('login_form.phtml',$variables);
-						exit;
+						die();
 					}
 				} else {
 					$variables = array('error'=>1);
 					$variables['DesplRegiones'] = posibles_esquemas($esquema);
 					$oView = new core\View(__NAMESPACE__);
 					echo $oView->render('login_form.phtml',$variables);
-					exit;
+					die();
 				}
 		}
 	} else { // el primer cop
@@ -306,12 +305,15 @@ if ( !isset($_SESSION['session_auth'])) {
 		$a_campos['DesplRegiones'] = posibles_esquemas($esquema);
 		$oView = new core\View(__NAMESPACE__);
 		echo $oView->render('login_form.phtml',$a_campos);
-		exit;
+		die();
 	}
 } else {
 	// ya esta registrado";
-	/* parece que los cambios con setlocale son para el proceso, no para session ni multithreaded, por tanto hay que hacerlo cada vez
-	   para la traducción */
+	/**
+	 *  parece que los cambios con setlocale son para el proceso,
+	 *  no para session ni multithreaded, por tanto hay que hacerlo cada vez
+	 *  para la traducción 
+	 */
 	cambiar_idioma();
 }
 

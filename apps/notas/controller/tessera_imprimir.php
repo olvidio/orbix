@@ -1,7 +1,7 @@
 <?php
-use asignaturas\model as asignaturas;
-use notas\model as notas;
-use personas\model as personas;
+use asignaturas\model\entity as asignaturas;
+use notas\model\entity as notas;
+use personas\model\entity as personas;
 /**
 * Esta página sirve para la tessera de una persona.
 *
@@ -24,15 +24,35 @@ use personas\model as personas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+echo "<script>fnjs_left_side_hide()</script>";
 include_once(core\ConfigGlobal::$dir_estilos.'/tessera.css.php'); 
 
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	$id_sel=$_POST['sel'];
-	$id_nom=strtok($_POST['sel'][0],"#");
+$oPosicion->recordar();
+
+// En el caso de actualizar la misma página (cara A-B) solo me quedo con la última.
+$stack = $oPosicion->getStack(1);
+
+//Si vengo por medio de Posicion, borro la última
+if (isset($_POST['stack'])) {
+	$stack2 = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+	if ($stack2 != '') {
+		$oPosicion2 = new web\Posicion();
+		if ($oPosicion2->goStack($stack2)) { // devuelve false si no puede ir
+			$Qid_sel=$oPosicion2->getParametro('id_sel');
+			$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+			$oPosicion2->olvidar($stack2);
+		}
+	}
+}
+
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	$id_nom=strtok($a_sel[0],"#");
 	$id_tabla=strtok("#");
-	$oPosicion->addParametro('id_sel',$id_sel);
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
-	$oPosicion->addParametro('scroll_id',$scroll_id);
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else {
 	empty($_POST['id_nom'])? $id_nom="" : $id_nom=$_POST['id_nom'];
 	empty($_POST['id_tabla'])? $id_tabla="" : $id_tabla=$_POST['id_tabla'];
@@ -41,7 +61,7 @@ if (empty($_POST['cara'])) $_POST['cara']="A";
 
 $oPersona = personas\Persona::NewPersona($id_nom);
 if (!is_object($oPersona)) {
-	$msg_err = "<br>$oPersona con id_nom: $id_nom";
+	$msg_err = "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 	exit($msg_err);
 }
 $nom_vernacula = $oPersona->getNom();
@@ -156,8 +176,8 @@ function data($data) {
 // -----------------------------
 
 // -----------------------------  cabecera ---------------------------------
-$caraA = web\Hash::link('apps/notas/controller/tessera_imprimir.php?'.http_build_query(array('cara'=>'A','id_nom'=>$id_nom,'id_tabla'=>$id_tabla)));
-$caraB = web\Hash::link('apps/notas/controller/tessera_imprimir.php?'.http_build_query(array('cara'=>'B','id_nom'=>$id_nom,'id_tabla'=>$id_tabla)));
+$caraA = web\Hash::link('apps/notas/controller/tessera_imprimir.php?'.http_build_query(array('cara'=>'A','id_nom'=>$id_nom,'id_tabla'=>$id_tabla,'stack'=>$stack)));
+$caraB = web\Hash::link('apps/notas/controller/tessera_imprimir.php?'.http_build_query(array('cara'=>'B','id_nom'=>$id_nom,'id_tabla'=>$id_tabla,'stack'=>$stack)));
 
 $oHash = new web\Hash();
 $oHash->setUrl(core\ConfigGlobal::getWeb().'/apps/notas/controller/tessera_2_mpdf.php');
@@ -168,11 +188,11 @@ $h = $oHash->linkSinVal();
 <table class="no_print">
 <tr>
 <td class="atras">
-<?= $oPosicion->mostrar_back_arrow(); ?>
+<?= $oPosicion->mostrar_back_arrow(1); ?>
 </td>
 <td align="center"><span class=link onclick="fnjs_update_div('#main','<?= $caraA ?>')"><?= _("Cara A (delante)"); ?></span></td>
 <td align="center"><span class=link onclick="fnjs_update_div('#main','<?= $caraB ?>')"><?= _("Cara B (detrás)"); ?></span></td>
-<td align="center"><span class=link onclick='window.open("<?= core\ConfigGlobal::getWeb() ?>/apps/notas/controller/tessera_2_mpdf.php?id_nom=<?= $id_nom ?>&id_tabla=<?= $id_tabla ?><?= $h ?>&PHPSESSID=<?php echo session_id(); ?>", "sele");' >
+<td align="center"><span class=link onclick='window.open("<?= core\ConfigGlobal::getWeb() ?>/apps/notas/controller/tessera_2_mpdf.php?id_nom=<?= $id_nom ?>&id_tabla=<?= $id_tabla ?><?= $h ?>&PHPSESSID=<?= session_id(); ?>", "sele");' >
 <?= _("PDF"); ?></span></td>
 </tr></table>
 <table class="A4">
@@ -268,9 +288,9 @@ while ( $a < count($cAsignaturas)) {
 		echo titulo($oAsignatura->getId_nivel());
 		$nombre_asig = strtr($oAsignatura->getNombre_asig(), $replace);
 		?>
-		<tr class="<?php echo $clase;?>" valign="bottom">
+		<tr class="<?= $clase;?>" valign="bottom">
 		<td></td>    
-		<td><?php echo $nombre_asig;?>&nbsp;</td>
+		<td><?= $nombre_asig;?>&nbsp;</td>
 		<td class="dato">&nbsp;</td>
 		<td>&nbsp;</td>
 		<td class="dato">&nbsp;</td>
@@ -294,26 +314,26 @@ while ( $a < count($cAsignaturas)) {
 			$nombre_asig=strtr ($row["nombre_asig"], $replace);
 			$algo=$oAsignatura->getNombre_asig()."<br>&nbsp;&nbsp;&nbsp;&nbsp;".$nombre_asig;
 			?>
-			<tr class="<?php echo $clase;?>" valign="bottom">
+			<tr class="<?= $clase;?>" valign="bottom">
 			<td></td>
-			<td><?php echo $algo;?>&nbsp;</td>
-			<td class="dato"><?php echo $row["nota"];?>&nbsp;</td>
+			<td><?= $algo;?>&nbsp;</td>
+			<td class="dato"><?= $row["nota"];?>&nbsp;</td>
 			<td>&nbsp;</td>
-			<td class="dato"><?php echo $row["fecha"];?>&nbsp;</td>
+			<td class="dato"><?= $row["fecha"];?>&nbsp;</td>
 			<td>&nbsp;</td>
-			<td class="dato"><?php echo $row["acta"];?>&nbsp;</td><td></td></tr>
+			<td class="dato"><?= $row["acta"];?>&nbsp;</td><td></td></tr>
 			<?php 
 		} else {
 			$nombre_asig = strtr($oAsignatura->getNombre_asig(), $replace);
 			?>
-			<tr class="<?php echo $clase;?>">
+			<tr class="<?= $clase;?>">
 			<td></td>
 			<td><?= $nombre_asig; ?>&nbsp;</td>
-			<td class="dato"><?php echo $row["nota"];?>&nbsp;</td>
+			<td class="dato"><?= $row["nota"];?>&nbsp;</td>
 			<td>&nbsp;</td>
-			<td class="dato"><?php echo $row["fecha"];?>&nbsp;</td>
+			<td class="dato"><?= $row["fecha"];?>&nbsp;</td>
 			<td>&nbsp;</td>
-			<td class="dato"><?php echo $row["acta"];?>&nbsp;</td><td></td></tr>
+			<td class="dato"><?= $row["acta"];?>&nbsp;</td><td></td></tr>
 			<?php 
 		}
 		$num_asig ++;
@@ -325,7 +345,7 @@ while ( $a < count($cAsignaturas)) {
 			echo titulo($oAsignatura->getId_asignatura());
 			$nombre_asig = strtr($oAsignatura->getNombre_asig(), $replace);
 			?>
-			<tr class="<?php echo $clase;?>">
+			<tr class="<?= $clase;?>">
 				<td></td>
 				<td><?= $nombre_asig; ?>&nbsp;</td>
 				<td class="dato">&nbsp;</td>

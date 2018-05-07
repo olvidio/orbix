@@ -1,13 +1,10 @@
 <?php
-use actividades\model as actividades;
-use actividadcargos\model as actividadcargos;
-use actividadestudios\model as actividadestudios;
-use asignaturas\model as asignaturas;
-use asistentes\model as asistentes;
-use personas\model as personas;
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
+use actividades\model\entity as actividades;
+use actividadcargos\model\entity as actividadcargos;
+use actividadestudios\model\entity as actividadestudios;
+use asignaturas\model\entity as asignaturas;
+use asistentes\model\entity as asistentes;
+use personas\model\entity as personas;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -16,12 +13,15 @@ use personas\model as personas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	$id_sel=$_POST['sel'];
-	$id_activ=strtok($_POST['sel'][0],"#");
-	$oPosicion->addParametro('id_sel',$id_sel);
+$oPosicion->recordar();
+
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	$id_activ = strtok($a_sel[0],"#");
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
-	$oPosicion->addParametro('scroll_id',$scroll_id);
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 }
 
 // nombre de la actividad
@@ -45,19 +45,12 @@ if (empty($id_nom_dtor_est)) {
 } else {
 	$oPersona = personas\Persona::NewPersona($id_nom_dtor_est);
 	if (!is_object($oPersona)) {
-		$msg_err .= "<br>$oPersona con id_nom: $id_nom_dtor_est";
+		$msg_err .= "<br>$oPersona con id_nom: $id_nom_dtor_est en  ".__FILE__.": line ". __LINE__;
 		$nom_director_est='';
 	} else {
 		$nom_director_est=$oPersona->getApellidosNombre();
 	}
 }
-
-echo $oPosicion->mostrar_left_slide();
-
-$cabecera="<table><thead><tr>
-		<td colspan=4><h3>$nom_activ</h3></td></tr>
-		<tr><td></td><td class='contenido' colspan=2>".ucfirst(_("director de estudios")).":</td>
-		<td>$nom_director_est</td></tr><tr></tr></thead>";
 
 //asignaturas del ca. (profesores y preceptores).
 //asignaturas: profesores y preceptores.
@@ -66,9 +59,9 @@ $a=0;
 $tipo_old=0;
 $GesActividadAsignaturas = new actividadestudios\GestorActividadAsignatura();
 $cActividadAsignaturas = $GesActividadAsignaturas->getActividadAsignaturas(array('id_activ'=>$id_activ));
-foreach ( $cActividadAsignaturas as $oActividadAsignatura) {
+$datos_asignatura = array();
+foreach ($cActividadAsignaturas as $oActividadAsignatura) {
 	$a++;
-	//extract($oActividadAsignatura->getTot());
 	$id_asignatura = $oActividadAsignatura->getId_asignatura();
 	$tipo = $oActividadAsignatura->getTipo();
 
@@ -78,7 +71,7 @@ foreach ( $cActividadAsignaturas as $oActividadAsignatura) {
 	if (!empty($id_profesor)) {
 		$oPersona = personas\Persona::NewPersona($id_profesor);
 		if (!is_object($oPersona)) {
-			$msg_err .= "<br>$oPersona con id_nom: $id_profesor (profesor)";
+			$msg_err .= "<br>$oPersona con id_nom: $id_profesor (profesor) en  ".__FILE__.": line ". __LINE__;
 			$nom_profesor = '';
 		} else {
 			$nom_profesor=$oPersona->getApellidosNombre();
@@ -86,49 +79,43 @@ foreach ( $cActividadAsignaturas as $oActividadAsignatura) {
 	} else {
 		$nom_profesor = '';
 	}
-	if (empty($tipo)) { $p=1; }
-	if ($tipo=="p") { $p=2; }
+	if (!empty($tipo) && $tipo=="p") {
+		$tipo_profesor=ucfirst(_("preceptor"));  
+	} else {
+		$tipo_profesor=ucfirst(_("profesor")); 
+	}
+
+	$datos_asignatura[$a]['nom_profesor'] = $nom_profesor;
+	$datos_asignatura[$a]['tipo_profesor'] = $tipo_profesor;
+	$datos_asignatura[$a]['nombre_corto'] = $nombre_corto;
 	
-	if ($p==1) { 
-		$profe=ucfirst(_("profesor")); 
-		$tipo_old=$p;
-		if ($a>1) echo "<div class=salta_pag></div>"; //si no es la primera salto de página
-		echo $cabecera;	
-	}
-	if ($p==2) { 
-		$profe=ucfirst(_("preceptor"));  
-		if ($tipo_old!=$p) { echo "<div class=salta_pag></div>".$cabecera; } else { echo "<table><tr><td valign=top width=40px class='no_print'></td></tr>"; }
-		$tipo_old=$p;
-	}
-	echo "<tbody><tr><td><br></td></tr><tr><td></td><td colspan=2 class='contenido'><h2>$nombre_corto</h2></td></tr>";
-	echo "<tr><td></td><td></td><td>$profe:</td><td>$nom_profesor</td></tr><tr></tr>";
-	// busco los alumnos
-	$GesAsistentes = new asistentes\GestorAsistente(); 
-	$cAsistentes = $GesAsistentes->getAsistentesDeActividad($id_activ,'apellido1,apellido2,nom');
-	$i=0;
-	foreach ($cAsistentes as $oActividadAsistente) {
-		$i++;
-		$id_nom=$oActividadAsistente->getId_nom();
+	// busco las matriculas
+	$GesMatriculas = new actividadestudios\GestorMatricula();
+	$cMatriculas = $GesMatriculas->getMatriculas(array('id_activ'=>$id_activ,'id_asignatura'=>$id_asignatura));
+	$aMatriculados = array();
+	foreach($cMatriculas as $oMatricula) {
+		$id_nom=$oMatricula->getId_nom();
 		$oPersona = personas\Persona::NewPersona($id_nom);
 		if (!is_object($oPersona)) {
-			$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+			$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 			continue;
 		}
 		$nom_persona=$oPersona->getApellidosNombre();
 		$ctr=$oPersona->getCentro_o_dl();
-		$stgr=$oPersona->getStgr();
-		// busco las asignaturas de esta persona
-		$GesMatriculas = new actividadestudios\GestorMatricula();
-		$cMatriculas = $GesMatriculas->getMatriculas(array('id_nom'=>$id_nom,'id_activ'=>$id_activ,'id_asignatura'=>$id_asignatura));
-		// si no tiene asignaturas, miro si está de repaso
-		if (is_array($cMatriculas) && count($cMatriculas)!=0) {
-			echo "<tr><td></td><td align=right>$i.-</td><td colspan=2>$nom_persona ($ctr)</td></tr>";
-		} else {
-			$i--;
-		}
+		$aMatriculados[$nom_persona] = $ctr;
 	}
-	echo "</tbody>";
-	echo "</table>";
+	uksort($aMatriculados, 'core\strsinacentocmp');
+	$datos_asignatura[$a]['alumnos'] = $aMatriculados;
+	
 }
+
 if (!empty($msg_err)) { echo $msg_err; }
-?>
+
+	$a_campos = ['oPosicion' => $oPosicion,
+				'nom_activ' => $nom_activ,
+				'nom_director_est' => $nom_director_est,
+				'datos_asignatura' => $datos_asignatura,
+				];
+
+	$oView = new core\View('actividadestudios/controller');
+	echo $oView->render('lista_clases_ca.phtml',$a_campos);

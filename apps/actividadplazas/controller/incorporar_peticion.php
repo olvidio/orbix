@@ -1,16 +1,19 @@
 <?php
-use actividades\model as actividades;
-use asistentes\model as asistentes;
-use personas\model as personas;
-
 /**
- * Incorpora la primer peticion como asistencia con plaza 'pedida'.
+ * Incorpora la primera petición como asistencia con plaza:
+ *  'asignada' en el caso de actividades de la dl.
+ *  'pedida' en actividades de otras dl.
  * No debe actualizar a las personas que ya tienen una aistencia a una actividad 
  * marcada como propia en el curso.
+ * 
+ * @param string $sactividad
+ * @param string $sasistentes
  */
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
+
+use actividades\model\entity as actividades;
+use asistentes\model\entity as asistentes;
+use personas\model\entity as personas;
+
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -19,10 +22,8 @@ use personas\model as personas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-/* Validate inputs $b = (string)filter_input(INPUT_GET, 'b'); */
-	
-$sactividad = (string)  filter_input(INPUT_POST, 'sactividad');
-$sasistentes = (string)  filter_input(INPUT_POST, 'sasistentes');
+$Qsactividad = (string)  filter_input(INPUT_POST, 'sactividad');
+$Qsasistentes = (string)  filter_input(INPUT_POST, 'sasistentes');
 
 $mi_sfsv = core\ConfigGlobal::mi_sfsv();
 if ($mi_sfsv == 1) $ssfsv = 'sv';
@@ -30,13 +31,13 @@ if ($mi_sfsv == 2) $ssfsv = 'sf';
 $snom_tipo = '...';
 $oTipoActiv= new web\TiposActividades();
 $oTipoActiv->setSfsvText($ssfsv);
-$oTipoActiv->setAsistentesText($sasistentes);
-$oTipoActiv->setActividadText($sactividad);
+$oTipoActiv->setAsistentesText($Qsasistentes);
+$oTipoActiv->setActividadText($Qsactividad);
 $Qid_tipo_activ=$oTipoActiv->getId_tipo_activ();
 $Qid_tipo_activ =  '^'.$Qid_tipo_activ;
 
 /* Pongo en la variable $curso el periodo del curso */
-switch ($sactividad) {
+switch ($Qsactividad) {
 	case 'ca':
 	case 'cv':
 		$any=  core\ConfigGlobal::any_final_curs('est');
@@ -56,7 +57,7 @@ $cActividades = array();
 $aWhereA['status'] = 2;
 $aWhereA['f_ini'] = "'$inicurs','$fincurs'";
 $aOperadorA['f_ini'] = 'BETWEEN';
-switch ($sasistentes) {
+switch ($Qsasistentes) {
 	case "agd":
 	case "a":
 		//caso de agd
@@ -100,8 +101,8 @@ foreach ($cActividades as $oActividad) {
 }
 
 //Miro las peticiones actuales
-$gesPlazasPeticion = new \actividadplazas\model\GestorPlazaPeticion();
-$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('tipo'=>$sactividad,'_ordre'=>'id_nom,orden'));
+$gesPlazasPeticion = new \actividadplazas\model\entity\GestorPlazaPeticion();
+$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('tipo'=>$Qsactividad,'_ordre'=>'id_nom,orden'));
 $id_nom_old = 0;
 $msg_err = '';
 foreach ($cPlazasPeticion as $oPlazaPeticion) {
@@ -117,11 +118,11 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
 	$id_tabla_p = $oPersona->getId_tabla();
 	if ($id_tabla_p != $id_tabla_persona) { continue; }
 	if (!is_object($oPersona)) {
-		$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+		$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 		exit($msg_err);
 	}
 	$obj_persona = get_class($oPersona);
-	$obj_persona = str_replace("personas\\model\\",'',$obj_persona);
+	$obj_persona = str_replace("personas\\model\\entity\\",'',$obj_persona);
 
 	//Comprobar que no tienen alguna actividad ya asignada como propia
 	//Con el tiempo habrá menos actividades (curso) que asistencias (todas). Miro por actividades:
@@ -208,7 +209,7 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
 	}
 }
 
-$txt = sprintf(_("No se incorporan las peticiones si la persona ya tiene una actividad como propia en el periodo: %s - %s."),$inicurs,$fincurs);
+$txt = sprintf(_("No se incorporán las peticiones si la persona ya tiene una actividad como propia en el periodo: %s - %s."),$inicurs,$fincurs);
 if (!empty($msg_err)) { echo $msg_err; }
 ?>
 <script>

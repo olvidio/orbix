@@ -1,5 +1,5 @@
 <?php
-use personas\model as personas;
+use personas\model\entity as personas;
 /**
 * Esta es la página de presentación de la ficha de n, agd y sss+ de paso (copia de agd). 
 *
@@ -56,7 +56,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 			?>
 	</select>
 	<td><span class=etiqueta ondblclick="fnjs_help('<?php //echo $dl_help_ref; ?>')" >Delegación</span></td>
-	<td><input class=datos size="6" name="dl" value="<?php echo $dl ?>" title="<?php //echo $dl_help; ?>"></TD>
+	<td><input class=datos size="6" name="dl" value="<?= $dl ?>" title="<?php //echo $dl_help; ?>"></TD>
 	</tr>
 <tr>
 <?php
@@ -76,7 +76,7 @@ echo web\dibujar_campo($obj,"f_nacimiento",11,1,0);
 echo web\dibujar_campo($obj,"edad",4,1,1);
 echo "</tr><tr>";
 ?>
-	<td><span class=etiqueta ><?php echo ucfirst('situacion'); ?></span>
+	<td><span class=etiqueta ><?= ucfirst('situacion'); ?></span>
 	</td>
 	<td colspan=2>
 	<select class=contenido id="situacion" name="situacion" ">

@@ -42,7 +42,7 @@ COLS: Serán visibles las líneas que separan columnas (elemento TD).
 ALL: Todas las líneas. 
 El atributo BORDER indica en pixels el ancho del reborde de las tablas. BORDER = 3 dibujará un reborde de tres pixels de ancho. 
 -->
-<!-- PAGINA DE ESTILO: <?php echo __FILE__; ?> -->
+<!-- PAGINA DE ESTILO: <?= __FILE__; ?> -->
 <style>
      
      .cap  {

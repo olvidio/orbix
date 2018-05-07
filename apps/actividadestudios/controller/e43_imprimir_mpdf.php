@@ -9,9 +9,9 @@
 
 $msg_err = '';
 
-$oPersona = personas\model\Persona::NewPersona($id_nom);
+$oPersona = personas\model\entity\Persona::NewPersona($id_nom);
 if (!is_object($oPersona)) {
-	$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+	$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 }
 
 $nom=$oPersona->getNombreApellidos();
@@ -22,18 +22,18 @@ $txt_nacimiento = "$lugar_nacimiento ($f_nacimiento)";
 $dl_origen = core\ConfigGlobal::mi_dele();
 $dl_destino = $oPersona->getDl();
 
-$oActividad = new actividades\model\Actividad($id_activ);
+$oActividad = new actividades\model\entity\Actividad($id_activ);
 $nom_activ = $oActividad->getNom_activ();
 $id_ubi = $oActividad->getId_ubi();
 $f_ini = $oActividad->getF_ini();
 $f_fin = $oActividad->getF_fin();
-$oUbi = ubis\model\Ubi::NewUbi($id_ubi);
+$oUbi = ubis\model\entity\Ubi::NewUbi($id_ubi);
 $lugar = $oUbi->getNombre_ubi();
 
 $txt_actividad = "$lugar, $f_ini-$f_fin";
 
 
-$GesMatriculas = new actividadestudios\model\GestorMatricula();
+$GesMatriculas = new actividadestudios\model\entity\GestorMatricula();
 $cMatriculas = $GesMatriculas->getMatriculas(array('id_nom'=>$id_nom, 'id_activ'=>$id_activ));
 $matriculas=count($cMatriculas);
 if ($matriculas > 0) {
@@ -41,11 +41,11 @@ if ($matriculas > 0) {
 	$aAsignaturasMatriculadas = array(); 
 	foreach($cMatriculas as $oMatricula) {
 		$id_asignatura=$oMatricula->getId_asignatura();
-		$oAsignatura = new asignaturas\model\Asignatura($id_asignatura);
+		$oAsignatura = new asignaturas\model\entity\Asignatura($id_asignatura);
 		$nombre_corto = $oAsignatura->getNombre_corto();
 		//$nota = $oMatricula->getNota_txt();
 		
-		$GesNotas = new notas\model\GestorPersonaNota();
+		$GesNotas = new notas\model\entity\GestorPersonaNota();
 		$cNotas = $GesNotas->getPersonaNotas(array('id_nom'=>$id_nom,'id_asignatura'=>$id_asignatura));
 		if ($cNotas !== FALSE && count($cNotas) > 0) {
 			$oNota = $cNotas[0];

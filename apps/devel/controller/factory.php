@@ -665,13 +665,13 @@ $filename = '/var/www'.core\ConfigGlobal::$web_path.'/apps/'.$grupo.'/model/'.st
 // that's where $somecontent will go when we fwrite() it.
 if (!$handle = fopen($filename, 'a')) {
 	 echo "Cannot open file ($filename)";
-	 exit;
+	 die();
 }
 
 // Write $somecontent to our opened file.
 if (fwrite($handle, $txt) === FALSE) {
 	echo "Cannot write to file ($filename)";
-	exit;
+	die();
 }
 
 echo "Success, wrote (somecontent) to file ($filename)";
@@ -815,13 +815,13 @@ $filename = '/var/www/'.core\ConfigGlobal::$web_path.'/apps/'.$grupo.'/model/ges
 // that's where $somecontent will go when we fwrite() it.
 if (!$handle = fopen($filename, 'a')) {
 	 echo "Cannot open file ($filename)";
-	 exit;
+	 die();
 }
 
 // Write $somecontent to our opened file.
 if (fwrite($handle, $txt2) === FALSE) {
 	echo "Cannot write to file ($filename)";
-	exit;
+	die();
 }
 
 echo "<br>Success, wrote gestor to file ($filename)";

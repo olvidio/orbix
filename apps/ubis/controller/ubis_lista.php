@@ -1,6 +1,6 @@
 <?php
-use usuarios\model as usuarios;
-use ubis\model as ubis;
+use usuarios\model\entity as usuarios;
+use ubis\model\entity as ubis;
 /**
 * Esta página muestra una tabla con los ubis seleccionados.
 *
@@ -12,9 +12,6 @@ use ubis\model as ubis;
 *		
 */
 
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************

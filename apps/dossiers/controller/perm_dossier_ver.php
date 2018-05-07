@@ -1,5 +1,5 @@
 <?php
-use dossiers\model as dossiers;
+use dossiers\model\entity as dossiers;
 /**
 * Página de visualización de los permisos de los dossiers
 * Le llegan las variables $tipo y $id_tipo
@@ -12,9 +12,6 @@ use dossiers\model as dossiers;
 *@author	Josep Companys
 *@since		15/5/02.
 *		
-*/
-/**
-* En el fichero config tenemos las variables genéricas del sistema
 */
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");

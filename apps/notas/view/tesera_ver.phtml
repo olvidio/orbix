@@ -1,0 +1,60 @@
+<script>
+fnjs_left_side_hide();
+</script>
+<?php include_once(core\ConfigGlobal::$dir_estilos.'/tessera.css.php'); ?>
+	<div class="salta_pag">
+		<span id="span_exportar"  title="tesseras"></span>
+	<table>
+		<tr>
+		<td class="atras no_print">
+		<?php 
+		// sólo pongo el primero, porque sino hay varios div con  el mismo id="ir_atras2"
+		echo $oPosicion->mostrar_back_arrow(1);
+		?>
+		</td>
+		<td style="vertical-align: bottom;">
+			<h3> <?= ucfirst(sprintf(_("tessera de:  %s (%s)"),$ap_nom,$centro)); ?> </h3>
+		</td>
+		</tr>
+	</table>
+	<table border=1>
+	<tr><td valign="TOP" width="50%">
+	<table class="semi" border="0">
+<?php
+foreach ($tabla as $fila => $row){
+
+	if (!empty($row['titulo'])) {
+		echo $row['titulo'];
+	}
+	echo "<tr><td>{$row['asignatura']}</td>";
+	if ($row['nota'] < 0) {
+		$class = "alert";
+		$nota = _("Pendiente");
+		$fecha = '';
+	} else {
+		$class='';
+		$nota = $row['nota'];
+		$fecha = '';
+	}
+		echo "<td class=$class>$nota</td>";
+		echo "<td>$fecha</td>";
+	echo "</tr>";
+}
+
+
+
+?>
+	</table>
+	</td></tr>
+	<tr><td>
+	<?= sprintf(_("Número de asignaturas hechas: %s (de %s)"),$numasig,$num_asig_total); ?>
+	</td><td>
+	<?= sprintf(_("Número de asignaturas cursadas el curso %s: %s"),$curso_txt,$numasig_year); ?>
+	</td></tr>
+	<tr><td>
+	<?= sprintf(_("Número de créditos realizados: %s (de %s)"),$numcred,$num_creditos_total); ?>
+	</td><td>
+	<?= sprintf(_("Número de créditos realizados el curso %s: %s"),$curso_txt,$numcred_year); ?>
+	</td></tr>
+	</table>
+	</div>

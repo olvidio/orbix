@@ -5,6 +5,12 @@
 */
 header('Content-Type: text/javascript; charset=UTF-8');
 ?>
+function fnjs_sin_acentos(text) {
+	var chars = {'á':'a','é':'e','í':'i','ó':'o','ú':'u','ç':'cz','à':'a','è':'e','ò':'o','ä':'a','ë':'e','ï':'i','ö':'o','ü':'u','â':'a','ê':'e','î':'i','ô':'o','û':'u','Á':'A','É':'E','Í':'I','Ó':'O','Ú':'U','Ç':'CZ','À':'A','È':'E','Ò':'O','Ä':'A','Ë':'E','Ï':'I','Ö':'O','Ü':'U','Â':'A','Ê':'E','Î':'I','Ô':'O','Û':'U','ñ':'nz','Ñ':'NZ'} 
+	rta = text.replace(/[áéíóúçàèòäëïöüâêîôûÁÉÍÓÚÇÀÈÒÄËÏÖÜÂÊÎÔÛñÑ]/g, m => chars[m]);
+	return rta;
+}
+
 function fnjs_selectAll(formulario,Name,val,aviso){
 	aviso = typeof aviso !== 'undefined' ? aviso : 1;
 	if (aviso == 1) {

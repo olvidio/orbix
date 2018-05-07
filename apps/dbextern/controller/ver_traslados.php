@@ -40,7 +40,7 @@ switch ($tipo_persona) {
 		break;
 }
 
-$obj = 'personas\\model\\'.$obj_pau;
+$obj = 'personas\\model\\entity\\'.$obj_pau;
 
 $oSincroDB = new SincroDB();
 $oSincroDB->setTipo_persona($tipo_persona);
@@ -81,7 +81,7 @@ $txt_alert =_("Se va a poner la fecha de hoy como fecha de traslado. Para cambia
 <script>
 fnjs_trasladar=function(id_orbix,dl,fila){
 	var url='<?= $url_sincro_ajax ?>';
-	var parametros='que=trasladar&dl='+dl+'&id_nom_orbix='+id_orbix+'&tipo_persona=<?= $tipo_persona ?><?= $h ?>&PHPSESSID=<?php echo session_id(); ?>';
+	var parametros='que=trasladar&dl='+dl+'&id_nom_orbix='+id_orbix+'&tipo_persona=<?= $tipo_persona ?><?= $h ?>&PHPSESSID=<?= session_id(); ?>';
 	
 	alert ("<?= $txt_alert ?>");		 
 	

@@ -1,5 +1,5 @@
 ﻿<?php
-use ubis\model as ubis;
+use ubis\model\entity as ubis;
 /**
 * Esta página quita la dirección de un ubi.
 *
@@ -12,9 +12,6 @@ use ubis\model as ubis;
 *		
 */
 
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -47,6 +44,4 @@ if ($oUbi->DBEliminar() === false) {
 	echo _('Hay un error, no se ha eliminado');
 }
 
-$oPosicion->setId_div('ir_a');
-echo $oPosicion->mostrar_left_slide();
-?>
+echo $oPosicion->go_atras(1);

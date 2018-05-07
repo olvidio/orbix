@@ -1,13 +1,10 @@
 <?php
 
 use core\ConfigGlobal;
-use dbextern\model\GestorIdMatchPersona;
-use dbextern\model\GestorPersonaListas;
-use dbextern\model\IdMatchPersona;
-use ubis\model\GestorCentroDl;
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
+use dbextern\model\entity\GestorIdMatchPersona;
+use dbextern\model\entity\GestorPersonaListas;
+use dbextern\model\entity\IdMatchPersona;
+use ubis\model\entity\GestorCentroDl;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -66,14 +63,14 @@ switch ($que) {
 			$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas'=>$id_nom_listas));
 			if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) { // (a) unida
 				$id_orbix = $cIdMatch[0]->getId_orbix();
-				$oTrasladoDl = new personas\model\trasladoDl();
+				$oTrasladoDl = new personas\model\entity\trasladoDl();
 				$aaa = $oTrasladoDl->getEsquemas($id_orbix,$tipo_persona);
 				
 			} else { //(b) mala suerte!
 				
 			}
 			
-			$obj = 'personas\\model\\'.$obj_pau;
+			$obj = 'personas\\model\\entity\\'.$obj_pau;
 			$oPersona = new $obj();
 		
 			$oPersona->setSituacion('A');
@@ -174,7 +171,7 @@ switch ($que) {
 		$tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
 		$id_nom_orbix = (string)  filter_input(INPUT_POST, 'id_nom_orbix');
 
-		$oTrasladoDl = new personas\model\TrasladoDl();
+		$oTrasladoDl = new personas\model\entity\TrasladoDl();
 		$oTrasladoDl->setId_nom($id_nom_orbix);
 		
 		$aEsquemas = $oTrasladoDl->getEsquemas($id_nom_orbix,$tipo_persona);
@@ -201,7 +198,7 @@ switch ($que) {
 		$tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
 		$id_nom_orbix = (string)  filter_input(INPUT_POST, 'id_nom_orbix');
 
-		$oTrasladoDl = new personas\model\TrasladoDl();
+		$oTrasladoDl = new personas\model\entity\TrasladoDl();
 		$oTrasladoDl->setId_nom($id_nom_orbix);
 		
 		$mi_dele = ConfigGlobal::mi_dele();
@@ -230,7 +227,7 @@ switch ($que) {
 		$tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
 		$id_nom_orbix = (string)  filter_input(INPUT_POST, 'id_nom_orbix');
 
-		$oTrasladoDl = new personas\model\TrasladoDl();
+		$oTrasladoDl = new personas\model\entity\TrasladoDl();
 		$oTrasladoDl->setId_nom($id_nom_orbix);
 		
 		$mi_dele = ConfigGlobal::mi_dele();

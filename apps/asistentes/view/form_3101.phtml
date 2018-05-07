@@ -1,0 +1,96 @@
+<script>
+<?php
+if (core\configGlobal::is_app_installed('actividadplazas')) {
+?>
+/**
+ * se ejecuta al cambiar el desplegable $oDesplegablePersonas
+ * @returns desplegable de posibles propietarios de plaza
+ */
+fnjs_cmb_propietario=function(){
+	var id_nom=$('#id_nom').val();
+	//alert ('nom: '+id_nom);
+	var url='<?= $url_ajax ?>';
+	var parametros='que=lst_propietarios&id_nom='+id_nom+'&id_activ=<?= $id_activ ?><?= $h1 ?>&PHPSESSID=<?= session_id(); ?>';
+		 
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta_txt) {
+			//rta_txt=rta.responseText;
+			//alert ('respuesta: '+rta_txt);
+			$('#lst_propietarios').html(rta_txt);
+		}
+	});
+}
+
+<?php	
+}
+?>
+fnjs_guardar=function(formulario){
+	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
+	//alert ("EEE "+rr);
+	if (rr=='ok') {
+		$(formulario).attr('action',"apps/asistentes/controller/update_3101.php");
+		$(formulario).submit(function() {
+			$.ajax({
+				data: $(this).serialize(),
+				url: $(this).attr('action'),
+				type: 'post',
+				complete: function (rta) {
+					rta_txt=rta.responseText;
+					if (rta_txt != '' && rta_txt != '\\n') {
+						alert ('respuesta: '+rta_txt);
+					} else {
+						<?= $oPosicion->js_atras(1); ?>
+					}
+				}
+			});
+			return false;
+		});
+		$(formulario).submit();
+		$(formulario).off();
+	}
+}
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<form id="frm_sin_nombre" name="frm_sin_nombre" action="" method="POST">
+<?= $oHash->getCamposHtml(); ?>
+<input type="Hidden" id="mod" name="mod" value="<?= $mod ?>">
+<table>
+<tr class=tab><th class=titulo_inv colspan=4><?= ucfirst(_("Asistente a una actividad")); ?></th></tr>
+<tr><td class=etiqueta><?= ucfirst(_("asistente")) ?>:</td>
+<?php
+if (!empty($id_nom_real)) {
+	echo "<td class=contenido colspan=3>$ape_nom</td>";
+} else {
+	echo "<td colspan=3>";
+	echo $oDesplegablePersonas->desplegable();
+	echo "</td>";
+}
+?>
+</tr>
+<tr><td class=etiqueta><?= _("propio") ?></td>
+<td><input type="Checkbox" id="propio" name="propio" value="true" <?= $propio_chk ?>></td></tr>
+<tr><td class=etiqueta><?= _("falta") ?></td>
+<td><input type="Checkbox" id="falta" name="falta" value="true" <?= $falta_chk ?>></td></tr>
+<tr><td class=etiqueta><?= _("estudios confirmados") ?></td>
+<td><input type="Checkbox" id="est_ok" name="est_ok" value="true" <?= $est_chk ?>></td></tr>
+<tr><td class=etiqueta><?= ucfirst(_("observaciones")); ?></td><td class=contenido colspan="3">
+<textarea id="observ" name="observ" cols="40" rows="5"><?= htmlspecialchars($observ) ?></textarea></td></tr>
+<?php
+if (core\configGlobal::is_app_installed('actividadplazas')) {
+?>
+	<tr><td class=etiqueta><?= _("plaza") ?></td><td><?= $oDesplegablePlaza->desplegable(); ?></td>
+	<td class=etiqueta><?= _("propiedad de") ?></td><td>
+	<div id='lst_propietarios'>
+	<?= $oDesplPosiblesPropietarios->desplegable(); ?>
+	</div></td>
+	</tr>
+<?php
+}
+?>
+</table>
+<br>
+<input type="button" id="guardar" name="guardar" onclick="fnjs_guardar(this.form);" value="<?= ucfirst(_("guardar datos del asistente")); ?>" align="MIDDLE">
+</form>

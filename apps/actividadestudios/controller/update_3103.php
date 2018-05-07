@@ -1,7 +1,7 @@
 <?php
-use asistentes\model as asistentes;
-use actividadestudios\model as actividadestudios;
-use dossiers\model as dossiers;
+use asistentes\model\entity as asistentes;
+use actividadestudios\model\entity as actividadestudios;
+use dossiers\model\entity as dossiers;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -10,37 +10,47 @@ use dossiers\model as dossiers;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	if ($_POST['pau']=='p') { 
-		$id_activ = strtok($_POST['sel'][0],'#'); 
-		$id_activ = !empty($_POST['id_activ'])? $_POST['id_activ'] : $id_activ;
-		$id_asignatura = strtok('#'); 
-		$id_nom = strtok('#'); 
-		$id_nom = !empty($_POST['id_pau'])? $_POST['id_pau'] : $id_nom;
+$msg_err = '';
+$Qmod = (string) \filter_input(INPUT_POST,'mod');
+$Qpau = (string) \filter_input(INPUT_POST,'pau');
+$Qest_ok = (string) \filter_input(INPUT_POST,'est_ok');
+
+//En el caso de eliminar desde la lista de cargos
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	if ($Qpau=="p") {
+		$Qid_activ=strtok($a_sel[0],"#");
+		$Qid_asignatura=strtok("#");
+		$Qid_nom = (integer) \filter_input(INPUT_POST,'id_pau');
 	}
-	if ($_POST['pau']=='a') {
-		$id_nom=strtok($_POST['sel'][0],'#'); 
-		$id_asignatura=strtok('#'); 
-		$id_activ=empty($_POST['id_pau'])? '' : $_POST['id_pau'];
+	if ($Qpau=="a") {
+		$Qid_nom=strtok($a_sel[0],"#");
+		$Qid_asignatura=strtok("#");
+		$Qid_activ = (integer) \filter_input(INPUT_POST,'id_pau');
 	}
-} else {
-	$id_activ=empty($_POST['id_activ'])? '' : $_POST['id_activ'];
-	$id_nom=empty($_POST['id_pau'])? '' : $_POST['id_pau'];
-	$id_asignatura=empty($_POST['id_asignatura'])? '' : $_POST['id_asignatura'];
+} else { // desde el formulario
+	$Qid_activ = (integer) \filter_input(INPUT_POST,'id_activ');
+	$Qid_nom = (integer) \filter_input(INPUT_POST,'id_nom');
+	$Qid_nom = (integer) \filter_input(INPUT_POST,'id_pau');
+	$Qid_asignatura = (integer) \filter_input(INPUT_POST,'id_asignatura');
+	$Qid_nivel = (integer) \filter_input(INPUT_POST,'id_nivel');
+	$Qid_situacion = (integer) \filter_input(INPUT_POST,'id_situacion');
+	$Qpreceptor = (string) \filter_input(INPUT_POST,'preceptor');
+	$Qid_preceptor = (integer) \filter_input(INPUT_POST,'id_preceptor');
 }
 
-switch ($_POST['mod']) {
+switch ($Qmod) {
 	case 'plan':  //------------ confirmar estudios --------
-		$est_ok = (isset($_POST['est_ok']) && $_POST['est_ok']=='t') ? 't': 'f';
-		$oAsistente = new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+		$est_ok = (isset($Qest_ok) && $Qest_ok=='t') ? 't': 'f';
+		$oAsistente = new asistentes\AsistenteDl(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom));
 		$oAsistente->DBCarregar();
 		$oAsistente->setEst_ok($est_ok);
 		$oAsistente->DBGuardar();
 		break;
 	case 'eliminar': //------------ BORRAR --------
-		if ($_POST['pau']=="p") { 
+		if ($Qpau=="p") { 
 			// Para borrar varios
-			foreach ($_POST['sel'] as $sel) {
+			foreach ($a_sel as $sel) {
 				$id_activ = strtok($sel,'#'); 
 				$id_asignatura = strtok('#'); 
 				if (!empty($_POST['id_activ'])) {
@@ -62,7 +72,7 @@ switch ($_POST['mod']) {
 				$oDossier->DBGuardar();
 			}
 		}
-		if ($_POST['pau']=="a") { 
+		if ($Qpau=="a") { 
 			$oMatricula = new actividadestudios\MatriculaDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'id_asignatura'=>$id_asignatura));
 			if ($oMatricula->DBEliminar() === false) {
 				$msg_err = _("Hay un error, no se ha borrado.");
@@ -74,63 +84,63 @@ switch ($_POST['mod']) {
 		}
 		break;
 	case 'nuevo': //------------ NUEVO --------
-		$_POST['id_nivel'] = empty($_POST['id_nivel'])? '' : $_POST['id_nivel'];
-		$_POST['id_situacion'] = empty($_POST['id_situacion'])? '' : $_POST['id_situacion'];
-		$_POST['preceptor'] = (isset($_POST['preceptor']) && $_POST['preceptor']==true)? 't' : 'f';
-
-		$oMatricula = new actividadestudios\MatriculaDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'id_asignatura'=>$id_asignatura));
-		$oMatricula->setId_nivel($_POST['id_nivel']);
-		$oMatricula->setId_situacion($_POST['id_situacion']);
-		$oMatricula->setPreceptor($_POST['preceptor']);
+		// Si no es opcional, calculo el id_asignatura a partir del id_nivel
+		if ($Qid_asignatura=='1') {
+			$oGesAsignaturas=new asignaturas\model\entity\GestorAsignatura();
+			$cAsignaturas=$oGesAsignaturas->getAsignaturas(array('id_nivel'=>$Qid_nivel));
+			$oAsignatura = $cAsignaturas[0]; // sólo deberia haber una
+			$Qid_asignatura=$oAsignatura->getId_asignatura();
+		}
+		
+		$oMatricula = new actividadestudios\MatriculaDl(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom,'id_asignatura'=>$Qid_asignatura));
+		$oMatricula->setId_nivel($Qid_nivel);
+		$oMatricula->setId_situacion($Qid_situacion);
+		empty($Qpreceptor)? $oMatricula->setPreceptor('f') : $oMatricula->setPreceptor('t');
+		$oMatricula->setId_preceptor($Qid_preceptor);
 		if ($oMatricula->DBGuardar() === false) {
 			$msg_err = _("Hay un error, no se ha guardado.");
 		} else {
 			// si no está abierto, hay que abrir el dossier para esta persona
-			$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$id_nom,'id_tipo_dossier'=>1303));
+			$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$Qid_nom,'id_tipo_dossier'=>1303));
 			$oDossier->abrir();
 			$oDossier->DBGuardar();
 			// ... y si es la primera persona, hay que abrir el dossier para esta actividad
-			$oDossier = new dossiers\Dossier(array('tabla'=>'a','id_pau'=>$id_activ,'id_tipo_dossier'=>3103));
+			$oDossier = new dossiers\Dossier(array('tabla'=>'a','id_pau'=>$Qid_activ,'id_tipo_dossier'=>3103));
 			$oDossier->abrir();
 			$oDossier->DBGuardar();
 
 			// hay que añadir esta asignatura a las asignaturas que se dan en el ca
 			// compruebo que no existe:
 			$oGesActividadAsignatura = new actividadestudios\GestorActividadAsignaturaDl();
-			$cActividadAsignaturas = $oGesActividadAsignatura->getActividadAsignaturas(array('id_activ'=>$id_activ,'id_asignatura'=>$id_asignatura));
+			$cActividadAsignaturas = $oGesActividadAsignatura->getActividadAsignaturas(array('id_activ'=>$Qid_activ,'id_asignatura'=>$Qid_asignatura));
 			if (count($cActividadAsignaturas) > 0) {
-				$tipo = ($_POST['preceptor']=='t')? 'p' : '';
+				if ($Qpreceptor===true) {
+					$oActividadAsignatura->setId_profesor($Qid_preceptor);
+					$tipo = 'p';
+				} else {
+					$tipo = '';
+				}
 				$oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
-				$oActividadAsignatura->setId_activ($id_activ);
-				$oActividadAsignatura->setId_asignatura($id_asignatura);
+				$oActividadAsignatura->setId_activ($Qid_activ);
+				$oActividadAsignatura->setId_asignatura($Qid_asignatura);
 				$oActividadAsignatura->setTipo($tipo);
 				$oActividadAsignatura->DBGuardar();
 			}
 		}
 		break;
 	case 'editar':  //------------ EDITAR --------
-		//$aPrimaryKey = unserialize($_POST['primary_key_s']);
-		$_POST['id_nivel'] = empty($_POST['id_nivel'])? '' : $_POST['id_nivel'];
-		$_POST['id_situacion'] = empty($_POST['id_situacion'])? '' : $_POST['id_situacion'];
-		$_POST['preceptor'] = (isset($_POST['preceptor']) && $_POST['preceptor']==true)? 't' : 'f';
-
-		$oMatricula = new actividadestudios\MatriculaDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'id_asignatura'=>$id_asignatura));
-		//$oMatricula = new actividadestudios\MatriculaDl($aPrimaryKey);
-		$oMatricula->setId_asignatura($id_asignatura);
-		$oMatricula->setId_nivel($_POST['id_nivel']);
-		$oMatricula->setId_situacion($_POST['id_situacion']);
-		$oMatricula->setPreceptor($_POST['preceptor']);
+		$oMatricula = new actividadestudios\MatriculaDl(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom,'id_asignatura'=>$Qid_asignatura));
+		isset($Qid_asignatura)? $oMatricula->setId_asignatura($Qid_asignatura) : $oMatricula->setId_asignatura();
+		isset($Qid_nivel)? $oMatricula->setId_nivel($Qid_nivel) : $oMatricula->setId_nivel();
+		isset($Qid_situacion)? $oMatricula->setId_situacion($Qid_situacion) : $oMatricula->setId_situacion();
+		empty($Qpreceptor)? $oMatricula->setPreceptor('f') : $oMatricula->setPreceptor('t');
+		isset($Qid_preceptor)? $oMatricula->setId_preceptor($Qid_preceptor) : $oMatricula->setId_preceptor();
+		
 		if ($oMatricula->DBGuardar() === false) {
 			$msg_err = _("Hay un error, no se ha guardado.");
 		}
 }
 
-$go_to = urldecode($_POST['go_to']);
-if (empty($msg_err)) { 
-	$oPosicion2 = new web\Posicion();
-	$oPosicion2->go(3);
-	echo $oPosicion2->ir_a($go_to);
-} else {
+if (!empty($msg_err)) { 
 	echo $msg_err;
-}	
-?>
+}

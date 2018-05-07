@@ -1,9 +1,6 @@
 <?php
-use usuarios\model as usuarios;
-use menus\model as menus;
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
+use usuarios\model\entity as usuarios;
+use menus\model\entity as menus;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -132,11 +129,11 @@ $oHash->setcamposForm('inicio!oficina!estilo_color!tipo_menu!tipo_tabla!ordenApe
 <tr><td><?= ucfirst(_("página central de inicio")) ?>: </td>
 <td>
 <select name=inicio>
-	<option value=exterior <?php echo $ini_exterior; ?>><?= ucfirst(_("home")) ?></option>
-	<option value=avisos <?php echo $ini_avisos; ?>><?= ucfirst(_("avisos cambios actividades")) ?></option>
-	<option value=oficina <?php echo $ini_oficina; ?>><?= ucfirst(_("oficina")) ?></option>
-	<option value=personal <?php echo $ini_personal; ?>><?= ucfirst(_("personal")) ?></option>
-	<option value=aniversarios <?php echo $ini_aniv; ?>><?= ucfirst(_("aniversarios")) ?></option>
+	<option value=exterior <?= $ini_exterior; ?>><?= ucfirst(_("home")) ?></option>
+	<option value=avisos <?= $ini_avisos; ?>><?= ucfirst(_("avisos cambios actividades")) ?></option>
+	<option value=oficina <?= $ini_oficina; ?>><?= ucfirst(_("oficina")) ?></option>
+	<option value=personal <?= $ini_personal; ?>><?= ucfirst(_("personal")) ?></option>
+	<option value=aniversarios <?= $ini_aniv; ?>><?= ucfirst(_("aniversarios")) ?></option>
 </select>
 </td>
 </tr>
@@ -144,34 +141,34 @@ $oHash->setcamposForm('inicio!oficina!estilo_color!tipo_menu!tipo_tabla!ordenApe
 <td><?= ucfirst(_("menú principal de la oficina")) ?>:</td><td>
 <select name=oficina>
 <option />
-<?php echo $posibles; ?>;
+<?= $posibles; ?>;
 </select>
 </td>
 </tr>
 <tr><td><?= ucfirst(_("estilo")) ?>:</td>
 <td>
 <select name=estilo_color>
-	<option value=azul <?php echo $estil_azul; ?>>Azul</option>
-	<option value=naranja <?php echo $estil_naranja; ?>>Naranja</option>
-	<option value=verde <?php echo $estil_verde; ?>>verde</option>
+	<option value=azul <?= $estil_azul; ?>>Azul</option>
+	<option value=naranja <?= $estil_naranja; ?>>Naranja</option>
+	<option value=verde <?= $estil_verde; ?>>verde</option>
 </select></td></tr>
 <tr><td><?= ucfirst(_("disposición menú")) ?>:</td>
 <td>
 <select name=tipo_menu>
-	<option value=horizontal <?php echo $tipo_menu_h; ?>>Horizontal</option>
-	<option value=vertical <?php echo $tipo_menu_v; ?>>Vertical</option>
+	<option value=horizontal <?= $tipo_menu_h; ?>>Horizontal</option>
+	<option value=vertical <?= $tipo_menu_v; ?>>Vertical</option>
 </select></td></tr>
 <tr><td><?= ucfirst(_("presentación tablas")) ?>:</td>
 <td>
 <select name=tipo_tabla>
-	<option value="slickgrid" <?php echo $tipo_tabla_s; ?>>SlickGrid</option>	
-	<option value="html" <?php echo $tipo_tabla_h; ?>>Html</option>
+	<option value="slickgrid" <?= $tipo_tabla_s; ?>>SlickGrid</option>	
+	<option value="html" <?= $tipo_tabla_h; ?>>Html</option>
 </select></td></tr>
 <tr><td><?= ucfirst(_("presentación nombre,Apellidos")) ?>:</td>
 <td>
 <select name=ordenApellidos>
-	<option value="ap_nom" <?php echo $tipo_apellidos_ap_nom; ?>>Apellidos, Nombre</option>	
-	<option value="nom_ap" <?php echo $tipo_apellidos_nom_ap; ?>>Nombre Apellidos</option>
+	<option value="ap_nom" <?= $tipo_apellidos_ap_nom; ?>>Apellidos, Nombre</option>	
+	<option value="nom_ap" <?= $tipo_apellidos_nom_ap; ?>>Nombre Apellidos</option>
 </select></td></tr>
 <tr><td><?= ucfirst(_("idioma")) ?>:</td>
 <td>

@@ -1,10 +1,7 @@
 <?php
-use devel\model as devel;
-use permisos\model as permisos;
 /**
-* Esta página muestra una tabla con las personas que cumplen con la condicion.
+* Muestra una tabla con los módulos instalados
 *
-* Es llamado desde personas_que.php
 *
 *@package	delegacion
 *@subpackage	fichas
@@ -13,6 +10,10 @@ use permisos\model as permisos;
 *@ajax		27/8/2007.		
 *
 */
+
+use devel\model\entity as devel;
+use permisos\model\entity as permisos;
+
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -59,8 +60,8 @@ foreach ($cModulos as $oModulo) {
 $resultado=sprintf( _("Módulos instalados"));
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('sel!que!id_dossier');
-$oHash->setcamposNo('scroll_id!que!id_dossier');
+$oHash->setcamposForm('sel!que');
+$oHash->setcamposNo('scroll_id!que');
 $a_camposHidden = array(
 		'pau' => 'p',
 		);
@@ -82,7 +83,6 @@ fnjs_modificar=function(formulario){
 <form id='seleccionados' name='seleccionados' action='' method='post'>
 <?= $oHash->getCamposHtml(); ?>
 	<input type='hidden' id='que' name='que' value=''>
-	<input type='hidden' id='id_dossier' name='id_dossier' value=''>
 
 <?php
 $oTabla = new web\Lista();

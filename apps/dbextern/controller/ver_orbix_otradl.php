@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
-use dbextern\model\GestorIdMatchPersona;
-use dbextern\model\PersonaListas;
+use dbextern\model\entity\GestorIdMatchPersona;
+use dbextern\model\entity\PersonaListas;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -56,7 +56,7 @@ $txt_alert =_("Se va a poner la fecha de hoy como fecha de traslado. Para cambia
 <script>
 fnjs_trasladar=function(id_orbix,dl,fila){
 	var url='<?= $url_sincro_ajax ?>';
-	var parametros='que=trasladarA&dl='+dl+'&id_nom_orbix='+id_orbix+'&tipo_persona=<?= $tipo_persona ?><?= $h ?>&PHPSESSID=<?php echo session_id(); ?>';
+	var parametros='que=trasladarA&dl='+dl+'&id_nom_orbix='+id_orbix+'&tipo_persona=<?= $tipo_persona ?><?= $h ?>&PHPSESSID=<?= session_id(); ?>';
 			 
 	alert ("<?= $txt_alert ?>");
 			 

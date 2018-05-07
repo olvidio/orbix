@@ -1,13 +1,10 @@
 <?php
-use ubis\model as ubis;
+use ubis\model\entity as ubis;
 /*
 * Devuelvo un desplegable con los valores posibles segun el valor de entrada.
 *
 */
 
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -19,7 +16,7 @@ use ubis\model as ubis;
 switch ($_POST['salida']) {
 	 case "lugar":
 		$donde='';
-		if (empty($_POST['entrada'])) exit;
+		if (empty($_POST['entrada'])) die();
 		
 		$region = $_POST['entrada'];
 

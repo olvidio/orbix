@@ -27,8 +27,8 @@
 #main {
 	clear:both;
 	height:78%;
-	overflow-x:scroll;
-	overflow-y:scroll;
+	overflow-x:auto;
+	overflow-y:auto;
 	padding-bottom:2em;
 	padding-left:2em;
 	padding-right:1em;

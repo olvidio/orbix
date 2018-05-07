@@ -1,5 +1,5 @@
 <?php
-use ubis\model as ubis;
+use ubis\model\entity as ubis;
 /**
 * Funciones más comunes de la aplicación
 */
@@ -15,8 +15,25 @@ use ubis\model as ubis;
 $nuevo = (integer)  filter_input(INPUT_POST, 'nuevo');
 $obj_pau = (string)  filter_input(INPUT_POST, 'obj_pau');
 	
+$oPosicion->recordar();
+
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	$id_activ = strtok($a_sel[0],"#");
+	$id_asignatura=strtok("#");
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$oPosicion->addParametro('id_sel',$a_sel,1);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
+	if (!empty($go_to)) {
+		// add stack:
+		$stack = $oPosicion->getStack(1);
+		$go_to .= "&stack=$stack";
+	}
+}
+
 if (!empty($nuevo)) {
-	$obj = 'personas\\model\\'.$obj_pau;
+	$obj = 'personas\\model\\entity\\'.$obj_pau;
 	$oPersona = new $obj;
 	$cDatosCampo = $oPersona->getDatosCampos();
 	$oDbl = $oPersona->getoDbl();
@@ -30,20 +47,24 @@ if (!empty($nuevo)) {
 	$a_campos['obj'] = $oPersona;
 	$a_campos['id_tabla'] = empty($_POST['id_tabla'])? '' : $_POST['id_tabla'];
 } else {
-	if (!empty($_POST['sel'])) { //vengo de un checkbox
-		$id_sel=$_POST['sel'];
-		$id_nom=strtok($_POST['sel'][0],"#");
+	if (!empty($a_sel)) { //vengo de un checkbox
+		$id_nom = strtok($a_sel[0],"#");
 		$id_tabla=strtok("#");
-		$oPosicion->addParametro('id_sel',$id_sel);
+		// el scroll id es de la página anterior, hay que guardarlo allí
+		$oPosicion->addParametro('id_sel',$a_sel,1);
 		$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
-		$oPosicion->addParametro('scroll_id',$scroll_id);
-		
+		$oPosicion->addParametro('scroll_id',$scroll_id,1);
+		if (!empty($go_to)) {
+			// add stack:
+			$stack = $oPosicion->getStack(1);
+			$go_to .= "&stack=$stack";
+		}
 	} else {
 		empty($_POST['id_nom'])? $id_nom="" : $id_nom=$_POST['id_nom'];
 		empty($_POST['id_tabla'])? $id_tabla="" : $id_tabla=$_POST['id_tabla'];
 	}
 
-	$obj = 'personas\\model\\'.$obj_pau;
+	$obj = 'personas\\model\\entity\\'.$obj_pau;
 	$oPersona = new $obj($id_nom);
 	$a_campos = $oPersona->getTot();
 	$a_campos['obj'] = $oPersona;
@@ -174,7 +195,7 @@ if 	($ok_txt==1) {
 $a_campos['botones'] = $botones;
 //------------------------------------------------------------------------
 
-
+echo $oPosicion->mostrar_left_slide(1);
 ?>
 <script>
 
@@ -198,32 +219,12 @@ fnjs_guardar=function(){
 	if (rr=='ok') {
 		$('#que').val('guardar');
 		$('#frm2').attr('action',"apps/personas/controller/personas_update.php");
-		<?php if (empty($nuevo)) { ?>
-			$('#frm2').submit(function() {
-				$.ajax({
-					data: $(this).serialize(),
-					url: $(this).attr('action'),
-					type: 'post',
-					succes: function (rta_txt) {
-						//rta_txt = rta.responseText;
-						//if (rta_txt != '' && rta_txt != '\n') {
-						if (rta_txt.search('id="ir_a"') != -1) {
-							mostra_resposta (rta,'main'); 
-						}
-					}
-				});
-				return false;
-			});
-			$('#frm2').submit();
-			$('#frm2').off();
-		<?php } else { ?>
-			fnjs_enviar_formulario('#frm2');
-		<?php } ?>
+		fnjs_enviar_formulario('#frm2');
 	}
 }
 
 fnjs_eliminar=function(){
-	if (confirm("<?php echo _("¿Esta seguro que desea eliminar esta ficha?");?>") ) {
+	if (confirm("<?= _("¿Esta seguro que desea eliminar esta ficha?");?>") ) {
 		$('#que').val('eliminar');
 		$('#frm2').attr('action',"apps/personas/controller/personas_update.php");
 		fnjs_enviar_formulario('#frm2');
@@ -238,10 +239,10 @@ if ($_POST['que'] == 'titulo') {
 	$alt=_("ver dossiers");
 	$titulo = $oPersona->getNombreApellidos();
 	
-	echo '<div id="top_personas"  name="top_personas">';
+	echo '<div id="top"  name="top">';
    	include ("../view/titulo_persona.phtml"); 
 	echo '</div>';
-	echo '<div id="ficha_personas" name="ficha_personas">';
+	echo '<div id="ficha" name="ficha">';
 }
 /**
 * Dibuja la ficha
@@ -252,4 +253,3 @@ echo $oView->render($presentacion,$a_campos);
 if ($_POST['que'] == 'titulo') {
 	echo "</div>";
 }
-?>

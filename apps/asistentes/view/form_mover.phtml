@@ -1,0 +1,15 @@
+<div style="border: 2px; border-style: solid; padding: 15px; } " >
+<form id="frm_mover" name="frm_mover" action="apps/asistentes/controller/update_3101.php" method="POST">
+<?= $oHash->getCamposHtml(); ?>
+<table style="width: 400px">
+<tr><td class=etiqueta><?= ucfirst(_("mover a")) ?>:</td>
+	<td><?= $oDesplActividades->desplegable(); ?></td>
+</tr>
+<tr><td class=etiqueta><?= ucfirst(_("observaciones")); ?></td><td class=contenido>
+<textarea id="observ" name="observ" cols="40" rows="5"><?= htmlspecialchars($observ) ?></textarea></td></tr>
+</table>
+<br>
+<input type="button" id="guardar" name="guardar" onclick="fnjs_mover_guardar('#frm_mover');" value="<?= ucfirst(_("guardar")); ?>" align="MIDDLE">
+<input type='button' value='<?= _('cancel') ?>' onclick='fnjs_mover_cerrar();' >
+</form>
+</div>

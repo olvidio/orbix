@@ -18,9 +18,6 @@
 * 
 */
 
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -35,7 +32,7 @@ $oDBSt_q_ctr=$oDB->query($query_ctr);
 $nom_ctr=$oDBSt_q_ctr->fetchColumn();
 ?>
 <!--------------------- DATOS PERSONALES -------------------------->
-<table border=<?php echo $border; ?> >
+<table border=<?= $border; ?> >
 <tr><td class=titulo colspan="5">
 <?php print(strtoupper(_("datos personales"))); ?>
 </td></tr>

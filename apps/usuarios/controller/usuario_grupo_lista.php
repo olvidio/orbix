@@ -1,5 +1,5 @@
 <?php
-use usuarios\model as usuarios;
+use usuarios\model\entity as usuarios;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -82,7 +82,7 @@ fnjs_nuevo=function(){
 fnjs_eliminar=function(formulario){
 	rta=fnjs_solo_uno('#seleccionados');
 	if (rta==1) {
-		if (confirm("<?php echo _("¿Esta seguro que desea borrar este grupo?");?>") ) {
+		if (confirm("<?= _("¿Esta seguro que desea borrar este grupo?");?>") ) {
 			var url='<?= core\ConfigGlobal::getWeb() ?>/apps/usuarios/controller/usuario_ajax.php';
 			$('#seleccionados').submit(function() {
 				$.ajax({

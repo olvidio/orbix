@@ -1,5 +1,14 @@
 <html>
  <head>
+  <script type="text/javascript">
+	/* Asegurarme que ya existe algo en la pagina, para empezar de cero
+	 * No puedo usar jquery porque al inicio no hay nada cargado.
+	 */
+	var x = document.getElementById("cargando");
+	if ( x != null) {
+	  window.location.replace("http://<?= core\ConfigGlobal::getWeb() ?>");
+	}  
+  </script>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <title>Test for Login</title>
   <style type="text/css">
@@ -19,7 +28,7 @@ Si us plau, identifica't amb un nom i un password:<br>
 <?php
 $PHP_SELF = $_SERVER['PHP_SELF'];
 ?>
-<form action="<?php echo $PHP_SELF ?>" method=post>
+<form action="<?= $PHP_SELF ?>" method=post>
 <table border=0 bgcolor="#eeeeee" align="center" cellspacing=0 cellpadding=4>
  <tr valign=top align=left>
   <td>Ubicació:</td>

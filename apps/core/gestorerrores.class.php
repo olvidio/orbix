@@ -32,6 +32,30 @@ class gestorErrores {
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
 
+	private function limitar($n=10) {
+		// Cuando hay el doble, borro $n.
+		if (isset($_SESSION['errores'])) { // No sé poruqe no deja poner todo junto
+			if (is_array($_SESSION['errores']) & (count($_SESSION['errores']) > 2*$n)) {
+				$eee = 'a borrra!!';
+				array_splice($_SESSION['errores'], -$n); // negativo empieza por el final.
+				// hay que cambiar el indice stack
+				end($_SESSION['errores']);
+				$stack = key($_SESSION['errores']);
+				$this->stack = $stack;
+				//con los stack dentro de parammmmm
+			}
+		}
+	}
+	
+	public function recordar($error) {
+		// evitar que sea muy grande
+		$this->limitar(10);
+		if (isset($_SESSION['errores']) && is_array($_SESSION['errores'])) { //para la primera
+			end($_SESSION['errores']);
+		}
+		$_SESSION['errores'][] = $error;
+	}
+	
 	function muestraMensaje($sClauError,$goto) {
 		//$_SESSION['oGestorErrores']->addErrorAppLastError($oDBSt, $sClauError, $file);
 		$txt=$this->leerErrorAppLastError();
@@ -63,12 +87,12 @@ class gestorErrores {
 			/*
 		if (!$handle = fopen($filename, 'a')) {
 			 echo "Cannot open file ($filename)";
-			 exit;
+			 die();
 		}
 		// Write $somecontent to our opened file.
 		if ($txt=fread($handle) === FALSE) {
 			echo "Cannot write to file ($filename)";
-			exit;
+			die();
 		}
 		fclose($handle);
 		*/
@@ -83,18 +107,23 @@ class gestorErrores {
 		//		$server = $oDB->getAttribute(constant("\PDO::ATTR_SERVER_INFO"));
 		//		$txt = "\n# ".$ahora." - ".$user."[$esquema]$ip  ($server)";
 		$err = $oDBSt->errorInfo();
-		$txt = "\n# ".$ahora." - ".$user."[$esquema]$ip ";
+		$id_user = $user."[$esquema]$ip ";
+		$txt = "\n# ".$ahora." - ".$id_user;
 		$txt.= "\n\t->>  ".$err[2]."\n $sClauError en linea $line de: $file\n";
+		
+		// También lo guardo en una variable de la session para poder acceder a 
+		// el desde el controlador correspondiente.
+		$this->recordar($err[2]);
 		
 		$filename = ConfigGlobal::$directorio.'/log/errores.log';
 		if (!$handle = fopen($filename, 'a')) {
 			 echo "Cannot open file ($filename)";
-			 exit;
+			 die();
 		}
 		// Write $somecontent to our opened file.
 		if (fwrite($handle, $txt) === FALSE) {
 			echo "Cannot write to file ($filename)";
-			exit;
+			die();
 		}
 		fclose($handle);
 	}
@@ -106,12 +135,12 @@ class gestorErrores {
 		$filename = ConfigGlobal::$directorio.'/log/errores.log';
 		if (!$handle = fopen($filename, 'a')) {
 			 echo "Cannot open file ($filename)";
-			 exit;
+			 die();
 		}
 		// Write $somecontent to our opened file.
 		if (fwrite($handle, $txt) === FALSE) {
 			echo "Cannot write to file ($filename)";
-			exit;
+			die();
 		}
 		fclose($handle);
 	}

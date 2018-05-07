@@ -1,5 +1,5 @@
 ﻿<?php
-use notas\model as notas;
+use notas\model\entity as notas;
 
 /**
 * Esta página sirve para comprobar las notas de la tabla e_notas.
@@ -12,9 +12,6 @@ use notas\model as notas;
 *		
 */
 
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************

@@ -1,8 +1,8 @@
 <?php
-use asignaturas\model as asignaturas;
+use asignaturas\model\entity as asignaturas;
 use core\ConfigGlobal;
-use notas\model as notas;
-use personas\model as personas;
+use notas\model\entity as notas;
+use personas\model\entity as personas;
 use web\Hash;
 use function core\strtoupper_dlb;
 
@@ -17,9 +17,6 @@ use function core\strtoupper_dlb;
 *		
 */
 
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Crea los objectos de uso global **********************************************
@@ -47,17 +44,24 @@ function num_latin($num) {
 	return $latin;
 }	
 
-$sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($sel)) { //vengo de un checkbox
-	$acta=urldecode(strtok($sel[0],"#"));
+
+$Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
+$oPosicion->recordar($Qrefresh);
+
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	$acta=urldecode(strtok($a_sel[0],"#"));
 	// el scroll id es de la página anterior, hay que guardarlo allí
-	$id_sel=$sel;
-	$oPosicion->addParametro('id_sel',$id_sel,0);
+	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
-	$oPosicion->addParametro('scroll_id',$scroll_id,0);
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else {
-	empty($_POST['acta'])? $acta="" : $acta=urldecode($_POST['acta']);
+	$Qacta = (string) \filter_input(INPUT_POST, 'acta');
+	$acta = empty($Qacta)? '' : urldecode($Qacta);
 }
+
+$Qcara = (string) \filter_input(INPUT_POST, 'cara');
+$cara = empty($Qcara)? 'A' : $Qcara;
 
 // acta
 $oActa = new notas\Acta($acta);
@@ -91,7 +95,6 @@ switch ($any) {
 
 // -----------------------------
 // alumnos:
-
 $GesPersonaNotas = new notas\GestorPersonaNota();
 $aWhere['acta'] = $acta;
 $cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhere);
@@ -147,119 +150,38 @@ $lin_max_cara_A=$lin_A4 - $lin_encabezado - 2; 	// número máximo de lineas en 
 if ($num_alumnos > $lin_max_cara_A) { $alum_cara_A=$lin_max_cara_A; } else { $alum_cara_A=$num_alumnos; }
 $alum_cara_B=$num_alumnos-$alum_cara_A;
 
-$caraA = Hash::link('apps/notas/controller/acta_imprimir.php?'.http_build_query(array('cara'=>'A','acta'=>$acta)));
-$caraB = Hash::link('apps/notas/controller/acta_imprimir.php?'.http_build_query(array('cara'=>'B','acta'=>$acta)));
+$caraA = Hash::link('apps/notas/controller/acta_imprimir.php?'.http_build_query(array('cara'=>'A','acta'=>$acta,'refresh'=>1)));
+$caraB = Hash::link('apps/notas/controller/acta_imprimir.php?'.http_build_query(array('cara'=>'B','acta'=>$acta,'refresh'=>1)));
 
 $oHash = new Hash();
 $oHash->setUrl(ConfigGlobal::getWeb().'/apps/notas/controller/acta_2_mpdf.php');
 $oHash->setCamposForm('acta');
 $h = $oHash->linkSinVal();
 
-// ---------------------------------------------------------------------------------------
-if (empty($_POST['cara'])) { $cara="A"; } else { $cara=$_POST['cara']; }
-?>
-<table class="no_print"><tr>
-<td><?= $oPosicion->mostrar_back_arrow() ?></td>
-<td align="center"><span class=link onclick="fnjs_update_div('#main','<?= $caraA ?>')"><?= _("Cara A (delante)"); ?></span></td>
-<td align="center"><span class=link onclick="fnjs_update_div('#main','<?= $caraB ?>')"><?= _("Cara B (detrás)"); ?></span></td>
-<td align="center"><span class=link onclick='window.open("<?= ConfigGlobal::getWeb() ?>/apps/notas/controller/acta_2_mpdf.php?acta=<?= urlencode($acta) ?><?= $h ?>&PHPSESSID=<?php echo session_id(); ?>", "sele");' >
-<?= _("PDF"); ?></span></td>
-</tr>
-<?php if (!empty($errores)) { echo "<tr><td colspan=4>$errores</td></tr>"; } ?>
-</table>
+$a_campos = [
+			'oPosicion' => $oPosicion,
+			'h' => $h,
+			'cara' => $cara,
+			'caraA' => $caraA,
+			'caraB' => $caraB,
+			'acta' => $acta,
+			'errores' => $errores,
+			'curso' => $curso,
+			'any' => $any,
+			'nombre_asig' => $nombre_asig,
+			'alum_cara_A' => $alum_cara_A,
+			'alum_cara_B' => $alum_cara_B,
+			'aPersonasNotas' => $aPersonasNotas,
+			'num_alumnos' => $num_alumnos,
+			'lin_max_cara_A' => $lin_max_cara_A,
+			'lin_tribunal' => $lin_tribunal,
+			'cTribunal' => $cTribunal,
+			'lugar' => $lugar,
+			'f_acta' => $f_acta,
+			'libro' => $libro,
+			'pagina' => $pagina,
+			'linea' => $linea,
+			];
 
-<div class="A4" >
-<?php if ($cara=="A") { ?>
-   <cabecera><?php echo str_replace ("AE", "&#198;", "PRAELATURA SANCTAE CRUCIS ET OPERIS DEI"); ?></cabecera>
-   <region><?php echo str_replace ("AE", "&#198;", "STUDIUM GENERALE REGIONIS: &nbsp;HISPANIAE"); ?></region>
-   <curso><?php echo str_replace ("AE", "&#198;",sprintf("CURSUS INSTITUTIONALES:&nbsp;&nbsp;  %s &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ANNUS: %s",$curso,$any)); ?></curso>
-   <curso><?php echo str_replace ("ae", "&#230;", "DISCIPLINA: &nbsp;&nbsp;&nbsp;&nbsp;$nombre_asig"); ?></curso>
-   <intro>Hisce litteris, quas propria uniuscuiusque subsignatione firmamus, fidem facimus hodierna die, coram infrascriptis Iudicibus, periculum de hac disciplina sequentes alumnos rite superasse:</intro>
-<table class="alumni" height="<?= $alum_cara_A ?>">
-<tr><td width=65% class=alumni>ALUMNI</td><td  width=10%>&nbsp;</td><td width=25% class=alumni>CUM NOTA</td></tr>
-<?php
-	$i=0;
-	foreach ($aPersonasNotas as $nom => $nota) {
-		$i++;
-		if ($i > $alum_cara_A) continue;
-		?>
-		<tr class=alumno>
-		<td class=alumno><?php echo $nom; ?>
-		</td>
-		<td>&nbsp;</td>
-		<td class=nota><?php echo $nota; ?></td>
-		</tr>
-		<?php
-	}
-	// linea final y linea de salto
-	if ($num_alumnos>$alum_cara_A) {
-		//echo "<tr><td colspan=3 class=linea >---------------------------------------------------------------------------------------------------(.../...)</td></tr>";
-		echo "<tr><td colspan=2 class=linea ><hr></td><td>(.../...)</td></tr>";
-	} else {
-		//echo "<tr><td colspan=3 class=linea >----------------------------------------------------------------------------------------------------</td></tr>";
-		echo "<tr><td colspan=3 class=linea ><hr></td></tr>";
-	}
-	echo "</table>";
-
-}
-if ($cara=="B" && $alum_cara_B > 0 ) {
-	echo "<tbody><tr height=$alum_cara_B% ><td colspan=3 >";
-	echo "<table class=alumni>";
-	echo "<tr><td width=65% class=alumni></td><td  width=10%></td><td width=25%></td></tr>";
-	//echo "<tr><td colspan=3 class=linea >(.../...)------------------------------------------------------------------------------------------------</td></tr>";
-	echo "<tr><td colspan=3>(.../...)<hr></td></tr>";
-	$i = 0;
-	foreach ($aPersonasNotas as $nom => $nota) {
-		$i++;
-		if ($i <= $lin_max_cara_A) continue;
-		?>
-		<tr class=alumno>
-		<td class=alumno><?php echo $nom; ?>
-		</td>
-		<td>&nbsp;</td>
-		<td class=nota><?php echo $nota; ?></td>
-		</tr>
-		<?php
-	}
-	// linea final y linea de salto
-	echo "<tr><td colspan=3 class=linea ><hr></td></tr>";
-	echo "</tbody></table>";
-}
-
-// tribunal -----------------
-if ($cara=="A" && $num_alumnos+$lin_tribunal<$lin_max_cara_A) $tribunal=1;
-if ($cara=="A" && $num_alumnos+$lin_tribunal>$lin_max_cara_A) $tribunal=0;
-if ($cara=="B" && $num_alumnos+$lin_tribunal>=$lin_max_cara_A) $tribunal=1;
-
-if (!empty($tribunal)){
-?>
-	<tribunal>TRIBUNAL:</tribunal>
-	<?php
-	$i=0;
-foreach ($cTribunal as $oTribunal) {
-		$i++;
-
-		$examinador=$oTribunal->getExaminador();
-		echo "<examinador>$examinador</examinador>";
-	}
-	$fecha=$lugar.",  ".data($f_acta);
-	echo "<fecha>$fecha</fecha>";
-	echo "<sello>L.S.<br>Studii Generalis</sello>";
-}
-if ($cara=="A") {
-?>
-</div>
-<pie>
-<libro>
-<b>Reg.</b> StgrH &nbsp;
-<b>lib.</b> <?php echo $libro; ?> &nbsp;
-<b>pág.</b>  <?php echo $pagina; ?>
-<b> n.</b> <?php echo $linea; ?>
-</libro>
-<acta>(N <?php echo $acta; ?>)</acta>
-</pie>
-<f7>F7</f7>
-<?php
-} else {
-	echo "</div>";
-}
+$oView = new core\View('notas/controller');
+echo $oView->render('acta_imprimir.phtml',$a_campos);

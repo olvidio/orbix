@@ -1,0 +1,61 @@
+<script>
+fnjs_actas=function(formulario){
+	rta=fnjs_solo_uno(formulario);
+	if (rta==1) {
+		$(formulario).attr('action',"apps/actividadestudios/controller/acta_notas.php");
+		fnjs_enviar_formulario(formulario,'#<?= $bloque ?>');
+	}
+}
+fnjs_modificar=function(formulario){
+	rta=fnjs_solo_uno(formulario);
+	if (rta==1) {
+		$('#mod').val("editar");
+		$(formulario).attr('action',"apps/actividadestudios/controller/form_3005.php");
+		fnjs_enviar_formulario(formulario,'#<?= $bloque ?>');
+	}
+}
+fnjs_borrar_asignatura=function(formulario){
+	rta=fnjs_solo_uno(formulario);
+	if (rta==1) {
+		if (confirm("<?= $txt_eliminar ?>")) { 
+			$('#mod').val("eliminar");
+			$(formulario).attr('action',"apps/actividadestudios/controller/update_3005.php");
+			$(formulario).submit(function() {
+				$.ajax({
+					data: $(this).serialize(),
+					url: $(this).attr('action'),
+					type: 'post',
+					complete: function (rta) {
+						rta_txt = rta.responseText;
+						if (rta_txt != '' && rta_txt != '\\n') {
+							alert ('respuesta: '+rta_txt);
+						}
+					},
+					success: function() { fnjs_actualizar(formulario) }
+				});
+				return false;
+			});
+			$(formulario).submit();
+			$(formulario).off();
+		}
+	}
+}	
+fnjs_actualizar=function(formulario){
+	var campo = '<input type="hidden" name="refresh" value=1>';
+	$(formulario).attr('action',"apps/dossiers/controller/dossiers_ver.php");
+	$(formulario).append(campo);
+	fnjs_enviar_formulario(formulario,'#main');
+}
+</script>
+<h2 class=titulo><?= ucfirst(_("relación de asignaturas")) ?></h2>
+<form id="seleccionados" name="seleccionados" action="" method="post">
+<?= $oHashSelect->getCamposHtml(); ?>
+<input type='hidden' id='mod' name='mod' value=''>
+<?= $oTabla->mostrar_tabla(); ?>
+</form>
+
+<!-- =========== boton insert ============  --> 
+<br><table cellspacing=3  class=botones><tr class=botones>
+<td class=botones><span class=link_inv onclick="fnjs_update_div('#<?= $bloque ?>','<?= $link_insert ?>');" >
+<?= sprintf(_("añadir asignatura")) ?></span></td>
+</tr></table>

@@ -1,6 +1,4 @@
 <?php
-use actividades\model as actividades;
-use usuarios\model as usuarios;
 /**
 * Esta página muestra una tabla con las actividades que cumplen con la condicion.
 * He quitado la posibilidad de buscar por sacd i por ctr. Quedan las opciones:
@@ -27,6 +25,8 @@ use usuarios\model as usuarios;
 *		
 */
 
+use actividades\model\entity as actividades;
+use usuarios\model\entity as usuarios;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -44,7 +44,9 @@ $Qempiezamax = '';
 $mi_dele = core\ConfigGlobal::mi_dele();
 $mi_sfsv = core\ConfigGlobal::mi_sfsv();
 
-$continuar = (string)  filter_input(INPUT_POST, 'continuar');
+$oPosicion->recordar();
+
+$Qcontinuar = (string)  filter_input(INPUT_POST, 'continuar');
 if (isset($_POST['stack'])) {
 	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
 } else { 
@@ -53,10 +55,10 @@ if (isset($_POST['stack'])) {
 
 //Si vengo de vuelta con el parámetro 'continuar', los datos no están en el POST,
 // sino en $Posicion. Le paso la referecia del stack donde está la información.
-if (!empty($continuar) && $continuar == 'si' && ($stack != '')) {
+if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($stack != '')) {
 	$oPosicion->goStack($stack);
 	$Qmodo = $oPosicion->getParametro('modo');
-	$Qque = $oPosicion->getParametro('que');
+//	$Qque = $oPosicion->getParametro('que');
 	$Qstatus = $oPosicion->getParametro('status');
 	$Qid_tipo_activ = $oPosicion->getParametro('id_tipo_activ');
 	$Qfiltro_lugar = $oPosicion->getParametro('filtro_lugar');
@@ -72,21 +74,48 @@ if (!empty($continuar) && $continuar == 'si' && ($stack != '')) {
 	$Qscroll_id = $oPosicion->getParametro('scroll_id');
 	$oPosicion->olvidar($stack); //limpio todos los estados hacia delante.
 } else { //si vengo de vuelta y tengo los parametros en el $_POST
-	$Qmodo = empty($_POST['modo'])? '' : $_POST['modo'];
-	$Qque = empty($_POST['que'])? '' : $_POST['que'];
-	$Qstatus = empty($_POST['status'])? 2 : $_POST['status'];
-	$Qid_tipo_activ = empty($_POST['id_tipo_activ'])? '' : $_POST['id_tipo_activ'];
-	$Qfiltro_lugar = empty($_POST['filtro_lugar'])? '' : $_POST['filtro_lugar'];
-	$Qid_ubi = empty($_POST['id_ubi'])? '' : $_POST['id_ubi'];
-	$Qperiodo = empty($_POST['periodo'])? '' : $_POST['periodo'];
-	$Qinicio = empty($_POST['inicio'])? '' : $_POST['inicio'];
-	$Qfin = empty($_POST['fin'])? '' : $_POST['fin'];
-	$Qyear = empty($_POST['year'])? '' : $_POST['year'];
-	$Qdl_org = empty($_POST['dl_org'])? '' : $_POST['dl_org'];
-	$Qempiezamin = empty($_POST['empiezamin'])? date('d/m/Y',mktime(0, 0, 0, date('m'), date('d')-40, date('Y'))) : $_POST['empiezamin'];
-	$Qempiezamax = empty($_POST['empiezamax'])? date('d/m/Y',mktime(0, 0, 0, date('m')+9, 0, date('Y'))) : $_POST['empiezamax'];
-	$Qid_sel = empty($_POST['id_sel'])? '' : $_POST['id_sel'];
-	$Qscroll_id = empty($_POST['scroll_id'])? '' : $_POST['scroll_id'];
+	$Qid_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+	$Qscroll_id = (string) \filter_input(INPUT_POST, 'scroll_id');
+	//Si vengo por medio de Posicion, borro la última
+	if ($stack != '') {
+		// No me sirve el de global_object, sino el de la session
+		$oPosicion2 = new web\Posicion();
+		if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+			$Qid_sel=$oPosicion2->getParametro('id_sel');
+			$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+			$oPosicion2->olvidar($stack);
+		}
+	}
+	$Qmodo = (string) \filter_input(INPUT_POST, 'modo');
+	$Qstatus = (integer) \filter_input(INPUT_POST, 'status');
+	$Qid_tipo_activ = (string) \filter_input(INPUT_POST, 'id_tipo_activ');
+	$Qfiltro_lugar = (string) \filter_input(INPUT_POST, 'filtro_lugar');
+	$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
+	$Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
+	$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
+	$Qfin = (string) \filter_input(INPUT_POST, 'fin');
+	$Qyear = (string) \filter_input(INPUT_POST, 'year');
+	$Qdl_org = (string) \filter_input(INPUT_POST, 'dl_org');
+	$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
+	$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
+
+	// valores por defeccto
+	$Qempiezamin = empty($Qempiezamin)? date('d/m/Y',mktime(0, 0, 0, date('m'), date('d')-40, date('Y'))) : $Qempiezamin;
+	$Qempiezamax = empty($Qempiezamax)? date('d/m/Y',mktime(0, 0, 0, date('m')+9, 0, date('Y'))) : $Qempiezamax;
+
+	$aGoBack = array (
+					'modo'=>$Qmodo,
+					'id_tipo_activ'=>$Qid_tipo_activ,
+					'id_ubi'=>$Qid_ubi,
+					'periodo'=>$Qperiodo,
+					'year'=>$Qyear,
+					'inicio'=>$Qinicio,
+					'fin'=>$Qfin,
+					'dl_org'=>$Qdl_org,
+					'status'=>$Qstatus,
+					'empiezamin'=>$Qempiezamin,
+					'empiezamax'=>$Qempiezamax );
+	$oPosicion->setParametros($aGoBack,1);
 }
 
 // Condiciones de búsqueda.
@@ -97,16 +126,20 @@ if ($Qstatus!=5) {
 }
 // Id tipo actividad
 if (empty($Qid_tipo_activ)) {
-	if (empty($_POST['ssfsv'])) {
-		if ($mi_sfsv == 1) $_POST['ssfsv'] = 'sv';
-		if ($mi_sfsv == 2) $_POST['ssfsv'] = 'sf';
+	$Qssfsv = (string) \filter_input(INPUT_POST, 'ssfsv');
+	$Qsasistentes = (string) \filter_input(INPUT_POST, 'sasistentes');
+	$Qsactividad = (string) \filter_input(INPUT_POST, 'sactividad');
+	$Qsnom_tipo = (string) \filter_input(INPUT_POST, 'snom_tipo');
+	
+	if (empty($Qssfsv)) {
+		if ($mi_sfsv == 1) $Qssfsv = 'sv';
+		if ($mi_sfsv == 2) $Qssfsv = 'sf';
 	}
-	$ssfsv = $_POST['ssfsv'];
-	$sasistentes = empty($_POST['sasistentes'])? '.' : $_POST['sasistentes'];
-	$sactividad = empty($_POST['sactividad'])? '.' : $_POST['sactividad'];
-	$snom_tipo = empty($_POST['snom_tipo'])? '...' : $_POST['snom_tipo'];
+	$sasistentes = empty($Qsasistentes)? '.' : $Qsasistentes;
+	$sactividad = empty($Qsactividad)? '.' : $Qsactividad;
+	$snom_tipo = empty($Qsnom_tipo)? '...' : $Qsnom_tipo;
 	$oTipoActiv= new web\TiposActividades();
-	$oTipoActiv->setSfsvText($ssfsv);
+	$oTipoActiv->setSfsvText($Qssfsv);
 	$oTipoActiv->setAsistentesText($sasistentes);
 	$oTipoActiv->setActividadText($sactividad);
 	$Qid_tipo_activ=$oTipoActiv->getId_tipo_activ();
@@ -153,32 +186,6 @@ if (!empty($Qmodo) && $Qmodo == 'publicar') {
    $aWhere['publicado'] = 'f'; 
 }
 		
-
-/*
-* Defino un array con los datos actuales, para saber volver después de navegar un rato
-*/
-//$aGoBack = array (
-//				'modo'=>$Qmodo,
-//				'que'=>$Qque,
-//				'id_tipo_activ'=>$Qid_tipo_activ,
-//				'id_ubi'=>$Qid_ubi,
-//				'periodo'=>$Qperiodo,
-//				'year'=>$Qyear,
-//				'inicio'=>$Qinicio,
-//				'fin'=>$Qfin,
-//				'dl_org'=>$Qdl_org,
-//				'status'=>$Qstatus,
-//				'empiezamin'=>$Qempiezamin,
-//				'empiezamax'=>$Qempiezamax );
-//$oPosicion->setParametros($aGoBack);
-//Parámetros que pueden haber cambiado desde el POST
-$aGoBack = array (
-				'status'=>$Qstatus,
-				'empiezamin'=>$Qempiezamin,
-				'empiezamax'=>$Qempiezamax );
-$oPosicion->setParametros($aGoBack);
-$oPosicion->recordar();
-
 // miro que rol tengo. Si soy casa, sólo veo la mía
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miRole=$oMiUsuario->getId_role();
@@ -275,20 +282,18 @@ if (!empty($Qmodo) && $Qmodo == 'importar') {
 $aWhere['_ordre'] = 'f_ini';
 $cActividades = $GesActividades->getActividades($aWhere,$aOperador);
 $num_activ=count($cActividades);
-if ($num_activ > $num_max_actividades && empty($_POST['continuar'])) {
+if ($num_activ > $num_max_actividades && empty($Qcontinuar)) {
 	$go_avant=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_select.php?'.http_build_query(array('continuar'=>'si','stack'=>$oPosicion->getStack())));
 	$go_atras=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_que.php?'.http_build_query(array('stack'=>$oPosicion->getStack())));
 	echo "<h2>".sprintf(_('son %s actividades a mostrar. ¿Seguro que quiere continuar?.'),$num_activ).'</h2>';
 	echo "<input type='button' onclick=fnjs_update_div('#main','".$go_avant."') value="._('continuar').">";
 	echo "<input type='button' onclick=fnjs_update_div('#main','".$go_atras."') value="._('volver').">";
-	exit;
+	die();
 }
 
 $i=0;
 $sin=0;
 $a_valores=array();
-if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
-if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 $sPrefs = '';
 $id_usuario= core\ConfigGlobal::mi_id_usuario();
 $tipo = 'tabla_presentacion';
@@ -420,6 +425,16 @@ foreach($cActividades as $oActividad) {
 	}
 }
 $num=$i;
+if (!empty($a_valores)) {
+	if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+	if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
+}
+
+if (core\ConfigGlobal::is_app_installed('procesos')) {
+	$resultado = sprintf( _("%s actividades encontradas (%s sin permiso)"),$num,$sin);
+} else {
+	$resultado = sprintf( _("%s actividades encontradas"),$num);
+}
 
 $oHash = new web\Hash();
 $a_camposHidden = array(
@@ -432,7 +447,7 @@ $a_camposHidden = array(
 		'dl_org' => $Qdl_org,
 		'id_ubi' => $Qid_ubi,
 		'filtro_lugar' => $Qfiltro_lugar,
-		'que' => $Qque,
+//		'que' => $Qque,
 		'modo' => $Qmodo
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
@@ -449,88 +464,21 @@ $a_camposHiddenSel = array(
 		//'tabla_pau' =>'a_actividades',
 $oHashSel->setArraycamposHidden($a_camposHiddenSel);
 
-/* ---------------------------------- html --------------------------------------- */
-?>
-<script type="text/javascript" src="<?= 'apps/actividades/controller/actividades.js?'.rand(); ?>"></script>
-
-<script>
-fnjs_borrar=function(formulario,que_val){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-		if (confirm("<?php echo _("¿Esta seguro que desea borrar esta actividad?");?>") ) {
-			$('#mod').val(que_val);
-			$(formulario).attr('action',"apps/actividades/controller/actividad_update.php");
-			$(formulario).submit(function() {
-				$.ajax({
-					data: $(this).serialize(),
-					url: $(this).attr('action'),
-					type: 'post',
-					complete: function (rta) {
-						rta_txt = rta.responseText;
-						if (rta_txt != '' && rta_txt != '\n') {
-							alert (rta_txt);
-						}
-					},
-					success: function() { // tacho los marcados
-						$(formulario+' input.sel').each(function(i){
-							if($(this).prop('checked') === true){
-								$(this).parent().siblings().addClass('tachado');
-								$(this).prop('checked',false);
-							}
-						});
-				   	}
-				});
-				return false;
-			});
-			$(formulario).submit();
-			$(formulario).off();
-		}
-	}
-};
-fnjs_buscar=function(){
-	$('#modifica').attr('action','apps/actividades/controller/actividad_que.php');
-	$('#b_que').val("buscar");
-	fnjs_enviar_formulario('#modifica','#main');
-}
-
-</script>
-<div id="condiciones" class="no_print">
-	<form id="modifica" name="modifica" action="">
-	<?= $oHash->getCamposHtml(); ?>
-	<table><tr><td class="derecha">
-		<input id="b_buscar" name="b_buscar" TYPE="button" VALUE="<?php echo _("realizar otra busqueda"); ?>" onclick="fnjs_buscar()" >
-	</td></tr>
-	</table>
-	</form>
-</div>
-<div id="resultados" >
-<?php
-if (core\ConfigGlobal::is_app_installed('procesos')) {
-	$resultado = sprintf( _("%s actividades encontradas (%s sin permiso)"),$num,$sin);
-} else {
-	$resultado = sprintf( _("%s actividades encontradas"),$num);
-}
-?>
-<h3><?= $resultado ?></h3>
-<form id='seleccionados' name='seleccionados' action='' method='post'>
-	<?= $oHashSel->getCamposHtml(); ?>
-	<input type='hidden' id='queSel' name='queSel' value='' >
-	<input type='hidden' id='id_dossier' name='id_dossier' value="">
-	<input type='hidden' id='mod' name='mod' value="<?= $mod ?>">
-<?php
 $oTabla = new web\Lista();
 $oTabla->setId_tabla('actividad_select');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
-echo $oTabla->mostrar_tabla();
-?>
-</form>
-<div class="no_print">
-<?php
-if ($miRole != '9' && $miRole != '16') { //casa o centroSf
-?>
-	<br><span class=link onclick="fnjs_update_div('#main','<?= web\Hash::link('apps/actividades/controller/actividad_nueva.php?'.http_build_query(array('id_tipo_activ'=>$Qid_tipo_activ))) ?>')" ><?= _("Nueva actividad") ?></span>
-<?php } ?>
-</div>
-</div>
+
+$a_campos = ['oPosicion' => $oPosicion,
+			'oHash' => $oHash,
+			'oHashSel' => $oHashSel,
+			'Qid_tipo_activ' => $Qid_tipo_activ,
+			'resultado' => $resultado,
+			'miRole' => $miRole,
+			'mod' => $mod,
+			'oTabla' => $oTabla,
+			];
+
+$oView = new core\View('actividades/controller');
+echo $oView->render('actividad_select.phtml',$a_campos);

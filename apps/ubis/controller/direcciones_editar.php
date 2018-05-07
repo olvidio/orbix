@@ -1,6 +1,6 @@
 ﻿<?php
-use usuarios\model as usuarios;
-use ubis\model as ubis;
+use usuarios\model\entity as usuarios;
+use ubis\model\entity as ubis;
 /**
 * Es el frame inferior. Muestra la ficha de los ubis
 *
@@ -12,9 +12,6 @@ use ubis\model as ubis;
 *@author	Daniel Serrabou
 *@since		15/5/02.
 *		
-*/
-/**
-* En el fichero config tenemos las variables genéricas del sistema
 */
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -29,31 +26,31 @@ $mod = empty($_POST['mod'])? '' : $_POST['mod'];
 
 switch ($_POST['obj_dir']) {
 	case 'DireccionCdc': // tipo dl pero no de la mia
-		$obj_x = 'ubis\\model\\CdcxDireccion';
-		$obj_ubi = 'ubis\\model\\Casa';
+		$obj_x = 'ubis\\model\\entity\\CdcxDireccion';
+		$obj_ubi = 'ubis\\model\\entity\\Casa';
 		break;
 	case 'DireccionCdcDl':
-		$obj_x = 'ubis\\model\\CdcDlxDireccion';
-		$obj_ubi = 'ubis\\model\\CasaDl';
+		$obj_x = 'ubis\\model\\entity\\CdcDlxDireccion';
+		$obj_ubi = 'ubis\\model\\entity\\CasaDl';
 		break;
 	case 'DireccionCdcEx':
-		$obj_x = 'ubis\\model\\CdcExxDireccion';
-		$obj_ubi = 'ubis\\model\\CasaEx';
+		$obj_x = 'ubis\\model\\entity\\CdcExxDireccion';
+		$obj_ubi = 'ubis\\model\\entity\\CasaEx';
 		break;
 	case 'DireccionCtr': // tipo dl pero no de la mia
-		$obj_x = 'ubis\\model\\CtrxDireccion';
-		$obj_ubi = 'ubis\\model\\Centro';
+		$obj_x = 'ubis\\model\\entity\\CtrxDireccion';
+		$obj_ubi = 'ubis\\model\\entity\\Centro';
 		break;
 	case 'DireccionCtrDl':
-		$obj_x = 'ubis\\model\\CtrDlxDireccion';
-		$obj_ubi = 'ubis\\model\\CentroDl';
+		$obj_x = 'ubis\\model\\entity\\CtrDlxDireccion';
+		$obj_ubi = 'ubis\\model\\entity\\CentroDl';
 		break;
 	case 'DireccionCtrEx':
-		$obj_x = 'ubis\\model\\CtrExxDireccion';
-		$obj_ubi = 'ubis\\model\\CentroEx';
+		$obj_x = 'ubis\\model\\entity\\CtrExxDireccion';
+		$obj_ubi = 'ubis\\model\\entity\\CentroEx';
 		break;
 }
-$obj = 'ubis\\model\\'.$_POST['obj_dir'];
+$obj = 'ubis\\model\\entity\\'.$_POST['obj_dir'];
 
 if ($mod == 'nuevo') {
 
@@ -146,11 +143,11 @@ if (empty($mod) & empty($_POST['id_direccion'])) {
  	?>
 	<table><tr><td><?= _("Este ubi no dispone de una dirección. Compruebe primero si existe, en este caso, asígnesela. En caso contrario cree una nueva.") ?></td></tr></table>
 	<br>
-	<span class="link" onclick="fnjs_update_div('#ficha_ubis','<?= $golistadir ?>');">
+	<span class="link" onclick="fnjs_update_div('#ficha','<?= $golistadir ?>');">
 	<?=  mb_strtoupper(_('asignar una direccion')) ?>
 	</span>
 	<?php
-	exit;
+	die();
 }
 
 ?>
@@ -182,11 +179,11 @@ fnjs_eliminar=function(f,r,go){
 
 fnjs_quitar_dir=function(idx){
 	url ='<?= $quitardir ?>'+'&idx='+idx;
-   fnjs_update_div('#ficha_ubis',url);
+   fnjs_update_div('#ficha',url);
 }
 
 fnjs_add_dir=function(){
-   fnjs_update_div('#ficha_ubis','<?= $golistadir ?>');
+   fnjs_update_div('#ficha','<?= $golistadir ?>');
 }
 
 </script>

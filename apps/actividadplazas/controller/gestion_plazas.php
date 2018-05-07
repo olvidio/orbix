@@ -1,5 +1,13 @@
 <?php
-//use ubis\model as ubis;
+/**
+ * Muestra el cuadro de calendario: Plazas que tiene cada dl del grupo por actividad.
+ * 
+ * @param integer $id_tipo_activ
+ * o bien 
+ * @param string $ssfsv 
+ * @param string $sasistentes 
+ * @param string $ssctividad 
+ */
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -9,34 +17,30 @@
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-// Sólo las del tipo...
-///$id_tipo_activ = empty($_POST['id_tipo_activ'])? '' : '^'.$_POST['id_tipo_activ'];
-
 $Qid_tipo_activ = (string)  filter_input(INPUT_POST, 'id_tipo_activ');
 // Id tipo actividad
 if (empty($Qid_tipo_activ)) {
-	if (empty($_POST['ssfsv'])) {
+	$Qssfsv = (string)  filter_input(INPUT_POST, 'ssvsf');
+	if (empty($Qssfsv)) {
 		$mi_sfsv = core\ConfigGlobal::mi_sfsv();
-		if ($mi_sfsv == 1) $_POST['ssfsv'] = 'sv';
-		if ($mi_sfsv == 2) $_POST['ssfsv'] = 'sf';
+		if ($mi_sfsv == 1) $Qssfsv = 'sv';
+		if ($mi_sfsv == 2) $Qssfsv = 'sf';
 	}
-	$ssfsv = $_POST['ssfsv'];
-	$sasistentes = empty($_POST['sasistentes'])? '.' : $_POST['sasistentes'];
-	$sactividad = empty($_POST['sactividad'])? '.' : $_POST['sactividad'];
-	$snom_tipo = empty($_POST['snom_tipo'])? '...' : $_POST['snom_tipo'];
+	$Qsasistentes = (string) \filter_input(INPUT_POST, 'sasistentes');
+	$Qsactividad = (string) \filter_input(INPUT_POST, 'sactividad');
 	$oTipoActiv= new web\TiposActividades();
-	$oTipoActiv->setSfsvText($ssfsv);
-	$oTipoActiv->setAsistentesText($sasistentes);
-	$oTipoActiv->setActividadText($sactividad);
+	$oTipoActiv->setSfsvText($Qssfsv);
+	$oTipoActiv->setAsistentesText($Qsasistentes);
+	$oTipoActiv->setActividadText($Qsactividad);
 	$Qid_tipo_activ=$oTipoActiv->getId_tipo_activ();
 } else {
 	$oTipoActiv= new web\TiposActividades($Qid_tipo_activ);
-	$sactividad = $oTipoActiv->getActividadText();
+	$Qsactividad = $oTipoActiv->getActividadText();
 }
 $Qid_tipo_activ =  '^'.$Qid_tipo_activ;
 
 //periodo
-switch ($sactividad) {
+switch ($Qsactividad) {
 	case 'ca':
 	case 'cv':
 		$any=  core\ConfigGlobal::any_final_curs('est');
@@ -57,18 +61,18 @@ $esquema = core\ConfigGlobal::mi_region_dl();
 $a_reg = explode('-',$esquema);
 $mi_dl = substr($a_reg[1],0,-1); // quito la v o la f.
 $aWhere =array('region'=>$a_reg[0],'dl'=>$mi_dl);
-$oMiDelegacion = new ubis\model\Delegacion($aWhere);
+$oMiDelegacion = new ubis\model\entity\Delegacion($aWhere);
 $grupo_estudios = $oMiDelegacion->getGrupo_estudios();
 
-$gesDelegacion = new ubis\model\GestorDelegacion();
+$gesDelegacion = new ubis\model\entity\GestorDelegacion();
 $cDelegaciones = $gesDelegacion->getDelegaciones(array('grupo_estudios'=>$grupo_estudios,'_ordre'=>'region,dl'));
 
-$gesActividadPlazas = new \actividadplazas\model\GestorActividadPlazas();
+$gesActividadPlazas = new \actividadplazas\model\entity\GestorActividadPlazas();
 // Seleccionar actividades exportadas de los id_dl
 
 $a_grupo = array();
 $cActividades = array();
-$gesActividades = new actividades\model\GestorActividad();
+$gesActividades = new actividades\model\entity\GestorActividad();
 $k = 0;
 foreach ($cDelegaciones as $oDelegacion) {
 	$k++;
@@ -99,7 +103,7 @@ foreach ($cActividades as $oActividad) {
 	$plazas_totales = $oActividad->getPlazas();
 	if (empty($plazas_totales)) {
 		$id_ubi = $oActividad->getId_ubi();
-		$oCasa = ubis\model\Ubi::NewUbi($id_ubi);
+		$oCasa = ubis\model\entity\Ubi::NewUbi($id_ubi);
 		// Si la casa es un ctr de otra dl, no sé las plazas
 		if(method_exists($oCasa, 'getPlazas')){
 			$plazas_totales = $oCasa->getPlazas();
@@ -181,9 +185,8 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
+$a_campos = ['oTabla' => $oTabla,
+			];
 
-echo _("sólo se ven las actividades publicadas");
-echo '<br>';
-echo _("editar celdas con doble click");
-echo '<br>';
-echo $oTabla->mostrar_tabla();
+$oView = new core\View('actividadplazas/controller');
+echo $oView->render('gestion_plazas.phtml',$a_campos);

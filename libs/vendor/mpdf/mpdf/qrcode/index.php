@@ -10,9 +10,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title>Spipu Qrcode <?php echo __CLASS_QRCODE__; ?></title>
-		<meta name="Title"			content="Spipu - Qrcode <?php echo __CLASS_QRCODE__; ?>" > 
-		<meta name="Description"	content="Spipu - Qrcode <?php echo __CLASS_QRCODE__; ?>" >
+		<title>Spipu Qrcode <?= __CLASS_QRCODE__; ?></title>
+		<meta name="Title"			content="Spipu - Qrcode <?= __CLASS_QRCODE__; ?>" > 
+		<meta name="Description"	content="Spipu - Qrcode <?= __CLASS_QRCODE__; ?>" >
 		<meta name="Keywords"		content="spipu">
 		<meta name="Author"			content="spipu" >
 		<meta name="Reply-to"		content="webmaster@spipu.net" >
@@ -44,13 +44,13 @@ table.qr td.on
 	<body>
 		<center>
 			<form method="GET" action="">
-				<textarea name="msg" cols="40" rows="7"><?php echo htmlentities($msg); ?></textarea><br>
+				<textarea name="msg" cols="40" rows="7"><?= htmlentities($msg); ?></textarea><br>
 				Correction d'erreur : 
 				<select name="err">
-					<option value="L" <?php echo $err=='L' ? 'selected' : ''; ?>>L</option>
-					<option value="M" <?php echo $err=='M' ? 'selected' : ''; ?>>M</option>
-					<option value="Q" <?php echo $err=='Q' ? 'selected' : ''; ?>>Q</option>
-					<option value="H" <?php echo $err=='H' ? 'selected' : ''; ?>>H</option>
+					<option value="L" <?= $err=='L' ? 'selected' : ''; ?>>L</option>
+					<option value="M" <?= $err=='M' ? 'selected' : ''; ?>>M</option>
+					<option value="Q" <?= $err=='Q' ? 'selected' : ''; ?>>Q</option>
+					<option value="H" <?= $err=='H' ? 'selected' : ''; ?>>H</option>
 				</select> | 
 				<input type="submit" value="Afficher">
 			</form>
@@ -62,7 +62,7 @@ table.qr td.on
 ?>
 			<br>
 			Génération d'une image PNG : <br>
-			<img src="./image.php?msg=<?php echo urlencode($msg); ?>&amp;err=<?php echo urlencode($err); ?>" alt="generation qr-code" style="border: solid 1px black;">
+			<img src="./image.php?msg=<?= urlencode($msg); ?>&amp;err=<?= urlencode($err); ?>" alt="generation qr-code" style="border: solid 1px black;">
 		</center>
 	</body>
 </html>

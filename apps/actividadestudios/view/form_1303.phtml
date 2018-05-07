@@ -1,0 +1,111 @@
+<script>
+/**
+ * se ejecuta al cambiar el desplegable $oDesplegaAsignaturas
+ * @returns desplegable de posibles asignaturas opcionales
+ */
+fnjs_cmb_opcional=function(){
+	var id=$('#id_nivel').val();
+	if (<?= $condicion_js; ?>) { //solo si es opcional
+		var id_nom=$('#id_pau').val();
+		//alert ('nom: '+id_nom);
+		var url='<?= $url_ajax ?>';
+		var parametros='que=posibles_opcionales&id_nom='+id_nom+'<?= $h1 ?>';
+			 
+		$.ajax({
+			url: url,
+			type: 'post',
+			data: parametros,
+			success: function (rta_txt) {
+				//rta_txt=rta.responseText;
+				//alert ('respuesta: '+rta_txt);
+				$('#lst_opcionales').html(rta_txt);
+			}
+		});
+	} else { // al cambiar a NO opcional
+		var rta = '<input type="hidden" id="id_asignatura" name="id_asignatura" value="1">';
+		$('#lst_opcionales').html(rta);
+	}
+}
+fnjs_cmb_preceptor=function(){
+	if($('#preceptor').prop('checked')) {
+		var id_nom=$('#id_pau').val();
+		//alert ('nom: '+id_nom);
+		var url='<?= $url_ajax ?>';
+		var parametros='que=posibles_preceptores<?= $h2 ?>';
+			 
+		$.ajax({
+			url: url,
+			type: 'post',
+			data: parametros,
+			success: function (rta_txt) {
+				//rta_txt=rta.responseText;
+				//alert ('respuesta: '+rta_txt);
+				$('#lst_preceptores').html(rta_txt);
+			}
+		});
+	} else { // al cambiar a NO preceptor
+		var rta = '';
+		$('#lst_preceptores').html(rta);
+	}
+}
+fnjs_guardar=function(formulario){
+	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
+	//alert ("EEE "+rr);
+	if (rr=='ok') {
+		$(formulario).attr('action',"apps/actividadestudios/controller/update_3103.php");
+		$(formulario).submit(function() {
+			$.ajax({
+				data: $(this).serialize(),
+				url: $(this).attr('action'),
+				type: 'post',
+				complete: function (rta) {
+					rta_txt=rta.responseText;
+					if (rta_txt != '' && rta_txt != '\\n') {
+						alert ('respuesta: '+rta_txt);
+					} else {
+						<?= $oPosicion->js_atras(1); ?>
+					}
+				}
+			});
+			return false;
+		});
+		$(formulario).submit();
+		$(formulario).off();
+	}
+}
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<form id="f_1303" name="f_1303" action="t" method="POST">
+<?= $oHash->getCamposHtml(); ?>
+<table>
+<thead><tr><th colspan=4><?= _("matricula de asignaturas") ?></th></tr></thead>
+<tbody>
+<tr><td><?= ucfirst(_("actividad")) ?>:</td><td class=contenido colspan=3><?= $nom_activ ?></td></tr>
+<?php
+if (!empty($id_asignatura_real)) { //caso de modificar
+	?>
+	<tr><td><?= ucfirst(_("asignatura")) ?>:</td><td class=contenido><?= $nombre_corto ?></td></tr>
+	<?php
+} else { ?>
+	<tr><td><?= ucfirst(_("asignatura")) ?>:</td>
+	<td><?= $oDesplNiveles->desplegable(); ?></td>
+	<td colspan="2">
+		<div id='lst_opcionales'>
+			<input type="hidden" id="id_asignatura" name="id_asignatura" value="1">
+		</div
+	</td>
+	</tr>
+<?php } ?>
+	
+<tr><td><?= _("preceptor") ?></td>
+<td><input type="Checkbox" id="preceptor" name="preceptor" value="true" <?= $chk_preceptor ?> onclick='fnjs_cmb_preceptor()'></td>
+<td colspan="2">
+	<div id='lst_preceptores'>
+		<?php if (!empty($id_preceptor)) { 
+			echo $oDesplProfesores->desplegable();		
+		} ?>
+	</div
+</td>
+</tr>
+</tbody></table>
+<br><input type="button" value="<?= ucfirst(_("guardar")); ?>" onclick="fnjs_guardar(this.form)">

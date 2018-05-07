@@ -1,6 +1,6 @@
 <?php
-use personas\model as personas;
-use ubis\model as ubis;
+use personas\model\entity as personas;
+use ubis\model\entity as ubis;
 
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
@@ -14,30 +14,51 @@ use ubis\model as ubis;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	$id_sel=$_POST['sel'];
-	$id_pau=strtok($_POST['sel'][0],"#");
+$oPosicion->recordar();
+
+$go_to = '';
+$pau = (string)  \filter_input(INPUT_POST, 'pau');
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	$id_pau = strtok($a_sel[0],"#");
 	$id_tabla=strtok("#");
-	$go_to="atras";
-	$pau = empty($_POST['pau'])? "" : $_POST['pau'];
-	$oPosicion->addParametro('id_sel',$id_sel);
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
-	$oPosicion->addParametro('scroll_id',$scroll_id);
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
+	if (!empty($go_to)) {
+		// add stack:
+		$stack = $oPosicion->getStack(1);
+		$go_to .= "&stack=$stack";
+	}
 } else {
-	$pau = empty($_POST['pau'])? "" : $_POST['pau'];
 	$id_pau = empty($_POST['id_pau'])? "" : $_POST['id_pau'];
 	$go_to = empty($_POST['go_to'])? "" : $_POST['go_to'];
 }
 
+//if (!empty($_POST['sel'])) { //vengo de un checkbox
+//	$id_sel=$_POST['sel'];
+//	$id_pau=strtok($_POST['sel'][0],"#");
+//	$id_tabla=strtok("#");
+//	$go_to="atras";
+//	$pau = empty($_POST['pau'])? "" : $_POST['pau'];
+//	$oPosicion->addParametro('id_sel',$id_sel);
+//	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+//	$oPosicion->addParametro('scroll_id',$scroll_id);
+//} else {
+//	$pau = empty($_POST['pau'])? "" : $_POST['pau'];
+//	$id_pau = empty($_POST['id_pau'])? "" : $_POST['id_pau'];
+//	$go_to = empty($_POST['go_to'])? "" : $_POST['go_to'];
+//}
+
 $oPersona = personas\Persona::newPersona($id_pau);
 if (!is_object($oPersona)) {
-	$msg_err = "<br>$oPersona con id_nom: $id_pau";
+	$msg_err = "<br>$oPersona con id_nom: $id_pau en  ".__FILE__.": line ". __LINE__;
 	exit($msg_err);
 }
 $titulo = $oPersona->getNombreApellidos();
-$top="top_personas";
 
-if (get_class($oPersona) == 'personas\model\PersonaEx') {
+if (get_class($oPersona) == 'personas\model\entity\PersonaEx') {
 	exit(_("Con las personas de paso no tiene sentido."));
 }
 //si viene de la página de dossiers, no hace falta la cabecera
@@ -47,9 +68,9 @@ if (empty($_POST['cabecera']) || $_POST['cabecera']!="no") {
 	$alt=_("ver dossiers");
 	$dos=_("dossiers");
 
-	echo $oPosicion->mostrar_left_slide();
+	echo $oPosicion->mostrar_left_slide(1);
 	?>
-	<div id=<?= $top ?>>
+	<div id="top">
 	<table><tr>
 	<td><span class=link onclick=fnjs_update_div('#main','<?= $godossiers ?>')><img src=<?= core\ConfigGlobal::$web_icons ?>/dossiers.gif border=0 width=40 height=40 alt='<?= $alt ?>'>(<?= $dos ?>)</span></td>
 	<td class=titulo><?= $titulo ?></td>
@@ -101,13 +122,13 @@ $(function() { $( "#f_dl" ).datepicker(); });
 	<?= $oHash->getCamposHtml(); ?>
 <table border=1>
 <tr> 
-   <th><?php echo ucfirst(_("tipo"));?></th>
-   <th><?php echo ucfirst(_("origen")); ?></th>
-   <th><?php echo ucfirst(_("destino")); ?></th>
-   <th><?php echo ucfirst(_("fecha")); ?></th>
+   <th><?= ucfirst(_("tipo"));?></th>
+   <th><?= ucfirst(_("origen")); ?></th>
+   <th><?= ucfirst(_("destino")); ?></th>
+   <th><?= ucfirst(_("fecha")); ?></th>
    </tr>
    <tr> 
-	 <td class=etiqueta><?php echo ucfirst(_("centro")); ?></td>    
+	 <td class=etiqueta><?= ucfirst(_("centro")); ?></td>    
 	 <td><?= $nombre_ctr; ?>&nbsp;</td>
 	 <td><select class=contenido id="new_ctr" name="new_ctr">
 		<option value="" selected></option>
@@ -124,13 +145,13 @@ $(function() { $( "#f_dl" ).datepicker(); });
 	 <td width="15"><input class="fecha" type="Text" id="f_ctr" name="f_ctr" size="10" value="<?= $hoy ?>" >&nbsp;</td>
 </tr>
 <tr>     
-	 <td class=etiqueta><?php echo ucfirst(_("delegación")); ?></td>
+	 <td class=etiqueta><?= ucfirst(_("delegación")); ?></td>
 	 <td><?= $dl; ?>&nbsp;</td>
 	 <td><?= $oDesplDlyR->desplegable(); ?></td>
 	 <td><input class="fecha" type="Text" id="f_dl" name="f_dl" size="10" value="<?= $hoy ?>" >&nbsp;</td>
 </tr>
 <tr>
- 	<td class=etiqueta colspan="2" align="RIGHT"><?php echo ucfirst(_("situacion")); ?>:</td>
+ 	<td class=etiqueta colspan="2" align="RIGHT"><?= ucfirst(_("situacion")); ?>:</td>
 	<td colspan=2><select class=contenido id="situacion" name="situacion">
 	<?php
 	foreach ($cSituacion as $oSituacion) {
@@ -143,4 +164,4 @@ $(function() { $( "#f_dl" ).datepicker(); });
 </tr>
 </table>
 <br><br>
-<input type="button" onclick="fnjs_enviar_formulario('#frm_sin_nombre');" value="<?php echo ucfirst(_("actualizar cambios")); ?>" align="ABSBOTTOM">
+<input type="button" onclick="fnjs_enviar_formulario('#frm_sin_nombre');" value="<?= ucfirst(_("actualizar cambios")); ?>" align="ABSBOTTOM">

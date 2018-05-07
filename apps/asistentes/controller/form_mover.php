@@ -1,7 +1,7 @@
 <?php
-use actividades\model as actividades;
-use asistentes\model as asistentes;
-use actividadestudios\model as actividadestudios;
+use actividades\model\entity as actividades;
+use asistentes\model\entity as asistentes;
+use actividadestudios\model\entity as actividadestudios;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -10,16 +10,25 @@ use actividadestudios\model as actividadestudios;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	$Qid_nom = strtok($a_sel[0],"#");
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$oPosicion->addParametro('id_sel',$a_sel,1);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
+} else {
+	$Qid_nom = (integer) \filter_input(INPUT_POST, 'id_nom');
+}
+
+$Qid_activ_old = (integer)  \filter_input(INPUT_POST, 'id_activ');
+$Qid_nom = (integer)  \filter_input(INPUT_POST, 'id_pau');
+
 $oPosiblesCa = new actividadestudios\PosiblesCa(); 
 
-$id_activ_old = empty($_POST['id_activ'])? '' : $_POST['id_activ'];
-$id_nom = empty($_POST['id_pau'])? '' : $_POST['id_pau'];
-
-$go_to = 'no';
-
-$gesDelegacion = new ubis\model\GestorDelegacion();
-$gesActividadPlazas = new \actividadplazas\model\GestorActividadPlazas();
-$gesAsistentes = new \asistentes\model\GestorAsistente();
+$gesDelegacion = new ubis\model\entity\GestorDelegacion();
+$gesActividadPlazas = new \actividadplazas\model\entity\GestorActividadPlazas();
+$gesAsistentes = new \asistentes\model\entity\GestorAsistente();
 $mi_dele = core\ConfigGlobal::mi_dele();
 $cDelegaciones = $gesDelegacion->getDelegaciones(array('dl'=> $mi_dele));
 $oDelegacion = $cDelegaciones[0];
@@ -27,11 +36,11 @@ $id_dl = $oDelegacion->getId_dl();
 
 //borrar el actual y poner la nueva
 $propietario = '';
-if (!empty($id_activ_old) && !empty($id_nom)) {
+if (!empty($Qid_activ_old) && !empty($Qid_nom)) {
 	$mod="mover";
 	
 	//del mismo tipo que la anterior
-	$oActividad = new actividades\Actividad(array('id_activ'=>$id_activ_old));
+	$oActividad = new actividades\Actividad(array('id_activ'=>$Qid_activ_old));
 	$id_tipo = $oActividad->getId_tipo_activ();
 
 	// IMPORTANT: Propietario del a plaza
@@ -76,8 +85,8 @@ if (!empty($id_activ_old) && !empty($id_nom)) {
 		//primero las que se han pedido
 		$cActividadesPreferidas = array();
 		//Miro los actuales
-		$gesPlazasPeticion = new \actividadplazas\model\GestorPlazaPeticion();
-		$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom'=>$id_nom,'tipo'=>$sactividad,'_ordre'=>'orden'));
+		$gesPlazasPeticion = new \actividadplazas\model\entity\GestorPlazaPeticion();
+		$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom'=>$Qid_nom,'tipo'=>$sactividad,'_ordre'=>'orden'));
 		$sid_activ = '';
 		foreach ($cPlazasPeticion as $oPlazaPeticion) {
 			$id_activ = $oPlazaPeticion->getId_activ();
@@ -97,36 +106,20 @@ if (!empty($id_activ_old) && !empty($id_nom)) {
 	$observ=""; //valor por defecto
 }
 
-$oHash = new web\Hash();
-$camposForm = 'observ!id_activ';
-$oHash->setCamposNo('falta!est_ok');
-$a_camposHidden = array(
-		'id_nom' => $id_nom,
-		'id_activ_old' => $id_activ_old,
-		'mod' => $mod,
-		'propio' => $propio,
-		'plaza' => asistentes\Asistente::PLAZA_ASIGNADA,
-		'propietario' => $propietario,
-		'go_to'=> $go_to
-		);
-$oHash->setcamposForm($camposForm);
-$oHash->setArraycamposHidden($a_camposHidden);
-
-?>
-<form id="frm_mover" name="frm_mover" action="apps/asistentes/controller/update_3101.php" method="POST">
-<?= $oHash->getCamposHtml(); ?>
-	<table style="width: 400px">
-<?php
-echo "<tr><td class=etiqueta>".ucfirst(_("mover a")).":</td><td><select class=contenido id='id_activ' name='id_activ'>";
+$aOpciones = array();
 $i=0;
 foreach ($cActividades as $oActividad) {
 	$i++;
 	$id_activ = 0;
 	$nom_activ = '--------------';
 	$txt_plazas = '';
+	$txt_creditos = '';
 	// para el separador '-------'
 	if (is_object($oActividad)) {
 		$id_activ=$oActividad->getId_activ();
+		if ($id_activ == $Qid_activ_old) {
+			continue;
+		}
 		$nom_activ=$oActividad->getNom_activ();
 		$dl_org=$oActividad->getDl_org();
 		// plazas libres
@@ -149,25 +142,44 @@ foreach ($cActividades as $oActividad) {
 				$txt_plazas = sprintf(_("plazas libres/concedidas: %s/%s"),$libres,$concedidas);
 			}
 		}
-		$txt_creditos = '';
 		// creditos
 		// por cada ca creo un array con las asignaturas y los créditos.
 		$GesActividadAsignaturas = new actividadestudios\GestorActividadAsignaturaDl();
 		$asignaturas = $GesActividadAsignaturas->getAsignaturasCa($id_activ);
-		$creditos=$oPosiblesCa->contar_creditos($id_nom,$asignaturas);
+		$creditos=$oPosiblesCa->contar_creditos($Qid_nom,$asignaturas);
 		if (!empty($creditos)) {
 			$txt_creditos = sprintf(_("creditos: %s"),$creditos);
 		}
 	}
-	//$id_activ==$id_pau ? $chk="selected": $chk=""; 
-	echo "<option value=$id_activ>$nom_activ $txt_plazas  $txt_creditos</option>";
-
+	$aOpciones[$id_activ] = "$nom_activ $txt_plazas  $txt_creditos";
 }
-echo "</select></td></tr>";
 
-?>	
-<tr><td class=etiqueta><?php echo ucfirst(_("observaciones")); ?></td><td class=contenido>
-<textarea id="observ" name="observ" cols="40" rows="5"><?= htmlspecialchars($observ) ?></textarea></td></tr>
-</table>
-<br><input type="button" id="guardar" name="guardar" onclick="fnjs_guardar('#frm_mover');" value="<?php echo ucfirst(_("guardar")); ?>" align="MIDDLE">
-<input type='button' value='<?= _('cancel') ?>' onclick='fnjs_cerrar();' >
+$oDesplActividades = new web\Desplegable();
+$oDesplActividades->setNombre('id_activ');
+$oDesplActividades->setOpciones($aOpciones);
+
+$oHash = new web\Hash();
+$camposForm = 'observ!id_activ';
+$oHash->setCamposNo('falta!est_ok');
+$a_camposHidden = array(
+		'id_nom' => $Qid_nom,
+		'id_activ_old' => $Qid_activ_old,
+		'mod' => $mod,
+		'propio' => $propio,
+		'plaza' => asistentes\Asistente::PLAZA_ASIGNADA,
+		'propietario' => $propietario,
+		);
+$oHash->setcamposForm($camposForm);
+$oHash->setArraycamposHidden($a_camposHidden);
+
+
+$a_campos = [
+			'oPosicion' => $oPosicion,
+			'oHash' => $oHash,
+			'oDesplActividades' => $oDesplActividades,
+			'observ' => $observ,
+			];
+
+$oView = new core\View('asistentes/model');
+
+echo $oView->render('form_mover.phtml',$a_campos);

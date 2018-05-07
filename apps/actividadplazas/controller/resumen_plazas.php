@@ -1,5 +1,5 @@
 <?php
-use actividades\model as actividades;
+use actividades\model\entity as actividades;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -9,37 +9,41 @@ use actividades\model as actividades;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	$id_sel=$_POST['sel'];
-    $id_activ=strtok($id_sel[0],"#");
+	
+$oPosicion->recordar();
+
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	$id_activ = strtok($a_sel[0],"#");
     $nom_activ=strtok("#");
-	//if (empty($nom_activ) && !empty($id_activ)) {
-	//	$nom_activ = $oActividad->getNom_activ();
-	//}
-	$oPosicion->addParametro('id_sel',$id_sel);
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
-	$oPosicion->addParametro('scroll_id',$scroll_id);
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
+	if (!empty($go_to)) {
+		// add stack:
+		$stack = $oPosicion->getStack(1);
+		$go_to .= "&stack=$stack";
+	}
 } else { // vengo de actualizar
 	$id_activ = (integer)  filter_input(INPUT_POST, 'id_activ');
 	$nom_activ = (string)  filter_input(INPUT_POST, 'nom_activ');
+	// borro la última
+	$stack = $oPosicion->getStack() - 1 ;
+	$oPosicion2 = new web\Posicion();
+	$oPosicion2->olvidar($stack);
 }
 
-$gesDelegacion = new ubis\model\GestorDelegacion();
+$gesDelegacion = new ubis\model\entity\GestorDelegacion();
 $oDesplDelegaciones = $gesDelegacion->getListaDelegaciones(array('H'));
 $oDesplDelegaciones->setNombre('dl');
 
-/*
-$cDelegaciones = $gesDelegacion->getDelegaciones(array('_ordre'=>'region,dl'));
-// array de id=>dl
-foreach ($cDelegaciones as $oDelegacion) {
-	$dl = $oDelegacion->getDl();
-	$id_dl = $oDelegacion->getId_dl();
-	$a_dele[$id_dl] = $dl;
-	$a_id_dele[$dl] = $id_dl;
-}
-*/
+// comprobar que la actividad está publicada, sino avisar!
+$publicado = '';
+$oActividad = new actividades\ActividadDl($id_activ);
+$publicado = $oActividad->getPublicado();
 
-$gesActividadPlazas = new \actividadplazas\model\GestorResumenPlazas();
+$gesActividadPlazas = new \actividadplazas\model\entity\GestorResumenPlazas();
 $gesActividadPlazas->setId_activ($id_activ);
 $a_plazas = $gesActividadPlazas->getResumen();
 
@@ -61,121 +65,29 @@ $a_camposHidden = array(
 $oHash->setcamposForm($camposForm);
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$oHash1 = new web\Hash();
-$a_camposHidden1 = array(
+$oHashActualizar = new web\Hash();
+$oHashActualizar->setCamposNo('refresh');
+$a_camposHiddenActualizar = array(
 		'id_activ' => $id_activ,
 		'nom_activ' => $nom_activ
 		);
-$oHash1->setArraycamposHidden($a_camposHidden1);
+$oHashActualizar->setArraycamposHidden($a_camposHiddenActualizar);
 
-/* ---------------------------------- html --------------------------------------- */
-echo $oPosicion->mostrar_left_slide();
-?>
-<script>
-fnjs_guardar=function(formulario){
-	$('#que').value = 'ceder';
-	$(formulario).attr('action',"apps/actividadplazas/controller/resumen_plazas_update.php");
-	$(formulario).submit(function() {
-		$.ajax({
-			data: $(this).serialize(),
-			url: $(this).attr('action'),
-			type: 'post',
-			complete: function (rta) { 
-				rta_txt=rta.responseText;
-				if (rta_txt != '' && rta_txt != '\n') {
-					alert (rta_txt);
-				}
-			},
-			success: function() { fnjs_actualizar() }
-		});
-		return false;
-	});
-	$(formulario).submit();
-	$(formulario).off();
-}
+$a_campos = [
+			'oPosicion' => $oPosicion,
+			'oHashActualizar' => $oHashActualizar,
+			'oHash' => $oHash,
+			'publicado' => $publicado,
+			'nom_activ' => $nom_activ,
+			'a_plazas' => $a_plazas,
+			'tot_calendario' => $tot_calendario,
+			'plazas_totales' => $plazas_totales,
+			'tot_cedidas' => $tot_cedidas,
+			'tot_conseguidas' => $tot_conseguidas,
+			'tot_actual' => $tot_actual,
+			'tot_ocupadas' => $tot_ocupadas,
+			'oDesplDelegaciones' => $oDesplDelegaciones,
+			];
 
-fnjs_actualizar=function(){
-	$('#frm_actualizar').attr('action','apps/actividadplazas/controller/resumen_plazas.php');
-	fnjs_enviar_formulario('#frm_actualizar');
-}
-</script>
-<form id='frm_actualizar'>
-	<?= $oHash1->getCamposHtml(); ?>
-</form>
-<form id="frm_sin_nombre" name="frm_sin_nombre" action="" method="POST">
-<?= $oHash->getCamposHtml(); ?>
-<?= $nom_activ ?>
-<table border="1">
-	<tr><td>dl</td><td colspan="4">plazas</td><td>ocupadas</td><td>libres</td></tr>
-	<tr><td></td><td>calendario</td><td>cedidas</td><td>conseguidas</td><td>total</td><td></td><td></td></tr>
-	<?php
-	//plazas
-	$d = 0;
-	foreach ($a_plazas as $dl=>$pl) {
-		if ($dl == 'total') { continue; }
-		// evitar errores si no existe el indice.
-		$pl['calendario'] = empty($pl['calendario'])? '-' : $pl['calendario'];
-		$pl['total_cedidas'] = empty($pl['total_cedidas'])? '-' : $pl['total_cedidas'];
-		$pl['total_conseguidas'] = empty($pl['total_conseguidas'])? '-' : $pl['total_conseguidas'];
-		$pl['total_actual'] = empty($pl['total_actual'])? '-' : $pl['total_actual'];
-		$pl['ocupadas'] = empty($pl['ocupadas'])? '-' : $pl['ocupadas'];
-		
-		$d++;
-		$clase = "tono$d";
-		echo "<tr class='$clase'>";
-		echo "<td>".$dl."</td><td>".$pl['calendario']."</td>";
-		echo "<td>".$pl['total_cedidas']."</td>";
-		echo "<td>".$pl['total_conseguidas']."</td>";
-		echo "<td>".$pl['total_actual']."</td>";
-		echo "<td>".$pl['ocupadas']."</td>";
-		echo "<td></td>";
-		echo "</tr>";
-		if (!empty($pl['cedidas'])){
-			$aCedidas = $pl['cedidas'];
-			foreach ($aCedidas as $dl_otra=>$num_plazas){
-				echo "<tr class='$clase'><td></td><td></td><td>$num_plazas a $dl_otra</td>";
-				if (!array_key_exists($dl_otra,$a_plazas)) {
-					echo "<td></td><td>$num_plazas</td>";
-					$ocupadas = empty($a_plazas[$dl][$dl_otra]['ocupadas'])? 0 : $a_plazas[$dl][$dl_otra]['ocupadas'];
-					echo "<td>$ocupadas</td><td></td></tr>";
-				} else {
-					echo "<td></td><td></td>";
-					echo "<td></td><td></td></tr>";
-				}
-				echo "</tr>";
-			}
-		}
-		if (!empty($pl['conseguidas'])){
-			$aCedidas = $pl['conseguidas'];
-			foreach ($aCedidas as $dl_otra=>$num_plazas){
-				echo "<tr class='$clase'><td></td><td></td><td></td><td>$num_plazas de $dl_otra</td>";
-				echo "<td></td><td></td><td></td></tr>";
-			}
-		} else {
-			echo "<tr class='$clase'><td></td><td></td><td></td><td></td>";
-			echo "<td></td><td></td><td></td></tr>";
-		}
-	}
-	// TOTALES
-	echo "<tr>";
-	echo "<td>"._("totales")."</td><td>$tot_calendario ($plazas_totales)</td>";
-	echo "<td>".$tot_cedidas."</td>";
-	echo "<td>".$tot_conseguidas."</td>";
-	echo "<td>".$tot_actual."</td>";
-	echo "<td>".$tot_ocupadas."</td>";
-	echo "<td></td>";
-	echo "</tr>";
-
-	
-	?>
-</table>
-
-<br><br>
-<form id="ceder">
-ceder 
-<input name="num_plazas" type="text" size="3" />
-plazas a 
-<?= $oDesplDelegaciones->desplegable() ?>
-<input type="button" id="ok" name="ok" onclick="fnjs_guardar(this.form);" value="<?php echo ucfirst(_("guardar")); ?>" align="MIDDLE" />
-
-</form>
+$oView = new core\View('actividadplazas/controller');
+echo $oView->render('resumen_plazas.phtml',$a_campos);

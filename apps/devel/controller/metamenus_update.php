@@ -37,7 +37,4 @@ if (isset($_POST['del']) && $_POST['del']==1 ) {
 	}
 }
 
-$go_to="menus_get.php?filtro_of=$oficina|ficha";
-$oPosicion = new web\Posicion();
-echo $oPosicion->ir_a($go_to);
-?>
+echo $oPosicion->go_atras(1);

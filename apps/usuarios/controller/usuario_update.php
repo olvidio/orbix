@@ -1,6 +1,6 @@
 <?php
-use usuarios\model as usuarios;
-use permisos\model as permisos;
+use usuarios\model\entity as usuarios;
+use permisos\model\entity as permisos;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************

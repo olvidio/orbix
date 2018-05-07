@@ -10,9 +10,6 @@
 *		
 */
 
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -21,13 +18,20 @@
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	$id_sel=$_POST['sel'];
-	$id_nom=strtok($_POST['sel'][0],"#");
+$oPosicion->recordar();
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	$id_nom=strtok($a_sel[0],"#");
 	$id_tabla=strtok("#");
-	$oPosicion->addParametro('id_sel',$id_sel);
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
-	$oPosicion->addParametro('scroll_id',$scroll_id);
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
+	if (!empty($go_to)) {
+		// add stack:
+		$stack = $oPosicion->getStack(1);
+		$go_to .= "&stack=$stack";
+	}
 }
 
 switch ($id_tabla) {
@@ -54,7 +58,7 @@ switch ($id_tabla) {
 
 
 // según sean numerarios...
-$obj = 'personas\\model\\'.$obj_pau;
+$obj = 'personas\\model\\entity\\'.$obj_pau;
 $oPersona = new $obj($id_nom);
 
 $nom = $oPersona->getNombreApellidos();
@@ -83,12 +87,12 @@ $a_camposHidden = array(
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 
-echo $oPosicion->mostrar_left_slide();
+echo $oPosicion->mostrar_left_slide(1);
 ?>
-<h2 class=titulo><?php echo ucfirst(_("cambiar el stgr")); ?></h2>
+<h2 class=titulo><?= ucfirst(_("cambiar el stgr")); ?></h2>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="apps/personas/controller/stgr_update.php" method="POST">
 	<?= $oHash->getCamposHtml(); ?>
-	<table><tr><th class=etiqueta_inv><?php echo $nom; ?></th>
+	<table><tr><th class=etiqueta_inv><?= $nom; ?></th>
 	<td class=datos>
 	<?= $oDespl->desplegable(); ?>
 	</td></tr>

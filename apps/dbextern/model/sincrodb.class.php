@@ -2,10 +2,15 @@
 namespace dbextern\model;
 
 use core\ConfigGlobal;
+use dbextern\model\entity\GestorIdMatchPersona;
+use dbextern\model\entity\GestorPersonaListas;
+use dbextern\model\entity\IdMatchPersona;
+use dbextern\model\entity\PersonaListas;
 use PDO;
-use personas\model\GestorPersonaDl;
-use personas\model\GestorTelecoPersonaDl;
-use personas\model\TelecoPersonaDl;
+use personas\model\entity\GestorPersonaDl;
+use personas\model\entity\GestorTelecoPersonaDl;
+use personas\model\entity\TelecoPersonaDl;
+use personas\model\entity\TrasladoDl;
 
 /**
  * Description of sincroDB
@@ -257,7 +262,7 @@ class sincroDB {
 				$obj_pau = 'PersonaNax';
 			break;
 		}
-		$obj = 'personas\\model\\'.$obj_pau;
+		$obj = 'personas\\model\\entity\\'.$obj_pau;
 		$oPersona = new $obj($id_orbix);
 
 		$oPersona->DBCarregar();
@@ -336,7 +341,7 @@ class sincroDB {
 
 	public function buscarEnOrbix($id_orbix) {
 		$dl = '';
-		$oTrasladoDl = new \personas\model\TrasladoDl();
+		$oTrasladoDl = new TrasladoDl();
 		$a_esquemas = $oTrasladoDl->getEsquemas($id_orbix,$this->tipo_persona);
 		$esquema = '';
 		foreach ($a_esquemas as $info_eschema){

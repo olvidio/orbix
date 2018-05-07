@@ -1,6 +1,6 @@
 <?php
-use profesores\model as profesores;
-use personas\model as personas;
+use profesores\model\entity as profesores;
+use personas\model\entity as personas;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");

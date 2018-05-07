@@ -1,4 +1,4 @@
-<?php echo $oPosicion->mostrar_left_slide(); ?>
+<?= $oPosicion->mostrar_left_slide(1); ?>
 <table><tr>
 <td class=esquerra nowrap>
 </td>
@@ -13,6 +13,6 @@
 <tr><td class=etiqueta>profesion</td><td class=contenido colspan=3><?= $profesion ?></td><td class=etiqueta>stgr</td><td class=contenido><?= $stgr ?></td></tr>
 <tr><td colspan=6>telfs: <?= $telfs ?></td></tr>
 <tr class=tab>
-	<td colspan=2 onclick="fnjs_update_div('#ficha_personas','<?= $go_breve ?>');"><?= _("ver ficha breve") ?></td>
-	<td colspan=4 onclick="fnjs_update_div('#ficha_personas','<?= $go_ficha ?>');"><?= _("editar") ?></td>
+	<td colspan=2 onclick="fnjs_update_div('#ficha','<?= $go_breve ?>');"><?= _("ver ficha breve") ?></td>
+	<td colspan=4 onclick="fnjs_update_div('#ficha','<?= $go_ficha ?>');"><?= _("editar") ?></td>
 </tr></table>

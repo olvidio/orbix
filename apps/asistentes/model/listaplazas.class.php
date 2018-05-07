@@ -1,13 +1,13 @@
 <?php 
 namespace asistentes\model;
 
-use actividadcargos\model as actividadcargos;
-use actividades\model as actividades;
-use actividadplazas\model\GestorResumenPlazas;
-use asistentes\model as asistentes;
+use actividadcargos\model\entity as actividadcargos;
+use actividades\model\entity as actividades;
+use actividadplazas\model\entity\GestorResumenPlazas;
+use asistentes\model\entity as asistentes;
 use core\ConfigGlobal;
-use personas\model as personas;
-use ubis\model as ubis;
+use personas\model\entity as personas;
+use ubis\model\entity as ubis;
 use web\Lista;
 use web\TiposActividades;
 
@@ -160,7 +160,7 @@ class listaPlazas {
 						$cargo_cl = $oCargo->getCargo();
 						$oPersona = personas\Persona::NewPersona($id_nom);
 						if (!is_object($oPersona)) {
-							$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+							$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 							continue;
 						}
 						$id_tabla = $oPersona->getId_tabla();
@@ -191,7 +191,7 @@ class listaPlazas {
 					if (in_array($id_nom,$aIdCargos)) continue; // si ya está como cargo, no lo pongo.
 					$oPersona = personas\Persona::NewPersona($id_nom);
 					if (!is_object($oPersona)) {
-						$msg_err .= "<br>$oPersona con id_nom: $id_nom";
+						$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 						continue;
 					}
 					$id_tabla = $oPersona->getId_tabla();
@@ -216,7 +216,7 @@ class listaPlazas {
 							$plazas_pedidas++;
 							$key = $plazas + $plazas_pedidas; // al final de la lista
 							$a_activ[$id_activ][$key]['cargo']='';
-							$a_activ[$id_activ][$key]['ap_nom']="<span style=\"color: red;\">$ap_nom ($ctr_dl)</span>";
+							$a_activ[$id_activ][$key]['ap_nom']="<span class=\"alert\">$ap_nom ($ctr_dl)</span>";
 						} else { // asignados y confirmados
 							$num++;
 							$a_activ[$id_activ][$num]['cargo']=$num;
@@ -230,7 +230,7 @@ class listaPlazas {
 				}
 			}
 			if (!empty($plazas_max) && $num > $plazas_max) {
-				$num_txt = "<span style=\"color: red;\">$num</span>";
+				$num_txt = "<span class=\"alert\">$num</span>";
 			} else {
 				$num_txt = $num;
 			}
@@ -254,7 +254,7 @@ class listaPlazas {
 			$pl_ocupadas_pedidas = $pl_ocupadas + $plazas_pedidas;
 			$pl_dif = $pl_disponibles - $pl_ocupadas_pedidas;
 			if (!empty($pl_dif) && $pl_dif < 0) {
-				$pl_dif_txt = "<span style=\"color: red;\">$pl_dif</span>";
+				$pl_dif_txt = "<span class=\"alert\">$pl_dif</span>";
 			} else {
 				$pl_dif_txt = $pl_dif;
 			}

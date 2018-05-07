@@ -1,0 +1,48 @@
+<script>
+fnjs_imprimir=function(formulario){
+	rta=fnjs_solo_uno(formulario);
+	if (rta==1) {
+  		$(formulario).attr('action',"apps/notas/controller/acta_imprimir.php");
+  		fnjs_enviar_formulario(formulario);
+  	}
+}
+fnjs_nuevo=function(formulario){
+	$('#nuevo').val("1");
+	$(formulario).attr('action',"apps/notas/controller/acta_ver.php");
+  	fnjs_enviar_formulario(formulario,'#main');
+}
+fnjs_modificar=function(formulario){
+	rta=fnjs_solo_uno(formulario);
+	if (rta==1) {
+  		$(formulario).attr('action',"apps/notas/controller/acta_ver.php");
+  		fnjs_enviar_formulario(formulario);
+  	}
+}
+fnjs_left_side_hide();
+</script>
+<form id="frm_sin_nombre" name="frm_sin_nombre" action="apps/notas/controller/acta_select.php" method="post" onkeypress="fnjs_enviar(event,this);" >
+<?= $oHash->getCamposHtml(); ?>
+<table>
+<th class=titulo_inv colspan=4><?= ucfirst(_("buscar un acta")); ?>
+&nbsp;&nbsp;&nbsp;<input class=contenido id="acta" name="acta" size="25">
+<div class="help-tip">
+	<p><?= _("ejemplos") ?>:<br>
+		 - <?= _("23/15 (sólo número) => busca en las actas de la dl.") ?><br>
+		 - <?= _("dlx .* => todas las de dlx Hay que dejar espacio") ?><br>
+		 - <?= _("dlx .*/15 => todas las de dlx del año 15 ") ?><br>
+	</p>
+</div>
+</th>
+<th colspan=4><input type="button" id="ok" name="ok" onclick="fnjs_enviar_formulario('#frm_sin_nombre');" value="<?= ucfirst(_("buscar")); ?>" class="btn_ok">
+</th>
+</table>
+</form>
+
+<h3 class=subtitulo><?= $titulo ?></h3>
+<form id='seleccionados' id='seleccionados' name='seleccionados' action='' method='post'>
+<?= $oHash1->getCamposHtml(); ?>
+<input type='Hidden' id='nuevo' name='nuevo' value=''>
+<?= $oTabla->mostrar_tabla(); ?>
+</form>
+<br><table><tr class=botones>
+<td class=botones><span class=link_inv onclick="fnjs_nuevo('#seleccionados');" ><?= _("añadir acta") ?></span></td>

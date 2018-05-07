@@ -44,17 +44,29 @@ class View {
 		$dir_apps = ConfigGlobal::$web_path.'/apps';
 		$base_dir = $_SERVER['DOCUMENT_ROOT'] . $dir_apps;
 
-		$new_dir = str_replace('controller','view',$this->snamespace);
+		// reemplazo controller o model por view
+		$patterns = array();
+		$patterns[0] = '/controller/';
+		$patterns[1] = '/model/';
+		$replacements = array();
+		$replacements[0] = 'view';
+		$replacements[1] = 'view';
+		$new_dir = preg_replace($patterns, $replacements, $this->snamespace);
+		
 		$new_dir = str_replace('\\', DIRECTORY_SEPARATOR, $new_dir);
 
-		
 		$fileName = $base_dir . DIRECTORY_SEPARATOR . $new_dir. DIRECTORY_SEPARATOR . $file;
 
 		require $fileName;
-        $renderedView = ob_get_clean();
-        return $renderedView;
+		
+		$out2 = ob_get_contents();
+
+		ob_end_clean();
+
+//		var_dump($out2);
+        //$renderedView = ob_get_clean();
+        //return $renderedView;
+        echo $out2;
     }
-
-
 }
 ?>

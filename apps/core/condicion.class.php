@@ -75,6 +75,16 @@ class Condicion {
 					 */
 					$sCondi = "$campo = ANY (:$campo)";
 					break;
+				case 'IN':
+				case 'NOT IN':
+					/* Uso: pasar un array de postgres, que el php trata com una variable string:
+					 * $a_id_dir = array (1,3,7,90);
+					 * $v = "{".implode(', ',$aid_dir)."}";
+					 * $aWhere['id_direccion'] = $v;
+            		 * $aOperador['id_direccion'] = 'ANY';
+					 */
+					$sCondi = "$campo $operador (:$campo)";
+					break;
 				default:
 					$sCondi = "$campo $operador :$campo";
 			}

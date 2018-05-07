@@ -1,0 +1,42 @@
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<table cellpadding="2">
+<tr>
+<th class=titulo_inv colspan=8><?= $nom_activ;?></th>
+<tr><th class=subtitulo_inv colspan=8><?= ucfirst(_("relación de asistentes")); ?></th>
+</tr>
+<tr><tr><td><br></td></tr>
+
+<tr><th></th><th class=subtitulo_inv><?= ucfirst(_("nombre")) ?></th><th></th>
+	<?php
+	if ($queSel=="listcl") {
+	?>
+	<th class=subtitulo_inv><?= ucfirst(_("estudios")) ?></th>
+	<th class=subtitulo_inv><?= ucfirst(_("profesión")) ?></th>
+	<th class=subtitulo_inv><?= ucfirst(_("edad")) ?></th>
+	<th class=subtitulo_inv><?= _("eap") ?></th>
+	<th class=subtitulo_inv><?= ucfirst(_("observaciones")) ?></th>
+	<?php
+	}
+	?>
+</tr>
+<?php
+foreach ($aAsistentes as $c => $datos) {
+	$a_datos_cl = $datos['a_datos_cl'];
+	?>    
+	<tr><td class=contenido_especial align=RIGHT><?= $c ?></td>
+		<td class=contenido_especial><?= $datos['nombre'] ?></td>
+		<td class=contenido_especial></td>
+		<?php
+		if ($queSel=="listcl") {
+		?>
+		<td class="contenido_especial"><?= $a_datos_cl['estudios'] ?></td>
+		<td class="contenido_especial"><?= $a_datos_cl['profesion'] ?></td>
+		<td class="contenido_especial"><?= $a_datos_cl['edad'] ?></td>
+		<td class="contenido_especial"><?= $a_datos_cl['eap'] ?></td>
+		<td class="contenido_especial"><?= $a_datos_cl['observ'] ?></td>
+		<?php
+		}
+		echo "</tr>";
+}
+?>
+</table>

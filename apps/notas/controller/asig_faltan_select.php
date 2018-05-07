@@ -1,8 +1,8 @@
 <?php
-use asignaturas\model as asignaturas;
-use notas\model as notas;
-use personas\model as personas;
-use ubis\model as ubis;
+use asignaturas\model\entity as asignaturas;
+use notas\model\entity as notas;
+use personas\model\entity as personas;
+use ubis\model\entity as ubis;
 /**
 * Esta página muestra una tabla con las personas que cumplen con la condicion.
 *
@@ -103,7 +103,7 @@ if (empty($breve)) $breve="";
 if (empty($es_sacd)) $es_sacd="";
 $i=0;
 $a_valores=array();
-$obj = 'personas\\model\\'.$obj_pau;
+$obj = 'personas\\model\\entity\\'.$obj_pau;
 foreach ($aId_nom as $id_nom=>$aAsignaturas) {
 	$i++;
 	$oPersona = new $obj($id_nom);

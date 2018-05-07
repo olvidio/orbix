@@ -1,6 +1,6 @@
 ﻿<?php
-use usuarios\model as usuarios;
-use personas\model as personas;
+use usuarios\model\entity as usuarios;
+use personas\model\entity as personas;
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
 */
@@ -17,17 +17,16 @@ $miSfsv=core\ConfigGlobal::mi_sfsv();
 
 switch ($_POST['que']) {
 	case 'eliminar':
-		$obj = 'personas\\model\\'.$_POST['obj_pau'];
+		$obj = 'personas\\model\\entity\\'.$_POST['obj_pau'];
 		$oPersona = new $obj($_POST['id_nom']);
 		if ($oPersona->DBEliminar() === false) {
 			echo _('Hay un error, no se ha eliminado');
 		}
-		$oPosicion->setId_div('ir_a');
-		echo $oPosicion->mostrar_left_slide();
-		exit;
+		echo $oPosicion->go_atras(1);
+		die();
 		break;
 	case 'guardar':
-		$obj = 'personas\\model\\'.$_POST['obj_pau'];
+		$obj = 'personas\\model\\entity\\'.$_POST['obj_pau'];
 		$oPersona = new $obj($_POST['id_nom']);
 		break;
 }
@@ -69,6 +68,4 @@ foreach ($cDatosCampo as $oDatosCampo) {
 $oPersona->setAllAtributes($a_values_o);
 $oPersona->DBGuardar();
 
-$oPosicion->setId_div('ir_a');
-echo $oPosicion->mostrar_left_slide();
-?>
+echo $oPosicion->go_atras(1);

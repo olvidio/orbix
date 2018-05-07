@@ -1,5 +1,5 @@
 <?php
-use ubis\model as ubis;
+use ubis\model\entity as ubis;
 /**
 * Es un formulario para introducir las condiciones de búsqueda de los ubis.
 *
@@ -9,9 +9,6 @@ use ubis\model as ubis;
 *@author	Daniel Serrabou
 *@since		15/5/02.
 *		
-*/
-/**
-* En el fichero config tenemos las variables genéricas del sistema
 */
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -173,29 +170,29 @@ if ($simple==2) {
 <input type="hidden" name="simple" value="1">
 <!-- Búsqueda simple --------------------------------------------- -->
 <table border=1>
-<thead><th class=titulo_inv colspan=4><?php echo ucfirst(_("buscar centro o casa")); ?></th>
+<thead><th class=titulo_inv colspan=4><?= ucfirst(_("buscar centro o casa")); ?></th>
 </thead>
 <tfoot>
 <tr>
 <td class=etiqueta align="RIGHT"><input type="checkbox" name="cmb"><?= _("buscar ubis fuera de uso"); ?></td>
 <td colspan=5 style="text-align:right;">
-<input id="ok" name="ok" TYPE="button" VALUE="<?php echo _("buscar"); ?>" onclick="fnjs_buscar('#frm_buscar_1')"  class="btn_ok" ></td></tr>
+<input id="ok" name="ok" TYPE="button" VALUE="<?= _("buscar"); ?>" onclick="fnjs_buscar('#frm_buscar_1')"  class="btn_ok" ></td></tr>
 </tfoot>
 <tbody>
 <tr>
-	<td class=etiqueta><?php echo $nomUbi ?></td>
+	<td class=etiqueta><?= $nomUbi ?></td>
 	<td colspan="4"><input class=contenido id=nombre_ubi name=nombre_ubi size="60"></td>
 </tr>
 <tr>
-	<td class=etiqueta><?php echo ucfirst(_("población")); ?></td>
+	<td class=etiqueta><?= ucfirst(_("población")); ?></td>
 	<td colspan="4"><input class=contenido id=ciudad name=ciudad size="60"></td>	
 </tr>
 <tr>
-	<td class=etiqueta><?php echo ucfirst(_("región")); ?></td>
-	<td><?php echo $oDesplRegion->desplegable(); ?></td>
+	<td class=etiqueta><?= ucfirst(_("región")); ?></td>
+	<td><?= $oDesplRegion->desplegable(); ?></td>
 </tr>
 <tr>
-	<td class=etiqueta><?php echo ucfirst(_("país")); ?></td>
+	<td class=etiqueta><?= ucfirst(_("país")); ?></td>
 	<td><?= $oDesplPais->desplegable(); ?></td>
 </tr>
 
@@ -204,48 +201,48 @@ if ($tipo=="mail") { ?>
 <table align="justify">
 <tr></tr>
 <tr>
-<td class=subtitulo><?php echo _("tipo de centro"); ?></td>
+<td class=subtitulo><?= _("tipo de centro"); ?></td>
 </tr>
 <tr>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="a"><?php echo _("agd"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="aj"><?php echo _("agd jóvenes"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="am"><?php echo _("agd mayores"); ?></td>
-<td colspan="3" class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="n"><?php echo _("numerarios"); ?>
-<input type="Checkbox" id="select[]" name="select[]" value="nj"><?php echo _("n jóvenes"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="a"><?= _("agd"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="aj"><?= _("agd jóvenes"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="am"><?= _("agd mayores"); ?></td>
+<td colspan="3" class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="n"><?= _("numerarios"); ?>
+<input type="Checkbox" id="select[]" name="select[]" value="nj"><?= _("n jóvenes"); ?></td>
 </tr>
 <tr>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="nm"><?php echo _("n mayores"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="rs"><?php echo _("residencia"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="sg"><?php echo _("san Gabriel"); ?></td>
-<td colspan="2" class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="ce"><?php echo _("centro de estudios"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="nm"><?= _("n mayores"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="rs"><?= _("residencia"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="sg"><?= _("san Gabriel"); ?></td>
+<td colspan="2" class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="ce"><?= _("centro de estudios"); ?></td>
 </tr>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="oc"><?php echo _("obra corporativa"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="igl"><?php echo _("iglesia"); ?></td>
-<td colspan="1" class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="cefi"><?php echo _("ce de formación intensa"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="ss"><?php echo _("sss+"); ?></td>
-</tr>
-<tr>
-<td colspan="1" class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="cipna"><?php echo _("centro internacional"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="lp"><?php echo _("labor personal"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="cr"><?php echo _("comisiones"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="dl"><?php echo _("delegaciones"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="oc"><?= _("obra corporativa"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="igl"><?= _("iglesia"); ?></td>
+<td colspan="1" class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="cefi"><?= _("ce de formación intensa"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="ss"><?= _("sss+"); ?></td>
 </tr>
 <tr>
-<td class=subtitulo><?php echo _("tipo labor"); ?></td>
+<td colspan="1" class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="cipna"><?= _("centro internacional"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="lp"><?= _("labor personal"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="cr"><?= _("comisiones"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="dl"><?= _("delegaciones"); ?></td>
 </tr>
 <tr>
-<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="512"><?php echo _("sr"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="256"><?php echo _("n"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="128"><?php echo _("agd"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="64"><?php echo _("sg"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="32"><?php echo _("sss+"); ?></td>
+<td class=subtitulo><?= _("tipo labor"); ?></td>
 </tr>
 <tr>
-<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="16"><?php echo _("club"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="8"><?php echo _("bachilleres"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="4"><?php echo _("universitarios"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="2"><?php echo _("jóvenes"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="1"><?php echo _("mayores"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="512"><?= _("sr"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="256"><?= _("n"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="128"><?= _("agd"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="64"><?= _("sg"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="32"><?= _("sss+"); ?></td>
+</tr>
+<tr>
+<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="16"><?= _("club"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="8"><?= _("bachilleres"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="4"><?= _("universitarios"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="2"><?= _("jóvenes"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="1"><?= _("mayores"); ?></td>
 </tr>
 </table>
 <?php } ?>
@@ -258,13 +255,13 @@ if ($tipo=="mail") { ?>
 <input type="hidden" name="opcion" value="">
 <input type="hidden" name="simple" value="2">
 <table border=1>
-<thead><th class=titulo_inv colspan=4><?php echo ucfirst(_("buscar centro o casa")); ?></th></thead>
+<thead><th class=titulo_inv colspan=4><?= ucfirst(_("buscar centro o casa")); ?></th></thead>
 <tfoot>
-<tr><td colspan=5 style="text-align:right;"><input id="b_buscar_2" name="b_buscar" TYPE="button" VALUE="<?php echo _("buscar"); ?>" onclick="fnjs_buscar('#frm_buscar_2')" class="btn_ok"></td></tr>
+<tr><td colspan=5 style="text-align:right;"><input id="b_buscar_2" name="b_buscar" TYPE="button" VALUE="<?= _("buscar"); ?>" onclick="fnjs_buscar('#frm_buscar_2')" class="btn_ok"></td></tr>
 </tfoot>
 <tbody>
 <tr><td class=etiqueta>
-<?php echo ucfirst(_("tipo")); ?>
+<?= ucfirst(_("tipo")); ?>
 </td><td>
 <select id="tipo" name="tipo" onchange="fnjs_actualizar('#frm_buscar_2')" class=contenido>
 <?php 
@@ -276,7 +273,7 @@ if ($tipo=="mail") { ?>
 	echo "<option value='tot' $tot_selected>".ucfirst(_("todos")); ?>
 	</select>
 </td><td>
-<?php echo ucfirst(_("localización")); ?>
+<?= ucfirst(_("localización")); ?>
 </td><td>
 <select id="loc" name="loc" onchange="fnjs_actualizar('#frm_buscar_2')" class=contenido>
 <?php
@@ -296,37 +293,37 @@ if ($tipo=="mail") { ?>
 </select>
 </td></tr>
 <tr>
-	<td class=etiqueta><?php echo $nomUbi ?></td>
+	<td class=etiqueta><?= $nomUbi ?></td>
 	<td colspan="4"><input class=contenido id=nombre_ubi name=nombre_ubi size="60"></td>
 </tr>
 <tr>
-	<td class=etiqueta><?php echo ucfirst(_("población")); ?></td>
+	<td class=etiqueta><?= ucfirst(_("población")); ?></td>
 	<td colspan="4"><input class=contenido id=ciudad name=ciudad size="60"></td>	
 </tr>
 
 <?php if ($loc=="ex") { ?>
 	<tr>
-		<td class=etiqueta><?php echo _("dl"); ?></td>
+		<td class=etiqueta><?= _("dl"); ?></td>
 		<td><input class=contenido id=dl name=dl size=1  style="HEIGHT: 22px; WIDTH: 62px"></td> 
-		<td class=etiqueta><?php echo ucfirst(_("región")); ?></td>
+		<td class=etiqueta><?= ucfirst(_("región")); ?></td>
 		<td><input class=contenido id=region name=region size=1 style="HEIGHT: 22px; WIDTH: 62px"></td> 
 	</tr>
 	<tr>
-		<td class=etiqueta><?php echo ucfirst(_("país")); ?></td>
+		<td class=etiqueta><?= ucfirst(_("país")); ?></td>
 		<td colspan="4"><input class=contenido id=pais name=pais size=1 style="HEIGHT: 22px; WIDTH: 250px"></td>
 	</tr>
 	<?php
 
 	if ($tipo=="ctr" ) {
 	?>
-		<tr><td class=etiqueta><?php echo _("tipo de centro"); ?></td>
+		<tr><td class=etiqueta><?= _("tipo de centro"); ?></td>
 		<td><?= $oDesplTipoCentro->desplegable(); ?>
 		</td></tr>
 	<?php
 	}
 	if ($tipo=="cdc" ) {
 	?>
-		<tr><td class=etiqueta><?php echo _("tipo de casa"); ?></td>
+		<tr><td class=etiqueta><?= _("tipo de casa"); ?></td>
 		<td><?= $oDesplTipoCasa->desplegable(); ?>
 		</td></tr>
 	<?php	
@@ -338,48 +335,48 @@ if ($tipo=="mail") { ?>
 <tr></tr>
 <tr></tr>
 <tr>
-<td class=subtitulo><?php echo _("tipo de centro"); ?></td>
+<td class=subtitulo><?= _("tipo de centro"); ?></td>
 </tr>
 <tr>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="a"><?php echo _("agd"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="aj"><?php echo _("agd jóvenes"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="am"><?php echo _("agd mayores"); ?></td>
-<td colspan="3" class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="n"><?php echo _("numerarios"); ?>
-<input type="Checkbox" id="select[]" name="select[]" value="nj"><?php echo _("n jóvenes"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="a"><?= _("agd"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="aj"><?= _("agd jóvenes"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="am"><?= _("agd mayores"); ?></td>
+<td colspan="3" class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="n"><?= _("numerarios"); ?>
+<input type="Checkbox" id="select[]" name="select[]" value="nj"><?= _("n jóvenes"); ?></td>
 </tr>
 <tr>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="nm"><?php echo _("n mayores"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="rs"><?php echo _("residencia"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="sg"><?php echo _("san Gabriel"); ?></td>
-<td colspan="2" class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="ce"><?php echo _("centro de estudios"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="nm"><?= _("n mayores"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="rs"><?= _("residencia"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="sg"><?= _("san Gabriel"); ?></td>
+<td colspan="2" class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="ce"><?= _("centro de estudios"); ?></td>
 </tr>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="oc"><?php echo _("obra corporativa"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="igl"><?php echo _("iglesia"); ?></td>
-<td colspan="1" class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="cefi"><?php echo _("ce de formación intensa"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="ss"><?php echo _("sss+"); ?></td>
-</tr>
-<tr>
-<td colspan="1" class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="cipna"><?php echo _("centro internacional"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="lp"><?php echo _("labor personal"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="cr"><?php echo _("comisiones"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="dl"><?php echo _("delegaciones"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="oc"><?= _("obra corporativa"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="igl"><?= _("iglesia"); ?></td>
+<td colspan="1" class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="cefi"><?= _("ce de formación intensa"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="ss"><?= _("sss+"); ?></td>
 </tr>
 <tr>
-<td class=subtitulo><?php echo _("tipo labor"); ?></td>
+<td colspan="1" class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="cipna"><?= _("centro internacional"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="lp"><?= _("labor personal"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="cr"><?= _("comisiones"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="select[]" name="select[]" value="dl"><?= _("delegaciones"); ?></td>
 </tr>
 <tr>
-<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="512"><?php echo _("sr"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="256"><?php echo _("n"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="128"><?php echo _("agd"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="64"><?php echo _("sg"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="32"><?php echo _("sss+"); ?></td>
+<td class=subtitulo><?= _("tipo labor"); ?></td>
 </tr>
 <tr>
-<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="16"><?php echo _("club"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="8"><?php echo _("bachilleres"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="4"><?php echo _("universitarios"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="2"><?php echo _("jóvenes"); ?></td>
-<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="1"><?php echo _("mayores"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="512"><?= _("sr"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="256"><?= _("n"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="128"><?= _("agd"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="64"><?= _("sg"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="32"><?= _("sss+"); ?></td>
+</tr>
+<tr>
+<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="16"><?= _("club"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="8"><?= _("bachilleres"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="4"><?= _("universitarios"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="2"><?= _("jóvenes"); ?></td>
+<td class=etiqueta><input type="Checkbox" id="labor[]" name="labor[]" value="1"><?= _("mayores"); ?></td>
 </tr>
 </table>
 <?php
@@ -387,7 +384,7 @@ if ($tipo=="mail") { ?>
 ?>
 </tbody></table>
 </form>
-<td><input id="b_mas" name="b_mas" TYPE="button" VALUE="<?php echo _("ver otras opciones"); ?>" onclick="fnjs_update_div('#main','<?= $pagina ?>')" ></td>
+<td><input id="b_mas" name="b_mas" TYPE="button" VALUE="<?= _("ver otras opciones"); ?>" onclick="fnjs_update_div('#main','<?= $pagina ?>')" ></td>
 </table>
 </div>
 <div id="resultados">

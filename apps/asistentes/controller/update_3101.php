@@ -1,9 +1,4 @@
 ﻿<?php
-use actividades\model as actividades;
-use actividadestudios\model as actividadestudios;
-use dossiers\model as dossiers;
-use asistentes\model as asistentes;
-use personas\model as personas;
 /**
  * Actualiza los datos de un objeto Asistente.
  * Al eliminar también elimina  las matrículas.
@@ -29,70 +24,65 @@ use personas\model as personas;
  *
  */
 
+use actividades\model\entity as actividades;
+use actividadestudios\model\entity as actividadestudios;
+use dossiers\model\entity as dossiers;
+use asistentes\model\entity as asistentes;
+use personas\model\entity as personas;
+
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
-	//require_once ("classes/activ-personas/d_matriculas_activ_gestor.class");
 
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	if ($_POST['pau']=="p") { $id_activ=strtok($_POST['sel'][0],"#"); $id_nom=$_POST['id_pau']; }
-	if ($_POST['pau']=="a") { $id_nom=strtok($_POST['sel'][0],"#"); $id_activ=$_POST['id_pau']; }
-} else {
-	empty($_POST['id_activ_old'])? $id_activ_old="" : $id_activ_old=$_POST['id_activ_old'];
-	empty($_POST['id_activ'])? $id_activ="" : $id_activ=$_POST['id_activ'];
-	empty($_POST['id_nom'])? $id_nom="" : $id_nom=$_POST['id_nom'];
+$msg_err = '';
+$Qmod = (string) \filter_input(INPUT_POST,'mod');
+$Qpau = (string) \filter_input(INPUT_POST,'pau');
+
+//En el caso de eliminar desde la lista de cargos
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	if ($Qpau=="p") {
+		$Qid_activ=strtok($a_sel[0],"#");
+		$Qid_asignatura=strtok("#");
+		$Qid_nom = (integer) \filter_input(INPUT_POST,'id_pau');
+	}
+	if ($Qpau=="a") {
+		$Qid_nom=strtok($a_sel[0],"#");
+		$Qid_asignatura=strtok("#");
+		$Qid_activ = (integer) \filter_input(INPUT_POST,'id_pau');
+	}
+} else { // desde el formulario
+	$Qid_activ = (integer) \filter_input(INPUT_POST,'id_activ');
+	$Qid_activ_old = (integer) \filter_input(INPUT_POST,'id_activ_old');
+	$Qid_nom = (integer) \filter_input(INPUT_POST,'id_nom');
 }
+	
+// -------------- funciones -----------------------
 
 function eliminar ($id_activ,$id_nom) {
 	$msg_err = '';
 	// hay que averiguar si la persona es de la dl o de fuera.
 	$oPersona = personas\Persona::NewPersona($id_nom);
 	if (!is_object($oPersona)) {
-		$msg_err = "<br>$oPersona con id_nom: $id_nom";
+		$msg_err = "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 		exit($msg_err);
 	}
 	$obj_persona = get_class($oPersona);
-	$obj_persona = str_replace("personas\\model\\",'',$obj_persona);
+	$obj_persona = str_replace("personas\\model\\entity\\",'',$obj_persona);
 	// hay que averiguar si la actividad es de la dl o de fuera.
 	$oActividad  = new actividades\Actividad($id_activ);
 	// si es de la sf quito la 'f'
 	$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
 	$id_tabla = $oActividad->getId_tabla();
-	if ($dl == core\ConfigGlobal::mi_dele()) {
-		Switch($obj_persona) {
-			case 'PersonaN':
-			case 'PersonaNax':
-			case 'PersonaAgd':
-			case 'PersonaS':
-			case 'PersonaSSSC':				
-			case 'PersonaDl':
-				$oAsistente=new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-				break;
-			case 'PersonaIn':
-				// Supongo que sólo debería modificar la dl origen.
-				// $oAsistente=new asistentes\AsistenteIn(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-				exit (_("Los datos de asistencia los modifica la dl del asistente"));
-				break;
-			case 'PersonaEx':
-				$oAsistente=new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-				break;
-		}
-	} else {
-		if ($id_tabla == 'dl') {
-			$oAsistente=new asistentes\AsistenteOut(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-		} else {
-			$oAsistente=new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-		}
-	}
-	if (empty($msg_err)) { 
-		$oAsistente->DBCarregar();
-		if ($oAsistente->DBEliminar() === false) {
-			$msg_err = _('Hay un error, no se ha eliminado');
-		}
+	$oAsistente = asistentes\Asistente::getClaseAsistente($obj_persona,$dl,$id_tabla);
+	$oAsistente->setPrimary_key(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+	$oAsistente->DBCarregar();
+	if ($oAsistente->DBEliminar() === false) {
+		$msg_err = _('Hay un error, no se ha eliminado');
 	}
 
 	// hay que cerrar el dossier para esta persona/actividad/ubi, si no tiene más:
@@ -111,44 +101,23 @@ function eliminar ($id_activ,$id_nom) {
 }
 function plaza($id_nom){
 	$msg_err = '';
-	global $_POST;
 	$id_activ = (string)  filter_input(INPUT_POST, 'id_activ');
 	$plaza = (string)  filter_input(INPUT_POST, 'plaza');
 	// hay que averiguar si la persona es de la dl o de fuera.
 	$oPersona = personas\Persona::NewPersona($id_nom);
 	if (!is_object($oPersona)) {
-		$msg_err = "<br>$oPersona con id_nom: $id_nom";
+		$msg_err = "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 		exit($msg_err);
 	}
 	$obj_persona = get_class($oPersona);
-	$obj_persona = str_replace("personas\\model\\",'',$obj_persona);
+	$obj_persona = str_replace("personas\\model\\entity\\",'',$obj_persona);
 	// hay que averiguar si la actividad es de la dl o de fuera.
 	$oActividad  = new actividades\Actividad($id_activ);
 	// si es de la sf quito la 'f'
 	$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
 	$id_tabla = $oActividad->getId_tabla();
-	if ($dl == core\ConfigGlobal::mi_dele()) {
-		Switch($obj_persona) {
-			case 'PersonaN':
-			case 'PersonaNax':
-			case 'PersonaAgd':
-			case 'PersonaS':
-			case 'PersonaSSSC':
-			case 'PersonaDl':
-				$oAsistente=new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-				break;
-			case 'PersonaIn':
-			case 'PersonaEx':
-				$oAsistente=new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-				break;
-		}
-	} else {
-		if ($id_tabla == 'dl') {
-			$oAsistente=new asistentes\AsistenteOut(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-		} else {
-			$oAsistente=new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-		}
-	}
+	$oAsistente = asistentes\Asistente::getClaseAsistente($obj_persona,$dl,$id_tabla);
+	$oAsistente->setPrimary_key(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
 	$oAsistente->DBCarregar();
 	isset($plaza)? $oAsistente->setPlaza($plaza) : $oAsistente->setPlaza();
 	if ($oAsistente->DBGuardar() === false) {
@@ -159,62 +128,53 @@ function plaza($id_nom){
 
 function editar($id_activ,$id_nom){
 	$msg_err = '';
-	global $_POST;
 	// hay que averiguar si la persona es de la dl o de fuera.
 	$oPersona = personas\Persona::NewPersona($id_nom);
 	if (!is_object($oPersona)) {
-		$msg_err = "<br>$oPersona con id_nom: $id_nom";
+		$msg_err = "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 		exit($msg_err);
 	}
 	$obj_persona = get_class($oPersona);
-	$obj_persona = str_replace("personas\\model\\",'',$obj_persona);
+	$obj_persona = str_replace("personas\\model\\entity\\",'',$obj_persona);
 	// hay que averiguar si la actividad es de la dl o de fuera.
 	$oActividad  = new actividades\Actividad($id_activ);
 	// si es de la sf quito la 'f'
 	$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
 	$id_tabla = $oActividad->getId_tabla();
-	if ($dl == core\ConfigGlobal::mi_dele()) {
-		Switch($obj_persona) {
-			case 'PersonaN':
-			case 'PersonaNax':
-			case 'PersonaAgd':
-			case 'PersonaS':
-			case 'PersonaSSSC':
-			case 'PersonaDl':
-				$oAsistente=new asistentes\AsistenteDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-				break;
-			case 'PersonaIn':
-			case 'PersonaEx':
-				$oAsistente=new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-				break;
-		}
-	} else {
-		if ($id_tabla == 'dl') {
-			$oAsistente=new asistentes\AsistenteOut(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-		} else {
-			$oAsistente=new asistentes\AsistenteEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-		}
-	}
+	$oAsistente = asistentes\Asistente::getClaseAsistente($obj_persona,$dl,$id_tabla);
+	$oAsistente->setPrimary_key(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
 	$oAsistente->DBCarregar();
-	isset($_POST['encargo'])? $oAsistente->setEncargo($_POST['encargo']) : $oAsistente->setEncargo();
-	isset($_POST['cama'])? $oAsistente->setCama($_POST['cama']) : $oAsistente->setCama();
-	isset($_POST['observ'])? $oAsistente->setObserv($_POST['observ']) : $oAsistente->setObserv();
-	isset($_POST['plaza'])? $oAsistente->setPlaza($_POST['plaza']) : $oAsistente->setPlaza();
-	isset($_POST['propio'])? $oAsistente->setPropio('t') : $oAsistente->setPropio('f');
-	isset($_POST['est_ok'])? $oAsistente->setEst_ok('t') : $oAsistente->setEst_ok('f');
-	isset($_POST['cfi'])? $oAsistente->setCfi('t') : $oAsistente->setCfi('f');
-	isset($_POST['falta'])? $oAsistente->setFalta('t') : $oAsistente->setFalta('f');
-	isset($_POST['cfi_con'])? $oAsistente->setCfi_con($_POST['cfi_con']) : $oAsistente->setCfi_con();
+	
+	$Qencargo = (string) \filter_input(INPUT_POST, 'encargo');
+	$Qcama = (string) \filter_input(INPUT_POST, 'cama');
+	$Qobserv = (string) \filter_input(INPUT_POST, 'observ');
+	$Qplaza = (integer) \filter_input(INPUT_POST, 'plaza');
+	$Qpropio = (string) \filter_input(INPUT_POST, 'propio');
+	$Qest_ok = (string) \filter_input(INPUT_POST, 'est_ok');
+	$Qcfi = (string) \filter_input(INPUT_POST, 'cfi');
+	$Qfalta = (string) \filter_input(INPUT_POST, 'falta');
+	$Qcfi_con = (string) \filter_input(INPUT_POST, 'cfi_con');
+	$Qpropietario = (string) \filter_input(INPUT_POST, 'propietario');
+
+	isset($Qencargo)? $oAsistente->setEncargo($Qencargo) : $oAsistente->setEncargo();
+	isset($Qcama)? $oAsistente->setCama($Qcama) : $oAsistente->setCama();
+	isset($Qobserv)? $oAsistente->setObserv($Qobserv) : $oAsistente->setObserv();
+	isset($Qplaza)? $oAsistente->setPlaza($Qplaza) : $oAsistente->setPlaza();
+	empty($Qpropio)? $oAsistente->setPropio('f') : $oAsistente->setPropio('t');
+	empty($Qest_ok)? $oAsistente->setEst_ok('f') : $oAsistente->setEst_ok('t');
+	empty($Qcfi)? $oAsistente->setCfi('f') : $oAsistente->setCfi('t');
+	empty($Qfalta)? $oAsistente->setFalta('f') : $oAsistente->setFalta('t');
+	isset($Qcfi_con)? $oAsistente->setCfi_con($Qcfi_con) : $oAsistente->setCfi_con();
 	// Si no es epecificado, al poner la plaza ya se pone al propietario
-	!empty($_POST['propietario'])? $oAsistente->setPropietario($_POST['propietario']) : FALSE;
+	!empty($Qpropietario)? $oAsistente->setPropietario($Qpropietario) : FALSE;
 	if ($oAsistente->DBGuardar() === false) {
 		$msg_err = _('Hay un error, no se ha guardado');
 	}
 	return $msg_err;
 
 }
-$msg_err = '';
-switch ($_POST['mod']) {
+
+switch ($Qmod) {
 	//------------ cambiar PLAZA --------
 	case "plaza":
 		$msg_err = '';
@@ -224,39 +184,29 @@ switch ($_POST['mod']) {
 			$id_nom = strtok($id_nom,'#'); // los cargos tienen más datos
 			$msg_err .= plaza($id_nom);
 		}
-		$_POST['go_to'] = 'no';
 		break;
 	//------------ MOVER --------
 	case "mover":
-		$msg_err = eliminar($id_activ_old,$id_nom);
-		$msg_err .= editar($id_activ,$id_nom);
+		$msg_err = eliminar($Qid_activ_old,$Qid_nom);
+		$msg_err .= editar($Qid_activ,$Qid_nom);
 		break;
 	//------------ BORRAR --------
 	case "eliminar":
-	$msg_err = eliminar($id_activ,$id_nom);
+	$msg_err = eliminar($Qid_activ,$Qid_nom);
 		break;
 	//------------ NUEVO --------
 	//------------ EDITAR --------
 	case "nuevo":
 		// hay que abrir el dossier para esta persona/actividad/ubi:
-		$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$id_nom,'id_tipo_dossier'=>1301));
+		$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$Qid_nom,'id_tipo_dossier'=>1301));
 		$oDossier->abrir();
 		$oDossier->DBGuardar();
 	case "editar":
-		$msg_err = editar($id_activ,$id_nom);
+		$msg_err = editar($Qid_activ,$Qid_nom);
 		break;
 }
 
+
 if (empty($msg_err)) { 
-	if (!empty($_POST['go_to']) && $_POST['go_to'] != 'no') {
-		echo $oPosicion->ir_a($_POST['go_to']);
-	} else {
-		if ($_POST['go_to'] != 'no') {
-			$oPosicion->setId_div('ir_a');
-			echo $oPosicion->mostrar_left_slide();
-		}
-	}
-} else {
 	echo $msg_err;
 }	
-?>

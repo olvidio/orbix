@@ -1,8 +1,8 @@
 <?php
-use actividades\model as actividades;
-use actividadestudios\model as actividadestudios;
-use asignaturas\model as asignaturas;
-use notas\model as notas;
+use actividades\model\entity as actividades;
+use actividadestudios\model\entity as actividadestudios;
+use asignaturas\model\entity as asignaturas;
+use notas\model\entity as notas;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -11,247 +11,212 @@ use notas\model as notas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$oPosicion->recordar();
+
+$obj = 'actividadestudios\\model\\entity\\Matricula';
 
 $id_asignatura_real = '';
 
-$go_to = (string)  \filter_input(INPUT_POST, 'go_to');
-if (!empty($go_to)) {
-	$go_to=urldecode($go_to);
-}
-	
-//$id_activ = (integer)  \filter_input(INPUT_POST, 'id_pau');
-$id_nom = empty($_POST['id_pau'])? '' : $_POST['id_pau'];
-$id_activ = empty($_POST['id_activ'])? '' : $_POST['id_activ'];
-$opcional = empty($_POST['opcional'])? '': $_POST['opcional'];
-$Qid_nivel = empty($_POST['id_nivel'])? '': $_POST['id_nivel'];
-$Qid_asignatura = empty($_POST['id_asignatura'])? '': $_POST['id_asignatura'];
+$Qid_nom = (integer) \filter_input(INPUT_POST, 'id_pau');
+$Qid_activ = (integer) \filter_input(INPUT_POST, 'id_activ');
+$Qid_nivel = (integer) \filter_input(INPUT_POST, 'id_nivel');
+$Qid_asignatura = (integer) \filter_input(INPUT_POST, 'id_asignatura');
 
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-	$id_activ = strtok($a_sel[0],"#");
+	$Qid_activ = strtok($a_sel[0],"#");
 	$id_asignatura_real=strtok("#");
-//	$id_nom=strtok("#");
 	// el scroll id es de la página anterior, hay que guardarlo allí
-	$oPosicion->addParametro('id_sel',$a_sel,0);
+	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
-	$oPosicion->addParametro('scroll_id',$scroll_id,0);
-	if (!empty($go_to)) {
-		// add stack:
-		$stack = $oPosicion->getStack();
-		$go_to .= "&stack=$stack";
-	}
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 }
 
-$oActividad = new actividades\Actividad($id_activ);
+$oActividad = new actividades\Actividad($Qid_activ);
 $nom_activ = $oActividad->getNom_activ();
 
+$GesAsignaturas = new asignaturas\GestorAsignatura();
+
+$oDesplProfesores = array();
 if (!empty($id_asignatura_real)) { //caso de modificar
 	$mod="editar";
-	$oMatricula = new actividadestudios\Matricula(array('id_nom'=>$id_nom,'id_activ'=>$id_activ,'id_asignatura'=>$id_asignatura_real));
+	$oMatricula = new actividadestudios\Matricula(array('id_nom'=>$Qid_nom,'id_activ'=>$Qid_activ,'id_asignatura'=>$id_asignatura_real));
 	$id_situacion=$oMatricula->getId_situacion();
 	$preceptor=$oMatricula->getPreceptor();
+	$id_preceptor=$oMatricula->getId_preceptor();
 	$oAsignatura = new asignaturas\Asignatura($id_asignatura_real);
 	$nombre_corto=$oAsignatura->getNombre_corto();
 	$id_nivel=$id_asignatura_real;
 	$id_asignatura=$id_asignatura_real;
-	$primary_key_s=serialize(array('id_nom'=>$id_nom,'id_activ'=>$id_activ,'id_asignatura'=>$id_asignatura_real));
+	
+	$chk_preceptor = ($preceptor===true)? 'checked' : '';
+	$cOpcionales = array();
+	$aFaltan=array();
+	$oDesplNiveles = array();
+	if (!empty($id_preceptor)) {
+		$GesProfes = new profesores\model\entity\GestorProfesor();
+		$cProfesores= $GesProfes->getProfesores();
+		$aProfesores=array();
+		$msg_err = '';
+		foreach ($cProfesores as $oProfesor) {
+			$id_nom=$oProfesor->getId_nom();
+			$oPersona = personas\model\entity\Persona::NewPersona($id_nom);
+			if (!is_object($oPersona)) {
+				$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
+				continue;
+			}
+			$ap_nom=$oPersona->getApellidosNombre();
+			$aProfesores[$id_nom]=$ap_nom;
+		}
+		uasort($aProfesores,'core\strsinacentocmp');
+		
+		$oDesplProfesores = new web\Desplegable();
+		$oDesplProfesores->setOpciones($aProfesores);
+		$oDesplProfesores->setBlanco(1);
+		$oDesplProfesores->setNombre('id_preceptor');
+		$oDesplProfesores->setOpcion_sel($id_preceptor);
+	}
 } else { //caso de nueva asignatura
 	$mod="nuevo";	
-	// asignaturas posibles
-	$GesAsignaturas = new asignaturas\GestorAsignatura();
-	$cAsignaturas = $GesAsignaturas->getAsignaturas(array('id_nivel'=>3000,'status'=>'t','_ordre'=>'id_nivel'),array('id_nivel'=>'<'));
-	// quito las ya cursadas
+	$nombre_corto='';
+	$preceptor='';
+	$chk_preceptor = "";
+	$id_preceptor='';
+	$detalle='';
+	$epoca='';
+	$id_activ='';
+	// todas las asignaturas
+	$aWhere=array();
+	$aOperador=array();
+	$aWhere['status']='t';
+	$aWhere['id_nivel']=3000;
+	$aOperador['id_nivel']='<';
+	$aWhere['_ordre']='id_nivel';
+	$cAsignaturas = $GesAsignaturas->getAsignaturas($aWhere,$aOperador);
+	// todas las opcionales 
+	$aWhere=array();
+	$aOperador=array();
+	$aWhere['status']='t';
+	$aWhere['id_nivel']='3000,5000';
+	$aOperador['id_nivel']='BETWEEN';
+	$aWhere['_ordre']='nombre_corto';
+	$cOpcionales = $GesAsignaturas->getAsignaturas($aWhere,$aOperador);
+	// Asignaturas superadas
 	$GesNotas = new notas\GestorNota();
-	$cNotas = $GesNotas->getNotas(array('superada'=>'t'));
-	$aSuperadas = array();
-	foreach ($cNotas as $oNota) {
-		$aSuperadas[] = $oNota->getId_situacion();
+	$cSuperadas = $GesNotas->getNotas(array('superada'=>'t'));
+	$cond='';
+	$c=0;
+	foreach ($cSuperadas as $Nota) {
+		if ($c >0 ) $cond.='|';
+		$c++;
+		$cond.=$Nota->getId_situacion();
 	}
-	$ac=0;
-	foreach ($cAsignaturas as $oAsignatura) {
+	$aWhere=array();
+	$aOperador=array();
+	$aWhere['id_situacion']=$cond;
+	$aOperador['id_situacion']='~';
+	$aWhere['id_nom']=$Qid_nom;
+	$aWhere['id_nivel']=3000;
+	$aOperador['id_nivel']='<';
+	$aWhere['_ordre']='id_nivel';
+	$GesPersonaNotas = new notas\GestorPersonaNota();
+	$cAsignaturasSuperadas = $GesPersonaNotas->getPersonaNotas($aWhere,$aOperador);
+	$aSuperadas=array();
+	foreach($cAsignaturasSuperadas as $oAsignatura) {
+		$id_nivel = $oAsignatura->getId_nivel();
 		$id_asignatura = $oAsignatura->getId_asignatura();
-		$id_nivel = $oAsignatura->getId_nivel();
-		$GesPersonaNota = new notas\GestorPersonaNota();
-		$cPersonaNota = $GesPersonaNota->getPersonaNotas(array('id_nom'=>$id_nom,'id_nivel'=>$id_nivel));
-		if (is_array($cPersonaNota) && count($cPersonaNota) == 1) {
-			$id_situacion = $cPersonaNota[0]->getId_situacion();
-			if (in_array($id_situacion,$aSuperadas)) {
-				// la borro de la lista
-				unset($cAsignaturas[$ac]);
-			}
-		}
-		$ac++;
+		$aSuperadas[$id_nivel]=$id_asignatura;
 	}
-	// quito las ya matriculadas
+	// También quito las ya matriculadas
 	$GesMatriculas = new actividadestudios\GestorMatriculaDl();
-	$cMatriculas = $GesMatriculas->getMatriculas(array('id_nom'=>$id_nom,'id_activ'=>$id_activ));
-	//lista ids asignaturas posibles
-	$a_PosiblesAsignaturas = array();
-	foreach($cAsignaturas as $n=>$oAsignatura){
-		$id_nivel = $oAsignatura->getId_nivel();
-		$a_PosiblesAsignaturas[$id_nivel] = $n;
-	}
+	$cMatriculas = $GesMatriculas->getMatriculas(array('id_nom'=>$Qid_nom,'id_activ'=>$Qid_activ));
+	$aMatriculadas=array();
 	foreach ($cMatriculas as $oMatricula) {
 		$id_asignatura=$oMatricula->getId_asignatura();
 		$id_nivel = $oMatricula->getId_nivel();
-		// la borro de la lista
-		if (array_key_exists($id_nivel,$a_PosiblesAsignaturas)) {
-			$n = $a_PosiblesAsignaturas[$id_nivel];
-			unset($cAsignaturas[$n]);
-		}
+		$aMatriculadas[$id_nivel]=$id_asignatura;
 	}
-	// Lo mismo para las opcionales
-	if (!empty($opcional)) {
-		$GesAsignaturasOp = new asignaturas\GestorAsignatura();
-		$cAsignaturasOp = $GesAsignaturasOp->getAsignaturas(array('id_nivel'=>'3000,5000','status'=>'t','_ordre'=>'nombre_corto'),array('id_nivel'=>'BETWEEN'));
-		// quito las ya cursadas
-		$GesNotas = new notas\GestorNota();
-		$cNotas = $GesNotas->getNotas(array('superada'=>'t'));
-		$aSuperadas = array();
-		foreach ($cNotas as $oNota) {
-			$aSuperadas[] = $oNota->getId_situacion();
-		}
-		$acop=0;
-		foreach ($cAsignaturasOp as $oAsignatura) {
-			$id_asignatura = $oAsignatura->getId_asignatura();
-			$oPersonaNota = new notas\PersonaNota(array('id_nom'=>$id_nom,'id_asignatura'=>$id_asignatura));
-			if (is_object($oPersonaNota)) {
-				$id_situacion = $oPersonaNota->getId_situacion();
-				if (in_array($id_situacion,$aSuperadas)) {
-					// la borro de la lista
-					unset($cAsignaturasOp[$acop]);
-				}
-			}
-			$acop++;
-		}
-		// quito las ya matriculadas
-		//lista ids asignaturas posibles
-		$a_PosiblesAsignaturas = array();
-		foreach($cAsignaturasOp as $n=>$oAsignatura){
-			$id_asignatura = $oAsignatura->getId_asignatura();
-			$a_PosiblesAsignaturas[$id_asignatura] = $n;
-		}
-		foreach ($cMatriculas as $oMatricula) {
-			$id_asignatura=$oMatricula->getId_asignatura();
-			// la borro de la lista
-			if (array_key_exists($id_asignatura,$a_PosiblesAsignaturas)) {
-				$n = $a_PosiblesAsignaturas[$id_asignatura];
-				unset($cAsignaturasOp[$n]);
-			}
-		}
+	// asignaturas posibles
+	$aFaltan=array();
+	foreach ($cAsignaturas as $oAsignatura) {
+		$id_nivel = $oAsignatura->getId_nivel();
+		$id_asignatura = $oAsignatura->getId_asignatura();
+		$nombre_corto = $oAsignatura->getNombre_corto();
+		if (array_key_exists($id_nivel,$aSuperadas)) continue;
+		if (array_key_exists($id_nivel,$aMatriculadas)) continue;
+		$aFaltan[$id_nivel]=$nombre_corto;
 	}
+
+	$oDesplNiveles = new web\Desplegable();
+	$oDesplNiveles->setNombre('id_nivel');
+	$oDesplNiveles->setOpciones($aFaltan);
+	$oDesplNiveles->setBlanco(1);
+	$oDesplNiveles->setAction('fnjs_cmb_opcional()');
 }
 
-// miro cuales son las opcionales genéricas, para la funcion actualizar() de java.
+// miro cuales son las opcionales genéricas, para la funcion
+//  fnjs_cmb_opcional de javascript.
 // la condicion es que tengan id_sector=1
-$GesAsignaturasOpG = new asignaturas\GestorAsignatura();
-$cAsignaturasOpG = $GesAsignaturasOpG->getAsignaturas(array('id_nivel'=>'3000','id_sector'=>1,'status'=>'t'),array('id_nivel'=>'<'));
-$condicion_js='';
-foreach ($cAsignaturasOpG as $oAsignaturaOp) {
-	$id_nivel_j = $oAsignaturaOp->getId_nivel();
-	$condicion_js .= "id==".$id_nivel_j." || ";
+$aWhere=array();
+$aOperador=array();
+$aWhere['status']='t';
+$aWhere['id_sector']=1;
+$aWhere['id_nivel']=3000;
+$aOperador['id_nivel']='<';
+$aWhere['_ordre']='nombre_corto';
+$cOpcionalesGenericas = $GesAsignaturas->getAsignaturas($aWhere,$aOperador);
+$condicion='';
+$lista_nivel_op='';
+foreach ($cOpcionalesGenericas as $oOpcional) {
+	$id_nivel_j = $oOpcional->getId_nivel();
+	$condicion.="id==".$id_nivel_j." || ";
+	$lista_nivel_op.=$id_nivel_j.",";
 }
-$condicion_js=substr($condicion_js,0,-4);
+$condicion_js=substr($condicion,0,-4);
 
 $oHash = new web\Hash();
 $camposForm = '';
-$oHash->setCamposNo('mod!opcional!preceptor');
+$oHash->setCamposNo('preceptor!id_preceptor');
 $a_camposHidden = array(
-		'id_pau' => $id_nom,
-		'id_activ' => $id_activ,
-		'go_to' => $go_to
+		'id_pau' => $Qid_nom,
+		'id_activ' => $Qid_activ,
+		'mod' => $mod,
 		);
 if (!empty($id_asignatura_real)) {
 	$a_camposHidden['id_asignatura'] = $id_asignatura;
 	$a_camposHidden['id_nivel'] = $id_nivel;
-	//$a_camposHidden['primary_key_s'] = $primary_key_s;
 } else {
 	$camposForm .= 'id_asignatura!id_nivel';
 }
 $oHash->setcamposForm($camposForm);
 $oHash->setArraycamposHidden($a_camposHidden);
 
+$url_ajax = core\ConfigGlobal::getWeb().'/apps/notas/controller/notas_ajax.php';
+$oHash1 = new web\Hash();
+$oHash1->setUrl($url_ajax);
+$oHash1->setCamposForm('que!id_nom'); 
+//$oHash1->setCamposNo('id_nom'); 
+$h1 = $oHash1->linkSinVal();
+$oHash2 = new web\Hash();
+$oHash2->setUrl($url_ajax);
+$oHash2->setCamposForm('que'); 
+$h2 = $oHash2->linkSinVal();
 
-echo $oPosicion->mostrar_left_slide();
-?>
-<script>
-fnjs_actualizar=function(){
-	var id=document.f_1303.id_nivel.value;
-	if (<?php echo $condicion_js; ?>) {
-		$('#opcional').val(1);
-	} else {
-		$('#opcional').val(0);
-	}
-	$('#f_1303').attr('action',"apps/actividadestudios/controller/form_1303.php");
-	fnjs_enviar_formulario('#f_1303','#ficha_personas');
-}
-fnjs_guardar=function(){
-	if ($('#id_asignatura').value=="") {
-		$('#id_asignatura').value=document.f_1303.id_nivel.value;
-	}
-	$('#f_1303').attr('action',"apps/actividadestudios/controller/update_3103.php");
-	fnjs_enviar_formulario('#f_1303','#ficha_personas');
-}
-</script>
-<form id="f_1303" name="f_1303" action="t" method="POST">
-<?= $oHash->getCamposHtml(); ?>
-<input type="Hidden" id="mod" name="mod" value="<?= $mod ?>">
-<input type="Hidden" id="opcional" name="opcional" value="">
-<table>
-<thead><tr><th colspan=4><?= _("matricula de asignaturas") ?></th></tr></thead>
-<tbody>
-<tr><td><?= ucfirst(_("actividad")) ?>:</td><td class=contenido colspan=3><?= $nom_activ ?></td></tr>
-<?php
-if (!empty($id_asignatura_real)) { //caso de modificar
-?>
-	<tr><td><?= ucfirst(_("asignatura")) ?>:</td><td class=contenido><?= $nombre_corto ?></td></tr>
-<?php
-} else {
-	//niveles posibles (los no aprobados)
-	echo "<tr><td>".ucfirst(_("asignatura")).":</td>";
-	echo "<td><select id='id_nivel' name='id_nivel' onchange='fnjs_actualizar()'><option />";
-	$i=0;
-	foreach ($cAsignaturas as $oAsignatura) {
-		$i++;
-		$asignatura=$oAsignatura->getNombre_corto();
-		$list_id_nivel=$oAsignatura->getId_nivel();
-		if (!empty($Qid_nivel) && $list_id_nivel==$Qid_nivel) { $chk="selected"; } else { $chk=""; }
-		echo "<option value=$list_id_nivel $chk>$asignatura</option>";
-	}
-	echo "</select></td>";
-	
-	// opcionales posibles
-	if (!empty($opcional)) {
-		echo "<td>".ucfirst(_("opcional")).":</td>";
-		echo "<td><select id='id_asignatura' name='id_asignatura' >";
-		$i=0;
-		foreach ($cAsignaturasOp as $oAsignatura) {
-			$i++;
-			$asignatura=$oAsignatura->getNombre_corto();
-			$id_asignatura=$oAsignatura->getId_asignatura();
-			if (!empty($Qid_asignatura) && $Qid_asignatura==$id_asignatura_real) { $chk="selected"; } else { $chk=""; }
-			echo "<option value=$id_asignatura $chk>$asignatura</option>";
-		}
-		echo "</select></td>";
-	} else { //si no es opcional 
-		if (!empty($Qid_nivel)) {
-			$GesAsigaturas = new asignaturas\GestorAsignatura();
-			$cAsignatura = $GesAsignaturas->getAsignaturas(array('id_nivel'=>$Qid_nivel));
-			$id_asignatura=$cAsignatura[0]->getId_asignatura();
-		} else {
-			$id_asignatura='';
-		}
-		echo "<input type=\"Hidden\" id=\"id_asignatura\" name=\"id_asignatura\" value=\"$id_asignatura\">";
-	}
-	echo "</tr>";
-}
-if (!empty($preceptor) && $preceptor=="t") { $chk_tipo="selected"; } else { $chk_tipo=""; }
-?>	
-<tr><td><?= _("tipo") ?></td>
-	<td><select id="preceptor" name="preceptor">
-		<option />
-		<option value="t" <?= $chk_tipo ?> ><?= _("preceptor") ?></option>
-	</select>
-	</td></tr>
-</tbody></table>
-<br><input type="button" value="<?= ucfirst(_("guardar")); ?>" onclick="fnjs_guardar()">
+$a_campos = ['obj' => $obj,
+			'oPosicion' => $oPosicion,
+			'oHash' => $oHash,
+			'url_ajax' => $url_ajax,
+			'h1' => $h1,
+			'h2' => $h2,
+			'condicion_js' => $condicion_js,
+			'nom_activ' => $nom_activ,
+			'id_asignatura_real' => $id_asignatura_real,
+			'nombre_corto' => $nombre_corto,
+			'oDesplNiveles' => $oDesplNiveles,
+			'chk_preceptor' => $chk_preceptor,
+			'id_preceptor' => $id_preceptor,
+			'oDesplProfesores' => $oDesplProfesores,
+			];
+
+$oView = new core\View('actividadestudios/controller');
+echo $oView->render('form_1303.phtml',$a_campos);

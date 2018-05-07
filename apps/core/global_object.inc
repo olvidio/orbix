@@ -1,7 +1,7 @@
 <?php
 namespace core;
 
-use usuarios\model as usuarios;
+use usuarios\model\entity as usuarios;
 use permisos\model as permisos;
 use web;
 

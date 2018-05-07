@@ -1,10 +1,10 @@
 <?php
-use actividades\model as actividades;
-use actividadcargos\model as actividadcargos;
-use actividadestudios\model as actividadestudios;
-use asistentes\model as asistentes;
-use personas\model as personas;
-use ubis\model as ubis;
+use actividades\model\entity as actividades;
+use actividadcargos\model\entity as actividadcargos;
+use actividadestudios\model\entity as actividadestudios;
+use asistentes\model\entity as asistentes;
+use personas\model\entity as personas;
+use ubis\model\entity as ubis;
 /**
 * Esta página tiene la misión de realizar la llamada a calendario php;
 * y lo hace con distintos valores, en función de las páginas anteriores
@@ -20,9 +20,6 @@ use ubis\model as ubis;
 *@author	Daniel Serrabou
 *@since		15/5/02.
 *		
-*/
-/**
-* En el fichero config tenemos las variables genéricas del sistema
 */
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -45,19 +42,27 @@ switch($_POST['modelo']) {
 		break;
 }
 
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	$id_sel=$_POST['sel'];
+$oPosicion->recordar();
+
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
 	// puede ser más de uno
-	if (is_array($id_sel) && count($id_sel) > 1) {
+	if (is_array($a_sel) && count($a_sel) > 1) {
 		$aid_nom = array();
-		foreach ($_POST['sel'] as $nom_sel) {
+		foreach ($a_sel as $nom_sel) {
 			$aid_nom[] = $nom_sel;
 		}
 	} else {
-		$aid_nom[] = $id_sel[0];
-		$oPosicion->addParametro('id_sel',$id_sel);
+		$aid_nom[] = $a_sel[0];
+		// el scroll id es de la página anterior, hay que guardarlo allí
+		$oPosicion->addParametro('id_sel',$a_sel,1);
 		$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
-		$oPosicion->addParametro('scroll_id',$scroll_id);
+		$oPosicion->addParametro('scroll_id',$scroll_id,1);
+		if (!empty($go_to)) {
+			// add stack:
+			$stack = $oPosicion->getStack(1);
+			$go_to .= "&stack=$stack";
+		}
 	}
 }
 	
@@ -527,7 +532,7 @@ if ($_POST['tipo']=='planning_cdc' || $_POST['tipo']=='casa') {
 
 // En el caso de personas doy la opción de volver a los seleccionados.
 if ($_POST['tipo']=='planning' || $_POST['tipo']=='p_de_paso' ) {
-	echo $oPosicion->mostrar_left_slide();
+	echo $oPosicion->mostrar_left_slide(1);
 }
 
 // Listo varios centros.

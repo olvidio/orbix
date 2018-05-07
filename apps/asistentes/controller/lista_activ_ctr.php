@@ -1,8 +1,8 @@
 <?php 
-use actividades\model as actividades;
-use asistentes\model as asistentes;
-use personas\model as personas;
-use ubis\model as ubis;
+use actividades\model\entity as actividades;
+use asistentes\model\entity as asistentes;
+use personas\model\entity as personas;
+use ubis\model\entity as ubis;
 /**
 * Listados de los asistentes a actividades por ctr
 *
@@ -16,10 +16,6 @@ use ubis\model as ubis;
 *		
 */
 
-
-/**
-* Funciones más comunes de la aplicación
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -28,10 +24,12 @@ use ubis\model as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$ssfsv = empty($_POST['ssfsv'])? '' : $_POST['ssfsv'];
+$oPosicion->recordar();
+
+$Qssfsv = (string) \filter_input(INPUT_POST, 'ssfsv');
 
 if (core\ConfigGlobal::mi_sfsv() == 1 ) {
-	if ($ssfsv == 'sf' && (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des")))) {
+	if ($Qssfsv == 'sf' && (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des")))) {
 		$ssfsv = 'sf';
 	} else {
 		$ssfsv = 'sv';
@@ -41,47 +39,45 @@ if (core\ConfigGlobal::mi_sfsv() == 2 ) {
 	$ssfsv = 'sf';
 }
 
-$sasistentes = empty($_POST['sasistentes'])? '' : $_POST['sasistentes'];
-$sactividad  = empty($_POST['sactividad'])? '' : $_POST['sactividad'];
-empty($_POST['snom_tipo'])? $snom_tipo="" : $snom_tipo=$_POST['snom_tipo'];  
+$Qsasistentes = (string) \filter_input(INPUT_POST, 'sasistentes');
+$Qsactividad = (string) \filter_input(INPUT_POST, 'sactividad');
+$Qn_agd =  (string) \filter_input(INPUT_POST, 'n_agd');
+$Qyear = (integer) \filter_input(INPUT_POST, 'year');
+$Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 
-//echo "asistentes: $sasistentes<br>";
-if ($_POST['n_agd']=="sss") { //no me cabe el valor en el menú en sss+ (pasa de 100 caracteres), por tanto se lo damos por programa
-	$sasistentes="sss+";
+//no me cabe el valor en el menú en sss+ (pasa de 100 caracteres), por tanto se lo damos por programa
+if ($Qn_agd=="sss") {
+	$Qsasistentes="sss+";
 } 
+
 //desarrollamos la condición que filtre el tipo de actividad		
 $condta = '';
 $oTipoActiv= new web\TiposActividades();
 $oTipoActiv->setSfsvText($ssfsv);
-$oTipoActiv->setAsistentesText($sasistentes);
-$oTipoActiv->setActividadText($sactividad);
-// $oTipoActiv->setNom_tipoText($snom_tipo); // no té sentit
+$oTipoActiv->setAsistentesText($Qsasistentes);
+$oTipoActiv->setActividadText($Qsactividad);
 $condta=$oTipoActiv->getId_tipo_activ();
 
  //para el caso especial de n que hacen su ca en cv de agd:
 $condta_plus = '';
-if ($sasistentes=="n" && ($sactividad=="ca" || $sactividad=="crt")) {
-	if ($sactividad=="ca") { $activ="cv"; } else { $activ=$sactividad; }
+if ($Qsasistentes=="n" && ($Qsactividad=="ca" || $Qsactividad=="crt")) {
+	if ($Qsactividad=="ca") { $activ="cv"; } else { $activ=$Qsactividad; }
 	$oTipoActiv= new web\TiposActividades();
 	$oTipoActiv->setSfsvText($ssfsv);
 	$oTipoActiv->setAsistentesText('agd');
 	$oTipoActiv->setActividadText($activ);
-	// $oTipoActiv->setNom_tipoText($snom_tipo); // no té sentit
 	$condta_plus=$oTipoActiv->getId_tipo_activ();
 } 
 
 // para el caso de los ap. que han hecho el crt con sr.
 $condta_sr='';
-if ($sactividad=="crt") {
+if ($Qsactividad=="crt") {
 	$oTipoActiv= new web\TiposActividades();
 	$oTipoActiv->setSfsvText($ssfsv);
 	$oTipoActiv->setAsistentesText('sr');
 	$oTipoActiv->setActividadText('crt');
-	// $oTipoActiv->setNom_tipoText($snom_tipo); // no té sentit
 	$condta_sr=$oTipoActiv->getId_tipo_activ();
-	//$condta1 = "($condta1 OR id_tipo_activ::text ~ '^$condta_sr')";
 }
-//echo "condta: $condta,condta_plus: $condta_plus,condta_sr: $condta_sr";
 $condicion = '';
 $condicion .= empty($condta)? '' : '^'.$condta;
 $condicion .= empty($condta_plus)? '' : '|^'.$condta_plus;
@@ -92,22 +88,24 @@ $aOperadorAct['id_tipo_activ'] = "~";
 
 /*generamos el período de la búsqueda de actividades
 en función de las condiciones que tengamos: */
-
-$any=empty($_POST['year'])? date('Y') : $_POST['year'];
-
-if (empty($_POST['periodo']) || $_POST['periodo'] == 'otro') {
-	$inicio = empty($_POST['inicio'])? $_POST['empiezamin'] : $_POST['inicio'];
-	$fin = empty($_POST['fin'])? $_POST['empiezamax'] : $_POST['fin'];
+$any=empty($Qyear)? date('Y') : $Qyear;
+	
+if ($Qperiodo == 'otro') {
+	$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
+	$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
+	$Qfin = (string) \filter_input(INPUT_POST, 'fin');
+	$inicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
+	$fin = empty($Qfin)? $Qempiezamax : $Qfin;
 } else {
+	$periodo = empty($Qperiodo)? 'curso_ca' : $Qperiodo;
 	$oPeriodo = new web\Periodo();
 	$oPeriodo->setAny($any);
-	$oPeriodo->setPeriodo($_POST['periodo']);
+	$oPeriodo->setPeriodo($periodo);
 	$inicio = $oPeriodo->getF_ini();
 	$fin = $oPeriodo->getF_fin();
 }
 
-
-switch ($_POST['n_agd']) {
+switch ($Qn_agd) {
 	case "a":
 		$tabla="p_agregados";
 		$aWhere['tipo_ctr']='a.*';
@@ -145,14 +143,13 @@ $aWhere['_ordre']='nombre_ubi';
 $GesCentros = new ubis\GestorCentroDl();
 $cCentros = $GesCentros->getCentros($aWhere,$aOperador);
 
-echo "<table>";
 // Bucle para poder sacar los centros de la consulta anterior
 $ctr=0;
+$aCentros = array();
 foreach ($cCentros as $oCentro) {
 	$ctr++;
 	extract($oCentro->getTot());
 	//consulta para buscar personas de cada ctr		
-	// en caso de sss+ no hay campo situacion
 	if ($tabla=="p_sssc") {
 		$GesPersonas = new personas\GestorPersonaSSSC();
 		$cPersonas = $GesPersonas->getPersonas(array('id_ctr'=>$id_ubi,'situacion'=>'A','_ordre'=>'apellido1'));
@@ -161,103 +158,44 @@ foreach ($cCentros as $oCentro) {
 		$cPersonas = $GesPersonas->getPersonas(array('id_ctr'=>$id_ubi,'situacion'=>'A','_ordre'=>'apellido1,apellido2,nom'));
 	}	
 
-	// salto de pagina:
-    if ($ctr > 1) echo "<tr class='salta_pag'></td></td></tr>";
-    echo "<tr><th colspan=4>$nombre_ubi</th></tr>";
-    echo "<tr>
-    <th>"._("nombre")."</th>
-    <th>"._("actividades previstas")."</th>
-    </tr>";
-
-	// Bucle para poder sacar las personas de la consulta anterior	
+	$aCentros[$id_ubi]['nombre_ubi'] = $nombre_ubi;
+	
 	$i=0;
-	$vidFam = '';
+	$aPersonasCtr = array();
 	foreach ($cPersonas as $oPersona) {
 		$i++;
 		$id_nom=$oPersona->getId_nom();
 		$ap_nom=$oPersona->getApellidosNombre();
-		if ($tabla!="p_sssc") {
-			/*
-			$vida=$oPersona->getVida_familia();
-			//Pongo una linea en blanco entre los grupos de gente segun el campo de vida en familia
-			//entre cl y scl de gr o dtor de est o sacd no cl
-			if ($vidFam<="g" && $vida<="j" && $vida>"g"){
-				$linea=1;
-			//para alumnos 3er ano del ce
-			} elseif($vidFam<="j" && $vida<="l" && $vida>"j"){
-				$linea=1;
-			//para sacd no de cl con cel en agd
-			} elseif($vidFam<="j" && $vida<="p" && $vida>"j"){
-				$linea=1;
-			//para cel en agd
-			} elseif($vidFam<="p" && $vida<="w" && $vida>"p"){
-				$linea=1;
-			//para residentes
-			} elseif($vidFam<="q" && $vida<="s" && $vida>"q"){
-				$linea=1;
-			//para adscritos
-			} elseif($vidFam<="w" && $vida<="z" && $vida>"w"){
-				$linea=1;
-			} else {
-				$linea=0;
-			}
-			$vidFam= $vida;
-			if ($linea==1) { $a_valores[] = "&nbsp;"; }
-			*/
-		}
-		echo "<tr valign=\"TOP\"><td>$ap_nom</td>";
-		//consulta de las actividades de cada persona
-		/*$query_actividades="SELECT a.nom_activ,a.f_ini,a.f_fin   
-					FROM d_cargos_activ da, a_actividades a 
-					WHERE $condta1  da.id_nom=$id_nom AND da.id_activ=a.id_activ AND $periodo
-					UNION
-					SELECT a1.nom_activ, a1.f_ini,a1.f_fin  
-					FROM d_asistentes_activ aa, a_actividades a1 
-					WHERE $condta2  aa.id_nom=$id_nom AND aa.id_activ=a1.id_activ AND $periodo1
-					ORDER BY 1";
-		*/
-
-
-
-		// Cambio 21/3/2007: sólo buscamos las propias:
-		//$sCondicion = "propio='t' AND f_ini >= '$inicio' AND f_ini <= '$fin' AND $condta1";
 		$aWhereNom['id_nom'] = $id_nom;
 		$aWhereNom['propio'] = 't';
 		$aWhereAct['f_ini'] = "'$inicio','$fin'";
 		$aOperadorAct['f_ini'] = "BETWEEN";
-		//$aWhereAct['id_tipo_activ'] = "^1[137]1";
-		//$aOperadorAct['id_tipo_activ'] = "~";
 
 		$GesAsistencias = new asistentes\GestorAsistente();
 		$cAsistencias = $GesAsistencias->getActividadesDeAsistente($aWhereNom,$aWhereAct,$aOperadorAct);
+		$aActividades = array();
 		if (is_array($cAsistencias) && count($cAsistencias) == 0) {
 			$nom_activ=_("Pendiente de solicitar");
-			echo "<td><font style='color: red;'>$nom_activ</font></td></tr>";
 		} else {
 			$a=0;
 			foreach ($cAsistencias as $oActividadAsistente) {
 				$id_activ = $oActividadAsistente->getId_activ();
 				$oActividad = new actividades\Actividad($id_activ);
 				$nom_activ=$oActividad->getNom_activ();
-				if ($a>0) {
-					echo "<tr valign=\"TOP\"><td></td><td>$nom_activ</td></tr>";
-				} else {
-					echo "<td>$nom_activ</td></tr>";
-				}
 				$a++;
+				$aActividades[] = $nom_activ;
 			}
 		}
-		/*
-	   	$query_actividades="SELECT a1.nom_activ, a1.f_ini,a1.f_fin  
-					FROM d_asistentes_activ aa JOIN a_actividades a1 USING (id_activ)
-					WHERE aa.id_nom=$id_nom AND aa.propio='t' AND $periodo1 AND $condta2 
-					ORDER BY f_ini";
-		//echo "qqa: $query_actividades<br>";
-		*/
-		?>
-		</td></tr>
-		<?php
-	}// nueva persona
-} // nuevo centro
-?>
-</table>
+		$aPersonasCtr[$i]['ap_nom'] = $ap_nom;
+		$aPersonasCtr[$i]['actividades'] = $aActividades;
+	}
+	$aCentros[$id_ubi]['personas'] = $aPersonasCtr;
+}
+
+$a_campos = [
+			'oPosicion' => $oPosicion,
+			'aCentros' => $aCentros,
+			];
+
+$oView = new core\View('asistentes/controller');
+echo $oView->render('lista_activ_ctr.phtml',$a_campos);

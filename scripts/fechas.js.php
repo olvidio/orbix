@@ -24,14 +24,14 @@ function fnjs_comprobar_fecha(id) {
   {
      if(parseInt(v_fecha[0],10)>31 || (parseInt(v_fecha[0],10)<1))
      {
-        alert(name_fecha+': <?php echo _("el dia no es correcto"); ?>');
+        alert(name_fecha+': <?= _("el dia no es correcto"); ?>');
 		$(id).focus();
         return false;
      }
    
      if(parseInt(v_fecha[1],10)>12 || (parseInt(v_fecha[1],10)<1))
      {
-        alert(name_fecha+': <?php echo _("el mes no es correcto"); ?>');
+        alert(name_fecha+': <?= _("el mes no es correcto"); ?>');
 		$(id).focus();
         return false;
      }
@@ -39,7 +39,7 @@ function fnjs_comprobar_fecha(id) {
      var mi_v_fecha = new Date(parseInt(v_fecha[2],10),parseInt(v_fecha[1],10)-parseInt(1,10),parseInt(v_fecha[0],10))
      if(parseInt(v_fecha[0],10)!=parseInt(mi_v_fecha.getDate()))
      {
-        alert(name_fecha+': <?php echo _("La fecha introducida NO es correcta"); ?>');
+        alert(name_fecha+': <?= _("La fecha introducida NO es correcta"); ?>');
 		$(id).focus();
         return false;
      }
@@ -50,7 +50,7 @@ function fnjs_comprobar_fecha(id) {
   	 if (v_fecha.length==1 && v_fecha[0]) {
   	 	dia=parseInt(v_fecha[0],10);
   	 	if(isNaN(dia) || dia>31 || (dia<1)) {
-  	 		alert(name_fecha+': <?php echo _("El formato debe ser dd/mm/yyyy"); ?>');
+  	 		alert(name_fecha+': <?= _("El formato debe ser dd/mm/yyyy"); ?>');
 		 	$(id).focus();
 		 	return false;
   	 	}
@@ -58,7 +58,7 @@ function fnjs_comprobar_fecha(id) {
 		$(id).focus();
 		return true;
   	 } else {
-	     alert(name_fecha+': <?php echo _("El formato debe ser dd/mm/yyyy"); ?>');
+	     alert(name_fecha+': <?= _("El formato debe ser dd/mm/yyyy"); ?>');
 		 $(id).focus();
 		 return false;
 	 }
@@ -80,14 +80,14 @@ function fnjs_comprobar_fecha_val(id) {
   {
      if(parseInt(v_fecha[0],10)>31 || (parseInt(v_fecha[0],10)<1))
      {
-        alert(name_fecha+': <?php echo _("el dia no es correcto"); ?>');
+        alert(name_fecha+': <?= _("el dia no es correcto"); ?>');
 		$(id).focus();
         return false;
      }
    
      if(parseInt(v_fecha[1],10)>12 || (parseInt(v_fecha[1],10)<1))
      {
-        alert(name_fecha+': <?php echo _("el mes no es correcto"); ?>');
+        alert(name_fecha+': <?= _("el mes no es correcto"); ?>');
 		$(id).focus();
         return false;
      }
@@ -95,7 +95,7 @@ function fnjs_comprobar_fecha_val(id) {
      var mi_v_fecha = new Date(parseInt(v_fecha[2],10),parseInt(v_fecha[1],10)-parseInt(1,10),parseInt(v_fecha[0],10))
      if(parseInt(v_fecha[0],10)!=parseInt(mi_v_fecha.getDate()))
      {
-        alert(name_fecha+': <?php echo _("La fecha introducida NO es correcta"); ?>');
+        alert(name_fecha+': <?= _("La fecha introducida NO es correcta"); ?>');
 		$(id).focus();
         return false;
      }
@@ -106,14 +106,14 @@ function fnjs_comprobar_fecha_val(id) {
   	 if (v_fecha.length==1 && v_fecha[0]) {
   	 	dia=parseInt(v_fecha[0],10);
   	 	if(isNaN(dia) || dia>31 || (dia<1)) {
-  	 		alert(name_fecha+': <?php echo _("El formato debe ser dd/mm/yyyy"); ?>');
+  	 		alert(name_fecha+': <?= _("El formato debe ser dd/mm/yyyy"); ?>');
 		 	$(id).focus();
 		 	return false;
   	 	}
 		var rta=v_fecha[0]+"/"+month+"/"+year;
 		return rta;
   	 } else {
-	     alert(name_fecha+': <?php echo _("El formato debe ser dd/mm/yyyy"); ?>');
+	     alert(name_fecha+': <?= _("El formato debe ser dd/mm/yyyy"); ?>');
 		 $(id).focus();
 		 return false;
 	 }
@@ -130,7 +130,7 @@ function fnjs_comprobar_hora(id) {
   if(v_fecha.length==2 || v_fecha.length==3 )  {
      if(parseInt(v_fecha[0],10)>24 || (parseInt(v_fecha[0],10)<1))
      {
-        alert("<?php echo _("la hora no es correcta"); ?>");
+        alert("<?= _("la hora no es correcta"); ?>");
 		$(id).focus();
         return false;
      }
@@ -138,7 +138,7 @@ function fnjs_comprobar_hora(id) {
 	 var M=parseInt(v_fecha[1],10);
      if((M>60) || (M<0))
      {
-        alert("<?php echo _("los minutos no son correctos"); ?>"+M);
+        alert("<?= _("los minutos no son correctos"); ?>"+M);
 		$(id).focus();
         return false;
      }
@@ -147,7 +147,7 @@ function fnjs_comprobar_hora(id) {
   	  // pruebo de poner los minutos a 0
   	 if (v_fecha.length==1 && v_fecha[0]) {
   	 	if(parseInt(v_fecha[0],10)>24 || (parseInt(v_fecha[0],10)<1)) {
-  	 		alert("<?php echo _("El formato debe ser hh:mm"); ?>");
+  	 		alert("<?= _("El formato debe ser hh:mm"); ?>");
 		 	$(id).focus();
 		 	return false;
   	 	}
@@ -155,7 +155,7 @@ function fnjs_comprobar_hora(id) {
 		$(id).val(rta);
 		return true;
   	 } else {
-	     alert("<?php echo _("El formato debe ser hh:mm"); ?>");
+	     alert("<?= _("El formato debe ser hh:mm"); ?>");
 		 $(id).focus();
 		 return false;
 	 }

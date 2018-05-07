@@ -1,9 +1,8 @@
 <?php
-
-use asignaturas\model as asignaturas;
+use asignaturas\model\entity as asignaturas;
 use core\ConfigGlobal;
-use notas\model as notas;
-use ubis\model as ubis;
+use notas\model\entity as notas;
+use ubis\model\entity as ubis;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
@@ -19,9 +18,6 @@ use web\Posicion;
 *		
 */
 
-/**
-* Para asegurar que inicia la sesion, y poder acceder a los permisos
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -115,7 +111,7 @@ $i = 0;
 $a_valores = array();
 if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
 if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
-$obj = 'personas\\model\\'.$obj_pau;
+$obj = 'personas\\model\\entity\\'.$obj_pau;
 foreach ($aId_nom as $id_nom=>$aAsignaturas) {
 	$i++;
 	$oPersona = new $obj($id_nom);

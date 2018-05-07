@@ -1,0 +1,23 @@
+<h3 class=subtitulo><?= ucfirst($nom_activ) ?></h3>
+<form id="<?= $form ?>" name="<?= $form ?>" action="" method="post">
+<?= $oHashCa->getCamposHtml(); ?>
+<input type="hidden" id="mod<?= $ca_num ?>" name="mod" value="">
+<table><tr><td>
+<?= ucfirst(_("plan de estudios confirmado")); ?>
+<input type='Radio' id='est_ok' name='est_ok' value='t' <?= $chk_1 ?> onclick="fnjs_grabar_est(this.form,<?= $ca_num ?>)">
+<?= ucfirst(_("si")); ?>
+<input type='Radio' id='est_ok' name='est_ok' value='f' <?= $chk_2 ?> onclick="fnjs_grabar_est(this.form,<?= $ca_num ?>)">
+<?= ucfirst(_("no")) ?>
+</td></tr></table><br>
+<?= $oTabla->mostrar_tabla(); ?>
+<!--=================  boton añadir asignatura ===================-->
+<br>
+<table cellspacing=3  class=botones><tr class=botones>
+<td class=botones>
+	<input type="button" onclick="fnjs_update_div('#<?= $bloque ?>','<?= $link_add ?>');" value="<?= _("añadir asignatura"); ?>">
+</td>
+<!--=============== boton matricular automáticamente ============-->
+<td class=botones>
+	<input  type="button" onclick="fnjs_matricular(this.form,<?= $ca_num ?>);" value="<?=  _("matricular automáticamente"); ?>">
+</td>
+</tr></table></form>

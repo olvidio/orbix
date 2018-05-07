@@ -1,7 +1,7 @@
 <?php
-use asignaturas\model as asignaturas;
-use notas\model as notas;
-use personas\model as personas;
+use asignaturas\model\entity as asignaturas;
+use notas\model\entity as notas;
+use personas\model\entity as personas;
 
 /**
 * Esta página sirve para generar un cuadro con las asignaturas pendientes de todos los alumnos.
@@ -14,9 +14,6 @@ use personas\model as personas;
 *		
 */
 
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************

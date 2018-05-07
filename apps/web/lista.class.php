@@ -1,6 +1,6 @@
 <?php
 namespace web;
-use usuarios\model as usuarios;
+use usuarios\model\entity as usuarios;
 use core;
 //require_once ("classes/personas/ext_web_preferencias.class");
 /**
@@ -245,7 +245,8 @@ class Lista {
 		$a_cabeceras = $this->aCabeceras;
 		$a_valores = $this->aDatos;
 		$id_tabla = $this->sid_tabla;
-		$grid_width = '900px';
+		$grid_width = '900';
+		$grid_height = '400';
 
 		$sortcol=$this->ssortCol;
 		$botones="";
@@ -254,6 +255,7 @@ class Lista {
 		$clase="";
 		$chk="";
 		$b=0;
+		$height_botones=0;
 		if (empty($a_valores)) {
 			return	_("No hay ninguna fila");
 		}
@@ -289,7 +291,9 @@ class Lista {
 					$aColsWidth = $aPrefs['colWidths'];
 				}
 				// Anchura del grid
-				$grid_width = (!empty($aPrefs['widthGrid']))? $aPrefs['widthGrid'] : '900px';
+				$grid_width = (!empty($aPrefs['widthGrid']))? $aPrefs['widthGrid'] : '900';
+				// Altura del grid
+				$grid_height = (!empty($aPrefs['heightGrid']))? $aPrefs['heightGrid'] : '400';
 				break; // sale dell bucle.
 			} else { // buscar las opciones por defecto
 				continue;
@@ -460,12 +464,12 @@ class Lista {
 		$sData .= ']';
 
 		// calculo la altura de la tabla
-		if ($f < 12) {
-			$grid_height = (2+$f)*25; // +2 (cabecera y última linea en blanco). 25 = rowheight
+		if (empty($grid_height) && $f < 12) {
+			$grid_height = (4+$f)*25; // +4 (cabecera y última linea en blanco). 25 = rowheight
 			// mínimo, porque sino al deplegar el cuadro de búsqueda tapa tota la información
-			$grid_height = ($grid_height < 120)? 120 : $grid_height;
+			$grid_height = ($grid_height < 200)? 200 : $grid_height;
 		} else {
-			$grid_height = 350;
+			$grid_height = empty($grid_height)? 350 : $grid_height;
 		}
 	
 
@@ -606,6 +610,8 @@ class Lista {
 					if (isNaN(x) || isNaN(y)) {
 						x=x.toUpperCase();
 						y=y.toUpperCase();
+						x=fnjs_sin_acentos(x);
+						y=fnjs_sin_acentos(y);
 						return (x == y ? 0 : (x > y ? 1 : -1));
 					} else {
 						int_a=parseInt(a[sortcol],10);
@@ -729,14 +735,13 @@ class Lista {
 					searchString = this.value;
 					updateFilter();
 				});
-				
-			function updateFilter() {
-				dataView_$id_tabla.setFilterArgs({
-					searchString: searchString
-				});
-				dataView_$id_tabla.refresh();
-			}
 
+				function updateFilter() {
+					dataView_$id_tabla.setFilterArgs({
+						searchString: searchString
+					});
+					dataView_$id_tabla.refresh();
+				}
 			";
 
 		if ($sortcol) {
@@ -759,12 +764,17 @@ class Lista {
 		if ($bPanelVis) { $tt .= "toggleFilterRow_$id_tabla();"; }
 		
 		$tt .= "
-			})
+			var container = $(grid_$id_tabla.getContainerNode());
+			var h_header =  $('.grid-header').height();
+			var vph = $grid_height - h_header;
+			container.height(vph); 
+			grid_$id_tabla.resizeCanvas();
+		  })
 		</script>
 		";
 
 
-		$tt.="<div id=\"GridContainer_".$id_tabla."\"  style=\"width:$grid_width;\" >
+		$tt.="<div id=\"GridContainer_".$id_tabla."\"  style=\"width:{$grid_width}px; height:{$grid_height}px;\" >
 		<div class=\"grid-header\">
 		  <span style=\"width:90%; display: inline-block;\">$botones</span>
 		  <span style=\"float:right\" class=\"ui-icon ui-icon-disk\" title=\""._('guardar selección de columnas')."\"
@@ -772,9 +782,8 @@ class Lista {
 		  <span style=\"float:right\" class=\"ui-icon ui-icon-search\" title=\""._('ver/ocultar panel de busqueda')."\"
 				onclick=\"toggleFilterRow_$id_tabla()\"></span>
 		</div>
-		<div id=\"grid_$id_tabla\"  style=\"width:$grid_width; height:$grid_height\"></div>
+		<div id=\"grid_$id_tabla\"  style=\"width:{$grid_width}px;\"></div>
 		";
-		//$tt.="<div id=\"pager\" style=\"height:20px;\"></div>";
 		$tt.="</div>";
 
 		$tt.="

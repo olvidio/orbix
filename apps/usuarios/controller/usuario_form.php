@@ -1,8 +1,8 @@
 <?php
-use usuarios\model as usuarios;
-use permisos\model as permisos;
-use personas\model as personas;
-use ubis\model as ubis;
+use usuarios\model\entity as usuarios;
+use permisos\model\entity as permisos;
+use personas\model\entity as personas;
+use ubis\model\entity as ubis;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -14,8 +14,22 @@ use ubis\model as ubis;
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-echo $oPosicion->mostrar_left_slide();
+$oPosicion->recordar();
 
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	$id_activ = strtok($a_sel[0],"#");
+	$id_asignatura=strtok("#");
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$oPosicion->addParametro('id_sel',$a_sel,1);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
+	if (!empty($go_to)) {
+		// add stack:
+		$stack = $oPosicion->getStack(1);
+		$go_to .= "&stack=$stack";
+	}
+}
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miRole=$oMiUsuario->getId_role();
 $miSfsv = core\ConfigGlobal::mi_sfsv();
@@ -23,8 +37,8 @@ $miSfsv = core\ConfigGlobal::mi_sfsv();
 $id_usuario = empty($_POST['id_usuario'])? '' : $_POST['id_usuario'];
 $quien = empty($_POST['quien'])? '' : $_POST['quien'];
 
-if ($quien=='usuario') $obj = 'usuarios\\model\\Usuario';
-if ($quien=='grupo') $obj = 'usuarios\\model\\Grupo';
+if ($quien=='usuario') $obj = 'usuarios\\model\\entity\\Usuario';
+if ($quien=='grupo') $obj = 'usuarios\\model\\entity\\Grupo';
 
 if( (core\ConfigGlobal::is_app_installed('avisos')) && (!empty($id_usuario)) && ($quien == 'usuario') ) {
 
@@ -268,6 +282,7 @@ if ($miRole < 4) {
 	$oHash1->setCamposNo('scroll_id'); 
 	$h1 = $oHash1->linkSinVal();
 
+	echo $oPosicion->mostrar_left_slide(1);
 	?>
 	<style type="text/css">
 	input {
@@ -294,7 +309,7 @@ if ($miRole < 4) {
 		background-color: #bcfcb1;
 		}
 	</style>
-	<script type='text/javascript' src='<?php echo core\ConfigGlobal::$web_scripts.'/jquery.password_strength.js'; ?>'></script>
+	<script type='text/javascript' src='<?= core\ConfigGlobal::$web_scripts.'/jquery.password_strength.js'; ?>'></script>
 	<script>
 	var strong = 0;
 	algo=function(level) {
@@ -314,7 +329,7 @@ if ($miRole < 4) {
 	fnjs_actualizar_permisos=function(){
 		/* obtener el listado de periodos */
 		var url='<?= core\ConfigGlobal::getWeb() ?>/des/activ_sacd_ajax.php';
-		var parametros='que=get&id_activ='+id_activ+'&PHPSESSID=<?php echo session_id(); ?>';
+		var parametros='que=get&id_activ='+id_activ+'&PHPSESSID=<?= session_id(); ?>';
 			 
 		$.ajax({
 			url: url,
@@ -322,7 +337,7 @@ if ($miRole < 4) {
 			data: parametros,
 			success: function (rta) {
 				rta2=jQuery.parseJSON(rta);
-				if (rta2.error) { alert("<?php echo _("No es de este año, ni del año pasado"); ?>"); s=1; }
+				if (rta2.error) { alert("<?= _("No es de este año, ni del año pasado"); ?>"); s=1; }
 				if (rta2.txt) {
 					/* añadir debajo de la actividad */
 					var txt_id='#'+id_activ+'_sacds';
@@ -334,7 +349,7 @@ if ($miRole < 4) {
 
 	fnjs_add_grup=function(){
 		var url='<?= $url_usuario_ajax ?>';
-		var parametros='que=grupo_lst&id_usuario=<?= $id_usuario ?><?= $h1 ?>&PHPSESSID=<?php echo session_id(); ?>';
+		var parametros='que=grupo_lst&id_usuario=<?= $id_usuario ?><?= $h1 ?>&PHPSESSID=<?= session_id(); ?>';
 			 
 		$.ajax({
 			url: url,
@@ -350,7 +365,7 @@ if ($miRole < 4) {
 
 	fnjs_del_grup=function(){
 		var url='<?= $url_usuario_ajax ?>';
-		var parametros='que=grupo_del_lst&id_usuario=<?= $id_usuario ?><?= $h1 ?>&PHPSESSID=<?php echo session_id(); ?>';
+		var parametros='que=grupo_del_lst&id_usuario=<?= $id_usuario ?><?= $h1 ?>&PHPSESSID=<?= session_id(); ?>';
 			 
 		$.ajax({
 			url: url,
@@ -452,7 +467,7 @@ if ($miRole < 4) {
 		?>
 			<!--  --------------- Sacd --------------- -->
 			<tr>
-				<td class=etiqueta><?php echo _("sacd"); ?>:</td>	
+				<td class=etiqueta><?= _("sacd"); ?>:</td>	
 			<td colspan=8 id="col_sacd">
 			<?php
 			echo $oSelects->desplegable();
@@ -462,7 +477,7 @@ if ($miRole < 4) {
 		?>
 			<!--  --------------- CENTROS --------------- -->
 			<tr>
-				<td class=etiqueta><?php echo _("centro"); ?>:</td>	
+				<td class=etiqueta><?= _("centro"); ?>:</td>	
 			<td colspan=8 id="col_centros">
 			<?php
 			echo $oSelects->desplegable();
@@ -472,7 +487,7 @@ if ($miRole < 4) {
 		?>
 			<!--  --------------- CASAS --------------- -->
 			<tr>
-				<td class=etiqueta><?php echo _("casas"); ?>:</td>	
+				<td class=etiqueta><?= _("casas"); ?>:</td>	
 			<td colspan=8 id="col_casas">
 			<?php
 			echo $oSelects->ListaSelects();
@@ -680,7 +695,7 @@ if (!empty($id_usuario)) { // si no hay usuario, no puedo poner permisos.
 				switch (formulario) {
 					case '#permisos_menu':
 					case '#permisos':
-						if (confirm("<?php echo _("¿Esta seguro que desea borrar este permiso?");?>") ) {
+						if (confirm("<?= _("¿Esta seguro que desea borrar este permiso?");?>") ) {
 							id_usuario=$('#id_usuario').val();
 							if (formulario == '#permisos_menu') {
 								$('#que').val('perm_menu_eliminar');
@@ -712,7 +727,7 @@ if (!empty($id_usuario)) { // si no hay usuario, no puedo poner permisos.
 						}
 						break;
 					case '#avisos':
-						if (confirm("<?php echo _("¿Esta seguro que desea borrar este aviso?");?>") ) {
+						if (confirm("<?= _("¿Esta seguro que desea borrar este aviso?");?>") ) {
 							$('#av_que').val('aviso_eliminar');
 							go='<?= web\Hash::link('apps/usuarios/controller/usuario_form.php?'.http_build_query(array('quien'=>'usuario','id_usuario'=>$id_usuario))) ?>';
 							$(formulario).attr('action',"apps/usuarios/controller/usuario_aviso_update.php");

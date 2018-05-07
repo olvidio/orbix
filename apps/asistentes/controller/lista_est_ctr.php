@@ -1,10 +1,10 @@
 <?php 
-use actividades\model as actividades;
-use actividadestudios\model as actividadestudios;
-use asignaturas\model as asignaturas;
-use asistentes\model as asistentes;
-use personas\model as personas;
-use ubis\model as ubis;
+use actividades\model\entity as actividades;
+use actividadestudios\model\entity as actividadestudios;
+use asignaturas\model\entity as asignaturas;
+use asistentes\model\entity as asistentes;
+use personas\model\entity as personas;
+use ubis\model\entity as ubis;
 /**
 * Listado del plan de estudios por ctr
 *
@@ -19,9 +19,6 @@ use ubis\model as ubis;
 */
 
 
-/**
-* Funciones más comunes de la aplicación
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************

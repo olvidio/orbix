@@ -1,8 +1,5 @@
 <?php
-use ubis\model as ubis;
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
+use ubis\model\entity as ubis;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -30,25 +27,25 @@ $oHash->setArraycamposHidden($a_camposHidden);
 <form id="frm_dir_que" name="frm_dir_que" action="apps/ubis/controller/direcciones_tabla.php" method="POST" onkeypress="fnjs_enviar(event,this);" >
 <?= $oHash->getCamposHtml(); ?>
 <table>
-<thead><th class=titulo_inv colspan=4><?php echo $tituloGros; ?></th></thead>
+<thead><th class=titulo_inv colspan=4><?= $tituloGros; ?></th></thead>
 <tfoot>
 <tr>
-	<th colspan=4><input type="button" id="ok" name="ok" onclick="fnjs_enviar_formulario('#frm_dir_que','#ficha_ubis');" value="<?php echo ucfirst(_("buscar")); ?>" class="btn_ok">
-	<input TYPE="reset" value="<?php echo ucfirst(_("borrar")); ?>"></th>
+	<th colspan=4><input type="button" id="ok" name="ok" onclick="fnjs_enviar_formulario('#frm_dir_que','#ficha');" value="<?= ucfirst(_("buscar")); ?>" class="btn_ok">
+	<input TYPE="reset" value="<?= ucfirst(_("borrar")); ?>"></th>
 </tr>
 </tfoot>
 <tbody>
 <tr>
-	<td class=etiqueta><?php echo ucfirst(_("código Postal")); ?></td>
+	<td class=etiqueta><?= ucfirst(_("código Postal")); ?></td>
 	<td><input class=contenido id=c_p name=c_p ></td>	 
 </tr>
 <tr>
-	<td class=etiqueta><?php echo ucfirst(_("población")); ?></td>
+	<td class=etiqueta><?= ucfirst(_("población")); ?></td>
 	<td><input class=contenido id=ciudad name=ciudad ></td>	
 </tr>
 <?php if ($tipo_ubi=="ctrex" or $tipo_ubi=="cdcex") { ?>
 <tr>
-	<td class=etiqueta><?php echo ucfirst(_("país")); ?></td>
+	<td class=etiqueta><?= ucfirst(_("país")); ?></td>
 	<td colspan="2"><input class=contenido id=pais name=pais ></td></tr>
 <?php } else { ?>
 	<input type=hidden id=pais name=pais ></td></tr>

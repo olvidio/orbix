@@ -43,7 +43,7 @@ fnjs_ver_dir=function(){
 
 fnjs_ver_documento=function(id_direccion){
 	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/ubis/controller/plano_bytea.php';
-	var parametros='act=comprobar&id_direccion='+id_direccion+'&PHPSESSID=<?php echo session_id(); ?>';
+	var parametros='act=comprobar&id_direccion='+id_direccion+'&PHPSESSID=<?= session_id(); ?>';
 		 
 	$.ajax({
 		url: url,
@@ -53,7 +53,7 @@ fnjs_ver_documento=function(id_direccion){
 				//alert ('respuesta: '+rta);
 				//rta_txt=rta.responseText;
 				seguro=0;
-				if (rta=='no') { alert("<?php echo _("No existe ningún documento"); ?>"); } else { seguro=1; }
+				if (rta=='no') { alert("<?= _("No existe ningún documento"); ?>"); } else { seguro=1; }
 			},
 		complete: function() { 
 			if (seguro) { 
@@ -85,7 +85,7 @@ fnjs_otro=function(n){
 	if (n==2) { 
 		go_dir=go_dir+'&inc=mas';
 	}
-	fnjs_update_div('#ficha_ubis',go_dir)
+	fnjs_update_div('#ficha',go_dir)
 }
 </script>
 <?php if (!empty($menos)) { ?>

@@ -1,8 +1,5 @@
 <?php
-use usuarios\model as usuarios;
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
+use usuarios\model\entity as usuarios;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************

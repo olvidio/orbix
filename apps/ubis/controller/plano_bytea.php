@@ -5,9 +5,6 @@
 *
 */
 
-/**
-* En el fichero config tenemos las variables genéricas del sistema
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -141,7 +138,7 @@ case "download":
     ob_clean();
     flush();
 	echo fpassthru($plano_doc);
-	exit;
+	die();
 break;
 case 'adjuntar': 
 	$titulo=_("introducir documento");
@@ -149,14 +146,14 @@ case 'adjuntar':
 	$act="upload";
 	?>
 	<!-- jQuery -->
-	<script type="text/javascript" src='<?php echo core\ConfigGlobal::$web_scripts.'/jquery-ui-latest/js/jquery-1.7.1.min.js'; ?>'></script>
+	<script type="text/javascript" src='<?= core\ConfigGlobal::$web_scripts.'/jquery-ui-latest/js/jquery-1.7.1.min.js'; ?>'></script>
 
 	<script>
 	fnjs_introducir=function(){
 		var id_direccion=$('#id_direccion').val();
 
 		var url='<?= core\ConfigGlobal::getWeb() ?>/apps/ubis/controller/plano_bytea.php';
-		var parametros='act=comprobar&id_direccion='+id_direccion+'&PHPSESSID=<?php echo session_id(); ?>';
+		var parametros='act=comprobar&id_direccion='+id_direccion+'&PHPSESSID=<?= session_id(); ?>';
 			 
 		$.ajax({
 			url: url,
@@ -165,7 +162,7 @@ case 'adjuntar':
 			success: function (rta) {
 					//alert ('respuesta: '+rta);
 					//rta_txt=rta.responseText;
-					if (rta=='si') { seguro=confirm("<?php echo _("Ya existe un escrito. ¿Desea reemplazarlo?"); ?>"); } else { seguro=1; }
+					if (rta=='si') { seguro=confirm("<?= _("Ya existe un escrito. ¿Desea reemplazarlo?"); ?>"); } else { seguro=1; }
 				},
 			complete: function() { 
 				if (seguro) { 

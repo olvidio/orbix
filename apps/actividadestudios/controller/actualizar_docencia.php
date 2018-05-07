@@ -1,9 +1,9 @@
 <?php
-use actividades\model as actividades;
-use actividadestudios\model as actividadestudios;
-use notas\model as notas;
-use personas\model as personas;
-use profesores\model as profesores;
+use actividades\model\entity as actividades;
+use actividadestudios\model\entity as actividadestudios;
+use notas\model\entity as notas;
+use personas\model\entity as personas;
+use profesores\model\entity as profesores;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -18,15 +18,14 @@ use profesores\model as profesores;
  * Se cogen los ca marcados como terminados (así se copia el acta...)
  */
 
-$continuar = (string)  filter_input(INPUT_POST, 'continuar');
+$continuar = (integer)  filter_input(INPUT_POST, 'continuar');
+
  if (empty($continuar)) {
-	 $html = "<br><h3>"._("Actualización de los datos de docencia")."</h3>";
-	 $html .=  "<p>";
-	 $html .= _("Esta acción llenará el dossier de actividad docente con los datos de los cursos anuales. Sólo se tendrán en cuenta los ca que se han marcado como terminados. Así nos aseguramos de copiar todos los datos (actas...)");
-	 $html .=  "</p>";
-	 $html .=  "<span class=link onclick=fnjs_update_div('main','apps/actividadestudios/controller/actualizar_docencia.php?continuar=1')>";
-	 $html .= _("continuar");
-	 $html .= "</span></p>";
+	$aQuery = array('continuar'=> 1);
+	$pagina=web\Hash::link('apps/actividadestudios/controller/actualizar_docencia.php?'.http_build_query($aQuery));
+	$a_campos = array('mod'=>'inicio',
+					'pagina' => $pagina
+ 				);
  } else {
 	// seleccionar las posibles actividades:
 	$any=date("Y");
@@ -80,7 +79,10 @@ $continuar = (string)  filter_input(INPUT_POST, 'continuar');
 			$oProfesorDocencia->DBGuardar();
 		}	
 	}
-	$html = _("ya está");
+
+	$a_campos = array('mod'=>'fin',
+				);
 }
 
-echo $html;
+$oView = new core\View('actividadestudios/controller');
+echo $oView->render('actualizar_docencia.phtml',$a_campos);

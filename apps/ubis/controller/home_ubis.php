@@ -1,7 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
-use ubis\model as ubis;
+use ubis\model\entity as ubis;
 use web\Hash;
 use web\Posicion;
 /**
@@ -44,13 +44,6 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 	empty($_POST['id_ubi'])? $id_ubi="" : $id_ubi=$_POST['id_ubi'];
 }
 
-// si vengo de los listados se scdl
-if (isset($_SESSION['session_go_to']) ) {
-	//$go_atras=$_SESSION['session_go_to']['sel']['go_atras'];
-	$go_atras='';
-} else {
-	$go_atras='apps/ubis/controller/ubis_tabla.php';
-}
 
 $oUbi = ubis\Ubi::NewUbi($id_ubi);
 $nombre_ubi=$oUbi->getNombre_ubi();
@@ -122,7 +115,7 @@ switch ($tipo_ubi) {
 }
 
 $gohome=Hash::link('apps/ubis/controller/home_ubis.php?'.http_build_query(array('id_ubi'=>$id_ubi,'obj_pau'=>$obj_pau))); 
-$godossiers=Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau,'go_atras'=>$go_atras)));
+$godossiers=Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau)));
 
 $go_ubi=Hash::link('apps/ubis/controller/ubis_editar.php?'.http_build_query(array('id_ubi'=>$id_ubi,'obj_pau'=>$obj_pau)));
 $go_dir=Hash::link('apps/ubis/controller/direcciones_editar.php?'.http_build_query(array('id_ubi'=>$id_ubi,'id_direccion'=>$id_direccion,'obj_dir'=>$obj_dir))); 
@@ -139,7 +132,7 @@ $mails = $oUbi->getTeleco("e-mail","*"," / ") ;
 
 echo $oPosicion->mostrar_left_slide(1);
 ?>
-<div id="top_ubis" name="top_ubis">
+<div id="top" name="top">
 <table border=1><tr>
 <?php if (ConfigGlobal::$ubicacion == 'int') { ?>
 <td>
@@ -153,13 +146,13 @@ echo $oPosicion->mostrar_left_slide(1);
 <tr><td colspan=4>fax: <?= $fax ?></td></tr>
 <tr><td colspan=4>e-mails: <?= $mails ?></td></tr>
 <tr><th colspan=4><?= ucfirst(_("editar")) ?>: 
-		&nbsp;<span class="link_inv" onclick="fnjs_update_div('#ficha_ubis','<?= $go_ubi ?>');"><?= $ubi ?></span>
-		&nbsp;&nbsp;<span class="link_inv" onclick="fnjs_update_div('#ficha_ubis','<?= $go_dir ?>');"><?= _("dirección") ?></span>
-		&nbsp;&nbsp;<span class="link_inv" onclick="fnjs_update_div('#ficha_ubis','<?= $go_tel ?>');"><?= _("telecos") ?></span>
+		&nbsp;<span class="link_inv" onclick="fnjs_update_div('#ficha','<?= $go_ubi ?>');"><?= $ubi ?></span>
+		&nbsp;&nbsp;<span class="link_inv" onclick="fnjs_update_div('#ficha','<?= $go_dir ?>');"><?= _("dirección") ?></span>
+		&nbsp;&nbsp;<span class="link_inv" onclick="fnjs_update_div('#ficha','<?= $go_tel ?>');"><?= _("telecos") ?></span>
 		</th></tr>
 </table>
 </div>
-<div id="ficha_ubis" name="ficha_ubis">
+<div id="ficha" name="ficha">
 <?php
 if (ConfigGlobal::$ubicacion == 'int') {
 	include ("apps/dossiers/controller/lista_dossiers.php");

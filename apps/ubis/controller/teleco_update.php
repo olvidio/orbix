@@ -1,6 +1,6 @@
 ﻿<?php
-use usuarios\model as usuarios;
-use ubis\model as ubis;
+use usuarios\model\entity as usuarios;
+use ubis\model\entity as ubis;
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
 */
@@ -17,16 +17,16 @@ $miSfsv=core\ConfigGlobal::mi_sfsv();
 
 switch ($_POST['obj_pau']) {
 	case 'CentroDl':
-		$obj = 'ubis\\model\\TelecoCtrDl';
+		$obj = 'ubis\\model\\entity\\TelecoCtrDl';
 		break;
 	case 'CentroEx':
-		$obj = 'ubis\\model\\TelecoCtrEx';
+		$obj = 'ubis\\model\\entity\\TelecoCtrEx';
 		break;
 	case 'CasaDl':
-		$obj = 'ubis\\model\\TelecoCdcDl';
+		$obj = 'ubis\\model\\entity\\TelecoCdcDl';
 		break;
 	case 'CasaEx':
-		$obj = 'ubis\\model\\TelecoCdcEx';
+		$obj = 'ubis\\model\\entity\\TelecoCdcEx';
 		break;
 }
 
@@ -42,9 +42,8 @@ switch ($_POST['mod']) {
 		if ($oUbi->DBEliminar() === false) {
 			echo _('Hay un error, no se ha eliminado');
 		}
-		$oPosicion->setId_div('ir_a');
-		echo $oPosicion->mostrar_left_slide();
-		exit;
+		echo $oPosicion->go_atras(1);
+		die();
 		break;
 	case 'teleco':
 		$oUbi = new $obj($_POST['id_item']);
@@ -89,6 +88,4 @@ foreach ($cDatosCampo as $oDatosCampo) {
 $oUbi->setAllAtributes($a_values_o);
 $oUbi->DBGuardar();
 
-$oPosicion->setId_div('ir_a');
-echo $oPosicion->mostrar_left_slide();
-?>
+echo $oPosicion->go_atras(1);

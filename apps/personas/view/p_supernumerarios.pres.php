@@ -156,7 +156,7 @@ echo "<td>";
 		$f_dl=date("d/m/Y");
 		?>	
 		Delegación de procedencia:		
-		<select class=contenido name="dl_<?php echo $tabla[$f].$r; ?>" title="<?php echo $dl_help; ?>" >
+		<select class=contenido name="dl_<?= $tabla[$f].$r; ?>" title="<?= $dl_help; ?>" >
 		<option></option>
 		<?php
 		foreach ($oDBSt_q_dl_es->fetchAll() as $row_dl) {
@@ -185,8 +185,8 @@ echo "<td>";
 echo "</td>";
 echo dibujar_campo("lengua",3,1,1);
 ?>
-<td><span class=etiqueta ondblclick="fnjs_help('<?php echo $nacionalidad_help_ref; ?>')" ><?php echo ucfirst($nacionalidad_etiqueta); ?></span></td>
-<td><select class=contenido name="nacionalidad_<?php echo $tabla[$f].$r; ?>" title="<?php echo $nacionalidad_help; ?>">
+<td><span class=etiqueta ondblclick="fnjs_help('<?= $nacionalidad_help_ref; ?>')" ><?= ucfirst($nacionalidad_etiqueta); ?></span></td>
+<td><select class=contenido name="nacionalidad_<?= $tabla[$f].$r; ?>" title="<?= $nacionalidad_help; ?>">
 <option value=""></option>
 <?php
 $i=0;
@@ -201,8 +201,8 @@ echo "</select></td></tr>";
 echo "<tr>";
 echo dibujar_campo("santo",4,1,1);
 ?>
-<td><span class=etiqueta ondblclick="fnjs_help('<?php echo $celebra_help_ref; ?>')" ><?php echo ucfirst($celebra_etiqueta); ?></span>
-	<select class=contenido name="celebra_<?php echo $tabla[$f].$r; ?>" title="<?php echo $celebra_help; ?>">
+<td><span class=etiqueta ondblclick="fnjs_help('<?= $celebra_help_ref; ?>')" ><?= ucfirst($celebra_etiqueta); ?></span>
+	<select class=contenido name="celebra_<?= $tabla[$f].$r; ?>" title="<?= $celebra_help; ?>">
 		<option value="c" <?php if ($celebra=="c") { echo "selected"; } ?> >c</option>
 		<option value="s" <?php if ($celebra=="s") { echo "selected"; } ?> >s</option>
 	</select>
@@ -225,10 +225,10 @@ echo dibujar_campo("provincia_n",15,1,1);
 echo "</tr><tr>";
 echo dibujar_campo("f_fichero",11,1,1);
 ?>
-	<td><span class=etiqueta ondblclick="fnjs_help('<?php echo $fichero_help_ref; ?>')" ><?php echo ucfirst($fichero_etiqueta); ?></span>
+	<td><span class=etiqueta ondblclick="fnjs_help('<?= $fichero_help_ref; ?>')" ><?= ucfirst($fichero_etiqueta); ?></span>
 	</td>
 	<td>
-	<select class=contenido name="fichero_<?php echo $tabla[$f].$r; ?>" title="<?php echo $fichero_help; ?>">
+	<select class=contenido name="fichero_<?= $tabla[$f].$r; ?>" title="<?= $fichero_help; ?>">
 			<?php
 			$sql_t_fichero="SELECT u.fichero,u.nombre_fichero FROM xp_fichero u 
 							ORDER BY u.fichero ";
@@ -274,12 +274,12 @@ echo dibujar_campo("f_fichero",11,1,1);
 <!--
 ------------------- INCOPORACIONES ------------------------ 
 
-<input class=contenido type="hidden" name="ctr_<?php echo $tabla[$f].$r; ?>" value="<?php echo $ctr ?>" title="<?php echo $ctr_help; ?>">
-<input class=contenido type="hidden" name="ctr_cr_<?php echo $tabla[$f].$r; ?>" value="<?php echo $ctr_cr ?>" title="<?php echo $ctr_cr_help; ?>"></td></tr>
+<input class=contenido type="hidden" name="ctr_<?= $tabla[$f].$r; ?>" value="<?= $ctr ?>" title="<?= $ctr_help; ?>">
+<input class=contenido type="hidden" name="ctr_cr_<?= $tabla[$f].$r; ?>" value="<?= $ctr_cr ?>" title="<?= $ctr_cr_help; ?>"></td></tr>
 -->
 
-<input class=contenido type="hidden" name="id_ctr_<?php echo $tabla[$f].$r; ?>" value="<?php echo $id_ctr ?>" title="<?php echo $id_ctr_help; ?>">
-<input class=contenido type="hidden" name="id_ctr_cr_<?php echo $tabla[$f].$r; ?>" value="<?php echo $id_ctr_cr ?>" title="<?php echo $id_ctr_cr_help; ?>">
+<input class=contenido type="hidden" name="id_ctr_<?= $tabla[$f].$r; ?>" value="<?= $id_ctr ?>" title="<?= $id_ctr_help; ?>">
+<input class=contenido type="hidden" name="id_ctr_cr_<?= $tabla[$f].$r; ?>" value="<?= $id_ctr_cr ?>" title="<?= $id_ctr_cr_help; ?>">
 
 <table id="incorporaciones" border=1 style='display:none;'>
 <tr><td class=titulo colspan="5"><?php print(strtoupper(_("incorporaciones"))); ?></td></tr>
@@ -322,7 +322,7 @@ echo "</table>";
 		$oDBSt_q_ctrs=$oDB->query($query_ctrs);
 		?>
 		Centro-sede:
-		<select class=contenido name="id_ctr_<?php echo $tabla[$f].$r; ?>" id="id_ctr" onchange="fnjs_act_ctr('ctr')">
+		<select class=contenido name="id_ctr_<?= $tabla[$f].$r; ?>" id="id_ctr" onchange="fnjs_act_ctr('ctr')">
 		<option></option>
 		<?php
 		foreach ($oDBSt_q_ctrs->fetchAll() as $row) {
@@ -331,9 +331,9 @@ echo "</table>";
 		$a_valores_campo=$GLOBALS['a_campos']["f_ctr"];
 		?>
 		</select></td>			
-		<input class=contenido type="hidden" name="ctr_<?php echo $tabla[$f].$r; ?>" id="ctr" value="w">
-		<td colspan="3"><span class=etiqueta ondblclick="fnjs_help('<?php echo $a_valores_campo["help_ref"]; ?>')" ><?php echo ucfirst($a_valores_campo["etiqueta"])."&nbsp;"; ?></span>
-		<input class=fecha name="f_ctr_<?php echo $tabla[$f].$r; ?>" id="f_ctr" size=11 value="<?php echo $a_valores_campo["valor"] ?>" title="<?php echo $a_valores_campo["help"]; ?>"></td>
+		<input class=contenido type="hidden" name="ctr_<?= $tabla[$f].$r; ?>" id="ctr" value="w">
+		<td colspan="3"><span class=etiqueta ondblclick="fnjs_help('<?= $a_valores_campo["help_ref"]; ?>')" ><?= ucfirst($a_valores_campo["etiqueta"])."&nbsp;"; ?></span>
+		<input class=fecha name="f_ctr_<?= $tabla[$f].$r; ?>" id="f_ctr" size=11 value="<?= $a_valores_campo["valor"] ?>" title="<?= $a_valores_campo["help"]; ?>"></td>
 		<?php
 	} else {
 		echo "<span class=link onclick=\"fnjs_update_div('#main','$ir_a_traslado');\">&nbsp;Centro-sede:&nbsp;</span>";
@@ -351,7 +351,7 @@ echo "<td>";
 		$oDBSt_q_ctrs=$oDB->query($query_ctrs);
 		?>
 		Centro-cr:
-		<select class=contenido name="id_ctr_cr_<?php echo $tabla[$f].$r; ?>" id="id_ctr_cr" onchange="fnjs_act_ctr('ctr_cr')">
+		<select class=contenido name="id_ctr_cr_<?= $tabla[$f].$r; ?>" id="id_ctr_cr" onchange="fnjs_act_ctr('ctr_cr')">
 		<option></option>
 		<?php
 		foreach ($oDBSt_q_ctrs->fetchAll() as $row) {
@@ -360,9 +360,9 @@ echo "<td>";
 		$a_valores_campo=$GLOBALS['a_campos']["f_ctr_cr"];
 		?>
 		</select></td>			
-		<input class=contenido type="hidden" name="ctr_cr_<?php echo $tabla[$f].$r; ?>" id="ctr_cr" value="ee">
-		<td colspan="3"><span class=etiqueta ondblclick="fnjs_help('<?php echo $a_valores_campo["help_ref"]; ?>')" ><?php echo ucfirst($a_valores_campo["etiqueta"])."&nbsp;"; ?></span>
-		<input class=fecha name="f_ctr_cr_<?php echo $tabla[$f].$r; ?>" id="f_ctr_cr" size=11 value="<?php echo $a_valores_campo["valor"] ?>" title="<?php echo $a_valores_campo["help"]; ?>"></td>
+		<input class=contenido type="hidden" name="ctr_cr_<?= $tabla[$f].$r; ?>" id="ctr_cr" value="ee">
+		<td colspan="3"><span class=etiqueta ondblclick="fnjs_help('<?= $a_valores_campo["help_ref"]; ?>')" ><?= ucfirst($a_valores_campo["etiqueta"])."&nbsp;"; ?></span>
+		<input class=fecha name="f_ctr_cr_<?= $tabla[$f].$r; ?>" id="f_ctr_cr" size=11 value="<?= $a_valores_campo["valor"] ?>" title="<?= $a_valores_campo["help"]; ?>"></td>
 		<?php
 	} else {
 		echo "<span class=link onclick=\"fnjs_update_div('#main','$ir_a_traslado');\">&nbsp;Centro-cr:&nbsp;</span>";
@@ -404,7 +404,7 @@ echo "</tr><tr>";
 $a_valores_campo=$GLOBALS['a_campos']["cfi"];
 echo "<td><span class=etiqueta ondblclick=\"fnjs_help('$cfi_help_ref')\" >".ucfirst($a_valores_campo["etiqueta"])."&nbsp;</span>";
 ?>
-<input class=contenido name="cfi_<?php echo $tabla[$f].$r; ?>" type=checkbox   <?php if ($cfi=='t'){ echo "checked";} ?> title="<?php echo $cfi_help; ?>"></td>
+<input class=contenido name="cfi_<?= $tabla[$f].$r; ?>" type=checkbox   <?php if ($cfi=='t'){ echo "checked";} ?> title="<?= $cfi_help; ?>"></td>
 <?php
 echo dibujar_campo("f_cfi",11,2,1);
 echo "</tr><tr>";
@@ -425,7 +425,7 @@ echo "</tr><tr>";
 $a_valores_campo=$GLOBALS['a_campos']["estado"];
 echo "<td colspan=2><span class=etiqueta ondblclick=\"fnjs_help('$estado_help_ref')\" >".ucfirst($a_valores_campo["etiqueta"])."&nbsp;</span>";
 ?>
-	<select class=contenido name="estado_<?php echo $tabla[$f].$r; ?>" title="<?php echo $estado_help; ?>">
+	<select class=contenido name="estado_<?= $tabla[$f].$r; ?>" title="<?= $estado_help; ?>">
 		<option selected></option>
 		<option value="s" <?php if ($estado=="s") { echo "selected"; } ?> >s</option>
 		<option value="c" <?php if ($estado=="c") { echo "selected"; } ?> >c</option>

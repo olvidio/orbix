@@ -20,7 +20,7 @@ $a_persona_orbix = array();
 $i = 0;
 foreach ($a_ids_desaparecidos_de_listas as $id_nom_orbix) {
 	$i++;
-	$oPersonaDl = new personas\model\PersonaDl($id_nom_orbix);
+	$oPersonaDl = new personas\model\entity\PersonaDl($id_nom_orbix);
 
 	$a_persona_orbix[$i]['id_nom_orbix'] = $id_nom_orbix;
 	$a_persona_orbix[$i]['ape_nom'] = $oPersonaDl->getApellidosNombre();
@@ -41,7 +41,7 @@ $txt_alert =_("Se va a poner la fecha de hoy como fecha de baja. Para cambiarlo 
 <script>
 fnjs_baja=function(id_orbix,fila){
 	var url='<?= $url_sincro_ajax ?>';
-	var parametros='que=baja&id_nom_orbix='+id_orbix+'&tipo_persona=<?= $tipo_persona ?><?= $h ?>&PHPSESSID=<?php echo session_id(); ?>';
+	var parametros='que=baja&id_nom_orbix='+id_orbix+'&tipo_persona=<?= $tipo_persona ?><?= $h ?>&PHPSESSID=<?= session_id(); ?>';
 			 
 	alert ("<?= $txt_alert ?>");
 

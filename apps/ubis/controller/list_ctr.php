@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
-use ubis\model as ubis;
-use usuarios\model as usuarios;
+use ubis\model\entity as ubis;
+use usuarios\model\entity as usuarios;
 use web\Desplegable;
 use web\Hash;
 use web\Lista;
@@ -23,9 +23,6 @@ use web\Posicion;
 * idénticas a las que realizamos en submenú "buscar" 
 *
 * Se tiene en cuenta si es una vuelta de un go_to	
-*/
-/**
-* En el fichero config tenemos las variables genéricas del sistema
 */
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -328,19 +325,19 @@ fnjs_left_side_hide();
 </script>
 <form id=modifica name=modifica method="POST">
 <?= $oHash->getCamposHtml(); ?>
-<h3><?php echo ucfirst(_("listado de centros o casas")); ?></h3>
+<h3><?= ucfirst(_("listado de centros o casas")); ?></h3>
 <table>
 <tr>
 <td class=etiqueta>
-<?php echo ucfirst(_("localizacion")); ?>
+<?= ucfirst(_("localizacion")); ?>
 </td>
 <td>
-<?php echo $oDesplDl->desplegable(); ?>
+<?= $oDesplDl->desplegable(); ?>
 <td class=etiqueta>
-<?php echo ucfirst(_("tipo de ubi")); ?>
+<?= ucfirst(_("tipo de ubi")); ?>
 </td>
 <td class=contenido>
-<?php echo $oDesplLista->desplegable(); ?>
+<?= $oDesplLista->desplegable(); ?>
 </td>
 <td>
 <input type="button" value="listar" onclick="fnjs_actualizar()">

@@ -1,32 +1,35 @@
 <?php
-use actividades\model as actividades;
-use asistentes\model as asistentes;
-use personas\model as personas;
 /**
- * Muestra un formulario para introducir/cambiar los datos del objeto Asistente
- * Si se crea un nuevo cargo, machaca el anteriro (si lo hubiere)
- * Si se cambia el cargo, crea uno nuevo, no elimina el anterior.
+ * Muestra un formulario para introducir/cambiar los datos de la asistencia
+ * de una persona a una actividad
+ * 
  *
- * @package	delegacion
- * @subpackage	actividades
+ * @package	orbix
+ * @subpackage	asistentes
  * @author	Daniel Serrabou
  * @since		15/5/02.
- * @ajax		23/8/2007.
- * @version 1.0
- * @created 25/09/2010
+ * @version 1.0  refactoring: separar vistas
+ * @created Mayo 2018
  *
- * @param array $_POST['sel'] con id_nom#id_cargo si vengo de un select de una lista
- * @param string $_POST['go_to'] página a la que ir al terminar la acción.
- * @param integer $_POST['id_activ']
- * @param integer $_POST['id_cargo']
- * @param integer $_POST['id_nom']
- * @param string $_POST['observ'] optional
- * @param boolean $_POST['propio'] 
- * @param boolean $_POST['falta'] 
- * @param boolean $_POST['puede_agd'] 
- * @param string $_POST['observ'] optional
- *
+ * @param string $_POST['pau']  para el controlador dossiers_ver
+ * @param integer $_POST['id_pau']  para el controlador dossiers_ver
+ * @param string $_POST['obj_pau']  para el controlador dossiers_ver
+ * @param integer $_POST['id_dossier']  para el controlador dossiers_ver
+ * @param string $_POST['mod']  para el controlador dossiers_ver
+ * En el caso de modificar:
+ * @param string $_POST['mod_curso']  para mantener la selección del curso
+ * @param integer $_POST['permiso'] valores 1, 2, 3
+ * @param integer $_POST['scroll_id'] 
+ * @param array $_POST['sel'] con id_activ#id_asignatura
+ * En el caso de nuevo:
+ * @param string $_POST['que_dl'] la propia dl o vacio para otras
+ * @param integer $_POST['id_tipo'] selección del tipo de actividad
+ * 
  */
+
+use actividades\model\entity as actividades;
+use asistentes\model\entity as asistentes;
+use personas\model\entity as personas;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -36,57 +39,51 @@ use personas\model as personas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$go_to = (string)  \filter_input(INPUT_POST, 'go_to');
-if (!empty($go_to)) {
-	$go_to=urldecode($go_to);
-}
-	
+$oPosicion->recordar();
+
+$Qpermiso = (string) \filter_input(INPUT_POST,'permiso');
 
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-	$id_nom = strtok($a_sel[0],"#");
+	$Qid_nom = strtok($a_sel[0],"#");
 	// el scroll id es de la página anterior, hay que guardarlo allí
-	$oPosicion->addParametro('id_sel',$a_sel,0);
+	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
-	$oPosicion->addParametro('scroll_id',$scroll_id,0);
-	if (!empty($go_to)) {
-		// add stack:
-		$stack = $oPosicion->getStack();
-		$go_to .= "&stack=$stack";
-	}
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else {
-	$id_nom = empty($_POST['id_nom'])? "" : $_POST['id_nom'];
+	$Qid_nom = (integer) \filter_input(INPUT_POST, 'id_nom');
 }
 
-$id_activ = (integer)  \filter_input(INPUT_POST, 'id_pau');
+$Qid_activ = (integer)  \filter_input(INPUT_POST, 'id_pau');
+$Qid_pau = (integer)  \filter_input(INPUT_POST, 'id_pau');
+$Qobj_pau = (string)  \filter_input(INPUT_POST, 'obj_pau');
 
 $gesAsistentes = new asistentes\GestorAsistente();
 	
-$obj = 'asistentes\\model\\Asistente';
-$permiso =	empty($_POST['permiso'])? '' : $_POST['permiso'];
+$obj = 'asistentes\\model\\entity\\Asistente';
 
 /* Mirar si la actividad es mia o no */
-$oActividad = new actividades\Actividad($id_activ);
+$oActividad = new actividades\Actividad($Qid_activ);
 // si es de la sf quito la 'f'
 $dl_org = preg_replace('/f$/', '', $oActividad->getDl_org());
 $id_tabla_dl = $oActividad->getId_tabla();
 
-if (!empty($id_nom)) { //caso de modificar
+if (!empty($Qid_nom)) { //caso de modificar
 	$mod="editar";
-	$oPersona = personas\Persona::NewPersona($id_nom);
+	$oPersona = personas\Persona::NewPersona($Qid_nom);
 	if (!is_object($oPersona)) {
-		$msg_err = "<br>$oPersona con id_nom: $id_nom";
+		$msg_err = "<br>$oPersona con id_nom: $Qid_nom en  ".__FILE__.": line ". __LINE__;
 		exit($msg_err);
 	}
 	$ape_nom = $oPersona->getApellidosNombre();
 	$id_tabla = $oPersona->getId_tabla();
-	$id_nom_real = $id_nom;
+	$id_nom_real = $Qid_nom;
 
-	$aWhere = array('id_activ'=>$id_activ,'id_nom'=>$id_nom);
+	$aWhere = array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom);
 	$cAsistentes = $gesAsistentes->getAsistentes($aWhere);
 	$oAsistente = $cAsistentes[0];
 
-	$obj_pau = str_replace("personas\\model\\",'',get_class($oPersona));
+	$obj_pau = str_replace("personas\\model\\entity\\",'',get_class($oPersona));
 	$propio=$oAsistente->getPropio();
 	$falta=$oAsistente->getFalta();
 	$est_ok=$oAsistente->getEst_ok();
@@ -98,7 +95,7 @@ if (!empty($id_nom)) { //caso de modificar
 		if (!empty($propietario)) {
 			$padre = strtok($propietario,'>');
 			$child = strtok('>');
-			//$obj_asis = str_replace("personas\\model\\",'',get_class($oAsistente));
+			//$obj_asis = str_replace("personas\\model\\entity\\",'',get_class($oAsistente));
 			//if ($obj_asis == 'AsistenteOut' && $padre != core\ConfigGlobal::mi_dele() ) {
 			// excepto los de paso
 			if ( $obj_pau != 'PersonaEx' && $child != core\ConfigGlobal::mi_dele() ) {
@@ -106,15 +103,17 @@ if (!empty($id_nom)) { //caso de modificar
 			}
 		}
 	}
-
+	$oDesplegablePersonas = array();
 } else { //caso de nuevo asistente
 	$mod="nuevo";
+	$id_nom_real = '';
+	$ape_nom = '';
 	$propio="t"; //valor por defecto
 	$observ=""; //valor por defecto
 	$plaza=  asistentes\Asistente::PLAZA_PEDIDA; //valor por defecto
 	$propietario=''; //valor por defecto
-	$_POST['obj_pau'] = !empty($_POST['obj_pau'])? urldecode($_POST['obj_pau']) : '';
-	$obj_pau = strtok($_POST['obj_pau'],'&');
+	$Qobj_pau = !empty($Qobj_pau)? urldecode($Qobj_pau) : '';
+	$obj_pau = strtok($Qobj_pau,'&');
 	$na = strtok('&');
 	$na_txt = strtok($na,'=');
 	$na_val = 'p'.strtok('=');
@@ -172,8 +171,8 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 		
 		}
 	}
-	$gesActividadPlazas = new \actividadplazas\model\GestorResumenPlazas();
-	$gesActividadPlazas->setId_activ($id_activ);
+	$gesActividadPlazas = new \actividadplazas\model\entity\GestorResumenPlazas();
+	$gesActividadPlazas->setId_activ($Qid_activ);
 	$oDesplPosiblesPropietarios = $gesActividadPlazas->getPosiblesPropietarios($dl_de_paso);
 	$oDesplPosiblesPropietarios->setNombre('propietario');
 	$oDesplPosiblesPropietarios->setOpcion_sel($propietario);
@@ -193,9 +192,8 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 }
 $oHash->setCamposNo('mod!propio!falta!est_ok');
 $a_camposHidden = array(
-		'id_activ' => $_POST['id_pau'],
+		'id_activ' => $Qid_pau,
 		'obj_pau'=> $obj_pau,
-		'go_to' => $go_to
 		);
 if (!empty($id_nom_real)) {
 	$a_camposHidden['id_nom'] = $id_nom_real;
@@ -205,98 +203,23 @@ if (!empty($id_nom_real)) {
 $oHash->setcamposForm($camposForm);
 $oHash->setArraycamposHidden($a_camposHidden);
 
+$a_campos = ['obj' => $obj,
+			'oPosicion' => $oPosicion,
+			'oHash' => $oHash,
+			'h1' => $h1,
+			'url_ajax' => $url_ajax,
+			'id_activ' => $Qid_activ,
+			'mod' => $mod,
+			'id_nom_real' => $id_nom_real,
+			'ape_nom' => $ape_nom,
+			'oDesplegablePersonas' => $oDesplegablePersonas,
+			'propio_chk' => $propio_chk,
+			'falta_chk' => $falta_chk,
+			'est_chk' => $est_chk,
+			'observ' => $observ,
+			'oDesplegablePlaza' => $oDesplegablePlaza,
+			'oDesplPosiblesPropietarios' => $oDesplPosiblesPropietarios,
+			];
 
-echo $oPosicion->mostrar_left_slide();
-?>
-<!-- ------------------- html -----------------------------------------------  -->
-<script>
-<?php
-if (core\configGlobal::is_app_installed('actividadplazas')) {
-?>
-fnjs_cmb_propietario=function(){
-	var id_nom=$('#id_nom').val();
-	//alert ('nom: '+id_nom);
-	var url='<?= $url_ajax ?>';
-	var parametros='que=lst_propietarios&id_nom='+id_nom+'&id_activ=<?= $id_activ ?><?= $h1 ?>&PHPSESSID=<?php echo session_id(); ?>';
-		 
-	$.ajax({
-		url: url,
-		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta_txt);
-			$('#lst_propietarios').html(rta_txt);
-		}
-	});
-}
-
-<?php	
-}
-?>
-fnjs_guardar=function(formulario){
-	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
-	//alert ("EEE "+rr);
-	if (rr=='ok') {
-		go=$('#go_to').val();
-		$(formulario).attr('action',"apps/asistentes/controller/update_3101.php");
-		$(formulario).submit(function() {
-			$.ajax({
-				data: $(this).serialize(),
-				url: $(this).attr('action'),
-				type: 'post',
-				complete: function (rta) {
-					rta_txt=rta.responseText;
-					if (rta_txt.search('id="ir_a"') != -1) {
-						fnjs_mostra_resposta(rta,'#main'); 
-					} else {
-						if (go) fnjs_update_div('#main',go); 
-					}
-				}
-			});
-			return false;
-		});
-		$(formulario).submit();
-		$(formulario).off();
-	}
-}
-</script>
-<form id="frm_sin_nombre" name="frm_sin_nombre" action="" method="POST">
-<?= $oHash->getCamposHtml(); ?>
-<input type="Hidden" id="mod" name="mod" value=<?= $mod ?>>
-<table>
-<tr class=tab><th class=titulo_inv colspan=4><?php echo ucfirst(_("Asistente a una actividad")); ?></th></tr>
-<tr><td class=etiqueta><?= ucfirst(_("asistente")) ?>:</td>
-<?php
-if (!empty($id_nom_real)) {
-	echo "<td class=contenido colspan=3>$ape_nom</td>";
-} else {
-	echo "<td colspan=3>";
-	echo $oDesplegablePersonas->desplegable();
-	echo "</td>";
-}
-?>
-</tr>
-<tr><td class=etiqueta><?= _("propio") ?></td>
-<td><input type="Checkbox" id="propio" name="propio" value="true" <?= $propio_chk ?>></td></tr>
-<tr><td class=etiqueta><?= _("falta") ?></td>
-<td><input type="Checkbox" id="falta" name="falta" value="true" <?= $falta_chk ?>></td></tr>
-<tr><td class=etiqueta><?= _("estudios confirmados") ?></td>
-<td><input type="Checkbox" id="est_ok" name="est_ok" value="true" <?= $est_chk ?>></td></tr>
-<tr><td class=etiqueta><?php echo ucfirst(_("observaciones")); ?></td><td class=contenido colspan="3">
-<textarea id="observ" name="observ" cols="40" rows="5"><?= htmlspecialchars($observ) ?></textarea></td></tr>
-<?php
-if (core\configGlobal::is_app_installed('actividadplazas')) {
-?>
-	<tr><td class=etiqueta><?= _("plaza") ?></td><td><?= $oDesplegablePlaza->desplegable(); ?></td>
-	<td class=etiqueta><?= _("propiedad de") ?></td><td>
-	<div id='lst_propietarios'>
-	<?= $oDesplPosiblesPropietarios->desplegable(); ?>
-	</div></td>
-	</tr>
-<?php
-}
-?>
-</table>
-<br><input type="button" id="guardar" name="guardar" onclick="fnjs_guardar(this.form);" value="<?php echo ucfirst(_("guardar datos del asistente")); ?>" align="MIDDLE">
-</form>
+$oView = new core\View('asistentes/controller');
+echo $oView->render('form_3101.phtml',$a_campos);

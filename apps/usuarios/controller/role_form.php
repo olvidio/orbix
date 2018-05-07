@@ -1,7 +1,7 @@
 <?php
-use usuarios\model as usuarios;
-use permisos\model as permisos;
-use menus\model as menus;
+use usuarios\model\entity as usuarios;
+use permisos\model\entity as permisos;
+use menus\model\entity as menus;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 
@@ -9,9 +9,24 @@ use menus\model as menus;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$obj = 'usuarios\\model\\Role';
+$obj = 'usuarios\\model\\entity\\Role';
 
-echo $oPosicion->mostrar_left_slide();
+$oPosicion->recordar();
+
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	$id_activ = strtok($a_sel[0],"#");
+	$id_asignatura=strtok("#");
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$oPosicion->addParametro('id_sel',$a_sel,1);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
+	if (!empty($go_to)) {
+		// add stack:
+		$stack = $oPosicion->getStack(1);
+		$go_to .= "&stack=$stack";
+	}
+}
 
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miRole=$oMiUsuario->getId_role();
@@ -99,6 +114,7 @@ $a_camposHidden = array(
 		);
 $oHash1->setArraycamposHidden($a_camposHidden);
 
+echo $oPosicion->mostrar_left_slide(1);
 ?>
 <script>
 fnjs_del_grupmenu=function(formulario){
@@ -190,4 +206,3 @@ if (!empty($id_role)) { // si no hay role, no puedo poner permisos.
 	</form>
 	<?php
 }
-?>
