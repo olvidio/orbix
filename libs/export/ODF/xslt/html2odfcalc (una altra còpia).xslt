@@ -43,7 +43,6 @@ You should have received a copy of the GNU General Public License along with thi
 		<style:style style:name="cebold" style:family="table-cell" style:parent-style-name="Default">
 			<style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
 		</style:style>
-		<style:style style:name="ce2" style:family="table-cell" style:parent-style-name="Default"><style:table-cell-properties fo:background-color="#fff200"/></style:style>
 	</office:automatic-styles>
 
 	<xsl:apply-templates select="body"/>
@@ -107,66 +106,49 @@ You should have received a copy of the GNU General Public License along with thi
 		<!-- <table:table-column table:style-name="Table1.A" table:number-columns-repeated="2"/> -->
 		<!-- FIXME: should not do this... instead simply apply on node() and have template matches for tr[th] -->
 		<xsl:call-template name="table_cols_2"/>
-		<xsl:if test="child::thead">
-			<xsl:apply-templates select="thead"/>
-		</xsl:if>
-		<xsl:if test="child::tbody">
-			<xsl:apply-templates select="tbody"/>
-		</xsl:if>
-		<xsl:if test="child::tr">
-			<xsl:apply-templates select="tr"/>
-		</xsl:if>
+		<xsl:for-each select="thead|tbody">
+			<xsl:for-each select="tr[th]">
+				<table:table-header-rows>
+					<table:table-row>
+						<xsl:apply-templates select="th"/>
+					</table:table-row>
+				</table:table-header-rows>
+			</xsl:for-each>
+			<xsl:for-each select="tr[td]">
+				<table:table-row><xsl:apply-templates select="td"/>
+				</table:table-row>
+			</xsl:for-each>
+		</xsl:for-each>
+		<!-- sin tbody -->
+		<xsl:for-each select="tr[th]">
+			<table:table-header-rows>
+				<table:table-row>
+					<xsl:apply-templates select="th"/>
+				</table:table-row>
+			</table:table-header-rows>
+		</xsl:for-each>
+		<xsl:for-each select="tr[td]">
+			<xsl:for-each select="table">
+			</xsl:for-each>
+			<table:table-row><xsl:apply-templates select="td"/>
+			</table:table-row>
+		</xsl:for-each>
+	<!-- </table:table> -->
 </xsl:template>
 
-<xsl:template name="subtable">
-	<table:table-row>
-		<xsl:apply-templates select="td"/>
-	</table:table-row>
-</xsl:template>
-
-<xsl:template match="tbody|thead">
-	<xsl:apply-templates select="tr"/>
-</xsl:template>
-
-<xsl:template match="tr">
+<xsl:template match="th">
 	<xsl:choose>
-		<xsl:when test="descendant::table">
-			<xsl:apply-templates select="td"/>
+		<xsl:when test="@tipo='notext'">
 		</xsl:when>
-		<xsl:when test="th">
-			<table:table-row>
-				<xsl:apply-templates select="th"/>
-			</table:table-row>
-		</xsl:when>
-		<xsl:otherwise test="td">
-			<table:table-row>
-				<xsl:apply-templates select="td"/>
-			</table:table-row>
+		<xsl:otherwise>
+			<table:table-cell table:style-name="ce3" office:value-type="string">
+				<xsl:call-template name="text_applyer"/>
+			</table:table-cell>
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
-
 <xsl:template match="td|th">
 	<xsl:choose>
-		<xsl:when test="child::table">
-			<xsl:for-each select="table/thead/tr|table/tr">
-				<xsl:call-template name="subtable"/>
-			</xsl:for-each>
-			<xsl:for-each select="table/tbody/tr|table/tr">
-				<xsl:call-template name="subtable"/>
-			</xsl:for-each>
-		</xsl:when>
-		<xsl:when test="@class='alert'">
-		 	<table:table-cell table:style-name="ce2" office:value-type="string" table:number-columns-spanned="1" table:number-rows-spanned="1">
-				<text:p>
-					<xsl:value-of select="current()"/>
-				</text:p>
-			</table:table-cell>
-		</xsl:when>
-		<xsl:when test="@class='no_print'">
-		</xsl:when>
-		<xsl:when test="@tipo='notext'">
-		</xsl:when>
 		<xsl:when test="@class='fecha_hora'">
 			<table:table-cell table:style-name="cefechaHora" office:value-type="date" office:date-value="{@fecha_iso}" >
 				<xsl:call-template name="text_applyer"/>
@@ -197,11 +179,6 @@ You should have received a copy of the GNU General Public License along with thi
 					<xsl:call-template name="text_applyer"/>
 				<!-- </text:p> -->
 			</table:table-cell>
-		</xsl:when>
-		<xsl:when test="child::span[@class='alert']">
-		   <table:table-cell table:style-name="ce2" office:value-type="string" table:number-columns-spanned="1" table:number-rows-spanned="1">
-				<xsl:call-template name="text_applyer"/>
-		   </table:table-cell>
 		</xsl:when>
 		<xsl:when test="@colspan">
 			<table:table-cell table:style-name="ce1" office:value-type="string" table:number-columns-spanned="{@colspan}" table:number-rows-spanned="1">
@@ -234,11 +211,6 @@ You should have received a copy of the GNU General Public License along with thi
 <xsl:template name="text_applyer">
 	<xsl:choose>
 		<xsl:when test="h1|h2|h3|b">
-			<text:p>
-				<xsl:value-of select="current()"/>
-			</text:p>
-		</xsl:when>
-		<xsl:when test="span">
 			<text:p>
 				<xsl:value-of select="current()"/>
 			</text:p>

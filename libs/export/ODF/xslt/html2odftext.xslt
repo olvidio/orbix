@@ -105,13 +105,13 @@ You should have received a copy of the GNU General Public License along with thi
 
 <xsl:template name="subtable">
 	<xsl:choose>
-		<xsl:when test="descendant::h3">
+		<xsl:when test="descendant::h3|descendant::h2">
 			<xsl:apply-templates select="node()"/>
 		</xsl:when>
-		<xsl:when test="child::td/h3|child::td/b">
+		<xsl:when test="child::td/h3|child::td/h2|child::td/b">
 			<xsl:apply-templates select="td"/>
 		</xsl:when>
-		<xsl:when test="child::th/h3|child::th/b">
+		<xsl:when test="child::td/h3|child::th/h2|child::th/b">
 			<xsl:apply-templates select="th"/>
 		</xsl:when>
 		<xsl:otherwise>
@@ -159,10 +159,10 @@ You should have received a copy of the GNU General Public License along with thi
 				<text:tab />
 				<xsl:value-of select="normalize-space(string(./p))"/>
 		</xsl:when>
-		<xsl:when test="descendant::h3">
+		<xsl:when test="descendant::h3|descendant::h2">
 			<text:h text:style-name="Heading_20_3" text:outline-level="3"><xsl:value-of select="current()"/></text:h>
 		</xsl:when>
-		<xsl:when test="child::h3|child::b">
+		<xsl:when test="child::h3|child::h2|child::b">
 			<xsl:call-template name="text_applyer" />
 		</xsl:when>
 

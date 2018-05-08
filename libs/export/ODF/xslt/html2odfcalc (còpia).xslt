@@ -40,10 +40,11 @@ You should have received a copy of the GNU General Public License along with thi
 		<number:number number:min-integer-digits="1"/>
 		</number:number-style>
 		<style:style style:name="cenumero" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="N0"/>
+
 		<style:style style:name="cebold" style:family="table-cell" style:parent-style-name="Default">
 			<style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
 		</style:style>
-		<style:style style:name="ce2" style:family="table-cell" style:parent-style-name="Default"><style:table-cell-properties fo:background-color="#fff200"/></style:style>
+
 	</office:automatic-styles>
 
 	<xsl:apply-templates select="body"/>
@@ -52,27 +53,27 @@ You should have received a copy of the GNU General Public License along with thi
 
 <xsl:template match="body">
 	<office:body>
-	 <office:text>
+	 <office:spreedsheet>
 	 <xsl:choose>
 	 	<xsl:when test="./div[@class='salta_pag']">
 				<xsl:apply-templates select="node()"/>
 		</xsl:when>
 		<xsl:otherwise>
-			  <table:table table:name="Table1" table:style-name="Table1">
+			<table:table table:name="Table1" table:style-name="Table1">
 				<xsl:apply-templates select="node()"/>
-			  </table:table>
+		</table:table>
 	  </xsl:otherwise>
 	  </xsl:choose>
-	 </office:text>
+	 </office:spreedsheet>
 	</office:body>
 </xsl:template>
 
-<xsl:template match="h1|h2|h3|b">
- <table:table-row>
- 	<table:table-cell table:style-name="cebold" office:value-type="string" >
+<xsl:template match="h1|h2|h3">
+  <table:table-row>
+	<table:table-cell table:style-name="cebold" office:value-type="string" >
 		<xsl:call-template name="text_applyer"/>
 	</table:table-cell>
- </table:table-row>
+  </table:table-row>
 </xsl:template>
 
 <xsl:template match="p">
@@ -124,6 +125,7 @@ You should have received a copy of the GNU General Public License along with thi
 	</table:table-row>
 </xsl:template>
 
+
 <xsl:template match="tbody|thead">
 	<xsl:apply-templates select="tr"/>
 </xsl:template>
@@ -156,13 +158,7 @@ You should have received a copy of the GNU General Public License along with thi
 				<xsl:call-template name="subtable"/>
 			</xsl:for-each>
 		</xsl:when>
-		<xsl:when test="@class='alert'">
-		 	<table:table-cell table:style-name="ce2" office:value-type="string" table:number-columns-spanned="1" table:number-rows-spanned="1">
-				<text:p>
-					<xsl:value-of select="current()"/>
-				</text:p>
-			</table:table-cell>
-		</xsl:when>
+
 		<xsl:when test="@class='no_print'">
 		</xsl:when>
 		<xsl:when test="@tipo='notext'">
@@ -198,17 +194,16 @@ You should have received a copy of the GNU General Public License along with thi
 				<!-- </text:p> -->
 			</table:table-cell>
 		</xsl:when>
-		<xsl:when test="child::span[@class='alert']">
-		   <table:table-cell table:style-name="ce2" office:value-type="string" table:number-columns-spanned="1" table:number-rows-spanned="1">
-				<xsl:call-template name="text_applyer"/>
-		   </table:table-cell>
-		</xsl:when>
 		<xsl:when test="@colspan">
 			<table:table-cell table:style-name="ce1" office:value-type="string" table:number-columns-spanned="{@colspan}" table:number-rows-spanned="1">
-				<xsl:call-template name="text_applyer"/>
+				<text:p>
+					<xsl:call-template name="text_applyer"/>
+				</text:p>
 			</table:table-cell>
 		</xsl:when>
 		<xsl:when test="@tipo='sel'">
+			<table:table-cell>
+			</table:table-cell>
 		</xsl:when>
 		<xsl:otherwise>
 			<table:table-cell office:value-type="string">
@@ -217,6 +212,7 @@ You should have received a copy of the GNU General Public License along with thi
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
+
 <xsl:template match="a">
 	<xsl:call-template name="text_applyer"/>
 </xsl:template>
@@ -234,11 +230,6 @@ You should have received a copy of the GNU General Public License along with thi
 <xsl:template name="text_applyer">
 	<xsl:choose>
 		<xsl:when test="h1|h2|h3|b">
-			<text:p>
-				<xsl:value-of select="current()"/>
-			</text:p>
-		</xsl:when>
-		<xsl:when test="span">
 			<text:p>
 				<xsl:value-of select="current()"/>
 			</text:p>
