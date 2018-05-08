@@ -301,6 +301,8 @@ class GestorResumenPlazas {
 		$tot_calendario = 0;
 		$tot_actual = 0;
 		$tot_ocupadas = 0;
+		$tot_cedidas = 0;
+		$tot_conseguidas = 0;
 		foreach ($a_plazas as $dl=>$aa) {
 			$total_cedidas = 0;
 			// si no tiene por calendario le pongo 0
@@ -319,12 +321,12 @@ class GestorResumenPlazas {
 					
 					$ocu = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$dl_otra);
 					$a_plazas[$dl][$dl_otra]['ocupadas'] = $ocu;
-					$tot_actual += $num_plazas;
 				} 
 				$total_cedidas += $num_plazas;
 			}
 			$a_plazas[$dl]['total_cedidas'] = $total_cedidas;
 			$tot_calendario += $num_plazas_calendario;
+			$tot_cedidas += $total_cedidas;
 		}
 		foreach ($a_plazas as $dl=>$aa) {
 			$total_conseguidas = 0;
@@ -333,8 +335,10 @@ class GestorResumenPlazas {
 				$total_conseguidas += $num_plazas;
 			}
 			$a_plazas[$dl]['total_conseguidas'] = $total_conseguidas;
+			$tot_conseguidas += $total_conseguidas;
 		}
 		foreach ($a_plazas as $dl=>$aa) {
+			$total_actual = 0;
 			// si no tiene por calendario le pongo 0
 			if (!array_key_exists('calendario',$aa)) {
 				$pl_calendario = 0;
@@ -345,10 +349,10 @@ class GestorResumenPlazas {
 			}
 			$pl_conseguidas = $aa['total_conseguidas'];
 
-			$pl_actual = $pl_calendario - $pl_cedidas + $pl_conseguidas;
+			$total_actual = $pl_calendario - $pl_cedidas + $pl_conseguidas;
 			
-			$a_plazas[$dl]['total_actual'] = $pl_actual;
-			$tot_actual += $pl_actual;
+			$a_plazas[$dl]['total_actual'] = $total_actual;
+			$tot_actual += $total_actual;
 
 			$ocupadas = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$dl);
 			if ($ocupadas < 0) { // No se sabe
@@ -358,8 +362,6 @@ class GestorResumenPlazas {
 			}
 			$tot_ocupadas += $ocupadas;
 		}
-		$tot_cedidas = 0;
-		$tot_conseguidas = 0;
 		
 		$a_plazas['total']['actividad'] = $plazas_totales;
 		$a_plazas['total']['calendario'] = $tot_calendario;

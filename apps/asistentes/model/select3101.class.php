@@ -344,8 +344,8 @@ class Select3101 {
 					//si es de otra dl no distingo cedidas.
 					// no muestro ni cuento las que esten en estado distinto al asignado o confirmado (>3)
 					if ($padre != $this->mi_dele) {
-						if ($plaza > 3) {
-							$this->incrementa($a_plazas_resumen[$padre]['ocupadas'][$dl][$plaza]);
+						if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) {
+							$this->incrementa($this->a_plazas_resumen[$padre]['ocupadas'][$dl][$plaza]);
 							if (!empty($child) && $child != $padre) {
 								$this->incrementa($a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
 							}
@@ -363,10 +363,10 @@ class Select3101 {
 								continue;
 							} else {
 								$this->incrementa($a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
-								$this->incrementa($a_plazas_resumen[$padre]['ocupadas'][$dl][$plaza]);
+								$this->incrementa($this->a_plazas_resumen[$padre]['ocupadas'][$dl][$plaza]);
 							}
 						} else {
-							$this->incrementa($a_plazas_resumen[$padre]['ocupadas'][$dl][$plaza]);
+							$this->incrementa($this->a_plazas_resumen[$padre]['ocupadas'][$dl][$plaza]);
 						}
 					}
 				}
@@ -458,7 +458,7 @@ class Select3101 {
 				// no muestro ni cuento las que esten en estado distinto al asignado o confirmado (>3)
 				if ($padre != $this->mi_dele) {
 					if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) {
-						$this->incrementa($a_plazas_resumen[$padre]['ocupadas'][$dl][$plaza]);
+						$this->incrementa($this->a_plazas_resumen[$padre]['ocupadas'][$dl][$plaza]);
 						if (!empty($child) && $child != $padre) {
 							$this->incrementa($a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
 						}
@@ -476,10 +476,10 @@ class Select3101 {
 							continue;
 						} else {
 							$this->incrementa($a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
-							$this->incrementa($a_plazas_resumen[$padre]['ocupadas'][$dl][$plaza]);
+							$this->incrementa($this->a_plazas_resumen[$padre]['ocupadas'][$dl][$plaza]);
 						}
 					} else {
-						$this->incrementa($a_plazas_resumen[$padre]['ocupadas'][$dl][$plaza]);
+						$this->incrementa($this->a_plazas_resumen[$padre]['ocupadas'][$dl][$plaza]);
 					}
 				}
 			}

@@ -193,9 +193,10 @@ class Select3005 {
 	}
 
 	public function setLinksInsert() {
+		$this->LinkInsert = '';
 		if ($this->permiso === 3) {
 			$a_dataUrl = array('pau'=> $this->pau,'id_pau'=> $this->id_pau);
-			$this->LinkInsert=web\Hash::link(core\ConfigGlobal::getWeb()."/apps/actividadestudios/controller/form_3005.php?".http_build_query($a_dataUrl));
+			$this->LinkInsert = web\Hash::link(core\ConfigGlobal::getWeb()."/apps/actividadestudios/controller/form_3005.php?".http_build_query($a_dataUrl));
 		}
 	}
 	

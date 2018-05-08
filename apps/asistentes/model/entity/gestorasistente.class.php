@@ -132,6 +132,7 @@ class GestorAsistente Extends core\ClaseGestor {
 				//$gesAsistenteDl = new GestorAsistenteDl();
 				//$cAsistentes = $gesAsistenteDl->getAsistentesDl(array('id_activ'=>$iid_activ));
 				$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');
+				$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
 				$cAsistentes = $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
 			} else {
 				$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
@@ -175,9 +176,10 @@ class GestorAsistente Extends core\ClaseGestor {
 				$oAsistente->DBEliminar();
 				continue;
 			}
-			$dl = $oPersona->getDl();
+			// También hay que contar a los de paso (ocupan plaza)
+			/*$dl = $oPersona->getDl();
 			if ($sdl != $dl) continue;
-			//}
+			*/
 			$plaza= empty($oAsistente->getPlaza())? Asistente::PLAZA_PEDIDA : $oAsistente->getPlaza();
 			// sólo cuento las asignadas
 			if ($plaza < Asistente::PLAZA_ASIGNADA) continue;
