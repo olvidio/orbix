@@ -27,6 +27,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 // nombre de la actividad
 $oActividad = new actividades\Actividad($id_activ);
 $nom_activ=$oActividad->getNom_activ();
+$dl_org=$oActividad->getDl_org();
 	
 //director de estudios
 $GesCargos = new actividadcargos\GestorCargo();
@@ -97,7 +98,11 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
 		$id_nom=$oMatricula->getId_nom();
 		$oPersona = personas\Persona::NewPersona($id_nom);
 		if (!is_object($oPersona)) {
-			$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
+			// Normalmente es gente a la que no tengoo acceso (otra dl),
+			// sino soy la dl organizadora no me preocupo:
+			if ($dl_org == core\ConfigGlobal::mi_dele()) {
+				$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
+			}
 			continue;
 		}
 		$nom_persona=$oPersona->getApellidosNombre();
