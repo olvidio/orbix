@@ -21,8 +21,8 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
          left:2%;
          margin:10px 0 0 10px;
     }
-
-	.no_print { visibility : hidden; }
+	/* antes usaba hidden, pero con hidden conserva el espacio ocupado, con none NO */
+	.no_print { visibility : none; }
    /* Uso la etiqueta <div> </div> para hacer un salto de página al imprimir */
 	.salta_pag {page-break-after:always;}
 
