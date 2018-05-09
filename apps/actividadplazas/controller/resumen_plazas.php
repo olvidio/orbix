@@ -42,6 +42,10 @@ $oDesplDelegaciones->setNombre('dl');
 $publicado = '';
 $oActividad = new actividades\ActividadDl($id_activ);
 $publicado = $oActividad->getPublicado();
+// Si no es una actividad de la dl, publicado da NULL (igual que todos los campos)
+if ($publicado === null) {
+	$publicado = true;
+}
 
 $gesActividadPlazas = new \actividadplazas\model\entity\GestorResumenPlazas();
 $gesActividadPlazas->setId_activ($id_activ);
