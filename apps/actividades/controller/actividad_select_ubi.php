@@ -52,7 +52,8 @@ $oDesplRegion->setNombre('filtro_lugar');
 $oDesplRegion->setAction('fnjs_lugar()');
 $oDesplRegion->setOpciones($oDBSt_dl_r_lugar);
 if (!empty($_REQUEST['dl_org'])) {
-	$oDesplRegion->setOpcion_sel($_REQUEST['dl_org']);
+	$dl = 'dl|'.$_REQUEST['dl_org'];
+	$oDesplRegion->setOpcion_sel($dl);
 }
 
 $oHash = new web\Hash();
