@@ -1,6 +1,8 @@
 <?= $oPosicion->mostrar_left_slide(1); ?>
 <?php
-	if (!empty($msg_txt)) { echo $msg_txt; }
+	if (!empty($msg_txt)) {
+		echo "<span class=\"no_print\">$msg_txt</span>";
+	}
 ?>
 <div class='salta_pag'><table><tr><th align='LEFT'><?= $ctr ?></th><th align='RIGHT'><?= $ref ?></th></tr></table>
 <table class='ca_posibles' rules='groups' CELLSPACING=0>
