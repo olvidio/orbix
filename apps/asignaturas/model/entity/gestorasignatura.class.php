@@ -117,17 +117,25 @@ class GestorAsignatura Extends core\ClaseGestor {
 			$genericas = "1230,1231,1232,2430,2431,2432,2433,2434";
 			$sWhere .= " AND id_nivel NOT IN ($genericas)";
 		}
-		$sQuery="SELECT id_asignatura, nombre_corto FROM $nom_tabla $sWhere ORDER BY nombre_corto";
+		//para hacer listados que primero salgan las normales y después las opcionales:
+		//$sQuery="SELECT id_asignatura, nombre_asig FROM $nom_tabla $sWhere ORDER BY nombre_asig";
+		$sQuery="SELECT id_asignatura, nombre_asig, CASE WHEN id_nivel < 3000 THEN xa_asignaturas.id_nivel ELSE 3001 END AS op FROM $nom_tabla $sWhere ORDER BY op,nombre_asig;";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorAsignatura.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		$aOpciones=array();
+		$c = 0;
 		foreach ($oDbl->query($sQuery) as $aClave) {
 			$clave=$aClave[0];
 			$val=$aClave[1];
-			$aOpciones[$clave]=$val;
+			$id_op=$aClave[2];
+			if ($id_op > 3000 && $c < 1) {
+				$aOpciones[3000] = '----------';
+				$c = 1;
+			}
+			$aOpciones[$clave] = $val;
 		}
 		return new web\Desplegable('',$aOpciones,'',true);
 	}
