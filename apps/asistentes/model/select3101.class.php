@@ -190,9 +190,14 @@ class Select3101 {
 		$this->plazas_txt = $plazas_txt;
 	}
 
+	/**
+	 * Genera:
+	 * $this->a_plazas_conseguidas
+	 * $this->a_pazas_resumen
+	 */
 	private function contarPlazas() {
 		$a_plazas_resumen = array();
-		$a_plazas_conseguidas = array();
+		$this->a_plazas_conseguidas = array();
 		// Si no esta publicada todas las plazas de la actividad son para la dl.
 		// No hay plazas de calendario.
 		if ($this->publicado === false) {
@@ -201,7 +206,6 @@ class Select3101 {
 			$a_plazas_resumen[$dl]['conseguidas'] = 0;
 			$a_plazas_resumen[$dl]['disponibles'] = $this->plazas_totales;
 			$a_plazas_resumen[$dl]['total_cedidas'] = 0;
-			$a_plazas_conseguidas =array();
 		} else {
 			// array para pasar id_dl a dl.
 			$gesDelegacion = new ubis\model\entity\GestorDelegacion();
@@ -214,7 +218,6 @@ class Select3101 {
 			$gesActividadPlazas = new \actividadplazas\model\entity\GestorActividadPlazas();
 			$cActividadPlazas = $gesActividadPlazas->getActividadesPlazas(array('id_activ'=>  $this->id_pau));
 			$a_plazas_resumen =array();
-			$a_plazas_conseguidas =array();
 			foreach ($cActividadPlazas as $oActividadPlazas) {
 				$dl_tabla = $oActividadPlazas->getDl_tabla();
 				$id_dl = $oActividadPlazas->getId_dl();
@@ -251,16 +254,23 @@ class Select3101 {
 				if (!empty($json_cedidas)){
 					$aCedidas = json_decode($json_cedidas,TRUE);
 					foreach ($aCedidas as $dl2 => $num) {
-						$a_plazas_conseguidas[$dl2][$dl]['cedidas'] = $num;
+						$this->a_plazas_conseguidas[$dl2][$dl]['cedidas'] = $num;
 					}
 				}
 			}
 		}
 		$this->a_plazas_resumen = $a_plazas_resumen;
-		$this->a_plazas_conseguidas = $a_plazas_conseguidas;
 	}
 
 
+	/**
+	 * Establece
+	 *		$this->num = $num;
+	 *		$this->a_valores = $a_valores;
+	 * Incrementa:
+	 *		$this->a_plazas_conseguidas
+	 *		$this->a_pazas_resumen
+	 */
 	public function getCargos() {
 		// Permisos según el tipo de actividad
 		$oPermDossier = new dossiers\PermDossier();
@@ -347,11 +357,11 @@ class Select3101 {
 						if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) {
 							$this->incrementa($this->a_plazas_resumen[$padre]['ocupadas'][$dl][$plaza]);
 							if (!empty($child) && $child != $padre) {
-								$this->incrementa($a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
+								$this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
 							}
 						} else {
 							if (!empty($child) && $child == $this->mi_dele) {
-								$this->incrementa($a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
+								$this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
 							}elseif (!empty($padre)) {
 								continue;
 							}
@@ -362,7 +372,7 @@ class Select3101 {
 							if ($plaza < asistentes\Asistente::PLAZA_ASIGNADA) {
 								continue;
 							} else {
-								$this->incrementa($a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
+								$this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
 								$this->incrementa($this->a_plazas_resumen[$padre]['ocupadas'][$dl][$plaza]);
 							}
 						} else {
@@ -419,6 +429,14 @@ class Select3101 {
 		$this->a_valores = $a_valores;
 	}
 
+	/**
+	 * Establece:
+	 * 		$a_asistentes
+	 * Incrementa las propiedades:
+	 * $this->a_plazas_resumen
+	 * $this->a_plazas_conseguidas
+	 * 
+	 */
 	public function getAsistentes() {
 		$gesAsistentes = new asistentes\GestorAsistente();
 		$this->a_asistentes = array();
@@ -515,6 +533,17 @@ class Select3101 {
 
 	}
 
+	/**
+	 * Establece los textos:
+	 *	$this->leyenda_html
+	 *	$this->resumen_plazas
+	 *	$this->resumen_plazas2
+	 * 
+	 * Incrementa
+	 * $this->a_plazas_resumen
+	 * $this->a_asistentes
+	 * 
+	 */
 	public function getLeyenda() {
 		//leyenda colores
 		$leyenda_html = '';
@@ -706,18 +735,10 @@ class Select3101 {
 	}
 
 	public function getValores() {
-		if (empty($this->a_valores)) {
-			$this->getTabla();	
-		}
 		return $this->a_valores;
 	}
 	
 	public function getTabla() {
-		
-		if (core\configGlobal::is_app_installed('actividadplazas')) {
-			$this->contarPlazas();
-		}
-
 		if (core\configGlobal::is_app_installed('actividadcargos')) {
 			$this->getCargos();
 			$c = count($this->a_valores);
@@ -728,6 +749,7 @@ class Select3101 {
 		}
 
 		$this->getAsistentes();
+		$this->getLeyenda();
 
 		$n = $c;
 		foreach ($this->a_asistentes as $nom => $val) {
@@ -759,13 +781,17 @@ class Select3101 {
 		$this->msg_err = '';
 		$this->txt_eliminar = _("¿Esta Seguro que desea borrar a esta persona de esta actividad?");
 	
+		if (core\configGlobal::is_app_installed('actividadplazas')) {
+			$this->contarPlazas();
+		}
+		$this->getTabla(); // antes debe estar el contarPlazas
+
 		$oTabla = new web\Lista();
 		$oTabla->setId_tabla('sql_3101');
 		$oTabla->setCabeceras($this->getCabeceras());
 		$oTabla->setBotones($this->getBotones());
 		$oTabla->setDatos($this->getValores());
 
-		$this->getLeyenda(); // antes debe estar el contarPlazas
 		
 		$oHash = new web\Hash();
 		$oHash->setcamposForm('');
