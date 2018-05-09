@@ -203,7 +203,10 @@ if (!empty($Qidca)){
 	foreach ($cActividades as $oActividad) {
 		$asignaturas=array();
 		$i++;
-		extract($oActividad->getTot());
+		//extract($oActividad->getTot());
+		$id_activ = $oActividad->getId_activ();
+		$nom_activ = $oActividad->getNom_activ();
+		$nivel_stgr = $oActividad->getNivel_stgr();
 		// si es sólo un alumno pongo el nombre entero, porque saldrá en formato lista.
 		// sino, cambio el nombre de la actividad: borro cosas:
 		if ($alum > 1) {
