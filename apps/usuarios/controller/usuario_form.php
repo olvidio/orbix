@@ -1,6 +1,6 @@
 <?php
 use usuarios\model\entity as usuarios;
-use permisos\model\entity as permisos;
+use permisos\model as permisos;
 use personas\model\entity as personas;
 use ubis\model\entity as ubis;
 // INICIO Cabecera global de URL de controlador *********************************

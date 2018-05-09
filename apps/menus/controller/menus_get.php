@@ -1,6 +1,6 @@
 <?php
 namespace menus\controller;
-use menus\model\entity as menus;
+use menus\model\entity as menusEntity;
 use core;
 use web;
 // INICIO Cabecera global de URL de controlador *********************************
@@ -12,25 +12,21 @@ use web;
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-	$oCuadros=new menus\PermisoMenu;
+	$oCuadros=new menus\model\PermisoMenu;
 
 if (empty($_POST['filtro_grupo'])) $_POST['filtro_grupo']='';
 if (empty($_POST['nuevo'])) $_POST['nuevo']='';
 if (empty($_POST['id_menu'])) $_POST['id_menu']='';
 
-$oGesMetamenu = new menus\GestorMetamenu();
+$oGesMetamenu = new menusEntity\GestorMetamenu();
 $oDesplMeta = $oGesMetamenu->getListaMetamenus();
 $oDesplMeta->setNombre('id_metamenu');
 
 
-$oListaGM=new menus\GestorGrupMenu();
+$oListaGM=new menusEntity\GestorGrupMenu();
 
 $oDesplGM=$oListaGM->getListaMenus();
 $oDesplGM->setNombre('gm_new');
-
-
-
-
 
 $oHash3 = new web\Hash();
 $a_camposHidden = array(
@@ -41,7 +37,7 @@ $oHash3->setArraycamposHidden($a_camposHidden);
 
 if (!empty($_POST['id_menu']) || !empty($_POST['nuevo'])) {
 	if (!empty($_POST['id_menu'])) {
-		$oMenuDb=new menus\MenuDb();
+		$oMenuDb=new menusEntity\MenuDb();
 		// para modificar los valores de un menu.
 		$oMenuDb->setId_menu($_POST['id_menu']);
 		extract($oMenuDb->getTot());
@@ -155,7 +151,7 @@ if (!empty($_POST['id_menu']) || !empty($_POST['nuevo'])) {
 	// para ver el listado de todos los menus de un grupo
 	if (!empty($_POST['filtro_grupo'])) {
 		$aWhere = array('id_grupmenu'=>$_POST['filtro_grupo'],'_ordre'=>'orden');
-		$oLista=new menus\GestorMenuDb();
+		$oLista=new menusEntity\GestorMenuDb();
 		$oMenuDbs=$oLista->getMenuDbs($aWhere);
 	}
 	$txt="";
