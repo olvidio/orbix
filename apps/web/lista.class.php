@@ -886,6 +886,8 @@ class Lista {
 						if ( !empty($valor['ira']) ) {
 							$ira=$valor['ira'];
 							$tbody.="<td><span class=\"link\" onclick=\"fnjs_update_div('#main','$ira')\" >$val</span></td>";
+						} else {
+							$tbody.="<td>$val</td>";
 						}
 						if ( !empty($valor['ira2']) ) {
 							$ira=$valor['ira2'];
