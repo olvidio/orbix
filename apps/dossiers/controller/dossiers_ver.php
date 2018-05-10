@@ -41,7 +41,7 @@ if (isset($_POST['stack'])) {
 		if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
 			$Qid_sel=$oPosicion2->getParametro('id_sel');
 			$Qscroll_id = $oPosicion2->getParametro('scroll_id');
-			$oPosicion2->olvidar($stack);
+			$oPosicion2->olvidar($stack+1);
 		}
 	}
 } elseif (!empty($a_sel)) { //vengo de un checkbox
