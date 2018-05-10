@@ -65,6 +65,7 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
 	$a++;
 	$id_asignatura = $oActividadAsignatura->getId_asignatura();
 	$tipo = $oActividadAsignatura->getTipo();
+	$id_profesor = $oActividadAsignatura->getId_profesor();
 
 	$oAsignatura = new asignaturas\Asignatura($id_asignatura);	
 	$nombre_corto=$oAsignatura->getNombre_corto();
