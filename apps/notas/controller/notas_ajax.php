@@ -74,6 +74,11 @@ switch ($Qque) {
 
 	case 'posibles_preceptores':
 		$GesProfes = new profesores\GestorProfesor();
+		$oDesplProfesores= $GesProfes->getListaProfesores();
+		$oDesplProfesores->setBlanco(1);
+		$oDesplProfesores->setNombre('id_preceptor');
+		echo $oDesplProfesores->desplegable();
+		/*
 		$cProfesores= $GesProfes->getProfesores();
 		$aProfesores=array();
 		$msg_err = '';
@@ -94,6 +99,8 @@ switch ($Qque) {
 		$oDesplProfesores->setBlanco(1);
 		$oDesplProfesores->setNombre('id_preceptor');
 		echo $oDesplProfesores->desplegable();
+		 * 
+		 */
 	break;
 
 }

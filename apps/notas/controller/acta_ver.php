@@ -68,6 +68,8 @@ if (!empty($a_sel) && empty($notas)) { //vengo de un checkbox y no estoy en la p
 } else { // vengo de un link 
 	if (empty($acta) && !empty($_POST['acta'])) $acta=urldecode($_POST['acta']); // si estoy  en la página de acta_notas ya tengo el acta.
 }
+
+$json_examinadores = '';
 if (empty($Qnuevo) && !empty($acta))  { //significa que no es nuevo
 	if (!empty($_POST['acta']) && !empty($notas)) { // vengo de actualizar esta pág.
 		// estoy actualizando la página
@@ -106,7 +108,9 @@ if (empty($Qnuevo) && !empty($acta))  { //significa que no es nuevo
 		$oPersonaDl = new personas\PersonaDl($id_profesor);
 		$ap_nom = $oPersonaDl->getTituloNombreLatin();
 		$examinador = $ap_nom;
-		$json_examinadores = '[{name: "'.htmlspecialchars($examinador).'"}]';
+		$json_examinadores = 'prePopulate: [';
+		$json_examinadores .= '{name: "'.htmlspecialchars($examinador).'"}';
+		$json_examinadores .= '],';
 	} else { // estoy actualizando la página
 		if (!empty($a_sel) && !empty($notas)) { //vengo de un checkbox y estoy en la página de acta_notas ($notas).
 			$id_activ = strtok($a_sel[0],'#');
@@ -170,7 +174,6 @@ $oHashActa->setArraycamposHidden($a_camposHidden);
 $titulo=strtoupper(_("datos del acta"));
 
 $e = 0;
-$json_examinadores = '';
 if (!empty($cTribunal)) { 
 	$json_examinadores = 'prePopulate: [';
 	foreach ($cTribunal as $oActaTribunal) {

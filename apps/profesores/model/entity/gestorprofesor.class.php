@@ -225,9 +225,6 @@ class GestorProfesor Extends core\ClaseGestor {
 
 		$gesProfesores = $this->getProfesores(array('f_cese'=>''),array('f_cese'=>'IS NULL'));
 		$aProfesores = array();
-		$aAp1 = array();
-		$aAp2 = array();
-		$aNom = array();
 		foreach ($gesProfesores as $oProfesor) {
 			$id_nom = $oProfesor->getId_nom();
 			$oPersonaDl = new personas\PersonaDl($id_nom);
@@ -235,30 +232,10 @@ class GestorProfesor Extends core\ClaseGestor {
 			$situacion = $oPersonaDl->getSituacion();
 			if ($situacion != 'A') { continue; }
 			$ap_nom = $oPersonaDl->getApellidosNombre();
-			$aProfesores[] = array('id_nom'=>$id_nom,'ap_nom'=>$ap_nom);
-			$aAp1[] = $oPersonaDl->getApellido1();
-			$aAp2[] = $oPersonaDl->getApellido2();
-			$aNom[] = $oPersonaDl->getNom();
+			$aProfesores[$id_nom] = $ap_nom;
 		}
-		$multisort_args = array(); 
-		$multisort_args[] = $aAp1;
-		$multisort_args[] = SORT_ASC;
-		$multisort_args[] = SORT_STRING;
-		$multisort_args[] = $aAp2;
-		$multisort_args[] = SORT_ASC;
-		$multisort_args[] = SORT_STRING;
-		$multisort_args[] = $aNom;
-		$multisort_args[] = SORT_ASC;
-		$multisort_args[] = SORT_STRING;
-		$multisort_args[] = &$aProfesores;   // finally add the source array, by reference
-		call_user_func_array("array_multisort", $multisort_args);
-		$aOpciones=array();
-		foreach ($aProfesores as $aClave) {
-			$clave=$aClave['id_nom'];
-			$val=$aClave['ap_nom'];
-			$aOpciones[$clave]=$val;
-		}
-		return new web\Desplegable('',$aOpciones,'',true);
+		uasort($aProfesores,'core\strsinacentocmp');
+		return new web\Desplegable('',$aProfesores,'',true);
 	}
 
 	/**

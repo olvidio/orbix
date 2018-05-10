@@ -55,23 +55,7 @@ if (!empty($id_asignatura_real)) { //caso de modificar
 	$oDesplNiveles = array();
 	if (!empty($id_preceptor)) {
 		$GesProfes = new profesores\model\entity\GestorProfesor();
-		$cProfesores= $GesProfes->getProfesores();
-		$aProfesores=array();
-		$msg_err = '';
-		foreach ($cProfesores as $oProfesor) {
-			$id_nom=$oProfesor->getId_nom();
-			$oPersona = personas\model\entity\Persona::NewPersona($id_nom);
-			if (!is_object($oPersona)) {
-				$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
-				continue;
-			}
-			$ap_nom=$oPersona->getApellidosNombre();
-			$aProfesores[$id_nom]=$ap_nom;
-		}
-		uasort($aProfesores,'core\strsinacentocmp');
-		
-		$oDesplProfesores = new web\Desplegable();
-		$oDesplProfesores->setOpciones($aProfesores);
+		$oDesplProfesores= $GesProfes->getListaProfesores();
 		$oDesplProfesores->setBlanco(1);
 		$oDesplProfesores->setNombre('id_preceptor');
 		$oDesplProfesores->setOpcion_sel($id_preceptor);
