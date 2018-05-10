@@ -10,18 +10,10 @@ use personas\model\entity as personas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-/*
-$aGoBack = array (
-				'loc'=>$loc,
-				'que_lista'=>$que_lista,
-				 );
-$oPosicion->setParametros($aGoBack);
-$oPosicion->recordar();
-*/
-	
-$id_asignatura = empty($_POST['id_asignatura'])? '' : $_POST['id_asignatura'];
+$Qid_asignatura = (integer) \filter_input(INPUT_POST, 'id_asignatura');
+
 $GesProfesores = new profesores\GestorProfesor();
-$cProfesores = $GesProfesores->getListaProfesoresAsignatura($id_asignatura);
+$cProfesores = $GesProfesores->getListaProfesoresAsignatura($Qid_asignatura);
 /* $cProfesores es un array amb dos llistes:
 	$Opciones['departamento']
 	$Opciones['ampliacion']
