@@ -191,9 +191,16 @@ $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miRole=$oMiUsuario->getId_role();
 
 if (!empty($Qmodo)) {
-	$a_botones[] = array( 'txt' => _('datos'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"datos\")" );
-	if ($Qmodo == 'importar') $a_botones[] = array( 'txt' => _('importar'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"importar\")" );
-	if ($Qmodo == 'publicar') $a_botones[] = array( 'txt' => _('publicar'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"publicar\")" );
+	if ($Qmodo == 'importar') {
+		$a_botones[] = array( 'txt' => _('importar'),
+							'click' =>"jsForm.update(\"#seleccionados\",\"importar\")" );
+	}
+	if ($Qmodo == 'publicar') {
+		$a_botones[] = array( 'txt' => _('datos'),
+							'click' =>"jsForm.mandar(\"#seleccionados\",\"datos\")" );
+		$a_botones[] = array( 'txt' => _('publicar'),
+							'click' =>"jsForm.update(\"#seleccionados\",\"publicar\")" );
+	}
 	if (core\configGlobal::is_app_installed('asignaturas')) {
 		if ($_SESSION['oPerm']->have_perm("est")) {
 			$a_botones[]=array( 'txt'=> _('asignaturas'), 'click'=>"jsForm.mandar(\"#seleccionados\",\"asig\")");
@@ -206,7 +213,7 @@ if (!empty($Qmodo)) {
 		$a_botones[] = array( 'txt' => _('datos'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"datos\")" );
 		if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
 			$duplicar=1; //condición de duplicar
-			$a_botones[]=array( 'txt'=> _('duplicar'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"duplicar\")");
+			$a_botones[]=array( 'txt'=> _('duplicar'), 'click' =>"jsForm.update(\"#seleccionados\",\"duplicar\")");
 			// Ahora lo generalizo para todas. (no sólo proyecto). 17.X.2011
 			$eliminar=1; //condición de eliminable
 			$a_botones[]=array( 'txt'=> _('borrar'), 'click'=>"fnjs_borrar(\"#seleccionados\",\"eliminar\")");
@@ -454,11 +461,12 @@ $oHash->setArraycamposHidden($a_camposHidden);
 
 $oHashSel = new web\Hash();
 $oHashSel->setcamposForm('!sel!mod!queSel!id_dossier');
-$oHashSel->setcamposNo('scroll_id');
+$oHashSel->setcamposNo('continuar!scroll_id');
 $a_camposHiddenSel = array(
 		'obj_pau' =>$obj_pau,
 		'pau' =>'a',
-		'permiso' =>'3'
+		'permiso' =>'3',
+		'stack' => $oPosicion->getStack(),
 		);
 		//'tabla' =>'a_actividades',
 		//'tabla_pau' =>'a_actividades',
