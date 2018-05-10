@@ -25,7 +25,7 @@ class InfoRegiones extends core\datosInfo {
 			$aWhere=array('region'=> $this->k_buscar);
 			$aOperador=array('region'=>'sin_acentos');
 		}
-		$oLista=new GestorRegion();
+		$oLista=new entity\GestorRegion();
 		$Coleccion=$oLista->getRegiones($aWhere,$aOperador);
 
 		return $Coleccion;

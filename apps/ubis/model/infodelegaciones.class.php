@@ -25,7 +25,7 @@ class InfoDelegaciones extends core\datosInfo {
 			$aWhere=array('dl'=> $this->k_buscar);
 			$aOperador=array('dl'=>'sin_acentos');
 		}
-		$oLista=new GestorDelegacion();
+		$oLista=new entity\GestorDelegacion();
 		$Coleccion=$oLista->getDelegaciones($aWhere,$aOperador);
 
 		return $Coleccion;

@@ -25,7 +25,7 @@ class InfotipoCasa extends core\datosInfo {
 			$aWhere=array('nombre_tipo_casa'=> $this->k_buscar);
 			$aOperador=array('nombre_tipo_casa'=>'sin_acentos');
 		}
-		$oLista=new GestorTipoCasa();
+		$oLista=new entity\GestorTipoCasa();
 		$Coleccion=$oLista->getTiposCasa($aWhere,$aOperador);
 		
 		return $Coleccion;

@@ -25,7 +25,7 @@ class InfoTipoCtr extends core\datosInfo {
 			$aWhere=array('nombre_tipo_ctr'=> $this->k_buscar);
 			$aOperador=array('nombre_tipo_ctr'=>'sin_acentos');
 		}
-		$oLista=new GestorTipoCentro();
+		$oLista=new entity\GestorTipoCentro();
 		$Coleccion=$oLista->getTiposCentro($aWhere,$aOperador);
 
 		return $Coleccion;
