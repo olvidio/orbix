@@ -190,6 +190,10 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
 		if (array_key_exists($id_nivel,$aSuperadas)) continue;
 		$aFaltan[$id_nivel]=$nombre_corto;
 	}
+	// Añado Fin Bienio y Fin Cuadrienio
+	$aFaltan[9997]='---------';
+	$aFaltan[9998]=_("fin cuadrienio");
+	$aFaltan[9999]=_("fin bienio");
 
 	$oDesplNiveles = new web\Desplegable();
 	$oDesplNiveles->setNombre('id_nivel');

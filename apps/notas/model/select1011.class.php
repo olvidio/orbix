@@ -98,7 +98,9 @@ class Select1011 {
 
 
 		$gesPersonaNotas = new notas\GestorPersonaNota();
-		$cPersonaNotas = $gesPersonaNotas->getPersonaNotas(array('id_nom'=>  $this->id_pau,'id_asignatura'=>9000,'_ordre'=>'id_nivel'),array('id_asignatura'=>'<'));
+		// Que si muestre el "fin bienio, fincuadrienio".
+		//$cPersonaNotas = $gesPersonaNotas->getPersonaNotas(array('id_nom'=>  $this->id_pau,'id_asignatura'=>9000,'_ordre'=>'id_nivel'),array('id_asignatura'=>'<'));
+		$cPersonaNotas = $gesPersonaNotas->getPersonaNotas(array('id_nom'=>  $this->id_pau,'_ordre'=>'id_nivel'),array('id_asignatura'=>'<'));
 
 		$gesNotas = new notas\GestorNota();
 		$cNotas = $gesNotas->getNotas();

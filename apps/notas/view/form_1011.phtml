@@ -72,21 +72,24 @@ fnjs_guardar=function(formulario){
 	var acta=$('#acta').val();
 	var f_acta=$('#f_acta').val();
 	var situacion=$('#id_situacion').val();
-
-	if (situacion == 10) { // comprobar la nota numérica
-		var num = $('#nota_num').val();
-		var max = $('#nota_max').val();
-		num = parseFloat(num);
-		max = parseFloat(max);
-		if (isNaN(num)) { alert ('<?= _("valor de nota no válido") ?>'); err=1; } 
-		if (num < 0 || num > max) { alert ('<?= _("nota fuera de rango") ?>'); err=1; } 
-	}
+	var id_nivel=$('#id_nivel').val();
 	
-	// situacion = 2 es para cursada
-	if (!acta && situacion != 2) {
-		alert("Debe llenar el campo del acta");
-		$('#acta').focus();
-		err=1;
+	if (id_nivel < 9990) { // No comprobar en caso "Fin bienio, cuadrienio".
+		if (situacion == 10) { // comprobar la nota numérica
+			var num = $('#nota_num').val();
+			var max = $('#nota_max').val();
+			num = parseFloat(num);
+			max = parseFloat(max);
+			if (isNaN(num)) { alert ('<?= _("valor de nota no válido") ?>'); err=1; } 
+			if (num < 0 || num > max) { alert ('<?= _("nota fuera de rango") ?>'); err=1; } 
+		}
+		
+		// situacion = 2 es para cursada
+		if (!acta && situacion != 2) {
+			alert("Debe llenar el campo del acta");
+			$('#acta').focus();
+			err=1;
+		}
 	}
 	if (f_acta) {
 		if (!fnjs_comprobar_fecha('#f_acta')) { err=1; }
