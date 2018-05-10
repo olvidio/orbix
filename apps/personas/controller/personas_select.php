@@ -25,6 +25,7 @@ use usuarios\model\entity as usuarios;
 $titulo = 0;
 
 $oPosicion->recordar();
+
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
 	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
@@ -39,24 +40,24 @@ if (isset($_POST['stack'])) {
 }
 
 //Si vengo de vuelta de un go_to:
-$tabla = empty($_POST['tabla'])? '' : $_POST['tabla'];
-$breve = empty($_POST['breve'])? '' : $_POST['breve'];
-$tipo = empty($_POST['tipo'])? '' : $_POST['tipo'];
-$es_sacd = empty($_POST['es_sacd'])? '' : $_POST['es_sacd'];
-$sWhere = empty($_POST['sWhere'])? '' : $_POST['sWhere'];
-$sOperador = empty($_POST['sOperador'])? '' : $_POST['sOperador'];
-$sWhereCtr = empty($_POST['sWhereCtr'])? '' : $_POST['sWhereCtr'];
-$sOperadorCtr = empty($_POST['sOperadorCtr'])? '' : $_POST['sOperadorCtr'];
-$Qid_sel = empty($_POST['id_sel'])? '' : $_POST['id_sel'];
-$Qscroll_id = empty($_POST['scroll_id'])? '' : $_POST['scroll_id'];
+$tabla = (string) \filter_input(INPUT_POST, 'tabla');
+$breve = (string) \filter_input(INPUT_POST, 'breve');
+$tipo = (string) \filter_input(INPUT_POST, 'tipo');
+$es_sacd = (string) \filter_input(INPUT_POST, 'es_sacd');
+$sWhere = (string) \filter_input(INPUT_POST, 'sWhere');
+$sOperador = (string) \filter_input(INPUT_POST, 'sOperador');
+$sWhereCtr = (string) \filter_input(INPUT_POST, 'sWhereCtr');
+$sOperadorCtr = (string) \filter_input(INPUT_POST, 'sOperadorCtr');
 
-$Qque = empty($_POST['que'])? '' : $_POST['que'];
-$Qexacto = empty($_POST['exacto'])? '' : $_POST['exacto'];
-$Qcmb = empty($_POST['cmb'])? '' : $_POST['cmb'];
-$Qnombre = empty($_POST['nombre'])? '' : $_POST['nombre'];
-$Qapellido1 = empty($_POST['apellido1'])? '' : $_POST['apellido1'];
-$Qapellido2 = empty($_POST['apellido2'])? '' : $_POST['apellido2'];
-$Qcentro = empty($_POST['centro'])? '' : $_POST['centro'];
+$Qid_sel = (string) \filter_input(INPUT_POST, 'id_sel');
+$Qscroll_id = (string) \filter_input(INPUT_POST, 'scroll_id');
+$Qque = (string) \filter_input(INPUT_POST, 'que');
+$Qexacto = (string) \filter_input(INPUT_POST, 'exacto');
+$Qcmb = (string) \filter_input(INPUT_POST, 'cmb');
+$Qnombre = (string) \filter_input(INPUT_POST, 'nombre');
+$Qapellido1 = (string) \filter_input(INPUT_POST, 'apellido1');
+$Qapellido2 = (string) \filter_input(INPUT_POST, 'apellido2');
+$Qcentro = (string) \filter_input(INPUT_POST, 'centro');
 
 /*
 * Defino un array con los datos actuales, para saber volver 
@@ -165,21 +166,31 @@ if (!empty($aWhereCtr)) {
 
 // por defecto no pongo valor, que lo coja de la base de datos. Sólo sirve para los de paso.
 $id_tabla = '';
+$permiso = 1;
 switch ($tabla) {
 	case "p_sssc":
 		$obj_pau = 'PersonaSSSC';
 		$GesPersona = new personas\GestorPersonaSSSC();
 		$cPersonas = $GesPersona->getPersonasDl($aWhere,$aOperador);
+		if ($_SESSION['oPerm']->have_perm("des")){
+			$permiso = 3;
+		}
 	break;
 	case "p_supernumerarios":
 		$obj_pau = 'PersonaS';
 		$GesPersona = new personas\GestorPersonaS();
 		$cPersonas = $GesPersona->getPersonasDl($aWhere,$aOperador);
+		if ($_SESSION['oPerm']->have_perm("sg")){
+			$permiso = 3;
+		}
 	break;
 	case "p_numerarios":
 		$obj_pau = 'PersonaN';
 		$GesPersona = new personas\GestorPersonaN();
 		$cPersonas = $GesPersona->getPersonasDl($aWhere,$aOperador);
+		if ($_SESSION['oPerm']->have_perm("sm")){
+			$permiso = 3;
+		}
 	break;
 	case "p_nax":
 		$obj_pau = 'PersonaNax';
@@ -187,11 +198,17 @@ switch ($tabla) {
 		if (($cPersonas = $GesPersona->getPersonasDl($aWhere,$aOperador)) === false) {
 			$cPersonas = array();
 		}
+		if ($_SESSION['oPerm']->have_perm("nax")){
+			$permiso = 3;
+		}
 	break;
 	case "p_agregados":
 		$obj_pau = 'PersonaAgd';
 		$GesPersona = new personas\GestorPersonaAgd();
 		$cPersonas = $GesPersona->getPersonasDl($aWhere,$aOperador);
+		if ($_SESSION['oPerm']->have_perm("agd")){
+			$permiso = 3;
+		}
 	break;
 	case "p_de_paso":
 		if (!empty($Qna)) {
@@ -212,53 +229,65 @@ $sOperador = core\urlsafe_b64encode(serialize($aOperador));
 $sWhereCtr = core\urlsafe_b64encode(serialize($aWhereCtr));
 $sOperadorCtr = core\urlsafe_b64encode(serialize($aOperadorCtr));
 
-$a_botones[] = array( 'txt' => _('cambio de ctr'), 'click' =>"fnjs_modificar_ctr(\"#seleccionados\")" );
+$a_botones[] = array( 'txt' => _('cambio de ctr'),
+					'click' =>"fnjs_modificar_ctr(\"#seleccionados\")" );
 $script['fnjs_modificar_ctr'] = 1;
-$a_botones[] = array( 'txt' => _('ver dossiers'), 'click' =>"fnjs_dossiers(\"#seleccionados\")" );
+$a_botones[] = array( 'txt' => _('ver dossiers'),
+					'click' =>"fnjs_dossiers(\"#seleccionados\")" );
 $script['fnjs_dossiers'] = 1;
-$a_botones[] = array( 'txt' => _('ficha'), 'click' =>"fnjs_ficha(\"#seleccionados\")" );
+$a_botones[] = array( 'txt' => _('ficha'),
+					'click' =>"fnjs_ficha(\"#seleccionados\")" );
 $script['fnjs_ficha'] = 1;
 
 if (core\configGlobal::is_app_installed('asistentes')) {
-	$a_botones[] = array( 'txt' => _('ver actividades'), 'click' =>"fnjs_actividades(\"#seleccionados\")" );
+	$a_botones[] = array( 'txt' => _('ver actividades'),
+						'click' =>"fnjs_actividades(\"#seleccionados\")" );
 	$script['fnjs_actividades'] = 1;
 }
 
 if (core\configGlobal::is_app_installed('notas')) {
 	if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso")) {   
-		$a_botones[]= array( 'txt' => _('ver tessera'), 'click' =>"fnjs_tessera(\"#seleccionados\")" ) ;
+		$a_botones[]= array( 'txt' => _('ver tessera'),
+							'click' =>"fnjs_tessera(\"#seleccionados\")" ) ;
 		$script['fnjs_tessera'] = 1;
 	}
 	// en el caso de los de estudios añado la posibilidad de modificar el campo stgr
 	if ($_SESSION['oPerm']->have_perm("est")){
-		$a_botones[]=array( 'txt' => _('modificar stgr'), 'click' =>"fnjs_modificar(\"#seleccionados\")" );
+		$a_botones[]=array( 'txt' => _('modificar stgr'),
+							'click' =>"fnjs_modificar(\"#seleccionados\")" );
 		$script['fnjs_modificar'] = 1;
-		$a_botones[]=array( 'txt' => _('imprimir tessera'), 'click' =>"fnjs_imp_tessera(\"#seleccionados\")" );
+		$a_botones[]=array( 'txt' => _('imprimir tessera'),
+							'click' =>"fnjs_imp_tessera(\"#seleccionados\")" );
 		$script['fnjs_imp_tessera'] = 1;
 	}
 }
 if (core\configGlobal::is_app_installed('actividadestudios')) {
 	if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso")) {   
-		$a_botones[]= array( 'txt' => _('posibles ca'), 'click' =>"fnjs_posibles_ca(\"#seleccionados\")" ) ;
+		$a_botones[]= array( 'txt' => _('posibles ca'),
+							'click' =>"fnjs_posibles_ca(\"#seleccionados\")" ) ;
 		$script['fnjs_posibles_ca'] = 1;
 	}
 }
 if (core\configGlobal::is_app_installed('actividadplazas')) {
 	if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso")) {   
 		$sactividad = 'ca'; //ca
-		$a_botones[]= array( 'txt' => _('petición ca'), 'click' =>"fnjs_peticion_activ(\"#seleccionados\",\"$sactividad\")" ) ;
+		$a_botones[]= array( 'txt' => _('petición ca'),
+							'click' =>"fnjs_peticion_activ(\"#seleccionados\",\"$sactividad\")" ) ;
 		$sactividad = 'crt'; //crt
-		$a_botones[]= array( 'txt' => _('petición crt'), 'click' =>"fnjs_peticion_activ(\"#seleccionados\",\"$sactividad\")" ) ;
+		$a_botones[]= array( 'txt' => _('petición crt'),
+							'click' =>"fnjs_peticion_activ(\"#seleccionados\",\"$sactividad\")" ) ;
 		$script['fnjs_posibles_activ'] = 1;
 	}
 }
 if ($_SESSION['oPerm']->have_perm("est")){
 	if (core\configGlobal::is_app_installed('actividadestudios')) {
-		$a_botones[]=array( 'txt' => _("plan estudios"), 'click' =>"fnjs_matriculas(\"#seleccionados\")" );
+		$a_botones[]=array( 'txt' => _("plan estudios"),
+							'click' =>"fnjs_matriculas(\"#seleccionados\")" );
 		$script['fnjs_matriculas'] = 1;
 	}
 	if (core\configGlobal::is_app_installed('profesores')) {
-		$a_botones[]=array( 'txt' => _('ficha profesor stgr'), 'click' =>"fnjs_ficha_profe(\"#seleccionados\")" );
+		$a_botones[]=array( 'txt' => _('ficha profesor stgr'),
+							'click' =>"fnjs_ficha_profe(\"#seleccionados\")" );
 		$script['fnjs_ficha_profe'] = 1;
 	}
 }
@@ -266,7 +295,8 @@ if ($_SESSION['oPerm']->have_perm("est")){
 // en el caso de los de dre añado la posibilidad de listar la atencion a las actividades
 if (core\configGlobal::is_app_installed('atnsacd')) {
 	if ($_SESSION['oPerm']->have_perm("des")){
-		$a_botones[]=array( 'txt' => _('atención actividades'), 'click' =>"fnjs_lista_activ(\"#seleccionados\")" );
+		$a_botones[]=array( 'txt' => _('atención actividades'),
+							'click' =>"fnjs_lista_activ(\"#seleccionados\")" );
 		$script['fnjs_lista_activ'] = 1;
 	}
 }
@@ -287,14 +317,11 @@ if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso")
 if (!empty($situacion)) { 
 	$a_cabeceras[]=ucfirst(_("situacion"));
 	$a_cabeceras[]= array('name'=>ucfirst(_("fecha cambio situacion")),'class'=>'fecha');
-
 } 
 
 $i = 0;
 $a_valores = array();
 $a_personas = array();
-if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
-if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 
 $sPrefs = '';
 $id_usuario= core\ConfigGlobal::mi_id_usuario();
@@ -350,6 +377,14 @@ foreach ($a_personas as $nom => $val) {
 	$c++;
 	$a_valores[$c] = $val;
 }
+if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
+
+$oTabla = new web\Lista();
+$oTabla->setId_tabla("personas_select_$tabla");
+$oTabla->setCabeceras($a_cabeceras);
+$oTabla->setBotones($a_botones);
+$oTabla->setDatos($a_valores);
 
 $pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/personas_editar.php?'.http_build_query(array('obj_pau'=>$obj_pau,'id_tabla'=>$id_tabla,'nuevo'=>1)));
 	
@@ -364,147 +399,19 @@ $a_camposHidden = array(
 		'permiso' => '3',
 		'breve' => $breve,
 		'es_sacd' => $es_sacd,
-		'tabla' => $tabla
+		'tabla' => $tabla,
+		'permiso' => $permiso,
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
-/* ---------------------------------- html --------------------------------------- */
-?>
-<?= $oPosicion->mostrar_left_slide(1); ?>
-<script>
-<?php if (!empty($script['fnjs_modificar_ctr'])) { ?>
-fnjs_modificar_ctr=function(formulario){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-  		$(formulario).attr('action',"apps/personas/controller/traslado_form.php");
-  		fnjs_enviar_formulario(formulario);
-  	}
-}
-<?php } ?>
-<?php if (!empty($script['fnjs_dossiers'])) { ?>
-fnjs_dossiers=function(formulario){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-  		$(formulario).attr('action',"apps/dossiers/controller/dossiers_ver.php");
-  		fnjs_enviar_formulario(formulario);
-  	}
-}
-<?php } ?>
-<?php if (!empty($script['fnjs_ficha'])) { ?>
-fnjs_ficha=function(formulario){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-		$('#que').val("titulo");
-  		$(formulario).attr('action','apps/personas/controller/personas_editar.php');
-  		fnjs_enviar_formulario(formulario);
-  	}
-}
-<?php } ?>
-<?php if (!empty($script['fnjs_actividades'])) { ?>
-fnjs_actividades=function(formulario){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-		$('#que').val("activ");
-		$('#id_dossier').val("1301y1302");
-  		$(formulario).attr('action',"apps/dossiers/controller/dossiers_ver.php");
-  		fnjs_enviar_formulario(formulario);
-  	}
-}
-<?php } ?>
-<?php if (!empty($script['fnjs_tessera'])) { ?>
-fnjs_tessera=function(formulario){
-	/*rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-	*/
-  		$(formulario).attr('action',"apps/notas/controller/tessera_ver.php");
-  		fnjs_enviar_formulario(formulario);
-  	/* } */
-}
-<?php } ?>
-<?php if (!empty($script['fnjs_lista_activ'])) { ?>
-fnjs_lista_activ=function(formulario){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-		$('#que').val("un_sacd");
-  		$(formulario).attr('action',"des/com_sacd_activ.php");
-  		fnjs_enviar_formulario(formulario);
-  	}
-}
-<?php } ?>
-<?php if (!empty($script['fnjs_matriculas'])) { ?>
-fnjs_matriculas=function(formulario){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-		$('#que').val("matriculas");
-		$('#id_dossier').val("1303");
-  		$(formulario).attr('action',"apps/dossiers/controller/dossiers_ver.php");
-  		fnjs_enviar_formulario(formulario);
-  	}
-}
-<?php } ?>
-<?php if (!empty($script['fnjs_posibles_ca'])) { ?>
-fnjs_posibles_ca=function(formulario){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-		$(formulario).attr('action',"apps/actividadestudios/controller/ca_posibles.php");
-  		fnjs_enviar_formulario(formulario);
-	}
-}
-<?php } ?>
-<?php if (!empty($script['fnjs_posibles_activ'])) { ?>
-fnjs_peticion_activ=function(formulario,sactividad){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-		$('#que').val(sactividad);
-		$(formulario).attr('action',"apps/actividadplazas/controller/peticiones_activ.php");
-  		fnjs_enviar_formulario(formulario);
-	}
-}
-<?php } ?>
-<?php if (!empty($script['fnjs_imp_tessera'])) { ?>
-fnjs_imp_tessera=function(formulario){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-  		$(formulario).attr('action',"apps/notas/controller/tessera_imprimir.php");
-  		$(formulario).target="print";
-  		fnjs_enviar_formulario(formulario);
-  	}
-}
-<?php } ?>
-<?php if (!empty($script['fnjs_ficha_profe'])) { ?>
-fnjs_ficha_profe=function(formulario){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-  		$(formulario).attr('action',"apps/profesores/controller/ficha_profesor_stgr.php");
-  		fnjs_enviar_formulario(formulario);
-  	}
-}
-<?php } ?>
-<?php if (!empty($script['fnjs_modificar'])) { ?>
-fnjs_modificar=function(formulario){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-  		$(formulario).attr('action',"apps/personas/controller/stgr_cambio.php");
-  		fnjs_enviar_formulario(formulario);
-  	}
-}
-<?php } ?>
-</script>
-<h3><?= $resultado ?></h3>
-<form id='seleccionados' name='seleccionados' action='' method='post'>
-<?= $oHash->getCamposHtml(); ?>
-	<input type='hidden' id='que' name='que' value=''>
-	<input type='hidden' id='id_dossier' name='id_dossier' value=''>
 
-<?php
-$oTabla = new web\Lista();
-$oTabla->setId_tabla("personas_select_$tabla");
-$oTabla->setCabeceras($a_cabeceras);
-$oTabla->setBotones($a_botones);
-$oTabla->setDatos($a_valores);
-echo $oTabla->mostrar_tabla();
-?>
-</form>
-<br>
-<table><tr><th class="no_print">
-	<span class="link_inv" onclick="fnjs_update_div('#main','<?= $pagina ?>');"><?= core\strtoupper_dlb(_("añadir persona")) ?></span>
-</th></tr></table>
+$a_campos = ['oPosicion' => $oPosicion,
+			'oHash' => $oHash,
+			'script' => $script,
+			'resultado' => $resultado,
+			'oTabla' => $oTabla,
+			'pagina' => $pagina,
+			'permiso' => $permiso,
+			];
+
+$oView = new core\View('personas/controller');
+echo $oView->render('personas_select.phtml',$a_campos);
