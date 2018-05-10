@@ -113,16 +113,16 @@ switch ($Qmod) {
 			// compruebo que no existe:
 			$oGesActividadAsignatura = new actividadestudios\GestorActividadAsignaturaDl();
 			$cActividadAsignaturas = $oGesActividadAsignatura->getActividadAsignaturas(array('id_activ'=>$Qid_activ,'id_asignatura'=>$Qid_asignatura));
-			if (count($cActividadAsignaturas) > 0) {
-				if ($Qpreceptor===true) {
+			if (count($cActividadAsignaturas) == 0) {
+				$oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
+				$oActividadAsignatura->setId_activ($Qid_activ);
+				$oActividadAsignatura->setId_asignatura($Qid_asignatura);
+				if ($Qpreceptor==true) {
 					$oActividadAsignatura->setId_profesor($Qid_preceptor);
 					$tipo = 'p';
 				} else {
 					$tipo = '';
 				}
-				$oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
-				$oActividadAsignatura->setId_activ($Qid_activ);
-				$oActividadAsignatura->setId_asignatura($Qid_asignatura);
 				$oActividadAsignatura->setTipo($tipo);
 				$oActividadAsignatura->DBGuardar();
 			}
