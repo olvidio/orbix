@@ -32,7 +32,9 @@ fnjs_otro=function(v){
 	}
  }
 // por defecto escondido.
-$('#oro').hide();	
+<?php if (empty($c)) { ?>
+$('#oro').hide();
+<?php } ?>
 </script>
 <div>
 <h2 class="subtitulo"><?= $tituloGros ?></h2>
@@ -57,7 +59,8 @@ if (core\ConfigGlobal::mi_sfsv() == 1) { ?>
 <input type="radio" id="n_agd_3" name="n_agd" value="nax" <?= $nax ?> ><?= ucfirst(_("todos los de nax"))?></td></tr>
 <?php } ?>
 
-<tr><td class="etiqueta"><input type="radio" id="n_agd_4" name="n_agd" value="c" onclick="fnjs_otro(1);"><?= ucfirst(_("otro..."))?></td>
+<tr><td class="etiqueta">
+<input type="radio" id="n_agd_4" name="n_agd" value="c" onclick="fnjs_otro(1);" <?= $c ?> ><?= ucfirst(_("otro..."))?></td>
 <td><span id="oro" class=etiqueta " ><?= $oDesplCentros->desplegable(); ?></span></td>
 
 </tbody>

@@ -27,6 +27,10 @@ $ssfsv = (string) \filter_input(INPUT_POST, 'ssfsv');
 $Qlista = (string) \filter_input(INPUT_POST, 'lista');
 $Qsasistentes = (string) \filter_input(INPUT_POST, 'sasistentes');
 $Qsactividad = (string) \filter_input(INPUT_POST, 'sactividad');
+$Qn_agd = (string) \filter_input(INPUT_POST, 'n_agd');
+$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
+$Qyear = (integer) \filter_input(INPUT_POST, 'year');
+$Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 
 switch ($Qlista) {
 	case "profesion" :
@@ -73,8 +77,9 @@ $nm='';
 $a='';
 $sss='';
 $nax='';
+$c='';
 
-switch ($_POST['n_agd']) {
+switch ($Qn_agd) {
 	case "n":
 		$n="checked";
 		break;
@@ -93,12 +98,16 @@ switch ($_POST['n_agd']) {
 	case "nax":
 		$nax="checked";
 		break;
+	case "c":
+		$c="checked";
+		break;
 }
 
 $oGesCentros= new ubis\GestorCentroDl();
 $oDesplCentros = $oGesCentros->getListaCentros("WHERE status = 't' AND tipo_ctr ~ '^a|^n' ");
 $oDesplCentros->setNombre('id_ubi');
 $oDesplCentros->setBlanco(true);
+$oDesplCentros->setOpcion_sel($Qid_ubi);
 $oDesplCentros->setAction('fnjs_otro(1)');
 
 $oHash = new web\Hash();
@@ -130,7 +139,14 @@ if ($Qlista=="list_activ" || $Qlista=="list_est") {
 			$oFormP->setDesplPeriodosOpcion_sel('tot_any');
 			break;
 	}
-	$oFormP->setDesplAnysOpcion_sel(date('Y'));
+	if (!empty($Qperiodo)) {
+		$oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
+	}
+	if (!empty($Qyear)) {
+		$oFormP->setDesplAnysOpcion_sel($Qyear);
+	} else {
+		$oFormP->setDesplAnysOpcion_sel(date('Y'));
+	}
 }
 
 $a_campos = [
@@ -144,6 +160,7 @@ $a_campos = [
 			'a' => $a,
 			'sss' => $sss,
 			'nax' => $nax,
+			'c' => $c,
 			'oDesplCentros' => $oDesplCentros,
 			'oFormP' => $oFormP,
 			];

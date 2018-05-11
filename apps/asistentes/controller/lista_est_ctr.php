@@ -27,6 +27,7 @@ use ubis\model\entity as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$oPosicion->recordar();
 
 // sólo las actividades de estudios:
 
@@ -34,28 +35,52 @@ use ubis\model\entity as ubis;
 //en función de las condiciones que tengamos:
 $hoy = date('d/m/Y');
 
-empty($_POST['na'])? $na="" : $na=$_POST['na'];
-$any=empty($_POST['year'])? date('Y')+1 : $_POST['year'];
-if (empty($_POST['periodo']) || $_POST['periodo'] == 'otro') {
-	$inicio = empty($_POST['inicio'])? $_POST['empiezamin'] : $_POST['inicio'];
-	$fin = empty($_POST['fin'])? $_POST['empiezamax'] : $_POST['fin'];
+$Qn_agd = (string) \filter_input(INPUT_POST, 'n_agd');
+$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
+$Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
+$Qyear = (string) \filter_input(INPUT_POST, 'year');
+$any=empty($Qyear)? date('Y')+1 : $Qyear;
+
+
+if (empty($Qperiodo) || $Qperiodo == 'otro') {
+	$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
+	$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
+	$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
+	$Qfin = (string) \filter_input(INPUT_POST, 'fin');
+	$inicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
+	$fin = empty($Qfin)? $Qempiezamax : $Qfin;
 } else {
+	$Qempiezamax = '';
+	$Qempiezamin = '';
 	$oPeriodo = new web\Periodo();
 	$oPeriodo->setAny($any);
-	$oPeriodo->setPeriodo($_POST['periodo']);
+	$oPeriodo->setPeriodo($Qperiodo);
 	$inicio = $oPeriodo->getF_ini();
 	$fin = $oPeriodo->getF_fin();
 }
 
+
+$aGoBack = array (
+			'n_agd' => $Qn_agd,
+			'id_ubi' => $Qid_ubi,
+			'periodo' => $Qperiodo,
+			'year' => $Qyear,
+			'empiezamax' => $Qempiezamax,
+			'empiezamin' => $Qempiezamin,
+		);
+$oPosicion->setParametros($aGoBack,1);
+
+
+
 $aWhereNom['propio'] = 't';
 $aWhereAct['f_ini'] = "'$inicio','$fin'";
 $aOperadorAct['f_ini'] = 'BETWEEN';
-$aWhereAct['id_tipo_activ'] = "'^1(12|33)'";
+$aWhereAct['id_tipo_activ'] = "^1(12|33)";
 $aOperadorAct['id_tipo_activ'] = "~";
 
 $aWhereCtr=array();
 $aOperadorCtr=array();
-switch ($_POST['n_agd']) {
+switch ($Qn_agd) {
 	case "a":
 		$tabla="p_agregados";
 		$aWhereCtr['tipo_ctr'] = '^a';
@@ -76,9 +101,14 @@ switch ($_POST['n_agd']) {
 		$aWhereCtr['tipo_ctr'] = 'nj(ce)*';
 		$aOperadorCtr['tipo_ctr'] = '~';
 		break;
+	case "sss":
+		$tabla="p_n_agd";
+		$aWhereCtr['tipo_ctr'] = 'ss';
+		$aOperadorCtr['tipo_ctr'] = '=';
+		break;
 	case "c":
 		$tabla="p_n_agd";
-		$aWhereCtr['id_ubi'] = $_POST['id_ubi'];
+		$aWhereCtr['id_ubi'] = $Qid_ubi;
 		$aOperadorCtr = array();
 		break;
 	default:
@@ -152,10 +182,20 @@ foreach ($cCentros as $oCentroDl) {
 						foreach ($cMatriculas as $oMatricula) {
 							$id_asignatura = $oMatricula->getId_asignatura();
 							$preceptor = $oMatricula->getPreceptor();
+							$id_preceptor = $oMatricula->getId_preceptor();
 							$oAsignatura = new asignaturas\Asignatura($id_asignatura);
 							$nombre_corto = $oAsignatura->getNombre_corto();
 							$creditos = $oAsignatura->getCreditos();
-							if ($preceptor == 't') { $preceptor = '(p)'; } else { $preceptor=''; }
+							if ($preceptor == 't') { 
+								if (!empty($id_preceptor)) {
+									$oPersona = personas\Persona::NewPersona($id_preceptor);
+									$preceptor = '(p: '. $oPersona->getApellidosNombre().')';
+								} else {
+									$preceptor = '(p)';
+								}
+							} else {
+								$preceptor=''; 
+							}
 							$asignaturas.= "$nombre_corto ($creditos "._("creditos")." )$preceptor<br>";
 						}
 				}
@@ -177,5 +217,6 @@ $oLista = new web\Lista();
 $oLista->setGrupos($aGrupos);
 $oLista->setCabeceras($a_cabeceras);
 $oLista->setDatos($a_valores);
+
+echo $oPosicion->mostrar_left_slide(1); 
 echo $oLista->listaPaginada();
-?>
