@@ -1,8 +1,6 @@
 <?php
-namespace menus\controller;
 use menus\model\entity as menusEntity;
-use core;
-use web;
+use menus\model;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -12,16 +10,19 @@ use web;
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-	$oCuadros=new menus\model\PermisoMenu;
 
-if (empty($_POST['filtro_grupo'])) $_POST['filtro_grupo']='';
-if (empty($_POST['nuevo'])) $_POST['nuevo']='';
-if (empty($_POST['id_menu'])) $_POST['id_menu']='';
+$oPosicion->setBloque('ficha'); // antes del recordar
+$oPosicion->recordar();
+	
+$oCuadros = new menus\model\PermisoMenu;
+
+$Qfiltro_grupo = (string) \filter_input(INPUT_POST, 'filtro_grupo');
+$Qnuevo = (string) \filter_input(INPUT_POST, 'nuevo');
+$Qid_menu = (string) \filter_input(INPUT_POST, 'id_menu');
 
 $oGesMetamenu = new menusEntity\GestorMetamenu();
 $oDesplMeta = $oGesMetamenu->getListaMetamenus();
 $oDesplMeta->setNombre('id_metamenu');
-
 
 $oListaGM=new menusEntity\GestorGrupMenu();
 
@@ -30,19 +31,19 @@ $oDesplGM->setNombre('gm_new');
 
 $oHash3 = new web\Hash();
 $a_camposHidden = array(
-		'filtro_grupo' => $_POST['filtro_grupo'],
+		'filtro_grupo' => $Qfiltro_grupo,
 		'nuevo' => 1
 		);
 $oHash3->setArraycamposHidden($a_camposHidden);
 
-if (!empty($_POST['id_menu']) || !empty($_POST['nuevo'])) {
-	if (!empty($_POST['id_menu'])) {
+if (!empty($Qid_menu) || !empty($Qnuevo)) {
+	if (!empty($Qid_menu)) {
 		$oMenuDb=new menusEntity\MenuDb();
 		// para modificar los valores de un menu.
-		$oMenuDb->setId_menu($_POST['id_menu']);
+		$oMenuDb->setId_menu($Qid_menu);
 		extract($oMenuDb->getTot());
 		$oDesplMeta->setOpcion_sel($id_metamenu);
-		$oDesplMeta->setAction('fnjs_lista_menusx()');
+//		$oDesplMeta->setAction('fnjs_lista_menus()');
 		
 		$perm_menu = $oCuadros->lista_txt2($menu_perm);
 		$a_perm_menu = explode(',',$perm_menu);
@@ -70,31 +71,31 @@ if (!empty($_POST['id_menu']) || !empty($_POST['nuevo'])) {
 	$oHash->setcamposForm("$campos_chk!orden!txt_menu!id_metamenu!parametros!perm_menu");
 	$oHash->setcamposNo($campos_chk);
 	$a_camposHidden = array(
-			'id_menu' => $_POST['id_menu'],
-			'filtro_grupo' => $_POST['filtro_grupo'],
+			'id_menu' => $Qid_menu,
+			'filtro_grupo' => $Qfiltro_grupo,
 			'que' => 'guardar'
 			);
 	$oHash->setArraycamposHidden($a_camposHidden);
 	
 	$oHash2 = new web\Hash();
 	$a_camposHidden = array(
-			'id_menu' => $_POST['id_menu'],
-			'filtro_grupo' => $_POST['filtro_grupo'],
+			'id_menu' => $Qid_menu,
+			'filtro_grupo' => $Qfiltro_grupo,
 			'que' => 'del'
 			);
 	$oHash2->setArraycamposHidden($a_camposHidden);
 
 	$oHash4 = new web\Hash();
 	$a_camposHidden = array(
-			'filtro_grupo' => $_POST['filtro_grupo']
+			'filtro_grupo' => $Qfiltro_grupo
 			);
 	$oHash4->setArraycamposHidden($a_camposHidden);
 
 	$oHash5 = new web\Hash();
 	$oHash5->setcamposForm("gm_new");
 	$a_camposHidden = array(
-			'id_menu' => $_POST['id_menu'],
-			'filtro_grupo' => $_POST['filtro_grupo'],
+			'id_menu' => $Qid_menu,
+			'filtro_grupo' => $Qfiltro_grupo,
 			'que' => 'move'
 			);
 	$oHash5->setArraycamposHidden($a_camposHidden);
@@ -102,97 +103,56 @@ if (!empty($_POST['id_menu']) || !empty($_POST['nuevo'])) {
 	$oHash6 = new web\Hash();
 	$oHash6->setcamposForm("gm_new");
 	$a_camposHidden = array(
-			'id_menu' => $_POST['id_menu'],
-			'filtro_grupo' => $_POST['filtro_grupo'],
+			'id_menu' => $Qid_menu,
+			'filtro_grupo' => $Qfiltro_grupo,
 			'que' => 'copy'
 			);
 	$oHash6->setArraycamposHidden($a_camposHidden);
-	?>
-	<form id="frm_menus" name="frm_menus" action="apps/menus/controller/menus_update.php">
-	<?= $oHash->getCamposHtml(); ?>
-	<table>
-	<tr><td><?= _("orden") ?></td><td><input type="text" name="orden" value="<?= $orden ?>"><?= $txt_ok ?></td></tr>
-	<tr><td><?= _("texto menu") ?></td><td><input type="text" name="txt_menu" value="<?= htmlspecialchars($menu) ?>" size="30"></td></tr>
-	<tr><td><?= _("meta") ?></td><td><?=  $oDesplMeta->desplegable(); ?></td></tr>
-	<tr><td><?= _("parametros") ?></td><td><input type="text" name="parametros" value="<?= htmlspecialchars($parametros) ?>" size="70"></td></tr>
-	<tr><td><?= _("marcar") ?></td><td><input type="button" name="btodo" onClick="fnjs_selectAll('#frm_menus','perm_menu[]','all',0)" value="<?= _('todos') ?>"> <input type="button" name="bnada" onClick="fnjs_selectAll('#frm_menus','perm_menu[]','none',0)" value="<?= _('ninguno') ?>"></td></tr>
+	
+	$a_campos = [ 'oPosicion' => $oPosicion,
+				'oHash' => $oHash,
+				'orden' => $orden,
+				'txt_ok' => $txt_ok,
+				'menu' => $menu,
+				'oDesplMeta' => $oDesplMeta,
+				'parametros' => $parametros,
+				'oCuadros' => $oCuadros,
+				'menu_perm' => $menu_perm,
+				'oHash4' => $oHash4,
+				'nuevo' => $Qnuevo,
+				'oHash2' => $oHash2,
+				'oHash3' => $oHash3,
+				'oHash5' => $oHash5,
+				'oDesplGM' => $oDesplGM,
+				'oHash6' => $oHash6,
+				];
 
-	<tr><td><?= _("permisos") ?></td><td><?= $oCuadros->cuadros_check('perm_menu',$menu_perm); ?></td></tr>
-	</table>
-	<input type="button" onclick="fnjs_enviar_formulario('#frm_menus','#ficha');" value="<?= _("guardar") ?>">
-	</form>
-
-	<form id="frm_menus_4" action="apps/menus/controller/menus_get.php">
-	<?= $oHash4->getCamposHtml(); ?>
-	<input type="button" onclick="fnjs_enviar_formulario('#frm_menus_4','#ficha');" value="<?= _("cancelar") ?>">
-	</form>
-	<?php if (empty($_POST['nuevo'])) { ?>
-		<form id="frm_menus_2" action="apps/menus/controller/menus_update.php">
-		<?= $oHash2->getCamposHtml(); ?>
-		<input type="button" onclick="if (confirm('<?= addslashes(_("¿Está seguro?")) ?>')) { fnjs_enviar_formulario('#frm_menus_2','#ficha'); }" value="<?= _("eliminar") ?>">
-		</form>
-		<form id="frm_menus_3" action="apps/menus/controller/menus_get.php">
-		<?= $oHash3->getCamposHtml(); ?>
-		<input type="button" onclick="fnjs_enviar_formulario('#frm_menus_3','#ficha');" value="<?= _("nuevo") ?>">
-		</form>
-		<form id="frm_menus_5" action="apps/menus/controller/menus_update.php">
-		<?= $oHash5->getCamposHtml(); ?>
-		<input type="button" onclick="if (confirm('<?= addslashes(_("No se guardan los cambios, sólo se cambia el grupo.")) ?>')) { fnjs_enviar_formulario('#frm_menus_5','#ficha'); }" value="<?= _("mover a") ?>">
-		<?= $oDesplGM->desplegable(); ?>
-		</form>
-		<form id="frm_menus_6" action="apps/menus/controller/menus_update.php">
-		<?= $oHash6->getCamposHtml(); ?>
-		<input type="button" onclick="if (confirm('<?= addslashes(_("No se guardan los cambios, sólo se cambia el grupo.")) ?>')) { fnjs_enviar_formulario('#frm_menus_6','#ficha'); }" value="<?= _("copiar en") ?>">
-		<?= $oDesplGM->desplegable(); ?>
-		</form>
-		<?php
-	}
+	$oView = new core\View('menus/controller');
+	echo $oView->render('menus_get.phtml',$a_campos);
 } else {
 	// para ver el listado de todos los menus de un grupo
-	if (!empty($_POST['filtro_grupo'])) {
-		$aWhere = array('id_grupmenu'=>$_POST['filtro_grupo'],'_ordre'=>'orden');
+	$oMenuDbs=array();
+	if (!empty($Qfiltro_grupo)) {
+		$aWhere = array('id_grupmenu'=>$Qfiltro_grupo,'_ordre'=>'orden');
 		$oLista=new menusEntity\GestorMenuDb();
 		$oMenuDbs=$oLista->getMenuDbs($aWhere);
 	}
-	$txt="";
-	$indice=1;
-	$indice_old=1;
-	$m=0;
-	echo"<ul>";
-	foreach ($oMenuDbs as $oMenuDb) {
-		$m++;
-		extract($oMenuDb->getTot());
-		$txt_ok = empty($ok)? '' : '[ok]';
-		//echo "m: $perm_menu,l: $perm_login, ";
-		$perm_menu = $oCuadros->lista_txt2($menu_perm);
-		// hago las rutas absolutas, en vez de relativas:
-		if (!empty($url)) $url=core\ConfigGlobal::getWeb().'/$url';
-		// quito las llaves "{}"
-		$orden=substr($orden,1,-1);
-		//$num_orden=
-		$array_orden=preg_split('/,/',$orden);
-		$indice=count ($array_orden);
-		// para poder hcer click si he borrado el monbre
-		$menu = empty($menu)? '???'._('BORRADO').'???' : $menu;
-		if ($indice==$indice_old) {
-				$txt.="<li>$orden <span class='link' onclick=fnjs_ver_ficha('$id_menu')  >$menu</span> $txt_ok ($perm_menu)";
-		} elseif ($indice>$indice_old) {
-				$txt.="<ul><li>$orden <span class='link' onclick=fnjs_ver_ficha('$id_menu')  >$menu</span> $txt_ok ($perm_menu)";
-		} else {
-			for ($n=$indice;$n<$indice_old;$n++) {
-				$txt.="</li></ul>";
-			}
-				$txt.="</li><li>$orden <span class='link' onclick=fnjs_ver_ficha('$id_menu')  >$menu</span> $txt_ok ($perm_menu)";
-		}
-		$indice_old=$indice;
-	}
-	echo $txt;
-	echo "</li></ul></li></ul>";
-	?>
-	<form id="frm_menus_3" action="apps/menus/controller/menus_get.php">
-	<?= $oHash3->getCamposHtml(); ?>
-	<input type="button" onclick="fnjs_enviar_formulario('#frm_menus_3','#ficha');" value="<?= _("nuevo") ?>">
-	</form>
-	<?php
+	
+	// para el script
+	$url = core\ConfigGlobal::getWeb().'/apps/menus/controller/menus_get.php';
+	$oHash2 = new web\Hash();
+	$oHash2->setUrl($url);
+	$oHash2->setCamposForm('filtro_grupo!id_menu'); 
+	$h2 = $oHash2->linkSinVal();
+
+	$a_campos = ['oPosicion' => $oPosicion,
+				'url' => $url,
+				'h2' => $h2,
+				'oCuadros' => $oCuadros,
+				'oHash3' => $oHash3,
+				'oMenuDbs' => $oMenuDbs,
+				];
+
+	$oView = new core\View('menus/controller');
+	echo $oView->render('menus_get_lista.phtml',$a_campos);
 }
-?>

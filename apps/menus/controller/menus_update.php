@@ -1,5 +1,7 @@
 ﻿<?php
-use menus\model\entity as menus;
+use menus\model\entity as menusEntity;
+use menus\model;
+
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -11,8 +13,8 @@ use menus\model\entity as menus;
 $id_grupmenu = empty($_POST['filtro_grupo'])? '' : $_POST['filtro_grupo'];
 $gm_new = empty($_POST['gm_new'])? '' : $_POST['gm_new'];
 
-$oMenuDb=new menus\MenuDb();
-$oCuadros=new menus\PermisoMenu;
+$oMenuDb=new menusEntity\MenuDb();
+$oCuadros=new menus\model\PermisoMenu;
 
 $oMenuDb->setId_menu($_POST['id_menu']);
 switch ($_POST['que']) {
@@ -65,6 +67,3 @@ switch ($_POST['que']) {
 		}
 		break;
 }
-
-$go_to="menus_get.php?filtro_grupo=$id_grupmenu|ficha";
-echo $oPosicion->go_atras(1);
