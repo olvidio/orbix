@@ -144,12 +144,10 @@
 161	admin	apps/usuarios/controller/role_lista.php	\N	lista roles
 162	core	fnjs_exportar('odfc')	\N	exportar a odf calc
 164	usuarios	apps/usuarios/controller/personal.php	\N	preferencias usuario
-165	core	fnjs_windowopen('http://demo.dlb.es/mediawiki')	\N	Ayuda
 133	ubis	apps/ubis/controller/ubis_buscar.php	\N	buscar ubis
 119	activ1	apps/actividades/controller/actividad_que.php	\N	seleccionar actividad
 76	personas	apps/personas/controller/personas_que.php	\N	búsqueda de personas
 166	devel	apps/menus/controller/pasar_a_demo.php	\N	pasar a demo
-136	activ	apps/actividades/controller/actividad_nueva.php	\N	actividad nueva
 17	devel	apps/devel/controller/db_que.php	\N	nuevo esquema
 167	core	fnjs_windowopen('http://demo.moneders.net/redmine')	\N	abrir pag redmine
 60	notas	apps/notas/controller/acta_select.php	\N	actas
@@ -157,13 +155,11 @@
 121	admin	apps/dossiers/controller/perm_dossiers.php	\N	permisos dossiers
 138	\N	programas/lista_dossiers.php	\N	\N
 61	asistentes	apps/asistentes/controller/planning_que.php	\N	planning
-155	actividadestudios	apps/actividadestudios/controller/posibles.php	\N	Posibles ca
 147	asistentes	apps/asistentes/controller/que_ctr_lista.php	\N	Buscar por centro
 140	asistentes	apps/asistentes/controller/activ_pendientes_select.php	\N	actividades pendientes
 57	notas	apps/notas/controller/resumen_anual.php	\N	resumen anual
 168	actividadestudios	apps/actividadestudios/controller/matriculas_pendientes.php	\N	matriculas pendientes
 169	actividadplazas	apps/actividadplazas/controller/gestion_plazas.php	\N	Gestión de plazas
-170	actividadplazas	apps/actividadplazas/controller/balance_plazas.php	\N	Balance de Plazas
 171	stgr1	apps/profesores/controller/profesor_asignatura_que.php	\N	profesores para asignatura
 172	actividadplazas	apps/actividadplazas/controller/incorporar_peticion.php	\N	Incorporar peticiones de plazas
 52	actividadestudios	apps/actividadestudios/controller/actualizar_docencia.php	\N	guardar docencia ca en dossier
@@ -172,3 +168,7 @@
 175	notas	apps/notas/controller/asig_faltan_que.php	\N	Asignaturas pendientes
 176	dbextern	apps/dbextern/controller/sincro_listas.php	\N	Sincronizar con los datos de Listas
 163	core	fnjs_exportar('odft')	\N	exportar a odft txt
+165	core	fnjs_windowopen('http://orbix.local/orbix/public/ayuda/index.php')	\N	Ayuda
+136	activ	apps/actividades/controller/actividad_ver.php	\N	actividad nueva
+170	actividadplazas	apps/actividadplazas/controller/plazas_balance_que.php	\N	Balance de Plazas
+155	actividadestudios	apps/actividadestudios/controller/ca_posibles_que.php	\N	Posibles ca
