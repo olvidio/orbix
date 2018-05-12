@@ -123,6 +123,7 @@ switch ($Qtipo_personas) {
 		break;
 }
 
+$aFaltan = array();
 foreach ($cPersonas as $oPersona) {
 	$id_nomP = $oPersona->getId_nom();
 	if (in_array($id_nomP, $aAsistentes)) continue;
@@ -167,6 +168,7 @@ switch ($Qtipo_personas) {
 		break;
 }
 
+$aFaltanOtras = array();
 foreach ($cPersonasOtras as $oPersona) {
 	$id_nomP = $oPersona->getId_nom();
 	if (in_array($id_nomP, $aAsistentes)) continue;
