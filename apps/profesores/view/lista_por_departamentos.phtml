@@ -1,0 +1,24 @@
+<?php
+foreach ($aClaustro as $aDepartamento){
+	$titulo = $aDepartamento['departamento'];
+	$aProfesores = $aDepartamento['profesores'];
+	?>
+	<div class='salta_pag'>
+	<h3><?= $titulo ?></h3>
+	<table>
+	<?php
+	foreach ($aProfesores as $tipo => $aNoms) {
+		?>
+		<tr><td><?= $tipo ?></td><td></td></tr>
+		<?php
+		foreach($aNoms as $id => $ap_nom) {
+		?>
+			<tr><td></td><td><?= $ap_nom ?></td></tr>
+		<?php
+		}
+	}
+	?>
+	</table>
+	</div>
+	<?php
+}

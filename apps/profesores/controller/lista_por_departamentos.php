@@ -10,9 +10,6 @@
 *		
 */
 
-/**
-* Funciones más comunes de la aplicación
-*/
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -79,24 +76,9 @@ foreach ($cDepartamentos as $oDepartamento) {
 						);
 }
 
-//------------------------------ html --------------------------------
-?>
+$a_campos = [
+			'aClaustro' => $aClaustro,
+			];
 
-<?php
-$html = '';
-foreach ($aClaustro as $aDepartamento){
-	$titulo = $aDepartamento['departamento'];
-	$html .=  "<div class='salta_pag'>";
-	$html .=  "<h3>$titulo</h3>";
-	$html .=  "<table>";
-	$aProfesores = $aDepartamento['profesores'];
-	foreach ($aProfesores as $tipo => $aNoms) {
-		$html .= "<tr><td>$tipo</td><td></td></tr>";
-		foreach($aNoms as $id => $ap_nom) {
-			$html .= "<tr><td></td><td>$ap_nom</td></tr>";
-		}
-	}
-	$html .=  "</table>";
-	$html .=  "</div>";
-}
-echo $html;
+$oView = new core\View('profesores/controller');
+echo $oView->render('lista_por_departamentos.phtml',$a_campos);
