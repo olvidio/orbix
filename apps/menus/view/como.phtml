@@ -1,0 +1,47 @@
+<ul>
+	<li>1.- exportar:<br>
+	Copia los menus de 'sv.dlb' a 'comun.public'
+	</li>
+	<li>2.- exportar a ficheros:<br>
+	IMPORTANTE
+	   Para tener permisos de escritura el directorio menus debe tener a+w
+	</p><p>
+	$dir_base = "/var/www/orbix";<br>
+	<b>OJO. Están en 'orbix', no en 'pruebas'</b>
+	</p><p>
+	Se exportan lo valores de "comun.public" a ficheros
+	</p><p>
+	Genera Un fichero con las instrucciones sql para borrar (TRUNCATE) y copiar los nuevos:<br>
+	filename = "$dir_base/log/menus/tot_menus.sql";
+	</p><p>
+	Los ficheros donde están los valores de las tablas:
+	</p><p>
+	file_metamenus = "$dir_base/log/menus/comun.sql";<br>
+	file_refgrupmenu = "$dir_base/log/menus/refgrupmenu.sql";<br>
+	file_refgrupmenu_rol = "$dir_base/log/menus/refgrupmenu_rol.sql";<br>
+	file_refmenus = "$dir_base/log/menus/refmenus.sql";<br>
+	</p>
+	</li>
+	<li>3. Copiar via ssh, o git Hub (commit) al directorio destino
+	</li>
+	<li>4. importar desde ficheros
+	<p>
+	Ejecuta lo que se ha grabado en <br>
+	<b>OJO. Están en 'orbix', no en 'pruebas'</b>
+	filename = "$dir_base/log/menus/tot_menus.sql";
+	</p><p>
+	Es decir copia a 'comun.public' los menus de referencia.
+	</p>
+	</li>
+	<li>5. importar
+	<p>
+	Dos opciones:
+	</p><p>
+		a) todas las dl igual<br>
+	copia todos los menus de comun.public a todos los esquemas (sv y sf).
+	</p> <p>
+	b) seguro?<br>
+	copia todos los menus de comun.public al esquema actual (sv-sf distinto)
+	</p>
+	</li>
+</ul>

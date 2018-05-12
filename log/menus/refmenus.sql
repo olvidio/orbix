@@ -205,3 +205,4 @@
 57	{5,20}	n de paso	tabla=p_de_paso&na=n&tipo=persona&es_sacd=1	76	8	8	t
 129	{37,60}	list varias cv	ssfsv=sv&sasistentes=agd&sactividad=cv&que=list_cjto	119	2064	12	t
 140	{35,70}	lista por ctr	lista=list_activ&n_agd=n&sasistentes=n&sactividad=ca	147	2064	12	t
+938	{10,70}	ayuda	\N	177	33816576	13	t

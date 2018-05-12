@@ -12,17 +12,20 @@ use menus\model\entity as menus;
 $oDB = $GLOBALS['oDB'];
 $oDBPC = $GLOBALS['oDBPC'];
 
-$seguro = empty($_POST['seguro'])? 2 : $_POST['seguro'];
-$todos = empty($_POST['todos'])? 2 : $_POST['todos'];
+$Qseguro = (integer) \filter_input(INPUT_POST, 'seguro');
+$Qtodos = (integer) \filter_input(INPUT_POST, 'todos');
 
-if ($seguro == 2) {
+$Qseguro = empty($Qseguro)? 2 : $Qseguro;
+$Qtodos = empty($Qtodos)? 2 : $Qtodos;
+
+if ($Qseguro == 2) {
     if (core\ConfigGlobal::mi_dele() == 'dlb') {
         echo _("casi seguro que no quieres hacerlo.");
         echo "<br>";
 
         $go1=web\Hash::link('apps/menus/controller/menus_importar.php?'.http_build_query(array('seguro'=>1,'todos'=>1)));
         $html = "Esto pondrá los menus por defecto. Para todas las dl";
-        $html = "tarda mucho, pero acaba bien (creo)";
+        $html = "tarda mucho (2'30\" para 10 dl), pero acaba bien (creo)";
         $html .= "<br>";
         $html .= "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go1');\">". _("Poner todas las dl igual")."</span>";
         $html .= "<br>";
@@ -36,30 +39,28 @@ if ($seguro == 2) {
     echo $html;
 }
 
-if ($seguro == 1) {
-    $aEsquemas = array('dl');
-    if ($todos == 1) {
-        $aDl = array('dlb','dlgr','dlmE','dlmO','dlp','dlst','dls','dlva','dlv','dlz');
-        $aEsquemas = array();
-        foreach ($aDl as $dl) {
-            $aEsquemas[] = "H-".$dl."v";
-            $aEsquemas[] = "H-".$dl."f";
-        }
-    }
+if ($Qseguro == 1) {
+	$aEsquemas = array();
+    if ($Qtodos == 1) {
+        $aDl = array('cr','dlb','dlgr','dlmE','dlmO','dlp','dlst','dls','dlva','dlv','dlz');
+		foreach ($aDl as $dl) {
+			$aEsquemas[] = "H-".$dl."v";
+			$aEsquemas[] = "H-".$dl."f";
+		}
+    } else { // solo un esquema
+		$mi_region_dl = core\ConfigGlobal::mi_region_dl();
+		$aEsquemas[] = $mi_region_dl;
+	}
 
     foreach ($aEsquemas as $esquema) {
-        if ($todos == 2) { // solo un esquema
-            //$oDB = $GLOBALS['oDB'];
-        } else {
-            echo ">>>>actualizando menus para $esquema<br>";
-            $sec = substr($esquema,-1); // la v o la f.
-            echo ">>>$sec>>actualizando menus para $esquema<br>";
-            if ($sec == 'v') { $oDB = new \PDO(core\ConfigGlobal::get_conexio_sv($esquema)); }
-            if ($sec == 'f') { $oDB = new \PDO(core\ConfigGlobal::get_conexio_sf($esquema)); }
+		echo ">>>>actualizando menus para $esquema<br>";
+		$sec = substr($esquema,-1); // la v o la f.
+		echo ">>>$sec>>actualizando menus para $esquema<br>";
+		if ($sec == 'v') { $oDB = new \PDO(core\ConfigGlobal::get_conexio_sv($esquema)); }
+		if ($sec == 'f') { $oDB = new \PDO(core\ConfigGlobal::get_conexio_sf($esquema)); }
 
-            $oDB->exec("SET DATESTYLE TO '".core\ConfigGlobal::$datestyle."'");
-            echo "actualizando menus para $esquema<br>";
-        }
+		$oDB->exec("SET DATESTYLE TO '".core\ConfigGlobal::$datestyle."'");
+		echo "actualizando menus para $esquema<br>";
 
         //************ GRUPMENU **************
 		$sql_del = 'TRUNCATE TABLE aux_grupmenu RESTART IDENTITY CASCADE';

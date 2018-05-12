@@ -25,7 +25,7 @@ class InfoMetaMenus extends core\datosInfo {
 			$aWhere=array('modulo'=> $this->k_buscar);
 			$aOperador=array('modulo'=>'sin_acentos');
 		}
-		$oLista=new GestorMetamenu();
+		$oLista = new entity\GestorMetamenu();
 		$Coleccion=$oLista->getMetamenus($aWhere,$aOperador);
 
 		return $Coleccion;

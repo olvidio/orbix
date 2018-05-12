@@ -114,7 +114,6 @@
 104	actividadestudios	apps/actividadestudios/controller/matricular.php	\N	matricular
 38	permisos	apps/permisos/controller/config_select.php	\N	config modulos
 88	notas	apps/notas/controller/asignaturas_pendientes.php	\N	cuadro alumnos-asignaturas
-64	devel	apps/menus/controller/pasar_a_tunel.php	\N	pasar a tunel
 130	\N	programas/actividades_fases_cambio.php	\N	\N
 132	\N	sg/lista_actividades_sg.php	\N	\N
 134	\N	scdl/registro/mod_ini.php	\N	\N
@@ -172,3 +171,5 @@
 136	activ	apps/actividades/controller/actividad_ver.php	\N	actividad nueva
 170	actividadplazas	apps/actividadplazas/controller/plazas_balance_que.php	\N	Balance de Plazas
 155	actividadestudios	apps/actividadestudios/controller/ca_posibles_que.php	\N	Posibles ca
+64	devel	apps/menus/controller/menus_ficheros.php	\N	menu a/de ficheros
+177	devel	apps/menus/view/como.phtml	\N	ayuda menus

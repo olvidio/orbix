@@ -25,14 +25,14 @@ $str_conexio_public="pgsql:host=localhost sslmode=disable port=5432  dbname='com
 $oDevelPC = new \PDO($str_conexio_public);
 $oDevelPC->exec('SET search_path TO public');
 
-$accion = empty($_POST['accion'])? '' : $_POST['accion'];
+$Qaccion = (string) \filter_input(INPUT_POST, 'accion');
 
 //$dir_base = core\ConfigGlobal::$directorio;
 $dir_base = "/var/www/orbix";
 $filename = "$dir_base/log/menus/tot_menus.sql";
 $filelog = "$dir_base/log/menus/log.txt";
 
-if ($accion == 'importar') {
+if ($Qaccion == 'importar') {
 	/* IMPORTANTE
 	   En el fichero /etc/sudoers  (editar con visudo) debe estar la linea:
 
@@ -63,7 +63,7 @@ if ($accion == 'importar') {
 }
 
 
-if ($accion == 'exportar') {
+if ($Qaccion == 'exportar') {
 	// PASSAR A FICHEROS
 
 	/* IMPORTANTE
@@ -99,4 +99,3 @@ if ($accion == 'exportar') {
 
 	file_put_contents($filename, $txt_comun);
 } 
-?>

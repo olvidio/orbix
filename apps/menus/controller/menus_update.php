@@ -10,33 +10,41 @@ use menus\model;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$id_grupmenu = empty($_POST['filtro_grupo'])? '' : $_POST['filtro_grupo'];
-$gm_new = empty($_POST['gm_new'])? '' : $_POST['gm_new'];
+$Qid_grupmenu = (integer) \filter_input(INPUT_POST, 'filtro_grupo');
+$Qid_menu = (integer) \filter_input(INPUT_POST, 'id_menu');
+$Qque = (string) \filter_input(INPUT_POST, 'que');
+$Qgm_new = (string) \filter_input(INPUT_POST, 'gm_new');
 
 $oMenuDb=new menusEntity\MenuDb();
 $oCuadros=new menus\model\PermisoMenu;
 
-$oMenuDb->setId_menu($_POST['id_menu']);
-switch ($_POST['que']) {
+$oMenuDb->setId_menu($Qid_menu);
+switch ($Qque) {
 	case 'del': // Para borrar un registro
 		if ($oMenuDb->DBEliminar() === false) {
 			echo _('Hay un error, no se ha eliminado');
 		}
 		break;
 	case 'guardar':
+		$Qok = (string) \filter_input(INPUT_POST, 'ok');
+		$Qorden = (string) \filter_input(INPUT_POST, 'orden');
+		$Qtxt_menu = (string) \filter_input(INPUT_POST, 'txt_menu');
+		$Qparametros = (string) \filter_input(INPUT_POST, 'parametros');
+		$Qid_metamenu = (integer) \filter_input(INPUT_POST, 'id_metamenu');
+		$Qperm_menu = (array) \filter_input(INPUT_POST, 'perm_menu', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 		$oMenuDb->DBCarregar(); // si no paso el ok, que coja el valor que tiene
 		if (core\ConfigGlobal::mi_id_role() == 1) {
-			$ok = empty($_POST['ok'])? 'f' : $_POST['ok'];
+			$ok = empty($Qok)? 'f' : $Qok;
 			$oMenuDb->setOk($ok);
 		}
-		$oMenuDb->setOrden($_POST['orden']);
-		$oMenuDb->setId_grupmenu($id_grupmenu);
-		$oMenuDb->setMenu($_POST['txt_menu']);
-		$oMenuDb->setParametros($_POST['parametros']);
-		$oMenuDb->setId_metamenu($_POST['id_metamenu']);
+		$oMenuDb->setOrden($Qorden);
+		$oMenuDb->setId_grupmenu($Qid_grupmenu);
+		$oMenuDb->setMenu($Qtxt_menu);
+		$oMenuDb->setParametros($Qparametros);
+		$oMenuDb->setId_metamenu($Qid_metamenu);
 		//cuando el campo es perm_menu, se pasa un array que hay que convertirlo en integer.
-		if (!empty($_POST['perm_menu'])){
-			list ($ok0, $sum) = $oCuadros->permsum_bit($_POST['perm_menu']);
+		if (!empty($Qperm_menu)){
+			list ($ok0, $sum) = $oCuadros->permsum_bit($Qperm_menu);
 			if ($ok0) {
 				$oMenuDb->setMenu_perm($sum);
 			}
@@ -46,21 +54,21 @@ switch ($_POST['que']) {
 		}
 		break;
 	case 'move':
-		if (empty($gm_new)) {
+		if (empty($Qgm_new)) {
 			echo _('Hay un error, no se ha guardado');
 		}
 		$oMenuDb->DBCarregar(); // camiar de grupomenu
-		$oMenuDb->setId_grupmenu($gm_new);
+		$oMenuDb->setId_grupmenu($Qgm_new);
 		if ($oMenuDb->DBGuardar() === false) {
 			echo _('Hay un error, no se ha guardado');
 		}
 		break;
 	case 'copy':
-		if (empty($gm_new)) {
+		if (empty($Qgm_new)) {
 			echo _('Hay un error, no se ha guardado');
 		}
 		$oMenuDb->DBCarregar(); // Clonar y poner en otro grupmenu
-		$oMenuDb->setId_grupmenu($gm_new);
+		$oMenuDb->setId_grupmenu($Qgm_new);
 		$oMenuDb->setId_menu(''); //al borrar el id_menu, me generará uno nuevo.
 		if ($oMenuDb->DBGuardar() === false) {
 			echo _('Hay un error, no se ha guardado');
