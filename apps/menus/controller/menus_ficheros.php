@@ -21,14 +21,21 @@ use menus\model\entity as menus;
 // Copiar de dlb a public roles-grupmenu, grupmenu, menus
 //$oDevelPC = $GLOBALS['oDBPC'];
 
-$str_conexio_public="pgsql:host=localhost sslmode=disable port=5432  dbname='comun' user='dani' password='system'";
+// Para el caso de pruebas, la base de datos es 'teest-comun'
+if (core\ConfigGlobal::WEBDIR == 'pruebas') {
+	$str_conexio_public="pgsql:host=localhost sslmode=disable port=5432  dbname='test-comun' user='dani' password='system'";
+	$db_comun = 'test-comun';
+} else {
+	$str_conexio_public="pgsql:host=localhost sslmode=disable port=5432  dbname='comun' user='dani' password='system'";
+	$db_comun = 'comun';
+}
 $oDevelPC = new \PDO($str_conexio_public);
 $oDevelPC->exec('SET search_path TO public');
 
 $Qaccion = (string) \filter_input(INPUT_POST, 'accion');
 
-//$dir_base = core\ConfigGlobal::$directorio;
-$dir_base = "/var/www/orbix";
+//$dir_base = "/var/www/orbix";
+$dir_base = core\ConfigGlobal::DIR;
 $filename = "$dir_base/log/menus/tot_menus.sql";
 $filelog = "$dir_base/log/menus/log.txt";
 
@@ -47,7 +54,7 @@ if ($Qaccion == 'importar') {
     $command .= "--pset pager=off ";
     $command .= "--file=".$filename." ";
     $command .= "--user=\"dani\"";
-    $command .= " comun ";
+    $command .= " $db_comun ";
     //$command .= " comun > ".$filelog." 2>&1";
     //echo "cmd: $command<br>";
 

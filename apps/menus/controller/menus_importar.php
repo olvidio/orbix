@@ -25,7 +25,7 @@ if ($Qseguro == 2) {
 
         $go1=web\Hash::link('apps/menus/controller/menus_importar.php?'.http_build_query(array('seguro'=>1,'todos'=>1)));
         $html = "Esto pondrá los menus por defecto. Para todas las dl";
-        $html = "tarda mucho (2'30\" para 10 dl), pero acaba bien (creo)";
+        $html = "tarda mucho (3min para 10 dl), pero acaba bien (creo)";
         $html .= "<br>";
         $html .= "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go1');\">". _("Poner todas las dl igual")."</span>";
         $html .= "<br>";
