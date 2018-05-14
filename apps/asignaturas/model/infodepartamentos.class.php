@@ -25,7 +25,7 @@ class InfoDepartamentos extends core\datosInfo {
 			$aWhere=array('departamento'=> $this->k_buscar);
 			$aOperador=array('departamento'=>'sin_acentos');
 		}
-		$oLista=new GestorDepartamento();
+		$oLista=new entity\GestorDepartamento();
 		$Coleccion=$oLista->getDepartamentos($aWhere,$aOperador);
 
 		return $Coleccion;

@@ -25,7 +25,7 @@ class InfoAsignaturas extends core\datosInfo {
 		$aWhere['id_asignatura']= 3000;
 		$aOperador['id_asignatura']='<';
 		$aWhere['_ordre']='id_nivel';
-		$oLista=new GestorAsignatura();
+		$oLista=new entity\GestorAsignatura();
 		$Coleccion=$oLista->getAsignaturas($aWhere,$aOperador);
 
 		return $Coleccion;

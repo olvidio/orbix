@@ -25,7 +25,7 @@ class InfoSectores extends core\datosInfo {
 			$aWhere=array('sector'=> $this->k_buscar);
 			$aOperador=array('sector'=>'sin_acentos');
 		}
-		$oLista=new GestorSector();
+		$oLista=new entity\GestorSector();
 		$Coleccion=$oLista->getSectores($aWhere,$aOperador);
 
 		return $Coleccion;
