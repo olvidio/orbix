@@ -482,7 +482,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'tipo'));
 		$oDatosCampo->setEtiqueta(_("tipo"));
 		$oDatosCampo->setTipo('array');
-        $oDatosCampo->setArgument(array( 'v'=> _("verano"), 'i'=> _("invierno") , 'p'=> _("preceptor") ));
+		$oDatosCampo->setLista(array( 'v'=> _("verano"), 'i'=> _("invierno") , 'p'=> _("preceptor") ));
 		return $oDatosCampo;
 	}
 	/**

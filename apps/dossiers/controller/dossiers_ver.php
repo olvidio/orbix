@@ -214,8 +214,9 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
 	$id_dossier=strtok($Qid_dossier,"y");
 	while  ($id_dossier) {
 		// nombre del id div actual
-		$bloque = 'ficha'.$id_dossier;
-		echo "<div id=\"$bloque\">";
+		$nom_bloque = 'ficha'.$id_dossier;
+		$bloque = '#ficha'.$id_dossier;
+		echo "<div id=\"$nom_bloque\">";
 		$oTipoDossier = new dossiers\TipoDossier($id_dossier);
 		$tabla_dossier=$oTipoDossier->getTabla_to();
 		$app=$oTipoDossier->getApp();
@@ -224,9 +225,10 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
 		if ($Qpermiso==3) { $edit=1; }
 		
 		// Para presentaciones particulares
-		$nameClaseSelect = "$app\\model\\Select".$id_dossier;
-		$claseSelect = new $nameClaseSelect();
-		if (is_object($claseSelect)){
+		$nameFile = "../../$app/model/select".$id_dossier.".class.php";
+		if (realpath($nameFile)){ //como file_exists
+			$nameClaseSelect = "$app\\model\\Select".$id_dossier;
+			$claseSelect = new $nameClaseSelect();
 			$claseSelect->setId_dossier($id_dossier);
 			$claseSelect->setPau($pau);
 			$claseSelect->setObj_pau($Qobj_pau);
@@ -257,7 +259,7 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
 			$oTipoDossier = new dossiers\TipoDossier($id_dossier);
 			$app=$oTipoDossier->getApp();
 			// No sé porque no acepa aqui el '_' en el nombre de la clase.
-			$clase_info = "$app\\model\\entity\\datos$id_dossier";
+			$clase_info = "$app\\model\\info$id_dossier";
 			// Tiene que ser en dos pasos.
 			$obj = $clase_info;
 			$oInfoClase = new $obj();
@@ -293,7 +295,6 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
 					'obj_pau' => $Qobj_pau,
 					'permiso' => $Qpermiso,
 					'bloque' => $bloque,
-					'go_to' => $go_to
 					);
 			$oHashSelect->setArraycamposHidden($a_camposHidden);
 		

@@ -537,7 +537,7 @@ function fnjs_ir_a() {
 	var atras='';
 	var url=$('#url').val();
 	var parametros=$('#parametros').val();
-	var bloque='#'+$('#id_div').val();
+	var bloque=$('#id_div').val();
 	
 	if(parametros) {
 		if ($('#ir_a').length || $('#ir_atras').length || $('#ir_atras2').length || $('#go_atras').length) { // atras=1; 

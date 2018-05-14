@@ -55,6 +55,14 @@ $Qk_buscar = urldecode($Qk_buscar);
 $obj = $Qclase_info;
 $oInfoClase = new $obj();
 
+// si paso parametros, definir la collción
+$Qpau = (string) \filter_input(INPUT_POST, 'pau');
+$Qid_pau = (integer) \filter_input(INPUT_POST, 'id_pau');
+$Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
+$oInfoClase->setPau($Qpau);
+$oInfoClase->setId_pau($Qid_pau);
+$oInfoClase->setObj_pau($Qobj_pau);
+
 $oDatosTabla = new DatosTabla();
 $oDatosTabla->setExplicacion_txt($oInfoClase->getTxtExplicacion());
 $oDatosTabla->setEliminar_txt($oInfoClase->getTxtEliminar());
@@ -82,6 +90,9 @@ $a_camposHiddenSelect = array(
 		'datos_buscar' => $Qdatos_buscar,
 		'aSerieBuscar' => $QaSerieBuscar,
 		'k_buscar' => $Qk_buscar,
+		'obj_pau' => $Qobj_pau,
+		'id_pau' => $Qid_pau,
+		'pau' => $Qpau
 		);
 $oHashSelect->setArraycamposHidden($a_camposHiddenSelect);
 
@@ -129,6 +140,7 @@ if ($Qpermiso == 3) {
 	$html .= _("nuevo");
 	$html .= "\" onclick=\"fnjs_nuevo('#seleccionados');\"></td></tr></table>";
 }
+$html .= "</form>";
 
 echo $oPosicion->mostrar_left_slide(1);
 echo $html;

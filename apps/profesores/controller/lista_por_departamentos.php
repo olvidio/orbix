@@ -40,7 +40,7 @@ foreach ($cDepartamentos as $oDepartamento) {
 	$departamento = $oDepartamento->getDepartamento();
 	// director.
 	$oGesProfesorDirector = new profesores\model\entity\GestorProfesorDirector();
-	$cProfesorDirector = $oGesProfesorDirector->getProfesoresDirectores(array('id_departamento'=>$id_departamento),  array('f_cese' => 'IS NULL'));
+	$cProfesorDirector = $oGesProfesorDirector->getProfesoresDirectores(array('id_departamento'=>$id_departamento,'f_cese'=>'NULL'),  array('f_cese' => 'IS NULL'));
 	$aProfesores =array();
 	$aDirs =array();
 	foreach ($cProfesorDirector as $oProfesorDirector) {
@@ -57,7 +57,7 @@ foreach ($cDepartamentos as $oDepartamento) {
 	$oGesProfesor = new profesores\model\entity\GestorProfesor();
 	foreach ($cTipoProfesor as $id_tipo => $tipo) {
 		//$aProfesores[$tipo] = $oGesProfesor->getListaProfesoresDepartamento($id_departamento);
-		$cProfesores = $oGesProfesor->getProfesores(array('id_departamento'=>$id_departamento,'id_tipo_profesor' => $id_tipo),array('f_cese'=>'IS NULL'));
+		$cProfesores = $oGesProfesor->getProfesores(array('id_departamento'=>$id_departamento,'id_tipo_profesor' => $id_tipo,'f_cese'=>'NULL'),array('f_cese'=>'IS NULL'));
 		$aProfes =array();
 		foreach ($cProfesores as $oProfesor) {
 			$id_nom = $oProfesor->getId_nom();

@@ -46,7 +46,7 @@ class Posicion {
 	function __construct($php_self='',$vars=array()) {
 		$this->constructor = true;
 		$this->surl = $php_self;
-		$this->sbloque = 'main';
+		$this->sbloque = '#main';
 		$this->setParametros($vars);
 		$this->constructor = false;
 	}
@@ -194,15 +194,16 @@ class Posicion {
 		if (empty($this->surl)) {
 			return '';
 		}
-		
+		$id_div = $this->getId_div();
+		$id_div = empty($id_div)? 'ir_atras' : $id_div;
+
 		$url = $this->surl;
 		$aParam = $this->aParametros;
 		$sparametros = Hash::add_hash($aParam,$url);
 		$bloque = $this->sbloque;
 
-		$id_div = $this->getId_div();
-		$id_div = empty($id_div)? 'ir_atras' : $id_div;
-
+		// el div inicial lo pone fnjs_mostrar_atras, porque intenta aprovechar si ya existe uno
+		//  $html = '<div id="'.$id_div.'" style="display: none;">';
 		$html = '<form id="go">';
 		$html .= '	url: <input id="url" type="text" value="' . $url .'" size=70><br>';
 		$html .= '	parametros: <input id="parametros" type="text" value="' . $sparametros . '" size=70><br>';
@@ -483,7 +484,7 @@ class Posicion {
 			echo $_error_txt;
 		}
 		*/
-		if (empty($frame)) $frame="main";
+		if (empty($frame)) $frame="#main";
 
 		// passarlo a array para usar la funcion add_hash
 		$aParam = array();

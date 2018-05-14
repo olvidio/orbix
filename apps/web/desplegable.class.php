@@ -70,7 +70,8 @@ class Desplegable {
 				$txt .= "<option value=\"$key\" $sel>$val</option>";
 			}
 		} else {
-			exit (_('Tiene que ser un array'));
+			$msg_err = _('Tiene que ser un array') .": ".__FILE__.": line ". __LINE__;
+			exit ($msg_err);
 		}
 		return $txt;
 	}

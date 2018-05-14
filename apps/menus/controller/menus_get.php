@@ -11,7 +11,7 @@ use menus\model;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$oPosicion->setBloque('ficha'); // antes del recordar
+$oPosicion->setBloque('#ficha'); // antes del recordar
 $oPosicion->recordar();
 	
 $oCuadros = new menus\model\PermisoMenu;

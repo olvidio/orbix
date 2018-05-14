@@ -113,4 +113,6 @@ $oTabla->setId_tabla('list_profe_asig');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
+
+
 echo $oTabla->mostrar_tabla();

@@ -67,7 +67,6 @@ class DatosTabla {
 			rta=fnjs_solo_uno(formulario);
 			if (rta==1) {
 				if (confirm(eliminar) ) {
-					go=$('#go_to').val();
 					$('#mod').val(\"eliminar\");
 					$(formulario).attr('action',\"$action_update\");
 					$(formulario).submit(function() {
@@ -93,7 +92,7 @@ class DatosTabla {
 		}
 		fnjs_actualizar=function(formulario){
 			$(formulario).attr('action',\"$action_tabla\");
-			fnjs_enviar_formulario(formulario,'#main');
+			fnjs_enviar_formulario(formulario,'$bloque');
 		}
 		";
 		return $html_script;

@@ -15,15 +15,6 @@ $oDesplAsignaturas = $GesAsignaturas->getListaAsignaturas();
 $oDesplAsignaturas->setNombre('id_asignatura');
 $oDesplAsignaturas->setAction("fnjs_profes()");
 
-/*
-$aGoBack = array (
-				'loc'=>$loc,
-				'que_lista'=>$que_lista,
-				 );
-$oPosicion->setParametros($aGoBack);
-$oPosicion->recordar();
-*/
-	
 $oHash = new web\Hash();
 $oHash->setUrl('apps/profesores/controller/profesor_asignatura_ajax.php');
 $oHash->setCamposForm('id_asignatura');
@@ -48,6 +39,7 @@ fnjs_profes=function(){
 		}
 	});
 };
+fnjs_left_side_hide();
 </script>
 <table>
 <tr class=tab><th class=titulo_inv colspan=5><?= ucfirst(_("profesores que pueden impartir una asignatura")); ?></th></tr>

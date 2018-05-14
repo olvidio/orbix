@@ -498,7 +498,7 @@ class Traslado Extends core\ClasePropiedades {
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'tipo_cmb'));
 		$oDatosCampo->setEtiqueta(_("tipo"));
         $oDatosCampo->setTipo('array');
-        $oDatosCampo->setArgument(array( "sede"=> _("ctr sede"), "cr"=> _("ctr cr"), "dl"=> _("delegación") ));
+        $oDatosCampo->setLista(array( "sede"=> _("ctr sede"), "cr"=> _("ctr cr"), "dl"=> _("delegación") ));
 		return $oDatosCampo;
 	}
 	/**

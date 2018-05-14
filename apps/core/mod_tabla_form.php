@@ -114,7 +114,6 @@ fnjs_grabar=function(formulario){
 	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes(get_class($oFicha)) ?>');
 	//alert ("EEE "+rr);
 	if (rr=='ok') {
-		go=$('#go_to').val();
 		$(formulario).attr('action',"apps/core/mod_tabla_update.php");
 		$(formulario).submit(function() {
 			$.ajax({
