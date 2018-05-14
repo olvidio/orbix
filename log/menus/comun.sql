@@ -165,7 +165,6 @@
 173	stgr1	apps/profesores/controller/lista_por_departamentos.php	\N	listado claustro
 174	notas	apps/notas/controller/asignaturas_pendientes_resumen.php	\N	Resumen asig. pendientes
 175	notas	apps/notas/controller/asig_faltan_que.php	\N	Asignaturas pendientes
-176	dbextern	apps/dbextern/controller/sincro_listas.php	\N	Sincronizar con los datos de Listas
 163	core	fnjs_exportar('odft')	\N	exportar a odft txt
 165	core	fnjs_windowopen('http://orbix.local/orbix/public/ayuda/index.php')	\N	Ayuda
 136	activ	apps/actividades/controller/actividad_ver.php	\N	actividad nueva
@@ -173,3 +172,4 @@
 155	actividadestudios	apps/actividadestudios/controller/ca_posibles_que.php	\N	Posibles ca
 64	devel	apps/menus/controller/menus_ficheros.php	\N	menu a/de ficheros
 177	devel	apps/menus/view/como.phtml	\N	ayuda menus
+176	dbextern	apps/dbextern/controller/sincro_index.php	\N	Sincronizar con los datos de Listas
