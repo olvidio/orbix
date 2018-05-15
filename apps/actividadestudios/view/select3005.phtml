@@ -3,7 +3,7 @@ fnjs_actas=function(formulario){
 	rta=fnjs_solo_uno(formulario);
 	if (rta==1) {
 		$(formulario).attr('action',"apps/actividadestudios/controller/acta_notas.php");
-		fnjs_enviar_formulario(formulario,'#<?= $bloque ?>');
+		fnjs_enviar_formulario(formulario,'<?= $bloque ?>');
 	}
 }
 fnjs_modificar=function(formulario){
@@ -11,7 +11,7 @@ fnjs_modificar=function(formulario){
 	if (rta==1) {
 		$('#mod').val("editar");
 		$(formulario).attr('action',"apps/actividadestudios/controller/form_3005.php");
-		fnjs_enviar_formulario(formulario,'#<?= $bloque ?>');
+		fnjs_enviar_formulario(formulario,'<?= $bloque ?>');
 	}
 }
 fnjs_borrar_asignatura=function(formulario){
@@ -56,6 +56,6 @@ fnjs_actualizar=function(formulario){
 
 <!-- =========== boton insert ============  --> 
 <br><table cellspacing=3  class=botones><tr class=botones>
-<td class=botones><span class=link_inv onclick="fnjs_update_div('#<?= $bloque ?>','<?= $link_insert ?>');" >
+<td class=botones><span class=link_inv onclick="fnjs_update_div('<?= $bloque ?>','<?= $link_insert ?>');" >
 <?= sprintf(_("añadir asignatura")) ?></span></td>
 </tr></table>

@@ -4,7 +4,7 @@ fnjs_mod_cargo=function(formulario){
 	if (rta==1) {
 		$('#mod').val("editar");
 		$(formulario).attr('action',"apps/actividadcargos/controller/form_3102.php");
-		fnjs_enviar_formulario(formulario,'#<?= $bloque ?>');
+		fnjs_enviar_formulario(formulario,'<?= $bloque ?>');
 	}
 }
 fnjs_borrar_cargo=function(formulario){
@@ -51,6 +51,6 @@ fnjs_actualizar=function(formulario){
 <!--  boton insert  -->
 <br><table cellspacing=3  class="botones"><tr class="botones"><th width=25 align=RIGHT><?= _("dl") ?>:</th>
 <?php foreach ($aLinks_dl as $nom => $pagina) { ?>
-	<td class="botones"><span class=link_inv onclick="fnjs_update_div('#<?= $bloque ?>','<?= $pagina ?>');"><?= $nom ?></span></td>
+	<td class="botones"><span class=link_inv onclick="fnjs_update_div('<?= $bloque ?>','<?= $pagina ?>');"><?= $nom ?></span></td>
 <?php } ?>
 </tr></table>

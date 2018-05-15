@@ -27,7 +27,7 @@ fnjs_modificar=function(formulario,n){
 		var mod="#mod"+n;
 		$(mod).val("editar");
 		$(formulario).attr('action',"apps/actividadestudios/controller/form_1303.php");
-		fnjs_enviar_formulario(formulario,'#<?= $bloque ?>');
+		fnjs_enviar_formulario(formulario,'<?= $bloque ?>');
 	}
 }
 fnjs_borrar=function(formulario,n){

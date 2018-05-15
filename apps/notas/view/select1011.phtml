@@ -4,7 +4,7 @@ fnjs_modificar=function(formulario){
 	if (rta==1) {
 		$('#mod').val("editar");
   		$(formulario).attr('action',"apps/notas/controller/form_1011.php");
-  		fnjs_enviar_formulario(formulario,'#<?= $bloque ?>');
+  		fnjs_enviar_formulario(formulario,'<?= $bloque ?>');
   	}
 }
 fnjs_borrar=function(formulario){
@@ -52,6 +52,6 @@ fnjs_actualizar=function(formulario){
 
 <!-- =========== boton insert ============  --> 
 <br><table cellspacing=3  class=botones><tr class=botones>
-<td class=botones><span class=link_inv onclick="fnjs_update_div('#<?= $bloque ?>','<?= $link_insert ?>');" >
+<td class=botones><span class=link_inv onclick="fnjs_update_div('<?= $bloque ?>','<?= $link_insert ?>');" >
 <?= sprintf(_("añadir nota")) ?></span></td>
 </tr></table>
