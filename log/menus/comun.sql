@@ -148,7 +148,6 @@
 76	personas	apps/personas/controller/personas_que.php	\N	búsqueda de personas
 166	devel	apps/menus/controller/pasar_a_demo.php	\N	pasar a demo
 17	devel	apps/devel/controller/db_que.php	\N	nuevo esquema
-167	core	fnjs_windowopen('http://demo.moneders.net/redmine')	\N	abrir pag redmine
 60	notas	apps/notas/controller/acta_select.php	\N	actas
 71	actividades	apps/actividades/controller/actividad_select.php	\N	Listado de Actividades
 121	admin	apps/dossiers/controller/perm_dossiers.php	\N	permisos dossiers
@@ -173,3 +172,4 @@
 64	devel	apps/menus/controller/menus_ficheros.php	\N	menu a/de ficheros
 177	devel	apps/menus/view/como.phtml	\N	ayuda menus
 176	dbextern	apps/dbextern/controller/sincro_index.php	\N	Sincronizar con los datos de Listas
+167	core	fnjs_windowopen('http://10.0.0.16/redmine')	\N	abrir pag redmine
