@@ -25,11 +25,6 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
-	if (!empty($go_to)) {
-		// add stack:
-		$stack = $oPosicion->getStack(1);
-		$go_to .= "&stack=$stack";
-	}
 }
 
 if (!empty($nuevo)) {
@@ -54,11 +49,6 @@ if (!empty($nuevo)) {
 		$oPosicion->addParametro('id_sel',$a_sel,1);
 		$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
 		$oPosicion->addParametro('scroll_id',$scroll_id,1);
-		if (!empty($go_to)) {
-			// add stack:
-			$stack = $oPosicion->getStack(1);
-			$go_to .= "&stack=$stack";
-		}
 	} else {
 		empty($_POST['id_nom'])? $id_nom="" : $id_nom=$_POST['id_nom'];
 		empty($_POST['id_tabla'])? $id_tabla="" : $id_tabla=$_POST['id_tabla'];
@@ -162,18 +152,6 @@ if (empty($nuevo)) {
 	$ir_a_traslado=web\hash::link('apps/personas/controller/traslado_form.php?'.http_build_query(array('pau'=>'p','id_pau'=>$id_nom,'obj_pau'=>$obj_pau)));
 	$a_campos['ir_a_traslado'] = $ir_a_traslado;
 }
-
-
-/*
-$adossiers="programas/dossiers/dossiers_ver.php?pau=p&id_pau=$id_nom&obj_pau=".$_POST['obj_pau'];
-$ahome="programas/dossiers/home_persona.php?id_nom=$id_nom&obj_pau=".$_POST['obj_pau']."&breve=".$_POST['breve']."&es_sacd=".$_POST['es_sacd'];
-
-
-//$form_action=link_a($go_to,1);
-$form_action='';
-$alt=_("ver dossiers");
-$dos=_("dossiers");
-*/
 
 $botones = 0;
 /*
