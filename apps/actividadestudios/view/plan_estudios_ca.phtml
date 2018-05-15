@@ -31,8 +31,9 @@
 		$aAsignaturas = $datos['aAsignaturas'];
 		echo "<tr><td>$a</td><td>{$datos['nom_persona']} ({$datos['ctr']})</td>";
 		if(is_array($aAsignaturas)) {
+			$asig = '';
 			foreach($aAsignaturas as $aAsignatura) {
-				$asig = "{$aAsignatura['nombre_corto']} ({$aAsignatura['creditos']}) {$aAsignatura['preceptor']}";
+				$asig .= "{$aAsignatura['nombre_corto']} ({$aAsignatura['creditos']}) {$aAsignatura['preceptor']}";
 				if ($a > 1) $asig .= '<br>';
 			}
 			echo "<td>$asig</td></tr>";
