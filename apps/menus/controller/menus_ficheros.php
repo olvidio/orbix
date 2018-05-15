@@ -49,6 +49,12 @@ if ($Qaccion == 'importar') {
 		para permitir a ww-data ejecutar psql
 	*/
 
+	// Cambiar el directorio local al de la instalacion
+	$txt_base = file_get_contents($filename);
+	$txt_comun = str_replace ( "DIRBASE", $dir_base, $txt_base);
+	file_put_contents($filename, $txt_comun);
+	
+
     $command = "export PGPASSWORD='system'; ";
     $command .= "sudo /usr/bin/psql -q ";
     $command .= "--pset pager=off ";
@@ -80,29 +86,33 @@ if ($Qaccion == 'exportar') {
 	
 	//************ METAMENUS **************
 	$file_metamenus = "$dir_base/log/menus/comun.sql";
+	$name_metamenus = "DIRBASE/log/menus/comun.sql";
 	$txt_comun = '';
 
 	$txt_comun .= 'TRUNCATE TABLE "public".aux_metamenus RESTART IDENTITY;'."\n";
 	$oDevelPC->exec('COPY "public".aux_metamenus TO \''.$file_metamenus.'\' ');
-	$txt_comun .= 'COPY "public".aux_metamenus FROM \''.$file_metamenus.'\''.";\n";
+	$txt_comun .= 'COPY "public".aux_metamenus FROM \''.$name_metamenus.'\''.";\n";
 
 	//************ GRUPMENU **************
 	$file_refgrupmenu = "$dir_base/log/menus/refgrupmenu.sql";
+	$name_refgrupmenu = "DIRBASE/log/menus/refgrupmenu.sql";
 	$txt_comun .= 'TRUNCATE TABLE "public".ref_grupmenu RESTART IDENTITY;'."\n";
 	$oDevelPC->exec('COPY "public".ref_grupmenu TO \''.$file_refgrupmenu.'\' ');
-	$txt_comun .= 'COPY "public".ref_grupmenu FROM \''.$file_refgrupmenu.'\''.";\n";
+	$txt_comun .= 'COPY "public".ref_grupmenu FROM \''.$name_refgrupmenu.'\''.";\n";
 
 	//************ GRUPMENU_ROL **************
 	$file_refgrupmenu_rol = "$dir_base/log/menus/refgrupmenu_rol.sql";
+	$name_refgrupmenu_rol = "DIRBASE/log/menus/refgrupmenu_rol.sql";
 	$txt_comun .= 'TRUNCATE TABLE "public".ref_grupmenu_rol RESTART IDENTITY;'."\n";
 	$oDevelPC->exec('COPY "public".ref_grupmenu_rol TO \''.$file_refgrupmenu_rol.'\' ');
-	$txt_comun .= 'COPY "public".ref_grupmenu_rol FROM \''.$file_refgrupmenu_rol.'\''.";\n";
+	$txt_comun .= 'COPY "public".ref_grupmenu_rol FROM \''.$name_refgrupmenu_rol.'\''.";\n";
 
 	//************ MENUS **************
 	$file_refmenus = "$dir_base/log/menus/refmenus.sql";
+	$name_refmenus = "DIRBASE/log/menus/refmenus.sql";
 	$txt_comun .= 'TRUNCATE TABLE "public".ref_menus RESTART IDENTITY;'."\n";
 	$oDevelPC->exec('COPY "public".ref_menus TO \''.$file_refmenus.'\' ');
-	$txt_comun .= 'COPY "public".ref_menus FROM \''.$file_refmenus.'\''.";\n";
+	$txt_comun .= 'COPY "public".ref_menus FROM \''.$name_refmenus.'\''.";\n";
 
 	file_put_contents($filename, $txt_comun);
 } 
