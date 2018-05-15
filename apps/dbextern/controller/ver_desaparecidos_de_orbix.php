@@ -34,7 +34,7 @@ $url_sincro_ajax = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro
 $oHash = new web\Hash();
 $oHash->setUrl($url_sincro_ajax);
 //$oHash->setArraycamposHidden($a_camposHidden);
-$oHash->setCamposForm('que!id_nom_orbix!tipo_persona'); 
+$oHash->setCamposForm('que!id_nom_listas!tipo_persona'); 
 $h = $oHash->linkSinVal();
 
 // ------------------ html ----------------------------------
