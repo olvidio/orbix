@@ -26,19 +26,6 @@ $titulo = 0;
 
 $oPosicion->recordar();
 
-//Si vengo por medio de Posicion, borro la última
-if (isset($_POST['stack'])) {
-	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-	if ($stack != '') {
-		$oPosicion2 = new web\Posicion();
-		if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
-			$Qid_sel=$oPosicion2->getParametro('id_sel');
-			$Qscroll_id = $oPosicion2->getParametro('scroll_id');
-			$oPosicion2->olvidar($stack);
-		}
-	}
-}
-
 //Si vengo de vuelta de un go_to:
 $tabla = (string) \filter_input(INPUT_POST, 'tabla');
 $breve = (string) \filter_input(INPUT_POST, 'breve');
@@ -58,6 +45,19 @@ $Qnombre = (string) \filter_input(INPUT_POST, 'nombre');
 $Qapellido1 = (string) \filter_input(INPUT_POST, 'apellido1');
 $Qapellido2 = (string) \filter_input(INPUT_POST, 'apellido2');
 $Qcentro = (string) \filter_input(INPUT_POST, 'centro');
+
+//Si vengo por medio de Posicion, borro la última
+if (isset($_POST['stack'])) {
+	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+	if ($stack != '') {
+		$oPosicion2 = new web\Posicion();
+		if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+			$Qid_sel=$oPosicion2->getParametro('id_sel');
+			$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+			$oPosicion2->olvidar($stack);
+		}
+	}
+}
 
 /*
 * Defino un array con los datos actuales, para saber volver 
@@ -218,6 +218,9 @@ switch ($tabla) {
 		$obj_pau = 'PersonaEx';
 		$GesPersona = new personas\GestorPersonaEx();
 		$cPersonas = $GesPersona->getPersonas($aWhere,$aOperador);
+		if ($_SESSION['oPerm']->have_perm("sm") OR $_SESSION['oPerm']->have_perm("agd")){
+			$permiso = 3;
+		}
 	break;
 	case 'nada':
 		$cPersonas = array();
