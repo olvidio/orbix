@@ -284,7 +284,7 @@ class Grupo Extends core\ClasePropiedades {
 		$oGrupoSet = new core\Set();
 
 		$oGrupoSet->add($this->getDatosUsuario());
-		$oUsuarioSet->add($this->getDatosId_role());
+		$oGrupoSet->add($this->getDatosId_role());
 		return $oGrupoSet->getTot();
 	}
 

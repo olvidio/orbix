@@ -398,12 +398,12 @@ if ($miRole < 4) {
 					data: $(this).serialize(),
 					type: 'post',
 					url: $(this).attr('action'),
-					complete: function (rta) { 
+					complete: function (rta) {
 						rta_txt=rta.responseText;
-						if (rta_txt != '' && rta_txt != '\n') {
-							alert (rta_txt);
+						if (rta_txt != '' && rta_txt != '\\n') {
+							alert ('respuesta: '+rta_txt);
 						} else {
-							if (go) fnjs_update_div('#main',go); 
+							<?= $oPosicion->js_atras(1); ?>
 						}
 					}
 				});
