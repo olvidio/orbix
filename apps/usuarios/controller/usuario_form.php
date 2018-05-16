@@ -16,35 +16,27 @@ use ubis\model\entity as ubis;
 
 $oPosicion->recordar();
 
-$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) { //vengo de un checkbox
-	$id_activ = strtok($a_sel[0],"#");
-	$id_asignatura=strtok("#");
+$Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
+$Qquien = (string) \filter_input(INPUT_POST, 'quien');
+
+// Aunque vengo de la slickgrid, com 'editar' es un link no tengo el valor del sel
+// pero lo puedo generar para que al volver lo marque
+	$a_sel = array("#$Qid_usuario");
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$a_sel,1);
-	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
-	$oPosicion->addParametro('scroll_id',$scroll_id,1);
-	if (!empty($go_to)) {
-		// add stack:
-		$stack = $oPosicion->getStack(1);
-		$go_to .= "&stack=$stack";
-	}
-}
+
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miRole=$oMiUsuario->getId_role();
 $miSfsv = core\ConfigGlobal::mi_sfsv();
 
-$id_usuario = empty($_POST['id_usuario'])? '' : $_POST['id_usuario'];
-$quien = empty($_POST['quien'])? '' : $_POST['quien'];
+if ($Qquien=='usuario') $obj = 'usuarios\\model\\entity\\Usuario';
+if ($Qquien=='grupo') $obj = 'usuarios\\model\\entity\\Grupo';
 
-if ($quien=='usuario') $obj = 'usuarios\\model\\entity\\Usuario';
-if ($quien=='grupo') $obj = 'usuarios\\model\\entity\\Grupo';
-
-if( (core\ConfigGlobal::is_app_installed('avisos')) && (!empty($id_usuario)) && ($quien == 'usuario') ) {
+if( (core\ConfigGlobal::is_app_installed('avisos')) && (!empty($Qid_usuario)) && ($Qquien == 'usuario') ) {
 
 	// avisos
 	$oGesCambiosUsuariosTabla = new GestorCambioUsuarioTablaPref();
-	$cListaTablas = $oGesCambiosUsuariosTabla->getCambiosUsuarioTablaPref(array('id_usuario'=>$id_usuario));
+	$cListaTablas = $oGesCambiosUsuariosTabla->getCambiosUsuarioTablaPref(array('id_usuario'=>$Qid_usuario));
 
 	// Tipos de avisos
 	$aTipos_aviso = CambioUsuarioTablaPref::getTipos_aviso();
@@ -73,7 +65,7 @@ if( (core\ConfigGlobal::is_app_installed('avisos')) && (!empty($id_usuario)) && 
 
 		$oTipoActividad = new web\TiposActividades($oCambioUsuarioTablaPref->getId_tipo_activ_txt());
 
-		$a_valores_avisos[$i]['sel']="$id_usuario#$id_item_usuario_tabla";
+		$a_valores_avisos[$i]['sel']="$Qid_usuario#$id_item_usuario_tabla";
 		$a_valores_avisos[$i][1]=$dl_propia_txt;
 		$a_valores_avisos[$i][2]=$oTipoActividad->getNom();
 		$oFase->setId_fase($id_fase_ini);
@@ -130,13 +122,13 @@ if ($miRole < 4) {
 		$oDesplFases->setNombre('fase');
 	}
 	*/
-	switch($quien) {
+	switch($Qquien) {
 		case 'usuario':
 			$txt_guardar=_("guardar datos usuario");
 
-			if (!empty($id_usuario)) {
+			if (!empty($Qid_usuario)) {
 				$que_user='guardar';
-				$oUsuario = new usuarios\Usuario(array('id_usuario'=>$id_usuario));
+				$oUsuario = new usuarios\Usuario(array('id_usuario'=>$Qid_usuario));
 
 				$id_usuario=$oUsuario->getId_usuario();
 				$seccion=$miSfsv;
@@ -225,15 +217,15 @@ if ($miRole < 4) {
 			$oHash->setcamposNo('pass!password!id_ctr!id_sacd!casas');
 			$a_camposHidden = array(
 					'id_usuario' => $id_usuario,
-					'quien' => $quien
+					'quien' => $Qquien
 					);
 			$oHash->setArraycamposHidden($a_camposHidden);
 			break;
 		case 'grupo':
 			$txt_guardar=_("guardar datos grupo");
-			if (!empty($id_usuario)) {
+			if (!empty($Qid_usuario)) {
 				$que_user='guardar';
-				$oUsuario = new usuarios\Grupo(array('id_usuario'=>$id_usuario));
+				$oUsuario = new usuarios\Grupo(array('id_usuario'=>$Qid_usuario));
 				$id_usuario=$oUsuario->getId_usuario();
 				$id_role=$oUsuario->getId_role();
 				$oDesplRoles->setOpcion_sel($id_role);
@@ -268,7 +260,7 @@ if ($miRole < 4) {
 			$a_camposHidden = array(
 					'pass' => $pass,
 					'id_usuario' => $id_usuario,
-					'quien' => $quien
+					'quien' => $Qquien
 					);
 			$oHash->setArraycamposHidden($a_camposHidden);
 			break;
@@ -399,7 +391,7 @@ if ($miRole < 4) {
 		//alert ("EEE "+rr);
 		if (rr=='ok') {
 			$('#que_user').val('<?= $que_user ?>');
-			go='<?= web\Hash::link('apps/usuarios/controller/usuario_form.php?'.http_build_query(array('quien'=>$quien,'id_usuario'=>$id_usuario))) ?>';
+			go='<?= web\Hash::link('apps/usuarios/controller/usuario_form.php?'.http_build_query(array('quien'=>$Qquien,'id_usuario'=>$id_usuario))) ?>';
 			$(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
 			$(formulario).submit(function() {
 				$.ajax({
@@ -455,14 +447,14 @@ if ($miRole < 4) {
 	<input type=hidden id=que_user  name=que value=''>
 	<br>
 	<?= ucfirst(_("nombre")) ?>:<input type=text name=usuario value="<?= $usuario ?>">
-	<?php if ($quien == 'usuario') { ?>
+	<?php if ($Qquien == 'usuario') { ?>
 	<?= ucfirst(_("nombre a mostrar")) ?>:<input type=text name=nom_usuario value="<?= $nom_usuario ?>">
 	<?php } ?>
 	<?= ucfirst(_("role")) ?>:
 	<?= $oDesplRoles->desplegable(); ?>
 	<br>
 	<?php 
-	if ($quien == 'usuario') {
+	if ($Qquien == 'usuario') {
 		if ($pau == 'sacd') {
 		?>
 			<!--  --------------- Sacd --------------- -->
@@ -520,7 +512,7 @@ if ($miRole < 4) {
 		?>
 		<br>
 		<?php
-		if ($quien == 'usuario') {  // de momento no dejo hacer grupos de grupos.
+		if ($Qquien == 'usuario') {  // de momento no dejo hacer grupos de grupos.
 			?>
 			<h3><?= _('grupos') ?>: </h3><?= $txt ?>
 			<input type=button onclick="fnjs_add_grup();" value='<?= _("añadir un grupo de permisos") ?>'>
@@ -530,7 +522,7 @@ if ($miRole < 4) {
 			<?php
 		}
 		// propios (sólo para los grupos)
-		if ($quien == 'grupo') {
+		if ($Qquien == 'grupo') {
 			$i=0;
 			$a_cabeceras=array(array('name'=>_("oficina o grupo"),'width'=>'350'));
 			$a_botones=array(
@@ -553,7 +545,7 @@ if ($miRole < 4) {
 			$oHash2->setcamposNo('scroll_id');
 			$a_camposHidden = array(
 					'id_usuario' => $id_usuario,
-					'quien' => $quien
+					'quien' => $Qquien
 					);
 			$oHash2->setArraycamposHidden($a_camposHidden);
 			?>
@@ -631,14 +623,14 @@ if ($miRole < 4) {
 		$oHash3->setcamposForm('que!sel');
 		$a_camposHidden = array(
 				'id_usuario' => $id_usuario,
-				'quien' => $quien
+				'quien' => $Qquien
 				);
 		$oHash3->setArraycamposHidden($a_camposHidden);
 		?>
 		<br>
 		<h3><?= ucfirst(_("permisos en actividades")) ?>:</h3>
 		<?php
-		if ($quien == 'usuario') {  // de momento no dejo hacer grupos de grupos.
+		if ($Qquien == 'usuario') {  // de momento no dejo hacer grupos de grupos.
 			?>
 			<b><?= _('grupos') ?>: </b><?= $txt ?>
 			<input type=button onclick="fnjs_add_grup();" value='<?= _("añadir un grupo de permisos") ?>'>
@@ -764,7 +756,7 @@ if (!empty($id_usuario)) { // si no hay usuario, no puedo poner permisos.
 	<?php
 }
 // si no hay usuario, no puedo poner permisos.
-if( (core\ConfigGlobal::is_app_installed('avisos')) && (!empty($id_usuario)) && ($quien == 'usuario') ) {
+if( (core\ConfigGlobal::is_app_installed('avisos')) && (!empty($id_usuario)) && ($Qquien == 'usuario') ) {
 	?>
 	<b><?= _('avisos') ?>:</b>
 	<form id="avisos" name="avisos" action=''>

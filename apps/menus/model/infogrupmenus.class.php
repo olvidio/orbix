@@ -25,7 +25,7 @@ class InfoGrupMenus extends core\datosInfo {
 			$aWhere=array('grup_menu'=> $this->k_buscar);
 			$aOperador=array('grup_menu'=>'sin_acentos');
 		}
-		$oLista=new GestorGrupMenu();
+		$oLista=new entity\GestorGrupMenu();
 		$Coleccion=$oLista->getGrupMenus($aWhere,$aOperador);
 
 		return $Coleccion;

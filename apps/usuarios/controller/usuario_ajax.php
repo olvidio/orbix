@@ -10,10 +10,15 @@ use usuarios\model\entity as usuarios;
 
 $sfsv = core\ConfigGlobal::mi_sfsv();
 
-switch ($_POST['que']) {
+$Qque = (string) \filter_input(INPUT_POST, 'que');
+
+switch ($Qque) {
 	case "orden":
-		if ($_POST['num_orden']=="b") { //entonces es borrar:
-			if ($_POST['id_activ'] && $_POST['id_nom']) {
+		$Qnum_orden = (string) \filter_input(INPUT_POST, 'num_orden');
+		if ($Qnum_orden=="b") { //entonces es borrar:
+			$Qid_activ = (integer) \filter_input(INPUT_POST, 'id_activ');
+			$Qid_nom = (integer) \filter_input(INPUT_POST, 'id_nom');
+			if (!empty($Qid_activ) && !empty($Qid_nom)) {
 				// también la asistencia
 				//echo "sql: $sql<br>";
 				$oDBSt_q=$oDB->query($sql);
@@ -21,12 +26,13 @@ switch ($_POST['que']) {
 				$error_txt=_("no sé cuál he de borar");
 			}
 		} else {
-			$error_txt=ordena($_POST['id_activ'],$_POST['id_nom'],$_POST['num_orden']);
+			$error_txt=ordena($Qid_activ,$Qid_nom,$Qnum_orden);
 		}
-		echo "{ que: '".$_POST['que']."', txt: '$txt', error: '$error_txt' }";
+		echo "{ que: '".$Qque."', txt: '$txt', error: '$error_txt' }";
 		break;
 	case "grupo_lst":
-		$oUsuario= new usuarios\Usuario(array('id_usuario'=>$_POST['id_usuario']));
+		$Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
+		$oUsuario= new usuarios\Usuario(array('id_usuario'=>$Qid_usuario));
 		$id_role = $oUsuario->getId_role();
 		$awhere['id_role'] = $id_role;
 		// listado de grupos posibles
@@ -34,7 +40,7 @@ switch ($_POST['que']) {
 		$oGrupoColeccion= $oGesGrupos->getGrupos($awhere);
 		// no pongo los que ya tengo. Los pongo en un array
 		$oGesUsuarioGrupo = new usuarios\GestorUsuarioGrupo();
-		$oListaGrupos = $oGesUsuarioGrupo->getUsuariosGrupos(array('id_usuario'=>$_POST['id_usuario']));
+		$oListaGrupos = $oGesUsuarioGrupo->getUsuariosGrupos(array('id_usuario'=>$Qid_usuario));
 		$aGruposOn=array();
 		foreach ($oListaGrupos as $oUsuarioGrupo) {
 			$aGruposOn[]=$oUsuarioGrupo->getId_grupo();
@@ -52,7 +58,7 @@ switch ($_POST['que']) {
 			$usuario=$oGrupo->getUsuario();
 			$seccion=$asfsv[$sfsv];
 
-			$pagina=core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_ajax.php?que=grupo_add&id_grupo='.$id_grupo.'&id_usuario='.$_POST['id_usuario'];
+			$pagina=core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_ajax.php?que=grupo_add&id_grupo='.$id_grupo.'&id_usuario='.$Qid_usuario;
 
 			$a_valores[$i][1]=$usuario;
 			$a_valores[$i][2]=$seccion;
@@ -66,12 +72,13 @@ switch ($_POST['que']) {
 		echo $oTabla->mostrar_tabla();
 		break;
 	case "grupo_del_lst":
+		$Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
 		// listado de grupos posibles
 		$oGesGrupos = new usuarios\GestorGrupo();
 		$oGrupoColeccion= $oGesGrupos->getGrupos();
 		// no pongo los que ya tengo. Los pongo en un array
 		$oGesUsuarioGrupo = new usuarios\GestorUsuarioGrupo();
-		$oListaGrupos = $oGesUsuarioGrupo->getUsuariosGrupos(array('id_usuario'=>$_POST['id_usuario']));
+		$oListaGrupos = $oGesUsuarioGrupo->getUsuariosGrupos(array('id_usuario'=>$Qid_usuario));
 		$aGruposOn=array();
 		foreach ($oListaGrupos as $oUsuarioGrupo) {
 			$aGruposOn[]=$oUsuarioGrupo->getId_grupo();
@@ -88,7 +95,7 @@ switch ($_POST['que']) {
 			$usuario=$oGrupo->getUsuario();
 			$seccion=$asfsv[$sfsv];
 
-			$pagina=core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_ajax.php?que=grupo_del&id_grupo='.$id_grupo.'&id_usuario='.$_POST['id_usuario'];
+			$pagina=core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_ajax.php?que=grupo_del&id_grupo='.$id_grupo.'&id_usuario='.$Qid_usuario;
 
 			$a_valores[$i][1]=$usuario;
 			$a_valores[$i][2]=$seccion;
@@ -102,39 +109,26 @@ switch ($_POST['que']) {
 		echo $oTabla->mostrar_tabla();
 		break;
 	case "grupo_add":
+		$Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
+		$Qid_grupo = (integer) \filter_input(INPUT_POST, 'id_grupo');
 		// añado el grupo de permisos al usuario.
-		$oUsuarioGrupo = new usuarios\UsuarioGrupo(array('id_usuario'=>$_POST['id_usuario'],'id_grupo'=>$_POST['id_grupo']));
+		$oUsuarioGrupo = new usuarios\UsuarioGrupo(array('id_usuario'=>$Qid_usuario,'id_grupo'=>$Qid_grupo));
 		if ($oUsuarioGrupo->DBGuardar() === false) {
 			echo _('Hay un error, no se ha guardado');
 		}
 		$oPosicion = new web\Posicion();
-		echo $oPosicion->ir_a("usuario_form.php?quien=usuario&id_usuario=".$_POST['id_usuario']);
+		echo $oPosicion->ir_a("usuario_form.php?quien=usuario&id_usuario=".$Qid_usuario);
 		break;
 	case "grupo_del":
+		$Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
+		$Qid_grupo = (integer) \filter_input(INPUT_POST, 'id_grupo');
 		// añado el grupo de permisos al usuario.
-		$oUsuarioGrupo = new usuarios\UsuarioGrupo(array('id_usuario'=>$_POST['id_usuario'],'id_grupo'=>$_POST['id_grupo']));
+		$oUsuarioGrupo = new usuarios\UsuarioGrupo(array('id_usuario'=>$Qid_usuario,'id_grupo'=>$Qid_grupo));
 		if ($oUsuarioGrupo->DBEliminar() === false) {
 			echo _('Hay un error, no se ha eliminado');
 		}
 		$oPosicion = new web\Posicion();
-		echo $oPosicion->ir_a("usuario_form.php?quien=usuario&id_usuario=".$_POST['id_usuario']);
-		break;
-	case "asignar":
-		// miro si hay sacds encargados
-		$query_sacd="SELECT id_cargo 
-				  FROM d_cargos_activ e 
-				  WHERE e.id_activ=".$_POST['id_activ']." AND id_cargo > 34
-				  ORDER BY id_cargo DESC ";
-		//echo "Query_sacd: $query_sacd";
-		$oDBSt_q_sacd=$oDB->query($query_sacd);
-		if ($oDBSt_q_sacd->rowCount()) {
-			$ultimo=$oDBSt_q_sacd->fetchColumn();
-			$id_cargo=$ultimo+1;
-		} else {
-			$id_cargo=35;
-		}
-		//echo "sql: $sql<br>";
-		$oDBSt_q=$oDB->query($sql);
+		echo $oPosicion->ir_a("usuario_form.php?quien=usuario&id_usuario=".$Qid_usuario);
 		break;
 	case "eliminar":
 		// elimna al usuario.
