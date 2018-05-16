@@ -178,9 +178,9 @@ class Posicion {
 
 		$html = '<div id="'.$id_div.'" style="display: none;">';
 		$html .= '	<form id="go">';
-		$html .= '	url: <input id="url" type="text" value="' . $url .'" size=70><br>';
-		$html .= '	parametros: <input id="parametros" type="text" value="' . $sparametros . '" size=70><br>';
-		$html .= '	bloque: <input id="id_div" type="text" value="' . $bloque . '" size=70>';
+		$html .= '	url: <input name="url" type="text" value="' . $url .'" size=70><br>';
+		$html .= '	parametros: <input name="parametros" type="text" value="' . $sparametros . '" size=70><br>';
+		$html .= '	bloque: <input name="id_div" type="text" value="' . $bloque . '" size=70>';
 		$html .= '</form>';
 		$html .= '</div>';
 		// vuelvo el cursor al final.
@@ -195,7 +195,7 @@ class Posicion {
 			return '';
 		}
 		$id_div = $this->getId_div();
-		$id_div = empty($id_div)? 'ir_atras' : $id_div;
+		$id_div = empty($id_div)? 'js_atras' : $id_div; //por si hay dos (ir_atras)
 
 		$url = $this->surl;
 		$aParam = $this->aParametros;
@@ -205,16 +205,25 @@ class Posicion {
 		// el div inicial lo pone fnjs_mostrar_atras, porque intenta aprovechar si ya existe uno
 		//  $html = '<div id="'.$id_div.'" style="display: none;">';
 		$html = '<form id="go">';
-		$html .= '	url: <input id="url" type="text" value="' . $url .'" size=70><br>';
-		$html .= '	parametros: <input id="parametros" type="text" value="' . $sparametros . '" size=70><br>';
-		$html .= '	bloque: <input id="id_div" type="text" value="' . $bloque . '" size=70>';
+		$html .= '	<input name="url" type="text" value="' . $url .'" size=70><br>';
+		$html .= '	<input name="parametros" type="text" value="' . $sparametros . '" size=70><br>';
+		$html .= '	<input name="id_div" type="text" value="' . $bloque . '" size=70>';
 		$html .= '</form>';
 		
 		// vuelvo el cursor al final.
 		$this->goEnd();
-		return "fnjs_mostrar_atras('$id_div','$html');";
+		return "fnjs_mostrar_atras('#$id_div','$html');";
 	}
 	
+	/**
+	 * retorna un div, con formulario para enviar datos a Posicion
+	 * En index.php hay un div:
+	 * <div id="left_slide" class="left-slide">
+	 *		<span class=handle onClick="fnjs_ir_a('#ir_atras');"></span>
+	 * 
+	 * @param integer $n número de posiciones atras. Normalmente 1
+	 * @return string Html= div (display_none)
+	 */
 	public function mostrar_left_slide($n=0) {
 		$this->go($n);
 		// puede ser que no haya donde volver
@@ -231,9 +240,9 @@ class Posicion {
 		
 		$html = '<div id="'.$id_div.'" style="display: none;">';
 		$html .= '	<form id="go">';
-		$html .= '	url: <input id="url" type="text" value="' . $url .'" size=70><br>';
-		$html .= '	parametros: <input id="parametros" type="text" value="' . $sparametros . '" size=70><br>';
-		$html .= '	bloque: <input id="id_div" type="text" value="' . $bloque . '" size=70>';
+		$html .= '	url: <input name="url" type="text" value="' . $url .'" size=70><br>';
+		$html .= '	parametros: <input name="parametros" type="text" value="' . $sparametros . '" size=70><br>';
+		$html .= '	bloque: <input name="id_div" type="text" value="' . $bloque . '" size=70>';
 		$html .= '</form>';
 		$html .= '</div>';
 
@@ -242,6 +251,13 @@ class Posicion {
 		return $html;
 	}
 
+	/**
+	 * retorna una imagen de flecha, con formulario para enviar datos a Posicion
+	 * onClick -> activa fnjs_ir_a(id_div)
+	 * 
+	 * @param integer $n número de posiciones atras. Normalmente 1
+	 * @return string Html= div (display_none) + img(arrow)
+	 */
 	public function mostrar_back_arrow($n=0) {
 		$this->go($n);
 		// puede ser que no haya donde volver
@@ -258,12 +274,15 @@ class Posicion {
 		
 		$html = '<div id="'.$id_div.'" style="display: none;">';
 		$html .= '<form id="go">';
-		$html .= '	<input id="url" type="hidden" value="' . $url .'" size=70>';
-		$html .= '	<input id="parametros" type="hidden" value="' . $sparametros . '" size=70>';
-		$html .= '	<input id="id_div" type="hidden" value="' . $bloque . '" size=70>';
+		$html .= '	<input name="url" type="hidden" value="' . $url .'" size=70>';
+		$html .= '	<input name="parametros" type="hidden" value="' . $sparametros . '" size=70>';
+		$html .= '	<input name="id_div" type="hidden" value="' . $bloque . '" size=70>';
 		$html .= '</form>';
 		$html .= '</div>';
-		$html .= "<img onclick=fnjs_ir_a() src=".core\ConfigGlobal::$web_icons.'/flechas/left.gif border=0 height=40>';
+		$html .= "<img onclick=fnjs_ir_a('#$id_div') src=".core\ConfigGlobal::$web_icons.'/flechas/left.gif border=0 height=40>';
+		
+		// vuelvo el cursor al final.
+		$this->goEnd();
 		return $html;
 	}
 
@@ -500,7 +519,7 @@ class Posicion {
 		$html .= '	bloque: <input id="id_div" type="text" value="' . $frame . '" size=70>';
 		$html .= '</form>';
 		?>
-		<script>fnjs_mostrar_atras('ir_a','<?= $html ?>');</script>
+		<script>fnjs_mostrar_atras('#ir_a','<?= $html ?>');</script>
 		<?php
 	}
 

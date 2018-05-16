@@ -512,28 +512,48 @@ function fnjs_procesarError() {
 
 function fnjs_mostrar_atras(id_div,htmlForm) {
 	fnjs_borrar_posibles_atras();
-	var id_atras='#'+id_div;
+	var name_div=id_div.substring(1);
 	
-	if ($(id_atras).length) {
-		$(id_atras).html(htmlForm);
+	if ($(id_div).length) {
+		$(id_div).html(htmlForm);
 	} else {
-		html = '<div id="'+id_div+'" style="display: none;">';
+		html = '<div id="'+name_div+'" style="display: none;">';
 		html += htmlForm;
 		html += '</div>';
 		$('#cargando').prepend(html);
 		
 	}
-	fnjs_ir_a();
+	fnjs_ir_a(id_div);
 }
 
 function fnjs_borrar_posibles_atras() {
 	if ($('#ir_a').length) $('#ir_a').remove() ;
 	if ($('#ir_atras').length) $('#ir_atras').remove() ;
 	if ($('#ir_atras2').length) $('#ir_atras2').remove() ;
+	if ($('#js_atras').length) $('#js_atras').remove() ;
 	if ($('#go_atras').length) $('#go_atras').remove() ;
 }
 	
-function fnjs_ir_a() {
+function fnjs_ir_a(id_div) {
+	var url=$(id_div+" [name='url']").val();
+	var parametros=$(id_div+" [name='parametros']").val();
+	var bloque=$(id_div+" [name='id_div']").val();
+	
+	fnjs_left_side_hide();
+
+	$(bloque).attr('refe',url);
+	fnjs_borrar_posibles_atras();
+	$.ajax({
+			url: url,
+			type: 'post',
+			data: parametros,
+			complete: function (resposta) { fnjs_mostra_resposta (resposta,bloque); },
+			error: fnjs_procesarError
+			}) ;
+	return false;
+}
+
+function Oldfnjs_ir_a() {
 	var atras='';
 	var url=$('#url').val();
 	var parametros=$('#parametros').val();
@@ -575,9 +595,10 @@ function fnjs_ir_a() {
 
 function fnjs_cambiar_link(id_div) {
 	// busco si hay un id=ir_a que es para ir a otra página
-	if ($('#ir_a').length) { fnjs_ir_a(); return false; } 
-	if ($('#go_atras').length) { fnjs_ir_a(); return false; } 
+	if ($('#ir_a').length) { fnjs_ir_a(id_div); return false; } 
+	if ($('#go_atras').length) { fnjs_ir_a(id_div); return false; } 
 	if ($('#ir_atras').length) { fnjs_left_side_show(); return true; } 
+	if ($('#js_atras').length) { fnjs_ir_a(id_div); return true; } 
 	var base=$(id_div).attr('refe');
 	if (base) {
 		var selector=id_div+" a[href]";
@@ -922,7 +943,7 @@ if ($gm > 1) {
 </div>
 <div id="cargando" ><?= _('Cargando...') ?></div>
 <div id="left_slide" class="left-slide">
-<span class=handle onClick="fnjs_ir_a();"></span>
+<span class=handle onClick="fnjs_ir_a('#ir_atras');"></span>
 </div>
 <div id="main" refe="<?= $pag_ini ?>">
 <?php

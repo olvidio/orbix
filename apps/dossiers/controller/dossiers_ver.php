@@ -41,7 +41,7 @@ if (isset($_POST['stack'])) {
 		if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
 			$Qid_sel=$oPosicion2->getParametro('id_sel');
 			$Qscroll_id = $oPosicion2->getParametro('scroll_id');
-			$oPosicion2->olvidar($stack+1);
+			$oPosicion2->olvidar($stack);
 		}
 	}
 } elseif (!empty($a_sel)) { //vengo de un checkbox
@@ -198,11 +198,11 @@ echo $oPosicion->mostrar_left_slide(1);
 </table>
 </div>
 <?php
-if (!empty($accion)) {
-	cerrar_dossier($pau,$id_pau,$id_tipo_dossier,$oDB);
-	$go_to="dossiers_lista.php?pau=$pau&id_pau=$id_pau&obj_pau=".$Qobj_pau."";
-	ir_a($go_to);
-}
+//if (!empty($accion)) {
+//	cerrar_dossier($pau,$id_pau,$id_tipo_dossier,$oDB);
+//	$go_to="dossiers_lista.php?pau=$pau&id_pau=$id_pau&obj_pau=".$Qobj_pau."";
+//	ir_a($go_to);
+//}
 
 // ------------------------- cuerpo -----------------------------
 if (empty($Qid_dossier)) { // enseña la lista de dossiers.
