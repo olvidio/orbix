@@ -466,7 +466,7 @@ $a_camposHiddenSel = array(
 		'obj_pau' =>$obj_pau,
 		'pau' =>'a',
 		'permiso' =>'3',
-		'stack' => $oPosicion->getStack(),
+//		'stack' => $oPosicion->getStack(),
 		);
 		//'tabla' =>'a_actividades',
 		//'tabla_pau' =>'a_actividades',

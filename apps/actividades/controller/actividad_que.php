@@ -25,6 +25,7 @@ use ubis\model\entity as ubis;
 // FIN de  Cabecera global de URL de controlador ********************************
 	
 $oPosicion->recordar();
+
 //Si vengo de vuelta y le paso la referecia del stack donde está la información.
 if (isset($_POST['stack'])) {
 	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
