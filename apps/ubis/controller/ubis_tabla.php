@@ -115,33 +115,33 @@ if (empty($sWhere)) {
 			switch ($loc) {
 				case "dl":
 					$titulo=ucfirst(_("tabla de centros de la delegación"));
-					$Gestor= 'ubis\model\entity\GestorCentroDl';
+					$Gestor= "ubis\\model\\entity\\GestorCentroDl";
 					$metodo = 'getCentros';
-					$GestorDir = 'ubis\model\entity\GestorDireccionCtrDl';
+					$GestorDir = "ubis\\model\\entity\\GestorDireccionCtrDl";
 					break;
 				case "ex":
-					$Gestor= "ubis\model\entity\GestorCentroEx";
+					$Gestor= "ubis\\model\\entity\\GestorCentroEx";
 					$metodo = 'getCentros';
 					$GestorDir = 'ubis\model\entity\GestorDireccionCtrEx';
 					$titulo=ucfirst(_("tabla de centros de fuera de la delegación"));
 					break;
 				case "sf":
 					if (($_SESSION['oPerm']->have_perm("vcsd")) OR ($_SESSION['oPerm']->have_perm("des"))) { 
-						$Gestor= "ubis\model\entity\GestorCentroDl";
+						$Gestor= "ubis\\model\\entity\\GestorCentroDl";
 						$Gestor->setoDbl( $GLOBALS['oDBE']);
 						$metodo = 'getCentros';
-						$GestorDir = 'ubis\model\entity\GestorDireccionCtrDl';
+						$GestorDir = 'ubis\\model\\entity\\GestorDireccionCtrDl';
 						$titulo=ucfirst(_("tabla de centros de la delegación femenina"));
 					}
 					break;
 				case "tot":
-					$Gestor= "ubis\model\entity\GestorCentro";
+					$Gestor= "ubis\\model\\entity\\GestorCentro";
 					$metodo = 'getCentros';
 					$titulo=ucfirst(_("tabla de toda las casas y centros"));
 					switch ($miSfsv) {
 						case 1: // sv
 							$aWhere['sv']='t';
-							$GestorDir = 'ubis\model\entity\GestorDireccionCtr';
+							$GestorDir = 'ubis\\model\\entity\\GestorDireccionCtr';
 							break;
 						case 2: //sf
 							$aWhere['sf']='t';
@@ -154,47 +154,47 @@ if (empty($sWhere)) {
 		case "cdc":
 			switch ($loc) {
 				case "dl":
-					$Gestor= "ubis\model\entity\GestorCasaDl";
+					$Gestor= "ubis\\model\\entity\\GestorCasaDl";
 					$metodo = 'getCasas';
 					$titulo=ucfirst(_("tabla de casas de la delegación"));
-					$GestorDir = 'ubis\model\entity\GestorDireccionCdcDl'; // Las casas tienen las mismas direcciones que sv.
+					$GestorDir = "ubis\\model\\entity\\GestorDireccionCdcDl"; // Las casas tienen las mismas direcciones que sv.
 					break;
 				case "ex":
-					$Gestor= "ubis\model\entity\GestorCasaEx";
+					$Gestor= "ubis\\model\\entity\\GestorCasaEx";
 					$metodo = 'getCasas';
 					$titulo=ucfirst(_("tabla de casas de fuera de la delegación"));
-					$GestorDir = 'ubis\model\entity\GestorDireccionCdcEx';
+					$GestorDir = "ubis\\model\\entity\\GestorDireccionCdcEx";
 					break;
 				case "sf":
 					if (($_SESSION['oPerm']->have_perm("vcsd")) OR ($_SESSION['oPerm']->have_perm("des"))) {
-						$Gestor= "ubis\model\entity\GestorCasaDl";
+						$Gestor= "ubis\\model\\entity\\GestorCasaDl";
 						$metodo = 'getCasas';
-						$GestorDir = 'ubis\model\entity\GestorDireccionCdcDl';
+						$GestorDir = "ubis\\model\\entity\\GestorDireccionCdcDl";
 						$aWhere['sf']='t';
 						$titulo=ucfirst(_("tabla de casas de la sf"));
 					}
 					break;
 				case "tot":
-					$Gestor= "ubis\model\entity\GestorCasa";
+					$Gestor= "ubis\\model\\entity\\GestorCasa";
 					$metodo = 'getCasas';
 					$titulo=ucfirst(_("tabla de toda las casas y centros"));
-					$GestorDir = 'ubis\model\entity\GestorDireccionCdc';
+					$GestorDir = "ubis\\model\\entity\\GestorDireccionCdc";
 					break;
 			}
 			break;
 		case "tot":
 			switch ($loc) {
 				case "dl":
-					$Gestor= "ubis\model\entity\GestorUbi";
+					$Gestor= "ubis\\model\\entity\\GestorUbi";
 					$metodo = 'getUbis';
 					$titulo=ucfirst(_("tabla de casas y centros de la delegación"));
-					$GestorDir = 'ubis\model\entity\GestorDireccion';
+					$GestorDir = "ubis\\model\\entity\\GestorDireccion";
 					break;
 				case "ex":
-					$Gestor= "ubis\model\entity\GestorUbi";
+					$Gestor= "ubis\\model\\entity\\GestorUbi";
 					$metodo = 'getUbis';
 					$titulo=ucfirst(_("tabla de casas y centros de fuera de la delegación"));
-					$GestorDir = 'ubis\model\entity\GestorDireccion';
+					$GestorDir = "ubis\\model\\entity\\GestorDireccion";
 					/*
 					switch ($miSfsv) {
 						case 1: // sv
@@ -223,7 +223,7 @@ if (empty($sWhere)) {
 					break;
 				case "sf":
 					/*
-					$Gestor= "ubis\model\entity\GestorUbi";
+					$Gestor= "ubis\\model\\entity\\GestorUbi";
 					$metodo = 'getUbis';
 					$titulo=ucfirst(_("tabla de toda las casas y centros"));
 					switch ($miSfsv) {
@@ -243,9 +243,9 @@ if (empty($sWhere)) {
 					*/
 					break;
 				case "tot":
-					$Gestor= "ubis\model\entity\GestorUbi";
+					$Gestor= "ubis\\model\\entity\\GestorUbi";
 					$metodo = 'getUbis';
-					$GestorDir = 'ubis\model\entity\GestorDireccion';
+					$GestorDir = "ubis\\model\\entity\\GestorDireccion";
 					$titulo=ucfirst(_("tabla de toda las casas y centros"));
 					break;
 			}

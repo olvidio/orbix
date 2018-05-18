@@ -54,7 +54,7 @@ class GestorProfesorActividad Extends core\ClaseGestor {
 				continue;
 			}
 			$obj_persona = get_class($oPersona);
-			$obj_persona = str_replace("personas\\model\entity\\",'',$obj_persona);
+			$obj_persona = str_replace("personas\\model\\entity\\",'',$obj_persona);
 			if ($obj_persona == 'PersonaDl') continue;
 			// solo puede ser PersonaEx o PersonaIN;
 			$profesor_stgr = $oPersona->getProfesor_stgr();

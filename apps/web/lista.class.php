@@ -246,7 +246,7 @@ class Lista {
 		$a_valores = $this->aDatos;
 		$id_tabla = $this->sid_tabla;
 		$grid_width = '900';
-		$grid_height = '400';
+		$grid_height = '200';
 
 		$sortcol=$this->ssortCol;
 		$botones="";
@@ -293,7 +293,7 @@ class Lista {
 				// Anchura del grid
 				$grid_width = (!empty($aPrefs['widthGrid']))? $aPrefs['widthGrid'] : '900';
 				// Altura del grid
-				$grid_height = (!empty($aPrefs['heightGrid']))? $aPrefs['heightGrid'] : '400';
+				$grid_height = (!empty($aPrefs['heightGrid']))? $aPrefs['heightGrid'] : '200';
 				break; // sale dell bucle.
 			} else { // buscar las opciones por defecto
 				continue;

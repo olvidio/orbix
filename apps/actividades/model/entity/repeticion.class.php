@@ -137,7 +137,7 @@ class Repeticion Extends core\ClasePropiedades {
 					return false;
 				}
 			}
-			$aDades['id_repeticion'] = $oDbl->lastInsertId('$nom_tabla_id_repeticion_seq');
+			$aDades['id_repeticion'] = $oDbl->lastInsertId($nom_tabla.'_id_repeticion_seq');
 		}
 		$this->setAllAtributes($aDades);
 		return true;

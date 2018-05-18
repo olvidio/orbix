@@ -128,7 +128,7 @@ class GrupMenuRole Extends core\ClasePropiedades {
 					return false;
 				}
 			}
-			$this->id_item = $oDbl->lastInsertId('$nom_tabla_id_item_seq');
+			$this->id_item = $oDbl->lastInsertId($nom_tabla.'_id_item_seq');
 		}
 		$this->setAllAtributes($aDades);
 		return true;

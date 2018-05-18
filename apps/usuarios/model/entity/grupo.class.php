@@ -124,7 +124,7 @@ class Grupo Extends core\ClasePropiedades {
 					return false;
 				}
 			}
-			$aDades['id_usuario'] = $oDbl->lastInsertId('$nom_tabla_id_usuario_seq');
+			$aDades['id_usuario'] = $oDbl->lastInsertId($nom_tabla.'_id_usuario_seq');
 		}
 		$this->setAllAtributes($aDades);
 		return true;

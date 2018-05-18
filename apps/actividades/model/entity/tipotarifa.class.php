@@ -138,7 +138,7 @@ class TipoTarifa Extends core\ClasePropiedades {
 					return false;
 				}
 			}
-			$aDades['tarifa'] = $oDbl->lastInsertId('$nom_tabla_tarifa_seq');
+			$aDades['tarifa'] = $oDbl->lastInsertId($nom_tabla.'_tarifa_seq');
 		}
 		$this->setAllAtributes($aDades);
 		return true;

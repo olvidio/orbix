@@ -129,7 +129,7 @@ class GrupMenu Extends core\ClasePropiedades {
 					return false;
 				}
 			}
-			$this->id_grupmenu = $oDbl->lastInsertId('$nom_tabla_id_gm_seq');
+			$this->id_grupmenu = $oDbl->lastInsertId($nom_tabla.'_id_gm_seq');
 		}
 		$this->setAllAtributes($aDades);
 		return true;

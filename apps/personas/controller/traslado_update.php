@@ -16,34 +16,34 @@ use personas\model\entity as personas;
 
 $error = '';
 
-$id_pau  = empty($_POST['id_pau'])? '' : $_POST['id_pau'];
-$oPersonaDl = new personas\PersonaDl($id_pau);
+$Qid_pau = (integer) \filter_input(INPUT_POST, 'id_pau');
+$oPersonaDl = new personas\PersonaDl($Qid_pau);
 $oPersonaDl->DBCarregar();
 
 //centro
-$new_ctr  = empty($_POST['new_ctr'])? '' : $_POST['new_ctr'];
-$f_ctr  = empty($_POST['f_ctr'])? '' : $_POST['f_ctr'];
+$Qnew_ctr = (string) \filter_input(INPUT_POST, 'new_ctr');
+$Qf_ctr = (string) \filter_input(INPUT_POST, 'f_ctr');
 
-if (!empty($new_ctr) AND !empty($f_ctr)){
-	$id_ctr_o  = empty($_POST['id_ctr_o'])? '' : $_POST['id_ctr_o'];
-	$ctr_o  = empty($_POST['ctr_o'])? '' : $_POST['ctr_o'];
+if (!empty($Qnew_ctr) AND !empty($Qf_ctr)){
+	$Qid_ctr_o = (string) \filter_input(INPUT_POST, 'id_ctr_o');
+	$Qctr_o = (string) \filter_input(INPUT_POST, 'ctr_o');
 
-	$id_new_ctr=strtok($new_ctr,"#");
+	$id_new_ctr=strtok($Qnew_ctr,"#");
 	$nom_new_ctr=strtok("#");
 
 	$oPersonaDl->setId_ctr($id_new_ctr);
-	// ?? $oPersonaDl->setF_ctr($f_ctr);
+	// ?? $oPersonaDl->setF_ctr($Qf_ctr);
 	if ($oPersonaDl->DBGuardar() === false) {
 		$error .= '<br>'._('Hay un error, no se ha guardado');
 	}
 
   	//para el dossier de traslados
  	$oTraslado = new personas\Traslado();
-	$oTraslado->setId_nom($id_pau);
-	$oTraslado->setF_traslado($f_ctr);
+	$oTraslado->setId_nom($Qid_pau);
+	$oTraslado->setF_traslado($Qf_ctr);
 	$oTraslado->setTipo_cmb('sede');
-	$oTraslado->setId_ctr_origen($id_ctr_o);
-	$oTraslado->setCtr_origen($ctr_o);
+	$oTraslado->setId_ctr_origen($Qid_ctr_o);
+	$oTraslado->setCtr_origen($Qctr_o);
 	$oTraslado->setId_ctr_destino($id_new_ctr);
 	$oTraslado->setCtr_destino($nom_new_ctr);
 	if ($oTraslado->DBGuardar() === false) {
@@ -53,29 +53,30 @@ if (!empty($new_ctr) AND !empty($f_ctr)){
 
 //cambio de dl
 $old_dl = $oPersonaDl->getDl();
-$new_dl  = empty($_POST['new_dl'])? '' : $_POST['new_dl'];
-$f_dl  = empty($_POST['f_dl'])? '' : $_POST['f_dl'];
-$situacion  = empty($_POST['situacion'])? '' : $_POST['situacion'];
-$reg_dl_org  = empty($_POST['dl'])? '' : ConfigGlobal::mi_region().'-'.$_POST['dl'];
+$Qnew_dl = (string) \filter_input(INPUT_POST, 'new_dl');
+$Qf_dl = (string) \filter_input(INPUT_POST, 'f_dl');
+$Qsituacion = (string) \filter_input(INPUT_POST, 'situacion');
+$Qdl = (string) \filter_input(INPUT_POST, 'dl');
+$reg_dl_org  = empty($Qdl)? '' : ConfigGlobal::mi_region().'-'.$Qdl;
 $sfsv_txt = (configGlobal::mi_sfsv() == 1)? 'v' :'f';
 
-if (!empty($new_dl) AND !empty($f_dl)){
+if (!empty($Qnew_dl) AND !empty($Qf_dl)){
 	$reg_dl_org  .= $sfsv_txt;
-	$new_dl  .= $sfsv_txt;
+	$Qnew_dl  .= $sfsv_txt;
 	$oTrasladoDl = new personas\trasladoDl();
-	$oTrasladoDl->setId_nom($id_pau);
+	$oTrasladoDl->setId_nom($Qid_pau);
 	$oTrasladoDl->setDl_persona($old_dl);
 	$oTrasladoDl->setReg_dl_org($reg_dl_org);
-	$oTrasladoDl->setReg_dl_dst($new_dl);
-	$oTrasladoDl->setF_dl($f_dl);
-	$oTrasladoDl->setSituacion($situacion);
+	$oTrasladoDl->setReg_dl_dst($Qnew_dl);
+	$oTrasladoDl->setF_dl($Qf_dl);
+	$oTrasladoDl->setSituacion($Qsituacion);
 
 	$error = $oTrasladoDl->trasladar();
 }
 
 
 // hay que abrir el dossier para esta persona/actividad/ubi, si no tiene.
-$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$id_pau,'id_tipo_dossier'=>1004));
+$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$Qid_pau,'id_tipo_dossier'=>1004));
 $oDossier->abrir(); // ya pone la fecha de hoy.
 $oDossier->DBGuardar();
 

@@ -128,7 +128,7 @@ class Sector Extends core\ClasePropiedades {
 					return false;
 				}
 			}
-			$aDades['id_sector'] = $oDbl->lastInsertId('$nom_tabla_id_sector_seq');
+			$aDades['id_sector'] = $oDbl->lastInsertId($nom_tabla.'_id_sector_seq');
 		}
 		$this->setAllAtributes($aDades);
 		return true;

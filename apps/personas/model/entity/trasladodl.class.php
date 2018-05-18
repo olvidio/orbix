@@ -216,51 +216,51 @@ class TrasladoDl {
 			return $this->serror;
 		}
 		// Aviso si le faltan notas
-		if ($this->comprobarNotas() === false) {
-			$msg = $this->serror;
-		}
+			if ($this->comprobarNotas() === false) {
+				$msg = $this->serror;
+			}
 
-		// Cambio la situación de la persona. Debo hacerlo lo primero, pues no puedo
-		// tener la misma persona en dos dl en la misma situación
-		if ($this->cambiarFichaPersona() === false) {
-			$msg = $this->serror;
-			return _("OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio.").$msg;
-		}
+			// Cambio la situación de la persona. Debo hacerlo lo primero, pues no puedo
+			// tener la misma persona en dos dl en la misma situación
+			if ($this->cambiarFichaPersona() === false) {
+				$msg = $this->serror;
+				return _("OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio.").$msg;
+			}
 
-		// Trasladar persona
-		if ($this->copiarPersona() === false) {
-			return $this->serror;
-		}
+			// Trasladar persona
+			if ($this->copiarPersona() === false) {
+				return $this->serror;
+			}
 
-		if ($this->copiarNotas() === false) {
-			return $this->serror;
-		}
-		
-		// apunto el traslado. Lo pongo antes para que se copie trasladar dossiers.
-		if ($this->apuntar() === false) {
-			return $this->serror;
-		}
-		
-		if ($this->trasladarDossiers() === false) {
-			return $this->serror;
-		}
-		return true;
-	}
-
-	public function comprobar() {
-		$error = '';
-		if (!empty($this->sdl_dst) AND $this->sdl_dst == $this->sdl_persona) {
-			$error = _("Ya esta trasladado. No se ha hecho ningún cambio.");
-		}
-		if (empty($error)) {
+			if ($this->copiarNotas() === false) {
+				return $this->serror;
+			}
+			
+			// apunto el traslado. Lo pongo antes para que se copie trasladar dossiers.
+			if ($this->apuntar() === false) {
+				return $this->serror;
+			}
+			
+			if ($this->trasladarDossiers() === false) {
+				return $this->serror;
+			}
 			return true;
-		} else {
-			$this->serror = $error;
-			return false;
 		}
-	}
 
-	public function comprobarNotas() {
+		public function comprobar() {
+			$error = '';
+			if (!empty($this->sdl_dst) AND $this->sdl_dst == $this->sdl_persona) {
+				$error = _("Ya esta trasladado. No se ha hecho ningún cambio.");
+			}
+			if (empty($error)) {
+				return true;
+			} else {
+				$this->serror = $error;
+				return false;
+			}
+		}
+
+		public function comprobarNotas() {
 		// Aviso si le faltan notas
 		$error = '';
 		$oDBorg = $this->conexionOrg();
@@ -456,7 +456,7 @@ class TrasladoDl {
 		$oDBorg = $this->conexionOrg();
 		$oDBdst = $this->conexionDst();
 
-		$gestor = "notas\model\entity\GestorPersonaNotaDl";
+		$gestor = "notas\\model\\entity\\GestorPersonaNotaDl";
 		$ges = new $gestor();
 		$ges->setoDbl($oDBorg);
 		$colection = $ges->getPersonaNotas(array('id_nom'=>$this->iid_nom));
@@ -513,61 +513,61 @@ class TrasladoDl {
 			$colection = array();
 			switch ($class) {
 				case 'TelecoPersonaDl':
-					$gestor = "$app\model\entity\GestorTelecoPersonaDl";
+					$gestor = "$app\\model\\entity\\GestorTelecoPersonaDl";
 					$ges = new $gestor();
 					$ges->setoDbl($oDBorg);
 					$colection = $ges->getTelecos(array('id_nom'=>$this->iid_nom));
 					break;
 				case 'Profesor':
-					$gestor = "$app\model\entity\Gestor$class";
+					$gestor = "$app\\model\\entity\\Gestor$class";
 					$ges = new $gestor();
 					$ges->setoDbl($oDBorg);
 					$colection = $ges->getProfesores(array('id_nom'=>$this->iid_nom));
 					break;
 				case 'ProfesorAmpliacion':
-					$gestor = "$app\model\entity\Gestor$class";
+					$gestor = "$app\\model\\entity\\Gestor$class";
 					$ges = new $gestor();
 					$ges->setoDbl($oDBorg);
 					$colection = $ges->getProfesorAmpliaciones(array('id_nom'=>$this->iid_nom));
 					break;
 				case 'ProfesorCongreso':
-					$gestor = "$app\model\entity\Gestor$class";
+					$gestor = "$app\\model\\entity\\Gestor$class";
 					$ges = new $gestor();
 					$ges->setoDbl($oDBorg);
 					$colection = $ges->getProfesorCongresos(array('id_nom'=>$this->iid_nom));
 					break;
 				case 'ProfesorDirector':
-					$gestor = "$app\model\entity\Gestor$class";
+					$gestor = "$app\\model\\entity\\Gestor$class";
 					$ges = new $gestor();
 					$ges->setoDbl($oDBorg);
 					$colection = $ges->getProfesoresDirectores(array('id_nom'=>$this->iid_nom));
 					break;
 				case 'ProfesorDocenciaStgr':
-					$gestor = "$app\model\entity\Gestor$class";
+					$gestor = "$app\\model\\entity\\Gestor$class";
 					$ges = new $gestor();
 					$ges->setoDbl($oDBorg);
 					$colection = $ges->getProfesorDocenciasStgr(array('id_nom'=>$this->iid_nom));
 					break;
 				case 'ProfesorJuramento':
-					$gestor = "$app\model\entity\Gestor$class";
+					$gestor = "$app\\model\\entity\\Gestor$class";
 					$ges = new $gestor();
 					$ges->setoDbl($oDBorg);
 					$colection = $ges->getProfesorJuramentos(array('id_nom'=>$this->iid_nom));
 					break;
 				case 'ProfesorLatin':
-					$gestor = "$app\model\entity\Gestor$class";
+					$gestor = "$app\\model\\entity\\Gestor$class";
 					$ges = new $gestor();
 					$ges->setoDbl($oDBorg);
 					$colection = $ges->getProfesoresLatin(array('id_nom'=>$this->iid_nom));
 					break;
 				case 'ProfesorPublicacion':
-					$gestor = "$app\model\entity\Gestor$class";
+					$gestor = "$app\\model\\entity\\Gestor$class";
 					$ges = new $gestor();
 					$ges->setoDbl($oDBorg);
 					$colection = $ges->getProfesorPublicaciones(array('id_nom'=>$this->iid_nom));
 					break;
 				case 'ProfesorTituloEst':
-					$gestor = "$app\model\entity\Gestor$class";
+					$gestor = "$app\\model\\entity\\Gestor$class";
 					$ges = new $gestor();
 					$ges->setoDbl($oDBorg);
 					$colection = $ges->getTitulosEst(array('id_nom'=>$this->iid_nom));
@@ -577,21 +577,21 @@ class TrasladoDl {
 					break;
 				case 'MatriculaDl':
 					/*
-					$gestor = "$app\model\entity\Gestor$class";
+					$gestor = "$app\\model\\entity\\Gestor$class";
 					$ges = new $gestor();
 					$ges->setoDbl($oDBorg);
 					$colection = $ges->getMatriculas(array('id_nom'=>$this->iid_nom));
 					*/
 					break;
 				case 'Traslado':
-					$gestor = "$app\model\entity\Gestor$class";
+					$gestor = "$app\\model\\entity\\Gestor$class";
 					$ges = new $gestor();
 					$ges->setoDbl($oDBorg);
 					$colection = $ges->getTraslados(array('id_nom'=>$this->iid_nom));
 					break;
 				case 'AsistenteDl':
 					// Los Out pasan a Dl si la dl destino es la que organiza.
-					$gestor = "$app\model\entity\GestorAsistenteOut";
+					$gestor = "$app\\model\\entity\\GestorAsistenteOut";
 					$ges = new $gestor();
 					$ges->setoDbl($oDBorg);
 					$colection = $ges->getAsistentesOut(array('id_nom'=>$this->iid_nom));
@@ -615,7 +615,7 @@ class TrasladoDl {
 						}
 					}
 					// Los Dl pasan a Out
-					$gestor = "$app\model\entity\GestorAsistenteDl";
+					$gestor = "$app\\model\\entity\\GestorAsistenteDl";
 					$ges = new $gestor();
 					$ges->setoDbl($oDBorg);
 					$colection = $ges->getAsistentesDl(array('id_nom'=>$this->iid_nom));
@@ -634,7 +634,7 @@ class TrasladoDl {
 				case 'AsistenteCargo':
 					// De momento no lo traslado.
 					/*
-					$gestor = "$app\model\entity\Gestor$class";
+					$gestor = "$app\\model\\entity\\Gestor$class";
 					$ges = new $gestor();
 					$ges->setoDbl($oDBorg);
 					$colection = $ges->getActividadCargos(array('id_nom'=>$this->iid_nom));

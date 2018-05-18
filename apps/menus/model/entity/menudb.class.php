@@ -171,7 +171,7 @@ class MenuDb Extends core\ClasePropiedades {
 					return false;
 				}
 			}
-			$this->id_menu = $oDbl->lastInsertId('$nom_tabla_id_menu_seq');
+			$this->id_menu = $oDbl->lastInsertId($nom_tabla.'_id_menu_seq');
 		}
 		$this->setAllAtributes($aDades);
 		return true;

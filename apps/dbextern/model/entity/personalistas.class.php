@@ -242,7 +242,7 @@ class PersonaListas Extends core\ClasePropiedades {
 					return false;
 				}
 			}
-			$this->Identif = $oDbl->lastInsertId('$nom_tabla_id_menu_seq');
+			$this->Identif = $oDbl->lastInsertId($nom_tabla.'_id_menu_seq');
 		}
 		$this->setAllAtributes($aDades);
 		return true;

@@ -142,7 +142,7 @@ class NivelStgr Extends core\ClasePropiedades {
 					}
 				}
 			}
-			$aDades['nivel_stgr'] = $oDbl->lastInsertId('$nom_tabla_nivel_stgr_seq');
+			$aDades['nivel_stgr'] = $oDbl->lastInsertId($nom_tabla.'_nivel_stgr_seq');
 		}
 		$this->setAllAtributes($aDades);
 		return true;
