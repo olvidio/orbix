@@ -78,13 +78,20 @@ foreach ($cPersonas as $oPersona) {
 	$a_valores[$p][4] = $ap_nom;
 
 	// Asignaturas cursadas:
-	/*
-	$aWhere=array();
-	$aOperador=array();
-	$aWhere['id_nom'] = $id_nom;
-	$aWhere['id_nivel'] = '1100,2500';
-	$aOperador['id_nivel']='BETWEEN';
-	*/
+	// Busco fin_bienio, cuadrienio
+	$cFin = $GesNotas->getPersonaNotas(array('id_nom'=>$id_nom, 'id_nivel'=>9990),array('id_nivel' => '>'));
+	$fin_bienio = false;
+	$fin_cuadrienio = false;
+	foreach ($cFin as $oPersonaNota) {
+		$id_asignatura = $oPersonaNota->getId_asignatura();
+		if ($id_asignatura == 9999) {
+			$fin_bienio = true;
+		}
+		if ($id_asignatura == 9998) {
+			$fin_cuadrienio = true;
+		}
+	}
+	
 	$cNotas = $GesNotas->getPersonaNotasSuperadas($id_nom,'t');
 	$aAprobadas=array();
 	foreach ($cNotas as $oPersonaNota) {
@@ -93,13 +100,6 @@ foreach ($cPersonas as $oPersona) {
 		$id_nivel = $oPersonaNota->getId_nivel();
 		$id_situacion = $oPersonaNota->getId_situacion();
 
-		/* 
-		 * No se porqué está aqui. Aunque la asignatura esté fuera de uso,
-		 * si está aprobada cuenta no?
-		 */
-		//if ($a_Asig_status[$id_asignatura] != 't') continue;
-	
-		
 		if ($id_asignatura > 3000) {
 			$id_nivel_asig = $id_nivel;
 		} else {
@@ -111,7 +111,7 @@ foreach ($cPersonas as $oPersona) {
 	}
 
 
-	$a=4;
+	$a=4; // 1: id_tabla, 2: stgr, 3: centro, 4: ap_nom.
 	foreach ($cAsignaturas as $oAsignatura) {
 		$a++;
 		$id_nivel = $oAsignatura->getId_nivel();
@@ -120,12 +120,27 @@ foreach ($cPersonas as $oPersona) {
 		} else {
 			$a_valores[$p][$a] = 1;
 		}
+		// borro las pendientes si ya está aprobado el bienio o cuadrienio
+		if ($fin_bienio && $id_nivel < 2000) {
+			$a_valores[$p][$a] = '';
+		}
+		if ($fin_cuadrienio) {
+			$a_valores[$p][$a] = '';
+		}
 	}
 }
 $oTabla = new web\Lista();
 $oTabla->setId_tabla("pendientes");
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setDatos($a_valores);
-echo $oTabla->mostrar_tabla_html();
+
+// ------------------- html --------------
+
 ?>
+<p>
+	1: <?= _("pendiente") ?>
+	2: <?= _("cursada") ?>
+</p>
+<br>
+<?= $oTabla->mostrar_tabla_html(); ?>
 
