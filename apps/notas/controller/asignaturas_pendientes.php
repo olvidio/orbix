@@ -137,6 +137,7 @@ $oTabla->setDatos($a_valores);
 // ------------------- html --------------
 
 ?>
+<script>fnjs_left_side_hide()</script>
 <p>
 	1: <?= _("pendiente") ?>
 	2: <?= _("cursada") ?>
