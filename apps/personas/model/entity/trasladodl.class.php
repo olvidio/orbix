@@ -398,7 +398,7 @@ class TrasladoDl {
 				$_SESSION['oGestorErrores']->addErrorAppLastError($qRs, $sClauError, __LINE__, __FILE__);
 				return false;
 		}
-		$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+		$aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
 		// si existe el esquema (dl)
 		if (empty($aDades['existe'])) {
 			$error = sprintf(_("No existe el esquema destino %s en la base de datos"),  $this->snew_esquema);
