@@ -62,7 +62,9 @@ class Select1011 {
 							_("acta"),
 							array('name'=>ucfirst(_("fecha acta")),'class'=>'fecha'),
 							_("preceptor"),
-							_("época")
+							_("época"),
+							_("detalle"),
+							_("cursada en")
 						);
 		return $a_cabeceras;
 	}
@@ -135,8 +137,14 @@ class Select1011 {
 			$preceptor=$oPersonaNota->getPreceptor();
 			$id_preceptor=$oPersonaNota->getId_preceptor();
 			$epoca=$oPersonaNota->getEpoca();
+			$detalle=$oPersonaNota->getDetalle();
 			$id_activ=$oPersonaNota->getId_activ();
-
+	
+			$nom_activ = '';
+			if (!empty($id_activ)) {
+				$oActividad = new actividades\ActividadAll($id_activ);
+				$nom_activ = $oActividad->getNom_activ();
+			}
 			//$nota = $a_notas[$id_situacion];
 			$nota = $oPersonaNota->getNota_txt();
 			
@@ -178,6 +186,8 @@ class Select1011 {
 			$a_valores[$i][4]=$f_acta;
 			$a_valores[$i][5]=$preceptor;
 			$a_valores[$i][6]=$epoca;
+			$a_valores[$i][7]=$detalle;
+			$a_valores[$i][8]=$nom_activ;
 		}
 		if (!empty($a_valores)) {
 			// Estas dos variables vienen de la pagina 'padre' dossiers_ver.php
