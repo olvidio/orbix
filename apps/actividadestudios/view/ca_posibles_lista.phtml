@@ -5,10 +5,21 @@
 
 <?php 
 foreach($aActividades as $actividad) {
-   $nom_activ=$actividad["nom_activ"];
-   $creditos=$actividad["creditos"];
+//	'nom_activ' => $nom_activ,
+//	'creditos' => $creditos,
+//	'aLista' => $aLista,
+	$nom_activ = $actividad["nom_activ"];
+	$creditos = $actividad["creditos"];
+	$txt_creditos = sprintf(_("total: %s creditos"),$creditos);
+	$aLista = $actividad["aLista"];
+	$txt_asig = '';
+	foreach ($aLista as $Lista) {
+		$txt_asig .= !empty($txt_asig)? "<br>" : '';
+		$txt_asig .= $Lista['nombre_asignatura'];
+		$txt_asig .= " (".$Lista['creditos'].")";
+	}
 
-   echo "<tr><td style=\"text-align: left;\">  $nom_activ</td><td>$creditos</td></tr>";
+	echo "<tr><td style=\"text-align: left;\">$nom_activ</td><td>$txt_asig</td><td>$txt_creditos</td></tr>";
 }
 ?>
 </table>

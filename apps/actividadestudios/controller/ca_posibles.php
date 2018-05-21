@@ -201,7 +201,7 @@ if (!empty($Qidca)){
 	$nc_ce=0;
 	$nc_otros=0;
 	foreach ($cActividades as $oActividad) {
-		$asignaturas=array();
+		$aAsignaturasCa=array();
 		$i++;
 		//extract($oActividad->getTot());
 		$id_activ = $oActividad->getId_activ();
@@ -223,12 +223,12 @@ if (!empty($Qidca)){
 		}
 		// repaso, mayores 30, menores 30, pa-ad
 		if ($nivel_stgr==4 || $nivel_stgr==9 || $nivel_stgr==8 || $nivel_stgr==7) { 
-			$asignaturas=array("dd");
+			$aAsignaturasCa=array("dd");
 		} else {
 			// por cada ca creo un array con las asignaturas y los créditos.
 			$GesActividadAsignaturas = new actividadestudios\GestorActividadAsignatura();
-			$asignaturas = $GesActividadAsignaturas->getAsignaturasCa($id_activ);
-			if (count($asignaturas)==0 && $nivel_stgr) {
+			$aAsignaturasCa = $GesActividadAsignaturas->getAsignaturasCa($id_activ);
+			if (count($aAsignaturasCa)==0 && $nivel_stgr) {
 				$msg_txt .= sprintf(_("El ca: %s no tiene puesta ninguna asignatura.")."<br>",$nom_activ);
 				continue;
 			}
@@ -257,7 +257,7 @@ if (!empty($Qidca)){
 		$a_datos_ca[$id_activ]=array(
 						'nom_activ'=>$nom_activ,
 						'nivel_stgr'=>$nivel_stgr,
-						'asignaturas'=>$asignaturas
+						'aAsignaturas'=>$aAsignaturasCa
 						);
 		
 		$len = strlen($nom_activ);
@@ -321,9 +321,10 @@ foreach ($cOrdPersonas as $ctr=>$ctrPersonas) {
 		// por cada ca:
 		$aActividades=array();
 		foreach( $a_datos_ca as $id_activ => $datos_ca ) {
+			$aLista = array();
 			$nom_activ=$datos_ca["nom_activ"];
 			$nivel_stgr=$datos_ca["nivel_stgr"];
-			$asignaturas=$datos_ca["asignaturas"];
+			$aAsignaturas=$datos_ca["aAsignaturas"];
 			
 			// para el caso especial de agd en el ceagd
 			if ($ce && $Qna=="agd") { $stgr="ce"; }
@@ -339,23 +340,31 @@ foreach ($cOrdPersonas as $ctr=>$ctrPersonas) {
 						break;
 				case "b":
 						if ($nivel_stgr==1) {
-							$creditos=$oPosiblesCa->contar_creditos($id_nom,$asignaturas);
+							$result=$oPosiblesCa->contar_creditos($id_nom,$aAsignaturas);
+							$creditos = $result['suma'];
+							$aLista = $result['lista'];
 						} else {
 							$creditos="-";
 						}
 						break;
 				case "c1":
 						if ($nivel_stgr==2) {
-							$creditos=$oPosiblesCa->contar_creditos($id_nom,$asignaturas); 
+							$result=$oPosiblesCa->contar_creditos($id_nom,$aAsignaturas);
+							$creditos = $result['suma'];
+							$aLista = $result['lista'];
 						} elseif ($nivel_stgr==3) {
-							$creditos=$oPosiblesCa->contar_creditos($id_nom,$asignaturas); 
+							$result=$oPosiblesCa->contar_creditos($id_nom,$aAsignaturas);
+							$creditos = $result['suma'];
+							$aLista = $result['lista'];
 						} else {
 							$creditos="-";
 						}
 						break;
 				case "c2":
 						if ($nivel_stgr==3) {
-							$creditos=$oPosiblesCa->contar_creditos($id_nom,$asignaturas);
+							$result=$oPosiblesCa->contar_creditos($id_nom,$aAsignaturas);
+							$creditos = $result['suma'];
+							$aLista = $result['lista'];
 						} else {
 							$creditos="-";
 						}
@@ -373,7 +382,9 @@ foreach ($cOrdPersonas as $ctr=>$ctrPersonas) {
 						break;
 				case "ce":
 						if ($nivel_stgr==5) {
-							$creditos=$oPosiblesCa->contar_creditos($id_nom,$asignaturas);
+							$result=$oPosiblesCa->contar_creditos($id_nom,$aAsignaturas);
+							$creditos = $result['suma'];
+							$aLista = $result['lista'];
 						} else {
 							$creditos="-";
 						}
@@ -383,6 +394,7 @@ foreach ($cOrdPersonas as $ctr=>$ctrPersonas) {
 			$aActividades[$id_activ]=array(	
 									'nom_activ' => $nom_activ,
 									'creditos' => $creditos,
+									'aLista' => $aLista,
 								);				
 		}
 		

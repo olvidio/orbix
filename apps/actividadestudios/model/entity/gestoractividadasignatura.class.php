@@ -44,11 +44,12 @@ class GestorActividadAsignatura Extends core\ClaseGestor {
 	 */
 	function getAsignaturasCa ($id_activ,$tipo='') { 
 		/**
-		 * Array con las asignaturas=>creditos, para no tener que consultar cada vez a la base de datos.
+		 * Array con  id_asignatura => array(nombre_asignatura, creditos)
+		 * para no tener que consultar cada vez a la base de datos.
 		 *
 		 */
 		$GesAsignaturas = new asignaturas\GestorAsignatura();
-		$aAsigCreditos = $GesAsignaturas->getArrayAsignaturasCreditos();
+		$aAsigDatos = $GesAsignaturas->getArrayAsignaturasCreditos();
 		
 		// por cada ca creo un array con las asignaturas y los créditos.
 		$aWhere['id_activ'] = $id_activ;
@@ -60,12 +61,12 @@ class GestorActividadAsignatura Extends core\ClaseGestor {
 			$aWhere['tipo'] = $tipo;
 		}
 		$cActividadAsignaturas = $this->getActividadAsignaturas($aWhere,$aOperador);
-		$asignaturas=array();
+		$aAsignaturasCa=array();
 		foreach ( $cActividadAsignaturas as $oActividadAsignatura) {
 			$id_asignatura = $oActividadAsignatura->getId_asignatura();
-			$asignaturas[$id_asignatura]=$aAsigCreditos[$id_asignatura];
+			$aAsignaturasCa[$id_asignatura]= $aAsigDatos[$id_asignatura];
 		}
-		return $asignaturas;
+		return $aAsignaturasCa;
 	}
 	/**
 	 * retorna l'array d'objectes de tipus ActividadAsignatura

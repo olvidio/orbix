@@ -30,7 +30,12 @@ class PosiblesCa Extends core\ClasePropiedades {
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
 	
-	function contar_creditos($id_nom,$asignaturas) {
+	/**
+	 * 
+	 * param integer $id_nom
+	 * param array  $aAsignaturas	id_asignatura => array(nombre_asignatura, creditos)
+	 */
+	function contar_creditos($id_nom,$aAsignaturas) {
 		$suma_creditos=0;
 		$GesNotas = new notas\GestorNota();
 		$cNotas = 	$GesNotas->getNotas(array('superada'=>'t'));
@@ -50,10 +55,16 @@ class PosiblesCa Extends core\ClasePropiedades {
 				$todas_asig_p[]=$id_asignatura;
 			}
 		}
-		foreach( $asignaturas as $id_asignatura => $creditos ) {
-			if (!in_array( $id_asignatura, $todas_asig_p)) { $suma_creditos += $creditos; }
+		$aLista = [];
+		foreach( $aAsignaturas as $id_asignatura => $datosAsignatura ) {
+			$creditos = $datosAsignatura['creditos'];
+			if (!in_array( $id_asignatura, $todas_asig_p)) { 
+				$suma_creditos += $creditos; 
+				$aLista [$id_asignatura] = $datosAsignatura;
+			}
 		}
-		return $suma_creditos;
+		$result = ['suma' => $suma_creditos, 'lista' => $aLista];
+		return $result;
 	}
 	
 	/* METODES ALTRES  ----------------------------------------------------------*/

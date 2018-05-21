@@ -78,25 +78,26 @@ class GestorAsignatura Extends core\ClaseGestor {
 	}
 
 	/**
-	 * retorna un array del tipus: id_asignatura => credits
+	 * retorna un array del tipus: id_asignatura => array(nombre_asignatura, creditos)
 	 *
-	 * @return array id_asignatura => credits
+	 * @return array id_asignatura => array(nombre_asignatura, creditos)
 	 */
 	function getArrayAsignaturasCreditos() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		$oTipoCentroSet = new core\Set();
-		$sQuery="SELECT id_asignatura, creditos FROM $nom_tabla ORDER BY id_nivel";
+		$sQuery="SELECT id_asignatura, nombre_asig, creditos FROM $nom_tabla ORDER BY id_nivel";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorAsignatura.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		$aOpciones=array();
-		foreach ($oDbl->query($sQuery) as $aClave) {
-			$clave=$aClave[0];
-			$val=$aClave[1];
-			$aOpciones[$clave]=$val;
+		foreach ($oDbl->query($sQuery) as $row) {
+			$id_asignatrura = $row[0];
+			$nombre_asignatura = $row[1];
+			$creditos = $row[2];
+			$aOpciones[$id_asignatrura] = array('nombre_asignatura' => $nombre_asignatura, 'creditos' => $creditos);
 		}
 		return $aOpciones;
 	}

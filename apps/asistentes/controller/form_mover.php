@@ -145,8 +145,10 @@ foreach ($cActividades as $oActividad) {
 		// creditos
 		// por cada ca creo un array con las asignaturas y los créditos.
 		$GesActividadAsignaturas = new actividadestudios\GestorActividadAsignaturaDl();
-		$asignaturas = $GesActividadAsignaturas->getAsignaturasCa($id_activ);
-		$creditos=$oPosiblesCa->contar_creditos($Qid_nom,$asignaturas);
+		$aAsignaturasCa = $GesActividadAsignaturas->getAsignaturasCa($id_activ);
+		
+		$result=$oPosiblesCa->contar_creditos($Qid_nom,$aAsignaturasCa);
+		$creditos=$result['suma'];
 		if (!empty($creditos)) {
 			$txt_creditos = sprintf(_("creditos: %s"),$creditos);
 		}
