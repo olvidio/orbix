@@ -102,7 +102,7 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($stack != '')) {
 	// valores por defeccto
 	$Qempiezamin = empty($Qempiezamin)? date('d/m/Y',mktime(0, 0, 0, date('m'), date('d')-40, date('Y'))) : $Qempiezamin;
 	$Qempiezamax = empty($Qempiezamax)? date('d/m/Y',mktime(0, 0, 0, date('m')+9, 0, date('Y'))) : $Qempiezamax;
-	$Qstatus = empty($Qstatus)? 2 : '';
+	$Qstatus = empty($Qstatus)? 2 : $Qstatus;
 
 	$aGoBack = array (
 					'modo'=>$Qmodo,
@@ -122,7 +122,7 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($stack != '')) {
 // Condiciones de búsqueda.
 $aWhere = array();
 // Status
-if ($Qstatus!=5) {
+if ($Qstatus != 5) {
 	$aWhere['status'] = $Qstatus;
 }
 // Id tipo actividad
@@ -289,7 +289,7 @@ if (!empty($Qmodo) && $Qmodo == 'importar') {
 
 $aWhere['_ordre'] = 'f_ini';
 $cActividades = $GesActividades->getActividades($aWhere,$aOperador);
-$num_activ=count($cActividades);
+$num_activ = count($cActividades);
 if ($num_activ > $num_max_actividades && empty($Qcontinuar)) {
 	$go_avant=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_select.php?'.http_build_query(array('continuar'=>'si','stack'=>$oPosicion->getStack())));
 	$go_atras=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_que.php?'.http_build_query(array('stack'=>$oPosicion->getStack())));
