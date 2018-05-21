@@ -44,6 +44,12 @@ class Lista {
 	 */
 	 protected $aCabeceras;
 	/**
+	 * sPie de la Lista
+	 *
+	 * @var string
+	 */
+	 protected $sPie;
+	/**
 	 * ssortcol de la Lista. Columna por la que se ordena la tabla inicialmente.
 	 *
 	 * @var string
@@ -191,6 +197,9 @@ class Lista {
 			$Html.="<div class=salta_pag>";
 			$Html.="<h2>$titulo</h2>";
 			$Html.= $this->lista();
+			if (!empty($this->sPie)) {
+				$Html.="<p>$this->sPie</p>";
+			}
 			$Html.="</div>";
 		}
 		return $Html;
@@ -1083,6 +1092,9 @@ class Lista {
 	}
 	public function setCabeceras($aCabeceras) {
 		 $this->aCabeceras = $aCabeceras;
+	}
+	public function setPie($str) {
+		 $this->sPie = $str;
 	}
 	public function setSortCol($ssortcol) {
 		 $this->ssortCol = str_replace(' ','',$ssortcol);

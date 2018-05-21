@@ -189,7 +189,15 @@ foreach ($cCentros as $oCentroDl) {
 							if ($preceptor == 't') { 
 								if (!empty($id_preceptor)) {
 									$oPersona = personas\Persona::NewPersona($id_preceptor);
-									$preceptor = '(p: '. $oPersona->getApellidosNombre().')';
+									// Comprobar si el preceptor asiste al ca.
+									$aWherePreceptor =['id_activ'=>$id_activ, 'id_nom'=>$id_nom];
+									$cAsistentesP = $GesAsistente->getAsistentes($aWherePreceptor);
+									if (count($cAsistentesP) > 0) {
+										$p = '*';
+									} else {
+										$p = '';
+									}
+									$preceptor = '(p: '. $oPersona->getApellidosNombre().")$p";
 								} else {
 									$preceptor = '(p)';
 								}
@@ -217,6 +225,7 @@ $oLista = new web\Lista();
 $oLista->setGrupos($aGrupos);
 $oLista->setCabeceras($a_cabeceras);
 $oLista->setDatos($a_valores);
+$oLista->setPie(_("(*) El preceptor no asiste al ca"));
 
 echo $oPosicion->mostrar_left_slide(1); 
 echo $oLista->listaPaginada();
