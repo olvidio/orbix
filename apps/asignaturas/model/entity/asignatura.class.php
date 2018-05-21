@@ -49,11 +49,11 @@ class Asignatura Extends core\ClasePropiedades {
 	 */
 	 private $iid_nivel;
 	/**
-	 * Nombre_asig de Asignatura
+	 * Nombre_asignatura de Asignatura
 	 *
 	 * @var string
 	 */
-	 private $snombre_asig;
+	 private $snombre_asignatura;
 	/**
 	 * Nombre_corto de Asignatura
 	 *
@@ -131,7 +131,7 @@ class Asignatura Extends core\ClasePropiedades {
 		if ($this->DBCarregar('guardar') === false) { $bInsert=true; } else { $bInsert=false; }
 		$aDades=array();
 		$aDades['id_nivel'] = $this->iid_nivel;
-		$aDades['nombre_asig'] = $this->snombre_asig;
+		$aDades['nombre_asignatura'] = $this->snombre_asignatura;
 		$aDades['nombre_corto'] = $this->snombre_corto;
 		$aDades['creditos'] = $this->screditos;
 		$aDades['year'] = $this->syear;
@@ -146,7 +146,7 @@ class Asignatura Extends core\ClasePropiedades {
 			//UPDATE
 			$update="
 					id_nivel                 = :id_nivel,
-					nombre_asig              = :nombre_asig,
+					nombre_asignatura        = :nombre_asignatura,
 					nombre_corto             = :nombre_corto,
 					creditos                 = :creditos,
 					year                     = :year,
@@ -167,8 +167,8 @@ class Asignatura Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_asignatura);
-			$campos="(id_asignatura,id_nivel,nombre_asig,nombre_corto,creditos,year,id_sector,status,id_tipo)";
-			$valores="(:id_asignatura,:id_nivel,:nombre_asig,:nombre_corto,:creditos,:year,:id_sector,:status,:id_tipo)";		
+			$campos="(id_asignatura,id_nivel,nombre_asignatura,nombre_corto,creditos,year,id_sector,status,id_tipo)";
+			$valores="(:id_asignatura,:id_nivel,:nombre_asignatura,:nombre_corto,:creditos,:year,:id_sector,:status,:id_tipo)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Asignatura.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
@@ -242,7 +242,7 @@ class Asignatura Extends core\ClasePropiedades {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_asignatura',$aDades)) $this->setId_asignatura($aDades['id_asignatura']);
 		if (array_key_exists('id_nivel',$aDades)) $this->setId_nivel($aDades['id_nivel']);
-		if (array_key_exists('nombre_asig',$aDades)) $this->setNombre_asig($aDades['nombre_asig']);
+		if (array_key_exists('nombre_asignatura',$aDades)) $this->setNombre_asignatura($aDades['nombre_asignatura']);
 		if (array_key_exists('nombre_corto',$aDades)) $this->setNombre_corto($aDades['nombre_corto']);
 		if (array_key_exists('creditos',$aDades)) $this->setCreditos($aDades['creditos']);
 		if (array_key_exists('year',$aDades)) $this->setYear($aDades['year']);
@@ -315,23 +315,23 @@ class Asignatura Extends core\ClasePropiedades {
 		$this->iid_nivel = $iid_nivel;
 	}
 	/**
-	 * Recupera l'atribut snombre_asig de Asignatura
+	 * Recupera l'atribut snombre_asignatura de Asignatura
 	 *
-	 * @return string snombre_asig
+	 * @return string snombre_asignatura
 	 */
-	function getNombre_asig() {
-		if (!isset($this->snombre_asig)) {
+	function getNombre_asignatura() {
+		if (!isset($this->snombre_asignatura)) {
 			$this->DBCarregar();
 		}
-		return $this->snombre_asig;
+		return $this->snombre_asignatura;
 	}
 	/**
-	 * estableix el valor de l'atribut snombre_asig de Asignatura
+	 * estableix el valor de l'atribut snombre_asignatura de Asignatura
 	 *
-	 * @param string snombre_asig='' optional
+	 * @param string snombre_asignatura='' optional
 	 */
-	function setNombre_asig($snombre_asig='') {
-		$this->snombre_asig = $snombre_asig;
+	function setNombre_asignatura($snombre_asignatura='') {
+		$this->snombre_asignatura = $snombre_asignatura;
 	}
 	/**
 	 * Recupera l'atribut snombre_corto de Asignatura
@@ -458,7 +458,7 @@ class Asignatura Extends core\ClasePropiedades {
 
 		$oAsignaturaSet->add($this->getDatosId_asignatura());
 		$oAsignaturaSet->add($this->getDatosId_nivel());
-		$oAsignaturaSet->add($this->getDatosNombre_asig());
+		$oAsignaturaSet->add($this->getDatosNombre_asignatura());
 		$oAsignaturaSet->add($this->getDatosNombre_corto());
 		$oAsignaturaSet->add($this->getDatosCreditos());
 		$oAsignaturaSet->add($this->getDatosYear());
@@ -499,14 +499,14 @@ class Asignatura Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut snombre_asig de Asignatura
+	 * Recupera les propietats de l'atribut snombre_asignatura de Asignatura
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return oject DatosCampo
 	 */
-	function getDatosNombre_asig() {
+	function getDatosNombre_asignatura() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nombre_asig'));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nombre_asignatura'));
 		$oDatosCampo->setEtiqueta(_("nombre largo"));
 		$oDatosCampo->setTipo('texto');
 		$oDatosCampo->setArgument(40);

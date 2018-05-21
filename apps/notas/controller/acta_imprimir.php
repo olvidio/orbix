@@ -69,7 +69,7 @@ extract($oActa->getTot());
 
 $oAsignatura = new asignaturas\Asignatura($id_asignatura);
 $nombre_corto=$oAsignatura->getNombre_corto();
-$nombre_asig=$oAsignatura->getNombre_asig();
+$nombre_asignatura=$oAsignatura->getNombre_asignatura();
 $any=$oAsignatura->getYear();
 
 $id_tipo=$oAsignatura->getId_tipo();
@@ -168,7 +168,7 @@ $a_campos = [
 			'errores' => $errores,
 			'curso' => $curso,
 			'any' => $any,
-			'nombre_asig' => $nombre_asig,
+			'nombre_asignatura' => $nombre_asignatura,
 			'alum_cara_A' => $alum_cara_A,
 			'alum_cara_B' => $alum_cara_B,
 			'aPersonasNotas' => $aPersonasNotas,

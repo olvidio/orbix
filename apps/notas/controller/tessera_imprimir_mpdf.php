@@ -195,7 +195,7 @@ foreach ($cNotas as $oPersonaNota) {
 	$aAprobadas[$n]['id_nivel_asig']= $id_nivel_asig;
 	$aAprobadas[$n]['id_nivel']= $id_nivel;
 	$aAprobadas[$n]['id_asignatura']= $id_asignatura;
-	$aAprobadas[$n]['nombre_asig']= $oAsig->getNombre_asig();
+	$aAprobadas[$n]['nombre_asignatura']= $oAsig->getNombre_asignatura();
 	$aAprobadas[$n]['acta']= $acta;
 	$aAprobadas[$n]['fecha']= $f_acta;
 	//$oNota = new notas\Nota($id_situacion);
@@ -219,11 +219,11 @@ while ( $a < count($cAsignaturas)) {
 	}
 	while (($oAsignatura->getId_nivel() < $row["id_nivel_asig"]) && ($row["id_nivel"] < 2434) ){
 		titulo($oAsignatura->getId_nivel());
-		$nombre_asig = strtr($oAsignatura->getNombre_asig(), $replace);
+		$nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
 		?>
 		<tr>
 		<td></td>    
-		<td><?= $nombre_asig;?>&nbsp;</td>
+		<td><?= $nombre_asignatura;?>&nbsp;</td>
 		<td class="dato">&nbsp;</td>
 		<td>&nbsp;</td>
 		<td class="dato">&nbsp;</td>
@@ -239,8 +239,8 @@ while ( $a < count($cAsignaturas)) {
 		titulo($oAsignatura->getId_nivel());
 		// para las opcionales
 		if ($row["id_asignatura"] > 3000 &&  $row["id_asignatura"] < 9000 ) {
-			$nombre_asig=strtr ($row["nombre_asig"], $replace);
-			$algo=$oAsignatura->getNombre_asig()."<br>&nbsp;&nbsp;&nbsp;&nbsp;".$nombre_asig;
+			$nombre_asignatura=strtr ($row["nombre_asignatura"], $replace);
+			$algo=$oAsignatura->getNombre_asignatura()."<br>&nbsp;&nbsp;&nbsp;&nbsp;".$nombre_asignatura;
 			?>
 			<tr>
 			<td></td>
@@ -253,11 +253,11 @@ while ( $a < count($cAsignaturas)) {
 			<tr><td class="space"></td></tr>
 			<?php 
 		} else {
-			$nombre_asig = strtr($oAsignatura->getNombre_asig(), $replace);
+			$nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
 			?>
 			<tr>
 			<td></td>
-			<td><?= $nombre_asig; ?>&nbsp;</td>
+			<td><?= $nombre_asignatura; ?>&nbsp;</td>
 			<td class="dato"><?= $row["nota"];?>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td class="dato"><?= $row["fecha"];?>&nbsp;</td>
@@ -269,11 +269,11 @@ while ( $a < count($cAsignaturas)) {
 	} else {
 		if (!$row["id_nivel"] || ($j==$num_asig)) {
 			titulo($oAsignatura->getId_asignatura());
-			$nombre_asig = strtr($oAsignatura->getNombre_asig(), $replace);
+			$nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
 			?>
 			<tr>
 				<td></td>
-				<td><?= $nombre_asig; ?>&nbsp;</td>
+				<td><?= $nombre_asignatura; ?>&nbsp;</td>
 				<td class="dato">&nbsp;</td>
 				<td>&nbsp;</td>
 				<td class="dato">&nbsp;</td>

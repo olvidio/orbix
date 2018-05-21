@@ -45,8 +45,8 @@ class GestorAsignatura Extends core\ClaseGestor {
 		$nom_tabla = $this->getNomTabla();
 		$sCondi = '';
 		foreach ($aWhere as $camp => $val) {
-			if ($camp == 'nombre_asig' && !empty($val)) {
-				$sCondi .= "WHERE status=true AND nombre_asig ILIKE '%$val%'";
+			if ($camp == 'nombre_asignatura' && !empty($val)) {
+				$sCondi .= "WHERE status=true AND nombre_asignatura ILIKE '%$val%'";
 			}
 			if ($camp == 'id' && !empty($val)) {
 				if (!empty($sCondi)) {
@@ -58,7 +58,7 @@ class GestorAsignatura Extends core\ClaseGestor {
 		}
 		$sOrdre = " ORDER BY id_nivel";
 		$sLimit = " LIMIT 25";
-		$sQuery = "SELECT DISTINCT id_asignatura,nombre_asig,id_nivel FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
+		$sQuery = "SELECT DISTINCT id_asignatura,nombre_asignatura,id_nivel FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorAsignatura.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -69,9 +69,9 @@ class GestorAsignatura Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aClave) {
 			$i++;
 			$id_asignatura = $aClave[0];
-			$nombre_asig = $aClave[1];
+			$nombre_asignatura = $aClave[1];
 			$json .= ($i > 1)? ',' : ''; 
-			$json .= "{\"id\":\"$id_asignatura\",\"name\":\"$nombre_asig\"}";
+			$json .= "{\"id\":\"$id_asignatura\",\"name\":\"$nombre_asignatura\"}";
 		}
 		$json .= ']';
 		return $json;
@@ -86,7 +86,7 @@ class GestorAsignatura Extends core\ClaseGestor {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		$oTipoCentroSet = new core\Set();
-		$sQuery="SELECT id_asignatura, nombre_asig, creditos FROM $nom_tabla ORDER BY id_nivel";
+		$sQuery="SELECT id_asignatura, nombre_asignatura, creditos FROM $nom_tabla ORDER BY id_nivel";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorAsignatura.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -119,8 +119,8 @@ class GestorAsignatura Extends core\ClaseGestor {
 			$sWhere .= " AND id_nivel NOT IN ($genericas)";
 		}
 		//para hacer listados que primero salgan las normales y después las opcionales:
-		//$sQuery="SELECT id_asignatura, nombre_asig FROM $nom_tabla $sWhere ORDER BY nombre_asig";
-		$sQuery="SELECT id_asignatura, nombre_asig, CASE WHEN id_nivel < 3000 THEN xa_asignaturas.id_nivel ELSE 3001 END AS op FROM $nom_tabla $sWhere ORDER BY op,nombre_asig;";
+		//$sQuery="SELECT id_asignatura, nombre_asignatura FROM $nom_tabla $sWhere ORDER BY nombre_asignatura";
+		$sQuery="SELECT id_asignatura, nombre_asignatura, CASE WHEN id_nivel < 3000 THEN xa_asignaturas.id_nivel ELSE 3001 END AS op FROM $nom_tabla $sWhere ORDER BY op,nombre_asignatura;";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorAsignatura.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);

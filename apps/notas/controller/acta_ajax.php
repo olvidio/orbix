@@ -31,7 +31,7 @@ switch($Qque) {
 		break;
 	case 'asignaturas':
 		$GesAsignatura = new asignaturas\GestorAsignatura();
-		$json = $GesAsignatura->getJsonAsignaturas(array('nombre_asig'=>$sQuery));
+		$json = $GesAsignatura->getJsonAsignaturas(array('nombre_asignatura'=>$sQuery));
 	break;
 }
 echo $json;

@@ -47,7 +47,7 @@ extract($oActa->getTot());
 
 $oAsignatura = new asignaturas\Asignatura($id_asignatura);
 $nombre_corto=$oAsignatura->getNombre_corto();
-$nombre_asig=$oAsignatura->getNombre_asig();
+$nombre_asignatura=$oAsignatura->getNombre_asignatura();
 $any=$oAsignatura->getYear();
 
 $id_tipo=$oAsignatura->getId_tipo();
@@ -147,7 +147,7 @@ $tribunal_html .= "<div class=\"sello\">L.S.<br>Studii Generalis</div>";
 <div class="cabecera"><?= str_replace ("AE", "&#198;", "PRAELATURA SANCTAE CRUCIS ET OPERIS DEI"); ?></div>
 <div class="region"><?= str_replace ("AE", "&#198;", "STUDIUM GENERALE REGIONIS: &nbsp;HISPANIAE"); ?></div>
 <div class="curso"><?= str_replace ("AE", "&#198;",sprintf("CURSUS INSTITUTIONALES:&nbsp;&nbsp;  %s &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ANNUS: %s",$curso,$any)); ?></div><br>
-<div class="curso"><?= str_replace ("ae", "&#230;", "DISCIPLINA: &nbsp;&nbsp;&nbsp;&nbsp;$nombre_asig"); ?></div><br>
+<div class="curso"><?= str_replace ("ae", "&#230;", "DISCIPLINA: &nbsp;&nbsp;&nbsp;&nbsp;$nombre_asignatura"); ?></div><br>
 <div class="intro">Hisce litteris, quas propria uniuscuiusque subsignatione firmamus, fidem facimus hodierna die, coram infrascriptis Iudicibus, periculum de hac disciplina sequentes alumnos rite superasse:</div>
 <table class="alumni" height="<?= $alum_cara_A ?>">
 <tr><td width=55% class=alumni>ALUMNI</td><td  width=10%>&nbsp;</td><td width=35% class=alumni>CUM NOTA</td></tr>

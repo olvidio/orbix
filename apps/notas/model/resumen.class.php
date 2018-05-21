@@ -331,7 +331,7 @@ class Resumen Extends core\ClasePropiedades {
 		$sqlCreate="CREATE TABLE $asignaturas(
 						id_asignatura integer,
 						id_nivel integer,
-						nombre_asig character varying(100) NOT NULL,
+						nombre_asignatura character varying(100) NOT NULL,
 						nombre_corto character varying(23),
 						creditos numeric(4,2),
 						year character varying(3),
@@ -349,7 +349,7 @@ class Resumen Extends core\ClasePropiedades {
 		$gesAsignaturas = new asignaturas\gestorAsignatura();
 		$cAsignaturas = $gesAsignaturas->getAsignaturas(array('status'=>'true'));
 
-		$prep = $oDbl->prepare("INSERT INTO $asignaturas VALUES(:id_asignatura, :id_nivel, :nombre_asig, :nombre_corto, :creditos, :year, :id_sector, :status, :id_tipo)");
+		$prep = $oDbl->prepare("INSERT INTO $asignaturas VALUES(:id_asignatura, :id_nivel, :nombre_asignatura, :nombre_corto, :creditos, :year, :id_sector, :status, :id_tipo)");
 		foreach ($cAsignaturas as $oAsignatura) {
 			$aDades = $oAsignatura->getTot();
 			$prep->execute($aDades);
