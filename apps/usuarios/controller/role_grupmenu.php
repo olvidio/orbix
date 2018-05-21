@@ -11,31 +11,25 @@ use menus\model\entity as menus;
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-if (isset($_POST['sel'])) { //vengo de un checkbox
-	//$id_nom=$sel[0];
-	$id_role=strtok($_POST['sel'][0],"#");
-} else {
-	empty($_POST['id_role'])? $id_role="" : $id_role=$_POST['id_role'];
+$oPosicion->recordar();
+
+$Qid_role = (string) \filter_input(INPUT_POST, 'id_role');
+
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	$Qid_role = strtok($a_sel[0],"#");
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$oPosicion->addParametro('id_sel',$a_sel,1);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 }
 
-$oRole = new usuarios\Role(array('id_role'=>$id_role));
+$oRole = new usuarios\Role(array('id_role'=>$Qid_role));
 $role=$oRole->getRole();
-/*
-$sf=$oRole->getSf();
-$sv=$oRole->getSv();
-$sfsv = '';
-if ($sv == 1) $sfsv = 1;
-if ($sf == 1) $sfsv = 2;
-$aWhere = array('sfsv'=>$sfsv);
-if ($sv == 1 & $sf == 1) $aWhere = array();
-*/
-
-$go_to= web\Hash::link('apps/usuarios/controller/role_form.php?'.http_build_query(array('id_role'=>$id_role)));
-
 
 // los que ya tengo:
 $oGesGMRol = new menus\GestorGrupMenuRole();
-$cGMR = $oGesGMRol->getGrupMenuRoles(array('id_role'=>$id_role));
+$cGMR = $oGesGMRol->getGrupMenuRoles(array('id_role'=>$Qid_role));
 $aGrupMenus = array();
 foreach ($cGMR as $oGrupMenuRole) {
 	$id_grupmenu = $oGrupMenuRole->getId_grupmenu();
@@ -54,7 +48,7 @@ foreach ($cGM as $oGrupMenu) {
 
 	$grup_menu=$oGrupMenu->getGrup_menu();
 
-	$a_valores[$i]['sel']="$id_role#$id_grupmenu";
+	$a_valores[$i]['sel']="$Qid_role#$id_grupmenu";
 	$a_valores[$i][1]=$grup_menu;
 }
 
@@ -66,47 +60,20 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-
 $oHash = new web\Hash();
 $oHash->setcamposForm('sel');
 $oHash->setcamposNo('scroll_id');
 $a_camposHidden = array(
-		'id_role' => $id_role,
-		'go_to' => $go_to,
+		'id_role' => $Qid_role,
 		'que' => 'add_grupmenu'
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 
-?>
-<script>
-fnjs_add_grupmenu=function(formulario){
-	go='<?= $go_to ?>';
-	$(formulario).attr('action',"apps/usuarios/controller/role_update.php");
-	$(formulario).submit(function() {
-		$.ajax({
-			data: $(this).serialize(),
-			type: 'post',
-			url: $(this).attr('action'),
-			complete: function (rta) { 
-				rta_txt=rta.responseText;
-				if (rta_txt.search('id="ir_a"') != -1) {
-					fnjs_mostra_resposta(rta,'#main'); 
-				} else {
-					if (go) fnjs_update_div('#main',go); 
-				}
-			}
-		});
-		return false;
-	});
-	$(formulario).submit();
-	$(formulario).off();
-}
-</script>
-<h1><?= sprintf(_("Añadir nuevo grupMenu a %s"),$role) ?></h1>
-<form id=from_grupmenu  name=from_grupmenu action="" method="post" >
-<?= $oHash->getCamposHtml(); ?>
-<h4><?= ucfirst(_("grupos de menús")) ?>:</h4>
-<?php
-echo $oTabla->mostrar_tabla();
-?>
-</form>
+$a_campos = ['oPosicion' => $oPosicion,
+				'role' => $role,
+				'oHash' => $oHash,
+				'oTabla' => $oTabla,
+				];
+
+$oView = new core\View('usuarios/controller');
+echo $oView->render('role_grupmenu.phtml',$a_campos);

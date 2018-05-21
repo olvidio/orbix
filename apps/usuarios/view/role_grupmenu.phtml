@@ -1,0 +1,30 @@
+<script>
+fnjs_add_grupmenu=function(formulario){
+	$(formulario).attr('action',"apps/usuarios/controller/role_update.php");
+	$(formulario).submit(function() {
+		$.ajax({
+			data: $(this).serialize(),
+			type: 'post',
+			url: $(this).attr('action'),
+			complete: function (rta) {
+				rta_txt=rta.responseText;
+				if (rta_txt != '' && rta_txt != '\\n') {
+					alert ('respuesta: '+rta_txt);
+				} else {
+					<?= $oPosicion->js_atras(1); ?>
+				}
+			}
+		});
+		return false;
+	});
+	$(formulario).submit();
+	$(formulario).off();
+}
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<h1><?= sprintf(_("Añadir nuevo grupMenu a %s"),$role) ?></h1>
+<form id="from_grupmenu"  name="from_grupmenu" action="" method="post" >
+<?= $oHash->getCamposHtml(); ?>
+<h4><?= ucfirst(_("grupos de menús")) ?>:</h4>
+<?= $oTabla->mostrar_tabla(); ?>
+</form>

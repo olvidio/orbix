@@ -69,6 +69,7 @@ $nom_usuario='';
 $miSfsv='';
 $email='';
 $role='';
+$permiso = 1;
 
 $a_cabeceras=array('usuario','nombre a mostrar','role','email',array('name'=>'accion','formatter'=>'clickFormatter'));
 $a_botones[]=array( 'txt'=> _('borrar'), 'click'=>"fnjs_eliminar()");
@@ -99,6 +100,12 @@ foreach ($oUsuarioColeccion as $oUsuario) {
 if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
 if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 
+$oTabla = new web\Lista();
+$oTabla->setId_tabla('usuario_lista');
+$oTabla->setCabeceras($a_cabeceras);
+$oTabla->setBotones($a_botones);
+$oTabla->setDatos($a_valores);
+
 $oHash = new web\Hash();
 $oHash->setcamposForm('Qusername');
 $oHash->setcamposNo('scroll_id');
@@ -108,64 +115,17 @@ $oHash1 = new web\Hash();
 $oHash1->setcamposForm('sel');
 $oHash1->setcamposNo('scroll_id');
 $oHash1->setArraycamposHidden(array('que'=>'eliminar'));
-?>
-<script>
-fnjs_buscar=function(){
-	$('#frm_buscar').attr('action',"apps/usuarios/controller/usuario_lista.php");
-	fnjs_enviar_formulario('#frm_buscar');
-}
-fnjs_nuevo=function(){
-	$('#frm_buscar').attr('action',"apps/usuarios/controller/usuario_form.php");
-	fnjs_enviar_formulario('#frm_buscar');
-}
-fnjs_eliminar=function(){
-	rta=fnjs_solo_uno('#seleccionados');
-	if (rta==1) {
-		if (confirm("<?= _("¿Esta seguro que desea borrar este usuario?");?>") ) {
-			var url='<?= core\ConfigGlobal::getWeb() ?>/apps/usuarios/controller/usuario_ajax.php';
-			$('#seleccionados').submit(function() {
-				$.ajax({
-					url: url,
-					type: 'post',
-					data: $(this).serialize(),
-					complete: function (rta) {
-						rta_txt=rta.responseText;
-						if (rta_txt != '' && rta_txt != '\n') {
-							alert ('respuesta: '+rta_txt);
-						}
-					},
-					success: function() { fnjs_actualizar() }
-				});
-				return false;
-			});
-			$('#seleccionados').submit();
-			$('#seleccionados').off();
-		}
-	}
-}
-fnjs_actualizar=function(){
-	var url='<?= web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_lista.php'); ?>';
-	fnjs_update_div('#main',url);
-}
-</script>
-<h3>Buscar usuario</h3>
-<form id=frm_buscar  name=frm_buscar action="" method="post" onkeypress="fnjs_enviar(event,this);" >
-<?= $oHash->getCamposHtml(); ?>
-<?= ucfirst(_("nombre")) ?>:<input type=text name=Qusername value="<?= $Qusername ?>">
-<input type="button" onclick="fnjs_buscar();" id="ok" name="ok" value="<?= ucfirst(_("buscar")); ?>" class="btn_ok">
-<br>
-<input type=button onclick="fnjs_nuevo();" value='<?= _("nuevo usuario") ?>'>
-</form>
-<form id=seleccionados  name=seleccionados action="" method="post" >
-<?= $oHash1->getCamposHtml(); ?>
-<?php
-$oTabla = new web\Lista();
-$oTabla->setId_tabla('usuario_lista');
-$oTabla->setCabeceras($a_cabeceras);
-$oTabla->setBotones($a_botones);
-$oTabla->setDatos($a_valores);
-echo $oTabla->mostrar_tabla();
-?>
-</form>
-<?php
-?>
+
+$url_nuevo = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?'.http_build_query(array('nuevo'=>1)));
+
+$a_campos = [
+			'oHash' => $oHash,
+			'username' => $Qusername,
+			'oHash1' => $oHash1,
+			'oTabla' => $oTabla,
+			'permiso' => $permiso,
+			'url_nuevo' => $url_nuevo,
+ 			];
+
+$oView = new core\View('usuarios/controller');
+echo $oView->render('usuario_lista.phtml',$a_campos);

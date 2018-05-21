@@ -11,22 +11,41 @@ use menus\model\entity as menus;
 
 $obj = 'usuarios\\model\\entity\\Role';
 
-$oPosicion->recordar();
+$Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
+$oPosicion->recordar($Qrefresh);
 
+$Qid_role = (string) \filter_input(INPUT_POST, 'id_role');
+$Qnuevo = (string) \filter_input(INPUT_POST, 'nuevo');
+
+$Qid_sel = '';
+$Qscroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) { //vengo de un checkbox
-	$id_activ = strtok($a_sel[0],"#");
-	$id_asignatura=strtok("#");
-	// el scroll id es de la página anterior, hay que guardarlo allí
-	$oPosicion->addParametro('id_sel',$a_sel,1);
-	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
-	$oPosicion->addParametro('scroll_id',$scroll_id,1);
-	if (!empty($go_to)) {
-		// add stack:
-		$stack = $oPosicion->getStack(1);
-		$go_to .= "&stack=$stack";
+// Hay que usar isset y empty porque puede tener el valor =0.
+// Si vengo por medio de Posicion, borro la última
+if (isset($_POST['stack'])) {
+	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+	if ($stack != '') {
+		// No me sirve el de global_object, sino el de la session
+		$oPosicion2 = new web\Posicion();
+		if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+			$a_sel=$oPosicion2->getParametro('sel');
+			$Qid_role = strtok($a_sel[0],"#");
+			$Qid_sel=$oPosicion2->getParametro('id_sel');
+			$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+			$oPosicion2->olvidar($stack);
+		}
+	}
+} elseif (!empty($a_sel)) { //vengo de un checkbox
+	$Qque = (string) \filter_input(INPUT_POST, 'que');
+	if ($Qque != 'del_grupmenu') { //En el caso de venir de borrar un grupmenu, no hago nada
+		$Qid_role = strtok($a_sel[0],"#");
+		// el scroll id es de la página anterior, hay que guardarlo allí
+		$oPosicion->addParametro('id_sel',$a_sel,1);
+		$Qscroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+		$oPosicion->addParametro('scroll_id',$Qscroll_id,1);
 	}
 }
+$oPosicion->setParametros(array('id_role'=>$Qid_role),1);
 
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miRole=$oMiUsuario->getId_role();
@@ -36,13 +55,11 @@ if ($miRole == 1) {
 	$permiso = 1;
 }
 
-$id_role = empty($_POST['id_role'])? '' : $_POST['id_role'];
-
 $txt_guardar=_("guardar datos rol");
 $txt_sfsv = '';
-if (!empty($id_role)) {
+if (!empty($Qid_role)) {
 	$que_user='guardar';
-	$oRole = new usuarios\Role(array('id_role'=>$id_role));
+	$oRole = new usuarios\Role(array('id_role'=>$Qid_role));
 	$role=$oRole->getRole();
 	$sf=$oRole->getSf();
 	if (!empty($sf)) {
@@ -69,10 +86,12 @@ if (!empty($id_role)) {
 	$chk_sv = '';
 	$pau='';
 }
-if (!empty($id_role)) { // si no hay usuario, no puedo poner permisos.
+
+$oTabla = '';
+if (!empty($Qid_role)) { // si no hay usuario, no puedo poner permisos.
 	//grupo
 	$oGesGMRol = new menus\GestorGrupMenuRole();
-	$cGMR = $oGesGMRol->getGrupMenuRoles(array('id_role'=>$id_role));
+	$cGMR = $oGesGMRol->getGrupMenuRoles(array('id_role'=>$Qid_role));
 
 	$i=0;
 	$a_cabeceras=array(array('name'=>_("grupo de menus"),'width'=>'350'));
@@ -100,109 +119,39 @@ if (!empty($id_role)) { // si no hay usuario, no puedo poner permisos.
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('que!role!sf!sv!pau');
-$oHash->setcamposNo('sf!sv');
+$oHash->setcamposNo('sf!sv!refresh');
 $a_camposHidden = array(
-		'id_role' => $id_role,
+		'id_role' => $Qid_role,
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $oHash1 = new web\Hash();
 $oHash1->setcamposForm('que!sel');
-$oHash1->setcamposNo('scroll_id');
+$oHash1->setcamposNo('scroll_id!refresh');
 $a_camposHidden = array(
-		'id_role' => $id_role,
+		'id_role' => $Qid_role,
 		);
 $oHash1->setArraycamposHidden($a_camposHidden);
 
-echo $oPosicion->mostrar_left_slide(1);
-?>
-<script>
-fnjs_del_grupmenu=function(formulario){
-	go='<?= web\Hash::link('apps/usuarios/controller/role_form.php?'.http_build_query(array('id_role'=>$id_role))) ?>';
-	$('#que').val('del_grupmenu');
-	$(formulario).attr('action',"apps/usuarios/controller/role_update.php");
-	$(formulario).submit(function() {
-		$.ajax({
-			data: $(this).serialize(),
-			type: 'post',
-			url: $(this).attr('action'),
-			complete: function (rta) { 
-				rta_txt=rta.responseText;
-				if (rta_txt.search('id="ir_a"') != -1) {
-					fnjs_mostra_resposta(rta,'#main'); 
-				} else {
-					if (go) fnjs_update_div('#main',go); 
-				}
-			}
-		});
-		return false;
-	});
-	$(formulario).submit();
-	$(formulario).off();
-}
 
-fnjs_add_grupmenu=function(que){
-	go='<?= web\Hash::link('apps/usuarios/controller/role_grupmenu.php?'.http_build_query(array('id_role'=>$id_role))) ?>';
-	fnjs_update_div('#main',go); 
-}
-fnjs_guardar=function(formulario){
-	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
-	//alert ("EEE "+rr);
-	if (rr=='ok') {
-		$('#que_user').val('<?= $que_user ?>');
-		go='<?= web\Hash::link('apps/usuarios/controller/role_form.php?'.http_build_query(array('id_role'=>$id_role))) ?>';
-		$(formulario).attr('action',"apps/usuarios/controller/role_update.php");
-		$(formulario).submit(function() {
-			$.ajax({
-				data: $(this).serialize(),
-				type: 'post',
-				url: $(this).attr('action'),
-				complete: function (rta) { 
-					rta_txt=rta.responseText;
-					if (rta_txt != '' && rta_txt != '\n') {
-						alert (rta_txt);
-					} else {
-						if (go) fnjs_update_div('#main',go); 
-					}
-				}
-			});
-			return false;
-		});
-		$(formulario).submit();
-		$(formulario).off();
-	}
-}
-</script>
-<h3><?= $role ?> <?= $txt_sfsv ?></h3>
-<?php 
-if ($permiso == 1) {
-	?>
-	<form id=frm_role  name=frm_role action='' method="post" >
-	<?= $oHash->getCamposHtml(); ?>
-	<input type=hidden id=que_user  name=que value=''>
-	<br>
-	<?= ucfirst(_("nombre")) ?>:<input type=text name=role value="<?= $role ?>">
-	<?= ucfirst(_("sf")) ?>:<input type=checkbox name=sf value="1"<?= $chk_sf ?> >
-	<?= ucfirst(_("sv")) ?>:<input type=checkbox name=sv value="1"<?= $chk_sv ?> >
-	<?= ucfirst(_("pau")) ?>:<input type=text name=pau value="<?= $pau ?>">
-	<br>
-	<input type=button onclick="fnjs_guardar(this.form);" value="<?= $txt_guardar ?>">
-	<br>
-	</form>
-	<?php
-}
+$a_campos = [
+			'obj' => $obj,
+			'oPosicion' => $oPosicion,
+			'oHash' => $oHash,
+			'oHash1' => $oHash1,
+			'Qid_role' => $Qid_role,
+			'role' => $role,
+			'que_user' => $que_user,
+			'txt_sfsv' => $txt_sfsv,
+			'permiso' => $permiso,
+			'role' => $role,
+			'chk_sf' => $chk_sf,
+			'chk_sv' => $chk_sv,
+			'pau' => $pau,
+			'txt_guardar' => $txt_guardar,
+			'oTabla' => $oTabla,
+			'nuevo' => $Qnuevo,
+ 			];
 
-if (!empty($id_role)) { // si no hay role, no puedo poner permisos.
-	?>
-	<h4><?= ucfirst(_("grupos de menús")) ?>:</h4>
-	<form id=form_grup_menu name=form_grup_menu action=''>
-	<?= $oHash1->getCamposHtml(); ?>
-	<input type=hidden id=que  name=que value=''>
-	<?php
-	echo $oTabla->mostrar_tabla();
-	?>
-	<br>
-	<input type=button onclick="fnjs_add_grupmenu();" value='<?= _("añadir grup menu") ?>'>
-	</form>
-	<?php
-}
+$oView = new core\View('usuarios/controller');
+echo $oView->render('role_form.phtml',$a_campos);

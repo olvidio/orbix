@@ -73,8 +73,6 @@ $estil_verde=($estilo_color=="verde")? "selected":'';
 $tipo_menu_h=($tipo_menu=="horizontal")? "selected":'';
 $tipo_menu_v=($tipo_menu=="vertical")? "selected":'';
 
-
-
 // ----------- Tipo de tablas -------------------
 $oPref = new usuarios\Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>'tabla_presentacion'));
 $tipo_tabla=$oPref->getPreferencia();
@@ -102,80 +100,35 @@ $oDesplLocales = $oGesLocales->getListaLocales();
 $oDesplLocales->setNombre('idioma_nou');
 $oDesplLocales->setOpcion_sel($idioma);
 
-/*
-// si no tiene, grabo una prefernecia por defecto.
-if (empty($idioma)) {
-	$idioma="es_ES.UTF-8@euro";
-	$query_idioma = sprintf( "INSERT INTO web_preferencias (username,tipo,preferencia) VALUES ('%s','%s','%s') ",core\ConfigGlobal::mi_usuario(),"idioma",$idioma);
-	$oDBSt_q=$oDB->query($query_idioma);
-}
-*/
-
-
 $aniversarios=web\Hash::link(core\ConfigGlobal::getWeb().'/programas/aniversarios.php');
 $avisos=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?'.http_build_query(array('quien'=>'usuario','id_usuario'=>$id_usuario)));
 $cambio_password=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form_pwd.php');
 
-
 $oHash = new web\Hash();
 $oHash->setcamposForm('inicio!oficina!estilo_color!tipo_menu!tipo_tabla!ordenApellidos!idioma_nou');
-?>
-<span class="link" onclick="fnjs_update_div('#main_pref','<?= $aniversarios ?>');"><?= _("ver santos y aniversarios") ?></span><br>
-<span class="link" onclick="fnjs_update_div('#main_pref','<?= $avisos ?>');"><?= _("gestionar avisos en cambios actividades") ?></span><br>
-<h2><?= ucfirst(_("preferencias personales")) ?><br></h2>
-<form id=preferencias name=preferencias action="apps/usuarios/controller/personal_update.php" method="post">
-<?= $oHash->getCamposHtml(); ?>
-<table>
-<tr><td><?= ucfirst(_("página central de inicio")) ?>: </td>
-<td>
-<select name=inicio>
-	<option value=exterior <?= $ini_exterior; ?>><?= ucfirst(_("home")) ?></option>
-	<option value=avisos <?= $ini_avisos; ?>><?= ucfirst(_("avisos cambios actividades")) ?></option>
-	<option value=oficina <?= $ini_oficina; ?>><?= ucfirst(_("oficina")) ?></option>
-	<option value=personal <?= $ini_personal; ?>><?= ucfirst(_("personal")) ?></option>
-	<option value=aniversarios <?= $ini_aniv; ?>><?= ucfirst(_("aniversarios")) ?></option>
-</select>
-</td>
-</tr>
-<tr>
-<td><?= ucfirst(_("menú principal de la oficina")) ?>:</td><td>
-<select name=oficina>
-<option />
-<?= $posibles; ?>;
-</select>
-</td>
-</tr>
-<tr><td><?= ucfirst(_("estilo")) ?>:</td>
-<td>
-<select name=estilo_color>
-	<option value=azul <?= $estil_azul; ?>>Azul</option>
-	<option value=naranja <?= $estil_naranja; ?>>Naranja</option>
-	<option value=verde <?= $estil_verde; ?>>verde</option>
-</select></td></tr>
-<tr><td><?= ucfirst(_("disposición menú")) ?>:</td>
-<td>
-<select name=tipo_menu>
-	<option value=horizontal <?= $tipo_menu_h; ?>>Horizontal</option>
-	<option value=vertical <?= $tipo_menu_v; ?>>Vertical</option>
-</select></td></tr>
-<tr><td><?= ucfirst(_("presentación tablas")) ?>:</td>
-<td>
-<select name=tipo_tabla>
-	<option value="slickgrid" <?= $tipo_tabla_s; ?>>SlickGrid</option>	
-	<option value="html" <?= $tipo_tabla_h; ?>>Html</option>
-</select></td></tr>
-<tr><td><?= ucfirst(_("presentación nombre,Apellidos")) ?>:</td>
-<td>
-<select name=ordenApellidos>
-	<option value="ap_nom" <?= $tipo_apellidos_ap_nom; ?>>Apellidos, Nombre</option>	
-	<option value="nom_ap" <?= $tipo_apellidos_nom_ap; ?>>Nombre Apellidos</option>
-</select></td></tr>
-<tr><td><?= ucfirst(_("idioma")) ?>:</td>
-<td>
-<?= $oDesplLocales->desplegable() ?>
-</td></tr>
-</table>
-<br>
-<input type="button" onclick=fnjs_enviar_formulario('#preferencias') value="guardar preferencias">
-</form>
-<br><span class="link" onclick="fnjs_update_div('#main','<?= $cambio_password ?>');"><?= _("cambiar el password") ?></span><br>
+
+$a_campos = [
+			'aniversarios' => $aniversarios,
+			'avisos' => $avisos,
+			'oHash' => $oHash,
+			'ini_exterior' => $ini_exterior,
+			'ini_avisos' => $ini_avisos,
+			'ini_oficina' => $ini_oficina,
+			'ini_personal' => $ini_personal,
+			'ini_aniv' => $ini_aniv,
+			'posibles' => $posibles,
+			'estil_azul' => $estil_azul,
+			'estil_naranja' => $estil_naranja,
+			'estil_verde' => $estil_verde,
+			'tipo_menu_h' => $tipo_menu_h,
+			'tipo_menu_v' => $tipo_menu_v,
+			'tipo_tabla_s' => $tipo_tabla_s,
+			'tipo_tabla_h' => $tipo_tabla_h,
+			'tipo_apellidos_ap_nom' => $tipo_apellidos_ap_nom,
+			'tipo_apellidos_nom_ap' => $tipo_apellidos_nom_ap,
+			'oDesplLocales' => $oDesplLocales,
+			'cambio_password' => $cambio_password,
+ 			];
+
+$oView = new core\View('usuarios/controller');
+echo $oView->render('personal.phtml',$a_campos);

@@ -1,6 +1,6 @@
 <?php
 namespace dossiers\model\entity;
-use permisos\model\entity as permisos;
+use permisos\model as permisos;
 use core;
 
 /**

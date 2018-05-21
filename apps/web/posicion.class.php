@@ -514,9 +514,9 @@ class Posicion {
 		$parametros = Hash::add_hash($aParam,$url);
 
 		$html = '<form id="go">';
-		$html .= '	url: <input id="url" type="text" value="' . $url .'" size=70><br>';
-		$html .= '	parametros: <input id="parametros" type="text" value="' . $parametros . '" size=70><br>';
-		$html .= '	bloque: <input id="id_div" type="text" value="' . $frame . '" size=70>';
+		$html .= '	url: <input name="url" type="text" value="' . $url .'" size=70><br>';
+		$html .= '	parametros: <input name="parametros" type="text" value="' . $parametros . '" size=70><br>';
+		$html .= '	bloque: <input name="id_div" type="text" value="' . $frame . '" size=70>';
 		$html .= '</form>';
 		?>
 		<script>fnjs_mostrar_atras('#ir_a','<?= $html ?>');</script>

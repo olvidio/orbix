@@ -1,0 +1,85 @@
+<script>
+fnjs_guardar=function(formulario){
+	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
+	//alert ("EEE "+rr);
+	if (rr=='ok') {
+		$('#que_user').val('<?= $que_user ?>');
+		$(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
+		$(formulario).submit(function() {
+			$.ajax({
+				data: $(this).serialize(),
+				type: 'post',
+				url: $(this).attr('action'),
+				complete: function (rta) {
+					rta_txt=rta.responseText;
+					if (rta_txt != '' && rta_txt != '\\n') {
+						alert ('respuesta: '+rta_txt);
+					} else {
+						<?= $oPosicion->js_atras(1); ?>
+					}
+				}
+			});
+			return false;
+		});
+		$(formulario).submit();
+		$(formulario).off();
+	}
+}
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<h3><?= $usuario ?></h3>
+<form id="frm_usuario"  name="frm_usuario" action="" method="post" >
+<?= $oHash->getCamposHtml(); ?>
+<input type=hidden id=pass  name=pass value='<?= $pass ?>'>
+<input type=hidden id=que_user  name=que value=''>
+<br>
+<?= ucfirst(_("nombre")) ?>:<input type=text name=usuario value="<?= $usuario ?>">
+<?php if ($Qquien == 'usuario') { ?>
+<?= ucfirst(_("nombre a mostrar")) ?>:<input type=text name=nom_usuario value="<?= $nom_usuario ?>">
+<?php } ?>
+<?= ucfirst(_("role")) ?>:
+<?= $oDesplRoles->desplegable(); ?>
+<br>
+<?php 
+if ($Qquien == 'usuario') {
+	if ($pau == 'sacd') {
+	?>
+		<!--  --------------- Sacd --------------- -->
+		<tr>
+			<td class=etiqueta><?= _("sacd"); ?>:</td>	
+		<td colspan=8 id="col_sacd">
+		<?php
+		echo $oSelects->desplegable();
+		echo "</td></tr>";
+	}
+	if ($pau == 'ctr') {
+	?>
+		<!--  --------------- CENTROS --------------- -->
+		<tr>
+			<td class=etiqueta><?= _("centro"); ?>:</td>	
+		<td colspan=8 id="col_centros">
+		<?php
+		echo $oSelects->desplegable();
+		echo "</td></tr>";
+	}
+	if ($pau == 'cdc') {
+	?>
+		<!--  --------------- CASAS --------------- -->
+		<tr>
+			<td class=etiqueta><?= _("casas"); ?>:</td>	
+		<td colspan=8 id="col_casas">
+		<?php
+		echo $oSelects->ListaSelects();
+		echo "</td></tr>";
+	}
+?>
+	<br>
+	<?= ucfirst(_("password")) ?>:<input type="password" type="password" name="password"><br>
+	<?= ucfirst(_("email")) ?>:<input type=text name=email value="<?= $email ?>"><br>
+	<?php
+}
+?>
+<input type=button onclick="fnjs_guardar(this.form);" value="<?= $txt_guardar ?>">
+
+<br>
+</form>

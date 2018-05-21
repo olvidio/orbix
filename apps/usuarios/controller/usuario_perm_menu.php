@@ -1,6 +1,6 @@
 <?php
 use usuarios\model\entity as usuarios;
-use permisos\model\entity as permisos;
+use permisos\model as permisos;
 use menus\model\entity as menus;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -13,77 +13,50 @@ use menus\model\entity as menus;
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-if (isset($_POST['sel'])) { //vengo de un checkbox
-	//$id_nom=$sel[0];
-	$id_usuario=strtok($_POST['sel'][0],"#");
-	$id_item=strtok("#");
-} else {
-	empty($_POST['id_usuario'])? $id_usuario="" : $id_usuario=$_POST['id_usuario'];
-	empty($_POST['id_item'])? $id_item="" : $id_item=$_POST['id_item'];
+$oPosicion->recordar();
+
+$Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
+$Qid_item = (integer) \filter_input(INPUT_POST, 'id_item');
+$Qquien = (string) \filter_input(INPUT_POST, 'quien');
+
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	$Qid_usuario = strtok($a_sel[0],"#");
+	$Qid_item=strtok("#");
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$oPosicion->addParametro('id_sel',$a_sel,1);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 }
 
-$oUsuario = new usuarios\GrupoOUsuario(array('id_usuario'=>$id_usuario)); // La tabla y su heredada
+$oUsuario = new usuarios\GrupoOUsuario(array('id_usuario'=>$Qid_usuario)); // La tabla y su heredada
 $nombre=$oUsuario->getUsuario();
 
-if (!empty($id_item)) {
-	$oPermiso = new usuarios\PermMenu(array('id_item'=>$id_item));
+if (!empty($Qid_item)) {
+	$oPermiso = new usuarios\PermMenu(array('id_item'=>$Qid_item));
 	$menu_perm=$oPermiso->getMenu_perm();
 } else { // es nuevo
-	$oPermiso = new usuarios\PermMenu(array('id_usuario'=>$id_usuario));
+	$oPermiso = new usuarios\PermMenu(array('id_usuario'=>$Qid_usuario));
 	$menu_perm=0;
 }
-$go_to = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?'.http_build_query(array('quien'=>$_POST['quien'],'id_usuario'=>$id_usuario)));
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('menu_perm');
 $aCamposHidden = array(
-		'id_usuario' => $id_usuario,
-		'id_item' => $id_item,
-		'go_to' => $go_to,
+		'id_usuario' => $Qid_usuario,
+		'id_item' => $Qid_item,
 		'que' =>'perm_menu_update',
-		'quien' => $_POST['quien']
+		'quien' => $Qquien
 		);
 $oHash->setArraycamposHidden($aCamposHidden);
 
-?>
-<script>
-fnjs_grabar=function(formulario){
-	go=$('#go_to').val();
-	$(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
-	$(formulario).submit(function() {
-		$.ajax({
-			data: $(this).serialize(),
-			type: 'post',
-			url: $(this).attr('action'),
-			complete: function (rta) { 
-				rta_txt=rta.responseText;
-				if (rta_txt.search('id="ir_a"') != -1) {
-					fnjs_mostra_resposta(rta,'#main'); 
-				} else {
-					if (go) fnjs_update_div('#main',go); 
-				}
-			}
-		});
-		return false;
-	});
-	$(formulario).submit();
-	$(formulario).off();
-}
-</script>
-<h1>Añadir nuevo permiso a <?= $nombre ?></h1>
-<form id=pem_usuario  name=perm_usuario action="" method="post" >
-<?= $oHash->getCamposHtml(); ?>
-<br>
-<table>
-<tr>
-<td class=etiqueta><?= ucfirst(_("oficina o grupo")); ?>:</td>
-<td colspan=5>
-<?php
-echo $oCuadros->cuadros_radio('menu_perm',$menu_perm);
-?>
-</td></tr>
-</table>
 
-<br>
-<input type=button onclick="fnjs_grabar(this.form);" value=<?= _("guardar") ?>>
-</form>
+$a_campos = [ 'oPosicion' => $oPosicion,
+			'nombre' => $nombre,
+			'oHash' => $oHash,
+			'oCuadros' => $oCuadros,
+			'menu_perm' => $menu_perm,
+ 			];
+
+$oView = new core\View('usuarios/controller');
+echo $oView->render('usuario_perm_menu.phtml',$a_campos);

@@ -11,11 +11,13 @@ use menus\model\entity as menus;
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$que=empty($_POST['que'])? '' : $_POST['que'];
-switch($que) {
+$Qque = (string) \filter_input(INPUT_POST, 'que');
+
+switch($Qque) {
 	case 'del_grupmenu':
-		if (isset($_POST['sel'])) { //vengo de un checkbox
-			foreach ($_POST['sel'] as $sel) {
+		$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+		if (!empty($a_sel)) { //vengo de un checkbox
+			foreach ($a_sel as $sel) {
 				//$id_nom=$sel[0];
 				$id_item=strtok($sel,"#");
 				$oGrupMenuRole = new menus\GrupMenuRole($id_item);
@@ -26,8 +28,9 @@ switch($que) {
 		}
 		break;
 	case 'add_grupmenu':
-		if (isset($_POST['sel'])) { //vengo de un checkbox
-			foreach ($_POST['sel'] as $sel) {
+		$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+		if (!empty($a_sel)) { //vengo de un checkbox
+			foreach ($a_sel as $sel) {
 				//$id_nom=$sel[0];
 				$id_role=strtok($sel,"#");
 				$id_grupmenu=strtok("#");
@@ -41,28 +44,37 @@ switch($que) {
 		}
 		break;
 	case "guardar":
-		if ($_POST['role']) {
-			$oRole = new usuarios\Role(array('id_role' => $_POST['id_role']));
-			$oRole->setRole($_POST['role']);
-			$sf = !empty($_POST['sf'])? '1' : 0;
+		$Qrole = (string) \filter_input(INPUT_POST, 'role');
+		$Qid_role = (integer) \filter_input(INPUT_POST, 'id_role');
+		$Qsf = (integer) \filter_input(INPUT_POST, 'sf');
+		$Qsv = (integer) \filter_input(INPUT_POST, 'sv');
+		$Qpau = (string) \filter_input(INPUT_POST, 'pau');
+		if ($Qrole) {
+			$oRole = new usuarios\Role(array('id_role' => $Qid_role));
+			$oRole->setRole($Qrole);
+			$sf = !empty($Qsf)? '1' : 0;
 			$oRole->setSf($sf);
-			$sv = !empty($_POST['sv'])? '1' : 0;
+			$sv = !empty($Qsv)? '1' : 0;
 			$oRole->setSv($sv);
-			$oRole->setPau($_POST['pau']);
+			$oRole->setPau($Qpau);
 			if ($oRole->DBGuardar() === false) {
 				echo _('Hay un error, no se ha guardado');
 			}
 		} else { exit("debe poner un nombre"); }
 	break;
 	case "nuevo":
-		if ($_POST['role']) {
+		$Qrole = (string) \filter_input(INPUT_POST, 'role');
+		$Qsf = (integer) \filter_input(INPUT_POST, 'sf');
+		$Qsv = (integer) \filter_input(INPUT_POST, 'sv');
+		$Qpau = (string) \filter_input(INPUT_POST, 'pau');
+		if ($Qrole) {
 			$oRole = new usuarios\Role();
-			$oRole->setRole($_POST['role']);
-			$sf = !empty($_POST['sf'])? '1' : 0;
+			$oRole->setRole($Qrole);
+			$sf = !empty($Qsf)? '1' : 0;
 			$oRole->setSf($sf);
-			$sv = !empty($_POST['sv'])? '1' : 0;
+			$sv = !empty($Qsv)? '1' : 0;
 			$oRole->setSv($sv);
-			$oRole->setPau($_POST['pau']);
+			$oRole->setPau($Qpau);
 			if ($oRole->DBGuardar() === false) {
 				echo _('Hay un error, no se ha guardado');
 			}

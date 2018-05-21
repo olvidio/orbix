@@ -58,7 +58,8 @@ switch ($Qque) {
 			$usuario=$oGrupo->getUsuario();
 			$seccion=$asfsv[$sfsv];
 
-			$pagina=core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_ajax.php?que=grupo_add&id_grupo='.$id_grupo.'&id_usuario='.$Qid_usuario;
+			$a_parametros = array('que' => 'grupo_add', 'id_grupo' => $id_grupo, 'id_usuario' => $Qid_usuario);
+			$pagina = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_ajax.php?'.http_build_query($a_parametros));
 
 			$a_valores[$i][1]=$usuario;
 			$a_valores[$i][2]=$seccion;
@@ -95,8 +96,9 @@ switch ($Qque) {
 			$usuario=$oGrupo->getUsuario();
 			$seccion=$asfsv[$sfsv];
 
-			$pagina=core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_ajax.php?que=grupo_del&id_grupo='.$id_grupo.'&id_usuario='.$Qid_usuario;
-
+			$a_parametros = array('que' => 'grupo_del', 'id_grupo' => $id_grupo, 'id_usuario' => $Qid_usuario);
+			$pagina = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_ajax.php?'.http_build_query($a_parametros));
+			
 			$a_valores[$i][1]=$usuario;
 			$a_valores[$i][2]=$seccion;
 			$a_valores[$i][3]= array( 'ira'=>$pagina, 'valor'=>_('quitar'));
@@ -116,24 +118,29 @@ switch ($Qque) {
 		if ($oUsuarioGrupo->DBGuardar() === false) {
 			echo _('Hay un error, no se ha guardado');
 		}
+		$a_parametros = array('quien' => 'usuario', 'id_usuario' => $Qid_usuario);
+		$pagina = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?'.http_build_query($a_parametros));
 		$oPosicion = new web\Posicion();
-		echo $oPosicion->ir_a("usuario_form.php?quien=usuario&id_usuario=".$Qid_usuario);
+		echo $oPosicion->ir_a($pagina);
 		break;
 	case "grupo_del":
 		$Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
 		$Qid_grupo = (integer) \filter_input(INPUT_POST, 'id_grupo');
-		// añado el grupo de permisos al usuario.
+		// elimino el grupo de permisos al usuario.
 		$oUsuarioGrupo = new usuarios\UsuarioGrupo(array('id_usuario'=>$Qid_usuario,'id_grupo'=>$Qid_grupo));
 		if ($oUsuarioGrupo->DBEliminar() === false) {
 			echo _('Hay un error, no se ha eliminado');
 		}
+		$a_parametros = array('quien' => 'usuario', 'id_usuario' => $Qid_usuario);
+		$pagina = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?'.http_build_query($a_parametros));
 		$oPosicion = new web\Posicion();
-		echo $oPosicion->ir_a("usuario_form.php?quien=usuario&id_usuario=".$Qid_usuario);
+		echo $oPosicion->ir_a($pagina);
 		break;
 	case "eliminar":
 		// elimna al usuario.
-		if (!empty($_POST['sel'])) { //vengo de un checkbox
-			$id_usuario=strtok($_POST['sel'][0],"#");
+		$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+		if (!empty($a_sel)) { //vengo de un checkbox
+			$id_usuario=strtok($a_sel[0],"#");
 		}
 		$oUsuario= new usuarios\Usuario(array('id_usuario'=>$id_usuario));
 		if ($oUsuario->DBEliminar() === false) {
@@ -141,8 +148,9 @@ switch ($Qque) {
 		}
 	case "eliminar_grupo":
 		// elimna el grupo.
-		if (!empty($_POST['sel'])) { //vengo de un checkbox
-			$id_usuario=strtok($_POST['sel'][0],"#");
+		$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+		if (!empty($a_sel)) { //vengo de un checkbox
+			$id_usuario=strtok($a_sel[0],"#");
 		}
 		$oUsuario= new usuarios\Grupo(array('id_usuario'=>$id_usuario));
 		if ($oUsuario->DBEliminar() === false) {
@@ -150,9 +158,10 @@ switch ($Qque) {
 		}
 		break;
 	case "eliminar_role":
-		// elimna el grupo.
-		if (!empty($_POST['sel'])) { //vengo de un checkbox
-			$id_role=strtok($_POST['sel'][0],"#");
+		// elimna el role.
+		$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+		if (!empty($a_sel)) { //vengo de un checkbox
+			$id_role=strtok($a_sel[0],"#");
 		}
 		$oRole= new usuarios\Role(array('id_role'=>$id_role));
 		if ($oRole->DBEliminar() === false) {

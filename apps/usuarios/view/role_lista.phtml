@@ -1,0 +1,52 @@
+<script>
+fnjs_modificar=function(formulario){
+	rta=fnjs_solo_uno(formulario);
+	if (rta==1) {
+  		$(formulario).attr('action',"apps/usuarios/controller/role_form.php");
+  		fnjs_enviar_formulario(formulario);
+  	}
+}
+fnjs_eliminar=function(){
+	rta=fnjs_solo_uno('#seleccionados');
+	if (rta==1) {
+		if (confirm("<?= _("¿Esta seguro que desea borrar este rol?");?>") ) {
+			var url='<?= core\ConfigGlobal::getWeb() ?>/apps/usuarios/controller/usuario_ajax.php';
+			$('#que').val('eliminar_role');
+			$('#seleccionados').submit(function() {
+				$.ajax({
+					url: url,
+					type: 'post',
+					data: $(this).serialize(),
+					complete: function (rta) {
+						rta_txt=rta.responseText;
+						if (rta_txt != '' && rta_txt != '\n') {
+							alert ('respuesta: '+rta_txt);
+						}
+					},
+					success: function() { fnjs_actualizar() }
+				});
+				return false;
+			});
+			$('#seleccionados').submit();
+			$('#seleccionados').off();
+		}
+	}
+}
+fnjs_actualizar=function(){
+	var url='<?= web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/role_lista.php'); ?>';
+	fnjs_update_div('#main',url);
+}
+fnjs_left_side_hide();
+</script>
+<h1><?= _("listado de roles") ?></h1>
+<form id="seleccionados"  name="seleccionados" action="" method="post" >
+<?= $oHash->getCamposHtml(); ?>
+<input type=hidden id=que  name=que value=''>
+<?= $oTabla->mostrar_tabla(); ?>
+</form>
+<br>
+<?php if ($permiso == 1) { ?>
+<table><tr><th class="no_print">
+	<span class="link_inv" onclick="fnjs_update_div('#main','<?= $url_nuevo ?>');"><?= core\strtoupper_dlb(_("nuevo rol")) ?></span>
+</th></tr></table>
+<?php } ?>

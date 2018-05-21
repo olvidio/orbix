@@ -1,0 +1,339 @@
+<style type="text/css">
+input {
+	border: 1px solid #999;
+	margin: 0 5px;
+	}
+.password_strength {
+	padding: 0 5px;
+	display: inline-block;
+	}
+.password_strength_1 {
+	background-color: #fcb6b1;
+	}
+.password_strength_2 {
+	background-color: #fccab1;
+	}
+.password_strength_3 {
+	background-color: #fcfbb1;
+	}
+.password_strength_4 {
+	background-color: #dafcb1;
+	}
+.password_strength_5 {
+	background-color: #bcfcb1;
+	}
+</style>
+<script type='text/javascript' src='<?= core\ConfigGlobal::$web_scripts.'/jquery.password_strength.js'; ?>'></script>
+<script>
+var strong = 0;
+algo=function(level) {
+	strong = level;
+}
+var options = {	'texts' : {
+		1 : 'Demasiado débil',
+		2 : 'password débil',
+		3 : 'Normal',
+		4 : 'Strong password',
+		5 : 'Very strong password'
+	},
+	'onCheck': algo
+}
+fnjs_add_grup=function(){
+	var url='<?= $url_usuario_ajax ?>';
+	var parametros='que=grupo_lst&id_usuario=<?= $id_usuario ?><?= $h1 ?>';
+		 
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta_txt) {
+			//rta_txt=rta.responseText;
+			//alert ('respuesta: '+rta_txt);
+			$('#lst_grupos').html(rta_txt);
+		}
+	});
+}
+fnjs_del_grup=function(){
+	var url='<?= $url_usuario_ajax ?>';
+	var parametros='que=grupo_del_lst&id_usuario=<?= $id_usuario ?><?= $h1 ?>';
+		 
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta_txt) {
+			//rta_txt=rta.responseText;
+			//alert ('respuesta: '+rta_txt);
+			$('#lst_grupos').html(rta_txt);
+		}
+	});
+}
+fnjs_add_perm=function(que){
+	if (que=='menu'){
+		$('#frm_usuario').attr('action',"apps/usuarios/controller/usuario_perm_menu.php");
+	}
+	if (que=='activ'){
+		$('#frm_usuario').attr('action',"apps/usuarios/controller/usuario_perm_activ.php");
+	}
+	fnjs_enviar_formulario('#frm_usuario');
+}
+fnjs_del_perm=function(formulario){
+	rta=fnjs_solo_uno(formulario);
+	if (rta==1) {
+		if (confirm("<?= $txt_eliminar ?>") ) {
+			$('#mod').val("eliminar");
+			$(formulario).attr('action',"apps/usuarios/controller/usuario_ajax.php");
+			$(formulario).submit(function() {
+				$.ajax({
+					data: $(this).serialize(),
+					url: $(this).attr('action'),
+					type: 'post',
+					complete: function (rta) {
+						rta_txt = rta.responseText;
+						if (rta_txt != '' && rta_txt != '\\n') {
+							alert ('respuesta: '+rta_txt);
+						}
+					},
+					success: function() { fnjs_actualizar(formulario) }
+				});
+				return false;
+			});
+			$(formulario).submit();
+			$(formulario).off();
+		}
+	}
+}
+fnjs_actualizar=function(formulario){
+	var campo = '<input type="hidden" name="refresh" value=1>';
+	$(formulario).attr('action',"apps/dossiers/controller/dossiers_ver.php");
+	$(formulario).append(campo);
+	fnjs_enviar_formulario(formulario,'#main');
+}
+fnjs_guardar=function(formulario){
+	// si es 0, no se cambia el password.
+	if (strong != 0 && strong < 5) {
+	  alert('Debe poner un password "fuerte" o "muy fuerte"');
+	  return false;
+	}
+
+	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
+	//alert ("EEE "+rr);
+	if (rr=='ok') {
+		$('#que_user').val('<?= $que_user ?>');
+		$(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
+		$(formulario).submit(function() {
+			$.ajax({
+				data: $(this).serialize(),
+				type: 'post',
+				url: $(this).attr('action'),
+				complete: function (rta) {
+					rta_txt=rta.responseText;
+					if (rta_txt != '' && rta_txt != '\\n') {
+						alert ('respuesta: '+rta_txt);
+					} else {
+						<?= $oPosicion->js_atras(1); ?>
+					}
+				}
+			});
+			return false;
+		});
+		$(formulario).submit();
+		$(formulario).off();
+	}
+}
+<?php
+if ($pau == 'cdc' && $Qquien == 'usuario') { //casa
+	?>
+	fnjs_mas_casas=function(evt){
+		if(evt=="x") {
+			var valor=1;
+		} else {
+			var id_campo=evt.currentTarget.id;
+			var valor=$(id_campo).val();
+			evt.preventDefault();
+			evt.stopPropagation();
+		}
+		if (evt.keyCode==9 || evt.type=="change" || evt=="x") {
+			if (valor!=0) {
+				<?php
+					echo $oSelects->ListaSelectsJs();
+				?>
+			} else {
+				ir_a('f_entrada');
+			}
+		}
+	}
+	<?php
+	echo $oSelects->ComprobarSelectJs();
+}
+?>
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<h3><?= $usuario ?></h3>
+<form id="frm_usuario"  name="frm_usuario" action="" method="post" >
+<?= $oHash->getCamposHtml(); ?>
+<input type=hidden id=pass  name=pass value='<?= $pass ?>'>
+<input type=hidden id=que_user  name=que value=''>
+<br>
+<?= ucfirst(_("nombre")) ?>:<input type=text name=usuario value="<?= $usuario ?>">
+<?php if ($Qquien == 'usuario') { ?>
+<?= ucfirst(_("nombre a mostrar")) ?>:<input type=text name=nom_usuario value="<?= $nom_usuario ?>">
+<?php } ?>
+<?= ucfirst(_("role")) ?>:
+<?= $oDesplRoles->desplegable(); ?>
+<br>
+<?php 
+if ($Qquien == 'usuario') {
+	if ($pau == 'sacd') {
+	?>
+		<!--  --------------- Sacd --------------- -->
+		<tr>
+			<td class=etiqueta><?= _("sacd"); ?>:</td>	
+		<td colspan=8 id="col_sacd">
+		<?php
+		echo $oSelects->desplegable();
+		echo "</td></tr>";
+	}
+	if ($pau == 'ctr') {
+	?>
+		<!--  --------------- CENTROS --------------- -->
+		<tr>
+			<td class=etiqueta><?= _("centro"); ?>:</td>	
+		<td colspan=8 id="col_centros">
+		<?php
+		echo $oSelects->desplegable();
+		echo "</td></tr>";
+	}
+	if ($pau == 'cdc') {
+	?>
+		<!--  --------------- CASAS --------------- -->
+		<tr>
+			<td class=etiqueta><?= _("casas"); ?>:</td>	
+		<td colspan=8 id="col_casas">
+		<?php
+		echo $oSelects->ListaSelects();
+		echo "</td></tr>";
+	}
+?>
+	<br>
+	<?= ucfirst(_("password")) ?>:<input type="password" type="password" name="password"><br>
+	<?= ucfirst(_("email")) ?>:<input type=text name=email value="<?= $email ?>"><br>
+	<?php
+}
+?>
+<input type=button onclick="fnjs_guardar(this.form);" value="<?= $txt_guardar ?>">
+
+<br>
+</form>
+<?php
+if (!empty($id_usuario)) { // si no hay usuario, no puedo poner permisos.
+	//grupo
+	$oGesUsuarioGrupo = new usuarios\model\entity\GestorUsuarioGrupo();
+	$oListaGrupos = $oGesUsuarioGrupo->getUsuariosGrupos(array('id_usuario'=>$id_usuario));
+	$i=0;
+	$txt='';
+	foreach ($oListaGrupos as $oUsuarioGrupo) {
+		$i++;
+		$oGrupo = new usuarios\model\entity\Grupo($oUsuarioGrupo->getId_grupo());
+		if ($i > 1) $txt.=", ";
+		$txt.= $oGrupo->getUsuario();
+	}	
+	?>
+	<br>
+	<h3><?= _('grupos') ?>: </h3>
+	<p><?= $txt ?></p>
+	<br>
+	<input type=button onclick="fnjs_add_grup();" value='<?= _("añadir un grupo de permisos") ?>'>
+	<input type=button onclick="fnjs_del_grup();" value='<?= _("quitar de un grupo de permisos") ?>'>
+	<div id=lst_grupos></div>
+	<br>
+	<?php
+}
+?>
+<br>
+<?php
+if ((core\ConfigGlobal::is_app_installed('procesos')) && !empty($id_usuario)) { // si no hay usuario, no puedo poner permisos.
+	//grupo
+	$oGesUsuarioGrupo = new usuarios\model\entity\GestorUsuarioGrupo();
+	$oListaGrupos = $oGesUsuarioGrupo->getUsuariosGrupos(array('id_usuario'=>$id_usuario));
+	$i=0;
+	$txt='';
+	foreach ($oListaGrupos as $oUsuarioGrupo) {
+		$i++;
+		$oGrupo = new usuarios\model\entity\Grupo($oUsuarioGrupo->getId_grupo());
+		if ($i > 1) $txt.=", ";
+		$txt.= $oGrupo->getUsuario();
+	}	
+	// propios
+	$i=0;
+	$a_cabeceras=array('tipo de actividad','fase inicial','fase final','permiso','dl propia',array('name'=>'afecta_a','width'=>'350'));
+	$a_botones[] = array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(\"#permisos\")" );
+	$a_botones[] = array( 'txt' => _('eliminar'), 'click' =>"fnjs_borrar(\"#permisos\")" ); 
+	
+	$a_valores=array();
+	$oFase = new ActividadFase();
+	foreach ($oUsuarioUsuarioPerm as $oUsuarioPerm) {
+		$i++;
+		
+		$id_item=$oUsuarioPerm->getId_item();
+		$id_tipo=$oUsuarioPerm->getId_tipo_activ_txt();
+		$id_fase_ini=$oUsuarioPerm->getId_fase_ini();
+		$id_fase_fin=$oUsuarioPerm->getId_fase_fin();
+		$id_accion=$oUsuarioPerm->getAccion();
+		$dl_propia=$oUsuarioPerm->getDl_propia();
+
+		if ($dl_propia=='t') { $dl_propia_txt = core\ConfigGlobal::$dele; } else { $dl_propia_txt = _('otras'); }
+
+		$oTipoActividad = new web\TiposActividades($oUsuarioPerm->getId_tipo_activ_txt());
+
+		$a_valores[$i]['sel']="$id_usuario#$id_item";
+		$a_valores[$i][1]=$oTipoActividad->getNom();
+		$oFase->setId_fase($id_fase_ini);
+		$oFase->DBCarregar();
+		$a_valores[$i][2]= $oFase->getDesc_fase();
+		$oFase->setId_fase($id_fase_fin);
+		$oFase->DBCarregar();
+		$a_valores[$i][3]= $oFase->getDesc_fase();
+		$a_valores[$i][4]=$oPermAccion->lista_txt($oUsuarioPerm->getAccion());
+		$a_valores[$i][5]=$dl_propia_txt;
+
+		$a_valores[$i][6]=$oCuadros->lista_tiene_txt($oUsuarioPerm->getAfecta_a());
+	}
+	$oHash3 = new web\Hash();
+	$oHash3->setcamposForm('que!sel');
+	$a_camposHidden = array(
+			'id_usuario' => $id_usuario,
+			'quien' => $Qquien
+			);
+	$oHash3->setArraycamposHidden($a_camposHidden);
+	?>
+	<br>
+	<h3><?= ucfirst(_("permisos en actividades")) ?>:</h3>
+	<?php
+	if ($Qquien == 'usuario') {  // de momento no dejo hacer grupos de grupos.
+		?>
+		<b><?= _('grupos') ?>: </b><?= $txt ?>
+		<input type=button onclick="fnjs_add_grup();" value='<?= _("añadir un grupo de permisos") ?>'>
+		<input type=button onclick="fnjs_del_grup();" value='<?= _("quitar de un grupo de permisos") ?>'>
+		<div id=lst_grupos></div>
+		<br>
+		<?php
+	}
+	?>
+	<b><?= _('propios') ?>:</b>
+	<form id=permisos name=permisos action=''>
+	<?= $oHash3->getCamposHtml(); ?>
+	<input type=hidden id=que  name=que value=''>
+	<?php
+	$oTabla = new web\Lista();
+	$oTabla->setId_tabla('usuario_form_permisos');
+	$oTabla->setCabeceras($a_cabeceras);
+	$oTabla->setBotones($a_botones);
+	$oTabla->setDatos($a_valores);
+//	echo $oTabla->mostrar_tabla();
+	?>
+	<br>
+	<input type=button onclick="fnjs_add_perm('activ');" value='<?= _("añadir permiso") ?>'>
+	</form>
+	<?php
+}

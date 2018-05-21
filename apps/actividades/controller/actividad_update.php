@@ -127,7 +127,7 @@ case "nuevo":
 	$Qpublicado = (string) \filter_input(INPUT_POST, 'publicado');
 	
 	//Compruebo que estén todos los campos necesasrios
-	if (empty($_POST['nom_activ']) or empty($_POST['f_ini']) or empty($_POST['f_fin']) or empty($_POST['status']) or empty($_POST['dl_org']) ) {
+	if (empty($Qnom_activ) or empty($Qf_ini) or empty($Qf_fin) or empty($Qstatus) or empty($Qdl_org) ) {
 		echo _("Debe llenar todos los campos que tengan un (*)")."<br>";
 		die();
 	}
@@ -228,11 +228,41 @@ case "eliminar": // Eliminar la actividad.
 	}
 	break;
 case "cmb_tipo": // sólo cambio el tipo a una actividad existente //____________________________
+	$Qid_tipo_activ = (integer) \filter_input(INPUT_POST, 'id_tipo_activ');
+	$Qisfsv_val = (integer) \filter_input(INPUT_POST, 'isfsv_val');
+	$Qiasistentes_val = (integer) \filter_input(INPUT_POST, 'iasistentes_val');
+	$Qiactividad_val = (integer) \filter_input(INPUT_POST, 'iactividad_val');
+	$Qinom_tipo_val = (integer) \filter_input(INPUT_POST, 'inom_tipo_val');
+
+	$Qdl_org = (string) \filter_input(INPUT_POST, 'dl_org');
+
+	
+	$Qnum_asistentes = (integer) \filter_input(INPUT_POST, 'num_asistentes');
+	$Qstatus = (integer) \filter_input(INPUT_POST, 'status');
+	$Qid_repeticion = (integer) \filter_input(INPUT_POST, 'id_repeticion');
+	$Qplazas = (integer) \filter_input(INPUT_POST, 'plazas');
+	$Qtarifa = (integer) \filter_input(INPUT_POST, 'tarifa');
+	$Qprecio = (float) \filter_input(INPUT_POST, 'precio');
+	
+	$Qnom_activ = (string) \filter_input(INPUT_POST, 'nom_activ');
+	$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
+	$Qlugar_esp = (string) \filter_input(INPUT_POST, 'lugar_esp');
+	$Qdesc_activ = (string) \filter_input(INPUT_POST, 'desc_activ');
+	$Qf_ini = (string) \filter_input(INPUT_POST, 'f_ini');
+	$Qf_fin = (string) \filter_input(INPUT_POST, 'f_fin');
+	$Qtipo_horario = (string) \filter_input(INPUT_POST, 'tipo_horario');
+	$Qobserv = (string) \filter_input(INPUT_POST, 'observ');
+	$Qnivel_stgr = (string) \filter_input(INPUT_POST, 'nivel_stgr');
+	$Qobserv_material = (string) \filter_input(INPUT_POST, 'observ_material');
+	$Qh_ini = (string) \filter_input(INPUT_POST, 'h_ini');
+	$Qh_fin = (string) \filter_input(INPUT_POST, 'h_fin');
+	$Qpublicado = (string) \filter_input(INPUT_POST, 'publicado');
+
 	//echo "id_tipo de actividad: $id_tipo_activ<br>";
-	if (!empty($_POST['id_tipo_activ']) and !strstr($_POST['id_tipo_activ'],'.')) {
-		$valor_id_tipo_activ=$_POST['id_tipo_activ'];
+	if (!empty($Qid_tipo_activ) and !strstr($Qid_tipo_activ,'.')) {
+		$valor_id_tipo_activ=$Qid_tipo_activ;
 	} else {
-		$condta=$_POST['isfsv_val'].$_POST['iasistentes_val'].$_POST['iactividad_val'].$_POST['inom_tipo_val'];
+		$condta=$Qisfsv_val.$Qiasistentes_val.$Qiactividad_val.$Qinom_tipo_val;
 		if (!strstr ($condta, '.')) {
 			$valor_id_tipo_activ = $condta;
 		} else {
@@ -243,30 +273,30 @@ case "cmb_tipo": // sólo cambio el tipo a una actividad existente //___________
 	$oActividad = new actividades\Actividad($id_activ);
 	$oActividad->DBCarregar();
 	$oActividad->setId_tipo_activ($valor_id_tipo_activ);
-	if(isset($_POST['dl_org'])) {
-		$dl_org = strtok($_POST['dl_org'],'#');
+	if(isset($Qdl_org)) {
+		$dl_org = strtok($Qdl_org,'#');
 		$oActividad->setDl_org($dl_org);
 	} else {	
 		$oActividad->setDl_org('');
 	}	
-	isset($_POST['nom_activ']) ? $oActividad->setNom_activ($_POST['nom_activ']) : '';
-	isset($_POST['id_ubi']) ? $oActividad->setId_ubi($_POST['id_ubi']) : '';
-	isset($_POST['desc_activ']) ? $oActividad->setDesc_activ($_POST['desc_activ']) : '';
-	isset($_POST['f_ini']) ? $oActividad->setF_ini($_POST['f_ini']) : '';
-	isset($_POST['f_fin']) ? $oActividad->setF_fin($_POST['f_fin']) : '';
-	isset($_POST['tipo_horario']) ? $oActividad->setTipo_horario($_POST['tipo_horario']) : '';
-	isset($_POST['precio']) ? $oActividad->setPrecio($_POST['precio']) : '';
-	isset($_POST['num_asistentes']) ? $oActividad->setNum_asistentes($_POST['num_asistentes']) : '';
-	isset($_POST['status']) ? $oActividad->setStatus($_POST['status']) : '';
-	isset($_POST['observ']) ? $oActividad->setObserv($_POST['observ']) : '';
-	isset($_POST['nivel_stgr']) ? $oActividad->setNivel_stgr($_POST['nivel_stgr']) : '';
-	isset($_POST['id_repeticion']) ? $oActividad->setId_repeticion($_POST['id_repeticion']) : '';
-	isset($_POST['observ_material']) ? $oActividad->setObserv_material($_POST['observ_material']) : '';
-	isset($_POST['lugar_esp']) ? $oActividad->setLugar_esp($_POST['lugar_esp']) : '';
-	isset($_POST['tarifa']) ? $oActividad->setTarifa($_POST['tarifa']) : '';
-	isset($_POST['h_ini']) ? $oActividad->setH_ini($_POST['h_ini']) : '';
-	isset($_POST['h_fin']) ? $oActividad->setH_fin($_POST['h_fin']) : '';
-	isset($_POST['plazas']) ? $oActividad->setPlazas($_POST['plazas']) : '';
+	$oActividad->setNom_activ($Qnom_activ);
+	$oActividad->setId_ubi($Qid_ubi);
+	$oActividad->setDesc_activ($Qdesc_activ);
+	$oActividad->setF_ini($Qf_ini);
+	$oActividad->setF_fin($Qf_fin);
+	$oActividad->setTipo_horario($Qtipo_horario);
+	$oActividad->setPrecio($Qprecio);
+	$oActividad->setNum_asistentes($Qnum_asistentes);
+	$oActividad->setStatus($Qstatus);
+	$oActividad->setObserv($Qobserv);
+	$oActividad->setNivel_stgr($Qnivel_stgr);
+	$oActividad->setId_repeticion($Qid_repeticion);
+	$oActividad->setObserv_material($Qobserv_material);
+	$oActividad->setLugar_esp($Qlugar_esp);
+	$oActividad->setTarifa($Qtarifa);
+	$oActividad->setH_ini($Qh_ini);
+	$oActividad->setH_fin($Qh_fin);
+	$oActividad->setPlazas($Qplazas);
 	if ($oActividad->DBGuardar() === false) { 
 		echo _('Hay un error, no se ha guardado');
 	}

@@ -11,15 +11,20 @@ use permisos\model as permisos;
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$que=empty($_POST['que'])? '' : $_POST['que'];
-switch($que) {
+$Qque = (string) \filter_input(INPUT_POST, 'que');
+
+switch($Qque) {
 	case 'perm_menu_update':
-		$oUsuarioPerm = new usuarios\PermMenu(array('id_item'=>$_POST['id_item']));
-		$oUsuarioPerm->setId_usuario($_POST['id_usuario']);
+		$Qid_item = (integer) \filter_input(INPUT_POST, 'id_item');
+		$Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
+		$Qmenu_perm = (array) \filter_input(INPUT_POST, 'menu_perm', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+		
+		$oUsuarioPerm = new usuarios\PermMenu(array('id_item'=>$Qid_item));
+		$oUsuarioPerm->setId_usuario($Qid_usuario);
 		//cuando el campo es menu_perm, se pasa un array que hay que convertirlo en número.
-		if (!empty($_POST['menu_perm'])){
+		if (!empty($Qmenu_perm)){
 			$byte=0;
-			foreach($_POST['menu_perm'] as $bit) {
+			foreach($Qmenu_perm as $bit) {
 				$byte=$byte+$bit;
 			}
 			$oUsuarioPerm->setMenu_perm($byte);
@@ -29,49 +34,63 @@ switch($que) {
 		}
 		break;
 	case 'perm_menu_eliminar':
-		if (isset($_POST['sel'])) { //vengo de un checkbox
-			//$id_nom=$sel[0];
-			$id_usuario=strtok($_POST['sel'][0],"#");
-			$id_item=strtok("#");
+		$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+		if (!empty($a_sel)) { //vengo de un checkbox
+			$Qid_usuario = strtok($a_sel[0],"#");
+			$Qid_item=strtok("#");
 		} 
-		$oUsuarioPerm = new usuarios\PermMenu(array('id_item'=>$id_item));
+		$oUsuarioPerm = new usuarios\PermMenu(array('id_item'=>$Qid_item));
 		if ($oUsuarioPerm->DBEliminar() === false) {
 			echo _('Hay un error, no se ha eliminado');
 		}
 		break;
 	case 'perm_eliminar':
-		if (isset($_POST['sel'])) { //vengo de un checkbox
-			//$id_nom=$sel[0];
-			$id_usuario=strtok($_POST['sel'][0],"#");
-			$id_item=strtok("#");
+		$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+		if (!empty($a_sel)) { //vengo de un checkbox
+			$Qid_usuario = strtok($a_sel[0],"#");
+			$Qid_item=strtok("#");
 		} 
-		$oUsuario = new usuarios\GrupoOUsuario(array('id_usuario'=>$id_usuario)); // La tabla y su heredada
-		$oUsuarioPerm = new UsuarioPerm(array('id_item'=>$id_item));
+		$oUsuario = new usuarios\GrupoOUsuario(array('id_usuario'=>$Qid_usuario)); // La tabla y su heredada
+		$oUsuarioPerm = new UsuarioPerm(array('id_item'=>$Qid_item));
 		if ($oUsuarioPerm->DBEliminar() === false) {
 			echo _('Hay un error, no se ha eliminado');
 		}
 		break;
 	case 'perm_update':
-		if (empty($_POST['id_tipo_activ'])) {
-			$sfsv_val= empty($_POST['isfsv_val'])? '.' : $_POST['isfsv_val'];
-			$asistentes_val= empty($_POST['iasistentes_val'])? '.' : $_POST['iasistentes_val'];
-			$actividad_val= empty($_POST['iactividad_val'])? '.' : $_POST['iactividad_val'];
-			$nom_tipo_val= empty($_POST['inom_tipo_val'])? '...' : $_POST['inom_tipo_val'];
+		$Qid_tipo_activ = (integer) \filter_input(INPUT_POST, 'id_tipo_activ');
+		$Qid_item = (integer) \filter_input(INPUT_POST, 'id_item');
+		$Qfase_ini = (integer) \filter_input(INPUT_POST, 'fase_ini');
+		$Qfase_fin = (integer) \filter_input(INPUT_POST, 'fase_fin');
+		$Qaccion = (integer) \filter_input(INPUT_POST, 'accion');
+		$Qdl_propia = (integer) \filter_input(INPUT_POST, 'dl_propia');
+		$Qafecta_a = (array) \filter_input(INPUT_POST, 'afecta_a', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+		
+		if (empty($Qid_tipo_activ)) {
+			$Qisfsv_val = (integer) \filter_input(INPUT_POST, 'isfsv_val');
+			$Qiasistentes_val = (integer) \filter_input(INPUT_POST, 'iasistentes_val');
+			$Qiactividad_val = (integer) \filter_input(INPUT_POST, 'iactividad_val');
+			$Qinom_tipo_val = (integer) \filter_input(INPUT_POST, 'inom_tipo_val');
+
+			$sfsv_val= empty($Qisfsv_val)? '.' : $Qisfsv_val;
+			$asistentes_val= empty($Qiasistentes_val)? '.' : $Qiasistentes_val;
+			$actividad_val= empty($Qiactividad_val)? '.' : $Qiactividad_val;
+			$nom_tipo_val= empty($Qinom_tipo_val)? '...' : $Qinom_tipo_val;
 			$id_tipo_activ_txt=$sfsv_val.$asistentes_val.$actividad_val.$nom_tipo_val;
 		} else {
-			$id_tipo_activ_txt=$_POST['id_tipo_activ'];
+			$id_tipo_activ_txt=$Qid_tipo_activ;
 		}
 		//$oUsuario = new usuarios\GrupoOUsuario(array('id_usuario'=>$_POST['id_usuario'])); // La tabla y su heredada
-		$oUsuarioPerm = new UsuarioPerm(array('id_item'=>$_POST['id_item'],'id_usuario'=>$_POST['id_usuario']));
+		$oUsuarioPerm = new UsuarioPerm(array('id_item'=>$Qid_item,'id_usuario'=>$Qid_usuario));
 		$oUsuarioPerm->setId_tipo_activ_txt($id_tipo_activ_txt);
-		$oUsuarioPerm->setId_fase_ini($_POST['fase_ini']);
-		$oUsuarioPerm->setId_fase_fin($_POST['fase_fin']);
-		$oUsuarioPerm->setAccion($_POST['accion']);
-		$oUsuarioPerm->setDl_propia($_POST['dl_propia']);
+		$oUsuarioPerm->setId_fase_ini($Qfase_ini);
+		$oUsuarioPerm->setId_fase_fin($Qfase_fin);
+		$oUsuarioPerm->setAccion($Qaccion);
+		$oUsuarioPerm->setDl_propia($Qdl_propia);
 		//cuando el campo es afecta_a, se pasa un array que hay que convertirlo en número.
-		if (!empty($_POST['afecta_a'])){
+		if (!empty($Qafecta_a)){
 			$byte=0;
-			foreach($_POST['afecta_a'] as $bit) {
+			foreach($Qafecta_a as $bit) {
 				$byte=$byte+$bit;
 			}
 			$oUsuarioPerm->setAfecta_a($byte);
@@ -81,64 +100,85 @@ switch($que) {
 		}
 		break;
 	case "buscar":
+		$Qusuario = (string) \filter_input(INPUT_POST, 'usuario');
+		
 		$oUsuarios = new usuarios\GestorUsuario();
-		$oUser=$oUsuarios->getUsuarios(array('usuario'=>$_POST['usuario']));
+		$oUser=$oUsuarios->getUsuarios(array('usuario'=>$Qusuario));
 		$oUsuario=$oUser[0];
 		break;
 	case "guardar_pwd":
-		$oUsuario = new usuarios\Usuario(array('id_usuario' => $_POST['id_usuario']));
+		$Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
+		$Qemail = (string) \filter_input(INPUT_POST, 'email');
+		$Qpassword = (string) \filter_input(INPUT_POST, 'password');
+		$Qpass = (string) \filter_input(INPUT_POST, 'pass');
+		
+		$oUsuario = new usuarios\Usuario(array('id_usuario' => $Qid_usuario));
 		$oUsuario->DBCarregar();
-		$oUsuario->setEmail($_POST['email']);
-		if (!empty($_POST['password'])){
+		$oUsuario->setEmail($Qemail);
+		if (!empty($Qpassword)){
 			$oCrypt = new permisos\MyCrypt();
-			$my_passwd=$oCrypt->encode($_POST['password']);
+			$my_passwd=$oCrypt->encode($Qpassword);
 			$oUsuario->setPassword($my_passwd);
 		} else {
-			$oUsuario->setPassword($_POST['pass']);
+			$oUsuario->setPassword($Qpass);
 		}
 		if ($oUsuario->DBGuardar() === false) {
 			echo _('Hay un error, no se ha guardado');
 		}
 	break;
 	case "guardar":
-		if (empty($_POST['usuario'])) { echo _('debe poner un nombre'); }
-		switch($_POST['quien']) {
+		$Qusuario = (string) \filter_input(INPUT_POST, 'usuario');
+		$Qquien = (string) \filter_input(INPUT_POST, 'quien');
+
+		if (empty($Qusuario)) { echo _('debe poner un nombre'); }
+		switch($Qquien) {
 			case 'usuario':
-				$oUsuario = new usuarios\Usuario(array('id_usuario' => $_POST['id_usuario']));
-				$oUsuario->setUsuario($_POST['usuario']);
+				$Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
+				$Qperm_activ = (array) \filter_input(INPUT_POST, 'perm_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+				$Qid_role = (integer) \filter_input(INPUT_POST, 'id_role');
+				$Qemail = (string) \filter_input(INPUT_POST, 'email');
+				$Qnom_usuario = (string) \filter_input(INPUT_POST, 'nom_usuario');
+				$Qpassword = (string) \filter_input(INPUT_POST, 'password');
+				$Qpass = (string) \filter_input(INPUT_POST, 'pass');
+				$Qid_sacd = (integer) \filter_input(INPUT_POST, 'id_sacd');
+				$Qid_ctr = (integer) \filter_input(INPUT_POST, 'id_ctr');
+				$Qcasas = (array) \filter_input(INPUT_POST, 'casas', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+				
+				$oUsuario = new usuarios\Usuario(array('id_usuario' => $Qid_usuario));
+				$oUsuario->setUsuario($Qusuario);
 				//cuando el campo es perm_activ, se pasa un array que hay que convertirlo en número.
-				if (!empty($_POST['perm_activ'])){
+				if (!empty($Qperm_activ)){
 					$byte=0;
-					foreach($_POST['perm_activ'] as $bit) {
+					foreach($Qperm_activ as $bit) {
 						$byte=$byte+$bit;
 					}
 					$oUsuario->setPerm_activ($byte);
 				} 
-				$oUsuario->setid_role($_POST['id_role']);
-				$oUsuario->setEmail($_POST['email']);
-				$oUsuario->setNom_usuario($_POST['nom_usuario']);
-				if (!empty($_POST['password'])){
+				$oUsuario->setid_role($Qid_role);
+				$oUsuario->setEmail($Qemail);
+				$oUsuario->setNom_usuario($Qnom_usuario);
+				if (!empty($Qpassword)){
 					$oCrypt = new permisos\MyCrypt();
-					$my_passwd=$oCrypt->encode($_POST['password']);
+					$my_passwd=$oCrypt->encode($Qpassword);
 					$oUsuario->setPassword($my_passwd);
 				} else {
-					$oUsuario->setPassword($_POST['pass']);
+					$oUsuario->setPassword($Qpass);
 				}
-				$oRole = new usuarios\Role($_POST['id_role']);
+				$oRole = new usuarios\Role($Qid_role);
 				$pau = $oRole->getPau();
 				// sacd
-				if ($pau == 'sacd' && !empty($_POST['id_sacd'])) {
-					$oUsuario->setId_pau($_POST['id_sacd']);
+				if ($pau == 'sacd' && !empty($Qid_sacd)) {
+					$oUsuario->setId_pau($Qid_sacd);
 				}
 				// centros (sv o sf)
-				if (($pau == 'ctr') && !empty($_POST['id_ctr'])) {
-					$oUsuario->setId_pau($_POST['id_ctr']);
+				if (($pau == 'ctr') && !empty($Qid_ctr)) {
+					$oUsuario->setId_pau($Qid_ctr);
 				}
 				// casas
-				if ($pau == 'cdc' && !empty($_POST['casas'])) {
+				if ($pau == 'cdc' && !empty($Qcasas)) {
 					$txt_casa='';
 					$i=0;	
-					foreach ($_POST['casas'] as $id_ubi) {
+					foreach ($Qcasas as $id_ubi) {
 						if (empty($id_ubi)) continue;
 						$i++;
 						if ($i > 1) $txt_casa .= ',';
@@ -148,9 +188,12 @@ switch($que) {
 				}
 				break;
 			case 'grupo':
-				$oUsuario = new usuarios\Grupo(array('id_usuario' => $_POST['id_usuario']));
-				$oUsuario->setUsuario($_POST['usuario']);
-				$oUsuario->setid_role($_POST['id_role']);
+				$Qid_role = (integer) \filter_input(INPUT_POST, 'id_role');
+				$Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
+				
+				$oUsuario = new usuarios\Grupo(array('id_usuario' => $Qid_usuario));
+				$oUsuario->setUsuario($Qusuario);
+				$oUsuario->setid_role($Qid_role);
 				break;
 		}
 		if ($oUsuario->DBGuardar() === false) {
@@ -158,23 +201,31 @@ switch($que) {
 		}
 	break;
 	case "nuevo":
-		switch($_POST['quien']) {
+		$Qquien = (string) \filter_input(INPUT_POST, 'quien');
+		switch($Qquien) {
 			case 'usuario':
-				if ($_POST['usuario'] && $_POST['password']) {
+				$Qperm_activ = (array) \filter_input(INPUT_POST, 'perm_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+				$Qusuario = (string) \filter_input(INPUT_POST, 'usuario');
+				$Qemail = (string) \filter_input(INPUT_POST, 'email');
+				$Qid_role = (integer) \filter_input(INPUT_POST, 'id_role');
+				$Qnom_usuario = (string) \filter_input(INPUT_POST, 'nom_usuario');
+				$Qpassword = (string) \filter_input(INPUT_POST, 'password');
+				
+				if ($Qusuario && $Qpassword) {
 					$oUsuario = new usuarios\Usuario();
-					$oUsuario->setUsuario($_POST['usuario']);
-					if (!empty($_POST['password'])){
+					$oUsuario->setUsuario($Qusuario);
+					if (!empty($Qpassword)){
 						$oCrypt = new permisos\MyCrypt();
-						$my_passwd=$oCrypt->encode($_POST['password']);
+						$my_passwd=$oCrypt->encode($Qpassword);
 						$oUsuario->setPassword($my_passwd);
 					}
-					$oUsuario->setEmail($_POST['email']);
-					$oUsuario->setId_role($_POST['id_role']);
-					$oUsuario->setNom_usuario($_POST['nom_usuario']);
+					$oUsuario->setEmail($Qemail);
+					$oUsuario->setId_role($Qid_role);
+					$oUsuario->setNom_usuario($Qnom_usuario);
 					//cuando el campo es perm_activ, se pasa un array que hay que convertirlo en número.
-					if (!empty($_POST['perm_activ'])){
+					if (!empty($Qperm_activ)){
 						$byte=0;
-						foreach($_POST['perm_activ'] as $bit) {
+						foreach($Qperm_activ as $bit) {
 							$byte=$byte+$bit;
 						}
 						$oUsuario->setPerm_activ($byte);
@@ -185,10 +236,13 @@ switch($que) {
 				} else { echo _('debe poner un nombre y el password'); }
 				break;
 			case "grupo":
-				if ($_POST['usuario']) {
+				$Qusuario = (string) \filter_input(INPUT_POST, 'usuario');
+				$Qid_role = (integer) \filter_input(INPUT_POST, 'id_role');
+
+				if ($Qusuario) {
 					$oUsuario = new usuarios\Grupo();
-					$oUsuario->setUsuario($_POST['usuario']);
-					$oUsuario->setid_role($_POST['id_role']);
+					$oUsuario->setUsuario($Qusuario);
+					$oUsuario->setid_role($Qid_role);
 					if ($oUsuario->DBGuardar() === false) {
 						echo _('Hay un error, no se ha guardado');
 					}

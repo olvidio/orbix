@@ -55,7 +55,7 @@ $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miRole=$oMiUsuario->getId_role();
 $miSfsv = core\ConfigGlobal::mi_sfsv();
 
-if ($Qquien=='usuario') $obj = 'usuarios\\model\\entity\\Usuario';
+if ($Qquien=='grupo') $obj = 'usuarios\\model\\entity\\Grupo';
 
 /*
 if( (core\ConfigGlobal::is_app_installed('avisos')) && (!empty($Qid_usuario)) && ($Qquien == 'usuario') ) {
@@ -127,176 +127,167 @@ if( (core\ConfigGlobal::is_app_installed('avisos')) && (!empty($Qid_usuario)) &&
 */
 
 // a los usuarios normales (no administrador) sólo dejo ver la parte de los avisos.
-if ($miRole < 4) {
-	if ($miRole > 3) exit(_('no tiene permisos para ver esto')); // no es administrador
-	if ($miRole != 1) { $cond_role="WHERE id_role <> 1 "; } else {$cond_role="WHERE id_role > 0 "; } //absurda cond, pero pero para que no se borre el role del superadmin
+if ($miRole > 3) exit(_('no tiene permisos para ver esto')); // no es administrador
+if ($miRole != 1) { $cond_role="WHERE id_role <> 1 "; } else {$cond_role="WHERE id_role > 0 "; } //absurda cond, pero pero para que no se borre el role del superadmin
 
-	switch($miSfsv) {
-		case 1:
-			$cond_role.="AND sv='t'";
-			break;
-		case 2:
-			$cond_role.="AND sf='t'";
-			break;
+switch($miSfsv) {
+	case 1:
+		$cond_role.="AND sv='t'";
+		break;
+	case 2:
+		$cond_role.="AND sf='t'";
+		break;
+}
+
+if( !(core\ConfigGlobal::is_app_installed('personas')) ) { $cond_role.="AND (pau != 'sacd' OR pau IS NULL)"; }
+if( !(core\ConfigGlobal::is_app_installed('ubis')) ) { $cond_role.="AND (pau != 'ctr' OR pau != 'cdc' OR pau IS NULL)"; }
+		
+$oGRoles = new usuarios\GestorRole();
+$oDesplRoles= $oGRoles->getListaRoles($cond_role);
+$oDesplRoles->setNombre('id_role');
+
+/*
+if( (core\ConfigGlobal::is_app_installed('procesos')) {
+	$oGesFases = new GestorActividadFase();
+	$oDesplFases= $oGesFases->getListaActividadFases();
+	$oDesplFases->setNombre('fase');
+}
+*/
+
+$oSelects = array();
+$email='';
+$txt_guardar=_("guardar datos grupo");
+if (!empty($Qid_usuario)) {
+	$que_user='guardar';
+	$oUsuario = new usuarios\Grupo(array('id_usuario'=>$Qid_usuario));
+	$id_usuario=$oUsuario->getId_usuario();
+	$id_role=$oUsuario->getId_role();
+	$oDesplRoles->setOpcion_sel($id_role);
+	$usuario=$oUsuario->getUsuario();
+	$oRole = new usuarios\Role($id_role);
+	$pau = $oRole->getPau();
+	$sv = $oRole->getSv();
+	$sf = $oRole->getSf();
+	//$nom_usuario=$oUsuario->getNom_usuario();
+	$nom_usuario='';
+	$seccion=$miSfsv;
+	$oGesPermMenu = new usuarios\GestorPermMenu();
+	$oGrupoGrupoPermMenu = $oGesPermMenu->getPermMenus(array('id_usuario'=>$id_usuario));
+	if (core\ConfigGlobal::is_app_installed('procesos')) { 
+		$oGesPerm = new usuarios\GestorUsuarioPerm();
+		$oUsuarioUsuarioPerm = $oGesPerm->getUsuarioPerms(array('id_usuario'=>$id_usuario));
 	}
-
-	if( !(core\ConfigGlobal::is_app_installed('personas')) ) { $cond_role.="AND (pau != 'sacd' OR pau IS NULL)"; }
-	if( !(core\ConfigGlobal::is_app_installed('ubis')) ) { $cond_role.="AND (pau != 'ctr' OR pau != 'cdc' OR pau IS NULL)"; }
-			
-	$oGRoles = new usuarios\GestorRole();
-	$oDesplRoles= $oGRoles->getListaRoles($cond_role);
-	$oDesplRoles->setNombre('id_role');
-
-	/*
-	if( (core\ConfigGlobal::is_app_installed('procesos')) {
-		$oGesFases = new GestorActividadFase();
-		$oDesplFases= $oGesFases->getListaActividadFases();
-		$oDesplFases->setNombre('fase');
-	}
-	*/
-	$txt_guardar=_("guardar datos usuario");
+	$pass='';
+} else {
 	$oGrupoGrupoPermMenu = array();
-	$oSelects = array();
-	if (!empty($Qid_usuario)) {
-		$que_user='guardar';
-		$oUsuario = new usuarios\Usuario(array('id_usuario'=>$Qid_usuario));
+	$que_user='nuevo';
+	$id_role='';
+	$pau='';
+	$id_usuario='';
+	$usuario='';
+	$nom_usuario='';
+	$seccion='';
+	$pass='';
+}
 
-		$id_usuario=$oUsuario->getId_usuario();
-		$seccion=$miSfsv;
-		$usuario=$oUsuario->getUsuario();
-		$nom_usuario=$oUsuario->getNom_usuario();
-		$pass=$oUsuario->getPassword();
-		$email=$oUsuario->getEmail();
-		$id_role=$oUsuario->getId_role();
-		$oDesplRoles->setOpcion_sel($id_role);
-		$oRole = new usuarios\Role($id_role);
-		$pau = $oRole->getPau();
-		$sv = $oRole->getSv();
-		$sf = $oRole->getSf();
-		if ($pau == 'cdc') { //casa
-			$id_pau=$oUsuario->getId_pau();
-			$cond = '';
-			switch ($seccion) {
-				case 1:
-					$cond = "WHERE sv = 't'";
-					break;
-				case 2:
-					$cond = "WHERE sf = 't'";
-					break;
-			}
-			$oGCasas = new ubis\GestorCasaDl();
-			$oOpcionesCasas = $oGCasas->getPosiblesCasas($cond);
-			//$oDesplCasas = new Desplegable(array('oOpciones'=>$oOpcionesCasas));	
-
-			$oSelects = new web\DesplegableArray($id_pau,$oOpcionesCasas,'casas');
-			$oSelects->setBlanco('t');
-			$oSelects->setAccionConjunto('fnjs_mas_casas(event)');
-			$camposMas = 'casas!casas_mas!casas_num';
-		}
-		if ($pau == 'ctr' && $sv == 1) { //centroSv
-			$id_pau=$oUsuario->getId_pau();
-			$oGesCentrosDl = new ubis\GestorCentroDl();
-			$oSelects = $oGesCentrosDl->getListaCentros();
-
-			$oSelects->setNombre('id_ctr');
-			$oSelects->setOpcion_sel($id_pau);
-			$oSelects->setBlanco('t');
-			$camposMas = 'id_ctr';
-		}
-		if ($pau == 'ctr' && $sf == 1) { //centroSf
-			$id_pau=$oUsuario->getId_pau();
-			$oGesCentrosDl = new GestorCentroSf();
-			$oSelects = $oGesCentrosDl->getListaCentros();
-
-			$oSelects->setNombre('id_ctr');
-			$oSelects->setOpcion_sel($id_pau);
-			$oSelects->setBlanco('t');
-			$camposMas = 'id_ctr';
-		}
-		if ($pau == 'sacd') { //sacd
-			$id_pau=$oUsuario->getId_pau();
-
-			$GesPersonas = new personas\GestorPersonaDl();
-			$oSelects = $GesPersonas->getListaSacd();
-
-			$oSelects->setNombre('id_sacd');
-			$oSelects->setOpcion_sel($id_pau);
-			$oSelects->setBlanco('t');
-			$camposMas = 'id_sacd';
-		}
-		if (core\ConfigGlobal::is_app_installed('procesos')) { 
-			$oGesPerm = new usuarios\GestorUsuarioPerm();
-			$oUsuarioUsuarioPerm = $oGesPerm->getUsuarioPerms(array('id_usuario'=>$id_usuario));
-		}
-	} else {
-		$que_user='nuevo';
-		$id_role='';
-		$id_usuario='';
-		$usuario='';
-		$nom_usuario='';
-		$pass='';
-		$seccion='';
-		$email='';
-		$role='';
-		$pau='';
+// Permisos
+if (!empty($id_usuario)) { // si no hay usuario, no puedo poner permisos.
+	//grupo
+	$oGesUsuarioGrupo = new usuarios\GestorUsuarioGrupo();
+	$oListaGrupos = $oGesUsuarioGrupo->getUsuariosGrupos(array('id_usuario'=>$id_usuario));
+	$i=0;
+	$txt='';
+	foreach ($oListaGrupos as $oUsuarioGrupo) {
+		$i++;
+		$oGrupo = new usuarios\Grupo($oUsuarioGrupo->getId_grupo());
+		if ($i > 1) $txt.=", ";
+		$txt.= $oGrupo->getUsuario();
+	}	
+	// propios 
+	$i=0;
+	$a_cabeceras=array(array('name'=>_("oficina o grupo"),'width'=>'350'));
+	if (core\ConfigGlobal::is_app_installed('procesos')) {
+		$a_botones[] = array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(\"#permisos_menu\")" );
 	}
-	//$camposForm = 'que!usuario!nom_usuario!password!email!id_role!id_ctr!id_sacd!casas';
-	$camposForm = 'que!usuario!nom_usuario!password!email!id_role';
-	$camposForm = !empty($camposMas)? $camposForm.'!'.$camposMas : $camposForm;
-	$oHash = new web\Hash();
-	$oHash->setcamposForm($camposForm);
-	$oHash->setcamposNo('pass!password!id_ctr!id_sacd!casas');
+	$a_botones[] = array( 'txt' => _('quitar'), 'click' =>"fnjs_del_perm_menu(\"#permisos_menu\")" );
+	
+	$a_valores=array();
+	foreach ($oGrupoGrupoPermMenu as $oPermMenu) {
+		$i++;
+		
+		$id_item=$oPermMenu->getId_item();
+		$menu_perm=$oPermMenu->getMenu_perm();
+
+		$a_valores[$i]['sel']="$id_usuario#$id_item";
+		$a_valores[$i][1]=$oCuadros->lista_txt($menu_perm);
+	}
+
+	$oHashPermisos = new web\Hash();
+	$oHashPermisos->setcamposForm('que!sel');
+	$oHashPermisos->setcamposNo('scroll_id!refresh');
 	$a_camposHidden = array(
 			'id_usuario' => $id_usuario,
 			'quien' => $Qquien
 			);
-	$oHash->setArraycamposHidden($a_camposHidden);
-
-	$url_usuario_ajax = core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_ajax.php';
-	$oHash1 = new web\Hash();
-	$oHash1->setUrl($url_usuario_ajax);
-	$oHash1->setCamposForm('que!id_usuario'); 
-	$oHash1->setCamposNo('scroll_id'); 
-	$h1 = $oHash1->linkSinVal();
+	$oHashPermisos->setArraycamposHidden($a_camposHidden);
 	
-	$txt_eliminar = _("¿Esta Seguro que desea quitar este permiso");
-	
-	$a_campos = [
-				'url_usuario_ajax' => $url_usuario_ajax,
-				'id_usuario' => $Qid_usuario,
-				'h1' => $h1,
-				'obj' => $obj,
-				'que_user' => $que_user,
-				'Qquien' => $Qquien,
-				'id_usuario' => $id_usuario,
-				'oPosicion' => $oPosicion,
-				'pau' => $pau,
-				'oSelects' => $oSelects,
-				'oCuadros' => $oCuadros,
-				'usuario' => $usuario,
-				'oHash' => $oHash,
-				'pass' => $pass,
-				'usuario' => $usuario,
-				'nom_usuario' => $nom_usuario,
-				'oDesplRoles' => $oDesplRoles,
-				'oGrupoGrupoPermMenu' => $oGrupoGrupoPermMenu,
-				'email' => $email,
-				'txt_guardar' => $txt_guardar,
-				'txt_eliminar' => $txt_eliminar,
-				];
-
-	$oView = new core\View('usuarios/controller');
-	echo $oView->render('usuario_form.phtml',$a_campos);
-} 
-
-//////////// Esto lo ven todos ////////////
-// si no hay usuario, no puedo poner permisos.
-if( (core\ConfigGlobal::is_app_installed('avisos')) && (!empty($id_usuario)) && ($Qquien == 'usuario') ) {
-	$a_camposAvisos = [
-				'oHash3' => $oHash3,
-				'oTablaAvisos' => $oTablaAvisos,
-				];
-
-	$oView = new core\View('usuarios/controller');
-//	echo $oView->render('usuario_form_avisos.phtml',$a_camposAvisos);
+	$oTabla = new web\Lista();
+	$oTabla->setId_tabla('usuario_form_permisos');
+	$oTabla->setCabeceras($a_cabeceras);
+	$oTabla->setBotones($a_botones);
+	$oTabla->setDatos($a_valores);
 }
+
+
+$oHash = new web\Hash();
+$oHash->setcamposForm('que!usuario!id_role');
+$oHash->setcamposNo('id_ctr!id_sacd!casas!refresh');
+$a_camposHidden = array(
+		'pass' => $pass,
+		'id_usuario' => $id_usuario,
+		'quien' => $Qquien
+		);
+$oHash->setArraycamposHidden($a_camposHidden);
+
+
+$url_usuario_ajax = core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_ajax.php';
+$oHash1 = new web\Hash();
+$oHash1->setUrl($url_usuario_ajax);
+$oHash1->setCamposForm('que!id_usuario'); 
+$oHash1->setCamposNo('scroll_id'); 
+$h1 = $oHash1->linkSinVal();
+
+$txt_eliminar = _("¿Esta Seguro que desea quitar este permiso");
+	
+// Grupo
+$a_camposG = [
+			'url_usuario_ajax' => $url_usuario_ajax,
+			'id_usuario' => $Qid_usuario,
+			'h1' => $h1,
+			'obj' => $obj,
+			'pau' => $pau,
+			'que_user' => $que_user,
+			'Qquien' => $Qquien,
+			'oSelects' => $oSelects,
+			'oPosicion' => $oPosicion,
+			'oHash' => $oHash,
+			'pass' => $pass,
+			'usuario' => $usuario,
+			'nom_usuario' => $nom_usuario,
+			'oDesplRoles' => $oDesplRoles,
+			'email' => $email,
+			'txt_guardar' => $txt_guardar,
+			'txt_eliminar' => $txt_eliminar,
+			];
+
+$oView = new core\View('usuarios/controller');
+echo $oView->render('grupo_form.phtml',$a_camposG);
+
+// Permisos
+$a_camposP = [
+			'oHashPermisos' => $oHashPermisos,
+			'oTabla' => $oTabla,
+			];
+
+$oView = new core\View('usuarios/controller');
+echo $oView->render('perm_menu_form.phtml',$a_camposP);

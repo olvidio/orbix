@@ -18,15 +18,6 @@ $Qentrada = (string) \filter_input(INPUT_POST, 'entrada');
 $Qsalida = (string) \filter_input(INPUT_POST, 'salida');
 
 switch ($Qsalida) {
-	case "tarifa":
-		/*
-		if (!empty($_POST['entrada'])) {
-			$id_tipo_activ=$_POST['entrada'];
-			$oTipoActivTarifa = new TipoActivTarifa(array('id_tipo_activ'=>$id_tipo_activ));
-			echo $oTipoActivTarifa->getTarifa();
-		}
-		*/
-	break;
 	case "asistentes":
 		$aux=$Qentrada.'.....';
 		$oTipoActiv= new web\TiposActividades($aux);
