@@ -102,6 +102,7 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($stack != '')) {
 	// valores por defeccto
 	$Qempiezamin = empty($Qempiezamin)? date('d/m/Y',mktime(0, 0, 0, date('m'), date('d')-40, date('Y'))) : $Qempiezamin;
 	$Qempiezamax = empty($Qempiezamax)? date('d/m/Y',mktime(0, 0, 0, date('m')+9, 0, date('Y'))) : $Qempiezamax;
+	$Qstatus = empty($Qstatus)? 2 : '';
 
 	$aGoBack = array (
 					'modo'=>$Qmodo,
