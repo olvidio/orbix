@@ -32,7 +32,10 @@ foreach ($tabla as $fila => $row){
 		$nota = _("Pendiente");
 		$fecha = '';
 	} else {
-		$class='';
+		$class = '';
+		if ($row['nota'] == 'cursada') {
+			$class="alert";
+		}
 		$nota = $row['nota'];
 		$fecha = '';
 	}
