@@ -47,6 +47,8 @@ $mi_sfsv = core\ConfigGlobal::mi_sfsv();
 $oPosicion->recordar();
 
 $Qcontinuar = (string)  filter_input(INPUT_POST, 'continuar');
+// Sólo sirve para esta pagina: importar, publicar, duplicar
+$QGstack = (integer)  filter_input(INPUT_POST, 'Gstack');
 if (isset($_POST['stack'])) {
 	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
 } else { 
@@ -55,8 +57,8 @@ if (isset($_POST['stack'])) {
 
 //Si vengo de vuelta con el parámetro 'continuar', los datos no están en el POST,
 // sino en $Posicion. Le paso la referecia del stack donde está la información.
-if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($stack != '')) {
-	$oPosicion->goStack($stack);
+if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
+	$oPosicion->goStack($QGstack);
 	$Qmodo = $oPosicion->getParametro('modo');
 //	$Qque = $oPosicion->getParametro('que');
 	$Qstatus = $oPosicion->getParametro('status');
@@ -72,7 +74,7 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($stack != '')) {
 	$Qempiezamax=$oPosicion->getParametro('empiezamax');
 	$Qid_sel=$oPosicion->getParametro('id_sel');
 	$Qscroll_id = $oPosicion->getParametro('scroll_id');
-	$oPosicion->olvidar($stack); //limpio todos los estados hacia delante.
+	$oPosicion->olvidar($QGstack); //limpio todos los estados hacia delante.
 } else { //si vengo de vuelta y tengo los parametros en el $_POST
 	$Qid_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 	$Qscroll_id = (string) \filter_input(INPUT_POST, 'scroll_id');
@@ -455,7 +457,6 @@ $a_camposHidden = array(
 		'dl_org' => $Qdl_org,
 		'id_ubi' => $Qid_ubi,
 		'filtro_lugar' => $Qfiltro_lugar,
-//		'que' => $Qque,
 		'modo' => $Qmodo
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
@@ -467,10 +468,8 @@ $a_camposHiddenSel = array(
 		'obj_pau' =>$obj_pau,
 		'pau' =>'a',
 		'permiso' =>'3',
-//		'stack' => $oPosicion->getStack(),
+		'Gstack' => $oPosicion->getStack(),
 		);
-		//'tabla' =>'a_actividades',
-		//'tabla_pau' =>'a_actividades',
 $oHashSel->setArraycamposHidden($a_camposHiddenSel);
 
 $oTabla = new web\Lista();
