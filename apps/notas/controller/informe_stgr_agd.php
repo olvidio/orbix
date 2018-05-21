@@ -1,5 +1,5 @@
 ﻿<?php
-use notas\model\entity as notas;
+use notas\model as notas;
 
 /**
 * Esta página sirve para comprobar las notas de la tabla e_notas.
