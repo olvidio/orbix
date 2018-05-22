@@ -48,13 +48,6 @@
 134	{37,10}	buscar cv	sasistentes=agd&sactividad=cv&que=ver	119	2064	12	t
 321	{82}	cve	\N	\N	128	2	t
 158	{10,30}	listados	\N	48	33816575	4	t
-377	{50,10,50}	sf n	id_tipo_activ=21....&status=2&periodo=desdeHoy	71	8	8	t
-374	{50,10,20}	sv agd	id_tipo_activ=133....&status=2&periodo=desdeHoy	71	8	8	t
-376	{50,10,40}	sv sr	id_tipo_activ=17....&status=2&periodo=desdeHoy	71	8	8	t
-378	{50,10,60}	sf nax	id_tipo_activ=22....&status=2&periodo=desdeHoy	71	8	8	t
-379	{50,10,70}	sf agd	id_tipo_activ=23....&status=2&periodo=desdeHoy	71	8	8	t
-380	{50,10,80}	sf s y sg	id_tipo_activ=2[45]....&status=2&periodo=desdeHoy	71	8	8	t
-381	{50,10,90}	sf sr,sr-nax,sr-agd	id_tipo_activ=2[789]....&status=2&periodo=desdeHoy	71	8	8	t
 121	{10,30}	matricular a todos	\N	104	16	12	t
 259	{40,20}	ubis	tipo=u	121	33554432	13	t
 258	{40,10}	personas	tipo=p	121	33554432	13	t
@@ -63,6 +56,12 @@
 287	{15,10}	n dl	tabla=p_numerarios&tipo=persona	76	144	2	t
 504	{60}	usuarios web		72	131071	9	t
 137	{35,10}	buscar ca	sasistentes=n&sactividad=ca&que=ver	119	2064	12	t
+376	{50,10,40}	sv sr	id_tipo_activ=17&status=2&periodo=desdeHoy	71	8	8	t
+377	{50,10,50}	sf n	id_tipo_activ=21&status=2&periodo=desdeHoy	71	8	8	t
+378	{50,10,60}	sf nax	id_tipo_activ=22&status=2&periodo=desdeHoy	71	8	8	t
+379	{50,10,70}	sf agd	id_tipo_activ=23&status=2&periodo=desdeHoy	71	8	8	t
+380	{50,10,80}	sf s y sg	id_tipo_activ=2[45]&status=2&periodo=desdeHoy	71	8	8	t
+381	{50,10,90}	sf sr,sr-nax,sr-agd	id_tipo_activ=2[789]&status=2&periodo=desdeHoy	71	8	8	t
 516	{60,30}	lista usuarios		131	131071	9	t
 61	{10,10}	buscar 	simple=1&tipo=ctr&loc=dl	133	8	8	t
 506	{20}	ayuda		72	0	9	t
@@ -84,7 +83,6 @@
 56	{5,10}	sacd num	tabla=p_numerarios&na=n&tipo=persona&es_sacd=1	76	8	8	t
 53	{5,40}	agd de paso	tabla=p_de_paso&na=a&tipo=persona&es_sacd=1	76	8	8	t
 59	{5,50}	sacd sssc	tabla=p_sssc&tipo=persona	76	8	8	t
-375	{50,10,30}	sv s y sg	id_tipo_activ=1[45]....&status=2&periodo=desdeHoy	71	8	8	t
 194	{91,10}	s de la dl	tabla=p_supernumerarios&tipo=persona	76	2112	10	t
 243	{140,30}	agd dl	tabla=p_agregados&tipo=persona	76	64	10	t
 619	{20,20}	tabla alumnos-asignaturas	\N	88	16	12	t
@@ -100,6 +98,7 @@
 241	{140,10}	n dl	tabla=p_numerarios&tipo=persona	76	64	10	t
 141	{35,60}	lista varios ca	ssfsv=sv&sasistentes=n&sactividad=ca&que=list_cjto	119	2064	12	t
 142	{35,75}	estudios x ctr	lista=list_est&n_agd=n&sasistentes=n&sactividad=ca	147	2064	12	t
+375	{50,10,30}	sv s y sg	id_tipo_activ=1[45]&status=2&periodo=desdeHoy	71	8	8	t
 60	{10}	centros y casas		72	8	8	t
 71	{40}	planning		72	0	8	t
 817	{1}	Utilidades	\N	\N	33816575	1	t
@@ -130,7 +129,6 @@
 834	{10,10}	nax dl	tabla=p_nax&tipo=persona	76	18432	16	t
 835	{10,20}	nax de paso	tabla=p_de_paso&na=x&tipo=persona	76	18432	16	t
 123	{20}	actas...	\N	\N	2066	12	t
-373	{50,10,10}	sv  n	id_tipo_activ=112....&status=2&periodo=desdeHoy	71	8	8	t
 837	{70}	crt	\N	\N	18464	16	t
 839	{80}	ca	\N	\N	18464	16	t
 316	{80,20}	buscar ca	sasistentes=n&sactividad=ca&que=ver	71	2208	2	t
@@ -148,6 +146,7 @@
 854	{50}	actividades	\N	\N	131072	20	t
 855	{50,10}	buscar activ	que=ver	119	131072	20	t
 135	{35}	ca n		72	2064	12	t
+373	{50,10,10}	sv  n	id_tipo_activ=112&status=2&periodo=desdeHoy	71	8	8	t
 856	{50,10,10}	sv  n	id_tipo_activ=112....&status=2&periodo=desdeHoy	71	131072	20	t
 857	{50,10,20}	sv agd	id_tipo_activ=133....&status=2&periodo=desdeHoy	71	131072	20	t
 858	{50,10,30}	sv s y sg	id_tipo_activ=1[45]....&status=2&periodo=desdeHoy	71	131072	20	t
@@ -206,3 +205,4 @@
 129	{37,60}	list varias cv	ssfsv=sv&sasistentes=agd&sactividad=cv&que=list_cjto	119	2064	12	t
 140	{35,70}	lista por ctr	lista=list_activ&n_agd=n&sasistentes=n&sactividad=ca	147	2064	12	t
 938	{10,70}	ayuda	\N	177	33816576	13	t
+374	{50,10,20}	sv agd	id_tipo_activ=133&status=2&periodo=desdeHoy	71	8	8	t

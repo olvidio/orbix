@@ -105,7 +105,6 @@
 125	\N	programas/sm-agd/cr1_05_E4.php	\N	\N
 126	\N	sg/que_centro_sg.php	\N	\N
 48	ubis	apps/ubis/controller/list_ctr.php	\N	listas de ubis
-122	admin	apps/usuarios/controller/usuario_grupo_lista.php	\N	lista grupos
 92	devel	apps/menus/controller/menus_exportar.php	\N	exportar menus
 40	admin	apps/menus/controller/menus_importar.php	\N	importar menus
 127	\N	des/tareas/sacd_ausencias.php	\N	\N
@@ -116,6 +115,7 @@
 88	notas	apps/notas/controller/asignaturas_pendientes.php	\N	cuadro alumnos-asignaturas
 130	\N	programas/actividades_fases_cambio.php	\N	\N
 132	\N	sg/lista_actividades_sg.php	\N	\N
+122	admin	apps/usuarios/controller/grupo_lista.php	\N	lista grupos
 134	\N	scdl/registro/mod_ini.php	\N	\N
 135	\N	sg/que_resumen.php	\N	\N
 137	\N	des/libros/que_libros.php	\N	\N
