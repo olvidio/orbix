@@ -67,6 +67,7 @@
 506	{20}	ayuda		72	0	9	t
 255	{30}	historicos	\N	\N	\N	\N	t
 115	{10}	agenda vcdl		72	0	5	t
+836	{20,10}	actas	\N	60	16	12	t
 100	{55,10}	buscar activ	que=ver&ssfsv=sv&sasistentes=sss+	119	8	8	t
 270	{60,40}	lista grupos	\N	122	33816576	13	t
 144	{40,10}	persona dl	obj_pau=PersonaDl&tipo=planning	61	2064	12	t
@@ -138,7 +139,6 @@
 840	{80,20}	buscar ca	sasistentes=nax&sactividad=ca&que=ver	71	18464	16	t
 842	{82,20}	buscar cve	sasistentes=nax&sactividad=cve&que=ver	71	18464	16	t
 838	{70,20}	buscar crt	sasistentes=nax&sactividad=crt&que=ver	71	18464	16	t
-836	{20,10}	actas	\N	60	16	12	t
 847	{40}	planning		72	0	20	t
 844	{10}	centros y casas	\N	\N	131072	20	t
 845	{10,10}	buscar 	simple=1&tipo=ctr&loc=dl	133	131072	20	t
@@ -206,3 +206,5 @@
 140	{35,70}	lista por ctr	lista=list_activ&n_agd=n&sasistentes=n&sactividad=ca	147	2064	12	t
 938	{10,70}	ayuda	\N	177	33816576	13	t
 374	{50,10,20}	sv agd	id_tipo_activ=133&status=2&periodo=desdeHoy	71	8	8	t
+1	{20,70}	listado actas	\N	178	16	12	t
+1029	{30}	historicos	\N	\N	\N	\N	t

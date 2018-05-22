@@ -173,3 +173,4 @@
 177	devel	apps/menus/view/como.phtml	\N	ayuda menus
 176	dbextern	apps/dbextern/controller/sincro_index.php	\N	Sincronizar con los datos de Listas
 167	core	fnjs_windowopen('http://10.0.0.16/redmine')	\N	abrir pag redmine
+178	notas	apps/notas/controller/acta_listado_anual.php	\N	listado anual actas
