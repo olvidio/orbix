@@ -136,15 +136,23 @@ class TiposActividades {
 	
 	function separarId($sregexp_id_tipo_activ) {
 		if(!empty($sregexp_id_tipo_activ)) {
-			for ($i=strlen($sregexp_id_tipo_activ);$i<6;$i++) {
+			$inc = 0;
+			if (($ini = strpos($sregexp_id_tipo_activ, '[')) !== false) {
+				$fin = strpos($sregexp_id_tipo_activ, ']');
+				$inc = $fin - $ini;
+			}
+			$long = empty($inc)? 6 : 6+$inc;
+			for ($i=strlen($sregexp_id_tipo_activ);$i<$long;$i++) {
 				$sregexp_id_tipo_activ.='.';
 			}
-			preg_match('/(\[\d+\]|\d|\.)(\[\d+\]|\d|\.)(\[\d+\]|\d|\.)(\d{3}|\.{3})/', $sregexp_id_tipo_activ,$matches);
-			$this->sregexp_id_tipo_activ=$matches[0];
-			$this->ssfsv=$matches[1];
-			$this->sasistentes=$matches[2];
-			$this->sactividad=$matches[3];
-			$this->snom_tipo=$matches[4];
+			preg_match('/(\[\d+\]|\d|\.)(\[\d+\]|\d|\.)(\[\d+\]|\d|\.)(\d{3}|\.*)/', $sregexp_id_tipo_activ,$matches);
+			if (!empty($matches)) {
+				$this->sregexp_id_tipo_activ=$matches[0];
+				$this->ssfsv=$matches[1];
+				$this->sasistentes=$matches[2];
+				$this->sactividad=$matches[3];
+				$this->snom_tipo=$matches[4];
+			}
 		} else {
 			return false;
 		}
