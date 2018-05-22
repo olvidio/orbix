@@ -27,10 +27,10 @@ switch ($Qque) {
 			$sPrefs_old = $oPref->getPreferencia();
 			$aPrefs_old = json_decode($sPrefs_old, true);
 			$aPrefs['colVisible'] = empty($aPrefs_old['colVisible'])? '' : $aPrefs_old['colVisible'];
-			$sPrefs = json_encode($aPrefs, true);
+			$QsPrefs = json_encode($aPrefs, true);
 		}
 
-		$oPref->setPreferencia($sPrefs);
+		$oPref->setPreferencia($QsPrefs);
 		if ($oPref->DBGuardar() === false) {
 			echo _('Hay un error, no se ha guardado');
 		}
