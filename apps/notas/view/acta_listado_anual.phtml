@@ -1,0 +1,14 @@
+<h3><?= _("listado de actas por orden de asignatura") ?></h3>
+<table>
+<?php
+foreach($aActas as $acta) {
+	?>
+	<tr>
+		<td> <?= $acta['nombre_corto'] ?> </td>
+		<td> <?= $acta['acta'] ?> </td>
+		<td> <?= $acta['f_acta'] ?> </td>
+	</tr>
+	<?php
+}
+?>
+</table>
