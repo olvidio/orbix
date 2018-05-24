@@ -255,7 +255,7 @@ class Lista {
 		$a_valores = $this->aDatos;
 		$id_tabla = $this->sid_tabla;
 		$grid_width = '900';
-		$grid_height = '200';
+		$grid_height = 'auto';
 
 		$sortcol=$this->ssortCol;
 		$botones="";
@@ -301,9 +301,9 @@ class Lista {
 				}
 				// Anchura del grid
 				$grid_width = (!empty($aPrefs['widthGrid']))? $aPrefs['widthGrid'] : '900';
-				// Altura del grid
-				$grid_height = (!empty($aPrefs['heightGrid']))? $aPrefs['heightGrid'] : '200';
-				break; // sale dell bucle.
+				// Altura del grid. Si no está en prefs: 0 para que calcule.
+				$grid_height = (!empty($aPrefs['heightGrid']))? $aPrefs['heightGrid'] : 0;
+				break; // sale del bucle.
 			} else { // buscar las opciones por defecto
 				continue;
 			}
@@ -783,7 +783,8 @@ class Lista {
 		";
 
 
-		$tt.="<div id=\"GridContainer_".$id_tabla."\"  style=\"width:{$grid_width}px; height:{$grid_height}px;\" >
+		//OJO. si heigth no es auto, al hacer resize desde html, los textos de debajo de la grid no se mueven.
+		$tt.="<div id=\"GridContainer_".$id_tabla."\"  style=\"width:{$grid_width}px; height:\"auto\";\" >
 		<div class=\"grid-header\">
 		  <span style=\"width:90%; display: inline-block;\">$botones</span>
 		  <span style=\"float:right\" class=\"ui-icon ui-icon-disk\" title=\""._('guardar selección de columnas')."\"
