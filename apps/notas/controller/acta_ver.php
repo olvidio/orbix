@@ -55,10 +55,14 @@ $Qnuevo = (integer) \filter_input(INPUT_POST, 'nuevo');
 
 $acta=urldecode($acta);
 //últimos
+$any = date('y');
+$dl = core\ConfigGlobal::mi_dele();
+
 $GesActas = new notas\GestorActa();
 $ult_lib = $GesActas->getUltimoLibro();
 $ult_pag = $GesActas->getUltimaPagina($ult_lib);
 $ult_lin = $GesActas->getUltimaLinea($ult_lib);
+$ult_acta = $GesActas->getUltimaActa($dl,$any);
 
 $obj = 'notas\\model\\entity\\ActaDl';
 
@@ -87,16 +91,13 @@ if (empty($Qnuevo) && !empty($acta))  { //significa que no es nuevo
 		$id_asignatura_actual=$id_asignatura;
 	}
 } else {
-	/*
 	//busco la última acta (para ayudar)
-	$any=date("y");
-	$query_acta="SELECT position ('/' in acta) as pos, substring(acta from 4 for position ('/' in acta)-4) as num 
-					FROM e_actas where acta ~ 'dlb .+/$any' 
-					ORDER BY pos DESC,num DESC limit 1 ";
+	//
 	//echo "aa: $query_acta<br>";
-	$ult_acta=$oDB->query($query_acta)->fetchColumn(1);
-	$ult_acta= "dlb ".$ult_acta."/".$any;
-	*/
+	$num_acta = $ult_acta + 1;
+	$ult_acta= "$dl {$ult_acta}/{$any}";
+	$acta= "$dl {$num_acta}/{$any}";
+	
 	if ($notas=="nuevo") { //vengo de un ca
 		$id_asignatura_actual=$id_asignatura;
 		// Busco al profesor como examinador principal.

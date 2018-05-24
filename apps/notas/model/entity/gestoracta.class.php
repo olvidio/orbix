@@ -58,7 +58,7 @@ class GestorActa Extends core\ClaseGestor {
 		$num = $oDblSt->fetchColumn();
 		if ($num != false) {
 			// Quitar los {}.
-			$num = trim($num, '{}');
+			$num = (integer) trim($num, '{}');
 		} else {
 			$num = 0;
 		}
