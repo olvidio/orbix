@@ -479,6 +479,7 @@ class Select3101 {
 						$this->incrementa($this->a_plazas_resumen[$padre]['ocupadas'][$dl][$plaza]);
 						if (!empty($child) && $child != $padre) {
 							$this->incrementa($a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
+							$this->incrementa($this->a_plazas_resumen[$child]['ocupadas'][$dl][$plaza]);
 						}
 					} else {
 						if (!empty($child) && $child == $this->mi_dele) {
