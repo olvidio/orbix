@@ -410,12 +410,17 @@ foreach($cActividades as $oActividad) {
 		}
 		$a_valores[$i][1]=$f_ini;
 		$a_valores[$i][2]=$f_fin;
-		if ($sPrefs == 'html') {
-			$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>'a','id_pau'=>$id_activ,'obj_pau'=>$obj_pau)));
-			$a_valores[$i][3]= array( 'ira'=>$pagina, 'valor'=>$nom_activ.$con);
+
+		if ($Qmodo != 'importar') {
+			if ($sPrefs == 'html') {
+				$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>'a','id_pau'=>$id_activ,'obj_pau'=>$obj_pau)));
+				$a_valores[$i][3]= array( 'ira'=>$pagina, 'valor'=>$nom_activ.$con);
+			} else {
+				$pagina='jsForm.mandar("#seleccionados","dossiers")';
+				$a_valores[$i][3]= array( 'script'=>$pagina, 'valor'=>$nom_activ.$con);
+			}
 		} else {
-			$pagina='jsForm.mandar("#seleccionados","dossiers")';
-			$a_valores[$i][3]= array( 'script'=>$pagina, 'valor'=>$nom_activ.$con);
+			$a_valores[$i][3] = $nom_activ.$con;
 		}
 		$a_valores[$i][4]=$h_ini;
 		$a_valores[$i][5]=$h_fin;
