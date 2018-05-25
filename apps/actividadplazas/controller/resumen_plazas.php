@@ -20,11 +20,6 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
-	if (!empty($go_to)) {
-		// add stack:
-		$stack = $oPosicion->getStack(1);
-		$go_to .= "&stack=$stack";
-	}
 } else { // vengo de actualizar
 	$id_activ = (integer)  filter_input(INPUT_POST, 'id_activ');
 	$nom_activ = (string)  filter_input(INPUT_POST, 'nom_activ');

@@ -15,31 +15,67 @@ use ubis\model\entity as ubis;
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miSfsv=core\ConfigGlobal::mi_sfsv();
 
-switch ($_POST['que']) {
+$Qque = (string) \filter_input(INPUT_POST, 'que');
+$Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
+$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
+
+switch ($Qque) {
 	case 'eliminar_ubi':
-		$obj = 'ubis\\model\\entity\\'.$_POST['obj_pau'];
-		$oUbi = new $obj($_POST['id_ubi']);
+		$obj = 'ubis\\model\\entity\\'.$Qobj_pau;
+		$oUbi = new $obj($Qid_ubi);
 		if ($oUbi->DBEliminar() === false) {
 			echo _('Hay un error, no se ha eliminado');
 		}
-		echo $oPosicion->go_atras(1);
 		die();
 		break;
 	case 'ubi':
-		$obj = 'ubis\\model\\entity\\'.$_POST['obj_pau'];
-		$oUbi = new $obj($_POST['id_ubi']);
+		$obj = 'ubis\\model\\entity\\'.$Qobj_pau;
+		$oUbi = new $obj($Qid_ubi);
 		break;
 	case 'direccion':
-		$idx = empty($_POST['idx'])? 0 : $_POST['idx'];
-		if ($idx === 'nuevo') {
-			$obj = 'ubis\\model\\entity\\'.$_POST['obj_dir'];
+		$Qidx = (integer) \filter_input(INPUT_POST, 'idx');
+		$Qobj_dir = (string) \filter_input(INPUT_POST, 'obj_dir');
+		$Qpropietario = (string) \filter_input(INPUT_POST, 'propietario');
+		$Qprincipal = (string) \filter_input(INPUT_POST, 'propietario');
+
+		if ($Qidx === 'nuevo') {
+			$obj = 'ubis\\model\\entity\\'.$Qobj_dir;
 			$oUbi = new $obj();
+			$id_direccion = $oUbi->getId_direccion();
+			$a_pkey= array('id_ubi'=>$Qid_ubi,'id_direccion'=>$id_direccion);
 		} else {
 			// puede haber más de una dirección
 			$a_id_direccion = explode(',',$_POST['id_direccion']);
-			$obj = 'ubis\\model\\entity\\'.$_POST['obj_dir'];
-			$oUbi = new $obj($a_id_direccion[$idx]);
+			$obj = 'ubis\\model\\entity\\'.$Qobj_dir;
+			$oUbi = new $obj($a_id_direccion[$Qidx]);
+			$a_pkey= array('id_ubi'=>$Qid_ubi,'id_direccion'=>$a_id_direccion[$Qidx]);
 		}
+		
+		switch ($Qobj_dir) {
+			case "DireccionCtrDl":
+				$xDireccion = new ubis\CtrDlxDireccion($a_pkey);
+				break;
+			case "DireccionCtrEx":
+				$xDireccion = new ubis\CtrExxDireccion($a_pkey);
+				break;
+			case "DireccionCdcDl":
+				$xDireccion = new ubis\CdcDlxDireccion($a_pkey);
+				break;
+			case "DireccionCdcEx":
+				$xDireccion = new ubis\CdcExxDireccion($a_pkey);
+				break;
+		}
+		if (!empty($Qpropietario)) {
+			$xDireccion->setPropietario('t');
+		} else {
+			$xDireccion->setPropietario('f');
+		}
+		if (!empty($Qprincipal)) {
+			$xDireccion->setPrincipal('t');
+		} else {
+			$xDireccion->setPrincipal('f');
+		}
+		$xDireccion->DBGuardar();
 		break;
 }
 
@@ -62,8 +98,8 @@ foreach ($cDatosCampo as $oDatosCampo) {
 			}
 		}
 		// Si es un centro los valores sf/sv no se pueden cambiar
-		if ($_POST['que'] == 'ubi') {
-			if ($_POST['obj_pau'] == 'CentroDl' OR $_POST['obj_pau'] == 'CentroEx') {
+		if ($Qque == 'ubi') {
+			if ($Qobj_pau == 'CentroDl' OR $Qobj_pau == 'CentroEx') {
 				switch ($miSfsv) {
 					case 1: // sv
 						$a_values_o['sv'] = 't';
@@ -99,45 +135,11 @@ foreach ($cDatosCampo as $oDatosCampo) {
 	}
 }
 $oUbi->setAllAtributes($a_values_o);
-$oUbi->DBGuardar();
 
-switch ($_POST['que']) {
-	case 'direccion':
-		$idx = empty($_POST['idx'])? 0 : $_POST['idx'];
-		if ($idx === 'nuevo') {
-			$id_direccion = $oUbi->getId_direccion();
-			$a_pkey= array('id_ubi'=>$_POST['id_ubi'],'id_direccion'=>$id_direccion);
-		} else {
-			// puede haber más de una dirección
-			$a_id_direccion = explode(',',$_POST['id_direccion']);
-			$a_pkey= array('id_ubi'=>$_POST['id_ubi'],'id_direccion'=>$a_id_direccion[$idx]);
-		}
-		switch ($_POST['obj_dir']) {
-			case "DireccionCtrDl":
-				$xDireccion = new ubis\CtrDlxDireccion($a_pkey);
-				break;
-			case "DireccionCtrEx":
-				$xDireccion = new ubis\CtrExxDireccion($a_pkey);
-				break;
-			case "DireccionCdcDl":
-				$xDireccion = new ubis\CdcDlxDireccion($a_pkey);
-				break;
-			case "DireccionCdcEx":
-				$xDireccion = new ubis\CdcExxDireccion($a_pkey);
-				break;
-		}
-		if (!empty($_POST['propietario'])) {
-			$xDireccion->setPropietario('t');
-		} else {
-			$xDireccion->setPropietario('f');
-		}
-		if (!empty($_POST['principal'])) {
-			$xDireccion->setPrincipal('t');
-		} else {
-			$xDireccion->setPrincipal('f');
-		}
-		$xDireccion->DBGuardar();
-		break;
-
+if ($oUbi->DBGuardar() === false) {
+	$msg_err = _("Hay un error, no se ha guardado.");
 }
-echo $oPosicion->go_atras(1);
+		
+if (!empty($msg_err)) { 
+	echo $msg_err;
+}	

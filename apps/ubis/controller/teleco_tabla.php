@@ -11,9 +11,28 @@ use ubis\model\entity as ubis;
 /***************  datos  **********************************/
 
 // dossier="1001";
-
 	
-switch ($_POST['obj_pau']) {
+$Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
+$oPosicion->setBloque('#ficha');
+$oPosicion->recordar();
+
+$Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
+$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
+	
+//Si vengo por medio de Posicion, borro la última
+if (isset($_POST['stack'])) {
+	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+	if ($stack != '') {
+		$oPosicion2 = new web\Posicion();
+		if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+			$Qid_sel=$oPosicion2->getParametro('id_sel');
+			$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+			$oPosicion2->olvidar($stack);
+		}
+	}
+}
+
+switch ($Qobj_pau) {
 	case 'Casa': // tipo dl pero no de la mia
 		$obj_ges_tel = 'ubis\\model\\entity\\GestorTelecoCdc';
 		$obj_ubi = 'ubis\\model\\entity\\Casa';
@@ -41,14 +60,14 @@ switch ($_POST['obj_pau']) {
 }
 
 $oLista=new $obj_ges_tel();
-$Coleccion=$oLista->getTelecos(array('id_ubi'=>$_POST['id_ubi']));
+$Coleccion=$oLista->getTelecos(array('id_ubi'=>$Qid_ubi));
 
 $botones = 0;
 /*
 1: modificar,eliminar,nuevo
 */
-if (strstr($_POST['obj_pau'],'Dl')) {
-	$oUbi = new $obj_ubi($_POST['id_ubi']);
+if (strstr($Qobj_pau,'Dl')) {
+	$oUbi = new $obj_ubi($Qid_ubi);
 	$dl = $oUbi->getDl();
 	if ($dl == core\ConfigGlobal::mi_dele()) {
 		// ----- sv sólo a scl -----------------
@@ -56,7 +75,7 @@ if (strstr($_POST['obj_pau'],'Dl')) {
 			$botones= "1";
 		}
 	}
-} else if (strstr($_POST['obj_pau'],'Ex')) {
+} else if (strstr($Qobj_pau,'Ex')) {
 	// ----- sv sólo a scl -----------------
 	if ($_SESSION['oPerm']->have_perm("scdl")) {
 			$botones= "1";
@@ -65,56 +84,7 @@ if (strstr($_POST['obj_pau'],'Dl')) {
 
 $tit_txt=_("Telecomunicaciones de un centro o casa");
 $ficha="ficha";
-?>
-<script>
-fnjs_nuevo=function(formulario){
-	$('#mod').val("nuevo");
-	$(formulario).attr('action',"apps/ubis/controller/teleco_editar.php");
-  	fnjs_enviar_formulario(formulario,'#<?= $ficha ?>');
-}
-fnjs_modificar=function(formulario){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-		$('#mod').val("editar");
-		$(formulario).attr('action',"apps/ubis/controller/teleco_editar.php");
-	  	fnjs_enviar_formulario(formulario,'#<?= $ficha ?>');
-	}
-}
-fnjs_eliminar=function(formulario){
-	var err;
-	var eliminar;
-	eliminar="<?php if (empty($eliminar_txt)) { echo ''; } else { echo $eliminar_txt; } ?>";
 
-	if (!eliminar) eliminar="<?= _("¿Está seguro que desea eliminar este registro?") ?>";
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-		if (confirm(eliminar) ) {
-			go=$('#go_to').val();
-			$('#mod').val("eliminar_teleco");
-			$(formulario).attr('action',"apps/ubis/controller/teleco_update.php");
-			$(formulario).submit(function() {
-				$.ajax({
-					data: $(this).serialize(),
-					url: $(this).attr('action'),
-					type: 'post',
-					complete: function (rta) {
-						rta_txt=rta.responseText;
-						if (rta_txt.search('id="ir_a"') != -1) {
-							fnjs_mostra_resposta(rta,'#main'); 
-						} else {
-							if (go) fnjs_update_div('#main',go); 
-						}
-					}
-				});
-				return false;
-			});
-			$(formulario).submit();
-			$(formulario).off();
-		}
-  	}
-}
-</script>
-<?php
 if ($botones == 1) {
 	$a_botones=array( array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(\"#seleccionados\")" ) ,
 				array( 'txt' => _('eliminar'), 'click' =>"fnjs_eliminar(\"#seleccionados\")" ) 
@@ -159,35 +129,29 @@ foreach ($Coleccion as $oFila) {
 	}
 	$c++;
 }
-
-$oHash = new web\Hash();
-$oHash->setcamposForm('mod!sel');
-$oHash->setcamposNo('mod!sel!scroll_id');
-$a_camposHidden = array(
-		'id_ubi'=>$_POST['id_ubi'],
-		'obj_pau'=>$_POST['obj_pau'],
-		);
-$oHash->setArraycamposHidden($a_camposHidden);
-
-/* ---------------------------------- html --------------------------------------- */
-?>
-<h3 class=subtitulo><?= ucfirst($tit_txt) ?></h3>
-<form id='seleccionados' id='seleccionados' name='seleccionados' action='' method='post'>
-<?= $oHash->getCamposHtml(); ?>
-<input type="hidden" id="mod" name="mod" value="" >
-<?php
 $oTabla = new web\Lista();
 $oTabla->setId_tabla('telecos_tabla');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
-echo $oTabla->mostrar_tabla();
-// ---------- BOTON DE NUEVO ----------
-if ($botones == 1) {
-	?>
-	<br><table cellspacing=3  class=botones><tr class=botones>
-	<td class=botones><input name="btn_new" type="button" value="<?= _("nuevo") ?>" onclick="fnjs_nuevo('#seleccionados');"></td>
-	</tr></table>
-	<?php
-}
-?>
+
+$oHash = new web\Hash();
+$oHash->setcamposForm('mod!sel');
+$oHash->setcamposNo('mod!sel!scroll_id!refresh');
+$a_camposHidden = array(
+		'id_ubi'=>$Qid_ubi,
+		'obj_pau'=>$Qobj_pau,
+		);
+$oHash->setArraycamposHidden($a_camposHidden);
+
+
+$a_campos = ['botones' => $botones,
+		'oPosicion' => $oPosicion,
+		'oHash' => $oHash,
+		'ficha' => $ficha,
+		'tit_txt' => $tit_txt,
+		'oTabla' => $oTabla,
+		];
+
+$oView = new core\View('ubis/controller');
+echo $oView->render('teleco_tabla.phtml',$a_campos);

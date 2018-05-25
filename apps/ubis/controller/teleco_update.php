@@ -15,7 +15,11 @@ use ubis\model\entity as ubis;
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miSfsv=core\ConfigGlobal::mi_sfsv();
 
-switch ($_POST['obj_pau']) {
+$Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
+$Qmod = (string) \filter_input(INPUT_POST, 'mod');
+$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
+
+switch ($Qobj_pau) {
 	case 'CentroDl':
 		$obj = 'ubis\\model\\entity\\TelecoCtrDl';
 		break;
@@ -30,24 +34,34 @@ switch ($_POST['obj_pau']) {
 		break;
 }
 
-switch ($_POST['mod']) {
+if (!empty($_POST['sel'])) { //vengo de un checkbox
+	$s_pkey=explode('#',$_POST['sel'][0]);
+	// he cambiado las comillas dobles por simples. Deshago el cambio.
+	$s_pkey = str_replace("'",'"',$s_pkey[0]);
+	$a_pkey=unserialize(core\urlsafe_b64decode($s_pkey));
+} else {
+	$s_pkey = (string) \filter_input(INPUT_POST, 's_pkey');
+	$a_pkey=unserialize(core\urlsafe_b64decode($s_pkey));
+	
+}
+
+switch ($Qmod) {
 	case 'eliminar_teleco':
-		if (!empty($_POST['sel'])) { //vengo de un checkbox
-			$s_pkey=explode('#',$_POST['sel'][0]);
-			// he cambiado las comillas dobles por simples. Deshago el cambio.
-			$s_pkey = str_replace("'",'"',$s_pkey[0]);
-			$a_pkey=unserialize(core\urlsafe_b64decode($s_pkey));
-		}
 		$oUbi = new $obj($a_pkey);
 		if ($oUbi->DBEliminar() === false) {
 			echo _('Hay un error, no se ha eliminado');
 		}
-		echo $oPosicion->go_atras(1);
+//		echo $oPosicion->go_atras(1);
 		die();
 		break;
 	case 'teleco':
-		$oUbi = new $obj($_POST['id_item']);
-		$oUbi->setId_ubi($_POST['id_ubi']);
+		if (empty($a_pkey)) {
+			// es nuevo
+			$oUbi = new $obj();
+			$oUbi->setId_ubi($Qid_ubi);
+		} else {
+			$oUbi = new $obj($a_pkey);
+		}
 		break;
 }
 
@@ -87,5 +101,3 @@ foreach ($cDatosCampo as $oDatosCampo) {
 }
 $oUbi->setAllAtributes($a_values_o);
 $oUbi->DBGuardar();
-
-echo $oPosicion->go_atras(1);

@@ -15,6 +15,7 @@ use web\Posicion;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$oPosicion->recordar();
 	
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
@@ -31,7 +32,6 @@ if (isset($_POST['stack'])) {
 		}
 	}
 } 
-$oPosicion->recordar();
 
 // el scroll id es de la página anterior, hay que guardarlo allí
 if (!empty($_POST['sel'])) { //vengo de un checkbox
@@ -130,32 +130,29 @@ $telfs = $oUbi->getTeleco("telf","*"," / ") ;
 $fax = $oUbi->getTeleco("fax","*"," / ") ;
 $mails = $oUbi->getTeleco("e-mail","*"," / ") ;
 
-echo $oPosicion->mostrar_left_slide(1);
-?>
-<div id="top" name="top">
-<table border=1><tr>
-<?php if (ConfigGlobal::$ubicacion == 'int') { ?>
-<td>
-<span class=link onclick=fnjs_update_div('#main','<?= $godossiers ?>') ><img src=<?= ConfigGlobal::$web_icons ?>/dossiers.gif border=0 width=40 height=40 alt='<?= $alt ?>'>(<?= $dos ?>)</span>
-</td>
-<?php } ?>
-<td class=titulo><span class=link onclick=fnjs_update_div('#main','<?= $gohome ?>')><?= $titulo ?></span></td>
-<td><?= $dl ?>(<?= $region ?>)</td></tr>
-<tr><td colspan=1><?= $direccion ?></td><td><?= $c_p ?></td><td><?= $poblacion ?></td></tr>
-<tr><td colspan=4>telfs: <?= $telfs ?></td></tr>
-<tr><td colspan=4>fax: <?= $fax ?></td></tr>
-<tr><td colspan=4>e-mails: <?= $mails ?></td></tr>
-<tr><th colspan=4><?= ucfirst(_("editar")) ?>: 
-		&nbsp;<span class="link_inv" onclick="fnjs_update_div('#ficha','<?= $go_ubi ?>');"><?= $ubi ?></span>
-		&nbsp;&nbsp;<span class="link_inv" onclick="fnjs_update_div('#ficha','<?= $go_dir ?>');"><?= _("dirección") ?></span>
-		&nbsp;&nbsp;<span class="link_inv" onclick="fnjs_update_div('#ficha','<?= $go_tel ?>');"><?= _("telecos") ?></span>
-		</th></tr>
-</table>
-</div>
-<div id="ficha" name="ficha">
-<?php
-if (ConfigGlobal::$ubicacion == 'int') {
-	include ("apps/dossiers/controller/lista_dossiers.php");
-}
-?>
-</div>
+
+$a_campos = ['oPosicion' => $oPosicion,
+			'godossiers' => $godossiers,
+			'alt' => $alt,
+			'dos' => $dos,
+			'gohome' => $gohome,
+			'titulo' => $titulo,
+			'dl' => $dl,
+			'region' => $region,
+			'direccion' => $direccion,
+			'c_p' => $c_p,
+			'poblacion' => $poblacion,
+			'telfs' => $telfs,
+			'fax' => $fax,
+			'mails' => $mails,
+			'go_ubi' => $go_ubi,
+			'ubi' => $ubi,
+			'go_dir' => $go_dir,
+			'go_tel' => $go_tel,
+			'pau' => $pau,
+			'id_pau'=>$id_pau,
+			'Qobj_pau'=>$obj_pau
+ 			];
+
+$oView = new core\View('ubis/controller');
+echo $oView->render('home_ubis.phtml',$a_campos);

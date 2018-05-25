@@ -40,14 +40,6 @@ class Ficha {
 *			0  indica seleccionar un registro empezando en el registro número 0
 *			n  indica seleccionar un registro empezando en el registro número n
 *
-*	Todos los $go_to se componen de dos partes: página y frame. Están separados por '|'
-*		El argumento de frame es opcional. El frame debe empezar desde arriba: top.main.ficha
-*
-*	$go_toG:	es la página a la que se debe ir al finalizar la operacion de Guardar
-*	$go_toN:	es la página a la que se debe ir al finalizar la operacion de Nuevo
-*	$go_toE:	es la página a la que se debe ir al finalizar la operacion de Eliminar
-*	$go_toQ:	es la página a la que se debe ir al finalizar la operacion de Quitar dirección
-*
 *	Funciones requeridas:
 *		- datos_campo($oDB,$tabla,$camp,$que) incluida en "func_tablas.php"
 *		- primaryKey($tabla) incluida en "func_tablas.php"
@@ -62,7 +54,6 @@ $a_campos = $obj->getTot();
 <form action="programas/ficha_ver.php" method="POST" target="ficha" name="frm2" id="frm2">
 <input type="hidden" id="onanar" name="onanar" value="">
 <input type="hidden" id="b" name="b" value="">
-<input type="Hidden" id="go_to" name="go_to" value="">
 	<?php
 		// para el caso de nueva ficha cuando no existe ninguna
 		if ($n==0){

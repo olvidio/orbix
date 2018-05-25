@@ -1,0 +1,120 @@
+<script>
+fnjs_guardar=function(formulario){
+	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
+	//alert ("EEE "+rr);
+	if (rr=='ok') {
+		$('#que').val('ubi');
+		$(formulario).attr('action',"apps/ubis/controller/ubis_update.php");
+		$(formulario).submit(function() {
+			$.ajax({
+				data: $(this).serialize(),
+				type: 'post',
+				url: $(this).attr('action'),
+				complete: function (rta) {
+					rta_txt=rta.responseText;
+					if (rta_txt != '' && rta_txt != '\\n') {
+						alert ('respuesta: '+rta_txt);
+					} else {
+						<?= $oPosicion->js_atras(1); ?>
+					}
+				}
+			});
+			return false;
+		});
+		$(formulario).submit();
+		$(formulario).off();
+	}
+}
+fnjs_eliminar=function(formulario){
+	if (confirm("<?= _("¿Esta seguro que desea borrar este centro?");?>") ) {
+	   	$('#que').val('eliminar_ubi');
+	   	$(formulario).attr('action','apps/ubis/controller/ubis_update.php');
+		$(formulario).submit(function() {
+			$.ajax({
+				data: $(this).serialize(),
+				url: $(this).attr('action'),
+				type: 'post',
+				complete: function (rta) {
+					rta_txt = rta.responseText;
+					if (rta_txt != '' && rta_txt != '\\n') {
+						alert ('respuesta: '+rta_txt);
+					} else {
+						<?= $oPosicion->js_atras(2); ?>
+					}
+				}
+			});
+			return false;
+		});
+		$(formulario).submit();
+		$(formulario).off();
+	}
+}
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<form id='frm2' >
+<?= $oHash->getCamposHtml(); ?>
+<input type="Hidden" id="que"  name="que" value="">
+<table>
+<tr><td class="etiqueta"><?= ucfirst(_("tipo de ubi")) ?>
+	<input class="contenido" id="tipo_ubi"  name="tipo_ubi" value="<?= $tipo_ubi ?>" size="5">
+	<?= ucfirst(_("delegación")) ?><input class="contenido" name="dl"  value="<?= $dl ?>" size="6">
+	<?= ucfirst(_("en uso")) ?><input class="contenido" type="Checkbox" name="status" <?= $chk ?>>
+	<?= ucfirst(_("región")) ?><input class="contenido" name="region" value="<?= $region ?>" size="7">
+	</td></tr>
+<tr><td class="etiqueta"><?= ucfirst(_("nombre del centro")) ?>
+		<input class="contenido" name="nombre_ubi" size="35" value="<?= $nombre_ubi ?>">
+		<?= ucfirst(_("¿puede ser cdc?")) ?>
+		<input class="contenido" type="Checkbox" name="cdc" <?= $chk_cdc ?>>
+	</td></tr>
+<tr><td class="etiqueta">
+	    <?= ucfirst(_("tipo de centro")) ?>
+		<input class="contenido" name="tipo_ctr" size="9" value="<?= $tipo_ctr ?>"> 
+		<?= ucfirst(_("nºejemplares pi")) ?>
+		<input class="contenido" name="num_pi" size="3" value="<?= $num_pi ?>"> 
+		<?= ucfirst(_("nºcartas")) ?>
+		<input class="contenido" name="num_cartas" size="3" value="<?= $num_cartas ?>">
+		<?= ucfirst(_("nºcartas mensuales")) ?>
+		<input class="contenido" name="num_cartas_mensuales" size="3" value="<?= $num_cartas_mensuales ?>">
+	</td></tr>
+<tr><td class="etiqueta"><?= ucfirst(_("tipo de labor")) ?>
+	</td></tr>
+<tr><td>
+<?= $oPermActiv->cuadros_check("tipo_labor",$tipo_labor); ?>
+	</td></tr>
+<tr><td class="etiqueta">
+	<?= ucfirst(_("habitaciones individuales")) ?>
+	<input class="contenido" name="num_habit_indiv" size="3" value="<?= $num_habit_indiv ?>">
+	<?= ucfirst(_("plazas")) ?><input class="contenido" name="plazas" size="3" value="<?= $plazas ?>">
+	</td></tr>
+<tr><td>
+	<?= ucfirst(_("nº de buzón")) ?>
+		<input class="contenido" name="n_buzon" size="5" value="<?= $n_buzon ?>">
+	</td></tr>
+<tr><td>	
+	<?= ucfirst(_("observaciones")) ?>
+	<textarea name="observ" rows="3" style="height: 40px; width: 300px; text-align: left;"><?= $observ ?></textarea>
+	</td></tr>
+<tr><td>
+	<?= ucfirst(_("centro padre")) ?>
+	<?= $oDesplCentros->desplegable(); ?>
+	</td></tr>
+</table>
+<?php
+// -----------------------------------  Botones  ----------------------
+if (!empty($botones)) {
+	echo "<table><tr class=botones>";
+	$b=strtok($botones,",");
+	while ($b) {
+		if ($b==1){
+			$txt_g=ucwords(_("guardar cambios"));
+			echo "<th class='link_inv' onclick=\"fnjs_guardar('#frm2');\">$txt_g</th>"; }
+		if ($b==2){
+			$txt_e=ucwords(_("eliminar"));
+			echo "<th class='link_inv' onclick=\"fnjs_eliminar('#frm2');\">$txt_e</th>"; }
+		$b=strtok(",");
+	} 
+	echo "</tr></table><br>";
+}
+// fin ----------------------------  Botones  ----------------------
+?>
+</form>

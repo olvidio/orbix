@@ -18,8 +18,12 @@ use ubis\model\entity as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$a_pkey= array('id_ubi'=>$_POST['id_ubi'],'id_direccion'=>$_POST['id_direccion']);
-switch ($_POST['obj_dir']) {
+$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
+$Qobj_dir = (string) \filter_input(INPUT_POST, 'obj_dir');
+$Qid_direccion = (integer) \filter_input(INPUT_POST, 'id_direccion');
+
+$a_pkey= array('id_ubi'=>$Qid_ubi,'id_direccion'=>$Qid_direccion);
+switch ($Qobj_dir) {
 	case "DireccionCtrDl":
 		$oUbi= new ubis\CtrDlxDireccion($a_pkey);
 		break;
@@ -33,8 +37,13 @@ switch ($_POST['obj_dir']) {
 		$oUbi= new ubis\CdcExxDireccion($a_pkey);
 		break;
 }
-if ($oUbi->DBGuardar() === false) {
-	echo _('Hay un error, no se ha guardado');
-}
 
-echo $oPosicion->go_atras(1);
+if ($oUbi->DBGuardar() === false) {
+	$msg_err = _("Hay un error, no se ha guardado.");
+}
+		
+if (!empty($msg_err)) { 
+	echo $msg_err;
+} else {
+	echo $oPosicion->go_atras(1);
+}	

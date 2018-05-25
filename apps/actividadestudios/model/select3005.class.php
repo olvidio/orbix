@@ -65,8 +65,7 @@ class Select3005 {
 	}
 
 	public function getCabeceras() {
-		$a_cabeceras=array( _("interés"),
-							_("asignatura"),
+		$a_cabeceras=array( _("asignatura"),
 							_("créditos"),
 							_("tipo"),
 							_("profesor"),
@@ -110,7 +109,6 @@ class Select3005 {
 			$oAsignatura = new asignaturas\Asignatura($id_asignatura);
 			$nombre_corto=$oAsignatura->getNombre_corto();
 			$creditos=$oAsignatura->getCreditos();
-			$interes=$oActividadAsignatura->getInteres();
 			$id_profesor=$oActividadAsignatura->getId_profesor();
 			if (!empty($id_profesor)) {
 				$oPersona = personas\Persona::NewPersona($id_profesor);
@@ -138,14 +136,13 @@ class Select3005 {
 				$a_valores[$c]['sel']="";
 			}
 					
-			$a_valores[$c][1]="$interes";
-			$a_valores[$c][2]="$nombre_corto";
-			$a_valores[$c][3]=$creditos;
-			$a_valores[$c][4]=$tipo;
-			$a_valores[$c][5]=$nom;
-			$a_valores[$c][6]=$aviso;
-			$a_valores[$c][7]=$f_ini;
-			$a_valores[$c][8]=$f_fin;
+			$a_valores[$c][1]="$nombre_corto";
+			$a_valores[$c][2]=$creditos;
+			$a_valores[$c][3]=$tipo;
+			$a_valores[$c][4]=$nom;
+			$a_valores[$c][5]=$aviso;
+			$a_valores[$c][6]=$f_ini;
+			$a_valores[$c][7]=$f_fin;
 		}
 		if (!empty($a_valores)) {
 			// Estas dos variables vienen de la pagina 'padre' dossiers_ver.php

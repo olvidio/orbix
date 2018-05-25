@@ -32,21 +32,21 @@ if (isset($_POST['stack'])) {
 		}
 	}
 }
-$Qmodo = empty($_POST['modo'])? '' : $_POST['modo'];
+$Qmodo = (string) \filter_input(INPUT_POST, 'modo');
 
-$Qes_sacd = empty($_POST['es_sacd'])? '' : $_POST['es_sacd'];
-$Qna = empty($_POST['na'])? '' : $_POST['na'];
-$Qbreve = empty($_POST['breve'])? '' : $_POST['breve'];
-$Qque = empty($_POST['que'])? '' : $_POST['que'];
-$Qtipo = empty($_POST['tipo'])? '' : $_POST['tipo'];
-$Qtabla = empty($_POST['tabla'])? '' : $_POST['tabla'];
+$Qes_sacd = (string) \filter_input(INPUT_POST, 'es_sacd');
+$Qna = (string) \filter_input(INPUT_POST, 'na');
+$Qbreve = (string) \filter_input(INPUT_POST, 'breve');
+$Qque = (string) \filter_input(INPUT_POST, 'que');
+$Qtipo = (string) \filter_input(INPUT_POST, 'tipo');
+$Qtabla = (string) \filter_input(INPUT_POST, 'tabla');
 
-$Qexacto = empty($_POST['exacto'])? '' : $_POST['exacto'];
-$Qcmb = empty($_POST['cmb'])? '' : $_POST['cmb'];
-$Qnombre = empty($_POST['nombre'])? '' : $_POST['nombre'];
-$Qapellido1 = empty($_POST['apellido1'])? '' : $_POST['apellido1'];
-$Qapellido2 = empty($_POST['apellido2'])? '' : $_POST['apellido2'];
-$Qcentro = empty($_POST['centro'])? '' : $_POST['centro'];
+$Qexacto = (string) \filter_input(INPUT_POST, 'exacto');
+$Qcmb = (string) \filter_input(INPUT_POST, 'cmb');
+$Qnombre = (string) \filter_input(INPUT_POST, 'nombre');
+$Qapellido1 = (string) \filter_input(INPUT_POST, 'apellido1');
+$Qapellido2 = (string) \filter_input(INPUT_POST, 'apellido2');
+$Qcentro = (string) \filter_input(INPUT_POST, 'centro');
 
 if (!empty($Qtabla)) {
 	$nom_tabla=substr($Qtabla,2);

@@ -107,8 +107,6 @@ fnjs_guardar=function(formulario){
 	<td>
 		<input id='f_fin' name='f_fin' type="text" class="fecha" size="11" value="<?= $f_fin ?>" onchange="fnjs_comprobar_fecha('#f_ini')">
 		</td></tr>
-<tr><td class=etiqueta><?= _("especial interés") ?></td>
-	<td><input type="Checkbox" id="interes" name="interes" value="true" <?= $chk_interes ?>></td></tr>
 </table>
 <br>
 <input type="button" id="guardar" name="guardar" onclick="fnjs_guardar(this.form);" value="<?= ucfirst(_("guardar")); ?>" align="MIDDLE">

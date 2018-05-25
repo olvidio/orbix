@@ -8,20 +8,26 @@
 // FIN de  Cabecera global de URL de controlador ********************************
 
 	
-$obj = 'ubis\\model\\entity\\Gestor'.$_POST['obj_dir'];
+$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
+$Qobj_dir = (string) \filter_input(INPUT_POST, 'obj_dir');
+$Qc_p = (string) \filter_input(INPUT_POST, 'c_p');
+$Qciudad = (string) \filter_input(INPUT_POST, 'ciudad');
+$Qpais = (string) \filter_input(INPUT_POST, 'pais');
+
+$obj = 'ubis\\model\\entity\\Gestor'.$Qobj_dir;
 $oGesDir = new $obj();
 
 /*miro las condiciones. las variables son: centro,ciudad */
-if (!empty($_POST['c_p'])){
-	$aWhere['c_p']=$_POST['c_p'];
+if (!empty($Qc_p)){
+	$aWhere['c_p']=$Qc_p;
 	$aOperador['c_p']='LIKE';
 }
-if (!empty($_POST['ciudad'])){
-	$aWhere['poblacion']=$_POST['ciudad'];
+if (!empty($Qciudad)){
+	$aWhere['poblacion']=$Qciudad;
 	$aOperador['poblacion']='sin_acentos';
 }
-if (!empty($_POST['pais'])){
-	$aWhere['pais']=$_POST['pais'];
+if (!empty($Qpais)){
+	$aWhere['pais']=$Qpais;
 	$aOperador['pais']='sin_acentos';
 }
 
@@ -43,7 +49,7 @@ $cDirecciones = $oGesDir->getDirecciones($aWhere,$aOperador);
 foreach ($cDirecciones as $oDireccion) {
 	$i++;
 	$id_direccion=$oDireccion->getId_direccion();
-	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/ubis/controller/direcciones_asignar.php?'.http_build_query(array('id_ubi'=>$_POST['id_ubi'],'id_direccion'=>$id_direccion,'obj_dir'=>$_POST['obj_dir'],'pais'=>$_POST['pais']))); 
+	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/ubis/controller/direcciones_asignar.php?'.http_build_query(array('id_ubi'=>$Qid_ubi,'id_direccion'=>$id_direccion,'obj_dir'=>$Qobj_dir,'pais'=>$Qpais))); 
 	$a_valores[$i][1]=$id_direccion;
 	$a_valores[$i][2]= array( 'ira'=>$pagina, 'valor'=>'ok');
 	$a_valores[$i][3]=$oDireccion->getDireccion();
@@ -56,15 +62,18 @@ foreach ($cDirecciones as $oDireccion) {
 	$a_valores[$i][10]=$oDireccion->getObserv();
 }
  
-$pagina=web\Hash::link('apps/ubis/controller/direcciones_editar.php?'.http_build_query(array('mod'=>'nuevo','id_ubi'=>$_POST['id_ubi'],'obj_dir'=>$_POST['obj_dir'])));
-?>
-<h2 class=titulo><?= ucfirst(_("tabla de direcciones")); ?></h2>
-<?php
+$url_nueva=web\Hash::link('apps/ubis/controller/direcciones_editar.php?'.http_build_query(array('mod'=>'nuevo','id_ubi'=>$Qid_ubi,'obj_dir'=>$Qobj_dir)));
+
 $oTabla = new web\Lista();
 $oTabla->setId_tabla('direcciones_tabla');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
-echo $oTabla->mostrar_tabla();
-?>
-<br><h3><span class="link" onclick="fnjs_update_div('#main','<?= $pagina; ?>');"><?= _("crear otra nueva"); ?></span></h3>
+
+$a_campos = [
+			'oTabla' => $oTabla,
+			'url_nueva' => $url_nueva,
+			];
+
+$oView = new core\View('ubis\controller');
+echo $oView->render('direcciones_tabla.phtml',$a_campos);

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 use usuarios\model\entity as usuarios;
 use ubis\model\entity as ubis;
 /**
@@ -21,10 +21,16 @@ use ubis\model\entity as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$id_ubi = empty($_POST['id_ubi'])? '' : $_POST['id_ubi'];
-$mod = empty($_POST['mod'])? '' : $_POST['mod'];
+$Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
+//$oPosicion->recordar($Qrefresh);
 
-switch ($_POST['obj_dir']) {
+$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
+$Qmod = (string) \filter_input(INPUT_POST, 'mod');
+$Qobj_dir = (string) \filter_input(INPUT_POST, 'obj_dir');
+// id_direccion es string, porque puede ser una lista de varios separados por coma
+$Qid_direccion = (string) \filter_input(INPUT_POST, 'id_direccion');
+
+switch ($Qobj_dir) {
 	case 'DireccionCdc': // tipo dl pero no de la mia
 		$obj_x = 'ubis\\model\\entity\\CdcxDireccion';
 		$obj_ubi = 'ubis\\model\\entity\\Casa';
@@ -50,11 +56,10 @@ switch ($_POST['obj_dir']) {
 		$obj_ubi = 'ubis\\model\\entity\\CentroEx';
 		break;
 }
-$obj = 'ubis\\model\\entity\\'.$_POST['obj_dir'];
+$obj = 'ubis\\model\\entity\\'.$Qobj_dir;
 
-if ($mod == 'nuevo') {
-
-	$oUbi = new $obj_ubi($id_ubi);
+if ($Qmod == 'nuevo') {
+	$oUbi = new $obj_ubi($Qid_ubi);
 	$sf = $oUbi->getSf();
 	$dl = $oUbi->getDl();
 	$tipo_ubi = $oUbi->getTipo_ubi();
@@ -68,19 +73,15 @@ if ($mod == 'nuevo') {
 		$a_campos[$camp] = $valor_predeterminado;
 
 	}
-	$a_campos['obj_dir'] = $_POST['obj_dir'];
-	$a_campos['id_ubi'] = $id_ubi;
-	$a_campos['idx'] = 'nuevo';
-	$a_campos['id_direccion'] = '';
-	//print_r($a_campos);
+	$idx = 'nuevo';
+	$id_direccion = '';
 	$golistadir = '';
-	$quitardir = '';
 } else {
 	// puede haber más de una dirección
-	$a_id_direccion = explode(',',$_POST['id_direccion']);
+	$a_id_direccion = explode(',',$Qid_direccion);
 	$num_dir = count($a_id_direccion);
-	$idx = empty($_POST['idx'])? 0 : $_POST['idx'];
-	$inc = empty($_POST['inc'])? '' : $_POST['inc'];
+	$idx = (integer) \filter_input(INPUT_POST, 'idx');
+	$inc = (string) \filter_input(INPUT_POST, 'inc');
 
 	if ($inc == 'mas' & $idx < $num_dir-1) $idx++;
 	if ($inc == 'menos' & $idx > 0) $idx--;
@@ -88,27 +89,44 @@ if ($mod == 'nuevo') {
 	$id_direccion_actual = $a_id_direccion[$idx];
 	$oDireccion = new $obj($a_id_direccion[$idx]);
 
-	$xDireccion = new $obj_x(array('id_ubi'=>$id_ubi,'id_direccion'=>$a_id_direccion[$idx]));
+	$xDireccion = new $obj_x(array('id_ubi'=>$Qid_ubi,'id_direccion'=>$a_id_direccion[$idx]));
 
-	$a_campos = $oDireccion->getTot();
-	$a_campos['propietario'] = $xDireccion->getPropietario();
-	$a_campos['principal'] = $xDireccion->getPrincipal();
+	//$a_campos = $oDireccion->getTot();
+	$nom_sede = $oDireccion->getNom_sede(); 
+	$direccion = $oDireccion->getDireccion(); 
+	$a_p = $oDireccion->getA_p(); 
+	$c_p = $oDireccion->getC_p(); 
+	$cp_dcha = $oDireccion->getCp_dcha(); 
+	$poblacion = $oDireccion->getPoblacion(); 
+	$provincia = $oDireccion->getProvincia(); 
+	$pais = $oDireccion->getPais(); 
+	$observ = $oDireccion->getObserv(); 
+	$f_direccion = $oDireccion->getF_direccion(); 
+	$latitud = $oDireccion->getLatitud(); 
+	$longitud = $oDireccion->getLongitud(); 
+	$propietario = $xDireccion->getPropietario();
+	$principal = $xDireccion->getPrincipal();
 
-	$oUbi = new $obj_ubi($id_ubi);
+	$oUbi = new $obj_ubi($Qid_ubi);
 	$sf = $oUbi->getSf();
 	$dl = $oUbi->getDl();
 	$tipo_ubi = $oUbi->getTipo_ubi();
 
-	$a_campos['mas'] = ($idx < $num_dir-1)? 1 : 0; 
-	$a_campos['menos'] = ($idx < 1)? 0 : 1; 
-	$a_campos['obj_dir'] = $_POST['obj_dir'];
-	$a_campos['idx'] = $idx;
-	$a_campos['id_direccion'] = $_POST['id_direccion'];
-	$a_campos['id_direccion_actual'] = $id_direccion_actual;
-	$a_campos['id_ubi'] = $id_ubi;
+	$mas = ($idx < $num_dir-1)? 1 : 0; 
+	$menos = ($idx < 1)? 0 : 1; 
+	$obj_dir = $Qobj_dir;
+	$idx = $idx;
+	$id_direccion = $Qid_direccion;
+	$id_direccion_actual = $id_direccion_actual;
+	$id_ubi = $Qid_ubi;
 
-	$golistadir = web\Hash::link('apps/ubis/controller/direcciones_que.php?'.http_build_query(array('id_ubi'=>$id_ubi,'id_direccion'=>$_POST['id_direccion'],'obj_dir'=>$_POST['obj_dir'])));
-	$quitardir = web\Hash::link('apps/ubis/controller/direcciones_quitar.php?'.http_build_query(array('id_ubi'=>$id_ubi,'id_direccion'=>$_POST['id_direccion'],'obj_dir'=>$_POST['obj_dir'],'hno'=>'idx')));
+	$golistadir = web\Hash::link('apps/ubis/controller/direcciones_que.php?'.http_build_query(array('id_ubi'=>$Qid_ubi,'id_direccion'=>$Qid_direccion,'obj_dir'=>$Qobj_dir)));
+	
+	$oHashPlano = new web\Hash();
+	$oHashPlano->setUrl('apps/ubis/controller/plano_bytea.php');
+	$oHashPlano->setCamposForm('obj_dir!act!id_direccion');
+	$h = $oHashPlano->linkSinVal();
+
 }
 
 //----------------------------------Permisos según el usuario
@@ -123,14 +141,14 @@ $botones = 0;
 3: eliminar
 4: quitar direccion
 */
-if (strstr($_POST['obj_dir'],'Dl')) {
+if (strstr($Qobj_dir,'Dl')) {
 	if ($dl == core\ConfigGlobal::mi_dele()) {
 		// ----- sv sólo a scl -----------------
 		if ($_SESSION['oPerm']->have_perm("scdl")) {
 					$botones= "1,4,5";
 		}
 	}
-} else if (strstr($_POST['obj_dir'],'Ex')) {
+} else if (strstr($Qobj_dir,'Ex')) {
 	// ----- sv sólo a scl -----------------
 	if ($_SESSION['oPerm']->have_perm("scdl")) {
 				$botones= "1,4,5";
@@ -139,7 +157,7 @@ if (strstr($_POST['obj_dir'],'Dl')) {
 $a_campos['botones'] = $botones;
 //------------------------------------------------------------------------
 
-if (empty($mod) & empty($_POST['id_direccion'])) {
+if (empty($Qmod) & empty($Qid_direccion)) {
  	?>
 	<table><tr><td><?= _("Este ubi no dispone de una dirección. Compruebe primero si existe, en este caso, asígnesela. En caso contrario cree una nueva.") ?></td></tr></table>
 	<br>
@@ -150,46 +168,52 @@ if (empty($mod) & empty($_POST['id_direccion'])) {
 	die();
 }
 
-?>
-<script>
-fnjs_guardar_dir=function(){
-	var rr=fnjs_comprobar_campos('#frm2','<?= addslashes($obj) ?>');
-	if (rr=='ok') {
-	   $('#que').val('direccion');
-	   $('#frm2').attr('action','apps/ubis/controller/ubis_update.php');
-	   fnjs_enviar_formulario('#frm2');
-	}
-}
+$chk_dcha = (!empty($cp_dcha) && $cp_dcha=="t")? 'checked' : '';
+$chk_propietario = (!empty($propietario) && $propietario=="t")? 'checked' : '';
+$chk_principal = (!empty($principal) && $principal=="t")? 'checked' : '';
 
-fnjs_nuevo=function(f,go){
-   $('#onanar').val(f);
-   $('#go_to').val(go);
-   $('#frm2').attr('action','programas/ficha_nueva.php');
-   fnjs_enviar_formulario('#frm2');
-}
+$campos_chk = 'cp_dcha!propietario!principal';
 
-fnjs_eliminar=function(f,r,go){
-	alert ("¿Está seguro que desea eliminar esta ficha?");
-   $('#onanar').val(f);
-   $('#b').val(r);
-   $('#go_to').val(go);
-   $('#frm2').attr('action','programas/ficha_eliminar.php');
-   fnjs_enviar_formulario('#frm2');
-}
+$oHash = new web\Hash();
+$oHash->setcamposForm('a_p!c_p!direccion!f_direccion!latitud!longitud!nom_sede!observ!pais!poblacion!provincia!que');
+$oHash->setcamposNo('que!'.$campos_chk);
+$a_camposHidden = array(
+		'campos_chk'=>$campos_chk,
+		'obj_dir'=>$obj_dir,
+		'id_direccion'=>$id_direccion,
+		'idx'=>$idx,
+		'id_ubi'=>$id_ubi
+		);
+$oHash->setArraycamposHidden($a_camposHidden);
 
-fnjs_quitar_dir=function(idx){
-	url ='<?= $quitardir ?>'+'&idx='+idx;
-   fnjs_update_div('#ficha',url);
-}
-
-fnjs_add_dir=function(){
-   fnjs_update_div('#ficha','<?= $golistadir ?>');
-}
-
-</script>
-<?php
+$a_campos = ['oPosicion' => $oPosicion,
+		'oHash' => $oHash,
+		'id_ubi' => $Qid_ubi,
+		'id_direccion' => $id_direccion,
+		'obj' => $obj,
+		'obj_dir' => $Qobj_dir,
+		'idx' => $idx,
+		'nom_sede' => $nom_sede,
+		'chk_propietario' => $chk_propietario,
+		'direccion' => $direccion,
+		'chk_principal' => $chk_principal,
+		'a_p' => $a_p,
+		'chk_dcha' => $chk_dcha,
+		'c_p' => $c_p,
+		'poblacion' => $poblacion,
+		'provincia' => $provincia,
+		'pais' => $pais,
+		'observ' => $observ,
+		'f_direccion' => $f_direccion,
+		'latitud' => $latitud,
+		'longitud' => $longitud,
+		'botones' => $botones,
+		'id_direccion_actual' => $id_direccion_actual,
+		'golistadir' => $golistadir,
+		'mas' => $mas,
+		'menos' => $menos,
+		'h' => $h,
+	];
 
 $oView = new core\View('ubis\controller');
 echo $oView->render('direccion_form.phtml',$a_campos);
-
-?>

@@ -296,6 +296,12 @@ if ($loc=='ex') {
 $oDesplLista->setOpciones($aOpciones);
 $oDesplLista->setOpcion_sel($que_lista);
 
+$oTabla = new Lista();
+$oTabla->setId_tabla('list_ctr');
+$oTabla->setCabeceras($a_cabeceras);
+$oTabla->setBotones($a_botones);
+$oTabla->setDatos($a_valores);
+
 $oHash = new Hash();
 $oHash->setcamposForm('loc!que_lista');
 
@@ -307,51 +313,14 @@ $a_camposHidden1 = array(
 		);
 $oHash1->setArraycamposHidden($a_camposHidden1);
 
-?>
-<script>
-fnjs_actualizar=function(){
-  $('#modifica').attr('action','apps/ubis/controller/list_ctr.php');
-  fnjs_enviar_formulario('#modifica');
-}
 
-fnjs_modificar=function(formulario){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-		$(formulario).attr('action',"apps/ubis/controller/home_ubis.php");
-  		fnjs_enviar_formulario(formulario);
-  	}
-}
-fnjs_left_side_hide();
-</script>
-<form id=modifica name=modifica method="POST">
-<?= $oHash->getCamposHtml(); ?>
-<h3><?= ucfirst(_("listado de centros o casas")); ?></h3>
-<table>
-<tr>
-<td class=etiqueta>
-<?= ucfirst(_("localizacion")); ?>
-</td>
-<td>
-<?= $oDesplDl->desplegable(); ?>
-<td class=etiqueta>
-<?= ucfirst(_("tipo de ubi")); ?>
-</td>
-<td class=contenido>
-<?= $oDesplLista->desplegable(); ?>
-</td>
-<td>
-<input type="button" value="listar" onclick="fnjs_actualizar()">
-</td></tr>
-</table>
-</form>
-<form id="seleccionados" name="seleccionados" action="" method="post">
-<?= $oHash1->getCamposHtml(); ?>
-<?php
-$oTabla = new Lista();
-$oTabla->setId_tabla('list_ctr');
-$oTabla->setCabeceras($a_cabeceras);
-$oTabla->setBotones($a_botones);
-$oTabla->setDatos($a_valores);
-echo $oTabla->mostrar_tabla();
-?>
-</form>
+$a_campos = ['oPosicion' => $oPosicion,
+			'oHash' => $oHash,
+			'oDesplDl' => $oDesplDl,
+			'oDesplLista' => $oDesplLista,
+			'oHash1' => $oHash1,
+			'oTabla' => $oTabla,
+			];
+
+$oView = new core\View('ubis/controller');
+echo $oView->render('list_ctr.phtml',$a_campos);

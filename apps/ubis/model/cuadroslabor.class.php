@@ -1,6 +1,6 @@
 <?php
-namespace ubis\model\entity;
-use permisos\model\entity as permisos;
+namespace ubis\model;
+use permisos\model as permisos;
 use core;
 
 class CuadrosLabor extends permisos\Xpermisos {
@@ -26,4 +26,3 @@ class CuadrosLabor extends permisos\Xpermisos {
 	}
 
 }
-?>

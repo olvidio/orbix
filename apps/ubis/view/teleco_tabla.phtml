@@ -1,0 +1,70 @@
+<script>
+fnjs_nuevo=function(formulario){
+	$('#mod').val("nuevo");
+	$(formulario).attr('action',"apps/ubis/controller/teleco_editar.php");
+  	fnjs_enviar_formulario(formulario,'#<?= $ficha ?>');
+}
+fnjs_modificar=function(formulario){
+	rta=fnjs_solo_uno(formulario);
+	if (rta==1) {
+		$('#mod').val("editar");
+		$(formulario).attr('action',"apps/ubis/controller/teleco_editar.php");
+	  	fnjs_enviar_formulario(formulario,'#<?= $ficha ?>');
+	}
+}
+fnjs_eliminar=function(formulario){
+	var eliminar="<?= _("¿Está seguro que desea eliminar este registro?") ?>";
+	
+	rta=fnjs_solo_uno(formulario);
+	if (rta==1) {
+		if (confirm(eliminar) ) {
+			$('#mod').val("eliminar_teleco");
+			$(formulario).attr('action',"apps/ubis/controller/teleco_update.php");
+			$(formulario).submit(function() {
+				$.ajax({
+					data: $(this).serialize(),
+					url: $(this).attr('action'),
+					type: 'post',
+					complete: function (rta) {
+						rta_txt=rta.responseText;
+						if (rta_txt.search('id="ir_a"') != -1) {
+							fnjs_mostra_resposta(rta,'#main'); 
+						}
+					},
+					success: function() { fnjs_actualizar(formulario) }
+				});
+				return false;
+			});
+			$(formulario).submit();
+			$(formulario).off();
+		}
+  	}
+}
+fnjs_actualizar=function(formulario){
+	var campo = '<input type="hidden" name="refresh" value=1>';
+	$(formulario).attr('action',"apps/ubis/controller/teleco_tabla.php");
+	$(formulario).append(campo);
+	fnjs_enviar_formulario(formulario,'#<?= $ficha ?>');
+}
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<h3 class=subtitulo><?= ucfirst($tit_txt) ?></h3>
+<form id='seleccionados' id='seleccionados' name='seleccionados' action='' method='post'>
+<?= $oHash->getCamposHtml(); ?>
+<input type="hidden" id="mod" name="mod" value="" >
+<?= $oTabla->mostrar_tabla();?>
+<?php
+// ---------- BOTON DE NUEVO ----------
+if ($botones == 1) {
+	?>
+	<br>
+	<table cellspacing=3  class=botones>
+	<tr class=botones>
+		<td class=botones>
+		<input name="btn_new" type="button" value="<?= _("nuevo") ?>" onclick="fnjs_nuevo('#seleccionados');"></td>
+	</tr>
+	</table>
+	<?php
+}
+?>
+</form>

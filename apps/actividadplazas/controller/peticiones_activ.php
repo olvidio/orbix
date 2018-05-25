@@ -35,11 +35,6 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
-	if (!empty($go_to)) {
-		// add stack:
-		$stack = $oPosicion->getStack(1);
-		$go_to .= "&stack=$stack";
-	}
 	$sactividad = empty($_POST['que'])? '' : $_POST['que'];
 	$Qtodos = empty($Qtodos)? 1 : $Qtodos;
 } else { // vengo de actualizar

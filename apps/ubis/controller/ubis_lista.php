@@ -3,7 +3,7 @@ use usuarios\model\entity as usuarios;
 use ubis\model\entity as ubis;
 /**
 * Esta página muestra una tabla con los ubis seleccionados.
-*
+ * Para "actividad_select_ubi.phtml"
 *
 *@package	delegacion
 *@subpackage	ubis

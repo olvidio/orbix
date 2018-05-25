@@ -1,6 +1,4 @@
 <?php
-namespace ubis\controller;
-use core;
 use usuarios\model\entity as usuarios;
 /**
 * Es el frame inferior. Muestra la ficha de los ubis
@@ -22,13 +20,19 @@ use usuarios\model\entity as usuarios;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
+$oPosicion->recordar($Qrefresh);
 
-if (!empty($_POST['nuevo'])) {
+$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
+$Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
+$Qnuevo = (string) \filter_input(INPUT_POST, 'nuevo');
+
+if (!empty($Qnuevo)) {
 	$tipo_ubi = empty($_POST['tipo_ubi'])? '' : $_POST['tipo_ubi'];
 	$Gestor = unserialize(core\urlsafe_b64decode($_POST['sGestor']));
 	$obj = str_replace('Gestor','',$Gestor);
 	$oUbi = new $obj();
-	$obj_pau = str_replace('ubis\\model\\entity\\','',$obj);
+	$Qobj_pau = str_replace('ubis\\model\\entity\\','',$obj);
 	$cDatosCampo = $oUbi->getDatosCampos();
 	$oDbl = $oUbi->getoDbl();
 	foreach ($cDatosCampo as $oDatosCampo) {
@@ -43,16 +47,19 @@ if (!empty($_POST['nuevo'])) {
 	$a_campos['tipo_ubi'] = $tipo_ubi;
 	//print_r($a_campos);
 } else {
-	$obj = 'ubis\\model\\entity\\'.$_POST['obj_pau'];
-	$oUbi = new $obj($_POST['id_ubi']);
-	$obj_pau = $_POST['obj_pau'];
-	$a_campos = $oUbi->getTot();
-	$a_campos['id_direccion'] = '';
+	$obj = 'ubis\\model\\entity\\'.$Qobj_pau;
+	$oUbi = new $obj($Qid_ubi);
+
+	$tipo_ubi = $oUbi->getTipo_ubi();
+	$dl = $oUbi->getDl();
+	$region = $oUbi->getRegion();
+	$nombre_ubi = $oUbi->getNombre_ubi();
+	$status = $oUbi->getStatus();
+	$id_direccion = '';
 }
 
 $sf = $oUbi->getSf();
 
-$a_campos['obj_pau'] = $obj_pau;
 //----------------------------------Permisos según el usuario
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miSfsv=core\ConfigGlobal::mi_sfsv();
@@ -63,59 +70,190 @@ $botones = 0;
 2: eliminar
 4: quitar direccion
 */
-if (strstr($obj_pau,'Dl')) {
-	if ($a_campos['dl'] == core\ConfigGlobal::mi_dele()) {
+if (strstr($Qobj_pau,'Dl')) {
+	if ($dl == core\ConfigGlobal::mi_dele()) {
 		// ----- sv sólo a scl -----------------
 		if ($_SESSION['oPerm']->have_perm("scdl")) {
 					$botones= "1,2";
 		}
 	}
-} else if (strstr($obj_pau,'Ex')) {
+} else if (strstr($Qobj_pau,'Ex')) {
 	// ----- sv sólo a scl -----------------
 	if ($_SESSION['oPerm']->have_perm("scdl")) {
 				$botones= "1,2";
 	}
 }
 
-$a_campos['botones'] = $botones;
-//------------------------------------------------------------------------
-?>
-<script>
-fnjs_guardar=function(){
-   var error=0;
-   var tipo_ubi=$("#tipo_ubi").val();
-   if (tipo_ubi=="cdcdl" || tipo_ubi=="cdcex") {
-	   var camp_sf="#sf:checked";
-	   var camp_sv="#sv:checked";
-	   var val_sf=$(camp_sf).length;
-	   var val_sv=$(camp_sv).length;
-	   if (!val_sf && !val_sv) {
-	   		alert ("<?= _("debe indicar si es sf o sv") ?>");
-			error=1;
-		}
-   } 
-   if (!error) {
-	   $('#que').val('ubi');
-	   $('#frm2').attr('action','apps/ubis/controller/ubis_update.php');
-	   fnjs_enviar_formulario('#frm2','#ficha');
-   }
+// Aunque el tipo sea ctrdl, si es diferente a la mia, lo trato como ctrex.
+if ($dl != core\ConfigGlobal::mi_dele()) {
+	if ($tipo_ubi == 'ctrdl') $tipo_ubi = 'ctrex';
+	if ($tipo_ubi == 'cdcdl') $tipo_ubi = 'cdcex';
 }
 
-fnjs_eliminar=function(r,go){
-	if (confirm("<?= _("¿Esta seguro que desea borrar este ubi?");?>") ) {
-	   $('#que').val('eliminar_ubi');
-	   $('#frm2').attr('action','apps/ubis/controller/ubis_update.php');
-	   fnjs_enviar_formulario('#frm2');
+$oPermActiv=new ubis\model\CuadrosLabor();
+
+$chk = ($status=="t" OR $status=="true")? 'checked' :''; 
+$campos_chk = 'status!sv!sf';
+if ($tipo_ubi=="ctrdl" or $tipo_ubi=="ctrex" or $tipo_ubi=="ctrsf") $campos_chk .= '!cdc'; 
+
+$oHash = new web\Hash();
+$oHash->setcamposNo('que!'.$campos_chk);
+$camposForm = 'que!dl!tipo_ubi!status!region!nombre_ubi';
+if ($tipo_ubi=="ctrdl") { 
+	$camposForm .= '!num_pi!num_cartas!num_cartas_mensuales!plazas!num_habit_indiv!n_buzon!observ';
+}
+if ($tipo_ubi=="ctrdl" or $tipo_ubi=="ctrex" or $tipo_ubi=="ctrsf") {
+	$camposForm .= '!cdc!id_ctr_padre!tipo_ctr!tipo_labor';
+}
+if ($tipo_ubi=="cdcdl" or $tipo_ubi=="cdcex") {
+	$camposForm .= '!tipo_casa!plazas!plazas_min!num_sacd!sf!sv';
+}
+$oHash->setcamposForm($camposForm);
+$a_camposHidden = array(
+		'campos_chk'=>$campos_chk,
+		'obj_pau'=>$Qobj_pau,
+		'id_ubi'=>$Qid_ubi,
+		'id_direccion'=>$id_direccion
+		);
+$oHash->setArraycamposHidden($a_camposHidden);
+
+
+
+
+$oView = new core\View('ubis/controller');
+
+if ($tipo_ubi=="ctrdl") { 
+
+	$cdc = $oUbi->getCdc();
+	$chk_cdc = ($cdc=="t" OR $cdc=="true")? 'checked' :'';
+	$tipo_labor = $oUbi->getTipo_labor();
+	$id_ctr_padre = $oUbi->getId_ctr_padre();
+	$tipo_ctr = $oUbi->getTipo_ctr();
+	$num_pi = $oUbi->getNum_pi();
+	$num_cartas = $oUbi->getNum_cartas();
+	$num_cartas_mensuales = $oUbi->getNum_cartas_mensuales();
+	$num_habit_indiv = $oUbi->getNum_habit_indiv();
+	$plazas = $oUbi->getPlazas();
+	$n_buzon = $oUbi->getN_buzon();
+	$observ = $oUbi->getObserv();
+	
+	
+	$GesCentro = new ubis\model\entity\GestorCentro();
+	if (!empty($dl)) {
+		$sWhere = "WHERE dl = '$dl'";
+	} else if (!empty($region)) {
+		$sWhere = "WHERE region = '$region'"; //probar con la region
+	} else {
+		$sWhere = ''; // Hay muchos ctr que no tienen puesta la dl.
 	}
+	$oDesplCentros=$GesCentro->getListaCentros($sWhere);
+	$nnom = "id_ctr_padre";
+	$oDesplCentros->setNombre($nnom);
+	$oDesplCentros->setOpcion_sel($id_ctr_padre);
+	
+	$a_campos = ['botones' => $botones,
+			'oPosicion' => $oPosicion,
+			'obj' => $obj,
+			'oHash' => $oHash,
+			'tipo_ubi' => $tipo_ubi,
+			'dl' => $dl,
+			'chk' => $chk,
+			'region' => $region,
+			'nombre_ubi' => $nombre_ubi,
+			'tipo_ctr' => $tipo_ctr,
+			'num_pi' => $num_pi,
+			'num_cartas' => $num_cartas,
+			'num_cartas_mensuales' => $num_cartas_mensuales,
+			'oPermActiv' => $oPermActiv,
+			'tipo_labor' => $tipo_labor,
+			'num_habit_indiv' => $num_habit_indiv,
+			'plazas' => $plazas,
+			'n_buzon' => $n_buzon,
+			'observ' => $observ,
+			'chk_cdc' => $chk_cdc,
+			'oDesplCentros' => $oDesplCentros,
+			];
+
+	echo $oView->render('ctrdl_form.phtml',$a_campos);
+}
+	
+if ($tipo_ubi=="ctrex" or $tipo_ubi=="ctrsf") {
+	
+	$cdc = $oUbi->getCdc();
+	$chk_cdc = ($cdc=="t" OR $cdc=="true")? 'checked' :'';
+	$tipo_labor = $oUbi->getTipo_labor();
+	$id_ctr_padre = $oUbi->getId_ctr_padre();
+	$tipo_ctr = $oUbi->getTipo_ctr();
+	
+	$GesCentro = new ubis\model\entity\GestorCentro();
+	if (!empty($dl)) {
+		$sWhere = "WHERE dl = '$dl'";
+	} else if (!empty($region)) {
+		$sWhere = "WHERE region = '$region'"; //probar con la region
+	} else {
+		$sWhere = ''; // Hay muchos ctr que no tienen puesta la dl.
+	}
+	$oDesplCentros=$GesCentro->getListaCentros($sWhere);
+	$nnom = "id_ctr_padre";
+	$oDesplCentros->setNombre($nnom);
+	$oDesplCentros->setOpcion_sel($id_ctr_padre);
+	
+	$oTiposCentro = new ubis\model\entity\GestorTipoCentro();
+	$oTiposCentroOpciones=$oTiposCentro->getListaTiposCentro();
+	$oDesplegableTiposCentro=new web\Desplegable('tipo_ctr',$oTiposCentroOpciones,$tipo_ctr,true);
+
+	$a_campos = ['botones' => $botones,
+			'oPosicion' => $oPosicion,
+			'obj' => $obj,
+			'oHash' => $oHash,
+			'tipo_ubi' => $tipo_ubi,
+			'dl' => $dl,
+			'chk' => $chk,
+			'region' => $region,
+			'nombre_ubi' => $nombre_ubi,
+			'tipo_ctr' => $tipo_ctr,
+			'chk_cdc' => $chk_cdc,
+			'oDesplCentros' => $oDesplCentros,
+			'tipo_labor' => $tipo_labor,
+			'oPermActiv' => $oPermActiv,
+			'oDesplegableTiposCentro' => $oDesplegableTiposCentro,
+			];
+
+	echo $oView->render('ctrex_form.phtml',$a_campos);
 }
 
-fnjs_quitar_dir=function(go){
-   $('#go_to').val(go);
-   $('#frm2').attr('action','programas/direcciones_quitar.php');
-   fnjs_enviar_formulario('#frm2');
+if ($tipo_ubi=="cdcdl" or $tipo_ubi=="cdcex") {
+
+
+	$tipo_casa = $oUbi->getTipo_casa();
+	$plazas = $oUbi->getPlazas();
+	$plazas_min = $oUbi->getPlazas_min();
+	$num_sacd = $oUbi->getNum_sacd();
+	$sv = $oUbi->getSv();
+	$sf = $oUbi->getSf();
+
+	$sv_chk = ($sv=="t" OR $sv=="true")? 'checked': ''; 
+	$sf_chk = ($sf=="t" OR $sf=="true")? 'checked' :''; 
+	$oTiposCasa=new ubis\model\entity\GestorTipoCasa();
+	$oTiposCasaOpciones=$oTiposCasa->getListaTiposCasa();
+	$oDesplegableTiposCasa=new web\Desplegable('tipo_casa',$oTiposCasaOpciones,$tipo_casa,true);
+
+	$a_campos = ['botones' => $botones,
+			'oPosicion' => $oPosicion,
+			'obj' => $obj,
+			'oHash' => $oHash,
+			'tipo_ubi' => $tipo_ubi,
+			'dl' => $dl,
+			'chk' => $chk,
+			'region' => $region,
+			'nombre_ubi' => $nombre_ubi,
+			'plazas' => $plazas,
+			'plazas_min' => $plazas_min,
+			'num_sacd' => $num_sacd,
+			'sv_chk' => $sv_chk,
+			'sf_chk' => $sf_chk,
+			'oDesplegableTiposCasa' => $oDesplegableTiposCasa,
+			];
+	
+	echo $oView->render('cdc_form.phtml',$a_campos);
 }
-</script>
-<?php
-$oView = new core\View(__NAMESPACE__);
-echo $oView->render('ubis_form.phtml',$a_campos);
-?>

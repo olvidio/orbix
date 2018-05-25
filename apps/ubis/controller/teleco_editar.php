@@ -20,18 +20,27 @@ use usuarios\model\entity as usuarios;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	$s_pkey=explode('#',$_POST['sel'][0]);
+$oPosicion->recordar();
+
+$Qobj_pau = (string) \filter_input(INPUT_POST,'obj_pau');
+$Qmod = (string) \filter_input(INPUT_POST,'mod');
+$Qid_ubi = (integer) \filter_input(INPUT_POST,'id_ubi');
+
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	$s_pkey=explode('#',$a_sel[0]);
 	// he cambiado las comillas dobles por simples. Deshago el cambio.
 	$s_pkey = str_replace("'",'"',$s_pkey[0]);
 	$a_pkey=unserialize(core\urlsafe_b64decode($s_pkey));
+	// el scroll id es de la página anterior, hay que guardarlo allí
+	$oPosicion->addParametro('id_sel',$a_sel,1);
+	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else { // si es nuevo
 	$s_pkey='';
 }
 
-$obj_pau = $_POST['obj_pau'];
-
-switch ($obj_pau) {
+switch ($Qobj_pau) {
 	case 'Centro': // tipo dl pero no de la mia
 		$obj = 'ubis\\model\\entity\\TelecoCtr';
 		break;
@@ -52,7 +61,11 @@ switch ($obj_pau) {
 		break;
 }
 
-if (!empty($_POST['mod']) & $_POST['mod'] == 'nuevo' ) {
+if ( $Qmod == 'nuevo' ) {
+	$desc_teleco = '';
+	$tipo_teleco = '';
+	$num_teleco = '';
+	$observ = '';
 	$oUbi = new $obj();
 	$cDatosCampo = $oUbi->getDatosCampos();
 	$oDbl = $oUbi->getoDbl();
@@ -62,15 +75,14 @@ if (!empty($_POST['mod']) & $_POST['mod'] == 'nuevo' ) {
 		$a_campos[$camp] = $valor_predeterminado;
 
 	}
-	$a_campos['id_ubi'] = empty($_POST['id_ubi'])? '' : $_POST['id_ubi'];
-	$a_campos['id_item'] = '';
-	//print_r($a_campos);
 } else {
 	$oUbi = new $obj($a_pkey);
-	$a_campos = $oUbi->getTot();
+	$desc_teleco = $oUbi->getDesc_teleco();
+	$tipo_teleco = $oUbi->getTipo_teleco();
+	$num_teleco = $oUbi->getNum_teleco();
+	$observ = $oUbi->getObserv();
 }
 
-$a_campos['obj_pau'] = $obj_pau;
 //----------------------------------Permisos según el usuario
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miSfsv=core\ConfigGlobal::mi_sfsv();
@@ -82,11 +94,11 @@ $botones = 0;
 3: eliminar
 4: quitar direccion
 */
-switch($obj_pau) {
+switch($Qobj_pau) {
 	case 'CentroDl':
 	case 'CasaDl':
-		$objfull = 'ubis\\model\\entity\\'.$obj_pau;
-		$oUbi = new $objfull($_POST['id_ubi']);
+		$objfull = 'ubis\\model\\entity\\'.$Qobj_pau;
+		$oUbi = new $objfull($Qid_ubi);
 		$dl = $oUbi->getDl();
 		if ($dl == core\ConfigGlobal::mi_dele()) {
 			// ----- sv sólo a scl -----------------
@@ -103,18 +115,36 @@ switch($obj_pau) {
 		}
 	break;
 }
-$a_campos['botones'] = $botones;
-//------------------------------------------------------------------------
-?>
-<script>
-fnjs_guardar=function(){
-   var error=0;
-   $('#mod').val('teleco');
-   $('#frm2').attr('action','apps/ubis/controller/teleco_update.php');
-   fnjs_enviar_formulario('#frm2','#ficha');
-}
-</script>
-<?php
+
+$campos_chk = '';
+
+$oTiposTeleco=new ubis\model\entity\GestorTipoTeleco();
+$oDesplegableTiposTeleco=$oTiposTeleco->getListaTiposTelecoUbi();
+$oDesplegableTiposTeleco->setNombre('tipo_teleco');
+$oDesplegableTiposTeleco->setOpcion_sel($tipo_teleco);
+$oDesplegableTiposTeleco->setBlanco(true);
+
+$oHash = new web\Hash();
+$oHash->setcamposForm('mod!tipo_teleco!desc_teleco!num_teleco!observ');
+$oHash->setcamposNo('mod!'.$campos_chk);
+$a_camposHidden = array(
+		'campos_chk'=>$campos_chk,
+		'obj_pau'=>$Qobj_pau,
+		'id_ubi'=>$Qid_ubi,
+		's_pkey'=>$s_pkey,
+		);
+$oHash->setArraycamposHidden($a_camposHidden);
+
+
+$a_campos = [ 'obj' =>$obj,
+		'oPosicion' => $oPosicion,
+		'oHash' => $oHash,
+		'oDesplegableTiposTeleco' => $oDesplegableTiposTeleco,
+		'desc_teleco' => $desc_teleco,
+		'num_teleco' => $num_teleco,
+		'observ' => $observ,
+		'botones' => $botones,
+		];
+
 $oView = new core\View('ubis\controller');
 echo $oView->render('teleco_form.phtml',$a_campos);
-?>

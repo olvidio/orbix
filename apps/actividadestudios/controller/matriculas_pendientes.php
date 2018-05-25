@@ -42,14 +42,6 @@ if (isset($_POST['stack'])) {
 } 
 $oPosicion->recordar();
 
-if (empty($_POST['go_to'])) {
-	//pongo aqui el $go_to porque al ir al mismo update que las actividaes, no se donde voler
-	$a_dataUrl = array('queSel'=>'matriculas','pau'=>'p','id_pau'=>'id_pau');
-	$go_to=Hash::link(ConfigGlobal::getWeb().'/apps/actividadestudios/controller/matriculas_pendientes_ver.php?'.http_build_query($a_dataUrl));
-} else {
-	$go_to = $_POST['go_to'];
-}
-
 $aviso = '';
 $form = '';
 $traslados = '';
@@ -112,7 +104,6 @@ $a_camposHidden = array(
 		'permiso' => 3,
 		'obj_pau' => 'Actividad',
 		'queSel' => 'asig',
-		'go_to' => $go_to
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 

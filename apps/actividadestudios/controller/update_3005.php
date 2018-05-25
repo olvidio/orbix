@@ -63,7 +63,6 @@ switch ($Qmod) {
 		$oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
 		$oActividadAsignatura->setId_activ($Qid_activ);
 		$oActividadAsignatura->setId_asignatura($Qid_asignatura);
-		if (!empty($_POST['interes'])) $oActividadAsignatura->setInteres($_POST['interes']); 
 		if (!empty($_POST['id_profesor'])) $oActividadAsignatura->setId_profesor($_POST['id_profesor']); 
 		if (!empty($_POST['avis_profesor'])) $oActividadAsignatura->setAvis_profesor($_POST['avis_profesor']); 
 		if (!empty($_POST['tipo'])) $oActividadAsignatura->setTipo($_POST['tipo']);
@@ -82,8 +81,6 @@ switch ($Qmod) {
 		$oActividadAsignatura->setId_activ($Qid_activ);
 		$oActividadAsignatura->setId_asignatura($Qid_asignatura);
 		$oActividadAsignatura->DBCarregar();
-		$_POST['interes'] = empty($_POST['interes'])? 'f' : 't'; 
-		$oActividadAsignatura->setInteres($_POST['interes']); 
 		$oActividadAsignatura->setId_profesor($_POST['id_profesor']); 
 		$oActividadAsignatura->setAvis_profesor($_POST['avis_profesor']); 
 		$oActividadAsignatura->setTipo($_POST['tipo']);

@@ -13,11 +13,13 @@ use profesores\model\entity as profesores;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-switch ($_POST['salida']) {
+$Qsalida = (string) \filter_input(INPUT_POST, 'salida');
+	
+switch ($Qsalida) {
 	case "asignatura":
-		$id_asignatura = empty($_POST['id_asignatura'])? '' : $_POST['id_asignatura'];
+		$Qid_asignatura = (integer) \filter_input(INPUT_POST, 'id_asignatura');
 		$GesProfesores = new profesores\GestorProfesor();
-		$oDesplProfesores = $GesProfesores->getDesplProfesoresAsignatura($id_asignatura);
+		$oDesplProfesores = $GesProfesores->getDesplProfesoresAsignatura($Qid_asignatura);
 		
 		$oDesplProfesores->setNombre('id_profesor');
 		$oDesplProfesores->setBlanco('t');
@@ -26,9 +28,9 @@ switch ($_POST['salida']) {
 		echo $oDesplProfesores->desplegable();
 	 break;
 	case "dl":
-		$id_activ = empty($_POST['id_activ'])? '' : $_POST['id_activ'];
+		$Qid_activ = (integer) \filter_input(INPUT_POST, 'id_activ');
 		$GesProfesores = new profesores\GestorProfesorActividad();
-		$oDesplProfesores = $GesProfesores->getListaProfesoresActividad(array($id_activ));
+		$oDesplProfesores = $GesProfesores->getListaProfesoresActividad(array($Qid_activ));
 		
 		$oDesplProfesores->setNombre('id_profesor');
 		$oDesplProfesores->setBlanco('t');

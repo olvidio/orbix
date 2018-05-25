@@ -49,12 +49,6 @@ class ActividadAsignatura Extends core\ClasePropiedades {
 	 */
 	 protected  $iid_asignatura;
 	/**
-	 * Interes de ActividadAsignatura
-	 *
-	 * @var boolean
-	 */
-	 protected $binteres;
-	/**
 	 * Id_profesor de ActividadAsignatura
 	 *
 	 * @var integer
@@ -132,20 +126,16 @@ class ActividadAsignatura Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if ($this->DBCarregar('guardar') === false) { $bInsert=true; } else { $bInsert=false; }
 		$aDades=array();
-		$aDades['interes'] = $this->binteres;
 		$aDades['id_profesor'] = $this->iid_profesor;
 		$aDades['avis_profesor'] = $this->savis_profesor;
 		$aDades['tipo'] = $this->stipo;
 		$aDades['f_ini'] = $this->df_ini;
 		$aDades['f_fin'] = $this->df_fin;
 		array_walk($aDades, 'core\poner_null');
-		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if (empty($aDades['interes']) || ($aDades['interes'] === 'off') || ($aDades['interes'] === false) || ($aDades['interes'] === 'f')) { $aDades['interes']='f'; } else { $aDades['interes']='t'; }
 
 		if ($bInsert === false) {
 			//UPDATE
 			$update="
-					interes                  = :interes,
 					id_profesor              = :id_profesor,
 					avis_profesor            = :avis_profesor,
 					tipo                     = :tipo,
@@ -165,8 +155,8 @@ class ActividadAsignatura Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_activ, $this->iid_asignatura);
-			$campos="(id_activ,id_asignatura,interes,id_profesor,avis_profesor,tipo,f_ini,f_fin)";
-			$valores="(:id_activ,:id_asignatura,:interes,:id_profesor,:avis_profesor,:tipo,:f_ini,:f_fin)";		
+			$campos="(id_activ,id_asignatura,id_profesor,avis_profesor,tipo,f_ini,f_fin)";
+			$valores="(:id_activ,:id_asignatura,:id_profesor,:avis_profesor,:tipo,:f_ini,:f_fin)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'ActividadAsignatura.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
@@ -240,7 +230,6 @@ class ActividadAsignatura Extends core\ClasePropiedades {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_activ',$aDades)) $this->setId_activ($aDades['id_activ']);
 		if (array_key_exists('id_asignatura',$aDades)) $this->setId_asignatura($aDades['id_asignatura']);
-		if (array_key_exists('interes',$aDades)) $this->setInteres($aDades['interes']);
 		if (array_key_exists('id_profesor',$aDades)) $this->setId_profesor($aDades['id_profesor']);
 		if (array_key_exists('avis_profesor',$aDades)) $this->setAvis_profesor($aDades['avis_profesor']);
 		if (array_key_exists('tipo',$aDades)) $this->setTipo($aDades['tipo']);
@@ -311,25 +300,6 @@ class ActividadAsignatura Extends core\ClasePropiedades {
 	 */
 	function setId_asignatura($iid_asignatura) {
 		$this->iid_asignatura = $iid_asignatura;
-	}
-	/**
-	 * Recupera l'atribut binteres de ActividadAsignatura
-	 *
-	 * @return boolean binteres
-	 */
-	function getInteres() {
-		if (!isset($this->binteres)) {
-			$this->DBCarregar();
-		}
-		return $this->binteres;
-	}
-	/**
-	 * estableix el valor de l'atribut binteres de ActividadAsignatura
-	 *
-	 * @param boolean binteres='f' optional
-	 */
-	function setInteres($binteres='f') {
-		$this->binteres = $binteres;
 	}
 	/**
 	 * Recupera l'atribut iid_profesor de ActividadAsignatura
@@ -435,7 +405,6 @@ class ActividadAsignatura Extends core\ClasePropiedades {
 	function getDatosCampos() {
 		$oActividadAsignaturaSet = new core\Set();
 
-		$oActividadAsignaturaSet->add($this->getDatosInteres());
 		$oActividadAsignaturaSet->add($this->getDatosId_profesor());
 		$oActividadAsignaturaSet->add($this->getDatosAvis_profesor());
 		$oActividadAsignaturaSet->add($this->getDatosTipo());
@@ -446,18 +415,6 @@ class ActividadAsignatura Extends core\ClasePropiedades {
 
 
 
-	/**
-	 * Recupera les propietats de l'atribut binteres de ActividadAsignatura
-	 * en una clase del tipus DatosCampo
-	 *
-	 * @return oject DatosCampo
-	 */
-	function getDatosInteres() {
-		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'interes'));
-		$oDatosCampo->setEtiqueta(_("interes"));
-		return $oDatosCampo;
-	}
 	/**
 	 * Recupera les propietats de l'atribut iid_profesor de ActividadAsignatura
 	 * en una clase del tipus DatosCampo

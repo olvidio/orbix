@@ -12,15 +12,18 @@ use personas\model\entity as personas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$Qque = (string) \filter_input(INPUT_POST, 'que');
+$Qid_asignatura = (integer) \filter_input(INPUT_POST, 'id_asignatura');
+$Qid_activ = (integer) \filter_input(INPUT_POST, 'id_activ');
 
-if ($_POST['que']==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
+if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 	$aNivelOpcionales = array(1230,1231,1232,2430,2431,2432,2433,2434);
 	$error = '';
 	$GesNotas  = new notas\GestorNota();
 	//$aIdSuperadas = $GesNotas->getArrayNotasSuperadas();
 	// miro el acta
 	$GesActas = new notas\GestorActa();
-	$cActas = $GesActas->getActas(array('id_activ'=>$_POST['id_activ'],'id_asignatura'=>$_POST['id_asignatura']));
+	$cActas = $GesActas->getActas(array('id_activ'=>$Qid_activ,'id_asignatura'=>$Qid_asignatura));
 
 	if (is_array($cActas) && count($cActas) == 1) {
 		$acta=$cActas[0]->getActa();
@@ -32,7 +35,7 @@ if ($_POST['que']==3) { //paso las matrículas a notas definitivas (Grabar e imp
 	if (!empty($error)) exit($error);
 
 	$GesMatriculas = new actividadestudios\GestorMatricula();
-	$cMatriculados = $GesMatriculas->getMatriculas(array('id_asignatura'=>$_POST['id_asignatura'], 'id_activ'=>$_POST['id_activ']));
+	$cMatriculados = $GesMatriculas->getMatriculas(array('id_asignatura'=>$Qid_asignatura, 'id_activ'=>$Qid_activ));
 	$i=0;
 	$msg_err = '';
 	foreach ($cMatriculados as $oMatricula) {
@@ -59,15 +62,15 @@ if ($_POST['que']==3) { //paso las matrículas a notas definitivas (Grabar e imp
 		}
 				
 		if (!empty($preceptor)) { //miro cuál
-			$oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl(array('id_activ'=>$_POST['id_activ'],'id_asignatura'=>$_POST['id_asignatura'])); 
+			$oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl(array('id_activ'=>$Qid_activ,'id_asignatura'=>$Qid_asignatura)); 
 			$id_preceptor = $oActividadAsignatura->getId_profesor();
 		} else {
 			$id_preceptor = '';
 		}
 		
 		//Si es una opcional miro el id nivel para cada uno
-		if ($_POST['id_asignatura'] > 3000) {
-			switch (substr($_POST['id_asignatura'],1,1)) {
+		if ($Qid_asignatura > 3000) {
+			switch (substr($Qid_asignatura,1,1)) {
 				case 1:	// sólo de bienio
 					$aWhere['id_nivel'] = "123.";
 					$aOperadores['id_nivel'] = '~';
@@ -110,17 +113,17 @@ if ($_POST['que']==3) { //paso las matrículas a notas definitivas (Grabar e imp
 			}
 			//if ($nivel > $aNivelOpcionales[$op_max]) { $error.=sprintf (_("ha cursado una opcional que no tocaba (id_nom=%s)")."\n",$id_nom); continue; }
 		} else {
-			$oAsignatura = new asignaturas\Asignatura($_POST['id_asignatura']);
+			$oAsignatura = new asignaturas\Asignatura($Qid_asignatura);
 			$id_nivel = $oAsignatura->getId_nivel();
 		}
 			
-		$oPersonaNota = new notas\PersonaNota(array('id_nom'=>$id_nom,'id_asignatura'=>$_POST['id_asignatura']));
+		$oPersonaNota = new notas\PersonaNota(array('id_nom'=>$id_nom,'id_asignatura'=>$Qid_asignatura));
 		//compruebo que no existe ya la nota:
 		//	- si existe y es en mismo id_activ, actualizo
 		//  - si existe en otro id_activ, AVISO!!
 		//
 		$id_activ_old = $oPersonaNota->getId_activ();
-		if (!empty($id_activ_old) && ($_POST['id_activ'] != $id_activ_old)) {
+		if (!empty($id_activ_old) && ($Qid_activ != $id_activ_old)) {
 			//aviso
 			$error.=sprintf (_("está intentando poner una nota que ya existe (id_nom=%s)")."\n",$id_nom);
 			continue;
@@ -132,7 +135,7 @@ if ($_POST['que']==3) { //paso las matrículas a notas definitivas (Grabar e imp
 			$oPersonaNota->setId_situacion($id_situacion);
 			$oPersonaNota->setActa($acta);
 			$oPersonaNota->setF_acta($f_acta);
-			$oPersonaNota->setId_activ($_POST['id_activ']);
+			$oPersonaNota->setId_activ($Qid_activ);
 			$oPersonaNota->setPreceptor($preceptor);
 			$oPersonaNota->setId_preceptor($id_preceptor);
 			$oPersonaNota->setNota_num($nota_num);
@@ -146,21 +149,26 @@ if ($_POST['que']==3) { //paso las matrículas a notas definitivas (Grabar e imp
 	$go_to=core\ConfigGlobal::getWeb()."/apps/notas/controller/acta_imprimir.php?acta=$acta|main";
 }
 
-if ($_POST['que']==1) { // Grabar las notas en la matricula
-	for ($n=0;$n<$_POST['matriculados'];$n++) {
-		if (!empty($_POST['form_preceptor'][$n]) && $_POST['form_preceptor'][$n]=="p") { $preceptor="t"; } else { $preceptor="f"; }
-		$oMatricula = new actividadestudios\Matricula(array('id_asignatura'=>$_POST['id_asignatura'],'id_activ'=>$_POST['id_activ'],'id_nom'=>$_POST['id_nom'][$n]));
+if ($Qque==1) { // Grabar las notas en la matricula
+	$Qmatriculados = (array) \filter_input(INPUT_POST, 'matriculados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+	$Qform_preceptor = (array) \filter_input(INPUT_POST, 'form_preceptor', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+	$Qid_nom = (array) \filter_input(INPUT_POST, 'id_nom', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+	$Qnota_num = (array) \filter_input(INPUT_POST, 'nota_num', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+	$Qnota_max = (array) \filter_input(INPUT_POST, 'nota_max', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+	for ($n=0;$n<$Qmatriculados;$n++) {
+		if (!empty($Qform_preceptor[$n]) && $Qform_preceptor[$n]=="p") { $preceptor="t"; } else { $preceptor="f"; }
+		$oMatricula = new actividadestudios\Matricula(array('id_asignatura'=>$Qid_asignatura,'id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom[$n]));
 		$oMatricula->setPreceptor($preceptor);
 		// admitir coma y punto como separador decimal
-		$nn = str_replace(',', '.', $_POST['nota_num'][$n]);
+		$nn = str_replace(',', '.', $Qnota_num[$n]);
 		$oMatricula->setNota_num($nn);
-		$oMatricula->setNota_max($_POST['nota_max'][$n]);
-		if ($_POST['nota_num'][$n] > 1) $oMatricula->setId_situacion(10);
+		$oMatricula->setNota_max($Qnota_max[$n]);
+		if ($Qnota_num[$n] > 1) $oMatricula->setId_situacion(10);
 		if ($oMatricula->DBGuardar() === false) {
 			echo _('Hay un error, no se ha guardado');
 		}
 	}
-	//$go_to="acta_notas.php?id_asignatura=".$_POST['id_asignatura']."&id_activ=".$_POST['id_activ'];
 	$go_to = '';
 }
 

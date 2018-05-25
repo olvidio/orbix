@@ -4,7 +4,7 @@ use ubis\model\entity as ubis;
 /**
 * Página de selección de las personas para las que se trazará un planning 
 * Presenta una lista de personas que cumplen la condición fijada en el formulario
-* podemos venir de la página plannig_que.php o por go_to (atrás).
+* podemos venir de la página plannig_que.php
 * Condiciones:
 *	por formulario:
 *		apellido1, apellido2, nombre, centro

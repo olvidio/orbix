@@ -434,6 +434,12 @@ foreach($cUbisTot as $oUbi) {
 	$a_valores[$i][7]=$poblacion;
  }
 
+$oTabla = new Lista();
+$oTabla->setId_tabla('ubis_tabla');
+$oTabla->setCabeceras($a_cabeceras);
+$oTabla->setBotones($a_botones);
+$oTabla->setDatos($a_valores);
+
 $oHash = new Hash();
 $oHash->setcamposForm('!sel');
 $oHash->setcamposNo('!scroll_id');
@@ -448,58 +454,13 @@ $a_camposHidden = array(
 		'titulo'=>$titulo
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
-// --------------------------------------- html --------------------------------------
-?>
-<script>
-fnjs_modificar=function(formulario){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-  		$(formulario).attr('action',"apps/ubis/controller/home_ubis.php");
-  		fnjs_enviar_formulario(formulario);
-  	}
-}
-fnjs_borrar=function(formulario){
-	var seguro;
-	seguro=confirm("<?= _("¿Está Seguro que desea borrar este ubi?");?>");
-	if (seguro) {
-		$(formulario).submit(function() {
-			$.ajax({
-				data: $(this).serialize(),
-				url: $(this).attr('action'),
-				type: 'post',
-				complete: function (rta_txt) {
-					if (rta_txt != '' && rta_txt != '\n') {
-						alert (rta_txt);
-					}
-				}
-			});
-			return false;
-		});
-		$(formulario).submit();
-		$(formulario).off();
-		/*
-		// tacho los marcados
-		var form=$(formulario).id;
-		// selecciono los elementos con class="sel" de las tablas del id=formulario 
-		var sel=$('#'+form+' input.sel');
-		$(sel).each(function(i,item){
-			if(item.checked== true){
-				var s=item.parentNode.parentNode.id;
-				$(s).toggleClass('tachado');
-			}
-		});
-		*/
-	}
-}
 
-</script>
-<form id="seleccionados" name="seleccionados" action="programas/ubis_tabla_total.php" method="post">
-<?= $oHash->getCamposHtml(); ?>
-<h2 class=titulo><?= $titulo; ?></h2>
-<?php
-$oTabla = new Lista();
-$oTabla->setId_tabla('ubis_tabla');
-$oTabla->setCabeceras($a_cabeceras);
-$oTabla->setBotones($a_botones);
-$oTabla->setDatos($a_valores);
-echo $oTabla->mostrar_tabla();
+
+$a_campos = [
+			'oHash' => $oHash,
+			'titulo' => $titulo,
+			'oTabla' => $oTabla,
+			];
+
+$oView = new core\View('ubis\controller');
+echo $oView->render('ubis_tabla.phtml',$a_campos);

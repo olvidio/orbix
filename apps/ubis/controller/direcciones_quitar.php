@@ -20,13 +20,17 @@ use ubis\model\entity as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
+$Qidx = (integer) \filter_input(INPUT_POST, 'idx');
+$Qobj_dir = (string) \filter_input(INPUT_POST, 'obj_dir');
+// id_direccion es string, porque puede ser una lista de varios separados por coma
+$Qid_direccion = (string) \filter_input(INPUT_POST, 'id_direccion');
 
 // puede haber más de una dirección
-$a_id_direccion = explode(',',$_POST['id_direccion']);
-$idx = empty($_POST['idx'])? 0 : $_POST['idx'];
-$id_direccion = $a_id_direccion[$idx];
-$a_pkey= array('id_ubi'=>$_POST['id_ubi'],'id_direccion'=>$id_direccion);
-switch ($_POST['obj_dir']) {
+$a_id_direccion = explode(',',$Qid_direccion);
+$id_direccion = $a_id_direccion[$Qidx];
+$a_pkey= array('id_ubi'=>$Qid_ubi,'id_direccion'=>$id_direccion);
+switch ($Qobj_dir) {
 	case "DireccionCtrDl":
 		$oUbi= new ubis\CtrDlxDireccion($a_pkey);
 		break;
@@ -43,5 +47,3 @@ switch ($_POST['obj_dir']) {
 if ($oUbi->DBEliminar() === false) {
 	echo _('Hay un error, no se ha eliminado');
 }
-
-echo $oPosicion->go_atras(1);

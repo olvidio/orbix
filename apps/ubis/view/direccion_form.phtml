@@ -1,23 +1,58 @@
-<?php
-$chk = (!empty($cp_dcha) && $cp_dcha=="t")? 'checked' : '';
-$chk_propietario = (!empty($propietario) && $propietario=="t")? 'checked' : '';
-$chk_principal = (!empty($principal) && $principal=="t")? 'checked' : '';
-
-$campos_chk = 'cp_dcha!propietario!principal';
-
-$oHash = new web\Hash();
-$oHash->setcamposForm('a_p!c_p!direccion!f_direccion!latitud!longitud!nom_sede!observ!pais!poblacion!provincia!que');
-$oHash->setcamposNo('que!'.$campos_chk);
-$a_camposHidden = array(
-		'campos_chk'=>$campos_chk,
-		'obj_dir'=>$obj_dir,
-		'id_direccion'=>$id_direccion,
-		'idx'=>$idx,
-		'id_ubi'=>$id_ubi
-		);
-$oHash->setArraycamposHidden($a_camposHidden);
-?>
 <script>
+fnjs_guardar_dir=function(formulario){
+	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
+	if (rr=='ok') {
+	   	$('#que').val('direccion');
+		$(formulario).attr('action',"apps/ubis/controller/ubis_update.php");
+		$(formulario).submit(function() {
+			$.ajax({
+				data: $(this).serialize(),
+				type: 'post',
+				url: $(this).attr('action'),
+				complete: function (rta) {
+					rta_txt=rta.responseText;
+					if (rta_txt != '' && rta_txt != '\\n') {
+						alert ('respuesta: '+rta_txt);
+					} else {
+						<?= $oPosicion->js_atras(1); ?>
+					}
+				}
+			});
+			return false;
+		});
+		$(formulario).submit();
+		$(formulario).off();
+	}
+}
+
+fnjs_quitar_dir=function(idx){
+	var formulario = '#frm2';
+	$('#idx').val(idx);
+	$(formulario).attr('action',"apps/ubis/controller/direcciones_quitar.php");
+	$(formulario).submit(function() {
+		$.ajax({
+			data: $(this).serialize(),
+			type: 'post',
+			url: $(this).attr('action'),
+			complete: function (rta) {
+				rta_txt=rta.responseText;
+				if (rta_txt != '' && rta_txt != '\\n') {
+					alert ('respuesta: '+rta_txt);
+				} else {
+					<?= $oPosicion->js_atras(1); ?>
+				}
+			}
+		});
+		return false;
+	});
+	$(formulario).submit();
+	$(formulario).off();
+}
+
+fnjs_add_dir=function(){
+   fnjs_update_div('#ficha','<?= $golistadir ?>');
+}
+
 fnjs_ver_dir=function(){
 	nom=$('#nom_sede').val();
 	dir=$('#direccion').val();
@@ -43,8 +78,10 @@ fnjs_ver_dir=function(){
 
 fnjs_ver_documento=function(id_direccion){
 	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/ubis/controller/plano_bytea.php';
-	var parametros='act=comprobar&id_direccion='+id_direccion;
+	var parametros='act=comprobar&obj_dir=<?= $obj_dir?><?= $h ?>&id_direccion='+id_direccion;
 		 
+	var seguro=0;
+	debugger;
 	$.ajax({
 		url: url,
 		type: 'post',
@@ -52,14 +89,12 @@ fnjs_ver_documento=function(id_direccion){
 		success: function (rta) {
 				//alert ('respuesta: '+rta);
 				//rta_txt=rta.responseText;
-				seguro=0;
 				if (rta=='no') { alert("<?= _("No existe ningún documento"); ?>"); } else { seguro=1; }
 			},
 		complete: function() { 
-			if (seguro) { 
+			if (seguro == 1) { 
 				var winPrefs="";
-				//var pagina='/apps/ubis/controller/plano_bytea.php?id_direccion='+id_direccion+'&act=download&PHPSESSID=<?= session_id() ?>';
-				var pagina=url+'?id_direccion='+id_direccion+'&act=download&PHPSESSID=<?= session_id() ?>';
+				var pagina=url+'?id_direccion='+id_direccion+'&act=download&obj_dir=<?= $obj_dir?><?= $h ?>&PHPSESSID=<?= session_id() ?>';
 				top.newWin = window.open(pagina, "abrir", winPrefs);
 				top.newWin.focus();
 			} else {
@@ -70,7 +105,7 @@ fnjs_ver_documento=function(id_direccion){
 
 }
 fnjs_adjuntar=function(act,id_direccion){
-	var pagina='apps/ubis/controller/plano_bytea.php?id_direccion='+id_direccion+'&act='+act+'&PHPSESSID=<?= session_id() ?>';
+	var pagina='<?= core\ConfigGlobal::getWeb() ?>/apps/ubis/controller/plano_bytea.php?id_direccion='+id_direccion+'&act='+act+'&obj_dir=<?= $obj_dir ?><?= $h ?>&PHPSESSID=<?= session_id() ?>';
 
 	var winPrefs="dependent=yes,width=850,height=300,screenX=300,screenY=300,titlebar=yes,scrollbars=yes";
 	top.newWin = window.open(pagina, "files", winPrefs);
@@ -88,6 +123,7 @@ fnjs_otro=function(n){
 	fnjs_update_div('#ficha',go_dir)
 }
 </script>
+<?= $oPosicion->mostrar_left_slide(); ?>
 <?php if (!empty($menos)) { ?>
 <input type="button" onclick='fnjs_otro(1)' value="<?= _('anterior') ?>">
 <?php } ?>
@@ -98,50 +134,59 @@ fnjs_otro=function(n){
 <?= $oHash->getCamposHtml(); ?>
 <input type="Hidden" id="que"  name="que" value="">
 <table>
-	<tr><td class=etiqueta>
-	<?= ucfirst(_("nombre sede")) ?> <input class="contenido" id="nom_sede" name="nom_sede" size=80 value="<?= $nom_sede ?>" style="HEIGHT:22px;WIDTH:342px"> 
+<tr><td class=etiqueta>
+	<?= ucfirst(_("nombre sede")) ?> 
+	<input class="contenido" id="nom_sede" name="nom_sede" size=80 value="<?= $nom_sede ?>" style="HEIGHT:22px;WIDTH:342px"> 
 	</td>
 	<td class=etiqueta>
-	<?= ucfirst(_("propietario")) ?> <input type="checkbox" id="propietario" name="propietario" size="1" <?= $chk_propietario ?>>
+	<?= ucfirst(_("propietario")) ?>
+	<input type="checkbox" id="propietario" name="propietario" size="1" <?= $chk_propietario ?>>
 	</td>
 	</tr>
-	<tr><td class=etiqueta>
+<tr><td class=etiqueta>
 	<?= ucfirst(_("dirección")) ?> <input class="contenido" id="direccion" name="direccion" size=80 value="<?= $direccion ?>" style="HEIGHT:22px;WIDTH:342px"> 
 	</td>
 	<td class=etiqueta>
-	<?= ucfirst(_("principal")) ?> <input type="checkbox" id="principal" name="principal" size="1" <?= $chk_principal ?>>
+	<?= ucfirst(_("principal")) ?>
+	<input type="checkbox" id="principal" name="principal" size="1" <?= $chk_principal ?>>
 	</td>
 	</tr>
-	<tr><td class=etiqueta>
-	<?= ucfirst(_("dirección postal")) ?> <input class="contenido" id="a_p" name="a_p" size="80" style="HEIGHT: 22px; WIDTH: 342px" value="<?= $a_p ?>">
+<tr><td class=etiqueta>
+	<?= ucfirst(_("dirección postal")) ?>
+	<input class="contenido" id="a_p" name="a_p" size="80" style="HEIGHT: 22px; WIDTH: 342px" value="<?= $a_p ?>">
 	</td></tr>
-	<tr><td class=etiqueta title="invierte el orden: población - cod. postal">
-	<?= _("inv") ?> <input type="checkbox" id="cp_dcha" name="cp_dcha" size="1" <?= $chk ?>>
-	<?= ucfirst(_("código postal")) ?><input class="contenido" id="c_p" name="c_p" size="25" value="<?= $c_p ?>" style="HEIGHT: 22px;WIDTH:250px">
-	<?= ucfirst(_("población")) ?> <input class="contenido" id="poblacion" name="poblacion" size="34" value="<?= $poblacion ?>" style="HEIGHT: 22px; WIDTH: 250px">
+<tr><td class=etiqueta title="invierte el orden: población - cod. postal">
+	<?= _("inv") ?> <input type="checkbox" id="cp_dcha" name="cp_dcha" size="1" <?= $chk_dcha ?>>
+	<?= ucfirst(_("código postal")) ?>
+	<input class="contenido" id="c_p" name="c_p" size="25" value="<?= $c_p ?>" style="HEIGHT: 22px;WIDTH:250px">
+	<?= ucfirst(_("población")) ?> 
+	<input class="contenido" id="poblacion" name="poblacion" size="34" value="<?= $poblacion ?>" style="HEIGHT: 22px; WIDTH: 250px">
 	</td></tr>
-	<tr><td class=etiqueta>
-	<?= ucfirst(_("provincia")) ?> <input class="contenido" id="provincia" name="provincia" size="15" value="<?= $provincia ?>"> 
+<tr><td class=etiqueta>
+	<?= ucfirst(_("provincia")) ?> 
+	<input class="contenido" id="provincia" name="provincia" size="15" value="<?= $provincia ?>"> 
 	</td></tr>
-	<tr><td class=etiqueta>
-	<?= ucfirst(_("país")) ?> <input class="contenido" id="pais" name="pais" size="37" value="<?= $pais ?>">
+<tr><td class=etiqueta>
+	<?= ucfirst(_("país")) ?> 
+	<input class="contenido" id="pais" name="pais" size="37" value="<?= $pais ?>">
 	</td></tr>
-	<tr><td class=etiqueta>
-	<?= ucfirst(_("comentarios dirección")) ?> <textarea class="contenido" name="observ" rows=3 style="HEIGHT: 40px; WIDTH: 400px"><?= $observ ?></textarea> 
+<tr><td class=etiqueta>
+	<?= ucfirst(_("comentarios dirección")) ?> 
+	<textarea class="contenido" name="observ" rows=3 style="HEIGHT: 40px; WIDTH: 400px"><?= $observ ?></textarea> 
 	</td></tr>
-	<tr><td class=etiqueta>
-	<?= ucfirst(_("fecha introducción de datos")) ?> <input class="contenido" name="f_direccion" size="15" value="<?= $f_direccion ?>"> 
+<tr><td class=etiqueta>
+	<?= ucfirst(_("fecha introducción de datos")) ?> 
+	<input class="contenido" name="f_direccion" size="15" value="<?= $f_direccion ?>"> 
 	</td>
 	<td> <span class="link"  onclick="fnjs_ver_dir();"><?= _("ver ejemplo dirección") ?></span></td>
 	</tr>
-	<tr><td class=etiqueta>
+<tr><td class=etiqueta>
 	<?= ucfirst(_("latitud")) ?> <input class="contenido" name="latitud" size="15" value="<?= $latitud ?>"> 
 	<?= ucfirst(_("longitud")) ?> <input class="contenido" name="longitud" size="15" value="<?= $longitud ?>"> 
 	</td>
 </tr>
 </table>
 </form>
-
 <?php
 // -----------------------------------  Botones  ----------------------
 if (!empty($botones)) {
@@ -162,7 +207,7 @@ if (!empty($botones)) {
 	while ($b) {
 		if ($b==1){
 			$txt_g=ucwords(_("guardar cambios"));
-			echo "<th class='link_inv' onclick='fnjs_guardar_dir()'>$txt_g</th>"; }
+			echo "<th class='link_inv' onclick=\"fnjs_guardar_dir('#frm2');\">$txt_g</th>"; }
 		if ($b==3){
 			$txt_e=ucwords(_("eliminar dirección"));
 			echo "<th class='link_inv' onclick='fnjs_eliminar($idx)'>$txt_e</th>"; }
@@ -177,4 +222,3 @@ if (!empty($botones)) {
 	echo "</tr></table><br>";
 }
 // fin ----------------------------  Botones  ----------------------
-?>

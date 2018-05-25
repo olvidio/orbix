@@ -36,7 +36,6 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $chk_avisado='';
 $chk_confirmado='';
 $chk_preceptor=''; 
-$chk_interes=''; 
 $oDesplAsignaturas = array();
 
 if (!empty($Qid_asignatura)) { //caso de modificar
@@ -50,8 +49,6 @@ if (!empty($Qid_asignatura)) { //caso de modificar
 	$oActividadAsignatura->setId_asignatura($Qid_asignatura);
 	$oActividadAsignatura->DBCarregar();
 
-	$interes=$oActividadAsignatura->getInteres();
-	$chk_interes = !empty($interes)? "checked": '';
 	$id_profesor=$oActividadAsignatura->getId_profesor();
 	if (!empty($id_profesor)) {
 		$oDesplProfesores->setOpcion_sel($id_profesor);
@@ -98,7 +95,7 @@ $oDesplProfesores->setBlanco('t');
 
 $oHash = new web\Hash();
 $camposForm = 'f_ini!f_fin!tipo!id_profesor';
-$oHash->setCamposNo('mod!avis_profesor!interes');
+$oHash->setCamposNo('mod!avis_profesor');
 $a_camposHidden = array(
 		'id_activ' => $Qid_activ,
 		);
@@ -140,7 +137,6 @@ $a_campos = ['obj' => $obj,
 			'chk_confirmado' => $chk_confirmado,
 			'f_ini' => $f_ini,
 			'f_fin' => $f_fin,
-			'chk_interes' => $chk_interes,
 			];
 
 $oView = new core\View('actividadestudios/controller');
