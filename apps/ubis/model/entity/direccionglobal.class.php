@@ -518,6 +518,66 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 		$this->snom_sede = $snom_sede;
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
+
+	public function planoDownload() {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$id_direccion = $this->getId_direccion();
+		
+		$sql="SELECT plano_nom,plano_extension,plano_doc FROM $nom_tabla WHERE id_direccion=?";
+		//echo "sql: $sql_update<br>";
+		$stmt = $oDbl->prepare($sql);
+		$stmt->execute(array($id_direccion));
+		$stmt->bindColumn(1, $plano_nom, \PDO::PARAM_STR, 256);
+		$stmt->bindColumn(2, $plano_extension, \PDO::PARAM_STR, 256);
+		$stmt->bindColumn(3, $plano_doc, \PDO::PARAM_LOB);
+		$stmt->fetch(\PDO::FETCH_BOUND);
+
+		return [
+			'plano_nom' => $plano_nom,
+			'plano_extension' => $plano_extension,
+			'plano_doc' => $plano_doc,
+		];
+	}
+	
+	public function planoUpload($nom,$extension,$fichero) {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$id_direccion = $this->getId_direccion();
+	
+		$nom=empty($nom)? '' : $nom;
+		$extension=empty($extension)? '' : $extension;
+		$fichero=empty($fichero)? '' : $fichero;
+
+		$sql_update="UPDATE $nom_tabla SET plano_nom=:plano_nom,plano_extension=:plano_extension,plano_doc=:plano_doc WHERE id_direccion=$id_direccion";
+
+		$oDBSt_a=$oDbl->prepare($sql_update);
+		$oDBSt_a->bindParam(":plano_nom", $nom, \PDO::PARAM_STR);
+		$oDBSt_a->bindParam(":plano_extension", $extension, \PDO::PARAM_STR);
+		$oDBSt_a->bindParam(":plano_doc", $fichero, \PDO::PARAM_LOB);
+
+		$oDBSt_a->execute();
+	}
+
+	public function planoBorrar() {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$id_direccion = $this->getId_direccion();
+		
+		$nom=NULL;
+		$extension=NULL;
+		$fichero=NULL;
+
+		$sql_update="UPDATE $nom_tabla SET plano_nom=:plano_nom,plano_extension=:plano_extension,plano_doc=:plano_doc WHERE id_direccion=$id_direccion";
+
+		$oDBSt_a=$oDbl->prepare($sql_update);
+		$oDBSt_a->bindParam(":plano_nom", $nom, \PDO::PARAM_STR);
+		$oDBSt_a->bindParam(":plano_extension", $extension, \PDO::PARAM_STR);
+		$oDBSt_a->bindParam(":plano_doc", $fichero, \PDO::PARAM_LOB);
+
+		$oDBSt_a->execute();
+	}
+	
 	/**
 	 * texte amb l'adreça formatejada
 	 *
