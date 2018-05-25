@@ -143,7 +143,7 @@ class AsistenteOut Extends AsistentePub {
 					$cProfesores = array();
 					$gesProfesores = new profesores\GestorProfesor();
 					$cProfesores = $gesProfesores->getProfesores(array('id_nom'=>$this->iid_nom, 'f_cese'=>''),array('f_cese'=>'IS NULL'));
-					if (count($cProfesores > 0)) {
+					if (count($cProfesores) > 0) {
 						$oPersonaOut->setProfesor_stgr('t');
 						$oPersonaOut->DBGuardar();
 					}
