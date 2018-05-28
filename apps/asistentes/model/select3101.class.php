@@ -259,6 +259,7 @@ class Select3101 {
 				}
 			}
 		}
+		ksort($a_plazas_resumen);
 		$this->a_plazas_resumen = $a_plazas_resumen;
 	}
 

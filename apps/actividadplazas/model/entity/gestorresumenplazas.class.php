@@ -370,6 +370,7 @@ class GestorResumenPlazas {
 		$a_plazas['total']['actual'] = $tot_actual;
 		$a_plazas['total']['ocupadas'] = $tot_ocupadas;
 		
+		ksort($a_plazas);
 		return $a_plazas;
 	}
 	
