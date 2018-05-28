@@ -197,7 +197,7 @@ class Select3101 {
 	 */
 	private function contarPlazas() {
 		$a_plazas_resumen = array();
-		$this->a_plazas_conseguidas = array();
+		$a_plazas_conseguidas = array();
 		// Si no esta publicada todas las plazas de la actividad son para la dl.
 		// No hay plazas de calendario.
 		if ($this->publicado === false) {
@@ -254,13 +254,14 @@ class Select3101 {
 				if (!empty($json_cedidas)){
 					$aCedidas = json_decode($json_cedidas,TRUE);
 					foreach ($aCedidas as $dl2 => $num) {
-						$this->a_plazas_conseguidas[$dl2][$dl]['cedidas'] = $num;
+						$a_plazas_conseguidas[$dl2][$dl]['cedidas'] = $num;
 					}
 				}
 			}
 		}
 		ksort($a_plazas_resumen);
 		$this->a_plazas_resumen = $a_plazas_resumen;
+		$this->a_plazas_conseguidas = $a_plazas_conseguidas;
 	}
 
 
@@ -479,14 +480,14 @@ class Select3101 {
 					if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) {
 						$this->incrementa($this->a_plazas_resumen[$padre]['ocupadas'][$dl][$plaza]);
 						if (!empty($child) && $child != $padre) {
-							$this->incrementa($a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
-							$this->incrementa($this->a_plazas_resumen[$child]['ocupadas'][$dl][$plaza]);
+							$this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
+							//$this->incrementa($this->a_plazas_resumen[$child]['ocupadas'][$dl][$plaza]);
 						} else {
 							$this->incrementa($this->a_plazas_resumen[$padre]['ocupadas'][$dl][$plaza]);
 						}
 					} else {
 						if (!empty($child) && $child == $this->mi_dele) {
-							$this->incrementa($a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
+							$this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
 						}elseif (!empty($padre)) {
 							continue;
 						}
@@ -497,7 +498,7 @@ class Select3101 {
 						if ($plaza < asistentes\Asistente::PLAZA_ASIGNADA) {
 							continue;
 						} else {
-							$this->incrementa($a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
+							$this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
 							$this->incrementa($this->a_plazas_resumen[$padre]['ocupadas'][$dl][$plaza]);
 						}
 					} else {
