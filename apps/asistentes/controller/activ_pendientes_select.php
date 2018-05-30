@@ -136,6 +136,7 @@ $titulo=ucfirst(sprintf(_("lista de %s sin %s en el curso %s"),$Qtipo_personas,$
 
 $a_cabeceras=array( _("nº"),array('name'=>ucfirst(_("nombre de la persona")),'formatter'=>'clickFormatter'));
 $i=0;
+$a_valores = array();
 foreach ($aFaltan as $ap_nom=>$id_nom) {
 	$i++;
 	
@@ -178,6 +179,7 @@ foreach ($cPersonasOtras as $oPersona) {
 uksort($aFaltanOtras,"core\strsinacentocmp");
 
 $i=0;
+$a_valores_2 = array();
 foreach ($aFaltanOtras as $ap_nom=>$id_nom) {
 	$i++;
 	
