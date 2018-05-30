@@ -45,7 +45,7 @@ fnjs_actualizar=function(){
 <form id=frm_buscar  name=frm_buscar action="" method="post" onkeypress="fnjs_enviar(event,this);" >
 <?= $oHashBuscar->getCamposHtml(); ?>
 <?= ucfirst(_("nombre")) ?>:<input type=text name=Qusername value="<?= $username ?>">
-<input type="button" onclick="fnjs_buscar();" id="ok" name="ok" value="<?= ucfirst(_("buscar")); ?>" class="btn_ok">
+<input type="button" onclick="fnjs_buscar();" id="btn_ok" name="btn_ok" value="<?= ucfirst(_("buscar")); ?>" class="btn_ok">
 </form>
 <br>
 <form id="seleccionados"  name="seleccionados" action="" method="post" >

@@ -1,19 +1,30 @@
 <script>
 fnjs_buscar=function(act){
-	/* genero el id_tipo_actividad */
-	var isfsv=$('#isfsv_val').val();
-	var iasistentes=$('#iasistentes_val').val();
-	var iactividad=$('#iactividad_val').val();
-	var inom_tipo=$('#inom_tipo_val').val();
-	if (!isfsv) isfsv=".";
-	if (!iasistentes) iasistentes=".";
-	if (!iactividad) iactividad=".";
-	if (!inom_tipo) inom_tipo="...";
-	var id=isfsv+iasistentes+iactividad+inom_tipo;
+	var err = 0;
+	var f=$('#periodo').val();	
+	if (f=='otro') {
+		if (!fnjs_comprobar_fecha('#empiezamin')) { err=1; }
+		if (!fnjs_comprobar_fecha('#empiezamax')) { err=1; }
+	}
+	
+	if (err == 1) {
+		alert("<?= _("Debe inrtoducir las fechas inicio-fin del periodo") ?>"); 
+	} else {
+		/* genero el id_tipo_actividad */
+		var isfsv=$('#isfsv_val').val();
+		var iasistentes=$('#iasistentes_val').val();
+		var iactividad=$('#iactividad_val').val();
+		var inom_tipo=$('#inom_tipo_val').val();
+		if (!isfsv) isfsv=".";
+		if (!iasistentes) iasistentes=".";
+		if (!iactividad) iactividad=".";
+		if (!inom_tipo) inom_tipo="...";
+		var id=isfsv+iasistentes+iactividad+inom_tipo;
 
-	$('#id_tipo_activ').val(id);
-	$('#modifica').attr('action',act);
-	fnjs_enviar_formulario('#modifica');
+		$('#id_tipo_activ').val(id);
+		$('#modifica').attr('action',act);
+		fnjs_enviar_formulario('#modifica');
+	}
 }
 fnjs_lugar=function(){
 	var opcion_sel='<?= $Qid_ubi ?>';
@@ -34,7 +45,7 @@ fnjs_lugar=function(){
 }
 fnjs_left_side_hide();
 </script>
-<div id="exportar" export_modo="formulario">
+<div id="exportar" export_modo="formulario" onkeypress="alert('hoooo')">
 <form id="modifica"name="modifica" action="" method="post" onkeypress="fnjs_enviar(event,this);" >
 <?= $oHash->getCamposHtml(); ?>
 <h3 class=subtitulo><?= $titulo; ?></h3>
@@ -83,7 +94,7 @@ if (core\ConfigGlobal::mi_id_role() != 8 && core\ConfigGlobal::mi_id_role() != 1
 </tr>
 </table>
 <br>
-<input TYPE="button" onclick="fnjs_buscar('<?= $accion; ?>')" id="ok" name="ok" value="<?= ucfirst(_("buscar")); ?>" class="btn_ok">
+<input TYPE="button" onclick="fnjs_buscar('<?= $accion; ?>')" id="btn_ok" name="btn_ok" value="<?= ucfirst(_("buscar")); ?>" class="btn_ok">
 <input TYPE="reset" VALUE="borrar" onclick="fnjs_update_div('#main','<?= $Link_borrar ?>')" >
 </form>
 <script>

@@ -36,7 +36,7 @@ switch ($que) {
 			$oCedidas = new stdClass;
 		}
 		if ($num_plazas == 0) {
-			unset($oCedidas->$dl);
+			if (isset($oCedidas->$dl)) { unset($oCedidas->$dl); }
 		} else {
 			$oCedidas->$dl = $num_plazas;
 		}

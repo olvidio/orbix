@@ -110,7 +110,7 @@ $html .= "<table>";
 $html .= "<thead>";
 $html .= "<th class=titulo_inv colspan=4>".$oInfoClase->getTxtBuscar();
 $html .= "&nbsp;&nbsp;&nbsp;<input class=contenido id=\"frm_buscar_nom\" name=\"k_buscar\" size=\"25\" value=\"$Qk_buscar\"></th>";
-$html .= "<th colspan=4><input type=\"button\" id=\"ok\" name=\"ok\" onclick=\"fnjs_enviar_formulario(this.form);\" value=\"".ucfirst(_("buscar"))."\" class=\"btn_ok\"></th>";
+$html .= "<th colspan=4><input type=\"button\" id=\"btn_ok\" name=\"btn_ok\" onclick=\"fnjs_enviar_formulario(this.form);\" value=\"".ucfirst(_("buscar"))."\" class=\"btn_ok\"></th>";
 $html .= "</thead>";
 $html .= "</table>";
 $html .= "</form>";

@@ -36,7 +36,7 @@ $oHash1->setcamposForm('id_asignatura!b_c');
 <thead><th class=titulo_inv colspan=4><?= ucfirst(_("búsqueda de personas por número de asignaturas")); ?></th></thead>
 <tfoot>
 <tr>
-	<th colspan=4><input type="button" onclick="fnjs_enviar_formulario('#frm_asig_altan')" id="ok" name="ok" value="<?= ucfirst(_("buscar")); ?>"  class="btn_ok">
+	<th colspan=4><input type="button" onclick="fnjs_enviar_formulario('#frm_asig_altan')" id="btn_ok" name="btn_ok" value="<?= ucfirst(_("buscar")); ?>"  class="btn_ok">
 	<input TYPE="reset" value="<?= ucfirst(_("borrar")); ?>"></th>
 </tr>
 </tfoot>
@@ -68,7 +68,7 @@ $oHash1->setcamposForm('id_asignatura!b_c');
 <thead><th class=titulo_inv colspan=4><?= ucfirst(_("búsqueda de personas por asignatura")); ?></th></thead>
 <tfoot>
 <tr>
-	<th colspan=4><input type="button" onclick="fnjs_enviar_formulario('#frm_asig_altan1')" id="ok" name="ok" value="<?= ucfirst(_("buscar")); ?>"  class="btn_ok">
+	<th colspan=4><input type="button" onclick="fnjs_enviar_formulario('#frm_asig_altan1')" id="btn_ok" name="btn_ok" value="<?= ucfirst(_("buscar")); ?>"  class="btn_ok">
 	<input TYPE="reset" value="<?= ucfirst(_("borrar")); ?>"></th>
 </tr>
 </tfoot>

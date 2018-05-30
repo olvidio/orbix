@@ -92,7 +92,7 @@ $chk_exacto_1 = empty($Qexacto)? '' : 'checked';
 	<input type="Radio" name="exacto" value=1 <?= $chk_exacto_1 ?>><?= _("sí"); ?></td>
 <td class=etiqueta colspan="2" align="RIGHT"><input type="checkbox" name="cmb" <?= $chk_cmb?>><?= _("buscar en fichero cmb"); ?></td></tr>
 <tr>
-	<th colspan=4><input type="button" id="ok" name="ok" onclick="fnjs_enviar_formulario('#frm_personas_que')" value="<?= ucfirst(_("buscar")); ?>" class="btn_ok">
+	<th colspan=4><input type="button" id="btn_ok" name="btn_ok" onclick="fnjs_enviar_formulario('#frm_personas_que')" value="<?= ucfirst(_("buscar")); ?>" class="btn_ok">
 	<input TYPE="reset" onclick="fnjs_update_div('#main','<?= web\Hash::link('apps/personas/controller/personas_que.php?'.http_build_query(array('tabla'=>$Qtabla,'tipo'=>$Qtipo))) ?>')" value="<?= ucfirst(_("borrar")); ?>"></th>
 </tr>
 </tfoot>

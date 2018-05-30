@@ -192,6 +192,6 @@ if ($_POST['tipo']=='planning_ctr' || $_POST['tipo']=='planning_cdc' ) { ?>
 <td><input TYPE="button" onclick="fnjs_ver_planning(this.form,3)" value="<?= ucfirst(_('planning vista grid')); ?>" ></td>
 <td colspan=2><input TYPE="button" onclick="fnjs_ver_planning(this.form,2)" value="<?= _('Vista para imprimir'); ?>"></td>
 <?php } else { ?>
-<td><input TYPE="button" onclick="fnjs_ver_planning(this.form,0)" id="ok" name="ok" value="<?= ucfirst(_('buscar')); ?>" class="btn_ok" ></td>
+<td><input TYPE="button" onclick="fnjs_ver_planning(this.form,0)" id="btn_ok" name="btn_ok" value="<?= ucfirst(_('buscar')); ?>" class="btn_ok" ></td>
 <?php } ?>
 </tr></tfoot>
