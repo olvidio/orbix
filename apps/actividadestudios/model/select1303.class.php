@@ -101,6 +101,7 @@ class Select1303 {
 
 		$i=0;
 		$a_valores=array();
+		$msg_err = '';
 		foreach ($cMatriculas as $oMatricula) {
 			$i++;
 			$id_asignatura=$oMatricula->getId_asignatura();
@@ -165,6 +166,8 @@ class Select1303 {
 					'bloque' => $this->bloque,
 					];
 		
+		
+		if (!empty($msg_err)) { echo $msg_err; }
 		$oView = new core\View(__NAMESPACE__);
 		return $oView->render('selectUnCa.phtml',$a_campos);
 	}

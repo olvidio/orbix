@@ -24,6 +24,8 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 }
 
+$msg_err = '';
+
 // nombre de la actividad
 $oActividad = new actividades\Actividad($id_activ);
 $nom_activ=$oActividad->getNom_activ();
@@ -117,11 +119,11 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
 
 if (!empty($msg_err)) { echo $msg_err; }
 
-	$a_campos = ['oPosicion' => $oPosicion,
-				'nom_activ' => $nom_activ,
-				'nom_director_est' => $nom_director_est,
-				'datos_asignatura' => $datos_asignatura,
-				];
+$a_campos = ['oPosicion' => $oPosicion,
+			'nom_activ' => $nom_activ,
+			'nom_director_est' => $nom_director_est,
+			'datos_asignatura' => $datos_asignatura,
+			];
 
-	$oView = new core\View('actividadestudios/controller');
-	echo $oView->render('lista_clases_ca.phtml',$a_campos);
+$oView = new core\View('actividadestudios/controller');
+echo $oView->render('lista_clases_ca.phtml',$a_campos);
