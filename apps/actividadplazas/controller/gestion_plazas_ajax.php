@@ -80,7 +80,7 @@ switch ($que) {
 		}
 		// valor por defecto
 		$propietario = core\ConfigGlobal::mi_dele().">".$dl_de_paso;
-		$gesActividadPlazas = new \actividadplazas\model\entity\GestorResumenPlazas();
+		$gesActividadPlazas = new \actividadplazas\model\GestorResumenPlazas();
 		$gesActividadPlazas->setId_activ($id_activ);
 		$oDesplPosiblesPropietarios = $gesActividadPlazas->getPosiblesPropietarios($dl_de_paso);
 		$oDesplPosiblesPropietarios->setNombre('propietario');

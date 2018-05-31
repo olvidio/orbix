@@ -171,7 +171,7 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 		
 		}
 	}
-	$gesActividadPlazas = new \actividadplazas\model\entity\GestorResumenPlazas();
+	$gesActividadPlazas = new \actividadplazas\model\GestorResumenPlazas();
 	$gesActividadPlazas->setId_activ($Qid_activ);
 	$oDesplPosiblesPropietarios = $gesActividadPlazas->getPosiblesPropietarios($dl_de_paso);
 	$oDesplPosiblesPropietarios->setNombre('propietario');

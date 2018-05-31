@@ -3,7 +3,7 @@ namespace asistentes\model;
 
 use actividadcargos\model\entity as actividadcargos;
 use actividades\model\entity as actividades;
-use actividadplazas\model\entity\GestorResumenPlazas;
+use actividadplazas\model\GestorResumenPlazas;
 use asistentes\model\entity as asistentes;
 use core\ConfigGlobal;
 use personas\model\entity as personas;

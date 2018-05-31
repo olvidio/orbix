@@ -609,7 +609,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$plaza_actual = $this->getPlaza();
 
 		if ($plaza_actual < Asistente::PLAZA_DENEGADA && $iplaza > Asistente::PLAZA_DENEGADA) {
-			$gesActividadPlazasR = new \actividadplazas\model\entity\GestorResumenPlazas();
+			$gesActividadPlazasR = new \actividadplazas\model\GestorResumenPlazas();
 			$gesActividadPlazasR->setId_activ($this->iid_activ);
 			if ($gesActividadPlazasR->getLibres() > 0) {
 				$this->iplaza = $iplaza;

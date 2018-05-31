@@ -42,7 +42,7 @@ if ($publicado === null) {
 	$publicado = true;
 }
 
-$gesActividadPlazas = new \actividadplazas\model\entity\GestorResumenPlazas();
+$gesActividadPlazas = new \actividadplazas\model\GestorResumenPlazas();
 $gesActividadPlazas->setId_activ($id_activ);
 $a_plazas = $gesActividadPlazas->getResumen();
 

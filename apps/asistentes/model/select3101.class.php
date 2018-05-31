@@ -212,7 +212,7 @@ class Select3101 {
 			$a_dl = $gesDelegacion->getArrayDelegaciones(array("H"));
 			//print_r($a_dl);
 			
-			$gesActividadPlazasR = new \actividadplazas\model\entity\GestorResumenPlazas();
+			$gesActividadPlazasR = new \actividadplazas\model\GestorResumenPlazas();
 			$gesActividadPlazasR->setId_activ($this->id_pau);
 			
 			$gesActividadPlazas = new \actividadplazas\model\entity\GestorActividadPlazas();

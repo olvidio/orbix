@@ -145,7 +145,7 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 		
 		}
 	}
-	$gesActividadPlazas = new \actividadplazas\model\entity\GestorResumenPlazas();
+	$gesActividadPlazas = new \actividadplazas\model\GestorResumenPlazas();
 	if (!empty($id_activ)) {
 		$gesActividadPlazas->setId_activ($id_activ);
 		$oDesplPosiblesPropietarios = $gesActividadPlazas->getPosiblesPropietarios($dl_de_paso);
