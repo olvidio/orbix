@@ -1,5 +1,5 @@
 <?php
-namespace actividadplazas\model\entity;
+namespace actividadplazas\model;
 use core;
 /**
  * GestorActividadPlazas
