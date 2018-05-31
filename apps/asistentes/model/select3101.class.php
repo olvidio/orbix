@@ -707,21 +707,24 @@ class Select3101 {
 					}
 				} elseif (array_key_exists($this->mi_dele, $this->a_plazas_conseguidas)) {  // No es una dl organizadora/colaboradora
 					$a_dl_plazas = $this->a_plazas_conseguidas[$this->mi_dele];
-					$decidir = 0;
-					$espera = 0;
-					$ocupadas_dl = 0;
 					// ocupadas por la dl padre
 					$resumen_plazas2 = "$this->mi_dele: ";
+					$p = 0;
 					foreach ($a_dl_plazas as $dl2 => $pla) {
 						$plazas = empty($pla['ocupadas'])? array() : $pla['ocupadas'];
 						$pla['cedidas'] = empty($pla['cedidas'])? '?' : $pla['cedidas'];
 						foreach ($plazas as $dl => $pl) {
+							$p++;
+							$decidir = 0;
+							$espera = 0;
+							$ocupadas_dl = 0;
 							foreach ($pl as $plaza => $num) {
 								if ($plaza == asistentes\Asistente::PLAZA_PEDIDA) { $decidir += $num; }
 								if ($plaza == asistentes\Asistente::PLAZA_EN_ESPERA) { $espera += $num; }
 								if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) { $ocupadas_dl += $num; }
 							}
 							$txt = sprintf(_("(de las %s cedidas por %s)"),$pla['cedidas'],$dl2);
+							$resumen_plazas2 .= ($p > 1)? ' + ' : '';
 							$resumen_plazas2 .= $ocupadas_dl." ".$txt;
 							if (!empty($espera)) { $resumen_plazas2 .= " ".sprintf(_("(%s en espera)"),$espera); }
 							if (!empty($decidir)) { $resumen_plazas2 .= " ".sprintf(_("(%s por decidir)"),$decidir); }

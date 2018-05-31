@@ -308,9 +308,12 @@ class GestorResumenPlazas {
 			// si no tiene por calendario le pongo 0
 			if (!array_key_exists('calendario',$aa)) {
 				$num_plazas_calendario = 0;
-				$aCedidas = array();
 			} else {
 				$num_plazas_calendario = $aa['calendario'];
+			}
+			if (!array_key_exists('cedidas',$aa)) {
+				$aCedidas = array();
+			} else {
 				$aCedidas = $aa['cedidas'];
 			}
 			foreach ($aCedidas as $dl_otra=>$num_plazas){
@@ -342,9 +345,12 @@ class GestorResumenPlazas {
 			// si no tiene por calendario le pongo 0
 			if (!array_key_exists('calendario',$aa)) {
 				$pl_calendario = 0;
-				$pl_cedidas = 0;
 			} else {
 				$pl_calendario = $aa['calendario'];
+			}
+			if (!array_key_exists('total_cedidas',$aa)) {
+				$pl_cedidas = 0;
+			} else {
 				$pl_cedidas = $aa['total_cedidas'];
 			}
 			$pl_conseguidas = $aa['total_conseguidas'];
@@ -458,7 +464,9 @@ class GestorResumenPlazas {
 					foreach ($aCedidas as $dl_2 => $num_plazas) {
 						if ($mi_dl == $dl_2) {
 							$ocu = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$mi_dl,$dl_otra);
-							$propiedad["$dl_otra>$dl_2"] = "$dl_otra ($ocu de $num_plazas)";
+							if ($ocu < $num_plazas) {
+								$propiedad["$dl_otra>$dl_2"] = "$dl_otra ($ocu de $num_plazas)";
+							}
 						}
 					}
 				}
