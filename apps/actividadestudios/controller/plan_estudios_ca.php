@@ -100,6 +100,7 @@ $a=0;
 $a_old=0;
 $aAlumnos = array();
 foreach ($cAsistentes as $oActividadAsistente) {
+	if ($oActividadAsistente->getPropio() === FALSE) { continue; }
 	$a++;
 	$id_nom=$oActividadAsistente->getId_nom();
 	$oPersona = personas\Persona::NewPersona($id_nom);
