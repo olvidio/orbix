@@ -25,6 +25,9 @@ class PersonaNota Extends core\ClasePropiedades {
     const FORMATO_ACTA     = 1; // Acta.
     const FORMATO_CERTIFICADO    = 2; // Certificado.
 	
+    const EPOCA_CA     = 1; // ca verano.
+    const EPOCA_INVIERNO   = 2; // semestre invierno.
+	
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/**

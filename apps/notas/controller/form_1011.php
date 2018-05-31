@@ -222,6 +222,14 @@ if (!empty($tipo_acta)) {
 	$chk_certificado="";
 }
 
+if (!empty($epoca)) {
+	if ($epoca==notas\PersonaNota::EPOCA_CA) { $chk_epoca_ca="checked"; } else { $chk_epoca_ca=""; }
+	if ($epoca==notas\PersonaNota::EPOCA_INVIERNO) { $chk_epoca_inv="checked"; } else { $chk_epoca_inv=""; }
+} else {
+	$chk_epoca_ca="checked";
+	$chk_epoca_inv="";
+}
+
 if (!empty($f_acta)) { // 3 meses cerca de la fecha del acta.
 	$oData = DateTime::createFromFormat('j/m/Y',$f_acta);
 	$oData2 = clone $oData;
@@ -336,6 +344,8 @@ $a_campos = [
 			'id_preceptor' => $id_preceptor,
 			'oDesplProfesores' => $oDesplProfesores,
 			'epoca' => $epoca,
+			'chk_epoca_ca' => $chk_epoca_ca,
+			'chk_epoca_inv' => $chk_epoca_inv,
 			'oDesplActividades' => $oDesplActividades,
 			'detalle' => $detalle,
 			];

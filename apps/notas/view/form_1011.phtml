@@ -176,7 +176,13 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
 	</td>
 </tr>
 
-<tr><td><?= _("epoca") ?></td><td><input type="text" id="epoca" name="epoca" value="<?= $epoca ?>" size="2"></td></tr>
+<tr><td><?= _("epoca") ?></td>
+	<td><input type="radio" id="epoca1" name="epoca" value="<?= notas\model\entity\PersonaNota::EPOCA_CA ?>" <?= $chk_epoca_ca ?> >
+		<?= _("ca") ?>
+	<input type="radio" id="epoca2" name="epoca" value="<?= notas\model\entity\PersonaNota::EPOCA_INVIERNO ?>" <?= $chk_epoca_inv ?> >
+	<?= _("semestre invierno") ?>
+	</td>
+</tr>
 <tr><td><?= _("cursada en") ?></td>
 <td class=contenido colspan=3>
 	<?= $oDesplActividades->desplegable(); ?>
