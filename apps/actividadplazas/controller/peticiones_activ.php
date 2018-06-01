@@ -33,7 +33,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$na=strtok("#");
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$a_sel,1);
-	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 	$sactividad = empty($_POST['que'])? '' : $_POST['que'];
 	$Qtodos = empty($Qtodos)? 1 : $Qtodos;

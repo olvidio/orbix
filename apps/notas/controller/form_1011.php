@@ -50,7 +50,7 @@ $sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_
 if (!empty($sel)) { //vengo de un checkbox
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$sel,1);
-	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 	if ($Qpau=="p") { 
 		$id_nivel_real=strtok($sel[0],"#"); 

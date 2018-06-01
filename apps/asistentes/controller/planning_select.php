@@ -29,6 +29,8 @@ use ubis\model\entity as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$oPosicion->recordar();
+
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
 	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
@@ -47,23 +49,28 @@ if (isset($_POST['stack'])) {
 		$QsaOperadorCtr=$oPosicion->getParametro('saOperadorCtr');
 		$Qid_sel=$oPosicion->getParametro('id_sel');
 		$Qscroll_id = $oPosicion->getParametro('scroll_id');
-
+		$oPosicion->olvidar($stack); //limpio todos los estados hacia delante.
+		
 		$aWhere=unserialize(base64_decode($QsaWhere));
 		$aOperador=unserialize(base64_decode($QsaOperador));
 		$aWhereCtr=unserialize(base64_decode($QsaWhereCtr));
 		$aOperadorCtr=unserialize(base64_decode($QsaOperadorCtr));
 	}
 } else { //si no vengo por goto.
-	$Qmodo = empty($_POST['modo'])? '' : $_POST['modo'];
-	$Qtipo=empty($_POST['tipo'])? '' : $_POST['tipo'];
-	$Qobj_pau=empty($_POST['obj_pau'])? '' : $_POST['obj_pau'];
-	$Qna=empty($_POST['na'])? '' : $_POST['na'];
-	$Qinicio=empty($_POST['inicio'])? '' : $_POST['inicio'];
-	$Qfin=empty($_POST['fin'])? '' : $_POST['fin'];
-	$Qyear=empty($_POST['year'])? '' : $_POST['year'];
-	$Qperiodo = empty($_POST['periodo'])? '' : $_POST['periodo'];
-	$Qempiezamin = empty($_POST['empiezamin'])? date('d/m/Y',mktime(0, 0, 0, date('m'), date('d')-40, date('Y'))) : $_POST['empiezamin'];
-	$Qempiezamax = empty($_POST['empiezamax'])? date('d/m/Y',mktime(0, 0, 0, date('m')+9, 0, date('Y'))) : $_POST['empiezamax'];
+	$Qmodo = (string) \filter_input(INPUT_POST, 'modo');
+	$Qtipo = (string) \filter_input(INPUT_POST, 'tipo');
+	$Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
+	$Qna = (string) \filter_input(INPUT_POST, 'na');
+	$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
+	$Qfin = (string) \filter_input(INPUT_POST, 'fin');
+	$Qyear = (string) \filter_input(INPUT_POST, 'year');
+	$Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
+	$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
+	$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
+
+	// valores por defeccto
+	$Qempiezamin = empty($Qempiezamin)? date('d/m/Y',mktime(0,0,0,date('m'),date('d')-40,date('Y'))):$Qempiezamin;
+	$Qempiezamax = empty($Qempiezamax)? date('d/m/Y',mktime(0,0,0,date('m')+9,0,date('Y'))):$Qempiezamax;
 
 	if (empty($Qperiodo) || $Qperiodo == 'otro') {
 		$Qinicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
@@ -78,42 +85,46 @@ if (isset($_POST['stack'])) {
 	}
 
 	/*miro las condiciones. las variables son: num, agd, sup, nombre, apellido1, apellido2 */
+	$Qapellido1 = (string) \filter_input(INPUT_POST, 'apellido1');
+	$Qapellido2 = (string) \filter_input(INPUT_POST, 'apellido2');
+	$Qnombre = (string) \filter_input(INPUT_POST, 'nombre');
+	$Qcentro = (string) \filter_input(INPUT_POST, 'centro');
+	$Qna = (string) \filter_input(INPUT_POST, 'na');
+
 	$aWhere = array();	
 	$aOperador = array();	
 	$aWhereCtr = array();	
 	$aOperadorCtr = array();	
 	$aWhere['situacion']= 'A';	
 	$aWhere['_ordre']= 'apellido1,apellido2,nom';	
-	if (!empty($_POST['apellido1'])){ 
-		$aWhere['apellido1']= "^".$_POST['apellido1'];	
+	if (!empty($Qapellido1)){ 
+		$aWhere['apellido1']= "^".$Qapellido1;	
 		$aOperador['apellido1']='sin_acentos';
 	}
-	if (!empty($_POST['apellido2'])){ 
-		$aWhere['apellido2']= "^".$_POST['apellido2'];	
+	if (!empty($Qapellido2)){ 
+		$aWhere['apellido2']= "^".$Qapellido2;	
 		$aOperador['apellido2']='sin_acentos';
 	}
-	if (!empty($_POST['nombre'])){ 
-		$aWhere['nom']= "^".$_POST['nombre'];	
+	if (!empty($Qnombre)){ 
+		$aWhere['nom']= "^".$Qnombre;	
 		$aOperador['nom']='sin_acentos';
 	}
 		
 	/*Si está puesto el nombre del centro, saco una lista de todos los del centro*/
-	if (!empty($_POST['centro'])){ 
-		$nom_ubi = str_replace("+", "\+", $_POST['centro']); // para los centros de la sss+
+	if (!empty($Qcentro)){ 
+		$nom_ubi = str_replace("+", "\+", $Qcentro); // para los centros de la sss+
 		$aWhereCtr['nombre_ubi']= $nom_ubi;	
 		$aOperadorCtr['nombre_ubi']='sin_acentos';
 	}
 	// Estos valores vienen por el menu
-	if (!empty($_POST['na'])) {
-		$aWhere['id_tabla']='p'.$_POST['na'] ;
+	if (!empty($Qna)) {
+		$aWhere['id_tabla']='p'.$Qna ;
 	}
 	$QsaWhere=base64_encode(serialize($aWhere));
 	$QsaOperador=base64_encode(serialize($aOperador));
 	$QsaWhereCtr=base64_encode(serialize($aWhereCtr));
 	$QsaOperadorCtr=base64_encode(serialize($aOperadorCtr));
 }
-?>
-<?php
 
 if (!empty($aWhereCtr)) { // si busco por centro sólo puede ser de casa
 	$GesCentroDl = new ubis\GestorCentroDl();
@@ -202,7 +213,11 @@ foreach ($cPersonas as $oPersona) {
 	$ctr_o_dl=$oPersona->getCentro_o_dl();
 	$condicion_2="Where id_nom='".$id_nom."'";
 	$condicion_2=urlencode($condicion_2);
-	$pagina="programas/dossiers/home_persona.php?id_nom=$id_nom&condicion=$condicion_2&id_tabla=$id_tabla";
+	
+	$aQuery = array('id_nom' => $id_nom,
+					'condicion' => $condicion_2,
+					'id_tabla'=>  $id_tabla);
+	$pagina=web\Hash::link('apps/personas/controller/home_persona.php?'.http_build_query($aQuery));
 
 	$a_valores[$i]['sel']="$id_nom";
 	$a_valores[$i][1]=$id_tabla;
@@ -224,47 +239,17 @@ $a_camposHidden = array(
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 
-/* ---------------------------------- html --------------------------------------- */
-$resultado=sprintf( _("%s personas encontradas"),$i);
-?>
-<script>
-
-fnjs_ver_planning=function(formulario,n){
-	$('#modelo').val(n);
-	$(formulario).attr('action',"apps/asistentes/controller/planning_crida_calendari.php");
-	fnjs_enviar_formulario(formulario);
-}
-fnjs_planning_print=function(formulario){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-		$('#modelo').val('2');
-		$(formulario).attr('target','print');
-  		$(formulario).attr('action',"apps/asistentes/controller/planning_crida_calendari.php");
-  		fnjs_enviar_formulario(formulario);
-  	}
-}
-fnjs_actividades=function(formulario){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-		$('#que').val("activ");
-		$('#id_dossier').val("1301y1302");
-  		$(formulario).attr('action',"apps/dossiers/controller/dossiers_ver.php");
-  		fnjs_enviar_formulario(formulario);
-  	}
-}
-</script>
-<h3><?= $resultado ?></h3>
-<form id='seleccionados' name='seleccionados' action='' method='post'>
-<?= $oHash->getCamposHtml(); ?>
-<input type="hidden" id="modelo" name="modelo" value="">
-<input type='hidden' id='que' name='que' value=''>
-<input type='hidden' id='id_dossier' name='id_dossier' value=''>
-<?php
 $oTabla = new web\Lista();
 $oTabla->setId_tabla('planning_select');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
-echo $oTabla->mostrar_tabla();
-?>
-</form>
+
+$a_campos = ['oPosicion' => $oPosicion,
+			'oHash' => $oHash,
+			'oTabla' => $oTabla,
+			'num_personas' => $i,
+			];
+
+$oView = new core\View('asistentes/controller');
+echo $oView->render('planning_select.phtml',$a_campos);

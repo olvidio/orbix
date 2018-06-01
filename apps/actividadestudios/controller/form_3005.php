@@ -23,7 +23,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$Qid_asignatura=strtok("#");
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$a_sel,1);
-	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else {
 	if ($Qpau == 'a') {

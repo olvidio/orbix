@@ -1,40 +1,85 @@
-<?php
-use personas\model\entity as personas;
-/**
-* Esta es la página de presentación de la ficha de n, agd y sss+ de paso (copia de agd). 
-*
-* Esta presentación se incluye dentro del programa de visualización de
-* las fichas.
-* Existen 3 tipos de textos:
-*		- titulos (<th>)
-*		- etiquetas (<span class=etiqueta>) son links a helps
-*		- datos (class=datos) varios tipos: links, inputs
-*
-* @author Daniel Serrabou
-* @package fichas
-* @subpackage agd
-*/
+<script>
+fnjs_act_ctr=function (camp) {
+	var centre, camp, idCamp;
+	var dDate = new Date();
+	var mes=dDate.getMonth()+1;
+	var fecha=dDate.getDate()+'/'+mes+'/'+dDate.getFullYear();
+	var f;
+	idCamp='#id_'+camp;
+	centre=$(idCamp).val();
+	$(camp).val(centre);
+	// también la fecha
+	//f='f_'+camp;
+	//$(f).val(fecha);
+}
 
-$GesSituacion = new personas\GestorSituacion();
-$aWhere['_ordre'] = 'situacion';
-$cSituaciones = $GesSituacion->getSituaciones($aWhere);
+fnjs_guardar=function(formulario){
+	var rr=fnjs_comprobar_campos('#frm2','<?= addslashes($obj_txt) ?>');
+	//alert ("EEE "+rr);
+	if (rr=='ok') {
+		$('#que').val('guardar');
+		$(formulario).attr('action',"apps/personas/controller/personas_update.php");
+		$(formulario).submit(function() {
+			$.ajax({
+				data: $(this).serialize(),
+				type: 'post',
+				url: $(this).attr('action'),
+				complete: function (rta) {
+					rta_txt=rta.responseText;
+					if (rta_txt != '' && rta_txt != '\\n') {
+						alert ('respuesta: '+rta_txt);
+					} else {
+						<?= $oPosicion->js_atras(1); ?>
+					}
+				}
+			});
+			return false;
+		});
+		$(formulario).submit();
+		$(formulario).off();
+	}
+}
+fnjs_eliminar=function(formulario){
+	if (confirm("<?= _("¿Esta seguro que desea borrar esta persona?");?>") ) {
+	   	$('#que').val('eliminar');
+	   	$(formulario).attr('action','apps/ubis/controller/ubis_update.php');
+		$(formulario).submit(function() {
+			$.ajax({
+				data: $(this).serialize(),
+				url: $(this).attr('action'),
+				type: 'post',
+				complete: function (rta) {
+					rta_txt = rta.responseText;
+					if (rta_txt != '' && rta_txt != '\\n') {
+						alert ('respuesta: '+rta_txt);
+					} else {
+						<?= $oPosicion->js_atras(2); ?>
+					}
+				}
+			});
+			return false;
+		});
+		$(formulario).submit();
+		$(formulario).off();
+	}
+}
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<!-- ============================== cabecera ============================= -->
+<table><tr>
+<td class=esquerra nowrap>
+</td>
+<td>
+<span class=link onclick="fnjs_update_div('#main','<?= $godossiers ?>')" ><img src=<?= core\ConfigGlobal::$web_icons ?>/dossiers.gif border=0 width=40 height=40 alt='<?= _("ver dossiers") ?>'>(<?= _("dossiers") ?>)</span>
 
-$campos_chk = 'sacd';
+<td class=titulo><span class=link onclick="fnjs_update_div('#main','<?= $gohome ?>')" ><?= $titulo ?></span></td>
+</table>
 
-$oHash = new web\Hash();
-$oHash->setcamposForm('id_ctr!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!f_situacion!inc!lengua!nom!nx1!nx2!observ!profesion!que!situacion!stgr!trato!lugar_nacimiento!ce!ce_lugar!ce_ini!ce_fin');
-$oHash->setcamposNo('que!'.$campos_chk);
-$a_camposHidden = array(
-		'campos_chk'=>$campos_chk,
-		'obj_pau'=>$obj_pau,
-		'id_nom'=>$id_nom
-		);
-$oHash->setArraycamposHidden($a_camposHidden);
-?>
+
+<!-- ============================== Ficha ============================= -->
 <form id='frm2' >
 <?= $oHash->getCamposHtml(); ?>
 <input type="Hidden" id="que"  name="que" value="">
-
 <table id="datospersonales">
 <tr><td class=titulo colspan="5">
 <?php print(strtoupper(_("datos personales"))); ?>
@@ -78,17 +123,7 @@ echo "</tr><tr>";
 ?>
 	<td><span class=etiqueta ><?= ucfirst('situacion'); ?></span>
 	</td>
-	<td colspan=2>
-	<select class=contenido id="situacion" name="situacion" ">
-			<?php
-			foreach ($cSituaciones as $oSituacion) {
-				$situacion_db = $oSituacion->getSituacion();
-				$nombre_situacion = $oSituacion->getNombre_situacion();
-				if ($situacion == $situacion_db) { $sel="selected"; } else { $sel=""; }
- 				echo "<option value=\"$situacion_db\" $sel>  $nombre_situacion </option>";
-			}
-			?>
-	</select></td>
+	<td colspan=2><?= $oDesplSituacion->desplegable() ?></td>
 <?php
 echo web\dibujar_campo($obj,"f_situacion",11,1,0);
 echo "</tr><tr>";
@@ -132,10 +167,10 @@ if (!empty($botones)) {
 	while ($b) {
 		if ($b==1){
 			$txt_g=ucwords(_("guardar cambios"));
-			echo "<th class='link_inv' onclick='fnjs_guardar()'>$txt_g</th>"; }
+			echo "<th class='link_inv' onclick='fnjs_guardar(\"#frm2\")'>$txt_g</th>"; }
 		if ($b==2){
 			$txt_e=ucwords(_("eliminar"));
-			echo "<th class='link_inv' onclick='fnjs_eliminar()'>$txt_e</th>"; }
+			echo "<th class='link_inv' onclick='fnjs_eliminar(\"#frm2\")'>$txt_e</th>"; }
 		if ($b==3){
 			$txt_e=ucwords(_("formato texto"));
 			$pag="programas/ficha_texto.php?id_nom=$id_nom&obj_pau=".$_POST['obj_pau'];

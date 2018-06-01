@@ -78,7 +78,6 @@ class DatosTabla {
 								rta_txt=rta.responseText;
 								if (rta_txt != '' && rta_txt != '\\n') {
 									alert ('respuesta: '+rta_txt);
-									/*fnjs_mostra_resposta(rta,'#main'); */
 								}
 							},
 							success: function() { fnjs_actualizar(formulario) }
@@ -91,8 +90,10 @@ class DatosTabla {
 			}
 		}
 		fnjs_actualizar=function(formulario){
+			var campo = '<input type=\"hidden\" name=\"refresh\" value=1>';
 			$(formulario).attr('action',\"$action_tabla\");
-			fnjs_enviar_formulario(formulario,'$bloque');
+			$(formulario).append(campo);
+			fnjs_enviar_formulario(formulario,'#main');
 		}
 		";
 		return $html_script;

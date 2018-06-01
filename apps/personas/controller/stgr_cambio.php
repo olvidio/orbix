@@ -19,19 +19,15 @@
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();
+
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
 	$id_nom=strtok($a_sel[0],"#");
 	$id_tabla=strtok("#");
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$a_sel,1);
-	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
-	if (!empty($go_to)) {
-		// add stack:
-		$stack = $oPosicion->getStack(1);
-		$go_to .= "&stack=$stack";
-	}
 }
 
 switch ($id_tabla) {
@@ -72,7 +68,6 @@ $tipos= array (  "n"=> _("no cursa est."),
 				"r"=> _("repaso"),
 				);
 
-//$go_to=stripslashes($go_to);
 $oDespl = new web\Desplegable();
 $oDespl->setNombre('stgr');
 $oDespl->setOpciones($tipos);
@@ -87,15 +82,11 @@ $a_camposHidden = array(
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 
-echo $oPosicion->mostrar_left_slide(1);
-?>
-<h2 class=titulo><?= ucfirst(_("cambiar el stgr")); ?></h2>
-<form id="frm_sin_nombre" name="frm_sin_nombre" action="apps/personas/controller/stgr_update.php" method="POST">
-	<?= $oHash->getCamposHtml(); ?>
-	<table><tr><th class=etiqueta_inv><?= $nom; ?></th>
-	<td class=datos>
-	<?= $oDespl->desplegable(); ?>
-	</td></tr>
-	</td></tr></table>
-	<input type="button" id="guardar" name="guardar" onclick="fnjs_enviar_formulario('#frm_sin_nombre');" value="<?php print(ucfirst(_('guardar'))); ?>" > 
-</form>
+$a_campos = ['oPosicion' => $oPosicion,
+			'oHash' => $oHash,
+			'nom' => $nom,
+			'oDespl' => $oDespl,
+			];
+
+$oView = new core\View('personas/controller');
+echo $oView->render('stgr_cambio.phtml',$a_campos);

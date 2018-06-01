@@ -126,12 +126,13 @@ case "nuevo":
 	$Qh_fin = (string) \filter_input(INPUT_POST, 'h_fin');
 	$Qpublicado = (string) \filter_input(INPUT_POST, 'publicado');
 	
+	$Qinom_tipo_val = (integer) \filter_input(INPUT_POST, 'inom_tipo_val');
 	//Compruebo que estén todos los campos necesasrios
 	if (empty($Qnom_activ) or empty($Qf_ini) or empty($Qf_fin) or empty($Qstatus) or empty($Qdl_org) ) {
 		echo _("Debe llenar todos los campos que tengan un (*)")."<br>";
 		die();
 	}
-	if (empty($_POST['inom_tipo_val']) || strstr($_POST['inom_tipo_val'],'.')) {
+	if (empty($Qinom_tipo_val)) {
 		echo _("Debe seleccionar un tipo de actividad")."<br>";
 		die();
 	}

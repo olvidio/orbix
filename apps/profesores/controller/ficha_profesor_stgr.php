@@ -32,29 +32,48 @@ $dele .= (core\ConfigGlobal::mi_sfsv()==2)? 'f' : '';
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
 	$id_nom=strtok($a_sel[0],"#");
-	$id_tabla=strtok("#");
+	$Qid_tabla=strtok("#");
 	$oPosicion->addParametro('id_sel',$a_sel,1);
-	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else {
-	$id_pau = empty($_POST['id_pau'])? '' : $_POST['id_pau'];
-	$id_nom = empty($_POST['id_nom'])? '' : $_POST['id_nom'];
-	$id_nom = empty($id_nom)? $id_pau : $id_nom;
-	$id_tabla = empty($_POST['id_tabla'])? '' : $_POST['id_tabla'];
+	$Qid_pau = (integer) \filter_input(INPUT_POST, 'id_pau');
+	$Qid_nom = (integer) \filter_input(INPUT_POST, 'id_nom');
+	$id_nom = empty($Qid_nom)? $Qid_pau : $Qid_nom;
+	$Qid_tabla = (string) \filter_input(INPUT_POST, 'id_tabla');
 }
-$_POST['permiso']= empty($_POST['permiso'])? '':$_POST['permiso'];
-$_POST['depende']= empty($_POST['depende'])? '':$_POST['depende'];
-$obj_pau = empty($_POST['obj_pau'])? '':$_POST['obj_pau'];
+
+// Sobre-escribe el scroll_id que se pueda tener
+if (isset($_POST['stack'])) {
+	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+} else { 
+	$stack = '';
+}
+//Si vengo por medio de Posicion, borro la última
+if ($stack != '') {
+	// No me sirve el de global_object, sino el de la session
+	$oPosicion2 = new web\Posicion();
+	if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+		$Qid_sel=$oPosicion2->getParametro('id_sel');
+		$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+		$oPosicion2->olvidar($stack);
+	}
+}
+
+$Qpermiso = (string) \filter_input(INPUT_POST, 'permiso');
+$Qdepende = (string) \filter_input(INPUT_POST, 'depende');
+$Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
+$Qprint = (integer) \filter_input(INPUT_POST, 'print');
 
 $aWhere = array('id_nom'=>$id_nom,'_ordre'=>'f_nombramiento');
 $aOperador = array();
-if (!empty($_POST['print'])) { $aWhere['f_cese'] = 'NULL'; $aOperador['f_cese'] = 'IS NULL'; }
+if (!empty($Qprint)) { $aWhere['f_cese'] = 'NULL'; $aOperador['f_cese'] = 'IS NULL'; }
 
 $num_txt='';
 $agd_txt='';
 $sacd_txt='';
 $latin_txt='';
-switch ($id_tabla) {
+switch ($Qid_tabla) {
 	case "n":
 		$num_txt="si";
 		break;
@@ -78,19 +97,19 @@ $id_ctr = $oPersona->getid_ctr();
 $oCentroDl = new ubis\CentroDl($id_ctr);
 $nombre_ubi = $oCentroDl->getNombre_ubi();
 
-$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/profesores/controller/ficha_profesor_stgr.php?'.http_build_query(array('id_nom'=>$id_nom,'id_tabla'=>$id_tabla,'permiso'=>$_POST['permiso'],'depende'=>$_POST['depende'])));
+$go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/profesores/controller/ficha_profesor_stgr.php?'.http_build_query(array('id_nom'=>$id_nom,'id_tabla'=>$Qid_tabla,'permiso'=>$Qpermiso,'depende'=>$Qdepende)));
 
 $oProfesorLatin = new profesores\ProfesorLatin($id_nom);
 $latin = $oProfesorLatin->getLatin();
 
-$go_cosas['print']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/profesores/controller/ficha_profesor_stgr.php?'.http_build_query(array('id_nom'=>$id_nom,'id_tabla'=>$id_tabla,'print'=>'1')));
+$go_cosas['print']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/profesores/controller/ficha_profesor_stgr.php?'.http_build_query(array('id_nom'=>$id_nom,'id_tabla'=>$Qid_tabla,'print'=>'1')));
 
 $cosas=array( 'clase_info'=>'profesores\model\info1022', //latin
 			'pau'=>'p',
 			'id_pau'=>$id_nom,
-			'obj_pau'=>$obj_pau,
-			'permiso'=>$_POST['permiso'],
-			'depende'=>$_POST['depende'],
+			'obj_pau'=>$Qobj_pau,
+			'permiso'=>$Qpermiso,
+			'depende'=>$Qdepende,
 			'go_to'=>$go_to);
 $go_cosas['latin']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/core/mod_tabla_sql.php?'.http_build_query($cosas));
 
@@ -118,7 +137,7 @@ foreach ($cProfesores as $oProfesor) {
 }
 $dep = !empty($departamento)? $departamento : '';
 
-if (empty($_POST['print'])) { // si no es para imprimir muestro todos los datos
+if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
 	// director departamento (clase_info=1020)  //////////////////////////////////
 	$gesProfesorDirector = new profesores\GestorProfesorDirector();
 	$cDirectores = $gesProfesorDirector->getProfesoresDirectores($aWhere,$aOperador);
@@ -243,7 +262,7 @@ $go_cosas['docencia']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/core/mod
 
 echo $oPosicion->mostrar_left_slide(1);
 
-if (!empty($_POST['print'])) {
+if (!empty($Qprint)) {
 	include("../view/ficha_profesor_stgr.print.phtml");
 } else {
 	include("../view/ficha_profesor_stgr.phtml");

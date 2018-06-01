@@ -29,7 +29,8 @@ if (!empty($Qnew_ctr) AND !empty($Qf_ctr)){
 	$Qctr_o = (string) \filter_input(INPUT_POST, 'ctr_o');
 
 	$id_new_ctr=strtok($Qnew_ctr,"#");
-	$nom_new_ctr=strtok("#");
+	$oCentro = new \ubis\model\entity\Centro($id_new_ctr);
+	$nom_new_ctr = $oCentro->getNombre_ubi();
 
 	$oPersonaDl->setId_ctr($id_new_ctr);
 	// ?? $oPersonaDl->setF_ctr($Qf_ctr);
@@ -80,8 +81,6 @@ $oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$Qid_pau,'id_tipo_
 $oDossier->abrir(); // ya pone la fecha de hoy.
 $oDossier->DBGuardar();
 
-if (empty($error)) {
-	echo $oPosicion->go_atras(1);
-} else {
+if (!empty($error)) {
 	echo $error;
 }

@@ -38,7 +38,7 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
  	$id_sel=$_POST['sel'];
 	$id_ubi=strtok($id_sel[0],"#");
 	$oPosicion->addParametro('id_sel',$id_sel,1);
-	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else {
 	empty($_POST['id_ubi'])? $id_ubi="" : $id_ubi=$_POST['id_ubi'];

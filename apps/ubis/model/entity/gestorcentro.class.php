@@ -40,14 +40,15 @@ class GestorCentro Extends  core\ClaseGestor {
 	 *
 	 * @return object Desplegable
 	 */
-	function getListaCentros($sCondicion='') {
+	function getListaCentros($sCondicion='', $orden='') {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
+		if (empty($orden)) { $orden = 'nombre_ubi'; }
 		if (empty($sCondicion)) $sCondicion="WHERE status = 't'";
 		$sQuery="SELECT id_ubi, nombre_ubi
 				FROM $nom_tabla
 				$sCondicion
-				ORDER BY nombre_ubi";
+				ORDER BY $orden";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorCentro.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);

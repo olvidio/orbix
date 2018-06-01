@@ -287,7 +287,7 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
 			
 			$oHashSelect = new web\Hash();
 			$oHashSelect->setCamposForm('mod');
-			$oHashSelect->setCamposNo('sel!scroll_id!mod');
+			$oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
 			$a_camposHidden = array(
 					'clase_info' => $clase_info,
 					'pau' => $pau,
@@ -324,7 +324,7 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
 				$html .= _("nuevo");
 				// caso especial para traslados:
 				if ($id_dossier == 1004) {
-					$insert=Hash::link(ConfigGlobal::getWeb().'/apps/personas/controller/traslado_form.php?'.http_build_query(array('cabecera'=>'no','id_pau'=>$id_pau,'id_dossier'=>$id_dossier,'obj_pau'=>$Qobj_pau,'go_to'=>$go_to)));
+					$insert=Hash::link(ConfigGlobal::getWeb().'/apps/personas/controller/traslado_form.php?'.http_build_query(array('cabecera'=>'no','id_pau'=>$id_pau,'id_dossier'=>$id_dossier,'obj_pau'=>$Qobj_pau)));
 					$html .= "\" onclick=\"fnjs_update_div('#main','$insert');\"></td></tr></table>";
 				} else {
 					$html .= "\" onclick=\"fnjs_nuevo('#seleccionados');\"></td></tr></table>";

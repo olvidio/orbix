@@ -28,7 +28,7 @@ if (!empty($_POST['sel'])) { //vengo de un checkbox
 	$id_tabla=strtok("#");
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$a_sel,1);
-	$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else {
 	$id_nom = (integer) \filter_input(INPUT_POST, 'id_nom');
@@ -71,7 +71,6 @@ if (isset($_SESSION['session_go_to']['sel']['tabla'])) {
 	$_SESSION['session_go_to']['sel']['tabla']=$Qobj_pau;
 }
 
-$id_pau = $id_nom;
 $pau="p";
 
 /* def variables **/
@@ -107,13 +106,12 @@ if ($Qobj_pau != 'PersonaEx' && $Qobj_pau != 'PersonaIn') {
 	$ctr = '';
 }
 
-$gohome=web\Hash::link('apps/personas/controller/home_persona.php?'.http_build_query(array('id_nom'=>$id_nom,'obj_pau'=>$Qobj_pau))); 
-$godossiers=web\Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_nom,'obj_pau'=>$Qobj_pau)));
-$go_breve=web\Hash::link('apps/personas/controller/personas_editar.php?'.http_build_query(array('id_nom'=>$id_nom,'obj_pau'=>$Qobj_pau,'breve'=>'true'))); 
-$go_ficha=web\Hash::link('apps/personas/controller/personas_editar.php?'.http_build_query(array('id_nom'=>$id_nom,'obj_pau'=>$Qobj_pau))); 
+$a_parametros = array('pau'=>$pau,'id_nom'=>$id_nom,'obj_pau'=>$Qobj_pau); 
+$gohome=web\Hash::link('apps/personas/controller/home_persona.php?'.http_build_query($a_parametros));
+$go_ficha=web\Hash::link('apps/personas/controller/personas_editar.php?'.http_build_query($a_parametros));
+$a_parametros = array('pau'=>$pau,'id_pau'=>$id_nom,'obj_pau'=>$Qobj_pau); 
+$godossiers=web\Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_build_query($a_parametros));
 
-$alt=_("ver dossiers");
-$dos=_("dossiers");
 $titulo=$nom;
 
 //$telfs_fijo = telecos_persona($id_nom,"telf","*"," / ") ;
@@ -121,6 +119,24 @@ $titulo=$nom;
 //if ($telfs_fijo && $telfs_movil) { $telfs = $telfs_fijo ." / ". $telfs_movil; } else { $telfs = $telfs_fijo . $telfs_movil;} 
 $telfs = '';
 
-?>
-<div id="top"  name="top"><?php include ("../view/home_persona.phtml"); ?></div>
-<div id="ficha" name="ficha"><?php include ("apps/dossiers/controller/lista_dossiers.php"); ?></div>
+$a_campos = [
+			'oPosicion' => $oPosicion,
+			'gohome' => $gohome,
+			'godossiers' => $godossiers,
+			'go_ficha' => $go_ficha,
+			'titulo' => $titulo,
+			'telfs' => $telfs,
+			'stgr' => $stgr,
+			'profesion' => $profesion,
+			'celebra' => $celebra,
+			'santo' => $santo,
+			'f_nacimiento' => $f_nacimiento,
+			'dl' => $dl,
+			'ctr' => $ctr,
+			'pau'=>$pau,
+			'id_pau'=>$id_nom,
+			'Qobj_pau'=>$Qobj_pau
+			];
+
+$oView = new core\View('personas/controller');
+echo $oView->render('home_persona.phtml',$a_campos);

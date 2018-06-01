@@ -12,13 +12,17 @@ use personas\model\entity as personas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$Qid_nom = (integer) \filter_input(INPUT_POST, 'id_nom');
+$Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
+$Qque = (string) \filter_input(INPUT_POST, 'que');
+
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miSfsv=core\ConfigGlobal::mi_sfsv();
 
-switch ($_POST['que']) {
+switch ($Qque) {
 	case 'eliminar':
-		$obj = 'personas\\model\\entity\\'.$_POST['obj_pau'];
-		$oPersona = new $obj($_POST['id_nom']);
+		$obj = 'personas\\model\\entity\\'.$Qobj_pau;
+		$oPersona = new $obj($Qid_nom);
 		$dl = $oPersona->getDl();
 		// solo lo dejo borrar si es de mi dl.
 		if (core\ConfigGlobal::mi_dele()== $dl) {
@@ -30,8 +34,8 @@ switch ($_POST['que']) {
 		die();
 		break;
 	case 'guardar':
-		$obj = 'personas\\model\\entity\\'.$_POST['obj_pau'];
-		$oPersona = new $obj($_POST['id_nom']);
+		$obj = 'personas\\model\\entity\\'.$Qobj_pau;
+		$oPersona = new $obj($Qid_nom);
 		break;
 }
 
@@ -54,7 +58,7 @@ foreach ($cDatosCampo as $oDatosCampo) {
 			}
 		}
 	} else {
-		if (!isset($_POST[$camp]) && !empty($_POST['id_nom'])) continue; // sólo si no es nuevo
+		if (!isset($_POST[$camp]) && !empty($Qid_nom)) continue; // sólo si no es nuevo
 		//pongo el valor nulo, sobretodo para las fechas.
 		if (isset($_POST[$camp]) && (empty($_POST[$camp]) or trim($_POST[$camp])=="") && !is_array($_POST[$camp])) {
 			//si es un campo not null (y es null), pongo el valor por defecto
@@ -71,5 +75,3 @@ foreach ($cDatosCampo as $oDatosCampo) {
 }
 $oPersona->setAllAtributes($a_values_o);
 $oPersona->DBGuardar();
-
-echo $oPosicion->go_atras(1);

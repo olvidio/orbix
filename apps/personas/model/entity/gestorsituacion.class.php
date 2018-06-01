@@ -1,6 +1,7 @@
 <?php
 namespace personas\model\entity;
 use core;
+use web;
 /**
  * GestorSituacion
  *
@@ -33,6 +34,34 @@ class GestorSituacion Extends core\ClaseGestor {
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
+	/**
+	 * retorna un objecte del tipus Desplegable
+	 * Els posibles situacions.
+	 *
+	 * @return array Una Llista
+	 */
+	function getListaSituaciones($traslado=FALSE) {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$Condicion = '';
+		if ($traslado) {
+			$Condicion = " WHERE situacion IN ('A','D','E','L','T','X')";
+		}
+		$sQuery="SELECT situacion,nombre_situacion FROM $nom_tabla $Condicion ORDER BY situacion";
+		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+			$sClauError = 'GestorSituacion.lista';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		$aOpciones=array();
+		foreach ($oDbl->query($sQuery) as $aClave) {
+			$clave=$aClave[0];
+			$val=$aClave[1];
+			$aOpciones[$clave]=$val;
+		}
+		return new web\Desplegable('',$aOpciones,'',true);
+	}
+	
 	/**
 	 * retorna l'array d'objectes de tipus Situacion
 	 *

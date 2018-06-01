@@ -9,7 +9,9 @@ use web;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$oPosicion->recordar();
+$Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
+$oPosicion->recordar($Qrefresh);
+
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 // Si vengo de eliminar, hay que borrar el 'sel' que ha identificado el registro,
 //  pues ya no existe
@@ -55,7 +57,7 @@ $Qk_buscar = urldecode($Qk_buscar);
 $obj = $Qclase_info;
 $oInfoClase = new $obj();
 
-// si paso parametros, definir la collción
+// si paso parametros, definir la colección
 $Qpau = (string) \filter_input(INPUT_POST, 'pau');
 $Qid_pau = (integer) \filter_input(INPUT_POST, 'id_pau');
 $Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
@@ -84,7 +86,7 @@ $oHashBuscar->setArraycamposHidden($a_camposHiddenBuscar);
 
 $oHashSelect = new web\Hash();
 $oHashSelect->setcamposForm('sel');
-$oHashSelect->setCamposNo('mod!sel!scroll_id');
+$oHashSelect->setCamposNo('mod!sel!scroll_id!refresh');
 $a_camposHiddenSelect = array(
 		'clase_info' => $Qclase_info,
 		'datos_buscar' => $Qdatos_buscar,

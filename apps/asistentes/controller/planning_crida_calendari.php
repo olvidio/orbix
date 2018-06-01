@@ -29,7 +29,10 @@ use ubis\model\entity as ubis;
 	require_once ("apps/core/global_object.inc");
 
 // FIN de  Cabecera global de URL de controlador ********************************
-switch($_POST['modelo']) {
+	
+$Qmodelo = (integer) \filter_input(INPUT_POST, 'modelo');
+		
+switch($Qmodelo) {
 	case 2:
 		$print = 1;
 	case 1:
@@ -56,7 +59,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 		$aid_nom[] = $a_sel[0];
 		// el scroll id es de la página anterior, hay que guardarlo allí
 		$oPosicion->addParametro('id_sel',$a_sel,1);
-		$scroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+		$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
 		$oPosicion->addParametro('scroll_id',$scroll_id,1);
 	}
 }
@@ -64,13 +67,14 @@ if (!empty($a_sel)) { //vengo de un checkbox
 function actividadesDeUnaCasa($id_ubi,$inicio,$fin) {
 	$oInicio = $GLOBALS['oInicio']; 
     $oFin = $GLOBALS['oFin'];
+    $Qcdc_sel = $GLOBALS['Qcdc_sel'];
 	$a=0;
 	$a_cdc = array();
 	$aWhere=array();
 	$aOperador=array();
 	if (empty($id_ubi) || $id_ubi==1) { // en estos casos sólo miro las actividades de cada sección.
 		if (empty($id_ubi)) { $aOperador['id_ubi']='IS NULL'; }
-		switch ($_POST['cdc_sel']) {
+		switch ($Qcdc_sel) {
 			case 11:
 				$aWhere['id_tipo_activ']='^1';
 				$aOperador['id_tipo_activ']='~';
@@ -152,16 +156,24 @@ function actividadesDeUnaCasa($id_ubi,$inicio,$fin) {
 	}
 }
 
-$year=empty($_POST['year'])? date('Y')+1 : $_POST['year'];
-$_POST['cdc_sel'] = empty($_POST['cdc_sel'])? '' : $_POST['cdc_sel'];
+$Qyear = (integer) \filter_input(INPUT_POST, 'year');
+$year=empty($Qyear)? date('Y')+1 : $Qyear;
+$Qcdc_sel = (integer) \filter_input(INPUT_POST, 'cdc_sel');
+$Qtipo = (string) \filter_input(INPUT_POST, 'tipo');
+$Qdd = (integer) \filter_input(INPUT_POST, 'dd');
+$Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 
-if (empty($_POST['periodo']) || $_POST['periodo'] == 'otro') {
-	$inicio = empty($_POST['inicio'])? $_POST['empiezamin'] : $_POST['inicio'];
-	$fin = empty($_POST['fin'])? $_POST['empiezamax'] : $_POST['fin'];
+if (empty($Qperiodo) || $Qperiodo == 'otro') {
+	$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
+	$Qfin = (string) \filter_input(INPUT_POST, 'fin');
+	$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
+	$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
+	$inicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
+	$fin = empty($Qfin)? $Qempiezamax : $Qfin;
 } else {
 	$oPeriodo = new web\Periodo();
 	$oPeriodo->setAny($year);
-	$oPeriodo->setPeriodo($_POST['periodo']);
+	$oPeriodo->setPeriodo($Qperiodo);
 	$inicio = $oPeriodo->getF_ini();
 	$fin = $oPeriodo->getF_fin();
 }
@@ -170,8 +182,8 @@ $oInicio = DateTime::createFromFormat('j/n/Y',$inicio);
 $oFin = DateTime::createFromFormat('j/n/Y',$fin);
 // valores por defecto.
 //divisiones por día
-if (empty($_POST['dd']) || (($_POST['dd']<>1) AND ($_POST['dd']<>3))) {
-	$_POST['dd']=3;
+if (empty($Qdd) || (($Qdd<>1) AND ($Qdd<>3))) {
+	$Qdd=3;
 }
 $mod=0; // 0 u otro valor (1 ver, 2 modificar, 3 eliminar..) el valor se pasa a la página link. 
 $nueva=0; // 0 o 1 para asignar una nueva actividad.
@@ -181,7 +193,7 @@ if (empty($print)) { $doble=1; } else { $doble=0; }
 $interval = $oFin->diff($oInicio)->format('%m');
 if ($interval < 2) $doble=0;
 
-switch ($_POST['tipo']) {
+switch ($Qtipo) {
 	case 'planning':
 	case 'p_de_paso':
 		$cabecera=ucfirst(_('persona seleccionada'));
@@ -191,8 +203,9 @@ switch ($_POST['tipo']) {
 		$cPersonas = $oGesPersonas->getPersonas($aWhere,$aOperador);
 	break;
 	case 'ctr':
-		if (!empty($_POST['id_ubi'])) { 
-			$id_ubi=strtok($_POST['id_ubi'],'#');
+		$Qid_ubi = (string) \filter_input(INPUT_POST, 'id_ubi');
+		if (!empty($Qid_ubi)) { 
+			$id_ubi=strtok($Qid_ubi,'#');
 			$nombre_ubi=strtok('#');
 			$cabecera=ucfirst(sprintf(_('personas de: %s'),$nombre_ubi));
 			$GesPersonas = new personas\GestorPersonaDl();
@@ -203,10 +216,12 @@ switch ($_POST['tipo']) {
 	case 'planning_ctr':
 		$aWhere=array();
 		$aWhereP = array('situacion'=>'A'); 
-		if (empty($_POST['sacd'])) { $aWhereP['sacd']='f'; } 
-		if (!empty($_POST['ctr'])) { 
-			$nom_ubi = str_replace("+", "\+", $_POST['ctr']); // para los centros de la sss+
-			$cabecera=ucfirst(sprintf(_("personas de: %s"),$_POST['ctr']));
+		$Qsacd = (string) \filter_input(INPUT_POST, 'sacd');
+		$Qctr = (string) \filter_input(INPUT_POST, 'ctr');
+		if (empty($Qsacd)) { $aWhereP['sacd']='f'; } 
+		if (!empty($Qctr)) { 
+			$nom_ubi = str_replace("+", "\+", $Qctr); // para los centros de la sss+
+			$cabecera=ucfirst(sprintf(_("personas de: %s"),$Qctr));
 			$aWhere['nombre_ubi']=$nom_ubi;
 			$aOperador['nombre_ubi']='sin_acentos';
 			$GesCentros = new ubis\GestorCentroDl();
@@ -228,12 +243,14 @@ switch ($_POST['tipo']) {
 			}
 		} else {
 			$cabecera=ucfirst(_('centros'));
-			if ((!empty($_POST['todos_n']) && !empty($_POST['todos_agd']))
-				|| (empty($_POST['todos_n']) && empty($_POST['todos_agd'])) ) {
-			} else {
-				if (!empty($_POST['todos_n'])) $aWhereP['id_tabla']='n';
-				if (!empty($_POST['todos_agd'])) $aWhereP['id_tabla']='a';
-			}
+			$Qtodos_n = (string) \filter_input(INPUT_POST, 'todos_n');
+			$Qtodos_agd = (string) \filter_input(INPUT_POST, 'todos_agd');
+			$Qtodos_s = (string) \filter_input(INPUT_POST, 'todos_s');
+			// Pro defecto los 'n':
+			$aWhereP['id_tabla']='n';
+			if (!empty($Qtodos_n)) $aWhereP['id_tabla']='n';
+			if (!empty($Qtodos_agd)) $aWhereP['id_tabla']='a';
+			if (!empty($Qtodos_s)) $aWhereP['id_tabla']='s';
 			$aWhereP['_ordre'] = 'id_ctr, apellido1';
 			$GesPersonas = new personas\GestorPersonaDl();
 			$cPersonas = $GesPersonas->getPersonas($aWhereP);
@@ -246,17 +263,18 @@ switch ($_POST['tipo']) {
 	break;
 	case 'casa':
 		$cabecera=ucfirst(_('planning de casas'));
-		$_POST['status']=array(2);
+//		$_POST['status']=array(2);
 	break;
 }
 
 
-if ($_POST['tipo']=='planning_cdc' || $_POST['tipo']=='casa') {
-	if (!empty($_POST['sin_activ']) && $_POST['sin_activ'] == 1) { $sin_activ = 1; } else { $sin_activ = 0; } //Para dibujar caudricula aunque no tenga actividades.
-	if ($_POST['cdc_sel'] < 10) { //Para buscar por casas.
+if ($Qtipo=='planning_cdc' || $Qtipo=='casa') {
+	$Qsin_activ = (string) \filter_input(INPUT_POST, 'sin_activ');
+	if (!empty($Qsin_activ) && $Qsin_activ == 1) { $sin_activ = 1; } else { $sin_activ = 0; } //Para dibujar caudricula aunque no tenga actividades.
+	if ($Qcdc_sel < 10) { //Para buscar por casas.
 		$aWhere=array();
 		$aOperador=array();
-		switch ($_POST['cdc_sel']) {
+		switch ($Qcdc_sel) {
 			case 1:
 				$aWhere['sv']='t';
 				$aWhere['sf']='t';
@@ -286,8 +304,9 @@ if ($_POST['tipo']=='planning_cdc' || $_POST['tipo']=='casa') {
 				break;
 			case 9:
 				// posible selección múltiple de casas
-				if (!empty($_POST['id_cdc'])) {
-					$aWhere['id_ubi'] = '^'. implode('$|^',$_POST['id_cdc']) .'$';
+				$a_id_cdc = (array)  \filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+				if (!empty($a_id_cdc)) {
+					$aWhere['id_ubi'] = '^'. implode('$|^',$a_id_cdc) .'$';
 					$aOperador['id_ubi'] = '~';
 				}
 				break;
@@ -296,7 +315,7 @@ if ($_POST['tipo']=='planning_cdc' || $_POST['tipo']=='casa') {
 		$GesCasaDl = new ubis\GestorCasaDl();
 		$cCasasDl = $GesCasaDl->getCasas($aWhere,$aOperador);
 
-		if ($_POST['cdc_sel']==6) { //añado los ctr de sf
+		if ($Qcdc_sel==6) { //añado los ctr de sf
 			foreach ($cCentrosSf as $oCentroSf) {
 				array_push($cCasasDl, $oCentroSf);
 			}	
@@ -333,7 +352,7 @@ if ($_POST['tipo']=='planning_cdc' || $_POST['tipo']=='casa') {
 		$oGesActividades = new actividades\GestorActividad();
 		$aWhere=array();
 		$aOperador=array();
-		switch ($_POST['cdc_sel']) {
+		switch ($Qcdc_sel) {
 			case 11:
 				$aWhere['id_tipo_activ']='^1';
 				$aOperador['id_tipo_activ']='~';
@@ -401,7 +420,9 @@ if ($_POST['tipo']=='planning_cdc' || $_POST['tipo']=='casa') {
 
 		if (!empty($buscar_ctr)) {
 			$id_ubi=$oPersona->getId_ctr();
-			if (!in_array($id_ubi,$aListaCtr)) {
+			if (empty($id_ubi)) {
+				$nombre_ubi="centro?";
+			} elseif (!in_array($id_ubi,$aListaCtr)) {
 				$oCentro = new ubis\CentroDl($id_ubi);
 				$nombre_ubi = $oCentro->getNombre_ubi();
 				$aListaCtr[$id_ubi]=$nombre_ubi;
@@ -526,9 +547,9 @@ if ($_POST['tipo']=='planning_cdc' || $_POST['tipo']=='casa') {
 }//fin del else
 
 // En el caso de personas doy la opción de volver a los seleccionados.
-if ($_POST['tipo']=='planning' || $_POST['tipo']=='p_de_paso' ) {
+//if ($Qtipo=='planning' || $Qtipo=='p_de_paso' ) {
 	echo $oPosicion->mostrar_left_slide(1);
-}
+//}
 
 // Listo varios centros.
 if (!empty($buscar_ctr)) {
@@ -542,10 +563,9 @@ if (!empty($buscar_ctr)) {
 		en que todas las casas están ocupadas.  
 		*/  
 		$actividades[]=array('###'=>array());
-		$r=dibujar_calendario($_POST['dd'],$cabecera,$inicio,$fin,$actividades,$mod,$nueva,$doble);
+		$r=dibujar_calendario($Qdd,$cabecera,$inicio,$fin,$actividades,$mod,$nueva,$doble);
 		$act++;
 	}
 } else {
-	$r=dibujar_calendario($_POST['dd'],$cabecera,$inicio,$fin,$actividades,$mod,$nueva,$doble);
+	$r=dibujar_calendario($Qdd,$cabecera,$inicio,$fin,$actividades,$mod,$nueva,$doble);
 }
-?>
