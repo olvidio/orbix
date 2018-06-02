@@ -28,11 +28,37 @@ if (!empty($nuevo)) {
 		$valor_predeterminado=$oDatosCampo->datos_campo($oDbl,'valor');
 		$a_campos[$camp] = $valor_predeterminado;
 	}
-	$a_campos['f_situacion'] = date('j/m/Y');
-	$a_campos['id_nom'] = '';
-	$a_campos['obj'] = $oPersona;
-	$a_campos['id_tabla'] = empty($_POST['id_tabla'])? '' : $_POST['id_tabla'];
 	$nom_ctr = '';
+	$Qid_nom = '';
+	$gohome = '';
+	$godossiers = '';
+	$ir_a_traslado = '';
+	$titulo = '';
+	$id_tabla = (string)  filter_input(INPUT_POST, 'tabla');
+	$dl = '';
+	$sacd = '';
+	$trato = '';
+	$nom = '';
+	$nx1 = '';
+	$apellido1 = '';
+	$nx2 = '';
+	$apellido2 = '';
+	$f_nacimiento = '';
+	$lengua = '';
+	$situacion = '';
+	$f_situacion =  date('j/m/Y');
+	$apel_fam = '';
+	$inc = '';
+	$f_inc = '';
+	$stgr = '';
+	$profesion = '';
+	$eap = '';
+	$observ = '';
+	$lugar_nacimiento = '';
+	$id_ctr = '';
+	$nom_ctr = '';
+	$edad = '';
+	$profesor_stgr = '';
 } else {
 	$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 	if (!empty($a_sel)) { //vengo de un checkbox

@@ -246,15 +246,14 @@ class GestorResumenPlazas {
 		$plazas_totales = $this->getPlazasTotales();
 		// si la actividad no está pulicada, no hay plazas de otras dl. Todas para la dl org.
 		if ($oActividad->getPublicado() === false) {
-			
-			$ocupadas = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$dl_org);
-			if ($ocupadas < 0) { // No se sabe
-				$a_plazas[$dl_org]['ocupadas'] = '?';
-				$a_plazas['total']['ocupadas'] = $ocupadas;
-			} else {
-				$a_plazas[$dl_org]['ocupadas'] = $ocupadas;
-				$a_plazas['total']['ocupadas'] = $ocupadas;
-			}
+//			$ocupadas = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$dl_org);
+//			if ($ocupadas < 0) { // No se sabe
+//				$a_plazas[$dl_org]['ocupadas'] = '?';
+//				$a_plazas['total']['ocupadas'] = $ocupadas;
+//			} else {
+//				$a_plazas[$dl_org]['ocupadas'] = $ocupadas;
+//				$a_plazas['total']['ocupadas'] = $ocupadas;
+//			}
 			
 			$a_plazas['total']['actividad'] = $plazas_totales;
 			$a_plazas['total']['calendario'] = $plazas_totales;
@@ -265,7 +264,7 @@ class GestorResumenPlazas {
 		
 			return $a_plazas;
 		}
-		// plazas de calendario de cada dl
+		// plazas de calendario de cada dl + cedidas
 		$cActividadPlazas = $gesActividadPlazas->getActividadesPlazas(array('id_activ'=>$id_activ));
 		foreach ($cActividadPlazas as $oActividadPlazas) {
 			$id_dl = $oActividadPlazas->getId_dl();
@@ -277,6 +276,7 @@ class GestorResumenPlazas {
 			if (empty($a_plazas[$dl]['conseguidas'])) {
 				$a_plazas[$dl]['conseguidas'] = array();
 			}
+			$a_plazas[$dl]['calendario'] = 0;
 			if ($dl_org == $dl_tabla) {
 				$a_plazas[$dl]['calendario'] = $oActividadPlazas->getPlazas();
 				// las cedidas se guardan en la tabla que pertenece a la dl
@@ -299,10 +299,11 @@ class GestorResumenPlazas {
 		}
 		//Calcular totales
 		$tot_calendario = 0;
-		$tot_actual = 0;
+		$tot_disponibles = 0;
 		$tot_ocupadas = 0;
 		$tot_cedidas = 0;
 		$tot_conseguidas = 0;
+		// Conseguidas
 		foreach ($a_plazas as $dl=>$aa) {
 			$total_cedidas = 0;
 			// si no tiene por calendario le pongo 0
@@ -321,9 +322,9 @@ class GestorResumenPlazas {
 					$a_plazas[$dl_otra]['conseguidas'][$dl] = $num_plazas;
 				} else {
 					$a_plazas[$dl_otra]['conseguidas'][$dl] = $num_plazas;
-					
-					$ocu = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$dl_otra);
-					$a_plazas[$dl][$dl_otra]['ocupadas'] = $ocu;
+//					
+//					$ocu = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$dl_otra,$dl);
+//					$a_plazas[$dl]['ocupadas'][$dl_otra] = $ocu;
 				} 
 				$total_cedidas += $num_plazas;
 			}
@@ -340,40 +341,40 @@ class GestorResumenPlazas {
 			$a_plazas[$dl]['total_conseguidas'] = $total_conseguidas;
 			$tot_conseguidas += $total_conseguidas;
 		}
+		// Disponibles (calendario - cedidas // conseguidas)
 		foreach ($a_plazas as $dl=>$aa) {
-			$total_actual = 0;
-			// si no tiene por calendario le pongo 0
-			if (!array_key_exists('calendario',$aa)) {
-				$pl_calendario = 0;
+			$total_disponibles = 0;
+			$aa['calendario'] = empty($aa['calendario'])? 0 : $aa['calendario'];
+			if (empty($aa['cedidas'])) {
+				$disponibles = $aa['calendario'];
 			} else {
-				$pl_calendario = $aa['calendario'];
+				$disponibles = $aa['calendario'] - \array_sum($aa['cedidas']);
 			}
-			if (!array_key_exists('total_cedidas',$aa)) {
-				$pl_cedidas = 0;
-			} else {
-				$pl_cedidas = $aa['total_cedidas'];
+			$total_disponibles += $disponibles;
+			$a_plazas[$dl]['disponibles'][$dl] = $disponibles;
+			foreach ($aa['conseguidas'] as $dl_otra => $num) {
+				// conseguidas - cedidas
+				$a_plazas[$dl]['disponibles'][$dl_otra] = $num;
+				$total_disponibles += $num;
 			}
-			$pl_conseguidas = $aa['total_conseguidas'];
-
-			$total_actual = $pl_calendario - $pl_cedidas + $pl_conseguidas;
-			
-			$a_plazas[$dl]['total_actual'] = $total_actual;
-			$tot_actual += $total_actual;
-
-			$ocupadas = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$dl);
-			if ($ocupadas < 0) { // No se sabe
-				$a_plazas[$dl]['ocupadas'] = '?';
-			} else {
-				$a_plazas[$dl]['ocupadas'] = $ocupadas;
+			$a_plazas[$dl]['total_disponibles'] = $total_disponibles;
+			$tot_disponibles += $total_disponibles;
+		}
+		// Ocupadas (de las disponibles)
+		foreach ($a_plazas as $dl=>$aa) {
+			foreach ($aa['disponibles'] as $dl_otra => $num) {
+				$ocupadas = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$dl,$dl_otra);
+				$a_plazas[$dl]['ocupadas'][$dl_otra] = $ocupadas;
 			}
-			$tot_ocupadas += $ocupadas;
+			$a_plazas[$dl]['total_ocupadas'] = \array_sum($a_plazas[$dl]['ocupadas']);
+			$tot_ocupadas += $a_plazas[$dl]['total_ocupadas'];
 		}
 		
 		$a_plazas['total']['actividad'] = $plazas_totales;
 		$a_plazas['total']['calendario'] = $tot_calendario;
 		$a_plazas['total']['cedidas'] = $tot_cedidas;
 		$a_plazas['total']['conseguidas'] = $tot_conseguidas;
-		$a_plazas['total']['actual'] = $tot_actual;
+		$a_plazas['total']['disponibles'] =  $tot_disponibles;
 		$a_plazas['total']['ocupadas'] = $tot_ocupadas;
 		
 		ksort($a_plazas);

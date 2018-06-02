@@ -50,10 +50,8 @@ $plazas_totales = $a_plazas['total']['actividad'];
 $tot_calendario = $a_plazas['total']['calendario'];
 $tot_cedidas = $a_plazas['total']['cedidas'];
 $tot_conseguidas = $a_plazas['total']['conseguidas'];
-$tot_actual = $a_plazas['total']['actual'];
+$tot_disponibles = $a_plazas['total']['disponibles'];
 $tot_ocupadas = $a_plazas['total']['ocupadas'];
-
-
 
 $oHash = new web\Hash();
 $camposForm = 'num_plazas!dl';
@@ -83,7 +81,7 @@ $a_campos = [
 			'plazas_totales' => $plazas_totales,
 			'tot_cedidas' => $tot_cedidas,
 			'tot_conseguidas' => $tot_conseguidas,
-			'tot_actual' => $tot_actual,
+			'tot_disponibles' => $tot_disponibles,
 			'tot_ocupadas' => $tot_ocupadas,
 			'oDesplDelegaciones' => $oDesplDelegaciones,
 			];

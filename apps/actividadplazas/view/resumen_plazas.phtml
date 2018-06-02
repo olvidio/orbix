@@ -58,8 +58,8 @@ fnjs_actualizar=function(formulario){
 		echo "<td>".$dl."</td><td>".$pl['calendario']."</td>";
 		echo "<td>".$pl['total_cedidas']."</td>";
 		echo "<td>".$pl['total_conseguidas']."</td>";
-		echo "<td>".$pl['total_actual']."</td>";
-		echo "<td>".$pl['ocupadas']."</td>";
+		echo "<td>".$pl['total_disponibles']."</td>";
+		echo "<td>".$pl['total_ocupadas']."</td>";
 		echo "<td></td>";
 		echo "</tr>";
 		if (!empty($pl['cedidas'])){
@@ -93,7 +93,7 @@ fnjs_actualizar=function(formulario){
 	echo "<td>"._("totales")."</td><td>$tot_calendario ($plazas_totales)</td>";
 	echo "<td>".$tot_cedidas."</td>";
 	echo "<td>".$tot_conseguidas."</td>";
-	echo "<td>".$tot_actual."</td>";
+	echo "<td>".$tot_disponibles."</td>";
 	echo "<td>".$tot_ocupadas."</td>";
 	echo "<td></td>";
 	echo "</tr>";
