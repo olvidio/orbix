@@ -30,7 +30,7 @@ switch ($Qque) {
 				echo _('Hay un error, no se ha eliminado');
 			}
 		}
-		echo $oPosicion->go_atras(1);
+//		echo $oPosicion->go_atras(1);
 		die();
 		break;
 	case 'guardar':
