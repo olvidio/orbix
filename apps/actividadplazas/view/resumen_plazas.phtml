@@ -38,11 +38,12 @@ fnjs_actualizar=function(formulario){
 	<span class="alert"><?= _("OJO! Esta actividad no está publicada") ?></span>
 <?php } ?>
 <table border="1">
-	<tr><td>dl</td><td colspan="4">plazas</td><td>ocupadas</td><td>libres</td></tr>
-	<tr><td></td><td>calendario</td><td>cedidas</td><td>conseguidas</td><td>total</td><td></td><td></td></tr>
+	<tr><td>dl</td><td colspan="4"><?= _("plazas") ?></td><td><?= _("ocupadas") ?></td><td><?= _("libres") ?></td></tr>
+	<tr><td></td><td><?= _("calendario") ?></td><td><?= _("cedidas") ?></td><td><?= _("conseguidas") ?></td><td><?= _("total") ?></td><td></td><td></td></tr>
 	<?php
 	//plazas
 	$d = 0;
+	$libres = 0;
 	foreach ($a_plazas as $dl=>$pl) {
 		if ($dl == 'total') { continue; }
 		// evitar errores si no existe el indice.
@@ -51,6 +52,7 @@ fnjs_actualizar=function(formulario){
 		$pl['total_conseguidas'] = empty($pl['total_conseguidas'])? '-' : $pl['total_conseguidas'];
 		$pl['total_actual'] = empty($pl['total_actual'])? '-' : $pl['total_actual'];
 		$pl['ocupadas'] = empty($pl['ocupadas'])? '-' : $pl['ocupadas'];
+		$libres = $pl['total_disponibles'] - $pl['total_ocupadas'];
 		
 		$d++;
 		$clase = "tono$d";
@@ -60,7 +62,7 @@ fnjs_actualizar=function(formulario){
 		echo "<td>".$pl['total_conseguidas']."</td>";
 		echo "<td>".$pl['total_disponibles']."</td>";
 		echo "<td>".$pl['total_ocupadas']."</td>";
-		echo "<td></td>";
+		echo "<td>$libres</td>";
 		echo "</tr>";
 		if (!empty($pl['cedidas'])){
 			$aCedidas = $pl['cedidas'];
@@ -89,24 +91,23 @@ fnjs_actualizar=function(formulario){
 		}
 	}
 	// TOTALES
+	$tot_libres = $tot_disponibles - $tot_ocupadas;
 	echo "<tr>";
 	echo "<td>"._("totales")."</td><td>$tot_calendario ($plazas_totales)</td>";
 	echo "<td>".$tot_cedidas."</td>";
 	echo "<td>".$tot_conseguidas."</td>";
 	echo "<td>".$tot_disponibles."</td>";
 	echo "<td>".$tot_ocupadas."</td>";
-	echo "<td></td>";
+	echo "<td>$tot_libres</td>";
 	echo "</tr>";
-
-	
 	?>
 </table>
 
 <br><br>
 <form id="ceder">
-ceder 
-<input name="num_plazas" type="text" size="3" />
-plazas a 
-<?= $oDesplDelegaciones->desplegable() ?>
-<input type="button" id="btn_ok" name="btn_ok" class="btn_ok" onclick="fnjs_guardar(this.form);" value="<?= ucfirst(_("guardar")); ?>" align="MIDDLE" />
+<?= _("ceder") ?>
+  <input name="num_plazas" type="text" size="2" />
+<?= _("plazas a") ?>
+  <?= $oDesplDelegaciones->desplegable() ?>
+     <input type="button" id="btn_ok" name="btn_ok" class="btn_ok" onclick="fnjs_guardar(this.form);" value="<?= ucfirst(_("guardar")); ?>" align="MIDDLE" />
 </form>
