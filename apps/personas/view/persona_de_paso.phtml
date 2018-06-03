@@ -28,7 +28,7 @@ fnjs_guardar=function(formulario){
 fnjs_eliminar=function(formulario){
 	if (confirm("<?= _("¿Esta seguro que desea borrar esta persona?");?>") ) {
 	   	$('#que').val('eliminar');
-	   	$(formulario).attr('action','apps/ubis/controller/ubis_update.php');
+		$(formulario).attr('action',"apps/personas/controller/personas_update.php");
 		$(formulario).submit(function() {
 			$.ajax({
 				data: $(this).serialize(),
