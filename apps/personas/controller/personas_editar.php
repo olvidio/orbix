@@ -12,14 +12,15 @@ use ubis\model\entity as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$nuevo = (integer)  filter_input(INPUT_POST, 'nuevo');
-$Qobj_pau = (string)  filter_input(INPUT_POST, 'obj_pau');
+$Qnuevo = (integer) filter_input(INPUT_POST, 'nuevo'); // 0 -> existe, 1->nuevo
+$Qobj_pau = (string) filter_input(INPUT_POST, 'obj_pau');
+
+$obj = 'personas\\model\\entity\\'.$Qobj_pau;
 	
 $oPosicion->recordar();
 
-
-if (!empty($nuevo)) {
-	$obj = 'personas\\model\\entity\\'.$Qobj_pau;
+if (!empty($Qnuevo)) {
+	$Qapellido1 = (string) filter_input(INPUT_POST, 'apellido1');
 	$oPersona = new $obj;
 	$cDatosCampo = $oPersona->getDatosCampos();
 	$oDbl = $oPersona->getoDbl();
@@ -28,37 +29,18 @@ if (!empty($nuevo)) {
 		$valor_predeterminado=$oDatosCampo->datos_campo($oDbl,'valor');
 		$a_campos[$camp] = $valor_predeterminado;
 	}
+	$oPersona->setApellido1($Qapellido1);
+	$oPersona->setF_situacion(date('j/m/Y'));
+	$id_tabla = (string) filter_input(INPUT_POST, 'tabla');
+	$stgr = '';
+	$dl = '';
 	$nom_ctr = '';
+	$id_ctr = '';
 	$Qid_nom = '';
 	$gohome = '';
 	$godossiers = '';
 	$ir_a_traslado = '';
 	$titulo = '';
-	$id_tabla = (string)  filter_input(INPUT_POST, 'tabla');
-	$dl = '';
-	$sacd = '';
-	$trato = '';
-	$nom = '';
-	$nx1 = '';
-	$apellido1 = '';
-	$nx2 = '';
-	$apellido2 = '';
-	$f_nacimiento = '';
-	$lengua = '';
-	$situacion = '';
-	$f_situacion =  date('j/m/Y');
-	$apel_fam = '';
-	$inc = '';
-	$f_inc = '';
-	$stgr = '';
-	$profesion = '';
-	$eap = '';
-	$observ = '';
-	$lugar_nacimiento = '';
-	$id_ctr = '';
-	$nom_ctr = '';
-	$edad = '';
-	$profesor_stgr = '';
 } else {
 	$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 	if (!empty($a_sel)) { //vengo de un checkbox
@@ -89,47 +71,28 @@ if (!empty($nuevo)) {
 		}
 	}
 
-	$obj = 'personas\\model\\entity\\'.$Qobj_pau;
 	$oPersona = new $obj($Qid_nom);
 	
 	$id_tabla = $oPersona->getId_tabla();
 	$dl = $oPersona->getDl();
-	$sacd = $oPersona->getSacd();
-	$trato = $oPersona->getTrato();
-	$nom = $oPersona->getNom();
-	$nx1 = $oPersona->getNx1();
-	$apellido1 = $oPersona->getApellido1();
-	$nx2 = $oPersona->getNx2();
-	$apellido2 = $oPersona->getApellido2();
-	$f_nacimiento = $oPersona->getF_nacimiento();
-	$lengua = $oPersona->getLengua();
-	$situacion = $oPersona->getSituacion();
-	$f_situacion = $oPersona->getF_situacion();
-	$apel_fam = $oPersona->getApel_fam();
-	$inc = $oPersona->getInc();
-	$f_inc = $oPersona->getF_inc();
 	$stgr = $oPersona->getStgr();
-	$profesion = $oPersona->getProfesion();
-	$eap = $oPersona->getEap();
-	$observ = $oPersona->getObserv();
-	$lugar_nacimiento = $oPersona->getLugar_nacimiento();
 	// los de paso no tienen ctr
 	if (method_exists($oPersona, "getId_ctr")) {
 		$id_ctr = $oPersona->getId_ctr();
 	} else {
 		$id_ctr = '';
 	}
-	// para los de paso
-	if (method_exists($oPersona, "getEdad")) {
-		$edad = $oPersona->getEdad();
-	} else {
-		$edad = '';
-	}
-	if (method_exists($oPersona, "getProfesor_stgr")) {
-		$profesor_stgr = $oPersona->getProfesor_stgr();
-	} else {
-		$profesor_stgr = '';
-	}
+//	// para los de paso
+//	if (method_exists($oPersona, "getEdad")) {
+//		$edad = $oPersona->getEdad();
+//	} else {
+//		$edad = '';
+//	}
+//	if (method_exists($oPersona, "getProfesor_stgr")) {
+//		$profesor_stgr = $oPersona->getProfesor_stgr();
+//	} else {
+//		$profesor_stgr = '';
+//	}
 	// para el ctr hay que buscar el nombre
 	if (!empty($id_ctr)) {
 		$oCentroDl = new ubis\CentroDl($id_ctr);
@@ -215,7 +178,7 @@ switch ($Qobj_pau){
 		break;
 }
 
-if (empty($nuevo)) {
+if (empty($Qnuevo)) {
 	$ir_a_traslado=web\hash::link('apps/personas/controller/traslado_form.php?'.http_build_query(array('pau'=>'p','id_pau'=>$Qid_nom,'obj_pau'=>$Qobj_pau)));
 }
 
@@ -243,11 +206,31 @@ $oDesplSituacion = $GesSituacion->getListaSituaciones();
 $oDesplSituacion->setNombre("situacion");
 $oDesplSituacion->setOpcion_sel($oPersona->getSituacion());
 
+//posibles valores de stgr
+$tipos= array (  "n"=> _("no cursa est."),
+				"b"=> _("bienio"),
+				"c1"=>  _("cuadrienio año I"),
+				"c2"=> _("cuadrienio año II-IV"),
+				"r"=> _("repaso"),
+				);
 
-$campos_chk = 'sacd';
+$oDesplStgr = new web\Desplegable();
+$oDesplStgr->setNombre('stgr');
+$oDesplStgr->setOpciones($tipos);
+$oDesplStgr->setOpcion_sel($stgr);
+$oDesplStgr->setBlanco(true);
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('que!id_ctr!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!f_situacion!inc!lengua!nom!nx1!nx2!observ!profesion!situacion!stgr!trato!lugar_nacimiento!ce!ce_lugar!ce_ini!ce_fin');
+$campos_chk = 'sacd';
+$camposForm = 'que!id_ctr!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!f_situacion!inc!lengua!nom!nx1!nx2!observ!profesion!situacion!stgr!trato!lugar_nacimiento!ce!ce_lugar!ce_ini!ce_fin';
+
+//Para la presentacion "de_paso" los campos un poco distintos:
+if ($Qobj_pau == 'PersonaEx') {
+	$campos_chk = 'sacd!profesor_stgr';
+	$camposForm = 'que!id_tabla!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!lugar_nacimiento!edad!f_situacion!inc!lengua!nom!nx1!nx2!observ!profesion!situacion!stgr!trato';
+}
+
+$oHash->setcamposForm($camposForm);
 $oHash->setcamposNo($campos_chk);
 $a_camposHidden = array(
 		'campos_chk'=>$campos_chk,
@@ -255,7 +238,6 @@ $a_camposHidden = array(
 		'id_nom'=>$Qid_nom
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
-
 
 $a_parametros = array('pau'=>'p','id_nom'=>$Qid_nom,'obj_pau'=>$Qobj_pau); 
 $gohome=web\Hash::link('apps/personas/controller/home_persona.php?'.http_build_query($a_parametros));
@@ -271,6 +253,7 @@ $a_campos = ['obj_txt' => $obj,
 			'pau'=>'p',
 			'id_pau'=>$Qid_nom,
 			'Qobj_pau'=>$Qobj_pau,
+			'nuevo'=>$Qnuevo,
 			'gohome' => $gohome,
 			'godossiers' => $godossiers,
 			'ir_a_traslado' => $ir_a_traslado,
@@ -279,31 +262,11 @@ $a_campos = ['obj_txt' => $obj,
 			'id_nom' => $Qid_nom,
 			'id_tabla' => $id_tabla,
 			'dl' => $dl,
-			'sacd' => $sacd,
-			'trato' => $trato,
-			'nom' => $nom,
-			'nx1' => $nx1,
-			'apellido1' => $apellido1,
-			'nx2' => $nx2,
-			'apellido2' => $apellido2,
-			'f_nacimiento' => $f_nacimiento,
-			'lengua' => $lengua,
-			'situacion ' => $situacion ,
-			'f_situacion' => $f_situacion,
-			'apel_fam' => $apel_fam,
-			'inc' => $inc,
-			'f_inc' => $f_inc,
-			'stgr' => $stgr,
-			'profesion' => $profesion,
-			'eap' => $eap,
-			'observ' => $observ,
-			'lugar_nacimiento' => $lugar_nacimiento,
 			'id_ctr' => $id_ctr,
 			'nom_ctr' => $nom_ctr,
-			'edad' => $edad,
-			'profesor_stgr' => $profesor_stgr,
 			'oDesplCentro' => $oDesplCentroDl,
 			'oDesplSituacion' => $oDesplSituacion,
+			'oDesplStgr' => $oDesplStgr,
 			'botones' => $botones,
 			];
 

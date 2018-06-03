@@ -65,17 +65,21 @@ fnjs_eliminar=function(formulario){
 }
 </script>
 <?= $oPosicion->mostrar_left_slide(1); ?>
-<!-- ============================== cabecera ============================= -->
-<table><tr>
-<td class=esquerra nowrap>
-</td>
-<td>
-<span class=link onclick="fnjs_update_div('#main','<?= $godossiers ?>')" ><img src=<?= core\ConfigGlobal::$web_icons ?>/dossiers.gif border=0 width=40 height=40 alt='<?= _("ver dossiers") ?>'>(<?= _("dossiers") ?>)</span>
+<?php 
+if (!$nuevo) {
+	?>
+	<!-- ============================== cabecera ============================= -->
+	<table><tr>
+	<td class=esquerra nowrap>
+	</td>
+	<td>
+	<span class=link onclick="fnjs_update_div('#main','<?= $godossiers ?>')" ><img src=<?= core\ConfigGlobal::$web_icons ?>/dossiers.gif border=0 width=40 height=40 alt='<?= _("ver dossiers") ?>'>(<?= _("dossiers") ?>)</span>
 
-<td class=titulo><span class=link onclick="fnjs_update_div('#main','<?= $gohome ?>')" ><?= $titulo ?></span></td>
-</table>
-
-
+	<td class=titulo><span class=link onclick="fnjs_update_div('#main','<?= $gohome ?>')" ><?= $titulo ?></span></td>
+	</table>
+	<?php 
+	}
+?>
 <!-- ============================== Ficha ============================= -->
 <form id='frm2' >
 <?= $oHash->getCamposHtml(); ?>
@@ -88,7 +92,7 @@ fnjs_eliminar=function(formulario){
 	<td><span class=etiqueta ondblclick="fnjs_help('<?php //echo $dl_help_ref; ?>')" >Delegación</span></td>
 	<td><input class=datos size="6" name="dl" value="<?= $dl ?>" title="<?php //echo $dl_help; ?>"></td>
 	<?php //en el caso de nueva ficha o sin ctr actual, pongo el nombre del centro sin llenar el dossier de traslados.
-	if (empty($id_nom) || empty($id_ctr)){
+	if (empty($id_nom) || empty($nom_ctr)){
 		?>
 		<td>
 		Centro-sede:
@@ -137,15 +141,7 @@ if (core\ConfigGlobal::mi_sfsv() == 1) {
 }
 ?>
 <td><span class=etiqueta ondblclick="fnjs_help('<?php //echo $stgr_help_ref; ?>')" >Stgr&nbsp;</span>
-			<select class=datos name="stgr" title="<?php //echo $stgr_help; ?>">
-			<option value="b" <?php if ($stgr=="b") { echo "selected"; } ?> >b</option>
-			<option value="c1" <?php if ($stgr=="c1") { echo "selected"; } ?> >c1</option>
-			<option value="c2" <?php if ($stgr=="c2") { echo "selected"; } ?> >c2</option>
-			<option value="r" <?php if ($stgr=="r") { echo "selected"; } ?> >r</option>
-			<option value="s" <?php if ($stgr=="s") { echo "selected"; } ?> >s</option>
-			<option value="n" <?php if ($stgr=="n") { echo "selected"; } ?> >n</option>
-			<option value="c" <?php if ($stgr=="c") { echo "selected"; } ?> >c (fuera uso)</option>
-		</select>
+	<?= $oDesplStgr->desplegable(); ?>
 </td>
 <?php
 echo web\dibujar_campo($obj,"eap",20,2,0);
@@ -173,7 +169,7 @@ if (!empty($botones)) {
 			echo "<th class='link_inv' onclick='fnjs_eliminar(\"#frm2\")'>$txt_e</th>"; }
 		if ($b==3){
 			$txt_e=ucwords(_("formato texto"));
-			$pag="programas/ficha_texto.php?id_nom=$id_nom&obj_pau=".$_POST['obj_pau'];
+			$pag="programas/ficha_texto.php?id_nom=$id_nom&obj_pau=$Qobj_pau";
 			echo "<th class='link_inv' onclick='fnjs_update_div('#main','$pag')'>$txt_e</th>"; }
 		$b=strtok(",");
 	} 
@@ -181,4 +177,5 @@ if (!empty($botones)) {
 }
 // fin ----------------------------  Botones  ----------------------
 ?>
+</tr></table>
 </form>

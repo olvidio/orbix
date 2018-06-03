@@ -36,7 +36,7 @@ if (!empty($_POST['cc_obj'])) {
 	$cDatosCampos = $Object->getDatosCampos();
 }
 
-$error="";
+$errores = [];
 foreach ($cDatosCampos as $oDatosCampo) {
 	$reg_exp = $oDatosCampo->getRegExp();
 	$nomcamp = $oDatosCampo->getNom_camp();
@@ -194,8 +194,6 @@ foreach ($cDatosCampos as $oDatosCampo) {
 	}
 }
 
-
-
 /*
 *  En caso de error busco la etiqueta del campo (si la hay) para hacer más
 *  entendible el mensaje
@@ -216,4 +214,3 @@ if (!empty($errores)) {
 	}
 	echo trim($error_txt);
 }
-?>

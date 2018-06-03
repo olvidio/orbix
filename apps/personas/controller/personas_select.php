@@ -28,6 +28,7 @@ $oPosicion->recordar();
 
 //Si vengo de vuelta de un go_to:
 $tabla = (string) \filter_input(INPUT_POST, 'tabla');
+$Qna = (string) \filter_input(INPUT_POST, 'na');
 $breve = (string) \filter_input(INPUT_POST, 'breve');
 $tipo = (string) \filter_input(INPUT_POST, 'tipo');
 $es_sacd = (string) \filter_input(INPUT_POST, 'es_sacd');
@@ -71,6 +72,7 @@ $aGoBack = array (
 				'apellido2' => $Qapellido2,
 				'centro' => $Qcentro,
 				'tabla' => $tabla,
+				'na' => $Qna,
 				'breve' => $breve,
 				'tipo' => $tipo,
 				'es_sacd' => $es_sacd,
@@ -389,7 +391,7 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/personas_editar.php?'.http_build_query(array('obj_pau'=>$obj_pau,'id_tabla'=>$id_tabla,'nuevo'=>1)));
+$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/personas_editar.php?'.http_build_query(array('obj_pau'=>$obj_pau,'id_tabla'=>$id_tabla,'nuevo'=>1,'apellido1'=>$Qapellido1)));
 	
 $resultado=sprintf( _("%s personas encontradas"),$i);
 
@@ -403,6 +405,7 @@ $a_camposHidden = array(
 		'breve' => $breve,
 		'es_sacd' => $es_sacd,
 		'tabla' => $tabla,
+		'na' => $Qna,
 		'permiso' => $permiso,
 		);
 $oHash->setArraycamposHidden($a_camposHidden);

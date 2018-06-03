@@ -1,41 +1,77 @@
-<?php
-use personas\model\entity as personas;
-/**
-* Esta es la página de presentación de la ficha de n, agd y sss+ de paso (copia de agd). 
-*
-* Esta presentación se incluye dentro del programa de visualización de
-* las fichas.
-* Existen 3 tipos de textos:
-*		- titulos (<th>)
-*		- etiquetas (<span class=etiqueta>) son links a helps
-*		- datos (class=datos) varios tipos: links, inputs
-*
-* @author Daniel Serrabou
-* @package fichas
-* @subpackage agd
-*/
+<script>
+fnjs_guardar=function(formulario){
+	var rr=fnjs_comprobar_campos('#frm2','<?= addslashes($obj_txt) ?>');
+	//alert ("EEE "+rr);
+	if (rr=='ok') {
+		$('#que').val('guardar');
+		$(formulario).attr('action',"apps/personas/controller/personas_update.php");
+		$(formulario).submit(function() {
+			$.ajax({
+				data: $(this).serialize(),
+				type: 'post',
+				url: $(this).attr('action'),
+				complete: function (rta) {
+					rta_txt=rta.responseText;
+					if (rta_txt != '' && rta_txt != '\\n') {
+						alert ('respuesta: '+rta_txt);
+					} else {
+						<?= $oPosicion->js_atras(1); ?>
+					}
+				}
+			});
+			return false;
+		});
+		$(formulario).submit();
+		$(formulario).off();
+	}
+}
+fnjs_eliminar=function(formulario){
+	if (confirm("<?= _("¿Esta seguro que desea borrar esta persona?");?>") ) {
+	   	$('#que').val('eliminar');
+	   	$(formulario).attr('action','apps/ubis/controller/ubis_update.php');
+		$(formulario).submit(function() {
+			$.ajax({
+				data: $(this).serialize(),
+				url: $(this).attr('action'),
+				type: 'post',
+				complete: function (rta) {
+					rta_txt = rta.responseText;
+					if (rta_txt != '' && rta_txt != '\\n') {
+						alert ('respuesta: '+rta_txt);
+					} else {
+						<?= $oPosicion->js_atras(2); ?>
+					}
+				}
+			});
+			return false;
+		});
+		$(formulario).submit();
+		$(formulario).off();
+	}
+}
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<?php 
+if (!$nuevo) {
+	?>
+	<!-- ============================== cabecera ============================= -->
+	<table><tr>
+	<td class=esquerra nowrap>
+	</td>
+	<td>
+	<span class=link onclick="fnjs_update_div('#main','<?= $godossiers ?>')" ><img src=<?= core\ConfigGlobal::$web_icons ?>/dossiers.gif border=0 width=40 height=40 alt='<?= _("ver dossiers") ?>'>(<?= _("dossiers") ?>)</span>
 
-$GesSituacion = new personas\GestorSituacion();
-$aWhere['_ordre'] = 'situacion';
-$cSituaciones = $GesSituacion->getSituaciones($aWhere);
-
-$campos_chk = 'sacd!profesor_stgr';
-
-$oHash = new web\Hash();
-$oHash->setcamposForm('id_tabla!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!lugar_nacimiento!edad!f_situacion!inc!lengua!nom!nx1!nx2!observ!profesion!que!situacion!stgr!trato');
-$oHash->setcamposNo('que!'.$campos_chk);
-$a_camposHidden = array(
-		'campos_chk'=>$campos_chk,
-		'obj_pau'=>$obj_pau,
-		'id_nom'=>$id_nom
-		);
-$oHash->setArraycamposHidden($a_camposHidden);
-
+	<td class=titulo><span class=link onclick="fnjs_update_div('#main','<?= $gohome ?>')" ><?= $titulo ?></span></td>
+	</table>
+	<?php 
+	}
 ?>
+
+
+<!-- ============================== Ficha ============================= -->
 <form id='frm2' >
 <?= $oHash->getCamposHtml(); ?>
 <input type="Hidden" id="que"  name="que" value="">
-
 <table id="datospersonales">
 <tr><td class=titulo colspan="5">
 <?php print(strtoupper(_("datos personales"))); ?>
@@ -54,9 +90,9 @@ $oHash->setArraycamposHidden($a_camposHidden);
 				echo "<option value=\"psssc\" $selected >". _("sss+") ."</option>";
 			}
 			?>
-	</select>
+	</select></td>
 	<td><span class=etiqueta ondblclick="fnjs_help('<?php //echo $dl_help_ref; ?>')" >Delegación</span></td>
-	<td><input class=datos size="6" name="dl" value="<?= $dl ?>" title="<?php //echo $dl_help; ?>"></TD>
+	<td><input class=datos size="6" name="dl" value="<?= $dl ?>" title="<?php //echo $dl_help; ?>"></td>
 	</tr>
 <tr>
 <?php
@@ -78,17 +114,7 @@ echo "</tr><tr>";
 ?>
 	<td><span class=etiqueta ><?= ucfirst('situacion'); ?></span>
 	</td>
-	<td colspan=2>
-	<select class=contenido id="situacion" name="situacion" ">
-			<?php
-			foreach ($cSituaciones as $oSituacion) {
-				$situacion_db = $oSituacion->getSituacion();
-				$nombre_situacion = $oSituacion->getNombre_situacion();
-				if ($situacion==$situacion_db) { $sel="selected"; } else { $sel=""; }
- 				echo "<option value=\"$situacion_db\" $sel>  $nombre_situacion </option>";
-			}
-			?>
-	</select></td>
+	<td colspan=2><?= $oDesplSituacion->desplegable() ?></td>
 <?php
 echo web\dibujar_campo($obj,"f_situacion",11,1,1);
 echo "</tr><tr>";
@@ -102,15 +128,7 @@ if (core\ConfigGlobal::mi_sfsv() == 1) {
 echo web\dibujar_campo($obj,"profesor_stgr",9,1,1);
 ?>
 <td><span class=etiqueta ondblclick="fnjs_help('<?php //echo $stgr_help_ref; ?>')" >Stgr&nbsp;</span>
-			<select class=datos name="stgr" title="<?php //echo $stgr_help; ?>">
-			<option value="b" <?php if ($stgr=="b") { echo "selected"; } ?> >b</option>
-			<option value="c1" <?php if ($stgr=="c1") { echo "selected"; } ?> >c1</option>
-			<option value="c2" <?php if ($stgr=="c2") { echo "selected"; } ?> >c2</option>
-			<option value="r" <?php if ($stgr=="r") { echo "selected"; } ?> >r</option>
-			<option value="s" <?php if ($stgr=="s") { echo "selected"; } ?> >s</option>
-			<option value="n" <?php if ($stgr=="n") { echo "selected"; } ?> >n</option>
-			<option value="c" <?php if ($stgr=="c") { echo "selected"; } ?> >c (fuera uso)</option>
-		</select>
+	<?= $oDesplStgr->desplegable(); ?>
 </td>
 <?php
 echo "</tr><tr>";
@@ -128,13 +146,13 @@ if (!empty($botones)) {
 	while ($b) {
 		if ($b==1){
 			$txt_g=ucwords(_("guardar cambios"));
-			echo "<th class='link_inv' onclick='fnjs_guardar()'>$txt_g</th>"; }
+			echo "<th class='link_inv' onclick='fnjs_guardar(\"#frm2\")'>$txt_g</th>"; }
 		if ($b==2){
 			$txt_e=ucwords(_("eliminar"));
-			echo "<th class='link_inv' onclick='fnjs_eliminar()'>$txt_e</th>"; }
+			echo "<th class='link_inv' onclick='fnjs_eliminar(\"#frm2\")'>$txt_e</th>"; }
 		if ($b==3){
 			$txt_e=ucwords(_("formato texto"));
-			$pag="programas/ficha_texto.php?id_nom=$id_nom&obj_pau=".$_POST['obj_pau'];
+			$pag="programas/ficha_texto.php?id_nom=$id_nom&obj_pau=$Qobj_pau";
 			echo "<th class='link_inv' onclick='fnjs_update_div('#main','$pag')'>$txt_e</th>"; }
 		$b=strtok(",");
 	} 
@@ -142,4 +160,5 @@ if (!empty($botones)) {
 }
 // fin ----------------------------  Botones  ----------------------
 ?>
+</tr></table>
 </form>
