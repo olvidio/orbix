@@ -225,9 +225,11 @@ if (!empty($tipo_acta)) {
 if (!empty($epoca)) {
 	if ($epoca==notas\PersonaNota::EPOCA_CA) { $chk_epoca_ca="checked"; } else { $chk_epoca_ca=""; }
 	if ($epoca==notas\PersonaNota::EPOCA_INVIERNO) { $chk_epoca_inv="checked"; } else { $chk_epoca_inv=""; }
+	if ($epoca==notas\PersonaNota::EPOCA_OTRO) { $chk_epoca_otro="checked"; } else { $chk_epoca_otro=""; }
 } else {
 	$chk_epoca_ca="checked";
 	$chk_epoca_inv="";
+	$chk_epoca_otro="";
 }
 
 if (!empty($f_acta)) { // 3 meses cerca de la fecha del acta.
@@ -346,6 +348,7 @@ $a_campos = [
 			'epoca' => $epoca,
 			'chk_epoca_ca' => $chk_epoca_ca,
 			'chk_epoca_inv' => $chk_epoca_inv,
+			'chk_epoca_otro' => $chk_epoca_otro,
 			'oDesplActividades' => $oDesplActividades,
 			'detalle' => $detalle,
 			];

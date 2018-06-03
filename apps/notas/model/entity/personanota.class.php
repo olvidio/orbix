@@ -27,6 +27,7 @@ class PersonaNota Extends core\ClasePropiedades {
 	
     const EPOCA_CA     = 1; // ca verano.
     const EPOCA_INVIERNO   = 2; // semestre invierno.
+    const EPOCA_OTRO   = 3; // sin especificar.
 	
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
