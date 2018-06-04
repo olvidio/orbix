@@ -260,7 +260,6 @@ class GestorResumenPlazas {
 			$a_plazas['total']['cedidas'] = 0;
 			$a_plazas['total']['conseguidas'] = 0;
 			$a_plazas['total']['actual'] = $plazas_totales;
-			$a_plazas[$dl_org]['total_actual'] = $plazas_totales;
 		
 			return $a_plazas;
 		}
@@ -395,8 +394,8 @@ class GestorResumenPlazas {
 		
 		$a_plazas = $this->getResumen();
 		// Puede no tener plazas asignadas...
-		if (isset($a_plazas[$dl]['total_actual']) && isset ($a_plazas[$dl]['ocupadas'])) {
-			$libres = $a_plazas[$dl]['total_actual'] - $a_plazas[$dl]['ocupadas'];
+		if (isset($a_plazas[$dl]['total_disponibles']) && isset ($a_plazas[$dl]['total_ocupadas'])) {
+			$libres = $a_plazas[$dl]['total_disponibles'] - $a_plazas[$dl]['total_ocupadas'];
 		} else {
 			$libres = 0;
 		}

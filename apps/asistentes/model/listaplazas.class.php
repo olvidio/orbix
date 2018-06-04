@@ -242,15 +242,14 @@ class listaPlazas {
 			$pl_calendario = empty($a_plazas[$this->smi_dele]['calendario'])? 0 : $a_plazas[$this->smi_dele]['calendario'];
 			$pl_cedidas = empty($a_plazas[$this->smi_dele]['total_cedidas'])? 0 : $a_plazas[$this->smi_dele]['total_cedidas'];
 			$pl_conseguidas = empty($a_plazas[$this->smi_dele]['total_conseguidas'])?0 : $a_plazas[$this->smi_dele]['total_conseguidas'];
-			$pl_actual = empty($a_plazas[$this->smi_dele]['total_actual'])? 0 : $a_plazas[$this->smi_dele]['total_actual'];
-			$pl_ocupadas = empty($a_plazas[$this->smi_dele]['ocupadas'])? 0 : $a_plazas[$this->smi_dele]['ocupadas'];
+			$pl_disponibles = empty($a_plazas[$this->smi_dele]['total_disponibles'])? 0 : $a_plazas[$this->smi_dele]['total_disponibles'];
+			$pl_ocupadas = empty($a_plazas[$this->smi_dele]['total_ocupadas'])? 0 : $a_plazas[$this->smi_dele]['total_ocupadas'];
 			/*
 			A) Plazas totales:  XX;
 			B) Plazas disponibles para la dl; 
 			C) Plazas ocupadas + pedidas;
 			Resultado de  B)-C) (si este valor es negativo que salga en ROJO)
 			*/
-			$pl_disponibles = $pl_calendario + $pl_conseguidas - $pl_cedidas;
 			$pl_ocupadas_pedidas = $pl_ocupadas + $plazas_pedidas;
 			$pl_dif = $pl_disponibles - $pl_ocupadas_pedidas;
 			if (!empty($pl_dif) && $pl_dif < 0) {
