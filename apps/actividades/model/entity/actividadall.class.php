@@ -15,6 +15,14 @@ use procesos\model\entity as procesos;
  */
 
 class ActividadAll Extends core\ClasePropiedades {
+	
+	// status constants.
+    const STATUS_PROYECTO		 = 1; // Proyecto.
+	const STATUS_ACTUAL	 	  	 = 2; // Actual.
+	const STATUS_TERMINADA	  	 = 3; // Terminada.
+	const STATUS_BORRABLE 	  	 = 4; // Borrable.
+	
+	
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/**

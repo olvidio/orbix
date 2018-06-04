@@ -97,7 +97,7 @@ if (!empty($Qid_item)) { //caso de modificar
 	
 	$aWhere['id_tipo_activ'] = $id_tipo;
 	$aOperadores['id_tipo_activ']='~';
-	$aWhere['status']=2;
+	$aWhere['status']= actividades\ActividadAll::STATUS_ACTUAL;
 	$aWhere['_ordre']='f_ini';
 
 	$oGesActividades = new actividades\GestorActividad();

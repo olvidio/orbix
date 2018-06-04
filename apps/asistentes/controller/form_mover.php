@@ -74,7 +74,7 @@ if (!empty($Qid_activ_old) && !empty($Qid_nom)) {
 
 	$aWhere['id_tipo_activ'] = '^'.$id_tipo;
 	$aOperador['id_tipo_activ']='~';
-	$aWhere['status']=2;
+	$aWhere['status']=  actividades\ActividadAll::STATUS_ACTUAL;
 	$aWhere['_ordre']='f_ini';
 
 	// todas las posibles.

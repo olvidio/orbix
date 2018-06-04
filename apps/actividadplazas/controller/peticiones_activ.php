@@ -90,7 +90,7 @@ switch ($sactividad) {
 
 $aWhere['f_ini'] = "'$inicurs','$fincurs'";
 $aOperador['f_ini'] = 'BETWEEN';
-$aWhere['status'] = 2;
+$aWhere['status'] = actividades\ActividadAll::STATUS_ACTUAL;
 $aWhere['_ordre'] = 'f_ini,nivel_stgr';
 
 $cActividades = array();

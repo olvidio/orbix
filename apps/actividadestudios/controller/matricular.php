@@ -78,7 +78,7 @@ $m=0;
 $aWhere = array();
 $aOperadores = array();
 // de estudios ca-n, cv-agd
-$aWhere['status'] = 2;
+$aWhere['status'] = \actividades\model\entity\ActividadAll::STATUS_ACTUAL;
 $aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
 $aOperadores['f_ini'] = 'BETWEEN';
 $aWhere['id_tipo_activ'] = '^'.core\ConfigGlobal::mi_sfsv().'(12)|(22)|(33)'; // el 325 correponde al semestre de invierno

@@ -1,8 +1,5 @@
 <?php 
 use actividades\model\entity as actividades;
-use actividadcargos\model\entity as actividadcargos;
-use personas\model\entity as personas;
-use ubis\model\entity as ubis;
 
 /**
 * Lista los asistentes de una relación de actividades seleccionada
@@ -26,16 +23,20 @@ use ubis\model\entity as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qstatus = empty($_POST['status'])? 2 : $_POST['status'];
-$Qid_tipo_activ = empty($_POST['id_tipo_activ'])? '' : $_POST['id_tipo_activ'];
-$Qid_ubi = empty($_POST['id_ubi'])? '' : $_POST['id_ubi'];
-$Qperiodo = empty($_POST['periodo'])? '' : $_POST['periodo'];
-$Qinicio = empty($_POST['inicio'])? '' : $_POST['inicio'];
-$Qfin = empty($_POST['fin'])? '' : $_POST['fin'];
-$Qyear = empty($_POST['year'])? (integer) date('Y') : $_POST['year'];
-$Qdl_org = empty($_POST['dl_org'])? '' : $_POST['dl_org'];
-$Qempiezamin = empty($_POST['empiezamin'])? date('d/m/Y',mktime(0, 0, 0, date('m'), date('d')-40, date('Y'))) : $_POST['empiezamin'];
-$Qempiezamax = empty($_POST['empiezamax'])? date('d/m/Y',mktime(0, 0, 0, date('m')+9, 0, date('Y'))) : $_POST['empiezamax'];
+$Qstatus = (integer) \filter_input(INPUT_POST, 'status');
+$Qstatus = empty($Qstatus)? actividades\ActividadAll::STATUS_ACTUAL : $Qstatus;
+$Qid_tipo_activ = (string) \filter_input(INPUT_POST, 'id_tipo_activ');
+$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
+$Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
+$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
+$Qfin = (string) \filter_input(INPUT_POST, 'fin');
+$Qyear = (integer) \filter_input(INPUT_POST, 'year');
+$Qyear = empty($Qyear)? date('Y') : $Qyear;
+$Qdl_org = (string) \filter_input(INPUT_POST, 'dl_org');
+$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
+$Qempiezamin = empty($Qempiezamin)? date('d/m/Y',mktime(0, 0, 0, date('m'), date('d')-40, date('Y'))) : $Qempiezamin;
+$Qempiezamax = empty($Qempiezamax)? date('d/m/Y',mktime(0, 0, 0, date('m')+9, 0, date('Y'))) : $Qempiezamax;
 	
 // Condiciones de búsqueda.
 $aWhere = array();
@@ -45,14 +46,19 @@ if ($Qstatus!=5) {
 }
 // Id tipo actividad
 if (empty($Qid_tipo_activ)) {
-	if (empty($_POST['ssfsv'])) {
-		if ($mi_sfsv == 1) $_POST['ssfsv'] = 'sv';
-		if ($mi_sfsv == 2) $_POST['ssfsv'] = 'sf';
+	$Qsfsv = (string) \filter_input(INPUT_POST, 'sfsv');
+	$Qsasistentes = (string) \filter_input(INPUT_POST, 'sasistentes');
+	$Qsactividad = (string) \filter_input(INPUT_POST, 'sactividad');
+	$Qsnom_tipo = (string) \filter_input(INPUT_POST, 'snom_tipo');
+	
+	if (empty($Qssfsv)) {
+		if ($mi_sfsv == 1) $Qssfsv = 'sv';
+		if ($mi_sfsv == 2) $Qssfsv = 'sf';
 	}
-	$ssfsv = $_POST['ssfsv'];
-	$sasistentes = empty($_POST['sasistentes'])? '.' : $_POST['sasistentes'];
-	$sactividad = empty($_POST['sactividad'])? '.' : $_POST['sactividad'];
-	$snom_tipo = empty($_POST['snom_tipo'])? '...' : $_POST['snom_tipo'];
+	$ssfsv = $Qssfsv;
+	$sasistentes = empty($Qsasistentes)? '.' : $Qsasistentes;
+	$sactividad = empty($Qsactividad)? '.' : $Qsactividad;
+	$snom_tipo = empty($Qsnom_tipo)? '...' : $Qsnom_tipo;
 	$oTipoActiv= new web\TiposActividades();
 	$oTipoActiv->setSfsvText($ssfsv);
 	$oTipoActiv->setAsistentesText($sasistentes);

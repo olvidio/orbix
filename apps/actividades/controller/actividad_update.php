@@ -145,7 +145,7 @@ case "nuevo":
 		$oActividad= new actividades\ActividadEx();
 		$oActividad->setPublicado('t');
 		$oActividad->setId_tabla('ex');
-		$Qstatus = 2; // Que sea estado actual.
+		$Qstatus = actividades\ActividadAll::STATUS_ACTUAL; // Que sea estado actual.
 	}
 	$oActividad->setDl_org($Qdl_org);
 	if (isset($Qid_tipo_activ)) {

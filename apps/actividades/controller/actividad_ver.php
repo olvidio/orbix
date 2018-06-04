@@ -37,7 +37,11 @@ $sQuery = array ('pau'=>'a',
 				'obj_pau'=>$Qobj_pau);
 $godossiers = web\Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_build_query($sQuery));
 
-$a_status = array( 1 => _("proyecto"), 2 => _("actual"), 3 => _("terminada"), 4 => _("borrable"));
+$a_status = array( \actividades\model\entity\ActividadAll::STATUS_PROYECTO => _("proyecto"),
+				 \actividades\model\entity\ActividadAll::STATUS_ACTUAL => _("actual"),
+				 \actividades\model\entity\ActividadAll::STATUS_TERMINADA => _("terminada"),
+				 \actividades\model\entity\ActividadAll::STATUS_BORRABLE => _("borrable")
+				);
 
 $alt = '';
 $dos = '';

@@ -263,7 +263,6 @@ switch ($Qtipo) {
 	break;
 	case 'casa':
 		$cabecera=ucfirst(_('planning de casas'));
-//		$_POST['status']=array(2);
 	break;
 }
 

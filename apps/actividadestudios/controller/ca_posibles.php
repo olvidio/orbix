@@ -174,7 +174,7 @@ if ($Qtodos!=1) {
 	$aWhereActividad['dl_org'] = $mi_grupo;
 }
 
-$aWhereActividad['status'] = 2;
+$aWhereActividad['status'] = actividades\ActividadAll::STATUS_ACTUAL;
 $aWhereActividad['_ordre'] = 'nivel_stgr,f_ini';
 
 $cActividades = array();

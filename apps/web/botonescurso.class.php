@@ -69,7 +69,7 @@ class BotonesCurso {
 				$this->chk_1="checked";
 				$this->chk_2="";
 				$this->chk_3="";
-				$this->aWhere['status'] = 2;
+				$this->aWhere['status'] = \actividades\model\entity\ActividadAll::STATUS_ACTUAL;
 				$this->aWhere['f_ini'] =  "'$inicurs_ca','$fincurs_ca'";
 				$this->aOperator['f_ini'] = 'BETWEEN';
 				break;

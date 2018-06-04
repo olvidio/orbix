@@ -56,11 +56,10 @@ fnjs_left_side_hide();
 <table>
 <tr>
 <td class=etiqueta><?= ucfirst(_("estado")); ?>:</td>
-	<td><input type="Radio" name="status" value="1" <?php if ($Qstatus==1) { echo "checked='true'";} ?>><?= _("proyecto"); ?></td>
-	<td><input type="Radio" name="status" value="2" <?php if ($Qstatus==2) { echo "checked='true'";} ?>><?= _("actual"); ?></td>
-	<td><input type="radio" name="status" value="3" <?php if ($Qstatus==3) { echo "checked='true'";} ?>><?= _("terminada"); ?></td>
-	<td><input type="radio" name="status" value="4" <?php if ($Qstatus==4) { echo "checked='true'";} ?>><?= _("borrable"); ?></td>
-	<td><input type="radio" name="status" value="5" <?php if ($Qstatus==5) { echo "checked='true'";} ?>><?= _("cualquiera"); ?></td>
+	<td><input type="Radio" id="status_1" name="status" value="<?= actividades\model\entity\ActividadAll::STATUS_PROYECTO ?>" <?php if ($status== actividades\model\entity\ActividadAll::STATUS_PROYECTO) { echo "checked='true'";} ?>><?= _("proyecto"); ?></td>
+	<td><input type="Radio" id="status_2" name="status" value="<?= actividades\model\entity\ActividadAll::STATUS_ACTUAL ?>" <?php if ($status==actividades\model\entity\ActividadAll::STATUS_ACTUAL) { echo "checked='true'";} ?>><?= _("actual"); ?></td>
+	<td><input type="radio" id="status_3" name="status" value="<?= actividades\model\entity\ActividadAll::STATUS_TERMINADA ?>" <?php if ($status==actividades\model\entity\ActividadAll::STATUS_TERMINADA) { echo "checked='true'";} ?>><?= _("terminada"); ?></td>
+	<td><input type="radio" id="status_4" name="status" value="<?= actividades\model\entity\ActividadAll::STATUS_BORRABLE ?>" <?php if ($status==actividades\model\entity\ActividadAll::STATUS_BORRABLE) { echo "checked='true'";} ?>><?= _("borrable"); ?></td>
 <td><input type='hidden' id='id_tipo_activ' name='id_tipo_activ'> </td>
 </tr>
 </table>

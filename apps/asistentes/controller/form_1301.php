@@ -101,7 +101,7 @@ if (!empty($id_activ)) { //caso de modificar
 		$id_tipo = '^'.$id_tipo;
 	}
 	
-	$condicion = "AND status = 2";
+	$condicion = "AND status = " . actividades\ActividadAll::STATUS_ACTUAL;
 	if (!empty($que_dl)) { 
 		$condicion .= " AND dl_org = '$que_dl'";
 	} else {

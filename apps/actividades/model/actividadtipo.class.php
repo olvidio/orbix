@@ -34,7 +34,7 @@ class ActividadTipo {
 		$aSfsv=array(1=>'sv',2=>'sf');
 
 		if (empty($this->ssfsv)) { $this->ssfsv=$aSfsv[$isfsv]; }
-		if (empty($this->status)) $this->status=2;
+		if (empty($this->status)) $this->status = entity\ActividadAll::STATUS_ACTUAL;
 
 		if (!empty($this->id_tipo_activ))  {
 			$oTipoActiv= new web\TiposActividades($this->id_tipo_activ);
@@ -73,7 +73,7 @@ class ActividadTipo {
 			$array2 = array_merge($array2,$array_sg);
 		}
 		if ($_SESSION['oPerm']->have_perm("des")) {
-			if($this->status==2) {
+			if($this->status == entity\ActividadAll::STATUS_ACTUAL) {
 				$array_des = $oTipoActiv->getAsistentesPosibles(); //todos
 			} else {
 				$array_des = array(6=>'sss+');

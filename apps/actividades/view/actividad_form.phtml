@@ -159,10 +159,10 @@ fnjs_tipo_actividad=function(){
 <tr>
 	<td class=etiqueta><?= ucfirst(_("estado")); ?>:</td>
 	<?php if (!core\ConfigGlobal::is_app_installed('procesos')) { ?>
-		<td><input type="Radio" id="status_1" name="status" value="1" <?php if ($status==1) { echo "checked";} ?>><?= _("proyecto"); ?></td>
-		<td><input type="Radio" id="status_2" name="status" value="2" <?php if ($status==2) { echo "checked";} ?>><?= _("actual"); ?></td>
-		<td><input type="radio" id="status_3" name="status" value="3" <?php if ($status==3) { echo "checked";} ?>><?= _("terminada"); ?></td>
-		<td><input type="radio" id="status_4" name="status" value="4" <?php if ($status==4) { echo "checked";} ?>><?= _("borrable"); ?></td>
+	<td><input type="Radio" id="status_1" name="status" value="<?= actividades\model\entity\ActividadAll::STATUS_PROYECTO ?>" <?php if ($status== actividades\model\entity\ActividadAll::STATUS_PROYECTO) { echo "checked";} ?>><?= _("proyecto"); ?></td>
+		<td><input type="Radio" id="status_2" name="status" value="<?= actividades\model\entity\ActividadAll::STATUS_ACTUAL ?>" <?php if ($status==actividades\model\entity\ActividadAll::STATUS_ACTUAL) { echo "checked";} ?>><?= _("actual"); ?></td>
+		<td><input type="radio" id="status_3" name="status" value="<?= actividades\model\entity\ActividadAll::STATUS_TERMINADA ?>" <?php if ($status==actividades\model\entity\ActividadAll::STATUS_TERMINADA) { echo "checked";} ?>><?= _("terminada"); ?></td>
+		<td><input type="radio" id="status_4" name="status" value="<?= actividades\model\entity\ActividadAll::STATUS_BORRABLE ?>" <?php if ($status==actividades\model\entity\ActividadAll::STATUS_BORRABLE) { echo "checked";} ?>><?= _("borrable"); ?></td>
 	<?php } else { ?>
 		<!-- Ara faig que no es pugui canviar. S'ha d'anar per les fases.  -->
 		<td><?= $a_status[$status] ?>

@@ -54,7 +54,7 @@ switch ($Qsactividad) {
 		break;
 }
 
-$status = 2; //actual
+$status = \actividades\model\entity\ActividadAll::STATUS_ACTUAL; //actual
 
 // Seleccionar los id_dl del mismo grupo de estudios
 $esquema = core\ConfigGlobal::mi_region_dl();
