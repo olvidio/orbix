@@ -84,8 +84,8 @@ fnjs_guardar=function(formulario){
 			if (num < 0 || num > max) { alert ('<?= _("nota fuera de rango") ?>'); err=1; } 
 		}
 		
-		// situacion = 2 es para cursada
-		if (!acta && situacion != 2) {
+		// situacion = 2 es para cursada, 11 exento
+		if (!acta && situacion != 2 && situacion != 11) {
 			alert("Debe llenar el campo del acta");
 			$('#acta').focus();
 			err=1;

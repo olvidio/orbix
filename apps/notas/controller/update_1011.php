@@ -62,9 +62,9 @@ switch($Qmod) {
 		$oPersonaNota->setId_asignatura($id_asignatura);
 		$oPersonaNota->setId_nom($Qid_pau);
 		// para saber a que schema pertenece la persona
-		$oPersona = personas\Persona::NewPersona($Qid_nom);
+		$oPersona = personas\Persona::NewPersona($Qid_pau);
 		if (!is_object($oPersona)) {
-			$msg_err = "<br>$oPersona con id_nom: $Qid_nom en  ".__FILE__.": line ". __LINE__;
+			$msg_err = "<br>$oPersona con id_nom: $Qid_pau en  ".__FILE__.": line ". __LINE__;
 			exit($msg_err);
 		}
 		$id_schema = $oPersona->getId_schema();
