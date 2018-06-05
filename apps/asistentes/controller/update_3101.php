@@ -155,6 +155,7 @@ function editar($id_activ,$id_nom){
 	$Qfalta = (string) \filter_input(INPUT_POST, 'falta');
 	$Qcfi_con = (string) \filter_input(INPUT_POST, 'cfi_con');
 	$Qpropietario = (string) \filter_input(INPUT_POST, 'propietario');
+	if ($Qpropietario === 'xxx') { $Qpropietario = ''; }
 
 	isset($Qencargo)? $oAsistente->setEncargo($Qencargo) : $oAsistente->setEncargo();
 	isset($Qcama)? $oAsistente->setCama($Qcama) : $oAsistente->setCama();

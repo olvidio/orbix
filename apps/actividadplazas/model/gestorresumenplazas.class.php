@@ -109,7 +109,10 @@ class GestorResumenPlazas {
 		}
 		// Debe haber al menos un valor para que se pase el campo y no dé error de 'llega distinto número de campos...'
 		//if (count($a_dl) == 0 ) $a_dl["nadie"] = "nadie";
-		if (count($a_dl) == 0 ) $a_dl["$dl_org>$dl_org"] = $dl_org;
+		if (count($a_dl) == 0 ) {
+			//$a_dl["$dl_org>$dl_org"] = $dl_org;
+			$a_dl["xxx"] = _("no disponibles");
+		}
 		return new \web\Desplegable('',$a_dl,'',true);
 	}
 	

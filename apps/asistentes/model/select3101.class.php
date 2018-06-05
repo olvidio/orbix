@@ -267,6 +267,7 @@ class Select3101 {
 		$this->a_plazas_conseguidas = $a_plazas_conseguidas;
 		*/
 		
+		$this->a_plazas_conseguidas = array();
 		$aaa = $gesActividadPlazasR->getResumen();
 		$this->a_plazas_resumen = $aaa;
 	}
@@ -478,7 +479,7 @@ class Select3101 {
 				// las cuento todas y a la hora de enseñar miro si soy la dl org o no.
 				// propiedad de la plaza:
 				$propietario = $oAsistente->getPropietario();
-				if ($propietario === NULL) {
+				if ($propietario === NULL OR $propietario === 'xxx') {
 					$this->msg_err .= "ALERTA: asistente sin propiedad en la plaza:<br>";
 					$this->msg_err .= "$nom(".$oPersona->getId_tabla().")<br>";
 				}
@@ -496,7 +497,7 @@ class Select3101 {
 					} else {
 						if (!empty($child) && $child == $this->mi_dele) {
 							$this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
-						}elseif (!empty($padre)) {
+						} elseif (!empty($padre)) {
 							continue;
 						}
 					}
@@ -617,7 +618,7 @@ class Select3101 {
 						$continuacion = false; //para indicar si hay que poner '+' al añadir texto.
 						$resumen_plazas .= "$padre: " 	;
 						// ocupadas por la dl padre
-						$ocupadas_calendario = $a_ocupadas[$padre];
+						$ocupadas_calendario = empty($a_ocupadas[$padre])? 0 : $a_ocupadas[$padre];
 						if ($ocupadas_calendario > 0 ) {
 							$resumen_plazas .= 	"$ocupadas_calendario($padre)";
 						}
