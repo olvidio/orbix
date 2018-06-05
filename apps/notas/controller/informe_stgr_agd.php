@@ -42,7 +42,8 @@ if ($mes>3) {
 	$any_ini_curs = $any1;
 }
 //crear la tabla temporal de agregados y notas
-$lista = empty($_POST['lista'])? false : true;
+$Qlista = (string) \filter_input(INPUT_POST, 'lista');
+$lista = empty($Qlista)? false : true;
 
 $Resumen = new notas\Resumen('agregados');
 $Resumen->setAnyIniCurs($any_ini_curs);

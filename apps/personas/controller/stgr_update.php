@@ -8,16 +8,16 @@
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$id_nom = empty($_POST['id_nom'])? '' : $_POST['id_nom'];
-$obj_pau = empty($_POST['obj_pau'])? '' : $_POST['obj_pau'];
-$stgr = empty($_POST['stgr'])? '' : $_POST['stgr'];
+$Qid_nom = (integer) \filter_input(INPUT_POST, 'id_nom');
+$Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
+$Qstgr = (string) \filter_input(INPUT_POST, 'stgr');
 
 // según sean numerarios...
-$obj = 'personas\\model\\entity\\'.$obj_pau;
-$oPersona = new $obj($id_nom);
+$obj = 'personas\\model\\entity\\'.$Qobj_pau;
+$oPersona = new $obj($Qid_nom);
 
 $oPersona->DBCarregar();
-$oPersona->setStgr($stgr);
+$oPersona->setStgr($Qstgr);
 if ($oPersona->DBGuardar() === false) {
 	echo _('Hay un error, no se ha guardado');
 }

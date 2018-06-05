@@ -18,6 +18,7 @@ $miSfsv=core\ConfigGlobal::mi_sfsv();
 $Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
 $Qmod = (string) \filter_input(INPUT_POST, 'mod');
 $Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
+$Qcampos_chk = (string) \filter_input(INPUT_POST, 'campos_chk');
 
 switch ($Qobj_pau) {
 	case 'CentroDl':
@@ -34,8 +35,9 @@ switch ($Qobj_pau) {
 		break;
 }
 
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	$s_pkey=explode('#',$_POST['sel'][0]);
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	$s_pkey=explode('#',$a_sel[0]);
 	// he cambiado las comillas dobles por simples. Deshago el cambio.
 	$s_pkey = str_replace("'",'"',$s_pkey[0]);
 	$a_pkey=unserialize(core\urlsafe_b64decode($s_pkey));
@@ -65,7 +67,7 @@ switch ($Qmod) {
 		break;
 }
 
-$campos_chk = empty($_POST['campos_chk'])? array() : explode(',',$_POST['campos_chk']);
+$campos_chk = empty($Qcampos_chk)? array() : explode(',',$Qcampos_chk);
 $oUbi->DBCarregar();
 $oDbl = $oUbi->getoDbl();
 $cDatosCampo = $oUbi->getDatosCampos();

@@ -17,6 +17,8 @@ use web\Posicion;
 
 $oPosicion->recordar();
 	
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
 	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
@@ -34,14 +36,13 @@ if (isset($_POST['stack'])) {
 } 
 
 // el scroll id es de la página anterior, hay que guardarlo allí
-if (!empty($_POST['sel'])) { //vengo de un checkbox
- 	$id_sel=$_POST['sel'];
-	$id_ubi=strtok($id_sel[0],"#");
+if (!empty($a_sel)) { //vengo de un checkbox
+	$id_ubi=strtok($a_sel[0],"#");
 	$oPosicion->addParametro('id_sel',$id_sel,1);
 	$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else {
-	empty($_POST['id_ubi'])? $id_ubi="" : $id_ubi=$_POST['id_ubi'];
+	$id_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
 }
 
 

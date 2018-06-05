@@ -25,7 +25,8 @@ use dossiers\model\entity as dossiers;
 listado de todos los dossiers de un tipo, según sea $tipo="p", "a" ó "u"
 en caso de no pasarla, por defecto lista los de personas:
 */
-$tipo = empty($_POST['tipo'])? 'p' : $_POST['tipo'];
+$Qtipo = (string) \filter_input(INPUT_POST, 'tipo');
+$tipo = empty($Qtipo)? 'p' : $Qtipo;
 
 $GesTipoDossiers = new dossiers\GestorTipoDossier();
 $cTipoDossiers  = $GesTipoDossiers->getTiposDossiers(array('tabla_from'=>$tipo,'_ordre'=>'id_tipo_dossier'));
@@ -42,4 +43,3 @@ foreach ($cTipoDossiers as $oTipoDossier) {
 	echo "<td><span class=link onclick=\"fnjs_update_div('#main','$pagina');\">"._("ver o modificar permisos")."</span></td><tr>";
 }
 echo "</table>";
-?>

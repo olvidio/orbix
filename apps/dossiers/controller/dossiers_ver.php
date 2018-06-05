@@ -30,7 +30,7 @@ if (isset($a_sel) && ($Qmod == 'eliminar' OR $Qmod == 'nuevo')) {
 }
 
 $Qid_sel = '';
-$Qscroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+$Qscroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
 // Hay que usar isset y empty porque puede tener el valor =0.
 // Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
@@ -48,7 +48,7 @@ if (isset($_POST['stack'])) {
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$Qid_sel = $a_sel;
 	$oPosicion->addParametro('id_sel',$a_sel,1);
-	$Qscroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$Qscroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
 	$oPosicion->addParametro('scroll_id',$Qscroll_id,1);
 }
 	

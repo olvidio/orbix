@@ -50,7 +50,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 }
 
-$acta = (string) \filter_input(INPUT_POST, 'acta');
+$Qacta = (string) \filter_input(INPUT_POST, 'acta');
 $Qnuevo = (integer) \filter_input(INPUT_POST, 'nuevo');
 
 $acta=urldecode($acta);
@@ -70,12 +70,12 @@ if (!empty($a_sel) && empty($notas)) { //vengo de un checkbox y no estoy en la p
 	$notas = '';
 	$acta=urldecode(strtok($a_sel[0],"#"));
 } else { // vengo de un link 
-	if (empty($acta) && !empty($_POST['acta'])) $acta=urldecode($_POST['acta']); // si estoy  en la página de acta_notas ya tengo el acta.
+	if (empty($acta) && !empty($Qacta)) $acta=urldecode($Qacta); // si estoy  en la página de acta_notas ya tengo el acta.
 }
 
 $json_examinadores = '';
 if (empty($Qnuevo) && !empty($acta))  { //significa que no es nuevo
-	if (!empty($_POST['acta']) && !empty($notas)) { // vengo de actualizar esta pág.
+	if (!empty($Qacta) && !empty($notas)) { // vengo de actualizar esta pág.
 		// estoy actualizando la página
 		$id_asignatura_actual = (integer) \filter_input(INPUT_POST, 'id_asignatura_actual');
 		$id_actividad = (integer) \filter_input(INPUT_POST, 'id_actividad');

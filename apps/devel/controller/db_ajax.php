@@ -12,13 +12,15 @@ use ubis\model\entity as ubis;
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-
-switch ($_POST['salida']) {
+	
+$Qsalida = (integer) \filter_input(INPUT_POST, 'salida');
+$Qentrada = (integer) \filter_input(INPUT_POST, 'entrada');
+switch ($Qsalida) {
 	 case "lugar":
 		$donde='';
-		if (empty($_POST['entrada'])) die();
+		if (empty($Qentrada)) die();
 		
-		$region = $_POST['entrada'];
+		$region = $Qentrada;
 
 		$oGesDl = new ubis\GestorDelegacion();
 		$oDesplDelegaciones = $oGesDl->getListaDelegaciones(array("$region"));

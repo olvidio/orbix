@@ -29,31 +29,31 @@ if (isset($_POST['stack'])) {
 
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-	$id_nom = strtok($a_sel[0],"#");
-	$na=strtok("#");
+	$Qid_nom = strtok($a_sel[0],"#");
+	$Qna=strtok("#");
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
-	$sactividad = empty($_POST['que'])? '' : $_POST['que'];
+	$sactividad = (string) \filter_input(INPUT_POST, 'que');
 	$Qtodos = empty($Qtodos)? 1 : $Qtodos;
 } else { // vengo de actualizar
-	$id_nom = empty($_POST['id_nom'])? '' : $_POST['id_nom'];
-	$na = empty($_POST['na'])? '' : $_POST['na'];
-	$sactividad = empty($_POST['sactividad'])? '' : $_POST['sactividad'];
+	$Qid_nom = (integer) \filter_input(INPUT_POST, 'id_nom');
+	$Qna = (string) \filter_input(INPUT_POST, 'na');
+	$Qsactividad = (string) \filter_input(INPUT_POST, 'sactividad');
 	
 }
 
-if (($na == 'a' || $na == 'agd') && $sactividad == 'ca') {
-	$sactividad = 'cv';
+if (($Qna == 'a' || $Qna == 'agd') && $Qsactividad == 'ca') {
+	$Qsactividad = 'cv';
 }
 
-$oPersona = new personas\PersonaDl($id_nom);
+$oPersona = new personas\PersonaDl($Qid_nom);
 $ap_nom = $oPersona->getApellidosNombre();
 
 //Miro los actuales
 $gesPlazasPeticion = new \actividadplazas\model\entity\GestorPlazaPeticion();
-$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom'=>$id_nom,'tipo'=>$sactividad,'_ordre'=>'orden'));
+$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom'=>$Qid_nom,'tipo'=>$Qsactividad,'_ordre'=>'orden'));
 $sid_activ = '';
 foreach ($cPlazasPeticion as $oPlazaPeticion) {
 	$id_activ = $oPlazaPeticion->getId_activ();
@@ -74,7 +74,7 @@ if (!empty($Qtodos) && $Qtodos != 1) {
 	$aWhere['dl_org'] = $mi_grupo;
 }
 //periodo
-switch ($sactividad) {
+switch ($Qsactividad) {
 	case 'ca':
 	case 'cv':
 		$any=  core\ConfigGlobal::any_final_curs('est');
@@ -96,16 +96,16 @@ $aWhere['_ordre'] = 'f_ini,nivel_stgr';
 $cActividades = array();
 $sfsv = core\ConfigGlobal::mi_sfsv();
 $mi_dele = core\ConfigGlobal::mi_dele();
-switch ($na) {
+switch ($Qna) {
 	case "agd":
 	case "a":
-		//caso de agd
-		$id_ctr = empty($_POST['id_ctr_agd'])? '' : $_POST['id_ctr_agd'];
+		//caso de agd 
+		$id_ctr = (integer) \filter_input(INPUT_POST, 'id_ctr_agd');
 		if ($id_ctr==1) $id_ctr = ''; //es todos los ctr.
 		$id_tabla_persona='a'; //el id_tabla entra en conflicto con el de actividad
 		$tabla_pau='p_agregados';
 
-		switch ($sactividad) {
+		switch ($Qsactividad) {
 			case 'ca': //133
 			case 'cv': //133
 				$Qid_tipo_activ = '^'.$sfsv.'33';
@@ -130,12 +130,12 @@ switch ($na) {
 		break;
 	case "n":
 		// caso de n
-		$id_ctr = empty($_POST['id_ctr_n'])? '' : $_POST['id_ctr_n'];
+		$id_ctr = (integer) \filter_input(INPUT_POST, 'id_ctr_n');
 		if ($id_ctr==1) $id_ctr = ''; //es todos los ctr.
 		$id_tabla_persona='n';
 		$tabla_pau='p_numerarios';
 	
-		switch ($sactividad) {
+		switch ($Qsactividad) {
 			case 'ca': //112
 				$Qid_tipo_activ = '^'.$sfsv.'12';
 				break;
@@ -183,9 +183,9 @@ $camposForm = 'actividades!actividades_mas!actividades_num';
 $oHash->setcamposForm($camposForm);
 $oHash->setcamposNo('que!actividades');
 $a_camposHidden = array(
-		'id_nom' => $id_nom,
-		'na' => $na,
-		'sactividad' => $sactividad,
+		'id_nom' => $Qid_nom,
+		'na' => $Qna,
+		'sactividad' => $Qsactividad,
 		'que' => '',
 		'stack' => $stack
 		);

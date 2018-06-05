@@ -53,11 +53,11 @@ switch ($Qmod) {
 			foreach ($a_sel as $sel) {
 				$id_activ = strtok($sel,'#'); 
 				$id_asignatura = strtok('#'); 
-				if (!empty($_POST['id_activ'])) {
-					$id_activ = $_POST['id_activ'];
+				if (!empty($Qid_activ)) {
+					$id_activ = $Qid_activ;
 				}
-				if (!empty($_POST['id_pau'])) {
-					$id_nom = $_POST['id_pau'];
+				if (!empty($Qid_nom)) {
+					$id_nom = $Qid_nom;
 				} else {
 					$id_nom = strtok('#'); 
 				}

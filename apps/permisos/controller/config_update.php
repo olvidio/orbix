@@ -15,9 +15,14 @@ use personas\model\entity as personas;
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miSfsv=core\ConfigGlobal::mi_sfsv();
 
-switch ($_POST['que']) {
+$Qque = (string) \filter_input(INPUT_POST, 'que');
+$Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
+$Qcampos_chk = (string) \filter_input(INPUT_POST, 'campos_chk');
+
+
+switch ($Qque) {
 	case 'eliminar':
-		$obj = 'personas\\model\\entity\\'.$_POST['obj_pau'];
+		$obj = 'personas\\model\\entity\\'.$Qobj_pau;
 		$oPersona = new $obj($_POST['id_nom']);
 		if ($oPersona->DBEliminar() === false) {
 			echo _('Hay un error, no se ha eliminado');
@@ -26,12 +31,12 @@ switch ($_POST['que']) {
 		die();
 		break;
 	case 'guardar':
-		$obj = 'personas\\model\\entity\\'.$_POST['obj_pau'];
+		$obj = 'personas\\model\\entity\\'.$Qobj_pau;
 		$oPersona = new $obj($_POST['id_nom']);
 		break;
 }
 
-$campos_chk = empty($_POST['campos_chk'])? array() : explode('!',$_POST['campos_chk']);
+$campos_chk = empty($Qcampos_chk)? array() : explode('!',$Qcampos_chk);
 $oPersona->DBCarregar();
 $oDbl = $oPersona->getoDbl();
 $cDatosCampo = $oPersona->getDatosCampos();

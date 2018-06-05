@@ -63,11 +63,18 @@ switch ($Qmod) {
 		$oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
 		$oActividadAsignatura->setId_activ($Qid_activ);
 		$oActividadAsignatura->setId_asignatura($Qid_asignatura);
-		if (!empty($_POST['id_profesor'])) $oActividadAsignatura->setId_profesor($_POST['id_profesor']); 
-		if (!empty($_POST['avis_profesor'])) $oActividadAsignatura->setAvis_profesor($_POST['avis_profesor']); 
-		if (!empty($_POST['tipo'])) $oActividadAsignatura->setTipo($_POST['tipo']);
-		if (!empty($_POST['f_ini'])) $oActividadAsignatura->setF_ini($_POST['f_ini']);
-		if (!empty($_POST['f_fin'])) $oActividadAsignatura->setF_fin($_POST['f_fin']);
+		
+		$Qid_profesor = (integer) \filter_input(INPUT_POST,'id_profesor');
+		$Qavis_profesor = (string) \filter_input(INPUT_POST,'avis_profesor');
+		$Qtipo = (string) \filter_input(INPUT_POST,'tipo');
+		$Qf_ini = (string) \filter_input(INPUT_POST,'f_ini');
+		$Qf_fin = (string) \filter_input(INPUT_POST,'f_fin');
+		
+		$oActividadAsignatura->setId_profesor($Qid_profesor); 
+		$oActividadAsignatura->setAvis_profesor($Qavis_profesor); 
+		$oActividadAsignatura->setTipo($Qtipo);
+		$oActividadAsignatura->setF_ini($Qf_ini);
+		$oActividadAsignatura->setF_fin($Qf_fin);
 		if ($oActividadAsignatura->DBGuardar() === false) {
 			$msg_err = _("Hay un error, no se ha creado.");
 		}
@@ -77,15 +84,21 @@ switch ($Qmod) {
 		$oDossier->DBGuardar();
 		break;
 	case 'editar': //------------ EDITAR --------
+		$Qid_profesor = (integer) \filter_input(INPUT_POST,'id_profesor');
+		$Qavis_profesor = (string) \filter_input(INPUT_POST,'avis_profesor');
+		$Qtipo = (string) \filter_input(INPUT_POST,'tipo');
+		$Qf_ini = (string) \filter_input(INPUT_POST,'f_ini');
+		$Qf_fin = (string) \filter_input(INPUT_POST,'f_fin');
+
 		$oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
 		$oActividadAsignatura->setId_activ($Qid_activ);
 		$oActividadAsignatura->setId_asignatura($Qid_asignatura);
 		$oActividadAsignatura->DBCarregar();
-		$oActividadAsignatura->setId_profesor($_POST['id_profesor']); 
-		$oActividadAsignatura->setAvis_profesor($_POST['avis_profesor']); 
-		$oActividadAsignatura->setTipo($_POST['tipo']);
-		$oActividadAsignatura->setF_ini($_POST['f_ini']);
-		$oActividadAsignatura->setF_fin($_POST['f_fin']);
+		$oActividadAsignatura->setId_profesor($Qid_profesor); 
+		$oActividadAsignatura->setAvis_profesor($Qavis_profesor); 
+		$oActividadAsignatura->setTipo($Qtipo);
+		$oActividadAsignatura->setF_ini($Qf_ini);
+		$oActividadAsignatura->setF_fin($Qf_fin);
 		if ($oActividadAsignatura->DBGuardar() === false) {
 			$msg_err = _("Hay un error, no se ha guardado.");
 		}

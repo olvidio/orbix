@@ -53,18 +53,17 @@ if (isset($_POST['stack'])) {
 	}
 } 
 
-$que_lista = empty($_POST['que_lista'])? '' : $_POST['que_lista'];
-$loc = empty($_POST['loc'])? '' : $_POST['loc'];
+$Qque_lista = (string) \filter_input(INPUT_POST, 'que_lista');
+$Qloc = (string) \filter_input(INPUT_POST, 'loc');
 	
-if (empty($loc)) $loc='dl';
-if (empty($que_lista)) $que_lista='ctr_n';
+if (empty($Qloc)) $Qloc='dl';
+if (empty($Qque_lista)) $Qque_lista='ctr_n';
 
 $aWhere['_ordre'] = 'nombre_ubi';
 $aOperador = array();
 
-if (empty($_POST['tipoc'])) { $tipoc='u.tipo_ctr'; } else { $tipoc=$_POST['tipoc']; }
 
-switch ($que_lista) {
+switch ($Qque_lista) {
 	/*vamos a por los casos de la tabla u_centros dl*/
 	case "todos_ctr_dl":
 		$obj = 'CentroDl';
@@ -178,8 +177,8 @@ switch ($obj) {
 }
 
 $aGoBack = array (
-				'loc'=>$loc,
-				'que_lista'=>$que_lista,
+				'loc'=>$Qloc,
+				'que_lista'=>$Qque_lista,
 				 );
 $oPosicion->setParametros($aGoBack);
 $oPosicion->recordar();
@@ -261,13 +260,13 @@ $oDesplDl = new Desplegable();
 $oDesplDl->setNombre('loc');
 $oDesplDl->setAction('fnjs_actualizar()');
 $oDesplDl->setOpciones(array('dl'=>_('de dl'),'ex'=>_('de otra dl/cr')));
-$oDesplDl->setOpcion_sel($loc);
+$oDesplDl->setOpcion_sel($Qloc);
 
 
 $oDesplLista = new Desplegable();
 $oDesplLista->setNombre('que_lista');
 $oDesplLista->setAction('fnjs_actualizar()');
-if ($loc=='dl') {
+if ($Qloc=='dl') {
 	$aOpciones=array(
 			'ctr_n'=>ucfirst(_("sólo centros de n")), 
 			'todos_ctr_dl'=>ucfirst(_("todos los ctr de la dl")),
@@ -285,7 +284,7 @@ if ($loc=='dl') {
 	$aOpciones['cgi'] = ucfirst(_("sólo colegios"));
 	$aOpciones['otros_cdc'] = ucfirst(_("resto casas cdc"));
 }
-if ($loc=='ex') {
+if ($Qloc=='ex') {
 	$aOpciones=array(
 			'todos_ctr_ex'=>ucfirst(_("todos los centros")),
 			'dl'=>ucfirst(_("sólo delegaciones")), 
@@ -294,7 +293,7 @@ if ($loc=='ex') {
 			);	
 }
 $oDesplLista->setOpciones($aOpciones);
-$oDesplLista->setOpcion_sel($que_lista);
+$oDesplLista->setOpcion_sel($Qque_lista);
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('list_ctr');
@@ -309,7 +308,7 @@ $oHash1 = new Hash();
 $oHash1->setcamposForm('sel');
 $oHash1->setcamposNo('scroll_id');
 $a_camposHidden1 = array(
-		'que_lista'=>$que_lista
+		'que_lista'=>$Qque_lista
 		);
 $oHash1->setArraycamposHidden($a_camposHidden1);
 

@@ -45,23 +45,24 @@ if (isset($_POST['stack'])) {
 	}
 } 
 
-$loc = empty($_POST['loc'])? '' : $_POST['loc'];
-$tipo = empty($_POST['tipo'])? '' : $_POST['tipo'];
-$simple = empty($_POST['simple'])? '' : $_POST['simple'];
-if ($simple == 1) {
-	$tipo = 'tot';
-	$loc = 'tot';
+$Qloc = (string) \filter_input(INPUT_POST, 'loc');
+$Qtipo = (string) \filter_input(INPUT_POST, 'tipo');
+$Qsimple = (integer) \filter_input(INPUT_POST, 'simple');
+if ($Qsimple == 1) {
+	$Qtipo = 'tot';
+	$Qloc = 'tot';
 }
-$sWhere = empty($_POST['sWhere'])? '' : $_POST['sWhere'];
-$sOperador = empty($_POST['sOperador'])? '' : $_POST['sOperador']; 
-$sGestor = empty($_POST['sGestor'])? '' : $_POST['sGestor'];
-$sWhereD = empty($_POST['sWhereD'])? '' : $_POST['sWhereD'];
-$sOperadorD = empty($_POST['sOperadorD'])? '' : $_POST['sOperadorD'];
-$sGestorDir = empty($_POST['sGestorDir'])? '' : $_POST['sGestorDir'];
-$metodo = empty($_POST['metodo'])? '' : $_POST['metodo'];
-$titulo = empty($_POST['titulo'])? '' : $_POST['titulo'];
+$sWhere = (string) \filter_input(INPUT_POST, 'sWhere');
+$sOperador = (string) \filter_input(INPUT_POST, 'sOperador');
+$sGestor = (string) \filter_input(INPUT_POST, 'sGestor');
+$sWhereD = (string) \filter_input(INPUT_POST, 'sWhereD');
+$sOperadorD = (string) \filter_input(INPUT_POST, 'sOperadorD');
+$sGestorDir = (string) \filter_input(INPUT_POST, 'sGestorDir');
+$metodo = (string) \filter_input(INPUT_POST, 'metodo');
+$titulo = (string) \filter_input(INPUT_POST, 'titulo');
+$cmb = (string) \filter_input(INPUT_POST, 'cmb');
 
-$tipo_ubi = $tipo.$loc;
+$tipo_ubi = $Qtipo.$Qloc;
 
 /*miro las condiciones. las variables son: nombre_ubi,ciudad,region,pais */
 if (empty($sWhere)) {
@@ -69,50 +70,55 @@ if (empty($sWhere)) {
 	$aOperador=array();
 	$aWhereD=array();
 	$aOperadorD=array();
-	if (!empty($_POST['nombre_ubi'])){
-		$nom_ubi = str_replace("+", "\+", $_POST['nombre_ubi']); // para los centros de la sss+
+	$Qnombre_ubi = (string) \filter_input(INPUT_POST, 'nombre_ubi');
+	if (!empty($Qnombre_ubi)){
+		$nom_ubi = str_replace("+", "\+", $Qnombre_ubi); // para los centros de la sss+
 		$aWhere['nombre_ubi']=$nom_ubi;
 		$aOperador['nombre_ubi']='sin_acentos';
 		//$aWhere['_ordre'] = 'nombre_ubi';
 		$aWhere['_ordre'] = 'tipo_ubi,nombre_ubi';
 	}
-	if (!empty($_POST['region'])){
-		$aWhere['region']=$_POST['region'];
+	$Qregion = (string) \filter_input(INPUT_POST, 'region');
+	if (!empty($Qregion)){
+		$aWhere['region']=$Qregion;
 		$aWhere['_ordre'] = 'nombre_ubi';
 		}
-	if (!empty($_POST['dl'])){
-		$aWhere['dl']=$_POST['dl'];
+	$Qdl = (string) \filter_input(INPUT_POST, 'dl');
+	if (!empty($Qdl)){
+		$aWhere['dl']=$Qdl;
 		$aOperador['dl']='sin_acentos';
 		$aWhere['_ordre'] = 'dl';
 		}
-	if (!empty($_POST['tipo_ctr'])){
-		$aWhere['tipo_ctr']=$_POST['tipo_ctr'];
+	$Qtipo_ctr = (string) \filter_input(INPUT_POST, 'tipo_ctr');
+	if (!empty($Qtipo_ctr)){
+		$aWhere['tipo_ctr']=$Qtipo_ctr;
 		$aOperador['tipo_ctr']='sin_acentos';
 		$aWhere['_ordre'] = 'tipo_ctr';
 		}
-	if (!empty($_POST['tipo_casa'])){
-		$aWhere['tipo_casa']=$_POST['tipo_casa'];
+	$Qtipo_casa = (string) \filter_input(INPUT_POST, 'tipo_casa');
+	if (!empty($Qtipo_casa)){
+		$aWhere['tipo_casa']=$Qtipo_casa;
 		$aOperador['tipo_casa']='sin_acentos';
 		$aWhere['_ordre'] = 'tipo_casa';
 		}
 
 
-	if (!empty($_POST['ciudad'])){
-		$aWhereD['poblacion']=$_POST['ciudad'];
+	$Qciudad = (string) \filter_input(INPUT_POST, 'ciudad');
+	if (!empty($Qciudad)){
+		$aWhereD['poblacion']=$Qciudad;
 		$aOperadorD['poblacion']='sin_acentos';
 		$aWhereD['_ordre']='poblacion';
 		}
-	if (!empty($_POST['pais'])){
-		$aWhereD['pais']=$_POST['pais'];
+	$Qpais = (string) \filter_input(INPUT_POST, 'pais');
+	if (!empty($Qpais)){
+		$aWhereD['pais']=$Qpais;
 		$aOperadorD['pais']='sin_acentos';
 		$aWhereD['_ordre']='pais';
 		}
 
-	//echo "tipo:$tipo<br>";
-	//echo "loc:$loc<br>";
-	switch ($tipo) {
+	switch ($Qtipo) {
 		case "ctr":
-			switch ($loc) {
+			switch ($Qloc) {
 				case "dl":
 					$titulo=ucfirst(_("tabla de centros de la delegación"));
 					$Gestor= "ubis\\model\\entity\\GestorCentroDl";
@@ -152,7 +158,7 @@ if (empty($sWhere)) {
 			}
 			break;
 		case "cdc":
-			switch ($loc) {
+			switch ($Qloc) {
 				case "dl":
 					$Gestor= "ubis\\model\\entity\\GestorCasaDl";
 					$metodo = 'getCasas';
@@ -183,7 +189,7 @@ if (empty($sWhere)) {
 			}
 			break;
 		case "tot":
-			switch ($loc) {
+			switch ($Qloc) {
 				case "dl":
 					$Gestor= "ubis\\model\\entity\\GestorUbi";
 					$metodo = 'getUbis';
@@ -268,7 +274,7 @@ if (empty($aWhere) && empty($aWhereD)) {
 }
 
 if (!empty($aWhere)) {
-	if (empty($_POST['cmb'])){
+	if (empty($Qcmb)){
 		$aWhere['status']='t';
 	}
 	// En el caso de las casas, hay que distinguir. Lo pongo aqui
@@ -344,12 +350,12 @@ $sGestorDir = urlsafe_b64encode(serialize($GestorDir));
 $go_to= '';
 //si no existe la ficha, hacer una nueva	
 if (is_array($cUbisTot) && count($cUbisTot) == 0) {
-	$go_to=Hash::link(ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_buscar.php?'.http_build_query(array('simple'=>1,'tipo'=>$tipo))); 
-	$nombre_ubi=$_POST['nombre_ubi'];
+	$go_to=Hash::link(ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_buscar.php?'.http_build_query(array('simple'=>1,'tipo'=>$Qtipo))); 
+	$nombre_ubi=$Qnombre_ubi;
 	
-	$pagina=Hash::link(ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_editar.php?'.http_build_query(array('sGestor'=>$sGestor,'tipo_ubi'=>$tipo_ubi,'nombre_ubi'=>$nombre_ubi,'nuevo'=>1,'go_to'=>$go_to))); 
+	$pagina=Hash::link(ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_editar.php?'.http_build_query(array('sGestor'=>$sGestor,'tipo_ubi'=>$tipo_ubi,'nombre_ubi'=>$Qnombre_ubi,'nuevo'=>1,'go_to'=>$go_to))); 
 	
-	if ($tipo=="tot" || $loc=="tot") {
+	if ($Qtipo=="tot" || $Qloc=="tot") {
 		echo _("No existe esta ficha.");
 		echo "<br>";
 		echo _("OJO!: para crear un centro/casa debe especificar el tipo de centro/casa. Para ello debe buscar a través de 'ver más opciones' definiendo el tipo y la localización distinto a 'todos'.");
@@ -365,8 +371,8 @@ if (is_array($cUbisTot) && count($cUbisTot) == 0) {
 * Defino un array con los datos actuales, para saber volver después de navegar un rato
 */
 $aGoBack = array (
-				'tipo'=>$tipo,
-				'loc'=>$loc,
+				'tipo'=>$Qtipo,
+				'loc'=>$Qloc,
 				'sWhere' => $sWhere,
 				'sOperador' => $sOperador,
 				'sGestor' => $sGestor,
@@ -444,8 +450,8 @@ $oHash = new Hash();
 $oHash->setcamposForm('!sel');
 $oHash->setcamposNo('!scroll_id');
 $a_camposHidden = array(
-		'tipo'=>$tipo,
-		'loc'=>$loc,
+		'tipo'=>$Qtipo,
+		'loc'=>$Qloc,
 		'go_to'=>$go_to,
 		'sWhere'=>$sWhere,
 		'sOperador'=>$sOperador,

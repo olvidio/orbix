@@ -7,7 +7,7 @@ use personas\model\entity as personas;
 
 /**
  * Actualiza los datos de un objeto ActividadCargo.
- * Si asiste ($_POST['asis']), se crea el objeto ActividadAsistente y se pone como propio
+ * Si asiste (['asis']), se crea el objeto ActividadAsistente y se pone como propio
  *
  * 
  * @package	orbix

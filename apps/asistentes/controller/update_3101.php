@@ -178,7 +178,8 @@ switch ($Qmod) {
 	//------------ cambiar PLAZA --------
 	case "plaza":
 		$msg_err = '';
-		$arr = json_decode($_POST['lista_json']);
+		$Qlista_json = (string) \filter_input(INPUT_POST, 'lista_json');
+		$arr = json_decode($Qlista_json);
 		foreach ($arr as $obj) {
 			$id_nom = $obj->value;
 			$id_nom = strtok($id_nom,'#'); // los cargos tienen más datos

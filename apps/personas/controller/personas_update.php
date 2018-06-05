@@ -15,6 +15,7 @@ use personas\model\entity as personas;
 $Qid_nom = (integer) \filter_input(INPUT_POST, 'id_nom');
 $Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
 $Qque = (string) \filter_input(INPUT_POST, 'que');
+$Qcampos_chk = (string) \filter_input(INPUT_POST, 'campos_chk');
 
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miSfsv=core\ConfigGlobal::mi_sfsv();
@@ -39,7 +40,7 @@ switch ($Qque) {
 		break;
 }
 
-$campos_chk = empty($_POST['campos_chk'])? array() : explode('!',$_POST['campos_chk']);
+$campos_chk = empty($Qcampos_chk)? array() : explode('!',$Qcampos_chk);
 $oPersona->DBCarregar();
 $oDbl = $oPersona->getoDbl();
 $cDatosCampo = $oPersona->getDatosCampos();

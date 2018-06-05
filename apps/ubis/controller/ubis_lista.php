@@ -27,8 +27,9 @@ $miSfsv=core\ConfigGlobal::mi_sfsv();
 $tabla="ubis";
 $tabla_dir="u_direcciones";
 $oDbl = $GLOBALS['oDBPC'];
-if (!empty($_POST['nombre_ubi'])){
-	$nom_ubi = str_replace("+", "\+", $_POST['nombre_ubi']); // para los centros de la sss+
+$Qnombre_ubi = (string) \filter_input(INPUT_POST, 'nombre_ubi');
+if (!empty($Qnombre_ubi)){
+	$nom_ubi = str_replace("+", "\+", $Qnombre_ubi); // para los centros de la sss+
 	$aWhereCasa['nombre_ubi'] = $nom_ubi;
 	$aOperadorCasa['nombre_ubi'] = 'sin_acentos';
 	$aWhereCtr['nombre_ubi'] = $nom_ubi;

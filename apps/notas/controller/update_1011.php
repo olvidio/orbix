@@ -16,20 +16,26 @@ use personas\model\entity as personas;
 	
 $msg_err = '';
 	
-$id_nom = empty($_POST['id_pau'])? '' : $_POST['id_pau'];
-if (!empty($_POST['sel'])) { //vengo de un checkbox
-	if ($_POST['pau']=="p") { 
-		$id_nivel=strtok($_POST['sel'][0],"#"); 
+$Qid_nom = (integer) \filter_input(INPUT_POST, 'id_nom');
+$Qpau = (string) \filter_input(INPUT_POST, 'pau');
+$Qid_pau = (integer) \filter_input(INPUT_POST, 'id_pau');
+$Qmod = (string) \filter_input(INPUT_POST, 'mod');
+
+
+$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+	if ($Qpau=="p") { 
+		$id_nivel=strtok($a_sel[0],"#"); 
 		$id_asignatura=strtok("#"); 
 	}
 }
 
-switch($_POST['mod']) {
+switch($Qmod) {
 	case 'eliminar': //------------ BORRAR --------
-		if ($_POST['pau']=="p") { 
-			if (!empty($_POST['id_pau']) && !empty($id_asignatura) && !empty($id_nivel)) {
+		if ($Qpau=="p") { 
+			if (!empty($Qid_pau) && !empty($id_asignatura) && !empty($id_nivel)) {
 				$oPersonaNota = new notas\PersonaNota();
-				$oPersonaNota->setId_nom($_POST['id_pau']);
+				$oPersonaNota->setId_nom($Qid_pau);
 				$oPersonaNota->setId_asignatura($id_asignatura);	
 				$oPersonaNota->setId_nivel($id_nivel);	
 				$oPersonaNota->DBCarregar(); //perque agafi els valors que ja té.
@@ -40,106 +46,135 @@ switch($_POST['mod']) {
 		}
 		break;
 	case 'nuevo': //------------ NUEVO --------
-		if ($_POST['id_asignatura']=='1') {
-			$id_nivel = $_POST['id_nivel'];
+		$Qid_asignatura = (integer) \filter_input(INPUT_POST, 'id_asignatura');
+		$Qid_nivel = (integer) \filter_input(INPUT_POST, 'id_nivel');
+		//No es una opcional
+		if ($Qid_asignatura=='1') {
 			$oGesAsignaturas=new asignaturas\GestorAsignatura();
-			$cAsignaturas=$oGesAsignaturas->getAsignaturas(array('id_nivel'=>$id_nivel));
+			$cAsignaturas=$oGesAsignaturas->getAsignaturas(array('id_nivel'=>$Qid_nivel));
 			$oAsignatura = $cAsignaturas[0]; // sólo deberia haber una
 			$id_asignatura=$oAsignatura->getId_asignatura();
-		} else { //es una opcional
-			empty($_POST['id_asignatura'])? $id_asignatura="" : $id_asignatura=$_POST['id_asignatura'];
-			empty($_POST['id_nivel'])? $id_nivel="" : $id_nivel=$_POST['id_nivel'];
+		} else {//es una opcional
+			$id_asignatura=$Qid_asignatura;
 		}
 		$oPersonaNota = new notas\PersonaNota();
-		$oPersonaNota->setId_nivel($id_nivel);
+		$oPersonaNota->setId_nivel($Qid_nivel);
 		$oPersonaNota->setId_asignatura($id_asignatura);
-		$oPersonaNota->setId_nom($_POST['id_pau']);
+		$oPersonaNota->setId_nom($Qid_pau);
 		// para saber a que schema pertenece la persona
-		$oPersona = personas\Persona::NewPersona($id_nom);
+		$oPersona = personas\Persona::NewPersona($Qid_nom);
 		if (!is_object($oPersona)) {
-			$msg_err = "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
+			$msg_err = "<br>$oPersona con id_nom: $Qid_nom en  ".__FILE__.": line ". __LINE__;
 			exit($msg_err);
 		}
 		$id_schema = $oPersona->getId_schema();
 		$oPersonaNota->setId_schema($id_schema);
-		if (!empty($_POST['id_situacion'])) $oPersonaNota->setId_situacion($_POST['id_situacion']);
-		if (!empty($_POST['f_acta'])) $oPersonaNota->setF_acta($_POST['f_acta']);
-		if (!empty($_POST['tipo_acta'])) $oPersonaNota->setTipo_acta($_POST['tipo_acta']);
+
+		$Qid_situacion = (integer) \filter_input(INPUT_POST, 'id_situacion');
+		$Qacta = (string) \filter_input(INPUT_POST, 'acta');
+		$Qf_acta = (string) \filter_input(INPUT_POST, 'f_acta');
+		$Qtipo_acta = (integer) \filter_input(INPUT_POST, 'tipo_acta');
+		$Qpreceptor = (string) \filter_input(INPUT_POST, 'preceptor');
+		$Qid_preceptor = (integer) \filter_input(INPUT_POST, 'id_preceptor');
+		$Qdetalle = (string) \filter_input(INPUT_POST, 'detalle');
+		$Qepoca = (integer) \filter_input(INPUT_POST, 'epoca');
+		$Qid_activ = (integer) \filter_input(INPUT_POST, 'id_activ');
+		$Qnota_num = (integer) \filter_input(INPUT_POST, 'nota_num');
+		$Qnota_max = (integer) \filter_input(INPUT_POST, 'nota_max');
+		
+		$oPersonaNota->setId_situacion($Qid_situacion);
+		$oPersonaNota->setF_acta($Qf_acta);
+		$oPersonaNota->setTipo_acta($Qtipo_acta);
 		// comprobar valor del acta
-		if (!empty($_POST['acta'])) {
-			if ($_POST['tipo_acta'] == notas\PersonaNota::FORMATO_CERTIFICADO) {
-				$oPersonaNota->setActa($_POST['acta']);
+		if (!empty($Qacta)) {
+			if ($Qtipo_acta == notas\PersonaNota::FORMATO_CERTIFICADO) {
+				$oPersonaNota->setActa($Qacta);
 			}
-			if ($_POST['tipo_acta'] == notas\PersonaNota::FORMATO_ACTA) {
+			if ($Qtipo_acta == notas\PersonaNota::FORMATO_ACTA) {
 				$oActa = new notas\Acta();
-				$valor = trim($_POST['acta']);
+				$valor = trim($Qacta);
 				$reg_exp = "/^(\?|\w{1,6}\??)\s+([0-9]{0,3})\/([0-9]{2})\??$/";
 				if (preg_match ($reg_exp, $valor) == 1) {
 					} else {
 						// inventar acta.
-						$valor = $oActa->inventarActa($valor,$_POST['f_acta']);
+						$valor = $oActa->inventarActa($valor,$Qf_acta);
 					}
 				$oPersonaNota->setActa($valor);
 			}
 		}
-		if (!empty($_POST['preceptor'])) $oPersonaNota->setPreceptor($_POST['preceptor']);
-		if (!empty($_POST['id_preceptor'])) $oPersonaNota->setId_preceptor($_POST['id_preceptor']);
-		if (!empty($_POST['detalle'])) $oPersonaNota->setDetalle($_POST['detalle']);
-		if (!empty($_POST['epoca'])) $oPersonaNota->setEpoca($_POST['epoca']);
-		if (!empty($_POST['id_activ'])) $oPersonaNota->setId_activ($_POST['id_activ']);
-		if (!empty($_POST['nota_num'])) $oPersonaNota->setNota_num($_POST['nota_num']);
-		if (!empty($_POST['nota_max'])) $oPersonaNota->setNota_max($_POST['nota_max']);
+		$oPersonaNota->setPreceptor($Qpreceptor);
+		$oPersonaNota->setId_preceptor($Qid_preceptor);
+		$oPersonaNota->setDetalle($Qdetalle);
+		$oPersonaNota->setEpoca($Qepoca);
+		$oPersonaNota->setId_activ($Qid_activ);
+		$oPersonaNota->setNota_num($Qnota_num);
+		$oPersonaNota->setNota_max($Qnota_max);
 		if ($oPersonaNota->DBGuardar() === false) {
 			$msg_err = _("Hay un error, no se ha guardado.");
 		}
 		// si no está abierto, hay que abrir el dossier para esta persona
 		//abrir_dossier('p',$_POST['id_pau'],'1303',$oDB);
-		$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$_POST['id_pau'],'id_tipo_dossier'=>1303));
+		$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$Qid_pau,'id_tipo_dossier'=>1303));
 		$oDossier->abrir();
 		$oDossier->DBGuardar();
 
 		break; 
 	case 'editar':  //------------ EDITAR --------
-		if (!empty($_POST['id_pau']) && !empty($_POST['id_asignatura_real'])) {
+		$Qid_nivel = (integer) \filter_input(INPUT_POST, 'id_nivel');
+		$Qid_asignatura_real = (integer) \filter_input(INPUT_POST, 'id_asignatura_real');
+		if (!empty($Qid_pau) && !empty($Qid_asignatura_real)) {
 			$oPersonaNota = new notas\PersonaNota();
-			$oPersonaNota->setId_nom($_POST['id_pau']);
-			$oPersonaNota->setId_nivel($_POST['id_nivel']);	
+			$oPersonaNota->setId_nom($Qid_pau);
+			$oPersonaNota->setId_nivel($Qid_nivel);	
 			$oPersonaNota->DBCarregar(); //perque agafi els valors que ja té.
 		} else {
 			$oPersonaNota = new notas\PersonaNota();
 		}
-		$oPersonaNota->setId_situacion($_POST['id_situacion']);
-		$oPersonaNota->setF_acta($_POST['f_acta']);
-		$oPersonaNota->setTipo_acta($_POST['tipo_acta']);
+		$Qid_situacion = (integer) \filter_input(INPUT_POST, 'id_situacion');
+		$Qacta = (string) \filter_input(INPUT_POST, 'acta');
+		$Qf_acta = (string) \filter_input(INPUT_POST, 'f_acta');
+		$Qtipo_acta = (integer) \filter_input(INPUT_POST, 'tipo_acta');
+		$Qpreceptor = (string) \filter_input(INPUT_POST, 'preceptor');
+		$Qid_preceptor = (integer) \filter_input(INPUT_POST, 'id_preceptor');
+		$Qdetalle = (string) \filter_input(INPUT_POST, 'detalle');
+		$Qepoca = (integer) \filter_input(INPUT_POST, 'epoca');
+		$Qid_activ = (integer) \filter_input(INPUT_POST, 'id_activ');
+		$Qnota_num = (integer) \filter_input(INPUT_POST, 'nota_num');
+		$Qnota_max = (integer) \filter_input(INPUT_POST, 'nota_max');
+		
+		$oPersonaNota->setId_situacion($Qid_situacion);
+		$oPersonaNota->setF_acta($Qf_acta);
+		$oPersonaNota->setTipo_acta($Qtipo_acta);
 		// comprobar valor del acta
-		if (!empty($_POST['acta'])) {
-			if ($_POST['tipo_acta'] == notas\PersonaNota::FORMATO_CERTIFICADO) {
-				$oPersonaNota->setActa($_POST['acta']);
+		if (!empty($Qacta)) {
+			if ($Qtipo_acta == notas\PersonaNota::FORMATO_CERTIFICADO) {
+				$oPersonaNota->setActa($Qacta);
 			}
-			if ($_POST['tipo_acta'] == notas\PersonaNota::FORMATO_ACTA) {
+			if ($Qtipo_acta == notas\PersonaNota::FORMATO_ACTA) {
 				$oActa = new notas\Acta();
-				$valor = trim($_POST['acta']);
+				$valor = trim($Qacta);
 				$reg_exp = "/^(\?|\w{1,6}\??)\s+([0-9]{0,3})\/([0-9]{2})\??$/";
 				if (preg_match ($reg_exp, $valor) == 1) {
 					} else {
 						// inventar acta.
-						$valor = $oActa->inventarActa($valor,$_POST['f_acta']);
+						$valor = $oActa->inventarActa($valor,$Qf_acta);
 					}
 				$oPersonaNota->setActa($valor);
 			}
 		}
-		if (empty($_POST['preceptor'])) {
+		if (empty($Qpreceptor)) {
 			$oPersonaNota->setPreceptor('');
 			$oPersonaNota->setId_preceptor('');
 		} else {
-			$oPersonaNota->setPreceptor($_POST['preceptor']);
-			$oPersonaNota->setId_preceptor($_POST['id_preceptor']);
+			$oPersonaNota->setPreceptor($Qpreceptor);
+			$oPersonaNota->setId_preceptor($Qid_preceptor);
 		}
-		$oPersonaNota->setDetalle($_POST['detalle']);
-		$oPersonaNota->setEpoca($_POST['epoca']);
-		$oPersonaNota->setId_activ($_POST['id_activ']);
-		$oPersonaNota->setNota_num($_POST['nota_num']);
-		$oPersonaNota->setNota_max($_POST['nota_max']);
+		$oPersonaNota->setDetalle($Qdetalle);
+		$oPersonaNota->setEpoca($Qepoca);
+		$oPersonaNota->setId_activ($Qid_activ);
+		$oPersonaNota->setNota_num($Qnota_num);
+		$oPersonaNota->setNota_max($Qnota_max);
+		
 		if ($oPersonaNota->DBGuardar() === false) {
 			$msg_err = _("Hay un error, no se ha guardado.");
 		}

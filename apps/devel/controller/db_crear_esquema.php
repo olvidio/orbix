@@ -7,12 +7,13 @@
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$region = empty($_POST['region'])? '' : $_POST['region'];
-$dl = empty($_POST['dl'])? '' : $_POST['dl'];
-$sv = empty($_POST['sv'])? '' : $_POST['sv'];
-$sf = empty($_POST['sf'])? '' : $_POST['sf'];
+	
+$Qregion = (string) \filter_input(INPUT_POST, 'region');
+$Qdl = (string) \filter_input(INPUT_POST, 'dl');
+$Qsv = (string) \filter_input(INPUT_POST, 'sv');
+$Qsf = (string) \filter_input(INPUT_POST, 'sf');
 
-$esquema = "$region-$dl";
+$esquema = "$Qregion-$Qdl";
 $esquema_pwd = $esquema;
 $esquemav = $esquema.'v';
 $esquemav_pwd = $esquemav;
@@ -61,8 +62,8 @@ $oDBRol->setDbConexion();
 	// Copiar esquema
 	$RegionRef = 'H';
 	$DlRef = 'dlb';
-	$RegionNew = $region;
-	$DlNew = $dl;
+	$RegionNew = $Qregion;
+	$DlNew = $Qdl;
 	$oDBEsquema = new core\DBEsquema();
 	$oDBEsquema->setDb('comun');
 	$oDBEsquema->setRegionRef($RegionRef);
@@ -80,7 +81,7 @@ $oDBRol->setDbConexion();
 	$oDBRol->setDbConexion();
 	$oDBRol->crearSchema();
 	// Copiar esquema
-	if (!empty($sv)) {
+	if (!empty($Qsv)) {
 		$oDBEsquema = new core\DBEsquema();
 		$oDBEsquema->setDb('sv');
 		$oDBEsquema->setRegionRef($RegionRef);
@@ -98,7 +99,7 @@ $oDBRol->setDbConexion();
 	$oDBRol->setDbConexion();
 	$oDBRol->crearSchema();
 	// Copiar esquema
-	if (!empty($sf)) {
+	if (!empty($Qsf)) {
 		$oDBEsquema = new core\DBEsquema();
 		$oDBEsquema->setDb('sf');
 		$oDBEsquema->setRegionRef($RegionRef);

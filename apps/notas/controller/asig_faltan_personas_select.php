@@ -39,13 +39,15 @@ if (isset($_POST['stack'])) {
 		}
 	}
 } 
-$Qid_asignatura = empty($_POST['id_asignatura'])? '' : $_POST['id_asignatura'];
-$Qpersonas_n = empty($_POST['personas_n'])? '' : $_POST['personas_n'];
-$Qpersonas_agd = empty($_POST['personas_agd'])? '' : $_POST['personas_agd'];
+
+$Qid_asignatura = (string) \filter_input(INPUT_POST, 'id_asignatura');
+$Qpersonas_n = (string) \filter_input(INPUT_POST, 'personas_n');
+$Qpersonas_agd = (string) \filter_input(INPUT_POST, 'personas_agd');
+$Qb_c = (string) \filter_input(INPUT_POST, 'b_c');
+$Qc1 = (string) \filter_input(INPUT_POST, 'c1');
+$Qc2 = (string) \filter_input(INPUT_POST, 'c2');
+
 $Qtitulo = '';
-$Qb_c = empty($_POST['b_c'])? '' : $_POST['b_c'];
-$Qc1 = empty($_POST['c1'])? '' : $_POST['c1'];
-$Qc2 = empty($_POST['c2'])? '' : $_POST['c2'];
 
 //miro las condiciones.
 if ($Qb_c == 'b'){ 

@@ -28,8 +28,9 @@ $Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
 $Qnuevo = (string) \filter_input(INPUT_POST, 'nuevo');
 
 if (!empty($Qnuevo)) {
-	$tipo_ubi = empty($_POST['tipo_ubi'])? '' : $_POST['tipo_ubi'];
-	$Gestor = unserialize(core\urlsafe_b64decode($_POST['sGestor']));
+	$tipo_ubi = (string) \filter_input(INPUT_POST, 'tipo_ubi');
+	$QsGestor = (string) \filter_input(INPUT_POST, 'sGestor');
+	$Gestor = unserialize(core\urlsafe_b64decode($QsGestor));
 	$obj = str_replace('Gestor','',$Gestor);
 	$oUbi = new $obj();
 	$Qobj_pau = str_replace('ubis\\model\\entity\\','',$obj);
@@ -40,7 +41,7 @@ if (!empty($Qnuevo)) {
 		$valor_predeterminado=$oDatosCampo->datos_campo($oDbl,'valor');
 		$a_campos[$camp] = $valor_predeterminado;
 	}
-	$nombre_ubi = empty($_POST['nombre_ubi'])? '' : $_POST['nombre_ubi'];
+	$nombre_ubi = (string) \filter_input(INPUT_POST, 'nombre_ubi');
 	$a_campos['nombre_ubi'] = urldecode($nombre_ubi);
 	$a_campos['id_ubi'] = '';
 	$a_campos['id_direccion'] = '';

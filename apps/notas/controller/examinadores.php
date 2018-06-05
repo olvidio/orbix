@@ -20,7 +20,7 @@ use notas\model\entity as notas;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$sQuery = empty($_POST['q'])? '' : $_POST['q'];
+$sQuery = (string) \filter_input(INPUT_POST, 'q');
 
 $oGestorActaTribunalDl = new notas\GestorActaTribunalDl();
 $aExaminadores = $oGestorActaTribunalDl->getArrayExaminadores($sQuery);
@@ -36,5 +36,3 @@ foreach ($aExaminadores as $examinador) {
 $json .= ']';
 
 echo $json;
-
-?>

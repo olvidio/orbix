@@ -7,12 +7,12 @@
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$region = empty($_POST['region'])? '' : $_POST['region'];
-$dl = empty($_POST['dl'])? '' : $_POST['dl'];
-$sv = empty($_POST['sv'])? '' : $_POST['sv'];
-$sf = empty($_POST['sf'])? '' : $_POST['sf'];
+$Qregion = (string) \filter_input(INPUT_POST, 'region');
+$Qdl = (string) \filter_input(INPUT_POST, 'dl');
+$Qsv = (string) \filter_input(INPUT_POST, 'sv');
+$Qsf = (string) \filter_input(INPUT_POST, 'sf');
 
-$esquema = "$region-$dl";
+$esquema = "$Qregion-$Qdl";
 
 echo sprintf(_("Esquema: %s. Se han pasado todos los datos que se tenian."),$esquema);
 
@@ -32,8 +32,8 @@ $oTrasvase->setDbUser('dani');
 $oTrasvase->setDbPwd('system');
 $oTrasvase->setDbName('comun');
 $oTrasvase->setDbConexion();
-$oTrasvase->setRegion($region);
-$oTrasvase->setDl($dl);
+$oTrasvase->setRegion($Qregion);
+$oTrasvase->setDl($Qdl);
 
 $oTrasvase->actividades('resto2dl');
 $oTrasvase->cdc('resto2dl');
@@ -42,7 +42,7 @@ $oTrasvase->teleco_cdc('resto2dl');
 $oTrasvase->fix_seq();
 
 // SV
-if (!empty($sv)) {
+if (!empty($Qsv)) {
 	$esquemaNew = $esquema.'v';
 	$esquemaRef = 'H-dlbv';
 	$aTablas = array("'aux*'","web_preferencias","m0_mods_installed_dl");
@@ -55,8 +55,8 @@ if (!empty($sv)) {
 
 	$oTrasvase->setDbName('sv');
 	$oTrasvase->setDbConexion();
-	$oTrasvase->setRegion($region);
-	$oTrasvase->setDl($dl);
+	$oTrasvase->setRegion($Qregion);
+	$oTrasvase->setDl($Qdl);
 
 	$oTrasvase->ctr('resto2dl');
 	$oTrasvase->teleco_ctr('resto2dl');
@@ -65,7 +65,7 @@ if (!empty($sv)) {
 	
 }
 // SF
-if (!empty($sv)) {
+if (!empty($Qsf)) {
 	$esquemaNew = $esquema.'f';
 	$esquemaRef = 'H-dlbf';
 	$aTablas = array("'aux*'","web_preferencias","m0_mods_installed_dl");
@@ -78,8 +78,8 @@ if (!empty($sv)) {
 
 	$oTrasvase->setDbName('sf');
 	$oTrasvase->setDbConexion();
-	$oTrasvase->setRegion($region);
-	$oTrasvase->setDl($dl);
+	$oTrasvase->setRegion($Qregion);
+	$oTrasvase->setDl($Qdl);
 
 	$oTrasvase->ctr('resto2dl');
 	$oTrasvase->teleco_ctr('resto2dl');

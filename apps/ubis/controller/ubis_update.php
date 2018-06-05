@@ -18,6 +18,7 @@ $miSfsv=core\ConfigGlobal::mi_sfsv();
 $Qque = (string) \filter_input(INPUT_POST, 'que');
 $Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
 $Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
+$Qcampos_chk = (string) \filter_input(INPUT_POST, 'campos_chk');
 
 switch ($Qque) {
 	case 'eliminar_ubi':
@@ -79,7 +80,7 @@ switch ($Qque) {
 		break;
 }
 
-$campos_chk = empty($_POST['campos_chk'])? array() : explode('!',$_POST['campos_chk']);
+$campos_chk = empty($Qcampos_chk)? array() : explode('!',$Qcampos_chk);
 $oUbi->DBCarregar();
 $oDbl = $oUbi->getoDbl();
 $cDatosCampo = $oUbi->getDatosCampos();

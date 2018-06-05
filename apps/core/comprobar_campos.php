@@ -22,14 +22,11 @@ namespace core;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-
-//$oDbl = $oDB;
-//$tabla = empty($_POST['cc_tabla'])? '' : $_POST['cc_tabla'];
-
-
 $cDatosCampos = false;
-if (!empty($_POST['cc_obj'])) {
-	$Object = new $_POST['cc_obj'];
+
+$Qcc_obj = (string) \filter_input(INPUT_POST, 'cc_obj');
+if (!empty($Qcc_obj)) {
+	$Object = new $Qcc_obj;
 	$oDbl = $Object->getoDbl();
 	$tabla = $Object->getNomTabla();
 	// selecciono las restricciones anotadas en el objeto: getDatosCampos().
@@ -37,6 +34,7 @@ if (!empty($_POST['cc_obj'])) {
 }
 
 $errores = [];
+$Qcc_pau = (integer) \filter_input(INPUT_POST, 'cc_pau');
 foreach ($cDatosCampos as $oDatosCampo) {
 	$reg_exp = $oDatosCampo->getRegExp();
 	$nomcamp = $oDatosCampo->getNom_camp();
@@ -45,7 +43,7 @@ foreach ($cDatosCampos as $oDatosCampo) {
 	$not_null= $oDatosCampo->datos_campo($oDbl,'nulo');
 	$longitud = $oDatosCampo->datos_campo($oDbl,'longitud');
 
-	if (($nomcamp == 'id_nom' || $nomcamp == 'id_activ' || $nomcamp == 'id_ubi') && $_POST['cc_pau'] == 1) {
+	if (($nomcamp == 'id_nom' || $nomcamp == 'id_activ' || $nomcamp == 'id_ubi') && $Qcc_pau == 1) {
 		$nomcamp='id_pau';
 	}
 	// caso especial.

@@ -6,21 +6,21 @@
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
+	
+$Qregion = (string) \filter_input(INPUT_POST, 'region');
+$Qdl = (string) \filter_input(INPUT_POST, 'dl');
+$Qsv = (string) \filter_input(INPUT_POST, 'sv');
+$Qsf = (string) \filter_input(INPUT_POST, 'sf');
 
-$region = empty($_POST['region'])? '' : $_POST['region'];
-$dl = empty($_POST['dl'])? '' : $_POST['dl'];
-$sv = empty($_POST['sv'])? '' : $_POST['sv'];
-$sf = empty($_POST['sf'])? '' : $_POST['sf'];
-
-$esquema = "$region-$dl";
-$RegionNew = $region;
-$DlNew = $dl;
+$esquema = "$Qregion-$Qdl";
+$RegionNew = $Qregion;
+$DlNew = $Qdl;
 
 $oTrasvase = new core\DBTrasvase();
 $oTrasvase->setDbUser('dani');
 $oTrasvase->setDbPwd('system');
-$oTrasvase->setRegion($region);
-$oTrasvase->setDl($dl);
+$oTrasvase->setRegion($Qregion);
+$oTrasvase->setDl($Qdl);
 
 // COMUN
 $oTrasvase->setDbName('comun');
@@ -30,7 +30,7 @@ $oTrasvase->cdc('dl2resto');
 $oTrasvase->teleco_cdc('dl2resto');
 
 // SV
-if (!empty($sv)) {
+if (!empty($Qsv)) {
 	$oTrasvase->setDbName('sv');
 	$oTrasvase->setDbConexion();
 	$oTrasvase->ctr('dl2resto');
@@ -43,7 +43,7 @@ if (!empty($sv)) {
 	$oDBEsquema->eliminar();
 }
 // SF
-if (!empty($sf)) {
+if (!empty($Qsf)) {
 	$oTrasvase->setDbName('sf');
 	$oTrasvase->setDbConexion();
 	$oTrasvase->ctr('dl2resto');
@@ -56,7 +56,7 @@ if (!empty($sf)) {
 	$oDBEsquema->eliminar();
 }
 
-if (!empty($sv) && !empty($sf)) {
+if (!empty($Qsv) && !empty($Qsf)) {
 	$oDBEsquema = new core\DBEsquema();
 	$oDBEsquema->setDb('comun');
 	$oDBEsquema->setRegionNew($RegionNew);

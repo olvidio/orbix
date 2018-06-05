@@ -7,10 +7,13 @@
 	require_once ("global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-empty($_POST['filtro_of'])? $oficina='' : $oficina=$_POST['filtro_of'];
+$Qoficina = (string) \filter_input(INPUT_POST, 'filtro_of');
+$Qdel = (integer) \filter_input(INPUT_POST, 'del');
+$Qid_menu = (integer) \filter_input(INPUT_POST, 'id_menu');
+
 
 if (ConfigGlobal::$ubicacion == 'int') {
-	if ($_POST['filtro_of'] == 'exterior') { // si miro los menus de exterior desde dentro.
+	if ($Qoficina == 'exterior') { // si miro los menus de exterior desde dentro.
 		$oMenu=new MenuExt();
 	} else {
 		$oMenu=new Menu();
@@ -19,19 +22,25 @@ if (ConfigGlobal::$ubicacion == 'int') {
 	$oMenu=new MenuExt();
 }
 // Para borrar un registro
-if (isset($_POST['del']) && $_POST['del']==1 ) {
-	$oMenu->setId_menu($_POST['id_menu']);
+if (isset($Qdel) && $Qdel==1 ) {
+	$oMenu->setId_menu($Qid_menu);
 	if ($oMenu->DBEliminar() === false) {
 		echo _('Hay un error, no se ha eliminado');
 	}
 } else {
-	$oMenu->setId_menu($_POST['id_menu']);
-	$oMenu->setOrden($_POST['orden']);
-	$oMenu->setOficina($oficina);
-	$oMenu->setMenu($_POST['txt_menu']);
-	$oMenu->setUrl($_POST['url']);
-	$oMenu->setParametros($_POST['parametros']);
-	$oMenu->setPerm_menu($_POST['perm_menu']);
+	$Qorden = (string) \filter_input(INPUT_POST, 'orden');
+	$Qtxt_menu = (string) \filter_input(INPUT_POST, 'txt_menu');
+	$Qurl = (string) \filter_input(INPUT_POST, 'url');
+	$Qparametros = (string) \filter_input(INPUT_POST, 'parametros');
+	$Qperm_menu = (string) \filter_input(INPUT_POST, 'perm_menu');
+
+	$oMenu->setId_menu($Qid_menu);
+	$oMenu->setOrden($Qorden);
+	$oMenu->setOficina($Qoficina);
+	$oMenu->setMenu($Qtxt_menu);
+	$oMenu->setUrl($Qurl);
+	$oMenu->setParametros($Qparametros);
+	$oMenu->setPerm_menu($Qperm_menu);
 	if ($oMenu->DBGuardar() === false) {
 		echo _('Hay un error, no se ha guardado');
 	}

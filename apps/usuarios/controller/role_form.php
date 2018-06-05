@@ -18,7 +18,7 @@ $Qid_role = (string) \filter_input(INPUT_POST, 'id_role');
 $Qnuevo = (string) \filter_input(INPUT_POST, 'nuevo');
 
 $Qid_sel = '';
-$Qscroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+$Qscroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 // Hay que usar isset y empty porque puede tener el valor =0.
 // Si vengo por medio de Posicion, borro la última
@@ -41,7 +41,7 @@ if (isset($_POST['stack'])) {
 		$Qid_role = strtok($a_sel[0],"#");
 		// el scroll id es de la página anterior, hay que guardarlo allí
 		$oPosicion->addParametro('id_sel',$a_sel,1);
-		$Qscroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+		$Qscroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
 		$oPosicion->addParametro('scroll_id',$Qscroll_id,1);
 	}
 }

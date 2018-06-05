@@ -152,19 +152,13 @@ if ($tipo=="mail") { ?>
 <?= ucfirst(_("localización")); ?>
 </td><td>
 <select id="loc" name="loc" onchange="fnjs_actualizar('#frm_buscar_2')" class=contenido>
-<?php
+	<?php
 	if ($loc=="dl") { $dl_selected="selected"; } else { $dl_selected=""; }
 	if ($loc=="ex") { $ex_selected="selected"; } else { $ex_selected=""; }
 	if ($loc=="tot") { $to_selected="selected"; } else { $to_selected=""; }
 	echo "<option value='dl' $dl_selected>"._("de dl");
 	echo "<option value='ex' $ex_selected>"._("de otra dl/cr");
 	echo "<option value='tot' $to_selected>"._("todos"); 
-	/* de momento lo anulo. ahy que ver si funcions desde sf
-	if (($_SESSION['oPerm']->have_perm("des")) || ($_SESSION['oPerm']->have_perm("vcsd"))) {
-		if ($_POST['loc']=="sf") { $sf_selected="selected"; } else { $sf_selected=""; }
-		echo "<option value='sf' $sf_selected>"._("de la sf");
-	}
-	*/
 	?>
 </select>
 </td></tr>

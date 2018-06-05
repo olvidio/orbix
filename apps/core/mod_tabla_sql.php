@@ -21,8 +21,8 @@ if ($Qmod == 'eliminar' && isset($a_sel)) {
 }
 
 //Si vengo por medio de Posicion, borro la última
-$Qid_sel = empty($_POST['id_sel'])? '' : $_POST['id_sel'];
-$Qscroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+$Qid_sel = (string) \filter_input(INPUT_POST, 'id_sel');
+$Qscroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
 if (isset($_POST['stack'])) {
 	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
 	if ($stack != '') {
@@ -37,7 +37,7 @@ if (isset($_POST['stack'])) {
 } elseif (!empty($a_sel)) { //vengo de un checkbox
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$a_sel,1);
-	$Qscroll_id = empty($_POST['scroll_id'])? 0 : $_POST['scroll_id'];
+	$Qscroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
 	$oPosicion->addParametro('scroll_id',$Qscroll_id,1);
 }
 

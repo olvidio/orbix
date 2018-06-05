@@ -27,14 +27,16 @@ use ubis\model\entity as ubis;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 //si vengo por un goto:
-$Qnumero = empty($_POST['numero'])? '' : $_POST['numero'];
-$Qb_c = empty($_POST['b_c'])? '' : $_POST['b_c'];
-$Qc1 = empty($_POST['c1'])? '' : $_POST['c1'];
-$Qc2 = empty($_POST['c2'])? '' : $_POST['c2'];
-$Qlista = empty($_POST['lista'])? false : true;
-$Qpersonas_n = empty($_POST['personas_n'])? '' : $_POST['personas_n'];
-$Qpersonas_agd = empty($_POST['personas_agd'])? '' : $_POST['personas_agd'];
-$Qtitulo = empty($_POST['titulo'])? '' : $_POST['titulo'];
+$Qnumero = (string) \filter_input(INPUT_POST, 'numero');
+$Qb_c = (string) \filter_input(INPUT_POST, 'b_c');
+$Qc1 = (string) \filter_input(INPUT_POST, 'c1');
+$Qc2 = (string) \filter_input(INPUT_POST, 'c2');
+$Qpersonas_n = (string) \filter_input(INPUT_POST, 'personas_n');
+$Qpersonas_agd = (string) \filter_input(INPUT_POST, 'personas_agd');
+$Qtitulo = (string) \filter_input(INPUT_POST, 'titulo');
+
+$Qlista = (string) \filter_input(INPUT_POST, 'lista');
+$Qlista = empty($Qlista)? false : true;
 
 //miro las condiciones.
 if ($Qb_c == 'b'){ 

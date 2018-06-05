@@ -54,10 +54,12 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else {
-	empty($_POST['id_nom'])? $id_nom="" : $id_nom=$_POST['id_nom'];
-	empty($_POST['id_tabla'])? $id_tabla="" : $id_tabla=$_POST['id_tabla'];
+	$id_nom = (integer) \filter_input(INPUT_POST, 'id_nom');
+	$id_tabla = (string) \filter_input(INPUT_POST, 'id_tabla');
 }
-if (empty($_POST['cara'])) $_POST['cara']="A";
+
+$Qcara = (string) \filter_input(INPUT_POST, 'cara');
+$Qcara = empty($Qcara)? "A" : $Qcara;
 
 $oPersona = personas\Persona::NewPersona($id_nom);
 if (!is_object($oPersona)) {
@@ -205,7 +207,7 @@ $h = $oHash->linkSinVal();
 <col style="width: 10%">
 <col style="width: 1%">
 <?php 
-if ($_POST['cara']=="A") {
+if ($Qcara=="A") {
 ?>
 <tr><td class="space"></td></tr>
 <tr><td></td><td class="titulo" colspan="6">STUDIUM GENERALE REGIONIS: <?= core\ConfigGlobal::$x_region ?></td></tr>
@@ -266,8 +268,8 @@ while ( $a < count($cAsignaturas)) {
 
  	// para imprimir sólo una cara:
 	// cara A hasta la asignatura 2107
-	if ($_POST['cara']=="A" && $oAsignatura->getId_nivel() > 2107 ) { continue ; }
-	if ($_POST['cara']=="B" && $oAsignatura->getId_nivel() < 2108 ) { 
+	if ($Qcara=="A" && $oAsignatura->getId_nivel() > 2107 ) { continue ; }
+	if ($Qcara=="B" && $oAsignatura->getId_nivel() < 2108 ) { 
 		while ( ($row["id_nivel"] < 2107) && ($j < $num_asig) ){
 			$row= current($aAprobadas);
 			next($aAprobadas);
@@ -300,7 +302,7 @@ while ( $a < count($cAsignaturas)) {
 		</tr>
 		<?php
 		$oAsignatura=$cAsignaturas[$a++];
-		if ($_POST['cara']=="A" && $oAsignatura->getId_nivel() > 2107 )	{ continue 2; }
+		if ($Qcara=="A" && $oAsignatura->getId_nivel() > 2107 )	{ continue 2; }
 	}
 
 	if ($oAsignatura->getId_nivel() == $row["id_nivel_asig"]) {

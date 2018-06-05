@@ -27,7 +27,8 @@ if (isset($_POST['stack'])) {
 	}
 }
 
-$Qusername = empty($_POST['Qusername'])? '' : $_POST['Qusername'];
+// Se usa al buscar:
+$Qusername = (string) \filter_input(INPUT_POST, 'Qusername');
 
 $oPosicion->setParametros(array('Qusername'=>$Qusername),1);
 

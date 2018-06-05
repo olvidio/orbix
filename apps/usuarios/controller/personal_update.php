@@ -47,7 +47,9 @@ switch ($Qque) {
 		}
 
 		// Guardar estilo:
-		$estilo=$_POST['estilo_color']."#".$_POST['tipo_menu'];
+		$Qestilo_color = (string) \filter_input(INPUT_POST, 'estilo_color');
+		$Qtipo_menu = (string) \filter_input(INPUT_POST, 'tipo_menu');
+		$estilo=$Qestilo_color."#".$Qtipo_menu;
 		$oPref = new usuarios\Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>'estilo'));
 		$oPref->setPreferencia($estilo);
 		if ($oPref->DBGuardar() === false) {
@@ -55,22 +57,25 @@ switch ($Qque) {
 		}
 
 		// Guardar presentacion tablas:
+		$Qtipo_tabla = (string) \filter_input(INPUT_POST, 'tipo_tabla');
 		$oPref = new usuarios\Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>'tabla_presentacion'));
-		$oPref->setPreferencia($_POST['tipo_tabla']);
+		$oPref->setPreferencia($Qtipo_tabla);
 		if ($oPref->DBGuardar() === false) {
 			echo _('Hay un error, no se ha guardado');
 		}
 
 		// Guardar presentacion nombre Apellidos:
+		$QordenApellidos = (string) \filter_input(INPUT_POST, 'ordenApellidos');
 		$oPref = new usuarios\Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>'ordenApellidos'));
-		$oPref->setPreferencia($_POST['ordenApellidos']);
+		$oPref->setPreferencia($QordenApellidos);
 		if ($oPref->DBGuardar() === false) {
 			echo _('Hay un error, no se ha guardado');
 		}
 
 		// Guardar idioma:
+		$Qidioma_nou = (string) \filter_input(INPUT_POST, 'idioma_nou');
 		$oPref = new usuarios\Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>'idioma'));
-		$oPref->setPreferencia($_POST['idioma_nou']);
+		$oPref->setPreferencia($Qidioma_nou);
 		if ($oPref->DBGuardar() === false) {
 			echo _('Hay un error, no se ha guardado');
 		}

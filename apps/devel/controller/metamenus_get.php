@@ -11,16 +11,16 @@ use core;
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
+	
+$Qfiltro_mod = (string) \filter_input(INPUT_POST, 'filtro_mod');
+$Qnuevo = (integer) \filter_input(INPUT_POST, 'nuevo');
+$Qid_menu = (integer) \filter_input(INPUT_POST, 'id_menu');
 
-if (empty($_POST['filtro_mod'])) $_POST['filtro_mod']='';
-if (empty($_POST['nuevo'])) $_POST['nuevo']='';
-if (empty($_POST['id_menu'])) $_POST['id_menu']='';
-
-if (!empty($_POST['id_menu']) || !empty($_POST['nuevo'])) {
-	if (!empty($_POST['id_menu'])) {
+if (!empty($Qid_menu) || !empty($Qnuevo)) {
+	if (!empty($Qid_menu)) {
 		$oMetamenu=new menus\Metamenu();
 		// para modificar los valores de un menu.
-		$oMetamenu->setId_menu($_POST['id_menu']);
+		$oMetamenu->setId_menu($Qid_menu);
 		$row = $oMetamenu->getTot();
 	} else {
 		$row['id_menu']='';
@@ -32,9 +32,9 @@ if (!empty($_POST['id_menu']) || !empty($_POST['nuevo'])) {
 	}
 	?>
 	<form id="frm_menus" action="apps/devel/controller/menus_update.php">
-	<input type="hidden" name="id_menu" value="<?= $_POST['id_menu'] ?>">
-	<input type="hidden" name="filtro_mod" value="<?= $_POST['filtro_mod'] ?>">
-	<input type="hidden" name="nuevo" value="<?= $_POST['nuevo'] ?>">
+	<input type="hidden" name="id_menu" value="<?= $Qid_menu ?>">
+	<input type="hidden" name="filtro_mod" value="<?= $Qfiltro_mod ?>">
+	<input type="hidden" name="nuevo" value="<?= $Qnuevo ?>">
 	<table>
 	<tr><td><?= _("orden") ?></td><td><input type="text" name="orden" value="<?= $row['orden'] ?>"></td></tr>
 	<tr><td><?= _("texto menu") ?></td><td><input type="text" name="txt_menu" value="<?= htmlspecialchars($row['menu']) ?>" size="30"></td></tr>
@@ -44,28 +44,28 @@ if (!empty($_POST['id_menu']) || !empty($_POST['nuevo'])) {
 	</table>
 	<input type="button" onclick="fnjs_enviar_formulario('#frm_menus','#ficha');" value="<?= _("guardar") ?>">
 	</form>
-	<?php if (empty($nuevo)) { ?>
+	<?php if (empty($Qnuevo)) { ?>
 		<form id="frm_menus_2" action="apps/devel/controller/menus_update.php">
-		<input type="hidden" name="id_menu" value="<?= $_POST['id_menu'] ?>">
-		<input type="hidden" name="filtro_mod" value="<?= $_POST['filtro_mod'] ?>">
+		<input type="hidden" name="id_menu" value="<?= $Qid_menu ?>">
+		<input type="hidden" name="filtro_mod" value="<?= $Qfiltro_mod ?>">
 		<input type="hidden" name="del" value="1">
 		<input type="button" onclick="if (confirm('<?= addslashes(_("¿Está seguro?")) ?>')) { fnjs_enviar_formulario('#frm_menus_2','#ficha'); }" value="<?= _("eliminar") ?>">
 		</form>
 		<form id="frm_menus_3" action="apps/devel/controller/menus_get.php">
 		<input type="hidden" name="nuevo" value="1">
-		<input type="hidden" name="filtro_mod" value="<?= $_POST['filtro_mod'] ?>">
+		<input type="hidden" name="filtro_mod" value="<?= $Qfiltro_mod ?>">
 		<input type="button" onclick="fnjs_enviar_formulario('#frm_menus_3','#ficha');" value="<?= _("nuevo") ?>">
 		</form>
 		<form id="frm_menus_4" action="apps/devel/controller/menus_get.php">
-		<input type="hidden" name="filtro_mod" value="<?= $_POST['filtro_mod'] ?>">
+		<input type="hidden" name="filtro_mod" value="<?= $Qfiltro_mod ?>">
 		<input type="button" onclick="fnjs_enviar_formulario('#frm_menus_4','#ficha');" value="<?= _("cancelar") ?>">
 		</form>
 		<?php
 	}
 } else {
 	// para ver el listado de todos los menus de un módulo
-	if (!empty($_POST['filtro_mod'])) {
-		$aWhere = array('modulo'=>$_POST['filtro_mod'],'_ordre'=>'modulo,url');
+	if (!empty($Qfiltro_mod)) {
+		$aWhere = array('modulo'=>$Qfiltro_mod,'_ordre'=>'modulo,url');
 		$oLista=new menus\GestorMetamenu();
 		$oMetamenus=$oLista->getMetamenus($aWhere);
 	} else {

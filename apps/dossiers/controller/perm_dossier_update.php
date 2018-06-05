@@ -11,9 +11,13 @@ use dossiers\model\entity as dossiers;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-switch ($_POST['que']) {
+$Qque = (string) \filter_input(INPUT_POST, 'que');
+$Qid_tipo_dossier = (integer) \filter_input(INPUT_POST, 'id_tipo_dossier');
+$Qcampos_chk = (string) \filter_input(INPUT_POST, 'campos_chk');
+
+switch ($Qque) {
 	case 'eliminar':
-		$oTipoDossier = new dossiers\TipoDossier($_POST['id_tipo_dossier']);
+		$oTipoDossier = new dossiers\TipoDossier($Qid_tipo_dossier);
 		if ($oTipoDossier->DBEliminar() === false) {
 			echo _('Hay un error, no se ha eliminado');
 		}
@@ -21,11 +25,11 @@ switch ($_POST['que']) {
 		die();
 		break;
 	case 'guardar':
-		$oTipoDossier = new dossiers\TipoDossier($_POST['id_tipo_dossier']);
+		$oTipoDossier = new dossiers\TipoDossier($Qid_tipo_dossier);
 		break;
 }
 
-$campos_chk = empty($_POST['campos_chk'])? array() : explode('!',$_POST['campos_chk']);
+$campos_chk = empty($Qcampos_chk)? array() : explode('!',$Qcampos_chk);
 $oTipoDossier->DBCarregar();
 $oDbl = $oTipoDossier->getoDbl();
 $cDatosCampo = $oTipoDossier->getDatosCampos();
@@ -44,7 +48,7 @@ foreach ($cDatosCampo as $oDatosCampo) {
 			}
 		}
 	} else {
-		if (!isset($_POST[$camp]) && !empty($_POST['id_tipo_dossier'])) continue; // sólo si no es nuevo
+		if (!isset($_POST[$camp]) && !empty($Qid_tipo_dossier)) continue; // sólo si no es nuevo
 
 		//cuando el campo es permiso_lectura, se pasa un array que hay que convertirlo en número.
 		if ($camp=="permiso_lectura"){
@@ -78,8 +82,3 @@ foreach ($cDatosCampo as $oDatosCampo) {
 }
 $oTipoDossier->setAllAtributes($a_values_o);
 $oTipoDossier->DBGuardar();
-
-$oPosicion = new web\Posicion();
-echo $oPosicion->ir_a($_POST['go_to']);
-
-?>

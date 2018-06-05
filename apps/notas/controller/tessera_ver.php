@@ -38,7 +38,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 
 $oTesera = new \notas\model\Tesera();
 $p = 0;
-foreach ($_POST['sel'] as $PersonaSel) {
+foreach ($a_sel as $PersonaSel) {
 	$p++;
 	$id_nom=strtok($PersonaSel,"#");
 	echo $oTesera->verTesera($id_nom);

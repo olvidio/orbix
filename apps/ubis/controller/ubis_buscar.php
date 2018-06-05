@@ -23,7 +23,6 @@ $GesRegion = new ubis\GestorRegion();
 $oDesplRegion = $GesRegion->getListaRegiones();
 $oDesplRegion->setNombre('region');
 
-
 // tipo ctr
 $oDesplTipoCentro = new web\Desplegable();
 $GesTipoCentro = new ubis\GestorTipoCentro();
@@ -45,9 +44,13 @@ $GesPais = new ubis\GestorDireccionCtr();
 $oDesplPais = $GesPais->getListaPaises();
 $oDesplPais->setNombre('pais');
 
-$simple = empty($_POST['simple'])? 1 : $_POST['simple'];
-$tipo = empty($_POST['tipo'])? "tot" : $_POST['tipo'];
-$loc = empty($_POST['loc'])? "tot" : $_POST['loc'];
+$Qsimple = (integer) \filter_input(INPUT_POST, 'simple');
+$Qtipo = (string) \filter_input(INPUT_POST, 'tipo');
+$Qloc = (string) \filter_input(INPUT_POST, 'loc');
+
+$simple = empty($Qsimple)? 1 : $Qsimple;
+$tipo = empty($Qtipo)? "tot" : $Qtipo;
+$loc = empty($Qloc)? "tot" : $Qloc;
 
 switch ($tipo) {
 	case "ctrdl" :
@@ -103,10 +106,10 @@ $oHash = new web\Hash();
 $s_camposForm = 'simple!nombre_ubi!opcion!ciudad';
 $oHash->setcamposNo('simple!tipo_ctr!tipo_casa');
 
-if ($_POST['simple']==1) {
+if ($simple==1) {
 	$s_camposForm .= '!region!pais';
 }
-if ($_POST['simple']==2) {
+if ($simple==2) {
 	$s_camposForm .= '!tipo!loc';
 	if ($loc=="ex") {
 		$s_camposForm .= '!dl!region!pais';

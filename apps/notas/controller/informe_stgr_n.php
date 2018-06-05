@@ -56,7 +56,8 @@ if ($mes>3) {
 }
 
 //crear la tabla temporal de numerarios y notas
-$lista = empty($_POST['lista'])? false : true;
+$Qlista = (string) \filter_input(INPUT_POST, 'lista');
+$lista = empty($Qlista)? false : true;
 
 $Resumen = new notas\Resumen('numerarios');
 $Resumen->setAnyIniCurs($any_ini_curs);

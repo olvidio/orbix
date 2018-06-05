@@ -15,10 +15,17 @@ use core;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-if (!isset($_POST['tabla'])) exit("Ha de dir quina taula");
+$Qdb = (string) \filter_input(INPUT_POST, 'db');
+$Qtabla = (string) \filter_input(INPUT_POST, 'tabla');
+$Qclase = (string) \filter_input(INPUT_POST, 'clase');
+$Qclase_plural = (string) \filter_input(INPUT_POST, 'clase_plural');
+$Qgrupo = (string) \filter_input(INPUT_POST, 'grupo');
+$Qaplicacion = (string) \filter_input(INPUT_POST, 'aplicacion');
+	
+if (empty($Qtabla)) { exit("Ha de dir quina taula"); }
 // si la tabla tiene el schema, hay que separalo:
 $schema_sql = '';
-$tabla = $_POST['tabla'];
+$tabla = $Qtabla;
 $schema = strtok($tabla,'.');
 if ($schema !== $tabla) {
 	$tabla = strtok('.');
@@ -28,8 +35,8 @@ if ($schema !== $tabla) {
 }
 
 
-if (isset($_POST['db'])) {
-	switch($_POST['db']) {
+if (isset($Qdb)) {
+	switch($Qdb) {
 		case "filmoteca":
 			$oDbl=$oDBT;
 			$oDB_txt='oDBT';
@@ -129,9 +136,9 @@ if (isset($_POST['db'])) {
 }
 
 
-$clase= isset($_POST['clase'])? $_POST['clase'] : $tabla;
-if (isset($_POST['clase_plural']) && $_POST['clase_plural']!='') {
-	$clase_plural=$_POST['clase_plural'];
+$clase= !empty($Qclase)? $Qclase : $tabla;
+if (!empty($Qclase_plural)) {
+	$clase_plural=$Qclase_plural;
 } else {
 	//plural de la clase
 	if (preg_match('/[aeiou]$/',$clase)) {
@@ -141,11 +148,11 @@ if (isset($_POST['clase_plural']) && $_POST['clase_plural']!='') {
 	}
 }
 
-$grupo= isset($_POST['grupo'])? $_POST['grupo'] : "actividades";
-$aplicacion= isset($_POST['aplicacion'])? $_POST['aplicacion'] : "delegación";
+$grupo= !empty($Qgrupo)? $Qgrupo : "actividades";
+$aplicacion= !empty($Qaplicacion)? $Qaplicacion : "delegación";
 
 //busco les claus primaries
-$aClaus=core\primaryKey($oDbl,$_POST['tabla']);
+$aClaus=core\primaryKey($oDbl,$Qtabla);
 
 $sql="SELECT 
 				a.attnum,
@@ -657,7 +664,7 @@ $txt.='
 ?>';
 
 /* ESCRIURE LA CLASSSE ------------------------------------------------ */
-$filename = '/var/www'.core\ConfigGlobal::$web_path.'/apps/'.$grupo.'/model/'.strtolower($_POST['clase']).'.class.php';
+$filename = '/var/www'.core\ConfigGlobal::$web_path.'/apps/'.$grupo.'/model/'.strtolower($Qclase).'.class.php';
 
 
 // In our example we're opening $filename in append mode.
@@ -807,7 +814,7 @@ $txt2.='
 }
 ?>';
 /* ESCRIURE LA CLASSSE ------------------------------------------------ */
-$filename = '/var/www/'.core\ConfigGlobal::$web_path.'/apps/'.$grupo.'/model/gestor'.strtolower($_POST['clase']).'.class.php';
+$filename = '/var/www/'.core\ConfigGlobal::$web_path.'/apps/'.$grupo.'/model/gestor'.strtolower($Qclase).'.class.php';
 
 
 // In our example we're opening $filename in append mode.
@@ -827,5 +834,3 @@ if (fwrite($handle, $txt2) === FALSE) {
 echo "<br>Success, wrote gestor to file ($filename)";
 
 fclose($handle);
-?>
-

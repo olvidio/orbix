@@ -21,13 +21,14 @@ use asignaturas\model\entity as asignaturas;
 
 //include ("./funciones_est.php");
 
-$actualizar = empty($_POST['actualizar'])? '' : $_POST['actualizar'];
-$id_tabla = empty($_POST['id_tabla'])? '' : $_POST['id_tabla'];
-if ($id_tabla == 'n') {
+$Qactualizar = (string) \filter_input(INPUT_POST, 'actualizar');
+$Qid_tabla = (string) \filter_input(INPUT_POST, 'id_tabla');
+
+if ($Qid_tabla == 'n') {
 	$tabla = 'p_numerarios';
 	$tabla_txt = 'Numerarios';
 }
-if ($id_tabla == 'a') {
+if ($Qid_tabla == 'a') {
 	$tabla = 'p_agregados';
 	$tabla_txt = 'Agregados';
 }
@@ -36,7 +37,7 @@ $oDB = $GLOBALS['oDB'];
 
 $superada = "(n.id_situacion = 10 OR n.id_situacion::text ~ '[1345]')";
 
-if ($actualizar == 'c1') {
+if ($Qactualizar == 'c1') {
 	$ssql="SELECT p.id_nom
 		FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
 		WHERE p.stgr != 'b' AND p.stgr !='c1'
@@ -56,7 +57,7 @@ if ($actualizar == 'c1') {
 		$oDBSt_sql_1=$oDB->query($ssql_1);
 	}
 }
-if ($actualizar == 'c2') {
+if ($Qactualizar == 'c2') {
 	$ssql="SELECT p.id_nom
 		FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
 		WHERE p.stgr != 'b' AND p.stgr !='c2'
@@ -78,7 +79,7 @@ if ($actualizar == 'c2') {
 		$oDBSt_sql_1=$oDB->query($ssql_1);
 	}
 }
-if ($actualizar=="9999") {
+if ($Qactualizar=="9999") {
 	$ssql="SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(*),stgr
 		FROM $tabla p,e_notas_dl n
 		WHERE p.id_nom=n.id_nom AND $superada
@@ -117,7 +118,7 @@ if ($actualizar=="9999") {
 		$oDBSt_sql_3=$oDB->query($ssql_3);
 	}
 }
-if ($actualizar=="9998") {
+if ($Qactualizar=="9998") {
 	$ssql="SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(*),stgr
 		FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
 		WHERE $superada
@@ -189,7 +190,7 @@ if (!empty($nf)) {
 	echo "</table>";
 	/* end lista */
 	echo "<p>";
-	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$id_tabla,'actualizar'=>9999)));
+	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>9999)));
 	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("click aquí") ."</span>";
 	printf (_("Para poner c1 y bienio finalizado a todos los de la lista, hacer %s. Esto pondrá la fecha de acta última."),$pag);
 	echo "</p>";
@@ -221,7 +222,7 @@ if (!empty($nf)) {
 	echo "<tr><td colspan=7><hr>";
 	echo "</table>";
 	/* end lista */
-	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$id_tabla,'actualizar'=>9998)));
+	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>9998)));
 	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("click aquí") ."</span>";
 	echo "<p>";
 	printf (_("Para poner r y cuadrienio finalizado a todos los de la lista, hacer %s. Esto pondrá la fecha de acta última."),$pag);
@@ -281,7 +282,7 @@ if (!empty($nf)) {
 	echo "<tr><td colspan=7><hr>";
 	echo "</table>";
 	echo "<p>";
-	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$id_tabla,'actualizar'=>'c1')));
+	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>'c1')));
 	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("click aquí") ."</span>";
 	printf (_("Para poner c1 a todos los de la lista, hacer %s"),$pag);
 	echo "</p>";
@@ -312,7 +313,7 @@ if (!empty($nf)) {
 	}
 	echo "<tr><td colspan=7><hr>";
 	echo "</table>";
-	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$id_tabla,'actualizar'=>'c2')));
+	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>'c2')));
 	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("click aquí") ."</span>";
 	printf (_("Para poner c2 a todos los de la lista, hacer %s"),$pag);
 }

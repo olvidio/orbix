@@ -33,7 +33,8 @@ if ($mes>3) {
 	$any_ini_curs = $any1;
 }
 
-$lista = empty($_POST['lista'])? false : true;
+$Qlista = (string) \filter_input(INPUT_POST, 'lista');
+$lista = empty($Qlista)? false : true;
 
 /* tipos de profesor:
 	1 Ordinario

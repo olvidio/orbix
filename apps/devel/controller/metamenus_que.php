@@ -8,12 +8,12 @@ use menus\model\entity as menus;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$filtro_mod= empty($_POST['filtro_mod'])? '' : $_POST['filtro_mod'];
+$Qfiltro_mod = (string) \filter_input(INPUT_POST, 'filtro_mod');
 
 $oLista=new menus\GestorMetamenu();
 
 $oDespl=$oLista->getListaMetamenus();
-$oDespl->setOpcion_sel($filtro_mod);
+$oDespl->setOpcion_sel($Qfiltro_mod);
 $oDespl->setAction('fnjs_lista_menus()');
 $oDespl->setNombre('filtro_mod');
 ?>
