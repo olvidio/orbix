@@ -69,11 +69,10 @@ $oDesplNotas = $GesNotas->getListaNotas();
 $oDesplNotas->setNombre('id_situacion');
 
 $cNotas = $GesNotas->getNotas(array('superada' => 'f'));
-$lista_situacion_no_acta = '';
+$lista_situacion_no_acta = '"11"'; // Para el caso de 'exento', es superada pero sin acta.
 foreach ($cNotas as $oNota) {
 	$id_situacion = $oNota->getId_situacion(); 
-	$lista_situacion_no_acta .= empty($lista_situacion_no_acta)? '' : ',';
-	$lista_situacion_no_acta .= '"'.$id_situacion.'"' ;
+	$lista_situacion_no_acta .= ',"'.$id_situacion.'"' ;
 }
 		
 
