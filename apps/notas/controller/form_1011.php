@@ -68,6 +68,15 @@ $GesNotas = new notas\GestorNota();
 $oDesplNotas = $GesNotas->getListaNotas();
 $oDesplNotas->setNombre('id_situacion');
 
+$cNotas = $GesNotas->getNotas(array('superada' => 'f'));
+$lista_situacion_no_acta = '';
+foreach ($cNotas as $oNota) {
+	$id_situacion = $oNota->getId_situacion(); 
+	$lista_situacion_no_acta .= empty($lista_situacion_no_acta)? '' : ',';
+	$lista_situacion_no_acta .= '"'.$id_situacion.'"' ;
+}
+		
+
 $GesActividades = new actividades\GestorActividad();
 $GesAsignaturas = new asignaturas\GestorAsignatura();
 
@@ -351,6 +360,7 @@ $a_campos = [
 			'chk_epoca_otro' => $chk_epoca_otro,
 			'oDesplActividades' => $oDesplActividades,
 			'detalle' => $detalle,
+			'lista_situacion_no_acta' => $lista_situacion_no_acta,
 			];
 
 $oView = new core\View('notas/model');
