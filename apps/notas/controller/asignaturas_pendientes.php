@@ -51,6 +51,13 @@ foreach ($cAsignaturasTodas as $oAsignatura) {
 	$a_Asig_nivel[$id_asignatura] = $oAsignatura->getId_nivel();
 }
 
+// array de id_situacion que corresponde a superada
+$GesNotas = new notas\GestorNota();
+$cNotas = $GesNotas->getNotas(['superada'=>'t']);
+$a_notas_superada =array();
+foreach ($cNotas as $oNota) {
+	$a_notas_superada[] = $oNota->getId_situacion();
+}
 
 $aWhere=array();
 $aOperador=array();
@@ -63,7 +70,7 @@ $aOperador['stgr'] = '~';
 $GesPersonas = new personas\GestorPersonaDl();
 $cPersonas = $GesPersonas->getPersonasDl($aWhere,$aOperador);
 $p=0;
-$GesNotas = new notas\GestorPersonaNotaDl();
+$GesPersonaNotas = new notas\GestorPersonaNotaDl();
 foreach ($cPersonas as $oPersona) {
 	$p++;
 	$id_nom = $oPersona->getId_nom();
@@ -79,7 +86,7 @@ foreach ($cPersonas as $oPersona) {
 
 	// Asignaturas cursadas:
 	// Busco fin_bienio, cuadrienio
-	$cFin = $GesNotas->getPersonaNotas(array('id_nom'=>$id_nom, 'id_nivel'=>9990),array('id_nivel' => '>'));
+	$cFin = $GesPersonaNotas->getPersonaNotas(array('id_nom'=>$id_nom, 'id_nivel'=>9990),array('id_nivel' => '>'));
 	$fin_bienio = false;
 	$fin_cuadrienio = false;
 	foreach ($cFin as $oPersonaNota) {
@@ -92,9 +99,10 @@ foreach ($cPersonas as $oPersona) {
 		}
 	}
 	
-	$cNotas = $GesNotas->getPersonaNotasSuperadas($id_nom,'t');
+	//$cPersonaNotas = $GesPersonaNotas->getPersonaNotasSuperadas($id_nom,'t');
+	$cPersonaNotas = $GesPersonaNotas->getPersonaNotas(['id_nom' => $id_nom]);
 	$aAprobadas=array();
-	foreach ($cNotas as $oPersonaNota) {
+	foreach ($cPersonaNotas as $oPersonaNota) {
 		//extract($oPersonaNota->getTot());
 		$id_asignatura = $oPersonaNota->getId_asignatura();
 		$id_nivel = $oPersonaNota->getId_nivel();
@@ -105,9 +113,13 @@ foreach ($cPersonas as $oPersona) {
 		} else {
 			$id_nivel_asig = $a_Asig_nivel[$id_asignatura];
 		}
-		$n=$id_nivel_asig;
-		$oNota = new notas\Nota($id_situacion);
-		$aAprobadas[$n]['nota']= ($oNota->getSuperada() == 't')? '' : 2;
+		
+		// En el caso de las cursadas (id_situacion = 2) pongo 2.
+		if ($id_situacion == 2) {
+			$aAprobadas[$id_nivel_asig]['nota'] = 2;
+		} elseif ( in_array($id_situacion, $a_notas_superada)) {
+			$aAprobadas[$id_nivel_asig]['nota'] = '';
+		}
 	}
 
 
@@ -143,5 +155,7 @@ $oTabla->setDatos($a_valores);
 	2: <?= _("cursada") ?>
 </p>
 <br>
+<div id="exportar" style="overflow: scroll; height: 800px">
 <?= $oTabla->mostrar_tabla_html(); ?>
+</div>
 
