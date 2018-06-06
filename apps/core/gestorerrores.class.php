@@ -129,8 +129,10 @@ class gestorErrores {
 	}
 	function addError($err='',$sClauError,$line, $file) {
 		$user=ConfigGlobal::mi_usuario();
+		$esquema = ConfigGlobal::mi_region_dl();
 		$ahora=date("d/m/Y H:i:s");
-		$txt="\n".$ahora." - ".$user."->>  ".$err."\n $sClauError en linea $line de: $file\n";
+		$id_user = $user."[$esquema]$ip ";
+		$txt="\n".$ahora." - ".$id_user."->>  ".$err."\n $sClauError en linea $line de: $file\n";
 		
 		$filename = ConfigGlobal::$directorio.'/log/errores.log';
 		if (!$handle = fopen($filename, 'a')) {
