@@ -46,11 +46,13 @@ class dbConnection {
 		$config = $this->config;
 
         $str_conexio = $config['driver'].":".$config['dbname'];
+		/* No se porque no va todo en una variable...
 		$str_conexio .= ", user='".$config['user']."'";
 		$str_conexio .= ", password='".$config['password']."'";
 		$str_conexio .= ", array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING)";
-		
 		$oDB = new \PDO($str_conexio);
+		*/
+		$oDB = new \PDO($str_conexio,$config['user'], $config['password'], array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING));
 		
 		return $oDB;
 	}
