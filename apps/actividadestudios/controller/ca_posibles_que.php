@@ -11,6 +11,33 @@ use ubis\model\entity as ubis;
 
 $oPosicion->recordar();
 
+//Si vengo de vuelta y le paso la referecia del stack donde está la información.
+if (isset($_POST['stack'])) {
+	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+	if ($stack != '') {
+		// No me sirve el de global_object, sino el de la session
+		$oPosicion2 = new web\Posicion();
+		if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+			$Qid_sel=$oPosicion2->getParametro('id_sel');
+			$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+			$oPosicion2->olvidar($stack);
+		}
+	}
+}
+
+$Qna = (string) \filter_input(INPUT_POST, 'na');
+$Qid_ctr_n = (string) \filter_input(INPUT_POST, 'id_ctr_n');
+$Qid_ctr_agd = (string) \filter_input(INPUT_POST, 'id_ctr_agd');
+$Qiasistentes_val = (string) \filter_input(INPUT_POST, 'iasistentes_val');
+$Qiactividad_val = (string) \filter_input(INPUT_POST, 'actividad_val');
+$Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
+$Qyear = (string) \filter_input(INPUT_POST, 'year');
+$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
+$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
+$Qref = (string) \filter_input(INPUT_POST, 'ref');
+$Qtodos = (string) \filter_input(INPUT_POST, 'todos');
+
+
 // Grupo de estudios
 $mi_dele = core\ConfigGlobal::mi_dele();
 $GesGrupoEst = new ubis\GestorDelegacion();
@@ -51,6 +78,7 @@ foreach ($aCentrosOrden as $aCentro) {
 $oDesplCtrN = new web\Desplegable();
 $oDesplCtrN->setNombre('id_ctr_n');
 $oDesplCtrN->setOpciones($aCentrosNExt);
+$oDesplCtrN->setOpcion_sel($Qid_ctr_n);
 $oDesplCtrN->setBlanco(1);
 $oDesplCtrN->setAction("fnjs_n_a('n')");
 
@@ -78,10 +106,12 @@ foreach ($aCentrosOrden as $aCentro) {
 $oDesplCtrAgd = new web\Desplegable();
 $oDesplCtrAgd->setNombre('id_ctr_agd');
 $oDesplCtrAgd->setOpciones($aCentrosAgdExt);
+$oDesplCtrAgd->setOpcion_sel($Qid_ctr_agd);
 $oDesplCtrAgd->setBlanco(1);
 $oDesplCtrAgd->setAction("fnjs_n_a('agd')");
 
 // Selección de periodo
+$any=empty($Qyear)? date('Y') : $Qyear;
 $aOpciones =  array(
 					'verano'=>_('verano'),
 					'curso_ca'=>_('curso'),
@@ -98,7 +128,10 @@ $oFormP = new web\PeriodoQue();
 $oFormP->setFormName('que');
 $oFormP->setTitulo(core\strtoupper_dlb(_("periodo de las actividades")));
 $oFormP->setPosiblesPeriodos($aOpciones);
-$oFormP->setDesplAnysOpcion_sel(date('Y'));
+$oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
+$oFormP->setDesplAnysOpcion_sel($any);
+$oFormP->setEmpiezaMin($Qempiezamin);
+$oFormP->setEmpiezaMax($Qempiezamax);
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('id_ctr_agd!id_ctr_n!texto!empiezamax!empiezamin!periodo!ref!iactividad_val!iasistentes_val!year');
@@ -109,14 +142,26 @@ $a_camposHidden = array(
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 
+if ($Qtodos == 1) {
+	$chk_todos = 'checked';
+	$chk_grupo = '';
+} else {
+	$chk_todos = '';
+	$chk_grupo = 'checked';
+}
+
 $a_campos = [
-			//'oPosicion' => $oPosicion,
+			'oPosicion' => $oPosicion,
 			'oHash' => $oHash,
 			'grupo_estudios' => $grupo_estudios,
 			'mi_grupo' => $mi_grupo,
 			'oFormP' => $oFormP,
 			'oDesplCtrAgd' => $oDesplCtrAgd,
 			'oDesplCtrN' => $oDesplCtrN,
+			'na' => $Qna,
+			'ref' => $Qref,
+			'chk_todos' => $chk_todos,
+			'chk_grupo' => $chk_grupo,
 			];
 
 $oView = new core\View('actividadestudios/controller');

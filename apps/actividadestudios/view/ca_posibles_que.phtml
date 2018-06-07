@@ -7,10 +7,11 @@ fnjs_n_a=function(dd){
 		$('#id_ctr_agd').val('');
 	}
 }
+fnjs_left_side_hide();
 </script>
 <form id="modifica" name="modifica" action="apps/actividadestudios/controller/ca_posibles.php" method="POST">
 <?= $oHash->getCamposHtml(); ?>
-<input type="hidden" id="na" name="na" value="">
+<input type="hidden" id="na" name="na" value="<?= $na ?>">
 <!-- Selección de centros -->
 <table>
 	<tr>
@@ -56,14 +57,21 @@ fnjs_n_a=function(dd){
 <tr>
 <th colspan=5><?= _("selección por delegaciones"); ?></th>
 </tr>
-<tr><td colspan=4><input type="radio" id="todos" name="todos" value=<?= $grupo_estudios?> checked><?= $mi_grupo ?>    <input type="radio" name="todos" value=1 ><?= _("todos") ?></td></tr>
-<tr><td><br></td></tr>
 <tr>
-<th colspan=5><?= _("formato del cuadro"); ?></th>
+	<td colspan=4>
+		<input type="radio" id="todos" name="todos" value=<?= $grupo_estudios?> <?= $chk_grupo ?> ><?= $mi_grupo ?>
+		<input type="radio" name="todos" value=1 <?= $chk_todos ?>><?= _("todos") ?></td></tr>
+<tr>
+	<td><br></td></tr>
+<tr>
+	<th colspan=5><?= _("formato del cuadro"); ?></th>
 </tr>
-<tr><td><?= ucfirst(_("escrito de referencia")).":"; ?><input type=text name=ref></td></tr>
-<tr><td><input type="Radio" name="texto" value="text"><?= ucfirst(_("texto cabecera horizontal (excel)")); ?></td>
-<td colspan=4><input type="Radio" name="texto" value="image" checked><?= ucfirst(_("texto cabecera vertical (imprimir)")); ?></td></tr>
+<tr>
+	<td><?= ucfirst(_("escrito de referencia")).":"; ?><input type="text" name="ref" value="<?= $ref ?>"></td></tr>
+<tr>
+	<td><input type="Radio" name="texto" value="text"><?= ucfirst(_("texto cabecera horizontal (excel)")); ?></td>
+<td colspan=4>
+	<input type="Radio" name="texto" value="image" checked><?= ucfirst(_("texto cabecera vertical (imprimir)")); ?></td></tr>
 <tr><td>
 	<input name='btn1' type=button onclick="fnjs_enviar_formulario(this.form)" value="<?= _("ver cuadro") ?>" >
 </td></tr>

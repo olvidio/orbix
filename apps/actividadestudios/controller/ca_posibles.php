@@ -23,7 +23,9 @@ use ubis\model\entity as ubis;
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-
+	
+$Qempiezamin = '';
+$Qempiezamax = '';
 $oPosiblesCa = new actividadestudios\PosiblesCa(); 
 
 $oPosicion->recordar();
@@ -41,7 +43,7 @@ if (isset($_POST['stack'])) {
 }
 
 $obj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
-$Qtodos = (string) \filter_input(INPUT_POST, 'todos');
+$Qtodos = (integer) \filter_input(INPUT_POST, 'todos');
 $Qtexto = (string) \filter_input(INPUT_POST, 'texto');
 $Qref = (string) \filter_input(INPUT_POST, 'ref');
 $Qidca = (string) \filter_input(INPUT_POST, 'idca');
@@ -79,6 +81,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$any=empty($Qyear)? date('Y')+1 : $Qyear;
 	
 	if ($Qperiodo == 'otro') {
+		$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
 		$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 		$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
 		$Qfin = (string) \filter_input(INPUT_POST, 'fin');
@@ -92,7 +95,22 @@ if (!empty($a_sel)) { //vengo de un checkbox
 		$inicio = $oPeriodo->getF_ini();
 		$fin = $oPeriodo->getF_fin();
 	}
+	$aGoBack = array (
+					'id_ctr_agd' => $Qid_ctr_agd,
+					'id_ctr_n' => $Qid_ctr_n,
+					'na' => $Qna,
+					'periodo'=>$Qperiodo,
+					'year'=>$Qyear,
+					'empiezamin'=>$Qempiezamin,
+					'empiezamax'=>$Qempiezamax,
+					'todos' => $Qtodos,
+					'ref' => $Qref,
+				);
+	$oPosicion->setParametros($aGoBack,1);
+
 }
+
+
 
 switch ($Qna) {
 	case "agd":
