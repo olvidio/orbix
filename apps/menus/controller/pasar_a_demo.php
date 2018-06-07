@@ -28,24 +28,19 @@ $str_conexio_restof="pgsql:host=demo.moneders.net sslmode=require port=5432  dbn
 $oDemoPC = new \PDO($str_conexio_public);
 $oDemoRC = new \PDO($str_conexio_resto);
 //comun
-//$oDemoC = new \PDO(get_conexio_comu());
 $user_sfsv =$_SESSION['session_auth']['sfsv']; 
 switch ($user_sfsv) {
 	case 1: //sv
-		//$oDemo = new \PDO(get_conexio_sv());
 		$oDemoP = new \PDO($str_conexio_publicv);
 		$oDemoR = new \PDO($str_conexio_restov);
 		//sf
-		//$oDemoE = new \PDO(get_conexio_sf());
 		$oDemoEP = new \PDO($str_conexio_publicf);
 		$oDemoER = new \PDO($str_conexio_restof);
 		break;
 	case 2: //sf
-		//$oDemo = new \PDO(get_conexio_sf());
 		$oDemoP = new \PDO($str_conexio_publicf);
 		$oDemoR = new \PDO($str_conexio_restof);
 		//sv
-		//$oDemoE = new \PDO(get_conexio_sv());
 		break;
 }
 

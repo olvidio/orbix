@@ -19,18 +19,16 @@ use menus\model\entity as menus;
  */
 
 // Copiar de dlb a public roles-grupmenu, grupmenu, menus
-//$oDevelPC = $GLOBALS['oDBPC'];
 
-// Para el caso de pruebas, la base de datos es 'teest-comun'
+$oConfig = new core\Config('importar'); //de la database comun 
+// Para el caso de pruebas, la base de datos es 'test-comun'
 if (core\ConfigGlobal::WEBDIR == 'pruebas') {
-	$str_conexio_public="pgsql:host=localhost sslmode=disable port=5432  dbname='test-comun' user='dani' password='system'";
-	$db_comun = 'test-comun';
+	$config = $oConfig->getEsquema('test-public'); //de la database test-comun 
 } else {
-	$str_conexio_public="pgsql:host=localhost sslmode=disable port=5432  dbname='comun' user='dani' password='system'";
-	$db_comun = 'comun';
+	$config = $oConfig->getEsquema('public'); //de la database comun 
 }
-$oDevelPC = new \PDO($str_conexio_public);
-$oDevelPC->exec('SET search_path TO public');
+$oConexion = new core\dbConnection($config);
+$oDevelPC = $oConexion->getPDO();
 
 $Qaccion = (string) \filter_input(INPUT_POST, 'accion');
 

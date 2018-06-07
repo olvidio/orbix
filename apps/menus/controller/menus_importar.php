@@ -1,5 +1,7 @@
 ﻿<?php
 use menus\model\entity as menus;
+use core;
+
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -56,10 +58,17 @@ if ($Qseguro == 1) {
 		echo ">>>>actualizando menus para $esquema<br>";
 		$sec = substr($esquema,-1); // la v o la f.
 		echo ">>>$sec>>actualizando menus para $esquema<br>";
-		if ($sec == 'v') { $oDB = new \PDO(core\ConfigGlobal::get_conexio_sv($esquema)); }
-		if ($sec == 'f') { $oDB = new \PDO(core\ConfigGlobal::get_conexio_sf($esquema)); }
+		if ($sec == 'v') { 
+			$oConfig = new core\Config('sv'); 
+		}
+		if ($sec == 'f') {
+			$oConfig = new core\Config('sf'); 
+			
+		}
+		$config = $oConfig->getEsquema($esquema); 
+		$oConexion = new core\dbConnection($config);
+		$oDB = $oConexion->getPDO();
 
-		$oDB->exec("SET DATESTYLE TO '".core\ConfigGlobal::$datestyle."'");
 		echo "actualizando menus para $esquema<br>";
 
         //************ GRUPMENU **************

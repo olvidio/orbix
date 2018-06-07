@@ -21,66 +21,99 @@ $_SESSION['oGestorErrores'] = new gestorErrores();
  * De esta manera (no persistente) se cierra la conexión cada vez que acaba el script.
  * 
  */
-// public para todo el mundo
-$oDBPC = new \PDO(ConfigGlobal::$str_conexio_public);
-$oDBPC->exec('SET search_path TO public');
-$oDBPC->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
-//$oDBPC->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
 
-$oDBRC = new \PDO(ConfigGlobal::$str_conexio_resto);
-$oDBRC->exec('SET search_path TO resto');
-$oDBRC->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
-//$oDBRC->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
-//comun
-$oDBC = new \PDO(ConfigGlobal::get_conexio_comu());
-$oDBC->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
-//$oDBC->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
+// public para todo el mundo
+$oConfig = new Config('comun'); //de la database comun 
+
+$config = $oConfig->getEsquema('public'); 
+$oConexion = new dbConnection($config);
+$oDBPC = $oConexion->getPDO();
+
+$config = $oConfig->getEsquema('resto'); 
+$oConexion = new dbConnection($config);
+$oDBRC = $oConexion->getPDO();
+
 $user_sfsv =$_SESSION['session_auth']['sfsv']; 
 switch ($user_sfsv) {
 	case 1: //sv
-		$oDB = new \PDO(ConfigGlobal::get_conexio_sv());
-		$oDB->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
-//		$oDB->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
-		$oDBP = new \PDO(ConfigGlobal::$str_conexio_publicv);
-		$oDBP->exec('SET search_path TO publicv');
-		$oDBP->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
-//		$oDBP->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
-		$oDBR = new \PDO(ConfigGlobal::$str_conexio_restov);
-		$oDBR->exec('SET search_path TO restov');
-		$oDBR->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
-//		$oDBR->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
+		$esquemav = $_SESSION['session_auth']['esquema'];
+		$esquema = \substr($esquemav, 0, -1);
+		$esquemaf = $esquema.'f';
+		//comun
+		$oConfig = new Config('comun'); 
+		$config = $oConfig->getEsquema($esquema); 
+		$oConexion = new dbConnection($config);
+		$oDBC = $oConexion->getPDO();
+		//sv
+		$oConfig = new Config('sv'); 
+		$config = $oConfig->getEsquema($esquemav); 
+		$oConexion = new dbConnection($config);
+		$oDB = $oConexion->getPDO();
+
+		$config = $oConfig->getEsquema('publicv'); 
+		$oConexion = new dbConnection($config);
+		$oDBP = $oConexion->getPDO();
+
+		$config = $oConfig->getEsquema('restov'); 
+		$oConexion = new dbConnection($config);
+		$oDBR = $oConexion->getPDO();
+		
 		//sf
-		$oDBE = new \PDO(ConfigGlobal::get_conexio_sf());
-		$oDBEP = new \PDO(ConfigGlobal::$str_conexio_publicf);
-		$oDBER = new \PDO(ConfigGlobal::$str_conexio_restof);
+		$oConfig = new Config('sf'); 
+		$config = $oConfig->getEsquema($esquemaf); 
+		$oConexion = new dbConnection($config);
+		$oDBE = $oConexion->getPDO();
+
+		$config = $oConfig->getEsquema('publicf'); 
+		$oConexion = new dbConnection($config);
+		$oDBEP = $oConexion->getPDO();
+
+		$config = $oConfig->getEsquema('restof'); 
+		$oConexion = new dbConnection($config);
+		$oDBER = $oConexion->getPDO();
+		
 		break;
 	case 2: //sf
-		$oDB = new \PDO(ConfigGlobal::get_conexio_sf());
-		$oDB->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
-//		$oDB->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
-		$oDBP = new \PDO(ConfigGlobal::$str_conexio_publicf);
-		$oDBP->exec('SET search_path TO publicf');
-		$oDBP->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
-//		$oDBP->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
-		$oDBR = new \PDO(ConfigGlobal::$str_conexio_restof);
-		$oDBR->exec('SET search_path TO restof');
-		$oDBR->exec("SET DATESTYLE TO '".ConfigGlobal::$datestyle."'");
-//		$oDBR->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
+		$esquemaf = $_SESSION['session_auth']['esquema'];
+		$esquema = \substr($esquema, 0, -1);
+		$esquemav = $esquema.'v';
+		//comun
+		$oConfig = new Config('comun'); 
+		$config = $oConfig->getEsquema($esquema); 
+		$oConexion = new dbConnection($config);
+		$oDBC = $oConexion->getPDO();
+		//sf
+		$oConfig = new Config('sf'); 
+		$config = $oConfig->getEsquema($esquemaf); 
+		$oConexion = new dbConnection($config);
+		$oDB = $oConexion->getPDO();
+
+		$config = $oConfig->getEsquema('publicf'); 
+		$oConexion = new dbConnection($config);
+		$oDBP = $oConexion->getPDO();
+
+		$config = $oConfig->getEsquema('restof'); 
+		$oConexion = new dbConnection($config);
+		$oDBR = $oConexion->getPDO();
+		
 		//sv
-		$oDBE = new \PDO(ConfigGlobal::get_conexio_sv());
+		$oConfig = new Config('sv'); 
+		$config = $oConfig->getEsquema($esquemav); 
+		$oConexion = new dbConnection($config);
+		$oDBE = $oConexion->getPDO();
 		break;
 }
-
-// para las tertulias.
-//$oDBT = new \PDO(ConfigGlobal::$str_conexio_filmoteca);
-//$oDBA->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
-
 
 if (configGlobal::is_app_installed('dbextern')) {
 	// Para sincronizar con listas Madrid (SQLSERVER)
 	if (!isset($_SESSION['oDBListas'])){
 		try {
-			$oDBListas = new \PDO(ConfigGlobal::$dsn_conexio_listas,ConfigGlobal::$user_conexio_listas,ConfigGlobal::$password_conexio_listas, array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING));
+			$oConfig = new Config('listas'); 
+			$config = $oConfig->getEsquema('public'); 
+			$oConexion = new dbConnection($config);
+			$oDBListas = $oConexion->getPDOListas();
+
+			//$oDBListas = new \PDO(ConfigGlobal::$dsn_conexio_listas,ConfigGlobal::$user_conexio_listas,ConfigGlobal::$password_conexio_listas, array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING));
 		} catch (\PDOException $e) {
 			//Hay que poner el mensaje entre /* ... */ para que el script que carga a continuación lo interprete como un comentario.
 			echo "/*";
@@ -138,4 +171,3 @@ $oValidator = new web\Hash();
 echo $oValidator->validatePost($_POST);
 
 $oPosicion = new web\Posicion($_SERVER['PHP_SELF'],$_POST);
-?>

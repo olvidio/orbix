@@ -26,7 +26,11 @@ $_SESSION['config']=$session_config;
 function posibles_esquemas($default='') {
 	$txt = '';
 	// Lista de posibles esquemas (en comun)
-	$oDBP = new \PDO(core\ConfigGlobal::$str_conexio_public);
+	$oConfig = new core\Config('comun');
+	$config = $oConfig->getEsquema('public'); 
+	$oConexion = new core\dbConnection($config);
+	$oDBP = $oConexion->getPDO();
+
 	$sQuery = "select nspname from pg_namespace where nspowner > 1000 ORDER BY nspname";
 	if (($oDblSt = $oDBP->query($sQuery)) === false) {
 		$sClauError = 'Schemas.lista';
@@ -84,7 +88,10 @@ function cambiar_idioma() {
 
 // APLICACIONES POSIBLES
 function getAppsPosibles () {
-	$oDBP = new \PDO(core\ConfigGlobal::$str_conexio_public);
+	$oConfig = new core\Config('comun');
+	$config = $oConfig->getEsquema('public'); 
+	$oConexion = new core\dbConnection($config);
+	$oDBP = $oConexion->getPDO();
 	$sQuery = "SELECT * FROM m0_apps";
 	$a_apps=array();
 	foreach ($oDBP->query($sQuery) as $aDades) {
@@ -96,7 +103,10 @@ function getAppsPosibles () {
 
 // MODULOS POSIBLES
 function getModsPosibles () {
-	$oDBP = new \PDO(core\ConfigGlobal::$str_conexio_public);
+	$oConfig = new core\Config('comun');
+	$config = $oConfig->getEsquema('public'); 
+	$oConexion = new core\dbConnection($config);
+	$oDBP = $oConexion->getPDO();
 	$sQuery = "SELECT * FROM m0_modulos";
 	$a_mods=array();
 	$a_mods_req=array();
@@ -166,12 +176,19 @@ if ( !isset($_SESSION['session_auth'])) {
 				$aWhere = array('usuario'=>$_POST['username']);
 				$esquema = $_POST['esquema'];
 				if (substr($esquema,-1)=='v') {
-					$oDB = new \PDO(core\ConfigGlobal::get_conexio_sv($esquema));
 					$sfsv = 1;
+					$oConfig = new core\Config('sv'); 
+					$config = $oConfig->getEsquema($esquema); 
+					$oConexion = new core\dbConnection($config);
+					$oDB = $oConexion->getPDO();
+
 				}
 				if (substr($esquema,-1)=='f') {
-					$oDB = new \PDO(core\ConfigGlobal::get_conexio_sf($esquema));
 					$sfsv = 2;
+					$oConfig = new core\Config('sf'); 
+					$config = $oConfig->getEsquema($esquema); 
+					$oConexion = new core\dbConnection($config);
+					$oDB = $oConexion->getPDO();
 				}
 				$query="SELECT * FROM aux_usuarios WHERE usuario = :usuario";
 				if (($oDBSt= $oDB->prepare($query)) === false) {
@@ -193,7 +210,10 @@ if ( !isset($_SESSION['session_auth'])) {
 					if ($oCrypt->encode($_POST['password'],$sPasswd) == $sPasswd) {
 						$id_usuario = $row['id_usuario'];
 						$id_role = $row['id_role'];
-						$oDBP = new \PDO(core\ConfigGlobal::$str_conexio_public);
+						$oConfig = new core\Config('comun');
+						$config = $oConfig->getEsquema('public'); 
+						$oConexion = new core\dbConnection($config);
+						$oDBP = $oConexion->getPDO();
 						$queryr="SELECT * FROM aux_roles WHERE id_role = $id_role";
 						if (($oDBPSt= $oDBP->query($queryr)) === false) {
 							$sClauError = 'login_obj.prepare';
