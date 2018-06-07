@@ -18,6 +18,6 @@ class Config {
 
 	public function __construct($database)
 	{
-		$this->data = include '/home/dani/orbix_local/conf/'.$database.'.inc';
+		$this->data = include ConfigGlobal::DIR_PWD.'/'.$database.'.inc';
 	}
 }
