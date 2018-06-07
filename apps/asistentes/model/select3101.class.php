@@ -201,11 +201,13 @@ class Select3101 {
 		// Si no esta publicada todas las plazas de la actividad son para la dl.
 		// No hay plazas de calendario.
 		if ($this->publicado === false) {
-			$dl = $this->dl_org;
-			$a_plazas_resumen[$dl]['calendario'] = $this->plazas_totales;
-			$a_plazas_resumen[$dl]['conseguidas'] = 0;
-			$a_plazas_resumen[$dl]['disponibles'] = $this->plazas_totales;
-			$a_plazas_resumen[$dl]['total_cedidas'] = 0;
+			$gesActividadPlazasR = new \actividadplazas\model\GestorResumenPlazas();
+			$gesActividadPlazasR->setId_activ($this->id_pau);
+//			$dl = $this->dl_org;
+//			$a_plazas_resumen[$dl]['calendario'] = $this->plazas_totales;
+//			$a_plazas_resumen[$dl]['conseguidas'] = 0;
+//			$a_plazas_resumen[$dl]['disponibles'] = $this->plazas_totales;
+//			$a_plazas_resumen[$dl]['total_cedidas'] = 0;
 		} else {
 			// array para pasar id_dl a dl.
 			$gesDelegacion = new ubis\model\entity\GestorDelegacion();
