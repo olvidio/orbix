@@ -1,7 +1,8 @@
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2018-06-08 09:00+0200\n"
+"POT-Creation-Date: 2018-06-08 14:03+0200\n"
 "PO-Revision-Date: 2018-06-08 09:00+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -277,6 +278,7 @@ msgid "buscar actividad"
 msgstr ""
 
 #: actividades/controller/actividad_select.php:198
+#: menus/view/traducir_menu.phtml:158
 msgid "importar"
 msgstr ""
 
@@ -295,6 +297,7 @@ msgstr ""
 #: asignaturas/model/infoasignaturas.class.php:9
 #: asistentes/controller/lista_est_ctr.php:220
 #: notas/controller/asig_faltan_select.php:96
+#: menus/view/traducir_menu.phtml:187
 #: profesores/view/ficha_profesor_stgr.print.phtml:66
 msgid "asignaturas"
 msgstr ""
@@ -449,7 +452,7 @@ msgstr ""
 
 #: actividades/controller/actividad_select.php:299
 #: actividadestudios/controller/acta_notas_update.php:188
-#: cambios/model/gestorcanvis.class.php:94 core/gestorerrores.class.php:71
+#: cambios/model/gestorcanvis.class.php:94 core/gestorerrores.class.php:72
 #: menus/controller/menus_importar.php:40
 #: actividadestudios/view/actualizar_docencia.phtml:7
 msgid "continuar"
@@ -531,14 +534,14 @@ msgstr ""
 #: actividades/controller/actividad_ver.php:49
 #: dossiers/controller/dossiers_ver.php:186
 #: personas/controller/personas_select.php:240
-#: ubis/controller/home_ubis.php:125 personas/view/home_persona.phtml:7
+#: ubis/controller/home_ubis.php:124 personas/view/home_persona.phtml:7
 #: personas/view/persona_de_paso.phtml:62 personas/view/persona_form.phtml:76
 #: personas/view/traslado_form.phtml:37
 msgid "ver dossiers"
 msgstr ""
 
 #: actividades/controller/actividad_ver.php:50
-#: dossiers/controller/dossiers_ver.php:187 ubis/controller/home_ubis.php:126
+#: dossiers/controller/dossiers_ver.php:187 ubis/controller/home_ubis.php:125
 #: personas/view/home_persona.phtml:7 personas/view/persona_de_paso.phtml:62
 #: personas/view/persona_form.phtml:76 personas/view/traslado_form.phtml:37
 msgid "dossiers"
@@ -1100,6 +1103,7 @@ msgid "quitar asignatura"
 msgstr ""
 
 #: actividadestudios/model/select3005.class.php:61
+#: menus/view/traducir_menu.phtml:128
 msgid "actas"
 msgstr ""
 
@@ -1271,6 +1275,7 @@ msgid "buscar en nombre largo"
 msgstr ""
 
 #: asignaturas/model/infodepartamentos.class.php:9
+#: menus/view/traducir_menu.phtml:185
 msgid "departamentos"
 msgstr ""
 
@@ -1295,6 +1300,7 @@ msgid "buscar una asignatura opcional"
 msgstr ""
 
 #: asignaturas/model/infosectores.class.php:9
+#: menus/view/traducir_menu.phtml:184
 msgid "sectores"
 msgstr ""
 
@@ -1787,7 +1793,7 @@ msgstr ""
 msgid "Fases Actividad"
 msgstr ""
 
-#: cambios/model/gestorcanvis.class.php:87 core/gestorerrores.class.php:64
+#: cambios/model/gestorcanvis.class.php:87 core/gestorerrores.class.php:65
 msgid "Ya existe un registro con esta información"
 msgstr ""
 
@@ -1904,10 +1910,12 @@ msgstr ""
 #: actividades/view/actividad_select_ubi.phtml:53
 #: asistentes/view/activ_pendientes.phtml:28
 #: asistentes/view/planning_persona_que.phtml:37
-#: asistentes/view/que_ctr_lista.phtml:72 notas/view/acta_select.phtml:36
-#: personas/view/personas_que.phtml:12 ubis/view/direcciones_que.phtml:9
-#: ubis/view/ubis_buscar.phtml:55 ubis/view/ubis_buscar.phtml:136
-#: usuarios/view/grupo_lista.phtml:48 usuarios/view/usuario_lista.phtml:44
+#: asistentes/view/que_ctr_lista.phtml:72 menus/view/traducir_menu.phtml:61
+#: menus/view/traducir_menu.phtml:97 menus/view/traducir_menu.phtml:105
+#: notas/view/acta_select.phtml:36 personas/view/personas_que.phtml:12
+#: ubis/view/direcciones_que.phtml:9 ubis/view/ubis_buscar.phtml:55
+#: ubis/view/ubis_buscar.phtml:136 usuarios/view/grupo_lista.phtml:48
+#: usuarios/view/usuario_lista.phtml:44
 msgid "buscar"
 msgstr ""
 
@@ -2982,6 +2990,7 @@ msgstr ""
 #: actividades/view/actividad_select_ubi.phtml:40
 #: actividades/view/actividad_select_ubi.phtml:68
 #: actividades/view/actividad_select_ubi.phtml:75
+#: menus/view/traducir_menu.phtml:157
 msgid "seleccionar"
 msgstr ""
 
@@ -3051,6 +3060,7 @@ msgid "imprimir tessera"
 msgstr ""
 
 #: personas/controller/personas_select.php:271
+#: menus/view/traducir_menu.phtml:135 menus/view/traducir_menu.phtml:136
 msgid "posibles ca"
 msgstr ""
 
@@ -3410,6 +3420,7 @@ msgstr ""
 
 #: profesores/model/entity/congreso.class.php:550
 #: profesores/model/entity/profesorcongreso.class.php:550
+#: menus/view/traducir_menu.phtml:50 menus/view/traducir_menu.phtml:108
 msgid "cv"
 msgstr ""
 
@@ -3628,7 +3639,11 @@ msgstr ""
 msgid "casa"
 msgstr ""
 
-#: ubis/controller/home_ubis.php:127 personas/view/persona_de_paso.phtml:154
+#: ubis/controller/home_ubis.php:114
+msgid "falta definir el tipo_ubi: "
+msgstr ""
+
+#: ubis/controller/home_ubis.php:126 personas/view/persona_de_paso.phtml:154
 #: personas/view/persona_form.phtml:171
 msgid "formato texto"
 msgstr ""
@@ -4033,8 +4048,8 @@ msgstr ""
 msgid "principal"
 msgstr ""
 
-#: ubis/model/infodelegaciones.class.php:9 ubis/view/ubis_buscar.phtml:104
-#: ubis/view/ubis_buscar.phtml:232
+#: ubis/model/infodelegaciones.class.php:9 menus/view/traducir_menu.phtml:189
+#: ubis/view/ubis_buscar.phtml:104 ubis/view/ubis_buscar.phtml:232
 msgid "delegaciones"
 msgstr ""
 
@@ -4046,7 +4061,7 @@ msgstr ""
 msgid "buscar una delegación (sigla)"
 msgstr ""
 
-#: ubis/model/inforegiones.class.php:9
+#: ubis/model/inforegiones.class.php:9 menus/view/traducir_menu.phtml:190
 msgid "regiones"
 msgstr ""
 
@@ -4407,15 +4422,15 @@ msgstr ""
 msgid "Url modificada"
 msgstr ""
 
-#: web/hash.class.php:220
+#: web/hash.class.php:217 web/hash.class.php:221
 msgid "Problema general se seguridad"
 msgstr ""
 
-#: web/hash.class.php:221
+#: web/hash.class.php:222
 msgid "Para ver más detalles activa el mode debug en core\\confgiGlobal"
 msgstr ""
 
-#: web/hash.class.php:251
+#: web/hash.class.php:252
 msgid "página con seguridad desactivada"
 msgstr ""
 
@@ -4804,6 +4819,8 @@ msgid "editar celdas con doble click"
 msgstr ""
 
 #: actividadplazas/view/peticiones_activ.phtml:60
+#: menus/view/traducir_menu.phtml:76 menus/view/traducir_menu.phtml:98
+#: menus/view/traducir_menu.phtml:167 menus/view/traducir_menu.phtml:197
 msgid "actividades"
 msgstr ""
 
@@ -4831,7 +4848,8 @@ msgstr ""
 msgid "plazas a"
 msgstr ""
 
-#: asistentes/view/activ_pendientes.phtml:6
+#: asistentes/view/activ_pendientes.phtml:6 menus/view/traducir_menu.phtml:64
+#: menus/view/traducir_menu.phtml:165
 msgid "personas"
 msgstr ""
 
@@ -4876,7 +4894,7 @@ msgstr ""
 msgid "relación de asistentes"
 msgstr ""
 
-#: asistentes/view/lista_asistentes.phtml:13
+#: asistentes/view/lista_asistentes.phtml:13 menus/view/traducir_menu.phtml:183
 msgid "estudios"
 msgstr ""
 
@@ -5038,6 +5056,479 @@ msgstr ""
 msgid "Debe selccionar un grupo de menu para poder añadir un menu."
 msgstr ""
 
+#: menus/view/traducir_menu.phtml:3
+msgid "Utilidades"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:4
+msgid "preferencias"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:5
+msgid "exportar"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:6
+msgid "a ODF Calc"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:7
+msgid "a ODF Text"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:8
+msgid "Informar de un bug"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:9
+msgid "buscar n"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:10 menus/view/traducir_menu.phtml:115
+#: menus/view/traducir_menu.phtml:120
+msgid "n dl"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:11 menus/view/traducir_menu.phtml:66
+#: menus/view/traducir_menu.phtml:116 menus/view/traducir_menu.phtml:121
+msgid "n de paso"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:12 menus/view/traducir_menu.phtml:41
+#: menus/view/traducir_menu.phtml:107
+msgid "Actualizar datos desde Listas"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:13 menus/view/traducir_menu.phtml:42
+#: menus/view/traducir_menu.phtml:111 menus/view/traducir_menu.phtml:177
+msgid "crt"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:14 menus/view/traducir_menu.phtml:43
+msgid "importar crt"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:15 menus/view/traducir_menu.phtml:44
+#: menus/view/traducir_menu.phtml:178
+msgid "buscar crt"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:16 menus/view/traducir_menu.phtml:46
+msgid "list varios crt"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:17
+msgid "list por ctr"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:18 menus/view/traducir_menu.phtml:27
+#: menus/view/traducir_menu.phtml:55 menus/view/traducir_menu.phtml:142
+#: menus/view/traducir_menu.phtml:148
+msgid "pendientes"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:19 menus/view/traducir_menu.phtml:28
+#: menus/view/traducir_menu.phtml:47 menus/view/traducir_menu.phtml:56
+msgid "Gestión de plazas"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:20 menus/view/traducir_menu.phtml:29
+#: menus/view/traducir_menu.phtml:48 menus/view/traducir_menu.phtml:57
+msgid "Balance de plazas"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:21 menus/view/traducir_menu.phtml:30
+#: menus/view/traducir_menu.phtml:49 menus/view/traducir_menu.phtml:58
+msgid "Incorporar 1ª petición"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:22 menus/view/traducir_menu.phtml:179
+#: notas/view/form_1011.phtml:185
+msgid "ca"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:23
+msgid "importar ca"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:24 menus/view/traducir_menu.phtml:138
+#: menus/view/traducir_menu.phtml:180
+msgid "buscar ca"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:25 menus/view/traducir_menu.phtml:139
+msgid "lista varios ca"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:26 menus/view/traducir_menu.phtml:45
+#: menus/view/traducir_menu.phtml:140 menus/view/traducir_menu.phtml:146
+msgid "lista por ctr"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:31 menus/view/traducir_menu.phtml:181
+msgid "cve"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:32 menus/view/traducir_menu.phtml:182
+msgid "buscar cve"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:33 menus/view/traducir_menu.phtml:59
+msgid "importar cve"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:34
+msgid "lista varias cve"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:35 menus/view/traducir_menu.phtml:75
+#: menus/view/traducir_menu.phtml:196
+msgid "planning"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:36 menus/view/traducir_menu.phtml:151
+msgid "por centro"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:37 menus/view/traducir_menu.phtml:152
+msgid "por casas"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:38
+msgid "buscar agd"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:39 menus/view/traducir_menu.phtml:117
+#: menus/view/traducir_menu.phtml:122
+msgid "agd dl"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:40 menus/view/traducir_menu.phtml:68
+#: menus/view/traducir_menu.phtml:118 menus/view/traducir_menu.phtml:123
+msgid "agd de paso"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:51
+msgid "importar cv"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:52 menus/view/traducir_menu.phtml:109
+#: menus/view/traducir_menu.phtml:144
+msgid "buscar cv"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:53 menus/view/traducir_menu.phtml:145
+msgid "list varias cv"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:54
+msgid "list por centros"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:60
+msgid "direcciones"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:62 menus/view/traducir_menu.phtml:74
+#: menus/view/traducir_menu.phtml:195
+msgid "listados"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:63
+msgid "agenda vcdl"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:65
+msgid "sacd num"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:67
+msgid "sacd agd"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:69
+msgid "sacd sssc"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:70
+msgid "sssc de paso"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:71
+msgid "cp & as.ecles"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:72 menus/view/traducir_menu.phtml:193
+msgid "centros y casas"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:73 menus/view/traducir_menu.phtml:194
+msgid "buscar "
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:77 menus/view/traducir_menu.phtml:91
+#: menus/view/traducir_menu.phtml:198
+msgid "buscar activ"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:78 menus/view/traducir_menu.phtml:199
+msgid "sv  n"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:79 menus/view/traducir_menu.phtml:200
+msgid "sv agd"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:80 menus/view/traducir_menu.phtml:201
+msgid "sv s y sg"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:81 menus/view/traducir_menu.phtml:202
+msgid "sv sr"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:82 menus/view/traducir_menu.phtml:203
+msgid "sf n"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:83 menus/view/traducir_menu.phtml:204
+msgid "sf nax"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:84 menus/view/traducir_menu.phtml:205
+msgid "sf agd"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:85 menus/view/traducir_menu.phtml:206
+msgid "sf s y sg"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:86 menus/view/traducir_menu.phtml:207
+msgid "sf sr,sr-nax,sr-agd"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:87 menus/view/traducir_menu.phtml:208
+msgid "importar activ"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:88 menus/view/traducir_menu.phtml:209
+msgid "publicar activ"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:89 menus/view/traducir_menu.phtml:210
+msgid "nueva activ"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:90
+msgid "sssc"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:92
+msgid "propuesta cl cv"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:93
+msgid "Nuevo calendario"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:94
+msgid "menus ext"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:95 menus/view/traducir_menu.phtml:161
+msgid "ayuda"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:96 usuarios/view/grupo_form.phtml:69
+#: usuarios/view/usuario_form.phtml:211
+msgid "casas"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:99
+msgid "procesos activ."
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:100 menus/view/traducir_menu.phtml:168
+msgid "usuarios web"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:101 menus/view/traducir_menu.phtml:171
+msgid "lista usuarios"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:102 menus/view/traducir_menu.phtml:172
+msgid "lista grupos"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:103
+msgid "editar web"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:104
+msgid "traducciones"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:106
+msgid "s de la dl"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:110 menus/view/traducir_menu.phtml:173
+msgid "lista cargos"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:112
+msgid "buscar crt s"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:113
+msgid "buscar crt sg"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:114
+msgid "buscar n ó agd"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:119
+msgid "buscar persona"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:124
+msgid "matricular a todos"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:125
+msgid "profesor para asignatura"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:126
+msgid "claustro"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:127
+msgid "actas..."
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:129
+msgid "tabla alumnos-asignaturas"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:130
+msgid "resúmenes"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:131
+msgid "Matr. Pendientes"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:132
+msgid "resumen pendientes"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:133
+msgid "buscar asig. pendientes"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:134
+msgid "listado actas"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:137
+msgid "ca n"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:141 menus/view/traducir_menu.phtml:147
+msgid "estudios x ctr"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:143
+msgid "cv agd"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:149
+msgid "planning "
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:150
+msgid "persona dl"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:153
+msgid "mantenimiento"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:154
+msgid "dic latin"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:155
+msgid "actualizar docencia"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:156
+msgid "menus"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:159
+msgid "meta menus"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:160
+msgid "importar desde ficheros"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:162
+msgid "DB"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:163
+msgid "nuevo esquema"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:164
+msgid "perm_dossiers"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:166 menus/view/traducir_menu.phtml:188
+msgid "ubis"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:169
+msgid "lista de roles"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:170
+msgid "grup menu"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:174
+msgid "buscar nax"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:175
+msgid "nax dl"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:176
+msgid "nax de paso"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:186
+msgid "opcionales"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:191 ubis/view/cdc_form.phtml:89
+#: ubis/view/ubis_buscar.phtml:196
+msgid "tipo de casa"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:192
+msgid "tipo de ctr"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:211 menus/view/traducir_menu.phtml:212
+msgid "historicos"
+msgstr ""
+
 #: notas/view/acta_listado_anual.phtml:1
 msgid "listado de actas por orden de asignatura"
 msgstr ""
@@ -5130,10 +5621,6 @@ msgstr ""
 msgid "sin especificar"
 msgstr ""
 
-#: notas/view/form_1011.phtml:185
-msgid "ca"
-msgstr ""
-
 #: notas/view/form_1011.phtml:187
 msgid "semestre invierno"
 msgstr ""
@@ -5204,19 +5691,19 @@ msgstr ""
 msgid "Número de créditos realizados el curso %s: %s"
 msgstr ""
 
-#: permisos/view/login_form2.phtml:142
+#: permisos/view/login_form2.phtml:143
 msgid "stgr y actividades"
 msgstr ""
 
-#: permisos/view/login_form2.phtml:143
+#: permisos/view/login_form2.phtml:144
 msgid "Ubicación"
 msgstr ""
 
-#: permisos/view/login_form2.phtml:144
+#: permisos/view/login_form2.phtml:145
 msgid "nombre de usuario"
 msgstr ""
 
-#: permisos/view/login_form2.phtml:147
+#: permisos/view/login_form2.phtml:148
 msgid "Iniciar sesión"
 msgstr ""
 
@@ -5351,10 +5838,6 @@ msgstr ""
 
 #: ubis/view/cdc_form.phtml:83
 msgid "nº máximo de sacd"
-msgstr ""
-
-#: ubis/view/cdc_form.phtml:89 ubis/view/ubis_buscar.phtml:196
-msgid "tipo de casa"
 msgstr ""
 
 #: ubis/view/ctrdl_form.phtml:29 ubis/view/ctrex_form.phtml:29
@@ -5594,10 +6077,6 @@ msgstr ""
 
 #: usuarios/view/grupo_form.phtml:38 usuarios/view/usuario_form.phtml:180
 msgid "nombre a mostrar"
-msgstr ""
-
-#: usuarios/view/grupo_form.phtml:69 usuarios/view/usuario_form.phtml:211
-msgid "casas"
 msgstr ""
 
 #: usuarios/view/grupo_lista.phtml:16
