@@ -46,12 +46,12 @@ $gesActividadPlazas = new \actividadplazas\model\GestorResumenPlazas();
 $gesActividadPlazas->setId_activ($id_activ);
 $a_plazas = $gesActividadPlazas->getResumen();
 
-$plazas_totales = $a_plazas['total']['actividad'];
-$tot_calendario = $a_plazas['total']['calendario'];
-$tot_cedidas = $a_plazas['total']['cedidas'];
-$tot_conseguidas = $a_plazas['total']['conseguidas'];
-$tot_disponibles = $a_plazas['total']['disponibles'];
-$tot_ocupadas = $a_plazas['total']['ocupadas'];
+$plazas_totales = empty($a_plazas['total']['actividad'])? 0 : $a_plazas['total']['actividad'];
+$tot_calendario = empty($a_plazas['total']['calendario'])? 0 : $a_plazas['total']['calendario'];
+$tot_cedidas = empty($a_plazas['total']['cedidas'])? 0 : $a_plazas['total']['cedidas'];
+$tot_conseguidas = empty($a_plazas['total']['conseguidas'])? 0 : $a_plazas['total']['conseguidas'];
+$tot_disponibles = empty($a_plazas['total']['disponibles'])? 0 : $a_plazas['total']['disponibles'];
+$tot_ocupadas = empty($a_plazas['total']['ocupadas'])? 0 : $a_plazas['total']['ocupadas'];
 
 $oHash = new web\Hash();
 $camposForm = 'num_plazas!dl';
