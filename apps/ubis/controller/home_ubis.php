@@ -38,7 +38,7 @@ if (isset($_POST['stack'])) {
 // el scroll id es de la página anterior, hay que guardarlo allí
 if (!empty($a_sel)) { //vengo de un checkbox
 	$id_ubi=strtok($a_sel[0],"#");
-	$oPosicion->addParametro('id_sel',$id_sel,1);
+	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else {
