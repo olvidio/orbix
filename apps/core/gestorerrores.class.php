@@ -20,6 +20,8 @@ class gestorErrores {
 	 */
 	 private $aDades;
 
+	 private $filename;
+
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
 	/**
@@ -27,7 +29,7 @@ class gestorErrores {
 	 *
 	 */
 	function __construct() {
-
+		$this->filename = ConfigGlobal::$directorio.'/log/errores.log';
 	}
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
@@ -57,7 +59,6 @@ class gestorErrores {
 	}
 	
 	function muestraMensaje($sClauError,$goto) {
-		//$_SESSION['oGestorErrores']->addErrorAppLastError($oDBSt, $sClauError, $file);
 		$txt=$this->leerErrorAppLastError();
 		$err=$oDBSt->errorInfo();
 		if (strstr($txt, 'duplicate key')) {
@@ -79,24 +80,12 @@ class gestorErrores {
 		$err=$oDBSt->errorInfo();
 		$txt="\n".$ahora." - ".$user."->>  ".$err[2]."\n $sClauError en linea $line de: $file\n";
 		
-		$filename = ConfigGlobal::$directorio.'/log/errores.log';
-		$trimmed = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+		$trimmed = file($this->filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 		$linea2=array_pop($trimmed);
 		$linea1=array_pop($trimmed);
 		return $linea1."\n".$linea2;
-			/*
-		if (!$handle = fopen($filename, 'a')) {
-			 echo "Cannot open file ($filename)";
-			 die();
-		}
-		// Write $somecontent to our opened file.
-		if ($txt=fread($handle) === FALSE) {
-			echo "Cannot write to file ($filename)";
-			die();
-		}
-		fclose($handle);
-		*/
 	}
+	
 	function addErrorAppLastError(&$oDBSt, $sClauError,$line, $file) {
 		$ip = $_SERVER['REMOTE_ADDR'];
 		$user = ConfigGlobal::mi_usuario();
@@ -115,7 +104,7 @@ class gestorErrores {
 		// el desde el controlador correspondiente.
 		$this->recordar($err[2]);
 		
-		$filename = ConfigGlobal::$directorio.'/log/errores.log';
+		$filename = $this->filename;
 		if (!$handle = fopen($filename, 'a')) {
 			 echo "Cannot open file ($filename)";
 			 die();
@@ -127,6 +116,14 @@ class gestorErrores {
 		}
 		fclose($handle);
 	}
+	
+	function addErrorSec($err='',$sClauError,$line, $file) {
+		$filename = $this->filename;
+		$this->filename = ConfigGlobal::$directorio.'/log/security.log';
+		$this->addError($err,$sClauError,$line, $file);
+		$this->filename = $filename;
+	}
+	
 	function addError($err='',$sClauError,$line, $file) {
 		$user=ConfigGlobal::mi_usuario();
 		$esquema = ConfigGlobal::mi_region_dl();
@@ -134,7 +131,7 @@ class gestorErrores {
 		$id_user = $user."[$esquema]$ip ";
 		$txt="\n".$ahora." - ".$id_user."->>  ".$err."\n $sClauError en linea $line de: $file\n";
 		
-		$filename = ConfigGlobal::$directorio.'/log/errores.log';
+		$filename = $this->filename;
 		if (!$handle = fopen($filename, 'a')) {
 			 echo "Cannot open file ($filename)";
 			 die();
