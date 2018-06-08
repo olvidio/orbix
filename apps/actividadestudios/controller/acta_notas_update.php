@@ -150,14 +150,17 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 }
 
 if ($Qque==1) { // Grabar las notas en la matricula
-	$Qmatriculados = (array) \filter_input(INPUT_POST, 'matriculados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 	$Qform_preceptor = (array) \filter_input(INPUT_POST, 'form_preceptor', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 	$Qid_nom = (array) \filter_input(INPUT_POST, 'id_nom', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 	$Qnota_num = (array) \filter_input(INPUT_POST, 'nota_num', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 	$Qnota_max = (array) \filter_input(INPUT_POST, 'nota_max', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
-	for ($n=0;$n<$Qmatriculados;$n++) {
-		if (!empty($Qform_preceptor[$n]) && $Qform_preceptor[$n]=="p") { $preceptor="t"; } else { $preceptor="f"; }
+	for ($n=0;$n<$Qid_nom;$n++) {
+		if (!empty($Qform_preceptor[$n]) && $Qform_preceptor[$n]=="p") { 
+			$preceptor="t";
+		} else {
+			$preceptor="f";
+		}
 		$oMatricula = new actividadestudios\Matricula(array('id_asignatura'=>$Qid_asignatura,'id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom[$n]));
 		$oMatricula->setPreceptor($preceptor);
 		// admitir coma y punto como separador decimal
