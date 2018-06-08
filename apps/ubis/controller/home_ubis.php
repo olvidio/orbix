@@ -111,8 +111,7 @@ switch ($tipo_ubi) {
 		$tipo="cdc";
 		break;
 	default:
-		echo "tipo_ubi: $tipo_ubi<br>";
-		print_r($_POST);
+		echo _("falta definir el tipo_ubi: ")."$tipo_ubi<br>";
 }
 
 $gohome=Hash::link('apps/ubis/controller/home_ubis.php?'.http_build_query(array('id_ubi'=>$id_ubi,'obj_pau'=>$obj_pau))); 

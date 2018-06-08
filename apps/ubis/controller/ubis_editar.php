@@ -96,8 +96,6 @@ $oPermActiv=new ubis\model\CuadrosLabor();
 $chk = ($status=="t" OR $status=="true")? 'checked' :''; 
 $campos_chk = 'status!sv!sf';
 
-$oHash = new web\Hash();
-$oHash->setcamposNo('que!'.$campos_chk);
 $camposForm = 'que!dl!tipo_ubi!status!region!nombre_ubi';
 if ($tipo_ubi=="ctrdl") { 
 	$camposForm .= '!num_pi!num_cartas!num_cartas_mensuales!plazas!num_habit_indiv!n_buzon!observ';
@@ -109,6 +107,8 @@ if ($tipo_ubi=="ctrdl" or $tipo_ubi=="ctrex" or $tipo_ubi=="ctrsf") {
 if ($tipo_ubi=="cdcdl" or $tipo_ubi=="cdcex") {
 	$camposForm .= '!tipo_casa!plazas!plazas_min!num_sacd!sf!sv';
 }
+$oHash = new web\Hash();
+$oHash->setcamposNo('que!'.$campos_chk);
 $oHash->setcamposForm($camposForm);
 $a_camposHidden = array(
 		'campos_chk'=>$campos_chk,
