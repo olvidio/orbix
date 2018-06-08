@@ -278,7 +278,7 @@ class GestorResumenPlazas {
 			if (empty($a_plazas[$dl]['conseguidas'])) {
 				$a_plazas[$dl]['conseguidas'] = array();
 			}
-			$a_plazas[$dl]['calendario'] = 0;
+			//$a_plazas[$dl]['calendario'] = 0;
 			if ($dl_org == $dl_tabla) {
 				$a_plazas[$dl]['calendario'] = $oActividadPlazas->getPlazas();
 				// las cedidas se guardan en la tabla que pertenece a la dl
