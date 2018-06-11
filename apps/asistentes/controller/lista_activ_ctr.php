@@ -91,6 +91,7 @@ en función de las condiciones que tengamos: */
 $any=empty($Qyear)? date('Y') : $Qyear;
 	
 if ($Qperiodo == 'otro') {
+	$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
 	$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 	$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
 	$Qfin = (string) \filter_input(INPUT_POST, 'fin');
