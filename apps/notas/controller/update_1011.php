@@ -79,7 +79,7 @@ switch($Qmod) {
 		$Qdetalle = (string) \filter_input(INPUT_POST, 'detalle');
 		$Qepoca = (integer) \filter_input(INPUT_POST, 'epoca');
 		$Qid_activ = (integer) \filter_input(INPUT_POST, 'id_activ');
-		$Qnota_num = (integer) \filter_input(INPUT_POST, 'nota_num');
+		$Qnota_num = (float) \filter_input(INPUT_POST, 'nota_num', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 		$Qnota_max = (integer) \filter_input(INPUT_POST, 'nota_max');
 		
 		$oPersonaNota->setId_situacion($Qid_situacion);
@@ -139,7 +139,7 @@ switch($Qmod) {
 		$Qdetalle = (string) \filter_input(INPUT_POST, 'detalle');
 		$Qepoca = (integer) \filter_input(INPUT_POST, 'epoca');
 		$Qid_activ = (integer) \filter_input(INPUT_POST, 'id_activ');
-		$Qnota_num = (integer) \filter_input(INPUT_POST, 'nota_num');
+		$Qnota_num = (float) \filter_input(INPUT_POST, 'nota_num', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 		$Qnota_max = (integer) \filter_input(INPUT_POST, 'nota_max');
 		
 		$oPersonaNota->setId_situacion($Qid_situacion);
