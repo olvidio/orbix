@@ -78,7 +78,7 @@ function datos($oPersona) {
 				$f_inc=$oPersona->$get;
 			}
 			$edad=$oPersona->getEdad();
-			$eap='?';
+			$eap=empty($oPersona->getEap())? '?' : $oPersona->getEap();
 			break;
 		case 'PersonaIn':
 		case 'PersonaEx':
