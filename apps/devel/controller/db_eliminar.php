@@ -80,5 +80,3 @@ if (!empty($Qsv) && !empty($Qsf)) {
 }
 
 echo _("Datos pasados a resto y tablas vaciadas");
-
-?>

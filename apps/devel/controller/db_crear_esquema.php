@@ -124,6 +124,3 @@ $oDBRol->setDbConexion();
 	$oDBRol->delGrupo('orbixf');
 	
 echo sprintf(_("Se han creado los usuarios y la estructua de los esquemas."));
-
-?>
-
