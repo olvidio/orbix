@@ -133,6 +133,7 @@ $a_campos = ['oPosicion' => $oPosicion,
 			'oDesplPais' => $oDesplPais,
 			'loc' => $loc,
 			'oDesplTipoCasa' => $oDesplTipoCasa,
+			'oDesplTipoCentro' => $oDesplTipoCentro,
 			'pagina' => $pagina,
 			];
 

@@ -10,7 +10,6 @@ use function core\urlsafe_b64encode;
 /**
 * Esta página muestra una tabla con los ubis seleccionados.
 *
-* Se tiene en cuenta si es una vuelta de un go_to
 *
 *@package	delegacion
 *@subpackage	ubis
@@ -27,6 +26,7 @@ use function core\urlsafe_b64encode;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$oPosicion->recordar();
 
 $oMiUsuario = new usuarios\Usuario(ConfigGlobal::mi_id_usuario());
 $miSfsv=ConfigGlobal::mi_sfsv();
@@ -64,6 +64,9 @@ $cmb = (string) \filter_input(INPUT_POST, 'cmb');
 
 $tipo_ubi = $Qtipo.$Qloc;
 
+$Qnombre_ubi = '';
+$Qdl = '';
+$Qregion = '';
 /*miro las condiciones. las variables son: nombre_ubi,ciudad,region,pais */
 if (empty($sWhere)) {
 	$aWhere=array();
@@ -347,20 +350,26 @@ $sWhereD = urlsafe_b64encode(serialize($aWhereD));
 $sOperadorD = urlsafe_b64encode(serialize($aOperadorD));
 $sGestorDir = urlsafe_b64encode(serialize($GestorDir));
 
-$go_to= '';
 //si no existe la ficha, hacer una nueva	
 if (is_array($cUbisTot) && count($cUbisTot) == 0) {
-	$go_to=Hash::link(ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_buscar.php?'.http_build_query(array('simple'=>1,'tipo'=>$Qtipo))); 
 	$nombre_ubi=$Qnombre_ubi;
-	
-	$pagina=Hash::link(ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_editar.php?'.http_build_query(array('sGestor'=>$sGestor,'tipo_ubi'=>$tipo_ubi,'nombre_ubi'=>$Qnombre_ubi,'nuevo'=>1,'go_to'=>$go_to))); 
+	$a_link = array('sGestor' => $sGestor,
+					'tipo_ubi' => $tipo_ubi,
+					'nombre_ubi' => $Qnombre_ubi,
+					'nuevo' => 1,
+					'dl' => $Qdl,
+					'region' => $Qregion,
+					); 
+	$pagina=Hash::link(ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_editar.php?'.http_build_query($a_link));
 	
 	if ($Qtipo=="tot" || $Qloc=="tot") {
 		echo _("No existe esta ficha.");
 		echo "<br>";
 		echo _("OJO!: para crear un centro/casa debe especificar el tipo de centro/casa. Para ello debe buscar a través de 'ver más opciones' definiendo el tipo y la localización distinto a 'todos'.");
 	} else {
-		printf(_("no existe esta ficha, puede crear una nueva, hacer click <span class=link onclick=fnjs_update_div('#main','%s') > aquí </span>"),$pagina);
+		$aviso = _("no existe esta ficha, puede crear una nueva, hacer click");
+		$txt = $aviso."<span class=link onclick=fnjs_update_div('#main','$pagina') >  "._("aquí")."</span>";
+		echo $txt;
 	}
 	die();
 } else {
@@ -452,7 +461,6 @@ $oHash->setcamposNo('!scroll_id');
 $a_camposHidden = array(
 		'tipo'=>$Qtipo,
 		'loc'=>$Qloc,
-		'go_to'=>$go_to,
 		'sWhere'=>$sWhere,
 		'sOperador'=>$sOperador,
 		'sGestor'=>$sGestor,

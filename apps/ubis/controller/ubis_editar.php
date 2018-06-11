@@ -41,11 +41,16 @@ if (!empty($Qnuevo)) {
 		$valor_predeterminado=$oDatosCampo->datos_campo($oDbl,'valor');
 		$a_campos[$camp] = $valor_predeterminado;
 	}
+	$dl = (string) \filter_input(INPUT_POST, 'dl');
+	$region = (string) \filter_input(INPUT_POST, 'region');
 	$nombre_ubi = (string) \filter_input(INPUT_POST, 'nombre_ubi');
-	$a_campos['nombre_ubi'] = urldecode($nombre_ubi);
-	$a_campos['id_ubi'] = '';
-	$a_campos['id_direccion'] = '';
-	$a_campos['tipo_ubi'] = $tipo_ubi;
+	$nombre_ubi = urldecode($nombre_ubi);
+	$oUbi->setNombre_ubi($nombre_ubi);
+	$oUbi->setTipo_ubi($tipo_ubi);
+	$oUbi->setStatus(true);
+	$Qid_ubi = '';
+	$id_direccion = '';
+	$status = true;
 	//print_r($a_campos);
 } else {
 	$obj = 'ubis\\model\\entity\\'.$Qobj_pau;
@@ -57,6 +62,12 @@ if (!empty($Qnuevo)) {
 	$nombre_ubi = $oUbi->getNombre_ubi();
 	$status = $oUbi->getStatus();
 	$id_direccion = '';
+
+	// Aunque el tipo sea ctrdl, si es diferente a la mia, lo trato como ctrex.
+	if ($dl != core\ConfigGlobal::mi_dele()) {
+		if ($tipo_ubi == 'ctrdl') $tipo_ubi = 'ctrex';
+		if ($tipo_ubi == 'cdcdl') $tipo_ubi = 'cdcex';
+	}
 }
 
 $sf = $oUbi->getSf();
@@ -72,7 +83,7 @@ $botones = 0;
 4: quitar direccion
 */
 if (strstr($Qobj_pau,'Dl')) {
-	if ($dl == core\ConfigGlobal::mi_dele()) {
+	if (!empty($Qnuevo) OR $dl == core\ConfigGlobal::mi_dele()) {
 		// ----- sv sólo a scl -----------------
 		if ($_SESSION['oPerm']->have_perm("scdl")) {
 					$botones= "1,2";
@@ -83,12 +94,6 @@ if (strstr($Qobj_pau,'Dl')) {
 	if ($_SESSION['oPerm']->have_perm("scdl")) {
 				$botones= "1,2";
 	}
-}
-
-// Aunque el tipo sea ctrdl, si es diferente a la mia, lo trato como ctrex.
-if ($dl != core\ConfigGlobal::mi_dele()) {
-	if ($tipo_ubi == 'ctrdl') $tipo_ubi = 'ctrex';
-	if ($tipo_ubi == 'cdcdl') $tipo_ubi = 'cdcex';
 }
 
 $oPermActiv=new ubis\model\CuadrosLabor();
@@ -138,6 +143,8 @@ if ($tipo_ubi=="ctrdl") {
 	$n_buzon = $oUbi->getN_buzon();
 	$observ = $oUbi->getObserv();
 	
+	$dl = empty($dl)? core\ConfigGlobal::mi_dele() : $dl;
+	$region = empty($region)? core\ConfigGlobal::mi_region() : $region;
 	
 	$GesCentro = new ubis\model\entity\GestorCentro();
 	if (!empty($dl)) {
@@ -225,6 +232,10 @@ if ($tipo_ubi=="ctrex" or $tipo_ubi=="ctrsf") {
 
 if ($tipo_ubi=="cdcdl" or $tipo_ubi=="cdcex") {
 
+	if ($tipo_ubi=="cdcdl") {
+		$dl = empty($dl)? core\ConfigGlobal::mi_dele() : $dl;
+		$region = empty($region)? core\ConfigGlobal::mi_region() : $region;
+	}
 
 	$tipo_casa = $oUbi->getTipo_casa();
 	$plazas = $oUbi->getPlazas();
