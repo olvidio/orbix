@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2018-06-08 14:04+0200\n"
-"PO-Revision-Date: 2018-06-08 16:49+0200\n"
+"PO-Revision-Date: 2018-06-11 20:15+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
 "Language: ca_ES\n"
@@ -182,7 +182,7 @@ msgstr "Activitat"
 #: actividadcargos/view/form_1302.phtml:53
 #: actividadcargos/view/form_3102.phtml:47
 msgid "puede ser agd?"
-msgstr "pot ser AGD?"
+msgstr "pot ser agd?"
 
 #: actividadcargos/model/select1302.class.php:83
 #: actividadcargos/model/select3102.class.php:78
@@ -259,7 +259,7 @@ msgstr "curs crt"
 #: asistentes/controller/planning_que.php:74
 #: asistentes/controller/que_ctr_lista.php:125
 msgid "otro"
-msgstr "20 | Altres|"
+msgstr "altres"
 
 #: actividades/controller/actividad_que.php:135
 msgid "buscar actividad de otras dl para importar"
@@ -396,7 +396,7 @@ msgstr "tar."
 #: profesores/view/ficha_profesor_stgr.print.phtml:40
 #: usuarios/view/grupo_form.phtml:49 usuarios/view/usuario_form.phtml:191
 msgid "sacd"
-msgstr "SACD"
+msgstr "sacd"
 
 #: actividades/controller/actividad_select.php:270
 #: actividadplazas/controller/plazas_balance_dl.php:180
@@ -2216,7 +2216,7 @@ msgstr "es compara amb els valors (llista csv) del camp 'permís per oficines' d
 
 #: devel/controller/metamenus_que.php:67
 msgid "valores posibles: 'dtor','todos' y las oficinas ('agd', 'sm' ,'scl'...)."
-msgstr "valors possibles: 'dtor', 'tots' i les oficines ( 'AGD', 'sm', 'scl' ...)."
+msgstr "valors possibles: 'dtor', 'tots' i les oficines ( 'agd', 'sm', 'scl' ...)."
 
 #: devel/controller/metamenus_que.php:69
 msgid "se compara con el role del usuario. Si el role tiene activado 'permisos menu por oficina', también se compara con las oficinas."
@@ -2758,7 +2758,7 @@ msgstr "Nombre de professors que van donar classe d'altres assignatures"
 
 #: notas/controller/informe_stgr_profesores.php:87
 msgid "Número de profesores asistentes a cve del stgr u otras reuniones"
-msgstr "Nombre de professors assistents a CVE del stgr o altres reunions"
+msgstr "Nombre de professors assistents a cve del stgr o altres reunions"
 
 #: notas/controller/informe_stgr_profesores.php:105
 msgid "Ratio alumno/profesor en bienio"
@@ -3619,7 +3619,7 @@ msgstr "tots els ctr de la dl"
 
 #: ubis/controller/list_ctr.php:273
 msgid "sólo centros de agd"
-msgstr "només centres d'AGD"
+msgstr "només centres d'agd"
 
 #: ubis/controller/list_ctr.php:274
 msgid "sólo centros de s"
@@ -3813,7 +3813,7 @@ msgstr "plazas_min"
 
 #: ubis/model/entity/casa.class.php:427
 msgid "num sacd"
-msgstr "num SACD"
+msgstr "num sacd"
 
 #: ubis/model/entity/casa.class.php:439
 msgid "biblioteca casa"
@@ -4438,7 +4438,7 @@ msgstr "relació de càrrecs"
 #: actividadestudios/view/ca_posibles_cuadro.phtml:28
 #: asistentes/view/select1301.phtml:60
 msgid "otros"
-msgstr "Altres"
+msgstr "altres"
 
 #: actividades/view/actividad_form.phtml:57
 msgid "Debe concretar la sección en el tipo de Actividad"
@@ -4874,7 +4874,7 @@ msgstr "tots els ctr amb n"
 
 #: asistentes/view/planning_ctr_que.phtml:25
 msgid "todos los ctr con agd"
-msgstr "tots els ctr amb AGD"
+msgstr "tots els ctr amb agd"
 
 #: asistentes/view/planning_ctr_que.phtml:26
 msgid "todos los ctr con s"
@@ -4882,7 +4882,7 @@ msgstr "tots els ctr amb s"
 
 #: asistentes/view/planning_ctr_que.phtml:28
 msgid "incluir sacd:"
-msgstr "incloure SACD:"
+msgstr "incloure sacd:"
 
 #: asistentes/view/planning_persona_que.phtml:18
 msgid "búsqueda de personas en la obj_pau"
@@ -4928,7 +4928,7 @@ msgstr "tots els de nax"
 
 #: asistentes/view/que_ctr_lista.phtml:63
 msgid "otro..."
-msgstr "20 | Altres|"
+msgstr "altres"
 
 #: asistentes/view/select1301.phtml:43
 msgid "relación de actividades a las que asiste"
@@ -4952,7 +4952,7 @@ msgstr "id_tipo_dossier"
 
 #: dossiers/view/perm_dossier_pres.phtml:42
 msgid "depende_modificar activo implica que sólo podrá modificar la oficina correspondiente: agd para los agd, sm para los n, sg para los s, en dossiers que afectan a varios tipos de personas"
-msgstr "depende_modificar actiu implica que només podrà modificar l'oficina corresponent: AGD per als AGD, sm per als n, sg per als s, en dossiers que afecten diversos tipus de persones"
+msgstr "depende_modificar actiu implica que només podrà modificar l'oficina corresponent: agd per als agd, sm per als n, sg per als s, en dossiers que afecten diversos tipus de persones"
 
 #: dossiers/view/perm_dossier_pres.phtml:44
 msgid "permisos de lectura"
@@ -5101,19 +5101,19 @@ msgstr "llista per ctr"
 
 #: menus/view/traducir_menu.phtml:31 menus/view/traducir_menu.phtml:181
 msgid "cve"
-msgstr "CVE"
+msgstr "cve"
 
 #: menus/view/traducir_menu.phtml:32 menus/view/traducir_menu.phtml:182
 msgid "buscar cve"
-msgstr "buscar CVE"
+msgstr "buscar cve"
 
 #: menus/view/traducir_menu.phtml:33 menus/view/traducir_menu.phtml:59
 msgid "importar cve"
-msgstr "importar CVE"
+msgstr "importar cve"
 
 #: menus/view/traducir_menu.phtml:34
 msgid "lista varias cve"
-msgstr "llista diverses CVE"
+msgstr "llista diverses cve"
 
 #: menus/view/traducir_menu.phtml:35 menus/view/traducir_menu.phtml:75
 #: menus/view/traducir_menu.phtml:196
@@ -5130,17 +5130,17 @@ msgstr "per cases"
 
 #: menus/view/traducir_menu.phtml:38
 msgid "buscar agd"
-msgstr "buscar AGD"
+msgstr "buscar agd"
 
 #: menus/view/traducir_menu.phtml:39 menus/view/traducir_menu.phtml:117
 #: menus/view/traducir_menu.phtml:122
 msgid "agd dl"
-msgstr "AGD dl"
+msgstr "agd dl"
 
 #: menus/view/traducir_menu.phtml:40 menus/view/traducir_menu.phtml:68
 #: menus/view/traducir_menu.phtml:118 menus/view/traducir_menu.phtml:123
 msgid "agd de paso"
-msgstr "AGD de pas"
+msgstr "agd de pas"
 
 #: menus/view/traducir_menu.phtml:51
 msgid "importar cv"
@@ -5174,15 +5174,15 @@ msgstr "agenda vcdl"
 
 #: menus/view/traducir_menu.phtml:65
 msgid "sacd num"
-msgstr "SACD num"
+msgstr "sacd num"
 
 #: menus/view/traducir_menu.phtml:67
 msgid "sacd agd"
-msgstr "SACD AGD"
+msgstr "sacd agd"
 
 #: menus/view/traducir_menu.phtml:69
 msgid "sacd sssc"
-msgstr "SACD sssc"
+msgstr "sacd sssc"
 
 #: menus/view/traducir_menu.phtml:70
 msgid "sssc de paso"
@@ -5211,7 +5211,7 @@ msgstr "sv n"
 
 #: menus/view/traducir_menu.phtml:79 menus/view/traducir_menu.phtml:200
 msgid "sv agd"
-msgstr "sv AGD"
+msgstr "sv agd"
 
 #: menus/view/traducir_menu.phtml:80 menus/view/traducir_menu.phtml:201
 msgid "sv s y sg"
@@ -5231,7 +5231,7 @@ msgstr "sf nax"
 
 #: menus/view/traducir_menu.phtml:84 menus/view/traducir_menu.phtml:205
 msgid "sf agd"
-msgstr "sf AGD"
+msgstr "sf agd"
 
 #: menus/view/traducir_menu.phtml:85 menus/view/traducir_menu.phtml:206
 msgid "sf s y sg"
@@ -5239,7 +5239,7 @@ msgstr "sf es i sg"
 
 #: menus/view/traducir_menu.phtml:86 menus/view/traducir_menu.phtml:207
 msgid "sf sr,sr-nax,sr-agd"
-msgstr "sf sr, sr-nax, sr-AGD"
+msgstr "sf sr, sr-nax, sr-agd"
 
 #: menus/view/traducir_menu.phtml:87 menus/view/traducir_menu.phtml:208
 msgid "importar activ"
@@ -5320,7 +5320,7 @@ msgstr "buscar crt sg"
 
 #: menus/view/traducir_menu.phtml:114
 msgid "buscar n ó agd"
-msgstr "buscar n o AGD"
+msgstr "buscar n o agd"
 
 #: menus/view/traducir_menu.phtml:119
 msgid "buscar persona"
@@ -5376,7 +5376,7 @@ msgstr "estudis x ctr"
 
 #: menus/view/traducir_menu.phtml:143
 msgid "cv agd"
-msgstr "cv AGD"
+msgstr "cv agd"
 
 #: menus/view/traducir_menu.phtml:149
 msgid "planning "
@@ -5706,13 +5706,13 @@ msgstr "actualitzar canvis"
 #: profesores/view/ficha_profesor_stgr.print.phtml:38
 #: ubis/view/ubis_buscar.phtml:111 ubis/view/ubis_buscar.phtml:239
 msgid "n"
-msgstr "N"
+msgstr "n"
 
 #: profesores/view/ficha_profesor_stgr.print.phtml:39
 #: ubis/view/ubis_buscar.phtml:83 ubis/view/ubis_buscar.phtml:112
 #: ubis/view/ubis_buscar.phtml:211 ubis/view/ubis_buscar.phtml:240
 msgid "agd"
-msgstr "AGD"
+msgstr "agd"
 
 #: profesores/view/ficha_profesor_stgr.print.phtml:43
 msgid "curriculum"
@@ -5745,7 +5745,7 @@ msgstr "convivències i congressos"
 
 #: profesores/view/ficha_profesor_stgr.print.phtml:79
 msgid "tema"
-msgstr "Tema 3"
+msgstr "Tema"
 
 #: profesores/view/ficha_profesor_stgr.print.phtml:87
 msgid "actividad docente"
@@ -5770,7 +5770,7 @@ msgstr "mínim assistents"
 
 #: ubis/view/cdc_form.phtml:83
 msgid "nº máximo de sacd"
-msgstr "major nombre d'SACD"
+msgstr "major nombre d'sacd"
 
 #: ubis/view/ctrdl_form.phtml:29 ubis/view/ctrex_form.phtml:29
 msgid "¿Esta seguro que desea borrar este centro?"
@@ -5788,15 +5788,15 @@ msgstr "tipus de centre"
 
 #: ubis/view/ctrdl_form.phtml:72
 msgid "nºejemplares pi"
-msgstr "nºejemplares pi"
+msgstr "nº exemplars pi"
 
 #: ubis/view/ctrdl_form.phtml:74
 msgid "nºcartas"
-msgstr "nºcartas"
+msgstr "nº cartes"
 
 #: ubis/view/ctrdl_form.phtml:76
 msgid "nºcartas mensuales"
-msgstr "nºcartas mensuals"
+msgstr "nº cartes mensuals"
 
 #: ubis/view/ctrdl_form.phtml:79 ubis/view/ctrex_form.phtml:72
 msgid "tipo de labor"
@@ -5857,11 +5857,11 @@ msgstr "veure plànol"
 
 #: ubis/view/direccion_form.phtml:199
 msgid "adjuntar plano"
-msgstr "adjuntar pla"
+msgstr "adjuntar plànol"
 
 #: ubis/view/direccion_form.phtml:200
 msgid "eliminar plano"
-msgstr "eliminar pla"
+msgstr "eliminar plànol"
 
 #: ubis/view/direccion_form.phtml:212
 msgid "eliminar dirección"
@@ -5913,11 +5913,11 @@ msgstr "buscar ubis fora d'ús"
 
 #: ubis/view/ubis_buscar.phtml:84 ubis/view/ubis_buscar.phtml:212
 msgid "agd jóvenes"
-msgstr "AGD joves"
+msgstr "agd joves"
 
 #: ubis/view/ubis_buscar.phtml:85 ubis/view/ubis_buscar.phtml:213
 msgid "agd mayores"
-msgstr "AGD majors"
+msgstr "agd majors"
 
 #: ubis/view/ubis_buscar.phtml:87 ubis/view/ubis_buscar.phtml:215
 msgid "n jóvenes"
