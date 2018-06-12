@@ -135,7 +135,8 @@ uksort($aPersonasNotas, "core\strsinacentocmp"); // compara sin contar los acent
 $num_alumnos=count($aPersonasNotas);
 
 // tribunal:
-$GesTribunal = new notas\GestorActaTribunalDl();
+//$GesTribunal = new notas\GestorActaTribunalDl();
+$GesTribunal = new notas\GestorActaTribunal();
 $cTribunal = $GesTribunal->getActasTribunales(array('acta'=>$acta,'_ordre'=>'orden')); 
 $num_examinadores=count($cTribunal);
 

@@ -121,7 +121,6 @@
 137	\N	des/libros/que_libros.php	\N	\N
 139	\N	des/planning_zones.php	\N	\N
 141	\N	programas/calendario_que.php	\N	\N
-142	\N	sistema/menus_generar_txt.php	\N	\N
 143	\N	programas/lista_activ_sr_que.php	\N	\N
 144	\N	scdl/documentos/cabecera_pie_txt.php	\N	\N
 145	\N	scdl/tabla_mails_ex.php	\N	\N
@@ -157,6 +156,7 @@
 140	asistentes	apps/asistentes/controller/activ_pendientes_select.php	\N	actividades pendientes
 57	notas	apps/notas/controller/resumen_anual.php	\N	resumen anual
 168	actividadestudios	apps/actividadestudios/controller/matriculas_pendientes.php	\N	matriculas pendientes
+142	menus	apps/menus/controller/menus_generar_txt.php	\N	pasa los menus a texto
 169	actividadplazas	apps/actividadplazas/controller/gestion_plazas.php	\N	Gestión de plazas
 171	stgr1	apps/profesores/controller/profesor_asignatura_que.php	\N	profesores para asignatura
 172	actividadplazas	apps/actividadplazas/controller/incorporar_peticion.php	\N	Incorporar peticiones de plazas

@@ -48,6 +48,7 @@ function urlsafe_b64decode($string) {
 * Devuelve el objeto Base de Daros dónde se encuentra la tabla.
 *
 */
+/*
 function que_DB($tabla) {
 	// para las tablas que están en otra base de datos:
 	if (in_array($tabla,array('u_centros_sf','u_direcciones_sf'))) {
@@ -57,6 +58,8 @@ function que_DB($tabla) {
 	}
 	return $oDbl;
 }
+ * 
+ */
 
 /**
 *
@@ -64,6 +67,7 @@ function que_DB($tabla) {
 *	primero el id_lugar, después la sigla y tercero el nombre
 *
 */
+/*
 function array_ctrs() {
 	$oDB = $GLOBALS['oDB'];
 	// 1º ctr de dl
@@ -79,6 +83,7 @@ function array_ctrs() {
 	}
 	return $lugares;
 } // fin funcion
+*/
 
 $a_num_romanos=array('1'=>"I",'2'=>"II",'3'=>"III",'4'=>"IV",'5'=>"V",'6'=>"VI",'7'=>"VII",'8'=>"VIII",'9'=>"IX",'10'=>"X",
 '11'=>"XI",'12'=>"XII",'13'=>"XIII",'14'=>"XIV",'15'=>"XV",'16'=>"XVI",'17'=>"XVII",'18'=>"XVIII");
@@ -174,6 +179,7 @@ $Ga_actividad = array (
 *@since		28/2/06.
 *		
 */
+/*
 function encargo_de_tipo($id_tipo_enc){
 	global $t_grupo;
 
@@ -215,7 +221,7 @@ function encargo_de_tipo($id_tipo_enc){
 
 	return $tipo;
 }
-
+*/
 
 /**
 * Devuelve el número del tipo de encargo para hacer una selección SQL.
@@ -226,6 +232,7 @@ function encargo_de_tipo($id_tipo_enc){
 *	Si un parámetro se omite, se pone un punto (.) para que la búsqueda sea qualquier número
 *	ejemplo: 12....
 */
+/*
 function id_tipo_encargo($grupo,$nom_tipo) {
 	global $a_grupo;
 	
@@ -250,6 +257,8 @@ function id_tipo_encargo($grupo,$nom_tipo) {
 	
 	return $condta;
 }
+ * 
+ */
 //-----------------------------------------------------------------------------------
 
 
@@ -260,6 +269,7 @@ function id_tipo_encargo($grupo,$nom_tipo) {
 *		
 *	
 */
+/*
 function profesion($id_nom) {
 	$oDB=$GLOBALS['oDB'];
 	$sql_prof="SELECT empresa, cargo, actual
@@ -278,6 +288,8 @@ function profesion($id_nom) {
 	}
 	return $profesion;
 }
+ * 
+ */
 /**
 * Devuelve las profesiones actuales de una persona en una sola línea
 *
@@ -285,6 +297,7 @@ function profesion($id_nom) {
 *		
 *	
 */
+/*
 function profesion_1_linea($id_nom) {
 	$oDB=$GLOBALS['oDB'];
 	$sql_prof="SELECT empresa, cargo, actual
@@ -303,6 +316,8 @@ function profesion_1_linea($id_nom) {
 	$profesion=substr($profesion,0,strlen($profesion)-1);
 	return $profesion;
 }
+ * 
+ */
 /**
 * Devuelve los teleco de una persona especificados por
 *
@@ -311,6 +326,7 @@ function profesion_1_linea($id_nom) {
 *	Si $desc_teleco es '*', entonces se añade la descripción entre paréntesis
 *      al final del número...
 */
+/*
 function telecos_persona($id_nom,$tipo_teleco,$desc_teleco='',$separador) {
 	require_once('classes/personas-ubis/xd_desc_teleco.class');
 	require_once('classes/personas/d_teleco_personas_gestor.class');
@@ -337,6 +353,8 @@ function telecos_persona($id_nom,$tipo_teleco,$desc_teleco='',$separador) {
 	$tels=substr($tels,0,-(strlen($separador)));
 	return $tels;
 }
+ * 
+ */
 
 /**
 * Devuelve los teleco de un ubi especificados por
@@ -346,6 +364,7 @@ function telecos_persona($id_nom,$tipo_teleco,$desc_teleco='',$separador) {
 *	Si $desc_teleco es '*', entonces se añade la descripción entre paréntesis
 *      al final del número...
 */
+/*
 function teleco($id_ubi,$tipo_teleco,$desc_teleco,$separador) {
 	require_once('classes/personas-ubis/xd_desc_teleco.class');
 	require_once('classes/ubis/d_teleco_ubis_gestor.class');
@@ -373,6 +392,8 @@ function teleco($id_ubi,$tipo_teleco,$desc_teleco,$separador) {
 	$tels=substr($tels,0,-(strlen($separador)));
 	return $tels;
 }
+ * 
+ */
 
 //-----------------------------------------------------------------------------------
 
@@ -382,56 +403,58 @@ function teleco($id_ubi,$tipo_teleco,$desc_teleco,$separador) {
 * En $nomcamp esta el nombre del campo
 * En $bin está un valor del tipo: B'000100100000' (12 dígitos)
 */
+/*
 function cuadroslabor($nomcamp,$bin){
-$camp=$nomcamp."[]";
-//si $bin es nulo, le pongo todo 0
-if (empty($bin)) { $bin=0; }
-for ($i=0;$i<12;$i++) {
-	switch ($i) {
-			case "11":
-				if ($bin & 1) {$chk="checked";} else {$chk="";}
-				echo "   <input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"1\" $chk>mayores";
-				break;
-			case "10":
-				if ($bin & 2) {$chk="checked";} else {$chk="";}
-				echo "   <input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"2\" $chk>jóvenes";
-				break;
-			case "9":
-				if ($bin & 4) {$chk="checked";} else {$chk="";}
-				echo "   <input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"4\" $chk>univ";
-				break;
-			case "8":
-				if ($bin & 8) {$chk="checked";} else {$chk="";}
-				echo "   <input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"8\" $chk>bachilleres";
-				break;
-			case "7":
-				if ($bin & 16) {$chk="checked";} else {$chk="";}
-				echo "   <input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"16\" $chk>club";
-				break;
-			case "6":
-				if ($bin & 32) {$chk="checked";} else {$chk="";}
-				echo "   <input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"32\" $chk>sss+";
-				break;
-			case "5":
-				if ($bin & 64) {$chk="checked";} else {$chk="";}
-				echo "   <input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"64\" $chk>sg";
-				break;
-			case "4":
-				if ($bin & 128) {$chk="checked";} else {$chk="";}
-				echo "   <input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"128\" $chk>agd";
-				break;
-			case "3":
-				if ($bin & 256) {$chk="checked";} else {$chk="";}
-				echo "   <input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"256\" $chk>n";
-				break;
-			case "2":
-				if ($bin & 512) {$chk="checked";} else {$chk="";}
-				echo "<input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"512\" $chk>sr";
-				break;
-	}	
+	$camp=$nomcamp."[]";
+	//si $bin es nulo, le pongo todo 0
+	if (empty($bin)) { $bin=0; }
+	for ($i=0;$i<12;$i++) {
+		switch ($i) {
+				case "11":
+					if ($bin & 1) {$chk="checked";} else {$chk="";}
+					echo "   <input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"1\" $chk>mayores";
+					break;
+				case "10":
+					if ($bin & 2) {$chk="checked";} else {$chk="";}
+					echo "   <input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"2\" $chk>jóvenes";
+					break;
+				case "9":
+					if ($bin & 4) {$chk="checked";} else {$chk="";}
+					echo "   <input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"4\" $chk>univ";
+					break;
+				case "8":
+					if ($bin & 8) {$chk="checked";} else {$chk="";}
+					echo "   <input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"8\" $chk>bachilleres";
+					break;
+				case "7":
+					if ($bin & 16) {$chk="checked";} else {$chk="";}
+					echo "   <input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"16\" $chk>club";
+					break;
+				case "6":
+					if ($bin & 32) {$chk="checked";} else {$chk="";}
+					echo "   <input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"32\" $chk>sss+";
+					break;
+				case "5":
+					if ($bin & 64) {$chk="checked";} else {$chk="";}
+					echo "   <input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"64\" $chk>sg";
+					break;
+				case "4":
+					if ($bin & 128) {$chk="checked";} else {$chk="";}
+					echo "   <input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"128\" $chk>agd";
+					break;
+				case "3":
+					if ($bin & 256) {$chk="checked";} else {$chk="";}
+					echo "   <input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"256\" $chk>n";
+					break;
+				case "2":
+					if ($bin & 512) {$chk="checked";} else {$chk="";}
+					echo "<input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"512\" $chk>sr";
+					break;
+		}	
+	}
 }
-
-}
+ * 
+ */
 //-----------------------------------------------------------------------------------
 
 /**
@@ -440,6 +463,7 @@ for ($i=0;$i<12;$i++) {
 * Sirve para crear el nombre más los nexos más los apellidos.
 *
 */
+/*
 function na(){		
 	$nom="case when trato isnull or trato = '' then '' else trato||' ' end 
 	||COALESCE(apel_fam, nom)||
@@ -451,7 +475,10 @@ function na(){
 	";
 	return $nom;
 }
+ * 
+ */
 // idem sin el tratamiento (para los listados de des)
+/*
 function na_cr_sin(){		
 	$nom="nom||
 	case when nx1 = '' or nx1 isnull then ' ' else ' '||nx1||' ' end 
@@ -462,6 +489,8 @@ function na_cr_sin(){
 	";
 	return $nom;
 }
+ * 
+ */
 //-----------------------------------------------------------------------------------
 
 /**
@@ -469,7 +498,7 @@ function na_cr_sin(){
 *
 * Sirve para crear el apellidos, nombre.
 */
-	
+/*	
 function ap_nom(){
 	
 $nom="apellido1||
@@ -483,12 +512,14 @@ $nom="apellido1||
 	";
 	return $nom;
 }
+ * 
+ */
 /**
 * Es para no volver a escribir todo en la función select.
 *
 * Sirve para crear el apellidos, nombre. En el caso especial de enviar datos a cr sin guiones
 */
-	
+/*	
 function ap_nom_cr_1_05(){
 	
 $nom="case when p.nx1 = '' or p.nx1 isnull then '' else ''||p.nx1||' ' end 
@@ -500,7 +531,7 @@ $nom="case when p.nx1 = '' or p.nx1 isnull then '' else ''||p.nx1||' ' end
 	";
 	return $nom;
 }
-
+*/
 /**
 * Es para no volver a escribir todo en la función select.
 *
@@ -536,6 +567,7 @@ $nom="translate(apellido1, ' ', '-')||
 *		"tipo"		int, varchar, bool...
 *		"valor"		valor por defecto
 */
+/*
 function datos_campo($oDB,$tabla,$camp,$que){
 	if ($tabla && $camp) {
 		//tipo de campos
@@ -586,13 +618,12 @@ function datos_campo($oDB,$tabla,$camp,$que){
 				return $row['type'];
 				break;
 			case "valor":
-				/*  valores por defecto
-				/ creo  que las posibilidades son:
-					número
-					'txto'::character...
-					true, false
-					nextval(),idlocal()... -> funcion
-				*/
+				//valores por defecto
+				//creo  que las posibilidades son:
+				//	número
+				//	'txto'::character...
+				//	true, false
+				//	nextval(),idlocal()... -> funcion
 				$sql_get_default = "
 					SELECT d.adsrc AS rowdefault
 					FROM pg_attrdef d, pg_class c 
@@ -608,14 +639,12 @@ function datos_campo($oDB,$tabla,$camp,$que){
 				} else {
 					$rowdefault = $oDBSt_def_res->fetchColumn();
 					$rta=preg_match_all("/^'([\w]+)'::(.*)/", $rowdefault, $matches, PREG_SET_ORDER);
-					/*
-					foreach ($matches as $val) {
-						echo "matched: " . $val[0] . "\n";
-						echo "part 1: " . $val[1] . "\n";
-						echo "part 2: " . $val[3] . "\n";
-						echo "part 3: " . $val[4] . "\n\n";
-					}
-					*/
+					//foreach ($matches as $val) {
+					//	echo "matched: " . $val[0] . "\n";
+					//	echo "part 1: " . $val[1] . "\n";
+					//	echo "part 2: " . $val[3] . "\n";
+					//	echo "part 3: " . $val[4] . "\n\n";
+					//}
 					if (!empty($rta)) {
 						$rowdefault=$matches[0][1];
 					} elseif (strstr($rowdefault,'(')) {
@@ -628,6 +657,8 @@ function datos_campo($oDB,$tabla,$camp,$que){
 		} 
 	}
 }
+*/
+
 //-----------------------------------------------------------------------------------
 
 /**
@@ -637,6 +668,7 @@ function datos_campo($oDB,$tabla,$camp,$que){
 * sé que puede pasar.
 *
 */
+/*
 function primaryKey($oDB,$tabla) {
 	// si la tabla tiene el schema, hay que separalo:
 	$schema_sql = '';
@@ -671,8 +703,9 @@ function primaryKey($oDB,$tabla) {
 	}
 return $campo;
 }
-
+*/
 // --------------------------------------------------------------------------------------------------
+/*
 function mostrar_tabla_print($a_cabeceras,$a_valores,$id_tabla="uno") {
 	echo "función desactivada. Probar con la clase Lista.<br>";
 	die();
@@ -730,9 +763,10 @@ function mostrar_tabla_print($a_cabeceras,$a_valores,$id_tabla="uno") {
 
 	return $tt;
 }
+*/
 
 // Es del phpPgAdmin
-
+/*
 function bool_YesNo($boolVal) {
 	$strNo=_("no");
 	$strYes=_("sí");
@@ -742,8 +776,9 @@ function bool_YesNo($boolVal) {
 		return $strNo;
 	}
 }
+*/
 
-
+/*
 function comprobar_oficina($depende,$tabla) {
 	$rta="f";
 	if ($depende=="t") {
@@ -767,6 +802,7 @@ function comprobar_oficina($depende,$tabla) {
 	}
 	return $rta;
 }
+*/
 
 /**
 * Función para corregir la del php strnatcasecmp. Compara sin tener en cuenta los acentos. La uso para ordenar arrays.
@@ -828,4 +864,3 @@ function curso_est($que,$any,$tipo="est") {
 	}
 
 }
-?>

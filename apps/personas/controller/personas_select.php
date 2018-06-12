@@ -297,6 +297,19 @@ if ($_SESSION['oPerm']->have_perm("est")){
 	}
 }
 
+// Solo ver e imprimir tessera
+if (core\ConfigGlobal::mi_dele() === core\ConfigGlobal::mi_region()) {
+	$a_botones = [];
+	$a_botones[]= array( 'txt' => _('ver tessera'),
+						'click' =>"fnjs_tessera(\"#seleccionados\")" ) ;
+	$script['fnjs_tessera'] = 1;
+	$a_botones[]=array( 'txt' => _('imprimir tessera'),
+						'click' =>"fnjs_imp_tessera(\"#seleccionados\")" );
+	$script['fnjs_imp_tessera'] = 1;
+	$a_botones[]=array( 'txt' => _('ficha profesor stgr'),
+						'click' =>"fnjs_ficha_profe(\"#seleccionados\")" );
+	$script['fnjs_ficha_profe'] = 1;
+}
 // en el caso de los de dre añado la posibilidad de listar la atencion a las actividades
 if (core\configGlobal::is_app_installed('atnsacd')) {
 	if ($_SESSION['oPerm']->have_perm("des")){
@@ -342,7 +355,11 @@ foreach ($cPersonas as $oPersona) {
 	if ($obj_pau != 'PersonaEx') {
 		$id_ctr=$oPersona->getId_ctr();
 
-		$oCentroDl = new ubis\CentroDl($id_ctr);
+		if (core\ConfigGlobal::mi_dele() === core\ConfigGlobal::mi_region()) {
+			$oCentroDl = new ubis\Centro($id_ctr);
+		} else {
+			$oCentroDl = new ubis\CentroDl($id_ctr);
+		}
 		$nombre_ubi = $oCentroDl->getNombre_ubi();
 	} else {
 		$nombre_ubi = $oPersona->getDl();

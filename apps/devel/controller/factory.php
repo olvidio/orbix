@@ -13,6 +13,7 @@ use core;
 // Arxivos requeridos por esta url **********************************************
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
+	require_once ("apps/devel/controller/func_factory.php");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qdb = (string) \filter_input(INPUT_POST, 'db');

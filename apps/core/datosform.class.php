@@ -55,7 +55,7 @@ class DatosForm {
 					$formulario.="<td class=contenido><input type='text' name='$nom_camp' value=\"".htmlspecialchars($valor_camp)."\" size='$size'></td></tr>";
 					break;
 				case "fecha":
-					$formulario.="<td class=contenido><input class='fecha' type='text' id='$nom_camp' name='$nom_camp' value='$valor_camp' 
+					$formulario.="<td class=contenido><input class=\"fecha\" type=\"text\" id=\"$nom_camp\" name=\"$nom_camp\" value=\"$valor_camp\" 
 									onchange='fnjs_comprobar_fecha(\"#$nom_camp\")'>";	
 					break;
 				case "opciones":

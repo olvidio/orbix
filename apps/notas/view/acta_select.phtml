@@ -44,5 +44,13 @@ fnjs_left_side_hide();
 <input type='Hidden' id='nuevo' name='nuevo' value=''>
 <?= $oTabla->mostrar_tabla(); ?>
 </form>
-<br><table><tr class=botones>
-<td class=botones><span class=link_inv onclick="fnjs_nuevo('#seleccionados');" ><?= _("añadir acta") ?></span></td>
+<?php
+// -----------------------------------  Botones  ----------------------
+if (!empty($botones)) {
+	echo "<table><tr class=botones>";
+	$txt_g=ucwords(_("añadir acta"));
+	echo "<th class='link_inv' onclick='fnjs_nuevo(\"#seleccionados\")'>$txt_g</th>"; 
+	echo "</tr></table><br>";
+}
+// fin ----------------------------  Botones  ----------------------
+?>

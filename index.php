@@ -156,8 +156,10 @@ foreach ($cGrupMenuRoles as $oGrupMenuRole) {
 // ordenar la barra de grupmenus
 ksort($html_gm);
 $html_barra .= implode($html_gm);
-$html_barra .= "<li onclick=\"fnjs_logout();\" >| ".ucfirst(_('salir'))."</li>";
-$html_barra .= "<li> (login as: ".$oUsuario->getUsuario().'['.configGlobal::mi_region_dl()."])</li>";
+$html_exit = "<li onclick=\"fnjs_logout();\" >| ".ucfirst(_('salir'))."</li>";
+$html_exit .= "<li> (login as: ".$oUsuario->getUsuario().'['.configGlobal::mi_region_dl()."])</li>";
+
+$html_barra .= $html_exit;
 $html_barra .= "</ul>";
 if ($gm == 1) { 
 	//asegurarme que el id_grupmenu seleccionado (pref) es el que se ve.
@@ -249,8 +251,12 @@ for ($n=1;$n<$indice_old;$n++) {
 }
 $li_submenus.="</li>";
 if ($gm < 2) {
-	$li_submenus.="<li><a href=\"#\" onclick=\"fnjs_logout();\" >| <?= ucfirst(_('salir')) ?></a></li>";
+	$html_exit = "<li><a class=\"nohref\" onclick=\"fnjs_logout();\" >| ".ucfirst(_('salir'))."</a></li>";
+	$html_exit .= "<li><a class=\"nohref\"> (login as: ".$oUsuario->getUsuario().'['.configGlobal::mi_region_dl()."])</a></li>";
+
+	$li_submenus.= $html_exit;
 }
+$li_submenus.="</ul>";
 
 $oHash = new web\Hash();
 $oHash->setUrl(ConfigGlobal::getWeb().'/apps/usuarios/controller/personal_update.php');

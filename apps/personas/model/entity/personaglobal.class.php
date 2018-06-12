@@ -875,7 +875,11 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 					$ctr = $this->getDl();
 					break;
 				case 'PersonaDl':
-					$oCentroDl = new ubis\CentroDl($this->getId_ctr());
+					if (core\ConfigGlobal::mi_dele() === core\ConfigGlobal::mi_region()) {
+						$oCentroDl = new ubis\Centro($this->getId_ctr());
+					} else {
+						$oCentroDl = new ubis\CentroDl($this->getId_ctr());
+					}
 					$ctr = $oCentroDl->getNombre_ubi();
 					break;
 			}

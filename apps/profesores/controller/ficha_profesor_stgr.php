@@ -65,6 +65,11 @@ $Qdepende = (string) \filter_input(INPUT_POST, 'depende');
 $Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
 $Qprint = (integer) \filter_input(INPUT_POST, 'print');
 
+// Para cr stgr
+if (core\ConfigGlobal::mi_dele() === core\ConfigGlobal::mi_region()) {
+	$Qprint = 1;
+}
+
 $aWhere = array('id_nom'=>$id_nom,'_ordre'=>'f_nombramiento');
 $aOperador = array();
 if (!empty($Qprint)) { $aWhere['f_cese'] = 'NULL'; $aOperador['f_cese'] = 'IS NULL'; }
@@ -94,7 +99,11 @@ $nom_ap = $oPersona->getNombreApellidosCrSin();
 $sacd = $oPersona->getSacd();
 $id_ctr = $oPersona->getid_ctr();
 
-$oCentroDl = new ubis\CentroDl($id_ctr);
+if (core\ConfigGlobal::mi_dele() === core\ConfigGlobal::mi_region()) {
+	$oCentroDl = new ubis\Centro($id_ctr);
+} else {
+	$oCentroDl = new ubis\CentroDl($id_ctr);
+}
 $nombre_ubi = $oCentroDl->getNombre_ubi();
 
 $go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/profesores/controller/ficha_profesor_stgr.php?'.http_build_query(array('id_nom'=>$id_nom,'id_tabla'=>$Qid_tabla,'permiso'=>$Qpermiso,'depende'=>$Qdepende)));

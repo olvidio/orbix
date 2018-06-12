@@ -34,10 +34,12 @@ switch ($Qque) {
 		$Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
 		$oUsuario= new usuarios\Usuario(array('id_usuario'=>$Qid_usuario));
 		$id_role = $oUsuario->getId_role();
-		$awhere['id_role'] = $id_role;
+		$aWhere = array();
+		// Ahora mismo no sé porque hay que filtrar por role. Para añadir se tienen que ver...
+		//$aWhere['id_role'] = $id_role;
 		// listado de grupos posibles
 		$oGesGrupos = new usuarios\GestorGrupo();
-		$oGrupoColeccion= $oGesGrupos->getGrupos($awhere);
+		$oGrupoColeccion= $oGesGrupos->getGrupos($aWhere);
 		// no pongo los que ya tengo. Los pongo en un array
 		$oGesUsuarioGrupo = new usuarios\GestorUsuarioGrupo();
 		$oListaGrupos = $oGesUsuarioGrupo->getUsuariosGrupos(array('id_usuario'=>$Qid_usuario));

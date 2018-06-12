@@ -110,7 +110,7 @@ fnjs_tipo_actividad=function(){
 <!-- ============================== cabecera ============================= -->
 <form id="modifica" name="modifica" action="" method="POST" >
 <?= $oHash->getCamposHtml(); ?>
-<input type='hidden' id='mod' name='mod' value='<?= $mod ?>'>
+<input type='hidden' id='mod' name='mod' value="<?= $mod ?>">
 <?php if ($mod == 'nuevo' OR $accion=="cambiar_tipo") { ?>
 	<!--<input type='hidden' id='id_tipo_activ' name='id_tipo_activ' value='<?= $id_tipo_activ ?>'>-->
 	<table><tr><th class=titulo_inv><?= ucfirst(_("nueva actividad")); ?>
@@ -146,14 +146,14 @@ fnjs_tipo_actividad=function(){
 		<?php } ?>
 		<td class=etiqueta><?= ucfirst(_("asistentes")); ?>: 
 			<span class=contenido><?= $sasistentes ?>
-			<input type='Hidden' id='sasistentes' name='sasistentes' value='<?= $sasistentes ?>'></span></td>
+			<input type='Hidden' id='sasistentes' name='sasistentes' value="<?= $sasistentes ?>"></span></td>
 		<td class=etiqueta><?= ucfirst(_("actividad")); ?>: 
 			<span class=contenido><?= $sactividad ?></span>
-			<input type='Hidden' id='sactividad' name='sactividad' value='<?= $sactividad ?>'></span></td>
+			<input type='Hidden' id='sactividad' name='sactividad' value="<?= $sactividad ?>"></span></td>
 		<td class=etiqueta><?= ucfirst(_("tipo actividad")); ?>: 
 		<!--para no hacerse un lio con el generar actividad válido para otros formularios,--> 
 			<span class=contenido><?= "$snom_tipo"?>
-				<input type='Hidden' id='snom_tipo' name='snom_tipo' value='<?= $snom_tipo ?>'></span></td>
+				<input type='Hidden' id='snom_tipo' name='snom_tipo' value="<?= $snom_tipo ?>"></span></td>
 	</tr>
 <?php } ?>
 <tr>
@@ -166,7 +166,7 @@ fnjs_tipo_actividad=function(){
 	<?php } else { ?>
 		<!-- Ara faig que no es pugui canviar. S'ha d'anar per les fases.  -->
 		<td><?= $a_status[$status] ?>
-		<input type='hidden' id='status' name='status' value='<?= $status ?>'>
+		<input type='hidden' id='status' name='status' value="<?= $status ?>">
 		</td>
 	<?php } ?>
 </tr>
@@ -206,7 +206,7 @@ fnjs_tipo_actividad=function(){
 <td><?= $oDesplPosiblesTipoTarifas->desplegable(); ?></td>
 <td class=etiqueta><?= ucfirst(_("precio")); ?>: </td>
   <td>
-  <input type=text class="contenido derecha" id="precio" name="precio" value='<?= $precio ?>' size="8" > <?= _('€') ?>
+  <input type=text class="contenido derecha" id="precio" name="precio" value="<?= $precio ?>" size="8" > <?= _('€') ?>
 </td></tr>
 <tr><td class=etiqueta>
 <?= ucfirst(_("observaciones")); ?>:</td><td colspan=2><input class=contenido size="30" id="observ" name="observ" value="<?= htmlspecialchars($observ) ?>">
@@ -237,7 +237,7 @@ switch ($mod) {
 		echo "<input TYPE=\"button\" VALUE=\"".ucfirst(_("guardar ficha"))."\" onclick=\"javascript:fnjs_guardar('cmb_tipo')\"> ";
 	case 'editar':
 		if ($oPermActiv->have_perm('modificar') && $mod != 'importar') {
-			echo "<input TYPE='button' VALUE='".ucfirst(_("guardar cambios"))."'  onclick=\"fnjs_guardar('editar')\">";
+			echo "<input TYPE='button' VALUE=\"".ucfirst(_("guardar cambios"))."\"  onclick=\"fnjs_guardar('editar')\">";
 		}
 	break;
 }

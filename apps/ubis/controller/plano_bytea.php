@@ -170,7 +170,7 @@ switch ($Qact) {
 		<input type="hidden" id="name_file" name="name_file" value="" >
 		<?= ucfirst(_("ubicación del fichero")) ?>
 		<input type='file' id='userfile' name='userfile' size='30'><br><br>
-		<br><input type='button' value='<?= $txt_btn ?>' id='B1' name='B1' onclick="fnjs_introducir();">
+		<br><input type='button' value="<?= $txt_btn ?>" id='B1' name='B1' onclick="fnjs_introducir();">
 		</form>
 		<?php
 	break;

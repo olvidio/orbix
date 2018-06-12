@@ -92,15 +92,22 @@ if (!empty($Qacta)) {
 	$aWhere['_ordre'] = 'f_acta DESC';
 	
 	$titulo=ucfirst(sprintf(_("lista de actas del curso %s"),$txt_curso));
-	$GesActas = new notas\GestorActaDl();
+	// Si es cr, se mira en todas:
+	if (core\ConfigGlobal::mi_dele() === core\ConfigGlobal::mi_region()) {
+		$GesActas = new notas\GestorActa();
+	} else {
+		$GesActas = new notas\GestorActaDl();
+	}
 }
 
 $cActas = $GesActas->getActas($aWhere,$aOperador);
 
-
-$a_botones=array( array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(\"#seleccionados\")" ) ,
-				array( 'txt' => _('imprimir'), 'click' =>"fnjs_imprimir(\"#seleccionados\")" ) 
-				);
+$botones = 0; // para 'añadir acta'
+if ($_SESSION['oPerm']->have_perm("est")) {
+	$a_botones[] = array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(\"#seleccionados\")");
+	$botones = 1; // para 'añadir acta'
+}
+$a_botones[] = array( 'txt' => _('imprimir'), 'click' =>"fnjs_imprimir(\"#seleccionados\")" );
 
 $a_cabeceras=array( array('name'=>ucfirst(_("acta")),'formatter'=>'clickFormatter'), 
 		array('name'=>ucfirst(_("fecha")),'class'=>'fecha'),
@@ -121,7 +128,11 @@ foreach ($cActas as $oActa) {
 	//$pagina="apps/notas/controller/acta_ver.php?acta=$acta_2";
 	$pagina=Hash::link('apps/notas/controller/acta_ver.php?'.http_build_query(array('acta'=>$acta)));
 	$a_valores[$i]['sel']=$acta_2;
-	$a_valores[$i][1]=array( 'ira'=>$pagina, 'valor'=>$acta);
+	if ($_SESSION['oPerm']->have_perm("est")) {
+		$a_valores[$i][1]=array( 'ira'=>$pagina, 'valor'=>$acta);
+	} else {
+		$a_valores[$i][1]=$acta;
+	}
 	$a_valores[$i][2]=$f_acta;
 	$a_valores[$i][3]=$nombre_corto;
 }
@@ -146,6 +157,7 @@ $a_campos = ['oPosicion' => $oPosicion,
 			'oHash1' => $oHash1,
 			'titulo' => $titulo,
 			'oTabla' => $oTabla,
+			'botones' => $botones,
 			];
 
 $oView = new core\View('notas/controller');

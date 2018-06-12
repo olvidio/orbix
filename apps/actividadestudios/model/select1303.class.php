@@ -236,7 +236,7 @@ class Select1303 {
 				$aviso .= _(sprintf("No tiene asignado ningún ca como propio este curso: %s - %s.",$inicurs_ca,$fincurs_ca)); 
 				$aviso .= "<form action='apps/dossiers/controller/dossiers_ver.php' method='post'>";
 				$aviso .= $oHashA->getCamposHtml();
-				$aviso .= "<input type=\"button\" onclick=\"fnjs_enviar_formulario(this.form,'#main')\" value='"._("ver anteriores")."'>";
+				$aviso .= "<input type=\"button\" onclick=\"fnjs_enviar_formulario(this.form,'#main')\" value=\""._("ver anteriores")."\">";
 				$aviso .= "</form>";
 			}
 			

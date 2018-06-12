@@ -48,7 +48,7 @@ fnjs_actualizar=function(formulario){
 <input type="hidden" id="que" name="que" value="">
 <?= $oTabla->mostrar_tabla(); ?>
 <br>
-<input type=button onclick="fnjs_add_perm('menu');" value='<?= _("añadir permiso") ?>'>
+<input type=button onclick="fnjs_add_perm('menu');" value="<?= _("añadir permiso") ?>">
 </form>
 <br>
 <?php
@@ -114,8 +114,8 @@ if ((core\ConfigGlobal::is_app_installed('procesos')) && !empty($id_usuario)) { 
 	if ($Qquien == 'usuario') {  // de momento no dejo hacer grupos de grupos.
 		?>
 		<b><?= _('grupos') ?>: </b><?= $txt ?>
-		<input type=button onclick="fnjs_add_grup();" value='<?= _("añadir un grupo de permisos") ?>'>
-		<input type=button onclick="fnjs_del_grup();" value='<?= _("quitar de un grupo de permisos") ?>'>
+		<input type=button onclick="fnjs_add_grup();" value="<?= _("añadir un grupo de permisos") ?>">
+		<input type=button onclick="fnjs_del_grup();" value="<?= _("quitar de un grupo de permisos") ?>">
 		<div id=lst_grupos></div>
 		<br>
 		<?php
@@ -134,7 +134,7 @@ if ((core\ConfigGlobal::is_app_installed('procesos')) && !empty($id_usuario)) { 
 	echo $oTabla->mostrar_tabla();
 	?>
 	<br>
-	<input type=button onclick="fnjs_add_perm('activ');" value='<?= _("añadir permiso") ?>'>
+	<input type=button onclick="fnjs_add_perm('activ');" value="<?= _("añadir permiso") ?>">
 	</form>
 	<?php
 }

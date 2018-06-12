@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2018-06-08 14:04+0200\n"
-"PO-Revision-Date: 2018-06-11 20:15+0200\n"
+"PO-Revision-Date: 2018-06-12 08:57+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
 "Language: ca_ES\n"
@@ -187,7 +187,7 @@ msgstr "pot ser agd?"
 #: actividadcargos/model/select1302.class.php:83
 #: actividadcargos/model/select3102.class.php:78
 msgid "observaciones."
-msgstr "OBSERVACIONS"
+msgstr "observacions."
 
 #: actividadcargos/model/select1302.class.php:117
 #: actividadcargos/model/select3102.class.php:138
@@ -206,7 +206,7 @@ msgstr "Això també esborrarà a aquesta persona de la llista d'assistents?"
 #: notas/controller/asig_faltan_select.php:96
 #: personas/controller/personas_select.php:310
 msgid "nombre y apellidos"
-msgstr "· Nom i cognoms"
+msgstr "nom i cognoms"
 
 #: actividadcargos/model/select3102.class.php:221
 #, php-format
@@ -369,7 +369,7 @@ msgstr "Inici"
 #: actividadestudios/model/select3005.class.php:74
 #: profesores/view/ficha_profesor_stgr.print.phtml:79
 msgid "fin"
-msgstr "Fi"
+msgstr "fi"
 
 #: actividades/controller/actividad_select.php:261
 msgid "hora ini"
@@ -439,7 +439,7 @@ msgstr "Centro"
 #: notas/view/acta_ver.phtml:87 ubis/view/ctrdl_form.phtml:94
 #: ubis/view/teleco_form.phtml:43
 msgid "observaciones"
-msgstr "OBSERVACIONS"
+msgstr "observacions"
 
 #: actividades/controller/actividad_select.php:298
 #, php-format
@@ -581,7 +581,7 @@ msgstr "Data d'inici"
 #: actividades/model/entity/actividadall.class.php:1088
 #: actividades/view/actividad_form.phtml:180
 msgid "hora inicio"
-msgstr "HORA INICI: 10.00"
+msgstr "hora d'inici"
 
 #: actividades/model/entity/actividadall.class.php:1100
 #: profesores/model/entity/congreso.class.php:521
@@ -613,7 +613,7 @@ msgstr "No s'admet separador per als milers"
 
 #: actividades/model/entity/actividadall.class.php:1144
 msgid "ejemplo: 1254.56"
-msgstr "Exemple 4"
+msgstr "Exemple: 41254.56"
 
 #: actividades/model/entity/actividadall.class.php:1158
 msgid "número de asistentes"
@@ -672,7 +672,7 @@ msgstr "desc_breve"
 #: notas/model/entity/actatribunaldl.class.php:370
 #: ubis/model/entity/descteleco.class.php:388 menus/view/menus_get.phtml:28
 msgid "orden"
-msgstr "Ordre"
+msgstr "ordre"
 
 #: actividades/model/entity/repeticion.class.php:334
 msgid "repeticion"
@@ -707,12 +707,12 @@ msgstr "per dia"
 #: actividades/model/entity/tipotarifa.class.php:279
 #: actividadplazas/view/resumen_plazas.phtml:42
 msgid "total"
-msgstr "TOTAL:"
+msgstr "total"
 
 #: actividades/model/entity/tipotarifa.class.php:376
 #: profesores/view/ficha_profesor_stgr.print.phtml:89
 msgid "modo"
-msgstr "manera"
+msgstr "mode"
 
 #: actividades/model/entity/tipotarifa.class.php:388
 msgid "letra"
@@ -787,7 +787,7 @@ msgstr "estiu"
 #: asistentes/view/activ_pendientes.phtml:21
 #: profesores/view/ficha_profesor_stgr.print.phtml:89
 msgid "curso"
-msgstr "Curs 1993-94."
+msgstr "curs"
 
 #: actividadestudios/controller/ca_posibles_que.php:129
 msgid "periodo de las actividades"
@@ -801,7 +801,7 @@ msgstr "No hi ha cap matricula d'aquesta persona"
 #: actividadestudios/controller/e43_imprimir_mpdf.php:81
 #: actividadestudios/view/e43.phtml:21
 msgid "Nombre y apellidos"
-msgstr "· Nom i cognoms"
+msgstr "Nom i cognoms"
 
 #: actividadestudios/controller/e43_imprimir_mpdf.php:82
 #: actividadestudios/view/e43.phtml:22
@@ -831,7 +831,7 @@ msgstr "Data i lloc del sem, ca o cv"
 #: notas/view/form_1011.phtml:134 notas/view/form_1011.phtml:137
 #: profesores/view/ficha_profesor_stgr.print.phtml:89
 msgid "asignatura"
-msgstr "Assignatura"
+msgstr "assignatura"
 
 #: actividadestudios/controller/e43_imprimir_mpdf.php:89
 #: actividadestudios/view/e43.phtml:29
@@ -1217,7 +1217,7 @@ msgstr "nom llarg"
 
 #: asignaturas/model/entity/asignatura.class.php:524
 msgid "nombre corto"
-msgstr "Nom curt"
+msgstr "nom curt"
 
 #: asignaturas/model/entity/asignatura.class.php:552
 #: asignaturas/model/entity/asignaturatipo.class.php:377
@@ -1227,7 +1227,7 @@ msgstr "Nom curt"
 #: profesores/model/entity/profesortituloest.class.php:440
 #: profesores/model/entity/tituloest.class.php:440
 msgid "año"
-msgstr "Any"
+msgstr "any"
 
 #: asignaturas/model/entity/asignatura.class.php:566
 #: asignaturas/model/entity/sector.class.php:320
@@ -1510,7 +1510,7 @@ msgstr "cercar en un o diversos centres"
 #: ubis/controller/ubis_tabla.php:395 ubis/view/cdc_form.phtml:75
 #: ubis/view/ctrdl_form.phtml:64 ubis/view/ctrex_form.phtml:65
 msgid "nombre del centro"
-msgstr "Nom del centre:"
+msgstr "nom del centre:"
 
 #: asistentes/controller/que_ctr_lista.php:47
 msgid "actividades de personas por centros de la delegación"
@@ -1752,7 +1752,7 @@ msgstr "( %s per decidir)"
 #: asistentes/model/select3101.class.php:727
 #, php-format
 msgid "(xde las %s cedidas por %s)"
-msgstr "(XDE les %s cedides per %s )"
+msgstr "(de les %s cedides per %s )"
 
 #: cambios/model/gestorcanvis.class.php:24
 msgid "Actividad"
@@ -1859,7 +1859,7 @@ msgstr "Guardar els canvis?"
 
 #: core/ficha.class.php:149 ubis/view/direccion_form.phtml:215
 msgid "quitar dirección"
-msgstr "treure direcció"
+msgstr "treure adreça"
 
 #: core/func_tablas.php:680 web/lista.class.php:269 web/lista.class.php:830
 #: web/lista.class.php:978 web/tablaeditable.class.php:192
@@ -2044,7 +2044,7 @@ msgstr "anterior"
 #: dbextern/controller/ver_listas.php:184 dbextern/controller/ver_orbix.php:138
 #: ubis/view/direccion_form.phtml:131
 msgid "siguiente"
-msgstr "SEGÜENT"
+msgstr "seguent"
 
 #: dbextern/controller/ver_listas.php:203
 msgid "Posibles Coincidencias"
@@ -2161,7 +2161,7 @@ msgstr "Dades passats a la resta i taules buidades"
 #: ubis/view/ctrex_form.phtml:62 ubis/view/ubis_buscar.phtml:67
 #: ubis/view/ubis_buscar.phtml:178
 msgid "región"
-msgstr "Regió:"
+msgstr "regió"
 
 #: devel/controller/db_que.php:68
 msgid "Delegación"
@@ -2992,7 +2992,7 @@ msgstr "quadrienni any II-IV"
 #: menus/view/menus_get.phtml:32 ubis/view/ubis_buscar.phtml:149
 #: ubis/view/ubis_buscar.phtml:161
 msgid "todos"
-msgstr "Tots"
+msgstr "tots"
 
 #: personas/controller/personas_select.php:237
 msgid "cambio de ctr"
@@ -3033,7 +3033,7 @@ msgstr "atenció activitats"
 
 #: personas/controller/personas_select.php:309
 msgid "tabla"
-msgstr "Tabla"
+msgstr "taula"
 
 #: personas/controller/personas_select.php:314
 msgid "socio"
@@ -3107,7 +3107,7 @@ msgstr "tracte"
 
 #: personas/model/entity/personaglobal.class.php:1011
 msgid "nx1"
-msgstr "NX1"
+msgstr "nx1"
 
 #: personas/model/entity/personaglobal.class.php:1023
 msgid "apellido1"
@@ -3115,7 +3115,7 @@ msgstr "cognom1"
 
 #: personas/model/entity/personaglobal.class.php:1035
 msgid "nx2"
-msgstr "NX2"
+msgstr "nx2"
 
 #: personas/model/entity/personaglobal.class.php:1047
 msgid "apellido2"

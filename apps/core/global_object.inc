@@ -106,18 +106,17 @@ switch ($user_sfsv) {
 
 if (configGlobal::is_app_installed('dbextern')) {
 	// Para sincronizar con listas Madrid (SQLSERVER)
-	if (!isset($_SESSION['oDBListas'])){
+	// No en el caso de cr (H-Hv)
+	if ((\core\ConfigGlobal::mi_region() != \core\ConfigGlobal::mi_dele()) && !isset($_SESSION['oDBListas'])){
 		try {
 			$oConfig = new Config('listas'); 
 			$config = $oConfig->getEsquema('public'); 
 			$oConexion = new dbConnection($config);
 			$oDBListas = $oConexion->getPDOListas();
-
-			//$oDBListas = new \PDO(ConfigGlobal::$dsn_conexio_listas,ConfigGlobal::$user_conexio_listas,ConfigGlobal::$password_conexio_listas, array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING));
 		} catch (\PDOException $e) {
 			//Hay que poner el mensaje entre /* ... */ para que el script que carga a continuación lo interprete como un comentario.
 			echo "/*";
-			echo _("No puedo conectar con  la base de datos de listas").':<br>';
+			echo _("No puedo conectar con la base de datos de listas").':<br>';
 			echo $e->getMessage();
 			echo "*/";
 			$_SESSION['oDBListas'] = 'error';
@@ -163,7 +162,7 @@ if ( ConfigGlobal::is_app_installed('procesos') ) {
 	$oPermActividades = $_SESSION['oPermActividades'];
 }
 
-// func_tablas necesita $oDB
+// func_tablas necesita $oDB (Ya no!)
 include_once('func_tablas.php'); 
 
 // Para validar los parametros enviados via POST
