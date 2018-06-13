@@ -13,14 +13,7 @@ use core;
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // Crea los objectos por esta url  **********************************************
-/*
-$session_config=array (
-	'region'=>'H',
-	'dele'=>'dlb',
-	'gestionActividades'=>2 // 1 => centralizada, 2 => por oficinas.
-	 );
-$_SESSION['config']=$session_config;
-*/
+// 
 // FIN de  Cabecera global de URL de controlador ********************************
 
 function posibles_esquemas($default='') {
@@ -55,31 +48,33 @@ function posibles_esquemas($default='') {
 	}
 	return $txt;
 }
-function cambiar_idioma() {
-	// Si no está determinado en las preferencias, miro el del navegador
-	if (empty($_SESSION['session_auth']['idioma'])) { 
-	// mirar el idioma del navegador
-		if (!empty($_SERVER["HTTP_ACCEPT_LANGUAGE"])){ # Verificamos que el visitante haya designado algún idioma
-			$a_idiomas = explode(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]); # Convertimos HTTP_ACCEPT_LANGUAGE en array
-			/* Recorremos el array hasta que encontramos un idioma del visitante que coincida con los idiomas
-			en que está disponible nuestra web */
-			for ($i=0; $i<count($a_idiomas); $i++){
-				if (!isset($idioma)){
-					if (substr($a_idiomas[$i], 0, 2) == "ca"){$idioma = "ca_ES.UTF-8";}
-					if (substr($a_idiomas[$i], 0, 2) == "es"){$idioma = "es_ES.UTF-8";}
-					//if (substr($a_idiomas[$i], 0, 2) == "en"){$idioma = "en";}
-					//if (substr($a_idiomas[$i], 0, 2) == "fr"){$idioma = "fr";}
+function cambiar_idioma($idioma='') {
+	if (empty($idioma)) {
+		// Si no está determinado en las preferencias, miro el del navegador
+		if (empty($_SESSION['session_auth']['idioma'])) { 
+			// mirar el idioma del navegador
+			if (!empty($_SERVER["HTTP_ACCEPT_LANGUAGE"])){ # Verificamos que el visitante haya designado algún idioma
+				$a_idiomas = explode(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]); # Convertimos HTTP_ACCEPT_LANGUAGE en array
+				/* Recorremos el array hasta que encontramos un idioma del visitante que coincida con los idiomas
+				en que está disponible nuestra web */
+				for ($i=0; $i<count($a_idiomas); $i++){
+					if (!isset($idioma)){
+						if (substr($a_idiomas[$i], 0, 2) == "ca"){$idioma = "ca_ES.UTF-8";}
+						if (substr($a_idiomas[$i], 0, 2) == "es"){$idioma = "es_ES.UTF-8";}
+						if (substr($a_idiomas[$i], 0, 2) == "en"){$idioma = "en_US.UTF-8";}
+						//if (substr($a_idiomas[$i], 0, 2) == "en"){$idioma = "en";}
+						//if (substr($a_idiomas[$i], 0, 2) == "fr"){$idioma = "fr";}
+					}
 				}
 			}
+		} else {
+			$idioma = $_SESSION['session_auth']['idioma'];
 		}
-	} else {
-		$idioma = $_SESSION['session_auth']['idioma'];
+		# Si no hemos encontrado ningún idioma que nos convenga, mostramos la web en el idioma por defecto
+		if (!isset($idioma)){$idioma = core\ConfigGlobal::$x_default_idioma;}  
 	}
-	# Si no hemos encontrado ningún idioma que nos convenga, mostramos la web en el idioma por defecto
-	if (!isset($idioma)){$idioma = core\ConfigGlobal::$x_default_idioma;}  
-
-	$domain="delegacion";
-	bindtextdomain($domain,core\ConfigGlobal::$dir_idiomas);
+	$domain="orbix";
+	bindtextdomain($domain,core\ConfigGlobal::$dir_languages);
 	textdomain ($domain);
 	bind_textdomain_codeset($domain,'UTF-8');
 	putenv("LC_ALL=$idioma");
@@ -301,6 +296,7 @@ if ( !isset($_SESSION['session_auth'])) {
 						cambiar_idioma();
 						/* a ver si memoriza el esquema al que entro */
 						setcookie("esquema", $esquema, time() + (86400 * 30), "/"); // 86400 = 1 day
+						setcookie("idioma", $idioma, time() + (86400 * 30), "/"); // 86400 = 1 day
 					} else {
 						$variables = array('error'=>1);
 						$variables['DesplRegiones'] = posibles_esquemas($esquema);
@@ -317,14 +313,13 @@ if ( !isset($_SESSION['session_auth'])) {
 				}
 		}
 	} else { // el primer cop
-		if(!isset($_COOKIE["esquema"])) {
-			$esquema = "";
-		} else {
-			$esquema = $_COOKIE["esquema"];
-		}
+		$esquema = (!isset($_COOKIE["esquema"]))? "" : $_COOKIE["esquema"];
+		$idioma = (!isset($_COOKIE["idioma"]))? "" : $_COOKIE["idioma"];
+		cambiar_idioma($idioma);	
 		$a_campos['DesplRegiones'] = posibles_esquemas($esquema);
+		$a_campos['idioma'] = $idioma;
 		$oView = new core\View(__NAMESPACE__);
-		echo $oView->render('login_form.phtml',$a_campos);
+		echo $oView->render('login_form2.phtml',$a_campos);
 		die();
 	}
 } else {
