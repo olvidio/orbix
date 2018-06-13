@@ -1,6 +1,5 @@
 ﻿<?php
 use menus\model\entity as menus;
-use core;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
