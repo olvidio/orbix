@@ -37,7 +37,7 @@ $Qaccion = (string) \filter_input(INPUT_POST, 'accion');
 //$dir_base = "/var/www/orbix";
 $dir_base = core\ConfigGlobal::DIR;
 $filename = "$dir_base/log/menus/tot_menus.sql";
-$filelog = "$dir_base/log/menus/log.txt";
+$filelog = "$dir_base/log/menus/menus.log";
 
 if ($Qaccion == 'importar') {
 	/* IMPORTANTE
