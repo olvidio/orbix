@@ -1,8 +1,21 @@
 <script>
 fnjs_ver_planning = function(formulario,n) {
-	periodo = $('#periodo').val();
-	if (!periodo) {
-		alert('<?= _("Falta definir un periodo") ?>');
+	var err = 0;
+	var f=$('#periodo').val();	
+	if (!f) {
+		err=1;
+	}
+	if (f=='otro') {
+		if (!fnjs_comprobar_fecha('#empiezamin')) { err=1; }
+		if (!fnjs_comprobar_fecha('#empiezamax')) { err=1; }
+	}
+	
+	if (err == 1) {
+		if (!f) {
+			alert('<?= _("Falta definir un periodo") ?>');
+		} else {
+			alert("<?= _("Debe inrtoducir las fechas inicio-fin del periodo") ?>"); 
+		}
 	} else {
 		$('#modelo').val(n);
 		fnjs_enviar_formulario(formulario);

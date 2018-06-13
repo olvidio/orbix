@@ -1,25 +1,23 @@
 <script>
-fnjs_buscar=function(form){
-	var err=0;
-	// Hay opciones que no muestran el periodo.
-	if ($(form).periodo) {
-		// comprobar que tiene el periodo.
-		var periodo = $(form).periodo.value;
-		if (!periodo) { err=1; }
-		if (periodo == 'otro') {
-			var min = $(form).empiezamin.value;
-			var max = $(form).empiezamax.value;
-			if (min && max) {
-				err=0;
-			} else {
-				err=1;
-			}
-		}
+fnjs_buscar=function(formulario){
+	var err = 0;
+	var f=$('#periodo').val();	
+	if (!f) {
+		err=1;
 	}
-	if (err==1) {
-		alert ("<?= _("debe introducir un periodo") ?>");
+	if (f=='otro') {
+		if (!fnjs_comprobar_fecha('#empiezamin')) { err=1; }
+		if (!fnjs_comprobar_fecha('#empiezamax')) { err=1; }
+	}
+	
+	if (err == 1) {
+		if (!f) {
+			alert('<?= _("Falta definir un periodo") ?>');
+		} else {
+			alert("<?= _("Debe inrtoducir las fechas inicio-fin del periodo") ?>"); 
+		}
 	} else {
-		fnjs_enviar_formulario(form);
+		fnjs_enviar_formulario(formulario);
 	}
 }
 

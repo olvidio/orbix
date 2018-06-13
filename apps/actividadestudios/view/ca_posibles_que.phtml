@@ -1,4 +1,25 @@
 <script>
+fnjs_buscar=function(formulario){
+	var err = 0;
+	var f=$('#periodo').val();	
+	if (!f) {
+		err=1;
+	}
+	if (f=='otro') {
+		if (!fnjs_comprobar_fecha('#empiezamin')) { err=1; }
+		if (!fnjs_comprobar_fecha('#empiezamax')) { err=1; }
+	}
+	
+	if (err == 1) {
+		if (!f) {
+			alert('<?= _("Falta definir un periodo") ?>');
+		} else {
+			alert("<?= _("Debe inrtoducir las fechas inicio-fin del periodo") ?>"); 
+		}
+	} else {
+		fnjs_enviar_formulario(formulario);
+	}
+}
 fnjs_n_a=function(dd){
 	$('#na').val(dd);
 	if (dd=='agd') {
@@ -73,6 +94,6 @@ fnjs_left_side_hide();
 <td colspan=4>
 	<input type="Radio" name="texto" value="image" checked><?= ucfirst(_("texto cabecera vertical (imprimir)")); ?></td></tr>
 <tr><td>
-	<input name='btn1' type=button onclick="fnjs_enviar_formulario(this.form)" value="<?= _("ver cuadro") ?>" >
+	<input name='btn1' type=button onclick="fnjs_buscar(this.form)" value="<?= _("ver cuadro") ?>" >
 </td></tr>
 </table>
