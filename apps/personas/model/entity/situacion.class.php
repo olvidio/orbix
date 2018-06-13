@@ -96,7 +96,7 @@ class Situacion Extends core\ClasePropiedades {
 					nombre_situacion         = :nombre_situacion";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE situacion='$this->ssituacion'")) === false) {
 				$sClauError = 'Situacion.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
@@ -112,7 +112,7 @@ class Situacion Extends core\ClasePropiedades {
 			$valores="(:situacion,:nombre_situacion)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Situacion.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
@@ -136,7 +136,7 @@ class Situacion Extends core\ClasePropiedades {
 		if (isset($this->ssituacion)) {
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE situacion='$this->ssituacion'")) === false) {
 				$sClauError = 'Situacion.carregar';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
@@ -165,7 +165,7 @@ class Situacion Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE situacion='$this->ssituacion'")) === false) {
 			$sClauError = 'Situacion.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		return true;

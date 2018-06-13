@@ -104,7 +104,7 @@ class Sector Extends core\ClasePropiedades {
 					sector                   = :sector";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_sector='$this->iid_sector'")) === false) {
 				$sClauError = 'Sector.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
@@ -119,7 +119,7 @@ class Sector Extends core\ClasePropiedades {
 			$valores="(:id_departamento,:sector)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Sector.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
@@ -144,7 +144,7 @@ class Sector Extends core\ClasePropiedades {
 		if (isset($this->iid_sector)) {
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_sector='$this->iid_sector'")) === false) {
 				$sClauError = 'Sector.carregar';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
@@ -173,7 +173,7 @@ class Sector Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_sector='$this->iid_sector'")) === false) {
 			$sClauError = 'Sector.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		return true;

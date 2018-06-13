@@ -102,7 +102,7 @@ class DireccionCtrEx Extends DireccionCtr {
 
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_direccion='$this->iid_direccion'")) === false) {
 				$sClauError = 'DireccionCtrEx.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
@@ -118,7 +118,7 @@ class DireccionCtrEx Extends DireccionCtr {
 			$valores="(:direccion,:c_p,:poblacion,:provincia,:a_p,:pais,:f_direccion,:observ,:cp_dcha,:latitud,:longitud,:plano_doc,:plano_extension,:plano_nom,:nom_sede)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'DireccionCtrEx.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
@@ -144,7 +144,7 @@ class DireccionCtrEx Extends DireccionCtr {
 		if (isset($this->iid_direccion)) {
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_direccion='$this->iid_direccion'")) === false) {
 				$sClauError = 'DireccionCtrEx.carregar';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
@@ -173,7 +173,7 @@ class DireccionCtrEx Extends DireccionCtr {
 		$nom_tabla = $this->getNomTabla();
 		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_direccion='$this->iid_direccion'")) === false) {
 			$sClauError = 'DireccionCtrEx.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		return true;

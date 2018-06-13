@@ -293,7 +293,7 @@ class ActividadAll Extends core\ClasePropiedades {
 			//echo "SELECT * FROM $nom_tabla WHERE id_activ='$this->iid_activ'";
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_activ='$this->iid_activ'")) === false) {
 				$sClauError = 'ActividadAll.carregar';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);

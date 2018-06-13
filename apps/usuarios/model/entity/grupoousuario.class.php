@@ -24,7 +24,7 @@ class GrupoOUsuario Extends Grupo {
 		if (isset($this->iid_usuario)) {
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_usuario='$this->iid_usuario'")) === false) {
 				$sClauError = 'Grupo.carregar';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);

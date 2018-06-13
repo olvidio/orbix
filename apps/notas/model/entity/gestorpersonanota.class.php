@@ -64,7 +64,7 @@ class GestorPersonaNota Extends core\ClaseGestor {
 				";
 		if (($oDblSt = $oDbl->query($sQry)) === false) {
 			$sClauError = 'GestorPersonaNota.llistar.prepare';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		foreach ($oDblSt as $aDades) {

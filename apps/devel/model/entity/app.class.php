@@ -116,7 +116,7 @@ class App Extends core\ClasePropiedades {
 					db_prefix                = :db_prefix";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_app='$this->iid_app'")) === false) {
 				$sClauError = 'App.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
@@ -131,7 +131,7 @@ class App Extends core\ClasePropiedades {
 			$valores="(:nom,:db_prefix)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'App.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
@@ -156,7 +156,7 @@ class App Extends core\ClasePropiedades {
 		if (isset($this->iid_app)) {
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_app='$this->iid_app'")) === false) {
 				$sClauError = 'App.carregar';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
@@ -185,7 +185,7 @@ class App Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_app='$this->iid_app'")) === false) {
 			$sClauError = 'App.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		return true;

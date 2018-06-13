@@ -121,7 +121,7 @@ class Metamenu Extends core\ClasePropiedades {
 					descripcion              = :descripcion";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_metamenu='$this->iid_metamenu'")) === false) {
 				$sClauError = 'Metamenu.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
@@ -136,7 +136,7 @@ class Metamenu Extends core\ClasePropiedades {
 			$valores="(:modulo,:url,:parametros,:descripcion)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Metamenu.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
@@ -161,7 +161,7 @@ class Metamenu Extends core\ClasePropiedades {
 		if (isset($this->iid_metamenu)) {
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_metamenu='$this->iid_metamenu'")) === false) {
 				$sClauError = 'Metamenu.carregar';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
@@ -190,7 +190,7 @@ class Metamenu Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_metamenu='$this->iid_metamenu'")) === false) {
 			$sClauError = 'Metamenu.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		return true;

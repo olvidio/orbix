@@ -54,7 +54,7 @@ class GestorActaTribunal Extends core\ClaseGestor {
 		//echo "qry: $sQry<br>";
 		if (($oDblSt = $oDbl->query($sQry)) === false) {
 			$sClauError = 'GestorActaTribunalDl.examinador';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		$json = '[';

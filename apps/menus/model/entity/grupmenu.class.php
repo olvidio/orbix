@@ -105,7 +105,7 @@ class GrupMenu Extends core\ClasePropiedades {
 					orden                    = :orden";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_grupmenu='$this->iid_grupmenu'")) === false) {
 				$sClauError = 'GrupMenu.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
@@ -120,7 +120,7 @@ class GrupMenu Extends core\ClasePropiedades {
 			$valores="(:grup_menu,:orden)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'GrupMenu.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
@@ -145,7 +145,7 @@ class GrupMenu Extends core\ClasePropiedades {
 		if (isset($this->iid_grupmenu)) {
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_grupmenu='$this->iid_grupmenu'")) === false) {
 				$sClauError = 'GrupMenu.carregar';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
@@ -174,7 +174,7 @@ class GrupMenu Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_grupmenu='$this->iid_grupmenu'")) === false) {
 			$sClauError = 'GrupMenu.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		return true;

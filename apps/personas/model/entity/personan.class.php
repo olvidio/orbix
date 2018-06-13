@@ -150,7 +150,7 @@ class PersonaN Extends PersonaDl {
 			
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_nom='$this->iid_nom'")) === false) {
 				$sClauError = 'PersonaN.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
@@ -174,7 +174,7 @@ class PersonaN Extends PersonaDl {
 			}
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'PersonaN.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
@@ -186,7 +186,7 @@ class PersonaN Extends PersonaDl {
 			$id_auto = $oDbl->lastInsertId($nom_tabla.'_id_auto_seq');
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_auto=$id_auto")) === false) {
 				$sClauError = get_class($this).'.carregar.Last';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 			$aDadesLast = $oDblSt->fetch(\PDO::FETCH_ASSOC);
@@ -206,7 +206,7 @@ class PersonaN Extends PersonaDl {
 		if (isset($this->iid_nom)) {
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_nom='$this->iid_nom'")) === false) {
 				$sClauError = 'PersonaN.carregar';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
@@ -235,7 +235,7 @@ class PersonaN Extends PersonaDl {
 		$nom_tabla = $this->getNomTabla();
 		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_nom='$this->iid_nom'")) === false) {
 			$sClauError = 'PersonaN.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		return true;

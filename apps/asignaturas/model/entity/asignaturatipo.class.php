@@ -111,7 +111,7 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 					tipo_latin               = :tipo_latin";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_tipo='$this->iid_tipo'")) === false) {
 				$sClauError = 'AsignaturaTipo.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
@@ -127,7 +127,7 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 			$valores="(:id_tipo,:tipo_asignatura,:tipo_breve,:año,:tipo_latin)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'AsignaturaTipo.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
@@ -151,7 +151,7 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 		if (isset($this->iid_tipo)) {
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_tipo='$this->iid_tipo'")) === false) {
 				$sClauError = 'AsignaturaTipo.carregar';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
@@ -180,7 +180,7 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_tipo='$this->iid_tipo'")) === false) {
 			$sClauError = 'AsignaturaTipo.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		return true;

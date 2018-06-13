@@ -116,7 +116,7 @@ class IdMatchPersona Extends core\ClasePropiedades {
 					id_tabla                 = :id_tabla";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_listas='$this->iid_listas'")) === false) {
 				$sClauError = 'IdMatchPersona.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
@@ -132,7 +132,7 @@ class IdMatchPersona Extends core\ClasePropiedades {
 			$valores="(:id_listas,:id_orbix,:id_tabla)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'IdMatchPersona.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
@@ -156,7 +156,7 @@ class IdMatchPersona Extends core\ClasePropiedades {
 		if (isset($this->iid_listas)) {
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_listas='$this->iid_listas'")) === false) {
 				$sClauError = 'IdMatchPersona.carregar';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
@@ -185,7 +185,7 @@ class IdMatchPersona Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_listas='$this->iid_listas'")) === false) {
 			$sClauError = 'IdMatchPersona.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		return true;

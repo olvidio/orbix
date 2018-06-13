@@ -140,7 +140,7 @@ class actividadPlazas Extends core\ClasePropiedades {
 					cedidas                  = :cedidas";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_activ='$this->iid_activ' AND id_dl='$this->iid_dl' AND dl_tabla='$this->sdl_tabla'")) === false) {
 				$sClauError = 'actividadPlazas.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
@@ -156,7 +156,7 @@ class actividadPlazas Extends core\ClasePropiedades {
 			$valores="(:id_activ,:id_dl,:dl_tabla,:plazas,:cl,:cedidas)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'actividadPlazas.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
@@ -180,7 +180,7 @@ class actividadPlazas Extends core\ClasePropiedades {
 		if (isset($this->iid_activ) && isset($this->iid_dl) && isset($this->sdl_tabla)) {
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_dl='$this->iid_dl' AND dl_tabla='$this->sdl_tabla'")) === false) {
 				$sClauError = 'actividadPlazas.carregar';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
@@ -209,7 +209,7 @@ class actividadPlazas Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_dl='$this->iid_dl' AND dl_tabla='$this->sdl_tabla'")) === false) {
 			$sClauError = 'actividadPlazas.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		return true;

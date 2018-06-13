@@ -85,7 +85,14 @@ class gestorErrores {
 		$linea1=array_pop($trimmed);
 		return $linea1."\n".$linea2;
 	}
-	
+	/**
+	 * Añade un error al fichero
+	 * 
+	 * @param type $oDBSt Puede ser objeto PDO o PDOStatement
+	 * @param type $sClauError  Un texto cualquiera para poner en el error
+	 * @param type $line
+	 * @param type $file
+	 */
 	function addErrorAppLastError(&$oDBSt, $sClauError,$line, $file) {
 		$ip = $_SERVER['REMOTE_ADDR'];
 		$user = ConfigGlobal::mi_usuario();

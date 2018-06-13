@@ -108,7 +108,7 @@ class ActividadPub Extends ActividadAll {
 		if (isset($this->iid_activ)) {
 			if (($oDblSt = $oDbl->query("SELECT * FROM av_actividades_pub WHERE id_activ='$this->iid_activ'")) === false) {
 				$sClauError = get_class($this).'.carregar';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);

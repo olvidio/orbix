@@ -145,7 +145,7 @@ class DBTrasvase {
 				$oDbl->exec($sql);
 				if ($oDbl->commit() === false) {
 					$sClauError = 'DBTrasvase.actividades.resto2dl';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
 				break;
@@ -159,7 +159,7 @@ class DBTrasvase {
 				$oDbl->exec($sql);
 				if ($oDbl->commit() === false) {
 					$sClauError = 'DBTrasvase.actividades.dl2resto';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
 				break;
@@ -177,14 +177,14 @@ class DBTrasvase {
 				$sql = "INSERT INTO \"$esquema\".u_cdc_dl SELECT * FROM resto.u_cdc_ex WHERE dl = '$dl' AND region='$region'; ";
 				if ($oDbl->query($sql) === false) {
 					$sClauError = 'DBTrasvase.cdc.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 					return false;
 				} else {
 					// actualizar el tipo_ubi.
 					$sql = "UPDATE \"$esquema\".u_cdc_dl SET tipo_ubi='cdcdl'";
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBTrasvase.cdc.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 						return false;
 					}
 					// primero las direcciones porque 'u_cross' tiene como foreign key id_direccion e id_ubi.
@@ -193,20 +193,20 @@ class DBTrasvase {
 						WHERE u.id_ubi = rx.id_ubi";
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBTrasvase.cdc.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 						return false;
 					}
 					$sql = "INSERT INTO \"$esquema\".u_cross_cdc_dl_dir SELECT r.* FROM  resto.u_cross_cdc_ex_dir r JOIN \"$esquema\".u_cdc_dl a USING (id_ubi)";
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBTrasvase.cdc.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 						return false;
 					}
 					// delete cdc
 					$sql = "DELETE FROM resto.u_cdc_ex WHERE dl = '$dl' AND region='$region'";
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBCopiar.cdc.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 						return false;
 					}
 					// delete dir
@@ -214,7 +214,7 @@ class DBTrasvase {
 							WHERE id_direccion IN (SELECT id_direccion FROM \"$esquema\".u_dir_cdc_dl)"; 
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBTrasvase.cdc.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 						return false;
 					}
 					// delete cross (deberia borrarse sólo; por el foreign key).
@@ -225,41 +225,41 @@ class DBTrasvase {
 				$sql = "UPDATE \"$esquema\".u_cdc_dl SET tipo_ubi='cdcex'";
 				if ($oDbl->query($sql) === false) {
 					$sClauError = 'DBTrasvase.cdc.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
 				//cdc
 				$sql = "INSERT INTO resto.u_cdc_ex SELECT * FROM \"$esquema\".u_cdc_dl";
 				if ($oDbl->query($sql) === false) {
 					$sClauError = 'DBTrasvase.cdc.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 					return false;
 				} else {
 					// primero las direcciones porque 'u_cross' tiene como foreign key id_direccion e id_ubi.
 					$sql = "INSERT INTO resto.u_dir_cdc_ex SELECT * FROM  \"$esquema\".u_dir_cdc_dl ";
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBTrasvase.cdc.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 						return false;
 					}
 					$sql = "INSERT INTO  resto.u_cross_cdc_ex_dir  SELECT * FROM \"$esquema\".u_cross_cdc_dl_dir";
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBTrasvase.cdc.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 						return false;
 					}
 					// delete cdc
 					$sql = "TRUNCATE \"$esquema\".u_cdc_dl RESTART IDENTITY CASCADE";
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBTrasvase.cdc.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 						return false;
 					}
 					// delete dir
 					$sql = "TRUNCATE \"$esquema\".u_dir_cdc_dl RESTART IDENTITY CASCADE";
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBTrasvase.cdc.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 						return false;
 					}
 					// delete cross (deberia borrarse sólo; por el foreign key).
@@ -277,13 +277,13 @@ class DBTrasvase {
 				$sql = "INSERT INTO \"$esquema\".d_teleco_cdc_dl SELECT r.* FROM  resto.d_teleco_cdc_ex r JOIN \"$esquema\".u_cdc_dl a USING (id_ubi)";
 				if ($oDbl->query($sql) === false) {
 					$sClauError = 'DBTrasvase.telecocdc.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 					return false;
 				} else {
 					$sql = "DELETE FROM resto.d_teleco_cdc_ex  WHERE id_ubi IN (SELECT id_ubi FROM \"$esquema\".u_cdc_dl)";
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBTrasvase.telecocdc.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 						return false;
 					}
 				}
@@ -292,13 +292,13 @@ class DBTrasvase {
 				$sql = "INSERT INTO resto.d_teleco_cdc_ex SELECT * FROM \"$esquema\".d_teleco_cdc_dl";
 				if ($oDbl->query($sql) === false) {
 					$sClauError = 'DBTrasvase.telecocdc.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 					return false;
 				} else {
 					$sql = "TRUNCATE \"$esquema\".d_teleco_cdc_dl";
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBTrasvase.telecocdc.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 						return false;
 					}
 				}
@@ -319,14 +319,14 @@ class DBTrasvase {
 				$sql = "INSERT INTO \"$esquema\".u_centros_dl SELECT * FROM \"$resto\".u_centros_ex WHERE dl = '$dl' AND region='$region'; ";
 				if ($oDbl->query($sql) === false) {
 					$sClauError = 'DBTrasvase.ctr.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 					return false;
 				} else {
 					// actualizar el tipo_ubi.
 					$sql = "UPDATE \"$esquema\".u_centros_dl SET tipo_ubi='ctrdl'";
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBTrasvase.ctr.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 						return false;
 					}
 					// primero las direcciones porque 'u_cross' tiene como foreign key id_direccion e id_ubi.
@@ -335,20 +335,20 @@ class DBTrasvase {
 						WHERE u.id_ubi = rx.id_ubi";
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBTrasvase.ctr.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 						return false;
 					}
 					$sql = "INSERT INTO \"$esquema\".u_cross_ctr_dl_dir SELECT r.* FROM  \"$resto\".u_cross_ctr_ex_dir r JOIN \"$esquema\".u_centros_dl a USING (id_ubi)";
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBTrasvase.ctr.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 						return false;
 					}
 					// delete ctr
 					$sql = "DELETE FROM \"$resto\".u_centros_ex WHERE dl = '$dl' AND region='$region'";
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBTrasvase.ctr.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 						return false;
 					}
 					// delete dir
@@ -356,7 +356,7 @@ class DBTrasvase {
 							WHERE id_direccion IN (SELECT id_direccion FROM \"$esquema\".u_dir_ctr_dl)"; 
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBTrasvase.ctr.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 						return false;
 					}
 					// delete cross (deberia borrarse sólo; por el foreign key).
@@ -367,40 +367,40 @@ class DBTrasvase {
 				$sql = "UPDATE \"$esquema\".u_centros_dl SET tipo_ubi='ctrex'";
 				if ($oDbl->query($sql) === false) {
 					$sClauError = 'DBTrasvase.ctr.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
 				$sql = "INSERT INTO \"$resto\".u_centros_ex SELECT tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,status,f_status,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre,id_auto FROM \"$esquema\".u_centros_dl";
 			   if ($oDbl->query($sql) === false) {
 					$sClauError = 'DBEliminar.ctr.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 					return false;
 				} else {
 					// primero las direcciones porque 'u_cross' tiene como foreign key id_direccion e id_ubi.
 					$sql = "INSERT INTO \"$resto\".u_dir_ctr_ex SELECT * FROM  \"$esquema\".u_dir_ctr_dl";
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBTrasvase.ctr.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 						return false;
 					}
 					$sql = "INSERT INTO \"$resto\".u_cross_ctr_ex_dir SELECT * FROM \"$esquema\".u_cross_ctr_dl_dir ";
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBTrasvase.ctr.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 						return false;
 					}
 					// delete ctr
 					$sql = "TRUNCATE \"$esquema\".u_centros_dl RESTART IDENTITY CASCADE";
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBTrasvase.ctr.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 						return false;
 					}
 					// delete dir
 					$sql = "TRUNCATE \"$esquema\".u_dir_ctr_dl RESTART IDENTITY CASCADE";
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBTrasvase.ctr.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 						return false;
 					}
 					// delete cross (deberia borrarse sólo; por el foreign key).
@@ -418,13 +418,13 @@ class DBTrasvase {
 				$sql = "INSERT INTO \"$esquema\".d_teleco_ctr_dl SELECT r.* FROM  \"$resto\".d_teleco_ctr_ex r JOIN \"$esquema\".u_centros_dl a USING (id_ubi)";
 				if ($oDbl->query($sql) === false) {
 					$sClauError = 'DBTrasvase.telecoctr.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 					return false;
 				} else {
 					$sql = "DELETE FROM \"$resto\".d_teleco_ctr_ex  WHERE id_ubi IN (SELECT id_ubi FROM \"$esquema\".u_centros_dl)";
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBTrasvase.telecoctr.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 						return false;
 					}
 				}
@@ -433,13 +433,13 @@ class DBTrasvase {
 				$sql = "INSERT INTO \"$resto\".d_teleco_ctr_ex SELECT * FROM \"$esquema\".d_teleco_ctr_dl ";
 				if ($oDbl->query($sql) === false) {
 					$sClauError = 'DBTrasvase.telecoctr.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 					return false;
 				} else {
 					$sql = "TRUNCATE \"$esquema\".d_teleco_ctr_dl";
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBTrasvase.telecoctr.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 						return false;
 					}
 				}

@@ -74,7 +74,7 @@ class GestorActividadAll Extends core\ClaseGestor {
 
 		if (($oDblSt = $oDbl->query($sql)) === false) {
 			$sClauError = 'GestorActividadAll.getCoincidencia';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		if ($salida == 'array') {

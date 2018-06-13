@@ -124,6 +124,44 @@ if (configGlobal::is_app_installed('dbextern')) {
 	}
 }
 
+// En el caso cr-stgr, refrescar las vistas
+if ((\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_dele()) && !isset($_SESSION['Refresh'])){
+	try {
+		$views = [
+				'd_profesor_latin',
+				'd_profesor_ampliacion',
+				'd_profesor_director',
+				'd_profesor_juramento',
+				'd_profesor_stgr',
+				'd_publicaciones',
+				'd_congresos',
+				'd_docencia_stgr',
+				'd_titulo_est',
+				'p_agregados',
+				'p_numerarios',
+				'personas_dl',
+			];
+		
+		foreach ($views as $view) {
+			//$sql = "REFRESH MATERIALIZED VIEW $view";
+			$sql = "REFRESH MATERIALIZED VIEW \"H-Hv\".$view";
+			//$sql = "SELECT * FROM  $view";
+//			$oDB->exec($sql) or exit(print_r($oDB->errorInfo(), true));
+			if (($oDblSt = $oDB->exec($sql)) === false) {
+				$sClauError = 'Refresh';
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, __LINE__, __FILE__);
+			}
+		}
+		$_SESSION['Refresh'] = 'ok';
+	} catch (\PDOException $e) {
+		//Hay que poner el mensaje entre /* ... */ para que el script que carga a continuación lo interprete como un comentario.
+		echo "/*";
+		echo _("No puedo refrescar las vistas").':<br>';
+		echo $e->getMessage();
+		echo "*/";
+		$_SESSION['Refresh'] = 'error';
+	}
+}
 
 if ( ConfigGlobal::is_app_installed('menus') ) {
 	if (empty($_SESSION['iPermMenus'])) { // con hacerlo una vez basta.
