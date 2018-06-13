@@ -208,3 +208,11 @@
 374	{50,10,20}	sv agd	id_tipo_activ=133&status=2&periodo=desdeHoy	71	8	8	t
 1	{20,70}	listado actas	\N	178	16	12	t
 1029	{30}	historicos	\N	\N	\N	\N	t
+1373	{10,5}	n dl	tabla=p_numerarios&tipo=persona	76	2064	21	t
+1374	{20,10}	actas	\N	60	16	21	t
+1375	{20,20}	tabla alumnos-asignaturas	\N	88	16	21	t
+1378	{10,40}	profesor para asignatura	\N	171	16	21	t
+1379	{10,50}	claustro	\N	173	16	21	t
+1372	{10,10}	agd dl	tabla=p_agregados&tipo=persona	76	2064	21	t
+1384	{10}	personas	\N	0	16	21	t
+1385	{20}	actas	\N	0	16	21	t

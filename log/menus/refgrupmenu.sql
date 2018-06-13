@@ -14,3 +14,4 @@
 3	dagd	50
 20	Calendario	111
 7	adl	90
+21	stgr	310
