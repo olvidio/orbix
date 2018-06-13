@@ -508,7 +508,7 @@ $txt.=$update.'";';
 $txt.='
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE '.$where.'")) === false) {
 				$sClauError = \''.$clase.'.update.prepare\';
-				$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
@@ -529,7 +529,7 @@ $txt.=$valores.')";';
 $txt.='		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = \''.$clase.'.insertar.prepare\';
-				$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
@@ -563,7 +563,7 @@ $txt.="\n\t\t".'}
 		if ('.$claus_isset.') {
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE '.$where.'")) === false) {
 				$sClauError = \''.$clase.'.carregar\';
-				$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\\PDO::FETCH_ASSOC);
@@ -592,7 +592,7 @@ $txt.="\n\t\t".'}
 		$nom_tabla = $this->getNomTabla();
 		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE '.$where.'")) === false) {
 			$sClauError = \''.$clase.'.eliminar\';
-			$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		return true;
