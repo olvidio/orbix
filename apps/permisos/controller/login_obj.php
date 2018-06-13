@@ -319,7 +319,8 @@ if ( !isset($_SESSION['session_auth'])) {
 		$a_campos['DesplRegiones'] = posibles_esquemas($esquema);
 		$a_campos['idioma'] = $idioma;
 		$oView = new core\View(__NAMESPACE__);
-		echo $oView->render('login_form2.phtml',$a_campos);
+		//echo $oView->render('login_form2.phtml',$a_campos);
+		echo $oView->render('login_form.phtml',$a_campos);
 		die();
 	}
 } else {
