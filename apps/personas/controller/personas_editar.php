@@ -95,7 +95,11 @@ if (!empty($Qnuevo)) {
 //	}
 	// para el ctr hay que buscar el nombre
 	if (!empty($id_ctr)) {
-		$oCentroDl = new ubis\CentroDl($id_ctr);
+		if (core\ConfigGlobal::mi_dele() === core\ConfigGlobal::mi_region()) {
+			$oCentroDl = new ubis\Centro($id_ctr);
+		} else {
+			$oCentroDl = new ubis\CentroDl($id_ctr);
+		}
 		$nom_ctr = $oCentroDl->getNombre_ubi();
 		$oDesplCentroDl = array();
 	} else {
