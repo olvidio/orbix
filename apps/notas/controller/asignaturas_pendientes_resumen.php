@@ -171,7 +171,7 @@ foreach ($aPendientes as $id_nivel => $Pendientes) {
 	$asignatura = $Pendientes['def'];
 	//$html .= '<tr><td colspan=14>';
 	$html .= '<tr><td>';
-	$html .= $asignatura['nombre']." (".$asignatura['creditos']." creditos, año ".$asignatura['year'].")";
+	$html .= $asignatura['nombre']." (".$asignatura['creditos']." créditos, año ".$asignatura['year'].")";
 	$html .= '</td>';
 	//$html .= '</td></tr>';
 	//$html .= '<tr>';

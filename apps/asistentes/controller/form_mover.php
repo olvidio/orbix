@@ -150,7 +150,7 @@ foreach ($cActividades as $oActividad) {
 		$result=$oPosiblesCa->contar_creditos($Qid_nom,$aAsignaturasCa);
 		$creditos=$result['suma'];
 		if (!empty($creditos)) {
-			$txt_creditos = sprintf(_("creditos: %s"),$creditos);
+			$txt_creditos = sprintf(_("créditos: %s"),$creditos);
 		}
 	}
 	$aOpciones[$id_activ] = "$nom_activ $txt_plazas  $txt_creditos";
