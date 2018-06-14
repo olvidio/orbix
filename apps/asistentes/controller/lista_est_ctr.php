@@ -118,6 +118,7 @@ switch ($Qn_agd) {
 // primero selecciono los centros
 $GesCentrosDl = new ubis\GestorCentroDl();
 $cCentros = $GesCentrosDl->getCentros($aWhereCtr,$aOperadorCtr);
+$a_valores = array();
 foreach ($cCentros as $oCentroDl) {
 	$id_ubi = $oCentroDl->getId_ubi();
 	$aGrupos[$id_ubi]= $oCentroDl->getNombre_ubi();
