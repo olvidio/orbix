@@ -53,9 +53,11 @@ fnjs_actualizar=function(formulario){
 <input type='hidden' id='mod' name='mod' value=''>
 <?= $oTabla->mostrar_tabla(); ?>
 </form>
-
-<!-- =========== boton insert ============  --> 
-<br><table cellspacing=3  class=botones><tr class=botones>
-<td class=botones><span class=link_inv onclick="fnjs_update_div('<?= $bloque ?>','<?= $link_insert ?>');" >
-<?= sprintf(_("añadir asignatura")) ?></span></td>
-</tr></table>
+<?php
+// <!-- =========== boton insert ============  --> 
+if (!empty($link_insert)) { ?>
+	<br><table cellspacing=3  class=botones><tr class=botones>
+	<td class=botones><span class=link_inv onclick="fnjs_update_div('<?= $bloque ?>','<?= $link_insert ?>');" >
+	<?= sprintf(_("añadir asignatura")) ?></span></td>
+	</tr></table>
+<?php } ?>
