@@ -1,5 +1,5 @@
 <?php
-namespace dossiers\model\entity;
+namespace dossiers\model;
 use core;
 use personas\model\entity as personas;
 use web;
@@ -185,6 +185,7 @@ class PermDossier {
 								$sv."64" => array ( 'nom'=>"cve sss+",	'perm'=> 1),
 								$sf.".." => array ( 'nom'=>"sf",	'perm'=> 1)
 							);
+		$ref_perm = array();
 		switch ($id_tabla) {
 			case "n" : //------------------------- numerarios -------------------
 			case "pn": 

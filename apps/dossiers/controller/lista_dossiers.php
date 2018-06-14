@@ -1,19 +1,19 @@
 <?php
-use dossiers\model\entity as dossiers;
+use dossiers\model\entity as dossiersEntity;
 
 $aWhere = array('tabla_from'=>$pau);
 $GesTipoDossier = new dossiers\GestorTipoDossier();
 $cTipoDossier = $GesTipoDossier->getTiposDossiers($aWhere); 
 $i=0;
 $a_filas = array();
-$oPermDossier = new dossiers\PermDossier();
+$oPermDossier = new dossiers\model\PermDossier();
 foreach ($cTipoDossier as $oTipoDossier) {
 	extract($oTipoDossier->getTot());
 	$id_dossier = $id_tipo_dossier;
 	// Miro si la app está instalada
 	if(!core\ConfigGlobal::is_app_installed($app)) continue;
 	$aWhere = array('tabla'=>$tabla_from,'id_pau'=>$id_pau,'id_tipo_dossier'=>$id_tipo_dossier,'_ordre'=>'id_tipo_dossier');
-	$oDossier = new dossiers\Dossier($aWhere);
+	$oDossier = new dossiersEntity\Dossier($aWhere);
 	$status_dossier = $oDossier->getStatus_dossier();
 	switch ($status_dossier) {
 		case "t":

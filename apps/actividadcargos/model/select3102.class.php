@@ -3,7 +3,7 @@ namespace actividadcargos\model;
 
 use actividades\model\entity as actividades;
 use actividadcargos\model\entity as actividadcargos;
-use dossiers\model\entity as dossiers;
+use dossiers\model as dossiers;
 use personas\model\entity as personas;
 use core;
 use web;

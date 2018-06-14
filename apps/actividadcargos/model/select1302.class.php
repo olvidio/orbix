@@ -5,7 +5,7 @@ use actividadcargos\model\entity\Cargo;
 use actividadcargos\model\entity\GestorActividadCargo;
 use actividades\model\entity as actividades;
 use core;
-use dossiers\model\entity as dossiers;
+use dossiers\model as dossiers;
 use personas\model\entity as personas;
 use web;
 

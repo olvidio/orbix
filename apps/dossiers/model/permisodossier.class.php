@@ -1,5 +1,5 @@
 <?php
-namespace dossiers\model\entity;
+namespace dossiers\model;
 use permisos\model as permisos;
 use core;
 
@@ -59,4 +59,3 @@ class PermisoDossier extends permisos\Xpermisos {
   }
 
 }
-?>
