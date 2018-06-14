@@ -132,6 +132,7 @@ class gestorErrores {
 	}
 	
 	function addError($err='',$sClauError,$line, $file) {
+		$ip = $_SERVER['REMOTE_ADDR'];
 		$user=ConfigGlobal::mi_usuario();
 		$esquema = ConfigGlobal::mi_region_dl();
 		$ahora=date("d/m/Y H:i:s");
