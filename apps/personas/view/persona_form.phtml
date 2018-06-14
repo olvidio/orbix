@@ -99,10 +99,16 @@ if (!$nuevo) {
 		<?= $oDesplCentro->desplegable() ?>
 		<?php
 	} else {
-		echo "<td><span class=link onclick=\"fnjs_update_div('#main','$ir_a_traslado');\">&nbsp;Centro-sede:&nbsp;</span>";
-		echo "<b class=contenido>$nom_ctr</b>";
-		echo "<input class=contenido type='hidden' name='id_ctr' id='id_ctr' value='$id_ctr'>";
-		echo "</td>";
+		if (!empty($botones)) {
+			echo "<td><span class=link onclick=\"fnjs_update_div('#main','$ir_a_traslado');\">&nbsp;Centro-sede:&nbsp;</span>";
+			echo "<b class=contenido>$nom_ctr</b>";
+			echo "<input class=contenido type='hidden' name='id_ctr' id='id_ctr' value='$id_ctr'>";
+			echo "</td>";
+		} else {
+			echo "<td>&nbsp;Centro-sede:&nbsp;";
+			echo "<b class=contenido>$nom_ctr</b>";
+			echo "</td>";
+		}
 	}
 ?>
 </td>
