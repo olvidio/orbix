@@ -51,9 +51,9 @@ class Usuario Extends core\ClasePropiedades {
 	/**
 	 * Password de Usuario
 	 *
-	 * @var integer
+	 * @var string
 	 */
-	 private $ipassword;
+	 private $spassword;
 	/**
 	 * Email de Usuario
 	 *
@@ -118,7 +118,7 @@ class Usuario Extends core\ClasePropiedades {
 		if ($this->DBCarregar('guardar') === false) { $bInsert=true; } else { $bInsert=false; }
 		$aDades=array();
 		$aDades['usuario'] = $this->susuario;
-		$aDades['password'] = $this->ipassword;
+		$aDades['password'] = $this->spassword;
 		$aDades['email'] = $this->semail;
 		$aDades['id_pau'] = $this->sid_pau;
 		$aDades['nom_usuario'] = $this->snom_usuario;
@@ -180,6 +180,9 @@ class Usuario Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Llegeixo el password (la BD només em passa el handler)
+			$pass = $aDades['password'];
+			$aDades['password'] = fread($pass,2048);
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -295,24 +298,23 @@ class Usuario Extends core\ClasePropiedades {
 		$this->susuario = $susuario;
 	}
 	/**
-	 * Recupera l'atribut ipassword de Usuario
+	 * Recupera l'atribut spassword de Usuario
 	 *
-	 * @return integer ipassword
+	 * @return integer spassword
 	 */
 	function getPassword() {
-		if (!isset($this->ipassword)) {
+		if (!isset($this->spassword)) {
 			$this->DBCarregar();
-			if(!empty($this->ipassword)) $this->ipassword = fread($this->ipassword,2048);
 		}
-		return $this->ipassword;
+		return $this->spassword;
 	}
 	/**
-	 * estableix el valor de l'atribut ipassword de Usuario
+	 * estableix el valor de l'atribut spassword de Usuario
 	 *
-	 * @param integer ipassword='' optional
+	 * @param integer spassword='' optional
 	 */
-	function setPassword($ipassword='') {
-		$this->ipassword = $ipassword;
+	function setPassword($spassword='') {
+		$this->spassword = $spassword;
 	}
 	/**
 	 * Recupera l'atribut semail de Usuario
@@ -424,7 +426,7 @@ class Usuario Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut ipassword de Usuario
+	 * Recupera les propietats de l'atribut spassword de Usuario
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return oject DatosCampo
