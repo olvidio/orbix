@@ -91,13 +91,11 @@ class Select3005 {
 		$dl_org = $oActividad->getDl_org();
 		if ($mi_dele == $dl_org) {
 			$this->permiso = 3;
-			$GesActivAsignaturas = new entity\GestorActividadAsignaturaDl();
-			$cActivAsignaturas = $GesActivAsignaturas->getActividadAsignaturas(array('id_activ'=>  $this->id_pau,'_ordre'=>'id_asignatura')); 
 		} else {
 			$this->permiso = 1;
-			$GesActivAsignaturas = new entity\GestorActividadAsignatura();
-			$cActivAsignaturas = $GesActivAsignaturas->getActividadAsignaturas(array('id_activ'=>  $this->id_pau,'_ordre'=>'id_asignatura')); 
 		}
+		$GesActivAsignaturas = new entity\GestorActividadAsignatura();
+		$cActivAsignaturas = $GesActivAsignaturas->getActividadAsignaturas(array('id_activ'=>  $this->id_pau,'_ordre'=>'id_asignatura')); 
 
 		$c=0;
 		$a_valores=array();
