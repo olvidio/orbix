@@ -204,7 +204,7 @@ foreach ($cCentros as $oCentroDl) {
 							} else {
 								$preceptor=''; 
 							}
-							$asignaturas.= "$nombre_corto ($creditos "._("créditos")." )$preceptor<br>";
+							$asignaturas.= "$nombre_corto ($creditos "._("créditos").")$preceptor<br>";
 						}
 				}
 			}
