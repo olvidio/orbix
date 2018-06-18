@@ -48,7 +48,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 // centros
 $oHash1 = new web\Hash();
 $oHash1->setcamposForm('sacd!ctr!empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
-$oHash1->setcamposNo('todos_n!todos_agd!modelo');
+$oHash1->setcamposNo('todos_n!todos_agd!todos_s!modelo');
 $a_camposHidden1 = array(
 		'tipo' => $Qtipo,
 		'obj_pau' => $Qobj_pau,
