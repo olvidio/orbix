@@ -77,7 +77,7 @@ class DatosTabla {
 							complete: function (rta) {
 								rta_txt=rta.responseText;
 								if (rta_txt != '' && rta_txt != '\\n') {
-									alert ('<?= _("respuesta") ?>: '+rta_txt);
+									alert ('<?= _(\"respuesta\") ?>: '+rta_txt);
 								}
 							},
 							success: function() { fnjs_actualizar(formulario) }
