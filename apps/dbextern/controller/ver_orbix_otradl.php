@@ -65,8 +65,9 @@ fnjs_trasladar=function(id_orbix,dl,fila){
 		type: 'post',
 		data: parametros,
 		success: function (rta) {
+			rta_txt=rta.responseText;
 			if (rta != true) { 
-				alert ('respuesta: '+rta);
+				alert ('<?= _("respuesta") ?>: '+rta_txt);
 			} else {
 				//tachar la fila
 				$("#fila"+fila).addClass('tachado');

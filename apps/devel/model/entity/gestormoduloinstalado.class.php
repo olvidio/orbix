@@ -1,19 +1,19 @@
 <?php
-namespace devel\model\entity;
+namespace devel\model;
 use core;
 /**
- * GestorApp
+ * GestorModuloInstalado
  *
- * Classe per gestionar la llista d'objectes de la clase App
+ * Classe per gestionar la llista d'objectes de la clase ModuloInstalado
  *
- * @package delegación
+ * @package orbix
  * @subpackage model
  * @author Daniel Serrabou
  * @version 1.0
- * @created 15/12/2014
+ * @created 14/06/2018
  */
 
-class GestorApp Extends core\ClaseGestor {
+class GestorModuloInstalado Extends core\ClaseGestor {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
@@ -26,48 +26,48 @@ class GestorApp Extends core\ClaseGestor {
 	 *
 	 */
 	function __construct() {
-		$oDbl = $GLOBALS['oDBPC'];
+		$oDbl = $GLOBALS['oDB'];
 		$this->setoDbl($oDbl);
-		$this->setNomTabla('m0_apps');
+		$this->setNomTabla('m0_mods_installed_dl');
 	}
 
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
 	/**
-	 * retorna l'array d'objectes de tipus App
+	 * retorna l'array d'objectes de tipus ModuloInstalado
 	 *
 	 * @param string sQuery la query a executar.
-	 * @return array Una col·lecció d'objectes de tipus App
+	 * @return array Una col·lecció d'objectes de tipus ModuloInstalado
 	 */
-	function getAppsQuery($sQuery='') {
+	function getModulosInstaladosQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
-		$oAppSet = new core\Set();
+		$oModuloInstaladoSet = new core\Set();
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorApp.query';
+			$sClauError = 'GestorModuloInstalado.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		foreach ($oDbl->query($sQuery) as $aDades) {
-			$a_pkey = array('id_app' => $aDades['id_app']);
-			$oApp= new App($a_pkey);
-			$oApp->setAllAtributes($aDades);
-			$oAppSet->add($oApp);
+			$a_pkey = array('id_mod' => $aDades['id_mod']);
+			$oModuloInstalado= new ModuloInstalado($a_pkey);
+			$oModuloInstalado->setAllAtributes($aDades);
+			$oModuloInstaladoSet->add($oModuloInstalado);
 		}
-		return $oAppSet->getTot();
+		return $oModuloInstaladoSet->getTot();
 	}
 
 	/**
-	 * retorna l'array d'objectes de tipus App
+	 * retorna l'array d'objectes de tipus ModuloInstalado
 	 *
 	 * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
 	 * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-	 * @return array Una col·lecció d'objectes de tipus App
+	 * @return array Una col·lecció d'objectes de tipus ModuloInstalado
 	 */
-	function getApps($aWhere=array(),$aOperators=array()) {
+	function getModulosInstalados($aWhere=array(),$aOperators=array()) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		$oAppSet = new core\Set();
+		$oModuloInstaladoSet = new core\Set();
 		$oCondicion = new core\Condicion();
 		$aCondi = array();
 		foreach ($aWhere as $camp => $val) {
@@ -90,26 +90,25 @@ class GestorApp Extends core\ClaseGestor {
 		if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
 		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-			$sClauError = 'GestorApp.llistar.prepare';
+			$sClauError = 'GestorModuloInstalado.llistar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		if (($oDblSt->execute($aWhere)) === false) {
-			$sClauError = 'GestorApp.llistar.execute';
+			$sClauError = 'GestorModuloInstalado.llistar.execute';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		foreach ($oDblSt as $aDades) {
-			$a_pkey = array('id_app' => $aDades['id_app']);
-			$oApp= new App($a_pkey);
-			$oApp->setAllAtributes($aDades);
-			$oAppSet->add($oApp);
+			$a_pkey = array('id_mod' => $aDades['id_mod']);
+			$oModuloInstalado= new ModuloInstalado($a_pkey);
+			$oModuloInstalado->setAllAtributes($aDades);
+			$oModuloInstaladoSet->add($oModuloInstalado);
 		}
-		return $oAppSet->getTot();
+		return $oModuloInstaladoSet->getTot();
 	}
 
 	/* METODES PROTECTED --------------------------------------------------------*/
 
 	/* METODES GET i SET --------------------------------------------------------*/
 }
-?>

@@ -867,7 +867,7 @@ class TablaEditable {
 						complete: function (rta) {
 							rta_txt=rta.responseText;
 							if (rta_txt != '' && rta_txt != '\\n') {
-								alert ('respuesta: '+rta_txt);
+								alert ('<?= _(\"respuesta\") ?>: '+rta_txt);
 							}
 						}
 					});

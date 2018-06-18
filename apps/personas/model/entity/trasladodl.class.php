@@ -45,6 +45,12 @@ class TrasladoDl {
 	private $path_ini_org;
 	private $path_ini_dst;
 	private $snew_esquema;
+
+	public function getError() {
+		return $this->serror;
+	}
+
+	
 	/**
 	 * Recupera l'atribut iid_nom de Traslado
 	 *

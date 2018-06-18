@@ -72,7 +72,8 @@ if (!empty($Qnew_dl) AND !empty($Qf_dl)){
 	$oTrasladoDl->setF_dl($Qf_dl);
 	$oTrasladoDl->setSituacion($Qsituacion);
 
-	$error = $oTrasladoDl->trasladar();
+	$oTrasladoDl->trasladar();
+	$error = $oTrasladoDl->getError();
 }
 
 

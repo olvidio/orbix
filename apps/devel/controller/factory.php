@@ -153,7 +153,7 @@ $grupo= !empty($Qgrupo)? $Qgrupo : "actividades";
 $aplicacion= !empty($Qaplicacion)? $Qaplicacion : "delegación";
 
 //busco les claus primaries
-$aClaus=core\primaryKey($oDbl,$Qtabla);
+$aClaus=primaryKey($oDbl,$Qtabla);
 
 $sql="SELECT 
 				a.attnum,
@@ -361,7 +361,7 @@ $hoy=date("d/m/Y");
 
 
 $txt="<?php
-namespace $grupo\\model;
+namespace $grupo\\model\\entity;
 use core;
 /**
  * Fitxer amb la Classe que accedeix a la taula $tabla
@@ -662,11 +662,10 @@ $txt.='
 $txt.=$altres_gets;
 $txt.='
 }
-?>';
+';
 
 /* ESCRIURE LA CLASSSE ------------------------------------------------ */
-$filename = '/var/www'.core\ConfigGlobal::$web_path.'/apps/'.$grupo.'/model/'.strtolower($Qclase).'.class.php';
-
+$filename = core\ConfigGlobal::DIR.'/apps/'.$grupo.'/model/entity/'.strtolower($Qclase).'.class.php';
 
 // In our example we're opening $filename in append mode.
 // The file pointer is at the bottom of the file hence
@@ -813,9 +812,9 @@ $txt2.='
 
 	/* METODES GET i SET --------------------------------------------------------*/
 }
-?>';
+';
 /* ESCRIURE LA CLASSSE ------------------------------------------------ */
-$filename = '/var/www/'.core\ConfigGlobal::$web_path.'/apps/'.$grupo.'/model/gestor'.strtolower($Qclase).'.class.php';
+$filename = core\ConfigGlobal::DIR.'/apps/'.$grupo.'/model/entity/gestor'.strtolower($Qclase).'.class.php';
 
 
 // In our example we're opening $filename in append mode.

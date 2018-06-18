@@ -48,7 +48,7 @@ fnjs_add_grup=function(){
 		data: parametros,
 		success: function (rta_txt) {
 			//rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta_txt);
+			//alert ('<?= _("respuesta") ?>: '+rta_txt);
 			$('#lst_grupos').html(rta_txt);
 		}
 	});
@@ -63,7 +63,7 @@ fnjs_del_grup=function(){
 		data: parametros,
 		success: function (rta_txt) {
 			//rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta_txt);
+			//alert ('<?= _("respuesta") ?>: '+rta_txt);
 			$('#lst_grupos').html(rta_txt);
 		}
 	});
@@ -91,7 +91,7 @@ fnjs_del_perm=function(formulario){
 					complete: function (rta) {
 						rta_txt = rta.responseText;
 						if (rta_txt != '' && rta_txt != '\\n') {
-							alert ('respuesta: '+rta_txt);
+							alert ('<?= _("respuesta") ?>: '+rta_txt);
 						}
 					},
 					success: function() { fnjs_actualizar(formulario) }
@@ -129,7 +129,7 @@ fnjs_guardar=function(formulario){
 				complete: function (rta) {
 					rta_txt=rta.responseText;
 					if (rta_txt != '' && rta_txt != '\\n') {
-						alert ('respuesta: '+rta_txt);
+						alert ('<?= _("respuesta") ?>: '+rta_txt);
 					} else {
 						<?= $oPosicion->js_atras(1); ?>
 					}

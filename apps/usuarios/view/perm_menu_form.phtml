@@ -22,7 +22,7 @@ fnjs_del_perm_menu=function(formulario){
 					complete: function (rta) {
 						rta_txt = rta.responseText;
 						if (rta_txt != '' && rta_txt != '\\n') {
-							alert ('respuesta: '+rta_txt);
+							alert ('<?= _("respuesta") ?>: '+rta_txt);
 						}
 					},
 					success: function() { fnjs_actualizar(formulario) }

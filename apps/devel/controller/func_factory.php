@@ -1,5 +1,5 @@
 <?php
-
+namespace devel\controller;
 /**
 * Devuelve un array con los nombres de los campos que forman la clave primaria de la tabla
 *

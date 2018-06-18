@@ -50,8 +50,9 @@ fnjs_baja=function(id_orbix,fila){
 		type: 'post',
 		data: parametros,
 		success: function (rta) {
+			rta_txt=rta.responseText;
 			if (rta != true) { 
-				alert ('respuesta: '+rta);
+				alert ('<?= _("respuesta") ?>: '+rta_txt);
 			} else {
 				//tachar la fila
 				$("#fila"+fila).addClass('tachado');

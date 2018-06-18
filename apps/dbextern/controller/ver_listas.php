@@ -136,7 +136,7 @@ fnjs_crear=function(){
 		data: parametros,
 		success: function (rta_txt) {
 			//rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta_txt);
+			//alert ('<?= _("respuesta") ?>: '+rta_txt);
 			fnjs_submit('#movimiento','-');
 		}
 	});
@@ -152,7 +152,7 @@ fnjs_unir=function(id_orbix){
 		data: parametros,
 		success: function (rta_txt) {
 			//rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta_txt);
+			//alert ('<?= _("respuesta") ?>: '+rta_txt);
 			fnjs_submit('#movimiento','-');
 		}
 	});

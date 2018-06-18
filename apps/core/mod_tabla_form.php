@@ -123,7 +123,7 @@ fnjs_grabar=function(formulario){
 				complete: function (rta) {
 					rta_txt=rta.responseText;
 					if (rta_txt != '' && rta_txt != '\\n') {
-						alert ('respuesta: '+rta_txt);
+						alert ('<?= _("respuesta") ?>: '+rta_txt);
 					} else {
 						<?= $oPosicion->js_atras(1); ?>
 					}

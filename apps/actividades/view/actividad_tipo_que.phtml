@@ -79,7 +79,7 @@ fnjs_act_id_activ=function(){
 			data: parametros,
 			success: function (rta) {
 					rta_txt=rta.responseText;
-					//alert ('respuesta: '+rta_txt);
+					//alert ('<?= _("respuesta") ?>: '+rta_txt);
 					$('#tarifa').val(rta_txt);			
 				}
 		});
