@@ -35,7 +35,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
-	$sactividad = (string) \filter_input(INPUT_POST, 'que');
+	$Qsactividad = (string) \filter_input(INPUT_POST, 'que');
 	$Qtodos = empty($Qtodos)? 1 : $Qtodos;
 } else { // vengo de actualizar
 	$Qid_nom = (integer) \filter_input(INPUT_POST, 'id_nom');
