@@ -2,7 +2,7 @@
 use dossiers\model\entity as dossiersEntity;
 
 $aWhere = array('tabla_from'=>$pau);
-$GesTipoDossier = new dossiers\GestorTipoDossier();
+$GesTipoDossier = new dossiersEntity\GestorTipoDossier();
 $cTipoDossier = $GesTipoDossier->getTiposDossiers($aWhere); 
 $i=0;
 $a_filas = array();
