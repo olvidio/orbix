@@ -155,7 +155,10 @@ if ($Qque==1) { // Grabar las notas en la matricula
 	$Qnota_num = (array) \filter_input(INPUT_POST, 'nota_num', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 	$Qnota_max = (array) \filter_input(INPUT_POST, 'nota_max', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
-	for ($n=0;$n<$Qid_nom;$n++) {
+	$num_alumnos = count($Qid_nom);
+	$num_alumnos = empty($num_alumnos)? 0 : $num_alumnos;
+	
+	for ($n=0;$n<$num_alumnos;$n++) {
 		if (!empty($Qform_preceptor[$n]) && $Qform_preceptor[$n]=="p") { 
 			$preceptor="t";
 		} else {
