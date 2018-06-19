@@ -70,6 +70,18 @@ switch ($Qmod) {
 				$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$id_nom,'id_tipo_dossier'=>1303));
 				$oDossier->abrir();
 				$oDossier->DBGuardar();
+				// Si la puse yo, hay que eliminar esta asignatura a las asignaturas que se dan en el ca
+				// si no hay nadie más matriculado:
+				$oGesActividadAsignatura = new actividadestudios\GestorActividadAsignaturaDl();
+				$cActividadAsignaturas = $oGesActividadAsignatura->getActividadAsignaturas(array('id_activ'=>$Qid_activ,'id_asignatura'=>$Qid_asignatura));
+				if (count($cActividadAsignaturas) == 1) {
+					$gesMatriculas = new actividadestudios\GestorMatricula();
+					$cMatriculas = $gesMatriculas->getMatriculas(['id_activ'=>$id_activ,'id_asignatura'=>$id_asignatura]);
+					if (count($cMatriculas) == 0) {
+						$oActividadAsignatura = $cActividadAsignaturas[0];
+						$oActividadAsignatura->DBEliminar();
+					}
+				}
 			}
 		}
 		if ($Qpau=="a") { 
@@ -111,7 +123,7 @@ switch ($Qmod) {
 
 			// hay que añadir esta asignatura a las asignaturas que se dan en el ca
 			// compruebo que no existe:
-			$oGesActividadAsignatura = new actividadestudios\GestorActividadAsignaturaDl();
+			$oGesActividadAsignatura = new actividadestudios\GestorActividadAsignatura();
 			$cActividadAsignaturas = $oGesActividadAsignatura->getActividadAsignaturas(array('id_activ'=>$Qid_activ,'id_asignatura'=>$Qid_asignatura));
 			if (count($cActividadAsignaturas) == 0) {
 				$oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
