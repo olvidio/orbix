@@ -161,6 +161,7 @@ class Importar Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_activ',$aDades)) $this->setId_activ($aDades['id_activ']);
 	}
 

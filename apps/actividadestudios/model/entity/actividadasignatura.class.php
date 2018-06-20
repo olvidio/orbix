@@ -37,6 +37,12 @@ class ActividadAsignatura Extends core\ClasePropiedades {
 	 protected  $aDades;
 
 	/**
+	 * Id_schema de ActividadAsignatura
+	 *
+	 * @var integer
+	 */
+	protected $iid_schema;
+	/**
 	 * Id_activ de ActividadAsignatura
 	 *
 	 * @var integer
@@ -228,6 +234,7 @@ class ActividadAsignatura Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_activ',$aDades)) $this->setId_activ($aDades['id_activ']);
 		if (array_key_exists('id_asignatura',$aDades)) $this->setId_asignatura($aDades['id_asignatura']);
 		if (array_key_exists('id_profesor',$aDades)) $this->setId_profesor($aDades['id_profesor']);

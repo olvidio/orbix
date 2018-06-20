@@ -209,6 +209,7 @@ class ActaTribunalDl Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('acta',$aDades)) $this->setActa($aDades['acta']);
 		if (array_key_exists('examinador',$aDades)) $this->setExaminador($aDades['examinador']);
 		if (array_key_exists('orden',$aDades)) $this->setOrden($aDades['orden']);

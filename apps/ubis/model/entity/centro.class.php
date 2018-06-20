@@ -200,6 +200,7 @@ class Centro Extends UbiGlobal {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('tipo_ubi',$aDades)) $this->setTipo_ubi($aDades['tipo_ubi']);
 		if (array_key_exists('id_ubi',$aDades)) $this->setId_ubi($aDades['id_ubi']);
 		if (array_key_exists('nombre_ubi',$aDades)) $this->setNombre_ubi($aDades['nombre_ubi']);

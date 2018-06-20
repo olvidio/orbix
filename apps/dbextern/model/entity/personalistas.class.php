@@ -432,6 +432,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('Identif',$aDades)) $this->setIdentif($aDades['Identif']);
 		if (array_key_exists('ApeNom',$aDades)) $this->setApeNom($aDades['ApeNom']);
 		if (array_key_exists('Dl',$aDades)) $this->setDl($aDades['Dl']);

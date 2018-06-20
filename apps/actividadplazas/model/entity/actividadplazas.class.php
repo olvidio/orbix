@@ -261,25 +261,6 @@ class actividadPlazas Extends core\ClasePropiedades {
 	}
 
 	/**
-	 * Recupera l'atribut iid_schema de actividadPlazas
-	 *
-	 * @return integer iid_schema
-	 */
-	function getId_schema() {
-		if (!isset($this->iid_schema)) {
-			$this->DBCarregar();
-		}
-		return $this->iid_schema;
-	}
-	/**
-	 * estableix el valor de l'atribut iid_schema de actividadPlazas
-	 *
-	 * @param integer iid_schema='' optional
-	 */
-	function setId_schema($iid_schema='') {
-		$this->iid_schema = $iid_schema;
-	}
-	/**
 	 * Recupera l'atribut iid_activ de actividadPlazas
 	 *
 	 * @return integer iid_activ

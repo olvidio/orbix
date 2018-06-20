@@ -189,6 +189,7 @@ class GrupMenuRole Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_item',$aDades)) $this->setId_item($aDades['id_item']);
 		if (array_key_exists('id_grupmenu',$aDades)) $this->setId_grupmenu($aDades['id_grupmenu']);
 		if (array_key_exists('id_role',$aDades)) $this->setId_role($aDades['id_role']);

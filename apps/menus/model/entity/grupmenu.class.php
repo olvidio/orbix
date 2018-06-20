@@ -190,6 +190,7 @@ class GrupMenu Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_grupmenu',$aDades)) $this->setId_grupmenu($aDades['id_grupmenu']);
 		if (array_key_exists('grup_menu',$aDades)) $this->setGrup_menu($aDades['grup_menu']);
 		if (array_key_exists('orden',$aDades)) $this->setOrden($aDades['orden']);

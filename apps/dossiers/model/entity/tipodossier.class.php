@@ -267,6 +267,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_tipo_dossier',$aDades)) $this->setId_tipo_dossier($aDades['id_tipo_dossier']);
 		if (array_key_exists('descripcion',$aDades)) $this->setDescripcion($aDades['descripcion']);
 		if (array_key_exists('tabla_from',$aDades)) $this->setTabla_from($aDades['tabla_from']);

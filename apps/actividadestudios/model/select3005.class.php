@@ -4,6 +4,7 @@ namespace actividadestudios\model;
 use actividades\model\entity as actividades;
 use asignaturas\model\entity as asignaturas;
 use personas\model\entity as personas;
+use devel\model\entity\GestorDbSchema;
 use web;
 use core;
 
@@ -97,6 +98,7 @@ class Select3005 {
 		$GesActivAsignaturas = new entity\GestorActividadAsignatura();
 		$cActivAsignaturas = $GesActivAsignaturas->getActividadAsignaturas(array('id_activ'=>  $this->id_pau,'_ordre'=>'id_asignatura')); 
 
+		$gesDbSchemas = new GestorDbSchema();
 		$c=0;
 		$a_valores=array();
 		$msg_err = '';
@@ -107,6 +109,14 @@ class Select3005 {
 			$oAsignatura = new asignaturas\Asignatura($id_asignatura);
 			$nombre_corto=$oAsignatura->getNombre_corto();
 			$creditos=$oAsignatura->getCreditos();
+			$id_schema = $oActividadAsignatura->getId_schema();
+			$cDbSchemas = $gesDbSchemas->getDbSchemas(['id' => $id_schema]);
+			$a_reg = explode('-',$cDbSchemas[0]->getSchema());
+			$dl_matricula = substr($a_reg[1],0,-1); // quito la v o la f.
+			if ($dl_matricula != $dl_org) {
+				$nombre_corto = "($dl_matricula) $nombre_corto";
+			}
+			
 			$id_profesor=$oActividadAsignatura->getId_profesor();
 			if (!empty($id_profesor)) {
 				$oPersona = personas\Persona::NewPersona($id_profesor);

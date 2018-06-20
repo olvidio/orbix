@@ -187,6 +187,7 @@ class Preferencia Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_usuario',$aDades)) $this->setId_usuario($aDades['id_usuario']);
 		if (array_key_exists('tipo',$aDades)) $this->setTipo($aDades['tipo']);
 		if (array_key_exists('preferencia',$aDades)) $this->setPreferencia($aDades['preferencia']);

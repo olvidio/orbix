@@ -688,7 +688,7 @@ fclose($handle);
 /* CONSTRUIR EL GESTOR ------------------------------------------------ */
 $gestor="Gestor".ucfirst($clase);
 $txt2="<?php
-namespace $grupo\\model;
+namespace $grupo\\model\\entity;
 use core;
 /**
  * $gestor

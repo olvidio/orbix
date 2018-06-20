@@ -211,6 +211,7 @@ class Nota Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_situacion',$aDades)) $this->setId_situacion($aDades['id_situacion']);
 		if (array_key_exists('descripcion',$aDades)) $this->setDescripcion($aDades['descripcion']);
 		if (array_key_exists('superada',$aDades)) $this->setSuperada($aDades['superada']);

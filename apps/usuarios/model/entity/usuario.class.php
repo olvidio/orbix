@@ -224,6 +224,7 @@ class Usuario Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_usuario',$aDades)) $this->setId_usuario($aDades['id_usuario']);
 		if (array_key_exists('usuario',$aDades)) $this->setUsuario($aDades['usuario']);
 		if (array_key_exists('password',$aDades)) $this->setPassword($aDades['password']);

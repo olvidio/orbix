@@ -244,25 +244,6 @@ class ModuloInstalado Extends core\ClasePropiedades {
 	}
 
 	/**
-	 * Recupera l'atribut iid_schema de ModuloInstalado
-	 *
-	 * @return integer iid_schema
-	 */
-	function getId_schema() {
-		if (!isset($this->iid_schema)) {
-			$this->DBCarregar();
-		}
-		return $this->iid_schema;
-	}
-	/**
-	 * estableix el valor de l'atribut iid_schema de ModuloInstalado
-	 *
-	 * @param integer iid_schema='' optional
-	 */
-	function setId_schema($iid_schema='') {
-		$this->iid_schema = $iid_schema;
-	}
-	/**
 	 * Recupera l'atribut iid_mod de ModuloInstalado
 	 *
 	 * @return integer iid_mod

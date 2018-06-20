@@ -196,6 +196,7 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_tipo',$aDades)) $this->setId_tipo($aDades['id_tipo']);
 		if (array_key_exists('tipo_asignatura',$aDades)) $this->setTipo_asignatura($aDades['tipo_asignatura']);
 		if (array_key_exists('tipo_breve',$aDades)) $this->setTipo_breve($aDades['tipo_breve']);

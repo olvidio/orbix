@@ -206,6 +206,7 @@ class Metamenu Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_metamenu',$aDades)) $this->setId_metamenu($aDades['id_metamenu']);
 		if (array_key_exists('modulo',$aDades)) $this->setModulo($aDades['modulo']);
 		if (array_key_exists('url',$aDades)) $this->setUrl($aDades['url']);

@@ -217,6 +217,7 @@ class Modulo Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_mod',$aDades)) $this->setId_mod($aDades['id_mod']);
 		if (array_key_exists('nom',$aDades)) $this->setNom($aDades['nom']);
 		if (array_key_exists('descripcion',$aDades)) $this->setDescripcion($aDades['descripcion']);

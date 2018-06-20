@@ -235,6 +235,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_item',$aDades)) $this->setId_item($aDades['id_item']);
 		if (array_key_exists('id_nom',$aDades)) $this->setId_nom($aDades['id_nom']);
 		if (array_key_exists('id_asignatura',$aDades)) $this->setId_asignatura($aDades['id_asignatura']);
@@ -270,25 +271,6 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 		return $this->aPrimary_key;
 	}
 
-	/**
-	 * Recupera l'atribut iid_schema de ProfesorDocenciaStgr
-	 *
-	 * @return integer iid_schema
-	 */
-	function getId_schema() {
-		if (!isset($this->iid_schema)) {
-			$this->DBCarregar();
-		}
-		return $this->iid_schema;
-	}
-	/**
-	 * estableix el valor de l'atribut iid_schema de ProfesorDocenciaStgr
-	 *
-	 * @param integer iid_schema='' optional
-	 */
-	function setId_schema($iid_schema='') {
-		$this->iid_schema = $iid_schema;
-	}
 	/**
 	 * Recupera l'atribut iid_item de ProfesorDocenciaStgr
 	 *

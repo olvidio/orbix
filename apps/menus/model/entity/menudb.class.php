@@ -232,6 +232,7 @@ class MenuDb Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_menu',$aDades)) $this->setId_menu($aDades['id_menu']);
 		if (array_key_exists('orden',$aDades)) $this->setOrden($aDades['orden']);
 		if (array_key_exists('menu',$aDades)) $this->setMenu($aDades['menu']);

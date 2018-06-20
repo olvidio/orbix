@@ -189,6 +189,7 @@ class DireccionCdcDl Extends DireccionCdc {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_direccion',$aDades)) $this->setId_direccion($aDades['id_direccion']);
 		if (array_key_exists('direccion',$aDades)) $this->setDireccion($aDades['direccion']);
 		if (array_key_exists('c_p',$aDades)) $this->setC_p($aDades['c_p']);

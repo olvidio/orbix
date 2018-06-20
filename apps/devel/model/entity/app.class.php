@@ -201,6 +201,7 @@ class App Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_app',$aDades)) $this->setId_app($aDades['id_app']);
 		if (array_key_exists('nom',$aDades)) $this->setNom($aDades['nom']);
 		if (array_key_exists('db_prefix',$aDades)) $this->setDb_prefix($aDades['db_prefix']);

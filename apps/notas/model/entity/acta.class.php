@@ -250,6 +250,7 @@ class Acta Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		// la fecha debe estar antes del acta por si hay que usar la funcion inventarActa.
 		if (array_key_exists('f_acta',$aDades)) $this->setF_acta($aDades['f_acta']);
 		if (array_key_exists('acta',$aDades)) $this->setActa($aDades['acta']);

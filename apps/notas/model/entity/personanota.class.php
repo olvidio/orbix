@@ -357,25 +357,6 @@ class PersonaNota Extends core\ClasePropiedades {
 	}
 
 	/**
-	 * Recupera l'atribut iid_schema de PersonaNota
-	 *
-	 * @return integer iid_schema
-	 */
-	function getId_schema() {
-		if (!isset($this->iid_schema)) {
-			$this->DBCarregar();
-		}
-		return $this->iid_schema;
-	}
-	/**
-	 * estableix el valor de l'atribut iid_schema de PersonaNota
-	 *
-	 * @param integer iid_schema
-	 */
-	function setId_schema($iid_schema) {
-		$this->iid_schema = $iid_schema;
-	}
-	/**
 	 * Recupera l'atribut iid_nom de PersonaNota
 	 *
 	 * @return integer iid_nom

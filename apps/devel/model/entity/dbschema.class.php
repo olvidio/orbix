@@ -1,62 +1,62 @@
 <?php
-namespace profesores\model\entity;
+namespace devel\model\entity;
 use core;
 /**
- * Fitxer amb la Classe que accedeix a la taula d_profesor_latin
+ * Fitxer amb la Classe que accedeix a la taula db_idschema
  *
- * @package delegación
+ * @package orbix
  * @subpackage model
  * @author Daniel Serrabou
  * @version 1.0
- * @created 08/04/2014
+ * @created 19/06/2018
  */
 /**
- * Classe que implementa l'entitat d_profesor_latin
+ * Classe que implementa l'entitat db_idschema
  *
- * @package delegación
+ * @package orbix
  * @subpackage model
  * @author Daniel Serrabou
  * @version 1.0
- * @created 08/04/2014
+ * @created 19/06/2018
  */
-class ProfesorLatin Extends core\ClasePropiedades {
+class DbSchema Extends core\ClasePropiedades {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/**
-	 * aPrimary_key de ProfesorLatin
+	 * aPrimary_key de DbSchema
 	 *
 	 * @var array
 	 */
 	 private $aPrimary_key;
 
 	/**
-	 * aDades de ProfesorLatin
+	 * aDades de DbSchema
 	 *
 	 * @var array
 	 */
 	 private $aDades;
 
 	/**
-	 * Id_nom de ProfesorLatin
+	 * Schema de DbSchema
+	 *
+	 * @var string
+	 */
+	 private $sschema;
+	/**
+	 * Id de DbSchema
 	 *
 	 * @var integer
 	 */
-	 private $iid_nom;
-	/**
-	 * Latin de ProfesorLatin
-	 *
-	 * @var boolean
-	 */
-	 private $blatin;
+	 private $iid;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
-	 * oDbl de ProfesorLatin
+	 * oDbl de DbSchema
 	 *
 	 * @var object
 	 */
 	 protected $oDbl;
 	/**
-	 * NomTabla de ProfesorLatin
+	 * NomTabla de DbSchema
 	 *
 	 * @var string
 	 */
@@ -68,23 +68,23 @@ class ProfesorLatin Extends core\ClasePropiedades {
 	 * Si només necessita un valor, se li pot passar un integer.
 	 * En general se li passa un array amb les claus primàries.
 	 *
-	 * @param integer|array iid_nom
+	 * @param integer|array sschema
 	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
 	 */
 	function __construct($a_id='') {
-		$oDbl = $GLOBALS['oDB'];
+		$oDbl = $GLOBALS['oDBPC'];
 		if (is_array($a_id)) { 
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
-				if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; // evitem SQL injection fent cast a integer
+				if (($nom_id == 'schema') && $val_id !== '') $this->sschema = (string)$val_id; // evitem SQL injection fent cast a string
 			}	} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->iid_nom = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('iid_nom' => $this->iid_nom);
+				$this->sschema = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->aPrimary_key = array('sschema' => $this->sschema);
 			}
 		}
 		$this->setoDbl($oDbl);
-		$this->setNomTabla('d_profesor_latin');
+		$this->setNomTabla('db_idschema');
 	}
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
@@ -99,38 +99,36 @@ class ProfesorLatin Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if ($this->DBCarregar('guardar') === false) { $bInsert=true; } else { $bInsert=false; }
 		$aDades=array();
-		$aDades['latin'] = $this->blatin;
+		$aDades['id'] = $this->iid;
 		array_walk($aDades, 'core\poner_null');
-		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if (empty($aDades['latin']) || ($aDades['latin'] === 'off') || ($aDades['latin'] === false) || ($aDades['latin'] === 'f')) { $aDades['latin']='f'; } else { $aDades['latin']='t'; }
 
 		if ($bInsert === false) {
 			//UPDATE
 			$update="
-					latin                    = :latin";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_nom='$this->iid_nom'")) === false) {
-				$sClauError = 'ProfesorLatin.update.prepare';
+					id                       = :id";
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE schema='$this->sschema'")) === false) {
+				$sClauError = 'DbSchema.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
-					$sClauError = 'ProfesorLatin.update.execute';
+					$sClauError = 'DbSchema.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
 			}
 		} else {
 			// INSERT
-			array_unshift($aDades, $this->iid_nom);
-			$campos="(id_nom,latin)";
-			$valores="(:id_nom,:latin)";		
+			array_unshift($aDades, $this->sschema);
+			$campos="(schema,id)";
+			$valores="(:schema,:id)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-				$sClauError = 'ProfesorLatin.insertar.prepare';
+				$sClauError = 'DbSchema.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
-					$sClauError = 'ProfesorLatin.insertar.execute';
+					$sClauError = 'DbSchema.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
@@ -147,9 +145,9 @@ class ProfesorLatin Extends core\ClasePropiedades {
 	public function DBCarregar($que=null) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (isset($this->iid_nom)) {
-			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_nom='$this->iid_nom'")) === false) {
-				$sClauError = 'ProfesorLatin.carregar';
+		if (isset($this->sschema)) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE schema='$this->sschema'")) === false) {
+				$sClauError = 'DbSchema.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
@@ -177,8 +175,8 @@ class ProfesorLatin Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_nom='$this->iid_nom'")) === false) {
-			$sClauError = 'ProfesorLatin.eliminar';
+		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE schema='$this->sschema'")) === false) {
+			$sClauError = 'DbSchema.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
@@ -195,15 +193,14 @@ class ProfesorLatin Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
-		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
-		if (array_key_exists('id_nom',$aDades)) $this->setId_nom($aDades['id_nom']);
-		if (array_key_exists('latin',$aDades)) $this->setLatin($aDades['latin']);
+		if (array_key_exists('schema',$aDades)) $this->setSchema($aDades['schema']);
+		if (array_key_exists('id',$aDades)) $this->setId($aDades['id']);
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 
 	/**
-	 * Recupera tots els atributs de ProfesorLatin en un array
+	 * Recupera tots els atributs de DbSchema en un array
 	 *
 	 * @return array aDades
 	 */
@@ -215,54 +212,54 @@ class ProfesorLatin Extends core\ClasePropiedades {
 	}
 
 	/**
-	 * Recupera las claus primàries de ProfesorLatin en un array
+	 * Recupera las claus primàries de DbSchema en un array
 	 *
 	 * @return array aPrimary_key
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('iid_nom' => $this->iid_nom);
+			$this->aPrimary_key = array('schema' => $this->sschema);
 		}
 		return $this->aPrimary_key;
 	}
 
 	/**
-	 * Recupera l'atribut iid_nom de ProfesorLatin
+	 * Recupera l'atribut sschema de DbSchema
 	 *
-	 * @return integer iid_nom
+	 * @return string sschema
 	 */
-	function getId_nom() {
-		if (!isset($this->iid_nom)) {
+	function getSchema() {
+		if (!isset($this->sschema)) {
 			$this->DBCarregar();
 		}
-		return $this->iid_nom;
+		return $this->sschema;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_nom de ProfesorLatin
+	 * estableix el valor de l'atribut sschema de DbSchema
 	 *
-	 * @param integer iid_nom
+	 * @param string sschema
 	 */
-	function setId_nom($iid_nom) {
-		$this->iid_nom = $iid_nom;
+	function setSchema($sschema) {
+		$this->sschema = $sschema;
 	}
 	/**
-	 * Recupera l'atribut blatin de ProfesorLatin
+	 * Recupera l'atribut iid de DbSchema
 	 *
-	 * @return boolean blatin
+	 * @return integer iid
 	 */
-	function getLatin() {
-		if (!isset($this->blatin)) {
+	function getId() {
+		if (!isset($this->iid)) {
 			$this->DBCarregar();
 		}
-		return $this->blatin;
+		return $this->iid;
 	}
 	/**
-	 * estableix el valor de l'atribut blatin de ProfesorLatin
+	 * estableix el valor de l'atribut iid de DbSchema
 	 *
-	 * @param boolean blatin='f' optional
+	 * @param integer iid='' optional
 	 */
-	function setLatin($blatin='f') {
-		$this->blatin = $blatin;
+	function setId($iid='') {
+		$this->iid = $iid;
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
@@ -271,26 +268,24 @@ class ProfesorLatin Extends core\ClasePropiedades {
 	 *
 	 */
 	function getDatosCampos() {
-		$oProfesorLatinSet = new core\Set();
+		$oDbSchemaSet = new core\Set();
 
-		$oProfesorLatinSet->add($this->getDatosLatin());
-		return $oProfesorLatinSet->getTot();
+		$oDbSchemaSet->add($this->getDatosId());
+		return $oDbSchemaSet->getTot();
 	}
 
 
 
 	/**
-	 * Recupera les propietats de l'atribut blatin de ProfesorLatin
+	 * Recupera les propietats de l'atribut iid de DbSchema
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return oject DatosCampo
 	 */
-	function getDatosLatin() {
+	function getDatosId() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'latin'));
-		$oDatosCampo->setEtiqueta(_("latin"));
-		$oDatosCampo->setTipo('check');
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id'));
+		$oDatosCampo->setEtiqueta(_("id"));
 		return $oDatosCampo;
 	}
 }
-?>

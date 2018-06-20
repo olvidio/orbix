@@ -210,6 +210,7 @@ class PlazaPeticion Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_nom',$aDades)) $this->setId_nom($aDades['id_nom']);
 		if (array_key_exists('id_activ',$aDades)) $this->setId_activ($aDades['id_activ']);
 		if (array_key_exists('orden',$aDades)) $this->setOrden($aDades['orden']);
@@ -242,25 +243,6 @@ class PlazaPeticion Extends core\ClasePropiedades {
 		return $this->aPrimary_key;
 	}
 
-	/**
-	 * Recupera l'atribut iid_schema de PlazaPeticion
-	 *
-	 * @return integer iid_schema
-	 */
-	function getId_schema() {
-		if (!isset($this->iid_schema)) {
-			$this->DBCarregar();
-		}
-		return $this->iid_schema;
-	}
-	/**
-	 * estableix el valor de l'atribut iid_schema de PlazaPeticion
-	 *
-	 * @param integer iid_schema='' optional
-	 */
-	function setId_schema($iid_schema='') {
-		$this->iid_schema = $iid_schema;
-	}
 	/**
 	 * Recupera l'atribut iid_nom de PlazaPeticion
 	 *

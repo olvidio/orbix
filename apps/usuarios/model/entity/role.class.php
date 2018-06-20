@@ -208,6 +208,7 @@ class Role Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_role',$aDades)) $this->setId_role($aDades['id_role']);
 		if (array_key_exists('role',$aDades)) $this->setRole($aDades['role']);
 		if (array_key_exists('sf',$aDades)) $this->setSf($aDades['sf']);

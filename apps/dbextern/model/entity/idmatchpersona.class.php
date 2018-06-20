@@ -201,6 +201,7 @@ class IdMatchPersona Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_listas',$aDades)) $this->setId_listas($aDades['id_listas']);
 		if (array_key_exists('id_orbix',$aDades)) $this->setId_orbix($aDades['id_orbix']);
 		if (array_key_exists('id_tabla',$aDades)) $this->setId_tabla($aDades['id_tabla']);
