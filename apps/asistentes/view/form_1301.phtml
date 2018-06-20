@@ -75,6 +75,7 @@ if (!empty($id_activ_real)) {
 if (core\configGlobal::is_app_installed('actividadplazas')) {
 ?>
 	<tr><td class=etiqueta><?= _("plaza") ?></td><td><?= $oDesplegablePlaza->desplegable(); ?></td>
+	</tr><tr>
 	<td class=etiqueta><?= _("propiedad de") ?></td><td>
 	<div id='lst_propietarios'>
 	<?= $oDesplPosiblesPropietarios->desplegable(); ?>
