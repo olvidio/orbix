@@ -27,10 +27,9 @@ use personas\model\entity as personas;
 echo "<script>fnjs_left_side_hide()</script>";
 include_once(core\ConfigGlobal::$dir_estilos.'/tessera.css.php'); 
 
-$oPosicion->recordar();
-
 // En el caso de actualizar la misma página (cara A-B) solo me quedo con la última.
-$stack = $oPosicion->getStack(1);
+$Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
+$oPosicion->recordar($Qrefresh);
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
@@ -178,8 +177,8 @@ function data($data) {
 // -----------------------------
 
 // -----------------------------  cabecera ---------------------------------
-$caraA = web\Hash::link('apps/notas/controller/tessera_imprimir.php?'.http_build_query(array('cara'=>'A','id_nom'=>$id_nom,'id_tabla'=>$id_tabla,'stack'=>$stack)));
-$caraB = web\Hash::link('apps/notas/controller/tessera_imprimir.php?'.http_build_query(array('cara'=>'B','id_nom'=>$id_nom,'id_tabla'=>$id_tabla,'stack'=>$stack)));
+$caraA = web\Hash::link('apps/notas/controller/tessera_imprimir.php?'.http_build_query(array('cara'=>'A','id_nom'=>$id_nom,'id_tabla'=>$id_tabla,'refresh'=>1)));
+$caraB = web\Hash::link('apps/notas/controller/tessera_imprimir.php?'.http_build_query(array('cara'=>'B','id_nom'=>$id_nom,'id_tabla'=>$id_tabla,'refresh'=>1)));
 
 $oHash = new web\Hash();
 $oHash->setUrl(core\ConfigGlobal::getWeb().'/apps/notas/controller/tessera_2_mpdf.php');
