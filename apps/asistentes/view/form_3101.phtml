@@ -27,7 +27,7 @@ fnjs_cmb_propietario=function(){
 <?php	
 }
 ?>
-fnjs_guardar=function(formulario){
+fnjs_guardar2=function(formulario){
 	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
 	//alert ("EEE "+rr);
 	if (rr=='ok') {
@@ -52,11 +52,39 @@ fnjs_guardar=function(formulario){
 		$(formulario).off();
 	}
 }
+fnjs_guardar=function(formulario,repetir){
+	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
+	//alert ("EEE "+rr);
+	if (rr=='ok') {
+		$(formulario).attr('action',"apps/asistentes/controller/update_3101.php");
+		$(formulario).submit(function() {
+			$.ajax({
+				data: $(this).serialize(),
+				url: $(this).attr('action'),
+				type: 'post',
+				complete: function (rta) {
+					rta_txt=rta.responseText;
+					if (rta_txt != '' && rta_txt != '\\n') {
+						alert ('<?= _("respuesta") ?>: '+rta_txt);
+					} else {
+						if (repetir == 1) {
+							$('#id_nom').val(0);
+						} else {
+							<?= $oPosicion->js_atras(1); ?>
+						}
+					}
+				}
+			});
+			return false;
+		});
+		$(formulario).submit();
+		$(formulario).off();
+	}
+}
 </script>
 <?= $oPosicion->mostrar_left_slide(1); ?>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="" method="POST">
 <?= $oHash->getCamposHtml(); ?>
-<input type="Hidden" id="mod" name="mod" value="<?= $mod ?>">
 <table>
 <tr class=tab><th class=titulo_inv colspan=4><?= ucfirst(_("Asistente a una actividad")); ?></th></tr>
 <tr><td class=etiqueta><?= ucfirst(_("asistente")) ?>:</td>
@@ -93,5 +121,6 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 ?>
 </table>
 <br>
-<input type="button" id="guardar" name="guardar" onclick="fnjs_guardar(this.form);" value="<?= ucfirst(_("guardar datos del asistente")); ?>" align="MIDDLE">
+<input type="button" id="guardar" name="guardar" onclick="fnjs_guardar(this.form,0);" value="<?= ucfirst(_("guardar datos del asistente")); ?>" align="MIDDLE">
+<input type="button" id="guardar2" name="guardar2" onclick="fnjs_guardar(this.form,1);" value="<?= ucfirst(_("guardar y añadir otro asistente")); ?>" align="MIDDLE">
 </form>

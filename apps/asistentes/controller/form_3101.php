@@ -190,10 +190,11 @@ $camposForm = 'observ';
 if (core\configGlobal::is_app_installed('actividadplazas')) {
 	$camposForm .= '!plaza!propietario';
 }
-$oHash->setCamposNo('mod!propio!falta!est_ok');
+$oHash->setCamposNo('propio!falta!est_ok');
 $a_camposHidden = array(
 		'id_activ' => $Qid_pau,
 		'obj_pau'=> $obj_pau,
+		'mod' => $mod,
 		);
 if (!empty($id_nom_real)) {
 	$a_camposHidden['id_nom'] = $id_nom_real;
@@ -203,13 +204,14 @@ if (!empty($id_nom_real)) {
 $oHash->setcamposForm($camposForm);
 $oHash->setArraycamposHidden($a_camposHidden);
 
+$oPosicion->addParametro('mod',$mod,0);
+		
 $a_campos = ['obj' => $obj,
 			'oPosicion' => $oPosicion,
 			'oHash' => $oHash,
 			'h1' => $h1,
 			'url_ajax' => $url_ajax,
 			'id_activ' => $Qid_activ,
-			'mod' => $mod,
 			'id_nom_real' => $id_nom_real,
 			'ape_nom' => $ape_nom,
 			'oDesplegablePersonas' => $oDesplegablePersonas,
