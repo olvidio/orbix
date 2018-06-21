@@ -123,6 +123,7 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
 
 // Condiciones de búsqueda.
 $aWhere = array();
+$aOperador = array();
 // Status
 if ($Qstatus != 5) {
 	$aWhere['status'] = $Qstatus;

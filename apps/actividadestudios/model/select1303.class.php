@@ -199,10 +199,11 @@ class Select1303 {
 		$stgr = $oPersona->getStgr();
 		if ($stgr == 'r') $aviso .= _("Está de repaso")."<br>";
 
+		$aWhere = array();
+		$aOperadores = array();
 		$GesAsistentes = new asistentes\GestorAsistente();
 		if (!empty($this->Qid_activ)) {  // ¿? ya tengo una actividad concreta (vengo del dossier de esa actividad).
 			$aWhere['id_activ'] = $this->Qid_activ;
-			$aOperadores = array();
 			$cAsistencias = $GesAsistentes->getActividadesDeAsistente(array('id_nom'=>  $this->id_pau,'id_activ'=>  $this->Qid_activ),$aWhere,$aOperadores,true);
 		} else {
 			if (empty($this->todos)) {
