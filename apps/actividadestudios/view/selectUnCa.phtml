@@ -8,7 +8,12 @@
 <?= ucfirst(_("si")); ?>
 <input type='Radio' id='est_ok' name='est_ok' value='f' <?= $chk_2 ?> onclick="fnjs_grabar_est(this.form,<?= $ca_num ?>)">
 <?= ucfirst(_("no")) ?>
-</td></tr></table><br>
+</td>
+<td style="text-align: right">
+	<?= _("observaciones") ?>
+	<input type="text" name="observ" value="<?= $observ ?>" size="65em" onChange="fnjs_grabar_observ(this.form,<?= $ca_num ?>)" />
+</td>	
+</tr></table><br>
 <?= $oTabla->mostrar_tabla(); ?>
 <!--=================  boton añadir asignatura ===================-->
 <br>

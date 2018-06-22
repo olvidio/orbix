@@ -1,4 +1,26 @@
 <script>
+fnjs_grabar_observ=function(formulario,n){
+	var mod="#mod"+n;
+	$(mod).val("observ");
+	$(formulario).attr('action',"apps/actividadestudios/controller/update_3103.php");
+	$(formulario).submit(function() {
+		$.ajax({
+			data: $(this).serialize(),
+			url: $(this).attr('action'),
+			type: 'post',
+			complete: function (rta) {
+				rta_txt = rta.responseText;
+				if (rta_txt != '' && rta_txt != '\\n') {
+					alert ('<?= _("respuesta") ?>: '+rta_txt);
+				}
+			},
+			success: function() { fnjs_actualizar(formulario) }
+		});
+		return false;
+	});
+	$(formulario).submit();
+	$(formulario).off();
+}
 fnjs_grabar_est=function(formulario,n){
 	var mod="#mod"+n;
 	$(mod).val("plan");

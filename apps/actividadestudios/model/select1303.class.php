@@ -85,6 +85,7 @@ class Select1303 {
 		$propio=$oAsistente->getPropio();
 		if ($propio != 't')  echo _("No está como propio, no debería tener plan de estudios");
 		$est_ok=$oAsistente->getEst_ok();
+		$observ_asistente=$oAsistente->getObserv();
 		$oActividad = new actividades\Actividad(array('id_activ'=>  $this->id_activ));
 		extract($oActividad->getTot());
 		$GesMatriculas = new entity\GestorMatricula();
@@ -138,7 +139,7 @@ class Select1303 {
 		$oTabla->setDatos($a_valores);
 
 		$oHashCa = new web\Hash();
-		$oHashCa->setcamposForm('est_ok');
+		$oHashCa->setcamposForm('est_ok!observ');
 		$oHashCa->setCamposNo('sel!mod!scroll_id!refresh');
 		$a_camposHiddenCa = array(
 				'pau' => $this->pau,
@@ -162,8 +163,8 @@ class Select1303 {
 					'chk_1' => $chk_1,
 					'chk_2' => $chk_2,
 					'link_add' => $this->link_add,
-//					'link_matricular' => $this->link_matricular,
 					'bloque' => $this->bloque,
+					'observ' => $observ_asistente,
 					];
 		
 		
