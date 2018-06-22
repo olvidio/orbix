@@ -35,7 +35,7 @@ $Qyear = (string) \filter_input(INPUT_POST, 'year');
 $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
 $Qref = (string) \filter_input(INPUT_POST, 'ref');
-$Qtodos = (string) \filter_input(INPUT_POST, 'todos');
+$Qgrupo_estudios = (string) \filter_input(INPUT_POST, 'grupo_estudios');
 
 
 // Grupo de estudios
@@ -135,14 +135,14 @@ $oFormP->setEmpiezaMax($Qempiezamax);
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('id_ctr_agd!id_ctr_n!texto!empiezamax!empiezamin!periodo!ref!iactividad_val!iasistentes_val!year');
-$oHash->setCamposNo('na!todos');
+$oHash->setCamposNo('na!grupo_estudios');
 $a_camposHidden = array(
 		'asistentes_val' => 1,
 		'actividades_val' => 2
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 
-if ($Qtodos == 1) {
+if ($Qgrupo_estudios == 'todos') {
 	$chk_todos = 'checked';
 	$chk_grupo = '';
 } else {

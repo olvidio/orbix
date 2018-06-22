@@ -43,7 +43,7 @@ if (isset($_POST['stack'])) {
 }
 
 $obj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
-$Qtodos = (integer) \filter_input(INPUT_POST, 'todos');
+$Qgrupo_estudios = (string) \filter_input(INPUT_POST, 'grupo_estudios');
 $Qtexto = (string) \filter_input(INPUT_POST, 'texto');
 $Qref = (string) \filter_input(INPUT_POST, 'ref');
 $Qidca = (string) \filter_input(INPUT_POST, 'idca');
@@ -53,7 +53,7 @@ $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIR
 if (!empty($a_sel)) { //vengo de un checkbox
 	$Qid_nom = strtok($a_sel[0],"#");
 	$Qna=strtok("#"); // id_tabla
-	$Qtodos=1;
+	$Qgrupo_estudios = 'todos';
 	$inicio=date("d/m/Y");
 	if (date("m") < 10 ) {
 		$fin="30/10/".date("Y");
@@ -103,7 +103,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 					'year'=>$Qyear,
 					'empiezamin'=>$Qempiezamin,
 					'empiezamax'=>$Qempiezamax,
-					'todos' => $Qtodos,
+					'grupo_estudios' => $Qgrupo_estudios,
 					'ref' => $Qref,
 				);
 	$oPosicion->setParametros($aGoBack,1);
@@ -179,10 +179,9 @@ $cPersonas = $GesPersonaDl->getPersonas($aWhere,$aOperador);
 $aWhereActividad['f_ini'] = "'$inicio','$fin'";
 $aOperadorActividad['f_ini'] = 'BETWEEN';
 
-if ($Qtodos!=1) {
-	$grupo_estudios = $Qtodos;
+if ($Qgrupo_estudios != 'todos') {
 	$GesGrupoEst = new ubis\GestorDelegacion();
-	$cDelegaciones = $GesGrupoEst->getDelegaciones(array('grupo_estudios'=>$grupo_estudios));
+	$cDelegaciones = $GesGrupoEst->getDelegaciones(array('grupo_estudios'=>$Qgrupo_estudios));
 	if (count($cDelegaciones) > 1) $aOperadorActividad['dl_org'] = 'OR';
 	$mi_grupo = '';
 	foreach ($cDelegaciones as $oDelegacion) {
