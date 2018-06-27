@@ -49,6 +49,12 @@ fnjs_cmb_preceptor=function(){
 	}
 }
 fnjs_guardar=function(formulario){
+	if(!($('#id_asignatura_real').length > 0)) {
+		if($('#id_nivel').val() < 1000) {
+			alert ("<?= _("Debe poner una asignatura") ?>");
+			return;
+		}
+	}
 	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
 	//alert ("EEE "+rr);
 	if (rr=='ok') {
