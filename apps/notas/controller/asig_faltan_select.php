@@ -101,8 +101,6 @@ if (empty($titulo)) {
 	$titulo=urldecode($titulo);
 }
 		
-if (empty($breve)) $breve="";
-if (empty($es_sacd)) $es_sacd="";
 $i=0;
 $a_valores=array();
 $obj = 'personas\\model\\entity\\'.$obj_pau;
@@ -119,7 +117,7 @@ foreach ($aId_nom as $id_nom=>$aAsignaturas) {
 
 	$condicion_2="Where id_nom='".$id_nom."'";
 	$condicion_2=urlencode($condicion_2);
-	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/home_persona.php?'.http_build_query(array('id_nom'=>$id_nom,'obj_pau'=>$obj_pau,'breve'=>$breve,'es_sacd'=>$es_sacd)));
+	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/home_persona.php?'.http_build_query(array('id_nom'=>$id_nom,'obj_pau'=>$obj_pau)));
 
 	if ($Qlista == true) { //Hacer un listado de las asignaturas que le faltan
 		$as = '';
@@ -144,8 +142,6 @@ $oHash->setcamposForm('sel!scroll_id');
 $a_camposHidden = array(
 		'pau' => 'p',
 		'obj_pau' => $obj_pau,
-		'breve' => $breve,
-		'es_sacd' => $es_sacd
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 

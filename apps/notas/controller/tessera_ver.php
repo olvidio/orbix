@@ -32,7 +32,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else {
-	exit('nose de que va');
+	exit('no sé de que va');
 }
 
 

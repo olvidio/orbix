@@ -34,9 +34,7 @@ if (isset($_POST['stack'])) {
 }
 $Qmodo = (string) \filter_input(INPUT_POST, 'modo');
 
-$Qes_sacd = (string) \filter_input(INPUT_POST, 'es_sacd');
 $Qna = (string) \filter_input(INPUT_POST, 'na');
-$Qbreve = (string) \filter_input(INPUT_POST, 'breve');
 $Qque = (string) \filter_input(INPUT_POST, 'que');
 $Qtipo = (string) \filter_input(INPUT_POST, 'tipo');
 $Qtabla = (string) \filter_input(INPUT_POST, 'tabla');
@@ -51,7 +49,6 @@ $Qcentro = (string) \filter_input(INPUT_POST, 'centro');
 if (!empty($Qtabla)) {
 	$nom_tabla=substr($Qtabla,2);
 	if ($nom_tabla=="de_paso") $nom_tabla=$Qna." ".$nom_tabla;
-	if (!empty($Qes_sacd)) $nom_tabla="sacd ".$nom_tabla;
 } else {
 	$Qtabla="personas";
 	$nom_tabla=ucfirst(_("todos"));
@@ -70,8 +67,6 @@ $a_camposHidden = array(
 		'tipo' => $Qtipo,
 		'tabla' => $Qtabla,
 		'na' => $Qna,
-		'breve' => $Qbreve,
-		'es_sacd' => $Qes_sacd,
 		'que' => $Qque
 		);
 $oHash->setArraycamposHidden($a_camposHidden);

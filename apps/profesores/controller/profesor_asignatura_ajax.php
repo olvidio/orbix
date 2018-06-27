@@ -94,20 +94,6 @@ foreach ($cProfesores['ampliacion'] as $id_nom => $ap_nom) {
 
 }
 
-/*
-$oHash = new web\Hash();
-$oHash->setcamposForm('nombre!apellido1!apellido2!centro!exacto!cmb');
-$oHash->setcamposNo('exacto!cmb');
-$a_camposHidden = array(
-		'tipo' => $_POST['tipo'],
-		'tabla' => $tabla,
-		'na' => $_POST['na'],
-		'breve' => $_POST['breve'],
-		'es_sacd' => $_POST['es_sacd'],
-		'que' => $_POST['que']
-		);
-$oHash->setArraycamposHidden($a_camposHidden);
-*/
 $oTabla = new web\Lista();
 $oTabla->setId_tabla('list_profe_asig');
 $oTabla->setCabeceras($a_cabeceras);

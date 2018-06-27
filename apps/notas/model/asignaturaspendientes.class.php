@@ -288,7 +288,7 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
 		$sqlCreate="CREATE TEMP TABLE $asignaturas(
 						id_asignatura integer,
 						id_nivel integer,
-						nombre_asignatura character varying(60) NOT NULL,
+						nombre_asignatura character varying(100) NOT NULL,
 						nombre_corto character varying(23),
 						creditos numeric(4,2),
 						year character varying(3),

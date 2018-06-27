@@ -29,9 +29,7 @@ $oPosicion->recordar();
 //Si vengo de vuelta de un go_to:
 $tabla = (string) \filter_input(INPUT_POST, 'tabla');
 $Qna = (string) \filter_input(INPUT_POST, 'na');
-$breve = (string) \filter_input(INPUT_POST, 'breve');
 $tipo = (string) \filter_input(INPUT_POST, 'tipo');
-$es_sacd = (string) \filter_input(INPUT_POST, 'es_sacd');
 $sWhere = (string) \filter_input(INPUT_POST, 'sWhere');
 $sOperador = (string) \filter_input(INPUT_POST, 'sOperador');
 $sWhereCtr = (string) \filter_input(INPUT_POST, 'sWhereCtr');
@@ -73,9 +71,7 @@ $aGoBack = array (
 				'centro' => $Qcentro,
 				'tabla' => $tabla,
 				'na' => $Qna,
-				'breve' => $breve,
 				'tipo' => $tipo,
-				'es_sacd' => $es_sacd,
 				'sWhere' => $sWhere,
 				'sOperador' => $sOperador,
 				'sWhereCtr' => $sWhereCtr,
@@ -136,12 +132,6 @@ if (empty($sWhere)) {
 			$aWhere['situacion'] = 'B';
 			$aOperador['situacion'] = '!=';
 		}
-	}
-	//añado una condición más, para cuando me interesan solo los que son
-	//sacd. La variable es sacd=1 la hago llegar a través de menús
-	empty($Qes_sacd)? $es_sacd="" : $es_sacd=$Qes_sacd;
-	if ($es_sacd==1){ 
-		$aWhere['sacd'] = 't';
 	}
 } else {
 	$aWhere = unserialize(core\urlsafe_b64decode($sWhere));
@@ -371,7 +361,7 @@ foreach ($cPersonas as $oPersona) {
 	$a_val['sel']="$id_nom#$id_tabla";
 	$a_val[1]=$id_tabla;
 	if ($sPrefs == 'html') {
-		$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/home_persona.php?'.http_build_query(array('id_nom'=>$id_nom,'id_tabla'=>$id_tabla,'obj_pau'=>$obj_pau,'breve'=>$breve,'es_sacd'=>$es_sacd)));
+		$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/home_persona.php?'.http_build_query(array('id_nom'=>$id_nom,'id_tabla'=>$id_tabla,'obj_pau'=>$obj_pau)));
 		$a_val[2]= array( 'ira'=>$pagina, 'valor'=>$nom);
 	} else {
 		$pagina='fnjs_ficha("#seleccionados")';
@@ -419,8 +409,6 @@ $a_camposHidden = array(
 		'pau' => 'p',
 		'obj_pau' => $obj_pau,
 		'permiso' => '3',
-		'breve' => $breve,
-		'es_sacd' => $es_sacd,
 		'tabla' => $tabla,
 		'na' => $Qna,
 		'permiso' => $permiso,
