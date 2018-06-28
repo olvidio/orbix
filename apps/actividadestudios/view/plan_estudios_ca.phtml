@@ -32,9 +32,11 @@
 		echo "<tr><td>$a</td><td>{$datos['nom_persona']} ({$datos['ctr']})</td>";
 		if(is_array($aAsignaturas)) {
 			$asig = '';
+			$i = 0;
 			foreach($aAsignaturas as $aAsignatura) {
+				$i++;
+				if ($i > 1) $asig .= '<br>';
 				$asig .= "{$aAsignatura['nombre_corto']} ({$aAsignatura['creditos']}) {$aAsignatura['preceptor']}";
-				if ($a > 1) $asig .= '<br>';
 			}
 			echo "<td>$asig</td></tr>";
 		} else {
