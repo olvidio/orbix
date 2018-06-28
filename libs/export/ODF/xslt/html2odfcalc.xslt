@@ -9,7 +9,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU General Public License along with this program; see the file COPYING. If not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA -->
 
 <xsl:output method="xml" indent="yes"/>
-<xsl:output type="text" encoding="utf-8"/>
+<xsl:output encoding="utf-8"/>
 <xsl:template match="/html">
 <office:document-content office:version="1.0"> <office:scripts/>
 	<office:automatic-styles>
@@ -138,11 +138,11 @@ You should have received a copy of the GNU General Public License along with thi
 				<xsl:apply-templates select="th"/>
 			</table:table-row>
 		</xsl:when>
-		<xsl:otherwise test="td">
+		<xsl:when test="td">
 			<table:table-row>
 				<xsl:apply-templates select="td"/>
 			</table:table-row>
-		</xsl:otherwise>
+		</xsl:when>
 	</xsl:choose>
 </xsl:template>
 
@@ -217,6 +217,7 @@ You should have received a copy of the GNU General Public License along with thi
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
+
 <xsl:template match="a">
 	<xsl:call-template name="text_applyer"/>
 </xsl:template>
@@ -250,7 +251,8 @@ You should have received a copy of the GNU General Public License along with thi
 		</xsl:when>
 		<xsl:when test="text()">
 			<text:p>
-				<xsl:value-of select="normalize-space(string(.))"/>
+				<xsl:apply-templates select="node()"/>
+				<!-- <xsl:value-of select="normalize-space(string(.))"/> -->
 			</text:p>
 		</xsl:when>
 		<xsl:otherwise>
@@ -270,8 +272,8 @@ You should have received a copy of the GNU General Public License along with thi
 </xsl:template>
 
 <xsl:template match="br">
-	<text:p>
-	</text:p>
+	<xsl:text disable-output-escaping="yes">&amp;#13;</xsl:text>
+	<xsl:text disable-output-escaping="yes">&amp;#10;</xsl:text>
 </xsl:template>
 
 <xsl:template match="p">

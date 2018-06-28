@@ -35,7 +35,7 @@
 			$i = 0;
 			foreach($aAsignaturas as $aAsignatura) {
 				$i++;
-				if ($i > 1) $asig .= '<br>';
+				if ($i > 1) $asig .= '<br />';
 				$asig .= "{$aAsignatura['nombre_corto']} ({$aAsignatura['creditos']}) {$aAsignatura['preceptor']}";
 			}
 			echo "<td>$asig</td></tr>";
