@@ -29,64 +29,12 @@ $oHash1 = new web\Hash();
 $oHash1->setcamposChk('personas_n!personas_agd!c1!c2');
 $oHash1->setcamposForm('id_asignatura!b_c');
 
-?>
-<form id="frm_asig_altan" action="apps/notas/controller/asig_faltan_select.php" method="post" onkeypress="fnjs_enviar(event,this);">
-<?= $oHash->getCamposHtml(); ?>
-<table >
-<thead><th class=titulo_inv colspan=4><?= ucfirst(_("búsqueda de personas por número de asignaturas")); ?></th></thead>
-<tfoot>
-<tr>
-	<th colspan=4><input type="button" onclick="fnjs_enviar_formulario('#frm_asig_altan')" id="btn_ok" name="btn_ok" value="<?= ucfirst(_("buscar")); ?>"  class="btn_ok">
-	<input TYPE="reset" value="<?= ucfirst(_("borrar")); ?>"></th>
-</tr>
-</tfoot>
-<tbody>
-<tr>
-	<td class=etiqueta ><input type="Checkbox" name="personas_n" value="n" checked><?= _("numerarios"); ?></td>
-	<td class=etiqueta ><input type="Checkbox" name="personas_agd" value="agd" ><?= _("agregados"); ?></td>
-</tr>
-<tr>
-	<td class=etiqueta ><input type="Radio" name="b_c" value=b ><?= _("bienio"); ?></td>
-	<td class=etiqueta ><input type="Radio" name="b_c" value=c checked><?= _("cuadrienio"); ?></td>
-	<td class=etiqueta align="RIGHT"><input type="checkbox" name="c1" checked><?= _("año I"); ?></td>
-	<td class=etiqueta align="RIGHT"><input type="checkbox" name="c2" checked><?= _("año II-IV"); ?></td>
-</tr>
-<tr>
-	<td class=etiqueta><b><?= ucfirst(_("número de asignaturas que faltan")); ?></b></td> 
-	<td><input class=contenido name="numero" size="3"></td>
-</tr>
-<tr>
-<td class=etiqueta colspan="2"><input type="checkbox" name="lista"><?= _("incluir lista de asignaturas"); ?></td>
-</tr>
-</tbody>
-</table>
-</form>
-<br />
-<form id="frm_asig_altan1" action="apps/notas/controller/asig_faltan_personas_select.php" method="post" onkeypress="fnjs_enviar(event,this);">
-<?= $oHash1->getCamposHtml(); ?>
-<table >
-<thead><th class=titulo_inv colspan=4><?= ucfirst(_("búsqueda de personas por asignatura")); ?></th></thead>
-<tfoot>
-<tr>
-	<th colspan=4><input type="button" onclick="fnjs_enviar_formulario('#frm_asig_altan1')" id="btn_ok" name="btn_ok" value="<?= ucfirst(_("buscar")); ?>"  class="btn_ok">
-	<input TYPE="reset" value="<?= ucfirst(_("borrar")); ?>"></th>
-</tr>
-</tfoot>
-<tbody>
-<tr>
-	<td class=etiqueta ><input type="Checkbox" name="personas_n" value="n" checked><?= _("numerarios"); ?></td>
-	<td class=etiqueta ><input type="Checkbox" name="personas_agd" value="agd" ><?= _("agregados"); ?></td>
-</tr>
-<tr>
-	<td class=etiqueta ><input type="Radio" name="b_c" value=b ><?= _("bienio"); ?></td>
-	<td class=etiqueta ><input type="Radio" name="b_c" value=c checked><?= _("cuadrienio"); ?></td>
-	<td class=etiqueta align="RIGHT"><input type="checkbox" name="c1" checked><?= _("año I"); ?></td>
-	<td class=etiqueta align="RIGHT"><input type="checkbox" name="c2" checked><?= _("año II-IV"); ?></td>
-</tr>
-<tr>
-	<td class=etiqueta><b><?= ucfirst(_("asignatura")); ?></b></td> 
-	<td><?= $oDesplAsignaturas->desplegable(); ?></td>
-</tr>
-</tbody>
-</table>
-</form>
+
+$a_campos = ['oPosicion' => $oPosicion,
+			'oHash' => $oHash,
+			'oHash1' => $oHash1,
+			'oDesplAsignaturas' => $oDesplAsignaturas,
+			];
+
+$oView = new core\View('notas/controller');
+echo $oView->render('asig_faltan_que.phtml',$a_campos);

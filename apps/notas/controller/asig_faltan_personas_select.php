@@ -82,13 +82,15 @@ if (!empty($Qpersonas_n) && !empty($Qpersonas_agd)) {
 	$obj_pau = 'PersonaDl';
 }
 
+$oAsignatura = new asignaturas\Asignatura($Qid_asignatura);
+$nom_asignatura = $oAsignatura->getNombre_corto();
+$tipo_asignatura = $oAsignatura->getId_tipo(); // tipo 8 = OPCIONAL
+
 $Pendientes = new notas\AsignaturasPendientes($personas);
 $Pendientes->setLista(true);
 
-$aId_nom = $Pendientes->personasQueLesFaltaAsignatura($Qid_asignatura,$curso);
+$aId_nom = $Pendientes->personasQueLesFaltaAsignatura($Qid_asignatura,$curso,$id_tipo_asignatura);
 
-$oAsignatura = new asignaturas\Asignatura($Qid_asignatura);
-$nom_asignatura = $oAsignatura->getNombre_corto();
 /*
 * Defino un array con los datos actuales, para saber volver después de navegar un rato
 */

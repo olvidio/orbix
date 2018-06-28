@@ -216,7 +216,7 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
 		}
 		return $aId_nom;
 	}
-	public function personasQueLesFaltaAsignatura($id_asignatura,$curso) {
+	public function personasQueLesFaltaAsignatura($id_asignatura,$curso,$id_tipo_asignatura) {
 		$aId_nom = array();
 		if (!empty($id_asignatura)) {
 			$lista = $this->blista;
@@ -230,10 +230,15 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
 					FROM $personas p 
 					WHERE p.situacion = 'A' $condicion_stgr
 					";
-			$query_op="SELECT n.id_nom
+			if ($id_tipo_asignatura == 8) { // opcional
+				$query_op="SELECT n.id_nom
+					FROM e_notas_dl n
+					WHERE n.id_nivel = $id_asignatura";
+			} else {
+				$query_op="SELECT n.id_nom
 					FROM e_notas_dl n
 					WHERE n.id_asignatura = $id_asignatura";
-			
+			}
 			$query_tot="$query EXCEPT $query_op";
 			//echo "$query_tot<br>";
 			$a_id_noms = $oDbl->query($query_tot);
