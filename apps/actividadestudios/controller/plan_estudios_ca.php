@@ -103,6 +103,7 @@ foreach ($cAsistentes as $oActividadAsistente) {
 	if ($oActividadAsistente->getPropio() === FALSE) { continue; }
 	$a++;
 	$id_nom=$oActividadAsistente->getId_nom();
+	$observ_est=$oActividadAsistente->getObserv_est();
 	$oPersona = personas\Persona::NewPersona($id_nom);
 	if (!is_object($oPersona)) {
 		$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
@@ -128,6 +129,7 @@ foreach ($cAsistentes as $oActividadAsistente) {
 		}
 		$aAlumnos[$a]['nom_persona'] = $nom_persona;
 		$aAlumnos[$a]['ctr'] = $ctr;
+		$aAlumnos[$a]['observ_est'] = $observ_est;
 		$aAlumnos[$a]['aAsignaturas'] = $est;
 	} else {
 		$aAsignaturas = array();
@@ -148,6 +150,7 @@ foreach ($cAsistentes as $oActividadAsistente) {
 		}
 		$aAlumnos[$a]['nom_persona'] = $nom_persona;
 		$aAlumnos[$a]['ctr'] = $ctr;
+		$aAlumnos[$a]['observ_est'] = $observ_est;
 		$aAlumnos[$a]['aAsignaturas'] = $aAsignaturas;
 	}
 }

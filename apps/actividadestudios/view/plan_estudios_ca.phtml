@@ -29,7 +29,11 @@
 	foreach ($aAlumnos as $datos) {
 		$a++;
 		$aAsignaturas = $datos['aAsignaturas'];
-		echo "<tr><td>$a</td><td>{$datos['nom_persona']} ({$datos['ctr']})</td>";
+		echo "<tr><td>$a</td><td>{$datos['nom_persona']} ({$datos['ctr']})";
+		if (!empty($datos['observ_est'])) {
+			echo "<br />*{$datos['observ_est']}";
+		}
+		echo "</td>";
 		if(is_array($aAsignaturas)) {
 			$asig = '';
 			$i = 0;

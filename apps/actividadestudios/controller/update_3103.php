@@ -17,6 +17,7 @@ $Qmod = (string) \filter_input(INPUT_POST,'mod');
 $Qpau = (string) \filter_input(INPUT_POST,'pau');
 $Qest_ok = (string) \filter_input(INPUT_POST,'est_ok');
 $Qobserv = (string) \filter_input(INPUT_POST,'observ');
+$Qobserv_est = (string) \filter_input(INPUT_POST,'observ_est');
 
 //En el caso de eliminar desde la lista de cargos
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -43,6 +44,26 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 switch ($Qmod) {
+	case 'observ_est':  //------------ observaciones estudios --------
+		// hay que averiguar si la persona es de la dl o de fuera.
+		$oPersona = personas\Persona::NewPersona($Qid_nom);
+		if (!is_object($oPersona)) {
+			$msg_err = "<br>$oPersona con id_nom: $Qid_nom en  ".__FILE__.": line ". __LINE__;
+			exit($msg_err);
+		}
+		$obj_persona = get_class($oPersona);
+		$obj_persona = str_replace("personas\\model\\entity\\",'',$obj_persona);
+		// hay que averiguar si la actividad es de la dl o de fuera.
+		$oActividad  = new actividades\Actividad($Qid_activ);
+		// si es de la sf quito la 'f'
+		$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
+		$id_tabla = $oActividad->getId_tabla();
+		$oAsistente = asistentes\Asistente::getClaseAsistente($obj_persona,$dl,$id_tabla);
+		$oAsistente->setPrimary_key(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom));
+		$oAsistente->DBCarregar();
+		$oAsistente->setObserv_est($Qobserv_est);
+		$oAsistente->DBGuardar();
+		break;
 	case 'observ':  //------------ observaciones --------
 		// hay que averiguar si la persona es de la dl o de fuera.
 		$oPersona = personas\Persona::NewPersona($Qid_nom);

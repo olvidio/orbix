@@ -105,7 +105,9 @@ if (!empty($id_nom_real)) {
 <tr><td class=etiqueta><?= _("estudios confirmados") ?></td>
 <td><input type="Checkbox" id="est_ok" name="est_ok" value="true" <?= $est_chk ?>></td></tr>
 <tr><td class=etiqueta><?= ucfirst(_("observaciones")); ?></td><td class=contenido colspan="3">
-<textarea id="observ" name="observ" cols="40" rows="5"><?= htmlspecialchars($observ) ?></textarea></td></tr>
+<textarea id="observ" name="observ" cols="40" rows="3"><?= htmlspecialchars($observ) ?></textarea></td></tr>
+<tr><td class=etiqueta><?= ucfirst(_("observaciones estudios")); ?></td><td class=contenido colspan="3">
+<textarea id="observ_est" name="observ_est" cols="40" rows="3"><?= htmlspecialchars($observ_est) ?></textarea></td></tr>
 <?php
 if (core\configGlobal::is_app_installed('actividadplazas')) {
 ?>

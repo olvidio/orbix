@@ -1,7 +1,7 @@
 <script>
 fnjs_grabar_observ=function(formulario,n){
 	var mod="#mod"+n;
-	$(mod).val("observ");
+	$(mod).val("observ_est");
 	$(formulario).attr('action',"apps/actividadestudios/controller/update_3103.php");
 	$(formulario).submit(function() {
 		$.ajax({

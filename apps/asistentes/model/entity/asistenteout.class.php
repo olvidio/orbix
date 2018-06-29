@@ -75,6 +75,7 @@ class AsistenteOut Extends AsistentePub {
 		$aDades['encargo'] = $this->sencargo;
 		$aDades['cama'] = $this->scama;
 		$aDades['observ'] = $this->sobserv;
+		$aDades['observ_est'] = $this->sobserv_est;
 		$aDades['plaza'] = $this->iplaza;
 		$aDades['propietario'] = $this->spropietario;
 		array_walk($aDades, 'core\poner_null');
@@ -95,6 +96,7 @@ class AsistenteOut Extends AsistentePub {
 					encargo                  = :encargo,
 					cama                     = :cama,
 					observ                   = :observ,
+					observ_est               = :observ_est,
 					plaza                    = :plaza,
 					propietario              = :propietario";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_activ='$this->iid_activ' AND id_nom='$this->iid_nom'")) === false) {
@@ -111,8 +113,8 @@ class AsistenteOut Extends AsistentePub {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_activ, $this->iid_nom);
-			$campos="(id_activ,id_nom,propio,est_ok,cfi,cfi_con,falta,encargo,cama,observ,plaza,propietario)";
-			$valores="(:id_activ,:id_nom,:propio,:est_ok,:cfi,:cfi_con,:falta,:encargo,:cama,:observ,:plaza,:propietario)";
+			$campos="(id_activ,id_nom,propio,est_ok,cfi,cfi_con,falta,encargo,cama,observ,observ_est,plaza,propietario)";
+			$valores="(:id_activ,:id_nom,:propio,:est_ok,:cfi,:cfi_con,:falta,:encargo,:cama,:observ,:observ_est,:plaza,:propietario)";
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = get_class($this).'.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);

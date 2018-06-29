@@ -88,6 +88,7 @@ if (!empty($Qid_nom)) { //caso de modificar
 	$falta=$oAsistente->getFalta();
 	$est_ok=$oAsistente->getEst_ok();
 	$observ=$oAsistente->getObserv();
+	$observ_est=$oAsistente->getObserv_est();
 	$plaza=$oAsistente->getPlaza();
 	$propietario=$oAsistente->getPropietario();
 	
@@ -110,6 +111,7 @@ if (!empty($Qid_nom)) { //caso de modificar
 	$ape_nom = '';
 	$propio="t"; //valor por defecto
 	$observ=""; //valor por defecto
+	$observ_est=""; //valor por defecto
 	$plaza=  asistentes\Asistente::PLAZA_PEDIDA; //valor por defecto
 	$propietario=''; //valor por defecto
 	$Qobj_pau = !empty($Qobj_pau)? urldecode($Qobj_pau) : '';
@@ -186,7 +188,7 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 }
 
 $oHash = new web\Hash();
-$camposForm = 'observ';
+$camposForm = 'observ!observ_est';
 if (core\configGlobal::is_app_installed('actividadplazas')) {
 	$camposForm .= '!plaza!propietario';
 }
@@ -219,6 +221,7 @@ $a_campos = ['obj' => $obj,
 			'falta_chk' => $falta_chk,
 			'est_chk' => $est_chk,
 			'observ' => $observ,
+			'observ_est' => $observ_est,
 			'oDesplegablePlaza' => $oDesplegablePlaza,
 			'oDesplPosiblesPropietarios' => $oDesplPosiblesPropietarios,
 			];

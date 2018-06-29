@@ -97,6 +97,12 @@ class AsistentePub Extends core\ClasePropiedades {
 	 */
 	 protected $sobserv;
 	/**
+	 * Observ_est de AsistentePub
+	 *
+	 * @var string
+	 */
+	 protected $sobserv_est;
+	/**
 	 * Plaza de AsistentePub
 	 *
 	 * @var integer
@@ -199,6 +205,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$aDades['encargo'] = $this->sencargo;
 		$aDades['cama'] = $this->scama;
 		$aDades['observ'] = $this->sobserv;
+		$aDades['observ_est'] = $this->sobserv_est;
 		$aDades['plaza'] = $this->iplaza;
 		$aDades['propietario'] = $this->spropietario;
 		//$aDades['id_tabla'] = $this->sid_tabla;
@@ -220,6 +227,7 @@ class AsistentePub Extends core\ClasePropiedades {
 					encargo                  = :encargo,
 					cama                     = :cama,
 					observ                   = :observ,
+					observ_est               = :observ_est,
 					plaza                    = :plaza,
 					propietario              = :propietario";
 					//id_tabla                 = :id_tabla";
@@ -237,8 +245,8 @@ class AsistentePub Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_activ, $this->iid_nom);
-			$campos="(id_activ,id_nom,propio,est_ok,cfi,cfi_con,falta,encargo,cama,observ,plaza,propietario)";
-			$valores="(:id_activ,:id_nom,:propio,:est_ok,:cfi,:cfi_con,:falta,:encargo,:cama,:observ,:plaza,:propietario)";		
+			$campos="(id_activ,id_nom,propio,est_ok,cfi,cfi_con,falta,encargo,cama,observ,observ_est,plaza,propietario)";
+			$valores="(:id_activ,:id_nom,:propio,:est_ok,:cfi,:cfi_con,:falta,:encargo,:cama,:observ,:observ_est,:plaza,:propietario)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = get_class($this).'.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -321,6 +329,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		if (array_key_exists('encargo',$aDades)) $this->setEncargo($aDades['encargo']);
 		if (array_key_exists('cama',$aDades)) $this->setCama($aDades['cama']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
+		if (array_key_exists('observ_est',$aDades)) $this->setObserv_est($aDades['observ_est']);
 		if (array_key_exists('plaza',$aDades)) $this->setPlazaSinComprobar($aDades['plaza']);
 		if (array_key_exists('propietario',$aDades)) $this->setPropietario($aDades['propietario']);
 		if (array_key_exists('id_tabla',$aDades)) $this->setId_tabla($aDades['id_tabla']);
@@ -343,6 +352,7 @@ class AsistentePub Extends core\ClasePropiedades {
 			$aDades['encargo'] = $this->getEncargo();
 			$aDades['cama'] = $this->getCama();
 			$aDades['observ'] = $this->getObserv();
+			$aDades['observ_est'] = $this->getObserv_est();
 			$aDades['plaza'] = $this->getPlaza();
 			$aDades['propietario'] = $this->getPropietario();
 			$aDades['id_tabla'] = $this->getId_tabla();
@@ -581,6 +591,25 @@ class AsistentePub Extends core\ClasePropiedades {
 		$this->sobserv = $sobserv;
 	}
 	/**
+	 * Recupera l'atribut sobserv_est de AsistentePub
+	 *
+	 * @return string sobserv_est
+	 */
+	function getObserv_est() {
+		if (!isset($this->sobserv_est)) {
+			$this->DBCarregar();
+		}
+		return $this->sobserv_est;
+	}
+	/**
+	 * estableix el valor de l'atribut sobserv_est de AsistentePub
+	 *
+	 * @param string sobserv_est='' optional
+	 */
+	function setObserv_est($sobserv_est='') {
+		$this->sobserv_est = $sobserv_est;
+	}
+	/**
 	 * Recupera l'atribut iplaza de AsistentePub
 	 *
 	 * @return integer iplaza
@@ -685,6 +714,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$oAsistentePubSet->add($this->getDatosEncargo());
 		$oAsistentePubSet->add($this->getDatosCama());
 		$oAsistentePubSet->add($this->getDatosObserv());
+		$oAsistentePubSet->add($this->getDatosObserv_est());
 		return $oAsistentePubSet->getTot();
 	}
 
@@ -784,6 +814,18 @@ class AsistentePub Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'observ'));
 		$oDatosCampo->setEtiqueta(_("observ"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut sobserv_est de AsistentePub
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return oject DatosCampo
+	 */
+	function getDatosObserv_est() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'observ_est'));
+		$oDatosCampo->setEtiqueta(_("observ esturdios"));
 		return $oDatosCampo;
 	}
 	/**

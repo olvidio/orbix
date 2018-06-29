@@ -148,6 +148,7 @@ function editar($id_activ,$id_nom){
 	$Qencargo = (string) \filter_input(INPUT_POST, 'encargo');
 	$Qcama = (string) \filter_input(INPUT_POST, 'cama');
 	$Qobserv = (string) \filter_input(INPUT_POST, 'observ');
+	$Qobserv_est = (string) \filter_input(INPUT_POST, 'observ_est');
 	$Qplaza = (integer) \filter_input(INPUT_POST, 'plaza');
 	$Qpropio = (string) \filter_input(INPUT_POST, 'propio');
 	$Qest_ok = (string) \filter_input(INPUT_POST, 'est_ok');
@@ -160,6 +161,7 @@ function editar($id_activ,$id_nom){
 	isset($Qencargo)? $oAsistente->setEncargo($Qencargo) : $oAsistente->setEncargo();
 	isset($Qcama)? $oAsistente->setCama($Qcama) : $oAsistente->setCama();
 	isset($Qobserv)? $oAsistente->setObserv($Qobserv) : $oAsistente->setObserv();
+	isset($Qobserv_est)? $oAsistente->setObserv_est($Qobserv_est) : $oAsistente->setObserv_est();
 	isset($Qplaza)? $oAsistente->setPlaza($Qplaza) : $oAsistente->setPlaza();
 	empty($Qpropio)? $oAsistente->setPropio('f') : $oAsistente->setPropio('t');
 	empty($Qest_ok)? $oAsistente->setEst_ok('f') : $oAsistente->setEst_ok('t');
