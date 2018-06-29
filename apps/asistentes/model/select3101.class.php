@@ -150,6 +150,7 @@ class Select3101 {
 	private function getCabeceras() {
 		$a_cabeceras=array( array('name'=>_("num"),'width'=>40),
 							array('name'=>_("nombre y apellidos"),'width'=>300),
+							array('name'=>_("dl"),'width'=>4),
 							array('name'=>_("propio"),'width'=>40),
 							array('name'=>_("est. ok"),'width'=>40),
 							array('name'=>_("falta"),'width'=>40),
@@ -324,6 +325,7 @@ class Select3101 {
 			$cargo=$oCargo->getCargo();
 			$puede_agd=$oActividadCargo->getPuede_agd();
 			$observ=$oActividadCargo->getObserv();
+			$dl_asistente=$oPersona->getDl();
 			$ctr_dl=$oPersona->getCentro_o_dl();
 			// permisos (añado caso de cargo sin nombre = todos permiso)
 			if ($id_tabla=$oPersona->getId_tabla()) {
@@ -434,6 +436,7 @@ class Select3101 {
 				
 			$a_valores[$c][1]=$cargo;
 			$a_valores[$c][2]="$nom  ($ctr_dl)";
+			$a_valores[$c][3]=$dl_asistente;
 			$a_valores[$c][6]="$observ $observ1";
 		}
 		
@@ -465,7 +468,7 @@ class Select3101 {
 				continue;
 			}
 			$nom=$oPersona->getApellidosNombre();
-			//$dl=$oPersona->getDl();
+			$dl_asistente=$oPersona->getDl();
 			$ctr_dl=$oPersona->getCentro_o_dl();
 
 			$propio=$oAsistente->getPropio();
@@ -538,10 +541,11 @@ class Select3101 {
 			}
 					
 			$a_val[2]="$nom  ($ctr_dl)";
-			$a_val[3]=$chk_propio;
-			$a_val[4]=$chk_est_ok;
-			$a_val[5]=$chk_falta;
-			$a_val[6]=$observ;
+			$a_val[3]=$dl_asistente;
+			$a_val[4]=$chk_propio;
+			$a_val[5]=$chk_est_ok;
+			$a_val[6]=$chk_falta;
+			$a_val[7]=$observ;
 			
 			$this->a_asistentes[$nom] = $a_val;
 		}
@@ -972,4 +976,3 @@ class Select3101 {
 
 
 }
-		
