@@ -365,7 +365,11 @@ class TrasladoDl {
 					$tabla_personas = 'p_supernumerarios';
 					break;
 			}
-			//elimino public, publicv, global
+			//elimino public, publicv, global y el de H-H
+			$a_reg = explode('-',$esquema);
+			$reg = $a_reg[0]; 
+			$dl = substr($a_reg[1],0,-1); // quito la v o la f.
+			if ($reg == $dl) { continue; }
 			if ($esquema == 'global') { continue; }
 			if ($esquema == 'public') { continue; }
 			if ($esquema == 'publicv') { continue; }
