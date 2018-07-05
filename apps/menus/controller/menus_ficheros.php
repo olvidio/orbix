@@ -23,12 +23,11 @@ use menus\model\entity as menus;
 $oConfig = new core\Config('importar'); //de la database comun 
 // Para el caso de pruebas, la base de datos es 'test-comun'
 if (core\ConfigGlobal::WEBDIR == 'pruebas') {
-	$config = $oConfig->getEsquema('test-public'); //de la database test-comun 
     $db_comun = 'test-comun';
 } else {
-	$config = $oConfig->getEsquema('public'); //de la database comun 
     $db_comun = 'comun';
 }
+$config = $oConfig->getEsquema('public'); //de la database comun 
 $oConexion = new core\dbConnection($config);
 $oDevelPC = $oConexion->getPDO();
 
