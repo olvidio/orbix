@@ -18,6 +18,9 @@ class Config {
 
 	public function __construct($database)
 	{
+		if (Config::WEBDIR == 'pruebas') {
+			$database = 'test-'.$database;
+		}
 		$this->data = include ConfigGlobal::DIR_PWD.'/'.$database.'.inc';
 	}
 }
