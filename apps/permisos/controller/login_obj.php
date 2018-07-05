@@ -301,14 +301,14 @@ if ( !isset($_SESSION['session_auth'])) {
 						$variables = array('error'=>1);
 						$variables['DesplRegiones'] = posibles_esquemas($esquema);
 						$oView = new core\View(__NAMESPACE__);
-						echo $oView->render('login_form.phtml',$variables);
+						echo $oView->render('login_form2.phtml',$variables);
 						die();
 					}
 				} else {
 					$variables = array('error'=>1);
 					$variables['DesplRegiones'] = posibles_esquemas($esquema);
 					$oView = new core\View(__NAMESPACE__);
-					echo $oView->render('login_form.phtml',$variables);
+					echo $oView->render('login_form2.phtml',$variables);
 					die();
 				}
 		}
@@ -320,7 +320,7 @@ if ( !isset($_SESSION['session_auth'])) {
 		$a_campos['idioma'] = $idioma;
 		$oView = new core\View(__NAMESPACE__);
 		//echo $oView->render('login_form2.phtml',$a_campos);
-		echo $oView->render('login_form.phtml',$a_campos);
+		echo $oView->render('login_form2.phtml',$a_campos);
 		die();
 	}
 } else {
