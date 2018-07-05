@@ -279,6 +279,7 @@ if ($_SESSION['oPerm']->have_perm("est")){
 		$a_botones[]=array( 'txt' => _("plan estudios"),
 							'click' =>"fnjs_matriculas(\"#seleccionados\")" );
 		$script['fnjs_matriculas'] = 1;
+		$permiso = 3;
 	}
 	if (core\configGlobal::is_app_installed('profesores')) {
 		$a_botones[]=array( 'txt' => _('ficha profesor stgr'),
@@ -409,7 +410,6 @@ $oHash->setcamposNo('que!id_dossier!scroll_id');
 $a_camposHidden = array(
 		'pau' => 'p',
 		'obj_pau' => $obj_pau,
-		'permiso' => '3',
 		'tabla' => $tabla,
 		'na' => $Qna,
 		'permiso' => $permiso,
