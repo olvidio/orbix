@@ -381,7 +381,7 @@ foreach ($cPersonas as $oPersona) {
 		$a_val[6]=$row['situacion'];
 		$a_val[7]=$row['f_situacion'];
 	} 
-	$key_sort = "$nom_$id_nom";
+	$key_sort = $nom."_".$id_nom;
 	$a_personas[$key_sort] = $a_val;
 }
 uksort($a_personas,"core\strsinacentocmp");
