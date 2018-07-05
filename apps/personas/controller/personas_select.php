@@ -381,11 +381,12 @@ foreach ($cPersonas as $oPersona) {
 		$a_val[6]=$row['situacion'];
 		$a_val[7]=$row['f_situacion'];
 	} 
-	$a_personas[$nom] = $a_val;
+	$key_sort = "$nom_$id_nom";
+	$a_personas[$key_sort] = $a_val;
 }
 uksort($a_personas,"core\strsinacentocmp");
 $c = 0;
-foreach ($a_personas as $nom => $val) {
+foreach ($a_personas as $key_sort => $val) {
 	$c++;
 	$a_valores[$c] = $val;
 }
