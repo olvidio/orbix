@@ -146,6 +146,12 @@ class PersonaOut Extends PersonaPub {
 					return false;
 				}
 			}
+			// En este caso no hay id_auto. es el id_nom de la tabla originaria (agd, n, s)
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_nom=$this->id_nom")) === false) {
+				$sClauError = get_class($this).'.carregar.Last';
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				return false;
+			}
 			$aDadesLast = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 			$this->aDades=$aDadesLast;
 			$this->setAllAtributes($aDadesLast);
