@@ -324,7 +324,7 @@ class Select3101 {
 
 			$cargo=$oCargo->getCargo();
 			$puede_agd=$oActividadCargo->getPuede_agd();
-			$observ=$oActividadCargo->getObserv();
+			$observ_cargo=$oActividadCargo->getObserv();
 			$dl_asistente=$oPersona->getDl();
 			$ctr_dl=$oPersona->getCentro_o_dl();
 			// permisos (añado caso de cargo sin nombre = todos permiso)
@@ -354,7 +354,7 @@ class Select3101 {
 				$propio=$oAsistente->getPropio();
 				$falta=$oAsistente->getFalta();
 				$est_ok=$oAsistente->getEst_ok();
-				$observ1=$oAsistente->getObserv();
+				$observ=$oAsistente->getObserv();
 				$plaza= empty($oAsistente->getPlaza())? asistentes\Asistente::PLAZA_PEDIDA : $oAsistente->getPlaza();
 
 				// contar plazas
@@ -418,12 +418,12 @@ class Select3101 {
 				} else {
 					$a_valores[$c]['sel']="";
 				}
-				$a_valores[$c][3]=$chk_propio;
-				$a_valores[$c][4]=$chk_est_ok;
-				$a_valores[$c][5]=$chk_falta;
+				$a_valores[$c][4]=$chk_propio;
+				$a_valores[$c][5]=$chk_est_ok;
+				$a_valores[$c][6]=$chk_falta;
 			} else {
-				$a_valores[$c][3]= array( 'span'=>3, 'valor'=> _("no asiste"));
-				$observ1='';
+				$a_valores[$c][4]= array( 'span'=>3, 'valor'=> _("no asiste"));
+				$observ='';
 				$num--;
 				$asis="f";
 			}
@@ -437,7 +437,7 @@ class Select3101 {
 			$a_valores[$c][1]=$cargo;
 			$a_valores[$c][2]="$nom  ($ctr_dl)";
 			$a_valores[$c][3]=$dl_asistente;
-			$a_valores[$c][6]="$observ $observ1";
+			$a_valores[$c][7]="$observ_cargo $observ";
 		}
 		
 		$this->num = $num;
