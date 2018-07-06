@@ -269,7 +269,8 @@ $h = $oHash->linkSinVal();
 <html manifest="orbix.appcache">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Pàgina inicial de la web de la dl</title>
+	<title>Orbix</title>
+	<link rel="icon" type="image/x-icon" href="favicon.ico"/>
 	<!-- ULTIMATE DROP DOWN MENU Version 4.5 by Brothercake -->
 	<!-- http://www.udm4.com/ -->
  	<link rel="stylesheet" type="text/css" href="<?= ConfigGlobal::$web_scripts ?>/udm4-php/udm-resources/udm-style.php?PHPSESSID=<?= session_id() ?>" media="screen, projection" /> 
