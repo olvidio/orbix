@@ -298,17 +298,19 @@ if ( !isset($_SESSION['session_auth'])) {
 						setcookie("esquema", $esquema, time() + (86400 * 30), "/"); // 86400 = 1 day
 						setcookie("idioma", $idioma, time() + (86400 * 30), "/"); // 86400 = 1 day
 					} else {
-						$variables = array('error'=>1);
-						$variables['DesplRegiones'] = posibles_esquemas($esquema);
+						$a_campos = array('error'=>1);
+						$a_campos['DesplRegiones'] = posibles_esquemas($esquema);
+						$a_campos['idioma'] = $idioma;
 						$oView = new core\View(__NAMESPACE__);
-						echo $oView->render('login_form2.phtml',$variables);
+						echo $oView->render('login_form2.phtml',$a_campos);
 						die();
 					}
 				} else {
-					$variables = array('error'=>1);
-					$variables['DesplRegiones'] = posibles_esquemas($esquema);
+					$a_campos = array('error'=>1);
+					$a_campos['DesplRegiones'] = posibles_esquemas($esquema);
+					$a_campos['idioma'] = $idioma;
 					$oView = new core\View(__NAMESPACE__);
-					echo $oView->render('login_form2.phtml',$variables);
+					echo $oView->render('login_form2.phtml',$a_campos);
 					die();
 				}
 		}
