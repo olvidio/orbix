@@ -141,6 +141,13 @@ class sincroDB {
 		$a_posibles = [];
 		foreach ($aEsquemas as $esquemaName) {
 			$esquema = $esquemaName['schemaname'];
+			//elimino el de H-H
+			if (strpos($esquema, '-')) {
+				$a_reg = explode('-',$esquema);
+				$reg = $a_reg[0]; 
+				$dl = substr($a_reg[1],0,-1); // quito la v o la f.
+				if ($reg == $dl) { continue; }
+			}
 			//elimino public, publicv, global
 			if ($esquema == 'global') { continue; }
 			if ($esquema == 'public') { continue; }
