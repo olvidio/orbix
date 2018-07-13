@@ -662,8 +662,8 @@ class TrasladoDl {
 					//print_r($Objeto);
 					$NuevoObj = clone $Objeto;
 					$NuevoObj->setoDbl($oDBdst);
-					//if (method_exists($NuevoObj,'getId_item') === true) unset($NuevoObj->iid_item);
-					if (property_exists($NuevoObj,'iid_item') === true) unset($NuevoObj->iid_item);
+					if (method_exists($NuevoObj,'setId_item') === true) $NuevoObj->setId_item(null);
+					//if (property_exists($NuevoObj,'iid_item') === true) unset($NuevoObj->iid_item);
 					$NuevoObj->DBGuardar();
 				}
 			}
