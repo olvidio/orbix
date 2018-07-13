@@ -485,10 +485,11 @@ class TrasladoDl {
 			$aSchema = $qRs->fetch(\PDO::FETCH_ASSOC);
 			$id_schema = $aSchema['id'];
 			foreach ($colection as $Objeto) {
+				$Objeto->setoDbl($oDBorg);
 				$Objeto->DBCarregar();
 				//print_r($Objeto);
 				$NuevoObj = clone $Objeto;
-				if (method_exists($NuevoObj,'getId_item') === true) $NuevoObj->setId_item('');
+				if (method_exists($NuevoObj,'setId_item') === true) $NuevoObj->setId_item(null);
 				$NuevoObj->setoDbl($oDBdst);
 				$NuevoObj->setId_schema($id_schema);
 				if ($NuevoObj->DBGuardar() === false) {
@@ -611,6 +612,7 @@ class TrasladoDl {
 					$ges->setoDbl($oDBorg);
 					$colection = $ges->getAsistentesOut(array('id_nom'=>$this->iid_nom));
 					foreach ($colection as $oAsistenteOut) {
+						$oAsistenteOut->setoDbl($oDBorg);
 						$oAsistenteOut->DBCarregar();
 						$id_activ = $oAsistenteOut->getId_activ();
 						$oActividad = new ActividadAll($id_activ);
@@ -624,7 +626,7 @@ class TrasladoDl {
 						} else{
 							$NuevoObj = clone $oAsistenteOut;
 							$NuevoObj->setoDbl($oDBdst);
-							if (method_exists($NuevoObj,'getId_item') === true) $NuevoObj->setId_item('');
+							if (method_exists($NuevoObj,'setId_item') === true) $NuevoObj->setId_item(null);
 							$NuevoObj->setTraslado('t');
 							$NuevoObj->DBGuardar();
 						}
@@ -635,6 +637,7 @@ class TrasladoDl {
 					$ges->setoDbl($oDBorg);
 					$colection = $ges->getAsistentesDl(array('id_nom'=>$this->iid_nom));
 					foreach ($colection as $oAsistenteDl) {
+						$oAsistenteDl->setoDbl($oDBorg);
 						$oAsistenteDl->DBCarregar();
 						$oAsistenteOut = new AsistenteOut();
 						$oAsistenteOut->setoDbl($oDBdst);
@@ -658,12 +661,12 @@ class TrasladoDl {
 			}
 			if (!empty($colection)) {
 				foreach ($colection as $Objeto) {
+					$Objeto->setoDbl($oDBorg);
 					$Objeto->DBCarregar();
 					//print_r($Objeto);
 					$NuevoObj = clone $Objeto;
 					$NuevoObj->setoDbl($oDBdst);
 					if (method_exists($NuevoObj,'setId_item') === true) $NuevoObj->setId_item(null);
-					//if (property_exists($NuevoObj,'iid_item') === true) unset($NuevoObj->iid_item);
 					$NuevoObj->DBGuardar();
 				}
 			}

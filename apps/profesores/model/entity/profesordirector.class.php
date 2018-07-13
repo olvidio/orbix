@@ -282,11 +282,7 @@ class ProfesorDirector Extends core\ClasePropiedades {
 	 * @param integer iid_item
 	 */
 	function setId_item($iid_item) {
-		if (empty($iid_item)) {
-			unset($this->iid_item);
-		} else {
-			$this->iid_item = $iid_item;
-		}
+		$this->iid_item = $iid_item;
 	}
 	/**
 	 * Recupera l'atribut iid_nom de ProfesorDirector
