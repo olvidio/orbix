@@ -99,7 +99,7 @@ class AsistenteOut Extends AsistentePub {
 					observ_est               = :observ_est,
 					plaza                    = :plaza,
 					propietario              = :propietario";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_activ='$this->iid_activ' AND id_nom='$this->iid_nom'")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_activ='$this->iid_activ' AND id_nom=$this->iid_nom")) === false) {
 				$sClauError = get_class($this).'.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;

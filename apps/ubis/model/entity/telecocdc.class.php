@@ -67,7 +67,7 @@ class TelecoCdc Extends TelecoUbiGlobal {
 					desc_teleco              = :desc_teleco,
 					num_teleco               = :num_teleco,
 					observ                   = :observ";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item' AND id_ubi='$this->iid_ubi'")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item=$this->iid_item AND id_ubi='$this->iid_ubi'")) === false) {
 				$sClauError = 'TelecoCdc.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -108,7 +108,7 @@ class TelecoCdc Extends TelecoUbiGlobal {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iid_item) && isset($this->iid_ubi)) {
-			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item='$this->iid_item' AND id_ubi='$this->iid_ubi'")) === false) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item=$this->iid_item AND id_ubi='$this->iid_ubi'")) === false) {
 				$sClauError = 'TelecoCdc.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -137,7 +137,7 @@ class TelecoCdc Extends TelecoUbiGlobal {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_item='$this->iid_item'")) === false) {
+		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_item=$this->iid_item")) === false) {
 			$sClauError = 'TelecoCdc.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;

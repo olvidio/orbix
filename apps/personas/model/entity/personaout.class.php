@@ -118,7 +118,7 @@ class PersonaOut Extends PersonaPub {
 					observ                   = :observ,
 					lugar_nacimiento         = :lugar_nacimiento,
 					profesor_stgr            = :profesor_stgr";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_nom='$this->iid_nom'")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_nom=$this->iid_nom")) === false) {
 				$sClauError = get_class($this).'.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
