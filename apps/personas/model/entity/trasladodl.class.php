@@ -218,8 +218,8 @@ class TrasladoDl {
 	public function trasladar() {
 		$msg = '';
 		if ($this->comprobar() === false) {
-			return false;
-			return $this->serror;
+			$msg = $this->serror;
+			return _("Comprobar.").$msg;
 		}
 		// Aviso si le faltan notas
 		if ($this->comprobarNotas() === false) {
