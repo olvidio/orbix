@@ -90,9 +90,8 @@ fnjs_trasladar=function(id_orbix,dl,fila){
 		type: 'post',
 		data: parametros,
 		success: function (rta) {
-			rta_txt=rta.responseText;
 			if (rta != true) { 
-				alert ('<?= _("respuesta") ?>: '+rta_txt);
+				alert ('<?= _("respuesta") ?>: '+rta);
 			} else {
 				//tachar la fila
 				$("#fila"+fila).addClass('tachado');

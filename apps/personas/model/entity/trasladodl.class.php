@@ -218,55 +218,59 @@ class TrasladoDl {
 	public function trasladar() {
 		$msg = '';
 		if ($this->comprobar() === false) {
-			return true;
+			return false;
 			return $this->serror;
 		}
 		// Aviso si le faltan notas
-			if ($this->comprobarNotas() === false) {
-				$msg = $this->serror;
-			}
+		if ($this->comprobarNotas() === false) {
+			$msg = $this->serror;
+		}
 
-			// Cambio la situación de la persona. Debo hacerlo lo primero, pues no puedo
-			// tener la misma persona en dos dl en la misma situación
-			if ($this->cambiarFichaPersona() === false) {
-				$msg = $this->serror;
-				return _("OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio.").$msg;
-			}
+		// Cambio la situación de la persona. Debo hacerlo lo primero, pues no puedo
+		// tener la misma persona en dos dl en la misma situación
+		if ($this->cambiarFichaPersona() === false) {
+			$msg = $this->serror;
+			return _("OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio.").$msg;
+		}
 
-			// Trasladar persona
-			if ($this->copiarPersona() === false) {
-				return $this->serror;
-			}
+		// Trasladar persona
+		if ($this->copiarPersona() === false) {
+			$msg = $this->serror;
+			return _("Copiar Persona.").$msg;
+		}
 
-			if ($this->copiarNotas() === false) {
-				return $this->serror;
-			}
-			
-			// apunto el traslado. Lo pongo antes para que se copie trasladar dossiers.
-			if ($this->apuntar() === false) {
-				return $this->serror;
-			}
-			
-			if ($this->trasladarDossiers() === false) {
-				return $this->serror;
-			}
+		if ($this->copiarNotas() === false) {
+			$msg = $this->serror;
+			return _("Copiar Notas").$msg;
+		}
+		
+		// apunto el traslado. Lo pongo antes para que se copie trasladar dossiers.
+		if ($this->apuntar() === false) {
+			$msg = $this->serror;
+			return _("Apuntar traslado").$msg;
+		}
+		
+		if ($this->trasladarDossiers() === false) {
+			$msg = $this->serror;
+			return _("Copiar dossiers").$msg;
+		}
+		return true;
+	}
+
+	public function comprobar() {
+		$error = '';
+		if (!empty($this->sdl_dst) AND $this->sdl_dst == $this->sdl_persona) {
+			$error = _("Ya esta trasladado. No se ha hecho ningún cambio.");
+		}
+		if (empty($error)) {
 			return true;
+		} else {
+			$this->serror = $error;
+			return false;
 		}
+	}
 
-		public function comprobar() {
-			$error = '';
-			if (!empty($this->sdl_dst) AND $this->sdl_dst == $this->sdl_persona) {
-				$error = _("Ya esta trasladado. No se ha hecho ningún cambio.");
-			}
-			if (empty($error)) {
-				return true;
-			} else {
-				$this->serror = $error;
-				return false;
-			}
-		}
-
-		public function comprobarNotas() {
+	public function comprobarNotas() {
 		// Aviso si le faltan notas
 		$error = '';
 		$oDBorg = $this->conexionOrg();
@@ -315,8 +319,6 @@ class TrasladoDl {
 		$oPersonaDl->setDl($this->sdl_dst);
 		if ($oPersonaDl->DBGuardar() === false) {
 			$error .= '<br>'._('Hay un error, no se ha guardado');
-			$this->restaurarConexionOrg($oDBorg);
-			return false;
 		}
 		$this->restaurarConexionOrg($oDBorg);
 		if (empty($error)) {
