@@ -1,24 +1,39 @@
 <script>
 fnjs_guardar=function(formulario){
-	$(formulario).attr('action',"apps/personas/controller/traslado_update.php");
-	$(formulario).submit(function() {
-		$.ajax({
-			data: $(this).serialize(),
-			type: 'post',
-			url: $(this).attr('action'),
-			complete: function (rta) {
-				rta_txt=rta.responseText;
-				if (rta_txt != '' && rta_txt != '\\n') {
-					alert ('<?= _("respuesta") ?>: '+rta_txt);
-				} else {
-					<?= $oPosicion->js_atras(1); ?>
+	var err = 0;
+	var new_ctr = $('#new_ctr').val();
+	var new_dl = $('#new_dl').val();
+	var situacion = $('#situacion').val();
+	if (!new_dl && !new_ctr) {
+		err=1;
+		alert ('<?= _("Debería lenar el campo ctr o dl") ?>');
+	}
+	if (new_dl && !situacion) {
+		err=1;
+		alert ('<?= _("Debería lenar el campo situación") ?>');
+	}
+
+	if (err== 0) {
+		$(formulario).attr('action',"apps/personas/controller/traslado_update.php");
+		$(formulario).submit(function() {
+			$.ajax({
+				data: $(this).serialize(),
+				type: 'post',
+				url: $(this).attr('action'),
+				complete: function (rta) {
+					rta_txt=rta.responseText;
+					if (rta_txt != '' && rta_txt != '\\n') {
+						alert ('<?= _("respuesta") ?>: '+rta_txt);
+					} else {
+						<?= $oPosicion->js_atras(1); ?>
+					}
 				}
-			}
+			});
+			return false;
 		});
-		return false;
-	});
-	$(formulario).submit();
-	$(formulario).off();
+		$(formulario).submit();
+		$(formulario).off();
+	}
 }
 $(function() { $( "#f_ctr" ).datepicker(); });
 $(function() { $( "#f_dl" ).datepicker(); });
