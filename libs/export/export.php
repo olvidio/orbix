@@ -656,6 +656,8 @@ switch ($_POST['frm_export_tipo']) {
 		$documento=preg_replace('/<\/form>/', '', $documento); 
 
 		$file_txt = "/tmp/$nom.txt";
+		$file_xml = "/tmp/$nom.xml";
+		
 		if (!$handle = fopen($file_txt, 'w+')) {
 			 echo "Cannot open file ($file_txt)";
 			 exit;
@@ -667,25 +669,36 @@ switch ($_POST['frm_export_tipo']) {
 		}
 		fclose($handle);
 		$conv_style="1";
-		$content_xml = shell_exec("xsltproc --html ".getcwd()."/ODF/xslt/html2odfcalc.xslt $file_txt");
-		//echo "<br>content: $content_xml<br>";	
+		
+		$cmd = "xsltproc --html ".getcwd()."/ODF/xslt/html2odfcalc.xslt $file_txt > $file_xml";
+		$a_output =array();
+		exec($cmd, $a_output, $return_var);
+		if ($return_var != 0) {
+			echo "cmd: $cmd <br>error: $return_var<br>";
+			print_r($a_output);
+			exit();
+		}
+		$content_xml = file_get_contents($file_xml);
+		
 		$object = newOds(); //create a new ods file
 		$file_ods="/tmp/$nom.ods";
 		saveOds($object,$file_ods,$content_xml,$conv_style,$doc_type); //save the object to a ods file
 		if (file_exists($file_ods)) {
+			$file_size = (int) filesize($file_ods);
 			header('Content-type: application/vnd.oasis.opendocument.spreadsheet');
 			header("Content-Disposition: attachment; filename=\"$file_ods\"");
+			header("Content-Length: $file_size");
 			header('Content-Description: File Transfer');
 			header('Expires: 0');
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			header('Pragma: public');
-			header('Content-Length: ' . filesize($file_ods)+1);
 			ob_clean();
 			flush();
 			readfile($file_ods);
 			unlink($file_ods);
 		}
 		unlink($file_txt);
+		unlink($file_xml);
 		break;
 	case "odft":
 		if ($_POST['frm_export_titulo']) {
@@ -694,6 +707,7 @@ switch ($_POST['frm_export_tipo']) {
 			$nom="export".uniqid(); // per evitar emoblics si accedeixen varies persones a l'hora.
 		}
 		$documento=$_POST['frm_export_ex'];
+		//echo "$documento";
 		fixAmps($documento, 0);
 		$doc_type="text";
 		require_once("odf.php");
@@ -706,6 +720,7 @@ switch ($_POST['frm_export_tipo']) {
 		$documento=preg_replace('/<\/form>/', '', $documento); 
 
 		$file_txt = "/tmp/$nom.txt";
+		$file_xml = "/tmp/$nom.xml";
 
 		if (!$handle = fopen($file_txt, 'w+')) {
 			 echo "Cannot open file ($file_txt)";
@@ -738,29 +753,39 @@ switch ($_POST['frm_export_tipo']) {
 					$conv_style="1";
 			}
 		} else {
-			$xslt="html2ootext.xslt";
+			$xslt="html2odftext.xslt";
 			$conv_style="1";
 		}
 		
-		$content_xml = shell_exec("xsltproc --html ".getcwd()."/ODF/xslt/$xslt $file_txt");
-		//echo "oo: $output<br>";
+		$cmd = "xsltproc --html ".getcwd()."/ODF/xslt/$xslt $file_txt > $file_xml";
+		$a_output =array();
+		exec($cmd, $a_output, $return_var);
+		if ($return_var != 0) {
+			echo "cmd: $cmd <br>error: $return_var<br>";
+			print_r($a_output);
+			exit();
+		}
+		$content_xml = file_get_contents($file_xml);
 		
 		$object = newOds(); //create a new ods file
 		$file_odt="/tmp/$nom.odt";
 		saveOds($object,$file_odt,$content_xml,$conv_style,$doc_type); //save the object to a ods file
 		if (file_exists($file_odt)) {
+			$file_size = (int) filesize($file_odt);
 			header('Content-type: application/vnd.oasis.opendocument.text');
 			header("Content-Disposition: attachment; filename=\"$file_odt\"");
+			header("Content-Length: $file_size");
 			header('Content-Description: File Transfer');
 			header('Expires: 0');
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			header('Pragma: public');
-			header('Content-Length: ' . filesize($file_odt)+1);
 			ob_clean();
 			flush();
 			readfile($file_odt);
+			unlink($file_odt);
 		}
 		unlink($file_txt);
+		unlink($file_xml);
 		break;
 }
 ?>

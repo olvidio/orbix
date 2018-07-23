@@ -108,6 +108,7 @@ fnjs_tipo_actividad=function(){
 };
 </script>
 <!-- ============================== cabecera ============================= -->
+<div id="exportar" export_modo="formulario">
 <form id="modifica" name="modifica" action="" method="POST" >
 <?= $oHash->getCamposHtml(); ?>
 <input type='hidden' id='mod' name='mod' value="<?= $mod ?>">
@@ -243,3 +244,4 @@ switch ($mod) {
 }
 ?>
 </form>
+</div>

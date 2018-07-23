@@ -112,8 +112,15 @@ function fnjs_convert(node){
 	//if ($(node).hasClass("no_print")) return false;
 	//alert ("num: "+node+"\ntipo: "+tag+"\nid: "+tagId);
 	switch(tag){
+		case "script":
+			return " ";
+			break;
 		case "style":
 		case "hr":
+			break;
+		case "img":
+			//rta=$(node).html();
+			return " ";
 			break;
 		case "p":
 			$(node).children().filter(":visible").each(function(i){
@@ -126,9 +133,31 @@ function fnjs_convert(node){
 			break;
 		case "input":
 			//alert("tipo: "+$(node).attr("type"));
-			if ($(node).attr("type")=="hidden" || $(node).attr("type")=="button") return "";
 			if (tagId=="sel") return false;
-			rta=$(node).val();
+			tipo=$(node).attr("type");
+			value=$(node).val();
+			if (tipo != undefined) {
+				if (tipo.toUpperCase()==="hidden".toUpperCase() || tipo.toUpperCase()==="button".toUpperCase()) return " ";
+				if (tipo.toUpperCase()==="radio".toUpperCase() ) {
+					if ($(node).prop('checked')) {
+						txta=$(node).parent().text();
+						return txta;
+					} else {
+						return " ";
+					} 
+				}
+			}
+			if (value === undefined || !value) {
+				rta=" ";
+			} else {
+				rta=value;
+			}
+			break;
+		case "select":
+			rta=$('#'+tagId+' option:selected').text();
+			if (!rta) {
+				return " ";
+			}
 			break;
 		case "h1":
 		case "h2":
@@ -182,6 +211,19 @@ function fnjs_convert(node){
 			txt=$(node).html();
 		    var m = /^([^<]*)(<.+>)([^>]*)$/.exec(txt);
 			//alert ("m: "+m);
+			$(node).children().each(function(){
+				//alert ("WW"+this);
+					rta1+=fnjs_convert(this);
+				});
+			if (rta1) {
+				rr='';
+				//rr=$(node).contents().not($(node).children()).text();
+				//if (rec<30) alert(tag+" con hijos\n"+rta1);
+				rta="<"+tag+">"+rr+rta1+"</"+tag+">"; 
+			} else {
+				//if (rec<30) alert(tag+" sin hijos");
+				rta="<"+tag+">"+$(node).html()+"</"+tag+">"; 
+			}
 			break;
 		case "tbody":
 		case "tr":
@@ -217,7 +259,7 @@ function fnjs_convert(node){
 			amplada=$(node).attr("web-width");
 			if (amplada==undefined) amplada=($(node).outerWidth())*2/3;
 			tab=$(node).attr("tab-width");
-			if (tab==undefined) tab+=amplada;
+			if (tab==undefined) tab=amplada;
 			rta="<th web-width=\""+amplada+"\" tab-width=\""+tab+"\">"+$(node).html()+"</th>";
 			break;
 		case "br": //dentro de un td es fatal, no sé que pasa en el resto de casos...
@@ -288,22 +330,29 @@ function fnjs_exportar(formato){
 	
 	switch (export_modo) {
 		case "formulario":
+			var myText=txt;
+			/*
 			//var myText=$(bloque).html();;
-			var o=new Object($(bloque));
+			//var o=new Object($(bloque));
+			oldObject = $(bloque);
+			//var o = jQuery.extend({}, oldObject);
+			var o = oldObject.clone(true);
 			//quitar los div class=no_print 
-			var selector=".no_print";
-			o.getElementsByClassName(selector).each(function(i,elemento) {
-					elemento.remove();
-				}
-			 );
-			var myText=o.innerHTML;
+			var selector="no_print";
+//			o.getElementsByClassName(selector).each(function(i,elemento) {
+//					elemento.remove();
+//				}
+//			 );
+			var myText=o.html();
 			if (formato!='html') {
 				//quitar los div
 				myText=myText.replace(/<div.*>/,''); 
 				myText=myText.replace(/<\/div>/,''); 
 			}
+			//quitar los img 
+			myText=myText.replace(/<img.+?>/,''); 
 			//quitar los forms 
-			myText=myText.replace(/<form.*>/,''); 
+			myText=myText.replace(/<form.+?>/,''); 
 			myText=myText.replace(/<\/form>/,''); 
 
 			//coger el valor de los inputs.
@@ -314,48 +363,54 @@ function fnjs_exportar(formato){
 				var val_type=elemento.type;
 				var val_name=elemento.name;
 
-				if (val_type=="hidden" || val_type=="button" || val_type=="checkbox" || val_type=="radio" || val_type=="submit" || val_type=="reset") {
+				if (val_type=="checkbox") {
 					if (id_n) {
-						re_str='<input.*id="'+id_n+'".*?>';
+						re_str='<input.+?id=\"'+id_n+'.*?>';
 					} else {
-						re_str='<input.*name="'+val_name+'".*?>';
+						re_str='<input.+?name=\"'+val_name+'.*?>';
 					}
-					val_n="";
 				} else {
-					re_str='<input.*id="'+id_n+'".*?>';
+					if (val_type=="hidden" || val_type=="button" || val_type=="submit" || val_type=="reset") {
+						val_n="";
+						re_str='<input.+?type=\"'+val_type+'.*?>';
+					} else {
+						re_str='<input.+?name=\"'+val_name+'.*?>';
+					}
 				}
-				re = new RegExp(re_str);
+				if (val_type=="radio" ) {
+					var val_n=$('#'+id_n).prop('checked');
+					re_str='<input.+?id=\"'+id_n+'.*?>(.+?)<';
+					if (val_n) {
+						val_n="$1<";
+					} else {
+						val_n='<';
+					} 
+				}
+				re = new RegExp(re_str,'i');
 				myText=myText.replace(re,val_n); 
 			} );
 			//coger el valor de los select.
-				// de golpe no me aclaro, primero borro las options.
-				re_str=/<option.*>.*<\/option>/mi;
-				re = new RegExp(re_str);
-				myText=myText.replace(re,''); 
-				re_str=/<option.*>\s*<\/option>/mi;
-				re = new RegExp(re_str);
-				myText=myText.replace(re,''); 
-				alert ("my "+myText);
 			var selector=bloque+" select";
 			$(selector).each(function(i) {
 				var id_n=$(this).attr('id');
-				var val_n=$(id_n+' :selected').text();
-				alert ("select: "+id_n+"  "+val_n);
-				// de golpe no me aclaro, primero borro las options.
-				re='/<option.*>.*<\/option>/';
-				myText=myText.replace(re,''); 
-				re='/<option.*>\s*<\/option>/';
-				myText=myText.replace(re,''); 
-
-				re_str='<select.*id="'+id_n+'".*>\\s*</select>';
+				var val_n=$('#'+id_n+' :selected').text();
+				//alert ("select: "+id_n+"  "+val_n);
+				re_str='<select.+?id=\"'+id_n+'.+?><option.+?>.+?</option></select>';
 				re = new RegExp(re_str);
 				myText=myText.replace(re,val_n); 
 			} );
 		
 			//Quito los links (a href)
-			re_str=/<a href.*?>(.*?)<\/a>/mi;
-			re = new RegExp(re_str);
-			myText=myText.replace(re,'#{1}'); 
+//			re_str=/<a href.*?>(.*?)<\/a>/mi;
+//			re = new RegExp(re_str);
+//			myText=myText.replace(re,'#{1}'); 
+
+			myText='<body>'+myText+'</body>';
+			console.log(myText);
+			var Text=$(bloque).html();
+			console.log("--------\n");
+			console.log(Text);
+			*/
 			break;
 		case "texto":
 			if (formato=='html') {
