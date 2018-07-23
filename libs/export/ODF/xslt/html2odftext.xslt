@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License along with thi
 		</style:style>
 		<style:style style:name="P1" style:family="paragraph" style:parent-style-name="Standard" />
 		<style:style style:name="T2" style:family="text">
-			<style:text-properties fo:background-color="#fff200" loext:char-shading-value="0"/>
+			<style:text-properties fo:background-color="#fff200" text:char-shading-value="0"/>
 		</style:style>
 		<xsl:call-template name="table_cols"/>
 	</office:automatic-styles>
