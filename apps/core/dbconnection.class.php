@@ -52,7 +52,7 @@ class dbConnection {
 		$str_conexio .= ", array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING)";
 		$oDB = new \PDO($str_conexio);
 		*/
-		$oDB = new \PDO($str_conexio,$config['user'], $config['password'], array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING));
+		$oDB = new \PDO($str_conexio,$config['user'], $config['password'], array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING, \PDO::ATTR_TIMEOUT => 5));
 		
 		return $oDB;
 	}
