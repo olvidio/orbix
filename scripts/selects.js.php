@@ -37,7 +37,7 @@ function fnjs_selectAll(formulario,Name,val,aviso){
 		}
 	);
 }
-/*
+
 function fnjs_solo_uno_grid(formulario) {
 	var s=0;
 	var form=$(formulario).attr('id');
@@ -52,7 +52,7 @@ function fnjs_solo_uno_grid(formulario) {
 	}
 	return s;
 }
-*/
+
 function fnjs_solo_uno(formulario, multiple = false) {
 	var s=0;
 	var form=$(formulario).attr('id');
