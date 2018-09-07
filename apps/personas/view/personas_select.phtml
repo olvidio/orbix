@@ -41,7 +41,7 @@ fnjs_actividades=function(formulario){
 <?php } ?>
 <?php if (!empty($script['fnjs_tessera'])) { ?>
 fnjs_tessera=function(formulario){
-	rta=fnjs_solo_uno(formulario);
+	rta=fnjs_solo_uno(formulario,true);
 	if (rta!=0) {
   		$(formulario).attr('action',"apps/notas/controller/tessera_ver.php");
   		fnjs_enviar_formulario(formulario);

@@ -37,7 +37,7 @@ function fnjs_selectAll(formulario,Name,val,aviso){
 		}
 	);
 }
-
+/*
 function fnjs_solo_uno_grid(formulario) {
 	var s=0;
 	var form=$(formulario).attr('id');
@@ -52,14 +52,14 @@ function fnjs_solo_uno_grid(formulario) {
 	}
 	return s;
 }
-
-function fnjs_solo_uno(formulario) {
+*/
+function fnjs_solo_uno(formulario, multiple = false) {
 	var s=0;
 	var form=$(formulario).attr('id');
 	/* selecciono los elementos con class="sel" de las tablas del id=formulario */
 	var sel=$('#'+form+' input.sel:checked');
 	var s = sel.length;
-	if ( s > 1 ) {
+	if ( s > 1 && !multiple) {
 		alert ("<?php printf (_("Sólo puede seleccionar un elemento. Ha selecionado %s."),'"+s+"'); ?>");
 	}
 	if (s==0) {

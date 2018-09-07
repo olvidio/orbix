@@ -123,6 +123,9 @@ echo "</style>";
       <li>
         <h4>publicar ca <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::$web_public ?>/ayuda/11-publicarCa.mp4')">(video)</span></h4>
       </li>
+      <li>
+        <h4>imprimir situación académica <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::$web_public ?>/ayuda/12-verTessera.mp4')">(video)</span></h4>
+      </li>
     </ol>
   </body>
 </html>
