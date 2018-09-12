@@ -3,6 +3,7 @@ use actividades\model\entity as actividades;
 use actividadestudios\model\entity as actividadestudios;
 use notas\model\entity as notas;
 use personas\model\entity as personas;
+use web\Posicion;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -17,6 +18,24 @@ $oPosicion->recordar();
 $notas=1; // para indicar a la página de actas que está dentro de ésta.
 
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+$Qid_sel = '';
+$Qscroll_id = (string) \filter_input(INPUT_POST, 'scroll_id');
+// Hay que usar isset y empty porque puede tener el valor =0.
+// Si vengo por medio de Posicion, borro la última
+if (isset($_POST['stack'])) {
+	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+	if ($stack != '') {
+		// No me sirve el de global_object, sino el de la session
+		$oPosicion2 = new Posicion();
+		if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+			$Qid_sel=$oPosicion2->getParametro('id_sel');
+			$Qscroll_id = $oPosicion2->getParametro('scroll_id');
+			$oPosicion2->olvidar($stack);
+		}
+	}
+}
+
 if (!empty($a_sel)) { //vengo de un checkbox
 	$id_activ = strtok($a_sel[0],"#");
 	$id_asignatura=strtok("#");

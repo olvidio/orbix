@@ -74,7 +74,7 @@ if (!empty($Qnuevo)) { // nueva.
 	$oActa->DBCarregar();
 
 	$oActa->setId_asignatura($Qid_asignatura);
-	$oActa->setId_activ($Qid_activ);
+//	$oActa->setId_activ($Qid_activ);
 	$oActa->setF_acta($Qf_acta);
 	$oActa->setLibro($Qlibro);
 	$oActa->setPagina($Qpagina);

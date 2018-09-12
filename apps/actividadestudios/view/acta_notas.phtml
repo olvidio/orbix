@@ -11,11 +11,31 @@ fnjs_nota=function(n){
 	fnjs_guardar_nota();
 }
 
+fnjs_imprimir=function(form_acta){
+	fnjs_left_side_hide();
+	$(form_acta).attr('action',"apps/notas/controller/acta_imprimir.php");
+	fnjs_enviar_formulario(form_acta);
+}
 fnjs_guardar_todo=function(form_acta){
 	fnjs_guardar_acta(form_acta);
 	$('#que').val("3");
 	$('#f_1303').attr('action',"apps/actividadestudios/controller/acta_notas_update.php");
-	fnjs_enviar_formulario('#f_1303');
+	$('#f_1303').submit(function() {
+		$.ajax({
+			data: $(this).serialize(),
+			url: $(this).attr('action'),
+			type: 'post',
+			complete: function (rta) {
+				rta_txt=rta.responseText;
+				if (rta_txt != '' && rta_txt != '\n') {
+					alert (rta_txt);
+				}
+			}
+		});
+		return false;
+	});
+	$('#f_1303').submit();
+	$('#f_1303').off();
 }
 
 fnjs_guardar_nota=function(){
@@ -69,11 +89,12 @@ foreach ($aPersonasMatriculadas as $nom=>$oMatricula) {
 	<td class=contenido>
 		<input type="text" id="nota_num<?= $i ?>" name="nota_num[]" value="<?= $nota_num ?>" size="2" onchange="fnjs_nota(<?= $i ?>)">
 		<?= _("sobre") ?>
-		<input type="text" id="nota_max<?= $i ?>" name="nota_max[]" value="<?= $nota_max ?>" size="2">
+		<input type="text" id="nota_max<?= $i ?>" name="nota_max[]" value="<?= $nota_max ?>" size="2" onchange="fnjs_nota(<?= $i ?>)">
 	</td></tr>
 	<?php
 }
 ?>	
 </tbody></table>
 </form>
-<br><input type="button" value="<?= strtoupper(_("grabar e imprimir")); ?>" onclick="fnjs_guardar_todo('#frm_acta')">
+<br><input type="button" value="<?= strtoupper(_("grabar")); ?>" onclick="fnjs_guardar_todo('#frm_acta')">
+<br><input type="button" value="<?= strtoupper(_("imprimir")); ?>" onclick="fnjs_imprimir('#frm_acta')">

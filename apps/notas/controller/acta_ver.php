@@ -26,8 +26,6 @@ use web\Posicion;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$ult_acta = '';
-$acta = '';
 $f_acta = '';
 $libro = '';
 $pagina = '';
@@ -35,7 +33,7 @@ $linea = '';
 $lugar = '';
 $observ = '';
 
-// Si notas=1, quiere decir que estoy en un include de actividadestudios/controller/acta_notas
+// Si notas=(nuevo|acta), quiere decir que estoy en un include de actividadestudios/controller/acta_notas
 $notas = empty($notas)? '': $notas;
 
 if (empty($notas)) {
@@ -53,7 +51,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $Qacta = (string) \filter_input(INPUT_POST, 'acta');
 $Qnuevo = (integer) \filter_input(INPUT_POST, 'nuevo');
 
-$acta=urldecode($acta);
+//$acta=urldecode($acta);
 //últimos
 $any = date('y');
 $dl = core\ConfigGlobal::mi_dele();
@@ -87,7 +85,14 @@ if (empty($Qnuevo) && !empty($acta))  { //significa que no es nuevo
 		$observ = (string) \filter_input(INPUT_POST, 'observ');
 	} else {
 		$oActa = new notas\Acta($acta);
-		extract($oActa->getTot());
+		$id_asignatura = $oActa->getId_asignatura();
+		$id_activ = $oActa->getId_activ();
+		$f_acta = $oActa->getF_acta();
+		$libro = $oActa->getLibro();
+		$pagina = $oActa->getPagina();
+		$linea = $oActa->getLinea();
+		$lugar = $oActa->getLugar();
+		$observ =$oActa->getObserv();
 		$id_asignatura_actual=$id_asignatura;
 	}
 } else {
@@ -118,7 +123,14 @@ if (empty($Qnuevo) && !empty($acta))  { //significa que no es nuevo
 			$id_asignatura = strtok('#');
 			$cActas = $GesActas->getActas(array('id_activ'=>$id_activ,'id_asignatura'=>$id_asignatura));
 			$oActa = $cActas[0];
-			extract($oActa->getTot());
+			$id_asignatura = $oActa->getId_asignatura();
+			$id_activ = $oActa->getId_activ();
+			$f_acta = $oActa->getF_acta();
+			$libro = $oActa->getLibro();
+			$pagina = $oActa->getPagina();
+			$linea = $oActa->getLinea();
+			$lugar = $oActa->getLugar();
+			$observ =$oActa->getObserv();
 			$id_asignatura_actual=$id_asignatura;
 		} else {
 			$id_asignatura_actual='';
@@ -169,6 +181,7 @@ if ($notas=="nuevo" || !empty($Qnuevo) ) {
 	}
 } else {
 	$a_camposHidden['acta'] = $acta;
+	$a_camposHidden['id_activ'] = $id_activ;
 }
 $oHashActa->setArraycamposHidden($a_camposHidden);
 

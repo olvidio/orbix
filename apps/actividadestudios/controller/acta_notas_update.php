@@ -184,15 +184,13 @@ if (empty($error)) {
    if (!empty($go_to)) {
 		$go_to=urlencode($go_to);
 		//echo "gou: $go_to<br>";
-		echo $oPosicion->ir_a($go_to);
+//		echo $oPosicion->ir_a($go_to);
    }
 } else {
 	echo $error;
 	echo "<br>";
 	
-	$go_avant = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/acta_imprimir.php?'.http_build_query(array('acta'=>$acta)));
-	echo "<input type='button' onclick=fnjs_update_div('#main','".$go_avant."') value="._('continuar').">";
-
+//	$go_avant = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/acta_imprimir.php?'.http_build_query(array('acta'=>$acta)));
+//	echo "<input type='button' onclick=fnjs_update_div('#main','".$go_avant."') value="._('continuar').">";
 
 }
-?>
