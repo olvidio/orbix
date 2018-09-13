@@ -67,7 +67,9 @@ if (!empty($nce)) { $nf=number_format(($aprobadas/$nBienio),2,',','.'); } else {
 $res[22]['num'] = $nf;
 $a_textos[22] = _("Media de asignaturas superadas por alumno en bienio");
 
-
+//23 Nº de agd en cuadrienio con bienio pendiente
+$res['23'] = '???';
+$a_textos['23.1'] = _("Nº de agd en cuadrienio con bienio pendiente");
 //23.1 Nº de n en bienio que han superado asignaturas con preceptor
 $res['23.1'] = $Resumen->conPreceptorBienio();
 $a_textos['23.1'] = _("Nº de n en bienio que han superado asignaturas con preceptor");
@@ -108,7 +110,7 @@ $a_textos[30] = _("Número de agregados que han superado asignaturas con precept
 $res[31] = $Resumen->terminadoCuadrienio();
 $a_textos[31] = _("Número de agregados que han terminado el cuadrienio este curso");
 //32. Número total de alumnos agregados 
-$res[32] = $res[21]['num'] + $res[24]['num'];
+$res[32] = $nBienio + $numC;
 $a_textos[32] = _("Número total de alumnos agregados");
 
 // 
