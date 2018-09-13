@@ -243,7 +243,7 @@ class Resumen Extends core\ClasePropiedades {
 				FROM $personas p LEFT JOIN u_centros_dl u ON (p.id_ctr = u.id_ubi)
 				WHERE (p.situacion='A' AND (p.f_situacion < '$fincurs' OR p.f_situacion IS NULL))
 					 OR (p.situacion='D' AND p.f_situacion $curs)
-					 OR (p.situacion!='A' AND p.f_situacion > $fincurs)
+					 OR (p.situacion!='A' AND p.f_situacion > '$fincurs')
 				";
 		//echo "sql: $sqlLlenar<br>";
 		$oDbl->query($sqlLlenar);
