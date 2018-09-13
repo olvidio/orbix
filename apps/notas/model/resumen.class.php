@@ -241,10 +241,16 @@ class Resumen Extends core\ClasePropiedades {
 				p.ce_lugar,p.ce_ini,p.ce_fin,
 				p.sacd,u.nombre_ubi
 				FROM $personas p LEFT JOIN u_centros_dl u ON (p.id_ctr = u.id_ubi)
-				WHERE ((p.situacion='A' AND (p.f_situacion < '$fincurs' OR p.f_situacion IS NULL)) OR (p.situacion='D' AND (p.f_situacion $curs)))
+				WHERE (p.situacion='A' AND (p.f_situacion < '$fincurs' OR p.f_situacion IS NULL))
+					 OR (p.situacion='D' AND p.f_situacion $curs)
+					 OR (p.situacion!='A' AND p.f_situacion > $fincurs)
 				";
 		//echo "sql: $sqlLlenar<br>";
 		$oDbl->query($sqlLlenar);
+
+		// Busco los que han ido a un ci
+
+		
 	
 		// Miro los que se han incorporado "recientemente": desde el 1-junio
 		$ssql= "SELECT  p.nom, p.apellido1, p.apellido2, p.ctr, p.stgr
