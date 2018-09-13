@@ -8,6 +8,7 @@ use notas\model as notas;
 *@subpackage	estudios
 *@author	Daniel Serrabou
 *@since		23/3/2007
+ * @version september 2018
 *		
 */
 
@@ -49,76 +50,46 @@ $Resumen->setAnyIniCurs($any_ini_curs);
 $Resumen->setLista($lista);
 $Resumen->nuevaTablaProfe();
 
-//32. nº de profesores ordinarios:
-$res[32] = $Resumen->profesorDeTipo(1);
-$a_textos[32] = _("Número de profesores ordinarios");
-//33. Número de profesores extraordinarios
-$res[33] = $Resumen->profesorDeTipo(2);
-$a_textos[33] = _("Número de profesores extraordinarios");
-//34. Número de profesores adjuntos
-$res[34] = $Resumen->profesorDeTipo(3);
-$a_textos[34] = _("Número de profesores adjuntos");
-//35. Número de profesores encargados
-$res[35] = $Resumen->profesorDeTipo(4);
-$a_textos[35] = _("Número de profesores encargados");
-//36. Número de profesores asociados
-$res[36] = $Resumen->profesorDeTipo(6);
-$a_textos[36] = _("Número de profesores asociados");
-//37. Número de profesores ayudantes
-$res[37] = $Resumen->profesorDeTipo(5);
-$a_textos[37] = _("Número de profesores ayudantes");
-//38. Número de total de profesores
-$res[38] = $Resumen->profesorDeTipo(0);
-$a_textos[38] = _("Número de total de profesores");
-//39. Número de profesores de latín
-$res[39] = $Resumen->profesorDeLatin();
-$a_textos[39] = _("Número de profesores de latín");
+//36. nº de profesores ordinarios:
+$res[36] = $Resumen->profesorDeTipo(1);
+$a_textos[36] = _("Número de profesores ordinarios");
+//37. Número de profesores extraordinarios
+$res[37] = $Resumen->profesorDeTipo(2);
+$a_textos[37] = _("Número de profesores extraordinarios");
+//38. Número de profesores adjuntos
+$res[38] = $Resumen->profesorDeTipo(3);
+$a_textos[38] = _("Número de profesores adjuntos");
+//39. Número de profesores encargados
+$res[39] = $Resumen->profesorDeTipo(4);
+$a_textos[39] = _("Número de profesores encargados");
+//40. Número de profesores asociados
+$res[40] = $Resumen->profesorDeTipo(6);
+$a_textos[40] = _("Número de profesores asociados");
+//41. Número de profesores ayudantes
+$res[41] = $Resumen->profesorDeTipo(5);
+$a_textos[41] = _("Número de profesores ayudantes");
+//42. Número de total de profesores
+$res[42] = $Resumen->profesorDeTipo(0);
+$a_textos[42] = _("Número de total de profesores");
+//43. Número de profesores de latín
+$res[43] = $Resumen->profesorDeLatin();
+$a_textos[43] = _("Número de profesores de latín");
 
-/*40. Número de profesores que dieron clase de su especialidad*/
-$res[40] = $Resumen->profesorEspecialidad();
-$a_textos[40] = _("Número de profesores que dieron clase de su especialidad");
+/*44. Número de profesores que dieron clase de su especialidad*/
+$res[44] = $Resumen->profesorEspecialidad();
+$a_textos[44] = _("Número de profesores que dieron clase de su especialidad");
 
-/*41. Número de profesores que dieron clase otras asignaturas*/
-$res[41] = $Resumen->profesorEspecialidad(TRUE);
-$a_textos[41] = _("Número de profesores que dieron clase de otras asignaturas");
+/*45. Número de profesores que dieron clase otras asignaturas*/
+$res[45] = $Resumen->profesorEspecialidad(TRUE);
+$a_textos[45] = _("Número de profesores que dieron clase de otras asignaturas");
 
-/*42. Número de profesores asistentes a congresos...*/
-$res[42] = $Resumen->profesorCongreso();
-$a_textos[42] = _("Número de profesores asistentes a cve del stgr u otras reuniones");
+/*46. Número de profesores asistentes a congresos...*/
+$res[46] = $Resumen->profesorCongreso();
+$a_textos[46] = _("Número de profesores asistentes a cve del stgr u otras reuniones");
 
-/*43. Ratio alumno/profesor en bienio*/
-$a_profB = $Resumen->profesoresEnBienio();
-$profB = $a_profB['num'];
-$ResumenN = new notas\Resumen('numerarios');
-$ResumenN->setLista($lista);
-$ResumenN->nuevaTabla();
-$Resumen->setCe_lugar('bm');
-$a_numB = $ResumenN->enBienio();
-$numB = $a_numB['num'];
-$ResumenA = new notas\Resumen('agregados');
-$ResumenA->setLista($lista);
-$ResumenA->nuevaTabla();
-$a_agdB = $ResumenA->enBienio();
-$agdB = $a_agdB['num'];
-$ratioB=($numB+$agdB)/$profB;
-$res[43]['num'] = round($ratioB,2);
-$a_textos[43] = _("Ratio alumno/profesor en bienio");
-
-/*44. Ratio alumno/profesor en cuadrienio*/
-$a_profC = $Resumen->profesoresEnCuadrienio();
-$profC =$a_profC['num'];
-$a_numC = $ResumenN->enBienio();
-$numC = $a_numC['num'];
-$a_agdC = $ResumenA->enBienio();
-$agdC = $a_agdC['num'];
-$ratioC=($numC+$agdC)/$profC;
-$res[44]['num'] = round($ratioC,2);
-$a_textos[44] = _("Ratio alumno/profesor en cuadrienio");
-
-
-/*45. Número de departamentos con director*/
-$res[45] = $Resumen->Departamentos();
-$a_textos[45] = _("Nº de departamentos");
+/*47. Número de departamentos con director*/
+$res[47] = $Resumen->Departamentos();
+$a_textos[47] = _("Nº de departamentos");
 
 
 // ---------------------------------- html ----------------------------------------------------

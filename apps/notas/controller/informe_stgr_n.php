@@ -9,6 +9,7 @@ use notas\model as notas;
 *@subpackage	estudios
 *@author	Daniel Serrabou
 *@since		22/11/02.
+*@version september 2018
 *		
 */
 
@@ -35,10 +36,14 @@ $a_ce = array('dlb'=>'Barcelona',
 $mi_dl = core\ConfigGlobal::mi_dele();
 $ce_lugar = $a_ce[$mi_dl];
 	
-/* Cálculo del informe cr 22/97. 
-	Se coge a las personas que dependen de la dl en el momento actual (Fichero=A)
-	Se incluyen los que estuvieron en la dl (Fecha cambio fichero entre 1/10/97 - FechaActual/98) y van a otra r, ci, (fichero= E(n),G(agd))
-	Se crea una tabla temporal con estos alumnos: TempEstNumeraris
+/* Cálculo del informe cr 1/18. 
+ * Se coge a las personas que dependen de la dl el 1 de octubre siguiente al curso al que se refiere el informe
+ *	(Fichero=A)
+ *	(Fichero=A y Fecha cambio fichero NULL o menor 2/10/18) + (Fichero != A y Fecha cambio fichero entre 1/10/18 - FechaActual/18)
+ *	Se incluyen los que estuvieron en la dl, pero se han ido a otra r, a un ci, o se han ordenado.
+ *  (si se han ordenado no influye??)
+ *  (Fecha cambio fichero entre 1/10/17 - 1/10/18) y van a otra r, ci, (fichero= E(n),G(agd))
+ *	Se crea una tabla temporal con estos alumnos: TempEstNumeraris
 */
 
 /* Pongo en la variable $curs el periodo del curso */
@@ -66,85 +71,94 @@ $Resumen->nuevaTabla();
 
 $Resumen->setCe_lugar($ce_lugar);
 
-//1. Numerarios en Bienio
-$res[1] = $Resumen->enBienio();
-$a_textos[1] = _("Número de numerarios en Bienio");
-//2. Numerarios en año I de Cuadrienio
-$res[2] = $Resumen->enCuadrienio(1);
-$a_textos[2] = _("Número de numerarios en año I de Cuadrienio");
-//3. Numerarios en años II-IV de Cuadrienio. Cuento también los que han terminado este curso
-$res[3] = $Resumen->enCuadrienio(2);
-$a_textos[3] = _("Número de numerarios en años II-IV de Cuadrienio");
-//4. Numerarios en Total
-$res[4] = $Resumen->enTotal();
-$a_textos[4] = _("Número de numerarios en stgr");
-//5. Numerarios del stgr sin la o
-$res[5] = $Resumen->enStgrSinO();
-$a_textos[5] = _("Numerarios del stgr sin la o");
-//6. Numerarios en el ce
-$res[6] = $Resumen->finCe();
-$a_textos[6] = _("Numerarios que estuvieron en el ce");
-//6.1. Rendimiento de los alumnos del ce
-$nce = $res[6]['num'];
+// BIENIO
+//1. Numerarios en el ce
+$res[1] = $Resumen->enCe();
+$a_textos[1] = _("Numerarios en el ce");
+//2. Numerarios sin ce
+$res[2] = $Resumen->sinCe();
+$a_textos[2] = _("Numerarios sin haber hecho el ce");
+//3. Numerarios que han terminado el ce este curso y con el bienio sin acabar 
+$res[3] = $Resumen->bienioSinAcabar(0);
+$a_textos[3] = _("Numerarios que han terminado el ce y con el bienio sin acabar");
+if (!$lista) {
+	//xx. Numerarios que han terminado el ce este curso y con el bienio sin acabar 
+	$res['3.2'] = $Resumen->bienioSinAcabar(1);
+	$a_textos['3.2'] = _("Numerarios que han terminado el ce este curso y con el bienio sin acabar");
+	//xxx. Numerarios que han terminado el ce (otros anos) y con el bienio sin acabar 
+	$res['3.3'] = $Resumen->bienioSinAcabar(2);
+	$a_textos['3.3'] = _("Numerarios que han terminado el ce (otros años) y con el bienio sin acabar");
+}
+//4. Numerarios en Bienio
+$res[4] = $Resumen->enBienio();
+$a_textos[4] = _("Número de numerarios en Bienio");
+//5. Media de asignaturas superadas por alumno en ce
+$nce = $res[1]['num'];
 SetType($nce,"double");
 $a_aprobadas = $Resumen->aprobadasCe();
 $aprobadas = $a_aprobadas['num'];
 if (!empty($nce)) { $nf=number_format(($aprobadas/$nce),2,',','.'); } else { $nf=0; }
-$res['6.1']['num'] = $nf;
-$a_textos['6.1'] = _("Rendimiento de los alumnos del ce");
-//$res['6.2'] = $Resumen->aprobadasCe();
-//$a_textos['6.2'] = _("Total de asignaturas de B y C aprobadas por alumnos del ce");
-if (!$lista) {
-	//xx. Numerarios que han terminado el ce este curso y con el bienio sin acabar 
-	$res['6.2'] = $Resumen->bienioSinAcabar(1);
-	$a_textos['6.2'] = _("Numerarios que han terminado el ce este curso y con el bienio sin acabar");
-	//xxx. Numerarios que han terminado el ce (otros anos) y con el bienio sin acabar 
-	$res['6.3'] = $Resumen->bienioSinAcabar(0);
-	$a_textos['6.3'] = _("Numerarios que han terminado el ce (otros años) y con el bienio sin acabar");
-}
-//7. Media de asignaturas superadas por alumno en bienio
-$a_aprobadas = $Resumen->aprobadasBienio();
-$aprobadas = $a_aprobadas['num'];
-$numB = $res[1]['num'];
-SetType($numB,"double");
-if (!empty($numB)) { $nf=number_format(($aprobadas/$numB),2,',','.'); } else { $nf=0; }
-$res[7]['num'] = $nf;
-$a_textos[7] = _("Media de asignaturas superadas por alumno en bienio");
-//8. Media de asignaturas superadas por alumno en cuadrienio
+$res[5]['num'] = $nf;
+$a_textos[5] = _("Media de asignaturas superadas por alumno en ce (n. 1)");
+//6. Media de asignaturas superadas por alumno sin haber hecho el ce
+$nSince = $res[2]['num'];
+SetType($nSince,"double");
+$a_aprobadas_sin_ce = $Resumen->aprobadasSinCe();
+$aprobadasSin = $a_aprobadas_sin_ce['num'];
+if (!empty($nSince)) { $nf=number_format(($aprobadasSin/$nSince),2,',','.'); } else { $nf=0; }
+$res[6]['num'] = $nf;
+$a_textos[6] = _("Media de asignaturas superadas por alumno sin haber hecho el ce (n. 2)");
+//7. Nº de n en bienio que han superado asignaturas con preceptor
+$res[7] = $Resumen->conPreceptorBienio();
+$a_textos[7] = _("Nº de n en bienio que han superado asignaturas con preceptor");
+// 
+// CUADRIENIO
+//8. Numerarios en año I de Cuadrienio
+$res[8] = $Resumen->enCuadrienio(1);
+$a_textos[8] = _("Número de numerarios en año I de Cuadrienio");
+//9. Numerarios en años II-IV de Cuadrienio. Cuento también los que han terminado este curso
+$res[9] = $Resumen->enCuadrienio(2);
+$a_textos[9] = _("Número de numerarios en años II-IV de Cuadrienio");
+//10. Numerarios en Total
+$res[10] = $Resumen->enCuadrienio('all');
+$a_textos[10] = _("Número de numerarios en stgr");
+//11. Media de asignaturas superadas por alumno en cuadrienio
 $a_aprobadas = $Resumen->aprobadasCuadrienio();
 if (!isset($a_aprobadas['error'])) {
 	$aprobadas = $a_aprobadas['num'];
-	$numC = $res[4]['num'];
+	$numC = $res[10]['num'];
 	SetType($numC,"double");
 	if (!empty($numC)) { $nf=number_format(($aprobadas/$numC),2,',','.'); } else { $nf=0; }
-	$res[8]['num'] = $nf;
-	$a_textos[8] = _("Media de asignaturas superadas por alumno en cuadrienio");
+	$res[11]['num'] = $nf;
+	$a_textos[11] = _("Media de asignaturas superadas por alumno en cuadrienio");
 } else {
-	$res[8] = $a_aprobadas;
-	$a_textos[8] = sprintf(_("Hay %s numerarios que ya estaban en Repaso y han cursado asignaturas. Arreglarlo a mano"),$a_aprobadas['num']);
-
+	$res[11] = $a_aprobadas;
+	$a_textos[11] = sprintf(_("Hay %s numerarios que ya estaban en Repaso y han cursado asignaturas. Arreglarlo a mano"),$a_aprobadas['num']);
 }
-//9. Número de numerarios de cuadrienio que han superado 1 curso (28.75 Creditos) 
-$res[9] = $Resumen->masCreditosQue('28.75');
-$a_textos[9] = _("Número de numerarios de cuadrienio que han superado 1 curso");
-//10. Número de numerarios de cuadrienio que han superado 1 semestre (14.25 Creditos) 
-$res[10] = $Resumen->masCreditosQue('14');
-$a_textos[10] = _("Número de numerarios de cuadrienio que han superado 1 semestre");
-//11. Número de numerarios de cuadrienio que han superado menos de 1 semestre
-$res[11] = $Resumen->menosCreditosQue('14');
-$a_textos[11] = _("Número de numerarios de cuadrienio que han superado menos de 1 semestre");
-//12. Número de numerarios de cuadrienio que no han superado ninguna asignatura
-$res[12] = $Resumen->ningunaSuperada();
-$a_textos[12] = _("Número de numerarios de cuadrienio que no han superado ninguna asignatura");
-//13. Número de numerarios que han superado asignaturas con preceptor
-$res[13] = $Resumen->conPreceptor();
-$a_textos[13] = _("Número de numerarios que han superado asignaturas con preceptor");
-//14. Número de numerarios que han terminado el cuadrienio este curso 
-$res[14] = $Resumen->terminadoCuadrienio();
-$a_textos[14] = _("Número de numerarios que han terminado el cuadrienio este curso");
-//15. Número de numerarios laicos con el cuadrienio terminado 
-$res[15] = $Resumen->laicosConCuadrienio();
-$a_textos[15] = _("Número de numerarios laicos con el cuadrienio terminado");
+//12. Número de numerarios de cuadrienio que han superado 1 curso (28.75 Creditos) 
+$res[12] = $Resumen->masCreditosQue('28.75');
+$a_textos[12] = _("Número de numerarios de cuadrienio que han superado 1 curso");
+//13. Número de numerarios de cuadrienio que han superado 1 semestre (14.25 Creditos) 
+$res[13] = $Resumen->masCreditosQue('14');
+$a_textos[13] = _("Número de numerarios de cuadrienio que han superado 1 semestre");
+//14. Número de numerarios de cuadrienio que han superado menos de 1 semestre
+$res[14] = $Resumen->menosCreditosQue('14');
+$a_textos[14] = _("Número de numerarios de cuadrienio que han superado menos de 1 semestre");
+//15. Número de numerarios de cuadrienio que no han superado ninguna asignatura
+$res[15] = $Resumen->ningunaSuperada();
+$a_textos[15] = _("Número de numerarios de cuadrienio que no han superado ninguna asignatura");
+//16. Número de numerarios que han superado asignaturas con preceptor
+$res[16] = $Resumen->conPreceptorCuadrienio();
+$a_textos[16] = _("Número de numerarios que han superado asignaturas con preceptor");
+//17. Número de numerarios que han terminado el cuadrienio este curso 
+$res[17] = $Resumen->terminadoCuadrienio();
+$a_textos[17] = _("Número de numerarios que han terminado el cuadrienio este curso");
+// 
+// REPASO
+// 
+//18. Número de numerarios laicos con el cuadrienio terminado 
+$res[18] = $Resumen->laicosConCuadrienio();
+$a_textos[18] = _("Número de numerarios laicos con el cuadrienio terminado");
 
 if ($lista) {
 	//x. Número de numerarios de repaso

@@ -546,6 +546,30 @@ class Resumen Extends core\ClasePropiedades {
 		*/
 		return array('num'=>'?','lista'=>'falta poner fecha o en tablas');
 	}
+	public function enCe() {
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+		$ce_lugar = $this->getCe_lugar();
+		$any = $this->getAnyFiCurs();
+
+	    $ssql="SELECT p.nom, p.apellido1, p.apellido2, p.ctr
+		FROM $tabla p
+		WHERE (p.stgr='b')
+			AND (p.ce_lugar='$ce_lugar' AND p.ce_ini IS NOT NULL  AND p.ce_fin IS NULL) 
+		ORDER BY p.apellido1,p.apellido2,p.nom 
+		"; 
+
+		//echo "sql: $ssql<br>";
+		$statement = $oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr",1);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
+	
 	public function finCe() {
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
@@ -556,6 +580,29 @@ class Resumen Extends core\ClasePropiedades {
 		FROM $tabla p
 		WHERE (p.stgr='b' OR p.stgr ILIKE 'c%')
 			AND (p.ce_lugar='$ce_lugar' AND p.ce_fin = '$any') 
+		ORDER BY p.apellido1,p.apellido2,p.nom 
+		"; 
+
+		//echo "sql: $ssql<br>";
+		$statement = $oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr",1);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
+	public function sinCe() {
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+		$ce_lugar = $this->getCe_lugar();
+		$any = $this->getAnyFiCurs();
+
+	    $ssql="SELECT p.nom, p.apellido1, p.apellido2, p.ctr
+		FROM $tabla p
+		WHERE (p.stgr='b')
+			AND (p.ce_lugar IS NULL OR p.ce_lugar = '') 
 		ORDER BY p.apellido1,p.apellido2,p.nom 
 		"; 
 
@@ -581,7 +628,31 @@ class Resumen Extends core\ClasePropiedades {
 			WHERE p.id_nom=n.id_nom 
 				AND (n.id_nivel BETWEEN 1100 AND 1229 OR n.id_nivel BETWEEN 2100 AND 2429)
 				AND (p.ce_lugar='$ce_lugar' AND p.ce_fin = '$any')
-			 	AND (p.stgr='b' OR p.stgr ILIKE 'c%')
+			 	AND (p.stgr='b')
+			"; 
+
+		$statement=$oDbl->query($ssql);
+		$rta['num'] = $statement->fetchColumn();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = '';
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
+	public function aprobadasSinCe() {
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+		$notas = $this->getNomNotas();
+		$ce_lugar = $this->getCe_lugar();
+		$any = $this->getAnyFiCurs();
+
+	    $ssql="SELECT count(*)
+			FROM $tabla p, $notas n
+			WHERE p.id_nom=n.id_nom 
+				AND (n.id_nivel BETWEEN 1100 AND 1229 OR n.id_nivel BETWEEN 2100 AND 2429)
+				AND (p.ce_lugar ISNULL OR p.ce_lugar = '')
+			 	AND (p.stgr='b')
 			"; 
 
 		$statement=$oDbl->query($ssql);
@@ -594,6 +665,11 @@ class Resumen Extends core\ClasePropiedades {
 		return $rta;
 	}
 
+	/**
+	 * 
+	 * @param integer $actual  0->todos, 1->este curso, 2->otros cursos
+	 * @return array
+	 */
 	public function bienioSinAcabar($actual=0) {
 		$ce_lugar = $this->getCe_lugar();
 		$any = $this->getAnyFiCurs();
@@ -609,40 +685,61 @@ class Resumen Extends core\ClasePropiedades {
 		$statement=$oDbl->query($sAsql);
 		$a_Asql = $statement->fetchAll();
 			
-		if ($actual == 1) {
-			$ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.ctr, p.stgr
-				FROM $tabla p
-				WHERE  p.ce_fin='$any' AND p.ce_lugar = '$ce_lugar' AND p.stgr = 'b'
-				ORDER BY p.apellido1,p.apellido2,p.nom  "; 
-			$statement=$oDbl->query($ssql);
-			$nf=$statement->rowCount();
-			if ($nf >= 1){
-				$rta['error'] = true;
-				$rta['num'] = $nf;
-				if ($this->blista == true && $rta['num'] > 0) {
-					$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr,stgr",1);
-				} else {
-					$rta['lista'] = '';
+		switch ($actual) {
+			case 0: //todo
+				$ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.ctr, p.stgr
+					FROM $tabla p
+					WHERE  p.ce_fin IS NOT NULL AND p.ce_lugar = '$ce_lugar' AND p.stgr = 'b'
+					ORDER BY p.apellido1,p.apellido2,p.nom  "; 
+				$statement=$oDbl->query($ssql);
+				$nf=$statement->rowCount();
+				if ($nf >= 1){
+					$rta['error'] = true;
+					$rta['num'] = $nf;
+					if ($this->blista == true && $rta['num'] > 0) {
+						$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr,stgr",1);
+					} else {
+						$rta['lista'] = '';
+					}
+					return $rta;
 				}
-				return $rta;
-			}
-		} else {
-			$ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.ctr, p.stgr
-				FROM $tabla p
-				WHERE  p.ce_fin != '$any' AND p.ce_lugar = '$ce_lugar' AND p.stgr = 'b'
-				ORDER BY p.apellido1,p.apellido2,p.nom  "; 
-			$statement=$oDbl->query($ssql);
-			$nf=$statement->rowCount();
-			if ($nf >= 1){
-				$rta['error'] = true;
-				$rta['num'] = $nf;
-				if ($this->blista == true && $rta['num'] > 0) {
-					$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr,stgr",1);
-				} else {
-					$rta['lista'] = '';
+				break;
+			case 1:
+				$ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.ctr, p.stgr
+					FROM $tabla p
+					WHERE  p.ce_fin='$any' AND p.ce_lugar = '$ce_lugar' AND p.stgr = 'b'
+					ORDER BY p.apellido1,p.apellido2,p.nom  "; 
+				$statement=$oDbl->query($ssql);
+				$nf=$statement->rowCount();
+				if ($nf >= 1){
+					$rta['error'] = true;
+					$rta['num'] = $nf;
+					if ($this->blista == true && $rta['num'] > 0) {
+						$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr,stgr",1);
+					} else {
+						$rta['lista'] = '';
+					}
+					return $rta;
 				}
-				return $rta;
-			}
+				break;
+			case 2:
+				$ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.ctr, p.stgr
+					FROM $tabla p
+					WHERE  p.ce_fin != '$any' AND p.ce_lugar = '$ce_lugar' AND p.stgr = 'b'
+					ORDER BY p.apellido1,p.apellido2,p.nom  "; 
+				$statement=$oDbl->query($ssql);
+				$nf=$statement->rowCount();
+				if ($nf >= 1){
+					$rta['error'] = true;
+					$rta['num'] = $nf;
+					if ($this->blista == true && $rta['num'] > 0) {
+						$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr,stgr",1);
+					} else {
+						$rta['lista'] = '';
+					}
+					return $rta;
+				}
+				break;
 		}
 		return array('num'=>0,'lista'=>'');
 	}
@@ -651,15 +748,19 @@ class Resumen Extends core\ClasePropiedades {
 
 	public function aprobadasBienio() {
 		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
 		$notas = $this->getNomNotas();
-
-	    $ssql="SELECT count(*)
-			FROM $notas n
-			WHERE (n.id_nivel BETWEEN 1100 AND 1232)
-		 	";
-
+		
+		$ssql="SELECT p.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
+				FROM $tabla p,$notas n
+				WHERE p.id_nom=n.id_nom
+					AND (n.id_nivel BETWEEN 1100 AND 1232)
+					AND p.stgr ~ '^b'
+				GROUP BY p.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
+				ORDER BY p.apellido1, p.apellido2, p.nom
+				";
 		$statement=$oDbl->query($ssql);
-		$rta['num'] = $statement->fetchColumn();
+		$rta['num'] = $statement->rowCount();
 		if ($this->blista == true && $rta['num'] > 0) {
 			$rta['lista'] = sprintf(_("Total de asignaturas superadas en bienio %s"),$rta['num']);
 		} else {
@@ -694,12 +795,22 @@ class Resumen Extends core\ClasePropiedades {
 			return $rta;
 		}
 
-		$ssql="SELECT count(*)
-				FROM $notas n 
-				WHERE n.id_nivel BETWEEN 2100 AND 2500
-				 ";
+//		$ssql="SELECT count(*)
+//				FROM $notas n 
+//				WHERE n.id_nivel BETWEEN 2100 AND 2500
+//				 ";
+//		$statement=$oDbl->query($ssql);
+//		$rta['num'] = $statement->fetchColumn();
+		$ssql="SELECT p.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
+				FROM $tabla p,$notas n
+				WHERE p.id_nom=n.id_nom
+					AND (n.id_nivel BETWEEN 2100 AND 2500)
+					AND p.stgr ~ '^c'
+				GROUP BY p.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
+				ORDER BY p.apellido1, p.apellido2, p.nom
+				";
 		$statement=$oDbl->query($ssql);
-		$rta['num'] = $statement->fetchColumn();
+		$rta['num'] = $statement->rowCount();
 		if ($this->blista == true && $rta['num'] > 0) {
 			$rta['lista'] = sprintf(_("Total de asignaturas superadas en cuadrienio %s"),$rta['num']);
 		} else {
@@ -715,7 +826,7 @@ class Resumen Extends core\ClasePropiedades {
 
 		$ssql="SELECT n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
 		FROM $tabla p,$notas n,$asignaturas a
-		WHERE p.id_nom=n.id_nom AND n.id_asignatura=a.id_asignatura
+		WHERE p.id_nom=n.id_nom AND p.stgr ~ '^c' AND n.id_asignatura=a.id_asignatura
 			AND (n.id_nivel BETWEEN 2100 AND 2500)
 		GROUP BY n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
 		HAVING SUM( CASE WHEN n.id_nivel < 2430 THEN a.creditos else 1 END) > $creditos
@@ -776,7 +887,7 @@ class Resumen Extends core\ClasePropiedades {
 		}
 		return $rta;
 	}
-	public function conPreceptor() {
+	public function conPreceptorBienio() {
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 		$notas = $this->getNomNotas();
@@ -784,6 +895,28 @@ class Resumen Extends core\ClasePropiedades {
 		$ssql="SELECT n.id_nom, p.nom, p.apellido1, p.apellido2,p.ctr
 		FROM $notas n, $tabla p
 		WHERE n.id_nom=p.id_nom AND n.preceptor='t' 
+			AND p.stgr = 'b'
+		GROUP BY n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
+		ORDER BY p.apellido1,p.apellido2,p.nom "; 
+
+		$statement=$oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr",1);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
+	public function conPreceptorCuadrienio() {
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+		$notas = $this->getNomNotas();
+		
+		$ssql="SELECT n.id_nom, p.nom, p.apellido1, p.apellido2,p.ctr
+		FROM $notas n, $tabla p
+		WHERE n.id_nom=p.id_nom AND n.preceptor='t' 
+			AND p.stgr ~ '^c'
 		GROUP BY n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
 		ORDER BY p.apellido1,p.apellido2,p.nom "; 
 
@@ -800,11 +933,12 @@ class Resumen Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 		$notas = $this->getNomNotas();
+		$curs = $this->getCurso();
 		
 		$ssql="SELECT n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
 		FROM $tabla p, $notas n
 		WHERE p.id_nom=n.id_nom
-			AND (n.id_nivel=9998)
+			AND (n.id_nivel=9998) AND n.f_acta $curs
 		GROUP BY n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
 		ORDER BY p.apellido1, p.apellido2,p.nom"; 
 
@@ -854,9 +988,10 @@ class Resumen Extends core\ClasePropiedades {
 		$sqlDelete="DROP TABLE $tabla";
 		$oDbl->query($sqlDelete);
 		$sqlCreate="CREATE TABLE $tabla AS
-						SELECT DISTINCT  p.id_nom,p.nom,p.apellido1,p.apellido2
-		   				FROM $personas p JOIN d_profesor_stgr d USING(id_nom)
-						WHERE situacion='A' ORDER BY id_nom";
+						SELECT DISTINCT  p.id_nom,p.nom,p.apellido1,p.apellido2,u.nombre_ubi as ctr
+		   				FROM $personas p JOIN d_profesor_stgr d USING(id_nom), u_centros_dl u
+						WHERE situacion='A' AND (p.id_ctr = u.id_ubi)
+						ORDER BY id_nom";
 		$oDbl->query($sqlCreate);
 		//echo "$sqlCreate<br>";
 	
@@ -1098,4 +1233,3 @@ class Resumen Extends core\ClasePropiedades {
 		return $rta;
 	}
 }
-?>
