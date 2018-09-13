@@ -37,7 +37,7 @@ class GestorMatricula Extends core\ClaseGestor {
 	/**
 	 * retorna l'array d'objectes de tipus Matricula
 	 *
-	 * @param string sQuery la query a executar.
+	 * @param integer id_nom
 	 * @return array Una col·lecció d'objectes de tipus Matricula
 	 */
 	function getMatriculasPendientes($id_nom='') {

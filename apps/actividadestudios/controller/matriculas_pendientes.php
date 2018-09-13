@@ -50,8 +50,8 @@ if (!empty($traslados)) {
 	// Periodo??
 
 } else {
-	$gesMatriculas = new actividadestudios\gestorMatricula();
-	$cMatriculasPendientes = $gesMatriculas->getMatriculasPendientes();
+	$gesMatriculasDl = new actividadestudios\gestorMatriculaDl();
+	$cMatriculasPendientes = $gesMatriculasDl->getMatriculasPendientes();
 }
 
 $titulo = _("Lista de matrículas pendientes de poner nota");
