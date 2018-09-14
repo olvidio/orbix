@@ -55,6 +55,9 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 		
 		// Sólo grabo si está superada.
 		//if (!in_array($id_situacion,$aIdSuperadas)) continue;
+		if (empty($nota_num) || empty($nota_max)) {
+			continue;
+		}
 		if ($nota_num/$nota_max < 0.6) {
 			$nn = $nota_num/$nota_max * 10;
 			$error .= sprintf(_("nota no guardada para %s porque la nota (%s) no llega al mínimo: 6"),$oPersona->getNombreApellidos(),$nn);
