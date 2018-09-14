@@ -58,7 +58,7 @@ if (empty($notas)) {
 <tr>
 	<td class=etiqueta><?= ucfirst(_("acta")); ?>:
 	</td>
-	<?php if (!empty($nuevo) || $notas=="nuevo") { 
+	<?php if ($mod == 'nueva' || $notas=="nuevo") { 
 	  	echo "<td colspan=8><input class=contenido size='25' id='acta' name='acta' value=\"$acta\">"; 
 	  	echo "&nbsp;&nbsp;$ult_acta";
 	} else {

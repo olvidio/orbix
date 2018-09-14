@@ -49,7 +49,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 $Qacta = (string) \filter_input(INPUT_POST, 'acta');
-$Qnuevo = (integer) \filter_input(INPUT_POST, 'nuevo');
+$Qmod = (string) \filter_input(INPUT_POST, 'mod');
 
 //$acta=urldecode($acta);
 //últimos
@@ -72,7 +72,7 @@ if (!empty($a_sel) && empty($notas)) { //vengo de un checkbox y no estoy en la p
 }
 
 $json_examinadores = '';
-if (empty($Qnuevo) && !empty($acta))  { //significa que no es nuevo
+if ($Qmod != 'nueva' && !empty($acta))  { //significa que no es nuevo
 	if (!empty($Qacta) && !empty($notas)) { // vengo de actualizar esta pág.
 		// estoy actualizando la página
 		$id_asignatura_actual = (integer) \filter_input(INPUT_POST, 'id_asignatura_actual');
@@ -161,7 +161,7 @@ if (!empty($id_asignatura_actual)) {
 
 $oHashActa = new Hash();
 $sCamposForm = 'libro!linea!pagina!lugar!observ!id_asignatura!f_acta';
-if (!empty($Qnuevo) || $notas=="nuevo") { 
+if ($Qmod == 'nueva' || $notas=="nuevo") { 
 	$sCamposForm .= '!acta';
 	$sCamposForm .= '!f_acta';
 }
@@ -172,8 +172,8 @@ if(!empty($cTribunal)) {
 $oHashActa->setcamposForm($sCamposForm);
 $oHashActa->setCamposNo('go_to!examinadores');
 $a_camposHidden = array();
-if ($notas=="nuevo" || !empty($Qnuevo) ) {
-	$a_camposHidden['nuevo'] = 1;
+if ($Qmod == 'nueva' || $notas=="nuevo") { 
+	$a_camposHidden['mod'] = 'nueva';
 	if (empty($id_activ)) {
 		echo _('No se guardará el ca/cv donde se cursó la asignatura');
 	} else {
@@ -214,7 +214,7 @@ $loc_asig = "{$url}?que=asignaturas&$h";
 $a_campos = ['obj' => $obj,
 			'oPosicion' => $oPosicion,
 			'notas' => $notas,
-			'nuevo' => $Qnuevo,
+			'mod' => $Qmod,
 			'oHashActa' => $oHashActa,
 			'titulo' => $titulo,
 			'acta' => $acta,

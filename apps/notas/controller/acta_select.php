@@ -29,7 +29,9 @@ use function core\curso_est;
 $mi_dele = ConfigGlobal::mi_dele();
 $mi_dele .= (ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
 
-$oPosicion->recordar();
+	
+$Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
+$oPosicion->recordar($Qrefresh);
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
@@ -104,6 +106,7 @@ $cActas = $GesActas->getActas($aWhere,$aOperador);
 
 $botones = 0; // para 'añadir acta'
 if ($_SESSION['oPerm']->have_perm("est")) {
+	$a_botones[] = array( 'txt' => _('eliminar'), 'click' =>"fnjs_eliminar(\"#seleccionados\")");
 	$a_botones[] = array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(\"#seleccionados\")");
 	$botones = 1; // para 'añadir acta'
 }
@@ -143,8 +146,8 @@ $oHash = new Hash();
 $oHash->setcamposForm('acta');
 
 $oHash1 = new Hash();
-$oHash1->setcamposForm('sel!nuevo');
-$oHash1->setCamposNo('sel!scroll_id!nuevo');
+$oHash1->setcamposForm('sel!mod');
+$oHash1->setCamposNo('sel!scroll_id!mod!refresh');
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('acta_select');
@@ -152,12 +155,15 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
+$txt_eliminar = _("Esto eliminará los datos del acta, pero no las notas que mantendrán el número de acta");
+					
 $a_campos = ['oPosicion' => $oPosicion,
 			'oHash' => $oHash,
 			'oHash1' => $oHash1,
 			'titulo' => $titulo,
 			'oTabla' => $oTabla,
 			'botones' => $botones,
+			'txt_eliminar' => $txt_eliminar,
 			];
 
 $oView = new core\View('notas/controller');
