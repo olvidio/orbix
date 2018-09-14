@@ -101,13 +101,7 @@ if (empty($notas)) {
 		</td></tr>
 </table>
 <br>
-<?php if (empty($notas)) {
-	//echo _("Primero debe guardar los valores del acta. Después las notas.");
-?>
 <input id="g1" TYPE="button" VALUE="<?= ucfirst(_("guardar cambios acta")); ?>"  onclick="fnjs_guardar_acta(this.form)">
-<?php
-}
-?>
 </form>
 <script type="text/javascript">
 $(document).ready(function () {

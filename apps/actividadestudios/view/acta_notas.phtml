@@ -16,8 +16,10 @@ fnjs_imprimir=function(form_acta){
 	$(form_acta).attr('action',"apps/notas/controller/acta_imprimir.php");
 	fnjs_enviar_formulario(form_acta);
 }
-fnjs_guardar_todo=function(form_acta){
-	fnjs_guardar_acta(form_acta);
+
+//paso las matrículas a notas definitivas
+fnjs_guardar_tessera=function(form_acta){
+	//fnjs_guardar_acta(form_acta);
 	$('#que').val("3");
 	$('#f_1303').attr('action',"apps/actividadestudios/controller/acta_notas_update.php");
 	$('#f_1303').submit(function() {
@@ -38,6 +40,7 @@ fnjs_guardar_todo=function(form_acta){
 	$('#f_1303').off();
 }
 
+// Grabar las notas en la matricula
 fnjs_guardar_nota=function(){
 	$('#que').val("1");
 	$('#f_1303').attr('action',"apps/actividadestudios/controller/acta_notas_update.php");
@@ -96,5 +99,5 @@ foreach ($aPersonasMatriculadas as $nom=>$oMatricula) {
 ?>	
 </tbody></table>
 </form>
-<br><input type="button" value="<?= strtoupper(_("grabar")); ?>" onclick="fnjs_guardar_todo('#frm_acta')">
+<br><input type="button" value="<?= strtoupper(_("grabar notas en tessera")); ?>" onclick="fnjs_guardar_tessera('#frm_acta')">
 <br><input type="button" value="<?= strtoupper(_("imprimir")); ?>" onclick="fnjs_imprimir('#frm_acta')">
