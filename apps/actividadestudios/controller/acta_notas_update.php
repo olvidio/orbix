@@ -55,10 +55,11 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 		
 		// Sólo grabo si está superada.
 		//if (!in_array($id_situacion,$aIdSuperadas)) continue;
-		if (empty($nota_num) || empty($nota_max)) {
-			continue;
+		if (empty($nota_max)) {
+			$nota_max = 10;
 		}
-		if ($nota_num/$nota_max < 0.6) {
+		// Acepto nota_num=0 para borrar.
+		if (!empty($nota_num) && $nota_num/$nota_max < 0.6) {
 			$nn = $nota_num/$nota_max * 10;
 			$error .= sprintf(_("nota no guardada para %s porque la nota (%s) no llega al mínimo: 6"),$oPersona->getNombreApellidos(),$nn);
 			continue;
@@ -132,20 +133,25 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 			continue;
 		} else {
 			if ($nota_num > 1) $id_situacion = 10;
-			// guardo los datos
-			$oPersonaNota->setId_schema($id_schema);
-			$oPersonaNota->setId_nivel($id_nivel);
-			$oPersonaNota->setId_situacion($id_situacion);
-			$oPersonaNota->setActa($acta);
-			$oPersonaNota->setF_acta($f_acta);
-			$oPersonaNota->setId_activ($Qid_activ);
-			$oPersonaNota->setPreceptor($preceptor);
-			$oPersonaNota->setId_preceptor($id_preceptor);
-			$oPersonaNota->setNota_num($nota_num);
-			$oPersonaNota->setNota_max($nota_max);
-			$oPersonaNota->setTipo_acta(notas\PersonaNota::FORMATO_ACTA);
-			if ($oPersonaNota->DBGuardar() === false) {
-				echo _('Hay un error, no se ha guardado');
+			// para borrar	(empty($nota_num))
+			if (!empty($id_activ_old) && ($Qid_activ == $id_activ_old) && empty($nota_num)) {
+				$oPersonaNota->DBEliminar();
+			} else {
+				// guardo los datos
+				$oPersonaNota->setId_schema($id_schema);
+				$oPersonaNota->setId_nivel($id_nivel);
+				$oPersonaNota->setId_situacion($id_situacion);
+				$oPersonaNota->setActa($acta);
+				$oPersonaNota->setF_acta($f_acta);
+				$oPersonaNota->setId_activ($Qid_activ);
+				$oPersonaNota->setPreceptor($preceptor);
+				$oPersonaNota->setId_preceptor($id_preceptor);
+				$oPersonaNota->setNota_num($nota_num);
+				$oPersonaNota->setNota_max($nota_max);
+				$oPersonaNota->setTipo_acta(notas\PersonaNota::FORMATO_ACTA);
+				if ($oPersonaNota->DBGuardar() === false) {
+					echo _('Hay un error, no se ha guardado');
+				}
 			}
 		}
 	}
