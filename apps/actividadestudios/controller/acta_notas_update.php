@@ -144,6 +144,7 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 				$oPersonaNota->setId_situacion($id_situacion);
 				$oPersonaNota->DBEliminar();
 			} else {
+				$oPersonaNota = new notas\PersonaNota(array('id_nom'=>$id_nom,'id_asignatura'=>$Qid_asignatura));
 				if ($nota_num > 1) $id_situacion = 10;
 				// guardo los datos
 				$oPersonaNota->setId_schema($id_schema);
