@@ -122,6 +122,7 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 		}
 			
 		$oPersonaNota = new notas\PersonaNota(array('id_nom'=>$id_nom,'id_asignatura'=>$Qid_asignatura));
+		$oPersonaNota->DBCarregar();
 		//compruebo que no existe ya la nota:
 		//	- si existe y es en mismo id_activ, actualizo
 		//  - si existe en otro id_activ, AVISO!!
@@ -132,11 +133,13 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 			$error.=sprintf (_("está intentando poner una nota que ya existe (id_nom=%s)")."\n",$id_nom);
 			continue;
 		} else {
-			if ($nota_num > 1) $id_situacion = 10;
 			// para borrar	(empty($nota_num))
 			if (!empty($id_activ_old) && ($Qid_activ == $id_activ_old) && empty($nota_num)) {
+				$id_situacion = 10;
+				$oPersonaNota->setId_situacion($id_situacion);
 				$oPersonaNota->DBEliminar();
 			} else {
+				if ($nota_num > 1) $id_situacion = 10;
 				// guardo los datos
 				$oPersonaNota->setId_schema($id_schema);
 				$oPersonaNota->setId_nivel($id_nivel);
