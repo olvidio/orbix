@@ -22,7 +22,7 @@ fnjs_guardar=function(formulario){
 }
 fnjs_actualizar=function(formulario){
 	var campo = '<input type="hidden" name="refresh" value=1>';
-	$('#frm_actualizar').attr('action','apps/actividadplazas/controller/resumen_plazas.php');
+	$(formulario).attr('action','apps/actividadplazas/controller/resumen_plazas.php');
 	$(formulario).append(campo);
 	fnjs_enviar_formulario(formulario,'#main');
 }
