@@ -29,7 +29,6 @@ use function core\curso_est;
 $mi_dele = ConfigGlobal::mi_dele();
 $mi_dele .= (ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
 
-	
 $Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 
