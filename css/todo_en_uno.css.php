@@ -288,7 +288,12 @@ div.ventana z-index: 160;
 		0% { opacity:0; }
 		100% { opacity:100%; }
 	}
-
+	
+	/* input disabled */
+	input[type=checkbox]:disabled + span {
+  		color:#8c8c8c;
+	}
+	
 	/* tonos de color */
 	.tono1 {
 		background-color : <?= $tono1; ?> !important;
