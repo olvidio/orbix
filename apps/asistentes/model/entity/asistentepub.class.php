@@ -635,6 +635,14 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * @param integer iplaza='' optional
 	 */
 	function setPlaza($iplaza='') {
+		// tipos de actividad para los que no hay que comprobar la plaza
+		// 132500 => agd ca sem invierno
+		$aId_tipo_activ_no = [132500,00000];
+		$oActividad = new \actividades\model\entity\Actividad($this->iid_activ);
+		$id_tipo_activ = $oActividad->getId_tipo_activ();
+		if (in_array($id_tipo_activ, $aId_tipo_activ_no)) {
+			return $this->setPlazaSinComprobar($iplaza);
+		}
 		//hacer comprobaciones de plazas disponibles...
 		$plaza_actual = $this->getPlaza();
 

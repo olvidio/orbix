@@ -1,3 +1,4 @@
+<fieldset>
 <h3 class=subtitulo><?= ucfirst($nom_activ) ?></h3>
 <form id="<?= $form ?>" name="<?= $form ?>" action="" method="post">
 <?= $oHashCa->getCamposHtml(); ?>
@@ -26,3 +27,4 @@
 	<input  type="button" onclick="fnjs_matricular(this.form,<?= $ca_num ?>);" value="<?=  _("matricular automáticamente"); ?>">
 </td>
 </tr></table></form>
+</fieldset><br>
