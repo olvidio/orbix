@@ -316,6 +316,8 @@ class App Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nom'));
 		$oDatosCampo->setEtiqueta(_("nom"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument(30);
 		return $oDatosCampo;
 	}
 	/**
@@ -327,7 +329,9 @@ class App Extends core\ClasePropiedades {
 	function getDatosDb_prefix() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'db_prefix'));
-		$oDatosCampo->setEtiqueta(_("db_prefix"));
+		$oDatosCampo->setEtiqueta(_("db prefix"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument(30);
 		return $oDatosCampo;
 	}
 }

@@ -4,7 +4,7 @@ use core;
 /**
  * Fitxer amb la Classe que accedeix a la taula m0_modulos
  *
- * @package delegación
+ * @package orbix
  * @subpackage model
  * @author Daniel Serrabou
  * @version 1.0
@@ -13,7 +13,7 @@ use core;
 /**
  * Classe que implementa l'entitat m0_modulos
  *
- * @package delegación
+ * @package orbix
  * @subpackage model
  * @author Daniel Serrabou
  * @version 1.0

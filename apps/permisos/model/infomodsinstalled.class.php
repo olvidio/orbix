@@ -1,5 +1,5 @@
 <?php
-namespace devel\model;
+namespace permisos\model;
 use core;
 
 /* No vale el underscore en el nombre */
@@ -11,7 +11,7 @@ class InfoModsInstalled extends core\datosInfo {
 		$this->setTxtBuscar(_("buscar un módulo"));
 		$this->setTxtExplicacion();
 
-		$this->setClase('devel\\model\\entity\\ModuloInstalado');
+		$this->setClase('permisos\\model\\entity\\ModuloInstalado');
 		$this->setMetodoGestor('getModulosInstalados');
 	}
 
@@ -23,10 +23,12 @@ class InfoModsInstalled extends core\datosInfo {
 			$aOperador='';
 		} else {
 			$aWhere=array('id_mod'=> $this->k_buscar);
+			$aOperador='';
 		}
-		$oLista = new entity\GestorApp();
-		$Coleccion=$oLista->getApps($aWhere,$aOperador);
+		$oLista = new entity\GestorModuloInstalado();
+		$Coleccion=$oLista->getModulosInstalados($aWhere,$aOperador);
 
 		return $Coleccion;
 	}
+	
 }

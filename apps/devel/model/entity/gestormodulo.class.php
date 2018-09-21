@@ -1,6 +1,8 @@
 <?php
 namespace devel\model\entity;
 use core;
+use web;
+
 /**
  * GestorModulo
  *
@@ -33,6 +35,26 @@ class GestorModulo Extends core\ClaseGestor {
 
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
+	
+	/**
+	 * retorna un objecte del tipus Desplegable
+	 * Els posibles modulos 
+	 *
+	 * @return array Una Llista
+	 */
+	function getListaModulos() {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$sQuery="SELECT id_mod, nom
+				FROM $nom_tabla
+				ORDER BY nom";
+		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+			$sClauError = 'GestorTipoCasa.lista';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		return new web\Desplegable('',$oDblSt,'',true);
+	}
 
 	/**
 	 * retorna l'array d'objectes de tipus Modulo

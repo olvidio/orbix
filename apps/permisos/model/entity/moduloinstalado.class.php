@@ -4,7 +4,7 @@ use core;
 /**
  * Fitxer amb la Classe que accedeix a la taula m0_mods_installed_dl
  *
- * @package delegación
+ * @package orbix
  * @subpackage model
  * @author Daniel Serrabou
  * @version 1.0
@@ -13,7 +13,7 @@ use core;
 /**
  * Classe que implementa l'entitat m0_mods_installed_dl
  *
- * @package delegación
+ * @package orbix
  * @subpackage model
  * @author Daniel Serrabou
  * @version 1.0
@@ -36,6 +36,12 @@ class ModuloInstalado Extends core\ClasePropiedades {
 	 */
 	 private $aDades;
 
+	/**
+	 * Id_schema de ModuloInstalado
+	 *
+	 * @var integer
+	 */
+	 private $iid_schema;
 	/**
 	 * Id_mod de ModuloInstalado
 	 *
@@ -307,11 +313,11 @@ class ModuloInstalado Extends core\ClasePropiedades {
 		return $oModuloInstaladoSet->getTot();
 	}
 
-	function getDatosDesc_teleco() {
+	function getDatosId_mod() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'modulo'));
-		$oDatosCampo->setEtiqueta(_("descripcion"));
-		$oDatosCampo->setTipo('depende');
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_mod'));
+		$oDatosCampo->setEtiqueta(_("nombre"));
+		$oDatosCampo->setTipo('opciones');
 		$oDatosCampo->setArgument('devel\model\entity\Modulo');
 		$oDatosCampo->setArgument2('nom');
 		$oDatosCampo->setArgument3('getListaModulos');
@@ -345,4 +351,3 @@ class ModuloInstalado Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 }
-?>
