@@ -104,7 +104,7 @@ if (!empty($Qid_activ)) { // caso de modificar
 	$tarifa = '';
 	$nivel_stgr = 'r';
 	$id_repeticion = 0;
-	$id_tipo_activ = '';
+	$id_tipo_activ = (string)  \filter_input(INPUT_POST, 'id_tipo_activ');
 	$id_activ = '';
 	$ssfsv = '';
 	$sasistentes='';
