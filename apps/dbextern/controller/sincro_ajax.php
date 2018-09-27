@@ -41,6 +41,7 @@ switch ($que) {
 			$apellido2 = $oPersonaListas->getApellido2();
 			$apellido2_sinprep = $oPersonaListas->getApellido2_sinprep();
 			$f_nacimiento = $oPersonaListas->getFecha_Naci();
+			$lugar_nacimiento = $oPersonaListas->getLugar_Naci();
 
 			$id_tipo_persona = substr($id_nom_listas, 0, 1);
 			switch ($id_tipo_persona){
@@ -81,6 +82,7 @@ switch ($que) {
 			$oPersona->setNx2($nx2);
 			$oPersona->setApellido2($apellido2_sinprep);
 			$oPersona->setF_nacimiento($f_nacimiento);
+			$oPersona->setLugar_nacimiento($lugar_nacimiento);
 
 			if ($oPersona->DBGuardar() === false) {
 				exit(_('Hay un error, no se ha guardado'));
