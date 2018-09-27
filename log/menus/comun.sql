@@ -21,7 +21,6 @@
 24	\N	scdl/registro/control_usr.php	\N	\N
 25	\N	vcsd/scheduler/oficina.php	\N	\N
 26	\N	programas/lista_activ_sr.php	\N	\N
-27	\N	programas/lor/que_personas_ficha.php	\N	\N
 28	\N	des/com_sacd_activ_periodo.php	\N	\N
 29	\N	programas/calendario_exportar_sf.php	\N	\N
 30	\N	scdl/registro/registro_distribucion.php	\N	\N
@@ -116,6 +115,7 @@
 130	\N	programas/actividades_fases_cambio.php	\N	\N
 132	\N	sg/lista_actividades_sg.php	\N	\N
 122	admin	apps/usuarios/controller/grupo_lista.php	\N	lista grupos
+27	devel	apps/devel/controller/modulos_select.php	\N	modulos select
 134	\N	scdl/registro/mod_ini.php	\N	\N
 135	\N	sg/que_resumen.php	\N	\N
 137	\N	des/libros/que_libros.php	\N	\N

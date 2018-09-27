@@ -216,3 +216,8 @@
 1372	{10,10}	agd dl	tabla=p_agregados&tipo=persona	76	2064	21	t
 1384	{10}	personas	\N	0	16	21	t
 1385	{20}	actas	\N	0	16	21	t
+1386	{38}	sem inv.	\N	0	16	12	t
+1387	{38,10}	buscar	sasistentes=agd&sactividad=ca&que=ver	119	16	12	t
+1391	{38,110}	gestión de plazas	ssfsv=sv&sasistentes=agd&sactividad=ca	169	16	12	t
+1389	{82,110}	Gestión de plazas	ssfsv=sv&sasistentes=n&sactividad=cve	169	128	2	t
+1390	{90,110}	Gestión de plazas	ssfsv=sv&sasistentes=agd&sactividad=cve	169	2	3	t
