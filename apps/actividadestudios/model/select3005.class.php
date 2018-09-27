@@ -55,7 +55,7 @@ class Select3005 {
 		
 	public function getBotones() {
 		$a_botones = array();
-		if ($this->permiso === 3) {
+		if ($this->permiso == 3) {
 			$a_botones=array(
 		            array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(this.form)" ) ,
 		            array( 'txt' => _('quitar asignatura'), 'click' =>"fnjs_borrar_asignatura(this.form)" ) ,
