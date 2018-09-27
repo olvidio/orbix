@@ -199,77 +199,10 @@ class Select3101 {
 	private function contarPlazas() {
 		$a_plazas_resumen = array();
 		$a_plazas_conseguidas = array();
-		// Si no esta publicada todas las plazas de la actividad son para la dl.
-		// No hay plazas de calendario.
-		if ($this->publicado === false) {
-			$gesActividadPlazasR = new \actividadplazas\model\GestorResumenPlazas();
-			$gesActividadPlazasR->setId_activ($this->id_pau);
-//			$dl = $this->dl_org;
-//			$a_plazas_resumen[$dl]['calendario'] = $this->plazas_totales;
-//			$a_plazas_resumen[$dl]['conseguidas'] = 0;
-//			$a_plazas_resumen[$dl]['disponibles'] = $this->plazas_totales;
-//			$a_plazas_resumen[$dl]['total_cedidas'] = 0;
-		} else {
-			// array para pasar id_dl a dl.
-			$gesDelegacion = new ubis\model\entity\GestorDelegacion();
-			$a_dl = $gesDelegacion->getArrayDelegaciones(array("H"));
-			//print_r($a_dl);
-			
-			$gesActividadPlazasR = new \actividadplazas\model\GestorResumenPlazas();
-			$gesActividadPlazasR->setId_activ($this->id_pau);
-			
-			/*
-			$gesActividadPlazas = new \actividadplazas\model\entity\GestorActividadPlazas();
-			$cActividadPlazas = $gesActividadPlazas->getActividadesPlazas(array('id_activ' => $this->id_pau));
-			$a_plazas_resumen =array();
-			foreach ($cActividadPlazas as $oActividadPlazas) {
-				$dl_tabla = $oActividadPlazas->getDl_tabla();
-				$id_dl = $oActividadPlazas->getId_dl();
-				$json_cedidas = $oActividadPlazas->getCedidas();
-				$dl = $a_dl[$id_dl];
-				$calendario = $gesActividadPlazasR->getPlazasCalendario($dl);
-				//if (empty($calendario)) { continue; }
-				$a_plazas_resumen[$dl]['calendario'] = $gesActividadPlazasR->getPlazasCalendario($dl);
-				$a_plazas_resumen[$dl]['conseguidas'] = $gesActividadPlazasR->getPlazasConseguidas($dl);
-				$a_plazas_resumen[$dl]['disponibles'] = $gesActividadPlazasR->getPlazasDisponibles($dl);
-				$a_plazas_resumen[$dl]['total_cedidas'] = $gesActividadPlazasR->getPlazasCedidas($dl);
-				if ($this->dl_org == $dl_tabla) {
-					// las cedidas se guardan en la tabla que pertenece a la dl
-					if($dl === $this->dl_org) {
-						if (!empty($json_cedidas)){
-							//$aCedidas = json_decode($json_cedidas,TRUE);
-							//$a_plazas_resumen[$dl]['cedidas'] = $aCedidas;
-							$a_plazas_resumen[$dl]['json_cedidas'] = $json_cedidas;
-						} else {
-							//$a_plazas_resumen[$dl]['cedidas'] = array();
-							$a_plazas_resumen[$dl]['json_cedidas'] = array();
-						}
-					}
-				} else {
-					if (!empty($json_cedidas)){
-						//$aCedidas = json_decode($json_cedidas,TRUE);
-						//$a_plazas_resumen[$dl]['cedidas'] = $aCedidas;
-						$a_plazas_resumen[$dl]['json_cedidas'] = $json_cedidas;
-					} else {
-						//$a_plazas_resumen[$dl]['cedidas'] = array();
-						$a_plazas_resumen[$dl]['json_cedidas'] = array();
-					}
-				}
-				if (!empty($json_cedidas)){
-					$aCedidas = json_decode($json_cedidas,TRUE);
-					foreach ($aCedidas as $dl2 => $num) {
-						$a_plazas_conseguidas[$dl2][$dl]['cedidas'] = $num;
-					}
-				}
-			}
-		*/
-		}
-		/*
-		ksort($a_plazas_resumen);
-		$this->a_plazas_resumen = $a_plazas_resumen;
-		$this->a_plazas_conseguidas = $a_plazas_conseguidas;
-		*/
 		
+		$gesActividadPlazasR = new \actividadplazas\model\GestorResumenPlazas();
+		$gesActividadPlazasR->setId_activ($this->id_pau);
+			
 		$this->a_plazas_conseguidas = array();
 		$aaa = $gesActividadPlazasR->getResumen();
 		$this->a_plazas_resumen = $aaa;

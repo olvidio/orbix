@@ -17,7 +17,15 @@
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
+$oPosicion->recordar($Qrefresh);
+
 $Qid_tipo_activ = (string)  filter_input(INPUT_POST, 'id_tipo_activ');
+$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
+$Qfin = (string) \filter_input(INPUT_POST, 'fin');
+$Qyear = (string) \filter_input(INPUT_POST, 'year');
+$Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
+	
 // Id tipo actividad
 if (empty($Qid_tipo_activ)) {
 	$Qssfsv = (string)  filter_input(INPUT_POST, 'ssvsf');
@@ -40,18 +48,32 @@ if (empty($Qid_tipo_activ)) {
 $Qid_tipo_activ =  '^'.$Qid_tipo_activ;
 
 //periodo
-switch ($Qsactividad) {
-	case 'ca':
-	case 'cv':
-		$any=  core\ConfigGlobal::any_final_curs('est');
-		$inicurs=core\curso_est("inicio",$any,"est");
-		$fincurs=core\curso_est("fin",$any,"est");
-		break;
-	case 'crt':
-		$any=  core\ConfigGlobal::any_final_curs('crt');
-		$inicurs=core\curso_est("inicio",$any,"crt");
-		$fincurs=core\curso_est("fin",$any,"crt");
-		break;
+if (empty($Qperiodo) || $Qperiodo == 'otro') {
+	switch ($Qsactividad) {
+		case 'ca':
+		case 'cv':
+			$any=  core\ConfigGlobal::any_final_curs('est');
+			$Qempiezamin=core\curso_est("inicio",$any,"est");
+			$Qempiezamax=core\curso_est("fin",$any,"est");
+			$Qperiodo = 'curso_ca';
+			break;
+		case 'crt':
+		case 'cve':
+			$any=  core\ConfigGlobal::any_final_curs('crt');
+			$Qempiezamin=core\curso_est("inicio",$any,"crt");
+			$Qempiezamax=core\curso_est("fin",$any,"crt");
+			$Qperiodo = 'curso_crt';
+			break;
+	}
+	$inicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
+	$fin = empty($Qfin)? $Qempiezamax : $Qfin;
+} else {
+	$oPeriodo = new web\Periodo();
+	$any=empty($Qyear)? date('Y')+1 : $Qyear;
+	$oPeriodo->setAny($any);
+	$oPeriodo->setPeriodo($Qperiodo);
+	$inicio = $oPeriodo->getF_ini();
+	$fin = $oPeriodo->getF_fin();
 }
 
 $status = \actividades\model\entity\ActividadAll::STATUS_ACTUAL; //actual
@@ -82,9 +104,9 @@ foreach ($cDelegaciones as $oDelegacion) {
 	$aWhere =array('dl_org'			=>$dl,
 					'id_tipo_activ'	=>$Qid_tipo_activ,
 					'status' 		=> $status,
-					'publicado' 		=> 't',
-					'f_ini' 		=> "'$inicurs','$fincurs'",
-					'_ordre'		=>'f_ini');
+//					'publicado' 		=> 't',
+					'f_ini' 		=> "'$inicio','$fin'",
+					'_ordre'		=> 'publicado,f_ini');
 	$aOperador = array('id_tipo_activ'=>'~', 'f_ini'=>'BETWEEN');
 	$cActividades1 = $gesActividades->getActividades($aWhere,$aOperador);
 	$cActividades =  array_merge($cActividades,$cActividades1);
@@ -185,7 +207,40 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$a_campos = ['oTabla' => $oTabla,
+//Periodo
+$boton = "<input type='button' value='"._("Buscar")."' onclick='fnjs_buscar()' >";
+$aOpciones =  array(
+					'tot_any' => _('todo el año'),
+					'trimestre_1'=>_('primer trimestre'),
+					'trimestre_2'=>_('segundo trimestre'),
+					'trimestre_3'=>_('tercer trimestre'),
+					'trimestre_4'=>_('cuarto trimestre'),
+					'separador'=>'---------',
+					'curso_ca'=>_('curso ca'),
+					'curso_crt'=>_('curso crt'),
+					'separador1'=>'---------',
+					'otro'=>_('otro')
+					);
+$oFormP = new web\PeriodoQue();
+$oFormP->setFormName('que');
+$oFormP->setTitulo(core\strtoupper_dlb(_('periodo de selección de actividades')));
+$oFormP->setPosiblesPeriodos($aOpciones);
+$oFormP->setDesplAnysOpcion_sel($Qyear);
+$oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
+$oFormP->setBoton($boton);
+
+$oHash = new web\Hash();
+$oHash->setCamposForm('empiezamax!empiezamin!iactividad_val!iasistentes_val!id_tipo_activ!periodo!year');
+$oHash->setCamposNo('!refresh');
+$a_camposHidden = array(
+		'id_tipo_activ' => $Qid_tipo_activ,
+		);
+$oHash->setArraycamposHidden($a_camposHidden);
+
+$a_campos = ['oPosicion' => $oPosicion,
+			'oTabla' => $oTabla,
+			'oFormP' => $oFormP,
+			'oHash' => $oHash,
 			];
 
 $oView = new core\View('actividadplazas/controller');
