@@ -710,7 +710,9 @@ class TablaEditable {
 		</script>
 		";
 
-		$tt.="<div id=\"GridContainer_".$id_tabla."\"  style=\"width:{$grid_width}px; height:{$grid_height}px;\" >
+		//$tt.="<div id=\"GridContainer_".$id_tabla."\"  style=\"width:{$grid_width}px; height:{$grid_height}px;\" >
+		//OJO. si heigth no es auto, al hacer resize desde html, los textos de debajo de la grid no se mueven.
+		$tt.="<div id=\"GridContainer_".$id_tabla."\"  style=\"width:{$grid_width}px; height:auto;\" >
 		<div class=\"grid-header\">
 		  <span style=\"width:90%; display: inline-block;\">$botones</span>
 		  <span style=\"float:right\" class=\"ui-icon ui-icon-disk\" title=\""._('guardar selección de columnas')."\"
