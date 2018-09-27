@@ -247,6 +247,7 @@ class GestorResumenPlazas {
 		$oActividad = new \actividades\model\entity\Actividad($id_activ);
 		$dl_org = $oActividad->getDl_org();
 		$plazas_totales = $this->getPlazasTotales();
+		/*
 		// si la actividad no está pulicada, no hay plazas de otras dl. Todas para la dl org.
 		if ($oActividad->getPublicado() === false) {
 //			$ocupadas = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$dl_org);
@@ -266,6 +267,8 @@ class GestorResumenPlazas {
 		
 			return $a_plazas;
 		}
+		 * 
+		 */
 		// plazas de calendario de cada dl + cedidas
 		$cActividadPlazas = $gesActividadPlazas->getActividadesPlazas(array('id_activ'=>$id_activ));
 		foreach ($cActividadPlazas as $oActividadPlazas) {
