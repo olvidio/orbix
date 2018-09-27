@@ -1,12 +1,26 @@
+<div id='acta'>
 <link rel="stylesheet" type="text/css" href="<?= core\ConfigGlobal::$web_scripts.'/jquery-tokeninput/styles/token-input.css' ?>" />
 <script>
 $(function() { $( "#f_acta" ).datepicker(); });
+
+fnjs_nueva_convocatoria=function(formulario){
+	$('#notas').val("nuevo");
+	$(formulario).attr('action','apps/notas/controller/acta_ver.php');
+	fnjs_enviar_formulario(formulario,'#acta');
+}
+
+fnjs_cmb_acta=function(formulario){
+	var campo = '<input type="hidden" name="refresh" value=1>';
+	$(formulario).attr('action','apps/notas/controller/acta_ver.php');
+	$(formulario).append(campo);
+	fnjs_enviar_formulario(formulario,'#acta');
+}
 
 fnjs_guardar_acta=function(formulario){
 	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
 	if (rr=='ok') {
 		$(formulario).attr('action','apps/notas/controller/acta_update.php');
-	<?php if (!empty($notas)) { ?>
+	<?php if (!empty($notas) && $notas != 'nuevo') { ?>
 		$(formulario).submit(function() {
 			$.ajax({
 				data: $(this).serialize(),
@@ -46,11 +60,7 @@ fnjs_guardar_acta=function(formulario){
 	}
 }
 </script>
-<?php
-if (empty($notas)) {
-	echo $oPosicion->mostrar_left_slide(1);
-}
-?>
+<?= $oPosicion->mostrar_left_slide(1); ?>
 <form id="frm_acta" name="frm_acta" action="" method="POST" >
 <?= $oHashActa->getCamposHtml(); ?>
 <table>
@@ -59,10 +69,18 @@ if (empty($notas)) {
 	<td class=etiqueta><?= ucfirst(_("acta")); ?>:
 	</td>
 	<?php if ($mod == 'nueva' || $notas=="nuevo") { 
-	  	echo "<td colspan=8><input class=contenido size='25' id='acta' name='acta' value=\"$acta\">"; 
+	  	echo "<td colspan=8><input class=contenido size='25' id='acta' name='acta' value=\"$acta_new\">"; 
 	  	echo "&nbsp;&nbsp;$ult_acta";
 	} else {
-		echo "<td colspan=8 class=contenido >$acta"; 
+		echo "<td colspan=8 class=contenido >"; 
+		if (is_array($a_actas)) {
+			foreach($a_actas as $acta_i) {
+				$chk = ($acta_i == $acta_actual)? 'checked' : '';
+				echo "<input type='radio' name='acta' value='$acta_i' $chk onchange='fnjs_cmb_acta(this.form)'>$acta_i";
+			}
+		} else {
+			echo "$acta_actual"; 
+		}
 	}?>
 	</td>
 </tr>
@@ -102,6 +120,13 @@ if (empty($notas)) {
 </table>
 <br>
 <input id="g1" TYPE="button" VALUE="<?= ucfirst(_("guardar cambios acta")); ?>"  onclick="fnjs_guardar_acta(this.form)">
+<?php
+if (!empty($notas)) {
+	?>
+	<input id="g2" TYPE="button" VALUE="<?= ucfirst(_("nueva acta convocatoria")); ?>"  onclick="fnjs_nueva_convocatoria(this.form)">
+	<?php
+}
+?>
 </form>
 <script type="text/javascript">
 $(document).ready(function () {
@@ -130,3 +155,4 @@ $(document).ready(function () {
 	});
 });
 </script>
+</div>

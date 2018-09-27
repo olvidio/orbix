@@ -13,7 +13,8 @@ use web\Posicion;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$oPosicion->recordar();
+$Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
+$oPosicion->recordar($Qrefresh);
 
 $notas=1; // para indicar a la página de actas que está dentro de ésta.
 
@@ -84,17 +85,26 @@ $Qprimary_key_s = (string) \filter_input(INPUT_POST, 'primary_key_s');
 $Qid_nivel = (integer) \filter_input(INPUT_POST, 'id_nivel');
 
 $GesActas = new notas\GestorActa();
-$cActas = $GesActas->getActas(array('id_activ'=>$id_activ,'id_asignatura'=>$id_asignatura));
-if (is_array($cActas) && count($cActas) == 1) {
-	$oActa = $cActas[0];
-	$acta=$oActa->getActa();
+$cActas = $GesActas->getActas(array('id_activ'=>$id_activ,'id_asignatura'=>$id_asignatura, '_ordre'=>'f_acta'));
+//if (is_array($cActas) && count($cActas) == 1) {
+if (is_array($cActas) && !empty($cActas)) {
+	$a_actas = [];
+	foreach ($cActas as $oActa) {
+		$nom_acta=$oActa->getActa();
+		$a_actas[$nom_acta]=$oActa->getActa();
+	}
 	$notas="acta"; // para indicar a la página de actas que está dentro de ésta.
+	$oDesplActas = new web\Desplegable();
+	$oDesplActas->setNombre('acta_nota[]');
+	$oDesplActas->setOpciones($a_actas);
 } else {
 	$notas="nuevo";// para indicar a la página de actas que está dentro de ésta.
+	$oDesplActas = new web\Desplegable();
+	$oDesplActas->setOpciones(array('primero gurardar acta'));
 }
 
 $oHashNotas = new web\Hash();
-$oHashNotas->setcamposForm('id_nom!nota_num!nota_max!form_preceptor');
+$oHashNotas->setcamposForm('id_nom!nota_num!nota_max!form_preceptor!acta_nota');
 $oHashNotas->setCamposNo('que');
 $a_camposHidden1 = array(
 		'id_pau' => $Qid_pau,
@@ -109,6 +119,8 @@ $oHashNotas->setArraycamposHidden($a_camposHidden1);
 
 if (!empty($msg_err)) { echo $msg_err; }
 
+$txt_alert_acta = _("Primero debe guadar los datos del acta");
+
 // El formulario del acta:
 include_once ("apps/notas/controller/acta_ver.php"); 
 
@@ -116,6 +128,8 @@ $a_campos = ['oPosicion' => $oPosicion,
 			'oHashNotas' => $oHashNotas,
 			'Qque' => $Qque,
 			'aPersonasMatriculadas' => $aPersonasMatriculadas,
+			'oDesplActas' => $oDesplActas,
+			'txt_alert_acta' => $txt_alert_acta,
 			];
 
 $oView = new core\View('actividadestudios/controller');

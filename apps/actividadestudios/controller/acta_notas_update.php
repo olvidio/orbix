@@ -25,15 +25,6 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 	$GesActas = new notas\GestorActa();
 	$cActas = $GesActas->getActas(array('id_activ'=>$Qid_activ,'id_asignatura'=>$Qid_asignatura));
 
-	if (is_array($cActas) && count($cActas) == 1) {
-		$acta=$cActas[0]->getActa();
-		$f_acta=$cActas[0]->getF_acta();
-		if (!$acta || !$f_acta) $error .= sprintf(_("debe introducir los datos del acta")."\n");
-	} else {
-		$error .= sprintf(_("debe introducir los datos del acta. No se ha guardado nada.")."\n");
-	}
-	if (!empty($error)) exit($error);
-
 	$GesMatriculas = new actividadestudios\GestorMatricula();
 	$cMatriculados = $GesMatriculas->getMatriculas(array('id_asignatura'=>$Qid_asignatura, 'id_activ'=>$Qid_activ));
 	$i=0;
@@ -52,7 +43,14 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 		$preceptor=$oMatricula->getPreceptor();
 		$nota_num=$oMatricula->getNota_num();
 		$nota_max=$oMatricula->getNota_max();
+		$acta=$oMatricula->getActa();
 		
+		$oActa =new notas\Acta($acta);
+		$f_acta=$oActa->getF_acta();
+		if (!$acta || !$f_acta) {
+			$error .= sprintf(_("debe introducir los datos del acta. No se ha guardado nada.")."\n");
+		}
+		if (!empty($error)) exit($error);
 		// Sólo grabo si está superada.
 		//if (!in_array($id_situacion,$aIdSuperadas)) continue;
 		if (empty($nota_max)) {
@@ -106,14 +104,21 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 			foreach ($cPersonaNotas as $oPersonaNota) {
 				$j++;
 				$id_op = $oPersonaNota->getId_nivel();
+				$id_asignatura = $oPersonaNota->getId_asignatura();
+				if ($id_asignatura ==$Qid_asignatura) { // ya está la que intento meter => actualizar
+					$id_nivel = $id_op;
+					break;
+				}
 				$id_situacion = $oPersonaNota->getId_situacion();
 				// compruebo que el id_situacion corresponde a 'superada'
 				//if (in_array($id_situacion,$aIdSuperadas)) $aOpSuperadas[$j] = $id_op;
 				if ($nota_num/$nota_max >= 0.6)  $aOpSuperadas[$j] = $id_op;
 			}
-			for ($op=$op_min;$op<=$op_max;$op++) {
-				$id_nivel = $aNivelOpcionales[$op];
-				if (!in_array($id_nivel,$aOpSuperadas)) break;
+			if (empty($id_nivel)) {
+				for ($op=$op_min;$op<=$op_max;$op++) {
+					$id_nivel = $aNivelOpcionales[$op];
+					if (!in_array($id_nivel,$aOpSuperadas)) break;
+				}
 			}
 			//if ($nivel > $aNivelOpcionales[$op_max]) { $error.=sprintf (_("ha cursado una opcional que no tocaba (id_nom=%s)")."\n",$id_nom); continue; }
 		} else {
@@ -173,6 +178,7 @@ if ($Qque==1) { // Grabar las notas en la matricula
 	$Qid_nom = (array) \filter_input(INPUT_POST, 'id_nom', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 	$Qnota_num = (array) \filter_input(INPUT_POST, 'nota_num', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 	$Qnota_max = (array) \filter_input(INPUT_POST, 'nota_max', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+	$Qacta = (array) \filter_input(INPUT_POST, 'acta_nota', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 	$num_alumnos = count($Qid_nom);
 	$num_alumnos = empty($num_alumnos)? 0 : $num_alumnos;
@@ -189,6 +195,7 @@ if ($Qque==1) { // Grabar las notas en la matricula
 		$nn = str_replace(',', '.', $Qnota_num[$n]);
 		$oMatricula->setNota_num($nn);
 		$oMatricula->setNota_max($Qnota_max[$n]);
+		$oMatricula->setActa($Qacta[$n]);
 		if ($Qnota_num[$n] > 1) $oMatricula->setId_situacion(10);
 		if ($oMatricula->DBGuardar() === false) {
 			echo _('Hay un error, no se ha guardado');

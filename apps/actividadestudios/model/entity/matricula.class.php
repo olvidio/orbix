@@ -84,6 +84,12 @@ class Matricula Extends core\ClasePropiedades {
 	 * @var integer
 	 */
 	 protected $iid_preceptor;
+	/**
+	 * Acta de Matricula
+	 *
+	 * @var string
+	 */
+	 protected $sacta;
  	/**
 	 * Nota_num de Nota
 	 *
@@ -160,6 +166,7 @@ class Matricula Extends core\ClasePropiedades {
 		$aDades['id_preceptor'] = $this->iid_preceptor;
 		$aDades['nota_num'] = $this->inota_num;
 		$aDades['nota_max'] = $this->inota_max;
+		$aDades['acta'] = $this->sacta;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if (empty($aDades['preceptor']) || ($aDades['preceptor'] === 'off') || ($aDades['preceptor'] === false) || ($aDades['preceptor'] === 'f')) { $aDades['preceptor']='f'; } else { $aDades['preceptor']='t'; }
@@ -172,7 +179,8 @@ class Matricula Extends core\ClasePropiedades {
 					preceptor                = :preceptor,
 					id_preceptor             = :id_preceptor,
 					nota_num                 = :nota_num,
-					nota_max                 = :nota_max";
+					nota_max                 = :nota_max,
+					acta                 	 = :acta";
 
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_activ='$this->iid_activ' AND id_asignatura='$this->iid_asignatura' AND id_nom=$this->iid_nom")) === false) {
 				$sClauError = 'Matricula.update.prepare';
@@ -188,8 +196,8 @@ class Matricula Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_activ, $this->iid_asignatura, $this->iid_nom);
-			$campos="(id_activ,id_asignatura,id_nom,id_nivel,id_situacion,preceptor,id_preceptor,nota_num,nota_max)";
-			$valores="(:id_activ,:id_asignatura,:id_nom,:id_nivel,:id_situacion,:preceptor,:id_preceptor,:nota_num,:nota_max)";		
+			$campos="(id_activ,id_asignatura,id_nom,id_nivel,id_situacion,preceptor,id_preceptor,nota_num,nota_max,acta)";
+			$valores="(:id_activ,:id_asignatura,:id_nom,:id_nivel,:id_situacion,:preceptor,:id_preceptor,:nota_num,:nota_max,:acta)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Matricula.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -271,6 +279,7 @@ class Matricula Extends core\ClasePropiedades {
 		if (array_key_exists('id_preceptor',$aDades)) $this->setId_preceptor($aDades['id_preceptor']);
 		if (array_key_exists('nota_num',$aDades)) $this->setNota_num($aDades['nota_num']);
 		if (array_key_exists('nota_max',$aDades)) $this->setNota_max($aDades['nota_max']);
+		if (array_key_exists('acta',$aDades)) $this->setActa($aDades['acta']);
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
@@ -433,6 +442,25 @@ class Matricula Extends core\ClasePropiedades {
 		$this->iid_preceptor = $iid_preceptor;
 	}
 	/**
+	 * Recupera l'atribut sacta de Matricula
+	 *
+	 * @return string sacta
+	 */
+	function getActa() {
+		if (!isset($this->sacta)) {
+			$this->DBCarregar();
+		}
+		return $this->sacta;
+	}
+	/**
+	 * estableix el valor de l'atribut sacta de Matricula
+	 *
+	 * @param string sacta='' optional
+	 */
+	function setActa($sacta='') {
+		$this->sacta = $sacta;
+	}
+	/**
 	 * Recupera l'atribut inota_num de PersonaNota
 	 *
 	 * @return integer inota_num
@@ -517,6 +545,7 @@ class Matricula Extends core\ClasePropiedades {
 		$oMatriculaSet->add($this->getDatosPreceptor());
 		$oMatriculaSet->add($this->getDatosNota_num());
 		$oMatriculaSet->add($this->getDatosNota_max());
+		$oMatriculaSet->add($this->getDatosActa());
 		return $oMatriculaSet->getTot();
 	}
 
@@ -604,6 +633,18 @@ class Matricula Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nota_max'));
 		$oDatosCampo->setEtiqueta(_("nota max"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut sacta de PersonaNota
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return oject DatosCampo
+	 */
+	function getDatosActa() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'acta'));
+		$oDatosCampo->setEtiqueta(_("acta"));
 		return $oDatosCampo;
 	}
 }
