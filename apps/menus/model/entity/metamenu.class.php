@@ -377,7 +377,7 @@ class Metamenu Extends core\ClasePropiedades {
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'url'));
 		$oDatosCampo->setEtiqueta(_("url"));
 		$oDatosCampo->setTipo('texto');
-		$oDatosCampo->setArgument(30);
+		$oDatosCampo->setArgument(60);
 		return $oDatosCampo;
 	}
 	/**
