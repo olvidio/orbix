@@ -23,6 +23,16 @@
 	</p>
 	</li>
 	<li>3. Copiar via ssh, o git Hub (commit) al directorio destino
+	
+		<p>Cambiaer los permisos de los ficheros *.sql
+			<br><em>/var/www/orbix/log/menus# chmod a+rw * </em>
+		</p>
+		<p> En el fichero /var/www/orbix/log/menus/tot_menus.sql, cambiar la ruta de los ficheros:
+			<em>
+			<br>:%s /home\/dani\/orbix_local\/orbix/var\/www\/pruebas/
+			<br>:%s /home\/dani\/orbix_local\/orbix/var\/www\/orbix/
+			</em>
+		</p>
 	</li>
 	<li>4. importar desde ficheros
 	<p>

@@ -95,11 +95,13 @@ foreach ($cMatriculas as $oMatricula) {
 	if ($preceptor == "t") { 
 		$preceptor="x"; 
 		$id_preceptor=$oMatricula->getId_preceptor();
-		$oPersona = personas\Persona::newPersona($id_preceptor);
-		if (!is_object($oPersona)) {
-			$msg_err .= "<br>preceptor: $oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
-		} else {
-			$preceptor = $oPersona->getApellidosNombre();
+		if (!empty($id_preceptor)) {
+			$oPersona = personas\Persona::newPersona($id_preceptor);
+			if (!is_object($oPersona)) {
+				$msg_err .= "<br>preceptor: $oPersona con id_nom: $id_preceptor en  ".__FILE__.": line ". __LINE__;
+			} else {
+				$preceptor = $oPersona->getApellidosNombre();
+			}
 		}
 	} else {
 		$preceptor="";
