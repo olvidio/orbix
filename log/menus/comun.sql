@@ -51,7 +51,6 @@
 62	\N	des/tareas/ctr_ficha.php	\N	\N
 63	\N	programas/calendario_ubi_resumen.php	\N	\N
 65	\N	vcsd/registro/salidas.php	\N	\N
-66	\N	vcsd/listados/casas.htm	\N	\N
 67	\N	vcsd/scheduler/calendarios.php	\N	\N
 68	\N	programas/mod_tabla_sql.php	\N	\N
 69	\N	scdl/registro/categoria_select.php	\N	\N
@@ -157,6 +156,7 @@
 57	notas	apps/notas/controller/resumen_anual.php	\N	resumen anual
 168	actividadestudios	apps/actividadestudios/controller/matriculas_pendientes.php	\N	matriculas pendientes
 142	menus	apps/menus/controller/menus_generar_txt.php	\N	pasa los menus a texto
+66	actividadestudios	apps/actividadestudios/controller/matriculas_lista.php	\N	listas de matriculas
 169	actividadplazas	apps/actividadplazas/controller/gestion_plazas.php	\N	Gestión de plazas
 171	stgr1	apps/profesores/controller/profesor_asignatura_que.php	\N	profesores para asignatura
 172	actividadplazas	apps/actividadplazas/controller/incorporar_peticion.php	\N	Incorporar peticiones de plazas
