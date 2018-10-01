@@ -1,4 +1,10 @@
 <script>
+fnjs_buscar=function(){
+	var campo = '<input type="hidden" name="refresh" value=1>';
+	$('#periodo_form').attr('action',"apps/actividadestudios/controller/matriculas_lista.php");
+	$('#periodo_form').append(campo);
+	fnjs_enviar_formulario('#periodo_form','#main');
+}
 fnjs_ver_ca=function(formulario,n){
 	rta=fnjs_solo_uno(formulario);
 	if (rta==1) {
@@ -20,7 +26,12 @@ fnjs_borrar=function(formulario){
 		fnjs_enviar_formulario(formulario,'#main');
 	}
 }
+fnjs_left_side_hide();
 </script>
+<form id='periodo_form' action=''>
+	<?= $oHashPeriodo->getCamposHtml(); ?>
+	<?= $oFormP->getHtml(); ?>
+</form>
 <h2 class=titulo><?= $titulo ?></h2>
 <h3><?= $aviso; ?></h3>
 <form id="seleccionados" name="seleccionados" action="" method="post">

@@ -23,26 +23,41 @@ use function core\curso_est;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
+$Qfin = (string) \filter_input(INPUT_POST, 'fin');
+$Qyear = (string) \filter_input(INPUT_POST, 'year');
+$Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
+
+//periodo
+if (empty($Qperiodo) || $Qperiodo == 'otro') {
+	$any=  core\ConfigGlobal::any_final_curs('est');
+	$Qempiezamin=core\curso_est("inicio",$any,"est");
+	$Qempiezamax=core\curso_est("fin",$any,"est");
+	$Qperiodo = 'curso_ca';
+	$inicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
+	$fin = empty($Qfin)? $Qempiezamax : $Qfin;
+} else {
+	$oPeriodo = new web\Periodo();
+	$any=empty($Qyear)? date('Y')+1 : $Qyear;
+	$oPeriodo->setAny($any);
+	$oPeriodo->setPeriodo($Qperiodo);
+	$inicio = $oPeriodo->getF_ini();
+	$fin = $oPeriodo->getF_fin();
+}
 
 $aWhere = array();
 $aOperador = array();
 
-$mes=date('m');
-if ($mes>9) { $any=date('Y')+1; } else { $any=date("Y"); }
-$inicurs_ca=curso_est("inicio",$any);
-$fincurs_ca=curso_est("fin",$any);
-$txt_curso = "$inicurs_ca - $fincurs_ca";
-
-$aWhere['f_acta'] = "'$inicurs_ca','$fincurs_ca'";
+$aWhere['f_acta'] = "'$inicio','$fin'";
 $aOperador['f_acta'] = 'BETWEEN';
 
-$titulo=ucfirst(sprintf(_("lista de actas del curso %s"),$txt_curso));
+$titulo = _(sprintf("Lista de actas en el periodo: %s - %s.",$inicio,$fin)); 
 $GesActas = new notas\GestorActaDl();
 
 $cActas = $GesActas->getActas($aWhere,$aOperador);
 
 $i=0;
-//$aActas = array();
+$aActas = array();
 foreach ($cActas as $oActa) {
 	$i++;
 	$acta=$oActa->getActa();
@@ -72,12 +87,46 @@ foreach ($cActas as $oActa) {
 	$aFecha[$i] = $oFecha->format('Y-m-d');
 }
 
-array_multisort($aNivel, SORT_NUMERIC,
+if (!empty($aActas)) {
+	array_multisort($aNivel, SORT_NUMERIC,
 				$aFecha, SORT_NUMERIC,
 				$aActas);
+}
+
+
+//Periodo
+$boton = "<input type='button' value='"._("Buscar")."' onclick='fnjs_buscar()' >";
+$aOpciones =  array(
+					'tot_any' => _('todo el año'),
+					'trimestre_1'=>_('primer trimestre'),
+					'trimestre_2'=>_('segundo trimestre'),
+					'trimestre_3'=>_('tercer trimestre'),
+					'trimestre_4'=>_('cuarto trimestre'),
+					'separador'=>'---------',
+					'curso_ca'=>_('curso ca'),
+					'separador1'=>'---------',
+					'otro'=>_('otro')
+					);
+$oFormP = new web\PeriodoQue();
+$oFormP->setFormName('que');
+$oFormP->setTitulo(core\strtoupper_dlb(_('periodo de selección')));
+$oFormP->setPosiblesPeriodos($aOpciones);
+$oFormP->setDesplAnysOpcion_sel($Qyear);
+$oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
+$oFormP->setBoton($boton);
+
+$oHashPeriodo = new web\Hash();
+$oHashPeriodo->setCamposForm('empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val');
+$oHashPeriodo->setCamposNo('!refresh');
+$a_camposHiddenP = array(
+		);
+$oHashPeriodo->setArraycamposHidden($a_camposHiddenP);
 
 
 $a_campos = ['aActas' => $aActas,
+			'titulo' => $titulo,
+			'oFormP' => $oFormP,
+			'oHashPeriodo' => $oHashPeriodo,
 			];
 
 $oView = new core\View('notas/controller');
