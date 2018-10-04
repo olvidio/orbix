@@ -557,7 +557,7 @@ class Publicacion Extends core\ClasePropiedades {
 	function getDatosTitulo() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'titulo'));
-		$oDatosCampo->setEtiqueta(_("titulo"));
+		$oDatosCampo->setEtiqueta(_("título"));
 		$oDatosCampo->setTipo('texto');
 		$oDatosCampo->setArgument(100);
 		return $oDatosCampo;
@@ -585,7 +585,7 @@ class Publicacion Extends core\ClasePropiedades {
 	function getDatosColeccion() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'coleccion'));
-		$oDatosCampo->setEtiqueta(_("coleccion"));
+		$oDatosCampo->setEtiqueta(_("colección"));
 		$oDatosCampo->setTipo('texto');
 		$oDatosCampo->setArgument(50);
 		return $oDatosCampo;

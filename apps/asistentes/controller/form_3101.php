@@ -100,7 +100,7 @@ if (!empty($Qid_nom)) { //caso de modificar
 			//if ($obj_asis == 'AsistenteOut' && $padre != core\ConfigGlobal::mi_dele() ) {
 			// excepto los de paso
 			if ( $obj_pau != 'PersonaEx' && $child != core\ConfigGlobal::mi_dele() ) {
-				exit (sprintf(_("Los datos de asistencia los modifica el propietario de la plaza: %s"),$child));
+				exit (sprintf(_("los datos de asistencia los modifica el propietario de la plaza: %s"),$child));
 			}
 		}
 	}

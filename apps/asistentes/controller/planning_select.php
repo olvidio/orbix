@@ -191,10 +191,10 @@ $oPosicion->setParametros($aGoBack);
 $oPosicion->recordar();
 
 $a_botones=array(
-				array( 'txt' => _('vista tabla'), 'click' =>"fnjs_ver_planning(\"#seleccionados\",1)" ) ,
-				array( 'txt' => _('vista grid'), 'click' =>"fnjs_ver_planning(\"#seleccionados\",3)" ) ,
-				array( 'txt' => _('vista para imprimir'), 'click' =>"fnjs_planning_print(\"#seleccionados\")" ) ,
-				array( 'txt' => _('ver actividades'), 'click' =>"fnjs_actividades(\"#seleccionados\")" )
+				array( 'txt' => _("vista tabla"), 'click' =>"fnjs_ver_planning(\"#seleccionados\",1)" ) ,
+				array( 'txt' => _("vista grid"), 'click' =>"fnjs_ver_planning(\"#seleccionados\",3)" ) ,
+				array( 'txt' => _("vista para imprimir"), 'click' =>"fnjs_planning_print(\"#seleccionados\")" ) ,
+				array( 'txt' => _("ver actividades"), 'click' =>"fnjs_actividades(\"#seleccionados\")" )
 			);
 $a_cabeceras=array( _("tipo"),
 					array('name'=>_("nombre y apellidos"),'formatter'=>'clickFormatter'),

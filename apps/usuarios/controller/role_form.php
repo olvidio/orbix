@@ -96,7 +96,7 @@ if (!empty($Qid_role)) { // si no hay usuario, no puedo poner permisos.
 	$i=0;
 	$a_cabeceras=array(array('name'=>_("grupo de menus"),'width'=>'350'));
 	$a_botones=array(
-				array( 'txt' => _('quitar'), 'click' =>"fnjs_del_grupmenu(\"#form_grup_menu\")" ) 
+				array( 'txt' => _("quitar"), 'click' =>"fnjs_del_grupmenu(\"#form_grup_menu\")" ) 
 			);
 	$a_valores=array();
 	foreach ($cGMR as $oGrupMenuRole) {

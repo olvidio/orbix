@@ -128,7 +128,7 @@ fnjs_submit=function(formulario,mov){
 }
 </script>
 
-<h3><?= _("Personas en Orbix sin unir a Listas") ?></h3>
+<h3><?= _("personas en orbix sin unir a Listas") ?></h3>
 
 <form id="movimiento" name="movimiento" action="">
 	<?= $oHash->getCamposHtml(); ?>

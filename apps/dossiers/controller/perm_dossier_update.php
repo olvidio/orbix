@@ -19,7 +19,7 @@ switch ($Qque) {
 	case 'eliminar':
 		$oTipoDossier = new dossiers\TipoDossier($Qid_tipo_dossier);
 		if ($oTipoDossier->DBEliminar() === false) {
-			echo _('Hay un error, no se ha eliminado');
+			echo _("hay un error, no se ha eliminado");
 		}
 		echo $oPosicion->go_atras(1);
 		die();

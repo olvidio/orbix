@@ -170,12 +170,12 @@ if (core\configGlobal::is_app_installed('actividadcargos')) {
 			$observ1=$cAsistente[0]->getObserv();
 
 			if ($propio=='t') {
-				$chk_propio=_("si");
+				$chk_propio=_("sí");
 			} else { 
 				$chk_propio=_("no") ;
 			}
-			$falta=='t' ? $chk_falta=_("si") : $chk_falta=_("no") ;
-			$est_ok=='t' ? $chk_est_ok=_("si") : $chk_est_ok=_("no") ;
+			$falta=='t' ? $chk_falta=_("sí") : $chk_falta=_("no") ;
+			$est_ok=='t' ? $chk_est_ok=_("sí") : $chk_est_ok=_("no") ;
 			$asis="t";
 			$a_valores[$c][3]=$chk_propio;
 			$a_valores[$c][4]=$chk_est_ok;
@@ -221,12 +221,12 @@ foreach($gesAsistentes->getAsistentes(array('id_activ'=>$id_pau)) as $oAsistente
 		if ($plaza < 4) continue;
 	}
 	if ($propio=='t') {
-		$chk_propio=_("si");
+		$chk_propio=_("sí");
 	} else { 
 		$chk_propio=_("no") ;
 	}
-	$falta=='t' ? $chk_falta=_("si") : $chk_falta=_("no") ;
-	$est_ok=='t' ? $chk_est_ok=_("si") : $chk_est_ok=_("no") ;
+	$falta=='t' ? $chk_falta=_("sí") : $chk_falta=_("no") ;
+	$est_ok=='t' ? $chk_est_ok=_("sí") : $chk_est_ok=_("no") ;
 			
 	$a_val[2]="$nom  ($ctr_dl)";
 	$a_val[3]=$chk_propio;

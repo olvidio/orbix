@@ -156,7 +156,7 @@ foreach ($cGrupMenuRoles as $oGrupMenuRole) {
 // ordenar la barra de grupmenus
 ksort($html_gm);
 $html_barra .= implode($html_gm);
-$html_exit = "<li onclick=\"fnjs_logout();\" >| ".ucfirst(_('salir'))."</li>";
+$html_exit = "<li onclick=\"fnjs_logout();\" >| ".ucfirst(_("salir"))."</li>";
 $html_exit .= "<li> (login as: ".$oUsuario->getUsuario().'['.configGlobal::mi_region_dl()."])</li>";
 
 $html_barra .= $html_exit;
@@ -251,7 +251,7 @@ for ($n=1;$n<$indice_old;$n++) {
 }
 $li_submenus.="</li>";
 if ($gm < 2) {
-	$html_exit = "<li><a class=\"nohref\" onclick=\"fnjs_logout();\" >| ".ucfirst(_('salir'))."</a></li>";
+	$html_exit = "<li><a class=\"nohref\" onclick=\"fnjs_logout();\" >| ".ucfirst(_("salir"))."</a></li>";
 	$html_exit .= "<li><a class=\"nohref\"> (login as: ".$oUsuario->getUsuario().'['.configGlobal::mi_region_dl()."])</a></li>";
 
 	$li_submenus.= $html_exit;
@@ -948,7 +948,7 @@ if ($gm > 1) {
 	<input type="hidden" id="frm_export_ex" name="frm_export_ex" />
 	</form>
 </div>
-<div id="cargando" ><?= _('Cargando...') ?></div>
+<div id="cargando" ><?= _("Cargando...") ?></div>
 <div id="left_slide" class="left-slide">
 <span class=handle onClick="fnjs_ir_a('#ir_atras');"></span>
 </div>

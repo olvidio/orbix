@@ -49,7 +49,7 @@ switch ($Qmod) {
 	case 'nueva':
 		// Si se pone un acta ya existente, modificará los datos de ésta. Hay que avisar:
 		$oActa->setActa($Qacta);
-		if (!empty($oActa->getF_acta())) { exit(_("Esta acta ya existe")); }
+		if (!empty($oActa->getF_acta())) { exit(_("esta acta ya existe")); }
 		
 		$oActa->setId_asignatura($Qid_asignatura);
 		$oActa->setId_activ($Qid_activ);
@@ -72,7 +72,7 @@ switch ($Qmod) {
 		$oActa->setLugar($Qlugar);
 		$oActa->setObserv($Qobserv);
 		if ($oActa->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 	break;
 	case 'eliminar':
@@ -80,7 +80,7 @@ switch ($Qmod) {
 		$oActa->DBCarregar();
 
 		if ($oActa->DBEliminar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 		break;
 	case 'modificar':
@@ -106,7 +106,7 @@ switch ($Qmod) {
 		$oActa->setLugar($Qlugar);
 		$oActa->setObserv($Qobserv);
 		if ($oActa->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 		break;
 }
@@ -116,7 +116,7 @@ $oGesActaTribunal = new notas\GestorActaTribunalDl();
 $cActaTribunal = $oGesActaTribunal->getActasTribunales(array('acta'=>$Qacta));
 foreach ($cActaTribunal as $oActaTribunal) {
 	if ($oActaTribunal->DBEliminar() === false) {
-		echo _('Hay un error, no se ha eliminado');
+		echo _("hay un error, no se ha eliminado");
 	}
 }
 
@@ -131,7 +131,7 @@ if (!empty($Qexaminadores)) {
 		$oActaTribunal->setExaminador($examinador);
 		$oActaTribunal->setOrden($i);
 		if ($oActaTribunal->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
     }
 }

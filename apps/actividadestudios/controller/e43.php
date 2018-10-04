@@ -78,7 +78,7 @@ if ($matriculas > 0) {
 											'acta' => $acta);
 	}
 } else {
-	$msg_err .= _("No hay ninguna matricula de esta persona");
+	$msg_err .= _("no hay ninguna matrícula de esta persona");
 }
 
 $oHash = new web\Hash();

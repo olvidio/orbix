@@ -163,7 +163,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	 */
 	function __construct($a_id='') {
 		if (!empty($_SESSION['oDBListas']) && $_SESSION['oDBListas'] == 'error') {
-			exit(_("No se puede conectar con la base de datos de Listas")); 
+			exit(_("no se puede conectar con la base de datos de Listas")); 
 		}
 		$oDbl = $GLOBALS['oDBListas'];
 		if (is_array($a_id)) { 
@@ -780,7 +780,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	function getDatosApeNom() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'ApeNom'));
-		$oDatosCampo->setEtiqueta(_("Apellidos Nombre"));
+		$oDatosCampo->setEtiqueta(_("apellidos nombre"));
 		return $oDatosCampo;
 	}
 	/**
@@ -792,7 +792,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	function getDatosDl() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'Dl'));
-		$oDatosCampo->setEtiqueta(_("Dl"));
+		$oDatosCampo->setEtiqueta(_("dl"));
 		return $oDatosCampo;
 	}
 	/**
@@ -804,7 +804,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	function getDatosCtr() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'Ctr'));
-		$oDatosCampo->setEtiqueta(_("Ctr"));
+		$oDatosCampo->setEtiqueta(_("ctr"));
 		return $oDatosCampo;
 	}
 	/**
@@ -816,7 +816,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	function getDatosLugar_Naci() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'Lugar_Naci'));
-		$oDatosCampo->setEtiqueta(_("Lugar de Nacimiento"));
+		$oDatosCampo->setEtiqueta(_("lugar de nacimiento"));
 		return $oDatosCampo;
 	}
 	/**
@@ -828,7 +828,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	function getDatosFecha_Naci() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'Fecha_Naci'));
-		$oDatosCampo->setEtiqueta(_("Fecha de Nacimiento"));
+		$oDatosCampo->setEtiqueta(_("fecha de nacimiento"));
 		return $oDatosCampo;
 	}
 	/**
@@ -840,7 +840,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	function getDatosEmail() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'Email'));
-		$oDatosCampo->setEtiqueta(_("Email"));
+		$oDatosCampo->setEtiqueta(_("email"));
 		return $oDatosCampo;
 	}
 	/**
@@ -852,7 +852,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	function getDatosTfno_Movil() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'Tfno_Movil'));
-		$oDatosCampo->setEtiqueta(_("Tfno_Movil"));
+		$oDatosCampo->setEtiqueta(_("teléfono móvil"));
 		return $oDatosCampo;
 	}
 	/**
@@ -864,7 +864,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	function getDatosCe() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'Ce'));
-		$oDatosCampo->setEtiqueta(_("Ce"));
+		$oDatosCampo->setEtiqueta(_("ce"));
 		return $oDatosCampo;
 	}
 

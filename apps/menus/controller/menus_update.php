@@ -22,7 +22,7 @@ $oMenuDb->setId_menu($Qid_menu);
 switch ($Qque) {
 	case 'del': // Para borrar un registro
 		if ($oMenuDb->DBEliminar() === false) {
-			echo _('Hay un error, no se ha eliminado');
+			echo _("hay un error, no se ha eliminado");
 		}
 		break;
 	case 'guardar':
@@ -50,28 +50,28 @@ switch ($Qque) {
 			}
 		} 
 		if ($oMenuDb->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 		break;
 	case 'move':
 		if (empty($Qgm_new)) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 		$oMenuDb->DBCarregar(); // camiar de grupomenu
 		$oMenuDb->setId_grupmenu($Qgm_new);
 		if ($oMenuDb->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 		break;
 	case 'copy':
 		if (empty($Qgm_new)) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 		$oMenuDb->DBCarregar(); // Clonar y poner en otro grupmenu
 		$oMenuDb->setId_grupmenu($Qgm_new);
 		$oMenuDb->setId_menu(''); //al borrar el id_menu, me generará uno nuevo.
 		if ($oMenuDb->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 		break;
 }

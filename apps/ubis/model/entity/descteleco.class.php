@@ -397,7 +397,7 @@ class DescTeleco Extends core\ClasePropiedades {
 	function getDatosTipo_teleco() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'tipo_teleco'));
-		$oDatosCampo->setEtiqueta(_("tipo_teleco"));
+		$oDatosCampo->setEtiqueta(_("tipo de teleco"));
 		return $oDatosCampo;
 	}
 	/**
@@ -409,7 +409,7 @@ class DescTeleco Extends core\ClasePropiedades {
 	function getDatosDesc_teleco() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'desc_teleco'));
-		$oDatosCampo->setEtiqueta(_("desc_teleco"));
+		$oDatosCampo->setEtiqueta(_("descripción"));
 		return $oDatosCampo;
 	}
 	/**

@@ -67,8 +67,8 @@ class Select1301 {
 	
 	private function getBotones() {
 		$a_botones=array(
-				array( 'txt' => _('modificar asistencia'), 'click' =>"fnjs_modificar(this.form)" ) ,
-				array( 'txt' => _('borrar asistencia'), 'click' =>"fnjs_borrar(this.form)" ) 
+				array( 'txt' => _("modificar asistencia"), 'click' =>"fnjs_modificar(this.form)" ) ,
+				array( 'txt' => _("borrar asistencia"), 'click' =>"fnjs_borrar(this.form)" ) 
 		);
 		return $a_botones;
 	}
@@ -169,7 +169,7 @@ class Select1301 {
 	}
 
 	public function getHtml() {
-		$this->txt_eliminar = _("¿Esta Seguro que desea borrar a esta persona de esta actividad?");
+		$this->txt_eliminar = _("¿Está seguro que desea borrar a esta persona de esta actividad?");
 		// En el caso de actualizar la misma página (fnjs_actualizar) solo me quedo con la última (stack=0).
 		$oPosicion = new web\Posicion();
 		$stack = $oPosicion->getStack(0);

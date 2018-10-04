@@ -49,9 +49,9 @@ $cRoles= $oGesRole->getRoles();
 
 $a_cabeceras=array('role','sf','sv','pau','grup menu');
 if ($permiso == 1) {
-	$a_botones[] = array( 'txt'=> _('borrar'),
+	$a_botones[] = array( 'txt'=> _("borrar"),
 						'click'=>"fnjs_eliminar()");
-	$a_botones[] = array( 'txt' => _('modificar'),
+	$a_botones[] = array( 'txt' => _("modificar"),
 					'click' =>"fnjs_modificar(\"#seleccionados\")" );
 } else {
 	$a_botones=array();

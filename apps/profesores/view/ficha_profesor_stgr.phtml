@@ -62,7 +62,7 @@ include_once (core\ConfigGlobal::$dir_estilos.'/colores.php');
 <?php
 if (is_array($a_curriculum)) {
 foreach ($a_curriculum as $n => $row) {
-	if ($row['eclesiastico']=="t") { $eclesiastico_txt=_("si"); } else { $eclesiastico_txt=_("no"); }
+	if ($row['eclesiastico']=="t") { $eclesiastico_txt=_("sí"); } else { $eclesiastico_txt=_("no"); }
 	echo "<tr><td>${row['titulo']}</td><td>${row['centro_dnt']}</td><td>${row['year']}</td><td>$eclesiastico_txt</td></tr>";
 }
 }
@@ -144,7 +144,7 @@ foreach($cProfesorCongresos as $oProfesorCongreso) {
 <?php
 if (is_array($a_publicaciones )) {
 foreach ($a_publicaciones as $n => $row) {
-	if ($row['pendiente']=="t") { $pendiente_txt=_("si"); } else { $pendiente_txt=_("no"); }
+	if ($row['pendiente']=="t") { $pendiente_txt=_("sí"); } else { $pendiente_txt=_("no"); }
 	echo "<tr><td>${row['tipo_publicacion']}</td><td>${row['titulo']}</td><td>${row['editorial']}</td><td>${row['coleccion']}</td><td>${row['f_publicacion']}</td><td>$pendiente_txt</td><td>${row['referencia']}</td><td>${row['lugar']}</td><td>${row['observ']}</td></tr>";
 }
 }

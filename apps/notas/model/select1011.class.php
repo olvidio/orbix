@@ -48,8 +48,8 @@ class Select1011 {
 	
 	private function getBotones() {
 		$a_botones=array(
-						array( 'txt' => _('modificar nota'), 'click' =>"fnjs_modificar(this.form)" ) ,
-						array( 'txt' => _('borrar asignatura'), 'click' =>"fnjs_borrar(this.form)" ) 
+						array( 'txt' => _("modificar nota"), 'click' =>"fnjs_modificar(this.form)" ) ,
+						array( 'txt' => _("borrar asignatura"), 'click' =>"fnjs_borrar(this.form)" ) 
 					);
 		return $a_botones;
 	}
@@ -94,7 +94,7 @@ class Select1011 {
 				$msg .= sprintf(_("ca: %s, asignatura: %s"),$nom_activ,$nombre_corto);
 			}
 			if (!empty($msg)) {
-				$msg = _("Tiene pendiente de poner las notas de:") .'<br>'.$msg;
+				$msg = _("tiene pendiente de poner las notas de:") .'<br>'.$msg;
 			}
 		}
 
@@ -157,14 +157,14 @@ class Select1011 {
 				$gesOpcionales = new asignaturas\GestorAsignatura();
 				$cOpcionales = $gesOpcionales->getAsignaturas(array('id_nivel'=>$id_nivel));
 				if (empty($cOpcionales)) {
-					$nombre_corto= _("Opcional de extra");
+					$nombre_corto= _("opcional de sobra");
 				} else {
 					$nom_op=$cOpcionales[0]->getNombre_corto();
 					$nombre_corto=$nom_op." (".$nombre_corto.")";
 				}
 			}
 			
-			if ($preceptor=="t") { $preceptor=_("si"); } else { $preceptor=_("no");}	
+			if ($preceptor=="t") { $preceptor=_("sí"); } else { $preceptor=_("no");}	
 			// preceptor
 			if ($id_preceptor && $preceptor=="t") {
 				$oPersonaDl = new personas\PersonaDl($id_preceptor);
@@ -199,7 +199,7 @@ class Select1011 {
 	}
 
 	public function getHtml() {
-		$this->txt_eliminar =  _("¿Esta Seguro que desea borrar la nota de esta asignatura?");
+		$this->txt_eliminar =  _("¿Está seguro que desea borrar la nota de esta asignatura?");
 		
 		$oHashSelect = new Hash();
 		$oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');

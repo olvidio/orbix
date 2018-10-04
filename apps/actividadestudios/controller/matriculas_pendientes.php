@@ -54,13 +54,13 @@ if (!empty($traslados)) {
 	$cMatriculasPendientes = $gesMatriculasDl->getMatriculasPendientes();
 }
 
-$titulo = _("Lista de matrículas pendientes de poner nota");
+$titulo = _("lista de matrículas pendientes de poner nota");
 $a_botones=array(
-			array( 'txt' => _('ver asignaturas ca'), 'click' =>"fnjs_ver_ca(this.form)" ) ,
-			array( 'txt' => _('borrar matricula'), 'click' =>"fnjs_borrar(this.form)" ) 
+			array( 'txt' => _("ver asignaturas ca"), 'click' =>"fnjs_ver_ca(this.form)" ) ,
+			array( 'txt' => _("borrar matrícula"), 'click' =>"fnjs_borrar(this.form)" ) 
 );
 
-$a_cabeceras=array(_("actividad"),_("asignatura"),_("alumno"),_('p'));
+$a_cabeceras=array(_("actividad"),_("asignatura"),_("alumno"),_("p"));
 
 $i=0;
 $a_valores=array();
@@ -125,7 +125,7 @@ fnjs_ver_ca=function(formulario,n){
 
 fnjs_borrar=function(formulario){
 	var mensaje;
-	mensaje="<?= _("¿Esta Seguro que desea borrar todas las matrículas seleccionadas?");?>"; 
+	mensaje="<?= _("¿Está seguro que desea borrar todas las matrículas seleccionadas?");?>"; 
 	if (confirm(mensaje) ) {
 		var mod="#mod";
 		$(mod).val("eliminar");

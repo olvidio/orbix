@@ -487,7 +487,7 @@ class ProfesorCongreso Extends core\ClasePropiedades {
 	function getDatosF_ini() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_ini'));
-		$oDatosCampo->setEtiqueta(_("fecha inico"));
+		$oDatosCampo->setEtiqueta(_("fecha inicio"));
 		$oDatosCampo->setTipo('fecha');
 		return $oDatosCampo;
 	}

@@ -54,14 +54,14 @@ $aOperador = [];
 $GesModulos = new entity\GestorModulo();
 $cModulos = $GesModulos->getModulos($aWhere,$aOperador);
 
-$a_botones[] = array( 'txt' => _('modificar'),
+$a_botones[] = array( 'txt' => _("modificar"),
 					'click' =>"fnjs_modificar(\"#seleccionados\")" );
-$a_botones[] = array( 'txt' => _('eliminar'),
+$a_botones[] = array( 'txt' => _("eliminar"),
 					'click' =>"fnjs_eliminar(\"#seleccionados\")" );
 
-$a_cabeceras = array( ucfirst(_("nom")),
+$a_cabeceras = array( ucfirst(_("nombre")),
 						ucfirst(_("descripción")),
-						_("modulos requeridos"),
+						_("módulos requeridos"),
 						_("aplicaciones requeridas"),
 				);
 

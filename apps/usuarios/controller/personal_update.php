@@ -32,7 +32,7 @@ switch ($Qque) {
 
 		$oPref->setPreferencia($QsPrefs);
 		if ($oPref->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 		break;
 	default:
@@ -43,7 +43,7 @@ switch ($Qque) {
 		$oPref = new usuarios\Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>'inicio'));
 		$oPref->setPreferencia($inicio);
 		if ($oPref->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 
 		// Guardar estilo:
@@ -53,7 +53,7 @@ switch ($Qque) {
 		$oPref = new usuarios\Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>'estilo'));
 		$oPref->setPreferencia($estilo);
 		if ($oPref->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 
 		// Guardar presentacion tablas:
@@ -61,7 +61,7 @@ switch ($Qque) {
 		$oPref = new usuarios\Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>'tabla_presentacion'));
 		$oPref->setPreferencia($Qtipo_tabla);
 		if ($oPref->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 
 		// Guardar presentacion nombre Apellidos:
@@ -69,7 +69,7 @@ switch ($Qque) {
 		$oPref = new usuarios\Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>'ordenApellidos'));
 		$oPref->setPreferencia($QordenApellidos);
 		if ($oPref->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 
 		// Guardar idioma:
@@ -77,7 +77,7 @@ switch ($Qque) {
 		$oPref = new usuarios\Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>'idioma'));
 		$oPref->setPreferencia($Qidioma_nou);
 		if ($oPref->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 
 		// volver a la página de configuración

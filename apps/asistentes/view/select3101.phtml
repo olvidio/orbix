@@ -162,7 +162,7 @@ fnjs_borrar_cargo=function(formulario){
 	var asis="test";
 	rta=fnjs_solo_uno(formulario);
 	if (rta==1) {
-		if (confirm("<?= _("¿Esta Seguro que desea quitar este cargo a esta persona?");?>") ) {
+		if (confirm("<?= _("¿Está seguro que desea quitar este cargo a esta persona?");?>") ) {
 			$('#mod').val("eliminar");
 			$(formulario).attr('action',"apps/actividadcargos/controller/update_3102.php");
 			$(formulario).submit(function() {
@@ -186,7 +186,7 @@ fnjs_borrar_cargo=function(formulario){
 	}
 }
 fnjs_transferir=function(formulario){
-	if (confirm("<?= _("¿Esta Seguro que desea transferir todas las personas seleccionadas a históricos?");?>") ) {
+	if (confirm("<?= _("¿Está seguro que desea transferir todas las personas seleccionadas a históricos?");?>") ) {
 			$(formulario).attr('action',"apps/dossiers/historics_insert.php?");
 	  		fnjs_enviar_formulario(formulario,'<?= $bloque ?>');
 	}

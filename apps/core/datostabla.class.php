@@ -100,8 +100,8 @@ class DatosTabla {
 	}
 
 	public function getBotones() {
-		$a_botones=array(	array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(this.form)" ) ,
-							array( 'txt' => _('eliminar'), 'click' =>"fnjs_eliminar(this.form)" ) 
+		$a_botones=array(	array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(this.form)" ) ,
+							array( 'txt' => _("eliminar"), 'click' =>"fnjs_eliminar(this.form)" ) 
 						);
 		return $a_botones;
 	}
@@ -155,7 +155,7 @@ class DatosTabla {
 						$a_valores[$c][$v]=$var;	
 						break;
 					case "check":
-						if ($valor_camp=="t") { $a_valores[$c][$v]= _("si"); } else { $a_valores[$c][$v] = _("no"); }
+						if ($valor_camp=="t") { $a_valores[$c][$v]= _("sí"); } else { $a_valores[$c][$v] = _("no"); }
 						break;
 					default:
 						$a_valores[$c][$v]=$valor_camp;

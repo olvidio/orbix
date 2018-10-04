@@ -58,7 +58,7 @@ fnjs_ver_ficha=function(id_menu){
 </table>
 <div id="ficha"></div>
 
-<?= ucfirst(_('permisos')) ?>:<br>
+<?= ucfirst(_("permisos")) ?>:<br>
 <li><?= _("'!' delante significa negado. ej: '!casa'.") ?>
 <li><?= _("se pueden poner varios separados por ','. Importa el orden.") ?>
 <?php

@@ -51,7 +51,7 @@ switch ($Qmod) {
 	case 'eliminar_teleco':
 		$oUbi = new $obj($a_pkey);
 		if ($oUbi->DBEliminar() === false) {
-			echo _('Hay un error, no se ha eliminado');
+			echo _("hay un error, no se ha eliminado");
 		}
 //		echo $oPosicion->go_atras(1);
 		die();

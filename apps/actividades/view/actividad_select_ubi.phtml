@@ -20,7 +20,7 @@
 	if (!empty($oDesplFreq) && is_object($oDesplFreq)) {
 		echo $oDesplFreq->desplegable();
 	} else {
-		echo _('falta saber quien organiza');
+		echo _("falta saber quien organiza");
 	}
 	?></td>
 </tr>
@@ -119,7 +119,7 @@ fnjs_buscar=function(formulario,id){
 		var lista=$('#id_ubi_1').val();
 		var txt=$('#id_ubi_1 :selected').text();
 		if (!lista) {
-			alert ("<?= _("Tiene que seleccionar un casa") ?>");
+			alert ("<?= _("tiene que seleccionar una casa") ?>");
 			return;
 		}
 	  	window.opener.$('#id_ubi').val(lista);
@@ -136,7 +136,7 @@ fnjs_buscar=function(formulario,id){
 		var lista=$('#id_ubi').val();
 		var txt=$('#id_ubi :selected').text();
 		if (!lista) {
-			alert ("<?= _("Tiene que seleccionar un casa") ?>");
+			alert ("<?= _("tiene que seleccionar una casa") ?>");
 			return;
 		}
 	  	window.opener.$('#id_ubi').val(lista);
@@ -150,7 +150,7 @@ fnjs_buscar=function(formulario,id){
 		var lista=id;
 		var txt=$('#'+id).html();;
 		if (!lista) {
-			alert ("<?= _("Tiene que seleccionar un casa") ?>");
+			alert ("<?= _("tiene que seleccionar una casa") ?>");
 			return;
 		}
 	  	window.opener.$('#id_ubi').val(lista);
@@ -165,7 +165,7 @@ fnjs_buscar=function(formulario,id){
 		*/
 		var txt=document.frm_buscar_4.frm_4_nombre_ubi.value;
 		if (!txt) {
-			alert ("<?= _("Tiene que escribir un lugar") ?>");
+			alert ("<?= _("tiene que escribir un lugar") ?>");
 			return;
 		}
 	  	window.opener.$('#id_ubi').val(1);
@@ -180,7 +180,7 @@ fnjs_buscar=function(formulario,id){
 		*/
 		var txt="<?= _("sin determinar") ?>";
 		if (!txt) {
-			alert ("<?= _("Tiene que escribir un lugar") ?>");
+			alert ("<?= _("tiene que escribir un lugar") ?>");
 			return;
 		}
 	  	window.opener.$('#id_ubi').val("");

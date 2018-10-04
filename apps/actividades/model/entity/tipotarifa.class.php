@@ -273,10 +273,10 @@ class TipoTarifa Extends core\ClasePropiedades {
 		}
 		switch ($this->imodo) {
 			case 0:
-				$txt = _('por dia');
+				$txt = _("por día");
 				break;
 			case 1:
-				$txt = _('total');
+				$txt = _("total");
 				break;
 		}
 		return $txt;
@@ -409,7 +409,7 @@ class TipoTarifa Extends core\ClasePropiedades {
 	function getDatosObserv() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'observ'));
-		$oDatosCampo->setEtiqueta(_("observ"));
+		$oDatosCampo->setEtiqueta(_("observaciones"));
 		return $oDatosCampo;
 	}
 }

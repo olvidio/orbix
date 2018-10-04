@@ -53,7 +53,7 @@ foreach ($cGM as $oGrupMenu) {
 }
 
 $a_cabeceras=array('grupmenu');
-$a_botones[]=array( 'txt'=> _('añadir'), 'click'=>"fnjs_add_grupmenu(\"#from_grupmenu\")");
+$a_botones[]=array( 'txt'=> _("añadir"), 'click'=>"fnjs_add_grupmenu(\"#from_grupmenu\")");
 $oTabla = new web\Lista();
 $oTabla->setId_tabla('grupmenu');
 $oTabla->setCabeceras($a_cabeceras);

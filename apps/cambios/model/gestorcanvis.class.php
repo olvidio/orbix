@@ -21,12 +21,12 @@ class gestorCanvis {
 	 * @return array
 	 */
 	public static function getNom_obj() {
-		$aNomTablas_obj = array('Actividad' => _('Actividad'),
-					'ActividadCargoSacd' => _('Sacd'),
-					'CentroEncargado'=> _('ctr'),
-					'ActividadCargo' => _('cl'),
-					'ActividadAsistente' => _('Asistencias'),
-					'ActividadProcesoTarea'=> _('Fases Actividad')
+		$aNomTablas_obj = array('Actividad' => _("actividad"),
+					'ActividadCargoSacd' => _("sacd"),
+					'CentroEncargado'=> _("ctr"),
+					'ActividadCargo' => _("cl"),
+					'ActividadAsistente' => _("asistencias"),
+					'ActividadProcesoTarea'=> _("fases actividad")
 		);
 		return $aNomTablas_obj;
 	}
@@ -84,7 +84,7 @@ class gestorCanvis {
 		$txt=$this->leerErrorAppLastError();
 		$err=$oDBSt->errorInfo();
 		if (strstr($txt, 'duplicate key')) {
-			echo _("Ya existe un registro con esta información");
+			echo _("ya existe un registro con esta información");
 		} else {
 			echo "\n dd".$txt."\n $sClauError <br>";
 		}

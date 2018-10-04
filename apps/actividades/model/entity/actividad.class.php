@@ -91,7 +91,7 @@ class Actividad Extends ActividadAll {
 			if ($id_tabla == 'dl') {
 				//$oActividad = new ActividadPub($a_pkey);
 				// No se puede eliminar una actividad de otra dl
-				echo _("No se puede modificar una actividad de otra dl");
+				echo _("no se puede modificar una actividad de otra dl");
 				return false;
 			} else {
 				$oActividad = new ActividadEx($a_pkey);

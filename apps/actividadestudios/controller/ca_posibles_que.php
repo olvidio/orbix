@@ -51,7 +51,7 @@ if (is_array($cMiDl) && !empty($cMiDl)) {
 		$mi_grupo .= $oDelegacion->getDl();
 	}
 } else {
-	$mi_grupo = _("No encuentro el grupo de estudios al que pertenece la dl");
+	$mi_grupo = _("no encuentro el grupo de estudios al que pertenece la dl");
 }
 
 // centros donde hay numerarios, aunque sean de agd
@@ -113,16 +113,16 @@ $oDesplCtrAgd->setAction("fnjs_n_a('agd')");
 // Selección de periodo
 $any=empty($Qyear)? date('Y') : $Qyear;
 $aOpciones =  array(
-					'verano'=>_('verano'),
-					'curso_ca'=>_('curso'),
+					'verano'=>_("verano"),
+					'curso_ca'=>_("curso"),
 					'separador'=>'---------',
-					'tot_any' => _('todo el año'),
-					'trimestre_1'=>_('primer trimestre'),
-					'trimestre_2'=>_('segundo trimestre'),
-					'trimestre_3'=>_('tercer trimestre'),
-					'trimestre_4'=>_('cuarto trimestre'),
+					'tot_any' => _("todo el año"),
+					'trimestre_1'=>_("primer trimestre"),
+					'trimestre_2'=>_("segundo trimestre"),
+					'trimestre_3'=>_("tercer trimestre"),
+					'trimestre_4'=>_("cuarto trimestre"),
 					'separador'=>'---------',
-					'otro'=>_('otro')
+					'otro'=>_("otro")
 					);
 $oFormP = new web\PeriodoQue();
 $oFormP->setFormName('que');

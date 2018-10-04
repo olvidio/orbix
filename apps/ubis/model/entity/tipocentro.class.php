@@ -260,7 +260,7 @@ class TipoCentro Extends core\ClasePropiedades {
 	function getDatosTipo_ctr() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'tipo_ctr'));
-		$oDatosCampo->setEtiqueta(_("tipo centro"));
+		$oDatosCampo->setEtiqueta(_("tipo de centro"));
 		$oDatosCampo->setTipo('texto');
 		$oDatosCampo->setArgument(6);
 		return $oDatosCampo;

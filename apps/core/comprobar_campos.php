@@ -65,7 +65,7 @@ foreach ($cDatosCampos as $oDatosCampo) {
 					$reg_text = $oDatosCampo->getRegExpText();
 					$reg_text = !empty($reg_text)? $reg_text : _("no tiene el formato requerido");
 
-					$errores[]=array('txt'=>_('El campo "%1$s" "%3$s". Valor actual: "%2$s"'),
+					$errores[]=array('txt'=>_("el campo \"%1\$s\" \"%3\$s\". Valor actual: \"%2\$s\""),
 							   'camp'=>$nomcamp,
 							   'etiqueta'=>$etiqueta,
 							   'val'=>array($valor),
@@ -77,7 +77,7 @@ foreach ($cDatosCampos as $oDatosCampo) {
 				case 'float4':
 				case 'double':
 					if (!is_numeric($valor)) {
-					   $errores[]=array('txt'=>_('El campo "%1$s" debe ser un número real, y es: "%2$s"'),
+					   $errores[]=array('txt'=>_("el campo \"%1\$s\" debe ser un número real, y es: \"%2\$s\""),
 								   'camp'=>$nomcamp,
 								   'etiqueta'=>$etiqueta,
 								   'val'=>array($valor));
@@ -85,7 +85,7 @@ foreach ($cDatosCampos as $oDatosCampo) {
 					break;
 				case 'numeric':
 					if (!is_numeric($valor)) {
-					   $errores[]=array('txt'=>_('El campo "%1$s" debe ser un número, y es: "%2$s"'),
+					   $errores[]=array('txt'=>_("el campo \"%1\$s\" debe ser un número, y es: \"%2\$s\""),
 								   'camp'=>$nomcamp,
 								   'etiqueta'=>$etiqueta,
 								   'val'=>array($valor));
@@ -96,13 +96,13 @@ foreach ($cDatosCampos as $oDatosCampo) {
 					//$valor=(int)$valor;
 					if (is_numeric($valor)) {
 						if ((int)$valor != $valor) {
-						   $errores[]=array('txt'=>_('El campo "%1$s" debe ser un número entero, y es: "%2$s"'),
+						   $errores[]=array('txt'=>_("el campo \"%1\$s\" debe ser un número entero, y es: \"%2\$s\""),
 									   'camp'=>$nomcamp,
 									   'etiqueta'=>$etiqueta,
 									   'val'=>array($valor));
 						}
 					} else {
-					   $errores[]=array('txt'=>_('El campo "%1$s" debe ser un número entero, y es: "%2$s"'),
+						$errores[]=array('txt'=>_("el campo \"%1\$s\" debe ser un número entero, y es: \"%2\$s\""),
 								   'camp'=>$nomcamp,
 								   'etiqueta'=>$etiqueta,
 								   'val'=>array($valor));
@@ -110,7 +110,7 @@ foreach ($cDatosCampos as $oDatosCampo) {
 					break;
 				case 'text':
 					if (!is_string($valor)) {
-					   $errores[]=array('txt'=>_('El campo "%1$s" debe ser un texto, y es: "%2$s"'),
+					   $errores[]=array('txt'=>_("el campo \"%1\$s\" debe ser un texto, y es: \"%2\$s\""),
 								   'camp'=>$nomcamp,
 								   'etiqueta'=>$etiqueta,
 								   'val'=>array($valor));
@@ -118,13 +118,13 @@ foreach ($cDatosCampos as $oDatosCampo) {
 					break;
 				case 'varchar':
 					if (!is_string($valor)) {
-					   $errores[]=array('txt'=>_('El campo "%1$s" debe ser un texto, y es: "%2$s"'),
+					   $errores[]=array('txt'=>_("el campo \"%1\$s\" debe ser un texto, y es: \"%2\$s\""),
 								   'camp'=>$nomcamp,
 								   'etiqueta'=>$etiqueta,
 								   'val'=>array($valor));
 					} else {
 						if (strlen($valor) > ($longitud)) {
-						   $errores[]=array('txt'=>_('El campo "%1$s" sólo puede tener %2$d cararcteres y tiene %3$d'),
+						   $errores[]=array('txt'=>_("el campo \"%1\$s\" sólo puede tener %2\$d cararcteres y tiene %3\$d"),
 								   'camp'=>$nomcamp,
 								   'etiqueta'=>$etiqueta,
 								   'val'=> array(($longitud),strlen($valor))
@@ -137,13 +137,13 @@ foreach ($cDatosCampos as $oDatosCampo) {
 						//check weather the date is valid of not
 						if(checkdate($parts[2],$parts[1],$parts[3])) {
 						} else {
-						   $errores[]=array('txt'=>_('El campo "%1$s" debe ser una fecha, y es: "%2$s"'),
+						   $errores[]=array('txt'=>_("el campo \"%1\$s\" debe ser una fecha, y es: \"%2\$s\""),
 								   'camp'=>$nomcamp,
 								   'etiqueta'=>$etiqueta,
 								   'val'=>array($valor));
 						}
 					} else {
-					   $errores[]=array('txt'=>_('El campo "%1$s" debe ser una fecha, y es: "%2$s"'),
+					   $errores[]=array('txt'=>_("el campo \"%1\$s\" debe ser una fecha, y es: \"%2\$s\""),
 								   'camp'=>$nomcamp,
 								   'etiqueta'=>$etiqueta,
 								   'val'=>array($valor));
@@ -157,13 +157,13 @@ foreach ($cDatosCampos as $oDatosCampo) {
 							if ($parts[2]>60) $err=1;
 							if (!empty($parts[4]) && $parts[4]>60) $err=1;
 							if ($err==1) {
-							   $errores[]=array('txt'=>_('El campo "%1$s" debe ser una hora. Debe tener el formato hh:mm:ss. [%2$s]'),
+							   $errores[]=array('txt'=>_("el campo \"%1\$s\" debe ser una hora. Debe tener el formato hh:mm:ss. [%2\$s]"),
 								   'camp'=>$nomcamp,
 								   'etiqueta'=>$etiqueta,
 								   'val'=>array($valor));
 							}
 						} else {
-						   $errores[]=array('txt'=>_('El campo "%1$s" debe ser una hora. Debe tener el formato hh:mm:ss. [%2$s]'),
+						   $errores[]=array('txt'=>_("el campo \"%1\$s\" debe ser una hora. Debe tener el formato hh:mm:ss. [%2\$s]"),
 								   'camp'=>$nomcamp,
 								   'etiqueta'=>$etiqueta,
 								   'val'=>array($valor));
@@ -183,7 +183,7 @@ foreach ($cDatosCampos as $oDatosCampo) {
 			//tiene un valor por defecto?
 			$default = $oDatosCampo->datos_campo($oDbl,'valor');
 			if (empty($default)) {
-			   $errores[]=array('txt'=>_('El campo "%1$s" no puede estar vacío'),
+			   $errores[]=array('txt'=>_("el campo \"%1\$s\" no puede estar vacío"),
 				   'camp'=>$nomcamp,
 				   'etiqueta'=>$etiqueta,
 				   'val'=>array());

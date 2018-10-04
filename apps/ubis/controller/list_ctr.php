@@ -183,15 +183,15 @@ $aGoBack = array (
 $oPosicion->setParametros($aGoBack);
 $oPosicion->recordar();
 
-$a_botones=array( array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(this.form)" ) );
+$a_botones=array( array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(this.form)" ) );
 
-$a_cabeceras[]= array('name'=>ucfirst(_('centro')),'formatter'=>'clickFormatter');
-$a_cabeceras[]= ucfirst(_('región'));
-$a_cabeceras[]= ucfirst(_('tipo ctr o casa'));
-$a_cabeceras[]= ucfirst(_('dirección'));
-$a_cabeceras[]= ucfirst(_('cp'));
-$a_cabeceras[]= ucfirst(_('ciudad'));
-$a_cabeceras[]= ucfirst(_('teléfono'));
+$a_cabeceras[]= array('name'=>ucfirst(_("centro")),'formatter'=>'clickFormatter');
+$a_cabeceras[]= ucfirst(_("región"));
+$a_cabeceras[]= ucfirst(_("tipo ctr o casa"));
+$a_cabeceras[]= ucfirst(_("dirección"));
+$a_cabeceras[]= ucfirst(_("cp"));
+$a_cabeceras[]= ucfirst(_("ciudad"));
+$a_cabeceras[]= ucfirst(_("teléfono"));
 	  
 $i=0;
 $a_valores = array();
@@ -259,7 +259,7 @@ foreach ($cUbis as $oCentro) {
 $oDesplDl = new Desplegable();
 $oDesplDl->setNombre('loc');
 $oDesplDl->setAction('fnjs_actualizar()');
-$oDesplDl->setOpciones(array('dl'=>_('de dl'),'ex'=>_('de otra dl/cr')));
+$oDesplDl->setOpciones(array('dl'=>_("de dl'),'ex'=>_('de otra dl/cr")));
 $oDesplDl->setOpcion_sel($Qloc);
 
 

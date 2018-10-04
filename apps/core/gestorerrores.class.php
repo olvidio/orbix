@@ -62,7 +62,7 @@ class gestorErrores {
 		$txt=$this->leerErrorAppLastError();
 		$err=$oDBSt->errorInfo();
 		if (strstr($txt, 'duplicate key')) {
-			echo _("Ya existe un registro con esta información");
+			echo _("ya existe un registro con esta información");
 		} else {
 			echo "\n dd".$txt."\n $sClauError <br>";
 		}

@@ -122,7 +122,7 @@ switch ($Qmod) {
 			
 				$oMatricula = new actividadestudios\MatriculaDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'id_asignatura'=>$id_asignatura));
 				if ($oMatricula->DBEliminar() === false) {
-					$msg_err = _("Hay un error, no se ha borrado.");
+					$msg_err = _("hay un error, no se ha borrado");
 				}
 				// hay que cerrar el dossier para esta persona, si no tiene más actividades:
 				$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$id_nom,'id_tipo_dossier'=>1303));
@@ -145,7 +145,7 @@ switch ($Qmod) {
 		if ($Qpau=="a") { 
 			$oMatricula = new actividadestudios\MatriculaDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'id_asignatura'=>$id_asignatura));
 			if ($oMatricula->DBEliminar() === false) {
-				$msg_err = _("Hay un error, no se ha borrado.");
+				$msg_err = _("hay un error, no se ha borrado");
 			}
 			// hay que cerrar el dossier para esta actividad, si no tiene más personas:
 			$oDossier = new dossiers\Dossier(array('tabla'=>'a','id_pau'=>$id_activ,'id_tipo_dossier'=>3103));
@@ -168,7 +168,7 @@ switch ($Qmod) {
 		empty($Qpreceptor)? $oMatricula->setPreceptor('f') : $oMatricula->setPreceptor('t');
 		$oMatricula->setId_preceptor($Qid_preceptor);
 		if ($oMatricula->DBGuardar() === false) {
-			$msg_err = _("Hay un error, no se ha guardado.");
+			$msg_err = _("hay un error, no se ha guardado");
 		} else {
 			// si no está abierto, hay que abrir el dossier para esta persona
 			$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$Qid_nom,'id_tipo_dossier'=>1303));
@@ -207,7 +207,7 @@ switch ($Qmod) {
 		isset($Qid_preceptor)? $oMatricula->setId_preceptor($Qid_preceptor) : $oMatricula->setId_preceptor();
 		
 		if ($oMatricula->DBGuardar() === false) {
-			$msg_err = _("Hay un error, no se ha guardado.");
+			$msg_err = _("hay un error, no se ha guardado");
 		}
 }
 

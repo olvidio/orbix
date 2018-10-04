@@ -84,16 +84,16 @@ fnjs_guardar=function(formulario){
 	<td id="lst_profes">
 		<?= $oDesplProfesores->desplegable(); ?>
 	</td>
-	<td><input type=button onclick="fnjs_mas_profes('asignatura')" value="<?= _('corresponde') ?>"></td>
-	<td><input type=button onclick="fnjs_mas_profes('dl')" value="<?= _('dl y asistentes') ?>"></td>
-	<td><input type=button onclick="fnjs_mas_profes('all')" value="<?= _('otros de paso') ?>"></td>
+	<td><input type=button onclick="fnjs_mas_profes('asignatura')" value="<?= _("corresponde") ?>"></td>
+	<td><input type=button onclick="fnjs_mas_profes('dl')" value="<?= _("dl y asistentes") ?>"></td>
+	<td><input type=button onclick="fnjs_mas_profes('all')" value="<?= _("otros de paso") ?>"></td>
 </tr>
 <tr><td class=etiqueta><?= _("tipo") ?></td>
 	<td><select class=contenido id='tipo' name='tipo'>
 		<option></option>
 		<option value='p' <?= $chk_preceptor ?> > <?= _("preceptor") ?></option>
 	</select></td></tr>
-<tr><td class=etiqueta><?= _("profesor avisado?") ?></td>
+<tr><td class=etiqueta><?= _("¿profesor avisado?") ?></td>
 	<td><select class=contenido id='avis_profesor' name='avis_profesor'>
 		<option></option>
 		<option value='a' <?= $chk_avisado ?> ><?= _("avisado") ?></option>

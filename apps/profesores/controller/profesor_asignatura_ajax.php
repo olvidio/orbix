@@ -21,13 +21,13 @@ $cProfesores = $GesProfesores->getListaProfesoresAsignatura($Qid_asignatura);
  */
 
 // De momento no se hace ninguna accion
-//$a_botones=array( array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(this.form)" ) );
+//$a_botones=array( array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(this.form)" ) );
 $a_botones=array();
 
-$a_cabeceras[]= array('name'=>ucfirst(_('apellidos, nombre')),'formatter'=>'clickFormatter');
-$a_cabeceras[]= ucfirst(_('centro'));
-$a_cabeceras[]= ucfirst(_('teléfono'));
-$a_cabeceras[]= ucfirst(_('mail'));
+$a_cabeceras[]= array('name'=>ucfirst(_("apellidos, nombre")),'formatter'=>'clickFormatter');
+$a_cabeceras[]= ucfirst(_("centro"));
+$a_cabeceras[]= ucfirst(_("teléfono"));
+$a_cabeceras[]= ucfirst(_("mail"));
 	  
 $i=0;
 $a_valores = array();

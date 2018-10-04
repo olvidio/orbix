@@ -6,11 +6,11 @@ fnjs_guardar=function(formulario){
 	var situacion = $('#situacion').val();
 	if (!new_dl && !new_ctr) {
 		err=1;
-		alert ('<?= _("Debería lenar el campo ctr o dl") ?>');
+		alert ('<?= _("debería lenar el campo ctr o dl") ?>');
 	}
 	if (new_dl && !situacion) {
 		err=1;
-		alert ('<?= _("Debería lenar el campo situación") ?>');
+		alert ('<?= _("debería lenar el campo situación") ?>');
 	}
 
 	if (err== 0) {
@@ -79,7 +79,7 @@ if (empty($Qcabecera) || $Qcabecera!="no") {
 	 <td><input class="fecha" type="Text" id="f_dl" name="f_dl" size="10" value="<?= $hoy ?>" >&nbsp;</td>
 </tr>
 <tr>
- 	<td class=etiqueta colspan="2" align="RIGHT"><?= ucfirst(_("situacion")); ?>:</td>
+ 	<td class=etiqueta colspan="2" align="RIGHT"><?= ucfirst(_("situación")); ?>:</td>
 	<td colspan=2><?= $oDesplSituacion->desplegable() ?></td>
 </tr>
 </table>

@@ -75,7 +75,7 @@ if ($matriculados > 0) {
 	}
 	uksort($aPersonasMatriculadas, "core\strsinacentocmp"); // compara sin contar los acentos i insensitive.
 } else {
-	echo _("No hay ninguna persona matriculada de esta asignatura");
+	echo _("no hay ninguna persona matriculada de esta asignatura");
 }
 
 $Qque = (string) \filter_input(INPUT_POST, 'que');
@@ -119,7 +119,7 @@ $oHashNotas->setArraycamposHidden($a_camposHidden1);
 
 if (!empty($msg_err)) { echo $msg_err; }
 
-$txt_alert_acta = _("Primero debe guadar los datos del acta");
+$txt_alert_acta = _("primero debe guadar los datos del acta");
 
 // El formulario del acta:
 include_once ("apps/notas/controller/acta_ver.php"); 

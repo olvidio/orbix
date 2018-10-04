@@ -76,7 +76,7 @@ $oHash3->setArraycamposHidden($a_camposHidden);
 $oHash4 = new web\Hash();
 $oHash4->setcamposForm('frm_4_nombre_ubi');
 
-$txt_alert = _("No olvides ajustar el nombre de la actividad");
+$txt_alert = _("no olvides ajustar el nombre de la actividad");
 
 $a_campos = ['oPosicion' => $oPosicion,
 			'oHash' => $oHash,

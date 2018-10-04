@@ -746,7 +746,7 @@ class PersonaNota Extends core\ClasePropiedades {
 	function getDatosF_acta() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_acta'));
-		$oDatosCampo->setEtiqueta(_("f_acta"));
+		$oDatosCampo->setEtiqueta(_("fecha acta"));
 		return $oDatosCampo;
 	}
 	/**
@@ -794,7 +794,7 @@ class PersonaNota Extends core\ClasePropiedades {
 	function getDatosEpoca() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'epoca'));
-		$oDatosCampo->setEtiqueta(_("epoca"));
+		$oDatosCampo->setEtiqueta(_("época"));
 		return $oDatosCampo;
 	}
 	/**
@@ -842,7 +842,7 @@ class PersonaNota Extends core\ClasePropiedades {
 	function getDatosTipo_acta() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'tipo_acta'));
-		$oDatosCampo->setEtiqueta(_("tipo acta"));
+		$oDatosCampo->setEtiqueta(_("tipo de acta"));
 		return $oDatosCampo;
 	}
 

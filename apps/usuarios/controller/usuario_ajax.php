@@ -23,7 +23,7 @@ switch ($Qque) {
 				//echo "sql: $sql<br>";
 				$oDBSt_q=$oDB->query($sql);
 			} else {
-				$error_txt=_("no sé cuál he de borar");
+				$error_txt=_("no sé cuál he de borrar");
 			}
 		} else {
 			$error_txt=ordena($Qid_activ,$Qid_nom,$Qnum_orden);
@@ -65,7 +65,7 @@ switch ($Qque) {
 
 			$a_valores[$i][1]=$usuario;
 			$a_valores[$i][2]=$seccion;
-			$a_valores[$i][3]= array( 'ira'=>$pagina, 'valor'=>_('añadir'));
+			$a_valores[$i][3]= array( 'ira'=>$pagina, 'valor'=>_("añadir"));
 		}
 		$oTabla = new web\Lista();
 		$oTabla->setId_tabla('usuario_ajax_grupo_lst');
@@ -103,7 +103,7 @@ switch ($Qque) {
 			
 			$a_valores[$i][1]=$usuario;
 			$a_valores[$i][2]=$seccion;
-			$a_valores[$i][3]= array( 'ira'=>$pagina, 'valor'=>_('quitar'));
+			$a_valores[$i][3]= array( 'ira'=>$pagina, 'valor'=>_("quitar"));
 		}
 		$oTabla = new web\Lista();
 		$oTabla->setId_tabla('usuario_ajax_grupo_del_lst');
@@ -118,7 +118,7 @@ switch ($Qque) {
 		// añado el grupo de permisos al usuario.
 		$oUsuarioGrupo = new usuarios\UsuarioGrupo(array('id_usuario'=>$Qid_usuario,'id_grupo'=>$Qid_grupo));
 		if ($oUsuarioGrupo->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 		$a_parametros = array('quien' => 'usuario', 'id_usuario' => $Qid_usuario);
 		$pagina = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?'.http_build_query($a_parametros));
@@ -131,7 +131,7 @@ switch ($Qque) {
 		// elimino el grupo de permisos al usuario.
 		$oUsuarioGrupo = new usuarios\UsuarioGrupo(array('id_usuario'=>$Qid_usuario,'id_grupo'=>$Qid_grupo));
 		if ($oUsuarioGrupo->DBEliminar() === false) {
-			echo _('Hay un error, no se ha eliminado');
+			echo _("hay un error, no se ha eliminado");
 		}
 		$a_parametros = array('quien' => 'usuario', 'id_usuario' => $Qid_usuario);
 		$pagina = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?'.http_build_query($a_parametros));
@@ -146,7 +146,7 @@ switch ($Qque) {
 		}
 		$oUsuario= new usuarios\Usuario(array('id_usuario'=>$id_usuario));
 		if ($oUsuario->DBEliminar() === false) {
-			echo _("Hay un error, no se ha eliminado.");
+			echo _("hay un error, no se ha eliminado");
 		}
 	case "eliminar_grupo":
 		// elimna el grupo.
@@ -156,7 +156,7 @@ switch ($Qque) {
 		}
 		$oUsuario= new usuarios\Grupo(array('id_usuario'=>$id_usuario));
 		if ($oUsuario->DBEliminar() === false) {
-			echo _("Hay un error, no se ha eliminado.");
+			echo _("hay un error, no se ha eliminado");
 		}
 		break;
 	case "eliminar_role":
@@ -167,7 +167,7 @@ switch ($Qque) {
 		}
 		$oRole= new usuarios\Role(array('id_role'=>$id_role));
 		if ($oRole->DBEliminar() === false) {
-			echo _("Hay un error, no se ha eliminado.");
+			echo _("hay un error, no se ha eliminado");
 		}
 		break;
 }

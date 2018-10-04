@@ -51,7 +51,7 @@ fnjs_cmb_preceptor=function(){
 fnjs_guardar=function(formulario){
 	if(!($('#id_asignatura_real').length > 0)) {
 		if($('#id_nivel').val() < 1000) {
-			alert ("<?= _("Debe poner una asignatura") ?>");
+			alert ("<?= _("debe poner una asignatura") ?>");
 			return;
 		}
 	}
@@ -84,7 +84,7 @@ fnjs_guardar=function(formulario){
 <form id="f_1303" name="f_1303" action="t" method="POST">
 <?= $oHash->getCamposHtml(); ?>
 <table>
-<thead><tr><th colspan=4><?= _("matricula de asignaturas") ?></th></tr></thead>
+<thead><tr><th colspan=4><?= _("matrícula de asignaturas") ?></th></tr></thead>
 <tbody>
 <tr><td><?= ucfirst(_("actividad")) ?>:</td><td class=contenido colspan=3><?= $nom_activ ?></td></tr>
 <?php

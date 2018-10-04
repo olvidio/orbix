@@ -52,44 +52,44 @@ $Resumen->nuevaTablaProfe();
 
 //36. nº de profesores ordinarios:
 $res[36] = $Resumen->profesorDeTipo(1);
-$a_textos[36] = _("Número de profesores ordinarios");
+$a_textos[36] = ucfirst(_("número de profesores ordinarios"));
 //37. Número de profesores extraordinarios
 $res[37] = $Resumen->profesorDeTipo(2);
-$a_textos[37] = _("Número de profesores extraordinarios");
+$a_textos[37] = ucfirst(_("número de profesores extraordinarios"));
 //38. Número de profesores adjuntos
 $res[38] = $Resumen->profesorDeTipo(3);
-$a_textos[38] = _("Número de profesores adjuntos");
+$a_textos[38] = ucfirst(_("número de profesores adjuntos"));
 //39. Número de profesores encargados
 $res[39] = $Resumen->profesorDeTipo(4);
-$a_textos[39] = _("Número de profesores encargados");
+$a_textos[39] = ucfirst(_("número de profesores encargados"));
 //40. Número de profesores asociados
 $res[40] = $Resumen->profesorDeTipo(6);
-$a_textos[40] = _("Número de profesores asociados");
+$a_textos[40] = ucfirst(_("número de profesores asociados"));
 //41. Número de profesores ayudantes
 $res[41] = $Resumen->profesorDeTipo(5);
-$a_textos[41] = _("Número de profesores ayudantes");
+$a_textos[41] = ucfirst(_("número de profesores ayudantes"));
 //42. Número de total de profesores
 $res[42] = $Resumen->profesorDeTipo(0);
-$a_textos[42] = _("Número de total de profesores");
+$a_textos[42] = ucfirst(_("número de total de profesores"));
 //43. Número de profesores de latín
 $res[43] = $Resumen->profesorDeLatin();
-$a_textos[43] = _("Número de profesores de latín");
+$a_textos[43] = ucfirst(_("número de profesores de latín"));
 
 /*44. Número de profesores que dieron clase de su especialidad*/
 $res[44] = $Resumen->profesorEspecialidad();
-$a_textos[44] = _("Número de profesores que dieron clase de su especialidad");
+$a_textos[44] = ucfirst(_("número de profesores que dieron clase de su especialidad"));
 
 /*45. Número de profesores que dieron clase otras asignaturas*/
 $res[45] = $Resumen->profesorEspecialidad(TRUE);
-$a_textos[45] = _("Número de profesores que dieron clase de otras asignaturas");
+$a_textos[45] = ucfirst(_("número de profesores que dieron clase de otras asignaturas"));
 
 /*46. Número de profesores asistentes a congresos...*/
 $res[46] = $Resumen->profesorCongreso();
-$a_textos[46] = _("Número de profesores asistentes a cve del stgr u otras reuniones");
+$a_textos[46] = ucfirst(_("número de profesores asistentes a cve del stgr u otras reuniones"));
 
 /*47. Número de departamentos con director*/
 $res[47] = $Resumen->Departamentos();
-$a_textos[47] = _("Nº de departamentos");
+$a_textos[47] = ucfirst(_("nº de departamentos"));
 
 
 // ---------------------------------- html ----------------------------------------------------

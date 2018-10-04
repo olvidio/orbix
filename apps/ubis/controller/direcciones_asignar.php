@@ -39,7 +39,7 @@ switch ($Qobj_dir) {
 }
 
 if ($oUbi->DBGuardar() === false) {
-	$msg_err = _("Hay un error, no se ha guardado.");
+	$msg_err = _("hay un error, no se ha guardado");
 }
 		
 if (!empty($msg_err)) { 

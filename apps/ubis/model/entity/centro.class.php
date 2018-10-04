@@ -328,7 +328,7 @@ class Centro Extends UbiGlobal {
 	function getDatosTipo_ctr() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'tipo_ctr'));
-		$oDatosCampo->setEtiqueta(_("tipo_ctr"));
+		$oDatosCampo->setEtiqueta(_("tipo de ctr"));
 		return $oDatosCampo;
 	}
 	/**
@@ -340,7 +340,7 @@ class Centro Extends UbiGlobal {
 	function getDatosTipo_labor() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'tipo_labor'));
-		$oDatosCampo->setEtiqueta(_("tipo_labor"));
+		$oDatosCampo->setEtiqueta(_("tipo de labor"));
 		return $oDatosCampo;
 	}
 	/**

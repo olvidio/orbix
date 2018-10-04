@@ -143,13 +143,13 @@ if (empty($Qdl_org) || $Qdl_org != $mi_dele) {
 
 
 if (!empty($oListaPlazasDl)) {
-	echo "<h3>"._("Actividades de la dl")."</h3>";
+	echo "<h3>".ucfrist(_("actividades de la dl"))."</h3>";
 	// Lo pongo detrás del titulo, por si da error, saber que categoría hace referencia
 	$oListaDl = $oListaPlazasDl->getLista();
 	echo $oListaDl->listaPaginada();
 }
 if (!empty($oListaPlazasOtras)) {
-	echo "<h3>"._("Actividades de otras dl")."</h3>";
+	echo "<h3>".ucfrist(_("actividades de otras dl"))."</h3>";
 	// Lo pongo detrás del titulo, por si da error, saber que categoría hace referencia
 	$oListaOtras = $oListaPlazasOtras->getLista();
 	echo $oListaOtras->listaPaginada();

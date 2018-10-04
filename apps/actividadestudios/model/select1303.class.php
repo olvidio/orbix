@@ -65,8 +65,8 @@ class Select1303 {
 		$a_botones = array();
 		if ($this->permiso == 3) {
 			$a_botones=array(
-				array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(this.form,$ca_num)" ) ,
-				array( 'txt' => _('borrar matricula'), 'click' =>"fnjs_borrar(this.form,$ca_num)" ) 
+				array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(this.form,$ca_num)" ) ,
+				array( 'txt' => _("borrar matrícula"), 'click' =>"fnjs_borrar(this.form,$ca_num)" ) 
 				);
 		}
 		return $a_botones;
@@ -83,7 +83,7 @@ class Select1303 {
 	public function getHtmlCa($oAsistente,$ca_num=1) {
 		$this->id_activ=$oAsistente->getId_activ();
 		$propio=$oAsistente->getPropio();
-		if ($propio != 't')  echo _("No está como propio, no debería tener plan de estudios");
+		if ($propio != 't')  echo _("no está como propio, no debería tener plan de estudios");
 		$est_ok=$oAsistente->getEst_ok();
 		$observ_est=$oAsistente->getObserv_est();
 		$oActividad = new actividades\Actividad(array('id_activ'=>  $this->id_activ));
@@ -198,7 +198,7 @@ class Select1303 {
 		// Compruebo si està de repaso...
 		$oPersona = new personas\PersonaDl(array('id_nom'=>  $this->id_pau));
 		$stgr = $oPersona->getStgr();
-		if ($stgr == 'r') $aviso .= _("Está de repaso")."<br>";
+		if ($stgr == 'r') $aviso .= _("está de repaso")."<br>";
 
 		$aWhere = array();
 		$aOperadores = array();
@@ -243,7 +243,7 @@ class Select1303 {
 			}
 			
 			if ( $n == 0 && !empty($this->todos)) {
-				$aviso .= _("No tiene asignado ningún ca."); 
+				$aviso .= _("no tiene asignado ningún ca."); 
 			}
 			if ( $n > 1 && empty($this->todos)) {
 				$nn = 0;
@@ -265,7 +265,7 @@ class Select1303 {
 	}
 
 	public function getHtml() {
-		$txt_eliminar = _("¿Esta Seguro que desea quitar esta asignatura de esta actividad?");
+		$txt_eliminar = _("¿Está seguro que desea quitar esta asignatura de esta actividad?");
 		
 		$this->getAsistencias();
 		
@@ -286,7 +286,7 @@ class Select1303 {
 			$html .= $this->getHtmlCa($oAsistente,$ca_num);
 		}
 		if (count($this->cAsistencias) == 0) {
-			$html .= _("No tiene ninguna actividad asignada");
+			$html .= _("no tiene ninguna actividad asignada");
 		}
 		return $html_script.$html;
 	}

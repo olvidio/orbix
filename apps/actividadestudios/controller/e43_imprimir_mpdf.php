@@ -63,7 +63,7 @@ if ($matriculas > 0) {
 											'acta' => $acta);
 	}
 } else {
-	$msg_err .= _("No hay ninguna matricula de esta persona");
+	$msg_err .= _("no hay ninguna matrícula de esta persona");
 }
 // Una line en blanco
 $aAsignaturasMatriculadas[] = array('nom_asignatura' => ' ',
@@ -78,9 +78,9 @@ $aAsignaturasMatriculadas[] = array('nom_asignatura' => ' ',
 <table class="A4"><tr><td><?= $dl_destino ?></td><td class="derecha"><?= $dl_origen ?></td></tr></table>
 <br><br>
 <table class="cabecera">
-	<tr><td><?= _("Nombre y apellidos"); ?>:</td><td><?= $nom ?></td></tr>
-	<tr><td><?= _("Lugar y fecha de nacimiento"); ?>:</td><td><?= $txt_nacimiento ?></td></tr>
-	<tr><td><?= _("Fecha y lugar del sem, ca o cv"); ?>:</td><td><?= $txt_actividad ?></td></tr>
+	<tr><td><?= ucfirst(_("nombre y apellidos")); ?>:</td><td><?= $nom ?></td></tr>
+	<tr><td><?= ucfirst(_("lugar y fecha de nacimiento")); ?>:</td><td><?= $txt_nacimiento ?></td></tr>
+	<tr><td><?= ucfirst(_("fecha y lugar del sem, ca o cv")); ?>:</td><td><?= $txt_actividad ?></td></tr>
 </table>
 <br>
 <table class="calif">

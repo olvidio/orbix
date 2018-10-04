@@ -54,7 +54,7 @@ class Persona {
 					if (count($cPersonasDl) > 0) {
 						$oPersona = $cPersonasDl[0];
 					} else {
-						return _("No encuentro a nadie");
+						return _("no encuentro a nadie");
 					}
 				}
 			}

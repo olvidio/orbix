@@ -219,7 +219,7 @@ class TrasladoDl {
 		$msg = '';
 		if ($this->comprobar() === false) {
 			$msg = $this->serror;
-			return _("Comprobar.").$msg;
+			return _("comprobar.").$msg;
 		}
 		// Aviso si le faltan notas
 		if ($this->comprobarNotas() === false) {
@@ -236,23 +236,23 @@ class TrasladoDl {
 		// Trasladar persona
 		if ($this->copiarPersona() === false) {
 			$msg = $this->serror;
-			return _("Copiar Persona.").$msg;
+			return _("copiar persona.").$msg;
 		}
 
 		if ($this->copiarNotas() === false) {
 			$msg = $this->serror;
-			return _("Copiar Notas").$msg;
+			return _("copiar notas").$msg;
 		}
 		
 		// apunto el traslado. Lo pongo antes para que se copie trasladar dossiers.
 		if ($this->apuntar() === false) {
 			$msg = $this->serror;
-			return _("Apuntar traslado").$msg;
+			return _("apuntar traslado").$msg;
 		}
 		
 		if ($this->trasladarDossiers() === false) {
 			$msg = $this->serror;
-			return _("Copiar dossiers").$msg;
+			return _("copiar dossiers").$msg;
 		}
 		return true;
 	}
@@ -260,7 +260,7 @@ class TrasladoDl {
 	public function comprobar() {
 		$error = '';
 		if (!empty($this->sdl_dst) AND $this->sdl_dst == $this->sdl_persona) {
-			$error = _("Ya esta trasladado. No se ha hecho ningún cambio.");
+			$error = _("ya está trasladado. No se ha hecho ningún cambio.");
 		}
 		if (empty($error)) {
 			return true;
@@ -293,7 +293,7 @@ class TrasladoDl {
 		}
 		$this->restaurarConexionOrg($oDBorg);
 		if (!empty($msg)) {
-			$error = _("Tiene pendiente de poner las notas de:") .'<br>'.$msg;
+			$error = _("tiene pendiente de poner las notas de:") .'<br>'.$msg;
 		}
 		if (empty($error)) {
 			return true;
@@ -318,7 +318,7 @@ class TrasladoDl {
 		$oPersonaDl->setF_situacion($this->df_dl);
 		$oPersonaDl->setDl($this->sdl_dst);
 		if ($oPersonaDl->DBGuardar() === false) {
-			$error .= '<br>'._('Hay un error, no se ha guardado');
+			$error .= '<br>'._("hay un error, no se ha guardado");
 		}
 		$this->restaurarConexionOrg($oDBorg);
 		if (empty($error)) {
@@ -387,7 +387,7 @@ class TrasladoDl {
 				if (count($Result) == 1) {
 					$aResult[] = $Result[0];
 				} else {
-					exit(_("No puede existir una persona con el mismo id!!"));
+					exit(_("no puede existir una persona con el mismo id!!"));
 				}
 			}
 		}
@@ -416,7 +416,7 @@ class TrasladoDl {
 		$aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
 		// si existe el esquema (dl)
 		if (empty($aDades['existe'])) {
-			$error = sprintf(_("No existe el esquema destino %s en la base de datos"),  $this->snew_esquema);
+			$error = sprintf(_("no existe el esquema destino %s en la base de datos"),  $this->snew_esquema);
 		}
 		if (!empty($aDades['existe']) && $aDades['existe'] === true) {
 			$id_tabla = $oPersonaDl->getId_tabla();
@@ -448,7 +448,7 @@ class TrasladoDl {
 			$oPersonaNew->setF_situacion($this->df_dl);
 			$oPersonaNew->setId_ctr('');
 			if ($oPersonaNew->DBGuardar() === false) {
-				$error .= '<br>'._('Hay un error, no se ha guardado');
+				$error .= '<br>'._("hay un error, no se ha guardado");
 			}
 		}
 		$this->restaurarConexionOrg($oDBorg);
@@ -493,7 +493,7 @@ class TrasladoDl {
 				$NuevoObj->setoDbl($oDBdst);
 				$NuevoObj->setId_schema($id_schema);
 				if ($NuevoObj->DBGuardar() === false) {
-					$error .= '<br>'._('No se ha guardado la nota');
+					$error .= '<br>'._("no se ha guardado la nota");
 				} else {
 					//borrar la origen:
 					$Objeto->DBEliminar();
@@ -700,7 +700,7 @@ class TrasladoDl {
 		$oTraslado->setId_ctr_destino('');
 		$oTraslado->setCtr_destino($this->sdl_dst);
 		if ($oTraslado->DBGuardar() === false) {
-			$error .= '<br>'._('Hay un error, no se ha guardado');
+			$error .= '<br>'._("hay un error, no se ha guardado");
 		}
 		$this->restaurarConexionOrg($oDBorg);
 		if (empty($error)) {

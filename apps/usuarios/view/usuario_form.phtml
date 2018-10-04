@@ -30,11 +30,11 @@ algo=function(level) {
 	strong = level;
 }
 var options = {	'texts' : {
-		1 : 'Demasiado débil',
-		2 : 'password débil',
-		3 : 'Normal',
-		4 : 'Strong password',
-		5 : 'Very strong password'
+		1 : "<?= _("demasiado débil")?>",
+		2 : "<?= _("password débil")?>",
+		3 : "<?= _("normal")?>",
+		4 : "<?= _("strong password")?>",
+		5 : "<?= _("very strong password")?>"
 	},
 	'onCheck': algo
 }
@@ -112,7 +112,7 @@ fnjs_actualizar=function(formulario){
 fnjs_guardar=function(formulario){
 	// si es 0, no se cambia el password.
 	if (strong != 0 && strong < 5) {
-	  alert('Debe poner un password "fuerte" o "muy fuerte"');
+	  alert('debe poner un password "fuerte" o "muy fuerte"');
 	  return false;
 	}
 
@@ -240,7 +240,7 @@ if (!empty($id_usuario)) { // si no hay usuario, no puedo poner permisos.
 	}	
 	?>
 	<br>
-	<h3><?= _('grupos') ?>: </h3>
+	<h3><?= _("grupos") ?>: </h3>
 	<p><?= $txt ?></p>
 	<br>
 	<input type=button onclick="fnjs_add_grup();" value="<?= _("añadir un grupo de permisos") ?>">
@@ -267,8 +267,8 @@ if ((core\ConfigGlobal::is_app_installed('procesos')) && !empty($id_usuario)) { 
 	// propios
 	$i=0;
 	$a_cabeceras=array('tipo de actividad','fase inicial','fase final','permiso','dl propia',array('name'=>'afecta_a','width'=>'350'));
-	$a_botones[] = array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(\"#permisos\")" );
-	$a_botones[] = array( 'txt' => _('eliminar'), 'click' =>"fnjs_borrar(\"#permisos\")" ); 
+	$a_botones[] = array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(\"#permisos\")" );
+	$a_botones[] = array( 'txt' => _("eliminar"), 'click' =>"fnjs_borrar(\"#permisos\")" ); 
 	
 	$a_valores=array();
 	$oFase = new ActividadFase();
@@ -282,7 +282,7 @@ if ((core\ConfigGlobal::is_app_installed('procesos')) && !empty($id_usuario)) { 
 		$id_accion=$oUsuarioPerm->getAccion();
 		$dl_propia=$oUsuarioPerm->getDl_propia();
 
-		if ($dl_propia=='t') { $dl_propia_txt = core\ConfigGlobal::$dele; } else { $dl_propia_txt = _('otras'); }
+		if ($dl_propia=='t') { $dl_propia_txt = core\ConfigGlobal::$dele; } else { $dl_propia_txt = _("otras"); }
 
 		$oTipoActividad = new web\TiposActividades($oUsuarioPerm->getId_tipo_activ_txt());
 
@@ -312,7 +312,7 @@ if ((core\ConfigGlobal::is_app_installed('procesos')) && !empty($id_usuario)) { 
 	<?php
 	if ($Qquien == 'usuario') {  // de momento no dejo hacer grupos de grupos.
 		?>
-		<b><?= _('grupos') ?>: </b><?= $txt ?>
+		<b><?= _("grupos") ?>: </b><?= $txt ?>
 		<input type=button onclick="fnjs_add_grup();" value="<?= _("añadir un grupo de permisos") ?>">
 		<input type=button onclick="fnjs_del_grup();" value="<?= _("quitar de un grupo de permisos") ?>">
 		<div id=lst_grupos></div>
@@ -320,7 +320,7 @@ if ((core\ConfigGlobal::is_app_installed('procesos')) && !empty($id_usuario)) { 
 		<?php
 	}
 	?>
-	<b><?= _('propios') ?>:</b>
+	<b><?= _("propios") ?>:</b>
 	<form id=permisos name=permisos action=''>
 	<?= $oHash3->getCamposHtml(); ?>
 	<input type=hidden id=que  name=que value=''>

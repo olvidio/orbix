@@ -634,7 +634,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	function getDatosDireccion() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'direccion'));
-		$oDatosCampo->setEtiqueta(_("direccion"));
+		$oDatosCampo->setEtiqueta(_("dirección"));
 		return $oDatosCampo;
 	}
 	/**
@@ -646,7 +646,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	function getDatosC_p() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'c_p'));
-		$oDatosCampo->setEtiqueta(_("c_p"));
+		$oDatosCampo->setEtiqueta(_("código postal"));
 		return $oDatosCampo;
 	}
 	/**
@@ -658,7 +658,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	function getDatosPoblacion() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'poblacion'));
-		$oDatosCampo->setEtiqueta(_("poblacion"));
+		$oDatosCampo->setEtiqueta(_("población"));
 		return $oDatosCampo;
 	}
 	/**
@@ -682,7 +682,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	function getDatosA_p() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'a_p'));
-		$oDatosCampo->setEtiqueta(_("a_p"));
+		$oDatosCampo->setEtiqueta(_("ap. correos"));
 		return $oDatosCampo;
 	}
 	/**
@@ -694,7 +694,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	function getDatosPais() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'pais'));
-		$oDatosCampo->setEtiqueta(_("pais"));
+		$oDatosCampo->setEtiqueta(_("país"));
 		return $oDatosCampo;
 	}
 	/**
@@ -706,7 +706,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	function getDatosF_direccion() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_direccion'));
-		$oDatosCampo->setEtiqueta(_("f_direccion"));
+		$oDatosCampo->setEtiqueta(_("fecha dirección"));
 		return $oDatosCampo;
 	}
 	/**
@@ -718,7 +718,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	function getDatosObserv() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'observ'));
-		$oDatosCampo->setEtiqueta(_("observ"));
+		$oDatosCampo->setEtiqueta(_("observaciones"));
 		return $oDatosCampo;
 	}
 	/**
@@ -730,7 +730,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	function getDatosCp_dcha() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'cp_dcha'));
-		$oDatosCampo->setEtiqueta(_("cp_dcha"));
+		$oDatosCampo->setEtiqueta(_("cp dcha"));
 		return $oDatosCampo;
 	}
 	/**
@@ -766,7 +766,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	function getDatosPlano_doc() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'plano_doc'));
-		$oDatosCampo->setEtiqueta(_("plano_doc"));
+		$oDatosCampo->setEtiqueta(_("plano documento"));
 		return $oDatosCampo;
 	}
 	/**
@@ -778,7 +778,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	function getDatosPlano_extension() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'plano_extension'));
-		$oDatosCampo->setEtiqueta(_("plano_extension"));
+		$oDatosCampo->setEtiqueta(_("plano extensión"));
 		return $oDatosCampo;
 	}
 	/**
@@ -790,7 +790,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	function getDatosPlano_nom() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'plano_nom'));
-		$oDatosCampo->setEtiqueta(_("plano_nom"));
+		$oDatosCampo->setEtiqueta(_("plano nombre"));
 		return $oDatosCampo;
 	}
 	/**
@@ -802,7 +802,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	function getDatosNom_sede() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nom_sede'));
-		$oDatosCampo->setEtiqueta(_("nom_sede"));
+		$oDatosCampo->setEtiqueta(_("nombre de la sede"));
 		return $oDatosCampo;
 	}
 }

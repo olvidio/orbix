@@ -14,7 +14,7 @@ $Qsf = (string) \filter_input(INPUT_POST, 'sf');
 
 $esquema = "$Qregion-$Qdl";
 
-echo sprintf(_("Esquema: %s. Se han pasado todos los datos que se tenian."),$esquema);
+echo sprintf(_("esquema: %s. Se han pasado todos los datos que se tenian."),$esquema);
 
 // COMUN
 $esquemaRef = 'H-dlb';

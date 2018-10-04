@@ -146,7 +146,7 @@ class AsistentePub Extends core\ClasePropiedades {
 					// Supongo que sólo debería modificar la dl origen.
 					//$clase = 'asistentes\\model\\entity\\AsistenteIn';
 					// $oAsistente=new asistentes\AsistenteIn(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-					exit (_("Los datos de asistencia los modifica la dl del asistente"));
+					exit (_("los datos de asistencia los modifica la dl del asistente"));
 					break;
 				case 'PersonaEx':
 					$clase = 'asistentes\\model\\entity\\AsistenteEx';
@@ -655,7 +655,7 @@ class AsistentePub Extends core\ClasePropiedades {
 				//debe asignarse un propietario. Sólo si es asignada o confirmada
 				$propiedad = $gesActividadPlazasR->getPropiedadPlazaLibre();
 				if (empty($propiedad)) {
-					exit (_("No debería pasar. No puede haber una plaza libre sin propietario"));
+					exit (_("no debería pasar. No puede haber una plaza libre sin propietario"));
 				} else {
 					$prop = key($propiedad);
 					$this->setPropietario($prop);
@@ -774,7 +774,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	function getDatosCfi_con() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'cfi_con'));
-		$oDatosCampo->setEtiqueta(_("cfi_con"));
+		$oDatosCampo->setEtiqueta(_("cfi con"));
 		return $oDatosCampo;
 	}
 	/**
@@ -822,7 +822,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	function getDatosObserv() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'observ'));
-		$oDatosCampo->setEtiqueta(_("observ"));
+		$oDatosCampo->setEtiqueta(_("observaciones"));
 		return $oDatosCampo;
 	}
 	/**
@@ -834,7 +834,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	function getDatosObserv_est() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'observ_est'));
-		$oDatosCampo->setEtiqueta(_("observ esturdios"));
+		$oDatosCampo->setEtiqueta(_("observaciones estudios"));
 		return $oDatosCampo;
 	}
 	/**

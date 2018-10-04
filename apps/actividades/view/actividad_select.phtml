@@ -3,7 +3,7 @@
 fnjs_borrar=function(formulario,que_val){
 	rta=fnjs_solo_uno(formulario);
 	if (rta==1) {
-		if (confirm("<?= _("¿Esta seguro que desea borrar esta actividad?");?>") ) {
+		if (confirm("<?= _("¿Está seguro que desea borrar esta actividad?");?>") ) {
 			$('#mod').val(que_val);
 			$(formulario).attr('action',"apps/actividades/controller/actividad_update.php");
 			$(formulario).submit(function() {
@@ -44,7 +44,7 @@ fnjs_buscar=function(){
 	<form id="modifica" name="modifica" action="">
 	<?= $oHash->getCamposHtml(); ?>
 	<table><tr><td class="derecha">
-		<input id="b_buscar" name="b_buscar" TYPE="button" VALUE="<?= _("realizar otra busqueda"); ?>" onclick="fnjs_buscar()" >
+		<input id="b_buscar" name="b_buscar" TYPE="button" VALUE="<?= _("realizar otra búsqueda"); ?>" onclick="fnjs_buscar()" >
 	</td></tr>
 	</table>
 	</form>
@@ -62,7 +62,7 @@ fnjs_buscar=function(){
 <?php
 if ($miRole != '9' && $miRole != '16') { //casa o centroSf
 ?>
-	<br><span class=link onclick="fnjs_update_div('#main','<?= web\Hash::link('apps/actividades/controller/actividad_ver.php?'.http_build_query(array('id_tipo_activ'=>$Qid_tipo_activ))) ?>')" ><?= _("Nueva actividad") ?></span>
+	<br><span class=link onclick="fnjs_update_div('#main','<?= web\Hash::link('apps/actividades/controller/actividad_ver.php?'.http_build_query(array('id_tipo_activ'=>$Qid_tipo_activ))) ?>')" ><?= _("nueva actividad") ?></span>
 <?php } ?>
 </div>
 </div>

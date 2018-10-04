@@ -315,7 +315,7 @@ class App Extends core\ClasePropiedades {
 	function getDatosNom() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nom'));
-		$oDatosCampo->setEtiqueta(_("nom"));
+		$oDatosCampo->setEtiqueta(_("nombre"));
 		$oDatosCampo->setTipo('texto');
 		$oDatosCampo->setArgument(30);
 		return $oDatosCampo;

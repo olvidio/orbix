@@ -167,7 +167,7 @@ fnjs_submit=function(formulario,mov){
 }
 </script>
 
-<h3><?= _("Personas en listas Madrid") ?></h3>
+<h3><?= _("personas en listas Madrid") ?></h3>
 <?php
 if (empty($mov)) {
 	echo sprintf(_("unidas automáticamente: %s"),$cont_sync);
@@ -200,7 +200,7 @@ if (empty($mov)) {
 <?php } ?>
 
 <?php if (!empty($a_lista_orbix)) { ?>
-<h3><?= _("Posibles Coincidencias") ?>:</h3>
+<h3><?= _("posibles coincidencias") ?>:</h3>
 <table>
 <?php
 foreach ($a_lista_orbix as $persona_orbix) {
@@ -212,14 +212,14 @@ foreach ($a_lista_orbix as $persona_orbix) {
 	echo "<td>".$persona_orbix['apellido1'].'<td>';
 	echo "<td>".$persona_orbix['apellido2'].'<td>';
 	echo "<td class='contenido'>".$persona_orbix['f_nacimiento'].'<td>';
-	echo "<td class='titulo'><span class=link onClick='fnjs_unir($id_orbix)'>" . _("Unir") . '</span><td>';
+	echo "<td class='titulo'><span class=link onClick='fnjs_unir($id_orbix)'>" . _("unir") . '</span><td>';
 	echo '</tr>';
 }
 ?>
 </table>
 <?php } ?>
 <?php if (!empty($a_lista_orbix_otradl)) { ?>
-<h3><?= _("Posibles Coincidencias en otras dl") ?>:</h3>
+<h3><?= _("posibles coincidencias en otras dl") ?>:</h3>
 <table>
 <?php
 foreach ($a_lista_orbix_otradl as $persona_orbix) {
@@ -231,7 +231,7 @@ foreach ($a_lista_orbix_otradl as $persona_orbix) {
 	echo "<td>".$persona_orbix['apellido1'].'<td>';
 	echo "<td>".$persona_orbix['apellido2'].'<td>';
 	echo "<td class='contenido'>".$persona_orbix['f_nacimiento'].'<td>';
-	echo "<td class='titulo'><span class=link onClick='fnjs_unir($id_orbix)'>" . _("Unir") . '</span><td>';
+	echo "<td class='titulo'><span class=link onClick='fnjs_unir($id_orbix)'>" . _("unir") . '</span><td>';
 	echo '</tr>';
 }
 ?>

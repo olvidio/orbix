@@ -351,7 +351,7 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 	function getDatosTipo_asignatura() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'tipo_asignatura'));
-		$oDatosCampo->setEtiqueta(_("tipo_asignatura"));
+		$oDatosCampo->setEtiqueta(_("tipo de asignatura"));
 		return $oDatosCampo;
 	}
 	/**
@@ -363,7 +363,7 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 	function getDatosTipo_breve() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'tipo_breve'));
-		$oDatosCampo->setEtiqueta(_("tipo_breve"));
+		$oDatosCampo->setEtiqueta(_("tipo breve"));
 		return $oDatosCampo;
 	}
 	/**

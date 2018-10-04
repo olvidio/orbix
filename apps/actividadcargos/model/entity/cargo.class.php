@@ -416,7 +416,7 @@ class Cargo Extends core\ClasePropiedades {
 	function getDatosOrden_cargo() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'orden_cargo'));
-		$oDatosCampo->setEtiqueta(_("orden_cargo"));
+		$oDatosCampo->setEtiqueta(_("orden cargo"));
 		return $oDatosCampo;
 	}
 	/**
@@ -452,7 +452,7 @@ class Cargo Extends core\ClasePropiedades {
 	function getDatosTipo_cargo() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'tipo_cargo'));
-		$oDatosCampo->setEtiqueta(_("tipo_cargo"));
+		$oDatosCampo->setEtiqueta(_("tipo de cargo"));
 		return $oDatosCampo;
 	}
 }

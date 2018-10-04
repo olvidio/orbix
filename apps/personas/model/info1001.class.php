@@ -8,7 +8,7 @@ use ubis\model\entity as ubis;
 class Info1001 extends core\datosInfo {
 
 	public function __construct() {
-		$this->setTxtTitulo(_("Telecomunicaciones de una persona"));
+		$this->setTxtTitulo(_("telecomunicaciones de una persona"));
 		$this->setTxtEliminar(_("¿Está seguro que desea eliminar esta teleco?"));
 		$this->setTxtBuscar();
 		$this->setTxtExplicacion();

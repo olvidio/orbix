@@ -7,7 +7,7 @@ class Info1017 extends core\datosInfo {
 
 	public function __construct() {
 		$this->setTxtTitulo(_("dossier de títulos de postgrado"));
-		$this->setTxtEliminar(_("¿Está seguro que desea eliminar este titulo?"));
+		$this->setTxtEliminar(_("¿Está seguro que desea eliminar este título?"));
 		$this->setTxtBuscar();
 		$this->setTxtExplicacion();
 		

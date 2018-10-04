@@ -89,7 +89,7 @@ fnjs_ver_documento=function(id_direccion){
 		success: function (rta) {
 				//alert ('respuesta: '+rta);
 				//rta_txt=rta.responseText;
-				if (rta=='no') { alert("<?= _("No existe ningún documento"); ?>"); } else { seguro=1; }
+				if (rta=='no') { alert("<?= _("no existe ningún documento"); ?>"); } else { seguro=1; }
 			},
 		complete: function() { 
 			if (seguro == 1) { 
@@ -125,10 +125,10 @@ fnjs_otro=function(n){
 </script>
 <?= $oPosicion->mostrar_left_slide(); ?>
 <?php if (!empty($menos)) { ?>
-<input type="button" onclick='fnjs_otro(1)' value="<?= _('anterior') ?>">
+<input type="button" onclick='fnjs_otro(1)' value="<?= _("anterior") ?>">
 <?php } ?>
 <?php if (!empty($mas)) { ?>
-<input type="button" onclick='fnjs_otro(2)' value="<?= _('siguiente') ?>">
+<input type="button" onclick='fnjs_otro(2)' value="<?= _("siguiente") ?>">
 <?php } ?>
 <form id='frm2' >
 <?= $oHash->getCamposHtml(); ?>
@@ -195,9 +195,9 @@ if (!empty($botones)) {
 	<input type=hidden name=sel value='dani'>
 	<input type=hidden id=que name=que value=''>
 	<table><tr>
-		<td class='link' onclick="fnjs_ver_documento(<?= $id_direccion_actual ?>)"><?= _('ver plano') ?></td>
-		<td class='link' onclick="fnjs_adjuntar('adjuntar',<?= $id_direccion_actual ?>)"><?= _('adjuntar plano') ?></td>
-		<td class='link' onclick="fnjs_adjuntar('eliminar',<?= $id_direccion_actual ?>)"><?= _('eliminar plano') ?></td>
+		<td class='link' onclick="fnjs_ver_documento(<?= $id_direccion_actual ?>)"><?= _("ver plano") ?></td>
+		<td class='link' onclick="fnjs_adjuntar('adjuntar',<?= $id_direccion_actual ?>)"><?= _("adjuntar plano") ?></td>
+		<td class='link' onclick="fnjs_adjuntar('eliminar',<?= $id_direccion_actual ?>)"><?= _("eliminar plano") ?></td>
 		</tr>
 	</table>
 	</form><br>

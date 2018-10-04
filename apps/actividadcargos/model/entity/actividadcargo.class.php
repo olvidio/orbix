@@ -433,7 +433,7 @@ class ActividadCargo Extends core\ClasePropiedades {
 	function getDatosPuede_agd() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'puede_agd'));
-		$oDatosCampo->setEtiqueta(_("puede_agd"));
+		$oDatosCampo->setEtiqueta(_("¿puede ser agd?"));
 		return $oDatosCampo;
 	}
 	/**
@@ -445,7 +445,7 @@ class ActividadCargo Extends core\ClasePropiedades {
 	function getDatosObserv() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'observ'));
-		$oDatosCampo->setEtiqueta(_("observ"));
+		$oDatosCampo->setEtiqueta(_("observaciones"));
 		return $oDatosCampo;
 	}
 }

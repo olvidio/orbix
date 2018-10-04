@@ -35,7 +35,7 @@ if (!empty($Qnew_ctr) AND !empty($Qf_ctr)){
 	$oPersonaDl->setId_ctr($id_new_ctr);
 	// ?? $oPersonaDl->setF_ctr($Qf_ctr);
 	if ($oPersonaDl->DBGuardar() === false) {
-		$error .= '<br>'._('Hay un error, no se ha guardado');
+		$error .= '<br>'._("hay un error, no se ha guardado");
 	}
 
   	//para el dossier de traslados
@@ -48,7 +48,7 @@ if (!empty($Qnew_ctr) AND !empty($Qf_ctr)){
 	$oTraslado->setId_ctr_destino($id_new_ctr);
 	$oTraslado->setCtr_destino($nom_new_ctr);
 	if ($oTraslado->DBGuardar() === false) {
-		$error .= '<br>'._('Hay un error, no se ha guardado');
+		$error .= '<br>'._("hay un error, no se ha guardado");
 	}
 }
 

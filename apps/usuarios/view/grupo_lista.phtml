@@ -13,7 +13,7 @@ fnjs_modificar=function(formulario){
 fnjs_eliminar=function(formulario){
 	rta=fnjs_solo_uno('#seleccionados');
 	if (rta==1) {
-		if (confirm("<?= _("¿Esta seguro que desea borrar este grupo?");?>") ) {
+		if (confirm("<?= _("¿Está seguro que desea borrar este grupo?");?>") ) {
 			var url='<?= core\ConfigGlobal::getWeb() ?>/apps/usuarios/controller/usuario_ajax.php';
 			$('#que').val('eliminar_grupo');
 			$('#seleccionados').submit(function() {

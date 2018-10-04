@@ -272,7 +272,7 @@ if (empty($sWhere)) {
 }
 
 if (empty($aWhere) && empty($aWhereD)) {
-	printf(_("Debe poner algún criterio de búsqueda"));
+	printf(_("debe poner algún criterio de búsqueda"));
 	die();
 }
 
@@ -363,7 +363,7 @@ if (is_array($cUbisTot) && count($cUbisTot) == 0) {
 	$pagina=Hash::link(ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_editar.php?'.http_build_query($a_link));
 	
 	if ($Qtipo=="tot" || $Qloc=="tot") {
-		echo _("No existe esta ficha.");
+		echo _("no existe esta ficha");
 		echo "<br>";
 		echo _("OJO!: para crear un centro/casa debe especificar el tipo de centro/casa. Para ello debe buscar a través de 'ver más opciones' definiendo el tipo y la localización distinto a 'todos'.");
 	} else {
@@ -395,10 +395,10 @@ $oPosicion->setParametros($aGoBack);
 $oPosicion->recordar();
 
 $a_botones=array(
-				array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(this.form)" )
+				array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(this.form)" )
 		);
 if ($_SESSION['oPerm']->have_perm("scl")) {
-	$a_botones[]=array( 'txt' => _('eliminar'), 'click' =>"fnjs_borrar(this.form)" );
+	$a_botones[]=array( 'txt' => _("eliminar"), 'click' =>"fnjs_borrar(this.form)" );
 }
 
 $a_cabeceras=array( array('name'=>ucfirst(_("nombre del centro")),'formatter'=>'clickFormatter'),

@@ -70,8 +70,8 @@ class Select1302 {
 		
 	private function getBotones() {
 		$a_botones=array(
-					array( 'txt' => _('modificar cargo'), 'click' =>"fnjs_mod_cargo(this.form)" ) ,
-					array( 'txt' => _('quitar cargo'), 'click' =>"fnjs_borrar_cargo(this.form)" ) 
+					array( 'txt' => _("modificar cargo"), 'click' =>"fnjs_mod_cargo(this.form)" ) ,
+					array( 'txt' => _("quitar cargo"), 'click' =>"fnjs_borrar_cargo(this.form)" ) 
 		);
 		return $a_botones;
 	}
@@ -79,8 +79,8 @@ class Select1302 {
 	private function getCabeceras() {
 		$a_cabeceras=array( _("cargo"),
 							array('name'=>_("actividad"), 'width'=>300),
-							_("puede ser agd?"),
-							_("observaciones.")
+							_("¿puede ser agd?"),
+							_("observaciones")
 					);
 		return $a_cabeceras;
 	}
@@ -117,7 +117,7 @@ class Select1302 {
 		$this->txt_eliminar = _("¿Está seguro que desea quitar este cargo a esta persona?");
 		if (($_SESSION['oPerm']->have_perm("des")) or ($_SESSION['oPerm']->have_perm("vcsd"))) {
 			$this->txt_eliminar .= "\\n";
-			$this->txt_eliminar .= _("Esto también borrará a esta persona de la lista de asistentes?");
+			$this->txt_eliminar .= _("esto también borrará a esta persona de la lista de asistentes");
 			$eliminar=2;
 		} else {
 			$eliminar=1;

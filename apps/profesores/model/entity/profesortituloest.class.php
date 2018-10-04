@@ -397,7 +397,7 @@ class ProfesorTituloEst Extends core\ClasePropiedades {
 	function getDatosTitulo() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'titulo'));
-		$oDatosCampo->setEtiqueta(_("titulo"));
+		$oDatosCampo->setEtiqueta(_("título"));
 		$oDatosCampo->setTipo('texto');
 		$oDatosCampo->setArgument(25);
 		return $oDatosCampo;
@@ -411,7 +411,7 @@ class ProfesorTituloEst Extends core\ClasePropiedades {
 	function getDatosCentro_dnt() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'centro_dnt'));
-		$oDatosCampo->setEtiqueta(_("centro_dnt"));
+		$oDatosCampo->setEtiqueta(_("centro docente"));
 		$oDatosCampo->setTipo('texto');
 		$oDatosCampo->setArgument(25);
 		return $oDatosCampo;
@@ -425,7 +425,7 @@ class ProfesorTituloEst Extends core\ClasePropiedades {
 	function getDatosEclesiastico() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'eclesiastico'));
-		$oDatosCampo->setEtiqueta(_("eclesiastico"));
+		$oDatosCampo->setEtiqueta(_("eclesiástico"));
 		$oDatosCampo->setTipo('check');
 		return $oDatosCampo;
 	}

@@ -142,11 +142,11 @@ $PHP_SELF = $_SERVER['PHP_SELF'];
 	<input type="hidden" name="idioma" value="<?= $idioma ?>" />
     <h2>Orbix</h2>
 	<h1><?= _("stgr y actividades") ?></h1>
-	<h1><?= _("Ubicación") ?>: <?= $DesplRegiones ?></h1>
+	<h1><?= ucfirst(_("ubicación")) ?>: <?= $DesplRegiones ?></h1>
     <input type="text" name="username" placeholder="<?= _("nombre de usuario")?>" required="" autofocus="" />
     <input type="password" name="password" placeholder="Password" required=""/>      
 	<br>
-    <input type="submit" value="<?= _("Iniciar sesión") ?>" />   
+    <input type="submit" value="<?= ucfirst(_("iniciar sesión")) ?>" />   
 	<br>
 </form>
 <div id="version">v 1.0</div>

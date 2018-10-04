@@ -203,13 +203,13 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
 		// IMPORTANT: Propietario del a plaza
 		$oAsistenteNew->setPropietario("$dl>$mi_dele");
 		if ($oAsistenteNew->DBGuardar() === false) {
-			$msg_err = _('Hay un error, no se ha guardado');
+			$msg_err = _("hay un error, no se ha guardado");
 			echo $msg_err;
 		}
 	}
 }
 
-$txt = sprintf(_("No se incorporán las peticiones si la persona ya tiene una actividad como propia en el periodo: %s - %s."),$inicurs,$fincurs);
+$txt = sprintf(_("no se incorporán las peticiones si la persona ya tiene una actividad como propia en el periodo: %s - %s."),$inicurs,$fincurs);
 if (!empty($msg_err)) { echo $msg_err; }
 ?>
 <script>

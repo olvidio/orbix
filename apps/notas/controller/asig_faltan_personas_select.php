@@ -105,8 +105,8 @@ $aGoBack = array (
 $oPosicion->setParametros($aGoBack);
 $oPosicion->recordar();
 
-$a_botones=array( array( 'txt' => _('modificar stgr'), 'click' =>"fnjs_modificar(\"#seleccionados\")" ) ,
-				array( 'txt' => _('ver tesera'), 'click' =>"fnjs_tesera(\"#seleccionados\")" ) 
+$a_botones=array( array( 'txt' => _("modificar stgr"), 'click' =>"fnjs_modificar(\"#seleccionados\")" ) ,
+				array( 'txt' => _("ver tessera"), 'click' =>"fnjs_tesera(\"#seleccionados\")" ) 
 				);
 
 $a_cabeceras=array( ucfirst(_("tipo")), array('name'=>_("nombre y apellidos"),'formatter'=>'clickFormatter'), ucfirst(_("centro")), ucfirst(_("stgr")));
@@ -139,7 +139,7 @@ foreach ($aId_nom as $id_nom=>$aAsignaturas) {
 }
 
 if (empty($titulo)) {
-	$titulo=sprintf(_("Lista de %s de %s a los que falta la asignatura %s (%s)"),$gente,$curso_txt,$nom_asignatura,$i);
+	$titulo=sprintf(_("lista de %s de %s a los que falta la asignatura %s (%s)"),$gente,$curso_txt,$nom_asignatura,$i);
 } else {
 	$titulo=urldecode($titulo);
 }

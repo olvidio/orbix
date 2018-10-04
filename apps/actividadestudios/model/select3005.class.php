@@ -57,9 +57,9 @@ class Select3005 {
 		$a_botones = array();
 		if ($this->permiso == 3) {
 			$a_botones=array(
-		            array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(this.form)" ) ,
-		            array( 'txt' => _('quitar asignatura'), 'click' =>"fnjs_borrar_asignatura(this.form)" ) ,
-		            array( 'txt' => _('actas'), 'click' =>"fnjs_actas(this.form)" ) 
+		            array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(this.form)" ) ,
+		            array( 'txt' => _("quitar asignatura"), 'click' =>"fnjs_borrar_asignatura(this.form)" ) ,
+		            array( 'txt' => _("actas"), 'click' =>"fnjs_actas(this.form)" ) 
 				);
 		}
 		return $a_botones;

@@ -9,7 +9,7 @@ fnjs_modificar=function(formulario){
 fnjs_eliminar=function(){
 	rta=fnjs_solo_uno('#seleccionados');
 	if (rta==1) {
-		if (confirm("<?= _("¿Esta seguro que desea borrar este rol?");?>") ) {
+		if (confirm("<?= _("¿Está seguro que desea borrar este rol?");?>") ) {
 			var url='<?= core\ConfigGlobal::getWeb() ?>/apps/usuarios/controller/usuario_ajax.php';
 			$('#que').val('eliminar_role');
 			$('#seleccionados').submit(function() {

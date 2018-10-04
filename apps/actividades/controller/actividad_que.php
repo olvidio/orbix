@@ -93,16 +93,16 @@ $oDesplFiltroLugar->setNombre('filtro_lugar');
 $oDesplFiltroLugar->setOpcion_sel($Qfiltro_lugar);
 
 $aOpciones =  array(
-					'tot_any' => _('todo el año'),
-					'trimestre_1'=>_('primer trimestre'),
-					'trimestre_2'=>_('segundo trimestre'),
-					'trimestre_3'=>_('tercer trimestre'),
-					'trimestre_4'=>_('cuarto trimestre'),
+					'tot_any' => _("todo el año"),
+					'trimestre_1'=>_("primer trimestre"),
+					'trimestre_2'=>_("segundo trimestre"),
+					'trimestre_3'=>_("tercer trimestre"),
+					'trimestre_4'=>_("cuarto trimestre"),
 					'separador'=>'---------',
-					'curso_ca'=>_('curso ca'),
-					'curso_crt'=>_('curso crt'),
+					'curso_ca'=>_("curso ca"),
+					'curso_crt'=>_("curso crt"),
 					'separador1'=>'---------',
-					'otro'=>_('otro')
+					'otro'=>_("otro")
 					);
 $oFormP = new web\PeriodoQue();
 $oFormP->setFormName('modifica');

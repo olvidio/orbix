@@ -549,7 +549,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	function getDatosDescripcion() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'descripcion'));
-		$oDatosCampo->setEtiqueta(_("descripcion"));
+		$oDatosCampo->setEtiqueta(_("descripción"));
 		return $oDatosCampo;
 	}
 	/**
@@ -609,7 +609,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	function getDatosPermiso_lectura() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'permiso_lectura'));
-		$oDatosCampo->setEtiqueta(_("permiso_lectura"));
+		$oDatosCampo->setEtiqueta(_("permiso de lectura"));
 		return $oDatosCampo;
 	}
 	/**
@@ -621,7 +621,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	function getDatosPermiso_escritura() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'permiso_escritura'));
-		$oDatosCampo->setEtiqueta(_("permiso_escritura"));
+		$oDatosCampo->setEtiqueta(_("permiso de escritura"));
 		return $oDatosCampo;
 	}
 	/**
@@ -633,7 +633,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	function getDatosDepende_modificar() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'depende_modificar'));
-		$oDatosCampo->setEtiqueta(_("depende_modificar"));
+		$oDatosCampo->setEtiqueta(_("depende modificar"));
 		return $oDatosCampo;
 	}
 	/**

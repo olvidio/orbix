@@ -331,7 +331,7 @@ class Repeticion Extends core\ClasePropiedades {
 	function getDatosRepeticion() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'repeticion'));
-		$oDatosCampo->setEtiqueta(_("repeticion"));
+		$oDatosCampo->setEtiqueta(_("repetición"));
 		$oDatosCampo->setTipo('texto');
 		$oDatosCampo->setArgument(30);
 		return $oDatosCampo;

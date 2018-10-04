@@ -389,7 +389,7 @@ class Casa Extends UbiGlobal {
 	function getDatosTipo_casa() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'tipo_casa'));
-		$oDatosCampo->setEtiqueta(_("tipo casa"));
+		$oDatosCampo->setEtiqueta(_("tipo de casa"));
 		return $oDatosCampo;
 	}
 	/**
@@ -413,7 +413,7 @@ class Casa Extends UbiGlobal {
 	function getDatosPlazas_min() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'plazas_min'));
-		$oDatosCampo->setEtiqueta(_("plazas_min"));
+		$oDatosCampo->setEtiqueta(_("plazas mínimo"));
 		return $oDatosCampo;
 	}
 	/**
@@ -449,7 +449,7 @@ class Casa Extends UbiGlobal {
 	function getDatosObserv() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'observ'));
-		$oDatosCampo->setEtiqueta(_("observ"));
+		$oDatosCampo->setEtiqueta(_("observaciones"));
 		return $oDatosCampo;
 	}
 }

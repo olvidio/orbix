@@ -73,12 +73,15 @@ function cambiar_idioma($idioma='') {
 		# Si no hemos encontrado ningún idioma que nos convenga, mostramos la web en el idioma por defecto
 		if (!isset($idioma)){$idioma = core\ConfigGlobal::$x_default_idioma;}  
 	}
+//	$idioma=  str_replace('UTF-8', 'utf8', $idioma);
 	$domain="orbix";
+//	echo "dir: ".core\ConfigGlobal::$dir_languages."<br>";
+//	echo "domain: $domain, id: $idioma<br>";
+	setlocale(LC_MESSAGES,$idioma);
+	putenv("LC_ALL=$idioma");
 	bindtextdomain($domain,core\ConfigGlobal::$dir_languages);
 	textdomain ($domain);
 	bind_textdomain_codeset($domain,'UTF-8');
-	putenv("LC_ALL=$idioma");
-	setlocale(LC_ALL,$idioma);
 }
 
 // APLICACIONES POSIBLES

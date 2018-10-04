@@ -457,7 +457,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	function getDatosTipo_ubi() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'tipo_ubi'));
-		$oDatosCampo->setEtiqueta(_("tipo_ubi"));
+		$oDatosCampo->setEtiqueta(_("tipo de ubi"));
 		return $oDatosCampo;
 	}
 	/**
@@ -469,7 +469,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	function getDatosNombre_ubi() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nombre_ubi'));
-		$oDatosCampo->setEtiqueta(_("nombre_ubi"));
+		$oDatosCampo->setEtiqueta(_("nombre ubi"));
 		return $oDatosCampo;
 	}
 	/**
@@ -493,7 +493,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	function getDatosPais() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'pais'));
-		$oDatosCampo->setEtiqueta(_("pais"));
+		$oDatosCampo->setEtiqueta(_("país"));
 		return $oDatosCampo;
 	}
 	/**
@@ -505,7 +505,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	function getDatosRegion() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'region'));
-		$oDatosCampo->setEtiqueta(_("region"));
+		$oDatosCampo->setEtiqueta(_("región"));
 		return $oDatosCampo;
 	}
 	/**
@@ -529,7 +529,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	function getDatosF_status() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_status'));
-		$oDatosCampo->setEtiqueta(_("f_status"));
+		$oDatosCampo->setEtiqueta(_("fecha status"));
 		return $oDatosCampo;
 	}
 	/**

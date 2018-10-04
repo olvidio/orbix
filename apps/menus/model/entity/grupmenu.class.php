@@ -303,7 +303,7 @@ class GrupMenu Extends core\ClasePropiedades {
 	function getDatosGrup_menu() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'grup_menu'));
-		$oDatosCampo->setEtiqueta(_("grup_menu"));
+		$oDatosCampo->setEtiqueta(_("grupmenu"));
 		$oDatosCampo->setTipo('texto');
 		$oDatosCampo->setArgument(30);
 		return $oDatosCampo;

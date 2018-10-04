@@ -35,7 +35,7 @@ foreach ($oMenuDbs as $oMenuDb) {
 	$array_orden = preg_split('/,/',$orden);
 	$indice = count($array_orden);
 	// para poder hcer click si he borrado el monbre
-	$menu = empty($menu)? '???'._('BORRADO').'???' : $menu;
+	$menu = empty($menu)? '???'.strtoupper(_("borrado")).'???' : $menu;
 	if ($indice == $indice_old) {
 			$txt .= "<li>$orden <span class='link' onclick=fnjs_ver_ficha('$id_menu')  >$menu</span> $txt_ok ($perm_menu)";
 	} elseif ($indice > $indice_old) {

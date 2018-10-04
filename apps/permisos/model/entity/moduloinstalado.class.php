@@ -332,7 +332,7 @@ class ModuloInstalado Extends core\ClasePropiedades {
 	function getDatosStatus() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'status'));
-		$oDatosCampo->setEtiqueta(_("Activo"));
+		$oDatosCampo->setEtiqueta(_("activo"));
 		$oDatosCampo->setTipo('check');
 		return $oDatosCampo;
 	}

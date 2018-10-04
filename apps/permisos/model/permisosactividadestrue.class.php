@@ -184,7 +184,7 @@ class PermisosActividadesTrue {
 						if ($id_fase == $id_fase_fin) $grabar = 0;
 					}
 				} else {
-					echo _('ERROR: la fase de permiso no está en el proceso.');
+					echo _("ERROR: la fase de permiso no está en el proceso.");
 				}
 			}
 		}

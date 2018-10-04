@@ -61,13 +61,10 @@ function dibujar_calendario ($dd,$cabecera,$inicio,$fin,$actividades,$mod,$nueva
 	$bgcolor = $colorColumnaUno;
 	//dias de la semana y meses
 	$semana=array(_("D"),_("L"),_("M"),_("X"),_("J"),_("V"),_("S"));
-	//$semana='["'._('D').'","'._('L').'","'._('M').'","'._('X').'","'._('J').'","'._('V').'","'._('S').'"]';
 	$mes=array(_("enero"),_("febrero"),_("marzo"),_("abril"),_("mayo"),_("junio"),_("julio"),
 				_("agosto"),_("septiembre"),_("octubre"),_("noviembre"),_("diciembre"));
-	//$mes='["'._('enero').'","'._('febrero').'","'._('marzo').'","'._('abril').'","'._('mayo').'","'._('junio').'","'._('julio').'","'.
-	//			_('agosto').'","'._('septiembre').'","'._('octubre').'","'._('noviembre').'","'._('diciembre').'"]';
 	$txt_nueva=_("click para crear una nueva actividad en esta casa");
-	$txt_aviso=_("esta fila es para que represente correctamente las divisiones de dia");
+	$txt_aviso=_("esta fila es para que represente correctamente las divisiones de día");
 
 	//por defecto:
 	$h_ini_0=0;

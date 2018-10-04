@@ -192,7 +192,7 @@ if (!empty($nf)) {
 	echo "<p>";
 	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>9999)));
 	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("click aquí") ."</span>";
-	printf (_("Para poner c1 y bienio finalizado a todos los de la lista, hacer %s. Esto pondrá la fecha de acta última."),$pag);
+	printf (_("para poner c1 y bienio finalizado a todos los de la lista, hacer %s. Esto pondrá la fecha de acta última."),$pag);
 	echo "</p>";
 }
 
@@ -225,7 +225,7 @@ if (!empty($nf)) {
 	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>9998)));
 	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("click aquí") ."</span>";
 	echo "<p>";
-	printf (_("Para poner r y cuadrienio finalizado a todos los de la lista, hacer %s. Esto pondrá la fecha de acta última."),$pag);
+	printf (_("para poner r y cuadrienio finalizado a todos los de la lista, hacer %s. Esto pondrá la fecha de acta última."),$pag);
 	echo "</p>";
 }
 
@@ -284,7 +284,7 @@ if (!empty($nf)) {
 	echo "<p>";
 	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>'c1')));
 	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("click aquí") ."</span>";
-	printf (_("Para poner c1 a todos los de la lista, hacer %s"),$pag);
+	printf (_("para poner c1 a todos los de la lista, hacer %s"),$pag);
 	echo "</p>";
 }
 
@@ -315,7 +315,7 @@ if (!empty($nf)) {
 	echo "</table>";
 	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>'c2')));
 	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("click aquí") ."</span>";
-	printf (_("Para poner c2 a todos los de la lista, hacer %s"),$pag);
+	printf (_("para poner c2 a todos los de la lista, hacer %s"),$pag);
 }
 
 /*7. Gente con asignaturas cursadas sin aprobar*/

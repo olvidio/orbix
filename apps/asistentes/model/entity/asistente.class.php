@@ -59,10 +59,10 @@ class Asistente Extends AsistentePub {
 				$oAsistente->DBGuardar();
 				break;
 			case 'in':
-				echo _("El asistente es de otra dl. Se debe modificar en la dl origen.");
+				echo _("el asistente es de otra dl. Se debe modificar en la dl origen.");
 				break;
 			default:
-				echo _("No se a que dl pertenece el asistente.");
+				echo _("no sé a que dl pertenece el asistente.");
 				echo "tabla: $id_tabla<br>";
 				break;
 		}
@@ -88,7 +88,7 @@ class Asistente Extends AsistentePub {
 				$oAsistente->DBEliminar();
 				break;
 			case 'in':
-				echo _("El asistenete es de otra dl. Se debe modificar en la dl origen.");
+				echo _("el asistenete es de otra dl. Se debe modificar en la dl origen.");
 				break;
 		}
 	}

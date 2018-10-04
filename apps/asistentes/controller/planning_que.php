@@ -27,9 +27,9 @@ $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miSfsv = core\ConfigGlobal::mi_sfsv();
 
 if (date('m')>9) {
-	$periodo_txt= _('(por defecto: periodo desde 1/10 hasta 31/5)'); 
+	$periodo_txt= _("(por defecto: periodo desde 1/10 hasta 31/5)"); 
 } else {
-	$periodo_txt= _('(por defecto: periodo desde 1/6 hasta 30/9)'); 
+	$periodo_txt= _("(por defecto: periodo desde 1/6 hasta 30/9)"); 
 }
 $Qtipo = (string) \filter_input(INPUT_POST, 'tipo');
 $Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
@@ -65,17 +65,17 @@ $a_camposHidden2 = array(
 $oHash2->setArraycamposHidden($a_camposHidden2);
 
 $aOpciones =  array(
-					'tot_any' => _('todo el año'),
-					'trimestre_1'=>_('primer trimestre'),
-					'trimestre_2'=>_('segundo trimestre'),
-					'trimestre_3'=>_('tercer trimestre'),
-					'trimestre_4'=>_('cuarto trimestre'),
+					'tot_any' => _("todo el año"),
+					'trimestre_1'=>_("primer trimestre"),
+					'trimestre_2'=>_("segundo trimestre"),
+					'trimestre_3'=>_("tercer trimestre"),
+					'trimestre_4'=>_("cuarto trimestre"),
 					'separador'=>'---------',
-					'otro'=>_('otro')
+					'otro'=>_("otro")
 					);
 $oFormP = new web\PeriodoQue();
 $oFormP->setFormName('que');
-$oFormP->setTitulo(core\strtoupper_dlb(_('periodo del planning actividades')));
+$oFormP->setTitulo(core\strtoupper_dlb(_("periodo del planning actividades")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplAnysOpcion_sel(date('Y'));
 ?>
@@ -83,7 +83,7 @@ $oFormP->setDesplAnysOpcion_sel(date('Y'));
 fnjs_ver_planning = function(formulario,n) {
 	periodo = $('#periodo').val();
 	if (!periodo) {
-		alert('<?= _("Falta definir un periodo") ?>');
+		alert('<?= _("falta definir un periodo") ?>');
 	} else {
 		$('#modelo').val(n);
 		fnjs_enviar_formulario(formulario);
@@ -117,7 +117,7 @@ switch ($Qtipo) {
 	break;
 	case 'planning_cdc':
 		$oForm = new web\CasasQue();
-		$oForm->setTitulo(core\strtoupper_dlb(_('búsqueda de casas cuyo planning interesa')));
+		$oForm->setTitulo(core\strtoupper_dlb(_("búsqueda de casas cuyo planning interesa")));
 		// miro que rol tengo. Si soy casa, sólo veo la mía
 		$miRole=$oMiUsuario->getId_role();
 		if ($miRole == 9) { //casa

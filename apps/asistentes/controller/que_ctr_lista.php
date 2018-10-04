@@ -35,7 +35,7 @@ $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 switch ($Qlista) {
 	case "profesion" :
 		$tituloGros=ucfirst(_("listado de profesiones por centros"));
-		$titulo=ucfirst(_("buscar en uno ó varios centros"));
+		$titulo=ucfirst(_("buscar en uno o varios centros"));
 		$nomUbi=ucfirst(_("nombre del centro"));
 		$action="programas/sm-agd/lista_profesion.php";
 		$a_camposHidden = array(
@@ -45,7 +45,7 @@ switch ($Qlista) {
 	case "ctrex" :
 	case "list_activ" :
 		$titulo=ucfirst(_("actividades de personas por centros de la delegación"));
-		$tituloGros=ucfirst(_("qué centro interesa?"));
+		$tituloGros=ucfirst(_("¿qué centro interesa?"));
 		$nomUbi=ucfirst(_("nombre del centro"));
 		$action="apps/asistentes/controller/lista_activ_ctr.php";
 		
@@ -58,7 +58,7 @@ switch ($Qlista) {
 		break;
 	case "list_est" :
 		$titulo=ucfirst(_("estudios en actividades de personas por centros de la delegación"));
-		$tituloGros=ucfirst(_("qué centro interesa?"));
+		$tituloGros=ucfirst(_("¿qué centro interesa?"));
 		$nomUbi=ucfirst(_("nombre del centro"));
 		$action="apps/asistentes/controller/lista_est_ctr.php";
 		$a_camposHidden = array(
@@ -118,15 +118,15 @@ $oHash->setArraycamposHidden($a_camposHidden);
 $oFormP = array();
 if ($Qlista=="list_activ" || $Qlista=="list_est") {
 	$aOpciones =  array(
-						'curso_ca'=>_('curso ca'),
-						'curso_crt'=>_('curso crt'),
-						'tot_any' => _('todo el año'),
+						'curso_ca'=>_("curso ca"),
+						'curso_crt'=>_("curso crt"),
+						'tot_any' => _("todo el año"),
 						'separador'=>'---------',
-						'otro'=>_('otro')
+						'otro'=>_("otro")
 						);
 	$oFormP = new web\PeriodoQue();
 	$oFormP->setFormName('modifica');
-	$oFormP->setTitulo(core\strtoupper_dlb(_('período de inicio o finalización de las actividades')));
+	$oFormP->setTitulo(core\strtoupper_dlb(_("periodo de inicio o finalización de las actividades")));
 	$oFormP->setPosiblesPeriodos($aOpciones);
 	switch ($Qsactividad) {
 		case 'ca':

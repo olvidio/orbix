@@ -38,7 +38,7 @@ class DateTimeLocal Extends \DateTime {
 	}
     public function format($format) {
         $english = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
-        $local = array(_('Lunes'), _('Martes'), _('Miércoles'), _('Jueves'), _('Viernes'), _('Sábado'), _('Domingo'));
+        $local = array(_("Lunes"), _("Martes"), _("Miércoles"), _("Jueves"), _("Viernes"), _("Sábado"), _("Domingo"));
         return str_replace($english, $local, $this->oData->format($format));
     }
     public function formatRoman() {

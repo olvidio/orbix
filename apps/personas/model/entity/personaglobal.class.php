@@ -981,7 +981,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	function getDatosNom() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nom'));
-		$oDatosCampo->setEtiqueta(_("nom"));
+		$oDatosCampo->setEtiqueta(_("nombre"));
 		return $oDatosCampo;
 	}
 	/**
@@ -1065,7 +1065,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	function getDatosSituacion() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'situacion'));
-		$oDatosCampo->setEtiqueta(_("situacion"));
+		$oDatosCampo->setEtiqueta(_("situación"));
 		return $oDatosCampo;
 	}
 	/**
@@ -1077,7 +1077,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	function getDatosF_situacion() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_situacion'));
-		$oDatosCampo->setEtiqueta(_("f_situacion"));
+		$oDatosCampo->setEtiqueta(_("fecha situación"));
 		return $oDatosCampo;
 	}
 	/**
@@ -1113,7 +1113,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	function getDatosF_inc() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_inc'));
-		$oDatosCampo->setEtiqueta(_("f_inc"));
+		$oDatosCampo->setEtiqueta(_("fecha incorporación"));
 		return $oDatosCampo;
 	}
 	/**
@@ -1137,7 +1137,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	function getDatosProfesion() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'profesion'));
-		$oDatosCampo->setEtiqueta(_("profesion"));
+		$oDatosCampo->setEtiqueta(_("profesión"));
 		return $oDatosCampo;
 	}
 	/**
@@ -1161,7 +1161,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	function getDatosObserv() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'observ'));
-		$oDatosCampo->setEtiqueta(_("observ"));
+		$oDatosCampo->setEtiqueta(_("observaciones"));
 		return $oDatosCampo;
 	}
 	/**
@@ -1173,7 +1173,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	function getDatosLugar_nacimiento() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'lugar_nacimiento'));
-		$oDatosCampo->setEtiqueta(_("lugar nacimiento"));
+		$oDatosCampo->setEtiqueta(_("lugar de nacimiento"));
 		return $oDatosCampo;
 	}
 }

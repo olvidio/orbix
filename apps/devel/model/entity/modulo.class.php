@@ -373,7 +373,7 @@ class Modulo Extends core\ClasePropiedades {
 	function getDatosNom() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nom'));
-		$oDatosCampo->setEtiqueta(_("nom"));
+		$oDatosCampo->setEtiqueta(_("nombre"));
 		return $oDatosCampo;
 	}
 	/**
@@ -385,7 +385,7 @@ class Modulo Extends core\ClasePropiedades {
 	function getDatosDescripcion() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'descripcion'));
-		$oDatosCampo->setEtiqueta(_("descripcion"));
+		$oDatosCampo->setEtiqueta(_("descripción"));
 		return $oDatosCampo;
 	}
 	/**
@@ -397,7 +397,7 @@ class Modulo Extends core\ClasePropiedades {
 	function getDatosMods_req() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'mods_req'));
-		$oDatosCampo->setEtiqueta(_("mods_req"));
+		$oDatosCampo->setEtiqueta(_("mods requeridos"));
 		return $oDatosCampo;
 	}
 	/**
@@ -409,7 +409,7 @@ class Modulo Extends core\ClasePropiedades {
 	function getDatosApps_req() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'apps_req'));
-		$oDatosCampo->setEtiqueta(_("apps_req"));
+		$oDatosCampo->setEtiqueta(_("apps requeridas"));
 		return $oDatosCampo;
 	}
 }

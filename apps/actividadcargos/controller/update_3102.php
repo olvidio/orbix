@@ -76,7 +76,7 @@ switch ($Qmod) {
 		$Qid_nom = $oActividadCargo->getId_nom();
 
 		if (($oActividadCargo->DBEliminar()) === false) {
-			$msg_err = _('Hay un error, no se ha eliminado');
+			$msg_err = _("hay un error, no se ha eliminado");
 			exit ($msg_err);
 		}
 	 	
@@ -123,7 +123,7 @@ switch ($Qmod) {
 			$oActividadAsistente=new asistentes\Asistente(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom));
 			$oActividadAsistente->setId_tabla($id_tabla);
 			if ($oActividadAsistente->DBEliminar() === false) {
-				$msg_err = _('Hay un error, no se ha eliminado');
+				$msg_err = _("hay un error, no se ha eliminado");
 			}
 			$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$Qid_nom,'id_tipo_dossier'=>1301));
 			$oDossier->cerrar();
@@ -144,9 +144,9 @@ switch ($Qmod) {
 			// intentar recuperar el error
 			$error = end($_SESSION['errores']);
 			if (strstr($error, 'duplicate key')) {
-				$msg_err = _("Ya existe este cargo para esta actividad");
+				$msg_err = _("ya existe este cargo para esta actividad");
 			} else {
-				$msg_err = _('Hay un error, no se ha guardado');
+				$msg_err = _("hay un error, no se ha guardado");
 			}
 			exit ($msg_err);
 		}
@@ -191,7 +191,7 @@ switch ($Qmod) {
 			$oActividadAsistente->setPropio('t'); // por defecto lo pongo como propio
 			$oActividadAsistente->setFalta('f');
 			if ($oActividadAsistente->DBGuardar() === false) {
-				$msg_err = _('Hay un error, no se ha guardado');
+				$msg_err = _("hay un error, no se ha guardado");
 			}
 			// si no está abierto, hay que abrir el dossier para esta persona
 			$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$Qid_nom,'id_tipo_dossier'=>1301));
@@ -217,9 +217,9 @@ switch ($Qmod) {
 			// intentar recuperar el error
 			$error = end($_SESSION['errores']);
 			if (strstr($error, 'duplicate key')) {
-				$msg_err = _("Ya existe este cargo para esta actividad");
+				$msg_err = _("ya existe este cargo para esta actividad");
 			} else {
-				$msg_err = _('Hay un error, no se ha guardado');
+				$msg_err = _("hay un error, no se ha guardado");
 			}
 		}
 		// Modifico la asistencia:
@@ -229,7 +229,7 @@ switch ($Qmod) {
 				$oActividadAsistente->setPropio('t'); // por defecto lo pongo como propio
 				$oActividadAsistente->setFalta('f');
 				if ($oActividadAsistente->DBGuardar() === false) {
-					$msg_err = _('Hay un error, no se ha guardado');
+					$msg_err = _("hay un error, no se ha guardado");
 				}
 				// si no está abierto, hay que abrir el dossier para esta persona
 				$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$Qid_nom,'id_tipo_dossier'=>1301));
@@ -243,7 +243,7 @@ switch ($Qmod) {
 		} else {
 			if (isset($_POST['asis']) && empty($Qasis)) { // lo borro. OJO hay que mirar el $_POST para isset
 				if ($oActividadAsistente->DBEliminar() === false) {
-					$msg_err = _('Hay un error, no se ha eliminado');
+					$msg_err = _("hay un error, no se ha eliminado");
 				}
 				// si no está abierto, hay que abrir el dossier para esta persona
 				$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$Qid_nom,'id_tipo_dossier'=>1301));

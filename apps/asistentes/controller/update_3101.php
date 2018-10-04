@@ -82,7 +82,7 @@ function eliminar ($id_activ,$id_nom) {
 	$oAsistente->setPrimary_key(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
 	$oAsistente->DBCarregar();
 	if ($oAsistente->DBEliminar() === false) {
-		$msg_err = _('Hay un error, no se ha eliminado');
+		$msg_err = _("hay un error, no se ha eliminado");
 	}
 
 	// hay que cerrar el dossier para esta persona/actividad/ubi, si no tiene más:
@@ -94,7 +94,7 @@ function eliminar ($id_activ,$id_nom) {
 	$oGestorMatricula=new actividadestudios\GestorMatricula();
 	foreach ($oGestorMatricula->getMatriculas(array('id_activ'=>$id_activ,'id_nom'=>$id_nom)) as $oMatricula) {
 		if ($oMatricula->DBEliminar() === false) {
-			$msg_err = _('Hay un error, no se ha eliminado');
+			$msg_err = _("hay un error, no se ha eliminado");
 		}
 	}
 	return $msg_err;
@@ -121,7 +121,7 @@ function plaza($id_nom){
 	$oAsistente->DBCarregar();
 	isset($plaza)? $oAsistente->setPlaza($plaza) : $oAsistente->setPlaza();
 	if ($oAsistente->DBGuardar() === false) {
-		$msg_err = _('Hay un error, no se ha guardado');
+		$msg_err = _("hay un error, no se ha guardado");
 	}
 	return $msg_err;
 }
@@ -171,7 +171,7 @@ function editar($id_activ,$id_nom){
 	// Si no es epecificado, al poner la plaza ya se pone al propietario
 	!empty($Qpropietario)? $oAsistente->setPropietario($Qpropietario) : FALSE;
 	if ($oAsistente->DBGuardar() === false) {
-		$msg_err = _('Hay un error, no se ha guardado');
+		$msg_err = _("hay un error, no se ha guardado");
 	}
 	return $msg_err;
 

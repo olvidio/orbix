@@ -88,7 +88,7 @@ fnjs_guardar=function(formulario){
 		// situacion = 2 es para cursada, 11 exento
 		//if (!acta && situacion != 2 && situacion != 11) {
 		if (!acta && !(jQuery.inArray(situacion, arr_no_superadas) !== -1)) { 
-			alert("Debe llenar el campo del acta");
+			alert("debe llenar el campo del acta");
 			$('#acta').focus();
 			err=1;
 		}
@@ -161,7 +161,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
 <td colspan=1><input type="text" id="acta" name="acta" value="<?= $acta ?>" size="20">
 </td>
 <td colspan=2>
-("?": <?= _("significa inventado") ?>   <?= _("Formato") ?>: "dlx nn/aa" o "dlx" o "region" o "?"</td>
+("?": <?= _("significa inventado") ?>   <?= _("formato") ?>: "dlx nn/aa" o "dlx" o "region" o "?"</td>
 </tr>
 
 <tr><td><?= _("fecha acta") ?></td>
@@ -178,7 +178,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
 	</td>
 </tr>
 
-<tr><td><?= _("epoca") ?></td>
+<tr><td><?= _("época") ?></td>
 	<td colspan="2"><input type="radio" id="epoca3" name="epoca" value="<?= notas\model\entity\PersonaNota::EPOCA_OTRO ?>" <?= $chk_epoca_otro ?> >
 		<?= _("sin especificar") ?>
 	<input type="radio" id="epoca1" name="epoca" value="<?= notas\model\entity\PersonaNota::EPOCA_CA ?>" <?= $chk_epoca_ca ?> >

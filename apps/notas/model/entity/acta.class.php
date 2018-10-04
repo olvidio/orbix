@@ -561,7 +561,7 @@ class Acta Extends core\ClasePropiedades {
 	function getDatosF_acta() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_acta'));
-		$oDatosCampo->setEtiqueta(_("f_acta"));
+		$oDatosCampo->setEtiqueta(_("fecha acta"));
 		return $oDatosCampo;
 	}
 	/**
@@ -585,7 +585,7 @@ class Acta Extends core\ClasePropiedades {
 	function getDatosPagina() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'pagina'));
-		$oDatosCampo->setEtiqueta(_("pagina"));
+		$oDatosCampo->setEtiqueta(_("página"));
 		return $oDatosCampo;
 	}
 	/**
@@ -597,7 +597,7 @@ class Acta Extends core\ClasePropiedades {
 	function getDatosLinea() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'linea'));
-		$oDatosCampo->setEtiqueta(_("linea"));
+		$oDatosCampo->setEtiqueta(_("línea"));
 		return $oDatosCampo;
 	}
 	/**
@@ -621,7 +621,7 @@ class Acta Extends core\ClasePropiedades {
 	function getDatosObserv() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'observ'));
-		$oDatosCampo->setEtiqueta(_("observ"));
+		$oDatosCampo->setEtiqueta(_("observaciones"));
 		return $oDatosCampo;
 	}
 }

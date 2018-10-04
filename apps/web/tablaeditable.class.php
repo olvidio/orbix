@@ -189,7 +189,7 @@ class TablaEditable {
 		$chk="";
 		$b=0;
 		if (empty($a_valores)) {
-			return	'<br \>'._("No hay ninguna fila");
+			return	'<br \>'._("no hay ninguna fila");
 		}
 		if (!empty($a_botones)) {
 			if ($a_botones=="ninguno") {
@@ -715,9 +715,9 @@ class TablaEditable {
 		$tt.="<div id=\"GridContainer_".$id_tabla."\"  style=\"width:{$grid_width}px; height:auto;\" >
 		<div class=\"grid-header\">
 		  <span style=\"width:90%; display: inline-block;\">$botones</span>
-		  <span style=\"float:right\" class=\"ui-icon ui-icon-disk\" title=\""._('guardar selección de columnas')."\"
+		  <span style=\"float:right\" class=\"ui-icon ui-icon-disk\" title=\""._("guardar selección de columnas")."\"
 				onclick=\"fnjs_def_tabla('".$id_tabla."')\"></span>
-		  <span style=\"float:right\" class=\"ui-icon ui-icon-search\" title=\""._('ver/ocultar panel de busqueda')."\"
+		  <span style=\"float:right\" class=\"ui-icon ui-icon-search\" title=\""._("ver/ocultar panel de búsqueda")."\"
 				onclick=\"toggleFilterRow_$id_tabla()\"></span>
 		</div>
 		<div id=\"grid_$id_tabla\"  style=\"width:{$grid_width}px;\"></div>
@@ -726,7 +726,7 @@ class TablaEditable {
 		
 		$tt.="
 		<div id=\"inlineFilterPanel_".$id_tabla."\" style=\"display:none;background:#dddddd;padding:3px;color:black;\">
-		  "._('Buscar en todas las columnas')." <input type=\"text\" id=\"txtSearch_".$id_tabla."\">
+		  "._("Buscar en todas las columnas")." <input type=\"text\" id=\"txtSearch_".$id_tabla."\">
 		</div>
 		";
 		

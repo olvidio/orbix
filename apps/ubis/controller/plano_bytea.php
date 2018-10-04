@@ -78,7 +78,7 @@ switch ($Qact) {
 		$plano_doc = $aDatosPlano['plano_doc'];
 
 		if (empty($plano_doc)) {
-			exit( _("No existe un plano."));
+			exit( _("no existe un plano"));
 		}
 
 		$nom_ext=$plano_nom.".".$plano_extension;
@@ -148,7 +148,7 @@ switch ($Qact) {
 						//alert ('respuesta: '+rta);
 						//rta_txt=rta.responseText;
 						if (rta=='si') { 
-							seguro=confirm("<?= _("Ya existe un escrito. ¿Desea reemplazarlo?"); ?>");
+							seguro=confirm("<?= _("ya existe un escrito. ¿Desea reemplazarlo?"); ?>");
 						} else {
 							seguro=1; 
 						}

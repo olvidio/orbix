@@ -48,7 +48,7 @@ function fnjs_solo_uno_grid(formulario) {
 		alert ("<?php printf (_("Sólo puede seleccionar un elemento. Ha selecionado %s."),'"+s+"'); ?>");
 	}
 	if (s==0) {
-		alert ("<?php printf (_("No ha seleccionado ninguna fila. Debe hacer click en algún chekbox de la izquierda. ")); ?>");
+		alert ("<?php printf (_("No ha seleccionado ninguna fila. debe hacer click en algún chekbox de la izquierda. ")); ?>");
 	}
 	return s;
 }
@@ -63,7 +63,7 @@ function fnjs_solo_uno(formulario, multiple = false) {
 		alert ("<?php printf (_("Sólo puede seleccionar un elemento. Ha selecionado %s."),'"+s+"'); ?>");
 	}
 	if (s==0) {
-		alert ("<?php printf (_("No ha seleccionado ninguna fila. Debe hacer click en algún chekbox de la izquierda. ")); ?>");
+		alert ("<?php printf (_("No ha seleccionado ninguna fila. debe hacer click en algún chekbox de la izquierda. ")); ?>");
 	}
 	return s;
 }

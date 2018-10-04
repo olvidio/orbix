@@ -8,7 +8,7 @@ fnjs_modificar=function(formulario){
 }
 fnjs_borrar=function(formulario){
 	var seguro;
-	seguro=confirm("<?= _("¿Está Seguro que desea borrar este ubi?");?>");
+	seguro=confirm("<?= _("¿Está seguro que desea borrar este ubi?");?>");
 	if (seguro) {
 		$(formulario).submit(function() {
 			$.ajax({

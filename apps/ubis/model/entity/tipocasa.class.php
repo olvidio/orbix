@@ -265,7 +265,7 @@ class TipoCasa Extends core\ClasePropiedades {
 	function getDatosTipo_casa() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'tipo_casa'));
-		$oDatosCampo->setEtiqueta(_("tipo casa"));
+		$oDatosCampo->setEtiqueta(_("tipo de casa"));
 		$oDatosCampo->setTipo('texto');
 		$oDatosCampo->setArgument(6);
 		return $oDatosCampo;

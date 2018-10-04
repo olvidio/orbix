@@ -31,7 +31,7 @@ $oPosicion->recordar();
 
 // sólo las actividades de estudios:
 
-//generamos el período de la búsqueda de actividades
+//generamos el periodo de la búsqueda de actividades
 //en función de las condiciones que tengamos:
 $hoy = date('d/m/Y');
 

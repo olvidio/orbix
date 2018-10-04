@@ -195,7 +195,7 @@ class DBEsquema {
 		$dump_nou = preg_replace($pattern, $replacement, $dump_nou);
 
 		$d = file_put_contents($this->getFileNew(), $dump_nou);
-		if ($d === false) printf(_("Error al escribir el fichero"));
+		if ($d === false) printf(_("error al escribir el fichero"));
 	}
 
 	public function leer() {

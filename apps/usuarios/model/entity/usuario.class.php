@@ -471,7 +471,7 @@ class Usuario Extends core\ClasePropiedades {
 	function getDatosNom_usuario() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nom_usuario'));
-		$oDatosCampo->setEtiqueta(_("nom_usuario"));
+		$oDatosCampo->setEtiqueta(_("nombre de usuario"));
 		return $oDatosCampo;
 	}
 	/**

@@ -35,7 +35,7 @@ if (!is_object($oPersona)) {
 }
 
 if (get_class($oPersona) == 'personas\model\entity\PersonaEx') {
-	exit(_("Con las personas de paso no tiene sentido."));
+	exit(_("con las personas de paso no tiene sentido."));
 }
 
 $gesCentroDl = new ubis\GestorCentroDl();

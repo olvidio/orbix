@@ -82,12 +82,12 @@ if (strstr($Qobj_pau,'Dl')) {
 	}
 }
 
-$tit_txt=_("Telecomunicaciones de un centro o casa");
+$tit_txt=_("telecomunicaciones de un centro o casa");
 $ficha="ficha";
 
 if ($botones == 1) {
-	$a_botones=array( array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(\"#seleccionados\")" ) ,
-				array( 'txt' => _('eliminar'), 'click' =>"fnjs_eliminar(\"#seleccionados\")" ) 
+	$a_botones=array( array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(\"#seleccionados\")" ) ,
+				array( 'txt' => _("eliminar"), 'click' =>"fnjs_eliminar(\"#seleccionados\")" ) 
 				);
 } else {
 	$a_botones = array();
@@ -121,7 +121,7 @@ foreach ($Coleccion as $oFila) {
 				$a_valores[$c][$v]=$var;	
 				break;
 			case "check":
-				if ($valor_camp=="t") { $a_valores[$c][$v]= _("si"); } else { $a_valores[$c][$v] = _("no"); }
+				if ($valor_camp=="t") { $a_valores[$c][$v]= _("sí"); } else { $a_valores[$c][$v] = _("no"); }
 				break;
 			default:
 				$a_valores[$c][$v]=$valor_camp;

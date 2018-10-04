@@ -19,7 +19,7 @@ $oPersona = new $obj($Qid_nom);
 $oPersona->DBCarregar();
 $oPersona->setStgr($Qstgr);
 if ($oPersona->DBGuardar() === false) {
-	echo _('Hay un error, no se ha guardado');
+	echo _("hay un error, no se ha guardado");
 }
 
 echo $oPosicion->go_atras(1);

@@ -45,7 +45,7 @@ switch ($tipo_persona) {
 }
 
 if (empty($id_tipo)) {
-	exit(_("No tiene permisos"));
+	exit(_("no tiene permisos"));
 }
 
 //Orbix
@@ -163,11 +163,11 @@ $oHash1->setUrl($url_sincro_ajax);
 $oHash1->setCamposForm('que!dl!tipo_persona');
 $h1 = $oHash1->linkSinVal();
 
-$explicacion_txt = _("En situación normal bastaría hacer click en 'ejecutar' del punto 1.");
+$explicacion_txt = _("en situación normal bastaría hacer click en 'ejecutar' del punto 1.");
 $explicacion_txt .= "<br>";
-$explicacion_txt .= _("El resto de puntos deberían tener valor 0. En situaciones especiales pueden tener otro valor, pero deben ser casos controlados.");
+$explicacion_txt .= _("el resto de puntos deberían tener valor 0. En situaciones especiales pueden tener otro valor, pero deben ser casos controlados.");
 $explicacion_txt .= "<br>";
-$explicacion_txt .= _("Al efectuar alguna acción dentro de las listas, las personas cambian de situación (no se arregla directamente). Es posible que se tengan que hacer varias pasadas antes de tener a todos en el punto 1");
+$explicacion_txt .= _("al efectuar alguna acción dentro de las listas, las personas cambian de situación (no se arregla directamente). Es posible que se tengan que hacer varias pasadas antes de tener a todos en el punto 1");
 
 ?>
 <script>
@@ -191,40 +191,40 @@ fnjs_sincronizar=function(){
 </p>
 <br>
 <table>
-	<tr><th colspan="4"><?= _("Personas en listas")?></th>
+	<tr><th colspan="4"><?= _("personas en listas")?></th>
 	<tr><td>1.</td>
-		<td><?= _("Personas a sincronizar") ?></td>
+		<td><?= _("personas a sincronizar") ?></td>
 		<td><?= $p1_unidas_dl ?></td>
 		<td><span class=link onclick="fnjs_sincronizar()"><?= _("ejecutar")?></span></td>
 	</tr>
 	<tr><td>2.</td>
-		<td> <?= _("Posiblemente estén en otra dl")?></td>
+		<td> <?= _("posiblemente estén en otra dl")?></td>
 		<td><?= $p2_unidas_otradl ?></td>
 		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_2 ?>')"><?=_("ver")?></span></td>
 	</tr>
 	<tr><td>3.</td>
-		<td><?= _("Personas en listas desaparecidas en orbix") ?></td>
+		<td><?= _("personas en listas desaparecidas en orbix") ?></td>
 		<td><?= $p3_unidas_desaparecidas ?></td>
 		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_3 ?>')"><?=_("ver")?></span></td>
 	</tr>
 	<tr><td>4.</td>
-		<td><?= _("Personas no estan unidas a orbix") ?></td>
+		<td><?= _("personas no estan unidas a orbix") ?></td>
 		<td><?= $p456_listas_no_unidas ?></td>
 		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_456 ?>')"><?=_("ver")?></span></td>
 	</tr>
-	<tr><th colspan="4"><?= _("Personas en Orbix")?></th>
+	<tr><th colspan="4"><?= _("personas en orbix")?></th>
 	<tr><td>7.</td>
-		<td><?= _("Personas en orbix que deberían trasladarse a otra dl") ?></td>
+		<td><?= _("personas en orbix que deberían trasladarse a otra dl") ?></td>
 		<td><?= $p7_orbix_unidas_otra_dl ?></td>
 		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_7 ?>')"><?=_("ver")?></span></td>
 	</tr>
 	<tr><td>8.</td>
-		<td><?= _("Personas en orbix con correspondencia en listas y desaparecidos de listas") ?></td>
+		<td><?= _("personas en orbix con correspondencia en listas y desaparecidos de listas") ?></td>
 		<td><?= $p8_orbix_unidas_desaparecidas ?></td>
 		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_8 ?>')"><?=_("ver")?></span></td>
 	</tr>
 	<tr><td>9.</td>
-		<td><?= _("Personas en orbix sin correspondencia en listas") ?></td>
+		<td><?= _("personas en orbix sin correspondencia en listas") ?></td>
 		<td><?= $p910_orbix_no_unidas ?></td>
 		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_910 ?>')"><?=_("ver")?></span></td>
 </table>

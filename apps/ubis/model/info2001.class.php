@@ -8,7 +8,7 @@ use web; // necesario para los deplegables de 'depende'
 class Info2001 extends core\datosInfo {
 
 	public function __construct() {
-		$this->setTxtTitulo(_("Telecomunicaciones de un centro o casa"));
+		$this->setTxtTitulo(_("telecomunicaciones de un centro o casa"));
 		$this->setTxtEliminar(_("¿Está seguro que desea eliminar esta teleco?"));
 		$this->setTxtBuscar();
 		$this->setTxtExplicacion();

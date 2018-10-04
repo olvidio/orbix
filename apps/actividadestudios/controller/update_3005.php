@@ -39,7 +39,7 @@ switch ($Qmod) {
 			$oActividadAsignatura->setId_activ($Qid_activ);
 			$oActividadAsignatura->setId_asignatura($Qid_asignatura);
 			if ($oActividadAsignatura->DBEliminar() === false) {
-				$msg_err = _("Hay un error, no se ha borrado.");
+				$msg_err = _("hay un error, no se ha borrado");
 			}
 			/*
 			// hay que cerrar el dossier para esta actividad, si no tiene más personas:
@@ -53,7 +53,7 @@ switch ($Qmod) {
 			$cMatriculas = $GesMatriculas ->getMatriculas(array('id_activ'=>$id_activ,'id_asignatura'=>$id_asignatura));
 			foreach ($cMatriculas as $oMatricula) {
 				if ($oMatricula->DBElliminar() === false) {
-					$msg_err = _("Hay un error, no se ha borrado.");
+					$msg_err = _("hay un error, no se ha borrado.");
 				}
 			}
 			*/
@@ -76,7 +76,7 @@ switch ($Qmod) {
 		$oActividadAsignatura->setF_ini($Qf_ini);
 		$oActividadAsignatura->setF_fin($Qf_fin);
 		if ($oActividadAsignatura->DBGuardar() === false) {
-			$msg_err = _("Hay un error, no se ha creado.");
+			$msg_err = _("hay un error, no se ha creado");
 		}
 		// si es la primera asignatura, hay que abrir el dossier para esta actividad
 		$oDossier = new dossiers\Dossier(array('tabla'=>'a','id_pau'=>$Qid_activ,'id_tipo_dossier'=>3005));
@@ -100,7 +100,7 @@ switch ($Qmod) {
 		$oActividadAsignatura->setF_ini($Qf_ini);
 		$oActividadAsignatura->setF_fin($Qf_fin);
 		if ($oActividadAsignatura->DBGuardar() === false) {
-			$msg_err = _("Hay un error, no se ha guardado.");
+			$msg_err = _("hay un error, no se ha guardado");
 		}
 		break;
 }

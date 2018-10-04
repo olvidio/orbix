@@ -32,12 +32,12 @@ class PeriodoQue {
 	 private $aOpcionesPeriodos;
 			 /* No sé com fer per que funcioni aquí  (el traduir).
 						'tot_any' => _("todo el año"),
-						'trimestre_1'=>"_('primer trimestre')",
-						'trimestre_2'=>"_('segundo trimestre')",
-						'trimestre_3'=>"_('tercer trimestre')",
-						'trimestre_4'=>"_('cuarto trimestre')",
+						'trimestre_1'=>"_("primer trimestre")",
+						'trimestre_2'=>"_("segundo trimestre")",
+						'trimestre_3'=>"_("tercer trimestre")",
+						'trimestre_4'=>"_("cuarto trimestre")",
 						'separador'=>'---------',
-						'otro'=>"_('otro')"
+						'otro'=>"_("otro")"
 						);
 			*/
 

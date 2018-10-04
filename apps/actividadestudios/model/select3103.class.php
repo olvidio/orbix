@@ -64,7 +64,7 @@ class Select3103 {
 
 	public function getBotones() {
 		$a_botones=array(
-				array( 'txt' => _('borrar matricula'), 'click' =>"fnjs_borrar(this.form)" ) 
+				array( 'txt' => _("borrar matrícula"), 'click' =>"fnjs_borrar(this.form)" ) 
 				);
 		return $a_botones;
 	}
@@ -106,7 +106,7 @@ class Select3103 {
 		$cActividadAsignaturas = $GesActivAsignaturas->getActividadAsignaturas(array('id_activ'=>  $this->id_pau,'_ordre'=>'id_asignatura')); 
 
 		if (is_array($cActividadAsignaturas) && count($cActividadAsignaturas)==0) {
-			echo _("Esta actividad no tiene ninguna asignatura");
+			echo _("esta actividad no tiene ninguna asignatura");
 			die();
 		}
 		// por cada asignatura
@@ -172,7 +172,7 @@ class Select3103 {
 	}
 	
 	public function getHtml() {
-		$this->txt_eliminar = _("¿Esta Seguro que desea quitar esta matricula?"); 
+		$this->txt_eliminar = _("¿Está seguro que desea quitar esta matrícula?"); 
 
 		$oHashSelect = new web\Hash();
 		$oHashSelect->setcamposForm('');

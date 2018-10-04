@@ -49,12 +49,12 @@ function borrar_actividad($id_activ) {
 		$status = $oActividad->getStatus();
 		if (!empty($status) && $status == 1) { // si no esta en proyecto (status=1) no dejo borrar,
 			if ($oActividad->DBEliminar() === false) {
-				echo _('Hay un error, no se ha eliminado');
+				echo _("hay un error, no se ha eliminado");
 			}
 		} else {
 			$oActividad->setStatus(4); // la pongo en estado borrable
 			if ($oActividad->DBGuardar() === false) {
-				echo _('Hay un error, no se ha guardado');
+				echo _("hay un error, no se ha guardado");
 			}
 		}
 	} else {
@@ -65,7 +65,7 @@ function borrar_actividad($id_activ) {
 		} else { // de otras dl en resto
 			$oActividad->setStatus(4); // la pongo en estado borrable
 			if ($oActividad->DBGuardar() === false) {
-				echo _('Hay un error, no se ha guardado');
+				echo _("hay un error, no se ha guardado");
 			}
 		}
 	}
@@ -84,7 +84,7 @@ case 'publicar':
 			$oActividad->DBCarregar();
 			$oActividad->setPublicado('t');
 			if ($oActividad->DBGuardar() === false) { 
-				echo _('Hay un error, no se ha guardado');
+				echo _("hay un error, no se ha guardado");
 				$err = 1;
 			}
 		}
@@ -97,7 +97,7 @@ case 'importar':
 			$id_activ=strtok($id,'#');
 			$oImportar = new actividades\Importar($id_activ);
 			if ($oImportar->DBGuardar() === false) {
-				echo _('Hay un error, no se ha importado');
+				echo _("hay un error, no se ha importado");
 			}
 		}
 	}
@@ -129,11 +129,11 @@ case "nuevo":
 	$Qinom_tipo_val = (integer) \filter_input(INPUT_POST, 'inom_tipo_val');
 	//Compruebo que estén todos los campos necesasrios
 	if (empty($Qnom_activ) or empty($Qf_ini) or empty($Qf_fin) or empty($Qstatus) or empty($Qdl_org) ) {
-		echo _("Debe llenar todos los campos que tengan un (*)")."<br>";
+		echo _("debe llenar todos los campos que tengan un (*)")."<br>";
 		die();
 	}
 	if (empty($Qinom_tipo_val)) {
-		echo _("Debe seleccionar un tipo de actividad")."<br>";
+		echo _("debe seleccionar un tipo de actividad")."<br>";
 		die();
 	}
 
@@ -150,7 +150,7 @@ case "nuevo":
 	$oActividad->setDl_org($Qdl_org);
 	if (isset($Qid_tipo_activ)) {
 	   if ($oActividad->setId_tipo_activ($Qid_tipo_activ) === false) {
-		 echo _("Tipo de actividad incorrecto");
+		 echo _("tipo de actividad incorrecto");
 		 die();
 	   }
 	}
@@ -181,7 +181,7 @@ case "nuevo":
 	$oActividad->setPublicado($Qpublicado);
 	$oActividad->setPlazas($Qplazas);
 	if ($oActividad->DBGuardar() === false) { 
-		echo '<br>'._('Hay un error, no se ha guardado');
+		echo '<br>'._("hay un error, no se ha guardado");
 		$err = 1;
 	}
 	// si estoy creando una actividad de otra dl es porque la quiero importar.
@@ -189,7 +189,7 @@ case "nuevo":
 		$id_activ = $oActividad->getId_activ();
 		$oImportar = new actividades\Importar($id_activ);
 		if ($oImportar->DBGuardar() === false) {
-			echo _('Hay un error, no se ha importado');
+			echo _("hay un error, no se ha importado");
 		}
 	}
 	break;
@@ -202,7 +202,7 @@ case "duplicar": // duplicar la actividad.
 		if ($dl == core\ConfigGlobal::mi_dele()) {
 			$oActividad = new actividades\ActividadDl($id_activ);
 		} else {
-			exit(_("No se puede duplicar actividades que no sean de la propia dl"));
+			exit(_("no se puede duplicar actividades que no sean de la propia dl"));
 		}
 		$oActividad->DBCarregar();
 		$oActividad->setId_activ('0'); //para que al guardar genere un nuevo id.
@@ -210,7 +210,7 @@ case "duplicar": // duplicar la actividad.
 		$oActividad->setNom_activ($nom);
 		$oActividad->setStatus(1); // la pongo en estado proyecto
 		if ($oActividad->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 		$oActividad->DBCarregar();
 	}
@@ -267,7 +267,7 @@ case "cmb_tipo": // sólo cambio el tipo a una actividad existente //___________
 		if (!strstr ($condta, '.')) {
 			$valor_id_tipo_activ = $condta;
 		} else {
-			echo _("Debe seleccionar un tipo de actividad")."<br>";
+			echo _("debe seleccionar un tipo de actividad")."<br>";
 			die();
 		}
 	}
@@ -299,7 +299,7 @@ case "cmb_tipo": // sólo cambio el tipo a una actividad existente //___________
 	$oActividad->setH_fin($Qh_fin);
 	$oActividad->setPlazas($Qplazas);
 	if ($oActividad->DBGuardar() === false) { 
-		echo _('Hay un error, no se ha guardado');
+		echo _("hay un error, no se ha guardado");
 	}
 	break;
 case "editar": // editar la actividad.
@@ -364,7 +364,7 @@ case "editar": // editar la actividad.
 	$oActividad->setPublicado($Qpublicado);
 	$oActividad->setPlazas($Qplazas);
 	if ($oActividad->DBGuardar() === false) { 
-		echo '<br>'._('Hay un error, no se ha guardado');
+		echo '<br>'._("hay un error, no se ha guardado");
 		$err = 1;
 	}
 	// Si cambio de dl_propia a otra (o al revés), hay que cambiar el proceso. Se hace al final para que la actividad ya tenga puesta la nueva dl

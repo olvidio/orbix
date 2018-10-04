@@ -768,7 +768,7 @@ class Resumen Extends core\ClasePropiedades {
 		$statement=$oDbl->query($ssql);
 		$rta['num'] = $statement->rowCount();
 		if ($this->blista == true && $rta['num'] > 0) {
-			$rta['lista'] = sprintf(_("Total de asignaturas superadas en bienio %s"),$rta['num']);
+			$rta['lista'] = sprintf(_("total de asignaturas superadas en bienio %s"),$rta['num']);
 		} else {
 			$rta['lista'] = '';
 		}
@@ -818,7 +818,7 @@ class Resumen Extends core\ClasePropiedades {
 		$statement=$oDbl->query($ssql);
 		$rta['num'] = $statement->rowCount();
 		if ($this->blista == true && $rta['num'] > 0) {
-			$rta['lista'] = sprintf(_("Total de asignaturas superadas en cuadrienio %s"),$rta['num']);
+			$rta['lista'] = sprintf(_("total de asignaturas superadas en cuadrienio %s"),$rta['num']);
 		} else {
 			$rta['lista'] = '';
 		}

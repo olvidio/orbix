@@ -12,9 +12,9 @@ fnjs_ver_planning = function(formulario,n) {
 	
 	if (err == 1) {
 		if (!f) {
-			alert('<?= _("Falta definir un periodo") ?>');
+			alert('<?= _("falta definir un periodo") ?>');
 		} else {
-			alert("<?= _("Debe inrtoducir las fechas inicio-fin del periodo") ?>"); 
+			alert("<?= _("debe inrtoducir las fechas inicio-fin del periodo") ?>"); 
 		}
 	} else {
 		$('#modelo').val(n);
@@ -27,16 +27,16 @@ fnjs_left_side_hide();
 <input type="hidden" id="modelo" name="modelo" value="">
 <?= $oHash2->getCamposHtml(); ?>
 <?= $oForm->getHtmlTabla(); ?>
-<?= _('incluir casas sin actividad:') ?>
+<?= _("incluir casas sin actividad:") ?>
 <input type="Radio" id="sin_activ" name="sin_activ" value=0 checked> <?= _("no") ?>
-<input type="Radio" name="sin_activ" value=1> <?= _("si") ?>
+<input type="Radio" name="sin_activ" value=1> <?= _("sí") ?>
 <?= $oFormP->getHtml(); ?>
 <table>
 <tfoot>
 <tr class=botones>
-<td><input TYPE="button" onclick="fnjs_ver_planning(this.form,1)" value="<?= ucfirst(_('planning vista tabla')); ?>" ></td>
-<td><input TYPE="button" onclick="fnjs_ver_planning(this.form,3)" value="<?= ucfirst(_('planning vista grid')); ?>" ></td>
-<td colspan=2><input TYPE="button" onclick="fnjs_ver_planning(this.form,2)" value="<?= _('Vista para imprimir'); ?>"></td>
+<td><input TYPE="button" onclick="fnjs_ver_planning(this.form,1)" value="<?= ucfirst(_("planning vista tabla")); ?>" ></td>
+<td><input TYPE="button" onclick="fnjs_ver_planning(this.form,3)" value="<?= ucfirst(_("planning vista grid")); ?>" ></td>
+<td colspan=2><input TYPE="button" onclick="fnjs_ver_planning(this.form,2)" value="<?= _("vista para imprimir"); ?>"></td>
 </tr></tfoot>
 </table>
 </form>

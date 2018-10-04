@@ -35,7 +35,7 @@ $oHash->setUrl($url_sincro_ajax);
 $oHash->setCamposForm('que!id_nom_orbix!tipo_persona'); 
 $h = $oHash->linkSinVal();
 
-$txt_alert =_("Se va a poner la fecha de hoy como fecha de baja. Para cambiarlo ir al a ficha de la persona")
+$txt_alert =_("se va a poner la fecha de hoy como fecha de baja. Para cambiarlo ir al a ficha de la persona")
 // ------------------ html ----------------------------------
 ?>
 <script>
@@ -67,7 +67,7 @@ fnjs_traslado=function($id_orbix){
 
 </script>
 
-<h3><?= _("Personas de orbix que habían estado en listas y no se encuentran") ?></h3>
+<h3><?= _("personas de orbix que habían estado en listas y no se encuentran") ?></h3>
 <table>
 	<tr><th><?= _("nombre") ?></th><th><?= _("dl") ?></th><th></th></tr>
 <?php

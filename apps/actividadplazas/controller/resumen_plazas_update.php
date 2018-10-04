@@ -45,7 +45,7 @@ switch ($que) {
 			
 		//print_r($oActividadPlazasDl);
 		if ($oActividadPlazasDl->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 		//$oPosicion = new web\Posicion();
 		//echo $oPosicion->ir_a("usuario_form.php?quien=usuario&id_usuario=".$_POST['id_usuario']);

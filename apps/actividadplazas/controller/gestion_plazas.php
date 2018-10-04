@@ -188,7 +188,7 @@ $a_cabeceras=array(
 		array('name'=>_("id_activ"),'field'=>'id','visible'=>'no'),
 		array('name'=>_("actividad"),'field'=>'actividad','width'=>200,'formatter'=>'clickFormatter'),
 		array('name'=>_("org"),'title'=>_("organiza"),'field'=>"dlorg",'width'=>40),
-		array('name'=>_("tot"),'title'=>_("totales actividad"),'field'=>"tot",'width'=>40,'editor'=>'Slick.Editors.Integer'),
+		array('name'=>_("total"),'title'=>_("totales actividad"),'field'=>"tot",'width'=>40,'editor'=>'Slick.Editors.Integer'),
 		);
 foreach ($a_grupo as $dl => $id_dl) {
 	$sub_cabecera = array(
@@ -208,22 +208,22 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
 //Periodo
-$boton = "<input type='button' value='"._("Buscar")."' onclick='fnjs_buscar()' >";
+$boton = "<input type='button' value='"._("buscar")."' onclick='fnjs_buscar()' >";
 $aOpciones =  array(
-					'tot_any' => _('todo el año'),
-					'trimestre_1'=>_('primer trimestre'),
-					'trimestre_2'=>_('segundo trimestre'),
-					'trimestre_3'=>_('tercer trimestre'),
-					'trimestre_4'=>_('cuarto trimestre'),
+					'tot_any' => _("todo el año"),
+					'trimestre_1'=>_("primer trimestre"),
+					'trimestre_2'=>_("segundo trimestre"),
+					'trimestre_3'=>_("tercer trimestre"),
+					'trimestre_4'=>_("cuarto trimestre"),
 					'separador'=>'---------',
-					'curso_ca'=>_('curso ca'),
-					'curso_crt'=>_('curso crt'),
+					'curso_ca'=>_("curso ca"),
+					'curso_crt'=>_("curso crt"),
 					'separador1'=>'---------',
-					'otro'=>_('otro')
+					'otro'=>_("otro")
 					);
 $oFormP = new web\PeriodoQue();
 $oFormP->setFormName('que');
-$oFormP->setTitulo(core\strtoupper_dlb(_('periodo de selección de actividades')));
+$oFormP->setTitulo(core\strtoupper_dlb(_("periodo de selección de actividades")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);

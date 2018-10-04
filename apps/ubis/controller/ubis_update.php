@@ -25,7 +25,7 @@ switch ($Qque) {
 		$obj = 'ubis\\model\\entity\\'.$Qobj_pau;
 		$oUbi = new $obj($Qid_ubi);
 		if ($oUbi->DBEliminar() === false) {
-			echo _('Hay un error, no se ha eliminado');
+			echo _("hay un error, no se ha eliminado");
 		}
 		die();
 		break;
@@ -138,7 +138,7 @@ foreach ($cDatosCampo as $oDatosCampo) {
 $oUbi->setAllAtributes($a_values_o);
 
 if ($oUbi->DBGuardar() === false) {
-	$msg_err = _("Hay un error, no se ha guardado.");
+	$msg_err = _("hay un error, no se ha guardado");
 }
 		
 if (!empty($msg_err)) { 

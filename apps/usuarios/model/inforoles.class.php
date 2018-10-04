@@ -6,7 +6,7 @@ use core;
 class InfoRoles extends core\datosInfo {
 
 	public function __construct() {
-		$this->setTxtTitulo(_("Tipos de rol que puede tener un usuario"));
+		$this->setTxtTitulo(_("tipos de rol que puede tener un usuario"));
 		$this->setTxtEliminar();
 		$this->setTxtBuscar(_("rol a buscar"));
 		$this->setTxtExplicacion();
@@ -27,7 +27,7 @@ class InfoRoles extends core\datosInfo {
 		}
 		$aWhere['id_role'] = 3; // para asegurarme que no se borra.
 		$aOperador['id_role'] = '>'; // para asegurarme que no se borra.
-		$oLista=new GestorRole();
+		$oLista=new entity\GestorRole();
 		$Coleccion=$oLista->getRoles($aWhere,$aOperador);
 
 		return $Coleccion;

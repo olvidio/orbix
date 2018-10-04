@@ -196,60 +196,60 @@ $miRole=$oMiUsuario->getId_role();
 
 if (!empty($Qmodo)) {
 	if ($Qmodo == 'importar') {
-		$a_botones[] = array( 'txt' => _('importar'),
+		$a_botones[] = array( 'txt' => _("importar"),
 							'click' =>"jsForm.update(\"#seleccionados\",\"importar\")" );
 	}
 	if ($Qmodo == 'publicar') {
-		$a_botones[] = array( 'txt' => _('datos'),
+		$a_botones[] = array( 'txt' => _("datos"),
 							'click' =>"jsForm.mandar(\"#seleccionados\",\"datos\")" );
-		$a_botones[] = array( 'txt' => _('publicar'),
+		$a_botones[] = array( 'txt' => _("publicar"),
 							'click' =>"jsForm.update(\"#seleccionados\",\"publicar\")" );
 	}
 	if (core\configGlobal::is_app_installed('asignaturas')) {
 		if ($_SESSION['oPerm']->have_perm("est")) {
-			$a_botones[]=array( 'txt'=> _('asignaturas'), 'click'=>"jsForm.mandar(\"#seleccionados\",\"asig\")");
+			$a_botones[]=array( 'txt'=> _("asignaturas"), 'click'=>"jsForm.mandar(\"#seleccionados\",\"asig\")");
 		}	
 	}
 } else {
 	if ($miRole == '9' || $miRole == '16') { //casa o centroSf
-		$a_botones=array( array( 'txt' => _('datos'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"datos\")" ) ,);
+		$a_botones=array( array( 'txt' => _("datos"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"datos\")" ) ,);
 	} else {
-		$a_botones[] = array( 'txt' => _('datos'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"datos\")" );
+		$a_botones[] = array( 'txt' => _("datos"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"datos\")" );
 		if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
 			$duplicar=1; //condición de duplicar
-			$a_botones[]=array( 'txt'=> _('duplicar'), 'click' =>"jsForm.update(\"#seleccionados\",\"duplicar\")");
+			$a_botones[]=array( 'txt'=> _("duplicar"), 'click' =>"jsForm.update(\"#seleccionados\",\"duplicar\")");
 			// Ahora lo generalizo para todas. (no sólo proyecto). 17.X.2011
 			$eliminar=1; //condición de eliminable
-			$a_botones[]=array( 'txt'=> _('borrar'), 'click'=>"fnjs_borrar(\"#seleccionados\",\"eliminar\")");
+			$a_botones[]=array( 'txt'=> _("borrar"), 'click'=>"fnjs_borrar(\"#seleccionados\",\"eliminar\")");
 		}
 				
 		if (core\configGlobal::is_app_installed('actividadcargos')) {
-			$a_botones[] = array( 'txt' => _('cargos'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"carg\")");
-			$a_botones[] = array( 'txt' => _('lista cl'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"listcl\")");
+			$a_botones[] = array( 'txt' => _("cargos"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"carg\")");
+			$a_botones[] = array( 'txt' => _("lista cl"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"listcl\")");
 		}
 		if (core\configGlobal::is_app_installed('asistentes')) {
-			$a_botones[] = array( 'txt' => _('asistentes'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"asis\")");
-			$a_botones[] = array( 'txt' => _('lista'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"list\")");
-			//$a_botones[] = array( 'txt' => _('transferir sasistentes a históricos'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"historicos\")");
+			$a_botones[] = array( 'txt' => _("asistentes"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"asis\")");
+			$a_botones[] = array( 'txt' => _("lista"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"list\")");
+			//$a_botones[] = array( 'txt' => _("transferir sasistentes a históricos"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"historicos\")");
 		}
 		if (core\configGlobal::is_app_installed('actividadplazas')) {
-			$a_botones[] = array( 'txt' => _('plazas'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"plazas\")");
+			$a_botones[] = array( 'txt' => _("plazas"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"plazas\")");
 		}
 		if (core\configGlobal::is_app_installed('procesos')) {
-			$a_botones[] = array( 'txt' => _('estado'), 'click' =>"jsForm.mandar(\"#seleccionados\",\"estado\")");
+			$a_botones[] = array( 'txt' => _("estado"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"estado\")");
 		}
 
 		if (core\configGlobal::is_app_installed('asignaturas')) {
 			if ($_SESSION['oPerm']->have_perm("est")) {
-				$a_botones[]=array( 'txt'=> _('asignaturas'), 'click'=>"jsForm.mandar(\"#seleccionados\",\"asig\")");
+				$a_botones[]=array( 'txt'=> _("asignaturas"), 'click'=>"jsForm.mandar(\"#seleccionados\",\"asig\")");
 			}	
 			if (($_SESSION['oPerm']->have_perm("est")) 
 				or ($_SESSION['oPerm']->have_perm("agd"))
 				or ($_SESSION['oPerm']->have_perm("sm"))) {
-				$a_botones[]=array( 'txt'=>_('plan estudios'), 'click'=>"jsForm.mandar(\"#seleccionados\",\"plan_estudios\")");
+				$a_botones[]=array( 'txt'=>_("plan estudios"), 'click'=>"jsForm.mandar(\"#seleccionados\",\"plan_estudios\")");
 			}	
 			if ($_SESSION['oPerm']->have_perm("est")) {
-				$a_botones[]=array( 'txt'=>_('listas de clase'), 'click'=>"jsForm.mandar(\"#seleccionados\",\"lista_clase\")");
+				$a_botones[]=array( 'txt'=>_("listas de clase"), 'click'=>"jsForm.mandar(\"#seleccionados\",\"lista_clase\")");
 			}
 		}
 	}
@@ -296,9 +296,9 @@ $num_activ = count($cActividades);
 if ($num_activ > $num_max_actividades && empty($Qcontinuar)) {
 	$go_avant=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_select.php?'.http_build_query(array('continuar'=>'si','stack'=>$oPosicion->getStack())));
 	$go_atras=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_que.php?'.http_build_query(array('stack'=>$oPosicion->getStack())));
-	echo "<h2>".sprintf(_('son %s actividades a mostrar. ¿Seguro que quiere continuar?.'),$num_activ).'</h2>';
-	echo "<input type='button' onclick=fnjs_update_div('#main','".$go_avant."') value="._('continuar').">";
-	echo "<input type='button' onclick=fnjs_update_div('#main','".$go_atras."') value="._('volver').">";
+	echo "<h2>".sprintf(_("son %s actividades a mostrar. ¿Seguro que quiere continuar?."),$num_activ).'</h2>';
+	echo "<input type='button' onclick=fnjs_update_div('#main','".$go_avant."') value="._("continuar").">";
+	echo "<input type='button' onclick=fnjs_update_div('#main','".$go_atras."') value="._("volver").">";
 	die();
 }
 

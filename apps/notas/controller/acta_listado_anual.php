@@ -95,21 +95,21 @@ if (!empty($aActas)) {
 
 
 //Periodo
-$boton = "<input type='button' value='"._("Buscar")."' onclick='fnjs_buscar()' >";
+$boton = "<input type='button' value='"._("buscar")."' onclick='fnjs_buscar()' >";
 $aOpciones =  array(
-					'tot_any' => _('todo el año'),
-					'trimestre_1'=>_('primer trimestre'),
-					'trimestre_2'=>_('segundo trimestre'),
-					'trimestre_3'=>_('tercer trimestre'),
-					'trimestre_4'=>_('cuarto trimestre'),
+					'tot_any' => _("todo el año"),
+					'trimestre_1'=>_("primer trimestre"),
+					'trimestre_2'=>_("segundo trimestre"),
+					'trimestre_3'=>_("tercer trimestre"),
+					'trimestre_4'=>_("cuarto trimestre"),
 					'separador'=>'---------',
-					'curso_ca'=>_('curso ca'),
+					'curso_ca'=>_("curso ca"),
 					'separador1'=>'---------',
-					'otro'=>_('otro')
+					'otro'=>_("otro")
 					);
 $oFormP = new web\PeriodoQue();
 $oFormP->setFormName('que');
-$oFormP->setTitulo(core\strtoupper_dlb(_('periodo de selección')));
+$oFormP->setTitulo(core\strtoupper_dlb(_("periodo de selección")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);

@@ -23,7 +23,7 @@ fnjs_borrar=function(formulario,que_val){
 		switch (formulario) {
 			case '#permisos_menu':
 			case '#permisos':
-				if (confirm("<?= _("¿Esta seguro que desea borrar este permiso?");?>") ) {
+				if (confirm("<?= _("¿Está seguro que desea borrar este permiso?");?>") ) {
 					id_usuario=$('#id_usuario').val();
 					if (formulario == '#permisos_menu') {
 						$('#que').val('perm_menu_eliminar');
@@ -55,7 +55,7 @@ fnjs_borrar=function(formulario,que_val){
 				}
 				break;
 			case '#avisos':
-				if (confirm("<?= _("¿Esta seguro que desea borrar este aviso?");?>") ) {
+				if (confirm("<?= _("¿Está seguro que desea borrar este aviso?");?>") ) {
 					$('#av_que').val('aviso_eliminar');
 					go='<?= web\Hash::link('apps/usuarios/controller/usuario_form.php?'.http_build_query(array('quien'=>'usuario','id_usuario'=>$id_usuario))) ?>';
 					$(formulario).attr('action',"apps/usuarios/controller/usuario_aviso_update.php");
@@ -87,7 +87,7 @@ fnjs_add_alert=function(){
 	fnjs_enviar_formulario('#avisos');
 }
 </script>
-<b><?= _('avisos') ?>:</b>
+<b><?= _("avisos") ?>:</b>
 <form id="avisos" name="avisos" action=''>
 <?= $oHash3->getCamposHtml(); ?>
 <input type="hidden" id="av_que"  name="que" value="">

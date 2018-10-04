@@ -1038,7 +1038,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	function getDatosNom_activ() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nom_activ'));
-		$oDatosCampo->setEtiqueta(_("nom_activ"));
+		$oDatosCampo->setEtiqueta(_("nombre actividad"));
 		return $oDatosCampo;
 	}
 	/**
@@ -1062,7 +1062,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	function getDatosDesc_activ() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'desc_activ'));
-		$oDatosCampo->setEtiqueta(_("desc_activ"));
+		$oDatosCampo->setEtiqueta(_("descripción"));
 		return $oDatosCampo;
 	}
 	/**
@@ -1136,13 +1136,13 @@ class ActividadAll Extends core\ClasePropiedades {
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'precio'));
 		$oDatosCampo->setEtiqueta(_("precio"));
 		$oDatosCampo->setRegExp("/^(\d+)[,.]?\d{0,2}$/");
-		$txt =  _('tiene un formato no válido.');
+		$txt =  _("tiene un formato no válido.");
 		$txt.=  "\n";
-		$txt.=  _('se adminte un separador para los decimales (máximo 2)');
+		$txt.=  _("se adminte un separador para los decimales (máximo 2)");
 		$txt.=  "\n";
-		$txt.=  _('No se admite separador para los miles');
+		$txt.=  _("no se admite separador para los miles");
 		$txt.=  "\n";
-		$txt.=  _('ejemplo: 1254.56');
+		$txt.=  _("ejemplo: 1254.56");
 		$oDatosCampo->setRegExpText($txt);
 
 		return $oDatosCampo;

@@ -40,7 +40,7 @@ fnjs_guardar=function(formulario){
 	}
 }
 fnjs_eliminar=function(formulario){
-	if (confirm("<?= _("¿Esta seguro que desea borrar esta persona?");?>") ) {
+	if (confirm("<?= _("¿Está seguro que desea borrar esta persona?");?>") ) {
 	   	$('#que').val('eliminar');
 		$(formulario).attr('action',"apps/personas/controller/personas_update.php");
 		$(formulario).submit(function() {

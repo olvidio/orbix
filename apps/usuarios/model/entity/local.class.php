@@ -375,6 +375,8 @@ class Local Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nom_locale'));
 		$oDatosCampo->setEtiqueta(_("nom_locale"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument('50');
 		return $oDatosCampo;
 	}
 	/**
@@ -387,6 +389,8 @@ class Local Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'idioma'));
 		$oDatosCampo->setEtiqueta(_("idioma"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument('50');
 		return $oDatosCampo;
 	}
 	/**
@@ -398,7 +402,9 @@ class Local Extends core\ClasePropiedades {
 	function getDatosNom_idioma() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nom_idioma'));
-		$oDatosCampo->setEtiqueta(_("nom_idioma"));
+		$oDatosCampo->setEtiqueta(_("nombre idioma"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument('50');
 		return $oDatosCampo;
 	}
 	/**
@@ -411,6 +417,7 @@ class Local Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'activo'));
 		$oDatosCampo->setEtiqueta(_("activo"));
+		$oDatosCampo->setTipo('check');
 		return $oDatosCampo;
 	}
 }

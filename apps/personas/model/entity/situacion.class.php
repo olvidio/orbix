@@ -272,7 +272,7 @@ class Situacion Extends core\ClasePropiedades {
 	function getDatosNombre_situacion() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nombre_situacion'));
-		$oDatosCampo->setEtiqueta(_("nombre_situacion"));
+		$oDatosCampo->setEtiqueta(_("nombre situación"));
 		return $oDatosCampo;
 	}
 }

@@ -470,7 +470,7 @@ class CentroDl Extends Centro {
 	function getDatosN_buzon() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'n_buzon'));
-		$oDatosCampo->setEtiqueta(_("n_buzon"));
+		$oDatosCampo->setEtiqueta(_("número de buzón"));
 		return $oDatosCampo;
 	}
 	/**
@@ -482,7 +482,7 @@ class CentroDl Extends Centro {
 	function getDatosNum_pi() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'num_pi'));
-		$oDatosCampo->setEtiqueta(_("num_pi"));
+		$oDatosCampo->setEtiqueta(_("número de pi"));
 		return $oDatosCampo;
 	}
 	/**
@@ -494,7 +494,7 @@ class CentroDl Extends Centro {
 	function getDatosNum_cartas() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'num_cartas'));
-		$oDatosCampo->setEtiqueta(_("num_cartas"));
+		$oDatosCampo->setEtiqueta(_("número de cartas"));
 		return $oDatosCampo;
 	}
 	/**
@@ -506,7 +506,7 @@ class CentroDl Extends Centro {
 	function getDatosObserv() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'observ'));
-		$oDatosCampo->setEtiqueta(_("observ"));
+		$oDatosCampo->setEtiqueta(_("observaciones"));
 		return $oDatosCampo;
 	}
 	/**
@@ -554,7 +554,7 @@ class CentroDl Extends Centro {
 	function getDatosNum_cartas_mensuales() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'num_cartas_mensuales'));
-		$oDatosCampo->setEtiqueta(_("num_cartas_mensuales"));
+		$oDatosCampo->setEtiqueta(_("número de cartas mensuales"));
 		return $oDatosCampo;
 	}
 }

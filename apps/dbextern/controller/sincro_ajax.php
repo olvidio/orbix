@@ -85,7 +85,7 @@ switch ($que) {
 			$oPersona->setLugar_nacimiento($lugar_nacimiento);
 
 			if ($oPersona->DBGuardar() === false) {
-				exit(_('Hay un error, no se ha guardado'));
+				exit(_("hay un error, no se ha guardado"));
 			}
 			$id_orbix = $oPersona->getId_nom();
 		} else {
@@ -105,7 +105,7 @@ switch ($que) {
 		$oIdMatch->setId_tabla($tipo_persona);
 		
 		if ($oIdMatch->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 		//Elimino el valor del array
 		unset($_SESSION['DBListas'][$id]);
@@ -122,7 +122,7 @@ switch ($que) {
 		$oIdMatch->setId_tabla($tipo_persona);
 		
 		if ($oIdMatch->DBEliminar() === false) {
-			echo _('Hay un error, no se ha eliminado');
+			echo _("hay un error, no se ha eliminado");
 		}
 		break;
 	case 'syncro':

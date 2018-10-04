@@ -177,9 +177,9 @@ class TiposActividades {
 	 */
 	public function getNomGral() {
 		$txt= $this->getSfsvText();
-		if ($this->getAsistentesText() <> _('todos')) $txt.= ' '.$this->getAsistentesText();
-		if ($this->getActividadText() <> _('todos')) $txt.= ' '.$this->getActividadText();
-		if ($this->getNom_tipoId() <> 0 && $this->getNom_tipoText() <> _('todos')) $txt.= ' '.$this->getNom_tipoText();
+		if ($this->getAsistentesText() <> _("todos")) $txt.= ' '.$this->getAsistentesText();
+		if ($this->getActividadText() <> _("todos")) $txt.= ' '.$this->getActividadText();
+		if ($this->getNom_tipoId() <> 0 && $this->getNom_tipoText() <> _("todos")) $txt.= ' '.$this->getNom_tipoText();
 		return $txt;
 	}
 	/**
@@ -189,9 +189,9 @@ class TiposActividades {
 	 */
 	public function getNom() {
 		$txt= $this->getSfsvText();
-		if ($this->getAsistentesText() <> _('todos')) $txt.= ' '.$this->getAsistentesText();
-		if ($this->getActividadText() <> _('todos')) $txt.= ' '.$this->getActividadText();
-		if ($this->getNom_tipoText() <> _('todos')) $txt.= ' '.$this->getNom_tipoText();
+		if ($this->getAsistentesText() <> _("todos")) $txt.= ' '.$this->getAsistentesText();
+		if ($this->getActividadText() <> _("todos")) $txt.= ' '.$this->getActividadText();
+		if ($this->getNom_tipoText() <> _("todos")) $txt.= ' '.$this->getNom_tipoText();
 		return $txt;
 	}
 	/**
@@ -204,7 +204,7 @@ class TiposActividades {
 		if (is_numeric($this->ssfsv)) {
 			return $aText[$this->ssfsv];
 		} else {
-			return _('todos');
+			return _("todos");
 		}
 	}
 	/**
@@ -271,7 +271,7 @@ class TiposActividades {
 		if (is_numeric($this->sasistentes)) {
 			return $aText[$this->sasistentes];
 		} else {
-			return _('todos');
+			return _("todos");
 		}
 	}
 	/**
@@ -344,7 +344,7 @@ class TiposActividades {
 		if (is_numeric($this->sactividad)) {
 			return $aText[$this->sactividad];
 		} else {
-			return _('todos');
+			return _("todos");
 		}
 	}
 	/**
@@ -411,7 +411,7 @@ class TiposActividades {
 				return $this->afNom_tipo[$this->snom_tipo];
 			}
 		} else {
-			return _('todos');
+			return _("todos");
 		}
 	}
 	/**

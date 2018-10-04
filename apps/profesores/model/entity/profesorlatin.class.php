@@ -288,7 +288,7 @@ class ProfesorLatin Extends core\ClasePropiedades {
 	function getDatosLatin() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'latin'));
-		$oDatosCampo->setEtiqueta(_("latin"));
+		$oDatosCampo->setEtiqueta(_("latín"));
 		$oDatosCampo->setTipo('check');
 		return $oDatosCampo;
 	}

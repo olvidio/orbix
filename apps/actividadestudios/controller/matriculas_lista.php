@@ -88,8 +88,8 @@ $cMatriculas = $gesMatriculasDl->getMatriculas($aWhere,$aOperador);
 
 $titulo = _(sprintf("Lista de matrículas en el periodo: %s - %s.",$inicio,$fin)); 
 $a_botones=array(
-			array( 'txt' => _('ver asignaturas ca'), 'click' =>"fnjs_ver_ca(this.form)" ) ,
-			array( 'txt' => _('borrar matricula'), 'click' =>"fnjs_borrar(this.form)" ) 
+			array( 'txt' => _("ver asignaturas ca"), 'click' =>"fnjs_ver_ca(this.form)" ) ,
+			array( 'txt' => _("borrar matrícula"), 'click' =>"fnjs_borrar(this.form)" ) 
 );
 
 $a_cabeceras=array(
@@ -98,7 +98,7 @@ $a_cabeceras=array(
 					_("dl"),
 					_("actividad"),
 					_("asignatura"),
-					_('preceptor'),
+					_("preceptor"),
 					_("nota")
 	);
 
@@ -191,24 +191,24 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$txt_eliminar = _("¿Esta Seguro que desea borrar todas las matrículas seleccionadas?"); 
+$txt_eliminar = _("¿Está seguro que desea borrar todas las matrículas seleccionadas?"); 
 
 //Periodo
-$boton = "<input type='button' value='"._("Buscar")."' onclick='fnjs_buscar()' >";
+$boton = "<input type='button' value='"._("buscar")."' onclick='fnjs_buscar()' >";
 $aOpciones =  array(
-					'tot_any' => _('todo el año'),
-					'trimestre_1'=>_('primer trimestre'),
-					'trimestre_2'=>_('segundo trimestre'),
-					'trimestre_3'=>_('tercer trimestre'),
-					'trimestre_4'=>_('cuarto trimestre'),
+					'tot_any' => _("todo el año"),
+					'trimestre_1'=>_("primer trimestre"),
+					'trimestre_2'=>_("segundo trimestre"),
+					'trimestre_3'=>_("tercer trimestre"),
+					'trimestre_4'=>_("cuarto trimestre"),
 					'separador'=>'---------',
-					'curso_ca'=>_('curso ca'),
+					'curso_ca'=>_("curso ca"),
 					'separador1'=>'---------',
-					'otro'=>_('otro')
+					'otro'=>_("otro")
 					);
 $oFormP = new web\PeriodoQue();
 $oFormP->setFormName('que');
-$oFormP->setTitulo(core\strtoupper_dlb(_('periodo de selección de actividades')));
+$oFormP->setTitulo(core\strtoupper_dlb(_("periodo de selección de actividades")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);

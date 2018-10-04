@@ -111,13 +111,13 @@ class Select3101 {
 
 	private function getBotones() {
 		if (core\configGlobal::is_app_installed('asistentes')) {
-			$a_botones[] = array( 'txt' => _('modificar asistencia'),
+			$a_botones[] = array( 'txt' => _("modificar asistencia"),
 								'click' =>"fnjs_modificar(this.form)"
 							);
-			$a_botones[] = array( 'txt' => _('cambiar actividad'),
+			$a_botones[] = array( 'txt' => _("cambiar actividad"),
 								'click' =>"fnjs_mover(this.form,$this->id_pau)" 
 							);
-			$a_botones[] = array( 'txt' => _('borrar asistencia'),
+			$a_botones[] = array( 'txt' => _("borrar asistencia"),
 								'click' =>"fnjs_borrar(this.form)" 
 							);
 			$a_botones[] = array( 'txt' => _("transferir a históricos"),
@@ -125,21 +125,21 @@ class Select3101 {
 							);
 		}
 		if (core\configGlobal::is_app_installed('actividadcargos')) {
-			$a_botones[] = array( 'txt' => _('añadir cargo'),
+			$a_botones[] = array( 'txt' => _("añadir cargo"),
 									'click' =>"fnjs_add_cargo(this.form)" 
 							);
-			$a_botones[] = array( 'txt' => _('modificar cargo'),
+			$a_botones[] = array( 'txt' => _("modificar cargo"),
 									'click' =>"fnjs_mod_cargo(this.form)" 
 							);
-			$a_botones[] = array( 'txt' => _('quitar cargo'),
+			$a_botones[] = array( 'txt' => _("quitar cargo"),
 									'click' =>"fnjs_borrar_cargo(this.form)" 
 							);
 		}
 		if (core\configGlobal::is_app_installed('actividadestudios')) {
-			$a_botones[] = array( 'txt' => _('plan estudios'),
+			$a_botones[] = array( 'txt' => _("plan estudios"),
 									'click' =>"fnjs_matriculas(this.form,\"#frm_matriculas\")" 
 							);
-			$a_botones[] = array( 'txt' => _('E43'),
+			$a_botones[] = array( 'txt' => _("E43"),
 									'click' =>"fnjs_e43(this.form)" 
 							);
 		}
@@ -181,11 +181,11 @@ class Select3101 {
 				$plazas_max = '';
 				$plazas_min = '';
 			}
-			$plazas_txt = _("Plazas casa (max - min)").": ";
+			$plazas_txt = _("plazas casa (max - min)").": ";
 			$plazas_txt .= !empty($plazas_max)? $plazas_max : '?';
 			$plazas_txt .= !empty($plazas_min)? ' - '.$plazas_min : '';
 		} else {
-			$plazas_txt = _("Plazas actividad").": ";
+			$plazas_txt = _("plazas actividad").": ";
 			$plazas_txt .= !empty($this->plazas_totales)? $this->plazas_totales : '?';
 		}
 		$this->plazas_txt = $plazas_txt;
@@ -331,7 +331,7 @@ class Select3101 {
 				$puede_agd=='t' ? $chk_puede_agd="si" : $chk_puede_agd="no" ;
 
 				if ($propio=='t') {
-					$chk_propio=_("si");
+					$chk_propio=_("sí");
 					// Para los de des, elimino el cargo y la asistencia. Para el resto, sólo el cargo (no la asistencia).
 					if (($_SESSION['oPerm']->have_perm("des")) or ($_SESSION['oPerm']->have_perm("vcsd"))) {
 						$eliminar = 2;
@@ -342,8 +342,8 @@ class Select3101 {
 					$chk_propio=_("no") ;
 					$eliminar = 2;  //si no es propio, al eliminar el cargo, elimino la asistencia
 				}
-				$falta=='t' ? $chk_falta=_("si") : $chk_falta=_("no") ;
-				$est_ok=='t' ? $chk_est_ok=_("si") : $chk_est_ok=_("no") ;
+				$falta=='t' ? $chk_falta=_("sí") : $chk_falta=_("no") ;
+				$est_ok=='t' ? $chk_est_ok=_("sí") : $chk_est_ok=_("no") ;
 				$asis="t";
 				
 				if ($this->permiso == 3) {
@@ -455,12 +455,12 @@ class Select3101 {
 			}
 
 			if ($propio=='t') {
-				$chk_propio=_("si");
+				$chk_propio=_("sí");
 			} else { 
 				$chk_propio=_("no") ;
 			}
-			$falta=='t' ? $chk_falta=_("si") : $chk_falta=_("no") ;
-			$est_ok=='t' ? $chk_est_ok=_("si") : $chk_est_ok=_("no") ;
+			$falta=='t' ? $chk_falta=_("sí") : $chk_falta=_("no") ;
+			$est_ok=='t' ? $chk_est_ok=_("sí") : $chk_est_ok=_("no") ;
 			
 			if ($this->permiso == 3) {
 				$a_val['sel']="$id_nom";
@@ -506,13 +506,13 @@ class Select3101 {
 		$resumen_plazas2 = '';
 		if (core\configGlobal::is_app_installed('actividadplazas')) {
 			//leyenda colores
-			$explicacion1 = _("plaza que contabiliza pero que las otras delegaciones no ven. Podría explicarse como una plaza que se desea pero no se puede conceder porque no hay sitio.");
-			$explicacion2 = _("como la plaza pedida, pero cuando ya se ha solicitado a la otra delegación que nos conceda ese plaza. Implica que por nuestra parte nos parece correcto que vaya pero necesitamos confirmación de que hay sitio.");
-			$explicacion4 = _("plaza ocupada en toda regla. Las delegaciones organizadoras ven a los nuestros. Si somos nosotros los organizadores, podemos ocupar más plazas de las previstas. Si son de otra delegación, no debería poder pasar a asignada si no hay plazas.");
-			$explicacion5 = _("como la anterior pero con el plus de que se ha comunicado al interesado y no hay cambio.");
+			$explicacion1 = _("plaza que contabiliza pero que las otras delegaciones no ven. Podría explicarse como una plaza que se desea pero no se puede conceder porque no hay sitio");
+			$explicacion2 = _("como la plaza pedida, pero cuando ya se ha solicitado a la otra delegación que nos conceda ese plaza. Implica que por nuestra parte nos parece correcto que vaya pero necesitamos confirmación de que hay sitio");
+			$explicacion4 = _("plaza ocupada en toda regla. Las delegaciones organizadoras ven a los nuestros. Si somos nosotros los organizadores, podemos ocupar más plazas de las previstas. Si son de otra delegación, no debería poder pasar a asignada si no hay plazas");
+			$explicacion5 = _("como la anterior pero con el plus de que se ha comunicado al interesado y no hay cambio");
 			
 			$leyenda_html = '<p class="contenido">';
-			$leyenda_html .= _("Para seleccionar varios: 'Ctrl+Click' o bien 'Mays+Click'");
+			$leyenda_html .= _("para seleccionar varios: 'Ctrl+Click' o bien 'Mays+Click'");
 			$leyenda_html .= "<br><style>
 				.box {
 				display: inline;
@@ -661,7 +661,7 @@ class Select3101 {
 								if ($plaza == asistentes\Asistente::PLAZA_EN_ESPERA) { $espera += $num; }
 								if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) { $ocupadas_dl += $num; }
 							}
-							$txt = sprintf(_("(xde las %s cedidas por %s)"),$pla['cedidas'],$dl2);
+							$txt = sprintf(_("(de las %s cedidas por %s)"),$pla['cedidas'],$dl2);
 							$resumen_plazas2 .= ($p > 1)? ' + ' : '';
 							$resumen_plazas2 .= $ocupadas_dl." ".$txt;
 							if (!empty($espera)) { $resumen_plazas2 .= " ".sprintf(_("(%s en espera)"),$espera); }
@@ -722,7 +722,7 @@ class Select3101 {
 
 	public function getHtml() {
 		$this->msg_err = '';
-		$this->txt_eliminar = _("¿Esta Seguro que desea borrar a esta persona de esta actividad?");
+		$this->txt_eliminar = _("¿Está seguro que desea borrar a esta persona de esta actividad?");
 	
 		if (core\configGlobal::is_app_installed('actividadplazas')) {
 			$this->contarPlazas();

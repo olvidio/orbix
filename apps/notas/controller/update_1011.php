@@ -40,7 +40,7 @@ switch($Qmod) {
 				$oPersonaNota->setId_nivel($id_nivel);	
 				$oPersonaNota->DBCarregar(); //perque agafi els valors que ja té.
 				if ($oPersonaNota->DBEliminar() === false) {
-					$msg_err = _("Hay un error, no se ha borrado.");
+					$msg_err = _("hay un error, no se ha borrado");
 				}
 			}
 		}
@@ -110,7 +110,7 @@ switch($Qmod) {
 		$oPersonaNota->setNota_num($Qnota_num);
 		$oPersonaNota->setNota_max($Qnota_max);
 		if ($oPersonaNota->DBGuardar() === false) {
-			$msg_err = _("Hay un error, no se ha guardado.");
+			$msg_err = _("hay un error, no se ha guardado");
 		}
 		// si no está abierto, hay que abrir el dossier para esta persona
 		//abrir_dossier('p',$_POST['id_pau'],'1303',$oDB);
@@ -176,7 +176,7 @@ switch($Qmod) {
 		$oPersonaNota->setNota_max($Qnota_max);
 		
 		if ($oPersonaNota->DBGuardar() === false) {
-			$msg_err = _("Hay un error, no se ha guardado.");
+			$msg_err = _("hay un error, no se ha guardado");
 		}
 		break;
 }

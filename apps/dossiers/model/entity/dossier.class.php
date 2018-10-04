@@ -467,7 +467,7 @@ class Dossier Extends core\ClasePropiedades {
 	function getDatosF_ini() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_ini'));
-		$oDatosCampo->setEtiqueta(_("f_ini"));
+		$oDatosCampo->setEtiqueta(_("fecha inicio"));
 		return $oDatosCampo;
 	}
 	/**
@@ -479,7 +479,7 @@ class Dossier Extends core\ClasePropiedades {
 	function getDatosF_camb_dossier() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_camb_dossier'));
-		$oDatosCampo->setEtiqueta(_("f_camb_dossier"));
+		$oDatosCampo->setEtiqueta(_("fecha cambio dossier"));
 		return $oDatosCampo;
 	}
 	/**
@@ -491,7 +491,7 @@ class Dossier Extends core\ClasePropiedades {
 	function getDatosStatus_dossier() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'status_dossier'));
-		$oDatosCampo->setEtiqueta(_("status_dossier"));
+		$oDatosCampo->setEtiqueta(_("status dossier"));
 		return $oDatosCampo;
 	}
 	/**
@@ -503,7 +503,7 @@ class Dossier Extends core\ClasePropiedades {
 	function getDatosF_status() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_status'));
-		$oDatosCampo->setEtiqueta(_("f_status"));
+		$oDatosCampo->setEtiqueta(_("fecha status"));
 		return $oDatosCampo;
 	}
 }

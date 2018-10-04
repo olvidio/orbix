@@ -19,7 +19,7 @@ class DatosUpdate {
 	public function eliminar() {
 		$oFicha = $this->getFicha();
 		if ($oFicha->DBEliminar() === false) {
-			$msg_err = _('Hay un error, no se ha eliminado');
+			$msg_err = _("hay un error, no se ha eliminado");
 			return $msg_err;
 		}
 		return true;	
@@ -34,7 +34,7 @@ class DatosUpdate {
 			$oFicha->$nom_camp=$aCampos[$nom_camp];
 		}
 		if ($oFicha->DBGuardar() === false) {
-			$msg_err = _('Hay un error, no se ha guardado');
+			$msg_err = _("hay un error, no se ha guardado");
 			return $msg_err;
 		}
 		return true;	
@@ -54,7 +54,7 @@ class DatosUpdate {
 			$oFicha->$nom_camp=$aCampos[$nom_camp];
 		}
 		if ($oFicha->DBGuardar() === false) {
-			$msg_err = _('Hay un error, no se ha guardado');
+			$msg_err = _("hay un error, no se ha guardado");
 			return $msg_err;
 		}
 		return true;;

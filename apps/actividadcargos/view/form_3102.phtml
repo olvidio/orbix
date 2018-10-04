@@ -44,14 +44,14 @@ if (!empty($id_nom_real)) {
 <tr><td class=etiqueta><?= ucfirst(_("cargo")) ?>:</td><td>
 <?= $oDesplegableCargos->desplegable(); ?>
 </td></tr>
-<tr><td class=etiqueta><?= _("puede ser agd?") ?></td>
+<tr><td class=etiqueta><?= _("¿puede ser agd?") ?></td>
 <td><input type="Checkbox" id="puede_agd" name="puede_agd" value="true" <?= $chk ?>></td></tr>
 <tr><td class=etiqueta><?= ucfirst(_("observaciones")); ?></td><td>
 <textarea class=contenido id="observ" name="observ" cols="40" rows="5"><?= htmlspecialchars($observ) ?></textarea></td></tr>
 <?php
 if ($Qmod=="nuevo" && empty($id_nom_real)) {
 	$asis_txt="<input type=\"Checkbox\" id=\"asis\" name=\"asis\" value=\"true\" checked>";
-	echo "<tr><td class=etiqueta>"._("asiste?")."</td><td>$asis_txt</td></tr>";
+	echo "<tr><td class=etiqueta>"._("¿asiste?")."</td><td>$asis_txt</td></tr>";
 }
 ?>	
 </table>

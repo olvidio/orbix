@@ -75,7 +75,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 
 	if (empty($Qid_ctr_agd) && empty($Qid_ctr_n)) { 
-		$msg_txt = _("Debe seleccionar un centro o grupo de centros");
+		$msg_txt = _("debe seleccionar un centro o grupo de centros");
 		exit($msg_txt);
 	}
 	$any=empty($Qyear)? date('Y')+1 : $Qyear;
@@ -235,7 +235,7 @@ if (!empty($Qidca)){
 			$nom_activ=trim ($nom_activ);
 		}
 		if (empty($nivel_stgr)) { 
-			$msg_txt .= sprintf(_("El ca: %s no tiene puesto el nivel de stgr.")."<br>",$nom_activ);
+			$msg_txt .= sprintf(_("el ca: %s no tiene puesto el nivel de stgr.")."<br>",$nom_activ);
 			$nivel_stgr=$oActividad->generarNivelStgr(); 
 		}
 		// repaso, mayores 30, menores 30, pa-ad
@@ -246,7 +246,7 @@ if (!empty($Qidca)){
 			$GesActividadAsignaturas = new actividadestudios\GestorActividadAsignatura();
 			$aAsignaturasCa = $GesActividadAsignaturas->getAsignaturasCa($id_activ);
 			if (count($aAsignaturasCa)==0 && $nivel_stgr) {
-				$msg_txt .= sprintf(_("El ca: %s no tiene puesta ninguna asignatura.")."<br>",$nom_activ);
+				$msg_txt .= sprintf(_("el ca: %s no tiene puesta ninguna asignatura.")."<br>",$nom_activ);
 				continue;
 			}
 		}
@@ -429,7 +429,7 @@ if (!empty($a_sel) && $alum==1) { //vengo de un 'checkbox' => sólo una persona
 
 	// Errores y falta de información
 	if (count($cuadro) > 1) {
-		exit(_("Sólo debebería haber uno"));
+		exit(_("sólo debebería haber uno"));
 	}
 	if (!empty($msg_txt)) { 
 		echo "<div class='no_print'>$msg_txt</div>"; 

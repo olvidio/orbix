@@ -89,14 +89,14 @@ $aGoBack = array (
 $oPosicion->setParametros($aGoBack);
 $oPosicion->recordar();
 
-$a_botones=array( array( 'txt' => _('modificar stgr'), 'click' =>"fnjs_modificar(\"#seleccionados\")" ) ,
-				array( 'txt' => _('ver tesera'), 'click' =>"fnjs_tesera(\"#seleccionados\")" ) 
+$a_botones=array( array( 'txt' => _("modificar stgr"), 'click' =>"fnjs_modificar(\"#seleccionados\")" ) ,
+				array( 'txt' => _("ver tessera"), 'click' =>"fnjs_tesera(\"#seleccionados\")" ) 
 				);
 
 $a_cabeceras=array( ucfirst(_("tipo")), array('name'=>_("nombre y apellidos"),'formatter'=>'clickFormatter'), ucfirst(_("centro")), ucfirst(_("stgr")), ucfirst(_("asignaturas")) );
 
 if (empty($titulo)) {
-	$titulo=sprintf(_("Lista de %s a los que faltan %d o menos asignaturas para finalizar el %s"),$gente,$Qnumero,$curso_txt);
+	$titulo=sprintf(_("lista de %s a los que faltan %d o menos asignaturas para finalizar el %s"),$gente,$Qnumero,$curso_txt);
 } else {
 	$titulo=urldecode($titulo);
 }

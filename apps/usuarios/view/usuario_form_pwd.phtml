@@ -25,7 +25,7 @@ input {
 </style>
 <script type='text/javascript' src='<?= core\ConfigGlobal::$web_scripts.'/jquery.password_strength.js'; ?>'></script>
 <h3><?= $usuario ?></h3>
-<?= _("Deberías cambiar el password") ?>
+<?= _("deberías cambiar el password") ?>
 <form id=frm_usuario  name=frm_usuario action='' method="post" >
 <?= $oHash->getCamposHtml(); ?>
 <input type=hidden id=que_user  name=que value=''>
@@ -42,11 +42,11 @@ algo=function(level) {
 	strong = level;
 }
 var options = {	'texts' : {
-		1 : "<?= _("Demasiado débil")?>",
+		1 : "<?= _("demasiado débil")?>",
 		2 : "<?= _("password débil")?>",
-		3 : "<?= _("Normal")?>",
-		4 : "<?= _("Strong password")?>",
-		5 : "<?= _("Very strong password")?>"
+		3 : "<?= _("normal")?>",
+		4 : "<?= _("strong password")?>",
+		5 : "<?= _("very strong password")?>"
 	},
 	'onCheck': algo
 }
@@ -56,22 +56,22 @@ $('input[type=password]').password_strength(options);
 fnjs_guardar=function(formulario){
 	// si es 0, no se cambia el password.
 	if (strong != 0 && strong < 4) {
-	  alert("<?= _("Debe poner un password 'fuerte' o 'muy fuerte'") ?>");
+	  alert("<?= _("debe poner un password 'fuerte' o 'muy fuerte'") ?>");
 	  return false;
 	}
 	var pwd=$("#password").val();
 	var pwd1=$("#password1").val();
 	
 	if (!pwd) {
-		alert ("<?= _("Error: password no válido") ?>");
+		alert ("<?= _("error: password no válido") ?>");
 		return false;
 	}
 	if (!pwd1) {
-		alert ("<?= _("Error: debes confirmar el password") ?>");
+		alert ("<?= _("error: debes confirmar el password") ?>");
 		return false;
 	}
 	if (pwd!=pwd1) {
-		alert ("<?= _("Error: passwords no coincidentes") ?>");
+		alert ("<?= _("error: passwords no coincidentes") ?>");
 		return false;
 	}
 	$('#que_user').val('<?= $que_user ?>');

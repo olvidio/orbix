@@ -17,7 +17,7 @@ $dl=$oUbi->getDl();
 $region=$oUbi->getRegion();
 $tipo_ubi=$oUbi->getTipo_ubi();
 
-$tituloGros=ucfirst(_("introduzca un valor para buscar una direccion existente"));
+$tituloGros=ucfirst(_("introduzca un valor para buscar una dirección existente"));
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('c_p!ciudad!id_ubi!obj_dir!pais');

@@ -36,7 +36,7 @@ $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miRole=$oMiUsuario->getId_role();
 $miSfsv=core\ConfigGlobal::mi_sfsv();
 
-if ($miRole > 3) exit(_('no tiene permisos para ver esto')); // no es administrador
+if ($miRole > 3) exit(_("no tiene permisos para ver esto")); // no es administrador
 // filtro por sf/sv
 $cond=array();
 $operator = array();
@@ -73,7 +73,7 @@ $role='';
 $permiso = 1;
 
 $a_cabeceras=array('usuario','nombre a mostrar','role','email',array('name'=>'accion','formatter'=>'clickFormatter'));
-$a_botones[]=array( 'txt'=> _('borrar'), 'click'=>"fnjs_eliminar()");
+$a_botones[]=array( 'txt'=> _("borrar"), 'click'=>"fnjs_eliminar()");
 
 $a_valores=array();
 $i=0;

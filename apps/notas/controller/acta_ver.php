@@ -203,7 +203,7 @@ $a_camposHidden = array();
 if ($Qmod == 'nueva' || $notas=="nuevo") { 
 	$a_camposHidden['mod'] = 'nueva';
 	if (empty($id_activ)) {
-		echo _('No se guardará el ca/cv donde se cursó la asignatura');
+		echo _("no se guardará el ca/cv donde se cursó la asignatura");
 	} else {
 		$a_camposHidden['id_activ'] = $id_activ;
 	}

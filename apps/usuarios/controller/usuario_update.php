@@ -30,7 +30,7 @@ switch($Qque) {
 			$oUsuarioPerm->setMenu_perm($byte);
 		} 
 		if ($oUsuarioPerm->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 		break;
 	case 'perm_menu_eliminar':
@@ -41,7 +41,7 @@ switch($Qque) {
 		} 
 		$oUsuarioPerm = new usuarios\PermMenu(array('id_item'=>$Qid_item));
 		if ($oUsuarioPerm->DBEliminar() === false) {
-			echo _('Hay un error, no se ha eliminado');
+			echo _("hay un error, no se ha eliminado");
 		}
 		break;
 	case 'perm_eliminar':
@@ -53,7 +53,7 @@ switch($Qque) {
 		$oUsuario = new usuarios\GrupoOUsuario(array('id_usuario'=>$Qid_usuario)); // La tabla y su heredada
 		$oUsuarioPerm = new UsuarioPerm(array('id_item'=>$Qid_item));
 		if ($oUsuarioPerm->DBEliminar() === false) {
-			echo _('Hay un error, no se ha eliminado');
+			echo _("hay un error, no se ha eliminado");
 		}
 		break;
 	case 'perm_update':
@@ -96,7 +96,7 @@ switch($Qque) {
 			$oUsuarioPerm->setAfecta_a($byte);
 		} 
 		if ($oUsuarioPerm->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 		break;
 	case "buscar":
@@ -123,14 +123,14 @@ switch($Qque) {
 			$oUsuario->setPassword($Qpass);
 		}
 		if ($oUsuario->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 	break;
 	case "guardar":
 		$Qusuario = (string) \filter_input(INPUT_POST, 'usuario');
 		$Qquien = (string) \filter_input(INPUT_POST, 'quien');
 
-		if (empty($Qusuario)) { echo _('debe poner un nombre'); }
+		if (empty($Qusuario)) { echo _("debe poner un nombre"); }
 		switch($Qquien) {
 			case 'usuario':
 				$Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
@@ -197,7 +197,7 @@ switch($Qque) {
 				break;
 		}
 		if ($oUsuario->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 	break;
 	case "nuevo":
@@ -231,9 +231,9 @@ switch($Qque) {
 						$oUsuario->setPerm_activ($byte);
 					} 
 					if ($oUsuario->DBGuardar() === false) {
-						echo _('Hay un error, no se ha guardado');
+						echo _("hay un error, no se ha guardado");
 					}
-				} else { echo _('debe poner un nombre y el password'); }
+				} else { echo _("debe poner un nombre y el password"); }
 				break;
 			case "grupo":
 				$Qusuario = (string) \filter_input(INPUT_POST, 'usuario');
@@ -244,7 +244,7 @@ switch($Qque) {
 					$oUsuario->setUsuario($Qusuario);
 					$oUsuario->setid_role($Qid_role);
 					if ($oUsuario->DBGuardar() === false) {
-						echo _('Hay un error, no se ha guardado');
+						echo _("hay un error, no se ha guardado");
 					}
 				} else { exit("debe poner un nombre"); }
 				break;

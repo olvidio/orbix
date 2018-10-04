@@ -114,7 +114,7 @@ class sincroDB {
 			$oIdMatch->setId_tabla($this->tipo_persona);
 			
 			if ($oIdMatch->DBGuardar() === false) {
-				echo _('Hay un error, no se ha guardado');
+				echo _("hay un error, no se ha guardado");
 				print_r($oIdMatch);
 				echo '<br>';
 				return false;
@@ -239,9 +239,9 @@ class sincroDB {
 		} else {
 			$id_ubi = 0;
 			if (empty($Ctr)) {
-				$msg = sprintf(_("Parece que %s  no tiene puesto el ctr en \"listas\""),$ape_nom);
+				$msg = sprintf(_("parece que %s  no tiene puesto el ctr en \"listas\""),$ape_nom);
 			} else {
-				$msg = sprintf(_("No se encuentra el ctr %s en la lista de ctr"),$Ctr);
+				$msg = sprintf(_("no se encuentra el ctr %s en la lista de ctr"),$Ctr);
 			}
 		}
 		
@@ -299,7 +299,7 @@ class sincroDB {
 
 			
 		if ($oPersona->DBGuardar() === false) {
-			exit(_('Hay un error, no se ha guardado'));
+			exit(_("hay un error, no se ha guardado"));
 		}
 
 		//Dossiers
@@ -320,7 +320,7 @@ class sincroDB {
 				$oTeleco->setObserv('de listas');
 			}
 			if ($oTeleco->DBGuardar() === false) {
-				echo (_('Hay un error, no se ha guardado'));
+				echo (_("hay un error, no se ha guardado"));
 			}
 		}
 		// e-mail   --principal(13)
@@ -339,7 +339,7 @@ class sincroDB {
 				$oTeleco->setObserv('de listas');
 			}
 			if ($oTeleco->DBGuardar() === false) {
-				echo (_('Hay un error, no se ha guardado'));
+				echo (_("hay un error, no se ha guardado"));
 			}
 			
 		}

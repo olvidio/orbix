@@ -285,7 +285,7 @@ class ProfesorTipo Extends core\ClasePropiedades {
 	function getDatosTipo_profesor() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'tipo_profesor'));
-		$oDatosCampo->setEtiqueta(_("tipo_profesor"));
+		$oDatosCampo->setEtiqueta(_("tipo de profesor"));
 		return $oDatosCampo;
 	}
 }

@@ -443,7 +443,7 @@ class ActividadAsignatura Extends core\ClasePropiedades {
 	function getDatosAvis_profesor() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'avis_profesor'));
-		$oDatosCampo->setEtiqueta(_("avis_profesor"));
+		$oDatosCampo->setEtiqueta(_("aviso profesor"));
 		return $oDatosCampo;
 	}
 	/**
@@ -467,7 +467,7 @@ class ActividadAsignatura Extends core\ClasePropiedades {
 	function getDatosF_ini() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_ini'));
-		$oDatosCampo->setEtiqueta(_("f_ini"));
+		$oDatosCampo->setEtiqueta(_("fecha inicio"));
 		return $oDatosCampo;
 	}
 	/**
@@ -479,7 +479,7 @@ class ActividadAsignatura Extends core\ClasePropiedades {
 	function getDatosF_fin() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_fin'));
-		$oDatosCampo->setEtiqueta(_("f_fin"));
+		$oDatosCampo->setEtiqueta(_("fecha fin"));
 		return $oDatosCampo;
 	}
 }

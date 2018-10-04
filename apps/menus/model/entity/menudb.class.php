@@ -462,7 +462,7 @@ class MenuDb Extends core\ClasePropiedades {
 	function getDatosMenu() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'menu'));
-		$oDatosCampo->setEtiqueta(_("menu"));
+		$oDatosCampo->setEtiqueta(_("menú"));
 		return $oDatosCampo;
 	}
 	/**

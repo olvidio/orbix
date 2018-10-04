@@ -224,41 +224,41 @@ $sOperador = core\urlsafe_b64encode(serialize($aOperador));
 $sWhereCtr = core\urlsafe_b64encode(serialize($aWhereCtr));
 $sOperadorCtr = core\urlsafe_b64encode(serialize($aOperadorCtr));
 
-$a_botones[] = array( 'txt' => _('cambio de ctr'),
+$a_botones[] = array( 'txt' => _("cambio de ctr"),
 					'click' =>"fnjs_modificar_ctr(\"#seleccionados\")" );
 $script['fnjs_modificar_ctr'] = 1;
-$a_botones[] = array( 'txt' => _('ver dossiers'),
+$a_botones[] = array( 'txt' => _("ver dossiers"),
 					'click' =>"fnjs_dossiers(\"#seleccionados\")" );
 $script['fnjs_dossiers'] = 1;
-$a_botones[] = array( 'txt' => _('ficha'),
+$a_botones[] = array( 'txt' => _("ficha"),
 					'click' =>"fnjs_ficha(\"#seleccionados\")" );
 $script['fnjs_ficha'] = 1;
 
 if (core\configGlobal::is_app_installed('asistentes')) {
-	$a_botones[] = array( 'txt' => _('ver actividades'),
+	$a_botones[] = array( 'txt' => _("ver actividades"),
 						'click' =>"fnjs_actividades(\"#seleccionados\")" );
 	$script['fnjs_actividades'] = 1;
 }
 
 if (core\configGlobal::is_app_installed('notas')) {
 	if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso")) {   
-		$a_botones[]= array( 'txt' => _('ver tessera'),
+		$a_botones[]= array( 'txt' => _("ver tessera"),
 							'click' =>"fnjs_tessera(\"#seleccionados\")" ) ;
 		$script['fnjs_tessera'] = 1;
 	}
 	// en el caso de los de estudios añado la posibilidad de modificar el campo stgr
 	if ($_SESSION['oPerm']->have_perm("est")){
-		$a_botones[]=array( 'txt' => _('modificar stgr'),
+		$a_botones[]=array( 'txt' => _("modificar stgr"),
 							'click' =>"fnjs_modificar(\"#seleccionados\")" );
 		$script['fnjs_modificar'] = 1;
-		$a_botones[]=array( 'txt' => _('imprimir tessera'),
+		$a_botones[]=array( 'txt' => _("imprimir tessera"),
 							'click' =>"fnjs_imp_tessera(\"#seleccionados\")" );
 		$script['fnjs_imp_tessera'] = 1;
 	}
 }
 if (core\configGlobal::is_app_installed('actividadestudios')) {
 	if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso")) {   
-		$a_botones[]= array( 'txt' => _('posibles ca'),
+		$a_botones[]= array( 'txt' => _("posibles ca"),
 							'click' =>"fnjs_posibles_ca(\"#seleccionados\")" ) ;
 		$script['fnjs_posibles_ca'] = 1;
 	}
@@ -266,10 +266,10 @@ if (core\configGlobal::is_app_installed('actividadestudios')) {
 if (core\configGlobal::is_app_installed('actividadplazas')) {
 	if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso")) {   
 		$sactividad = 'ca'; //ca
-		$a_botones[]= array( 'txt' => _('petición ca'),
+		$a_botones[]= array( 'txt' => _("petición ca"),
 							'click' =>"fnjs_peticion_activ(\"#seleccionados\",\"$sactividad\")" ) ;
 		$sactividad = 'crt'; //crt
-		$a_botones[]= array( 'txt' => _('petición crt'),
+		$a_botones[]= array( 'txt' => _("petición crt"),
 							'click' =>"fnjs_peticion_activ(\"#seleccionados\",\"$sactividad\")" ) ;
 		$script['fnjs_posibles_activ'] = 1;
 	}
@@ -282,7 +282,7 @@ if ($_SESSION['oPerm']->have_perm("est")){
 		$permiso = 3;
 	}
 	if (core\configGlobal::is_app_installed('profesores')) {
-		$a_botones[]=array( 'txt' => _('ficha profesor stgr'),
+		$a_botones[]=array( 'txt' => _("ficha profesor stgr"),
 							'click' =>"fnjs_ficha_profe(\"#seleccionados\")" );
 		$script['fnjs_ficha_profe'] = 1;
 	}
@@ -291,20 +291,20 @@ if ($_SESSION['oPerm']->have_perm("est")){
 // Solo ver e imprimir tessera
 if (core\ConfigGlobal::mi_dele() === core\ConfigGlobal::mi_region()) {
 	$a_botones = [];
-	$a_botones[]= array( 'txt' => _('ver tessera'),
+	$a_botones[]= array( 'txt' => _("ver tessera"),
 						'click' =>"fnjs_tessera(\"#seleccionados\")" ) ;
 	$script['fnjs_tessera'] = 1;
-	$a_botones[]=array( 'txt' => _('imprimir tessera'),
+	$a_botones[]=array( 'txt' => _("imprimir tessera"),
 						'click' =>"fnjs_imp_tessera(\"#seleccionados\")" );
 	$script['fnjs_imp_tessera'] = 1;
-	$a_botones[]=array( 'txt' => _('ficha profesor stgr'),
+	$a_botones[]=array( 'txt' => _("ficha profesor stgr"),
 						'click' =>"fnjs_ficha_profe(\"#seleccionados\")" );
 	$script['fnjs_ficha_profe'] = 1;
 }
 // en el caso de los de dre añado la posibilidad de listar la atencion a las actividades
 if (core\configGlobal::is_app_installed('atnsacd')) {
 	if ($_SESSION['oPerm']->have_perm("des")){
-		$a_botones[]=array( 'txt' => _('atención actividades'),
+		$a_botones[]=array( 'txt' => _("atención actividades"),
 							'click' =>"fnjs_lista_activ(\"#seleccionados\")" );
 		$script['fnjs_lista_activ'] = 1;
 	}
@@ -324,8 +324,8 @@ if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso")
 	$a_cabeceras[]=ucfirst(_("stgr"));
 }   
 if (!empty($situacion)) { 
-	$a_cabeceras[]=ucfirst(_("situacion"));
-	$a_cabeceras[]= array('name'=>ucfirst(_("fecha cambio situacion")),'class'=>'fecha');
+	$a_cabeceras[]=ucfirst(_("situación"));
+	$a_cabeceras[]= array('name'=>ucfirst(_("fecha cambio situación")),'class'=>'fecha');
 } 
 
 $i = 0;

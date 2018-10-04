@@ -86,7 +86,7 @@ $condicion .= empty($condta_sr)? '' : '|^'.$condta_sr;
 $aWhereAct['id_tipo_activ'] = $condicion;
 $aOperadorAct['id_tipo_activ'] = "~";
 
-/*generamos el período de la búsqueda de actividades
+/*generamos el periodo de la búsqueda de actividades
 en función de las condiciones que tengamos: */
 $any=empty($Qyear)? date('Y') : $Qyear;
 	
@@ -176,7 +176,7 @@ foreach ($cCentros as $oCentro) {
 		$cAsistencias = $GesAsistencias->getActividadesDeAsistente($aWhereNom,$aWhereAct,$aOperadorAct);
 		$aActividades = array();
 		if (is_array($cAsistencias) && count($cAsistencias) == 0) {
-			$nom_activ=_("Pendiente de solicitar");
+			$nom_activ=_("pendiente de solicitar");
 		} else {
 			$a=0;
 			foreach ($cAsistencias as $oActividadAsistente) {

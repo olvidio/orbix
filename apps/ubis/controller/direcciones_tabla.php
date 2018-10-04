@@ -37,10 +37,10 @@ $a_cabeceras=array(_("id"),
                    _("cp"),
                    _("ciudad"),
                    _("provincia"),
-                   _("ap. Correos"),
+                   _("ap. correos"),
                    _("país"),
 				   	array('name'=>ucfirst(_("última modif.")),'class'=>'fecha'),
-                   _("obervaciones") 
+                   _("observaciones") 
 		);
 $a_botones=array();
 $a_valores=array();

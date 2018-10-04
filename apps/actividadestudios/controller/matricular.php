@@ -115,7 +115,7 @@ foreach($cAlumnos as $oPersonaDl) {
 				$cMatriculas = $GesMatriculas->getMatriculas(array('id_nom'=>$id_nom,'id_activ'=>$id_activ_1));
 				foreach ($cMatriculas as $oMatricula) {
 					if ($oMatricula->DBEliminar() === false) {
-						echo _("Hay un error, no se ha eliminado");
+						echo _("hay un error, no se ha eliminado");
 					}
 				}
 			
@@ -149,7 +149,7 @@ foreach($cAlumnos as $oPersonaDl) {
 									$oMatricula = new actividadestudios\MatriculaDl(array('id_activ'=>$id_activ_1,'id_asignatura'=>$id_asignatura,'id_nom'=>$id_nom));
 									$oMatricula->setPreceptor($preceptor);
 									if ($oMatricula->DBGuardar() === false) {
-										echo _("Error al guardar la matrícula");
+										echo _("error al guardar la matrícula");
 									}
 								} else {
 									continue;
@@ -164,7 +164,7 @@ foreach($cAlumnos as $oPersonaDl) {
 									$oMatricula = new actividadestudios\MatriculaDl(array('id_activ'=>$id_activ_1,'id_asignatura'=>$id_asignatura,'id_nom'=>$id_nom));
 									$oMatricula->setPreceptor($preceptor);
 									if ($oMatricula->DBGuardar() === false) {
-										echo _("Error al guardar la matrícula");
+										echo _("error al guardar la matrícula");
 									}
 								} else {
 									continue;
@@ -179,7 +179,7 @@ foreach($cAlumnos as $oPersonaDl) {
 									$oMatricula = new actividadestudios\MatriculaDl(array('id_activ'=>$id_activ_1,'id_asignatura'=>$id_asignatura,'id_nom'=>$id_nom));
 									$oMatricula->setPreceptor($preceptor);
 									if ($oMatricula->DBGuardar() === false) {
-										echo _("Error al guardar la matrícula");
+										echo _("error al guardar la matrícula");
 									}
 								} else {
 									continue;
@@ -190,7 +190,7 @@ foreach($cAlumnos as $oPersonaDl) {
 						$oMatricula = new actividadestudios\MatriculaDl(array('id_activ'=>$id_activ_1,'id_asignatura'=>$id_asignatura,'id_nom'=>$id_nom));
 						$oMatricula->setPreceptor($preceptor);
 						if ($oMatricula->DBGuardar() === false) {
-							echo _("Error al guardar la matrícula");
+							echo _("error al guardar la matrícula");
 						}
 					}
 					$m++;

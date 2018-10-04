@@ -36,7 +36,7 @@ fnjs_guardar=function(formulario){
 	}
 }
 fnjs_eliminar=function(formulario){
-	if (confirm("<?= _("¿Esta seguro que desea borrar esta casa?");?>") ) {
+	if (confirm("<?= _("¿Está seguro que desea borrar esta casa?");?>") ) {
 	   	$('#que').val('eliminar_ubi');
 	   	$(formulario).attr('action','apps/ubis/controller/ubis_update.php');
 		$(formulario).submit(function() {

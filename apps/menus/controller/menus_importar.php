@@ -21,7 +21,7 @@ $Qtodos = empty($Qtodos)? 2 : $Qtodos;
 
 if ($Qseguro == 2) {
     if (core\ConfigGlobal::mi_dele() == 'dlb') {
-        echo _("casi seguro que no quieres hacerlo.");
+        echo _("casi seguro que no quieres hacerlo");
         echo "<br>";
 
         $go1=web\Hash::link('apps/menus/controller/menus_importar.php?'.http_build_query(array('seguro'=>1,'todos'=>1)));

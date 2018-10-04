@@ -403,7 +403,7 @@ class Metamenu Extends core\ClasePropiedades {
 	function getDatosDescripcion() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'descripcion'));
-		$oDatosCampo->setEtiqueta(_("descripcion"));
+		$oDatosCampo->setEtiqueta(_("descripción"));
 		$oDatosCampo->setTipo('texto');
 		$oDatosCampo->setArgument(50);
 		return $oDatosCampo;

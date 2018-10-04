@@ -25,7 +25,7 @@ if (ConfigGlobal::$ubicacion == 'int') {
 if (isset($Qdel) && $Qdel==1 ) {
 	$oMenu->setId_menu($Qid_menu);
 	if ($oMenu->DBEliminar() === false) {
-		echo _('Hay un error, no se ha eliminado');
+		echo _("hay un error, no se ha eliminado");
 	}
 } else {
 	$Qorden = (string) \filter_input(INPUT_POST, 'orden');
@@ -42,7 +42,7 @@ if (isset($Qdel) && $Qdel==1 ) {
 	$oMenu->setParametros($Qparametros);
 	$oMenu->setPerm_menu($Qperm_menu);
 	if ($oMenu->DBGuardar() === false) {
-		echo _('Hay un error, no se ha guardado');
+		echo _("hay un error, no se ha guardado");
 	}
 }
 

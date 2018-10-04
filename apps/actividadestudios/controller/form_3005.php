@@ -81,7 +81,7 @@ if (!empty($Qid_asignatura)) { //caso de modificar
 		$oDesplAsignaturas->setNombre('id_asignatura');
 		$oDesplAsignaturas->setAction("fnjs_mas_profes('asignatura')");
 	} else {
-		exit (_("deberia haber un nombre de asignatura"));
+		exit (_("debería haber un nombre de asignatura"));
 		$id_dossier = (integer)  \filter_input(INPUT_POST, 'id_dossier');
 		$tabla_pau = (string)  \filter_input(INPUT_POST, 'tabla_pau');
 		$go_to=urlencode(core\ConfigGlobal::getWeb()."/apps/dossiers/controller/dossiers_ver.php?pau=a&id_pau=$Qid_activ&id_dossier=$id_dossier&tabla_pau=$tabla_pau&permiso=3");

@@ -41,7 +41,7 @@ $oDatosUpdate->setFicha($oFicha);
 // campos del dossier (de hecho todo el $_POST, porque desconozco...)
 $oDatosUpdate->setCampos($_POST);
 
-$rta = _("No se ha ejecutado la acción");
+$rta = _("no se ha ejecutado la acción");
 switch ($Qmod) {
 	case 'eliminar':
 		$rta = $oDatosUpdate->eliminar();

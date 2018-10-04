@@ -28,7 +28,7 @@ fnjs_left_side_hide();
 			echo "<tr><td>{$row['asignatura']}</td>";
 			if ($row['nota'] < 0) {
 				$class = "alert";
-				$nota = _("Pendiente");
+				$nota = _("pendiente");
 				$fecha = '';
 			} else {
 				$class = '';
@@ -46,14 +46,14 @@ fnjs_left_side_hide();
 	</table>
 	</td></tr>
 	<tr><td>
-	<?= sprintf(_("Número de asignaturas hechas: %s (de %s)"),$numasig,$num_asig_total); ?>
+	<?= sprintf(ucfirst(_("número de asignaturas hechas: %s (de %s)")),$numasig,$num_asig_total); ?>
 	</td><td>
-	<?= sprintf(_("Número de asignaturas cursadas el curso %s: %s"),$curso_txt,$numasig_year); ?>
+	<?= sprintf(ucfirst(_("número de asignaturas cursadas el curso %s: %s")),$curso_txt,$numasig_year); ?>
 	</td></tr>
 	<tr><td>
-	<?= sprintf(_("Número de créditos realizados: %s (de %s)"),$numcred,$num_creditos_total); ?>
+	<?= sprintf(ucfirst(_("número de créditos realizados: %s (de %s)")),$numcred,$num_creditos_total); ?>
 	</td><td>
-	<?= sprintf(_("Número de créditos realizados el curso %s: %s"),$curso_txt,$numcred_year); ?>
+	<?= sprintf(ucfirst(_("número de créditos realizados el curso %s: %s")),$curso_txt,$numcred_year); ?>
 	</td></tr>
 </table>
 </div>

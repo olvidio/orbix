@@ -54,14 +54,14 @@ fnjs_guardar=function(tipo=''){
 	var id_actividad_val=$('#iactividad_val').val();
 	var id_nom_tipo_val=$('#inom_tipo_val').val();
 
-	if (id_sfsv_val == '.') { alert("<?= _("Debe concretar la sección en el tipo de Actividad") ?>"); err=1; }
-	if (id_asistentes_val == '.') { alert("<?= _("Debe concretar los asistentes en el tipo de Actividad") ?>"); err=1; }
-	if (id_actividad_val == '.') { alert("<?= _("Debe concretar la actividad en el tipo de Actividad") ?>"); err=1; }
-	if (id_nom_tipo_val == '...') { alert("<?= _("Debe concretar el tipo de Actividad") ?>"); err=1; }
+	if (id_sfsv_val == '.') { alert("<?= _("debe concretar la sección en el tipo de actividad") ?>"); err=1; }
+	if (id_asistentes_val == '.') { alert("<?= _("debe concretar los asistentes en el tipo de actividad") ?>"); err=1; }
+	if (id_actividad_val == '.') { alert("<?= _("debe concretar la actividad en el tipo de actividad") ?>"); err=1; }
+	if (id_nom_tipo_val == '...') { alert("<?= _("debe concretar el tipo de actividad") ?>"); err=1; }
 	/* fin de tipo */
 	
 	if (!dl_org) { 
-		alert("<?= _("Debe llenar el campo de Organiza") ?>"); err=1;
+		alert("<?= _("debe llenar el campo de Organiza") ?>"); err=1;
 	}
 
 	var rr=fnjs_comprobar_campos('#modifica','<?= addslashes($obj) ?>');
@@ -133,7 +133,7 @@ fnjs_tipo_actividad=function(){
 	<tr><th colspan='8' class=titulo_inv><?= $titulo=strtoupper(_("datos actividad")); ?></th>
 	<?php
 	if(core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->only_perm('ver')) {
-		echo "<tr><td colspan=8 class='alerta'>"._('no tiene permisos para modificar los datos')."</td></tr>";
+		echo "<tr><td colspan=8 class='alerta'>"._("no tiene permisos para modificar los datos")."</td></tr>";
 	}
 	if(core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->only_perm('borrar')) { ?>
 	<td><input type="Button" value="<?= ucfirst(_("cambiar el tipo")); ?>" onclick="fnjs_tipo_actividad()"></td>
@@ -150,7 +150,7 @@ fnjs_tipo_actividad=function(){
 		<td class=etiqueta><?= ucfirst(_("actividad")); ?>: 
 			<span class=contenido><?= $sactividad ?></span>
 			<input type='Hidden' id='sactividad' name='sactividad' value="<?= $sactividad ?>"></span></td>
-		<td class=etiqueta><?= ucfirst(_("tipo actividad")); ?>: 
+		<td class=etiqueta><?= ucfirst(_("tipo de actividad")); ?>: 
 		<!--para no hacerse un lio con el generar actividad válido para otros formularios,--> 
 			<span class=contenido><?= "$snom_tipo"?>
 				<input type='Hidden' id='snom_tipo' name='snom_tipo' value="<?= $snom_tipo ?>"></span></td>
@@ -177,11 +177,11 @@ fnjs_tipo_actividad=function(){
 </td></tr>
 <tr>
 	<td class=etiqueta><?= ucfirst(_("fecha inicio")); ?>: </td><td><input class=fecha size="11" id="f_ini" name="f_ini" value="<?= $f_ini ?>">
-	  <td class=etiqueta><?= ucfirst(_("hora inicio")); ?>: </td><td><input class=contenido size="6" id="h_ini" name="h_ini" value="<?= $h_ini ?>" title="<?= _('formato [hh:mm]') ?>">
+	  <td class=etiqueta><?= ucfirst(_("hora inicio")); ?>: </td><td><input class=contenido size="6" id="h_ini" name="h_ini" value="<?= $h_ini ?>" title="<?= _("formato [hh:mm]") ?>">
 </td></tr>
 <tr>
 	<td class=etiqueta><?= ucfirst(_("fecha fin")); ?>: </td><td><input class=fecha size="11" id="f_fin" name="f_fin" value="<?= $f_fin ?>">
-	  <td class=etiqueta><?= ucfirst(_("hora fin")); ?>: </td><td><input class=contenido size="6" id="h_fin" name="h_fin" value="<?= $h_fin ?>" title="<?= _('formato [hh:mm]') ?>">
+	  <td class=etiqueta><?= ucfirst(_("hora fin")); ?>: </td><td><input class=contenido size="6" id="h_fin" name="h_fin" value="<?= $h_fin ?>" title="<?= _("formato [hh:mm]") ?>">
 </td></tr>
 <?php
 ?>
@@ -206,23 +206,23 @@ fnjs_tipo_actividad=function(){
 <td><?= $oDesplPosiblesTipoTarifas->desplegable(); ?></td>
 <td class=etiqueta><?= ucfirst(_("precio")); ?>: </td>
   <td>
-  <input type=text class="contenido derecha" id="precio" name="precio" value="<?= $precio ?>" size="8" > <?= _('€') ?>
+  <input type=text class="contenido derecha" id="precio" name="precio" value="<?= $precio ?>" size="8" > <?= _("€") ?>
 </td></tr>
 <tr><td class=etiqueta>
 <?= ucfirst(_("observaciones")); ?>:</td><td colspan=2><input class=contenido size="30" id="observ" name="observ" value="<?= htmlspecialchars($observ) ?>">
 </td></tr>
 <tr>
-	<td class=etiqueta><?= ucfirst(_(" repetición anual por")); ?>:</td>
+	<td class=etiqueta><?= ucfirst(_("repetición anual por")); ?>:</td>
 <td colspan=2>
 <?= $oDesplRepeticion->desplegable(); ?>
 </td>
-<td class=etiqueta><?= ucfirst(_(" nivel de stgr")); ?>:</td>
+<td class=etiqueta><?= ucfirst(_("nivel de stgr")); ?>:</td>
 <td colspan=2>
 <?= $oDesplNivelStgr->desplegable(); ?>
 </td>
 </tr><tr>
 	<td class=etiqueta><?= _("publicado") ?>:</td>
-<td><input type="Radio" id="pub_1" name="publicado" value="t" <?php if ($publicado == true) { echo "checked";} ?>><?= _("si"); ?>
+<td><input type="Radio" id="pub_1" name="publicado" value="t" <?php if ($publicado == true) { echo "checked";} ?>><?= _("sí"); ?>
 <input type="Radio" id="pub_2" name="publicado" value="f" <?php if ($publicado == false) { echo "checked";} ?>><?= _("no"); ?></td>
 </tr>
 </table>

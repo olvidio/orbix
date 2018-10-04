@@ -71,7 +71,7 @@ class listaPlazas {
 		$cActividades = $GesActividades->getActividades($this->aWhere,$this->aOperador);
 
 		if (is_array($cActividades) && count($cActividades) < 1) {
-			echo strtoupper_dlb(_("No existe ninguna actividad con esta condición.")); 
+			echo strtoupper_dlb(_("no existe ninguna actividad con esta condición")); 
 			// retorno una lista vacia para que no dé errores.
 			$oLista = new Lista();
 			$oLista->setGrupos(array());
@@ -259,12 +259,12 @@ class listaPlazas {
 			}
 
 			if ($publicado === true) {
-				$plazas_txt = sprintf(_("Plazas (max-min): %s, para la dl: %s, ocupadas + pedidas: %s"),$plazas_casa,$pl_disponibles,$pl_ocupadas_pedidas);
+				$plazas_txt = sprintf(_("plazas (max-min): %s, para la dl: %s, ocupadas + pedidas: %s"),$plazas_casa,$pl_disponibles,$pl_ocupadas_pedidas);
 				// Nombre actividad y plazas:
 				$aGrupos[$id_activ] = $nom_activ;
 				$aGrupos[$id_activ] .= '<br>'." $plazas_txt, "._("dif").": $pl_dif_txt";
 			} else {
-				$plazas_txt = sprintf(_("Plazas (max-min): %s, ocupadas: %s"),$plazas_casa,$num_txt);
+				$plazas_txt = sprintf(_("plazas (max-min): %s, ocupadas: %s"),$plazas_casa,$num_txt);
 				$aGrupos[$id_activ] = $nom_activ;
 				$aGrupos[$id_activ] .= '<br>'." $plazas_txt";
 			}

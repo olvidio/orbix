@@ -14,7 +14,7 @@ $miRole=$oMiUsuario->getId_role();
 $sfsv = core\ConfigGlobal::mi_sfsv();
 
 if ($miRole > 3) { 
-	exit(_('no tiene permisos para ver esto')); // no es administrador
+	exit(_("no tiene permisos para ver esto")); // no es administrador
 }
 
 $Qusername = (string) \filter_input(INPUT_POST, 'username');
@@ -43,10 +43,10 @@ if (isset($oGrupo) && is_object($oGrupo)) {
 	$usuario=$oGrupo->getUsuario();
 }
 
-$a_cabeceras=array(_('grupo'));
-$a_botones[] = array( 'txt'=> _('borrar'),
+$a_cabeceras=array(_("grupo"));
+$a_botones[] = array( 'txt'=> _("borrar"),
 					'click'=>"fnjs_eliminar(\"#seleccionados\")");
-$a_botones[] = array( 'txt' => _('modificar'),
+$a_botones[] = array( 'txt' => _("modificar"),
 					'click' =>"fnjs_modificar(\"#seleccionados\")" );
 
 $a_valores=array();

@@ -35,7 +35,7 @@ switch ($que) {
 			$oActividadDl->DBCarregar();
 			$oActividadDl->setPlazas($plazas);
 			if ($oActividadDl->DBGuardar() === false) {
-				echo _('Hay un error, no se ha guardado');
+				echo _("hay un error, no se ha guardado");
 			}
 		} else { //para el resto
 			// $dl puede ser dlx-c para las concedidas, o dlx-p para las pedidas.
@@ -54,7 +54,7 @@ switch ($que) {
 				
 			//print_r($oActividadPlazasDl);
 			if ($oActividadPlazasDl->DBGuardar() === false) {
-				echo _('Hay un error, no se ha guardado');
+				echo _("hay un error, no se ha guardado");
 			}
 			//$oPosicion = new web\Posicion();
 			//echo $oPosicion->ir_a("usuario_form.php?quien=usuario&id_usuario=".$_POST['id_usuario']);

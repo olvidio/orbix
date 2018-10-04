@@ -105,11 +105,11 @@ $cActas = $GesActas->getActas($aWhere,$aOperador);
 
 $botones = 0; // para 'añadir acta'
 if ($_SESSION['oPerm']->have_perm("est")) {
-	$a_botones[] = array( 'txt' => _('eliminar'), 'click' =>"fnjs_eliminar(\"#seleccionados\")");
-	$a_botones[] = array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(\"#seleccionados\")");
+	$a_botones[] = array( 'txt' => _("eliminar"), 'click' =>"fnjs_eliminar(\"#seleccionados\")");
+	$a_botones[] = array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(\"#seleccionados\")");
 	$botones = 1; // para 'añadir acta'
 }
-$a_botones[] = array( 'txt' => _('imprimir'), 'click' =>"fnjs_imprimir(\"#seleccionados\")" );
+$a_botones[] = array( 'txt' => _("imprimir"), 'click' =>"fnjs_imprimir(\"#seleccionados\")" );
 
 $a_cabeceras=array( array('name'=>ucfirst(_("acta")),'formatter'=>'clickFormatter'), 
 		array('name'=>ucfirst(_("fecha")),'class'=>'fecha'),
@@ -154,7 +154,7 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$txt_eliminar = _("Esto eliminará los datos del acta, pero no las notas que mantendrán el número de acta");
+$txt_eliminar = _("esto eliminará los datos del acta, pero no las notas que mantendrán el número de acta");
 					
 $a_campos = ['oPosicion' => $oPosicion,
 			'oHash' => $oHash,

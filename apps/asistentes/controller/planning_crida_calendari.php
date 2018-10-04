@@ -196,7 +196,7 @@ if ($interval < 2) $doble=0;
 switch ($Qtipo) {
 	case 'planning':
 	case 'p_de_paso':
-		$cabecera=ucfirst(_('persona seleccionada'));
+		$cabecera=ucfirst(_("persona seleccionada"));
 		$oGesPersonas = new personas\GestorPersonaDl();
 		$aWhere['id_nom'] = implode(',',$aid_nom);
 		$aOperador['id_nom'] = 'OR';
@@ -207,7 +207,7 @@ switch ($Qtipo) {
 		if (!empty($Qid_ubi)) { 
 			$id_ubi=strtok($Qid_ubi,'#');
 			$nombre_ubi=strtok('#');
-			$cabecera=ucfirst(sprintf(_('personas de: %s'),$nombre_ubi));
+			$cabecera=ucfirst(sprintf(_("personas de: %s"),$nombre_ubi));
 			$GesPersonas = new personas\GestorPersonaDl();
 			$aWhereP['id_ctr'] = $id_ubi;
 			$cPersonas = $GesPersonas->getPersonasDl($aWhereP);
@@ -242,7 +242,7 @@ switch ($Qtipo) {
 				}
 			}
 		} else {
-			$cabecera=ucfirst(_('centros'));
+			$cabecera=ucfirst(_("centros"));
 			$Qtodos_n = (string) \filter_input(INPUT_POST, 'todos_n');
 			$Qtodos_agd = (string) \filter_input(INPUT_POST, 'todos_agd');
 			$Qtodos_s = (string) \filter_input(INPUT_POST, 'todos_s');
@@ -259,10 +259,10 @@ switch ($Qtipo) {
 		}		
 	break;
 	case 'planning_cdc':
-		$cabecera=ucfirst(_('planning de casas'));
+		$cabecera=ucfirst(_("planning de casas"));
 	break;
 	case 'casa':
-		$cabecera=ucfirst(_('planning de casas'));
+		$cabecera=ucfirst(_("planning de casas"));
 	break;
 }
 
@@ -375,10 +375,10 @@ if ($Qtipo=='planning_cdc' || $Qtipo=='casa') {
 		foreach ($aUbis as $id_ubi) {
 			$a_cdc=array();
 			if (empty($id_ubi)) {
-				$nombre_ubi= _('por determinar');
+				$nombre_ubi= _("por determinar");
 				$cdc[$p]="u#2#$nombre_ubi"; // hay que poner un id_ubi para que vaya bien la función de dibujar el calendario.
 			} elseif ($id_ubi == 1) {
-				$nombre_ubi= _('otros lugares');
+				$nombre_ubi= _("otros lugares");
 				$cdc[$p]="u#$id_ubi#$nombre_ubi";
 			} else {
 				$oCasa = new ubis\Ubi($id_ubi);
@@ -518,8 +518,8 @@ if ($Qtipo=='planning_cdc' || $Qtipo=='casa') {
 				$f_ini = $oActividadAsignatura->getF_ini();
 				$f_fin = $oActividadAsignatura->getF_fin();
 
-				$nom_curt = _('clases stgr');
-				$nom_llarg = $nom_curt." "._('en')." ".$nom_activ;
+				$nom_curt = _("clases stgr");
+				$nom_llarg = $nom_curt." "._("en")." ".$nom_activ;
 				$aActivPersona[]=array(
 								'nom_curt'=>$nom_curt,
 								'nom_llarg'=>$nom_llarg,

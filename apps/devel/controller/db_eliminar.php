@@ -79,4 +79,4 @@ if (!empty($Qsv) && !empty($Qsf)) {
 	$oDBRol->eliminarUsuario();
 }
 
-echo _("Datos pasados a resto y tablas vaciadas");
+echo _("datos pasados a resto y tablas vaciadas");

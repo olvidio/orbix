@@ -249,7 +249,7 @@ Abstract class TelecoUbiGlobal Extends core\ClasePropiedades {
 	function getDatosDesc_teleco() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'desc_teleco'));
-		$oDatosCampo->setEtiqueta(_("descripcion"));
+		$oDatosCampo->setEtiqueta(_("descripción"));
 		$oDatosCampo->setTipo('depende');
 		$oDatosCampo->setArgument('ubis\model\entity\DescTeleco');
 		$oDatosCampo->setArgument2('desc_teleco');

@@ -1,30 +1,3 @@
-<?php
-namespace core;
-use web;
-
-// INICIO Cabecera global de URL de controlador *********************************
-	require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
-
-// Crea los objectos de uso global **********************************************
-	require_once ("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
-
-include_once(ConfigGlobal::$dir_estilos.'/todo_en_uno.css.php');
-echo "<style>";
-include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
-echo "</style>";
-
-?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <title>index</title>
-  </head>
-  <body class="otro">
-
-
 <p>Existe una plantilla con todas las frases a traducir en:
 	orbix/languages/es_ES.pot
 </p>
@@ -32,15 +5,23 @@ Para cada idioma exite una carpeta:
 en_US.UTF-8/LC_MESSAGES
 
 con dos archivos: "orbix.po" y "orbix.mo" (se debe llamar orbix)
-Sólo hay que editar ell ".po".
+Sólo hay que editar "orbix.po".
 
-Cuando ha habido cambios en el programa hay que actualizar desde la plantilla.
+<ol>
 
+<li>Cuando ha habido cambios en el programa hay que actualizar desde la plantilla.<br>
+Para ello, abrir la plantilla con poedit, y dar a "actualizar desde las fuentes".
+</li>  
+<li>Para poder traducir los menus, hay que ejecutar:<br>
+ Sistema > traducciones > menus.<br>
+ Esto genera un archivo de texto con el texto de los menus. Asi al generar los archivo de tracuccion (.pot) tinene en cuenta estos textos que de hecho están en la base de datos. </li>
 
+<li>Para crear un nuevo idioma:
+a) si queremos usar el google traductor, creamos el fichero .po para el spanish, y lo subimos al traductor toolkit (que es distinto del traductor). Ver más abajo.
+<br>
+https://translate.google.com/toolkit/list?hl=ca#translations/active
 
-
-	  
-<li>Para poder traducir los menus, hay que ejecutar Sistema > traducciones > menus. Esto genera un archivo de texto con el texto de los menus. Asi al generar los archivo de tracuccion (.po) tinene en cuenta estos textos que de hecho están en la base de datos. </li>
+</ol>
 
 <h1>Poedit</h1>
 
@@ -65,6 +46,8 @@ Cuando ha habido cambios en el programa hay que actualizar desde la plantilla.
 
 <h1>Google Translator Toolkit</h1>
 a la que hay que acceder con una cuenta Google.
+
+https://translate.google.com/toolkit/list?hl=ca#translations/active
 
 Al parecer es una herramienta para organizar traducciones, pero yo le he dado el siguiente uso: Traducir temas de WordPress o drupal o cualquier otro que utilize archivos o  ficheros .po
 <ol>

@@ -69,8 +69,8 @@ if( (core\ConfigGlobal::is_app_installed('avisos')) && (!empty($Qid_usuario)) &&
 	$i=0;
 	$a_cabeceras_avisos=array('dl propia','tipo de actividad','fase inicial','fase final','objeto','tipo de aviso','campos','valor');
 	$a_botones_avisos=array(
-				array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(\"#avisos\")" ),
-				array( 'txt' => _('eliminar'), 'click' =>"fnjs_borrar(\"#avisos\")" ) 
+				array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(\"#avisos\")" ),
+				array( 'txt' => _("eliminar"), 'click' =>"fnjs_borrar(\"#avisos\")" ) 
 			);
 	$a_valores_avisos=array();
 	$oFase = new ActividadFase();
@@ -86,7 +86,7 @@ if( (core\ConfigGlobal::is_app_installed('avisos')) && (!empty($Qid_usuario)) &&
 		$aviso_tipo=$oCambioUsuarioTablaPref->getAviso_tipo();
 
 
-		if ($dl_propia=='t') { $dl_propia_txt = core\ConfigGlobal::$dele; } else { $dl_propia_txt = _('otras'); }
+		if ($dl_propia=='t') { $dl_propia_txt = core\ConfigGlobal::$dele; } else { $dl_propia_txt = _("otras"); }
 
 		$oTipoActividad = new web\TiposActividades($oCambioUsuarioTablaPref->getId_tipo_activ_txt());
 
@@ -128,7 +128,7 @@ if( (core\ConfigGlobal::is_app_installed('avisos')) && (!empty($Qid_usuario)) &&
 
 // a los usuarios normales (no administrador) sólo dejo ver la parte de los avisos.
 if ($miRole < 4) {
-	if ($miRole > 3) exit(_('no tiene permisos para ver esto')); // no es administrador
+	if ($miRole > 3) exit(_("no tiene permisos para ver esto")); // no es administrador
 	if ($miRole != 1) { $cond_role="WHERE id_role <> 1 "; } else {$cond_role="WHERE id_role > 0 "; } //absurda cond, pero pero para que no se borre el role del superadmin
 
 	switch($miSfsv) {
@@ -259,7 +259,7 @@ if ($miRole < 4) {
 	$oHash1->setCamposNo('scroll_id'); 
 	$h1 = $oHash1->linkSinVal();
 	
-	$txt_eliminar = _("¿Esta Seguro que desea quitar este permiso");
+	$txt_eliminar = _("¿Está seguro que desea quitar este permiso?");
 	
 	$a_campos = [
 				'url_usuario_ajax' => $url_usuario_ajax,

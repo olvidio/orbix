@@ -6,7 +6,7 @@
 <table><tr><td>
 <?= ucfirst(_("plan de estudios confirmado")); ?>
 <input type='Radio' id='est_ok' name='est_ok' value='t' <?= $chk_1 ?> onclick="fnjs_grabar_est(this.form,<?= $ca_num ?>)">
-<?= ucfirst(_("si")); ?>
+<?= ucfirst(_("sí")); ?>
 <input type='Radio' id='est_ok' name='est_ok' value='f' <?= $chk_2 ?> onclick="fnjs_grabar_est(this.form,<?= $ca_num ?>)">
 <?= ucfirst(_("no")) ?>
 </td>
@@ -24,7 +24,7 @@
 </td>
 <!--=============== boton matricular automáticamente ============-->
 <td class=botones>
-	<input  type="button" onclick="fnjs_matricular(this.form,<?= $ca_num ?>);" value="<?=  _("matricular automáticamente"); ?>">
+	<input  type="button" onclick="fnjs_matricular(this.form,<?= $ca_num ?>);" value="<?=  _("matrícular automáticamente"); ?>">
 </td>
 </tr></table></form>
 </fieldset><br>

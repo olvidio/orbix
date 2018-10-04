@@ -22,7 +22,7 @@ switch($Qque) {
 				$id_item=strtok($sel,"#");
 				$oGrupMenuRole = new menus\GrupMenuRole($id_item);
 				if ($oGrupMenuRole->DBEliminar() === false) {
-					echo _('Hay un error, no se ha eliminado');
+					echo _("hay un error, no se ha eliminado");
 				}
 			} 
 		}
@@ -38,7 +38,7 @@ switch($Qque) {
 				$oGrupMenuRole->setId_role($id_role);
 				$oGrupMenuRole->setId_grupmenu($id_grupmenu);
 				if ($oGrupMenuRole->DBGuardar() === false) {
-					echo _('Hay un error, no se ha guardado');
+					echo _("hay un error, no se ha guardado");
 				}
 			} 
 		}
@@ -58,7 +58,7 @@ switch($Qque) {
 			$oRole->setSv($sv);
 			$oRole->setPau($Qpau);
 			if ($oRole->DBGuardar() === false) {
-				echo _('Hay un error, no se ha guardado');
+				echo _("hay un error, no se ha guardado");
 			}
 		} else { exit("debe poner un nombre"); }
 	break;
@@ -76,7 +76,7 @@ switch($Qque) {
 			$oRole->setSv($sv);
 			$oRole->setPau($Qpau);
 			if ($oRole->DBGuardar() === false) {
-				echo _('Hay un error, no se ha guardado');
+				echo _("hay un error, no se ha guardado");
 			}
 		} else { exit("debe poner un nombre"); }
 		break;
