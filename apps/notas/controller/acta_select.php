@@ -72,8 +72,12 @@ if (!empty($Qacta)) {
 			$Qacta = empty($matches[3])? "$mi_dele ".$matches[1].'/'.date("y") : "$mi_dele $Qacta";
 			$GesActas = new notas\GestorActaDl();
 		} else {
-		// Ojo si la dl ya existe no deberia hacerse
-			$GesActas = new notas\GestorActaEx();
+			// Si es cr, se mira en todas:
+			if (core\ConfigGlobal::mi_dele() === core\ConfigGlobal::mi_region()) {
+				$GesActas = new notas\GestorActa();
+			} else {
+				$GesActas = new notas\GestorActaEx();
+			}
 		}
 	}
 
