@@ -49,8 +49,8 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 		$f_acta=$oActa->getF_acta();
 		if (!$acta || !$f_acta) {
 			$error .= sprintf(_("debe introducir los datos del acta. No se ha guardado nada.")."\n");
+			exit($error);
 		}
-		if (!empty($error)) exit($error);
 		// Sólo grabo si está superada.
 		//if (!in_array($id_situacion,$aIdSuperadas)) continue;
 		if (empty($nota_max)) {
@@ -59,7 +59,7 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 		// Acepto nota_num=0 para borrar.
 		if (!empty($nota_num) && $nota_num/$nota_max < 0.6) {
 			$nn = $nota_num/$nota_max * 10;
-			$error .= sprintf(_("nota no guardada para %s porque la nota (%s) no llega al mínimo: 6"),$oPersona->getNombreApellidos(),$nn);
+			$error .= sprintf(_("nota no guardada para %s porque la nota (%s) no llega al mínimo: 6"),$oPersona->getNombreApellidos(),$nn)."\n";
 			continue;
 		}
 				
@@ -165,7 +165,7 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 				$oPersonaNota->setNota_max($nota_max);
 				$oPersonaNota->setTipo_acta(notas\PersonaNota::FORMATO_ACTA);
 				if ($oPersonaNota->DBGuardar() === false) {
-					echo _('Hay un error, no se ha guardado');
+					echo _("hay un error, no se ha guardado");
 				}
 			}
 		}
@@ -198,7 +198,7 @@ if ($Qque==1) { // Grabar las notas en la matricula
 		$oMatricula->setActa($Qacta[$n]);
 		if ($Qnota_num[$n] > 1) $oMatricula->setId_situacion(10);
 		if ($oMatricula->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 	}
 	$go_to = '';
@@ -214,9 +214,9 @@ if (empty($error)) {
    }
 } else {
 	echo $error;
-	echo "<br>";
+	echo "\n";
 	
 //	$go_avant = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/acta_imprimir.php?'.http_build_query(array('acta'=>$acta)));
-//	echo "<input type='button' onclick=fnjs_update_div('#main','".$go_avant."') value="._('continuar').">";
+//	echo "<input type='button' onclick=fnjs_update_div('#main','".$go_avant."') value="._("continuar").">";
 
 }
