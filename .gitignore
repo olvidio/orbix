@@ -41,10 +41,9 @@ apps/web/hash.class.php
 ehthumbs.db
 Thumbs.db
 /nbproject/private/
-!/log/menus/refgrupmenu.sql
 !/log/menus/comun.sql
-!/log/menus/refmenus.sql
+!/log/menus/refgrupmenu.sql
 !/log/menus/refgrupmenu_rol.sql
+!/log/menus/refmenus.sql
 !/log/menus/tot_menus.sql
-/apps/personas/controller/traslado_update (còpia).php
 !/log/menus/tot_menus_base.sql
