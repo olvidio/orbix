@@ -6,7 +6,6 @@
 236	{120,20}	buscar crt s	sasistentes=s&sactividad=crt	71	2112	10	t
 315	{80,60}	lista varios ca	ssfsv=sv&sasistentes=n&sactividad=ca&que=list_cjto	119	2208	2	t
 324	{82,20}	lista varias cve	ssfsv=sv&sasistentes=n&sactividad=cve&que=list_cjto	119	2208	2	t
-143	{40}	planning 	\N	\N	2064	12	t
 820	{1,20,10}	a ODF Calc	\N	162	34078719	1	t
 127	{37}	cv agd	\N	\N	2064	12	t
 136	{35,90}	pendientes	sactividad=ca&tipo_personas=n	140	16	12	t
@@ -25,7 +24,6 @@
 54	{5,30}	sacd agd	tabla=p_agregados&na=a&tipo=persona&es_sacd=1	76	8	8	t
 193	{91}	buscar	\N	\N	2112	10	t
 310	{70,20}	buscar crt	sasistentes=n&sactividad=crt&que=ver	71	2208	2	t
-239	{140}	buscar n ó agd	\N	\N	64	10	t
 309	{70,60}	list varios crt	ssfsv=sv&sasistentes=n&sactividad=crt&que=list_cjto	119	2208	2	t
 147	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	2064	12	t
 329	{85,40}	por casas	tipo=planning_cdc&ssfsv=sv	61	2176	2	t
@@ -63,15 +61,17 @@
 380	{50,10,80}	sf s y sg	id_tipo_activ=2[45]&status=2&periodo=desdeHoy	71	8	8	t
 381	{50,10,90}	sf sr,sr-nax,sr-agd	id_tipo_activ=2[789]&status=2&periodo=desdeHoy	71	8	8	t
 516	{60,30}	lista usuarios		131	131071	9	t
-61	{10,10}	buscar 	simple=1&tipo=ctr&loc=dl	133	8	8	t
 506	{20}	ayuda		72	0	9	t
 255	{30}	historicos	\N	\N	\N	\N	t
 115	{10}	agenda vcdl		72	0	5	t
 836	{20,10}	actas	\N	60	16	12	t
+239	{140}	buscar n o agd	\N	0	64	10	t
+143	{40}	planning	\N	\N	2064	12	t
 100	{55,10}	buscar activ	que=ver&ssfsv=sv&sasistentes=sss+	119	8	8	t
 270	{60,40}	lista grupos	\N	122	33816576	13	t
 144	{40,10}	persona dl	obj_pau=PersonaDl&tipo=planning	61	2064	12	t
 89	{55,29}	propuesta cl cv	ssfsv=sv&sasistentes=sss%2B&sactividad=cv&que=list_cjto	119	8	8	t
+1384	{10}	personas	\N	0	16	21	t
 32	{80,60}	list varias cv	ssfsv=sv&sasistentes=agd&sactividad=cv&que=list_cjto	119	2082	3	t
 327	{85,30}	por centro	tipo=planning_ctr	61	2176	2	t
 317	{80,70}	lista por ctr	lista=list_activ&n_agd=n&sasistentes=n&sactividad=ca	147	2208	2	t
@@ -141,7 +141,6 @@
 838	{70,20}	buscar crt	sasistentes=nax&sactividad=crt&que=ver	71	18464	16	t
 847	{40}	planning		72	0	20	t
 844	{10}	centros y casas	\N	\N	131072	20	t
-845	{10,10}	buscar 	simple=1&tipo=ctr&loc=dl	133	131072	20	t
 846	{10,20}	listados	\N	48	131072	20	t
 854	{50}	actividades	\N	\N	131072	20	t
 855	{50,10}	buscar activ	que=ver	119	131072	20	t
@@ -214,11 +213,12 @@
 1378	{10,40}	profesor para asignatura	\N	171	16	21	t
 1379	{10,50}	claustro	\N	173	16	21	t
 1372	{10,10}	agd dl	tabla=p_agregados&tipo=persona	76	2064	21	t
-1384	{10}	personas	\N	0	16	21	t
 1385	{20}	actas	\N	0	16	21	t
 1386	{38}	sem inv.	\N	0	16	12	t
 1387	{38,10}	buscar	sasistentes=agd&sactividad=ca&que=ver	119	16	12	t
 1391	{38,110}	gestión de plazas	ssfsv=sv&sasistentes=agd&sactividad=ca	169	16	12	t
 1389	{82,110}	Gestión de plazas	ssfsv=sv&sasistentes=n&sactividad=cve	169	128	2	t
 1390	{90,110}	Gestión de plazas	ssfsv=sv&sasistentes=agd&sactividad=cve	169	2	3	t
-1392	{20,45}	Matriculas	\N	66	16	12	t
+61	{10,10}	buscar	simple=1&tipo=ctr&loc=dl	133	8	8	t
+845	{10,10}	buscar	simple=1&tipo=ctr&loc=dl	133	131072	20	t
+1392	{20,45}	Matrículas	\N	66	16	12	t

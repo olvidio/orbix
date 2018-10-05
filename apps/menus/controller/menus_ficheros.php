@@ -35,6 +35,7 @@ $Qaccion = (string) \filter_input(INPUT_POST, 'accion');
 
 //$dir_base = "/var/www/orbix";
 $dir_base = core\ConfigGlobal::DIR;
+$filename_base = "$dir_base/log/menus/tot_menus_base.sql";
 $filename = "$dir_base/log/menus/tot_menus.sql";
 $filelog = "$dir_base/log/menus/menus.log";
 
@@ -49,7 +50,7 @@ if ($Qaccion == 'importar') {
 	*/
 
 	// Cambiar el directorio local al de la instalacion
-	$txt_base = file_get_contents($filename);
+	$txt_base = file_get_contents($filename_base);
 	$txt_comun = str_replace ( "DIRBASE", $dir_base, $txt_base);
 	file_put_contents($filename, $txt_comun);
 	
@@ -113,5 +114,5 @@ if ($Qaccion == 'exportar') {
 	$oDevelPC->exec('COPY "public".ref_menus TO \''.$file_refmenus.'\' ');
 	$txt_comun .= 'COPY "public".ref_menus FROM \''.$name_refmenus.'\''.";\n";
 
-	file_put_contents($filename, $txt_comun);
+	file_put_contents($filename_base, $txt_comun);
 } 

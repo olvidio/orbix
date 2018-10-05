@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2018-10-02 10:24+0200\n"
+"POT-Creation-Date: 2018-10-05 08:40+0200\n"
 "PO-Revision-Date: 2018-06-08 09:00+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -344,7 +344,7 @@ msgstr ""
 #: asignaturas/model/infoasignaturas.class.php:9
 #: asistentes/controller/lista_est_ctr.php:221
 #: notas/controller/asig_faltan_select.php:96
-#: menus/view/traducir_menu.phtml:193
+#: menus/view/traducir_menu.phtml:197
 #: profesores/view/ficha_profesor_stgr.print.phtml:66
 msgid "asignaturas"
 msgstr ""
@@ -463,6 +463,7 @@ msgstr ""
 #: personas/controller/personas_select.php:321
 #: profesores/controller/profesor_asignatura_ajax.php:28
 #: ubis/controller/home_ubis.php:87 ubis/controller/home_ubis.php:93
+#: ubis/controller/list_ctr.php:188
 #: actividadestudios/view/ca_posibles_que.phtml:55
 #: actividadestudios/view/ca_posibles_que.phtml:70
 #: asistentes/view/planning_ctr_que.phtml:33
@@ -861,7 +862,7 @@ msgstr ""
 #: actividadestudios/model/select1303.class.php:77
 #: actividadestudios/model/select3005.class.php:69
 #: actividadestudios/model/select3103.class.php:73
-#: notas/controller/acta_select.php:116 notas/model/select1011.class.php:60
+#: notas/controller/acta_select.php:120 notas/model/select1011.class.php:60
 #: profesores/controller/profesor_asignatura_que.php:46
 #: profesores/model/entity/profesorampliacion.class.php:429
 #: profesores/model/entity/profesordocenciastgr.class.php:433
@@ -1020,7 +1021,7 @@ msgstr ""
 #: asistentes/view/que_ctr_lista.phtml:70 menus/view/traducir_menu.phtml:63
 #: menus/view/traducir_menu.phtml:75 menus/view/traducir_menu.phtml:99
 #: menus/view/traducir_menu.phtml:107 menus/view/traducir_menu.phtml:153
-#: menus/view/traducir_menu.phtml:200 notas/view/acta_select.phtml:69
+#: menus/view/traducir_menu.phtml:204 notas/view/acta_select.phtml:69
 #: notas/view/asig_faltan_que.phtml:7 notas/view/asig_faltan_que.phtml:39
 #: personas/view/personas_que.phtml:12 ubis/view/direcciones_que.phtml:9
 #: ubis/view/ubis_buscar.phtml:55 ubis/view/ubis_buscar.phtml:136
@@ -1109,7 +1110,7 @@ msgid "nota max"
 msgstr ""
 
 #: actividadestudios/model/entity/matricula.class.php:647
-#: notas/controller/acta_select.php:114 notas/model/entity/acta.class.php:521
+#: notas/controller/acta_select.php:118 notas/model/entity/acta.class.php:521
 #: notas/model/entity/actatribunaldl.class.php:347
 #: notas/model/entity/personanota.class.php:732
 #: notas/model/select1011.class.php:62
@@ -1152,7 +1153,7 @@ msgstr ""
 #: actividadestudios/model/select1303.class.php:68
 #: actividadestudios/model/select3005.class.php:60
 #: core/datostabla.class.php:103 devel/controller/modulos_select.php:57
-#: notas/controller/acta_select.php:109 ubis/controller/list_ctr.php:186
+#: notas/controller/acta_select.php:113 ubis/controller/list_ctr.php:186
 #: ubis/controller/teleco_tabla.php:89 ubis/controller/ubis_tabla.php:398
 #: usuarios/controller/grupo_form.php:210
 #: usuarios/controller/grupo_lista.php:49 usuarios/controller/role_lista.php:54
@@ -1190,8 +1191,8 @@ msgid "quitar asignatura"
 msgstr ""
 
 #: actividadestudios/model/select3005.class.php:62
-#: menus/view/traducir_menu.phtml:130 menus/view/traducir_menu.phtml:222
-#: menus/view/traducir_menu.phtml:223
+#: menus/view/traducir_menu.phtml:130 menus/view/traducir_menu.phtml:226
+#: menus/view/traducir_menu.phtml:227
 msgid "actas"
 msgstr ""
 
@@ -1360,7 +1361,7 @@ msgid "buscar en nombre largo"
 msgstr ""
 
 #: asignaturas/model/infodepartamentos.class.php:9
-#: menus/view/traducir_menu.phtml:191
+#: menus/view/traducir_menu.phtml:195
 msgid "departamentos"
 msgstr ""
 
@@ -1385,7 +1386,7 @@ msgid "buscar una asignatura opcional"
 msgstr ""
 
 #: asignaturas/model/infosectores.class.php:9
-#: menus/view/traducir_menu.phtml:190
+#: menus/view/traducir_menu.phtml:194
 msgid "sectores"
 msgstr ""
 
@@ -1928,7 +1929,7 @@ msgstr ""
 
 #: core/datostabla.class.php:104 core/zzficha.class.php:143
 #: core/zzficha.class.php:146 devel/controller/metamenus_get.php:52
-#: devel/controller/modulos_select.php:59 notas/controller/acta_select.php:108
+#: devel/controller/modulos_select.php:59 notas/controller/acta_select.php:112
 #: ubis/controller/teleco_tabla.php:90 ubis/controller/ubis_tabla.php:401
 #: dossiers/view/perm_dossier_pres.phtml:59 menus/view/menus_get.phtml:49
 #: personas/view/persona_de_paso.phtml:151 personas/view/persona_form.phtml:174
@@ -2353,7 +2354,7 @@ msgstr ""
 msgid "apps requeridas"
 msgstr ""
 
-#: devel/model/infoapps.class.php:9
+#: devel/model/infoapps.class.php:9 menus/view/traducir_menu.phtml:180
 msgid "aplicaciones"
 msgstr ""
 
@@ -2509,23 +2510,23 @@ msgstr ""
 msgid "periodo de selección"
 msgstr ""
 
-#: notas/controller/acta_select.php:95
+#: notas/controller/acta_select.php:99
 #, php-format
 msgid "lista de actas del curso %s"
 msgstr ""
 
-#: notas/controller/acta_select.php:112
+#: notas/controller/acta_select.php:116
 #: actividadestudios/view/acta_notas.phtml:123
 msgid "imprimir"
 msgstr ""
 
-#: notas/controller/acta_select.php:115 personas/view/traslado_form.phtml:67
+#: notas/controller/acta_select.php:119 personas/view/traslado_form.phtml:67
 #: profesores/view/ficha_profesor_stgr.print.phtml:55
 #: profesores/view/ficha_profesor_stgr.print.phtml:66
 msgid "fecha"
 msgstr ""
 
-#: notas/controller/acta_select.php:157
+#: notas/controller/acta_select.php:161
 msgid ""
 "esto eliminará los datos del acta, pero no las notas que mantendrán el "
 "número de acta"
@@ -2597,6 +2598,7 @@ msgstr ""
 
 #: notas/controller/asignaturas_pendientes.php:40
 #: notas/controller/asignaturas_pendientes_resumen.php:80
+#: profesores/controller/profesor_asignatura_ajax.php:27
 msgid "apellidos, nombre"
 msgstr ""
 
@@ -3016,7 +3018,7 @@ msgid "teología"
 msgstr ""
 
 #: permisos/model/entity/moduloinstalado.class.php:335
-#: usuarios/model/entity/local.class.php:413
+#: usuarios/model/entity/local.class.php:419
 msgid "activo"
 msgstr ""
 
@@ -3424,10 +3426,6 @@ msgstr ""
 msgid "datos procedencia"
 msgstr ""
 
-#: profesores/controller/profesor_asignatura_ajax.php:27
-msgid "apellidos, nombre')),'formatter'=>'clickFormatter"
-msgstr ""
-
 #: profesores/controller/profesor_asignatura_ajax.php:29
 #: ubis/controller/list_ctr.php:194
 msgid "teléfono"
@@ -3674,10 +3672,6 @@ msgstr ""
 msgid "formato texto"
 msgstr ""
 
-#: ubis/controller/list_ctr.php:188
-msgid "centro')),'formatter'=>'clickFormatter"
-msgstr ""
-
 #: ubis/controller/list_ctr.php:189 ubis/controller/ubis_lista.php:87
 #: ubis/controller/ubis_tabla.php:407 ubis/model/entity/ubiglobal.class.php:508
 #: devel/view/db_que.phtml:36 ubis/view/cdc_form.phtml:72
@@ -3894,7 +3888,7 @@ msgid "aquí"
 msgstr ""
 
 #: ubis/model/entity/casa.class.php:392
-#: ubis/model/entity/tipocasa.class.php:268 menus/view/traducir_menu.phtml:197
+#: ubis/model/entity/tipocasa.class.php:268 menus/view/traducir_menu.phtml:201
 #: ubis/view/cdc_form.phtml:89 ubis/view/ubis_buscar.phtml:196
 msgid "tipo de casa"
 msgstr ""
@@ -3911,7 +3905,7 @@ msgstr ""
 msgid "biblioteca casa"
 msgstr ""
 
-#: ubis/model/entity/centro.class.php:331 menus/view/traducir_menu.phtml:198
+#: ubis/model/entity/centro.class.php:331 menus/view/traducir_menu.phtml:202
 msgid "tipo de ctr"
 msgstr ""
 
@@ -4072,7 +4066,7 @@ msgstr ""
 msgid "principal"
 msgstr ""
 
-#: ubis/model/infodelegaciones.class.php:9 menus/view/traducir_menu.phtml:195
+#: ubis/model/infodelegaciones.class.php:9 menus/view/traducir_menu.phtml:199
 #: ubis/view/ubis_buscar.phtml:104 ubis/view/ubis_buscar.phtml:232
 msgid "delegaciones"
 msgstr ""
@@ -4085,7 +4079,7 @@ msgstr ""
 msgid "buscar una delegación (sigla)"
 msgstr ""
 
-#: ubis/model/inforegiones.class.php:9 menus/view/traducir_menu.phtml:196
+#: ubis/model/inforegiones.class.php:9 menus/view/traducir_menu.phtml:200
 msgid "regiones"
 msgstr ""
 
@@ -4193,11 +4187,11 @@ msgstr ""
 msgid "nom_locale"
 msgstr ""
 
-#: usuarios/model/entity/local.class.php:389 usuarios/view/personal.phtml:51
+#: usuarios/model/entity/local.class.php:391 usuarios/view/personal.phtml:51
 msgid "idioma"
 msgstr ""
 
-#: usuarios/model/entity/local.class.php:401
+#: usuarios/model/entity/local.class.php:405
 msgid "nombre idioma"
 msgstr ""
 
@@ -4231,6 +4225,14 @@ msgstr ""
 #: usuarios/model/entity/usuario.class.php:474
 #: permisos/view/login_form2.phtml:146
 msgid "nombre de usuario"
+msgstr ""
+
+#: usuarios/model/infolocales.class.php:9
+msgid "idiomas posibles para la aplicación"
+msgstr ""
+
+#: usuarios/model/infolocales.class.php:11
+msgid "idioma a buscar"
 msgstr ""
 
 #: usuarios/model/inforoles.class.php:9
@@ -4860,7 +4862,7 @@ msgstr ""
 
 #: actividadplazas/view/peticiones_activ.phtml:60
 #: menus/view/traducir_menu.phtml:78 menus/view/traducir_menu.phtml:100
-#: menus/view/traducir_menu.phtml:173 menus/view/traducir_menu.phtml:203
+#: menus/view/traducir_menu.phtml:173 menus/view/traducir_menu.phtml:207
 msgid "actividades"
 msgstr ""
 
@@ -4889,7 +4891,7 @@ msgid "plazas a"
 msgstr ""
 
 #: asistentes/view/activ_pendientes.phtml:6 menus/view/traducir_menu.phtml:66
-#: menus/view/traducir_menu.phtml:171 menus/view/traducir_menu.phtml:217
+#: menus/view/traducir_menu.phtml:171 menus/view/traducir_menu.phtml:221
 msgid "personas"
 msgstr ""
 
@@ -4938,7 +4940,7 @@ msgstr ""
 msgid "relación de asistentes"
 msgstr ""
 
-#: asistentes/view/lista_asistentes.phtml:13 menus/view/traducir_menu.phtml:189
+#: asistentes/view/lista_asistentes.phtml:13 menus/view/traducir_menu.phtml:193
 msgid "estudios"
 msgstr ""
 
@@ -5132,7 +5134,7 @@ msgid "buscar n"
 msgstr ""
 
 #: menus/view/traducir_menu.phtml:10 menus/view/traducir_menu.phtml:117
-#: menus/view/traducir_menu.phtml:122 menus/view/traducir_menu.phtml:218
+#: menus/view/traducir_menu.phtml:122 menus/view/traducir_menu.phtml:222
 msgid "n dl"
 msgstr ""
 
@@ -5147,7 +5149,7 @@ msgid "Actualizar datos desde Listas"
 msgstr ""
 
 #: menus/view/traducir_menu.phtml:13 menus/view/traducir_menu.phtml:43
-#: menus/view/traducir_menu.phtml:113 menus/view/traducir_menu.phtml:183
+#: menus/view/traducir_menu.phtml:113 menus/view/traducir_menu.phtml:187
 msgid "crt"
 msgstr ""
 
@@ -5156,7 +5158,7 @@ msgid "importar crt"
 msgstr ""
 
 #: menus/view/traducir_menu.phtml:15 menus/view/traducir_menu.phtml:45
-#: menus/view/traducir_menu.phtml:184
+#: menus/view/traducir_menu.phtml:188
 msgid "buscar crt"
 msgstr ""
 
@@ -5190,7 +5192,7 @@ msgstr ""
 msgid "Incorporar 1ª petición"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:22 menus/view/traducir_menu.phtml:185
+#: menus/view/traducir_menu.phtml:22 menus/view/traducir_menu.phtml:189
 #: notas/view/form_1011.phtml:185
 msgid "ca"
 msgstr ""
@@ -5200,7 +5202,7 @@ msgid "importar ca"
 msgstr ""
 
 #: menus/view/traducir_menu.phtml:24 menus/view/traducir_menu.phtml:141
-#: menus/view/traducir_menu.phtml:186
+#: menus/view/traducir_menu.phtml:190
 msgid "buscar ca"
 msgstr ""
 
@@ -5213,11 +5215,11 @@ msgstr ""
 msgid "lista por ctr"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:31 menus/view/traducir_menu.phtml:187
+#: menus/view/traducir_menu.phtml:31 menus/view/traducir_menu.phtml:191
 msgid "cve"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:32 menus/view/traducir_menu.phtml:188
+#: menus/view/traducir_menu.phtml:32 menus/view/traducir_menu.phtml:192
 msgid "buscar cve"
 msgstr ""
 
@@ -5230,7 +5232,7 @@ msgid "lista varias cve"
 msgstr ""
 
 #: menus/view/traducir_menu.phtml:36 menus/view/traducir_menu.phtml:77
-#: menus/view/traducir_menu.phtml:155 menus/view/traducir_menu.phtml:202
+#: menus/view/traducir_menu.phtml:155 menus/view/traducir_menu.phtml:206
 msgid "planning"
 msgstr ""
 
@@ -5247,7 +5249,7 @@ msgid "buscar agd"
 msgstr ""
 
 #: menus/view/traducir_menu.phtml:40 menus/view/traducir_menu.phtml:119
-#: menus/view/traducir_menu.phtml:124 menus/view/traducir_menu.phtml:219
+#: menus/view/traducir_menu.phtml:124 menus/view/traducir_menu.phtml:223
 msgid "agd dl"
 msgstr ""
 
@@ -5278,7 +5280,7 @@ msgid "direcciones"
 msgstr ""
 
 #: menus/view/traducir_menu.phtml:64 menus/view/traducir_menu.phtml:76
-#: menus/view/traducir_menu.phtml:201
+#: menus/view/traducir_menu.phtml:205
 msgid "listados"
 msgstr ""
 
@@ -5306,60 +5308,60 @@ msgstr ""
 msgid "cp & as.ecles"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:74 menus/view/traducir_menu.phtml:199
+#: menus/view/traducir_menu.phtml:74 menus/view/traducir_menu.phtml:203
 msgid "centros y casas"
 msgstr ""
 
 #: menus/view/traducir_menu.phtml:79 menus/view/traducir_menu.phtml:93
-#: menus/view/traducir_menu.phtml:204
+#: menus/view/traducir_menu.phtml:208
 msgid "buscar activ"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:80 menus/view/traducir_menu.phtml:205
+#: menus/view/traducir_menu.phtml:80 menus/view/traducir_menu.phtml:209
 msgid "sv  n"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:81 menus/view/traducir_menu.phtml:206
+#: menus/view/traducir_menu.phtml:81 menus/view/traducir_menu.phtml:210
 msgid "sv agd"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:82 menus/view/traducir_menu.phtml:207
+#: menus/view/traducir_menu.phtml:82 menus/view/traducir_menu.phtml:211
 msgid "sv s y sg"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:83 menus/view/traducir_menu.phtml:208
+#: menus/view/traducir_menu.phtml:83 menus/view/traducir_menu.phtml:212
 msgid "sv sr"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:84 menus/view/traducir_menu.phtml:209
+#: menus/view/traducir_menu.phtml:84 menus/view/traducir_menu.phtml:213
 msgid "sf n"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:85 menus/view/traducir_menu.phtml:210
+#: menus/view/traducir_menu.phtml:85 menus/view/traducir_menu.phtml:214
 msgid "sf nax"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:86 menus/view/traducir_menu.phtml:211
+#: menus/view/traducir_menu.phtml:86 menus/view/traducir_menu.phtml:215
 msgid "sf agd"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:87 menus/view/traducir_menu.phtml:212
+#: menus/view/traducir_menu.phtml:87 menus/view/traducir_menu.phtml:216
 msgid "sf s y sg"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:88 menus/view/traducir_menu.phtml:213
+#: menus/view/traducir_menu.phtml:88 menus/view/traducir_menu.phtml:217
 msgid "sf sr,sr-nax,sr-agd"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:89 menus/view/traducir_menu.phtml:214
+#: menus/view/traducir_menu.phtml:89 menus/view/traducir_menu.phtml:218
 msgid "importar activ"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:90 menus/view/traducir_menu.phtml:215
+#: menus/view/traducir_menu.phtml:90 menus/view/traducir_menu.phtml:219
 msgid "publicar activ"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:91 menus/view/traducir_menu.phtml:216
+#: menus/view/traducir_menu.phtml:91 menus/view/traducir_menu.phtml:220
 msgid "nueva activ"
 msgstr ""
 
@@ -5416,7 +5418,7 @@ msgstr ""
 msgid "s de la dl"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:112 menus/view/traducir_menu.phtml:179
+#: menus/view/traducir_menu.phtml:112 menus/view/traducir_menu.phtml:183
 msgid "lista cargos"
 msgstr ""
 
@@ -5440,11 +5442,11 @@ msgstr ""
 msgid "matricular a todos"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:127 menus/view/traducir_menu.phtml:220
+#: menus/view/traducir_menu.phtml:127 menus/view/traducir_menu.phtml:224
 msgid "profesor para asignatura"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:128 menus/view/traducir_menu.phtml:221
+#: menus/view/traducir_menu.phtml:128 menus/view/traducir_menu.phtml:225
 msgid "claustro"
 msgstr ""
 
@@ -5452,7 +5454,7 @@ msgstr ""
 msgid "actas..."
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:131 menus/view/traducir_menu.phtml:224
+#: menus/view/traducir_menu.phtml:131 menus/view/traducir_menu.phtml:228
 msgid "tabla alumnos-asignaturas"
 msgstr ""
 
@@ -5540,7 +5542,7 @@ msgstr ""
 msgid "perm_dossiers"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:172 menus/view/traducir_menu.phtml:194
+#: menus/view/traducir_menu.phtml:172 menus/view/traducir_menu.phtml:198
 msgid "ubis"
 msgstr ""
 
@@ -5552,23 +5554,35 @@ msgstr ""
 msgid "grup menu"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:180
-msgid "buscar nax"
+#: menus/view/traducir_menu.phtml:179
+msgid "Configuración"
 msgstr ""
 
 #: menus/view/traducir_menu.phtml:181
-msgid "nax dl"
+msgid "definir módulos"
 msgstr ""
 
 #: menus/view/traducir_menu.phtml:182
+msgid "instalar módulos"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:184
+msgid "buscar nax"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:185
+msgid "nax dl"
+msgstr ""
+
+#: menus/view/traducir_menu.phtml:186
 msgid "nax de paso"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:192
+#: menus/view/traducir_menu.phtml:196
 msgid "opcionales"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:225 menus/view/traducir_menu.phtml:226
+#: menus/view/traducir_menu.phtml:229 menus/view/traducir_menu.phtml:230
 msgid "historicos"
 msgstr ""
 
