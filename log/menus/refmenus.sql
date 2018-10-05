@@ -71,7 +71,6 @@
 270	{60,40}	lista grupos	\N	122	33816576	13	t
 144	{40,10}	persona dl	obj_pau=PersonaDl&tipo=planning	61	2064	12	t
 89	{55,29}	propuesta cl cv	ssfsv=sv&sasistentes=sss%2B&sactividad=cv&que=list_cjto	119	8	8	t
-1384	{10}	personas	\N	0	16	21	t
 32	{80,60}	list varias cv	ssfsv=sv&sasistentes=agd&sactividad=cv&que=list_cjto	119	2082	3	t
 327	{85,30}	por centro	tipo=planning_ctr	61	2176	2	t
 317	{80,70}	lista por ctr	lista=list_activ&n_agd=n&sasistentes=n&sactividad=ca	147	2208	2	t
@@ -207,12 +206,14 @@
 374	{50,10,20}	sv agd	id_tipo_activ=133&status=2&periodo=desdeHoy	71	8	8	t
 1	{20,70}	listado actas	\N	178	16	12	t
 1029	{30}	historicos	\N	\N	\N	\N	t
+1197	{70}	Configuración	\N	0	33554432	13	t
 1373	{10,5}	n dl	tabla=p_numerarios&tipo=persona	76	2064	21	t
 1374	{20,10}	actas	\N	60	16	21	t
 1375	{20,20}	tabla alumnos-asignaturas	\N	88	16	21	t
 1378	{10,40}	profesor para asignatura	\N	171	16	21	t
 1379	{10,50}	claustro	\N	173	16	21	t
 1372	{10,10}	agd dl	tabla=p_agregados&tipo=persona	76	2064	21	t
+1384	{10}	personas	\N	0	16	21	t
 1385	{20}	actas	\N	0	16	21	t
 1386	{38}	sem inv.	\N	0	16	12	t
 1387	{38,10}	buscar	sasistentes=agd&sactividad=ca&que=ver	119	16	12	t
@@ -222,3 +223,6 @@
 61	{10,10}	buscar	simple=1&tipo=ctr&loc=dl	133	8	8	t
 845	{10,10}	buscar	simple=1&tipo=ctr&loc=dl	133	131072	20	t
 1392	{20,45}	Matrículas	\N	66	16	12	t
+1206	{70,10}	aplicaciones	clase_info=devel\\model\\infoapps	160	33554432	13	t
+1222	{70,20}	definir módulos	\N	27	33554432	13	t
+1233	{70,30}	instalar módulos	clase_info=permisos\\model\\infomodsinstalled	160	33554432	13	t
