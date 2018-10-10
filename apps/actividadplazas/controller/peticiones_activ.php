@@ -51,15 +51,6 @@ if (($Qna == 'a' || $Qna == 'agd') && $Qsactividad == 'ca') {
 $oPersona = new personas\PersonaDl($Qid_nom);
 $ap_nom = $oPersona->getApellidosNombre();
 
-//Miro los actuales
-$gesPlazasPeticion = new \actividadplazas\model\entity\GestorPlazaPeticion();
-$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom'=>$Qid_nom,'tipo'=>$Qsactividad,'_ordre'=>'orden'));
-$sid_activ = '';
-foreach ($cPlazasPeticion as $oPlazaPeticion) {
-	$id_activ = $oPlazaPeticion->getId_activ();
-	$sid_activ .= empty($sid_activ)? $id_activ : ','.$id_activ;
-}
-
 // Posibles:
 if (!empty($Qtodos) && $Qtodos != 1) {
 	$grupo_estudios = $Qtodos;
@@ -160,6 +151,7 @@ switch ($Qna) {
 }
 
 $aOpciones = array();
+$a_IdActividades = array();
 foreach ($cActividades as $oActividad) {
 	// para el separador '-------'
 	if (is_object($oActividad)) {
@@ -172,14 +164,20 @@ foreach ($cActividades as $oActividad) {
 	}
 }
 
-// Borrar los aniguos (no están en la nueva selección de actividades)
+//Miro los actuales
+$gesPlazasPeticion = new \actividadplazas\model\entity\GestorPlazaPeticion();
+$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom'=>$Qid_nom,'tipo'=>$Qsactividad,'_ordre'=>'orden'));
+$sid_activ = '';
 foreach ($cPlazasPeticion as $key => $oPlazaPeticion) {
-	$id_activ_sel = $oPlazaPeticion->getId_activ();
-	if (!in_array($id_activ_sel, $a_IdActividades)) {
+	$id_activ = $oPlazaPeticion->getId_activ();
+	// Borrar los aniguos (no están en la nueva selección de actividades)
+	if (!in_array($id_activ, $a_IdActividades)) {
 		unset($cPlazasPeticion[$key]);
-	}	
+//		$oPlazaPeticion->DBEliminar();
+	} else {	
+		$sid_activ .= empty($sid_activ)? $id_activ : ','.$id_activ;
+	}
 }
-
 
 $oSelects = new web\DesplegableArray($sid_activ,$aOpciones,'actividades');
 $oSelects->setBlanco('t');
