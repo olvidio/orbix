@@ -261,21 +261,24 @@ $a=0;
 $j=0;
 $i=0;
 reset($aAprobadas);
+$row= current($aAprobadas);
 while ( $a < count($cAsignaturas)) {
 	$oAsignatura=$cAsignaturas[$a++];
-	$row= current($aAprobadas);
 
  	// para imprimir sólo una cara:
 	// cara A hasta la asignatura 2107
-	if ($Qcara=="A" && $oAsignatura->getId_nivel() > 2107 ) { continue ; }
+	if ($Qcara=="A" && $oAsignatura->getId_nivel() > 2107 ) { 
+		$row= current($aAprobadas);
+		continue ;
+	}
 	if ($Qcara=="B" && $oAsignatura->getId_nivel() < 2108 ) { 
 		while ( ($row["id_nivel"] < 2107) && ($j < $num_asig) ){
 			$row= current($aAprobadas);
 			next($aAprobadas);
 			$j++;
 		}
-			prev($aAprobadas);
 		continue ; 
+		prev($aAprobadas);
 	}
 	while (($row['id_nivel_asig'] < $oAsignatura->getId_nivel()) && ($j < $num_asig)) {
 		$row= current($aAprobadas);
