@@ -166,10 +166,20 @@ foreach ($cActividades as $oActividad) {
 		$id_activ = $oActividad->getId_activ();
 		$nom_activ = $oActividad->getNom_activ();
 		$aOpciones[$id_activ] = $nom_activ;
+		$a_IdActividades[] = $id_activ; 
 	} else {
 		$aOpciones[1] = '--------';
 	}
 }
+
+// Borrar los aniguos (no están en la nueva selección de actividades)
+foreach ($cPlazasPeticion as $key => $oPlazaPeticion) {
+	$id_activ_sel = $oPlazaPeticion->getId_activ();
+	if (!in_array($id_activ_sel, $a_IdActividades)) {
+		unset($cPlazasPeticion[$key]);
+	}	
+}
+
 
 $oSelects = new web\DesplegableArray($sid_activ,$aOpciones,'actividades');
 $oSelects->setBlanco('t');
