@@ -156,6 +156,7 @@ switch ($que) {
 			$oGesMatch = new GestorIdMatchPersona();
 			$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas'=>$id_nom_listas));
 			if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
+				$i++;
 				$id_orbix = $cIdMatch[0]->getId_orbix();
 				$rta = $oSincroDB->syncro($oPersonaListas,$id_orbix);
 				if (!empty($rta)) {
@@ -166,7 +167,11 @@ switch ($que) {
 				continue;
 			}
 		}
-		if (!empty($msg)) echo $msg;
+		if (!empty($msg)) {
+			echo $msg;
+		} else {
+			echo sprintf (_("OK. %s personas sincronizadas"), $i);
+		}
 		break;
 	case 'trasladar':
 		$dl = (string)  filter_input(INPUT_POST, 'dl');
