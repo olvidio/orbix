@@ -88,11 +88,17 @@ if (!empty($Qid_activ_old) && !empty($Qid_nom)) {
 		$gesPlazasPeticion = new \actividadplazas\model\entity\GestorPlazaPeticion();
 		$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom'=>$Qid_nom,'tipo'=>$sactividad,'_ordre'=>'orden'));
 		$sid_activ = '';
+		$oF_iniCurs=DateTime::createFromFormat('j/n/Y',$inicurs);
 		foreach ($cPlazasPeticion as $oPlazaPeticion) {
 			$id_activ = $oPlazaPeticion->getId_activ();
 			$oActividad = new actividades\Actividad($id_activ);
 			// Asegurar que es una actividad actual (No terminada)
 			if ($oActividad->getStatus() != actividades\ActividadAll::STATUS_ACTUAL) {
+				continue;
+			}
+			// Asegurar que es una actividad del periodo
+			$oF_ini=DateTime::createFromFormat('j/n/Y',$oActividad->getF_ini());
+			if ($oF_ini < $oF_iniCurs) {
 				continue;
 			}
 			$cActividadesPreferidas[] = $oActividad;
