@@ -91,6 +91,10 @@ if (!empty($Qid_activ_old) && !empty($Qid_nom)) {
 		foreach ($cPlazasPeticion as $oPlazaPeticion) {
 			$id_activ = $oPlazaPeticion->getId_activ();
 			$oActividad = new actividades\Actividad($id_activ);
+			// Asegurar que es una actividad actual (No terminada)
+			if ($oActividad->getStatus() != actividades\ActividadAll::STATUS_ACTUAL) {
+				continue;
+			}
 			$cActividadesPreferidas[] = $oActividad;
 		}
 
