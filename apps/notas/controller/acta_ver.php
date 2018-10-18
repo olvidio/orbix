@@ -35,6 +35,7 @@ $observ = '';
 
 // Si notas=(nuevo|acta), quiere decir que estoy en un include de actividadestudios/controller/acta_notas
 $notas = empty($notas)? '': $notas;
+$permiso = empty($permiso)? 3: $permiso;
 
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
@@ -108,6 +109,7 @@ if ($notas != 'nuevo' && $Qmod != 'nueva' && !empty($acta_actual))  { //signific
 		$linea = (integer) \filter_input(INPUT_POST, 'linea');
 		$lugar = (string) \filter_input(INPUT_POST, 'lugar');
 		$observ = (string) \filter_input(INPUT_POST, 'observ');
+		$permiso = (integer) \filter_input(INPUT_POST, 'permiso');
 	} else {
 		$oActa = new notas\Acta($acta_actual);
 		$id_asignatura = $oActa->getId_asignatura();
@@ -264,6 +266,7 @@ $a_campos = ['obj' => $obj,
 			'json_asignaturas' => $json_asignaturas,
 			'json_examinadores' => $json_examinadores,
 			'a_actas' => $a_actas,
+			'permiso' => $permiso,
 			];
 
 $oView = new core\View('notas/controller');

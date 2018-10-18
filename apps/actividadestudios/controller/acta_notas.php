@@ -79,6 +79,7 @@ if ($matriculados > 0) {
 }
 
 $Qque = (string) \filter_input(INPUT_POST, 'que');
+$permiso = (integer) \filter_input(INPUT_POST, 'permiso');
 $Qid_pau = (integer) \filter_input(INPUT_POST, 'id_pau');
 $Qopcional = (string) \filter_input(INPUT_POST, 'opcional');
 $Qprimary_key_s = (string) \filter_input(INPUT_POST, 'primary_key_s');
@@ -126,6 +127,7 @@ include_once ("apps/notas/controller/acta_ver.php");
 
 $a_campos = ['oPosicion' => $oPosicion,
 			'oHashNotas' => $oHashNotas,
+			'permiso' => $permiso,
 			'Qque' => $Qque,
 			'aPersonasMatriculadas' => $aPersonasMatriculadas,
 			'oDesplActas' => $oDesplActas,

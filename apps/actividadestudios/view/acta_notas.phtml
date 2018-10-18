@@ -95,17 +95,30 @@ foreach ($aPersonasMatriculadas as $nom=>$oMatricula) {
 	$nota_max=$oMatricula->getNota_max();
 	$id_situacion=$oMatricula->getId_situacion();
 	$preceptor=$oMatricula->getPreceptor();
-	if ($preceptor=="t") { $chk_tipo="selected"; } else { $chk_tipo=""; }
+	if ($preceptor == "t") { 
+		$chk_tipo = "selected";
+		$tipo_txt = _("preceptor");
+	} else {
+		$chk_tipo = '';
+		$tipo_txt = '';
+	}
 	$acta=$oMatricula->getActa();
 	$oDesplActas->setOpcion_sel($acta);
-	$oDesplActas->setAction("fnjs_nota($i)");
+	if ($permiso == 3) {
+		$oDesplActas->setAction("fnjs_nota($i)");
+	}
 	?>
 	<input type="Hidden" id="id_nom[]" name="id_nom[]" value="<?= $id_nom ?>">
 	<tr><td><?= $nom ?></td>
-	<td><select id="form_preceptor[]" name="form_preceptor[]" onchange="javascript:fnjs_guardar_nota()">
+	<td>
+		<?php if ($permiso == 3) { ?>
+		<select id="form_preceptor[]" name="form_preceptor[]" onchange="javascript:fnjs_guardar_nota()">
 			<option />
 			<option value="p" <?= $chk_tipo ?> ><?= _("preceptor") ?></option>
 		</select>
+		<?php } else { 
+			echo $tipo_txt;		
+		} ?>
 		</td>
 	<td class=contenido>
 		<input type="text" id="nota_num<?= $i ?>" name="nota_num[]" value="<?= $nota_num ?>" size="2" onchange="fnjs_nota(<?= $i ?>)">
@@ -119,5 +132,7 @@ foreach ($aPersonasMatriculadas as $nom=>$oMatricula) {
 ?>	
 </tbody></table>
 </form>
+<?php if ($permiso == 3) { ?>
 <br><input type="button" value="<?= strtoupper(_("grabar notas en tessera")); ?>" onclick="fnjs_guardar_tessera('#frm_acta')">
 <br><input type="button" value="<?= strtoupper(_("imprimir")); ?>" onclick="fnjs_imprimir('#frm_acta')">
+<?php } ?>

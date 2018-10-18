@@ -48,6 +48,11 @@ class Select3005 {
 	 * @var integer $permiso
 	 */
 	private $permiso;
+	/**
+	 *
+	 * @var $dl_org string 
+	 */
+	private $dl_org;
 
 	// ------ Variables para mantener la selección de la grid al volver atras
 	private $Qid_sel;
@@ -59,9 +64,9 @@ class Select3005 {
 			$a_botones=array(
 		            array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(this.form)" ) ,
 		            array( 'txt' => _("quitar asignatura"), 'click' =>"fnjs_borrar_asignatura(this.form)" ) ,
-		            array( 'txt' => _("actas"), 'click' =>"fnjs_actas(this.form)" ) 
 				);
 		}
+		$a_botones[] = array( 'txt' => _("actas"), 'click' =>"fnjs_actas(this.form)" );
 		return $a_botones;
 	}
 
@@ -88,13 +93,14 @@ class Select3005 {
 		$this->txt_eliminar = _("¿Está seguro que desea quitar esta asignatura?");
 		$mi_dele = core\ConfigGlobal::mi_dele();
 		// Añadir la posibilidad de ver el plan de estudios aunque la actividad sea importada
-		$oActividad = new actividades\ActividadAll($this->id_pau);
-		$dl_org = $oActividad->getDl_org();
-		if ($mi_dele == $dl_org) {
-			$this->permiso = 3;
-		} else {
-			$this->permiso = 1;
-		}
+//		$oActividad = new actividades\ActividadAll($this->id_pau);
+//		$dl_org = $oActividad->getDl_org();
+//		if ($mi_dele == $dl_org) {
+//			$this->permiso = 3;
+//		} else {
+//			$this->permiso = 1;
+//		}
+//		$this->permiso = 3;
 		$GesActivAsignaturas = new entity\GestorActividadAsignatura();
 		$cActivAsignaturas = $GesActivAsignaturas->getActividadAsignaturas(array('id_activ'=>  $this->id_pau,'_ordre'=>'id_asignatura')); 
 
@@ -113,7 +119,7 @@ class Select3005 {
 			$cDbSchemas = $gesDbSchemas->getDbSchemas(['id' => $id_schema]);
 			$a_reg = explode('-',$cDbSchemas[0]->getSchema());
 			$dl_matricula = substr($a_reg[1],0,-1); // quito la v o la f.
-			if ($dl_matricula != $dl_org) {
+			if ($dl_matricula != $this->dl_org) {
 				$nombre_corto = "($dl_matricula) $nombre_corto";
 			}
 			
@@ -138,11 +144,12 @@ class Select3005 {
 			$f_ini=$oActividadAsignatura->getF_ini();
 			$f_fin=$oActividadAsignatura->getF_fin();
 			
-			if ($this->permiso==3) {
-				$a_valores[$c]['sel']="$id_activ#$id_asignatura";
-			} else {
-				$a_valores[$c]['sel']="";
-			}
+//			if ($this->permiso == 3) {
+//				$a_valores[$c]['sel']="$id_activ#$id_asignatura";
+//			} else {
+//				$a_valores[$c]['sel']="";
+//			}
+			$a_valores[$c]['sel']="$id_activ#$id_asignatura";
 					
 			$a_valores[$c][1]="$nombre_corto";
 			$a_valores[$c][2]=$creditos;
@@ -163,6 +170,15 @@ class Select3005 {
 	}
 	
 	public function getHtml() {
+		$oActividad = new actividades\ActividadAll($this->id_pau);
+		$this->dl_org = $oActividad->getDl_org();
+		$mi_dele = core\ConfigGlobal::mi_dele();
+		if ($mi_dele == $this->dl_org) {
+			$this->permiso = 3;
+		} else {
+			$this->permiso = 1;
+		}
+
 		$oHashSelect = new web\Hash();
 		$oHashSelect->setcamposForm('');
 		$oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');

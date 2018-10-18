@@ -119,14 +119,16 @@ fnjs_guardar_acta=function(formulario){
 		</td></tr>
 </table>
 <br>
-<input id="g1" TYPE="button" VALUE="<?= ucfirst(_("guardar cambios acta")); ?>"  onclick="fnjs_guardar_acta(this.form)">
-<?php
-if (!empty($notas)) {
-	?>
-	<input id="g2" TYPE="button" VALUE="<?= ucfirst(_("nueva acta convocatoria")); ?>"  onclick="fnjs_nueva_convocatoria(this.form)">
+<?php if ($permiso == 3) { ?>
+	<input id="g1" TYPE="button" VALUE="<?= ucfirst(_("guardar cambios acta")); ?>"  onclick="fnjs_guardar_acta(this.form)">
 	<?php
-}
-?>
+	if (!empty($notas)) {
+		?>
+		<input id="g2" TYPE="button" VALUE="<?= ucfirst(_("nueva acta convocatoria")); ?>"  onclick="fnjs_nueva_convocatoria(this.form)">
+		<?php
+	}
+	?>
+<?php } ?>
 </form>
 <script type="text/javascript">
 $(document).ready(function () {
