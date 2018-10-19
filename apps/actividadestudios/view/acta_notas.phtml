@@ -92,7 +92,9 @@ foreach ($aPersonasMatriculadas as $nom=>$oMatricula) {
 	$i++;
 	$id_nom=$oMatricula->getId_nom();
 	$nota_num=$oMatricula->getNota_num();
+	$nota_num_txt = empty($nota_num)? '?' : $nota_num;
 	$nota_max=$oMatricula->getNota_max();
+	$nota_max_txt = empty($nota_max)? '?' : $nota_max;
 	$id_situacion=$oMatricula->getId_situacion();
 	$preceptor=$oMatricula->getPreceptor();
 	if ($preceptor == "t") { 
@@ -103,29 +105,35 @@ foreach ($aPersonasMatriculadas as $nom=>$oMatricula) {
 		$tipo_txt = '';
 	}
 	$acta=$oMatricula->getActa();
+	$acta_txt = empty($acta)? '-' : $acta;
 	$oDesplActas->setOpcion_sel($acta);
-	if ($permiso == 3) {
-		$oDesplActas->setAction("fnjs_nota($i)");
-	}
+	$oDesplActas->setAction("fnjs_nota($i)");
 	?>
 	<input type="Hidden" id="id_nom[]" name="id_nom[]" value="<?= $id_nom ?>">
 	<tr><td><?= $nom ?></td>
 	<td>
 		<?php if ($permiso == 3) { ?>
-		<select id="form_preceptor[]" name="form_preceptor[]" onchange="javascript:fnjs_guardar_nota()">
-			<option />
-			<option value="p" <?= $chk_tipo ?> ><?= _("preceptor") ?></option>
-		</select>
-		<?php } else { 
-			echo $tipo_txt;		
-		} ?>
-		</td>
-	<td class=contenido>
-		<input type="text" id="nota_num<?= $i ?>" name="nota_num[]" value="<?= $nota_num ?>" size="2" onchange="fnjs_nota(<?= $i ?>)">
-		<?= _("sobre") ?>
-		<input type="text" id="nota_max<?= $i ?>" name="nota_max[]" value="<?= $nota_max ?>" size="2" onchange="fnjs_nota(<?= $i ?>)">
-	</td>
-	<td><?= $oDesplActas->desplegable(); ?>
+			<select id="form_preceptor[]" name="form_preceptor[]" onchange="javascript:fnjs_guardar_nota()">
+				<option />
+				<option value="p" <?= $chk_tipo ?> ><?= _("preceptor") ?></option>
+			</select>
+			</td>
+			<td class=contenido>
+				<input type="text" id="nota_num<?= $i ?>" name="nota_num[]" value="<?= $nota_num ?>" size="2" onchange="fnjs_nota(<?= $i ?>)">
+				<?= _("sobre") ?>
+				<input type="text" id="nota_max<?= $i ?>" name="nota_max[]" value="<?= $nota_max ?>" size="2" onchange="fnjs_nota(<?= $i ?>)">
+			</td>
+			<td><?= $oDesplActas->desplegable(); ?>
+		<?php } else { ?>
+			<?= $tipo_txt ?>
+			</td>
+			<td class=contenido>
+				<?= $nota_num_txt ?>
+				<?= _("sobre") ?>
+				<?= $nota_max_txt ?>
+			</td>
+			<td><?= $acta_txt ?>
+		<?php } ?>
 	</td></tr>
 	<?php
 }
