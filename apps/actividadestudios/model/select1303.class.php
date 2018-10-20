@@ -352,4 +352,8 @@ class Select1303 {
 	public function setQueSel($queSel) {
 		$this->queSel = $queSel;
 	}
+	public function setQId_activ($Qid_activ) {
+		$this->Qid_activ = $Qid_activ;
+	}
+
 }

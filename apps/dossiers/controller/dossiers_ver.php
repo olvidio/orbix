@@ -93,6 +93,7 @@ switch ($QqueSel){
 		$pau="p";
 		$Qpermiso=3;
 		// En asistentes de un ca, ver plan estudios, Machaco el id_pau que tenga (que es id_activ)
+		$Qid_activ = $Qid_pau;
 //		if (!empty($a_sel)) { //vengo de un checkbox
 //			$id_pau= strtok($a_sel[0],"#");
 //		} else {
@@ -250,6 +251,12 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
 					// propio del 1302	
 					$Qmodo_curso = (integer) \filter_input(INPUT_POST,'modo_curso');
 					$claseSelect->setModo_curso($Qmodo_curso);
+				break;
+				case 1303:
+					// propio del 1303	
+					if (!empty($Qid_activ)) {
+						$claseSelect->setQId_activ($Qid_activ);
+					}
 				break;
 			}
 			echo $claseSelect->getHtml();
