@@ -73,12 +73,19 @@ switch ($any) {
 
 // -----------------------------
 // alumnos:
+$aWhere = [];
+$aOperador = [];
 
-$GesPersonaNotas = new notas\GestorPersonaNota();
-$aWhere['acta'] = $acta;
-$cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhere);
 $GesNotas  = new notas\GestorNota();
 $aIdSuperadas = $GesNotas->getArrayNotasSuperadas();
+$superadas_txt = "{".implode(', ',$aIdSuperadas)."}";
+
+$aWhere['id_situacion'] = $superadas_txt;
+$aOperador['id_situacion'] = 'ANY';
+$aWhere['acta'] = $acta;
+
+$GesPersonaNotas = new notas\GestorPersonaNota();
+$cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhere,$aOperador);
 
 // para ordenar
 $aPersonasNotas = array(); 

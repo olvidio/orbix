@@ -44,23 +44,51 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 		$nota_num=$oMatricula->getNota_num();
 		$nota_max=$oMatricula->getNota_max();
 		$acta=$oMatricula->getActa();
-		
-		$oActa =new notas\Acta($acta);
-		$f_acta=$oActa->getF_acta();
-		if (!$acta || !$f_acta) {
-			$error .= sprintf(_("debe introducir los datos del acta. No se ha guardado nada.")."\n");
-			exit($error);
-		}
-		// Sólo grabo si está superada.
-		//if (!in_array($id_situacion,$aIdSuperadas)) continue;
+
 		if (empty($nota_max)) {
 			$nota_max = 10;
 		}
-		// Acepto nota_num=0 para borrar.
-		if (!empty($nota_num) && $nota_num/$nota_max < 0.6) {
-			$nn = $nota_num/$nota_max * 10;
-			$error .= sprintf(_("nota no guardada para %s porque la nota (%s) no llega al mínimo: 6"),$oPersona->getNombreApellidos(),$nn)."\n";
-			continue;
+		// Si es con precptor no se acepta cursado o examinado.
+		if ($preceptor)	{
+			// Acepto nota_num=0 para borrar.
+			if (!empty($nota_num) && $nota_num/$nota_max < 0.6) {
+				$nn = $nota_num/$nota_max * 10;
+				// Ahora si la gurado como examinado
+				$error .= sprintf(_("nota no guardada para %s porque la nota (%s) no llega al mínimo: 6"),$oPersona->getNombreApellidos(),$nn)."\n";
+				continue;
+			}
+			if ($acta == 2 ) {
+				$error .= sprintf(_("no se puede definir cursada con preceptor")."\n");
+				exit($error);
+			}
+			$oActa =new notas\Acta($acta);
+			$f_acta=$oActa->getF_acta();
+			if (!$acta || !$f_acta) {
+				$error .= sprintf(_("debe introducir los datos del acta. No se ha guardado nada.")."\n");
+				exit($error);
+			}
+		} else {
+			// para las cursadas o examinadas no aprobadas
+			if ($id_situacion == 2 OR $id_situacion == 12 OR $id_situacion == 0) {
+				//conseguir una fecha para poner como fecha acta. las cursadas se guardan durante 2 años
+				$f_acta = $cActas[0]->getF_acta();
+			} else {
+				if (!$acta) {
+					$error .= sprintf(_("falta definir el acta para alguna nota")."\n");
+					exit($error);
+				}
+				$oActa =new notas\Acta($acta);
+				$f_acta=$oActa->getF_acta();
+				if (!$acta || !$f_acta) {
+					$error .= sprintf(_("debe introducir los datos del acta. No se ha guardado nada.")."\n");
+					exit($error);
+				}
+			}
+			// Acepto nota_num=0 para borrar.
+			if (!empty($nota_num) && $nota_num/$nota_max < 0.6) {
+				$nn = $nota_num/$nota_max * 10;
+				$id_situacion = 12; // examinado
+			}
 		}
 				
 		if (!empty($preceptor)) { //miro cuál
@@ -109,9 +137,7 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 					$id_nivel = $id_op;
 					break;
 				}
-				$id_situacion = $oPersonaNota->getId_situacion();
-				// compruebo que el id_situacion corresponde a 'superada'
-				//if (in_array($id_situacion,$aIdSuperadas)) $aOpSuperadas[$j] = $id_op;
+				// compruebo que corresponde a 'superada'
 				if ($nota_num/$nota_max >= 0.6)  $aOpSuperadas[$j] = $id_op;
 			}
 			if (empty($id_nivel)) {
@@ -145,28 +171,37 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 		} else {
 			// para borrar	(empty($nota_num))
 			if (!empty($id_activ_old) && ($Qid_activ == $id_activ_old) && empty($nota_num)) {
-				$id_situacion = 10;
-				$oPersonaNota->setId_situacion($id_situacion);
-				$oPersonaNota->DBEliminar();
-			} else {
-				if (empty($nota_num)) { continue; }
-				$oPersonaNota = new notas\PersonaNota(array('id_nom'=>$id_nom,'id_asignatura'=>$Qid_asignatura));
-				if ($nota_num > 1) $id_situacion = 10;
-				// guardo los datos
-				$oPersonaNota->setId_schema($id_schema);
-				$oPersonaNota->setId_nivel($id_nivel);
-				$oPersonaNota->setId_situacion($id_situacion);
-				$oPersonaNota->setActa($acta);
-				$oPersonaNota->setF_acta($f_acta);
-				$oPersonaNota->setId_activ($Qid_activ);
-				$oPersonaNota->setPreceptor($preceptor);
-				$oPersonaNota->setId_preceptor($id_preceptor);
-				$oPersonaNota->setNota_num($nota_num);
-				$oPersonaNota->setNota_max($nota_max);
-				$oPersonaNota->setTipo_acta(notas\PersonaNota::FORMATO_ACTA);
-				if ($oPersonaNota->DBGuardar() === false) {
-					echo _("hay un error, no se ha guardado");
+				if ($id_situacion != 2 && $id_situacion != 12) {
+					$oPersonaNota->DBEliminar();
+					continue;
 				}
+			} 
+			// Ahora guardo si la ha cursado o examinado
+			if (empty($id_situacion)) {
+				if (empty($nota_num)) {
+					$id_situacion = 2;
+				}
+				if (!empty($nota_num) && $nota_num/$nota_max < 0.6) {
+					$id_situacion = 12;
+				} else {
+					$id_situacion = 10;
+				}
+			}
+			$oPersonaNota = new notas\PersonaNota(array('id_nom'=>$id_nom,'id_asignatura'=>$Qid_asignatura));
+			// guardo los datos
+			$oPersonaNota->setId_schema($id_schema);
+			$oPersonaNota->setId_nivel($id_nivel);
+			$oPersonaNota->setId_situacion($id_situacion);
+			$oPersonaNota->setActa($acta);
+			$oPersonaNota->setF_acta($f_acta);
+			$oPersonaNota->setId_activ($Qid_activ);
+			$oPersonaNota->setPreceptor($preceptor);
+			$oPersonaNota->setId_preceptor($id_preceptor);
+			$oPersonaNota->setNota_num($nota_num);
+			$oPersonaNota->setNota_max($nota_max);
+			$oPersonaNota->setTipo_acta(notas\PersonaNota::FORMATO_ACTA);
+			if ($oPersonaNota->DBGuardar() === false) {
+				echo _("hay un error, no se ha guardado");
 			}
 		}
 	}
@@ -196,7 +231,32 @@ if ($Qque==1) { // Grabar las notas en la matricula
 		$oMatricula->setNota_num($nn);
 		$oMatricula->setNota_max($Qnota_max[$n]);
 		$oMatricula->setActa($Qacta[$n]);
-		if ($Qnota_num[$n] > 1) $oMatricula->setId_situacion(10);
+		// cursada o examinada para el caso sin preceptor
+		if ($preceptor == 'f') {
+			if ($Qacta[$n] == 2) {
+				$oMatricula->setId_situacion(2);
+				// examinada
+				if ($Qnota_num[$n] > 1) $oMatricula->setId_situacion(12);
+			} elseif ($Qnota_num[$n] > 1) {
+				if (!empty($Qnota_num[$n]) && $Qnota_num[$n]/$Qnota_max[$n] < 0.6) {
+					// examinado
+					$oMatricula->setId_situacion(12);
+				} else {
+					// aprobada
+					$oMatricula->setId_situacion(10);
+				}
+			}
+		} else {
+			if ($Qacta[$n] == 2 && $preceptor == true) {
+				$error = sprintf(_("no se puede definir cursada con preceptor")."\n");
+				exit($error);
+			}
+			if (empty($Qnota_num[$n])) {
+				$oMatricula->setId_situacion(0);
+			} else {
+				$oMatricula->setId_situacion(10);
+			}
+		}
 		if ($oMatricula->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
 		}

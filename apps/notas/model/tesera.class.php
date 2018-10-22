@@ -138,7 +138,7 @@ class Tesera {
 			$aAprobadas[$n]['id_asignatura']= $id_asignatura;
 			$aAprobadas[$n]['nombre_corto']= $oAsig->getNombre_corto();
 			$aAprobadas[$n]['fecha']= $f_acta;
-			//$oNota = new notas\Nota($id_situacion);
+			$aAprobadas[$n]['id_situacion']= $id_situacion;
 			//$aAprobadas[$n]['nota']= $oNota->getDescripcion();
 			$nota = $oPersonaNota->getNota_txt();
 			$aAprobadas[$n]['nota']= $nota;
@@ -160,6 +160,10 @@ class Tesera {
 		$num_asig_total=count($cAsignaturas);
 		$num_creditos_total=0;
 
+		// array con los id_situacion correspondientes a notas 'superadas'
+		$GesNotas  = new entity\GestorNota();
+		$aIdSuperadas = $GesNotas->getArrayNotasSuperadas();
+		
 		$a=0;
 		$i=0;
 		$numasig=0;
@@ -198,13 +202,15 @@ class Tesera {
 					$tabla[$i]['nota'] = $row['nota'];
 					$tabla[$i]['fecha'] = $row['fecha'];
 				}
-				$numasig ++;
-				$numcred += $oAsignatura->getCreditos(); 
-				$oFActa = \DateTime::createFromFormat('d/m/Y', $row['fecha']);
-					
-				if($this->oInicio <= $oFActa && $oFActa <= $this->oFin) {
-					$numasig_year ++;
-					$numcred_year += $oAsignatura->getCreditos(); 
+				if (in_array($row['id_situacion'],$aIdSuperadas)) {
+					$numasig ++;
+					$numcred += $oAsignatura->getCreditos(); 
+					$oFActa = \DateTime::createFromFormat('d/m/Y', $row['fecha']);
+						
+					if($this->oInicio <= $oFActa && $oFActa <= $this->oFin) {
+						$numasig_year ++;
+						$numcred_year += $oAsignatura->getCreditos(); 
+					}
 				}
 			}
 

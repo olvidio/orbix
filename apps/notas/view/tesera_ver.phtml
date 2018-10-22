@@ -36,10 +36,10 @@ fnjs_left_side_hide();
 					$class="alert";
 				}
 				$nota = $row['nota'];
-				$fecha = '';
+				$fecha = $row['fecha'];
 			}
 				echo "<td class=$class>$nota</td>";
-				echo "<td>$fecha</td>";
+				echo "<td class=$class>$fecha</td>";
 			echo "</tr>";
 		}
 		?>
