@@ -1,5 +1,7 @@
 <?php
 namespace profesores\model\entity;
+
+use actividadestudios\model\entity\ActividadAsignatura;
 use core;
 /**
  * Fitxer amb la Classe que accedeix a la taula d_docencia_stgr
@@ -464,7 +466,9 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'tipo'));
 		$oDatosCampo->setEtiqueta(_("tipo"));
 		$oDatosCampo->setTipo('array');
-		$oDatosCampo->setLista(array( 'v'=> _("verano"), 'i'=> _("invierno") , 'p'=> _("preceptor") ));
+		$oDatosCampo->setLista(array( ActividadAsignatura::TIPO_CA => _("ca/cv"),
+			ActividadAsignatura::TIPO_INV => _("sem. invierno"),
+			ActividadAsignatura::TIPO_PRECEPTOR => _("preceptor") ));
 		return $oDatosCampo;
 	}
 	/**

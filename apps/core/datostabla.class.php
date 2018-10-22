@@ -145,7 +145,8 @@ class DatosTabla {
 				$var_2=$oDatosCampo->getArgument2();
 				switch($oDatosCampo->getTipo()) {
 					case "array":
-						$a_valores[$c][$v]=$var_1[$valor_camp];
+						$lista = $oDatosCampo->getLista();
+						$a_valores[$c][$v]=$lista[$valor_camp];
 						break;
 					case 'depende':
 					case 'opciones':

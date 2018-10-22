@@ -90,7 +90,7 @@ foreach($cProfesorCongresos as $oProfesorCongreso) {
 <?php
 foreach($cDocencias as $oDocencia) {
 	$row = $oDocencia->getTot();
-	$array_tipo = $oDocencia->getDatosTipo()->getArgument();
+	$array_tipo = $oDocencia->getDatosTipo()->getLista();
 	$oAsignatura = new asignaturas\Asignatura($row['id_asignatura']);
 	$nombre_corto = $oAsignatura->getNombre_corto();
 	$modo=$array_tipo[$row['tipo']];

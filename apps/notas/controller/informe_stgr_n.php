@@ -168,6 +168,9 @@ if ($lista) {
 
 // ---------------------------------- html ----------------------------------------------------
 ?>
+<script>
+	fnjs_left_side_hide();
+</script>
 <p><?= \core\strtoupper_dlb(_("Alumnos numerarios")) ?>   <?= $curso_txt ?></p)>
 <table border=1>
 <?php

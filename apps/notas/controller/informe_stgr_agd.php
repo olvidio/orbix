@@ -127,8 +127,10 @@ if ($lista) {
 }
 
 // ---------------------------------- html ----------------------------------------------------
-
 ?>
+<script>
+	fnjs_left_side_hide();
+</script>
 <p><?= \core\strtoupper_dlb(_("alumnos agregados")) ?>   <?= $curso_txt ?></p>
 <table border=1>
 <?php

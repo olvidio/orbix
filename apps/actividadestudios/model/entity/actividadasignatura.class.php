@@ -22,6 +22,11 @@ use core;
 class ActividadAsignatura Extends core\ClasePropiedades {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
+	// tipo constants.
+    const TIPO_CA	 		= 'v'; // Verano: ca,cv.
+	const TIPO_INV 	 		= 'i'; // Semestre de invierno.
+	const TIPO_PRECEPTOR 	= 'p'; // Preceptor.
+	
 	/**
 	 * aPrimary_key de ActividadAsignatura
 	 *

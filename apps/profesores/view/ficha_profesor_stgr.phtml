@@ -162,7 +162,7 @@ foreach($cDocencias as $oDocencia) {
 	$tipo = $oDocencia->getTipo();
 	$curso_inicio = $oDocencia->getCurso_inicio();
 	$acta = $oDocencia->getActa();
-	$array_tipo = $oDocencia->getDatosTipo()->getArgument();
+	$array_tipo = $oDocencia->getDatosTipo()->getLista();
 	$oAsignatura = new asignaturas\Asignatura($id_asignatura);
 	$nombre_corto = $oAsignatura->getNombre_corto();
 	$modo = empty($tipo)? '' : $array_tipo[$tipo];

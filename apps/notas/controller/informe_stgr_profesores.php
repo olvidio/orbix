@@ -94,6 +94,9 @@ $a_textos[47] = ucfirst(_("nº de departamentos"));
 
 // ---------------------------------- html ----------------------------------------------------
 ?>
+<script>
+	fnjs_left_side_hide();
+</script>
 <p><?= \core\strtoupper_dlb(_("profesores stgr")) ?>   <?= $curso_txt ?></p>
 <table border=1>
 <?php

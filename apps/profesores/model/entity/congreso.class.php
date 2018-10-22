@@ -528,7 +528,7 @@ class Congreso Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'tipo'));
 		$oDatosCampo->setEtiqueta(_("tipo"));
-		 $oDatosCampo->setTipo('array');
+		$oDatosCampo->setTipo('array');
         $oDatosCampo->setLista(array( 1=> _("cv"), 2=> _("congreso"), 3=> _("reunión") ));
 		return $oDatosCampo;
 	}

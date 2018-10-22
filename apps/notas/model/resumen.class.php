@@ -1065,7 +1065,7 @@ class Resumen Extends core\ClasePropiedades {
 		return $result;
 	}
 	
-	/*40. Número de profesores que dieron clase de su especialidad*/
+	/*44. Número de profesores que dieron clase de su especialidad*/
 	public function profesorEspecialidad($otras=FALSE){
 		$oDbl = $this->getoDbl();
 		$any = $this->getAnyFiCurs();
