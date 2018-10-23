@@ -1080,10 +1080,10 @@ class Resumen Extends core\ClasePropiedades {
 		foreach ($a_profe_dept as $row) {
 			$id_nom=$row['id_nom'];
 			$id_departamento=$row['id_departamento'];
-			// asignaturas (sector) por profesor
+			// asignaturas (sector) por profesor. No contar las preceptuaciones
 			$ssql="SELECT DISTINCT d.id_nom,d.id_activ,a.id_sector,a.nombre_corto"
 					. " FROM d_docencia_stgr d JOIN $asignaturas a USING (id_asignatura)"
-					. " WHERE d.id_nom=$id_nom AND curso_inicio=$curso_inicio ";
+					. " WHERE d.id_nom=$id_nom AND curso_inicio=$curso_inicio AND d.tipo != 'p'";
 			//echo "sql: $ssql<br>";
 			foreach($oDbl->query($ssql) as $row) {
 				$id_nom = $row['id_nom'];
