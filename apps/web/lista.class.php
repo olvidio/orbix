@@ -885,7 +885,7 @@ class Lista {
 					}
 					if (!empty($id)) {
 						if ( in_array($id, $a_valores_chk)) { $chk ='checked'; } else { $chk = ''; }
-						$tbody.="<td tipo='sel' title='". _("clik para seleccionar")."'>";
+						$tbody.="<td tipo='sel' title='". _("clic para seleccionar")."'>";
 						$tbody.="<input class='sel' type='checkbox' $chk  name='sel[]' id='a$id' value='$id'>";
 						$tbody.="</td>";
 					} else { // no hay que dibujar el checkbox, pero si la columna
@@ -1029,7 +1029,7 @@ class Lista {
 							$id=$valor;
 						}
 						if (!empty($id)) {
-							$tbody.="<td tipo='sel' title='". _("clik para seleccionar")."'>";
+							$tbody.="<td tipo='sel' title='". _("clic para seleccionar")."'>";
 							$tbody.="<input class='sel' type='checkbox' $chk  name='sel[]' id='a$id' value='$id'>";
 							$tbody.="</td>";
 						} else { // no hay que dibujar el checkbox, pero si la columna

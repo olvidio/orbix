@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2018-10-05 08:40+0200\n"
+"POT-Creation-Date: 2018-10-23 09:15+0200\n"
 "PO-Revision-Date: 2018-06-08 09:00+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -57,8 +57,8 @@ msgstr ""
 #: actividades/controller/actividad_update.php:213
 #: actividades/controller/actividad_update.php:302
 #: actividades/controller/actividad_update.php:367
-#: actividadestudios/controller/acta_notas_update.php:168
-#: actividadestudios/controller/acta_notas_update.php:201
+#: actividadestudios/controller/acta_notas_update.php:204
+#: actividadestudios/controller/acta_notas_update.php:261
 #: actividadestudios/controller/update_3005.php:103
 #: actividadestudios/controller/update_3103.php:171
 #: actividadestudios/controller/update_3103.php:210
@@ -206,7 +206,7 @@ msgstr ""
 #: actividadplazas/controller/plazas_balance_dl.php:179
 #: asistentes/controller/lista_est_ctr.php:220
 #: cambios/model/gestorcanvis.class.php:24
-#: profesores/model/entity/profesordocenciastgr.class.php:449
+#: profesores/model/entity/profesordocenciastgr.class.php:451
 #: actividadcargos/view/form_1302.phtml:33
 #: actividades/view/actividad_form.phtml:150
 #: actividades/view/actividad_tipo_que.phtml:114
@@ -243,6 +243,7 @@ msgid "añadir %s"
 msgstr ""
 
 #: actividades/controller/actividad_que.php:96
+#: actividadestudios/controller/actualizar_docencia.php:31
 #: actividadestudios/controller/ca_posibles_que.php:119
 #: actividadestudios/controller/matriculas_lista.php:199
 #: actividadplazas/controller/gestion_plazas.php:213
@@ -253,6 +254,7 @@ msgid "todo el año"
 msgstr ""
 
 #: actividades/controller/actividad_que.php:97
+#: actividadestudios/controller/actualizar_docencia.php:32
 #: actividadestudios/controller/ca_posibles_que.php:120
 #: actividadestudios/controller/matriculas_lista.php:200
 #: actividadplazas/controller/gestion_plazas.php:214
@@ -262,6 +264,7 @@ msgid "primer trimestre"
 msgstr ""
 
 #: actividades/controller/actividad_que.php:98
+#: actividadestudios/controller/actualizar_docencia.php:33
 #: actividadestudios/controller/ca_posibles_que.php:121
 #: actividadestudios/controller/matriculas_lista.php:201
 #: actividadplazas/controller/gestion_plazas.php:215
@@ -271,6 +274,7 @@ msgid "segundo trimestre"
 msgstr ""
 
 #: actividades/controller/actividad_que.php:99
+#: actividadestudios/controller/actualizar_docencia.php:34
 #: actividadestudios/controller/ca_posibles_que.php:122
 #: actividadestudios/controller/matriculas_lista.php:202
 #: actividadplazas/controller/gestion_plazas.php:216
@@ -280,6 +284,7 @@ msgid "tercer trimestre"
 msgstr ""
 
 #: actividades/controller/actividad_que.php:100
+#: actividadestudios/controller/actualizar_docencia.php:35
 #: actividadestudios/controller/ca_posibles_que.php:123
 #: actividadestudios/controller/matriculas_lista.php:203
 #: actividadplazas/controller/gestion_plazas.php:217
@@ -289,6 +294,7 @@ msgid "cuarto trimestre"
 msgstr ""
 
 #: actividades/controller/actividad_que.php:102
+#: actividadestudios/controller/actualizar_docencia.php:37
 #: actividadestudios/controller/matriculas_lista.php:205
 #: actividadplazas/controller/gestion_plazas.php:219
 #: asistentes/controller/que_ctr_lista.php:121
@@ -303,6 +309,7 @@ msgid "curso crt"
 msgstr ""
 
 #: actividades/controller/actividad_que.php:105
+#: actividadestudios/controller/actualizar_docencia.php:39
 #: actividadestudios/controller/ca_posibles_que.php:125
 #: actividadestudios/controller/matriculas_lista.php:207
 #: actividadplazas/controller/gestion_plazas.php:222
@@ -410,13 +417,13 @@ msgid "listas de clase"
 msgstr ""
 
 #: actividades/controller/actividad_select.php:259
-#: actividadestudios/model/select3005.class.php:74
+#: actividadestudios/model/select3005.class.php:79
 #: profesores/view/ficha_profesor_stgr.print.phtml:79
 msgid "inicio"
 msgstr ""
 
 #: actividades/controller/actividad_select.php:260
-#: actividadestudios/model/select3005.class.php:75
+#: actividadestudios/model/select3005.class.php:80
 #: profesores/view/ficha_profesor_stgr.print.phtml:79
 msgid "fin"
 msgstr ""
@@ -482,7 +489,6 @@ msgstr ""
 #: actividades/controller/actividad_select.php:300
 #: cambios/model/gestorcanvis.class.php:94 core/gestorerrores.class.php:72
 #: menus/controller/menus_importar.php:39
-#: actividadestudios/view/actualizar_docencia.phtml:7
 msgid "continuar"
 msgstr ""
 
@@ -560,7 +566,7 @@ msgid "borrable"
 msgstr ""
 
 #: actividades/controller/actividad_ver.php:49
-#: dossiers/controller/dossiers_ver.php:186
+#: dossiers/controller/dossiers_ver.php:187
 #: personas/controller/personas_select.php:230
 #: ubis/controller/home_ubis.php:124 personas/view/home_persona.phtml:7
 #: personas/view/persona_de_paso.phtml:62 personas/view/persona_form.phtml:76
@@ -569,7 +575,7 @@ msgid "ver dossiers"
 msgstr ""
 
 #: actividades/controller/actividad_ver.php:50
-#: dossiers/controller/dossiers_ver.php:187 ubis/controller/home_ubis.php:125
+#: dossiers/controller/dossiers_ver.php:188 ubis/controller/home_ubis.php:125
 #: personas/view/home_persona.phtml:7 personas/view/persona_de_paso.phtml:62
 #: personas/view/persona_form.phtml:76 personas/view/traslado_form.phtml:52
 msgid "dossiers"
@@ -616,7 +622,7 @@ msgid "descripción"
 msgstr ""
 
 #: actividades/model/entity/actividadall.class.php:1077
-#: actividadestudios/model/entity/actividadasignatura.class.php:470
+#: actividadestudios/model/entity/actividadasignatura.class.php:475
 #: dossiers/model/entity/dossier.class.php:470
 #: profesores/model/entity/congreso.class.php:490
 #: profesores/model/entity/profesorcongreso.class.php:490
@@ -630,7 +636,7 @@ msgid "hora inicio"
 msgstr ""
 
 #: actividades/model/entity/actividadall.class.php:1101
-#: actividadestudios/model/entity/actividadasignatura.class.php:482
+#: actividadestudios/model/entity/actividadasignatura.class.php:487
 #: profesores/model/entity/congreso.class.php:503
 #: profesores/model/entity/profesorcongreso.class.php:503
 #: actividades/view/actividad_form.phtml:183
@@ -651,7 +657,7 @@ msgid "tiene un formato no válido."
 msgstr ""
 
 #: actividades/model/entity/actividadall.class.php:1141
-msgid "se adminte un separador para los decimales (máximo 2)"
+msgid "se admite un separador para los decimales (máximo 2)"
 msgstr ""
 
 #: actividades/model/entity/actividadall.class.php:1143
@@ -731,8 +737,8 @@ msgid "temporada"
 msgstr ""
 
 #: actividades/model/entity/repeticion.class.php:362
-#: actividadestudios/model/entity/actividadasignatura.class.php:458
-#: actividadestudios/model/select3005.class.php:71
+#: actividadestudios/model/entity/actividadasignatura.class.php:463
+#: actividadestudios/model/select3005.class.php:76
 #: actividadplazas/model/entity/plazapeticion.class.php:372
 #: asignaturas/model/entity/asignatura.class.php:595
 #: asistentes/controller/planning_select.php:199
@@ -741,7 +747,7 @@ msgstr ""
 #: personas/model/entity/traslado.class.php:500
 #: profesores/model/entity/congreso.class.php:530
 #: profesores/model/entity/profesorcongreso.class.php:530
-#: profesores/model/entity/profesordocenciastgr.class.php:465
+#: profesores/model/entity/profesordocenciastgr.class.php:467
 #: ubis/controller/ubis_lista.php:85 ubis/controller/ubis_tabla.php:405
 #: actividadestudios/view/form_3005.phtml:91
 #: personas/view/traslado_form.phtml:64 ubis/view/ubis_buscar.phtml:140
@@ -775,23 +781,65 @@ msgstr ""
 msgid "no hay ninguna persona matriculada de esta asignatura"
 msgstr ""
 
-#: actividadestudios/controller/acta_notas.php:122
+#: actividadestudios/controller/acta_notas.php:92
+#: notas/controller/asignaturas_pendientes.php:155
+msgid "cursada"
+msgstr ""
+
+#: actividadestudios/controller/acta_notas.php:123
 msgid "primero debe guadar los datos del acta"
 msgstr ""
 
-#: actividadestudios/controller/acta_notas_update.php:51
-#, php-format
-msgid "debe introducir los datos del acta. No se ha guardado nada."
-msgstr ""
-
-#: actividadestudios/controller/acta_notas_update.php:62
+#: actividadestudios/controller/acta_notas_update.php:57
 #, php-format
 msgid "nota no guardada para %s porque la nota (%s) no llega al mínimo: 6"
 msgstr ""
 
-#: actividadestudios/controller/acta_notas_update.php:143
+#: actividadestudios/controller/acta_notas_update.php:61
+#: actividadestudios/controller/acta_notas_update.php:251
+#, php-format
+msgid "no se puede definir cursada con preceptor"
+msgstr ""
+
+#: actividadestudios/controller/acta_notas_update.php:67
+#: actividadestudios/controller/acta_notas_update.php:83
+#, php-format
+msgid "debe introducir los datos del acta. No se ha guardado nada."
+msgstr ""
+
+#: actividadestudios/controller/acta_notas_update.php:77
+#, php-format
+msgid "falta definir el acta para alguna nota"
+msgstr ""
+
+#: actividadestudios/controller/acta_notas_update.php:169
 #, php-format
 msgid "está intentando poner una nota que ya existe (id_nom=%s)"
+msgstr ""
+
+#: actividadestudios/controller/actualizar_docencia.php:29
+#: actividadestudios/controller/matriculas_lista.php:197
+#: actividadplazas/controller/gestion_plazas.php:211 core/mod_tabla_sql.php:115
+#: notas/controller/acta_listado_anual.php:98
+#: actividades/view/actividad_que.phtml:96
+#: actividades/view/actividad_select_ubi.phtml:53
+#: asistentes/view/activ_pendientes.phtml:28
+#: asistentes/view/planning_persona_que.phtml:50
+#: asistentes/view/que_ctr_lista.phtml:70 menus/view/traducir_menu.phtml:63
+#: menus/view/traducir_menu.phtml:75 menus/view/traducir_menu.phtml:99
+#: menus/view/traducir_menu.phtml:107 menus/view/traducir_menu.phtml:153
+#: menus/view/traducir_menu.phtml:204 notas/view/acta_select.phtml:69
+#: notas/view/asig_faltan_que.phtml:7 notas/view/asig_faltan_que.phtml:39
+#: personas/view/personas_que.phtml:12 ubis/view/direcciones_que.phtml:9
+#: ubis/view/ubis_buscar.phtml:55 ubis/view/ubis_buscar.phtml:136
+#: usuarios/view/grupo_lista.phtml:48 usuarios/view/usuario_lista.phtml:44
+msgid "buscar"
+msgstr ""
+
+#: actividadestudios/controller/actualizar_docencia.php:43
+#: actividadestudios/controller/matriculas_lista.php:211
+#: actividadplazas/controller/gestion_plazas.php:226
+msgid "periodo de selección de actividades"
 msgstr ""
 
 #: actividadestudios/controller/ca_posibles.php:78
@@ -827,7 +875,6 @@ msgid "todos los ctr"
 msgstr ""
 
 #: actividadestudios/controller/ca_posibles_que.php:116
-#: profesores/model/entity/profesordocenciastgr.class.php:467
 msgid "verano"
 msgstr ""
 
@@ -860,12 +907,12 @@ msgstr ""
 #: actividadestudios/controller/matriculas_lista.php:100
 #: actividadestudios/controller/matriculas_pendientes.php:63
 #: actividadestudios/model/select1303.class.php:77
-#: actividadestudios/model/select3005.class.php:69
+#: actividadestudios/model/select3005.class.php:74
 #: actividadestudios/model/select3103.class.php:73
 #: notas/controller/acta_select.php:120 notas/model/select1011.class.php:60
 #: profesores/controller/profesor_asignatura_que.php:46
 #: profesores/model/entity/profesorampliacion.class.php:429
-#: profesores/model/entity/profesordocenciastgr.class.php:433
+#: profesores/model/entity/profesordocenciastgr.class.php:435
 #: actividadestudios/view/e43.phtml:28
 #: actividadestudios/view/form_1303.phtml:93
 #: actividadestudios/view/form_1303.phtml:96
@@ -908,16 +955,17 @@ msgstr ""
 #: actividadestudios/model/select1303.class.php:76
 #: notas/model/entity/personanota.class.php:773
 #: notas/model/select1011.class.php:64
-#: profesores/model/entity/profesordocenciastgr.class.php:467
+#: profesores/model/entity/profesordocenciastgr.class.php:471
 #: actividadestudios/view/acta_notas.phtml:86
-#: actividadestudios/view/acta_notas.phtml:107
+#: actividadestudios/view/acta_notas.phtml:102
+#: actividadestudios/view/acta_notas.phtml:118
 #: actividadestudios/view/form_1303.phtml:106
 #: actividadestudios/view/form_3005.phtml:94 notas/view/form_1011.phtml:170
 msgid "preceptor"
 msgstr ""
 
 #: actividadestudios/controller/lista_clases_ca.php:89
-#: actividadestudios/model/select3005.class.php:72
+#: actividadestudios/model/select3005.class.php:77
 #: actividadestudios/view/form_3005.phtml:83
 msgid "profesor"
 msgstr ""
@@ -1011,29 +1059,6 @@ msgstr ""
 msgid "¿Está seguro que desea borrar todas las matrículas seleccionadas?"
 msgstr ""
 
-#: actividadestudios/controller/matriculas_lista.php:197
-#: actividadplazas/controller/gestion_plazas.php:211 core/mod_tabla_sql.php:115
-#: notas/controller/acta_listado_anual.php:98
-#: actividades/view/actividad_que.phtml:96
-#: actividades/view/actividad_select_ubi.phtml:53
-#: asistentes/view/activ_pendientes.phtml:28
-#: asistentes/view/planning_persona_que.phtml:50
-#: asistentes/view/que_ctr_lista.phtml:70 menus/view/traducir_menu.phtml:63
-#: menus/view/traducir_menu.phtml:75 menus/view/traducir_menu.phtml:99
-#: menus/view/traducir_menu.phtml:107 menus/view/traducir_menu.phtml:153
-#: menus/view/traducir_menu.phtml:204 notas/view/acta_select.phtml:69
-#: notas/view/asig_faltan_que.phtml:7 notas/view/asig_faltan_que.phtml:39
-#: personas/view/personas_que.phtml:12 ubis/view/direcciones_que.phtml:9
-#: ubis/view/ubis_buscar.phtml:55 ubis/view/ubis_buscar.phtml:136
-#: usuarios/view/grupo_lista.phtml:48 usuarios/view/usuario_lista.phtml:44
-msgid "buscar"
-msgstr ""
-
-#: actividadestudios/controller/matriculas_lista.php:211
-#: actividadplazas/controller/gestion_plazas.php:226
-msgid "periodo de selección de actividades"
-msgstr ""
-
 #: actividadestudios/controller/matriculas_pendientes.php:57
 msgid "lista de matrículas pendientes de poner nota"
 msgstr ""
@@ -1068,11 +1093,11 @@ msgstr ""
 msgid "hay un error, no se ha creado"
 msgstr ""
 
-#: actividadestudios/model/entity/actividadasignatura.class.php:434
+#: actividadestudios/model/entity/actividadasignatura.class.php:439
 msgid "id_profesor"
 msgstr ""
 
-#: actividadestudios/model/entity/actividadasignatura.class.php:446
+#: actividadestudios/model/entity/actividadasignatura.class.php:451
 msgid "aviso profesor"
 msgstr ""
 
@@ -1114,7 +1139,7 @@ msgstr ""
 #: notas/model/entity/actatribunaldl.class.php:347
 #: notas/model/entity/personanota.class.php:732
 #: notas/model/select1011.class.php:62
-#: profesores/model/entity/profesordocenciastgr.class.php:493
+#: profesores/model/entity/profesordocenciastgr.class.php:497
 #: actividadestudios/view/acta_notas.phtml:86 notas/view/acta_ver.phtml:69
 #: notas/view/form_1011.phtml:157
 msgid "acta"
@@ -1151,7 +1176,7 @@ msgid "ir a dossier de actividades"
 msgstr ""
 
 #: actividadestudios/model/select1303.class.php:68
-#: actividadestudios/model/select3005.class.php:60
+#: actividadestudios/model/select3005.class.php:65
 #: core/datostabla.class.php:103 devel/controller/modulos_select.php:57
 #: notas/controller/acta_select.php:113 ubis/controller/list_ctr.php:186
 #: ubis/controller/teleco_tabla.php:89 ubis/controller/ubis_tabla.php:398
@@ -1186,36 +1211,36 @@ msgstr ""
 msgid "no tiene ninguna actividad asignada"
 msgstr ""
 
-#: actividadestudios/model/select3005.class.php:61
+#: actividadestudios/model/select3005.class.php:66
 msgid "quitar asignatura"
 msgstr ""
 
-#: actividadestudios/model/select3005.class.php:62
+#: actividadestudios/model/select3005.class.php:69
 #: menus/view/traducir_menu.phtml:130 menus/view/traducir_menu.phtml:226
 #: menus/view/traducir_menu.phtml:227
 msgid "actas"
 msgstr ""
 
-#: actividadestudios/model/select3005.class.php:70
+#: actividadestudios/model/select3005.class.php:75
 #: asignaturas/model/entity/asignatura.class.php:538
 #: asistentes/controller/lista_est_ctr.php:208
 msgid "créditos"
 msgstr ""
 
-#: actividadestudios/model/select3005.class.php:73
+#: actividadestudios/model/select3005.class.php:78
 msgid "prof. avisado"
 msgstr ""
 
-#: actividadestudios/model/select3005.class.php:88
+#: actividadestudios/model/select3005.class.php:93
 msgid "¿Está seguro que desea quitar esta asignatura?"
 msgstr ""
 
-#: actividadestudios/model/select3005.class.php:133
+#: actividadestudios/model/select3005.class.php:139
 #: actividadestudios/view/form_3005.phtml:99
 msgid "avisado"
 msgstr ""
 
-#: actividadestudios/model/select3005.class.php:134
+#: actividadestudios/model/select3005.class.php:140
 #: actividadestudios/view/form_3005.phtml:100
 msgid "confirmado"
 msgstr ""
@@ -1271,7 +1296,7 @@ msgid ""
 "propia en el periodo: %s - %s."
 msgstr ""
 
-#: actividadplazas/controller/peticiones_activ.php:194
+#: actividadplazas/controller/peticiones_activ.php:202
 msgid "guardar peticiones"
 msgstr ""
 
@@ -1418,12 +1443,12 @@ msgstr ""
 msgid "los datos de asistencia los modifica el propietario de la plaza: %s"
 msgstr ""
 
-#: asistentes/controller/form_mover.php:142
+#: asistentes/controller/form_mover.php:152
 #, php-format
 msgid "plazas libres/concedidas: %s/%s"
 msgstr ""
 
-#: asistentes/controller/form_mover.php:153
+#: asistentes/controller/form_mover.php:163
 #, php-format
 msgid "créditos: %s"
 msgstr ""
@@ -1452,7 +1477,7 @@ msgstr ""
 #: asistentes/model/select3101.class.php:346
 #: asistentes/model/select3101.class.php:458
 #: asistentes/model/select3101.class.php:462
-#: asistentes/model/select3101.class.php:463 core/datostabla.class.php:158
+#: asistentes/model/select3101.class.php:463 core/datostabla.class.php:159
 #: notas/model/select1011.class.php:167 ubis/controller/teleco_tabla.php:124
 #: actividades/view/actividad_form.phtml:225
 #: actividadestudios/view/selectUnCa.phtml:9
@@ -1474,7 +1499,7 @@ msgstr ""
 #: asistentes/model/select3101.class.php:346
 #: asistentes/model/select3101.class.php:460
 #: asistentes/model/select3101.class.php:462
-#: asistentes/model/select3101.class.php:463 core/datostabla.class.php:158
+#: asistentes/model/select3101.class.php:463 core/datostabla.class.php:159
 #: notas/model/select1011.class.php:167 ubis/controller/teleco_tabla.php:124
 #: actividades/view/actividad_form.phtml:226
 #: actividadestudios/view/selectUnCa.phtml:11
@@ -1624,15 +1649,12 @@ msgid "periodo de inicio o finalización de las actividades"
 msgstr ""
 
 #: asistentes/model/entity/asistente.class.php:62
+#: asistentes/model/entity/asistente.class.php:91
 msgid "el asistente es de otra dl. Se debe modificar en la dl origen."
 msgstr ""
 
 #: asistentes/model/entity/asistente.class.php:65
 msgid "no sé a que dl pertenece el asistente."
-msgstr ""
-
-#: asistentes/model/entity/asistente.class.php:91
-msgid "el asistenete es de otra dl. Se debe modificar en la dl origen."
 msgstr ""
 
 #: asistentes/model/entity/asistentepub.class.php:149
@@ -2004,12 +2026,12 @@ msgid "guardar"
 msgstr ""
 
 #: core/mod_tabla_form.php:175 devel/controller/metamenus_get.php:61
-#: menus/view/menus_get.phtml:44
+#: asistentes/view/form_mover.phtml:13 menus/view/menus_get.phtml:44
 msgid "cancelar"
 msgstr ""
 
 #: core/mod_tabla_sql.php:142 devel/controller/metamenus_get.php:57
-#: dossiers/controller/dossiers_ver.php:324 menus/view/menus_get.phtml:53
+#: dossiers/controller/dossiers_ver.php:331 menus/view/menus_get.phtml:53
 #: menus/view/menus_get_lista.phtml:56 ubis/view/teleco_tabla.phtml:64
 msgid "nuevo"
 msgstr ""
@@ -2032,7 +2054,12 @@ msgstr ""
 msgid "quitar dirección"
 msgstr ""
 
-#: dbextern/controller/sincro_ajax.php:248
+#: dbextern/controller/sincro_ajax.php:173
+#, php-format
+msgid "OK. %s personas sincronizadas"
+msgstr ""
+
+#: dbextern/controller/sincro_ajax.php:253
 #: personas/model/entity/trasladodl.class.php:233
 msgid "OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio."
 msgstr ""
@@ -2493,16 +2520,16 @@ msgstr ""
 msgid "buscar un módulo"
 msgstr ""
 
-#: notas/controller/acta_imprimir.php:113
-#: notas/controller/acta_imprimir_mpdf.php:91
+#: notas/controller/acta_imprimir.php:121
+#: notas/controller/acta_imprimir_mpdf.php:98
 #, php-format
 msgid ""
 "existe una nota de la que no se tiene acceso al nombre (id_nom = %s): es de "
 "otra dl o 'de paso' borrado."
 msgstr ""
 
-#: notas/controller/acta_imprimir.php:114
-#: notas/controller/acta_imprimir_mpdf.php:92
+#: notas/controller/acta_imprimir.php:122
+#: notas/controller/acta_imprimir_mpdf.php:99
 msgid "no aparece en la lista"
 msgstr ""
 
@@ -2516,7 +2543,7 @@ msgid "lista de actas del curso %s"
 msgstr ""
 
 #: notas/controller/acta_select.php:116
-#: actividadestudios/view/acta_notas.phtml:123
+#: actividadestudios/view/acta_notas.phtml:145
 msgid "imprimir"
 msgstr ""
 
@@ -2536,22 +2563,22 @@ msgstr ""
 msgid "esta acta ya existe"
 msgstr ""
 
-#: notas/controller/acta_ver.php:169
+#: notas/controller/acta_ver.php:171
 #, php-format
 msgid "(último= %s)"
 msgstr ""
 
-#: notas/controller/acta_ver.php:170 notas/controller/acta_ver.php:171
-#: notas/controller/acta_ver.php:172
+#: notas/controller/acta_ver.php:172 notas/controller/acta_ver.php:173
+#: notas/controller/acta_ver.php:174
 #, php-format
 msgid "(última= %s)"
 msgstr ""
 
-#: notas/controller/acta_ver.php:206
+#: notas/controller/acta_ver.php:208
 msgid "no se guardará el ca/cv donde se cursó la asignatura"
 msgstr ""
 
-#: notas/controller/acta_ver.php:218
+#: notas/controller/acta_ver.php:220
 msgid "datos del acta"
 msgstr ""
 
@@ -2609,15 +2636,11 @@ msgstr ""
 msgid "pendiente"
 msgstr ""
 
-#: notas/controller/asignaturas_pendientes.php:155
-msgid "cursada"
-msgstr ""
-
 #: notas/controller/comprobar_notas.php:194
 #: notas/controller/comprobar_notas.php:226
 #: notas/controller/comprobar_notas.php:286
 #: notas/controller/comprobar_notas.php:317
-msgid "click aquí"
+msgid "clic aquí"
 msgstr ""
 
 #: notas/controller/comprobar_notas.php:195
@@ -2722,7 +2745,7 @@ msgstr ""
 msgid "número de agregados de repaso"
 msgstr ""
 
-#: notas/controller/informe_stgr_agd.php:132
+#: notas/controller/informe_stgr_agd.php:134
 msgid "alumnos agregados"
 msgstr ""
 
@@ -2812,7 +2835,7 @@ msgstr ""
 msgid "número de numerarios de repaso"
 msgstr ""
 
-#: notas/controller/informe_stgr_n.php:171
+#: notas/controller/informe_stgr_n.php:174
 msgid "Alumnos numerarios"
 msgstr ""
 
@@ -2864,7 +2887,7 @@ msgstr ""
 msgid "nº de departamentos"
 msgstr ""
 
-#: notas/controller/informe_stgr_profesores.php:97
+#: notas/controller/informe_stgr_profesores.php:100
 msgid "profesores stgr"
 msgstr ""
 
@@ -3485,11 +3508,15 @@ msgstr ""
 msgid "fecha de cese"
 msgstr ""
 
-#: profesores/model/entity/profesordocenciastgr.class.php:467
-msgid "invierno"
+#: profesores/model/entity/profesordocenciastgr.class.php:469
+msgid "ca/cv"
 msgstr ""
 
-#: profesores/model/entity/profesordocenciastgr.class.php:479
+#: profesores/model/entity/profesordocenciastgr.class.php:470
+msgid "sem. invierno"
+msgstr ""
+
+#: profesores/model/entity/profesordocenciastgr.class.php:483
 msgid "año inicio curso"
 msgstr ""
 
@@ -3684,8 +3711,12 @@ msgstr ""
 msgid "tipo ctr o casa"
 msgstr ""
 
-#: ubis/controller/list_ctr.php:262
-msgid "de dl'),'ex'=>_('de otra dl/cr"
+#: ubis/controller/list_ctr.php:262 ubis/view/ubis_buscar.phtml:159
+msgid "de dl"
+msgstr ""
+
+#: ubis/controller/list_ctr.php:262 ubis/view/ubis_buscar.phtml:160
+msgid "de otra dl/cr"
 msgstr ""
 
 #: ubis/controller/list_ctr.php:271
@@ -4344,7 +4375,7 @@ msgid "diciembre"
 msgstr ""
 
 #: web/calendario.php:66 web/calendario_grid.php:66
-msgid "click para crear una nueva actividad en esta casa"
+msgid "clic para crear una nueva actividad en esta casa"
 msgstr ""
 
 #: web/calendario.php:67 web/calendario_grid.php:67
@@ -4471,7 +4502,7 @@ msgid "ordenar por..."
 msgstr ""
 
 #: web/lista.class.php:888 web/lista.class.php:1032
-msgid "clik para seleccionar"
+msgid "clic para seleccionar"
 msgstr ""
 
 #: web/periodoque.class.php:136 web/periodoque.class.php:187
@@ -4694,26 +4725,27 @@ msgstr ""
 msgid "notas del acta"
 msgstr ""
 
-#: actividadestudios/view/acta_notas.phtml:112 notas/view/form_1011.phtml:149
+#: actividadestudios/view/acta_notas.phtml:123
+#: actividadestudios/view/acta_notas.phtml:132 notas/view/form_1011.phtml:149
 msgid "sobre"
 msgstr ""
 
-#: actividadestudios/view/acta_notas.phtml:122
+#: actividadestudios/view/acta_notas.phtml:144
 msgid "grabar notas en tessera"
 msgstr ""
 
-#: actividadestudios/view/actualizar_docencia.phtml:1
+#: actividadestudios/view/actualizar_docencia.phtml:10
 msgid "actualización de los datos de docencia"
 msgstr ""
 
-#: actividadestudios/view/actualizar_docencia.phtml:4
+#: actividadestudios/view/actualizar_docencia.phtml:13
 msgid ""
 "esta acción llenará el dossier de actividad docente con los datos de los "
 "cursos anuales. Sólo se tendrán en cuenta los ca que se han marcado como "
 "terminados. Así nos aseguramos de copiar todos los datos (actas...)"
 msgstr ""
 
-#: actividadestudios/view/actualizar_docencia.phtml:10
+#: actividadestudios/view/actualizar_docencia.phtml:22
 msgid "ya está"
 msgstr ""
 
@@ -4925,10 +4957,6 @@ msgstr ""
 
 #: asistentes/view/form_mover.phtml:5 menus/view/menus_get.phtml:57
 msgid "mover a"
-msgstr ""
-
-#: asistentes/view/form_mover.phtml:13
-msgid "cancel"
 msgstr ""
 
 #: asistentes/view/lista_activ_ctr.phtml:13
@@ -5614,27 +5642,27 @@ msgstr ""
 msgid "tribunal"
 msgstr ""
 
-#: notas/view/acta_ver.phtml:122
+#: notas/view/acta_ver.phtml:123
 msgid "guardar cambios acta"
 msgstr ""
 
-#: notas/view/acta_ver.phtml:126
+#: notas/view/acta_ver.phtml:127
 msgid "nueva acta convocatoria"
 msgstr ""
 
-#: notas/view/acta_ver.phtml:139
+#: notas/view/acta_ver.phtml:141
 msgid "escriba parte del nombre para buscar"
 msgstr ""
 
-#: notas/view/acta_ver.phtml:140 notas/view/acta_ver.phtml:150
+#: notas/view/acta_ver.phtml:142 notas/view/acta_ver.phtml:152
 msgid "no hay resultados"
 msgstr ""
 
-#: notas/view/acta_ver.phtml:141 notas/view/acta_ver.phtml:151
+#: notas/view/acta_ver.phtml:143 notas/view/acta_ver.phtml:153
 msgid "buscando..."
 msgstr ""
 
-#: notas/view/acta_ver.phtml:149
+#: notas/view/acta_ver.phtml:151
 msgid "escriba un texto para buscar"
 msgstr ""
 
@@ -5817,11 +5845,11 @@ msgid "cambiar el stgr"
 msgstr ""
 
 #: personas/view/traslado_form.phtml:9
-msgid "debería lenar el campo ctr o dl"
+msgid "debería llenar el campo ctr o dl"
 msgstr ""
 
 #: personas/view/traslado_form.phtml:13
-msgid "debería lenar el campo situación"
+msgid "debería llenar el campo situación"
 msgstr ""
 
 #: personas/view/traslado_form.phtml:65
@@ -6094,14 +6122,6 @@ msgstr ""
 
 #: ubis/view/ubis_buscar.phtml:121 ubis/view/ubis_buscar.phtml:249
 msgid "mayores"
-msgstr ""
-
-#: ubis/view/ubis_buscar.phtml:159
-msgid "de dl"
-msgstr ""
-
-#: ubis/view/ubis_buscar.phtml:160
-msgid "de otra dl/cr"
 msgstr ""
 
 #: ubis/view/ubis_buscar.phtml:257

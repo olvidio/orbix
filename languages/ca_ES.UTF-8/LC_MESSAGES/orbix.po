@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2018-10-05 08:40+0200\n"
-"PO-Revision-Date: 2018-10-05 08:42+0200\n"
+"POT-Creation-Date: 2018-10-23 09:15+0200\n"
+"PO-Revision-Date: 2018-10-23 09:20+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
 "Language: es_ES\n"
@@ -56,8 +56,8 @@ msgstr "ja existeix aquest càrrec per a aquesta activitat"
 #: actividades/controller/actividad_update.php:213
 #: actividades/controller/actividad_update.php:302
 #: actividades/controller/actividad_update.php:367
-#: actividadestudios/controller/acta_notas_update.php:168
-#: actividadestudios/controller/acta_notas_update.php:201
+#: actividadestudios/controller/acta_notas_update.php:204
+#: actividadestudios/controller/acta_notas_update.php:261
 #: actividadestudios/controller/update_3005.php:103
 #: actividadestudios/controller/update_3103.php:171
 #: actividadestudios/controller/update_3103.php:210
@@ -123,7 +123,7 @@ msgstr "id_nom"
 #: actividadcargos/view/form_1302.phtml:53
 #: actividadcargos/view/form_3102.phtml:47
 msgid "¿puede ser agd?"
-msgstr "¿Pot ser AGD?"
+msgstr "¿Pot ser agd?"
 
 #: actividadcargos/model/entity/actividadcargo.class.php:448
 #: actividadcargos/model/select1302.class.php:83
@@ -205,7 +205,7 @@ msgstr "treure càrrec"
 #: actividadplazas/controller/plazas_balance_dl.php:179
 #: asistentes/controller/lista_est_ctr.php:220
 #: cambios/model/gestorcanvis.class.php:24
-#: profesores/model/entity/profesordocenciastgr.class.php:449
+#: profesores/model/entity/profesordocenciastgr.class.php:451
 #: actividadcargos/view/form_1302.phtml:33
 #: actividades/view/actividad_form.phtml:150
 #: actividades/view/actividad_tipo_que.phtml:114
@@ -242,6 +242,7 @@ msgid "añadir %s"
 msgstr "afegir %s"
 
 #: actividades/controller/actividad_que.php:96
+#: actividadestudios/controller/actualizar_docencia.php:31
 #: actividadestudios/controller/ca_posibles_que.php:119
 #: actividadestudios/controller/matriculas_lista.php:199
 #: actividadplazas/controller/gestion_plazas.php:213
@@ -252,6 +253,7 @@ msgid "todo el año"
 msgstr "tot l'any"
 
 #: actividades/controller/actividad_que.php:97
+#: actividadestudios/controller/actualizar_docencia.php:32
 #: actividadestudios/controller/ca_posibles_que.php:120
 #: actividadestudios/controller/matriculas_lista.php:200
 #: actividadplazas/controller/gestion_plazas.php:214
@@ -261,6 +263,7 @@ msgid "primer trimestre"
 msgstr "primer trimestre"
 
 #: actividades/controller/actividad_que.php:98
+#: actividadestudios/controller/actualizar_docencia.php:33
 #: actividadestudios/controller/ca_posibles_que.php:121
 #: actividadestudios/controller/matriculas_lista.php:201
 #: actividadplazas/controller/gestion_plazas.php:215
@@ -270,6 +273,7 @@ msgid "segundo trimestre"
 msgstr "segon trimestre"
 
 #: actividades/controller/actividad_que.php:99
+#: actividadestudios/controller/actualizar_docencia.php:34
 #: actividadestudios/controller/ca_posibles_que.php:122
 #: actividadestudios/controller/matriculas_lista.php:202
 #: actividadplazas/controller/gestion_plazas.php:216
@@ -279,6 +283,7 @@ msgid "tercer trimestre"
 msgstr "tercer trimestre"
 
 #: actividades/controller/actividad_que.php:100
+#: actividadestudios/controller/actualizar_docencia.php:35
 #: actividadestudios/controller/ca_posibles_que.php:123
 #: actividadestudios/controller/matriculas_lista.php:203
 #: actividadplazas/controller/gestion_plazas.php:217
@@ -288,6 +293,7 @@ msgid "cuarto trimestre"
 msgstr "quart trimestre"
 
 #: actividades/controller/actividad_que.php:102
+#: actividadestudios/controller/actualizar_docencia.php:37
 #: actividadestudios/controller/matriculas_lista.php:205
 #: actividadplazas/controller/gestion_plazas.php:219
 #: asistentes/controller/que_ctr_lista.php:121
@@ -302,6 +308,7 @@ msgid "curso crt"
 msgstr "curs crt"
 
 #: actividades/controller/actividad_que.php:105
+#: actividadestudios/controller/actualizar_docencia.php:39
 #: actividadestudios/controller/ca_posibles_que.php:125
 #: actividadestudios/controller/matriculas_lista.php:207
 #: actividadplazas/controller/gestion_plazas.php:222
@@ -409,13 +416,13 @@ msgid "listas de clase"
 msgstr "llistes de classe"
 
 #: actividades/controller/actividad_select.php:259
-#: actividadestudios/model/select3005.class.php:74
+#: actividadestudios/model/select3005.class.php:79
 #: profesores/view/ficha_profesor_stgr.print.phtml:79
 msgid "inicio"
 msgstr "inici"
 
 #: actividades/controller/actividad_select.php:260
-#: actividadestudios/model/select3005.class.php:75
+#: actividadestudios/model/select3005.class.php:80
 #: profesores/view/ficha_profesor_stgr.print.phtml:79
 msgid "fin"
 msgstr "fi"
@@ -434,7 +441,7 @@ msgstr "hora fi"
 #: actividades/view/actividad_form.phtml:144
 #: actividades/view/actividad_tipo_que.phtml:99
 msgid "sf/sv"
-msgstr "sf / sv"
+msgstr "sf/sv"
 
 #: actividades/controller/actividad_select.php:268
 msgid "tar."
@@ -446,7 +453,7 @@ msgstr "tar."
 #: profesores/view/ficha_profesor_stgr.print.phtml:40
 #: usuarios/view/grupo_form.phtml:49 usuarios/view/usuario_form.phtml:191
 msgid "sacd"
-msgstr "SACD"
+msgstr "sacd"
 
 #: actividades/controller/actividad_select.php:271
 #: actividadplazas/controller/plazas_balance_dl.php:180
@@ -476,12 +483,11 @@ msgstr "centre"
 #: actividades/controller/actividad_select.php:299
 #, php-format
 msgid "son %s actividades a mostrar. ¿Seguro que quiere continuar?."
-msgstr "són %s activitats a mostrar. ¿Segur que vol continuar ?."
+msgstr "són %s activitats a mostrar. ¿Segur que vol continuar?."
 
 #: actividades/controller/actividad_select.php:300
 #: cambios/model/gestorcanvis.class.php:94 core/gestorerrores.class.php:72
 #: menus/controller/menus_importar.php:39
-#: actividadestudios/view/actualizar_docencia.phtml:7
 msgid "continuar"
 msgstr "continuar"
 
@@ -559,7 +565,7 @@ msgid "borrable"
 msgstr "esborrable"
 
 #: actividades/controller/actividad_ver.php:49
-#: dossiers/controller/dossiers_ver.php:186
+#: dossiers/controller/dossiers_ver.php:187
 #: personas/controller/personas_select.php:230
 #: ubis/controller/home_ubis.php:124 personas/view/home_persona.phtml:7
 #: personas/view/persona_de_paso.phtml:62 personas/view/persona_form.phtml:76
@@ -568,7 +574,7 @@ msgid "ver dossiers"
 msgstr "veure dossiers"
 
 #: actividades/controller/actividad_ver.php:50
-#: dossiers/controller/dossiers_ver.php:187 ubis/controller/home_ubis.php:125
+#: dossiers/controller/dossiers_ver.php:188 ubis/controller/home_ubis.php:125
 #: personas/view/home_persona.phtml:7 personas/view/persona_de_paso.phtml:62
 #: personas/view/persona_form.phtml:76 personas/view/traslado_form.phtml:52
 msgid "dossiers"
@@ -615,7 +621,7 @@ msgid "descripción"
 msgstr "descripció"
 
 #: actividades/model/entity/actividadall.class.php:1077
-#: actividadestudios/model/entity/actividadasignatura.class.php:470
+#: actividadestudios/model/entity/actividadasignatura.class.php:475
 #: dossiers/model/entity/dossier.class.php:470
 #: profesores/model/entity/congreso.class.php:490
 #: profesores/model/entity/profesorcongreso.class.php:490
@@ -629,7 +635,7 @@ msgid "hora inicio"
 msgstr "hora inici"
 
 #: actividades/model/entity/actividadall.class.php:1101
-#: actividadestudios/model/entity/actividadasignatura.class.php:482
+#: actividadestudios/model/entity/actividadasignatura.class.php:487
 #: profesores/model/entity/congreso.class.php:503
 #: profesores/model/entity/profesorcongreso.class.php:503
 #: actividades/view/actividad_form.phtml:183
@@ -650,8 +656,8 @@ msgid "tiene un formato no válido."
 msgstr "té un format no vàlid."
 
 #: actividades/model/entity/actividadall.class.php:1141
-msgid "se adminte un separador para los decimales (máximo 2)"
-msgstr "es adminte un separador per als decimals (màxim 2)"
+msgid "se admite un separador para los decimales (máximo 2)"
+msgstr "s'admet un separador per als decimals (màxim 2)"
 
 #: actividades/model/entity/actividadall.class.php:1143
 msgid "no se admite separador para los miles"
@@ -730,8 +736,8 @@ msgid "temporada"
 msgstr "temporada"
 
 #: actividades/model/entity/repeticion.class.php:362
-#: actividadestudios/model/entity/actividadasignatura.class.php:458
-#: actividadestudios/model/select3005.class.php:71
+#: actividadestudios/model/entity/actividadasignatura.class.php:463
+#: actividadestudios/model/select3005.class.php:76
 #: actividadplazas/model/entity/plazapeticion.class.php:372
 #: asignaturas/model/entity/asignatura.class.php:595
 #: asistentes/controller/planning_select.php:199
@@ -740,7 +746,7 @@ msgstr "temporada"
 #: personas/model/entity/traslado.class.php:500
 #: profesores/model/entity/congreso.class.php:530
 #: profesores/model/entity/profesorcongreso.class.php:530
-#: profesores/model/entity/profesordocenciastgr.class.php:465
+#: profesores/model/entity/profesordocenciastgr.class.php:467
 #: ubis/controller/ubis_lista.php:85 ubis/controller/ubis_tabla.php:405
 #: actividadestudios/view/form_3005.phtml:91
 #: personas/view/traslado_form.phtml:64 ubis/view/ubis_buscar.phtml:140
@@ -774,24 +780,66 @@ msgstr "sfsv"
 msgid "no hay ninguna persona matriculada de esta asignatura"
 msgstr "no hi ha cap persona matriculada d'aquesta assignatura"
 
-#: actividadestudios/controller/acta_notas.php:122
+#: actividadestudios/controller/acta_notas.php:92
+#: notas/controller/asignaturas_pendientes.php:155
+msgid "cursada"
+msgstr "cursada"
+
+#: actividadestudios/controller/acta_notas.php:123
 msgid "primero debe guadar los datos del acta"
 msgstr "primer ha guadar les dades de l'acta"
 
-#: actividadestudios/controller/acta_notas_update.php:51
-#, php-format
-msgid "debe introducir los datos del acta. No se ha guardado nada."
-msgstr "ha d'introduir les dades de l'acta. No s'ha guardat res."
-
-#: actividadestudios/controller/acta_notas_update.php:62
+#: actividadestudios/controller/acta_notas_update.php:57
 #, php-format
 msgid "nota no guardada para %s porque la nota (%s) no llega al mínimo: 6"
 msgstr "nota no guardada per %s perquè la nota ( %s ) no arriba al mínim: 6"
 
-#: actividadestudios/controller/acta_notas_update.php:143
+#: actividadestudios/controller/acta_notas_update.php:61
+#: actividadestudios/controller/acta_notas_update.php:251
+#, php-format
+msgid "no se puede definir cursada con preceptor"
+msgstr "no es pot definir cursada amb preceptor"
+
+#: actividadestudios/controller/acta_notas_update.php:67
+#: actividadestudios/controller/acta_notas_update.php:83
+#, php-format
+msgid "debe introducir los datos del acta. No se ha guardado nada."
+msgstr "ha d'introduir les dades de l'acta. No s'ha guardat res."
+
+#: actividadestudios/controller/acta_notas_update.php:77
+#, php-format
+msgid "falta definir el acta para alguna nota"
+msgstr "falta definir l'acta per alguna nota"
+
+#: actividadestudios/controller/acta_notas_update.php:169
 #, php-format
 msgid "está intentando poner una nota que ya existe (id_nom=%s)"
 msgstr "està intentant posar una nota que ja existeix (id_nom = %s )"
+
+#: actividadestudios/controller/actualizar_docencia.php:29
+#: actividadestudios/controller/matriculas_lista.php:197
+#: actividadplazas/controller/gestion_plazas.php:211 core/mod_tabla_sql.php:115
+#: notas/controller/acta_listado_anual.php:98
+#: actividades/view/actividad_que.phtml:96
+#: actividades/view/actividad_select_ubi.phtml:53
+#: asistentes/view/activ_pendientes.phtml:28
+#: asistentes/view/planning_persona_que.phtml:50
+#: asistentes/view/que_ctr_lista.phtml:70 menus/view/traducir_menu.phtml:63
+#: menus/view/traducir_menu.phtml:75 menus/view/traducir_menu.phtml:99
+#: menus/view/traducir_menu.phtml:107 menus/view/traducir_menu.phtml:153
+#: menus/view/traducir_menu.phtml:204 notas/view/acta_select.phtml:69
+#: notas/view/asig_faltan_que.phtml:7 notas/view/asig_faltan_que.phtml:39
+#: personas/view/personas_que.phtml:12 ubis/view/direcciones_que.phtml:9
+#: ubis/view/ubis_buscar.phtml:55 ubis/view/ubis_buscar.phtml:136
+#: usuarios/view/grupo_lista.phtml:48 usuarios/view/usuario_lista.phtml:44
+msgid "buscar"
+msgstr "buscar"
+
+#: actividadestudios/controller/actualizar_docencia.php:43
+#: actividadestudios/controller/matriculas_lista.php:211
+#: actividadplazas/controller/gestion_plazas.php:226
+msgid "periodo de selección de actividades"
+msgstr "període de selecció d'activitats"
 
 #: actividadestudios/controller/ca_posibles.php:78
 msgid "debe seleccionar un centro o grupo de centros"
@@ -800,12 +848,12 @@ msgstr "ha de seleccionar un centre o grup de centres"
 #: actividadestudios/controller/ca_posibles.php:238
 #, php-format
 msgid "el ca: %s no tiene puesto el nivel de stgr."
-msgstr "el es: %s no té posat el nivell de stgr."
+msgstr "el ca: %s no té posat el nivell de stgr."
 
 #: actividadestudios/controller/ca_posibles.php:249
 #, php-format
 msgid "el ca: %s no tiene puesta ninguna asignatura."
-msgstr "el es: %s no té posada cap assignatura."
+msgstr "el ca: %s no té posada cap assignatura."
 
 #: actividadestudios/controller/ca_posibles.php:432
 msgid "sólo debebería haber uno"
@@ -826,7 +874,6 @@ msgid "todos los ctr"
 msgstr "tots els ctr"
 
 #: actividadestudios/controller/ca_posibles_que.php:116
-#: profesores/model/entity/profesordocenciastgr.class.php:467
 msgid "verano"
 msgstr "estiu"
 
@@ -859,12 +906,12 @@ msgstr "data i lloc del sem, ca o cv"
 #: actividadestudios/controller/matriculas_lista.php:100
 #: actividadestudios/controller/matriculas_pendientes.php:63
 #: actividadestudios/model/select1303.class.php:77
-#: actividadestudios/model/select3005.class.php:69
+#: actividadestudios/model/select3005.class.php:74
 #: actividadestudios/model/select3103.class.php:73
 #: notas/controller/acta_select.php:120 notas/model/select1011.class.php:60
 #: profesores/controller/profesor_asignatura_que.php:46
 #: profesores/model/entity/profesorampliacion.class.php:429
-#: profesores/model/entity/profesordocenciastgr.class.php:433
+#: profesores/model/entity/profesordocenciastgr.class.php:435
 #: actividadestudios/view/e43.phtml:28
 #: actividadestudios/view/form_1303.phtml:93
 #: actividadestudios/view/form_1303.phtml:96
@@ -907,16 +954,17 @@ msgstr "per nomenar-lo, anar al dossier de càrrecs de l'activitat"
 #: actividadestudios/model/select1303.class.php:76
 #: notas/model/entity/personanota.class.php:773
 #: notas/model/select1011.class.php:64
-#: profesores/model/entity/profesordocenciastgr.class.php:467
+#: profesores/model/entity/profesordocenciastgr.class.php:471
 #: actividadestudios/view/acta_notas.phtml:86
-#: actividadestudios/view/acta_notas.phtml:107
+#: actividadestudios/view/acta_notas.phtml:102
+#: actividadestudios/view/acta_notas.phtml:118
 #: actividadestudios/view/form_1303.phtml:106
 #: actividadestudios/view/form_3005.phtml:94 notas/view/form_1011.phtml:170
 msgid "preceptor"
 msgstr "preceptor"
 
 #: actividadestudios/controller/lista_clases_ca.php:89
-#: actividadestudios/model/select3005.class.php:72
+#: actividadestudios/model/select3005.class.php:77
 #: actividadestudios/view/form_3005.phtml:83
 msgid "profesor"
 msgstr "professor"
@@ -1010,29 +1058,6 @@ msgstr "nota"
 msgid "¿Está seguro que desea borrar todas las matrículas seleccionadas?"
 msgstr "Esteu segur que voleu esborrar totes les matrícules seleccionades?"
 
-#: actividadestudios/controller/matriculas_lista.php:197
-#: actividadplazas/controller/gestion_plazas.php:211 core/mod_tabla_sql.php:115
-#: notas/controller/acta_listado_anual.php:98
-#: actividades/view/actividad_que.phtml:96
-#: actividades/view/actividad_select_ubi.phtml:53
-#: asistentes/view/activ_pendientes.phtml:28
-#: asistentes/view/planning_persona_que.phtml:50
-#: asistentes/view/que_ctr_lista.phtml:70 menus/view/traducir_menu.phtml:63
-#: menus/view/traducir_menu.phtml:75 menus/view/traducir_menu.phtml:99
-#: menus/view/traducir_menu.phtml:107 menus/view/traducir_menu.phtml:153
-#: menus/view/traducir_menu.phtml:204 notas/view/acta_select.phtml:69
-#: notas/view/asig_faltan_que.phtml:7 notas/view/asig_faltan_que.phtml:39
-#: personas/view/personas_que.phtml:12 ubis/view/direcciones_que.phtml:9
-#: ubis/view/ubis_buscar.phtml:55 ubis/view/ubis_buscar.phtml:136
-#: usuarios/view/grupo_lista.phtml:48 usuarios/view/usuario_lista.phtml:44
-msgid "buscar"
-msgstr "buscar"
-
-#: actividadestudios/controller/matriculas_lista.php:211
-#: actividadplazas/controller/gestion_plazas.php:226
-msgid "periodo de selección de actividades"
-msgstr "període de selecció d'activitats"
-
 #: actividadestudios/controller/matriculas_pendientes.php:57
 msgid "lista de matrículas pendientes de poner nota"
 msgstr "llista de matrícules pendents de posar nota"
@@ -1067,11 +1092,11 @@ msgstr "hi ha un error, no s'ha esborrat"
 msgid "hay un error, no se ha creado"
 msgstr "hi ha un error, no s'ha creat"
 
-#: actividadestudios/model/entity/actividadasignatura.class.php:434
+#: actividadestudios/model/entity/actividadasignatura.class.php:439
 msgid "id_profesor"
 msgstr "id_profesor"
 
-#: actividadestudios/model/entity/actividadasignatura.class.php:446
+#: actividadestudios/model/entity/actividadasignatura.class.php:451
 msgid "aviso profesor"
 msgstr "avís professor"
 
@@ -1113,7 +1138,7 @@ msgstr "nota max"
 #: notas/model/entity/actatribunaldl.class.php:347
 #: notas/model/entity/personanota.class.php:732
 #: notas/model/select1011.class.php:62
-#: profesores/model/entity/profesordocenciastgr.class.php:493
+#: profesores/model/entity/profesordocenciastgr.class.php:497
 #: actividadestudios/view/acta_notas.phtml:86 notas/view/acta_ver.phtml:69
 #: notas/view/form_1011.phtml:157
 msgid "acta"
@@ -1147,10 +1172,10 @@ msgstr "ce"
 #: actividadestudios/model/posiblesca.class.php:70
 #: actividadestudios/view/ca_posibles_lista.phtml:26
 msgid "ir a dossier de actividades"
-msgstr "anar a dossier d'activitats"
+msgstr "anar al dossier d'activitats"
 
 #: actividadestudios/model/select1303.class.php:68
-#: actividadestudios/model/select3005.class.php:60
+#: actividadestudios/model/select3005.class.php:65
 #: core/datostabla.class.php:103 devel/controller/modulos_select.php:57
 #: notas/controller/acta_select.php:113 ubis/controller/list_ctr.php:186
 #: ubis/controller/teleco_tabla.php:89 ubis/controller/ubis_tabla.php:398
@@ -1185,36 +1210,36 @@ msgstr "Esteu segur que voleu treure aquesta assignatura d'aquesta activitat?"
 msgid "no tiene ninguna actividad asignada"
 msgstr "no té cap activitat assignada"
 
-#: actividadestudios/model/select3005.class.php:61
+#: actividadestudios/model/select3005.class.php:66
 msgid "quitar asignatura"
 msgstr "treure assignatura"
 
-#: actividadestudios/model/select3005.class.php:62
+#: actividadestudios/model/select3005.class.php:69
 #: menus/view/traducir_menu.phtml:130 menus/view/traducir_menu.phtml:226
 #: menus/view/traducir_menu.phtml:227
 msgid "actas"
 msgstr "actes"
 
-#: actividadestudios/model/select3005.class.php:70
+#: actividadestudios/model/select3005.class.php:75
 #: asignaturas/model/entity/asignatura.class.php:538
 #: asistentes/controller/lista_est_ctr.php:208
 msgid "créditos"
 msgstr "crèdits"
 
-#: actividadestudios/model/select3005.class.php:73
+#: actividadestudios/model/select3005.class.php:78
 msgid "prof. avisado"
 msgstr "prof. avisat"
 
-#: actividadestudios/model/select3005.class.php:88
+#: actividadestudios/model/select3005.class.php:93
 msgid "¿Está seguro que desea quitar esta asignatura?"
 msgstr "Esteu segur que voleu treure aquesta assignatura?"
 
-#: actividadestudios/model/select3005.class.php:133
+#: actividadestudios/model/select3005.class.php:139
 #: actividadestudios/view/form_3005.phtml:99
 msgid "avisado"
 msgstr "avisat"
 
-#: actividadestudios/model/select3005.class.php:134
+#: actividadestudios/model/select3005.class.php:140
 #: actividadestudios/view/form_3005.phtml:100
 msgid "confirmado"
 msgstr "confirmat"
@@ -1272,7 +1297,7 @@ msgstr ""
 "no incorporen les peticions si la persona ja té una activitat com a pròpia "
 "en el període: %s - %s ."
 
-#: actividadplazas/controller/peticiones_activ.php:194
+#: actividadplazas/controller/peticiones_activ.php:202
 msgid "guardar peticiones"
 msgstr "guardar peticions"
 
@@ -1419,12 +1444,12 @@ msgstr "nom de la persona"
 msgid "los datos de asistencia los modifica el propietario de la plaza: %s"
 msgstr "les dades d'assistència dels modifica el propietari de la plaça: %s"
 
-#: asistentes/controller/form_mover.php:142
+#: asistentes/controller/form_mover.php:152
 #, php-format
 msgid "plazas libres/concedidas: %s/%s"
-msgstr "places lliures / concedides: %s / %s"
+msgstr "places lliures/concedides: %s/%s"
 
-#: asistentes/controller/form_mover.php:153
+#: asistentes/controller/form_mover.php:163
 #, php-format
 msgid "créditos: %s"
 msgstr "crèdits: %s"
@@ -1453,7 +1478,7 @@ msgstr "activitats d'altres dl"
 #: asistentes/model/select3101.class.php:346
 #: asistentes/model/select3101.class.php:458
 #: asistentes/model/select3101.class.php:462
-#: asistentes/model/select3101.class.php:463 core/datostabla.class.php:158
+#: asistentes/model/select3101.class.php:463 core/datostabla.class.php:159
 #: notas/model/select1011.class.php:167 ubis/controller/teleco_tabla.php:124
 #: actividades/view/actividad_form.phtml:225
 #: actividadestudios/view/selectUnCa.phtml:9
@@ -1475,7 +1500,7 @@ msgstr "si"
 #: asistentes/model/select3101.class.php:346
 #: asistentes/model/select3101.class.php:460
 #: asistentes/model/select3101.class.php:462
-#: asistentes/model/select3101.class.php:463 core/datostabla.class.php:158
+#: asistentes/model/select3101.class.php:463 core/datostabla.class.php:159
 #: notas/model/select1011.class.php:167 ubis/controller/teleco_tabla.php:124
 #: actividades/view/actividad_form.phtml:226
 #: actividadestudios/view/selectUnCa.phtml:11
@@ -1625,16 +1650,13 @@ msgid "periodo de inicio o finalización de las actividades"
 msgstr "període d'inici o finalització de les activitats"
 
 #: asistentes/model/entity/asistente.class.php:62
+#: asistentes/model/entity/asistente.class.php:91
 msgid "el asistente es de otra dl. Se debe modificar en la dl origen."
 msgstr "l'assistent és d'una altra dl. S'ha de modificar en la dl origen."
 
 #: asistentes/model/entity/asistente.class.php:65
 msgid "no sé a que dl pertenece el asistente."
 msgstr "no sé a què dl pertany l'assistent."
-
-#: asistentes/model/entity/asistente.class.php:91
-msgid "el asistenete es de otra dl. Se debe modificar en la dl origen."
-msgstr "el asistenete és d'una altra dl. S'ha de modificar en la dl origen."
 
 #: asistentes/model/entity/asistentepub.class.php:149
 msgid "los datos de asistencia los modifica la dl del asistente"
@@ -1657,11 +1679,11 @@ msgstr "est_ok"
 
 #: asistentes/model/entity/asistentepub.class.php:765
 msgid "cfi"
-msgstr "CFI"
+msgstr "cfi"
 
 #: asistentes/model/entity/asistentepub.class.php:777
 msgid "cfi con"
-msgstr "CFI amb"
+msgstr "cfi amb"
 
 #: asistentes/model/entity/asistentepub.class.php:789
 #: asistentes/model/select1301.class.php:81
@@ -1893,50 +1915,50 @@ msgstr "no té el format requerit"
 #: core/comprobar_campos.php:68
 #, php-format
 msgid "el campo \"%1$s\" \"%3$s\". Valor actual: \"%2$s\""
-msgstr "el camp \\ \" %1$s \" \\ \" %3$s \". Valor actual: \\ \" %2$s \""
+msgstr "el camp \"%1$s\" \"%3$s\". Valor actual: \"%2$s\""
 
 #: core/comprobar_campos.php:80
 #, php-format
 msgid "el campo \"%1$s\" debe ser un número real, y es: \"%2$s\""
-msgstr "el camp \\ \" %1$s \" ha de ser un nombre real, i és: \\ \" %2$s \""
+msgstr "el camp \"%1$s\" ha de ser un nombre real, i és: \"%2$s\""
 
 #: core/comprobar_campos.php:88
 #, php-format
 msgid "el campo \"%1$s\" debe ser un número, y es: \"%2$s\""
-msgstr "el camp \\ \" %1$s \" ha de ser un nombre, i és: \\ \" %2$s \""
+msgstr "el camp \"%1$s\" ha de ser un nombre, i és: \"%2$s\""
 
 #: core/comprobar_campos.php:99 core/comprobar_campos.php:105
 #, php-format
 msgid "el campo \"%1$s\" debe ser un número entero, y es: \"%2$s\""
-msgstr "el camp \\ \" %1$s \" ha de ser un nombre enter, i és: \\ \" %2$s \""
+msgstr "el camp \"%1$s\" ha de ser un nombre enter, i és: \"%2$s\""
 
 #: core/comprobar_campos.php:113 core/comprobar_campos.php:121
 #, php-format
 msgid "el campo \"%1$s\" debe ser un texto, y es: \"%2$s\""
-msgstr "el camp \\ \" %1$s \" ha de ser un text, i és: \\ \" %2$s \""
+msgstr "el camp \"%1$s\" ha de ser un text, i és: \"%2$s\""
 
 #: core/comprobar_campos.php:127
 #, php-format
 msgid "el campo \"%1$s\" sólo puede tener %2$d cararcteres y tiene %3$d"
-msgstr "el camp \\ \" %1$s \" només pot tenir %2$d cararcteres i té %3$d"
+msgstr "el camp \"%1$s\" només pot tenir %2$d cararcteres i en té %3$d"
 
 #: core/comprobar_campos.php:140 core/comprobar_campos.php:146
 #, php-format
 msgid "el campo \"%1$s\" debe ser una fecha, y es: \"%2$s\""
-msgstr "el camp \\ \" %1$s \" ha de ser una data, i és: \\ \" %2$s \""
+msgstr "el camp \"%1$s\" ha de ser una data, i és: \"%2$s\""
 
 #: core/comprobar_campos.php:160 core/comprobar_campos.php:166
 #, php-format
 msgid ""
 "el campo \"%1$s\" debe ser una hora. Debe tener el formato hh:mm:ss. [%2$s]"
 msgstr ""
-"el camp \\ \" %1$s \" ha de ser una hora. Ha de tenir el format hh: mm: ss. "
-"[ %2$s ]"
+"el camp \"%1$s\" ha de ser una hora. Ha de tenir el format hh: mm: ss. "
+"[%2$s] "
 
 #: core/comprobar_campos.php:186
 #, php-format
 msgid "el campo \"%1$s\" no puede estar vacío"
-msgstr "el camp \\ \" %1$s \" no pot estar buit"
+msgstr "el camp \"%1$s\" no pot estar buit"
 
 #: core/datostabla.class.php:66 ubis/view/teleco_tabla.phtml:16
 msgid "¿Está seguro que desea eliminar este registro?"
@@ -2019,12 +2041,12 @@ msgid "guardar"
 msgstr "guardar"
 
 #: core/mod_tabla_form.php:175 devel/controller/metamenus_get.php:61
-#: menus/view/menus_get.phtml:44
+#: asistentes/view/form_mover.phtml:13 menus/view/menus_get.phtml:44
 msgid "cancelar"
 msgstr "cancel·lar"
 
 #: core/mod_tabla_sql.php:142 devel/controller/metamenus_get.php:57
-#: dossiers/controller/dossiers_ver.php:324 menus/view/menus_get.phtml:53
+#: dossiers/controller/dossiers_ver.php:331 menus/view/menus_get.phtml:53
 #: menus/view/menus_get_lista.phtml:56 ubis/view/teleco_tabla.phtml:64
 msgid "nuevo"
 msgstr "nou"
@@ -2047,7 +2069,12 @@ msgstr "guardar canvis"
 msgid "quitar dirección"
 msgstr "treure direcció"
 
-#: dbextern/controller/sincro_ajax.php:248
+#: dbextern/controller/sincro_ajax.php:173
+#, php-format
+msgid "OK. %s personas sincronizadas"
+msgstr "OK. %s persones sincronitzades"
+
+#: dbextern/controller/sincro_ajax.php:253
 #: personas/model/entity/trasladodl.class.php:233
 msgid "OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio."
 msgstr "ULL: Hauria de canviar el camp situació. No s'ha fet cap canvi."
@@ -2148,7 +2175,7 @@ msgstr "baixa"
 
 #: dbextern/controller/ver_desaparecidos_de_listas.php:83
 msgid "fallecido o traslado a otra r"
-msgstr "mort o trasllat a una altra r"
+msgstr "mort o traslladat  a un altre r"
 
 #: dbextern/controller/ver_desaparecidos_de_orbix.php:65
 msgid "personas de listas que habían estado en orbix y no se encuentran"
@@ -2271,7 +2298,7 @@ msgstr "telèfon mòbil"
 #: dbextern/model/sincrodb.class.php:242
 #, php-format
 msgid "parece que %s  no tiene puesto el ctr en \"listas\""
-msgstr "sembla que %s no té posat el ctr a \\ \"llistes \""
+msgstr "sembla que %s no té posat el ctr a \"llistes\""
 
 #: dbextern/model/sincrodb.class.php:244
 #, php-format
@@ -2299,7 +2326,7 @@ msgstr "text menu"
 #: devel/controller/metamenus_get.php:41
 #: menus/model/entity/metamenu.class.php:378
 msgid "url"
-msgstr "uRL"
+msgstr "url"
 
 #: devel/controller/metamenus_get.php:42
 #: menus/model/entity/menudb.class.php:477
@@ -2327,7 +2354,7 @@ msgstr "mòdul"
 
 #: devel/controller/metamenus_que.php:62
 msgid "'!' delante significa negado. ej: '!casa'."
-msgstr "'!' davant significa negat. ex: '! casa'."
+msgstr "'!' davant significa negat. ex: '!casa'."
 
 #: devel/controller/metamenus_que.php:63
 msgid "se pueden poner varios separados por ','. Importa el orden."
@@ -2345,14 +2372,14 @@ msgstr ""
 msgid ""
 "valores posibles: 'dtor','todos' y las oficinas ('agd', 'sm' ,'scl'...)."
 msgstr ""
-"valors possibles: 'dtor', 'tots' i les oficines ( 'AGD', 'sm', 'scl' ...)."
+"valors possibles: 'dtor', 'tots' i les oficines ( 'agd', 'sm', 'scl' ...)."
 
 #: devel/controller/metamenus_que.php:69
 msgid ""
 "se compara con el role del usuario. Si el role tiene activado 'permisos menu "
 "por oficina', también se compara con las oficinas."
 msgstr ""
-"es compara amb el role de l'usuari. Si el role té activat 'permisos menu per "
+"es compara amb el rol de l'usuari. Si el rol té activat 'permisos menu per "
 "oficina', també es compara amb les oficines."
 
 #: devel/controller/metamenus_que.php:70
@@ -2523,8 +2550,8 @@ msgstr "Està segur que desitja eliminar aquest metamenu?"
 msgid "buscar un módulo"
 msgstr "buscar un mòdul"
 
-#: notas/controller/acta_imprimir.php:113
-#: notas/controller/acta_imprimir_mpdf.php:91
+#: notas/controller/acta_imprimir.php:121
+#: notas/controller/acta_imprimir_mpdf.php:98
 #, php-format
 msgid ""
 "existe una nota de la que no se tiene acceso al nombre (id_nom = %s): es de "
@@ -2533,8 +2560,8 @@ msgstr ""
 "hi ha una nota de la qual no es té accés al nom (id_nom = %s ): és d'una "
 "altra dl o 'de pas' esborrat."
 
-#: notas/controller/acta_imprimir.php:114
-#: notas/controller/acta_imprimir_mpdf.php:92
+#: notas/controller/acta_imprimir.php:122
+#: notas/controller/acta_imprimir_mpdf.php:99
 msgid "no aparece en la lista"
 msgstr "no apareix a la llista"
 
@@ -2548,7 +2575,7 @@ msgid "lista de actas del curso %s"
 msgstr "llista d'actes del curs %s"
 
 #: notas/controller/acta_select.php:116
-#: actividadestudios/view/acta_notas.phtml:123
+#: actividadestudios/view/acta_notas.phtml:145
 msgid "imprimir"
 msgstr "imprimir"
 
@@ -2570,22 +2597,22 @@ msgstr ""
 msgid "esta acta ya existe"
 msgstr "aquesta acta ja existeix"
 
-#: notas/controller/acta_ver.php:169
+#: notas/controller/acta_ver.php:171
 #, php-format
 msgid "(último= %s)"
 msgstr "(últim = %s )"
 
-#: notas/controller/acta_ver.php:170 notas/controller/acta_ver.php:171
-#: notas/controller/acta_ver.php:172
+#: notas/controller/acta_ver.php:172 notas/controller/acta_ver.php:173
+#: notas/controller/acta_ver.php:174
 #, php-format
 msgid "(última= %s)"
 msgstr "(última = %s )"
 
-#: notas/controller/acta_ver.php:206
+#: notas/controller/acta_ver.php:208
 msgid "no se guardará el ca/cv donde se cursó la asignatura"
 msgstr "no es guardarà el ca / ​​cv on es va cursar l'assignatura"
 
-#: notas/controller/acta_ver.php:218
+#: notas/controller/acta_ver.php:220
 msgid "datos del acta"
 msgstr "dades de l'acta"
 
@@ -2629,7 +2656,7 @@ msgstr ""
 #: notas/controller/asignaturas_pendientes.php:37
 #: notas/controller/asignaturas_pendientes_resumen.php:77
 msgid "n/a"
-msgstr "n / a"
+msgstr "n/a"
 
 #: notas/controller/asignaturas_pendientes.php:40
 #: notas/controller/asignaturas_pendientes_resumen.php:80
@@ -2644,16 +2671,12 @@ msgstr "cognoms, nom"
 msgid "pendiente"
 msgstr "pendent"
 
-#: notas/controller/asignaturas_pendientes.php:155
-msgid "cursada"
-msgstr "cursada"
-
 #: notas/controller/comprobar_notas.php:194
 #: notas/controller/comprobar_notas.php:226
 #: notas/controller/comprobar_notas.php:286
 #: notas/controller/comprobar_notas.php:317
-msgid "click aquí"
-msgstr "click aquí"
+msgid "clic aquí"
+msgstr "clic aquí"
 
 #: notas/controller/comprobar_notas.php:195
 #, php-format
@@ -2670,7 +2693,7 @@ msgid ""
 "para poner r y cuadrienio finalizado a todos los de la lista, hacer %s. Esto "
 "pondrá la fecha de acta última."
 msgstr ""
-"per posar ri quadrienni finalitzat a tots els de la llista, fer %s . Això "
+"per posar r i quadrienni finalitzat a tots els de la llista, fer %s . Això "
 "posarà la data d'acta última."
 
 #: notas/controller/comprobar_notas.php:287
@@ -2701,7 +2724,7 @@ msgstr "mitjana d'assignatures superades per alumne en bienni"
 
 #: notas/controller/informe_stgr_agd.php:72
 msgid "nº de agd en cuadrienio con bienio pendiente"
-msgstr "nº de AGD en quadrienni amb bienni pendent"
+msgstr "nº de agd en quadrienni amb bienni pendent"
 
 #: notas/controller/informe_stgr_agd.php:75
 #: notas/controller/informe_stgr_n.php:113
@@ -2763,7 +2786,7 @@ msgstr "nombre d'agregats laics amb el quadrienni acabat"
 msgid "número de agregados de repaso"
 msgstr "nombre d'agregats de repàs"
 
-#: notas/controller/informe_stgr_agd.php:132
+#: notas/controller/informe_stgr_agd.php:134
 msgid "alumnos agregados"
 msgstr "alumnes agregats"
 
@@ -2858,7 +2881,7 @@ msgstr "nombre de numeraris laics amb el quadrienni acabat"
 msgid "número de numerarios de repaso"
 msgstr "nombre de numeraris de repàs"
 
-#: notas/controller/informe_stgr_n.php:171
+#: notas/controller/informe_stgr_n.php:174
 msgid "Alumnos numerarios"
 msgstr "alumnes numeraris"
 
@@ -2904,13 +2927,13 @@ msgstr "nombre de professors que van donar classe d'altres assignatures"
 
 #: notas/controller/informe_stgr_profesores.php:88
 msgid "número de profesores asistentes a cve del stgr u otras reuniones"
-msgstr "nombre de professors assistents a CVE del stgr o altres reunions"
+msgstr "nombre de professors assistents a cve del stgr o altres reunions"
 
 #: notas/controller/informe_stgr_profesores.php:92
 msgid "nº de departamentos"
 msgstr "nº de departaments"
 
-#: notas/controller/informe_stgr_profesores.php:97
+#: notas/controller/informe_stgr_profesores.php:100
 msgid "profesores stgr"
 msgstr "professors stgr"
 
@@ -3218,7 +3241,7 @@ msgstr "tracte"
 
 #: personas/model/entity/personaglobal.class.php:996
 msgid "nx1"
-msgstr "NX1"
+msgstr "nx1"
 
 #: personas/model/entity/personaglobal.class.php:1008
 msgid "apellido1"
@@ -3226,7 +3249,7 @@ msgstr "cognom1"
 
 #: personas/model/entity/personaglobal.class.php:1020
 msgid "nx2"
-msgstr "NX2"
+msgstr "nx2"
 
 #: personas/model/entity/personaglobal.class.php:1032
 msgid "apellido2"
@@ -3531,11 +3554,15 @@ msgstr "escrit de cessament"
 msgid "fecha de cese"
 msgstr "data de cessament"
 
-#: profesores/model/entity/profesordocenciastgr.class.php:467
-msgid "invierno"
-msgstr "hivern"
+#: profesores/model/entity/profesordocenciastgr.class.php:469
+msgid "ca/cv"
+msgstr "ca/cv"
 
-#: profesores/model/entity/profesordocenciastgr.class.php:479
+#: profesores/model/entity/profesordocenciastgr.class.php:470
+msgid "sem. invierno"
+msgstr "sem. hivern"
+
+#: profesores/model/entity/profesordocenciastgr.class.php:483
 msgid "año inicio curso"
 msgstr "any inici curs"
 
@@ -3656,7 +3683,7 @@ msgid ""
 "caso, asígnesela. En caso contrario cree una nueva."
 msgstr ""
 "aquest ubi no disposa d'una direcció. Comproveu primer si existeix, en "
-"aquest cas, asígnesela. En cas contrari creï una nova."
+"aquest cas, assigneu-la. En cas contrari creï una nova."
 
 #: ubis/controller/direcciones_editar.php:165
 msgid "asignar una dirección"
@@ -3732,9 +3759,13 @@ msgstr "regió"
 msgid "tipo ctr o casa"
 msgstr "tipus ctr o casa"
 
-#: ubis/controller/list_ctr.php:262
-msgid "de dl'),'ex'=>_('de otra dl/cr"
-msgstr "de dl '),' ex '=> _ (' d'una altra dl / cr"
+#: ubis/controller/list_ctr.php:262 ubis/view/ubis_buscar.phtml:159
+msgid "de dl"
+msgstr "de dl"
+
+#: ubis/controller/list_ctr.php:262 ubis/view/ubis_buscar.phtml:160
+msgid "de otra dl/cr"
+msgstr "d'una altre dl/cr"
 
 #: ubis/controller/list_ctr.php:271
 msgid "sólo centros de n"
@@ -3746,7 +3777,7 @@ msgstr "tots els ctr de la dl"
 
 #: ubis/controller/list_ctr.php:273
 msgid "sólo centros de agd"
-msgstr "només centres d'AGD"
+msgstr "només centres d'agd"
 
 #: ubis/controller/list_ctr.php:274
 msgid "sólo centros de s"
@@ -3754,7 +3785,7 @@ msgstr "només centres de s"
 
 #: ubis/controller/list_ctr.php:277
 msgid "sólo centros de sss+"
-msgstr "només centres de sss +"
+msgstr "només centres de sss+"
 
 #: ubis/controller/list_ctr.php:280
 msgid "sólo centros de nax"
@@ -3766,7 +3797,7 @@ msgstr "només obres corporatives"
 
 #: ubis/controller/list_ctr.php:283
 msgid "casas de retiros y de cv"
-msgstr "cases de jubilacions i de cv"
+msgstr "cases de recés i de cv"
 
 #: ubis/controller/list_ctr.php:284
 msgid "sólo colegios"
@@ -3827,7 +3858,7 @@ msgstr "¿Quin centre t'interessa?"
 
 #: ubis/controller/ubis_buscar.php:62
 msgid "centros o casas de otras dl/r"
-msgstr "centres o cases d'altres dl / r"
+msgstr "centres o cases d'altres dl/r"
 
 #: ubis/controller/ubis_buscar.php:63
 msgid "¿qué centro o casa te interesa?"
@@ -3839,7 +3870,7 @@ msgstr "nom del centre o casa"
 
 #: ubis/controller/ubis_buscar.php:67
 msgid "centros de otras dl/r"
-msgstr "centres d'altres dl / r"
+msgstr "centres d'altres dl/r"
 
 #: ubis/controller/ubis_buscar.php:72
 msgid "casas de la delegación"
@@ -3856,7 +3887,7 @@ msgstr "nom de la casa"
 
 #: ubis/controller/ubis_buscar.php:77
 msgid "casas de otras dl/r"
-msgstr "cases d'altres dl / r"
+msgstr "cases d'altres dl/r"
 
 #: ubis/controller/ubis_buscar.php:82
 msgid "buscar e-mails de los centros de la dl"
@@ -3926,9 +3957,9 @@ msgid ""
 "Para ello debe buscar a través de 'ver más opciones' definiendo el tipo y la "
 "localización distinto a 'todos'."
 msgstr ""
-"ULL !: per crear un centre / casa ha d'especificar el tipus de centre / "
-"casa. Per a això ha de buscar a través de 'veure més opcions' definint el "
-"tipus i la localització diferent de 'tots'."
+"ULL !: per crear un centre/casa ha d'especificar el tipus de centre/casa. "
+"Per a això ha de buscar a través de 'veure més opcions' definint el tipus i "
+"la localització diferent de 'tots'."
 
 #: ubis/controller/ubis_tabla.php:370
 msgid "no existe esta ficha, puede crear una nueva, hacer click"
@@ -3950,7 +3981,7 @@ msgstr "places mínim"
 
 #: ubis/model/entity/casa.class.php:428
 msgid "num sacd"
-msgstr "num SACD"
+msgstr "num sacd"
 
 #: ubis/model/entity/casa.class.php:440
 msgid "biblioteca casa"
@@ -4395,7 +4426,7 @@ msgid "diciembre"
 msgstr "desembre"
 
 #: web/calendario.php:66 web/calendario_grid.php:66
-msgid "click para crear una nueva actividad en esta casa"
+msgid "clic para crear una nueva actividad en esta casa"
 msgstr "clic per crear una nova activitat en aquesta casa"
 
 #: web/calendario.php:67 web/calendario_grid.php:67
@@ -4413,7 +4444,7 @@ msgstr "cases només sf"
 #: web/casasque.class.php:154 web/casasque.class.php:163
 #: web/casasque.class.php:169
 msgid "casas comunes"
-msgstr "cases comunes"
+msgstr "cases comuns"
 
 #: web/casasque.class.php:155 web/casasque.class.php:164
 msgid "casas sv"
@@ -4482,7 +4513,7 @@ msgstr "arriben diferent nombre o nom dels camps que es diu que s'envien"
 
 #: web/hash.class.php:207
 msgid "url modificada"
-msgstr "uRL modificada"
+msgstr "url modificada"
 
 #: web/hash.class.php:218 web/hash.class.php:223
 msgid "problema general de seguridad"
@@ -4490,7 +4521,7 @@ msgstr "problema general de seguretat"
 
 #: web/hash.class.php:224
 msgid "para ver más detalles activa el mode debug en core\\confgiGlobal"
-msgstr "per veure més detalls activa el model debug en core \\ confgiGlobal"
+msgstr "per veure més detalls activa el model debug en core\\confgiGlobal"
 
 #: web/hash.class.php:254
 msgid "página con seguridad desactivada"
@@ -4511,7 +4542,7 @@ msgstr "guardar selecció de columnes"
 
 #: web/lista.class.php:792 web/tablaeditable.class.php:720
 msgid "ver/ocultar panel de búsqueda"
-msgstr "veure / ocultar panell de cerca"
+msgstr "veure/ocultar panell de cerca"
 
 #: web/lista.class.php:801 web/tablaeditable.class.php:729
 msgid "Buscar en todas las columnas"
@@ -4519,11 +4550,11 @@ msgstr "Cercar en totes les columnes"
 
 #: web/lista.class.php:848 web/lista.class.php:996
 msgid "ordenar por..."
-msgstr "Ordenar per ..."
+msgstr "Ordenar per..."
 
 #: web/lista.class.php:888 web/lista.class.php:1032
-msgid "clik para seleccionar"
-msgstr "clik per seleccionar"
+msgid "clic para seleccionar"
+msgstr "clic per seleccionar"
 
 #: web/periodoque.class.php:136 web/periodoque.class.php:187
 msgid "entre"
@@ -4541,7 +4572,7 @@ msgstr "càrrec d'una activitat"
 #: actividadcargos/view/form_1302.phtml:60
 #: actividadcargos/view/form_3102.phtml:54
 msgid "¿asiste?"
-msgstr "¿Assisteix?"
+msgstr "¿assisteix?"
 
 #: actividadcargos/view/form_1302.phtml:64
 #: actividadcargos/view/form_3102.phtml:58
@@ -4622,7 +4653,7 @@ msgstr "format [hh: mm]"
 
 #: actividades/view/actividad_form.phtml:188
 msgid "dl/r que organiza"
-msgstr "dl / r que organitza"
+msgstr "dl/r que organitza"
 
 #: actividades/view/actividad_form.phtml:192
 msgid "plazas totales"
@@ -4691,7 +4722,7 @@ msgstr "més freqüents"
 
 #: actividades/view/actividad_select_ubi.phtml:23
 msgid "falta saber quien organiza"
-msgstr "Cal saber qui organitza"
+msgstr "cal saber qui organitza"
 
 #: actividades/view/actividad_select_ubi.phtml:27
 #: actividades/view/actividad_select_ubi.phtml:40
@@ -4745,19 +4776,20 @@ msgstr "Vol canviar el nom de l'activitat?"
 msgid "notas del acta"
 msgstr "notes de l'acta"
 
-#: actividadestudios/view/acta_notas.phtml:112 notas/view/form_1011.phtml:149
+#: actividadestudios/view/acta_notas.phtml:123
+#: actividadestudios/view/acta_notas.phtml:132 notas/view/form_1011.phtml:149
 msgid "sobre"
 msgstr "sobre"
 
-#: actividadestudios/view/acta_notas.phtml:122
+#: actividadestudios/view/acta_notas.phtml:144
 msgid "grabar notas en tessera"
 msgstr "gravar notes en tessera"
 
-#: actividadestudios/view/actualizar_docencia.phtml:1
+#: actividadestudios/view/actualizar_docencia.phtml:10
 msgid "actualización de los datos de docencia"
 msgstr "actualització de les dades de docència"
 
-#: actividadestudios/view/actualizar_docencia.phtml:4
+#: actividadestudios/view/actualizar_docencia.phtml:13
 msgid ""
 "esta acción llenará el dossier de actividad docente con los datos de los "
 "cursos anuales. Sólo se tendrán en cuenta los ca que se han marcado como "
@@ -4767,7 +4799,7 @@ msgstr ""
 "cursos anuals. Només es tindran en compte els ca que s'han marcat com a "
 "acabats. Així ens assegurem de copiar totes les dades (actes ...)"
 
-#: actividadestudios/view/actualizar_docencia.phtml:10
+#: actividadestudios/view/actualizar_docencia.phtml:22
 msgid "ya está"
 msgstr "ja està"
 
@@ -4983,10 +5015,6 @@ msgstr "guardar i afegir un altre assistent"
 msgid "mover a"
 msgstr "moure a"
 
-#: asistentes/view/form_mover.phtml:13
-msgid "cancel"
-msgstr "cancel"
-
 #: asistentes/view/lista_activ_ctr.phtml:13
 msgid "actividades previstas"
 msgstr "activitats previstes"
@@ -5028,7 +5056,7 @@ msgstr "tots els ctr amb n"
 
 #: asistentes/view/planning_ctr_que.phtml:38
 msgid "todos los ctr con agd"
-msgstr "tots els ctr amb AGD"
+msgstr "tots els ctr amb agd"
 
 #: asistentes/view/planning_ctr_que.phtml:39
 msgid "todos los ctr con s"
@@ -5036,7 +5064,7 @@ msgstr "tots els ctr amb s"
 
 #: asistentes/view/planning_ctr_que.phtml:41
 msgid "incluir sacd"
-msgstr "incloure SACD"
+msgstr "incloure sacd"
 
 #: asistentes/view/planning_persona_que.phtml:31
 msgid "búsqueda de personas en la obj_pau"
@@ -5070,7 +5098,7 @@ msgstr "tots els agregats"
 
 #: asistentes/view/que_ctr_lista.phtml:54
 msgid "todos los de sss+"
-msgstr "tots els de sss +"
+msgstr "tots els de sss+"
 
 #: asistentes/view/que_ctr_lista.phtml:57
 msgid "todos los de nax"
@@ -5078,7 +5106,7 @@ msgstr "tots els de nax"
 
 #: asistentes/view/que_ctr_lista.phtml:61
 msgid "otro..."
-msgstr "un altre ..."
+msgstr "un altre..."
 
 #: asistentes/view/select1301.phtml:43
 msgid "relación de actividades a las que asiste"
@@ -5127,7 +5155,7 @@ msgid ""
 "que afectan a varios tipos de personas"
 msgstr ""
 "depende_modificar actiu implica que només podrà modificar l'oficina "
-"corresponent: AGD per als AGD, sm per als n, sg per als s, en dossiers que "
+"corresponent: agd per als agd, sm per als n, sg per als s, en dossiers que "
 "afecten diversos tipus de persones"
 
 #: dossiers/view/perm_dossier_pres.phtml:44
@@ -5207,7 +5235,7 @@ msgstr "n de pas"
 #: menus/view/traducir_menu.phtml:12 menus/view/traducir_menu.phtml:42
 #: menus/view/traducir_menu.phtml:109
 msgid "Actualizar datos desde Listas"
-msgstr "Actualitzar dades des Llistes"
+msgstr "Actualitzar dades des de Llistes"
 
 #: menus/view/traducir_menu.phtml:13 menus/view/traducir_menu.phtml:43
 #: menus/view/traducir_menu.phtml:113 menus/view/traducir_menu.phtml:187
@@ -5278,19 +5306,19 @@ msgstr "llista per ctr"
 
 #: menus/view/traducir_menu.phtml:31 menus/view/traducir_menu.phtml:191
 msgid "cve"
-msgstr "CVE"
+msgstr "cve"
 
 #: menus/view/traducir_menu.phtml:32 menus/view/traducir_menu.phtml:192
 msgid "buscar cve"
-msgstr "buscar CVE"
+msgstr "buscar cve"
 
 #: menus/view/traducir_menu.phtml:33 menus/view/traducir_menu.phtml:60
 msgid "importar cve"
-msgstr "importar CVE"
+msgstr "importar cve"
 
 #: menus/view/traducir_menu.phtml:34
 msgid "lista varias cve"
-msgstr "llista diverses CVE"
+msgstr "llista diverses cve"
 
 #: menus/view/traducir_menu.phtml:36 menus/view/traducir_menu.phtml:77
 #: menus/view/traducir_menu.phtml:155 menus/view/traducir_menu.phtml:206
@@ -5307,17 +5335,17 @@ msgstr "per cases"
 
 #: menus/view/traducir_menu.phtml:39
 msgid "buscar agd"
-msgstr "buscar AGD"
+msgstr "buscar agd"
 
 #: menus/view/traducir_menu.phtml:40 menus/view/traducir_menu.phtml:119
 #: menus/view/traducir_menu.phtml:124 menus/view/traducir_menu.phtml:223
 msgid "agd dl"
-msgstr "AGD dl"
+msgstr "agd dl"
 
 #: menus/view/traducir_menu.phtml:41 menus/view/traducir_menu.phtml:70
 #: menus/view/traducir_menu.phtml:120 menus/view/traducir_menu.phtml:125
 msgid "agd de paso"
-msgstr "AGD de pas"
+msgstr "agd de pas"
 
 #: menus/view/traducir_menu.phtml:52
 msgid "importar cv"
@@ -5351,15 +5379,15 @@ msgstr "agenda vcdl"
 
 #: menus/view/traducir_menu.phtml:67
 msgid "sacd num"
-msgstr "SACD num"
+msgstr "sacd num"
 
 #: menus/view/traducir_menu.phtml:69
 msgid "sacd agd"
-msgstr "SACD AGD"
+msgstr "sacd agd"
 
 #: menus/view/traducir_menu.phtml:71
 msgid "sacd sssc"
-msgstr "SACD sssc"
+msgstr "sacd sssc"
 
 #: menus/view/traducir_menu.phtml:72
 msgid "sssc de paso"
@@ -5384,7 +5412,7 @@ msgstr "sv n"
 
 #: menus/view/traducir_menu.phtml:81 menus/view/traducir_menu.phtml:210
 msgid "sv agd"
-msgstr "sv AGD"
+msgstr "sv agd"
 
 #: menus/view/traducir_menu.phtml:82 menus/view/traducir_menu.phtml:211
 msgid "sv s y sg"
@@ -5404,15 +5432,15 @@ msgstr "sf nax"
 
 #: menus/view/traducir_menu.phtml:86 menus/view/traducir_menu.phtml:215
 msgid "sf agd"
-msgstr "sf AGD"
+msgstr "sf agd"
 
 #: menus/view/traducir_menu.phtml:87 menus/view/traducir_menu.phtml:216
 msgid "sf s y sg"
-msgstr "sf es i sg"
+msgstr "sf s i sg"
 
 #: menus/view/traducir_menu.phtml:88 menus/view/traducir_menu.phtml:217
 msgid "sf sr,sr-nax,sr-agd"
-msgstr "sf sr, sr-nax, sr-AGD"
+msgstr "sf sr, sr-nax, sr-agd"
 
 #: menus/view/traducir_menu.phtml:89 menus/view/traducir_menu.phtml:218
 msgid "importar activ"
@@ -5469,7 +5497,7 @@ msgstr "llista grups"
 
 #: menus/view/traducir_menu.phtml:105
 msgid "editar web"
-msgstr "edita web"
+msgstr "editar web"
 
 #: menus/view/traducir_menu.phtml:106
 msgid "traducciones"
@@ -5493,7 +5521,7 @@ msgstr "buscar crt sg"
 
 #: menus/view/traducir_menu.phtml:116
 msgid "buscar n o agd"
-msgstr "cercar no AGD"
+msgstr "cercar n o agd"
 
 #: menus/view/traducir_menu.phtml:121
 msgid "buscar persona"
@@ -5513,7 +5541,7 @@ msgstr "claustre"
 
 #: menus/view/traducir_menu.phtml:129
 msgid "actas..."
-msgstr "actes ..."
+msgstr "actes..."
 
 #: menus/view/traducir_menu.phtml:131 menus/view/traducir_menu.phtml:228
 msgid "tabla alumnos-asignaturas"
@@ -5553,7 +5581,7 @@ msgstr "estudis x ctr"
 
 #: menus/view/traducir_menu.phtml:146
 msgid "cv agd"
-msgstr "cv AGD"
+msgstr "cv agd"
 
 #: menus/view/traducir_menu.phtml:152
 msgid "sem inv."
@@ -5573,7 +5601,7 @@ msgstr "manteniment"
 
 #: menus/view/traducir_menu.phtml:160
 msgid "dic latin"
-msgstr "desembre latin"
+msgstr "dic llatí"
 
 #: menus/view/traducir_menu.phtml:161
 msgid "actualizar docencia"
@@ -5661,11 +5689,11 @@ msgstr "23/15 (només nombre) => busca en les actes de la dl."
 
 #: notas/view/acta_select.phtml:64
 msgid "dlx .* => todas las de dlx Hay que dejar espacio"
-msgstr "DLX. * => totes les de DLX Cal deixar espai"
+msgstr "dlx. * => totes les de dlx. Cal deixar espai"
 
 #: notas/view/acta_select.phtml:65
 msgid "dlx .*/15 => todas las de dlx del año 15 "
-msgstr "DLX. * / 15 => totes les de DLX de l'any 15 "
+msgstr "dlx. * / 15 => totes les de dlx de l'any 15 "
 
 #: notas/view/acta_select.phtml:84
 msgid "añadir acta"
@@ -5675,27 +5703,27 @@ msgstr "afegir acta"
 msgid "tribunal"
 msgstr "tribunal"
 
-#: notas/view/acta_ver.phtml:122
+#: notas/view/acta_ver.phtml:123
 msgid "guardar cambios acta"
 msgstr "guardar canvis acta"
 
-#: notas/view/acta_ver.phtml:126
+#: notas/view/acta_ver.phtml:127
 msgid "nueva acta convocatoria"
 msgstr "nova acta convocatòria"
 
-#: notas/view/acta_ver.phtml:139
+#: notas/view/acta_ver.phtml:141
 msgid "escriba parte del nombre para buscar"
 msgstr "escrigui part del nom per buscar"
 
-#: notas/view/acta_ver.phtml:140 notas/view/acta_ver.phtml:150
+#: notas/view/acta_ver.phtml:142 notas/view/acta_ver.phtml:152
 msgid "no hay resultados"
 msgstr "no hi ha resultats"
 
-#: notas/view/acta_ver.phtml:141 notas/view/acta_ver.phtml:151
+#: notas/view/acta_ver.phtml:143 notas/view/acta_ver.phtml:153
 msgid "buscando..."
-msgstr "buscant ..."
+msgstr "buscant..."
 
-#: notas/view/acta_ver.phtml:149
+#: notas/view/acta_ver.phtml:151
 msgid "escriba un texto para buscar"
 msgstr "escrigui un text per buscar"
 
@@ -5853,7 +5881,7 @@ msgstr "numerària auxiliar"
 #: ubis/view/ubis_buscar.phtml:114 ubis/view/ubis_buscar.phtml:226
 #: ubis/view/ubis_buscar.phtml:242
 msgid "sss+"
-msgstr "sss +"
+msgstr "sss+"
 
 #: personas/view/persona_form.phtml:43
 msgid "¿Está seguro que desea borrar esta persona?"
@@ -5880,12 +5908,12 @@ msgid "cambiar el stgr"
 msgstr "canviar el stgr"
 
 #: personas/view/traslado_form.phtml:9
-msgid "debería lenar el campo ctr o dl"
-msgstr "hauria lenar el camp ctr o dl"
+msgid "debería llenar el campo ctr o dl"
+msgstr "hauria d'omplir el camp de ctr o dl"
 
 #: personas/view/traslado_form.phtml:13
-msgid "debería lenar el campo situación"
-msgstr "hauria lenar el camp situació"
+msgid "debería llenar el campo situación"
+msgstr "hauria d'omplir el camp de situació"
 
 #: personas/view/traslado_form.phtml:65
 msgid "origen"
@@ -5908,7 +5936,7 @@ msgstr "n"
 #: ubis/view/ubis_buscar.phtml:83 ubis/view/ubis_buscar.phtml:112
 #: ubis/view/ubis_buscar.phtml:211 ubis/view/ubis_buscar.phtml:240
 msgid "agd"
-msgstr "AGD"
+msgstr "agd"
 
 #: profesores/view/ficha_profesor_stgr.print.phtml:43
 msgid "curriculum"
@@ -5961,7 +5989,7 @@ msgstr "mínim assistents"
 
 #: ubis/view/cdc_form.phtml:83
 msgid "nº máximo de sacd"
-msgstr "major nombre d'SACD"
+msgstr "nª màxim d'sacd"
 
 #: ubis/view/ctrdl_form.phtml:29 ubis/view/ctrex_form.phtml:29
 msgid "¿Está seguro que desea borrar este centro?"
@@ -6029,7 +6057,7 @@ msgstr "veure plànol"
 
 #: ubis/view/direccion_form.phtml:199
 msgid "adjuntar plano"
-msgstr "adjuntar pla"
+msgstr "adjuntar plànol"
 
 #: ubis/view/direccion_form.phtml:200
 msgid "eliminar plano"
@@ -6081,11 +6109,11 @@ msgstr "buscar ubis fora d'ús"
 
 #: ubis/view/ubis_buscar.phtml:84 ubis/view/ubis_buscar.phtml:212
 msgid "agd jóvenes"
-msgstr "AGD joves"
+msgstr "agd joves"
 
 #: ubis/view/ubis_buscar.phtml:85 ubis/view/ubis_buscar.phtml:213
 msgid "agd mayores"
-msgstr "AGD majors"
+msgstr "agd grans"
 
 #: ubis/view/ubis_buscar.phtml:87 ubis/view/ubis_buscar.phtml:215
 msgid "n jóvenes"
@@ -6093,7 +6121,7 @@ msgstr "n joves"
 
 #: ubis/view/ubis_buscar.phtml:90 ubis/view/ubis_buscar.phtml:218
 msgid "n mayores"
-msgstr "n majors"
+msgstr "n grans"
 
 #: ubis/view/ubis_buscar.phtml:91 ubis/view/ubis_buscar.phtml:219
 msgid "residencia"
@@ -6157,15 +6185,7 @@ msgstr "joves"
 
 #: ubis/view/ubis_buscar.phtml:121 ubis/view/ubis_buscar.phtml:249
 msgid "mayores"
-msgstr "majors"
-
-#: ubis/view/ubis_buscar.phtml:159
-msgid "de dl"
-msgstr "de dl"
-
-#: ubis/view/ubis_buscar.phtml:160
-msgid "de otra dl/cr"
-msgstr "d'una altra dl / cr"
+msgstr "grans"
 
 #: ubis/view/ubis_buscar.phtml:257
 msgid "ver otras opciones"
@@ -6367,6 +6387,36 @@ msgstr "error: passwords no coincidents"
 #: usuarios/view/usuario_lista.phtml:13
 msgid "¿Está seguro que desea borrar este usuario?"
 msgstr "Esteu segur que voleu suprimir aquest usuari?"
+
+#~ msgid "se adminte un separador para los decimales (máximo 2)"
+#~ msgstr "es adminte un separador per als decimals (màxim 2)"
+
+#~ msgid "el asistenete es de otra dl. Se debe modificar en la dl origen."
+#~ msgstr "el asistenete és d'una altra dl. S'ha de modificar en la dl origen."
+
+#~ msgid "click aquí"
+#~ msgstr "click aquí"
+
+#~ msgid "de dl'),'ex'=>_('de otra dl/cr"
+#~ msgstr "de dl '),' ex '=> _ (' d'una altra dl / cr"
+
+#~ msgid "click para crear una nueva actividad en esta casa"
+#~ msgstr "clic per crear una nova activitat en aquesta casa"
+
+#~ msgid "clik para seleccionar"
+#~ msgstr "clik per seleccionar"
+
+#~ msgid "cancel"
+#~ msgstr "cancel"
+
+#~ msgid "invierno"
+#~ msgstr "hivern"
+
+#~ msgid "debería lenar el campo ctr o dl"
+#~ msgstr "hauria lenar el camp ctr o dl"
+
+#~ msgid "debería lenar el campo situación"
+#~ msgstr "hauria lenar el camp situació"
 
 #~ msgid "apellidos, nombre')),'formatter'=>'clickFormatter"
 #~ msgstr "cognoms, nom ')),' formatter '=>' clickFormatter"

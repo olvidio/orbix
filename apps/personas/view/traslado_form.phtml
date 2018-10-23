@@ -6,11 +6,11 @@ fnjs_guardar=function(formulario){
 	var situacion = $('#situacion').val();
 	if (!new_dl && !new_ctr) {
 		err=1;
-		alert ('<?= _("debería lenar el campo ctr o dl") ?>');
+		alert ('<?= _("debería llenar el campo ctr o dl") ?>');
 	}
 	if (new_dl && !situacion) {
 		err=1;
-		alert ('<?= _("debería lenar el campo situación") ?>');
+		alert ('<?= _("debería llenar el campo situación") ?>');
 	}
 
 	if (err== 0) {

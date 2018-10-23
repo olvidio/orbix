@@ -191,7 +191,7 @@ if (!empty($nf)) {
 	/* end lista */
 	echo "<p>";
 	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>9999)));
-	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("click aquí") ."</span>";
+	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("clic aquí") ."</span>";
 	printf (_("para poner c1 y bienio finalizado a todos los de la lista, hacer %s. Esto pondrá la fecha de acta última."),$pag);
 	echo "</p>";
 }
@@ -223,7 +223,7 @@ if (!empty($nf)) {
 	echo "</table>";
 	/* end lista */
 	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>9998)));
-	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("click aquí") ."</span>";
+	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("clic aquí") ."</span>";
 	echo "<p>";
 	printf (_("para poner r y cuadrienio finalizado a todos los de la lista, hacer %s. Esto pondrá la fecha de acta última."),$pag);
 	echo "</p>";
@@ -283,7 +283,7 @@ if (!empty($nf)) {
 	echo "</table>";
 	echo "<p>";
 	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>'c1')));
-	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("click aquí") ."</span>";
+	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("clic aquí") ."</span>";
 	printf (_("para poner c1 a todos los de la lista, hacer %s"),$pag);
 	echo "</p>";
 }
@@ -314,7 +314,7 @@ if (!empty($nf)) {
 	echo "<tr><td colspan=7><hr>";
 	echo "</table>";
 	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>'c2')));
-	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("click aquí") ."</span>";
+	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("clic aquí") ."</span>";
 	printf (_("para poner c2 a todos los de la lista, hacer %s"),$pag);
 }
 

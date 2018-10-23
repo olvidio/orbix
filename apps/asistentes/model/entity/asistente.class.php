@@ -88,7 +88,7 @@ class Asistente Extends AsistentePub {
 				$oAsistente->DBEliminar();
 				break;
 			case 'in':
-				echo _("el asistenete es de otra dl. Se debe modificar en la dl origen.");
+				echo _("el asistente es de otra dl. Se debe modificar en la dl origen.");
 				break;
 		}
 	}

@@ -259,7 +259,7 @@ foreach ($cUbis as $oCentro) {
 $oDesplDl = new Desplegable();
 $oDesplDl->setNombre('loc');
 $oDesplDl->setAction('fnjs_actualizar()');
-$oDesplDl->setOpciones(array('dl'=>_("de dl'),'ex'=>_('de otra dl/cr")));
+$oDesplDl->setOpciones(array('dl'=>_("de dl"),'ex'=>_("de otra dl/cr")));
 $oDesplDl->setOpcion_sel($Qloc);
 
 

@@ -634,7 +634,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @param integer iprecio='' optional
 	 */
 	function setPrecio($iprecio='') {
-		// adminto ',' como separador decimal.
+		// admito ',' como separador decimal.
 		$iprecio = str_replace(",", ".", $iprecio);
 		$this->iprecio = $iprecio;
 	}
@@ -1138,7 +1138,7 @@ class ActividadAll Extends core\ClasePropiedades {
 		$oDatosCampo->setRegExp("/^(\d+)[,.]?\d{0,2}$/");
 		$txt =  _("tiene un formato no válido.");
 		$txt.=  "\n";
-		$txt.=  _("se adminte un separador para los decimales (máximo 2)");
+		$txt.=  _("se admite un separador para los decimales (máximo 2)");
 		$txt.=  "\n";
 		$txt.=  _("no se admite separador para los miles");
 		$txt.=  "\n";
