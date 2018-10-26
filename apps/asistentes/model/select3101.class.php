@@ -836,6 +836,8 @@ class Select3101 {
 								'obj_pau'=>  $obj_pau,
 								'id_dossier'=>  $this->id_dossier, //Para que al volver a la pagina 'dossiers_ver' sepa cual mostrar.
 								'id_pau'=>  $this->id_pau);
+				// el hppt_build_query no pasa los valores null
+				array_walk($aQuery, 'core\poner_empty_on_null');
 				$pagina=web\Hash::link('apps/asistentes/controller/form_3101.php?'.http_build_query($aQuery));
 				$this->aLinks_dl[$nom] = $pagina;
 			}

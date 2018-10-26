@@ -179,6 +179,8 @@ class Select1303 {
 							'id_pau'=>  $this->id_pau,
 							'id_activ'=>  $this->id_activ,
 							);
+		// el hppt_build_query no pasa los valores null
+		array_walk($a_dataUrl, 'core\poner_empty_on_null');
 		$this->link_add = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividadestudios/controller/form_1303.php?'.http_build_query($a_dataUrl));
 		// --------------  boton matricular automáticamente ----------------------
 //		$this->link_matricular = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividadestudios/controller/matricular.php?'.http_build_query($a_dataUrl));	

@@ -103,6 +103,21 @@ function poner_null(&$valor) {
 }
 
 /**
+* Para poner string empty en los valores null de un array,
+ * necesario para la función http_build_query, que no pone
+ * los parametros con valor null
+*
+*@author	Daniel Serrabou
+*@since		26/10/18.
+*		
+*/
+function poner_empty_on_null(&$valor) {
+	if ($valor === NULL) {
+		$valor='';
+	} 
+}
+
+/**
 * Para clacular la edad a partir de la fecha de nacimiento
 *
 *

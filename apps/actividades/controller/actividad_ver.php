@@ -32,10 +32,12 @@ $Qobj_pau = (string)  \filter_input(INPUT_POST, 'obj_pau');
 
 $obj = 'actividades\\model\\entity\\ActividadAll';
 
-$sQuery = array ('pau'=>'a',
+$aQuery = array ('pau'=>'a',
 				'id_pau'=>$Qid_activ,
 				'obj_pau'=>$Qobj_pau);
-$godossiers = web\Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_build_query($sQuery));
+// el hppt_build_query no pasa los valores null
+array_walk($aQuery, 'core\poner_empty_on_null');
+$godossiers = web\Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_build_query($aQuery));
 
 $a_status = array( \actividades\model\entity\ActividadAll::STATUS_PROYECTO => _("proyecto"),
 				 \actividades\model\entity\ActividadAll::STATUS_ACTUAL => _("actual"),

@@ -113,14 +113,14 @@ $latin = $oProfesorLatin->getLatin();
 
 $go_cosas['print']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/profesores/controller/ficha_profesor_stgr.php?'.http_build_query(array('id_nom'=>$id_nom,'id_tabla'=>$Qid_tabla,'print'=>'1')));
 
-$cosas=array( 'clase_info'=>'profesores\model\info1022', //latin
+$a_cosas=array( 'clase_info'=>'profesores\model\info1022', //latin
 			'pau'=>'p',
 			'id_pau'=>$id_nom,
 			'obj_pau'=>$Qobj_pau,
 			'permiso'=>$Qpermiso,
 			'depende'=>$Qdepende,
 			'go_to'=>$go_to);
-$go_cosas['latin']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/core/mod_tabla_sql.php?'.http_build_query($cosas));
+$go_cosas['latin']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/core/mod_tabla_sql.php?'.http_build_query($a_cosas));
 
 if ($sacd=="t") { $sacd_txt="si"; }
 if ($latin=="t") { $latin_txt="si"; }
@@ -163,15 +163,15 @@ if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
 
 		$a_director[] = array('departamento'=>$departamento,'f_nombramiento'=>$f_nombramiento,'escrito_nombramiento'=>$escrito_nombramiento,'f_cese'=>$f_cese,'escrito_cese'=>$escrito_cese);
 	}
-	$cosas['clase_info']='profesores\model\info1020';
-	$go_cosas['director']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/core/mod_tabla_sql.php?'.http_build_query($cosas));
+	$a_cosas['clase_info']='profesores\model\info1020';
+	$go_cosas['director']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/core/mod_tabla_sql.php?'.http_build_query($a_cosas));
 
 	// juramento //////////////////////////
 	$oJuramento = new profesores\ProfesorJuramento(array('id_nom'=>$id_nom));
 	$oJuramento->DBCarregar();
 	$f_juramento = $oJuramento->getF_juramento();
-	$cosas['clase_info']='profesores\model\info1021';
-	$go_cosas['juramento']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/core/mod_tabla_sql.php?'.http_build_query($cosas));
+	$a_cosas['clase_info']='profesores\model\info1021';
+	$go_cosas['juramento']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/core/mod_tabla_sql.php?'.http_build_query($a_cosas));
 
 	//publicaciones (clase_info=1012)  ///////////////////////////////////
 	$gesProfesorPublicaciones = new profesores\GestorProfesorPublicacion();
@@ -191,8 +191,8 @@ if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
 		$a_publicaciones[] = array( 'pendiente'=>$pendiente, 'tipo_publicacion'=>$tipo_publicacion, 'titulo'=>$titulo, 'editorial'=>$editorial, 'coleccion'=>$coleccion, 'f_publicacion'=>$f_publicacion, 'referencia'=>$referencia, 'lugar'=>$lugar, 'observ'=>$observ);
 
 	}
-	$cosas['clase_info']='profesores\model\info1012';
-	$go_cosas['publicaciones']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/core/mod_tabla_sql.php?'.http_build_query($cosas));
+	$a_cosas['clase_info']='profesores\model\info1012';
+	$go_cosas['publicaciones']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/core/mod_tabla_sql.php?'.http_build_query($a_cosas));
 }
 
 
@@ -208,8 +208,8 @@ foreach ($cTitulosEst as $oProfesorTituloEst) {
 
 	$a_curriculum[] = array( 'eclesiastico'=>$eclesiastico, 'titulo'=>$titulo, 'centro_dnt'=>$centro_dnt, 'year'=>$year);
 }
-$cosas['clase_info']='profesores\model\info1017';
-$go_cosas['curriculum']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/core/mod_tabla_sql.php?'.http_build_query($cosas));
+$a_cosas['clase_info']='profesores\model\info1017';
+$go_cosas['curriculum']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/core/mod_tabla_sql.php?'.http_build_query($a_cosas));
 
 // Nombramientos (clase_info=1018) ///////////////////////////
 $gesProfesor = new profesores\GestorProfesor();
@@ -233,8 +233,8 @@ foreach ($cProfesores as $oProfesor) {
 
 	$a_nombramientos[] = array('departamento'=>$departamento,'tipo_profesor'=>$tipo_profesor,'f_nombramiento'=>$f_nombramiento,'escrito_nombramiento'=>$escrito_nombramiento,'f_cese'=>$f_cese,'escrito_cese'=>$escrito_cese);
 }
-$cosas['clase_info']='profesores\model\info1018';
-$go_cosas['nombramientos']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/core/mod_tabla_sql.php?'.http_build_query($cosas));
+$a_cosas['clase_info']='profesores\model\info1018';
+$go_cosas['nombramientos']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/core/mod_tabla_sql.php?'.http_build_query($a_cosas));
 
 // Ampliación docencia (clase_info=1019) ///////////////////
 $gesProfesorAmpliacion = new profesores\GestorProfesorAmpliacion();
@@ -254,20 +254,20 @@ foreach ($cProfesorAmpliaciones as $oProfesorAmpliacion) {
 
 	$a_ampliacion[] = array('nombre_corto'=>$nombre_corto,'f_nombramiento'=>$f_nombramiento,'escrito_nombramiento'=>$escrito_nombramiento,'f_cese'=>$f_cese,'escrito_cese'=>$escrito_cese);
 }
-$cosas['clase_info']='profesores\model\info1019';
-$go_cosas['ampliacion']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/core/mod_tabla_sql.php?'.http_build_query($cosas));
+$a_cosas['clase_info']='profesores\model\info1019';
+$go_cosas['ampliacion']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/core/mod_tabla_sql.php?'.http_build_query($a_cosas));
 
 // Convivencias y congresos (clase_info=1024) //////////////////////////////
 $GesProfesorCongresos = new profesores\GestorProfesorCongreso();
 $cProfesorCongresos = $GesProfesorCongresos->getProfesorCongresos(array('id_nom'=>$id_nom,'_ordre'=>'f_ini'));
-$cosas['clase_info']='profesores\model\info1024';
-$go_cosas['congresos']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/core/mod_tabla_sql.php?'.http_build_query($cosas));
+$a_cosas['clase_info']='profesores\model\info1024';
+$go_cosas['congresos']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/core/mod_tabla_sql.php?'.http_build_query($a_cosas));
 
 // Actividad docente (clase_info=1025) ////////////////////////////////////
 $GesDocencias = new profesores\GestorProfesorDocenciaStgr();
 $cDocencias = $GesDocencias->getProfesorDocenciasStgr(array('id_nom'=>$id_nom,'_ordre'=>'curso_inicio,id_asignatura'));
-$cosas['clase_info']='profesores\model\info1025';
-$go_cosas['docencia']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/core/mod_tabla_sql.php?'.http_build_query($cosas));
+$a_cosas['clase_info']='profesores\model\info1025';
+$go_cosas['docencia']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/core/mod_tabla_sql.php?'.http_build_query($a_cosas));
 
 echo $oPosicion->mostrar_left_slide(1);
 

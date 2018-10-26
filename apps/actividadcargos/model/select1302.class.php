@@ -237,6 +237,8 @@ class Select1302 {
 								'obj_pau'=>  $this->obj_pau,
 								'id_dossier'=>  $this->id_dossier, //Para que al volver a la pagina 'dossiers_ver' sepa cual mostrar.
 								'id_pau'=>  $this->id_pau);
+				// el hppt_build_query no pasa los valores null
+				array_walk($aQuery, 'core\poner_empty_on_null');
 				$pagina=web\Hash::link('apps/actividadcargos/controller/form_1302.php?'.http_build_query($aQuery));
 				$this->aLinks_dl[$nom] = $pagina;
 			}
@@ -252,6 +254,8 @@ class Select1302 {
 								'obj_pau'=>  $this->obj_pau,
 								'id_dossier'=>  $this->id_dossier, //Para que al volver a la pagina 'dossiers_ver' sepa cual mostrar.
 								'id_pau'=>  $this->id_pau);
+				// el hppt_build_query no pasa los valores null
+				array_walk($aQuery, 'core\poner_empty_on_null');
 				$pagina=web\Hash::link('apps/actividadcargos/controller/form_1302.php?'.http_build_query($aQuery));
 				$this->aLinks_otros[$nom] = $pagina;
 			}

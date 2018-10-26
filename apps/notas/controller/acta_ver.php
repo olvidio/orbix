@@ -102,7 +102,7 @@ if ($notas != 'nuevo' && $Qmod != 'nueva' && !empty($acta_actual))  { //signific
 	if (false && !empty($Qacta) && !empty($notas)) { // vengo de actualizar esta pág.
 		// estoy actualizando la página
 		$id_asignatura_actual = (integer) \filter_input(INPUT_POST, 'id_asignatura_actual');
-		$id_actividad = (integer) \filter_input(INPUT_POST, 'id_actividad');
+		$id_activ = (integer) \filter_input(INPUT_POST, 'id_activ');
 		$f_acta = (string) \filter_input(INPUT_POST, 'f_acta');
 		$libro = (string) \filter_input(INPUT_POST, 'libro');
 		$pagina = (integer) \filter_input(INPUT_POST, 'pagina');
@@ -131,7 +131,7 @@ if ($notas != 'nuevo' && $Qmod != 'nueva' && !empty($acta_actual))  { //signific
 	$acta_new= "$dl {$num_acta}/{$any}";
 	
 	if ($notas=="nuevo") { //vengo de un ca
-		$Qid_activ = (string) \filter_input(INPUT_POST, 'id_activ');
+		$Qid_activ = (integer) \filter_input(INPUT_POST, 'id_activ');
 		$id_activ = empty($id_activ)? $Qid_activ : $id_activ;
 		$Qid_asignatura = (string) \filter_input(INPUT_POST, 'id_asignatura');
 		$id_asignatura_actual = empty($id_asignatura)? $Qid_asignatura : $id_asignatura;
