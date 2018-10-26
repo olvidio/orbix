@@ -129,7 +129,7 @@ $h = $oHash1->linkSinVal();
 
 $aQuery = array('que'=>$Qque,'sactividad'=>$Qsactividad,'sasistentes'=>$Qsasistentes);
 // el hppt_build_query no pasa los valores null
-array_walk($aQuery, 'core\poner_empty_on_null');
+if (is_array($aQuery)) { array_walk($aQuery, 'core\poner_empty_on_null'); }
 $Link_borrar = web\Hash::link('apps/actividades/controller/actividad_que.php?'.http_build_query($aQuery));
 
 switch ($Qmodo) {

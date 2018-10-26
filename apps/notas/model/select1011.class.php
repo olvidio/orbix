@@ -243,7 +243,7 @@ class Select1011 {
 								'id_dossier'=>  $this->id_dossier, //Para que al volver a la pagina 'dossiers_ver' sepa cual mostrar.
 							);
 			// el hppt_build_query no pasa los valores null
-			array_walk($aQuery, 'core\poner_empty_on_null');
+			if (is_array($aQuery)) { array_walk($aQuery, 'core\poner_empty_on_null'); }
 			$this->LinkInsert = Hash::link(ConfigGlobal::getWeb()."/apps/notas/controller/form_1011.php?".http_build_query($aQuery));
 		}
 		

@@ -218,7 +218,7 @@ foreach ($cPersonas as $oPersona) {
 					'condicion' => $condicion_2,
 					'id_tabla'=>  $id_tabla);
 	// el hppt_build_query no pasa los valores null
-	array_walk($aQuery, 'core\poner_empty_on_null');
+	if (is_array($aQuery)) { array_walk($aQuery, 'core\poner_empty_on_null'); }
 	$pagina=web\Hash::link('apps/personas/controller/home_persona.php?'.http_build_query($aQuery));
 
 	$a_valores[$i]['sel']="$id_nom";
