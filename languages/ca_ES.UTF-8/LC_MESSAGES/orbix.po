@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2018-10-23 09:15+0200\n"
-"PO-Revision-Date: 2018-10-23 09:20+0200\n"
+"POT-Creation-Date: 2018-10-31 08:51+0100\n"
+"PO-Revision-Date: 2018-10-31 08:53+0100\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
 "Language: es_ES\n"
@@ -236,7 +236,7 @@ msgstr "això també esborrarà a aquesta persona de la llista d'assistents"
 msgid "nombre y apellidos"
 msgstr "nom i cognoms"
 
-#: actividadcargos/model/select3102.class.php:221
+#: actividadcargos/model/select3102.class.php:223
 #, php-format
 msgid "añadir %s"
 msgstr "afegir %s"
@@ -318,15 +318,15 @@ msgstr "curs crt"
 msgid "otro"
 msgstr "un altre"
 
-#: actividades/controller/actividad_que.php:135
+#: actividades/controller/actividad_que.php:137
 msgid "buscar actividad de otras dl para importar"
 msgstr "cercar activitat d'altres dl per importar"
 
-#: actividades/controller/actividad_que.php:138
+#: actividades/controller/actividad_que.php:140
 msgid "buscar actividades de mi dl para publicar"
 msgstr "buscar activitats de la meva dl per publicar"
 
-#: actividades/controller/actividad_que.php:141
+#: actividades/controller/actividad_que.php:143
 msgid "buscar actividad"
 msgstr "buscar activitat"
 
@@ -540,31 +540,31 @@ msgstr "no es pot duplicar activitats que no siguin de la pròpia dl"
 msgid "dup"
 msgstr "dup"
 
-#: actividades/controller/actividad_ver.php:40
+#: actividades/controller/actividad_ver.php:42
 #: actividades/view/actividad_form.phtml:162
 #: actividades/view/actividad_que.phtml:59
 msgid "proyecto"
 msgstr "projecte"
 
-#: actividades/controller/actividad_ver.php:41
+#: actividades/controller/actividad_ver.php:43
 #: actividades/view/actividad_form.phtml:163
 #: actividades/view/actividad_que.phtml:60
 msgid "actual"
 msgstr "actual"
 
-#: actividades/controller/actividad_ver.php:42
+#: actividades/controller/actividad_ver.php:44
 #: actividades/view/actividad_form.phtml:164
 #: actividades/view/actividad_que.phtml:61
 msgid "terminada"
 msgstr "acabada"
 
-#: actividades/controller/actividad_ver.php:43
+#: actividades/controller/actividad_ver.php:45
 #: actividades/view/actividad_form.phtml:165
 #: actividades/view/actividad_que.phtml:62
 msgid "borrable"
 msgstr "esborrable"
 
-#: actividades/controller/actividad_ver.php:49
+#: actividades/controller/actividad_ver.php:51
 #: dossiers/controller/dossiers_ver.php:187
 #: personas/controller/personas_select.php:230
 #: ubis/controller/home_ubis.php:124 personas/view/home_persona.phtml:7
@@ -573,14 +573,14 @@ msgstr "esborrable"
 msgid "ver dossiers"
 msgstr "veure dossiers"
 
-#: actividades/controller/actividad_ver.php:50
+#: actividades/controller/actividad_ver.php:52
 #: dossiers/controller/dossiers_ver.php:188 ubis/controller/home_ubis.php:125
 #: personas/view/home_persona.phtml:7 personas/view/persona_de_paso.phtml:62
 #: personas/view/persona_form.phtml:76 personas/view/traslado_form.phtml:52
 msgid "dossiers"
 msgstr "dossiers"
 
-#: actividades/controller/actividad_ver.php:137
+#: actividades/controller/actividad_ver.php:139
 #: actividades/view/actividad_select_ubi.phtml:181
 msgid "sin determinar"
 msgstr "sense determinar"
@@ -970,7 +970,7 @@ msgid "profesor"
 msgstr "professor"
 
 #: actividadestudios/controller/matricular.php:64
-#: actividadestudios/model/select1303.class.php:201
+#: actividadestudios/model/select1303.class.php:203
 msgid "está de repaso"
 msgstr "està de repàs"
 
@@ -1194,19 +1194,19 @@ msgstr "no està com a propi, no hauria de tenir pla d'estudis"
 msgid "por determinar"
 msgstr "per determinar"
 
-#: actividadestudios/model/select1303.class.php:241
+#: actividadestudios/model/select1303.class.php:243
 msgid "ver anteriores"
 msgstr "veure anteriors"
 
-#: actividadestudios/model/select1303.class.php:246
+#: actividadestudios/model/select1303.class.php:248
 msgid "no tiene asignado ningún ca."
 msgstr "no té assignat cap ca."
 
-#: actividadestudios/model/select1303.class.php:268
+#: actividadestudios/model/select1303.class.php:270
 msgid "¿Está seguro que desea quitar esta asignatura de esta actividad?"
 msgstr "Esteu segur que voleu treure aquesta assignatura d'aquesta activitat?"
 
-#: actividadestudios/model/select1303.class.php:289
+#: actividadestudios/model/select1303.class.php:291
 msgid "no tiene ninguna actividad asignada"
 msgstr "no té cap activitat assignada"
 
@@ -1888,13 +1888,13 @@ msgstr "ocupades"
 #: asistentes/model/select3101.class.php:667
 #, php-format
 msgid "(%s en espera)"
-msgstr "( %s en espera)"
+msgstr "(%s en espera)"
 
 #: asistentes/model/select3101.class.php:626
 #: asistentes/model/select3101.class.php:668
 #, php-format
 msgid "(%s por decidir)"
-msgstr "( %s per decidir)"
+msgstr "(%s per decidir)"
 
 #: cambios/model/gestorcanvis.class.php:28
 msgid "asistencias"
@@ -4511,19 +4511,19 @@ msgstr "arriben camps hidden modificats"
 msgid "llegan distinto número o nombre de los campos que se dice que se envian"
 msgstr "arriben diferent nombre o nom dels camps que es diu que s'envien"
 
-#: web/hash.class.php:207
+#: web/hash.class.php:208
 msgid "url modificada"
 msgstr "url modificada"
 
-#: web/hash.class.php:218 web/hash.class.php:223
+#: web/hash.class.php:219 web/hash.class.php:224
 msgid "problema general de seguridad"
 msgstr "problema general de seguretat"
 
-#: web/hash.class.php:224
+#: web/hash.class.php:225
 msgid "para ver más detalles activa el mode debug en core\\confgiGlobal"
 msgstr "per veure més detalls activa el model debug en core\\confgiGlobal"
 
-#: web/hash.class.php:254
+#: web/hash.class.php:255
 msgid "página con seguridad desactivada"
 msgstr "pàgina amb seguretat desactivada"
 
