@@ -1,5 +1,4 @@
 <style>
-<!--
 @media print {
 	#menu, #submenu, #cargando {
 		display: none;
@@ -65,5 +64,4 @@
         padding-bottom:1em;
     }
 }
--->
 </style>
