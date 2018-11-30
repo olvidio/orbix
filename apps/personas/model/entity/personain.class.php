@@ -30,9 +30,10 @@ class PersonaIn Extends PersonaPub {
 	*       
 	*/
 	function getEdad() {
-		$f_nacimiento = $this->getF_nacimiento();
-		if (!empty($f_nacimiento)) {
-			list($d,$m,$a) = preg_split('/[\.\/-]/', $f_nacimiento );   //separo la fecha en dia, mes, año
+		$oF_nacimiento = $this->getF_nacimiento();
+		if (!empty($oF_nacimiento)) {
+		    $m = $oF_nacimiento->format('m');
+		    $a = $oF_nacimiento->format('Y');
 			$ah=date("Y");
 			$mh=date("m");
 			$inc_m=0 ;

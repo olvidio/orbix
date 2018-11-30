@@ -93,7 +93,8 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
 	$nota_max=$oPersonaNota->getNota_max();
 	$acta=$oPersonaNota->getActa();
 	$tipo_acta=$oPersonaNota->getTipo_acta();
-	$f_acta=$oPersonaNota->getF_acta();
+	$oF_acta=$oPersonaNota->getF_acta();
+	$f_acta=$oF_acta->getFromLocal();
 	$preceptor=$oPersonaNota->getPreceptor();
 	$id_preceptor=$oPersonaNota->getId_preceptor();
 	$detalle=$oPersonaNota->getDetalle();
@@ -241,23 +242,22 @@ if (!empty($epoca)) {
 }
 
 if (!empty($f_acta)) { // 3 meses cerca de la fecha del acta.
-	$oData = DateTime::createFromFormat('j/m/Y',$f_acta);
-	$oData2 = clone $oData;
-	$oData->add(new \DateInterval('P3M'));
-	$f_fin = $oData->format('d/m/Y');
+	$oData2 = clone $oF_acta;
+	$oF_acta->add(new \DateInterval('P3M'));
+	$f_fin_iso = $oF_acta->format('Y-m-d');
 	$oData2->sub(new \DateInterval('P3M'));
-	$f_ini = $oData2->format('d/m/Y');
+	$f_ini_iso = $oData2->format('Y-m-d');
 } else { // desde hoy, 10 meses antes.
-	$oData = new \DateTime();
+	$oData = new web\DateTimeLocal();
 	$oData2 = clone $oData;
 	$oData->add(new \DateInterval('P1M'));
-	$f_fin = $oData->format('d/m/Y');
+	$f_fin_iso = $oData->format('Y-m-d');
 	$oData2->sub(new \DateInterval('P10M'));
-	$f_ini = $oData2->format('d/m/Y');
+	$f_ini_iso = $oData2->format('Y-m-d');
 }
 $aWhere=array();
 $aOperador=array();
-$aWhere['f_ini'] = "'$f_ini','$f_fin'";
+$aWhere['f_ini'] = "'$f_ini_iso','$f_fin_iso'";
 $aOperador['f_ini']='BETWEEN';
 $aWhere['id_tipo_activ'] = '^1(12|33)';
 $aOperador['id_tipo_activ'] = '~';

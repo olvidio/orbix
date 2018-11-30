@@ -78,27 +78,34 @@ $oFormP->setFormName('que');
 $oFormP->setTitulo(core\strtoupper_dlb(_("periodo del planning actividades")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplAnysOpcion_sel(date('Y'));
-?>
-<script>
-fnjs_ver_planning = function(formulario,n) {
-	periodo = $('#periodo').val();
-	if (!periodo) {
-		alert('<?= _("falta definir un periodo") ?>');
-	} else {
-		$('#modelo').val(n);
-		fnjs_enviar_formulario(formulario);
-	}
-}
-</script>
-<?php 
+
 switch ($Qtipo) {
 	case 'planning':
 	case 'p_de_paso':
+        $personas_txt = '';
+	    switch ($Qobj_pau) {
+	        case 'PersonaN':
+	            $personas_txt = _("numerarios");
+	            break;
+	        case 'PersonaNax':
+	            $personas_txt = _("nax");
+	            break;
+	        case 'PersonaAgd':
+	            $personas_txt = _("agregados");
+	            break;
+	        case 'PersonaS':
+	            $personas_txt = _("supernumerarios");
+	            break;
+	        case 'PersonaSSSC':
+	            $personas_txt = _("de la sss+");
+	            break;
+	    }
 	//cuando queramos visualizar el calendario de actividades de
 	//1 persona de dlb o de paso
 		$a_campos = ['oPosicion' => $oPosicion,
 					'oHash' => $oHash,
 					'oFormP' => $oFormP,
+		            'personas_txt' => $personas_txt,
 					];
 
 		$oView = new core\View('asistentes/controller');

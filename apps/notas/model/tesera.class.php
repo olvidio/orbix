@@ -11,6 +11,7 @@ namespace notas\model;
 use personas\model\entity as personas;
 use asignaturas\model\entity as asignaturas;
 use core;
+use web;
 
 /**
  * Description of tessera
@@ -22,25 +23,28 @@ class Tesera {
 	private $id_nom;
 
 	private function getCurso() {	
-		$ini = core\ConfigGlobal::$est_inicio;
-		$fin = core\ConfigGlobal::$est_fin;
+	    $ini_d = core\ConfigGlobal::$est_inicio['d'];
+	    $ini_m = core\ConfigGlobal::$est_inicio['m'];
+	    $fin_d = core\ConfigGlobal::$est_fin['d'];
+	    $fin_m = core\ConfigGlobal::$est_fin['m'];
+
 		$any = date('Y');
 		$mes = date('m');
 
 		if ($mes>9) {
 			$any2=$any-1;
-			$inicio = "$ini/$any2";	
-			$fin = "$fin/$any";
+			$inicio = "$any2-$ini_m-$ini_d";	
+			$fin = "$any-$fin_m-$fin_d";
 			$this->curso_txt = "$any2-$any";
 		} else {
 			$any2=$any-2;
 			$any--;
-			$inicio = "$ini/$any2";	
-			$fin = "$fin/$any";
+			$inicio = "$any2-$ini_m-$ini_d";	
+			$fin = "$any-$fin_m-$fin_d";
 			$this->curso_txt = "$any2-$any";
 		}
-		$this->oInicio = \DateTime::createFromFormat('d/m/Y', $inicio);
-		$this->oFin = \DateTime::createFromFormat('d/m/Y', $fin);
+		$this->oInicio = new web\DateTimeLocal('Y-m-d', $inicio);
+		$this->oFin = new web\DateTimeLocal('Y-m-d', $fin);
 	}
 	
 	private function getTitulo($id_nivel) {
@@ -125,6 +129,10 @@ class Tesera {
 		$aAprobadas=array();
 		foreach ($cNotas as $oPersonaNota) {
 			extract($oPersonaNota->getTot());
+			$id_asignatura = $oPersonaNota->getId_asignatura(); 
+			$id_nivel = $oPersonaNota->getId_nivel(); 
+			$oF_acta = $oPersonaNota->getF_acta(); 
+			$id_situacion = $oPersonaNota->getId_situacion(); 
 			$oAsig = new asignaturas\Asignatura($id_asignatura);
 			if ($id_asignatura > 3000) {
 				$id_nivel_asig = $id_nivel;
@@ -137,7 +145,7 @@ class Tesera {
 			$aAprobadas[$n]['id_nivel']= $id_nivel;
 			$aAprobadas[$n]['id_asignatura']= $id_asignatura;
 			$aAprobadas[$n]['nombre_corto']= $oAsig->getNombre_corto();
-			$aAprobadas[$n]['fecha']= $f_acta;
+			$aAprobadas[$n]['fecha']= $oF_acta;
 			$aAprobadas[$n]['id_situacion']= $id_situacion;
 			//$aAprobadas[$n]['nota']= $oNota->getDescripcion();
 			$nota = $oPersonaNota->getNota_txt();
@@ -196,16 +204,16 @@ class Tesera {
 					$algo=$oAsignatura->getNombre_corto()."<br>&nbsp;&nbsp;&nbsp;&nbsp;".$row["nombre_corto"];
 					$tabla[$i]['asignatura'] = $algo;
 					$tabla[$i]['nota'] = $row['nota'];
-					$tabla[$i]['fecha'] = $row['fecha'];
+					$tabla[$i]['fecha'] = $row['fecha']->getFromLocal();
 				} else {
 					$tabla[$i]['asignatura'] = $oAsignatura->getNombre_corto();
 					$tabla[$i]['nota'] = $row['nota'];
-					$tabla[$i]['fecha'] = $row['fecha'];
+					$tabla[$i]['fecha'] = $row['fecha']->getFromLocal();
 				}
 				if (in_array($row['id_situacion'],$aIdSuperadas)) {
 					$numasig ++;
 					$numcred += $oAsignatura->getCreditos(); 
-					$oFActa = \DateTime::createFromFormat('d/m/Y', $row['fecha']);
+					$oFActa = $row['fecha'];
 						
 					if($this->oInicio <= $oFActa && $oFActa <= $this->oFin) {
 						$numasig_year ++;

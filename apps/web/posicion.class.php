@@ -67,7 +67,7 @@ class Posicion {
 	 * coloca el cursor de posicion n posiciones atras.
 	 * para n=0, no se usa el valor en $_SESSION['position'], sino el actual.
 	 *
-	 * @var n número de posiciones a retroceder.
+	 * @var integer $n número de posiciones a retroceder.
 	 */
 	public function go($n=0) {
 		if ($n == 0 OR !is_array($_SESSION['position'])) return;
@@ -92,7 +92,7 @@ class Posicion {
 	/**
 	 * coloca el cursor de posicion en stack.
 	 *
-	 * @var stack indice del array $_SESSION['position']);
+	 * @var integer $stack indice del array $_SESSION['position']);
 	 */
 	public function goStack($stack='*') { //pongo '*' para distinguirlo del 0.
 		if (isset($_SESSION['position'][$stack])) {
@@ -577,4 +577,3 @@ class Posicion {
 		return "'".$url."?".$parametros."'";
 	}
 }
-?>

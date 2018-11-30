@@ -112,7 +112,7 @@ fnjs_actualizar=function(formulario){
 fnjs_guardar=function(formulario){
 	// si es 0, no se cambia el password.
 	if (strong != 0 && strong < 5) {
-	  alert('debe poner un password "fuerte" o "muy fuerte"');
+	  alert("<?= _("debe poner un password \"fuerte\" o \"muy fuerte\"") ?>");
 	  return false;
 	}
 

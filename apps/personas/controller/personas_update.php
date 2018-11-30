@@ -74,5 +74,5 @@ foreach ($cDatosCampo as $oDatosCampo) {
 		}
 	}
 }
-$oPersona->setAllAtributes($a_values_o);
+$oPersona->setAllAtributes($a_values_o,TRUE);
 $oPersona->DBGuardar();

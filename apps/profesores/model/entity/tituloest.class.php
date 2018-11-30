@@ -392,7 +392,7 @@ class TituloEst Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut stitulo de TituloEst
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTitulo() {
 		$nom_tabla = $this->getNomTabla();
@@ -406,7 +406,7 @@ class TituloEst Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut scentro_dnt de TituloEst
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosCentro_dnt() {
 		$nom_tabla = $this->getNomTabla();
@@ -420,7 +420,7 @@ class TituloEst Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut beclesiastico de TituloEst
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosEclesiastico() {
 		$nom_tabla = $this->getNomTabla();
@@ -433,7 +433,7 @@ class TituloEst Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iyear de TituloEst
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosYear() {
 		$nom_tabla = $this->getNomTabla();

@@ -103,7 +103,7 @@ class Lista {
 	/**
 	 * Constructor de la classe.
 	 *
-	 * @return GestorProceso
+	 * @return Lista
 	 *
 	 */
 	function __construct() {
@@ -114,7 +114,7 @@ class Lista {
 	 * Muestra una tabla simple
 	 *
 	 *@param ikey indice del array aDatos
-	 * @return Html
+	 *@return string Html
 	 *
 	 */
 	function lista() {
@@ -182,7 +182,7 @@ class Lista {
 	/**
 	 * Constructor de la classe.
 	 *
-	 * @return GestorProceso
+	 * @return string Html
 	 *
 	 */
 	function listaPaginada() {
@@ -208,7 +208,7 @@ class Lista {
 	/**
 	 * Muestra una tabla ordenable, con  botones en la cabecera y check box en cada lina.
 	 *
-	 *@return Html
+	 *@return string Html
 	 *
 	 */
 	function mostrar_tabla() {
@@ -246,7 +246,7 @@ class Lista {
 	 * 				=> crea un 'link' que ejecuta  al funcion de $cript:
 					return \"<span class=link onclick='this.closest(\\\".slick-cell\\\").click();\"+ira+\";' >\"+value+\"</span>\";
 	 * 	[fila][col] = array( 'span'=>3, 'valor'=> $txt) => de momento no hace nada. Sirve para la funcion mostrar_tabla_html
-	 *@return Html Grid
+	 *@return string Html Grid
 	 *
 	 */
 	function mostrar_tabla_slickgrid() {
@@ -811,7 +811,7 @@ class Lista {
 	/**
 	 * Muestra una tabla ordenable, con  botones en la cabecera y check box en cada lina.
 	 *
-	 *@return Html
+	 *@return string Html
 	 *
 	 */
 	function mostrar_tabla_html() {
@@ -958,7 +958,7 @@ class Lista {
 	 * Muestra una tabla ordenable, con  botones en la cabecera y check box en cada lina.
 	 * Pruebo de poner grupos.
 	 *
-	 *@return Html
+	 *@return string Html
 	 *
 	 */
 	function mostrar_tabla_html2() {
@@ -1122,4 +1122,3 @@ class Lista {
 		 $this->bRecordar = $bRecordar;
 	}
 }
-?>

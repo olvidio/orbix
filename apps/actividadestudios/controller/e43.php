@@ -15,7 +15,7 @@ $Qid_activ = (integer)  filter_input(INPUT_POST, 'id_pau');
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 // vengo directamente con un id:
 if (!empty($a_sel)) { //vengo de un checkbox
-	$Qid_nom = strtok($a_sel[0],"#");
+    $Qid_nom = (integer) strtok($a_sel[0],"#");
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
@@ -32,7 +32,7 @@ if (!is_object($oPersona)) {
 
 $nom=$oPersona->getNombreApellidos();
 $lugar_nacimiento=$oPersona->getLugar_nacimiento();
-$f_nacimiento=$oPersona->getF_nacimiento();
+$f_nacimiento=$oPersona->getF_nacimiento()->getFromLocal();
 $txt_nacimiento = "$lugar_nacimiento ($f_nacimiento)";
 
 $dl_origen = core\ConfigGlobal::mi_dele();
@@ -41,8 +41,8 @@ $dl_destino = $oPersona->getDl();
 $oActividad = new actividades\model\entity\Actividad($Qid_activ);
 $nom_activ = $oActividad->getNom_activ();
 $id_ubi = $oActividad->getId_ubi();
-$f_ini = $oActividad->getF_ini();
-$f_fin = $oActividad->getF_fin();
+$f_ini = $oActividad->getF_ini()->getFromLocal();
+$f_fin = $oActividad->getF_fin()->getFromLocal();
 $oUbi = ubis\model\entity\Ubi::NewUbi($id_ubi);
 $lugar = $oUbi->getNombre_ubi();
 

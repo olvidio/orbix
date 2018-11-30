@@ -38,8 +38,8 @@ if (isset($_POST['stack'])) {
 }
 
 if (!empty($a_sel)) { //vengo de un checkbox
-	$id_activ = strtok($a_sel[0],"#");
-	$id_asignatura=strtok("#");
+    $id_activ = (integer) strtok($a_sel[0],"#");
+    $id_asignatura= (integer) strtok("#");
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
@@ -98,6 +98,12 @@ if (is_array($cActas) && !empty($cActas)) {
 	$oDesplActas = new web\Desplegable();
 	$oDesplActas->setNombre('acta_nota[]');
 	$oDesplActas->setOpciones($a_actas);
+	// Si sólo hay una, la selecciono por defecto.
+	if (count($cActas) == 1) {
+	    $acta_principal = $nom_acta;
+	} else {
+	    $acta_principal = '';
+	}
 } else {
 	$notas="nuevo";// para indicar a la página de actas que está dentro de ésta.
 	$oDesplActas = new web\Desplegable();
@@ -131,6 +137,7 @@ $a_campos = ['oPosicion' => $oPosicion,
 			'Qque' => $Qque,
 			'aPersonasMatriculadas' => $aPersonasMatriculadas,
 			'oDesplActas' => $oDesplActas,
+    	    'acta_principal'  => $acta_principal,
 			'txt_alert_acta' => $txt_alert_acta,
 			];
 

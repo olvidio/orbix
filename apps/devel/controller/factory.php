@@ -1,6 +1,7 @@
 <?php
 namespace devel\controller;
 use core;
+use web;
 /**
   * programa per generar les classes a partir de la taula
   *
@@ -192,6 +193,7 @@ $atributs='
 	 */
 	 private $aDades;
 ';
+$add_convert = FALSE;
 $c=0;
 $cl=0;
 $id_seq="";
@@ -209,6 +211,7 @@ $err_bool="";
 $a_auto=array();
 foreach($oDbl->query($sql) as $row) {
 	$nomcamp=$row['field'];
+	if ($nomcamp == 'id_schema') { continue; }
 	$NomCamp=ucwords($nomcamp);
 	$tipo=$row['type'];	
 	$not_null=$row['notnull'];
@@ -228,6 +231,7 @@ foreach($oDbl->query($sql) as $row) {
 	$default=$oDbl->query($sql_get_default)->fetchColumn();
 	$auto=0;
 	if (!empty($default)) { //nomes agafo un. li dono preferencia al id_local
+	    $matches = [];
 		if(preg_match("/id_local\('(\w+)'.*$/",$default,$matches) || preg_match("/id_ubi\('(\w+)'.*$/",$default,$matches)) {
 			$id_seq=$matches[1];
 			$auto=1;
@@ -243,9 +247,17 @@ foreach($oDbl->query($sql) as $row) {
 	//echo "${_POST['ficha']}\n$nomcamp_post\n";
 
 	switch($tipo) {
+		case 'int8':
 		case 'int4':
 		case 'int2':
 			$tipo_db='integer';
+			$tip='i';
+			$tip_val='';
+			break;
+		case 'float4':
+		case 'double':
+		case 'numeric':
+			$tipo_db='float';
 			$tip='i';
 			$tip_val='';
 			break;
@@ -256,12 +268,12 @@ foreach($oDbl->query($sql) as $row) {
 			$tip_val='';
 			break;
 		case 'date':
-			$tipo_db='date';
+			$tipo_db='web\\DateTimeLocal';
 			$tip='d';
 			$tip_val='';
 			break;
 		case 'time':
-			$tipo_db='time';
+			$tipo_db='string time';
 			$tip='t';
 			$tip_val='';
 			break;
@@ -278,7 +290,22 @@ foreach($oDbl->query($sql) as $row) {
 	 * @var '.$tipo_db.'
 	 */
 	 private $'.$tip.$nomcamp.';';
-
+	
+	if ($tipo == 'date') {
+	$gets.='
+	/**
+	 * Recupera l\'atribut '.$tip.$nomcamp.' de '.$clase.'
+	 *
+	 * @return '.$tipo_db.' '.$tip.$nomcamp.'
+	 */
+	function get'.$NomCamp.'() {
+		if (!isset($this->'.$tip.$nomcamp.')) {
+			$this->DBCarregar();
+		}
+        $oConverter = new core\Converter(\'date\', $this->'.$tip.$nomcamp.');
+		return $oConverter->fromPg();
+	}';
+	} else {
 	$gets.='
 	/**
 	 * Recupera l\'atribut '.$tip.$nomcamp.' de '.$clase.'
@@ -291,7 +318,8 @@ foreach($oDbl->query($sql) as $row) {
 		}
 		return $this->'.$tip.$nomcamp.';
 	}';
-
+	}
+	
 	if (in_array($nomcamp,$aClaus)) {
 		$aClaus2[$nomcamp]=$tip.$nomcamp;
 		$gets.='
@@ -304,6 +332,25 @@ foreach($oDbl->query($sql) as $row) {
 		$this->'.$tip.$nomcamp.' = $'.$tip.$nomcamp.';
 	}';
 	} else {
+    	if ($tipo == 'date') {
+		$gets.='
+	/**
+	 * estableix el valor de l\'atribut '.$tip.$nomcamp.' de '.$clase.'
+	 * Si '.$tip.$nomcamp.' es string, y convert=true se convierte usando el formato web\DateTimeLocal->getForamat().
+	 * Si convert es false, '.$tip.$nomcamp.' debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	 * 
+	 * @param '.$tipo_db.'|string '.$tip.$nomcamp.'=\''.$tip_val.'\' optional.
+     * @param boolean convert=TRUE optional. Si es false, df_ini debe ser un string en formato ISO (Y-m-d).
+	 */
+	function set'.$NomCamp.'($'.$tip.$nomcamp.'=\''.$tip_val.'\',$convert=TRUE) {
+        if ($convert === TRUE  && !empty('.$tip.$nomcamp.')) {
+            $oConverter = new core\Converter(\'date\', $'.$tip.$nomcamp.');
+            $this->'.$tip.$nomcamp.' = $oConverter->toPg();
+	    } else {
+            $this->'.$tip.$nomcamp.' = $'.$tip.$nomcamp.';
+	    }
+	}';
+    	} else {
 		$gets.='
 	/**
 	 * estableix el valor de l\'atribut '.$tip.$nomcamp.' de '.$clase.'
@@ -313,12 +360,14 @@ foreach($oDbl->query($sql) as $row) {
 	function set'.$NomCamp.'($'.$tip.$nomcamp.'=\''.$tip_val.'\') {
 		$this->'.$tip.$nomcamp.' = $'.$tip.$nomcamp.';
 	}';
+    	    
+    	}
 		$altres_gets.='
 	/**
 	 * Recupera les propietats de l\'atribut '.$tip.$nomcamp.' de '.$clase.'
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatos'.$NomCamp.'() {
 		$nom_tabla = $this->getNomTabla();
@@ -330,12 +379,17 @@ foreach($oDbl->query($sql) as $row) {
 
 	}
 
-	$exists.="\n\t\t".'if (array_key_exists(\''.$nomcamp.'\',$aDades)) $this->set'.$NomCamp.'($aDades[\''.$nomcamp.'\']);';
+   	if ($tipo == 'date') {
+   	   $add_convert = TRUE;
+	   $exists.="\n\t\t".'if (array_key_exists(\''.$nomcamp.'\',$aDades)) $this->set'.$NomCamp.'($aDades[\''.$nomcamp.'\'],$convert);';
+   	} else {
+	   $exists.="\n\t\t".'if (array_key_exists(\''.$nomcamp.'\',$aDades)) $this->set'.$NomCamp.'($aDades[\''.$nomcamp.'\']);';
+   	}
 
 	if (!in_array($nomcamp,$aClaus)) {
 		if ($auto != 1) { // si tiene sequencia no pongo el campo en el update.
 			if ($tip=='b') {
-				$err_bool.="\n\t\t".'if (empty($aDades[\''.$nomcamp.'\']) || ($aDades[\''.$nomcamp.'\'] === \'off\') || ($aDades[\''.$nomcamp.'\'] === false) || ($aDades[\''.$nomcamp.'\'] === \'f\')) { $aDades[\''.$nomcamp.'\']=\'f\'; } else { $aDades[\''.$nomcamp.'\']=\'t\'; }';
+				$err_bool.="\n\t\t".'if (empty($aDades[\''.$nomcamp.'\']) || ($aDades[\''.$nomcamp.'\'] === \'off\') || ($aDades[\''.$nomcamp.'\'] === FALSE) || ($aDades[\''.$nomcamp.'\'] === \'f\')) { $aDades[\''.$nomcamp.'\']=\'f\'; } else { $aDades[\''.$nomcamp.'\']=\'t\'; }';
 			}
 			$guardar.="\n\t\t".'$aDades[\''.$nomcamp.'\'] = $this->'.$tip.$nomcamp.';';
 			if ($cl>0) $update.=",\n";
@@ -357,12 +411,18 @@ foreach($oDbl->query($sql) as $row) {
 		$c++;
 	}
 }
-$hoy=date("d/m/Y");
-
+$oHoy = new web\DateTimeLocal();
+$hoy = $oHoy->getFromLocal();
 
 $txt="<?php
 namespace $grupo\\model\\entity;
-use core;
+use core;";
+
+if ($add_convert === TRUE) {
+    $txt.="\nuse web;";
+}
+
+$txt.="
 /**
  * Fitxer amb la Classe que accedeix a la taula $tabla
  *
@@ -491,30 +551,30 @@ $txt.='
 	public function DBGuardar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if ($this->DBCarregar(\'guardar\') === false) { $bInsert=true; } else { $bInsert=false; }
+		if ($this->DBCarregar(\'guardar\') === FALSE) { $bInsert=TRUE; } else { $bInsert=FALSE; }
 		$aDades=array();';
 $txt.=$guardar;
 $txt.='
 		array_walk($aDades, \'core\\poner_null\');';
 if ($err_bool) {
-	$txt.="\n\t\t//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:";
+	$txt.="\n\t\t//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:";
 	$txt.=$err_bool;
 }
-$txt.="\n\n\t\t".'if ($bInsert === false) {
+$txt.="\n\n\t\t".'if ($bInsert === FALSE) {
 			//UPDATE
 			$update="
 ';
 $txt.=$update.'";';
 $txt.='
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE '.$where.'")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE '.$where.'")) === FALSE) {
 				$sClauError = \''.$clase.'.update.prepare\';
 				$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-				return false;
+				return FALSE;
 			} else {
-				if ($oDblSt->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === FALSE) {
 					$sClauError = \''.$clase.'.update.execute\';
 					$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-					return false;
+					return FALSE;
 				}
 			}
 		} else {
@@ -527,15 +587,15 @@ $txt.=$campos.')";'."\n";
 $txt.="\t\t\t".'$valores="(';
 $txt.=$valores.')";';
 $txt.='		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClauError = \''.$clase.'.insertar.prepare\';
 				$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-				return false;
+				return FALSE;
 			} else {
-				if ($oDblSt->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === FALSE) {
 					$sClauError = \''.$clase.'.insertar.execute\';
 					$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-					return false;
+					return FALSE;
 				}
 			}';
 if ($id_seq || $id_seq2) {
@@ -550,7 +610,7 @@ if ($id_seq || $id_seq2) {
 }
 $txt.="\n\t\t".'}
 		$this->setAllAtributes($aDades);
-		return true;
+		return TRUE;
 	}
 
 	/**
@@ -561,10 +621,10 @@ $txt.="\n\t\t".'}
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if ('.$claus_isset.') {
-			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE '.$where.'")) === false) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE '.$where.'")) === FALSE) {
 				$sClauError = \''.$clase.'.carregar\';
 				$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-				return false;
+				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\\PDO::FETCH_ASSOC);
 			switch ($que) {
@@ -572,14 +632,14 @@ $txt.="\n\t\t".'}
 					$this->aDades=$aDades;
 					break;
 				case \'guardar\':
-					if (!$oDblSt->rowCount()) return false;
+					if (!$oDblSt->rowCount()) return FALSE;
 					break;
 				default:
 					$this->setAllAtributes($aDades);
 			}
-			return true;
+			return TRUE;
 		} else {
-		   	return false;
+		   	return FALSE;
 		}
 	}
 
@@ -590,12 +650,12 @@ $txt.="\n\t\t".'}
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE '.$where.'")) === false) {
+		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE '.$where.'")) === FALSE) {
 			$sClauError = \''.$clase.'.eliminar\';
 			$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return false;
+			return FALSE;
 		}
-		return true;
+		return TRUE;
 	}
 	
 	/* METODES ALTRES  ----------------------------------------------------------*/
@@ -607,9 +667,14 @@ $txt.='	/* METODES PRIVATS -----------------------------------------------------
 	 * Estableix el valor de tots els atributs
 	 *
 	 * @param array $aDades
-	 */
-	function setAllAtributes($aDades) {
+	 */';
+if ($add_convert === TRUE) {
+    $txt.="\n\t".'function setAllAtributes($aDades,$convert=FALSE) {
 		if (!is_array($aDades)) return;';
+} else {
+    $txt.="\n\t".'function setAllAtributes($aDades) {
+		if (!is_array($aDades)) return;';
+}
 $txt.=$exists;
 $txt.="\n\t".'}
 
@@ -667,10 +732,7 @@ $txt.='
 /* ESCRIURE LA CLASSSE ------------------------------------------------ */
 $filename = core\ConfigGlobal::DIR.'/apps/'.$grupo.'/model/entity/'.strtolower($Qclase).'.class.php';
 
-// In our example we're opening $filename in append mode.
-// The file pointer is at the bottom of the file hence
-// that's where $somecontent will go when we fwrite() it.
-if (!$handle = fopen($filename, 'a')) {
+if (!$handle = fopen($filename, 'w')) {
 	 echo "Cannot open file ($filename)";
 	 die();
 }
@@ -684,6 +746,10 @@ if (fwrite($handle, $txt) === FALSE) {
 echo "Success, wrote (somecontent) to file ($filename)";
 
 fclose($handle);
+
+chmod($filename, 0775);  
+//chown($filename, 'dani'); No se puede por falta de permisos
+chgrp($filename, 'www-data');
 
 /* CONSTRUIR EL GESTOR ------------------------------------------------ */
 $gestor="Gestor".ucfirst($clase);
@@ -736,10 +802,10 @@ $txt2.='
 	function get'.$clase_plural.'Query($sQuery=\'\') {
 		$oDbl = $this->getoDbl();
 		$o'.$clase.'Set = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (($oDblSt = $oDbl->query($sQuery)) === FALSE) {
 			$sClauError = \''.$gestor.'.query\';
 			$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return false;
+			return FALSE;
 		}
 		foreach ($oDbl->query($sQuery) as $aDades) {';
 $txt2.="\n\t\t\t".'$a_pkey = array('.$claus_txt2.');';
@@ -782,20 +848,20 @@ $txt2.="\n\t\t".'$sCondi = implode(\' AND \',$aCondi);
 		} else {
 			$sLimit=\'\';
 		}
-		if ($sLimit===false) return;
+		if ($sLimit === FALSE) return;
 		$sOrdre = \'\';
 		if (isset($aWhere[\'_ordre\']) && $aWhere[\'_ordre\']!=\'\') $sOrdre = \' ORDER BY \'.$aWhere[\'_ordre\'];
 		if (isset($aWhere[\'_ordre\'])) unset($aWhere[\'_ordre\']);
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
+		if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
 			$sClauError = \''.$gestor.'.llistar.prepare\';
 			$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return false;
+			return FALSE;
 		}
-		if (($oDblSt->execute($aWhere)) === false) {
+		if (($oDblSt->execute($aWhere)) === FALSE) {
 			$sClauError = \''.$gestor.'.llistar.execute\';
 			$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-			return false;
+			return FALSE;
 		}
 		foreach ($oDblSt as $aDades) {';
 $txt2.="\n\t\t\t".'$a_pkey = array('.$claus_txt2.');';
@@ -817,10 +883,7 @@ $txt2.='
 $filename = core\ConfigGlobal::DIR.'/apps/'.$grupo.'/model/entity/gestor'.strtolower($Qclase).'.class.php';
 
 
-// In our example we're opening $filename in append mode.
-// The file pointer is at the bottom of the file hence
-// that's where $somecontent will go when we fwrite() it.
-if (!$handle = fopen($filename, 'a')) {
+if (!$handle = fopen($filename, 'w')) {
 	 echo "Cannot open file ($filename)";
 	 die();
 }
@@ -834,3 +897,7 @@ if (fwrite($handle, $txt2) === FALSE) {
 echo "<br>Success, wrote gestor to file ($filename)";
 
 fclose($handle);
+
+chmod($filename, 0775);  
+//chown($filename, 'dani'); No se puede por falta de permisos
+chgrp($filename, 'www-data');

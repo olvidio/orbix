@@ -1,5 +1,7 @@
 <?php
 namespace web;
+
+use core\ConfigGlobal;
 /**
  * Classe per les dates. Afageix a la clase del php la vista amn num. romans.
  *
@@ -10,68 +12,117 @@ namespace web;
  * @created 26/11/2010
  */
 class DateTimeLocal Extends \DateTime {
-	private $oData;
-
-	public static function Meses() {
-		$aMeses = array('1'=>_("enero"),
-			'2'=>_("febrero"),
-			'3'=>_("marzo"),
-			'4'=>_("abril"),
-			'5'=>_("mayo"),
-			'6'=>_("junio"),
-			'7'=>_("julio"),
-			'8'=>_("agosto"),
-			'9'=>_("septiembre"),
-			'10'=>_("octubre"),
-			'11'=>_("noviembre"),
-			'12'=>_("diciembre")	
-		);
-		return $aMeses;
-	}
-
-	public function setDateTime($oDateTime) {
-		$this->oData = $oDateTime;
-	}
-	public function setFromFormat($format,$data) {
-		//$this->oData = DateTime::createFromFormat($format,$data);
-		$this->oData = parent::createFromFormat($format,$data);
-	}
+    private $oData;
+    
+    public static function Meses() {
+        $aMeses = array('1'=>_("enero"),
+            '2'=>_("febrero"),
+            '3'=>_("marzo"),
+            '4'=>_("abril"),
+            '5'=>_("mayo"),
+            '6'=>_("junio"),
+            '7'=>_("julio"),
+            '8'=>_("agosto"),
+            '9'=>_("septiembre"),
+            '10'=>_("octubre"),
+            '11'=>_("noviembre"),
+            '12'=>_("diciembre")
+        );
+        return $aMeses;
+    }
+    static private function getFormat() {
+        $idioma = $_SESSION['session_auth']['idioma'];
+        # Si no hemos encontrado ningún idioma que nos convenga, mostramos la web en el idioma por defecto
+        if (!isset($idioma)){ $idioma = ConfigGlobal::$x_default_idioma; }
+        $a_idioma = explode('.',$idioma);
+        $code_lng = $a_idioma[0];
+        //$code_char = $a_idioma[1];
+        switch ($code_lng) {
+            case 'en_US':
+                $format = 'm/d/Y';
+                break;
+            default:
+                $format = 'd/m/Y';
+        }
+        return $format;
+    }
+    
+    static public function createFromLocal($data) {
+        $format = self::getFormat();
+        
+        $extnd_dt = new static();
+        $parent_dt = parent::createFromFormat($format,$data);
+        
+        if (!$parent_dt) {
+            return false;
+        }
+        
+        $extnd_dt->setTimestamp($parent_dt->getTimestamp());
+        /* corregir en el caso que el año tenga dos digitos
+         * No sirve para el siglo I (0-99) ;-) */
+        $yy = $extnd_dt->format('y');
+        $yyyy = $extnd_dt->format('Y');
+        if (($yyyy - $yy) == 0) {
+            $currentY4 = date('Y');
+            $currentY2 = date('y');
+            $currentMilenium = $currentY4 - $currentY2;
+            
+            $extnd_dt->add(new \DateInterval('P'.$currentMilenium.'Y'));
+        }
+        
+        return $extnd_dt;
+    }
+    
+    public function getFromLocal() {
+        $format = $this->getFormat();
+        return parent::format($format);
+    }
+    
+    static public function createFromFormat($format,$data, \DateTimeZone $TimeZone=NULL) {
+        $extnd_dt = new static();
+        $parent_dt = parent::createFromFormat($format,$data,$TimeZone);
+        
+        if (!$parent_dt) {
+            return false;
+        }
+        $extnd_dt->setTimestamp($parent_dt->getTimestamp());
+        return $extnd_dt;
+    }
+    
     public function format($format) {
         $english = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
         $local = array(_("Lunes"), _("Martes"), _("Miércoles"), _("Jueves"), _("Viernes"), _("Sábado"), _("Domingo"));
-        return str_replace($english, $local, $this->oData->format($format));
+        return str_replace($english, $local, parent::format($format));
     }
     public function formatRoman() {
-		$a_num_romanos=array('1'=>"I",'2'=>"II",'3'=>"III",'4'=>"IV",'5'=>"V",'6'=>"VI",'7'=>"VII",'8'=>"VIII",'9'=>"IX",
-				'10'=>"X",'11'=>"XI",'12'=>"XII");
-		$dia = $this->oData->format('j');
-		$mes = $this->oData->format('n');
-		$any = $this->oData->format('y');
+        $a_num_romanos=array('1'=>"I",'2'=>"II",'3'=>"III",'4'=>"IV",'5'=>"V",'6'=>"VI",'7'=>"VII",'8'=>"VIII",'9'=>"IX",
+            '10'=>"X",'11'=>"XI",'12'=>"XII");
+        $dia = parent::format('j');
+        $mes = parent::format('n');
+        $any = parent::format('y');
         return "$dia.".$a_num_romanos[$mes].".$any";
     }
-
+    
     public function duracion($oDateDiff) {
-		$interval = $this->oData->diff($oDateDiff);
-		$horas = $interval->format('%a')*24 +$interval->format('%h')+$interval->format('%i')/60+$interval->format('%s')/3600;
-		/*
-		$dias=$horas/24;
-		$e_dias=($dias % $horas);
-		$dec=round(($dias-$e_dias),1);
-		if ($dec > 0.1) { $dec=0.5; } else { $dec=0; }
-		return ($e_dias+$dec);
-		*/
-		$dias=round($horas/24,2);
-		return $dias;
-	}
+        $interval = $this->oData->diff($oDateDiff);
+        $horas = $interval->format('%a')*24 +$interval->format('%h')+$interval->format('%i')/60+$interval->format('%s')/3600;
+        /*
+         $dias=$horas/24;
+         $e_dias=($dias % $horas);
+         $dec=round(($dias-$e_dias),1);
+         if ($dec > 0.1) { $dec=0.5; } else { $dec=0; }
+         return ($e_dias+$dec);
+         */
+        $dias=round($horas/24,2);
+        return $dias;
+    }
     public function duracionAjustada($oDateDiff) {
-		$interval = $this->oData->diff($oDateDiff);
-		$horas = $interval->format('%a')*24 +$interval->format('%h')+$interval->format('%i')/60+$interval->format('%s')/3600 + 12;
-		$dias=$horas/24;
-		$e_dias=($dias % $horas);
-		$dec=round(($dias-$e_dias),1);
-		if ($dec > 0.1) { $dec=0.5; } else { $dec=0; }
-		return ($e_dias+$dec);
-	}
+        $interval = $this->oData->diff($oDateDiff);
+        $horas = $interval->format('%a')*24 +$interval->format('%h')+$interval->format('%i')/60+$interval->format('%s')/3600 + 12;
+        $dias=$horas/24;
+        $e_dias=($dias % $horas);
+        $dec=round(($dias-$e_dias),1);
+        if ($dec > 0.1) { $dec=0.5; } else { $dec=0; }
+        return ($e_dias+$dec);
+    }
 }
-
-?>

@@ -187,7 +187,7 @@ class DireccionCtrEx Extends DireccionCtr {
 	 *
 	 * @param array $aDades
 	 */
-	function setAllAtributes($aDades) {
+	function setAllAtributes($aDades,$convert=FALSE) {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_direccion',$aDades)) $this->setId_direccion($aDades['id_direccion']);
@@ -197,7 +197,7 @@ class DireccionCtrEx Extends DireccionCtr {
 		if (array_key_exists('provincia',$aDades)) $this->setProvincia($aDades['provincia']);
 		if (array_key_exists('a_p',$aDades)) $this->setA_p($aDades['a_p']);
 		if (array_key_exists('pais',$aDades)) $this->setPais($aDades['pais']);
-		if (array_key_exists('f_direccion',$aDades)) $this->setF_direccion($aDades['f_direccion']);
+		if (array_key_exists('f_direccion',$aDades)) $this->setF_direccion($aDades['f_direccion'],$convert);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
 		if (array_key_exists('cp_dcha',$aDades)) $this->setCp_dcha($aDades['cp_dcha']);
 		if (array_key_exists('latitud',$aDades)) $this->setLatitud($aDades['latitud']);

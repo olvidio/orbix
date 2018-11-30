@@ -1,6 +1,7 @@
 <?php
 namespace profesores\model\entity;
 use core;
+use web;
 /**
  * Fitxer amb la Classe que accedeix a la taula d_congresos
  *
@@ -69,13 +70,13 @@ class Congreso Extends core\ClasePropiedades {
 	/**
 	 * F_ini de Congreso
 	 *
-	 * @var date
+	 * @var web\DateTimeLocal
 	 */
 	 private $df_ini;
 	/**
 	 * F_fin de Congreso
 	 *
-	 * @var date
+	 * @var web\DateTimeLocal
 	 */
 	 private $df_fin;
 	/**
@@ -241,15 +242,15 @@ class Congreso Extends core\ClasePropiedades {
 	 *
 	 * @param array $aDades
 	 */
-	function setAllAtributes($aDades) {
+	function setAllAtributes($aDades,$convert=FALSE) {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_item',$aDades)) $this->setId_item($aDades['id_item']);
 		if (array_key_exists('id_nom',$aDades)) $this->setId_nom($aDades['id_nom']);
 		if (array_key_exists('congreso',$aDades)) $this->setCongreso($aDades['congreso']);
 		if (array_key_exists('lugar',$aDades)) $this->setLugar($aDades['lugar']);
-		if (array_key_exists('f_ini',$aDades)) $this->setF_ini($aDades['f_ini']);
-		if (array_key_exists('f_fin',$aDades)) $this->setF_fin($aDades['f_fin']);
+		if (array_key_exists('f_ini',$aDades)) $this->setF_ini($aDades['f_ini'],$convert);
+		if (array_key_exists('f_fin',$aDades)) $this->setF_fin($aDades['f_fin'],$convert);
 		if (array_key_exists('organiza',$aDades)) $this->setOrganiza($aDades['organiza']);
 		if (array_key_exists('tipo',$aDades)) $this->setTipo($aDades['tipo']);
 	}
@@ -359,40 +360,46 @@ class Congreso Extends core\ClasePropiedades {
 	/**
 	 * Recupera l'atribut df_ini de Congreso
 	 *
-	 * @return date df_ini
+	 * @return web\DateTimeLocal df_ini
 	 */
 	function getF_ini() {
-		if (!isset($this->df_ini)) {
-			$this->DBCarregar();
-		}
-		return $this->df_ini;
+	    if (!isset($this->df_ini)) {
+	        $this->DBCarregar();
+	    }
+	    if (empty($this->df_ini)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_ini);
+	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_ini de Congreso
-	 *
-	 * @param date df_ini='' optional
-	 */
-	function setF_ini($df_ini='') {
-		$this->df_ini = $df_ini;
+	 * estableix el valor de l'atribut df_ini de Congreso	* Si df_ini es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_ini debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_ini='' optional.	* @param boolean convert=true optional. Si es false, df_ini debe ser un string en formato ISO (Y-m-d).	 */
+	function setF_ini($df_ini='',$convert=true) {
+		if ($convert === true && !empty($df_ini)) {
+	        $oConverter = new core\Converter('date', $df_ini);
+	        $this->df_ini =$oConverter->toPg();
+	    } else {
+	        $this->df_ini = $df_ini;
+	    }
 	}
 	/**
 	 * Recupera l'atribut df_fin de Congreso
 	 *
-	 * @return date df_fin
+	 * @return web\DateTimeLocal df_fin
 	 */
 	function getF_fin() {
-		if (!isset($this->df_fin)) {
-			$this->DBCarregar();
-		}
-		return $this->df_fin;
+	    if (!isset($this->df_fin)) {
+	        $this->DBCarregar();
+	    }
+	    if (empty($this->df_fin)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_fin);
+	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_fin de Congreso
-	 *
-	 * @param date df_fin='' optional
-	 */
-	function setF_fin($df_fin='') {
-		$this->df_fin = $df_fin;
+	 * estableix el valor de l'atribut df_fin de Congreso	* Si df_fin es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_fin debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_fin='' optional.	* @param boolean convert=true optional. Si es false, df_fin debe ser un string en formato ISO (Y-m-d).	 */
+	function setF_fin($df_fin='',$convert=true) {
+		if ($convert === true && !empty($df_fin)) {
+	        $oConverter = new core\Converter('date', $df_fin);
+	        $this->df_fin =$oConverter->toPg();
+	    } else {
+	        $this->df_fin = $df_fin;
+	    }
 	}
 	/**
 	 * Recupera l'atribut sorganiza de Congreso
@@ -454,7 +461,7 @@ class Congreso Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut scongreso de Congreso
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosCongreso() {
 		$nom_tabla = $this->getNomTabla();
@@ -468,7 +475,7 @@ class Congreso Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut slugar de Congreso
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosLugar() {
 		$nom_tabla = $this->getNomTabla();
@@ -482,7 +489,7 @@ class Congreso Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut df_ini de Congreso
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosF_ini() {
 		$nom_tabla = $this->getNomTabla();
@@ -495,7 +502,7 @@ class Congreso Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut df_fin de Congreso
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosF_fin() {
 		$nom_tabla = $this->getNomTabla();
@@ -508,7 +515,7 @@ class Congreso Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sorganiza de Congreso
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosOrganiza() {
 		$nom_tabla = $this->getNomTabla();
@@ -522,7 +529,7 @@ class Congreso Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut itipo de Congreso
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTipo() {
 		$nom_tabla = $this->getNomTabla();

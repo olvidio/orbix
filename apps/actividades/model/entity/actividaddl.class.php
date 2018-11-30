@@ -232,7 +232,7 @@ class ActividadDl Extends ActividadAll {
 	 *
 	 * @param array $aDades
 	 */
-	function setAllAtributes($aDades) {
+	function setAllAtributes($aDades,$convert=FALSE) {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_activ',$aDades)) $this->setId_activ($aDades['id_activ']);
@@ -241,9 +241,9 @@ class ActividadDl Extends ActividadAll {
 		if (array_key_exists('nom_activ',$aDades)) $this->setNom_activ($aDades['nom_activ']);
 		if (array_key_exists('id_ubi',$aDades)) $this->setId_ubi($aDades['id_ubi']);
 		if (array_key_exists('desc_activ',$aDades)) $this->setDesc_activ($aDades['desc_activ']);
-		if (array_key_exists('f_ini',$aDades)) $this->setF_ini($aDades['f_ini']);
+		if (array_key_exists('f_ini',$aDades)) $this->setF_ini($aDades['f_ini'],$convert);
 		if (array_key_exists('h_ini',$aDades)) $this->setH_ini($aDades['h_ini']);
-		if (array_key_exists('f_fin',$aDades)) $this->setF_fin($aDades['f_fin']);
+		if (array_key_exists('f_fin',$aDades)) $this->setF_fin($aDades['f_fin'],$convert);
 		if (array_key_exists('h_fin',$aDades)) $this->setH_fin($aDades['h_fin']);
 		if (array_key_exists('tipo_horario',$aDades)) $this->setTipo_horario($aDades['tipo_horario']);
 		if (array_key_exists('precio',$aDades)) $this->setPrecio($aDades['precio']);

@@ -1,6 +1,7 @@
 <?php
 namespace profesores\model\entity;
 use core;
+use web;
 /**
  * Fitxer amb la Classe que accedeix a la taula d_profesor_ampliacion
  *
@@ -63,7 +64,7 @@ class ProfesorAmpliacion Extends core\ClasePropiedades {
 	/**
 	 * F_nombramiento de ProfesorAmpliacion
 	 *
-	 * @var date
+	 * @var web\DateTimeLocal
 	 */
 	 private $df_nombramiento;
 	/**
@@ -75,7 +76,7 @@ class ProfesorAmpliacion Extends core\ClasePropiedades {
 	/**
 	 * F_cese de ProfesorAmpliacion
 	 *
-	 * @var date
+	 * @var web\DateTimeLocal
 	 */
 	 private $df_cese;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
@@ -227,16 +228,16 @@ class ProfesorAmpliacion Extends core\ClasePropiedades {
 	 *
 	 * @param array $aDades
 	 */
-	function setAllAtributes($aDades) {
+	function setAllAtributes($aDades,$convert=FALSE) {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_item',$aDades)) $this->setId_item($aDades['id_item']);
 		if (array_key_exists('id_nom',$aDades)) $this->setId_nom($aDades['id_nom']);
 		if (array_key_exists('id_asignatura',$aDades)) $this->setId_asignatura($aDades['id_asignatura']);
 		if (array_key_exists('escrito_nombramiento',$aDades)) $this->setEscrito_nombramiento($aDades['escrito_nombramiento']);
-		if (array_key_exists('f_nombramiento',$aDades)) $this->setF_nombramiento($aDades['f_nombramiento']);
+		if (array_key_exists('f_nombramiento',$aDades)) $this->setF_nombramiento($aDades['f_nombramiento'],$convert);
 		if (array_key_exists('escrito_cese',$aDades)) $this->setEscrito_cese($aDades['escrito_cese']);
-		if (array_key_exists('f_cese',$aDades)) $this->setF_cese($aDades['f_cese']);
+		if (array_key_exists('f_cese',$aDades)) $this->setF_cese($aDades['f_cese'],$convert);
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
@@ -344,21 +345,24 @@ class ProfesorAmpliacion Extends core\ClasePropiedades {
 	/**
 	 * Recupera l'atribut df_nombramiento de ProfesorAmpliacion
 	 *
-	 * @return date df_nombramiento
+	 * @return web\DateTimeLocal df_nombramiento
 	 */
 	function getF_nombramiento() {
-		if (!isset($this->df_nombramiento)) {
-			$this->DBCarregar();
-		}
-		return $this->df_nombramiento;
+	    if (!isset($this->df_nombramiento)) {
+	        $this->DBCarregar();
+	    }
+	    if (empty($this->df_nombramiento)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_nombramiento);
+	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_nombramiento de ProfesorAmpliacion
-	 *
-	 * @param date df_nombramiento='' optional
-	 */
-	function setF_nombramiento($df_nombramiento='') {
-		$this->df_nombramiento = $df_nombramiento;
+	 * estableix el valor de l'atribut df_nombramiento de ProfesorAmpliacion	* Si df_nombramiento es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_nombramiento debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_nombramiento='' optional.	* @param boolean convert=true optional. Si es false, df_nombramiento debe ser un string en formato ISO (Y-m-d).	 */
+	function setF_nombramiento($df_nombramiento='',$convert=true) {
+		if ($convert === true && !empty($df_nombramiento)) {
+	        $oConverter = new core\Converter('date', $df_nombramiento);
+	        $this->df_nombramiento =$oConverter->toPg();
+	    } else {
+	        $this->df_nombramiento = $df_nombramiento;
+	    }
 	}
 	/**
 	 * Recupera l'atribut sescrito_cese de ProfesorAmpliacion
@@ -382,21 +386,24 @@ class ProfesorAmpliacion Extends core\ClasePropiedades {
 	/**
 	 * Recupera l'atribut df_cese de ProfesorAmpliacion
 	 *
-	 * @return date df_cese
+	 * @return web\DateTimeLocal df_cese
 	 */
 	function getF_cese() {
-		if (!isset($this->df_cese)) {
-			$this->DBCarregar();
-		}
-		return $this->df_cese;
+	    if (!isset($this->df_cese)) {
+	        $this->DBCarregar();
+	    }
+	    if (empty($this->df_cese)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_cese);
+	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_cese de ProfesorAmpliacion
-	 *
-	 * @param date df_cese='' optional
-	 */
-	function setF_cese($df_cese='') {
-		$this->df_cese = $df_cese;
+	 * estableix el valor de l'atribut df_cese de ProfesorAmpliacion	* Si df_cese es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_cese debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_cese='' optional.	* @param boolean convert=true optional. Si es false, df_cese debe ser un string en formato ISO (Y-m-d).	 */
+	function setF_cese($df_cese='',$convert=true) {
+		if ($convert === true && !empty($df_cese)) {
+	        $oConverter = new core\Converter('date', $df_cese);
+	        $this->df_cese =$oConverter->toPg();
+	    } else {
+	        $this->df_cese = $df_cese;
+	    }
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
@@ -421,7 +428,7 @@ class ProfesorAmpliacion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_asignatura de ProfesorAmpliacion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_asignatura() {
 		$nom_tabla = $this->getNomTabla();
@@ -438,7 +445,7 @@ class ProfesorAmpliacion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sescrito_nombramiento de ProfesorAmpliacion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosEscrito_nombramiento() {
 		$nom_tabla = $this->getNomTabla();
@@ -452,7 +459,7 @@ class ProfesorAmpliacion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut df_nombramiento de ProfesorAmpliacion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosF_nombramiento() {
 		$nom_tabla = $this->getNomTabla();
@@ -465,7 +472,7 @@ class ProfesorAmpliacion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sescrito_cese de ProfesorAmpliacion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosEscrito_cese() {
 		$nom_tabla = $this->getNomTabla();
@@ -479,7 +486,7 @@ class ProfesorAmpliacion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut df_cese de ProfesorAmpliacion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosF_cese() {
 		$nom_tabla = $this->getNomTabla();
@@ -489,4 +496,3 @@ class ProfesorAmpliacion Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 }
-?>

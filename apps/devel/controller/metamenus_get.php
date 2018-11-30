@@ -21,7 +21,7 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
 		$oMetamenu=new menus\Metamenu();
 		// para modificar los valores de un menu.
 		$oMetamenu->setId_menu($Qid_menu);
-		$row = $oMetamenu->getTot();
+		//$row = $oMetamenu->getTot();
 	} else {
 		$row['id_menu']='';
 		$row['orden']='';
@@ -79,7 +79,10 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
 	echo"<ul>";
 	foreach ($oMetamenus as $oMetamenu) {
 		$m++;
-		extract($oMetamenu->getTot());
+		$descripcion = $oMetamenu->getDescripcion();
+		$modulo = $oMetamenu->getModulo();
+		$url = $oMetamenu->getUrl();
+		$id_metamenu = $oMetamenu->getId_metamenu();
 		//echo "m: $perm_menu,l: $perm_login, ";
 		// hago las rutas absolutas, en vez de relativas:
 		//if (!empty($url)) $url=core\ConfigGlobal::getWeb()."/$url";
@@ -91,4 +94,3 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
 	echo $txt;
 	echo "</li></ul></li></ul>";
 }
-?>

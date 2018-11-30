@@ -1,6 +1,7 @@
 <?php
 namespace ubis\model\entity;
 use core;
+use web;
 /**
  * Classe que implementa l'entitat u_centros
  *
@@ -205,7 +206,7 @@ class CentroEllas Extends Ubi {
 	 *
 	 * @param array $aDades
 	 */
-	function setAllAtributes($aDades) {
+	function setAllAtributes($aDades,$convert=FALSE) {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('tipo_ubi',$aDades)) $this->setTipo_ubi($aDades['tipo_ubi']);
@@ -215,7 +216,7 @@ class CentroEllas Extends Ubi {
 		if (array_key_exists('pais',$aDades)) $this->setPais($aDades['pais']);
 		if (array_key_exists('region',$aDades)) $this->setRegion($aDades['region']);
 		if (array_key_exists('status',$aDades)) $this->setStatus($aDades['status']);
-		if (array_key_exists('f_status',$aDades)) $this->setF_status($aDades['f_status']);
+		if (array_key_exists('f_status',$aDades)) $this->setF_status($aDades['f_status'],$convert);
 		if (array_key_exists('sv',$aDades)) $this->setSv($aDades['sv']);
 		if (array_key_exists('sf',$aDades)) $this->setSf($aDades['sf']);
 		if (array_key_exists('tipo_ctr',$aDades)) $this->setTipo_ctr($aDades['tipo_ctr']);
@@ -373,21 +374,24 @@ class CentroEllas Extends Ubi {
 	/**
 	 * Recupera l'atribut df_status de Centro
 	 *
-	 * @return date df_status
+	 * @return web\DateTimeLocal df_status
 	 */
 	function getF_status() {
-		if (!isset($this->df_status)) {
-			$this->DBCarregar();
-		}
-		return $this->df_status;
+	    if (!isset($this->df_status)) {
+	        $this->DBCarregar();
+	    }
+	    if (empty($this->df_status)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_status);
+	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_status de Centro
-	 *
-	 * @param date df_status='' optional
-	 */
-	function setF_status($df_status='') {
-		$this->df_status = $df_status;
+	 * estableix el valor de l'atribut df_status de Centro	* Si df_status es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_status debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_status='' optional.	* @param boolean convert=true optional. Si es false, df_status debe ser un string en formato ISO (Y-m-d).	 */
+	function setF_status($df_status='',$convert=true) {
+		if ($convert === true && !empty($df_status)) {
+	        $oConverter = new core\Converter('date', $df_status);
+	        $this->df_status =$oConverter->toPg();
+	    } else {
+	        $this->df_status = $df_status;
+	    }
 	}
 	/**
 	 * Recupera l'atribut bsv de Centro
@@ -505,4 +509,3 @@ class CentroEllas Extends Ubi {
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 }
-?>

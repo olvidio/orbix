@@ -1,6 +1,7 @@
 <?php
 namespace dbextern\model\entity;
 use core;
+use web;
 
 class PersonaListas Extends core\ClasePropiedades {
 	/* ATRIBUTS ----------------------------------------------------------------- */
@@ -66,7 +67,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	/**
 	 * Fecha_Naci de Listas
 	 *
-	 * @var date
+	 * @var web\DateTimeLocal
 	 */
 	 private $dFecha_Naci;
 	/**
@@ -568,7 +569,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	/**
 	 * Recupera l'atribut dFecha_Naci de Listas
 	 *
-	 * @return date dFecha_Naci
+	 * @return string date dFecha_Naci
 	 */
 	function getFecha_Naci() {
 		if (!isset($this->dFecha_Naci)) {
@@ -775,7 +776,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sApeNom de Listas
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosApeNom() {
 		$nom_tabla = $this->getNomTabla();
@@ -787,7 +788,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sDl de Listas
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosDl() {
 		$nom_tabla = $this->getNomTabla();
@@ -799,7 +800,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sCtr de Listas
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosCtr() {
 		$nom_tabla = $this->getNomTabla();
@@ -811,7 +812,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sLugar_Naci de Listas
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosLugar_Naci() {
 		$nom_tabla = $this->getNomTabla();
@@ -823,19 +824,20 @@ class PersonaListas Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut dFecha_Naci de Listas
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosFecha_Naci() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'Fecha_Naci'));
 		$oDatosCampo->setEtiqueta(_("fecha de nacimiento"));
+        $oDatosCampo->setTipo('fecha');
 		return $oDatosCampo;
 	}
 	/**
 	 * Recupera les propietats de l'atribut sEmail de Listas
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosEmail() {
 		$nom_tabla = $this->getNomTabla();
@@ -847,7 +849,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sTfno_Movil de Listas
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTfno_Movil() {
 		$nom_tabla = $this->getNomTabla();
@@ -859,7 +861,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sCe de Listas
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosCe() {
 		$nom_tabla = $this->getNomTabla();

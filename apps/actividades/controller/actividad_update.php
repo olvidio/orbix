@@ -29,14 +29,14 @@ function poner_asistencia($id_activ,$sacd) {
 	$insert="INSERT INTO d_asistentes_activ
 			              (id_activ,id_nom,propio)
 						  VALUES ('$id_activ','$sacd','f')";
-	$oDBSt_q=$oDB->exec($insert);
+	$oDB->exec($insert);
 }
 
 function quitar_asistencia($id_activ,$sacd) {
 	$delete="DELETE FROM d_asistentes_activ
 			        WHERE id_activ='$id_activ' AND id_nom='$sacd' ";
 	//echo "sql: $delete";
-	$oDBSt_q=$oDB->exec($delete);
+	$oDB->exec($delete);
 }
 
 function borrar_actividad($id_activ) {
@@ -60,7 +60,7 @@ function borrar_actividad($id_activ) {
 	} else {
 		if ($id_tabla == 'dl') {
 			// No se puede eliminar una actividad de otra dl. Hay que borrarla como importada
-			$oImportada = new actividades\Importar($id_activ);
+			$oImportada = new actividades\Importada($id_activ);
 			$oImportada->DBEliminar();
 		} else { // de otras dl en resto
 			$oActividad->setStatus(4); // la pongo en estado borrable
@@ -79,7 +79,7 @@ case 'publicar':
 	$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 	if (!empty($a_sel)) { // puedo seleccionar más de uno.
 		foreach ($a_sel as $id) {
-			$id_activ=strtok($id,'#');
+		    $id_activ = (integer) strtok($id,'#');
 			$oActividad = new actividades\Actividad($id_activ);
 			$oActividad->DBCarregar();
 			$oActividad->setPublicado('t');
@@ -94,9 +94,9 @@ case 'importar':
 	$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 	if (!empty($a_sel)) { // puedo seleccionar más de uno.
 		foreach ($a_sel as $id) {
-			$id_activ=strtok($id,'#');
-			$oImportar = new actividades\Importar($id_activ);
-			if ($oImportar->DBGuardar() === false) {
+		    $id_activ = (integer) strtok($id,'#');
+			$oImportada = new actividades\Importada($id_activ);
+			if ($oImportada->DBGuardar() === false) {
 				echo _("hay un error, no se ha importado");
 			}
 		}
@@ -182,13 +182,12 @@ case "nuevo":
 	$oActividad->setPlazas($Qplazas);
 	if ($oActividad->DBGuardar() === false) { 
 		echo '<br>'._("hay un error, no se ha guardado");
-		$err = 1;
 	}
 	// si estoy creando una actividad de otra dl es porque la quiero importar.
 	if ($dele != core\ConfigGlobal::mi_dele()) {
 		$id_activ = $oActividad->getId_activ();
-		$oImportar = new actividades\Importar($id_activ);
-		if ($oImportar->DBGuardar() === false) {
+		$oImportada = new actividades\Importada($id_activ);
+		if ($oImportada->DBGuardar() === false) {
 			echo _("hay un error, no se ha importado");
 		}
 	}
@@ -196,7 +195,7 @@ case "nuevo":
 case "duplicar": // duplicar la actividad.
 	$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 	if (!empty($a_sel)) { 
-		$id_activ=strtok($a_sel[0],'#');
+	    $id_activ = (integer) strtok($a_sel[0],'#');
 		$oActividadAll = new actividades\Actividad($id_activ);
 		$dl = $oActividadAll->getDl_org();
 		if ($dl == core\ConfigGlobal::mi_dele()) {
@@ -219,7 +218,7 @@ case "eliminar": // Eliminar la actividad.
 	$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 	if (!empty($a_sel)) { // puedo seleccionar más de uno.
 		foreach ($a_sel as $id) {
-			$id_activ=strtok($id,'#');
+		    $id_activ = (integer) strtok($id,'#');
 			borrar_actividad($id_activ);
 		}
 	}

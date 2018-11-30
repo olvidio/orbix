@@ -111,7 +111,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	/**
 	 * Propietario de AsistentePub
 	 *
-	 * @var texet
+	 * @var string
 	 */
 	 protected $spropietario;
 	/**
@@ -127,9 +127,9 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * para saber el nombre de la clase que toca según mi dl, y la dl de la 
 	 * actividad a la que asisto
 	 * 
-	 * @param type $obj_persona
-	 * @param type $dl
-	 * @param type $id_tabla
+	 * @param string $obj_persona
+	 * @param string $dl
+	 * @param integer $id_tabla
 	 */
 	static function getClaseAsistente($obj_persona,$dl,$id_tabla) {
 		if ($dl == core\ConfigGlobal::mi_dele()) {
@@ -733,7 +733,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bpropio de AsistentePub
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPropio() {
 		$nom_tabla = $this->getNomTabla();
@@ -745,7 +745,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut best_ok de AsistentePub
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosEst_ok() {
 		$nom_tabla = $this->getNomTabla();
@@ -757,7 +757,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bcfi de AsistentePub
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosCfi() {
 		$nom_tabla = $this->getNomTabla();
@@ -769,7 +769,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut icfi_con de AsistentePub
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosCfi_con() {
 		$nom_tabla = $this->getNomTabla();
@@ -781,7 +781,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bfalta de AsistentePub
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosFalta() {
 		$nom_tabla = $this->getNomTabla();
@@ -793,7 +793,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sencargo de AsistentePub
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosEncargo() {
 		$nom_tabla = $this->getNomTabla();
@@ -805,7 +805,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut scama de AsistentePub
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosCama() {
 		$nom_tabla = $this->getNomTabla();
@@ -817,7 +817,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sobserv de AsistentePub
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosObserv() {
 		$nom_tabla = $this->getNomTabla();
@@ -829,7 +829,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sobserv_est de AsistentePub
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosObserv_est() {
 		$nom_tabla = $this->getNomTabla();
@@ -841,7 +841,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iplaza de AsistentePub
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPlaza() {
 		$nom_tabla = $this->getNomTabla();
@@ -853,7 +853,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut spropietario de AsistentePub
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPropietario() {
 		$nom_tabla = $this->getNomTabla();

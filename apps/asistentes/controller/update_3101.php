@@ -46,13 +46,13 @@ $Qpau = (string) \filter_input(INPUT_POST,'pau');
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
 	if ($Qpau=="p") {
-		$Qid_activ=strtok($a_sel[0],"#");
-		$Qid_asignatura=strtok("#");
+		$Qid_activ = (integer) strtok($a_sel[0],"#");
+		$Qid_asignatura = (integer) strtok("#");
 		$Qid_nom = (integer) \filter_input(INPUT_POST,'id_pau');
 	}
 	if ($Qpau=="a") {
-		$Qid_nom=strtok($a_sel[0],"#");
-		$Qid_asignatura=strtok("#");
+		$Qid_nom = (integer) strtok($a_sel[0],"#");
+		$Qid_asignatura = (integer) strtok("#");
 		$Qid_activ = (integer) \filter_input(INPUT_POST,'id_pau');
 	}
 } else { // desde el formulario
@@ -185,7 +185,7 @@ switch ($Qmod) {
 		$arr = json_decode($Qlista_json);
 		foreach ($arr as $obj) {
 			$id_nom = $obj->value;
-			$id_nom = strtok($id_nom,'#'); // los cargos tienen más datos
+			$id_nom = (integer) strtok($id_nom,'#'); // los cargos tienen más datos
 			$msg_err .= plaza($id_nom);
 		}
 		break;

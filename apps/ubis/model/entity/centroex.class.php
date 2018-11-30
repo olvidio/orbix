@@ -183,7 +183,7 @@ class CentroEx Extends Centro {
 	 *
 	 * @param array $aDades
 	 */
-	function setAllAtributes($aDades) {
+	function setAllAtributes($aDades,$convert=FALSE) {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('tipo_ubi',$aDades)) $this->setTipo_ubi($aDades['tipo_ubi']);
@@ -193,7 +193,7 @@ class CentroEx Extends Centro {
 		if (array_key_exists('pais',$aDades)) $this->setPais($aDades['pais']);
 		if (array_key_exists('region',$aDades)) $this->setRegion($aDades['region']);
 		if (array_key_exists('status',$aDades)) $this->setStatus($aDades['status']);
-		if (array_key_exists('f_status',$aDades)) $this->setF_status($aDades['f_status']);
+		if (array_key_exists('f_status',$aDades)) $this->setF_status($aDades['f_status'],$convert);
 		if (array_key_exists('sv',$aDades)) $this->setSv($aDades['sv']);
 		if (array_key_exists('sf',$aDades)) $this->setSf($aDades['sf']);
 		if (array_key_exists('tipo_ctr',$aDades)) $this->setTipo_ctr($aDades['tipo_ctr']);

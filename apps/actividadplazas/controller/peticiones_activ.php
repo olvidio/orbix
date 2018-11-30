@@ -29,7 +29,7 @@ if (isset($_POST['stack'])) {
 
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-	$Qid_nom = strtok($a_sel[0],"#");
+    $Qid_nom = (integer) strtok($a_sel[0],"#");
 	$Qna=strtok("#");
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$a_sel,1);
@@ -69,13 +69,13 @@ switch ($Qsactividad) {
 	case 'ca':
 	case 'cv':
 		$any=  core\ConfigGlobal::any_final_curs('est');
-		$inicurs=core\curso_est("inicio",$any,"est");
-		$fincurs=core\curso_est("fin",$any,"est");
+		$inicurs=core\curso_est("inicio",$any,"est")->format('Y-m-d');
+		$fincurs=core\curso_est("fin",$any,"est")->format('Y-m-d');
 		break;
 	case 'crt':
 		$any=  core\ConfigGlobal::any_final_curs('crt');
-		$inicurs=core\curso_est("inicio",$any,"crt");
-		$fincurs=core\curso_est("fin",$any,"crt");
+		$inicurs=core\curso_est("inicio",$any,"crt")->format('Y-m-d');
+		$fincurs=core\curso_est("fin",$any,"crt")->format('Y-m-d');
 		break;
 }
 

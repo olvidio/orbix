@@ -235,7 +235,7 @@ class GestorResumenPlazas {
 	 *	ubis\model\entity\Ubi::NewUbi($id_ubi);
 	 * 	ubis\model\entity\GestorDelegacion();
 	 * 
-	 * @param biginteger $id_activ
+	 * @param integer $id_activ
 	 * @return array $a_plazas
 	 * 
 	 */

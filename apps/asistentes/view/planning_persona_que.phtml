@@ -12,7 +12,7 @@ fnjs_ver_planning = function(formulario,n) {
 	
 	if (err == 1) {
 		if (!f) {
-			alert('<?= _("falta definir un periodo") ?>');
+			alert("<?= _("falta definir un periodo") ?>");
 		} else {
 			alert("<?= _("debe inrtoducir las fechas inicio-fin del periodo") ?>"); 
 		}
@@ -28,7 +28,7 @@ fnjs_left_side_hide();
 	<?= $oHash->getCamposHtml(); ?>
 	<table>
 		<tr><th class=titulo_inv colspan="2">
-		<?= core\strtoupper_dlb(_("búsqueda de personas en la obj_pau")); ?></th></tr>
+		<?= core\strtoupper_dlb(sprintf(_("búsqueda de personas %s"),$personas_txt)); ?></th></tr>
 		<tr>
 		<td class=etiqueta><?= ucfirst(_("nombre")); ?></td> 
 		<td><input class=contenido id="nombre" name="nombre" size="30"></td></tr>

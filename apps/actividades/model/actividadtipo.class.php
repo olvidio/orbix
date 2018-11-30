@@ -8,7 +8,6 @@
 
 namespace actividades\model;
 
-use usuarios\model\entity as usuarios;
 use core;
 use web;
 
@@ -28,7 +27,6 @@ class ActividadTipo {
 	private $id_tipo_activ;
 			
 	public function getHtml() {
-		$oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 		$isfsv=core\ConfigGlobal::mi_sfsv();
 
 		$aSfsv=array(1=>'sv',2=>'sf');

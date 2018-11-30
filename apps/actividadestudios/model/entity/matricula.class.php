@@ -1,6 +1,7 @@
 <?php
 namespace actividadestudios\model\entity;
 use core;
+use notas\model\entity\Nota;
 /**
  * Fitxer amb la Classe que accedeix a la taula d_matriculas_activ
  *
@@ -555,7 +556,7 @@ class Matricula Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_schema de Matricula
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_schema() {
 		$nom_tabla = $this->getNomTabla();
@@ -567,7 +568,7 @@ class Matricula Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_nivel de Matricula
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_nivel() {
 		$nom_tabla = $this->getNomTabla();
@@ -579,7 +580,7 @@ class Matricula Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_situacion de Matricula
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_situacion() {
 		$nom_tabla = $this->getNomTabla();
@@ -591,7 +592,7 @@ class Matricula Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bpreceptor de Matricula
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPreceptor() {
 		$nom_tabla = $this->getNomTabla();
@@ -603,7 +604,7 @@ class Matricula Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_preceptor de Matricula
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_preceptor() {
 		$nom_tabla = $this->getNomTabla();
@@ -615,7 +616,7 @@ class Matricula Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut inota_num de PersonaNota
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNota_num() {
 		$nom_tabla = $this->getNomTabla();
@@ -627,7 +628,7 @@ class Matricula Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut inota_max de PersonaNota
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNota_max() {
 		$nom_tabla = $this->getNomTabla();
@@ -639,7 +640,7 @@ class Matricula Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sacta de PersonaNota
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosActa() {
 		$nom_tabla = $this->getNomTabla();
@@ -648,4 +649,3 @@ class Matricula Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 }
-?>

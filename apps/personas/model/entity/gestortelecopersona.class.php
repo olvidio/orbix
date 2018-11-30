@@ -78,8 +78,9 @@ class GestorTelecoPersona Extends core\ClaseGestor {
 							'id_nom' => $aDades['id_nom']);
 			switch ($nom_tabla) {
 				case 'd_teleco_personas':
-					$oTelecoPersona= new TelecoPersona($a_pkey);
-					break;
+        			$sClauError = 'GestorTelecoPersona.llistar';
+					exit("$sClauError, __LINE__, __FILE__");
+		          	break;
 				case 'd_teleco_personas_dl':
 					$oTelecoPersona= new TelecoPersonaDl($a_pkey);
 					break;
@@ -96,4 +97,3 @@ class GestorTelecoPersona Extends core\ClaseGestor {
 	/* METODES PROTECTED --------------------------------------------------------*/
 	/* METODES GET i SET --------------------------------------------------------*/
 }
-?>

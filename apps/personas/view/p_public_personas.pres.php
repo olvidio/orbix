@@ -19,7 +19,9 @@
 */
 
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("global_header.inc");
+	use core\ConfigGlobal;
+
+require_once ("global_header.inc");
 // Arxivos requeridos por esta url **********************************************
 
 // Crea los objectos de uso global **********************************************

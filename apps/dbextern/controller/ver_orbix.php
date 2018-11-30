@@ -81,7 +81,7 @@ if (empty($id)) {
 		$a_persona_listas['nx1'] = $oPersonaListas->getNx1();
 		$a_persona_listas['apellido2'] = $oPersonaListas->getApellido2();
 		$a_persona_listas['nx2'] = $oPersonaListas->getNx2();
-		$a_persona_listas['f_nacimiento'] = $oPersonaListas->getF_nacimiento();
+		$a_persona_listas['f_nacimiento'] = $oPersonaListas->getF_nacimiento()->getFromLocal();
 
 		// incremento antes para empezar en 1 y no en 0.
 		$i++;

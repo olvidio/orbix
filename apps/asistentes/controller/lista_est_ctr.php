@@ -33,7 +33,7 @@ $oPosicion->recordar();
 
 //generamos el periodo de la búsqueda de actividades
 //en función de las condiciones que tengamos:
-$hoy = date('d/m/Y');
+$oHoy = new web\DateTimeLocal();
 
 $Qn_agd = (string) \filter_input(INPUT_POST, 'n_agd');
 $Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
@@ -55,8 +55,8 @@ if (empty($Qperiodo) || $Qperiodo == 'otro') {
 	$oPeriodo = new web\Periodo();
 	$oPeriodo->setAny($any);
 	$oPeriodo->setPeriodo($Qperiodo);
-	$inicio = $oPeriodo->getF_ini();
-	$fin = $oPeriodo->getF_fin();
+	$inicio = $oPeriodo->getF_ini_iso();
+	$fin = $oPeriodo->getF_fin_iso();
 }
 
 
@@ -159,13 +159,9 @@ foreach ($cCentros as $oCentroDl) {
 			$oActividad = new actividades\Actividad($id_activ);
 			$nom_activ=$oActividad->getNom_activ();
 
-			$f_ini=$oActividad->getF_ini();
+			$oF_ini = $oActividad->getF_ini();
 			// los que ya lo han hecho:
-			list($dia,$mes,$any) = preg_split('/[:\/\.-]/', $f_ini );
-			$ini=mktime(0,0,0,$mes,$dia,$any);
-			list($dia_h,$mes_h,$any_h) = preg_split('/[:\/\.-]/', $hoy );
-			$ini_h=mktime(0,0,0,$mes_h,$dia_h,$any_h);
-			if ($ini<$ini_h) { 
+			if ($oF_ini < $oHoy) { 
 				$nom_activ=_("ya lo ha hecho");
 				$asignaturas='';
 			} else {

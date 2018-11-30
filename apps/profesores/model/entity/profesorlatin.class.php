@@ -283,7 +283,7 @@ class ProfesorLatin Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut blatin de ProfesorLatin
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosLatin() {
 		$nom_tabla = $this->getNomTabla();

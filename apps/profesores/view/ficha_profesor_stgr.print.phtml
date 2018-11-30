@@ -1,5 +1,6 @@
 <?php
 use asignaturas\model\entity as asignaturas;
+use profesores\model\entity\Congreso;
 ?>
 <html>
 <head>
@@ -79,8 +80,11 @@ if (!empty($ampliacion) && is_array($ampliacion)) {
 <tr><td class=cabecera><?= _("tema") ?></td><td class=cabecera><?= _("lugar") ?></td><td class=cabecera><?= _("inicio") ?></td><td class=cabecera><?= _("fin") ?></td></tr>
 <?php
 foreach($cProfesorCongresos as $oProfesorCongreso) {
-	$row = $oProfesorCongreso->getTot();
-	echo "<tr><td>${row['congreso']}</td><td>${row['lugar']}</td><td>${row['f_ini']}</td><td>${row['f_fin']}</td></tr>";
+	$congreso = $oProfesorCongreso->getCongreso();
+	$lugar = $oProfesorCongreso->getLugar();
+	$f_ini = $oProfesorCongreso->getF_ini()->getFromLocal();
+	$f_fin = $oProfesorCongreso->getF_fin()->getFromLocal();
+	echo "<tr><td>$congreso</td><td>$lugar</td><td>$f_ini</td><td>$f_fin</td></tr>";
 }
 ?>
 </table>
@@ -89,12 +93,13 @@ foreach($cProfesorCongresos as $oProfesorCongreso) {
 <tr><td class=cabecera><?= _("curso") ?></td><td class=cabecera><?= _("asignatura") ?></td><td class=cabecera><?= _("modo") ?></td></tr>
 <?php
 foreach($cDocencias as $oDocencia) {
-	$row = $oDocencia->getTot();
+    $id_asignatura = $oDocencia->getId_asignatura();
+    $tipo = $oDocencia->getTipo();
+    $curso_inicio = $oDocencia->getCurso_inicio();
 	$array_tipo = $oDocencia->getDatosTipo()->getLista();
-	$oAsignatura = new asignaturas\Asignatura($row['id_asignatura']);
+	$oAsignatura = new asignaturas\Asignatura($id_asignatura);
 	$nombre_corto = $oAsignatura->getNombre_corto();
-	$modo=$array_tipo[$row['tipo']];
-	$curso_inicio = $row['curso_inicio'];
+	$modo=$array_tipo[$tipo];
 	$curso_fin = $curso_inicio +1;
 	echo "<tr><td>$curso_inicio - $curso_fin</td><td>$nombre_corto</td><td>$modo</td></tr>";
 }

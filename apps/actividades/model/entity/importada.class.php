@@ -19,25 +19,25 @@ use core;
  * @version 1.0
  * @created 04/02/2011
  */
-class Importar Extends core\ClasePropiedades {
+class Importada Extends core\ClasePropiedades {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/**
-	 * aPrimary_key de Importar
+	 * aPrimary_key de Importada
 	 *
 	 * @var array
 	 */
 	 private $aPrimary_key;
 
 	/**
-	 * aDades de Importar
+	 * aDades de Importada
 	 *
 	 * @var array
 	 */
 	 private $aDades;
 
 	/**
-	 * Id_activ de Importar
+	 * Id_activ de Importada
 	 *
 	 * @var integer
 	 */
@@ -91,12 +91,12 @@ class Importar Extends core\ClasePropiedades {
 			$campos="(id_activ)";
 			$valores="(:id_activ)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-				$sClauError = 'Importar.insertar.prepare';
+				$sClauError = 'Importada.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				if ($oDblSt->execute($aDades) === false) {
-					$sClauError = 'Importar.insertar.execute';
+					$sClauError = 'Importada.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
@@ -115,7 +115,7 @@ class Importar Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iid_activ)) {
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_activ='$this->iid_activ'")) === false) {
-				$sClauError = 'Importar.carregar';
+				$sClauError = 'Importada.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
@@ -144,7 +144,7 @@ class Importar Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_activ='$this->iid_activ'")) === false) {
-			$sClauError = 'Importar.eliminar';
+			$sClauError = 'Importada.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
@@ -167,7 +167,7 @@ class Importar Extends core\ClasePropiedades {
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/**
-	 * Recupera tots els atributs de Importar en un array
+	 * Recupera tots els atributs de Importada en un array
 	 *
 	 * @return array aDades
 	 */
@@ -179,7 +179,7 @@ class Importar Extends core\ClasePropiedades {
 	}
 
 	/**
-	 * Recupera las claus primàries de Importar en un array
+	 * Recupera las claus primàries de Importada en un array
 	 *
 	 * @return array aPrimary_key
 	 */
@@ -191,7 +191,7 @@ class Importar Extends core\ClasePropiedades {
 	}
 
 	/**
-	 * Recupera l'atribut iid_activ de Importar
+	 * Recupera l'atribut iid_activ de Importada
 	 *
 	 * @return integer iid_activ
 	 */
@@ -202,7 +202,7 @@ class Importar Extends core\ClasePropiedades {
 		return $this->iid_activ;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_activ de Importar
+	 * estableix el valor de l'atribut iid_activ de Importada
 	 *
 	 * @param integer iid_activ
 	 */

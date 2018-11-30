@@ -1,6 +1,7 @@
 <?php
 namespace ubis\model\entity;
 use core;
+use web;
 /**
  * Classe que implementa l'entitat u_direcciones_global
  *
@@ -72,7 +73,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	/**
 	 * F_direccion de Direccion
 	 *
-	 * @var date
+	 * @var web\DateTimeLocal
 	 */
 	 protected $df_direccion;
 	/**
@@ -102,7 +103,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	/**
 	 * Plano_doc de Direccion
 	 *
-	 * @var bytea
+	 * @var string bytea
 	 */
 	 protected $iplano_doc;
 	/**
@@ -349,21 +350,24 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	/**
 	 * Recupera l'atribut df_direccion de Direccion
 	 *
-	 * @return date df_direccion
+	 * @return web\DateTimeLocal df_direccion
 	 */
 	function getF_direccion() {
-		if (!isset($this->df_direccion)) {
-			$this->DBCarregar();
-		}
-		return $this->df_direccion;
+	    if (!isset($this->df_direccion)) {
+	        $this->DBCarregar();
+	    }
+	    if (empty($this->df_direccion)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_direccion);
+	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_direccion de Direccion
-	 *
-	 * @param date df_direccion='' optional
-	 */
-	function setF_direccion($df_direccion='') {
-		$this->df_direccion = $df_direccion;
+	 * estableix el valor de l'atribut df_direccion de Direccion	* Si df_direccion es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_direccion debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_direccion='' optional.	* @param boolean convert=true optional. Si es false, df_direccion debe ser un string en formato ISO (Y-m-d).	 */
+	function setF_direccion($df_direccion='',$convert=true) {
+		if ($convert === true && !empty($df_direccion)) {
+	        $oConverter = new core\Converter('date', $df_direccion);
+	        $this->df_direccion =$oConverter->toPg();
+	    } else {
+	        $this->df_direccion = $df_direccion;
+	    }
 	}
 	/**
 	 * Recupera l'atribut sobserv de Direccion
@@ -629,7 +633,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sdireccion de Direccion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosDireccion() {
 		$nom_tabla = $this->getNomTabla();
@@ -641,7 +645,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sc_p de Direccion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosC_p() {
 		$nom_tabla = $this->getNomTabla();
@@ -653,7 +657,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut spoblacion de Direccion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPoblacion() {
 		$nom_tabla = $this->getNomTabla();
@@ -665,7 +669,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sprovincia de Direccion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosProvincia() {
 		$nom_tabla = $this->getNomTabla();
@@ -677,7 +681,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sa_p de Direccion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosA_p() {
 		$nom_tabla = $this->getNomTabla();
@@ -689,7 +693,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut spais de Direccion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPais() {
 		$nom_tabla = $this->getNomTabla();
@@ -701,19 +705,20 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut df_direccion de Direccion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosF_direccion() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_direccion'));
 		$oDatosCampo->setEtiqueta(_("fecha dirección"));
+        $oDatosCampo->setTipo('fecha');
 		return $oDatosCampo;
 	}
 	/**
 	 * Recupera les propietats de l'atribut sobserv de Direccion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosObserv() {
 		$nom_tabla = $this->getNomTabla();
@@ -725,7 +730,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bcp_dcha de Direccion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosCp_dcha() {
 		$nom_tabla = $this->getNomTabla();
@@ -737,7 +742,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut ilatitud de Direccion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosLatitud() {
 		$nom_tabla = $this->getNomTabla();
@@ -749,7 +754,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut ilongitud de Direccion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosLongitud() {
 		$nom_tabla = $this->getNomTabla();
@@ -761,7 +766,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iplano_doc de Direccion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPlano_doc() {
 		$nom_tabla = $this->getNomTabla();
@@ -773,7 +778,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut splano_extension de Direccion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPlano_extension() {
 		$nom_tabla = $this->getNomTabla();
@@ -785,7 +790,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut splano_nom de Direccion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPlano_nom() {
 		$nom_tabla = $this->getNomTabla();
@@ -797,7 +802,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut snom_sede de Direccion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNom_sede() {
 		$nom_tabla = $this->getNomTabla();

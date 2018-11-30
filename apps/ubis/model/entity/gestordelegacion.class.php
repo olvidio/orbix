@@ -1,6 +1,9 @@
 <?php
 namespace ubis\model\entity;
-use core;
+use core\ClaseGestor;
+use core\ConfigGlobal;
+use core\Condicion;
+use core\Set;
 use web;
 /**
  * GestorDelegacion
@@ -14,7 +17,7 @@ use web;
  * @created 20/11/2010
  */
 
-class GestorDelegacion Extends  core\ClaseGestor {
+class GestorDelegacion Extends ClaseGestor {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
@@ -41,7 +44,7 @@ class GestorDelegacion Extends  core\ClaseGestor {
 	 * @return object Una Llista de delegacions i regions per filtrar.
 	 */
 	function getListaDlURegionesFiltro() {
-		$sf = (core\ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
+		$sf = (ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		
@@ -66,7 +69,7 @@ class GestorDelegacion Extends  core\ClaseGestor {
 	 * @return object Una Llista de delegacions i regions.
 	 */
 	function getListaRegDele($bdl='t') {
-		$sf = (core\ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
+		$sf = (ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if ($bdl == 't') {
@@ -99,7 +102,7 @@ class GestorDelegacion Extends  core\ClaseGestor {
 	 * @return object Una Llista de delegacions i regions.
 	 */
 	function getListaDelegacionesURegiones($bdl='t') {
-		$sf = (core\ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
+		$sf = (ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if ($bdl == 't') {
@@ -198,9 +201,8 @@ class GestorDelegacion Extends  core\ClaseGestor {
 	 */
 	function getDelegacionesQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
-		$oDelegacionSet = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		$oDelegacionSet = new Set();
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorDelegacion.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -225,8 +227,8 @@ class GestorDelegacion Extends  core\ClaseGestor {
 	function getDelegaciones($aWhere=array(),$aOperators=array()) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		$oDelegacionSet = new core\Set();
-		$oCondicion = new core\Condicion();
+		$oDelegacionSet = new Set();
+		$oCondicion = new Condicion();
 		$aCondi = array();
 		foreach ($aWhere as $camp => $val) {
 			if ($camp === '_ordre') continue;
@@ -272,4 +274,3 @@ class GestorDelegacion Extends  core\ClaseGestor {
 	/* METODES GET i SET --------------------------------------------------------*/
 
 }
-?>

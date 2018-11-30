@@ -20,18 +20,6 @@ use function core\curso_est;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-/* Pongo en la variable $curso el periodo del curso */
-/*
-	$mes=date('m');
-$any=date('Y');
-if ($mes>9) { $any=$any+1; } 
-$inicurs = curso_est("inicio",$any);
-$fincurs = curso_est("fin",$any);
-
-$inicio = $inicurs;
-$fin = $fincurs;
-*/	
-	
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
 	$stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
@@ -59,8 +47,8 @@ $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 //periodo
 if (empty($Qperiodo) || $Qperiodo == 'otro') {
 	$any=  core\ConfigGlobal::any_final_curs('est');
-	$Qempiezamin=core\curso_est("inicio",$any,"est");
-	$Qempiezamax=core\curso_est("fin",$any,"est");
+	$Qempiezamin=core\curso_est("inicio",$any,"est")->format('Y-m-d');
+	$Qempiezamax=core\curso_est("fin",$any,"est")->format('Y-m-d');
 	$Qperiodo = 'curso_ca';
 	$inicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
 	$fin = empty($Qfin)? $Qempiezamax : $Qfin;
@@ -69,8 +57,8 @@ if (empty($Qperiodo) || $Qperiodo == 'otro') {
 	$any=empty($Qyear)? date('Y')+1 : $Qyear;
 	$oPeriodo->setAny($any);
 	$oPeriodo->setPeriodo($Qperiodo);
-	$inicio = $oPeriodo->getF_ini();
-	$fin = $oPeriodo->getF_fin();
+	$inicio = $oPeriodo->getF_ini_iso();
+	$fin = $oPeriodo->getF_fin_iso();
 }
 
 $aWhereActividad['f_ini'] = "'$inicio','$fin'";
@@ -134,7 +122,7 @@ foreach ($cMatriculas as $oMatricula) {
 
 	$oActividad = new actividades\Actividad($id_activ);
 	$nom_activ = $oActividad->getNom_activ();
-	$f_ini = $oActividad->getF_ini();
+	$f_ini = $oActividad->getF_ini()->getFromLocal();
 	
 	$oPersona = personas\Persona::newPersona($id_nom);
 	if (!is_object($oPersona)) {

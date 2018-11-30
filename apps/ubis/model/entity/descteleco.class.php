@@ -380,7 +380,7 @@ class DescTeleco Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iorden de DescTeleco
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosOrden() {
 		$nom_tabla = $this->getNomTabla();
@@ -392,7 +392,7 @@ class DescTeleco Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut stipo_teleco de DescTeleco
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTipo_teleco() {
 		$nom_tabla = $this->getNomTabla();
@@ -404,7 +404,7 @@ class DescTeleco Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sdesc_teleco de DescTeleco
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosDesc_teleco() {
 		$nom_tabla = $this->getNomTabla();
@@ -416,7 +416,7 @@ class DescTeleco Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bubi de DescTeleco
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosUbi() {
 		$nom_tabla = $this->getNomTabla();
@@ -428,7 +428,7 @@ class DescTeleco Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bpersona de DescTeleco
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPersona() {
 		$nom_tabla = $this->getNomTabla();

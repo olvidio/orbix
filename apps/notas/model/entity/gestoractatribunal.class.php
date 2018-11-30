@@ -90,7 +90,7 @@ class GestorActaTribunal Extends core\ClaseGestor {
 			if ($dl == core\ConfigGlobal::mi_dele()) {
 				$oActaTribunal= new ActaTribunalDl($a_pkey);
 			} else {
-				$oActaTribunal= new ActaTribunalEx($a_pkey);
+				//$oActaTribunal= new ActaTribunalEx($a_pkey);
 			}
 			$oActaTribunal->setAllAtributes($aDades);
 			$oActaTribunalSet->add($oActaTribunal);
@@ -162,4 +162,3 @@ class GestorActaTribunal Extends core\ClaseGestor {
 
 	/* METODES GET i SET --------------------------------------------------------*/
 }
-?>

@@ -53,15 +53,15 @@ if (empty($Qperiodo) || $Qperiodo == 'otro') {
 		case 'ca':
 		case 'cv':
 			$any=  core\ConfigGlobal::any_final_curs('est');
-			$Qempiezamin=core\curso_est("inicio",$any,"est");
-			$Qempiezamax=core\curso_est("fin",$any,"est");
+			$Qempiezamin=core\curso_est("inicio",$any,"est")->format('Y-m-d');
+			$Qempiezamax=core\curso_est("fin",$any,"est")->format('Y-m-d');
 			$Qperiodo = 'curso_ca';
 			break;
 		case 'crt':
 		case 'cve':
 			$any=  core\ConfigGlobal::any_final_curs('crt');
-			$Qempiezamin=core\curso_est("inicio",$any,"crt");
-			$Qempiezamax=core\curso_est("fin",$any,"crt");
+			$Qempiezamin=core\curso_est("inicio",$any,"crt")->format('Y-m-d');
+			$Qempiezamax=core\curso_est("fin",$any,"crt")->format('Y-m-d');
 			$Qperiodo = 'curso_crt';
 			break;
 	}
@@ -72,8 +72,8 @@ if (empty($Qperiodo) || $Qperiodo == 'otro') {
 	$any=empty($Qyear)? date('Y')+1 : $Qyear;
 	$oPeriodo->setAny($any);
 	$oPeriodo->setPeriodo($Qperiodo);
-	$inicio = $oPeriodo->getF_ini();
-	$fin = $oPeriodo->getF_fin();
+	$inicio = $oPeriodo->getF_ini_iso();
+	$fin = $oPeriodo->getF_fin_iso();
 }
 
 $status = \actividades\model\entity\ActividadAll::STATUS_ACTUAL; //actual

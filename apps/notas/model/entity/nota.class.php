@@ -341,7 +341,7 @@ class Nota Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sdescripcion de Nota
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosDescripcion() {
 		$nom_tabla = $this->getNomTabla();
@@ -353,7 +353,7 @@ class Nota Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bsuperada de Nota
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosSuperada() {
 		$nom_tabla = $this->getNomTabla();
@@ -365,7 +365,7 @@ class Nota Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sbreve de Nota
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosBreve() {
 		$nom_tabla = $this->getNomTabla();

@@ -31,8 +31,8 @@ $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 //periodo
 if (empty($Qperiodo) || $Qperiodo == 'otro') {
 	$any=  core\ConfigGlobal::any_final_curs('est');
-	$Qempiezamin=core\curso_est("inicio",$any,"est");
-	$Qempiezamax=core\curso_est("fin",$any,"est");
+	$Qempiezamin=core\curso_est("inicio",$any,"est")->format('Y-m-d');
+	$Qempiezamax=core\curso_est("fin",$any,"est")->format('Y-m-d');
 	$Qperiodo = 'curso_ca';
 	$inicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
 	$fin = empty($Qfin)? $Qempiezamax : $Qfin;
@@ -41,8 +41,8 @@ if (empty($Qperiodo) || $Qperiodo == 'otro') {
 	$any=empty($Qyear)? date('Y')+1 : $Qyear;
 	$oPeriodo->setAny($any);
 	$oPeriodo->setPeriodo($Qperiodo);
-	$inicio = $oPeriodo->getF_ini();
-	$fin = $oPeriodo->getF_fin();
+	$inicio = $oPeriodo->getF_ini_iso();
+	$fin = $oPeriodo->getF_fin_iso();
 }
 
 $aWhere = array();
@@ -61,7 +61,8 @@ $aActas = array();
 foreach ($cActas as $oActa) {
 	$i++;
 	$acta=$oActa->getActa();
-	$f_acta=$oActa->getF_acta();
+	$oF_acta=$oActa->getF_acta();
+	$f_acta=$oF_acta->getFromLocal();
 	$id_asignatura=$oActa->getId_asignatura();
 
 	$oAsignatura = new asignaturas\Asignatura($id_asignatura);
@@ -79,12 +80,9 @@ foreach ($cActas as $oActa) {
 	$aActas[$i]['f_acta']=$f_acta;
 	$aActas[$i]['nombre_corto']=$nombre_corto;
 
-	// fecha en ISO
-	$oFecha = new web\DateTimeLocal();
-	$oFecha->setFromFormat('j/m/Y', $f_acta);
-	
 	$aNivel[$i] = $id_nivel;
-	$aFecha[$i] = $oFecha->format('Y-m-d');
+	// fecha en ISO
+	$aFecha[$i] = $oF_acta->format('Y-m-d');
 }
 
 if (!empty($aActas)) {

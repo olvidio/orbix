@@ -1,6 +1,9 @@
 <?php
 namespace permisos\model;
-use actividades\model\entity as actividades;
+use core\ConfigGlobal;
+use actividades\model\entity\Actividad;
+use actividades\model\entity\GestorTipoDeActividad;
+use actividades\model\entity\TipoDeActividad;
 use procesos\model\entity as procesos;
 use usuarios\model\entity as usuarios;
 /**
@@ -150,7 +153,7 @@ class PermisosActividades {
 				}
 			}
 			// buscar los procesos posibles para estos tipos de actividad
-			$GesTiposActiv = new actividades\GestorTipoDeActividad();
+			$GesTiposActiv = new GestorTipoDeActividad();
 			$aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ_txt,$dl_propia);
 			// para cada proceso hay que generar una entrada.
 			foreach ($aTiposDeProcesos as $id_tipo_proceso) {
@@ -189,12 +192,12 @@ class PermisosActividades {
 		$this->iid_activ = $id_activ;
 		// Si sólo paso el id_activ:
 		if (empty($id_tipo_activ)) {
-			$oActividad = new actividades\Actividad($id_activ);
+			$oActividad = new Actividad($id_activ);
 			$id_tipo_activ = $oActividad->getId_tipo_activ();
 			$dl_org = $oActividad->getDl_org();
 		}
 		$this->iid_tipo_activ = $id_tipo_activ;
-		$oTipoDeActividad = new actividades\TipoDeActividad($id_tipo_activ);
+		$oTipoDeActividad = new TipoDeActividad($id_tipo_activ);
 
 		if ($dl_org == ConfigGlobal::$dele) {
 			$this->bpropia=true;
@@ -327,4 +330,3 @@ class PermisosActividades {
 		return $this->iid_tipo_proceso;
 	}
 }
-?>

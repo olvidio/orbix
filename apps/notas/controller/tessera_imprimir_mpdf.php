@@ -183,7 +183,11 @@ $aOperador['id_nivel']='BETWEEN';
 $cNotas = $GesNotas->getPersonaNotas($aWhere,$aOperador);
 $aAprobadas=array();
 foreach ($cNotas as $oPersonaNota) {
-	extract($oPersonaNota->getTot());
+	$id_asignatura = $oPersonaNota->getId_asignatura();
+	$id_nivel = $oPersonaNota->getId_nivel();
+	$acta = $oPersonaNota->getActa();
+	$f_acta = $oPersonaNota->getF_acta()->getFromLocal();
+
 	$oAsig = new asignaturas\Asignatura($id_asignatura);
 	if ($id_asignatura > 3000) {
 		$id_nivel_asig = $id_nivel;

@@ -138,7 +138,7 @@ class ActividadPub Extends ActividadAll {
 		// si es de la sf quito la 'f'
 		$dl = preg_replace('/f$/', '', $this->sdl_org);
 		if ($dl == core\ConfigGlobal::mi_dele()) {
-			$oActividadAll= new ActividadAllDl($a_pkey);
+			$oActividadAll= new ActividadDl($a_pkey);
 		} else {
 			if ($id_tabla == 'dl') {
 				//$oActividad = new ActividadPub($a_pkey);

@@ -61,24 +61,26 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 				$error .= sprintf(_("no se puede definir cursada con preceptor")."\n");
 				exit($error);
 			}
-			$oActa =new notas\Acta($acta);
-			$f_acta=$oActa->getF_acta();
-			if (!$acta || !$f_acta) {
-				$error .= sprintf(_("debe introducir los datos del acta. No se ha guardado nada.")."\n");
-				exit($error);
+			if (!empty($nota_num)) { // Si esta vacio, es para borrar, no tiene acta.
+                $oActa =new notas\Acta($acta);
+                $f_acta=$oActa->getF_acta()->getFromLocal();
+                if (!$acta || !$f_acta) {
+                    $error .= sprintf(_("debe introducir los datos del acta. No se ha guardado nada.")."\n");
+                    exit($error);
+                }
 			}
 		} else {
 			// para las cursadas o examinadas no aprobadas
 			if ($id_situacion == 2 OR $id_situacion == 12 OR $id_situacion == 0) {
 				//conseguir una fecha para poner como fecha acta. las cursadas se guardan durante 2 años
-				$f_acta = $cActas[0]->getF_acta();
+				$f_acta = $cActas[0]->getF_acta()->getFromLocal();
 			} else {
 				if (!$acta) {
 					$error .= sprintf(_("falta definir el acta para alguna nota")."\n");
 					exit($error);
 				}
 				$oActa =new notas\Acta($acta);
-				$f_acta=$oActa->getF_acta();
+				$f_acta=$oActa->getF_acta()->getFromLocal();
 				if (!$acta || !$f_acta) {
 					$error .= sprintf(_("debe introducir los datos del acta. No se ha guardado nada.")."\n");
 					exit($error);

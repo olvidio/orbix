@@ -37,7 +37,8 @@ class dbConnection {
 		$str_conexio = $this->getStrConexio();		
 		$oDB = new \PDO($str_conexio);
 		$oDB->exec("SET search_path TO \"$esquema\"");
-		$oDB->exec("SET DATESTYLE TO '$datestyle'");
+		/* le paso la gestión a la clase web\datetimelocal */
+		//$oDB->exec("SET DATESTYLE TO '$datestyle'");
 		
 		return $oDB;
 	}

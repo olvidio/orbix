@@ -135,7 +135,7 @@ foreach ($cDatosCampo as $oDatosCampo) {
 		}
 	}
 }
-$oUbi->setAllAtributes($a_values_o);
+$oUbi->setAllAtributes($a_values_o,TRUE);
 
 if ($oUbi->DBGuardar() === false) {
 	$msg_err = _("hay un error, no se ha guardado");

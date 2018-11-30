@@ -1,6 +1,7 @@
 <?php
 namespace ubis\model\entity;
 use core;
+use web;
 /**
  * Classe que implementa l'entitat ubis
  *
@@ -72,7 +73,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	/**
 	 * F_status de Ubi
 	 *
-	 * @var date
+	 * @var web\DateTimeLocal
 	 */
 	 protected $df_status;
 	/**
@@ -371,21 +372,24 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	/**
 	 * Recupera l'atribut df_status de Ubi
 	 *
-	 * @return date df_status
+	 * @return web\DateTimeLocal df_status
 	 */
 	function getF_status() {
-		if (!isset($this->df_status)) {
-			$this->DBCarregar();
-		}
-		return $this->df_status;
+	    if (!isset($this->df_status)) {
+	        $this->DBCarregar();
+	    }
+	    if (empty($this->df_status)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_status);
+	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_status de Ubi
-	 *
-	 * @param date df_status='' optional
-	 */
-	function setF_status($df_status='') {
-		$this->df_status = $df_status;
+	 * estableix el valor de l'atribut df_status de Ubi	* Si df_status es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_status debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_status='' optional.	* @param boolean convert=true optional. Si es false, df_status debe ser un string en formato ISO (Y-m-d).	 */
+	function setF_status($df_status='',$convert=true) {
+		if ($convert === true && !empty($df_status)) {
+	        $oConverter = new core\Converter('date', $df_status);
+	        $this->df_status =$oConverter->toPg();
+	    } else {
+	        $this->df_status = $df_status;
+	    }
 	}
 	/**
 	 * Recupera l'atribut bsv de Ubi
@@ -452,7 +456,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut stipo_ubi de Ubi
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTipo_ubi() {
 		$nom_tabla = $this->getNomTabla();
@@ -464,7 +468,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut snombre_ubi de Ubi
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNombre_ubi() {
 		$nom_tabla = $this->getNomTabla();
@@ -476,7 +480,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sdl de Ubi
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosDl() {
 		$nom_tabla = $this->getNomTabla();
@@ -488,7 +492,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut spais de Ubi
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPais() {
 		$nom_tabla = $this->getNomTabla();
@@ -500,7 +504,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sregion de Ubi
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosRegion() {
 		$nom_tabla = $this->getNomTabla();
@@ -512,7 +516,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bstatus de Ubi
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosStatus() {
 		$nom_tabla = $this->getNomTabla();
@@ -524,19 +528,20 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut df_status de Ubi
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosF_status() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_status'));
 		$oDatosCampo->setEtiqueta(_("fecha status"));
+        $oDatosCampo->setTipo('fecha');
 		return $oDatosCampo;
 	}
 	/**
 	 * Recupera les propietats de l'atribut bsv de Ubi
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosSv() {
 		$nom_tabla = $this->getNomTabla();
@@ -548,7 +553,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bsf de Ubi
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosSf() {
 		$nom_tabla = $this->getNomTabla();
@@ -557,4 +562,3 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 }
-?>

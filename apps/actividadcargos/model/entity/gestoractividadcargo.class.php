@@ -56,9 +56,8 @@ class GestorActividadCargo Extends core\ClaseGestor {
 			$id_activ = $oActividadCargo->getId_activ();
 			if (in_array($id_activ,$aListaIds)) {
 				$oActividad = new actividades\Actividad($id_activ);
-				$f_ini = $oActividad->getF_ini();
-				$oFini= \DateTime::createFromFormat('j/m/Y', $f_ini);
-				$f_ini_iso = $oFini->format('Y-m-d'); 
+				$oF_ini = $oActividad->getF_ini();
+				$f_ini_iso = $oF_ini->format('Y-m-d'); 
 				$oActividadCargo->DBCarregar();
 				$cCargosOk[$f_ini_iso] = $oActividadCargo;
 			}
@@ -88,9 +87,8 @@ class GestorActividadCargo Extends core\ClaseGestor {
 			$id_activ = $oCargo->getId_activ();
 			if (in_array($id_activ,$aListaIds)) {
 				$oActividad = new actividades\Actividad($id_activ);
-				$f_ini = $oActividad->getF_ini();
-				$oFini= \DateTime::createFromFormat('j/m/Y', $f_ini);
-				$f_ini_iso = $oFini->format('Y-m-d'); 
+				$oF_ini = $oActividad->getF_ini();
+				$f_ini_iso = $oF_ini->format('Y-m-d'); 
 				$cActividadesOk[$id_activ] = $oCargo;
 			}
 		}

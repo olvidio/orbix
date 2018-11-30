@@ -1,5 +1,7 @@
 <?php
 namespace core;
+
+use actividades\model\entity\GestorActividad;
 /**
  * Set
  *
@@ -69,4 +71,3 @@ class View {
         echo $out2;
     }
 }
-?>

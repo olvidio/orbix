@@ -51,15 +51,16 @@ $Qidca = (string) \filter_input(INPUT_POST, 'idca');
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 // vengo directamente con un id:
 if (!empty($a_sel)) { //vengo de un checkbox
-	$Qid_nom = strtok($a_sel[0],"#");
+    $Qid_nom = (integer) strtok($a_sel[0],"#");
 	$Qna=strtok("#"); // id_tabla
 	$Qgrupo_estudios = 'todos';
-	$inicio=date("d/m/Y");
+	$oHoy = new web\DateTimeLocal();
+	$inicio = $oHoy->format("Y-m-d");
 	if (date("m") < 10 ) {
-		$fin="30/10/".date("Y");
+		$fin = date("Y")."-10-30";
 	} else {
-		$next_year=date("Y")+1;
-		$fin="30/10/".$next_year;
+		$next_year = date("Y")+1;
+		$fin = $next_year."-10-30";
 	}
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$a_sel,1);
@@ -92,8 +93,8 @@ if (!empty($a_sel)) { //vengo de un checkbox
 		$oPeriodo = new web\Periodo();
 		$oPeriodo->setAny($any);
 		$oPeriodo->setPeriodo($periodo);
-		$inicio = $oPeriodo->getF_ini();
-		$fin = $oPeriodo->getF_fin();
+		$inicio = $oPeriodo->getF_ini_iso();
+		$fin = $oPeriodo->getF_fin_iso();
 	}
 	$aGoBack = array (
 					'id_ctr_agd' => $Qid_ctr_agd,
@@ -143,7 +144,7 @@ $alum=0;
 if (!empty($a_sel)) { //vengo de un checkbox
 	$id_nom_lst='';
 	foreach ($a_sel as $selBox) {
-		$id_nom=strtok($selBox,"#");
+	    $id_nom = (integer) strtok($selBox,"#");
 		if ($alum > 0) $id_nom_lst.="|";
 		if (!empty($id_nom)) $id_nom_lst.='^'.$id_nom.'$';
 		$alum++;
@@ -220,7 +221,6 @@ if (!empty($Qidca)){
 	foreach ($cActividades as $oActividad) {
 		$aAsignaturasCa=array();
 		$i++;
-		//extract($oActividad->getTot());
 		$id_activ = $oActividad->getId_activ();
 		$nom_activ = $oActividad->getNom_activ();
 		$nivel_stgr = $oActividad->getNivel_stgr();

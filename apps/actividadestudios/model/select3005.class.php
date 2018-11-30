@@ -141,8 +141,8 @@ class Select3005 {
 				default: $aviso="";
 			}
 			$tipo=$oActividadAsignatura->getTipo();
-			$f_ini=$oActividadAsignatura->getF_ini();
-			$f_fin=$oActividadAsignatura->getF_fin();
+			$f_ini=$oActividadAsignatura->getF_ini()->getFromLocal();
+			$f_fin=$oActividadAsignatura->getF_fin()->getFromLocal();
 			
 //			if ($this->permiso == 3) {
 //				$a_valores[$c]['sel']="$id_activ#$id_asignatura";

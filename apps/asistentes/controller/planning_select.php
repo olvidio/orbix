@@ -69,8 +69,8 @@ if (isset($_POST['stack'])) {
 	$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 
 	// valores por defeccto
-	$Qempiezamin = empty($Qempiezamin)? date('d/m/Y',mktime(0,0,0,date('m'),date('d')-40,date('Y'))):$Qempiezamin;
-	$Qempiezamax = empty($Qempiezamax)? date('d/m/Y',mktime(0,0,0,date('m')+9,0,date('Y'))):$Qempiezamax;
+	$Qempiezamin = empty($Qempiezamin)? date('Y-m-d',mktime(0, 0, 0, date('m'), date('d')-40, date('Y'))) : $Qempiezamin;
+	$Qempiezamax = empty($Qempiezamax)? date('Y-m-d',mktime(0, 0, 0, date('m')+9, 0, date('Y'))) : $Qempiezamax;
 
 	if (empty($Qperiodo) || $Qperiodo == 'otro') {
 		$Qinicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
@@ -80,8 +80,8 @@ if (isset($_POST['stack'])) {
 		$any=empty($Qyear)? date('Y')+1 : $Qyear;
 		$oPeriodo->setAny($any);
 		$oPeriodo->setPeriodo($Qperiodo);
-		$inicio = $oPeriodo->getF_ini();
-		$fin = $oPeriodo->getF_fin();
+		$inicio = $oPeriodo->getF_ini_iso();
+		$fin = $oPeriodo->getF_fin_iso();
 	}
 
 	/*miro las condiciones. las variables son: num, agd, sup, nombre, apellido1, apellido2 */

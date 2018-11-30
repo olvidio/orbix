@@ -9,6 +9,7 @@ use actividadestudios\model\entity\gestorMatriculaDl;
 use core;
 use dossiers;
 use personas;
+use web;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula d_traslados
@@ -154,22 +155,27 @@ class TrasladoDl {
 		$this->ssituacion = $ssituacion;
 	}
 	/**
-	 * Recupera l'atribut df_dl de Traslado
+	 * Recupera l'atribut df_traslado de TrasladoDl
 	 *
-	 * @return date df_dl
+	 * @return web\DateTimeLocal df_dl
 	 */
 	function getF_dl() {
-		return $this->df_dl;
+	    if (!isset($this->df_dl)) {
+	        $this->DBCarregar();
+	    }
+	    if (empty($this->df_dl)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_dl);
+	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_dl de Traslado
-	 *
-	 * @param date df_dl
-	 */
-	function setF_dl($df_dl) {
-		$this->df_dl = $df_dl;
+	 * estableix el valor de l'atribut df_dl de TrasladoDl	* Si df_dl es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_dl debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_dl='' optional.	* @param boolean convert=true optional. Si es false, df_dl debe ser un string en formato ISO (Y-m-d).	 */
+	function setF_dl($df_dl='',$convert=true) {
+		if ($convert === true && !empty($df_dl)) {
+	        $oConverter = new core\Converter('date', $df_dl);
+	        $this->df_dl =$oConverter->toPg();
+	    } else {
+	        $this->df_dl = $df_dl;
+	    }
 	}
-	
 	private function conexionOrg() {
 		$this->snew_esquema = $this->sreg_dl_org;
 		if (core\ConfigGlobal::mi_region_dl() == $this->snew_esquema) {
@@ -315,7 +321,7 @@ class TrasladoDl {
 		$oPersonaDl->setId_nom($this->iid_nom);
 		$oPersonaDl->DBCarregar();
 		$oPersonaDl->setSituacion($this->ssituacion);
-		$oPersonaDl->setF_situacion($this->df_dl);
+		$oPersonaDl->setF_situacion($this->df_dl,FALSE);
 		$oPersonaDl->setDl($this->sdl_dst);
 		if ($oPersonaDl->DBGuardar() === false) {
 			$error .= '<br>'._("hay un error, no se ha guardado");
@@ -445,7 +451,7 @@ class TrasladoDl {
 			$oPersonaNew->setoDbl($oDBdst);
 			$oPersonaNew->setDl($this->sdl_dst);
 			$oPersonaNew->setSituacion('A');
-			$oPersonaNew->setF_situacion($this->df_dl);
+			$oPersonaNew->setF_situacion($this->df_dl,FALSE);
 			$oPersonaNew->setId_ctr('');
 			if ($oPersonaNew->DBGuardar() === false) {
 				$error .= '<br>'._("hay un error, no se ha guardado");
@@ -693,7 +699,7 @@ class TrasladoDl {
 		$oTraslado = new personas\model\entity\Traslado();
 		$oTraslado->setoDbl($oDBorg);
 		$oTraslado->setId_nom($this->iid_nom);
-		$oTraslado->setF_traslado($this->df_dl);
+		$oTraslado->setF_traslado($this->df_dl,FALSE);
 		$oTraslado->setTipo_cmb('dl');
 		$oTraslado->setId_ctr_origen('');
 		$oTraslado->setCtr_origen($this->sdl_org);

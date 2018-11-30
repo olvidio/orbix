@@ -25,8 +25,8 @@ $Qmod = (string) \filter_input(INPUT_POST, 'mod');
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
 	if ($Qpau=="p") { 
-		$id_nivel=strtok($a_sel[0],"#"); 
-		$id_asignatura=strtok("#"); 
+	    $id_nivel= (integer) strtok($a_sel[0],"#"); 
+	    $id_asignatura= (integer) strtok("#"); 
 	}
 }
 

@@ -356,7 +356,7 @@ class Metamenu Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut smodulo de Metamenu
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosModulo() {
 		$nom_tabla = $this->getNomTabla();
@@ -370,7 +370,7 @@ class Metamenu Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut surl de Metamenu
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosUrl() {
 		$nom_tabla = $this->getNomTabla();
@@ -384,7 +384,7 @@ class Metamenu Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sparametros de Metamenu
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosParametros() {
 		$nom_tabla = $this->getNomTabla();
@@ -398,7 +398,7 @@ class Metamenu Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sdescripcion de Metamenu
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosDescripcion() {
 		$nom_tabla = $this->getNomTabla();

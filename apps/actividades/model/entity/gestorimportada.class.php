@@ -3,9 +3,9 @@ namespace actividades\model\entity;
 use core;
 use web;
 /**
- * GestorImportar
+ * GestorImportada
  *
- * Classe per gestionar la llista d'objectes de la clase Importar
+ * Classe per gestionar la llista d'objectes de la clase Importada
  *
  * @package delegación
  * @subpackage model
@@ -14,7 +14,7 @@ use web;
  * @created 04/02/2011
  */
 
-class GestorImportar Extends core\ClaseGestor {
+class GestorImportada Extends core\ClaseGestor {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
@@ -22,7 +22,7 @@ class GestorImportar Extends core\ClaseGestor {
 	/**
 	 * Constructor de la classe.
 	 *
-	 * @return GestorImportar
+	 * @return GestorImportada
 	 *
 	 */
 	function __construct() {
@@ -37,16 +37,16 @@ class GestorImportar Extends core\ClaseGestor {
 
 
 	/**
-	 * retorna l'array d'objectes de tipus Importar
+	 * retorna l'array d'objectes de tipus Importada
 	 *
 	 * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
 	 * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-	 * @return array Una col·lecció d'objectes de tipus Importar
+	 * @return array Una col·lecció d'objectes de tipus Importada
 	 */
 	function getImportadas($aWhere=array(),$aOperators=array()) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		$oImportarSet = new core\Set();
+		$oImportadaSet = new core\Set();
 		$oCondicion = new core\Condicion();
 		$aCondi = array();
 		foreach ($aWhere as $camp => $val) {
@@ -69,22 +69,22 @@ class GestorImportar Extends core\ClaseGestor {
 		if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
 		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-			$sClauError = 'GestorImportar.llistar.prepare';
+			$sClauError = 'GestorImportada.llistar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		if (($oDblSt->execute($aWhere)) === false) {
-			$sClauError = 'GestorImportar.llistar.execute';
+			$sClauError = 'GestorImportada.llistar.execute';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_activ' => $aDades['id_activ']);
-			$oImportar= new Importar($a_pkey);
-			$oImportar->setAllAtributes($aDades);
-			$oImportarSet->add($oImportar);
+			$oImportada= new Importada($a_pkey);
+			$oImportada->setAllAtributes($aDades);
+			$oImportadaSet->add($oImportadar);
 		}
-		return $oImportarSet->getTot();
+		return $oImportadaSet->getTot();
 	}
 
 	/* METODES PROTECTED --------------------------------------------------------*/

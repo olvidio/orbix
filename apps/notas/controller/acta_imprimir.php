@@ -65,7 +65,14 @@ $cara = empty($Qcara)? 'A' : $Qcara;
 
 // acta
 $oActa = new notas\Acta($acta);
-extract($oActa->getTot());
+$id_asignatura = $oActa->getId_asignatura();
+$id_activ = $oActa->getId_activ();
+$f_acta = $oActa->getF_acta()->getFromLocal();
+$libro = $oActa->getLibro();
+$pagina = $oActa->getPagina();
+$linea = $oActa->getLinea();
+$lugar = $oActa->getLugar();
+$observ = $oActa->getObserv();
 
 $oAsignatura = new asignaturas\Asignatura($id_asignatura);
 $nombre_corto=$oAsignatura->getNombre_corto();

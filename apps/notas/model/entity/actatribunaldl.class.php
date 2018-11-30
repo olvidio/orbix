@@ -339,7 +339,7 @@ class ActaTribunalDl Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sacta de ActaTribunalDl
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosActa() {
 		$nom_tabla = $this->getNomTabla();
@@ -351,7 +351,7 @@ class ActaTribunalDl Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sexaminador de ActaTribunalDl
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosExaminador() {
 		$nom_tabla = $this->getNomTabla();
@@ -363,7 +363,7 @@ class ActaTribunalDl Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iorden de ActaTribunalDl
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosOrden() {
 		$nom_tabla = $this->getNomTabla();

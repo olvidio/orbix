@@ -295,7 +295,7 @@ class Grupo Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut susuario de Grupo
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosUsuario() {
 		$nom_tabla = $this->getNomTabla();
@@ -307,7 +307,7 @@ class Grupo Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_role de Usuario
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_role() {
 		$nom_tabla = $this->getNomTabla();

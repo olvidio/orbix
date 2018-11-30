@@ -105,7 +105,8 @@ if ($Qactualizar=="9999") {
 		$f_acta=$oDBSt_sql_1->fetchColumn();
 		if (empty($f_acta)) {
 			//pongo la de hoy. creo que actualmente no se utiliza.
-			$f_acta = date('d/m/Y');
+		    $oHoy = new web\DateTimeLocal();
+		    $f_acta = $oHoy->getFromLocal();
 		}
 		
 		$ssql_2="UPDATE $tabla SET stgr='c1'

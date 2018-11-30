@@ -359,7 +359,7 @@ class Role Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut srole de Role
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosRole() {
 		$nom_tabla = $this->getNomTabla();
@@ -371,7 +371,7 @@ class Role Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bsf de Role
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosSf() {
 		$nom_tabla = $this->getNomTabla();
@@ -383,7 +383,7 @@ class Role Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bsv de Role
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosSv() {
 		$nom_tabla = $this->getNomTabla();
@@ -395,7 +395,7 @@ class Role Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut spau de Role
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPau() {
 		$nom_tabla = $this->getNomTabla();

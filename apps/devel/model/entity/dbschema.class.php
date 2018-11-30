@@ -280,7 +280,7 @@ class DbSchema Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid de DbSchema
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId() {
 		$nom_tabla = $this->getNomTabla();

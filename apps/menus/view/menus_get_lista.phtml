@@ -23,7 +23,15 @@ $indice_old = 1;
 $m = 0;
 foreach ($oMenuDbs as $oMenuDb) {
 	$m++;
-	extract($oMenuDb->getTot());
+	$id_menu = $oMenuDb->getId_menu();
+	$orden = $oMenuDb->getOrden();
+	$menu = $oMenuDb->getMenu();
+	$parametros = $oMenuDb->getParametros();
+	$id_metamenu = $oMenuDb->getId_metamenu();
+	$menu_perm = $oMenuDb->getMenu_perm();
+	$id_grupmenu = $oMenuDb->getId_grupmenu();
+	$ok = $oMenuDb->getOk ();
+	
 	$txt_ok = empty($ok)? '' : '[ok]';
 	//echo "m: $perm_menu,l: $perm_login, ";
 	$perm_menu = $oCuadros->lista_txt2($menu_perm);

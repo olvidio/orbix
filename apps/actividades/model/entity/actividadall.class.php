@@ -1,9 +1,7 @@
 <?php
 namespace actividades\model\entity;
 use core;
-//require_once('classes/web/fechas.class');
-use cambios\model\entity as cambios;
-use procesos\model\entity as procesos;
+use web;
 /**
  * Classe que implementa l'entitat a_actividades_dl
  *
@@ -85,25 +83,25 @@ class ActividadAll Extends core\ClasePropiedades {
 	/**
 	 * F_ini de ActividadAll
 	 *
-	 * @var date
+	 * @var web\DateTimeLocal
 	 */
 	 protected $df_ini;
 	/**
 	 * H_ini de ActividadAll
 	 *
-	 * @var time
+	 * @var string time
 	 */
 	 protected $th_ini;
 	/**
 	 * F_fin de ActividadAll
 	 *
-	 * @var date
+	 * @var web\DateTimeLocal
 	 */
 	 protected $df_fin;
 	/**
 	 * H_fin de ActividadAll
 	 *
-	 * @var time
+	 * @var string time
 	 */
 	 protected $th_fin;
 	/**
@@ -181,7 +179,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	/**
 	 * Plazas de ActividadAll
 	 *
-	 * @var smallinteger
+	 * @var integer
 	 */
 	 protected $iplazas;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
@@ -321,8 +319,8 @@ class ActividadAll Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$a_pkey = $this->aPrimary_key;
 		// si es de la sf quito la 'f'
-		$dl = preg_replace('/f$/', '', $aDades['dl_org']);
-		$id_tabla = $aDades['id_tabla'];
+		$dl = preg_replace('/f$/', '', $this->dl_org);
+		$id_tabla = $this->id_tabla;
 		if ($dl == core\ConfigGlobal::mi_dele()) {
 			$oActividadAll= new ActividadDl($a_pkey);
 		} else {
@@ -347,7 +345,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 *
 	 * @param array $aDades
 	 */
-	function setAllAtributes($aDades) {
+	function setAllAtributes($aDades,$convert=FALSE) {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_activ',$aDades)) $this->setId_activ($aDades['id_activ']);
@@ -356,9 +354,9 @@ class ActividadAll Extends core\ClasePropiedades {
 		if (array_key_exists('nom_activ',$aDades)) $this->setNom_activ($aDades['nom_activ']);
 		if (array_key_exists('id_ubi',$aDades)) $this->setId_ubi($aDades['id_ubi']);
 		if (array_key_exists('desc_activ',$aDades)) $this->setDesc_activ($aDades['desc_activ']);
-		if (array_key_exists('f_ini',$aDades)) $this->setF_ini($aDades['f_ini']);
+		if (array_key_exists('f_ini',$aDades)) $this->setF_ini($aDades['f_ini'],$convert);
 		if (array_key_exists('h_ini',$aDades)) $this->setH_ini($aDades['h_ini']);
-		if (array_key_exists('f_fin',$aDades)) $this->setF_fin($aDades['f_fin']);
+		if (array_key_exists('f_fin',$aDades)) $this->setF_fin($aDades['f_fin'],$convert);
 		if (array_key_exists('h_fin',$aDades)) $this->setH_fin($aDades['h_fin']);
 		if (array_key_exists('tipo_horario',$aDades)) $this->setTipo_horario($aDades['tipo_horario']);
 		if (array_key_exists('precio',$aDades)) $this->setPrecio($aDades['precio']);
@@ -383,10 +381,33 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return array aDades
 	 */
 	public function getTot() {
-		if (!is_array($this->aDades)) {
-			$this->DBCarregar('tot');
-		}
-		return $this->aDades;
+	    $aDades = [];
+		$aDades['id_schema'] = $this->getId_schema();
+		$aDades['id_activ'] = $this->getId_activ();
+		$aDades['id_tipo_activ'] = $this->getId_tipo_activ();
+		$aDades['dl_org'] = $this->getDl_org();
+		$aDades['nom_activ'] = $this->getNom_activ();
+		$aDades['id_ubi'] = $this->getId_ubi();
+		$aDades['desc_activ'] = $this->getDesc_activ();
+		$aDades['f_ini'] = $this->getF_ini();
+		$aDades['h_ini'] = $this->getH_ini();
+		$aDades['f_fin'] = $this->getF_fin();
+		$aDades['h_fin'] = $this->getH_fin();
+		$aDades['tipo_horario'] = $this->getTipo_horario();
+		$aDades['precio'] = $this->getPrecio();
+		$aDades['num_asistentes'] = $this->getNum_asistentes();
+		$aDades['status'] = $this->getStatus();
+		$aDades['observ'] = $this->getObserv();
+		$aDades['nivel_stgr'] = $this->getNivel_stgr();
+		$aDades['observ_material'] = $this->getObserv_material();
+		$aDades['lugar_esp'] = $this->getLugar_esp();
+		$aDades['tarifa'] = $this->getTarifa();
+		$aDades['id_repeticion'] = $this->getId_repeticion();
+		$aDades['publicado'] = $this->getPublicado();
+		$aDades['id_tabla'] = $this->getId_tabla();
+		$aDades['plazas'] = $this->getPlazas();
+		
+		return $aDades;
 	}
 
 	/**
@@ -525,26 +546,35 @@ class ActividadAll Extends core\ClasePropiedades {
 	/**
 	 * Recupera l'atribut df_ini de ActividadAll
 	 *
-	 * @return date df_ini
+	 * @return web\DateTimeLocal df_ini
 	 */
 	function getF_ini() {
 		if (!isset($this->df_ini)) {
 			$this->DBCarregar();
 		}
-		return $this->df_ini;
+		if (empty($this->df_ini)) {			return new web\NullDateTimeLocal();		}		$oConverter = new core\Converter('date', $this->df_ini);
+		return $oConverter->fromPg();
 	}
 	/**
 	 * estableix el valor de l'atribut df_ini de ActividadAll
-	 *
-	 * @param date df_ini='' optional
+	 * Si df_ini es string, y convert=true se convierte usando el formato web\DateTimeLocal->getFormat().
+	 * Si convert es false, df_ini debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	 * 
+	 * @param date|string df_ini='' optional.
+	 * @param boolean convert=true optional. Si es false, df_ini debe ser un string en formato ISO (Y-m-d).
 	 */
-	function setF_ini($df_ini='') {
-		$this->df_ini = $df_ini;
+	function setF_ini($df_ini='',$convert=true) {
+		if ($convert === true && !empty($df_ini)) {
+            $oConverter = new core\Converter('date', $df_ini);
+            $this->df_ini =$oConverter->toPg();
+	    } else {
+            $this->df_ini = $df_ini;
+	    }
 	}
 	/**
 	 * Recupera l'atribut th_ini de ActividadAll
 	 *
-	 * @return time th_ini
+	 * @return string time th_ini
 	 */
 	function getH_ini() {
 		if (!isset($this->th_ini)) {
@@ -563,26 +593,29 @@ class ActividadAll Extends core\ClasePropiedades {
 	/**
 	 * Recupera l'atribut df_fin de ActividadAll
 	 *
-	 * @return date df_fin
+	 * @return web\DateTimeLocal df_fin
 	 */
 	function getF_fin() {
 		if (!isset($this->df_fin)) {
 			$this->DBCarregar();
 		}
-		return $this->df_fin;
+		if (empty($this->df_fin)) {			return new web\NullDateTimeLocal();		}		$oConverter = new core\Converter('date', $this->df_fin);
+		return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_fin de ActividadAll
-	 *
-	 * @param date df_fin='' optional
-	 */
-	function setF_fin($df_fin='') {
-		$this->df_fin = $df_fin;
+	 * estableix el valor de l'atribut df_fin de ActividadAll	* Si df_fin es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_fin debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_fin='' optional.	* @param boolean convert=true optional. Si es false, df_fin debe ser un string en formato ISO (Y-m-d).	 */
+	function setF_fin($df_fin='',$convert=true) {
+		if ($convert === true && !empty($df_fin)) {
+            $oConverter = new core\Converter('date', $df_fin);
+            $this->df_fin =$oConverter->toPg();
+	    } else {
+            $this->df_fin = $df_fin;
+	    }
 	}
 	/**
 	 * Recupera l'atribut th_fin de ActividadAll
 	 *
-	 * @return time th_fin
+	 * @return string time th_fin
 	 */
 	function getH_fin() {
 		if (!isset($this->th_fin)) {
@@ -851,40 +884,45 @@ class ActividadAll Extends core\ClasePropiedades {
 	/**
 	 * Recupera l'atribut idias de ActividadAll
 	 *
+	 *@param web\DateTimeLocal $oIniPeriodo
+	 *@param web\DateTimeLocal $oFinPeriodo
 	 * @return integer idias
 	 */
-	function getDuracionEnPeriodo($inicio,$fin) {
+	function getDuracionEnPeriodo($oIniPeriodo,$oFinPeriodo) {
 		$num_dias = $this->getDuracionReal();
 
 		// si la actividad empieza antes del inicio, cojo como valor del inicio de la actividad, el valor de inicio del periodo.
-		$oIniTot = DateTime::createFromFormat('j/n/Y H:i:s',$inicio." 00:00:00");
-		$oFinTot = DateTime::createFromFormat('j/n/Y H:i:s',$fin." 23:59:59");
+		$oIniPeriodo->setTime(0,0,0);
+		$oFinPeriodo->setTime(23,59,59);
 
 		$hIni = empty($this->th_ini)? '21:00:00' : $this->th_ini;
+        list($h,$m,$s) = explode(':', $hIni);
+        $oInicio = $this->getF_ini()->setTime($h,$m,$s);
+        
 		$hFin = empty($this->th_fin)? '10:00:00' : $this->th_fin;
-		$oInicio = DateTime::createFromFormat('j/n/Y H:i:s', $this->df_ini." ".$hIni);
-		$oFin = DateTime::createFromFormat('j/n/Y H:i:s', $this->df_fin." ".$hFin);
+        list($h,$m,$s) = explode(':', $hFin);
+        $oFin = $this->getF_fin()->setTime($h,$m,$s);
 
-		if ($oInicio < $oIniTot) {
-			$isoActivIni = $oIniTot->format('YmdHis');
-			$interval = $oIniTot->diff($oFin);
+		if ($oInicio < $oIniPeriodo) {
+			$isoActivIni = $oIniPeriodo->format('YmdHis');
+			$interval = $oIniPeriodo->diff($oFin);
 			$horas = $interval->format('%a')*24 +$interval->format('%h')+$interval->format('%i')/60+$interval->format('%s')/3600;
 			$num_dias=round($horas/24,2);
 		} else {
 			$isoActivIni = $oInicio->format('YmdHis');
 		}
 		// lo mismo para el final:
-		if ($oFin > $oFinTot) {
-			$isoActivFin = $oFinTot->format('YmdHis');
-			$interval = $oInicio->diff($oFinTot);
+		if ($oFin > $oFinPeriodo) {
+			$isoActivFin = $oFinPeriodo->format('YmdHis');
+			$interval = $oInicio->diff($oFinPeriodo);
 			$horas = $interval->format('%a')*24 +$interval->format('%h')+$interval->format('%i')/60+$interval->format('%s')/3600;
 			$num_dias=round($horas/24,2);
 		} else {
 			$isoActivFin = $oFin->format('YmdHis');
 		}
 	// miro si la actividad empieza y termina en el mismo periodo.
-		$iniPeriodo = $oIniTot->format('YmdHis');
-		$finPeriodo = $oFinTot->format('YmdHis');
+		$iniPeriodo = $oIniPeriodo->format('YmdHis');
+		$finPeriodo = $oFinPeriodo->format('YmdHis');
 		if ($isoActivIni <= $finPeriodo && $isoActivIni >= $iniPeriodo) {
 			if ($isoActivFin >= $iniPeriodo && $isoActivFin <= $finPeriodo) { 
 				//empieza y termina en el periodo.
@@ -904,9 +942,11 @@ class ActividadAll Extends core\ClasePropiedades {
 				$this->DBCarregar();
 			}
 			$hIni = empty($this->th_ini)? '21:00:00' : $this->th_ini;
+			list($h,$m,$s) = explode(':', $$hIni);
+			$oF_ini_ca = $this->getF_ini()->setTime($h,$m,$s);
 			$hFin = empty($this->th_fin)? '10:00:00' : $this->th_fin;
-			$oF_ini_ca = DateTime::createFromFormat('j/m/Y H:i:s', $this->df_ini." ".$hIni);
-			$oF_fin_ca = DateTime::createFromFormat('j/m/Y H:i:s', $this->df_fin." ".$hFin);
+			list($h,$m,$s) = explode(':', $$hFin);
+			$oF_fin_ca = $this->getF_fin()->setTime($h,$m,$s);
 			$interval = $oF_ini_ca->diff($oF_fin_ca);
 			$horas = $interval->format('%a')*24 +$interval->format('%h')+$interval->format('%i')/60+$interval->format('%s')/3600;
 			$dias=round($horas/24,2);
@@ -925,10 +965,11 @@ class ActividadAll Extends core\ClasePropiedades {
 				$this->DBCarregar();
 			}
 			$hIni = empty($this->th_ini)? '21:00:00' : $this->th_ini;
+			list($h,$m,$s) = explode(':', $$hIni);
+			$oF_ini_ca = $this->getF_ini()->setTime($h,$m,$s);
 			$hFin = empty($this->th_fin)? '10:00:00' : $this->th_fin;
-			$oF_ini_ca = new \DateTimeLocal();
-			$oF_ini_ca->setFromFormat('j/m/Y H:i:s', $this->df_ini." ".$hIni);
-			$oF_fin_ca = DateTime::createFromFormat('j/m/Y H:i:s', $this->df_fin." ".$hFin);
+			list($h,$m,$s) = explode(':', $$hFin);
+			$oF_fin_ca = $this->getF_fin()->setTime($h,$m,$s);
 
 			$this->iduracion = $oF_ini_ca->duracionAjustada($oF_fin_ca);
 		}
@@ -1009,7 +1050,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_tipo_activ de ActividadAll
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosId_tipo_activ() {
 		$nom_tabla = $this->getNomTabla();
@@ -1021,7 +1062,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sdl_org de ActividadAll
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosDl_org() {
 		$nom_tabla = $this->getNomTabla();
@@ -1033,7 +1074,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut snom_activ de ActividadAll
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosNom_activ() {
 		$nom_tabla = $this->getNomTabla();
@@ -1045,7 +1086,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_ubi de ActividadAll
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosId_ubi() {
 		$nom_tabla = $this->getNomTabla();
@@ -1057,7 +1098,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sdesc_activ de ActividadAll
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosDesc_activ() {
 		$nom_tabla = $this->getNomTabla();
@@ -1069,19 +1110,20 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut df_ini de ActividadAll
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosF_ini() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_ini'));
 		$oDatosCampo->setEtiqueta(_("fecha inicio"));
+        $oDatosCampo->setTipo('fecha');
 		return $oDatosCampo;
 	}
 	/**
 	 * Recupera les propietats de l'atribut th_ini de ActividadAll
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosH_ini() {
 		$nom_tabla = $this->getNomTabla();
@@ -1093,19 +1135,20 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut df_fin de ActividadAll
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosF_fin() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_fin'));
 		$oDatosCampo->setEtiqueta(_("fecha fin"));
+        $oDatosCampo->setTipo('fecha');
 		return $oDatosCampo;
 	}
 	/**
 	 * Recupera les propietats de l'atribut th_fin de ActividadAll
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosH_fin() {
 		$nom_tabla = $this->getNomTabla();
@@ -1117,7 +1160,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut itipo_horario de ActividadAll
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosTipo_horario() {
 		$nom_tabla = $this->getNomTabla();
@@ -1129,7 +1172,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iprecio de ActividadAll
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosPrecio() {
 		$nom_tabla = $this->getNomTabla();
@@ -1151,7 +1194,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut inum_asistentes de ActividadAll
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosNum_asistentes() {
 		$nom_tabla = $this->getNomTabla();
@@ -1163,7 +1206,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut istatus de ActividadAll
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosStatus() {
 		$nom_tabla = $this->getNomTabla();
@@ -1177,7 +1220,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sobserv de ActividadAll
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosObserv() {
 		$nom_tabla = $this->getNomTabla();
@@ -1189,7 +1232,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut inivel_stgr de ActividadAll
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosNivel_stgr() {
 		$nom_tabla = $this->getNomTabla();
@@ -1201,7 +1244,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sobserv_material de ActividadAll
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosObserv_material() {
 		$nom_tabla = $this->getNomTabla();
@@ -1213,7 +1256,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut slugar_esp de ActividadAll
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosLugar_esp() {
 		$nom_tabla = $this->getNomTabla();
@@ -1225,7 +1268,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut itarifa de ActividadAll
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosTarifa() {
 		$nom_tabla = $this->getNomTabla();
@@ -1237,7 +1280,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_repeticion de ActividadAll
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosId_repeticion() {
 		$nom_tabla = $this->getNomTabla();
@@ -1249,7 +1292,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bpublicado de ActividadAll
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosPublicado() {
 		$nom_tabla = $this->getNomTabla();
@@ -1261,7 +1304,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sid_tabla de ActividadAll
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosId_tabla() {
 		$nom_tabla = $this->getNomTabla();
@@ -1273,7 +1316,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iplazas de ActividadAll
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosPlazas() {
 		$nom_tabla = $this->getNomTabla();
@@ -1282,4 +1325,3 @@ class ActividadAll Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 }
-?>

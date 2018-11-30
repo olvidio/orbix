@@ -199,7 +199,7 @@ if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
 if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 foreach ($cUbis as $oCentro) {
 	$i++;
-	$row = $oCentro->getTot();
+	$region = $oCentro->getRegion();
 	$id_ubi=$oCentro->getId_ubi();
 	$pagina=Hash::link(ConfigGlobal::getWeb().'/apps/ubis/controller/home_ubis.php?'.http_build_query(array('pau'=>'u','id_ubi'=>$id_ubi))); 
 	$ctr=$oCentro->getNombre_ubi();
@@ -231,7 +231,7 @@ foreach ($cUbis as $oCentro) {
 
 	$a_valores[$i]['sel']="$id_ubi";
 	$a_valores[$i][1]= array( 'ira'=>$pagina, 'valor'=>$ctr);
-	$a_valores[$i][2]=$row["region"];
+	$a_valores[$i][2]=$region;
 	$a_valores[$i][3]=$tipo;
 	$a_valores[$i][4]=$direccion; 
 	$a_valores[$i][5]=$c_p; 

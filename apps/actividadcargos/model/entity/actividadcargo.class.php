@@ -215,7 +215,7 @@ class ActividadCargo Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_item=$this->iid_item")) === false) {
+		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item=$this->iid_item")) === false) {
 			$sClauError = 'ActividadCargo.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -404,7 +404,7 @@ class ActividadCargo Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_schema de ActividadCargo
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosId_schema() {
 		$nom_tabla = $this->getNomTabla();
@@ -416,7 +416,7 @@ class ActividadCargo Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_nom de ActividadCargo
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosId_nom() {
 		$nom_tabla = $this->getNomTabla();
@@ -428,7 +428,7 @@ class ActividadCargo Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bpuede_agd de ActividadCargo
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosPuede_agd() {
 		$nom_tabla = $this->getNomTabla();
@@ -440,7 +440,7 @@ class ActividadCargo Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sobserv de ActividadCargo
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosObserv() {
 		$nom_tabla = $this->getNomTabla();
@@ -449,4 +449,3 @@ class ActividadCargo Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 }
-?>

@@ -33,7 +33,7 @@ if (isset($_POST['stack'])) {
 		$oPosicion2 = new web\Posicion();
 		if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
 			$a_sel=$oPosicion2->getParametro('sel');
-			$Qid_usuario = strtok($a_sel[0],"#");
+			$Qid_usuario = (integer) strtok($a_sel[0],"#");
 			$Qid_sel=$oPosicion2->getParametro('id_sel');
 			$Qscroll_id = $oPosicion2->getParametro('scroll_id');
 			$oPosicion2->olvidar($stack);
@@ -42,7 +42,7 @@ if (isset($_POST['stack'])) {
 } elseif (!empty($a_sel)) { //vengo de un checkbox
 	$Qque = (string) \filter_input(INPUT_POST, 'que');
 	if ($Qque != 'del_grupmenu') { //En el caso de venir de borrar un grupmenu, no hago nada
-		$Qid_usuario = strtok($a_sel[0],"#");
+	    $Qid_usuario = (integer) strtok($a_sel[0],"#");
 		// el scroll id es de la página anterior, hay que guardarlo allí
 		$oPosicion->addParametro('id_sel',$a_sel,1);
 		$Qscroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');

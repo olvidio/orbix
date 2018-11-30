@@ -329,7 +329,7 @@ class NombreLatin Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut snom de NombreLatin
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNom() {
 		$nom_tabla = $this->getNomTabla();
@@ -343,7 +343,7 @@ class NombreLatin Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut snominativo de NombreLatin
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNominativo() {
 		$nom_tabla = $this->getNomTabla();
@@ -357,7 +357,7 @@ class NombreLatin Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sgenitivo de NombreLatin
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosGenitivo() {
 		$nom_tabla = $this->getNomTabla();

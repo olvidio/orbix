@@ -298,7 +298,7 @@ class PermMenu Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_usuario de PermMenu
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_usuario() {
 		$nom_tabla = $this->getNomTabla();
@@ -310,7 +310,7 @@ class PermMenu Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut imenu_perm de PermMenu
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosMenu_perm() {
 		$nom_tabla = $this->getNomTabla();

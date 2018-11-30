@@ -77,7 +77,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 	/**
 	 * Curso_inicio de ProfesorDocenciaStgr
 	 *
-	 * @var smallinteger
+	 * @var integer
 	 */
 	 private $icurso_inicio;
 	/**
@@ -427,7 +427,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_asignatura de ProfesorDocenciaStgr
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_asignatura() {
 		$nom_tabla = $this->getNomTabla();
@@ -443,7 +443,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_activ de ProfesorDocenciaStgr
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_activ() {
 		$nom_tabla = $this->getNomTabla();
@@ -459,7 +459,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut stipo de ProfesorDocenciaStgr
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTipo() {
 		$nom_tabla = $this->getNomTabla();
@@ -475,7 +475,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut icurso_inicio de ProfesorDocenciaStgr
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosCurso_inicio() {
 		$nom_tabla = $this->getNomTabla();
@@ -489,7 +489,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sacta de ProfesorDocenciaStgr
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosActa() {
 		$nom_tabla = $this->getNomTabla();

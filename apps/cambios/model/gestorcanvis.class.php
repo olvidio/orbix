@@ -100,8 +100,8 @@ class gestorCanvis {
 		// poso el nom de l'objecte que gestiona la taula en comptes del nom de la taula.
 		$oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
 		$id_fase = $oGestorActividadProcesoTarea->getFaseActual($iid_activ);
-		$id_user=ConfigGlobal::id_usuario();
-		$ahora=date("d/m/Y H:i:s");
+		$id_user= core\ConfigGlobal::mi_id_usuario();
+		$ahora = new web\DateTimeLocal();
 		// per saber el tipus d'activitat.
 		if ($sTabla == 'a_actividades') { //si el canvi és a l'activitat, ja el tinc.
 			$iId_tipo_activ = empty($aDadesNew['id_tipo_activ'])? $aDadesActuals['id_tipo_activ'] : $aDadesNew['id_tipo_activ'];

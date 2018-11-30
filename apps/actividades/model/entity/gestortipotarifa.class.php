@@ -35,14 +35,14 @@ class GestorTipoTarifa Extends  core\ClaseGestor {
 	/**
 	 * retorna un Array amb les lletres de les tarifas
 	 *
-	 * @return array (tarifa=>letra).
+	 * @return array (id_tarifa=>letra).
 	 */
 	function getArrayTipoTarifas($isfsv='') {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 
 		$sWhere = empty($isfsv)? '' : "WHERE sfsv=$isfsv"; 
-		$sQuery="SELECT tarifa,letra FROM $nom_tabla $sWhere ORDER BY tarifa";
+		$sQuery="SELECT id_tarifa,letra FROM $nom_tabla $sWhere ORDER BY id_tarifa";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorTipoTarifa.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -65,7 +65,7 @@ class GestorTipoTarifa Extends  core\ClaseGestor {
 	function getListaTipoTarifas($isfsv) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		$sQuery="SELECT tarifa,letra FROM $nom_tabla WHERE sfsv=$isfsv ORDER BY tarifa";
+		$sQuery="SELECT id_tarifa,letra FROM $nom_tabla WHERE sfsv=$isfsv ORDER BY id_tarifa";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorTipoTarifa.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -96,7 +96,7 @@ class GestorTipoTarifa Extends  core\ClaseGestor {
 			return false;
 		}
 		foreach ($oDbl->query($sQuery) as $aDades) {
-			$a_pkey = array('tarifa' => $aDades['tarifa']);
+			$a_pkey = array('id_tarifa' => $aDades['id_tarifa']);
 			$oTipoTarifa= new TipoTarifa($a_pkey);
 			$oTipoTarifa->setAllAtributes($aDades);
 			$oTipoTarifaSet->add($oTipoTarifa);
@@ -147,7 +147,7 @@ class GestorTipoTarifa Extends  core\ClaseGestor {
 			return false;
 		}
 		foreach ($oDblSt as $aDades) {
-			$a_pkey = array('tarifa' => $aDades['tarifa']);
+			$a_pkey = array('id_tarifa' => $aDades['id_tarifa']);
 			$oTipoTarifa= new TipoTarifa($a_pkey);
 			$oTipoTarifa->setAllAtributes($aDades);
 			$oTipoTarifaSet->add($oTipoTarifa);

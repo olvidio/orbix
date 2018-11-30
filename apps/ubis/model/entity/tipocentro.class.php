@@ -255,7 +255,7 @@ class TipoCentro Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut stipo_ctr de TipoCentro
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTipo_ctr() {
 		$nom_tabla = $this->getNomTabla();
@@ -269,7 +269,7 @@ class TipoCentro Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut snombre_tipo_ctr de TipoCentro
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNombre_tipo_ctr() {
 		$nom_tabla = $this->getNomTabla();

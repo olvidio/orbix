@@ -71,11 +71,12 @@ switch ($que) {
 				
 			}
 			
+            $oHoy = new web\DateTimeLocal();
 			$obj = 'personas\\model\\entity\\'.$obj_pau;
 			$oPersona = new $obj();
 		
 			$oPersona->setSituacion('A');
-			$oPersona->setF_situacion(date("d/m/Y"));
+			$oPersona->setF_situacion($oHoy);
 			$oPersona->setNom($nombre);
 			$oPersona->setNx1($nx1);
 			$oPersona->setApellido1($apellido1_sinprep);
@@ -189,12 +190,12 @@ switch ($que) {
 			}
 		}
 		$mi_esquema = ConfigGlobal::mi_region_dl();
-		$f_cmb = date('d/m/Y');
+		$oHoy = new web\DateTimeLocal();
 			
 		$oTrasladoDl->setDl_persona($dl);
 		$oTrasladoDl->setReg_dl_org($esq_org);
 		$oTrasladoDl->setReg_dl_dst($mi_esquema);
-		$oTrasladoDl->setF_dl($f_cmb);
+		$oTrasladoDl->setF_dl($oHoy);
 		$oTrasladoDl->setSituacion('L');
 		
 		echo $oTrasladoDl->trasladar();
@@ -210,7 +211,7 @@ switch ($que) {
 		
 		$mi_dele = ConfigGlobal::mi_dele();
 		$mi_esquema = ConfigGlobal::mi_region_dl();
-		$f_cmb = date('d/m/Y');
+		$oHoy = new web\DateTimeLocal();
 		$sfsv_txt = (configGlobal::mi_sfsv() == 1)? 'v' :'f';
 		$esq_dst = "H-".$dl.$sfsv_txt;
 
@@ -223,7 +224,7 @@ switch ($que) {
 		$oTrasladoDl->setDl_persona($mi_dele);
 		$oTrasladoDl->setReg_dl_org($mi_esquema);
 		$oTrasladoDl->setReg_dl_dst($esq_dst);
-		$oTrasladoDl->setF_dl($f_cmb);
+		$oTrasladoDl->setF_dl($oHoy);
 		$oTrasladoDl->setSituacion($situacion);
 		
 		echo $oTrasladoDl->trasladar();
@@ -239,14 +240,14 @@ switch ($que) {
 		
 		$mi_dele = ConfigGlobal::mi_dele();
 		$mi_esquema = ConfigGlobal::mi_region_dl();
-		$f_cmb = date('d/m/Y');
+		$oHoy = new web\DateTimeLocal();
 		$sfsv_txt = (configGlobal::mi_sfsv() == 1)? 'v' :'f';
 		$esq_dst = "H-".$dl.$sfsv_txt;
 			
 		$oTrasladoDl->setDl_persona($mi_dele);
 		$oTrasladoDl->setReg_dl_org($mi_esquema);
 		$oTrasladoDl->setReg_dl_dst($esq_dst);
-		$oTrasladoDl->setF_dl($f_cmb);
+		$oTrasladoDl->setF_dl($oHoy);
 		$oTrasladoDl->setSituacion('B');
 		
 		if ($oTrasladoDl->cambiarFichaPersona() === false) {

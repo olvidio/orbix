@@ -260,7 +260,7 @@ class TipoCasa Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut stipo_casa de TipoDeCasa
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTipo_casa() {
 		$nom_tabla = $this->getNomTabla();
@@ -275,7 +275,7 @@ class TipoCasa Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut snombre_tipo_casa de TipoDeCasa
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNombre_tipo_casa() {
 		$nom_tabla = $this->getNomTabla();

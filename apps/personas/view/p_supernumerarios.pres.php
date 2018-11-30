@@ -16,6 +16,8 @@
 * @since		2/1/03.
 *
 */
+use core\ConfigGlobal;
+
 ?>
 <script>
 $(function() { $("#f_fichero_<?= $tabla[$f].$r ?>").datepicker(); });
@@ -153,7 +155,8 @@ echo "<td>";
 		$oDBSt_q_dl_es=$oDB->query($query_dl_es);
 		$oDBSt_q_dl_ex=$oDB->query($query_dl_ex);
 		$oDBSt_q_r=$oDB->query($query_dl_r);
-		$f_dl=date("d/m/Y");
+        $oHoy = new web\DateTimeLocal();
+        $f_dl = $oHoy->getFromLocal();
 		?>	
 		Delegación de procedencia:		
 		<select class=contenido name="dl_<?= $tabla[$f].$r; ?>" title="<?= $dl_help; ?>" >

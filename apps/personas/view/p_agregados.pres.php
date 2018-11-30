@@ -16,6 +16,8 @@
 *@since		15/5/02.
 *		
 */
+use core\ConfigGlobal;
+
 ?>
 <script>
 $(function() { $("#f_situacion<?= $tabla[$f].$r ?>").datepicker(); });
@@ -161,7 +163,8 @@ if (empty($id_nom)){
 	$oDBSt_q_dl_es=$oDB->query($query_dl_es);
 	$oDBSt_q_dl_ex=$oDB->query($query_dl_ex);
 	$oDBSt_q_r=$oDB->query($query_dl_r);
-	$f_dl=date("d/m/Y");
+	$oHoy = new web\DateTimeLocal();
+	$f_dl = $oHoy->getFromLocal();
 	echo ucfirst($dl_etiqueta); ?>	
 	<select class=contenido name="dl_<?= $tabla[$f].$r; ?>" title="<?= $dl_help; ?>" >
 	<option></option>

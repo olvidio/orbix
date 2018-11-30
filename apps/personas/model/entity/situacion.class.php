@@ -267,7 +267,7 @@ class Situacion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut snombre_situacion de Situacion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNombre_situacion() {
 		$nom_tabla = $this->getNomTabla();
@@ -276,4 +276,3 @@ class Situacion Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 }
-?>

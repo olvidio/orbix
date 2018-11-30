@@ -1,3 +1,4 @@
+<?php use core\ConfigGlobal; ?>
 <h2 class=titulo><?= ucfirst(_("relación de dossiers")); ?></h2>
 <?php
 $lista_doss="SELECT * 

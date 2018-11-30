@@ -128,10 +128,16 @@ foreach ($a_ampliacion as $n => $row) {
 <tr><td class=cabecera>tipo</td><td class=cabecera>tema</td><td class=cabecera>lugar</td><td class=cabecera>inicio</td><td class=cabecera>fin</td><td class=cabecera>organiza</td></tr>
 <?php
 foreach($cProfesorCongresos as $oProfesorCongreso) {
-	$row = $oProfesorCongreso->getTot();
+    $congreso = $oProfesorCongreso->getCongreso();
+    $tipo = $oProfesorCongreso->getTipo();
+    $lugar = $oProfesorCongreso->getLugar();
+    $organiza = $oProfesorCongreso->getOrganiza();
+    $f_ini = $oProfesorCongreso->getF_ini()->getFromLocal();
+    $f_fin = $oProfesorCongreso->getF_fin()->getFromLocal();
+    
 	$array_tipo_c = $oProfesorCongreso->getDatosTipo()->getArgument();
 	$tipo_congreso=$array_tipo_c[$row['tipo']];
-	echo "<tr><td>$tipo_congreso</td><td>${row['congreso']}</td><td>${row['lugar']}</td><td>${row['f_ini']}</td><td>${row['f_fin']}</td><td>${row['organiza']}</td></tr>";
+    echo "<tr><td>$tipo_congreso</td><td>$congreso</td><td>$lugar</td><td>$f_ini</td><td>$f_fin</td><td>$organiza</td></tr>";
 }
 ?>
 </table>

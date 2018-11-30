@@ -296,7 +296,7 @@ class Sector Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_departamento de Sector
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_departamento() {
 		$nom_tabla = $this->getNomTabla();
@@ -312,7 +312,7 @@ class Sector Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut ssector de Sector
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosSector() {
 		$nom_tabla = $this->getNomTabla();

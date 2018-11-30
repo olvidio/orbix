@@ -267,7 +267,7 @@ class Departamento Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sdepartamento de Departamento
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosDepartamento() {
 		$nom_tabla = $this->getNomTabla();

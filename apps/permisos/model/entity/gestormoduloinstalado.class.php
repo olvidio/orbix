@@ -1,6 +1,7 @@
 <?php
 namespace permisos\model\entity;
 use core;
+use web;
 /**
  * GestorModuloInstalado
  *
@@ -64,7 +65,7 @@ class GestorModuloInstalado Extends core\ClaseGestor {
 	function getModulosInstaladosQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
 		$oModuloInstaladoSet = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorModuloInstalado.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;

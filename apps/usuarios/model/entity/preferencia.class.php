@@ -295,7 +295,7 @@ class Preferencia Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut spreferencia de Preferencia
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPreferencia() {
 		$nom_tabla = $this->getNomTabla();

@@ -103,7 +103,6 @@ foreach ($cPersonas as $oPersona) {
 	$cPersonaNotas = $GesPersonaNotas->getPersonaNotas(['id_nom' => $id_nom]);
 	$aAprobadas=array();
 	foreach ($cPersonaNotas as $oPersonaNota) {
-		//extract($oPersonaNota->getTot());
 		$id_asignatura = $oPersonaNota->getId_asignatura();
 		$id_nivel = $oPersonaNota->getId_nivel();
 		$id_situacion = $oPersonaNota->getId_situacion();

@@ -198,7 +198,7 @@ class sincroDB {
 			$dl_persona = $oPersonaDl->getDl();
 			$apellido1 = $oPersonaDl->getApellido1();
 			$apellido2 = $oPersonaDl->getApellido2();
-			$f_nacimiento = empty($oPersonaDl->getF_nacimiento())? '??' : $oPersonaDl->getF_nacimiento();
+			$f_nacimiento = empty($oPersonaDl->getF_nacimiento()->getFromLocal())? '??' : $oPersonaDl->getF_nacimiento()->getFromLocal();
 			$a_lista_orbix[$i] = array('id_nom'=>$id_nom,
 										'ape_nom'=>$ape_nom,
 										'nombre'=>$nombre,
@@ -217,6 +217,7 @@ class sincroDB {
 	
 	function syncro($oPersonaListas,$id_orbix) {
 		$msg = '';
+		$oHoy = new web\DateTimeLocal();
 		$a_ctr = $GLOBALS['a_centros'];
 		
 		$id_nom_listas = $oPersonaListas->getIdentif();
@@ -276,7 +277,7 @@ class sincroDB {
 		//Las personas en listas siempre están en situación 'A'
 		if ($oPersona->getSituacion() != 'A') {
 			$oPersona->setSituacion('A');
-			$oPersona->setF_situacion(date("d/m/Y"));
+			$oPersona->setF_situacion($oHoy);
 		}
 		$oPersona->setNom($nombre);
 		$oPersona->setNx1($nx1);

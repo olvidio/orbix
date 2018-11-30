@@ -87,7 +87,8 @@ class Select1303 {
 		$est_ok=$oAsistente->getEst_ok();
 		$observ_est=$oAsistente->getObserv_est();
 		$oActividad = new actividades\Actividad(array('id_activ'=>  $this->id_activ));
-		extract($oActividad->getTot());
+		$nom_activ = $oActividad->getNom_activ();
+		
 		$GesMatriculas = new entity\GestorMatricula();
 		$cMatriculas = $GesMatriculas->getMatriculas(array('id_nom'=>  $this->id_pau,'id_activ'=>  $this->id_activ,'_ordre'=>'id_nivel'));
 		
@@ -193,8 +194,8 @@ class Select1303 {
 		$mes=date('m');
 		$any=date('Y');
 		if ($mes>9) { $any=$any+1; } 
-		$inicurs_ca=core\curso_est("inicio",$any);
-		$fincurs_ca=core\curso_est("fin",$any);
+		$inicurs_ca=core\curso_est("inicio",$any)->format('Y-m-d');
+		$fincurs_ca=core\curso_est("fin",$any)->format('Y-m-d');
 
 		$aviso = '';
 		// Compruebo si està de repaso...

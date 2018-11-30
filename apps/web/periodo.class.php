@@ -1,6 +1,6 @@
 <?php
 namespace web;
-use core;
+use core\ConfigGlobal;
 /**
  * Classe que passa el periode amb texte a data inici i data fi.
  *
@@ -28,13 +28,13 @@ class Periodo {
 	/**
 	 * df_ini de Periodo
 	 *
-	 * @var date
+	 * @var DateTimeLocal
 	 */
 	 private $df_ini;
 	/**
 	 * df_fin de Periodo
 	 *
-	 * @var date
+	 * @var DateTimeLocal
 	 */
 	 private $df_fin;
 
@@ -74,10 +74,10 @@ class Periodo {
 	function setAny($iany) {
 		$this->iany = $iany;
 	}
-	function getF_ini() {
+	function getF_ini_iso() {
 		return $this->df_ini;
 	}
-	function getF_fin() {
+	function getF_fin_iso() {
 		return $this->df_fin;
 	}
 
@@ -86,91 +86,94 @@ class Periodo {
 		$mes = date('m');
 		switch ($sPeriodo) {
 			case "desdeHoy":
-				$inicio = date('d/m/Y');	
-				$fin = date('d/m/Y',mktime(0, 0, 0, $mes+6, 0, $any));
+				$inicio = date('Y/m/d');	
+				$fin = date('Y/m/d',mktime(0, 0, 0, $mes+6, 0, $any));
 				break;
 			case "curso":
 				if ($mes>9) {
 					$any2=$any+1;
-					$inicio = "1/10/".$any;	
-					$fin = "31/5/".$any2;
+					$inicio = $any."/10/1";	
+					$fin = $any2."/5/31";
 				} else {
 					$any2=$any-1;
-					$inicio = "1/10/".$any2;	
-					$fin = "31/5/".$any;
+					$inicio = $any2."/10/1";	
+					$fin = $any."/5/31";
 				}
 				break;
 			case "curso_crt":
+			    $ini_d = ConfigGlobal::$crt_inicio['d'];
+			    $ini_m = ConfigGlobal::$crt_inicio['m'];
+			    $fin_d = ConfigGlobal::$crt_fin['d'];
+			    $fin_m = ConfigGlobal::$crt_fin['m'];
 				if ($mes>9) {
-					$any2=$any+1;
-					$inicio = "1/10/".$any;	
-					$fin = "31/8/".$any2;
+				    $any2=$any-1;
+				    $inicio = "$any2-$ini_m-$ini_d";
+				    $fin = "$any-$fin_m-$fin_d";
 				} else {
-					$any2=$any-1;
-					$inicio = "1/10/".$any2;	
-					$fin = "31/8/".$any;
+				    $any2=$any-2;
+				    $any--;
+				    $inicio = "$any2-$ini_m-$ini_d";
+				    $fin = "$any-$fin_m-$fin_d";
 				}
 				break;
 			case "curso_ca":
-				$ini = core\ConfigGlobal::$est_inicio;
-				$fi = core\ConfigGlobal::$est_fin;
+			    $ini_d = ConfigGlobal::$est_inicio['d'];
+			    $ini_m = ConfigGlobal::$est_inicio['m'];
+			    $fin_d = ConfigGlobal::$est_fin['d'];
+			    $fin_m = ConfigGlobal::$est_fin['m'];
 				if ($mes>9) {
-					$any2=$any+1;
-					//$inicio = "1/10/".$any;	
-					//$fin = "30/9/".$any2;
-					$inicio = "$ini/$any";	
-					$fin = "$fi/$any2";
+				    $any2=$any-1;
+				    $inicio = "$any2-$ini_m-$ini_d";
+				    $fin = "$any-$fin_m-$fin_d";
 				} else {
-					$any2=$any-1;
-					//$inicio = "1/10/".$any2;	
-					//$fin = "30/9/".$any;
-					$inicio = "$ini/$any2";	
-					$fin = "$fi/$any";
+				    $any2=$any-2;
+				    $any--;
+				    $inicio = "$any2-$ini_m-$ini_d";
+				    $fin = "$any-$fin_m-$fin_d";
 				}
 				break;
 			case "trimestre":
-				$inicio = "1/$mes/".($any);	
-				$fin = date('d/m/Y',mktime(0, 0, 0, $mes+3, 0, $any));
+				$inicio = $any."/$mes/1";	
+				$fin = date('Y/m/d',mktime(0, 0, 0, $mes+3, 0, $any));
 				break;
 			case "mes":
-				$inicio = "1/$mes/".($any);	
-				$fin = date('d/m/Y',mktime(0, 0, 0, $mes+1, 0, $any));
+				$inicio = $any."/$mes/1";	
+				$fin = date('Y/m/d',mktime(0, 0, 0, $mes+1, 0, $any));
 				break;
 			case "verano":
-				$inicio = "1/6/".$any;	
-				$fin = "30/9/".$any;
+				$inicio = $any."/6/1";	
+				$fin = $any."/9/30";
 				break;
 			case "trimestre_1":
-				$inicio = "1/1/".($any);	
-				$fin = "31/3/".($any);
+				$inicio = $any."/1/1";	
+				$fin = $any."/3/31";
 				break;
 			case "trimestre_2":
-				$inicio = "1/4/".($any);	
-				$fin = "30/6/".($any);
+				$inicio = $any."/4/1";	
+				$fin = $any."/6/30";
 				break;
 			case "trimestre_3":
-				$inicio = "1/7/".($any);	
-				$fin = "30/9/".($any);
+				$inicio = $any."/7/1";	
+				$fin = $any."/9/30";
 				break;
 			case "trimestre_4":
-				$inicio = "1/10/".($any);	
-				$fin = "31/12/".($any);
+				$inicio = $any."/10/1";	
+				$fin = $any."/12/31";
 				break;
 			case "tot_any":
-				$inicio = "1/1/".($any);	
-				$fin = "31/12/".($any);
+				$inicio = $any."/1/1";	
+				$fin = $any."/12/31";
 				break;
 			case "any_prox":
-				$inicio = "1/1/".($any+1);	
-				$fin = "31/12/".($any+1);
+				$inicio = ($any+1)."/1/1";	
+				$fin = ($any+1)."/12/31";
 				break;
 			default:
-				if (empty($inicio)) $inicio = "1/1/".($any);	
-				if (empty($fin)) $fin = "31/12/".($any);
+				if (empty($inicio)) $inicio = $any."/1/1";	
+				if (empty($fin)) $fin = $any."/12/31";
 		}
 		$this->df_ini = $inicio;
 		$this->df_fin = $fin;
 	}
 
 }
-?>

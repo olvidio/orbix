@@ -28,11 +28,11 @@ class TipoTarifa Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
-	 * Tarifa de TipoTarifa
+	 * Id_tarifa de TipoTarifa
 	 *
 	 * @var integer
 	 */
-	 private $itarifa;
+	 private $iid_tarifa;
 	/**
 	 * Modo de TipoTarifa
 	 *
@@ -66,7 +66,7 @@ class TipoTarifa Extends core\ClasePropiedades {
 	 * Si només necessita un valor, se li pot passar un integer.
 	 * En general se li passa un array amb les claus primàries.
 	 *
-	 * @param integer|array itarifa
+	 * @param integer|array iid_tarifa
 	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
 	 */
 	function __construct($a_id='') {
@@ -74,11 +74,11 @@ class TipoTarifa Extends core\ClasePropiedades {
 		if (is_array($a_id)) { 
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
-				if (($nom_id === 'tarifa') && $val_id !== '') $this->itarifa = (int)$val_id; // evitem SQL injection fent cast a integer
+				if (($nom_id === 'id_tarifa') && $val_id !== '') $this->iid_tarifa = (int)$val_id; // evitem SQL injection fent cast a integer
 			}	} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->itarifa = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('itarifa' => $this->itarifa);
+				$this->iid_tarifa = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->aPrimary_key = array('iid_tarifa' => $this->iid_tarifa);
 			}
 		}
 		$this->setoDbl($oDbl);
@@ -112,7 +112,7 @@ class TipoTarifa Extends core\ClasePropiedades {
 					letra                    = :letra,
 					sfsv                     = :sfsv,
 					observ                   = :observ";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE tarifa='$this->itarifa'")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_tarifa='$this->iid_tarifa'")) === false) {
 				$sClauError = 'TipoTarifa.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -138,7 +138,7 @@ class TipoTarifa Extends core\ClasePropiedades {
 					return false;
 				}
 			}
-			$aDades['tarifa'] = $oDbl->lastInsertId($nom_tabla.'_tarifa_seq');
+			$aDades['id_tarifa'] = $oDbl->lastInsertId($nom_tabla.'_tarifa_seq');
 		}
 		$this->setAllAtributes($aDades);
 		return true;
@@ -151,8 +151,8 @@ class TipoTarifa Extends core\ClasePropiedades {
 	public function DBCarregar($que=null) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (isset($this->itarifa)) {
-			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE tarifa='$this->itarifa'")) === false) {
+		if (isset($this->iid_tarifa)) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_tarifa='$this->iid_tarifa'")) === false) {
 				$sClauError = 'TipoTarifa.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -181,7 +181,7 @@ class TipoTarifa Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE tarifa='$this->itarifa'")) === false) {
+		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_tarifa='$this->iid_tarifa'")) === false) {
 			$sClauError = 'TipoTarifa.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -199,7 +199,7 @@ class TipoTarifa Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
-		if (array_key_exists('tarifa',$aDades)) $this->setTarifa($aDades['tarifa']);
+		if (array_key_exists('id_tarifa',$aDades)) $this->setId_tarifa($aDades['id_tarifa']);
 		if (array_key_exists('modo',$aDades)) $this->setModo($aDades['modo']);
 		if (array_key_exists('letra',$aDades)) $this->setLetra($aDades['letra']);
 		if (array_key_exists('sfsv',$aDades)) $this->setSfsv($aDades['sfsv']);
@@ -227,29 +227,29 @@ class TipoTarifa Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('itarifa' => $this->itarifa);
+			$this->aPrimary_key = array('iid_tarifa' => $this->iid_tarifa);
 		}
 		return $this->aPrimary_key;
 	}
 
 	/**
-	 * Recupera l'atribut itarifa de TipoTarifa
+	 * Recupera l'atribut iid_tarifa de TipoTarifa
 	 *
-	 * @return integer itarifa
+	 * @return integer iid_tarifa
 	 */
-	function getTarifa() {
-		if (!isset($this->itarifa)) {
+	function getId_tarifa() {
+		if (!isset($this->iid_tarifa)) {
 			$this->DBCarregar();
 		}
-		return $this->itarifa;
+		return $this->iid_tarifa;
 	}
 	/**
-	 * estableix el valor de l'atribut itarifa de TipoTarifa
+	 * estableix el valor de l'atribut iid_tarifa de TipoTarifa
 	 *
-	 * @param integer itarifa
+	 * @param integer iid_tarifa
 	 */
-	function setTarifa($itarifa) {
-		$this->itarifa = $itarifa;
+	function setId_tarifa($iid_tarifa) {
+		$this->iid_tarifa = $iid_tarifa;
 	}
 	/**
 	 * Recupera l'atribut imodo de TipoTarifa
@@ -368,7 +368,7 @@ class TipoTarifa Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut imodo de TipoTarifa
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosModo() {
 		$nom_tabla = $this->getNomTabla();
@@ -380,7 +380,7 @@ class TipoTarifa Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sletra de TipoTarifa
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosLetra() {
 		$nom_tabla = $this->getNomTabla();
@@ -392,7 +392,7 @@ class TipoTarifa Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut isfsv de TipoTarifa
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosSfsv() {
 		$nom_tabla = $this->getNomTabla();
@@ -404,7 +404,7 @@ class TipoTarifa Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iobserv de TipoTarifa
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosObserv() {
 		$nom_tabla = $this->getNomTabla();

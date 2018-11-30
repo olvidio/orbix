@@ -474,7 +474,7 @@ class Asignatura Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_asignatura de Asignatura
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_asignatura() {
 		$nom_tabla = $this->getNomTabla();
@@ -488,7 +488,7 @@ class Asignatura Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_nivel de Asignatura
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_nivel() {
 		$nom_tabla = $this->getNomTabla();
@@ -502,7 +502,7 @@ class Asignatura Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut snombre_asignatura de Asignatura
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNombre_asignatura() {
 		$nom_tabla = $this->getNomTabla();
@@ -516,7 +516,7 @@ class Asignatura Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut snombre_corto de Asignatura
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNombre_corto() {
 		$nom_tabla = $this->getNomTabla();
@@ -530,7 +530,7 @@ class Asignatura Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut screditos de Asignatura
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosCreditos() {
 		$nom_tabla = $this->getNomTabla();
@@ -544,7 +544,7 @@ class Asignatura Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut syear de Asignatura
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosYear() {
 		$nom_tabla = $this->getNomTabla();
@@ -558,7 +558,7 @@ class Asignatura Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_sector de Asignatura
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_sector() {
 		$nom_tabla = $this->getNomTabla();
@@ -574,7 +574,7 @@ class Asignatura Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bstatus de Asignatura
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosStatus() {
 		$nom_tabla = $this->getNomTabla();
@@ -587,7 +587,7 @@ class Asignatura Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_tipo de Asignatura
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_tipo() {
 		$nom_tabla = $this->getNomTabla();

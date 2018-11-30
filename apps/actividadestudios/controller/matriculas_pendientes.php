@@ -3,12 +3,10 @@
 use actividades\model\entity as actividades;
 use actividadestudios\model\entity as actividadestudios;
 use asignaturas\model\entity as asignaturas;
-use core\ConfigGlobal;
 use personas\model\entity as personas;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
-use function core\curso_est;
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
 */
@@ -19,13 +17,6 @@ use function core\curso_est;
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-
-/* Pongo en la variable $curso el periodo del curso */
-$mes=date('m');
-$any=date('Y');
-if ($mes>9) { $any=$any+1; } 
-$inicurs_ca=curso_est("inicio",$any);
-$fincurs_ca=curso_est("fin",$any);
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {

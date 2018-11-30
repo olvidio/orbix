@@ -91,6 +91,7 @@ foreach ($cDatosCampos as $oDatosCampo) {
 								   'val'=>array($valor));
 					}
 					break;
+				case 'int8':
 				case 'int4':
 				case 'int2':
 					//$valor=(int)$valor;
@@ -152,7 +153,8 @@ foreach ($cDatosCampos as $oDatosCampo) {
 				case 'time':
 					$err=0;
 					if (!empty($valor)) {
-						if (preg_match ("/^([0-9]{2}):([0-9]{2})(:([0-9]{2}))?$/", $valor, $parts)==1) {
+					    $parts = [];
+						if (preg_match ("/^([0-9]{1,2}):([0-9]{1,2})(:([0-9]{1,2}))?$/", $valor, $parts)==1) {
 							if ($parts[1]>24) $err=1;
 							if ($parts[2]>60) $err=1;
 							if (!empty($parts[4]) && $parts[4]>60) $err=1;

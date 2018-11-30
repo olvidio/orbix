@@ -36,8 +36,8 @@ switch($Qque) {
 	case 'perm_menu_eliminar':
 		$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 		if (!empty($a_sel)) { //vengo de un checkbox
-			$Qid_usuario = strtok($a_sel[0],"#");
-			$Qid_item=strtok("#");
+		    $Qid_usuario = (integer) trtok($a_sel[0],"#");
+		    $Qid_item= (integer) strtok("#");
 		} 
 		$oUsuarioPerm = new usuarios\PermMenu(array('id_item'=>$Qid_item));
 		if ($oUsuarioPerm->DBEliminar() === false) {
@@ -47,8 +47,8 @@ switch($Qque) {
 	case 'perm_eliminar':
 		$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 		if (!empty($a_sel)) { //vengo de un checkbox
-			$Qid_usuario = strtok($a_sel[0],"#");
-			$Qid_item=strtok("#");
+		    $Qid_usuario = (integer) strtok($a_sel[0],"#");
+		    $Qid_item= (integer) strtok("#");
 		} 
 		$oUsuario = new usuarios\GrupoOUsuario(array('id_usuario'=>$Qid_usuario)); // La tabla y su heredada
 		$oUsuarioPerm = new UsuarioPerm(array('id_item'=>$Qid_item));

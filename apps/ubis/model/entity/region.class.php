@@ -324,7 +324,7 @@ class Region Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_region de Region
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_region() {
 		$nom_tabla = $this->getNomTabla();
@@ -338,7 +338,7 @@ class Region Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_region de Region
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosRegion() {
 		$nom_tabla = $this->getNomTabla();
@@ -352,7 +352,7 @@ class Region Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut snombre_region de Region
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNombre_region() {
 		$nom_tabla = $this->getNomTabla();
@@ -366,7 +366,7 @@ class Region Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bstatus de Region
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosStatus() {
 		$nom_tabla = $this->getNomTabla();

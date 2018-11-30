@@ -41,16 +41,24 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
 		$oMenuDb=new menusEntity\MenuDb();
 		// para modificar los valores de un menu.
 		$oMenuDb->setId_menu($Qid_menu);
-		extract($oMenuDb->getTot());
+
+		$orden = $oMenuDb->getOrden();
+		$menu = $oMenuDb->getMenu();
+		$parametros = $oMenuDb->getParametros();
+		$id_metamenu = $oMenuDb->getId_metamenu();
+		$menu_perm = $oMenuDb->getMenu_perm();
+		$id_grupmenu = $oMenuDb->getId_grupmenu();
+		$ok = $oMenuDb->getOk ();
+
 		$oDesplMeta->setOpcion_sel($id_metamenu);
 //		$oDesplMeta->setAction('fnjs_lista_menus()');
-		
+
 		$perm_menu = $oCuadros->lista_txt2($menu_perm);
 		$a_perm_menu = explode(',',$perm_menu);
 		$chk = ($ok)? 'checked' : '';
 
 	} else {
-		$id_menu='';
+		$Qid_menu='';
 		$orden='';
 		$menu='';
 		$url='';
@@ -113,6 +121,7 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
 				'oHash' => $oHash,
 				'orden' => $orden,
 				'txt_ok' => $txt_ok,
+				'id_menu' => $Qid_menu,
 				'menu' => $menu,
 				'oDesplMeta' => $oDesplMeta,
 				'parametros' => $parametros,

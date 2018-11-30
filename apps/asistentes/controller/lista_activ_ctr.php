@@ -83,6 +83,8 @@ $condicion .= empty($condta)? '' : '^'.$condta;
 $condicion .= empty($condta_plus)? '' : '|^'.$condta_plus;
 $condicion .= empty($condta_sr)? '' : '|^'.$condta_sr;
 
+$aWhereAct = [];
+$aOperadorAct = [];
 $aWhereAct['id_tipo_activ'] = $condicion;
 $aOperadorAct['id_tipo_activ'] = "~";
 
@@ -102,10 +104,12 @@ if ($Qperiodo == 'otro') {
 	$oPeriodo = new web\Periodo();
 	$oPeriodo->setAny($any);
 	$oPeriodo->setPeriodo($periodo);
-	$inicio = $oPeriodo->getF_ini();
-	$fin = $oPeriodo->getF_fin();
+	$inicio = $oPeriodo->getF_ini_iso();
+	$fin = $oPeriodo->getF_fin_iso();
 }
 
+$aWhere = [];
+$aOperador = [];
 switch ($Qn_agd) {
 	case "a":
 		$tabla="p_agregados";
@@ -149,7 +153,8 @@ $ctr=0;
 $aCentros = array();
 foreach ($cCentros as $oCentro) {
 	$ctr++;
-	extract($oCentro->getTot());
+	$id_ubi = $oCentro->getId_ubi();
+	$nombre_ubi = $oCentro->getNombre_ubi();
 	//consulta para buscar personas de cada ctr		
 	if ($tabla=="p_sssc") {
 		$GesPersonas = new personas\GestorPersonaSSSC();
@@ -163,6 +168,7 @@ foreach ($cCentros as $oCentro) {
 	
 	$i=0;
 	$aPersonasCtr = array();
+	$aWhereNom = [];
 	foreach ($cPersonas as $oPersona) {
 		$i++;
 		$id_nom=$oPersona->getId_nom();

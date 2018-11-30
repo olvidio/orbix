@@ -342,4 +342,3 @@ class PermisosActividadesTrue {
 		return $this->iid_tipo_proceso;
 	}
 }
-?>

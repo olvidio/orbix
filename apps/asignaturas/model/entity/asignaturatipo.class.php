@@ -346,7 +346,7 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut stipo_asignatura de AsignaturaTipo
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTipo_asignatura() {
 		$nom_tabla = $this->getNomTabla();
@@ -358,7 +358,7 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut stipo_breve de AsignaturaTipo
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTipo_breve() {
 		$nom_tabla = $this->getNomTabla();
@@ -370,7 +370,7 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut saño de AsignaturaTipo
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosAño() {
 		$nom_tabla = $this->getNomTabla();
@@ -382,7 +382,7 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut stipo_latin de AsignaturaTipo
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTipo_latin() {
 		$nom_tabla = $this->getNomTabla();

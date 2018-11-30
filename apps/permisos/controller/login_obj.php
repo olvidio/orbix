@@ -5,7 +5,8 @@ use permisos\model as permisos;
 use usuarios\model\entity as usuarios;
 use web;
 use core;
-
+use core\ConfigGlobal;
+    
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -37,6 +38,7 @@ function posibles_esquemas($default='') {
 			if (!isset($row[1])) { $a = 0; } else { $a = 1; } // para el caso de sólo tener un valor.
 			if ($row[0] == 'public') continue;
 			if ($row[0] == 'resto') continue;
+			if ($row[0] == 'global') continue;
 			$sf = $row[0].'f';
 			$sv = $row[0].'v';
 			if (!empty($default) && $sf == $default) { $sel_sf = 'selected'; } else { $sel_sf = ''; }
@@ -300,6 +302,9 @@ if ( !isset($_SESSION['session_auth'])) {
 						/* a ver si memoriza el esquema al que entro */
 						setcookie("esquema", $esquema, time() + (86400 * 30), "/"); // 86400 = 1 day
 						setcookie("idioma", $idioma, time() + (86400 * 30), "/"); // 86400 = 1 day
+						/* Hacer que vaya a la pagina de inicio.
+						 * No funciona, */
+						//header("Location: ".ConfigGlobal::getWeb(), true, 301);
 					} else {
 						$a_campos = array('error'=>1);
 						$a_campos['DesplRegiones'] = posibles_esquemas($esquema);

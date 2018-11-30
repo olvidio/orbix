@@ -1,5 +1,7 @@
 <?php
 namespace web;
+use actividades\model\entity\GestorTipoDeActividad;
+
 /**
  * Classe que implementa l'entitat tipos de actividades
  *
@@ -66,9 +68,9 @@ class TiposActividades {
 				"sv"=>1,
 				"sf"=>2,
 				"reservada"=>3,
-				"todos"=>'.'
+				"all"=>'.'
 			);
-	
+
 	/**
 	 * aAsistentes de ProcesoTipo
 	 *
@@ -84,7 +86,7 @@ class TiposActividades {
 				"sr"=>7,
 				"sr-nax"=>8,
 				"sr-agd"=>9,
-				"todos"=>'.'
+				"all"=>'.'
 			);
 
 	/**
@@ -98,7 +100,7 @@ class TiposActividades {
 				"cv"=>3,
 				"cve"=>4,
 				"cv-crt"=>5,
-				"todos"=>'.'
+				"all"=>'.'
 			);
 
 	//transpongo los vectores para buscar por números y no por el texto
@@ -115,8 +117,8 @@ class TiposActividades {
 	 */
 	function __construct($id='') {
 		if (isset($id) && $id !== '') {
-			if (is_numeric($id)) $this->iid_tipo_activ = $id; 
-			$this->separarId($id); 
+			if (is_numeric($id)) $this->iid_tipo_activ = $id;
+			$this->separarId($id);
 		}
 	}
 
@@ -133,7 +135,7 @@ class TiposActividades {
 		if (empty($this->afActividad)) $this->afActividad = array_flip($this->aActividad);
 		return $this->afActividad;
 	}
-	
+
 	function separarId($sregexp_id_tipo_activ) {
 		if(!empty($sregexp_id_tipo_activ)) {
 			$inc = 0;
@@ -145,6 +147,7 @@ class TiposActividades {
 			for ($i=strlen($sregexp_id_tipo_activ);$i<$long;$i++) {
 				$sregexp_id_tipo_activ.='.';
 			}
+			$matches = [];
 			preg_match('/(\[\d+\]|\d|\.)(\[\d+\]|\d|\.)(\[\d+\]|\d|\.)(\d{3}|\.*)/', $sregexp_id_tipo_activ,$matches);
 			if (!empty($matches)) {
 				$this->sregexp_id_tipo_activ=$matches[0];
@@ -177,9 +180,9 @@ class TiposActividades {
 	 */
 	public function getNomGral() {
 		$txt= $this->getSfsvText();
-		if ($this->getAsistentesText() <> _("todos")) $txt.= ' '.$this->getAsistentesText();
-		if ($this->getActividadText() <> _("todos")) $txt.= ' '.$this->getActividadText();
-		if ($this->getNom_tipoId() <> 0 && $this->getNom_tipoText() <> _("todos")) $txt.= ' '.$this->getNom_tipoText();
+		if ($this->getAsistentesText() <> 'all') $txt.= ' '.$this->getAsistentesText();
+		if ($this->getActividadText() <> 'all') $txt.= ' '.$this->getActividadText();
+		if ($this->getNom_tipoId() <> 0 && $this->getNom_tipoText() <> 'all') $txt.= ' '.$this->getNom_tipoText();
 		return $txt;
 	}
 	/**
@@ -189,9 +192,9 @@ class TiposActividades {
 	 */
 	public function getNom() {
 		$txt= $this->getSfsvText();
-		if ($this->getAsistentesText() <> _("todos")) $txt.= ' '.$this->getAsistentesText();
-		if ($this->getActividadText() <> _("todos")) $txt.= ' '.$this->getActividadText();
-		if ($this->getNom_tipoText() <> _("todos")) $txt.= ' '.$this->getNom_tipoText();
+		if ($this->getAsistentesText() <> 'all') $txt.= ' '.$this->getAsistentesText();
+		if ($this->getActividadText() <> 'all') $txt.= ' '.$this->getActividadText();
+		if ($this->getNom_tipoText() <> 'all') $txt.= ' '.$this->getNom_tipoText();
 		return $txt;
 	}
 	/**
@@ -204,7 +207,7 @@ class TiposActividades {
 		if (is_numeric($this->ssfsv)) {
 			return $aText[$this->ssfsv];
 		} else {
-			return _("todos");
+			return 'all';
 		}
 	}
 	/**
@@ -249,17 +252,9 @@ class TiposActividades {
 	 * @return array
 	 */
 	public function getSfsvPosibles() {
-		$oDbl = $GLOBALS['oDBPC'];
-		$aText=$this->getFlipSfsv();
-		$query_ta="select substr(id_tipo_activ::text,1,1) as ta1 from a_tipos_actividad where id_tipo_activ::text ~'' group by ta1 order by ta1";
-		$oDBPCASt_q_ta=$oDbl->query($query_ta);
-		$i=0;
-		foreach ($oDBPCASt_q_ta->fetchAll() as $row) {
-			$i++;
-			//$sfsv[$i]=$row[0]."#".$aText[$row[0]];
-			$sfsv[$row[0]]=$aText[$row[0]];
-		}
-		return $sfsv;
+	    $aText=$this->getFlipSfsv();
+		$GesTipoDeActividades = new GestorTipoDeActividad();
+		return $GesTipoDeActividades->getSfsvPosibles($aText);
 	}
 	/**
 	 * Recupera l'atribut asistentes en format de text
@@ -271,7 +266,7 @@ class TiposActividades {
 		if (is_numeric($this->sasistentes)) {
 			return $aText[$this->sasistentes];
 		} else {
-			return _("todos");
+			return 'all';
 		}
 	}
 	/**
@@ -318,21 +313,14 @@ class TiposActividades {
 	 * @return array
 	 */
 	public function getAsistentesPosibles() {
-		$oDbl = $GLOBALS['oDBPC'];
 		$aText=$this->getFlipAsistentes();
 		if (!empty($this->sasistentes)) {
 			$regexp=$this->getAsistentesRegexp();
 		} else {
 			$regexp=$this->getSfsvRegexp();
 		}
-		$query_ta="select substr(id_tipo_activ::text,2,1) as ta2
-			from a_tipos_actividad where id_tipo_activ::text ~'".$regexp."' group by ta2 order by ta2";
-		//echo "query: $query_ta<br>";
-		$oDBPCASt_q_ta=$oDbl->query($query_ta);
-		foreach ($oDBPCASt_q_ta->fetchAll() as $row) {
-			$asistentes[$row[0]]=$aText[$row[0]];
-		}
-		return $asistentes;
+		$GesTipoDeActividades = new GestorTipoDeActividad();
+		return $GesTipoDeActividades->getAsistentesPosibles($aText,$regexp);
 	}
 	/**
 	 * Recupera l'atribut acividades en format de text
@@ -344,7 +332,7 @@ class TiposActividades {
 		if (is_numeric($this->sactividad)) {
 			return $aText[$this->sactividad];
 		} else {
-			return _("todos");
+			return 'all';
 		}
 	}
 	/**
@@ -383,18 +371,9 @@ class TiposActividades {
 	 * @return array
 	 */
 	public function getActividadesPosibles() {
-		$oDbl = $GLOBALS['oDBPC'];
 		$aText=$this->getFlipActividad();
-		$query_ta="select substr(id_tipo_activ::text,3,1) as ta3
-			from a_tipos_actividad where id_tipo_activ::text ~'".$this->getAsistentesRegexp()."' group by ta3 order by ta3";
-		$oDBPCASt_q_ta=$oDbl->query($query_ta);
-		$i=0;
-		foreach ($oDBPCASt_q_ta->fetchAll() as $row) {
-			$i++;
-			//$asistentes[$i]=$row[0]."#".$aText[$row[0]];
-			$actividades[$row[0]]=$aText[$row[0]];
-		}
-		return $actividades;
+		$GesTipoDeActividades = new GestorTipoDeActividad();
+		return $GesTipoDeActividades->getActividadesPosibles($aText,$this->getAsistentesRegexp());
 	}
 
 	/**
@@ -411,7 +390,7 @@ class TiposActividades {
 				return $this->afNom_tipo[$this->snom_tipo];
 			}
 		} else {
-			return _("todos");
+			return 'all';
 		}
 	}
 	/**
@@ -450,40 +429,21 @@ class TiposActividades {
 	 * @return array
 	 */
 	public function getNom_tipoPosibles() {
-		$oDbl = $GLOBALS['oDBPC'];
-		$query="SELECT * FROM a_tipos_actividad where id_tipo_activ::text ~'".$this->getActividadRegexp()."' order by id_tipo_activ";
-		//echo $query;
-		$oDBPCASt_id=$oDbl->query($query);
-		$i=0;
-		foreach ($oDBPCASt_id->fetchAll() as $row) {
-			$i++;
-			$nom_tipo[$i] = $row['nombre'].'#'.$row['id_tipo_activ'];
-			$num=substr($row['id_tipo_activ'],3,3);
-			$tipo_nom[$num] = $row['nombre'];
-		}
-		$this->afNom_tipo =$tipo_nom;
-		$this->aNom_tipo=$nom_tipo;
-		return $tipo_nom;
+		$GesTipoDeActividades = new GestorTipoDeActividad();
+		$rta = $GesTipoDeActividades->getNom_tipoPosibles($this->getActividadRegexp());
+		$this->afNom_tipo = $rta['tipo_nom'];
+		$this->aNom_tipo = $rta['nom_tipo'];
+		return $rta['tipo_nom'];
 	}
 	/**
 	 * Retorna els posibles id_tipo en format de array
 	 *
-	 * @param regexp expresió regular per tornar el id (substring('bla' from regexp) del postgresql). 
+	 * @param regexp expresió regular per tornar el id (substring('bla' from regexp) del postgresql).
 	 * @return array
 	 */
 	public function getId_tipoPosibles($regexp='.*') {
-		$oDbl = $GLOBALS['oDBPC'];
-		$query="SELECT substring(id_tipo_activ::text from '".$regexp."') 
-		   	FROM a_tipos_actividad  where id_tipo_activ::text ~'".$this->getActividadRegexp()."' order by id_tipo_activ";
-		//echo $query;
-		$oDBPCASt_id=$oDbl->query($query);
-		$a_id_tipos = array();
-		foreach ($oDBPCASt_id->fetchAll() as $row) {
-			$id_tipo = $row[0];
-			$a_id_tipos[$id_tipo] = true;
-		}
-		return $a_id_tipos;
+		$GesTipoDeActividades = new GestorTipoDeActividad();
+		return $GesTipoDeActividades->getId_tipoPosibles($regexp,$this->getActividadRegexp());
 	}
 
 }
-?>

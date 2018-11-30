@@ -376,7 +376,7 @@ class Delegacion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_dl de Delegacion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_dl() {
 		$nom_tabla = $this->getNomTabla();
@@ -389,7 +389,7 @@ class Delegacion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sdl de Delegacion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosDl() {
 		$nom_tabla = $this->getNomTabla();
@@ -402,7 +402,7 @@ class Delegacion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut snombre_dl de Delegacion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNombre_dl() {
 		$nom_tabla = $this->getNomTabla();
@@ -416,7 +416,7 @@ class Delegacion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sgrupo_estudios de Delegacion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosGrupo_estudios() {
 		$nom_tabla = $this->getNomTabla();
@@ -430,7 +430,7 @@ class Delegacion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sregion de Delegacion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosRegion() {
 		$nom_tabla = $this->getNomTabla();
@@ -446,7 +446,7 @@ class Delegacion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bstatus de Delegacion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosStatus() {
 		$nom_tabla = $this->getNomTabla();

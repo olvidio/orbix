@@ -114,7 +114,7 @@ if ($notas != 'nuevo' && $Qmod != 'nueva' && !empty($acta_actual))  { //signific
 		$oActa = new notas\Acta($acta_actual);
 		$id_asignatura = $oActa->getId_asignatura();
 		$id_activ = $oActa->getId_activ();
-		$f_acta = $oActa->getF_acta();
+		$f_acta = $oActa->getF_acta()->getFromLocal();
 		$libro = $oActa->getLibro();
 		$pagina = $oActa->getPagina();
 		$linea = $oActa->getLinea();
@@ -149,13 +149,13 @@ if ($notas != 'nuevo' && $Qmod != 'nueva' && !empty($acta_actual))  { //signific
 		$json_examinadores .= '],';
 	} else { // estoy actualizando la página
 		if (!empty($a_sel) && !empty($notas)) { //vengo de un checkbox y estoy en la página de acta_notas ($notas).
-			$id_activ = strtok($a_sel[0],'#');
-			$id_asignatura = strtok('#');
+		    $id_activ = (integer) strtok($a_sel[0],'#');
+		    $id_asignatura = (integer) strtok('#');
 			$cActas = $GesActas->getActas(array('id_activ'=>$id_activ,'id_asignatura'=>$id_asignatura));
 			$oActa = $cActas[0];
 			$id_asignatura = $oActa->getId_asignatura();
 			$id_activ = $oActa->getId_activ();
-			$f_acta = $oActa->getF_acta();
+			$f_acta = $oActa->getF_acta()->getFromLocal();
 			$libro = $oActa->getLibro();
 			$pagina = $oActa->getPagina();
 			$linea = $oActa->getLinea();
@@ -211,6 +211,7 @@ if ($Qmod == 'nueva' || $notas=="nuevo") {
 	}
 } else {
 //	$a_camposHidden['acta'] = $acta;
+	$a_camposHidden['mod'] = '';
 	$a_camposHidden['id_activ'] = $id_activ;
 	$a_camposHidden['sa_actas'] = \base64_encode( serialize($a_actas));
 	$a_camposHidden['notas'] = $notas;

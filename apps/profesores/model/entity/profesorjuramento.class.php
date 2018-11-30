@@ -1,6 +1,7 @@
 <?php
 namespace profesores\model\entity;
 use core;
+use web;
 /**
  * Fitxer amb la Classe que accedeix a la taula d_profesor_juramento
  *
@@ -51,7 +52,7 @@ class ProfesorJuramento Extends core\ClasePropiedades {
 	/**
 	 * F_juramento de ProfesorJuramento
 	 *
-	 * @var date
+	 * @var web\DateTimeLocal
 	 */
 	 private $df_juramento;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
@@ -195,12 +196,12 @@ class ProfesorJuramento Extends core\ClasePropiedades {
 	 *
 	 * @param array $aDades
 	 */
-	function setAllAtributes($aDades) {
+	function setAllAtributes($aDades,$convert=FALSE) {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_item',$aDades)) $this->setId_item($aDades['id_item']);
 		if (array_key_exists('id_nom',$aDades)) $this->setId_nom($aDades['id_nom']);
-		if (array_key_exists('f_juramento',$aDades)) $this->setF_juramento($aDades['f_juramento']);
+		if (array_key_exists('f_juramento',$aDades)) $this->setF_juramento($aDades['f_juramento'],$convert);
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
@@ -270,21 +271,24 @@ class ProfesorJuramento Extends core\ClasePropiedades {
 	/**
 	 * Recupera l'atribut df_juramento de ProfesorJuramento
 	 *
-	 * @return date df_juramento
+	 * @return web\DateTimeLocal df_juramento
 	 */
 	function getF_juramento() {
-		if (!isset($this->df_juramento)) {
-			$this->DBCarregar();
-		}
-		return $this->df_juramento;
+	    if (!isset($this->df_juramento)) {
+	        $this->DBCarregar();
+	    }
+	    if (empty($this->df_juramento)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_juramento);
+	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_juramento de ProfesorJuramento
-	 *
-	 * @param date df_juramento='' optional
-	 */
-	function setF_juramento($df_juramento='') {
-		$this->df_juramento = $df_juramento;
+	 * estableix el valor de l'atribut df_juramento de ProfesorJuramento	* Si df_juramento es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_juramento debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_juramento='' optional.	* @param boolean convert=true optional. Si es false, df_juramento debe ser un string en formato ISO (Y-m-d).	 */
+	function setF_juramento($df_juramento='',$convert=true) {
+		if ($convert === true && !empty($df_juramento)) {
+	        $oConverter = new core\Converter('date', $df_juramento);
+	        $this->df_juramento =$oConverter->toPg();
+	    } else {
+	        $this->df_juramento = $df_juramento;
+	    }
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
@@ -305,7 +309,7 @@ class ProfesorJuramento Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut df_juramento de ProfesorJuramento
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosF_juramento() {
 		$nom_tabla = $this->getNomTabla();
@@ -315,4 +319,3 @@ class ProfesorJuramento Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 }
-?>

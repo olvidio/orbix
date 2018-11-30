@@ -210,7 +210,7 @@ class Cargo Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_cargo='$this->iid_cargo'")) === false) {
+		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_cargo='$this->iid_cargo'")) === false) {
 			$sClauError = 'cargo.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -399,7 +399,7 @@ class Cargo Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut scargo de cargo
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosCargo() {
 		$nom_tabla = $this->getNomTabla();
@@ -411,7 +411,7 @@ class Cargo Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iorden_cargo de cargo
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosOrden_cargo() {
 		$nom_tabla = $this->getNomTabla();
@@ -423,7 +423,7 @@ class Cargo Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bsf de cargo
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosSf() {
 		$nom_tabla = $this->getNomTabla();
@@ -435,7 +435,7 @@ class Cargo Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bsv de cargo
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosSv() {
 		$nom_tabla = $this->getNomTabla();
@@ -447,7 +447,7 @@ class Cargo Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut stipo_cargo de cargo
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosTipo_cargo() {
 		$nom_tabla = $this->getNomTabla();

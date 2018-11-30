@@ -42,24 +42,24 @@ $Qid_dossier = (integer) \filter_input(INPUT_POST,'id_dossier');
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
 	if ($Qpau=="p") {
-		$Qid_item=strtok($a_sel[0],"#");
+		$Qid_item = (integer) strtok($a_sel[0],"#");
 		$Qelim_asis=strtok("#");
 		$Qid_nom = (integer) \filter_input(INPUT_POST,'id_pau');
 	}
 	if ($Qpau=="a") {
-		$Qid_item=strtok($a_sel[0],"#");
+		$Qid_item = (integer) strtok($a_sel[0],"#");
 		$Qelim_asis=strtok("#");
 		$Qid_activ = (integer) \filter_input(INPUT_POST,'id_pau');
 	}
 	// sobre escribo...
 	if ($Qid_dossier == 3101) {  // vengo del listado de asistencias
-		$Qid_nom = strtok($a_sel[0],"#");
-		$Qid_item =  strtok("#"); // si no hay devuelve false
+		$Qid_nom = (integer) strtok($a_sel[0],"#");
+		$Qid_item = (integer) strtok("#"); // si no hay devuelve false
 		$Qid_item = empty($Qid_item)? '' : $Qid_item; // cambiar el false a ''.
-		$Qelim_asis =  strtok("#");
+		$Qelim_asis = strtok("#");
 		
 	} else {
-		$Qid_item = strtok($a_sel[0],"#");
+		$Qid_item = (integer) strtok($a_sel[0],"#");
 		$Qelim_asis =  strtok("#");
 	}
 } else { // desde el formulario

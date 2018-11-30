@@ -327,7 +327,7 @@ class ModuloInstalado Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bstatus de ModuloInstalado
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosStatus() {
 		$nom_tabla = $this->getNomTabla();
@@ -340,7 +340,7 @@ class ModuloInstalado Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sparam de ModuloInstalado
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosParam() {
 		$nom_tabla = $this->getNomTabla();

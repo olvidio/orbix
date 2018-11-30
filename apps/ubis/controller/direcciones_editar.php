@@ -91,7 +91,6 @@ if ($Qmod == 'nuevo') {
 
 	$xDireccion = new $obj_x(array('id_ubi'=>$Qid_ubi,'id_direccion'=>$a_id_direccion[$idx]));
 
-	//$a_campos = $oDireccion->getTot();
 	$nom_sede = $oDireccion->getNom_sede(); 
 	$direccion = $oDireccion->getDireccion(); 
 	$a_p = $oDireccion->getA_p(); 
@@ -101,7 +100,7 @@ if ($Qmod == 'nuevo') {
 	$provincia = $oDireccion->getProvincia(); 
 	$pais = $oDireccion->getPais(); 
 	$observ = $oDireccion->getObserv(); 
-	$f_direccion = $oDireccion->getF_direccion(); 
+	$f_direccion = $oDireccion->getF_direccion()->getFromLocal(); 
 	$latitud = $oDireccion->getLatitud(); 
 	$longitud = $oDireccion->getLongitud(); 
 	$propietario = $xDireccion->getPropietario();

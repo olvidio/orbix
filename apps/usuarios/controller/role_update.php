@@ -19,7 +19,7 @@ switch($Qque) {
 		if (!empty($a_sel)) { //vengo de un checkbox
 			foreach ($a_sel as $sel) {
 				//$id_nom=$sel[0];
-				$id_item=strtok($sel,"#");
+			    $id_item= (integer) strtok($sel,"#");
 				$oGrupMenuRole = new menus\GrupMenuRole($id_item);
 				if ($oGrupMenuRole->DBEliminar() === false) {
 					echo _("hay un error, no se ha eliminado");

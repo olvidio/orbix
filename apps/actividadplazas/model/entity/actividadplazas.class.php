@@ -75,7 +75,7 @@ class actividadPlazas Extends core\ClasePropiedades {
 	/**
 	 * Cedidas de actividadPlazas
 	 *
-	 * @var JSON
+	 * @var object JSON
 	 */
 	 protected $ocedidas;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
@@ -358,7 +358,7 @@ class actividadPlazas Extends core\ClasePropiedades {
 	/**
 	 * Recupera l'atribut ocedidas de actividadPlazas
 	 *
-	 * @return json ocedidas
+	 * @return object json ocedidas
 	 */
 	function getCedidas() {
 		if (!isset($this->ocedidas)) {
@@ -395,7 +395,7 @@ class actividadPlazas Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_schema de actividadPlazas
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_schema() {
 		$nom_tabla = $this->getNomTabla();
@@ -407,7 +407,7 @@ class actividadPlazas Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iplazas de actividadPlazas
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPlazas() {
 		$nom_tabla = $this->getNomTabla();
@@ -419,7 +419,7 @@ class actividadPlazas Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut scl de actividadPlazas
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosCl() {
 		$nom_tabla = $this->getNomTabla();

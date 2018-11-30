@@ -142,7 +142,7 @@ switch ($Qque) {
 		// elimna al usuario.
 		$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 		if (!empty($a_sel)) { //vengo de un checkbox
-			$id_usuario=strtok($a_sel[0],"#");
+		    $id_usuario= (integer) trtok($a_sel[0],"#");
 		}
 		$oUsuario= new usuarios\Usuario(array('id_usuario'=>$id_usuario));
 		if ($oUsuario->DBEliminar() === false) {
@@ -152,7 +152,7 @@ switch ($Qque) {
 		// elimna el grupo.
 		$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 		if (!empty($a_sel)) { //vengo de un checkbox
-			$id_usuario=strtok($a_sel[0],"#");
+		    $id_usuario= (integer) strtok($a_sel[0],"#");
 		}
 		$oUsuario= new usuarios\Grupo(array('id_usuario'=>$id_usuario));
 		if ($oUsuario->DBEliminar() === false) {
@@ -163,7 +163,7 @@ switch ($Qque) {
 		// elimna el role.
 		$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 		if (!empty($a_sel)) { //vengo de un checkbox
-			$id_role=strtok($a_sel[0],"#");
+		    $id_role= (integer) strtok($a_sel[0],"#");
 		}
 		$oRole= new usuarios\Role(array('id_role'=>$id_role));
 		if ($oRole->DBEliminar() === false) {

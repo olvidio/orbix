@@ -310,7 +310,7 @@ class IdMatchPersona Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_orbix de IdMatchPersona
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_orbix() {
 		$nom_tabla = $this->getNomTabla();
@@ -322,7 +322,7 @@ class IdMatchPersona Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sid_tabla de IdMatchPersona
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_tabla() {
 		$nom_tabla = $this->getNomTabla();

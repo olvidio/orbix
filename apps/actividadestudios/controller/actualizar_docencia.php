@@ -61,8 +61,8 @@ $continuar = (integer)  filter_input(INPUT_POST, 'continuar');
 	//periodo
 	if (empty($Qperiodo) || $Qperiodo == 'otro') {
 		$any=  core\ConfigGlobal::any_final_curs('est');
-		$Qempiezamin=core\curso_est("inicio",$any,"est");
-		$Qempiezamax=core\curso_est("fin",$any,"est");
+		$Qempiezamin=core\curso_est("inicio",$any,"est")->format('Y-m-d');
+		$Qempiezamax=core\curso_est("fin",$any,"est")->format('Y-m-d');
 		$Qperiodo = 'curso_ca';
 		$inicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
 		$fin = empty($Qfin)? $Qempiezamax : $Qfin;
@@ -71,8 +71,8 @@ $continuar = (integer)  filter_input(INPUT_POST, 'continuar');
 		$any=empty($Qyear)? date('Y')+1 : $Qyear;
 		$oPeriodo->setAny($any);
 		$oPeriodo->setPeriodo($Qperiodo);
-		$inicio = $oPeriodo->getF_ini();
-		$fin = $oPeriodo->getF_fin();
+		$inicio = $oPeriodo->getF_ini_iso();
+		$fin = $oPeriodo->getF_fin_iso();
 	}
 
 	$aWhere['f_ini'] = "'$inicio','$fin'";
@@ -87,13 +87,14 @@ $continuar = (integer)  filter_input(INPUT_POST, 'continuar');
 	$aOperador['id_tipo_activ'] = '~';
 	$GesActividades = new actividades\GestorActividadDl();	
 	$cActividades = $GesActividades->getActividades($aWhere,$aOperador);
-	list($ini_d,$ini_m) = preg_split('/[:\/\.-]/', core\ConfigGlobal::$est_inicio ); //los delimitadores pueden ser /, ., -, :	
+	$ini_d = core\ConfigGlobal::$est_inicio['d'];
+	$ini_m = core\ConfigGlobal::$est_inicio['m'];
 	// busco los profesores que han dado alguna asignatura en actividad.	
 	$GesProfesorDocencia = new profesores\GestorProfesorDocenciaStgr();
 	foreach ($cActividades as $oActividad) {
 		$id_activ = $oActividad->getId_activ();
 		$id_tipo_activ = $oActividad->getId_tipo_activ();
-		$oFini = \DateTime::createFromFormat('d/m/Y', $oActividad->getF_ini());
+		$oFini = $oActividad->getF_ini();
 		$mes = $oFini->format('m');
 		$any = $oFini->format('Y');
 		if ($mes < $ini_m) {

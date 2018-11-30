@@ -124,7 +124,6 @@ foreach ($cPersonas as $oPersona) {
 	$cNotas = $GesNotas->getPersonaNotasSuperadas($id_nom,'t');
 	$aAprobadas=array();
 	foreach ($cNotas as $oPersonaNota) {
-		//extract($oPersonaNota->getTot());
 		$id_asignatura = $oPersonaNota->getId_asignatura();
 		$id_nivel = $oPersonaNota->getId_nivel();
 		$id_situacion = $oPersonaNota->getId_situacion();

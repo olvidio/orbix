@@ -313,7 +313,7 @@ Abstract class UbixDireccion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bpropietario de UbixDireccion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPropietario() {
 		$nom_tabla = $this->getNomTabla();
@@ -326,7 +326,7 @@ Abstract class UbixDireccion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bprincipal de UbixDireccion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPrincipal() {
 		$nom_tabla = $this->getNomTabla();

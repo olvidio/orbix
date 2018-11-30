@@ -26,7 +26,7 @@ $msg='';
 
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-	$Qid_nom = strtok($a_sel[0],"#");
+    $Qid_nom = (integer) strtok($a_sel[0],"#");
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
@@ -38,8 +38,8 @@ if (!empty($a_sel)) { //vengo de un checkbox
 
 $mes=date('m');
 if ($mes>9)  { $any=date('Y')+1; } else { $any = date('Y'); }
-$inicurs_ca=core\curso_est("inicio",$any);
-$fincurs_ca=core\curso_est("fin",$any);
+$inicurs_ca=core\curso_est("inicio",$any)->format('Y-m-d');
+$fincurs_ca=core\curso_est("fin",$any)->format('Y-m-d');
 
 // no miro los de rapaso:
 //   " stgr != 'r' ";

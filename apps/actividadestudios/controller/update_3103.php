@@ -23,13 +23,13 @@ $Qobserv_est = (string) \filter_input(INPUT_POST,'observ_est');
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
 	if ($Qpau=="p") {
-		$Qid_activ=strtok($a_sel[0],"#");
-		$Qid_asignatura=strtok("#");
+	    $Qid_activ= (integer) strtok($a_sel[0],"#");
+	    $Qid_asignatura= (integer) strtok("#");
 		$Qid_nom = (integer) \filter_input(INPUT_POST,'id_pau');
 	}
 	if ($Qpau=="a") {
-		$Qid_nom=strtok($a_sel[0],"#");
-		$Qid_asignatura=strtok("#");
+	    $Qid_nom= (integer) strtok($a_sel[0],"#");
+	    $Qid_asignatura= (integer) strtok("#");
 		$Qid_activ = (integer) \filter_input(INPUT_POST,'id_pau');
 	}
 } else { // desde el formulario
@@ -109,15 +109,15 @@ switch ($Qmod) {
 		if ($Qpau=="p") { 
 			// Para borrar varios
 			foreach ($a_sel as $sel) {
-				$id_activ = strtok($sel,'#'); 
-				$id_asignatura = strtok('#'); 
+			    $id_activ = (integer) strtok($sel,'#'); 
+			    $id_asignatura = (integer) strtok('#'); 
 				if (!empty($Qid_activ)) {
 					$id_activ = $Qid_activ;
 				}
 				if (!empty($Qid_nom)) {
 					$id_nom = $Qid_nom;
 				} else {
-					$id_nom = strtok('#'); 
+				    $id_nom = (integer) strtok('#'); 
 				}
 			
 				$oMatricula = new actividadestudios\MatriculaDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'id_asignatura'=>$id_asignatura));

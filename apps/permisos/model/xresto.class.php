@@ -1,6 +1,6 @@
 <?php
 namespace permisos\model;
-
+use actividades\model\entity\TipoDeActividad;
 class xResto {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 	/**
@@ -80,4 +80,3 @@ class xResto {
 		if (is_array($this->aDades)) ksort($this->aDades);
 	}
 }
-?>

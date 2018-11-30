@@ -40,7 +40,17 @@ fnjs_guardar=function(){
 </script>
 <?php
 $oTipoDossier = new dossiers\TipoDossier(array('id_tipo_dossier'=>$_POST['id_tipo_dossier']));
-$a_campos = $oTipoDossier->getTot();
+$a_campos['descripcion'] = $oTipoDossier->getDescripcion();
+$a_campos['tabla_from'] = $oTipoDossier->getTabla_from();
+$a_campos['tabla_to'] = $oTipoDossier->getTabla_to();
+$a_campos['campo_to'] = $oTipoDossier->getCampo_to();
+$a_campos['id_tipo_dossier_rel'] = $oTipoDossier->getId_tipo_dossier_rel();
+$a_campos['permiso_lectura'] = $oTipoDossier->getPermiso_lectura();
+$a_campos['permiso_escritura'] = $oTipoDossier->getPermiso_escritura();
+$a_campos['depende_modificar'] = $oTipoDossier->getDepende_modificar();
+$a_campos['app'] = $oTipoDossier->getApp();
+$a_campos['class'] = $oTipoDossier->getClass();
+
 $botones = 0;
 /*
 1: guardar cambios
@@ -54,4 +64,3 @@ $a_campos['go_to'] = $go_to;
 
 $oView = new core\View('dossiers\controller');
 echo $oView->render('perm_dossier_pres.phtml',$a_campos);
-?>

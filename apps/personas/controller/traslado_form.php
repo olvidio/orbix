@@ -18,8 +18,8 @@ $Qobj_pau = (string)  \filter_input(INPUT_POST, 'obj_pau');
 
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-	$id_pau = strtok($a_sel[0],"#");
-	$id_tabla=strtok("#");
+    $id_pau = (integer) strtok($a_sel[0],"#");
+	$id_tabla= (string) strtok("#");
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
@@ -57,7 +57,8 @@ $oUbi = new ubis\CentroDl($id_ctr);
 $nombre_ctr = $oUbi->getNombre_ubi();
 $dl = $oPersona->getDl();
 
-$hoy=date("d/m/Y");
+$oHoy = new web\DateTimeLocal();
+$hoy = $oHoy->getFromLocal();
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('new_ctr!f_ctr!new_dl!f_dl!situacion');

@@ -1,5 +1,6 @@
 <?php
 namespace core;
+use web;
 /**
 * Esta página sólo contiene funciones. Es para incluir en otras.
 *
@@ -117,27 +118,6 @@ function poner_empty_on_null(&$valor) {
 	} 
 }
 
-/**
-* Para clacular la edad a partir de la fecha de nacimiento
-*
-*
-*@author	Daniel Serrabou
-*@since		25/11/2010.
-*		
-*/
-function edad($f_nacimiento) {
-	if (!empty($f_nacimiento)) {
-		list($d,$m,$a) = preg_split('/[\.\/-]/', $f_nacimiento );	//separo la fecha en dia, mes, año
-		$ah=date("Y");
-		$mh=date("m");
-		$inc_m=0 ;
-		$mh >= $m ? 0 : $inc_m=1 ; 
-		$edad=$ah - $a - $inc_m;	
-	} else {
-		$edad ="-";
-	}
-	return $edad;
-}
 
 //definición de variables globales para las funciones de tipo de encargo (tarea):
 
@@ -855,19 +835,24 @@ function strtoupper_dlb($texto) {
 function curso_est($que,$any,$tipo="est") {
 	switch ($tipo) {
 		case "est":
-			list($ini_d,$ini_m) = preg_split('/[:\/\.-]/', ConfigGlobal::$est_inicio ); //los delimitadores pueden ser /, ., -, :	
-			list($fin_d,$fin_m) = preg_split('/[:\/\.-]/', ConfigGlobal::$est_fin ); //los delimitadores pueden ser /, ., -, :	
+		    $ini_d = ConfigGlobal::$est_inicio['d'];
+		    $ini_m = ConfigGlobal::$est_inicio['m'];
+		    $fin_d = ConfigGlobal::$est_fin['d'];
+		    $fin_m = ConfigGlobal::$est_fin['m'];
 			break;
 		case "crt":
-			list($ini_d,$ini_m) = preg_split('/[:\/\.-]/', ConfigGlobal::$crt_inicio ); //los delimitadores pueden ser /, ., -, :	
-			list($fin_d,$fin_m) = preg_split('/[:\/\.-]/', ConfigGlobal::$crt_fin ); //los delimitadores pueden ser /, ., -, :	
+		    $ini_d = ConfigGlobal::$crt_inicio['d'];
+		    $ini_m = ConfigGlobal::$crt_inicio['m'];
+		    $fin_d = ConfigGlobal::$crt_fin['d'];
+		    $fin_m = ConfigGlobal::$crt_fin['m'];
 			break;
 	}
 	if (empty($any)) { $any = ConfigGlobal::any_final_curs(); }
+	$any0 = $any - 1;
 	//ConfigGlobal::mes_actual()=date("m");
 	//if (ConfigGlobal::mes_actual()>$fin_m) ConfigGlobal::any_final_curs()++; // debe estar antes de llamar a la función.
-	$inicurs= date("d/m/Y", mktime(0,0,0,$ini_m,$ini_d,$any-1)) ;
-	$fincurs= date("d/m/Y", mktime(0,0,0,$fin_m,$fin_d,$any)) ;
+	$inicurs= new web\DateTimeLocal("$any0-$ini_m-$ini_d");
+	$fincurs= new web\DateTimeLocal("$any-$fin_m-$fin_d");
 
 	switch ($que) {
 		case "inicio":

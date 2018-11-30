@@ -198,7 +198,7 @@ class Centro Extends UbiGlobal {
 	 *
 	 * @param array $aDades
 	 */
-	function setAllAtributes($aDades) {
+	function setAllAtributes($aDades,$convert=FALSE) {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('tipo_ubi',$aDades)) $this->setTipo_ubi($aDades['tipo_ubi']);
@@ -208,7 +208,7 @@ class Centro Extends UbiGlobal {
 		if (array_key_exists('pais',$aDades)) $this->setPais($aDades['pais']);
 		if (array_key_exists('region',$aDades)) $this->setRegion($aDades['region']);
 		if (array_key_exists('status',$aDades)) $this->setStatus($aDades['status']);
-		if (array_key_exists('f_status',$aDades)) $this->setF_status($aDades['f_status']);
+		if (array_key_exists('f_status',$aDades)) $this->setF_status($aDades['f_status'],$convert);
 		if (array_key_exists('sv',$aDades)) $this->setSv($aDades['sv']);
 		if (array_key_exists('sf',$aDades)) $this->setSf($aDades['sf']);
 		if (array_key_exists('tipo_ctr',$aDades)) $this->setTipo_ctr($aDades['tipo_ctr']);
@@ -323,7 +323,7 @@ class Centro Extends UbiGlobal {
 	 * Recupera les propietats de l'atribut stipo_ctr de CentroooDl
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTipo_ctr() {
 		$nom_tabla = $this->getNomTabla();
@@ -335,7 +335,7 @@ class Centro Extends UbiGlobal {
 	 * Recupera les propietats de l'atribut itipo_labor de CentroooDl
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTipo_labor() {
 		$nom_tabla = $this->getNomTabla();
@@ -347,7 +347,7 @@ class Centro Extends UbiGlobal {
 	 * Recupera les propietats de l'atribut bcdc de CentroooDl
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosCdc() {
 		$nom_tabla = $this->getNomTabla();
@@ -359,7 +359,7 @@ class Centro Extends UbiGlobal {
 	 * Recupera les propietats de l'atribut iid_ctr_padre de CentroooDl
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_ctr_padre() {
 		$nom_tabla = $this->getNomTabla();

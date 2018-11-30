@@ -105,8 +105,13 @@ foreach ($aPersonasMatriculadas as $nom=>$oMatricula) {
 		$tipo_txt = '';
 	}
 	$acta=$oMatricula->getActa();
-	$acta_txt = empty($acta)? '-' : $acta;
-	$oDesplActas->setOpcion_sel($acta);
+	if (empty($acta)) {
+	   $acta_txt = '-';
+       $oDesplActas->setOpcion_sel($acta_principal);
+	} else {
+	   $acta_txt = $acta;
+       $oDesplActas->setOpcion_sel($acta);
+	}
 	$oDesplActas->setAction("fnjs_nota($i)");
 	?>
 	<input type="Hidden" id="id_nom[]" name="id_nom[]" value="<?= $id_nom ?>">

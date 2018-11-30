@@ -216,7 +216,7 @@ class Casa Extends UbiGlobal {
 	 *
 	 * @param array $aDades
 	 */
-	function setAllAtributes($aDades) {
+	function setAllAtributes($aDades,$convert=FALSE) {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('tipo_ubi',$aDades)) $this->setTipo_ubi($aDades['tipo_ubi']);
@@ -226,7 +226,7 @@ class Casa Extends UbiGlobal {
 		if (array_key_exists('pais',$aDades)) $this->setPais($aDades['pais']);
 		if (array_key_exists('region',$aDades)) $this->setRegion($aDades['region']);
 		if (array_key_exists('status',$aDades)) $this->setStatus($aDades['status']);
-		if (array_key_exists('f_status',$aDades)) $this->setF_status($aDades['f_status']);
+		if (array_key_exists('f_status',$aDades)) $this->setF_status($aDades['f_status'],$convert);
 		if (array_key_exists('sv',$aDades)) $this->setSv($aDades['sv']);
 		if (array_key_exists('sf',$aDades)) $this->setSf($aDades['sf']);
 		if (array_key_exists('tipo_casa',$aDades)) $this->setTipo_casa($aDades['tipo_casa']);
@@ -384,7 +384,7 @@ class Casa Extends UbiGlobal {
 	 * Recupera les propietats de l'atribut stipo_casa de Casa
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTipo_casa() {
 		$nom_tabla = $this->getNomTabla();
@@ -396,7 +396,7 @@ class Casa Extends UbiGlobal {
 	 * Recupera les propietats de l'atribut iplazas de Casa
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPlazas() {
 		$nom_tabla = $this->getNomTabla();
@@ -408,7 +408,7 @@ class Casa Extends UbiGlobal {
 	 * Recupera les propietats de l'atribut iplazas_min de Casa
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPlazas_min() {
 		$nom_tabla = $this->getNomTabla();
@@ -420,7 +420,7 @@ class Casa Extends UbiGlobal {
 	 * Recupera les propietats de l'atribut inum_sacd de Casa
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNum_sacd() {
 		$nom_tabla = $this->getNomTabla();
@@ -432,7 +432,7 @@ class Casa Extends UbiGlobal {
 	 * Recupera les propietats de l'atribut sbiblioteca de Casa
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosBiblioteca() {
 		$nom_tabla = $this->getNomTabla();
@@ -444,7 +444,7 @@ class Casa Extends UbiGlobal {
 	 * Recupera les propietats de l'atribut sobserv de Casa
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosObserv() {
 		$nom_tabla = $this->getNomTabla();

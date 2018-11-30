@@ -213,7 +213,7 @@ class PersonaNax Extends PersonaDl {
 	 *
 	 * @param array $aDades
 	 */
-	function setAllAtributes($aDades) {
+	function setAllAtributes($aDades,$convert=FALSE) {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_nom',$aDades)) $this->setId_nom($aDades['id_nom']);
@@ -227,13 +227,13 @@ class PersonaNax Extends PersonaDl {
 		if (array_key_exists('apellido1',$aDades)) $this->setApellido1($aDades['apellido1']);
 		if (array_key_exists('nx2',$aDades)) $this->setNx2($aDades['nx2']);
 		if (array_key_exists('apellido2',$aDades)) $this->setApellido2($aDades['apellido2']);
-		if (array_key_exists('f_nacimiento',$aDades)) $this->setF_nacimiento($aDades['f_nacimiento']);
+		if (array_key_exists('f_nacimiento',$aDades)) $this->setF_nacimiento($aDades['f_nacimiento'],$convert);
 		if (array_key_exists('lengua',$aDades)) $this->setLengua($aDades['lengua']);
 		if (array_key_exists('situacion',$aDades)) $this->setSituacion($aDades['situacion']);
-		if (array_key_exists('f_situacion',$aDades)) $this->setF_situacion($aDades['f_situacion']);
+		if (array_key_exists('f_situacion',$aDades)) $this->setF_situacion($aDades['f_situacion'],$convert);
 		if (array_key_exists('apel_fam',$aDades)) $this->setApel_fam($aDades['apel_fam']);
 		if (array_key_exists('inc',$aDades)) $this->setInc($aDades['inc']);
-		if (array_key_exists('f_inc',$aDades)) $this->setF_inc($aDades['f_inc']);
+		if (array_key_exists('f_inc',$aDades)) $this->setF_inc($aDades['f_inc'],$convert);
 		if (array_key_exists('stgr',$aDades)) $this->setStgr($aDades['stgr']);
 		if (array_key_exists('profesion',$aDades)) $this->setProfesion($aDades['profesion']);
 		if (array_key_exists('eap',$aDades)) $this->setEap($aDades['eap']);

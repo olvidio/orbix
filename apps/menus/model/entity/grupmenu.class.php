@@ -298,7 +298,7 @@ class GrupMenu Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sgrup_menu de GrupMenu
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosGrup_menu() {
 		$nom_tabla = $this->getNomTabla();
@@ -312,7 +312,7 @@ class GrupMenu Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iorden de GrupMenu
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosOrden() {
 		$nom_tabla = $this->getNomTabla();

@@ -1,5 +1,6 @@
 <?php
 namespace core;
+use web;
 /**
  * Classe para manejar los errores
  *
@@ -76,7 +77,7 @@ class gestorErrores {
 
 	function leerErrorAppLastError(&$oDBSt, $sClauError,$line, $file) {
 		$user=ConfigGlobal::mi_usuario();
-		$ahora=date("d/m/Y H:i:s");
+		$ahora = date("Y/m/d H:i:s");
 		$err=$oDBSt->errorInfo();
 		$txt="\n".$ahora." - ".$user."->>  ".$err[2]."\n $sClauError en linea $line de: $file\n";
 		
@@ -88,16 +89,16 @@ class gestorErrores {
 	/**
 	 * Añade un error al fichero
 	 * 
-	 * @param type $oDBSt Puede ser objeto PDO o PDOStatement
-	 * @param type $sClauError  Un texto cualquiera para poner en el error
-	 * @param type $line
-	 * @param type $file
+	 * @param string $oDBSt Puede ser objeto PDO o PDOStatement
+	 * @param string $sClauError  Un texto cualquiera para poner en el error
+	 * @param string $line
+	 * @param string $file
 	 */
 	function addErrorAppLastError(&$oDBSt, $sClauError,$line, $file) {
 		$ip = $_SERVER['REMOTE_ADDR'];
 		$user = ConfigGlobal::mi_usuario();
 		$esquema = ConfigGlobal::mi_region_dl();
-		$ahora = date("d/m/Y H:i:s");
+		$ahora = date("Y/m/d H:i:s");
 		// En algunos momentos interesa la info del servidor, pero debe ser con 
 		// la conexión  PDO, no con el Statement:
 		//		$server = $oDB->getAttribute(constant("\PDO::ATTR_SERVER_INFO"));
@@ -135,7 +136,7 @@ class gestorErrores {
 		$ip = $_SERVER['REMOTE_ADDR'];
 		$user=ConfigGlobal::mi_usuario();
 		$esquema = ConfigGlobal::mi_region_dl();
-		$ahora=date("d/m/Y H:i:s");
+		$ahora = date("Y/m/d H:i:s");
 		$id_user = $user."[$esquema]$ip ";
 		$txt="\n".$ahora." - ".$id_user."->>  ".$err."\n $sClauError en linea $line de: $file\n";
 		

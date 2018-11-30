@@ -23,7 +23,7 @@ fnjs_cambiar_ubi=function(){
 	var ssfsv=$('#ssfsv').val();
 	var array_org=dl_org.split('#');
 	var winPrefs="dependent=yes,width=950,height=700,screenX=200,screenY=200,titlebar=yes,scrollbars=yes";
-	url = "<?= core\ConfigGlobal::getWeb() ?>/apps/actividades/controller/actividad_select_ubi.php";
+	url = "<?= $web ?>/apps/actividades/controller/actividad_select_ubi.php";
 	param_json = { dl_org : array_org[0], ssfsv: ssfsv };
 	var h_param = "<?= $h ?>";
 	var params = h_param.split('&');
@@ -64,7 +64,7 @@ fnjs_guardar=function(tipo=''){
 		alert("<?= _("debe llenar el campo de Organiza") ?>"); err=1;
 	}
 
-	var rr=fnjs_comprobar_campos('#modifica','<?= addslashes($obj) ?>');
+	var rr=fnjs_comprobar_campos('#modifica','<?= $obj ?>');
 	//alert ("EEE "+rr);
 	if (rr=='ok' && err==0) {
 		$('#mod').val(tipo);

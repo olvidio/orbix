@@ -1,5 +1,7 @@
 <?php
 namespace core;
+
+use actividades\model\entity\GestorActividad;
 /**
  * Condicion
  *
@@ -96,4 +98,3 @@ class Condicion {
 	}
 
 }
-?>

@@ -1,5 +1,7 @@
 <?php
 namespace core;
+
+use actividades\model\entity\GestorActividad;
 /**
  * Set
  *
@@ -50,4 +52,3 @@ class Set {
 	}
 
 }
-?>

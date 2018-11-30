@@ -74,8 +74,8 @@ switch ($Qsactividad) {
 		if ($Qtipo_personas=='agd') $id_tipo_activ='133...';
 		if ($Qtipo_personas=='stgr') $id_tipo_activ='(112...)|(133...)';
 		$chk_ca="selected";
-		$inicurs=core\curso_est("inicio",$any,"est");
-		$fincurs=core\curso_est("fin",$any,"est");
+		$inicurs=core\curso_est("inicio",$any,"est")->format('Y-m-d');
+		$fincurs=core\curso_est("fin",$any,"est")->format('Y-m-d');
 		break;
 	case 'crt':
 		// 22.1.09 quito a los que han hecho el crt con sr
@@ -83,8 +83,8 @@ switch ($Qsactividad) {
 		if ($Qtipo_personas=='agd') $id_tipo_activ='131...';
 		if ($Qtipo_personas=='sacd') $id_tipo_activ='1[13]1...';
 		$chk_crt='selected';
-		$inicurs=core\curso_est('inicio',$any,'crt');
-		$fincurs=core\curso_est('fin',$any,'crt');
+		$inicurs=core\curso_est('inicio',$any,'crt')->format('Y-m-d');
+		$fincurs=core\curso_est('fin',$any,'crt')->format('Y-m-d');
 		break;
 }
 // Actividades del curso y tipo:

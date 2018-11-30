@@ -372,7 +372,7 @@ div.ventana z-index: 160;
 		overflow: auto;
 		z-index: 160; /* algo de la slickgrigd está en 90 */
 		padding: 25px;
-		left: 100px;  top: 200px; /* la posición de la ventana modal */
+		left: 100px;  top: 100px; /* la posición de la ventana modal */
 		width: 800px; height: 300px; /* el tamaño de la ventana modal */
 		/* cualquier otra propeidad, colores, márgenes, fondo */
 	}

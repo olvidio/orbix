@@ -326,7 +326,7 @@ class Repeticion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut srepeticion de Repeticion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosRepeticion() {
 		$nom_tabla = $this->getNomTabla();
@@ -340,7 +340,7 @@ class Repeticion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut stemporada de Repeticion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTemporada() {
 		$nom_tabla = $this->getNomTabla();
@@ -354,7 +354,7 @@ class Repeticion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut stipo de Repeticion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTipo() {
 		$nom_tabla = $this->getNomTabla();

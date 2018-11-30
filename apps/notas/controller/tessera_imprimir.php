@@ -46,8 +46,8 @@ if (isset($_POST['stack'])) {
 
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-	$id_nom=strtok($a_sel[0],"#");
-	$id_tabla=strtok("#");
+    $id_nom= (integer) strtok($a_sel[0],"#");
+	$id_tabla= (string) strtok("#");
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
@@ -234,7 +234,11 @@ $aOperador['id_nivel']='BETWEEN';
 $cNotas = $GesNotas->getPersonaNotas($aWhere,$aOperador);
 $aAprobadas=array();
 foreach ($cNotas as $oPersonaNota) {
-	extract($oPersonaNota->getTot());
+	$id_asignatura = $oPersonaNota->getId_asignatura();
+	$id_nivel = $oPersonaNota->getId_nivel();
+	$acta = $oPersonaNota->getActa();
+	$f_acta = $oPersonaNota->getF_acta()->getFromLocal();
+	
 	$oAsig = new asignaturas\Asignatura($id_asignatura);
 	if ($id_asignatura > 3000) {
 		$id_nivel_asig = $id_nivel;

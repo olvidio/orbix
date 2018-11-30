@@ -46,14 +46,14 @@ $Qid_dossier = (integer)  \filter_input(INPUT_POST, 'id_dossier');
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
 	if ($Qid_dossier == 3101) {  // vengo del listado de asistencias
-		$Qid_nom = strtok($a_sel[0],"#");
-		$Qid_item =  strtok("#"); // si no hay devuelve false
+		$Qid_nom = (integer) strtok($a_sel[0],"#");
+		$Qid_item = (integer) strtok("#"); // si no hay devuelve false
 		$Qid_item = empty($Qid_item)? '' : $Qid_item; // cambiar el false a ''.
-		$eliminar =  strtok("#");
+		$eliminar = (integer) strtok("#");
 		
 	} else {
-		$Qid_item = strtok($a_sel[0],"#");
-		$eliminar =  strtok("#");
+		$Qid_item = (integer) strtok($a_sel[0],"#");
+		$eliminar = (integer) strtok("#");
 	}
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$a_sel,1);

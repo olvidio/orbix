@@ -31,8 +31,8 @@ $dele = core\ConfigGlobal::mi_dele();
 $dele .= (core\ConfigGlobal::mi_sfsv()==2)? 'f' : ''; 
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-	$id_nom=strtok($a_sel[0],"#");
-	$Qid_tabla=strtok("#");
+    $id_nom= (integer) strtok($a_sel[0],"#");
+	$Qid_tabla= (string) strtok("#");
 	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
@@ -131,7 +131,7 @@ $a_nombramientos = array();
 foreach ($cProfesores as $oProfesor) {
 	$id_departamento = $oProfesor->getId_departamento();
 	$escrito_nombramiento = $oProfesor->getEscrito_nombramiento();
-	$f_nombramiento = $oProfesor->getF_nombramiento();
+	$f_nombramiento = $oProfesor->getF_nombramiento()->getFromLocal();
 	//$f_cese = $oProfesor->getF_cese();
 	$escrito_cese = $oProfesor->getEscrito_cese();
 	$id_tipo_profesor = $oProfesor->getId_tipo_profesor();
@@ -154,8 +154,8 @@ if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
 	foreach ($cDirectores as $oProfesorDirector) {
 		$id_departamento = $oProfesorDirector->getId_departamento();
 		$escrito_nombramiento = $oProfesorDirector->getEscrito_nombramiento();
-		$f_nombramiento = $oProfesorDirector->getF_nombramiento();
-		$f_cese = $oProfesorDirector->getF_cese();
+		$f_nombramiento = $oProfesorDirector->getF_nombramiento()->getFromLocal();
+		$f_cese = $oProfesorDirector->getF_cese()->getFromLocal();
 		$escrito_cese = $oProfesorDirector->getEscrito_cese();
 
 		$oDepartamento = new asignaturas\Departamento(array('id_departamento'=>$id_departamento));
@@ -169,7 +169,7 @@ if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
 	// juramento //////////////////////////
 	$oJuramento = new profesores\ProfesorJuramento(array('id_nom'=>$id_nom));
 	$oJuramento->DBCarregar();
-	$f_juramento = $oJuramento->getF_juramento();
+	$f_juramento = $oJuramento->getF_juramento()->getFromLocal();
 	$a_cosas['clase_info']='profesores\model\info1021';
 	$go_cosas['juramento']=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/core/mod_tabla_sql.php?'.http_build_query($a_cosas));
 
@@ -183,7 +183,7 @@ if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
 		$titulo = $oProfesorPublicacion->getTitulo();
 		$editorial = $oProfesorPublicacion->getEditorial();
 		$coleccion = $oProfesorPublicacion->getColeccion();
-		$f_publicacion = $oProfesorPublicacion->getF_publicacion();
+		$f_publicacion = $oProfesorPublicacion->getF_publicacion()->getFromLocal();
 		$referencia = $oProfesorPublicacion->getReferencia();
 		$lugar = $oProfesorPublicacion->getLugar();
 		$observ = $oProfesorPublicacion->getObserv();
@@ -219,9 +219,9 @@ $id_departamento = '';
 foreach ($cProfesores as $oProfesor) {
 	$id_departamento = $oProfesor->getId_departamento();
 	$escrito_nombramiento = $oProfesor->getEscrito_nombramiento();
-	$f_nombramiento = $oProfesor->getF_nombramiento();
+	$f_nombramiento = $oProfesor->getF_nombramiento()->getFromLocal();
 	$escrito_nombramiento = $oProfesor->getEscrito_nombramiento();
-	$f_cese = $oProfesor->getF_cese();
+	$f_cese = $oProfesor->getF_cese()->getFromLocal();
 	$escrito_cese = $oProfesor->getEscrito_cese();
 	$id_tipo_profesor = $oProfesor->getId_tipo_profesor();
 
@@ -243,9 +243,9 @@ $a_ampliacion = array();
 $id_departamento = '';
 foreach ($cProfesorAmpliaciones as $oProfesorAmpliacion) {
 	$id_asignatura = $oProfesorAmpliacion->getId_asignatura();
-	$f_nombramiento = $oProfesorAmpliacion->getF_nombramiento();
+	$f_nombramiento = $oProfesorAmpliacion->getF_nombramiento()->getFrtomLocal();
 	$escrito_nombramiento = $oProfesorAmpliacion->getEscrito_nombramiento();
-	$f_cese = $oProfesorAmpliacion->getF_cese();
+	$f_cese = $oProfesorAmpliacion->getF_cese()->getFromLocal();
 	$escrito_cese = $oProfesorAmpliacion->getEscrito_cese();
 
 	$oAsignatura = new asignaturas\Asignatura(array('id_asignatura'=>$id_asignatura));

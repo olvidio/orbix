@@ -17,7 +17,7 @@ $oPosicion->recordar();
 
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-	$Qid_activ = strtok($a_sel[0],"#");
+	$Qid_activ = (integer) strtok($a_sel[0],"#");
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
@@ -45,6 +45,11 @@ $a_status = array( \actividades\model\entity\ActividadAll::STATUS_PROYECTO => _(
 				 \actividades\model\entity\ActividadAll::STATUS_BORRABLE => _("borrable")
 				);
 
+$permiso_des = FALSE;
+if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
+    $permiso_des = TRUE;
+}
+
 $alt = '';
 $dos = '';
 if (!empty($Qid_activ)) { // caso de modificar
@@ -53,28 +58,27 @@ if (!empty($Qid_activ)) { // caso de modificar
 	$Qmod = 'editar';
 
 	$oActividad = new actividades\model\entity\Actividad($Qid_activ);
-	$aDades = $oActividad->getTot();
-	$id_tipo_activ = $aDades['id_tipo_activ'];
-	$dl_org = $aDades['dl_org'];
-	$nom_activ = $aDades['nom_activ'];
-	$id_ubi = $aDades['id_ubi'];
-	//$desc_activ = $aDades['desc_activ'];
-	$f_ini = $aDades['f_ini'];
-	$h_ini = $aDades['h_ini'];
-	$f_fin = $aDades['f_fin'];
-	$h_fin = $aDades['h_fin'];
-	//$tipo_horario = $aDades['tipo_horario'];
-	$precio = $aDades['precio'];
-	//$num_asistentes = $aDades['num_asistentes'];
-	$status = $aDades['status'];
-	$observ = $aDades['observ'];
-	$nivel_stgr = $aDades['nivel_stgr'];
-	//$observ_material = $aDades['observ_material'];
-	$lugar_esp = $aDades['lugar_esp'];
-	$tarifa = $aDades['tarifa'];
-	$id_repeticion = $aDades['id_repeticion'];
-	$publicado = $aDades['publicado'];
-	$plazas = $aDades['plazas'];
+	$id_tipo_activ = $oActividad->getId_tipo_activ();
+	$dl_org = $oActividad->getDl_org();
+	$nom_activ = $oActividad->getNom_activ();
+	$id_ubi = $oActividad->getId_ubi();
+	//$desc_activ = $oActividad->['desc_activ'];
+	$f_ini = $oActividad->getF_ini()->getFromLocal();
+	$h_ini = $oActividad->getH_ini();
+	$f_fin = $oActividad->getF_fin()->getFromLocal();
+	$h_fin = $oActividad->getH_fin();
+	//$tipo_horario = $oActividad->['tipo_horario'];
+	$precio = $oActividad->getPrecio();
+	//$num_asistentes = $oActividad->['num_asistentes'];
+	$status = $oActividad->getStatus();
+	$observ = $oActividad->getObserv();
+	$nivel_stgr = $oActividad->getNivel_stgr();
+	//$observ_material = $oActividad->['observ_material'];
+	$lugar_esp = $oActividad->getLugar_esp();
+	$tarifa = $oActividad->getTarifa();
+	$id_repeticion = $oActividad->getId_repeticion();
+	$publicado = $oActividad->getPublicado();
+	$plazas = $oActividad->getPlazas();
 			
 	// mirar permisos.
 	//if(core\ConfigGlobal::is_app_installed('procesos')) {
@@ -199,16 +203,18 @@ $oActividadTipo->setAsistentes($sasistentes);
 $oActividadTipo->setActividad($sactividad);
 $oActividadTipo->setNom_tipo($snom_tipo);
 
+$procesos_installed = core\ConfigGlobal::is_app_installed('procesos');
 
 $accion = '';
 $a_campos = ['oPosicion' => $oPosicion,
 			'oHash' => $oHash,
 			'h' => $h,
-			'obj' => $obj,
+			'obj' => addslashes($obj),
 			'godossiers' => $godossiers,
 			'alt' => $alt,
 			'dos' => $dos,
 			'oPermActiv' => $oPermActiv,
+            'permiso_des'=> $permiso_des,
 			'accion' => $accion,
 			'sasistentes' => $sasistentes,
 			'sactividad' => $sactividad,
@@ -235,7 +241,12 @@ $a_campos = ['oPosicion' => $oPosicion,
 			'mod' => $Qmod,
 			'oActividadTipo' => $oActividadTipo,
 			'id_tipo_activ' => $id_tipo_activ,
+            'web' => core\ConfigGlobal::getWeb(),
+            'web_icons' => core\ConfigGlobal::$web_icons,
+            'procesos_installed' => $procesos_installed,
 			];
 
-$oView = new core\View('actividades/controller');
-echo $oView->render('actividad_form.phtml',$a_campos);
+$oView = new core\ViewTwig('actividades/controller');
+echo $oView->render('actividad_form.html.twig',$a_campos);
+//$oView = new core\View('actividades/controller');
+//echo $oView->render('actividad_form.phtml',$a_campos);

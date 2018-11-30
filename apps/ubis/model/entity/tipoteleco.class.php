@@ -321,7 +321,7 @@ class TipoTeleco Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bubi de TipoTeleco
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosUbi() {
 		$nom_tabla = $this->getNomTabla();
@@ -333,7 +333,7 @@ class TipoTeleco Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bpersona de TipoTeleco
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPersona() {
 		$nom_tabla = $this->getNomTabla();

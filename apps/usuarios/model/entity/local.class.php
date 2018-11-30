@@ -369,7 +369,7 @@ class Local Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut snom_locale de Local
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNom_Locale() {
 		$nom_tabla = $this->getNomTabla();
@@ -383,7 +383,7 @@ class Local Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sidioma de Local
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosIdioma() {
 		$nom_tabla = $this->getNomTabla();
@@ -397,7 +397,7 @@ class Local Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut snom_idioma de Local
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNom_idioma() {
 		$nom_tabla = $this->getNomTabla();
@@ -411,7 +411,7 @@ class Local Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bactivo de Local
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosActivo() {
 		$nom_tabla = $this->getNomTabla();

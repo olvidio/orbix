@@ -418,7 +418,7 @@ class Usuario Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut susuario de Usuario
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosUsuario() {
 		$nom_tabla = $this->getNomTabla();
@@ -430,7 +430,7 @@ class Usuario Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut spassword de Usuario
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPassword() {
 		$nom_tabla = $this->getNomTabla();
@@ -442,7 +442,7 @@ class Usuario Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut semail de Usuario
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosEmail() {
 		$nom_tabla = $this->getNomTabla();
@@ -454,7 +454,7 @@ class Usuario Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sid_pau de Usuario
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_pau() {
 		$nom_tabla = $this->getNomTabla();
@@ -466,7 +466,7 @@ class Usuario Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut snom_usuario de Usuario
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNom_usuario() {
 		$nom_tabla = $this->getNomTabla();
@@ -478,7 +478,7 @@ class Usuario Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_role de Usuario
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_role() {
 		$nom_tabla = $this->getNomTabla();
@@ -487,4 +487,3 @@ class Usuario Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 }
-?>

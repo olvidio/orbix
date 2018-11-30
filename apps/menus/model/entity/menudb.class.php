@@ -445,7 +445,7 @@ class MenuDb Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iorden de MenuDb
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosOrden() {
 		$nom_tabla = $this->getNomTabla();
@@ -457,7 +457,7 @@ class MenuDb Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut smenu de MenuDb
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosMenu() {
 		$nom_tabla = $this->getNomTabla();
@@ -469,7 +469,7 @@ class MenuDb Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sparametros de MenuDb
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosParametros() {
 		$nom_tabla = $this->getNomTabla();
@@ -481,7 +481,7 @@ class MenuDb Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_metamenu de MenuDb
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_metamenu() {
 		$nom_tabla = $this->getNomTabla();
@@ -493,7 +493,7 @@ class MenuDb Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut imenu_perm de MenuDb
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosMenu_perm() {
 		$nom_tabla = $this->getNomTabla();
@@ -505,7 +505,7 @@ class MenuDb Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_grupmenu de MenuDb
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_grupmenu() {
 		$nom_tabla = $this->getNomTabla();
@@ -517,7 +517,7 @@ class MenuDb Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bok de MenuDb
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosOk() {
 		$nom_tabla = $this->getNomTabla();

@@ -1,6 +1,7 @@
 <?php
 namespace personas\model\entity;
 use core;
+use web;
 /**
  * Fitxer amb la Classe que accedeix a la taula d_traslados
  *
@@ -51,7 +52,7 @@ class Traslado Extends core\ClasePropiedades {
 	/**
 	 * F_traslado de Traslado
 	 *
-	 * @var date
+	 * @var web\DateTimeLocal
 	 */
 	 private $df_traslado;
 	/**
@@ -243,12 +244,12 @@ class Traslado Extends core\ClasePropiedades {
 	 *
 	 * @param array $aDades
 	 */
-	function setAllAtributes($aDades) {
+	function setAllAtributes($aDades,$convert=FALSE) {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_item',$aDades)) $this->setId_item($aDades['id_item']);
 		if (array_key_exists('id_nom',$aDades)) $this->setId_nom($aDades['id_nom']);
-		if (array_key_exists('f_traslado',$aDades)) $this->setF_traslado($aDades['f_traslado']);
+		if (array_key_exists('f_traslado',$aDades)) $this->setF_traslado($aDades['f_traslado'],$convert);
 		if (array_key_exists('tipo_cmb',$aDades)) $this->setTipo_cmb($aDades['tipo_cmb']);
 		if (array_key_exists('id_ctr_origen',$aDades)) $this->setId_ctr_origen($aDades['id_ctr_origen']);
 		if (array_key_exists('ctr_origen',$aDades)) $this->setCtr_origen($aDades['ctr_origen']);
@@ -324,21 +325,24 @@ class Traslado Extends core\ClasePropiedades {
 	/**
 	 * Recupera l'atribut df_traslado de Traslado
 	 *
-	 * @return date df_traslado
+	 * @return web\DateTimeLocal df_traslado
 	 */
 	function getF_traslado() {
-		if (!isset($this->df_traslado)) {
-			$this->DBCarregar();
-		}
-		return $this->df_traslado;
+	    if (!isset($this->df_traslado)) {
+	        $this->DBCarregar();
+	    }
+	    if (empty($this->df_traslado)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_traslado);
+	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_traslado de Traslado
-	 *
-	 * @param date df_traslado='' optional
-	 */
-	function setF_traslado($df_traslado='') {
-		$this->df_traslado = $df_traslado;
+	 * estableix el valor de l'atribut df_traslado de Traslado	* Si df_traslado es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_traslado debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_traslado='' optional.	* @param boolean convert=true optional. Si es false, df_traslado debe ser un string en formato ISO (Y-m-d).	 */
+	function setF_traslado($df_traslado='',$convert=true) {
+		if ($convert === true && !empty($df_traslado)) {
+	        $oConverter = new core\Converter('date', $df_traslado);
+	        $this->df_traslado =$oConverter->toPg();
+	    } else {
+	        $this->df_traslado = $df_traslado;
+	    }
 	}
 	/**
 	 * Recupera l'atribut stipo_cmb de Traslado
@@ -479,7 +483,7 @@ class Traslado Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut df_traslado de Traslado
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosF_traslado() {
 		$nom_tabla = $this->getNomTabla();
@@ -492,7 +496,7 @@ class Traslado Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut stipo_cmb de Traslado
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTipo_cmb() {
 		$nom_tabla = $this->getNomTabla();
@@ -506,7 +510,7 @@ class Traslado Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_ctr_origen de Traslado
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_ctr_origen() {
 		$nom_tabla = $this->getNomTabla();
@@ -520,7 +524,7 @@ class Traslado Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sctr_origen de Traslado
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosCtr_origen() {
 		$nom_tabla = $this->getNomTabla();
@@ -534,7 +538,7 @@ class Traslado Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_ctr_destino de Traslado
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_ctr_destino() {
 		$nom_tabla = $this->getNomTabla();
@@ -548,7 +552,7 @@ class Traslado Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sctr_destino de Traslado
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosCtr_destino() {
 		$nom_tabla = $this->getNomTabla();
@@ -562,7 +566,7 @@ class Traslado Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sobserv de Traslado
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosObserv() {
 		$nom_tabla = $this->getNomTabla();
@@ -573,4 +577,3 @@ class Traslado Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 }
-?>

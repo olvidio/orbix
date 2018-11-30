@@ -102,7 +102,7 @@ class TablaEditable {
 	/**
 	 * Constructor de la classe.
 	 *
-	 * @return GestorProceso
+	 * @return TablaEditable
 	 *
 	 */
 	function __construct() {
@@ -112,7 +112,7 @@ class TablaEditable {
 	/**
 	 * Muestra una tabla ordenable, con  botones en la cabecera y check box en cada lina.
 	 *
-	 *@return Html
+	 *@return string Html
 	 *
 	 */
 	function mostrar_tabla() {
@@ -155,7 +155,7 @@ class TablaEditable {
 					return \"<span class=link onclick='this.closest(\\\".slick-cell\\\").click();\"+ira+\";' >\"+value+\"</span>\";
 	 * 	[fila][col] = array( 'span'=>3, 'valor'=> $txt) => de momento no hace nada. Sirve para la funcion mostrar_tabla_html
 	 * 
-	 *@return Html Grid
+	 *@return string Html Grid
 	 * 	
 	 * Slick.Editors.Text
     	Slick.Editors.LongText

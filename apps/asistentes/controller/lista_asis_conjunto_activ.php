@@ -35,8 +35,8 @@ $Qyear = empty($Qyear)? date('Y') : $Qyear;
 $Qdl_org = (string) \filter_input(INPUT_POST, 'dl_org');
 $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
-$Qempiezamin = empty($Qempiezamin)? date('d/m/Y',mktime(0, 0, 0, date('m'), date('d')-40, date('Y'))) : $Qempiezamin;
-$Qempiezamax = empty($Qempiezamax)? date('d/m/Y',mktime(0, 0, 0, date('m')+9, 0, date('Y'))) : $Qempiezamax;
+$Qempiezamin = empty($Qempiezamin)? date('Y-m-d',mktime(0, 0, 0, date('m'), date('d')-40, date('Y'))) : $Qempiezamin;
+$Qempiezamax = empty($Qempiezamax)? date('Y-m-d',mktime(0, 0, 0, date('m')+9, 0, date('Y'))) : $Qempiezamax;
 	
 // Condiciones de búsqueda.
 $aWhere = array();
@@ -88,8 +88,8 @@ if (empty($Qperiodo) || $Qperiodo == 'otro') {
 	$any=empty($Qyear)? date('Y')+1 : $Qyear;
 	$oPeriodo->setAny($any);
 	$oPeriodo->setPeriodo($Qperiodo);
-	$Qinicio = $oPeriodo->getF_ini();
-	$Qfin = $oPeriodo->getF_fin();
+	$Qinicio = $oPeriodo->getF_ini_iso();
+	$Qfin = $oPeriodo->getF_fin_iso();
 }
 if (!empty($Qperiodo) && $Qperiodo == 'desdeHoy') {
 	$aWhere['f_fin'] = "'$Qinicio','$Qfin'";

@@ -310,7 +310,7 @@ class App Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut snom de App
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNom() {
 		$nom_tabla = $this->getNomTabla();
@@ -324,7 +324,7 @@ class App Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sdb_prefix de App
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosDb_prefix() {
 		$nom_tabla = $this->getNomTabla();

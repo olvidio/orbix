@@ -61,7 +61,7 @@ $oGesPref = new usuarios\GestorPreferencia();
 $id_usuario = ConfigGlobal::mi_id_usuario();
 $oUsuario = new usuarios\Usuario(array('id_usuario'=>$id_usuario));
 $id_role = $oUsuario->getId_role();
-$oRole = new usuarios\Role($id_role);
+//$oRole = new usuarios\Role($id_role);
 //$mi_oficina_menu=ConfigGlobal::mi_oficina_menu();
 
 $oPermisoMenu = new menus\PermisoMenu();
@@ -181,12 +181,20 @@ $num_menu_1="";
 	$m=0;
 	foreach ($oMenuDbs as $oMenuDb) {
 		$m++;
-		extract($oMenuDb->getTot());
+		$orden = $oMenuDb->getOrden();
+		$menu = $oMenuDb->getMenu();
+		$parametros = $oMenuDb->getParametros();
+		$id_metamenu = $oMenuDb->getId_metamenu();
+		$menu_perm = $oMenuDb->getMenu_perm();
+		$id_grupmenu = $oMenuDb->getId_grupmenu();
+		//$ok = $oMenuDb->getOk ();
+		
 		$oMetamenu = new menusEntity\Metamenu($id_metamenu);
 		$url = $oMetamenu ->getUrl();
 		//echo "m: $perm_menu,l: $perm_login, ".visible($perm_menu,$perm_login) ;
 		// primero si està instalado:
 		if (!empty($url)) {
+		    $matches = [];
 			$rta=preg_match('@apps/(.+?)/@',$url, $matches);
 			if ($rta === false) {
 				echo _("error no hay menu");
@@ -277,7 +285,6 @@ $h = $oHash->linkSinVal();
 <?php
 include_once(ConfigGlobal::$dir_estilos.'/todo_en_uno.css.php');
 include_once(ConfigGlobal::$dir_estilos.'/slickgrid_orbix.css.php');
-echo "<style>";
 switch ($tipo_menu) {
 	case "horizontal":
 		include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
@@ -287,6 +294,7 @@ switch ($tipo_menu) {
 		break;
 }
 ?>
+<style>
 img.calendar:hover { cursor: pointer; }
 </style>
 <!-- jQuery -->
@@ -358,7 +366,7 @@ function fnjs_slick_col_visible() {
 	/*
 	$("span", ".slick-columnpicker", "input").each(function(i){
 		ci++;
-		alert('hola');
+		alert("hola");
 		id = $(this).attr('id');
 		var pattern=/columnpicker/;
 		if (pattern.test(id)) {
@@ -445,7 +453,7 @@ function fnjs_slick_grid_height(tabla) {
 }
 function fnjs_def_tabla(tabla) {
 	// si es la tabla por defecto, no puedo guardar las preferencias.
-	if (tabla=='uno') { alert('no puedo grabar las preferencias de la tabla. No puede tener el nombre por defecto: '+tabla); return; }
+	if (tabla=='uno') { alert("<?= _("no puedo grabar las preferencias de la tabla. No puede tener el nombre por defecto") ?>: "+tabla); return; }
 
 	panelVis=fnjs_slick_search_panel(tabla);
 	colsVisible=fnjs_slick_col_visible();
@@ -514,7 +522,7 @@ function fnjs_link_submenu(url,parametros) {
 	}
 }
 function fnjs_procesarError() {
-	alert('Error de pagina retornada');
+	alert("<?= _("Error de página devuelta") ?>");
 }
 
 function fnjs_mostrar_atras(id_div,htmlForm) {
@@ -596,7 +604,7 @@ function Oldfnjs_ir_a() {
 			data: parametros,
 			complete: function (resposta) { fnjs_mostra_resposta (resposta,bloque); },
 			error: fnjs_procesarError
-			}) ;
+			});
 	return false;
 }
 
@@ -968,7 +976,7 @@ if ($_SESSION['session_auth']['expire'] == 1) {
 $(function() {
 	fnjs_cambiar_base_link();
 	fnjs_left_side_hide(); // hide it initially
-})
+});
 /* Hay que ponerlo aqui, para asegurar que haya terminado de cargar todos los scripts. */
 $(document).ready(function(){
 	$.datepicker.setDefaults( $.datepicker.regional[ "es" ] ); // Para que quede por defecto.

@@ -15,7 +15,6 @@ use core\ConfigGlobal;
 use notas\model\entity as notas;
 use web\Hash;
 use web\Lista;
-use web\Posicion;
 use function core\curso_est;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -67,6 +66,7 @@ if (!empty($Qacta)) {
 		$GesActas = new notas\GestorActaDl();
 	} else {
 		// si es número busca en la dl.
+		$matches = [];
 		preg_match ("/^(\d*)(\/)?(\d*)/", $Qacta, $matches);
 		if (!empty($matches[1])) {
 			$Qacta = empty($matches[3])? "$mi_dele ".$matches[1].'/'.date("y") : "$mi_dele $Qacta";
@@ -88,8 +88,8 @@ if (!empty($Qacta)) {
 } else {
 	$mes=date('m');
 	if ($mes>9) { $any=date('Y')+1; } else { $any=date("Y"); }
-	$inicurs_ca=curso_est("inicio",$any);
-	$fincurs_ca=curso_est("fin",$any);
+	$inicurs_ca=curso_est("inicio",$any)->format('Y-m-d');
+	$fincurs_ca=curso_est("fin",$any)->format('Y-m-d');
 	$txt_curso = "$inicurs_ca - $fincurs_ca";
 	
 	$aWhere['f_acta'] = "'$inicurs_ca','$fincurs_ca'";
@@ -108,6 +108,7 @@ if (!empty($Qacta)) {
 $cActas = $GesActas->getActas($aWhere,$aOperador);
 
 $botones = 0; // para 'añadir acta'
+$a_botones = [];
 if ($_SESSION['oPerm']->have_perm("est")) {
 	$a_botones[] = array( 'txt' => _("eliminar"), 'click' =>"fnjs_eliminar(\"#seleccionados\")");
 	$a_botones[] = array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(\"#seleccionados\")");
@@ -115,7 +116,7 @@ if ($_SESSION['oPerm']->have_perm("est")) {
 }
 $a_botones[] = array( 'txt' => _("imprimir"), 'click' =>"fnjs_imprimir(\"#seleccionados\")" );
 
-$a_cabeceras=array( array('name'=>ucfirst(_("acta")),'formatter'=>'clickFormatter'), 
+$a_cabeceras = array( array('name'=>ucfirst(_("acta")),'formatter'=>'clickFormatter'), 
 		array('name'=>ucfirst(_("fecha")),'class'=>'fecha'),
 		_("asignatura"));
 
@@ -124,7 +125,7 @@ $a_valores = array();
 foreach ($cActas as $oActa) {
 	$i++;
 	$acta=$oActa->getActa();
-	$f_acta=$oActa->getF_acta();
+	$f_acta=$oActa->getF_acta()->getFromLocal();
 	$id_asignatura=$oActa->getId_asignatura();
 
 	$oAsignatura = new asignaturas\Asignatura($id_asignatura);

@@ -1,5 +1,6 @@
 <?php
 namespace actividades\model\entity;
+use core\ConfigGlobal;
 use core;
 /**
  * Classe que implementa l'entitat $nom_tabla
@@ -331,7 +332,7 @@ class NivelStgr Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sdesc_nivel de NivelStgr
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosDesc_nivel() {
 		$nom_tabla = $this->getNomTabla();
@@ -343,7 +344,7 @@ class NivelStgr Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sdesc_breve de NivelStgr
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosDesc_breve() {
 		$nom_tabla = $this->getNomTabla();
@@ -355,7 +356,7 @@ class NivelStgr Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iorden de NivelStgr
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return object DatosCampo
 	 */
 	function getDatosOrden() {
 		$nom_tabla = $this->getNomTabla();

@@ -12,7 +12,7 @@ use actividadestudios\model\entity as actividadestudios;
 
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-	$Qid_nom = strtok($a_sel[0],"#");
+    $Qid_nom = (integer) strtok($a_sel[0],"#");
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
@@ -58,18 +58,22 @@ if (!empty($Qid_activ_old) && !empty($Qid_nom)) {
 		case 'ca':
 		case 'cv':
 			$any=  core\ConfigGlobal::any_final_curs('est');
-			$inicurs=core\curso_est("inicio",$any,"est");
-			$fincurs=core\curso_est("fin",$any,"est");
+			$oInicurs=core\curso_est("inicio",$any,"est");
+			$oFincurs=core\curso_est("fin",$any,"est");
 			break;
 		case 'crt':
 			$any=  core\ConfigGlobal::any_final_curs('crt');
-			$inicurs=core\curso_est("inicio",$any,"crt");
-			$fincurs=core\curso_est("fin",$any,"crt");
+			$oInicurs=core\curso_est("inicio",$any,"crt");
+			$oFincurs=core\curso_est("fin",$any,"crt");
 			break;
 	}
+    $inicurs_iso = $oInicurs->format('Y-m-d');
+    $fincurs_iso = $oFincurs->format('Y-m-d');
 
 	//Actividades a las que afecta
-	$aWhere['f_ini'] = "'$inicurs','$fincurs'";
+	$aWhere = [];
+	$aOperador = [];
+	$aWhere['f_ini'] = "'$inicurs_iso','$fincurs_iso'";
 	$aOperador['f_ini'] = 'BETWEEN';
 
 	$aWhere['id_tipo_activ'] = '^'.$id_tipo;
@@ -88,7 +92,6 @@ if (!empty($Qid_activ_old) && !empty($Qid_nom)) {
 		$gesPlazasPeticion = new \actividadplazas\model\entity\GestorPlazaPeticion();
 		$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom'=>$Qid_nom,'tipo'=>$sactividad,'_ordre'=>'orden'));
 		$sid_activ = '';
-		$oF_iniCurs=DateTime::createFromFormat('j/n/Y',$inicurs);
 		foreach ($cPlazasPeticion as $oPlazaPeticion) {
 			$id_activ = $oPlazaPeticion->getId_activ();
 			$oActividad = new actividades\Actividad($id_activ);
@@ -97,8 +100,8 @@ if (!empty($Qid_activ_old) && !empty($Qid_nom)) {
 				continue;
 			}
 			// Asegurar que es una actividad del periodo
-			$oF_ini=DateTime::createFromFormat('j/n/Y',$oActividad->getF_ini());
-			if ($oF_ini < $oF_iniCurs) {
+			$oF_ini = $oActividad->getF_ini();
+			if ($oF_ini < $oInicurs) {
 				continue;
 			}
 			$cActividadesPreferidas[] = $oActividad;

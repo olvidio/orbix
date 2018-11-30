@@ -1,6 +1,7 @@
 <?php
 namespace dossiers\model\entity;
 use core;
+use web;
 /**
  * Fitxer amb la Classe que accedeix a la taula d_dossiers_abiertos
  *
@@ -63,13 +64,13 @@ class Dossier Extends core\ClasePropiedades {
 	/**
 	 * F_ini de Dossier
 	 *
-	 * @var date
+	 * @var web\DateTimeLocal
 	 */
 	 private $df_ini;
 	/**
 	 * F_camb_dossier de Dossier
 	 *
-	 * @var date
+	 * @var web\DateTimeLocal
 	 */
 	 private $df_camb_dossier;
 	/**
@@ -81,7 +82,7 @@ class Dossier Extends core\ClasePropiedades {
 	/**
 	 * F_status de Dossier
 	 *
-	 * @var date
+	 * @var web\DateTimeLocal
 	 */
 	 private $df_status;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
@@ -217,7 +218,7 @@ class Dossier Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE tabla='$this->stabla' AND id_pau='$this->sid_pau' AND id_tipo_dossier='$this->iid_tipo_dossier'")) === false) {
+		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE tabla='$this->stabla' AND id_pau='$this->sid_pau' AND id_tipo_dossier='$this->iid_tipo_dossier'")) === false) {
 			$sClauError = 'Dossier.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -233,16 +234,16 @@ class Dossier Extends core\ClasePropiedades {
 	 *
 	 * @param array $aDades
 	 */
-	function setAllAtributes($aDades) {
+	function setAllAtributes($aDades,$convert=FALSE) {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('tabla',$aDades)) $this->setTabla($aDades['tabla']);
 		if (array_key_exists('id_pau',$aDades)) $this->setId_pau($aDades['id_pau']);
 		if (array_key_exists('id_tipo_dossier',$aDades)) $this->setId_tipo_dossier($aDades['id_tipo_dossier']);
-		if (array_key_exists('f_ini',$aDades)) $this->setF_ini($aDades['f_ini']);
-		if (array_key_exists('f_camb_dossier',$aDades)) $this->setF_camb_dossier($aDades['f_camb_dossier']);
+		if (array_key_exists('f_ini',$aDades)) $this->setF_ini($aDades['f_ini'],$convert);
+		if (array_key_exists('f_camb_dossier',$aDades)) $this->setF_camb_dossier($aDades['f_camb_dossier'],$convert);
 		if (array_key_exists('status_dossier',$aDades)) $this->setStatus_dossier($aDades['status_dossier']);
-		if (array_key_exists('f_status',$aDades)) $this->setF_status($aDades['f_status']);
+		if (array_key_exists('f_status',$aDades)) $this->setF_status($aDades['f_status'],$convert);
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
@@ -250,24 +251,26 @@ class Dossier Extends core\ClasePropiedades {
 	/**
 	* Posa la data d'avuvi a f_status i status a true
 	*
-	* @return none
+	* @return 
 	*/
 	function abrir() {
-	$this->DBCarregar();
-	$this->setF_status(date("d/m/Y"));
-	$this->setStatus_dossier('t');
-	$this->DBGuardar();
+	    $oHoy = new web\DateTimeLocal();
+        $this->DBCarregar();
+        $this->setF_status($oHoy);
+        $this->setStatus_dossier('t');
+        $this->DBGuardar();
 	}
 	/**
 	* Posa la data d'avuvi a f_status i status a false
 	*
-	* @return none
+	* @return 
 	*/
 	function cerrar() {
-	$this->DBCarregar();
-	$this->setF_status(date("d/m/Y"));
-	$this->setStatus_dossier('f');
-	$this->DBGuardar();
+	    $oHoy = new web\DateTimeLocal();
+        $this->DBCarregar();
+        $this->setF_status($oHoy);
+        $this->setStatus_dossier('f');
+        $this->DBGuardar();
 	}
 
 	/**
@@ -354,40 +357,46 @@ class Dossier Extends core\ClasePropiedades {
 	/**
 	 * Recupera l'atribut df_ini de Dossier
 	 *
-	 * @return date df_ini
+	 * @return web\DateTimeLocal df_ini
 	 */
 	function getF_ini() {
-		if (!isset($this->df_ini)) {
-			$this->DBCarregar();
-		}
-		return $this->df_ini;
+	    if (!isset($this->df_ini)) {
+	        $this->DBCarregar();
+	    }
+	    if (empty($this->df_ini)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_ini);
+	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_ini de Dossier
-	 *
-	 * @param date df_ini='' optional
-	 */
-	function setF_ini($df_ini='') {
-		$this->df_ini = $df_ini;
+	 * estableix el valor de l'atribut df_ini de Dossier	* Si df_ini es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_ini debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_ini='' optional.	* @param boolean convert=true optional. Si es false, df_ini debe ser un string en formato ISO (Y-m-d).	 */
+	function setF_ini($df_ini='',$convert=true) {
+		if ($convert === true && !empty($df_ini)) {
+	        $oConverter = new core\Converter('date', $df_ini);
+	        $this->df_ini =$oConverter->toPg();
+	    } else {
+	        $this->df_ini = $df_ini;
+	    }
 	}
 	/**
 	 * Recupera l'atribut df_camb_dossier de Dossier
 	 *
-	 * @return date df_camb_dossier
+	 * @return web\DateTimeLocal df_camb_dossier
 	 */
 	function getF_camb_dossier() {
-		if (!isset($this->df_camb_dossier)) {
-			$this->DBCarregar();
-		}
-		return $this->df_camb_dossier;
+	    if (!isset($this->df_camb_dossier)) {
+	        $this->DBCarregar();
+	    }
+	    if (empty($this->df_camb_dossier)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_camb_dossier);
+	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_camb_dossier de Dossier
-	 *
-	 * @param date df_camb_dossier='' optional
-	 */
-	function setF_camb_dossier($df_camb_dossier='') {
-		$this->df_camb_dossier = $df_camb_dossier;
+	 * estableix el valor de l'atribut df_camb_dossier de Dossier	* Si df_camb_dossier es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_camb_dossier debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_camb_dossier='' optional.	* @param boolean convert=true optional. Si es false, df_camb_dossier debe ser un string en formato ISO (Y-m-d).	 */
+	function setF_camb_dossier($df_camb_dossier='',$convert=true) {
+		if ($convert === true && !empty($df_camb_dossier)) {
+	        $oConverter = new core\Converter('date', $df_camb_dossier);
+	        $this->df_camb_dossier =$oConverter->toPg();
+	    } else {
+	        $this->df_camb_dossier = $df_camb_dossier;
+	    }
 	}
 	/**
 	 * Recupera l'atribut bstatus_dossier de Dossier
@@ -411,21 +420,24 @@ class Dossier Extends core\ClasePropiedades {
 	/**
 	 * Recupera l'atribut df_status de Dossier
 	 *
-	 * @return date df_status
+	 * @return web\DateTimeLocal df_status
 	 */
 	function getF_status() {
-		if (!isset($this->df_status)) {
-			$this->DBCarregar();
-		}
-		return $this->df_status;
+	    if (!isset($this->df_status)) {
+	        $this->DBCarregar();
+	    }
+	    if (empty($this->df_status)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_status);
+	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_status de Dossier
-	 *
-	 * @param date df_status='' optional
-	 */
-	function setF_status($df_status='') {
-		$this->df_status = $df_status;
+	 * estableix el valor de l'atribut df_status de Dossier	* Si df_status es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_status debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_status='' optional.	* @param boolean convert=true optional. Si es false, df_status debe ser un string en formato ISO (Y-m-d).	 */
+	function setF_status($df_status='',$convert=true) {
+		if ($convert === true && !empty($df_status)) {
+	        $oConverter = new core\Converter('date', $df_status);
+	        $this->df_status =$oConverter->toPg();
+	    } else {
+	        $this->df_status = $df_status;
+	    }
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
@@ -450,7 +462,7 @@ class Dossier Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_schema de Dossier
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_schema() {
 		$nom_tabla = $this->getNomTabla();
@@ -462,31 +474,33 @@ class Dossier Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut df_ini de Dossier
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosF_ini() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_ini'));
 		$oDatosCampo->setEtiqueta(_("fecha inicio"));
+        $oDatosCampo->setTipo('fecha');
 		return $oDatosCampo;
 	}
 	/**
 	 * Recupera les propietats de l'atribut df_camb_dossier de Dossier
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosF_camb_dossier() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_camb_dossier'));
 		$oDatosCampo->setEtiqueta(_("fecha cambio dossier"));
+        $oDatosCampo->setTipo('fecha');
 		return $oDatosCampo;
 	}
 	/**
 	 * Recupera les propietats de l'atribut bstatus_dossier de Dossier
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosStatus_dossier() {
 		$nom_tabla = $this->getNomTabla();
@@ -498,13 +512,13 @@ class Dossier Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut df_status de Dossier
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosF_status() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_status'));
 		$oDatosCampo->setEtiqueta(_("fecha status"));
+        $oDatosCampo->setTipo('fecha');
 		return $oDatosCampo;
 	}
 }
-?>

@@ -1,6 +1,7 @@
 <?php
 namespace profesores\model\entity;
 use core;
+use web;
 /**
  * Fitxer amb la Classe que accedeix a la taula d_publicaciones
  *
@@ -75,7 +76,7 @@ class ProfesorPublicacion Extends core\ClasePropiedades {
 	/**
 	 * F_publicacion de ProfesorPublicacion
 	 *
-	 * @var date
+	 * @var web\DateTimeLocal
 	 */
 	 private $df_publicacion;
 	/**
@@ -261,7 +262,7 @@ class ProfesorPublicacion Extends core\ClasePropiedades {
 	 *
 	 * @param array $aDades
 	 */
-	function setAllAtributes($aDades) {
+	function setAllAtributes($aDades,$convert=FALSE) {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_item',$aDades)) $this->setId_item($aDades['id_item']);
@@ -270,7 +271,7 @@ class ProfesorPublicacion Extends core\ClasePropiedades {
 		if (array_key_exists('titulo',$aDades)) $this->setTitulo($aDades['titulo']);
 		if (array_key_exists('editorial',$aDades)) $this->setEditorial($aDades['editorial']);
 		if (array_key_exists('coleccion',$aDades)) $this->setColeccion($aDades['coleccion']);
-		if (array_key_exists('f_publicacion',$aDades)) $this->setF_publicacion($aDades['f_publicacion']);
+		if (array_key_exists('f_publicacion',$aDades)) $this->setF_publicacion($aDades['f_publicacion'],$convert);
 		if (array_key_exists('pendiente',$aDades)) $this->setPendiente($aDades['pendiente']);
 		if (array_key_exists('referencia',$aDades)) $this->setReferencia($aDades['referencia']);
 		if (array_key_exists('lugar',$aDades)) $this->setLugar($aDades['lugar']);
@@ -420,21 +421,24 @@ class ProfesorPublicacion Extends core\ClasePropiedades {
 	/**
 	 * Recupera l'atribut df_publicacion de ProfesorPublicacion
 	 *
-	 * @return date df_publicacion
+	 * @return web\DateTimeLocal df_publicacion
 	 */
 	function getF_publicacion() {
-		if (!isset($this->df_publicacion)) {
-			$this->DBCarregar();
-		}
-		return $this->df_publicacion;
+	    if (!isset($this->df_publicacion)) {
+	        $this->DBCarregar();
+	    }
+	    if (empty($this->df_publicacion)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_publicacion);
+	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_publicacion de ProfesorPublicacion
-	 *
-	 * @param date df_publicacion='' optional
-	 */
-	function setF_publicacion($df_publicacion='') {
-		$this->df_publicacion = $df_publicacion;
+	 * estableix el valor de l'atribut df_publicacion de ProfesorPublicacion	* Si df_publicacion es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_publicacion debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_publicacion='' optional.	* @param boolean convert=true optional. Si es false, df_publicacion debe ser un string en formato ISO (Y-m-d).	 */
+	function setF_publicacion($df_publicacion='',$convert=true) {
+		if ($convert === true && !empty($df_publicacion)) {
+	        $oConverter = new core\Converter('date', $df_publicacion);
+	        $this->df_publicacion =$oConverter->toPg();
+	    } else {
+	        $this->df_publicacion = $df_publicacion;
+	    }
 	}
 	/**
 	 * Recupera l'atribut bpendiente de ProfesorPublicacion
@@ -538,7 +542,7 @@ class ProfesorPublicacion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut stipo_publicacion de ProfesorPublicacion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTipo_publicacion() {
 		$nom_tabla = $this->getNomTabla();
@@ -552,7 +556,7 @@ class ProfesorPublicacion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut stitulo de ProfesorPublicacion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTitulo() {
 		$nom_tabla = $this->getNomTabla();
@@ -566,7 +570,7 @@ class ProfesorPublicacion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut seditorial de ProfesorPublicacion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosEditorial() {
 		$nom_tabla = $this->getNomTabla();
@@ -580,7 +584,7 @@ class ProfesorPublicacion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut scoleccion de ProfesorPublicacion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosColeccion() {
 		$nom_tabla = $this->getNomTabla();
@@ -594,7 +598,7 @@ class ProfesorPublicacion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut df_publicacion de ProfesorPublicacion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosF_publicacion() {
 		$nom_tabla = $this->getNomTabla();
@@ -607,7 +611,7 @@ class ProfesorPublicacion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bpendiente de ProfesorPublicacion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPendiente() {
 		$nom_tabla = $this->getNomTabla();
@@ -620,7 +624,7 @@ class ProfesorPublicacion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sreferencia de ProfesorPublicacion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosReferencia() {
 		$nom_tabla = $this->getNomTabla();
@@ -634,7 +638,7 @@ class ProfesorPublicacion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut slugar de ProfesorPublicacion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosLugar() {
 		$nom_tabla = $this->getNomTabla();
@@ -648,7 +652,7 @@ class ProfesorPublicacion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sobserv de ProfesorPublicacion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosObserv() {
 		$nom_tabla = $this->getNomTabla();
@@ -659,4 +663,3 @@ class ProfesorPublicacion Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 }
-?>

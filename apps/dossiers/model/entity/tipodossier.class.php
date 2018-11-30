@@ -544,7 +544,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sdescripcion de TipoDossier
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosDescripcion() {
 		$nom_tabla = $this->getNomTabla();
@@ -556,7 +556,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut stabla_from de TipoDossier
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTabla_from() {
 		$nom_tabla = $this->getNomTabla();
@@ -568,7 +568,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut stabla_to de TipoDossier
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTabla_to() {
 		$nom_tabla = $this->getNomTabla();
@@ -580,7 +580,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut scampo_to de TipoDossier
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosCampo_to() {
 		$nom_tabla = $this->getNomTabla();
@@ -592,7 +592,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_tipo_dossier_rel de TipoDossier
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_tipo_dossier_rel() {
 		$nom_tabla = $this->getNomTabla();
@@ -604,7 +604,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut ipermiso_lectura de TipoDossier
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPermiso_lectura() {
 		$nom_tabla = $this->getNomTabla();
@@ -616,7 +616,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut ipermiso_escritura de TipoDossier
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPermiso_escritura() {
 		$nom_tabla = $this->getNomTabla();
@@ -628,7 +628,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut bdepende_modificar de TipoDossier
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosDepende_modificar() {
 		$nom_tabla = $this->getNomTabla();
@@ -640,7 +640,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sapp de TipoDossier
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosApp() {
 		$nom_tabla = $this->getNomTabla();
@@ -652,7 +652,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sclass de TipoDossier
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosClass() {
 		$nom_tabla = $this->getNomTabla();

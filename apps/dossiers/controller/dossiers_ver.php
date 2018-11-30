@@ -78,7 +78,7 @@ if (empty($Qid_dossier) && !empty($Qclase_info)) {
 if (!empty($Qrefresh)) {
 	$id_pau = $Qid_pau;
 } elseif (!empty($a_sel)) {
-	$id_pau= strtok($a_sel[0],"#");
+    $id_pau= (integer) strtok($a_sel[0],"#");
 } else {
 	$id_pau = $Qid_pau;
 	

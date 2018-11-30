@@ -298,7 +298,7 @@ class GrupMenuRole Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_grupmenu de GrupMenuRole
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_grupmenu() {
 		$nom_tabla = $this->getNomTabla();
@@ -310,7 +310,7 @@ class GrupMenuRole Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_role de GrupMenuRole
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_role() {
 		$nom_tabla = $this->getNomTabla();

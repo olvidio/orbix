@@ -8,7 +8,14 @@ $i=0;
 $a_filas = array();
 $oPermDossier = new dossiers\model\PermDossier();
 foreach ($cTipoDossier as $oTipoDossier) {
-	extract($oTipoDossier->getTot());
+	$id_tipo_dossier = $oTipoDossier->getId_tipo_dossier();
+	$tabla_from = $oTipoDossier->getTabla_from();
+	$tabla_to = $oTipoDossier->getTabla_to();
+    $app = $oTipoDossier->getApp();	
+    $descripcion = $oTipoDossier->getDescripcion();	
+    $permiso_lectura = $oTipoDossier->getPermiso_lectura();	
+    $permiso_escritura = $oTipoDossier->getPermiso_escritura();	
+    $depende_modificar = $oTipoDossier->getDepende_modificar();	
 	$id_dossier = $id_tipo_dossier;
 	// Miro si la app está instalada
 	if(!core\ConfigGlobal::is_app_installed($app)) continue;
@@ -36,4 +43,3 @@ foreach ($cTipoDossier as $oTipoDossier) {
 
 $oView = new core\View('dossiers\controller');
 echo $oView->render('lista_dossiers.phtml',array('a_filas'=>$a_filas));
-?>

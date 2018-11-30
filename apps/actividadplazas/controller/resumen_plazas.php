@@ -14,7 +14,7 @@ $oPosicion->recordar();
 
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-	$id_activ = strtok($a_sel[0],"#");
+    $id_activ = (integer) strtok($a_sel[0],"#");
     $nom_activ=strtok("#");
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$a_sel,1);

@@ -340,7 +340,7 @@ class PlazaPeticion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iid_schema de PlazaPeticion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_schema() {
 		$nom_tabla = $this->getNomTabla();
@@ -352,7 +352,7 @@ class PlazaPeticion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut iorden de PlazaPeticion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosOrden() {
 		$nom_tabla = $this->getNomTabla();
@@ -364,7 +364,7 @@ class PlazaPeticion Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut stipo de PlazaPeticion
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTipo() {
 		$nom_tabla = $this->getNomTabla();

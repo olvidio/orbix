@@ -16,7 +16,7 @@ if (!is_object($oPersona)) {
 
 $nom=$oPersona->getNombreApellidos();
 $lugar_nacimiento=$oPersona->getLugar_nacimiento();
-$f_nacimiento=$oPersona->getF_nacimiento();
+$f_nacimiento=$oPersona->getF_nacimiento()->getFromLocal();
 $txt_nacimiento = "$lugar_nacimiento ($f_nacimiento)";
 
 $dl_origen = core\ConfigGlobal::mi_dele();
@@ -25,8 +25,8 @@ $dl_destino = $oPersona->getDl();
 $oActividad = new actividades\model\entity\Actividad($id_activ);
 $nom_activ = $oActividad->getNom_activ();
 $id_ubi = $oActividad->getId_ubi();
-$f_ini = $oActividad->getF_ini();
-$f_fin = $oActividad->getF_fin();
+$f_ini = $oActividad->getF_ini()->getFromLocal();
+$f_fin = $oActividad->getF_fin()->getFromLocal();
 $oUbi = ubis\model\entity\Ubi::NewUbi($id_ubi);
 $lugar = $oUbi->getNombre_ubi();
 
@@ -51,7 +51,7 @@ if ($matriculas > 0) {
 			$oNota = $cNotas[0];
 			$nota = $oNota->getNota_txt();
 			$acta = $oNota->getActa();
-			$f_acta = $oNota->getF_acta();
+			$f_acta = $oNota->getF_acta()->getFromLocal();
 		} else {
 			$nota = '';
 			$acta = '';

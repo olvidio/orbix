@@ -19,8 +19,8 @@ $Qpau = (string) \filter_input(INPUT_POST,'pau');
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
 	if ($Qpau=="a") { 
-		$Qid_activ = strtok($a_sel[0],"#");
-		$Qid_asignatura=strtok("#");
+	    $Qid_activ = (integer) strtok($a_sel[0],"#");
+	    $Qid_asignatura= (integer) strtok("#");
 	}
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$a_sel,1);

@@ -102,8 +102,8 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
 	$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 
 	// valores por defeccto
-	$Qempiezamin = empty($Qempiezamin)? date('d/m/Y',mktime(0, 0, 0, date('m'), date('d')-40, date('Y'))) : $Qempiezamin;
-	$Qempiezamax = empty($Qempiezamax)? date('d/m/Y',mktime(0, 0, 0, date('m')+9, 0, date('Y'))) : $Qempiezamax;
+	$Qempiezamin = empty($Qempiezamin)? date('Y-m-d',mktime(0, 0, 0, date('m'), date('d')-40, date('Y'))) : $Qempiezamin;
+	$Qempiezamax = empty($Qempiezamax)? date('Y-m-d',mktime(0, 0, 0, date('m')+9, 0, date('Y'))) : $Qempiezamax;
 	$Qstatus = empty($Qstatus)? actividades\ActividadAll::STATUS_ACTUAL : $Qstatus;
 
 	$aGoBack = array (
@@ -171,8 +171,8 @@ if (empty($Qperiodo) || $Qperiodo == 'otro') {
 	$any=empty($Qyear)? date('Y')+1 : $Qyear;
 	$oPeriodo->setAny($any);
 	$oPeriodo->setPeriodo($Qperiodo);
-	$Qinicio = $oPeriodo->getF_ini();
-	$Qfin = $oPeriodo->getF_fin();
+	$Qinicio = $oPeriodo->getF_ini_iso();
+	$Qfin = $oPeriodo->getF_fin_iso();
 }
 if (!empty($Qperiodo) && $Qperiodo == 'desdeHoy') {
 	$aWhere['f_fin'] = "'$Qinicio','$Qfin'";
@@ -281,7 +281,7 @@ if (!empty($Qmodo) && $Qmodo == 'importar') {
    		$aWhere['dl_org'] = $mi_dele; 
    		$aOperador['dl_org'] = '!='; 
 	}
-	$GesImportar = new actividades\GestorImportar();
+	$GesImportada = new actividades\GestorImportada();
 	$obj_pau = 'ActividadPub';
 } else {
 	//actividades de la dl más las importadas
@@ -311,10 +311,19 @@ $tipo = 'tabla_presentacion';
 $oPref = new usuarios\Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>$tipo));
 $sPrefs=$oPref->getPreferencia();
 foreach($cActividades as $oActividad) {
-	extract($oActividad->getTot());
+	$id_activ = $oActividad->getId_activ();
+	$id_tipo_activ = $oActividad->getId_tipo_activ();
+	$nom_activ = $oActividad->getNom_activ();
+	$dl_org = $oActividad->getDl_org();
+	$f_ini = $oActividad->getF_ini()->getFromLocal();
+	$f_fin = $oActividad->getF_fin()->getFromLocal();
+	$h_ini = $oActividad->getH_ini();
+	$h_fin = $oActividad->getH_fin();
+	$tarifa = $oActividad->getTarifa();
+	$observ = $oActividad->getObserv();
 	// Si es para importar, quito las que ya están importadas
 	if (!empty($Qmodo) && $Qmodo == 'importar') {
-		$cImportadas = $GesImportar->getImportadas(array('id_activ'=>$id_activ));
+		$cImportadas = $GesImportada->getImportadas(array('id_activ'=>$id_activ));
 		if ($cImportadas != false && count($cImportadas) > 0) continue;
 	}
 	$i++;
@@ -324,8 +333,8 @@ foreach($cActividades as $oActividad) {
 		$oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
 		$oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
 	}
-	$oTipoActiv= new web\TiposActividades($id_tipo_activ);
-	$isfsv=$oTipoActiv->getSfsvId();
+	$oTipoActividad= new web\TiposActividades($id_tipo_activ);
+	$isfsv=$oTipoActividad->getSfsvId();
 	// para ver el nombre en caso de la otra sección
 	if ($mi_sfsv != $isfsv && !($_SESSION['oPerm']->have_perm("des")) ) {
 		$ssfsv=$oTipoActividad->getSfsvText();
@@ -333,10 +342,10 @@ foreach($cActividades as $oActividad) {
 		$nom_activ="$ssfsv $sactividad";
 	}
 
-	$ssfsv=$oTipoActiv->getSfsvText();
-	$sasistentes=$oTipoActiv->getAsistentesText();
-	$sactividad=$oTipoActiv->getActividadText();
-	$nom_tipo=$oTipoActiv->getNom_tipoText();
+	$ssfsv=$oTipoActividad->getSfsvText();
+	$sasistentes=$oTipoActividad->getAsistentesText();
+	$sactividad=$oTipoActividad->getActividadText();
+	$nom_tipo=$oTipoActividad->getNom_tipoText();
 	if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm('ocupado') === false) { $sin++; continue; } // no tiene permisos ni para ver.
 	if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm('ver') === false) { // sólo puede ver que està ocupado
 		$a_valores[$i]['sel']='';
@@ -373,7 +382,7 @@ foreach($cActividades as $oActividad) {
 		$sacds="";
 		if (!core\ConfigGlobal::is_app_installed('procesos') || $oPermSacd->have_perm('ver') === true) { // sólo si tiene permiso
 			if(core\ConfigGlobal::is_app_installed('atnsacd')) {
-				$oCargosActividad=new GestorActividadCargo();
+				$oCargosActividad=new actividadcargos\model\entity\GestorActividadCargo();
 				foreach($oCargosActividad->getActividadSacds($id_activ) as $oPersona) {;
 					$sacds.=$oPersona->getApellidosNombre()."# "; // la coma la utilizo como separador de apellidos, nombre.
 				}
@@ -383,7 +392,7 @@ foreach($cActividades as $oActividad) {
 
 		$ctrs="";
 		if(core\ConfigGlobal::is_app_installed('atnctr')) {
-			$oEnc=new GestorCentroEncargado();
+			$oEnc=new actividadcargos\model\entity\GestorCentroEncargado();
 			foreach($oEnc->getCentrosEncargadosActividad($id_activ) as $oEncargado) {
 				$ctrs.=$oEncargado->getNombre_ubi().", ";
 			}

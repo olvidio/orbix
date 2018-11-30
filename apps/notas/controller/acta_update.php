@@ -49,7 +49,7 @@ switch ($Qmod) {
 	case 'nueva':
 		// Si se pone un acta ya existente, modificará los datos de ésta. Hay que avisar:
 		$oActa->setActa($Qacta);
-		if (!empty($oActa->getF_acta())) { exit(_("esta acta ya existe")); }
+		//if (!empty($oActa->getF_acta())) { exit(_("esta acta ya existe")); }
 		
 		$oActa->setId_asignatura($Qid_asignatura);
 		$oActa->setId_activ($Qid_activ);

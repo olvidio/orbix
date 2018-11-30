@@ -368,7 +368,7 @@ class Modulo Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut snom de Modulo
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNom() {
 		$nom_tabla = $this->getNomTabla();
@@ -380,7 +380,7 @@ class Modulo Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sdescripcion de Modulo
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosDescripcion() {
 		$nom_tabla = $this->getNomTabla();
@@ -392,7 +392,7 @@ class Modulo Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut smods_req de Modulo
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosMods_req() {
 		$nom_tabla = $this->getNomTabla();
@@ -404,7 +404,7 @@ class Modulo Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut sapps_req de Modulo
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosApps_req() {
 		$nom_tabla = $this->getNomTabla();

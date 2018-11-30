@@ -247,7 +247,7 @@ class CentroDl Extends Centro {
 	 *
 	 * @param array $aDades
 	 */
-	function setAllAtributes($aDades) {
+	function setAllAtributes($aDades,$convert=FALSE) {
 		//print_r($aDades);
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
@@ -258,7 +258,7 @@ class CentroDl Extends Centro {
 		if (array_key_exists('pais',$aDades)) $this->setPais($aDades['pais']);
 		if (array_key_exists('region',$aDades)) $this->setRegion($aDades['region']);
 		if (array_key_exists('status',$aDades)) $this->setStatus($aDades['status']);
-		if (array_key_exists('f_status',$aDades)) $this->setF_status($aDades['f_status']);
+		if (array_key_exists('f_status',$aDades)) $this->setF_status($aDades['f_status'],$convert);
 		if (array_key_exists('sv',$aDades)) $this->setSv($aDades['sv']);
 		if (array_key_exists('sf',$aDades)) $this->setSf($aDades['sf']);
 		if (array_key_exists('tipo_ctr',$aDades)) $this->setTipo_ctr($aDades['tipo_ctr']);
@@ -465,7 +465,7 @@ class CentroDl Extends Centro {
 	 * Recupera les propietats de l'atribut in_buzon de CentroooDl
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosN_buzon() {
 		$nom_tabla = $this->getNomTabla();
@@ -477,7 +477,7 @@ class CentroDl Extends Centro {
 	 * Recupera les propietats de l'atribut inum_pi de CentroooDl
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNum_pi() {
 		$nom_tabla = $this->getNomTabla();
@@ -489,7 +489,7 @@ class CentroDl Extends Centro {
 	 * Recupera les propietats de l'atribut inum_cartas de CentroooDl
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNum_cartas() {
 		$nom_tabla = $this->getNomTabla();
@@ -501,7 +501,7 @@ class CentroDl Extends Centro {
 	 * Recupera les propietats de l'atribut sobserv de CentroooDl
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosObserv() {
 		$nom_tabla = $this->getNomTabla();
@@ -513,7 +513,7 @@ class CentroDl Extends Centro {
 	 * Recupera les propietats de l'atribut inum_habit_indiv de CentroooDl
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNum_habit_indiv() {
 		$nom_tabla = $this->getNomTabla();
@@ -525,7 +525,7 @@ class CentroDl Extends Centro {
 	 * Recupera les propietats de l'atribut iplazas de CentroooDl
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosPlazas() {
 		$nom_tabla = $this->getNomTabla();
@@ -537,7 +537,7 @@ class CentroDl Extends Centro {
 	 * Recupera les propietats de l'atribut iid_zona de CentroooDl
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosId_zona() {
 		$nom_tabla = $this->getNomTabla();
@@ -549,7 +549,7 @@ class CentroDl Extends Centro {
 	 * Recupera les propietats de l'atribut inum_cartas_mensuales de CentroooDl
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosNum_cartas_mensuales() {
 		$nom_tabla = $this->getNomTabla();

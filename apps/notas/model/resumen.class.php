@@ -153,7 +153,7 @@ class Resumen Extends core\ClasePropiedades {
 	public function getIniCurso() {
 		if (empty($this->dinicurso)) {
 			$any = $this->getAnyIniCurs();
-			$this->dinicurso= date("d/m/Y", mktime(0,0,0,10,1,$any)) ;
+			$this->dinicurso= date("Y-m-d", mktime(0,0,0,10,1,$any)) ;
 		}
 		return $this->dinicurso;
 	}
@@ -163,7 +163,7 @@ class Resumen Extends core\ClasePropiedades {
 	public function getFinCurso() {
 		if (empty($this->dfincurso)) {
 			$any = $this->getAnyFiCurs();
-			$this->dfincurso= date("d/m/Y", mktime(0,0,0,9,30,$any)) ;
+			$this->dfincurso= date("Y-m-d", mktime(0,0,0,9,30,$any)) ;
 		}
 		return $this->dfincurso;
 	}
@@ -173,7 +173,7 @@ class Resumen Extends core\ClasePropiedades {
 
 	/* Pongo en la variable $curso el periodo del curso */
 	public function getCurso() {
-		$curso = "BETWEEN '".$this->getInicurso()."' AND '".$this->getFincurso()."' ";
+		$curso = "BETWEEN '".$this->getIniCurso()."' AND '".$this->getFinCurso()."' ";
 		return $curso;
 	}
 	
@@ -191,7 +191,7 @@ class Resumen Extends core\ClasePropiedades {
 		$personas = $this->getNomPersonas();
 
 		$curs = $this->getCurso();
-		$fincurs = $this->getFincurso();
+		$fincurs = $this->getFinCurso();
 
 		$any = $this->getAnyIniCurs();
 
@@ -255,7 +255,7 @@ class Resumen Extends core\ClasePropiedades {
 		// Miro los que se han incorporado "recientemente": desde el 1-junio
 		$ssql= "SELECT  p.nom, p.apellido1, p.apellido2, p.ctr, p.stgr
 			FROM $tabla p
-			WHERE p.situacion='A' AND p.f_situacion > '1/6/$any'
+			WHERE p.situacion='A' AND p.f_situacion > '$any-6-1'
 				AND (p.stgr='b' OR p.stgr ILIKE 'c%') "; 
 		//echo "qry: $ssql<br>";
 		$statement = $oDbl->query($ssql);

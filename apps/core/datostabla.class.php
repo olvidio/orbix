@@ -144,6 +144,9 @@ class DatosTabla {
 				$var_1=$oDatosCampo->getArgument();
 				$var_2=$oDatosCampo->getArgument2();
 				switch($oDatosCampo->getTipo()) {
+				    case "fecha":
+                        $a_valores[$c][$v]=$valor_camp->getFromLocal();
+				        break;
 					case "array":
 						$lista = $oDatosCampo->getLista();
 						$a_valores[$c][$v]=$lista[$valor_camp];

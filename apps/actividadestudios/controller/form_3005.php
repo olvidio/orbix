@@ -19,8 +19,8 @@ $Qpau = (string) \filter_input(INPUT_POST, 'pau');
 
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-	$Qid_activ = strtok($a_sel[0],"#");
-	$Qid_asignatura=strtok("#");
+    $Qid_activ = (integer) strtok($a_sel[0],"#");
+    $Qid_asignatura= (integer) strtok("#");
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$a_sel,1);
 	$scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
@@ -58,8 +58,8 @@ if (!empty($Qid_asignatura)) { //caso de modificar
 	$chk_confirmado = ($aviso=="c")? "selected": '';
 	$tipo=$oActividadAsignatura->getTipo();
 	$chk_preceptor = ($tipo=="p")? "selected": '';
-	$f_ini = $oActividadAsignatura->getF_ini();
-	$f_fin = $oActividadAsignatura->getF_fin();
+	$f_ini = $oActividadAsignatura->getF_ini()->getFromLocal();
+	$f_fin = $oActividadAsignatura->getF_fin()->getFromLocal();
 		
 	$oAsignatura = new asignaturas\Asignatura($Qid_asignatura);
 	$nombre_corto=$oAsignatura->getNombre_corto();

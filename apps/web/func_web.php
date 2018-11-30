@@ -28,12 +28,15 @@ function dibujar_campo($obj,$atributo,$size,$span1,$span2) {
 	$class='';
 	$dibujo="";
 	$valor = $obj->$get;
-	$valor=htmlspecialchars($valor);
 	$oDatosCampo = $obj->$getdatos();
 	$etiqueta = $oDatosCampo->getEtiqueta();
 	// si el campo es fecha, añado la clase=fecha
-	if ($oDatosCampo->getTipo() == 'fecha') $class = 'fecha';
+	if ($oDatosCampo->getTipo() == 'fecha') {
+	    $class = 'fecha';
+	    $valor = $valor->getFromLocal();
+	}
 
+	$valor=htmlspecialchars($valor);
 	/*
 	$help=$a_valores_campo["help"];
 	$help_ref=$a_valores_campo["help_ref"];

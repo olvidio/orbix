@@ -280,7 +280,7 @@ class ProfesorTipo Extends core\ClasePropiedades {
 	 * Recupera les propietats de l'atribut stipo_profesor de ProfesorTipo
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return oject DatosCampo
+	 * @return core\DatosCampo
 	 */
 	function getDatosTipo_profesor() {
 		$nom_tabla = $this->getNomTabla();

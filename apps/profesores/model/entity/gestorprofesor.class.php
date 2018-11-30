@@ -63,7 +63,7 @@ class GestorProfesor Extends core\ClaseGestor {
 	 * retorna un objecte del tipus Desplegable
 	 * Els posibles professors per una asignatura
 	 *
-	 * @return obj Desplegable
+	 * @return web\Desplegable
 	 */
 	function getDesplProfesoresAsignatura($id_asignatura) {
 		$oAsignatura = new asignaturas\Asignatura($id_asignatura);
