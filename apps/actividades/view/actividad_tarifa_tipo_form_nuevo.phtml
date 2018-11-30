@@ -1,0 +1,87 @@
+<style>
+	table  {
+		width : 600px;	
+	 }
+	.contenido  {
+		font-weight : bold;	
+	 }
+	.link  {
+		text-decoration : none;
+		color : blue;
+		cursor: pointer;
+	 }
+</style>
+<!-- jQuery -->
+<script src='<?= core\ConfigGlobal::$web_scripts.'/jquery-ui-latest/js/jquery-1.7.1.min.js'; ?>'> </script>
+<script>
+fnjs_guardar=function(formulario,que){
+	if (que=="eliminar") {
+		seguro=confirm("<?= $txt_eliminar ?>");
+		if (seguro) { 
+			err=0;
+		} else {
+			err=1;
+		}
+	}
+	var err=0;
+	var tar=$('#id_tarifa').val();
+	var id_tipo_activ=$('#id_tipo_activ').val();
+	if (!id_tipo_activ) {
+		var isfsv=$('#isfsv_val').val();
+		var iasistentes=$('#iasistentes_val').val();
+		var iactividad=$('#iactividad_val').val();
+		var inom_tipo=$('#inom_tipo_val').val();
+		//alert ("s: "+sfsv+", as: "+asistentes+", act: "+actividad+", tip: "+id_tipo_activ);
+		if (!isfsv || !iasistentes || !iactividad ) { alert ("<?= _("debe indicar el tipo de actividad") ?>"); err=1; }
+		if (!inom_tipo && !err) {
+		   id_tipo_activ=isfsv+iasistentes+iactividad+"000";
+	   	} else {
+		   id_tipo_activ=isfsv+iasistentes+iactividad+inom_tipo;
+		}
+		//alert ("tipo: "+id_tipo_activ +" err: "+err);
+	}
+	if (!tar) { alert ("<?= _("debe indicar la tarifa") ?>"); err=1; }
+	if (!err) {
+		$('#id_tipo_activ').val(id_tipo_activ);
+		$('#que').val(que);
+		$(formulario).attr('action','<?= core\ConfigGlobal::getWeb() ?>/apps/actividades/controller/actividad_tarifa_tipo_ajax.php');
+		$(formulario).submit(function() {
+			$.ajax({
+				data: $(this).serialize(),
+				url: $(this).attr('action'),
+				type: 'post',
+				complete: function (rta) {
+					rta_txt=rta.responseText;
+					if (rta_txt != '' && rta_txt != '\n') {
+						alert (rta_txt);
+					} else {
+						fnjs_ver();
+						fnjs_cerrar();
+					}
+				}
+			});
+			return false;
+		});
+		$(formulario).submit();
+		$(formulario).off();
+	}
+}
+</script>
+<form id="nuevo">
+<?= $oHash->getCamposHtml(); ?>
+<?= $oActividadTipo->getHtml() ?>
+<table><tr>
+    <tr>
+    <td class=etiqueta><?= _("temporada") ?>:</td><td>
+    <?php echo $oDesplPosiblesTemporadas->desplegable(); ?>
+    </td>
+    </tr><tr>
+    <td class=etiqueta><?= _("tarifa") ?>:</td><td>
+    <?php echo $oDesplPosiblesTipoTarifas->desplegable(); ?>
+    </td>
+</tr>
+</table>
+<br><br>
+<input type="button" value="<?= _("guardar") ?>" onclick="fnjs_guardar('#nuevo','update');">
+<input type="button" value="<?= _('cancel') ?>" onclick="fnjs_cerrar();" >
+</form>

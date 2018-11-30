@@ -1,0 +1,21 @@
+<script>
+fnjs_ver_planning = function(formulario,n) {
+	$('#modelo').val(n);
+	fnjs_enviar_formulario(formulario);
+}
+</script>
+<form name="que" id="que" target="print" action="apps/actividades/controller/calendario_planning.php" method="post" onkeypress="fnjs_enviar(event,this);">
+    <?= $oHash->getCamposHtml(); ?>
+    <?= $oForm->getHtmlTabla(); ?>
+    <?= $oFormP->getHtml(); ?>
+    <br>
+    <table>
+        <tfoot>
+        <tr class=botones>
+        <td><input TYPE="button" onclick="fnjs_ver_planning(this.form,1)" id="ok" name="ok" value="<?= ucfirst(_('ver planning')); ?>" class="btn_ok"></td>
+        <td><input TYPE="button" onclick="fnjs_ver_planning(this.form,3)" value="<?= ucfirst(_('v3')); ?>" ></td>
+        <td colspan=2><input TYPE="button" onclick="fnjs_ver_planning(this.form,2)" VALUE="<?= _("Vista para imprimir"); ?>" ></td>
+        </tr>
+        </tfoot>
+    </table>
+</form>

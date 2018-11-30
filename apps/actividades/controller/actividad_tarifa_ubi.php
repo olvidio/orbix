@@ -1,0 +1,58 @@
+﻿<?php
+// INICIO Cabecera global de URL de controlador *********************************
+require_once ("apps/core/global_header.inc");
+// Arxivos requeridos por esta url **********************************************
+
+// Crea los objectos de uso global **********************************************
+require_once ("apps/core/global_object.inc");
+
+// FIN de  Cabecera global de URL de controlador ********************************
+
+$oForm = new web\CasasQue();
+$miSfsv = core\ConfigGlobal::mi_sfsv();
+
+// Sólo quiero ver las casas comunes.
+//$donde="WHERE status='t' AND sf='t' AND sv='t'";
+// o (ara) no:
+if ($_SESSION['oPerm']->have_perm("des") or $_SESSION['oPerm']->have_perm("vcsd")) {
+	$oForm->setCasas('all');
+	$donde="WHERE status='t'";
+} else {
+	if ($miSfsv == 1) {
+		$oForm->setCasas('sv');
+		$donde="WHERE status='t' AND sv='t'";
+	} elseif ($miSfsv == 2) {
+		$oForm->setCasas('sf');
+		$donde="WHERE status='t' AND sf='t'";
+	}
+}
+$oForm->setPosiblesCasas($donde);
+$oForm->setAction('');
+
+$oFormAny = new web\PeriodoQue();
+
+$oHash = new web\Hash();
+$oHash->setUrl(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tarifa_ajax.php');
+$oHash->setCamposForm('que!id_ubi!year');
+$h_ver = $oHash->linkSinVal();
+
+$oHashNew = new web\Hash();
+$oHashNew->setUrl(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tarifa_ajax.php');
+$oHashNew->setCamposForm('que!id_ubi!year');
+$h_nuevo = $oHashNew->linkSinVal();
+
+$oHashMod = new web\Hash();
+$oHashMod->setUrl(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tarifa_ajax.php');
+$oHashMod->setCamposForm('que!id_item!letra');
+$h_modificar = $oHashMod->linkSinVal();
+
+$a_campos = ['oPosicion' => $oPosicion,
+    'h_ver' => $h_ver,
+    'h_nuevo' => $h_nuevo,
+    'h_modificar' => $h_modificar,
+    'oForm' => $oForm,
+    'oFormAny' => $oFormAny,
+];
+
+$oView = new core\View('actividades/controller');
+echo $oView->render('actividad_tarifa_ubi.phtml',$a_campos);

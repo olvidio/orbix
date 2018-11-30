@@ -1,0 +1,98 @@
+<script>
+fnjs_cerrar=function(){
+	$('#div_modificar').html('');
+	$('#div_modificar').width('0');
+	$('#div_modificar').height('0');
+	$('#div_modificar').removeClass('ventana');
+	document.getElementById("overlay").style.display = "none";
+}
+
+fnjs_guardar=function(formulario,que){
+	var err=0;
+	if (que=="eliminar") {
+		seguro=confirm("<?= _("¿Está seguro de borrar este periodo?") ?>");
+		if (seguro) { 
+			err=0;
+		} else {
+			err=1;
+		}
+	}
+	if (err!=1) {
+		id = $(formulario).attr('id');
+		$('#'+id+' input[name=que]').val(que);
+	    $(formulario).attr('action',"apps/ubis/controller/calendario_periodos_ajax.php")
+		$(formulario).submit(function() {
+			$.ajax({
+				data: $(this).serialize(),
+				url: $(this).attr('action'),
+				type: 'post',
+				complete: function (rta) {
+					rta_txt=rta.responseText;
+					if (rta_txt != '' && rta_txt != '\n') {
+						alert (rta_txt);
+					} else {
+                        $('#div_modificar').html('');
+                        $('#div_modificar').width('0');
+                        $('#div_modificar').height('0');
+                        $('#div_modificar').removeClass('ventana');
+					}
+				},
+                success: function() { fnjs_ver(); }
+			});
+			return false;
+		});
+		$(formulario).submit();
+		$(formulario).off();
+	}
+}
+
+fnjs_modificar=function(id_item){
+	$('#div_modificar').addClass('ventana');
+	$('#div_modificar').width('auto');
+	$('#div_modificar').height('auto');
+	document.getElementById("overlay").style.display = "block";
+
+	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/ubis/controller/calendario_periodos_ajax.php';
+	if (id_item) {
+		var parametros='que=form_periodo&id_item='+id_item+'<?= $h_modificar ?>';
+	} else {
+		id_ubi =$('#id_cdc').val();
+		year =$('#year').val();
+		var parametros='que=nuevo&id_ubi='+id_ubi+'&year='+year+'<?= $h_nuevo ?>';
+	}
+	fnjs_update_div('#div_modificar',url+'?'+parametros);
+}
+
+fnjs_ver=function(){
+	id_ubi =$('#id_cdc').val();
+	year =$('#year').val();
+	// obtener el listado de periodos 
+	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/ubis/controller/calendario_periodos_ajax.php';
+	var parametros='que=get2&id_ubi='+id_ubi+'&year='+year+'<?= $h_ver ?>';
+		 
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta_txt) {
+			//rta_txt=rta.responseText;
+			//alert ('respuesta: '+rta_txt);
+			if (rta_txt) {
+				// añadir debajo de la casa 
+				$('#ficha').html(rta_txt);
+			}
+		}
+	});
+	document.getElementById("overlay").style.display = "none";
+}
+
+$(document).ready(fnjs_ver());
+</script>
+<form name=seleccion action="">
+<?= $oForm->getDesplCasas()->desplegable(); ?>
+<?= $oFormAny->getDesplAnys()->desplegable(); ?>
+<input type=button name="buscar" value="<?= _('buscar') ?>" onclick="fnjs_ver()">
+</form>
+<div id='ficha'></div>
+<div id='div_modificar'></div>
+<div id='overlay'></div>

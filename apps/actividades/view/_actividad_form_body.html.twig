@@ -1,0 +1,81 @@
+{% block body %}
+<table>
+<tr>
+	<td class=etiqueta>{{ "estado"|trans|capitalize }}:</td>
+	{% if not procesos_installed %}
+	<td><input type="Radio" id="status_1" name="status" value="{{ constant('actividades\\model\\entity\\ActividadAll::STATUS_PROYECTO') }}"
+		{% if status == constant('actividades\\model\\entity\\ActividadAll::STATUS_PROYECTO') %} checked {% endif %}>
+		{{ "proyecto"|trans }}</td>
+	<td><input type="Radio" id="status_2" name="status" value="{{ constant('actividades\\model\\entity\\ActividadAll::STATUS_ACTUAL') }}"
+		{% if status == constant('actividades\\model\\entity\\ActividadAll::STATUS_ACTUAL') %} checked {% endif %}>
+		{{ "actual"|trans }}</td>
+	<td><input type="Radio" id="status_3" name="status" value="{{ constant('actividades\\model\\entity\\ActividadAll::STATUS_TERMINADA') }}"
+		{% if status == constant('actividades\\model\\entity\\ActividadAll::STATUS_TERMINADA') %} checked {% endif %}>
+		{{ "terminada"|trans }}</td>
+	<td><input type="Radio" id="status_4" name="status" value="{{ constant('actividades\\model\\entity\\ActividadAll::STATUS_BORRABLE') }}"
+		{% if status == constant('actividades\\model\\entity\\ActividadAll::STATUS_BORRABLE') %} checked {% endif %}>
+		{{ "borrable"|trans }}</td>
+	{% else %}
+		<!-- Ara faig que no es pugui canviar. S'ha d'anar per les fases.  -->
+		<td><?= $a_status[$status] ?>
+		<input type='hidden' id='status' name='status' value="{{ status }}">
+		</td>
+	{% endif %}
+</tr>
+<tr>
+	<td class=etiqueta>{{ "nombre actividad"|trans|capitalize }}:
+	  </td><td colspan=8><input class=contenido size='60' id='nom_activ' name='nom_activ' value="{{ nom_activ }}">
+		  <span class=link onclick="fnjs_generarNomActiv('#modifica');" >{{ "generar"|trans }}</span></td>
+</td></tr>
+<tr>
+	<td class=etiqueta>{{ "fecha inicio"|trans|capitalize }}: </td><td><input class=fecha size="11" id="f_ini" name="f_ini" value="{{ f_ini }}">
+		<td class=etiqueta>{{ "hora inicio"|trans|capitalize }}: </td><td><input class=contenido size="6" id="h_ini" name="h_ini" value="{{ h_ini }}" title="{{ "formato [hh:mm]"|trans }}">
+</td></tr>
+<tr>
+	<td class=etiqueta>{{ "fecha fin"|trans|capitalize }}: </td><td><input class=fecha size="11" id="f_fin" name="f_fin" value="{{ f_fin }}">
+		<td class=etiqueta>{{ "hora fin"|trans|capitalize }}: </td><td><input class=contenido size="6" id="h_fin" name="h_fin" value="{{ h_fin }}" title="{{ "formato [hh:mm]"|trans }}">
+</td></tr>
+<tr><td class=etiqueta>{{ "dl/r que organiza"|trans }}:</td>
+<td colspan=2>
+	{{  oDesplDelegacionesOrg.desplegable()|raw }}
+	</td>
+	<td class=etiqueta>{{ "plazas totales"|trans|capitalize }}:</td>
+<td><input class=contenido size="6" id="plazas" name="plazas" value="{{ plazas }}" ></td>
+</tr>
+<tr>
+	<td class=etiqueta>
+		{{ "lugar"|trans|capitalize }}: 
+	 </td><td colspan=2 class=contenido ><span class="link" onclick="fnjs_cambiar_ubi();" id="span_nom_ubi">{{ nombre_ubi }}</span>
+	 <input type=hidden id="nombre_ubi" name="nombre_ubi" value="{{ nombre_ubi }}">
+	 <input type=hidden id="id_ubi" name="id_ubi" value="{{ id_ubi }}">
+	 <input type=hidden id="lugar_esp" name="lugar_esp" value="{{ lugar_esp }}">
+	 </td>
+</tr>
+<tr>
+	<td class=etiqueta>{{ "tarifa"|trans|capitalize }}: </td>
+<td>{{ oDesplPosiblesTipoTarifas.desplegable()|raw }}</td>
+<td class=etiqueta>{{ "precio"|trans|capitalize }}: </td>
+  <td>
+	  <input type=text class="contenido derecha" id="precio" name="precio" value="{{ precio }}" size="8" > {{ "€"|trans }}
+</td></tr>
+<tr><td class=etiqueta>
+		{{ "observaciones"|trans|capitalize }}:</td><td colspan=2><input class=contenido size="30" id="observ" name="observ" value="{{ observ }}">
+</td></tr>
+<tr>
+	<td class=etiqueta>{{ "repetición anual por"|trans|capitalize }}:</td>
+<td colspan=2>
+{{ oDesplRepeticion.desplegable()|raw }}
+</td>
+<td class=etiqueta>{{ "nivel de stgr"|trans|capitalize }}:</td>
+<td colspan=2>
+{{ oDesplNivelStgr.desplegable()|raw }}
+</td>
+</tr><tr>
+	<td class=etiqueta>{{ "publicado"|trans }}:</td>
+	<td>
+		<input type="Radio" id="pub_1" name="publicado" value="t" {% if publicado == true %} checked {% endif %} >{{ "sí"|trans }} 
+		<input type="Radio" id="pub_2" name="publicado" value="f" {% if publicado == false %} checked {% endif %} >{{ "no"|trans }} 
+	</td>
+</tr>
+</table>
+{% endblock %}

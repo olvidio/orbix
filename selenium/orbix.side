@@ -1,0 +1,238 @@
+{
+  "id": "6cc07fb8-86e8-434f-8bad-ea2c49d5b47b",
+  "version": "1.1",
+  "name": "orbix",
+  "url": "http://orbix.local/",
+  "tests": [{
+    "id": "07f2084f-3833-4f22-bbe9-dc792f6fed3f",
+    "name": "canvi ctr",
+    "commands": [{
+      "id": "d2c828d7-2cf8-47fb-8046-5af05ed9fa00",
+      "comment": "",
+      "command": "open",
+      "target": "/orbix/index.php",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "94f5c61f-20b0-4433-a428-4ba9f4786098",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1050x693",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "1c0702c9-c830-4bcc-9b49-1ca24e75690b",
+      "comment": "",
+      "command": "click",
+      "target": "css=li",
+      "targets": [
+        ["css=li", "css"],
+        ["css=#menu > li:nth-child(1)", "css:finder"],
+        ["xpath=//li[@onclick=\"fnjs_link_menu('2');\"]", "xpath:attributes"],
+        ["xpath=//ul[@id='menu']/li", "xpath:idRelative"],
+        ["xpath=//li", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "affbe409-0805-472b-8fbb-b170d0d08f7f",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "linkText=buscar n",
+      "targets": [
+        ["linkText=buscar n", "linkText"],
+        ["css=a.nohref.udmR", "css"],
+        ["css=.udmR", "css:finder"],
+        ["xpath=//a[contains(text(),'buscar n')]", "xpath:link"],
+        ["xpath=//a[@onclick=\"fnjs_link_submenu('','h=77d97bb826df11f26b9d2ef2b609c6c1&horig=%2F%2Forbix.local%3A80%2Forbix%2F');\"]", "xpath:attributes"],
+        ["xpath=//ul[@id='udm']/li[2]/a", "xpath:idRelative"],
+        ["xpath=//div/ul/li[2]/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "9f68233e-e4d0-490e-bcb1-956fcb64a8ea",
+      "comment": "",
+      "command": "click",
+      "target": "css=li.selec",
+      "targets": [
+        ["css=li.selec", "css"],
+        ["css=.selec", "css:finder"],
+        ["xpath=//li[@onclick=\"fnjs_link_menu('2');\"]", "xpath:attributes"],
+        ["xpath=//ul[@id='menu']/li", "xpath:idRelative"],
+        ["xpath=//li", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "5b2d22db-06af-4953-8a81-f75a01078d04",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "linkText=buscar n",
+      "targets": [
+        ["linkText=buscar n", "linkText"],
+        ["css=a.nohref.udmR", "css"],
+        ["css=.udmR", "css:finder"],
+        ["xpath=//a[contains(text(),'buscar n')]", "xpath:link"],
+        ["xpath=//a[@onclick=\"fnjs_link_submenu('','h=77d97bb826df11f26b9d2ef2b609c6c1&horig=%2F%2Forbix.local%3A80%2Forbix%2F');\"]", "xpath:attributes"],
+        ["xpath=//ul[@id='udm']/li[2]/a", "xpath:idRelative"],
+        ["xpath=//div/ul/li[2]/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "ee5348b2-9b63-4ada-9a6c-6640d02ac06a",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=n dl",
+      "targets": [
+        ["linkText=n dl", "linkText"],
+        ["css=li:nth-child(1) > .udmR", "css:finder"],
+        ["xpath=//a[contains(text(),'n dl')]", "xpath:link"],
+        ["xpath=//a[@onclick=\"fnjs_link_submenu('//orbix.local:80/orbix/apps/personas/controller/personas_que.php','tabla=p_numerarios&tipo=persona&h=cfdc506ed7036a8e27ea80f738bd3a20&horig=%2F%2Forbix.local%3A80%2Forbix%2Fapps%2Fpersonas%2Fcontroller%2Fpersonas_que.php%3Ftabla%3Dp_numerarios%26tipo%3Dpersona');\"]", "xpath:attributes"],
+        ["xpath=//ul[@id='udm']/li[2]/ul/li/a", "xpath:idRelative"],
+        ["xpath=//div/ul/li[2]/ul/li/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "5a04e12c-a582-4032-960d-eed3b8161369",
+      "comment": "",
+      "command": "click",
+      "target": "id=apellido1",
+      "targets": [
+        ["id=apellido1", "id"],
+        ["name=apellido1", "name"],
+        ["css=#apellido1", "css"],
+        ["css=#apellido1", "css:finder"],
+        ["xpath=//input[@id='apellido1']", "xpath:attributes"],
+        ["xpath=//form[@id='frm_personas_que']/table/tbody/tr[2]/td[2]/input", "xpath:idRelative"],
+        ["xpath=//tr[2]/td[2]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "2c92f5ba-92ca-4286-b1bd-4ee8f7e7b00d",
+      "comment": "",
+      "command": "type",
+      "target": "id=apellido1",
+      "targets": [
+        ["id=apellido1", "id"],
+        ["name=apellido1", "name"],
+        ["css=#apellido1", "css"],
+        ["css=#apellido1", "css:finder"],
+        ["xpath=//input[@id='apellido1']", "xpath:attributes"],
+        ["xpath=//form[@id='frm_personas_que']/table/tbody/tr[2]/td[2]/input", "xpath:idRelative"],
+        ["xpath=//tr[2]/td[2]/input", "xpath:position"]
+      ],
+      "value": "A"
+    }, {
+      "id": "2549228f-2dec-4a23-9d7f-2e47587fa397",
+      "comment": "",
+      "command": "click",
+      "target": "css=tr:nth-child(4) > td:nth-child(2)",
+      "targets": [
+        ["css=tr:nth-child(4) > td:nth-child(2)", "css:finder"],
+        ["xpath=//form[@id='frm_personas_que']/table/tbody/tr[4]/td[2]", "xpath:idRelative"],
+        ["xpath=//tr[4]/td[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "b08036d4-77fb-43ce-a66d-e694abc4d9fe",
+      "comment": "",
+      "command": "click",
+      "target": "id=btn_ok",
+      "targets": [
+        ["id=btn_ok", "id"],
+        ["name=btn_ok", "name"],
+        ["css=#btn_ok", "css"],
+        ["css=#btn_ok", "css:finder"],
+        ["xpath=//input[@id='btn_ok']", "xpath:attributes"],
+        ["xpath=//form[@id='frm_personas_que']/table/tfoot/tr[2]/th/input", "xpath:idRelative"],
+        ["xpath=//th/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "9ecd0d48-37df-4a62-8b8c-fd66127709fc",
+      "comment": "",
+      "command": "click",
+      "target": "id=#1001173#n",
+      "targets": [
+        ["id=#1001173#n", "id"],
+        ["name=sel[]", "name"],
+        ["css=#\\#1001173\\#n", "css:finder"],
+        ["xpath=//input[@id='#1001173#n']", "xpath:attributes"],
+        ["xpath=//div[@id='grid_personas_select_p_numerarios']/div[5]/div/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[5]/div/div/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "0c23948d-55ab-4b43-aa9f-45187b77f869",
+      "comment": "",
+      "command": "click",
+      "target": "id=btn0",
+      "targets": [
+        ["id=btn0", "id"],
+        ["name=btn0", "name"],
+        ["css=#btn0", "css"],
+        ["css=#btn0", "css:finder"],
+        ["xpath=//input[@id='btn0']", "xpath:attributes"],
+        ["xpath=//div[@id='GridContainer_personas_select_p_numerarios']/div/span/input", "xpath:idRelative"],
+        ["xpath=//span/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "a331b71f-5beb-4243-adbb-3e7c217f4226",
+      "comment": "",
+      "command": "click",
+      "target": "id=new_ctr",
+      "targets": [
+        ["id=new_ctr", "id"],
+        ["name=new_ctr", "name"],
+        ["css=#new_ctr", "css"],
+        ["css=#new_ctr", "css:finder"],
+        ["xpath=//select[@id='new_ctr']", "xpath:attributes"],
+        ["xpath=//form[@id='frm_traslado']/table/tbody/tr[2]/td[3]/select", "xpath:idRelative"],
+        ["xpath=//select", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "8b65bef0-b3bc-4482-8b56-18cd69f094b5",
+      "comment": "",
+      "command": "select",
+      "target": "id=new_ctr",
+      "targets": [],
+      "value": "label=agdCimal"
+    }, {
+      "id": "caf7f3bb-93e4-4b61-aa77-0bae83ca5664",
+      "comment": "",
+      "command": "click",
+      "target": "css=option[value=\"1110126030\"]",
+      "targets": [
+        ["css=option[value=\"1110126030\"]", "css"],
+        ["css=#new_ctr > option:nth-child(7)", "css:finder"],
+        ["xpath=//option[@value='1110126030']", "xpath:attributes"],
+        ["xpath=//select[@id='new_ctr']/option[7]", "xpath:idRelative"],
+        ["xpath=//option[7]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "529db95c-91f3-4f3e-b2f7-b54722f393c9",
+      "comment": "",
+      "command": "click",
+      "target": "css=input[type=\"button\"]",
+      "targets": [
+        ["css=input[type=\"button\"]", "css"],
+        ["css=input:nth-child(13)", "css:finder"],
+        ["xpath=//input[@value='Actualitzar canvis']", "xpath:attributes"],
+        ["xpath=//form[@id='frm_traslado']/input[10]", "xpath:idRelative"],
+        ["xpath=//input[10]", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "9fedb528-f93b-4bb7-b41a-c22f48d087d9",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["07f2084f-3833-4f22-bbe9-dc792f6fed3f"]
+  }],
+  "urls": ["http://orbix.local/"],
+  "plugins": []
+}
