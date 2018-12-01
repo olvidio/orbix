@@ -33,15 +33,6 @@ if (isset($_REQUEST['logout']) && $_REQUEST['logout'] == 'si') {
     die();
 }
 
-//use orbix\config\configglobal as ConfigGlobal;
-
-/*
-define('CONFIG_DIR','/var/www/orbix/config');
-define('INCLUDES_DIR','/var/www/orbix/core');
-$new_include_path = get_include_path().PATH_SEPARATOR.CONFIG_DIR.PATH_SEPARATOR.INCLUDES_DIR;
-ini_set ('include_path', $new_include_path);
-*/
-
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************

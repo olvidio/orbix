@@ -24,7 +24,7 @@ use menus\model\entity as menus;
 $oConfig = new core\Config('importar'); //de la database comun 
 // Para el caso de pruebas, la base de datos es 'test-comun'
 if (core\ConfigGlobal::WEBDIR == 'pruebas') {
-    $db_comun = 'test-comun';
+    $db_comun = 'pruebas-comun';
 } else {
     $db_comun = 'comun';
 }

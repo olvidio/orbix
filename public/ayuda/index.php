@@ -1,6 +1,5 @@
 <?php
 namespace core;
-use web;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -11,9 +10,7 @@ use web;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 include_once(ConfigGlobal::$dir_estilos.'/todo_en_uno.css.php');
-echo "<style>";
 include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
-echo "</style>";
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
