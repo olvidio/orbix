@@ -1,5 +1,4 @@
 <?php
-use devel\model\entity as notas;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************

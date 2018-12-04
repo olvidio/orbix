@@ -1,4 +1,25 @@
 <script>
+fnjs_sql=function(formulario){
+	$(formulario).attr('action','apps/devel/controller/modulos_sql.php');
+	$(formulario).submit(function() {
+		$.ajax({
+			data: $(this).serialize(),
+			url: $(this).attr('action'),
+			type: 'post',
+			complete: function (rta) {
+				rta_txt=rta.responseText;
+				if (rta_txt != '' && rta_txt != '\\n') {
+					alert ('<?= _("respuesta") ?>: '+rta_txt);
+				} else {
+					<?= $oPosicion->js_atras(1); ?>
+				}
+			}
+		});
+		return false;
+	});
+	$(formulario).submit();
+	$(formulario).off();
+}
 fnjs_guardar=function(formulario){
 	$(formulario).attr('action','apps/devel/controller/modulos_update.php');
 	$(formulario).submit(function() {
@@ -102,4 +123,5 @@ Apps requeridas: <?= $apps_req ?><br>
 	</fieldset>
 <br>
 <input id="g1" TYPE="button" VALUE="<?= ucfirst(_("guardar cambios")); ?>"  onclick="fnjs_guardar(this.form)">
+<input id="g2" TYPE="button" VALUE="<?= ucfirst(_("generar tablas")); ?>"  onclick="fnjs_sql(this.form)">
 </form>
