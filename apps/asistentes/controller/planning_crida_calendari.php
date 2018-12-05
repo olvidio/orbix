@@ -82,18 +82,20 @@ if (empty($Qperiodo) || $Qperiodo == 'otro') {
     $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
     $inicio_local = empty($Qinicio)? $Qempiezamin : $Qinicio;
     $fin_local = empty($Qfin)? $Qempiezamax : $Qfin;
-    $oIniPlanning = web\DateTimeLocal::createFromLocal($inicio);
-    $oFinPlanning = web\DateTimeLocal::createFromLocal($fin);
-    $inicio = $oIniPlanning->format('Y-m-d');
-    $fin = $oFinPlanning->format('Y-m-d');
+    $oIniPlanning = web\DateTimeLocal::createFromLocal($inicio_local);
+    $oFinPlanning = web\DateTimeLocal::createFromLocal($fin_local);
+    $inicio_iso = $oIniPlanning->format('Y-m-d');
+    $fin_iso = $oFinPlanning->format('Y-m-d');
 } else {
     $oPeriodo = new web\Periodo();
     $oPeriodo->setAny($year);
     $oPeriodo->setPeriodo($Qperiodo);
-    $inicio = $oPeriodo->getF_ini_iso();
-    $fin = $oPeriodo->getF_fin_iso();
-    $oIniPlanning = web\DateTimeLocal::createFromFormat('Y/m/d',$inicio);
-    $oFinPlanning = web\DateTimeLocal::createFromFormat('Y/m/d',$fin);
+    $inicio_iso = $oPeriodo->getF_ini_iso();
+    $fin_iso = $oPeriodo->getF_fin_iso();
+    $oIniPlanning = web\DateTimeLocal::createFromFormat('Y/m/d',$inicio_iso);
+    $oFinPlanning = web\DateTimeLocal::createFromFormat('Y/m/d',$fin_iso);
+    $inicio_local = $oIniPlanning->getFromLocal();
+    $fin_local = $oFinPlanning->getFromLocal();
 }
 
 // valores por defecto.
@@ -282,9 +284,9 @@ if ($Qtipo=='planning_cdc' || $Qtipo=='casa') {
                 $aOperador['id_tipo_activ']='~';
                 break;
         }
-        $aWhere['f_ini']="'$fin'";
+        $aWhere['f_ini']="'$fin_iso'";
         $aOperador['f_ini']='<=';
-        $aWhere['f_fin']="'$inicio'";
+        $aWhere['f_fin']="'$inicio_iso'";
         $aOperador['f_fin']='>=';
         $aWhere['status']=4;
         $aOperador['status']='<';
@@ -327,7 +329,7 @@ if ($Qtipo=='planning_cdc' || $Qtipo=='casa') {
     }
 } else {
     $GesActividadAsignaturas = new actividadestudios\GestorActividadAsignaturaDl();
-    $aWhere = array('f_ini' => "'$inicio','$fin'");
+    $aWhere = array('f_ini' => "'$inicio_iso','$fin_iso'");
     $aOperador = array('f_ini' => 'BETWEEN');
     $GesActividadAsignaturas->getActividadAsignaturas($aWhere,$aOperador);
     //por cada persona busco las actividades.
@@ -357,9 +359,9 @@ if ($Qtipo=='planning_cdc' || $Qtipo=='casa') {
         }
         
         $aWhere=array();
-        $aWhere['f_ini']="'$fin'";
+        $aWhere['f_ini']="'$fin_iso'";
         $aOperador['f_ini']='<=';
-        $aWhere['f_fin']="'$inicio'";
+        $aWhere['f_fin']="'$inicio_iso'";
         $aOperador['f_fin']='>=';
         
         if (core\ConfigGlobal::is_app_installed('actividadcargos')) {
@@ -398,7 +400,7 @@ if ($Qtipo=='planning_cdc' || $Qtipo=='casa') {
             //en el entorno de las primeras del día (a efectos del planning
             //ya es suficiente con la 1:16 de la madrugada)
             if ($oIniPlanning>$oF_ini) {
-                $ini=$inicio;
+                $ini=$inicio_local;
                 $hini="1:16";
             } else {
                 $ini=(string) $oF_ini->getFromLocal();
