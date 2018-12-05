@@ -43,8 +43,8 @@ class Tesera {
 			$fin = "$any-$fin_m-$fin_d";
 			$this->curso_txt = "$any2-$any";
 		}
-		$this->oInicio = new web\DateTimeLocal('Y-m-d', $inicio);
-		$this->oFin = new web\DateTimeLocal('Y-m-d', $fin);
+		$this->oInicio = new web\DateTimeLocal($inicio);
+		$this->oFin = new web\DateTimeLocal($fin);
 	}
 	
 	private function getTitulo($id_nivel) {
