@@ -80,10 +80,12 @@ if (empty($Qperiodo) || $Qperiodo == 'otro') {
     $Qfin = (string) \filter_input(INPUT_POST, 'fin');
     $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
     $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
-    $inicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
-    $fin = empty($Qfin)? $Qempiezamax : $Qfin;
+    $inicio_local = empty($Qinicio)? $Qempiezamin : $Qinicio;
+    $fin_local = empty($Qfin)? $Qempiezamax : $Qfin;
     $oIniPlanning = web\DateTimeLocal::createFromLocal($inicio);
     $oFinPlanning = web\DateTimeLocal::createFromLocal($fin);
+    $inicio = $oIniPlanning->format('Y-m-d');
+    $fin = $oFinPlanning->format('Y-m-d');
 } else {
     $oPeriodo = new web\Periodo();
     $oPeriodo->setAny($year);

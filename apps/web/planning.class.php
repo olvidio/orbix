@@ -267,12 +267,10 @@ class Planning {
                         }
                     }
 
-                    //list($dini[$a],$mini[$a],$aini[$a]) = preg_split('/[\.\/-]/', $ini ); //los delimitadores pueden ser /, ., -
                     $oIniAct = DateTimeLocal::createFromLocal($ini);
                     $dini[$a] = $oIniAct->format('d');
                     $mini[$a] = $oIniAct->format('m');
                     $aini[$a] = $oIniAct->format('Y');
-                    //list($dfi[$a],$mfi[$a],$afi[$a]) = preg_split('/[\.\/-]/', $fi ); //los delimitadores pueden ser /, ., -
                     $this->oFinAct = DateTimeLocal::createFromLocal($fi);
                     $dfi[$a] = $this->oFinAct->format('d');
                     $mfi[$a] = $this->oFinAct->format('m');
