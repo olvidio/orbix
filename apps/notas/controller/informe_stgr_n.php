@@ -123,7 +123,7 @@ $res[9] = $Resumen->enCuadrienio(2);
 $a_textos[9] = ucfirst(_("número de numerarios en años II-IV de Cuadrienio"));
 //10. Numerarios en Total
 $res[10] = $Resumen->enCuadrienio('all');
-$a_textos[10] = ucfirst(_("número de numerarios en stgr"));
+$a_textos[10] = ucfirst(_("número de numerarios en cuadrienio"));
 //11. Media de asignaturas superadas por alumno en cuadrienio
 $a_aprobadas = $Resumen->aprobadasCuadrienio();
 if (!isset($a_aprobadas['error'])) {
