@@ -7,16 +7,21 @@ class PersonaListas Extends core\ClasePropiedades {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/*
-	Identif int 10 NOTNULL
+	Identif int 19 NOTNULL
 	ApeNom varchar (56)
-	Dl vachar (4)
+	Dl vachar (5)
 	Ctr varchar (40)
 	Lugar_Naci varchar (45)
 	Fecha_Naci date (10)
 	Email varchar (50)
-	Tfno_Movil varchar(15)
+	Tfno_Movil varchar(17)
 	Ce varchar (40)
 	ID_TABLA int 10 NOT NULL
+	Edad int (10)
+	Prof_Carg varchar(350)
+	Titu_Estu varchar(110)
+	Encargos varchar (150)
+	INCORP varchar (14)
 	 * 
 	 */
 	
@@ -94,6 +99,30 @@ class PersonaListas Extends core\ClasePropiedades {
 	 * @var integer
 	 */
 	 private $iID_TABLA;
+	/**
+	 * Prof_Carg de Listas
+	 *
+	 * @var string
+	 */
+	private $sProfesion_cargo;
+	/**
+	 * Titu_Estu de Listas
+	 *
+	 * @var string
+	 */
+	private $sTitulo_Estudios;
+	/**
+	 * Encargos de Listas
+	 *
+	 * @var string
+	 */
+	private $sEncargos;
+	/**
+	 * INCORP de Listas
+	 *
+	 * @var string
+	 */
+	private $sIncorporacion;
 	 
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
@@ -150,9 +179,21 @@ class PersonaListas Extends core\ClasePropiedades {
 	 * @var string
 	 */
 	 private $sce_lugar;
+	/**
+	 * inc de Listas
+	 *
+	 * @var string
+	 */
+	 private $sinc;
+	/**
+	 * f_inc de Listas
+	 *
+	 * @var string date
+	 */
+	 private $df_inc;
 
 
-	/* CONSTRUCTOR -------------------------------------------------------------- */
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
 	/**
 	 * Constructor de la classe.
@@ -202,7 +243,10 @@ class PersonaListas Extends core\ClasePropiedades {
 		$aDades['Email'] = $this->sEmail;
 		$aDades['Tfno_Movil'] = $this->sTfno_Movil;
 		$aDades['Ce'] = $this->sCe;
-		$aDades['ID_TABLA'] = $this->iID_TABLA;
+        $aDades['Prof_Carg'] = $this->sProfesion_cargo;
+        $aDades['Titu_Estu'] = $this->sTitulo_Estudios;
+        $aDades['Encargos'] = $this->sEncargos;
+        $aDades['INCORP'] = $this->sIncorporacion;
 		array_walk($aDades, 'core\poner_null');
 
 		if ($bInsert === false) {
@@ -216,7 +260,10 @@ class PersonaListas Extends core\ClasePropiedades {
 					Email              		= :Email,
 					Tfno_Movil              = :Tfno_Movil,
 					Ce              		= :Ce,
-					ID_TABLA 			    = :ID_TABLA";
+                    Prof_Carg               = :Prof_Carg,
+                    Titu_Estu               = :Titu_Estu,
+                    Encargos                = :Encargos,
+                    INCORP                  = :INCORP";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE Identif='$this->iIdentif'")) === false) {
 				$sClauError = 'Listas.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -230,8 +277,8 @@ class PersonaListas Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			$campos="(ApeNom,Dl,Ctr,Lugar_Naci,Fecha_Naci,Email,Tfno_Movil,Ce,ID_TABLA)";
-			$valores="(:ApeNom,:Dl,:Ctr,:Lugar_Naci,:Fecha_Naci,:Email,:Tfno_Movil,:Ce,:ID_TABLA)";		
+			$campos="(ApeNom,Dl,Ctr,Lugar_Naci,Fecha_Naci,Email,Tfno_Movil,Ce,Prof_Carg,Titu_Estu,Encargos,INCORP");
+			$valores="(:ApeNom,:Dl,:Ctr,:Lugar_Naci,:Fecha_Naci,:Email,:Tfno_Movil,:Ce,:Prof_Carg,:Titu_Estu,:Encargos,:INCORP");
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Listas.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -295,6 +342,25 @@ class PersonaListas Extends core\ClasePropiedades {
 	}
 	
 	/* METODES ALTRES  ----------------------------------------------------------*/
+	public function dividirIncorporacion() {
+		$matches = array();
+		$subject = $this->getIncorporacion();
+		$pattern = '/^(\w+.*)\s*(\d*)-(\d*)-(\d*)/';
+		if (preg_match($pattern, $subject, $matches)) {
+			$this->sinc = $matches[1];
+			$dia = $matches[2];
+			$mes = $matches[3];
+			$any = $matches[4];
+			// iso
+			$this->df_inc = "$any-$mes-$any";
+		} else {
+			$this->ice_num = '';
+			$this->sce_lugar = '';
+			$this->ice_ini = '';
+			$this->ice_fin = '';
+		}
+	}
+
 	public function dividirCe() {
 		$matches = array();
 		$subject = $this->getCe();
@@ -443,7 +509,10 @@ class PersonaListas Extends core\ClasePropiedades {
 		if (array_key_exists('Email',$aDades)) $this->setEmail($aDades['Email']);
 		if (array_key_exists('Tfno_Movil',$aDades)) $this->setTfno_Movil($aDades['Tfno_Movil']);
 		if (array_key_exists('Ce',$aDades)) $this->setCe($aDades['Ce']);
-		if (array_key_exists('ID_TABLA',$aDades)) $this->setID_TABLA($aDades['ID_TABLA']);
+        if (array_key_exists('Prof_Carg',$aDades)) $this->setProfesion_cargo($aDades['Prof_Carg']);
+        if (array_key_exists('Titu_Estu',$aDades)) $this->setTitulo_Estudios($aDades['Titu_Estu']);
+        if (array_key_exists('Encargos',$aDades)) $this->setEncargos($aDades['Encargos']);
+        if (array_key_exists('INCORP',$aDades)) $this->setIncorporacion($aDades['INCORP']);
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
@@ -664,6 +733,70 @@ class PersonaListas Extends core\ClasePropiedades {
 		$this->iID_TABLA = $iID_TABLA;
 	}
 
+	/**
+     * @return string
+     */
+    public function getProfesion_cargo()
+    {
+        return $this->sProfesion_cargo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitulo_Estudios()
+    {
+        return $this->sTitulo_Estudios;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEncargos()
+    {
+        return $this->sEncargos;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIncorporacion()
+    {
+        return $this->sIncorporacion;
+    }
+
+    /**
+     * @param string $sProfesion_cargo
+     */
+    public function setProfesion_cargo($sProfesion_cargo)
+    {
+        $this->sProfesion_cargo = $sProfesion_cargo;
+    }
+
+    /**
+     * @param string $sTitulo_Estudios
+     */
+    public function setTitulo_Estudios($sTitulo_Estudios)
+    {
+        $this->sTitulo_Estudios = $sTitulo_Estudios;
+    }
+
+    /**
+     * @param string $sEncargos
+     */
+    public function setEncargos($sEncargos)
+    {
+        $this->sEncargos = $sEncargos;
+    }
+
+    /**
+     * @param string $sIncorporacion
+     */
+    public function setIncorporacion($sIncorporacion)
+    {
+        $this->sIncorporacion = $sIncorporacion;
+    }
+	
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
 	public function getNombre() {
@@ -729,6 +862,23 @@ class PersonaListas Extends core\ClasePropiedades {
 		}
 		return $this->ice_fin;
 	}
+
+	public function getInc() {
+		if (!isset($this->sinc)) {
+			$this->dividirIncorporacion();
+		}
+		return $this->sinc;
+	}
+	/**
+	 * 
+	 * @return string fecha iso
+	 */
+	public function getF_inc() {
+		if (!isset($this->df_inc)) {
+			$this->dividirIncorporacion();
+		}
+		return $this->df_inc;
+	}
 	/**
 	 * Recupera l'atribut snx1 de PersonaListas
 	 *
@@ -766,7 +916,10 @@ class PersonaListas Extends core\ClasePropiedades {
 		$oListasSet->add($this->getDatosEmail());
 		$oListasSet->add($this->getDatosTfno_Movil());
 		$oListasSet->add($this->getDatosCe());
-		$oListasSet->add($this->getDatosID_TABLA());
+		$oListasSet->add($this->getDatosProfesion_cargo());
+		$oListasSet->add($this->getDatosTitulo_estudios());
+		$oListasSet->add($this->getDatosEncargos());
+		$oListasSet->add($this->getDatosIncorporacion());
 		return $oListasSet->getTot();
 	}
 
@@ -870,5 +1023,56 @@ class PersonaListas Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 
+	/**
+	 * Recupera les propietats de l'atribut sProfesion_cargo de Listas
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosProfesion_cargo() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'Prof_Carg'));
+		$oDatosCampo->setEtiqueta(_("profesión cargo"));
+		return $oDatosCampo;
+	}
+
+	/**
+	 * Recupera les propietats de l'atribut sEncargos de Listas
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosEncargos() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'Encargos'));
+		$oDatosCampo->setEtiqueta(_("encargos"));
+		return $oDatosCampo;
+	}
+	
+	/**
+	 * Recupera les propietats de l'atribut sTitulo_Estudios de Listas
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosTitulo_estudios() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'Titu_Estu'));
+		$oDatosCampo->setEtiqueta(_("titulo estudios"));
+		return $oDatosCampo;
+	}
+	
+	/**
+	 * Recupera les propietats de l'atribut sIncorporacion de Listas
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosIncorporacion() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'INCORP'));
+		$oDatosCampo->setEtiqueta(_("incorporación"));
+		return $oDatosCampo;
+	}
 }
-?>
+

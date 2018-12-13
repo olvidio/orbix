@@ -253,6 +253,12 @@ class sincroDB {
 		$ce_lugar = $oPersonaListas->getCe_lugar();
 		$ce_ini = $oPersonaListas->getCe_ini();
 		$ce_fin = $oPersonaListas->getCe_fin();
+		
+		$inc = $oPersonaListas->getInc();
+		$f_inc = $oPersonaListas->getF_inc();
+		$encargos = $oPersonaListas->getEncargos();
+		$profesion = $oPersonaListas->getProfesion_cargo();
+		$estudios = $oPersonaListas->getTitulo_estudios();
 
 			
 		$id_tipo_persona = substr($id_nom_listas, 0, 1);
@@ -290,6 +296,10 @@ class sincroDB {
 		$oPersona->setCe_lugar($ce_lugar);
 		$oPersona->setCe_ini($ce_ini);
 		$oPersona->setCe_fin($ce_fin);
+		$oPersona->setInc($inc);
+		$oPersona->setF_inc($f_inc);
+		$oPersona->setProfesion($profesion);
+		$oPersona->setEap($encargos);
 
 		if ($dl == 'Hcr') { 
 			$oPersona->setDl('cr');
