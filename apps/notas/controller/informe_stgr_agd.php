@@ -54,6 +54,8 @@ $Resumen->setAnyIniCurs($any_ini_curs);
 $Resumen->setLista($lista);
 $Resumen->nuevaTabla();
 
+$res = [];
+$a_textos = [];
 // BIENIO
 //21. Agregados en Bienio
 $res[21] = $Resumen->enBienio();
@@ -63,12 +65,12 @@ $nBienio = $res[21]['num'];
 SetType($nBienio,"double");
 $a_aprobadas = $Resumen->aprobadasBienio();
 $aprobadas = $a_aprobadas['num'];
-if (!empty($nce)) { $nf=number_format(($aprobadas/$nBienio),2,',','.'); } else { $nf=0; }
+if (!empty($nBienio)) { $nf=number_format(($aprobadas/$nBienio),2,',','.'); } else { $nf=0; }
 $res[22]['num'] = $nf;
 $a_textos[22] = ucfirst(_("media de asignaturas superadas por alumno en bienio"));
 
 //23 Nº de agd en cuadrienio con bienio pendiente
-$res['23']['num'] = '?';
+$res[23] = $Resumen->bienioSinAcabar();
 $a_textos['23'] = ucfirst(_("nº de agd en cuadrienio con bienio pendiente"));
 //23.1 Nº de n en bienio que han superado asignaturas con preceptor
 $res['23.1'] = $Resumen->conPreceptorBienio();

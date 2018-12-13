@@ -71,6 +71,8 @@ $Resumen->nuevaTabla();
 
 $Resumen->setCe_lugar($ce_lugar);
 
+$res = [];
+$a_textos = [];
 // BIENIO
 //1. Numerarios en el ce
 $res[1] = $Resumen->enCe();
@@ -79,14 +81,14 @@ $a_textos[1] = ucfirst(_("numerarios en el ce"));
 $res[2] = $Resumen->sinCe();
 $a_textos[2] = ucfirst(_("numerarios sin haber hecho el ce"));
 //3. Numerarios que han terminado el ce este curso y con el bienio sin acabar 
-$res[3] = $Resumen->bienioSinAcabar(0);
+$res[3] = $Resumen->ceAcabadoEnBienio(0);
 $a_textos[3] = ucfirst(_("numerarios que han terminado el ce y con el bienio sin acabar"));
 if (!$lista) {
 	//xx. Numerarios que han terminado el ce este curso y con el bienio sin acabar 
-	$res['3.2'] = $Resumen->bienioSinAcabar(1);
+    $res['3.2'] = $Resumen->ceAcabadoEnBienio(1);
 	$a_textos['3.2'] = ucfirst(_("numerarios que han terminado el ce este curso y con el bienio sin acabar"));
 	//xxx. Numerarios que han terminado el ce (otros anos) y con el bienio sin acabar 
-	$res['3.3'] = $Resumen->bienioSinAcabar(2);
+	$res['3.3'] = $Resumen->ceAcabadoEnBienio(2);
 	$a_textos['3.3'] = ucfirst(_("numerarios que han terminado el ce (otros años) y con el bienio sin acabar"));
 }
 //4. Numerarios en Bienio

@@ -32,7 +32,7 @@ class Resumen Extends core\ClasePropiedades {
 	 *
 	 * @var boolean
 	 */
-	 protected $blista;
+	protected $blista;
 
 	protected $dinicurso;
 	protected $dfincurso;
@@ -672,25 +672,47 @@ class Resumen Extends core\ClasePropiedades {
 	}
 
 	/**
+	 * personas con stgr != 'b' y con FinBienio = NULL
+	 * 
+	 * @return array
+	 */
+	public function bienioSinAcabar() {
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+		$notas = $this->getNomNotas();
+
+		$rta = [];
+		$ssql="SELECT p.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
+				FROM $tabla p,$notas n
+				WHERE p.id_nom=n.id_nom
+					AND n.id_nivel=9999
+					AND p.stgr != 'b'
+				GROUP BY p.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
+				ORDER BY p.apellido1, p.apellido2, p.nom
+				";
+		$statement=$oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = sprintf(_("total de asignaturas superadas en cuadrienio %s"),$rta['num']);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
+
+
+	/**
 	 * 
 	 * @param integer $actual  0->todos, 1->este curso, 2->otros cursos
 	 * @return array
 	 */
-	public function bienioSinAcabar($actual=0) {
+	public function ceAcabadoEnBienio($actual=0) {
 		$ce_lugar = $this->getCe_lugar();
 		$any = $this->getAnyFiCurs();
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
-		$notas = $this->getNomNotas();
-		$asignaturas = $this->getNomAsignaturas();
 
-		$sAsql="SELECT a.id_nivel, a.nombre_corto
-			FROM $asignaturas a
-			WHERE a.id_nivel BETWEEN 1100 AND 1300
-			ORDER BY a.id_nivel"; 
-		$statement=$oDbl->query($sAsql);
-		$a_Asql = $statement->fetchAll();
-			
+		$rta = [];
 		switch ($actual) {
 			case 0: //todo
 				$ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.ctr, p.stgr
