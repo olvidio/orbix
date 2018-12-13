@@ -298,7 +298,7 @@ class sincroDB {
 		$oPersona->setCe_ini($ce_ini);
 		$oPersona->setCe_fin($ce_fin);
 		$oPersona->setInc($inc);
-		$oPersona->setF_inc($f_inc);
+		$oPersona->setF_inc($f_inc,FALSE);
 		$oPersona->setProfesion($profesion);
 		$oPersona->setEap($encargos);
 

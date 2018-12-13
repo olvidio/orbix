@@ -345,14 +345,14 @@ class PersonaListas Extends core\ClasePropiedades {
 	public function dividirIncorporacion() {
 		$matches = array();
 		$subject = $this->getIncorporacion();
-		$pattern = '/^(\w+.*)\s*(\d*)-(\d*)-(\d*)/';
+		$pattern = '/^(\w+)\s*(\d*)-(\d*)-(\d*)/';
 		if (preg_match($pattern, $subject, $matches)) {
 			$this->sinc = $matches[1];
 			$dia = $matches[2];
 			$mes = $matches[3];
 			$any = $matches[4];
 			// iso
-			$this->df_inc = "$any-$mes-$any";
+			$this->df_inc = "$any-$mes-$dia";
 		} else {
 			$this->ice_num = '';
 			$this->sce_lugar = '';
