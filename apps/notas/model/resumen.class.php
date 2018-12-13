@@ -679,17 +679,18 @@ class Resumen Extends core\ClasePropiedades {
 	public function bienioSinAcabar() {
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
-		$notas = $this->getNomNotas();
 
 		$rta = [];
-		$ssql="SELECT p.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
-				FROM $tabla p,$notas n
-				WHERE p.id_nom=n.id_nom
-					AND n.id_nivel=9999
-					AND p.stgr != 'b'
-				GROUP BY p.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
-				ORDER BY p.apellido1, p.apellido2, p.nom
-				";
+		$ssql=" SELECT p.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
+                FROM $tabla p
+                WHERE p.stgr ~ '^c'
+                EXCEPT
+                SELECT t.id_nom, t.nom, t.apellido1, t.apellido2, t.ctr
+                FROM $tabla t JOIN e_notas_dl n USING (id_nom)
+                WHERE n.id_nivel=9999
+                ORDER BY 3
+                ";
+		
 		$statement=$oDbl->query($ssql);
 		$rta['num'] = $statement->rowCount();
 		if ($this->blista == true && $rta['num'] > 0) {
