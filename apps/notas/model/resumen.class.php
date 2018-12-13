@@ -693,7 +693,7 @@ class Resumen Extends core\ClasePropiedades {
 		$statement=$oDbl->query($ssql);
 		$rta['num'] = $statement->rowCount();
 		if ($this->blista == true && $rta['num'] > 0) {
-			$rta['lista'] = sprintf(_("total de asignaturas superadas en cuadrienio %s"),$rta['num']);
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr",1);
 		} else {
 			$rta['lista'] = '';
 		}
