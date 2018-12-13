@@ -11,6 +11,7 @@ use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\GestorTelecoPersonaDl;
 use personas\model\entity\TelecoPersonaDl;
 use personas\model\entity\TrasladoDl;
+use web\DateTimeLocal;
 
 /**
  * Description of sincroDB
@@ -217,7 +218,7 @@ class sincroDB {
 	
 	function syncro($oPersonaListas,$id_orbix) {
 		$msg = '';
-		$oHoy = new web\DateTimeLocal();
+		$oHoy = new DateTimeLocal();
 		$a_ctr = $GLOBALS['a_centros'];
 		
 		$id_nom_listas = $oPersonaListas->getIdentif();
