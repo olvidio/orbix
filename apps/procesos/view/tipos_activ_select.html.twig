@@ -1,0 +1,48 @@
+<script>
+fnjs_guardar=function(formulario){
+	var id_tipo_activ =$('#id_tipo_activ').val();
+	var nombre =$('#nombre').val();
+	var id_tipo_proceso =$('#id_tipo_proceso').val();
+	var dl_propia=$('#dl_propia').val();
+
+	var url='{{ url_ajax|raw }}';
+	var parametros='que=update&id_tipo_activ='+id_tipo_activ+'&dl_propia='+dl_propia+'&nombre='+nombre+'&id_tipo_proceso='+id_tipo_proceso+'{{ h_guardar|raw }}';
+		 
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta) {
+			rta_txt=rta.responseText;
+			//alert ('respuesta: '+rta_txt);
+			}
+	});
+}
+
+fnjs_ver=function(){
+	var url='{{ url_ajax|raw }}';
+	var id_tipo_activ=$('#id_tipo_activ').val();
+	var dl_propia=$('#dl_propia').val();
+	var parametros='que=editar&id_tipo_activ='+id_tipo_activ+'&dl_propia='+dl_propia+'{{ h_ver|raw }}';
+	fnjs_update_div('#div_modificar',url+'?'+parametros);
+}
+</script>
+<div id='div_buscar'>
+<select id='dl_propia' name='dl_propia'>
+	<option value='1' selected>dl</option>
+	<option value='2'>no dl</option>
+</select>
+<table>
+<tr><td class=subtitulo>{{ "escoger el tipo de actividad"|trans|capitalize }}
+	</td></tr>
+	<tr>
+		{{ oActividadTipo.getHtml|raw }}
+	</tr>
+</table>
+<br>
+<input type='hidden' id='id_tipo_activ' value=''>
+<input type='hidden' id='que' name='que' value='proceso'>
+</div>
+<hr>
+<br>
+<div id='div_modificar'></div>

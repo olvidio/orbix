@@ -165,7 +165,7 @@ fnjs_tipo_actividad=function(){
 		<td><input type="radio" id="status_4" name="status" value="<?= actividades\model\entity\ActividadAll::STATUS_BORRABLE ?>" <?php if ($status==actividades\model\entity\ActividadAll::STATUS_BORRABLE) { echo "checked";} ?>><?= _("borrable"); ?></td>
 	<?php } else { ?>
 		<!-- Ara faig que no es pugui canviar. S'ha d'anar per les fases.  -->
-		<td><?= $a_status[$status] ?>
+		<td><?= $status_txt ?>
 		<input type='hidden' id='status' name='status' value="<?= $status ?>">
 		</td>
 	<?php } ?>

@@ -34,11 +34,40 @@ class GestorTipoDeActividad Extends core\ClaseGestor {
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
 	
+	/**
+	 * retorna l'array de tipos de procesos posibles per el tipus d'activitat.
+	 *
+	 * @param string sid_tipo_activ
+	 * @return array Una llista de id_tipo_proceso
+	 */
+	function getTiposDeProcesos($sid_tipo_activ='......',$bdl_propia='t') {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+	    $aTiposDeProcesos = array();
+	    if ($bdl_propia == 't') {
+	        $sQry="SELECT id_tipo_proceso FROM $nom_tabla WHERE id_tipo_activ::text ~ '^$sid_tipo_activ' GROUP BY id_tipo_proceso";
+	    } else {
+	        $sQry="SELECT id_tipo_proceso_ex as id_tipo_proceso FROM $nom_tabla WHERE id_tipo_activ::text ~ '^$sid_tipo_activ' GROUP BY id_tipo_proceso_ex";
+	    }
+	    if (($oDbl->query($sQry)) === false) {
+	        $sClauError = 'GestorTipoDeActividad.query';
+	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+	        return false;
+	    }
+	    foreach ($oDbl->query($sQry) as $aDades) {
+	        if (!empty($aDades['id_tipo_proceso'])) {
+	            $aTiposDeProcesos[]=$aDades['id_tipo_proceso'];
+	        }
+	    }
+	    return $aTiposDeProcesos;
+	}
+	
 	public function getId_tipoPosibles($regexp, $expr_txt) {
 		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
 	    $a_id_tipos = [];
 	    $query="SELECT substring(id_tipo_activ::text from '".$regexp."')
-		   	FROM a_tipos_actividad  where id_tipo_activ::text ~'".$expr_txt."' order by id_tipo_activ";
+		   	FROM $nom_tabla  where id_tipo_activ::text ~'".$expr_txt."' order by id_tipo_activ";
 	    //echo $query;
 	    $oDBPCASt_id=$oDbl->query($query);
 	    foreach ($oDBPCASt_id->fetchAll() as $row) {
@@ -50,9 +79,10 @@ class GestorTipoDeActividad Extends core\ClaseGestor {
 	
 	public function getNom_tipoPosibles($expr_txt) {
 		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
 		$tipo_nom = [];
 		$nom_tipo = [];
-	    $query="SELECT * FROM a_tipos_actividad where id_tipo_activ::text ~'$expr_txt' order by id_tipo_activ";
+	    $query="SELECT * FROM $nom_tabla where id_tipo_activ::text ~'$expr_txt' order by id_tipo_activ";
 	    //echo $query;
 	    $oDBPCASt_id=$oDbl->query($query);
 	    $i=0;
@@ -67,9 +97,10 @@ class GestorTipoDeActividad Extends core\ClaseGestor {
 	}
 	public function getAsistentesPosibles($aText,$regexp) {
 		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
 		$asistentes = [];
 	    $query_ta="select substr(id_tipo_activ::text,2,1) as ta2
-			from a_tipos_actividad where id_tipo_activ::text ~'".$regexp."' group by ta2 order by ta2";
+			from $nom_tabla where id_tipo_activ::text ~'".$regexp."' group by ta2 order by ta2";
 	    //echo "query: $query_ta<br>";
 	    $oDBPCASt_q_ta=$oDbl->query($query_ta);
 	    foreach ($oDBPCASt_q_ta->fetchAll() as $row) {
@@ -79,9 +110,10 @@ class GestorTipoDeActividad Extends core\ClaseGestor {
 	}
 	public function getActividadesPosibles($aText,$expr_txt) {
 		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
 		$actividades = [];
 	    $query_ta="select substr(id_tipo_activ::text,3,1) as ta3
-			from a_tipos_actividad where id_tipo_activ::text ~'$expr_txt' group by ta3 order by ta3";
+			from $nom_tabla where id_tipo_activ::text ~'$expr_txt' group by ta3 order by ta3";
 	    $oDBPCASt_q_ta=$oDbl->query($query_ta);
 	    foreach ($oDBPCASt_q_ta->fetchAll() as $row) {
 	        $actividades[$row[0]]=$aText[$row[0]];
@@ -91,8 +123,9 @@ class GestorTipoDeActividad Extends core\ClaseGestor {
 
 	public function getSfsvPosibles($aText) {
 		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
 		$sfsv = [];
-	    $query_ta="select substr(id_tipo_activ::text,1,1) as ta1 from a_tipos_actividad where id_tipo_activ::text ~'' group by ta1 order by ta1";
+	    $query_ta="select substr(id_tipo_activ::text,1,1) as ta1 from $nom_tabla where id_tipo_activ::text ~'' group by ta1 order by ta1";
 	    $oDBPCASt_q_ta=$oDbl->query($query_ta);
 	    foreach ($oDBPCASt_q_ta->fetchAll() as $row) {
 	        $sfsv[$row[0]]=$aText[$row[0]];

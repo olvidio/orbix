@@ -1,5 +1,6 @@
 <?php
 namespace procesos\db;
+use core;
 /**
  * Crear las tablas necesaria a nivel de aplicación (global).
  * Cada esquema deberá crear las suyas, heredaas de estas.
@@ -14,7 +15,8 @@ class DB {
     public function __construct(){
         $this->esquema = 'global';
         $this->role = 'orbix';
-        $this->oDbl = $GLOBALS['oDBC'];
+        // Conexión Comun Public, para entrar como usuario orbix.
+        $this->oDbl = $GLOBALS['oDBPC'];
     }
     
     public function dropAll() {
@@ -23,6 +25,7 @@ class DB {
         $this->eliminar_a_procesos();
         $this->eliminar_a_fases();
         $this->eliminar_a_tareas();
+        $this->eliminar_aux_usuarios_perm();
     }
     
     public function createAll() {
@@ -31,6 +34,7 @@ class DB {
         $this->create_a_tareas();
         $this->create_a_fases();
         $this->create_a_procesos();
+        $this->create_aux_usuarios_perm();
     }
     
     private function executeSql($a_sql) {
@@ -172,4 +176,43 @@ class DB {
         $tabla = "a_procesos";
         return $this->eliminar($tabla);
     }
+    
+    public function create_aux_usuarios_perm() {
+        /** OJO Corresponde al esquema sf/sv, no al comun.
+         * Uso la conxión Public para crear en global con user orbixv/f
+         * y así no hay que cambiar el owner, que además da problemas de permisos
+         */
+        // Conexión sv/sf Public, para entrar como usuario orbixv/f.
+        $this->oDbl = $GLOBALS['oDBP'];
+        $tabla = "aux_usuarios_perm";
+        $nom_tabla = '"'.$this->esquema.'".'.$tabla;
+        $a_sql = [];
+        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                id_item integer NOT NULL,
+                id_usuario integer,
+                id_tipo_activ_txt character varying(6),
+                id_fase_ini integer,
+                id_fase_fin integer,
+                accion integer,
+                afecta_a integer,
+                dl_propia boolean DEFAULT true NOT NULL,
+                id_fases text
+            );";
+        //$a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+        
+        return $this->executeSql($a_sql);
+    }
+    public function eliminar_aux_usuarios_perm() {
+        /** OJO Corresponde al esquema sf/sv, no al comun.
+         * Uso la conxión Public para crear en global con user orbixv/f
+         * y así no hay que cambiar el owner, que además da problemas de permisos
+         */
+        $this->oDbl = $GLOBALS['oDBP'];
+        $tabla = "aux_usuarios_perm";
+        return $this->eliminar($tabla);
+    }
+
+
+
+    
 }

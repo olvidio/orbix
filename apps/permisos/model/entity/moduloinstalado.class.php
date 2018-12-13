@@ -1,6 +1,7 @@
 <?php
 namespace permisos\model\entity;
 use core;
+use devel\model\appDB;
 /**
  * Fitxer amb la Classe que accedeix a la taula m0_mods_installed_dl
  *
@@ -110,6 +111,7 @@ class ModuloInstalado Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if ($this->DBCarregar('guardar') === false) { $bInsert=true; } else { $bInsert=false; }
+		$aPrevDades = $this->aDades;
 		$aDades=array();
 		$aDades['status'] = $this->bstatus;
 		$aDades['param'] = $this->sparam;
@@ -117,6 +119,14 @@ class ModuloInstalado Extends core\ClasePropiedades {
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if (empty($aDades['status']) || ($aDades['status'] === 'off') || ($aDades['status'] === false) || ($aDades['status'] === 'f')) { $aDades['status']='f'; } else { $aDades['status']='t'; }
 
+		/*
+		 * Activar la creación de tablas necesarias para la app.
+		 */
+		if ($aPrevDades['status'] === FALSE && $aDades['status'] === 't') {
+		    $oAppDB = new appDB($this->iid_mod);
+		    $oAppDB->createTables();
+		}
+		
 		if ($bInsert === false) {
 			//UPDATE
 			$update="
@@ -168,9 +178,10 @@ class ModuloInstalado Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+            $this->aDades=$aDades;
 			switch ($que) {
 				case 'tot':
-					$this->aDades=$aDades;
+					//$this->aDades=$aDades;
 					break;
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;

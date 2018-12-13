@@ -134,6 +134,15 @@ input[type="submit"]:active {
 	margin-bottom: 10px;
 }
 </style>
+<script type="text/javascript">
+fnjs_goTop = function() {
+	menu=document.getElementById("menu");
+	if (menu) {
+		window.location.href = "<?= $url ?>";
+	} 
+}
+document.onload = fnjs_goTop();
+</script>
 <div class="login">
 <?php
 $PHP_SELF = $_SERVER['PHP_SELF'];

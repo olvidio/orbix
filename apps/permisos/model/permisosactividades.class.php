@@ -113,7 +113,7 @@ class PermisosActividades {
 		$this->carregar($sCondicion_usuario,'t');
 		$this->carregar($sCondicion_usuario,'f');
 		
-		$this->oGesActiv = new procesos\GestorActividadProcesoTarea();
+		//$this->oGesActiv = new procesos\GestorActividadProcesoTarea();
 		$this->setoDbl($oDbl);
 	}
 

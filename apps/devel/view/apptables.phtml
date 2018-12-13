@@ -1,0 +1,37 @@
+<script>
+fnjs_db=function(que){
+	
+	id_app = $('#id_app').val();
+	if (id_app < 19) {
+		alert("<?= $alerta ?>");
+	} else {
+        esquema = $('#esquema').val();
+        $('#accion').val(que);
+        $('#frm').attr('action','apps/devel/controller/apptables_update.php');
+        fnjs_enviar_formulario('#frm','#main');
+	}
+}
+</script>
+<h1><?= _("aplicación") ?></h1>
+<form id="frm" action="" method=post>
+<?= $oHash->getCamposHtml(); ?>
+<table>
+ <tr valign=top align=left>
+  <td><?= _("aplicación") ?>:</td>
+  <td><?= $oDesplApps->desplegable() ?></td>
+  </tr>
+  <tr>
+  <td><?= _("global") ?>:</td>
+  <td><input type="button" name="bcg" onclick="fnjs_db('crear_global')" value="<?= ("crear global") ?>"></td>
+  <td><input type="button" name="beg" onclick="fnjs_db('eliminar_global')" value="<?= ("eliminar global") ?>"></td>
+ </tr>
+ <tr>
+  <td><?= _("esquema") ?>:</td>
+  <td><?= $oDesplEsquemas ?></td>
+  <td><input type="button" name="bce" onclick="fnjs_db('crear_esquema')" value="<?= ("crear Esquema") ?>"></td>
+  <td><input type="button" name="bee" onclick="fnjs_db('eliminar_esquema')" value="<?= ("eliminar Esquema") ?>"></td>
+  <td><input type="button" name="bee" onclick="fnjs_db('llenar_esquema')" value="<?= ("llenar Esquema") ?>"></td>
+ </tr>
+</table>
+</form>
+<br><p><?= _("hay que hacer los dos pasos") ?></p>

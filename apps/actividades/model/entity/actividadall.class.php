@@ -20,6 +20,20 @@ class ActividadAll Extends core\ClasePropiedades {
 	const STATUS_TERMINADA	  	 = 3; // Terminada.
 	const STATUS_BORRABLE 	  	 = 4; // Borrable.
 	
+	const ARRAY_STATUS_TXT = [
+	    self::STATUS_PROYECTO => "proyecto",
+	    self::STATUS_ACTUAL => "actual",
+	    self::STATUS_TERMINADA => "terminada",
+	    self::STATUS_BORRABLE => "borrable",
+	];
+	
+	// NO se usan, son solo para asegurar que exista la traducción
+	private function traduccion () {
+	    $p = _("proyecto");
+	    $a = _("actual");
+	    $t = _("terminada");
+	    $b = _("borrable");
+	}
 	
 	/* ATRIBUTS ----------------------------------------------------------------- */
 

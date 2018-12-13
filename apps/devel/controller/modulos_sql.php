@@ -16,38 +16,48 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 }
 
-$Qmod = (string) \filter_input(INPUT_POST, 'mod');
 $Qid_mod = (integer) \filter_input(INPUT_POST, 'id_mod');
+$Qmod = (string) \filter_input(INPUT_POST, 'mod');
 
 if (!empty($a_sel)) { //vengo de un checkbox (caso de eliminar)
 	$Qid_mod=urldecode(strtok($a_sel[0],"#"));
 }
 
-$Qnom = (string) \filter_input(\INPUT_POST, 'nom');
-$Qdescripcion = (string) \filter_input(\INPUT_POST, 'descripcion');
-$Qsel_mods =  \filter_input(\INPUT_POST, 'sel_mods', \FILTER_VALIDATE_INT, \FILTER_REQUIRE_ARRAY);
-$Qsel_apps =  \filter_input(\INPUT_POST, 'sel_apps', \FILTER_VALIDATE_INT, \FILTER_REQUIRE_ARRAY);
+$Qaccion = (string) \filter_input(\INPUT_POST, 'accion');
+$Qaccion = 'crear';
 
-/*
- * buscar si existe la clase createglobal, createdl 
- */
-
-$clase_global = "$Qnom\\db\\DB";
-$clase_esquema = "$Qnom\\db\\DBEsquema";
-
-$ClaseGlobal = new $clase_global();
-$ClaseEsquema = new $clase_esquema("H-dlb");
-
-// generar global
-$ClaseGlobal->createAll();
-$ClaseEsquema->createAll();
-// borrar
-//$ClaseEsquema->dropAll();
-//$ClaseGlobal->dropAll();
+$oModulo = new \devel\model\entity\Modulo($Qid_mod);
+$mod_nom = $oModulo->getNom();
 
 switch ($Qmod) {
-	case 'nuevo':
+	case 'global':
+        /*
+         * Generar las tablas a nivel global
+         */
+        $clase_global = "$mod_nom\\db\\DB";
+        if (class_exists($clase_global)) {
+            $ClaseGlobal = new $clase_global();
+            if ($Qaccion == 'crear') {
+                $ClaseGlobal->createAll();
+            }
+            if ($Qaccion == 'eliminar') {
+                $ClaseGlobal->dropAll();
+            }
+        }
 	break;
-	case 'eliminar':
-	default :
+	case 'esquema':
+        /*
+         * Genera las tablas del esquema correspondiente
+         */
+        $clase_esquema = "$mod_nom\\db\\DBEsquema";
+        if (class_exists($clase_esquema)) {
+            $ClaseEsquema = new $clase_esquema();
+            if ($Qaccion == 'crear') {
+                $ClaseEsquema->createAll();
+            }
+            if ($Qaccion == 'eliminar') {
+                $ClaseEsquema->dropAll();
+            }
+        }
+        break;
 }

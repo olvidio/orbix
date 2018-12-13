@@ -4,6 +4,7 @@
  * 
  */
 use ubis\model\entity as ubis;
+use actividades\model\entity\ActividadAll;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -39,11 +40,7 @@ $aQuery = array ('pau'=>'a',
 if (is_array($aQuery)) { array_walk($aQuery, 'core\poner_empty_on_null'); }
 $godossiers = web\Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_build_query($aQuery));
 
-$a_status = array( \actividades\model\entity\ActividadAll::STATUS_PROYECTO => _("proyecto"),
-				 \actividades\model\entity\ActividadAll::STATUS_ACTUAL => _("actual"),
-				 \actividades\model\entity\ActividadAll::STATUS_TERMINADA => _("terminada"),
-				 \actividades\model\entity\ActividadAll::STATUS_BORRABLE => _("borrable")
-				);
+$a_status = ActividadAll::ARRAY_STATUS_TXT;
 
 $permiso_des = FALSE;
 if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
@@ -205,6 +202,7 @@ $oActividadTipo->setNom_tipo($snom_tipo);
 
 $procesos_installed = core\ConfigGlobal::is_app_installed('procesos');
 
+$status_txt = $a_status[$status];
 $accion = '';
 $a_campos = ['oPosicion' => $oPosicion,
 			'oHash' => $oHash,
@@ -221,7 +219,7 @@ $a_campos = ['oPosicion' => $oPosicion,
 			'snom_tipo' => $snom_tipo,
 			'ssfsv' => $ssfsv,
 			'status' => $status,
-			'a_status' => $a_status,
+			'status_txt' => $status_txt,
 			'nom_activ' => $nom_activ,
 			'f_ini' => $f_ini,
 			'h_ini' => $h_ini,
