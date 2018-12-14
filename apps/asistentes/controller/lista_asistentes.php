@@ -56,6 +56,7 @@ function datos($oPersona) {
 	$estudios = '';
 	$profesion = '';
 	$edad = '';
+	$inc_f_inc = '';
 	$eap = '';
 	$observ = '';
 	$obj_persona = get_class($oPersona);
@@ -74,9 +75,13 @@ function datos($oPersona) {
 			if (empty($inc) OR $inc=="?") {
 				$f_inc="?";
 			} else {
-				$get = "getF_$inc()";
-				$oF_inc = $oPersona->$get;
+				//$get = "getF_$inc()";
+				// Ahora sólo está la última
+				$oF_inc = $oPersona->getF_inc();
 				$f_inc = $oF_inc->getFromLocal();
+			}
+			if (!empty($inc)) {
+                $inc_f_inc=$inc .' : '. $f_inc;
 			}
 			$edad=$oPersona->getEdad();
 			$eap=empty($oPersona->getEap())? '?' : $oPersona->getEap();
@@ -99,7 +104,7 @@ function datos($oPersona) {
 				'estudios' => $estudios,
 				'profesion' => $profesion,
 				'edad' => $edad,
-				'f_inc' => $f_inc,
+				'inc_f_inc' => $inc_f_inc,
 				'eap' => $eap,
 				'observ' => $observ,
 				];
