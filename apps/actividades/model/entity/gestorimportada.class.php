@@ -1,7 +1,6 @@
 <?php
 namespace actividades\model\entity;
 use core;
-use web;
 /**
  * GestorImportada
  *
@@ -82,7 +81,7 @@ class GestorImportada Extends core\ClaseGestor {
 			$a_pkey = array('id_activ' => $aDades['id_activ']);
 			$oImportada= new Importada($a_pkey);
 			$oImportada->setAllAtributes($aDades);
-			$oImportadaSet->add($oImportadar);
+			$oImportadaSet->add($oImportada);
 		}
 		return $oImportadaSet->getTot();
 	}
