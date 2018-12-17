@@ -1,29 +1,20 @@
 <?php
 namespace procesos\db;
-use core;
+use core\ConfigGlobal;
+use devel\model\DBAbstract;
+
 /**
- * crear las tablas necesarias para el esquiem.
+ * crear las tablas necesarias para el esquema.
  * Heredadas de global
  */
-class DBEsquema {
+class DBEsquema extends DBAbstract {
 
-    private $esquema;
-    private $role;
-    private $oDbl;
-    
-    /*
-    public function __destruct(){
-        $this->delPermisoGlobal('comun');
-    }
-    */
     public function __construct($esquema_sfsv=NULL) {
         if (empty($esquema_sfsv)) {
-            $esquema_sfsv = core\ConfigGlobal::mi_region_dl();
+            $esquema_sfsv = ConfigGlobal::mi_region_dl();
         }
         $this->esquema = substr($esquema_sfsv,0,-1); // quito la v o la f.
         $this->role = '"'. $this->esquema .'"';
-        
-        $this->addPermisoGlobal('comun');
     }
     
     public function dropAll() {
@@ -51,70 +42,6 @@ class DBEsquema {
         $this->llenar_a_fases();
         $this->llenar_a_procesos();
         $this->llenar_aux_usuarios_perm();
-    }
-    
-    /**
-     * Quita el permiso (orbix u orbixv/f) para acceder a global. 
-     */
-    private function delPermisoGlobal($db) {
-        switch ($db) {
-            case 'comun':
-                // Conexión Comun public, para entrar como usuario orbix.
-                $this->oDbl = $GLOBALS['oDBPC'];
-                // Dar permisos al role H-dlb de orbix (para poder aceder a global)
-                $a_sql = [];
-                $a_sql[0] = "REVOKE orbix FROM $this->role;" ;
-                
-                $this->executeSql($a_sql);
-                // Devuelve la conexión a origen.
-                // Conexión Comun esquema, para entrar como usuario H-dlb.
-                $this->oDbl = $GLOBALS['oDBC'];
-                break;
-            case 'sv':
-                // Conexión sv public, para entrar como usuario orbixv.
-                $this->oDbl = $GLOBALS['oDBP'];
-                // Dar permisos al role H-dlbv de orbixv (para poder aceder a global)
-                $a_sql = [];
-                $a_sql[0] = "REVOKE orbixv FROM $this->role;" ;
-                
-                $this->executeSql($a_sql);
-                // Devuelve la conexión a origen.
-                // Conexión sv esquema, para entrar como usuario H-dlbv.
-                $this->oDbl = $GLOBALS['oDB'];
-                break;
-        }
-    }
-    
-    /**
-     * Añade el permiso (orbix u orbixv/f) para acceder a global. 
-     */
-    private function addPermisoGlobal($db) {
-        switch ($db) {
-            case 'comun':
-                // Conexión Comun public, para entrar como usuario orbix.
-                $this->oDbl = $GLOBALS['oDBPC'];
-                // Dar permisos al role H-dlb de orbix (para poder aceder a global)
-                $a_sql = [];
-                $a_sql[0] = "GRANT orbix TO $this->role;" ;
-                
-                $this->executeSql($a_sql);
-                // Devuelve la conexión a origen.
-                // Conexión Comun esquema, para entrar como usuario H-dlb.
-                $this->oDbl = $GLOBALS['oDBC'];
-                break;
-            case 'sv':
-                // Conexión sv public, para entrar como usuario orbixv.
-                $this->oDbl = $GLOBALS['oDBP'];
-                // Dar permisos al role H-dlbv de orbixv (para poder aceder a global)
-                $a_sql = [];
-                $a_sql[0] = "GRANT orbixv TO $this->role;" ;
-                
-                $this->executeSql($a_sql);
-                // Devuelve la conexión a origen.
-                // Conexión sv esquema, para entrar como usuario H-dlbv.
-                $this->oDbl = $GLOBALS['oDB'];
-                break;
-        }
     }
     
     private function infoTable($tabla) {
@@ -157,30 +84,7 @@ class DBEsquema {
         $datosTabla['id_seq'] = $id_seq;
         return $datosTabla;
     }
-    private function getNomTabla($tabla) {
-        $nom_tabla = '"'.$this->esquema.'".'.$tabla;
-        return $nom_tabla;
-    }
-    private function executeSql($a_sql) {
-        $oDbl = $this->oDbl;
-        
-        $oDbl->beginTransaction();
-        foreach ($a_sql as $sql) {
-            if ($oDbl->exec($sql) === false) {
-                $sClauError = 'Procesos.DBEsquema.query';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                $oDbl->rollback();
-                return FALSE;
-            }
-        }
-        $oDbl->commit();
-    }
-    private function eliminar($nom_tabla) {
-        $a_sql = [];
-        $a_sql[0] = "DROP TABLE IF EXISTS $nom_tabla CASCADE;" ;
-        
-        return $this->executeSql($a_sql);
-    }
+    
     
     /**
      * En la BD Comun.
@@ -188,6 +92,9 @@ class DBEsquema {
      * los procesoso podrian ser distintos, pero no interfieren los ids.
      */
     public function create_a_actividad_proceso() {
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('comun');
+
         $tabla = "a_actividad_proceso";
         $datosTabla = $this->infoTable($tabla);
         
@@ -233,9 +140,14 @@ class DBEsquema {
         $a_sql[] = "GRANT UPDATE ON $nom_tabla TO $this->role WITH GRANT OPTION; ";
         */
         
-        return $this->executeSql($a_sql);
+        $this->executeSql($a_sql);
+
+        $this->delPermisoGlobal('comun');
     }
     public function eliminar_a_actividad_proceso() {
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('comun');
+
         $datosTabla = $this->infoTable("a_actividad_proceso");
         
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -245,10 +157,15 @@ class DBEsquema {
         $a_sql[0] = "DROP SEQUENCE IF EXISTS $id_seq CASCADE;" ;
         $this->executeSql($a_sql);
 
-        return $this->eliminar($nom_tabla);
+        $this->eliminar($nom_tabla);
+
+        $this->delPermisoGlobal('comun');
     }
     
     public function create_a_tipos_procesos() {
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('comun');
+
         $tabla = "a_tipos_proceso";
         $datosTabla = $this->infoTable($tabla);
         
@@ -277,9 +194,14 @@ class DBEsquema {
         
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
         
-        return $this->executeSql($a_sql);
+        $this->executeSql($a_sql);
+
+        $this->delPermisoGlobal('comun');
     }
     public function eliminar_a_tipos_proceso() {
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('comun');
+
         $datosTabla = $this->infoTable("a_tipos_proceso");
         
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -289,10 +211,15 @@ class DBEsquema {
         $a_sql[0] = "DROP SEQUENCE IF EXISTS $id_seq CASCADE;" ;
         $this->executeSql($a_sql);
 
-        return $this->eliminar($nom_tabla);
+        $this->eliminar($nom_tabla);
+
+        $this->delPermisoGlobal('comun');
     }
     
     public function create_a_tareas() {
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('comun');
+
         $tabla = "a_tareas";
         $datosTabla = $this->infoTable($tabla);
         
@@ -321,9 +248,14 @@ class DBEsquema {
             
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
         
-        return $this->executeSql($a_sql);
+        $this->executeSql($a_sql);
+
+        $this->delPermisoGlobal('comun');
     }
     public function eliminar_a_tareas() {
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('comun');
+
         $datosTabla = $this->infoTable("a_tareas");
         
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -333,10 +265,15 @@ class DBEsquema {
         $a_sql[0] = "DROP SEQUENCE IF EXISTS $id_seq CASCADE;" ;
         $this->executeSql($a_sql);
 
-        return $this->eliminar($nom_tabla);
+        $this->eliminar($nom_tabla);
+
+        $this->delPermisoGlobal('comun');
     }
 
     public function create_a_fases() {
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('comun');
+
         $tabla = "a_fases";
         $datosTabla = $this->infoTable($tabla);
         
@@ -368,9 +305,14 @@ class DBEsquema {
             
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
         
-        return $this->executeSql($a_sql);
+        $this->executeSql($a_sql);
+
+        $this->delPermisoGlobal('comun');
     }
     public function eliminar_a_fases() {
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('comun');
+
         $datosTabla = $this->infoTable("a_fases");
         
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -380,10 +322,15 @@ class DBEsquema {
         $a_sql[0] = "DROP SEQUENCE IF EXISTS $id_seq CASCADE;" ;
         $this->executeSql($a_sql);
 
-        return $this->eliminar($nom_tabla);
+        $this->eliminar($nom_tabla);
+
+        $this->delPermisoGlobal('comun');
     }
 
     public function create_a_procesos() {
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('comun');
+
         $tabla = "a_procesos";
         $datosTabla = $this->infoTable($tabla);
         
@@ -416,9 +363,14 @@ class DBEsquema {
             
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
         
-        return $this->executeSql($a_sql);
+        $this->executeSql($a_sql);
+
+        $this->delPermisoGlobal('comun');
     }
     public function eliminar_a_procesos() {
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('comun');
+
         $datosTabla = $this->infoTable("a_procesos");
         
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -428,15 +380,17 @@ class DBEsquema {
         $a_sql[0] = "DROP SEQUENCE IF EXISTS $id_seq CASCADE;" ;
         $this->executeSql($a_sql);
 
-        return $this->eliminar($nom_tabla);
+        $this->eliminar($nom_tabla);
+
+        $this->delPermisoGlobal('comun');
     }
 
     public function create_aux_usuarios_perm() {
         // OJO Corresponde al esquema sf/sv, no al comun.
-        $this->esquema = core\ConfigGlobal::mi_region_dl();
+        $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sv');
+        $this->addPermisoGlobal('svsf');
         
         $tabla = "aux_usuarios_perm";
         $datosTabla = $this->infoTable($tabla);
@@ -474,14 +428,14 @@ class DBEsquema {
         
         $this->executeSql($a_sql);
         
-        $this->delPermisoGlobal('sv');
+        $this->delPermisoGlobal('svsf');
     }
     public function eliminar_aux_usuarios_perm() {
         // OJO Corresponde al esquema sf/sv, no al comun.
-        $this->esquema = core\ConfigGlobal::mi_region_dl();
+        $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sv');
+        $this->addPermisoGlobal('svsf');
         
         $datosTabla = $this->infoTable("aux_usuarios_perm");
         
@@ -494,7 +448,7 @@ class DBEsquema {
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('sv');
+        $this->delPermisoGlobal('svsf');
     }
 
     /* ###################### LLENAR TABLAS ################################ */
@@ -502,6 +456,7 @@ class DBEsquema {
         // empty;
     }
     public function llenar_a_tipos_procesos() {
+        $this->setConexion('comun');
         $datosTabla = $this->infoTable("a_tipos_proceso");
         
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -529,6 +484,7 @@ class DBEsquema {
         $this->executeSql($a_sql);
     }
     public function llenar_a_tareas() {
+        $this->setConexion('comun');
         $datosTabla = $this->infoTable("a_tareas");
         
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -573,6 +529,7 @@ class DBEsquema {
         
     }
     public function llenar_a_fases() {
+        $this->setConexion('comun');
         $datosTabla = $this->infoTable("a_fases");
         
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -630,6 +587,7 @@ class DBEsquema {
         $this->executeSql($a_sql);
     }
     public function llenar_a_procesos() {
+        $this->setConexion('comun');
         $datosTabla = $this->infoTable("a_procesos");
         
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -673,9 +631,11 @@ class DBEsquema {
     
     public function llenar_aux_usuarios_perm() {
         // OJO Corresponde al esquema sf/sv, no al comun.
-        $this->oDbl = $GLOBALS['oDB'];
-        $this->esquema = core\ConfigGlobal::mi_region_dl();
+        $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
+        // (debe estar después de fijar el role)
+        $this->setConexion('svsf');
+
         $datosTabla = $this->infoTable("aux_usuarios_perm");
         
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -692,167 +652,7 @@ class DBEsquema {
         $null_as = "NULL";
         $fields = "id_item, id_usuario, id_tipo_activ_txt, id_fase_ini, id_fase_fin, accion, afecta_a, dl_propia, id_fases";
         
-		$rows[] = "1	3	1	10	0	1	des	10	NULL	NULL";
 		$rows[] = "26	434	2.....	10	340	3	1	t	NULL";
-		$rows[] = "27	434	1.....	10	340	1	1	t	NULL";
-		$rows[] = "32	538	1.....	10	340	3	1	t	NULL";
-		$rows[] = "37	540	2.....	10	340	3	4	t	NULL";
-		$rows[] = "41	446	1.....	10	340	7	15	t	NULL";
-		$rows[] = "42	446	2.....	10	340	3	15	t	NULL";
-		$rows[] = "43	451	2.....	10	340	3	15	t	NULL";
-		$rows[] = "196	539	13....	330	340	3	29	t	NULL";
-		$rows[] = "131	4120	......	10	340	3	15	t	NULL";
-		$rows[] = "132	4121	......	10	340	3	15	t	NULL";
-		$rows[] = "49	560	1.....	10	340	1	1	t	NULL";
-		$rows[] = "51	461	......	10	340	3	15	t	NULL";
-		$rows[] = "250	584	11....	10	330	31	9	t	NULL";
-		$rows[] = "129	586	1.....	10	340	31	18	t	NULL";
-		$rows[] = "58	566	1.....	10	340	3	1	t	NULL";
-		$rows[] = "59	566	2.....	330	340	1	1	t	NULL";
-		$rows[] = "84	540	2.....	10	340	1	1	t	NULL";
-		$rows[] = "38	541	1.....	10	340	3	31	t	NULL";
-		$rows[] = "65	572	1.....	10	340	3	9	t	NULL";
-		$rows[] = "89	559	1.....	10	340	1	1	t	NULL";
-		$rows[] = "136	5124	1.....	10	340	3	18	t	NULL";
-		$rows[] = "135	5124	1.....	10	340	1	1	t	NULL";
-		$rows[] = "137	5124	2.....	10	340	3	9	t	NULL";
-		$rows[] = "138	5124	2.....	10	340	31	18	t	NULL";
-		$rows[] = "99	541	2.....	10	340	3	20	t	NULL";
-		$rows[] = "98	541	2.....	10	340	1	9	t	NULL";
-		$rows[] = "232	5158	2.....	330	340	3	25	t	NULL";
-		$rows[] = "48	559	2.....	10	340	3	9	t	NULL";
-		$rows[] = "140	5125	1.....	10	340	3	3	t	NULL";
-		$rows[] = "145	5130	1.....	10	340	1	1	t	NULL";
-		$rows[] = "213	577	2.....	330	340	3	4	f	NULL";
-		$rows[] = "130	497	......	10	340	3	15	t	NULL";
-		$rows[] = "260	5158	1.....	330	340	1	1	t	NULL";
-		$rows[] = "251	497	112...	10	340	3	127	t	NULL";
-		$rows[] = "159	559	2.....	330	340	3	9	f	NULL";
-		$rows[] = "150	541	1.....	330	340	3	31	f	NULL";
-		$rows[] = "149	4129	134...	330	330	3	1	f	NULL";
-		$rows[] = "162	5124	2.....	330	340	3	9	f	NULL";
-		$rows[] = "171	497	......	330	340	3	15	f	NULL";
-		$rows[] = "203	4109	......	330	340	3	15	f	NULL";
-		$rows[] = "204	4120	......	330	340	3	15	f	NULL";
-		$rows[] = "177	4143	......	330	340	3	11	f	NULL";
-		$rows[] = "249	541	112...	160	340	3	100	t	NULL";
-		$rows[] = "224	443	1.....	330	340	15	31	f	NULL";
-		$rows[] = "255	575	112...	10	340	15	127	t	NULL";
-		$rows[] = "259	4138	1.....	330	340	3	77	f	NULL";
-		$rows[] = "173	5140	2.....	330	340	3	15	t	NULL";
-		$rows[] = "244	5168	2.....	60	340	3	9	t	NULL";
-		$rows[] = "228	581	......	10	340	3	2	t	NULL";
-		$rows[] = "195	5130	2.....	330	340	3	4	f	NULL";
-		$rows[] = "189	5130	2.....	60	340	3	4	t	NULL";
-		$rows[] = "188	5130	2.....	330	50	NULL	4	t	NULL";
-		$rows[] = "187	5130	2.....	330	340	3	9	t	NULL";
-		$rows[] = "234	5163	1.....	10	340	1	1	t	NULL";
-		$rows[] = "236	5163	2.....	330	340	3	9	f	NULL";
-		$rows[] = "237	4165	1.....	330	340	3	1	t	NULL";
-		$rows[] = "180	4144	2.....	10	340	3	11	t	NULL";
-		$rows[] = "184	4144	2.....	60	340	3	4	t	NULL";
-		$rows[] = "238	443	1.....	10	340	15	32	t	NULL";
-		$rows[] = "146	4138	1.....	330	340	3	45	t	NULL";
-		$rows[] = "239	4138	2.....	330	340	3	13	t	NULL";
-		$rows[] = "242	5168	1.....	60	340	3	73	t	NULL";
-		$rows[] = "246	5168	1.....	330	340	3	65	f	NULL";
-		$rows[] = "185	577	2.....	60	340	3	4	t	NULL";
-		$rows[] = "168	577	1.....	10	340	3	3	t	NULL";
-		$rows[] = "197	585	14....	330	340	3	13	t	NULL";
-		$rows[] = "199	585	15....	330	340	3	13	t	NULL";
-		$rows[] = "264	541	2.....	330	340	1	1	f	NULL";
-		$rows[] = "201	588	112...	330	340	3	15	t	NULL";
-		$rows[] = "202	588	133...	330	340	3	15	t	NULL";
-		$rows[] = "200	4109	......	10	340	3	15	t	NULL";
-		$rows[] = "30	537	2.....	330	340	3	25	t	NULL";
-		$rows[] = "241	443	1.....	330	340	7	15	t	NULL";
-		$rows[] = "247	541	1.....	330	340	3	96	t	NULL";
-		$rows[] = "265	537	1.....	10	340	3	25	t	NULL";
-		$rows[] = "186	584	11....	330	340	3	109	t	NULL";
-		$rows[] = "261	537	......	330	340	3	25	f	NULL";
-		$rows[] = "248	577	2.....	330	340	31	2	t	NULL";
-		$rows[] = "263	537	......	330	340	31	2	f	NULL";
-		$rows[] = "82	577	2.....	330	340	3	25	t	NULL";
-		$rows[] = "31	537	1.....	330	340	31	2	t	NULL";
-		$rows[] = "266	537	2.....	330	340	31	2	t	NULL";
-		$rows[] = "254	541	112...	10	340	3	9	t	NULL";
-		$rows[] = "176	4143	......	10	340	3	11	t	NULL";
-		$rows[] = "211	577	1.....	10	340	NULL	12	t	NULL";
-		$rows[] = "56	563	2.....	10	330	31	1	t	NULL";
-		$rows[] = "66	572	1.....	10	340	31	2	t	NULL";
-		$rows[] = "67	574	......	10	340	31	15	t	NULL";
-		$rows[] = "96	454	23....	10	330	31	1	t	NULL";
-		$rows[] = "73	468	2.....	10	340	31	15	t	NULL";
-		$rows[] = "33	538	11....	10	340	31	10	t	NULL";
-		$rows[] = "75	538	11....	10	330	31	11	t	NULL";
-		$rows[] = "81	577	2.....	10	10	31	11	t	NULL";
-		$rows[] = "77	539	13....	330	340	31	2	t	NULL";
-		$rows[] = "114	584	11....	330	340	31	2	t	NULL";
-		$rows[] = "120	585	14....	330	340	31	2	t	NULL";
-		$rows[] = "121	585	15....	330	340	31	2	t	NULL";
-		$rows[] = "143	5125	2.....	10	340	31	2	t	NULL";
-		$rows[] = "163	5124	2.....	330	340	31	18	f	NULL";
-		$rows[] = "113	584	112...	10	340	31	11	t	NULL";
-		$rows[] = "252	497	133...	10	340	3	127	t	NULL";
-		$rows[] = "216	5147	25....	10	340	3	27	t	NULL";
-		$rows[] = "218	5149	27....	10	340	3	27	t	NULL";
-		$rows[] = "220	5149	29....	10	340	3	27	t	NULL";
-		$rows[] = "222	5150	222...	10	340	3	25	t	NULL";
-		$rows[] = "142	5125	2.....	330	340	3	9	t	NULL";
-		$rows[] = "70	575	......	10	340	31	127	t	NULL";
-		$rows[] = "258	577	112...	10	340	3	19	t	NULL";
-		$rows[] = "172	5140	2.....	10	60	31	11	t	NULL";
-		$rows[] = "118	585	14....	10	10	31	11	t	NULL";
-		$rows[] = "119	585	15....	10	10	31	11	t	NULL";
-		$rows[] = "125	587	17....	10	10	31	11	t	NULL";
-		$rows[] = "127	588	112...	10	10	31	1	t	NULL";
-		$rows[] = "128	588	133...	10	10	31	1	t	NULL";
-		$rows[] = "141	5125	2.....	10	10	31	9	t	NULL";
-		$rows[] = "80	539	13....	10	10	31	27	t	NULL";
-		$rows[] = "164	5130	2.....	10	340	3	9	t	NULL";
-		$rows[] = "167	575	......	330	340	31	15	f	NULL";
-		$rows[] = "153	585	15....	330	340	31	11	f	NULL";
-		$rows[] = "154	585	14....	330	340	31	11	f	NULL";
-		$rows[] = "155	587	17....	330	340	31	11	f	NULL";
-		$rows[] = "156	588	112...	330	340	31	1	f	NULL";
-		$rows[] = "157	588	133...	330	340	31	1	f	NULL";
-		$rows[] = "160	577	2.....	330	340	31	11	f	NULL";
-		$rows[] = "151	539	13....	330	340	31	27	f	NULL";
-		$rows[] = "152	584	11....	330	340	31	11	f	NULL";
-		$rows[] = "212	443	1.....	10	340	3	16	t	NULL";
-		$rows[] = "233	5159	25....	330	340	7	25	t	NULL";
-		$rows[] = "235	5163	2.....	10	340	3	9	t	NULL";
-		$rows[] = "158	581	......	330	340	31	31	f	NULL";
-		$rows[] = "227	581	......	10	340	31	29	t	NULL";
-		$rows[] = "243	5168	1.....	60	340	3	4	t	NULL";
-		$rows[] = "245	5168	2.....	60	340	3	4	t	NULL";
-		$rows[] = "161	5123	23....	10	340	3	27	t	NULL";
-		$rows[] = "267	5123	23....	60	340	3	4	t	NULL";
-		$rows[] = "214	5146	21....	10	340	3	27	t	NULL";
-		$rows[] = "268	5146	21....	60	340	3	4	t	NULL";
-		$rows[] = "215	5147	24....	10	340	3	27	t	NULL";
-		$rows[] = "269	5147	24....	60	340	3	4	t	NULL";
-		$rows[] = "270	5147	25....	60	340	3	4	t	NULL";
-		$rows[] = "217	5148	22....	10	340	3	27	t	NULL";
-		$rows[] = "271	5148	22....	60	340	3	4	t	NULL";
-		$rows[] = "219	5149	28....	10	340	3	27	t	NULL";
-		$rows[] = "272	5149	27....	60	340	3	4	t	NULL";
-		$rows[] = "273	5149	28....	60	340	3	4	t	NULL";
-		$rows[] = "274	5149	29....	60	340	3	4	t	NULL";
-		$rows[] = "221	5150	212...	10	340	3	25	t	NULL";
-		$rows[] = "223	5150	233...	10	340	3	25	t	NULL";
-		$rows[] = "275	5150	222...	60	340	3	4	t	NULL";
-		$rows[] = "276	5150	212...	60	340	3	4	t	NULL";
-		$rows[] = "277	5150	233...	60	340	3	4	t	NULL";
-		$rows[] = "278	5125	2.....	60	340	3	4	t	NULL";
-		$rows[] = "165	5125	2.....	330	340	31	15	f	NULL";
-		$rows[] = "279	5419	1.....	330	340	3	9	t	NULL";
-		$rows[] = "280	5419	2.....	330	340	1	1	t	NULL";
-		$rows[] = "281	5419	1.....	330	340	3	1	f	NULL";
-		$rows[] = "282	5419	2.....	330	340	1	1	f	NULL";
-		$rows[] = "126	587	17....	330	340	7	105	t	NULL";
-		$rows[] = "283	587	17....	330	340	3	125	t	NULL";
-		$rows[] = "289	4423	......	330	340	3	109	f26	434	2.....	10	340	3	1	t	NULL";
 		$rows[] = "27	434	1.....	10	340	1	1	t	NULL";
 		$rows[] = "32	538	1.....	10	340	3	1	t	NULL";
 		$rows[] = "37	540	2.....	10	340	3	4	t	NULL";

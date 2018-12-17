@@ -1,22 +1,20 @@
 <?php
 namespace procesos\db;
-use core;
+use core\ConfigGlobal;
+use devel\model\DBAbstract;
+
 /**
  * Crear las tablas necesaria a nivel de aplicación (global).
- * Cada esquema deberá crear las suyas, heredaas de estas.
+ * Cada esquema deberá crear las suyas, heredadas de estas.
  */
-
-
-class DB {
-    private $esquema;
-    private $role;
-    private $oDbl;
+class DB extends DBAbstract {
 
     public function __construct(){
+        $esquema_sfsv = ConfigGlobal::mi_region_dl();
+        $role = substr($esquema_sfsv,0,-1); // quito la v o la f.
+        $this->role = '"'. $role .'"';
+        
         $this->esquema = 'global';
-        $this->role = 'orbix';
-        // Conexión Comun Public, para entrar como usuario orbix.
-        $this->oDbl = $GLOBALS['oDBPC'];
     }
     
     public function dropAll() {
@@ -37,37 +35,16 @@ class DB {
         $this->create_aux_usuarios_perm();
     }
     
-    private function executeSql($a_sql) {
-        $oDbl = $this->oDbl;
-        
-        $oDbl->beginTransaction();
-        foreach ($a_sql as $sql) {
-            if ($oDbl->exec($sql) === false) {
-                $sClauError = 'Procesos.DB.query';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                $oDbl->rollback();
-                return FALSE;
-            }
-        }
-        $oDbl->commit();
-    }
-    private function eliminar($tabla) {
-        $nom_tabla = '"'.$this->esquema.'".'.$tabla;
-        
-        $a_sql = [];
-        $a_sql[0] = "DROP TABLE IF EXISTS $nom_tabla CASCADE;" ;
-        
-        return $this->executeSql($a_sql);
-    }
-
     /**
      * En la BD Comun.
      * Tiene un foreing key con el id_activ. Entiendo que no hay problemas con sf, ya 
      * los procesoso podrian ser distintos, pero no interfieren los ids.
      */
     public function create_a_actividad_proceso() {
+        $this->addPermisoGlobal('comun');
+
         $tabla = "a_actividad_proceso";
-        $nom_tabla = '"'.$this->esquema.'".'.$tabla;
+        $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                 id_item integer NOT NULL,
@@ -83,20 +60,28 @@ class DB {
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER completado SET DEFAULT false;";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
         
-        return $this->executeSql($a_sql);
+        $this->executeSql($a_sql);
+        
+        $this->delPermisoGlobal('comun');
     }
     public function eliminar_a_actividad_proceso() {
+        $this->addPermisoGlobal('comun');
+
         $tabla = "a_actividad_proceso";
-        return $this->eliminar($tabla);
+        $nom_tabla = $this->getNomTabla($tabla);
+        $this->eliminar($nom_tabla);
+        
+        $this->delPermisoGlobal('comun');
     }
     
 
     public function create_a_tipos_procesos() {
+        $this->addPermisoGlobal('comun');
+
         $tabla = "a_tipos_proceso";
-        $nom_tabla = '"'.$this->esquema.'".'.$tabla;
+        $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
 
-        
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
             id_tipo_proceso integer NOT NULL,
             nom_proceso text
@@ -104,16 +89,25 @@ class DB {
         
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
         
-        return $this->executeSql($a_sql);
+        $this->executeSql($a_sql);
+        
+        $this->delPermisoGlobal('comun');
     }
     public function eliminar_a_tipos_proceso() {
+        $this->addPermisoGlobal('comun');
+
         $tabla = "a_tipos_proceso";
-        return $this->eliminar($tabla);
+        $nom_tabla = $this->getNomTabla($tabla);
+        $this->eliminar($nom_tabla);
+        
+        $this->delPermisoGlobal('comun');
     }
     
     public function create_a_tareas() {
+        $this->addPermisoGlobal('comun');
+
         $tabla = "a_tareas";
-        $nom_tabla = '"'.$this->esquema.'".'.$tabla;
+        $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
 
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
@@ -124,16 +118,25 @@ class DB {
         
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
         
-        return $this->executeSql($a_sql);
+        $this->executeSql($a_sql);
+        
+        $this->delPermisoGlobal('comun');
     }
     public function eliminar_a_tareas() {
+        $this->addPermisoGlobal('comun');
+
         $tabla = "a_tareas";
-        return $this->eliminar($tabla);
+        $nom_tabla = $this->getNomTabla($tabla);
+        $this->eliminar($nom_tabla);
+        
+        $this->delPermisoGlobal('comun');
     }
     
     public function create_a_fases() {
+        $this->addPermisoGlobal('comun');
+
         $tabla = "a_fases";
-        $nom_tabla = '"'.$this->esquema.'".'.$tabla;
+        $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                     id_fase integer NOT NULL,
@@ -144,16 +147,25 @@ class DB {
         
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
         
-        return $this->executeSql($a_sql);
+        $this->executeSql($a_sql);
+        
+        $this->delPermisoGlobal('comun');
     }
     public function eliminar_a_fases() {
+        $this->addPermisoGlobal('comun');
+
         $tabla = "a_fases";
-        return $this->eliminar($tabla);
+        $nom_tabla = $this->getNomTabla($tabla);
+        $this->eliminar($nom_tabla);
+        
+        $this->delPermisoGlobal('comun');
     }
     
     public function create_a_procesos() {
+        $this->addPermisoGlobal('comun');
+
         $tabla = "a_procesos";
-        $nom_tabla = '"'.$this->esquema.'".'.$tabla;
+        $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                     id_item integer NOT NULL,
@@ -170,22 +182,26 @@ class DB {
         
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
         
-        return $this->executeSql($a_sql);
+        $this->executeSql($a_sql);
+        
+        $this->delPermisoGlobal('comun');
     }
     public function eliminar_a_procesos() {
+        $this->addPermisoGlobal('comun');
+
         $tabla = "a_procesos";
-        return $this->eliminar($tabla);
+        $nom_tabla = $this->getNomTabla($tabla);
+        $this->eliminar($nom_tabla);
+        
+        $this->delPermisoGlobal('comun');
     }
     
     public function create_aux_usuarios_perm() {
-        /** OJO Corresponde al esquema sf/sv, no al comun.
-         * Uso la conxión Public para crear en global con user orbixv/f
-         * y así no hay que cambiar el owner, que además da problemas de permisos
-         */
-        // Conexión sv/sf Public, para entrar como usuario orbixv/f.
-        $this->oDbl = $GLOBALS['oDBP'];
+        // OJO Corresponde al esquema sf/sv, no al comun.
+        $this->addPermisoGlobal('svsf');
+        
         $tabla = "aux_usuarios_perm";
-        $nom_tabla = '"'.$this->esquema.'".'.$tabla;
+        $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                 id_item integer NOT NULL,
@@ -200,19 +216,19 @@ class DB {
             );";
         //$a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
         
-        return $this->executeSql($a_sql);
+        $this->executeSql($a_sql);
+        
+        $this->delPermisoGlobal('svsf');
     }
     public function eliminar_aux_usuarios_perm() {
-        /** OJO Corresponde al esquema sf/sv, no al comun.
-         * Uso la conxión Public para crear en global con user orbixv/f
-         * y así no hay que cambiar el owner, que además da problemas de permisos
-         */
-        $this->oDbl = $GLOBALS['oDBP'];
+        // OJO Corresponde al esquema sf/sv, no al comun.
+        $this->addPermisoGlobal('svsf');
+        
         $tabla = "aux_usuarios_perm";
-        return $this->eliminar($tabla);
+        $nom_tabla = $this->getNomTabla($tabla);
+        $this->eliminar($nom_tabla);
+        
+        $this->delPermisoGlobal('svsf');
     }
-
-
-
     
 }

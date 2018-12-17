@@ -2,13 +2,20 @@
 fnjs_db=function(que){
 	
 	id_app = $('#id_app').val();
+	app = $("#id_app option:selected").text();
 	if (id_app < 19) {
 		alert("<?= $alerta ?>");
 	} else {
         esquema = $('#esquema').val();
-        $('#accion').val(que);
-        $('#frm').attr('action','apps/devel/controller/apptables_update.php');
-        fnjs_enviar_formulario('#frm','#main');
+		if (que == 'crear_global' || que == 'eliminar_global') {
+			esquema = 'global';
+		}
+        txt = "<?= _("Esto cambiará la aplicación");?>: "+app+"\n<?= _("para el esquema"); ?>: "+esquema;
+		if (confirm(txt) ) {
+            $('#accion').val(que);
+            $('#frm').attr('action','apps/devel/controller/apptables_update.php');
+            fnjs_enviar_formulario('#frm','#main');
+		}
 	}
 }
 </script>
