@@ -29,6 +29,7 @@
 
 use actividades\model\entity as actividades;
 use asistentes\model\entity as asistentes;
+use personas\model\entity\PersonaEx;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -140,6 +141,7 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 	$dl_de_paso = FALSE;
 	if ($obj_pau === 'PersonaEx') {
 		if (!empty($Qid_nom)) { //caso de modificar
+		    $oPersona = new PersonaEx(['id_nom' => $Qid_nom]);
 			$dl_de_paso = $oPersona->getDl();
 		} else {
 		
