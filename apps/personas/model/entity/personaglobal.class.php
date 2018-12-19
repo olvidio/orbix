@@ -485,11 +485,20 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	    if (!isset($this->df_nacimiento)) {
 	        $this->DBCarregar();
 	    }
-	    if (empty($this->df_nacimiento)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_nacimiento);
+	    if (empty($this->df_nacimiento)) {
+	    	return new web\NullDateTimeLocal();
+	    }
+	    $oConverter = new core\Converter('date', $this->df_nacimiento);
 	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_nacimiento de PersonaGlobal	* Si df_nacimiento es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_nacimiento debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_nacimiento='' optional.	* @param boolean convert=true optional. Si es false, df_nacimiento debe ser un string en formato ISO (Y-m-d).	 */
+	 * estableix el valor de l'atribut df_nacimiento de PersonaGlobal
+	* Si df_nacimiento es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
+	* Si convert es false, df_nacimiento debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	*
+	* @param date|string df_nacimiento='' optional.
+	* @param boolean convert=true optional. Si es false, df_nacimiento debe ser un string en formato ISO (Y-m-d).
+	 */
 	function setF_nacimiento($df_nacimiento='',$convert=true) {
 		if ($convert === true && !empty($df_nacimiento)) {
 	        $oConverter = new core\Converter('date', $df_nacimiento);
@@ -545,11 +554,20 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	    if (!isset($this->df_situacion)) {
 	        $this->DBCarregar();
 	    }
-	    if (empty($this->df_situacion)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_situacion);
+	    if (empty($this->df_situacion)) {
+	    	return new web\NullDateTimeLocal();
+	    }
+	    $oConverter = new core\Converter('date', $this->df_situacion);
 	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_situacion de PersonaGlobal	* Si df_situacion es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_situacion debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_situacion='' optional.	* @param boolean convert=true optional. Si es false, df_situacion debe ser un string en formato ISO (Y-m-d).	 */
+	 * estableix el valor de l'atribut df_situacion de PersonaGlobal
+	* Si df_situacion es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
+	* Si convert es false, df_situacion debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	*
+	* @param date|string df_situacion='' optional.
+	* @param boolean convert=true optional. Si es false, df_situacion debe ser un string en formato ISO (Y-m-d).
+	 */
 	function setF_situacion($df_situacion='',$convert=true) {
 		if ($convert === true && !empty($df_situacion)) {
 	        $oConverter = new core\Converter('date', $df_situacion);
@@ -605,11 +623,20 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	    if (!isset($this->df_inc)) {
 	        $this->DBCarregar();
 	    }
-	    if (empty($this->df_inc)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_inc);
+	    if (empty($this->df_inc)) {
+	    	return new web\NullDateTimeLocal();
+	    }
+	    $oConverter = new core\Converter('date', $this->df_inc);
 	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_inc de PersonaGlobal	* Si df_inc es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_inc debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_inc='' optional.	* @param boolean convert=true optional. Si es false, df_inc debe ser un string en formato ISO (Y-m-d).	 */
+	 * estableix el valor de l'atribut df_inc de PersonaGlobal
+	* Si df_inc es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
+	* Si convert es false, df_inc debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	*
+	* @param date|string df_inc='' optional.
+	* @param boolean convert=true optional. Si es false, df_inc debe ser un string en formato ISO (Y-m-d).
+	 */
 	function setF_inc($df_inc='',$convert=true) {
 		if ($convert === true && !empty($df_inc)) {
 	        $oConverter = new core\Converter('date', $df_inc);
@@ -725,8 +752,8 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 			$this->DBCarregar();
 			$ap_nom= !empty($this->snx1)? $this->snx1.' ' : '';
 			$ap_nom.= $this->sapellido1;
-			$ap_nom.= !empty($this->snx2)? ' '.$this->snx2.' ' : ' ';
-			$ap_nom.= !empty($this->sapellido2)? $this->sapellido2 : '';
+			$ap_nom.= !empty($this->snx2)? ' '.$this->snx2 : '';
+			$ap_nom.= !empty($this->sapellido2)? ' '.$this->sapellido2 : '';
 
 			$this->sApellidos=$ap_nom;
 		}
@@ -744,14 +771,14 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 				$ap_nom = '';
 			} else {
 				$ap_nom=$this->sapellido1;
-				$ap_nom.= !empty($this->snx2)? ' '.$this->snx2.' ' : ' ';
-				$ap_nom.= !empty($this->sapellido2)? $this->sapellido2 : '';
+				$ap_nom.= !empty($this->snx2)? ' '.$this->snx2 : '';
+				$ap_nom.= !empty($this->sapellido2)? ' '.$this->sapellido2 : '';
 				$ap_nom.= ', ';
 				$ap_nom.= !empty($this->strato)? $this->strato.' ' : ' ';
 				$ap_nom.= !empty($this->sapel_fam)? $this->sapel_fam : $this->snom;
 				$ap_nom.= !empty($this->snx1)? ' '.$this->snx1 : '';
 			}
-			$this->sApellidosNombre=$ap_nom;
+			$this->sApellidosNombre = trim($ap_nom);
 		}
 		return $this->sApellidosNombre;
 	}
@@ -773,7 +800,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 			$this->DBCarregar();
 			$ap_nom= !empty($this->snx1)? $this->snx1.' ' : '';
 			$ap_nom.= $this->sapellido1;
-			$ap_nom.= !empty($this->snx2)? ' '.$this->snx2.' ' : '';
+			$ap_nom.= !empty($this->snx2)? ' '.$this->snx2 : '';
 			$ap_nom.= !empty($this->sapellido2)? ' ' .$this->sapellido2 : '';
 			$ap_nom.= ', ';
 			$ap_nom.= $this->snom;
@@ -802,8 +829,8 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 			$nom_ap.= !empty($this->sapel_fam)? $this->sapel_fam : $this->snom;
 			$nom_ap.= !empty($this->snx1)? ' '.$this->snx1 : '';
 			$nom_ap.= ' '.$this->sapellido1;
-			$nom_ap.= !empty($this->snx2)? ' '.$this->snx2.' ' : ' ';
-			$nom_ap.= !empty($this->sapellido2)? $this->sapellido2 : '';
+			$nom_ap.= !empty($this->snx2)? ' '.$this->snx2 : ' ';
+			$nom_ap.= !empty($this->sapellido2)? ' '.$this->sapellido2 : '';
 
 			$this->sNombreApellidos=$nom_ap;
 		}
@@ -821,8 +848,8 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 			$nom_ap = $this->snom;
 			$nom_ap.= !empty($this->snx1)? ' '.$this->snx1 : '';
 			$nom_ap.= ' '.$this->sapellido1;
-			$nom_ap.= !empty($this->snx2)? ' '.$this->snx2.' ' : ' ';
-			$nom_ap.= !empty($this->sapellido2)? $this->sapellido2 : '';
+			$nom_ap.= !empty($this->snx2)? ' '.$this->snx2 : ' ';
+			$nom_ap.= !empty($this->sapellido2)? ' '.$this->sapellido2 : '';
 
 			$this->sNombreApellidosCrSin=$nom_ap;
 		}
@@ -842,8 +869,8 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 			$nom_ap .= $oGesNomLatin->getVernaculaLatin($this->snom); 
 			$nom_ap .= !empty($this->snx1)? ' '.$this->snx1 : '';
 			$nom_ap .= ' '.$this->sapellido1;
-			$nom_ap .= !empty($this->snx2)? ' '.$this->snx2.' ' : ' ';
-			$nom_ap .= !empty($this->sapellido2)? $this->sapellido2 : '';
+			$nom_ap .= !empty($this->snx2)? ' '.$this->snx2 : ' ';
+			$nom_ap .= !empty($this->sapellido2)? ' '.$this->sapellido2 : '';
 
 			$this->sTituloNombreLatin=$nom_ap;
 		}
