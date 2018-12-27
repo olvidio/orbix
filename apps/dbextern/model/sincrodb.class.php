@@ -100,7 +100,8 @@ class sincroDB {
 		$aOperador = array();
 		$aWhere['id_tabla'] = $this->tipo_persona;
 		$aWhere['apellido1'] = $apellido1_sinprep;
-		$aWhere['apellido2'] = $apellido2_sinprep;
+		// Para los extranjeros que no tienen segundo apellido.
+		if (!empty($apellido2_sinprep)) { $aWhere['apellido2'] = $apellido2_sinprep; }
 		$aWhere['f_nacimiento'] = "'$f_nacimiento'";
 		$aWhere['nom'] = trim($nombre);
 
