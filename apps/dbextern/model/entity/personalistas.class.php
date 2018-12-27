@@ -347,7 +347,7 @@ class PersonaListas Extends core\ClasePropiedades {
 		$subject = $this->getIncorporacion();
 		$pattern = '/^(\w+)\s*(\d*)-(\d*)-(\d*)/';
 		if (preg_match($pattern, $subject, $matches)) {
-			$this->sinc = $matches[1];
+			$this->sinc = substr($matches[1], 0, 2); // Aparace una nueva: elc, pero solo tengo 2 caracteres (el).
 			$dia = $matches[2];
 			$mes = $matches[3];
 			$any = $matches[4];
