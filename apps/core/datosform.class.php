@@ -55,6 +55,7 @@ class DatosForm {
 					$formulario.="<td class=contenido><input type='text' name='$nom_camp' value=\"".htmlspecialchars($valor_camp)."\" size='$size'></td></tr>";
 					break;
 				case "fecha":
+				    // el valor_camp debe ser un objeto web\DateTimeLocal
 				    $valor_camp_txt = $valor_camp->getFromLocal();
 					$formulario.="<td class=contenido><input class=\"fecha\" type=\"text\" id=\"$nom_camp\" name=\"$nom_camp\" value=\"$valor_camp_txt\" 
 									onchange='fnjs_comprobar_fecha(\"#$nom_camp\")'>";	
