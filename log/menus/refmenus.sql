@@ -1,5 +1,4 @@
 240	{140,40}	agd de paso	tabla=p_de_paso&na=a&tipo=persona	76	64	10	t
-529	{90}	Nuevo calendario	\N	\N	0	8	t
 508	{10}	menus ext	\N	\N	131071	9	t
 521	{50}	procesos activ.		72	131071	9	t
 352	{120,25}	buscar crt sg	sasistentes=sg&sactividad=crt	71	2112	10	t
@@ -68,10 +67,11 @@
 239	{140}	buscar n o agd	\N	\N	64	10	t
 100	{55,10}	buscar activ	que=ver&ssfsv=sv&sasistentes=sss+	119	8	8	t
 844	{10}	centros y casas	\N	\N	131072	20	t
+846	{10,20}	listados	\N	48	131072	20	t
 270	{60,40}	lista grupos	\N	122	33816576	13	t
 144	{40,10}	persona dl	obj_pau=PersonaDl&tipo=planning	61	2064	12	t
 89	{55,29}	propuesta cl cv	ssfsv=sv&sasistentes=sss%2B&sactividad=cv&que=list_cjto	119	8	8	t
-143	{40}	planning	\N	\N	2064	12	t
+1289	{90,90}	Tarifas	\N	0	8	8	t
 32	{80,60}	list varias cv	ssfsv=sv&sasistentes=agd&sactividad=cv&que=list_cjto	119	2082	3	t
 327	{85,30}	por centro	tipo=planning_ctr	61	2176	2	t
 317	{80,70}	lista por ctr	lista=list_activ&n_agd=n&sasistentes=n&sactividad=ca	147	2208	2	t
@@ -101,7 +101,6 @@
 142	{35,75}	estudios x ctr	lista=list_est&n_agd=n&sasistentes=n&sactividad=ca	147	2064	12	t
 375	{50,10,30}	sv s y sg	id_tipo_activ=1[45]&status=2&periodo=desdeHoy	71	8	8	t
 60	{10}	centros y casas		72	8	8	t
-71	{40}	planning		72	0	8	t
 817	{1}	Utilidades	\N	\N	33816575	1	t
 828	{90}	mantenimiento	\N	\N	16	12	t
 253	{20}	DB	\N	\N	33554432	13	t
@@ -140,7 +139,6 @@
 842	{82,20}	buscar cve	sasistentes=nax&sactividad=cve&que=ver	71	18464	16	t
 838	{70,20}	buscar crt	sasistentes=nax&sactividad=crt&que=ver	71	18464	16	t
 847	{40}	planning		72	0	20	t
-846	{10,20}	listados	\N	48	131072	20	t
 854	{50}	actividades	\N	\N	131072	20	t
 855	{50,10}	buscar activ	que=ver	119	131072	20	t
 135	{35}	ca n		72	2064	12	t
@@ -206,6 +204,15 @@
 374	{50,10,20}	sv agd	id_tipo_activ=133&status=2&periodo=desdeHoy	71	8	8	t
 1	{20,70}	listado actas	\N	178	16	12	t
 1029	{30}	historicos	\N	\N	\N	\N	t
+1099	{50,10}	fases	clase_info=procesos\\model\\infofases	160	33554432	13	t
+1101	{50,20}	fases-tareas	clase_info=procesos\\model\\infotareas	160	33554432	13	t
+1106	{50,30}	tipos de procesos	clase_info=procesos\\model\\infoprocesotipo	160	33554432	13	t
+1122	{50,60}	tipo activ - proceso	\N	44	33554432	13	t
+1083	{40,40}	por centro	tipo=planning_ctr	61	8	8	t
+1116	{50,50}	procesos	\N	32	33554432	13	t
+1086	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	8	8	t
+1261	{90,20}	nuevo curso	\N	157	8	8	t
+1293	{90,90,20}	tarifa <-> tipus dactivitat	\N	108	8	8	t
 1373	{10,5}	n dl	tabla=p_numerarios&tipo=persona	76	2064	21	t
 1374	{20,10}	actas	\N	60	16	21	t
 1375	{20,20}	tabla alumnos-asignaturas	\N	88	16	21	t
@@ -214,6 +221,7 @@
 1372	{10,10}	agd dl	tabla=p_agregados&tipo=persona	76	2064	21	t
 1384	{10}	personas	\N	0	16	21	t
 1385	{20}	actas	\N	0	16	21	t
+143	{40}	planning	\N	\N	2064	12	t
 61	{10,10}	buscar	simple=1&tipo=ctr&loc=dl	133	8	8	t
 845	{10,10}	buscar	simple=1&tipo=ctr&loc=dl	133	131072	20	t
 1222	{70,20}	definir módulos		27	33554432	13	t
@@ -229,3 +237,13 @@
 1368	{990}	traducciones	\N	0	33554432	13	t
 1369	{990,10}	menus a texto	\N	142	33816576	13	t
 1371	{990,20}	posibles idiomas	clase_info=usuarios\\model\\InfoLocales	160	33816576	13	t
+529	{90}	Nuevo calendario	\N	0	8	8	t
+1393	{80}	actividades	\N	0	8	19	t
+1095	{50}	procesos activ.	\N	0	33554432	13	t
+1163	{50,110}	cambiar de fase	\N	130	8	8	t
+1258	{90,10}	Definir periodos	\N	7	8	8	t
+1263	{90,30}	nuevo planing	\N	141	34078719	8	t
+1292	{90,90,10}	definir tarifa	\N	100	8	8	t
+1296	{90,90,30}	tarifes per casa i any	\N	73	8	8	t
+71	{40}	planning	\N	0	8	8	t
+1060	{40,10}	persona dl	obj_pau=PersonaDl&tipo=planning	61	8	8	t

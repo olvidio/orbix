@@ -3,7 +3,6 @@
 4	\N	scdl/documentos/equipajes_movimientos.php	\N	\N
 5	\N	programas/activ_asistentes.php	\N	\N
 6	\N	scdl/tertulias/devoluciones.php	\N	\N
-7	\N	programas/calendario_periodos.php	\N	\N
 8	\N	programas/sm-agd/cargos/lista_cl.php	\N	\N
 9	\N	sistema/trad_campos.php	\N	\N
 10	\N	sg/historics_sg_activ.php	\N	\N
@@ -25,7 +24,6 @@
 29	\N	programas/calendario_exportar_sf.php	\N	\N
 30	\N	scdl/registro/registro_distribucion.php	\N	\N
 31	\N	vcsd/scheduler/dinars.php	\N	\N
-32	\N	sistema/procesos_select.php	\N	\N
 33	\N	scdl/documentos/equipajes_ver.php	\N	\N
 34	\N	des/zona_sacd_ajax.php	\N	\N
 35	\N	programas/sm-agd/lista_aniversarios_sacd.php	\N	\N
@@ -35,7 +33,6 @@
 41	\N	scdl/registro/pen_of_buscar.php	\N	\N
 42	\N	des/zona_sacd.php	\N	\N
 43	\N	programas/activ_ctr.php	\N	\N
-44	\N	sistema/tipos_activ_select.php	\N	\N
 45	\N	programas/casa_que.php	\N	\N
 46	\N	sistema/avisos_generar_tabla.php	\N	\N
 47	\N	des/sssc_celebraciones_lista.php	\N	\N
@@ -55,7 +52,6 @@
 68	\N	programas/mod_tabla_sql.php	\N	\N
 69	\N	scdl/registro/categoria_select.php	\N	\N
 70	\N	sg/list_ultima_activ.php	\N	\N
-73	\N	programas/act_tarifas_ubis.php	\N	\N
 74	\N	scdl/registro/can_registrar.php	\N	\N
 75	\N	scdl/registro/registro_imprimir_que.php	\N	\N
 77	\N	scdl/tertulias/lista_que.php	\N	\N
@@ -79,14 +75,11 @@
 97	\N	vcsd/dlbf/actualizar.php	\N	\N
 98	\N	scdl/cartas_presentacion_lista.php	\N	\N
 99	\N	programas/sm-agd/cargos/listado_propuestas_cl.php	\N	\N
-100	\N	programas/activ_tarifa.php	\N	\N
 101	\N	scdl/registro/registro_entradas.php	\N	\N
-102	\N	vcsd/listados/apr.htm	\N	\N
 103	\N	programas/calendario_importar_sf.php	\N	\N
 105	\N	programas/lista_centros_activ.php	\N	\N
 106	\N	scdl/tertulias/enviar.php	\N	\N
 107	\N	vcsd/registro/entradas.php	\N	\N
-108	\N	programas/act_tipo_tarifa.php	\N	\N
 109	\N	sm/list_padres.php	\N	\N
 110	\N	vcsd/escritos_asr/search.php	\N	\N
 111	\N	sg/cp_trato_lista.php	\N	\N
@@ -111,16 +104,16 @@
 104	actividadestudios	apps/actividadestudios/controller/matricular.php	\N	matricular
 38	permisos	apps/permisos/controller/config_select.php	\N	config modulos
 88	notas	apps/notas/controller/asignaturas_pendientes.php	\N	cuadro alumnos-asignaturas
-130	\N	programas/actividades_fases_cambio.php	\N	\N
 132	\N	sg/lista_actividades_sg.php	\N	\N
 122	admin	apps/usuarios/controller/grupo_lista.php	\N	lista grupos
 27	devel	apps/devel/controller/modulos_select.php	\N	modulos select
 134	\N	scdl/registro/mod_ini.php	\N	\N
 135	\N	sg/que_resumen.php	\N	\N
 137	\N	des/libros/que_libros.php	\N	\N
+7	actividades	apps/ubis/controller/calendario_periodos.php	\N	Calendario Periodos
 139	\N	des/planning_zones.php	\N	\N
-141	\N	programas/calendario_que.php	\N	\N
 143	\N	programas/lista_activ_sr_que.php	\N	\N
+32	procesos	apps/procesos/controller/procesos_select.php	\N	procesos select
 144	\N	scdl/documentos/cabecera_pie_txt.php	\N	\N
 145	\N	scdl/tabla_mails_ex.php	\N	\N
 146	\N	scdl/centros_que.php	\N	\N
@@ -131,7 +124,6 @@
 153	\N	des/tareas/periodo_prueba.php	\N	\N
 154	\N	sistema/avisos_generar.php	\N	\N
 156	\N	des/tareas/encargo_select.php	\N	\N
-157	\N	programas/actividad_nuevo_curso.php	\N	\N
 158	\N	scdl/tabla_mails_moneders.php	\N	\N
 159	\N	scdl/registro/pen_form.php	\N	\N
 19	devel	apps/devel/controller/factory_form.php	\N	generador de clases
@@ -174,3 +166,11 @@
 176	dbextern	apps/dbextern/controller/sincro_index.php	\N	Sincronizar con los datos de Listas
 167	core	fnjs_windowopen('http://10.0.0.16/redmine')	\N	abrir pag redmine
 178	notas	apps/notas/controller/acta_listado_anual.php	\N	listado anual actas
+100	actividades	apps/actividades/controller/actividad_tarifa.php	\N	Tarifas actividades
+108	actividades	apps/actividades/controller/actividad_tarifa_tipo.php	\N	Tipo tarifa
+73	actividades	apps/actividades/controller/actividad_tarifa_ubi.php	\N	actividad Tarifa Ubi
+157	actividades	apps/actividades/controller/actividad_nuevo_curso.php	\N	Nuevo Curso
+141	actividades	apps/actividades/controller/calendario_que.php	\N	Calendario que
+102	devel	apps/devel/controller/apptables.php	\N	Manage tablas de Apps
+44	procesos	apps/procesos/controller/tipos_activ_select.php	\N	Tipos de actividad
+130	procesos	apps/procesos/controller/fases_activ_cambio.php	\N	Fases activ cambio

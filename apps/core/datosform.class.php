@@ -1,6 +1,5 @@
 <?php
 namespace core;
-use core;
 use web;
 
 /**
