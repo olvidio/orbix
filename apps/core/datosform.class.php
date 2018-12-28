@@ -30,9 +30,9 @@ class DatosForm {
 
 		$oFicha = $this->getFicha();
 		$oFicha->DBCarregar();
-		$clasname = get_class($oFicha);
+		//$clasname = get_class($oFicha);
 		foreach ($oFicha->getDatosCampos() as $oDatosCampo) {
-			$tabla=$oDatosCampo->getNom_tabla();	// Para usarlo a la hora de comprobar los campos.
+			//$tabla=$oDatosCampo->getNom_tabla();	// Para usarlo a la hora de comprobar los campos.
 			$nom_camp=$oDatosCampo->getNom_camp();	
 			$camposForm .= empty($camposForm)? $nom_camp : '!'.$nom_camp; 
 			$valor_camp=$oFicha->$nom_camp;	
@@ -55,7 +55,8 @@ class DatosForm {
 					$formulario.="<td class=contenido><input type='text' name='$nom_camp' value=\"".htmlspecialchars($valor_camp)."\" size='$size'></td></tr>";
 					break;
 				case "fecha":
-					$formulario.="<td class=contenido><input class=\"fecha\" type=\"text\" id=\"$nom_camp\" name=\"$nom_camp\" value=\"$valor_camp\" 
+				    $valor_camp_txt = $valor_camp->getFromLocal();
+					$formulario.="<td class=contenido><input class=\"fecha\" type=\"text\" id=\"$nom_camp\" name=\"$nom_camp\" value=\"$valor_camp_txt\" 
 									onchange='fnjs_comprobar_fecha(\"#$nom_camp\")'>";	
 					break;
 				case "opciones":
@@ -72,10 +73,8 @@ class DatosForm {
 					$formulario.="</select></td></tr>";
 					break;
 				case "depende":
-					$nom_despl= "despl_".$nom_camp;
 					$formulario.="<td class=contenido><select id=\"$nom_camp\" name=\"$nom_camp\">";
 					$formulario.= $this->despl_depende;  // solo útil en el caso de nuevo. En el resto se actualiza desde el campo del que depende.
-					//$formulario.= $$nom_despl; // solo útil en el caso de nuevo. En el resto se actualiza desde el campo del que depende.
 					$formulario.="</select></td></tr>";
 					break;
 				case "array":
