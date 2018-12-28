@@ -16,7 +16,6 @@ $snom_tipo='';
 $id_tipo_activ = '';
 
 $url_ajax = "apps/procesos/controller/tipos_activ_ajax.php";
-$url_ver = "apps/procesos/controller/procesos_ver.php";
 
 $oHashSave = new Hash();
 $oHashSave->setUrl($url_ajax);
@@ -27,6 +26,11 @@ $oHashVer = new web\Hash();
 $oHashVer->setUrl($url_ajax);
 $oHashVer->setCamposForm('que!id_tipo_activ!dl_propia');
 $h_ver = $oHashVer->linkSinVal();
+
+$oHashLista = new web\Hash();
+$oHashLista->setUrl($url_ajax);
+$oHashLista->setCamposForm('que');
+$h_lista = $oHashLista->linkSinVal();
 
 $oActividadTipo = new actividades\model\ActividadTipo();
 $oActividadTipo->setId_tipo_activ($id_tipo_activ);
@@ -39,6 +43,7 @@ $txt_eliminar = _("¿Esta seguro que desea borrar esta fase?");
 $a_campos = ['oPosicion' => $oPosicion,
     'h_guardar' => $h_guardar,
     'h_ver' => $h_ver,
+    'h_lista' => $h_lista,
     'oActividadTipo' => $oActividadTipo,
     'url_ajax' => $url_ajax,
     'txt_eliminar' => $txt_eliminar,

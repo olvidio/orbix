@@ -1,6 +1,7 @@
 <?php
 namespace procesos\model\entity;
 use core;
+use actividades\model\entity\Actividad;
 /**
  * Fitxer amb la Classe que accedeix a la taula a_actividad_proceso
  *

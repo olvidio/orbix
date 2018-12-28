@@ -1,6 +1,7 @@
 <?php
 namespace procesos\model\entity;
 use core;
+use permisos\model\PermDl;
 use usuarios\model\entity\Usuario;
 use web\Desplegable;
 /**
@@ -158,8 +159,8 @@ class GestorActividadFase Extends core\ClaseGestor {
 	    $miSfsv = core\ConfigGlobal::mi_sfsv();
 	    
 	    if ($bresp) {
-	        $miPerm=$oMiUsuario->getPerm_oficinas();
-	        $oPermiso = new dl_Perm;
+	        //$miPerm=$oMiUsuario->getPerm_oficinas();
+	        $oPermiso = new PermDl();
 	    }
 	    
 	    $cond='';

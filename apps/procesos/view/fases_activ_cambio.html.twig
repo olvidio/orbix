@@ -53,6 +53,7 @@ fnjs_lista=function(){
 }
 
 fnjs_actualizar_fases=function(){
+	alert('?hola');
 	var dl_propia=$('input[name="dl_propia"]:checked').val();
 	var isfsv=$('#isfsv_val').val();
 	var iasistentes=$('#iasistentes_val').val();
@@ -74,80 +75,13 @@ fnjs_actualizar_fases=function(){
 		}
 	});
 }
-/*
-fnjs_asistentes=function(){
-	var isfsv=$('#isfsv_val').val();
-	if (isfsv==3) {
-		$('#iasistentes_val').hide();
-		$('#iactividad_val').hide();
-		fun_nom_tipo();
-	} else {
-		var url='<?= ConfigGlobal::$web.'/programas/actividad_tipo_get.php' ?>';
-		var parametros='salida=asistentes&entrada='+isfsv+'&PHPSESSID=<?php echo session_id(); ?>';
-
-		$.ajax({
-			data: parametros,
-			url: url,
-			type: 'post',
-			dataType: 'html',
-			complete: function (rta) {
-				rta_txt=rta.responseText;
-				$('#lst_asistentes').html(rta_txt);
-			}
-		});
-	}
-	fnjs_actualizar_fases ();
-}
-fnjs_actividad=function(){
-	var isfsv=$('#isfsv_val').val();
-	var iasistentes=$('#iasistentes_val').val();
-	var url='<?= ConfigGlobal::$web.'/programas/actividad_tipo_get.php' ?>';
-	var parametros='salida=actividad&entrada='+isfsv+iasistentes+'&PHPSESSID=<?php echo session_id(); ?>';
-	$.ajax({
-		data: parametros,
-		url: url,
-		type: 'post',
-		dataType: 'html',
-		complete: function (rta) {
-			rta_txt=rta.responseText;
-			$('#lst_actividad').html(rta_txt);
-		}
-	});
-	fnjs_actualizar_fases ();
-}
-fnjs_nom_tipo=function(){
-	var isfsv=$('#isfsv_val').val();
-	var iasistentes=$('#iasistentes_val').val();
-	var iactividad=$('#iactividad_val').val();
-	var url='<?= ConfigGlobal::$web.'/programas/actividad_tipo_get.php' ?>';
-	var parametros='salida=nom_tipo&entrada='+isfsv+iasistentes+iactividad+'&PHPSESSID=<?php echo session_id(); ?>';
-	$.ajax({
-		data: parametros,
-		url: url,
-		type: 'post',
-		dataType: 'html',
-		complete: function (rta) {
-			rta_txt=rta.responseText;
-			$('#lst_nom_tipo').html(rta_txt);
-		}
-	});
-	fnjs_actualizar_fases ();
-}
-fnjs_act_id_activ=function(){
-	var isfsv=$('#isfsv_val').val();
-	var iasistentes=$('#iasistentes_val').val();
-	var iactividad=$('#iactividad_val').val();
-	var inom_tipo=$('#inom_tipo_val').val();
-	var id_tipo_activ=isfsv+iasistentes+iactividad+inom_tipo;
-
-	$('#id_tipo_activ').val(id_tipo_activ);
-	fnjs_actualizar_fases ();
-}
-*/
+ 
 $(document).ready(fnjs_actualizar_fases ());
 </script>
 <h3>seleccionar un tipo de actividad:</h3>
+<div>
     {{ oActividadTipo.getHtml|raw }}
+</div>
 <table>
 <tr>
 	<td class=etiqueta>{{ "para actividades que organiza"|trans|capitalize }}:
@@ -163,7 +97,7 @@ $(document).ready(fnjs_actualizar_fases ());
 {{ oFormP.getTd()|raw }}
 </tr>
 <tr><td class=etiqueta>{{ "pasar a fase"|trans }}:</td><td></td>
-<td><span id=div_proceso></td></td>
+<td><span id=div_proceso onclick="fnjs_actualizar_fases();"></td></td>
 </tr>
 </table>
 

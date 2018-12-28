@@ -93,16 +93,23 @@ $oHashAct->setUrl($url_ajax);
 $oHashAct->setcamposForm('que!dl_propia!id_tipo_activ');
 $h_actualizar = $oHashAct->linkSinVal();
 
-	
+$url_tipo = "apps/actividades/controller/actividad_tipo_get.php";
+$oHash1 = new web\Hash();
+//$oHash1->setUrl(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tipo_get.php');
+$oHash1->setUrl($url_tipo);
+$oHash1->setCamposForm('salida!entrada');
+$h_tipo = $oHash1->linkSinVal();
 		
 $txt_eliminar = _("¿Esta seguro que desea borrar esta fase?");
 
 $a_campos = ['oPosicion' => $oPosicion,
     'h_lista' => $h_lista,
     'h_actualizar' => $h_actualizar,
+    'h_tipo' => $h_tipo,
     'oActividadTipo' => $oActividadTipo,
     'oFormP' => $oFormP,
     'url_ajax' => $url_ajax,
+    'url_tipo' => $url_tipo,
     'txt_eliminar' => $txt_eliminar,
 ];
 

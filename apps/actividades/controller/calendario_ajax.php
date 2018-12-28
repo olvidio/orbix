@@ -178,6 +178,8 @@ switch ($Qque) {
 
         $procesos_installed = core\ConfigGlobal::is_app_installed('procesos');
         
+        $status_txt = $a_status[$status];
+        
         $accion = '';
         $a_campos = [
             'oPosicion' => $oPosicion,
@@ -192,7 +194,7 @@ switch ($Qque) {
             'snom_tipo' => $snom_tipo,
             'ssfsv' => $ssfsv,
             'status' => $status,
-            'a_status' => $a_status,
+            'status_txt' => $status_txt,
             'nom_activ' => $nom_activ,
             'f_ini' => $f_ini,
             'h_ini' => $h_ini,
@@ -324,6 +326,8 @@ switch ($Qque) {
 
         $procesos_installed = core\ConfigGlobal::is_app_installed('procesos');
         
+        $status_txt = $a_status[$status];
+
         $accion = '';
         $a_campos = [
             'oPosicion' => $oPosicion,
@@ -337,7 +341,7 @@ switch ($Qque) {
             'snom_tipo' => $snom_tipo,
             'ssfsv' => $ssfsv,
             'status' => $status,
-            'a_status' => $a_status,
+            'status_txt' => $status_txt,
             'nom_activ' => $nom_activ,
             'f_ini' => $f_ini,
             'h_ini' => $h_ini,

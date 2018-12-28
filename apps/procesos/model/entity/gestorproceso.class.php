@@ -110,7 +110,6 @@ class GestorProceso Extends core\ClaseGestor {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 	    if (empty($iid_tipo_proceso)) return array();
-	    $oDbl = $GLOBALS['oDBA'];
 	    $sQuery = "SELECT * FROM $nom_tabla WHERE id_tipo_proceso = $iid_tipo_proceso ORDER BY n_orden";
 	    
 	    if (($oDbl->query($sQuery)) === false) {
