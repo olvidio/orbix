@@ -203,6 +203,7 @@ if ( !isset($_SESSION['session_auth'])) {
 					return false;
 				}
 
+                $idioma='';
 				$sPasswd = null;
 				$oCrypt = new permisos\MyCrypt();
 				$oDBSt->bindColumn('password', $sPasswd, \PDO::PARAM_STR);
@@ -253,7 +254,6 @@ if ( !isset($_SESSION['session_auth'])) {
 						}
 			
 						// Idioma
-						$idioma='';
 						$query_idioma = sprintf( "select * from web_preferencias where id_usuario = '%s' and tipo = '%s' ",$id_usuario,"idioma");
 						$oDBStI=$oDB->query($query_idioma);
 						$row = $oDBStI->fetch(\PDO::FETCH_ASSOC);
