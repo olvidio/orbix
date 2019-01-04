@@ -125,8 +125,10 @@ class Proceso Extends core\ClasePropiedades {
 		if (is_array($a_id)) { 
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
-				if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; // evitem SQL injection fent cast a integer
-			}	} else {
+				//if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; // evitem SQL injection fent cast a integer
+				$this->$nom_id = (int)$val_id; // evitem SQL injection fent cast a integer
+			}	
+		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_item = intval($a_id); // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('iid_item' => $this->iid_item);
@@ -212,6 +214,25 @@ class Proceso Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iid_item)) {
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item='$this->iid_item'")) === FALSE) {
+				$sClauError = 'Proceso.carregar';
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				return FALSE;
+			}
+			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			switch ($que) {
+				case 'tot':
+					$this->aDades=$aDades;
+					break;
+				case 'guardar':
+					if (!$oDblSt->rowCount()) return FALSE;
+					break;
+				default:
+					$this->setAllAtributes($aDades);
+			}
+			return TRUE;
+		} elseif (!empty($this->aPrimary_key)) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla 
+                    WHERE id_tipo_proceso=$this->iid_tipo_proceso AND id_fase=$this->iid_fase AND id_tarea=$this->iid_tarea")) === FALSE) {
 				$sClauError = 'Proceso.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return FALSE;

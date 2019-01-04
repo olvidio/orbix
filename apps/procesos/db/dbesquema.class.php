@@ -124,8 +124,9 @@ class DBEsquema extends DBAbstract {
         $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT a_actividad_proceso_id_tipo_proceso_key
                     UNIQUE (id_tipo_proceso, id_activ, id_fase, id_tarea); ";
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT a_actividad_proceso_id_activ_fk
-                    FOREIGN KEY (id_activ) REFERENCES public.a_actividades_all(id_activ) ON DELETE CASCADE; ";
+        // No va con tablas heredadas
+        //$a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT a_actividad_proceso_id_activ_fk
+        //            FOREIGN KEY (id_activ) REFERENCES public.a_actividades_all(id_activ) ON DELETE CASCADE; ";
         
         $a_sql[] = "CREATE INDEX a_actividad_proceso_n_orden ON $nom_tabla USING btree (n_orden); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";

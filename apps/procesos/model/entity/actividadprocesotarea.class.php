@@ -145,7 +145,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 		$aDades['observ'] = $this->sobserv;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if (empty($aDades['completado']) || ($aDades['completado'] === 'off') || ($aDades['completado'] === FALSE) || ($aDades['completado'] === 'f')) { $aDades['completado']='f'; } else { $aDades['completado']='t'; }
+		if ( filter_var( $aDades['completado'], FILTER_VALIDATE_BOOLEAN)) { $aDades['completado']='t'; } else { $aDades['completado']='f'; }
 
 		if ($bInsert === FALSE) {
 			//UPDATE
@@ -167,14 +167,14 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return FALSE;
 				} elseif (core\ConfigGlobal::is_app_installed('procesos')) {
-				    if (empty($quiet)) {
-				        $oGestorCanvis = new GestorCanvis();
-				        $oGestorCanvis->addCanvi('a_actividad_proceso', 'FASE', $this->iid_activ, $aDades, $this->aDadesActuals);
+				    if (core\ConfigGlobal::is_app_installed('avisos')) {
+                        if (empty($quiet)) {
+                            $oGestorCanvis = new GestorCanvis();
+                            $oGestorCanvis->addCanvi('a_actividad_proceso', 'FASE', $this->iid_activ, $aDades, $this->aDadesActuals);
+                        }
 				    }
 				    // comprobar si hay que cambiar el estado (status) de la actividad.
 				    // en caso de completar la fase. Si se quita el 'completado' habría que buscar la fase anterior para saber que status corresponde.
-				    require_once('ext_a_actividades.class');
-				    require_once('ext_a_procesos.class');
 				    $oActividad = new Actividad($this->iid_activ);
 				    $statusActividad = $oActividad->getStatus();
 				    $oProceso = new Proceso(array('id_tipo_proceso'=>$this->iid_tipo_proceso,'id_fase'=>$this->iid_fase,'id_tarea'=>$this->iid_tarea));
@@ -186,8 +186,23 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 				        $statusProceso = $GesProcesos->getStatusFaseAnterior($itemProceso);
 				    }
 				    if ($statusProceso != $statusActividad) { // cambiar el status de la actividad.
-				        $oActividad->setStatus($statusProceso);
-				        $oActividad->DBGuardar();
+				        // OJO si la actividad no es de la dl, no puedo cambiarla.
+				        $dl_org = $oActividad->getDl_org();
+				        $id_tabla = $oActividad->getId_tabla();
+				        if ($dl_org == core\ConfigGlobal::mi_dele()) {
+                            $oActividad->setStatus($statusProceso);
+                            $oActividad->DBGuardar();
+				        } else {
+				            if ($id_tabla == 'dl') {
+				                //$oActividad = new ActividadPub($a_pkey);
+				                // No se puede eliminar una actividad de otra dl
+				                echo _("no se puede modificar el status de una actividad de otra dl");
+				                //return false;
+				            } else {
+                                $oActividad->setStatus($statusProceso);
+                                $oActividad->DBGuardar();
+				            }
+				        }
 				    }
 				}
 			}
@@ -254,8 +269,10 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 		    return false;
 		} else {
 		    // ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.
-		    $oGestorCanvis = new GestorCanvis();
-		    $oGestorCanvis->addCanvi('a_actividad_proceso', 'FASE', $this->iid_activ, array(), $this->aDadesActuals);
+            if (core\ConfigGlobal::is_app_installed('avisos')) {
+                $oGestorCanvis = new GestorCanvis();
+                $oGestorCanvis->addCanvi('a_actividad_proceso', 'FASE', $this->iid_activ, array(), $this->aDadesActuals);
+            }
 
             if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item='$this->iid_item'")) === FALSE) {
                 $sClauError = 'ActividadProcesoTarea.eliminar';

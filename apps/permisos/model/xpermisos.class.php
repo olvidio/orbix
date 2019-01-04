@@ -135,7 +135,7 @@ class Xpermisos {
 		if (!is_array($p)) {
 		  return array(false, 0);
 		}
-		$perms = $this->permissions;
+		//$perms = $this->permissions;
 		$r = 0;
 		reset($p);
 		foreach ($p as $key => $val) {
@@ -235,8 +235,6 @@ class Xpermisos {
 	*/
 	public function cuadros_check_menu($nomcamp,$a_perm){
 		$camp=$nomcamp."[]";
-		//si $bin es nulo, le pongo todo 0
-		if (empty($bin)) { $bin=0; }
 		$txt="";
 		foreach($this->permissions as $nom=>$num) {
 			if (in_array($num,$a_perm)) {$chk="checked";} else {$chk="";}
@@ -329,4 +327,3 @@ class Xpermisos {
 		return $txt;
 	}
 }
-?>

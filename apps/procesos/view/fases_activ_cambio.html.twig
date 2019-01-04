@@ -1,25 +1,51 @@
 <script>
+fnjs_ver_activ=function(formulario) {
+	var url = "apps/actividades/controller/actividad_proceso.php";
+	rta=fnjs_solo_uno(formulario);
+	if (rta == 1) {
+        $(formulario).attr('action',url);
+        $(formulario).submit(function() {
+            $.ajax({
+                data: $(this).serialize(),
+                url: $(this).attr('action'),
+                type: 'post',
+                complete: function (rta) {
+                    rta_txt=rta.responseText;
+                    if (rta_txt) {
+                        fnjs_mostra_resposta(rta_txt,'#main'); 
+                    }
+                }
+            });
+            return false;
+        });
+        $(formulario).submit();
+        $(formulario).off();
+	}
+}
 fnjs_cambiar=function(formulario){
 	var url='{{ url_ajax }}';
-	$(formulario).attr('action',url);
-	$(formulario).submit(function() {
-		$.ajax({
-			data: $(this).serialize(),
-			url: $(this).attr('action'),
-			type: 'post',
-			complete: function (rta) {
-				rta_txt=rta.responseText;
-				if (rta_txt) {
-					fnjs_mostra_resposta(rta_txt,'#main'); 
-				} else {
-					fnjs_lista();
-				}
-			}
-		});
-		return false;
-	});
-	$(formulario).submit();
-	$(formulario).off();
+	// segundo parametro permite multiple selección
+	rta=fnjs_solo_uno(formulario,true);
+	if (rta != 0 ) {
+        $(formulario).attr('action',url);
+        $(formulario).submit(function() {
+            $.ajax({
+                data: $(this).serialize(),
+                url: $(this).attr('action'),
+                type: 'post',
+                complete: function (rta) {
+                    rta_txt=rta.responseText;
+                    if (rta_txt) {
+                        fnjs_mostra_resposta(rta_txt,'#main'); 
+                    }
+                },
+                success: function () { fnjs_lista(); }
+            });
+            return false;
+        });
+        $(formulario).submit();
+        $(formulario).off();
+	}
 }
 
 fnjs_lista=function(){
@@ -52,8 +78,7 @@ fnjs_lista=function(){
 	});
 }
 
-fnjs_actualizar_fases=function(){
-	alert('?hola');
+fnjs_actualizar_fases=function(id_fase_sel=''){
 	var dl_propia=$('input[name="dl_propia"]:checked').val();
 	var isfsv=$('#isfsv_val').val();
 	var iasistentes=$('#iasistentes_val').val();
@@ -64,7 +89,7 @@ fnjs_actualizar_fases=function(){
 
 	/* obtener el listado de fases */
 	var url='{{ url_ajax }}';
-	var parametros='que=get&dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'{{ h_actualizar|raw }}';
+	var parametros='que=get&dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'&id_fase_sel='+id_fase_sel+'{{ h_actualizar|raw }}';
 	$.ajax({
 		url: url,
 		type: 'post',
@@ -76,7 +101,7 @@ fnjs_actualizar_fases=function(){
 	});
 }
  
-$(document).ready(fnjs_actualizar_fases ());
+$(document).ready(fnjs_actualizar_fases ({{ id_fase_nueva }}));
 </script>
 <h3>seleccionar un tipo de actividad:</h3>
 <div>
@@ -85,8 +110,8 @@ $(document).ready(fnjs_actualizar_fases ());
 <table>
 <tr>
 	<td class=etiqueta>{{ "para actividades que organiza"|trans|capitalize }}:
-    <input onchange="fnjs_actualizar_fases();" type="radio" name="dl_propia" value="t" checked>{{ "la propia dl"|trans }}
-    <input onchange="fnjs_actualizar_fases();" type="radio" name="dl_propia" value="f" >{{ "otras dl"|trans }}
+    <input onchange="fnjs_actualizar_fases();" type="radio" name="dl_propia" value="t" {{ chk_propia }}>{{ "la propia dl"|trans }}
+    <input onchange="fnjs_actualizar_fases();" type="radio" name="dl_propia" value="f" {{ chk_no_propia }}>{{ "otras dl"|trans }}
 	</td>
 </tr>
 </table>
@@ -97,7 +122,7 @@ $(document).ready(fnjs_actualizar_fases ());
 {{ oFormP.getTd()|raw }}
 </tr>
 <tr><td class=etiqueta>{{ "pasar a fase"|trans }}:</td><td></td>
-<td><span id=div_proceso onclick="fnjs_actualizar_fases();"></td></td>
+<td><span id=div_proceso "></td></td>
 </tr>
 </table>
 

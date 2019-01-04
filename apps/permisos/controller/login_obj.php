@@ -336,7 +336,7 @@ if ( !isset($_SESSION['session_auth'])) {
 		die();
 	}
 } else {
-	// ya esta registrado";
+	// ya esta registrado;
 	/**
 	 *  parece que los cambios con setlocale son para el proceso,
 	 *  no para session ni multithreaded, por tanto hay que hacerlo cada vez

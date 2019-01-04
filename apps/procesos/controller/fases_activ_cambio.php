@@ -28,17 +28,33 @@ $ssfsv = '';
 $sasistentes='';
 $sactividad='';
 $snom_tipo='';
-$id_tipo_activ = '';
+$Qid_tipo_activ = '';
 
+$oPosicion->recordar();
+
+//Si vengo de vuelta y le paso la referecia del stack donde está la información.
+if (isset($_POST['stack'])) {
+    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    if ($stack != '') {
+        // No me sirve el de global_object, sino el de la session
+        $oPosicion2 = new web\Posicion();
+        if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+            $Qid_sel=$oPosicion2->getParametro('id_sel');
+            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
+            $oPosicion2->olvidar($stack);
+        }
+    }
+}
+
+$Qdl_propia = (string) \filter_input(INPUT_POST, 'dl_propia');
+$Qid_fase_nueva = (string) \filter_input(INPUT_POST, 'id_fase_nueva');
+$Qid_tipo_activ = (string) \filter_input(INPUT_POST, 'id_tipo_activ');
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
-$Qyear = (string) \filter_input(INPUT_POST, 'year');
-$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
-$Qid_tipo_activ = (integer) \filter_input(INPUT_POST, 'id_tipo_activ');
-
 $Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
 $Qfin = (string) \filter_input(INPUT_POST, 'fin');
-
-//if (empty($_POST['year'])) $_POST['year']= date('Y'); 
+$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
+$Qyear = (string) \filter_input(INPUT_POST, 'year');
 
 
 if (!empty($Qid_tipo_activ))  {
@@ -59,7 +75,7 @@ $a_nom_tipo_posibles=$oTipoActiv->getNom_tipoPosibles();
 
 
 $oActividadTipo = new actividades\model\ActividadTipo();
-$oActividadTipo->setId_tipo_activ($id_tipo_activ);
+$oActividadTipo->setId_tipo_activ($Qid_tipo_activ);
 $oActividadTipo->setAsistentes($sasistentes);
 $oActividadTipo->setActividad($sactividad);
 $oActividadTipo->setNom_tipo($snom_tipo);
@@ -79,9 +95,8 @@ $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 
+
 $url_ajax = "apps/procesos/controller/fases_activ_cambio_ajax.php";
-$url_ver = "apps/procesos/controller/fases_activ_ver.php";
-$url='/programas/actividad_tipo_get.php';
 
 $oHashLista = new Hash();
 $oHashLista->setUrl($url_ajax);
@@ -90,7 +105,7 @@ $h_lista = $oHashLista->linkSinVal();
 
 $oHashAct = new Hash();
 $oHashAct->setUrl($url_ajax);
-$oHashAct->setcamposForm('que!dl_propia!id_tipo_activ');
+$oHashAct->setcamposForm('que!dl_propia!id_tipo_activ!id_fase_sel');
 $h_actualizar = $oHashAct->linkSinVal();
 
 $url_tipo = "apps/actividades/controller/actividad_tipo_get.php";
@@ -102,6 +117,14 @@ $h_tipo = $oHash1->linkSinVal();
 		
 $txt_eliminar = _("¿Esta seguro que desea borrar esta fase?");
 
+if ($Qdl_propia == 't') {
+    $chk_propia = 'checked';
+    $chk_no_propia = '';
+} else {
+    $chk_propia = '';
+    $chk_no_propia = 'checked';
+}
+
 $a_campos = ['oPosicion' => $oPosicion,
     'h_lista' => $h_lista,
     'h_actualizar' => $h_actualizar,
@@ -111,6 +134,9 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_ajax' => $url_ajax,
     'url_tipo' => $url_tipo,
     'txt_eliminar' => $txt_eliminar,
+    'chk_propia' => $chk_propia,
+    'chk_no_propia' => $chk_no_propia,
+    'id_fase_nueva' => $Qid_fase_nueva,
 ];
 
 $oView = new core\ViewTwig('procesos/controller');

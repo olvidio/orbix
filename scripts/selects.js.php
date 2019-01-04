@@ -1,6 +1,6 @@
 <?php
 /*
-   importante para que el navegador entienda que lo que sigue es javascrip, ja que 
+   importante para que el navegador entienda que lo que sigue es javascrip, ya que 
 	la extension del fichero no es ".js", sino ".js.php"
 */
 header('Content-Type: text/javascript; charset=UTF-8');
