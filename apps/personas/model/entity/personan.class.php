@@ -115,7 +115,7 @@ class PersonaN Extends PersonaDl {
 		$aDades['ce_lugar'] = $this->sce_lugar;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if (empty($aDades['sacd']) || ($aDades['sacd'] === 'off') || ($aDades['sacd'] === false) || ($aDades['sacd'] === 'f')) { $aDades['sacd']='f'; } else { $aDades['sacd']='t'; }
+		if ( filter_var( $aDades['sacd'], FILTER_VALIDATE_BOOLEAN)) { $aDades['sacd']='t'; } else { $aDades['sacd']='f'; }
 
 		if ($bInsert === false) {
 			//UPDATE

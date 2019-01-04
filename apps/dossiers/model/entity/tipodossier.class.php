@@ -165,7 +165,7 @@ class TipoDossier Extends core\ClasePropiedades {
 		$aDades['class'] = $this->sclass;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if (empty($aDades['depende_modificar']) || ($aDades['depende_modificar'] === 'off') || ($aDades['depende_modificar'] === false) || ($aDades['depende_modificar'] === 'f')) { $aDades['depende_modificar']='f'; } else { $aDades['depende_modificar']='t'; }
+		if ( filter_var( $aDades['depende_modificar'], FILTER_VALIDATE_BOOLEAN)) { $aDades['depende_modificar']='t'; } else { $aDades['depende_modificar']='f'; }
 
 		if ($bInsert === false) {
 			//UPDATE

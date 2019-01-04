@@ -88,8 +88,8 @@ class PersonaOut Extends PersonaPub {
 		$aDades['profesor_stgr'] = $this->bprofesor_stgr;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if (empty($aDades['sacd']) || ($aDades['sacd'] === 'off') || ($aDades['sacd'] === false) || ($aDades['sacd'] === 'f')) { $aDades['sacd']='f'; } else { $aDades['sacd']='t'; }
-		if (empty($aDades['profesor_stgr']) || ($aDades['profesor_stgr'] === 'off') || ($aDades['profesor_stgr'] === false) || ($aDades['profesor_stgr'] === 'f')) { $aDades['profesor_stgr']='f'; } else { $aDades['profesor_stgr']='t'; }
+		if ( filter_var( $aDades['sacd'], FILTER_VALIDATE_BOOLEAN)) { $aDades['sacd']='t'; } else { $aDades['sacd']='f'; }
+		if ( filter_var( $aDades['profesor_stgr'], FILTER_VALIDATE_BOOLEAN)) { $aDades['profesor_stgr']='t'; } else { $aDades['profesor_stgr']='f'; }
 
 		if ($bInsert === false) {
 			//UPDATE

@@ -112,8 +112,8 @@ class DescTeleco Extends core\ClasePropiedades {
 		$aDades['persona'] = $this->bpersona;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if (empty($aDades['ubi']) || ($aDades['ubi'] === 'off') || ($aDades['ubi'] === 'false') || ($aDades['ubi'] === 'f')) { $aDades['ubi']='f'; } else { $aDades['ubi'] = 't'; }
-		if (empty($aDades['persona']) || ($aDades['persona'] === 'off') || ($aDades['persona'] === 'false') || ($aDades['persona'] === 'f')) { $aDades['persona']='f'; } else { $aDades['persona'] = 't'; }
+		if ( filter_var( $aDades['ubi'], FILTER_VALIDATE_BOOLEAN)) { $aDades['ubi']='t'; } else { $aDades['ubi']='f'; }
+		if ( filter_var( $aDades['persona'], FILTER_VALIDATE_BOOLEAN)) { $aDades['persona']='t'; } else { $aDades['persona']='f'; }
 
 		if ($bInsert === false) {
 			//UPDATE

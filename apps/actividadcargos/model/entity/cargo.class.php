@@ -130,8 +130,8 @@ class Cargo Extends core\ClasePropiedades {
 		$aDades['tipo_cargo'] = $this->stipo_cargo;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if (empty($aDades['sf']) || ($aDades['sf'] === 'off') || ($aDades['sf'] === false) || ($aDades['sf'] === 'f')) { $aDades['sf']='f'; } else { $aDades['sf']='t'; }
-		if (empty($aDades['sv']) || ($aDades['sv'] === 'off') || ($aDades['sv'] === false) || ($aDades['sv'] === 'f')) { $aDades['sv']='f'; } else { $aDades['sv']='t'; }
+		if ( filter_var( $aDades['sf'], FILTER_VALIDATE_BOOLEAN)) { $aDades['sf']='t'; } else { $aDades['sf']='f'; }
+		if ( filter_var( $aDades['sv'], FILTER_VALIDATE_BOOLEAN)) { $aDades['sv']='t'; } else { $aDades['sv']='f'; }
 
 		if ($bInsert === false) {
 			//UPDATE

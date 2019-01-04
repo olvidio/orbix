@@ -80,10 +80,10 @@ class AsistenteOut Extends AsistentePub {
 		$aDades['propietario'] = $this->spropietario;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if (empty($aDades['propio']) || ($aDades['propio'] === 'off') || ($aDades['propio'] === false) || ($aDades['propio'] === 'f')) { $aDades['propio']='f'; } else { $aDades['propio']='t'; }
-		if (empty($aDades['est_ok']) || ($aDades['est_ok'] === 'off') || ($aDades['est_ok'] === false) || ($aDades['est_ok'] === 'f')) { $aDades['est_ok']='f'; } else { $aDades['est_ok']='t'; }
-		if (empty($aDades['cfi']) || ($aDades['cfi'] === 'off') || ($aDades['cfi'] === false) || ($aDades['cfi'] === 'f')) { $aDades['cfi']='f'; } else { $aDades['cfi']='t'; }
-		if (empty($aDades['falta']) || ($aDades['falta'] === 'off') || ($aDades['falta'] === false) || ($aDades['falta'] === 'f')) { $aDades['falta']='f'; } else { $aDades['falta']='t'; }
+		if ( filter_var( $aDades['propio'], FILTER_VALIDATE_BOOLEAN)) { $aDades['propio']='t'; } else { $aDades['propio']='f'; }
+		if ( filter_var( $aDades['est_ok'], FILTER_VALIDATE_BOOLEAN)) { $aDades['est_ok']='t'; } else { $aDades['est_ok']='f'; }
+		if ( filter_var( $aDades['cfi'], FILTER_VALIDATE_BOOLEAN)) { $aDades['cfi']='t'; } else { $aDades['cfi']='f'; }
+		if ( filter_var( $aDades['falta'], FILTER_VALIDATE_BOOLEAN)) { $aDades['falta']='t'; } else { $aDades['falta']='f'; }
 
 		if ($bInsert === false) {
 			//UPDATE

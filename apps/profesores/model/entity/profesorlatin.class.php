@@ -102,7 +102,7 @@ class ProfesorLatin Extends core\ClasePropiedades {
 		$aDades['latin'] = $this->blatin;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if (empty($aDades['latin']) || ($aDades['latin'] === 'off') || ($aDades['latin'] === false) || ($aDades['latin'] === 'f')) { $aDades['latin']='f'; } else { $aDades['latin']='t'; }
+		if ( filter_var( $aDades['latin'], FILTER_VALIDATE_BOOLEAN)) { $aDades['latin']='t'; } else { $aDades['latin']='f'; }
 
 		if ($bInsert === false) {
 			//UPDATE

@@ -117,7 +117,7 @@ class ModuloInstalado Extends core\ClasePropiedades {
 		$aDades['param'] = $this->sparam;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if (empty($aDades['status']) || ($aDades['status'] === 'off') || ($aDades['status'] === false) || ($aDades['status'] === 'f')) { $aDades['status']='f'; } else { $aDades['status']='t'; }
+		if ( filter_var( $aDades['status'], FILTER_VALIDATE_BOOLEAN)) { $aDades['status']='t'; } else { $aDades['status']='f'; }
 
 		/*
 		 * Activar la creación de tablas necesarias para la app.
