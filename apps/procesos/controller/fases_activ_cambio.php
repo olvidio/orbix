@@ -117,12 +117,12 @@ $h_tipo = $oHash1->linkSinVal();
 		
 $txt_eliminar = _("¿Esta seguro que desea borrar esta fase?");
 
-if ($Qdl_propia == 't') {
-    $chk_propia = 'checked';
-    $chk_no_propia = '';
-} else {
+if ($Qdl_propia == 'f') {
     $chk_propia = '';
     $chk_no_propia = 'checked';
+} else {
+    $chk_propia = 'checked';
+    $chk_no_propia = '';
 }
 
 $a_campos = ['oPosicion' => $oPosicion,
