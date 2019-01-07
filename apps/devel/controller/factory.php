@@ -389,7 +389,7 @@ foreach($oDbl->query($sql) as $row) {
 	if (!in_array($nomcamp,$aClaus)) {
 		if ($auto != 1) { // si tiene sequencia no pongo el campo en el update.
 			if ($tip=='b') {
-				$err_bool.="\n\t\t".'if (empty($aDades[\''.$nomcamp.'\']) || ($aDades[\''.$nomcamp.'\'] === \'off\') || ($aDades[\''.$nomcamp.'\'] === FALSE) || ($aDades[\''.$nomcamp.'\'] === \'f\')) { $aDades[\''.$nomcamp.'\']=\'f\'; } else { $aDades[\''.$nomcamp.'\']=\'t\'; }';
+				$err_bool.="\n\t\t".'if ( filter_var( $aDades[\''.$nomcamp.'\'], FILTER_VALIDATE_BOOLEAN)) { $aDades[\''.$nomcamp.'\']=\'t\'; } else { $aDades[\''.$nomcamp.'\']=\'f\'; }';
 			}
 			$guardar.="\n\t\t".'$aDades[\''.$nomcamp.'\'] = $this->'.$tip.$nomcamp.';';
 			if ($cl>0) $update.=",\n";

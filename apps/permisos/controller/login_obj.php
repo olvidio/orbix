@@ -166,6 +166,7 @@ function getApps($id_mod) {
 
 if ( !isset($_SESSION['session_auth'])) { 
 	//el segon cop tinc el nom i el password
+    $idioma='';
 	if (isset($_POST['username']) && isset($_POST['password'])) {
 		switch(core\ConfigGlobal::$auth_method) {
 			case "ldap":
@@ -309,6 +310,7 @@ if ( !isset($_SESSION['session_auth'])) {
 						$a_campos = array('error'=>1);
 						$a_campos['DesplRegiones'] = posibles_esquemas($esquema);
 						$a_campos['idioma'] = $idioma;
+                        $a_campos['url'] = core\ConfigGlobal::getWeb();
 						$oView = new core\View(__NAMESPACE__);
 						echo $oView->render('login_form2.phtml',$a_campos);
 						die();
@@ -317,6 +319,7 @@ if ( !isset($_SESSION['session_auth'])) {
 					$a_campos = array('error'=>1);
 					$a_campos['DesplRegiones'] = posibles_esquemas($esquema);
 					$a_campos['idioma'] = $idioma;
+                    $a_campos['url'] = core\ConfigGlobal::getWeb();
 					$oView = new core\View(__NAMESPACE__);
 					echo $oView->render('login_form2.phtml',$a_campos);
 					die();
@@ -328,13 +331,13 @@ if ( !isset($_SESSION['session_auth'])) {
 		cambiar_idioma($idioma);	
 		$a_campos['DesplRegiones'] = posibles_esquemas($esquema);
 		$a_campos['idioma'] = $idioma;
+		$a_campos['url'] = core\ConfigGlobal::getWeb();
 		$oView = new core\View(__NAMESPACE__);
-		//echo $oView->render('login_form2.phtml',$a_campos);
 		echo $oView->render('login_form2.phtml',$a_campos);
 		die();
 	}
 } else {
-	// ya esta registrado";
+	// ya esta registrado;
 	/**
 	 *  parece que los cambios con setlocale son para el proceso,
 	 *  no para session ni multithreaded, por tanto hay que hacerlo cada vez

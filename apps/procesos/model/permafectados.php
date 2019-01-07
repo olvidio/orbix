@@ -13,4 +13,3 @@ class PermAfectados extends permisos\Xpermisos {
 				"asistentes"			=>64
 		);
 }
-?>

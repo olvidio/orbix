@@ -80,11 +80,7 @@ switch ($Qque) {
             $permiso_des = TRUE;
         }
         
-        $a_status = array( \actividades\model\entity\ActividadAll::STATUS_PROYECTO => _("proyecto"),
-                     \actividades\model\entity\ActividadAll::STATUS_ACTUAL => _("actual"),
-                     \actividades\model\entity\ActividadAll::STATUS_TERMINADA => _("terminada"),
-                     \actividades\model\entity\ActividadAll::STATUS_BORRABLE => _("borrable")
-                    );
+        $a_status = Actividad::ARRAY_STATUS_TXT;
         
         $oActividad = new actividades\model\entity\Actividad($Qid_activ);
         $id_tipo_activ = $oActividad->getId_tipo_activ();
@@ -182,6 +178,8 @@ switch ($Qque) {
 
         $procesos_installed = core\ConfigGlobal::is_app_installed('procesos');
         
+        $status_txt = $a_status[$status];
+        
         $accion = '';
         $a_campos = [
             'oPosicion' => $oPosicion,
@@ -196,7 +194,7 @@ switch ($Qque) {
             'snom_tipo' => $snom_tipo,
             'ssfsv' => $ssfsv,
             'status' => $status,
-            'a_status' => $a_status,
+            'status_txt' => $status_txt,
             'nom_activ' => $nom_activ,
             'f_ini' => $f_ini,
             'h_ini' => $h_ini,
@@ -232,11 +230,7 @@ switch ($Qque) {
             $permiso_des = TRUE;
         }
         
-        $a_status = array( \actividades\model\entity\ActividadAll::STATUS_PROYECTO => _("proyecto"),
-                     \actividades\model\entity\ActividadAll::STATUS_ACTUAL => _("actual"),
-                     \actividades\model\entity\ActividadAll::STATUS_TERMINADA => _("terminada"),
-                     \actividades\model\entity\ActividadAll::STATUS_BORRABLE => _("borrable")
-                    );
+        $a_status = Actividad::ARRAY_STATUS_TXT;
         
         $oActividad = new actividades\model\entity\Actividad();
         $id_tipo_activ = $oActividad->getId_tipo_activ();
@@ -332,6 +326,8 @@ switch ($Qque) {
 
         $procesos_installed = core\ConfigGlobal::is_app_installed('procesos');
         
+        $status_txt = $a_status[$status];
+
         $accion = '';
         $a_campos = [
             'oPosicion' => $oPosicion,
@@ -345,7 +341,7 @@ switch ($Qque) {
             'snom_tipo' => $snom_tipo,
             'ssfsv' => $ssfsv,
             'status' => $status,
-            'a_status' => $a_status,
+            'status_txt' => $status_txt,
             'nom_activ' => $nom_activ,
             'f_ini' => $f_ini,
             'h_ini' => $h_ini,

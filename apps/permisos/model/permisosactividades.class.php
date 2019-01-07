@@ -5,7 +5,9 @@ use actividades\model\entity\Actividad;
 use actividades\model\entity\GestorTipoDeActividad;
 use actividades\model\entity\TipoDeActividad;
 use procesos\model\entity as procesos;
+use procesos\model\PermAccion;
 use usuarios\model\entity as usuarios;
+use core\ClasePropiedades;
 /**
  * Classe que genera un array amb els permisos per cada usuari. Es guarda a la sesió per tenir-ho a l'abast en qualsevol moment:
  *
@@ -92,11 +94,8 @@ class PermisosActividades {
 	 */
 	 private $btop;
 
-	 private $oGesActiv;
-
 	/* METODES ----------------------------------------------------------------- */
 	public function __construct($iid_usuario) {
-		$oDbl = $GLOBALS['oDBC'];
 		// permiso para el usuario
 		$sCondicion_usuario="u.id_usuario=$iid_usuario";
 		// miro en els grups als que pertany
@@ -113,19 +112,17 @@ class PermisosActividades {
 		$this->carregar($sCondicion_usuario,'t');
 		$this->carregar($sCondicion_usuario,'f');
 		
-		$this->oGesActiv = new procesos\GestorActividadProcesoTarea();
-		$this->setoDbl($oDbl);
 	}
 
-	public function carregar($sCondicion_usuario,$dl_propia) {
-		$oDbl = $this->getoDbl();
+	private function carregar($sCondicion_usuario,$dl_propia) {
+	    $oDbl = $GLOBALS['oDB'];
 		$Qry="SELECT DISTINCT u.*
 			FROM aux_usuarios_perm u
 			WHERE $sCondicion_usuario AND dl_propia='$dl_propia' 
 			ORDER BY id_usuario DESC
 			";
 		//echo "<br>permActiv: $Qry<br>";
-		if (($oDblSt = $oDbl->query($Qry)) === false) {
+		if (($oDbl->query($Qry)) === false) {
 			$sClauError = 'ActividadCargo.carregar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -199,14 +196,16 @@ class PermisosActividades {
 		$this->iid_tipo_activ = $id_tipo_activ;
 		$oTipoDeActividad = new TipoDeActividad($id_tipo_activ);
 
-		if ($dl_org == ConfigGlobal::$dele) {
+		if ($dl_org == ConfigGlobal::mi_dele()) {
 			$this->bpropia=true;
 			$this->iid_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso();
 		} else {
 			$this->bpropia=false;
 			$this->iid_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso_ex();
 		}
-		$this->iid_fase = $this->oGesActiv->getFaseActual($this->iid_activ); 
+		
+		$oGesActiv = new procesos\GestorActividadProcesoTarea();
+		$this->iid_fase = $oGesActiv->getFaseActual($this->iid_activ); 
 		//print_r($this);
 	}
 
@@ -215,7 +214,8 @@ class PermisosActividades {
 	}
 	public function getId_fase() {
 		if (empty($this->iid_fase)) {
-			$this->iid_fase = $this->oGesActiv->getFaseActual($this->iid_activ); 
+    		$oGesActiv = new procesos\GestorActividadProcesoTarea();
+			$this->iid_fase = $oGesActiv->getFaseActual($this->iid_activ); 
 		}
 		return $this->iid_fase;
 	}

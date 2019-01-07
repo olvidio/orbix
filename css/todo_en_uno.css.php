@@ -337,6 +337,13 @@ div.ventana z-index: 160;
 	.plaza5 {
 		background: #9C9485 !important;
 	}
+	/* alert  Es para la fila*/
+	.wrong {
+		background: red !important;
+	}
+	.alert  {
+		color : red;
+	}
 	/* logout */
 	#logout {
 		position:absolute;
@@ -413,9 +420,6 @@ div.ventana z-index: 160;
 		text-decoration : none;
 		color : <?= $letras_hover; ?>;
 		cursor: pointer;
-	}
-	.alert  {
-		color : red;
 	}
 	span.link:hover  {
 		text-decoration : none;

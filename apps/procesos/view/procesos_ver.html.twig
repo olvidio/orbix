@@ -1,0 +1,43 @@
+<script>
+fnjs_get_depende=function(id_campo,acc){
+	var valor=$(id_campo).val();
+	var url='{{ url_ajax }}';
+	var parametros='que=depende&acc='+acc+'&valor_depende='+valor;
+		 
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta_txt) {
+			//rta_txt=rta.responseText;
+			//alert ('respuesta: '+rta_txt);
+			if (rta_txt) {
+				/* añadir debajo de la actividad */
+				$(acc).html(rta_txt);
+			}
+		}
+	});
+}
+</script>
+<form id=frm_proceso name=frm_proceso action=''>
+{{ oHash.getCamposHtml()|raw }}
+<table>
+<tr>
+<td>{{ "fase"|trans }}:</td><td>{{  oDesplFase.desplegable()|raw }}</td>
+<td>{{ "tarea"|trans }}:</td><td>{{  oDesplTarea.desplegable()|raw }}</td>
+</tr>
+<tr><td>{{ "status"|trans }}:</td><td>{{  oDesplStatus.desplegable()|raw }}</td>
+</tr>
+<tr><td>{{ "oficina responsable"|trans }}:</td>
+<td><input type='text' name='of_responsable' value='{{ of_responsable }}'</td></tr>
+<tr>
+<td>{{ "fase previa"|trans }}:</td><td>{{  oDesplFasePrevia.desplegable()|raw }}</td>
+<td>{{ "tarea previa"|trans  }}:</td><td>{{  oDesplTareaPrevia.desplegable()|raw }}</td>
+</tr>
+<tr>
+<td>{{ "mensaje requisito"|trans }}:</td>
+<td colspan=4><input type='text' size=50 name='mensaje_requisito' value='{{ mensaje_requisito }}'></td></tr>
+</table>
+<input type='button' value='{{ "guardar"|trans }}' onclick='fnjs_guardar(this.form);' >
+<input type='button' value='{{ "cancel"|trans }}' onclick='fnjs_cerrar();' >
+</form>

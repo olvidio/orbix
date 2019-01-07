@@ -32,7 +32,7 @@ namespace orbix\apps\core {
 namespace orbix\apps {
 	//permisos/login_inc
 	use permisos\model\mycrypt;
-	use permisos\model\permdl;
+	//use permisos\model\perm;
 
 	use core\clasepropiedades;
 	use core\datoscampo;

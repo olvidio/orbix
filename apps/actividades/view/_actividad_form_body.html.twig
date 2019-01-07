@@ -17,7 +17,7 @@
 		{{ "borrable"|trans }}</td>
 	{% else %}
 		<!-- Ara faig que no es pugui canviar. S'ha d'anar per les fases.  -->
-		<td><?= $a_status[$status] ?>
+		<td>{{ status_txt|trans }}
 		<input type='hidden' id='status' name='status' value="{{ status }}">
 		</td>
 	{% endif %}

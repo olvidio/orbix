@@ -1,0 +1,34 @@
+10	Crear (proyecto)	t	t
+20	ok oficina correspondiente	t	t
+30	ok des i tal	f	t
+40	aprobado dl	t	t
+50	propuesta atención sacd	t	t
+60	ok atención sacd	t	t
+70	propuesta plan de estudios	f	t
+80	propuesta distribución cl	f	t
+90	ok plan de estudios	f	t
+100	ok distribución de plazas	f	t
+110	ok distribución cl	f	t
+120	posibles ca para cada ctr	f	t
+130	cuadro profesorado	f	t
+140	minuta ctr	f	t
+160	ok asistentes	f	t
+170	confirmación a los ctr	f	t
+180	envio E43 a otras dl	f	t
+190	ok profesores	f	t
+200	ok plan de estudios personal	f	t
+210	maleta material de estudios	f	t
+220	ok distribución cl	f	t
+230	distribución cfi	f	t
+240	reunión cl ca con d dl	f	t
+250	reunión d.est con vest	f	t
+260	actividad en marcha	f	t
+270	activiadad finalizada	f	t
+280	ok actas y notas	f	t
+290	ok E43 enviados	f	t
+300	ok E43 recibidos	f	t
+310	guardar historial	f	t
+320	Eliminada (borrable)	t	t
+330	Aprobada (actual)	t	t
+340	Terminada	t	t
+360	Crear inicial des (proyecto)	t	t

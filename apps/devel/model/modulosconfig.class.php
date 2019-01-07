@@ -13,7 +13,6 @@ use function permisos\controller\getModsInstalados;
  * @author Daniel Serrabou <dani@moneders.net>
  */
 class modulosConfig {
-	//put your code here
 	
 	private $a_mods_todos = [];
 	private $a_apps_todas = [];
@@ -69,6 +68,7 @@ class modulosConfig {
 		if (empty($id_mod)) { return $apps; }
 		$a_mods = $this->getModsAll();
 		$ajson = $a_mods[$id_mod]['mods_req'];
+		$matches = [];
 		if (preg_match('/^{(.*)}$/', $ajson, $matches)) {
 			$mod_in = str_getcsv($matches[1]);
 			foreach ($mod_in as $mod) {
@@ -87,6 +87,7 @@ class modulosConfig {
 		if (empty($id_mod)) { return $apps; }
 		$a_mods = $this->getModsAll();
 		$ajson = $a_mods[$id_mod]['apps_req'];
+		$matches = [];
 		if (preg_match('/^{(.*)}$/', $ajson, $matches)) {
 			$app_in = str_getcsv($matches[1]);
 			foreach ($app_in as $app) {
@@ -97,7 +98,7 @@ class modulosConfig {
 	}
 
 	public function getAppsInstaladas() {
-		$a_apps = $this->getAppsAll();
+		//$a_apps = $this->getAppsAll();
 		$app_installed = [];
 
 		$a_mods_installed = getModsInstalados();

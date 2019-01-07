@@ -101,10 +101,10 @@ class CentroEllas Extends Ubi {
 		$aDades['id_ctr_padre'] = $this->iid_ctr_padre;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if (empty($aDades['status']) || ($aDades['status'] === 'off') || ($aDades['status'] === 'false') || ($aDades['status'] === 'f')) { $aDades['status']='f'; } else { $aDades['status']='t'; }
-		if (empty($aDades['sv']) || ($aDades['sv'] === 'off') || ($aDades['sv'] === 'false') || ($aDades['sv'] === 'f')) { $aDades['sv']='f'; } else { $aDades['sv']='t'; }
-		if (empty($aDades['sf']) || ($aDades['sf'] === 'off') || ($aDades['sf'] === 'false') || ($aDades['sf'] === 'f')) { $aDades['sf']='f'; } else { $aDades['sf']='t'; }
-		if (empty($aDades['cdc']) || ($aDades['cdc'] === 'off') || ($aDades['cdc'] === 'false') || ($aDades['cdc'] === 'f')) { $aDades['cdc']='f'; } else { $aDades['cdc']='t'; }
+		if ( filter_var( $aDades['status'], FILTER_VALIDATE_BOOLEAN)) { $aDades['status']='t'; } else { $aDades['status']='f'; }
+		if ( filter_var( $aDades['sv'], FILTER_VALIDATE_BOOLEAN)) { $aDades['sv']='t'; } else { $aDades['sv']='f'; }
+		if ( filter_var( $aDades['sf'], FILTER_VALIDATE_BOOLEAN)) { $aDades['sf']='t'; } else { $aDades['sf']='f'; }
+		if ( filter_var( $aDades['cdc'], FILTER_VALIDATE_BOOLEAN)) { $aDades['cdc']='t'; } else { $aDades['cdc']='f'; }
 
 		if ($bInsert === false) {
 			//UPDATE

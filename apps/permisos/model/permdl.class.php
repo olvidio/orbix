@@ -1,14 +1,16 @@
 <?php
 namespace permisos\model;
 
-class PermDl extends xPermisos {
+class PermDl extends Xpermisos {
   var $classname = "PermDl";
   
-  function __construct(){
+  public function __construct(){
+      $this->iaccion = $_SESSION['iPermMenus'];
 	  $this->omplir();
   }
 
   private function omplir() {
+		$permission_users = [];
 		$permission_users["adl"]	= 1;
 		$permission_users["pr"]		= 1;
 		$permission_users["agd"]	= 1<<1; // 2
@@ -36,4 +38,3 @@ class PermDl extends xPermisos {
 		$this->permissions = $permission_users;
   }
 }
-?>

@@ -236,7 +236,7 @@ if (!empty($Qmodo)) {
 			$a_botones[] = array( 'txt' => _("plazas"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"plazas\")");
 		}
 		if (core\configGlobal::is_app_installed('procesos')) {
-			$a_botones[] = array( 'txt' => _("estado"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"estado\")");
+			$a_botones[] = array( 'txt' => _("proceso"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"proceso\")");
 		}
 
 		if (core\configGlobal::is_app_installed('asignaturas')) {

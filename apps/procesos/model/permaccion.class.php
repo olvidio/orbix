@@ -12,4 +12,3 @@ class PermAccion extends permisos\Xpermisos {
 				"borrar"		=>31
 		);
 }
-?>

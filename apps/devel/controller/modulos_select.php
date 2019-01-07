@@ -58,6 +58,8 @@ $a_botones[] = array( 'txt' => _("modificar"),
 					'click' =>"fnjs_modificar(\"#seleccionados\")" );
 $a_botones[] = array( 'txt' => _("eliminar"),
 					'click' =>"fnjs_eliminar(\"#seleccionados\")" );
+$a_botones[] = array( 'txt' => _("crear tablas"),
+					'click' =>"fnjs_sql(\"#seleccionados\")" );
 
 $a_cabeceras = array( ucfirst(_("nombre")),
 						ucfirst(_("descripción")),

@@ -16,11 +16,11 @@ fnjs_ver=function(){
 		url: url,
 		type: 'post',
 		data: parametros,
-		success: function (rta_txt) {
+		success: function (rta_html) {
 			//rta_txt=rta.responseText;
 			//alert ('respuesta: '+rta_txt);
-			if (rta_txt) { 
-				$('#ficha').html(rta_txt);
+			if (rta_html) { 
+				$('#ficha').html(rta_html);
 			}
 		}
 	});

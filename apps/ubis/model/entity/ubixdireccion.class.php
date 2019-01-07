@@ -90,8 +90,8 @@ Abstract class UbixDireccion Extends core\ClasePropiedades {
 		$aDades['principal'] = $this->bprincipal;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if (empty($aDades['propietario']) || ($aDades['propietario'] === 'off') || ($aDades['propietario'] === false) || ($aDades['propietario'] === 'f')) { $aDades['propietario']='f'; } else { $aDades['propietario']='t'; }
-		if (empty($aDades['principal']) || ($aDades['principal'] === 'off') || ($aDades['principal'] === false) || ($aDades['principal'] === 'f')) { $aDades['principal']='f'; } else { $aDades['principal']='t'; }
+		if ( filter_var( $aDades['propietario'], FILTER_VALIDATE_BOOLEAN)) { $aDades['propietario']='t'; } else { $aDades['propietario']='f'; }
+		if ( filter_var( $aDades['principal'], FILTER_VALIDATE_BOOLEAN)) { $aDades['principal']='t'; } else { $aDades['principal']='f'; }
 
 		if ($bInsert === false) {
 			//UPDATE
