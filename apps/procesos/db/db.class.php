@@ -47,9 +47,10 @@ class DB extends DBAbstract {
         $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                id_schema integer NOT NULL,
                 id_item integer NOT NULL,
                 id_tipo_proceso integer NOT NULL,
-                id_activ integer NOT NULL,
+                id_activ bigint NOT NULL,
                 id_fase integer,
                 id_tarea integer,
                 n_orden smallint,
@@ -83,6 +84,7 @@ class DB extends DBAbstract {
         $a_sql = [];
 
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+            id_schema integer NOT NULL,
             id_tipo_proceso integer NOT NULL,
             nom_proceso text
             );";
@@ -111,6 +113,7 @@ class DB extends DBAbstract {
         $a_sql = [];
 
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                    id_schema integer NOT NULL,
                     id_fase integer NOT NULL,
                     id_tarea integer NOT NULL,
                     desc_tarea character varying(70)
@@ -139,6 +142,7 @@ class DB extends DBAbstract {
         $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                    id_schema integer NOT NULL,
                     id_fase integer NOT NULL,
                     desc_fase text,
                     sf boolean NOT NULL,
@@ -168,6 +172,7 @@ class DB extends DBAbstract {
         $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                    id_schema integer NOT NULL,
                     id_item integer NOT NULL,
                     id_tipo_proceso integer NOT NULL,
                     n_orden smallint,
@@ -204,6 +209,7 @@ class DB extends DBAbstract {
         $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                id_schema integer NOT NULL,
                 id_item integer NOT NULL,
                 id_usuario integer,
                 id_tipo_activ_txt character varying(6),

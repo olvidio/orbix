@@ -27,6 +27,8 @@
 
 use actividades\model\entity as actividades;
 use usuarios\model\entity as usuarios;
+use actividadescentro\model\entity\GestorCentroEncargado;
+
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -195,6 +197,7 @@ $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miRole=$oMiUsuario->getId_role();
 
 if (!empty($Qmodo)) {
+    $a_botones = [];
 	if ($Qmodo == 'importar') {
 		$a_botones[] = array( 'txt' => _("importar"),
 							'click' =>"jsForm.update(\"#seleccionados\",\"importar\")" );
@@ -381,18 +384,20 @@ foreach($cActividades as $oActividad) {
 		
 		$sacds="";
 		if (!core\ConfigGlobal::is_app_installed('procesos') || $oPermSacd->have_perm('ver') === true) { // sólo si tiene permiso
-			if(core\ConfigGlobal::is_app_installed('atnsacd')) {
+			if(core\ConfigGlobal::is_app_installed('actividadessacd')) {
 				$oCargosActividad=new actividadcargos\model\entity\GestorActividadCargo();
+				/*
 				foreach($oCargosActividad->getActividadSacds($id_activ) as $oPersona) {;
 					$sacds.=$oPersona->getApellidosNombre()."# "; // la coma la utilizo como separador de apellidos, nombre.
 				}
 				$sacds=substr($sacds,0,-2);
+				*/
 			}
 		}
 
 		$ctrs="";
-		if(core\ConfigGlobal::is_app_installed('atnctr')) {
-			$oEnc=new actividadcargos\model\entity\GestorCentroEncargado();
+		if(core\ConfigGlobal::is_app_installed('actividadescentro')) {
+			$oEnc=new GestorCentroEncargado();
 			foreach($oEnc->getCentrosEncargadosActividad($id_activ) as $oEncargado) {
 				$ctrs.=$oEncargado->getNombre_ubi().", ";
 			}

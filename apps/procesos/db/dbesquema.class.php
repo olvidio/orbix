@@ -105,7 +105,7 @@ class DBEsquema extends DBAbstract {
         $this->addPermisoGlobal('comun');
 
         $tabla = "a_actividad_proceso";
-        $datosTabla = $this->infoTable();
+        $datosTabla = $this->infoTable($tabla);
         
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
@@ -116,6 +116,7 @@ class DBEsquema extends DBAbstract {
                 ) 
             INHERITS (global.$tabla);";
 
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER completado SET DEFAULT false;";
         
         //secuencia
@@ -188,6 +189,8 @@ class DBEsquema extends DBAbstract {
                 ) 
             INHERITS (global.$tabla);";
 
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+
         //secuencia
         $a_sql[] = "CREATE SEQUENCE IF NOT EXISTS $id_seq;";
         $a_sql[] = "ALTER SEQUENCE $id_seq
@@ -242,6 +245,7 @@ class DBEsquema extends DBAbstract {
                 ) 
             INHERITS (global.$tabla);";
 
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
         //secuencia
         $a_sql[] = "CREATE SEQUENCE IF NOT EXISTS $id_seq;";
         $a_sql[] = "ALTER SEQUENCE $id_seq
@@ -296,6 +300,7 @@ class DBEsquema extends DBAbstract {
                 ) 
             INHERITS (global.$tabla);";
 
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
         //secuencia
         $a_sql[] = "CREATE SEQUENCE IF NOT EXISTS $id_seq;";
         $a_sql[] = "ALTER SEQUENCE $id_seq
@@ -353,6 +358,7 @@ class DBEsquema extends DBAbstract {
                 ) 
             INHERITS (global.$tabla);";
 
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
         //secuencia
         $a_sql[] = "CREATE SEQUENCE IF NOT EXISTS $id_seq;";
         $a_sql[] = "ALTER SEQUENCE $id_seq
@@ -397,6 +403,8 @@ class DBEsquema extends DBAbstract {
 
     public function create_aux_usuarios_perm() {
         // OJO Corresponde al esquema sf/sv, no al comun.
+        $esquema_org = $this->esquema;
+        $role_org = $this->role;
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
@@ -414,6 +422,7 @@ class DBEsquema extends DBAbstract {
                 ) 
             INHERITS (global.$tabla);";
 
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
         //secuencia
         $a_sql[] = "CREATE SEQUENCE IF NOT EXISTS $id_seq;";
         $a_sql[] = "ALTER SEQUENCE $id_seq
@@ -439,9 +448,14 @@ class DBEsquema extends DBAbstract {
         $this->executeSql($a_sql);
         
         $this->delPermisoGlobal('svsf');
+        // Devolver los valores al estodo original
+        $this->esquema = $esquema_org;
+        $this->role = $role_org;
     }
     public function eliminar_aux_usuarios_perm() {
         // OJO Corresponde al esquema sf/sv, no al comun.
+        $esquema_org = $this->esquema;
+        $role_org = $this->role;
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
@@ -459,6 +473,9 @@ class DBEsquema extends DBAbstract {
         $this->eliminar($nom_tabla);
 
         $this->delPermisoGlobal('svsf');
+        // Devolver los valores al estodo original
+        $this->esquema = $esquema_org;
+        $this->role = $role_org;
     }
 
     /* ###################### LLENAR TABLAS ################################ */
@@ -468,6 +485,7 @@ class DBEsquema extends DBAbstract {
      *  Si hay algun añadido en los tipos de actividad se borrará.
      */
     public function llenar_a_tipos_actividad() {
+        $this->addPermisoGlobal('comun');
         $this->setConexion('comun');
         $datosTabla = $this->infoTable("a_tipos_actividad");
         
@@ -490,6 +508,7 @@ class DBEsquema extends DBAbstract {
         // empty;
     }
     public function llenar_a_tipos_procesos() {
+        $this->addPermisoGlobal('comun');
         $this->setConexion('comun');
         $datosTabla = $this->infoTable("a_tipos_proceso");
         
@@ -511,8 +530,11 @@ class DBEsquema extends DBAbstract {
         // Fix sequences
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);
+
+        $this->delPermisoGlobal('comun');
     }
     public function llenar_a_tareas() {
+        $this->addPermisoGlobal('comun');
         $this->setConexion('comun');
         $datosTabla = $this->infoTable("a_tareas");
         
@@ -527,7 +549,6 @@ class DBEsquema extends DBAbstract {
         $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY;" ;
         $this->executeSql($a_sql);
         
-        $rows = [];
         $delimiter = "\t"; 
         $null_as = "\\\\N";
         $fields = "id_fase, id_tarea, desc_tarea";
@@ -538,8 +559,10 @@ class DBEsquema extends DBAbstract {
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);
         
+        $this->delPermisoGlobal('comun');
     }
     public function llenar_a_fases() {
+        $this->addPermisoGlobal('comun');
         $this->setConexion('comun');
         $datosTabla = $this->infoTable("a_fases");
         
@@ -553,7 +576,6 @@ class DBEsquema extends DBAbstract {
         $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY;" ;
         $this->executeSql($a_sql);
         
-        $rows = [];
         $delimiter = "\t"; 
         $null_as = "\\\\N";
         $fields = "id_fase, desc_fase, sf, sv";
@@ -563,8 +585,11 @@ class DBEsquema extends DBAbstract {
         // Fix sequences
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq)/10 FROM $nom_tabla) )";
         $this->executeSql($a_sql);
+
+        $this->delPermisoGlobal('comun');
     }
     public function llenar_a_procesos() {
+        $this->addPermisoGlobal('comun');
         $this->setConexion('comun');
         $datosTabla = $this->infoTable("a_procesos");
         
@@ -578,7 +603,6 @@ class DBEsquema extends DBAbstract {
         $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY;" ;
         $this->executeSql($a_sql);
         
-        $rows = [];
         $delimiter = "\t"; 
         $null_as = "\\\\N";
         $fields = "id_item, id_tipo_proceso, n_orden, id_fase, id_tarea, status, of_responsable, id_fase_previa, id_tarea_previa, mensaje_requisito";
@@ -588,13 +612,18 @@ class DBEsquema extends DBAbstract {
         // Fix sequences
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);
+
+        $this->delPermisoGlobal('comun');
     }
     
     public function llenar_aux_usuarios_perm() {
         // OJO Corresponde al esquema sf/sv, no al comun.
+        $esquema_org = $this->esquema;
+        $role_org = $this->role;
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('svsf');
         $this->setConexion('svsf');
 
         $datosTabla = $this->infoTable("aux_usuarios_perm");
@@ -609,7 +638,6 @@ class DBEsquema extends DBAbstract {
         $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY;" ;
         $this->executeSql($a_sql);
         
-        $rows = [];
         $delimiter = "\t"; 
         $null_as = "\\\\N";
         $fields = "id_item, id_usuario, id_tipo_activ_txt, id_fase_ini, id_fase_fin, accion, afecta_a, dl_propia, id_fases";
@@ -619,6 +647,11 @@ class DBEsquema extends DBAbstract {
         // Fix sequences
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);
+
+        $this->delPermisoGlobal('svsf');
+        // Devolver los valores al estodo original
+        $this->esquema = $esquema_org;
+        $this->role = $role_org;
     }
 
  }

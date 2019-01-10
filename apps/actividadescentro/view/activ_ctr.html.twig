@@ -1,0 +1,144 @@
+<style>
+.dos {
+	background-attachment:scroll;
+	background-color:wheat;
+	background-image:none;
+	background-position:0 0;
+	background-repeat:repeat;
+	display:inline;
+	float:left;
+	position:absolute;
+	z-index:10;
+}
+div.ctr {
+	display:inline;
+	float:left;
+	height:60%;
+	position:fixed;
+	z-index:10;
+	overflow: scroll;
+	width: 17em;
+}
+div.ctr table{
+	width: 100%;
+	background-color:wheat;
+}
+div.ctr td.cabecera{
+	text-align: center;
+}
+p.tres:hover {
+	background-color:black;
+}
+</style>
+<script>
+fnjs_asignar_ctr=function(id_activ,id_ubi){
+	var url='{{ url_ajax|raw }}';
+	var parametros='que=asignar&id_activ='+id_activ+'&id_ubi='+id_ubi+'{{ h_asignar|raw }}';
+		 
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta_txt) {
+			//rta_txt=rta.responseText;
+			if (rta_txt != '' && rta_txt != '\n') { alert ('respuesta: '+rta_txt); }
+		}
+	});
+	if ($('#ctr').length) { $('#ctr').remove(); }
+	fnjs_actualizar_activ(id_activ);
+}
+
+fnjs_nuevo_ctr=function(id_activ,inicio,fin,f_ini,f_fin){
+	var url='{{ url_ajax|raw }}';
+	var n_tip="nuevo_{{ tipo }}";
+	var parametros='que='+n_tip+'&id_activ='+id_activ+'&inicio='+inicio+'&fin='+fin+'&f_ini_act='+f_ini+'&f_fin_act='+f_fin+'{{ h_nuevo|raw }}';
+		 
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta_txt) {
+			//rta_txt=rta.responseText;
+			//alert ('respuesta: '+rta_txt);
+			if ($('#ctr').length) { $('#ctr').remove(); }
+			var txt="<div id=ctr class=ctr>";
+				txt+=rta_txt;
+				txt+="</ul></div>";
+			$('#lst_ctr').append(txt);
+
+		}
+	});
+}
+ 
+fnjs_orden=function(id_activ,id_ubi,num_orden){
+	var url='{{ url_ajax|raw }}';
+	var parametros='que=orden&id_activ='+id_activ+'&id_ubi='+id_ubi+'&num_orden='+num_orden+'{{ h_orden|raw }}';
+		 
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta) {
+			//rta_txt=rta.responseText;
+			//alert ('respuesta: '+rta);
+			rta2=jQuery.parseJSON(rta);
+			if (rta2.error) { alert(rta2.error); }
+		}
+	});
+	fnjs_actualizar_activ(id_activ);
+}
+
+fnjs_actualizar_activ=function(id_activ){
+	// obtener el listado de periodos 
+	var url='{{ url_ajax|raw }}';
+	var parametros='que=get&id_activ='+id_activ+'{{ h_actualizar|raw }}';
+		 
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta_txt) {
+			//rta_txt=rta.responseText;
+			//alert ('respuesta: '+rta_txt);
+			if (rta_txt) {
+				var txt_id='#'+id_activ+'_ctrs';
+				$(txt_id).html(rta_txt);
+			}
+		}
+	});
+}
+
+fnjs_cambiar_ctr=function(evt,id_activ,id_ubi){
+	//alert("hola"+id_ubi);
+	// si ya existe lo elimino
+	if ($('#ctr').length) { $('#ctr').remove(); }
+	if (id_activ && id_ubi) {
+		var txt="<div id=ctr class=dos>";
+			txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_ubi+"','mas')>{{ "+ prioridad"|trans }}</p>";
+			txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_ubi+"','menos')>{{ "- prioridad"|trans }}</p>";
+			txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_ubi+"','borrar')>{{ "borrar"|trans }}</p>";
+			txt+="</div>";
+		var txt_id_ubi='#'+id_activ+'_'+id_ubi;
+		$(txt_id_ubi).append(txt);
+	}
+	evt.preventDefault(); // que no siga pasanmdo el evento a submit.
+	evt.stopPropagation();
+	return false;
+}
+
+fnjs_ver=function(){
+	var url='{{ url_ajax|raw }}';
+	
+	$('#frm_cond').attr('action',url);
+	fnjs_enviar_formulario('#frm_cond','#exportar');
+}
+
+</script>
+<div id="condiciones" class="no_print">
+<form name="frm_cond" id="frm_cond" target="print" action="" method="post" onkeypress="fnjs_enviar(event,this);">
+{{ oHash.getCamposHtml()|raw }}
+{{ oFormP.getHtml()|raw }}
+</form>
+</div>
+<div id="exportar">
+</div>

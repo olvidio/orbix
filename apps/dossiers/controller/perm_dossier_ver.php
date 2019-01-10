@@ -1,5 +1,6 @@
 <?php
-use dossiers\model\entity as dossiers;
+use dossiers\model\entity\TipoDossier;
+use dossiers\model\PermisoDossier;
 /**
 * Página de visualización de los permisos de los dossiers
 * Le llegan las variables $tipo y $id_tipo
@@ -21,46 +22,65 @@ use dossiers\model\entity as dossiers;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+	
+$Qtipo = (string) \filter_input(INPUT_POST, 'tipo');
+$Qid_tipo_dossier = (integer) \filter_input(INPUT_POST, 'id_tipo_dossier');
 
-$a_dataUrl = array('tipo'=>$_POST['tipo']);
+$a_dataUrl = array('tipo'=>$Qtipo);
 $go_to=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/perm_dossiers.php?'.http_build_query($a_dataUrl));
 
-?>
-<script>
-fnjs_eliminar=function(){
-   $('#que').val('eliminar');
-   $('#frm2').attr('action','apps/dossiers/controller/perm_dossier_update.php');
-   fnjs_enviar_formulario('#frm2');
-}
-fnjs_guardar=function(){
-   $('#que').val('guardar');
-   $('#frm2').attr('action','apps/dossiers/controller/perm_dossier_update.php');
-   fnjs_enviar_formulario('#frm2');
-}
-</script>
-<?php
-$oTipoDossier = new dossiers\TipoDossier(array('id_tipo_dossier'=>$_POST['id_tipo_dossier']));
-$a_campos['descripcion'] = $oTipoDossier->getDescripcion();
-$a_campos['tabla_from'] = $oTipoDossier->getTabla_from();
-$a_campos['tabla_to'] = $oTipoDossier->getTabla_to();
-$a_campos['campo_to'] = $oTipoDossier->getCampo_to();
-$a_campos['id_tipo_dossier_rel'] = $oTipoDossier->getId_tipo_dossier_rel();
-$a_campos['permiso_lectura'] = $oTipoDossier->getPermiso_lectura();
-$a_campos['permiso_escritura'] = $oTipoDossier->getPermiso_escritura();
-$a_campos['depende_modificar'] = $oTipoDossier->getDepende_modificar();
-$a_campos['app'] = $oTipoDossier->getApp();
-$a_campos['class'] = $oTipoDossier->getClass();
+$url_update = "apps/dossiers/controller/perm_dossier_update.php";
+
+$oTipoDossier = new TipoDossier(array('id_tipo_dossier'=>$Qid_tipo_dossier));
+$depende_modificar = $oTipoDossier->getDepende_modificar();
 
 $botones = 0;
 /*
 1: guardar cambios
 2: eliminar
 */
+$perm_admin = FALSE;
 if ($_SESSION['oPerm']->have_perm("admin_sv") OR $_SESSION['oPerm']->have_perm("admin_sf")) { 
 	$botones="1,2";
+	$perm_admin = TRUE;
 }
-$a_campos['botones'] = $botones;
-$a_campos['go_to'] = $go_to;
+
+$oCuadros = new PermisoDossier();
+
+$chk = ($depende_modificar == 't')? 'checked' : '';
+$campos_chk = 'depende_modificar!permiso_lectura!permiso_escritura';
+
+$oHash = new web\Hash();
+$oHash->setcamposForm('id_tipo_dossier!id_tipo_dossier_rel!tabla_from!tabla_to!campo_to!descripcion!app!class');
+$oHash->setcamposNo('que!'.$campos_chk);
+$a_camposHidden = array(
+		'go_to'=>$go_to,
+		'campos_chk'=>$campos_chk
+		);
+$oHash->setArraycamposHidden($a_camposHidden);
+
+$txt_eliminar = _("¿Está seguro que desea eliminar este dossier?");
+
+$a_campos = [
+	'oHash' => $oHash,
+	'oCuadros' => $oCuadros,
+    'url_update' => $url_update,
+    'txt_eliminar' => $txt_eliminar,
+	'perm_admin' => $perm_admin,
+	'id_tipo_dossier' => $Qid_tipo_dossier,
+    'descripcion' => $oTipoDossier->getDescripcion(),
+	'tabla_from' => $oTipoDossier->getTabla_from(),
+	'tabla_to' => $oTipoDossier->getTabla_to(),
+	'campo_to' => $oTipoDossier->getCampo_to(),
+	'id_tipo_dossier_rel' => $oTipoDossier->getId_tipo_dossier_rel(),
+	'permiso_lectura' => $oTipoDossier->getPermiso_lectura(),
+	'permiso_escritura' => $oTipoDossier->getPermiso_escritura(),
+	'app' => $oTipoDossier->getApp(),
+	'class' => $oTipoDossier->getClass(),
+	'chk' => $chk,
+	'botones' => $botones,
+	'go_to' => $go_to,
+	];
 
 $oView = new core\View('dossiers\controller');
 echo $oView->render('perm_dossier_pres.phtml',$a_campos);

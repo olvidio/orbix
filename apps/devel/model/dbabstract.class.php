@@ -48,6 +48,7 @@ abstract class DBAbstract {
                 // Conexión Comun esquema, para entrar como usuario H-dlb.
                 $this->oDbl = $GLOBALS['oDBC'];
                 break;
+            case 'sfsv':
             case 'svsf':
                 // Conexión sv public, para entrar como usuario orbixv/f.
                 $this->oDbl = $GLOBALS['oDBP'];
@@ -89,6 +90,7 @@ abstract class DBAbstract {
                 // Conexión Comun esquema, para entrar como usuario H-dlb.
                 $this->oDbl = $GLOBALS['oDBC'];
                 break;
+            case 'sfsv':
             case 'svsf':
                 // Conexión sv public, para entrar como usuario orbixv/f.
                 $this->oDbl = $GLOBALS['oDBP'];

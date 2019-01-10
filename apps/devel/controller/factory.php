@@ -802,7 +802,7 @@ $txt2.='
 	function get'.$clase_plural.'Query($sQuery=\'\') {
 		$oDbl = $this->getoDbl();
 		$o'.$clase.'Set = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === FALSE) {
+		if (($oDbl->query($sQuery)) === FALSE) {
 			$sClauError = \''.$gestor.'.query\';
 			$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return FALSE;

@@ -6,6 +6,8 @@ use actividades\model\entity\GestorRepeticion;
 use actividades\model\entity\ActividadDl;
 use core;
 use web;
+use procesos;
+use actividadescentro;
 
 /**
  * Description of actividadlugar
@@ -194,7 +196,7 @@ class ActividadNuevoCurso {
 
         if(core\ConfigGlobal::is_app_installed('ctrEncargados')) {
             // También copio los centros encargados.
-            $GesEncargados = new GestorCentroEncargado();
+            $GesEncargados = new actividadescentro\model\entity\GestorCentroEncargado();
             $cEncargados = $GesEncargados->getCentrosEncargados(array('id_activ'=>$oActividadOrigen->getId_activ()));
             foreach ($cEncargados as $oCentroEncargado) {
                 $newEncargado = clone $oCentroEncargado;
@@ -206,15 +208,13 @@ class ActividadNuevoCurso {
         }
         if(core\ConfigGlobal::is_app_installed('procesos')) {
             // También creo las fases-tareas
-            $this->crear_fases($id_actividad_new,$oActividadOrigen->getId_tipo_activ());
+            $this->crear_fases($id_actividad_new);
         }
     }
 
-    private function crear_fases($id_activ,$id_tipo_activ) {
+    private function crear_fases($id_activ) {
         //echo "generando fases de $id_activ,$id_tipo_activ...<br>";
-        $oTipoActividad = new TipoDeActividad($id_tipo_activ);
-        $id_tipo_proceso = $oTipoActividad->getId_tipo_proceso();
-        $oGesActividadProcesoTarea = new GestorActividadProcesoTarea();
-        $oGesActividadProcesoTarea->generar($id_activ,$id_tipo_proceso); 
+        $oGesActividadProcesoTarea = new procesos\model\entity\GestorActividadProcesoTarea();
+        $oGesActividadProcesoTarea->generarProceso($id_activ); 
     }
 }

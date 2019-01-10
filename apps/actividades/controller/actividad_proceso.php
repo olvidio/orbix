@@ -63,7 +63,7 @@ $oHash1->setCamposForm('que!id_item!completado!observ');
 $h_update = $oHash1->linkSinVal();
 
 $url_ajax = 'apps/actividades/controller/actividad_proceso_ajax.php';
-$txt_confirm = _("¿Esta seguro que desea crear el proceso de nuevo?");
+$txt_confirm = _("¿Está seguro que desea crear el proceso de nuevo?");
 
 $a_campos = ['oPosicion' => $oPosicion,
     'godossiers' => $godossiers,

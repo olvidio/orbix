@@ -209,13 +209,13 @@ switch($Qque) {
         
 		foreach ($a_sel as $id_activ) {
 			$id_activ=strtok($id_activ,"#");
+			$GesActividadProceso = new GestorActividadProcesoTarea();
 			// selecciono todas las tareas de esta fase.
-			$GesActividadProceso=new GestorActividadProcesoTarea();
 			$cLista = $GesActividadProceso->getActividadProcesoTareas(array('id_activ'=>$id_activ,'_ordre'=>'n_orden'));
 			$cListaSel = $GesActividadProceso->getActividadProcesoTareas(array('id_activ'=>$id_activ,'id_fase'=>$Qid_fase_nueva , '_ordre'=>'n_orden'));
 			$n_ordenSel = $cListaSel[0]->getN_orden();
 			foreach($cLista as $oActividadProcesoTarea) {
-				$oActividadProcesoTarea->DBCarregar(); // perque tingui tots els valors, y no esbori al grabar.
+				$oActividadProcesoTarea->DBCarregar(); // perque tingui tots els valors, y no esborri al grabar.
 				$n_orden = $oActividadProcesoTarea->getN_orden();
 				$id_tipo_proceso = $oActividadProcesoTarea->getId_tipo_proceso();
 				$id_fase = $oActividadProcesoTarea->getId_fase();
@@ -238,9 +238,8 @@ switch($Qque) {
                             echo _("No tiene permiso para completar la fase, no se ha guardado");
     				    }
     				}
-				}
-                // Cuando se va hacia atras (pongo sin completar las fases siguientes)
-				if ($n_orden > $n_ordenSel) {
+				} elseif ($n_orden > $n_ordenSel) {
+                    // Cuando se va hacia atras (pongo sin completar las fases siguientes)
 				    $oActividadProcesoTarea->setCompletado('f');
                     if ($oActividadProcesoTarea->DBGuardar() === false) {
                         echo _("Hay un error, no se ha guardado");

@@ -22,8 +22,6 @@ use usuarios\model\entity as usuarios;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$titulo = 0;
-
 $oPosicion->recordar();
 
 //Si vengo de vuelta de un go_to:
@@ -113,11 +111,7 @@ if (empty($sWhere)) {
 	if (!empty($Qcentro)){ 
 		if (!empty($Qexacto)){
 			$Qcentro=addslashes(strtr($Qcentro,"+","."));
-			if ($Qtabla=="p_cp_ae_sssc") {
-			$condicion=$condicion . " p.ctr_depende = '".$Qcentro."' AND";
-			} else {
-			$condicion=$condicion . " u.nombre_ubi = '".$Qcentro."' AND";
-			}	
+            $aWhereCtr['nombre_ubi'] = $Qcentro;
 		} else {
 			$nom_ubi = str_replace("+", "\+", $Qcentro); // para los centros de la sss+
 			$nom_ubi = addslashes($nom_ubi);
@@ -224,6 +218,9 @@ $sOperador = core\urlsafe_b64encode(serialize($aOperador));
 $sWhereCtr = core\urlsafe_b64encode(serialize($aWhereCtr));
 $sOperadorCtr = core\urlsafe_b64encode(serialize($aOperadorCtr));
 
+$a_botones = [];
+$script = [];
+
 $a_botones[] = array( 'txt' => _("cambio de ctr"),
 					'click' =>"fnjs_modificar_ctr(\"#seleccionados\")" );
 $script['fnjs_modificar_ctr'] = 1;
@@ -302,7 +299,7 @@ if (core\ConfigGlobal::mi_dele() === core\ConfigGlobal::mi_region()) {
 	$script['fnjs_ficha_profe'] = 1;
 }
 // en el caso de los de dre añado la posibilidad de listar la atencion a las actividades
-if (core\configGlobal::is_app_installed('atnsacd')) {
+if (core\configGlobal::is_app_installed('actividadessacd')) {
 	if ($_SESSION['oPerm']->have_perm("des")){
 		$a_botones[]=array( 'txt' => _("atención actividades"),
 							'click' =>"fnjs_lista_activ(\"#seleccionados\")" );
@@ -323,7 +320,7 @@ $a_cabeceras[]=ucfirst(_("centro"));
 if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso")) {   
 	$a_cabeceras[]=ucfirst(_("stgr"));
 }   
-if (!empty($situacion)) { 
+if (!empty($Qcmb)) { 
 	$a_cabeceras[]=ucfirst(_("situación"));
 	$a_cabeceras[]= array('name'=>ucfirst(_("fecha cambio situación")),'class'=>'fecha');
 } 
@@ -339,6 +336,7 @@ $oPref = new usuarios\Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>$tipo)
 $sPrefs=$oPref->getPreferencia();
 foreach ($cPersonas as $oPersona) {
 	$i++;
+	$a_val = [];
 	$id_tabla=$oPersona->getId_tabla();
 	$id_nom=$oPersona->getId_nom();
 	$nom=$oPersona->getApellidosNombre();
@@ -369,7 +367,7 @@ foreach ($cPersonas as $oPersona) {
 		$a_val[2]= array( 'script'=>$pagina, 'valor'=>$nom);
 	}
 	if ($tabla=="p_sssc") {
-		$a_val[3]=$row['socio'];
+		//$a_val[3]=$row['socio'];
 	}
 	$a_val[4]=$nombre_ubi;
 	/*la siguiente instrucción es para que el campo stgr sólo se visualice
@@ -378,9 +376,9 @@ foreach ($cPersonas as $oPersona) {
 	if ((($tabla=='p_numerarios') or ($tabla=='p_agregados'))and ($tipo!='planning')) {
 		$a_val[5]=$oPersona->getStgr();
 	} 
-	if (!empty($situacion)) { 
-		$a_val[6]=$row['situacion'];
-		$a_val[7]=$row['f_situacion'];
+	if (!empty($Qcmb)) { 
+		$a_val[6]=$oPersona->getSituacion();
+		$a_val[7]=$oPersona->getF_situacion();
 	} 
 	$key_sort = $nom."_".$id_nom;
 	$a_personas[$key_sort] = $a_val;

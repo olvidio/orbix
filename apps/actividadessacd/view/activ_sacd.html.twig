@@ -1,0 +1,157 @@
+<style type="text/css">
+.dos {
+	background-attachment:scroll;
+	background-color:wheat;
+	background-image:none;
+	background-position:0 0;
+	background-repeat:repeat;
+	display:inline;
+	float:left;
+	position:absolute;
+	z-index:10;
+}
+div.sacd {
+	display:inline;
+	float:left;
+	height:60%;
+	position:fixed;
+	z-index:10;
+	overflow: scroll;
+	width: 25em;
+	bottom: 3em;
+	right: 10em;
+}
+div.sacd table{
+	width: 100%;
+	background-color:wheat;
+}
+div.sacd td.cabecera{
+	text-align: center;
+}
+p.tres:hover {
+	background-color:black;
+}
+</style>
+<script>
+fnjs_asignar_sacd=function(id_activ,id_nom){
+	var url='{{ url_ajax|raw }}';
+	var parametros='que=asignar&id_activ='+id_activ+'&id_nom='+id_nom+'{{ h_asignar|raw }}';
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta_txt) {
+            if (rta_txt != '' && rta_txt != '\n') { alert ('respuesta1: '+rta_txt); }
+		}
+	});
+	if ($('#sacd').length) { $('#sacd').remove(); }
+	fnjs_actualizar_activ(id_activ);
+}
+
+fnjs_nuevo_sacd=function(id_activ,f_ini,f_fin){
+	// para reritngir la lista de sacd.
+	var na=$('#sacd_na').prop('checked');
+	var p=$('#sacd_p').prop('checked');
+	var sss=$('#sacd_sss').prop('checked');
+	var cp=$('#sacd_cp').prop('checked');
+	var seleccion=0;
+	if (na) seleccion+=2;
+	if (p) seleccion+=4;
+	if (sss) seleccion+=8;
+	if (cp) seleccion+=16;
+	//alert ("a: "+na+" b "+p+" c "+sss+" d "+cp+" tot "+ seleccion);
+	var url='{{ url_ajax|raw }}';
+	var parametros='que=nuevo&seleccion='+seleccion+'&id_activ='+id_activ+'&f_ini_act='+f_ini+'&f_fin_act='+f_fin+'{{ h_nuevo|raw }}';
+
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta_txt) {
+			//rta_txt=rta.responseText;
+			//alert ('respuesta: '+rta_txt);
+			if ($('#sacd').length) { $('#sacd').remove(); }
+			var txt="<div id=sacd class=sacd>";
+				txt+=rta_txt;
+				txt+="</ul></div>";
+			$('#lst_sacd').append(txt);
+		}
+	});
+}
+ 
+fnjs_orden=function(id_activ,id_cargo,id_nom,num_orden){
+	var url='{{ url_ajax|raw }}';
+	var parametros='que=orden&id_activ='+id_activ+'&id_nom='+id_nom+'&id_cargo='+id_cargo+'&num_orden='+num_orden+'{{ h_orden|raw }}';
+		 
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta_txt) {
+            if (rta_txt != '' && rta_txt != '\n') { alert ('respuesta2: '+rta_txt); }
+		}
+	});
+	fnjs_actualizar_activ(id_activ);
+}
+
+fnjs_actualizar_activ=function(id_activ){
+	// obtener el listado de periodos 
+	var url='{{ url_ajax|raw }}';
+	var parametros='que=get&id_activ='+id_activ+'{{ h_actualizar|raw }}';
+		 
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta_txt) {
+			//rta_txt=rta.responseText;
+			//alert ('respuesta: '+rta_txt);
+			if (rta_txt) {
+				var txt_id='#'+id_activ+'_sacds';
+				$(txt_id).html(rta_txt);
+			}
+		}
+	});
+}
+
+fnjs_cambiar_sacd=function(evt,id_activ,id_cargo,id_nom){
+	//alert("hola"+id_nom);
+	var txt_id_nom='#'+id_activ+'_'+id_nom;
+	// si ya existe lo elimino
+	if ($('#sacd').length) { $('#sacd').remove(); }
+	if (id_activ && id_nom) {
+		var txt="<div id=sacd class=dos>";
+		txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_cargo+"','"+id_nom+"','mas')>{{ "+ prioridad"|trans }}</p>";
+		txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_cargo+"','"+id_nom+"','menos')>{{ "- prioridad"|trans }}</p>";
+		txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_cargo+"','"+id_nom+"','borrar')>{{ "borrar"|trans }}</p>";
+		txt+="</div>";
+		$(txt_id_nom).append(txt);
+	}
+	evt.preventDefault(); // que no siga pasanmdo el evento a submit.
+	evt.stopPropagation();
+	return false;
+}
+
+fnjs_ver=function(){
+	var url='{{ url_ajax|raw }}';
+	
+	$('#frm_cond').attr('action',url);
+	fnjs_enviar_formulario('#frm_cond','#exportar');
+}
+</script>
+<div id="condiciones" class="no_print">
+<form name="frm_cond" id="frm_cond" target="print" action="" method="post" onkeypress="fnjs_enviar(event,this);">
+{{ oHash.getCamposHtml()|raw }}
+{{ oFormP.getHtml()|raw }}
+</form>
+{% if perm_des %}
+	<p>{{ "Selección de sacd"|trans }}: 
+		<input id="sacd_na"type="checkbox" value="2" checked>{{ "prelatura"|trans }}
+		<input id="sacd_p" type="checkbox" value="4" >{{ "de paso"|trans }}
+		<input id="sacd_sss" type="checkbox" value="8" >{{ "sss+"|trans }}
+		<input id="sacd_cp" type="checkbox" value="16" >{{ "cp"|trans }}
+	</p>
+{% endif %}
+</div>
+<div id="exportar">
+</div>

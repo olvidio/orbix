@@ -22,17 +22,8 @@ $Qid_activ = (integer)  \filter_input(INPUT_POST, 'id_activ');
 
 switch($Qque) {
 	case 'generar':
-		$oActividad = new ActividadAll($Qid_activ);
-		$oTipo = new TipoDeActividad(array('id_tipo_activ'=>$oActividad->getId_tipo_activ()));
-
-		if ($oActividad->getDl_org() == ConfigGlobal::mi_dele()) {
-			$id_tipo_proceso=$oTipo->getId_tipo_proceso();
-		} else {
-			$id_tipo_proceso=$oTipo->getId_tipo_proceso_ex();
-		}
-
 		$oActividadProceso=new GestorActividadProcesoTarea();
-		$oActividadProceso->generar($Qid_activ,$id_tipo_proceso);
+		$oActividadProceso->generarProceso($Qid_activ);
 		break;
 	case 'get':
 		$GesActividadProceso=new GestorActividadProcesoTarea();

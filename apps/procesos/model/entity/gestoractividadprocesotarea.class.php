@@ -56,15 +56,19 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	    if (is_numeric($iid_fase)) {
 	        return $iid_fase;
 	    } else {
-	        if ($iid_fase == 'END') { // devuelve la última fase
+	        if ($iid_fase === 'START') { // devuelve la primera
+	            $iid_fase = $this->faseActual($iid_activ);
+	            return $iid_fase;
+	        }
+	        if ($iid_fase === 'END') { // devuelve la última fase
 	            $iid_fase = $this->faseUltima($iid_activ);
 	            return $iid_fase;
 	        }
-	        if (empty($iid_fase) || $iid_fase == 'SIN') {
+	        if (empty($iid_fase) || $iid_fase === 'SIN') {
 	            //echo sprintf(_('esta actividad: %s no tiene ninguna fase. Se está generando...'),$oActividad->getNom_activ());
 	            echo '<br>'._('ATENCIÓN: puede que tenga que actualizar la página para que salgan todas las actividades.');
 	            echo '<br>';
-	            $this->generarProceso($iid_activ);
+	            return $this->generarProceso($iid_activ);
 	        }
 	    }
 	}
@@ -197,7 +201,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	 * @param integer iid_tipo_proceso
 	 * @return id_fase.
 	 */
-	function generar($iid_activ='',$iid_tipo_proceso='') {
+	private function generar($iid_activ='',$iid_tipo_proceso='') {
 	    $this->borrar($iid_activ);
 	    $GesProceso = new GestorProceso();
 	    $cProcesos = $GesProceso->getProcesos(array('id_tipo_proceso'=>$iid_tipo_proceso,'_ordre'=>'n_orden'));

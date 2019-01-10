@@ -106,7 +106,8 @@ class ActividadCargo Extends core\ClasePropiedades {
 		if (is_array($a_id)) { 
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
-				if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; // evitem SQL injection fent cast a integer
+				//if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; // evitem SQL injection fent cast a integer
+				$this->$nom_id = (int)$val_id; // evitem SQL injection fent cast a integer
 			}	} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_item = intval($a_id); // evitem SQL injection fent cast a integer
@@ -202,9 +203,28 @@ class ActividadCargo Extends core\ClasePropiedades {
 				default:
 					$this->setAllAtributes($aDades);
 			}
-			return true;
+			return TRUE;
+		} elseif (!empty($this->aPrimary_key)) {
+		    if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla
+                    WHERE id_activ=$this->iid_activ AND id_cargo=$this->iid_cargo")) === FALSE) {
+                    $sClauError = 'Proceso.carregar';
+                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                    return FALSE;
+		    }
+		    $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+		    switch ($que) {
+		        case 'tot':
+		            $this->aDades=$aDades;
+		            break;
+		        case 'guardar':
+		            if (!$oDblSt->rowCount()) return FALSE;
+		            break;
+		        default:
+		            $this->setAllAtributes($aDades);
+		    }
+		    return TRUE;
 		} else {
-		   	return false;
+		   	return FALSE;
 		}
 	}
 
@@ -234,6 +254,7 @@ class ActividadCargo Extends core\ClasePropiedades {
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
+		if (array_key_exists('id_item',$aDades)) $this->setId_item($aDades['id_item']);
 		if (array_key_exists('id_activ',$aDades)) $this->setId_activ($aDades['id_activ']);
 		if (array_key_exists('id_cargo',$aDades)) $this->setId_cargo($aDades['id_cargo']);
 		if (array_key_exists('id_nom',$aDades)) $this->setId_nom($aDades['id_nom']);
