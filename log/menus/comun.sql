@@ -9,14 +9,12 @@
 11	\N	vcsd/escritos_cr/docs.php	\N	\N
 12	\N	programas/centro_que.php	\N	\N
 13	\N	programas/sm-agd/list_ultima_activ.php	\N	\N
-14	\N	des/tareas/sacd_ficha.php	\N	\N
 15	\N	des/list_sssc_cr9_05.php	\N	\N
 16	\N	scdl/documentos/centros_que.php	\N	\N
 18	\N	des/asignar_sacd_activ.php	\N	\N
 20	\N	scdl/registro/pen_of_form.php	\N	\N
 21	\N	programas/calendario_listas.php	\N	\N
 22	\N	scdl/registro/control.php	\N	\N
-23	\N	des/que_tipo_de_encargo.php	\N	\N
 24	\N	scdl/registro/control_usr.php	\N	\N
 25	\N	vcsd/scheduler/oficina.php	\N	\N
 26	\N	programas/lista_activ_sr.php	\N	\N
@@ -29,10 +27,8 @@
 35	\N	programas/sm-agd/lista_aniversarios_sacd.php	\N	\N
 36	\N	scdl/registro/can_buscar.php	\N	\N
 37	\N	programas/dossiers/sql_1010.php	\N	\N
-39	\N	des/activ_sacd.php	\N	\N
 41	\N	scdl/registro/pen_of_buscar.php	\N	\N
 42	\N	des/zona_sacd.php	\N	\N
-43	\N	programas/activ_ctr.php	\N	\N
 45	\N	programas/casa_que.php	\N	\N
 46	\N	sistema/avisos_generar_tabla.php	\N	\N
 47	\N	des/sssc_celebraciones_lista.php	\N	\N
@@ -45,7 +41,6 @@
 56	\N	programas/sm-agd/cargos/cargos.php	\N	\N
 58	\N	programas/lista_activ_gral_sr.php	\N	\N
 59	\N	scdl/tertulias/devoluciones_pendientes.php	\N	\N
-62	\N	des/tareas/ctr_ficha.php	\N	\N
 63	\N	programas/calendario_ubi_resumen.php	\N	\N
 65	\N	vcsd/registro/salidas.php	\N	\N
 67	\N	vcsd/scheduler/calendarios.php	\N	\N
@@ -114,6 +109,9 @@
 139	\N	des/planning_zones.php	\N	\N
 143	\N	programas/lista_activ_sr_que.php	\N	\N
 32	procesos	apps/procesos/controller/procesos_select.php	\N	procesos select
+39	actividadessacd	apps/actividadessacd/controller/activ_sacd.php	\N	Atención sacd
+23	encargossacd	apps/encargossacd/controller/que_tipo_de_encargo.php	\N	Tipo de encargo
+14	encargossacd	apps/encargossacd/controller/sacd_ficha.php	\N	Encargo sacd ficha
 144	\N	scdl/documentos/cabecera_pie_txt.php	\N	\N
 145	\N	scdl/tabla_mails_ex.php	\N	\N
 146	\N	scdl/centros_que.php	\N	\N
@@ -123,7 +121,6 @@
 152	\N	sg/lista_ctrs.php	\N	\N
 153	\N	des/tareas/periodo_prueba.php	\N	\N
 154	\N	sistema/avisos_generar.php	\N	\N
-156	\N	des/tareas/encargo_select.php	\N	\N
 158	\N	scdl/tabla_mails_moneders.php	\N	\N
 159	\N	scdl/registro/pen_form.php	\N	\N
 19	devel	apps/devel/controller/factory_form.php	\N	generador de clases
@@ -174,3 +171,6 @@
 102	devel	apps/devel/controller/apptables.php	\N	Manage tablas de Apps
 44	procesos	apps/procesos/controller/tipos_activ_select.php	\N	Tipos de actividad
 130	procesos	apps/procesos/controller/fases_activ_cambio.php	\N	Fases activ cambio
+43	actividadescentro	apps/actividadescentro/controller/activ_ctr.php	\N	actividades centro
+156	encargossacd	apps/encargossacd/controller/encargo_select.php	\N	Encargos lista
+62	encargossacd	apps/encargossacd/controller/ctr_ficha.php	\N	Ficha encargos ctr

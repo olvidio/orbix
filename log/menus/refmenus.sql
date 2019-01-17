@@ -71,7 +71,7 @@
 270	{60,40}	lista grupos	\N	122	33816576	13	t
 144	{40,10}	persona dl	obj_pau=PersonaDl&tipo=planning	61	2064	12	t
 89	{55,29}	propuesta cl cv	ssfsv=sv&sasistentes=sss%2B&sactividad=cv&que=list_cjto	119	8	8	t
-1289	{90,90}	Tarifas	\N	0	8	8	t
+1144	{50,100}	asignar centros	\N	43	8	8	t
 32	{80,60}	list varias cv	ssfsv=sv&sasistentes=agd&sactividad=cv&que=list_cjto	119	2082	3	t
 327	{85,30}	por centro	tipo=planning_ctr	61	2176	2	t
 317	{80,70}	lista por ctr	lista=list_activ&n_agd=n&sasistentes=n&sactividad=ca	147	2208	2	t
@@ -211,8 +211,26 @@
 1083	{40,40}	por centro	tipo=planning_ctr	61	8	8	t
 1116	{50,50}	procesos	\N	32	33554432	13	t
 1086	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	8	8	t
+1146	{50,100,10}	activ sg	tipo=sg	43	8	8	t
+1138	{50,90,30}	activ sv n y agd	tipo=na	39	8	8	t
+1133	{50,90}	asignar sacd	\N	39	8	8	t
+1134	{50,90,10}	activ sv sg	tipo=sg&periodo=desdeHoy	39	8	8	t
+1136	{50,90,20}	activ sv sr	tipo=sr	39	8	8	t
+1139	{50,90,50}	activ sf sg	tipo=sf_sg	39	8	8	t
+1140	{50,90,60}	activ sf sr	tipo=sf_sr	39	8	8	t
+1141	{50,90,70}	activ sf n,nax y agd	tipo=sf_na	39	8	8	t
+1142	{50,90,90}	activ sss+	tipo=sssc	39	8	8	t
+1150	{50,100,20}	activ sr	tipo=sr	43	8	8	t
+1153	{50,100,30}	sv n y agd	tipo=nagd	43	8	8	t
+1155	{50,100,40}	sf s y sg	tipo=sfsg	43	8	8	t
+1158	{50,100,50}	sf sr	tipo=sfsr	43	8	8	t
+1161	{50,100,60}	sf n, nax y agd	tipo=sfnagd	43	8	8	t
+1162	{50,100,70}	sss+	tipo=sssc	43	8	8	t
+1217	{70,15}	ficha ctr	\N	62	2056	8	t
 1261	{90,20}	nuevo curso	\N	157	8	8	t
+1289	{90,90}	Tarifas	\N	0	8	8	t
 1293	{90,90,20}	tarifa <-> tipus dactivitat	\N	108	8	8	t
+1239	{70,60}	ver encargo	\N	156	8	8	t
 1373	{10,5}	n dl	tabla=p_numerarios&tipo=persona	76	2064	21	t
 1374	{20,10}	actas	\N	60	16	21	t
 1375	{20,20}	tabla alumnos-asignaturas	\N	88	16	21	t
@@ -247,3 +265,6 @@
 1296	{90,90,30}	tarifes per casa i any	\N	73	8	8	t
 71	{40}	planning	\N	0	8	8	t
 1060	{40,10}	persona dl	obj_pau=PersonaDl&tipo=planning	61	8	8	t
+1395	{70,140}	cambiar de fase	id_tipo_activ=111	130	128	2	t
+1396	{70,140}	cambiar de fase	id_tipo_activ=131	130	2	3	t
+1238	{70,50}	tipo encargo	clase_info=encargossacd\\model\\infoencargotipo	160	8	8	t
