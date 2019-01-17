@@ -1,0 +1,72 @@
+<script>
+fnjs_ver_ficha=function(id_nom){
+	if (!id_nom ) { var id_nom=$('#lst_sacds').val(); }
+
+	if (id_nom ) {
+		var url='{{ url_ajax }}';
+		var parametros='que=ficha&id_nom='+id_nom+'{{ h_ficha|raw }}';
+		$.ajax({
+			data: parametros,
+			url: url,
+			type: 'post',
+			dataType: 'html',
+			complete: function (rta) {
+				rta_txt=rta.responseText;
+				$('#ficha').html(rta_txt);
+			}
+		});
+	}
+
+}
+
+fnjs_lista_sacd=function(id_nom){
+	var filtro_sacd=$('#filtro_sacd').val();
+
+    var url='{{ url_ajax }}';
+	var parametros='que=get_select&filtro_sacd='+filtro_sacd+'&id_nom='+id_nom+'{{ h_lista|raw }}';
+	$.ajax({
+		data: parametros,
+		url: url,
+		type: 'post',
+		dataType: 'html',
+		complete: function (rta) {
+			rta_txt=rta.responseText;
+			$('#sacds').html(rta_txt);
+		}
+	});
+}
+
+fnjs_guardar=function(formulario){
+	$(formulario).submit(function() {
+		$.ajax({
+			data: $(this).serialize(),
+			url: $(this).attr('action'),
+			type: 'post',
+			complete: function (rta) {
+				rta_txt=rta.responseText;
+				if (rta_txt != '' && rta_txt != '\n') {
+					alert (rta_txt);
+				}
+			}
+		});
+		return false;
+	});
+	$(formulario).submit();
+	$(formulario).off();
+	fnjs_ver_ficha();
+}
+</script>
+<table>
+<thead>
+<tr><th colspan=4>{{ fase }}</th></tr>
+<tr>
+<th>{{ "tipo"|trans }}:&nbsp;&nbsp;&nbsp;
+{{ oDesplFiltroSacd.desplegable()|raw }}
+</th>
+<th colspan=3 id="sacds">{{ "sacd"|trans }}:&nbsp;&nbsp;&nbsp;
+	<select class=contenido id="lst_sacds" onchange="fnjs_ver_ficha();">
+	</select>
+</th></tr>
+</thead>
+</table>
+<div class=contenido id="ficha" ></div>

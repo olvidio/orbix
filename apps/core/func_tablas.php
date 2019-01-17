@@ -91,7 +91,6 @@ $a_num_romanos=array('1'=>"I",'2'=>"II",'3'=>"III",'4'=>"IV",'5'=>"V",'6'=>"VI",
 
 /**
 * Para poner null en los valores vacios de un array
-* Ahora además convirto el vsalor 't' a 'true'
 *
 *
 *@author	Daniel Serrabou
@@ -101,9 +100,6 @@ $a_num_romanos=array('1'=>"I",'2'=>"II",'3'=>"III",'4'=>"IV",'5'=>"V",'6'=>"VI",
 function poner_null(&$valor) {
 	if (!$valor && $valor !== 0) { //admito que sea 0.
 		$valor=NULL;
-	} 
-	if ($valor === 't') { // para que funcione con filter_var( $aDades['completado'], FILTER_VALIDATE_BOOLEAN))
-		$valor='true';
 	} 
 }
 

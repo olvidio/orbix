@@ -133,6 +133,7 @@ class MenuDb Extends core\ClasePropiedades {
 		$aDades['ok'] = $this->bok;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		$aDades['ok'] = ($aDades['ok'] === 't')? 'true' : '';
 		if ( filter_var( $aDades['ok'], FILTER_VALIDATE_BOOLEAN)) { $aDades['ok']='t'; } else { $aDades['ok']='f'; }
 
 		if ($bInsert === false) {

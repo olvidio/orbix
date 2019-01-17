@@ -1,0 +1,86 @@
+<script>
+fnjs_lista_ctrs=function(id_ubi){
+	var filtro_ctr=$('#filtro_ctr').val();
+
+	var url='{{ url_ctr|raw }}';
+	var parametros='filtro_ctr='+filtro_ctr+'&id_ubi='+id_ubi+'{{ h_ctr|raw }}';
+	$.ajax({
+		data: parametros,
+		url: url,
+		type: 'post',
+		dataType: 'html',
+		complete: function (rta) {
+			rta_txt=rta.responseText;
+			$('#centros').html(rta_txt);
+		}
+	});
+
+}
+fnjs_guardar=function(enc){
+	var error=0;
+	var formulario=$('#datos_ctr_'+enc);
+	//var formulario='#datos_ctr_'+enc;
+	var tipo_centro=$('#tipo_centro_'+enc).val();
+	if (tipo_centro != 'of') {
+		var titular=$('#id_sacd_titular_'+enc).val();
+		var suplente=$('#id_sacd_suplente_'+enc).val();
+		if (titular == suplente && titular != '') {
+			alert("El sacd titular y suplente deben ser distintos");
+			error=1;
+		} 
+	}
+	if (!error) {
+		$(formulario).attr('action','apps/encargossacd/controller/ctr_ficha_update.php');
+		$(formulario).submit(function() {
+			$.ajax({
+				data: $(this).serialize(),
+				url: $(this).attr('action'),
+				type: 'post',
+				complete: function (rta) {
+					rta_txt=rta.responseText;
+					if (rta_txt != '' && rta_txt != '\n') {
+						alert (rta_txt);
+					}
+				}
+			});
+			return false;
+		});
+		$(formulario).submit();
+		$(formulario).off();
+		fnjs_ver_ficha();
+	}
+}
+
+fnjs_ver_ficha=function(){
+   var id_ubi=$('#lst_ctrs').val();
+	if (id_ubi) {
+        var url='{{ url_ficha|raw }}';
+        var parametros='id_ubi='+id_ubi+'{{ h_ficha|raw }}';
+		$.ajax({
+			data: parametros,
+			url: url,
+			type: 'post',
+			dataType: 'html',
+			complete: function (rta) {
+				rta_txt=rta.responseText;
+				$('#ficha').html(rta_txt);
+			}
+		});
+	}
+}
+// cargar al iniciar, cuando se viene de la ficha sacd.
+fnjs_ver_ficha();
+</script>
+<table>
+<tr><th colspan=4>{{ fase }}</th></tr>
+<tr><th>{{ "grupo de ctrs" }}:
+{{ oDesplGrupoCtrs.desplegable()|raw }}
+</th>
+<th colspan=3 id="centros">{{ "centro" }}:
+{{ oDesplCtrs.desplegable()|raw }}
+</th>
+</tr>
+</table>
+<div class=contenido id="ficha" >
+<?php if (!empty($_POST['id_ubi'])) { include("ctr_get_ficha.php"); } ?>
+</div>

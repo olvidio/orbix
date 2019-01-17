@@ -318,6 +318,7 @@ foreach($cActividades as $oActividad) {
 	$id_tipo_activ = $oActividad->getId_tipo_activ();
 	$nom_activ = $oActividad->getNom_activ();
 	$dl_org = $oActividad->getDl_org();
+	$oF_ini = $oActividad->getF_ini();
 	$f_ini = $oActividad->getF_ini()->getFromLocal();
 	$f_fin = $oActividad->getF_fin()->getFromLocal();
 	$h_ini = $oActividad->getH_ini();
@@ -410,8 +411,11 @@ foreach($cActividades as $oActividad) {
 		$flag = 0;
 		if(preg_match("/^[12][45]/",$id_tipo_activ)) {
 			if(preg_match("/^[12][45]1/",$id_tipo_activ)) { // para los crt, sólo si es entre semana.
+			    /*
 				list($dini_0,$mini_0,$aini_0) = preg_split('/[\.\/-]/', $f_ini);
 				$w = date ('w',mktime(0,0,0,$mini_0,$dini_0,$aini_0));
+				*/
+			    $w = $oF_ini->format('w');
 				if ($w < 4) { // de domingo a miercoles.
 					$flag = 0;
 				} else {

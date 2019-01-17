@@ -45,7 +45,7 @@ function num_latin($num) {
 $oActa = new notas\Acta($acta);
 $id_asignatura = $oActa->getId_asignatura();
 $id_activ = $oActa->getId_activ();
-$f_acta = $oActa->getF_acta()->getFromLocal();
+$oF_acta = $oActa->getF_acta();
 $libro = $oActa->getLibro();
 $pagina = $oActa->getPagina();
 $linea = $oActa->getLinea();
@@ -150,8 +150,8 @@ foreach ($cTribunal as $oTribunal) {
 	$examinador=$oTribunal->getExaminador();
 	$tribunal_html .= "<div class=\"examinador\">$examinador</div>";
 }
-$fecha=$lugar.",  ".data($f_acta);
-$tribunal_html .= "<div class=\"fecha\">$fecha</div>";
+$lugar_fecha = $lugar.",  ".$oF_acta->getFechaLatin();
+$tribunal_html .= "<div class=\"fecha\">$lugar_fecha</div>";
 $tribunal_html .= "<div class=\"sello\">L.S.<br>Studii Generalis</div>";
 
 // ---------------------------------------------------------------------------------------

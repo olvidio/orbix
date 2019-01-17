@@ -15,7 +15,8 @@ class DateTimeLocal Extends \DateTime {
     private $oData;
     
     public static function Meses() {
-        $aMeses = array('1'=>_("enero"),
+		$aMeses = [
+			'1'=>_("enero"),
             '2'=>_("febrero"),
             '3'=>_("marzo"),
             '4'=>_("abril"),
@@ -27,10 +28,40 @@ class DateTimeLocal Extends \DateTime {
             '10'=>_("octubre"),
             '11'=>_("noviembre"),
             '12'=>_("diciembre")
-        );
+		];
         return $aMeses;
     }
-    static private function getFormat() {
+    
+    public static function Meses_latin() {
+        $aMes_latin = [
+				'1'=>'ianuario',
+				'2'=>'februario',
+				'3'=>'martio',
+				'4'=>'aprili',
+				'5'=>'maio',
+				'6'=>'iunio',
+				'7'=>'iulio',
+				'8'=>'augusto',
+				'9'=>'septembri',
+				'10'=>'octobri',
+				'11'=>'novembri',
+				'12'=>'decembri',
+            ];
+       return $aMes_latin;
+    }
+    
+    public function getFechaLatin() {
+        $mes_latin = $this->Meses_latin();
+        
+        $dia = parent::format('d');
+        $mes = parent::format('m');
+        $any = parent::format('Y');
+        
+        $fecha_latin="die ".$dia." mense  ".$mes_latin[$mes]."  anno  ".$any;
+        return $fecha_latin;
+    }
+    
+    static public function getFormat() {
         $idioma = $_SESSION['session_auth']['idioma'];
         # Si no hemos encontrado ningún idioma que nos convenga, mostramos la web en el idioma por defecto
         if (!isset($idioma)){ $idioma = ConfigGlobal::$x_default_idioma; }
@@ -71,6 +102,10 @@ class DateTimeLocal Extends \DateTime {
         }
         
         return $extnd_dt;
+    }
+    
+    public function getIso() {
+        return parent::format('Y-m-d');
     }
     
     public function getFromLocal() {

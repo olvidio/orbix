@@ -163,9 +163,23 @@ class Lista {
 							$Html.="<td $td_id class=\"$clase ".$valor['clase']."\">$val</td>";
 						}
 				} else {
+                        $es_fecha = FALSE;
 						// si es una fecha, pongo la clase fecha, para exportar a excel...
-						if (preg_match("/^(\d)+[\/-]\d\d[\/-](\d\d)+$/",$valor)) {
-							list( $d,$m,$y) = preg_split('/[:\/\.-]/',$valor);
+                        $formato_fecha = DateTimeLocal::getFormat();
+                        if ($formato_fecha === 'd/m/Y') {
+						    //if (preg_match("/^(\d)+[\/-]\d\d[\/-](\d\d)+$/",$valor)) {
+						    if (preg_match("/^(\d)+[\/-](\d)+[\/-](\d\d)+$/",$valor)) {
+						          list( $d,$m,$y) = preg_split('/[:\/\.-]/',$valor);
+						          $es_fecha = TRUE;
+						    }
+                        }
+                        if ($formato_fecha === 'm/d/Y') {
+						    if (preg_match("/^(\d)+[\/-](\d)+[\/-](\d\d)+$/",$valor)) {
+						          list( $m,$d,$y) = preg_split('/[:\/\.-]/',$valor);
+						          $es_fecha = TRUE;
+						    }
+                        }
+                        if ($es_fecha) {
 							$fecha_iso=date("Y-m-d",mktime(0,0,0,$m,$d,$y));
 							$clase ="fecha $clase";
 							$Html.="<td class=\"$clase\" fecha_iso='$fecha_iso'>$valor</td>";
@@ -265,6 +279,15 @@ class Lista {
 		$chk="";
 		$b=0;
 		$height_botones=0;
+		// Quitar al principio el scroll_id, select por si no hay filas.
+		$scroll_id = !empty($a_valores['scroll_id'])? $a_valores['scroll_id'] : 0;
+		unset($a_valores['scroll_id']);
+		if (isset($a_valores['select'])) {
+			$a_valores_chk = $a_valores['select'];
+			unset($a_valores['select']);
+		} else {
+			$a_valores_chk = array();
+		}
 		if (empty($a_valores)) {
 			return	_("no hay ninguna fila");
 		}
@@ -380,14 +403,6 @@ class Lista {
 		$ahora=date("Hms");
 		$f=1;
 		$aFilas = array();
-		$scroll_id = !empty($a_valores['scroll_id'])? $a_valores['scroll_id'] : 0;
-		unset($a_valores['scroll_id']);
-		if (isset($a_valores['select'])) {
-			$a_valores_chk = $a_valores['select'];
-			unset($a_valores['select']);
-		} else {
-			$a_valores_chk = array();
-		}
 		foreach($a_valores as $num_fila=>$fila) {
 			$f++;
 			$id_fila=$f.$ahora;

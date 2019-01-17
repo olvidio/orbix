@@ -343,7 +343,7 @@ foreach($oDbl->query($sql) as $row) {
      * @param boolean convert=TRUE optional. Si es false, df_ini debe ser un string en formato ISO (Y-m-d).
 	 */
 	function set'.$NomCamp.'($'.$tip.$nomcamp.'=\''.$tip_val.'\',$convert=TRUE) {
-        if ($convert === TRUE  && !empty('.$tip.$nomcamp.')) {
+        if ($convert === TRUE  && !empty($'.$tip.$nomcamp.')) {
             $oConverter = new core\Converter(\'date\', $'.$tip.$nomcamp.');
             $this->'.$tip.$nomcamp.' = $oConverter->toPg();
 	    } else {
@@ -389,6 +389,7 @@ foreach($oDbl->query($sql) as $row) {
 	if (!in_array($nomcamp,$aClaus)) {
 		if ($auto != 1) { // si tiene sequencia no pongo el campo en el update.
 			if ($tip=='b') {
+				$err_bool.="\n\t\t".'$aDades[\''.$nomcamp.'\'] = ($aDades[\''.$nomcamp.'\'] === \'t\')? \'true\' : \'\';';
 				$err_bool.="\n\t\t".'if ( filter_var( $aDades[\''.$nomcamp.'\'], FILTER_VALIDATE_BOOLEAN)) { $aDades[\''.$nomcamp.'\']=\'t\'; } else { $aDades[\''.$nomcamp.'\']=\'f\'; }';
 			}
 			$guardar.="\n\t\t".'$aDades[\''.$nomcamp.'\'] = $this->'.$tip.$nomcamp.';';

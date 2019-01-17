@@ -276,4 +276,3 @@ if (!empty($Qprint)) {
 } else {
 	include("../view/ficha_profesor_stgr.phtml");
 }
-?>

@@ -75,9 +75,13 @@ class CentroEx Extends Centro {
 		$aDades['id_ctr_padre'] = $this->iid_ctr_padre;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		$aDades['status'] = ($aDades['status'] === 't')? 'true' : '';
 		if ( filter_var( $aDades['status'], FILTER_VALIDATE_BOOLEAN)) { $aDades['status']='t'; } else { $aDades['status']='f'; }
+		$aDades['sv'] = ($aDades['sv'] === 't')? 'true' : '';
 		if ( filter_var( $aDades['sv'], FILTER_VALIDATE_BOOLEAN)) { $aDades['sv']='t'; } else { $aDades['sv']='f'; }
+		$aDades['sf'] = ($aDades['sf'] === 't')? 'true' : '';
 		if ( filter_var( $aDades['sf'], FILTER_VALIDATE_BOOLEAN)) { $aDades['sf']='t'; } else { $aDades['sf']='f'; }
+		$aDades['cdc'] = ($aDades['cdc'] === 't')? 'true' : '';
 		if ( filter_var( $aDades['cdc'], FILTER_VALIDATE_BOOLEAN)) { $aDades['cdc']='t'; } else { $aDades['cdc']='f'; }
 
 		if ($bInsert === false) {

@@ -1,0 +1,70 @@
+<script>
+fnjs_horario=function(formulario){
+	var url='{{ url_horario|raw }}';
+	rta=fnjs_solo_uno(formulario);
+	if (rta==1) {
+  		$(formulario).attr('action',url);
+		fnjs_enviar_formulario(formulario);
+  	}
+}
+fnjs_modificar=function(formulario){
+	var url='{{ url_modificar|raw }}';
+	rta=fnjs_solo_uno(formulario);
+	if (rta==1) {
+		$('#mod').val("editar");
+  		$(formulario).attr('action',url);
+		fnjs_enviar_formulario(formulario);
+  	}
+}
+fnjs_borrar=function(formulario){
+	var url='{{ url_borrar|raw }}';
+	rta=fnjs_solo_uno(formulario);
+	var seguro;
+	if (rta==1) {
+		seguro=confirm("{{ txt_eliminar }}");
+		if (seguro) {
+            $('#mod').val("eliminar");
+			$(formulario).attr('action','apps/encargossacd/controller/encargo_update.php');
+			$(formulario).submit(function() {
+				$.ajax({
+		               data: $(this).serialize(),
+		               url: $(this).attr('action'),
+		               type: 'post',
+		               complete: function (rta) {
+		                   rta_txt=rta.responseText;
+		                   if (rta_txt != '' && rta_txt != '\\n') {
+		                       alert ('{{ "respuesta"|trans }}: '+rta_txt);
+		                   } else {
+		                       {{ oPosicion.js_atras()|raw }}
+		                   }
+		               }
+				});
+				return false;
+			});
+			$(formulario).submit();
+			$(formulario).off();
+		}
+  	}
+}
+</script>
+{% if no_tipo_enc %}
+	<form id="frm_encargo_que" action="des/tareas/encargo_select.php" method="post" onkeypress="fnjs_enviar(event,this);" >
+	<table>
+	<thead>
+	<th class=titulo_inv colspan=4>{{ "buscar un encargo"|trans|capitalize }}&nbsp;&nbsp;&nbsp;
+		<input class=contenido name="desc_enc" size="25"></th>
+	<th colspan=4>
+		<input type="button" id="ok" name="ok" onclick="fnjs_enviar_formulario('#frm_encargo_que');" 
+				value="{{ "buscar"|trans }}"  class="btn_ok"></th>
+	</thead>
+	</table>
+	</form>
+{% endif %}
+<h2 class=subtitulo>{{ titulo }}</h2>
+<form id="seleccionados" name="seleccionados" action="" method="post">
+<input type='Hidden' id='mod' name='mod' value='' >
+{{ oHash.getCamposHtml()|raw }}
+{{ oTabla.mostrar_tabla()|raw }}
+</form>
+<br><table cellspacing=3  class=botones><tr class=botones>
+<td class=botones><span class=cabecera class=link onclick="fnjs_update_div('#main','{{ pagina_nuevo|raw }}')">{{ "añadir encargo"|trans }}</span></td>

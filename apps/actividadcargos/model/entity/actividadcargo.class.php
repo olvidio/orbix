@@ -138,6 +138,7 @@ class ActividadCargo Extends core\ClasePropiedades {
 		$aDades['observ'] = $this->sobserv;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		$aDades['puede_agd'] = ($aDades['puede_agd'] === 't')? 'true' : '';
 		if ( filter_var( $aDades['puede_agd'], FILTER_VALIDATE_BOOLEAN)) { $aDades['puede_agd']='t'; } else { $aDades['puede_agd']='f'; }
 
 		if ($bInsert === false) {

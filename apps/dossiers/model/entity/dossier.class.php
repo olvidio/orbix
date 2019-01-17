@@ -140,6 +140,7 @@ class Dossier Extends core\ClasePropiedades {
 		$aDades['f_status'] = $this->df_status;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		$aDades['status_dossier'] = ($aDades['status_dossier'] === 't')? 'true' : '';
 		if ( filter_var( $aDades['status_dossier'], FILTER_VALIDATE_BOOLEAN)) { $aDades['status_dossier']='t'; } else { $aDades['status_dossier']='f'; }
 
 		if ($bInsert === false) {

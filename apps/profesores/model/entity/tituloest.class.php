@@ -126,6 +126,7 @@ class TituloEst Extends core\ClasePropiedades {
 		$aDades['year'] = $this->iyear;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		$aDades['eclesiastico'] = ($aDades['eclesiastico'] === 't')? 'true' : '';
 		if ( filter_var( $aDades['eclesiastico'], FILTER_VALIDATE_BOOLEAN)) { $aDades['eclesiastico']='t'; } else { $aDades['eclesiastico']='f'; }
 
 		if ($bInsert === false) {

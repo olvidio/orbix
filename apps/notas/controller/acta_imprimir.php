@@ -26,13 +26,6 @@ use function core\strtoupper_dlb;
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-function data($data) {
-	list($dia,$mes,$any) = preg_split('/[\.\/-]/', $data ); //los delimitadores pueden ser /, ., -
-	$mes_latin=array('ianuario','februario','martio','aprili','maio','iunio','iulio','augusto','septembri','octobri','novembri','decembri');
-	$fecha_latin="die ".$dia." mense  ".$mes_latin[$mes-1]."  anno  ".$any;
-	return $fecha_latin;
-}
-
 function num_latin($num) {
 	$unidades=array('',I,II,III,IV,V,VI,VII,VIII,IX,X);
 	$decenas=array('',X,XX,XXX,XL,L,LX,LXX,LXXX,XC,C);
@@ -67,7 +60,7 @@ $cara = empty($Qcara)? 'A' : $Qcara;
 $oActa = new notas\Acta($acta);
 $id_asignatura = $oActa->getId_asignatura();
 $id_activ = $oActa->getId_activ();
-$f_acta = $oActa->getF_acta()->getFromLocal();
+$oF_acta = $oActa->getF_acta();
 $libro = $oActa->getLibro();
 $pagina = $oActa->getPagina();
 $linea = $oActa->getLinea();
@@ -174,6 +167,8 @@ $oHash->setUrl(ConfigGlobal::getWeb().'/apps/notas/controller/acta_2_mpdf.php');
 $oHash->setCamposForm('acta');
 $h = $oHash->linkSinVal();
 
+$lugar_fecha = $lugar.",  ".$oF_acta->getFechaLatin();
+
 $a_campos = [
 			'oPosicion' => $oPosicion,
 			'h' => $h,
@@ -193,7 +188,7 @@ $a_campos = [
 			'lin_tribunal' => $lin_tribunal,
 			'cTribunal' => $cTribunal,
 			'lugar' => $lugar,
-			'f_acta' => $f_acta,
+			'lugar_fecha' => $lugar_fecha,
 			'libro' => $libro,
 			'pagina' => $pagina,
 			'linea' => $linea,
