@@ -1,0 +1,96 @@
+{% block scripts %}
+<script>
+fnjs_buscar=function(act){
+	var err = 0;
+	var f=$('#periodo').val();	
+	if (f=='otro') {
+		if (!fnjs_comprobar_fecha('#empiezamin')) { err=1; }
+		if (!fnjs_comprobar_fecha('#empiezamax')) { err=1; }
+	}
+	
+	if (err == 1) {
+		alert("{{ "debe inrtoducir las fechas inicio-fin del periodo"|trans }}"); 
+	} else {
+		/* genero el id_tipo_actividad */
+		var isfsv=$('#isfsv_val').val();
+		var iasistentes=$('#iasistentes_val').val();
+		var iactividad=$('#iactividad_val').val();
+		var inom_tipo=$('#inom_tipo_val').val();
+		if (!isfsv) isfsv=".";
+		if (!iasistentes) iasistentes=".";
+		if (!iactividad) iactividad=".";
+		if (!inom_tipo) inom_tipo="...";
+		var id=isfsv+iasistentes+iactividad+inom_tipo;
+
+		$('#id_tipo_activ').val(id);
+		$('#modifica').attr('action',act);
+		fnjs_enviar_formulario('#modifica');
+	}
+}
+fnjs_lugar=function(){
+	var opcion_sel='{{ Qid_ubi }}';
+	var isfsv=$('#isfsv_val').val();
+	var filtro_lugar=$('#filtro_lugar').val();
+	var url='/apps/actividades/controller/actividad_tipo_get.php';
+	var parametros='salida=lugar&entrada='+filtro_lugar+'&opcion_sel='+opcion_sel+'&isfsv='+isfsv+'{{ h|raw }}';
+	$.ajax({
+		data: parametros,
+		url: url,
+		type: 'post',
+		dataType: 'html',
+		complete: function (rta) {
+			rta_txt=rta.responseText;
+			$('#lst_lugar').html(rta_txt);
+		}
+	});
+}
+fnjs_left_side_hide();
+</script>
+{% endblock %}
+{% block body %}
+<div id="exportar" >
+<form id="modifica"name="modifica" action="" method="post" onkeypress="fnjs_enviar(event,this);" >
+{{ oHash.getCamposHtml()|raw }}
+<h3 class=subtitulo>{{ titulo }}</h3>
+<table>
+<tr><th colspan=3 class=titulo_inv>{{ "escoger el tipo de actividad"|trans }}</th></tr>
+</table>
+{{ oActividadTipo.getHtml()|raw }}
+<table>
+<tr>
+<td class=etiqueta>{{ "estado"|trans }}:</td>
+	<td><input type="Radio" id="status_1" name="status" value="{{ val_status_1 }}"{{ chk_status_1 }}>{{ "proyecto"|trans }}</td>
+	<td><input type="Radio" id="status_2" name="status" value="{{ val_status_2 }}"{{ chk_status_2 }}>{{ "actual"|trans }}</td>
+	<td><input type="Radio" id="status_3" name="status" value="{{ val_status_3 }}"{{ chk_status_3 }}>{{ "terminada"|trans }}</td>
+	<td><input type="Radio" id="status_4" name="status" value="{{ val_status_4 }}"{{ chk_status_4 }}>{{ "borrable"|trans }}</td>
+<td><input type='hidden' id='id_tipo_activ' name='id_tipo_activ'> </td>
+</tr>
+</table>
+<br>
+<table>
+<tr><th colspan=6 class=titulo_inv>{{ "escoger la actividad"|trans }}</th></tr>
+{% if perm_ctr %}
+    <tr>
+        <td class=etiqueta>{{ "lugar según país o dl"|trans }}:</td>
+        <td colspan=3>{{ oDesplFiltroLugar.desplegable()|raw }}</td>
+        <td class=etiqueta>{{ "lugar"|trans }}</td>
+        <td id='lst_lugar' colspan=1>{{ oDesplegableCasas.desplegable()|raw }}</td>
+    </tr>
+    <tr>
+        <td class=etiqueta>{{ "organiza"|trans }}:</td>
+        <td colspan=3>{{ oDesplDelegacionesOrg.desplegable()|raw }}</td>
+    </tr>
+{% endif %}
+<tr><td class=etiqueta>{{ "periodo"|raw }}:</td>
+	{{ oFormP.getTd()|raw }}
+</tr>
+</table>
+<br>
+<input TYPE="button" onclick="fnjs_buscar('{{ accion }}')" id="btn_ok" name="btn_ok" value="{{ "buscar"|trans }}" class="btn_ok">
+<input TYPE="reset" VALUE="borrar" onclick="fnjs_update_div('#main','{{ Link_borrar|raw }}')" >
+</form>
+<script>
+/*fnjs_lugar();*/ 
+</script>
+</div>
+{% endblock %}

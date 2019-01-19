@@ -1,16 +1,26 @@
 <?php
-use usuarios\model\entity as usuarios;
-use permisos\model as permisos;
-use personas\model\entity as personas;
-use ubis\model\entity as ubis;
+use personas\model\entity\GestorPersonaDl;
+use procesos\model\PermAccion;
+use procesos\model\entity\GestorPermUsuarioActividad;
+use ubis\model\entity\GestorCasaDl;
+use ubis\model\entity\GestorCentroDl;
+use ubis\model\entity\GestorCentroEllas;
+use usuarios\model\entity\GestorRole;
+use usuarios\model\entity\Role;
+use usuarios\model\entity\Usuario;
+use procesos\model\PermAfectados;
+
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("apps/core/global_header.inc");
+
+require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
 
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // Crea los objectos para esta url  **********************************************
-	$oCuadros=new permisos\PermDl;
+	$oCuadrosAfecta = new PermAfectados();
+	$oPermAccion = new PermAccion();
+
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -19,9 +29,7 @@ $oPosicion->recordar($Qrefresh);
 
 $Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
 $Qquien = (string) \filter_input(INPUT_POST, 'quien');
-$Qnuevo = (string) \filter_input(INPUT_POST, 'nuevo');
 
-$Qid_sel = '';
 $Qscroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 // Hay que usar isset y empty porque puede tener el valor =0.
@@ -32,9 +40,13 @@ if (isset($_POST['stack'])) {
 		// No me sirve el de global_object, sino el de la session
 		$oPosicion2 = new web\Posicion();
 		if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
-			$a_sel=$oPosicion2->getParametro('sel');
-			$Qid_usuario = (integer) strtok($a_sel[0],"#");
-			$Qid_sel=$oPosicion2->getParametro('id_sel');
+			$a_sel=$oPosicion2->getParametro('id_sel');
+			if (!empty($a_sel)) {
+                $Qid_usuario = (integer) strtok($a_sel[0],"#");
+			} else {
+                $Qid_usuario = $oPosicion2->getParametro('id_usuario');
+			    $Qquien = $oPosicion2->getParametro('quien');
+			}
 			$Qscroll_id = $oPosicion2->getParametro('scroll_id');
 			$oPosicion2->olvidar($stack);
 		}
@@ -51,7 +63,7 @@ if (isset($_POST['stack'])) {
 }
 $oPosicion->setParametros(array('id_usuario'=>$Qid_usuario),1);
 
-$oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
+$oMiUsuario = new Usuario(core\ConfigGlobal::mi_id_usuario());
 $miRole=$oMiUsuario->getId_role();
 $miSfsv = core\ConfigGlobal::mi_sfsv();
 
@@ -143,23 +155,17 @@ if ($miRole < 4) {
 	if( !(core\ConfigGlobal::is_app_installed('personas')) ) { $cond_role.="AND (pau != 'sacd' OR pau IS NULL)"; }
 	if( !(core\ConfigGlobal::is_app_installed('ubis')) ) { $cond_role.="AND (pau != 'ctr' OR pau != 'cdc' OR pau IS NULL)"; }
 			
-	$oGRoles = new usuarios\GestorRole();
+	$oGRoles = new GestorRole();
 	$oDesplRoles= $oGRoles->getListaRoles($cond_role);
 	$oDesplRoles->setNombre('id_role');
 
-	/*
-	if( (core\ConfigGlobal::is_app_installed('procesos')) {
-		$oGesFases = new GestorActividadFase();
-		$oDesplFases= $oGesFases->getListaActividadFases();
-		$oDesplFases->setNombre('fase');
-	}
-	*/
 	$txt_guardar=_("guardar datos usuario");
 	$oGrupoGrupoPermMenu = array();
+    $oUsuarioUsuarioPerm = [];
 	$oSelects = array();
 	if (!empty($Qid_usuario)) {
 		$que_user='guardar';
-		$oUsuario = new usuarios\Usuario(array('id_usuario'=>$Qid_usuario));
+		$oUsuario = new Usuario(array('id_usuario'=>$Qid_usuario));
 
 		$id_usuario=$oUsuario->getId_usuario();
 		$seccion=$miSfsv;
@@ -169,7 +175,7 @@ if ($miRole < 4) {
 		$email=$oUsuario->getEmail();
 		$id_role=$oUsuario->getId_role();
 		$oDesplRoles->setOpcion_sel($id_role);
-		$oRole = new usuarios\Role($id_role);
+		$oRole = new Role($id_role);
 		$pau = $oRole->getPau();
 		$sv = $oRole->getSv();
 		$sf = $oRole->getSf();
@@ -184,7 +190,7 @@ if ($miRole < 4) {
 					$cond = "WHERE sf = 't'";
 					break;
 			}
-			$oGCasas = new ubis\GestorCasaDl();
+			$oGCasas = new GestorCasaDl();
 			$oOpcionesCasas = $oGCasas->getPosiblesCasas($cond);
 			//$oDesplCasas = new Desplegable(array('oOpciones'=>$oOpcionesCasas));	
 
@@ -195,7 +201,7 @@ if ($miRole < 4) {
 		}
 		if ($pau == 'ctr' && $sv == 1) { //centroSv
 			$id_pau=$oUsuario->getId_pau();
-			$oGesCentrosDl = new ubis\GestorCentroDl();
+			$oGesCentrosDl = new GestorCentroDl();
 			$oSelects = $oGesCentrosDl->getListaCentros();
 
 			$oSelects->setNombre('id_ctr');
@@ -205,7 +211,7 @@ if ($miRole < 4) {
 		}
 		if ($pau == 'ctr' && $sf == 1) { //centroSf
 			$id_pau=$oUsuario->getId_pau();
-			$oGesCentrosDl = new GestorCentroSf();
+			$oGesCentrosDl = new GestorCentroEllas();
 			$oSelects = $oGesCentrosDl->getListaCentros();
 
 			$oSelects->setNombre('id_ctr');
@@ -216,7 +222,7 @@ if ($miRole < 4) {
 		if ($pau == 'sacd') { //sacd
 			$id_pau=$oUsuario->getId_pau();
 
-			$GesPersonas = new personas\GestorPersonaDl();
+			$GesPersonas = new GestorPersonaDl();
 			$oSelects = $GesPersonas->getListaSacd();
 
 			$oSelects->setNombre('id_sacd');
@@ -225,8 +231,8 @@ if ($miRole < 4) {
 			$camposMas = 'id_sacd';
 		}
 		if (core\ConfigGlobal::is_app_installed('procesos')) { 
-			$oGesPerm = new usuarios\GestorUsuarioPerm();
-			$oUsuarioUsuarioPerm = $oGesPerm->getUsuarioPerms(array('id_usuario'=>$id_usuario));
+			$oGesPerm = new GestorPermUsuarioActividad();
+			$oUsuarioUsuarioPerm = $oGesPerm->getPermUsuarioActividades(array('id_usuario'=>$id_usuario));
 		}
 	} else {
 		$que_user='nuevo';
@@ -237,7 +243,6 @@ if ($miRole < 4) {
 		$pass='';
 		$seccion='';
 		$email='';
-		$role='';
 		$pau='';
 	}
 	//$camposForm = 'que!usuario!nom_usuario!password!email!id_role!id_ctr!id_sacd!casas';
@@ -262,17 +267,16 @@ if ($miRole < 4) {
 	$txt_eliminar = _("¿Está seguro que desea quitar este permiso?");
 	
 	$a_campos = [
+				'oPosicion' => $oPosicion,
 				'url_usuario_ajax' => $url_usuario_ajax,
 				'id_usuario' => $Qid_usuario,
 				'h1' => $h1,
 				'obj' => $obj,
 				'que_user' => $que_user,
-				'Qquien' => $Qquien,
+				'quien' => $Qquien,
 				'id_usuario' => $id_usuario,
-				'oPosicion' => $oPosicion,
 				'pau' => $pau,
 				'oSelects' => $oSelects,
-				'oCuadros' => $oCuadros,
 				'usuario' => $usuario,
 				'oHash' => $oHash,
 				'pass' => $pass,
@@ -280,6 +284,7 @@ if ($miRole < 4) {
 				'nom_usuario' => $nom_usuario,
 				'oDesplRoles' => $oDesplRoles,
 				'oGrupoGrupoPermMenu' => $oGrupoGrupoPermMenu,
+                'oUsuarioUsuarioPerm' => $oUsuarioUsuarioPerm ,
 				'email' => $email,
 				'txt_guardar' => $txt_guardar,
 				'txt_eliminar' => $txt_eliminar,
@@ -288,6 +293,47 @@ if ($miRole < 4) {
 	$oView = new core\View('usuarios/controller');
 	echo $oView->render('usuario_form.phtml',$a_campos);
 } 
+
+//////////// Permisos de grupos ////////////
+if (!empty($id_usuario)) { // si no hay usuario, no puedo poner permisos.
+    //grupo
+    $oGesUsuarioGrupo = new usuarios\model\entity\GestorUsuarioGrupo();
+    $oListaGrupos = $oGesUsuarioGrupo->getUsuariosGrupos(array('id_usuario'=>$id_usuario));
+    $i=0;
+    $txt='';
+    foreach ($oListaGrupos as $oUsuarioGrupo) {
+        $i++;
+        $oGrupo = new usuarios\model\entity\Grupo($oUsuarioGrupo->getId_grupo());
+        if ($i > 1) $txt.=", ";
+        $txt.= $oGrupo->getUsuario();
+    }
+    ?>
+	<br>
+	<h3><?= _("grupos") ?>: </h3>
+	<p><?= $txt ?></p>
+	<br>
+	<input type=button onclick="fnjs_add_grup();" value="<?= _("añadir un grupo de permisos") ?>">
+	<input type=button onclick="fnjs_del_grup();" value="<?= _("quitar de un grupo de permisos") ?>">
+	<div id=lst_grupos></div>
+	<br>
+    <br>
+    <?php
+//////////// Permisos en actividades ////////////
+    if (core\ConfigGlobal::is_app_installed('procesos')) {
+        
+        $a_campos = [
+                    'quien' => $Qquien,
+                    'id_usuario' => $id_usuario,
+                    'usuario' => $usuario,
+                    'oUsuarioUsuarioPerm' => $oUsuarioUsuarioPerm,
+                    'oCuadrosAfecta' => $oCuadrosAfecta,
+                    'oPermAccion' => $oPermAccion,
+                    ];
+
+        $oView = new core\View('usuarios/controller');
+        echo $oView->render('perm_activ_form.phtml',$a_campos);
+    }
+}
 
 //////////// Esto lo ven todos ////////////
 // si no hay usuario, no puedo poner permisos.

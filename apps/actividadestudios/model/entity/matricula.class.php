@@ -170,7 +170,7 @@ class Matricula Extends core\ClasePropiedades {
 		$aDades['acta'] = $this->sacta;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		$aDades['preceptor'] = ($aDades['preceptor'] === 't')? 'true' : '';
+		$aDades['preceptor'] = ($aDades['preceptor'] === 't')? 'true' : $aDades['preceptor'];
 		if ( filter_var( $aDades['preceptor'], FILTER_VALIDATE_BOOLEAN)) { $aDades['preceptor']='t'; } else { $aDades['preceptor']='f'; }
 
 		if ($bInsert === false) {

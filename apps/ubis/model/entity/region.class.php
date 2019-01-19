@@ -99,7 +99,7 @@ class Region Extends core\ClasePropiedades {
 		$aDades['status'] = $this->bstatus;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		$aDades['status'] = ($aDades['status'] === 't')? 'true' : '';
+		$aDades['status'] = ($aDades['status'] === 't')? 'true' : $aDades['status'];
 		if ( filter_var( $aDades['status'], FILTER_VALIDATE_BOOLEAN)) { $aDades['status']='t'; } else { $aDades['status']='f'; }
 
 		if ($bInsert === false) {

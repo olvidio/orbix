@@ -93,7 +93,7 @@ class PersonaDl Extends PersonaGlobal {
 		$aDades['lugar_nacimiento'] = $this->slugar_nacimiento;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		$aDades['sacd'] = ($aDades['sacd'] === 't')? 'true' : '';
+		$aDades['sacd'] = ($aDades['sacd'] === 't')? 'true' : $aDades['sacd'];
 		if ( filter_var( $aDades['sacd'], FILTER_VALIDATE_BOOLEAN)) { $aDades['sacd']='t'; } else { $aDades['sacd']='f'; }
 
 		if ($bInsert === false) {

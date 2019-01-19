@@ -1,6 +1,8 @@
 <?php
 use usuarios\model\entity as usuarios;
 use permisos\model as permisos;
+use procesos\model\entity\PermUsuarioActividad;
+use phpDocumentor\Reflection\Types\Boolean;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -36,7 +38,7 @@ switch($Qque) {
 	case 'perm_menu_eliminar':
 		$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 		if (!empty($a_sel)) { //vengo de un checkbox
-		    $Qid_usuario = (integer) trtok($a_sel[0],"#");
+		    $Qid_usuario = (integer) strtok($a_sel[0],"#");
 		    $Qid_item= (integer) strtok("#");
 		} 
 		$oUsuarioPerm = new usuarios\PermMenu(array('id_item'=>$Qid_item));
@@ -51,26 +53,27 @@ switch($Qque) {
 		    $Qid_item= (integer) strtok("#");
 		} 
 		$oUsuario = new usuarios\GrupoOUsuario(array('id_usuario'=>$Qid_usuario)); // La tabla y su heredada
-		$oUsuarioPerm = new UsuarioPerm(array('id_item'=>$Qid_item));
+		$oUsuarioPerm = new PermUsuarioActividad(array('id_item'=>$Qid_item));
 		if ($oUsuarioPerm->DBEliminar() === false) {
 			echo _("hay un error, no se ha eliminado");
 		}
 		break;
 	case 'perm_update':
+		$Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
 		$Qid_tipo_activ = (integer) \filter_input(INPUT_POST, 'id_tipo_activ');
 		$Qid_item = (integer) \filter_input(INPUT_POST, 'id_item');
 		$Qfase_ini = (integer) \filter_input(INPUT_POST, 'fase_ini');
 		$Qfase_fin = (integer) \filter_input(INPUT_POST, 'fase_fin');
 		$Qaccion = (integer) \filter_input(INPUT_POST, 'accion');
-		$Qdl_propia = (integer) \filter_input(INPUT_POST, 'dl_propia');
+		$Qdl_propia = (string) \filter_input(INPUT_POST, 'dl_propia');
 		$Qafecta_a = (array) \filter_input(INPUT_POST, 'afecta_a', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 		
 		if (empty($Qid_tipo_activ)) {
-			$Qisfsv_val = (integer) \filter_input(INPUT_POST, 'isfsv_val');
-			$Qiasistentes_val = (integer) \filter_input(INPUT_POST, 'iasistentes_val');
-			$Qiactividad_val = (integer) \filter_input(INPUT_POST, 'iactividad_val');
-			$Qinom_tipo_val = (integer) \filter_input(INPUT_POST, 'inom_tipo_val');
+			$Qisfsv_val = (string) \filter_input(INPUT_POST, 'isfsv_val');
+			$Qiasistentes_val = (string) \filter_input(INPUT_POST, 'iasistentes_val');
+			$Qiactividad_val = (string) \filter_input(INPUT_POST, 'iactividad_val');
+			$Qinom_tipo_val = (string) \filter_input(INPUT_POST, 'inom_tipo_val');
 
 			$sfsv_val= empty($Qisfsv_val)? '.' : $Qisfsv_val;
 			$asistentes_val= empty($Qiasistentes_val)? '.' : $Qiasistentes_val;
@@ -81,7 +84,8 @@ switch($Qque) {
 			$id_tipo_activ_txt=$Qid_tipo_activ;
 		}
 		//$oUsuario = new usuarios\GrupoOUsuario(array('id_usuario'=>$_POST['id_usuario'])); // La tabla y su heredada
-		$oUsuarioPerm = new UsuarioPerm(array('id_item'=>$Qid_item,'id_usuario'=>$Qid_usuario));
+		$oUsuarioPerm = new PermUsuarioActividad($Qid_item);
+		$oUsuarioPerm->setId_usuario($Qid_usuario);
 		$oUsuarioPerm->setId_tipo_activ_txt($id_tipo_activ_txt);
 		$oUsuarioPerm->setId_fase_ini($Qfase_ini);
 		$oUsuarioPerm->setId_fase_fin($Qfase_fin);

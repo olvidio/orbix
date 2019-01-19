@@ -83,7 +83,7 @@ class ActividadDl Extends ActividadAll {
 		$aDades['plazas'] = $this->iplazas;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		$aDades['publicado'] = ($aDades['publicado'] === 't')? 'true' : '';
+		$aDades['publicado'] = ($aDades['publicado'] === 't')? 'true' : $aDades['publicado'];
 		if ( filter_var( $aDades['publicado'], FILTER_VALIDATE_BOOLEAN)) { $aDades['publicado']='t'; } else { $aDades['publicado']='f'; }
 
 

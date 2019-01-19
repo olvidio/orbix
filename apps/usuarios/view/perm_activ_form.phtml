@@ -1,0 +1,152 @@
+<?php
+
+// propios
+$i=0;
+$a_cabeceras=array('tipo de actividad','fase inicial','fase final','permiso','dl propia',array('name'=>'afecta_a','width'=>'350'));
+$a_botones = [];
+$a_botones[] = array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(\"#permisos\")" );
+$a_botones[] = array( 'txt' => _("eliminar"), 'click' =>"fnjs_borrar(\"#permisos\")" ); 
+
+$a_valores=array();
+$oFase = new procesos\model\entity\ActividadFase();
+foreach ($oUsuarioUsuarioPerm as $oUsuarioPerm) {
+    $i++;
+    
+    $id_item=$oUsuarioPerm->getId_item();
+    $id_tipo=$oUsuarioPerm->getId_tipo_activ_txt();
+    $id_fase_ini=$oUsuarioPerm->getId_fase_ini();
+    $id_fase_fin=$oUsuarioPerm->getId_fase_fin();
+    $id_accion=$oUsuarioPerm->getAccion();
+    $dl_propia=$oUsuarioPerm->getDl_propia();
+
+    if ($dl_propia=='t') {
+        $dl_propia_txt = core\ConfigGlobal::mi_dele();
+    } else {
+        $dl_propia_txt = _("otras");
+    }
+
+    $oTipoActividad = new web\TiposActividades($oUsuarioPerm->getId_tipo_activ_txt());
+
+    $a_valores[$i]['sel']="$id_usuario#$id_item";
+    $a_valores[$i][1]=$oTipoActividad->getNom();
+    $oFase->setId_fase($id_fase_ini);
+    $oFase->DBCarregar();
+    $a_valores[$i][2]= $oFase->getDesc_fase();
+    $oFase->setId_fase($id_fase_fin);
+    $oFase->DBCarregar();
+    $a_valores[$i][3]= $oFase->getDesc_fase();
+    $a_valores[$i][4]=$oPermAccion->lista_txt($oUsuarioPerm->getAccion());
+    $a_valores[$i][5]=$dl_propia_txt;
+
+    $a_valores[$i][6]=$oCuadrosAfecta->lista_tiene_txt($oUsuarioPerm->getAfecta_a());
+}
+$oHash3 = new web\Hash();
+$oHash3->setcamposForm('que!sel');
+$oHash3->setcamposNo('refresh');
+$a_camposHidden = array(
+        'id_usuario' => $id_usuario,
+        'quien' => $quien
+        );
+$oHash3->setArraycamposHidden($a_camposHidden);
+?>
+<script>
+fnjs_modificar=function(formulario){
+    rta=fnjs_solo_uno(formulario);
+    if (rta==1) {
+        switch (formulario) {
+            case '#permisos':
+                $(formulario).attr('action','apps/procesos/controller/usuario_perm_activ.php');
+                break;
+            case '#avisos':
+                $(formulario).attr('action','sistema/usuario_avisos_pref.php');
+                break;
+        }
+        fnjs_enviar_formulario(formulario);
+    }
+}
+
+fnjs_borrar=function(formulario,que_val){
+    rta=fnjs_solo_uno(formulario);
+    if (rta==1) {
+        switch (formulario) {
+            case '#permisos':
+                if (confirm("<?php echo _("¿Esta seguro que desea borrar este permiso?");?>") ) {
+                    $('#que').val('perm_eliminar');
+                    id_usuario=$('#id_usuario').val();
+                    $(formulario).attr('action','apps/usuarios/controller/usuario_update.php');
+                    $(formulario).submit(function() {
+                        $.ajax({
+                            data: $(this).serialize(),
+                            type: 'post',
+                            url: $(this).attr('action'),
+                            complete: function (rta) {
+                                rta_txt=rta.responseText;
+                                if (rta_txt != '' && rta_txt != '\n') {
+                                    alert ('respuesta: '+rta_txt);
+                                }
+                            },
+                            success: function() { fnjs_actualizar3(formulario) }
+                        });
+                        return false;
+                    });
+                    $(formulario).submit();
+                    $(formulario).off();
+                }
+                break;
+            case '#avisos':
+                if (confirm("<?php echo _("¿Esta seguro que desea borrar este aviso?");?>") ) {
+                    $('#av_que').val('aviso_eliminar');
+                    id_usuario=$('#av_id_usuario').val();
+                    go='sistema/usuario_form.php?quien=usuario&id_usuario='+id_usuario;
+                    $(formulario).attr('action',"sistema/usuario_aviso_update.php");
+                    $(formulario).submit(function() {
+                        $.ajax({
+                            data: $(this).serialize(),
+                            type: 'post',
+                            url: $(this).attr('action'),
+                            complete: function (rta) { 
+                                rta_txt=rta.responseText;
+                                if (rta_txt.indexOf('id="ir_a"') != -1) {
+                                    fnjs_mostra_resposta(rta,'#main'); 
+                                } else {
+                                    if (go) fnjs_update_div('#main',go); 
+                                }
+                            }
+                        });
+                        return false;
+                    });
+                    $(formulario).submit();
+                    $(formulario).off();
+                }
+                break;
+        }
+    }
+}
+fnjs_add_alert=function(){
+    $('#avisos').attr('action',"sistema/usuario_avisos_pref.php");
+    fnjs_enviar_formulario('#avisos');
+}
+fnjs_actualizar3=function(formulario){
+    var campo = '<input type="hidden" name="refresh" value=1>';
+    $(formulario).attr('action',"apps/usuarios/controller/usuario_form.php");
+    $(formulario).append(campo);
+    fnjs_enviar_formulario(formulario,'#main');
+}
+</script>
+<br>
+<h3><?= ucfirst(_("permisos en actividades")) ?>:</h3>
+<b><?= _("propios") ?>:</b>
+<form id=permisos name=permisos action=''>
+<?= $oHash3->getCamposHtml(); ?>
+<input type=hidden id=que  name=que value=''>
+<?php
+$oTabla = new web\Lista();
+$oTabla->setId_tabla('usuario_form_permisos');
+$oTabla->setCabeceras($a_cabeceras);
+$oTabla->setBotones($a_botones);
+$oTabla->setDatos($a_valores);
+echo $oTabla->mostrar_tabla();
+?>
+<br>
+<input type=button onclick="fnjs_add_perm('activ');" value="<?= _("añadir permiso") ?>">
+</form>

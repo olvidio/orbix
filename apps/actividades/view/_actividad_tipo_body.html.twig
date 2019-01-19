@@ -1,0 +1,21 @@
+<table><tr>
+{% if perm_jefe %}
+	<td class="etiqueta">{{ "sf/sv"|trans }}</td>
+	<td> {{ oDesplSfsv.desplegable()|raw }}</td>
+{% else %}
+	<input type="hidden" id="isfsv_val" name="isfsv_val" value="{{ isfsv }}" >
+{% endif %}
+<td class="etiqueta">{{ "asistentes"|trans }}</td>
+	<td id="lst_asistentes">
+		{{ oDesplAsistentes.desplegable()|raw }}
+	</td>
+<td class="etiqueta">{{ "actividad"|trans }}</td>
+	<td id="lst_actividad">
+		{{ oDesplActividad.desplegable()|raw }}
+	</td>
+<td class="etiqueta">{{ "tipo de actividad"|raw }}</td>
+	<td id="lst_nom_tipo">
+		{{ oDesplNomTipo.desplegable()|raw }}
+	</td>
+</tr>
+</table>

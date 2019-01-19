@@ -1,0 +1,106 @@
+<script>
+fnjs_actualizar_fases=function(){
+	var dl_propia=$('input[name="dl_propia"]:checked').val();
+	var isfsv=$('#isfsv_val').val();
+	var iasistentes=$('#iasistentes_val').val();
+	var iactividad=$('#iactividad_val').val();
+	var inom_tipo=$('#inom_tipo_val').val();
+	
+	if (!iasistentes) iasistentes='.';
+	if (!iactividad) iactividad='.';
+	if (!inom_tipo) inom_tipo='...';
+
+	id_tipo_activ=isfsv+iasistentes+iactividad+inom_tipo;
+
+	// desplegable 'desde'
+	var url='{{ url_actualizar }}';
+	var parametros='salida=desde&dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'{{ h_actualizar|raw }}';
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta_txt) {
+			//rta_txt=rta.responseText;
+			//alert ('respuesta: '+rta_txt);
+			$('#desde').html(rta_txt);			
+		}
+	});
+	// desplegable 'hasta'
+	var url='{{ url_actualizar }}';
+	var parametros='salida=hasta&dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'{{ h_actualizar|raw }}';
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta_txt) {
+			//rta_txt=rta.responseText;
+			//alert ('respuesta: '+rta_txt);
+			$('#hasta').html(rta_txt);			
+		}
+	});
+}
+
+fnjs_grabar=function(formulario){
+	$(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
+	$(formulario).submit(function() {
+		$.ajax({
+			data: $(this).serialize(),
+			type: 'post',
+			url: $(this).attr('action'),
+			complete: function (rta) { 
+				rta_txt=rta.responseText;
+				if (rta_txt != '' && rta_txt != '\n') {
+                    alert ('respuesta: '+rta_txt);
+                } else {
+					{{ oPosicion.js_atras(1)|raw }}
+				}
+			}
+		});
+		return false;
+	});
+	$(formulario).submit();
+	$(formulario).off();
+}
+</script>
+{{  oPosicion.mostrar_left_slide(1)|raw }}
+<h1>{{  "Añadir nuevo permiso a"|trans }} {{ nombre }}</h1>
+<form id=pem_usuario  name=perm_usuario action="" method="post" >
+{{ oHash.getCamposHtml()|raw }}
+<input type='hidden' id='id_tipo_activ' name='id_tipo_activ'> </td>
+<h3>{{ "seleccionar un tipo de actividad"|trans }}:</h3>
+<table>
+<tr>
+<td class=etiqueta>{{ "para actividades que organiza"|trans }}:</td>
+<td colspan=5>
+	<input type=radio name=dl_propia value='t' {{ chk_propia }} onchange='fnjs_actualizar_fases();' > {{ "la propia dl"|trans }}
+	<input type=radio name=dl_propia value='f' {{ chk_otra }} onchange='fnjs_actualizar_fases();' > {{ "otras dl"|trans }}
+</td></tr>
+<tr>
+</table>
+{{ oActividadTipo.getHtml()|raw }}
+<table>
+</tr>
+</table>
+<h3>{{ "periodo del permiso"|trans }}:</h3>
+{{ "NOTA: Sólo salen las fases comunes a todos los procesos de los tipos de actividad seleccionados.
+Para ver más fases del proceso, debe limitar el tipo de actividad."|trans }}
+<br>
+<table>
+<tr>
+<td class=etiqueta>{{ "desde"|trans }}:</td>
+<td>
+<span id=desde> {{ oDesplFasesIni.desplegable()|raw }} </span>
+</td>
+<td class=etiqueta>{{ "hasta"|trans }}:</td>
+<td>
+<span id=hasta> {{ oDesplFasesFin.desplegable()|raw }} </span>
+</td>
+<td class=etiqueta>{{ "acción"|trans }}:</td>
+<td>{{ oDesplAccion.desplegable()|raw }}</td></tr>
+<tr>
+<td class=etiqueta>{{ "afecta a"|trans }}:</td>
+<td colspan=5> {{ oCuadros.cuadros_check('afecta_a',afecta_a)|raw }} </td></tr>
+</table>
+<br>
+<input type=button onclick="fnjs_grabar(this.form);" value="{{ "guardar"|trans }}">
+</form>

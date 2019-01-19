@@ -120,7 +120,7 @@ switch ($Qque) {
 		if ($oUsuarioGrupo->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
 		}
-		$a_parametros = array('quien' => 'usuario', 'id_usuario' => $Qid_usuario);
+		$a_parametros = array('quien' => 'usuario', 'id_usuario' => $Qid_usuario, 'refresh' => 1);
 		$pagina = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?'.http_build_query($a_parametros));
 		$oPosicion = new web\Posicion();
 		echo $oPosicion->ir_a($pagina);
@@ -133,7 +133,7 @@ switch ($Qque) {
 		if ($oUsuarioGrupo->DBEliminar() === false) {
 			echo _("hay un error, no se ha eliminado");
 		}
-		$a_parametros = array('quien' => 'usuario', 'id_usuario' => $Qid_usuario);
+		$a_parametros = array('quien' => 'usuario', 'id_usuario' => $Qid_usuario, 'refresh' => 1);
 		$pagina = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?'.http_build_query($a_parametros));
 		$oPosicion = new web\Posicion();
 		echo $oPosicion->ir_a($pagina);
@@ -142,7 +142,7 @@ switch ($Qque) {
 		// elimna al usuario.
 		$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 		if (!empty($a_sel)) { //vengo de un checkbox
-		    $id_usuario= (integer) trtok($a_sel[0],"#");
+		    $id_usuario= (integer) strtok($a_sel[0],"#");
 		}
 		$oUsuario= new usuarios\Usuario(array('id_usuario'=>$id_usuario));
 		if ($oUsuario->DBEliminar() === false) {

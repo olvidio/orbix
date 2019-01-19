@@ -162,7 +162,7 @@ class ProfesorPublicacion Extends core\ClasePropiedades {
 		$aDades['observ'] = $this->sobserv;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		$aDades['pendiente'] = ($aDades['pendiente'] === 't')? 'true' : '';
+		$aDades['pendiente'] = ($aDades['pendiente'] === 't')? 'true' : $aDades['pendiente'];
 		if ( filter_var( $aDades['pendiente'], FILTER_VALIDATE_BOOLEAN)) { $aDades['pendiente']='t'; } else { $aDades['pendiente']='f'; }
 
 		if ($bInsert === false) {

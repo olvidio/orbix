@@ -13,6 +13,7 @@
 */
 
 use ubis\model\entity as ubis;
+use core\ConfigGlobal;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -166,11 +167,32 @@ switch ($Qque) {
 	break;		
 }
 
+$perm_jefe = FALSE;
+if (core\ConfigGlobal::is_jefeCalendario()
+    or (($_SESSION['oPerm']->have_perm("des") or $_SESSION['oPerm']->have_perm("vcsd")) && ConfigGlobal::mi_sfsv() == 1)
+    ) { 
+    $perm_jefe = TRUE;
+}
+$oActividadTipo->setPerm_jefe($perm_jefe);
+
+$perm_ctr = FALSE;
+if (core\ConfigGlobal::mi_id_role() != 8 && core\ConfigGlobal::mi_id_role() != 16) {
+    $perm_ctr = TRUE;
+}
+
+$val_status_1 = actividades\model\entity\ActividadAll::STATUS_PROYECTO;
+$chk_status_1 = ($Qstatus== $val_status_1)? "checked='true'" : '';
+$val_status_2 = actividades\model\entity\ActividadAll::STATUS_ACTUAL;
+$chk_status_2 = ($Qstatus== $val_status_2)? "checked='true'" : '';
+$val_status_3 = actividades\model\entity\ActividadAll::STATUS_TERMINADA;
+$chk_status_3 = ($Qstatus== $val_status_3)? "checked='true'" : '';
+$val_status_4 = actividades\model\entity\ActividadAll::STATUS_BORRABLE;
+$chk_status_4 = ($Qstatus== $val_status_4)? "checked='true'" : '';
+
 $a_campos = ['oPosicion' => $oPosicion,
 			'oHash' => $oHash,
 			'accion' => $accion,
 			'Qid_ubi' => $Qid_ubi,
-			'status' => $Qstatus,
 			'h' => $h,
 			'titulo' => $titulo,
 			'oDesplFiltroLugar' => $oDesplFiltroLugar,
@@ -179,7 +201,16 @@ $a_campos = ['oPosicion' => $oPosicion,
 			'oFormP' => $oFormP,
 			'oActividadTipo' => $oActividadTipo,
 			'Link_borrar' => $Link_borrar,
+            'perm_ctr' => $perm_ctr,
+			'val_status_1' => $val_status_1,
+			'chk_status_1' => $chk_status_1,
+			'val_status_2' => $val_status_2,
+			'chk_status_2' => $chk_status_2,
+			'val_status_3' => $val_status_3,
+			'chk_status_3' => $chk_status_3,
+			'val_status_4' => $val_status_4,
+			'chk_status_4' => $chk_status_4,
 			];
 
-$oView = new core\View('actividades/controller');
-echo $oView->render('actividad_que.phtml',$a_campos);
+$oView = new core\ViewTwig('actividades/controller');
+echo $oView->render('actividad_que.html.twig',$a_campos);

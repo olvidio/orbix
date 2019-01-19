@@ -3,8 +3,10 @@
  * Muestra un formulario para poder seleccionar un rgupo de actividades
  * 
  */
-use ubis\model\entity as ubis;
 use actividades\model\entity\ActividadAll;
+use ubis\model\entity\GestorDelegacion;
+use ubis\model\entity\Ubi;
+
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -129,7 +131,7 @@ if (!empty($Qid_activ)) { // caso de modificar
 	
 
 if (!empty($id_ubi) && $id_ubi != 1) {
-	$oCasa = ubis\Ubi::newUbi($id_ubi);
+	$oCasa = Ubi::newUbi($id_ubi);
 	$nombre_ubi=$oCasa->getNombre_ubi();
 	$delegacion=$oCasa->getDl();
 	$region=$oCasa->getRegion();
@@ -149,7 +151,7 @@ if(core\ConfigGlobal::is_app_installed('procesos')) {
 		$Bdl="f";
 	}
 }
-$oGesDl = new ubis\GestorDelegacion();
+$oGesDl = new GestorDelegacion();
 $oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones($Bdl);
 $oDesplDelegacionesOrg->setNombre('dl_org');
 $oDesplDelegacionesOrg->setOpcion_sel($dl_org);

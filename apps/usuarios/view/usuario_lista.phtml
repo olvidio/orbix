@@ -36,11 +36,12 @@ fnjs_actualizar=function(){
 	var url='<?= web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_lista.php'); ?>';
 	fnjs_update_div('#main',url);
 }
+fnjs_left_side_hide();
 </script>
 <h3>Buscar usuario</h3>
 <form id=frm_buscar  name=frm_buscar action="" method="post" onkeypress="fnjs_enviar(event,this);" >
 <?= $oHash->getCamposHtml(); ?>
-<?= ucfirst(_("nombre")) ?>:<input type=text name=Qusername value="<?= $username ?>">
+<?= ucfirst(_("nombre")) ?>:<input type=text name=username value="<?= $username ?>">
 <input type="button" onclick="fnjs_buscar();" id="btn_ok" name="btn_ok" value="<?= ucfirst(_("buscar")); ?>" class="btn_ok">
 <br>
 <br>
@@ -52,6 +53,6 @@ fnjs_actualizar=function(){
 <br>
 <?php if ($permiso == 1) { ?>
 <table><tr><th class="no_print">
-	<span class="link_inv" onclick="fnjs_update_div('#main','<?= $url_nuevo ?>');"><?= core\strtoupper_dlb(_("nuevo grupo")) ?></span>
+	<span class="link_inv" onclick="fnjs_update_div('#main','<?= $url_nuevo ?>');"><?= core\strtoupper_dlb(_("nuevo usuario")) ?></span>
 </th></tr></table>
 <?php } ?>

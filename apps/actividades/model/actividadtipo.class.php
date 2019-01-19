@@ -10,6 +10,7 @@ namespace actividades\model;
 
 use core;
 use web;
+use core\ConfigGlobal;
 
 /**
  * Description of actividadtipo
@@ -25,6 +26,8 @@ class ActividadTipo {
 	private $status;
 	private $que;
 	private $id_tipo_activ;
+	private $para_perm = FALSE;
+	private $bperm_jefe = FALSE;
 			
 	public function getHtml() {
 		$isfsv=core\ConfigGlobal::mi_sfsv();
@@ -90,7 +93,7 @@ class ActividadTipo {
 
 
 		// si es una búsqueda, también puedo buscar todos. (Excepto sf/sv)
-		if (core\ConfigGlobal::is_jefeCalendario() || (isset($this->que) && $this->que=="buscar")) {
+		if (core\ConfigGlobal::is_jefeCalendario() || (isset($this->que) && $this->que=="buscar" || $this->bperm_jefe)) {
 			$oTipoActivB= new web\TiposActividades();
 			if ($this->ssfsv) $oTipoActivB->setSfsvText($this->ssfsv);
 			$a_asistentes_posibles =$oTipoActivB->getAsistentesPosibles();
@@ -141,24 +144,35 @@ class ActividadTipo {
 		$oDesplNomTipo->setValBlanco('...');
 		$oDesplNomTipo->setAction('fnjs_act_id_activ()');
 
+		$url = ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tipo_get.php';
 		$oHashTipo = new web\Hash();
 		$oHashTipo->setUrl('apps/actividades/controller/actividad_tipo_get.php');
 		$oHashTipo->setCamposForm('salida!entrada');
 		$h = $oHashTipo->linkSinVal();
 
-
 		$a_campos = [
+		            'url' => $url,
 					'h' => $h,
+					'perm_jefe' => $this->bperm_jefe,
 					'isfsv' => $isfsv,
-//					'pag_usuarios' => $pag_usuarios,
 					'oDesplSfsv' => $oDesplSfsv,
 					'oDesplAsistentes' => $oDesplAsistentes,
 					'oDesplActividad' => $oDesplActividad,
 					'oDesplNomTipo' => $oDesplNomTipo,
 					];
 
-		$oView = new core\View('actividades/controller');
-		return $oView->render('actividad_tipo_que.phtml',$a_campos);
+		if ($this->para_perm) {
+		    $aditionalPaths = ['actividades' => 'actividades/view'];
+		    $oView = new core\ViewTwig('procesos/controller',$aditionalPaths);
+            return $oView->render('actividad_tipo_que_perm.html.twig',$a_campos);
+		} else {
+            $oView = new core\ViewTwig('actividades/controller');
+            return $oView->render('actividad_tipo_que.html.twig',$a_campos);
+		}
+	}
+
+	public function setPerm_jefe($perm_jefe) {
+		$this->bperm_jefe = $perm_jefe;
 	}
 
 	public function setSfsv($ssfsv) {
@@ -182,12 +196,15 @@ class ActividadTipo {
 	}
 
 	public function setQue($que) {
-		$this->que = $this->que;
+		$this->que = $que;
 	}
 
 	public function setId_tipo_activ($id_tipo_activ) {
 		$this->id_tipo_activ = $id_tipo_activ;
 	}
 
+	public function setParaPerm($para_perm=FALSE) {
+	    $this->para_perm = $para_perm;
+	}
 
 }

@@ -116,9 +116,9 @@ class ActividadFase Extends core\ClasePropiedades {
 		$aDades['sv'] = $this->bsv;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		$aDades['sf'] = ($aDades['sf'] === 't')? 'true' : '';
+		$aDades['sf'] = ($aDades['sf'] === 't')? 'true' : $aDades['sf'];
 		if ( filter_var( $aDades['sf'], FILTER_VALIDATE_BOOLEAN)) { $aDades['sf']='t'; } else { $aDades['sf']='f'; }
-		$aDades['sv'] = ($aDades['sv'] === 't')? 'true' : '';
+		$aDades['sv'] = ($aDades['sv'] === 't')? 'true' : $aDades['sv'];
 		if ( filter_var( $aDades['sv'], FILTER_VALIDATE_BOOLEAN)) { $aDades['sv']='t'; } else { $aDades['sv']='f'; }
 
 		if ($bInsert === FALSE) {

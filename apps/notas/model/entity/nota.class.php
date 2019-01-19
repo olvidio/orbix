@@ -116,7 +116,7 @@ class Nota Extends core\ClasePropiedades {
 		$aDades['breve'] = $this->sbreve;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		$aDades['superada'] = ($aDades['superada'] === 't')? 'true' : '';
+		$aDades['superada'] = ($aDades['superada'] === 't')? 'true' : $aDades['superada'];
 		if ( filter_var( $aDades['superada'], FILTER_VALIDATE_BOOLEAN)) { $aDades['superada']='t'; } else { $aDades['superada']='f'; }
 
 		if ($bInsert === false) {

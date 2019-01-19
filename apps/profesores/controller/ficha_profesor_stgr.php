@@ -243,7 +243,7 @@ $a_ampliacion = array();
 $id_departamento = '';
 foreach ($cProfesorAmpliaciones as $oProfesorAmpliacion) {
 	$id_asignatura = $oProfesorAmpliacion->getId_asignatura();
-	$f_nombramiento = $oProfesorAmpliacion->getF_nombramiento()->getFrtomLocal();
+	$f_nombramiento = $oProfesorAmpliacion->getF_nombramiento()->getFromLocal();
 	$escrito_nombramiento = $oProfesorAmpliacion->getEscrito_nombramiento();
 	$f_cese = $oProfesorAmpliacion->getF_cese()->getFromLocal();
 	$escrito_cese = $oProfesorAmpliacion->getEscrito_cese();

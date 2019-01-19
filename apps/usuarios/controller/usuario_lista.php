@@ -28,9 +28,9 @@ if (isset($_POST['stack'])) {
 }
 
 // Se usa al buscar:
-$Qusername = (string) \filter_input(INPUT_POST, 'Qusername');
+$Qusername = (string) \filter_input(INPUT_POST, 'username');
 
-$oPosicion->setParametros(array('Qusername'=>$Qusername),1);
+$oPosicion->setParametros(array('username'=>$Qusername),1);
 
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miRole=$oMiUsuario->getId_role();
@@ -108,7 +108,7 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('Qusername');
+$oHash->setcamposForm('username');
 $oHash->setcamposNo('scroll_id');
 $oHash->setArraycamposHidden(array('quien'=>'usuario'));
 
@@ -117,7 +117,8 @@ $oHash1->setcamposForm('sel');
 $oHash1->setcamposNo('scroll_id');
 $oHash1->setArraycamposHidden(array('que'=>'eliminar'));
 
-$url_nuevo = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?'.http_build_query(array('nuevo'=>1)));
+$aQuery = [ 'nuevo' => 1, 'quien' => 'usuario' ];
+$url_nuevo = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?'.http_build_query($aQuery));
 
 $a_campos = [
 			'oHash' => $oHash,

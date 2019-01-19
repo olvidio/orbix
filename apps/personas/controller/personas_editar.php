@@ -20,6 +20,7 @@ $obj = 'personas\\model\\entity\\'.$Qobj_pau;
 $oPosicion->recordar();
 
 if (!empty($Qnuevo)) {
+    $oF_hoy = new web\DateTimeLocal();
 	$Qapellido1 = (string) filter_input(INPUT_POST, 'apellido1');
 	$oPersona = new $obj;
 	$cDatosCampo = $oPersona->getDatosCampos();
@@ -30,7 +31,7 @@ if (!empty($Qnuevo)) {
 		$a_campos[$camp] = $valor_predeterminado;
 	}
 	$oPersona->setApellido1($Qapellido1);
-	$oPersona->setF_situacion(date('j/m/Y'));
+	$oPersona->setF_situacion($oF_hoy);
 	$id_tabla = (string) filter_input(INPUT_POST, 'tabla');
 	$stgr = '';
 	$dl = '';

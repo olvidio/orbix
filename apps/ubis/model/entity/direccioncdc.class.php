@@ -73,7 +73,7 @@ class DireccionCdc Extends DireccionGlobal {
 		$aDades['nom_sede'] = $this->snom_sede;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		$aDades['cp_dcha'] = ($aDades['cp_dcha'] === 't')? 'true' : '';
+		$aDades['cp_dcha'] = ($aDades['cp_dcha'] === 't')? 'true' : $aDades['cp_dcha'];
 		if ( filter_var( $aDades['cp_dcha'], FILTER_VALIDATE_BOOLEAN)) { $aDades['cp_dcha']='t'; } else { $aDades['cp_dcha']='f'; }
 
 		if ($bInsert === false) {

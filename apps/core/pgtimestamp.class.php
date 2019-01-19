@@ -55,13 +55,13 @@ class PgTimestamp {
             switch ($type) {
                 case 'timestamp':
                     //$rta = sprintf("%s '%s'", $type, $this->checkData($this->data)->format(static::TS_FORMAT));
-                    $rta = sprintf("'%s'", $this->checkData($this->data)->format(static::TS_FORMAT));
+                    $rta = sprintf("%s", $this->checkData($this->data)->format(static::TS_FORMAT));
                     break;
                 case 'date':
-                    $rta = sprintf("'%s'", $this->checkData($this->data)->format(static::DATE_FORMAT));
+                    $rta = sprintf("%s", $this->checkData($this->data)->format(static::DATE_FORMAT));
                     break;
                 case 'time':
-                    $rta = sprintf("'%s'", $this->checkData($this->data)->format(static::TIME_FORMAT));
+                    $rta = sprintf("%s", $this->checkData($this->data)->format(static::TIME_FORMAT));
                     break;
             }
         } else {
