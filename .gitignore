@@ -28,9 +28,8 @@ apps/web/hash.class.php
 # Logs and databases #
 ######################
 *.log
-###*.sql
+*.sql
 *.sqlite
-log/db/*
  
 # OS generated files #
 ######################
@@ -42,9 +41,13 @@ log/db/*
 ehthumbs.db
 Thumbs.db
 /nbproject/private/
-!log/menus/comun.sql
-!log/menus/refgrupmenu.sql
-!log/menus/refgrupmenu_rol.sql
-!log/menus/refmenus.sql
-!log/menus/tot_menus.sql
-!log/menus/tot_menus_base.sql
+##############
+log/*
+!log/menus/
+!log/menus/*
+#!log/menus/comun.sql
+#!log/menus/refgrupmenu.sql
+#!log/menus/refgrupmenu_rol.sql
+#!log/menus/refmenus.sql
+#!log/menus/tot_menus.sql
+#!log/menus/tot_menus_base.sql
