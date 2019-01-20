@@ -31,11 +31,11 @@ function ordena($id_activ,$id_ubi,$num_orden) {
 						if (!empty($anterior_id_ubi)) {
 							$cCentrosEncargados[($i-1)]->setId_ubi($id_ubi);
 							if ($cCentrosEncargados[($i-1)]->DBGuardar() === false) {
-								echo _('Hay un error, no se ha guardado.');
+								echo _('Hay un error, no se ha guardado');
 							}
 							$cCentrosEncargados[($i)]->setId_ubi($anterior_id_ubi);
 							if ($cCentrosEncargados[($i)]->DBGuardar() === false) {
-								echo _('Hay un error, no se ha guardado.');
+								echo _('Hay un error, no se ha guardado');
 							}
 						}
 					}
@@ -46,11 +46,11 @@ function ordena($id_activ,$id_ubi,$num_orden) {
 						if (!empty($post_id_ubi)) {
 							$cCentrosEncargados[($i+1)]->setId_ubi($id_ubi);
 							if ($cCentrosEncargados[($i+1)]->DBGuardar() === false) {
-								echo _('Hay un error, no se ha guardado.');
+								echo _('Hay un error, no se ha guardado');
 							}
 							$cCentrosEncargados[($i)]->setId_ubi($post_id_ubi);
 							if ($cCentrosEncargados[($i)]->DBGuardar() === false) {
-								echo _('Hay un error, no se ha guardado.');
+								echo _('Hay un error, no se ha guardado');
 							}
 						}
 					}
@@ -74,7 +74,7 @@ switch ($Qque) {
 			if ($Qid_activ && $Qid_ubi) {
 				$oCentroEncargado = new CentroEncargado(array('id_activ'=>$Qid_activ,'id_ubi'=>$Qid_ubi));
 				if ($oCentroEncargado->DBEliminar() === false) {
-					$error_txt=_("Hay un error, no se ha eliminado el centro.");
+					$error_txt=_("Hay un error, no se ha eliminado el centro");
 				}
 			} else {
 				$error_txt=_("no sé cuál he de borar");
@@ -278,7 +278,7 @@ switch ($Qque) {
 		$oCentroEncargado->setNum_orden($num_orden);
 		$oCentroEncargado->setEncargo('organizador');
 		if ($oCentroEncargado->DBGuardar() === false) {
-			echo _("Hay un error, no se ha guardado el cargo.");
+			echo _("Hay un error, no se ha guardado el cargo");
 		}
 		break;
 	case 'lista_activ':

@@ -9,8 +9,8 @@ Sólo hay que editar "orbix.po".
 
 <ol>
 
-<li>Cuando ha habido cambios en el programa hay que actualizar desde la plantilla.<br>
-Para ello, abrir la plantilla con poedit, y dar a "actualizar desde las fuentes".
+<li>Cuando ha habido cambios en el programa hay que actualizar primero la plantilla (orbix/languages/es_ES.pot).<br>
+Para ello, abrir la plantilla con poedit, y dar a "catalogo > actualizar desde las fuentes".
 </li>  
 <li>Para poder traducir los menus, hay que ejecutar:<br>
  Sistema > traducciones > menus.<br>
@@ -20,7 +20,15 @@ Para ello, abrir la plantilla con poedit, y dar a "actualizar desde las fuentes"
 a) si queremos usar el google traductor, creamos el fichero .po para el spanish, y lo subimos al traductor toolkit (que es distinto del traductor). Ver más abajo.
 <br>
 https://translate.google.com/toolkit/list?hl=ca#translations/active
+</li>
+<li>Para crear actualizarb n idioma:
+a) Abrir el archivo de traduccion con poedit. (orbix/languages/ca_ES.UTF-8/LC_MESSAGES/orbix.po).<br>
+b) Ir a "Catálogo > Update from POT file", y seleccionar la plantilla (orbix/languages/es_ES.pot).<br>
 
+si queremos usar el google traductor, creamos el fichero .po para el spanish, y lo subimos al traductor toolkit (que es distinto del traductor). Ver más abajo.
+<br>
+https://translate.google.com/toolkit/list?hl=ca#translations/active
+</li>
 </ol>
 
 <h1>Poedit</h1>

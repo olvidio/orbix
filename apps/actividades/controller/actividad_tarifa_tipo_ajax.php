@@ -90,7 +90,7 @@ switch ($Qque) {
 		$oTipoActivTarifa->setTemporada($Qtemporada);
 		$oTipoActivTarifa->setId_tipo_activ($Qid_tipo_activ);
 		if ($oTipoActivTarifa->DBGuardar() === false) {
-			echo _("Hay un error, no se ha guardado.");
+			echo _("Hay un error, no se ha guardado");
 		}
 		break;
 	case "eliminar":
@@ -98,7 +98,7 @@ switch ($Qque) {
 		$oTipoActivTarifa = new TipoActivTarifa();
 		$oTipoActivTarifa->setId_item($Qid_item);
 		if ($oTipoActivTarifa->DBEliminar() === false) {
-			echo _("Hay un error, no se ha borrado.");
+			echo _("Hay un error, no se ha borrado");
 		}
 		break;
 }

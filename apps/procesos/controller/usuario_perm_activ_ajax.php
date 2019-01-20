@@ -78,11 +78,11 @@ switch($Qsalida) {
 			$chk_new = 'checked';
 		}
 		$txt2 = '<tr>';
-		$txt2 .= '<td>'._('avisar si el valor:');
+		$txt2 .= '<td>'._('avisar si el valor').':';
 		$txt2 .= "<input type=\"checkbox\" $chk_new name=\"valor_new\">"._('nuevo');
 		$txt2 .= "<input type=\"checkbox\" $chk_old name=\"valor_old\">"._('actual');
 		$txt2 .= '</td></tr>';
-		$txt2 .= '<tr><td>'._('es:');
+		$txt2 .= '<tr><td>'._('es').':';
 		foreach ($a_operadores as $op => $nom_op) {
 			if (empty($operador)) {
 				$chk_radio = ($op == '=')? 'checked' : '';
@@ -92,7 +92,7 @@ switch($Qsalida) {
 			$txt2 .= "<input type=\"radio\" $chk_radio name=\"operador\" value=\"$op\">$nom_op";
 		}
 		$txt2 .= '</td></tr>';
-		$txt2 .= '<tr><td>'._('a:');
+		$txt2 .= '<tr><td>'._('a').':';
 		$txt3 = '<input type="input" name="valor" value="'.$valor.'">';
 		if ($campo == 'id_ubi') {
 

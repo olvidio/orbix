@@ -62,7 +62,7 @@ switch ($Qmod) {
 
         //Compruebo que estén todos los campos necesarios
         if (empty($Qdesc_enc)) {
-            echo _("Debe llenar el campo Descripción")."<br>";
+            echo _("Debe llenar el campo descripción")."<br>";
             exit;
         }
 

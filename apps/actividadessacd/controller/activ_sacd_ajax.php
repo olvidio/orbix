@@ -63,11 +63,11 @@ function ordena($id_activ,$id_nom,$num_orden) {
 						if (!empty($anterior_id_nom)) {
 							$cActividadCargos[($i-1)]->setId_nom($id_nom);
 							if ($cActividadCargos[($i-1)]->DBGuardar() === false) {
-								echo _('Hay un error, no se ha guardado.');
+								echo _('Hay un error, no se ha guardado');
 							}
 							$cActividadCargos[($i)]->setId_nom($anterior_id_nom);
 							if ($cActividadCargos[($i)]->DBGuardar() === false) {
-								echo _('Hay un error, no se ha guardado.');
+								echo _('Hay un error, no se ha guardado');
 							}
 						}
 					}
@@ -78,11 +78,11 @@ function ordena($id_activ,$id_nom,$num_orden) {
 						if (!empty($post_id_nom)) {
 							$cActividadCargos[($i+1)]->setId_nom($id_nom);
 							if ($cActividadCargos[($i+1)]->DBGuardar() === false) {
-								echo _('Hay un error, no se ha guardado.');
+								echo _('Hay un error, no se ha guardado');
 							}
 							$cActividadCargos[($i)]->setId_nom($post_id_nom);
 							if ($cActividadCargos[($i)]->DBGuardar() === false) {
-								echo _('Hay un error, no se ha guardado.');
+								echo _('Hay un error, no se ha guardado');
 							}
 						}
 					}
@@ -109,12 +109,12 @@ switch ($Qque) {
                 // Para obligar a cargar el id_item y poder eliminar. (hemos creado el objeto: con id_activ,id_cargo)
 				$oCargoActiv->DBCarregar();
 				if ($oCargoActiv->DBEliminar() === false) {
-					$error_txt=_("Hay un error, no se ha eliminado el cargo.");
+					$error_txt=_("Hay un error, no se ha eliminado el cargo");
 				}
 				// también la asistencia
 				$oAsisActiv = new AsistenteDl(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom));
 				if ($oAsisActiv->DBEliminar() === false) {
-					$error_txt= _("Hay un error, no se ha eliminado la asistencia.");
+					$error_txt= _("Hay un error, no se ha eliminado la asistencia");
 				}
 			} else {
 				$error_txt=_("no sé cuál he de borar");
@@ -243,7 +243,7 @@ switch ($Qque) {
 		$oCargoActiv->setId_nom($Qid_nom);
 		$oCargoActiv->setId_cargo($id_cargo);
 		if ($oCargoActiv->DBGuardar() === false) {
-			echo _("Hay un error, no se ha guardado el cargo.");
+			echo _("Hay un error, no se ha guardado el cargo");
 		}
 		// pongo que asiste si no es de sf
 		$oActividad = new ActividadDl($Qid_activ);
@@ -251,7 +251,7 @@ switch ($Qque) {
 		if ($id_tipo_activ{0} == 1) {
 			$oAsisActiv = new AsistenteDl(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom,'propio'=>'f','falta'=>'f'));
 			if ($oAsisActiv->DBGuardar() === false) {
-				echo _("Hay un error, no se ha guardado la asistencia.");
+				echo _("Hay un error, no se ha guardado la asistencia");
 			}
 		}
 		break;

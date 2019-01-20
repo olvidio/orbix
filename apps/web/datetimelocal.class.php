@@ -126,7 +126,7 @@ class DateTimeLocal Extends \DateTime {
     
     public function format($format) {
         $english = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
-        $local = array(_("Lunes"), _("Martes"), _("Miércoles"), _("Jueves"), _("Viernes"), _("Sábado"), _("Domingo"));
+        $local = array(_("lunes"), _("martes"), _("miércoles"), _("jueves"), _("viernes"), _("sábado"), _("domingo"));
         return str_replace($english, $local, parent::format($format));
     }
     public function formatRoman() {

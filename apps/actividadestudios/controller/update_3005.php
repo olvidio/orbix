@@ -53,7 +53,7 @@ switch ($Qmod) {
 			$cMatriculas = $GesMatriculas ->getMatriculas(array('id_activ'=>$id_activ,'id_asignatura'=>$id_asignatura));
 			foreach ($cMatriculas as $oMatricula) {
 				if ($oMatricula->DBElliminar() === false) {
-					$msg_err = _("hay un error, no se ha borrado.");
+					$msg_err = _("Hay un error, no se ha borrado");
 				}
 			}
 			*/

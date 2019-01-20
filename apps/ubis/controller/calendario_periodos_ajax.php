@@ -35,7 +35,7 @@ switch ($Qque) {
 		
 		$txt="<form id='frm_periodo'>";
 		$txt.= $oHash->getCamposHtml();
-		$txt.='<h3>'._("Periodo").'</h3>';
+		$txt.='<h3>'._("periodo").'</h3>';
 		$txt.= _("de") ."<input type=text size=12 name=f_ini value=\"\">   "._("hasta")." <input type=text size=12 name=f_fin value=\"\">";
 		$txt.= _("asignado a")." <select name=sfsv><option value=1 >". _("sv")."</option>";
 		$txt.="<option value=2 >". _("sf") ."</option>";
@@ -69,7 +69,7 @@ switch ($Qque) {
 		
 		$txt="<form id='frm_periodo'>";
 		$txt.= $oHash->getCamposHtml();
-		$txt.='<h3>'._("Periodo").'</h3>';
+		$txt.='<h3>'._("periodo").'</h3>';
 		$txt.= _("de") ."<input type=text size=12 name=f_ini value=\"$f_ini\">   "._("hasta")." <input type=text size=12 name=f_fin value=\"$f_fin\">";
 		$txt.= _("asignado a")." <select name=sfsv><option value=1 $sel_sv>". _("sv")."</option>";
 		$txt.="<option value=2 $sel_sf>". _("sf") ."</option>";
@@ -213,7 +213,7 @@ switch ($Qque) {
 		if (!empty($Qf_fin)) $oCasaPeriodo->setF_fin($Qf_fin);
 		if (!empty($Qsfsv)) $oCasaPeriodo->setSfsv($Qsfsv);
 		if ($oCasaPeriodo->DBGuardar() === false) {
-			echo _("Hay un error, no se ha guardado.");
+			echo _("Hay un error, no se ha guardado");
 		}
 		break;
 	case "eliminar":

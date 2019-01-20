@@ -30,7 +30,7 @@ include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
     <br>
     <h2><a href="#uso_general">Uso en general</a></h2>
     <h2><a href="#gestion_de_ca">Gestión de ca</a></h2>
-    <h2><a href="traducciones.php">Traducciones</a></h2>
+    <h2><a href="public/ayuda/traducciones.php">Traducciones</a></h2>
 	<br> 
 	<br> 
 	<br> 

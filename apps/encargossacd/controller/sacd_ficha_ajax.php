@@ -466,12 +466,12 @@ switch ($Qque) {
 		if(!empty($cEncargoSacdObserv[0])) {
 			if (empty($Qobserv)) {
 			   if ($cEncargoSacdObserv[0]->DBEliminar() === false) {
-					echo _('Hay un error, no se ha elimenado.');
+					echo _('Hay un error, no se ha eliminado');
 				}
 			} else {
 				$cEncargoSacdObserv[0]->setObserv($Qobserv);
 				if ($cEncargoSacdObserv[0]->DBGuardar() === false) {
-					echo _('Hay un error, no se ha guardado.');
+					echo _('Hay un error, no se ha guardado');
 				}
 			}
 		} else {
@@ -479,7 +479,7 @@ switch ($Qque) {
 			$oEncargoSacdObserv->setId_nom($Qid_nom);
 			$oEncargoSacdObserv->setObserv($Qobserv);
 			if ($oEncargoSacdObserv->DBGuardar() === false) {
-				echo _('Hay un error, no se ha guardado.');
+				echo _('Hay un error, no se ha guardado');
 			}
 		}
 		break;

@@ -389,7 +389,7 @@ switch ($Qque) {
 		if (!empty($Qcantidad)) $oTarifa->setCantidad($Qcantidad);
 		if (!empty($Qobserv)) $oTarifa->setObserv($Qobserv);
 		if ($oTarifa->DBGuardar() === false) {
-			echo _("Hay un error, no se ha guardado.");
+			echo _("Hay un error, no se ha guardado");
 		}
 		break;
 	case "borrar":
@@ -418,7 +418,7 @@ switch ($Qque) {
 			$oTarifa->DBCarregar();
 			if (isset($cantidad)) $oTarifa->setCantidad($cantidad);
 			if ($oTarifa->DBGuardar() === false) {
-				echo _("Hay un error, no se ha guardado.");
+				echo _("Hay un error, no se ha guardado");
 			}
 		}
 		break;
@@ -480,14 +480,14 @@ switch ($Qque) {
 		if (isset($Qmodo)) $oTipoTarifa->setModo($Qmodo);
 		if (isset($Qobserv)) $oTipoTarifa->setObserv($Qobserv);
 		if ($oTipoTarifa->DBGuardar() === false) {
-			echo _("Hay un error, no se ha guardado.");
+			echo _("Hay un error, no se ha guardado");
 		}
 		break;
 	case "tar_eliminar":
 		$oTipoTarifa = new TipoTarifa($_POST['id_tarifa']);
 		$oTipoTarifa->DBCarregar();
 		if ($oTipoTarifa->DBEliminar() === false) {
-			echo _("Hay un error, no se ha borrado.");
+			echo _("Hay un error, no se ha borrado");
 		}
 		break;
 }
