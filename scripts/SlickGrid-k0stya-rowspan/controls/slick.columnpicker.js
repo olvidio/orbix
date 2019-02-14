@@ -22,7 +22,10 @@
       updateColumnLookupTable(columns);
       grid.onHeaderContextMenu.subscribe(handleHeaderContextMenu);
       grid.onColumnsReordered.subscribe(updateColumnOrder);
-
+      
+      if ($('.slick-columnpicker').length > 0) {
+    	  $('.slick-columnpicker').remove();
+      }
       $menu = $("<span class='slick-columnpicker' style='display:none;position:absolute;z-index:20;' />").appendTo(document.body);
 
       $menu.bind("mouseleave", function (e) {

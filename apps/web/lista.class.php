@@ -543,20 +543,25 @@ class Lista {
 					
 			function clickFormatter(row, cell, value, columnDef, dataContext) {
 				if (ira=dataContext['ira']) {
-					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"') \\\" >\"+value+\"</span>\";
+					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"'); return false; \\\" >\"+value+\"</span>\";
 				}
 				if (ira=dataContext['script']) {
-					return \"<span class=link onclick='grid_$id_tabla.setSelectedRows([\"+row+\"]);\"+ira+\";' >\"+value+\"</span>\";
+					//return \"<span class=link onclick='grid_$id_tabla.setSelectedRows([\"+row+\"]); setTimeout(\"+ira+\",5000); return false;' >\"+value+\"</span>\";
+                    // asegurarme que:
+                    // - No se propaga el onclick
+                    // - primero acaba con lo de seleccionar la fila
+                    var fun = \"event.stopPropagation(); (function (s) { \"+ira+\"; })(grid_$id_tabla.setSelectedRows([\"+row+\"]))\";
+					return \"<span class=link onclick=' \"+fun+\"; return false;' >\"+value+\"</span>\";
 				}
 				return value;
 			}
 			function clickFormatter2(row, cell, value, columnDef, dataContext) {
 				if (ira=dataContext['ira2']) {
-					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"') \\\" >\"+value+\"</span>\";
+					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"'): return false; \\\" >\"+value+\"</span>\";
 				}
 				if (ira=dataContext['script2']) {
 					//return \"<span class=link onclick='\"+dataContext['script']+\"' >\"+value+\"</span>\";
-					return \"<span class=link onclick=\"+ira+\" >\"+value+\"</span>\";
+					return \"<span class=link onclick='\"+ira+\"; return false;' >\"+value+\"</span>\";
 				}
 				return value;
 			}
@@ -687,7 +692,7 @@ class Lista {
 				grid_$id_tabla.onClick.subscribe(function (e,args) {
 					add_scroll_id(args.row);
 					grid_$id_tabla.setSelectedRows([args.row]);
-				//console.log(row);
+				    //console.log(args.row);
 					//e.stopPropagation();
 				});
 					
