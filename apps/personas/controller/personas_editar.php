@@ -22,6 +22,8 @@ $oPosicion->recordar();
 if (!empty($Qnuevo)) {
     $oF_hoy = new web\DateTimeLocal();
 	$Qapellido1 = (string) filter_input(INPUT_POST, 'apellido1');
+	// para los acentos
+	$Qapellido1 = urldecode($Qapellido1);
 	$oPersona = new $obj;
 	$cDatosCampo = $oPersona->getDatosCampos();
 	$oDbl = $oPersona->getoDbl();
