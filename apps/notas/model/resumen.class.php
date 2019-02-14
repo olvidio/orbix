@@ -552,28 +552,59 @@ class Resumen Extends core\ClasePropiedades {
 		*/
 		return array('num'=>'?','lista'=>'falta poner fecha o en tablas');
 	}
-	public function enCe() {
+	
+	/**
+	 * 
+	 * @param integer $actual  0->actual, 1->curso anterior (del que se hace el resumen)
+	 * @return array
+	 */
+	public function enCe($actual=0) {
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 		$ce_lugar = $this->getCe_lugar();
 		$any = $this->getAnyFiCurs();
 
-	    $ssql="SELECT p.nom, p.apellido1, p.apellido2, p.ctr
-		FROM $tabla p
-		WHERE (p.stgr='b')
-			AND (p.ce_lugar='$ce_lugar' AND p.ce_ini IS NOT NULL  AND p.ce_fin IS NULL) 
-		ORDER BY p.apellido1,p.apellido2,p.nom 
-		"; 
-
-		//echo "sql: $ssql<br>";
-		$statement = $oDbl->query($ssql);
-		$rta['num'] = $statement->rowCount();
-		if ($this->blista == true && $rta['num'] > 0) {
-			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr",1);
-		} else {
-			$rta['lista'] = '';
+		$rta = [];
+		switch ($actual) {
+			case 0: //actual
+				$ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.ctr
+					FROM $tabla p
+					WHERE p.ce_ini IS NOT NULL AND p.ce_fin IS NULL AND p.ce_lugar = '$ce_lugar' AND p.stgr = 'b'
+					ORDER BY p.apellido1,p.apellido2,p.nom  "; 
+				$statement=$oDbl->query($ssql);
+				$nf=$statement->rowCount();
+				if ($nf >= 1){
+					$rta['error'] = true;
+					$rta['num'] = $nf;
+					if ($this->blista == true && $rta['num'] > 0) {
+						$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr",1);
+					} else {
+						$rta['lista'] = '';
+					}
+					return $rta;
+				}
+				break;
+			case 1:
+				$ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.ctr
+					FROM $tabla p
+					WHERE p.ce_lugar = '$ce_lugar' 
+					   AND p.ce_ini IS NOT NULL AND p.ce_fin = '$any'
+					ORDER BY p.apellido1,p.apellido2,p.nom  "; 
+				$statement=$oDbl->query($ssql);
+				$nf=$statement->rowCount();
+				if ($nf >= 1){
+					$rta['error'] = true;
+					$rta['num'] = $nf;
+					if ($this->blista == true && $rta['num'] > 0) {
+						$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr",1);
+					} else {
+						$rta['lista'] = '';
+					}
+					return $rta;
+				}
+				break;
 		}
-		return $rta;
+		return array('num'=>0,'lista'=>'');
 	}
 	
 	public function finCe() {
@@ -606,11 +637,11 @@ class Resumen Extends core\ClasePropiedades {
 		$any = $this->getAnyFiCurs();
 
 	    $ssql="SELECT p.nom, p.apellido1, p.apellido2, p.ctr
-		FROM $tabla p
-		WHERE (p.stgr='b')
-			AND (p.ce_lugar IS NULL OR p.ce_lugar = '') 
-		ORDER BY p.apellido1,p.apellido2,p.nom 
-		"; 
+            FROM $tabla p
+            WHERE (p.stgr='b')
+                AND (p.ce_lugar IS NULL OR p.ce_lugar = '') 
+            ORDER BY p.apellido1,p.apellido2,p.nom 
+            "; 
 
 		//echo "sql: $ssql<br>";
 		$statement = $oDbl->query($ssql);
