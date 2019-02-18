@@ -378,7 +378,7 @@ foreach ($cPersonas as $oPersona) {
 	} 
 	if (!empty($Qcmb)) { 
 		$a_val[6]=$oPersona->getSituacion();
-		$a_val[7]=$oPersona->getF_situacion();
+		$a_val[7]=$oPersona->getF_situacion()->getFromLocal();
 	} 
 	$key_sort = $nom."_".$id_nom;
 	$a_personas[$key_sort] = $a_val;
