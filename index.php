@@ -2,43 +2,43 @@
 namespace core;
 use web;
 /**
-* llama a la plantilla de inicio con el nombre de la oficina
-*
-*@package	delegacion
-*@subpackage	menus
-*@author	Daniel Serrabou
-*@since		15/5/02.
-*		
-*/
+ * llama a la plantilla de inicio con el nombre de la oficina
+ *
+ *@package	delegacion
+ *@subpackage	menus
+ *@author	Daniel Serrabou
+ *@since		15/5/02.
+ *
+ */
 
 // Para salir de la sesión.
 if (isset($_REQUEST['logout']) && $_REQUEST['logout'] == 'si') {
-	session_start();
-	// Destruir todas las variables de sesión.
-	$_SESSION = array();
-	$GLOBALS = array();
-	// Si se desea destruir la sesión completamente, borre también la cookie de sesión.
-	// Nota: ¡Esto destruirá la sesión, y no la información de la sesión!
-	if (ini_get("session.use_cookies")) {
-		$params = session_get_cookie_params();
-		setcookie(session_name(), '', time() - 42000,
-			$params["path"], $params["domain"],
-			$params["secure"], $params["httponly"]
-		);
-	}
-	// Finalmente, destruir la sesión.
-	session_regenerate_id();
-	session_destroy();
+    session_start();
+    // Destruir todas las variables de sesión.
+    $_SESSION = array();
+    $GLOBALS = array();
+    // Si se desea destruir la sesión completamente, borre también la cookie de sesión.
+    // Nota: ¡Esto destruirá la sesión, y no la información de la sesión!
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000,
+            $params["path"], $params["domain"],
+            $params["secure"], $params["httponly"]
+            );
+    }
+    // Finalmente, destruir la sesión.
+    session_regenerate_id();
+    session_destroy();
     header("Location: index.php");
     die();
 }
 
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("apps/core/global_header.inc");
+require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
 
 // Crea los objectos de uso global **********************************************
-	require_once ("apps/core/global_object.inc");
+require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 //$oUsuario = new Usuario(array('id_usuario'=>113));
@@ -64,49 +64,49 @@ $pag_ini = '';
 $aPref = $oGesPref->getPreferencias(array('id_usuario'=>$id_usuario ,'tipo'=>'inicio'));
 //$aPref = $oGesPref->getPreferencias(array('username'=>$username,'tipo'=>'inicio'));
 if (is_array($aPref) && count($aPref) > 0) {
-	$oPreferencia = $aPref[0];
-	$preferencia = $oPreferencia->getPreferencia();
-	list($inicio,$mi_id_grupmenu) = preg_split('/#/',$preferencia);
+    $oPreferencia = $aPref[0];
+    $preferencia = $oPreferencia->getPreferencia();
+    list($inicio,$mi_id_grupmenu) = preg_split('/#/',$preferencia);
 } else {
-	$inicio='';
-	$GesGMR = new menusEntity\GestorGrupMenuRole();
-	$cGMR = $GesGMR->getGrupMenuRoles(array('id_role'=>$id_role));
-	$mi_id_grupmenu=$cGMR[0]->getId_grupmenu();
+    $inicio='';
+    $GesGMR = new menusEntity\GestorGrupMenuRole();
+    $cGMR = $GesGMR->getGrupMenuRoles(array('id_role'=>$id_role));
+    $mi_id_grupmenu=$cGMR[0]->getId_grupmenu();
 }
 
 if (isset($primera)) {
-	if ($mi_id_grupmenu=="admin") $mi_id_grupmenu="sistema";
-	switch ($inicio) {
-		case "oficina":
-			$id_grupmenu=$mi_id_grupmenu;
-			break;
-		case "personal":
-			$id_grupmenu=$mi_id_grupmenu;
-			$pag_ini=ConfigGlobal::$directorio.'/inici/personal.php';
-			break;
-		case "avisos":
-			$id_grupmenu=$mi_id_grupmenu;
-			//$pag_ini=ConfigGlobal::$directorio."/sistema/avisos_generar.php";
-			$pag_ini='';
-			break;
-		case "aniversarios":
-			$id_grupmenu=$mi_id_grupmenu;
-			//$pag_ini=ConfigGlobal::$directorio."/public/aniversarios.php";
-			$pag_ini='';
-			break;
-		case "exterior":
-			$oficina=$mi_oficina_menu;
-			//$pag_ini=ConfigGlobal::$directorio.'/public/exterior_home.php';
-			$pag_ini='';
-			break;
-		default:
-			$id_grupmenu=$mi_id_grupmenu;
-			$pag_ini='';
-	}
+    if ($mi_id_grupmenu=="admin") $mi_id_grupmenu="sistema";
+    switch ($inicio) {
+        case "oficina":
+            $id_grupmenu=$mi_id_grupmenu;
+            break;
+        case "personal":
+            $id_grupmenu=$mi_id_grupmenu;
+            $pag_ini=ConfigGlobal::$directorio.'/inici/personal.php';
+            break;
+        case "avisos":
+            $id_grupmenu=$mi_id_grupmenu;
+            //$pag_ini=ConfigGlobal::$directorio."/sistema/avisos_generar.php";
+            $pag_ini='';
+            break;
+        case "aniversarios":
+            $id_grupmenu=$mi_id_grupmenu;
+            //$pag_ini=ConfigGlobal::$directorio."/public/aniversarios.php";
+            $pag_ini='';
+            break;
+        case "exterior":
+            $oficina=$mi_oficina_menu;
+            //$pag_ini=ConfigGlobal::$directorio.'/public/exterior_home.php';
+            $pag_ini='';
+            break;
+        default:
+            $id_grupmenu=$mi_id_grupmenu;
+            $pag_ini='';
+    }
 } elseif (isset($_GET['id_grupmenu']) && $_GET['id_grupmenu']=="public_home") {
-	$pag_ini=ConfigGlobal::$directorio.'/public/public_home.php';
+    $pag_ini=ConfigGlobal::$directorio.'/public/public_home.php';
 } elseif (isset($_GET['id_grupmenu']) && $_GET['id_grupmenu']=="armari_doc") {
-	$pag_ini=ConfigGlobal::$dir_web.'/oficinas/scdl/File/todos/DOCUMENTS.htm';
+    $pag_ini=ConfigGlobal::$dir_web.'/oficinas/scdl/File/todos/DOCUMENTS.htm';
 }
 if (ConfigGlobal::mi_usuario() == 'auxiliar') { $pag_ini=''; }
 
@@ -115,13 +115,13 @@ if (!isset($_GET['id_grupmenu'])) { $id_grupmenu=$mi_id_grupmenu; } else { $id_g
 // crec que ja està a dalt. $username= ConfigGlobal::mi_usuario();
 $aPref = $oGesPref->getPreferencias(array('id_usuario'=>$id_usuario,'tipo'=>'estilo'));
 if (is_array(($aPref)) && count($aPref) > 0) {
-	$oPreferencia = $aPref[0];
-	$preferencia = $oPreferencia->getPreferencia();
-	list($estilo_color,$tipo_menu) = preg_split('/#/',$preferencia);
+    $oPreferencia = $aPref[0];
+    $preferencia = $oPreferencia->getPreferencia();
+    list($estilo_color,$tipo_menu) = preg_split('/#/',$preferencia);
 } else {
-	// valores por defecto
-	$estilo_color='azul';
-	$tipo_menu='horizontal';
+    // valores por defecto
+    $estilo_color='azul';
+    $tipo_menu='horizontal';
 }
 
 $aWhere = array('id_role'=>$oUsuario->getId_role());
@@ -131,18 +131,18 @@ $html_barra = "<ul id=\"menu\" class=\"menu\">";
 $gm = 0;
 $html_gm = array();
 foreach ($cGrupMenuRoles as $oGrupMenuRole) {
-	$gm++;
-	$id_gm = $oGrupMenuRole->getId_grupmenu();
-	// comprobar que tiene algún submenú.
-	$gesMenuDb = new menusEntity\GestorMenuDb();
-	$cMenuDbs=$gesMenuDb ->getMenuDbs(array('id_grupmenu'=>$id_gm));
-	if (is_array($cMenuDbs) && count($cMenuDbs) < 1) continue;
-	$oGrupMenu = new menusEntity\GrupMenu($id_gm);
-	$grup_menu = $oGrupMenu->getGrup_menu();
-	$iorden = $oGrupMenu->getOrden();
-	if ($iorden < 1) continue;
-	$clase = ($id_gm == $id_grupmenu)? "class='selec'": '';
-	$html_gm[$iorden] = "<li onclick=\"fnjs_link_menu('$id_gm');\" $clase >$grup_menu</li>";
+    $gm++;
+    $id_gm = $oGrupMenuRole->getId_grupmenu();
+    // comprobar que tiene algún submenú.
+    $gesMenuDb = new menusEntity\GestorMenuDb();
+    $cMenuDbs=$gesMenuDb ->getMenuDbs(array('id_grupmenu'=>$id_gm));
+    if (is_array($cMenuDbs) && count($cMenuDbs) < 1) continue;
+    $oGrupMenu = new menusEntity\GrupMenu($id_gm);
+    $grup_menu = $oGrupMenu->getGrup_menu();
+    $iorden = $oGrupMenu->getOrden();
+    if ($iorden < 1) continue;
+    $clase = ($id_gm == $id_grupmenu)? "class='selec'": '';
+    $html_gm[$iorden] = "<li onclick=\"fnjs_link_menu('$id_gm');\" $clase >$grup_menu</li>";
 }
 // ordenar la barra de grupmenus
 ksort($html_gm);
@@ -152,9 +152,9 @@ $html_exit .= "<li> (login as: ".$oUsuario->getUsuario().'['.configGlobal::mi_re
 
 $html_barra .= $html_exit;
 $html_barra .= "</ul>";
-if ($gm == 1) { 
-	//asegurarme que el id_grupmenu seleccionado (pref) es el que se ve.
-	$id_grupmenu = $id_gm;
+if ($gm == 1) {
+    //asegurarme que el id_grupmenu seleccionado (pref) es el que se ve.
+    $id_grupmenu = $id_gm;
 }
 
 // El grupmenu 'Utilidades' es el 1, lo pongo siempre.
@@ -169,91 +169,91 @@ $li_submenus="";
 $indice=1;
 $indice_old=1;
 $num_menu_1="";
-	$m=0;
-	foreach ($oMenuDbs as $oMenuDb) {
-		$m++;
-		$orden = $oMenuDb->getOrden();
-		$menu = $oMenuDb->getMenu();
-		$parametros = $oMenuDb->getParametros();
-		$id_metamenu = $oMenuDb->getId_metamenu();
-		$menu_perm = $oMenuDb->getMenu_perm();
-		$id_grupmenu = $oMenuDb->getId_grupmenu();
-		//$ok = $oMenuDb->getOk ();
-		
-		$oMetamenu = new menusEntity\Metamenu($id_metamenu);
-		$url = $oMetamenu ->getUrl();
-		//echo "m: $perm_menu,l: $perm_login, ".visible($perm_menu,$perm_login) ;
-		// primero si està instalado:
-		if (!empty($url)) {
-		    $matches = [];
-			$rta=preg_match('@apps/(.+?)/@',$url, $matches);
-			if ($rta === false) {
-				echo _("error no hay menu");
-			} else {
-				if ($rta == 1) {
-					$url_app = $matches[1];
-					if(!ConfigGlobal::is_app_installed($url_app)) continue;
-				} else {
-					//echo " | ". _("url invàlida en $menu");
-				}
-			}
-		}
-
-		// hago las rutas absolutas, en vez de relativas:
-		$full_url = '';
-		if (!empty($url)) $full_url=ConfigGlobal::getWeb().'/'.$url;
-		//$parametros = web\Hash::param($full_url,$parametros);
-		$parametros = web\Hash::add_hash($parametros,$full_url);
-		// quito las llaves "{}"
-		$orden=substr($orden,1,-1);
-		$array_orden=preg_split('/,/',$orden);
-		$indice=count($array_orden);
-		if ($array_orden[0]==$num_menu_1) { continue; }
-		if ($indice==1 && !$oPermisoMenu->visible($menu_perm)) {
-			$num_menu_1=$array_orden[0];
-			continue;
-		} else { 
-			$num_menu_1="";
-			if (!$oPermisoMenu->visible($menu_perm)) { continue; }
-		}
-		if ($indice==$indice_old) {
-				if (!empty($full_url)) {
-					if (strstr($url,'fnjs') !== false) {
-						$li_submenus.="<li><a class=\"nohref\" onclick=\"$url;\"  >"._($menu)."</a>";
-					} else {
-						$li_submenus.="<li><a class=\"nohref\" onclick=\"fnjs_link_submenu('$full_url','$parametros');\"  >"._($menu)."</a>";
-					}
-				} else {
-					$li_submenus.="<li><a class=\"nohref\" >"._($menu)."</a>";
-				}
-		} elseif ($indice>$indice_old) {
-				if (strstr($url,'fnjs') !== false) {
-					$li_submenus.="<ul><li><a class=\"nohref\" onclick=\"$url;\"  >"._($menu)."</a>";
-				} else {
-					$li_submenus.="<ul><li><a class=\"nohref\" onclick=\"fnjs_link_submenu('$full_url','$parametros');\"  >"._($menu)."</a>";
-				}
-		} else {
-			for ($n=$indice;$n<$indice_old;$n++) {
-				$li_submenus.="</li></ul>";
-			}
-			if (strstr($url,'fnjs') !== false) {
-				$li_submenus.="</li><li><a class=\"nohref\" onclick=\"$url;\"  >"._($menu)."</a>";
-			} else {
-				$li_submenus.="</li><li><a class=\"nohref\" onclick=\"fnjs_link_submenu('$full_url','$parametros');\"  >"._($menu)."</a>";
-			}
-		}
-		$indice_old=$indice;
-	}
+$m=0;
+foreach ($oMenuDbs as $oMenuDb) {
+    $m++;
+    $orden = $oMenuDb->getOrden();
+    $menu = $oMenuDb->getMenu();
+    $parametros = $oMenuDb->getParametros();
+    $id_metamenu = $oMenuDb->getId_metamenu();
+    $menu_perm = $oMenuDb->getMenu_perm();
+    $id_grupmenu = $oMenuDb->getId_grupmenu();
+    //$ok = $oMenuDb->getOk ();
+    
+    $oMetamenu = new menusEntity\Metamenu($id_metamenu);
+    $url = $oMetamenu ->getUrl();
+    //echo "m: $perm_menu,l: $perm_login, ".visible($perm_menu,$perm_login) ;
+    // primero si està instalado:
+    if (!empty($url)) {
+        $matches = [];
+        $rta=preg_match('@apps/(.+?)/@',$url, $matches);
+        if ($rta === false) {
+            echo _("error no hay menu");
+        } else {
+            if ($rta == 1) {
+                $url_app = $matches[1];
+                if(!ConfigGlobal::is_app_installed($url_app)) continue;
+            } else {
+                //echo " | ". _("url invàlida en $menu");
+            }
+        }
+    }
+    
+    // hago las rutas absolutas, en vez de relativas:
+    $full_url = '';
+    if (!empty($url)) $full_url=ConfigGlobal::getWeb().'/'.$url;
+    //$parametros = web\Hash::param($full_url,$parametros);
+    $parametros = web\Hash::add_hash($parametros,$full_url);
+    // quito las llaves "{}"
+    $orden=substr($orden,1,-1);
+    $array_orden=preg_split('/,/',$orden);
+    $indice=count($array_orden);
+    if ($array_orden[0]==$num_menu_1) { continue; }
+    if ($indice==1 && !$oPermisoMenu->visible($menu_perm)) {
+        $num_menu_1=$array_orden[0];
+        continue;
+    } else {
+        $num_menu_1="";
+        if (!$oPermisoMenu->visible($menu_perm)) { continue; }
+    }
+    if ($indice==$indice_old) {
+        if (!empty($full_url)) {
+            if (strstr($url,'fnjs') !== false) {
+                $li_submenus.="<li><a class=\"nohref\" onclick=\"$url;\"  >"._($menu)."</a>";
+            } else {
+                $li_submenus.="<li><a class=\"nohref\" onclick=\"fnjs_link_submenu('$full_url','$parametros');\"  >"._($menu)."</a>";
+            }
+        } else {
+            $li_submenus.="<li><a class=\"nohref\" >"._($menu)."</a>";
+        }
+    } elseif ($indice>$indice_old) {
+        if (strstr($url,'fnjs') !== false) {
+            $li_submenus.="<ul><li><a class=\"nohref\" onclick=\"$url;\"  >"._($menu)."</a>";
+        } else {
+            $li_submenus.="<ul><li><a class=\"nohref\" onclick=\"fnjs_link_submenu('$full_url','$parametros');\"  >"._($menu)."</a>";
+        }
+    } else {
+        for ($n=$indice;$n<$indice_old;$n++) {
+            $li_submenus.="</li></ul>";
+        }
+        if (strstr($url,'fnjs') !== false) {
+            $li_submenus.="</li><li><a class=\"nohref\" onclick=\"$url;\"  >"._($menu)."</a>";
+        } else {
+            $li_submenus.="</li><li><a class=\"nohref\" onclick=\"fnjs_link_submenu('$full_url','$parametros');\"  >"._($menu)."</a>";
+        }
+    }
+    $indice_old=$indice;
+}
 
 for ($n=1;$n<$indice_old;$n++) {
-	$li_submenus.="</li></ul>";
+    $li_submenus.="</li></ul>";
 }
 $li_submenus.="</li>";
 if ($gm < 2) {
-	$html_exit = "<li><a class=\"nohref\" onclick=\"fnjs_logout();\" >| ".ucfirst(_("salir"))."</a></li>";
-	$html_exit .= "<li><a class=\"nohref\"> (login as: ".$oUsuario->getUsuario().'['.configGlobal::mi_region_dl()."])</a></li>";
-
-	$li_submenus.= $html_exit;
+    $html_exit = "<li><a class=\"nohref\" onclick=\"fnjs_logout();\" >| ".ucfirst(_("salir"))."</a></li>";
+    $html_exit .= "<li><a class=\"nohref\"> (login as: ".$oUsuario->getUsuario().'['.configGlobal::mi_region_dl()."])</a></li>";
+    
+    $li_submenus.= $html_exit;
 }
 $li_submenus.="</ul>";
 

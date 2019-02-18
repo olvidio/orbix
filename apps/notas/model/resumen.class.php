@@ -584,11 +584,11 @@ class Resumen Extends core\ClasePropiedades {
 					return $rta;
 				}
 				break;
-			case 1:
+			case 1: // curso anterior
 				$ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.ctr
 					FROM $tabla p
 					WHERE p.ce_lugar = '$ce_lugar' 
-					   AND p.ce_ini IS NOT NULL AND p.ce_fin = '$any'
+					   AND p.ce_ini IS NOT NULL AND p.ce_ini > $any AND (p.ce_fin IS NULL OR p.ce_fin = '$any')
 					ORDER BY p.apellido1,p.apellido2,p.nom  "; 
 				$statement=$oDbl->query($ssql);
 				$nf=$statement->rowCount();

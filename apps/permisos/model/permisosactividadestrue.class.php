@@ -1,5 +1,6 @@
 <?php
 namespace permisos\model;
+use procesos\model\PermAccion;
 use actividades\model\entity as actividades;
 use procesos\model\entity as procesos;
 use usuarios\model\entity as usuarios;

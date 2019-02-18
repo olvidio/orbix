@@ -22,7 +22,7 @@ use menus\model\entity as menus;
 // Copiar de dlb a public roles-grupmenu, grupmenu, menus
 
 $oConfig = new core\Config('importar'); //de la database comun 
-// Para el caso de pruebas, la base de datos es 'test-comun'
+// Para el caso de pruebas, la base de datos es 'pruebas-comun'
 if (core\ConfigGlobal::WEBDIR == 'pruebas') {
     $db_comun = 'pruebas-comun';
 } else {
@@ -55,12 +55,12 @@ if ($Qaccion == 'importar') {
 	$txt_comun = str_replace ( "DIRBASE", $dir_base, $txt_base);
 	file_put_contents($filename, $txt_comun);
 	
-
-    $command = "export PGPASSWORD='system'; ";
+    $passwd_admin = $config['password'];
+    $command = "export PGPASSWORD='$passwd_admin'; ";
     $command .= "sudo /usr/bin/psql -q ";
     $command .= "--pset pager=off ";
     $command .= "--file=".$filename." ";
-    $command .= "--user=\"dani\"";
+    $command .= "--user=\"admindb\"";
     $command .= " $db_comun ";
     //$command .= " comun > ".$filelog." 2>&1";
     //echo "cmd: $command<br>";
