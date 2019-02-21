@@ -28,19 +28,19 @@ include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
   <body class="otro">
     <h1>Tutoriales</h1>
     <br>
-    <h2><a href="#uso_general">Uso en general</a></h2>
-    <h2><a href="#gestion_de_ca">Gestión de ca</a></h2>
-    <h2><a href="public/ayuda/traducciones.php">Traducciones</a></h2>
+    <h2><a href="#uso_general">1. Uso en general</a></h2>
+    <h2><a href="#gestion_de_ca">2. Gestión de ca</a></h2>
+    <h2><a href="public/ayuda/traducciones.php">3. Traducciones</a></h2>
 	<br> 
 	<br> 
 	<br> 
 	<br> 
-    <h2><a name="uso_general"></a>Uso en general</h2>
+    <h2><a name="uso_general"></a>1. Uso en general</h2>
     <br>
-    Trata aspectos aplicables en todo el entorno web<br>
+    Aspectos aplicables en todo el entorno web<br>
     <br>
-    <h4><b> 1.Preferencias</b></h4>
-    <h4> 2.Tabla slickGrid <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::$web_public ?>/ayuda/slickgrid.mp4')">(video)</span></h4>
+    <h4><b> 1.1. Preferencias</b></h4>
+    <h4> 1.2. Tabla slickGrid <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::$web_public ?>/ayuda/slickgrid.mp4')">(video)</span></h4>
     Es la presentación de resultados por defecto. Se puede cambiar a la
     vista de tabla normal (html) en el menu de preferencias.<br>
     Posibilidades:<br>
@@ -55,36 +55,37 @@ include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
     * para exportar (y quizá alguna otra cosa),&nbsp; primero hay que
     visualizar todas las filas. Explicación: si la lista es larga, el
     navegador no tiene todas las filas, las va pidiendo conforme las
-    necesita visualizar. Una <br>
-    vez se ha visualizado todas, ya estan en la memoria del navegador y
+    necesita visualizar. Una vez se ha visualizado todas, ya estan en la memoria del navegador y
     se pueden exportar.<br>
     * Al ordenar tiene algún problema con los acentos.<br>
     <br>
-    <h4> 3. Desplegables</h4>
+    <h4> 1.3. Desplegables</h4>
     Recordar que apretando una tecla (o esribiendo más de una pero sin
-    pausa) va a<br>
-    <h4> 4. Buscar en la página</h4>
+    pausa) va al item de la lista que empieza por la letra que tecleamos.<br>
+    <h4> 1.4. Buscar en la página</h4>
     Para buscar en toda la página, Ctrl+f permite buscar una cadena, con
     Ctrl+g se busca la siguiente.<br>
     * en slickgrid deben de haberse visualizado antes (mejor usar la
     búsqueda propia de la grid)<br>
-    <h4> 5. Imprimir</h4>
+    <h4> 1.5. Imprimir</h4>
     Hay páginas web que están pensadas para imprimir directamente desde
     el navegador. En este caso hay que decirle al navegador que no ponga
     cabecera ni pie en la página.<br>
-    <h4> 6. Exportar</h4>
-    <h4> 7. Permisos</h4>
+    <h4> 1.6. Exportar</h4>
+    <h4> 1.7. Permisos</h4>
     Afectan a dos cosas: menús y procesos.<br>
     En el caso de los menús se pueden adaptar a cada caso, aunque
     entiendo que lo mejor de momento es dejarlo como viene por defecto.<br>
     En el caso de los procesos es más rigido. En las actividades, quien
     tiene el control es dre. Sólo entrando como dre se pueden borrar
     actividades.<br>
-    <h4> 8. Salir</h4>
+    <h4> 1.8. Salir</h4>
     Es importante usar el boton de "Salir" para cerrar la sessión. El
     servidor provoca un error cuando se excede un número determinado de
     sessiones abiertas y apagando el navegador no se cierra la session.<br>
-    <h2><a name="gestion_de_ca"></a>Gestión de ca<br>
+    
+   <br><br><br> 
+    <h2><a name="gestion_de_ca"></a>2. Gestión de ca<br>
     </h2>
     <ol>
       <li>
