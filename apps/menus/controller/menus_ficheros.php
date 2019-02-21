@@ -22,13 +22,8 @@ use menus\model\entity as menus;
 // Copiar de dlb a public roles-grupmenu, grupmenu, menus
 
 $oConfig = new core\Config('importar'); //de la database comun 
-// Para el caso de pruebas, la base de datos es 'pruebas-comun'
-if (core\ConfigGlobal::WEBDIR == 'pruebas') {
-    $db_comun = 'pruebas-comun';
-} else {
-    $db_comun = 'comun';
-}
 $config = $oConfig->getEsquema('public'); //de la database comun 
+
 $oConexion = new core\dbConnection($config);
 $oDevelPC = $oConexion->getPDO();
 
@@ -55,9 +50,6 @@ if ($Qaccion == 'importar') {
 	$txt_comun = str_replace ( "DIRBASE", $dir_base, $txt_base);
 	file_put_contents($filename, $txt_comun);
 	
-    $oConfig = new core\Config('comun'); //de la database comun
-    $config = $oConfig->getEsquema('public'); //de la database comun
-    
     $host = $config['host'];
     //$sslmode = $config['sslmode'];
     $port = $config['port'];
@@ -66,12 +58,12 @@ if ($Qaccion == 'importar') {
     $password = $config['password'];
     
     $password_encoded = rawurlencode ($password);
-    $dbname = "postgresql://$user:$password_encoded@$host:$port/".$this->sDb;
+    $conn = "postgresql://$user:$password_encoded@$host:$port/".$dbname;
     
     $command = "/usr/bin/psql -q ";
     $command .= "--pset pager=off ";
     $command .= "--file=".$filename." ";
-    $command .= "\"".$dbname."\"";
+    $command .= "\"".$conn."\"";
     $command .= " > ".$filelog." 2>&1";
     passthru($command); // no output to capture so no need to store it
     // read the file, if empty all's well
