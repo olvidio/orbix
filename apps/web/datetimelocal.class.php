@@ -79,6 +79,8 @@ class DateTimeLocal Extends \DateTime {
     }
     
     static public function createFromLocal($data) {
+        // Cambiar '-' por '/':
+        $data = str_replace('-', '/', $data);
         $format = self::getFormat();
         
         $extnd_dt = new static();
