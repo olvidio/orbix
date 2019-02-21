@@ -321,11 +321,14 @@ class Resumen Extends core\ClasePropiedades {
 		$gesNotas = new entity\gestorNota();
 		$a_superadas = $gesNotas->getArrayNotasSuperadas();
 		$case_superada = " id_situacion IN (".implode(',', $a_superadas).")";
+		// Tengo que acceder a publicv, porque con los traslados las notas se cambian de esquema.
+		if (core\ConfigGlobal::mi_sfsv() == 1) { $notas_vf = 'publicv.e_notas'; }
+		if (core\ConfigGlobal::mi_sfsv() == 2) { $notas_vf = 'publicf.e_notas'; }
 		$sqlLlenar="INSERT INTO $notas
 					SELECT n.id_nom,n.id_asignatura,n.id_nivel,
 						   $case_superada,
 						   n.epoca,n.f_acta,n.acta,n.preceptor
-					FROM $tabla p,e_notas_dl n
+					FROM $tabla p, $notas_vf n
 					WHERE p.id_nom=n.id_nom AND n.f_acta $curs
 					";
 		//echo "sql: $sqlLlenar<br>";
