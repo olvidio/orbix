@@ -88,9 +88,10 @@ class listaPlazas {
 			} 
 		}
 
-		$k=0;
-		$centros='';
-		$aGrupos=array();
+		$k = 0;
+		$centros = '';
+		$aGrupos = array();
+		$a_activ = [];
 		$msg_err = '';
 		$gesActividadPlazas = new GestorResumenPlazas();
 		foreach ($cActividades as $oActividad) {
