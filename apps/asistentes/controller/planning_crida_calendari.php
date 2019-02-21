@@ -410,13 +410,18 @@ if ($Qtipo=='planning_cdc' || $Qtipo=='casa') {
             $hfi=(string) $h_fin;
             
             // mirar permisos.
-            $GLOBALS['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
-            $oPermActiv = $GLOBALS['oPermActividades']->getPermisoActual('datos');
-            
-            if ($oPermActiv->have_perm('ocupado') === false) continue; // no tiene permisos ni para ver.
-            if ($oPermActiv->have_perm('ver') === false) { // sólo puede ver que està ocupado
-                $nom_curt= $ssfsv;
-                $nom_llarg= "$ssfsv ($ini-$fi)";
+            if(core\ConfigGlobal::is_app_installed('procesos')) {
+                $GLOBALS['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
+                $oPermActiv = $GLOBALS['oPermActividades']->getPermisoActual('datos');
+                
+                if ($oPermActiv->have_perm('ocupado') === false) continue; // no tiene permisos ni para ver.
+                if ($oPermActiv->have_perm('ver') === false) { // sólo puede ver que està ocupado
+                    $nom_curt= $ssfsv;
+                    $nom_llarg= "$ssfsv ($ini-$fi)";
+                } else {
+                    $nom_curt=$oTipoActividad->getAsistentesText()." ".$oTipoActividad->getActividadText();
+                    $nom_llarg=$nom_activ;
+                }
             } else {
                 $nom_curt=$oTipoActividad->getAsistentesText()." ".$oTipoActividad->getActividadText();
                 $nom_llarg=$nom_activ;

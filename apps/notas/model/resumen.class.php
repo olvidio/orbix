@@ -554,82 +554,43 @@ class Resumen Extends core\ClasePropiedades {
 	}
 	
 	/**
+	 * Numerarios
+	 * Incluye a los que han empezado este curso, y los que han terminado este curso
+	 * Debe contar también a los que se han ido a otras dl.
 	 * 
-	 * @param integer $actual  0->actual, 1->curso anterior (del que se hace el resumen)
 	 * @return array
 	 */
-	public function enCe($actual=0) {
+	public function enCe() {
 		$oDbl = $this->getoDbl();
-		$tabla = $this->getNomTabla();
+		//$tabla = $this->getNomTabla();
+		$tabla = 'p_numerarios';
 		$ce_lugar = $this->getCe_lugar();
 		$any = $this->getAnyFiCurs();
 
 		$rta = [];
-		switch ($actual) {
-			case 0: //actual
-				$ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.ctr
-					FROM $tabla p
-					WHERE p.ce_ini IS NOT NULL AND p.ce_fin IS NULL AND p.ce_lugar = '$ce_lugar' AND p.stgr = 'b'
-					ORDER BY p.apellido1,p.apellido2,p.nom  "; 
-				$statement=$oDbl->query($ssql);
-				$nf=$statement->rowCount();
-				if ($nf >= 1){
-					$rta['error'] = true;
-					$rta['num'] = $nf;
-					if ($this->blista == true && $rta['num'] > 0) {
-						$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr",1);
-					} else {
-						$rta['lista'] = '';
-					}
-					return $rta;
-				}
-				break;
-			case 1: // curso anterior
-				$ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.ctr
-					FROM $tabla p
-					WHERE p.ce_lugar = '$ce_lugar' 
-					   AND p.ce_ini IS NOT NULL AND p.ce_ini > $any AND (p.ce_fin IS NULL OR p.ce_fin = '$any')
-					ORDER BY p.apellido1,p.apellido2,p.nom  "; 
-				$statement=$oDbl->query($ssql);
-				$nf=$statement->rowCount();
-				if ($nf >= 1){
-					$rta['error'] = true;
-					$rta['num'] = $nf;
-					if ($this->blista == true && $rta['num'] > 0) {
-						$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr",1);
-					} else {
-						$rta['lista'] = '';
-					}
-					return $rta;
-				}
-				break;
-		}
+        // curso anterior
+        $ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom
+            FROM $tabla p
+            WHERE p.ce_lugar = '$ce_lugar' 
+               AND p.ce_ini IS NOT NULL AND (p.ce_fin IS NULL OR p.ce_fin = '$any')
+               AND (p.situacion = 'A' OR p.situacion = 'D')
+            ORDER BY p.apellido1,p.apellido2,p.nom  "; 
+        $statement=$oDbl->query($ssql);
+        $nf=$statement->rowCount();
+        if ($nf >= 1){
+            $rta['error'] = true;
+            $rta['num'] = $nf;
+            if ($this->blista == true && $rta['num'] > 0) {
+                $rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
+            } else {
+                $rta['lista'] = '';
+            }
+            return $rta;
+        }
+
 		return array('num'=>0,'lista'=>'');
 	}
 	
-	public function finCe() {
-		$oDbl = $this->getoDbl();
-		$tabla = $this->getNomTabla();
-		$ce_lugar = $this->getCe_lugar();
-		$any = $this->getAnyFiCurs();
-
-	    $ssql="SELECT p.nom, p.apellido1, p.apellido2, p.ctr
-		FROM $tabla p
-		WHERE (p.stgr='b' OR p.stgr ILIKE 'c%')
-			AND (p.ce_lugar='$ce_lugar' AND p.ce_fin = '$any') 
-		ORDER BY p.apellido1,p.apellido2,p.nom 
-		"; 
-
-		//echo "sql: $ssql<br>";
-		$statement = $oDbl->query($ssql);
-		$rta['num'] = $statement->rowCount();
-		if ($this->blista == true && $rta['num'] > 0) {
-			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr",1);
-		} else {
-			$rta['lista'] = '';
-		}
-		return $rta;
-	}
 	public function sinCe() {
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
@@ -655,7 +616,8 @@ class Resumen Extends core\ClasePropiedades {
 	}
 	public function aprobadasCe() {
 		$oDbl = $this->getoDbl();
-		$tabla = $this->getNomTabla();
+		//$tabla = $this->getNomTabla();
+		$tabla = 'p_numerarios';
 		$notas = $this->getNomNotas();
 		$ce_lugar = $this->getCe_lugar();
 		$any = $this->getAnyFiCurs();
@@ -664,8 +626,8 @@ class Resumen Extends core\ClasePropiedades {
 			FROM $tabla p, $notas n
 			WHERE p.id_nom=n.id_nom 
 				AND (n.id_nivel BETWEEN 1100 AND 1229 OR n.id_nivel BETWEEN 2100 AND 2429)
-				AND (p.ce_lugar='$ce_lugar' AND p.ce_fin = '$any')
-			 	AND (p.stgr='b')
+                AND (p.ce_lugar = '$ce_lugar' AND p.ce_ini IS NOT NULL AND (p.ce_fin IS NULL OR p.ce_fin = '$any'))
+                AND (p.situacion = 'A' OR p.situacion = 'D')
 			"; 
 
 		$statement=$oDbl->query($ssql);
@@ -878,6 +840,32 @@ class Resumen Extends core\ClasePropiedades {
 		}
 		return $rta;
 	}
+	
+	// cuadrienio
+	public function masAsignaturasQue($numAsig = 10) {
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+		$notas = $this->getNomNotas();
+		$asignaturas = $this->getNomAsignaturas();
+
+		$ssql="SELECT n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
+		FROM $tabla p,$notas n,$asignaturas a
+		WHERE p.id_nom=n.id_nom AND p.stgr ~ '^c' AND n.id_asignatura=a.id_asignatura
+			AND (n.id_nivel BETWEEN 2100 AND 2500)
+		GROUP BY n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
+		HAVING count(*) > $numAsig
+		ORDER BY p.apellido1,p.apellido2,p.nom  ";
+
+		//echo "qry: $ssql<br>";
+		$statement=$oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr",1);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
 	public function masCreditosQue($creditos = '28.5') {
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
@@ -893,6 +881,30 @@ class Resumen Extends core\ClasePropiedades {
 		ORDER BY p.apellido1,p.apellido2,p.nom  ";
 
 		//echo "qry: $ssql<br>";
+		$statement=$oDbl->query($ssql);
+		$rta['num'] = $statement->rowCount();
+		if ($this->blista == true && $rta['num'] > 0) {
+			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr",1);
+		} else {
+			$rta['lista'] = '';
+		}
+		return $rta;
+	}
+	public function menosAsignaturasQue($numASig = 5) {
+		$oDbl = $this->getoDbl();
+		$tabla = $this->getNomTabla();
+		$notas = $this->getNomNotas();
+		$asignaturas = $this->getNomAsignaturas();
+		
+		$ssql="SELECT n.id_nom,p.nom, p.apellido1,p.apellido2,p.ctr
+		FROM $tabla p, $notas n, $asignaturas a
+		WHERE p.id_nom=n.id_nom AND  n.id_nivel=a.id_nivel
+			AND (p.stgr ILIKE 'c%' OR p.stgr='r')
+			AND (n.id_nivel BETWEEN 2100 AND 2500)
+		GROUP BY n.id_nom,p.nom, p.apellido1,p.apellido2, p.ctr
+		HAVING conut(*) <= $numASig
+		ORDER BY p.apellido1,p.apellido2,p.nom  ";
+
 		$statement=$oDbl->query($ssql);
 		$rta['num'] = $statement->rowCount();
 		if ($this->blista == true && $rta['num'] > 0) {

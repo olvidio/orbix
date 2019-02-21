@@ -271,3 +271,4 @@
 1396	{70,140}	cambiar de fase	id_tipo_activ=131	130	2	3	t
 1238	{70,50}	tipo encargo	clase_info=encargossacd\\model\\infoencargotipo	160	8	8	t
 1394	{70,40}	Tablas de apps	\N	102	33554432	13	t
+1397	{38,120}	importar	sasistentes=agd&sactividad=ca&que=ver&modo=importar	119	16	12	t
