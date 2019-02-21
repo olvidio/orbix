@@ -9,50 +9,67 @@
 
 $Qregion = (string) \filter_input(INPUT_POST, 'region');
 $Qdl = (string) \filter_input(INPUT_POST, 'dl');
+$Qcomun = (integer) \filter_input(INPUT_POST, 'comun');
 $Qsv = (string) \filter_input(INPUT_POST, 'sv');
 $Qsf = (string) \filter_input(INPUT_POST, 'sf');
 
 $esquema = "$Qregion-$Qdl";
+$esquemav = $esquema.'v';
+$esquemaf = $esquema.'f';
 
-echo sprintf(_("esquema: %s. Se han pasado todos los datos que se tenian."),$esquema);
+$esquemaRef = 'H-dlz';
 
 // COMUN
-$esquemaRef = 'H-dlb';
+if (!empty($Qcomun)) {
+    /**
+     * lista de tablas de las que hay que copiar los valores.
+     * Posteriormente hay que cambiar el id_schema (si tiene)
+     * y actualizar la sequencia (se hace al final, en DBTrasvase)
+     * 
+     * @var array $aTablas
+     */
+    $aTablas = ["xa_tipo_tarifa" => ['id_schema' => 'yes'],
+                ];
+    $oDBTabla = new core\DBTabla();
+    $oDBTabla->setDb('comun');
+    $oDBTabla->setRef($esquemaRef);
+    $oDBTabla->setNew($esquema);
+    $oDBTabla->setTablas($aTablas);
+    $oDBTabla->copiar();
 
-$aTablas = array("xa_tipo_tarifa");
-$oDBTabla = new core\DBTabla();
-$oDBTabla->setDb('comun');
-$oDBTabla->setRef($esquemaRef);
-$oDBTabla->setNew($esquema);
-$oDBTabla->setTablas($aTablas);
-$oDBTabla->copiar();
+    $oTrasvase = new core\DBTrasvase();
+    $oTrasvase->setDbName('comun');
+    $oTrasvase->setDbConexion();
+    $oTrasvase->setRegion($Qregion);
+    $oTrasvase->setDl($Qdl);
 
-$oTrasvase = new core\DBTrasvase();
-$oTrasvase->setDbUser('dani');
-$oTrasvase->setDbPwd('system');
-$oTrasvase->setDbName('comun');
-$oTrasvase->setDbConexion();
-$oTrasvase->setRegion($Qregion);
-$oTrasvase->setDl($Qdl);
-
-$oTrasvase->actividades('resto2dl');
-$oTrasvase->cdc('resto2dl');
-$oTrasvase->teleco_cdc('resto2dl');
-// fijar secuencias
-$oTrasvase->fix_seq();
-
+    $oTrasvase->actividades('resto2dl');
+    $oTrasvase->cdc('resto2dl');
+    $oTrasvase->teleco_cdc('resto2dl');
+    // fijar secuencias
+    $oTrasvase->fix_seq();
+}
 // SV
 if (!empty($Qsv)) {
-	$esquemaNew = $esquema.'v';
 	$esquemaRef = 'H-dlbv';
-	$aTablas = array("'aux*'","web_preferencias","m0_mods_installed_dl");
+    $aTablas = ["aux_cross_usuarios_grupos" => ['id_schema' => 'yes'],
+                "aux_grupmenu" => ['id_schema' => 'yes'],
+                "aux_grupmenu_rol" => ['id_schema' => 'yes'],
+                "aux_grupo_permmenu" => ['id_schema' => 'yes'],
+                "aux_grupos_y_usuarios" => ['id_schema' => 'yes'],
+                "aux_menus" => ['id_schema' => 'yes'],
+                "aux_usuarios" => ['id_schema' => 'yes'],
+                "web_preferencias" => ['id_schema' => 'yes'],
+                "m0_mods_installed_dl" => ['id_schema' => 'yes'],
+                ];
 	$oDBTabla = new core\DBTabla();
 	$oDBTabla->setDb('sv');
 	$oDBTabla->setRef($esquemaRef);
-	$oDBTabla->setNew($esquemaNew);
+	$oDBTabla->setNew($esquemav);
 	$oDBTabla->setTablas($aTablas);
 	$oDBTabla->copiar();
 
+    $oTrasvase = new core\DBTrasvase();
 	$oTrasvase->setDbName('sv');
 	$oTrasvase->setDbConexion();
 	$oTrasvase->setRegion($Qregion);
@@ -66,16 +83,25 @@ if (!empty($Qsv)) {
 }
 // SF
 if (!empty($Qsf)) {
-	$esquemaNew = $esquema.'f';
 	$esquemaRef = 'H-dlbf';
-	$aTablas = array("'aux*'","web_preferencias","m0_mods_installed_dl");
+    $aTablas = ["aux_cross_usuarios_grupos" => ['id_schema' => 'yes'],
+                "aux_grupmenu" => ['id_schema' => 'yes'],
+                "aux_grupmenu_rol" => ['id_schema' => 'yes'],
+                "aux_grupo_permmenu" => ['id_schema' => 'yes'],
+                "aux_grupos_y_usuarios" => ['id_schema' => 'yes'],
+                "aux_menus" => ['id_schema' => 'yes'],
+                "aux_usuarios" => ['id_schema' => 'yes'],
+                "web_preferencias" => ['id_schema' => 'yes'],
+                "m0_mods_installed_dl" => ['id_schema' => 'yes'],
+                ];
 	$oDBTabla = new core\DBTabla();
 	$oDBTabla->setDb('sf');
 	$oDBTabla->setRef($esquemaRef);
-	$oDBTabla->setNew($esquemaNew);
+	$oDBTabla->setNew($esquemaf);
 	$oDBTabla->setTablas($aTablas);
 	$oDBTabla->copiar();
 
+    $oTrasvase = new core\DBTrasvase();
 	$oTrasvase->setDbName('sf');
 	$oTrasvase->setDbConexion();
 	$oTrasvase->setRegion($Qregion);
@@ -87,3 +113,6 @@ if (!empty($Qsf)) {
 	$oTrasvase->fix_seq();
 	
 }
+
+echo "<br>";
+echo sprintf(_("esquema: %s. Se han pasado todos los datos que se tenian."),$esquema);

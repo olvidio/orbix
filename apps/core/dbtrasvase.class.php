@@ -28,14 +28,33 @@ class DBTrasvase {
 	public function getDbName() {
 		return $this->sdbname;
 	}
-	public function setDbUser($dbuser) {
-		$this->sdbuser = $dbuser;
-	}
-	public function setDbPwd($dbpwd) {
-		$this->sdbpwd = $dbpwd;
-	}
+	
 	public function setDbConexion() {
-		$str_conexio = "pgsql:host=localhost port=5432  dbname='".$this->sdbname."' user='".$this->sdbuser."' password='".$this->sdbpwd."'";
+	    switch($this->getDbName()) {
+	        case 'comun':
+                $oConfig = new Config('importar'); //de la database comun
+                $config = $oConfig->getEsquema('public'); //de la database comun
+	            break;
+	        case 'sv':
+	            $oConfig = new Config('importar'); //de la database sv
+	            $config = $oConfig->getEsquema('publicv');
+	            break;
+	        case 'sf':
+	            $oConfig = new Config('importar'); //de la database sf
+	            $config = $oConfig->getEsquema('publicf');
+	            break;
+	    }
+	    
+	    $host = $config['host'];
+	    //$sslmode = $config['sslmode'];
+	    $port = $config['port'];
+	    $dbname = $config['dbname'];
+	    $user = $config['user'];
+	    $password = $config['password'];
+	    
+	    // OJO Con las comillas dobles para algunos caracteres del password ($...)
+	    $str_conexio = 'pgsql:host='.$host.' port='.$port.' dbname=\''.$dbname.'\' user=\''.$user.'\' password=\''.$password.'\'';
+	    
 		$oDbl = new \PDO($str_conexio);
 		$this->setoDbl($oDbl);
 	}
@@ -96,8 +115,6 @@ class DBTrasvase {
 		return $this->sEsquema;
 	}
 
-
-
 	 /**
 	 * Fija las secuencias de un esquema
 	 * Busca todas las secuencias del esquema New, busca su valor máximo y cambia la secuencia a este valor
@@ -125,23 +142,29 @@ class DBTrasvase {
     	}
 	}
 
-
-
-
 	// COMUN
 	//-------------- Actividades ----------------------
 	public function actividades($que) {
 		$oDbl = $this->getoDbl();
 		$esquema = $this->getEsquema();
+		$region = $this->getRegion();
 		$dl = $this->getDl();
 		switch ($que) {
 			case 'resto2dl':
 				$oDbl->beginTransaction();
-				$sql = "INSERT INTO \"$esquema\".a_actividades_dl SELECT * FROM resto.a_actividades_ex WHERE dl_org = '$dl';";
+				if ($dl == 'cr') {
+				    $sql = "INSERT INTO \"$esquema\".a_actividades_dl SELECT * FROM resto.a_actividades_ex WHERE dl_org = '$region';";
+				} else {
+				    $sql = "INSERT INTO \"$esquema\".a_actividades_dl SELECT * FROM resto.a_actividades_ex WHERE dl_org = '$dl';";
+				}
 				$oDbl->exec($sql);
 				$sql = "UPDATE \"$esquema\".a_actividades_dl SET id_tabla='dl';";
 				$oDbl->exec($sql);
-				$sql = "DELETE FROM resto.a_actividades_ex WHERE dl_org = '$dl'";
+				if ($dl == 'cr') {
+                    $sql = "DELETE FROM resto.a_actividades_ex WHERE dl_org = '$region'";
+				} else {
+                    $sql = "DELETE FROM resto.a_actividades_ex WHERE dl_org = '$dl'";
+				}
 				$oDbl->exec($sql);
 				if ($oDbl->commit() === false) {
 					$sClauError = 'DBTrasvase.actividades.resto2dl';
@@ -174,7 +197,11 @@ class DBTrasvase {
 		$region = $this->getRegion();
 		switch ($que) {
 			case 'resto2dl':
-				$sql = "INSERT INTO \"$esquema\".u_cdc_dl SELECT * FROM resto.u_cdc_ex WHERE dl = '$dl' AND region='$region'; ";
+			    if ($dl == 'cr') { //no hay delegaciones. Se pone todo.
+                    $sql = "INSERT INTO \"$esquema\".u_cdc_dl SELECT * FROM resto.u_cdc_ex WHERE dl IS NULL AND region='$region'; ";
+			    } else {
+                    $sql = "INSERT INTO \"$esquema\".u_cdc_dl SELECT * FROM resto.u_cdc_ex WHERE dl = '$dl' AND region='$region'; ";
+			    }
 				if ($oDbl->query($sql) === false) {
 					$sClauError = 'DBTrasvase.cdc.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -203,7 +230,11 @@ class DBTrasvase {
 						return false;
 					}
 					// delete cdc
-					$sql = "DELETE FROM resto.u_cdc_ex WHERE dl = '$dl' AND region='$region'";
+                    if ($dl == 'cr') { //no hay delegaciones.
+                        $sql = "DELETE FROM resto.u_cdc_ex WHERE dl IS NULL AND region='$region'";
+                    } else {
+                        $sql = "DELETE FROM resto.u_cdc_ex WHERE dl = '$dl' AND region='$region'";
+                    }
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBCopiar.cdc.execute';
 						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -316,7 +347,11 @@ class DBTrasvase {
 		$region = $this->getRegion();
 		switch ($que) {
 			case 'resto2dl':
-				$sql = "INSERT INTO \"$esquema\".u_centros_dl SELECT * FROM \"$resto\".u_centros_ex WHERE dl = '$dl' AND region='$region'; ";
+                if ($dl == 'cr') { //no hay delegaciones.
+                    $sql = "INSERT INTO \"$esquema\".u_centros_dl SELECT * FROM \"$resto\".u_centros_ex WHERE dl IS NULL AND region='$region'; ";
+                } else {
+                    $sql = "INSERT INTO \"$esquema\".u_centros_dl SELECT * FROM \"$resto\".u_centros_ex WHERE dl = '$dl' AND region='$region'; ";
+                }
 				if ($oDbl->query($sql) === false) {
 					$sClauError = 'DBTrasvase.ctr.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -345,7 +380,11 @@ class DBTrasvase {
 						return false;
 					}
 					// delete ctr
-					$sql = "DELETE FROM \"$resto\".u_centros_ex WHERE dl = '$dl' AND region='$region'";
+                    if ($dl == 'cr') { //no hay delegaciones.
+					   $sql = "DELETE FROM \"$resto\".u_centros_ex WHERE dl IS NULL AND region='$region'";
+                    } else {
+					   $sql = "DELETE FROM \"$resto\".u_centros_ex WHERE dl = '$dl' AND region='$region'";
+                    }
 					if ($oDbl->query($sql) === false) {
 						$sClauError = 'DBTrasvase.ctr.execute';
 						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -448,4 +487,3 @@ class DBTrasvase {
 	}
 
 }
-?>

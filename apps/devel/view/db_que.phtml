@@ -14,7 +14,11 @@ fnjs_dl=function(){
 		}
 	});
 }
-fnjs_db_crear=function(){
+fnjs_db_crear_usuarios=function(){
+	$('#frm').attr('action','apps/devel/controller/db_crear_usuarios.php');
+	fnjs_enviar_formulario('#frm','#main');
+}
+fnjs_db_crear_esquemas=function(){
 	$('#frm').attr('action','apps/devel/controller/db_crear_esquema.php');
 	fnjs_enviar_formulario('#frm','#main');
 }
@@ -41,6 +45,9 @@ fnjs_db_eliminar=function(){
   </td>
  </tr>
  <tr>
+ <td><?= _("comun") ?>:</td>
+  <td><input type="checkbox" value="1" checked name="comun">
+  </td>
  <td><?= _("sv") ?>:</td>
   <td><input type="checkbox" value="1" checked name="sv">
   </td>
@@ -49,11 +56,16 @@ fnjs_db_eliminar=function(){
   </td>
  </tr>
  </table>
+ <br>
  <table>
  <tr>
-  <td align=right><input type="button" name="bcrear" onclick="fnjs_db_crear()" value="<?= (" 1º crear Esquema") ?>"></td>
-  <td align=right><input type="button" name="bimportar" onclick="fnjs_db_copiar()" value="<?= ("2º importar datos de resto") ?>"></td>
-  <td align=right><input type="button" name="beliminar" onclick="fnjs_db_eliminar()" value="<?= ("passar datos a resto y eliminar esquema") ?>"></td>
+  <td align=right><input type="button" name="bcrear" onclick="fnjs_db_crear_usuarios()" value="<?= (" 1º crear Usuarios") ?>"></td>
+  <td align=right><input type="button" name="bcrear" onclick="fnjs_db_crear_esquemas()" value="<?= (" 2º crear Esquema") ?>"></td>
+  <td align=right><input type="button" name="bimportar" onclick="fnjs_db_copiar()" value="<?= ("3º importar datos de resto") ?>"></td>
  </tr>
 </table>
-<br><p><?= _("hay que hacer los dos pasos") ?></p>
+<br><p><?= _("hay que hacer los tres pasos") ?></p>
+<hr>
+<h1><?= _("Eliminar dl")?></h1>
+<br><input type="button" name="beliminar" onclick="fnjs_db_eliminar()" value="<?= ("passar datos a resto y eliminar esquema") ?>">
+</form>

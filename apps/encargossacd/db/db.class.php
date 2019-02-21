@@ -12,12 +12,14 @@ class DB extends DBAbstract {
     public function __construct(){
         $esquema_sfsv = ConfigGlobal::mi_region_dl();
         $role = substr($esquema_sfsv,0,-1); // quito la v o la f.
+        
         $this->role = '"'. $role .'"';
+        $this->role_vf = '"'. $esquema_sfsv .'"';
         
         $this->esquema = 'global';
     }
     
-public function dropAll() {
+    public function dropAll() {
         $this->eliminar_encargos_sacd();
         $this->eliminar_encargo_sacd_observ();
         $this->eliminar_encargo_sacd_horario_excepcion();
@@ -62,7 +64,7 @@ public function dropAll() {
                     f_fin date
                     );";
         
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
         
         $this->executeSql($a_sql);
         
@@ -91,7 +93,7 @@ public function dropAll() {
                     mod_horario smallint DEFAULT 1 NOT NULL
                     );";
         
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
         
         $this->executeSql($a_sql);
         
@@ -125,7 +127,7 @@ public function dropAll() {
                     desc_lugar character varying(150),
                     observ text
                     );";
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
         
         $this->executeSql($a_sql);
         
@@ -162,7 +164,7 @@ public function dropAll() {
                     n_sacd smallint,
                     mes smallint
                     );";
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
         
         $this->executeSql($a_sql);
         
@@ -202,7 +204,7 @@ public function dropAll() {
                     n_sacd smallint,
                     mes smallint
                     );";
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
         
         $this->executeSql($a_sql);
         
@@ -239,7 +241,7 @@ public function dropAll() {
                     h_fin time without time zone,
                     id_item_tarea_sacd integer NOT NULL
                     );";
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
         
         $this->executeSql($a_sql);
         
@@ -278,7 +280,7 @@ public function dropAll() {
                     h_fin time without time zone,
                     mes smallint
                     );";
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
         
         $this->executeSql($a_sql);
         
@@ -306,7 +308,7 @@ public function dropAll() {
                     id_nom integer NOT NULL,
                     observ text
                     );";
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
         
         $this->executeSql($a_sql);
         
@@ -336,7 +338,7 @@ public function dropAll() {
                     curso_fin_any integer,
                     num_alum integer
                     );";
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
         
         $this->executeSql($a_sql);
         

@@ -13,7 +13,9 @@ abstract class DBAbstract {
     
     protected $esquema;
     protected $role;
+    protected $role_vf;
     protected $oDbl;
+    protected $user_orbix;
     
     /**
      * Define el objeto PDO de la base de datos
@@ -40,8 +42,9 @@ abstract class DBAbstract {
                 // Conexión Comun public, para entrar como usuario orbix.
                 $this->oDbl = $GLOBALS['oDBPC'];
                 // Dar permisos al role H-dlb de orbix (para poder aceder a global)
+                $this->user_orbix = 'orbix';
                 $a_sql = [];
-                $a_sql[0] = "REVOKE orbix FROM $this->role;" ;
+                $a_sql[0] = "REVOKE $this->user_orbix FROM $this->role;" ;
                 
                 $this->executeSql($a_sql);
                 // Devuelve la conexión a origen.
@@ -58,10 +61,10 @@ abstract class DBAbstract {
                 } else {
                     $vf = 'f';
                 }
-                $user_orbix = 'orbix'.$vf;
+                $this->user_orbix = 'orbix'.$vf;
 
                 $a_sql = [];
-                $a_sql[0] = "REVOKE $user_orbix FROM $this->role;" ;
+                $a_sql[0] = "REVOKE $this->user_orbix FROM $this->role_vf;" ;
                 
                 $this->executeSql($a_sql);
                 // Devuelve la conexión a origen.
@@ -82,8 +85,9 @@ abstract class DBAbstract {
                 // Conexión Comun public, para entrar como usuario orbix.
                 $this->oDbl = $GLOBALS['oDBPC'];
                 // Dar permisos al role H-dlb de orbix (para poder aceder a global)
+                $this->user_orbix = 'orbix';
                 $a_sql = [];
-                $a_sql[0] = "GRANT orbix TO $this->role;" ;
+                $a_sql[0] = "GRANT $this->user_orbix TO $this->role;" ;
                 
                 $this->executeSql($a_sql);
                 // Devuelve la conexión a origen.
@@ -100,10 +104,10 @@ abstract class DBAbstract {
                 } else {
                     $vf = 'f';
                 }
-                $user_orbix = 'orbix'.$vf;
+                $this->user_orbix = 'orbix'.$vf;
 
                 $a_sql = [];
-                $a_sql[0] = "GRANT $user_orbix TO $this->role;" ;
+                $a_sql[0] = "GRANT $this->user_orbix TO $this->role_vf;" ;
                 
                 $this->executeSql($a_sql);
                 // Devuelve la conexión a origen.

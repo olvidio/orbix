@@ -35,6 +35,98 @@ class GestorDbSchema Extends core\ClaseGestor {
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
 	/**
+	 * Conecta con la base de datos: comun, sf, sv
+	 * 
+	 * @param string $database
+	 * @return \PDO
+	 */
+	function connectar($database) {
+	    switch ($database) {
+	        case 'comun':
+	            $oDB = $this->getoDbl();
+                break;
+	        case 'sv':
+                $oConfig = new core\Config('sv');
+                $config = $oConfig->getEsquema('public');
+                $oConexion = new core\dbConnection($config);
+                $oDB = $oConexion->getPDO();
+                break;
+	        case 'sf':
+                // Conectar Db df
+                $oConfig = new core\Config('sf');
+                $config = $oConfig->getEsquema('public');
+                $oConexion = new core\dbConnection($config);
+                $oDB = $oConexion->getPDO();
+                $this->setoDbl($oDB);
+                break;
+	    }
+        return $oDB;
+	}
+	/**
+	 * llenar con los nuevos id, las tablas de las tres bases de datos (comun, sv, sf)
+	 */
+	function llenarNuevo($schema) {
+        $newId = $this->getNext($schema);
+        $newIdSf = $newId - 1000;
+        $newIdSv = $newId - 2000;
+        
+	    foreach (['comun','sv','sf'] as $database) {
+	        $oDbl = $this->connectar($database);
+            $oDbSchema = new DbSchema();
+            $oDbSchema->setoDbl($oDbl);
+            $oDbSchema->setId($newId);
+            $oDbSchema->setSchema($schema);
+            $oDbSchema->DBGuardar();
+            $oDbSchema = new DbSchema();
+            $oDbSchema->setoDbl($oDbl);
+            $oDbSchema->setId($newIdSf);
+            $oDbSchema->setSchema($schema.'f');
+            $oDbSchema->DBGuardar();
+            $oDbSchema = new DbSchema();
+            $oDbSchema->setoDbl($oDbl);
+            $oDbSchema->setId($newIdSv);
+            $oDbSchema->setSchema($schema.'v');
+            $oDbSchema->DBGuardar();
+	    }
+	}
+	/**
+	 *  retorna el id_schema següent per un esquema.
+	 *  primer mira si ja hi és
+	 *  
+	 *  @param string schema
+	 *  @return integer id_schema
+	 */
+	function getNext($schema) {
+	    // comprobar si existe
+	    $cSchema = [];
+	    $cSchema = $this->getDbSchemas(['schema' => $schema]);
+	    if (empty($cSchema)) {
+            $netxId = $this->getLast() + 1; 
+	    } else {
+            $oDbSchema = $cSchema[0];
+            $netxId = $oDbSchema->getId();
+	    }
+	    return $netxId;
+	}
+	/**
+	 *  retorna el id_schema ultim del comun.
+	 *  primer mira si ja hi és
+	 *  
+	 *  @return integer id_schema
+	 */
+	function getLast() {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$sQry = "SELECT id FROM $nom_tabla 
+            WHERE id BETWEEN 3000 AND 4000
+            ORDER BY id DESC
+            LIMIT 1";
+		foreach ($oDbl->query($sQry) as $aDades) {
+			$lastId = $aDades['id'];
+		}
+		return $lastId;
+	}
+	/**
 	 * retorna l'array d'objectes de tipus DbSchema
 	 *
 	 * @param string sQuery la query a executar.

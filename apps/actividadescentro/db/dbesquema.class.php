@@ -17,6 +17,7 @@ class DBEsquema extends DBAbstract {
         }
         $this->esquema = substr($esquema_sfsv,0,-1); // quito la v o la f.
         $this->role = '"'. $this->esquema .'"';
+        $this->role_vf = '"'. $esquema_sfsv .'"';
     }
     
     public function dropAll() {

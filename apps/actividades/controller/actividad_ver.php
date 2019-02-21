@@ -94,6 +94,15 @@ if (!empty($Qid_activ)) { // caso de modificar
 	$snom_tipo=$oTipoActiv->getNom_tipoText();
 	$isfsv=$oTipoActiv->getSfsvId();
 
+    // Para incluir o no la dl (core\ConfigGlobal::mi_dele()).
+    $Bdl = 't';
+    if(core\ConfigGlobal::is_app_installed('procesos')) {
+        if ($oPermActiv->have_perm('ver')) {
+            $Bdl = 't';
+        } else {
+            $Bdl = 'f';
+        }
+    }
 	
 } else { // caso de nueva actividad
 	$Qmod = 'nuevo';
@@ -126,6 +135,34 @@ if (!empty($Qid_activ)) { // caso de modificar
 	$observ='';
 	$publicado='';
 	
+    // Para incluir o no la dl (core\ConfigGlobal::mi_dele()).
+    $Bdl = 't';
+    if(core\ConfigGlobal::is_app_installed('procesos')) {
+        // Depende del proceso, para dl u otra
+        // primera fase de los posibles procesos.
+        // si no permiso para ninguno de los dos => die
+        // si para dl, incluir la dl org
+        // si dl_ex, idem.
+        $_SESSION['oPermActividades']->setId_tipo_activ($id_tipo_activ);
+        
+        $crearPropia = $_SESSION['oPermActividades']->getPermisoCrear(TRUE);
+        $of_responsable = $crearPropia['of_responsable'];
+        if ($_SESSION['oPerm']->have_perm($of_responsable)) {
+            $Bdl = 't';
+            $status = $crearPropia['status'];
+        } else {
+            $Bdl = 'f';
+            $crearEx = $_SESSION['oPermActividades']->getPermisoCrear(FALSE);
+            $of_responsable = $crearEx['of_responsable'];
+            $status = $crearEx['status'];
+            if (!$_SESSION['oPerm']->have_perm($of_responsable)) {
+                die (_("No tiene permiso para crear una actividad de este tipo"));
+            }
+        }
+        
+    }
+    // Para el permiso del botón guardar, en el caso de editar. Cuando es nuevo
+    // no se utiliza. Se inicializa para que no dé error.
 	$oPermActiv = array();
 }
 	
@@ -142,15 +179,6 @@ if (!empty($id_ubi) && $id_ubi != 1) {
 	if (!$id_ubi && !$lugar_esp) $nombre_ubi=_("sin determinar");
 }
 
-// Para incluir o no la dl (core\ConfigGlobal::mi_dele()).
-$Bdl="t";
-if(core\ConfigGlobal::is_app_installed('procesos')) {
-	if ($oPermActiv->have_perm('ver')) {
-		$Bdl="t";
-	} else {
-		$Bdl="f";
-	}
-}
 $oGesDl = new GestorDelegacion();
 $oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones($Bdl);
 $oDesplDelegacionesOrg->setNombre('dl_org');

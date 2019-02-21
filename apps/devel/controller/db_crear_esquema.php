@@ -1,4 +1,7 @@
 <?php
+use devel\model\entity\GestorDbSchema;
+use devel\model\entity\DbSchema;
+
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -7,63 +10,43 @@
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-	
 $Qregion = (string) \filter_input(INPUT_POST, 'region');
 $Qdl = (string) \filter_input(INPUT_POST, 'dl');
-$Qsv = (string) \filter_input(INPUT_POST, 'sv');
-$Qsf = (string) \filter_input(INPUT_POST, 'sf');
+$Qcomun = (integer) \filter_input(INPUT_POST, 'comun');
+$Qsv = (integer) \filter_input(INPUT_POST, 'sv');
+$Qsf = (integer) \filter_input(INPUT_POST, 'sf');
 
 $esquema = "$Qregion-$Qdl";
-$esquema_pwd = $esquema;
 $esquemav = $esquema.'v';
-$esquemav_pwd = $esquemav;
 $esquemaf = $esquema.'f';
-$esquemaf_pwd = $esquemaf;
-
-// CREAR USUARIOS ----------------------
 
 $oDBRol = new core\DBRol();
-$oDBRol->setDbUser('dani');
-$oDBRol->setDbPwd('system');
-$oDBRol->setDbName('comun');
-$oDBRol->setDbConexion();
-// necesito crear los tres usuarios para dar perminsos
-	// comun
-	$oDBRol->setUser($esquema);
-	$oDBRol->setPwd($esquema_pwd);
-	$oDBRol->crearUsuario();
-	// Necesito tener los permisos del usuario que tiene las tablas padre para poder crear las heredadas.
-	// Despues hay que quitarlo para que no tenga permisos para la tabla padre.
-	$oDBRol->addGrupo('orbix');
-	// sv
-	$oDBRol->setUser($esquemav);
-	$oDBRol->setPwd($esquemav_pwd);
-	$oDBRol->crearUsuario();
-	// Necesito tener los permisos del usuario que tiene las tablas padre para poder crear las heredadas.
-	// Despues hay que quitarlo para que no tenga permisos para la tabla padre.
-	$oDBRol->addGrupo('orbixv');
-	// sf
-	$oDBRol->setUser($esquemaf);
-	$oDBRol->setPwd($esquemaf_pwd);
-	$oDBRol->crearUsuario();
-	// Necesito tener los permisos del usuario que tiene las tablas padre para poder crear las heredadas.
-	// Despues hay que quitarlo para que no tenga permisos para la tabla padre.
-	$oDBRol->addGrupo('orbixf');
 
-// ESQUEMAS -----------------------
-	// comun
-	$oDBRol->setUser($esquema);
-	$oDBRol->setPwd($esquema_pwd);
+// ESQUEMAS 
+// Copiar esquema de...
+
+$RegionRef = 'H';
+$DlRef = 'dlb';
+$RegionNew = $Qregion;
+$DlNew = $Qdl;
+	
+// comun
+if (!empty($Qcomun)) {
+    $oConfig = new core\Config('importar'); //de la database comun
+    $config = $oConfig->getEsquema('public'); //de la database comun
+    
+    $oConexion = new core\dbConnection($config);
+    $oDevelPC = $oConexion->getPDO();
+
 	// CREAR Esquema 
-	$oDBRol->setDbName('comun');
-	$oDBRol->setUser($esquema);
-	$oDBRol->setDbConexion();
+    $oDBRol->setDbConexion($oDevelPC);
+    $oDBRol->setUser($esquema);
+    
+    // Necesito tener los permisos del usuario que tiene las tablas padre para poder crear las heredadas.
+    // Despues hay que quitarlo para que no tenga permisos para la tabla padre.
+    $oDBRol->addGrupo('orbix');
+    
 	$oDBRol->crearSchema();
-	// Copiar esquema
-	$RegionRef = 'H';
-	$DlRef = 'dlb';
-	$RegionNew = $Qregion;
-	$DlNew = $Qdl;
 	$oDBEsquema = new core\DBEsquema();
 	$oDBEsquema->setDb('comun');
 	$oDBEsquema->setRegionRef($RegionRef);
@@ -72,13 +55,28 @@ $oDBRol->setDbConexion();
 	$oDBEsquema->setDlNew($DlNew);
 	$oDBEsquema->crear();
 	
-	// sv
-	$oDBRol->setUser($esquemav);
-	$oDBRol->setPwd($esquemav_pwd);
+    // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
+	$oDBRol->delGrupo('orbix');
+
+    // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
+    $schema = $RegionNew.'-'.$DlNew;
+    $oGesDbSchema = new GestorDbSchema();
+    $oGesDbSchema->llenarNuevo($schema);
+}
+
+// sv
+if (!empty($Qsv)) {
+    $oConfig = new core\Config('importar'); //de la database sv
+    $config = $oConfig->getEsquema('publicv');
+    $oConexion = new core\dbConnection($config);
+    $oDevelPC = $oConexion->getPDO();
+
 	// CREAR Esquema 
-	$oDBRol->setDbName('sv');
-	$oDBRol->setUser($esquemav);
-	$oDBRol->setDbConexion();
+    $oDBRol->setDbConexion($oDevelPC);
+    $oDBRol->setUser($esquemav);
+    // Necesito tener los permisos del usuario que tiene las tablas padre para poder crear las heredadas.
+    // Despues hay que quitarlo para que no tenga permisos para la tabla padre.
+    $oDBRol->addGrupo('orbixv');
 	$oDBRol->crearSchema();
 	// Copiar esquema
 	if (!empty($Qsv)) {
@@ -90,13 +88,22 @@ $oDBRol->setDbConexion();
 		$oDBEsquema->setDlNew($DlNew);
 		$oDBEsquema->crear();
 	}
-	// sf
-	$oDBRol->setUser($esquemaf);
-	$oDBRol->setPwd($esquemaf_pwd);
+    // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
+	$oDBRol->delGrupo('orbixv');
+}
+// sf
+if (!empty($Qsf)) {
+    $oConfig = new core\Config('importar'); //de la database sf
+    $config = $oConfig->getEsquema('publicf');
+    $oConexion = new core\dbConnection($config);
+    $oDevelPC = $oConexion->getPDO();
+
 	// CREAR Esquema 
-	$oDBRol->setDbName('sf');
-	$oDBRol->setUser($esquemaf);
-	$oDBRol->setDbConexion();
+    $oDBRol->setDbConexion($oDevelPC);
+    $oDBRol->setUser($esquemaf);
+    // Necesito tener los permisos del usuario que tiene las tablas padre para poder crear las heredadas.
+    // Despues hay que quitarlo para que no tenga permisos para la tabla padre.
+    $oDBRol->addGrupo('orbixf');
 	$oDBRol->crearSchema();
 	// Copiar esquema
 	if (!empty($Qsf)) {
@@ -108,19 +115,9 @@ $oDBRol->setDbConexion();
 		$oDBEsquema->setDlNew($DlNew);
 		$oDBEsquema->crear();
 	}
-
-// Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
-	// comun
-	$oDBRol->setUser($esquema);
-	$oDBRol->setPwd($esquema_pwd);
-	$oDBRol->delGrupo('orbix');
-	// sv
-	$oDBRol->setUser($esquemav);
-	$oDBRol->setPwd($esquemav_pwd);
-	$oDBRol->delGrupo('orbixv');
-	// sf
-	$oDBRol->setUser($esquemaf);
-	$oDBRol->setPwd($esquemaf_pwd);
+    // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
 	$oDBRol->delGrupo('orbixf');
-	
-echo sprintf(_("se han creado los usuarios y la estructua de los esquemas."));
+}
+
+echo "<br>";
+echo sprintf(_("se ha creado la estructura de los esquemas."));

@@ -13,6 +13,7 @@ class DB extends DBAbstract {
         $esquema_sfsv = ConfigGlobal::mi_region_dl();
         $role = substr($esquema_sfsv,0,-1); // quito la v o la f.
         $this->role = '"'. $role .'"';
+        $this->role_vf = '"'. $esquema_sfsv .'"';
         
         $this->esquema = 'global';
     }
@@ -42,7 +43,7 @@ class DB extends DBAbstract {
                     encargo text
                     );";
         
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
         
         $this->executeSql($a_sql);
         

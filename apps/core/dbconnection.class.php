@@ -32,7 +32,7 @@ class dbConnection {
 		return $str_conexio;
 	}
 	public function getPDO() {
-		$datestyle =$this->config['datestyle']; 
+		//$datestyle =$this->config['datestyle']; 
 		$esquema =$this->config['schema']; 
 		$str_conexio = $this->getStrConexio();		
 		$oDB = new \PDO($str_conexio);

@@ -1,5 +1,6 @@
 <?php
-use ubis\model\entity as ubis;
+use ubis\model\entity\GestorDelegacion;
+use web\Desplegable;
 /*
 * Devuelvo un desplegable con los valores posibles segun el valor de entrada.
 *
@@ -13,17 +14,28 @@ use ubis\model\entity as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 	
-$Qsalida = (integer) \filter_input(INPUT_POST, 'salida');
-$Qentrada = (integer) \filter_input(INPUT_POST, 'entrada');
+$Qsalida = (string) \filter_input(INPUT_POST, 'salida');
+$Qentrada = (string) \filter_input(INPUT_POST, 'entrada');
 switch ($Qsalida) {
 	 case "lugar":
-		$donde='';
 		if (empty($Qentrada)) die();
 		
 		$region = $Qentrada;
 
-		$oGesDl = new ubis\GestorDelegacion();
-		$oDesplDelegaciones = $oGesDl->getListaDelegaciones(array("$region"));
+		$oGesDl = new GestorDelegacion();
+		$aOpcionesDl = $oGesDl->getArrayDelegaciones(array("$region"));
+		asort($aOpcionesDl);
+		// poner el valor del desplegable igual al texto, no id.
+		$aOpciones = [];
+		foreach ($aOpcionesDl as $key => $value) {
+		   $aOpciones[$value] = $value; 
+		}
+		// Añadir cr y gestión
+		$aOpciones['cr'] = _("personas de cr (no dl)");
+		$aOpciones[$region] = _("para gestión global");
+		
+		$oDesplDelegaciones = new Desplegable();
+		$oDesplDelegaciones->setOpciones($aOpciones);
 		$oDesplDelegaciones->setNombre('dl');
 		echo $oDesplDelegaciones->desplegable();
 		break;

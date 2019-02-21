@@ -94,20 +94,20 @@ if (!isset($a_aprobadas['error'])) {
 	$a_textos[25] = sprintf(_("hay %s agregados que ya estaban en Repaso y han cursado asignaturas. Arreglarlo a mano"),$a_aprobadas['num']);
 }
 //26. Número de agregados de cuadrienio que han superado 1 curso (28.75 Creditos) 
-$res[26] = $Resumen->masCreditosQue('28.75');
+$res[26] = $Resumen->masAsignaturasQue(10);
 $a_textos[26] = ucfirst(_("número de agregados de cuadrienio que han superado 1 curso"));
 //27. Número de agregados de cuadrienio que han superado 1 semestre (14.25 Creditos) 
-$res[27] = $Resumen->masCreditosQue('14');
+$res[27] = $Resumen->masAsignaturasQue(5);
 $a_textos[27] = ucfirst(_("número de agregados de cuadrienio que han superado 1 semestre"));
 //28. Número de agregados de cuadrienio que han superado menos de 1 semestre
-$res[28] = $Resumen->menosCreditosQue('14');
+$res[28] = $Resumen->menosAsignaturasQue(5);
 $a_textos[28] = ucfirst(_("número de agregados de cuadrienio que han superado menos de 1 semestre"));
 //29. Número de agregados de cuadrienio que no han superado ninguna asignatura
 $res[29] = $Resumen->ningunaSuperada();
 $a_textos[29] = ucfirst(_("número de agregados de cuadrienio que no han superado ninguna asignatura"));
-//30. Número de agregados que han superado asignaturas con preceptor
+//30. Número de agregados que han superado asignaturas de cuadrienio con preceptor
 $res[30] = $Resumen->conPreceptorCuadrienio();
-$a_textos[30] = ucfirst(_("número de agregados que han superado asignaturas con preceptor"));
+$a_textos[30] = ucfirst(_("número de agregados que han superado asignaturas de cuadrienio con preceptor"));
 //31. Número de agregados que han terminado el cuadrienio este curso 
 $res[31] = $Resumen->terminadoCuadrienio();
 $a_textos[31] = ucfirst(_("número de agregados que han terminado el cuadrienio este curso"));

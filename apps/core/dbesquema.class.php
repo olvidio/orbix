@@ -43,6 +43,10 @@ class DBEsquema {
 	 * @var string
 	 */
 	 private $sfileSeq;
+	 
+	 private $sDb;
+	 private $user;
+	 private $password;
 
 	 /* CONSTRUCTOR -------------------------------------------------------------- */
  
@@ -61,6 +65,7 @@ class DBEsquema {
 	 *
 	 */
 	function __destruct() {
+	    // No los borro si estoy en debug
 		if (!ConfigGlobal::is_debug_mode()) {
 			$this->deleteFile($this->getFileNew());
 			$this->deleteFile($this->getFileRef());
@@ -180,7 +185,6 @@ class DBEsquema {
 	}
 
 	public function cambiar_nombre() {
-		$esqemaRef = $this->getRef();
 		$dump = file_get_contents($this->getFileRef());
 		// cambiar nombre esquema
 		$dump_nou = str_replace($this->getRef(),$this->getNew(),$dump);
@@ -198,35 +202,75 @@ class DBEsquema {
 		if ($d === false) printf(_("error al escribir el fichero"));
 	}
 
+	protected function getConexion($new='') {
+	    // No he conseguido que funcione con ~/.pgpass.
+	    if (empty($new)) {
+            $esquema = $this->getRef();
+	    } else {
+            $esquema = $this->getNew();
+	    }
+		switch ($this->sDb) {
+		    case 'comun':
+                $oConfig = new Config('comun'); //de la database comun
+                $config = $oConfig->getEsquema($esquema); //de la database comun
+		        break;
+		    case 'sv':
+                $oConfig = new Config('sv'); //de la database sv
+                $config = $oConfig->getEsquema($esquema); //de la database sv
+		        break;
+		    case 'sf':
+                $oConfig = new Config('sf'); //de la database sf
+                $config = $oConfig->getEsquema($esquema); //de la database sf
+		        break;
+		}
+	    $host = $config['host'];
+	    //$sslmode = $config['sslmode'];
+	    $port = $config['port'];
+	    $dbname = $config['dbname'];
+	    $user = $config['user'];
+	    $password = $config['password'];
+	    
+	    $password_encoded = rawurlencode ($password);
+	    $dbname = "postgresql://$user:$password_encoded@$host:$port/".$this->sDb;
+	    
+	    return $dbname;
+	}
+	
 	public function leer() {
+	    //pg_dump --dbname=postgresql://username:password@host:port/database > file.sql
+	    // crear archivo con el password
+	    $dbname = $this->getConexion();
 		// leer esquema
 		$command = "/usr/bin/pg_dump -s --schema=\\\"".$this->getRef()."\\\" ";
 		$command .= "--file=".$this->getFileRef()." ";
-		$command .= "--user=\"".$this->getRef()."\"";
-		$command .= " ".$this->getDb()." > ".$this->getFileLog()." 2>&1"; 
+		//$command .= "--user=\"".$this->getRef()."\"";
+		$command .= "--dbname=\"".$dbname."\"";
+		$command .= " > ".$this->getFileLog()." 2>&1"; 
 		passthru($command); // no output to capture so no need to store it
 		// read the file, if empty all's well
 		$error = file_get_contents($this->getFileLog());
 		if(trim($error) != '') {
-			if (!ConfigGlobal::is_debug_mode()) {
-				printf("PSQL ERROR IN COMMAND: $command <br> mirar: ".$this->getFileLog()."<br>");
+			if (ConfigGlobal::is_debug_mode()) {
+				echo sprintf("PSQL ERROR IN COMMAND: %s<br> mirar: %s<br>",$command,$this->getFileLog());
 			}
 		}
 	}
 
 	public function importar() {
-		$filename = $this->getFileRef();
+	    // crear archivo con el password
+	    $dbname = $this->getConexion(1);
 		// Importar el esquema en la base de datos comun
 		$command = "/usr/bin/psql -q ";
 		$command .= "--file=".$this->getFileNew()." ";
-		$command .= "--user=\"".$this->getNew()."\" ";
-		$command .= " ".$this->getDb()." > ".$this->getFileLog()." 2>&1"; 
+		$command .= "\"".$dbname."\"";
+		//$command .= "--user=\"".$this->getNew()."\" ";
+		$command .= " > ".$this->getFileLog()." 2>&1"; 
 		passthru($command); // no output to capture so no need to store it
 		// read the file, if empty all's well
 		$error = file_get_contents($this->getFileLog());
 		if(trim($error) != '') {
-			if (!ConfigGlobal::is_debug_mode()) {
-				printf("PSQL ERROR IN COMMAND: $command <br> mirar: ".$this->getFileLog()."<br>");
+			if (ConfigGlobal::is_debug_mode()) {
+				echo sprintf("PSQL ERROR IN COMMAND: %s<br> mirar en: %s<br>",$command,$this->getFileLog());
 			}
 		}
 	}
@@ -248,8 +292,8 @@ class DBEsquema {
 		// read the file, if empty all's well
 		$error = file_get_contents($this->getFileLog());
 		if(trim($error) != '') {
-			if (!ConfigGlobal::is_debug_mode()) {
-				printf("PSQL ERROR IN COMMAND: $command <br> mirar: ".$this->getFileLog()."<br>");
+			if (ConfigGlobal::is_debug_mode()) {
+				echo sprintf("PSQL ERROR IN COMMAND: %s<br> mirar en: %s<br>",$command,$this->getFileLog());
 			}
 		}
 	}
@@ -259,4 +303,3 @@ class DBEsquema {
 		passthru($command); // no output to capture so no need to store it
 	}
 }
-?>

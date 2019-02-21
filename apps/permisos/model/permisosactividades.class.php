@@ -1,13 +1,14 @@
 <?php
 namespace permisos\model;
-use core\ConfigGlobal;
 use actividades\model\entity\Actividad;
 use actividades\model\entity\GestorTipoDeActividad;
 use actividades\model\entity\TipoDeActividad;
-use procesos\model\entity as procesos;
+use core\ConfigGlobal;
 use procesos\model\PermAccion;
+use procesos\model\entity as procesos;
+use procesos\model\entity\ActividadProcesoTarea;
+use procesos\model\entity\GestorProceso;
 use usuarios\model\entity as usuarios;
-use core\ClasePropiedades;
 /**
  * Classe que genera un array amb els permisos per cada usuari. Es guarda a la sesió per tenir-ho a l'abast en qualsevol moment:
  *
@@ -220,11 +221,46 @@ class PermisosActividades {
 		return $this->iid_fase;
 	}
 
+	/**
+	 * Para saber si puedo crear una actividad del tipo
+	 * para dl, ex
+	 * 
+	 * @param bool $propia dl organizadora
+	 * @return array [$of_respnsable, $status]
+	 */
+	public function getPermisoCrear($propia) {
+		$id_tipo_activ = $this->iid_tipo_activ;
+		// si vengo de una búsqueda, el id_tipo_actividad puede ser con '...'
+		// pongo el tipo básico (sin specificar)
+		$id_tipo_activ = str_replace('.', '0', $id_tipo_activ);
+		$oTipoDeActividad = new TipoDeActividad($id_tipo_activ);
+
+		if ($propia == TRUE) {
+			$this->iid_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso();
+		} else {
+			$this->iid_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso_ex();
+		}
+
+		$GesProceso = new GestorProceso();
+		$cProcesos = $GesProceso->getProcesos(array('id_tipo_proceso'=>$this->iid_tipo_proceso,'_ordre'=>'n_orden'));
+		// La primera fase:
+		$oProceso = $cProcesos[0];
+	    $of_responsable = $oProceso->getOf_responsable();	
+	    $status = $oProceso->getStatus();	
+
+	   return ['of_responsable' => $of_responsable,
+	           'status' => $status,
+	           ]; 
+	}
+
 	public function getPermisoActual($iAfecta) {
 		// para poder pasar el valor de afecta con texto:
 		if (is_string($iAfecta)) $iAfecta = $this->aAfecta[$iAfecta];
-		$id_tipo_activ_txt = $this->getId_tipo_activ();
 		$id_tipo_proceso = $this->getId_tipo_proceso();
+		if (empty($id_tipo_proceso)) {
+		    echo _("No tiene definido el proceso para este tipo de actividad. Puede que falte definir ls dl org");
+			return  new PermAccion(0);
+		}
 		$faseActual = $this->getId_fase();
 		//echo "afec: $iAfecta, fase: $faseActual, proceso: $id_tipo_proceso, tipo_activ: $id_tipo_activ_txt<br>";
 		$iperm=0;

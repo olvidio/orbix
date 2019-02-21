@@ -396,13 +396,15 @@ foreach($cActividades as $oActividad) {
 			}
 		}
 
-		$ctrs="";
+		$ctrs = "";
 		if(core\ConfigGlobal::is_app_installed('actividadescentro')) {
-			$oEnc=new GestorCentroEncargado();
+			$oEnc = new GestorCentroEncargado();
+			$n = 0;
 			foreach($oEnc->getCentrosEncargadosActividad($id_activ) as $oEncargado) {
-				$ctrs.=$oEncargado->getNombre_ubi().", ";
+			    $n++;
+				$ctrs .= $oEncargado->getNombre_ubi().", ";
 			}
-			$ctrs=substr($ctrs,0,-2);
+			$ctrs = (!empty($n))? substr($ctrs,0,-2) : '';
 		}
 		
 		$a_valores[$i]['sel']="$id_activ#$nom_activ";

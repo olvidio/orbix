@@ -45,7 +45,10 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	    } else {
 	        $id_tipo_proceso=$oTipo->getId_tipo_proceso_ex();
 	    }
-	    
+	    if (empty($id_tipo_proceso)) {
+	        echo _("No tiene definido el proceso para este tipo de actividad");
+	        return TRUE;
+	    }
 	    $iid_fase = $this->generar($iid_activ,$id_tipo_proceso);
 	    return $iid_fase;
 	}
@@ -72,7 +75,6 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	        }
 	    }
 	}
-	
 	
 	/**
 	 * retorna un integer id_fase que és la última del seu proces.

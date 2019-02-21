@@ -12,7 +12,9 @@ class DB extends DBAbstract {
     public function __construct(){
         $esquema_sfsv = ConfigGlobal::mi_region_dl();
         $role = substr($esquema_sfsv,0,-1); // quito la v o la f.
+        
         $this->role = '"'. $role .'"';
+        $this->role_vf = '"'. $esquema_sfsv .'"';
         
         $this->esquema = 'global';
     }
@@ -38,7 +40,7 @@ class DB extends DBAbstract {
     /**
      * En la BD Comun.
      * Tiene un foreing key con el id_activ. Entiendo que no hay problemas con sf, ya 
-     * los procesoso podrian ser distintos, pero no interfieren los ids.
+     * los procesos podrian ser distintos, pero no interfieren los ids.
      */
     public function create_a_actividad_proceso() {
         $this->addPermisoGlobal('comun');
@@ -59,7 +61,7 @@ class DB extends DBAbstract {
                 ); ";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER completado SET DEFAULT false;";
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
         
         $this->executeSql($a_sql);
         
@@ -89,7 +91,7 @@ class DB extends DBAbstract {
             nom_proceso text
             );";
         
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
         
         $this->executeSql($a_sql);
         
@@ -119,7 +121,7 @@ class DB extends DBAbstract {
                     desc_tarea character varying(70)
                     );";
         
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
         
         $this->executeSql($a_sql);
         
@@ -149,7 +151,7 @@ class DB extends DBAbstract {
                     sv boolean NOT NULL
                     );";
         
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
         
         $this->executeSql($a_sql);
         
@@ -185,7 +187,7 @@ class DB extends DBAbstract {
                     mensaje_requisito text
                     );";
         
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
         
         $this->executeSql($a_sql);
         
@@ -220,7 +222,7 @@ class DB extends DBAbstract {
                 dl_propia boolean DEFAULT true NOT NULL,
                 id_fases text
             );";
-        //$a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
         
         $this->executeSql($a_sql);
         

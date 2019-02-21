@@ -92,10 +92,12 @@ $a_textos[3] = ucfirst(_("numerarios que han terminado el ce y con el bienio sin
 	$a_textos['3.3'] = ucfirst(_("numerarios que han terminado el ce (otros años) y con el bienio sin acabar"));
 //}
 //4. Numerarios en Bienio
-$res[4] = $Resumen->enBienio();
+//$res[4] = $Resumen->enBienio(); Con los de ce es complicado, si tiene que ser la suma, mejor sumar:
+$res[4]['num'] = $res[1]['num'] + $res[2]['num'] + $res[3]['num'];
+$res[4]['lista'] = ucfirst(_("es la suma de los puntos: 1+2+3"));
 $a_textos[4] = ucfirst(_("número de numerarios en Bienio"));
 //5. Media de asignaturas superadas por alumno en ce
-$nce = $Resumen->enCe(1)['num'];
+$nce = $res[1]['num'];
 SetType($nce,"double");
 $a_aprobadas = $Resumen->aprobadasCe();
 $aprobadas = $a_aprobadas['num'];
@@ -138,13 +140,13 @@ if (!isset($a_aprobadas['error'])) {
 	$a_textos[11] = sprintf(_("hay %s numerarios que ya estaban en Repaso y han cursado asignaturas. Arreglarlo a mano"),$a_aprobadas['num']);
 }
 //12. Número de numerarios de cuadrienio que han superado 1 curso (28.75 Creditos) 
-$res[12] = $Resumen->masCreditosQue('28.75');
+$res[12] = $Resumen->masAsignaturasQue(10);
 $a_textos[12] = ucfirst(_("número de numerarios de cuadrienio que han superado 1 curso"));
 //13. Número de numerarios de cuadrienio que han superado 1 semestre (14.25 Creditos) 
-$res[13] = $Resumen->masCreditosQue('14');
+$res[13] = $Resumen->masAsignaturasQue(5);
 $a_textos[13] = ucfirst(_("número de numerarios de cuadrienio que han superado 1 semestre"));
 //14. Número de numerarios de cuadrienio que han superado menos de 1 semestre
-$res[14] = $Resumen->menosCreditosQue('14');
+$res[14] = $Resumen->menosCreditosQue(5);
 $a_textos[14] = ucfirst(_("número de numerarios de cuadrienio que han superado menos de 1 semestre"));
 //15. Número de numerarios de cuadrienio que no han superado ninguna asignatura
 $res[15] = $Resumen->ningunaSuperada();

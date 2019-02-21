@@ -30,37 +30,17 @@ class DBRol {
 
 	 /**
 	 * Constructor de la classe.
-	 * Si només necessita un valor, se li pot passar un integer.
-	 * En general se li passa un array amb les claus primàries.
-	 *
-	 * @param integer|array $iid_ubi
-	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
 	 */
 	function __construct() {
-		/*
-		$str_conexio = "pgsql:host=localhost port=5432  dbname='comun' user='dani' password='system'";
-		$oDbl = new \PDO($str_conexio);
-		$this->setoDbl($oDbl);
-		*/
 	}
  
 
 	/* METODES GET i SET --------------------------------------------------------*/
-	public function setDbName($dbname) {
-		$this->sdbname = $dbname;
+	
+	public function setDbConexion($oDbl) {
+	    $this->setoDbl($oDbl);
 	}
-	public function setDbUser($dbuser) {
-		$this->sdbuser = $dbuser;
-	}
-	public function setDbPwd($dbpwd) {
-		$this->sdbpwd = $dbpwd;
-	}
-	public function setDbConexion() {
-		$str_conexio = "pgsql:host=localhost port=5432  dbname='".$this->sdbname."' user='".$this->sdbuser."' password='".$this->sdbpwd."'";
-		$oDbl = new \PDO($str_conexio);
-		$this->setoDbl($oDbl);
-	}
-
+	
 	/**
 	 * Recupera l'atribut oDbl de Grupo
 	 *
@@ -91,7 +71,8 @@ class DBRol {
 	// usuarios:	
 	public function addGrupo($grupo) {
 		$oDbl = $this->getoDbl();
-		$sql = "GRANT \"$grupo\" TO \"$this->sUser\" ";
+		$sql = "GRANT \"$grupo\" TO \"$this->sUser\"";
+		//$sql = "GRANT \"$grupo\" TO \"$this->sUser\" ";
 
 		if (($oDblSt = $oDbl->prepare($sql)) === false) {
 			$sClauError = 'DBRol.addGrupo.prepare';
