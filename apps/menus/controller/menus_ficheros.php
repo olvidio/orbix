@@ -55,23 +55,30 @@ if ($Qaccion == 'importar') {
 	$txt_comun = str_replace ( "DIRBASE", $dir_base, $txt_base);
 	file_put_contents($filename, $txt_comun);
 	
-    $passwd_admin = $config['password'];
-    $command = "export PGPASSWORD='$passwd_admin'; ";
-    $command .= "sudo /usr/bin/psql -q ";
+    $oConfig = new core\Config('comun'); //de la database comun
+    $config = $oConfig->getEsquema('public'); //de la database comun
+    
+    $host = $config['host'];
+    //$sslmode = $config['sslmode'];
+    $port = $config['port'];
+    $dbname = $config['dbname'];
+    $user = $config['user'];
+    $password = $config['password'];
+    
+    $password_encoded = rawurlencode ($password);
+    $dbname = "postgresql://$user:$password_encoded@$host:$port/".$this->sDb;
+    
+    $command = "/usr/bin/psql -q ";
     $command .= "--pset pager=off ";
     $command .= "--file=".$filename." ";
-    $command .= "--user=\"admindb\"";
-    $command .= " $db_comun ";
-    //$command .= " comun > ".$filelog." 2>&1";
-    //echo "cmd: $command<br>";
-
-    //passthru($command); // no output to capture so no need to store it
-    echo shell_exec($command); // no output to capture so no need to store it
+    $command .= "\"".$dbname."\"";
+    $command .= " > ".$filelog." 2>&1";
+    passthru($command); // no output to capture so no need to store it
     // read the file, if empty all's well
     $error = file_get_contents($filelog);
     if(trim($error) != '') {
-        if (!ConfigGlobal::is_debug_mode()) {
-            printf("PSQL ERRROR IN COMMAND: $command<br>\n-----\n<br>$error\n");
+        if (ConfigGlobal::is_debug_mode()) {
+            echo sprintf("PSQL ERROR IN COMMAND: %s<br> mirar en: %s<br>",$command,$filelog);
         }
     }
 }
