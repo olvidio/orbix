@@ -130,7 +130,7 @@ if (!isset($a_aprobadas['error'])) {
 	$a_textos[11] = ucfirst(_("media de asignaturas superadas por alumno en cuadrienio"));
 } else {
 	$res[11] = $a_aprobadas;
-	$a_textos[11] = sprintf(_("hay %s numerarios que ya estaban en Repaso y han cursado asignaturas. Arreglarlo a mano"),$a_aprobadas['num']);
+	$a_textos[11] = sprintf(_("ERROR: hay %s numerarios que ya estaban en Repaso y han cursado asignaturas. Arreglarlo a mano"),$a_aprobadas['num']);
 }
 //12. Número de numerarios de cuadrienio que han superado 1 curso (28.75 Creditos) 
 $res[12] = $Resumen->masAsignaturasQue(10);

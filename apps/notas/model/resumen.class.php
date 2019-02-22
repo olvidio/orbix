@@ -764,7 +764,9 @@ class Resumen Extends core\ClasePropiedades {
 		$tabla = $this->getNomTabla();
 		$notas = $this->getNomNotas();
 
+		/*
 		//Miro que no exista nadie de repaso que haya cursado alguna asignatura
+		// fecha acabado bienio > fecha ultima asignatura
 		$ssql="SELECT p.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
 				FROM $tabla p,$notas n
 				WHERE p.id_nom=n.id_nom
@@ -785,7 +787,7 @@ class Resumen Extends core\ClasePropiedades {
 			}
 			return $rta;
 		}
-
+        */
 //		$ssql="SELECT count(*)
 //				FROM $notas n 
 //				WHERE n.id_nivel BETWEEN 2100 AND 2500
