@@ -591,7 +591,7 @@ class Resumen Extends core\ClasePropiedades {
             $rta['error'] = true;
             $rta['num'] = $nf;
             if ($this->blista == true && $rta['num'] > 0) {
-                $rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2, p.ce_lugar",1);
+                $rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ce_lugar",1);
             } else {
                 $rta['lista'] = '';
             }
