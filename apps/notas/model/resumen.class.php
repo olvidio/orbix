@@ -579,7 +579,7 @@ class Resumen Extends core\ClasePropiedades {
                AND (p.situacion = 'A' OR p.situacion = 'D')
             ORDER BY p.apellido1,p.apellido2,p.nom  "; 
   */
-        $ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom
+        $ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.ce_lugar
             FROM $tabla p
             WHERE p.ce_lugar IS NOT NULL
                AND p.ce_ini IS NOT NULL AND (p.ce_fin IS NULL OR p.ce_fin = '$any')
@@ -591,7 +591,7 @@ class Resumen Extends core\ClasePropiedades {
             $rta['error'] = true;
             $rta['num'] = $nf;
             if ($this->blista == true && $rta['num'] > 0) {
-                $rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
+                $rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2, p.ce_lugar",1);
             } else {
                 $rta['lista'] = '';
             }
@@ -718,7 +718,7 @@ class Resumen Extends core\ClasePropiedades {
 		$rta = [];
         $ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.ctr, p.stgr
             FROM $tabla p
-            WHERE  p.ce_fin > '$any' AND p.ce_lugar IS NOT NULL AND p.stgr = 'b'
+            WHERE  p.ce_fin != '$any' AND p.ce_lugar IS NOT NULL AND p.stgr = 'b'
             ORDER BY p.apellido1,p.apellido2,p.nom  "; 
         $statement=$oDbl->query($ssql);
         $nf=$statement->rowCount();
