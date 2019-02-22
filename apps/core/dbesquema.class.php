@@ -231,20 +231,19 @@ class DBEsquema {
 	    $password = $config['password'];
 	    
 	    $password_encoded = rawurlencode ($password);
-	    $dbname = "postgresql://$user:$password_encoded@$host:$port/".$this->sDb;
+	    $dsn = "postgresql://$user:$password_encoded@$host:$port/".$dbname;
 	    
-	    return $dbname;
+	    return $dsn;
 	}
 	
 	public function leer() {
 	    //pg_dump --dbname=postgresql://username:password@host:port/database > file.sql
 	    // crear archivo con el password
-	    $dbname = $this->getConexion();
+	    $dsn = $this->getConexion();
 		// leer esquema
 		$command = "/usr/bin/pg_dump -s --schema=\\\"".$this->getRef()."\\\" ";
 		$command .= "--file=".$this->getFileRef()." ";
-		//$command .= "--user=\"".$this->getRef()."\"";
-		$command .= "--dbname=\"".$dbname."\"";
+		$command .= "\"".$dsn."\"";
 		$command .= " > ".$this->getFileLog()." 2>&1"; 
 		passthru($command); // no output to capture so no need to store it
 		// read the file, if empty all's well
@@ -258,12 +257,11 @@ class DBEsquema {
 
 	public function importar() {
 	    // crear archivo con el password
-	    $dbname = $this->getConexion(1);
+	    $dsn = $this->getConexion(1);
 		// Importar el esquema en la base de datos comun
 		$command = "/usr/bin/psql -q ";
 		$command .= "--file=".$this->getFileNew()." ";
-		$command .= "\"".$dbname."\"";
-		//$command .= "--user=\"".$this->getNew()."\" ";
+		$command .= "\"".$dsn."\"";
 		$command .= " > ".$this->getFileLog()." 2>&1"; 
 		passthru($command); // no output to capture so no need to store it
 		// read the file, if empty all's well
@@ -283,13 +281,13 @@ class DBEsquema {
 	
 	public function eliminar() {
 	    // crear archivo con el password
-	    $dbname = $this->getConexion(1);
+	    $dsn = $this->getConexion(1);
 		$esquema = $this->getNew();
 		$sql = "DROP SCHEMA IF EXISTS \\\"".$esquema."\\\" CASCADE;";
 		
 		$command = "/usr/bin/psql -q ";
 		$command .= " -c \"".$sql."\" ";
-		$command .= "\"".$dbname."\"";
+		$command .= "\"".$dsn."\"";
 		$command .= " > ".$this->getFileLog()." 2>&1"; 
 		passthru($command); // no output to capture so no need to store it
 		// read the file, if empty all's well

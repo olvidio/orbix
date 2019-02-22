@@ -58,12 +58,12 @@ if ($Qaccion == 'importar') {
     $password = $config['password'];
     
     $password_encoded = rawurlencode ($password);
-    $conn = "postgresql://$user:$password_encoded@$host:$port/".$dbname;
+    $dsn = "postgresql://$user:$password_encoded@$host:$port/".$dbname;
     
     $command = "/usr/bin/psql -q ";
     $command .= "--pset pager=off ";
     $command .= "--file=".$filename." ";
-    $command .= "\"".$conn."\"";
+    $command .= "\"".$dsn."\"";
     $command .= " > ".$filelog." 2>&1";
     passthru($command); // no output to capture so no need to store it
     // read the file, if empty all's well

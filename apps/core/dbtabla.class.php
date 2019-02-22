@@ -187,9 +187,9 @@ class DBTabla {
 	    $password = $config['password'];
 	    
 	    $password_encoded = rawurlencode ($password);
-	    $dbname = "postgresql://$user:$password_encoded@$host:$port/".$this->sDb;
+	    $dsn = "postgresql://$user:$password_encoded@$host:$port/".$dbname;
 	    
-	    return $dbname;
+	    return $dsn;
 	}
 
 	protected function getConexionPDO($new='') {
@@ -215,11 +215,11 @@ class DBTabla {
 		}
 		//pg_dump --dbname=postgresql://username:password@host:port/database > file.sql
 		// crear archivo con el password
-		$dbname = $this->getConexion();
+		$dsn = $this->getConexion();
 		// leer esquema
 		$command = "/usr/bin/pg_dump -a $sTablas";
 		$command .= "--file=".$this->getFileRef()." ";
-		$command .= "--dbname=\"".$dbname."\"";
+		$command .= "\"".$dsn."\"";
 		$command .= " > ".$this->getFileLog()." 2>&1"; 
 		passthru($command); // no output to capture so no need to store it
 		// read the file, if empty all's well
@@ -233,12 +233,12 @@ class DBTabla {
 
 	public function importar() {
 	    // crear archivo con el password
-	    $dbname = $this->getConexion(1);
+	    $dsn = $this->getConexion(1);
 	    
 		$command = "/usr/bin/psql -q ";
 		$command .= "--pset pager=off ";
 		$command .= "--file=".$this->getFileNew()." ";
-		$command .= "\"".$dbname."\"";
+		$command .= "\"".$dsn."\"";
 		$command .= " > ".$this->getFileLog()." 2>&1"; 
 		passthru($command); // no output to capture so no need to store it
 		// read the file, if empty all's well
