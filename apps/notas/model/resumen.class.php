@@ -583,7 +583,7 @@ class Resumen Extends core\ClasePropiedades {
             FROM $tabla p
             WHERE p.ce_lugar IS NOT NULL
                AND p.ce_ini IS NOT NULL AND (p.ce_fin IS NULL OR p.ce_fin = '$any')
-               AND (p.situacion = 'A' OR p.situacion = 'D')
+               AND (p.situacion = 'A' OR p.situacion = 'D' OR p.situacion = 'L')
             ORDER BY p.apellido1,p.apellido2,p.nom  "; 
         $statement=$oDbl->query($ssql);
         $nf=$statement->rowCount();
@@ -718,7 +718,7 @@ class Resumen Extends core\ClasePropiedades {
 		$rta = [];
         $ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.ctr, p.stgr
             FROM $tabla p
-            WHERE  p.ce_fin != '$any' AND p.ce_lugar IS NOT NULL AND p.stgr = 'b'
+            WHERE  p.ce_fin < '$any' AND p.ce_lugar IS NOT NULL AND p.stgr = 'b'
             ORDER BY p.apellido1,p.apellido2,p.nom  "; 
         $statement=$oDbl->query($ssql);
         $nf=$statement->rowCount();
