@@ -203,7 +203,7 @@ class DBTabla {
 	    $password = $config['password'];
 	    
 	    // OJO Con las comillas dobles para algunos caracteres del password ($...)
-	    $str_conexio = 'pgsql:host='.$host.' port='.$port.' dbname=\''.$dbname.'\' user=\''.$user.'\' password=\''.$password.'\'';
+	    $str_conexio = 'pgsql:host='.$host.';port='.$port.';dbname=\''.$dbname.'\';user=\''.$user.'\';password=\''.$password.'\'';
 
 	    return $str_conexio;
 	}
