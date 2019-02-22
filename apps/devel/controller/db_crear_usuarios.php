@@ -23,7 +23,8 @@ function generar_password($largo){
     // OJO no se puede usar el caracter punto y coma ';',
     // porque al crear la cadena de conexión (DSN) del PDO lo usa como separador... 
     // idem comillas.
-    $cadena_base .= '!@#%^&*()_,./<>?:[]{}\|=+';
+    // idem barra de escape '\'
+    $cadena_base .= '!@#%^&*()_,./<>?:[]{}|=+';
     
     $password = '';
     $limite = strlen($cadena_base) - 1;
