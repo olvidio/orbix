@@ -572,9 +572,16 @@ class Resumen Extends core\ClasePropiedades {
 
 		$rta = [];
         // curso anterior
-        $ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom
+/*        $ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom
             FROM $tabla p
             WHERE p.ce_lugar = '$ce_lugar' 
+               AND p.ce_ini IS NOT NULL AND (p.ce_fin IS NULL OR p.ce_fin = '$any')
+               AND (p.situacion = 'A' OR p.situacion = 'D')
+            ORDER BY p.apellido1,p.apellido2,p.nom  "; 
+  */
+        $ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom
+            FROM $tabla p
+            WHERE p.ce_lugar IS NOT NULL
                AND p.ce_ini IS NOT NULL AND (p.ce_fin IS NULL OR p.ce_fin = '$any')
                AND (p.situacion = 'A' OR p.situacion = 'D')
             ORDER BY p.apellido1,p.apellido2,p.nom  "; 
@@ -700,72 +707,31 @@ class Resumen Extends core\ClasePropiedades {
 
 	/**
 	 * 
-	 * @param integer $actual  0->todos, 1->este curso, 2->otros cursos
 	 * @return array
 	 */
-	public function ceAcabadoEnBienio($actual=0) {
-		$ce_lugar = $this->getCe_lugar();
+	public function ceAcabadoEnBienio() {
+		//$ce_lugar = $this->getCe_lugar();
 		$any = $this->getAnyFiCurs();
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 
 		$rta = [];
-		switch ($actual) {
-			case 0: //todo
-				$ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.ctr, p.stgr
-					FROM $tabla p
-					WHERE  p.ce_fin IS NOT NULL AND p.ce_lugar = '$ce_lugar' AND p.stgr = 'b'
-					ORDER BY p.apellido1,p.apellido2,p.nom  "; 
-				$statement=$oDbl->query($ssql);
-				$nf=$statement->rowCount();
-				if ($nf >= 1){
-					$rta['error'] = true;
-					$rta['num'] = $nf;
-					if ($this->blista == true && $rta['num'] > 0) {
-						$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr,stgr",1);
-					} else {
-						$rta['lista'] = '';
-					}
-					return $rta;
-				}
-				break;
-			case 1:
-				$ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.ctr, p.stgr
-					FROM $tabla p
-					WHERE  p.ce_fin='$any' AND p.ce_lugar = '$ce_lugar' AND p.stgr = 'b'
-					ORDER BY p.apellido1,p.apellido2,p.nom  "; 
-				$statement=$oDbl->query($ssql);
-				$nf=$statement->rowCount();
-				if ($nf >= 1){
-					$rta['error'] = true;
-					$rta['num'] = $nf;
-					if ($this->blista == true && $rta['num'] > 0) {
-						$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr,stgr",1);
-					} else {
-						$rta['lista'] = '';
-					}
-					return $rta;
-				}
-				break;
-			case 2:
-				$ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.ctr, p.stgr
-					FROM $tabla p
-					WHERE  p.ce_fin != '$any' AND p.ce_lugar = '$ce_lugar' AND p.stgr = 'b'
-					ORDER BY p.apellido1,p.apellido2,p.nom  "; 
-				$statement=$oDbl->query($ssql);
-				$nf=$statement->rowCount();
-				if ($nf >= 1){
-					$rta['error'] = true;
-					$rta['num'] = $nf;
-					if ($this->blista == true && $rta['num'] > 0) {
-						$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr,stgr",1);
-					} else {
-						$rta['lista'] = '';
-					}
-					return $rta;
-				}
-				break;
-		}
+        $ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.ctr, p.stgr
+            FROM $tabla p
+            WHERE  p.ce_fin > '$any' AND p.ce_lugar IS NOT NULL AND p.stgr = 'b'
+            ORDER BY p.apellido1,p.apellido2,p.nom  "; 
+        $statement=$oDbl->query($ssql);
+        $nf=$statement->rowCount();
+        if ($nf >= 1){
+            $rta['error'] = true;
+            $rta['num'] = $nf;
+            if ($this->blista == true && $rta['num'] > 0) {
+                $rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr,stgr",1);
+            } else {
+                $rta['lista'] = '';
+            }
+            return $rta;
+        }
 		return array('num'=>0,'lista'=>'');
 	}
 
