@@ -9,30 +9,39 @@
 	
 $Qregion = (string) \filter_input(INPUT_POST, 'region');
 $Qdl = (string) \filter_input(INPUT_POST, 'dl');
-$Qsv = (string) \filter_input(INPUT_POST, 'sv');
-$Qsf = (string) \filter_input(INPUT_POST, 'sf');
+$Qcomun = (integer) \filter_input(INPUT_POST, 'comun');
+$Qsv = (integer) \filter_input(INPUT_POST, 'sv');
+$Qsf = (integer) \filter_input(INPUT_POST, 'sf');
 
 $esquema = "$Qregion-$Qdl";
+$esquemav = $esquema.'v';
+$esquemaf = $esquema.'f';
+
 $RegionNew = $Qregion;
 $DlNew = $Qdl;
 
-$oTrasvase = new core\DBTrasvase();
-$oTrasvase->setDbUser('dani');
-$oTrasvase->setDbPwd('system');
-$oTrasvase->setRegion($Qregion);
-$oTrasvase->setDl($Qdl);
-
 // COMUN
-$oTrasvase->setDbName('comun');
-$oTrasvase->setDbConexion();
-$oTrasvase->actividades('dl2resto');
-$oTrasvase->cdc('dl2resto');
-$oTrasvase->teleco_cdc('dl2resto');
-
+if (!empty($Qcomun)) {
+    $oTrasvase = new core\DBTrasvase();
+    $oTrasvase->setDbName('comun');
+    $oTrasvase->setDbConexion();
+    $oTrasvase->setRegion($Qregion);
+    $oTrasvase->setDl($Qdl);
+    
+    $oTrasvase->setDbName('comun');
+    $oTrasvase->setDbConexion();
+    $oTrasvase->actividades('dl2resto');
+    $oTrasvase->cdc('dl2resto');
+    $oTrasvase->teleco_cdc('dl2resto');
+}
 // SV
 if (!empty($Qsv)) {
-	$oTrasvase->setDbName('sv');
-	$oTrasvase->setDbConexion();
+    $oTrasvase = new core\DBTrasvase();
+    $oTrasvase->setDbName('sv');
+    $oTrasvase->setDbConexion();
+    $oTrasvase->setRegion($Qregion);
+    $oTrasvase->setDl($Qdl);
+    
 	$oTrasvase->ctr('dl2resto');
 	$oTrasvase->teleco_ctr('dl2resto');
 
@@ -44,8 +53,12 @@ if (!empty($Qsv)) {
 }
 // SF
 if (!empty($Qsf)) {
-	$oTrasvase->setDbName('sf');
-	$oTrasvase->setDbConexion();
+    $oTrasvase = new core\DBTrasvase();
+    $oTrasvase->setDbName('sf');
+    $oTrasvase->setDbConexion();
+    $oTrasvase->setRegion($Qregion);
+    $oTrasvase->setDl($Qdl);
+    
 	$oTrasvase->ctr('dl2resto');
 	$oTrasvase->teleco_ctr('dl2resto');
 
@@ -56,6 +69,7 @@ if (!empty($Qsf)) {
 	$oDBEsquema->eliminar();
 }
 
+// Borrar esquema comun y usuarios.
 if (!empty($Qsv) && !empty($Qsf)) {
 	$oDBEsquema = new core\DBEsquema();
 	$oDBEsquema->setDb('comun');
@@ -63,11 +77,17 @@ if (!empty($Qsv) && !empty($Qsf)) {
 	$oDBEsquema->setDlNew($DlNew);
 	$oDBEsquema->eliminar();
 	// Eliminar usuarios
+	
+	// Hay que pasar como parámetro el nombre de la database, que corresponde al archivo database.inc
+	// donde están los passwords. En este caso en importar.inc, tenermos al superadmin.
+	$oConfig = new core\Config('importar');
+	$config = $oConfig->getEsquema('public'); //de la database comun
+	
+	$oConexion = new core\dbConnection($config);
+	$oDevelPC = $oConexion->getPDO();
+	
 	$oDBRol = new core\DBRol();
-	$oDBRol->setDbUser('dani');
-	$oDBRol->setDbPwd('system');
-	$oDBRol->setDbName('comun');
-	$oDBRol->setDbConexion();
+	$oDBRol->setDbConexion($oDevelPC);
 
 	$oDBRol->setUser($esquema);
 	$oDBRol->eliminarUsuario();

@@ -10,8 +10,8 @@
 $Qregion = (string) \filter_input(INPUT_POST, 'region');
 $Qdl = (string) \filter_input(INPUT_POST, 'dl');
 $Qcomun = (integer) \filter_input(INPUT_POST, 'comun');
-$Qsv = (string) \filter_input(INPUT_POST, 'sv');
-$Qsf = (string) \filter_input(INPUT_POST, 'sf');
+$Qsv = (integer) \filter_input(INPUT_POST, 'sv');
+$Qsf = (integer) \filter_input(INPUT_POST, 'sf');
 
 $esquema = "$Qregion-$Qdl";
 $esquemav = $esquema.'v';

@@ -282,12 +282,15 @@ class DBEsquema {
 	}
 	
 	public function eliminar() {
+	    // crear archivo con el password
+	    $dbname = $this->getConexion(1);
 		$esquema = $this->getNew();
 		$sql = "DROP SCHEMA IF EXISTS \\\"".$esquema."\\\" CASCADE;";
+		
 		$command = "/usr/bin/psql -q ";
 		$command .= " -c \"".$sql."\" ";
-		$command .= "--user=\"".$this->getNew()."\"";
-		$command .= " ".$this->getDb()." > ".$this->getFileLog()." 2>&1"; 
+		$command .= "\"".$dbname."\"";
+		$command .= " > ".$this->getFileLog()." 2>&1"; 
 		passthru($command); // no output to capture so no need to store it
 		// read the file, if empty all's well
 		$error = file_get_contents($this->getFileLog());
