@@ -873,7 +873,7 @@ class Resumen Extends core\ClasePropiedades {
 			AND (p.stgr ILIKE 'c%' OR p.stgr='r')
 			AND (n.id_nivel BETWEEN 2100 AND 2500)
 		GROUP BY n.id_nom,p.nom, p.apellido1,p.apellido2, p.ctr
-		HAVING conut(*) <= $numASig
+		HAVING count(*) <= $numASig
 		ORDER BY p.apellido1,p.apellido2,p.nom  ";
 
 		$statement=$oDbl->query($ssql);
@@ -995,16 +995,33 @@ class Resumen Extends core\ClasePropiedades {
 		return $rta;
 	}
 
+	/**
+	 * Gente que está de repaso (strg='r') no sacd, y
+	 * que no haya termiinado este curso.
+	 * 
+	 * @return string
+	 */
 	public function laicosConCuadrienio() {
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 		$notas = $this->getNomNotas();
+		$curs = $this->getCurso();
 		
-		$ssql="SELECT p.id_nom,p.nom, p.apellido1, p.apellido2, p.ctr
-			FROM $tabla p
-			WHERE p.stgr='r' AND p.sacd='f'
-			ORDER BY p.apellido1, p.apellido2,p.nom"; 
+		$sql1="SELECT pp.id_nom,pp.nom, pp.apellido1, pp.apellido2, pp.ctr
+			FROM $tabla pp
+			WHERE pp.stgr='r' AND pp.sacd='f'";
+			//ORDER BY pp.apellido1, pp.apellido2, pp.nom"; 
 
+		$sql2="SELECT n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
+		FROM $tabla p, $notas n
+		WHERE p.id_nom=n.id_nom
+			AND (n.id_nivel=9998) AND n.f_acta $curs
+		GROUP BY n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
+
+		ORDER BY p.apellido1, p.apellido2,p.nom"; 
+
+		$ssql = "( $sql1 ) EXCEPT ( $sql2 )";
+		
 		$statement=$oDbl->query($ssql);
 		$rta['num'] = $statement->rowCount();
 		if ($this->blista == true && $rta['num'] > 0) {
