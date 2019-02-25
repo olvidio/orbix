@@ -1007,7 +1007,7 @@ class Resumen Extends core\ClasePropiedades {
 		$notas = $this->getNomNotas();
 		$curs = $this->getCurso();
 		
-		$sql1="SELECT pp.id_nom,pp.nom, pp.apellido1, pp.apellido2, pp.ctr
+		$ssql="SELECT pp.id_nom,pp.nom, pp.apellido1, pp.apellido2, pp.ctr
 			FROM $tabla pp
 			WHERE pp.stgr='r' AND pp.sacd='f'
 			ORDER BY pp.apellido1, pp.apellido2, pp.nom"; 
@@ -1024,7 +1024,7 @@ class Resumen Extends core\ClasePropiedades {
 		$ssql = "( $sql1 ) EXCEPT ( $sql2 ) ORDER BY 3,4,2";
         */
 	
-		$statement=$oDbl->query($sql1);
+		$statement=$oDbl->query($ssql);
 		$rta['num'] = $statement->rowCount();
 		if ($this->blista == true && $rta['num'] > 0) {
 			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr",1);
