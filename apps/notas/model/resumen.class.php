@@ -999,7 +999,7 @@ class Resumen Extends core\ClasePropiedades {
 	 * Gente que está de repaso (strg='r') no sacd, y
 	 * que no haya termiinado este curso.
 	 * 
-	 * @return string
+	 * @return array
 	 */
 	public function laicosConCuadrienio() {
 		$oDbl = $this->getoDbl();
@@ -1009,9 +1009,10 @@ class Resumen Extends core\ClasePropiedades {
 		
 		$sql1="SELECT pp.id_nom,pp.nom, pp.apellido1, pp.apellido2, pp.ctr
 			FROM $tabla pp
-			WHERE pp.stgr='r' AND pp.sacd='f'";
-			//ORDER BY pp.apellido1, pp.apellido2, pp.nom"; 
+			WHERE pp.stgr='r' AND pp.sacd='f'
+			ORDER BY pp.apellido1, pp.apellido2, pp.nom"; 
 
+        /*
 		$sql2="SELECT n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
 		FROM $tabla p, $notas n
 		WHERE p.id_nom=n.id_nom
@@ -1020,9 +1021,10 @@ class Resumen Extends core\ClasePropiedades {
 
 		ORDER BY p.apellido1, p.apellido2,p.nom"; 
 
-		$ssql = "( $sql1 ) EXCEPT ( $sql2 )";
-		
-		$statement=$oDbl->query($ssql);
+		$ssql = "( $sql1 ) EXCEPT ( $sql2 ) ORDER BY 3,4,2";
+        */
+	
+		$statement=$oDbl->query($sql1);
 		$rta['num'] = $statement->rowCount();
 		if ($this->blista == true && $rta['num'] > 0) {
 			$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr",1);
