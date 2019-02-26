@@ -53,8 +53,8 @@ class DateTimeLocal Extends \DateTime {
     public function getFechaLatin() {
         $mes_latin = $this->Meses_latin();
         
-        $dia = parent::format('d');
-        $mes = parent::format('m');
+        $dia = parent::format('j'); //sin ceros iniciales
+        $mes = parent::format('n'); //sin ceros iniciales
         $any = parent::format('Y');
         
         $fecha_latin="die ".$dia." mense  ".$mes_latin[$mes]."  anno  ".$any;
