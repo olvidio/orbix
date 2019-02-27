@@ -16,8 +16,9 @@ use web\Hash;
 
 $tipo_persona = (string)  filter_input(INPUT_POST, 'tipo');	
 $mi_dl = ConfigGlobal::mi_dele();
+$mi_region = ConfigGlobal::mi_region();
 if ($mi_dl == 'cr') {
-	$dl = 'Hcr';
+	$dl = $mi_region.$mi_dl; // 'Hcr', 'Acr;
 } else {
 	$dl = substr($mi_dl, 2);
 }
@@ -53,7 +54,7 @@ $obj = 'personas\\model\\entity\\'.$obj_pau;
 $GesPersonas = new $obj();
 
 //listas
-$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE Dl='$dl' AND Identif LIKE '$id_tipo%'";
+$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE pertenece_r='$mi_region' AND Dl='$dl' AND Identif LIKE '$id_tipo%'";
 // todos los de listas
 $oGesListas = new GestorPersonaListas();	
 $cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
@@ -149,18 +150,18 @@ foreach ($cPersonasOrbix as $oPersonaOrbix) {
 $ids_traslados_A = json_encode($a_ids_traslados_A);
 $ids_desaparecidos_de_listas = json_encode($a_ids_desaparecidos_de_listas);
 
-$ver_2 = Hash::link('apps/dbextern/controller/ver_traslados.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona,'ids_traslados'=>$ids_traslados)));
-$ver_3 = Hash::link('apps/dbextern/controller/ver_desaparecidos_de_orbix.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona,'ids_desaparecidos_de_orbix'=>$ids_desaparecidos_de_orbix)));
-$ver_456 = Hash::link('apps/dbextern/controller/ver_listas.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona)));
+$ver_2 = Hash::link('apps/dbextern/controller/ver_traslados.php?'.http_build_query(array('region'=>$region,'dl'=>$dl,'tipo_persona'=>$tipo_persona,'ids_traslados'=>$ids_traslados)));
+$ver_3 = Hash::link('apps/dbextern/controller/ver_desaparecidos_de_orbix.php?'.http_build_query(array('region'=>$region,'dl'=>$dl,'tipo_persona'=>$tipo_persona,'ids_desaparecidos_de_orbix'=>$ids_desaparecidos_de_orbix)));
+$ver_456 = Hash::link('apps/dbextern/controller/ver_listas.php?'.http_build_query(array('region'=>$region,'dl'=>$dl,'tipo_persona'=>$tipo_persona)));
 
-$ver_7 = Hash::link('apps/dbextern/controller/ver_orbix_otradl.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona,'ids_traslados_A'=>$ids_traslados_A)));
-$ver_8 = Hash::link('apps/dbextern/controller/ver_desaparecidos_de_listas.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona,'ids_desaparecidos_de_listas'=>$ids_desaparecidos_de_listas)));
-$ver_910 = Hash::link('apps/dbextern/controller/ver_orbix.php?'.http_build_query(array('dl'=>$dl,'tipo_persona'=>$tipo_persona)));
+$ver_7 = Hash::link('apps/dbextern/controller/ver_orbix_otradl.php?'.http_build_query(array('region'=>$region,'dl'=>$dl,'tipo_persona'=>$tipo_persona,'ids_traslados_A'=>$ids_traslados_A)));
+$ver_8 = Hash::link('apps/dbextern/controller/ver_desaparecidos_de_listas.php?'.http_build_query(array('region'=>$region,'dl'=>$dl,'tipo_persona'=>$tipo_persona,'ids_desaparecidos_de_listas'=>$ids_desaparecidos_de_listas)));
+$ver_910 = Hash::link('apps/dbextern/controller/ver_orbix.php?'.http_build_query(array('region'=>$region,'dl'=>$dl,'tipo_persona'=>$tipo_persona)));
 
 $url_sincro_ajax = ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro_ajax.php';
 $oHash1 = new Hash();
 $oHash1->setUrl($url_sincro_ajax);
-$oHash1->setCamposForm('que!dl!tipo_persona');
+$oHash1->setCamposForm('que!region!dl!tipo_persona');
 $h1 = $oHash1->linkSinVal();
 
 $explicacion_txt = _("en situación normal bastaría hacer click en 'ejecutar' del punto 1.");
@@ -173,7 +174,7 @@ $explicacion_txt .= _("al efectuar alguna acción dentro de las listas, las pers
 <script>
 fnjs_sincronizar=function(){
 	var url='<?= $url_sincro_ajax ?>';
-	var parametros='que=syncro&dl=<?= $dl ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>';
+	var parametros='que=syncro&region=<?= $region ?>&dl=<?= $dl ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>';
 			 
 	$.ajax({
 		url: url,

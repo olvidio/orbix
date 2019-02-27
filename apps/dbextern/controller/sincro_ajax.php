@@ -127,6 +127,7 @@ switch ($que) {
 		}
 		break;
 	case 'syncro':
+		$region = (string)  filter_input(INPUT_POST, 'region');
 		$dl = (string)  filter_input(INPUT_POST, 'dl');
 		$tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
 		
@@ -144,6 +145,7 @@ switch ($que) {
 		
 		$oSincroDB = new dbextern\model\sincroDB();
 		$oSincroDB->setTipo_persona($tipo_persona);
+		$oSincroDB->setDl($region);
 		$oSincroDB->setDl($dl);
 		$oSincroDB->setCentros($a_centros);
 		

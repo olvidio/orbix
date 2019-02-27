@@ -25,6 +25,7 @@ class sincroDB {
 	
 	private $cPersonasListas;
 	
+	private $region;
 	private $dl;
 	private $aCentros;
 
@@ -61,6 +62,14 @@ class sincroDB {
 		$this->id_tipo = $id_tipo;
 	}
 
+	public function getRegion() {
+		return $this->region();
+	}
+
+	public function setRegion($region) {
+		$this->region = $region;
+	}
+
 	public function getDl() {
 		return $this->dl;
 	}
@@ -80,7 +89,7 @@ class sincroDB {
 
 	public function getPersonasListas() {
 		if (empty($this->cPersonasListas)) {
-			$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE Dl='$this->dl' AND Identif LIKE '$this->id_tipo%'";
+			$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE pertenece_r='$this->region' AND  Dl='$this->dl' AND Identif LIKE '$this->id_tipo%'";
 			// todos los de listas
 			$oGesListas = new GestorPersonaListas();	
 			$cPersonasListas = $oGesListas->getPersonaListasQuery($Query);

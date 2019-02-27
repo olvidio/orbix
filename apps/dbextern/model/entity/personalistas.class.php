@@ -22,6 +22,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	Titu_Estu varchar(110)
 	Encargos varchar (150)
 	INCORP varchar (14)
+	pertenece_r varchar(5)
 	 * 
 	 */
 	
@@ -123,6 +124,12 @@ class PersonaListas Extends core\ClasePropiedades {
 	 * @var string
 	 */
 	private $sIncorporacion;
+	/**
+	 * Pertenece_r de Listas
+	 *
+	 * @var string
+	 */
+	private $spertenece_r;
 	 
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
@@ -247,6 +254,7 @@ class PersonaListas Extends core\ClasePropiedades {
         $aDades['Titu_Estu'] = $this->sTitulo_Estudios;
         $aDades['Encargos'] = $this->sEncargos;
         $aDades['INCORP'] = $this->sIncorporacion;
+        $aDades['pertenece_r'] = $this->spertenece_r;
 		array_walk($aDades, 'core\poner_null');
 
 		if ($bInsert === false) {
@@ -263,7 +271,8 @@ class PersonaListas Extends core\ClasePropiedades {
                     Prof_Carg               = :Prof_Carg,
                     Titu_Estu               = :Titu_Estu,
                     Encargos                = :Encargos,
-                    INCORP                  = :INCORP";
+                    INCORP                  = :INCORP,
+                    pertenece_r             = :pertenece_r";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE Identif='$this->iIdentif'")) === false) {
 				$sClauError = 'Listas.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -277,8 +286,8 @@ class PersonaListas Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			$campos="(ApeNom,Dl,Ctr,Lugar_Naci,Fecha_Naci,Email,Tfno_Movil,Ce,Prof_Carg,Titu_Estu,Encargos,INCORP)";
-			$valores="(:ApeNom,:Dl,:Ctr,:Lugar_Naci,:Fecha_Naci,:Email,:Tfno_Movil,:Ce,:Prof_Carg,:Titu_Estu,:Encargos,:INCORP)";
+			$campos="(ApeNom,Dl,Ctr,Lugar_Naci,Fecha_Naci,Email,Tfno_Movil,Ce,Prof_Carg,Titu_Estu,Encargos,INCORP,pertenece_r)";
+			$valores="(:ApeNom,:Dl,:Ctr,:Lugar_Naci,:Fecha_Naci,:Email,:Tfno_Movil,:Ce,:Prof_Carg,:Titu_Estu,:Encargos,:INCORP:pertenece_r)";
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Listas.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -513,6 +522,7 @@ class PersonaListas Extends core\ClasePropiedades {
         if (array_key_exists('Titu_Estu',$aDades)) $this->setTitulo_Estudios($aDades['Titu_Estu']);
         if (array_key_exists('Encargos',$aDades)) $this->setEncargos($aDades['Encargos']);
         if (array_key_exists('INCORP',$aDades)) $this->setIncorporacion($aDades['INCORP']);
+        if (array_key_exists('pertenece_r',$aDades)) $this->setIncorporacion($aDades['pertenece_r']);
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
@@ -1072,6 +1082,19 @@ class PersonaListas Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'INCORP'));
 		$oDatosCampo->setEtiqueta(_("incorporación"));
+		return $oDatosCampo;
+	}
+	
+	/**
+	 * Recupera les propietats de l'atribut sIncorporacion de Listas
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosPertenece_r() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'pertenece_r'));
+		$oDatosCampo->setEtiqueta(_("Pertenece_r"));
 		return $oDatosCampo;
 	}
 }

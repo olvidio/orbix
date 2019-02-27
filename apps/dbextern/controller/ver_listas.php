@@ -11,6 +11,7 @@ use dbextern\model;
 
 $mov = '';
 
+$region = (string)  filter_input(INPUT_POST, 'region');
 $dl = (string)  filter_input(INPUT_POST, 'dl');
 $tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
 
@@ -43,6 +44,7 @@ function otro($id,$mov,$max) {
 
 $oSincroDB = new dbextern\model\sincroDB();
 $oSincroDB->setTipo_persona($tipo_persona);
+$oSincroDB->setRegion($region);
 $oSincroDB->setDl($dl);
 
 $id_nom_listas = '';
@@ -108,6 +110,7 @@ $oHash = new web\Hash();
 $oHash->setUrl($url_sincro_ver);
 $oHash->setcamposNo('mov');
 $a_camposHidden = array(
+		'region' => $region,
 		'dl' => $dl,
 		'tipo_persona' => $tipo_persona,
 		'id' => $new_id,
@@ -118,7 +121,7 @@ $url_sincro_ajax = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro
 $oHash1 = new web\Hash();
 $oHash1->setUrl($url_sincro_ajax);
 //$oHash1->setArraycamposHidden($a_camposHidden);
-$oHash1->setCamposForm('que!id_nom_listas!id_orbix!dl!id!tipo_persona'); 
+$oHash1->setCamposForm('que!id_nom_listas!id_orbix!region!dl!id!tipo_persona'); 
 $h1 = $oHash1->linkSinVal();
 
 
@@ -128,7 +131,7 @@ $html_reg = sprintf(_("registro %s de %s"),$new_id,$max);
 <script>
 fnjs_crear=function(){
 	var url='<?= $url_sincro_ajax ?>';
-	var parametros='que=crear&dl=<?= $dl ?>&id=<?= $new_id?>&id_nom_listas=<?= $id_nom_listas ?>&id_orbix=&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>';
+	var parametros='que=crear&region=<?= $region ?>&dl=<?= $dl ?>&id=<?= $new_id?>&id_nom_listas=<?= $id_nom_listas ?>&id_orbix=&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>';
 			 
 	$.ajax({
 		url: url,
@@ -144,7 +147,7 @@ fnjs_crear=function(){
 
 fnjs_unir=function(id_orbix){
 	var url='<?= $url_sincro_ajax ?>';
-	var parametros='que=unir&dl=<?= $dl ?>&id_orbix='+id_orbix+'&id=<?= $new_id?>&id_nom_listas=<?= $id_nom_listas ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>';
+	var parametros='que=unir&region=<?= $region ?>&dl=<?= $dl ?>&id_orbix='+id_orbix+'&id=<?= $new_id?>&id_nom_listas=<?= $id_nom_listas ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>';
 			 
 	$.ajax({
 		url: url,
