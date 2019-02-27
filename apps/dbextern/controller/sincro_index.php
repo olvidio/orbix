@@ -16,9 +16,9 @@ use web\Hash;
 
 $tipo_persona = (string)  filter_input(INPUT_POST, 'tipo');	
 $mi_dl = ConfigGlobal::mi_dele();
-$mi_region = ConfigGlobal::mi_region();
+$region = ConfigGlobal::mi_region();
 if ($mi_dl == 'cr') {
-	$dl = $mi_region.$mi_dl; // 'Hcr', 'Acr;
+	$dl = $region.$mi_dl; // 'Hcr', 'Acr;
 } else {
 	$dl = substr($mi_dl, 2);
 }
@@ -54,7 +54,7 @@ $obj = 'personas\\model\\entity\\'.$obj_pau;
 $GesPersonas = new $obj();
 
 //listas
-$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE pertenece_r='$mi_region' AND Dl='$dl' AND Identif LIKE '$id_tipo%'";
+$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE pertenece_r='$region' AND Dl='$dl' AND Identif LIKE '$id_tipo%'";
 // todos los de listas
 $oGesListas = new GestorPersonaListas();	
 $cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
