@@ -542,7 +542,7 @@ class Proceso Extends core\ClasePropiedades {
 		$oDatosCampo->setEtiqueta(_("tipo de proceso"));
 		$oDatosCampo->setTipo('opciones');
 		$oDatosCampo->setArgument('ProcesoTipo'); // nombre del objeto relacionado
-		$oDatosCampo->setArgument2('nom_proceso'); // propiedad para ver en listados.
+		$oDatosCampo->setArgument2('getNom_proceso'); // método para obtener el valor a mostrar del objeto relacionado.
 		$oDatosCampo->setArgument3('getListaProcesoTipos'); // método con que crear la lista de opciones del Gestor objeto relacionado.
 		return $oDatosCampo;
 	}
@@ -572,7 +572,7 @@ class Proceso Extends core\ClasePropiedades {
 		$oDatosCampo->setEtiqueta(_("fase"));
 		$oDatosCampo->setTipo('opciones');
 		$oDatosCampo->setArgument('ActividadFase'); // nombre del objeto relacionado
-		$oDatosCampo->setArgument2('desc_fase'); // propiedad para ver en listados.
+		$oDatosCampo->setArgument2('getDesc_fase'); // método para obtener el valor a mostrar del objeto relacionado.
 		$oDatosCampo->setArgument3('getListaActividadFases'); // método con que crear la lista de opciones del Gestor objeto relacionado.
 		$oDatosCampo->setAccion('id_tarea'); // campo que hay que actualizar al cambiar este.
 		return $oDatosCampo;
@@ -589,7 +589,7 @@ class Proceso Extends core\ClasePropiedades {
 		$oDatosCampo->setEtiqueta(_("tarea"));
 		$oDatosCampo->setTipo('depende');
 		$oDatosCampo->setArgument('ActividadTarea'); // nombre del objeto relacionado para ver en listados.
-		$oDatosCampo->setArgument2('desc_tarea'); // propiedad para ver en listados.
+		$oDatosCampo->setArgument2('getDesc_tarea'); // método para obtener el valor a mostrar del objeto relacionado.
 		return $oDatosCampo;
 	}
 	/**
@@ -633,7 +633,7 @@ class Proceso Extends core\ClasePropiedades {
 		$oDatosCampo->setEtiqueta(_("fase previa"));
 		$oDatosCampo->setTipo('opciones');
 		$oDatosCampo->setArgument('ActividadFase'); // nombre del objeto relacionado
-		$oDatosCampo->setArgument2('desc_fase'); // propiedad para ver en listados.
+		$oDatosCampo->setArgument2('getDesc_fase'); // método para obtener el valor a mostrar del objeto relacionado.
 		$oDatosCampo->setArgument3('getListaActividadFases'); // método con que crear la lista de opciones del Gestor objeto relacionado.
 		$oDatosCampo->setAccion('id_tarea_previa'); // campo que hay que actualizar al cambiar este.
 		return $oDatosCampo;
@@ -650,7 +650,7 @@ class Proceso Extends core\ClasePropiedades {
 		$oDatosCampo->setEtiqueta(_("tarea previa"));
 		$oDatosCampo->setTipo('depende');
 		$oDatosCampo->setArgument('ActividadTarea');
-		$oDatosCampo->setArgument2('desc_tarea'); // propiedad para ver en listados.
+		$oDatosCampo->setArgument2('getDesc_tarea'); // método para obtener el valor a mostrar del objeto relacionado.
 		return $oDatosCampo;
 	}
 	/**

@@ -1,9 +1,10 @@
 <?php
+use encargossacd\model\EncargoConstants;
 use encargossacd\model\entity\GestorEncargo;
-use web\Lista;
 use ubis\model\entity\Ubi;
 use web\Hash;
-use encargossacd\model\EncargoConstants;
+use web\Lista;
+use encargossacd\model\entity\GestorEncargoTipo;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
@@ -111,9 +112,10 @@ foreach ($cEncargos as $oEncargo) {
     if (is_array($aQuery)) { array_walk($aQuery, 'core\poner_empty_on_null'); }
     $pagina = Hash::link('apps/encargossacd/controller/encargo_ver.php?'.http_build_query($aQuery));
 
-	$oGseccion = new EncargoConstants();
-	$a_seccion = $oGseccion->getArraySeccion();
+	$oGesEncargoTipo = new GestorEncargoTipo();
+	$a_seccion = $oGesEncargoTipo->getArraySeccion();
 	$seccion = $a_seccion[$sf_sv];
+	$oGseccion = new EncargoConstants();
 	$idioma=EncargoConstants::ARRAY_IDIOMAS[$idioma_enc];
 	
 	if ($sf_sv==2) $a_valores[$i]['clase']="sf";

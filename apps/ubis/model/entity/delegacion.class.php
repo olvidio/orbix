@@ -439,7 +439,7 @@ class Delegacion Extends core\ClasePropiedades {
 		$oDatosCampo->setEtiqueta(_("nombre de la región"));
 		$oDatosCampo->setTipo('opciones');
 		$oDatosCampo->setArgument('ubis\model\entity\Region');
-		$oDatosCampo->setArgument2('region');
+		$oDatosCampo->setArgument2('getRegion'); // método para obtener el valor a mostrar del objeto relacionado.
 		$oDatosCampo->setArgument3('getListaRegiones');
 		return $oDatosCampo;
 	}

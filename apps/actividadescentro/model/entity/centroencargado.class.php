@@ -341,7 +341,7 @@ class CentroEncargado Extends core\ClasePropiedades {
 	    $oDatosCampo->setEtiqueta(_("centro"));
 	    $oDatosCampo->setTipo('opciones');
 	    $oDatosCampo->setArgument('ubis\model\entity\CentroDl'); // nombre del objeto relacionado
-	    $oDatosCampo->setArgument2('nombre_ubi'); // clave con la que crear el objeto relacionado
+	    $oDatosCampo->setArgument2('getNombre_ubi'); // método para obtener el valor a mostrar del objeto relacionado.
 	    $oDatosCampo->setArgument3('getListaCentros'); // método con que crear la lista de opciones del Gestor objeto relacionado.
 	    
 	    return $oDatosCampo;

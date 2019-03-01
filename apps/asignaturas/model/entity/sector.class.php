@@ -304,7 +304,7 @@ class Sector Extends core\ClasePropiedades {
 		$oDatosCampo->setEtiqueta(_("departamento"));
 		$oDatosCampo->setTipo('opciones');
 		$oDatosCampo->setArgument('asignaturas\model\entity\Departamento');
-		$oDatosCampo->setArgument2('departamento');
+		$oDatosCampo->setArgument2('getDepartamento'); // método para obtener el valor a mostrar del objeto relacionado.
 		$oDatosCampo->setArgument3('getListaDepartamentos');
 		return $oDatosCampo;
 	}

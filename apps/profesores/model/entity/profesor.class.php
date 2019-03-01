@@ -461,7 +461,7 @@ class Profesor Extends core\ClasePropiedades {
 		$oDatosCampo->setEtiqueta(_("departamento"));
 		$oDatosCampo->setTipo('opciones');
 		$oDatosCampo->setArgument('asignaturas\model\entity\Departamento'); // nombre del objeto relacionado
-		$oDatosCampo->setArgument2('departamento'); // clave con la que crear el objeto relacionado
+		$oDatosCampo->setArgument2('getDepartamento'); // método para obtener el valor a mostrar del objeto relacionado.
 		$oDatosCampo->setArgument3('getListaDepartamentos'); // método con que crear la lista de opciones del Gestor objeto relacionado.
 		return $oDatosCampo;
 	}
@@ -504,7 +504,7 @@ class Profesor Extends core\ClasePropiedades {
 		$oDatosCampo->setEtiqueta(_("id_tipo_profesor"));
 		$oDatosCampo->setTipo('opciones');
 		$oDatosCampo->setArgument('profesores\model\entity\ProfesorTipo'); // nombre del objeto relacionado
-		$oDatosCampo->setArgument2('tipo_profesor'); // clave con la que crear el objeto relacionado
+		$oDatosCampo->setArgument2('getTipo_profesor'); // método para obtener el valor a mostrar del objeto relacionado.
 		$oDatosCampo->setArgument3('getListaProfesorTipos'); // método con que crear la lista de opciones del Gestor objeto relacionado.
 		return $oDatosCampo;
 	}

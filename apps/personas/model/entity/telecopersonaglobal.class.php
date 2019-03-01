@@ -241,7 +241,7 @@ Abstract class TelecoPersonaGlobal Extends core\ClasePropiedades {
 		$oDatosCampo->setEtiqueta(_("nombre teleco"));
 		$oDatosCampo->setTipo('opciones');
 		$oDatosCampo->setArgument('ubis\model\entity\TipoTeleco'); // nombre del objeto relacionado
-		$oDatosCampo->setArgument2('nombre_teleco'); // clave con la que crear el objeto relacionado
+		$oDatosCampo->setArgument2('getNombre_teleco'); // método para obtener el valor a mostrar del objeto relacionado.
 		$oDatosCampo->setArgument3('getListaTiposTelecoPersona'); // método con que crear la lista de opciones del Gestor objeto relacionado.
 		$oDatosCampo->setAccion('desc_teleco'); // campo que hay que actualizar al cambiar este.
 		return $oDatosCampo;
@@ -252,7 +252,7 @@ Abstract class TelecoPersonaGlobal Extends core\ClasePropiedades {
 		$oDatosCampo->setEtiqueta(_("descripción"));
 		$oDatosCampo->setTipo('depende');
 		$oDatosCampo->setArgument('ubis\model\entity\DescTeleco');
-		$oDatosCampo->setArgument2('desc_teleco');
+		$oDatosCampo->setArgument2('getDesc_teleco'); // método para obtener el valor a mostrar del objeto relacionado.
 		$oDatosCampo->setArgument3('getListaDescTelecoPersonas');
 		$oDatosCampo->setDepende('tipo_teleco');
 		return $oDatosCampo;

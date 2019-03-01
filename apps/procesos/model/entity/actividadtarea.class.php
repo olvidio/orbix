@@ -317,7 +317,7 @@ class ActividadTarea Extends core\ClasePropiedades {
 		$oDatosCampo->setEtiqueta(_("fase"));
 		$oDatosCampo->setTipo('opciones');
 		$oDatosCampo->setArgument('procesos\model\entity\ActividadFase'); // nombre del objeto relacionado
-		$oDatosCampo->setArgument2('desc_fase'); // clave con la que crear el objeto relacionado
+		$oDatosCampo->setArgument2('getDesc_fase'); // método para obtener el valor a mostrar del objeto relacionado.
 		$oDatosCampo->setArgument3('getListaActividadFases'); // método con que crear la lista de opciones del Gestor objeto relacionado.
 		return $oDatosCampo;
 	}

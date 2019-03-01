@@ -567,7 +567,7 @@ class Asignatura Extends core\ClasePropiedades {
 		$oDatosCampo->setEtiqueta(_("sector"));
 		$oDatosCampo->setTipo('opciones');
 		$oDatosCampo->setArgument('asignaturas\model\entity\Sector');
-		$oDatosCampo->setArgument2('sector');
+		$oDatosCampo->setArgument2('getSector'); // método para obtener el valor a mostrar del objeto relacionado.
 		$oDatosCampo->setArgument3('getListaSectores');
 		return $oDatosCampo;
 	}
@@ -596,7 +596,7 @@ class Asignatura Extends core\ClasePropiedades {
 		$oDatosCampo->setEtiqueta(_("tipo"));
 		$oDatosCampo->setTipo('opciones');
 		$oDatosCampo->setArgument('asignaturas\model\entity\AsignaturaTipo');
-		$oDatosCampo->setArgument2('tipo_asignatura');
+		$oDatosCampo->setArgument2('getTipo_asignatura'); // método para obtener el valor a mostrar del objeto relacionado.
 		$oDatosCampo->setArgument3('getListaAsignaturaTipos');
 		return $oDatosCampo;
 	}

@@ -331,7 +331,7 @@ class ModuloInstalado Extends core\ClasePropiedades {
 		$oDatosCampo->setEtiqueta(_("nombre"));
 		$oDatosCampo->setTipo('opciones');
 		$oDatosCampo->setArgument('devel\model\entity\Modulo');
-		$oDatosCampo->setArgument2('nom');
+		$oDatosCampo->setArgument2('getNom'); // método para obtener el valor a mostrar del objeto relacionado.
 		$oDatosCampo->setArgument3('getListaModulos');
 		return $oDatosCampo;
 	}
