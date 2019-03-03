@@ -1,0 +1,75 @@
+<script>
+fnjs_busca_sacds=function(){
+	var id_zona=$('#lst_zonas').val();
+	if (id_zona) {
+		var url='{{ url_ajax }}';
+		var parametros='que=get_lista&id_zona='+id_zona+'{{ h_sacd|raw }}';
+		$.ajax({
+			data: parametros,
+			url: url,
+			type: 'post',
+			dataType: 'html',
+			complete: function (rta) {
+				rta_txt=rta.responseText;
+				$('#lst_sacds').html(rta_txt);
+			}
+		});
+	}
+}
+fnjs_guardar=function(formulario,n){
+	$('#acumular').val(n);
+	$(formulario).attr('action','{{ url_ajax }}');
+	$(formulario).submit(function() {
+		$.ajax({
+			data: $(this).serialize(),
+			url: $(this).attr('action'),
+			type: 'post',
+			complete: function (rta_txt) {
+				if (typeof rta_txt === 'object' && rta_txt !== null) {
+					rta_txt = rta_txt.responseText;
+				}
+				if (rta_txt != '' && rta_txt != '\n') {
+					alert ('{{ "respuesta"|trans }}: '+rta_txt);
+				}
+			}
+		});
+		return false;
+	});
+	$(formulario).submit();
+	$(formulario).off();
+	fnjs_busca_sacds();
+}
+fnjs_left_side_hide();
+</script>
+<form id="frm_zona_sacd" action="" method="post">
+{{ oHash.getCamposHtml|raw }}
+<table>
+<thead>
+<th class=titulo_inv colspan=4>{{ "lista de sacd de la zona"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+<select class=contenido name="id_zona" id="lst_zonas" onchange="fnjs_busca_sacds()">
+    <option></option>
+    <option value="no">{{ "sin asignar zona"|trans }}</option>
+    {{ oDesplZonas.options|raw }}
+</select></th></tr>
+</thead>
+<tbody>
+<tr><td>
+<div class=contenido id="lst_sacds" ></div></td>
+</tr>
+{% if perm_des %}
+	<tr>
+	<th class=titulo_inv colspan=4>{{ "asignar los sacd marcados a la zona"|trans }}:&nbsp;&nbsp;&nbsp;
+	<select class=contenido id="id_zona_new" name="id_zona_new" >
+	<option></option>
+    {{ oDesplZonas.options|raw }}
+	<option value="no">{{ "sin asignar zona"|trans }}</option>
+	</th>
+	<th colspan=4>
+		<input type="button" onclick="fnjs_guardar(this.form,1);" name="ok" value="{{ "cambiar asignación zona"|trans }}">
+		<input type="button" onclick="fnjs_guardar(this.form,2);" name="ok2" value="{{ "añadir asignación iglesia/cgi"|trans }}"></th>
+	</th>
+	</tr>
+{% endif %}
+</tbody>
+</table>
+</form>

@@ -1,0 +1,92 @@
+<script>
+
+fnjs_guardar=function(formulario){
+	var err=0;
+	//var desc_enc=$('#desc_enc').val();
+	
+	//if (!desc_enc) { alert("Debe llenar el campo de Descripción del encargo"); err=1; }
+
+	if (err != 1) {
+        $(formulario).attr('action','{{ url_update }}');
+		$(formulario).submit(function() {
+			$.ajax({
+                data: $(this).serialize(),
+                url: $(this).attr('action'),
+                type: 'post',
+                complete: function (rta) {
+                    rta_txt=rta.responseText;
+                    if (rta_txt != '' && rta_txt != '\\n') {
+                        alert ('{{ "respuesta"|trans }}: '+rta_txt);
+                    } else {
+                        {{ oPosicion.js_atras(1)|raw }}
+                    }
+                }
+			});
+			return false;
+		});
+		$(formulario).submit();
+		$(formulario).off();
+	}
+	
+}
+
+fnjs_mas_enc=function(){
+	var id_enc=$('#mas').val();
+	var encargo=$('#mas :selected').text();
+	if (!encargo) return;
+	
+	var n=$('#enc_num').val();
+	var dedicacion;
+	//alert(encargo);
+	
+	/* dedicacion */
+	dedicacion='<tr><td class=etiqueta>'+encargo+':<input type=hidden id=id_enc_'+n+' name=id_enc['+n+'] value='+id_enc+'></td>';
+	dedicacion+='<td>{{ "inicio"|trans }} <input type=text size=12 id=inicio_'+n+' name=inicio['+n+'] class=fecha></td>';
+	dedicacion+='<td>{{ "fin"|trans }}<input type=text size=12 id=fin_'+n+' name=fin['+n+'] class=fecha></td>';
+	
+	/* antes del desplegable de añadir */
+	$('#pie').before(dedicacion);
+	$('#mas').val(0);
+	$('#inicio_'+n).datepicker();
+	$('#fin_'+n).datepicker();
+	$('#inicio_'+n).focus();
+	$('#enc_num').val(++n);
+}
+
+$('#frm_ausencias').ready(function(){
+	$('#frm_ausencias .fecha').each(function(i){
+		$(this).datepicker();
+	});
+});
+
+</script>
+<form id="frm_ausencias" name="frm_ausencias" action="">
+{{ oHash.getCamposHtml()|raw }}
+{{ historia|raw }}
+<table border=1>
+<tr><th>{{ "ausencias/tareas"|trans }}</th><th colspan=2>{{ "fechas"|trans }}</th><th>{{ "horario"|trans }}</th></tr>
+{% if enc_num > 0 %}
+	{% for j in 0..(enc_num-1) %}
+		<tr>
+		<td class=etiqueta>
+		<input type=hidden name=id_enc[{{ j }}] value="{{ id_enc[j] }}">
+		<input type=hidden name=id_item[{{ j }}] value="{{ id_item[j] }}">
+		{{ desc_enc[j] }}</td>
+		<td>{{ "inicio"|trans }} <input class=fecha type=text size=12 name=inicio[{{ j }}] value="{{ inicio[j] }}">
+		<td>{{ "fin"|trans }}    <input class=fecha type=text size=12 name=fin[{{ j }}] value="{{ fin[j] }}"></td>
+		<td><span class="link" onclick="fnjs_horario({{ id_enc[j] }})">{{ "crear horario"|trans }}</span></td>
+    {% endfor %}
+{% endif %}
+<tr id=pie><td colspan=4>
+	{{ "añadir actividades personales"|trans }}  
+	<select id=mas name=mas onchange="fnjs_mas_enc();">
+		<option></option>
+		{%  for id,desc in array_tipo_ausencias %}
+			<option value="{{ id }}">{{ desc }}</option>
+		{% endfor %}
+	</select>
+</td></tr>
+
+<th colspan=4><input type="button" onclick="fnjs_guardar(this.form);" name="ok" value="{{ "guardar"|trans|capitalize }}"></th>
+</table>
+<p>{{ "Para borrar basta dejar en blanco la fecha inicio y la fecha fin"|trans }}</p>
