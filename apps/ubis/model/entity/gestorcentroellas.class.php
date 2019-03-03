@@ -23,9 +23,11 @@ class GestorCentroEllas Extends GestorCentro {
 	 *
 	 */
 	function __construct() {
-		$oDbl = $GLOBALS['oDBEP'];
+		//$oDbl = $GLOBALS['oDBEP'];
+		$oDbl = $GLOBALS['oDBE'];
 		$this->setoDbl($oDbl);
-		$this->setNomTabla('u_centros');
+		$this->setNomTabla('u_centros_dl');
+		//$this->setNomTabla('u_centros');
 	}
 
 
@@ -35,4 +37,3 @@ class GestorCentroEllas Extends GestorCentro {
 	/* METODES GET i SET --------------------------------------------------------*/
 
 }
-?>

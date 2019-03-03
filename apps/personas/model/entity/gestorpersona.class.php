@@ -17,6 +17,8 @@ use actividades\model\entity as actividades;
 class GestorPersona Extends core\ClaseGestor {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
+    private $aClases = [];
+    
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
 
@@ -32,6 +34,16 @@ class GestorPersona Extends core\ClaseGestor {
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
+	/**
+	 * Define el array con los tipos de persona que hay que incluir en las búsquedas.
+     *       $a_Clases[] = array('clase'=>'PersonaOut','get'=>'getPersonasOut');
+     *       $a_Clases[] = array('clase'=>'PersonaEx','get'=>'getPersonasEx');
+	 * 
+	 * @param array $aClases
+	 */
+	public function setClases($aClases) {
+	   $this->aClases = $aClases;    
+	}
 
 	/**
 	 * retorna l'array d'objectes de tipus Persona
@@ -40,13 +52,20 @@ class GestorPersona Extends core\ClaseGestor {
 	 * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
 	 * @return array Una col·lecció d'objectes de tipus Persona
 	 */
-	function getPersonas($aWhere=array(),$aOperators=array()) {
-		/* Buscar en los tres tipos de asistente: Dl, IN y Out. */
-		$a_Clases[] = array('clase'=>'PersonaDl','get'=>'getPersonasDl');
-		$a_Clases[] = array('clase'=>'PersonaIn','get'=>'getPersonasIn');
-		$a_Clases[] = array('clase'=>'PersonaOut','get'=>'getPersonasOut');
-		$a_Clases[] = array('clase'=>'PersonaEx','get'=>'getPersonasEx');
+	public function getPersonas($aWhere=array(),$aOperators=array()) {
 		$namespace = __NAMESPACE__;
+		
+	    if (empty ($this->aClases)) {
+            $a_Clases = [];
+            /* Buscar en los tres tipos de asistente: Dl, IN y Out. */
+            $a_Clases[] = array('clase'=>'PersonaDl','get'=>'getPersonasDl');
+            $a_Clases[] = array('clase'=>'PersonaIn','get'=>'getPersonasIn');
+            $a_Clases[] = array('clase'=>'PersonaOut','get'=>'getPersonasOut');
+            $a_Clases[] = array('clase'=>'PersonaEx','get'=>'getPersonasEx');
+	    } else {
+	        $a_Clases = $this->aClases;
+	    }
+
 		return $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
 	}
 
@@ -54,4 +73,3 @@ class GestorPersona Extends core\ClaseGestor {
 
 	/* METODES GET i SET --------------------------------------------------------*/
 }
-?>

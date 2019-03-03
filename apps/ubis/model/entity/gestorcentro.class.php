@@ -95,9 +95,20 @@ class GestorCentro Extends  core\ClaseGestor {
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
+        $clasename = get_class($this);
+		$nomClase = join('', array_slice(explode('\\', $clasename), -1));
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('iid_ubi' => $aDades['id_ubi']);
-			$oCentro= new Centro($a_pkey);
+			switch ($nomClase) {
+			    case 'GestorCentroDl':
+                    $oCentro= new CentroDl($a_pkey);
+			        break;
+			    case 'GestorCentroEllas':
+                    $oCentro= new CentroEllas($a_pkey);
+			        break;
+                default:
+                    $oCentro= new Centro($a_pkey);
+			}
 			$oCentro->setAllAtributes($aDades);
 			$oCentroSet->add($oCentro);
 		}
@@ -146,9 +157,21 @@ class GestorCentro Extends  core\ClaseGestor {
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
+		
+        $clasename = get_class($this);
+		$nomClase = join('', array_slice(explode('\\', $clasename), -1));
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('iid_ubi' => $aDades['id_ubi']);
-			$oCentro= new Centro($a_pkey);
+			switch ($nomClase) {
+			    case 'GestorCentroDl':
+                    $oCentro= new CentroDl($a_pkey);
+			        break;
+			    case 'GestorCentroEllas':
+                    $oCentro= new CentroEllas($a_pkey);
+			        break;
+                default:
+                    $oCentro= new Centro($a_pkey);
+			}
 			$oCentro->setAllAtributes($aDades);
 			$oCentroSet->add($oCentro);
 		}

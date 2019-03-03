@@ -12,15 +12,9 @@ use web;
  * @created 27/09/2010
  */
 
-class CentroEllas Extends Ubi {
+class CentroEllas Extends Centro {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
-	/**
-	 * aDades de Centro
-	 *
-	 * @var array
-	 */
-	 private $aDades;
 	/**
 	 * Tipo_ctr de Centro
 	 *
