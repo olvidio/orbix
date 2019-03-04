@@ -45,7 +45,7 @@ foreach ($cGM as $oGrupMenu) {
 }
 
 $oGesRole = new usuarios\GestorRole();
-$cRoles= $oGesRole->getRoles();
+$cRoles= $oGesRole->getRoles(['_ordre' => 'role']);
 
 $a_cabeceras=array('role','sf','sv','pau','grup menu');
 if ($permiso == 1) {

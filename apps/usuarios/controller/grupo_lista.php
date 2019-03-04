@@ -46,6 +46,7 @@ if (!empty($Qusername)) {
 	$aWhere['usuario'] = $Qusername;
 	$aOperador['usuario'] = 'sin_acentos';
 }
+$aWhere['_ordre'] = 'usuario';
 
 $oGesGrupos = new usuarios\GestorGrupo();
 $oGrupoColeccion= $oGesGrupos->getGrupos($aWhere,$aOperador);

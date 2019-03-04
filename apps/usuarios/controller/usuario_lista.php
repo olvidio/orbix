@@ -38,24 +38,25 @@ $miSfsv=core\ConfigGlobal::mi_sfsv();
 
 if ($miRole > 3) exit(_("no tiene permisos para ver esto")); // no es administrador
 // filtro por sf/sv
-$cond=array();
-$operator = array();
+$aWhere=array();
+$aOperador = array();
 if ($miRole != 1) {
-	$cond['id_role'] = 1;
-	$operator['id_role'] = '>=';
+	$aWhere['id_role'] = 1;
+	$aOperador['id_role'] = '>=';
 } else {
-	$cond['id_role'] = 1;
-	$operator['id_role'] = '>'; // para no tocar al administrador
+	$aWhere['id_role'] = 1;
+	$aOperador['id_role'] = '>'; // para no tocar al administrador
 }
 
 if (!empty($Qusername)) {
-	$cond['usuario'] = $Qusername;
-	$operator['usuario'] = 'sin_acentos';
+	$aWhere['usuario'] = $Qusername;
+	$aOperador['usuario'] = 'sin_acentos';
 }
+$aWhere['_ordre'] = 'usuario';
 
 $oRole = new usuarios\Role();
 $oGesUsuarios = new usuarios\GestorUsuario();
-$oUsuarioColeccion= $oGesUsuarios->getUsuarios($cond,$operator);
+$oUsuarioColeccion= $oGesUsuarios->getUsuarios($aWhere,$aOperador);
 /*
    *** FASES ***
 $oGesFases = new GestorActividadFase();
