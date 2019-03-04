@@ -58,6 +58,11 @@ if (!empty($Qnuevo)) {
 
 	$tipo_ubi = $oUbi->getTipo_ubi();
 	$dl = $oUbi->getDl();
+    // para el caso de sf, podria ser que en el campo dl, se ponga 'dlbf' y no 'dlb'
+	if (substr($dl, -1) == 'f') {
+	   $dl = substr($dl,0,-1); // quito la f.
+	}
+	
 	$region = $oUbi->getRegion();
 	$nombre_ubi = $oUbi->getNombre_ubi();
 	$status = $oUbi->getStatus();

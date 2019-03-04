@@ -49,6 +49,10 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $oUbi = ubis\Ubi::NewUbi($id_ubi);
 $nombre_ubi=$oUbi->getNombre_ubi();
 $dl=$oUbi->getDl();
+// para el caso de sf, podria ser que en el campo dl, se ponga 'dlbf' y no 'dlb'
+if (substr($dl, -1) == 'f') {
+    $dl = substr($dl,0,-1); // quito la f.
+}
 $region=$oUbi->getRegion();
 $tipo_ubi=$oUbi->getTipo_ubi();
 
