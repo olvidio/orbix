@@ -225,22 +225,23 @@ class PermisosActividades {
 	 * Para saber si puedo crear una actividad del tipo
 	 * para dl, ex
 	 * 
-	 * @param bool $propia dl organizadora
+	 * @param bool $dl_propia dl organizadora
 	 * @return array [$of_respnsable, $status]
 	 */
-	public function getPermisoCrear($propia) {
+	public function getPermisoCrear($dl_propia) {
 		$id_tipo_activ = $this->iid_tipo_activ;
 		// si vengo de una búsqueda, el id_tipo_actividad puede ser con '...'
 		// pongo el tipo básico (sin specificar)
-		$id_tipo_activ = str_replace('.', '0', $id_tipo_activ);
-		$oTipoDeActividad = new TipoDeActividad($id_tipo_activ);
-
-		if ($propia == TRUE) {
-			$this->iid_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso();
-		} else {
-			$this->iid_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso_ex();
+		//$id_tipo_activ = str_replace('.', '0', $id_tipo_activ);
+		$GesTiposActiv = new GestorTipoDeActividad();
+		$aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ,$dl_propia);
+		
+		if (empty($aTiposDeProcesos)) {
+		    echo _("debería crear un proceso para este tipo de actividad");
+		    return FALSE;
 		}
-
+		// Cojo el primero
+		$this->iid_tipo_proceso = $aTiposDeProcesos[0];
 		$GesProceso = new GestorProceso();
 		$cProcesos = $GesProceso->getProcesos(array('id_tipo_proceso'=>$this->iid_tipo_proceso,'_ordre'=>'n_orden'));
 		// La primera fase:
@@ -258,7 +259,7 @@ class PermisosActividades {
 		if (is_string($iAfecta)) $iAfecta = $this->aAfecta[$iAfecta];
 		$id_tipo_proceso = $this->getId_tipo_proceso();
 		if (empty($id_tipo_proceso)) {
-		    echo _("No tiene definido el proceso para este tipo de actividad. Puede que falte definir ls dl org");
+		    echo _("No tiene definido el proceso para este tipo de actividad. Puede que falte definir la dl org");
 			return  new PermAccion(0);
 		}
 		$faseActual = $this->getId_fase();

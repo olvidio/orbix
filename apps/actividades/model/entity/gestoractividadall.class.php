@@ -38,7 +38,7 @@ class GestorActividadAll Extends core\ClaseGestor {
 	 * Devuelve un array con las actividades de una casa en un periodo.
 	 * Se modifican las fechas de inicio (si es anterior al periodo),
 	 *  para que empieze en el inicio del periodo
-     * Se requiere del array $GLOBALS['oPermActividades'] para saber si se tiene permisos para ver...
+     * Se requiere del array $_SESSION['oPermActividades'] para saber si se tiene permisos para ver...
 	 * 
 	 * @param integer $id_ubi
 	 * @param web\DateTimeLocal $oFini
@@ -100,8 +100,8 @@ class GestorActividadAll Extends core\ClaseGestor {
 	        $hfi=(string) $h_fin;
 	        
 	        // mirar permisos.
-	        $GLOBALS['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
-	        $oPermActiv = $GLOBALS['oPermActividades']->getPermisoActual('datos');
+	        $_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
+	        $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
 	        
 	        if ($oPermActiv->have_perm('ocupado') === false) { $a++; continue; } // no tiene permisos ni para ver.
 	        if ($oPermActiv->have_perm('ver') === false) { // sólo puede ver que està ocupado
