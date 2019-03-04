@@ -143,7 +143,5 @@ $a_campos = [
     'afecta_a' => $afecta_a,
 ];
 
-//$aditionalPaths = ['actividades' => 'actividades/view'];
-//$oView = new core\ViewTwig('procesos/controller',$aditionalPaths);
 $oView = new core\ViewTwig('procesos/controller');
 echo $oView->render('usuario_perm_activ.html.twig',$a_campos);

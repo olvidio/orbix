@@ -411,8 +411,8 @@ if ($Qtipo=='planning_cdc' || $Qtipo=='casa') {
             
             // mirar permisos.
             if(core\ConfigGlobal::is_app_installed('procesos')) {
-                $GLOBALS['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
-                $oPermActiv = $GLOBALS['oPermActividades']->getPermisoActual('datos');
+                $_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
+                $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
                 
                 if ($oPermActiv->have_perm('ocupado') === false) continue; // no tiene permisos ni para ver.
                 if ($oPermActiv->have_perm('ver') === false) { // sólo puede ver que està ocupado

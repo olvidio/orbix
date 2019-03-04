@@ -2,6 +2,7 @@
 use actividades\model\entity\GestorActividad;
 use ubis\model\entity\GestorCasaDl;
 use ubis\model\entity\Ubi;
+use ubis\model\entity\GestorCentroEllas;
 /**
 * Esta página tiene la misión de realizar la llamada a calendario php;
 * y lo hace con distintos valores, en función de las páginas anteriores
@@ -113,7 +114,7 @@ if ($Qcdc_sel < 10) { //Para buscar por casas.
 		case 6:
 			$aWhere['sf']='t';
 			// también los centros que son como cdc
-			$GesCentrosSf = new GestorCentroSf();
+			$GesCentrosSf = new GestorCentroEllas();
 			$cCentrosSf = $GesCentrosSf->getCentrosSf(array('cdc'=>'t','_ordre'=>'nombre_ubi')); 
 			break;
 		case 9:
