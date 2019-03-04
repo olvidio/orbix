@@ -75,7 +75,7 @@ switch ($user_sfsv) {
 		break;
 	case 2: //sf
 		$esquemaf = $_SESSION['session_auth']['esquema'];
-		$esquema = \substr($esquema, 0, -1);
+		$esquema = \substr($esquemaf, 0, -1);
 		$esquemav = $esquema.'v';
 		//comun
 		$oConfig = new Config('comun'); 
