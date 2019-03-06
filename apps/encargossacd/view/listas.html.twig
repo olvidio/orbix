@@ -1,0 +1,19 @@
+<style>
+	div.salta_pag { page-break-after:always;}
+	div.centro { page-break-inside: avoid;}
+	.suplente { text-decoration : underline; } 
+	table { width: 680; }
+	td { vertical-align:top; }
+	td.derecha { text-align: right; }
+	td.grupo { text-align: left;
+	    font-weight : bold;
+		text-decoration : underline; }
+	td.centro { font-weight : bold;height:2em; vertical-align:bottom; }
+	td.suplente { text-decoration : underline; } 
+	td.poblacion { text-decoration : underline; height: 3em; vertical-align: middle;}
+	td.sf { padding-left : 20px; } 
+</style>
+<table><tr><td class=izquierda>{{ cabecera_left }}</td><td class=derecha>{{ cabecera_right }}</td></tr>
+<tr><td></td><td class=derecha>{{ cabecera_right_2 }}</td></tr>
+</table>
+{{ Html|raw }}

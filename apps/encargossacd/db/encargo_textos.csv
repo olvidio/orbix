@@ -1,0 +1,22 @@
+es	com_sacd	Enviamos la relación de labores, junto con la dedicación prevista. Te agradeceríamos que lo comprobaras y que nos enviaras el horario semanal (cfr. hoja excel que adjuntamos), con las observaciones que consideres oportunas.\n\nMuchas gracias.
+ca	com_sacd	Enviem la relació de labors, juntament amb la dedicació prevista. T'agrairíem que ho comprovessis i que ens enviessis l'horari setmanal (cf. fulla excel que adjuntem), amb les observacions que consideris oportunes.\n\nMoltes gràcies.
+es	com_ctr	Comunicamos la atención sacerdotal de vuestro ctr para el curso 18-19:
+ca	com_ctr	Comuniquem l'atenció sacerdotal del vostre ctr pel curs 18-19:
+es	t_titular	titular
+es	t_secc	sección
+es	t_mañanas	mañanas
+es	t_tarde1	tarde 1ª hora
+es	t_tarde2	tarde 2ª hora
+es	t_suplente	suplente
+es	t_colaborador	colaborador
+es	t_otros	otros
+es	t_observ	observaciones
+ca	t_titular	titular
+ca	t_secc	secció
+ca	t_mañanas	matins
+ca	t_tarde1	tarda 1ª hora
+ca	t_tarde2	tarda 2ª hora
+ca	t_suplente	suplent
+ca	t_colaborador	col·laborador
+ca	t_otros	altres
+ca	t_observ	observacions

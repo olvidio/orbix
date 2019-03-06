@@ -1,0 +1,82 @@
+<style>
+	div.salta_pag {
+	 	clear: both;
+		display: block;
+		width: 17cm; 
+		page-break-after:always;
+		font-family: 'Arial';
+		font-size: 12pt; 
+	}
+	table { width: 17cm; 
+		margin-bottom: 10mm;
+		border-collapse:collapse;
+		padding:6px;
+		}
+	td.cabecera { text-align: left;
+		vertical-align: top;
+	    font-weight : bold;
+		padding:6px;
+	 }
+	p { margin: 0;
+		}
+	comunicacion { display: block; padding-left : 15mm;
+	 	padding-right : 10mm; 
+	 	padding-top : 10mm; 
+	 	padding-bottom : 10mm; 
+		}
+	izquierda { display: block; float: left; text-align: left; }
+	derecha { display: block; float: right; text-align: right; }
+	cabecera { display: block; }
+	pie { display: block; }
+
+</style>
+<body>
+<?php
+foreach ($array_atn_sacd as $nombre_ubi => $vector) {
+	?>
+	<div class=salta_pag>
+	<br />
+	<cabecera>
+		<izquierda><?= $nombre_ubi ?></izquierda><derecha><?= $origen_txt ?></derecha>
+	</cabecera>
+	<comunicacion><?= $txt ?></comunicacion>
+	<!-- sacd -->
+	<?php
+	$sacd_titular = empty($array_atn_sacd[$nombre_ubi]['titular'])? '' : $array_atn_sacd[$nombre_ubi]['titular'];
+	$titular_dedicacion = empty($array_atn_sacd[$nombre_ubi]['titular_dedicacion'])? '' : $array_atn_sacd[$nombre_ubi]['titular_dedicacion'];
+	$sacd_suplente = empty($array_atn_sacd[$nombre_ubi]['suplente'])? '': $array_atn_sacd[$nombre_ubi]['suplente'];
+	$sacd_colaborador = $array_atn_sacd[$nombre_ubi]['colaborador'];
+	?>
+	<table>
+	<tr><td class=cabecera><?= _("titular") ?>:</td><td><?= $sacd_titular ?></td><td><?= $titular_dedicacion ?></td></tr>
+	<?php
+	if (!empty($sacd_suplente)) {
+	?>
+		<tr><td class=cabecera><?= _("suplente") ?>:</td><td><?= $sacd_suplente ?></td></tr>
+	<?php
+	}
+	if (count($sacd_colaborador)) {
+		echo '<tr><td class=cabecera>';
+		if ( count($sacd_colaborador) > 1 ) { echo _("colaboradores"); } else { echo _("colaborador"); }
+		echo ':</td><td>';
+		foreach ($sacd_colaborador as $sacd_col) {
+			$sacd_nom = $sacd_col['nom'];
+			echo "<p>$sacd_nom</p>";
+		}
+		echo '</td><td>';
+		foreach ($sacd_colaborador as $sacd_col) {
+			$sacd_dedicacion = $sacd_col['dedicacion'];
+			echo "<p>$sacd_dedicacion</p>";
+		}
+		echo '</tr>';
+	}
+	?>
+	</table>
+	<pie>
+	<derecha><?= $fecha ?></derecha>
+	</pie>
+	</div>
+<?php
+}
+?>
+

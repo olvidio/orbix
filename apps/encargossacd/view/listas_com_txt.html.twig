@@ -1,0 +1,56 @@
+<script type="text/javascript">
+fnjs_get_texto=function(){
+	var clave = $('#clave').val();
+	var idioma = $('#idioma').val();
+
+	var url='{{ url_ajax|raw }}';
+	var parametros='que=get_texto&clave='+clave+'&idioma='+idioma+'{{ h_get|raw }}';
+	$.ajax({
+		data: parametros,
+		url: url,
+		type: 'post',
+		dataType: 'html',
+		complete: function (rta) {
+			rta_txt=rta.responseText;
+			$('#comunicacion').val(rta_txt);
+		}
+	});
+}
+
+fnjs_guardar=function(formulario){
+	$(formulario).submit(function() {
+		$.ajax({
+			data: $(this).serialize(),
+			url: $(this).attr('action'),
+			type: 'post',
+			complete: function (rta) {
+				rta_txt=rta.responseText;
+				if (rta_txt != '' && rta_txt != '\n') {
+					alert (rta_txt);
+				}
+			}
+		});
+		return false;
+	});
+	$(formulario).submit();
+	$(formulario).off();
+}
+
+</script>
+<h1>Textos para las comunicaciones</h1>
+<form id=textos name=textos action="{{ url_ajax|raw }}" >
+{{ oHash.getCamposHtml|raw }}
+<table>
+<tr><td>
+{{ oDesplClaves.desplegable|raw }}
+</td><td>
+{{ oDesplIdiomas.desplegable|raw }}
+</td></tr>
+<tr><td colspan=2>
+<textarea id="comunicacion" name="comunicacion" cols=100 rows=5>{{ comunicacion }}</textarea>
+</td></tr>
+<tr><td>
+<input type=button onclick="fnjs_guardar(this.form);" value="{{ "guardar"|trans }}">
+</td></tr>
+</table>
+</form>
