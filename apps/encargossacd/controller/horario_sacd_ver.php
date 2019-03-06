@@ -1,5 +1,5 @@
 <?php 
-use function encargossacd\model\EncargoFunciones\calcular_dia;
+use encargossacd\model\EncargoFunciones;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoSacdHorario;
 use personas\model\entity\PersonaDl;
@@ -23,6 +23,8 @@ require_once ("apps/core/global_header.inc");
 require_once ("apps/core/global_object.inc");
 //
 
+$oEncargoFunciones = new EncargoFunciones();
+
 $Qid_nom = (integer) \filter_input(INPUT_POST, 'id_nom');
 $Qid_enc = (integer) \filter_input(INPUT_POST, 'id_enc');
 $Qfiltro_sacd = (integer) \filter_input(INPUT_POST, 'filtro_sacd');
@@ -33,7 +35,6 @@ $ap_nom = $oPersona->getApellidosNombre();
 
 $GesEncargosSacdHorario = new GestorEncargoSacdHorario();
 $cTareasHorario = $GesEncargosSacdHorario->getTareaHorariosSacd(array('id_nom'=>$_POST['id_nom']));
-
 
 $GesEncargos = new GestorEncargo();
 $cEncargos = $GesEncargos->getEncargos(array('id_enc'));
@@ -158,7 +159,7 @@ fnjs_guardar_horario=function(tipo){
 <td><select class=contenido id="dia" name="dia">
 <option \>
 <?php
-    $dia=calcular_dia($mas_menos,$dia_ref,$dia_inc);
+    $dia=$oEncargoFunciones->calcular_dia($mas_menos,$dia_ref,$dia_inc);
     reset($opciones_dia_semana);
     while(list($key,$d_semana)=each($opciones_dia_semana)){
 	if ($dia==$key) { $selected="selected"; } else { $selected=""; }

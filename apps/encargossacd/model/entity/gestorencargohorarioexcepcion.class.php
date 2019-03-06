@@ -26,7 +26,7 @@ class GestorEncargoHorarioExcepcion Extends core\ClaseGestor {
 	 *
 	 */
 	function __construct() {
-		$oDbl = $GLOBALS['oDBC'];
+		$oDbl = $GLOBALS['oDB'];
 		$this->setoDbl($oDbl);
 		$this->setNomTabla('encargo_horario_excepcion');
 	}

@@ -1,6 +1,7 @@
 <?php
 namespace encargossacd\model;
 
+use core\ConfigGlobal;
 use encargossacd\model\entity\GestorEncargoSacdHorario;
 use encargossacd\model\entity\EncargoHorario;
 use encargossacd\model\entity\GestorEncargoHorario;
@@ -10,19 +11,63 @@ use encargossacd\model\entity\GestorEncargoSacd;
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\DatosCgi;
 use web\DateTimeLocal;
+use ubis\model\entity\GestorCentroDl;
 
-trait EncargoFunciones {
+Trait EncargoFuncionesTrait {
+    
+    function getLugar_dl() {
+        $dl = Configglobal::mi_dele();
+        $oGesCentrosDl = new GestorCentroDl();
+        $cCentros = $oGesCentrosDl->getCentros(['tipo_ctr' => 'dl']);
+        $num_dl = count($cCentros);
+        switch ($num_dl) {
+            case 0:
+                // Puede ser el nombre de la región
+                $cCentros = $oGesCentrosDl->getCentros(['tipo_ctr' => 'cr']);
+                if (count($cCentros) > 0) {
+                    $oCentro = $cCentros[0];
+                } else {
+                    // No existe el nombre de la delegacion ni región.
+                    return '?';
+                }
+                break;
+            case 1:
+                $oCentro = $cCentros[0];
+                break;
+            default:
+                // más de una dl?
+                exit (_("Más de un centro definido como dl"));
+                break;
+        }
+        // Buscar la direccion
+        $cDirecciones = $oCentro->getDirecciones();
+        
+        $poblacion = '';
+        if (is_array($cDirecciones) & !empty($cDirecciones)) {
+            $d = 0;
+            foreach ($cDirecciones as $oDireccion) {
+                $d++;
+                if ($d > 1) {
+                    $poblacion .= '<br>';
+                }
+                $poblacion .= $oDireccion->getPoblacion();
+            }
+        } else {
+            exit (_("falta poner la dirección a la dl"));
+        }
+        return $poblacion; 
+    }
     
     /* TODO
      * fase real/pruebas
      */
     
-    public function getF_ini() {
+    function getF_ini() {
         $oDate = new DateTimeLocal(date('Y-m-d')); // sólo el dia, sin la hora
         return $oDate;
     }
     
-    public function getF_fin() {
+    function getF_fin() {
         $oDate = new DateTimeLocal(date('Y-m-d')); // sólo el dia, sin la hora
         return $oDate;
     }

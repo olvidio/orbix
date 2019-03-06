@@ -213,6 +213,11 @@ $oDesplSituacion = $GesSituacion->getListaSituaciones();
 $oDesplSituacion->setNombre("situacion");
 $oDesplSituacion->setOpcion_sel($oPersona->getSituacion());
 
+$GesLocales = new usuarios\model\entity\GestorLocal();
+$oDesplLengua = $GesLocales->getListaIdiomas();
+$oDesplLengua->setNombre("lengua");
+$oDesplLengua->setOpcion_sel($oPersona->getLengua());
+
 //posibles valores de stgr
 $tipos= array (  "n"=> _("no cursa est."),
 				"b"=> _("bienio"),
@@ -273,6 +278,7 @@ $a_campos = ['obj_txt' => $obj,
 			'nom_ctr' => $nom_ctr,
 			'oDesplCentro' => $oDesplCentroDl,
 			'oDesplSituacion' => $oDesplSituacion,
+			'oDesplLengua' => $oDesplLengua,
 			'oDesplStgr' => $oDesplStgr,
 			'botones' => $botones,
 			];

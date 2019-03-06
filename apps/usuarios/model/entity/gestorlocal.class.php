@@ -37,6 +37,27 @@ class GestorLocal Extends core\ClaseGestor {
 
 	/**
 	 * retorna un objecte del tipus Desplegable
+	 * Els posibles idiomas
+	 *
+	 * @param string sWhere condicion con el WHERE.
+	 * @return array Una Llista
+	 */
+	function getListaIdiomas($sWhere='') {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$sQuery="SELECT DISTINCT idioma, nom_idioma
+				FROM $nom_tabla $sWhere
+				ORDER BY nom_idioma";
+		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+			$sClauError = 'GestorRole.lista';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		return new web\Desplegable('',$oDblSt,'',true);
+	}
+
+	/**
+	 * retorna un objecte del tipus Desplegable
 	 * Els posibles locals
 	 *
 	 *@param string sWhere condicion con el WHERE.

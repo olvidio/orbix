@@ -26,7 +26,7 @@ class GestorEncargoSacd Extends core\ClaseGestor {
 	 *
 	 */
 	function __construct() {
-		$oDbl = $GLOBALS['oDBC'];
+		$oDbl = $GLOBALS['oDB'];
 		$this->setoDbl($oDbl);
 		$this->setNomTabla('encargos_sacd');
 	}
@@ -34,6 +34,22 @@ class GestorEncargoSacd Extends core\ClaseGestor {
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
+	/**
+	 * Elimina los sacd encargados de encargos inexistentes
+	 */
+	public function deleteEncargos() {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+	    $sQuery="DELETE FROM $nom_tabla s USING encargos e WHERE s.id_enc=e.id_enc AND e.id_enc is null ";
+	    if (($res = $oDbl->query($sQuery)) === FALSE) {
+			$sClauError = 'GestorEncargoSacd.deleteEncargos';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return FALSE;
+		}
+		$count = $res->rowCount();
+		return sprintf(_("se han eliminado %s sacd de encargos inexistentes \n"),$count);
+	}
+	
 	/**
 	 * retorna l'array d'objectes de tipus EncargoSacd
 	 *

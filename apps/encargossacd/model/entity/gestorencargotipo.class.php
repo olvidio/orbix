@@ -1,7 +1,7 @@
 <?php
 namespace encargossacd\model\entity;
 use core;
-use encargossacd\model\EncargoFunciones;
+use encargossacd\model\EncargoFuncionesTrait;
 /**
  * GestorEncargoTipo
  *
@@ -15,7 +15,7 @@ use encargossacd\model\EncargoFunciones;
  */
 
 class GestorEncargoTipo Extends core\ClaseGestor {
-    use EncargoFunciones;
+    use EncargoFuncionesTrait;
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
@@ -28,7 +28,7 @@ class GestorEncargoTipo Extends core\ClaseGestor {
 	 *
 	 */
 	function __construct() {
-		$oDbl = $GLOBALS['oDBC'];
+		$oDbl = $GLOBALS['oDB'];
 		$this->setoDbl($oDbl);
 		$this->setNomTabla('encargo_tipo');
 	}

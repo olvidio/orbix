@@ -60,8 +60,13 @@ class DateTimeLocal Extends \DateTime {
         $fecha_latin="die ".$dia." mense  ".$mes_latin[$mes]."  anno  ".$any;
         return $fecha_latin;
     }
-    
-    static public function getFormat() {
+   /**
+    * Devuelve el formato de fecha según el idioma del usuario (d/m/y, o m/d/Y)
+    * 
+    * @param string $separador separador entre dia, mes año
+    * @return string
+    */ 
+    static public function getFormat($separador='/') {
         $idioma = $_SESSION['session_auth']['idioma'];
         # Si no hemos encontrado ningún idioma que nos convenga, mostramos la web en el idioma por defecto
         if (!isset($idioma)){ $idioma = ConfigGlobal::$x_default_idioma; }
@@ -70,10 +75,10 @@ class DateTimeLocal Extends \DateTime {
         //$code_char = $a_idioma[1];
         switch ($code_lng) {
             case 'en_US':
-                $format = 'm/d/Y';
+                $format = 'n'.$separador.'j'.$separador.'Y';
                 break;
             default:
-                $format = 'd/m/Y';
+                $format = 'j'.$separador.'n'.$separador.'Y';
         }
         return $format;
     }
@@ -109,9 +114,14 @@ class DateTimeLocal Extends \DateTime {
     public function getIso() {
         return parent::format('Y-m-d');
     }
-    
-    public function getFromLocal() {
-        $format = $this->getFormat();
+    /**
+     * Devuelve la fecha en el formato local (según el idioma del usuario)
+     * 
+     * @param string $separador (.-/)
+     * @return string
+     */
+    public function getFromLocal($separador='/') {
+        $format = $this->getFormat($separador);
         return parent::format($format);
     }
     

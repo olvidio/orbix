@@ -1,4 +1,6 @@
 <?php
+namespace core;
+
 /**
 * @desc ConfigMagik - Ini-File Reader and Writer (ConfigKeeper)
 * @author BennyZaminga <bzaminga@web.de>
@@ -61,6 +63,15 @@ class ConfigMagik{
 		}
 	}
 
+	/**
+	 * return array of ERRORS
+	 * 
+	 * @return array 
+	 */
+	function getErrors() {
+	    return $this->ERRORS;
+	}
+	
 	/**
 	* @desc					  Retrieves the value for a given key.
 	* @param  string $key     Key or name of directive to set in current config.
