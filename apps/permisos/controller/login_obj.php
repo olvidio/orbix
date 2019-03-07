@@ -43,7 +43,8 @@ function posibles_esquemas($default='') {
 			$sv = $row[0].'v';
 			if (!empty($default) && $sf == $default) { $sel_sf = 'selected'; } else { $sel_sf = ''; }
 			if (!empty($default) && $sv == $default) { $sel_sv = 'selected'; } else { $sel_sv = ''; }
-			$txt .= "<option value=\"$sf\" $sel_sf>$sf</option>";
+			// 7.3.2019 Parece que sf va por su lado.
+			//$txt .= "<option value=\"$sf\" $sel_sf>$sf</option>";
 			$txt .= "<option value=\"$sv\" $sel_sv>$sv</option>";
 		}
 		$txt .= '</select>';
