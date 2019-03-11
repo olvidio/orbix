@@ -74,8 +74,8 @@ foreach($array_modo as $array_modo_sacd) {
 					<tr><td class=cabecera_izq><?= $array_modo[$s]['txt']["t_titular"] ?></td>
 						<td class=cabecera><?= $array_modo[$s]['txt']["t_secc"] ?></td>
 						<td class=cabecera><?= $array_modo[$s]['txt']["t_mañanas"] ?></td>
-						<td class=cabecera><?= $array_modo[$s]['txt']["t_tarde1"] ?></td>
-						<td class=cabecera><?= $array_modo[$s]['txt']["t_tarde2"] ?></td>
+						<td class=cabecera><?= $array_modo[$s]['txt']["t_tardes1"] ?></td>
+						<td class=cabecera><?= $array_modo[$s]['txt']["t_tardes2"] ?></td>
 						<td class=cabecera_izq><?= $array_modo[$s]['txt']["t_suplente"] ?></td>
 					</tr>
 					<?php
@@ -93,8 +93,8 @@ foreach($array_modo as $array_modo_sacd) {
 					<tr><td class=cabecera_izq><?= $array_modo[$s]['txt']["t_colaborador"] ?></td>
 						<td class=cabecera><?= $array_modo[$s]['txt']["t_secc"] ?></td>
 						<td class=cabecera><?= $array_modo[$s]['txt']["t_mañanas"] ?></td>
-						<td class=cabecera><?= $array_modo[$s]['txt']["t_tarde1"] ?></td>
-						<td class=cabecera><?= $array_modo[$s]['txt']["t_tarde2"] ?></td>
+						<td class=cabecera><?= $array_modo[$s]['txt']["t_tardes1"] ?></td>
+						<td class=cabecera><?= $array_modo[$s]['txt']["t_tardes2"] ?></td>
 					</tr>
 					<?php
 					break;
@@ -113,7 +113,6 @@ foreach($array_modo as $array_modo_sacd) {
 					<?php
 					break;
 			}
-			$vector=$array_modo_sacd[$grupo];
 			if(is_array($vector)) {
 				foreach ($vector as $enc) {
 					switch ($grupo) {

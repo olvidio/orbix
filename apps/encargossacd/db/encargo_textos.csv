@@ -4,19 +4,31 @@ es	com_ctr	Comunicamos la atención sacerdotal de vuestro ctr para el curso 18-1
 ca	com_ctr	Comuniquem l'atenció sacerdotal del vostre ctr pel curs 18-19:
 es	t_titular	titular
 es	t_secc	sección
-es	t_mañanas	mañanas
+es	t_mañana	mañana
 es	t_tarde1	tarde 1ª hora
 es	t_tarde2	tarde 2ª hora
+es	t_mañanas	mañanas
+es	t_tardes1	tarde 1ª hora
+es	t_tardes2	tarde 2ª hora
 es	t_suplente	suplente
 es	t_colaborador	colaborador
 es	t_otros	otros
 es	t_observ	observaciones
 ca	t_titular	titular
 ca	t_secc	secció
-ca	t_mañanas	matins
+ca	t_mañana	matí
 ca	t_tarde1	tarda 1ª hora
 ca	t_tarde2	tarda 2ª hora
+ca	t_mañanas	matins
+ca	t_tardes1	tardes 1ª hora
+ca	t_tardes2	tardes 2ª hora
 ca	t_suplente	suplent
 ca	t_colaborador	col·laborador
 ca	t_otros	altres
 ca	t_observ	observacions
+es	e_estudio	estudio
+ca	e_estudio	estudi
+es	e_descanso	descanso
+ca	e_descanso	descans
+es	e_otros	otros
+ca	e_altres	altres

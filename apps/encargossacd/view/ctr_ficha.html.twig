@@ -12,6 +12,7 @@ fnjs_lista_ctrs=function(id_ubi){
 		complete: function (rta) {
 			rta_txt=rta.responseText;
 			$('#centros').html(rta_txt);
+			$('#ficha').html(''); // limpio lo que pueda haber en la pantalla
 		}
 	});
 
@@ -66,6 +67,8 @@ fnjs_ver_ficha=function(){
 				$('#ficha').html(rta_txt);
 			}
 		});
+	} else {
+        $('#ficha').html(''); // limpio lo que pueda haber en la pantalla
 	}
 }
 // cargar al iniciar, cuando se viene de la ficha sacd.

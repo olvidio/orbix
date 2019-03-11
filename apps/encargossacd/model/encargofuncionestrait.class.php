@@ -2,18 +2,57 @@
 namespace encargossacd\model;
 
 use core\ConfigGlobal;
-use encargossacd\model\entity\GestorEncargoSacdHorario;
-use encargossacd\model\entity\EncargoHorario;
-use encargossacd\model\entity\GestorEncargoHorario;
-use encargossacd\model\entity\EncargoSacdHorario;
-use encargossacd\model\entity\EncargoSacd;
-use encargossacd\model\entity\GestorEncargoSacd;
-use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\DatosCgi;
-use web\DateTimeLocal;
+use encargossacd\model\entity\Encargo;
+use encargossacd\model\entity\EncargoHorario;
+use encargossacd\model\entity\EncargoSacd;
+use encargossacd\model\entity\EncargoSacdHorario;
+use encargossacd\model\entity\GestorEncargoHorario;
+use encargossacd\model\entity\GestorEncargoSacd;
+use encargossacd\model\entity\GestorEncargoSacdHorario;
+use encargossacd\model\entity\GestorEncargoTexto;
 use ubis\model\entity\GestorCentroDl;
+use web\DateTimeLocal;
 
 Trait EncargoFuncionesTrait {
+    
+    /**
+     * array con las traducciones de claves por idiomas ([idoma,[claves]])
+     * 
+     * @var array
+     */
+    protected $a_txt = [];
+    
+    function getArrayTraducciones($idioma) {
+        $idioma = empty($idioma)? 'es' : $idioma;
+        if (empty($this->a_txt[$idioma])) {
+            $oGesEncargoTextos = new GestorEncargoTexto();
+            $cEncargoTextos = $oGesEncargoTextos->getEncargoTextos();
+            foreach ($cEncargoTextos as $oEncargoTexto) {
+                $clave = $oEncargoTexto->getClave();
+                $idioma = $oEncargoTexto->getIdioma();
+                $texto = $oEncargoTexto->getTexto();
+                $this->a_txt[$idioma][$clave] = $texto;
+            }
+        }
+        return $this->a_txt[$idioma];
+    }
+        
+    function getTraduccion($clave,$idioma) {
+        $a_traduccion = $this->getArrayTraducciones($idioma);
+        if (!empty($a_traduccion[$clave])) {
+            $txt_traduccion = $a_traduccion[$clave];
+        } else {
+            // El idioma por defecto (es) debería existir siempre
+            $a_traduccion = $this->getArrayTraducciones('es');
+            if (!empty($a_traduccion[$clave])) {
+                $txt_traduccion = $a_traduccion[$clave];
+            } else {
+                echo sprintf(_("falta definir el texto %s en este idioma: %s"),$clave,$idioma);
+            }
+        }
+        return $txt_traduccion;
+    }
     
     function getLugar_dl() {
         $dl = Configglobal::mi_dele();
@@ -161,7 +200,7 @@ Trait EncargoFuncionesTrait {
         }
     }
 
-    function dedicacion_horas($id_nom,$id_enc,$lengua="*"){
+    function dedicacion_horas($id_nom,$id_enc,$idioma=""){
         $GesEncargoSacdHorario = new GestorEncargoSacdHorario();
         $aWhere['id_enc'] = $id_enc;
         $aWhere['id_nom'] = $id_nom;
@@ -188,7 +227,7 @@ Trait EncargoFuncionesTrait {
         return $dedic_h;
     }
 
-    function getTxtDedicacion($cEncargoHorarios) {
+    function getTxtDedicacion($cEncargoHorarios,$idioma='') {
         $s=0;
         $dedicacion_m_txt="";
         $dedicacion_t_txt="";
@@ -197,52 +236,33 @@ Trait EncargoFuncionesTrait {
             $s++;
             $dia_ref = $oEncargoHorario->getDia_ref();
             $dia_inc = $oEncargoHorario->getDia_inc();
-            $lengua = $oEncargoHorario->getLemgua();
             //echo "n: $id_nom, e: $id_enc, r: $dia_ref, i: $dia_inc<br>";
             switch ($dia_ref) {
                 case "m":
                     if ($dia_inc > 1) { 
-                        if (!empty(EncargoConstants::ARRAY_DEDICACION_IDIOMA[$lengua]['m'])) {
-                            $dedicacion_m_txt=$dia_inc." ".EncargoConstants::ARRAY_DEDICACION_IDIOMA[$lengua]['m'];
-                        } else {
-                            $dedicacion_m_txt=$dia_inc." ".EncargoConstants::ARRAY_DEDICACION_IDIOMA['*']['m'];
-                        }
+                        $txt = $this->getTraduccion('t_mañana', $idioma);
+                        $dedicacion_m_txt=$dia_inc." ".$txt;
                     } else {
-                        if (!empty(EncargoConstants::ARRAY_DEDICACION_IDIOMA[$lengua]['m1'])) {
-                            $dedicacion_m_txt=$dia_inc." ".EncargoConstants::ARRAY_DEDICACION_IDIOMA[$lengua]['m1'];
-                        } else {
-                            $dedicacion_m_txt=$dia_inc." ".EncargoConstants::ARRAY_DEDICACION_IDIOMA['*']['m1'];
-                        }
+                        $txt = $this->getTraduccion('t_mañanas', $idioma);
+                        $dedicacion_m_txt=$dia_inc." ".$txt;
                     }
                     break;
                 case "t":
                     if ($dia_inc > 1) {
-                        if (!empty(EncargoConstants::ARRAY_DEDICACION_IDIOMA[$lengua]['t'])) {
-                            $dedicacion_t_txt=$dia_inc." ".EncargoConstants::ARRAY_DEDICACION_IDIOMA[$lengua]['t'];
-                        } else {
-                            $dedicacion_t_txt=$dia_inc." ".EncargoConstants::ARRAY_DEDICACION_IDIOMA['*']['t'];
-                        }
+                        $txt = $this->getTraduccion('t_tarde1', $idioma);
+                        $dedicacion_m_txt=$dia_inc." ".$txt;
                     } else {
-                        if (!empty(EncargoConstants::ARRAY_DEDICACION_IDIOMA[$lengua]['t1'])) {
-                            $dedicacion_t_txt=$dia_inc." ".EncargoConstants::ARRAY_DEDICACION_IDIOMA[$lengua]['t1'];
-                        } else {
-                            $dedicacion_t_txt=$dia_inc." ".EncargoConstants::ARRAY_DEDICACION_IDIOMA['*']['t1'];
-                        }
+                        $txt = $this->getTraduccion('t_tardes1', $idioma);
+                        $dedicacion_m_txt=$dia_inc." ".$txt;
                     }
                     break;
                 case "v":
                     if ($dia_inc > 1) { 
-                        if (!empty(EncargoConstants::ARRAY_DEDICACION_IDIOMA[$lengua]['v'])) {
-                            $dedicacion_v_txt=$dia_inc." ".EncargoConstants::ARRAY_DEDICACION_IDIOMA[$lengua]['v'];
-                        } else {
-                            $dedicacion_v_txt=$dia_inc." ".EncargoConstants::ARRAY_DEDICACION_IDIOMA['*']['v'];
-                        }
+                        $txt = $this->getTraduccion('t_tarde2', $idioma);
+                        $dedicacion_m_txt=$dia_inc." ".$txt;
                     } else {
-                        if (!empty(EncargoConstants::ARRAY_DEDICACION_IDIOMA[$lengua]['v1'])) {
-                            $dedicacion_v_txt=$dia_inc." ".EncargoConstants::ARRAY_DEDICACION_IDIOMA[$lengua]['v1'];
-                        } else {
-                            $dedicacion_v_txt=$dia_inc." ".EncargoConstants::ARRAY_DEDICACION_IDIOMA['*']['v1'];
-                        }
+                        $txt = $this->getTraduccion('t_tardes2', $idioma);
+                        $dedicacion_m_txt=$dia_inc." ".$txt;
                     }
                     break;
             }
@@ -256,7 +276,7 @@ Trait EncargoFuncionesTrait {
         return $dedicacion_txt;
     }
 
-    function dedicacion_ctr($id_ubi,$id_enc,$lengua="*"){
+    function dedicacion_ctr($id_ubi,$id_enc,$idioma=''){
         $GesEncargoHorario = new GestorEncargoHorario();
         $aWhere['id_enc'] = $id_enc;
         $aWhere['f_fin'] = 'x';
@@ -265,11 +285,11 @@ Trait EncargoFuncionesTrait {
 
         if (is_array($cEncargoHorarios ) && count($cEncargoHorarios ) == 0) { return false; }
         
-        $dedicacion_txt = $this->getTxtDedicacion($cEncargoHorarios);
+        $dedicacion_txt = $this->getTxtDedicacion($cEncargoHorarios,$idioma);
         return $dedicacion_txt;
     }
 
-    function dedicacion($id_nom,$id_enc,$lengua="*"){
+    function dedicacion($id_nom,$id_enc,$idioma=''){
         $GesEncargoSacdHorario = new GestorEncargoSacdHorario();
         $aWhere['id_enc'] = $id_enc;
         $aWhere['id_nom'] = $id_nom;
@@ -278,7 +298,7 @@ Trait EncargoFuncionesTrait {
         $cEncargoSacdHorario = $GesEncargoSacdHorario->getEncargoSacdHorarios($aWhere,$aOperador);
         if (is_array($cEncargoSacdHorario ) && count($cEncargoSacdHorario ) == 0) { return false; }
 
-        $dedicacion_txt = $this->getTxtDedicacion($cEncargoHorarios);
+        $dedicacion_txt = $this->getTxtDedicacion($cEncargoSacdHorario,$idioma);
         return $dedicacion_txt;
     }
 
@@ -413,6 +433,8 @@ Trait EncargoFuncionesTrait {
                 echo _('Hay un error, no se ha guardado');
             }
         }
+        $oEncargoSacd->DBCarregar();
+        return $oEncargoSacd;
     }
 
     function finalizar_sacd($id_enc,$id_sacd,$modo,$f_fin){

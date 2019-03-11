@@ -15,6 +15,8 @@ fnjs_ver_ficha=function(id_nom){
 				$('#ficha').html(rta_txt);
 			}
 		});
+	} else {
+        $('#ficha').html(''); // limpio lo que pueda haber en la pantalla
 	}
 
 }
@@ -32,6 +34,7 @@ fnjs_lista_sacd=function(id_nom){
 		complete: function (rta) {
 			rta_txt=rta.responseText;
 			$('#sacds').html(rta_txt);
+            $('#ficha').html(''); // limpio lo que pueda haber en la pantalla
 		}
 	});
 }

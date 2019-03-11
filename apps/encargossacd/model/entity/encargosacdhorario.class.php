@@ -158,6 +158,8 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if ($this->DBCarregar('guardar') === FALSE) { $bInsert=TRUE; } else { $bInsert=FALSE; }
 		$aDades=array();
+		$aDades['id_enc'] = $this->iid_enc;
+		$aDades['id_nom'] = $this->iid_nom;
 		$aDades['f_ini'] = $this->df_ini;
 		$aDades['f_fin'] = $this->df_fin;
 		$aDades['dia_ref'] = $this->sdia_ref;
@@ -172,6 +174,8 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 		if ($bInsert === FALSE) {
 			//UPDATE
 			$update="
+					id_enc                   = :id_enc,
+					id_nom                   = :id_nom,
 					f_ini                    = :f_ini,
 					f_fin                    = :f_fin,
 					dia_ref                  = :dia_ref,
@@ -181,7 +185,7 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 					h_ini                    = :h_ini,
 					h_fin                    = :h_fin,
 					id_item_tarea_sacd       = :id_item_tarea_sacd";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item' AND id_enc='$this->iid_enc' AND id_nom='$this->iid_nom'")) === FALSE) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item' ")) === FALSE) {
 				$sClauError = 'EncargoSacdHorario.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return FALSE;
@@ -194,7 +198,7 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			array_unshift($aDades, $this->iid_enc, $this->iid_nom);
+			//array_unshift($aDades, $this->iid_enc, $this->iid_nom);
 			$campos="(id_enc,id_nom,f_ini,f_fin,dia_ref,dia_num,mas_menos,dia_inc,h_ini,h_fin,id_item_tarea_sacd)";
 			$valores="(:id_enc,:id_nom,:f_ini,:f_fin,:dia_ref,:dia_num,:mas_menos,:dia_inc,:h_ini,:h_fin,:id_item_tarea_sacd)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
@@ -222,7 +226,7 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iid_item) && isset($this->iid_enc) && isset($this->iid_nom)) {
-			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item='$this->iid_item' AND id_enc='$this->iid_enc' AND id_nom='$this->iid_nom'")) === FALSE) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item='$this->iid_item' ")) === FALSE) {
 				$sClauError = 'EncargoSacdHorario.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return FALSE;
@@ -251,7 +255,7 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item='$this->iid_item' AND id_enc='$this->iid_enc' AND id_nom='$this->iid_nom'")) === FALSE) {
+		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item='$this->iid_item' ")) === FALSE) {
 			$sClauError = 'EncargoSacdHorario.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return FALSE;

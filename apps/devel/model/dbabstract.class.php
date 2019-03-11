@@ -12,6 +12,7 @@ use core\ConfigGlobal;
 abstract class DBAbstract {
     
     protected $esquema;
+    protected $vf;
     protected $role;
     protected $role_vf;
     protected $oDbl;
@@ -117,7 +118,12 @@ abstract class DBAbstract {
         }
     }
     protected function getNomTabla($tabla) {
-        $nom_tabla = '"'.$this->esquema.'".'.$tabla;
+        if ($this->esquema == 'public') {
+            $public_vf = $this->esquema.$this->vf;
+            $nom_tabla = '"'.$public_vf.'".'.$tabla;
+        } else {
+            $nom_tabla = '"'.$this->esquema.'".'.$tabla;
+        }
         return $nom_tabla;
     }
     protected function executeSql($a_sql) {

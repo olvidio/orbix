@@ -58,8 +58,8 @@ $QAdedic_v = filter_input(INPUT_POST, 'dedic_v', FILTER_DEFAULT, FILTER_REQUIRE_
 /* TODO
  * fase pruebas/real
  */
-$oF_ini = new DateTimeLocal(date('Y-m-d')); //Hoy sólo fecha, no hora
-$oF_fin = new DateTimeLocal(date('Y-m-d')); //Hoy sólo fecha, no hora
+$oF_ini = new DateTimeLocal();
+$oF_fin = new DateTimeLocal();
 
 // Para las funciones
 $GesEncargoTipo = new GestorEncargoTipo();
@@ -144,10 +144,12 @@ case "nuevo": //nuevo
 			if ($Qcl) { $modo=2; } else { $modo=3; } // titular de cl - no cl.
 			$QAid_sacd[0]=$Qid_sacd_titular;
 		}
-		$GesEncargoTipo->insert_sacd($id_enc,$QAid_sacd[$i],$modo);
-		if ($QAdedic_m[$i]) { $GesEncargoTipo->insert_horario_sacd($id_enc,$QAid_sacd[$i],'m',$QAdedic_m[$i]); }
-		if ($QAdedic_t[$i]) { $GesEncargoTipo->insert_horario_sacd($id_enc,$QAid_sacd[$i],'t',$QAdedic_t[$i]); }
-		if ($QAdedic_v[$i]) { $GesEncargoTipo->insert_horario_sacd($id_enc,$QAid_sacd[$i],'v',$QAdedic_v[$i]); }
+		$oEncargoSacd = $GesEncargoTipo->insert_sacd($id_enc,$QAid_sacd[$i],$modo);
+		$id_item_t_sacd = $oEncargoSacd->getId_item();
+		    
+		if ($QAdedic_m[$i]) { $GesEncargoTipo->insert_horario_sacd($id_item_t_sacd,$id_enc,$QAid_sacd[$i],'m',$QAdedic_m[$i]); }
+		if ($QAdedic_t[$i]) { $GesEncargoTipo->insert_horario_sacd($id_item_t_sacd,$id_enc,$QAid_sacd[$i],'t',$QAdedic_t[$i]); }
+		if ($QAdedic_v[$i]) { $GesEncargoTipo->insert_horario_sacd($id_item_t_sacd,$id_enc,$QAid_sacd[$i],'v',$QAdedic_v[$i]); }
 	}
 
 	if (!empty($Qid_sacd_suplente)) {
@@ -162,8 +164,14 @@ case "editar": //modificar
 	if ($Qtipo_centro != "of") { // para el caso de los oficiales no pongo titular ni suplente.
 		//Compruebo que estén todos los campos necesarios
 		if (empty($Qid_sacd_titular)) {
-			echo _("Debe nombrar un sacerdote tirular")."<br>";
-			exit;
+		    if (!empty($Qid_enc)) { // Si existe el ancargo, lo elimino.
+        		$oEncargo = new Encargo(array('id_enc'=>$Qid_enc));
+        		$oEncargo->DBEliminar();
+			    exit;
+		    } else {
+			    echo _("Debe nombrar un sacerdote tirular")."\n";
+			    exit;
+		    }
 		}
 		//Compruebo que el titular y suplente sean distintos (excepto para los oficiales de dl)
 		if ($Qid_sacd_titular==$Qid_sacd_suplente) { exit(_("El sacd titular y suplente deben ser distintos")); }

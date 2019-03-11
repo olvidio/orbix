@@ -9,40 +9,6 @@ class EncargoConstants {
         "es_ES"=> "castellano",
     ];
     
-    /**
-     * No funciona con el traducir normal, porque la traducción depende del destinatario,
-     * no del usuario que está logeado
-     *
-     */
-    const ARRAY_DEDICACION_IDIOMA = [
-        "cat" => [ 	"m1"=> "matí",
-            "t1"=> "tarda 1ª hora",
-            "v1"=> "tarda 2ª hora",
-            "m"=> "matins",
-            "t"=> "tardes 1ª hora",
-            "v"=> "tardes 2ª hora",
-        ],
-        "cas" => [	"m1"=> "mañana",
-            "t1"=> "tarde 1ª hora",
-            "v1"=> "tarde 2ª hora",
-            "m"=> "mañanas",
-            "t"=> "tardes 1ª hora",
-            "v"=> "tardes 2ª hora",
-        ],
-        "*" => [	"m1"=> "mañana",
-            "t1"=> "tarde 1ª hora",
-            "v1"=> "tarde 2ª hora",
-            "m"=> "mañanas",
-            "t"=> "tardes 1ª hora",
-            "v"=> "tardes 2ª hora",
-        ],
-    ];
-    
-    const ARRAY_TRAD=array(
-        "cat" => array( "estudio" => "estudi", "descanso" => "descans" , "otros" => "altres"),
-        "ing" => array( "estudio" => "study", "descanso" => "holiday" , "otros" => "others"),
-        "cas" => array( "estudio" => "estudio", "descanso" => "descanso" , "otros" => "otros")
-    );
     
     const ARRAY_OPCIONES_ENCARGOS = [
         "5020" => "estudio",

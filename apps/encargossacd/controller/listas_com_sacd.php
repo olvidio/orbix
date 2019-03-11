@@ -1,14 +1,14 @@
 <?php
 use core\ConfigGlobal;
+use encargossacd\model\EncargoFunciones;
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorEncargoSacd;
 use encargossacd\model\entity\GestorEncargoSacdHorario;
 use encargossacd\model\entity\GestorEncargoSacdObserv;
 use encargossacd\model\entity\GestorEncargoTexto;
 use personas\model\entity\GestorPersona;
-use personas\model\entity\Persona;
-use ubis\model\entity\Ubi;
-use encargossacd\model\EncargoFunciones;
+use personas\model\entity\PersonaDl;
+use ubis\model\entity\Centro;
 use web\DateTimeLocal;
 
 /**
@@ -44,15 +44,6 @@ $Qsel = (string) \filter_input(INPUT_POST, 'sel');
  *       "t_otros"
  *       "t_observ"
  */
-$oGesEncargoTextos = new GestorEncargoTexto();
-$cEncargoTextos = $oGesEncargoTextos->getEncargoTextos();
-$a_txt_comunicacion = [];
-foreach ($cEncargoTextos as $oEncargoTexto) {
-    $clave = $oEncargoTexto->getClave();
-    $idioma = $oEncargoTexto->getIdioma();
-    $texto = $oEncargoTexto->getTexto();
-    $a_txt_comunicacion[$idioma][$clave] = $texto;
-}
 
 // para ordenar los modos: 'modo'=>orden
 $hoy_iso = date('Y-m-d');
@@ -87,7 +78,6 @@ switch ($Qsel) {
 		$aWhere['_ordre'] = 'apellido1,apellido2,nom';
 		$aOperador['id_tabla'] = '~';
 		$cPersonas = $GesPersonas->getPersonas($aWhere,$aOperador);
-	    //$sql_sacd="SELECT id_nom,".na()." as nom_ap,lengua FROM vp_sacd WHERE id_tabla ~ '^sss' AND dl='".ConfigGlobal::$dele."' ORDER BY apellido1,apellido2,nom";
 		break;
 }
 $array_modo=array();
@@ -96,36 +86,34 @@ foreach ($cPersonas as $oPersona) {
 	$s++;
 	$id_nom=$oPersona->getId_nom();
 	$array_modo[$s]['nom_ap']=$oPersona->getNombreApellidos();
-	$lengua=$oPersona->getLengua();
+	$idioma=$oPersona->getLengua();
 	
-	if (empty($a_txt_comunicacion[$lengua])) {
-	    echo sprintf(_("falta definir el texto de comunicación en este idioma: %s"),$lengua);
-	    // pongo el primero
-	    reset($a_txt_comunicacion);
-	    if (empty(current($a_txt_comunicacion))) {
-            $a_txt_comunicacion[$lengua] = '?';
-	    } else {
-            $a_txt_comunicacion[$lengua] = current($a_txt_comunicacion);
-	    }
-	}
-    $array_modo[$s]['txt'] = $a_txt_comunicacion[$lengua];
-    
+	$array_modo[$s]['txt']['com_sacd'] = $oEncargoFunciones->getTraduccion('com_sacd', $idioma);
+	$array_modo[$s]['txt']['t_secc'] = $oEncargoFunciones->getTraduccion('t_secc', $idioma);
+	$array_modo[$s]['txt']['t_mañanas'] = $oEncargoFunciones->getTraduccion('t_mañanas', $idioma);
+	$array_modo[$s]['txt']['t_tardes1'] = $oEncargoFunciones->getTraduccion('t_tardes1', $idioma);
+	$array_modo[$s]['txt']['t_tardes2'] = $oEncargoFunciones->getTraduccion('t_tardes2', $idioma);
+	$array_modo[$s]['txt']['t_titular'] = $oEncargoFunciones->getTraduccion('t_titular', $idioma);
+	$array_modo[$s]['txt']['t_suplente'] = $oEncargoFunciones->getTraduccion('t_suplente', $idioma);
+	$array_modo[$s]['txt']['t_colaborador'] = $oEncargoFunciones->getTraduccion('t_colaborador', $idioma);
+	$array_modo[$s]['txt']['t_otros'] = $oEncargoFunciones->getTraduccion('t_otros', $idioma);
+	    
 	// busco las observaciones (si las hay)
-	$GesTareaSacdObserv = new GestorEncargoSacdObserv();
-	$cTareaSacdObserv = $GesTareaSacdObserv->getEncargoSacdObservs(array('id_nom'=>$id_nom));
-	if (is_array($cTareaSacdObserv) && count($cTareaSacdObserv) > 0) {
-		$observ = $cTareaSacdObserv[0]->getObserv();
+	$GesEncargoSacdObserv = new GestorEncargoSacdObserv();
+	$cEncargoSacdObserv = $GesEncargoSacdObserv->getEncargoSacdObservs(array('id_nom'=>$id_nom));
+	if (is_array($cEncargoSacdObserv) && count($cEncargoSacdObserv) > 0) {
+		$observ = $cEncargoSacdObserv[0]->getObserv();
 	} else {
 		$observ = '';
 	}
 	/* busco los datos del encargo que se tengan */
-	$GesTareas = new GestorEncargoSacd();
-	$cTareasSacd1 = $GesTareas->getEncargosSacd(array('id_nom'=>$id_nom,'f_fin'=>'x','_ordre'=>'modo'),array('f_fin'=>'IS NULL'));
-	$cTareasSacd2 = $GesTareas->getEncargosSacd(array('id_nom'=>$id_nom,'f_fin'=>$hoy_iso,'_ordre'=>'modo'),array('f_fin'=>'>'));
-	$cTareasSacd = $cTareasSacd1 + $cTareasSacd2 ;
-	foreach ($cTareasSacd as $oTareaSacd) {
-		$id_enc = $oTareaSacd->getId_enc();
-		$modo=$oTareaSacd->getModo();
+	$GesEncargoSad = new GestorEncargoSacd();
+	$cEncargosSacd1 = $GesEncargoSad->getEncargosSacd(array('id_nom'=>$id_nom,'f_fin'=>'x','_ordre'=>'modo'),array('f_fin'=>'IS NULL'));
+	$cEncargosSacd2 = $GesEncargoSad->getEncargosSacd(array('id_nom'=>$id_nom,'f_fin'=>$hoy_iso,'_ordre'=>'modo'),array('f_fin'=>'>'));
+	$cEncargosSacd = $cEncargosSacd1 + $cEncargosSacd2 ;
+	foreach ($cEncargosSacd as $oEncargoSacd) {
+		$id_enc = $oEncargoSacd->getId_enc();
+		$modo=$oEncargoSacd->getModo();
 		$oEncargo = new Encargo($id_enc);
 		$id_tipo_enc = $oEncargo->getId_tipo_enc();
 		// paso a texto para poder coger el segundo carcater.
@@ -136,7 +124,7 @@ foreach ($cPersonas as $oPersona) {
 		$id_ubi=$oEncargo->getId_ubi();
 		$grupo = $array_orden[$modo];
 		if (!empty($id_ubi)) { // en algunos encargos no hay ubi
-			$oUbi = new Ubi($id_ubi);
+			$oUbi = new Centro($id_ubi);
 			$nombre_ubi=$oUbi->getNombre_ubi();
 		} else {
 			$nombre_ubi="";
@@ -148,13 +136,13 @@ foreach ($cPersonas as $oPersona) {
 
 		if ($modo==2 || $modo==3) {
 			// busco el suplente
-			$cTareasSacd1 = $GesTareas->getTareasSacd(array('id_enc'=>$id_enc,'f_fin'=>'x','modo'=>4),array('f_fin'=>'IS NULL'));
-			if (is_array($cTareasSacd1) && count($cTareasSacd1) == 0 ) {
-				$cTareasSacd1 = $GesTareas->getTareasSacd(array('id_enc'=>$id_enc,'f_fin'=>$hoy_iso,'modo'=>4),array('f_fin'=>'>'));
+			$cEncargosSacd1 = $GesEncargoSad->getEncargosSacd(array('id_enc'=>$id_enc,'f_fin'=>'x','modo'=>4),array('f_fin'=>'IS NULL'));
+			if (is_array($cEncargosSacd1) && count($cEncargosSacd1) == 0 ) {
+				$cEncargosSacd1 = $GesEncargoSad->getEncargosSacd(array('id_enc'=>$id_enc,'f_fin'=>$hoy_iso,'modo'=>4),array('f_fin'=>'>'));
 			}
-			if (is_array($cTareasSacd1) && count($cTareasSacd1) == 1 ) {
-				$id_nom_sup = $cTareasSacd1[0]->getId_nom();
-				$oSacd  = new Persona($id_nom_sup);
+			if (is_array($cEncargosSacd1) && count($cEncargosSacd1) == 1 ) {
+				$id_nom_sup = $cEncargosSacd1[0]->getId_nom();
+				$oSacd  = new PersonaDl($id_nom_sup);
 				$sup_tit=$oSacd->getNombreApellidos();
 			} else {
 				$sup_tit='';
@@ -162,13 +150,13 @@ foreach ($cPersonas as $oPersona) {
 		} elseif ($modo==4) {
 			// busco el titular
 			// busco el suplente
-			$cTareasSacd1 = $GesTareas->getTareasSacd(array('id_enc'=>$id_enc,'f_fin'=>'x','modo'=>'[23]'),array('modo'=>'~','f_fin'=>'IS NULL'));
-			if (is_array($cTareasSacd1) && count($cTareasSacd1) == 0 ) {
-				$cTareasSacd1 = $GesTareas->getTareasSacd(array('id_enc'=>$id_enc,'f_fin'=>$hoy_iso,'modo'=>'[23]'),array('modo'=>'~','f_fin'=>'>'));
+			$cEncargosSacd1 = $GesEncargoSad->getEncargosSacd(array('id_enc'=>$id_enc,'f_fin'=>'x','modo'=>'[23]'),array('modo'=>'~','f_fin'=>'IS NULL'));
+			if (is_array($cEncargosSacd1) && count($cEncargosSacd1) == 0 ) {
+				$cEncargosSacd1 = $GesEncargoSad->getEncargosSacd(array('id_enc'=>$id_enc,'f_fin'=>$hoy_iso,'modo'=>'[23]'),array('modo'=>'~','f_fin'=>'>'));
 			}
-			if (is_array($cTareasSacd1) && count($cTareasSacd1) == 1 ) {
-				$id_nom_tit = $cTareasSacd1[0]->getId_nom();
-				$oSacd  = new Persona($id_nom_tit);
+			if (is_array($cEncargosSacd1) && count($cEncargosSacd1) == 1 ) {
+				$id_nom_tit = $cEncargosSacd1[0]->getId_nom();
+				$oSacd  = new PersonaDl($id_nom_tit);
 				$sup_tit=$oSacd->getNombreApellidos();
 			} else {
 				$sup_tit='';
@@ -184,25 +172,25 @@ foreach ($cPersonas as $oPersona) {
 		$aWhere['f_fin']="'$hoy_iso'";
 		$aOperador['f_fin']='>';
 
-		$cHorarios1 = $GesHorario->getTareaHorariosSacd($aWhere,$aOperador);
+		$cHorarios1 = $GesHorario->getEncargoSacdHorarios($aWhere,$aOperador);
 		$aOperador['f_fin']='IS NULL';
-		$cHorarios2 = $GesHorario->getTareaHorariosSacd($aWhere,$aOperador);
+		$cHorarios2 = $GesHorario->getEncargoSacdHorarios($aWhere,$aOperador);
 		$cHorarios = $cHorarios1 + $cHorarios2;
 
 		$dedic_m="";
 		$dedic_t="";
 		$dedic_v="";
-		foreach ($cHorarios as $oTareaHorarioSacd) {
-			$modulo=$oTareaHorarioSacd->getDia_ref();
+		foreach ($cHorarios as $oEncargoSacdHorario) {
+			$modulo=$oEncargoSacdHorario->getDia_ref();
 			switch ($modulo) {
 				case "m":
-					$dedic_m=$oTareaHorarioSacd->getDia_inc();
+					$dedic_m=$oEncargoSacdHorario->getDia_inc();
 					break;
 				case "t":
-					$dedic_t=$oTareaHorarioSacd->getDia_inc();
+					$dedic_t=$oEncargoSacdHorario->getDia_inc();
 					break;
 				case "v":
-					$dedic_v=$oTareaHorarioSacd->getDia_inc();
+					$dedic_v=$oEncargoSacdHorario->getDia_inc();
 					break;
 			}
 		}
@@ -210,13 +198,8 @@ foreach ($cPersonas as $oPersona) {
 		// estudio, descanso y otros como grupo 6
 		if ($id_tipo_enc==5020 || $id_tipo_enc==5030 || $id_tipo_enc==6000 ) {
 			$grupo=6;
-			if (array_key_exists($desc_enc, $array_trad[$lengua]) ) {
-				$nombre_ubi=$array_trad[$lengua][$desc_enc];
-				$desc_enc=$array_trad[$lengua][$desc_enc];
-			} else {
-				$nombre_ubi=$desc_enc;
-			}
-			$dedic_m = $oEncargoFunciones->dedicacion($id_nom,$id_enc,$lengua);
+			$nombre_ubi =  $oEncargoFunciones->getTraduccion('e_'.$desc_enc, $idioma);
+			$dedic_m = $oEncargoFunciones->dedicacion($id_nom,$id_enc,$idioma);
 		}
 
 		// las colatios y rtm los pongo al final
@@ -237,7 +220,6 @@ foreach ($cPersonas as $oPersona) {
 		}
 	}
 	if (!empty($observ)) { $array_modo[$s][7][]= array( "desc_enc" => $observ); }
-	//include ("list_com_sacd.html");
 } // fin del while de los sacd
 
 $a_campos = ['oPosicion' => $oPosicion,
