@@ -221,9 +221,8 @@ switch ($Qque) {
 							$dia_num = $oEncargoSacdHorario->getDia_num();
 							$h_ini = $oEncargoSacdHorario->getH_ini();
 							$h_fin = $oEncargoSacdHorario->getH_fin();
-							$n_sacd = $oEncargoSacdHorario->getN_sacd(); //????
 
-							$texto_horario=$GesEncargoTipo->texto_horario($mas_menos,$dia_ref,$dia_inc,$dia_num,$h_ini,$h_fin,$n_sacd);
+							$texto_horario=$GesEncargoTipo->texto_horario($mas_menos,$dia_ref,$dia_inc,$dia_num,$h_ini,$h_fin);
 							if ($h >1) $a_dedic_sacd[$i] .= " y ";
 							$a_dedic_sacd[$i] .= $texto_horario;
 						}
