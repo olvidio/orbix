@@ -502,6 +502,7 @@ Trait EncargoFuncionesTrait {
     }
 
     function texto_horario($mas_menos,$dia_ref,$dia_inc,$dia_num,$h_ini,$h_fin,$n_sacd='') {
+        $texto_horario = '';
         // texto que describe el horario orgiginal
         $dia_txt='';
         $dia=$this->calcular_dia($mas_menos,$dia_ref,$dia_inc);

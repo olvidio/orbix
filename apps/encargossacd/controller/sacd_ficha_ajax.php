@@ -76,8 +76,19 @@ switch ($Qque) {
 
 		/* busco los datos del encargo que se tengan */
 		$GesEncargosSacd = new GestorEncargoSacd();
-		$cEncargosSacd1 = $GesEncargosSacd->getEncargosSacd(array('id_nom'=>$Qid_nom,'f_fin'=>'x','_ordre'=>'modo'),array('f_fin'=>'IS NULL'));
-		$cEncargosSacd2 = $GesEncargosSacd->getEncargosSacd(array('id_nom'=>$Qid_nom,'f_fin'=>"'$hoy'",'_ordre'=>'modo'),array('f_fin'=>'>'));
+		// No los personasles:
+		$aWhereES = [];
+		$aOperadorES = [];
+        $aWhereES['id_nom'] = $Qid_nom;
+        $aWhereES['f_fin'] = 'x';
+        $aOperadorES['f_fin'] = 'IS NULL';
+        $aWhereES['_ordre'] = 'modo, f_ini DESC';
+		$cEncargosSacd1 = $GesEncargosSacd->getEncargosSacd($aWhereES, $aOperadorES);
+
+        $aWhereES['f_fin'] = "'$hoy'";
+        $aOperadorES['f_fin'] = '>';
+		$cEncargosSacd2 = $GesEncargosSacd->getEncargosSacd($aWhereES,$aOperadorES);
+			
 		$cEncargosSacd = $cEncargosSacd1 + $cEncargosSacd2;
 		$i=0;
 		$a_modo = [];
@@ -109,6 +120,12 @@ switch ($Qque) {
 			$oEncargo = new Encargo(array('id_enc'=>$id_enc));
 			$id_enc = $oEncargo->getId_enc();
 			$id_tipo_enc = $oEncargo->getId_tipo_enc();
+			// Si es un encargo personal (7 o 4) me lo salto
+			if (substr($id_tipo_enc, 0,1) == 7 OR substr($id_tipo_enc, 0,1) == 4 )  {
+			    $i--;
+			    continue;
+			}
+			
 			$sf_sv = $oEncargo->getSf_sv();
 			$id_ubi = $oEncargo->getId_ubi();
 			$id_zona = $oEncargo->getId_zona();
@@ -254,7 +271,6 @@ switch ($Qque) {
 			}
 		$enc_num=$i;
 		
-		//$opciones = EncargoConstants::ARRAY_OPCIONES_ENCARGOS;
 	    $oEncargoConstants = new EncargoConstants();
 		$opciones = $oEncargoConstants->getOpcionesEncargos();
 		$oDesplEncs = new Desplegable();
