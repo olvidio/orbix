@@ -1,6 +1,9 @@
 <?php
 
 use encargossacd\model\entity\Encargo;
+use encargossacd\model\entity\GestorEncargoTipo;
+use function encargossacd\model\entity\GestorEncargoTipo\id_tipo_encargo;
+use web\Desplegable;
 
 /**
 * Esta página actualiza la base de datos de los encargos.
@@ -27,13 +30,37 @@ require_once ("apps/core/global_header.inc");
 require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qmod = (string) \filter_input(INPUT_POST, 'mod');
-$Qfiltro_ctr = (string) \filter_input(INPUT_POST, 'filtro_ctr');
+$Qque = (string) \filter_input(INPUT_POST, 'que');
+$Qfiltro_ctr = (integer) \filter_input(INPUT_POST, 'filtro_ctr');
 
 
-switch ($Qmod) {
+switch ($Qque) {
+    case "lst_tipo_enc":
+        $Qid_tipo_enc = (integer) \filter_input(INPUT_POST, 'id_tipo_enc');
+        $Qgrupo = (integer) \filter_input(INPUT_POST, 'grupo');
+
+        $aWhere = [];
+        $aOperador = [];
+        $aWhere['id_tipo_enc'] = '^'.$Qgrupo;
+        $aOperador['id_tipo_enc'] = '~';
+        $oGesEncargoTipo = new GestorEncargoTipo();
+        $cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere,$aOperador);
+
+        // desplegable de nom_tipo
+        $posibles_encargo_tipo = [];
+        foreach ($cEncargoTipos as $oEncargoTipo) {
+            $posibles_encargo_tipo[$oEncargoTipo->getId_tipo_enc()] = $oEncargoTipo->getTipo_enc();
+        }
+        $oDesplNoms = new Desplegable();
+        $oDesplNoms->setNombre('id_tipo_enc');
+        $oDesplNoms->setOpciones($posibles_encargo_tipo);
+        $oDesplNoms->setOpcion_sel($Qid_tipo_enc);
+        $oDesplNoms->setBlanco('t');
+        
+        echo $oDesplNoms->desplegable();
+        break;
     case "nuevo": //nuevo
-        $sf_sv = empty($Qfiltro_ctr)? '' : $Qfiltro_ctr;
+        $Qsf_sv = empty($Qfiltro_ctr)? 1 : $Qfiltro_ctr; // sv
 
         $Qid_ubi = (integer) \filter_input(INPUT_POST, 'lst_ctrs');
         $Qid_zona = (integer) \filter_input(INPUT_POST, 'id_zona');
@@ -58,7 +85,7 @@ switch ($Qmod) {
             }
         }
         // para los encargos personales, no hay sección:
-        if ($Qid_tipo_enc{0}==7) $sf_sv=0;
+        if ($Qid_tipo_enc{0}==7) $Qsf_sv=0;
 
         //Compruebo que estén todos los campos necesarios
         if (empty($Qdesc_enc)) {
@@ -68,7 +95,7 @@ switch ($Qmod) {
 
         $oEncargo = new Encargo();
         $oEncargo->setId_tipo_enc($id_tipo_enc);
-        $oEncargo->setSf_sv($sf_sv);
+        $oEncargo->setSf_sv($Qsf_sv);
         $oEncargo->setId_ubi($Qid_ubi);
         $oEncargo->setId_zona($Qid_zona);
         $oEncargo->setDesc_enc($Qdesc_enc);
@@ -82,7 +109,7 @@ switch ($Qmod) {
 
         break;
     case "editar": // modificar 
-        $sf_sv = empty($Qfiltro_ctr)? '' : $Qfiltro_ctr;
+        $Qsf_sv = empty($Qfiltro_ctr)? 1 : $Qfiltro_ctr;
         $Qid_enc = (integer) \filter_input(INPUT_POST, 'id_enc');
 
         $Qid_ubi = (integer) \filter_input(INPUT_POST, 'lst_ctrs');
@@ -92,6 +119,9 @@ switch ($Qmod) {
         $Qdesc_lugar = (string) \filter_input(INPUT_POST, 'desc_lugar');
         $Qobserv = (string) \filter_input(INPUT_POST, 'observ');
         
+        $Qid_tipo_enc = (string) \filter_input(INPUT_POST, 'id_tipo_enc');
+        $Qgrupo = (string) \filter_input(INPUT_POST, 'grupo');
+
         //Compruebo que estén todos los campos necesasrios
         if (empty($Qdesc_enc)) {
             echo _("Debe llenar el campo descripción")."<br>";
@@ -101,7 +131,8 @@ switch ($Qmod) {
         $oEncargo = new Encargo($Qid_enc);
         $oEncargo->DBCarregar();
 
-        $oEncargo->setSf_sv($sf_sv);
+        $oEncargo->setId_tipo_enc($Qid_tipo_enc);
+        $oEncargo->setSf_sv($Qsf_sv);
         $oEncargo->setId_ubi($Qid_ubi);
         $oEncargo->setId_zona($Qid_zona);
         $oEncargo->setDesc_enc($Qdesc_enc);

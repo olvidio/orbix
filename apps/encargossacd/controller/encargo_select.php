@@ -1,5 +1,4 @@
 <?php
-use encargossacd\model\EncargoConstants;
 use encargossacd\model\entity\GestorEncargo;
 use ubis\model\entity\Ubi;
 use web\Hash;
@@ -106,15 +105,18 @@ foreach ($cEncargos as $oEncargo) {
 	
 	$idioma_enc=empty($idioma_enc)? 'ca_ES' : $idioma_enc;
 	
-    $aQuery = [ 'mod'       =>'editar',
+    $aQuery = [ 'que'       =>'editar',
             'id_enc'=>$id_enc,
             ];
     if (is_array($aQuery)) { array_walk($aQuery, 'core\poner_empty_on_null'); }
     $pagina = Hash::link('apps/encargossacd/controller/encargo_ver.php?'.http_build_query($aQuery));
 
-	$oGesEncargoTipo = new GestorEncargoTipo();
-	$a_seccion = $oGesEncargoTipo->getArraySeccion();
-	$seccion = $a_seccion[$sf_sv];
+	$seccion = '';
+	if (!empty($sf_sv)) {
+        $oGesEncargoTipo = new GestorEncargoTipo();
+        $a_seccion = $oGesEncargoTipo->getArraySeccion();
+        $seccion = $a_seccion[$sf_sv];
+	}
 
 	$idioma = '';
 	$GesLocales = new usuarios\model\entity\GestorLocal();
@@ -141,7 +143,7 @@ foreach ($cEncargos as $oEncargo) {
 	$a_valores[$i][6]=$id_zona;
 }
 
-$aQuery = [ 'mod'       =>'nuevo',
+$aQuery = [ 'que'       =>'nuevo',
             'id_tipo_enc'=>$Qid_tipo_enc,
             ];
 // el hppt_build_query no pasa los valores null
@@ -167,17 +169,17 @@ $h_horario = $oHashHorario->linkSinVal();
 $url_modificar = "apps/encargossacd/controller/encargo_ver.php";
 $oHashMod = new Hash();
 $oHashMod->setUrl($url_modificar);
-$oHashMod->setcamposForm('mod!scroll_id!sel');
+$oHashMod->setcamposForm('que!scroll_id!sel');
 $h_modificar = $oHashMod->linkSinVal();
 
-$url_borrar = "apps/encargossacd/controller/encargo_update.php";
+$url_borrar = "apps/encargossacd/controller/encargo_ajax.php";
 $oHashBorrar = new Hash();
 $oHashBorrar->setUrl($url_borrar);
 $oHashBorrar->setcamposForm('que!id_activ!id_nom');
 $h_borrar = $oHashBorrar->linkSinVal();
 
 $oHash = new Hash();
-$oHash->setCamposForm('mod');
+$oHash->setCamposForm('que');
 $oHash->setcamposNo('scroll_id!sel');
 /*
 $a_camposHidden = array(

@@ -31,7 +31,7 @@ fnjs_guardar=function(formulario){
 	if (!desc_enc) { alert("Debe llenar el campo de Descripción del encargo"); err=1; }
 
 	if (err != 1) {
-        $(formulario).attr('action','apps/encargossacd/controller/encargo_update.php');
+        $(formulario).attr('action','apps/encargossacd/controller/encargo_ajax.php');
 		$(formulario).submit(function() {
 			$.ajax({
                 data: $(this).serialize(),
@@ -59,26 +59,33 @@ fnjs_generarNomEnc=function(formulario){
 	var id_ubi=$('#lst_ctrs').val();
 	var nom_tipo='';
 	
-    nom_tipo=$('#nom_tipo :selected').text();
+    nom_tipo=$('#lst_tipo_enc :selected').text();
 	lloc=$('#lst_ctrs :selected').text();
 	if (sf == 2) { sf='sf ';} else {sf='';}
     tipus=sf+ nom_tipo;
-    $('#desc_enc').val(tipus+' ('+lloc+')');
+    if (lloc == '') {
+    	$('#desc_enc').val(tipus);
+    } else {
+    	$('#desc_enc').val(tipus+' ('+lloc+')');
+	}
 }
 
-fnjs_generar_id=function(){
+fnjs_lst_tipo_enc=function(){
   var grupo=$('#grupo').val();
   var nom_tipo=$('#nom_tipo').val();
-  
-  if (nom_tipo) {
-	  var tipus=nom_tipo;
-  } else {
-      var tipus=grupo;
-  }
-  
-  $('#id_tipo_enc').val(tipus);
-  
-  fnjs_actualizar('#modifica');
+
+	var parametros='que=lst_tipo_enc&grupo='+grupo+'{{ h_lst|raw }}';
+	var url = '{{ url_lst }}';
+	$.ajax({
+		data: parametros,
+		url: url,
+		type: 'post',
+		dataType: 'html',
+		complete: function (rta) {
+			rta_txt=rta.responseText;
+			$('#lst_tipo_enc').html(rta_txt);
+		}
+	});
 }
 </script>
 {{ oPosicion.mostrar_left_slide(1)|raw }}
@@ -86,6 +93,10 @@ fnjs_generar_id=function(){
 {{ oHash.getCamposHtml|raw }}
 {% if not id_enc %}
 	<table><tr><th class=titulo_inv>{{ "nuevo encargo" }}</th></tr>
+{% else %}
+	<table><tr><th class=titulo_inv>{{ "modificar encargo"|trans|capitalize }}</th></tr>
+    
+{% endif %}
 	<tr><td class=subtitulo>{{ "escoger el tipo de encargo" }}</td></tr>
 	<tr><td>
         <input type='hidden' id='id_tipo_enc' name='id_tipo_enc' size='5' value='{{ id_tipo_enc }}'>
@@ -94,16 +105,12 @@ fnjs_generar_id=function(){
         {{ oDesplGrupos.desplegable()|raw }}	
         </td>
         <td class="etiqueta">{{ "tipo encargo" }}</td>
-        <td>
+        <td id="lst_tipo_enc">
         {{ oDesplNoms.desplegable()|raw }}	
         </td>
         </tr></table>
      </td></tr>
      </table>  
-{% else %}
-	<table><tr><th class=titulo_inv>{{ "modificar encargo"|trans|capitalize }}</th></tr>
-    </table>
-{% endif %}
 <br>
 <table>
 <tr><td>{{ "grupo de ctrs" }}:</td><td>

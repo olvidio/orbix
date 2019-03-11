@@ -101,7 +101,7 @@ class GestorEncargoTipo Extends core\ClaseGestor {
             $grupo=$ft_grupo[$ta1];
         }
          
-        $query="SELECT * FROM $nom_tabla where id_tipo_enc::text ~ '".$id_tipo_enc."' order by tipo_enc";
+        $query="SELECT * FROM $nom_tabla where id_tipo_enc::text ~ '^".$id_tipo_enc."' order by tipo_enc";
         //echo $query;
 		if (($oDblSt=$oDbl->query($query)) === FALSE) {
 			$sClauError = 'GestorEncargoTipo.encargo_de_tipo.execute';

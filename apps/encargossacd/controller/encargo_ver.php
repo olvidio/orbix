@@ -82,18 +82,17 @@ function filtro($id_ubi) {
 }
 // -------------------------------------------------------------
 
-$Qmod = (string) \filter_input(INPUT_POST, 'mod');
+$Qque = (string) \filter_input(INPUT_POST, 'que');
 $Qid_enc = (integer) \filter_input(INPUT_POST, 'id_enc');
 $Qid_tipo_enc = (integer) \filter_input(INPUT_POST, 'id_tipo_enc');
 
-$grupo = (string) \filter_input(INPUT_POST, 'grupo');
-$nom_tipo = (string) \filter_input(INPUT_POST, 'nom_tipo');
+$Qgrupo = (string) \filter_input(INPUT_POST, 'grupo');
 $Qfiltro_ctr = (string) \filter_input(INPUT_POST, 'filtro_ctr');
 $Qdesc_enc = (string) \filter_input(INPUT_POST, 'desc_enc');
 $Qdesc_lugar = (string) \filter_input(INPUT_POST, 'desc_lugar');
 
 $idioma_enc = '';
-if (empty($Qmod) || $Qmod === 'editar') { //significa que no es nuevo
+if (empty($Qque) || $Qque === 'editar') { //significa que no es nuevo
     if (!empty($_POST['sel'])) { //vengo de un checkbox
 		$Qid_enc=strtok($_POST['sel'][0],"#");
 	}
@@ -114,10 +113,10 @@ if (empty($Qmod) || $Qmod === 'editar') { //significa que no es nuevo
 $oGesEncargoTipo = new GestorEncargoTipo();
 if (!empty($Qid_tipo_enc))  {
 	$tipo=$oGesEncargoTipo->encargo_de_tipo($Qid_tipo_enc);
-	$grupo=$tipo['grupo'];
-	$nom_tipo=$tipo['nom_tipo'];
+	$Qgrupo=$tipo['grupo'];
+	//$nom_tipo=$tipo['nom_tipo'];
 } else {
-	$Qid_tipo_enc=$oGesEncargoTipo->id_tipo_encargo($grupo,$nom_tipo);
+	$Qid_tipo_enc=$oGesEncargoTipo->id_tipo_encargo($Qgrupo,'...');
 }
 
 $ee = $oGesEncargoTipo->encargo_de_tipo($Qid_tipo_enc);
@@ -125,7 +124,7 @@ $ee = $oGesEncargoTipo->encargo_de_tipo($Qid_tipo_enc);
 if (substr($Qid_tipo_enc,0,1)=='.') {
 	$grupo_posibles=$ee['grupo'];
 } else { 
-	$grupo=substr($Qid_tipo_enc,0,1);
+	$Qgrupo=substr($Qid_tipo_enc,0,1);
 	$aux='....'; //Que siempre salgan todas las opciones
 	$ee_grupo=$oGesEncargoTipo->encargo_de_tipo($aux);
 	$grupo_posibles=$ee_grupo['grupo'];
@@ -133,24 +132,33 @@ if (substr($Qid_tipo_enc,0,1)=='.') {
 $oDesplGrupos = new Desplegable();
 $oDesplGrupos->setNombre('grupo');
 $oDesplGrupos->setOpciones($grupo_posibles);
-$oDesplGrupos->setOpcion_sel($grupo);
+$oDesplGrupos->setOpcion_sel($Qgrupo);
 $oDesplGrupos->setBlanco(1);
-$oDesplGrupos->setAction("fnjs_generar_id();");
+$oDesplGrupos->setAction("fnjs_lst_tipo_enc();");
 
-// desplegable de nom_tipo
-if (substr($Qid_tipo_enc,1,3)=='...') {
-	$nom_tipo_posibles=$ee['nom_tipo'];
+if (!empty($Qgrupo)) {
+    $aWhere = [];
+    $aOperador = [];
+    $aWhere['id_tipo_enc'] = '^'.$Qgrupo;
+    $aOperador['id_tipo_enc'] = '~';
+    $oGesEncargoTipo = new GestorEncargoTipo();
+    $cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere,$aOperador);
+
+    // desplegable de nom_tipo
+    $posibles_encargo_tipo = [];
+    foreach ($cEncargoTipos as $oEncargoTipo) {
+        $posibles_encargo_tipo[$oEncargoTipo->getId_tipo_enc()] = $oEncargoTipo->getTipo_enc();
+    }
+    $oDesplNoms = new Desplegable();
+    $oDesplNoms->setNombre('id_tipo_enc');
+    $oDesplNoms->setOpciones($posibles_encargo_tipo);
+    $oDesplNoms->setOpcion_sel($Qid_tipo_enc);
+    $oDesplNoms->setBlanco('t');
+
 } else {
-	$aux=substr($Qid_tipo_enc,0,1).'...';
-	$ee_nom_tipo=$oGesEncargoTipo->encargo_de_tipo($aux);
-	$nom_tipo_posibles=$ee_nom_tipo['nom_tipo'];
+    $oDesplNoms = new Desplegable();
+    $oDesplNoms->setOpciones([]);
 }
-$oDesplNoms = new Desplegable();
-$oDesplNoms->setNombre('nom_tipo');
-$oDesplNoms->setOpciones($nom_tipo_posibles);
-$oDesplNoms->setOpcion_sel($Qid_tipo_enc);
-$oDesplNoms->setBlanco('t');
-$oDesplNoms->setAction("fnjs_generar_id();");
 
 $opciones = $oGesEncargoTipo->getArraySeccion();
 $oDesplGrupoCtrs = new Desplegable();
@@ -177,14 +185,14 @@ $oDesplIdiomas->setBlanco(1);
 $url_actualizar = 'apps/encargossacd/controller/encargo_ver.php';
 $oHashAct = new Hash();
 $aCamposHidden = [
-    'mod' => $Qmod,
+    'que' => $Qque,
     'id_enc' => $Qid_enc,
 ];
 $oHashAct->setUrl($url_actualizar);
-if ($Qmod === 'nuevo') {
-    $campos_form = 'desc_enc!desc_lugar!filtro_ctr!grupo!id_tipo_enc!idioma_enc!nom_tipo';
+if ($Qque === 'nuevo') {
+    $campos_form = 'desc_enc!desc_lugar!filtro_ctr!grupo!id_tipo_enc!idioma_enc';
 } else {
-    $campos_form = 'desc_enc!desc_lugar!filtro_ctr!idioma_enc';
+    $campos_form = 'desc_enc!desc_lugar!filtro_ctr!grupo!id_tipo_enc!idioma_enc';
 }
 $oHashAct->setcamposForm($campos_form);
 $oHashAct->setcamposNo('lst_ctrs!refresh');
@@ -196,7 +204,13 @@ $oHashCtr->setUrl($url_ctr);
 $oHashCtr->setcamposForm('filtro_ctr!id_ubi');
 $h_ctr = $oHashCtr->linkSinVal();
 
-if ($Qmod === 'nuevo') {
+$url_lst = 'apps/encargossacd/controller/encargo_ajax.php';
+$oHashLst = new Hash();
+$oHashLst->setUrl($url_lst);
+$oHashLst->setcamposForm('que!grupo');
+$h_lst = $oHashLst->linkSinVal();
+
+if ($Qque === 'nuevo') {
     $txt_btn = _("crear encargo");
 } else {
     $txt_btn = _("guardar encargo");
@@ -206,6 +220,8 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_actualizar' => $url_actualizar,
     'url_ctr' => $url_ctr,
     'h_ctr' => $h_ctr,
+    'url_lst' => $url_lst,
+    'h_lst' => $h_lst,
     'oHash' => $oHashAct,
     'id_enc' => $Qid_enc,
     'id_tipo_enc' => $Qid_tipo_enc,
@@ -216,7 +232,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oDesplIdiomas' => $oDesplIdiomas,
     'desc_enc' => $Qdesc_enc,
     'desc_lugar' => $Qdesc_lugar,
-    'mod' > $Qmod,
+    'que' > $Qque,
     'txt_btn' => $txt_btn,
 ];
 

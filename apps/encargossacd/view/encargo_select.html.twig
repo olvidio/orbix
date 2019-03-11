@@ -11,7 +11,7 @@ fnjs_modificar=function(formulario){
 	var url='{{ url_modificar|raw }}';
 	rta=fnjs_solo_uno(formulario);
 	if (rta==1) {
-		$('#mod').val("editar");
+		$('#que').val("editar");
   		$(formulario).attr('action',url);
 		fnjs_enviar_formulario(formulario);
   	}
@@ -23,8 +23,8 @@ fnjs_borrar=function(formulario){
 	if (rta==1) {
 		seguro=confirm("{{ txt_eliminar }}");
 		if (seguro) {
-            $('#mod').val("eliminar");
-			$(formulario).attr('action','apps/encargossacd/controller/encargo_update.php');
+            $('#que').val("eliminar");
+			$(formulario).attr('action','apps/encargossacd/controller/encargo_ajax.php');
 			$(formulario).submit(function() {
 				$.ajax({
 		               data: $(this).serialize(),
@@ -62,7 +62,7 @@ fnjs_borrar=function(formulario){
 {% endif %}
 <h2 class=subtitulo>{{ titulo }}</h2>
 <form id="seleccionados" name="seleccionados" action="" method="post">
-<input type='Hidden' id='mod' name='mod' value='' >
+<input type='Hidden' id='que' name='que' value='' >
 {{ oHash.getCamposHtml()|raw }}
 {{ oTabla.mostrar_tabla()|raw }}
 </form>

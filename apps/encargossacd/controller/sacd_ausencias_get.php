@@ -5,14 +5,14 @@ use encargossacd\model\entity\GestorEncargoSacd;
 use encargossacd\model\entity\GestorEncargoSacdHorario;
 use web\Hash;
 /**
-* Esta página muestra las ausencias de un sacd. 
-*
-*@package	delegacion
-*@subpackage	des
-*@author	Daniel Serrabou
-*@since		28/03/07.
-*		
-*/
+ * Esta página muestra las ausencias de un sacd.
+ *
+ *@package	delegacion
+ *@subpackage	des
+ *@author	Daniel Serrabou
+ *@since		28/03/07.
+ *
+ */
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
@@ -38,7 +38,7 @@ $cEncargos = $GesEncargos->getEncargos($aWhere,$aOperador);
 
 $array_tipo_ausencias = [];
 foreach ($cEncargos as $oEncargo) {
-	$array_tipo_ausencias[$oEncargo->getId_enc()]=$oEncargo->getDesc_enc();
+    $array_tipo_ausencias[$oEncargo->getId_enc()]=$oEncargo->getDesc_enc();
 }
 
 /* busco los datos del encargo que se tengan */
@@ -46,13 +46,13 @@ $GesEncargosSacd = new GestorEncargoSacd();
 $aWhereP = [];
 $aOperadorP = [];
 if ($Qhistorial==1) {
-	$aWhereP['id_nom']=$Qid_nom;
-	$aWhereP['_ordre']='f_ini';
+    $aWhereP['id_nom']=$Qid_nom;
+    $aWhereP['_ordre']='f_ini';
 } else {
-	$aWhereP['id_nom']=$Qid_nom;
-	$aWhereP['f_ini']=$hoy;
-	$aOperadorP['f_ini']='>=';
-	$aWhereP['_ordre']='f_ini';
+    $aWhereP['id_nom']=$Qid_nom;
+    $aWhereP['f_ini']=$hoy;
+    $aOperadorP['f_ini']='>=';
+    $aWhereP['_ordre']='f_ini';
 }
 $cEncargosSacd = $GesEncargosSacd->getEncargosSacd($aWhereP,$aOperadorP);
 $i=0;
@@ -66,53 +66,53 @@ $dedic_m = [];
 $dedic_t = [];
 $dedic_v = [];
 foreach ($cEncargosSacd as $oEncargoSacd) {
-	$id_enc[$i] = $oEncargoSacd->getId_enc();
-	// Encargo
-	$oEncargo = new Encargo($id_enc[$i]);
-	$id_tipo_enc[$i] = $oEncargo->getId_tipo_enc();
-	// mirar que sea ausencia: id_tipo_enc = 4|7
-	if (!preg_match('/7|4/',$id_tipo_enc[$i])) { continue; }
-	$desc_enc[$i] = $oEncargo->getDesc_enc();
-	//tarea sacd
-	$id_item[$i] = $oEncargoSacd->getId_item();
-	$inicio[$i] = $oEncargoSacd->getF_ini()->getFromLocal();
-	$fin[$i] = $oEncargoSacd->getF_fin()->getFromLocal();
-
-	// horario
-	$GesHorario = new GestorEncargoSacdHorario();
-	$aWhereH = array();
-	$aOperadorH = array();
-	if ($Qhistorial==1) {
-		$aWhereH['id_enc'] = $id_enc[$i];
-		$aWhereH['id_nom'] = $Qid_nom;
-		$cHorarios = $GesHorario->getEncargoSacdHorarios($aWhereH);
-	} else {
-		$aWhereH['id_enc'] = $id_enc[$i];
-		$aWhereH['id_nom'] = $Qid_nom;
-		// con fecha fin > hoy
-		$aWhereH['f_fin'] = "'$hoy'";
-		$aOperadorH['f_fin'] = '>';
-		$cHorarios_1 = $GesHorario->getEncargoSacdHorarios($aWhereH,$aOperadorH);
-		// con fecha fin null
-		$aWhereH['f_fin'] = "";
-		$aOperadorH['f_fin'] = 'IS NULL';
-		$cHorarios_2 = $GesHorario->getEncargoSacdHorarios($aWhereH,$aOperadorH);
-		$cHorarios = $cHorarios_1 + $cHorarios_2;
-	}
-	foreach ($cHorarios as $oHorario) {
-		switch ($oHorario->getDia_ref()) {
-			case "m":
-				$dedic_m[$i]=$oHorario->getDia_inc();
-				break;
-			case "t":
-				$dedic_t[$i]=$oHorario->getDia_inc();
-				break;
-			case "v":
-				$dedic_v[$i]=$oHorario->getDia_inc();
-				break;
-		}
-	}
-	$i++;
+    $id_enc[$i] = $oEncargoSacd->getId_enc();
+    // Encargo
+    $oEncargo = new Encargo($id_enc[$i]);
+    $id_tipo_enc[$i] = $oEncargo->getId_tipo_enc();
+    // mirar que sea ausencia: id_tipo_enc = 4|7
+    if (!preg_match('/7|4/',$id_tipo_enc[$i])) { continue; }
+    $desc_enc[$i] = $oEncargo->getDesc_enc();
+    //tarea sacd
+    $id_item[$i] = $oEncargoSacd->getId_item();
+    $inicio[$i] = $oEncargoSacd->getF_ini()->getFromLocal();
+    $fin[$i] = $oEncargoSacd->getF_fin()->getFromLocal();
+    
+    // horario
+    $GesHorario = new GestorEncargoSacdHorario();
+    $aWhereH = array();
+    $aOperadorH = array();
+    if ($Qhistorial==1) {
+        $aWhereH['id_enc'] = $id_enc[$i];
+        $aWhereH['id_nom'] = $Qid_nom;
+        $cHorarios = $GesHorario->getEncargoSacdHorarios($aWhereH);
+    } else {
+        $aWhereH['id_enc'] = $id_enc[$i];
+        $aWhereH['id_nom'] = $Qid_nom;
+        // con fecha fin > hoy
+        $aWhereH['f_fin'] = "'$hoy'";
+        $aOperadorH['f_fin'] = '>';
+        $cHorarios_1 = $GesHorario->getEncargoSacdHorarios($aWhereH,$aOperadorH);
+        // con fecha fin null
+        $aWhereH['f_fin'] = "";
+        $aOperadorH['f_fin'] = 'IS NULL';
+        $cHorarios_2 = $GesHorario->getEncargoSacdHorarios($aWhereH,$aOperadorH);
+        $cHorarios = $cHorarios_1 + $cHorarios_2;
+    }
+    foreach ($cHorarios as $oHorario) {
+        switch ($oHorario->getDia_ref()) {
+            case "m":
+                $dedic_m[$i]=$oHorario->getDia_inc();
+                break;
+            case "t":
+                $dedic_t[$i]=$oHorario->getDia_inc();
+                break;
+            case "v":
+                $dedic_v[$i]=$oHorario->getDia_inc();
+                break;
+        }
+    }
+    $i++;
 }
 $enc_num=$i;
 
