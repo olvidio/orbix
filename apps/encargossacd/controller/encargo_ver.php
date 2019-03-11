@@ -168,10 +168,9 @@ if (!empty($Qid_ubi)) {
     $oDesplCtrs->setOpcion_sel($Qid_ubi);
 }
 
-$idiomas_posibles = EncargoConstants::ARRAY_IDIOMAS;
-$oDesplIdiomas = new Desplegable();
-$oDesplIdiomas->setNombre('idioma_enc');
-$oDesplIdiomas->setOpciones($idiomas_posibles);
+$GesLocales = new usuarios\model\entity\GestorLocal();
+$oDesplIdiomas = $GesLocales->getListaIdiomas();
+$oDesplIdiomas->setNombre("idioma_enc");
 $oDesplIdiomas->setOpcion_sel($idioma_enc);
 $oDesplIdiomas->setBlanco(1);
 

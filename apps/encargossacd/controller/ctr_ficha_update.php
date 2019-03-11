@@ -124,7 +124,7 @@ case "nuevo": //nuevo
 	//$oEncargo->setDesc_lugar($desc_lugar);
 	$oEncargo->setObserv($Qobserv);
 	if ($oEncargo->DBGuardar() === false) {
-		echo _('Hay un error, no se ha guardado');
+		echo _("hay un error, no se ha guardado");
 	}
 
 	/* crear horario encargo */
@@ -182,7 +182,7 @@ case "editar": //modificar
 		$oEncargo->DBCarregar();
 		$oEncargo->setObserv($Qobserv);
 		if ($oEncargo->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 		/* modificar horario encargo */
 		// horario de mañana (m-matí)
@@ -206,7 +206,7 @@ case "editar": //modificar
 		$oEncargoSacd->DBCarregar();
 		$oEncargoSacd->setF_fin($oF_fin);
 		if ($oEncargoSacd->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 		// también a todos los horarios
 		$id_nom = $oEncargoSacd->getId_nom();
@@ -250,12 +250,12 @@ case "editar": //modificar
 				$cEncargosSacd2 = $GesEncargoSacd2->getEncargosSacd($aWhere);
 				foreach ($cEncargosSacd2 as $oEncargoSacd2) { // aunque sólo debería haber una.
 					if ($oEncargoSacd2->DBEliminar() === false) {
-						echo _('Hay un error, no se ha eliminado');
+						echo _("hay un error, no se ha eliminado");
 					}
 				}
 				$oEncargoSacd->setModo($modo);
 				if ($oEncargoSacd->DBGuardar() === false) {
-					echo _('Hay un error, no se ha guardado');
+					echo _("hay un error, no se ha guardado");
 				}
 			}
 			$QAid_sacd[0]=$Qid_sacd_titular;
@@ -273,7 +273,7 @@ case "editar": //modificar
 			$aOperador['modo'] = '~';
 			$cEncargosSacd = $GesEncargoSacd->getEncargosSacd($aWhere,$aOperador);
             $id_item_t_sacd = 0;
-			if (count($cEncargosSacd)>1) echo _('Error con las tareas');
+			if (count($cEncargosSacd)>1) echo _("Error con las tareas");
 			foreach ($cEncargosSacd as $oEncargoSacd) { // se supone que sólo hay uno.
 				$id_item_t_sacd=$oEncargoSacd->getId_item();
 			}
@@ -301,7 +301,7 @@ case "editar": //modificar
 				if ($actual_id_sacd_suplente!=$Qid_sacd_suplente) {
 					$oEncargoSacd->setF_fin($oF_fin);
 					if ($oEncargoSacd->DBGuardar() === false) {
-						echo _('Hay un error, no se ha guardado');
+						echo _("hay un error, no se ha guardado");
 					}
 					$GesEncargoTipo->insert_sacd($Qid_enc,$Qid_sacd_suplente,4);
 				}
@@ -314,7 +314,7 @@ case "editar": //modificar
 			$oEncargoSacd->DBCarregar();
 			$oEncargoSacd->setF_fin($oF_fin);
 			if ($oEncargoSacd->DBGuardar() === false) {
-				echo _('Hay un error, no se ha guardado');
+				echo _("hay un error, no se ha guardado");
 			}
 		}
 	}

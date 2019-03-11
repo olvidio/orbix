@@ -389,7 +389,7 @@ switch ($Qque) {
 		if (!empty($Qcantidad)) $oTarifa->setCantidad($Qcantidad);
 		if (!empty($Qobserv)) $oTarifa->setObserv($Qobserv);
 		if ($oTarifa->DBGuardar() === false) {
-			echo _("Hay un error, no se ha guardado");
+			echo _("hay un error, no se ha guardado");
 		}
 		break;
 	case "borrar":
@@ -398,7 +398,7 @@ switch ($Qque) {
 			$oTarifa = new Tarifa();
 			$oTarifa->setId_item($Qid_item);
 			if ($oTarifa->DBEliminar() === false) {
-				echo _('Hay un error, no se ha eliminado');
+				echo _("hay un error, no se ha eliminado");
 			}
 		} else {
             $Qque = (string)  \filter_input(INPUT_POST, 'que');
@@ -418,7 +418,7 @@ switch ($Qque) {
 			$oTarifa->DBCarregar();
 			if (isset($cantidad)) $oTarifa->setCantidad($cantidad);
 			if ($oTarifa->DBGuardar() === false) {
-				echo _("Hay un error, no se ha guardado");
+				echo _("hay un error, no se ha guardado");
 			}
 		}
 		break;
@@ -435,7 +435,7 @@ switch ($Qque) {
 			$modo = $oTipoTarifa->getModo();
 			$observ = $oTipoTarifa->getObserv();
 		}
-		$a_opciones=array(0=>_('por dia'),1=>_('total'));
+		$a_opciones=array(0=>_("por dia"),1=>_("total"));
 		$oDespl = new Desplegable('modo',$a_opciones,$modo,0);
 		
 		$oHash = new web\Hash();
@@ -457,9 +457,9 @@ switch ($Qque) {
 		$txt.='<br>';
 		$txt.=_("observaciones")." <input type=text size=25 name=observ value=\"$observ\">";
 		$txt.='<br><br>';
-		$txt.="<input type='button' value='". _('guardar') ."' onclick=\"fnjs_guardar('#frm_tarifa','tar_update');\" >";
-		$txt.="<input type='button' value='". _('eliminar') ."' onclick=\"fnjs_guardar('#frm_tarifa','tar_eliminar');\" >";
-		$txt.="<input type='button' value='". _('cancel') ."' onclick=\"fnjs_cerrar();\" >";
+		$txt.="<input type='button' value='". _("guardar") ."' onclick=\"fnjs_guardar('#frm_tarifa','tar_update');\" >";
+		$txt.="<input type='button' value='". _("eliminar") ."' onclick=\"fnjs_guardar('#frm_tarifa','tar_eliminar');\" >";
+		$txt.="<input type='button' value='". _("cancel") ."' onclick=\"fnjs_cerrar();\" >";
 		$txt.="</form> ";
 		echo $txt;
 		break;
@@ -480,14 +480,14 @@ switch ($Qque) {
 		if (isset($Qmodo)) $oTipoTarifa->setModo($Qmodo);
 		if (isset($Qobserv)) $oTipoTarifa->setObserv($Qobserv);
 		if ($oTipoTarifa->DBGuardar() === false) {
-			echo _("Hay un error, no se ha guardado");
+			echo _("hay un error, no se ha guardado");
 		}
 		break;
 	case "tar_eliminar":
 		$oTipoTarifa = new TipoTarifa($_POST['id_tarifa']);
 		$oTipoTarifa->DBCarregar();
 		if ($oTipoTarifa->DBEliminar() === false) {
-			echo _("Hay un error, no se ha borrado");
+			echo _("hay un error, no se ha borrado");
 		}
 		break;
 }

@@ -27,7 +27,7 @@ $Qdl_propia = (string) \filter_input(INPUT_POST, 'dl_propia');
 switch($Qque) {
 	case 'lista':
         $Qid_fase_nueva = (string) \filter_input(INPUT_POST, 'id_fase_nueva');
-		if (empty($Qid_fase_nueva)) exit('<h2>'._('Debe poner la fase nueva').'</h2>');
+		if (empty($Qid_fase_nueva)) exit('<h2>'._("Debe poner la fase nueva").'</h2>');
 
 		$Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 		$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
@@ -101,13 +101,13 @@ switch($Qque) {
 
 		$i=0;
 		$a_cabeceras=array();
-		$a_cabeceras[] = _('nom');
-		$a_cabeceras[] = _('última fase completada');
-		$a_cabeceras[] = _('cumple requisito');
+		$a_cabeceras[] = _("nom");
+		$a_cabeceras[] = _("última fase completada");
+		$a_cabeceras[] = _("cumple requisito");
 		
 		$a_botones=[
-                ['txt' => _('cambiar los marcados'), 'click' =>"fnjs_cambiar(\"#seleccionados\")" ],
-                ['txt' => _('ver proceso actividad'), 'click' =>"fnjs_ver_activ(\"#seleccionados\")" ],
+                ['txt' => _("cambiar los marcados"), 'click' =>"fnjs_cambiar(\"#seleccionados\")" ],
+                ['txt' => _("ver proceso actividad"), 'click' =>"fnjs_ver_activ(\"#seleccionados\")" ],
 		    ];
 
 		$a_valores=array();
@@ -157,7 +157,7 @@ switch($Qque) {
 					$num_ok++;
 				}
 				if ($id_fase_actual == 'START') {
-					$fase_actual = _('por empezar');
+					$fase_actual = _("por empezar");
 				} else {
 					$oActividadFase = new ActividadFase($id_fase_actual);
 					$fase_actual = $oActividadFase->getDesc_fase();
@@ -193,7 +193,7 @@ switch($Qque) {
 		);
 		$oHash->setArraycamposHidden($a_camposHidden);
 		
-		$msg = sprintf(_('%s actividades, %s para cambiar'),$num_activ,$num_ok);
+		$msg = sprintf(_("%s actividades, %s para cambiar"),$num_activ,$num_ok);
 		
 		$txt = '<form id="seleccionados" name="seleccionados" action="" method="post">';
 		$txt .= $oHash->getCamposHtml();
@@ -232,7 +232,7 @@ switch($Qque) {
     				    if (($_SESSION['oPerm']->have_perm($responsable))) {
 				            $oActividadProcesoTarea->setCompletado('t');
                             if ($oActividadProcesoTarea->DBGuardar() === false) {
-                                echo _("Hay un error, no se ha guardado");
+                                echo _("hay un error, no se ha guardado");
                             }
     				    } else {
                             echo _("No tiene permiso para completar la fase, no se ha guardado");
@@ -242,7 +242,7 @@ switch($Qque) {
                     // Cuando se va hacia atras (pongo sin completar las fases siguientes)
 				    $oActividadProcesoTarea->setCompletado('f');
                     if ($oActividadProcesoTarea->DBGuardar() === false) {
-                        echo _("Hay un error, no se ha guardado");
+                        echo _("hay un error, no se ha guardado");
                     }
 				}
 			}

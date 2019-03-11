@@ -30,13 +30,13 @@ $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 
 $titulo = core\strtoupper_dlb(_("periodo del listado del año próximo"));
 $aOpciones =  array(
-					'tot_any' => _('todo el año'),
-					'trimestre_1'=>_('primer trimestre'),
-					'trimestre_2'=>_('segundo trimestre'),
-					'trimestre_3'=>_('tercer trimestre'),
-					'trimestre_4'=>_('cuarto trimestre'),
+					'tot_any' => _("todo el año"),
+					'trimestre_1'=>_("primer trimestre"),
+					'trimestre_2'=>_("segundo trimestre"),
+					'trimestre_3'=>_("tercer trimestre"),
+					'trimestre_4'=>_("cuarto trimestre"),
 					'separador'=>'---------',
-					'otro'=>_('otro')
+					'otro'=>_("otro")
 					);
 $oFormP = new PeriodoQue();
 $oFormP->setTitulo($titulo);
@@ -44,7 +44,7 @@ $oFormP->setFormName('modifica');
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
-$oFormP->setBoton("<input type=button name=\"buscar\" value=\""._('buscar')."\" onclick=\"fnjs_ver();\">");
+$oFormP->setBoton("<input type=button name=\"buscar\" value=\""._("buscar")."\" onclick=\"fnjs_ver();\">");
 
 
 $url_ajax = "apps/actividadescentro/controller/activ_ctr_ajax.php";

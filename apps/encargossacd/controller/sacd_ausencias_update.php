@@ -27,14 +27,14 @@ function modifica_sacd_ausencias($id_item,$id_enc,$id_nom,$f_ini,$f_fin){
 	$oEncargoSacd = new EncargoSacd($id_item);
 	if (empty($f_ini) && empty($f_fin)) {
 		if ($oEncargoSacd->DBEliminar() === false) {
-			echo _('Hay un error, no se ha eliminado');
+			echo _("hay un error, no se ha eliminado");
 		}
 	} else {
 		$oEncargoSacd->DBCarregar();
 		$oEncargoSacd->setF_ini($f_ini);
 		$oEncargoSacd->setF_fin($f_fin);
 		if ($oEncargoSacd->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 	}
 }
@@ -47,7 +47,7 @@ function insert_sacd_ausencias($id_enc,$id_nom,$modo,$f_ini,$f_fin){
 	$oEncargoSacd->setF_ini($f_ini);
 	$oEncargoSacd->setF_fin($f_fin);
 	if ($oEncargoSacd->DBGuardar() === false) {
-		echo _('Hay un error, no se ha guardado');
+		echo _("hay un error, no se ha guardado");
 	}
 	$id_item_tarea_sacd = $oEncargoSacd->getId_item();
 	$oHorario = new EncargoSacdHorario();
@@ -57,7 +57,7 @@ function insert_sacd_ausencias($id_enc,$id_nom,$modo,$f_ini,$f_fin){
 	$oHorario->setF_ini($f_ini);
 	$oHorario->setF_fin($f_fin);
 	if ($oHorario->DBGuardar() === false) {
-		echo _('Hay un error, no se ha guardado');
+		echo _("hay un error, no se ha guardado");
 	}
 }
 

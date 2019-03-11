@@ -189,10 +189,10 @@ if ($Qcdc_sel < 10) { //Para buscar por casas.
 	foreach ($aUbis as $id_ubi) {
 		$a_cdc=array();
 		if (empty($id_ubi)) {
-			$nombre_ubi= _('por determinar');
+			$nombre_ubi= _("por determinar");
 			$cdc[$p]="u#2#$nombre_ubi"; // hay que poner un id_ubi para que vaya bien la función de dibujar el calendario.
 		} elseif ($id_ubi == 1) {
-			$nombre_ubi= _('otros lugares');
+			$nombre_ubi= _("otros lugares");
 			$cdc[$p]="u#$id_ubi#$nombre_ubi";
 		} else {
 			$oCasa = Ubi::NewUbi($id_ubi);

@@ -359,7 +359,7 @@ $oPlanning->setDd(3);
 $oPlanning->setInicio($oIniPlanning);
 $oPlanning->setFin($oFinPlanning);
 // ---------------- html ---------------------------------------------
-if ($z==1) { $titulo = $cabeceras_por_zona[$z]; } else { $titulo = _('planning por zonas'); }
+if ($z==1) { $titulo = $cabeceras_por_zona[$z]; } else { $titulo = _("planning por zonas"); }
 echo "<span id=\"span_exportar\"  title=\"$titulo\">";
 for ( $i=1;$i <= $z; $i++) {
 	$a_actividades = $actividades_por_zona[$i];

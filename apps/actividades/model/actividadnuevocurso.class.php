@@ -110,7 +110,7 @@ class ActividadNuevoCurso {
             $rta_txt.=$oActividad->getNom_activ()."<br>";
         }
         if (!empty($rta_txt)) {
-            $txt .= _('quedan actividades sin eliminar, porque no estan en proyecto').":<br>";
+            $txt .= _("quedan actividades sin eliminar, porque no estan en proyecto").":<br>";
             $txt .= $rta_txt;
         }
         return $txt;
@@ -202,7 +202,7 @@ class ActividadNuevoCurso {
                 $newEncargado = clone $oCentroEncargado;
                 $newEncargado->setId_activ($id_actividad_new);
                 if ($newEncargado->DBGuardar() === false) {
-                    echo _('Hay un error, no se ha guardado');
+                    echo _("hay un error, no se ha guardado");
                 }
             }
         }

@@ -25,7 +25,7 @@ require_once ("apps/core/global_object.inc");
 
 $oDesplPosiblesTemporadas = new Desplegable();
 $oDesplPosiblesTemporadas ->setNombre('temporada');
-$oDesplPosiblesTemporadas ->setOpciones(array('A'=>_('alta'),'B'=>_('baja')));
+$oDesplPosiblesTemporadas ->setOpciones(array('A'=>_("alta"),'B'=>_("baja")));
 $oDesplPosiblesTemporadas ->setOpcion_sel('A');
 
 $Qid_item = (string) \filter_input(INPUT_POST, 'id_item');

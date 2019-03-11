@@ -39,8 +39,8 @@ $GesEncargoHorario = new GestorEncargoHorario();
 $cEncargoHorarios = $GesEncargoHorario->getEncargoHorarios(array('id_enc'=>$Qid_enc)); 
 
 
-$a_botones=array( array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(\"#seleccionados\")" ) ,
-				array( 'txt' => _('eliminar'), 'click' =>"fnjs_borrar(\"#seleccionados\")" ) 
+$a_botones=array( array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(\"#seleccionados\")" ) ,
+				array( 'txt' => _("eliminar"), 'click' =>"fnjs_borrar(\"#seleccionados\")" ) 
 				);
 $a_botones = [];
 

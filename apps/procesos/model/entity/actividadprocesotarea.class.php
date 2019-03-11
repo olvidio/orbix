@@ -434,7 +434,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 		if (!isset($this->in_orden)) {
 			$this->DBCarregar();
 		}
-		if (empty($this->in_orden)) printf(_('No debería ser 0. En %s, linea %s'), __FILE__,__LINE__);
+		if (empty($this->in_orden)) printf(_("No debería ser 0. En %s, linea %s"), __FILE__,__LINE__);
 		return $this->in_orden;
 	}
 	/**

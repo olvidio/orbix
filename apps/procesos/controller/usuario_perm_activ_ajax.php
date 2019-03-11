@@ -54,10 +54,10 @@ switch($Qsalida) {
 		$campo = $_POST['campo'];
 		$id_item = $_POST['id_item'];
 		
-		$a_operadores = array ( "=" => _('igual'),
-							"<" => _('menor'),
-							">" =>  _('mayor'),
-							"regexp" => _('regExp')
+		$a_operadores = array ( "=" => _("igual"),
+							"<" => _("menor"),
+							">" =>  _("mayor"),
+							"regexp" => _("regExp")
 							);
 
 		if (!empty($id_item)) {
@@ -78,11 +78,11 @@ switch($Qsalida) {
 			$chk_new = 'checked';
 		}
 		$txt2 = '<tr>';
-		$txt2 .= '<td>'._('avisar si el valor').':';
-		$txt2 .= "<input type=\"checkbox\" $chk_new name=\"valor_new\">"._('nuevo');
-		$txt2 .= "<input type=\"checkbox\" $chk_old name=\"valor_old\">"._('actual');
+		$txt2 .= '<td>'._("avisar si el valor").':';
+		$txt2 .= "<input type=\"checkbox\" $chk_new name=\"valor_new\">"._("nuevo");
+		$txt2 .= "<input type=\"checkbox\" $chk_old name=\"valor_old\">"._("actual");
 		$txt2 .= '</td></tr>';
-		$txt2 .= '<tr><td>'._('es').':';
+		$txt2 .= '<tr><td>'._("es").':';
 		foreach ($a_operadores as $op => $nom_op) {
 			if (empty($operador)) {
 				$chk_radio = ($op == '=')? 'checked' : '';
@@ -92,7 +92,7 @@ switch($Qsalida) {
 			$txt2 .= "<input type=\"radio\" $chk_radio name=\"operador\" value=\"$op\">$nom_op";
 		}
 		$txt2 .= '</td></tr>';
-		$txt2 .= '<tr><td>'._('a').':';
+		$txt2 .= '<tr><td>'._("a").':';
 		$txt3 = '<input type="input" name="valor" value="'.$valor.'">';
 		if ($campo == 'id_ubi') {
 
@@ -158,9 +158,9 @@ switch($Qsalida) {
 		$txt.=$txt2;
 		$txt.='</table>';
 		$txt.='<br><br>';
-		$txt.="<input type='button' value='". _('guardar') ."' onclick=\"fnjs_guardar('#frm_cond','guardar');\" >";
-		$txt.="<input type='button' value='". _('eliminar') ."' onclick=\"fnjs_guardar('#frm_cond','eliminar');\" >";
-		$txt.="<input type='button' value='". _('cancel') ."' onclick=\"fnjs_cerrar();\" >";
+		$txt.="<input type='button' value='". _("guardar") ."' onclick=\"fnjs_guardar('#frm_cond','guardar');\" >";
+		$txt.="<input type='button' value='". _("eliminar") ."' onclick=\"fnjs_guardar('#frm_cond','eliminar');\" >";
+		$txt.="<input type='button' value='". _("cancel") ."' onclick=\"fnjs_cerrar();\" >";
 		$txt.="</form> ";
 		echo $txt;
 
@@ -189,20 +189,20 @@ switch($Qsalida) {
 		$obj = $_POST['tabla_obj'];
 		$oTabla = new $obj;
 		$cDatosCampos = $oTabla->getDatosCampos();
-		$a_campos = array('todos'=>_('todos'), 'separador'=>'--------');
+		$a_campos = array('todos'=>_("todos"), 'separador'=>'--------');
 		$html = "<td></td><td><table><tr><td>";
-		$html .="[<span class='link' onclick='fnjs_selectAll(\"#perm_usuario\",\"{$obj}[]\",\"all\");'>"._('todos')."</span>]";
-		$html .="  [<span class='link' onclick='fnjs_selectAll(\"#perm_usuario\",\"{$obj}[]\",\"none\");'>"._('ninguno')."</span>]";
-		$html .="  [<span class='link' onclick='fnjs_selectAll(\"#perm_usuario\",\"{$obj}[]\",\"toggle\");'>"._('invertir')."</span>]";
-		$html .= "</td><td>"._('condición')."</td><td></td></tr>";
-		$condicion = _('cualquier cambio');
+		$html .="[<span class='link' onclick='fnjs_selectAll(\"#perm_usuario\",\"{$obj}[]\",\"all\");'>"._("todos")."</span>]";
+		$html .="  [<span class='link' onclick='fnjs_selectAll(\"#perm_usuario\",\"{$obj}[]\",\"none\");'>"._("ninguno")."</span>]";
+		$html .="  [<span class='link' onclick='fnjs_selectAll(\"#perm_usuario\",\"{$obj}[]\",\"toggle\");'>"._("invertir")."</span>]";
+		$html .= "</td><td>"._("condición")."</td><td></td></tr>";
+		$condicion = _("cualquier cambio");
 		$cambio_camp = '';
 		foreach ($cDatosCampos as $oDatosCampo) {
 			$nom_camp = $oDatosCampo->getNom_camp();
 			$etiqueta = $oDatosCampo->getEtiqueta();
 			if ($key=array_search($nom_camp,$a_campos_sel)) { 
 				$chk_camp = 'checked';
-				$condicion = empty($a_condicion_sel[$key])? _('cualquier cambio') : $a_condicion_sel[$key];
+				$condicion = empty($a_condicion_sel[$key])? _("cualquier cambio") : $a_condicion_sel[$key];
 				$id_item = $a_item_sel[$key];
 				$cambio_camp = $a_cambio_camp_sel[$key];
 			} else {
@@ -216,19 +216,19 @@ switch($Qsalida) {
 					$chk_camp = 'checked';
 					$id_item = '';
 					$cambio_camp = '';
-					$condicion = _('ja veurem');
+					$condicion = _("ja veurem");
 				} else {
 					$chk_camp = '';
 					$id_item = '';
 					$cambio_camp = '';
-					$condicion = _('cualquier cambio');
+					$condicion = _("cualquier cambio");
 				}
 			}
 			$id = $obj.'_'.$nom_camp;
 			$id_cond = $obj.'_'.$nom_camp.'_cond';
 			$td_item = $obj.'_'.$nom_camp.'_item';
 			$td_cond = "td_$id_cond";
-			$txt_mod = "<span class='link' onclick='fnjs_modificar(\"$obj\",\"$nom_camp\",\"$id_item\");'>"._('modificar condición')."</span>";
+			$txt_mod = "<span class='link' onclick='fnjs_modificar(\"$obj\",\"$nom_camp\",\"$id_item\");'>"._("modificar condición")."</span>";
 			$html .= "<tr><td>";
 			$html .= "<input type='hidden' id=$td_item name=$td_item value=\"$id_item\" >";
 			$html .= "<input type='checkbox' name=\"{$obj}[]\" value=$id_cond $chk_camp >$etiqueta</td>";

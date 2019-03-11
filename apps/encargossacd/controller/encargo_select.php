@@ -83,9 +83,9 @@ $go_to="session@sel";
 */
 
 
-$a_botones=array( array( 'txt' => _('horario'), 'click' =>"fnjs_horario(\"#seleccionados\")" ) ,
-				array( 'txt' => _('modificar'), 'click' =>"fnjs_modificar(\"#seleccionados\")" ) ,
-				array( 'txt' => _('eliminar'), 'click' =>"fnjs_borrar(\"#seleccionados\")" ) 
+$a_botones=array( array( 'txt' => _("horario"), 'click' =>"fnjs_horario(\"#seleccionados\")" ) ,
+				array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(\"#seleccionados\")" ) ,
+				array( 'txt' => _("eliminar"), 'click' =>"fnjs_borrar(\"#seleccionados\")" ) 
 				);
 
 $a_cabeceras=array( _("sección"),array('name'=>_("descripción"),'formatter'=>'clickFormatter'), _("lugar"), _("descripción lugar"), _("idioma"), _("zona") );
@@ -115,8 +115,13 @@ foreach ($cEncargos as $oEncargo) {
 	$oGesEncargoTipo = new GestorEncargoTipo();
 	$a_seccion = $oGesEncargoTipo->getArraySeccion();
 	$seccion = $a_seccion[$sf_sv];
-	$oGseccion = new EncargoConstants();
-	$idioma=EncargoConstants::ARRAY_IDIOMAS[$idioma_enc];
+
+	$idioma = '';
+	$GesLocales = new usuarios\model\entity\GestorLocal();
+	$cIdiomas = $GesLocales->getLocales(['idioma' => $idioma_enc]);
+	if (is_array($cIdiomas) && count($cIdiomas) > 0) {
+	   $idioma = $cIdiomas[0]->getNom_idioma();
+	}
 	
 	if ($sf_sv==2) $a_valores[$i]['clase']="sf";
 	

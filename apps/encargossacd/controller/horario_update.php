@@ -64,7 +64,7 @@ switch ($Qmod) {
 		$oEncargoHorario->setN_sacd($Qn_sacd);
 		$oEncargoHorario->setMes($Qmes);
 		if ($oEncargoHorario->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 		break;
 	case "editar": 
@@ -88,7 +88,7 @@ switch ($Qmod) {
 		$oEncargoHorario->setN_sacd($Qn_sacd);
 		$oEncargoHorario->setMes($Qmes);
 		if ($oEncargoHorario->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 		break;
 	case "eliminar":

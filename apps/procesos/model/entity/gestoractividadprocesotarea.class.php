@@ -68,8 +68,8 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	            return $iid_fase;
 	        }
 	        if (empty($iid_fase) || $iid_fase === 'SIN') {
-	            //echo sprintf(_('esta actividad: %s no tiene ninguna fase. Se está generando...'),$oActividad->getNom_activ());
-	            echo '<br>'._('ATENCIÓN: puede que tenga que actualizar la página para que salgan todas las actividades.');
+	            //echo sprintf(_("esta actividad: %s no tiene ninguna fase. Se está generando..."),$oActividad->getNom_activ());
+	            echo '<br>'._("ATENCIÓN: puede que tenga que actualizar la página para que salgan todas las actividades.");
 	            echo '<br>';
 	            return $this->generarProceso($iid_activ);
 	        }

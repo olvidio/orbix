@@ -28,7 +28,7 @@ switch ($Qque) {
         $Qid_ubi = (string)  \filter_input(INPUT_POST, 'id_ubi');
         $Qyear = (string)  \filter_input(INPUT_POST, 'year');
         $Qletra = (string)  \filter_input(INPUT_POST, 'letra');
-		$letra = empty($Qletra)? _('nueva') : $Qletra;
+		$letra = empty($Qletra)? _("nueva") : $Qletra;
 		
 		$oHash = new web\Hash();
         $a_camposHidden = array(
@@ -53,13 +53,13 @@ switch ($Qque) {
 			$oGesTipoTarifa = new GestorTipoTarifa();
 			$oTipoTarifas = $oGesTipoTarifa->getListaTipoTarifas($miSfsv);
 			$oTipoTarifas->setNombre('id_tarifa');
-			$txt.=_('tarifa');
+			$txt.=_("tarifa");
 			$txt.= $oTipoTarifas->desplegable();
 			$txt.='<br>';
 		}
-		$txt.=_('nuevo importe') .": <input type=text size=6 id='cantidad' name='cantidad' onblur=\"fnjs_comprobar_dinero('#cantidad');\"> "._('€')."<br>";
-		$txt.="<input type='button' value='". _('guardar') ."' onclick=\"fnjs_guardar('#frm_tarifa_ubi');\" >";
-		$txt.="<input type='button' value='". _('cancel') ."' onclick='fnjs_cerrar();' >";
+		$txt.=_("nuevo importe") .": <input type=text size=6 id='cantidad' name='cantidad' onblur=\"fnjs_comprobar_dinero('#cantidad');\"> "._("€")."<br>";
+		$txt.="<input type='button' value='". _("guardar") ."' onclick=\"fnjs_guardar('#frm_tarifa_ubi');\" >";
+		$txt.="<input type='button' value='". _("cancel") ."' onclick='fnjs_cerrar();' >";
 		$txt.="</form> ";
 		echo $txt;
 		break;
@@ -68,7 +68,7 @@ switch ($Qque) {
         $Qyear = (string)  \filter_input(INPUT_POST, 'year');
 
 		$miSfsv = ConfigGlobal::mi_sfsv();
-		$a_seccion=array(1=>_('sv'),2=>_('sf'));
+		$a_seccion=array(1=>_("sv"),2=>_("sf"));
 		// listado de tarifas por casa y año
 		if (!empty($Qid_ubi) && !empty($Qyear)) {
             $oGesTarifa = new GestorTarifa();
@@ -95,7 +95,7 @@ switch ($Qque) {
 			$id_tarifa = $oTarifa->getId_tarifa();
 			$cantidad = $oTarifa->getCantidad();
 			
-			$cantidad = "$cantidad "._('€');
+			$cantidad = "$cantidad "._("€");
 
 			$oGesTipoActivTarifas = new GestorTipoActivTarifa();
 			$cTipoActivTarifas = $oGesTipoActivTarifas->getTipoActivTarifas(array('id_tarifa'=>$id_tarifa));
@@ -155,7 +155,7 @@ switch ($Qque) {
 		echo $oLista->lista();
 		// sólo pueden añadir: adl, pr i actividades
 		if (($_SESSION['oPerm']->have_perm("adl")) || ($_SESSION['oPerm']->have_perm("pr")) || ($_SESSION['oPerm']->have_perm("actividades"))) {
-			echo '<br><span class="link" onclick="fnjs_modificar(\'nuevo\');">'._('añadir tarifa').'</span>';
+			echo '<br><span class="link" onclick="fnjs_modificar(\'nuevo\');">'._("añadir tarifa").'</span>';
 		}
 		break;
 	case "update":
@@ -179,7 +179,7 @@ switch ($Qque) {
 		if (!empty($Qcantidad)) $oTarifa->setCantidad($Qcantidad);
 		if (!empty($Qobserv)) $oTarifa->setObserv($Qobserv);
 		if ($oTarifa->DBGuardar() === false) {
-			echo _("Hay un error, no se ha guardado");
+			echo _("hay un error, no se ha guardado");
 		}
 		break;
 	case "borrar":
@@ -188,7 +188,7 @@ switch ($Qque) {
 			$oTarifa = new Tarifa();
 			$oTarifa->setId_item($Qid_item);
 			if ($oTarifa->DBEliminar() === false) {
-				echo _('Hay un error, no se ha eliminado');
+				echo _("hay un error, no se ha eliminado");
 			}
 		} else {
             $Qque = (string)  \filter_input(INPUT_POST, 'que');
@@ -208,7 +208,7 @@ switch ($Qque) {
 			$oTarifa->DBCarregar();
 			if (isset($cantidad)) $oTarifa->setCantidad($cantidad);
 			if ($oTarifa->DBGuardar() === false) {
-				echo _("Hay un error, no se ha guardado");
+				echo _("hay un error, no se ha guardado");
 			}
 		}
 		break;
@@ -253,7 +253,7 @@ switch ($Qque) {
 		echo $oLista->lista();
 		// sólo pueden añadir: adl, pr i actividades
 		if (($_SESSION['oPerm']->have_perm("adl")) || ($_SESSION['oPerm']->have_perm("pr")) || ($_SESSION['oPerm']->have_perm("actividades"))) {
-			echo '<br><span class="link" onclick="fnjs_modificar(\'nuevo\');">'._('nueva tarifa').'</span>';
+			echo '<br><span class="link" onclick="fnjs_modificar(\'nuevo\');">'._("nueva tarifa").'</span>';
 		}
 		break;
 	case 'tar_form':
@@ -269,7 +269,7 @@ switch ($Qque) {
 			$modo = $oTipoTarifa->getModo();
 			$observ = $oTipoTarifa->getObserv();
 		}
-		$a_opciones=array(0=>_('por dia'),1=>_('total'));
+		$a_opciones=array(0=>_("por dia"),1=>_("total"));
 		$oDespl = new Desplegable('modo',$a_opciones,$modo,0);
 		
 		$oHash = new web\Hash();
@@ -291,9 +291,9 @@ switch ($Qque) {
 		$txt.='<br>';
 		$txt.=_("observaciones")." <input type=text size=25 name=observ value=\"$observ\">";
 		$txt.='<br><br>';
-		$txt.="<input type='button' value='". _('guardar') ."' onclick=\"fnjs_guardar('#frm_tarifa','tar_update');\" >";
-		$txt.="<input type='button' value='". _('eliminar') ."' onclick=\"fnjs_guardar('#frm_tarifa','tar_eliminar');\" >";
-		$txt.="<input type='button' value='". _('cancel') ."' onclick=\"fnjs_cerrar();\" >";
+		$txt.="<input type='button' value='". _("guardar") ."' onclick=\"fnjs_guardar('#frm_tarifa','tar_update');\" >";
+		$txt.="<input type='button' value='". _("eliminar") ."' onclick=\"fnjs_guardar('#frm_tarifa','tar_eliminar');\" >";
+		$txt.="<input type='button' value='". _("cancel") ."' onclick=\"fnjs_cerrar();\" >";
 		$txt.="</form> ";
 		echo $txt;
 		break;
@@ -314,14 +314,14 @@ switch ($Qque) {
 		if (isset($Qmodo)) $oTipoTarifa->setModo($Qmodo);
 		if (isset($Qobserv)) $oTipoTarifa->setObserv($Qobserv);
 		if ($oTipoTarifa->DBGuardar() === false) {
-			echo _("Hay un error, no se ha guardado");
+			echo _("hay un error, no se ha guardado");
 		}
 		break;
 	case "tar_eliminar":
 		$oTipoTarifa = new TipoTarifa($_POST['id_tarifa']);
 		$oTipoTarifa->DBCarregar();
 		if ($oTipoTarifa->DBEliminar() === false) {
-			echo _("Hay un error, no se ha borrado");
+			echo _("hay un error, no se ha borrado");
 		}
 		break;
 }

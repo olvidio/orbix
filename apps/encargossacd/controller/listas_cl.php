@@ -7,6 +7,7 @@
 // INICIO Cabecera global de URL de controlador *********************************
 	use encargossacd\model\EncargoFunciones;
 use web\DateTimeLocal;
+use core\ConfigGlobal;
 
 require_once ("global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -20,9 +21,9 @@ include_once ("func_tareas.php");
 
 $any=date("Y");
 
-$cabecera_left=sprintf(_("Curso %s"),$curso);
-$cabecera_right=_("dlb");
-$cabecera_right_2=_("ref. cr 1/14, 10,c)");
+$cabecera_left = sprintf(_("Curso %s"),$curso);
+$cabecera_right = ConfigGlobal::mi_dele();
+$cabecera_right_2 = _("ref. cr 1/14, 10,c)");
 
 // ciudad de la dl
 $oEncargoFunciones = new EncargoFunciones();

@@ -3,24 +3,34 @@ namespace encargossacd\model;
 
 class EncargoConstants {
     
-    
-    const ARRAY_IDIOMAS = [
-        "ca_ES"=> "catalán",
-        "es_ES"=> "castellano",
-    ];
-    
+ 
+    // NO se usan, son solo para asegurar que exista la traducción
+    function traduccion () {
+        $txt = 
+        _("estudio"). 
+        _("descanso"). 
+        _("retiro"). 
+        _("otros"); 
+        
+        return $txt;
+    }
     
     const ARRAY_OPCIONES_ENCARGOS = [
         "5020" => "estudio",
         "5030" => "descanso",
-        "1110" => "rtm",
+        "1110" => "retiro",
         "6000" => "otros",
     ];
     
     // -------------------------------------------- complejo ----------------------------
     // NO se usan, son solo para asegurar que exista la traducción
-    function traduccion () {
-        $txt =  _("lunes").
+    function traduccion_c () {
+        $txt = 
+        _("estudio"). 
+        _("descanso"). 
+        _("retiro"). 
+        _("otros"). 
+        _("lunes").
         _("martes").
         _("miércoles").
         _("jueves").
@@ -46,6 +56,8 @@ class EncargoConstants {
         _("octubre").
         _("noviembre").
         _("diciembre")	;
+
+        return $txt;
     }
     
     const OPCIONES_DIA_SEMANA = [

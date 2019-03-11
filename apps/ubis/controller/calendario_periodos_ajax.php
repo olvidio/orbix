@@ -41,8 +41,8 @@ switch ($Qque) {
 		$txt.="<option value=2 >". _("sf") ."</option>";
 		$txt.="<option value=3 >". _("reservado") ."</option></select>";
 		$txt.='<br><br>';
-		$txt.="<input type='button' value='". _('guardar') ."' onclick=\"fnjs_guardar(this.form,'guardar');\" >";
-		$txt.="<input type='button' value='". _('cancel') ."' onclick=\"fnjs_cerrar();\" >";
+		$txt.="<input type='button' value='". _("guardar") ."' onclick=\"fnjs_guardar(this.form,'guardar');\" >";
+		$txt.="<input type='button' value='". _("cancel") ."' onclick=\"fnjs_cerrar();\" >";
 		$txt.="</form> ";
 		echo $txt;
 		break;
@@ -75,9 +75,9 @@ switch ($Qque) {
 		$txt.="<option value=2 $sel_sf>". _("sf") ."</option>";
 		$txt.="<option value=3 $sel_res>". _("reservado") ."</option></select>";
 		$txt.='<br><br>';
-		$txt.="<input type='button' value='". _('guardar') ."' onclick=\"fnjs_guardar(this.form,'guardar');\" >";
-		$txt.="<input type='button' value='". _('eliminar') ."' onclick=\"fnjs_guardar(this.form,'eliminar');\" >";
-		$txt.="<input type='button' value='". _('cancel') ."' onclick=\"fnjs_cerrar();\" >";
+		$txt.="<input type='button' value='". _("guardar") ."' onclick=\"fnjs_guardar(this.form,'guardar');\" >";
+		$txt.="<input type='button' value='". _("eliminar") ."' onclick=\"fnjs_guardar(this.form,'eliminar');\" >";
+		$txt.="<input type='button' value='". _("cancel") ."' onclick=\"fnjs_cerrar();\" >";
 		$txt.="</form> ";
 		echo $txt;
 		break;
@@ -141,7 +141,7 @@ switch ($Qque) {
 		echo $oLista->lista();
 		// Per afegir un periode
 		if ($permiso == 'modificar') {
-			$txt="<input type='button' value='". _('nuevo') ."' onclick=\"fnjs_modificar();\" >";
+			$txt="<input type='button' value='". _("nuevo") ."' onclick=\"fnjs_modificar();\" >";
 			echo $txt;
 		}
 		break;
@@ -213,7 +213,7 @@ switch ($Qque) {
 		if (!empty($Qf_fin)) $oCasaPeriodo->setF_fin($Qf_fin);
 		if (!empty($Qsfsv)) $oCasaPeriodo->setSfsv($Qsfsv);
 		if ($oCasaPeriodo->DBGuardar() === false) {
-			echo _("Hay un error, no se ha guardado");
+			echo _("hay un error, no se ha guardado");
 		}
 		break;
 	case "eliminar":
@@ -221,7 +221,7 @@ switch ($Qque) {
 		if (!empty($Qid_item)) {
 			$oCasaPeriodo = new CasaPeriodo($Qid_item);
 			if ($oCasaPeriodo->DBEliminar() === false) {
-				echo _('Hay un error, no se ha eliminado');
+				echo _("hay un error, no se ha eliminado");
 			}
 		} else {
 			$error_txt=_("no sé cuál he de borar");

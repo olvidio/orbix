@@ -149,7 +149,7 @@ switch($Qque) {
 				foreach ($a_zonas as $a_zona) {
 					$a_valores[$i][1]=$ap_nom;
 					$a_valores[$i][2]=$a_zona[0];
-					$a_valores[$i][3]=empty($a_zona[1])? _('no') : _('si');
+					$a_valores[$i][3]=empty($a_zona[1])? _("no") : _("si");
 					$i++;
 				}
 			} else {
@@ -178,7 +178,7 @@ switch($Qque) {
 						$oZonaSacd->setId_zona($Qid_zona);
 						$oZonaSacd->DBCarregar(); // para coger el id_item.
 						if ($oZonaSacd->DBEliminar() === false) {
-							echo _('Hay un error, no se ha eliminado');
+							echo _("hay un error, no se ha eliminado");
 						}
 					} else {
 						$oZonaSacd = new ZonaSacd();
@@ -187,7 +187,7 @@ switch($Qque) {
 						$oZonaSacd->setPropia('f');
 						$oZonaSacd->DBCarregar(); // para coger el id_item.
 						if ($oZonaSacd->DBGuardar() === false) {
-							echo _('Hay un error, no se ha guardado');
+							echo _("hay un error, no se ha guardado");
 						}
 					}
 				} else {
@@ -198,7 +198,7 @@ switch($Qque) {
 						$oZonaSacd->setId_zona($id_zona_new);
 						$oZonaSacd->setPropia('t');
 						if ($oZonaSacd->DBGuardar() === false) {
-							echo _('Hay un error, no se ha guardado');
+							echo _("hay un error, no se ha guardado");
 						}
 					} elseif (empty($id_zona_new)) {
 						$oZonaSacd = new ZonaSacd();
@@ -206,7 +206,7 @@ switch($Qque) {
 						$oZonaSacd->setId_zona($Qid_zona);
 						$oZonaSacd->DBCarregar(); // para coger el id_item.
 						if ($oZonaSacd->DBEliminar() === false) {
-							echo _('Hay un error, no se ha eliminado');
+							echo _("hay un error, no se ha eliminado");
 						}
 					} else {
 						$oZonaSacd = new ZonaSacd();
@@ -216,7 +216,7 @@ switch($Qque) {
 						$oZonaSacd->setId_zona($id_zona_new);
 						$oZonaSacd->setPropia('t');
 						if ($oZonaSacd->DBGuardar() === false) {
-							echo _('Hay un error, no se ha guardado');
+							echo _("hay un error, no se ha guardado");
 						}
 					}
 				}

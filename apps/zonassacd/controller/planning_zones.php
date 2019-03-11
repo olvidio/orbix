@@ -51,7 +51,7 @@ $oDesplZonas = $GesZonas->getListaZonas($id_nom_jefe);
 $oDesplZonas->setBlanco(0);
 // miro si se tiene opcion a ver alguna zona. La opcion blanco tiene que ser 0, sino la rta es <option></option>.
 $algo = $oDesplZonas->options();
-if (strlen($algo) < 1) exit(_('No tiene permiso para ver esta página'));
+if (strlen($algo) < 1) exit(_("No tiene permiso para ver esta página"));
 
 $perm_des = FALSE;
 if (($_SESSION['oPerm']->have_perm("des")) or ($_SESSION['oPerm']->have_perm("vcsd"))) {

@@ -314,7 +314,7 @@ switch ($Qque) {
 			foreach ($a_id_enc as $j => $val ) {
 				// las colatios y rtm los pongo al final
 				if ($a_id_tipo_enc[$j]==4002 || $a_id_tipo_enc[$j]==1110 || $a_id_tipo_enc[$j]==1210 ) {
-					$a_dedic_sacd[$j] = empty($a_dedic_sacd[$j])? _('crear horario') : $a_dedic_sacd[$j];
+					$a_dedic_sacd[$j] = empty($a_dedic_sacd[$j])? _("crear horario") : $a_dedic_sacd[$j];
 					$txt =  $a_dedic_sacd[$j];
 					$otros_enc.="<tr><td>".$a_desc_enc[$j]."</td><td colspan=3>$txt</td></tr>";
 					continue;
@@ -363,7 +363,7 @@ switch ($Qque) {
 				}
 				if ($a_modo[$j]!=4) { // Para el suplente no hay horario. 
 					if ($a_mod_horario[$j] == 3) {
-						$a_dedic_sacd[$j] = empty($a_dedic_sacd[$j])? _('crear horario') : $a_dedic_sacd[$j];
+						$a_dedic_sacd[$j] = empty($a_dedic_sacd[$j])? _("crear horario") : $a_dedic_sacd[$j];
 					?>
 						<td colspan=3><span class="link" onclick="fnjs_crear_horario(<?= $e ?>);"><?= $a_dedic_sacd[$j] ?></span></td>
 					<?php
@@ -466,12 +466,12 @@ switch ($Qque) {
 		if(!empty($cEncargoSacdObserv[0])) {
 			if (empty($Qobserv)) {
 			   if ($cEncargoSacdObserv[0]->DBEliminar() === false) {
-					echo _('Hay un error, no se ha eliminado');
+					echo _("hay un error, no se ha eliminado");
 				}
 			} else {
 				$cEncargoSacdObserv[0]->setObserv($Qobserv);
 				if ($cEncargoSacdObserv[0]->DBGuardar() === false) {
-					echo _('Hay un error, no se ha guardado');
+					echo _("hay un error, no se ha guardado");
 				}
 			}
 		} else {
@@ -479,7 +479,7 @@ switch ($Qque) {
 			$oEncargoSacdObserv->setId_nom($Qid_nom);
 			$oEncargoSacdObserv->setObserv($Qobserv);
 			if ($oEncargoSacdObserv->DBGuardar() === false) {
-				echo _('Hay un error, no se ha guardado');
+				echo _("hay un error, no se ha guardado");
 			}
 		}
 		break;

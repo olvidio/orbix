@@ -29,7 +29,7 @@ switch($Qque) {
 		$GesActividadProceso=new GestorActividadProcesoTarea();
 		$oLista = $GesActividadProceso->getActividadProcesoTareas(array('id_activ'=>$Qid_activ,'_ordre'=>'n_orden'));
 		$txt='<table>';
-		$txt.='<tr><td>'._('ok').'</td><td>'._('fase (tarea)').'</td><td>'._('responsable').'</td><td>'._('observaciones').'</td><td></td></tr>';
+		$txt.='<tr><td>'._("ok").'</td><td>'._("fase (tarea)").'</td><td>'._("responsable").'</td><td>'._("observaciones").'</td><td></td></tr>';
 		foreach($oLista as $oActividadProcesoTarea) {
 			$id_item = $oActividadProcesoTarea->getId_item();
 			$id_tipo_proceso = $oActividadProcesoTarea->getId_tipo_proceso();
@@ -64,7 +64,7 @@ switch($Qque) {
 			$txt.="<td>$responsable</td>";
 			$txt.= $obs;
 			if (($_SESSION['oPerm']->have_perm($responsable))) {
-				$txt.="<td><input type='button' name='b_guardar' value='"._('guardar')."' onclick='fnjs_guardar($id_item);'></td>";
+				$txt.="<td><input type='button' name='b_guardar' value='"._("guardar")."' onclick='fnjs_guardar($id_item);'></td>";
 			}
 			$txt .= '</tr>';
 		}
@@ -81,7 +81,7 @@ switch($Qque) {
 		$oFicha->setCompletado($Qcompletado);	
 		$oFicha->setObserv($Qobserv);	
 		if ($oFicha->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 		break;
 }

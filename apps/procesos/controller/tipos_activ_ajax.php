@@ -74,12 +74,12 @@ switch($Qque) {
 		$oDespl->setNombre('id_tipo_proceso');
 		if (!empty($id_tipo_proceso)) $oDespl->setOpcion_sel($id_tipo_proceso);
 
-		$txt=ucfirst(_('descripción'));
+		$txt=ucfirst(_("descripción"));
 		$txt.=":   <input type='text' id='nombre' name='nombre' value='$nombre'>";
-		$txt.=ucfirst(_('proceso'));
+		$txt.=ucfirst(_("proceso"));
 		$txt.=":   ".$oDespl->desplegable();
-		$txt.="<br><input type='button' name='b_guardar' value='"._('guardar')."' onclick='fnjs_guardar();'>";
-		$txt.="<input type='button' value='". _('cancel') ."' onclick='fnjs_cerrar();' >";
+		$txt.="<br><input type='button' name='b_guardar' value='"._("guardar")."' onclick='fnjs_guardar();'>";
+		$txt.="<input type='button' value='". _("cancel") ."' onclick='fnjs_cerrar();' >";
 		echo $txt;
 		break;
 	case 'update':
@@ -98,7 +98,7 @@ switch($Qque) {
 		}
 
 		if ($oFicha->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 		break;
 }

@@ -62,13 +62,13 @@ switch($Qque) {
 			$fase_previa=$oFase_previa->getDesc_fase();
 			$oTarea_previa = new ActividadTarea($oProceso->getId_tarea_previa());
 			$tarea_previa=$oTarea_previa->getDesc_tarea();
-			$mod="<span class=link onclick=fnjs_modificar($id_item) title='"._('modificar')."' >"._('modificar')."</span>";
-			$drop="<span class=link onclick=fnjs_eliminar($id_item) title='"._('eliminar')."' >"._('eliminar')."</span>";
-			$up="<span class=link onclick=fnjs_mover($id_item,'up') title='"._('mover hacia arriba')."' >+</span>";
-			$down="<span class=link onclick=fnjs_mover($id_item,'down') title='"._('mover hacia abajo')."' >-</span>";
+			$mod="<span class=link onclick=fnjs_modificar($id_item) title='"._("modificar")."' >"._("modificar")."</span>";
+			$drop="<span class=link onclick=fnjs_eliminar($id_item) title='"._("eliminar")."' >"._("eliminar")."</span>";
+			$up="<span class=link onclick=fnjs_mover($id_item,'up') title='"._("mover hacia arriba")."' >+</span>";
+			$down="<span class=link onclick=fnjs_mover($id_item,'down') title='"._("mover hacia abajo")."' >-</span>";
 
 			$txt.="<tr><td>($status_txt)</td><td>$i</td><td>$responsable</td><td colspan=3>$fase ($tarea)</td><td>$mod</td><td>$up</td><td>$down</td><td>$drop</td></tr>";
-			$txt.="<tr><td></td><td></td><td>&nbsp;&nbsp;&nbsp;"._('requisito').":</td><td>$fase_previa ($tarea_previa)</td></tr>";
+			$txt.="<tr><td></td><td></td><td>&nbsp;&nbsp;&nbsp;"._("requisito").":</td><td>$fase_previa ($tarea_previa)</td></tr>";
 		}
 		$txt.='</table>';
 		echo $txt;
@@ -80,7 +80,7 @@ switch($Qque) {
 		$rta = $oLista->setProcesosOrden($Qid_item,$Qorden);
 		$error = '';
 		if ($rta === false) {
-		    $error = _('Hay un error, no se ha movido');
+		    $error = _("hay un error, no se ha movido");
 		}
 		echo trim($error);
 		break;
@@ -128,14 +128,14 @@ switch($Qque) {
 		$oFicha->setId_fase_previa($Qid_fase_previa);	
 		$oFicha->setId_tarea_previa($Qid_tarea_previa);	
 		if ($oFicha->DBGuardar() === false) {
-			echo _('Hay un error, no se ha guardado');
+			echo _("hay un error, no se ha guardado");
 		}
 		break;
 	case 'eliminar':
 	    $Qid_item = (integer) \filter_input(INPUT_POST, 'id_item');
 		$oFicha = new Proceso(array('id_item'=>$Qid_item));
 		if ($oFicha->DBEliminar() === false) {
-			echo _('Hay un error, no se ha eliminado');
+			echo _("hay un error, no se ha eliminado");
 		}
 		break;
 }

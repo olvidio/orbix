@@ -197,7 +197,7 @@ if (is_array($cEncargos) && count($cEncargos) == 0) { // nuevo encargo
 								if ($h >1) $dedic_sacd[$e][0] .= " y ";
 								$dedic_sacd[$e][0] .= $texto_horario;
 							}
-							$dedic_sacd[$e][0] = empty($dedic_sacd[$e][0])? _('crear horario') : $dedic_sacd[$e][0];
+							$dedic_sacd[$e][0] = empty($dedic_sacd[$e][0])? _("crear horario") : $dedic_sacd[$e][0];
 							break;
 						case 2: // por módulos.
 						default:
@@ -245,7 +245,7 @@ if (is_array($cEncargos) && count($cEncargos) == 0) { // nuevo encargo
 								if ($h >1) $dedic_sacd[$e][$s] .= " y ";
 								$dedic_sacd[$e][$s] .= $texto_horario;
 							}
-							$dedic_sacd[$e][$s] = empty($dedic_sacd[$e][$s])? _('crear horario') : $dedic_sacd[$e][$s];
+							$dedic_sacd[$e][$s] = empty($dedic_sacd[$e][$s])? _("crear horario") : $dedic_sacd[$e][$s];
 							$dedicacion1.="<td>".$dedic_sacd[$e][$s]."</td></tr><tr>";
 							break;
 						case 2: // por módulos.

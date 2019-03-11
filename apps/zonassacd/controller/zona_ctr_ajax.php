@@ -115,7 +115,7 @@ switch($Qque) {
 				$oCentro->DBCarregar();
 				$oCentro->setId_zona($id_zona_new);
 				if ($oCentro->DBGuardar() === false) {
-					echo _("Hay un error, no se ha guardado.");
+					echo _("hay un error, no se ha guardado.");
 				}
 			}
 		} else {
@@ -126,7 +126,7 @@ switch($Qque) {
 				$oCentro->DBCarregar();
 				$oCentro->setId_zona('');
 				if ($oCentro->DBGuardar() === false) {
-					echo _("Hay un error, no se ha guardado.");
+					echo _("hay un error, no se ha guardado.");
 				}
 			}
 		}

@@ -314,7 +314,7 @@ class ZonaGrupo Extends core\ClasePropiedades {
 	function getDatosNombre_grupo() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nombre_grupo'));
-		$oDatosCampo->setEtiqueta(_("nombre_grupo"));
+		$oDatosCampo->setEtiqueta(_("nombre del grupo"));
 		$oDatosCampo->setTipo('texto');
 		$oDatosCampo->setArgument('30');
 		return $oDatosCampo;

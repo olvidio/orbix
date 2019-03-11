@@ -76,7 +76,7 @@ switch ($Qmod) {
         $oEncargo->setDesc_lugar($Qdesc_lugar);
         $oEncargo->setObserv($Qobserv);
         if ($oEncargo->DBGuardar() === false) {
-            echo _('Hay un error, no se ha guardado');
+            echo _("hay un error, no se ha guardado");
         }
         $oEncargo->DBCarregar();
 
@@ -109,7 +109,7 @@ switch ($Qmod) {
         $oEncargo->setDesc_lugar($Qdesc_lugar);
         $oEncargo->setObserv($Qobserv);
         if ($oEncargo->DBGuardar() === false) {
-            echo _('Hay un error, no se ha guardado');
+            echo _("hay un error, no se ha guardado");
         }
 
         break;
@@ -118,7 +118,7 @@ switch ($Qmod) {
             $id_enc=strtok($_POST['sel'][0],"#");
             $oEncargo = new Encargo(array('id_enc'=>$id_enc));
             if ($oEncargo->DBEliminar() === false) {
-                echo _('Hay un error, no se ha eliminado');
+                echo _("hay un error, no se ha eliminado");
             }
             // También elimino todos los horarios con sus excepciones (por el postgres: foreginKey)
             /*

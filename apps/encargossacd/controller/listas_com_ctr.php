@@ -78,7 +78,7 @@ foreach ($cCentros as $oCentro) {
 	$cEncargos = $GesEncargos->getEncargos(array('id_ubi'=>$id_ubi,'id_tipo_enc'=>'(1|2|3).00'),array('id_tipo_enc'=>'~'));
 	if (is_array($cEncargos) && count($cEncargos) == 0) continue;
 	if (is_array($cEncargos) && count($cEncargos) != 1) {
-		echo _('sólo debería haber uno');
+		echo _("sólo debería haber uno");
 		continue;
 	}
 	$id_enc=$cEncargos[0]->getId_enc();
