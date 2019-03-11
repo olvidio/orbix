@@ -23,12 +23,10 @@
 30	\N	scdl/registro/registro_distribucion.php	\N	\N
 31	\N	vcsd/scheduler/dinars.php	\N	\N
 33	\N	scdl/documentos/equipajes_ver.php	\N	\N
-34	\N	des/zona_sacd_ajax.php	\N	\N
 35	\N	programas/sm-agd/lista_aniversarios_sacd.php	\N	\N
 36	\N	scdl/registro/can_buscar.php	\N	\N
 37	\N	programas/dossiers/sql_1010.php	\N	\N
 41	\N	scdl/registro/pen_of_buscar.php	\N	\N
-42	\N	des/zona_sacd.php	\N	\N
 45	\N	programas/casa_que.php	\N	\N
 46	\N	sistema/avisos_generar_tabla.php	\N	\N
 47	\N	des/sssc_celebraciones_lista.php	\N	\N
@@ -57,7 +55,6 @@
 82	\N	scdl/documentos/equipajes_nuevo.php	\N	\N
 83	\N	scdl/registro/can_que_imprimir.php	\N	\N
 84	\N	programas/sm-agd/periodo.php	\N	\N
-85	\N	des/zona_ctr.php	\N	\N
 86	\N	vcsd/scheduler/sortides.php	\N	\N
 87	\N	des/periodo.php	\N	\N
 89	\N	programas/casas_resumen.php	\N	\N
@@ -87,13 +84,11 @@
 118	\N	vcsd/dlbf/lay-hor.php	\N	\N
 120	\N	vcsd/escritos_cr/search.php	\N	\N
 123	\N	programas/lista_para_historicos.php	\N	\N
-124	\N	des/tareas/list_index.php	\N	\N
 125	\N	programas/sm-agd/cr1_05_E4.php	\N	\N
 126	\N	sg/que_centro_sg.php	\N	\N
 48	ubis	apps/ubis/controller/list_ctr.php	\N	listas de ubis
 92	devel	apps/menus/controller/menus_exportar.php	\N	exportar menus
 40	admin	apps/menus/controller/menus_importar.php	\N	importar menus
-127	\N	des/tareas/sacd_ausencias.php	\N	\N
 128	\N	programas/act_tarifas.php	\N	\N
 129	\N	programas/lista_activ_sg_que.php	\N	\N
 104	actividadestudios	apps/actividadestudios/controller/matricular.php	\N	matricular
@@ -106,12 +101,14 @@
 135	\N	sg/que_resumen.php	\N	\N
 137	\N	des/libros/que_libros.php	\N	\N
 7	actividades	apps/ubis/controller/calendario_periodos.php	\N	Calendario Periodos
-139	\N	des/planning_zones.php	\N	\N
 143	\N	programas/lista_activ_sr_que.php	\N	\N
 32	procesos	apps/procesos/controller/procesos_select.php	\N	procesos select
 39	actividadessacd	apps/actividadessacd/controller/activ_sacd.php	\N	Atención sacd
 23	encargossacd	apps/encargossacd/controller/que_tipo_de_encargo.php	\N	Tipo de encargo
 14	encargossacd	apps/encargossacd/controller/sacd_ficha.php	\N	Encargo sacd ficha
+85	zonassacd	apps/zonassacd/controller/zona_ctr.php	\N	Zona-ctr
+42	zonassacd	apps/zonassacd/controller/zona_sacd.php	\N	Zona sacd
+139	zonassacd	apps/zonassacd/controller/planning_zones.php	\N	Planning por zonas
 144	\N	scdl/documentos/cabecera_pie_txt.php	\N	\N
 145	\N	scdl/tabla_mails_ex.php	\N	\N
 146	\N	scdl/centros_que.php	\N	\N
@@ -174,3 +171,6 @@
 43	actividadescentro	apps/actividadescentro/controller/activ_ctr.php	\N	actividades centro
 156	encargossacd	apps/encargossacd/controller/encargo_select.php	\N	Encargos lista
 62	encargossacd	apps/encargossacd/controller/ctr_ficha.php	\N	Ficha encargos ctr
+127	encargossacd	apps/encargossacd/controller/sacd_ausencias.php	\N	Ausencias sacd
+34	zonassacd	apps/zonassacd/controller/zona_sacd_ajax.php	\N	Zona sacd ajax
+124	encargossacd	apps/encargossacd/controller/listas_index.php	\N	Encargos Listas

@@ -71,7 +71,6 @@
 270	{60,40}	lista grupos	\N	122	33816576	13	t
 144	{40,10}	persona dl	obj_pau=PersonaDl&tipo=planning	61	2064	12	t
 89	{55,29}	propuesta cl cv	ssfsv=sv&sasistentes=sss%2B&sactividad=cv&que=list_cjto	119	8	8	t
-1144	{50,100}	asignar centros	\N	43	8	8	t
 32	{80,60}	list varias cv	ssfsv=sv&sasistentes=agd&sactividad=cv&que=list_cjto	119	2082	3	t
 327	{85,30}	por centro	tipo=planning_ctr	61	2176	2	t
 317	{80,70}	lista por ctr	lista=list_activ&n_agd=n&sasistentes=n&sactividad=ca	147	2208	2	t
@@ -203,7 +202,14 @@
 938	{10,70}	ayuda	\N	177	33816576	13	t
 374	{50,10,20}	sv agd	id_tipo_activ=133&status=2&periodo=desdeHoy	71	8	8	t
 1	{20,70}	listado actas	\N	178	16	12	t
+942	{5,85}	ca pendents	sactividad=ca&tipo_personas=sacd	140	8	8	t
+984	{20}	zonas	\N	0	2056	8	t
+1003	{20,30}	zonas	clase_info=zonassacd\\model\\infozona	160	8	8	t
+943	{5,86}	crt pendents	sactividad=crt&tipo_personas=sacd	140	8	8	t
 1029	{30}	historicos	\N	\N	\N	\N	t
+1008	{20,40}	zonas-ctr	\N	85	2056	8	t
+1010	{20,50}	zonas-sacd	\N	42	2056	8	t
+1012	{20,55}	lista sacd-zona	que=get_lista_tot	34	2056	8	t
 1099	{50,10}	fases	clase_info=procesos\\model\\infofases	160	33554432	13	t
 1101	{50,20}	fases-tareas	clase_info=procesos\\model\\infotareas	160	33554432	13	t
 1106	{50,30}	tipos de procesos	clase_info=procesos\\model\\infoprocesotipo	160	33554432	13	t
@@ -212,6 +218,7 @@
 1116	{50,50}	procesos	\N	32	33554432	13	t
 1086	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	8	8	t
 1146	{50,100,10}	activ sg	tipo=sg	43	8	8	t
+1144	{50,100}	asignar centros	\N	43	8	8	t
 1138	{50,90,30}	activ sv n y agd	tipo=na	39	8	8	t
 1133	{50,90}	asignar sacd	\N	39	8	8	t
 1134	{50,90,10}	activ sv sg	tipo=sg&periodo=desdeHoy	39	8	8	t
@@ -220,6 +227,7 @@
 1140	{50,90,60}	activ sf sr	tipo=sf_sr	39	8	8	t
 1141	{50,90,70}	activ sf n,nax y agd	tipo=sf_na	39	8	8	t
 1142	{50,90,90}	activ sss+	tipo=sssc	39	8	8	t
+1091	{40,60}	por zonas	\N	139	2056	8	t
 1150	{50,100,20}	activ sr	tipo=sr	43	8	8	t
 1153	{50,100,30}	sv n y agd	tipo=nagd	43	8	8	t
 1155	{50,100,40}	sf s y sg	tipo=sfsg	43	8	8	t
@@ -232,7 +240,10 @@
 1261	{90,20}	nuevo curso	\N	157	8	8	t
 1289	{90,90}	Tarifas	\N	0	8	8	t
 1293	{90,90,20}	tarifa <-> tipus dactivitat	\N	108	8	8	t
+1236	{70,30}	listados	\N	124	8	8	t
 1239	{70,60}	ver encargo	\N	156	8	8	t
+1241	{80}	ausencias	\N	0	8	8	t
+1243	{80,10}	sacd	\N	127	8	8	t
 1373	{10,5}	n dl	tabla=p_numerarios&tipo=persona	76	2064	21	t
 1374	{20,10}	actas	\N	60	16	21	t
 1375	{20,20}	tabla alumnos-asignaturas	\N	88	16	21	t
@@ -272,3 +283,4 @@
 1238	{70,50}	tipo encargo	clase_info=encargossacd\\model\\infoencargotipo	160	8	8	t
 1394	{70,40}	Tablas de apps	\N	102	33554432	13	t
 1397	{38,120}	importar	sasistentes=agd&sactividad=ca&que=ver&modo=importar	119	16	12	t
+995	{20,20}	zonas geogr.	clase_info=zonassacd\\model\\infozonagrupo	160	8	8	t
