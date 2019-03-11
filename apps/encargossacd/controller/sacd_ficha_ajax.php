@@ -255,7 +255,9 @@ switch ($Qque) {
 			}
 		$enc_num=$i;
 		
-		$opciones = EncargoConstants::ARRAY_OPCIONES_ENCARGOS;
+		//$opciones = EncargoConstants::ARRAY_OPCIONES_ENCARGOS;
+	    $oEncargoConstants = new EncargoConstants();
+		$opciones = $oEncargoConstants->getOpcionesEncargos();
 		$oDesplEncs = new Desplegable();
 		$oDesplEncs->setNombre('mas');
 		$oDesplEncs->setOpciones($opciones);
@@ -385,7 +387,7 @@ switch ($Qque) {
 		}
 		?>
 		<tr id=pie><td><?= _("añadir encargo") ?>
-		<?= $oDesplEncs->desplegable(); //echo options($array_opciones_encargos,"",1); ?>
+		<?= $oDesplEncs->desplegable(); ?>
 		</td></tr>
 		<tr>
 		<td colspan=4><?= _("observaciones") ?>: <textarea rows=3 cols=50 name=observ ><?= $observ_sacd ?></textarea></td></tr>

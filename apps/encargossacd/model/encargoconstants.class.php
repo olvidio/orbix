@@ -3,24 +3,15 @@ namespace encargossacd\model;
 
 class EncargoConstants {
     
- 
-    // NO se usan, son solo para asegurar que exista la traducción
-    function traduccion () {
-        $txt = 
-        _("estudio"). 
-        _("descanso"). 
-        _("retiro"). 
-        _("otros"); 
-        
-        return $txt;
+    function getOpcionesEncargos() {
+        $opciones = [
+            "5020" => _("estudio"),
+            "5030" => _("descanso"),
+            "1110" => _("retiro"),
+            "6000" => _("otros"),
+        ];
+        return $opciones;
     }
-    
-    const ARRAY_OPCIONES_ENCARGOS = [
-        "5020" => "estudio",
-        "5030" => "descanso",
-        "1110" => "retiro",
-        "6000" => "otros",
-    ];
     
     // -------------------------------------------- complejo ----------------------------
     // NO se usan, son solo para asegurar que exista la traducción
