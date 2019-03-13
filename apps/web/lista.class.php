@@ -245,7 +245,8 @@ class Lista {
 	 *				'name'=> texto de la cabecera de la columna
 	 * 				'width'=> ancho de la columna
 	 * 				'class'=> se añade al atributo class
-	 *				'formatter'=> ['clickFormatter'|'clickFormatter2'] post-formateo a aplicar en la columna. Para el caso de 'ira', 'script' y  'ira2', 'script2' respectivamente 
+	 *				'formatter'=> ['clickFormatter'|'clickFormatter2'|'clickFormatter3'] post-formateo a aplicar en la columna.
+	 *                              Para el caso de 'ira', 'script', 'ira2', 'script2' y  'ira3', 'script3' respectivamente 
 	 * 
 	 * $a_valores:  array(
 	 * 	[fila]['clase'] = valor => añade añade 'valor' en el atributo class de la fila
@@ -338,7 +339,7 @@ class Lista {
 		$sColumnsVisible = '[';
 		$sColFilters = '[';
 		$aFields = array();
-		if ($b != 0 OR $b == 'x') {
+		if ($b !== 0 OR $b === 'x') {
 			$c++;
 			$width = isset($aColsWidth['sel'])? $aColsWidth['sel'] : 30;
 			$sColumns.= "{id: \"sel\", name: \"sel\", field: \"sel\", width:$width, sortable: false, formatter: checkboxSelectionFormatter}";
@@ -446,6 +447,10 @@ class Lista {
 							$ira=$valor['ira2'];
 							$aFilas[$num_fila]['ira2'] = $ira;
 						}
+						if ( !empty($valor['ira3']) ) {
+							$ira=$valor['ira3'];
+							$aFilas[$num_fila]['ira3'] = $ira;
+						}
 						if (!empty($valor['script']) ) {
 							$ira=$valor['script'];
 							$aFilas[$num_fila]['script'] = addslashes($ira);
@@ -453,6 +458,10 @@ class Lista {
 						if (!empty($valor['script2']) ) {
 							$ira=$valor['script2'];
 							$aFilas[$num_fila]['script2'] = addslashes($ira);
+						}
+						if (!empty($valor['script3']) ) {
+							$ira=$valor['script3'];
+							$aFilas[$num_fila]['script3'] = addslashes($ira);
 						}
 						if (!empty($valor['span'])) {
 							$span="$val";
@@ -560,7 +569,15 @@ class Lista {
 					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"'): return false; \\\" >\"+value+\"</span>\";
 				}
 				if (ira=dataContext['script2']) {
-					//return \"<span class=link onclick='\"+dataContext['script']+\"' >\"+value+\"</span>\";
+					return \"<span class=link onclick='\"+ira+\"; return false;' >\"+value+\"</span>\";
+				}
+				return value;
+			}
+			function clickFormatter3(row, cell, value, columnDef, dataContext) {
+				if (ira=dataContext['ira3']) {
+					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"'): return false; \\\" >\"+value+\"</span>\";
+				}
+				if (ira=dataContext['script3']) {
 					return \"<span class=link onclick='\"+ira+\"; return false;' >\"+value+\"</span>\";
 				}
 				return value;
@@ -923,12 +940,20 @@ class Lista {
 							$ira=$valor['ira2'];
 							$tbody.="<td><span class=\"link\" onclick=\"fnjs_update_div('#main','$ira')\" >$val</span></td>";
 						}
+						if ( !empty($valor['ira3']) ) {
+							$ira=$valor['ira3'];
+							$tbody.="<td><span class=\"link\" onclick=\"fnjs_update_div('#main','$ira')\" >$val</span></td>";
+						}
 						if (!empty($valor['script']) ) {
 							$ira= $valor['script'];
 							$tbody.="<td><span class=\"link\" onclick='$ira' >$val</span></td>";
 						}
 						if (!empty($valor['script2']) ) {
 							$ira=$valor['script2'];
+							$tbody.="<td><span class=\"link\" onclick='$ira' >$val</span></td>";
+						}
+						if (!empty($valor['script3']) ) {
+							$ira=$valor['script3'];
 							$tbody.="<td><span class=\"link\" onclick='$ira' >$val</span></td>";
 						}
 						if (!empty($valor['span'])) {
@@ -948,7 +973,7 @@ class Lista {
 			$tbody.="</tr>\n";
 		}
 
-		if (!empty($b) && $b!="x") {
+		if (!empty($b) && $b !== 'x') {
 			$botones="<tr class=botones><td colspan='$cab'>".$botones;
 		}
 		// No puedo poner los botones como thead y tbody porque el sorteable.js se hace un lio.
@@ -1065,12 +1090,20 @@ class Lista {
 								$ira=$valor['ira2'];
 								$tbody.="<td><span class=\"link\" onclick=\"fnjs_update_div('#main','$ira')\" >$val</span></td>";
 							}
+							if ( !empty($valor['ira3']) ) {
+								$ira=$valor['ira3'];
+								$tbody.="<td><span class=\"link\" onclick=\"fnjs_update_div('#main','$ira')\" >$val</span></td>";
+							}
 							if (!empty($valor['script']) ) {
 								$ira=$valor['script'];
 								$tbody.="<td><span class=\"link\" onclick='$ira' >$val</span></td>";
 							}
 							if (!empty($valor['script2']) ) {
 								$ira=$valor['script2'];
+								$tbody.="<td><span class=\"link\" onclick='$ira' >$val</span></td>";
+							}
+							if (!empty($valor['script3']) ) {
+								$ira=$valor['script3'];
 								$tbody.="<td><span class=\"link\" onclick='$ira' >$val</span></td>";
 							}
 							if (!empty($valor['span'])) {
@@ -1091,7 +1124,7 @@ class Lista {
 			}
 		}
 
-		if (!empty($b) && $b!="x") {
+		if (!empty($b) && $b !== 'x') {
 			$botones="<tr class=botones><td colspan='$cab'>".$botones;
 		}
 		// No puedo poner los botones como thead y tbody porque el sorteable.js se hace un lio.

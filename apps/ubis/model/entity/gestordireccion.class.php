@@ -94,4 +94,3 @@ class GestorDireccion Extends  core\ClaseGestor {
 	/* METODES GET i SET --------------------------------------------------------*/
 
 }
-?>
