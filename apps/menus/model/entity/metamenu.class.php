@@ -43,11 +43,11 @@ class Metamenu Extends core\ClasePropiedades {
 	 */
 	 private $iid_metamenu;
 	/**
-	 * Modulo de Metamenu
+	 * id_mod de Metamenu
 	 *
-	 * @var string
+	 * @var integer
 	 */
-	 private $smodulo;
+	 private $iid_mod;
 	/**
 	 * Url de Metamenu
 	 *
@@ -106,7 +106,7 @@ class Metamenu Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if ($this->DBCarregar('guardar') === false) { $bInsert=true; } else { $bInsert=false; }
 		$aDades=array();
-		$aDades['modulo'] = $this->smodulo;
+		$aDades['id_mod'] = $this->iid_mod;
 		$aDades['url'] = $this->surl;
 		$aDades['parametros'] = $this->sparametros;
 		$aDades['descripcion'] = $this->sdescripcion;
@@ -115,7 +115,7 @@ class Metamenu Extends core\ClasePropiedades {
 		if ($bInsert === false) {
 			//UPDATE
 			$update="
-					modulo                   = :modulo,
+					id_mod                   = :id_mod,
 					url                      = :url,
 					parametros               = :parametros,
 					descripcion              = :descripcion";
@@ -132,8 +132,8 @@ class Metamenu Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			$campos="(modulo,url,parametros,descripcion)";
-			$valores="(:modulo,:url,:parametros,:descripcion)";		
+			$campos="(id_mod,url,parametros,descripcion)";
+			$valores="(:id_mod,:url,:parametros,:descripcion)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Metamenu.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -208,7 +208,7 @@ class Metamenu Extends core\ClasePropiedades {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_metamenu',$aDades)) $this->setId_metamenu($aDades['id_metamenu']);
-		if (array_key_exists('modulo',$aDades)) $this->setModulo($aDades['modulo']);
+		if (array_key_exists('id_mod',$aDades)) $this->setId_mod($aDades['id_mod']);
 		if (array_key_exists('url',$aDades)) $this->setUrl($aDades['url']);
 		if (array_key_exists('parametros',$aDades)) $this->setParametros($aDades['parametros']);
 		if (array_key_exists('descripcion',$aDades)) $this->setDescripcion($aDades['descripcion']);
@@ -259,23 +259,23 @@ class Metamenu Extends core\ClasePropiedades {
 		$this->iid_metamenu = $iid_metamenu;
 	}
 	/**
-	 * Recupera l'atribut smodulo de Metamenu
+	 * Recupera l'atribut iid_mod de Metamenu
 	 *
-	 * @return string smodulo
+	 * @return string iid_mod
 	 */
-	function getModulo() {
-		if (!isset($this->smodulo)) {
+	function getId_Mod() {
+		if (!isset($this->iid_mod)) {
 			$this->DBCarregar();
 		}
-		return $this->smodulo;
+		return $this->iid_mod;
 	}
 	/**
-	 * estableix el valor de l'atribut smodulo de Metamenu
+	 * estableix el valor de l'atribut iid_mod de Metamenu
 	 *
-	 * @param string smodulo='' optional
+	 * @param string iid_mod='' optional
 	 */
-	function setModulo($smodulo='') {
-		$this->smodulo = $smodulo;
+	function setId_Mod($iid_mod='') {
+		$this->iid_mod = $iid_mod;
 	}
 	/**
 	 * Recupera l'atribut surl de Metamenu
@@ -353,17 +353,19 @@ class Metamenu Extends core\ClasePropiedades {
 
 
 	/**
-	 * Recupera les propietats de l'atribut smodulo de Metamenu
+	 * Recupera les propietats de l'atribut iid_mod de Metamenu
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
 	 */
 	function getDatosModulo() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'modulo'));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_mod'));
 		$oDatosCampo->setEtiqueta(_("modulo"));
-		$oDatosCampo->setTipo('texto');
-		$oDatosCampo->setArgument(30);
+		$oDatosCampo->setTipo('opciones');
+		$oDatosCampo->setArgument('devel\model\entity\Modulo'); // nombre del objeto relacionado
+		$oDatosCampo->setArgument2('getNom'); // método para obtener el valor a mostrar del objeto relacionado.
+		$oDatosCampo->setArgument3('getListaModulos'); // método con que crear la lista de opciones del Gestor objeto relacionado.
 		return $oDatosCampo;
 	}
 	/**

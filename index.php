@@ -183,7 +183,12 @@ foreach ($oMenuDbs as $oMenuDb) {
     $oMetamenu = new menusEntity\Metamenu($id_metamenu);
     $url = $oMetamenu ->getUrl();
     //echo "m: $perm_menu,l: $perm_login, ".visible($perm_menu,$perm_login) ;
-    // primero si està instalado:
+    // primero si el módulo està instalado:
+    $id_mod = $oMetamenu->getId_Mod();
+    if(!empty($id_mod) && !ConfigGlobal::is_mod_installed($id_mod)) {
+        continue;
+    }
+    // primero si la app de la ruta està instalada:
     if (!empty($url)) {
         $matches = [];
         $rta=preg_match('@apps/(.+?)/@',$url, $matches);

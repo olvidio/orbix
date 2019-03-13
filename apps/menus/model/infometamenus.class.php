@@ -19,11 +19,11 @@ class InfoMetaMenus extends core\datosInfo {
 		// para el datos_sql.php
 		// Si se quiere listar una selección, $this->k_buscar
 		if (empty($this->k_buscar)) {
-			$aWhere=array('_ordre'=>'modulo,url');
+			$aWhere=array('_ordre'=>'url');
 			$aOperador='';
 		} else {
-			$aWhere=array('modulo'=> $this->k_buscar);
-			$aOperador=array('modulo'=>'sin_acentos');
+			$aWhere=array('descripcion'=> $this->k_buscar);
+			$aOperador=array('descripcion'=>'sin_acentos');
 		}
 		$oLista = new entity\GestorMetamenu();
 		$Coleccion=$oLista->getMetamenus($aWhere,$aOperador);

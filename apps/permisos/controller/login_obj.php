@@ -124,11 +124,13 @@ function getModsPosibles () {
 
 // APLICACIONES INSTALADAS EN LA DL
 function getModsInstalados ($oDB) {
+	$a_mods = getModsPosibles();
 	$sQuery = "SELECT * FROM m0_mods_installed_dl WHERE status = 't'";
 	$a_mods_installed=array();
 	foreach ($oDB->query($sQuery) as $aDades) {
 		$id_mod=$aDades['id_mod'];
-		$a_mods_installed[$id_mod]=$aDades['param'];
+        $nom_mod = $a_mods[$id_mod]['nom'];
+		$a_mods_installed[$id_mod]=$nom_mod;
 	}
 	return $a_mods_installed;
 }
@@ -244,6 +246,7 @@ if ( !isset($_SESSION['session_auth'])) {
 						}
 						
 						
+						$a_mods = getModsPosibles();
 						$a_apps = getAppsPosibles();
 						$app_installed = array();
 
@@ -294,8 +297,9 @@ if ( !isset($_SESSION['session_auth'])) {
 								'mail'=>$mail,
 								'idioma'=>$idioma,
 								'app_installed'=>$app_installed,
-								'a_mods_installed'=>$a_mods_installed,
-								'a_apps'=>$a_apps
+								'mod_installed'=>$a_mods_installed,
+								'a_apps'=>$a_apps,
+								'a_mods'=>$a_mods,
 								 );
 							$_SESSION['config']=$session_config;
 						}
