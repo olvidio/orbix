@@ -6,20 +6,16 @@
 315	{80,60}	lista varios ca	ssfsv=sv&sasistentes=n&sactividad=ca&que=list_cjto	119	2208	2	t
 324	{82,20}	lista varias cve	ssfsv=sv&sasistentes=n&sactividad=cve&que=list_cjto	119	2208	2	t
 820	{1,20,10}	a ODF Calc	\N	162	34078719	1	t
-127	{37}	cv agd	\N	\N	2064	12	t
 136	{35,90}	pendientes	sactividad=ca&tipo_personas=n	140	16	12	t
 31	{80,90}	pendientes	sactividad=ca&tipo_personas=agd	140	2	3	t
 131	{37,90}	pendientes	sactividad=ca&tipo_personas=agd	140	16	12	t
 120	{10,20}	agd de paso	tabla=p_de_paso&na=a&tipo=persona	76	2064	12	t
 286	{15,20}	n de paso	tabla=p_de_paso&na=n&tipo=persona	76	144	2	t
-157	{10}	direcciones	\N	\N	32767	4	t
 187	{100}	ubis	\N	\N	32	19	t
 252	{10,10}	seleccionar	\N	148	33816576	13	t
 118	{10,15}	agd dl	tabla=p_agregados&tipo=persona	76	2064	12	t
 33	{80,20}	buscar cv	sasistentes=agd&sactividad=cv&que=ver	71	2050	3	t
 122	{10,5}	n dl	tabla=p_numerarios&tipo=persona	76	2064	12	t
-308	{70}	crt	\N	\N	2208	2	t
-314	{80}	ca	\N	\N	2208	2	t
 54	{5,30}	sacd agd	tabla=p_agregados&na=a&tipo=persona&es_sacd=1	76	8	8	t
 193	{91}	buscar	\N	\N	2112	10	t
 310	{70,20}	buscar crt	sasistentes=n&sactividad=crt&que=ver	71	2208	2	t
@@ -43,7 +39,6 @@
 82	{50,20}	nueva activ	\N	136	8	8	t
 254	{20,10}	nuevo esquema	\N	17	33554432	13	t
 134	{37,10}	buscar cv	sasistentes=agd&sactividad=cv&que=ver	119	2064	12	t
-321	{82}	cve	\N	\N	128	2	t
 158	{10,30}	listados	\N	48	33816575	4	t
 121	{10,30}	matricular a todos	\N	104	16	12	t
 259	{40,20}	ubis	tipo=u	121	33554432	13	t
@@ -68,11 +63,14 @@
 100	{55,10}	buscar activ	que=ver&ssfsv=sv&sasistentes=sss+	119	8	8	t
 844	{10}	centros y casas	\N	\N	131072	20	t
 846	{10,20}	listados	\N	48	131072	20	t
+321	{82}	cve	\N	183	128	2	t
+157	{10}	direcciones	\N	181	32767	4	t
+127	{37}	cv agd	\N	183	2064	12	t
 270	{60,40}	lista grupos	\N	122	33816576	13	t
 144	{40,10}	persona dl	obj_pau=PersonaDl&tipo=planning	61	2064	12	t
 89	{55,29}	propuesta cl cv	ssfsv=sv&sasistentes=sss%2B&sactividad=cv&que=list_cjto	119	8	8	t
-1029	{30}	historicos	\N	\N	\N	\N	t
 32	{80,60}	list varias cv	ssfsv=sv&sasistentes=agd&sactividad=cv&que=list_cjto	119	2082	3	t
+143	{40}	planning	\N	183	2064	12	t
 327	{85,30}	por centro	tipo=planning_ctr	61	2176	2	t
 317	{80,70}	lista por ctr	lista=list_activ&n_agd=n&sasistentes=n&sactividad=ca	147	2208	2	t
 29	{80,70}	list por centros	lista=list_activ&n_agd=a&sasistentes=agd&sactividad=cv	147	2082	3	t
@@ -87,10 +85,7 @@
 194	{91,10}	s de la dl	tabla=p_supernumerarios&tipo=persona	76	2112	10	t
 243	{140,30}	agd dl	tabla=p_agregados&tipo=persona	76	64	10	t
 619	{20,20}	tabla alumnos-asignaturas	\N	88	16	12	t
-117	{10}	buscar persona		72	2064	12	t
-78	{50}	actividades		72	8	8	t
 151	{90}	estudios	\N	\N	16	19	t
-285	{15}	buscar n	\N	\N	128	2	t
 505	{990}	traducciones		72	0	9	t
 507	{70}	editar web		72	0	9	t
 242	{140,20}	n de paso	tabla=p_de_paso&na=n&tipo=persona	76	64	10	t
@@ -100,48 +95,48 @@
 141	{35,60}	lista varios ca	ssfsv=sv&sasistentes=n&sactividad=ca&que=list_cjto	119	2064	12	t
 142	{35,75}	estudios x ctr	lista=list_est&n_agd=n&sasistentes=n&sactividad=ca	147	2064	12	t
 375	{50,10,30}	sv s y sg	id_tipo_activ=1[45]&status=2&periodo=desdeHoy	71	8	8	t
-60	{10}	centros y casas		72	8	8	t
 817	{1}	Utilidades	\N	\N	33816575	1	t
-828	{90}	mantenimiento	\N	\N	16	12	t
-253	{20}	DB	\N	\N	33554432	13	t
 830	{50,10}	buscar activ	que=ver	119	8	8	t
 831	{1,95}	Informar de un bug	\N	167	33816575	1	t
 502	{30}	casas		72	0	9	t
-4	{16}	buscar agd	\N	\N	2050	3	t
 5	{16,25}	agd de paso	tabla=p_de_paso&na=a&tipo=persona	76	2050	3	t
-22	{70}	crt	\N	\N	2050	3	t
-28	{80}	cv	\N	\N	2050	3	t
 226	{110}	cv	\N	\N	2112	10	t
-88	{55}	sssc	\N	\N	8	8	t
 822	{10,25}	importar	\N	40	33816576	13	t
-52	{5}	personas	\N	\N	8	8	t
-257	{40}	perm_dossiers	\N	\N	33554432	13	t
-269	{60}	usuarios web	\N	\N	33816576	13	t
-250	{10}	menus	\N	\N	33816576	13	t
 6	{16,10}	agd dl	tabla=p_agregados&tipo=persona	76	2050	3	t
-326	{85}	planning	\N	\N	128	2	t
-125	{30}	posibles ca	\N	\N	2194	12	t
 832	{50,16}	publicar activ	que=ver&modo=publicar	119	8	8	t
 79	{50,15}	importar activ	que=ver&modo=importar	119	8	8	t
 322	{82,10}	buscar cve	sasistentes=n&sactividad=cve&que=ver	71	2210	2	t
 124	{20,30}	resúmenes	\N	57	2066	12	t
-833	{10}	buscar nax	\N	\N	18432	16	t
 834	{10,10}	nax dl	tabla=p_nax&tipo=persona	76	18432	16	t
 835	{10,20}	nax de paso	tabla=p_de_paso&na=x&tipo=persona	76	18432	16	t
-123	{20}	actas...	\N	\N	2066	12	t
-837	{70}	crt	\N	\N	18464	16	t
-839	{80}	ca	\N	\N	18464	16	t
 316	{80,20}	buscar ca	sasistentes=n&sactividad=ca&que=ver	71	2208	2	t
-841	{82}	cve	\N	\N	18464	16	t
 229	{110,20}	buscar cv	sasistentes=s&sactividad=cv&que=ver	71	2112	10	t
 25	{70,20}	buscar crt	sasistentes=agd&sactividad=crt&que=ver	71	2050	3	t
 840	{80,20}	buscar ca	sasistentes=nax&sactividad=ca&que=ver	71	18464	16	t
 842	{82,20}	buscar cve	sasistentes=nax&sactividad=cve&que=ver	71	18464	16	t
 838	{70,20}	buscar crt	sasistentes=nax&sactividad=crt&que=ver	71	18464	16	t
 847	{40}	planning		72	0	20	t
+285	{15}	buscar n	\N	181	128	2	t
+326	{85}	planning	\N	183	128	2	t
+833	{10}	buscar nax	\N	181	18432	16	t
+837	{70}	crt	\N	183	18464	16	t
+839	{80}	ca	\N	183	18464	16	t
+841	{82}	cve	\N	183	18464	16	t
+22	{70}	crt	\N	183	2050	3	t
+28	{80}	cv	\N	183	2050	3	t
+117	{10}	buscar persona	\N	181	2064	12	t
+123	{20}	actas...	\N	189	2066	12	t
+125	{30}	posibles ca	\N	183	2194	12	t
+828	{90}	mantenimiento	\N	181	16	12	t
+52	{5}	personas	\N	181	8	8	t
+60	{10}	centros y casas	\N	190	8	8	t
+78	{50}	actividades	\N	183	8	8	t
+88	{55}	sssc	\N	183	8	8	t
+250	{10}	menus	\N	182	33816576	13	t
+253	{20}	DB	\N	182	33554432	13	t
+269	{60}	usuarios web	\N	181	33816576	13	t
 854	{50}	actividades	\N	\N	131072	20	t
 855	{50,10}	buscar activ	que=ver	119	131072	20	t
-135	{35}	ca n		72	2064	12	t
 373	{50,10,10}	sv  n	id_tipo_activ=112&status=2&periodo=desdeHoy	71	8	8	t
 856	{50,10,10}	sv  n	id_tipo_activ=112....&status=2&periodo=desdeHoy	71	131072	20	t
 857	{50,10,20}	sv agd	id_tipo_activ=133....&status=2&periodo=desdeHoy	71	131072	20	t
@@ -204,7 +199,6 @@
 374	{50,10,20}	sv agd	id_tipo_activ=133&status=2&periodo=desdeHoy	71	8	8	t
 1	{20,70}	listado actas	\N	178	16	12	t
 942	{5,85}	ca pendents	sactividad=ca&tipo_personas=sacd	140	8	8	t
-984	{20}	zonas	\N	0	2056	8	t
 1003	{20,30}	zonas	clase_info=zonassacd\\model\\infozona	160	8	8	t
 943	{5,86}	crt pendents	sactividad=crt&tipo_personas=sacd	140	8	8	t
 975	{10,50,10}	modificar	\N	114	32	4	t
@@ -212,9 +206,14 @@
 972	{10,50}	cartas presentacion	\N	0	34078719	4	t
 977	{10,50,30}	lista dl	que=lista_dl	98	34078719	4	t
 978	{10,50,40}	buscar	\N	3	34078719	4	t
+984	{20}	zonas	\N	179	2056	8	t
+1029	{30}	historicos	\N	\N	\N	\N	t
 1008	{20,40}	zonas-ctr	\N	85	2056	8	t
 1010	{20,50}	zonas-sacd	\N	42	2056	8	t
 1012	{20,55}	lista sacd-zona	que=get_lista_tot	34	2056	8	t
+1055	{40}	planning	\N	181	32	4	t
+1061	{40,10}	persona dl	tabla=p_de_casa&tipo=planning	61	32	4	t
+1065	{40,20}	num de paso	tabla=p_de_paso&na=n&tipo=p_de_paso	61	32	4	t
 1099	{50,10}	fases	clase_info=procesos\\model\\infofases	160	33554432	13	t
 1101	{50,20}	fases-tareas	clase_info=procesos\\model\\infotareas	160	33554432	13	t
 1106	{50,30}	tipos de procesos	clase_info=procesos\\model\\infoprocesotipo	160	33554432	13	t
@@ -233,6 +232,9 @@
 1141	{50,90,70}	activ sf n,nax y agd	tipo=sf_na	39	8	8	t
 1142	{50,90,90}	activ sss+	tipo=sssc	39	8	8	t
 1091	{40,60}	por zonas	\N	139	2056	8	t
+1079	{40,30}	agd de paso	tabla=p_de_paso&na=a&tipo=p_de_paso	61	32	4	t
+1082	{40,40}	por ctr	tipo=planning_ctr	61	32	4	t
+1089	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	32	4	t
 1150	{50,100,20}	activ sr	tipo=sr	43	8	8	t
 1153	{50,100,30}	sv n y agd	tipo=nagd	43	8	8	t
 1155	{50,100,40}	sf s y sg	tipo=sfsg	43	8	8	t
@@ -240,15 +242,21 @@
 1161	{50,100,60}	sf n, nax y agd	tipo=sfnagd	43	8	8	t
 1162	{50,100,70}	sss+	tipo=sssc	43	8	8	t
 1217	{70,15}	ficha ctr	\N	62	2056	8	t
-1199	{70}	Encargos	\N	0	2056	8	t
 1220	{70,20}	ficha sacd	\N	14	2056	8	t
+1199	{70}	Encargos	\N	186	2056	8	t
 1261	{90,20}	nuevo curso	\N	157	8	8	t
 1289	{90,90}	Tarifas	\N	0	8	8	t
 1293	{90,90,20}	tarifa <-> tipus dactivitat	\N	108	8	8	t
 1236	{70,30}	listados	\N	124	8	8	t
 1239	{70,60}	ver encargo	\N	156	8	8	t
-1241	{80}	ausencias	\N	0	8	8	t
 1243	{80,10}	sacd	\N	127	8	8	t
+1252	{90}	cve	\N	183	2050	3	t
+1255	{90,10}	buscar cve agd	sasistentes=agd&sactividad=cve	71	2050	3	t
+1241	{80}	ausencias	\N	186	8	8	t
+1321	{100}	planning 	\N	183	2	3	t
+1323	{100,10}	persona dl	tabla=p_de_casa&tipo=planning	61	2	3	t
+1326	{100,30}	por centro	tipo=planning_ctr	61	2	3	t
+1329	{100,40}	por casas	tipo=planning_cdc&ssfsv=sv	61	2	3	t
 1373	{10,5}	n dl	tabla=p_numerarios&tipo=persona	76	2064	21	t
 1374	{20,10}	actas	\N	60	16	21	t
 1375	{20,20}	tabla alumnos-asignaturas	\N	88	16	21	t
@@ -257,35 +265,39 @@
 1372	{10,10}	agd dl	tabla=p_agregados&tipo=persona	76	2064	21	t
 1384	{10}	personas	\N	0	16	21	t
 1385	{20}	actas	\N	0	16	21	t
-143	{40}	planning	\N	\N	2064	12	t
 61	{10,10}	buscar	simple=1&tipo=ctr&loc=dl	133	8	8	t
 845	{10,10}	buscar	simple=1&tipo=ctr&loc=dl	133	131072	20	t
 1222	{70,20}	definir módulos		27	33554432	13	t
 1233	{70,30}	instalar módulos	clase_info=permisos\\model\\infomodsinstalled	160	33554432	13	t
 1206	{70,10}	aplicaciones	clase_info=devel\\model\\infoapps	160	33554432	13	t
-1197	{70}	Configuración	\N	0	33554432	13	t
-1386	{38}	sem inv.	\N	0	16	12	t
 1387	{38,10}	buscar	sasistentes=agd&sactividad=ca&que=ver	119	16	12	t
 1391	{38,110}	gestión de plazas	ssfsv=sv&sasistentes=agd&sactividad=ca	169	16	12	t
 1389	{82,110}	Gestión de plazas	ssfsv=sv&sasistentes=n&sactividad=cve	169	128	2	t
 1390	{90,110}	Gestión de plazas	ssfsv=sv&sasistentes=agd&sactividad=cve	169	2	3	t
 1392	{20,45}	Matrículas	\N	66	16	12	t
-1368	{990}	traducciones	\N	0	33554432	13	t
 1369	{990,10}	menus a texto	\N	142	33816576	13	t
 1371	{990,20}	posibles idiomas	clase_info=usuarios\\model\\InfoLocales	160	33816576	13	t
-529	{90}	Nuevo calendario	\N	0	8	8	t
 1393	{80}	actividades	\N	0	8	19	t
-1095	{50}	procesos activ.	\N	0	33554432	13	t
+1386	{38}	sem inv.	\N	183	16	12	t
 1163	{50,110}	cambiar de fase	\N	130	8	8	t
 1258	{90,10}	Definir periodos	\N	7	8	8	t
 1263	{90,30}	nuevo planing	\N	141	34078719	8	t
 1292	{90,90,10}	definir tarifa	\N	100	8	8	t
 1296	{90,90,30}	tarifes per casa i any	\N	73	8	8	t
-71	{40}	planning	\N	0	8	8	t
 1060	{40,10}	persona dl	obj_pau=PersonaDl&tipo=planning	61	8	8	t
 1395	{70,140}	cambiar de fase	id_tipo_activ=111	130	128	2	t
 1396	{70,140}	cambiar de fase	id_tipo_activ=131	130	2	3	t
 1238	{70,50}	tipo encargo	clase_info=encargossacd\\model\\infoencargotipo	160	8	8	t
 1394	{70,40}	Tablas de apps	\N	102	33554432	13	t
+71	{40}	planning	\N	183	8	8	t
+529	{90}	Nuevo calendario	\N	183	8	8	t
+257	{40}	perm_dossiers	\N	182	33554432	13	t
 1397	{38,120}	importar	sasistentes=agd&sactividad=ca&que=ver&modo=importar	119	16	12	t
 995	{20,20}	zonas geogr.	clase_info=zonassacd\\model\\infozonagrupo	160	8	8	t
+308	{70}	crt	\N	183	2208	2	t
+314	{80}	ca	\N	183	2208	2	t
+4	{16}	buscar agd	\N	181	2050	3	t
+135	{35}	ca n	\N	183	2064	12	t
+1095	{50}	procesos activ.	\N	188	33554432	13	t
+1197	{70}	Configuración	\N	182	33554432	13	t
+1368	{990}	traducciones	\N	181	33554432	13	t

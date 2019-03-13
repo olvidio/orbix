@@ -82,31 +82,23 @@
 123	\N	programas/lista_para_historicos.php	\N	\N
 125	\N	programas/sm-agd/cr1_05_E4.php	\N	\N
 126	\N	sg/que_centro_sg.php	\N	\N
-48	ubis	apps/ubis/controller/list_ctr.php	\N	listas de ubis
-92	devel	apps/menus/controller/menus_exportar.php	\N	exportar menus
-40	admin	apps/menus/controller/menus_importar.php	\N	importar menus
 128	\N	programas/act_tarifas.php	\N	\N
 129	\N	programas/lista_activ_sg_que.php	\N	\N
-104	actividadestudios	apps/actividadestudios/controller/matricular.php	\N	matricular
-38	permisos	apps/permisos/controller/config_select.php	\N	config modulos
-88	notas	apps/notas/controller/asignaturas_pendientes.php	\N	cuadro alumnos-asignaturas
 132	\N	sg/lista_actividades_sg.php	\N	\N
-122	admin	apps/usuarios/controller/grupo_lista.php	\N	lista grupos
-27	devel	apps/devel/controller/modulos_select.php	\N	modulos select
 134	\N	scdl/registro/mod_ini.php	\N	\N
 135	\N	sg/que_resumen.php	\N	\N
 137	\N	des/libros/que_libros.php	\N	\N
-7	actividades	apps/ubis/controller/calendario_periodos.php	\N	Calendario Periodos
 143	\N	programas/lista_activ_sr_que.php	\N	\N
-32	procesos	apps/procesos/controller/procesos_select.php	\N	procesos select
-39	actividadessacd	apps/actividadessacd/controller/activ_sacd.php	\N	Atención sacd
-23	encargossacd	apps/encargossacd/controller/que_tipo_de_encargo.php	\N	Tipo de encargo
-14	encargossacd	apps/encargossacd/controller/sacd_ficha.php	\N	Encargo sacd ficha
-85	zonassacd	apps/zonassacd/controller/zona_ctr.php	\N	Zona-ctr
-42	zonassacd	apps/zonassacd/controller/zona_sacd.php	\N	Zona sacd
-139	zonassacd	apps/zonassacd/controller/planning_zones.php	\N	Planning por zonas
-114	cartaspresentacion	apps/cartaspresentacion/controller/cartas_presentacion_que.php	\N	Cartas Presentacion
-3	cartaspresentacion	apps/cartaspresentacion/controller/cartas_presentacion_buscar.php	\N	Buscar Cartas presentacion
+39	20	apps/actividadessacd/controller/activ_sacd.php	\N	Atención sacd
+7	5	apps/ubis/controller/calendario_periodos.php	\N	Calendario Periodos
+23	21	apps/encargossacd/controller/que_tipo_de_encargo.php	\N	Tipo de encargo
+14	21	apps/encargossacd/controller/sacd_ficha.php	\N	Encargo sacd ficha
+104	7	apps/actividadestudios/controller/matricular.php	\N	matricular
+48	3	apps/ubis/controller/list_ctr.php	\N	listas de ubis
+88	4	apps/notas/controller/asignaturas_pendientes.php	\N	cuadro alumnos-asignaturas
+38	1	apps/permisos/controller/config_select.php	\N	config modulos
+40	1	apps/menus/controller/menus_importar.php	\N	importar menus
+122	1	apps/usuarios/controller/grupo_lista.php	\N	lista grupos
 144	\N	scdl/documentos/cabecera_pie_txt.php	\N	\N
 145	\N	scdl/tabla_mails_ex.php	\N	\N
 146	\N	scdl/centros_que.php	\N	\N
@@ -118,59 +110,79 @@
 154	\N	sistema/avisos_generar.php	\N	\N
 158	\N	scdl/tabla_mails_moneders.php	\N	\N
 159	\N	scdl/registro/pen_form.php	\N	\N
-19	devel	apps/devel/controller/factory_form.php	\N	generador de clases
-148	admin	apps/menus/controller/menus_que.php	\N	gestor de menus
-160	admin	apps/core/mod_tabla_sql.php	\N	modificar los datos de una tabla
-131	admin	apps/usuarios/controller/usuario_lista.php	\N	lista usuarios
-161	admin	apps/usuarios/controller/role_lista.php	\N	lista roles
-162	core	fnjs_exportar('odfc')	\N	exportar a odf calc
-164	usuarios	apps/usuarios/controller/personal.php	\N	preferencias usuario
-133	ubis	apps/ubis/controller/ubis_buscar.php	\N	buscar ubis
-119	activ1	apps/actividades/controller/actividad_que.php	\N	seleccionar actividad
-76	personas	apps/personas/controller/personas_que.php	\N	búsqueda de personas
-166	devel	apps/menus/controller/pasar_a_demo.php	\N	pasar a demo
-17	devel	apps/devel/controller/db_que.php	\N	nuevo esquema
-60	notas	apps/notas/controller/acta_select.php	\N	actas
-71	actividades	apps/actividades/controller/actividad_select.php	\N	Listado de Actividades
-121	admin	apps/dossiers/controller/perm_dossiers.php	\N	permisos dossiers
 138	\N	programas/lista_dossiers.php	\N	\N
-61	asistentes	apps/asistentes/controller/planning_que.php	\N	planning
-147	asistentes	apps/asistentes/controller/que_ctr_lista.php	\N	Buscar por centro
-140	asistentes	apps/asistentes/controller/activ_pendientes_select.php	\N	actividades pendientes
-57	notas	apps/notas/controller/resumen_anual.php	\N	resumen anual
-168	actividadestudios	apps/actividadestudios/controller/matriculas_pendientes.php	\N	matriculas pendientes
-142	menus	apps/menus/controller/menus_generar_txt.php	\N	pasa los menus a texto
-66	actividadestudios	apps/actividadestudios/controller/matriculas_lista.php	\N	listas de matriculas
-169	actividadplazas	apps/actividadplazas/controller/gestion_plazas.php	\N	Gestión de plazas
-171	stgr1	apps/profesores/controller/profesor_asignatura_que.php	\N	profesores para asignatura
-172	actividadplazas	apps/actividadplazas/controller/incorporar_peticion.php	\N	Incorporar peticiones de plazas
-52	actividadestudios	apps/actividadestudios/controller/actualizar_docencia.php	\N	guardar docencia ca en dossier
-173	stgr1	apps/profesores/controller/lista_por_departamentos.php	\N	listado claustro
-174	notas	apps/notas/controller/asignaturas_pendientes_resumen.php	\N	Resumen asig. pendientes
-175	notas	apps/notas/controller/asig_faltan_que.php	\N	Asignaturas pendientes
-163	core	fnjs_exportar('odft')	\N	exportar a odft txt
-165	core	fnjs_windowopen('http://orbix.local/orbix/public/ayuda/index.php')	\N	Ayuda
-136	activ	apps/actividades/controller/actividad_ver.php	\N	actividad nueva
-170	actividadplazas	apps/actividadplazas/controller/plazas_balance_que.php	\N	Balance de Plazas
-155	actividadestudios	apps/actividadestudios/controller/ca_posibles_que.php	\N	Posibles ca
-64	devel	apps/menus/controller/menus_ficheros.php	\N	menu a/de ficheros
-177	devel	apps/menus/view/como.phtml	\N	ayuda menus
-176	dbextern	apps/dbextern/controller/sincro_index.php	\N	Sincronizar con los datos de Listas
-167	core	fnjs_windowopen('http://10.0.0.16/redmine')	\N	abrir pag redmine
-178	notas	apps/notas/controller/acta_listado_anual.php	\N	listado anual actas
-100	actividades	apps/actividades/controller/actividad_tarifa.php	\N	Tarifas actividades
-108	actividades	apps/actividades/controller/actividad_tarifa_tipo.php	\N	Tipo tarifa
-73	actividades	apps/actividades/controller/actividad_tarifa_ubi.php	\N	actividad Tarifa Ubi
-157	actividades	apps/actividades/controller/actividad_nuevo_curso.php	\N	Nuevo Curso
-141	actividades	apps/actividades/controller/calendario_que.php	\N	Calendario que
-102	devel	apps/devel/controller/apptables.php	\N	Manage tablas de Apps
-44	procesos	apps/procesos/controller/tipos_activ_select.php	\N	Tipos de actividad
-130	procesos	apps/procesos/controller/fases_activ_cambio.php	\N	Fases activ cambio
-43	actividadescentro	apps/actividadescentro/controller/activ_ctr.php	\N	actividades centro
-156	encargossacd	apps/encargossacd/controller/encargo_select.php	\N	Encargos lista
-62	encargossacd	apps/encargossacd/controller/ctr_ficha.php	\N	Ficha encargos ctr
-127	encargossacd	apps/encargossacd/controller/sacd_ausencias.php	\N	Ausencias sacd
-34	zonassacd	apps/zonassacd/controller/zona_sacd_ajax.php	\N	Zona sacd ajax
-124	encargossacd	apps/encargossacd/controller/listas_index.php	\N	Encargos Listas
-98	castaspresentacion	apps/cartaspresentacion/controller/cartas_presentacion_lista.php	\N	Listado cartas presentación
-18	actividadessacd	apps/actividadessacd/controller/asignar_sacd_activ.php	\N	Asignar sacd a actividades
+92	2	apps/menus/controller/menus_exportar.php	\N	exportar menus
+27	2	apps/devel/controller/modulos_select.php	\N	modulos select
+32	11	apps/procesos/controller/procesos_select.php	\N	procesos select
+85	24	apps/zonassacd/controller/zona_ctr.php	\N	Zona-ctr
+42	24	apps/zonassacd/controller/zona_sacd.php	\N	Zona sacd
+139	24	apps/zonassacd/controller/planning_zones.php	\N	Planning por zonas
+114	25	apps/cartaspresentacion/controller/cartas_presentacion_que.php	\N	Cartas Presentacion
+3	25	apps/cartaspresentacion/controller/cartas_presentacion_buscar.php	\N	Buscar Cartas presentacion
+19	2	apps/devel/controller/factory_form.php	\N	generador de clases
+133	3	apps/ubis/controller/ubis_buscar.php	\N	buscar ubis
+119	5	apps/actividades/controller/actividad_que.php	\N	seleccionar actividad
+179	24	\N	\N	Raiz Zonas
+164	1	apps/usuarios/controller/personal.php	\N	preferencias usuario
+76	1	apps/personas/controller/personas_que.php	\N	búsqueda de personas
+176	9	apps/dbextern/controller/sincro_index.php	\N	Sincronizar con los datos de Listas
+61	5	apps/asistentes/controller/planning_que.php	\N	planning
+147	5	apps/asistentes/controller/que_ctr_lista.php	\N	Buscar por centro
+140	5	apps/asistentes/controller/activ_pendientes_select.php	\N	actividades pendientes
+60	4	apps/notas/controller/acta_select.php	\N	actas
+57	4	apps/notas/controller/resumen_anual.php	\N	resumen anual
+156	21	apps/encargossacd/controller/encargo_select.php	\N	Encargos lista
+62	21	apps/encargossacd/controller/ctr_ficha.php	\N	Ficha encargos ctr
+127	21	apps/encargossacd/controller/sacd_ausencias.php	\N	Ausencias sacd
+124	21	apps/encargossacd/controller/listas_index.php	\N	Encargos Listas
+136	5	apps/actividades/controller/actividad_ver.php	\N	actividad nueva
+157	5	apps/actividades/controller/actividad_nuevo_curso.php	\N	Nuevo Curso
+71	5	apps/actividades/controller/actividad_select.php	\N	Listado de Actividades
+100	5	apps/actividades/controller/actividad_tarifa.php	\N	Tarifas actividades
+108	5	apps/actividades/controller/actividad_tarifa_tipo.php	\N	Tipo tarifa
+73	5	apps/actividades/controller/actividad_tarifa_ubi.php	\N	actividad Tarifa Ubi
+141	5	apps/actividades/controller/calendario_que.php	\N	Calendario que
+168	7	apps/actividadestudios/controller/matriculas_pendientes.php	\N	matriculas pendientes
+66	7	apps/actividadestudios/controller/matriculas_lista.php	\N	listas de matriculas
+174	4	apps/notas/controller/asignaturas_pendientes_resumen.php	\N	Resumen asig. pendientes
+175	4	apps/notas/controller/asig_faltan_que.php	\N	Asignaturas pendientes
+178	4	apps/notas/controller/acta_listado_anual.php	\N	listado anual actas
+142	1	apps/menus/controller/menus_generar_txt.php	\N	pasa los menus a texto
+148	1	apps/menus/controller/menus_que.php	\N	gestor de menus
+160	1	apps/core/mod_tabla_sql.php	\N	modificar los datos de una tabla
+131	1	apps/usuarios/controller/usuario_lista.php	\N	lista usuarios
+161	1	apps/usuarios/controller/role_lista.php	\N	lista roles
+121	1	apps/dossiers/controller/perm_dossiers.php	\N	permisos dossiers
+182	1	\N	\N	Raiz admin
+98	25	apps/cartaspresentacion/controller/cartas_presentacion_lista.php	\N	Listado cartas presentación
+169	8	apps/actividadplazas/controller/gestion_plazas.php	\N	Gestión de plazas
+172	8	apps/actividadplazas/controller/incorporar_peticion.php	\N	Incorporar peticiones de plazas
+170	8	apps/actividadplazas/controller/plazas_balance_que.php	\N	Balance de Plazas
+18	20	apps/actividadessacd/controller/asignar_sacd_activ.php	\N	Asignar sacd a actividades
+43	20	apps/actividadescentro/controller/activ_ctr.php	\N	actividades centro
+166	2	apps/menus/controller/pasar_a_demo.php	\N	pasar a demo
+17	2	apps/devel/controller/db_que.php	\N	nuevo esquema
+171	4	apps/profesores/controller/profesor_asignatura_que.php	\N	profesores para asignatura
+173	4	apps/profesores/controller/lista_por_departamentos.php	\N	listado claustro
+64	2	apps/menus/controller/menus_ficheros.php	\N	menu a/de ficheros
+177	2	apps/menus/view/como.phtml	\N	ayuda menus
+102	2	apps/devel/controller/apptables.php	\N	Manage tablas de Apps
+44	11	apps/procesos/controller/tipos_activ_select.php	\N	Tipos de actividad
+130	11	apps/procesos/controller/fases_activ_cambio.php	\N	Fases activ cambio
+34	24	apps/zonassacd/controller/zona_sacd_ajax.php	\N	Zona sacd ajax
+180	2	\N	\N	Raiz devel
+181	1	\N	\N	Raiz base
+52	7	apps/actividadestudios/controller/actualizar_docencia.php	\N	guardar docencia ca en dossier
+155	7	apps/actividadestudios/controller/ca_posibles_que.php	\N	Posibles ca
+162	1	fnjs_exportar('odfc')	\N	exportar a odf calc
+163	1	fnjs_exportar('odft')	\N	exportar a odft txt
+165	1	fnjs_windowopen('http://orbix.local/orbix/public/ayuda/index.php')	\N	Ayuda
+167	1	fnjs_windowopen('http://10.0.0.16/redmine')	\N	abrir pag redmine
+183	5	\N	\N	Raiz activ1
+184	6	\N	\N	Raiz activ2
+185	20	\N	\N	Raiz EncargadosActiv
+186	21	\N	\N	Raiz encargos sacd
+187	8	\N	\N	Raiz plazas
+188	11	\N	\N	Raiz procesos
+189	4	\N	\N	Raiz stgr
+190	3	\N	\N	Raiz ubis
