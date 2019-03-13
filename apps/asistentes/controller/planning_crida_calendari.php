@@ -220,7 +220,7 @@ if ($Qtipo=='planning_cdc' || $Qtipo=='casa') {
             case 6:
                 $aWhere['sf']='t';
                 // también los centros que son como cdc
-                $GesCentrosSf = new ubis\GestorCentroSf();
+                $GesCentrosSf = new ubis\GestorCentroEllas();
                 $cCentrosSf = $GesCentrosSf->getCentrosSf(array('cdc'=>'t','_ordre'=>'nombre_ubi'));
                 break;
             case 9:

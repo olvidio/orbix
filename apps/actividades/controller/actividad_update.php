@@ -14,6 +14,7 @@
 */
 
 use actividades\model\entity as actividades;
+use procesos\model\entity\GestorActividadProcesoTarea;
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
 */

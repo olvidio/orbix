@@ -3,15 +3,15 @@ namespace asistentes\model;
 
 use actividadcargos\model\entity as actividadcargos;
 use actividades\model\entity as actividades;
+use actividadescentro\model\entity\GestorCentroEncargado;
 use actividadplazas\model\GestorResumenPlazas;
 use asistentes\model\entity as asistentes;
 use core\ConfigGlobal;
+use function core\strtoupper_dlb;
 use personas\model\entity as personas;
 use ubis\model\entity as ubis;
 use web\Lista;
 use web\TiposActividades;
-
-use function core\strtoupper_dlb;
 
 /**
 * Lista los asistentes de una relación de actividades seleccionada
