@@ -1,5 +1,4 @@
 2	\N	sistema/avisos_generar_mails.php	\N	\N
-3	\N	scdl/cartas_presentacion_buscar.php	\N	\N
 4	\N	scdl/documentos/equipajes_movimientos.php	\N	\N
 5	\N	programas/activ_asistentes.php	\N	\N
 6	\N	scdl/tertulias/devoluciones.php	\N	\N
@@ -11,7 +10,6 @@
 13	\N	programas/sm-agd/list_ultima_activ.php	\N	\N
 15	\N	des/list_sssc_cr9_05.php	\N	\N
 16	\N	scdl/documentos/centros_que.php	\N	\N
-18	\N	des/asignar_sacd_activ.php	\N	\N
 20	\N	scdl/registro/pen_of_form.php	\N	\N
 21	\N	programas/calendario_listas.php	\N	\N
 22	\N	scdl/registro/control.php	\N	\N
@@ -65,7 +63,6 @@
 95	\N	programas/sm-agd/lista_celebra_40.php	\N	\N
 96	\N	scdl/registro/cr_num_bajo_lista.php	\N	\N
 97	\N	vcsd/dlbf/actualizar.php	\N	\N
-98	\N	scdl/cartas_presentacion_lista.php	\N	\N
 99	\N	programas/sm-agd/cargos/listado_propuestas_cl.php	\N	\N
 101	\N	scdl/registro/registro_entradas.php	\N	\N
 103	\N	programas/calendario_importar_sf.php	\N	\N
@@ -77,7 +74,6 @@
 111	\N	sg/cp_trato_lista.php	\N	\N
 112	\N	scdl/registro/cr_num_bajo_que.php	\N	\N
 113	\N	sg/cr_7_01_anexXIII.php	\N	\N
-114	\N	scdl/cartas_presentacion_que.php	\N	\N
 115	\N	scdl/registro/registro_comprobaciones.php	\N	\N
 116	\N	scdl/registro/registro_salidas.php	\N	\N
 117	\N	scdl/registro/registro_buscar.php	\N	\N
@@ -109,6 +105,8 @@
 85	zonassacd	apps/zonassacd/controller/zona_ctr.php	\N	Zona-ctr
 42	zonassacd	apps/zonassacd/controller/zona_sacd.php	\N	Zona sacd
 139	zonassacd	apps/zonassacd/controller/planning_zones.php	\N	Planning por zonas
+114	cartaspresentacion	apps/cartaspresentacion/controller/cartas_presentacion_que.php	\N	Cartas Presentacion
+3	cartaspresentacion	apps/cartaspresentacion/controller/cartas_presentacion_buscar.php	\N	Buscar Cartas presentacion
 144	\N	scdl/documentos/cabecera_pie_txt.php	\N	\N
 145	\N	scdl/tabla_mails_ex.php	\N	\N
 146	\N	scdl/centros_que.php	\N	\N
@@ -174,3 +172,5 @@
 127	encargossacd	apps/encargossacd/controller/sacd_ausencias.php	\N	Ausencias sacd
 34	zonassacd	apps/zonassacd/controller/zona_sacd_ajax.php	\N	Zona sacd ajax
 124	encargossacd	apps/encargossacd/controller/listas_index.php	\N	Encargos Listas
+98	castaspresentacion	apps/cartaspresentacion/controller/cartas_presentacion_lista.php	\N	Listado cartas presentación
+18	actividadessacd	apps/actividadessacd/controller/asignar_sacd_activ.php	\N	Asignar sacd a actividades

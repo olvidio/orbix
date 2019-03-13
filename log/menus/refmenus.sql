@@ -71,6 +71,7 @@
 270	{60,40}	lista grupos	\N	122	33816576	13	t
 144	{40,10}	persona dl	obj_pau=PersonaDl&tipo=planning	61	2064	12	t
 89	{55,29}	propuesta cl cv	ssfsv=sv&sasistentes=sss%2B&sactividad=cv&que=list_cjto	119	8	8	t
+1029	{30}	historicos	\N	\N	\N	\N	t
 32	{80,60}	list varias cv	ssfsv=sv&sasistentes=agd&sactividad=cv&que=list_cjto	119	2082	3	t
 327	{85,30}	por centro	tipo=planning_ctr	61	2176	2	t
 317	{80,70}	lista por ctr	lista=list_activ&n_agd=n&sasistentes=n&sactividad=ca	147	2208	2	t
@@ -206,7 +207,11 @@
 984	{20}	zonas	\N	0	2056	8	t
 1003	{20,30}	zonas	clase_info=zonassacd\\model\\infozona	160	8	8	t
 943	{5,86}	crt pendents	sactividad=crt&tipo_personas=sacd	140	8	8	t
-1029	{30}	historicos	\N	\N	\N	\N	t
+975	{10,50,10}	modificar	\N	114	32	4	t
+976	{10,50,20}	lista todo	que=lista_todo	98	34078719	4	t
+972	{10,50}	cartas presentacion	\N	0	34078719	4	t
+977	{10,50,30}	lista dl	que=lista_dl	98	34078719	4	t
+978	{10,50,40}	buscar	\N	3	34078719	4	t
 1008	{20,40}	zonas-ctr	\N	85	2056	8	t
 1010	{20,50}	zonas-sacd	\N	42	2056	8	t
 1012	{20,55}	lista sacd-zona	que=get_lista_tot	34	2056	8	t
