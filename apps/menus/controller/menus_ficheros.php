@@ -84,10 +84,26 @@ if ($Qaccion == 'exportar') {
 	 * 
 	 */
 	
+	$txt_comun = '';
+	//************ MODULOS **************
+	$file_modulos = "$dir_base/log/menus/modulos.sql";
+	$name_modulos = "DIRBASE/log/menus/modulos.sql";
+
+	$txt_comun .= 'TRUNCATE TABLE "public".m0_modulos RESTART IDENTITY;'."\n";
+	$oDevelPC->exec('COPY "public".m0_modulos TO \''.$file_modulos.'\' ');
+	$txt_comun .= 'COPY "public".m0_modulos FROM \''.$name_modulos.'\''.";\n";
+
+	//************ APPS **************
+	$file_apps = "$dir_base/log/menus/apps.sql";
+	$name_apps = "DIRBASE/log/menus/apps.sql";
+
+	$txt_comun .= 'TRUNCATE TABLE "public".m0_apps RESTART IDENTITY;'."\n";
+	$oDevelPC->exec('COPY "public".m0_apps TO \''.$file_apps.'\' ');
+	$txt_comun .= 'COPY "public".m0_apps FROM \''.$name_apps.'\''.";\n";
+
 	//************ METAMENUS **************
 	$file_metamenus = "$dir_base/log/menus/comun.sql";
 	$name_metamenus = "DIRBASE/log/menus/comun.sql";
-	$txt_comun = '';
 
 	$txt_comun .= 'TRUNCATE TABLE "public".aux_metamenus RESTART IDENTITY;'."\n";
 	$oDevelPC->exec('COPY "public".aux_metamenus TO \''.$file_metamenus.'\' ');

@@ -8,7 +8,7 @@ class InfoMetaMenus extends core\datosInfo {
 	public function __construct() {
 		$this->setTxtTitulo(_("metamenus"));
 		$this->setTxtEliminar(_("¿Está seguro que desea eliminar este metamenu?"));
-		$this->setTxtBuscar(_("buscar un módulo"));
+		$this->setTxtBuscar(_("buscar un metamenú por descripción"));
 		$this->setTxtExplicacion();
 
 		$this->setClase('menus\\model\\entity\\Metamenu');

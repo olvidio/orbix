@@ -1,3 +1,7 @@
+TRUNCATE TABLE "public".m0_modulos RESTART IDENTITY;
+COPY "public".m0_modulos FROM 'DIRBASE/log/menus/modulos.sql';
+TRUNCATE TABLE "public".m0_apps RESTART IDENTITY;
+COPY "public".m0_apps FROM 'DIRBASE/log/menus/apps.sql';
 TRUNCATE TABLE "public".aux_metamenus RESTART IDENTITY;
 COPY "public".aux_metamenus FROM 'DIRBASE/log/menus/comun.sql';
 TRUNCATE TABLE "public".ref_grupmenu RESTART IDENTITY;
