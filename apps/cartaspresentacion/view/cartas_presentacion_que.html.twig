@@ -1,0 +1,174 @@
+<script>
+fnjs_ver_ubi=function(id_ubi){
+	var url='{{ url_ctr }}';
+	var parametros='id_ubi='+id_ubi+'{{ h_ctr|raw }}';
+	$.ajax({
+		data: parametros,
+		url: url,
+		type: 'post',
+		dataType: 'html',
+		complete: function (rta) {
+			rta_txt=rta.responseText;
+			$('#ficha').html(rta_txt);
+		}
+	});
+}
+
+fnjs_poblacion=function(){
+	var filtro=$('#que').val();
+	if (filtro == 'get_r') {
+		$("#td_poblacion").hide();
+		$("#lst_lugar").hide();
+		return;
+	}
+	$("#td_poblacion").show();
+	$("#lst_lugar").show();
+	var url='{{ url_ajax }}';
+	var parametros='que=poblaciones&filtro='+filtro+'{{ h_pob|raw }}';
+	$.ajax({
+		data: parametros,
+		url: url,
+		type: 'post',
+		dataType: 'html',
+		complete: function (rta) {
+			rta_txt=rta.responseText;
+			$('#lst_lugar').html(rta_txt);
+		}
+	});
+}
+
+fnjs_cerrar=function(){
+	$('#div_modificar').html('');
+	$('#div_modificar').width('0');
+	$('#div_modificar').height('0');
+	$('#div_modificar').removeClass('ventana');
+	document.getElementById("overlay").style.display = "none";
+}
+
+fnjs_modificar=function(id_ubi){
+	$('#div_modificar').addClass('ventana');
+	$('#div_modificar').width('auto');
+	$('#div_modificar').height('auto');
+	document.getElementById("overlay").style.display = "block";
+	
+	var url='{{ url_ajax }}';
+	if (id_ubi) {
+		var parametros='que=form_pres&id_ubi='+id_ubi;
+	} else {
+		id_ubi =$('#id_cdc').val();
+		var parametros='que=nuevo&id_ubi='+id_ubi;
+	}
+	var parametros = parametros + '{{ h_del|raw }}';
+	fnjs_update_div('#div_modificar',url+'?'+parametros);
+}
+
+fnjs_ver=function(){
+	pata = $('#seleccion').serialize();
+	var url='{{ url_ajax }}';
+	var parametros=pata;
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta_txt) {
+			//rta_txt=rta.responseText;
+			//alert ('respuesta: '+rta_txt);
+			if (rta_txt) {
+				$('#ficha').html(rta_txt);
+			}
+		}
+	});
+	document.getElementById("overlay").style.display = "none";
+}
+
+fnjs_eliminar=function(id_ubi){
+    seguro=confirm("{{ "¿Está seguro que quiere quitar los datos de presentación de este centro?" }}");
+    if (seguro) { 
+        var url='{{ url_ajax }}';
+        var parametros='que=eliminar&id_ubi='+id_ubi+'{{ h_del|raw }}';
+        //alert ("param "+parametros);
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            complete: function (rta_txt) {
+                //rta_txt=rta.responseText;
+                if (rta_txt) {
+                    alert ('respuesta: '+rta_txt);
+                }
+            }
+        });
+		fnjs_ver();
+    }
+}
+
+fnjs_guardar=function(formulario){
+	var url='{{ url_ajax }}';
+    $(formulario).attr('action',url);
+    $(formulario).submit(function() {
+		$.ajax({
+			data: $(this).serialize(),
+			url: $(this).attr('action'),
+			type: 'post',
+			complete: function (rta) {
+				rta_txt=rta.responseText;
+				if (rta_txt != '' && rta_txt != '\n') {
+					alert (rta_txt);
+				} else {
+					$('#div_modificar').html('');
+					$('#div_modificar').width('0');
+					$('#div_modificar').height('0');
+					$('#div_modificar').removeClass('ventana');
+				}
+			},
+            // OJO hay que actualizar el formulario de la lista, no el actual.
+            success: function() { fnjs_ver(); }
+        });
+        return false;
+    });
+    $(formulario).submit();
+    $(formulario).off();
+}
+
+/*
+fnjs_actualizar_dtor=function(){
+	var url='{{ url_ajax }}';
+	var parametros='que=actualizar+'{{ h_pob|raw }}';
+	//alert ("param "+parametros);
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta_txt) {
+			//rta_txt=rta.responseText;
+			if (rta_txt) {
+				alert ('respuesta: '+rta_txt);
+			}
+		}
+	});
+}
+*/
+
+</script>
+<form id=seleccion name=seleccion action="">
+{{ oHash.getCamposHtml|raw }}
+<table>
+<tr><th colspan=7 class=titulo_inv>{{ "seleccionar centros con cartas de presentación"|trans }}</th></tr>
+<tr>
+	<td class=etiqueta>{{ "según dl"|trans }}:</td>
+	<td colspan=3>
+	{{ oSelects.desplegable|raw }}
+	</td>
+	<td class=etiqueta id="td_poblacion" >{{ "población"|trans }}</td>
+	<td id='lst_lugar' colspan=1>
+	</td>
+	<td>
+<input type=button name="buscar" value="{{ "buscar"|trans }}" onclick="fnjs_ver();">
+</td>
+</tr>
+</table>
+
+</form>
+<div id='ficha'></div>
+<div id='div_modificar'></div>
+<div id='overlay'></div>
