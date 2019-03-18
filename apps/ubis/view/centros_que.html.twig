@@ -1,0 +1,80 @@
+<script>
+fnjs_cerrar=function(){
+	$('#div_modificar').html('');
+	$('#div_modificar').width('0');
+	$('#div_modificar').height('0');
+	$('#div_modificar').removeClass('ventana');
+	document.getElementById("overlay").style.display = "none";
+}
+
+fnjs_modificar=function(id_ubi,tipo){
+	$('#div_modificar').addClass('ventana');
+	$('#div_modificar').width('auto');
+	$('#div_modificar').height('auto');
+	document.getElementById("overlay").style.display = "block";
+
+	var url='{{ url_ajax }}';
+	if (id_ubi) {
+		var parametros='que=form_'+tipo+'&id_ubi='+id_ubi;
+	} else {
+		id_ubi =$('#id_cdc').val();
+		var parametros='que=nuevo&id_ubi='+id_ubi;
+	}
+	parametros = parametros+'{{ h_mod|raw }}';
+	fnjs_update_div('#div_modificar',url+'?'+parametros);
+}
+
+fnjs_ver=function(){
+	pata = $('#seleccion').serialize();
+	var url='{{ url_ajax }}';
+	var parametros=pata;
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta_txt) {
+			//rta_txt=rta.responseText;
+			//alert ('respuesta: '+rta_txt);
+			if (rta_txt) {
+				$('#exportar').html(rta_txt);
+			}
+		}
+	});
+}
+
+fnjs_guardar=function(formulario) {
+    $(formulario).attr('action','{{ url_ajax }}');
+    $(formulario).submit(function() {
+        $.ajax({
+            data: $(this).serialize(),
+            url: $(this).attr('action'),
+            type: 'post',
+            complete: function (rta) {
+                rta_txt=rta.responseText;
+                if (rta_txt != '' && rta_txt != '\n') {
+                    alert (rta_txt);
+                } else {
+                    $('#div_modificar').html('');
+                    $('#div_modificar').width('0');
+                    $('#div_modificar').height('0');
+                    $('#div_modificar').removeClass('ventana');
+					document.getElementById("overlay").style.display = "none";
+                }
+            },
+            // OJO hay que actualizar el formulario de la lista, no el actual.
+            success: function() { fnjs_ver(); }
+        });
+        return false;
+    });
+    $(formulario).submit();
+    $(formulario).off();
+}
+</script>
+<form id=seleccion name=seleccion action="">
+{{ oHash.getCamposHtml|raw }}
+{{ oDesplOpciones.desplegable|raw }}
+<input type=button name="buscar" value="{{ "buscar"|trans }}" onclick="fnjs_ver();">
+</form>
+<div id='exportar'></div>
+<div id='div_modificar'></div>
+<div id='overlay'></div>

@@ -62,6 +62,12 @@ class CentroDl Extends Centro {
 	 */
 	 protected $iid_zona;
 	/**
+	 * sede de CentroDl
+	 *
+	 * @var boolean
+	 */
+	 protected $bsede;
+	/**
 	 * Num_cartas_mensuales de CentroDl
 	 *
 	 * @var integer
@@ -128,6 +134,7 @@ class CentroDl Extends Centro {
 		$aDades['num_habit_indiv'] = $this->inum_habit_indiv;
 		$aDades['plazas'] = $this->iplazas;
 		$aDades['id_zona'] = $this->iid_zona;
+		$aDades['sede'] = $this->bsede;
 		$aDades['num_cartas_mensuales'] = $this->inum_cartas_mensuales;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
@@ -139,6 +146,8 @@ class CentroDl Extends Centro {
 		if ( filter_var( $aDades['sf'], FILTER_VALIDATE_BOOLEAN)) { $aDades['sf']='t'; } else { $aDades['sf']='f'; }
 		$aDades['cdc'] = ($aDades['cdc'] === 't')? 'true' : $aDades['cdc'];
 		if ( filter_var( $aDades['cdc'], FILTER_VALIDATE_BOOLEAN)) { $aDades['cdc']='t'; } else { $aDades['cdc']='f'; }
+		$aDades['sede'] = ($aDades['sede'] === 't')? 'true' : $aDades['sede'];
+		if ( filter_var( $aDades['cdc'], FILTER_VALIDATE_BOOLEAN)) { $aDades['sede']='t'; } else { $aDades['sede']='f'; }
 
 		if ($bInsert === false) {
 			//UPDATE
@@ -155,7 +164,7 @@ class CentroDl Extends Centro {
 					tipo_ctr                 = :tipo_ctr,
 					tipo_labor               = :tipo_labor,
 					cdc                      = :cdc,
-					id_ctr_padre              = :id_ctr_padre,
+					id_ctr_padre             = :id_ctr_padre,
 					n_buzon                  = :n_buzon,
 					num_pi                   = :num_pi,
 					num_cartas               = :num_cartas,
@@ -163,6 +172,7 @@ class CentroDl Extends Centro {
 					num_habit_indiv          = :num_habit_indiv,
 					plazas                   = :plazas,
 					id_zona                  = :id_zona,
+					sede                     = :sede,
 					num_cartas_mensuales     = :num_cartas_mensuales";
 			//print_r($aDades);
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_ubi='$this->iid_ubi'")) === false) {
@@ -178,8 +188,8 @@ class CentroDl Extends Centro {
 			}
 		} else {
 			// INSERT
-			$campos="(tipo_ubi,nombre_ubi,dl,pais,region,status,f_status,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre,n_buzon,num_pi,num_cartas,observ,num_habit_indiv,plazas,id_zona,num_cartas_mensuales)";
-			$valores="(:tipo_ubi,:nombre_ubi,:dl,:pais,:region,:status,:f_status,:sv,:sf,:tipo_ctr,:tipo_labor,:cdc,:id_ctr_padre,:n_buzon,:num_pi,:num_cartas,:observ,:num_habit_indiv,:plazas,:id_zona,:num_cartas_mensuales)";		
+			$campos="(tipo_ubi,nombre_ubi,dl,pais,region,status,f_status,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre,n_buzon,num_pi,num_cartas,observ,num_habit_indiv,plazas,id_zona,sede,num_cartas_mensuales)";
+			$valores="(:tipo_ubi,:nombre_ubi,:dl,:pais,:region,:status,:f_status,:sv,:sf,:tipo_ctr,:tipo_labor,:cdc,:id_ctr_padre,:n_buzon,:num_pi,:num_cartas,:observ,:num_habit_indiv,:plazas,:id_zona,:sede,:num_cartas_mensuales)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'CentroDl.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -276,6 +286,7 @@ class CentroDl Extends Centro {
 		if (array_key_exists('num_habit_indiv',$aDades)) $this->setNum_habit_indiv($aDades['num_habit_indiv']);
 		if (array_key_exists('plazas',$aDades)) $this->setPlazas($aDades['plazas']);
 		if (array_key_exists('id_zona',$aDades)) $this->setId_zona($aDades['id_zona']);
+		if (array_key_exists('sede',$aDades)) $this->setSede($aDades['sede']);
 		if (array_key_exists('num_cartas_mensuales',$aDades)) $this->setNum_cartas_mensuales($aDades['num_cartas_mensuales']);
 	}
 
@@ -414,6 +425,25 @@ class CentroDl Extends Centro {
 		$this->iid_zona = $iid_zona;
 	}
 	/**
+	 * Recupera l'atribut bsede de CentroDl
+	 *
+	 * @return boolean bsede
+	 */
+	function getSede() {
+		if (!isset($this->bsede)) {
+			$this->DBCarregar();
+		}
+		return $this->bsede;
+	}
+	/**
+	 * estableix el valor de l'atribut bsede de CentroDl
+	 *
+	 * @param boolean bsede='' optional
+	 */
+	function setSede($bsede='') {
+		$this->bsede = $bsede;
+	}
+	/**
 	 * Recupera l'atribut inum_cartas_mensuales de CentroDl
 	 *
 	 * @return integer inum_cartas_mensuales
@@ -466,7 +496,7 @@ class CentroDl Extends Centro {
 	}
 
 	/**
-	 * Recupera les propietats de l'atribut in_buzon de CentroooDl
+	 * Recupera les propietats de l'atribut in_buzon de CentroDl
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
@@ -478,7 +508,7 @@ class CentroDl Extends Centro {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut inum_pi de CentroooDl
+	 * Recupera les propietats de l'atribut inum_pi de CentroDl
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
@@ -490,7 +520,7 @@ class CentroDl Extends Centro {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut inum_cartas de CentroooDl
+	 * Recupera les propietats de l'atribut inum_cartas de CentroDl
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
@@ -502,7 +532,7 @@ class CentroDl Extends Centro {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut sobserv de CentroooDl
+	 * Recupera les propietats de l'atribut sobserv de CentroDl
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
@@ -514,7 +544,7 @@ class CentroDl Extends Centro {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut inum_habit_indiv de CentroooDl
+	 * Recupera les propietats de l'atribut inum_habit_indiv de CentroDl
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
@@ -526,7 +556,7 @@ class CentroDl Extends Centro {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut iplazas de CentroooDl
+	 * Recupera les propietats de l'atribut iplazas de CentroDl
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
@@ -538,7 +568,7 @@ class CentroDl Extends Centro {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut iid_zona de CentroooDl
+	 * Recupera les propietats de l'atribut iid_zona de CentroDl
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
@@ -550,7 +580,19 @@ class CentroDl Extends Centro {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut inum_cartas_mensuales de CentroooDl
+	 * Recupera les propietats de l'atribut bsede de CentroDl
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosSede() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'sede'));
+		$oDatosCampo->setEtiqueta(_("sede"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut inum_cartas_mensuales de CentroDl
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo

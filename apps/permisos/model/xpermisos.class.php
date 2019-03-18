@@ -1,5 +1,7 @@
 <?php
 namespace permisos\model;
+use core\ConfigGlobal;
+
 class Xpermisos {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
@@ -243,6 +245,26 @@ class Xpermisos {
 		}
 		return $txt;
 	}
+	
+	/**
+	 * dibuja una lista de check solo lectura
+	 *
+	 */
+	public function cuadros_check_read($bin){
+	    //si $bin es nulo, le pongo todo 0
+	    if (empty($bin)) { $bin=0; }
+	    $txt="";
+	    foreach($this->permissions as $nom=>$num) {
+	        if ($bin & $num) {
+	            $chk="checkbox-checked.png";
+	        } else {
+	            $chk="check-box-outline-blank.png";
+	        }
+	        $txt.="   <img src='http:".ConfigGlobal::$web_icons."/".$chk."' width=10 height=10 border=0>$nom";
+	    }
+	    return $txt;
+	}
+	
 	/**
 	* dibuja una lista de checkbox
 	*
