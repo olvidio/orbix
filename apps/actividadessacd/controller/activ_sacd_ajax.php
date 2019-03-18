@@ -1,14 +1,16 @@
 <?php
 use actividadcargos\model\entity\ActividadCargo;
 use actividadcargos\model\entity\GestorActividadCargo;
+use actividades\model\entity\ActividadDl;
+use actividades\model\entity\GestorActividadDl;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use asistentes\model\entity\AsistenteDl;
-
-use web\Periodo;
-use actividades\model\entity\GestorActividadDl;
+use core\ConfigGlobal;
+use encargossacd\model\entity\GestorEncargo;
 use personas\model\entity\GestorPersonaDl;
-use actividades\model\entity\ActividadDl;
 use personas\model\entity\PersonaDl;
+use web\Periodo;
+use encargossacd\model\entity\GestorEncargoSacd;
 
 /**
 * Esta página sirve para ejecutar las operaciones de guardar, eliminar, listar...
@@ -168,7 +170,7 @@ switch ($Qque) {
 		foreach($oEnc->getCentrosEncargados(array('id_activ'=>$Qid_activ,'_ordre'=>'num_orden')) as $oEncargado) {
 			$id_ctr=$oEncargado->getId_ubi();
 			$num_orden = $oEncargado->getNum_orden();
-            if (core\configGlobal::is_app_installed('encargossacd')) {
+            if (configGlobal::is_app_installed('encargossacd')) {
                 $GesEncargos = new GestorEncargo();
                 // Tipos de encargo que son atención centro. No los rt.
                 // 1000,1100,1200,1300
@@ -176,7 +178,7 @@ switch ($Qque) {
                 if (is_array($cEncargos) && count($cEncargos) > 0) { // puede ser que no haya sacd encargado (dlb, dlbf).
                     // només n'hi hauria d'haver un.
                     $id_enc = $cEncargos[0]->getId_enc();
-                    $GesTareasSacd = new GestorTareaSacd();
+                    $GesTareasSacd = new GestorEncargoSacd();
                     $aWhere=array('id_enc'=>$id_enc,'modo'=>'2|3','f_fin'=>'');
                     $aOperador=array('modo'=>'~','f_fin'=>'IS NULL');
                     $cTareasSacd = $GesTareasSacd->getTareasSacd($aWhere,$aOperador);
@@ -339,7 +341,7 @@ switch ($Qque) {
 			$f_ini = $oActividad->getF_ini()->getFromLocal();
 			$f_fin = $oActividad->getF_fin()->getFromLocal();
 			// mirar permisos.
-			if(core\ConfigGlobal::is_app_installed('procesos')) {
+			if(ConfigGlobal::is_app_installed('procesos')) {
 			    $_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
 			    $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
 			    $oPermCtr = $_SESSION['oPermActividades']->getPermisoActual('ctr');
