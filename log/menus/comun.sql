@@ -101,7 +101,6 @@
 122	1	apps/usuarios/controller/grupo_lista.php	\N	lista grupos
 144	\N	scdl/documentos/cabecera_pie_txt.php	\N	\N
 145	\N	scdl/tabla_mails_ex.php	\N	\N
-146	\N	scdl/centros_que.php	\N	\N
 149	\N	scdl/registro/pen_of_tabla.php	\N	\N
 150	\N	programas/personas_borrar_B.php	\N	\N
 151	\N	sg/list_cp_cr15_86.php	\N	\N
@@ -186,3 +185,5 @@
 188	11	\N	\N	Raiz procesos
 189	4	\N	\N	Raiz stgr
 190	3	\N	\N	Raiz ubis
+191	25	\N	\N	Raiz cartas presentacion
+146	3	apps/ubis/controller/centros_que.php	\N	Centros seleccionar
