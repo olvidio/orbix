@@ -30,6 +30,12 @@ si queremos usar el google traductor, creamos el fichero .po para el spanish, y 
 https://translate.google.com/toolkit/list?hl=ca#translations/active
 </li>
 </ol>
+<h1>OJO!!</h1>
+Las traducciones se guardan en caché en el servidor. Cuando se hace un cambio hay que reiniciar el servidor web (apache):<br>
+<code>service apache2 restart</code><br>
+Si está instalado el phpfpm, esto no basta y también hay que reiniciar:<br>
+<code>service php7.2-fpm restart</code>
+
 
 <h1>Poedit</h1>
 

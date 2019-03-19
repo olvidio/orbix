@@ -65,6 +65,7 @@ function cambiar_idioma($idioma='') {
 						if (substr($a_idiomas[$i], 0, 2) == "ca"){$idioma = "ca_ES.UTF-8";}
 						if (substr($a_idiomas[$i], 0, 2) == "es"){$idioma = "es_ES.UTF-8";}
 						if (substr($a_idiomas[$i], 0, 2) == "en"){$idioma = "en_US.UTF-8";}
+						if (substr($a_idiomas[$i], 0, 2) == "de"){$idioma = "de_DE.UTF-8";}
 						//if (substr($a_idiomas[$i], 0, 2) == "en"){$idioma = "en";}
 						//if (substr($a_idiomas[$i], 0, 2) == "fr"){$idioma = "fr";}
 					}
@@ -76,12 +77,18 @@ function cambiar_idioma($idioma='') {
 		# Si no hemos encontrado ningún idioma que nos convenga, mostramos la web en el idioma por defecto
 		if (!isset($idioma)){$idioma = core\ConfigGlobal::$x_default_idioma;}  
 	}
-//	$idioma=  str_replace('UTF-8', 'utf8', $idioma);
+	//$idioma=  str_replace('UTF-8', 'utf8', $idioma);
 	$domain="orbix";
 //	echo "dir: ".core\ConfigGlobal::$dir_languages."<br>";
 //	echo "domain: $domain, id: $idioma<br>";
+	setlocale(LC_MESSAGES, "");
+	putenv("LC_ALL=''");
+	putenv("LANGUAGE=");
+	
 	setlocale(LC_MESSAGES,$idioma);
-	putenv("LC_ALL=$idioma");
+	putenv("LC_ALL={$idioma}");
+	putenv("LANG={$idioma}");
+	
 	bindtextdomain($domain,core\ConfigGlobal::$dir_languages);
 	textdomain ($domain);
 	bind_textdomain_codeset($domain,'UTF-8');
