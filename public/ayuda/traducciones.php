@@ -1,3 +1,14 @@
+<h1>orbix.po</h1>
+<ol>
+<li>El arxivo que se edita con el poedit (orbix.po) no debe contener doble comillas(") (ni carácteres especiales) en la traducción.
+ En su caso deben ir precedidos por un escape (\).
+ </li>
+ <li>
+ Cuando aparece un %s indica que es una variable, que permite cambiarla de orden en la tracucción.
+ (También puede parecer un %d, que indica que es un número).
+ </li>
+ </ol>
+ 
 <p>Existe una plantilla con todas las frases a traducir en:
 	orbix/languages/es_ES.pot
 </p>
