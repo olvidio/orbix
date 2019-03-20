@@ -27,45 +27,45 @@ class CartaPresentacion Extends core\ClasePropiedades {
 	 *
 	 * @var array
 	 */
-	 private $aPrimary_key;
+	 protected $aPrimary_key;
 
 	/**
 	 * aDades de CartaPresentacion
 	 *
 	 * @var array
 	 */
-	 private $aDades;
+	 protected $aDades;
 
 	/**
 	 * Id_ubi de CartaPresentacion
 	 *
 	 * @var integer
 	 */
-	 private $iid_ubi;
+	 protected $iid_ubi;
 	/**
 	 * Pres_nom de CartaPresentacion
 	 *
 	 * @var string
 	 */
-	 private $spres_nom;
+	 protected $spres_nom;
 	/**
 	 * Pres_telf de CartaPresentacion
 	 *
 	 * @var string
 	 */
-	 private $spres_telf;
+	 protected $spres_telf;
 	/**
 	 * Pres_mail de CartaPresentacion
 	 *
 	 * @var string
 	 */
-	 private $spres_mail;
+	 protected $spres_mail;
 	/**
 	 * Zona de CartaPresentacion
 	 *
 	 * @var string
 	 */
-	 private $szona;
+	 protected $szona;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
 	 * oDbl de CartaPresentacion
@@ -90,7 +90,7 @@ class CartaPresentacion Extends core\ClasePropiedades {
 	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
 	 */
 	function __construct($a_id='') {
-		$oDbl = $GLOBALS['oDB'];
+		$oDbl = $GLOBALS['oDBP'];
 		if (is_array($a_id)) { 
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {

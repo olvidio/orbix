@@ -26,7 +26,7 @@ class GestorCartaPresentacion Extends core\ClaseGestor {
 	 *
 	 */
 	function __construct() {
-		$oDbl = $GLOBALS['oDB'];
+		$oDbl = $GLOBALS['oDBP'];
 		$this->setoDbl($oDbl);
 		$this->setNomTabla('du_presentacion');
 	}

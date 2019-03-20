@@ -64,8 +64,8 @@ $h_del = $oHashDel->linkSinVal();
 
 $oHash = new Hash();
 $oHash->setUrl($url_ajax);
-$oHash->setcamposForm('que!poblacion_sel');
-$oHash->setCamposNo('scroll_id!sel');
+$oHash->setcamposForm('que');
+$oHash->setCamposNo('scroll_id!sel!poblacion_sel');
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,

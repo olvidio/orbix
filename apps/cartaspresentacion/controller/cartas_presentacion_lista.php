@@ -2,9 +2,9 @@
 // INICIO Cabecera global de URL de controlador *********************************
 
 use cartaspresentacion\model\entity\GestorCartaPresentacion;
+use cartaspresentacion\model\entity\GestorCartaPresentacionDl;
 use core\ConfigGlobal;
 use ubis\model\entity\Centro;
-use ubis\model\entity\Direccion;
 use ubis\model\entity\GestorCentro;
 use ubis\model\entity\GestorDireccionCtr;
 
@@ -25,9 +25,12 @@ switch ($Qque) {
 	case "lista_dl":
 		$solo_dl = 1;
 		$mi_dele = ConfigGlobal::mi_dele();
+		$GesPresentacion = new GestorCartaPresentacionDl();
 	case "lista_todo":
 		$ordenar_dl = 1;
-		$GesPresentacion = new GestorCartaPresentacion();
+		if (empty($solo_dl)) {
+		  $GesPresentacion = new GestorCartaPresentacion();
+		}
 		$colPresentacion = $GesPresentacion->getCartasPresentacion();
 		$a_mega = array();
 		foreach ($colPresentacion as $oPresentacion) {

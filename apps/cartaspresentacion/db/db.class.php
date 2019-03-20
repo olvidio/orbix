@@ -27,6 +27,7 @@ class DB extends DBAbstract {
     
     public function createAll() {
         $this->create_presentacion();
+        $this->create_presentacion_resto();
     }
     
     /**
@@ -54,6 +55,45 @@ class DB extends DBAbstract {
         $this->executeSql($a_sql);
         
         $this->delPermisoGlobal('svsf');
+    }
+
+    public function create_presentacion_resto() {
+        // OJO Corresponde al esquema sf/sv, no al comun.
+        $esquema_org = $this->esquema;
+        $role_org = $this->role;
+        $this->esquema = 'resto'.$this->vf;
+        $this->role = 'orbix'.$this->vf;
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('svsf');
+        
+        $tabla = "du_presentacion";
+        
+        $nom_tabla = $this->esquema.'.'."du_presentacion_ex";
+        $nom_tabla_parent = 'public';
+        if ($this->vf == 'v') {
+            $nom_tabla_parent = 'publicv';
+        }
+        if ($this->vf == 'f') {
+            $nom_tabla_parent = 'publicf';
+        }
+        
+        $a_sql = [];
+        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                )
+            INHERITS ($nom_tabla_parent.$tabla);";
+        
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+        
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_ubi); ";
+        
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
+        
+        $this->executeSql($a_sql);
+        
+        $this->delPermisoGlobal('svsf');
+        // Devolver los valores al estado original
+        $this->esquema = $esquema_org;
+        $this->role = $role_org;
     }
     public function eliminar_presentacion() {
         $this->addPermisoGlobal('svsf');

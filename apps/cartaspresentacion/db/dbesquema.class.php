@@ -36,10 +36,10 @@ class DBEsquema extends DBAbstract {
     
     private function infoTable($tabla) {
         $datosTabla = [];
-        $datosTabla['tabla'] = $tabla;
         switch ($tabla) {
             case "du_presentacion":
-                $nom_tabla = $this->getNomTabla($tabla);
+                $datosTabla['tabla'] = "du_presentacion_dl";
+                $nom_tabla = $this->getNomTabla("du_presentacion_dl");
                 $campo_seq = '';
                 $id_seq = '';
                 break;
