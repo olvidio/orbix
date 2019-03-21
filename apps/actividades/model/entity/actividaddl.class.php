@@ -158,12 +158,12 @@ class ActividadDl Extends ActividadAll {
 			// generar proceso.
 			if (core\configGlobal::is_app_installed('procesos')) {
 				$oGestorActividadProcesoTarea = new procesos\GestorActividadProcesoTarea();
-				$oGestorActividadProcesoTarea->generarProceso($aDades['id_activ']);
+				$oGestorActividadProcesoTarea->generarProceso($aDadesLast['id_activ']);
 			}
 			// anotar cambio.
 			if (core\ConfigGlobal::is_app_installed('cambios') && empty($quiet)) {
 				$oGestorCanvis = new cambios\GestorCanvis();
-				$oGestorCanvis->addCanvi("$nom_tabla", 'INSERT', $aDades['id_activ'], $aDades, array());
+				$oGestorCanvis->addCanvi("$nom_tabla", 'INSERT', $aDadesLast['id_activ'], $this->aDades, array());
 			}
 		}
 		return true;
