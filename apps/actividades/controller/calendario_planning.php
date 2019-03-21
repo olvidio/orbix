@@ -50,6 +50,13 @@ $Qtipo = (string) \filter_input(INPUT_POST, 'tipo');
 $Qdd = (integer) \filter_input(INPUT_POST, 'dd');
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 
+$Qid_cdc_mas = (string) \filter_input(INPUT_POST, 'id_cdc_mas');
+$Qid_cdc_num = (string) \filter_input(INPUT_POST, 'id_cdc_num');
+$Qiasistentes_val = (string) \filter_input(INPUT_POST, 'iasistentes_val');
+$Qiactividad_val = (string) \filter_input(INPUT_POST, 'iactividad_val');
+$Qempiezamax = '';
+$Qempiezamin = '';
+
 if (empty($Qperiodo) || $Qperiodo == 'otro') {
     $Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
     $Qfin = (string) \filter_input(INPUT_POST, 'fin');
@@ -69,6 +76,7 @@ if (empty($Qperiodo) || $Qperiodo == 'otro') {
     $oFinPlanning = web\DateTimeLocal::createFromFormat('Y/m/d',$fin);
 }
 
+$a_id_cdc = [];
 // valores por defecto.
 //divisiones por día
 if (empty($Qdd) || (($Qdd<>1) AND ($Qdd<>3))) {
@@ -216,7 +224,21 @@ if ($Qcdc_sel < 10) { //Para buscar por casas.
 	$a_actividades[]=array($cdc[$p+1]=>array());
 }
 
-//$param = "mod=$mod&modelo=$Qmodelo& dd=$Qdd& cdc_sel=$Qcdc_sel& id_cdc=$Qid_cdc& periodo=$Qperiodo& year=$year& fin=$fin& inicio=$inicio";
+$aGoBack = array (
+    'modelo'=>$Qmodelo,
+    'cdc_sel'=>$Qcdc_sel,
+    'dd'=>$Qdd,
+    'id_cdc'=>$a_id_cdc,
+    'id_cdc_mas'=>$Qid_cdc_mas,
+    'id_cdc_num'=>$Qid_cdc_num,
+    'iasistentes_val'=>$Qiasistentes_val,
+    'iactividad_val'=>$Qiactividad_val,
+    'periodo'=>$Qperiodo,
+    'year'=>$Qyear,
+    'empiezamin'=>$Qempiezamin,
+    'empiezamax'=>$Qempiezamax );
+$oPosicion->setParametros($aGoBack,1);
+
 
 $oHashMod = new web\Hash();
 $oHashMod->setUrl(core\ConfigGlobal::getWeb().'/apps/actividades/controller/calendario_ajax.php');

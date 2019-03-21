@@ -45,8 +45,6 @@ $oPlanning->setTable_border($table_border);
 
 switch ($Qque) {
 	case "get":
-        $Qid_ubi = (string) \filter_input(INPUT_POST, 'id_ubi');
-        $Qyear = (string) \filter_input(INPUT_POST, 'year');
         $Qdd = (integer) \filter_input(INPUT_POST, 'dd');
         $Qcabecera = (string) \filter_input(INPUT_POST, 'cabecera');
         $QsIniPlanning = (string) \filter_input(INPUT_POST, 'sIniPlanning');

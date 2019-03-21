@@ -30,11 +30,16 @@ fnjs_cerrar=function(){
 	document.getElementById("overlay").style.display = "none";
 }
 
+fnjs_volver=function() {
+	<?= $oPosicion->js_atras(0) ?>;
+}
+
 fnjs_ver=function(){
 	/* obtener el listado */
 	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/actividades/controller/calendario_ajax.php';
 	var parametros="<?= $param_ver ?>";
-		 
+
+    $('#ficha').html('');
 	$.ajax({
 		url: url,
 		type: 'post',

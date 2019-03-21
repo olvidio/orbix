@@ -7,6 +7,7 @@ $(function() {
 		});
 
 });
+
 $(function() {
 	$( "#f_fin" ).datepicker( {
 		numberOfMonths: 3,
@@ -14,6 +15,18 @@ $(function() {
 		});
 
 });
+
+// Para poner por defecto en el mismo dia que el iniciode actividad
+$("#f_fin").click(function() {
+	var fin = '';
+    var ini = $( "#f_ini" ).val();
+
+    fin = $( "#f_fin" ).val();
+    if (ini && !fin) {
+    	$(this).datepicker('setDate',ini);
+    }
+});
+
 /*
  * Para enviar los parametros por POST
  * @type jQuery
@@ -39,7 +52,9 @@ fnjs_cambiar_ubi=function(){
         WinId.focus();
 	});
 };
-fnjs_guardar=function(tipo=''){
+
+/*
+fnjs_guardar=function(tipo='') {
 	var err = 0;
 	if (!fnjs_comprobar_fecha('#f_ini')) { err=1; }
 	if (!fnjs_comprobar_fecha('#f_fin')) { err=1; }
@@ -48,7 +63,7 @@ fnjs_guardar=function(tipo=''){
 	var dl_org=$('#dl_org').val();
 	var estado = $('#status').val();
 
-	/* comprobar si el id_tipo_actividad está completo */
+	// comprobar si el id_tipo_actividad está completo 
 	var id_sfsv_val=$('#isfsv_val').val();
 	var id_asistentes_val=$('#iasistentes_val').val();
 	var id_actividad_val=$('#iactividad_val').val();
@@ -58,7 +73,7 @@ fnjs_guardar=function(tipo=''){
 	if (id_asistentes_val == '.') { alert("{{ "debe concretar los asistentes en el tipo de actividad"|trans }}"); err=1; }
 	if (id_actividad_val == '.') { alert("{{ "debe concretar la actividad en el tipo de actividad"|trans }}"); err=1; }
 	if (id_nom_tipo_val == '...') { alert("{{ "debe concretar el tipo de actividad"|trans }}"); err=1; }
-	/* fin de tipo */
+	// fin de tipo 
 	
 	if (!dl_org) { 
 		alert("{{ "debe llenar el campo de Organiza"|trans }}"); err=1;
@@ -78,17 +93,19 @@ fnjs_guardar=function(tipo=''){
 					rta_txt=rta.responseText;
 					if (rta_txt != '' && rta_txt != '\\n') {
 						alert ('{{ "respuesta"|trans }}: '+rta_txt);
-					} else {
-						{{ oPosicion.js_atras(1)|raw }}
 					}
-				}
-			});
-			return false;
+				},
+                // OJO hay que actualizar el formulario de la lista, no el actual.
+                // Esta función está en calendario_planning.phtml 
+                success: function() { fnjs_ver(); }
+            });
+            return false;
 		});
 		$('#modifica').submit();
 		$('#modifica').off();
 	}
 };
+*/
 
 fnjs_actualizar_sacd=function(){
 	$('#modifica').attr('action','programas/actividad_update.php');

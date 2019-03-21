@@ -7,12 +7,24 @@ $(function() {
 		});
 
 });
+
 $(function() {
 	$( "#f_fin" ).datepicker( {
 		numberOfMonths: 3,
 		showButtonPanel: true
 		});
 
+});
+
+// Para poner por defecto en el mismo dia que el iniciode actividad
+$("#f_fin").click(function() {
+	var fin = '';
+    var ini = $( "#f_ini" ).val();
+
+    fin = $( "#f_fin" ).val();
+    if (ini && !fin) {
+    	$(this).datepicker('setDate',ini);
+    }
 });
 /*
  * Para enviar los parametros por POST
@@ -74,23 +86,22 @@ fnjs_guardar=function(tipo=''){
 				data: $(this).serialize(),
 				url: $(this).attr('action'),
 				type: 'post',
-				complete: function (rta) {
-					rta_txt=rta.responseText;
+				success: function (rta_txt) {
+					//rta_txt=rta.responseText;
 					if (rta_txt != '' && rta_txt != '\\n') {
 						alert ('{{ "respuesta"|trans }}: '+rta_txt);
-					} else {
-						$('#div_modificar').html('');
-						$('#div_modificar').width('0');
-						$('#div_modificar').height('0');
-						$('#div_modificar').removeClass('ventana');
 					}
 				},
+				complete: function () {
+                    // Esta función está en calendario_planning.phtml 
+                    fnjs_cerrar();
+                    fnjs_volver();
+				}
             });
             return false;
         });
         $('#modifica').submit();
         $('#modifica').off();
-        {{ oPosicion.js_atras(0)|raw }};
 	}
 };
 
