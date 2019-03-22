@@ -7,30 +7,42 @@ fnjs_cerrar=function(){
 	document.getElementById("overlay").style.display = "none";
 }
 
-fnjs_guardar=function(formulario){
-    $(formulario).attr('action',"apps/actividades/controller/actividad_tarifa_ajax.php")
-	$(formulario).submit(function() {
-		$.ajax({
-			data: $(this).serialize(),
-			url: $(this).attr('action'),
-			type: 'post',
-			complete: function (rta) {
-				rta_txt=rta.responseText;
-				if (rta_txt != '' && rta_txt != '\n') {
-					alert (rta_txt);
-				} else {
-                    $('#div_modificar').html('');
-                    $('#div_modificar').width('0');
-                    $('#div_modificar').height('0');
-                    $('#div_modificar').removeClass('ventana');
-				}
-			},
-            success: function() { fnjs_ver(); }
-		});
-		return false;
-	});
-	$(formulario).submit();
-	$(formulario).off();
+fnjs_guardar=function(formulario,que){
+	var err=0;
+	if (que=="tar_ubi_eliminar") {
+		seguro=confirm("EEE");
+		if (seguro) { 
+			err=0;
+		} else {
+			err=1;
+		}
+	}
+	if (err!=1) {
+		$(formulario+' input[name="que"]').val(que)
+        $(formulario).attr('action',"apps/actividades/controller/actividad_tarifa_ajax.php")
+        $(formulario).submit(function() {
+            $.ajax({
+                data: $(this).serialize(),
+                url: $(this).attr('action'),
+                type: 'post',
+                complete: function (rta) {
+                    rta_txt=rta.responseText;
+                    if (rta_txt != '' && rta_txt != '\n') {
+                        alert (rta_txt);
+                    } else {
+                        $('#div_modificar').html('');
+                        $('#div_modificar').width('0');
+                        $('#div_modificar').height('0');
+                        $('#div_modificar').removeClass('ventana');
+                    }
+                },
+                success: function() { fnjs_ver(); }
+            });
+            return false;
+        });
+        $(formulario).submit();
+        $(formulario).off();
+	}
 }
 
 fnjs_modificar=function(id_item,letra){

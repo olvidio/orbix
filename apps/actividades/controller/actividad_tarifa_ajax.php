@@ -42,6 +42,7 @@ switch ($Qque) {
 		} else {
     		$camposForm = 'cantidad!id_tarifa';
 		}
+		$oHash->setCamposNo('que');
 		$oHash->setcamposForm($camposForm);
 		$oHash->setArraycamposHidden($a_camposHidden);
 
@@ -58,7 +59,9 @@ switch ($Qque) {
 			$txt.='<br>';
 		}
 		$txt.=_("nuevo importe") .": <input type=text size=6 id='cantidad' name='cantidad' onblur=\"fnjs_comprobar_dinero('#cantidad');\"> "._("€")."<br>";
+		$txt.="<br>";
 		$txt.="<input type='button' value='". _("guardar") ."' onclick=\"fnjs_guardar('#frm_tarifa_ubi');\" >";
+		$txt.="<input type='button' value='". _("eliminar") ."' onclick=\"fnjs_guardar('#frm_tarifa_ubi','tar_ubi_eliminar');\" >";
 		$txt.="<input type='button' value='". _("cancel") ."' onclick='fnjs_cerrar();' >";
 		$txt.="</form> ";
 		echo $txt;
@@ -321,6 +324,14 @@ switch ($Qque) {
 		$oTipoTarifa = new TipoTarifa($_POST['id_tarifa']);
 		$oTipoTarifa->DBCarregar();
 		if ($oTipoTarifa->DBEliminar() === false) {
+			echo _("hay un error, no se ha borrado");
+		}
+		break;
+	case "tar_ubi_eliminar":
+	    $Qid_item = (string) \filter_input(INPUT_POST, 'id_item');
+		$oTarifa = new Tarifa($Qid_item);
+		$oTarifa->DBCarregar();
+		if ($oTarifa->DBEliminar() === false) {
 			echo _("hay un error, no se ha borrado");
 		}
 		break;

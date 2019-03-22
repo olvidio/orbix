@@ -331,7 +331,7 @@ img.calendar:hover { cursor: pointer; }
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.dataview.js'; ?>'></script>
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick.pager.js'; ?>'></script>
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick.columnpicker.js'; ?>'></script>
-<script type="text/javascript" src="<?= ConfigGlobal::$web_scripts.'/fechas.js.php?'.rand(); ?>"></script>
+<script type="text/javascript" src="<?= ConfigGlobal::$web_scripts.'/formatos.js.php?'.rand(); ?>"></script>
 <script type="text/javascript" src="<?= ConfigGlobal::$web_scripts.'/selects.js.php?'.rand(); ?>"></script>
 <script type="text/javascript" src="<?= ConfigGlobal::$web_scripts.'/exportar.js?'.rand(); ?>"></script>
 </head>
