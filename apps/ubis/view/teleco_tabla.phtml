@@ -22,16 +22,16 @@ fnjs_eliminar=function(formulario){
 			$(formulario).attr('action',"apps/ubis/controller/teleco_update.php");
 			$(formulario).submit(function() {
 				$.ajax({
-					data: $(this).serialize(),
 					url: $(this).attr('action'),
 					type: 'post',
-					complete: function (rta) {
-						rta_txt=rta.responseText;
-						if (rta_txt.search('id="ir_a"') != -1) {
-							fnjs_mostra_resposta(rta,'#main'); 
-						}
-					},
-					success: function() { fnjs_actualizar(formulario) }
+					data: $(this).serialize()
+				})
+				.done(function (rta_txt) {
+					if (rta_txt.search('id="ir_a"') != -1) {
+						fnjs_mostra_resposta(rta,'#main'); 
+					} else { 
+						fnjs_actualizar(formulario);
+				   	}
 				});
 				return false;
 			});

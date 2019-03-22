@@ -5,14 +5,13 @@ fnjs_busca_sacds=function(){
 		var url='{{ url_ajax }}';
 		var parametros='que=get_lista&id_zona='+id_zona+'{{ h_sacd|raw }}';
 		$.ajax({
-			data: parametros,
 			url: url,
 			type: 'post',
-			dataType: 'html',
-			complete: function (rta) {
-				rta_txt=rta.responseText;
-				$('#lst_sacds').html(rta_txt);
-			}
+			data: parametros,
+			dataType: 'html'
+		})
+		.done(function (rta_txt) {
+			$('#lst_sacds').html(rta_txt);
 		});
 	}
 }
@@ -21,16 +20,13 @@ fnjs_guardar=function(formulario,n){
 	$(formulario).attr('action','{{ url_ajax }}');
 	$(formulario).submit(function() {
 		$.ajax({
-			data: $(this).serialize(),
 			url: $(this).attr('action'),
 			type: 'post',
-			complete: function (rta_txt) {
-				if (typeof rta_txt === 'object' && rta_txt !== null) {
-					rta_txt = rta_txt.responseText;
-				}
-				if (rta_txt != '' && rta_txt != '\n') {
-					alert ('{{ "respuesta"|trans }}: '+rta_txt);
-				}
+			data: $(this).serialize()
+		})
+		.done(function (rta_txt) {
+			if (rta_txt != '' && rta_txt != '\n') {
+				alert ('{{ "respuesta"|trans }}: '+rta_txt);
 			}
 		});
 		return false;

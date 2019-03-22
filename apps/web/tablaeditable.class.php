@@ -865,12 +865,11 @@ class TablaEditable {
 					$.ajax({
 						url: url,
 						type: 'post',
-						data: $(this).serialize(),
-						complete: function (rta) {
-							rta_txt=rta.responseText;
-							if (rta_txt != '' && rta_txt != '\\n') {
-								alert ('<?= _(\"respuesta\") ?>: '+rta_txt);
-							}
+						data: $(this).serialize()
+					})
+					.done(function (rta_txt) {
+						if (rta_txt != '' && rta_txt != '\\n') {
+							alert ('<?= _(\"respuesta\") ?>: '+rta_txt);
 						}
 					});
 					return false;

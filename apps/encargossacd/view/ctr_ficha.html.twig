@@ -5,15 +5,14 @@ fnjs_lista_ctrs=function(id_ubi){
 	var url='{{ url_ctr|raw }}';
 	var parametros='filtro_ctr='+filtro_ctr+'&id_ubi='+id_ubi+'{{ h_ctr|raw }}';
 	$.ajax({
-		data: parametros,
 		url: url,
 		type: 'post',
-		dataType: 'html',
-		complete: function (rta) {
-			rta_txt=rta.responseText;
-			$('#centros').html(rta_txt);
-			$('#ficha').html(''); // limpio lo que pueda haber en la pantalla
-		}
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		$('#centros').html(rta_txt);
+		$('#ficha').html(''); // limpio lo que pueda haber en la pantalla
 	});
 
 }
@@ -34,14 +33,13 @@ fnjs_guardar=function(enc){
 		$(formulario).attr('action','apps/encargossacd/controller/ctr_ficha_update.php');
 		$(formulario).submit(function() {
 			$.ajax({
-				data: $(this).serialize(),
 				url: $(this).attr('action'),
 				type: 'post',
-				complete: function (rta) {
-					rta_txt=rta.responseText;
-					if (rta_txt != '' && rta_txt != '\n') {
-						alert (rta_txt);
-					}
+				data: $(this).serialize()
+			})
+			.done(function (rta_txt) {
+				if (rta_txt != '' && rta_txt != '\n') {
+					alert (rta_txt);
 				}
 			});
 			return false;
@@ -58,14 +56,13 @@ fnjs_ver_ficha=function(){
         var url='{{ url_ficha|raw }}';
         var parametros='id_ubi='+id_ubi+'{{ h_ficha|raw }}';
 		$.ajax({
-			data: parametros,
 			url: url,
 			type: 'post',
-			dataType: 'html',
-			complete: function (rta) {
-				rta_txt=rta.responseText;
-				$('#ficha').html(rta_txt);
-			}
+			data: parametros,
+			dataType: 'html'
+		})
+		.done(function (rta_txt) {
+			$('#ficha').html(rta_txt);
 		});
 	} else {
         $('#ficha').html(''); // limpio lo que pueda haber en la pantalla

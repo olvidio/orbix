@@ -47,17 +47,16 @@ fnjs_guardar=function(formulario,que){
 		$(formulario).attr('action','<?= core\ConfigGlobal::getWeb() ?>/apps/actividades/controller/actividad_tarifa_tipo_ajax.php');
 		$(formulario).submit(function() {
 			$.ajax({
-				data: $(this).serialize(),
 				url: $(this).attr('action'),
 				type: 'post',
-				complete: function (rta) {
-					rta_txt=rta.responseText;
-					if (rta_txt != '' && rta_txt != '\n') {
-						alert (rta_txt);
-					} else {
-						fnjs_ver();
-						fnjs_cerrar();
-					}
+				data: $(this).serialize()
+			})
+			.done(function (rta_txt) {
+				if (rta_txt != '' && rta_txt != '\n') {
+					alert (rta_txt);
+				} else {
+					fnjs_ver();
+					fnjs_cerrar();
 				}
 			});
 			return false;

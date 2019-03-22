@@ -10,12 +10,10 @@ fnjs_cmb_propietario=function(){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			//alert ('<?= _("respuesta") ?>: '+rta_txt);
-			$('#lst_propietarios').html(rta_txt);
-		}
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		$('#lst_propietarios').html(rta_txt);
 	});
 }
 
@@ -29,16 +27,15 @@ fnjs_guardar=function(formulario){
 		$(formulario).attr('action',"apps/asistentes/controller/update_3101.php");
 		$(formulario).submit(function() {
 			$.ajax({
-				data: $(this).serialize(),
 				url: $(this).attr('action'),
 				type: 'post',
-				complete: function (rta) {
-					rta_txt=rta.responseText;
-					if (rta_txt != '' && rta_txt != '\\n') {
-						alert ('<?= _("respuesta") ?>: '+rta_txt);
-					} else {
-						<?= $oPosicion->js_atras(1); ?>
-					}
+				data: $(this).serialize()
+			})
+			.done(function (rta_txt) {
+				if (rta_txt != '' && rta_txt != '\\n') {
+					alert ('<?= _("respuesta") ?>: '+rta_txt);
+				} else {
+					<?= $oPosicion->js_atras(1); ?>
 				}
 			});
 			return false;

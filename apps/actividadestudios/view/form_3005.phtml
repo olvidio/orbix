@@ -28,14 +28,13 @@ fnjs_mas_profes=function(filtro){
 			break;
 	}
 	$.ajax({
-		data: parametros,
 		url: url,
 		type: 'post',
-		dataType: 'html',
-		complete: function (rta) {
-			rta_txt=rta.responseText;
-			$('#lst_profes').html(rta_txt);
-		}
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		$('#lst_profes').html(rta_txt);
 	});
 }
 
@@ -46,16 +45,15 @@ fnjs_guardar=function(formulario){
 		$(formulario).attr('action','apps/actividadestudios/controller/update_3005.php');
 		$(formulario).submit(function() {
 			$.ajax({
-				data: $(this).serialize(),
 				url: $(this).attr('action'),
 				type: 'post',
-				complete: function (rta) {
-					rta_txt=rta.responseText;
-					if (rta_txt != '' && rta_txt != '\\n') {
-						alert ('<?= _("respuesta") ?>: '+rta_txt);
-					} else {
-						<?= $oPosicion->js_atras(1); ?>
-					}
+				data: $(this).serialize()
+			})
+			.done(function (rta_txt) {
+				if (rta_txt != '' && rta_txt != '\\n') {
+					alert ('<?= _("respuesta") ?>: '+rta_txt);
+				} else {
+					<?= $oPosicion->js_atras(1); ?>
 				}
 			});
 			return false;

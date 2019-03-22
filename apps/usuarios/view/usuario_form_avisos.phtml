@@ -36,16 +36,15 @@ fnjs_borrar=function(formulario,que_val){
 					$(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
 					$(formulario).submit(function() {
 						$.ajax({
-							data: $(this).serialize(),
-							type: 'post',
 							url: $(this).attr('action'),
-							complete: function (rta) { 
-								rta_txt=rta.responseText;
-								if (rta_txt.indexOf('id="ir_a"') != -1) {
-									fnjs_mostra_resposta(rta,'#main'); 
-								} else {
-									if (go) fnjs_update_div('#main',go); 
-								}
+							type: 'post',
+							data: $(this).serialize()
+						})
+						.done(function (rta_txt) { 
+							if (rta_txt.indexOf('id="ir_a"') != -1) {
+								fnjs_mostra_resposta(rta,'#main'); 
+							} else {
+								if (go) fnjs_update_div('#main',go); 
 							}
 						});
 						return false;
@@ -61,16 +60,15 @@ fnjs_borrar=function(formulario,que_val){
 					$(formulario).attr('action',"apps/usuarios/controller/usuario_aviso_update.php");
 					$(formulario).submit(function() {
 						$.ajax({
-							data: $(this).serialize(),
-							type: 'post',
 							url: $(this).attr('action'),
-							complete: function (rta) { 
-								rta_txt=rta.responseText;
-								if (rta_txt.indexOf('id="ir_a"') != -1) {
-									fnjs_mostra_resposta(rta,'#main'); 
-								} else {
-									if (go) fnjs_update_div('#main',go); 
-								}
+							type: 'post',
+							data: $(this).serialize()
+						})
+						.done(function (rta_txt) { 
+							if (rta_txt.indexOf('id="ir_a"') != -1) {
+								fnjs_mostra_resposta(rta,'#main'); 
+							} else {
+								if (go) fnjs_update_div('#main',go); 
 							}
 						});
 						return false;

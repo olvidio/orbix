@@ -4,16 +4,16 @@ fnjs_guardar=function(formulario){
 	$(formulario).attr('action',"apps/actividadplazas/controller/resumen_plazas_update.php");
 	$(formulario).submit(function() {
 		$.ajax({
-			data: $(this).serialize(),
 			url: $(this).attr('action'),
 			type: 'post',
-			complete: function (rta) { 
-				rta_txt=rta.responseText;
-				if (rta_txt != '' && rta_txt != '\n') {
-					alert (rta_txt);
-				}
-			},
-			success: function() { fnjs_actualizar('#frm_actualizar') }
+			data: $(this).serialize()
+		})
+		.done(function (rta_txt) { 
+			if (rta_txt != '' && rta_txt != '\n') {
+				alert (rta_txt);
+			} else {
+				fnjs_actualizar('#frm_actualizar');
+			}
 		});
 		return false;
 	});

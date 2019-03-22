@@ -23,14 +23,13 @@ fnjs_lista_menus=function(id_ubi){
 	var url='<?= core\ConfigGlobal::getWeb().'/apps/devel/controller/metamenus_get.php'; ?>';
 	var parametros='filtro_mod='+filtro_mod;
 	$.ajax({
-		data: parametros,
 		url: url,
 		type: 'post',
-		dataType: 'html',
-		complete: function (rta) {
-			rta_txt=rta.responseText;
-			$('#ficha').html(rta_txt);
-		}
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		$('#ficha').html(rta_txt);
 	});
 }
 
@@ -39,14 +38,13 @@ fnjs_ver_ficha=function(id_menu){
 	var url='<?= core\ConfigGlobal::getWeb().'/apps/devel/controller/metamenus_get.php'; ?>';
 	var parametros='id_menu='+id_menu+'&filtro_mod='+filtro_mod;
 	$.ajax({
-		data: parametros,
 		url: url,
 		type: 'post',
-		dataType: 'html',
-		complete: function (rta) {
-			rta_txt=rta.responseText;
-			$('#ficha').html(rta_txt);
-		}
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		$('#ficha').html(rta_txt);
 	});
 }
 </script>

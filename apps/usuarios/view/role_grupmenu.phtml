@@ -3,16 +3,15 @@ fnjs_add_grupmenu=function(formulario){
 	$(formulario).attr('action',"apps/usuarios/controller/role_update.php");
 	$(formulario).submit(function() {
 		$.ajax({
-			data: $(this).serialize(),
-			type: 'post',
 			url: $(this).attr('action'),
-			complete: function (rta) {
-				rta_txt=rta.responseText;
-				if (rta_txt != '' && rta_txt != '\\n') {
-					alert ('<?= _("respuesta") ?>: '+rta_txt);
-				} else {
-					<?= $oPosicion->js_atras(1); ?>
-				}
+			type: 'post',
+			data: $(this).serialize()
+		})
+		.done(function (rta_txt) {
+			if (rta_txt != '' && rta_txt != '\\n') {
+				alert ('<?= _("respuesta") ?>: '+rta_txt);
+			} else {
+				<?= $oPosicion->js_atras(1); ?>
 			}
 		});
 		return false;

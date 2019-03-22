@@ -39,10 +39,10 @@ fnjs_asignar_sacd=function(id_activ,id_nom){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-            if (rta_txt != '' && rta_txt != '\n') { alert ('respuesta1: '+rta_txt); }
-		}
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if (rta_txt != '' && rta_txt != '\n') { alert ('respuesta1: '+rta_txt); }
 	});
 	if ($('#sacd').length) { $('#sacd').remove(); }
 	fnjs_actualizar_activ(id_activ);
@@ -66,16 +66,14 @@ fnjs_nuevo_sacd=function(id_activ,f_ini,f_fin){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta_txt);
-			if ($('#sacd').length) { $('#sacd').remove(); }
-			var txt="<div id=sacd class=sacd>";
-				txt+=rta_txt;
-				txt+="</ul></div>";
-			$('#lst_sacd').append(txt);
-		}
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if ($('#sacd').length) { $('#sacd').remove(); }
+		var txt="<div id=sacd class=sacd>";
+			txt+=rta_txt;
+			txt+="</ul></div>";
+		$('#lst_sacd').append(txt);
 	});
 }
  
@@ -86,10 +84,10 @@ fnjs_orden=function(id_activ,id_cargo,id_nom,num_orden){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-            if (rta_txt != '' && rta_txt != '\n') { alert ('respuesta2: '+rta_txt); }
-		}
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if (rta_txt != '' && rta_txt != '\n') { alert ('respuesta2: '+rta_txt); }
 	});
 	fnjs_actualizar_activ(id_activ);
 }
@@ -102,14 +100,12 @@ fnjs_actualizar_activ=function(id_activ){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta_txt);
-			if (rta_txt) {
-				var txt_id='#'+id_activ+'_sacds';
-				$(txt_id).html(rta_txt);
-			}
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if (rta_txt) {
+			var txt_id='#'+id_activ+'_sacds';
+			$(txt_id).html(rta_txt);
 		}
 	});
 }

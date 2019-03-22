@@ -4,14 +4,13 @@ fnjs_dl=function(){
 	var url='<?= core\ConfigGlobal::getWeb().'/apps/devel/controller/db_ajax.php' ?>';
 	var parametros='salida=lugar&entrada='+filtro_region+'<?= $h ?>';
 	$.ajax({
-		data: parametros,
 		url: url,
 		type: 'post',
-		dataType: 'html',
-		complete: function (rta) {
-			rta_txt=rta.responseText;
-			$('#lst_dl').html(rta_txt);
-		}
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		$('#lst_dl').html(rta_txt);
 	});
 }
 fnjs_db_crear_usuarios=function(){

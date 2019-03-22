@@ -136,12 +136,10 @@ fnjs_crear=function(){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			//alert ('<?= _("respuesta") ?>: '+rta_txt);
-			fnjs_submit('#movimiento','-');
-		}
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		fnjs_submit('#movimiento','-');
 	});
 }
 
@@ -152,12 +150,10 @@ fnjs_unir=function(id_orbix){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			//alert ('<?= _("respuesta") ?>: '+rta_txt);
-			fnjs_submit('#movimiento','-');
-		}
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		fnjs_submit('#movimiento','-');
 	});
 }
 

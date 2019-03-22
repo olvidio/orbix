@@ -81,13 +81,12 @@ fnjs_enviar_form=function(id_form,bloque){
 	$(id_form).attr('action','<?= core\ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_lista.php' ?>');
 	$(id_form).submit(function() {
 		$.ajax({
-			data: $(this).serialize(),
 			url: $(this).attr('action'),
 			type: 'post',
-			complete: function (rta) {
-				rta_txt=rta.responseText;
-				$(bloque).html(rta_txt);
-			}
+			data: $(this).serialize()
+		})
+		.done(function (rta_txt) {
+			$(bloque).html(rta_txt);
 		});
 		return false;
 	});
@@ -101,14 +100,13 @@ fnjs_lugar=function(){
 	var url='<?= core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tipo_get.php' ?>';
 	var parametros='salida=lugar&entrada='+filtro_lugar+'&isfsv='+isfsv+'<?= $h ?>';
 	$.ajax({
-		data: parametros,
 		url: url,
 		type: 'post',
-		dataType: 'html',
-		complete: function (rta) {
-			rta_txt=rta.responseText;
-			$('#lst_lugar').html(rta_txt);
-		}
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		$('#lst_lugar').html(rta_txt);
 	});
 }
 

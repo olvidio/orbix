@@ -179,9 +179,11 @@ fnjs_sincronizar=function(){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta) {
-			alert (rta);
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if (rta_txt != '' && rta_txt != '\\n') {
+			alert ('{{ "respuesta"|trans }}: '+rta_txt);
 		}
 	});
 }

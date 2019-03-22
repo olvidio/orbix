@@ -6,28 +6,26 @@ fnjs_get_texto=function(){
 	var url='{{ url_ajax|raw }}';
 	var parametros='que=get_texto&clave='+clave+'&idioma='+idioma+'{{ h_get|raw }}';
 	$.ajax({
-		data: parametros,
 		url: url,
 		type: 'post',
-		dataType: 'html',
-		complete: function (rta) {
-			rta_txt=rta.responseText;
-			$('#comunicacion').val(rta_txt);
-		}
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		$('#comunicacion').val(rta_txt);
 	});
 }
 
 fnjs_guardar=function(formulario){
 	$(formulario).submit(function() {
 		$.ajax({
-			data: $(this).serialize(),
 			url: $(this).attr('action'),
 			type: 'post',
-			complete: function (rta) {
-				rta_txt=rta.responseText;
-				if (rta_txt != '' && rta_txt != '\n') {
-					alert (rta_txt);
-				}
+			data: $(this).serialize()
+		})
+		.done(function (rta_txt) {
+			if (rta_txt != '' && rta_txt != '\n') {
+				alert (rta_txt);
 			}
 		});
 		return false;

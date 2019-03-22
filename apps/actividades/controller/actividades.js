@@ -25,16 +25,16 @@ jsForm.refresh=function(){
 		var url=this.action;
 		$(this.form).submit(function() {
 			$.ajax({
-				data: param,
 				url: url,
 				type: 'post',
-				complete: function (rta) {
-					rta_txt=rta.responseText;
-					if (rta_txt != '' && rta_txt != '\n') {
-						alert (rta_txt);
-					}
-				},
-				success: function () { jsForm.actualizar(); }
+				data: param
+			})
+			.done(function (rta_txt) {
+				if (rta_txt != '' && rta_txt != '\n') {
+					alert (rta_txt);
+				} else {
+					jsForm.actualizar();
+				}
 			});
 			return false;
 		});

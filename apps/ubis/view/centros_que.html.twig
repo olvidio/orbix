@@ -31,13 +31,11 @@ fnjs_ver=function(){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta_txt);
-			if (rta_txt) {
-				$('#exportar').html(rta_txt);
-			}
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if (rta_txt) {
+			$('#exportar').html(rta_txt);
 		}
 	});
 }
@@ -46,23 +44,22 @@ fnjs_guardar=function(formulario) {
     $(formulario).attr('action','{{ url_ajax }}');
     $(formulario).submit(function() {
         $.ajax({
-            data: $(this).serialize(),
             url: $(this).attr('action'),
             type: 'post',
-            complete: function (rta) {
-                rta_txt=rta.responseText;
-                if (rta_txt != '' && rta_txt != '\n') {
-                    alert (rta_txt);
-                } else {
-                    $('#div_modificar').html('');
-                    $('#div_modificar').width('0');
-                    $('#div_modificar').height('0');
-                    $('#div_modificar').removeClass('ventana');
-					document.getElementById("overlay").style.display = "none";
-                }
-            },
-            // OJO hay que actualizar el formulario de la lista, no el actual.
-            success: function() { fnjs_ver(); }
+            data: $(this).serialize()
+		})
+		.done(function (rta_txt) {
+			if (rta_txt != '' && rta_txt != '\n') {
+				alert (rta_txt);
+			} else {
+				$('#div_modificar').html('');
+				$('#div_modificar').width('0');
+				$('#div_modificar').height('0');
+				$('#div_modificar').removeClass('ventana');
+				document.getElementById("overlay").style.display = "none";
+			}
+			// OJO hay que actualizar el formulario de la lista, no el actual.
+			fnjs_ver();
         });
         return false;
     });

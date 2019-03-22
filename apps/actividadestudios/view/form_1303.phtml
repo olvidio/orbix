@@ -14,16 +14,14 @@ fnjs_cmb_opcional=function(){
 		$.ajax({
 			url: url,
 			type: 'post',
-			data: parametros,
-			success: function (rta_txt) {
-				//rta_txt=rta.responseText;
-				//alert ('<?= _("respuesta") ?>: '+rta_txt);
-				$('#lst_opcionales').html(rta_txt);
-			}
+			data: parametros
+		})
+		.done(function (rta_txt) {
+			$('#lst_opcionales').html(rta_txt);
 		});
 	} else { // al cambiar a NO opcional
-		var rta = '<input type="hidden" id="id_asignatura" name="id_asignatura" value="1">';
-		$('#lst_opcionales').html(rta);
+		var rta_txt = '<input type="hidden" id="id_asignatura" name="id_asignatura" value="1">';
+		$('#lst_opcionales').html(rta_txt);
 	}
 }
 fnjs_cmb_preceptor=function(){
@@ -36,16 +34,14 @@ fnjs_cmb_preceptor=function(){
 		$.ajax({
 			url: url,
 			type: 'post',
-			data: parametros,
-			success: function (rta_txt) {
-				//rta_txt=rta.responseText;
-				//alert ('<?= _("respuesta") ?>: '+rta_txt);
-				$('#lst_preceptores').html(rta_txt);
-			}
+			data: parametros
+		})
+		.done(function (rta_txt) {
+			$('#lst_preceptores').html(rta_txt);
 		});
 	} else { // al cambiar a NO preceptor
-		var rta = '';
-		$('#lst_preceptores').html(rta);
+		var rta_txt = '';
+		$('#lst_preceptores').html(rta_txt);
 	}
 }
 fnjs_guardar=function(formulario){
@@ -61,16 +57,15 @@ fnjs_guardar=function(formulario){
 		$(formulario).attr('action',"apps/actividadestudios/controller/update_3103.php");
 		$(formulario).submit(function() {
 			$.ajax({
-				data: $(this).serialize(),
 				url: $(this).attr('action'),
 				type: 'post',
-				complete: function (rta) {
-					rta_txt=rta.responseText;
-					if (rta_txt != '' && rta_txt != '\\n') {
-						alert ('<?= _("respuesta") ?>: '+rta_txt);
-					} else {
-						<?= $oPosicion->js_atras(1); ?>
-					}
+				data: $(this).serialize()
+			})
+			.done(function (rta_txt) {
+				if (rta_txt != '' && rta_txt != '\\n') {
+					alert ('<?= _("respuesta") ?>: '+rta_txt);
+				} else {
+					<?= $oPosicion->js_atras(1); ?>
 				}
 			});
 			return false;

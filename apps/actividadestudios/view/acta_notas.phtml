@@ -33,14 +33,13 @@ fnjs_guardar_tessera=function(form_acta){
 		$('#f_1303').attr('action',"apps/actividadestudios/controller/acta_notas_update.php");
 		$('#f_1303').submit(function() {
 			$.ajax({
-				data: $(this).serialize(),
 				url: $(this).attr('action'),
 				type: 'post',
-				complete: function (rta) {
-					rta_txt=rta.responseText;
-					if (rta_txt != '' && rta_txt != '\n') {
-						alert (rta_txt);
-					}
+				data: $(this).serialize()
+			})
+			.done(function (rta_txt) {
+				if (rta_txt != '' && rta_txt != '\n') {
+					alert (rta_txt);
 				}
 			});
 			return false;
@@ -61,14 +60,13 @@ fnjs_guardar_nota=function(){
 		$('#f_1303').attr('action',"apps/actividadestudios/controller/acta_notas_update.php");
 		$('#f_1303').submit(function() {
 			$.ajax({
-				data: $(this).serialize(),
 				url: $(this).attr('action'),
 				type: 'post',
-				complete: function (rta) {
-					rta_txt=rta.responseText;
-					if (rta_txt != '' && rta_txt != '\n') {
-						alert (rta_txt);
-					}
+				data: $(this).serialize()
+			})
+			.done(function (rta_txt) {
+				if (rta_txt != '' && rta_txt != '\n') {
+					alert (rta_txt);
 				}
 			});
 			return false;

@@ -27,17 +27,16 @@ fnjs_borrar=function(formulario){
 			$(formulario).attr('action','apps/encargossacd/controller/encargo_ajax.php');
 			$(formulario).submit(function() {
 				$.ajax({
-		               data: $(this).serialize(),
 		               url: $(this).attr('action'),
 		               type: 'post',
-		               complete: function (rta) {
-		                   rta_txt=rta.responseText;
-		                   if (rta_txt != '' && rta_txt != '\\n') {
-		                       alert ('{{ "respuesta"|trans }}: '+rta_txt);
-		                   } else {
-		                       {{ oPosicion.js_atras()|raw }}
-		                   }
-		               }
+		               data: $(this).serialize()
+					  })
+				.done(function (rta_txt) {
+					   if (rta_txt != '' && rta_txt != '\\n') {
+						   alert ('{{ "respuesta"|trans }}: '+rta_txt);
+					   } else {
+						   {{ oPosicion.js_atras()|raw }}
+					   }
 				});
 				return false;
 			});

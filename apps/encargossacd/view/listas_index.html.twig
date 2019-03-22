@@ -4,14 +4,13 @@ fnjs_comprobaciones=function(){
 	var url='{{ url|raw }}';
 	var parametros='que=ctr{{ h|raw }}';
 	$.ajax({
-		data: parametros,
 		url: url,
 		type: 'post',
-		dataType: 'html',
-		complete: function (rta) {
-			rta_txt=rta.responseText;
-			alert (rta_txt);
-		}
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		alert (rta_txt);
 	});
 
 }

@@ -3,14 +3,13 @@ fnjs_ver_ubi=function(id_ubi){
 	var url='{{ url_ctr }}';
 	var parametros='id_ubi='+id_ubi+'{{ h_ctr|raw }}';
 	$.ajax({
-		data: parametros,
 		url: url,
 		type: 'post',
-		dataType: 'html',
-		complete: function (rta) {
-			rta_txt=rta.responseText;
-			$('#ficha').html(rta_txt);
-		}
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		$('#ficha').html(rta_txt);
 	});
 }
 
@@ -26,14 +25,13 @@ fnjs_poblacion=function(){
 	var url='{{ url_ajax }}';
 	var parametros='que=poblaciones&filtro='+filtro+'{{ h_pob|raw }}';
 	$.ajax({
-		data: parametros,
 		url: url,
 		type: 'post',
-		dataType: 'html',
-		complete: function (rta) {
-			rta_txt=rta.responseText;
-			$('#lst_lugar').html(rta_txt);
-		}
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		$('#lst_lugar').html(rta_txt);
 	});
 }
 
@@ -69,13 +67,11 @@ fnjs_ver=function(){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta_txt);
-			if (rta_txt) {
-				$('#ficha').html(rta_txt);
-			}
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if (rta_txt) {
+			$('#ficha').html(rta_txt);
 		}
 	});
 	document.getElementById("overlay").style.display = "none";
@@ -90,13 +86,12 @@ fnjs_eliminar=function(id_ubi){
         $.ajax({
             url: url,
             type: 'post',
-            data: parametros,
-            complete: function (rta_txt) {
-                //rta_txt=rta.responseText;
-                if (rta_txt) {
-                    alert ('respuesta: '+rta_txt);
-                }
-            }
+            data: parametros
+		})
+		.done(function (rta_txt) {
+			//                if (rta_txt) {
+				alert ('respuesta: '+rta_txt);
+			}
         });
 		fnjs_ver();
     }
@@ -107,22 +102,21 @@ fnjs_guardar=function(formulario){
     $(formulario).attr('action',url);
     $(formulario).submit(function() {
 		$.ajax({
-			data: $(this).serialize(),
 			url: $(this).attr('action'),
 			type: 'post',
-			complete: function (rta) {
-				rta_txt=rta.responseText;
-				if (rta_txt != '' && rta_txt != '\n') {
-					alert (rta_txt);
-				} else {
-					$('#div_modificar').html('');
-					$('#div_modificar').width('0');
-					$('#div_modificar').height('0');
-					$('#div_modificar').removeClass('ventana');
-				}
-			},
-            // OJO hay que actualizar el formulario de la lista, no el actual.
-            success: function() { fnjs_ver(); }
+			data: $(this).serialize()
+		})
+		.done(function (rta_txt) {
+			if (rta_txt != '' && rta_txt != '\n') {
+				alert (rta_txt);
+			} else {
+				$('#div_modificar').html('');
+				$('#div_modificar').width('0');
+				$('#div_modificar').height('0');
+				$('#div_modificar').removeClass('ventana');
+			}
+			// OJO hay que actualizar el formulario de la lista, no el actual.
+			fnjs_ver();
         });
         return false;
     });
@@ -138,12 +132,11 @@ fnjs_actualizar_dtor=function(){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			if (rta_txt) {
-				alert ('respuesta: '+rta_txt);
-			}
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if (rta_txt) {
+			alert ('respuesta: '+rta_txt);
 		}
 	});
 }

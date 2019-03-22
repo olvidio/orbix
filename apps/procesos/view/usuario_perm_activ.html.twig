@@ -18,12 +18,10 @@ fnjs_actualizar_fases=function(){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta_txt);
-			$('#desde').html(rta_txt);			
-		}
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		$('#desde').html(rta_txt);			
 	});
 	// desplegable 'hasta'
 	var url='{{ url_actualizar }}';
@@ -31,12 +29,10 @@ fnjs_actualizar_fases=function(){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta_txt);
-			$('#hasta').html(rta_txt);			
-		}
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		$('#hasta').html(rta_txt);			
 	});
 }
 
@@ -44,16 +40,15 @@ fnjs_grabar=function(formulario){
 	$(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
 	$(formulario).submit(function() {
 		$.ajax({
-			data: $(this).serialize(),
-			type: 'post',
 			url: $(this).attr('action'),
-			complete: function (rta) { 
-				rta_txt=rta.responseText;
-				if (rta_txt != '' && rta_txt != '\n') {
-                    alert ('respuesta: '+rta_txt);
-                } else {
-					{{ oPosicion.js_atras(1)|raw }}
-				}
+			type: 'post',
+			data: $(this).serialize()
+		})
+		.done(function (rta_txt) { 
+			if (rta_txt != '' && rta_txt != '\n') {
+				alert ('respuesta: '+rta_txt);
+			} else {
+				{{ oPosicion.js_atras(1)|raw }}
 			}
 		});
 		return false;

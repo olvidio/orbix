@@ -34,14 +34,13 @@ fnjs_lugar=function(){
 	var url='apps/actividades/controller/actividad_tipo_get.php';
 	var parametros='salida=lugar&entrada='+filtro_lugar+'&opcion_sel='+opcion_sel+'&isfsv='+isfsv+'{{ h|raw }}';
 	$.ajax({
-		data: parametros,
 		url: url,
 		type: 'post',
-		dataType: 'html',
-		complete: function (rta) {
-			rta_txt=rta.responseText;
-			$('#lst_lugar').html(rta_txt);
-		}
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		$('#lst_lugar').html(rta_txt);
 	});
 }
 fnjs_left_side_hide();

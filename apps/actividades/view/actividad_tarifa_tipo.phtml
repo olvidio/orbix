@@ -15,13 +15,11 @@ fnjs_ver=function(){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_html) {
-			//rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta_txt);
-			if (rta_html) { 
-				$('#ficha').html(rta_html);
-			}
+		data: parametros
+	})
+	.done(function (rta_html) {
+		if (rta_html) { 
+			$('#ficha').html(rta_html);
 		}
 	});
 	document.getElementById("overlay").style.display = "none";

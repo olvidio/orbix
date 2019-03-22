@@ -7,14 +7,12 @@ fnjs_get_depende=function(id_campo,acc){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta_txt);
-			if (rta_txt) {
-				/* añadir debajo de la actividad */
-				$(acc).html(rta_txt);
-			}
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if (rta_txt) {
+			/* añadir debajo de la actividad */
+			$(acc).html(rta_txt);
 		}
 	});
 }

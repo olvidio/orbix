@@ -13,13 +13,12 @@ fnjs_generar_proceso=function(){
 		$.ajax({
 			url: url,
 			type: 'post',
-			data: parametros,
-			success: function (rta_txt) {
-					//rta_txt=rta.responseText;
-					if (rta_txt != '' && rta_txt != '\n') {
-						alert ('respuesta: '+rta_txt);
-					}
-				}
+			data: parametros
+		})
+		.done(function (rta_txt) {
+			if (rta_txt != '' && rta_txt != '\n') {
+				alert ('respuesta: '+rta_txt);
+			}
 		});
 		fnjs_actualizar();
 	}
@@ -34,14 +33,12 @@ fnjs_actualizar=function(){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta_txt);
-			if (rta_txt) {
-				/* añadir debajo de la actividad */
-				$('#div_proceso').html(rta_txt);
-			}
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if (rta_txt) {
+			/* añadir debajo de la actividad */
+			$('#div_proceso').html(rta_txt);
 		}
 	});
 }
@@ -55,12 +52,11 @@ fnjs_guardar=function(id_item){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			if (rta_txt != '' && rta_txt != '\n') {
-				alert ('respuesta: '+rta_txt);
-			}
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if (rta_txt != '' && rta_txt != '\n') {
+			alert ('respuesta: '+rta_txt);
 		}
 	});
 	fnjs_actualizar();

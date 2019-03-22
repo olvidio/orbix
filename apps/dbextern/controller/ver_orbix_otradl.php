@@ -63,15 +63,14 @@ fnjs_trasladar=function(id_orbix,dl,fila){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta) {
-			rta_txt=rta.responseText;
-			if (rta != true) { 
-				alert ('<?= _("respuesta") ?>: '+rta_txt);
-			} else {
-				//tachar la fila
-				$("#fila"+fila).addClass('tachado');
-			}
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if (rta_txt != '' && rta_txt != '\\n') {
+			alert ('<?= _("respuesta") ?>: '+rta_txt);
+		} else {
+			//tachar la fila
+			$("#fila"+fila).addClass('tachado');
 		}
 	});
 }

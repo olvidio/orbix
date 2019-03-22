@@ -15,14 +15,13 @@ fnjs_guardar=function(){
 	$('#frm2').attr('action',"<?= $url_update ?>");
 	$('#frm2').submit(function() {
 		$.ajax({
-			data: $(this).serialize(),
 			url: $(this).attr('action'),
 			type: 'post',
-			complete: function (rta) {
-				rta_txt=rta.responseText;
-				if (rta_txt != '' && rta_txt != '\n') {
-					alert (rta_txt);
-				}
+			data: $(this).serialize()
+		})
+		.done(function (rta_txt) {
+			if (rta_txt != '' && rta_txt != '\n') {
+				alert (rta_txt);
 			}
 		});
 		return false;

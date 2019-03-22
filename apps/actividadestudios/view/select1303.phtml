@@ -5,16 +5,16 @@ fnjs_grabar_observ=function(formulario,n){
 	$(formulario).attr('action',"apps/actividadestudios/controller/update_3103.php");
 	$(formulario).submit(function() {
 		$.ajax({
-			data: $(this).serialize(),
 			url: $(this).attr('action'),
 			type: 'post',
-			complete: function (rta) {
-				rta_txt = rta.responseText;
-				if (rta_txt != '' && rta_txt != '\\n') {
-					alert ('<?= _("respuesta") ?>: '+rta_txt);
-				}
-			},
-			success: function() { fnjs_actualizar(formulario) }
+			data: $(this).serialize()
+		})
+		.done(function (rta_txt) {
+			if (rta_txt != '' && rta_txt != '\\n') {
+				alert ('<?= _("respuesta") ?>: '+rta_txt);
+			} else {
+				fnjs_actualizar(formulario);
+		    }
 		});
 		return false;
 	});
@@ -27,16 +27,16 @@ fnjs_grabar_est=function(formulario,n){
 	$(formulario).attr('action',"apps/actividadestudios/controller/update_3103.php");
 	$(formulario).submit(function() {
 		$.ajax({
-			data: $(this).serialize(),
 			url: $(this).attr('action'),
 			type: 'post',
-			complete: function (rta) {
-				rta_txt = rta.responseText;
-				if (rta_txt != '' && rta_txt != '\\n') {
-					alert ('<?= _("respuesta") ?>: '+rta_txt);
-				}
-			},
-			success: function() { fnjs_actualizar(formulario) }
+			data: $(this).serialize()
+		})
+		.done(function (rta_txt) {
+			if (rta_txt != '' && rta_txt != '\\n') {
+				alert ('<?= _("respuesta") ?>: '+rta_txt);
+			} else {
+				fnjs_actualizar(formulario);
+		   	}
 		});
 		return false;
 	});
@@ -61,16 +61,16 @@ fnjs_borrar=function(formulario,n){
 			$(formulario).attr('action',"apps/actividadestudios/controller/update_3103.php");
 			$(formulario).submit(function() {
 				$.ajax({
-					data: $(this).serialize(),
 					url: $(this).attr('action'),
 					type: 'post',
-					complete: function (rta) {
-						rta_txt = rta.responseText;
-						if (rta_txt != '' && rta_txt != '\\n') {
-							alert ('<?= _("respuesta") ?>: '+rta_txt);
-						}
-					},
-					success: function() { fnjs_actualizar(formulario) }
+					data: $(this).serialize()
+				})
+				.done(function (rta_txt) {
+					if (rta_txt != '' && rta_txt != '\\n') {
+						alert ('<?= _("respuesta") ?>: '+rta_txt);
+					} else {
+						fnjs_actualizar(formulario);
+				   	}
 				});
 				return false;
 			});
@@ -85,16 +85,16 @@ fnjs_matricular=function(formulario,n){
 	$(formulario).attr('action',"apps/actividadestudios/controller/matricular.php");
 	$(formulario).submit(function() {
 		$.ajax({
-			data: $(this).serialize(),
 			url: $(this).attr('action'),
 			type: 'post',
-			complete: function (rta) {
-				rta_txt = rta.responseText;
-				if (rta_txt != '' && rta_txt != '\\n') {
-					alert ('<?= _("respuesta") ?>: '+rta_txt);
-				}
-			},
-			success: function() { fnjs_actualizar(formulario) }
+			data: $(this).serialize()
+		})
+		.done(function (rta_txt) {
+			if (rta_txt != '' && rta_txt != '\\n') {
+				alert ('<?= _("respuesta") ?>: '+rta_txt);
+			} else {
+				fnjs_actualizar(formulario);
+		   	}
 		});
 		return false;
 	});

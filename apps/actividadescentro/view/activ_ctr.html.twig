@@ -38,10 +38,11 @@ fnjs_asignar_ctr=function(id_activ,id_ubi){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			if (rta_txt != '' && rta_txt != '\n') { alert ('respuesta: '+rta_txt); }
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if (rta_txt != '' && rta_txt != '\n') {
+			alert ('respuesta: '+rta_txt);
 		}
 	});
 	if ($('#ctr').length) { $('#ctr').remove(); }
@@ -56,17 +57,14 @@ fnjs_nuevo_ctr=function(id_activ,inicio,fin,f_ini,f_fin){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta_txt);
-			if ($('#ctr').length) { $('#ctr').remove(); }
-			var txt="<div id=ctr class=ctr>";
-				txt+=rta_txt;
-				txt+="</ul></div>";
-			$('#lst_ctr').append(txt);
-
-		}
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if ($('#ctr').length) { $('#ctr').remove(); }
+		var txt="<div id=ctr class=ctr>";
+			txt+=rta_txt;
+			txt+="</ul></div>";
+		$('#lst_ctr').append(txt);
 	});
 }
  
@@ -77,13 +75,11 @@ fnjs_orden=function(id_activ,id_ubi,num_orden){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta) {
-			//rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta);
-			rta2=jQuery.parseJSON(rta);
-			if (rta2.error) { alert(rta2.error); }
-		}
+		data: parametros
+	})
+	.done(function (rta) {
+		rta2=jQuery.parseJSON(rta);
+		if (rta2.error) { alert(rta2.error); }
 	});
 	fnjs_actualizar_activ(id_activ);
 }
@@ -96,14 +92,12 @@ fnjs_actualizar_activ=function(id_activ){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta_txt);
-			if (rta_txt) {
-				var txt_id='#'+id_activ+'_ctrs';
-				$(txt_id).html(rta_txt);
-			}
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if (rta_txt) {
+			var txt_id='#'+id_activ+'_ctrs';
+			$(txt_id).html(rta_txt);
 		}
 	});
 }

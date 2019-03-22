@@ -5,14 +5,13 @@ fnjs_busca_ctrs=function(){
 		var url='{{ url_ajax }}';
 		var parametros='que=get_lista&id_zona='+id_zona+'{{ h_ctr|raw }}';
 		$.ajax({
-			data: parametros,
 			url: url,
 			type: 'post',
-			dataType: 'html',
-			complete: function (rta) {
-				rta_txt=rta.responseText;
-				$('#lst_ctrs').html(rta_txt);
-			}
+			data: parametros,
+			dataType: 'html'
+		})
+		.done(function (rta_txt) {
+			$('#lst_ctrs').html(rta_txt);
 		});
 	}
 }
@@ -20,16 +19,13 @@ fnjs_guardar=function(formulario){
 	$(formulario).attr('action','{{ url_ajax }}');
 	$(formulario).submit(function() {
 		$.ajax({
-			data: $(this).serialize(),
 			url: $(this).attr('action'),
 			type: 'post',
-			complete: function (rta_txt) {
-				if (typeof rta_txt === 'object' && rta_txt !== null) {
-					rta_txt = rta_txt.responseText;
-				}
-				if (rta_txt != '' && rta_txt != '\n') {
-					alert ('{{ "respuesta"|trans }}: '+rta_txt);
-				}
+			data: $(this).serialize()
+		})
+		.done(function (rta_txt) {
+			if (rta_txt != '' && rta_txt != '\n') {
+				alert ('{{ "respuesta"|trans }}: '+rta_txt);
 			}
 		});
 		return false;

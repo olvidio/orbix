@@ -23,21 +23,20 @@ fnjs_guardar=function(formulario,que){
 	    $(formulario).attr('action',"apps/ubis/controller/calendario_periodos_ajax.php")
 		$(formulario).submit(function() {
 			$.ajax({
-				data: $(this).serialize(),
 				url: $(this).attr('action'),
 				type: 'post',
-				complete: function (rta) {
-					rta_txt=rta.responseText;
-					if (rta_txt != '' && rta_txt != '\n') {
-						alert (rta_txt);
-					} else {
-                        $('#div_modificar').html('');
-                        $('#div_modificar').width('0');
-                        $('#div_modificar').height('0');
-                        $('#div_modificar').removeClass('ventana');
-					}
-				},
-                success: function() { fnjs_ver(); }
+				data: $(this).serialize()
+			})
+			.done(function (rta_txt) {
+				if (rta_txt != '' && rta_txt != '\n') {
+					alert (rta_txt);
+				} else {
+					$('#div_modificar').html('');
+					$('#div_modificar').width('0');
+					$('#div_modificar').height('0');
+					$('#div_modificar').removeClass('ventana');
+				}
+				fnjs_ver();
 			});
 			return false;
 		});
@@ -73,14 +72,12 @@ fnjs_ver=function(){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta_txt);
-			if (rta_txt) {
-				// añadir debajo de la casa 
-				$('#ficha').html(rta_txt);
-			}
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if (rta_txt) {
+			// añadir debajo de la casa 
+			$('#ficha').html(rta_txt);
 		}
 	});
 	document.getElementById("overlay").style.display = "none";

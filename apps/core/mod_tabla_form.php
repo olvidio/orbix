@@ -117,16 +117,15 @@ fnjs_grabar=function(formulario){
 		$(formulario).attr('action',"apps/core/mod_tabla_update.php");
 		$(formulario).submit(function() {
 			$.ajax({
-				data: $(this).serialize(),
 				url: $(this).attr('action'),
 				type: 'post',
-				complete: function (rta) {
-					rta_txt=rta.responseText;
-					if (rta_txt != '' && rta_txt != '\\n') {
-						alert ('<?= _("respuesta") ?>: '+rta_txt);
-					} else {
-						<?= $oPosicion->js_atras(1); ?>
-					}
+				data: $(this).serialize()
+			})
+			.done(function (rta_txt) {
+				if (rta_txt != '' && rta_txt != '\\n') {
+					alert ('<?= _("respuesta") ?>: '+rta_txt);
+				} else {
+					<?= $oPosicion->js_atras(1); ?>
 				}
 			});
 			return false;
@@ -144,14 +143,13 @@ var valor_depende=$('#'+camp).val();
 	//var url='apps/core/mod_tabla_actualizar.php';
 	var url='<?= $web_depende ?>';
 	$.ajax({
-		data: parametros,
 		url: url,
 		type: 'post',
-		dataType: 'html',
-		complete: function (rta) {
-			rta_txt=rta.responseText;
-			$('#'+accion).html(rta_txt);
-		}
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		$('#'+accion).html(rta_txt);
 	});
 	return false;
 }

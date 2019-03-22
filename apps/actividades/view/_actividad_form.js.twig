@@ -86,18 +86,17 @@ fnjs_guardar=function(tipo='') {
 		$('#modifica').attr('action','apps/actividades/controller/actividad_update.php');
 		$('#modifica').submit(function() {
 			$.ajax({
-				data: $(this).serialize(),
 				url: $(this).attr('action'),
 				type: 'post',
-				complete: function (rta) {
-					rta_txt=rta.responseText;
-					if (rta_txt != '' && rta_txt != '\\n') {
-						alert ('{{ "respuesta"|trans }}: '+rta_txt);
-					}
-				},
-                // OJO hay que actualizar el formulario de la lista, no el actual.
-                // Esta función está en calendario_planning.phtml 
-                success: function() { fnjs_ver(); }
+				data: $(this).serialize()
+			})
+			.done(function (rta_txt) {
+				if (rta_txt != '' && rta_txt != '\\n') {
+					alert ('{{ "respuesta"|trans }}: '+rta_txt);
+				}
+				// OJO hay que actualizar el formulario de la lista, no el actual.
+				// Esta función está en calendario_planning.phtml 
+				fnjs_ver();
             });
             return false;
 		});

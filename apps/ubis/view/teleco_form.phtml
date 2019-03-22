@@ -7,16 +7,15 @@ fnjs_guardar=function(formulario){
 	   	$(formulario).attr('action','apps/ubis/controller/teleco_update.php');
 		$(formulario).submit(function() {
 			$.ajax({
-				data: $(this).serialize(),
 				url: $(this).attr('action'),
 				type: 'post',
-				complete: function (rta) {
-					rta_txt=rta.responseText;
-					if (rta_txt != '' && rta_txt != '\\n') {
-						alert ('<?= _("respuesta") ?>: '+rta_txt);
-					} else {
-						<?= $oPosicion->js_atras(1); ?>
-					}
+				data: $(this).serialize()
+			})
+			.done(function (rta_txt) {
+				if (rta_txt != '' && rta_txt != '\\n') {
+					alert ('<?= _("respuesta") ?>: '+rta_txt);
+				} else {
+					<?= $oPosicion->js_atras(1); ?>
 				}
 			});
 			return false;

@@ -29,14 +29,13 @@ fnjs_profes=function(){
 	id_asignatura = $("#id_asignatura").val();
 	var parametros='id_asignatura='+id_asignatura+'<?= $h ?>';
 	$.ajax({
-		data: parametros,
 		url: url,
 		type: 'post',
-		dataType: 'html',
-		complete: function (rta) {
-			rta_txt=rta.responseText;
-			$('#resultados').html(rta_txt);
-		}
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		$('#resultados').html(rta_txt);
 	});
 };
 fnjs_left_side_hide();

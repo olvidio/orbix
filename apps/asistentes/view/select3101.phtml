@@ -10,16 +10,16 @@ fnjs_cmb_plaza=function(formulario,plaza){
 	var parametros='mod=plaza&plaza='+plaza+'&lista_json='+lista_json+'&id_activ=<?= $id_pau ?><?= $h4 ?>';
 	$(formulario).submit(function() {
 		$.ajax({
-			data: parametros,
 			url: url,
 			type: 'post',
-			complete: function (rta) {
-				rta_txt=rta.responseText;
-				if (rta_txt != '' && rta_txt != '\n') {
-					alert (rta_txt);
-				}
-			},
-			success: function () { fnjs_actualizar(formulario); }
+			data: parametros
+		})
+		.done(function (rta_txt) {
+			if (rta_txt != '' && rta_txt != '\n') {
+				alert (rta_txt);
+			} else {
+				fnjs_actualizar(formulario);
+			}
 		});
 		return false;
 	});
@@ -41,22 +41,21 @@ fnjs_mover_guardar=function(formulario){
 	//$(formulario).attr('action','programas/casa_ajax.php');
 	$(formulario).submit(function() {
 		$.ajax({
-			data: $(this).serialize(),
 			url: $(this).attr('action'),
 			type: 'post',
-			complete: function (rta) {
-				rta_txt=rta.responseText;
-				if (rta_txt != '' && rta_txt != '\n') {
-					alert (rta_txt);
-				} else {
-					$('#div_modificar').html('');
-					$('#div_modificar').width('0');
-					$('#div_modificar').height('0');
-					$('#div_modificar').removeClass('ventana');
-				}
-			},
+			data: $(this).serialize()
+		})
+		.done(function (rta_txt) {
+			if (rta_txt != '' && rta_txt != '\n') {
+				alert (rta_txt);
+			} else {
+				$('#div_modificar').html('');
+				$('#div_modificar').width('0');
+				$('#div_modificar').height('0');
+				$('#div_modificar').removeClass('ventana');
+			}
 			// OJO hay que actualizar el formulario de la lista, no el de mover.
-			success: function() { fnjs_actualizar("#frm_3101") }
+			fnjs_actualizar("#frm_3101");
 		});
 		return false;
 	});
@@ -140,16 +139,16 @@ fnjs_borrar=function(formulario){
 			$(formulario).attr('action',"apps/asistentes/controller/update_3101.php");
 			$(formulario).submit(function() {
 				$.ajax({
-					data: $(this).serialize(),
 					url: $(this).attr('action'),
 					type: 'post',
-					complete: function (rta) {
-						rta_txt = rta.responseText;
-						if (rta_txt != '' && rta_txt != '\\n') {
-							alert ('<?= _("respuesta") ?>: '+rta_txt);
-						}
-					},
-					success: function() { fnjs_actualizar(formulario) }
+					data: $(this).serialize()
+				})
+				.done(function (rta_txt) {
+					if (rta_txt != '' && rta_txt != '\\n') {
+						alert ('<?= _("respuesta") ?>: '+rta_txt);
+					} else {
+						fnjs_actualizar(formulario);
+					}
 				});
 				return false;
 			});
@@ -167,16 +166,16 @@ fnjs_borrar_cargo=function(formulario){
 			$(formulario).attr('action',"apps/actividadcargos/controller/update_3102.php");
 			$(formulario).submit(function() {
 				$.ajax({
-					data: $(this).serialize(),
 					url: $(this).attr('action'),
 					type: 'post',
-					complete: function (rta) {
-						rta_txt = rta.responseText;
-						if (rta_txt != '' && rta_txt != '\\n') {
-							alert ('<?= _("respuesta") ?>: '+rta_txt);
-						}
-					},
-					success: function() { fnjs_actualizar(formulario) }
+					data: $(this).serialize()
+				})
+				.done(function (rta_txt) {
+					if (rta_txt != '' && rta_txt != '\\n') {
+						alert ('<?= _("respuesta") ?>: '+rta_txt);
+					} else { 
+						fnjs_actualizar(formulario);
+					}
 				});
 				return false;
 			});

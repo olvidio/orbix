@@ -45,12 +45,10 @@ fnjs_add_grup=function(){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			//alert ('<?= _("respuesta") ?>: '+rta_txt);
-			$('#lst_grupos').html(rta_txt);
-		}
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		$('#lst_grupos').html(rta_txt);
 	});
 }
 fnjs_del_grup=function(){
@@ -60,12 +58,10 @@ fnjs_del_grup=function(){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			//alert ('<?= _("respuesta") ?>: '+rta_txt);
-			$('#lst_grupos').html(rta_txt);
-		}
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		$('#lst_grupos').html(rta_txt);
 	});
 }
 fnjs_add_perm=function(que){
@@ -85,16 +81,16 @@ fnjs_del_perm=function(formulario){
 			$(formulario).attr('action',"apps/usuarios/controller/usuario_ajax.php");
 			$(formulario).submit(function() {
 				$.ajax({
-					data: $(this).serialize(),
 					url: $(this).attr('action'),
 					type: 'post',
-					complete: function (rta) {
-						rta_txt = rta.responseText;
-						if (rta_txt != '' && rta_txt != '\\n') {
-							alert ('<?= _("respuesta") ?>: '+rta_txt);
-						}
-					},
-					success: function() { fnjs_actualizar(formulario) }
+					data: $(this).serialize()
+				})
+				.done(function (rta_txt) {
+					if (rta_txt != '' && rta_txt != '\\n') {
+						alert ('<?= _("respuesta") ?>: '+rta_txt);
+					} else {
+						fnjs_actualizar(formulario);
+				   	}
 				});
 				return false;
 			});
@@ -123,16 +119,15 @@ fnjs_guardar=function(formulario){
 		$(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
 		$(formulario).submit(function() {
 			$.ajax({
-				data: $(this).serialize(),
-				type: 'post',
 				url: $(this).attr('action'),
-				complete: function (rta) {
-					rta_txt=rta.responseText;
-					if (rta_txt != '' && rta_txt != '\\n') {
-						alert ('<?= _("respuesta") ?>: '+rta_txt);
-					} else {
-						<?= $oPosicion->js_atras(1); ?>
-					}
+				type: 'post',
+				data: $(this).serialize()
+			})
+			.done(function (rta_txt) {
+				if (rta_txt != '' && rta_txt != '\\n') {
+					alert ('<?= _("respuesta") ?>: '+rta_txt);
+				} else {
+					<?= $oPosicion->js_atras(1); ?>
 				}
 			});
 			return false;

@@ -16,14 +16,13 @@ fnjs_asistentes=function(){
 		var parametros='salida=asistentes&entrada='+isfsv+'{{ h|raw }}';
 
 		$.ajax({
-			data: parametros,
 			url: url,
 			type: 'post',
-			dataType: 'html',
-			complete: function (rta) {
-				rta_txt=rta.responseText;
-				$('#lst_asistentes').html(rta_txt);
-			}
+			data: parametros,
+			dataType: 'html'
+		})
+		.done(function (rta_txt) {
+			$('#lst_asistentes').html(rta_txt);
 		});
 		// borrar el resto.
 		$('#iasistentes_val').val(".");
@@ -38,14 +37,13 @@ fnjs_actividad=function(){
 	var iasistentes=$('#iasistentes_val').val();
 	var parametros='salida=actividad&entrada='+isfsv+iasistentes+'{{ h|raw }}';
 	$.ajax({
-		data: parametros,
 		url: url,
 		type: 'post',
-		dataType: 'html',
-		complete: function (rta) {
-			rta_txt=rta.responseText;
-			$('#lst_actividad').html(rta_txt);
-		}
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		$('#lst_actividad').html(rta_txt);
 	});
 	// borrar el resto.
 	$('#inom_tipo_val').val("...");
@@ -58,14 +56,13 @@ fnjs_nom_tipo=function(){
 	var iactividad=$('#iactividad_val').val();
 	var parametros='salida=nom_tipo&entrada='+isfsv+iasistentes+iactividad+'{{ h|raw }}';
 	$.ajax({
-		data: parametros,
 		url: url,
 		type: 'post',
-		dataType: 'html',
-		complete: function (rta) {
-			rta_txt=rta.responseText;
-			$('#lst_nom_tipo').html(rta_txt);
-		}
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		$('#lst_nom_tipo').html(rta_txt);
 	});
 	fnjs_actualizar_fases ();
 }

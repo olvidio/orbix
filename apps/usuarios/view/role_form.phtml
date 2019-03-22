@@ -4,16 +4,16 @@ fnjs_del_grupmenu=function(formulario){
 	$(formulario).attr('action',"apps/usuarios/controller/role_update.php");
 	$(formulario).submit(function() {
 		$.ajax({
-			data: $(this).serialize(),
-			type: 'post',
 			url: $(this).attr('action'),
-			complete: function (rta) {
-				rta_txt=rta.responseText;
-				if (rta_txt != '' && rta_txt != '\\n') {
-					alert ('<?= _("respuesta") ?>: '+rta_txt);
-				}
-			},
-			success: function() { fnjs_actualizar(formulario) }
+			type: 'post',
+			data: $(this).serialize()
+		})
+		.done(function (rta_txt) {
+			if (rta_txt != '' && rta_txt != '\\n') {
+				alert ('<?= _("respuesta") ?>: '+rta_txt);
+			} else {
+				fnjs_actualizar(formulario);
+		   	}
 		});
 		return false;
 	});
@@ -34,16 +34,14 @@ fnjs_guardar=function(formulario){
 		$(formulario).attr('action',"apps/usuarios/controller/role_update.php");
 		$(formulario).submit(function() {
 			$.ajax({
-				data: $(this).serialize(),
-				type: 'post',
 				url: $(this).attr('action'),
-				complete: function (rta) {
-					rta_txt = rta.responseText;
-					if (rta_txt != '' && rta_txt != '\\n') {
-						alert ('<?= _("respuesta") ?>: '+rta_txt);
-					}
-				},
-				success: function() { 
+				type: 'post',
+				data: $(this).serialize()
+			})
+			.done(function (rta_txt) {
+				if (rta_txt != '' && rta_txt != '\\n') {
+					alert ('<?= _("respuesta") ?>: '+rta_txt);
+				} else {
 					<?php if (empty($nuevo)) {
 						echo "fnjs_actualizar(formulario);";
 					} else { // si es nuevo voy a la lista de rols

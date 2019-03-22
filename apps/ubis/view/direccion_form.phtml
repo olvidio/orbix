@@ -6,16 +6,15 @@ fnjs_guardar_dir=function(formulario){
 		$(formulario).attr('action',"apps/ubis/controller/ubis_update.php");
 		$(formulario).submit(function() {
 			$.ajax({
-				data: $(this).serialize(),
-				type: 'post',
 				url: $(this).attr('action'),
-				complete: function (rta) {
-					rta_txt=rta.responseText;
-					if (rta_txt != '' && rta_txt != '\\n') {
-						alert ('<?= _("respuesta") ?>: '+rta_txt);
-					} else {
-						<?= $oPosicion->js_atras(1); ?>
-					}
+				type: 'post',
+				data: $(this).serialize()
+			})
+			.done(function (rta_txt) {
+				if (rta_txt != '' && rta_txt != '\\n') {
+					alert ('<?= _("respuesta") ?>: '+rta_txt);
+				} else {
+					<?= $oPosicion->js_atras(1); ?>
 				}
 			});
 			return false;
@@ -31,16 +30,15 @@ fnjs_quitar_dir=function(idx){
 	$(formulario).attr('action',"apps/ubis/controller/direcciones_quitar.php");
 	$(formulario).submit(function() {
 		$.ajax({
-			data: $(this).serialize(),
-			type: 'post',
 			url: $(this).attr('action'),
-			complete: function (rta) {
-				rta_txt=rta.responseText;
-				if (rta_txt != '' && rta_txt != '\\n') {
-					alert ('<?= _("respuesta") ?>: '+rta_txt);
-				} else {
-					<?= $oPosicion->js_atras(1); ?>
-				}
+			type: 'post',
+			data: $(this).serialize()
+		})
+		.done(function (rta_txt) {
+			if (rta_txt != '' && rta_txt != '\\n') {
+				alert ('<?= _("respuesta") ?>: '+rta_txt);
+			} else {
+				<?= $oPosicion->js_atras(1); ?>
 			}
 		});
 		return false;
@@ -84,21 +82,16 @@ fnjs_ver_documento=function(id_direccion){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta) {
-				//alert ('respuesta: '+rta);
-				//rta_txt=rta.responseText;
-				if (rta=='no') { alert("<?= _("no existe ningún documento"); ?>"); } else { seguro=1; }
-			},
-		complete: function() { 
-			if (seguro == 1) { 
-				var winPrefs="";
-				var pagina=url+'?id_direccion='+id_direccion+'&act=download&obj_dir=<?= $obj_dir?><?= $h ?>&PHPSESSID=<?= session_id() ?>';
-				top.newWin = window.open(pagina, "abrir", winPrefs);
-				top.newWin.focus();
-			} else {
-				//$(siguiente).focus();
-			}
+		data: parametros
+	})
+	.done(function() { 
+		if (seguro == 1) { 
+			var winPrefs="";
+			var pagina=url+'?id_direccion='+id_direccion+'&act=download&obj_dir=<?= $obj_dir?><?= $h ?>&PHPSESSID=<?= session_id() ?>';
+			top.newWin = window.open(pagina, "abrir", winPrefs);
+			top.newWin.focus();
+		} else {
+			//$(siguiente).focus();
 		}
 	});
 

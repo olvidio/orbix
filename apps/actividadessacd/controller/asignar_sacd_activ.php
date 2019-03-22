@@ -1,17 +1,24 @@
 <?php
+use core\ConfigGlobal;
+use web\Hash;
+
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("global_header.inc");
+
+require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
 
 // Crea los objectos de uso global **********************************************
-	require_once ("global_object.inc");
+require_once ("apps/core/global_object.inc");
+
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
 //corrijo el dato que está en config, porque este programa se usará para el próximo curso:
 $inicurs_des= date("d/m/Y", mktime(0,0,0,9,1,ConfigGlobal::any_final_curs())) ;
 
-if (isset($_POST['confirm']) && $_POST['confirm']=="yes") {
+$Qconfirm = (string) \filter_input(INPUT_POST, 'confirm');
+
+if ( $Qconfirm == 'yes') {
 	// selecciono las actividades de sg y sr 
 	$sql="CREATE TEMP TABLE activ_ctr AS SELECT a.id_activ,d.id_ubi FROM a_actividades a JOIN d_encargados_activ d USING (id_activ) 
 		WHERE a.id_tipo_activ::text ~ '.(4|5|7)....' AND a.f_ini>'$inicurs_des' AND a.status=2 AND d.num_orden=0";
@@ -45,11 +52,19 @@ if (isset($_POST['confirm']) && $_POST['confirm']=="yes") {
 	$sin_asig=$i-$asig;
 	echo sprintf(_("Ya está. Se ha asignado %s actividades. Quedan %s por asignar (el centro)."),$asig,$sin_asig);
 } else {
+    
+    $oHash = new Hash();
+    $a_camposHidden = array(
+        'confirm' => 'yes',
+    );
+    $oHash->setArraycamposHidden($a_camposHidden);
 ?>
 	<p>Esto asignará el sacd titular del centro a las actividades que tengan un centro encargado.</p>
 	<p>Limitado a las actividades de sr y sg a partir de <?= $inicurs_des ?> y marcadas como actuales.</p>
 	<p>En el campo observaciones aparece la palabra "auto" para indicar la asignación automática</p>
-	<form id="confirm" name="confirm" action="des/asignar_sacd_activ.php"><input type=hidden name=confirm value=yes><input type=button onclick=fnjs_enviar_formulario('#confirm') value="continuar"></form>
+	<form id="confirm" name="confirm" action="apps/actividadessacd/controller/asignar_sacd_activ.php">
+	<?= $oHash->getCamposHtml() ?>
+	<input type=button onclick=fnjs_enviar_formulario(this.form) value="continuar">
+	</form>
 <?php
 }
-?>

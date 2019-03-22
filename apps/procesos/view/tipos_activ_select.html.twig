@@ -11,12 +11,10 @@ fnjs_guardar=function(formulario){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		complete: function (rta) {
-			rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta_txt);
-			},
-	 	success: function() { fnjs_lista(); }
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		fnjs_lista();
 	});
 	fnjs_cerrar();
 }
@@ -53,13 +51,11 @@ fnjs_lista=function(){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros,
-		success: function (rta_txt) {
-			//rta_txt=rta.responseText;
-			//alert ('respuesta: '+rta_txt);
-			if (rta_txt) {
-				$('#ficha').html(rta_txt);
-			}
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if (rta_txt) {
+			$('#ficha').html(rta_txt);
 		}
 	});
 	document.getElementById("overlay").style.display = "none";

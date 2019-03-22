@@ -144,22 +144,18 @@ switch ($Qact) {
 				url: url,
 				type: 'post',
 				data: parametros,
-				success: function (rta) {
-						//alert ('respuesta: '+rta);
-						//rta_txt=rta.responseText;
-						if (rta=='si') { 
-							seguro=confirm("<?= _("ya existe un escrito. ¿Desea reemplazarlo?"); ?>");
-						} else {
-							seguro=1; 
-						}
-					},
-				complete: function() { 
-					if (seguro) { 
-						$('#name_file').val($('#userfile').val());
-						$('#frm_doc1').submit();
-					} else {
-						//$(siguiente).focus();
-					}
+			})
+			.done(function(rta_txt) { 
+				if (rta_txt=='si') { 
+					seguro=confirm("<?= _("ya existe un escrito. ¿Desea reemplazarlo?"); ?>");
+				} else {
+					seguro=1; 
+				}
+				if (seguro) { 
+					$('#name_file').val($('#userfile').val());
+					$('#frm_doc1').submit();
+				} else {
+					//$(siguiente).focus();
 				}
 			});
 		}

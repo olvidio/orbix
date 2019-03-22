@@ -4,14 +4,13 @@ fnjs_comparativa=function(){
 	var url='<?= core\ConfigGlobal::getWeb().'/apps/actividadplazas/controller/plazas_balance_dl.php' ?>';
 	var parametros='id_tipo_activ=<?= $Qid_tipo_activ ?>&dl='+filtro_dl+'<?= $h ?>';
 	$.ajax({
-		data: parametros,
 		url: url,
 		type: 'post',
-		dataType: 'html',
-		complete: function (rta) {
-			rta_txt=rta.responseText;
-			$('#comparativa').html(rta_txt);
-		}
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		$('#comparativa').html(rta_txt);
 	});
 }
 </script>

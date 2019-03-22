@@ -7,14 +7,13 @@ fnjs_ver_ficha=function(id_nom,historial){
 		var url='{{ url_get }}';
 		var parametros='filtro_sacd='+filtro_sacd+'&id_nom='+id_nom+'&historial='+historial+'{{ h_get|raw }}';
 		$.ajax({
-			data: parametros,
 			url: url,
 			type: 'post',
-			dataType: 'html',
-			complete: function (rta) {
-				rta_txt=rta.responseText;
-				$('#ficha').html(rta_txt);
-			}
+			data: parametros,
+			dataType: 'html'
+		})
+		.done(function (rta_txt) {
+			$('#ficha').html(rta_txt);
 		});
 	}
 }
@@ -25,14 +24,13 @@ fnjs_lista_sacd=function(id_nom){
     var url='{{ url_ajax }}';
 	var parametros='que=get_select&filtro_sacd='+filtro_sacd+'&id_nom='+id_nom+'{{ h_lista|raw }}';
 	$.ajax({
-		data: parametros,
 		url: url,
 		type: 'post',
-		dataType: 'html',
-		complete: function (rta) {
-			rta_txt=rta.responseText;
-			$('#sacds').html(rta_txt);
-		}
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		$('#sacds').html(rta_txt);
 	});
 }
 fnjs_horario=function(id_enc){
@@ -41,14 +39,13 @@ fnjs_horario=function(id_enc){
     var url='{{ url_horario }}';
 	var parametros='filtro_sacd='+filtro_sacd+'&id_enc='+id_enc+'&id_nom='+id_nom+'{{ h_lista|raw }}';
 		$.ajax({
-			data: parametros,
 			url: url,
 			type: 'post',
-			dataType: 'html',
-			complete: function (rta) {
-				rta_txt=rta.responseText;
-				$('#ficha').html(rta_txt);
-			}
+			data: parametros,
+			dataType: 'html'
+		})
+		.done(function (rta_txt) {
+			$('#ficha').html(rta_txt);
 		});
 }
 </script>

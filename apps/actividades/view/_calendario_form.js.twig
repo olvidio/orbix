@@ -85,18 +85,15 @@ fnjs_guardar=function(tipo=''){
 			$.ajax({
 				data: $(this).serialize(),
 				url: $(this).attr('action'),
-				type: 'post',
-				success: function (rta_txt) {
-					//rta_txt=rta.responseText;
-					if (rta_txt != '' && rta_txt != '\\n') {
-						alert ('{{ "respuesta"|trans }}: '+rta_txt);
-					}
-				},
-				complete: function () {
-                    // Esta función está en calendario_planning.phtml 
-                    fnjs_cerrar();
-                    fnjs_volver();
-				}
+				type: 'post'
+            })
+            .done(function( rta_txt ) {
+                if (rta_txt != '' && rta_txt != '\\n') {
+                    alert ('{{ "respuesta"|trans }}: '+rta_txt);
+                }
+                // Esta función está en calendario_planning.phtml 
+                fnjs_cerrar();
+                fnjs_volver();
             });
             return false;
         });
