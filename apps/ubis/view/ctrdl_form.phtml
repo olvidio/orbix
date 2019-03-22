@@ -67,6 +67,8 @@ fnjs_eliminar=function(formulario){
 		<input class="contenido" type="Checkbox" name="cdc" <?= $chk_cdc ?>>
 	</td></tr>
 <tr><td class="etiqueta">
+        <?= ucfirst(_("tipo de centro")) ?>
+        <?= $oDesplegableTiposCentro->desplegable(); ?>
 	    <?= ucfirst(_("tipo de centro")) ?>
 		<input class="contenido" name="tipo_ctr" size="9" value="<?= $tipo_ctr ?>"> 
 		<?= ucfirst(_("nº ejemplares pi")) ?>

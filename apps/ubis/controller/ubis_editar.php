@@ -164,6 +164,10 @@ if ($tipo_ubi=="ctrdl") {
 	$oDesplCentros->setNombre($nnom);
 	$oDesplCentros->setOpcion_sel($id_ctr_padre);
 	
+	$oTiposCentro = new ubis\model\entity\GestorTipoCentro();
+	$oTiposCentroOpciones=$oTiposCentro->getListaTiposCentro();
+	$oDesplegableTiposCentro=new web\Desplegable('tipo_ctr',$oTiposCentroOpciones,$tipo_ctr,true);
+
 	$a_campos = ['botones' => $botones,
 			'oPosicion' => $oPosicion,
 			'obj' => $obj,
@@ -185,6 +189,7 @@ if ($tipo_ubi=="ctrdl") {
 			'observ' => $observ,
 			'chk_cdc' => $chk_cdc,
 			'oDesplCentros' => $oDesplCentros,
+			'oDesplegableTiposCentro' => $oDesplegableTiposCentro,
 			];
 
 	echo $oView->render('ctrdl_form.phtml',$a_campos);

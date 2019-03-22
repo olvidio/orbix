@@ -40,7 +40,6 @@ class GestorTipoCentro Extends  core\ClaseGestor {
 	function getListaTiposCentro() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		$oTipoCentroSet = new core\Set();
 		$sQuery="SELECT tipo_ctr, nombre_tipo_ctr
 				FROM $nom_tabla
 				ORDER BY tipo_ctr";
