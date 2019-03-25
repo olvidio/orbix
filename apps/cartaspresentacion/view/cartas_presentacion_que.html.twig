@@ -14,6 +14,7 @@ fnjs_ver_ubi=function(id_ubi){
 }
 
 fnjs_poblacion=function(){
+    $('#ficha').html('');
 	var filtro=$('#que').val();
 	if (filtro == 'get_r') {
 		$("#td_poblacion").hide();
@@ -78,7 +79,7 @@ fnjs_ver=function(){
 }
 
 fnjs_eliminar=function(id_ubi){
-    seguro=confirm("{{ "¿Está seguro que quiere quitar los datos de presentación de este centro?" }}");
+    seguro=confirm("{{ "¿Está seguro que quiere quitar los datos de presentación de este centro?"|trans }}");
     if (seguro) { 
         var url='{{ url_ajax }}';
         var parametros='que=eliminar&id_ubi='+id_ubi+'{{ h_del|raw }}';
@@ -89,9 +90,7 @@ fnjs_eliminar=function(id_ubi){
             data: parametros
 		})
 		.done(function (rta_txt) {
-			//                if (rta_txt) {
-				alert ('respuesta: '+rta_txt);
-			}
+            alert ('respuesta: '+rta_txt);
         });
 		fnjs_ver();
     }
@@ -150,7 +149,7 @@ fnjs_actualizar_dtor=function(){
 <tr>
 	<td class=etiqueta>{{ "según dl"|trans }}:</td>
 	<td colspan=3>
-	{{ oSelects.desplegable|raw }}
+	{{ oSelCiudades.desplegable|raw }}
 	</td>
 	<td class=etiqueta id="td_poblacion" >{{ "población"|trans }}</td>
 	<td id='lst_lugar' colspan=1>

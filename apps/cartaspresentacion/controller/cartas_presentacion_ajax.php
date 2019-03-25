@@ -5,10 +5,16 @@ use cartaspresentacion\model\entity\GestorCartaPresentacion;
 use cartaspresentacion\model\entity\GestorCartaPresentacionDl;
 use core\ConfigGlobal;
 use ubis\model\entity\Centro;
+use ubis\model\entity\DireccionCtrDl;
+use ubis\model\entity\DireccionCtrEx;
 use ubis\model\entity\GestorCentro;
 use ubis\model\entity\GestorCentroDl;
+use ubis\model\entity\GestorCentroEx;
+use ubis\model\entity\GestorCtrDlxDireccion;
+use ubis\model\entity\GestorCtrExxDireccion;
 use ubis\model\entity\GestorDireccion;
 use ubis\model\entity\GestorDireccionCtr;
+use web\Desplegable;
 use web\Hash;
 use web\Lista;
 
@@ -72,17 +78,43 @@ switch ($Qque) {
 		switch ($Qfiltro) {
 			case 'get_H':
 				$sCondicion = "WHERE pais ILIKE 'españa'";
+                $GesDirecciones = new GestorDireccionCtr();
+                $oDesplPoblaciones = $GesDirecciones->getListaPoblaciones($sCondicion);
 				break;
 			case 'get_r':
 				$sCondicion = "WHERE pais NOT ILIKE 'españa'";
+                $GesDirecciones = new GestorDireccionCtr();
+                $oDesplPoblaciones = $GesDirecciones->getListaPoblaciones($sCondicion);
 				break;
+			case 'get_dl':
+			    $oGesCentrosDl = new GestorCentroDl();
+			    $cCentrosDl = $oGesCentrosDl->getCentros(['status'=>'t']);
+			    $aPoblaciones = [];
+			    foreach ($cCentrosDl as $oCentroDl) {
+			        $id_ubi = $oCentroDl->getId_ubi();
+			        $oGesCtrxDir = new GestorCtrDlxDireccion();
+			        $cCtrxDir = $oGesCtrxDir->getCtrxDirecciones(['id_ubi'=>$id_ubi]);
+			        foreach ($cCtrxDir as $oCtrxDir) {
+                        $id_direccion = $oCtrxDir->getId_direccion();
+                        $oDireccion = new DireccionCtrDl($id_direccion);
+                        $poblacion = $oDireccion->getPoblacion();
+                        if (!in_array($poblacion, $aPoblaciones)) {
+                            $aPoblaciones[$poblacion] = $poblacion;
+                        }
+			        }
+			    }
+			    $oDesplPoblaciones = new Desplegable();
+			    $oDesplPoblaciones->setOpciones($aPoblaciones);
+				break;
+            default:
+			    $aPoblaciones = [];
+			    break;
 		}
 
-		$GesDirecciones = new GestorDireccionCtr();
-		$oDesplPoblaciones = $GesDirecciones->getListaPoblaciones($sCondicion);
+        $options = $oDesplPoblaciones->options();
 		
 		$txt = "<select class=contenido id=\"poblacion_sel\" name=\"poblacion_sel\">";
-		$txt .= $oDesplPoblaciones->options();
+		$txt .= $options;
 		$txt .= "</select></td>";
 		echo $txt;
 		break;
@@ -109,6 +141,7 @@ switch ($Qque) {
             $pres_telf = '';
             $pres_mail = '';
             $zona = '';
+            $observ = '';
             
             $tot = $oCartaPresentacion->getTot();
             if ($tot !== false) {
@@ -116,13 +149,14 @@ switch ($Qque) {
                 $pres_telf = $oCartaPresentacion->getPres_telf();
                 $pres_mail = $oCartaPresentacion->getPres_mail();
                 $zona = $oCartaPresentacion->getZona();
+                $observ = $oCartaPresentacion->getObserv();
             }
             
             $oHash = new Hash();
             //$oHash->setUrl($url_ajax);
             $oHash->setArrayCamposHidden(['que' => 'update', 'id_ubi' => $Qid_ubi]);
             
-            $oHash->setcamposForm('pres_nom!pres_telf!pres_mail!zona');
+            $oHash->setcamposForm('pres_nom!pres_telf!pres_mail!zona!observ');
             $oHash->setCamposNo('scroll_id!sel');
 
             $txt="<form id='frm_pres'>";
@@ -135,6 +169,8 @@ switch ($Qque) {
             $txt.= _("e-mail") ."   <input type=text size=20 name=pres_mail value=\"$pres_mail\">";
             $txt.='<br>';
             $txt.= _("zona") ."   <input type=text size=20 name=zona value=\"$zona\">";
+            $txt.='<br>';
+            $txt.= _("observaciones") ."   <input type=text size=60 name=zona value=\"$observ\">";
             $txt.='<br><br>';
             $txt.="<input type='button' value='". _('guardar') ."' onclick=\"fnjs_guardar('#frm_pres');\" >";
             $txt.="<input type='button' value='". _('cancel') ."' onclick=\"fnjs_cerrar();\" >";
@@ -180,12 +216,14 @@ switch ($Qque) {
             $Qpres_telf = (string)  \filter_input(INPUT_POST, 'pres_telf');
             $Qpres_mail = (string)  \filter_input(INPUT_POST, 'pres_mail');
             $Qzona = (string)  \filter_input(INPUT_POST, 'zona');
+            $Qobserv = (string)  \filter_input(INPUT_POST, 'observ');
 
 			$oCartaPresentacion ->DBCarregar();
             $oCartaPresentacion->setPres_nom($Qpres_nom);
             $oCartaPresentacion->setPres_telf($Qpres_telf);
             $oCartaPresentacion->setPres_mail($Qpres_mail);
             $oCartaPresentacion->setZona($Qzona);
+            $oCartaPresentacion->setObserv($Qobserv);
             if ($oCartaPresentacion->DBGuardar() === false) {
                 echo _("Hay un error, no se ha guardado.");
             }
@@ -204,7 +242,7 @@ switch ($Qque) {
 			llenar_dtor($oCartaPresentacion,$id_ubi);
 		}
 		break;
-	case "get_H":
+	case "get_dl":
         $Qpoblacion_sel = (string)  \filter_input(INPUT_POST, 'poblacion_sel');
 		// listado de centros.
 		$oGesCentros = new GestorCentro();
@@ -303,7 +341,7 @@ switch ($Qque) {
 		break;
 	case "get_r":
 		// listado de centros.
-		$oGesCentros = new GestorCentro();
+		$oGesCentros = new GestorCentroEx();
 		$permiso = 'modificar';
 		$aWhere = array('tipo_ctr'=>'cr|dl','status'=>'t','_ordre'=>'nombre_ubi');
 		$aOperador = array('tipo_ctr'=>'~');
@@ -318,75 +356,51 @@ switch ($Qque) {
 			$tipo_labor = $oCentro->getTipo_labor();
 			$tipo_ubi = $oCentro->getTipo_ubi();
 
-			$cDirecciones = $oCentro->getDirecciones();
-			$cDirCentros = array();
+            $oGesCtrxDir = new GestorCtrExxDireccion();
+            $cCtrxDir = $oGesCtrxDir->getCtrxDirecciones(['id_ubi'=>$id_ubi]);
+			$cDirCentros = [];
 			$txt_direccion = '';
-			$d = 0;
-			$cId_ubis = [];
-			foreach ($cDirecciones as $oDireccion) {
-				$d++;
-				$id_direccion = $oDireccion->getId_direccion();
+            foreach ($cCtrxDir as $oCtrxDir) {
+                $id_direccion = $oCtrxDir->getId_direccion();
+                $oDireccion = new DireccionCtrEx($id_direccion);
 				$txt_direccion = $oDireccion->getDireccionPostal(" - ");
-				$cId_ubis = $oDireccion->getUbis();
-				$cCentros = [];
-				foreach ($cId_ubis as $oUbi) {
-				    $oCentro = new Centro($oUbi->getId_ubi());
-				    if ($oCentro->getStatus()) {
-				        $cCentros[] = $oCentro;
-				    }
-				}
-                $cDirCentros[$d] = [ 'dir'=>$txt_direccion, 'colCentros'=>$cCentros ];
-			}
-            $c = 0;
-            $a_valores = array();
-            foreach ($cDirCentros as $key=>$Cen) {
-                $txt_direccion = $Cen['dir'];
-                $cCentros = $Cen['colCentros'];
-                foreach ($cCentros as $oCentro) {
-                    $c++;
-                    $id_ubi = $oCentro->getId_ubi();
-                    $nombre_ubi = $oCentro->getNombre_ubi();
-                    $tipo_ctr = $oCentro->getTipo_ctr();
-                    $tipo_labor = $oCentro->getTipo_labor();
-                    $tipo_ubi = $oCentro->getTipo_ubi();
+            }
 
-                    $GesPresentacion = new GestorCartaPresentacion();
-                    $colPresentacion = $GesPresentacion->getCartasPresentacion(array('id_ubi'=>$id_ubi));
-                    //sólo debería haber una.
-                    if (empty($colPresentacion[0])) {
-                        $activo = FALSE;
-                        $pres = _("no");
-                    } else {
-                        $activo = TRUE;
-                        $pres = _("si");
-                    }
+            $GesPresentacion = new GestorCartaPresentacion();
+            $colPresentacion = $GesPresentacion->getCartasPresentacion(array('id_ubi'=>$id_ubi));
+            //sólo debería haber una.
+            if (empty($colPresentacion[0])) {
+                $activo = FALSE;
+                $pres = _("no");
+            } else {
+                $activo = TRUE;
+                $pres = _("si");
+            }
 
-                    if ($permiso == 'modificar') {
-                        $script = '';
-                        $ctr_txt = $nombre_ubi;
-                        $script="fnjs_modificar($id_ubi)";
-                        $a_valores[$c][1]=array( 'script'=>$script, 'valor'=>'director');
-                        $script2="fnjs_ver_ubi($id_ubi)";
-                        $a_valores[$c][2]=array( 'script2'=>$script2, 'valor'=>$ctr_txt);
-                        if ($activo) {
-                            $script3="fnjs_eliminar($id_ubi)";
-                            $pres .= ", "._("quitar"); 
-                            $a_valores[$c][3]=array( 'script3'=>$script3, 'valor'=>$pres);
-                        } else {
-                            $a_valores[$c][3]=$pres;
-                        }
-                        $a_valores[$c][4]=$txt_direccion;
-                    } else {
-                        $a_valores[$c][1]='';
-                        $a_valores[$c][2]=$nombre_ubi;
-                        $a_valores[$c][3]=$pres;
-                        $a_valores[$c][4]=$txt_direccion;
-                    }
-                    //$a_valores[$c][2]="<input type=checkbox size=12 id=$id_ubi name=presentacion $chk onClick=\"fnjs_check($id_ubi)\">";
-                    //$a_valores[$c][3]=$oPermActiv->cuadros_check('tipo_labor',$tipo_labor);
+            if ($permiso == 'modificar') {
+                $script = '';
+                $ctr_txt = $nombre_ubi;
+                $script="fnjs_modificar($id_ubi)";
+                $a_valores[$c][1]=array( 'script'=>$script, 'valor'=>'director');
+                $script2="fnjs_ver_ubi($id_ubi)";
+                $a_valores[$c][2]=array( 'script2'=>$script2, 'valor'=>$ctr_txt);
+                if ($activo) {
+                    $script3="fnjs_eliminar($id_ubi)";
+                    $pres .= ", "._("quitar"); 
+                    $a_valores[$c][3]=array( 'script3'=>$script3, 'valor'=>$pres);
+                } else {
+                    $a_valores[$c][3]=$pres;
                 }
-			}
-		}
+                $a_valores[$c][4]=$txt_direccion;
+            } else {
+                $a_valores[$c][1]='';
+                $a_valores[$c][2]=$nombre_ubi;
+                $a_valores[$c][3]=$pres;
+                $a_valores[$c][4]=$txt_direccion;
+            }
+            //$a_valores[$c][2]="<input type=checkbox size=12 id=$id_ubi name=presentacion $chk onClick=\"fnjs_check($id_ubi)\">";
+            //$a_valores[$c][3]=$oPermActiv->cuadros_check('tipo_labor',$tipo_labor);
+        }
 		$a_cabeceras = [];
 		$a_cabeceras[]= array('name'=>ucfirst(_("nombre")),'width'=>20,'formatter'=>'clickFormatter');
 		$a_cabeceras[]= array('name'=>ucfirst(_("centro")),'width'=>80,'formatter'=>'clickFormatter2');

@@ -48,7 +48,8 @@ class DB extends DBAbstract {
             pres_nom text,
             pres_telf text,
             pres_mail text,
-            zona text
+            zona text,
+            observ text
             );";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
 

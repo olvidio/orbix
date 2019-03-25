@@ -66,6 +66,12 @@ class CartaPresentacion Extends core\ClasePropiedades {
 	 * @var string
 	 */
 	 protected $szona;
+	/**
+	 * Observ de CartaPresentacion
+	 *
+	 * @var string
+	 */
+	 protected $sobserv;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
 	 * oDbl de CartaPresentacion
@@ -121,6 +127,7 @@ class CartaPresentacion Extends core\ClasePropiedades {
 		$aDades['pres_telf'] = $this->spres_telf;
 		$aDades['pres_mail'] = $this->spres_mail;
 		$aDades['zona'] = $this->szona;
+		$aDades['observ'] = $this->sobserv;
 		array_walk($aDades, 'core\poner_null');
 
 		if ($bInsert === FALSE) {
@@ -129,7 +136,8 @@ class CartaPresentacion Extends core\ClasePropiedades {
 					pres_nom                 = :pres_nom,
 					pres_telf                = :pres_telf,
 					pres_mail                = :pres_mail,
-					zona                     = :zona";
+					zona                     = :zona,
+					observ                   = :observ";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_ubi='$this->iid_ubi'")) === FALSE) {
 				$sClauError = 'CartaPresentacion.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -144,8 +152,8 @@ class CartaPresentacion Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_ubi);
-			$campos="(id_ubi,pres_nom,pres_telf,pres_mail,zona)";
-			$valores="(:id_ubi,:pres_nom,:pres_telf,:pres_mail,:zona)";		
+			$campos="(id_ubi,pres_nom,pres_telf,pres_mail,zona,observ)";
+			$valores="(:id_ubi,:pres_nom,:pres_telf,:pres_mail,:zona,:observ)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClauError = 'CartaPresentacion.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -222,6 +230,7 @@ class CartaPresentacion Extends core\ClasePropiedades {
 		if (array_key_exists('pres_telf',$aDades)) $this->setPres_telf($aDades['pres_telf']);
 		if (array_key_exists('pres_mail',$aDades)) $this->setPres_mail($aDades['pres_mail']);
 		if (array_key_exists('zona',$aDades)) $this->setZona($aDades['zona']);
+		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
@@ -345,6 +354,25 @@ class CartaPresentacion Extends core\ClasePropiedades {
 	function setZona($szona='') {
 		$this->szona = $szona;
 	}
+	/**
+	 * Recupera l'atribut sobserv de CartaPresentacion
+	 *
+	 * @return string sobserv
+	 */
+	function getObserv() {
+		if (!isset($this->sobserv)) {
+			$this->DBCarregar();
+		}
+		return $this->sobserv;
+	}
+	/**
+	 * estableix el valor de l'atribut sobserv de CartaPresentacion
+	 *
+	 * @param string sobserv='' optional
+	 */
+	function setObserv($sobserv='') {
+		$this->sobserv = $sobserv;
+	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
 	/**
@@ -358,6 +386,7 @@ class CartaPresentacion Extends core\ClasePropiedades {
 		$oCartaPresentacionSet->add($this->getDatosPres_telf());
 		$oCartaPresentacionSet->add($this->getDatosPres_mail());
 		$oCartaPresentacionSet->add($this->getDatosZona());
+		$oCartaPresentacionSet->add($this->getDatosObserv());
 		return $oCartaPresentacionSet->getTot();
 	}
 
@@ -409,6 +438,18 @@ class CartaPresentacion Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'zona'));
 		$oDatosCampo->setEtiqueta(_("zona"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut sobserv de CartaPresentacion
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosObserv() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'observ'));
+		$oDatosCampo->setEtiqueta(_("observaciones"));
 		return $oDatosCampo;
 	}
 }

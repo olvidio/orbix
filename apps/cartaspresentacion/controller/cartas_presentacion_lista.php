@@ -217,6 +217,7 @@ function mega_array($oPresentacion,$oCentro,$ordenar_dl) {
 	if (($tipo_labor & 256) == 256) $tipo = 'numerarios';
 	if (($tipo_labor & 64) == 64) $tipo = 's';
 	if (($tipo_labor & 32) == 32) $tipo = 'sss+';
+	if ($tipo_ctr == 'dl' OR $tipo_ctr == 'cr') $tipo = 'otras r';
 	$edad = '';
 	if (($tipo_labor & 2) == 2) $edad = 'jóvenes';
 	if (($tipo_labor & 1) == 1) $edad = 'mayores';

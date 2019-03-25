@@ -37,6 +37,26 @@ class GestorDireccion Extends  core\ClaseGestor {
 	 *
 	 * @return object Desplegable
 	 */
+	function getListaPoblacionesPorDl($sdl='') {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$sQuery="SELECT DISTINCT initcap(poblacion),initcap(poblacion)
+				FROM $nom_tabla
+				$sCondicion
+				ORDER BY initcap(poblacion)";
+		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+			$sClauError = 'GestorDireccion.lista';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		return new web\Desplegable('',$oDblSt,'',true);
+	}
+	/**
+	 * retorna un objecte del tipus Desplegable
+	 * Els posibles poblacions
+	 *
+	 * @return object Desplegable
+	 */
 	function getListaPoblaciones($sCondicion='') {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
