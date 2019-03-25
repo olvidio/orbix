@@ -2,7 +2,6 @@
 
 use core\ConfigGlobal;
 use ubis\model\entity as ubis;
-use usuarios\model\entity as usuarios;
 use web\Desplegable;
 use web\Hash;
 use web\Lista;
@@ -31,11 +30,50 @@ use web\Posicion;
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-
-$oMiUsuario = new usuarios\Usuario(ConfigGlobal::mi_id_usuario());
+	
+	
+/**
+ * copiada de permisos/login_obj.php
+ */
+function posibles_esquemas($default='') {
+    $aOpciones = [];
+    // Lista de posibles esquemas (en comun)
+    $oConfig = new core\Config('comun');
+    $config = $oConfig->getEsquema('public');
+    $oConexion = new core\dbConnection($config);
+    $oDBP = $oConexion->getPDO();
+    
+    $sQuery = "select nspname from pg_namespace where nspowner > 1000 ORDER BY nspname";
+    if (($oDblSt = $oDBP->query($sQuery)) === false) {
+        $sClauError = 'Schemas.lista';
+        $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+        return false;
+    }
+    if (is_object($oDblSt)) {
+        $oDblSt->execute();
+        //$txt = "<select id=\"esquema\" name=\"esquema\" >";
+        foreach($oDblSt as $row) {
+            if (!isset($row[1])) { $a = 0; } else { $a = 1; } // para el caso de sólo tener un valor.
+            if ($row[0] == 'public') continue;
+            if ($row[0] == 'resto') continue;
+            if ($row[0] == 'global') continue;
+            $sf = $row[0].'f';
+            $sv = $row[0].'v';
+            if (!empty($default) && $sf == $default) { $sel_sf = 'selected'; } else { $sel_sf = ''; }
+            if (!empty($default) && $sv == $default) { $sel_sv = 'selected'; } else { $sel_sv = ''; }
+            // 7.3.2019 Parece que sf va por su lado.
+            //$txt .= "<option value=\"$sf\" $sel_sf>$sf</option>";
+            //$txt .= "<option value=\"$sv\" $sel_sv>$sv</option>";
+            $aOpciones[$sv] = $sv;
+            
+        }
+        //$txt .= '</select>';
+    }
+    return $aOpciones;
+}
+	
+	
 $miSfsv=ConfigGlobal::mi_sfsv();
-
-$doss_tel='d_teleco_ubis';
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
@@ -56,108 +94,157 @@ if (isset($_POST['stack'])) {
 $Qque_lista = (string) \filter_input(INPUT_POST, 'que_lista');
 $Qloc = (string) \filter_input(INPUT_POST, 'loc');
 	
-if (empty($Qloc)) $Qloc='dl';
+if (empty($Qloc)) $Qloc = ConfigGlobal::mi_region_dl();
 if (empty($Qque_lista)) $Qque_lista='ctr_n';
 
+$aWhere = [];
+$aWhere['status'] = 't';
 $aWhere['_ordre'] = 'nombre_ubi';
-$aOperador = array();
+$aOperador = [];
 
-
-switch ($Qque_lista) {
-	/*vamos a por los casos de la tabla u_centros dl*/
-	case "todos_ctr_dl":
-		$obj = 'CentroDl';
-		$aWhere['_ordre'] = 'tipo_ctr,nombre_ubi';
-		break;
-	case "ctr_n":
-		$obj = 'CentroDl';
-		$aWhere['tipo_ctr'] = '^n';
-		$aOperador['tipo_ctr'] = '~';
-		break;
-	case "ctr_nax":
-		$obj = 'CentroDl';
-		$aWhere['tipo_ctr'] = '^x';
-		$aOperador['tipo_ctr'] = '~';
-		break;
-	case "ctr_agd":
-		$obj = 'CentroDl';
-		$aWhere['tipo_ctr'] = '^a[^p]'; // que no sea ap (apeadero).
-		$aOperador['tipo_ctr'] = '~';
-		break;
-	case "ctr_s":
-		$obj = 'CentroDl';
-		$aWhere['tipo_ctr'] = '^(sj|sm|s)$';
-		$aOperador['tipo_ctr'] = '~';
-		break;
-	case "ctr_sss":
-		$obj = 'CentroDl';
-		$aWhere['tipo_ctr'] = '^(ss|sss)$';
-		$aOperador['tipo_ctr'] = '~';
-		break;
-	case "oc":
-		$obj = 'CentroDl';
-		$aWhere['tipo_ctr'] = '(oc)';
-		$aOperador['tipo_ctr'] = '~';
-		break;
-	case "cgi":
-		$obj = 'CentroDl';
-		$aWhere['tipo_ctr'] = '(cgi)';
-		$aOperador['tipo_ctr'] = '~';
-		break;
-	/*vamos a por los casos de la tabla u_cdc_dl*/
-	case "cdr_cdc_dl":
-		$obj = 'CasaDl';
-		$aWhere['tipo_casa'] = 'cdc|cdr';
-		$aOperador['tipo_casa'] = '~';
-		switch ($miSfsv) {
-			case 1:
-				if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
-				} else {
-					$aWhere['sv'] = 't';
-				}
-				break;
-			case 2:
-				$aWhere['sf'] = 't';
-				break;
-		}
-		break;
-	case "otros_cdc":
-		$obj = 'CasaDl';
-		$aWhere['tipo_casa'] = 'cdc|cdr|cgi';
-		$aOperador['tipo_casa'] = '!~';
-		switch ($miSfsv) {
-			case 1:
-				if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
-					//$condicion_u="WHERE u.tipo_casa!='cgi' AND u.tipo_casa !='cdc' AND u.tipo_casa !='cdr'";
-				} else {
-					$aWhere['sv'] = 't';
-					break;
-				}
-			case 2:
-				$aWhere['sf'] = 't';
-				break;
-		}
-		break;
-	/*vamos a por los casos de la tabla u_centros_ex*/
-	case "todos_ctr_ex":
-		$obj = 'CentroEx';
-		break;
-	case "dl":
-		$obj = 'CentroEx';
-		$aWhere['tipo_ctr'] = 'dl';
-		break;
-	case "cr":
-		$obj = 'CentroEx';
-		$aWhere['tipo_ctr'] = 'cr';
-		break;
-	case "cdc_ex":
-		$obj = 'CasaEx';
-		break;
+if ($Qloc !== 'ex') {
+    $a_reg = explode('-',$Qloc);
+    $reg = $a_reg[0];
+    $dl = substr($a_reg[1],0,-1); // quito la v o la f.
+    if ($dl == ConfigGlobal::mi_dele()) {
+        $objCentro = 'CentroDl';
+        $objCasa = 'CasaDl';
+    } else {
+        $objCentro = 'Centro';
+        $objCasa = 'Casa';
+        $aWhere['region'] = $reg;
+        if ($dl != 'cr') {
+            $aWhere['dl'] = $dl;
+        }
+    }
+    switch ($Qque_lista) {
+        /*vamos a por los casos de la tabla u_centros dl*/
+        case "todos_ctr_dl":
+            $obj = $objCentro;
+            $aWhere['_ordre'] = 'tipo_ctr,nombre_ubi';
+            break;
+        case "ctr_n":
+            $obj = $objCentro;
+            $aWhere['tipo_ctr'] = '^n';
+            $aOperador['tipo_ctr'] = '~';
+            break;
+        case "ctr_nax":
+            $obj = $objCentro;
+            $aWhere['tipo_ctr'] = '^x';
+            $aOperador['tipo_ctr'] = '~';
+            break;
+        case "ctr_agd":
+            $obj = $objCentro;
+            $aWhere['tipo_ctr'] = '^a[^p]'; // que no sea ap (apeadero).
+            $aOperador['tipo_ctr'] = '~';
+            break;
+        case "ctr_s":
+            $obj = $objCentro;
+            $aWhere['tipo_ctr'] = '^(sj|sm|s)$';
+            $aOperador['tipo_ctr'] = '~';
+            break;
+        case "ctr_sss":
+            $obj = $objCentro;
+            $aWhere['tipo_ctr'] = '^(ss|sss)$';
+            $aOperador['tipo_ctr'] = '~';
+            break;
+        case "oc":
+            $obj = $objCentro;
+            $aWhere['tipo_ctr'] = '(oc)';
+            $aOperador['tipo_ctr'] = '~';
+            break;
+        case "cgi":
+            $obj = $objCentro;
+            $aWhere['tipo_ctr'] = '(cgi)';
+            $aOperador['tipo_ctr'] = '~';
+            break;
+        /*vamos a por los casos de la tabla u_cdc_dl*/
+        case "cdr_cdc_dl":
+            $obj = $objCasa;
+            $aWhere['tipo_casa'] = 'cdc|cdr';
+            $aOperador['tipo_casa'] = '~';
+            switch ($miSfsv) {
+                case 1:
+                    if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
+                    } else {
+                        $aWhere['sv'] = 't';
+                    }
+                    break;
+                case 2:
+                    $aWhere['sf'] = 't';
+                    break;
+            }
+            break;
+        case "otros_cdc":
+            $obj = $objCasa;
+            $aWhere['tipo_casa'] = 'cdc|cdr|cgi';
+            $aOperador['tipo_casa'] = '!~';
+            switch ($miSfsv) {
+                case 1:
+                    if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
+                        //$condicion_u="WHERE u.tipo_casa!='cgi' AND u.tipo_casa !='cdc' AND u.tipo_casa !='cdr'";
+                    } else {
+                        $aWhere['sv'] = 't';
+                        break;
+                    }
+                case 2:
+                    $aWhere['sf'] = 't';
+                    break;
+            }
+            break;
+        default:
+            $obj = 'none';
+            break;
+    }
+}
+if ($Qloc == 'ex') {
+    Switch($Qque_lista) {
+        /*vamos a por los casos de la tabla u_centros_ex*/
+        case "ctr_n":
+            $obj = 'CentroEx';
+            $aWhere['tipo_ctr'] = '^n';
+            $aOperador['tipo_ctr'] = '~';
+            break;
+        case "ctr_nax":
+            $obj = 'CentroEx';
+            $aWhere['tipo_ctr'] = '^x';
+            $aOperador['tipo_ctr'] = '~';
+            break;
+        case "ctr_agd":
+            $obj = 'CentroEx';
+            $aWhere['tipo_ctr'] = '^a[^p]'; // que no sea ap (apeadero).
+            $aOperador['tipo_ctr'] = '~';
+            break;
+        case "ctr_s":
+            $obj = 'CentroEx';
+            $aWhere['tipo_ctr'] = '^(sj|sm|s)$';
+            $aOperador['tipo_ctr'] = '~';
+            break;
+        case "todos_ctr_ex":
+            $obj = 'CentroEx';
+            break;
+        case "dl":
+            $obj = 'CentroEx';
+            $aWhere['tipo_ctr'] = 'dl';
+            break;
+        case "cr":
+            $obj = 'CentroEx';
+            $aWhere['tipo_ctr'] = 'cr';
+            break;
+        case "cdc_ex":
+            $obj = 'CasaEx';
+            break;
+        default:
+            $obj = 'none';
+            break;
+    }
 }
 
-if (!empty($condicion_u)) { $condicion_u.=" AND status='t'"; } else { $condicion_u="WHERE status='t'"; }
-
 switch ($obj) {
+	case 'Centro':
+		$oGesCentros = new ubis\gestorCentro();
+		$cUbis = $oGesCentros->getCentros($aWhere,$aOperador); 
+		break;
 	case 'CentroDl':
 		$oGesCentros = new ubis\gestorCentroDl();
 		$cUbis = $oGesCentros->getCentros($aWhere,$aOperador); 
@@ -165,6 +252,10 @@ switch ($obj) {
 	case 'CentroEx':
 		$oGesCentros = new ubis\gestorCentroEx();
 		$cUbis = $oGesCentros->getCentros($aWhere,$aOperador); 
+		break;
+	case 'Casa':
+		$oGesCasas = new ubis\gestorCasa();
+		$cUbis = $oGesCasas->getCasas($aWhere,$aOperador); 
 		break;
 	case 'CasaDl':
 		$oGesCasas = new ubis\gestorCasaDl();
@@ -174,6 +265,9 @@ switch ($obj) {
 		$oGesCasas = new ubis\gestorCasaEx();
 		$cUbis = $oGesCasas->getCasas($aWhere,$aOperador); 
 		break;
+	case 'none':
+	    $cUbis = [];
+	    break;
 }
 
 $aGoBack = array (
@@ -185,6 +279,7 @@ $oPosicion->recordar();
 
 $a_botones=array( array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(this.form)" ) );
 
+$a_cabeceras = [];
 $a_cabeceras[]= array('name'=>ucfirst(_("centro")),'formatter'=>'clickFormatter');
 $a_cabeceras[]= ucfirst(_("región"));
 $a_cabeceras[]= ucfirst(_("tipo ctr o casa"));
@@ -259,19 +354,23 @@ foreach ($cUbis as $oCentro) {
 $oDesplDl = new Desplegable();
 $oDesplDl->setNombre('loc');
 $oDesplDl->setAction('fnjs_actualizar()');
-$oDesplDl->setOpciones(array('dl'=>_("de dl"),'ex'=>_("de otra dl/cr")));
+$aOpcionesDl = posibles_esquemas();
+$aOpcionesDl['ex'] = _("otras");
+//$oDesplDl->setOpciones(array('dl'=> core\ConfigGlobal::mi_dele(),'ex'=>_("de otra dl/cr")));
+$oDesplDl->setOpciones($aOpcionesDl);
 $oDesplDl->setOpcion_sel($Qloc);
+$oDesplDl->setAction('fnjs_limpiar()');
 
 
 $oDesplLista = new Desplegable();
 $oDesplLista->setNombre('que_lista');
 $oDesplLista->setAction('fnjs_actualizar()');
-if ($Qloc=='dl') {
-	$aOpciones=array(
+if ($Qloc!=='ex') {
+	$aOpciones=array( '' => '',
 			'ctr_n'=>ucfirst(_("sólo centros de n")), 
 			'todos_ctr_dl'=>ucfirst(_("todos los ctr de la dl")),
 			'ctr_agd'=>ucfirst(_("sólo centros de agd")), 
-			'ctr_s'=>ucfirst(_("sólo centros de s"))
+			'ctr_s'=>ucfirst(_("sólo centros de s")),
 			);
 	if ($miSfsv == 1) { // sv
 		$aOpciones['ctr_sss'] = ucfirst(_("sólo centros de sss+")); 
@@ -285,11 +384,14 @@ if ($Qloc=='dl') {
 	$aOpciones['otros_cdc'] = ucfirst(_("resto casas cdc"));
 }
 if ($Qloc=='ex') {
-	$aOpciones=array(
+	$aOpciones=array( '' => '',
+			'ctr_n_ex'=>ucfirst(_("sólo centros de n")), 
+			'ctr_agd_ex'=>ucfirst(_("sólo centros de agd")), 
+			'ctr_s_ex'=>ucfirst(_("sólo centros de s")),
 			'todos_ctr_ex'=>ucfirst(_("todos los centros")),
 			'dl'=>ucfirst(_("sólo delegaciones")), 
 			'cr'=>ucfirst(_("sólo comisiones regionales")), 
-			'cdc_ex'=>ucfirst(_("todas las casas"))
+			'cdc_ex'=>ucfirst(_("todas las casas")),
 			);	
 }
 $oDesplLista->setOpciones($aOpciones);

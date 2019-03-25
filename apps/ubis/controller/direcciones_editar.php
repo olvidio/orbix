@@ -76,6 +76,21 @@ if ($Qmod == 'nuevo') {
 	$idx = 'nuevo';
 	$id_direccion = '';
 	$golistadir = '';
+	$nom_sede = '';
+	$direccion = '';
+	$a_p = '';
+	$c_p = '';
+	$poblacion = '';
+	$provincia = '';
+	$pais = '';
+	$observ = '';
+	$f_direccion = '';
+	$latitud = '';
+	$longitud = '';
+	$id_direccion_actual = '';
+	$mas = '';
+	$menos = '';
+	$h = '';
 } else {
 	// puede haber más de una dirección
 	$a_id_direccion = explode(',',$Qid_direccion);
@@ -113,11 +128,9 @@ if ($Qmod == 'nuevo') {
 
 	$mas = ($idx < $num_dir-1)? 1 : 0; 
 	$menos = ($idx < 1)? 0 : 1; 
-	$obj_dir = $Qobj_dir;
 	$idx = $idx;
 	$id_direccion = $Qid_direccion;
 	$id_direccion_actual = $id_direccion_actual;
-	$id_ubi = $Qid_ubi;
 
 	$golistadir = web\Hash::link('apps/ubis/controller/direcciones_que.php?'.http_build_query(array('id_ubi'=>$Qid_ubi,'id_direccion'=>$Qid_direccion,'obj_dir'=>$Qobj_dir)));
 	
@@ -178,10 +191,10 @@ $oHash->setcamposForm('a_p!c_p!direccion!f_direccion!latitud!longitud!nom_sede!o
 $oHash->setcamposNo('que!'.$campos_chk);
 $a_camposHidden = array(
 		'campos_chk'=>$campos_chk,
-		'obj_dir'=>$obj_dir,
+		'obj_dir'=>$Qobj_dir,
 		'id_direccion'=>$id_direccion,
 		'idx'=>$idx,
-		'id_ubi'=>$id_ubi
+		'id_ubi'=>$Qid_ubi
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 

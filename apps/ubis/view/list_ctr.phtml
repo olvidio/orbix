@@ -1,7 +1,13 @@
 <script>
+fnjs_limpiar=function(){
+    $('#que_lista').val();
+    $('#modifica').attr('action','apps/ubis/controller/list_ctr.php');
+    fnjs_enviar_formulario('#modifica');
+}
+
 fnjs_actualizar=function(){
-  $('#modifica').attr('action','apps/ubis/controller/list_ctr.php');
-  fnjs_enviar_formulario('#modifica');
+    $('#modifica').attr('action','apps/ubis/controller/list_ctr.php');
+    fnjs_enviar_formulario('#modifica');
 }
 
 fnjs_modificar=function(formulario){
@@ -30,7 +36,7 @@ fnjs_left_side_hide();
 <?= $oDesplLista->desplegable(); ?>
 </td>
 <td>
-<input type="button" value="listar" onclick="fnjs_actualizar()">
+<input type="button" value="<?= _("listar") ?>" onclick="fnjs_actualizar()">
 </td></tr>
 </table>
 </form>
