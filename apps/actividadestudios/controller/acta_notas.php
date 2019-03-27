@@ -87,7 +87,7 @@ $Qid_nivel = (integer) \filter_input(INPUT_POST, 'id_nivel');
 
 $GesActas = new notas\GestorActa();
 $cActas = $GesActas->getActas(array('id_activ'=>$id_activ,'id_asignatura'=>$id_asignatura, '_ordre'=>'f_acta'));
-//if (is_array($cActas) && count($cActas) == 1) {
+$acta_principal = '';
 if (is_array($cActas) && !empty($cActas)) {
 	$a_actas = [ 0 => '', 2 => _("cursada")];
 	foreach ($cActas as $oActa) {
@@ -101,8 +101,6 @@ if (is_array($cActas) && !empty($cActas)) {
 	// Si sólo hay una, la selecciono por defecto.
 	if (count($cActas) == 1) {
 	    $acta_principal = $nom_acta;
-	} else {
-	    $acta_principal = '';
 	}
 } else {
 	$notas="nuevo";// para indicar a la página de actas que está dentro de ésta.

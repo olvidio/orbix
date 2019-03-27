@@ -38,6 +38,10 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$oPosicion->addParametro('id_sel',$id_sel);
 }
 
+$Qobj_pau = (string) filter_input(INPUT_POST,'obj_pau');
+$obj = 'personas\\model\\entity\\'.$Qobj_pau;
+$oPersona = new $obj($id_nom);
+$id_tabla = $oPersona->getId_tabla();
 
 if (!empty($id_tabla)) {
 	switch ($id_tabla) {
@@ -62,8 +66,6 @@ if (!empty($id_tabla)) {
 			$Qobj_pau="PersonaEx";
 			break;
 	}
-} else {
-	$Qobj_pau = (string) filter_input(INPUT_POST,'obj_pau');
 }
 
 // Si vengo de planning_select u otros, puede que la tabla sea más genérica (p_de_casa) y no sepa como resolver algunas cosas.
