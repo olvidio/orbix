@@ -87,8 +87,8 @@ if (!$nuevo) {
 <?php print(strtoupper(_("datos personales"))); ?>
 </td></tr>
 <tr>
-	<td><span class=etiqueta ondblclick="fnjs_help('<?php //echo $dl_help_ref; ?>')" >Delegación</span></td>
-	<td><input class=datos size="6" name="dl" value="<?= $dl ?>" title="<?php //echo $dl_help; ?>"></td>
+	<td><span class="etiqueta">Delegación</span></td>
+	<td><input class="datos" size="6" name="dl" value="<?= $dl ?>" ></td>
 	<?php //en el caso de nueva ficha o sin ctr actual, pongo el nombre del centro sin llenar el dossier de traslados.
 	if (empty($id_nom) || empty($nom_ctr)){
 		?>
@@ -148,7 +148,7 @@ if (core\ConfigGlobal::mi_sfsv() == 1) {
 	echo web\dibujar_campo($obj,"sacd",9,1,1);
 }
 ?>
-<td><span class=etiqueta ondblclick="fnjs_help('<?php //echo $stgr_help_ref; ?>')" >Stgr&nbsp;</span>
+<td><span class="etiqueta" >Stgr&nbsp;</span>
 	<?= $oDesplStgr->desplegable(); ?>
 </td>
 <?php
