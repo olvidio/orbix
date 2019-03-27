@@ -121,13 +121,11 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
 		if (empty($this->iasignaturasC1)) {
 			$gesAsignaturas = new asignaturas\gestorAsignatura();
 			$cAsignaturasC1 = $gesAsignaturas->getAsignaturas(array('status'=>'t','id_nivel'=>'2100,2113'),array('id_nivel'=>'BETWEEN'));
-			// le sumo una opcional (id_nivel = 2430)
-			$this->iasignaturasC1 = count($cAsignaturasC1)+1;
+			$this->iasignaturasC1 = count($cAsignaturasC1);
 			$aIdNivel = array();
 			foreach ($cAsignaturasC1 as $oAsignatura) {
 				$aIdNivel[] = $oAsignatura->getId_nivel();
 			}
-			$aIdNivel[] = 2430;
 			$this->aIdNivel = $aIdNivel;
 		}
 		return $this->iasignaturasC1;
@@ -139,11 +137,9 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
 		if (empty($this->iasignaturasC2)) {
 			$gesAsignaturas = new asignaturas\gestorAsignatura();
 			$cAsignaturasC2 = $gesAsignaturas->getAsignaturas(array('status'=>'t','id_nivel'=>'2200,2500'),array('id_nivel'=>'BETWEEN'));
-			// le quito una opcional (id_nivel = 2430)
-			$this->iasignaturasC2 = count($cAsignaturasC2)-1;
+			$this->iasignaturasC2 = count($cAsignaturasC2);
 			$aIdNivel = array();
 			foreach ($cAsignaturasC2 as $oAsignatura) {
-				if (($id_nivel = $oAsignatura->getId_nivel()) == 2430) continue;
 				$aIdNivel[] = $oAsignatura->getId_nivel();
 			}
 			$this->aIdNivel = $aIdNivel;
@@ -159,25 +155,21 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
 		switch ($curso) {
 			case 'bienio':
 				$num_curso = $this->getAsignaturasB();
-				//$condicion="AND (n.id_nivel BETWEEN 1100 AND 1300) AND p.stgr='b'";
 				$condicion = "AND id_nivel IN (".implode(',', $this->aIdNivel).")";
 		 		$condicion_stgr = "AND p.stgr = 'b'";
 				break;
 			case 'cuadrienio':
 				$num_curso = $this->getAsignaturasC();
-				//$condicion="AND (n.id_nivel BETWEEN 2100 AND 2500) AND p.stgr ~ '^c'";
 				$condicion="AND id_nivel IN (".implode(',', $this->aIdNivel).")";
 		 		$condicion_stgr = "AND p.stgr ~ '^c'";
 				break;
 			case 'c1':
 				$num_curso = $this->getAsignaturasC1();
-				//$condicion="AND (n.id_nivel BETWEEN 3100 AND 2500) AND n.id_nivel!=2430 AND p.stgr ~ '^c'";
 				$condicion="AND id_nivel IN (".implode(',', $this->aIdNivel).")";
 		 		$condicion_stgr = "AND p.stgr ~ '^c'";
 				break;
 			case 'c2':
 				$num_curso = $this->getAsignaturasC2();
-				//$condicion="AND ((n.id_nivel BETWEEN 2100 AND 2113) OR n.id_nivel=2430) AND p.stgr ~ '^c'";
 				$condicion="AND id_nivel IN (".implode(',', $this->aIdNivel).")";
 		 		$condicion_stgr = "AND p.stgr ~ '^c'";
 				break;

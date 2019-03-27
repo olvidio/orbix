@@ -25,6 +25,15 @@ use web\Posicion;
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
+	
+$oPosicion->recordar();
+	
+$Qid_asignatura = (string) \filter_input(INPUT_POST, 'id_asignatura');
+$Qpersonas_n = (string) \filter_input(INPUT_POST, 'personas_n');
+$Qpersonas_agd = (string) \filter_input(INPUT_POST, 'personas_agd');
+$Qb_c = (string) \filter_input(INPUT_POST, 'b_c');
+$Qc1 = (string) \filter_input(INPUT_POST, 'c1');
+$Qc2 = (string) \filter_input(INPUT_POST, 'c2');
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
@@ -40,15 +49,9 @@ if (isset($_POST['stack'])) {
 	}
 } 
 
-$Qid_asignatura = (string) \filter_input(INPUT_POST, 'id_asignatura');
-$Qpersonas_n = (string) \filter_input(INPUT_POST, 'personas_n');
-$Qpersonas_agd = (string) \filter_input(INPUT_POST, 'personas_agd');
-$Qb_c = (string) \filter_input(INPUT_POST, 'b_c');
-$Qc1 = (string) \filter_input(INPUT_POST, 'c1');
-$Qc2 = (string) \filter_input(INPUT_POST, 'c2');
-
-$Qtitulo = '';
-
+if (empty($Qpersonas_n) && empty($Qpersonas_agd)) {
+    exit (_("Debe marcar un grupo de personas (n o agd)"));
+}
 //miro las condiciones.
 if ($Qb_c == 'b'){ 
 	$curso="bienio";
@@ -95,15 +98,13 @@ $aId_nom = $Pendientes->personasQueLesFaltaAsignatura($Qid_asignatura,$curso,$id
 * Defino un array con los datos actuales, para saber volver después de navegar un rato
 */
 $aGoBack = array (
-				'titulo'=>$Qtitulo,
 				'b_c'=>$Qb_c,
 				'c1'=>$Qc1,
 				'c2'=>$Qc2,
 				'id_asignatura'=>$Qid_asignatura,
 				'personas_n'=>$Qpersonas_n,
 				'personas_agd'=>$Qpersonas_agd );
-$oPosicion->setParametros($aGoBack);
-$oPosicion->recordar();
+$oPosicion->setParametros($aGoBack,1);
 
 $a_botones=array( array( 'txt' => _("modificar stgr"), 'click' =>"fnjs_modificar(\"#seleccionados\")" ) ,
 				array( 'txt' => _("ver tessera"), 'click' =>"fnjs_tesera(\"#seleccionados\")" ) 
@@ -137,13 +138,12 @@ foreach ($aId_nom as $id_nom=>$aAsignaturas) {
 	$a_valores[$i][3] = $nombre_ubi;
 	$a_valores[$i][4] = $stgr;
 }
-
-if (empty($titulo)) {
-	$titulo=sprintf(_("lista de %s de %s a los que falta la asignatura %s (%s)"),$gente,$curso_txt,$nom_asignatura,$i);
-} else {
-	$titulo=urldecode($titulo);
+if (!empty($a_valores)) {
+    if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+    if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 }
-		
+
+$titulo=sprintf(_("lista de %s de %s a los que falta la asignatura %s (%s)"),$gente,$curso_txt,$nom_asignatura,$i);
 
 $oHash = new Hash();
 $oHash->setcamposForm('sel!scroll_id');
@@ -173,6 +173,7 @@ fnjs_modificar=function(formulario){
 }
 
 </script>
+<?= $oPosicion->mostrar_left_slide(1) ?>
 <h2 class=titulo><?= $titulo ?></h2>
 <form id='seleccionados' id='seleccionados' name='seleccionados' action='' method='post'>
 <?= $oHash->getCamposHtml(); ?>
