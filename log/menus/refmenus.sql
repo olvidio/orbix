@@ -235,6 +235,7 @@
 1079	{40,30}	agd de paso	tabla=p_de_paso&na=a&tipo=p_de_paso	61	32	4	t
 1082	{40,40}	por ctr	tipo=planning_ctr	61	32	4	t
 1089	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	32	4	t
+1103	{50,25}	comunic. sacd	\N	28	8	8	t
 1150	{50,100,20}	activ sr	tipo=sr	43	8	8	t
 1153	{50,100,30}	sv n y agd	tipo=nagd	43	8	8	t
 1155	{50,100,40}	sf s y sg	tipo=sfsg	43	8	8	t

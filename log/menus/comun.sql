@@ -16,7 +16,6 @@
 24	\N	scdl/registro/control_usr.php	\N	\N
 25	\N	vcsd/scheduler/oficina.php	\N	\N
 26	\N	programas/lista_activ_sr.php	\N	\N
-28	\N	des/com_sacd_activ_periodo.php	\N	\N
 29	\N	programas/calendario_exportar_sf.php	\N	\N
 30	\N	scdl/registro/registro_distribucion.php	\N	\N
 31	\N	vcsd/scheduler/dinars.php	\N	\N
@@ -157,7 +156,6 @@
 169	8	apps/actividadplazas/controller/gestion_plazas.php	\N	Gestión de plazas
 172	8	apps/actividadplazas/controller/incorporar_peticion.php	\N	Incorporar peticiones de plazas
 170	8	apps/actividadplazas/controller/plazas_balance_que.php	\N	Balance de Plazas
-18	20	apps/actividadessacd/controller/asignar_sacd_activ.php	\N	Asignar sacd a actividades
 43	20	apps/actividadescentro/controller/activ_ctr.php	\N	actividades centro
 166	2	apps/menus/controller/pasar_a_demo.php	\N	pasar a demo
 17	2	apps/devel/controller/db_que.php	\N	nuevo esquema
@@ -187,3 +185,5 @@
 190	3	\N	\N	Raiz ubis
 191	25	\N	\N	Raiz cartas presentacion
 146	3	apps/ubis/controller/centros_que.php	\N	Centros seleccionar
+28	20	apps/actividadessacd/controller/com_sacd_activ_periodo.php	\N	Comunicación activ sacd
+18	20	apps/actividadessacd/controller/asignar_sacd_auto.php	\N	Auto asignar sacd a actividades
