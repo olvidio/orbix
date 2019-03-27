@@ -6,6 +6,7 @@ use web\Desplegable;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
+use core\DBPropiedades;
 /**
 * Página para realizar algunos listados standard de ubis
 * 
@@ -30,47 +31,6 @@ use web\Posicion;
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-	
-	
-/**
- * copiada de permisos/login_obj.php
- */
-function posibles_esquemas($default='') {
-    $aOpciones = [];
-    // Lista de posibles esquemas (en comun)
-    $oConfig = new core\Config('comun');
-    $config = $oConfig->getEsquema('public');
-    $oConexion = new core\dbConnection($config);
-    $oDBP = $oConexion->getPDO();
-    
-    $sQuery = "select nspname from pg_namespace where nspowner > 1000 ORDER BY nspname";
-    if (($oDblSt = $oDBP->query($sQuery)) === false) {
-        $sClauError = 'Schemas.lista';
-        $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-        return false;
-    }
-    if (is_object($oDblSt)) {
-        $oDblSt->execute();
-        //$txt = "<select id=\"esquema\" name=\"esquema\" >";
-        foreach($oDblSt as $row) {
-            if (!isset($row[1])) { $a = 0; } else { $a = 1; } // para el caso de sólo tener un valor.
-            if ($row[0] == 'public') continue;
-            if ($row[0] == 'resto') continue;
-            if ($row[0] == 'global') continue;
-            $sf = $row[0].'f';
-            $sv = $row[0].'v';
-            if (!empty($default) && $sf == $default) { $sel_sf = 'selected'; } else { $sel_sf = ''; }
-            if (!empty($default) && $sv == $default) { $sel_sv = 'selected'; } else { $sel_sv = ''; }
-            // 7.3.2019 Parece que sf va por su lado.
-            //$txt .= "<option value=\"$sf\" $sel_sf>$sf</option>";
-            //$txt .= "<option value=\"$sv\" $sel_sv>$sv</option>";
-            $aOpciones[$sv] = $sv;
-            
-        }
-        //$txt .= '</select>';
-    }
-    return $aOpciones;
-}
 	
 	
 $miSfsv=ConfigGlobal::mi_sfsv();
@@ -354,7 +314,8 @@ foreach ($cUbis as $oCentro) {
 $oDesplDl = new Desplegable();
 $oDesplDl->setNombre('loc');
 $oDesplDl->setAction('fnjs_actualizar()');
-$aOpcionesDl = posibles_esquemas();
+$oDBPropiedades = new DBPropiedades();
+$aOpcionesDl = $oDBPropiedades->array_posibles_esquemas();
 $aOpcionesDl['ex'] = _("otras");
 //$oDesplDl->setOpciones(array('dl'=> core\ConfigGlobal::mi_dele(),'ex'=>_("de otra dl/cr")));
 $oDesplDl->setOpciones($aOpcionesDl);

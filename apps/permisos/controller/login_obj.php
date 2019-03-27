@@ -6,7 +6,8 @@ use usuarios\model\entity as usuarios;
 use web;
 use core;
 use core\ConfigGlobal;
-    
+use core\DBPropiedades;
+        
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -17,40 +18,6 @@ use core\ConfigGlobal;
 // 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-function posibles_esquemas($default='') {
-	$txt = '';
-	// Lista de posibles esquemas (en comun)
-	$oConfig = new core\Config('comun');
-	$config = $oConfig->getEsquema('public'); 
-	$oConexion = new core\dbConnection($config);
-	$oDBP = $oConexion->getPDO();
-
-	$sQuery = "select nspname from pg_namespace where nspowner > 1000 ORDER BY nspname";
-	if (($oDblSt = $oDBP->query($sQuery)) === false) {
-		$sClauError = 'Schemas.lista';
-		$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-		return false;
-	}
-	if (is_object($oDblSt)) {
-		$oDblSt->execute();
-		$txt = "<select id=\"esquema\" name=\"esquema\" >";
-		foreach($oDblSt as $row) {
-			if (!isset($row[1])) { $a = 0; } else { $a = 1; } // para el caso de sólo tener un valor.
-			if ($row[0] == 'public') continue;
-			if ($row[0] == 'resto') continue;
-			if ($row[0] == 'global') continue;
-			$sf = $row[0].'f';
-			$sv = $row[0].'v';
-			if (!empty($default) && $sf == $default) { $sel_sf = 'selected'; } else { $sel_sf = ''; }
-			if (!empty($default) && $sv == $default) { $sel_sv = 'selected'; } else { $sel_sv = ''; }
-			// 7.3.2019 Parece que sf va por su lado.
-			//$txt .= "<option value=\"$sf\" $sel_sf>$sf</option>";
-			$txt .= "<option value=\"$sv\" $sel_sv>$sv</option>";
-		}
-		$txt .= '</select>';
-	}
-	return $txt;
-}
 function cambiar_idioma($idioma='') {
 	if (empty($idioma)) {
 		// Si no está determinado en las preferencias, miro el del navegador
@@ -175,6 +142,7 @@ function getApps($id_mod) {
 //$GLOBALS['oPermActiv'] = new PermActiv;
 
 if ( !isset($_SESSION['session_auth'])) { 
+    $oDBPropiedades = new DBPropiedades();
 	//el segon cop tinc el nom i el password
     $idioma='';
 	if (isset($_POST['username']) && isset($_POST['password'])) {
@@ -320,7 +288,7 @@ if ( !isset($_SESSION['session_auth'])) {
 						//header("Location: ".ConfigGlobal::getWeb(), true, 301);
 					} else {
 						$a_campos = array('error'=>1);
-						$a_campos['DesplRegiones'] = posibles_esquemas($esquema);
+						$a_campos['DesplRegiones'] = $oDBPropiedades->posibles_esquemas($esquema);
 						$a_campos['idioma'] = $idioma;
                         $a_campos['url'] = core\ConfigGlobal::getWeb();
 						$oView = new core\View(__NAMESPACE__);
@@ -329,7 +297,7 @@ if ( !isset($_SESSION['session_auth'])) {
 					}
 				} else {
 					$a_campos = array('error'=>1);
-					$a_campos['DesplRegiones'] = posibles_esquemas($esquema);
+					$a_campos['DesplRegiones'] = $oDBPropiedades->posibles_esquemas($esquema);
 					$a_campos['idioma'] = $idioma;
                     $a_campos['url'] = core\ConfigGlobal::getWeb();
 					$oView = new core\View(__NAMESPACE__);
@@ -341,7 +309,7 @@ if ( !isset($_SESSION['session_auth'])) {
 		$esquema = (!isset($_COOKIE["esquema"]))? "" : $_COOKIE["esquema"];
 		$idioma = (!isset($_COOKIE["idioma"]))? "" : $_COOKIE["idioma"];
 		cambiar_idioma($idioma);	
-		$a_campos['DesplRegiones'] = posibles_esquemas($esquema);
+		$a_campos['DesplRegiones'] = $oDBPropiedades->posibles_esquemas($esquema);
 		$a_campos['idioma'] = $idioma;
 		$a_campos['url'] = core\ConfigGlobal::getWeb();
 		$oView = new core\View(__NAMESPACE__);

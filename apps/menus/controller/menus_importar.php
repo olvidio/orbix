@@ -1,5 +1,7 @@
 ﻿<?php
 
+use core\DBPropiedades;
+
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -42,11 +44,8 @@ if ($Qseguro == 2) {
 if ($Qseguro == 1) {
 	$aEsquemas = array();
     if ($Qtodos == 1) {
-        $aDl = array('cr','dlb','dlgr','dlmE','dlmO','dlp','dlst','dls','dlva','dlv','dlz');
-		foreach ($aDl as $dl) {
-			$aEsquemas[] = "H-".$dl."v";
-			$aEsquemas[] = "H-".$dl."f";
-		}
+        $oDBPropiedades = new DBPropiedades();
+        $aEsquemas = $oDBPropiedades->array_posibles_esquemas();
     } else { // solo un esquema
 		$mi_region_dl = core\ConfigGlobal::mi_region_dl();
 		$aEsquemas[] = $mi_region_dl;

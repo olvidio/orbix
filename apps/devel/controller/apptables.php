@@ -1,5 +1,6 @@
 <?php
 use devel\model\entity\GestorApp;
+use core\DBPropiedades;
 
 /**
  * La idea de esta página es poder crear y eliminar 
@@ -17,45 +18,6 @@ require_once ("apps/core/global_header.inc");
 // Crea los objectos de uso global **********************************************
 require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-
-/**
- * copiada de permisos/controller/loguin_obj.php
- * @param string $default
- * @return boolean|string
- */
-function posibles_esquemas($default='') {
-    $txt = '';
-    // Lista de posibles esquemas (en comun)
-    $oConfig = new core\Config('comun');
-    $config = $oConfig->getEsquema('public');
-    $oConexion = new core\dbConnection($config);
-    $oDBP = $oConexion->getPDO();
-    
-    $sQuery = "select nspname from pg_namespace where nspowner > 1000 ORDER BY nspname";
-    if (($oDblSt = $oDBP->query($sQuery)) === false) {
-        $sClauError = 'Schemas.lista';
-        $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-        return false;
-    }
-    if (is_object($oDblSt)) {
-        $oDblSt->execute();
-        $txt = "<select id=\"esquema\" name=\"esquema\" >";
-        foreach($oDblSt as $row) {
-            if (!isset($row[1])) { $a = 0; } else { $a = 1; } // para el caso de sólo tener un valor.
-            if ($row[0] == 'public') continue;
-            if ($row[0] == 'resto') continue;
-            if ($row[0] == 'global') continue;
-            $sf = $row[0].'f';
-            $sv = $row[0].'v';
-            if (!empty($default) && $sf == $default) { $sel_sf = 'selected'; } else { $sel_sf = ''; }
-            if (!empty($default) && $sv == $default) { $sel_sv = 'selected'; } else { $sel_sv = ''; }
-            $txt .= "<option value=\"$sf\" $sel_sf>$sf</option>";
-            $txt .= "<option value=\"$sv\" $sel_sv>$sv</option>";
-        }
-        $txt .= '</select>';
-    }
-    return $txt;
-}
 
 $oGesApps = new GestorApp();
 $cApps = $oGesApps->getApps();
@@ -81,8 +43,10 @@ $a_campos = [
     'oDesplApps' => $oDeslpApps,
     'alerta' => $alerta,
 ];
+
+$oDBPropiedades = new DBPropiedades();
 $esquema = core\ConfigGlobal::mi_region_dl();
-$a_campos['oDesplEsquemas'] = posibles_esquemas($esquema);
+$a_campos['oDesplEsquemas'] = $oDBPropiedades->posibles_esquemas($esquema);
 
 
 $oView = new core\View('devel\controller');
