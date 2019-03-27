@@ -435,7 +435,8 @@ class PersonaListas Extends core\ClasePropiedades {
 		/* array donde se guardan las "palabras" del apellidos */
 		$names = array();
 		/* palabras de apellidos compuetos */
-		$special_tokens = array('da', 'de', 'del', 'la', 'las', 'los', 'mac', 'mc', 'van', 'von', 'y', 'i', 'san', 'santa');
+		// 27.3.2019 He quitado 'san', pues hay un apellido así
+		$special_tokens = array('da', 'de', 'del', 'la', 'las', 'los', 'mac', 'mc', 'van', 'von', 'y', 'i', 'santa');
 
 		$prev = "";
 		foreach($tokens as $token) {
