@@ -41,9 +41,9 @@ if ($Qactualizar == 'c1') {
 	$ssql="SELECT p.id_nom
 		FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
 		WHERE p.stgr != 'b' AND p.stgr !='c1'
-			AND ((n.id_nivel BETWEEN 2100 AND 2113) OR n.id_nivel=2430)
+			AND n.id_nivel BETWEEN 2100 AND 2113
 		GROUP BY p.id_nom
-		HAVING count(*) < 14 
+		HAVING count(*) < 13 
 		"; 
 	
 	$oDBSt_sql=$oDB->query($ssql);
@@ -61,9 +61,9 @@ if ($Qactualizar == 'c2') {
 	$ssql="SELECT p.id_nom
 		FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
 		WHERE p.stgr != 'b' AND p.stgr !='c2'
-			AND ((n.id_nivel BETWEEN 2100 AND 2113) OR n.id_nivel=2430)
+			AND n.id_nivel BETWEEN 2100 AND 2113
 		GROUP BY p.id_nom
-		HAVING count(*) > 13 
+		HAVING count(*) > 12 
 		"; 
 	
 	$oDBSt_sql=$oDB->query($ssql);
