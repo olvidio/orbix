@@ -145,7 +145,7 @@ switch ($que) {
 		
 		$oSincroDB = new dbextern\model\sincroDB();
 		$oSincroDB->setTipo_persona($tipo_persona);
-		$oSincroDB->setDl($region);
+		$oSincroDB->setRegion($region);
 		$oSincroDB->setDl($dl);
 		$oSincroDB->setCentros($a_centros);
 		
