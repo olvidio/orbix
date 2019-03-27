@@ -183,12 +183,11 @@ fnjs_sincronizar=function(){
 	})
 	.done(function (rta_txt) {
 		if (rta_txt != '' && rta_txt != '\\n') {
-			alert ('{{ "respuesta"|trans }}: '+rta_txt);
+			alert ('<?= _("respuesta") ?>: '+rta_txt);
 		}
 	});
 }
 </script>
-
 <p>
 	<?= $explicacion_txt ?>
 </p>
