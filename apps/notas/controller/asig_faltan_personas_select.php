@@ -57,6 +57,11 @@ if ($Qb_c == 'b'){
 	$curso="bienio";
 	$curso_txt="bienio";
 } else {
+    // En caso no tener valores, pongo los dos.
+    if (empty($Qc1) && empty($Qc2)) {
+        $Qc1 = TRUE;
+        $Qc2 = TRUE;
+    }
 	if ($Qc1 && $Qc2) {
 		$curso="cuadrienio";
 		$curso_txt="cuadrienio";
