@@ -127,7 +127,8 @@ case "nuevo":
 	$Qh_fin = (string) \filter_input(INPUT_POST, 'h_fin');
 	$Qpublicado = (string) \filter_input(INPUT_POST, 'publicado');
 	
-	$Qinom_tipo_val = (integer) \filter_input(INPUT_POST, 'inom_tipo_val');
+	// Puede ser '000' > sin especificar
+	$Qinom_tipo_val = (string) \filter_input(INPUT_POST, 'inom_tipo_val');
 	//Compruebo que estén todos los campos necesasrios
 	if (empty($Qnom_activ) or empty($Qf_ini) or empty($Qf_fin) or empty($Qstatus) or empty($Qdl_org) ) {
 		echo _("debe llenar todos los campos que tengan un (*)")."<br>";
@@ -233,7 +234,8 @@ case "cmb_tipo": // sólo cambio el tipo a una actividad existente //___________
 	$Qisfsv_val = (integer) \filter_input(INPUT_POST, 'isfsv_val');
 	$Qiasistentes_val = (integer) \filter_input(INPUT_POST, 'iasistentes_val');
 	$Qiactividad_val = (integer) \filter_input(INPUT_POST, 'iactividad_val');
-	$Qinom_tipo_val = (integer) \filter_input(INPUT_POST, 'inom_tipo_val');
+	// Puede ser '000' > sin especificar
+	$Qinom_tipo_val = (string) \filter_input(INPUT_POST, 'inom_tipo_val');
 
 	$Qdl_org = (string) \filter_input(INPUT_POST, 'dl_org');
 

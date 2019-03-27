@@ -2,6 +2,7 @@
 namespace actividades\model\entity;
 use core;
 use web;
+use web\Desplegable;
 /**
  * GestorActividadAll
  *
@@ -246,7 +247,7 @@ class GestorActividadAll Extends core\ClaseGestor {
 	 *
 	 * @param string sTipo
 	 * @param string scondicion Condicion adicional a sTipo (debe empezar con AND).
-	 * @return array Una Llista.
+	 * @return Desplegable
 	 */
 	function getListaActividadesDeTipo($sid_tipo='......',$scondicion='') {
 		$oDbl = $this->getoDbl();

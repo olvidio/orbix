@@ -53,7 +53,6 @@ fnjs_cambiar_ubi=function(){
 	});
 };
 
-/*
 fnjs_guardar=function(tipo='') {
 	var err = 0;
 	if (!fnjs_comprobar_fecha('#f_ini')) { err=1; }
@@ -96,7 +95,7 @@ fnjs_guardar=function(tipo='') {
 				}
 				// OJO hay que actualizar el formulario de la lista, no el actual.
 				// Esta función está en calendario_planning.phtml 
-				fnjs_ver();
+				//fnjs_ver();
             });
             return false;
 		});
@@ -104,7 +103,6 @@ fnjs_guardar=function(tipo='') {
 		$('#modifica').off();
 	}
 };
-*/
 
 fnjs_actualizar_sacd=function(){
 	$('#modifica').attr('action','programas/actividad_update.php');

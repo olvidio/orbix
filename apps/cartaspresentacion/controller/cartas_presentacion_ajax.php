@@ -40,7 +40,7 @@ function llenar_dtor($oCartaPresentacion,$id_ubi) {
 		$oPersona = new Persona($id_nom);
 		$pres_nom = $oPersona->getNombreApellidos();
 		$GesTelecoPersona = new GestorTelecoPersona();
-		$cTelecos = $GesTelecoPersona->getTelecosPersona($aWhere=array('id_nom'=>$id_nom));
+		$cTelecos = $GesTelecoPersona->getTelecos($aWhere=array('id_nom'=>$id_nom));
 		foreach ($cTelecos as $oTeleco) {
 			$tipo = $oTeleco->getTipo_teleco();
 			$num = $oTeleco->getNum_teleco();

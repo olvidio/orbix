@@ -1,10 +1,9 @@
 <?php
-use encargossacd\model\entity\GestorEncargoTexto;
 use web\Desplegable;
 use web\Hash;
-
+use actividadessacd\model\entity\GestorAtnActivSacdTexto;
 /**
-* Esta es para cambiar los textos de comunicación de los encargos a los sacd. 
+* Esta es para cambiar los textos de comunicación de las actividades a los sacd. 
 *
 *@package	delegacion
 *@subpackage	des
@@ -21,22 +20,20 @@ require_once ("apps/core/global_header.inc");
 require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+
 // claves:
 $a_Claves = [ "com_sacd" => _("comunicación a los sacerdotes"),
-             "com_ctr" => _("comunicación a los centros"),
-            "t_titular" => _("titulo: titular"),
-            "t_secc" => _("titulo: sección"),
-            "t_mañana" => _("titulo: mañana"),
-            "t_tarde1" => _("titulo: tarde 1ª hora"),
-            "t_tarde2" => _("titulo: tarde 2ª hora"),
-            "t_mañanas" => _("titulo (plural): mañanas"),
-            "t_tardes1" => _("titulo (plural): tardes 1ª hora"),
-            "t_tardes2" => _("titulo (plural): tardes 2ª hora"),
-            "t_suplente" => _("titulo: suplente"),
-            "t_colaborador" => _("titulo: colaborador"),
-            "t_otros" => _("titulo: otros"),
-            "t_observ" => _("titulo: observaciones"),
-            ];
+	't_propio' => _("titulo: propio"),
+	't_f_ini' => _("titulo: f_ini"),
+	't_f_fin' => _("titulo: f_fin"),
+	't_nombre_ubi' => _("titulo: nombre ubi"),
+	't_sfsv' => _("titulo: sfsv"),
+	't_actividad' => _("titulo: actividad"),
+	't_asistentes' => _("titulo: asistentes"),
+	't_encargado' => _("titulo: encargado"),
+	't_observ' => _("titulo: observaciones"),
+	't_nom_tipo' => _("titulo: nom_tipo"),
+];
 $oDesplClaves = new Desplegable();
 $oDesplClaves->setNombre('clave');
 $oDesplClaves->setOpciones($a_Claves);
@@ -54,16 +51,16 @@ $oDesplIdiomas->setAction('fnjs_get_texto()');
 $aWhere = [];
 $aWhere['clave'] = 'com_sacd';
 $aWhere['idioma'] = 'es';
-$oGesEncargoTextos = new GestorEncargoTexto();
-$cEncargoTextos = $oGesEncargoTextos->getEncargoTextos($aWhere);
+$oGesAtnActivSacdTexto = new GestorAtnActivSacdTexto();
+$cAtnActivSacdTextos = $oGesAtnActivSacdTexto->getAtnActivSacdTextos($aWhere);
 $txt = '';
-if (count($cEncargoTextos) > 0) {
-    $txt = $cEncargoTextos[0]->getTexto();
+if (count($cAtnActivSacdTextos) > 0) {
+    $txt = $cAtnActivSacdTextos[0]->getTexto();
 }
 
 $comunicacion = $txt;
 
-$url_ajax = 'apps/encargossacd/controller/listas_com_txt_ajax.php';
+$url_ajax = 'apps/actividadessacd/controller/com_sacd_txt_ajax.php';
 $oHash = new Hash();
 $oHash->setUrl($url_ajax);
 $aCamposHidden = ['que' => 'update'];
@@ -84,5 +81,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oDesplIdiomas' => $oDesplIdiomas,
 ];
 
-$oView = new core\ViewTwig('encargossacd/controller');
-echo $oView->render('listas_com_txt.html.twig',$a_campos);
+$oView = new core\ViewTwig('actividadessacd/controller');
+echo $oView->render('com_sacd_txt.html.twig',$a_campos);

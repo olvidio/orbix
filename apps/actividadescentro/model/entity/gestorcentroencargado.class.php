@@ -37,6 +37,35 @@ class GestorCentroEncargado Extends core\ClaseGestor {
 	/* METODES PUBLICS -----------------------------------------------------------*/
 	
 	/**
+	 * retorna un texto con los dias que flatan para la siguiente actividad a partir de la fecha
+	 *     que se le pasa como parámetro. (o en negativo para una actividad anterior).
+	 *
+	 * @param integer id_ubi.
+	 * @param date iso. fecha de referencia respecto a la que calcular la diferencia de dias.
+	 * @return string dias de diferencia con la próxima/anterior actividad.
+	 */
+	function getProximasActividadesDeCentro($id_ubi='',$f_ini_act='') {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+	    $sQuery = "SELECT nom_activ,f_ini,f_fin,(f_ini - date '".$f_ini_act."') as dif
+				FROM a_actividades_dl a JOIN $nom_tabla e USING (id_activ)
+				WHERE e.id_ubi=$id_ubi
+				ORDER BY abs(f_ini - date '".$f_ini_act."')
+				limit 3
+				";
+	    if (($oDbl->query($sQuery)) === false) {
+	        $sClauError = 'GestorCentroEncargado.query';
+	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+	        return false;
+	    }
+	    $txt_dif="";
+	    foreach ($oDbl->query($sQuery) as $aDades) {
+	        $txt_dif .= " ".$aDades['dif'].";";
+	    }
+	    return $txt_dif;
+	}
+	
+	/**
 	 * retorna l'array d'objectes de tipus Actividad
 	 *
 	 * @param integer id_ubi.

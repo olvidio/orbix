@@ -5,6 +5,7 @@ use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorCentroEllas;
 use web\Periodo;
 use actividades\model\entity\GestorActividadDl;
+use encargossacd\model\entity\GestorEncargo;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
@@ -130,25 +131,12 @@ switch ($Qque) {
 			$id_ubi = $oCentro->getId_ubi();
 			$nombre_ubi = $oCentro->getNombre_ubi();
 			// número de actividades en periodo
-			$sql="SELECT f_ini,f_fin FROM a_actividades a LEFT JOIN d_encargados_activ e  USING (id_activ) 
-					WHERE e.id_ubi=$id_ubi AND $periodo
-					ORDER BY f_ini";
-			//echo "sql: $sql<br>";
-			$num_activ=$oDBA->query($sql)->rowCount();
+			$oGesCtrEncargado = new GestorCentroEncargado();
+			$cCtrsEncargados = $oGesCtrEncargado->getActividadesDeCentros($id_ubi,$periodo);
+			$num_activ=count($cCtrsEncargados);
 			
 			//próxima actividad
-			$sql_dif="SELECT nom_activ,f_ini,f_fin,(f_ini - date '".$Qf_ini_act."') as dif
-				FROM a_actividades a JOIN d_encargados_activ e USING (id_activ)
-				WHERE e.id_ubi=$id_ubi
-				ORDER BY abs(f_ini - date '".$Qf_ini_act."')
-				limit 3
-				";
-			//echo "sql_dif: $sql_dif<br>";
-			$txt_dif="";
-			foreach ($oDBA->query($sql_dif) as $row_dif) {
-				extract($row_dif);
-				$txt_dif.=" $dif;";
-			}
+			$txt_dif = $oGesCtrEncargado->getProximasActividadesDeCentro($id_ubi,$Qf_ini_act);
 			//$txt_ctr.="<tr><td><span class=link id=$id_ubi onclick=fnjs_asignar_ctr('$Qid_activ','$id_ubi')> $nombre_ubi</span></td>";
 			$txt_ctr.="<tr><td class=link id=$id_ubi onclick=fnjs_asignar_ctr('$Qid_activ','$id_ubi')> $nombre_ubi</td></tr>";
 			$txt_ctr.="<td>$num_activ</td><td>$txt_dif</td></tr>";

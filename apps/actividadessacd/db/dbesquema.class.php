@@ -1,5 +1,5 @@
 <?php
-namespace actividadescentro\db;
+namespace actividadessacd\db;
 use core\ConfigGlobal;
 use devel\model\DBAbstract;
 
@@ -9,7 +9,7 @@ use devel\model\DBAbstract;
  */
 class DBEsquema extends DBAbstract {
 
-    private $dir_base = ConfigGlobal::DIR."/apps/actividadescentro/db";
+    private $dir_base = ConfigGlobal::DIR."/apps/actividadessacd/db";
     
     public function __construct($esquema_sfsv=NULL) {
         if (empty($esquema_sfsv)) {
@@ -21,25 +21,25 @@ class DBEsquema extends DBAbstract {
     }
     
     public function dropAll() {
-        $this->eliminar_da_ctr_encargados();
+        $this->eliminar_atn_sacd_textos();
     }
     
     public function createAll() {
-        $this->create_da_ctr_encargados();
+        $this->create_atn_sacd_textos();
     }
     
     public function llenarAll() {
-        //$this->llenar_da_ctr_encargados();
+        $this->llenar_atn_sacd_textos();
     }
     
     private function infoTable($tabla) {
         $datosTabla = [];
         $datosTabla['tabla'] = $tabla;
         switch ($tabla) {
-            case "da_ctr_encargados":
+			case "a_sacd_textos":
                 $nom_tabla = $this->getNomTabla($tabla);
-                $campo_seq = '';
-                $id_seq = '';
+                $campo_seq = 'id_item';
+				$id_seq = $nom_tabla."_".$campo_seq."_seq";
                 break;
         }
         $datosTabla['nom_tabla'] = $nom_tabla;
@@ -48,16 +48,17 @@ class DBEsquema extends DBAbstract {
         $datosTabla['filename'] = $this->dir_base."/$tabla.csv";
         return $datosTabla;
     }
-    
-    
-    /**
-     * En la BD Comun.
-     */
-    public function create_da_ctr_encargados() {
+       
+    public function create_atn_sacd_textos() {
+        // OJO Corresponde al esquema sf/sv, no al comun.
+        $esquema_org = $this->esquema;
+        $role_org = $this->role;
+        $this->esquema = ConfigGlobal::mi_region_dl();
+        $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal('svsf');
 
-        $tabla = "da_ctr_encargados";
+        $tabla = "a_sacd_textos";
         $datosTabla = $this->infoTable($tabla);
         
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -71,23 +72,39 @@ class DBEsquema extends DBAbstract {
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
         
+        //secuencia
+        $a_sql[] = "CREATE SEQUENCE IF NOT EXISTS $id_seq;";
+        $a_sql[] = "ALTER SEQUENCE $id_seq
+                    INCREMENT BY 1
+                    MINVALUE 1
+                    MAXVALUE 9223372036854775807
+                    START WITH 1
+                    NO CYCLE;";
+        $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
+
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
         
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT da_ctr_encargados_id_activ_id_ubi_key
-                    UNIQUE (id_activ, id_ubi); ";
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
         
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_activ, id_ubi); ";
-        
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT a_sacd_textos_ukey
+                    UNIQUE (idioma,clave); ";
+
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
         
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal('svsf');
     }
-    public function eliminar_da_ctr_encargados() {
+    public function eliminar_atn_sacd_textos() {
+        // OJO Corresponde al esquema sf/sv, no al comun.
+        $esquema_org = $this->esquema;
+        $role_org = $this->role;
+        $this->esquema = ConfigGlobal::mi_region_dl();
+        $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal('svsf');
 
-        $datosTabla = $this->infoTable("da_ctr_encargados");
+        $datosTabla = $this->infoTable("a_sacd_textos");
         
         $nom_tabla = $datosTabla['nom_tabla'];
         $id_seq = $datosTabla['id_seq'];
@@ -98,16 +115,22 @@ class DBEsquema extends DBAbstract {
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal('svsf');
     }
-    
+
 
     /* ###################### LLENAR TABLAS ################################ */
-    
-    public function llenar_da_ctr_encargados() {
-        $this->addPermisoGlobal('comun');
-        $this->setConexion('comun');
-        $datosTabla = $this->infoTable("da_ctr_encargados");
+
+    public function llenar_atn_sacd_textos() {
+        // OJO Corresponde al esquema sf/sv, no al comun.
+        $esquema_org = $this->esquema;
+        $role_org = $this->role;
+        $this->esquema = ConfigGlobal::mi_region_dl();
+        $this->role = '"'. $this->esquema .'"';
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('svsf');
+        $this->setConexion('svsf');
+        $datosTabla = $this->infoTable("a_sacd_textos");
         
         $nom_tabla = $datosTabla['nom_tabla'];
         $filename = $datosTabla['filename'];
@@ -119,7 +142,7 @@ class DBEsquema extends DBAbstract {
         
         $delimiter = "\t"; 
         $null_as = "\\\\N";
-        $fields = "id_activ, id_ubi, num_orden, encargo";
+        $fields = "idioma, clave, texto";
         
         // Comprobar que existe el fichero (la ruta esta bien...
         if (!file_exists($filename)) {
@@ -129,7 +152,7 @@ class DBEsquema extends DBAbstract {
         
         $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
         
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal('svsf');
     }
 
  }

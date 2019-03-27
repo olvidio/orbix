@@ -332,7 +332,7 @@ function telecos_persona($id_nom,$tipo_teleco,$desc_teleco='',$separador) {
 		$aWhere['desc_teleco'] = $desc_teleco;
 	}
 	$GesTelecoPersonas = new GestorTelecoPersona();
-	$cTelecos = $GesTelecoPersonas->getTelecosPersona($aWhere);
+	$cTelecos = $GesTelecoPersonas->getTelecos($aWhere);
 	$tels='';
 	$separador=empty($separador)? ".-<br>": $separador;
 	foreach ($cTelecos as $oTelecoPersona) {

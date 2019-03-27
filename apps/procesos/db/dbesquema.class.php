@@ -502,6 +502,12 @@ class DBEsquema extends DBAbstract {
         $null_as = "\\\\N";
         $fields = "id_tipo_activ, nombre, id_tipo_proceso, id_tipo_proceso_ex";
        
+        // Comprobar que existe el fichero (la ruta esta bien...
+        if (!file_exists($filename)) {
+            $msg = sprintf(_("no existe el fichero: %s"),$filename);
+            exit ($msg);
+        }
+        
         $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
         
     }
@@ -526,7 +532,13 @@ class DBEsquema extends DBAbstract {
         $delimiter = "\t"; 
         $null_as = "\\\\N";
         $fields = "id_tipo_proceso, nom_proceso";
-       
+        
+        // Comprobar que existe el fichero (la ruta esta bien...
+        if (!file_exists($filename)) {
+            $msg = sprintf(_("no existe el fichero: %s"),$filename);
+            exit ($msg);
+        }
+        
         $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
         // Fix sequences
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
@@ -553,7 +565,13 @@ class DBEsquema extends DBAbstract {
         $delimiter = "\t"; 
         $null_as = "\\\\N";
         $fields = "id_fase, id_tarea, desc_tarea";
-
+        
+        // Comprobar que existe el fichero (la ruta esta bien...
+        if (!file_exists($filename)) {
+            $msg = sprintf(_("no existe el fichero: %s"),$filename);
+            exit ($msg);
+        }
+        
         $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
         
         // Fix sequences
@@ -580,7 +598,13 @@ class DBEsquema extends DBAbstract {
         $delimiter = "\t"; 
         $null_as = "\\\\N";
         $fields = "id_fase, desc_fase, sf, sv";
-
+        
+        // Comprobar que existe el fichero (la ruta esta bien...
+        if (!file_exists($filename)) {
+            $msg = sprintf(_("no existe el fichero: %s"),$filename);
+            exit ($msg);
+        }
+        
         $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
 
         // Fix sequences
@@ -607,7 +631,13 @@ class DBEsquema extends DBAbstract {
         $delimiter = "\t"; 
         $null_as = "\\\\N";
         $fields = "id_item, id_tipo_proceso, n_orden, id_fase, id_tarea, status, of_responsable, id_fase_previa, id_tarea_previa, mensaje_requisito";
-
+        
+        // Comprobar que existe el fichero (la ruta esta bien...
+        if (!file_exists($filename)) {
+            $msg = sprintf(_("no existe el fichero: %s"),$filename);
+            exit ($msg);
+        }
+        
         $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
         
         // Fix sequences
@@ -642,6 +672,12 @@ class DBEsquema extends DBAbstract {
         $delimiter = "\t"; 
         $null_as = "\\\\N";
         $fields = "id_item, id_usuario, id_tipo_activ_txt, id_fase_ini, id_fase_fin, accion, afecta_a, dl_propia, id_fases";
+        
+        // Comprobar que existe el fichero (la ruta esta bien...
+        if (!file_exists($filename)) {
+            $msg = sprintf(_("no existe el fichero: %s"),$filename);
+            exit ($msg);
+        }
         
         $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
         

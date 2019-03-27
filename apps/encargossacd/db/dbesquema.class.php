@@ -885,6 +885,12 @@ class DBEsquema extends DBAbstract {
         $delimiter = "\t"; 
         $null_as = "\\\\N";
         $fields = "id_tipo_enc, tipo_enc, mod_horario";
+
+        // Comprobar que existe el fichero (la ruta esta bien...
+        if (!file_exists($filename)) {
+            $msg = sprintf(_("no existe el fichero: %s"),$filename);
+            exit ($msg);
+        }
         
         $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
         
@@ -913,6 +919,12 @@ class DBEsquema extends DBAbstract {
         $delimiter = "\t"; 
         $null_as = "\\\\N";
         $fields = "idioma, clave, texto";
+
+        // Comprobar que existe el fichero (la ruta esta bien...
+        if (!file_exists($filename)) {
+            $msg = sprintf(_("no existe el fichero: %s"),$filename);
+            exit ($msg);
+        }
         
         $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
         

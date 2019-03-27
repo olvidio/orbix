@@ -32,6 +32,8 @@ $Qyear = (string) \filter_input(INPUT_POST, 'year');
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 
 $titulo = core\strtoupper_dlb(_("periodo del listado del año próximo"));
+$titulo .= '. ';
+$titulo .= '('.sprintf(_("actividades de %s"),$Qtipo).')';
 $aOpciones =  array(
     'tot_any' => _("todo el año"),
     'trimestre_1'=>_("primer trimestre"),

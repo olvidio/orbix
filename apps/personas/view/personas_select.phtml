@@ -53,7 +53,7 @@ fnjs_lista_activ=function(formulario){
 	rta=fnjs_solo_uno(formulario);
 	if (rta==1) {
 		$('#que').val("un_sacd");
-  		$(formulario).attr('action',"des/com_sacd_activ.php");
+  		$(formulario).attr('action',"apps/actividadessacd/controller/com_sacd_activ.php");
   		fnjs_enviar_formulario(formulario);
   	}
 }
