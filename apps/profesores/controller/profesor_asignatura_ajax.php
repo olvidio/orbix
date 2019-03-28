@@ -40,7 +40,11 @@ foreach ($cProfesores['departamento'] as $id_nom => $ap_nom) {
 	$centro = $oPersonaDl->getCentro_o_dl();
 	// Actividad docente
     $oGesDocencia = new GestorProfesorDocenciaStgr();
-    $cDocencia = $oGesDocencia->getProfesorDocenciasStgr(['id_nom' => $id_nom, 'id_asignatura' => $Qid_asignatura]);
+    $aWhere = [];
+    $aWhere['id_nom'] = $id_nom; 
+    $aWhere['id_asignatura'] = $Qid_asignatura;
+    $aWhere['_ordre'] = 'curso_inicio DESC';
+    $cDocencia = $oGesDocencia->getProfesorDocenciasStgr($aWhere);
     $txt_docencia = '';
     foreach ($cDocencia as $oProfesorDacendiaStgr) {
         $inicio_curso = $oProfesorDacendiaStgr->getCurso_inicio();
@@ -84,7 +88,11 @@ foreach ($cProfesores['ampliacion'] as $id_nom => $ap_nom) {
 	$centro = $oPersonaDl->getCentro_o_dl();
 	// Actividad docente
     $oGesDocencia = new GestorProfesorDocenciaStgr();
-    $cDocencia = $oGesDocencia->getProfesorDocenciasStgr(['id_nom' => $id_nom, 'id_asignatura' => $Qid_asignatura]);
+    $aWhere = [];
+    $aWhere['id_nom'] = $id_nom; 
+    $aWhere['id_asignatura'] = $Qid_asignatura;
+    $aWhere['_ordre'] = 'curso_inicio DESC';
+    $cDocencia = $oGesDocencia->getProfesorDocenciasStgr($aWhere);
     $txt_docencia = '';
     foreach ($cDocencia as $oProfesorDacendiaStgr) {
         $inicio_curso = $oProfesorDacendiaStgr->getCurso_inicio();
