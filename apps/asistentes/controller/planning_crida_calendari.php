@@ -69,7 +69,6 @@ $oPlanning->setColorColumnaDos($colorColumnaDos);
 $oPlanning->setTable_border($table_border);
 
 $Qyear = (integer) \filter_input(INPUT_POST, 'year');
-$year=empty($Qyear)? date('Y')+1 : $Qyear;
 $Qcdc_sel = (integer) \filter_input(INPUT_POST, 'cdc_sel');
 $Qtipo = (string) \filter_input(INPUT_POST, 'tipo');
 $Qdd = (integer) \filter_input(INPUT_POST, 'dd');
@@ -88,6 +87,7 @@ if (empty($Qperiodo) || $Qperiodo == 'otro') {
     $fin_iso = $oFinPlanning->format('Y-m-d');
 } else {
     $oPeriodo = new web\Periodo();
+    $year=empty($Qyear)? date('Y')+1 : $Qyear;
     $oPeriodo->setAny($year);
     $oPeriodo->setPeriodo($Qperiodo);
     $inicio_iso = $oPeriodo->getF_ini_iso();

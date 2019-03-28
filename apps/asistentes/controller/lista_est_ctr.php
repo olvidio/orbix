@@ -39,7 +39,6 @@ $Qn_agd = (string) \filter_input(INPUT_POST, 'n_agd');
 $Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 $Qyear = (string) \filter_input(INPUT_POST, 'year');
-$any=empty($Qyear)? date('Y')+1 : $Qyear;
 
 
 if (empty($Qperiodo) || $Qperiodo == 'otro') {
@@ -53,6 +52,7 @@ if (empty($Qperiodo) || $Qperiodo == 'otro') {
 	$Qempiezamax = '';
 	$Qempiezamin = '';
 	$oPeriodo = new web\Periodo();
+    $any=empty($Qyear)? date('Y')+1 : $Qyear;
 	$oPeriodo->setAny($any);
 	$oPeriodo->setPeriodo($Qperiodo);
 	$inicio = $oPeriodo->getF_ini_iso();

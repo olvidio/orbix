@@ -79,7 +79,6 @@ if (!empty($a_sel)) { //vengo de un checkbox
 		$msg_txt = _("debe seleccionar un centro o grupo de centros");
 		exit($msg_txt);
 	}
-	$any=empty($Qyear)? date('Y')+1 : $Qyear;
 	
 	if ($Qperiodo == 'otro') {
 		$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
@@ -91,6 +90,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	} else {
 		$periodo = empty($Qperiodo)? 'curso_ca' : $Qperiodo;
 		$oPeriodo = new web\Periodo();
+        $any=empty($Qyear)? date('Y')+1 : $Qyear;
 		$oPeriodo->setAny($any);
 		$oPeriodo->setPeriodo($periodo);
 		$inicio = $oPeriodo->getF_ini_iso();

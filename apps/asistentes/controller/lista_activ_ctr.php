@@ -90,7 +90,6 @@ $aOperadorAct['id_tipo_activ'] = "~";
 
 /*generamos el periodo de la búsqueda de actividades
 en función de las condiciones que tengamos: */
-$any=empty($Qyear)? date('Y') : $Qyear;
 	
 if ($Qperiodo == 'otro') {
 	$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
@@ -102,6 +101,7 @@ if ($Qperiodo == 'otro') {
 } else {
 	$periodo = empty($Qperiodo)? 'curso_ca' : $Qperiodo;
 	$oPeriodo = new web\Periodo();
+    $any=empty($Qyear)? date('Y')+1 : $Qyear;
 	$oPeriodo->setAny($any);
 	$oPeriodo->setPeriodo($periodo);
 	$inicio = $oPeriodo->getF_ini_iso();

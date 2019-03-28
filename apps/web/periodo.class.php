@@ -121,16 +121,10 @@ class Periodo {
 			    $ini_m = ConfigGlobal::$est_inicio['m'];
 			    $fin_d = ConfigGlobal::$est_fin['d'];
 			    $fin_m = ConfigGlobal::$est_fin['m'];
-				if ($mes>9) {
-				    $any2=$any-1;
-				    $inicio = "$any2-$ini_m-$ini_d";
-				    $fin = "$any-$fin_m-$fin_d";
-				} else {
-				    $any2=$any-2;
-				    $any--;
-				    $inicio = "$any2-$ini_m-$ini_d";
-				    $fin = "$any-$fin_m-$fin_d";
-				}
+			    
+                $any2=$any-1;
+                $inicio = "$any2-$ini_m-$ini_d";
+                $fin = "$any-$fin_m-$fin_d";
 				break;
 			case "trimestre":
 				$inicio = $any."/$mes/1";	

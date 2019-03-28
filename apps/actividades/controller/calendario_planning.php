@@ -44,7 +44,6 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 $Qyear = (integer) \filter_input(INPUT_POST, 'year');
-$year=empty($Qyear)? date('Y')+1 : $Qyear;
 $Qcdc_sel = (integer) \filter_input(INPUT_POST, 'cdc_sel');
 $Qtipo = (string) \filter_input(INPUT_POST, 'tipo');
 $Qdd = (integer) \filter_input(INPUT_POST, 'dd');
@@ -68,6 +67,7 @@ if (empty($Qperiodo) || $Qperiodo == 'otro') {
     $oFinPlanning = web\DateTimeLocal::createFromLocal($fin);
 } else {
     $oPeriodo = new web\Periodo();
+    $year=empty($Qyear)? date('Y')+1 : $Qyear;
     $oPeriodo->setAny($year);
     $oPeriodo->setPeriodo($Qperiodo);
     $inicio = $oPeriodo->getF_ini_iso();
