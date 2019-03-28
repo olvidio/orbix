@@ -66,7 +66,7 @@ class PosiblesCa Extends core\ClasePropiedades {
 			$creditos = $datosAsignatura['creditos'];
 			// Ojo con las opcionales
 			if ($id_asignatura > 3000) {
-			    if ($num_opcionales > 7) continue;    
+			    if ($num_opcionales >= 7) continue;    
 			}
             if (!in_array( $id_asignatura, $todas_asig_p)) { 
                 $suma_creditos += $creditos; 

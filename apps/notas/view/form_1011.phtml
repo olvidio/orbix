@@ -1,6 +1,28 @@
 <script>
 $(function() { $( "#f_acta" ).datepicker(); });
 
+fnjs_cerrar=function(){
+	$('#div_modificar').html('');
+	$('#div_modificar').width('0');
+	$('#div_modificar').height('0');
+	$('#div_modificar').removeClass('ventana');
+	document.getElementById("overlay").style.display = "none";
+}
+
+fnjs_modificar=function(id_item){
+	alert ('EEE');
+	$('#div_modificar').addClass('ventana');
+	$('#div_modificar').width('auto');
+	$('#div_modificar').height('auto');
+	document.getElementById("overlay").style.display = "block";
+
+	/*
+	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/actividades/controller/actividad_tarifa_tipo_form.php';
+	var parametros='id_item='+id_item+'<?= $h_modificar ?>';
+	fnjs_update_div('#div_modificar',url+'?'+parametros);
+	*/
+}
+
 fnjs_cmb_preceptor=function(){
 	if($('#preceptor').prop('checked')) {
 		var id_nom=$('#id_pau').val();
@@ -116,7 +138,13 @@ fnjs_guardar=function(formulario){
 		$(formulario).off();
 	}
 }
+
+
 </script>
+<div id='div_modificar'></div>
+<div id='overlay'></div>
+
+<div id='ficha'>
 <?= $oPosicion->mostrar_left_slide(1); ?>
 <form id="form_1011" name="form_1011" action="" method="POST">
 <?= $oHash->getCamposHtml(); ?>
@@ -183,6 +211,11 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
 	</td>
 </tr>
 <tr><td><?= _("cursada en") ?></td>
+<td>
+<span class="link" onclick="fnjs_modificar('nuevo');"><?= _("añadir ca") ?></span>
+</td>
+</tr>
+<tr><td><?= _("cursada en") ?></td>
 <td class=contenido colspan=3>
 	<?= $oDesplActividades->desplegable(); ?>
 </td>
@@ -190,3 +223,4 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
 </tbody></table>
 <br><input type="button" value="<?= ucfirst(_("guardar")); ?>" onclick="fnjs_guardar(this.form)">
 </form>
+</div>
