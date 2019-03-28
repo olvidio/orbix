@@ -15,6 +15,7 @@
 use actividades\model\entity as actividades;
 use asistentes\model\entity as asistentes;
 use personas\model\entity as personas;
+use ubis\model\entity\CentroDl;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -88,6 +89,8 @@ switch ($Qsactividad) {
 		break;
 }
 // Actividades del curso y tipo:
+$aWhereA = [];
+$aOperadorA = [];
 $aWhereA['id_tipo_activ'] = $id_tipo_activ;
 $aOperadorA['id_tipo_activ'] = '~';
 $aWhereA['f_ini'] = "'$inicurs','$fincurs'";
@@ -128,28 +131,46 @@ foreach ($cPersonas as $oPersona) {
 	$id_nomP = $oPersona->getId_nom();
 	if (in_array($id_nomP, $aAsistentes)) continue;
 	$ap_nom = $oPersona->getApellidosNombre();
-	$aFaltan[$ap_nom] = $id_nomP;
+	$id_ubi = $oPersona->getId_ctr();
+	$nivel_stgr = $oPersona->getStgr();
+	if (!empty($ap_nom)) {
+	   $aFaltan[$ap_nom] = ['id_nom'=>$id_nomP,'id_ubi'=>$id_ubi, 'nivel_stgr'=>$nivel_stgr];
+	}
 }
 uksort($aFaltan,"core\strsinacentocmp");
 
 $titulo=ucfirst(sprintf(_("lista de %s sin %s en el curso %s"),$Qtipo_personas,$Qsactividad,$txt_curso));
 
-$a_cabeceras=array( _("nº"),array('name'=>ucfirst(_("nombre de la persona")),'formatter'=>'clickFormatter'));
+$a_cabeceras = [ _("nº"),
+                array('name'=>ucfirst(_("nombre de la persona")),'formatter'=>'clickFormatter'),
+                'ctr',
+                _("nivel stgr"),
+                ];
 $i=0;
 $a_valores = array();
-foreach ($aFaltan as $ap_nom=>$id_nom) {
+foreach ($aFaltan as $ap_nom=>$aDatos) {
 	$i++;
+	$id_nom = $aDatos['id_nom'];
+	$id_ubi = $aDatos['id_ubi'];
+	$nivel_stgr = $aDatos['nivel_stgr'];
+	
+	$oCentro = new CentroDl($id_ubi);
+	$nombre_ubi = $oCentro->getNombre_ubi();
 	
 	$aQuery = array('obj_pau'=>$obj_pau,'id_nom'=>$id_nom);
 	$pagina=web\Hash::link('apps/personas/controller/home_persona.php?'.http_build_query($aQuery));
 
 	$a_valores[$i][1]=$i;
 	$a_valores[$i][2]= array( 'ira'=>$pagina, 'valor'=>$ap_nom);
+	$a_valores[$i][3]=$nombre_ubi;
+	$a_valores[$i][4]=$nivel_stgr;
 }
 
 
 // Al final añado la lista de personas que no estan en la dl, pero dependen de aqui.
 //  (probablemente haran la actividad en su region actual)
+$aWhere = [];
+$aOperador = [];
 $aWhere['situacion'] = 'A';
 $aWhere['dl'] = $mi_dele;
 $aOperador['dl'] = '!=';
@@ -174,20 +195,29 @@ foreach ($cPersonasOtras as $oPersona) {
 	$id_nomP = $oPersona->getId_nom();
 	if (in_array($id_nomP, $aAsistentes)) continue;
 	$ap_nom = $oPersona->getApellidosNombre();
-	$aFaltanOtras[$ap_nom] = $id_nomP;
+	$id_ubi = $oPersona->getId_ctr();
+	$nivel_stgr = $oPersona->getStgr();
+	$aFaltanOtras[$ap_nom] = ['id_nom'=>$id_nomP,'id_ubi'=>$id_ubi, 'nivel_stgr'=>$nivel_stgr];
 }
 uksort($aFaltanOtras,"core\strsinacentocmp");
 
-$i=0;
-$a_valores_2 = array();
-foreach ($aFaltanOtras as $ap_nom=>$id_nom) {
+$a_valores_2 = [];
+foreach ($aFaltanOtras as $ap_nom=>$aDatos) {
 	$i++;
+	$id_nom = $aDatos['id_nom'];
+	$id_ubi = $aDatos['id_ubi'];
+	$nivel_stgr = $aDatos['nivel_stgr'];
+	
+	$oCentro = new CentroDl($id_ubi);
+	$nombre_ubi = $oCentro->getNombre_ubi();
 	
 	$aQuery = array('obj_pau'=>$obj_pau,'id_nom'=>$id_nom);
 	$pagina=web\Hash::link('apps/personas/controller/home_persona.php?'.http_build_query($aQuery));
 
 	$a_valores_2[$i][1]=$i;
 	$a_valores_2[$i][2]= array( 'ira'=>$pagina, 'valor'=>$ap_nom);
+	$a_valores_2[$i][3]=$nombre_ubi;
+	$a_valores_2[$i][4]=$nivel_stgr;
 }
 
 
