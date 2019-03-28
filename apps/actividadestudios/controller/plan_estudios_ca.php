@@ -65,6 +65,7 @@ $GesActividadAsignaturas = new actividadestudios\GestorActividadAsignaturaDl();
 $cActividadAsignaturas = $GesActividadAsignaturas->getActividadAsignaturas(array('id_activ'=>$id_activ,'_ordre'=>'tipo'));
 foreach ( $cActividadAsignaturas as $oActividadAsignatura) {
 	$a++;
+	$id_asignatura = $oActividadAsignatura->getId_asignatura();
 	$id_profesor = $oActividadAsignatura->getId_profesor();
 	$tipo = $oActividadAsignatura->getTipo();
 
