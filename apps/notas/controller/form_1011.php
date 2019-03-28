@@ -145,6 +145,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
 	$acta='';
 	$tipo_acta='';
 	$f_acta='';
+	$f_acta_iso='';
 	$preceptor='';
 	$id_preceptor='';
 	$detalle='';
