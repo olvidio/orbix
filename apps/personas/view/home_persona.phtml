@@ -12,7 +12,10 @@
 	<table border=1>
 		<tr><td class=etiqueta>nacimiento</td><td class=contenido><?= $f_nacimiento ?></td><td class=etiqueta>santo</td><td class=contenido><?= $santo ?></td><td class=etiqueta>celebra</td><td class=contenido><?= $celebra ?></td></tr>
 		<tr><td class=etiqueta>profesion</td><td class=contenido colspan=3><?= $profesion ?></td><td class=etiqueta>stgr</td><td class=contenido><?= $stgr ?></td></tr>
-		<tr><td colspan=6>telfs: <?= $telfs ?></td></tr>
+		<tr>
+			<td colspan=2>telfs: <?= $telfs ?></td>
+			<td colspan=4>e-mail: <?= $mails ?></td>
+		</tr>
 		<tr class=tab>
 			<td colspan=6 onclick="fnjs_update_div('#main','<?= $go_ficha ?>');"><?= _("editar") ?></td>
 		</tr>

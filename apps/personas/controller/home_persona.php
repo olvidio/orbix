@@ -1,5 +1,5 @@
 <?php
-use personas\model\entity as personas;
+use function core\telecos_persona;
 use ubis\model\entity as ubis;
 /**
 * Esta página pone el titulo en el frame superior.
@@ -116,10 +116,18 @@ $godossiers=web\Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_bui
 
 $titulo=$nom;
 
-//$telfs_fijo = telecos_persona($id_nom,"telf","*"," / ") ;
-//$telfs_movil = telecos_persona($id_nom,"móvil","*"," / ") ;
-//if ($telfs_fijo && $telfs_movil) { $telfs = $telfs_fijo ." / ". $telfs_movil; } else { $telfs = $telfs_fijo . $telfs_movil;} 
 $telfs = '';
+$telfs_fijo = telecos_persona($id_nom,"telf","*"," / ") ;
+$telfs_movil = telecos_persona($id_nom,"móvil","*"," / ") ;
+if (!empty($telfs_fijo) && !empty($telfs_movil)) { 
+    $telfs = $telfs_fijo ." / ". $telfs_movil;
+} else {
+    $telfs .= $telfs_fijo??'';
+    $telfs .= $telfs_movil??'';
+}
+$mails = '';
+$mails = telecos_persona($id_nom,"e-mail","*"," / ") ;
+
 
 $a_campos = [
 			'oPosicion' => $oPosicion,
@@ -128,6 +136,7 @@ $a_campos = [
 			'go_ficha' => $go_ficha,
 			'titulo' => $titulo,
 			'telfs' => $telfs,
+			'mails' => $mails,
 			'stgr' => $stgr,
 			'profesion' => $profesion,
 			'celebra' => $celebra,

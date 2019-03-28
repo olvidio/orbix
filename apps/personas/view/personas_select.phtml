@@ -1,5 +1,12 @@
 <?= $oPosicion->mostrar_left_slide(1); ?>
 <script>
+fnjs_home=function(formulario){
+	rta=fnjs_solo_uno(formulario);
+	if (rta==1) {
+  		$(formulario).attr('action','apps/personas/controller/home_persona.php');
+  		fnjs_enviar_formulario(formulario);
+  	}
+}
 <?php if (!empty($script['fnjs_modificar_ctr'])) { ?>
 fnjs_modificar_ctr=function(formulario){
 	rta=fnjs_solo_uno(formulario);

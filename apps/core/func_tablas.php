@@ -1,6 +1,8 @@
 <?php
 namespace core;
 use web;
+use personas\model\entity\GestorTelecoPersonaDl;
+use ubis\model\entity\DescTeleco;
 /**
 * Esta página sólo contiene funciones. Es para incluir en otras.
 *
@@ -321,17 +323,16 @@ function profesion_1_linea($id_nom) {
 *	Si $desc_teleco es '*', entonces se añade la descripción entre paréntesis
 *      al final del número...
 */
-/*
-function telecos_persona($id_nom,$tipo_teleco,$desc_teleco='',$separador) {
-	require_once('classes/personas-ubis/xd_desc_teleco.class');
-	require_once('classes/personas/d_teleco_personas_gestor.class');
 
+function telecos_persona($id_nom,$tipo_teleco,$desc_teleco='',$separador) {
+
+    $aWhere = [];
 	$aWhere['id_nom'] = $id_nom;
 	$aWhere['tipo_teleco'] = $tipo_teleco;
 	if ($desc_teleco != '*' && !empty($desc_teleco)) {
 		$aWhere['desc_teleco'] = $desc_teleco;
 	}
-	$GesTelecoPersonas = new GestorTelecoPersona();
+	$GesTelecoPersonas = new GestorTelecoPersonaDl();
 	$cTelecos = $GesTelecoPersonas->getTelecos($aWhere);
 	$tels='';
 	$separador=empty($separador)? ".-<br>": $separador;
@@ -348,8 +349,6 @@ function telecos_persona($id_nom,$tipo_teleco,$desc_teleco='',$separador) {
 	$tels=substr($tels,0,-(strlen($separador)));
 	return $tels;
 }
- * 
- */
 
 /**
 * Devuelve los teleco de un ubi especificados por

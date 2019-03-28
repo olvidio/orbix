@@ -363,7 +363,7 @@ foreach ($cPersonas as $oPersona) {
 		$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/home_persona.php?'.http_build_query(array('id_nom'=>$id_nom,'id_tabla'=>$id_tabla,'obj_pau'=>$obj_pau)));
 		$a_val[2]= array( 'ira'=>$pagina, 'valor'=>$nom);
 	} else {
-		$pagina='fnjs_ficha("#seleccionados")';
+		$pagina='fnjs_home("#seleccionados")';
 		$a_val[2]= array( 'script'=>$pagina, 'valor'=>$nom);
 	}
 	if ($tabla=="p_sssc") {
