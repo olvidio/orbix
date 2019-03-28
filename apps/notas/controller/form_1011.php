@@ -27,6 +27,8 @@ use asignaturas\model\entity as asignaturas;
 use notas\model\entity as notas;
 use personas\model\entity as personas;
 use profesores\model\entity as profesores;
+use web\Hash;
+use actividades\model\entity\Actividad;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -95,6 +97,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
 	$tipo_acta=$oPersonaNota->getTipo_acta();
 	$oF_acta=$oPersonaNota->getF_acta();
 	$f_acta=$oF_acta->getFromLocal();
+	$f_acta_iso=$oF_acta->format('Y-m-d');
 	$preceptor=$oPersonaNota->getPreceptor();
 	$id_preceptor=$oPersonaNota->getId_preceptor();
 	$detalle=$oPersonaNota->getDetalle();
@@ -241,39 +244,13 @@ if (!empty($epoca)) {
 	$chk_epoca_otro="";
 }
 
-if (!empty($f_acta)) { // 3 meses cerca de la fecha del acta.
-	$oData2 = clone $oF_acta;
-	$oF_acta->add(new \DateInterval('P3M'));
-	$f_fin_iso = $oF_acta->format('Y-m-d');
-	$oData2->sub(new \DateInterval('P3M'));
-	$f_ini_iso = $oData2->format('Y-m-d');
-} else { // desde hoy, 10 meses antes.
-	$oData = new web\DateTimeLocal();
-	$oData2 = clone $oData;
-	$oData->add(new \DateInterval('P1M'));
-	$f_fin_iso = $oData->format('Y-m-d');
-	$oData2->sub(new \DateInterval('P10M'));
-	$f_ini_iso = $oData2->format('Y-m-d');
+if (!empty($id_activ)) {
+    $oActividad = new Actividad($id_activ);
+    $nom_activ = $oActividad->getNom_activ();
+} else {
+    $nom_activ = '';
 }
-$aWhere=array();
-$aOperador=array();
-$aWhere['f_ini'] = "'$f_ini_iso','$f_fin_iso'";
-$aOperador['f_ini']='BETWEEN';
-$aWhere['id_tipo_activ'] = '^1(12|33)';
-$aOperador['id_tipo_activ'] = '~';
-$aWhere['_ordre'] = 'f_ini';
-$cActividades = $GesActividades->getActividades($aWhere,$aOperador);
-$aActividades=array();
-foreach ($cActividades as $oActividad) {
-	$id_actividad=$oActividad->getId_activ();
-	$nom_activ=$oActividad->getNom_activ();
-	$aActividades[$id_actividad]=$nom_activ;
-}
-$oDesplActividades = new web\Desplegable();
-$oDesplActividades->setOpciones($aActividades);
-$oDesplActividades->setBlanco(1);
-$oDesplActividades->setNombre('id_activ');
-$oDesplActividades->setOpcion_sel($id_activ);
+
 
 // miro cuales son las opcionales genéricas, para la funcion
 //  fnjs_cmb_opcional de javascript.
@@ -307,6 +284,7 @@ $a_camposHidden = array(
 		'id_pau' => $Qid_pau,
 		'obj_pau' => $Qobj_pau,
 		'permiso' => $Qpermiso,
+        'id_activ' => $id_activ,
 		);
 
 if (!empty($Qid_asignatura_real)) { //caso de modificar
@@ -322,15 +300,22 @@ $oHash->setcamposNo($camposNo);
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $url_ajax = core\ConfigGlobal::getWeb().'/apps/notas/controller/notas_ajax.php';
-$oHash1 = new web\Hash();
+$oHash1 = new Hash();
 $oHash1->setUrl($url_ajax);
 $oHash1->setCamposForm('que!id_nom'); 
 //$oHash1->setCamposNo('id_nom'); 
 $h1 = $oHash1->linkSinVal();
-$oHash2 = new web\Hash();
+$oHash2 = new Hash();
 $oHash2->setUrl($url_ajax);
 $oHash2->setCamposForm('que'); 
 $h2 = $oHash2->linkSinVal();
+
+
+$oHashMod = new Hash();
+$oHashMod->setUrl($url_ajax);
+$oHashMod->setcamposForm('dl_org!f_acta_iso!que');
+$h_modificar = $oHashMod->linkSinVal();
+
 
 $a_campos = [
 			'obj' => $obj, //sirve para comprobar campos
@@ -339,6 +324,7 @@ $a_campos = [
 			'url_ajax' => $url_ajax,
 			'h1' => $h1,
 			'h2' => $h2,
+            'h_modificar' => $h_modificar,
 			'condicion_js' => $condicion_js,
 			'Qid_asignatura_real' => $Qid_asignatura_real,
 			'nombre_corto' => $nombre_corto,
@@ -350,6 +336,7 @@ $a_campos = [
 			'chk_certificado' => $chk_certificado,
 			'acta' => $acta,
 			'f_acta' => $f_acta,
+			'f_acta_iso' => $f_acta_iso,
 			'chk_preceptor' => $chk_preceptor,
 			'id_preceptor' => $id_preceptor,
 			'oDesplProfesores' => $oDesplProfesores,
@@ -357,7 +344,7 @@ $a_campos = [
 			'chk_epoca_ca' => $chk_epoca_ca,
 			'chk_epoca_inv' => $chk_epoca_inv,
 			'chk_epoca_otro' => $chk_epoca_otro,
-			'oDesplActividades' => $oDesplActividades,
+            'nom_activ' => $nom_activ,
 			'detalle' => $detalle,
 			'lista_situacion_no_acta' => $lista_situacion_no_acta,
 			];

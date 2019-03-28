@@ -10,17 +10,38 @@ fnjs_cerrar=function(){
 }
 
 fnjs_modificar=function(id_item){
-	alert ('EEE');
 	$('#div_modificar').addClass('ventana');
 	$('#div_modificar').width('auto');
 	$('#div_modificar').height('auto');
 	document.getElementById("overlay").style.display = "block";
 
-	/*
-	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/actividades/controller/actividad_tarifa_tipo_form.php';
-	var parametros='id_item='+id_item+'<?= $h_modificar ?>';
+    var url='<?= $url_ajax ?>';
+	var parametros='dl_org=&que=frm_buscar&f_acta_iso=<?= $f_acta_iso ?><?= $h_modificar ?>';
 	fnjs_update_div('#div_modificar',url+'?'+parametros);
-	*/
+}
+
+fnjs_buscar_ca=function(){
+	var dl_org = $('#dl_org').val();
+    var url='<?= $url_ajax ?>';
+	var parametros='que=frm_buscar&f_acta_iso=<?= $f_acta_iso ?>&dl_org='+dl_org+'<?= $h_modificar ?>';
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: parametros
+    })
+    .done(function (rta_txt) {
+        $('#div_modificar').html(rta_txt);
+    });
+}
+
+fnjs_update_activ=function() {
+	id_activ = $("#id_activ_sel option:selected").val();
+	nom_activ = $("#id_activ_sel option:selected").text();
+
+	$('#id_activ').val(id_activ);
+	$('#nom_activ').text(nom_activ);
+
+	fnjs_cerrar();
 }
 
 fnjs_cmb_preceptor=function(){
@@ -211,14 +232,10 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
 	</td>
 </tr>
 <tr><td><?= _("cursada en") ?></td>
-<td>
-<span class="link" onclick="fnjs_modificar('nuevo');"><?= _("añadir ca") ?></span>
+<td colspan=2><span id="nom_activ"><?= $nom_activ ?></span>
+    <span class="link" onclick="fnjs_modificar('nuevo');"><?= _("añadir ca") ?></span>
 </td>
 </tr>
-<tr><td><?= _("cursada en") ?></td>
-<td class=contenido colspan=3>
-	<?= $oDesplActividades->desplegable(); ?>
-</td>
 <tr><td><?= _("detalle") ?></td><td><input type="text" id="detalle" name="detalle" value="<?= $detalle ?>" ></td></tr>
 </tbody></table>
 <br><input type="button" value="<?= ucfirst(_("guardar")); ?>" onclick="fnjs_guardar(this.form)">

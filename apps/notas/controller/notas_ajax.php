@@ -1,12 +1,10 @@
 <?php
-/**
- * Controlador encargado de 
- * 
- */
 use asignaturas\model\entity as asignaturas;
 use notas\model\entity as notas;
 use profesores\model\entity as profesores;
-use personas\model\entity as personas;
+use ubis\model\entity\GestorDelegacion;
+use web\Hash;
+use actividades\model\entity\GestorActividad;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -21,6 +19,86 @@ $Qid_nom = (integer)  filter_input(INPUT_POST, 'id_nom');
 $Qid_asignatura = (integer)  filter_input(INPUT_POST, 'id_asignatura');
 
 switch ($Qque) {
+    case 'frm_buscar':
+        $Qdl_org = (string)  filter_input(INPUT_POST, 'dl_org');
+        $Qf_acta_iso = (string)  filter_input(INPUT_POST, 'f_acta_string');
+        $Qid_activ = (integer)  filter_input(INPUT_POST, 'id_activ');
+        
+        if (empty($Qdl_org)) {
+            $mi_dele = core\ConfigGlobal::mi_dele();
+            $Qdl_org = $mi_dele;
+        }
+
+        $oGesDl = new GestorDelegacion();
+        $oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones();
+        $oDesplDelegacionesOrg->setNombre('dl_org');
+        $oDesplDelegacionesOrg->setOpcion_sel($Qdl_org);
+        $oDesplDelegacionesOrg->setAction('fnjs_buscar_ca()');
+        
+            
+        if (!empty($Qf_acta_iso)) { // 3 meses cerca de la fecha del acta.
+            $oF_acta = new \DateTime($Qf_acta_iso);
+            $oData2 = new \DateTime($Qf_acta_iso);
+            $oF_acta->add(new \DateInterval('P3M'));
+            $f_fin_iso = $oF_acta->format('Y-m-d');
+            $oData2->sub(new \DateInterval('P3M'));
+            $f_ini_iso = $oData2->format('Y-m-d');
+        } else { // desde hoy, 10 meses antes.
+            $oData = new web\DateTimeLocal();
+            $oData2 = clone $oData;
+            $oData->add(new \DateInterval('P1M'));
+            $f_fin_iso = $oData->format('Y-m-d');
+            $oData2->sub(new \DateInterval('P10M'));
+            $f_ini_iso = $oData2->format('Y-m-d');
+        }
+        $aWhere=array();
+        $aOperador=array();
+        $aWhere['f_ini'] = "'$f_ini_iso','$f_fin_iso'";
+        $aOperador['f_ini']='BETWEEN';
+        $aWhere['id_tipo_activ'] = '^1(12|33)';
+        $aOperador['id_tipo_activ'] = '~';
+        $aWhere['_ordre'] = 'f_ini';
+        $aWhere['dl_org'] = $Qdl_org;
+        $GesActividades = new GestorActividad();
+        $cActividades = $GesActividades->getActividades($aWhere,$aOperador);
+        $aActividades=array();
+        foreach ($cActividades as $oActividad) {
+            $id_actividad=$oActividad->getId_activ();
+            $nom_activ=$oActividad->getNom_activ();
+            $aActividades[$id_actividad]=$nom_activ;
+        }
+        $oDesplActividades = new web\Desplegable();
+        $oDesplActividades->setOpciones($aActividades);
+        $oDesplActividades->setBlanco(1);
+        $oDesplActividades->setNombre('id_activ_sel');
+        $oDesplActividades->setOpcion_sel($Qid_activ);
+        
+        $oHash = new Hash();
+        //$oHash->setUrl($url_ajax);
+        //$oHash->setArrayCamposHidden(['que' => 'update', 'id_ubi' => $Qid_ubi]);
+        
+        $oHash->setcamposForm('pres_nom!pres_telf!pres_mail!zona!observ');
+        $oHash->setCamposNo('scroll_id!sel');
+        
+        $txt="<form id='frm_buscar'>";
+        $txt.='<h3>'._("seleccionar la actividad").'</h3>';
+        $txt.= $oHash->getCamposHtml();
+        $txt.='<br>';
+        $txt.= _("organniza");
+        $txt.='<br>';
+        $txt.= $oDesplDelegacionesOrg->desplegable();
+        $txt.='<br>';
+        $txt.= _("actividad");
+        $txt.='<br>';
+        $txt.= $oDesplActividades->desplegable();
+        $txt.='<br>';
+        $txt.='<br><br>';
+        $txt.="<input type='button' value='". _('guardar') ."' onclick=\"fnjs_update_activ('#frm_buscar');\" >";
+        $txt.="<input type='button' value='". _('cancel') ."' onclick=\"fnjs_cerrar();\" >";
+        $txt.="</form> ";
+
+        echo $txt;
+        break;
 	case 'posibles_opcionales':
 		// todas las opcionales 
 		$aWhere=array();
