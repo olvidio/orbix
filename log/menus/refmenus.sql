@@ -271,7 +271,6 @@
 1222	{70,20}	definir módulos		27	33554432	13	t
 1233	{70,30}	instalar módulos	clase_info=permisos\\model\\infomodsinstalled	160	33554432	13	t
 1206	{70,10}	aplicaciones	clase_info=devel\\model\\infoapps	160	33554432	13	t
-1387	{38,10}	buscar	sasistentes=agd&sactividad=ca&que=ver	119	16	12	t
 1391	{38,110}	gestión de plazas	ssfsv=sv&sasistentes=agd&sactividad=ca	169	16	12	t
 1389	{82,110}	Gestión de plazas	ssfsv=sv&sasistentes=n&sactividad=cve	169	128	2	t
 1390	{90,110}	Gestión de plazas	ssfsv=sv&sasistentes=agd&sactividad=cve	169	2	3	t
@@ -303,3 +302,4 @@
 1095	{50}	procesos activ.	\N	188	33554432	13	t
 1197	{70}	Configuración	\N	182	33554432	13	t
 1368	{990}	traducciones	\N	181	33554432	13	t
+1387	{38,10}	buscar	sasistentes=agd&sactividad=ca&que=ver&periodo=curso_ca	119	16	12	t
