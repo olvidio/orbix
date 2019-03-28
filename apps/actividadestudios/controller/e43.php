@@ -66,7 +66,7 @@ if ($matriculas > 0) {
 			$oNota = $cNotas[0];
 			$nota = $oNota->getNota_txt();
 			$acta = $oNota->getActa();
-			$f_acta = $oNota->getF_acta();
+			$f_acta = $oNota->getF_acta()->getFromLocal();
 		} else {
 			$nota = '';
 			$acta = '';
