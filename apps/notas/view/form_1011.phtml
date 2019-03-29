@@ -15,35 +15,46 @@ fnjs_buscar_acta=function() {
             dataType: 'json'
         })
         .done(function (rta_json) {
-            fecha = rta_json.f_acta;
-            id_activ = rta_json.id_activ;
-            nom_activ = rta_json.nom_activ;
             id_asignatura = rta_json.id_asignatura;
-
-            $('#f_acta').val(fecha);
-            $('#id_activ').val(id_activ);
-        	$('#nom_activ').text(nom_activ);
-            if (id_asignatura > 3000) {
-                // opcionales posibles
-                op_todas = <?= $op_genericas ?>;
-                // asig no aprobadas
-                niveles = $('#id_nivel option');
-                niveles.each( function( index, element ){
-                    idNivel = $( this ).val();
-                	console.log("Valor: " + idNivel);
-                    if(op_todas.includes(idNivel)) {
-                        //alert (idNivel);
-                        //seleccionarla y finalizar bucle
-                        $('#id_nivel').val(idNivel);
-                        fnjs_cmb_opcional(id_asignatura);
-                        return false; // breaks
-                    }
-                });
-                    
-				
-                console.log("Valor: DESPRES");
+            if (id_asignatura == 'no') {
+                //borrar
+                $('#id_nivel').val('');
+                $('#f_acta').val('');
+                $('#id_activ').val('');
+                $('#nom_activ').text('');
+                $("#epoca1").prop( "checked", true );
+                
+                fnjs_cmb_opcional();
             } else {
-	            $('#id_nivel').val(id_asignatura);
+                fecha = rta_json.f_acta;
+                id_activ = rta_json.id_activ;
+                nom_activ = rta_json.nom_activ;
+                acta = rta_json.acta;
+                epoca = rta_json.epoca;
+				id_epoca = '#epoca'+epoca;
+                $('#acta').val(acta);
+                $('#f_acta').val(fecha);
+                $('#id_activ').val(id_activ);
+                $('#nom_activ').text(nom_activ);
+                $(id_epoca).prop( "checked", true );
+                if (id_asignatura > 3000) {
+                    // opcionales posibles
+                    op_todas = <?= $op_genericas ?>;
+                    // asig no aprobadas
+                    niveles = $('#id_nivel option');
+                    niveles.each( function( index, element ){
+                        idNivel = $( this ).val();
+                        if(op_todas.includes(idNivel)) {
+                            //alert (idNivel);
+                            //seleccionarla y finalizar bucle
+                            $('#id_nivel').val(idNivel);
+                            fnjs_cmb_opcional(id_asignatura);
+                            return false; // breaks
+                        }
+                    });
+                } else {
+                    $('#id_nivel').val(id_asignatura);
+                }
             }
         });
 

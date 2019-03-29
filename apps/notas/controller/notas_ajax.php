@@ -7,6 +7,7 @@ use profesores\model\entity as profesores;
 use ubis\model\entity\GestorDelegacion;
 use web\Hash;
 use actividades\model\entity\Actividad;
+use core\ConfigGlobal;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -22,19 +23,41 @@ $Qid_nom = (integer)  filter_input(INPUT_POST, 'id_nom');
 switch ($Qque) {
     case 'buscar_acta':
         $Qacta = (string)  filter_input(INPUT_POST, 'acta');
+        // si es número busca en la dl.
+        $matches = [];
+        preg_match ("/^(\d*)(\/)?(\d*)/", $Qacta, $matches);
+        if (!empty($matches[1])) {
+            $mi_dele = ConfigGlobal::mi_dele();
+            $Qacta = empty($matches[3])? "$mi_dele ".$matches[1].'/'.date("y") : "$mi_dele $Qacta";
+        }
         $GesActas = new GestorActa();
         $cActas = $GesActas->getActas(['acta'=>$Qacta]);
-        $json = '';
+        $json = "{\"id_asignatura\":\"no\"}";
         if (count($cActas) == 1) {
             $oActa = $cActas[0];
             $f_acta = $oActa->getF_acta()->getFromLocal();
             $id_asignatura = $oActa->getId_asignatura();
             $id_activ = $oActa->getId_activ();
-            $oActividad = new Actividad($id_activ);
-            $nom_activ = $oActividad->getNom_activ();
-            //$json = '[';
-            $json .= "{\"id_asignatura\":\"$id_asignatura\",\"id_activ\":\"$id_activ\",\"f_acta\":\"$f_acta\",\"nom_activ\":\"$nom_activ\"}";
-            //$json .= ']';
+            if (!empty($id_activ)) {
+                $oActividad = new Actividad($id_activ);
+                $nom_activ = $oActividad->getNom_activ();
+                $id_tipo_actividad = $oActividad->getId_tipo_activ();
+                $epoca = notas\PersonaNota::EPOCA_CA;
+                if ($id_tipo_actividad == 132500) { //sem invierno
+                    $epoca = notas\PersonaNota::EPOCA_INVIERNO;
+                }
+            } else {
+                $nom_activ = '';
+                $epoca = notas\PersonaNota::EPOCA_OTRO;
+            }
+            $json = "{\"id_asignatura\":\"$id_asignatura\",
+                        \"id_activ\":\"$id_activ\",
+                          \"f_acta\":\"$f_acta\",
+                       \"nom_activ\":\"$nom_activ\",
+                       \"epoca\":\"$epoca\",
+                       \"acta\":\"$Qacta\"
+                    }";
+
         }
         echo $json;
         break;
