@@ -221,9 +221,11 @@ $aOpciones =  array(
 					'separador1'=>'---------',
 					'otro'=>_("otro")
 					);
+$titulo = core\strtoupper_dlb(_("periodo de selección de actividades"));
+$titulo .=  " ("._("en estado actual").")"; 
 $oFormP = new web\PeriodoQue();
 $oFormP->setFormName('que');
-$oFormP->setTitulo(core\strtoupper_dlb(_("periodo de selección de actividades")));
+$oFormP->setTitulo($titulo);
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);

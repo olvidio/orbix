@@ -14,6 +14,8 @@
 */
 
 use actividades\model\entity as actividades;
+use actividadplazas\model\entity\ActividadPlazasDl;
+use core\ConfigGlobal;
 use procesos\model\entity\GestorActividadProcesoTarea;
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
@@ -139,9 +141,10 @@ case "nuevo":
 		die();
 	}
 
+    $mi_dele = ConfigGlobal::mi_dele();
 	// si es de la sf quito la 'f'
 	$dele = preg_replace('/f$/', '',$Qdl_org);
-	if ($dele == core\ConfigGlobal::mi_dele()) {
+	if ($dele == $mi_dele) {
 		$oActividad= new actividades\ActividadDl();
 	} else {
 		$oActividad= new actividades\ActividadEx();
@@ -190,12 +193,33 @@ case "nuevo":
 		echo '<br>'._("hay un error, no se ha guardado");
 	}
 	// si estoy creando una actividad de otra dl es porque la quiero importar.
-	if ($dele != core\ConfigGlobal::mi_dele()) {
+	if ($dele != $mi_dele) {
 		$id_activ = $oActividad->getId_activ();
 		$oImportada = new actividades\Importada($id_activ);
 		if ($oImportada->DBGuardar() === false) {
 			echo _("hay un error, no se ha importado");
 		}
+	}
+	// Por defecto pongo todas las plazas en mi dl
+	if (core\configGlobal::is_app_installed('actividadplazas')) {
+	    if (!empty($Qplazas) && $Qdl_org == $mi_dele) {
+    		$id_activ = $oActividad->getId_activ();
+	        $id_dl = 0;
+	        $gesDelegacion = new ubis\model\entity\GestorDelegacion();
+	        $cDelegaciones = $gesDelegacion->getDelegaciones(array('dl'=>$mi_dele));
+	        if (is_array($cDelegaciones) && count($cDelegaciones)) {
+	            $id_dl = $cDelegaciones[0]->getId_dl();
+	        }
+	        //Si es la dl_org, son plazas concedidas, sino pedidas.
+	        $oActividadPlazasDl = new ActividadPlazasDl(array('id_activ'=>$id_activ,'id_dl'=>$id_dl,'dl_tabla'=>$mi_dele));
+	        $oActividadPlazasDl->DBCarregar();
+	        $oActividadPlazasDl->setPlazas($Qplazas);
+	        
+	        //print_r($oActividadPlazasDl);
+	        if ($oActividadPlazasDl->DBGuardar() === false) {
+	            echo _("hay un error, no se ha guardado");
+	        }
+	    }
 	}
 	break;
 case "duplicar": // duplicar la actividad.
@@ -334,6 +358,7 @@ case "editar": // editar la actividad.
 	
 	$oActividad = new actividades\Actividad($Qid_activ);
 	$oActividad->DBCarregar();
+	$plazas_old = $oActividad->getPlazas();
 
 	$oActividad->setId_tipo_activ($Qid_tipo_activ);
 	if (isset($Qdl_org)) {
@@ -379,6 +404,28 @@ case "editar": // editar la actividad.
 			$oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
 			$oGestorActividadProcesoTarea->generarProceso($oActividad->getId_activ());
 		}
+	}
+	// Por defecto pongo todas las plazas en mi dl
+	if (core\configGlobal::is_app_installed('actividadplazas')) {
+        $mi_dele = ConfigGlobal::mi_dele();
+	    if (!empty($Qplazas) && ($plazas_old != $Qplazas) && $Qdl_org == $mi_dele) {
+    		$id_activ = $oActividad->getId_activ();
+	        $id_dl = 0;
+	        $gesDelegacion = new ubis\model\entity\GestorDelegacion();
+	        $cDelegaciones = $gesDelegacion->getDelegaciones(array('dl'=>$mi_dele));
+	        if (is_array($cDelegaciones) && count($cDelegaciones)) {
+	            $id_dl = $cDelegaciones[0]->getId_dl();
+	        }
+	        //Si es la dl_org, son plazas concedidas, sino pedidas.
+	        $oActividadPlazasDl = new ActividadPlazasDl(array('id_activ'=>$id_activ,'id_dl'=>$id_dl,'dl_tabla'=>$mi_dele));
+	        $oActividadPlazasDl->DBCarregar();
+	        $oActividadPlazasDl->setPlazas($Qplazas);
+	        
+	        //print_r($oActividadPlazasDl);
+	        if ($oActividadPlazasDl->DBGuardar() === false) {
+	            echo _("hay un error, no se ha guardado");
+	        }
+	    }
 	}
 	break;
 case "actualizar_sacd": // para actualizar los sacd encargados.
