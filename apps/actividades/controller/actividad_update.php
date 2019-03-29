@@ -17,6 +17,7 @@ use actividades\model\entity as actividades;
 use actividadplazas\model\entity\ActividadPlazasDl;
 use core\ConfigGlobal;
 use procesos\model\entity\GestorActividadProcesoTarea;
+use actividadplazas\model\entity\GestorActividadPlazas;
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
 */
@@ -409,21 +410,37 @@ case "editar": // editar la actividad.
 	if (core\configGlobal::is_app_installed('actividadplazas')) {
         $mi_dele = ConfigGlobal::mi_dele();
 	    if (!empty($Qplazas) && ($plazas_old != $Qplazas) && $Qdl_org == $mi_dele) {
-    		$id_activ = $oActividad->getId_activ();
 	        $id_dl = 0;
 	        $gesDelegacion = new ubis\model\entity\GestorDelegacion();
 	        $cDelegaciones = $gesDelegacion->getDelegaciones(array('dl'=>$mi_dele));
 	        if (is_array($cDelegaciones) && count($cDelegaciones)) {
 	            $id_dl = $cDelegaciones[0]->getId_dl();
 	        }
-	        //Si es la dl_org, son plazas concedidas, sino pedidas.
-	        $oActividadPlazasDl = new ActividadPlazasDl(array('id_activ'=>$id_activ,'id_dl'=>$id_dl,'dl_tabla'=>$mi_dele));
-	        $oActividadPlazasDl->DBCarregar();
-	        $oActividadPlazasDl->setPlazas($Qplazas);
-	        
-	        //print_r($oActividadPlazasDl);
-	        if ($oActividadPlazasDl->DBGuardar() === false) {
-	            echo _("hay un error, no se ha guardado");
+	        // si ya tengo algo, mejor no toco. (a no ser que tenga todas)
+	        $oGesActividadPlazas = new GestorActividadPlazas();
+	        $aWhere = [];
+	        $aWhere['id_activ'] = $Qid_activ;
+	        $aWhere['id_dl'] = $id_dl;
+	        $aWhere['dl_tabla'] = $mi_dele;
+	        $cActividadPlazas = $oGesActividadPlazas->getactividadesPlazas($aWhere);
+	        $salta = 0;
+	        if (count($cActividadPlazas) == 1) {
+	            $oActividadPlazasDl = $cActividadPlazas[0];
+	            $plazas_dl = $oActividadPlazasDl->getPlazas();
+	            if ($plazas_dl != $plazas_old) {
+	                $salta = 1;
+	            }
+	        }
+	        if ($salta != 1) {
+                //Si es la dl_org, son plazas concedidas, sino pedidas.
+                $oActividadPlazasDl = new ActividadPlazasDl($aWhere);
+                $oActividadPlazasDl->DBCarregar();
+                $oActividadPlazasDl->setPlazas($Qplazas);
+                
+                //print_r($oActividadPlazasDl);
+                if ($oActividadPlazasDl->DBGuardar() === false) {
+                    echo _("hay un error, no se ha guardado");
+                }
 	        }
 	    }
 	}
