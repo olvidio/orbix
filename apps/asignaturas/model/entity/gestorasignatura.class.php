@@ -35,6 +35,24 @@ class GestorAsignatura Extends core\ClaseGestor {
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
 	/**
+	 * Devuelve una lista con los id_nivel de las opcionales.
+	 * 
+	 * @param string $formato 'csv'
+	 * @return string
+	 */
+	public function getListaOpGenericas($formato='') {
+	    switch ($formato) {
+	        case 'json':
+                $genericas = "[\"1230\",\"1231\",\"1232\",\"2430\",\"2431\",\"2432\",\"2433\",\"2434\"]";
+                break;
+	        case 'csv':
+	        default:
+            $genericas = "1230,1231,1232,2430,2431,2432,2433,2434";
+	    }
+		return $genericas;	
+	}
+
+	/**
 	 * retorna JSON llista d'Asignaturas
 	 *
 	 * @param string sQuery la query a executar.
@@ -114,16 +132,15 @@ class GestorAsignatura Extends core\ClaseGestor {
 	function getListaAsignaturas($op_genericas = true) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		$oTipoCentroSet = new core\Set();
 		$sWhere="WHERE status = 't' ";
 		if (!$op_genericas) {
-			$genericas = "1230,1231,1232,2430,2431,2432,2433,2434";
+			$genericas = $this->getListaOpGenericas('csv');
 			$sWhere .= " AND id_nivel NOT IN ($genericas)";
 		}
 		//para hacer listados que primero salgan las normales y después las opcionales:
 		//$sQuery="SELECT id_asignatura, nombre_asignatura FROM $nom_tabla $sWhere ORDER BY nombre_asignatura";
 		$sQuery="SELECT id_asignatura, nombre_asignatura, CASE WHEN id_nivel < 3000 THEN xa_asignaturas.id_nivel ELSE 3001 END AS op FROM $nom_tabla $sWhere ORDER BY op,nombre_asignatura;";
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorAsignatura.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;

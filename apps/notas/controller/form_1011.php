@@ -317,6 +317,12 @@ $oHashMod->setUrl($url_ajax);
 $oHashMod->setcamposForm('dl_org!f_acta_iso!que');
 $h_modificar = $oHashMod->linkSinVal();
 
+$oHashActa = new Hash();
+$oHashActa->setUrl($url_ajax);
+$oHashActa->setcamposForm('acta!que');
+$h_acta = $oHashActa->linkSinVal();
+
+$op_genericas = $GesAsignaturas->getListaOpGenericas('json');
 
 $a_campos = [
 			'obj' => $obj, //sirve para comprobar campos
@@ -326,6 +332,8 @@ $a_campos = [
 			'h1' => $h1,
 			'h2' => $h2,
             'h_modificar' => $h_modificar,
+            'h_acta' => $h_acta,
+            'op_genericas' => $op_genericas,
 			'condicion_js' => $condicion_js,
 			'Qid_asignatura_real' => $Qid_asignatura_real,
 			'nombre_corto' => $nombre_corto,

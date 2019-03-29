@@ -1,10 +1,12 @@
 <?php
+use actividades\model\entity\GestorActividad;
 use asignaturas\model\entity as asignaturas;
 use notas\model\entity as notas;
+use notas\model\entity\GestorActa;
 use profesores\model\entity as profesores;
 use ubis\model\entity\GestorDelegacion;
 use web\Hash;
-use actividades\model\entity\GestorActividad;
+use actividades\model\entity\Actividad;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -16,9 +18,26 @@ use actividades\model\entity\GestorActividad;
 
 $Qque = (string)  filter_input(INPUT_POST, 'que');
 $Qid_nom = (integer)  filter_input(INPUT_POST, 'id_nom');
-$Qid_asignatura = (integer)  filter_input(INPUT_POST, 'id_asignatura');
 
 switch ($Qque) {
+    case 'buscar_acta':
+        $Qacta = (string)  filter_input(INPUT_POST, 'acta');
+        $GesActas = new GestorActa();
+        $cActas = $GesActas->getActas(['acta'=>$Qacta]);
+        $json = '';
+        if (count($cActas) == 1) {
+            $oActa = $cActas[0];
+            $f_acta = $oActa->getF_acta()->getFromLocal();
+            $id_asignatura = $oActa->getId_asignatura();
+            $id_activ = $oActa->getId_activ();
+            $oActividad = new Actividad($id_activ);
+            $nom_activ = $oActividad->getNom_activ();
+            //$json = '[';
+            $json .= "{\"id_asignatura\":\"$id_asignatura\",\"id_activ\":\"$id_activ\",\"f_acta\":\"$f_acta\",\"nom_activ\":\"$nom_activ\"}";
+            //$json .= ']';
+        }
+        echo $json;
+        break;
     case 'frm_buscar':
         $Qdl_org = (string)  filter_input(INPUT_POST, 'dl_org');
         $Qf_acta_iso = (string)  filter_input(INPUT_POST, 'f_acta_string');
