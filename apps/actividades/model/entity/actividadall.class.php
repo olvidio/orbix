@@ -1020,6 +1020,8 @@ class ActividadAll Extends core\ClasePropiedades {
 				break;
 			case 112023: //repaso
 			case 133023:
+			case 212023:
+			case 233023:
 				$nivel_stgr=4;
 				break;
 			case 133016: // ceagd

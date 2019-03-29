@@ -174,6 +174,10 @@ case "nuevo":
 	$oActividad->setNum_asistentes($Qnum_asistentes);
 	$oActividad->setStatus($Qstatus);
 	$oActividad->setObserv($Qobserv);
+	// Si nivel_stgr está vacio, pongo el calculado.
+	if (empty($Qnivel_stgr)) {
+	    $Qnivel_stgr = $oActividad->generarNivelStgr();
+	}
 	$oActividad->setNivel_stgr($Qnivel_stgr);
 	$oActividad->setId_repeticion($Qid_repeticion);
 	$oActividad->setObserv_material($Qobserv_material);
