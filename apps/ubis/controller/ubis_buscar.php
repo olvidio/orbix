@@ -104,7 +104,7 @@ switch ($tipo) {
 $oHash = new web\Hash();
 
 $s_camposForm = 'simple!nombre_ubi!opcion!ciudad';
-$oHash->setcamposNo('simple!tipo_ctr!tipo_casa');
+$oHash->setcamposNo('cmb!simple!tipo_ctr!tipo_casa');
 
 if ($simple==1) {
 	$s_camposForm .= '!region!pais';
