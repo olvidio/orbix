@@ -153,6 +153,7 @@ if (!empty($aWhereCtr)) {
 // por defecto no pongo valor, que lo coja de la base de datos. Sólo sirve para los de paso.
 $id_tabla = '';
 $permiso = 1;
+$obj_pau = '';
 switch ($tabla) {
 	case "p_sssc":
 		$obj_pau = 'PersonaSSSC';
@@ -209,6 +210,7 @@ switch ($tabla) {
 		}
 	break;
 	case 'nada':
+	    exit (_("No se encuentra ningún centro con esta condición"));
 		$cPersonas = array();
 		break;
 }
