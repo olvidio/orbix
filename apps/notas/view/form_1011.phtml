@@ -3,7 +3,8 @@ $(function() { $( "#f_acta" ).datepicker(); });
 
 fnjs_buscar_acta=function() {
 	var tipo_acta=$('input[name=tipo_acta]:checked').val();
-	if (tipo_acta == <?= notas\model\entity\PersonaNota::FORMATO_ACTA ?>) {
+	var mod = $('#mod').val();
+	if (mod == 'nuevo' && tipo_acta == <?= notas\model\entity\PersonaNota::FORMATO_ACTA ?>) {
         var acta=$('#acta').val();
 
         var url='<?= $url_ajax ?>';
