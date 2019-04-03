@@ -78,7 +78,7 @@ fnjs_ver=function(){
 	document.getElementById("overlay").style.display = "none";
 }
 
-fnjs_eliminar=function(id_ubi){
+fnjs_eliminar_cp=function(id_ubi){
     seguro=confirm("{{ "¿Está seguro que quiere quitar los datos de presentación de este centro?"|trans }}");
     if (seguro) { 
         var url='{{ url_ajax }}';
@@ -90,13 +90,15 @@ fnjs_eliminar=function(id_ubi){
             data: parametros
 		})
 		.done(function (rta_txt) {
-            alert ('respuesta: '+rta_txt);
+            if (rta_txt) {
+                alert ('respuesta: '+rta_txt);
+            }
         });
 		fnjs_ver();
     }
 }
 
-fnjs_guardar=function(formulario){
+fnjs_guardar_cp=function(formulario){
 	var url='{{ url_ajax }}';
     $(formulario).attr('action',url);
     $(formulario).submit(function() {

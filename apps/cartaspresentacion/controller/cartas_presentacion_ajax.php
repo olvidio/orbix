@@ -172,7 +172,7 @@ switch ($Qque_mod) {
             $txt.='<br>';
             $txt.= _("observaciones") ."   <input type=text size=60 name=observ value=\"$observ\">";
             $txt.='<br><br>';
-            $txt.="<input type='button' value='". _('guardar') ."' onclick=\"fnjs_guardar('#frm_pres');\" >";
+            $txt.="<input type='button' value='". _('guardar') ."' onclick=\"fnjs_guardar_cp('#frm_pres');\" >";
             $txt.="<input type='button' value='". _('cancel') ."' onclick=\"fnjs_cerrar();\" >";
             $txt.="</form> ";
 		} else {
@@ -311,7 +311,7 @@ switch ($Qque_mod) {
 					$script2="fnjs_ver_ubi($id_ubi)";
 					$a_valores[$c][2]=array( 'script2'=>$script2, 'valor'=>$ctr_txt);
 					if ($activo) {
-                        $script3="fnjs_eliminar($id_ubi)";
+                        $script3="fnjs_eliminar_cp($id_ubi)";
                         $pres .= ", "._("quitar"); 
                         $a_valores[$c][3]=array( 'script3'=>$script3, 'valor'=>$pres);
 					} else {
@@ -390,7 +390,7 @@ switch ($Qque_mod) {
                 $script2="fnjs_ver_ubi($id_ubi)";
                 $a_valores[$c][2]=array( 'script2'=>$script2, 'valor'=>$ctr_txt);
                 if ($activo) {
-                    $script3="fnjs_eliminar($id_ubi)";
+                    $script3="fnjs_eliminar_cp($id_ubi)";
                     $pres .= ", "._("quitar"); 
                     $a_valores[$c][3]=array( 'script3'=>$script3, 'valor'=>$pres);
                 } else {
