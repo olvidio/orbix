@@ -70,9 +70,9 @@ function llenar_dtor($oCartaPresentacion,$id_ubi) {
 */
 		
 
-$Qque = (string)  \filter_input(INPUT_POST, 'que');
+$Qque_mod = (string)  \filter_input(INPUT_POST, 'que_mod');
 
-switch ($Qque) {
+switch ($Qque_mod) {
 	case 'poblaciones':
         $Qfiltro = (string)  \filter_input(INPUT_POST, 'filtro');
 		switch ($Qfiltro) {
@@ -154,7 +154,7 @@ switch ($Qque) {
             
             $oHash = new Hash();
             //$oHash->setUrl($url_ajax);
-            $oHash->setArrayCamposHidden(['que' => 'update', 'id_ubi' => $Qid_ubi]);
+            $oHash->setArrayCamposHidden(['que_mod' => 'update', 'id_ubi' => $Qid_ubi]);
             
             $oHash->setcamposForm('pres_nom!pres_telf!pres_mail!zona!observ');
             $oHash->setCamposNo('scroll_id!sel');
@@ -170,7 +170,7 @@ switch ($Qque) {
             $txt.='<br>';
             $txt.= _("zona") ."   <input type=text size=20 name=zona value=\"$zona\">";
             $txt.='<br>';
-            $txt.= _("observaciones") ."   <input type=text size=60 name=zona value=\"$observ\">";
+            $txt.= _("observaciones") ."   <input type=text size=60 name=observ value=\"$observ\">";
             $txt.='<br><br>';
             $txt.="<input type='button' value='". _('guardar') ."' onclick=\"fnjs_guardar('#frm_pres');\" >";
             $txt.="<input type='button' value='". _('cancel') ."' onclick=\"fnjs_cerrar();\" >";
@@ -243,6 +243,10 @@ switch ($Qque) {
 		}
 		break;
 	case "get_dl":
+	    $oPosicion->setBloque('#ficha2');
+	    //$oPosicion->addParametro('bloque', 'ficha2');
+	    $oPosicion->recordar();
+
         $Qpoblacion_sel = (string)  \filter_input(INPUT_POST, 'poblacion_sel');
 		// listado de centros.
 		$oGesCentros = new GestorCentro();
@@ -324,6 +328,7 @@ switch ($Qque) {
 				//$a_valores[$c][3]=$oPermActiv->cuadros_check('tipo_labor',$tipo_labor);
 			}
 		}
+
 		$a_cabeceras = [];
 		$a_cabeceras[]= array('name'=>ucfirst(_("nombre")),'width'=>20,'formatter'=>'clickFormatter');
 		$a_cabeceras[]= array('name'=>ucfirst(_("centro")),'width'=>80,'formatter'=>'clickFormatter2');

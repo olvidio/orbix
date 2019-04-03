@@ -124,7 +124,7 @@ if ($simple==1) {
 	$pagina=web\Hash::link('apps/ubis/controller/ubis_buscar.php?'.http_build_query(array('simple'=>'1'))); 
 }
 
-$a_campos = ['oPosicion' => $oPosicion,
+$a_campos = [
 			'oHash' => $oHash,
 			'tipo' => $tipo,
 			'simple' => $simple,

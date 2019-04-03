@@ -34,48 +34,50 @@ $oSelects->setBlanco('t');
 $oSelects->setNombre('que');
 $oSelects->setAction('fnjs_poblacion()');
 */
+
+
+// OJO el parametro que puede interferir con el de las presentaciones de ubis. 
+// Lo llamo que_mod.
 // Posibles Ciudades
 $aOpcionesCiudad =  array(
 					'get_dl' => $mi_dele,
-					//'get_no_dl'=>_('no')." $mi_dele",
 					'get_r'=>_('regiones')
 					);
 $oSelCiudades = new DesplegableArray('',$aOpcionesCiudad,'');
 $oSelCiudades ->setBlanco('t');
-$oSelCiudades ->setNombre('que');
+$oSelCiudades ->setNombre('que_mod');
 $oSelCiudades->setAction('fnjs_poblacion()');
 
 $url_ctr = 'apps/ubis/controller/home_ubis.php';
 $oHashCtr = new Hash();
 $oHashCtr->setUrl($url_ctr);
-$oHashCtr->setcamposForm('id_ubi');
+$oHashCtr->setcamposForm('bloque!pau!id_ubi');
 $h_ctr = $oHashCtr->linkSinVal();
 
 $url_ajax = 'apps/cartaspresentacion/controller/cartas_presentacion_ajax.php';
 $oHashPob = new Hash();
 $oHashPob->setUrl($url_ajax);
-$oHashPob->setcamposForm('que!filtro');
+$oHashPob->setcamposForm('que_mod!filtro');
 $h_pob = $oHashPob->linkSinVal();
 
 $oHashDel = new Hash();
 $oHashDel->setUrl($url_ajax);
-$oHashDel->setcamposForm('id_ubi!que');
+$oHashDel->setcamposForm('id_ubi!que_mod');
 $h_del = $oHashDel->linkSinVal();
 
 
 $oHash = new Hash();
 $oHash->setUrl($url_ajax);
-$oHash->setcamposForm('que');
+$oHash->setcamposForm('que_mod');
 $oHash->setCamposNo('scroll_id!sel!poblacion_sel');
 
-$a_campos = ['oPosicion' => $oPosicion,
+$a_campos = [
     'oHash' => $oHash,
     'url_ctr' => $url_ctr,
     'h_ctr' => $h_ctr,
     'url_ajax' => $url_ajax,
     'h_pob' => $h_pob,
     'h_del' => $h_del,
-   // 'oSelects' => $oSelects,
     'oSelCiudades' => $oSelCiudades,
 ];
 

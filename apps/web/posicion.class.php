@@ -173,6 +173,9 @@ class Posicion {
 		
 		$url = $this->surl;
 		$aParam = $this->aParametros;
+		if (!empty($aParam['bloque'])) {
+		    $this->sbloque = '#'.$aParam['bloque'];
+		}
 		$sparametros = Hash::add_hash($aParam,$url);
 		$bloque = $this->sbloque;
 
@@ -235,6 +238,9 @@ class Posicion {
 		
 		$url = $this->surl;
 		$aParam = $this->aParametros;
+		if (!empty($aParam['bloque'])) {
+		    $this->sbloque = '#'.$aParam['bloque'];
+		}
 		$sparametros = Hash::add_hash($aParam,$url);
 		$bloque = $this->sbloque;
 		

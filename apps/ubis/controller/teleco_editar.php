@@ -20,8 +20,6 @@ use usuarios\model\entity as usuarios;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$oPosicion->recordar();
-
 $Qobj_pau = (string) \filter_input(INPUT_POST,'obj_pau');
 $Qmod = (string) \filter_input(INPUT_POST,'mod');
 $Qid_ubi = (integer) \filter_input(INPUT_POST,'id_ubi');

@@ -15,7 +15,14 @@ use web\Posicion;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+//En el caso de modificar cartas de presentación, quiero que quede dentro del bloque.
 $oPosicion->recordar();
+$bloque = (string) \filter_input(INPUT_POST, 'bloque');
+if (!empty($bloque)) {
+    $oPosicion->setBloque("#$bloque");
+    $oPosicion->addParametro('bloque', $bloque);
+}
+$bloque = 'ficha';
 	
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
@@ -44,7 +51,6 @@ if (!empty($a_sel)) { //vengo de un checkbox
 } else {
 	$id_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
 }
-
 
 $oUbi = ubis\Ubi::NewUbi($id_ubi);
 $nombre_ubi=$oUbi->getNombre_ubi();
@@ -115,15 +121,15 @@ switch ($tipo_ubi) {
 		$tipo="cdc";
 		break;
 	default:
-		echo _("falta definir el tipo_ubi: ")."$tipo_ubi<br>";
+		exit( _("falta definir el tipo_ubi"));
 }
 
 $gohome=Hash::link('apps/ubis/controller/home_ubis.php?'.http_build_query(array('id_ubi'=>$id_ubi,'obj_pau'=>$obj_pau))); 
 $godossiers=Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>$pau,'id_pau'=>$id_pau,'obj_pau'=>$obj_pau)));
 
-$go_ubi=Hash::link('apps/ubis/controller/ubis_editar.php?'.http_build_query(array('id_ubi'=>$id_ubi,'obj_pau'=>$obj_pau)));
-$go_dir=Hash::link('apps/ubis/controller/direcciones_editar.php?'.http_build_query(array('id_ubi'=>$id_ubi,'id_direccion'=>$id_direccion,'obj_dir'=>$obj_dir))); 
-$go_tel=Hash::link('apps/ubis/controller/teleco_tabla.php?'.http_build_query(array('id_ubi'=>$id_ubi,'obj_pau'=>$obj_pau)));
+$go_ubi=Hash::link('apps/ubis/controller/ubis_editar.php?'.http_build_query(array('id_ubi'=>$id_ubi,'obj_pau'=>$obj_pau,'bloque'=>$bloque)));
+$go_dir=Hash::link('apps/ubis/controller/direcciones_editar.php?'.http_build_query(array('id_ubi'=>$id_ubi,'id_direccion'=>$id_direccion,'obj_dir'=>$obj_dir,'bloque'=>$bloque))); 
+$go_tel=Hash::link('apps/ubis/controller/teleco_tabla.php?'.http_build_query(array('id_ubi'=>$id_ubi,'obj_pau'=>$obj_pau,'bloque'=>$bloque)));
 
 $alt=_("ver dossiers");
 $dos=_("dossiers");
@@ -133,7 +139,6 @@ $titulo=$nombre_ubi;
 $telfs = $oUbi->getTeleco("telf","*"," / ") ;
 $fax = $oUbi->getTeleco("fax","*"," / ") ;
 $mails = $oUbi->getTeleco("e-mail","*"," / ") ;
-
 
 $a_campos = ['oPosicion' => $oPosicion,
 			'godossiers' => $godossiers,

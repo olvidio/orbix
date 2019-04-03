@@ -291,7 +291,7 @@ function lista_cartas($a_mega,$ordenar_dl){
 				$html .= '<table>';
 				foreach ($a_pob_edad as $poblacion => $a_edad) {
 					krsort($a_edad); // primero m, después j
-					if ($poblacion != $poblacion_anterior) {
+					if ($poblacion != $poblacion_anterior OR empty($poblacion)) {
 						$html .= "<tr><td $class>".strtoupper($poblacion)."</td>";
 					}
 					$f=0;

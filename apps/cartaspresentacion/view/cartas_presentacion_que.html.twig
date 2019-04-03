@@ -1,7 +1,7 @@
 <script>
 fnjs_ver_ubi=function(id_ubi){
 	var url='{{ url_ctr }}';
-	var parametros='id_ubi='+id_ubi+'{{ h_ctr|raw }}';
+	var parametros='bloque=ficha2&pau=u&id_ubi='+id_ubi+'{{ h_ctr|raw }}';
 	$.ajax({
 		url: url,
 		type: 'post',
@@ -9,13 +9,13 @@ fnjs_ver_ubi=function(id_ubi){
 		dataType: 'html'
 	})
 	.done(function (rta_txt) {
-		$('#ficha').html(rta_txt);
+		$('#ficha2').html(rta_txt);
 	});
 }
 
 fnjs_poblacion=function(){
-    $('#ficha').html('');
-	var filtro=$('#que').val();
+    $('#ficha2').html('');
+	var filtro=$('#que_mod').val();
 	if (filtro == 'get_r') {
 		$("#td_poblacion").hide();
 		$("#lst_lugar").hide();
@@ -24,7 +24,7 @@ fnjs_poblacion=function(){
 	$("#td_poblacion").show();
 	$("#lst_lugar").show();
 	var url='{{ url_ajax }}';
-	var parametros='que=poblaciones&filtro='+filtro+'{{ h_pob|raw }}';
+	var parametros='que_mod=poblaciones&filtro='+filtro+'{{ h_pob|raw }}';
 	$.ajax({
 		url: url,
 		type: 'post',
@@ -52,10 +52,10 @@ fnjs_modificar=function(id_ubi){
 	
 	var url='{{ url_ajax }}';
 	if (id_ubi) {
-		var parametros='que=form_pres&id_ubi='+id_ubi;
+		var parametros='que_mod=form_pres&id_ubi='+id_ubi;
 	} else {
 		id_ubi =$('#id_cdc').val();
-		var parametros='que=nuevo&id_ubi='+id_ubi;
+		var parametros='que_mod=nuevo&id_ubi='+id_ubi;
 	}
 	var parametros = parametros + '{{ h_del|raw }}';
 	fnjs_update_div('#div_modificar',url+'?'+parametros);
@@ -72,7 +72,7 @@ fnjs_ver=function(){
 	})
 	.done(function (rta_txt) {
 		if (rta_txt) {
-			$('#ficha').html(rta_txt);
+			$('#ficha2').html(rta_txt);
 		}
 	});
 	document.getElementById("overlay").style.display = "none";
@@ -82,7 +82,7 @@ fnjs_eliminar=function(id_ubi){
     seguro=confirm("{{ "¿Está seguro que quiere quitar los datos de presentación de este centro?"|trans }}");
     if (seguro) { 
         var url='{{ url_ajax }}';
-        var parametros='que=eliminar&id_ubi='+id_ubi+'{{ h_del|raw }}';
+        var parametros='que_mod=eliminar&id_ubi='+id_ubi+'{{ h_del|raw }}';
         //alert ("param "+parametros);
         $.ajax({
             url: url,
@@ -126,7 +126,7 @@ fnjs_guardar=function(formulario){
 /*
 fnjs_actualizar_dtor=function(){
 	var url='{{ url_ajax }}';
-	var parametros='que=actualizar+'{{ h_pob|raw }}';
+	var parametros='que_mod=actualizar+'{{ h_pob|raw }}';
 	//alert ("param "+parametros);
 	$.ajax({
 		url: url,
@@ -141,6 +141,7 @@ fnjs_actualizar_dtor=function(){
 }
 */
 
+fnjs_left_side_hide();
 </script>
 <form id=seleccion name=seleccion action="">
 {{ oHash.getCamposHtml|raw }}
@@ -161,6 +162,6 @@ fnjs_actualizar_dtor=function(){
 </table>
 
 </form>
-<div id='ficha'></div>
+<div id='ficha2'></div>
 <div id='div_modificar'></div>
 <div id='overlay'></div>

@@ -25,9 +25,11 @@ use function core\urlsafe_b64encode;
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
+	
 
 $oPosicion->recordar();
-
+	
+	
 $oMiUsuario = new usuarios\Usuario(ConfigGlobal::mi_id_usuario());
 $miSfsv=ConfigGlobal::mi_sfsv();
 
@@ -391,8 +393,8 @@ $aGoBack = array (
 				'metodo' => $metodo,
 				'titulo' => $titulo
 				 );
-$oPosicion->setParametros($aGoBack);
-$oPosicion->recordar();
+$oPosicion->setParametros($aGoBack,1);
+//$oPosicion->recordar();
 
 $a_botones=array(
 				array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(this.form)" )
