@@ -5,15 +5,15 @@ use cartaspresentacion\model\entity\GestorCartaPresentacion;
 use cartaspresentacion\model\entity\GestorCartaPresentacionDl;
 use core\ConfigGlobal;
 use ubis\model\entity\Centro;
+use ubis\model\entity\CentroDl;
 use ubis\model\entity\DireccionCtrDl;
 use ubis\model\entity\DireccionCtrEx;
-use ubis\model\entity\GestorCentro;
 use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorCentroEx;
 use ubis\model\entity\GestorCtrDlxDireccion;
 use ubis\model\entity\GestorCtrExxDireccion;
-use ubis\model\entity\GestorDireccion;
 use ubis\model\entity\GestorDireccionCtr;
+use ubis\model\entity\GestorDireccionCtrDl;
 use web\Desplegable;
 use web\Hash;
 use web\Lista;
@@ -249,12 +249,12 @@ switch ($Qque_mod) {
 
         $Qpoblacion_sel = (string)  \filter_input(INPUT_POST, 'poblacion_sel');
 		// listado de centros.
-		$oGesCentros = new GestorCentro();
+		$oGesCentros = new GestorCentroDl();
 		$permiso = 'modificar';
 
 		// si hay Qpoblacion, primero hay que buscar en las direcciones.
 		if (!empty($Qpoblacion_sel)) {
-			$GesDirecciones = new GestorDireccion();
+			$GesDirecciones = new GestorDireccionCtrDl();
 			$cDirecciones = $GesDirecciones->getDirecciones(array('poblacion'=>$Qpoblacion_sel),array('poblacion'=>'sin_acentos'));
 			$cDirCentros = array();
 			$txt_direccion = '';
@@ -267,7 +267,7 @@ switch ($Qque_mod) {
 				$cId_ubis = $oDireccion->getUbis();
 				$cCentros = [];
 				foreach ($cId_ubis as $oUbi) {
-				    $oCentro = new Centro($oUbi->getId_ubi());
+				    $oCentro = new CentroDl($oUbi->getId_ubi());
 				    if ($oCentro->getStatus()) {
 				        $cCentros[] = $oCentro;
 				    }
@@ -292,7 +292,7 @@ switch ($Qque_mod) {
 				$tipo_labor = $oCentro->getTipo_labor();
 				$tipo_ubi = $oCentro->getTipo_ubi();
 
-				$GesPresentacion = new GestorCartaPresentacion();
+				$GesPresentacion = new GestorCartaPresentacionDl();
 				$colPresentacion = $GesPresentacion->getCartasPresentacion(array('id_ubi'=>$id_ubi));
 				//sólo debería haber una.
 				if (empty($colPresentacion[0])) {
