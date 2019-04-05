@@ -103,11 +103,14 @@ switch ($Qque_mod) {
                         }
 			        }
 			    }
+			    ksort($aPoblaciones);
 			    $oDesplPoblaciones = new Desplegable();
 			    $oDesplPoblaciones->setOpciones($aPoblaciones);
 				break;
             default:
 			    $aPoblaciones = [];
+			    $oDesplPoblaciones = new Desplegable();
+			    $oDesplPoblaciones->setOpciones($aPoblaciones);
 			    break;
 		}
 
@@ -281,6 +284,7 @@ switch ($Qque_mod) {
 		}
 		$c = 0;
 		$a_valores = array();
+		$orden_nom = [];
 		foreach ($cDirCentros as $key=>$Cen) {
 			$txt_direccion = $Cen['dir'];
 			$cCentros = $Cen['colCentros'];
@@ -326,8 +330,11 @@ switch ($Qque_mod) {
 				}
 				//$a_valores[$c][2]="<input type=checkbox size=12 id=$id_ubi name=presentacion $chk onClick=\"fnjs_check($id_ubi)\">";
 				//$a_valores[$c][3]=$oPermActiv->cuadros_check('tipo_labor',$tipo_labor);
+				$orden_nom[$c]  = strtolower($nombre_ubi);
 			}
 		}
+		// ordenar por nombre_ubi
+		array_multisort($orden_nom,SORT_LOCALE_STRING, SORT_ASC, $a_valores);
 
 		$a_cabeceras = [];
 		$a_cabeceras[]= array('name'=>ucfirst(_("nombre")),'width'=>20,'formatter'=>'clickFormatter');
@@ -353,6 +360,7 @@ switch ($Qque_mod) {
 		$cCentros = $oGesCentros->getCentros($aWhere,$aOperador);
 		$c = 0;
 		$a_valores = array();
+		$orden_nom = [];
 		foreach ($cCentros as $oCentro) {
 			$c++;
 			$id_ubi = $oCentro->getId_ubi();
@@ -405,7 +413,11 @@ switch ($Qque_mod) {
             }
             //$a_valores[$c][2]="<input type=checkbox size=12 id=$id_ubi name=presentacion $chk onClick=\"fnjs_check($id_ubi)\">";
             //$a_valores[$c][3]=$oPermActiv->cuadros_check('tipo_labor',$tipo_labor);
+            $orden_nom[$c]  = strtolower($nombre_ubi);
         }
+		// ordenar por nombre_ubi
+		array_multisort($orden_nom,SORT_LOCALE_STRING, SORT_ASC, $a_valores);
+
 		$a_cabeceras = [];
 		$a_cabeceras[]= array('name'=>ucfirst(_("nombre")),'width'=>20,'formatter'=>'clickFormatter');
 		$a_cabeceras[]= array('name'=>ucfirst(_("centro")),'width'=>80,'formatter'=>'clickFormatter2');
