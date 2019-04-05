@@ -7,6 +7,7 @@ use core\ConfigGlobal;
 use ubis\model\entity\Centro;
 use ubis\model\entity\GestorCentro;
 use ubis\model\entity\GestorDireccionCtr;
+use ubis\model\CuadrosLabor;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -212,25 +213,31 @@ function mega_array($oPresentacion,$oCentro,$ordenar_dl) {
 					'telf' => $telf,	
 					'a_direccion' => $a_direccion);
 	//agd, n, sssc
-	$tipo = '';
-	if (($tipo_labor & 128) == 128) $tipo = 'agd';
-	if (($tipo_labor & 256) == 256) $tipo = 'numerarios';
-	if (($tipo_labor & 64) == 64) $tipo = 's';
-	if (($tipo_labor & 32) == 32) $tipo = 'sss+';
-	if ($tipo_ctr == 'dl' OR $tipo_ctr == 'cr') $tipo = 'otras r';
+	$oTipoLabor = new CuadrosLabor();
+	$aTiposLabor = $oTipoLabor->getTxtTiposLabor();
+	$aTipo = [];
+	if (($tipo_labor & 128) == 128) $aTipo[] = $aTiposLabor[128];  //'agd';
+	if (($tipo_labor & 256) == 256) $aTipo[] = $aTiposLabor[256];  //'numerarios';
+	if (($tipo_labor & 64) == 64) $aTipo[] = $aTiposLabor[64];  //'s';
+	if (($tipo_labor & 32) == 32) $aTipo[] = $aTiposLabor[32];  //'sss+';
+	if ($tipo_ctr == 'dl' OR $tipo_ctr == 'cr') $aTipo[] = 'otras r';
 	$edad = '';
-	if (($tipo_labor & 2) == 2) $edad = 'jóvenes';
-	if (($tipo_labor & 1) == 1) $edad = 'mayores';
-	if (($tipo_labor & 4) == 4) $edad = 'universitarios';
-	if (($tipo_labor & 8) == 8) $edad = 'bachilleres';
+	if (($tipo_labor & 2) == 2) { $edad .= $aTiposLabor[2]; }  //'jóvenes'
+	if (($tipo_labor & 1) == 1) { $edad .= !empty($edad)? ', ' : ''; $edad .= $aTiposLabor[1]; }  //'mayores'; }
+	if (($tipo_labor & 4) == 4) { $edad .= !empty($edad)? ', ' : ''; $edad .= $aTiposLabor[4]; }  //'universitarios'; }
+	if (($tipo_labor & 8) == 8) { $edad .= !empty($edad)? ', ' : ''; $edad .= $aTiposLabor[8]; }  //'bachilleres'; }
 	//zona
 	if (!empty($zona)) $edad .= "<br>$zona";
 
 	$poblacion .= empty($pais)? '' :  '<br>('.$pais.')';
 	if ($ordenar_dl == 1) {
-		$a_mega[$tipo][$dl][$poblacion][$edad]= datos_a_celdas($a_texto);
+	    foreach($aTipo as $tipo) {
+            $a_mega[$tipo][$dl][$poblacion][$edad]= datos_a_celdas($a_texto);
+	    }
 	} else {
-		$a_mega[$tipo][$poblacion][$edad]= datos_a_celdas($a_texto);
+	    foreach($aTipo as $tipo) {
+            $a_mega[$tipo][$poblacion][$edad]= datos_a_celdas($a_texto);
+	    }
 	}
 	return $a_mega;
 }

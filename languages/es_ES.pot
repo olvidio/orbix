@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2019-03-18 14:04+0100\n"
+"POT-Creation-Date: 2019-04-05 12:50+0200\n"
 "PO-Revision-Date: 2018-06-08 09:00+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -20,9 +20,9 @@ msgstr ""
 #: actividadcargos/controller/update_3102.php:79
 #: actividadcargos/controller/update_3102.php:126
 #: actividadcargos/controller/update_3102.php:246
-#: actividades/controller/actividad_tarifa_ajax.php:191
-#: actividades/controller/actividad_update.php:53
-#: actividades/controller/calendario_ajax.php:401
+#: actividades/controller/actividad_tarifa_ajax.php:194
+#: actividades/controller/actividad_update.php:56
+#: actividades/controller/calendario_ajax.php:399
 #: actividadestudios/controller/matricular.php:118
 #: asistentes/controller/update_3101.php:85
 #: asistentes/controller/update_3101.php:97 core/datosupdate.class.php:22
@@ -39,7 +39,7 @@ msgstr ""
 #: procesos/controller/procesos_ajax.php:138
 #: ubis/controller/calendario_periodos_ajax.php:224
 #: ubis/controller/direcciones_quitar.php:48
-#: ubis/controller/teleco_update.php:54 ubis/controller/ubis_update.php:28
+#: ubis/controller/teleco_update.php:54 ubis/controller/ubis_update.php:29
 #: usuarios/controller/role_update.php:25
 #: usuarios/controller/usuario_ajax.php:134
 #: usuarios/controller/usuario_ajax.php:149
@@ -62,25 +62,27 @@ msgstr ""
 #: actividadcargos/controller/update_3102.php:222
 #: actividadcargos/controller/update_3102.php:232
 #: actividades/controller/actividad_proceso_ajax.php:84
-#: actividades/controller/actividad_tarifa_ajax.php:182
-#: actividades/controller/actividad_tarifa_ajax.php:211
-#: actividades/controller/actividad_tarifa_ajax.php:317
+#: actividades/controller/actividad_tarifa_ajax.php:185
+#: actividades/controller/actividad_tarifa_ajax.php:214
+#: actividades/controller/actividad_tarifa_ajax.php:320
 #: actividades/controller/actividad_tarifa_tipo_ajax.php:93
-#: actividades/controller/actividad_update.php:58
-#: actividades/controller/actividad_update.php:69
-#: actividades/controller/actividad_update.php:88
-#: actividades/controller/actividad_update.php:185
-#: actividades/controller/actividad_update.php:213
-#: actividades/controller/actividad_update.php:302
-#: actividades/controller/actividad_update.php:367
-#: actividades/controller/calendario_ajax.php:392
-#: actividades/controller/calendario_ajax.php:421
-#: actividades/controller/calendario_ajax.php:483
+#: actividades/controller/actividad_update.php:61
+#: actividades/controller/actividad_update.php:72
+#: actividades/controller/actividad_update.php:91
+#: actividades/controller/actividad_update.php:194
+#: actividades/controller/actividad_update.php:221
+#: actividades/controller/actividad_update.php:243
+#: actividades/controller/actividad_update.php:333
+#: actividades/controller/actividad_update.php:399
+#: actividades/controller/actividad_update.php:442
+#: actividades/controller/calendario_ajax.php:390
+#: actividades/controller/calendario_ajax.php:419
+#: actividades/controller/calendario_ajax.php:481
 #: actividades/model/actividadnuevocurso.class.php:205
-#: actividadescentro/controller/activ_ctr_ajax.php:34
-#: actividadescentro/controller/activ_ctr_ajax.php:38
-#: actividadescentro/controller/activ_ctr_ajax.php:49
-#: actividadescentro/controller/activ_ctr_ajax.php:53
+#: actividadescentro/controller/activ_ctr_ajax.php:35
+#: actividadescentro/controller/activ_ctr_ajax.php:39
+#: actividadescentro/controller/activ_ctr_ajax.php:50
+#: actividadescentro/controller/activ_ctr_ajax.php:54
 #: actividadessacd/controller/activ_sacd_ajax.php:68
 #: actividadessacd/controller/activ_sacd_ajax.php:72
 #: actividadessacd/controller/activ_sacd_ajax.php:83
@@ -145,7 +147,7 @@ msgstr ""
 #: procesos/controller/tipos_activ_ajax.php:101
 #: ubis/controller/calendario_periodos_ajax.php:216
 #: ubis/controller/direcciones_asignar.php:42
-#: ubis/controller/ubis_update.php:141
+#: ubis/controller/ubis_update.php:149
 #: usuarios/controller/personal_update.php:35
 #: usuarios/controller/personal_update.php:46
 #: usuarios/controller/personal_update.php:56
@@ -188,8 +190,8 @@ msgstr ""
 #: actividadcargos/model/entity/actividadcargo.class.php:458
 #: actividadcargos/model/select1302.class.php:82
 #: actividadcargos/model/select3102.class.php:77
-#: actividadcargos/view/form_1302.phtml:53
-#: actividadcargos/view/form_3102.phtml:47
+#: actividadcargos/view/form_1302.phtml:52
+#: actividadcargos/view/form_3102.phtml:46
 msgid "¿puede ser agd?"
 msgstr ""
 
@@ -198,11 +200,13 @@ msgstr ""
 #: actividadcargos/model/select3102.class.php:78
 #: actividades/controller/actividad_proceso_ajax.php:32
 #: actividades/controller/actividad_select.php:277
-#: actividades/controller/actividad_tarifa_ajax.php:292
-#: actividades/controller/calendario_ajax.php:458
-#: actividades/model/entity/actividadall.class.php:1243
+#: actividades/controller/actividad_tarifa_ajax.php:295
+#: actividades/controller/calendario_ajax.php:456
+#: actividades/model/entity/actividadall.class.php:1245
 #: actividades/model/entity/tipotarifa.class.php:412
 #: asistentes/model/entity/asistentepub.class.php:829
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:173
+#: cartaspresentacion/model/entity/cartapresentacion.class.php:452
 #: encargossacd/controller/sacd_ficha_ajax.php:408
 #: notas/model/entity/acta.class.php:634
 #: personas/model/entity/personaglobal.class.php:1214
@@ -215,15 +219,15 @@ msgstr ""
 #: ubis/model/entity/centrodl.class.php:543
 #: ubis/model/entity/direccionglobal.class.php:726
 #: ubis/model/entity/telecoubiglobal.class.php:271
-#: actividadcargos/view/form_1302.phtml:55
-#: actividadcargos/view/form_3102.phtml:49
-#: actividades/view/actividad_form.phtml:212
+#: actividadcargos/view/form_1302.phtml:54
+#: actividadcargos/view/form_3102.phtml:48
+#: actividades/view/actividad_form.phtml:211
 #: actividadestudios/view/ca_posibles_cuadro.phtml:86
 #: actividadestudios/view/selectUnCa.phtml:14
-#: asistentes/view/form_1301.phtml:72 asistentes/view/form_3101.phtml:107
+#: asistentes/view/form_1301.phtml:69 asistentes/view/form_3101.phtml:103
 #: asistentes/view/form_mover.phtml:8 asistentes/view/lista_asistentes.phtml:17
-#: notas/view/acta_ver.phtml:105 ubis/view/ctrdl_form.phtml:94
-#: ubis/view/teleco_form.phtml:43
+#: notas/view/acta_ver.phtml:103 ubis/view/ctrdl_form.phtml:92
+#: ubis/view/teleco_form.phtml:42
 #: actividades/view/_actividad_form_body.html.twig:62
 #: encargossacd/view/ctr_get_ficha.html.twig:77
 msgid "observaciones"
@@ -232,8 +236,8 @@ msgstr ""
 #: actividadcargos/model/entity/cargo.class.php:409
 #: actividadcargos/model/select1302.class.php:80
 #: actividadcargos/model/select3102.class.php:75
-#: actividadcargos/view/form_1302.phtml:50
-#: actividadcargos/view/form_3102.phtml:44
+#: actividadcargos/view/form_1302.phtml:49
+#: actividadcargos/view/form_3102.phtml:43
 msgid "cargo"
 msgstr ""
 
@@ -242,30 +246,30 @@ msgid "orden cargo"
 msgstr ""
 
 #: actividadcargos/model/entity/cargo.class.php:433
-#: actividades/controller/actividad_tarifa_ajax.php:71
-#: actividades/controller/actividad_tarifa_ajax.php:217
+#: actividades/controller/actividad_tarifa_ajax.php:74
+#: actividades/controller/actividad_tarifa_ajax.php:220
 #: procesos/model/entity/actividadfase.class.php:363
 #: ubis/controller/calendario_periodos_ajax.php:41
 #: ubis/controller/calendario_periodos_ajax.php:75
 #: ubis/controller/calendario_periodos_ajax.php:192
 #: ubis/controller/centros_ajax.php:30
 #: ubis/model/entity/ubiglobal.class.php:561
-#: usuarios/model/entity/role.class.php:381 devel/view/db_que.phtml:54
-#: ubis/view/cdc_form.phtml:86 usuarios/view/role_form.phtml:77
+#: usuarios/model/entity/role.class.php:381 devel/view/db_que.phtml:53
+#: ubis/view/cdc_form.phtml:84 usuarios/view/role_form.phtml:75
 msgid "sf"
 msgstr ""
 
 #: actividadcargos/model/entity/cargo.class.php:445
-#: actividades/controller/actividad_tarifa_ajax.php:71
-#: actividades/controller/actividad_tarifa_ajax.php:217
+#: actividades/controller/actividad_tarifa_ajax.php:74
+#: actividades/controller/actividad_tarifa_ajax.php:220
 #: procesos/model/entity/actividadfase.class.php:376
 #: ubis/controller/calendario_periodos_ajax.php:40
 #: ubis/controller/calendario_periodos_ajax.php:74
 #: ubis/controller/calendario_periodos_ajax.php:191
 #: ubis/controller/centros_ajax.php:29
 #: ubis/model/entity/ubiglobal.class.php:549
-#: usuarios/model/entity/role.class.php:393 devel/view/db_que.phtml:51
-#: ubis/view/cdc_form.phtml:85 usuarios/view/role_form.phtml:78
+#: usuarios/model/entity/role.class.php:393 devel/view/db_que.phtml:50
+#: ubis/view/cdc_form.phtml:83 usuarios/view/role_form.phtml:76
 msgid "sv"
 msgstr ""
 
@@ -287,19 +291,19 @@ msgstr ""
 
 #: actividadcargos/model/select1302.class.php:81
 #: actividades/controller/actividad_select.php:264
-#: actividadescentro/controller/activ_ctr_ajax.php:354
+#: actividadescentro/controller/activ_ctr_ajax.php:342
 #: actividadessacd/controller/activ_sacd_ajax.php:329
 #: actividadestudios/controller/matriculas_lista.php:87
 #: actividadestudios/controller/matriculas_pendientes.php:54
 #: actividadplazas/controller/gestion_plazas.php:189
 #: actividadplazas/controller/plazas_balance_dl.php:179
 #: asistentes/controller/lista_est_ctr.php:216
-#: cambios/model/gestorcanvis.class.php:24
+#: cambios/model/gestorcanvis.class.php:24 notas/controller/notas_ajax.php:133
 #: profesores/model/entity/profesordocenciastgr.class.php:451
-#: actividadcargos/view/form_1302.phtml:33
-#: actividades/view/actividad_form.phtml:150
-#: actividadestudios/view/form_1303.phtml:89
-#: asistentes/view/activ_pendientes.phtml:14 asistentes/view/form_1301.phtml:56
+#: actividadcargos/view/form_1302.phtml:32
+#: actividades/view/actividad_form.phtml:149
+#: actividadestudios/view/form_1303.phtml:84
+#: asistentes/view/activ_pendientes.phtml:14 asistentes/view/form_1301.phtml:53
 #: actividades/view/_actividad_form_head.html.twig:33
 #: actividades/view/_actividad_tipo_body.html.twig:12
 msgid "actividad"
@@ -307,7 +311,7 @@ msgstr ""
 
 #: actividadcargos/model/select1302.class.php:117
 #: actividadcargos/model/select3102.class.php:138
-#: asistentes/view/select3101.phtml:165
+#: asistentes/view/select3101.phtml:164
 msgid "¿Está seguro que desea quitar este cargo a esta persona?"
 msgstr ""
 
@@ -320,9 +324,9 @@ msgstr ""
 #: actividadestudios/controller/e43_imprimir_mpdf.php:81
 #: asistentes/controller/planning_select.php:200
 #: asistentes/model/select3101.class.php:152
-#: notas/controller/asig_faltan_personas_select.php:112
-#: notas/controller/asig_faltan_select.php:96
-#: personas/controller/personas_select.php:311
+#: notas/controller/asig_faltan_personas_select.php:118
+#: notas/controller/asig_faltan_select.php:115
+#: personas/controller/personas_select.php:313
 #: actividadestudios/view/e43.phtml:21
 msgid "nombre y apellidos"
 msgstr ""
@@ -390,18 +394,18 @@ msgstr ""
 #: actividades/controller/actividad_proceso.php:33
 #: actividades/controller/actividad_ver.php:55
 #: dossiers/controller/dossiers_ver.php:187
-#: personas/controller/personas_select.php:227
-#: ubis/controller/home_ubis.php:128 personas/view/home_persona.phtml:7
-#: personas/view/persona_de_paso.phtml:67 personas/view/persona_form.phtml:76
-#: personas/view/traslado_form.phtml:52
+#: personas/controller/personas_select.php:229
+#: ubis/controller/home_ubis.php:134 personas/view/home_persona.phtml:7
+#: personas/view/persona_de_paso.phtml:65 personas/view/persona_form.phtml:74
+#: personas/view/traslado_form.phtml:51
 msgid "ver dossiers"
 msgstr ""
 
 #: actividades/controller/actividad_proceso.php:34
 #: actividades/controller/actividad_ver.php:56
-#: dossiers/controller/dossiers_ver.php:188 ubis/controller/home_ubis.php:129
-#: personas/view/home_persona.phtml:7 personas/view/persona_de_paso.phtml:67
-#: personas/view/persona_form.phtml:76 personas/view/traslado_form.phtml:52
+#: dossiers/controller/dossiers_ver.php:188 ubis/controller/home_ubis.php:135
+#: personas/view/home_persona.phtml:7 personas/view/persona_de_paso.phtml:65
+#: personas/view/persona_form.phtml:74 personas/view/traslado_form.phtml:51
 msgid "dossiers"
 msgstr ""
 
@@ -424,38 +428,41 @@ msgid "responsable"
 msgstr ""
 
 #: actividades/controller/actividad_proceso_ajax.php:67
-#: actividades/controller/actividad_tarifa_ajax.php:61
-#: actividades/controller/actividad_tarifa_ajax.php:294
-#: actividades/controller/calendario_ajax.php:460
-#: cartaspresentacion/controller/cartas_presentacion_ajax.php:125
-#: core/mod_tabla_form.php:174 devel/controller/metamenus_get.php:45
+#: actividades/controller/actividad_tarifa_ajax.php:63
+#: actividades/controller/actividad_tarifa_ajax.php:297
+#: actividades/controller/calendario_ajax.php:458
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:175
+#: core/mod_tabla_form.php:172 devel/controller/metamenus_get.php:45
 #: encargossacd/controller/sacd_ficha_ajax.php:412
+#: notas/controller/notas_ajax.php:138
 #: procesos/controller/tipos_activ_ajax.php:81
 #: procesos/controller/usuario_perm_activ_ajax.php:161
 #: ubis/controller/calendario_periodos_ajax.php:44
 #: ubis/controller/calendario_periodos_ajax.php:78
 #: ubis/controller/centros_ajax.php:33 ubis/controller/centros_ajax.php:65
 #: ubis/controller/centros_ajax.php:95 ubis/controller/centros_ajax.php:129
-#: actividades/view/actividad_tarifa_tipo_form.phtml:82
-#: actividades/view/actividad_tarifa_tipo_form_nuevo.phtml:85
-#: actividadestudios/view/form_1303.phtml:117
-#: actividadestudios/view/form_3005.phtml:112
+#: actividades/view/actividad_tarifa_tipo_form.phtml:81
+#: actividades/view/actividad_tarifa_tipo_form_nuevo.phtml:84
+#: actividadestudios/view/form_1303.phtml:112
+#: actividadestudios/view/form_3005.phtml:110
 #: actividadplazas/view/resumen_plazas.phtml:116
-#: asistentes/view/form_1301.phtml:89 asistentes/view/form_mover.phtml:12
-#: menus/view/menus_get.phtml:39 notas/view/form_1011.phtml:196
-#: personas/view/stgr_cambio.phtml:10 usuarios/view/usuario_perm_menu.phtml:39
+#: asistentes/view/form_1301.phtml:86 asistentes/view/form_mover.phtml:12
+#: menus/view/menus_get.phtml:38 notas/view/form_1011.phtml:303
+#: personas/view/stgr_cambio.phtml:10 usuarios/view/usuario_perm_menu.phtml:38
+#: actividadessacd/view/com_sacd_txt.html.twig:52
 #: encargossacd/view/ctr_get_ficha.html.twig:102
-#: encargossacd/view/listas_com_txt.html.twig:53
-#: encargossacd/view/sacd_ausencias_get.html.twig:90
-#: procesos/view/procesos_ver.html.twig:41
-#: procesos/view/usuario_perm_activ.html.twig:105
+#: encargossacd/view/listas_com_txt.html.twig:51
+#: encargossacd/view/sacd_ausencias_get.html.twig:89
+#: procesos/view/procesos_ver.html.twig:39
+#: procesos/view/usuario_perm_activ.html.twig:100
 msgid "guardar"
 msgstr ""
 
 #: actividades/controller/actividad_que.php:94
 #: actividades/controller/calendario_que.php:39
 #: actividadescentro/controller/activ_ctr.php:33
-#: actividadessacd/controller/activ_sacd.php:36
+#: actividadessacd/controller/activ_sacd.php:38
+#: actividadessacd/controller/com_sacd_activ_periodo.php:30
 #: actividadestudios/controller/actualizar_docencia.php:31
 #: actividadestudios/controller/ca_posibles_que.php:119
 #: actividadestudios/controller/matriculas_lista.php:187
@@ -470,7 +477,8 @@ msgstr ""
 #: actividades/controller/actividad_que.php:95
 #: actividades/controller/calendario_que.php:40
 #: actividadescentro/controller/activ_ctr.php:34
-#: actividadessacd/controller/activ_sacd.php:37
+#: actividadessacd/controller/activ_sacd.php:39
+#: actividadessacd/controller/com_sacd_activ_periodo.php:31
 #: actividadestudios/controller/actualizar_docencia.php:32
 #: actividadestudios/controller/ca_posibles_que.php:120
 #: actividadestudios/controller/matriculas_lista.php:188
@@ -484,7 +492,8 @@ msgstr ""
 #: actividades/controller/actividad_que.php:96
 #: actividades/controller/calendario_que.php:41
 #: actividadescentro/controller/activ_ctr.php:35
-#: actividadessacd/controller/activ_sacd.php:38
+#: actividadessacd/controller/activ_sacd.php:40
+#: actividadessacd/controller/com_sacd_activ_periodo.php:32
 #: actividadestudios/controller/actualizar_docencia.php:33
 #: actividadestudios/controller/ca_posibles_que.php:121
 #: actividadestudios/controller/matriculas_lista.php:189
@@ -498,7 +507,8 @@ msgstr ""
 #: actividades/controller/actividad_que.php:97
 #: actividades/controller/calendario_que.php:42
 #: actividadescentro/controller/activ_ctr.php:36
-#: actividadessacd/controller/activ_sacd.php:39
+#: actividadessacd/controller/activ_sacd.php:41
+#: actividadessacd/controller/com_sacd_activ_periodo.php:33
 #: actividadestudios/controller/actualizar_docencia.php:34
 #: actividadestudios/controller/ca_posibles_que.php:122
 #: actividadestudios/controller/matriculas_lista.php:190
@@ -512,7 +522,8 @@ msgstr ""
 #: actividades/controller/actividad_que.php:98
 #: actividades/controller/calendario_que.php:43
 #: actividadescentro/controller/activ_ctr.php:37
-#: actividadessacd/controller/activ_sacd.php:40
+#: actividadessacd/controller/activ_sacd.php:42
+#: actividadessacd/controller/com_sacd_activ_periodo.php:34
 #: actividadestudios/controller/actualizar_docencia.php:35
 #: actividadestudios/controller/ca_posibles_que.php:123
 #: actividadestudios/controller/matriculas_lista.php:191
@@ -541,7 +552,8 @@ msgstr ""
 #: actividades/controller/actividad_que.php:103
 #: actividades/controller/calendario_que.php:45
 #: actividadescentro/controller/activ_ctr.php:39
-#: actividadessacd/controller/activ_sacd.php:42
+#: actividadessacd/controller/activ_sacd.php:44
+#: actividadessacd/controller/com_sacd_activ_periodo.php:36
 #: actividadestudios/controller/actualizar_docencia.php:39
 #: actividadestudios/controller/ca_posibles_que.php:125
 #: actividadestudios/controller/matriculas_lista.php:195
@@ -584,7 +596,7 @@ msgstr ""
 #: actividades/controller/actividad_select.php:247
 #: asignaturas/model/infoasignaturas.class.php:9
 #: asistentes/controller/lista_est_ctr.php:217
-#: notas/controller/asig_faltan_select.php:96
+#: notas/controller/asig_faltan_select.php:115
 #: menus/view/traducir_menu.phtml:273
 #: profesores/view/ficha_profesor_stgr.print.phtml:67
 msgid "asignaturas"
@@ -600,11 +612,11 @@ msgstr ""
 #: usuarios/controller/grupo_lista.php:67 usuarios/controller/role_lista.php:52
 #: usuarios/controller/usuario_lista.php:77
 #: actividadplazas/view/peticiones_activ.phtml:64
-#: asistentes/view/que_ctr_lista.phtml:71 notas/view/asig_faltan_que.phtml:8
-#: notas/view/asig_faltan_que.phtml:40 personas/view/personas_que.phtml:13
+#: asistentes/view/que_ctr_lista.phtml:71 notas/view/asig_faltan_que.phtml:11
+#: notas/view/asig_faltan_que.phtml:43 personas/view/personas_que.phtml:13
 #: ubis/view/direcciones_que.phtml:10
-#: actividadescentro/view/activ_ctr.html.twig:119
-#: actividadessacd/view/activ_sacd.html.twig:126
+#: actividadescentro/view/activ_ctr.html.twig:113
+#: actividadessacd/view/activ_sacd.html.twig:122
 msgid "borrar"
 msgstr ""
 
@@ -617,7 +629,7 @@ msgid "lista cl"
 msgstr ""
 
 #: actividades/controller/actividad_select.php:234
-#: actividades/view/actividad_form.phtml:147
+#: actividades/view/actividad_form.phtml:146
 #: actividadestudios/view/plan_estudios_ca.phtml:25
 #: actividades/view/_actividad_form_head.html.twig:30
 #: actividades/view/_actividad_tipo_body.html.twig:8
@@ -629,26 +641,26 @@ msgid "lista"
 msgstr ""
 
 #: actividades/controller/actividad_select.php:239
-#: actividades/model/entity/actividadall.class.php:1339
+#: actividades/model/entity/actividadall.class.php:1341
 #: actividadplazas/model/entity/actividadplazas.class.php:415
 #: ubis/controller/centros_ajax.php:124 ubis/controller/centros_ajax.php:276
 #: ubis/model/entity/casa.class.php:407
 #: ubis/model/entity/centrodl.class.php:567
-#: actividadplazas/view/resumen_plazas.phtml:41 ubis/view/cdc_form.phtml:79
-#: ubis/view/ctrdl_form.phtml:87
+#: actividadplazas/view/resumen_plazas.phtml:41 ubis/view/cdc_form.phtml:77
+#: ubis/view/ctrdl_form.phtml:85
 msgid "plazas"
 msgstr ""
 
 #: actividades/controller/actividad_select.php:242
 #: procesos/controller/tipos_activ_ajax.php:39
 #: procesos/controller/tipos_activ_ajax.php:79
-#: procesos/view/procesos_select.html.twig:118
+#: procesos/view/procesos_select.html.twig:115
 msgid "proceso"
 msgstr ""
 
 #: actividades/controller/actividad_select.php:252
 #: asistentes/model/select3101.class.php:139
-#: personas/controller/personas_select.php:276
+#: personas/controller/personas_select.php:278
 msgid "plan estudios"
 msgstr ""
 
@@ -659,16 +671,16 @@ msgstr ""
 #: actividades/controller/actividad_select.php:262
 #: actividadestudios/model/select3005.class.php:79
 #: profesores/view/ficha_profesor_stgr.print.phtml:80
-#: encargossacd/view/sacd_ausencias_get.html.twig:44
-#: encargossacd/view/sacd_ausencias_get.html.twig:75
+#: encargossacd/view/sacd_ausencias_get.html.twig:43
+#: encargossacd/view/sacd_ausencias_get.html.twig:74
 msgid "inicio"
 msgstr ""
 
 #: actividades/controller/actividad_select.php:263
 #: actividadestudios/model/select3005.class.php:80
 #: profesores/view/ficha_profesor_stgr.print.phtml:80
-#: encargossacd/view/sacd_ausencias_get.html.twig:45
-#: encargossacd/view/sacd_ausencias_get.html.twig:76
+#: encargossacd/view/sacd_ausencias_get.html.twig:44
+#: encargossacd/view/sacd_ausencias_get.html.twig:75
 msgid "fin"
 msgstr ""
 
@@ -678,17 +690,17 @@ msgid "hora ini"
 msgstr ""
 
 #: actividades/controller/actividad_select.php:266
-#: actividades/model/entity/actividadall.class.php:1171
+#: actividades/model/entity/actividadall.class.php:1173
 #: encargossacd/controller/encargo_horario_select.php:53
 #: encargossacd/controller/horario_sacd_ver.php:207
-#: actividades/view/actividad_form.phtml:184
+#: actividades/view/actividad_form.phtml:183
 #: actividades/view/_actividad_form_body.html.twig:36
-#: encargossacd/view/horario_ver.html.twig:91
+#: encargossacd/view/horario_ver.html.twig:90
 msgid "hora fin"
 msgstr ""
 
 #: actividades/controller/actividad_select.php:269
-#: actividades/view/actividad_form.phtml:144
+#: actividades/view/actividad_form.phtml:143
 #: actividades/view/_actividad_form_head.html.twig:27
 #: actividades/view/_actividad_tipo_body.html.twig:3
 msgid "sf/sv"
@@ -707,9 +719,9 @@ msgstr ""
 #: zonassacd/controller/zona_sacd_ajax.php:162
 #: menus/view/traducir_menu.phtml:151
 #: profesores/view/ficha_profesor_stgr.print.phtml:41
-#: usuarios/view/usuario_form.phtml:190
-#: encargossacd/view/sacd_ausencias.html.twig:63
-#: encargossacd/view/sacd_ficha.html.twig:69
+#: usuarios/view/usuario_form.phtml:185
+#: encargossacd/view/sacd_ausencias.html.twig:60
+#: encargossacd/view/sacd_ficha.html.twig:66
 msgid "sacd"
 msgstr ""
 
@@ -719,35 +731,35 @@ msgid "dl org"
 msgstr ""
 
 #: actividades/controller/actividad_select.php:276
-#: actividadescentro/controller/activ_ctr_ajax.php:156
-#: actividadescentro/controller/activ_ctr_ajax.php:173
-#: actividadescentro/controller/activ_ctr_ajax.php:190
-#: actividadescentro/controller/activ_ctr_ajax.php:207
-#: actividadescentro/controller/activ_ctr_ajax.php:228
-#: actividadescentro/controller/activ_ctr_ajax.php:245
-#: actividadescentro/controller/activ_ctr_ajax.php:262
+#: actividadescentro/controller/activ_ctr_ajax.php:144
+#: actividadescentro/controller/activ_ctr_ajax.php:161
+#: actividadescentro/controller/activ_ctr_ajax.php:178
+#: actividadescentro/controller/activ_ctr_ajax.php:195
+#: actividadescentro/controller/activ_ctr_ajax.php:216
+#: actividadescentro/controller/activ_ctr_ajax.php:233
+#: actividadescentro/controller/activ_ctr_ajax.php:250
 #: actividadescentro/model/entity/centroencargado.class.php:341
 #: asistentes/controller/planning_select.php:201
-#: cartaspresentacion/controller/cartas_presentacion_ajax.php:115
-#: cartaspresentacion/controller/cartas_presentacion_ajax.php:258
-#: cartaspresentacion/controller/cartas_presentacion_ajax.php:336
-#: notas/controller/asig_faltan_personas_select.php:112
-#: notas/controller/asig_faltan_select.php:96
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:163
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:334
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:411
+#: notas/controller/asig_faltan_personas_select.php:118
+#: notas/controller/asig_faltan_select.php:115
 #: notas/controller/asignaturas_pendientes.php:39
 #: notas/controller/asignaturas_pendientes_resumen.php:79
-#: personas/controller/personas_select.php:318
-#: profesores/controller/profesor_asignatura_ajax.php:28
+#: personas/controller/personas_select.php:320
+#: profesores/controller/profesor_asignatura_ajax.php:30
 #: ubis/controller/centros_ajax.php:58 ubis/controller/centros_ajax.php:88
 #: ubis/controller/centros_ajax.php:121 ubis/controller/centros_ajax.php:195
 #: ubis/controller/centros_ajax.php:235 ubis/controller/centros_ajax.php:273
-#: ubis/controller/home_ubis.php:91 ubis/controller/home_ubis.php:97
-#: ubis/controller/list_ctr.php:188 zonassacd/controller/zona_ctr_ajax.php:79
+#: ubis/controller/home_ubis.php:97 ubis/controller/home_ubis.php:103
+#: ubis/controller/list_ctr.php:243 zonassacd/controller/zona_ctr_ajax.php:79
 #: actividadestudios/view/ca_posibles_que.phtml:55
 #: actividadestudios/view/ca_posibles_que.phtml:70
 #: asistentes/view/planning_ctr_que.phtml:33
 #: asistentes/view/planning_persona_que.phtml:42
-#: personas/view/personas_que.phtml:27 personas/view/traslado_form.phtml:70
-#: ubis/view/ubis_buscar.phtml:147 usuarios/view/usuario_form.phtml:200
+#: personas/view/personas_que.phtml:27 personas/view/traslado_form.phtml:69
+#: ubis/view/ubis_buscar.phtml:147 usuarios/view/usuario_form.phtml:195
 msgid "centro"
 msgstr ""
 
@@ -758,7 +770,7 @@ msgstr ""
 
 #: actividades/controller/actividad_select.php:303
 #: cambios/model/gestorcanvis.class.php:94 core/gestorerrores.class.php:73
-#: menus/controller/menus_importar.php:38
+#: menus/controller/menus_importar.php:40
 msgid "continuar"
 msgstr ""
 
@@ -793,156 +805,38 @@ msgstr ""
 msgid "nueva"
 msgstr ""
 
-#: actividades/controller/actividad_tarifa_ajax.php:50
+#: actividades/controller/actividad_tarifa_ajax.php:51
 #, php-format
 msgid "tarifa %s"
 msgstr ""
 
-#: actividades/controller/actividad_tarifa_ajax.php:56
-#: actividades/controller/actividad_tarifa_ajax.php:287
+#: actividades/controller/actividad_tarifa_ajax.php:57
+#: actividades/controller/actividad_tarifa_ajax.php:290
 #: actividades/controller/actividad_tarifa_tipo_ajax.php:67
-#: actividades/controller/calendario_ajax.php:453
-#: actividades/model/entity/actividadall.class.php:1291
+#: actividades/controller/calendario_ajax.php:451
+#: actividades/model/entity/actividadall.class.php:1293
 #: actividades/model/entity/tipoactivtarifa.class.php:384
-#: actividades/view/actividad_form.phtml:205
-#: actividades/view/actividad_tarifa_tipo_form.phtml:76
-#: actividades/view/actividad_tarifa_tipo_form_nuevo.phtml:79
+#: actividades/view/actividad_form.phtml:204
+#: actividades/view/actividad_tarifa_tipo_form.phtml:75
+#: actividades/view/actividad_tarifa_tipo_form_nuevo.phtml:78
 #: actividades/view/_actividad_form_body.html.twig:55
 msgid "tarifa"
 msgstr ""
 
-#: actividades/controller/actividad_tarifa_ajax.php:60
+#: actividades/controller/actividad_tarifa_ajax.php:61
 msgid "nuevo importe"
 msgstr ""
 
-#: actividades/controller/actividad_tarifa_ajax.php:60
-#: actividades/controller/actividad_tarifa_ajax.php:98
-#: actividades/view/actividad_form.phtml:209
+#: actividades/controller/actividad_tarifa_ajax.php:61
+#: actividades/controller/actividad_tarifa_ajax.php:101
+#: actividades/view/actividad_form.phtml:208
 #: actividades/view/_actividad_form_body.html.twig:59
 msgid "€"
 msgstr ""
 
-#: actividades/controller/actividad_tarifa_ajax.php:62
-#: actividades/controller/actividad_tarifa_ajax.php:296
-#: actividades/controller/calendario_ajax.php:462
-#: cartaspresentacion/controller/cartas_presentacion_ajax.php:126
-#: procesos/controller/tipos_activ_ajax.php:82
-#: procesos/controller/usuario_perm_activ_ajax.php:163
-#: ubis/controller/calendario_periodos_ajax.php:45
-#: ubis/controller/calendario_periodos_ajax.php:80
-#: ubis/controller/centros_ajax.php:34 ubis/controller/centros_ajax.php:66
-#: ubis/controller/centros_ajax.php:96 ubis/controller/centros_ajax.php:130
-#: actividades/view/actividad_tarifa_tipo_form.phtml:84
-#: actividades/view/actividad_tarifa_tipo_form_nuevo.phtml:86
-#: actividades/view/_calendario_form_botones.html.twig:3
-#: procesos/view/procesos_ver.html.twig:42
-msgid "cancel"
-msgstr ""
-
-#: actividades/controller/actividad_tarifa_ajax.php:81
-#: actividades/controller/actividad_tarifa_ajax.php:225
-#: encargossacd/controller/encargo_select.php:90
-msgid "sección"
-msgstr ""
-
-#: actividades/controller/actividad_tarifa_ajax.php:82
-#: actividades/controller/actividad_tarifa_ajax.php:224
-msgid "id_tarifa"
-msgstr ""
-
-#: actividades/controller/actividad_tarifa_ajax.php:83
-msgid "se aplica a"
-msgstr ""
-
-#: actividades/controller/actividad_tarifa_ajax.php:84
-msgid "minimo"
-msgstr ""
-
-#: actividades/controller/actividad_tarifa_ajax.php:85
-#: actividades/model/entity/actividadall.class.php:1195
-#: actividades/view/actividad_form.phtml:207
-#: actividades/view/_actividad_form_body.html.twig:57
-msgid "precio"
-msgstr ""
-
-#: actividades/controller/actividad_tarifa_ajax.php:86
-msgid "método"
-msgstr ""
-
-#: actividades/controller/actividad_tarifa_ajax.php:158
-msgid "añadir tarifa"
-msgstr ""
-
-#: actividades/controller/actividad_tarifa_ajax.php:195
-#: actividades/controller/calendario_ajax.php:405
-#: actividadescentro/controller/activ_ctr_ajax.php:80
-#: actividadessacd/controller/activ_sacd_ajax.php:122
-#: ubis/controller/calendario_periodos_ajax.php:227
-msgid "no sé cuál he de borar"
-msgstr ""
-
-#: actividades/controller/actividad_tarifa_ajax.php:218
-#: actividades/controller/actividad_tarifa_ajax.php:272
-#: actividades/controller/actividad_tarifa_tipo_ajax.php:55
-#: actividades/controller/calendario_ajax.php:438
-msgid "por dia"
-msgstr ""
-
-#: actividades/controller/actividad_tarifa_ajax.php:218
-#: actividades/controller/actividad_tarifa_ajax.php:272
-#: actividades/controller/actividad_tarifa_tipo_ajax.php:55
-#: actividades/controller/calendario_ajax.php:438
-#: actividades/model/entity/tipotarifa.class.php:279
-#: actividadplazas/controller/gestion_plazas.php:191
-#: actividadplazas/view/resumen_plazas.phtml:42
-msgid "total"
-msgstr ""
-
-#: actividades/controller/actividad_tarifa_ajax.php:226
-#: actividades/controller/actividad_tarifa_ajax.php:288
-#: actividades/controller/calendario_ajax.php:454
-#: actividades/model/entity/tipotarifa.class.php:388
-msgid "letra"
-msgstr ""
-
-#: actividades/controller/actividad_tarifa_ajax.php:227
-#: actividades/controller/actividad_tarifa_ajax.php:290
-#: actividades/controller/calendario_ajax.php:456
-#: actividades/model/entity/tipotarifa.class.php:376
-#: encargossacd/model/entity/encargosacd.class.php:447
-#: profesores/view/ficha_profesor_stgr.print.phtml:93
-msgid "modo"
-msgstr ""
-
-#: actividades/controller/actividad_tarifa_ajax.php:228
-#: encargossacd/model/entity/encargo.class.php:576
-#: encargossacd/model/entity/encargosacdobserv.class.php:329
-#: procesos/model/entity/actividadprocesotarea.class.php:588
-#: ubis/model/entity/tarifa.class.php:439
-msgid "observ"
-msgstr ""
-
-#: actividades/controller/actividad_tarifa_ajax.php:247
-#: actividades/controller/actividad_tarifa_tipo_ajax.php:63
-#: actividadestudios/model/select1303.class.php:68
-#: actividadestudios/model/select3005.class.php:65
-#: core/datostabla.class.php:103 devel/controller/modulos_select.php:57
-#: encargossacd/controller/encargo_horario_select.php:42
-#: encargossacd/controller/encargo_select.php:86
-#: notas/controller/acta_select.php:114
-#: procesos/controller/procesos_ajax.php:65 ubis/controller/list_ctr.php:186
-#: ubis/controller/teleco_tabla.php:89 ubis/controller/ubis_tabla.php:398
-#: usuarios/controller/grupo_form.php:216 usuarios/controller/role_lista.php:54
-#: menus/view/traducir_menu.phtml:75 usuarios/view/perm_activ_form.phtml:7
-msgid "modificar"
-msgstr ""
-
-#: actividades/controller/actividad_tarifa_ajax.php:256
-msgid "nueva tarifa"
-msgstr ""
-
-#: actividades/controller/actividad_tarifa_ajax.php:295
-#: actividades/controller/calendario_ajax.php:461 core/datostabla.class.php:104
+#: actividades/controller/actividad_tarifa_ajax.php:64
+#: actividades/controller/actividad_tarifa_ajax.php:298
+#: actividades/controller/calendario_ajax.php:459 core/datostabla.class.php:103
 #: core/zzficha.class.php:143 core/zzficha.class.php:146
 #: devel/controller/metamenus_get.php:52 devel/controller/modulos_select.php:59
 #: encargossacd/controller/encargo_horario_select.php:43
@@ -951,18 +845,140 @@ msgstr ""
 #: procesos/controller/procesos_ajax.php:66
 #: procesos/controller/usuario_perm_activ_ajax.php:162
 #: ubis/controller/calendario_periodos_ajax.php:79
-#: ubis/controller/teleco_tabla.php:90 ubis/controller/ubis_tabla.php:401
-#: actividades/view/actividad_tarifa_tipo_form.phtml:83
-#: dossiers/view/perm_dossier_pres.phtml:79 menus/view/menus_get.phtml:49
-#: personas/view/persona_de_paso.phtml:156 personas/view/persona_form.phtml:178
-#: ubis/view/cdc_form.phtml:102 ubis/view/ctrdl_form.phtml:112
-#: ubis/view/ctrex_form.phtml:91 usuarios/view/perm_activ_form.phtml:8
+#: ubis/controller/teleco_tabla.php:90 ubis/controller/ubis_tabla.php:403
+#: actividades/view/actividad_tarifa_tipo_form.phtml:82
+#: dossiers/view/perm_dossier_pres.phtml:78 menus/view/menus_get.phtml:48
+#: personas/view/persona_de_paso.phtml:154 personas/view/persona_form.phtml:176
+#: ubis/view/cdc_form.phtml:100 ubis/view/ctrdl_form.phtml:110
+#: ubis/view/ctrex_form.phtml:89 usuarios/view/perm_activ_form.phtml:8
 msgid "eliminar"
 msgstr ""
 
-#: actividades/controller/actividad_tarifa_ajax.php:324
+#: actividades/controller/actividad_tarifa_ajax.php:65
+#: actividades/controller/actividad_tarifa_ajax.php:299
+#: actividades/controller/calendario_ajax.php:460
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:176
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:181
+#: notas/controller/notas_ajax.php:139
+#: procesos/controller/tipos_activ_ajax.php:82
+#: procesos/controller/usuario_perm_activ_ajax.php:163
+#: ubis/controller/calendario_periodos_ajax.php:45
+#: ubis/controller/calendario_periodos_ajax.php:80
+#: ubis/controller/centros_ajax.php:34 ubis/controller/centros_ajax.php:66
+#: ubis/controller/centros_ajax.php:96 ubis/controller/centros_ajax.php:130
+#: actividades/view/actividad_tarifa_tipo_form.phtml:83
+#: actividades/view/actividad_tarifa_tipo_form_nuevo.phtml:85
+#: actividades/view/_calendario_form_botones.html.twig:3
+#: procesos/view/procesos_ver.html.twig:40
+msgid "cancel"
+msgstr ""
+
+#: actividades/controller/actividad_tarifa_ajax.php:84
+#: actividades/controller/actividad_tarifa_ajax.php:228
+#: encargossacd/controller/encargo_select.php:90
+msgid "sección"
+msgstr ""
+
+#: actividades/controller/actividad_tarifa_ajax.php:85
+#: actividades/controller/actividad_tarifa_ajax.php:227
+msgid "id_tarifa"
+msgstr ""
+
+#: actividades/controller/actividad_tarifa_ajax.php:86
+msgid "se aplica a"
+msgstr ""
+
+#: actividades/controller/actividad_tarifa_ajax.php:87
+msgid "minimo"
+msgstr ""
+
+#: actividades/controller/actividad_tarifa_ajax.php:88
+#: actividades/model/entity/actividadall.class.php:1197
+#: actividades/view/actividad_form.phtml:206
+#: actividades/view/_actividad_form_body.html.twig:57
+msgid "precio"
+msgstr ""
+
+#: actividades/controller/actividad_tarifa_ajax.php:89
+msgid "método"
+msgstr ""
+
+#: actividades/controller/actividad_tarifa_ajax.php:161
+msgid "añadir tarifa"
+msgstr ""
+
+#: actividades/controller/actividad_tarifa_ajax.php:198
+#: actividades/controller/calendario_ajax.php:403
+#: actividadescentro/controller/activ_ctr_ajax.php:81
+#: actividadessacd/controller/activ_sacd_ajax.php:122
+#: ubis/controller/calendario_periodos_ajax.php:227
+msgid "no sé cuál he de borar"
+msgstr ""
+
+#: actividades/controller/actividad_tarifa_ajax.php:221
+#: actividades/controller/actividad_tarifa_ajax.php:275
+#: actividades/controller/actividad_tarifa_tipo_ajax.php:55
+#: actividades/controller/calendario_ajax.php:436
+msgid "por dia"
+msgstr ""
+
+#: actividades/controller/actividad_tarifa_ajax.php:221
+#: actividades/controller/actividad_tarifa_ajax.php:275
+#: actividades/controller/actividad_tarifa_tipo_ajax.php:55
+#: actividades/controller/calendario_ajax.php:436
+#: actividades/model/entity/tipotarifa.class.php:279
+#: actividadplazas/controller/gestion_plazas.php:191
+#: actividadplazas/view/resumen_plazas.phtml:42
+msgid "total"
+msgstr ""
+
+#: actividades/controller/actividad_tarifa_ajax.php:229
+#: actividades/controller/actividad_tarifa_ajax.php:291
+#: actividades/controller/calendario_ajax.php:452
+#: actividades/model/entity/tipotarifa.class.php:388
+msgid "letra"
+msgstr ""
+
+#: actividades/controller/actividad_tarifa_ajax.php:230
+#: actividades/controller/actividad_tarifa_ajax.php:293
+#: actividades/controller/calendario_ajax.php:454
+#: actividades/model/entity/tipotarifa.class.php:376
+#: encargossacd/model/entity/encargosacd.class.php:447
+#: profesores/view/ficha_profesor_stgr.print.phtml:93
+msgid "modo"
+msgstr ""
+
+#: actividades/controller/actividad_tarifa_ajax.php:231
+#: encargossacd/model/entity/encargo.class.php:576
+#: encargossacd/model/entity/encargosacdobserv.class.php:329
+#: procesos/model/entity/actividadprocesotarea.class.php:588
+#: ubis/model/entity/tarifa.class.php:444
+msgid "observ"
+msgstr ""
+
+#: actividades/controller/actividad_tarifa_ajax.php:250
+#: actividades/controller/actividad_tarifa_tipo_ajax.php:63
+#: actividadestudios/model/select1303.class.php:68
+#: actividadestudios/model/select3005.class.php:65
+#: core/datostabla.class.php:102 devel/controller/modulos_select.php:57
+#: encargossacd/controller/encargo_horario_select.php:42
+#: encargossacd/controller/encargo_select.php:86
+#: notas/controller/acta_select.php:114
+#: procesos/controller/procesos_ajax.php:65 ubis/controller/list_ctr.php:240
+#: ubis/controller/teleco_tabla.php:89 ubis/controller/ubis_tabla.php:400
+#: usuarios/controller/grupo_form.php:216 usuarios/controller/role_lista.php:54
+#: menus/view/traducir_menu.phtml:75 usuarios/view/perm_activ_form.phtml:7
+msgid "modificar"
+msgstr ""
+
+#: actividades/controller/actividad_tarifa_ajax.php:259
+msgid "nueva tarifa"
+msgstr ""
+
+#: actividades/controller/actividad_tarifa_ajax.php:327
+#: actividades/controller/actividad_tarifa_ajax.php:335
 #: actividades/controller/actividad_tarifa_tipo_ajax.php:101
-#: actividades/controller/calendario_ajax.php:490
+#: actividades/controller/calendario_ajax.php:488
 #: actividadestudios/controller/update_3005.php:42
 #: actividadestudios/controller/update_3103.php:125
 #: actividadestudios/controller/update_3103.php:148
@@ -984,7 +1000,7 @@ msgid "alta"
 msgstr ""
 
 #: actividades/controller/actividad_tarifa_tipo_form.php:28
-#: dbextern/controller/ver_desaparecidos_de_listas.php:82
+#: dbextern/controller/ver_desaparecidos_de_listas.php:81
 #: dbextern/controller/ver_orbix.php:158
 msgid "baja"
 msgstr ""
@@ -994,29 +1010,29 @@ msgstr ""
 msgid "¿Está seguro que desea quitar esta tarifa?"
 msgstr ""
 
-#: actividades/controller/actividad_update.php:101
-#: actividades/controller/actividad_update.php:192
+#: actividades/controller/actividad_update.php:104
+#: actividades/controller/actividad_update.php:201
 msgid "hay un error, no se ha importado"
 msgstr ""
 
-#: actividades/controller/actividad_update.php:133
+#: actividades/controller/actividad_update.php:137
 msgid "debe llenar todos los campos que tengan un (*)"
 msgstr ""
 
-#: actividades/controller/actividad_update.php:137
-#: actividades/controller/actividad_update.php:270
+#: actividades/controller/actividad_update.php:141
+#: actividades/controller/actividad_update.php:301
 msgid "debe seleccionar un tipo de actividad"
 msgstr ""
 
-#: actividades/controller/actividad_update.php:154
+#: actividades/controller/actividad_update.php:159
 msgid "tipo de actividad incorrecto"
 msgstr ""
 
-#: actividades/controller/actividad_update.php:205
+#: actividades/controller/actividad_update.php:235
 msgid "no se puede duplicar actividades que no sean de la propia dl"
 msgstr ""
 
-#: actividades/controller/actividad_update.php:209
+#: actividades/controller/actividad_update.php:239
 msgid "dup"
 msgstr ""
 
@@ -1025,23 +1041,23 @@ msgid "No tiene permiso para crear una actividad de este tipo"
 msgstr ""
 
 #: actividades/controller/actividad_ver.php:179
-#: actividades/controller/calendario_ajax.php:133
-#: actividades/controller/calendario_ajax.php:281
-#: actividades/view/actividad_select_ubi.phtml:181
+#: actividades/controller/calendario_ajax.php:131
+#: actividades/controller/calendario_ajax.php:279
+#: actividades/view/actividad_select_ubi.phtml:179
 msgid "sin determinar"
 msgstr ""
 
-#: actividades/controller/calendario_planning.php:85
+#: actividades/controller/calendario_planning.php:93
 msgid "calendario de casas"
 msgstr ""
 
-#: actividades/controller/calendario_planning.php:192
+#: actividades/controller/calendario_planning.php:200
 #: actividadestudios/model/select1303.class.php:122
 #: asistentes/controller/planning_crida_calendari.php:301
 msgid "por determinar"
 msgstr ""
 
-#: actividades/controller/calendario_planning.php:195
+#: actividades/controller/calendario_planning.php:203
 #: asistentes/controller/planning_crida_calendari.php:304
 msgid "otros lugares"
 msgstr ""
@@ -1084,58 +1100,58 @@ msgid "no se puede modificar una actividad de otra dl"
 msgstr ""
 
 #: actividades/model/entity/actividadall.class.php:32
-#: actividades/view/actividad_form.phtml:162
+#: actividades/view/actividad_form.phtml:161
 #: actividades/view/_actividad_form_body.html.twig:8
-#: actividades/view/actividad_que.html.twig:62
+#: actividades/view/actividad_que.html.twig:61
 msgid "proyecto"
 msgstr ""
 
 #: actividades/model/entity/actividadall.class.php:33
 #: procesos/controller/usuario_perm_activ_ajax.php:83
-#: actividades/view/actividad_form.phtml:163
+#: actividades/view/actividad_form.phtml:162
 #: actividades/view/_actividad_form_body.html.twig:11
-#: actividades/view/actividad_que.html.twig:63
+#: actividades/view/actividad_que.html.twig:62
 msgid "actual"
 msgstr ""
 
 #: actividades/model/entity/actividadall.class.php:34
-#: actividades/view/actividad_form.phtml:164
+#: actividades/view/actividad_form.phtml:163
 #: actividades/view/_actividad_form_body.html.twig:14
-#: actividades/view/actividad_que.html.twig:64
+#: actividades/view/actividad_que.html.twig:63
 msgid "terminada"
 msgstr ""
 
 #: actividades/model/entity/actividadall.class.php:35
-#: actividades/view/actividad_form.phtml:165
+#: actividades/view/actividad_form.phtml:164
 #: actividades/view/_actividad_form_body.html.twig:17
-#: actividades/view/actividad_que.html.twig:65
+#: actividades/view/actividad_que.html.twig:64
 msgid "borrable"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1073
+#: actividades/model/entity/actividadall.class.php:1075
 #: actividades/model/entity/tipoactivtarifa.class.php:396
 #: procesos/controller/tipos_activ_ajax.php:37
 msgid "id_tipo_activ"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1085
+#: actividades/model/entity/actividadall.class.php:1087
 msgid "dl_org"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1097
-#: actividades/view/actividad_form.phtml:174
+#: actividades/model/entity/actividadall.class.php:1099
+#: actividades/view/actividad_form.phtml:173
 #: actividades/view/_actividad_form_body.html.twig:26
 msgid "nombre actividad"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1109
+#: actividades/model/entity/actividadall.class.php:1111
 #: encargossacd/model/entity/datoscgi.class.php:375
 #: encargossacd/model/entity/encargo.class.php:516
 #: ubis/model/entity/casaperiodo.class.php:394
 msgid "id_ubi"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1121
+#: actividades/model/entity/actividadall.class.php:1123
 #: devel/controller/modulos_select.php:65
 #: devel/model/entity/modulo.class.php:388
 #: dossiers/model/entity/tipodossier.class.php:553
@@ -1148,94 +1164,94 @@ msgstr ""
 #: procesos/model/entity/actividadtarea.class.php:333
 #: ubis/model/entity/descteleco.class.php:414
 #: ubis/model/entity/telecoubiglobal.class.php:252
-#: dossiers/view/perm_dossier_pres.phtml:58 ubis/view/teleco_form.phtml:37
+#: dossiers/view/perm_dossier_pres.phtml:57 ubis/view/teleco_form.phtml:36
 msgid "descripción"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1133
+#: actividades/model/entity/actividadall.class.php:1135
 #: actividadestudios/model/entity/actividadasignatura.class.php:482
 #: dossiers/model/entity/dossier.class.php:483
 #: profesores/model/entity/congreso.class.php:497
 #: profesores/model/entity/profesorcongreso.class.php:497
-#: actividades/view/actividad_form.phtml:179
+#: actividades/view/actividad_form.phtml:178
 #: actividades/view/_actividad_form_body.html.twig:31
 msgid "fecha inicio"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1146
+#: actividades/model/entity/actividadall.class.php:1148
 #: encargossacd/controller/horario_sacd_ver.php:206
-#: actividades/view/actividad_form.phtml:180
+#: actividades/view/actividad_form.phtml:179
 #: actividades/view/_actividad_form_body.html.twig:32
-#: encargossacd/view/horario_ver.html.twig:90
+#: encargossacd/view/horario_ver.html.twig:89
 msgid "hora inicio"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1158
+#: actividades/model/entity/actividadall.class.php:1160
 #: actividadestudios/model/entity/actividadasignatura.class.php:495
 #: profesores/model/entity/congreso.class.php:510
 #: profesores/model/entity/profesorcongreso.class.php:510
-#: actividades/view/actividad_form.phtml:183
+#: actividades/view/actividad_form.phtml:182
 #: actividades/view/_actividad_form_body.html.twig:35
 msgid "fecha fin"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1183
+#: actividades/model/entity/actividadall.class.php:1185
 #: encargossacd/model/entity/encargotipo.class.php:384
 msgid "tipo de horario"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1197
+#: actividades/model/entity/actividadall.class.php:1199
 msgid "tiene un formato no válido."
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1199
+#: actividades/model/entity/actividadall.class.php:1201
 msgid "se admite un separador para los decimales (máximo 2)"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1201
+#: actividades/model/entity/actividadall.class.php:1203
 msgid "no se admite separador para los miles"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1203
+#: actividades/model/entity/actividadall.class.php:1205
 msgid "ejemplo: 1254.56"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1217
+#: actividades/model/entity/actividadall.class.php:1219
 msgid "número de asistentes"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1229
+#: actividades/model/entity/actividadall.class.php:1231
 #: procesos/model/entity/proceso.class.php:604
 #: ubis/model/entity/ubiglobal.class.php:524
-#: procesos/view/procesos_ver.html.twig:29
+#: procesos/view/procesos_ver.html.twig:27
 msgid "status"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1255
-#: actividades/view/actividad_form.phtml:219
+#: actividades/model/entity/actividadall.class.php:1257
+#: actividades/view/actividad_form.phtml:218
 #: actividades/view/_actividad_form_body.html.twig:69
 msgid "nivel de stgr"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1267
+#: actividades/model/entity/actividadall.class.php:1269
 msgid "observaciones material"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1279
+#: actividades/model/entity/actividadall.class.php:1281
 msgid "lugar_esp"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1303
+#: actividades/model/entity/actividadall.class.php:1305
 msgid "id_repeticion"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1315
-#: actividades/view/actividad_form.phtml:224
+#: actividades/model/entity/actividadall.class.php:1317
+#: actividades/view/actividad_form.phtml:223
 #: actividades/view/_actividad_form_body.html.twig:74
 msgid "publicado"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1327
+#: actividades/model/entity/actividadall.class.php:1329
 #: dbextern/model/entity/idmatchpersona.class.php:330
 #: personas/model/entity/personaglobal.class.php:982
 msgid "id_tabla"
@@ -1258,7 +1274,7 @@ msgstr ""
 #: procesos/model/entity/proceso.class.php:558
 #: ubis/model/entity/descteleco.class.php:390
 #: zonassacd/model/entity/zona.class.php:389
-#: zonassacd/model/entity/zonagrupo.class.php:331 menus/view/menus_get.phtml:28
+#: zonassacd/model/entity/zonagrupo.class.php:331 menus/view/menus_get.phtml:27
 msgid "orden"
 msgstr ""
 
@@ -1268,7 +1284,7 @@ msgstr ""
 
 #: actividades/model/entity/repeticion.class.php:348
 #: actividades/model/entity/tipoactivtarifa.class.php:408
-#: actividades/view/actividad_tarifa_tipo_form_nuevo.phtml:75
+#: actividades/view/actividad_tarifa_tipo_form_nuevo.phtml:74
 msgid "temporada"
 msgstr ""
 
@@ -1278,17 +1294,17 @@ msgstr ""
 #: actividadplazas/model/entity/plazapeticion.class.php:372
 #: asignaturas/model/entity/asignatura.class.php:596
 #: asistentes/controller/planning_select.php:199
-#: notas/controller/asig_faltan_personas_select.php:112
-#: notas/controller/asig_faltan_select.php:96
+#: notas/controller/asig_faltan_personas_select.php:118
+#: notas/controller/asig_faltan_select.php:115
 #: personas/model/entity/traslado.class.php:504
 #: profesores/model/entity/congreso.class.php:537
 #: profesores/model/entity/profesorcongreso.class.php:537
 #: profesores/model/entity/profesordocenciastgr.class.php:467
-#: ubis/controller/ubis_lista.php:85 ubis/controller/ubis_tabla.php:405
-#: actividadestudios/view/form_3005.phtml:91
-#: personas/view/traslado_form.phtml:64 ubis/view/ubis_buscar.phtml:140
-#: encargossacd/view/sacd_ausencias.html.twig:60
-#: encargossacd/view/sacd_ficha.html.twig:66
+#: ubis/controller/ubis_lista.php:85 ubis/controller/ubis_tabla.php:407
+#: actividadestudios/view/form_3005.phtml:89
+#: personas/view/traslado_form.phtml:63 ubis/view/ubis_buscar.phtml:140
+#: encargossacd/view/sacd_ausencias.html.twig:57
+#: encargossacd/view/sacd_ficha.html.twig:63
 msgid "tipo"
 msgstr ""
 
@@ -1304,12 +1320,12 @@ msgstr ""
 #: asistentes/controller/lista_est_ctr.php:215
 #: asistentes/model/listaplazas.class.php:275
 #: asistentes/model/select1301.class.php:78
-#: cartaspresentacion/controller/cartas_presentacion_ajax.php:117
-#: cartaspresentacion/controller/cartas_presentacion_ajax.php:257
-#: cartaspresentacion/controller/cartas_presentacion_ajax.php:335
-#: dbextern/controller/ver_desaparecidos_de_listas.php:72
-#: dbextern/controller/ver_desaparecidos_de_orbix.php:67
-#: dbextern/controller/ver_orbix_otradl.php:83
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:165
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:333
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:410
+#: dbextern/controller/ver_desaparecidos_de_listas.php:71
+#: dbextern/controller/ver_desaparecidos_de_orbix.php:66
+#: dbextern/controller/ver_orbix_otradl.php:82
 #: dbextern/controller/ver_traslados.php:107
 #: devel/controller/modulos_select.php:64 devel/model/entity/app.class.php:318
 #: devel/model/entity/modulo.class.php:376
@@ -1320,8 +1336,8 @@ msgstr ""
 #: asistentes/view/planning_persona_que.phtml:33
 #: personas/view/personas_que.phtml:18
 #: profesores/view/ficha_profesor_stgr.print.phtml:37
-#: usuarios/view/grupo_form.phtml:36 usuarios/view/grupo_lista.phtml:48
-#: usuarios/view/role_form.phtml:76 usuarios/view/usuario_form.phtml:178
+#: usuarios/view/grupo_form.phtml:35 usuarios/view/grupo_lista.phtml:48
+#: usuarios/view/role_form.phtml:74 usuarios/view/usuario_form.phtml:173
 #: usuarios/view/usuario_lista.phtml:44
 msgid "nombre"
 msgstr ""
@@ -1362,58 +1378,71 @@ msgid "periodo del listado del año próximo"
 msgstr ""
 
 #: actividadescentro/controller/activ_ctr.php:47
-#: actividadessacd/controller/activ_sacd.php:50
+#: actividadessacd/controller/activ_sacd.php:52
+#: actividadessacd/controller/com_sacd_activ_periodo.php:43
 #: actividadestudios/controller/actualizar_docencia.php:29
 #: actividadestudios/controller/matriculas_lista.php:185
 #: actividadplazas/controller/gestion_plazas.php:211 core/mod_tabla_sql.php:115
 #: notas/controller/acta_listado_anual.php:96
 #: actividades/view/actividad_select_ubi.phtml:53
-#: actividades/view/actividad_tarifa_ubi.phtml:82
+#: actividades/view/actividad_tarifa_ubi.phtml:91
 #: asistentes/view/activ_pendientes.phtml:28
 #: asistentes/view/planning_persona_que.phtml:50
 #: asistentes/view/que_ctr_lista.phtml:70 menus/view/traducir_menu.phtml:71
 #: menus/view/traducir_menu.phtml:78 menus/view/traducir_menu.phtml:97
 #: menus/view/traducir_menu.phtml:163 menus/view/traducir_menu.phtml:171
 #: menus/view/traducir_menu.phtml:217 menus/view/traducir_menu.phtml:280
-#: notas/view/acta_select.phtml:69 notas/view/asig_faltan_que.phtml:7
-#: notas/view/asig_faltan_que.phtml:39 personas/view/personas_que.phtml:12
-#: ubis/view/calendario_periodos.phtml:94 ubis/view/direcciones_que.phtml:9
+#: notas/view/acta_select.phtml:69 notas/view/asig_faltan_que.phtml:10
+#: notas/view/asig_faltan_que.phtml:42 personas/view/personas_que.phtml:12
+#: ubis/view/calendario_periodos.phtml:91 ubis/view/direcciones_que.phtml:9
 #: ubis/view/ubis_buscar.phtml:55 ubis/view/ubis_buscar.phtml:136
 #: usuarios/view/grupo_lista.phtml:49 usuarios/view/usuario_lista.phtml:45
-#: actividades/view/actividad_que.html.twig:89
+#: actividades/view/actividad_que.html.twig:88
 #: cartaspresentacion/view/cartas_presentacion_buscar.html.twig:19
-#: cartaspresentacion/view/cartas_presentacion_que.html.twig:166
-#: encargossacd/view/encargo_select.html.twig:58
-#: ubis/view/centros_que.html.twig:76
+#: cartaspresentacion/view/cartas_presentacion_que.html.twig:161
+#: encargossacd/view/encargo_select.html.twig:57
+#: ubis/view/centros_que.html.twig:73
 msgid "buscar"
 msgstr ""
 
-#: actividadescentro/controller/activ_ctr_ajax.php:77
+#: actividadescentro/controller/activ_ctr_ajax.php:78
 msgid "hay un error, no se ha eliminado el centro"
 msgstr ""
 
-#: actividadescentro/controller/activ_ctr_ajax.php:156
+#: actividadescentro/controller/activ_ctr_ajax.php:144
 #: asistentes/model/listaplazas.class.php:274
 #: asistentes/model/select3101.class.php:151
 msgid "num"
 msgstr ""
 
-#: actividadescentro/controller/activ_ctr_ajax.php:156
+#: actividadescentro/controller/activ_ctr_ajax.php:144
 msgid "dif días"
 msgstr ""
 
-#: actividadescentro/controller/activ_ctr_ajax.php:281
+#: actividadescentro/controller/activ_ctr_ajax.php:269
 #: actividadessacd/controller/activ_sacd_ajax.php:248
 msgid "hay un error, no se ha guardado el cargo"
 msgstr ""
 
-#: actividadescentro/controller/activ_ctr_ajax.php:351
+#: actividadescentro/controller/activ_ctr_ajax.php:339
 #, php-format
 msgid "listado de actividades %s"
 msgstr ""
 
-#: actividadescentro/controller/activ_ctr_ajax.php:355
+#: actividadescentro/controller/activ_ctr_ajax.php:343
 msgid "ctr encargados"
+msgstr ""
+
+#: actividadescentro/db/dbesquema.class.php:126
+#: actividadessacd/db/dbesquema.class.php:149
+#: encargossacd/db/dbesquema.class.php:891
+#: encargossacd/db/dbesquema.class.php:925 procesos/db/dbesquema.class.php:507
+#: procesos/db/dbesquema.class.php:538 procesos/db/dbesquema.class.php:571
+#: procesos/db/dbesquema.class.php:604 procesos/db/dbesquema.class.php:637
+#: procesos/db/dbesquema.class.php:678 zonassacd/db/dbesquema.class.php:327
+#: zonassacd/db/dbesquema.class.php:373 zonassacd/db/dbesquema.class.php:410
+#, php-format
+msgid "no existe el fichero: %s"
 msgstr ""
 
 #: actividadescentro/model/entity/centroencargado.class.php:359
@@ -1437,6 +1466,11 @@ msgstr ""
 msgid "buscar un centro"
 msgstr ""
 
+#: actividadessacd/controller/activ_sacd.php:36
+#, php-format
+msgid "actividades de %s"
+msgstr ""
+
 #: actividadessacd/controller/activ_sacd_ajax.php:114
 msgid "hay un error, no se ha eliminado el cargo"
 msgstr ""
@@ -1457,10 +1491,116 @@ msgstr ""
 msgid "sacd encargados"
 msgstr ""
 
-#: actividadessacd/controller/asignar_sacd_activ.php:53
+#: actividadessacd/controller/asignar_sacd_auto.php:32
 #, php-format
 msgid ""
 "Ya está. Se ha asignado %s actividades. Quedan %s por asignar (el centro)."
+msgstr ""
+
+#: actividadessacd/controller/asignar_sacd_auto.php:42
+msgid ""
+"esto asignará el sacd titular del centro a las actividades que tengan un "
+"centro encargado"
+msgstr ""
+
+#: actividadessacd/controller/asignar_sacd_auto.php:44
+#, php-format
+msgid ""
+"limitado a las actividades de sr y sg a partir de %s y marcadas como actuales"
+msgstr ""
+
+#: actividadessacd/controller/asignar_sacd_auto.php:46
+msgid ""
+"en el campo observaciones aparece la palabra 'auto' para indicar la "
+"asignación automática"
+msgstr ""
+
+#: actividadessacd/controller/com_sacd_activ.php:141
+msgid "falta determinar un periodo"
+msgstr ""
+
+#: actividadessacd/controller/com_sacd_activ_periodo.php:40
+msgid "seleccionar un periodo"
+msgstr ""
+
+#: actividadessacd/controller/com_sacd_txt.php:25
+#: encargossacd/controller/listas_com_txt.php:25
+msgid "comunicación a los sacerdotes"
+msgstr ""
+
+#: actividadessacd/controller/com_sacd_txt.php:26
+msgid "titulo: propio"
+msgstr ""
+
+#: actividadessacd/controller/com_sacd_txt.php:27
+msgid "titulo: f_ini"
+msgstr ""
+
+#: actividadessacd/controller/com_sacd_txt.php:28
+msgid "titulo: f_fin"
+msgstr ""
+
+#: actividadessacd/controller/com_sacd_txt.php:29
+msgid "titulo: nombre ubi"
+msgstr ""
+
+#: actividadessacd/controller/com_sacd_txt.php:30
+msgid "titulo: sfsv"
+msgstr ""
+
+#: actividadessacd/controller/com_sacd_txt.php:31
+msgid "titulo: actividad"
+msgstr ""
+
+#: actividadessacd/controller/com_sacd_txt.php:32
+msgid "titulo: asistentes"
+msgstr ""
+
+#: actividadessacd/controller/com_sacd_txt.php:33
+msgid "titulo: encargado"
+msgstr ""
+
+#: actividadessacd/controller/com_sacd_txt.php:34
+#: encargossacd/controller/listas_com_txt.php:38
+msgid "titulo: observaciones"
+msgstr ""
+
+#: actividadessacd/controller/com_sacd_txt.php:35
+msgid "titulo: nom_tipo"
+msgstr ""
+
+#: actividadessacd/model/actividadessacdfunciones.class.php:39
+#: encargossacd/model/encargofuncionestrait.class.php:51
+#, php-format
+msgid "falta definir el texto %s en este idioma: %s"
+msgstr ""
+
+#: actividadessacd/model/actividadessacdfunciones.class.php:66
+#: encargossacd/model/encargofuncionestrait.class.php:78
+msgid "Más de un centro definido como dl"
+msgstr ""
+
+#: actividadessacd/model/actividadessacdfunciones.class.php:83
+#: encargossacd/model/encargofuncionestrait.class.php:95
+msgid "falta poner la dirección a la dl"
+msgstr ""
+
+#: actividadessacd/model/entity/atnactivsacdtexto.class.php:346
+#: encargossacd/controller/encargo_select.php:90
+#: encargossacd/model/entity/encargotexto.class.php:346
+#: usuarios/model/entity/local.class.php:392 usuarios/view/personal.phtml:51
+msgid "idioma"
+msgstr ""
+
+#: actividadessacd/model/entity/atnactivsacdtexto.class.php:358
+#: encargossacd/model/entity/encargotexto.class.php:358
+msgid "clave"
+msgstr ""
+
+#: actividadessacd/model/entity/atnactivsacdtexto.class.php:370
+#: encargossacd/controller/encargo_horario_select.php:59
+#: encargossacd/model/entity/encargotexto.class.php:370
+msgid "texto"
 msgstr ""
 
 #: actividadestudios/controller/acta_notas.php:78
@@ -1472,7 +1612,7 @@ msgstr ""
 msgid "cursada"
 msgstr ""
 
-#: actividadestudios/controller/acta_notas.php:129
+#: actividadestudios/controller/acta_notas.php:127
 msgid "primero debe guadar los datos del acta"
 msgstr ""
 
@@ -1505,7 +1645,7 @@ msgstr ""
 
 #: actividadestudios/controller/actualizar_docencia.php:43
 #: actividadestudios/controller/matriculas_lista.php:199
-#: actividadplazas/controller/gestion_plazas.php:226
+#: actividadplazas/controller/gestion_plazas.php:224
 msgid "periodo de selección de actividades"
 msgstr ""
 
@@ -1577,16 +1717,16 @@ msgstr ""
 #: actividadestudios/model/select3005.class.php:74
 #: actividadestudios/model/select3103.class.php:73
 #: notas/controller/acta_select.php:121 notas/model/select1011.class.php:60
-#: profesores/controller/profesor_asignatura_que.php:46
+#: profesores/controller/profesor_asignatura_que.php:45
 #: profesores/model/entity/profesorampliacion.class.php:436
 #: profesores/model/entity/profesordocenciastgr.class.php:435
 #: actividadestudios/view/e43.phtml:28
-#: actividadestudios/view/form_1303.phtml:93
-#: actividadestudios/view/form_1303.phtml:96
-#: actividadestudios/view/form_3005.phtml:75
-#: actividadestudios/view/form_3005.phtml:77 notas/view/acta_ver.phtml:108
-#: notas/view/asig_faltan_que.phtml:55 notas/view/form_1011.phtml:134
-#: notas/view/form_1011.phtml:137
+#: actividadestudios/view/form_1303.phtml:88
+#: actividadestudios/view/form_1303.phtml:91
+#: actividadestudios/view/form_3005.phtml:73
+#: actividadestudios/view/form_3005.phtml:75 notas/view/acta_ver.phtml:106
+#: notas/view/asig_faltan_que.phtml:58 notas/view/form_1011.phtml:240
+#: notas/view/form_1011.phtml:243
 #: profesores/view/ficha_profesor_stgr.print.phtml:93
 msgid "asignatura"
 msgstr ""
@@ -1617,23 +1757,23 @@ msgstr ""
 
 #: actividadestudios/controller/lista_clases_ca.php:87
 #: actividadestudios/controller/matriculas_lista.php:89
-#: actividadestudios/controller/plan_estudios_ca.php:146
+#: actividadestudios/controller/plan_estudios_ca.php:147
 #: actividadestudios/model/entity/matricula.class.php:601
 #: actividadestudios/model/select1303.class.php:76
 #: notas/model/entity/personanota.class.php:779
 #: notas/model/select1011.class.php:64
 #: profesores/model/entity/profesordocenciastgr.class.php:471
-#: actividadestudios/view/acta_notas.phtml:86
-#: actividadestudios/view/acta_notas.phtml:102
-#: actividadestudios/view/acta_notas.phtml:123
-#: actividadestudios/view/form_1303.phtml:106
-#: actividadestudios/view/form_3005.phtml:94 notas/view/form_1011.phtml:170
+#: actividadestudios/view/acta_notas.phtml:84
+#: actividadestudios/view/acta_notas.phtml:100
+#: actividadestudios/view/acta_notas.phtml:121
+#: actividadestudios/view/form_1303.phtml:101
+#: actividadestudios/view/form_3005.phtml:92 notas/view/form_1011.phtml:276
 msgid "preceptor"
 msgstr ""
 
 #: actividadestudios/controller/lista_clases_ca.php:89
 #: actividadestudios/model/select3005.class.php:77
-#: actividadestudios/view/form_3005.phtml:83
+#: actividadestudios/view/form_3005.phtml:81
 msgid "profesor"
 msgstr ""
 
@@ -1688,13 +1828,13 @@ msgstr ""
 #: actividadestudios/controller/matriculas_lista.php:84
 #: actividadestudios/controller/matriculas_pendientes.php:54
 #: actividadestudios/model/select3103.class.php:74
-#: actividadestudios/view/acta_notas.phtml:86
+#: actividadestudios/view/acta_notas.phtml:84
 msgid "alumno"
 msgstr ""
 
 #: actividadestudios/controller/matriculas_lista.php:85
 #: cambios/model/gestorcanvis.class.php:26
-#: dbextern/model/entity/personalistas.class.php:971
+#: dbextern/model/entity/personalistas.class.php:973
 #: encargossacd/model/entity/encargotipo.class.php:52
 #: profesores/view/ficha_profesor_stgr.print.phtml:37
 msgid "ctr"
@@ -1702,14 +1842,14 @@ msgstr ""
 
 #: actividadestudios/controller/matriculas_lista.php:86
 #: asistentes/model/select3101.class.php:153
-#: dbextern/controller/ver_desaparecidos_de_listas.php:72
-#: dbextern/model/entity/personalistas.class.php:959
+#: dbextern/controller/ver_desaparecidos_de_listas.php:71
+#: dbextern/model/entity/personalistas.class.php:961
 #: personas/model/entity/personaglobal.class.php:994
-#: ubis/controller/ubis_lista.php:86 ubis/controller/ubis_tabla.php:406
+#: ubis/controller/ubis_lista.php:86 ubis/controller/ubis_tabla.php:408
 #: ubis/model/entity/ubiglobal.class.php:488
 #: actividadcargos/view/select1302.phtml:57
 #: actividadcargos/view/select3102.phtml:52 asistentes/view/select1301.phtml:56
-#: asistentes/view/select3101.phtml:222
+#: asistentes/view/select3101.phtml:221
 #: profesores/view/ficha_profesor_stgr.print.phtml:38
 #: ubis/view/ubis_buscar.phtml:176
 msgid "dl"
@@ -1717,8 +1857,8 @@ msgstr ""
 
 #: actividadestudios/controller/matriculas_lista.php:90
 #: notas/model/select1011.class.php:61
-#: actividadestudios/view/acta_notas.phtml:86 menus/view/menus_que.phtml:26
-#: notas/view/form_1011.phtml:147
+#: actividadestudios/view/acta_notas.phtml:84 menus/view/menus_que.phtml:25
+#: notas/view/form_1011.phtml:253
 msgid "nota"
 msgstr ""
 
@@ -1736,7 +1876,7 @@ msgstr ""
 msgid "p"
 msgstr ""
 
-#: actividadestudios/controller/plan_estudios_ca.php:123
+#: actividadestudios/controller/plan_estudios_ca.php:124
 #: actividadestudios/model/posiblesca.class.php:60
 #: asistentes/controller/lista_est_ctr.php:173
 #: personas/controller/personas_editar.php:226
@@ -1745,7 +1885,7 @@ msgstr ""
 msgid "repaso"
 msgstr ""
 
-#: actividadestudios/controller/plan_estudios_ca.php:126
+#: actividadestudios/controller/plan_estudios_ca.php:127
 #: asistentes/controller/lista_est_ctr.php:170
 msgid "plan de formación"
 msgstr ""
@@ -1801,8 +1941,8 @@ msgstr ""
 #: notas/model/entity/personanota.class.php:737
 #: notas/model/select1011.class.php:62
 #: profesores/model/entity/profesordocenciastgr.class.php:497
-#: actividadestudios/view/acta_notas.phtml:86 notas/view/acta_ver.phtml:69
-#: notas/view/form_1011.phtml:157
+#: actividadestudios/view/acta_notas.phtml:84 notas/view/acta_ver.phtml:67
+#: notas/view/form_1011.phtml:263
 msgid "acta"
 msgstr ""
 
@@ -1810,7 +1950,7 @@ msgstr ""
 #: personas/controller/personas_editar.php:223
 #: personas/controller/stgr_cambio.php:65
 #: actividadestudios/view/ca_posibles_cuadro.phtml:16
-#: notas/view/asig_faltan_que.phtml:17 notas/view/asig_faltan_que.phtml:49
+#: notas/view/asig_faltan_que.phtml:20 notas/view/asig_faltan_que.phtml:52
 msgid "bienio"
 msgstr ""
 
@@ -1823,7 +1963,7 @@ msgid "cuadrienio-II-IV"
 msgstr ""
 
 #: actividadestudios/model/posiblesca.class.php:63
-#: dbextern/model/entity/personalistas.class.php:1032
+#: dbextern/model/entity/personalistas.class.php:1034
 #: personas/model/entity/personaagd.class.php:407
 #: personas/model/entity/personan.class.php:411
 #: personas/model/entity/personas.class.php:409
@@ -1882,12 +2022,12 @@ msgid "¿Está seguro que desea quitar esta asignatura?"
 msgstr ""
 
 #: actividadestudios/model/select3005.class.php:139
-#: actividadestudios/view/form_3005.phtml:99
+#: actividadestudios/view/form_3005.phtml:97
 msgid "avisado"
 msgstr ""
 
 #: actividadestudios/model/select3005.class.php:140
-#: actividadestudios/view/form_3005.phtml:100
+#: actividadestudios/view/form_3005.phtml:98
 msgid "confirmado"
 msgstr ""
 
@@ -1914,7 +2054,7 @@ msgstr ""
 #: actividadplazas/controller/gestion_plazas.php:190
 #: profesores/model/entity/congreso.class.php:523
 #: profesores/model/entity/profesorcongreso.class.php:523
-#: actividades/view/actividad_que.html.twig:80
+#: actividades/view/actividad_que.html.twig:79
 msgid "organiza"
 msgstr ""
 
@@ -1934,6 +2074,10 @@ msgstr ""
 
 #: actividadplazas/controller/gestion_plazas.php:196
 msgid "pedidas"
+msgstr ""
+
+#: actividadplazas/controller/gestion_plazas.php:225
+msgid "en estado actual"
 msgstr ""
 
 #: actividadplazas/controller/incorporar_peticion.php:212
@@ -2001,8 +2145,8 @@ msgid "sector"
 msgstr ""
 
 #: asignaturas/model/entity/asignatura.class.php:583
-#: ubis/view/cdc_form.phtml:71 ubis/view/ctrdl_form.phtml:61
-#: ubis/view/ctrex_form.phtml:61
+#: ubis/view/cdc_form.phtml:69 ubis/view/ctrdl_form.phtml:59
+#: ubis/view/ctrex_form.phtml:59
 msgid "en uso"
 msgstr ""
 
@@ -2072,18 +2216,22 @@ msgstr ""
 msgid "buscar un sector"
 msgstr ""
 
-#: asistentes/controller/activ_pendientes_select.php:135
+#: asistentes/controller/activ_pendientes_select.php:142
 #, php-format
 msgid "lista de %s sin %s en el curso %s"
 msgstr ""
 
-#: asistentes/controller/activ_pendientes_select.php:137
+#: asistentes/controller/activ_pendientes_select.php:144
 #: asistentes/controller/lista_est_ctr.php:214
 msgid "nº"
 msgstr ""
 
-#: asistentes/controller/activ_pendientes_select.php:137
+#: asistentes/controller/activ_pendientes_select.php:145
 msgid "nombre de la persona"
+msgstr ""
+
+#: asistentes/controller/activ_pendientes_select.php:147
+msgid "nivel stgr"
 msgstr ""
 
 #: asistentes/controller/form_1301.php:90
@@ -2126,9 +2274,9 @@ msgstr ""
 #: asistentes/model/select3101.class.php:346
 #: asistentes/model/select3101.class.php:458
 #: asistentes/model/select3101.class.php:462
-#: asistentes/model/select3101.class.php:463 core/datostabla.class.php:162
+#: asistentes/model/select3101.class.php:463 core/datostabla.class.php:161
 #: notas/model/select1011.class.php:167 ubis/controller/teleco_tabla.php:124
-#: actividades/view/actividad_form.phtml:225
+#: actividades/view/actividad_form.phtml:224
 #: actividadestudios/view/selectUnCa.phtml:9
 #: asistentes/view/planning_casa_que.phtml:51
 #: asistentes/view/planning_ctr_que.phtml:41 personas/view/personas_que.phtml:9
@@ -2150,13 +2298,12 @@ msgstr ""
 #: asistentes/model/select3101.class.php:460
 #: asistentes/model/select3101.class.php:462
 #: asistentes/model/select3101.class.php:463
-#: cartaspresentacion/controller/cartas_presentacion_ajax.php:225
 #: cartaspresentacion/controller/cartas_presentacion_ajax.php:300
-#: cartaspresentacion/controller/cartas_presentacion_que.php:40
-#: core/datostabla.class.php:162 notas/model/select1011.class.php:167
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:379
+#: core/datostabla.class.php:161 notas/model/select1011.class.php:167
 #: ubis/controller/centros_ajax.php:261 ubis/controller/teleco_tabla.php:124
 #: zonassacd/controller/zona_sacd_ajax.php:152
-#: actividades/view/actividad_form.phtml:226
+#: actividades/view/actividad_form.phtml:225
 #: actividadestudios/view/selectUnCa.phtml:11
 #: asistentes/view/planning_casa_que.phtml:50
 #: asistentes/view/planning_ctr_que.phtml:41 personas/view/personas_que.phtml:8
@@ -2212,19 +2359,20 @@ msgstr ""
 
 #: asistentes/controller/planning_que.php:88
 #: actividadestudios/view/ca_posibles_que.phtml:48
-#: notas/view/asig_faltan_que.phtml:13 notas/view/asig_faltan_que.phtml:45
+#: notas/view/asig_faltan_que.phtml:16 notas/view/asig_faltan_que.phtml:48
 #: notas/view/resumen_anual.phtml:7 ubis/view/ubis_buscar.phtml:86
 #: ubis/view/ubis_buscar.phtml:214
 msgid "numerarios"
 msgstr ""
 
 #: asistentes/controller/planning_que.php:91
+#: ubis/model/cuadroslabor.class.php:32
 msgid "nax"
 msgstr ""
 
 #: asistentes/controller/planning_que.php:94
 #: actividadestudios/view/ca_posibles_que.phtml:63
-#: notas/view/asig_faltan_que.phtml:14 notas/view/asig_faltan_que.phtml:46
+#: notas/view/asig_faltan_que.phtml:17 notas/view/asig_faltan_que.phtml:49
 #: notas/view/resumen_anual.phtml:13
 msgid "agregados"
 msgstr ""
@@ -2252,7 +2400,7 @@ msgid "vista para imprimir"
 msgstr ""
 
 #: asistentes/controller/planning_select.php:197
-#: personas/controller/personas_select.php:235
+#: personas/controller/personas_select.php:237
 msgid "ver actividades"
 msgstr ""
 
@@ -2270,8 +2418,8 @@ msgstr ""
 #: ubis/controller/ubis_buscar.php:59 ubis/controller/ubis_buscar.php:69
 #: ubis/controller/ubis_buscar.php:84 ubis/controller/ubis_buscar.php:89
 #: ubis/controller/ubis_buscar.php:94 ubis/controller/ubis_lista.php:84
-#: ubis/controller/ubis_tabla.php:404 ubis/view/cdc_form.phtml:75
-#: ubis/view/ctrdl_form.phtml:64 ubis/view/ctrex_form.phtml:65
+#: ubis/controller/ubis_tabla.php:406 ubis/view/cdc_form.phtml:73
+#: ubis/view/ctrdl_form.phtml:62 ubis/view/ctrex_form.phtml:63
 msgid "nombre del centro"
 msgstr ""
 
@@ -2311,8 +2459,8 @@ msgstr ""
 
 #: asistentes/model/entity/asistentepub.class.php:745
 #: asistentes/model/select1301.class.php:79
-#: asistentes/model/select3101.class.php:154 asistentes/view/form_1301.phtml:66
-#: asistentes/view/form_3101.phtml:101
+#: asistentes/model/select3101.class.php:154 asistentes/view/form_1301.phtml:63
+#: asistentes/view/form_3101.phtml:97
 msgid "propio"
 msgstr ""
 
@@ -2330,8 +2478,8 @@ msgstr ""
 
 #: asistentes/model/entity/asistentepub.class.php:793
 #: asistentes/model/select1301.class.php:81
-#: asistentes/model/select3101.class.php:156 asistentes/view/form_1301.phtml:68
-#: asistentes/view/form_3101.phtml:103
+#: asistentes/model/select3101.class.php:156 asistentes/view/form_1301.phtml:65
+#: asistentes/view/form_3101.phtml:99
 msgid "falta"
 msgstr ""
 
@@ -2340,18 +2488,18 @@ msgid "cama"
 msgstr ""
 
 #: asistentes/model/entity/asistentepub.class.php:841
-#: asistentes/view/form_3101.phtml:109
+#: asistentes/view/form_3101.phtml:105
 msgid "observaciones estudios"
 msgstr ""
 
 #: asistentes/model/entity/asistentepub.class.php:853
-#: asistentes/view/form_1301.phtml:77 asistentes/view/form_3101.phtml:114
+#: asistentes/view/form_1301.phtml:74 asistentes/view/form_3101.phtml:110
 msgid "plaza"
 msgstr ""
 
 #: asistentes/model/entity/asistentepub.class.php:865
 #: ubis/model/entity/ubixdireccion.class.php:323
-#: ubis/view/direccion_form.phtml:142
+#: ubis/view/direccion_form.phtml:134
 msgid "propietario"
 msgstr ""
 
@@ -2416,7 +2564,7 @@ msgid "borrar asistencia"
 msgstr ""
 
 #: asistentes/model/select1301.class.php:77
-#: encargossacd/view/sacd_ausencias_get.html.twig:67
+#: encargossacd/view/sacd_ausencias_get.html.twig:66
 msgid "fechas"
 msgstr ""
 
@@ -2531,18 +2679,23 @@ msgstr ""
 msgid "ya existe un registro con esta información"
 msgstr ""
 
-#: cartaspresentacion/controller/cartas_presentacion_ajax.php:119
-#: profesores/controller/profesor_asignatura_ajax.php:29
-#: ubis/controller/list_ctr.php:194
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:135
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:211
+msgid "No puede modificar datos de otra dl"
+msgstr ""
+
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:167
+#: profesores/controller/profesor_asignatura_ajax.php:32
+#: ubis/controller/list_ctr.php:249
 msgid "teléfono"
 msgstr ""
 
-#: cartaspresentacion/controller/cartas_presentacion_ajax.php:121
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:169
 msgid "e-mail"
 msgstr ""
 
-#: cartaspresentacion/controller/cartas_presentacion_ajax.php:123
-#: cartaspresentacion/model/entity/cartapresentacion.class.php:411
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:171
+#: cartaspresentacion/model/entity/cartapresentacion.class.php:440
 #: encargossacd/controller/encargo_select.php:90
 #: zonassacd/controller/zona_ctr_ajax.php:79
 #: zonassacd/controller/zona_sacd_ajax.php:104
@@ -2550,68 +2703,59 @@ msgstr ""
 msgid "zona"
 msgstr ""
 
-#: cartaspresentacion/controller/cartas_presentacion_ajax.php:137
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:193
 msgid "Hay un error, no se ha borrado."
 msgstr ""
 
-#: cartaspresentacion/controller/cartas_presentacion_ajax.php:157
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:228
 #: ubis/controller/centros_ajax.php:165
 msgid "Hay un error, no se ha guardado."
 msgstr ""
 
-#: cartaspresentacion/controller/cartas_presentacion_ajax.php:228
 #: cartaspresentacion/controller/cartas_presentacion_ajax.php:303
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:382
 #: ubis/controller/centros_ajax.php:261
 #: zonassacd/controller/zona_sacd_ajax.php:152
 msgid "si"
 msgstr ""
 
-#: cartaspresentacion/controller/cartas_presentacion_ajax.php:240
-#: cartaspresentacion/controller/cartas_presentacion_ajax.php:320
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:315
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:394
 #: usuarios/controller/grupo_form.php:218 usuarios/controller/role_form.php:99
 #: usuarios/controller/usuario_ajax.php:106
 msgid "quitar"
 msgstr ""
 
-#: cartaspresentacion/controller/cartas_presentacion_ajax.php:259
-#: cartaspresentacion/controller/cartas_presentacion_ajax.php:337
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:335
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:412
 msgid "carta de presentación"
 msgstr ""
 
-#: cartaspresentacion/controller/cartas_presentacion_ajax.php:260
-#: cartaspresentacion/controller/cartas_presentacion_ajax.php:338
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:336
+#: cartaspresentacion/controller/cartas_presentacion_ajax.php:413
 msgid "direccion"
 msgstr ""
 
-#: cartaspresentacion/controller/cartas_presentacion_ajax.php:345
-msgid "actualizar director"
-msgstr ""
-
-#: cartaspresentacion/controller/cartas_presentacion_lista.php:278
-#: cartaspresentacion/controller/cartas_presentacion_lista.php:322
+#: cartaspresentacion/controller/cartas_presentacion_lista.php:289
+#: cartaspresentacion/controller/cartas_presentacion_lista.php:333
 #, php-format
 msgid "Cartas de presentación de %s"
 msgstr ""
 
-#: cartaspresentacion/controller/cartas_presentacion_que.php:29
-msgid "region H"
-msgstr ""
-
-#: cartaspresentacion/controller/cartas_presentacion_que.php:30
-#: cartaspresentacion/controller/cartas_presentacion_que.php:41
+#: cartaspresentacion/controller/cartas_presentacion_que.php:44
 #: ubis/model/inforegiones.class.php:9 menus/view/traducir_menu.phtml:276
 msgid "regiones"
 msgstr ""
 
-#: cartaspresentacion/model/entity/cartapresentacion.class.php:375
+#: cartaspresentacion/model/entity/cartapresentacion.class.php:404
 msgid "pres_nom"
 msgstr ""
 
-#: cartaspresentacion/model/entity/cartapresentacion.class.php:387
+#: cartaspresentacion/model/entity/cartapresentacion.class.php:416
 msgid "pres_telf"
 msgstr ""
 
-#: cartaspresentacion/model/entity/cartapresentacion.class.php:399
+#: cartaspresentacion/model/entity/cartapresentacion.class.php:428
 msgid "pres_mail"
 msgstr ""
 
@@ -2674,65 +2818,58 @@ msgstr ""
 msgid "error al escribir el fichero"
 msgstr ""
 
-#: core/mod_tabla_form.php:126
+#: core/mod_tabla_form.php:126 dbextern/controller/sincro_index.php:186
 #: dbextern/controller/ver_desaparecidos_de_listas.php:55
 #: dbextern/controller/ver_desaparecidos_de_orbix.php:54
-#: dbextern/controller/ver_listas.php:142
-#: dbextern/controller/ver_listas.php:158
 #: dbextern/controller/ver_orbix_otradl.php:70
-#: dbextern/controller/ver_traslados.php:94
+#: dbextern/controller/ver_traslados.php:95
 #: actividadcargos/view/form_1302.phtml:15
 #: actividadcargos/view/form_3102.phtml:15
 #: actividadcargos/view/select1302.phtml:24
 #: actividadcargos/view/select3102.phtml:24
 #: actividades/view/actividad_form.phtml:80
-#: actividadestudios/view/form_1303.phtml:20
-#: actividadestudios/view/form_1303.phtml:42
-#: actividadestudios/view/form_1303.phtml:70
-#: actividadestudios/view/form_3005.phtml:55
+#: actividadestudios/view/form_1303.phtml:66
+#: actividadestudios/view/form_3005.phtml:54
 #: actividadestudios/view/select1303.phtml:14
 #: actividadestudios/view/select1303.phtml:36
 #: actividadestudios/view/select1303.phtml:70
 #: actividadestudios/view/select1303.phtml:94
 #: actividadestudios/view/select3005.phtml:31
 #: actividadestudios/view/select3103.phtml:24
-#: asistentes/view/form_1301.phtml:16 asistentes/view/form_1301.phtml:38
-#: asistentes/view/form_3101.phtml:21 asistentes/view/form_3101.phtml:43
-#: asistentes/view/form_3101.phtml:68 asistentes/view/select1301.phtml:24
-#: asistentes/view/select3101.phtml:149 asistentes/view/select3101.phtml:176
-#: devel/view/modulos_form.phtml:12 devel/view/modulos_form.phtml:33
-#: devel/view/modulos_form.phtml:54 devel/view/modulos_select.phtml:21
+#: asistentes/view/form_1301.phtml:36 asistentes/view/form_3101.phtml:41
+#: asistentes/view/form_3101.phtml:65 asistentes/view/select1301.phtml:24
+#: asistentes/view/select3101.phtml:148 asistentes/view/select3101.phtml:175
+#: devel/view/modulos_form.phtml:12 devel/view/modulos_form.phtml:32
+#: devel/view/modulos_form.phtml:52 devel/view/modulos_select.phtml:21
 #: devel/view/modulos_select.phtml:53 menus/view/menus_get.phtml:12
 #: notas/view/acta_select.phtml:36 notas/view/acta_ver.phtml:32
-#: notas/view/acta_ver.phtml:49 notas/view/form_1011.phtml:17
-#: notas/view/form_1011.phtml:44 notas/view/form_1011.phtml:112
+#: notas/view/acta_ver.phtml:48 notas/view/form_1011.phtml:213
 #: notas/view/select1011.phtml:24 personas/view/persona_de_paso.phtml:21
-#: personas/view/persona_de_paso.phtml:45 personas/view/persona_form.phtml:30
-#: personas/view/persona_form.phtml:54 personas/view/traslado_form.phtml:26
-#: ubis/view/cdc_form.phtml:26 ubis/view/cdc_form.phtml:50
-#: ubis/view/ctrdl_form.phtml:16 ubis/view/ctrdl_form.phtml:40
-#: ubis/view/ctrex_form.phtml:16 ubis/view/ctrex_form.phtml:40
-#: ubis/view/direccion_form.phtml:15 ubis/view/direccion_form.phtml:40
+#: personas/view/persona_de_paso.phtml:44 personas/view/persona_form.phtml:30
+#: personas/view/persona_form.phtml:53 personas/view/traslado_form.phtml:26
+#: ubis/view/cdc_form.phtml:26 ubis/view/cdc_form.phtml:49
+#: ubis/view/ctrdl_form.phtml:16 ubis/view/ctrdl_form.phtml:39
+#: ubis/view/ctrex_form.phtml:16 ubis/view/ctrex_form.phtml:39
+#: ubis/view/direccion_form.phtml:15 ubis/view/direccion_form.phtml:39
 #: ubis/view/teleco_form.phtml:16 usuarios/view/grupo_form.phtml:16
 #: usuarios/view/grupo_lista.phtml:27 usuarios/view/perm_menu_form.phtml:25
 #: usuarios/view/role_form.phtml:13 usuarios/view/role_form.phtml:43
 #: usuarios/view/role_grupmenu.phtml:12 usuarios/view/role_lista.phtml:23
-#: usuarios/view/usuario_form.phtml:51 usuarios/view/usuario_form.phtml:66
-#: usuarios/view/usuario_form.phtml:94 usuarios/view/usuario_form.phtml:132
+#: usuarios/view/usuario_form.phtml:90 usuarios/view/usuario_form.phtml:128
 #: usuarios/view/usuario_lista.phtml:23
 #: usuarios/view/usuario_perm_menu.phtml:12
-#: actividades/view/_actividad_form.js.twig:80
-#: actividades/view/_calendario_form.js.twig:80
+#: actividades/view/_actividad_form.js.twig:94
+#: actividades/view/_calendario_form.js.twig:92
 #: encargossacd/view/encargo_select.html.twig:36
-#: encargossacd/view/encargo_ver.html.twig:43
+#: encargossacd/view/encargo_ver.html.twig:42
 #: encargossacd/view/horario_ver.html.twig:54
 #: encargossacd/view/sacd_ausencias_get.html.twig:19
-#: zonassacd/view/zona_ctr.html.twig:31 zonassacd/view/zona_sacd.html.twig:32
+#: zonassacd/view/zona_ctr.html.twig:28 zonassacd/view/zona_sacd.html.twig:29
 msgid "respuesta"
 msgstr ""
 
-#: core/mod_tabla_form.php:175 devel/controller/metamenus_get.php:61
-#: asistentes/view/form_mover.phtml:13 menus/view/menus_get.phtml:44
+#: core/mod_tabla_form.php:173 devel/controller/metamenus_get.php:61
+#: asistentes/view/form_mover.phtml:13 menus/view/menus_get.phtml:43
 msgid "cancelar"
 msgstr ""
 
@@ -2742,8 +2879,8 @@ msgstr ""
 #: encargossacd/controller/horario_ver.php:66
 #: procesos/controller/usuario_perm_activ_ajax.php:82
 #: ubis/controller/calendario_periodos_ajax.php:144
-#: menus/view/menus_get.phtml:53 menus/view/menus_get_lista.phtml:64
-#: ubis/view/teleco_tabla.phtml:64 procesos/view/procesos_select.html.twig:128
+#: menus/view/menus_get.phtml:52 menus/view/menus_get_lista.phtml:63
+#: ubis/view/teleco_tabla.phtml:64 procesos/view/procesos_select.html.twig:125
 msgid "nuevo"
 msgstr ""
 
@@ -2752,18 +2889,18 @@ msgid "no se ha ejecutado la acción"
 msgstr ""
 
 #: core/zzficha.class.php:140 devel/controller/factory_form.php:24
-#: actividades/view/actividad_form.phtml:240 devel/view/modulos_form.phtml:125
-#: dossiers/view/perm_dossier_pres.phtml:76
-#: personas/view/persona_de_paso.phtml:153 personas/view/persona_form.phtml:175
-#: ubis/view/cdc_form.phtml:99 ubis/view/ctrdl_form.phtml:109
-#: ubis/view/ctrex_form.phtml:88 ubis/view/direccion_form.phtml:209
-#: ubis/view/teleco_form.phtml:51
+#: actividades/view/actividad_form.phtml:239 devel/view/modulos_form.phtml:123
+#: dossiers/view/perm_dossier_pres.phtml:75
+#: personas/view/persona_de_paso.phtml:151 personas/view/persona_form.phtml:173
+#: ubis/view/cdc_form.phtml:97 ubis/view/ctrdl_form.phtml:107
+#: ubis/view/ctrex_form.phtml:86 ubis/view/direccion_form.phtml:201
+#: ubis/view/teleco_form.phtml:50
 #: actividades/view/_actividad_form_botones.html.twig:4
 #: actividades/view/_calendario_form_botones.html.twig:2
 msgid "guardar cambios"
 msgstr ""
 
-#: core/zzficha.class.php:149 ubis/view/direccion_form.phtml:215
+#: core/zzficha.class.php:149 ubis/view/direccion_form.phtml:207
 msgid "quitar dirección"
 msgstr ""
 
@@ -2798,53 +2935,53 @@ msgid ""
 "varias pasadas antes de tener a todos en el punto 1"
 msgstr ""
 
-#: dbextern/controller/sincro_index.php:195
+#: dbextern/controller/sincro_index.php:196
 msgid "personas en listas"
 msgstr ""
 
-#: dbextern/controller/sincro_index.php:197
+#: dbextern/controller/sincro_index.php:198
 msgid "personas a sincronizar"
 msgstr ""
 
-#: dbextern/controller/sincro_index.php:199
+#: dbextern/controller/sincro_index.php:200
 msgid "ejecutar"
 msgstr ""
 
-#: dbextern/controller/sincro_index.php:202
+#: dbextern/controller/sincro_index.php:203
 msgid "posiblemente estén en otra dl"
 msgstr ""
 
-#: dbextern/controller/sincro_index.php:204
-#: dbextern/controller/sincro_index.php:209
-#: dbextern/controller/sincro_index.php:214
-#: dbextern/controller/sincro_index.php:220
-#: dbextern/controller/sincro_index.php:225
-#: dbextern/controller/sincro_index.php:230
+#: dbextern/controller/sincro_index.php:205
+#: dbextern/controller/sincro_index.php:210
+#: dbextern/controller/sincro_index.php:215
+#: dbextern/controller/sincro_index.php:221
+#: dbextern/controller/sincro_index.php:226
+#: dbextern/controller/sincro_index.php:231
 msgid "ver"
 msgstr ""
 
-#: dbextern/controller/sincro_index.php:207
+#: dbextern/controller/sincro_index.php:208
 msgid "personas en listas desaparecidas en orbix"
 msgstr ""
 
-#: dbextern/controller/sincro_index.php:212
+#: dbextern/controller/sincro_index.php:213
 msgid "personas no estan unidas a orbix"
 msgstr ""
 
-#: dbextern/controller/sincro_index.php:216
+#: dbextern/controller/sincro_index.php:217
 msgid "personas en orbix"
 msgstr ""
 
-#: dbextern/controller/sincro_index.php:218
+#: dbextern/controller/sincro_index.php:219
 msgid "personas en orbix que deberían trasladarse a otra dl"
 msgstr ""
 
-#: dbextern/controller/sincro_index.php:223
+#: dbextern/controller/sincro_index.php:224
 msgid ""
 "personas en orbix con correspondencia en listas y desaparecidos de listas"
 msgstr ""
 
-#: dbextern/controller/sincro_index.php:228
+#: dbextern/controller/sincro_index.php:229
 msgid "personas en orbix sin correspondencia en listas"
 msgstr ""
 
@@ -2854,24 +2991,24 @@ msgid ""
 "ficha de la persona"
 msgstr ""
 
-#: dbextern/controller/ver_desaparecidos_de_listas.php:70
+#: dbextern/controller/ver_desaparecidos_de_listas.php:69
 msgid "personas de orbix que habían estado en listas y no se encuentran"
 msgstr ""
 
-#: dbextern/controller/ver_desaparecidos_de_listas.php:83
+#: dbextern/controller/ver_desaparecidos_de_listas.php:82
 msgid "fallecido o traslado a otra r"
 msgstr ""
 
-#: dbextern/controller/ver_desaparecidos_de_orbix.php:65
+#: dbextern/controller/ver_desaparecidos_de_orbix.php:64
 msgid "personas de listas que habían estado en orbix y no se encuentran"
 msgstr ""
 
-#: dbextern/controller/ver_desaparecidos_de_orbix.php:67
-#: dbextern/controller/ver_orbix_otradl.php:83
+#: dbextern/controller/ver_desaparecidos_de_orbix.php:66
+#: dbextern/controller/ver_orbix_otradl.php:82
 msgid "dl actual"
 msgstr ""
 
-#: dbextern/controller/ver_desaparecidos_de_orbix.php:77
+#: dbextern/controller/ver_desaparecidos_de_orbix.php:76
 msgid "desunir"
 msgstr ""
 
@@ -2880,39 +3017,39 @@ msgstr ""
 msgid "registro %s de %s"
 msgstr ""
 
-#: dbextern/controller/ver_listas.php:173
+#: dbextern/controller/ver_listas.php:169
 msgid "personas en listas Madrid"
 msgstr ""
 
-#: dbextern/controller/ver_listas.php:176
+#: dbextern/controller/ver_listas.php:172
 #, php-format
 msgid "unidas automáticamente: %s"
 msgstr ""
 
-#: dbextern/controller/ver_listas.php:185 dbextern/controller/ver_orbix.php:136
-#: ubis/view/direccion_form.phtml:128
+#: dbextern/controller/ver_listas.php:181 dbextern/controller/ver_orbix.php:136
+#: ubis/view/direccion_form.phtml:120
 msgid "anterior"
 msgstr ""
 
-#: dbextern/controller/ver_listas.php:187 dbextern/controller/ver_orbix.php:138
-#: ubis/view/direccion_form.phtml:131
+#: dbextern/controller/ver_listas.php:183 dbextern/controller/ver_orbix.php:138
+#: ubis/view/direccion_form.phtml:123
 msgid "siguiente"
 msgstr ""
 
-#: dbextern/controller/ver_listas.php:206
+#: dbextern/controller/ver_listas.php:202
 msgid "posibles coincidencias"
 msgstr ""
 
-#: dbextern/controller/ver_listas.php:218
-#: dbextern/controller/ver_listas.php:237
+#: dbextern/controller/ver_listas.php:214
+#: dbextern/controller/ver_listas.php:233
 msgid "unir"
 msgstr ""
 
-#: dbextern/controller/ver_listas.php:225
+#: dbextern/controller/ver_listas.php:221
 msgid "posibles coincidencias en otras dl"
 msgstr ""
 
-#: dbextern/controller/ver_listas.php:245
+#: dbextern/controller/ver_listas.php:241
 msgid "crear nuevo"
 msgstr ""
 
@@ -2921,7 +3058,7 @@ msgid "personas en orbix sin unir a Listas"
 msgstr ""
 
 #: dbextern/controller/ver_orbix.php:157
-#: dbextern/controller/ver_orbix_otradl.php:93
+#: dbextern/controller/ver_orbix_otradl.php:92
 #: dbextern/controller/ver_traslados.php:117
 msgid "trasladar"
 msgstr ""
@@ -2933,7 +3070,7 @@ msgid ""
 "ficha de la persona y al dossier de traslados"
 msgstr ""
 
-#: dbextern/controller/ver_orbix_otradl.php:81
+#: dbextern/controller/ver_orbix_otradl.php:80
 msgid "personas en otras dl en Listas"
 msgstr ""
 
@@ -2954,46 +3091,46 @@ msgstr ""
 msgid "id_orbix"
 msgstr ""
 
-#: dbextern/model/entity/personalistas.class.php:947
+#: dbextern/model/entity/personalistas.class.php:949
 msgid "apellidos nombre"
 msgstr ""
 
-#: dbextern/model/entity/personalistas.class.php:983
+#: dbextern/model/entity/personalistas.class.php:985
 #: personas/model/entity/personaglobal.class.php:1226
 msgid "lugar de nacimiento"
 msgstr ""
 
-#: dbextern/model/entity/personalistas.class.php:995
+#: dbextern/model/entity/personalistas.class.php:997
 msgid "fecha de nacimiento"
 msgstr ""
 
-#: dbextern/model/entity/personalistas.class.php:1008
+#: dbextern/model/entity/personalistas.class.php:1010
 #: usuarios/model/entity/usuario.class.php:450
-#: usuarios/view/usuario_form.phtml:219 usuarios/view/usuario_form_pwd.phtml:35
+#: usuarios/view/usuario_form.phtml:214 usuarios/view/usuario_form_pwd.phtml:35
 msgid "email"
 msgstr ""
 
-#: dbextern/model/entity/personalistas.class.php:1020
+#: dbextern/model/entity/personalistas.class.php:1022
 msgid "teléfono móvil"
 msgstr ""
 
-#: dbextern/model/entity/personalistas.class.php:1045
+#: dbextern/model/entity/personalistas.class.php:1047
 msgid "profesión cargo"
 msgstr ""
 
-#: dbextern/model/entity/personalistas.class.php:1058
+#: dbextern/model/entity/personalistas.class.php:1060
 msgid "encargos"
 msgstr ""
 
-#: dbextern/model/entity/personalistas.class.php:1071
+#: dbextern/model/entity/personalistas.class.php:1073
 msgid "titulo estudios"
 msgstr ""
 
-#: dbextern/model/entity/personalistas.class.php:1084
+#: dbextern/model/entity/personalistas.class.php:1086
 msgid "incorporación"
 msgstr ""
 
-#: dbextern/model/entity/personalistas.class.php:1097
+#: dbextern/model/entity/personalistas.class.php:1099
 msgid "Pertenece_r"
 msgstr ""
 
@@ -3007,7 +3144,7 @@ msgstr ""
 msgid "no se encuentra el ctr %s en la lista de ctr"
 msgstr ""
 
-#: devel/controller/apptables.php:78
+#: devel/controller/apptables.php:40
 msgid "ojo es un modulo principal"
 msgstr ""
 
@@ -3043,7 +3180,7 @@ msgstr ""
 msgid "datos pasados a resto y tablas vaciadas"
 msgstr ""
 
-#: devel/controller/metamenus_get.php:40 menus/view/menus_get.phtml:29
+#: devel/controller/metamenus_get.php:40 menus/view/menus_get.phtml:28
 msgid "texto menu"
 msgstr ""
 
@@ -3056,52 +3193,52 @@ msgstr ""
 #: menus/model/entity/menudb.class.php:478
 #: menus/model/entity/metamenu.class.php:394
 #: permisos/model/entity/moduloinstalado.class.php:360
-#: menus/view/menus_get.phtml:31
+#: menus/view/menus_get.phtml:30
 msgid "parametros"
 msgstr ""
 
-#: devel/controller/metamenus_get.php:43 devel/controller/metamenus_que.php:61
-#: menus/view/menus_get.phtml:37
+#: devel/controller/metamenus_get.php:43 devel/controller/metamenus_que.php:59
+#: menus/view/menus_get.phtml:36
 msgid "permisos"
 msgstr ""
 
 #: devel/controller/metamenus_get.php:52
-#: devel/controller/modulos_select.php:138 menus/view/menus_get.phtml:49
+#: devel/controller/modulos_select.php:138 menus/view/menus_get.phtml:48
 #: usuarios/view/perm_menu_form.phtml:14
 msgid "¿Está seguro?"
 msgstr ""
 
-#: devel/controller/metamenus_que.php:54
+#: devel/controller/metamenus_que.php:52
 #: menus/model/entity/metamenu.class.php:364
 msgid "modulo"
 msgstr ""
 
-#: devel/controller/metamenus_que.php:62
+#: devel/controller/metamenus_que.php:60
 msgid "'!' delante significa negado. ej: '!casa'."
 msgstr ""
 
-#: devel/controller/metamenus_que.php:63
+#: devel/controller/metamenus_que.php:61
 msgid "se pueden poner varios separados por ','. Importa el orden."
 msgstr ""
 
-#: devel/controller/metamenus_que.php:66
+#: devel/controller/metamenus_que.php:64
 msgid ""
 "se compara con los valores (lista csv) del campo 'permiso por oficinas' del "
 "usuario."
 msgstr ""
 
-#: devel/controller/metamenus_que.php:67
+#: devel/controller/metamenus_que.php:65
 msgid ""
 "valores posibles: 'dtor','todos' y las oficinas ('agd', 'sm' ,'scl'...)."
 msgstr ""
 
-#: devel/controller/metamenus_que.php:69
+#: devel/controller/metamenus_que.php:67
 msgid ""
 "se compara con el role del usuario. Si el role tiene activado 'permisos menu "
 "por oficina', también se compara con las oficinas."
 msgstr ""
 
-#: devel/controller/metamenus_que.php:70
+#: devel/controller/metamenus_que.php:68
 msgid "valores posibles: 'todos' y los roles (y oficinas si es el caso)."
 msgstr ""
 
@@ -3109,7 +3246,7 @@ msgstr ""
 msgid "crear tablas"
 msgstr ""
 
-#: devel/controller/modulos_select.php:66 devel/view/modulos_form.phtml:89
+#: devel/controller/modulos_select.php:66 devel/view/modulos_form.phtml:87
 msgid "módulos requeridos"
 msgstr ""
 
@@ -3131,7 +3268,7 @@ msgstr ""
 msgid "mods requeridos"
 msgstr ""
 
-#: devel/model/entity/modulo.class.php:412 devel/view/modulos_form.phtml:105
+#: devel/model/entity/modulo.class.php:412 devel/view/modulos_form.phtml:103
 msgid "apps requeridas"
 msgstr ""
 
@@ -3173,22 +3310,22 @@ msgid "fecha status"
 msgstr ""
 
 #: dossiers/model/entity/tipodossier.class.php:565
-#: dossiers/view/perm_dossier_pres.phtml:47
+#: dossiers/view/perm_dossier_pres.phtml:46
 msgid "tabla_from"
 msgstr ""
 
 #: dossiers/model/entity/tipodossier.class.php:577
-#: dossiers/view/perm_dossier_pres.phtml:48
+#: dossiers/view/perm_dossier_pres.phtml:47
 msgid "tabla_to"
 msgstr ""
 
 #: dossiers/model/entity/tipodossier.class.php:589
-#: dossiers/view/perm_dossier_pres.phtml:49
+#: dossiers/view/perm_dossier_pres.phtml:48
 msgid "campo_to"
 msgstr ""
 
 #: dossiers/model/entity/tipodossier.class.php:601
-#: dossiers/view/perm_dossier_pres.phtml:44
+#: dossiers/view/perm_dossier_pres.phtml:43
 msgid "id_tipo_dossier_rel"
 msgstr ""
 
@@ -3205,7 +3342,7 @@ msgid "depende modificar"
 msgstr ""
 
 #: dossiers/model/entity/tipodossier.class.php:649
-#: dossiers/view/perm_dossier_pres.phtml:52
+#: dossiers/view/perm_dossier_pres.phtml:51
 msgid "app"
 msgstr ""
 
@@ -3243,7 +3380,7 @@ msgstr ""
 #: encargossacd/controller/sacd_ficha_ajax.php:334
 #: encargossacd/controller/sacd_ficha_ajax.php:383
 #: encargossacd/view/ctr_get_ficha.html.twig:27
-#: encargossacd/view/sacd_ausencias_get.html.twig:77
+#: encargossacd/view/sacd_ausencias_get.html.twig:76
 msgid "crear horario"
 msgstr ""
 
@@ -3328,11 +3465,6 @@ msgstr ""
 msgid "excepciones"
 msgstr ""
 
-#: encargossacd/controller/encargo_horario_select.php:59
-#: encargossacd/model/entity/encargotexto.class.php:370
-msgid "texto"
-msgstr ""
-
 #: encargossacd/controller/encargo_horario_select.php:140
 msgid "¿Esta Seguro que desea borrar este horario?"
 msgstr ""
@@ -3340,7 +3472,7 @@ msgstr ""
 #: encargossacd/controller/encargo_select.php:85
 #: encargossacd/model/entity/encargohorarioexcepcion.class.php:730
 #: encargossacd/model/entity/encargosacdhorarioexcepcion.class.php:701
-#: encargossacd/view/sacd_ausencias_get.html.twig:67
+#: encargossacd/view/sacd_ausencias_get.html.twig:66
 msgid "horario"
 msgstr ""
 
@@ -3350,22 +3482,16 @@ msgstr ""
 #: profesores/model/entity/profesorcongreso.class.php:483
 #: profesores/model/entity/profesorpublicacion.class.php:647
 #: profesores/model/entity/publicacion.class.php:647
-#: actividades/view/actividad_form.phtml:197
-#: actividades/view/actividad_select_ubi.phtml:37 notas/view/acta_ver.phtml:102
+#: actividades/view/actividad_form.phtml:196
+#: actividades/view/actividad_select_ubi.phtml:37 notas/view/acta_ver.phtml:100
 #: profesores/view/ficha_profesor_stgr.print.phtml:80
 #: actividades/view/_actividad_form_body.html.twig:47
-#: actividades/view/actividad_que.html.twig:76
+#: actividades/view/actividad_que.html.twig:75
 msgid "lugar"
 msgstr ""
 
 #: encargossacd/controller/encargo_select.php:90
 msgid "descripción lugar"
-msgstr ""
-
-#: encargossacd/controller/encargo_select.php:90
-#: encargossacd/model/entity/encargotexto.class.php:346
-#: usuarios/model/entity/local.class.php:392 usuarios/view/personal.phtml:51
-msgid "idioma"
 msgstr ""
 
 #: encargossacd/controller/encargo_select.php:153
@@ -3402,7 +3528,7 @@ msgid "¿Esta seguro que desea borrar este horario?"
 msgstr ""
 
 #: encargossacd/controller/horario_sacd_ver.php:153
-#: encargossacd/view/horario_ver.html.twig:78
+#: encargossacd/view/horario_ver.html.twig:77
 msgid "activo desde"
 msgstr ""
 
@@ -3412,13 +3538,13 @@ msgstr ""
 #: ubis/controller/calendario_periodos_ajax.php:111
 #: ubis/controller/calendario_periodos_ajax.php:190
 #: ubis/controller/centros_ajax.php:28
-#: encargossacd/view/horario_ver.html.twig:80
-#: procesos/view/usuario_perm_activ.html.twig:94
+#: encargossacd/view/horario_ver.html.twig:79
+#: procesos/view/usuario_perm_activ.html.twig:89
 msgid "hasta"
 msgstr ""
 
 #: encargossacd/controller/horario_sacd_ver.php:158
-#: encargossacd/view/horario_ver.html.twig:83
+#: encargossacd/view/horario_ver.html.twig:82
 msgid "dia"
 msgstr ""
 
@@ -3562,60 +3688,52 @@ msgstr ""
 msgid "sólo debería haber uno"
 msgstr ""
 
-#: encargossacd/controller/listas_com_txt.php:39
-msgid "comunicación a los sacerdotes"
-msgstr ""
-
-#: encargossacd/controller/listas_com_txt.php:40
+#: encargossacd/controller/listas_com_txt.php:26
 msgid "comunicación a los centros"
 msgstr ""
 
-#: encargossacd/controller/listas_com_txt.php:41
+#: encargossacd/controller/listas_com_txt.php:27
 msgid "titulo: titular"
 msgstr ""
 
-#: encargossacd/controller/listas_com_txt.php:42
+#: encargossacd/controller/listas_com_txt.php:28
 msgid "titulo: sección"
 msgstr ""
 
-#: encargossacd/controller/listas_com_txt.php:43
+#: encargossacd/controller/listas_com_txt.php:29
 msgid "titulo: mañana"
 msgstr ""
 
-#: encargossacd/controller/listas_com_txt.php:44
+#: encargossacd/controller/listas_com_txt.php:30
 msgid "titulo: tarde 1ª hora"
 msgstr ""
 
-#: encargossacd/controller/listas_com_txt.php:45
+#: encargossacd/controller/listas_com_txt.php:31
 msgid "titulo: tarde 2ª hora"
 msgstr ""
 
-#: encargossacd/controller/listas_com_txt.php:46
+#: encargossacd/controller/listas_com_txt.php:32
 msgid "titulo (plural): mañanas"
 msgstr ""
 
-#: encargossacd/controller/listas_com_txt.php:47
+#: encargossacd/controller/listas_com_txt.php:33
 msgid "titulo (plural): tardes 1ª hora"
 msgstr ""
 
-#: encargossacd/controller/listas_com_txt.php:48
+#: encargossacd/controller/listas_com_txt.php:34
 msgid "titulo (plural): tardes 2ª hora"
 msgstr ""
 
-#: encargossacd/controller/listas_com_txt.php:49
+#: encargossacd/controller/listas_com_txt.php:35
 msgid "titulo: suplente"
 msgstr ""
 
-#: encargossacd/controller/listas_com_txt.php:50
+#: encargossacd/controller/listas_com_txt.php:36
 msgid "titulo: colaborador"
 msgstr ""
 
-#: encargossacd/controller/listas_com_txt.php:51
+#: encargossacd/controller/listas_com_txt.php:37
 msgid "titulo: otros"
-msgstr ""
-
-#: encargossacd/controller/listas_com_txt.php:52
-msgid "titulo: observaciones"
 msgstr ""
 
 #: encargossacd/controller/listas_d.php:206
@@ -3663,7 +3781,7 @@ msgid "colaborador"
 msgstr ""
 
 #: encargossacd/controller/sacd_ficha_ajax.php:404
-#: encargossacd/view/encargo_select.html.twig:70
+#: encargossacd/view/encargo_select.html.twig:69
 msgid "añadir encargo"
 msgstr ""
 
@@ -3724,7 +3842,7 @@ msgstr ""
 #: procesos/controller/usuario_perm_activ_ajax.php:192
 #: procesos/controller/usuario_perm_activ_ajax.php:194
 #: actividadestudios/view/ca_posibles_que.phtml:84
-#: menus/view/menus_get.phtml:33 ubis/view/ubis_buscar.phtml:149
+#: menus/view/menus_get.phtml:32 ubis/view/ubis_buscar.phtml:149
 #: ubis/view/ubis_buscar.phtml:161
 msgid "todos"
 msgstr ""
@@ -3815,19 +3933,6 @@ msgstr ""
 #: web/datetimelocal.class.php:30 web/nulldatetimelocal.class.php:29
 #: web/planning.class.php:82 zonassacd/view/planning_zones.html.twig:30
 msgid "diciembre"
-msgstr ""
-
-#: encargossacd/model/encargofuncionestrait.class.php:51
-#, php-format
-msgid "falta definir el texto %s en este idioma: %s"
-msgstr ""
-
-#: encargossacd/model/encargofuncionestrait.class.php:78
-msgid "Más de un centro definido como dl"
-msgstr ""
-
-#: encargossacd/model/encargofuncionestrait.class.php:95
-msgid "falta poner la dirección a la dl"
 msgstr ""
 
 #: encargossacd/model/encargofuncionestrait.class.php:511
@@ -3970,10 +4075,6 @@ msgstr ""
 msgid "id_item_tarea_sacd"
 msgstr ""
 
-#: encargossacd/model/entity/encargotexto.class.php:358
-msgid "clave"
-msgstr ""
-
 #: encargossacd/model/entity/encargotipo.class.php:49
 msgid "opcional"
 msgstr ""
@@ -3995,11 +4096,11 @@ msgid "igl"
 msgstr ""
 
 #: encargossacd/model/entity/encargotipo.class.php:55
-#: notas/controller/asig_faltan_personas_select.php:112
-#: notas/controller/asig_faltan_select.php:96
+#: notas/controller/asig_faltan_personas_select.php:118
+#: notas/controller/asig_faltan_select.php:115
 #: notas/controller/asignaturas_pendientes.php:38
 #: notas/controller/asignaturas_pendientes_resumen.php:78
-#: personas/controller/personas_select.php:321
+#: personas/controller/personas_select.php:323
 #: personas/model/entity/personaglobal.class.php:1178
 #: personas/view/zp_agregados.pres.php:111
 #: personas/view/zp_agregados.pres.php:366
@@ -4044,11 +4145,11 @@ msgstr ""
 msgid "buscar un tipo de encargo"
 msgstr ""
 
-#: menus/controller/menus_importar.php:23
+#: menus/controller/menus_importar.php:25
 msgid "casi seguro que no quieres hacerlo"
 msgstr ""
 
-#: menus/controller/menus_importar.php:30
+#: menus/controller/menus_importar.php:32
 msgid "Poner todas las dl igual"
 msgstr ""
 
@@ -4127,11 +4228,11 @@ msgid "lista de actas del curso %s"
 msgstr ""
 
 #: notas/controller/acta_select.php:117
-#: actividadestudios/view/acta_notas.phtml:150
+#: actividadestudios/view/acta_notas.phtml:148
 msgid "imprimir"
 msgstr ""
 
-#: notas/controller/acta_select.php:120 personas/view/traslado_form.phtml:67
+#: notas/controller/acta_select.php:120 personas/view/traslado_form.phtml:66
 #: profesores/view/ficha_profesor_stgr.print.phtml:56
 #: profesores/view/ficha_profesor_stgr.print.phtml:67
 msgid "fecha"
@@ -4162,25 +4263,30 @@ msgstr ""
 msgid "datos del acta"
 msgstr ""
 
-#: notas/controller/asig_faltan_personas_select.php:108
-#: notas/controller/asig_faltan_select.php:92
-#: personas/controller/personas_select.php:248
+#: notas/controller/asig_faltan_personas_select.php:53
+#: notas/controller/asig_faltan_select.php:55
+msgid "Debe marcar un grupo de personas (n o agd)"
+msgstr ""
+
+#: notas/controller/asig_faltan_personas_select.php:114
+#: notas/controller/asig_faltan_select.php:111
+#: personas/controller/personas_select.php:250
 msgid "modificar stgr"
 msgstr ""
 
-#: notas/controller/asig_faltan_personas_select.php:109
-#: notas/controller/asig_faltan_select.php:93
-#: personas/controller/personas_select.php:242
-#: personas/controller/personas_select.php:291
+#: notas/controller/asig_faltan_personas_select.php:115
+#: notas/controller/asig_faltan_select.php:112
+#: personas/controller/personas_select.php:244
+#: personas/controller/personas_select.php:293
 msgid "ver tessera"
 msgstr ""
 
-#: notas/controller/asig_faltan_personas_select.php:142
+#: notas/controller/asig_faltan_personas_select.php:151
 #, php-format
 msgid "lista de %s de %s a los que falta la asignatura %s (%s)"
 msgstr ""
 
-#: notas/controller/asig_faltan_select.php:99
+#: notas/controller/asig_faltan_select.php:117
 #, php-format
 msgid ""
 "lista de %s a los que faltan %d o menos asignaturas para finalizar el %s"
@@ -4193,7 +4299,7 @@ msgstr ""
 
 #: notas/controller/asignaturas_pendientes.php:40
 #: notas/controller/asignaturas_pendientes_resumen.php:80
-#: profesores/controller/profesor_asignatura_ajax.php:27
+#: profesores/controller/profesor_asignatura_ajax.php:29
 msgid "apellidos, nombre"
 msgstr ""
 
@@ -4235,11 +4341,11 @@ msgstr ""
 msgid "para poner c2 a todos los de la lista, hacer %s"
 msgstr ""
 
-#: notas/controller/form_1011.php:204
+#: notas/controller/form_1011.php:208
 msgid "fin cuadrienio"
 msgstr ""
 
-#: notas/controller/form_1011.php:205
+#: notas/controller/form_1011.php:209
 msgid "fin bienio"
 msgstr ""
 
@@ -4455,6 +4561,14 @@ msgstr ""
 msgid "profesores stgr"
 msgstr ""
 
+#: notas/controller/notas_ajax.php:126
+msgid "seleccionar la actividad"
+msgstr ""
+
+#: notas/controller/notas_ajax.php:129
+msgid "organniza"
+msgstr ""
+
 #: notas/controller/tessera_imprimir.php:194 notas/view/acta_imprimir.phtml:5
 msgid "Cara A (delante)"
 msgstr ""
@@ -4475,25 +4589,25 @@ msgstr ""
 
 #: notas/model/entity/acta.class.php:573
 #: notas/model/entity/personanota.class.php:754
-#: notas/model/select1011.class.php:63 notas/view/acta_ver.phtml:88
-#: notas/view/form_1011.phtml:167
+#: notas/model/select1011.class.php:63 notas/view/acta_ver.phtml:86
+#: notas/view/form_1011.phtml:273
 msgid "fecha acta"
 msgstr ""
 
-#: notas/model/entity/acta.class.php:586 notas/view/acta_ver.phtml:93
+#: notas/model/entity/acta.class.php:586 notas/view/acta_ver.phtml:91
 msgid "libro"
 msgstr ""
 
-#: notas/model/entity/acta.class.php:598 notas/view/acta_ver.phtml:96
+#: notas/model/entity/acta.class.php:598 notas/view/acta_ver.phtml:94
 msgid "página"
 msgstr ""
 
-#: notas/model/entity/acta.class.php:610 notas/view/acta_ver.phtml:99
+#: notas/model/entity/acta.class.php:610 notas/view/acta_ver.phtml:97
 msgid "línea"
 msgstr ""
 
 #: notas/model/entity/actatribunaldl.class.php:359
-#: notas/view/acta_ver.phtml:115
+#: notas/view/acta_ver.phtml:113
 msgid "examinador"
 msgstr ""
 
@@ -4522,7 +4636,7 @@ msgid "Non probatus"
 msgstr ""
 
 #: notas/model/entity/personanota.class.php:767
-#: notas/model/select1011.class.php:66 notas/view/form_1011.phtml:194
+#: notas/model/select1011.class.php:66 notas/view/form_1011.phtml:301
 msgid "detalle"
 msgstr ""
 
@@ -4531,7 +4645,7 @@ msgid "id_preceptor"
 msgstr ""
 
 #: notas/model/entity/personanota.class.php:803
-#: notas/model/select1011.class.php:65 notas/view/form_1011.phtml:181
+#: notas/model/select1011.class.php:65 notas/view/form_1011.phtml:287
 msgid "época"
 msgstr ""
 
@@ -4557,7 +4671,7 @@ msgstr ""
 msgid "borrar asignatura"
 msgstr ""
 
-#: notas/model/select1011.class.php:67 notas/view/form_1011.phtml:190
+#: notas/model/select1011.class.php:67 notas/view/form_1011.phtml:296
 msgid "cursada en"
 msgstr ""
 
@@ -4638,60 +4752,64 @@ msgstr ""
 msgid "cuadrienio año II-IV"
 msgstr ""
 
-#: personas/controller/personas_select.php:224
+#: personas/controller/personas_select.php:213
+msgid "No se encuentra ningún centro con esta condición"
+msgstr ""
+
+#: personas/controller/personas_select.php:226
 msgid "cambio de ctr"
 msgstr ""
 
-#: personas/controller/personas_select.php:230
+#: personas/controller/personas_select.php:232
 msgid "ficha"
 msgstr ""
 
-#: personas/controller/personas_select.php:251
-#: personas/controller/personas_select.php:294
+#: personas/controller/personas_select.php:253
+#: personas/controller/personas_select.php:296
 msgid "imprimir tessera"
 msgstr ""
 
-#: personas/controller/personas_select.php:258
+#: personas/controller/personas_select.php:260
 #: menus/view/traducir_menu.phtml:202 menus/view/traducir_menu.phtml:203
 msgid "posibles ca"
 msgstr ""
 
-#: personas/controller/personas_select.php:266
+#: personas/controller/personas_select.php:268
 msgid "petición ca"
 msgstr ""
 
-#: personas/controller/personas_select.php:269
+#: personas/controller/personas_select.php:271
 msgid "petición crt"
 msgstr ""
 
-#: personas/controller/personas_select.php:282
-#: personas/controller/personas_select.php:297
+#: personas/controller/personas_select.php:284
+#: personas/controller/personas_select.php:299
 msgid "ficha profesor stgr"
 msgstr ""
 
-#: personas/controller/personas_select.php:304
+#: personas/controller/personas_select.php:306
 msgid "atención actividades"
 msgstr ""
 
-#: personas/controller/personas_select.php:310
+#: personas/controller/personas_select.php:312
 msgid "tabla"
 msgstr ""
 
-#: personas/controller/personas_select.php:315
+#: personas/controller/personas_select.php:317
 msgid "socio"
 msgstr ""
 
-#: personas/controller/personas_select.php:324
+#: personas/controller/personas_select.php:326
 #: personas/model/entity/personaglobal.class.php:1116
-#: notas/view/form_1011.phtml:151 personas/view/traslado_form.phtml:82
+#: notas/view/form_1011.phtml:257 personas/view/traslado_form.phtml:81
 msgid "situación"
 msgstr ""
 
-#: personas/controller/personas_select.php:325
+#: personas/controller/personas_select.php:327
 msgid "fecha cambio situación"
 msgstr ""
 
-#: personas/controller/personas_select.php:403
+#: personas/controller/personas_select.php:405
 #: asistentes/view/planning_select.phtml:27
 #, php-format
 msgid "%s personas encontradas"
@@ -4832,10 +4950,10 @@ msgstr ""
 msgid "ctr cr"
 msgstr ""
 
-#: personas/model/entity/traslado.class.php:506 devel/view/db_que.phtml:43
-#: personas/view/p_public_personas.phtml:25
-#: personas/view/traslado_form.phtml:76 ubis/view/cdc_form.phtml:70
-#: ubis/view/ctrdl_form.phtml:60 ubis/view/ctrex_form.phtml:60
+#: personas/model/entity/traslado.class.php:506 devel/view/db_que.phtml:42
+#: personas/view/p_public_personas.phtml:26
+#: personas/view/traslado_form.phtml:75 ubis/view/cdc_form.phtml:68
+#: ubis/view/ctrdl_form.phtml:58 ubis/view/ctrex_form.phtml:58
 msgid "delegación"
 msgstr ""
 
@@ -4930,8 +5048,8 @@ msgstr ""
 #: personas/view/zp_public_personas.pres.php:39
 #: personas/view/zp_supernumerarios.pres.php:103
 #: personas/view/zp_supernumerarios.pres.php:123
-#: personas/view/p_public_personas.phtml:21
-#: personas/view/persona_de_paso.phtml:82 personas/view/persona_form.phtml:89
+#: personas/view/p_public_personas.phtml:22
+#: personas/view/persona_de_paso.phtml:80 personas/view/persona_form.phtml:87
 #: personas/view/zp_numerarios.phtml:103 personas/view/zp_numerarios.phtml:128
 msgid "datos personales"
 msgstr ""
@@ -4997,7 +5115,7 @@ msgid "madre"
 msgstr ""
 
 #: personas/view/zp_public_personas.pres.php:110
-#: personas/view/p_public_personas.phtml:26
+#: personas/view/p_public_personas.phtml:27
 msgid "centro-sede"
 msgstr ""
 
@@ -5111,7 +5229,7 @@ msgid "condición para %s de %s"
 msgstr ""
 
 #: procesos/controller/usuario_perm_activ_ajax.php:195
-#: menus/view/menus_get.phtml:34
+#: menus/view/menus_get.phtml:33
 msgid "ninguno"
 msgstr ""
 
@@ -5164,7 +5282,7 @@ msgstr ""
 
 #: procesos/model/entity/actividadtarea.class.php:317
 #: procesos/model/entity/proceso.class.php:572
-#: procesos/view/procesos_ver.html.twig:26
+#: procesos/view/procesos_ver.html.twig:24
 msgid "fase"
 msgstr ""
 
@@ -5216,27 +5334,27 @@ msgid "tipo de proceso"
 msgstr ""
 
 #: procesos/model/entity/proceso.class.php:589
-#: procesos/view/procesos_ver.html.twig:27
+#: procesos/view/procesos_ver.html.twig:25
 msgid "tarea"
 msgstr ""
 
 #: procesos/model/entity/proceso.class.php:619
-#: procesos/view/procesos_ver.html.twig:31
+#: procesos/view/procesos_ver.html.twig:29
 msgid "oficina responsable"
 msgstr ""
 
 #: procesos/model/entity/proceso.class.php:633
-#: procesos/view/procesos_ver.html.twig:34
+#: procesos/view/procesos_ver.html.twig:32
 msgid "fase previa"
 msgstr ""
 
 #: procesos/model/entity/proceso.class.php:650
-#: procesos/view/procesos_ver.html.twig:35
+#: procesos/view/procesos_ver.html.twig:33
 msgid "tarea previa"
 msgstr ""
 
 #: procesos/model/entity/proceso.class.php:665
-#: procesos/view/procesos_ver.html.twig:38
+#: procesos/view/procesos_ver.html.twig:36
 msgid "mensaje requisito"
 msgstr ""
 
@@ -5280,11 +5398,15 @@ msgstr ""
 msgid "tarea a buscar"
 msgstr ""
 
-#: profesores/controller/profesor_asignatura_ajax.php:30
+#: profesores/controller/profesor_asignatura_ajax.php:31
+msgid "docencia"
+msgstr ""
+
+#: profesores/controller/profesor_asignatura_ajax.php:33
 msgid "mail"
 msgstr ""
 
-#: profesores/controller/profesor_asignatura_que.php:45
+#: profesores/controller/profesor_asignatura_que.php:44
 msgid "profesores que pueden impartir una asignatura"
 msgstr ""
 
@@ -5459,7 +5581,7 @@ msgstr ""
 
 #: ubis/controller/calendario_periodos_ajax.php:38
 #: ubis/controller/calendario_periodos_ajax.php:72
-#: procesos/view/fases_activ_cambio.html.twig:121
+#: procesos/view/fases_activ_cambio.html.twig:118
 msgid "periodo"
 msgstr ""
 
@@ -5486,7 +5608,7 @@ msgid "reservado"
 msgstr ""
 
 #: ubis/controller/calendario_periodos_ajax.php:110
-#: procesos/view/usuario_perm_activ.html.twig:90
+#: procesos/view/usuario_perm_activ.html.twig:85
 msgid "desde"
 msgstr ""
 
@@ -5499,15 +5621,15 @@ msgid "Periodo"
 msgstr ""
 
 #: ubis/controller/centros_ajax.php:59 ubis/controller/centros_ajax.php:196
-#: ubis/model/entity/tipocentro.class.php:263 ubis/view/ctrdl_form.phtml:70
-#: ubis/view/ctrex_form.phtml:68 ubis/view/ubis_buscar.phtml:80
+#: ubis/model/entity/tipocentro.class.php:263 ubis/view/ctrdl_form.phtml:68
+#: ubis/view/ctrex_form.phtml:66 ubis/view/ubis_buscar.phtml:80
 #: ubis/view/ubis_buscar.phtml:189 ubis/view/ubis_buscar.phtml:208
 msgid "tipo de centro"
 msgstr ""
 
 #: ubis/controller/centros_ajax.php:61 ubis/controller/centros_ajax.php:197
-#: ubis/model/entity/centro.class.php:347 ubis/view/ctrdl_form.phtml:79
-#: ubis/view/ctrex_form.phtml:72 ubis/view/ubis_buscar.phtml:107
+#: ubis/model/entity/centro.class.php:347 ubis/view/ctrdl_form.phtml:77
+#: ubis/view/ctrex_form.phtml:70 ubis/view/ubis_buscar.phtml:107
 #: ubis/view/ubis_buscar.phtml:235
 msgid "tipo de labor"
 msgstr ""
@@ -5548,13 +5670,13 @@ msgstr ""
 msgid "sede, plazas"
 msgstr ""
 
-#: ubis/controller/direcciones_editar.php:161
+#: ubis/controller/direcciones_editar.php:174
 msgid ""
 "este ubi no dispone de una dirección. Compruebe primero si existe, en este "
 "caso, asígnesela. En caso contrario cree una nueva."
 msgstr ""
 
-#: ubis/controller/direcciones_editar.php:164
+#: ubis/controller/direcciones_editar.php:177
 msgid "asignar una dirección"
 msgstr ""
 
@@ -5562,27 +5684,27 @@ msgstr ""
 msgid "introduzca un valor para buscar una dirección existente"
 msgstr ""
 
-#: ubis/controller/direcciones_tabla.php:36 ubis/controller/list_ctr.php:191
-#: ubis/controller/ubis_lista.php:88 ubis/controller/ubis_tabla.php:408
+#: ubis/controller/direcciones_tabla.php:36 ubis/controller/list_ctr.php:246
+#: ubis/controller/ubis_lista.php:88 ubis/controller/ubis_tabla.php:410
 #: ubis/model/entity/direccionglobal.class.php:641
-#: ubis/view/direccion_form.phtml:147 ubis/view/home_ubis.phtml:15
+#: ubis/view/direccion_form.phtml:139 ubis/view/home_ubis.phtml:15
 msgid "dirección"
 msgstr ""
 
-#: ubis/controller/direcciones_tabla.php:37 ubis/controller/list_ctr.php:192
-#: ubis/controller/ubis_lista.php:89 ubis/controller/ubis_tabla.php:409
-#: actividadessacd/view/activ_sacd.html.twig:152
+#: ubis/controller/direcciones_tabla.php:37 ubis/controller/list_ctr.php:247
+#: ubis/controller/ubis_lista.php:89 ubis/controller/ubis_tabla.php:411
+#: actividadessacd/view/activ_sacd.html.twig:148
 msgid "cp"
 msgstr ""
 
-#: ubis/controller/direcciones_tabla.php:38 ubis/controller/list_ctr.php:193
-#: ubis/controller/ubis_lista.php:90 ubis/controller/ubis_tabla.php:410
+#: ubis/controller/direcciones_tabla.php:38 ubis/controller/list_ctr.php:248
+#: ubis/controller/ubis_lista.php:90 ubis/controller/ubis_tabla.php:412
 msgid "ciudad"
 msgstr ""
 
 #: ubis/controller/direcciones_tabla.php:39
 #: ubis/model/entity/direccionglobal.class.php:677
-#: ubis/view/direccion_form.phtml:166
+#: ubis/view/direccion_form.phtml:158
 msgid "provincia"
 msgstr ""
 
@@ -5593,7 +5715,7 @@ msgstr ""
 
 #: ubis/controller/direcciones_tabla.php:41
 #: ubis/model/entity/direccionglobal.class.php:701
-#: ubis/model/entity/ubiglobal.class.php:500 ubis/view/direccion_form.phtml:170
+#: ubis/model/entity/ubiglobal.class.php:500 ubis/view/direccion_form.phtml:162
 #: ubis/view/direcciones_que.phtml:24 ubis/view/ubis_buscar.phtml:71
 #: ubis/view/ubis_buscar.phtml:182
 #: cartaspresentacion/view/cartas_presentacion_buscar.html.twig:32
@@ -5604,94 +5726,90 @@ msgstr ""
 msgid "última modif."
 msgstr ""
 
-#: ubis/controller/home_ubis.php:108 ubis/controller/home_ubis.php:114
+#: ubis/controller/home_ubis.php:114 ubis/controller/home_ubis.php:120
 #: ubis/view/ubis_buscar.phtml:148
 msgid "casa"
 msgstr ""
 
-#: ubis/controller/home_ubis.php:118
-msgid "falta definir el tipo_ubi: "
+#: ubis/controller/home_ubis.php:124
+msgid "falta definir el tipo_ubi"
 msgstr ""
 
-#: ubis/controller/home_ubis.php:130 personas/view/persona_de_paso.phtml:159
-#: personas/view/persona_form.phtml:181
+#: ubis/controller/home_ubis.php:136 personas/view/persona_de_paso.phtml:157
+#: personas/view/persona_form.phtml:179
 msgid "formato texto"
 msgstr ""
 
-#: ubis/controller/list_ctr.php:189 ubis/controller/ubis_lista.php:87
-#: ubis/controller/ubis_tabla.php:407 ubis/model/entity/ubiglobal.class.php:512
-#: devel/view/db_que.phtml:40 ubis/view/cdc_form.phtml:72
-#: ubis/view/ctrdl_form.phtml:62 ubis/view/ctrex_form.phtml:62
+#: ubis/controller/list_ctr.php:244 ubis/controller/ubis_lista.php:87
+#: ubis/controller/ubis_tabla.php:409 ubis/model/entity/ubiglobal.class.php:512
+#: devel/view/db_que.phtml:39 ubis/view/cdc_form.phtml:70
+#: ubis/view/ctrdl_form.phtml:60 ubis/view/ctrex_form.phtml:60
 #: ubis/view/ubis_buscar.phtml:67 ubis/view/ubis_buscar.phtml:178
 #: cartaspresentacion/view/cartas_presentacion_buscar.html.twig:28
 msgid "región"
 msgstr ""
 
-#: ubis/controller/list_ctr.php:190
+#: ubis/controller/list_ctr.php:245
 msgid "tipo ctr o casa"
 msgstr ""
 
-#: ubis/controller/list_ctr.php:262 ubis/view/ubis_buscar.phtml:159
-msgid "de dl"
+#: ubis/controller/list_ctr.php:319 usuarios/view/perm_activ_form.phtml:25
+msgid "otras"
 msgstr ""
 
-#: ubis/controller/list_ctr.php:262 ubis/view/ubis_buscar.phtml:160
-msgid "de otra dl/cr"
-msgstr ""
-
-#: ubis/controller/list_ctr.php:271
+#: ubis/controller/list_ctr.php:331 ubis/controller/list_ctr.php:349
 msgid "sólo centros de n"
 msgstr ""
 
-#: ubis/controller/list_ctr.php:272
+#: ubis/controller/list_ctr.php:332
 msgid "todos los ctr de la dl"
 msgstr ""
 
-#: ubis/controller/list_ctr.php:273
+#: ubis/controller/list_ctr.php:333 ubis/controller/list_ctr.php:350
 msgid "sólo centros de agd"
 msgstr ""
 
-#: ubis/controller/list_ctr.php:274
+#: ubis/controller/list_ctr.php:334 ubis/controller/list_ctr.php:351
 msgid "sólo centros de s"
 msgstr ""
 
-#: ubis/controller/list_ctr.php:277
+#: ubis/controller/list_ctr.php:337
 msgid "sólo centros de sss+"
 msgstr ""
 
-#: ubis/controller/list_ctr.php:280
+#: ubis/controller/list_ctr.php:340
 msgid "sólo centros de nax"
 msgstr ""
 
-#: ubis/controller/list_ctr.php:282
+#: ubis/controller/list_ctr.php:342
 msgid "sólo obras corporativas"
 msgstr ""
 
-#: ubis/controller/list_ctr.php:283
+#: ubis/controller/list_ctr.php:343
 msgid "casas de retiros y de cv"
 msgstr ""
 
-#: ubis/controller/list_ctr.php:284
+#: ubis/controller/list_ctr.php:344
 msgid "sólo colegios"
 msgstr ""
 
-#: ubis/controller/list_ctr.php:285
+#: ubis/controller/list_ctr.php:345
 msgid "resto casas cdc"
 msgstr ""
 
-#: ubis/controller/list_ctr.php:289
+#: ubis/controller/list_ctr.php:352
 msgid "todos los centros"
 msgstr ""
 
-#: ubis/controller/list_ctr.php:290
+#: ubis/controller/list_ctr.php:353
 msgid "sólo delegaciones"
 msgstr ""
 
-#: ubis/controller/list_ctr.php:291
+#: ubis/controller/list_ctr.php:354
 msgid "sólo comisiones regionales"
 msgstr ""
 
-#: ubis/controller/list_ctr.php:292
+#: ubis/controller/list_ctr.php:355
 msgid "todas las casas"
 msgstr ""
 
@@ -5707,11 +5825,11 @@ msgstr ""
 msgid "introducir"
 msgstr ""
 
-#: ubis/controller/plano_bytea.php:151
+#: ubis/controller/plano_bytea.php:150
 msgid "ya existe un escrito. ¿Desea reemplazarlo?"
 msgstr ""
 
-#: ubis/controller/plano_bytea.php:171
+#: ubis/controller/plano_bytea.php:167
 msgid "ubicación del fichero"
 msgstr ""
 
@@ -5777,70 +5895,125 @@ msgstr ""
 msgid "nombre de la casa o centro"
 msgstr ""
 
-#: ubis/controller/ubis_tabla.php:126
+#: ubis/controller/ubis_tabla.php:128
 msgid "tabla de centros de la delegación"
 msgstr ""
 
-#: ubis/controller/ubis_tabla.php:135
+#: ubis/controller/ubis_tabla.php:137
 msgid "tabla de centros de fuera de la delegación"
 msgstr ""
 
-#: ubis/controller/ubis_tabla.php:143
+#: ubis/controller/ubis_tabla.php:145
 msgid "tabla de centros de la delegación femenina"
 msgstr ""
 
-#: ubis/controller/ubis_tabla.php:149 ubis/controller/ubis_tabla.php:189
-#: ubis/controller/ubis_tabla.php:258
+#: ubis/controller/ubis_tabla.php:151 ubis/controller/ubis_tabla.php:191
+#: ubis/controller/ubis_tabla.php:260
 msgid "tabla de toda las casas y centros"
 msgstr ""
 
-#: ubis/controller/ubis_tabla.php:168
+#: ubis/controller/ubis_tabla.php:170
 msgid "tabla de casas de la delegación"
 msgstr ""
 
-#: ubis/controller/ubis_tabla.php:174
+#: ubis/controller/ubis_tabla.php:176
 msgid "tabla de casas de fuera de la delegación"
 msgstr ""
 
-#: ubis/controller/ubis_tabla.php:183
+#: ubis/controller/ubis_tabla.php:185
 msgid "tabla de casas de la sf"
 msgstr ""
 
-#: ubis/controller/ubis_tabla.php:199
+#: ubis/controller/ubis_tabla.php:201
 msgid "tabla de casas y centros de la delegación"
 msgstr ""
 
-#: ubis/controller/ubis_tabla.php:205
+#: ubis/controller/ubis_tabla.php:207
 msgid "tabla de casas y centros de fuera de la delegación"
 msgstr ""
 
-#: ubis/controller/ubis_tabla.php:275
+#: ubis/controller/ubis_tabla.php:277
 #, php-format
 msgid "debe poner algún criterio de búsqueda"
 msgstr ""
 
-#: ubis/controller/ubis_tabla.php:366
+#: ubis/controller/ubis_tabla.php:368
 msgid "no existe esta ficha"
 msgstr ""
 
-#: ubis/controller/ubis_tabla.php:368
+#: ubis/controller/ubis_tabla.php:370
 msgid ""
 "OJO!: para crear un centro/casa debe especificar el tipo de centro/casa. "
 "Para ello debe buscar a través de 'ver más opciones' definiendo el tipo y la "
 "localización distinto a 'todos'."
 msgstr ""
 
-#: ubis/controller/ubis_tabla.php:370
+#: ubis/controller/ubis_tabla.php:372
 msgid "no existe esta ficha, puede crear una nueva, hacer click"
 msgstr ""
 
-#: ubis/controller/ubis_tabla.php:371
+#: ubis/controller/ubis_tabla.php:373
 msgid "aquí"
+msgstr ""
+
+#: ubis/model/cuadroslabor.class.php:10 ubis/view/ubis_buscar.phtml:110
+#: ubis/view/ubis_buscar.phtml:238
+msgid "sr"
+msgstr ""
+
+#: ubis/model/cuadroslabor.class.php:11
+#: profesores/view/ficha_profesor_stgr.print.phtml:39
+#: ubis/view/ubis_buscar.phtml:111 ubis/view/ubis_buscar.phtml:239
+msgid "n"
+msgstr ""
+
+#: ubis/model/cuadroslabor.class.php:12
+#: profesores/view/ficha_profesor_stgr.print.phtml:40
+#: ubis/view/ubis_buscar.phtml:83 ubis/view/ubis_buscar.phtml:112
+#: ubis/view/ubis_buscar.phtml:211 ubis/view/ubis_buscar.phtml:240
+msgid "agd"
+msgstr ""
+
+#: ubis/model/cuadroslabor.class.php:13 ubis/view/ubis_buscar.phtml:113
+#: ubis/view/ubis_buscar.phtml:241
+msgid "sg"
+msgstr ""
+
+#: ubis/model/cuadroslabor.class.php:14 ubis/view/ubis_buscar.phtml:117
+#: ubis/view/ubis_buscar.phtml:245
+msgid "club"
+msgstr ""
+
+#: ubis/model/cuadroslabor.class.php:15 ubis/view/ubis_buscar.phtml:118
+#: ubis/view/ubis_buscar.phtml:246
+msgid "bachilleres"
+msgstr ""
+
+#: ubis/model/cuadroslabor.class.php:16
+msgid "univ"
+msgstr ""
+
+#: ubis/model/cuadroslabor.class.php:17 ubis/view/ubis_buscar.phtml:120
+#: ubis/view/ubis_buscar.phtml:248
+msgid "jóvenes"
+msgstr ""
+
+#: ubis/model/cuadroslabor.class.php:18 ubis/view/ubis_buscar.phtml:121
+#: ubis/view/ubis_buscar.phtml:249
+msgid "mayores"
+msgstr ""
+
+#: ubis/model/cuadroslabor.class.php:29 menus/view/traducir_menu.phtml:139
+#: personas/view/persona_de_paso.phtml:93 ubis/view/ubis_buscar.phtml:98
+#: ubis/view/ubis_buscar.phtml:114 ubis/view/ubis_buscar.phtml:226
+#: ubis/view/ubis_buscar.phtml:242
+#: actividadessacd/view/activ_sacd.html.twig:147
+msgid "sss+"
 msgstr ""
 
 #: ubis/model/entity/casa.class.php:395
 #: ubis/model/entity/tipocasa.class.php:268 menus/view/traducir_menu.phtml:277
-#: ubis/view/cdc_form.phtml:89 ubis/view/ubis_buscar.phtml:196
+#: ubis/view/cdc_form.phtml:87 ubis/view/ubis_buscar.phtml:196
 msgid "tipo de casa"
 msgstr ""
 
@@ -5918,15 +6091,15 @@ msgid "persona"
 msgstr ""
 
 #: ubis/model/entity/direccionglobal.class.php:653
-#: ubis/view/direccion_form.phtml:160 ubis/view/direcciones_que.phtml:15
+#: ubis/view/direccion_form.phtml:152 ubis/view/direcciones_que.phtml:15
 msgid "código postal"
 msgstr ""
 
 #: ubis/model/entity/direccionglobal.class.php:665
-#: ubis/view/direccion_form.phtml:162 ubis/view/direcciones_que.phtml:19
+#: ubis/view/direccion_form.phtml:154 ubis/view/direcciones_que.phtml:19
 #: ubis/view/ubis_buscar.phtml:63 ubis/view/ubis_buscar.phtml:170
 #: cartaspresentacion/view/cartas_presentacion_buscar.html.twig:24
-#: cartaspresentacion/view/cartas_presentacion_que.html.twig:162
+#: cartaspresentacion/view/cartas_presentacion_que.html.twig:157
 msgid "población"
 msgstr ""
 
@@ -5939,12 +6112,12 @@ msgid "cp dcha"
 msgstr ""
 
 #: ubis/model/entity/direccionglobal.class.php:750
-#: ubis/view/direccion_form.phtml:184
+#: ubis/view/direccion_form.phtml:176
 msgid "latitud"
 msgstr ""
 
 #: ubis/model/entity/direccionglobal.class.php:762
-#: ubis/view/direccion_form.phtml:185
+#: ubis/view/direccion_form.phtml:177
 msgid "longitud"
 msgstr ""
 
@@ -5968,11 +6141,11 @@ msgstr ""
 msgid "id_region"
 msgstr ""
 
-#: ubis/model/entity/tarifa.class.php:415
+#: ubis/model/entity/tarifa.class.php:420
 msgid "id_item"
 msgstr ""
 
-#: ubis/model/entity/tarifa.class.php:427
+#: ubis/model/entity/tarifa.class.php:432
 msgid "cantidad"
 msgstr ""
 
@@ -5984,9 +6157,9 @@ msgstr ""
 msgid "nombre de tipo centro"
 msgstr ""
 
-#: ubis/model/entity/ubiglobal.class.php:464 ubis/view/cdc_form.phtml:68
-#: ubis/view/ctrdl_form.phtml:58 ubis/view/ctrex_form.phtml:58
-#: ubis/view/list_ctr.phtml:27
+#: ubis/model/entity/ubiglobal.class.php:464 ubis/view/cdc_form.phtml:66
+#: ubis/view/ctrdl_form.phtml:56 ubis/view/ctrex_form.phtml:56
+#: ubis/view/list_ctr.phtml:33
 msgid "tipo de ubi"
 msgstr ""
 
@@ -5995,7 +6168,7 @@ msgid "nombre ubi"
 msgstr ""
 
 #: ubis/model/entity/ubixdireccion.class.php:336
-#: ubis/view/direccion_form.phtml:150
+#: ubis/view/direccion_form.phtml:142
 msgid "principal"
 msgstr ""
 
@@ -6056,7 +6229,7 @@ msgid "guardar datos grupo"
 msgstr ""
 
 #: usuarios/controller/grupo_form.php:214
-#: usuarios/view/usuario_perm_menu.phtml:31
+#: usuarios/view/usuario_perm_menu.phtml:30
 msgid "oficina o grupo"
 msgstr ""
 
@@ -6066,7 +6239,7 @@ msgid "¿Está seguro que desea quitar este permiso?"
 msgstr ""
 
 #: usuarios/controller/grupo_lista.php:65
-#: zonassacd/model/entity/zona.class.php:403 menus/view/menus_que.phtml:19
+#: zonassacd/model/entity/zona.class.php:403 menus/view/menus_que.phtml:18
 msgid "grupo"
 msgstr ""
 
@@ -6133,16 +6306,16 @@ msgid "preferencia"
 msgstr ""
 
 #: usuarios/model/entity/role.class.php:369
-#: usuarios/view/usuario_form.phtml:182
+#: usuarios/view/usuario_form.phtml:177
 msgid "role"
 msgstr ""
 
-#: usuarios/model/entity/role.class.php:405 usuarios/view/role_form.phtml:79
+#: usuarios/model/entity/role.class.php:405 usuarios/view/role_form.phtml:77
 msgid "pau"
 msgstr ""
 
 #: usuarios/model/entity/usuario.class.php:438
-#: usuarios/view/usuario_form.phtml:218 usuarios/view/usuario_form_pwd.phtml:33
+#: usuarios/view/usuario_form.phtml:213 usuarios/view/usuario_form_pwd.phtml:33
 msgid "password"
 msgstr ""
 
@@ -6261,27 +6434,27 @@ msgstr ""
 msgid "tiene que ser un array"
 msgstr ""
 
-#: web/hash.class.php:139
+#: web/hash.class.php:144
 msgid "llegan campos hidden modificados"
 msgstr ""
 
-#: web/hash.class.php:157
+#: web/hash.class.php:175
 msgid "llegan distinto número o nombre de los campos que se dice que se envian"
 msgstr ""
 
-#: web/hash.class.php:208
+#: web/hash.class.php:219
 msgid "url modificada"
 msgstr ""
 
-#: web/hash.class.php:219 web/hash.class.php:224
+#: web/hash.class.php:230 web/hash.class.php:235
 msgid "problema general de seguridad"
 msgstr ""
 
-#: web/hash.class.php:225
+#: web/hash.class.php:236
 msgid "para ver más detalles activa el mode debug en core\\confgiGlobal"
 msgstr ""
 
-#: web/hash.class.php:255
+#: web/hash.class.php:266
 msgid "página con seguridad desactivada"
 msgstr ""
 
@@ -6373,22 +6546,22 @@ msgstr ""
 msgid "grupo de zonas a buscar"
 msgstr ""
 
-#: actividadcargos/view/form_1302.phtml:32
-#: actividadcargos/view/form_3102.phtml:32
+#: actividadcargos/view/form_1302.phtml:31
+#: actividadcargos/view/form_3102.phtml:31
 msgid "cargo de una actividad"
 msgstr ""
 
-#: actividadcargos/view/form_1302.phtml:60
-#: actividadcargos/view/form_3102.phtml:54
+#: actividadcargos/view/form_1302.phtml:59
+#: actividadcargos/view/form_3102.phtml:53
 msgid "¿asiste?"
 msgstr ""
 
-#: actividadcargos/view/form_1302.phtml:64
-#: actividadcargos/view/form_3102.phtml:58
+#: actividadcargos/view/form_1302.phtml:63
+#: actividadcargos/view/form_3102.phtml:57
 msgid "guardar datos del cargo"
 msgstr ""
 
-#: actividadcargos/view/form_3102.phtml:33 asistentes/view/form_3101.phtml:90
+#: actividadcargos/view/form_3102.phtml:32 asistentes/view/form_3101.phtml:86
 msgid "asistente"
 msgstr ""
 
@@ -6398,110 +6571,110 @@ msgid "relación de cargos"
 msgstr ""
 
 #: actividades/view/actividad_form.phtml:57
-#: actividades/view/_actividad_form.js.twig:57
-#: actividades/view/_calendario_form.js.twig:57
+#: actividades/view/_actividad_form.js.twig:71
+#: actividades/view/_calendario_form.js.twig:69
 msgid "debe concretar la sección en el tipo de actividad"
 msgstr ""
 
 #: actividades/view/actividad_form.phtml:58
-#: actividades/view/_actividad_form.js.twig:58
-#: actividades/view/_calendario_form.js.twig:58
+#: actividades/view/_actividad_form.js.twig:72
+#: actividades/view/_calendario_form.js.twig:70
 msgid "debe concretar los asistentes en el tipo de actividad"
 msgstr ""
 
 #: actividades/view/actividad_form.phtml:59
-#: actividades/view/_actividad_form.js.twig:59
-#: actividades/view/_calendario_form.js.twig:59
+#: actividades/view/_actividad_form.js.twig:73
+#: actividades/view/_calendario_form.js.twig:71
 msgid "debe concretar la actividad en el tipo de actividad"
 msgstr ""
 
 #: actividades/view/actividad_form.phtml:60
-#: actividades/view/_actividad_form.js.twig:60
-#: actividades/view/_calendario_form.js.twig:60
+#: actividades/view/_actividad_form.js.twig:74
+#: actividades/view/_calendario_form.js.twig:72
 msgid "debe concretar el tipo de actividad"
 msgstr ""
 
 #: actividades/view/actividad_form.phtml:64
-#: actividades/view/_actividad_form.js.twig:64
-#: actividades/view/_calendario_form.js.twig:64
+#: actividades/view/_actividad_form.js.twig:78
+#: actividades/view/_calendario_form.js.twig:76
 msgid "debe llenar el campo de Organiza"
 msgstr ""
 
-#: actividades/view/actividad_form.phtml:116
-#: actividades/view/actividad_select.phtml:65
+#: actividades/view/actividad_form.phtml:115
+#: actividades/view/actividad_select.phtml:62
 #: actividades/view/_actividad_form_head.html.twig:5
 #: actividades/view/_calendario_form_head.html.twig:4
 msgid "nueva actividad"
 msgstr ""
 
-#: actividades/view/actividad_form.phtml:118
+#: actividades/view/actividad_form.phtml:117
 #: actividades/view/_actividad_form_head.html.twig:7
 #: actividades/view/_calendario_form_head.html.twig:6
-#: actividades/view/actividad_que.html.twig:56
-#: procesos/view/tipos_activ_select.html.twig:77
+#: actividades/view/actividad_que.html.twig:55
+#: procesos/view/tipos_activ_select.html.twig:73
 msgid "escoger el tipo de actividad"
 msgstr ""
 
-#: actividades/view/actividad_form.phtml:133
+#: actividades/view/actividad_form.phtml:132
 #: actividades/view/_actividad_form_head.html.twig:22
 msgid "datos actividad"
 msgstr ""
 
-#: actividades/view/actividad_form.phtml:136
+#: actividades/view/actividad_form.phtml:135
 msgid "no tiene permisos para modificar los datos"
 msgstr ""
 
-#: actividades/view/actividad_form.phtml:139
+#: actividades/view/actividad_form.phtml:138
 msgid "cambiar el tipo"
 msgstr ""
 
-#: actividades/view/actividad_form.phtml:142
-#: actividades/view/actividad_form.phtml:153
-#: actividades/view/actividad_tarifa_tipo_form.phtml:74
+#: actividades/view/actividad_form.phtml:141
+#: actividades/view/actividad_form.phtml:152
+#: actividades/view/actividad_tarifa_tipo_form.phtml:73
 #: actividades/view/_actividad_form_head.html.twig:25
 #: actividades/view/_actividad_form_head.html.twig:36
 msgid "tipo de actividad"
 msgstr ""
 
-#: actividades/view/actividad_form.phtml:160
+#: actividades/view/actividad_form.phtml:159
 #: actividades/view/_actividad_form_body.html.twig:4
-#: actividades/view/actividad_que.html.twig:61
+#: actividades/view/actividad_que.html.twig:60
 msgid "estado"
 msgstr ""
 
-#: actividades/view/actividad_form.phtml:176
+#: actividades/view/actividad_form.phtml:175
 #: actividades/view/_actividad_form_body.html.twig:28
 msgid "generar"
 msgstr ""
 
-#: actividades/view/actividad_form.phtml:180
-#: actividades/view/actividad_form.phtml:184
+#: actividades/view/actividad_form.phtml:179
+#: actividades/view/actividad_form.phtml:183
 #: actividades/view/_actividad_form_body.html.twig:32
 #: actividades/view/_actividad_form_body.html.twig:36
 msgid "formato [hh:mm]"
 msgstr ""
 
-#: actividades/view/actividad_form.phtml:188
+#: actividades/view/actividad_form.phtml:187
 #: actividades/view/_actividad_form_body.html.twig:38
 msgid "dl/r que organiza"
 msgstr ""
 
-#: actividades/view/actividad_form.phtml:192
+#: actividades/view/actividad_form.phtml:191
 #: actividades/view/_actividad_form_body.html.twig:42
 msgid "plazas totales"
 msgstr ""
 
-#: actividades/view/actividad_form.phtml:215
+#: actividades/view/actividad_form.phtml:214
 #: actividades/view/_actividad_form_body.html.twig:65
 msgid "repetición anual por"
 msgstr ""
 
-#: actividades/view/actividad_form.phtml:234
+#: actividades/view/actividad_form.phtml:233
 #: actividades/view/_actividad_form_botones.html.twig:7
 msgid "crear ficha"
 msgstr ""
 
-#: actividades/view/actividad_form.phtml:237
+#: actividades/view/actividad_form.phtml:236
 #: actividades/view/_actividad_form_botones.html.twig:9
 msgid "guardar ficha"
 msgstr ""
@@ -6510,7 +6683,7 @@ msgstr ""
 msgid "¿Está seguro que desea borrar esta actividad?"
 msgstr ""
 
-#: actividades/view/actividad_select.phtml:47
+#: actividades/view/actividad_select.phtml:44
 msgid "realizar otra búsqueda"
 msgstr ""
 
@@ -6567,14 +6740,14 @@ msgstr ""
 msgid "opción 5: Por determinar"
 msgstr ""
 
-#: actividades/view/actividad_select_ubi.phtml:122
-#: actividades/view/actividad_select_ubi.phtml:139
-#: actividades/view/actividad_select_ubi.phtml:153
+#: actividades/view/actividad_select_ubi.phtml:120
+#: actividades/view/actividad_select_ubi.phtml:137
+#: actividades/view/actividad_select_ubi.phtml:151
 msgid "tiene que seleccionar una casa"
 msgstr ""
 
-#: actividades/view/actividad_select_ubi.phtml:168
-#: actividades/view/actividad_select_ubi.phtml:183
+#: actividades/view/actividad_select_ubi.phtml:166
+#: actividades/view/actividad_select_ubi.phtml:181
 msgid "tiene que escribir un lugar"
 msgstr ""
 
@@ -6600,16 +6773,16 @@ msgstr ""
 msgid "Vista para imprimir"
 msgstr ""
 
-#: actividadestudios/view/acta_notas.phtml:85
+#: actividadestudios/view/acta_notas.phtml:83
 msgid "notas del acta"
 msgstr ""
 
-#: actividadestudios/view/acta_notas.phtml:128
-#: actividadestudios/view/acta_notas.phtml:137 notas/view/form_1011.phtml:149
+#: actividadestudios/view/acta_notas.phtml:126
+#: actividadestudios/view/acta_notas.phtml:135 notas/view/form_1011.phtml:255
 msgid "sobre"
 msgstr ""
 
-#: actividadestudios/view/acta_notas.phtml:149
+#: actividadestudios/view/acta_notas.phtml:147
 msgid "grabar notas en tessera"
 msgstr ""
 
@@ -6629,12 +6802,12 @@ msgid "ya está"
 msgstr ""
 
 #: actividadestudios/view/ca_posibles_cuadro.phtml:19
-#: notas/view/asig_faltan_que.phtml:18 notas/view/asig_faltan_que.phtml:50
+#: notas/view/asig_faltan_que.phtml:21 notas/view/asig_faltan_que.phtml:53
 msgid "cuadrienio"
 msgstr ""
 
 #: actividadestudios/view/ca_posibles_cuadro.phtml:36
-#: notas/view/asig_faltan_que.phtml:19 notas/view/asig_faltan_que.phtml:51
+#: notas/view/asig_faltan_que.phtml:22 notas/view/asig_faltan_que.phtml:54
 msgid "año I"
 msgstr ""
 
@@ -6698,39 +6871,39 @@ msgstr ""
 msgid "ver cuadro"
 msgstr ""
 
-#: actividadestudios/view/form_1303.phtml:54
+#: actividadestudios/view/form_1303.phtml:50
 msgid "debe poner una asignatura"
 msgstr ""
 
-#: actividadestudios/view/form_1303.phtml:87
+#: actividadestudios/view/form_1303.phtml:82
 msgid "matrícula de asignaturas"
 msgstr ""
 
-#: actividadestudios/view/form_3005.phtml:73
+#: actividadestudios/view/form_3005.phtml:71
 msgid "asignatura de una actividad"
 msgstr ""
 
-#: actividadestudios/view/form_3005.phtml:87
+#: actividadestudios/view/form_3005.phtml:85
 msgid "corresponde"
 msgstr ""
 
-#: actividadestudios/view/form_3005.phtml:88
+#: actividadestudios/view/form_3005.phtml:86
 msgid "dl y asistentes"
 msgstr ""
 
-#: actividadestudios/view/form_3005.phtml:89
+#: actividadestudios/view/form_3005.phtml:87
 msgid "otros de paso"
 msgstr ""
 
-#: actividadestudios/view/form_3005.phtml:96
+#: actividadestudios/view/form_3005.phtml:94
 msgid "¿profesor avisado?"
 msgstr ""
 
-#: actividadestudios/view/form_3005.phtml:102
+#: actividadestudios/view/form_3005.phtml:100
 msgid "inicio clases"
 msgstr ""
 
-#: actividadestudios/view/form_3005.phtml:106
+#: actividadestudios/view/form_3005.phtml:104
 msgid "fin clases"
 msgstr ""
 
@@ -6815,31 +6988,31 @@ msgstr ""
 msgid "personas en otras r"
 msgstr ""
 
-#: asistentes/view/form_1301.phtml:55
+#: asistentes/view/form_1301.phtml:52
 msgid "asistencia a una actividad"
 msgstr ""
 
-#: asistentes/view/form_1301.phtml:70 asistentes/view/form_3101.phtml:105
+#: asistentes/view/form_1301.phtml:67 asistentes/view/form_3101.phtml:101
 msgid "estudios confirmados"
 msgstr ""
 
-#: asistentes/view/form_1301.phtml:79 asistentes/view/form_3101.phtml:116
+#: asistentes/view/form_1301.phtml:76 asistentes/view/form_3101.phtml:112
 msgid "propiedad de"
 msgstr ""
 
-#: asistentes/view/form_3101.phtml:89
+#: asistentes/view/form_3101.phtml:85
 msgid "asistente a una actividad"
 msgstr ""
 
-#: asistentes/view/form_3101.phtml:126
+#: asistentes/view/form_3101.phtml:122
 msgid "guardar datos del asistente"
 msgstr ""
 
-#: asistentes/view/form_3101.phtml:127
+#: asistentes/view/form_3101.phtml:123
 msgid "guardar y añadir otro asistente"
 msgstr ""
 
-#: asistentes/view/form_mover.phtml:5 menus/view/menus_get.phtml:57
+#: asistentes/view/form_mover.phtml:5 menus/view/menus_get.phtml:56
 msgid "mover a"
 msgstr ""
 
@@ -6848,7 +7021,7 @@ msgid "actividades previstas"
 msgstr ""
 
 #: asistentes/view/lista_asistentes.phtml:5
-#: asistentes/view/select3101.phtml:200
+#: asistentes/view/select3101.phtml:199
 msgid "relación de asistentes"
 msgstr ""
 
@@ -6951,7 +7124,7 @@ msgstr ""
 msgid "relación de actividades a las que asiste"
 msgstr ""
 
-#: asistentes/view/select3101.phtml:189
+#: asistentes/view/select3101.phtml:188
 msgid ""
 "¿Está seguro que desea transferir todas las personas seleccionadas a "
 "históricos?"
@@ -6987,27 +7160,27 @@ msgstr ""
 msgid "hay que hacer los dos pasos"
 msgstr ""
 
-#: devel/view/db_que.phtml:35
+#: devel/view/db_que.phtml:34
 msgid "nuevas dl"
 msgstr ""
 
-#: devel/view/db_que.phtml:48
+#: devel/view/db_que.phtml:47
 msgid "comun"
 msgstr ""
 
-#: devel/view/db_que.phtml:67
+#: devel/view/db_que.phtml:66
 msgid "hay que hacer los tres pasos"
 msgstr ""
 
-#: devel/view/db_que.phtml:69
+#: devel/view/db_que.phtml:68
 msgid "Eliminar dl"
 msgstr ""
 
-#: devel/view/modulos_form.phtml:79
+#: devel/view/modulos_form.phtml:77
 msgid "módulo"
 msgstr ""
 
-#: devel/view/modulos_form.phtml:126
+#: devel/view/modulos_form.phtml:124
 msgid "generar tablas"
 msgstr ""
 
@@ -7015,34 +7188,34 @@ msgstr ""
 msgid "añadir módulo"
 msgstr ""
 
-#: dossiers/view/perm_dossier_pres.phtml:39
+#: dossiers/view/perm_dossier_pres.phtml:38
 msgid "permisos de acceso a dossier seleccionado"
 msgstr ""
 
-#: dossiers/view/perm_dossier_pres.phtml:43
+#: dossiers/view/perm_dossier_pres.phtml:42
 msgid "id_tipo_dossier"
 msgstr ""
 
-#: dossiers/view/perm_dossier_pres.phtml:53
+#: dossiers/view/perm_dossier_pres.phtml:52
 msgid "clase"
 msgstr ""
 
-#: dossiers/view/perm_dossier_pres.phtml:61
+#: dossiers/view/perm_dossier_pres.phtml:60
 msgid "depende_modificar"
 msgstr ""
 
-#: dossiers/view/perm_dossier_pres.phtml:62
+#: dossiers/view/perm_dossier_pres.phtml:61
 msgid ""
 "depende_modificar activo implica que sólo podrá modificar la oficina "
 "correspondiente: agd para los agd, sm para los n, sg para los s, en dossiers "
 "que afectan a varios tipos de personas"
 msgstr ""
 
-#: dossiers/view/perm_dossier_pres.phtml:64
+#: dossiers/view/perm_dossier_pres.phtml:63
 msgid "permisos de lectura"
 msgstr ""
 
-#: dossiers/view/perm_dossier_pres.phtml:66
+#: dossiers/view/perm_dossier_pres.phtml:65
 msgid "permisos de escritura"
 msgstr ""
 
@@ -7050,27 +7223,27 @@ msgstr ""
 msgid "colaboradores"
 msgstr ""
 
-#: menus/view/menus_get.phtml:30
+#: menus/view/menus_get.phtml:29
 msgid "meta"
 msgstr ""
 
-#: menus/view/menus_get.phtml:32
+#: menus/view/menus_get.phtml:31
 msgid "marcar"
 msgstr ""
 
-#: menus/view/menus_get.phtml:57 menus/view/menus_get.phtml:62
+#: menus/view/menus_get.phtml:56 menus/view/menus_get.phtml:61
 msgid "no se guardan los cambios, sólo se cambia el grupo."
 msgstr ""
 
-#: menus/view/menus_get.phtml:62
+#: menus/view/menus_get.phtml:61
 msgid "copiar en"
 msgstr ""
 
-#: menus/view/menus_get_lista.phtml:46
+#: menus/view/menus_get_lista.phtml:45
 msgid "borrado"
 msgstr ""
 
-#: menus/view/menus_que.phtml:27
+#: menus/view/menus_que.phtml:26
 msgid "debe selccionar un grupo de menu para poder añadir un menu."
 msgstr ""
 
@@ -7167,7 +7340,7 @@ msgid "cambiar de fase"
 msgstr ""
 
 #: menus/view/traducir_menu.phtml:23 menus/view/traducir_menu.phtml:264
-#: notas/view/form_1011.phtml:185
+#: notas/view/form_1011.phtml:291
 msgid "ca"
 msgstr ""
 
@@ -7471,13 +7644,6 @@ msgstr ""
 msgid "sf n, nax y agd"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:139 personas/view/persona_de_paso.phtml:95
-#: ubis/view/ubis_buscar.phtml:98 ubis/view/ubis_buscar.phtml:114
-#: ubis/view/ubis_buscar.phtml:226 ubis/view/ubis_buscar.phtml:242
-#: actividadessacd/view/activ_sacd.html.twig:151
-msgid "sss+"
-msgstr ""
-
 #: menus/view/traducir_menu.phtml:141
 msgid "sssc"
 msgstr ""
@@ -7550,7 +7716,7 @@ msgstr ""
 msgid "ayuda"
 msgstr ""
 
-#: menus/view/traducir_menu.phtml:162 usuarios/view/usuario_form.phtml:210
+#: menus/view/traducir_menu.phtml:162 usuarios/view/usuario_form.phtml:205
 msgid "casas"
 msgstr ""
 
@@ -7802,84 +7968,88 @@ msgstr ""
 msgid "añadir acta"
 msgstr ""
 
-#: notas/view/acta_ver.phtml:114
+#: notas/view/acta_ver.phtml:112
 msgid "tribunal"
 msgstr ""
 
-#: notas/view/acta_ver.phtml:123
+#: notas/view/acta_ver.phtml:121
 msgid "guardar cambios acta"
 msgstr ""
 
-#: notas/view/acta_ver.phtml:127
+#: notas/view/acta_ver.phtml:125
 msgid "nueva acta convocatoria"
 msgstr ""
 
-#: notas/view/acta_ver.phtml:141
+#: notas/view/acta_ver.phtml:139
 msgid "escriba parte del nombre para buscar"
 msgstr ""
 
-#: notas/view/acta_ver.phtml:142 notas/view/acta_ver.phtml:152
+#: notas/view/acta_ver.phtml:140 notas/view/acta_ver.phtml:150
 msgid "no hay resultados"
 msgstr ""
 
-#: notas/view/acta_ver.phtml:143 notas/view/acta_ver.phtml:153
+#: notas/view/acta_ver.phtml:141 notas/view/acta_ver.phtml:151
 msgid "buscando..."
 msgstr ""
 
-#: notas/view/acta_ver.phtml:151
+#: notas/view/acta_ver.phtml:149
 msgid "escriba un texto para buscar"
 msgstr ""
 
-#: notas/view/asig_faltan_que.phtml:4
+#: notas/view/asig_faltan_que.phtml:7
 msgid "búsqueda de personas por número de asignaturas"
 msgstr ""
 
-#: notas/view/asig_faltan_que.phtml:20 notas/view/asig_faltan_que.phtml:52
+#: notas/view/asig_faltan_que.phtml:23 notas/view/asig_faltan_que.phtml:55
 msgid "año II-IV"
 msgstr ""
 
-#: notas/view/asig_faltan_que.phtml:23
+#: notas/view/asig_faltan_que.phtml:26
 msgid "número de asignaturas que faltan"
 msgstr ""
 
-#: notas/view/asig_faltan_que.phtml:27
+#: notas/view/asig_faltan_que.phtml:30
 msgid "incluir lista de asignaturas"
 msgstr ""
 
-#: notas/view/asig_faltan_que.phtml:36
+#: notas/view/asig_faltan_que.phtml:39
 msgid "búsqueda de personas por asignatura"
 msgstr ""
 
-#: notas/view/form_1011.phtml:83
+#: notas/view/form_1011.phtml:185
 msgid "valor de nota no válido"
 msgstr ""
 
-#: notas/view/form_1011.phtml:84
+#: notas/view/form_1011.phtml:186
 msgid "nota fuera de rango"
 msgstr ""
 
-#: notas/view/form_1011.phtml:129
+#: notas/view/form_1011.phtml:235
 msgid "asignaturas aprobadas"
 msgstr ""
 
-#: notas/view/form_1011.phtml:159
+#: notas/view/form_1011.phtml:265
 msgid "certificado"
 msgstr ""
 
-#: notas/view/form_1011.phtml:164
+#: notas/view/form_1011.phtml:270
 msgid "significa inventado"
 msgstr ""
 
-#: notas/view/form_1011.phtml:164
+#: notas/view/form_1011.phtml:270
 msgid "formato"
 msgstr ""
 
-#: notas/view/form_1011.phtml:183
+#: notas/view/form_1011.phtml:289
 msgid "sin especificar"
 msgstr ""
 
-#: notas/view/form_1011.phtml:187
+#: notas/view/form_1011.phtml:293
 msgid "semestre invierno"
+msgstr ""
+
+#: notas/view/form_1011.phtml:298
+msgid "añadir ca"
 msgstr ""
 
 #: notas/view/resumen_anual.phtml:3
@@ -7956,29 +8126,29 @@ msgstr ""
 msgid "iniciar sesión"
 msgstr ""
 
-#: personas/view/home_persona.phtml:17 ubis/view/home_ubis.phtml:13
+#: personas/view/home_persona.phtml:20 ubis/view/home_ubis.phtml:13
 msgid "editar"
 msgstr ""
 
-#: personas/view/persona_de_paso.phtml:34
+#: personas/view/persona_de_paso.phtml:33
 msgid ""
 "¿Está seguro que desea borrar esta persona? Sólo puedes borrar a los de tu "
 "dl."
 msgstr ""
 
-#: personas/view/persona_de_paso.phtml:87
+#: personas/view/persona_de_paso.phtml:85
 msgid "numerario"
 msgstr ""
 
-#: personas/view/persona_de_paso.phtml:88
+#: personas/view/persona_de_paso.phtml:86
 msgid "agregado"
 msgstr ""
 
-#: personas/view/persona_de_paso.phtml:92
+#: personas/view/persona_de_paso.phtml:90
 msgid "numeraria auxiliar"
 msgstr ""
 
-#: personas/view/persona_form.phtml:43
+#: personas/view/persona_form.phtml:42
 msgid "¿Está seguro que desea borrar esta persona?"
 msgstr ""
 
@@ -7994,7 +8164,7 @@ msgstr ""
 msgid "buscar en fichero cmb"
 msgstr ""
 
-#: personas/view/personas_select.phtml:130
+#: personas/view/personas_select.phtml:137
 msgid "añadir persona"
 msgstr ""
 
@@ -8010,27 +8180,16 @@ msgstr ""
 msgid "debería llenar el campo situación"
 msgstr ""
 
-#: personas/view/traslado_form.phtml:65
+#: personas/view/traslado_form.phtml:64
 msgid "origen"
 msgstr ""
 
-#: personas/view/traslado_form.phtml:66
+#: personas/view/traslado_form.phtml:65
 msgid "destino"
 msgstr ""
 
-#: personas/view/traslado_form.phtml:87
+#: personas/view/traslado_form.phtml:86
 msgid "actualizar cambios"
-msgstr ""
-
-#: profesores/view/ficha_profesor_stgr.print.phtml:39
-#: ubis/view/ubis_buscar.phtml:111 ubis/view/ubis_buscar.phtml:239
-msgid "n"
-msgstr ""
-
-#: profesores/view/ficha_profesor_stgr.print.phtml:40
-#: ubis/view/ubis_buscar.phtml:83 ubis/view/ubis_buscar.phtml:112
-#: ubis/view/ubis_buscar.phtml:211 ubis/view/ubis_buscar.phtml:240
-msgid "agd"
 msgstr ""
 
 #: profesores/view/ficha_profesor_stgr.print.phtml:44
@@ -8078,95 +8237,91 @@ msgstr ""
 msgid "debe indicar si es sf o sv"
 msgstr ""
 
-#: ubis/view/cdc_form.phtml:39
+#: ubis/view/cdc_form.phtml:38
 msgid "¿Está seguro que desea borrar esta casa?"
 msgstr ""
 
-#: ubis/view/cdc_form.phtml:81
+#: ubis/view/cdc_form.phtml:79
 msgid "minimo asistentes"
 msgstr ""
 
-#: ubis/view/cdc_form.phtml:83
+#: ubis/view/cdc_form.phtml:81
 msgid "nº máximo de sacd"
 msgstr ""
 
-#: ubis/view/ctrdl_form.phtml:29 ubis/view/ctrex_form.phtml:29
+#: ubis/view/ctrdl_form.phtml:28 ubis/view/ctrex_form.phtml:28
 msgid "¿Está seguro que desea borrar este centro?"
 msgstr ""
 
-#: ubis/view/ctrdl_form.phtml:66 ubis/view/ctrex_form.phtml:66
+#: ubis/view/ctrdl_form.phtml:64 ubis/view/ctrex_form.phtml:64
 msgid "¿puede ser cdc?"
 msgstr ""
 
-#: ubis/view/ctrdl_form.phtml:72
+#: ubis/view/ctrdl_form.phtml:70
 msgid "nº ejemplares pi"
 msgstr ""
 
-#: ubis/view/ctrdl_form.phtml:74
+#: ubis/view/ctrdl_form.phtml:72
 msgid "nº cartas"
 msgstr ""
 
-#: ubis/view/ctrdl_form.phtml:76
+#: ubis/view/ctrdl_form.phtml:74
 msgid "nº cartas mensuales"
 msgstr ""
 
-#: ubis/view/ctrdl_form.phtml:85
+#: ubis/view/ctrdl_form.phtml:83
 msgid "habitaciones individuales"
 msgstr ""
 
-#: ubis/view/ctrdl_form.phtml:90
+#: ubis/view/ctrdl_form.phtml:88
 msgid "nº de buzón"
 msgstr ""
 
-#: ubis/view/ctrdl_form.phtml:98 ubis/view/ctrex_form.phtml:77
+#: ubis/view/ctrdl_form.phtml:96 ubis/view/ctrex_form.phtml:75
 msgid "centro padre"
 msgstr ""
 
-#: ubis/view/direccion_form.phtml:92
-msgid "no existe ningún documento"
-msgstr ""
-
-#: ubis/view/direccion_form.phtml:138
+#: ubis/view/direccion_form.phtml:130
 msgid "nombre sede"
 msgstr ""
 
-#: ubis/view/direccion_form.phtml:155
+#: ubis/view/direccion_form.phtml:147
 msgid "dirección postal"
 msgstr ""
 
-#: ubis/view/direccion_form.phtml:159
+#: ubis/view/direccion_form.phtml:151
 msgid "inv"
 msgstr ""
 
-#: ubis/view/direccion_form.phtml:174
+#: ubis/view/direccion_form.phtml:166
 msgid "comentarios dirección"
 msgstr ""
 
-#: ubis/view/direccion_form.phtml:178
+#: ubis/view/direccion_form.phtml:170
 msgid "fecha introducción de datos"
 msgstr ""
 
-#: ubis/view/direccion_form.phtml:181
+#: ubis/view/direccion_form.phtml:173
 msgid "ver ejemplo dirección"
 msgstr ""
 
-#: ubis/view/direccion_form.phtml:198
+#: ubis/view/direccion_form.phtml:190
 msgid "ver plano"
 msgstr ""
 
-#: ubis/view/direccion_form.phtml:199
+#: ubis/view/direccion_form.phtml:191
 msgid "adjuntar plano"
 msgstr ""
 
-#: ubis/view/direccion_form.phtml:200
+#: ubis/view/direccion_form.phtml:192
 msgid "eliminar plano"
 msgstr ""
 
-#: ubis/view/direccion_form.phtml:212
+#: ubis/view/direccion_form.phtml:204
 msgid "eliminar dirección"
 msgstr ""
 
-#: ubis/view/direccion_form.phtml:218
+#: ubis/view/direccion_form.phtml:210
 msgid "añadir dirección"
 msgstr ""
 
@@ -8182,19 +8337,23 @@ msgstr ""
 msgid "telecos"
 msgstr ""
 
-#: ubis/view/list_ctr.phtml:18
+#: ubis/view/list_ctr.phtml:24
 msgid "listado de centros o casas"
 msgstr ""
 
-#: ubis/view/list_ctr.phtml:22 ubis/view/ubis_buscar.phtml:152
+#: ubis/view/list_ctr.phtml:28 ubis/view/ubis_buscar.phtml:152
 msgid "localización"
 msgstr ""
 
-#: ubis/view/teleco_form.phtml:34
+#: ubis/view/list_ctr.phtml:39
+msgid "listar"
+msgstr ""
+
+#: ubis/view/teleco_form.phtml:33
 msgid "tipo teleco"
 msgstr ""
 
-#: ubis/view/teleco_form.phtml:40
+#: ubis/view/teleco_form.phtml:39
 msgid "número"
 msgstr ""
 
@@ -8258,32 +8417,16 @@ msgstr ""
 msgid "comisiones"
 msgstr ""
 
-#: ubis/view/ubis_buscar.phtml:110 ubis/view/ubis_buscar.phtml:238
-msgid "sr"
-msgstr ""
-
-#: ubis/view/ubis_buscar.phtml:113 ubis/view/ubis_buscar.phtml:241
-msgid "sg"
-msgstr ""
-
-#: ubis/view/ubis_buscar.phtml:117 ubis/view/ubis_buscar.phtml:245
-msgid "club"
-msgstr ""
-
-#: ubis/view/ubis_buscar.phtml:118 ubis/view/ubis_buscar.phtml:246
-msgid "bachilleres"
-msgstr ""
-
 #: ubis/view/ubis_buscar.phtml:119 ubis/view/ubis_buscar.phtml:247
 msgid "universitarios"
 msgstr ""
 
-#: ubis/view/ubis_buscar.phtml:120 ubis/view/ubis_buscar.phtml:248
-msgid "jóvenes"
+#: ubis/view/ubis_buscar.phtml:159
+msgid "de dl"
 msgstr ""
 
-#: ubis/view/ubis_buscar.phtml:121 ubis/view/ubis_buscar.phtml:249
-msgid "mayores"
+#: ubis/view/ubis_buscar.phtml:160
+msgid "de otra dl/cr"
 msgstr ""
 
 #: ubis/view/ubis_buscar.phtml:257
@@ -8302,10 +8445,6 @@ msgstr ""
 msgid "nuevo grupo"
 msgstr ""
 
-#: usuarios/view/perm_activ_form.phtml:25
-msgid "otras"
-msgstr ""
-
 #: usuarios/view/perm_activ_form.phtml:73
 msgid "¿Esta seguro que desea borrar este permiso?"
 msgstr ""
@@ -8314,15 +8453,15 @@ msgstr ""
 msgid "¿Esta seguro que desea borrar este aviso?"
 msgstr ""
 
-#: usuarios/view/perm_activ_form.phtml:137
+#: usuarios/view/perm_activ_form.phtml:136
 msgid "permisos en actividades"
 msgstr ""
 
-#: usuarios/view/perm_activ_form.phtml:138
+#: usuarios/view/perm_activ_form.phtml:137
 msgid "propios"
 msgstr ""
 
-#: usuarios/view/perm_activ_form.phtml:151
+#: usuarios/view/perm_activ_form.phtml:150
 #: usuarios/view/perm_menu_form.phtml:51
 msgid "añadir permiso"
 msgstr ""
@@ -8391,15 +8530,15 @@ msgstr ""
 msgid "cambiar el password"
 msgstr ""
 
-#: usuarios/view/role_form.phtml:89 usuarios/view/role_grupmenu.phtml:28
+#: usuarios/view/role_form.phtml:87 usuarios/view/role_grupmenu.phtml:27
 msgid "grupos de menús"
 msgstr ""
 
-#: usuarios/view/role_form.phtml:97
+#: usuarios/view/role_form.phtml:95
 msgid "añadir grup menu"
 msgstr ""
 
-#: usuarios/view/role_grupmenu.phtml:25
+#: usuarios/view/role_grupmenu.phtml:24
 #, php-format
 msgid "añadir nuevo grupMenu a %s"
 msgstr ""
@@ -8436,11 +8575,11 @@ msgstr ""
 msgid "very strong password"
 msgstr ""
 
-#: usuarios/view/usuario_form.phtml:115 usuarios/view/usuario_form_pwd.phtml:59
+#: usuarios/view/usuario_form.phtml:111 usuarios/view/usuario_form_pwd.phtml:59
 msgid "debe poner un password 'fuerte' o 'muy fuerte'"
 msgstr ""
 
-#: usuarios/view/usuario_form.phtml:180
+#: usuarios/view/usuario_form.phtml:175
 msgid "nombre a mostrar"
 msgstr ""
 
@@ -8448,15 +8587,15 @@ msgstr ""
 msgid "¿Está seguro que desea borrar este permiso?"
 msgstr ""
 
-#: usuarios/view/usuario_form_avisos.phtml:58
+#: usuarios/view/usuario_form_avisos.phtml:57
 msgid "¿Está seguro que desea borrar este aviso?"
 msgstr ""
 
-#: usuarios/view/usuario_form_avisos.phtml:90
+#: usuarios/view/usuario_form_avisos.phtml:88
 msgid "avisos"
 msgstr ""
 
-#: usuarios/view/usuario_form_avisos.phtml:96
+#: usuarios/view/usuario_form_avisos.phtml:94
 msgid "añadir aviso"
 msgstr ""
 
@@ -8488,50 +8627,63 @@ msgstr ""
 msgid "nuevo usuario"
 msgstr ""
 
-#: actividades/view/_actividad_tipo.js.twig:87
+#: actividades/view/_actividad_tipo.js.twig:82
 msgid "¿Quiere cambiar el nombre de la actividad?"
 msgstr ""
 
-#: actividades/view/actividad_proceso.html.twig:86
+#: actividades/view/actividad_proceso.html.twig:82
 msgid "fases de la actividad"
 msgstr ""
 
-#: actividades/view/actividad_proceso.html.twig:88
+#: actividades/view/actividad_proceso.html.twig:84
 msgid "regenerar"
 msgstr ""
 
-#: actividades/view/actividad_proceso.html.twig:94
+#: actividades/view/actividad_proceso.html.twig:90
 msgid "actualizar"
 msgstr ""
 
-#: actividades/view/actividad_que.html.twig:71
+#: actividades/view/actividad_que.html.twig:70
 msgid "escoger la actividad"
 msgstr ""
 
-#: actividades/view/actividad_que.html.twig:74
+#: actividades/view/actividad_que.html.twig:73
 msgid "lugar según país o dl"
 msgstr ""
 
-#: actividadescentro/view/activ_ctr.html.twig:117
-#: actividadessacd/view/activ_sacd.html.twig:124
+#: actividadescentro/view/activ_ctr.html.twig:111
+#: actividadessacd/view/activ_sacd.html.twig:120
 msgid "+ prioridad"
 msgstr ""
 
-#: actividadescentro/view/activ_ctr.html.twig:118
-#: actividadessacd/view/activ_sacd.html.twig:125
+#: actividadescentro/view/activ_ctr.html.twig:112
+#: actividadessacd/view/activ_sacd.html.twig:121
 msgid "- prioridad"
 msgstr ""
 
-#: actividadessacd/view/activ_sacd.html.twig:148
+#: actividadessacd/view/activ_sacd.html.twig:144
 msgid "Selección de sacd"
 msgstr ""
 
-#: actividadessacd/view/activ_sacd.html.twig:149
+#: actividadessacd/view/activ_sacd.html.twig:145
 msgid "prelatura"
 msgstr ""
 
-#: actividadessacd/view/activ_sacd.html.twig:150
+#: actividadessacd/view/activ_sacd.html.twig:146
 msgid "de paso"
+msgstr ""
+
+#: actividadessacd/view/com_sacd_activ_periodo.html.twig:21
+msgid "lista con la atención de actividades para mandar a los sacd"
+msgstr ""
+
+#: actividadessacd/view/com_sacd_activ_periodo.html.twig:27
+#: encargossacd/view/listas_index.html.twig:46
+msgid "modificar los textos de las comunicaciones"
+msgstr ""
+
+#: actividadessacd/view/com_sacd_txt.html.twig:38
+msgid "textos para las comunicaciones de las actividades"
 msgstr ""
 
 #: cartaspresentacion/view/cartas_presentacion_buscar.html.twig:15
@@ -8542,11 +8694,16 @@ msgstr ""
 msgid "delegación (H)"
 msgstr ""
 
-#: cartaspresentacion/view/cartas_presentacion_que.html.twig:156
+#: cartaspresentacion/view/cartas_presentacion_que.html.twig:82
+msgid ""
+"¿Está seguro que quiere quitar los datos de presentación de este centro?"
+msgstr ""
+
+#: cartaspresentacion/view/cartas_presentacion_que.html.twig:151
 msgid "seleccionar centros con cartas de presentación"
 msgstr ""
 
-#: cartaspresentacion/view/cartas_presentacion_que.html.twig:158
+#: cartaspresentacion/view/cartas_presentacion_que.html.twig:153
 msgid "según dl"
 msgstr ""
 
@@ -8566,157 +8723,157 @@ msgstr ""
 msgid "exigencias del ctr"
 msgstr ""
 
-#: encargossacd/view/encargo_select.html.twig:54
+#: encargossacd/view/encargo_select.html.twig:53
 msgid "buscar un encargo"
 msgstr ""
 
-#: encargossacd/view/encargo_ver.html.twig:97
+#: encargossacd/view/encargo_ver.html.twig:94
 msgid "modificar encargo"
 msgstr ""
 
-#: encargossacd/view/horario_ver.html.twig:94
+#: encargossacd/view/horario_ver.html.twig:93
 msgid "nº de sacd"
 msgstr ""
 
-#: encargossacd/view/listas_index.html.twig:19
+#: encargossacd/view/listas_com_txt.html.twig:38
+msgid "textos para las comunicaciones"
+msgstr ""
+
+#: encargossacd/view/listas_index.html.twig:18
 msgid "comprobaciones"
 msgstr ""
 
-#: encargossacd/view/listas_index.html.twig:22
+#: encargossacd/view/listas_index.html.twig:21
 msgid "Eliminar encargos de centros inexistentes"
 msgstr ""
 
-#: encargossacd/view/listas_index.html.twig:25
+#: encargossacd/view/listas_index.html.twig:24
 msgid "listados de encargos para cr"
 msgstr ""
 
-#: encargossacd/view/listas_index.html.twig:28
+#: encargossacd/view/listas_index.html.twig:27
 msgid "cl sss+ (cr 1/14, 10,c)"
 msgstr ""
 
-#: encargossacd/view/listas_index.html.twig:30
+#: encargossacd/view/listas_index.html.twig:29
 msgid "atención ctr sf (cr 1/14, 10,a)"
 msgstr ""
 
-#: encargossacd/view/listas_index.html.twig:31
+#: encargossacd/view/listas_index.html.twig:30
 msgid "atención ctr sv (cr 1/14, 10,a)"
 msgstr ""
 
-#: encargossacd/view/listas_index.html.twig:32
+#: encargossacd/view/listas_index.html.twig:31
 msgid "atención iglesias, oc y lp (cr 1/14, 10,b)"
 msgstr ""
 
-#: encargossacd/view/listas_index.html.twig:33
+#: encargossacd/view/listas_index.html.twig:32
 msgid "oc y lp sf (cr 1/14, 10,b)"
 msgstr ""
 
-#: encargossacd/view/listas_index.html.twig:34
+#: encargossacd/view/listas_index.html.twig:33
 msgid "por sacd (cr 1/14, 10,d)"
 msgstr ""
 
-#: encargossacd/view/listas_index.html.twig:35
+#: encargossacd/view/listas_index.html.twig:34
 msgid "tabla por sacd (cr xx/16)"
 msgstr ""
 
-#: encargossacd/view/listas_index.html.twig:38
+#: encargossacd/view/listas_index.html.twig:37
 msgid "listados comunicaciones"
 msgstr ""
 
-#: encargossacd/view/listas_index.html.twig:40
+#: encargossacd/view/listas_index.html.twig:39
 msgid "exigències ctr sv"
 msgstr ""
 
-#: encargossacd/view/listas_index.html.twig:41
+#: encargossacd/view/listas_index.html.twig:40
 msgid "exigències ctr sf"
 msgstr ""
 
-#: encargossacd/view/listas_index.html.twig:42
+#: encargossacd/view/listas_index.html.twig:41
 msgid "exigències igl, oc..."
 msgstr ""
 
-#: encargossacd/view/listas_index.html.twig:43
+#: encargossacd/view/listas_index.html.twig:42
 msgid "comunicación a sacd Prelatura"
 msgstr ""
 
-#: encargossacd/view/listas_index.html.twig:44
+#: encargossacd/view/listas_index.html.twig:43
 msgid "comunicación a sacd sss+"
 msgstr ""
 
-#: encargossacd/view/listas_index.html.twig:45
+#: encargossacd/view/listas_index.html.twig:44
 msgid "comunicación a los centros sv"
 msgstr ""
 
-#: encargossacd/view/listas_index.html.twig:46
+#: encargossacd/view/listas_index.html.twig:45
 msgid "comunicación a los centros sf"
 msgstr ""
 
-#: encargossacd/view/listas_index.html.twig:47
-msgid "modificar los textos de las comunicaciones"
-msgstr ""
-
-#: encargossacd/view/sacd_ausencias.html.twig:58
+#: encargossacd/view/sacd_ausencias.html.twig:55
 msgid "otros encargos y ausencias"
 msgstr ""
 
-#: encargossacd/view/sacd_ausencias_get.html.twig:67
+#: encargossacd/view/sacd_ausencias_get.html.twig:66
 msgid "ausencias/tareas"
 msgstr ""
 
-#: encargossacd/view/sacd_ausencias_get.html.twig:81
+#: encargossacd/view/sacd_ausencias_get.html.twig:80
 msgid "añadir actividades personales"
 msgstr ""
 
-#: encargossacd/view/sacd_ausencias_get.html.twig:92
+#: encargossacd/view/sacd_ausencias_get.html.twig:91
 msgid "Para borrar basta dejar en blanco la fecha inicio y la fecha fin"
 msgstr ""
 
-#: procesos/view/fases_activ_cambio.html.twig:112
-#: procesos/view/usuario_perm_activ.html.twig:73
+#: procesos/view/fases_activ_cambio.html.twig:109
+#: procesos/view/usuario_perm_activ.html.twig:68
 msgid "para actividades que organiza"
 msgstr ""
 
-#: procesos/view/fases_activ_cambio.html.twig:113
-#: procesos/view/usuario_perm_activ.html.twig:75
+#: procesos/view/fases_activ_cambio.html.twig:110
+#: procesos/view/usuario_perm_activ.html.twig:70
 msgid "la propia dl"
 msgstr ""
 
-#: procesos/view/fases_activ_cambio.html.twig:114
-#: procesos/view/usuario_perm_activ.html.twig:76
+#: procesos/view/fases_activ_cambio.html.twig:111
+#: procesos/view/usuario_perm_activ.html.twig:71
 msgid "otras dl"
 msgstr ""
 
-#: procesos/view/fases_activ_cambio.html.twig:124
+#: procesos/view/fases_activ_cambio.html.twig:121
 msgid "pasar a fase"
 msgstr ""
 
-#: procesos/view/fases_activ_cambio.html.twig:132
+#: procesos/view/fases_activ_cambio.html.twig:129
 msgid "ver selección"
 msgstr ""
 
-#: procesos/view/usuario_perm_activ.html.twig:66
+#: procesos/view/usuario_perm_activ.html.twig:61
 msgid "Añadir nuevo permiso a"
 msgstr ""
 
-#: procesos/view/usuario_perm_activ.html.twig:70
+#: procesos/view/usuario_perm_activ.html.twig:65
 msgid "seleccionar un tipo de actividad"
 msgstr ""
 
-#: procesos/view/usuario_perm_activ.html.twig:84
+#: procesos/view/usuario_perm_activ.html.twig:79
 msgid "periodo del permiso"
 msgstr ""
 
-#: procesos/view/usuario_perm_activ.html.twig:85
+#: procesos/view/usuario_perm_activ.html.twig:80
 msgid ""
 "NOTA: Sólo salen las fases comunes a todos los procesos de los tipos de "
 "actividad seleccionados.\n"
 "Para ver más fases del proceso, debe limitar el tipo de actividad."
 msgstr ""
 
-#: procesos/view/usuario_perm_activ.html.twig:98
+#: procesos/view/usuario_perm_activ.html.twig:93
 msgid "acción"
 msgstr ""
 
-#: procesos/view/usuario_perm_activ.html.twig:101
+#: procesos/view/usuario_perm_activ.html.twig:96
 msgid "afecta a"
 msgstr ""
 
@@ -8768,39 +8925,39 @@ msgstr ""
 msgid "sin actividades"
 msgstr ""
 
-#: zonassacd/view/zona_ctr.html.twig:47
+#: zonassacd/view/zona_ctr.html.twig:43
 msgid "lista de centros de la zona"
 msgstr ""
 
-#: zonassacd/view/zona_ctr.html.twig:50 zonassacd/view/zona_ctr.html.twig:67
-#: zonassacd/view/zona_sacd.html.twig:51 zonassacd/view/zona_sacd.html.twig:65
+#: zonassacd/view/zona_ctr.html.twig:46 zonassacd/view/zona_ctr.html.twig:63
+#: zonassacd/view/zona_sacd.html.twig:47 zonassacd/view/zona_sacd.html.twig:61
 msgid "sin asignar zona"
 msgstr ""
 
-#: zonassacd/view/zona_ctr.html.twig:52
+#: zonassacd/view/zona_ctr.html.twig:48
 msgid "sin asignar zona sf"
 msgstr ""
 
-#: zonassacd/view/zona_ctr.html.twig:63
+#: zonassacd/view/zona_ctr.html.twig:59
 msgid "asignar los centros marcados a la zona"
 msgstr ""
 
-#: zonassacd/view/zona_ctr.html.twig:70
+#: zonassacd/view/zona_ctr.html.twig:66
 msgid "asignar"
 msgstr ""
 
-#: zonassacd/view/zona_sacd.html.twig:48
+#: zonassacd/view/zona_sacd.html.twig:44
 msgid "lista de sacd de la zona"
 msgstr ""
 
-#: zonassacd/view/zona_sacd.html.twig:61
+#: zonassacd/view/zona_sacd.html.twig:57
 msgid "asignar los sacd marcados a la zona"
 msgstr ""
 
-#: zonassacd/view/zona_sacd.html.twig:68
+#: zonassacd/view/zona_sacd.html.twig:64
 msgid "cambiar asignación zona"
 msgstr ""
 
-#: zonassacd/view/zona_sacd.html.twig:69
+#: zonassacd/view/zona_sacd.html.twig:65
 msgid "añadir asignación iglesia/cgi"
 msgstr ""
