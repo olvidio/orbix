@@ -166,6 +166,7 @@ function mega_array($oPresentacion,$oCentro,$ordenar_dl) {
     $direccion = $oDireccion->getDireccion();
     $poblacion = $oDireccion->getPoblacion();
     $c_p = $oDireccion->getC_p();
+    $pais = $oDireccion->getPais();
     $nom_sede = $oDireccion->getNom_sede();
 
 	$telf = $oCentro->getTeleco("telf","*"," / ") ;
@@ -349,20 +350,18 @@ function lista_cartas($a_mega,$ordenar_dl){
 			$html .= '</h3>';
 			$poblacion_anterior = '';
 			$html .= '<table>';
-			foreach ($a_pod_edad as $poblacion => $a_edad) {
-				$style = "";
+			foreach ($a_pob_edad as $poblacion => $a_edad) {
 				krsort($a_edad); // primero m, después j
 				if ($poblacion != $poblacion_anterior) {
-					$txt_popblacion = strtoupper($poblacion);
-					$txt_popblacion .= empty($pais)? '' :  '<br>('.$pais.')';
-					$html .= "<tr><td $class>".strtoupper($poblacion)."</td>";
+					$txt_poblacion = strtoupper($poblacion);
+					$txt_poblacion .= empty($pais)? '' :  '<br>('.$pais.')';
+					$html .= "<tr><td $class>".strtoupper($txt_poblacion)."</td>";
 				}
 				$f=0;
 				foreach ($a_edad as $edad => $texto) {
 					$f++;
 					if ($f > 1)	{ $html .= "<tr><td></td>"; }
 					if (is_array($texto)) {
-						$txt1 = '';
 						$ff = 0;
 						foreach ($texto as $key=>$txt) {
 							$ff++;
@@ -383,14 +382,13 @@ function lista_cartas($a_mega,$ordenar_dl){
 		}
 	}
 	echo $html;
-
-
 }
 
 function format_telf ($number) {
   // The regular expression is set to a variable.
     $regex = "/^(\(?\d{3}\)?)?[- .]?(\d{3})[- .]?(\d{3})[- .]?( \(?.*\)?)?$/";
 	$a_telf = explode(" / ", $number);
+	$formattedValue = [];
 	foreach ($a_telf as $tel) {
  	   $formattedValue[] = preg_replace($regex, "\\1 \\2 \\3\\4", $tel);
 	}

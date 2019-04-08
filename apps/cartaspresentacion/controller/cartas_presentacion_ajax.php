@@ -161,12 +161,12 @@ switch ($Qque_mod) {
                 // sobreescribo el anterior objeto.
                 $oCartaPresentacion = $cCartasPresentacion[0];
                 $oCartaPresentacion ->DBCarregar();
+                $pres_nom = $oCartaPresentacion->getPres_nom();
+                $pres_telf = $oCartaPresentacion->getPres_telf();
+                $pres_mail = $oCartaPresentacion->getPres_mail();
+                $zona = $oCartaPresentacion->getZona();
+                $observ = $oCartaPresentacion->getObserv();
             }
-            $pres_nom = $oCartaPresentacion->getPres_nom();
-            $pres_telf = $oCartaPresentacion->getPres_telf();
-            $pres_mail = $oCartaPresentacion->getPres_mail();
-            $zona = $oCartaPresentacion->getZona();
-            $observ = $oCartaPresentacion->getObserv();
             
             $oHash = new Hash();
             //$oHash->setUrl($url_ajax);
