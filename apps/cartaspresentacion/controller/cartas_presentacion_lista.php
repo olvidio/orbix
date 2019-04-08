@@ -10,6 +10,7 @@ use ubis\model\entity\GestorDireccionCtr;
 use ubis\model\CuadrosLabor;
 use ubis\model\entity\DireccionCtr;
 use ubis\model\entity\Direccion;
+use ubis\model\entity\GestorCtrxDireccion;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -139,6 +140,7 @@ switch ($Qque) {
 
 function mega_array($oPresentacion,$oCentro,$ordenar_dl) {
     $a_mega = [];
+    $id_ubi = $oPresentacion->getId_ubi();
     $id_direccion = $oPresentacion->getId_direccion();
 	$pres_nom = $oPresentacion->getPres_nom();
 	$pres_telf = $oPresentacion->getPres_telf();
@@ -196,6 +198,24 @@ function mega_array($oPresentacion,$oCentro,$ordenar_dl) {
 							'telf'		=> $telf1	);	
 		}
 	}
+	// Similar a ctr_padre: Si hay una segunda dirección del centro que sea la principal.
+	$GesCtrxDireccion = new GestorCtrxDireccion();
+	$cCtrxDirecciones = $GesCtrxDireccion->getCtrxDirecciones(['id_ubi' => $id_ubi,'principal' => 't']);
+	if (count($cCtrxDirecciones) > 0 ){
+	    foreach ($cCtrxDirecciones as $oCtrxDireccion) {
+	        $id_dir = $oCtrxDireccion->getId_direccion();
+	        if ($id_dir != $id_direccion) {
+	            $oDireccion2 = new DireccionCtr($id_dir);
+                //$telf1 .= 'fax:'.teleco($id_ctr_padre,"fax","*"," / ") ;
+                $a_direccion = array('direccion' => $oDireccion2->getDireccion(),
+                                'a_p'       => $oDireccion2->getA_p(),
+                                'c_p'       => $oDireccion2->getC_p(),
+                                'poblacion' => $oDireccion2->getPoblacion(),
+                                'telf'		=> ''	);	
+	        }
+	    }
+	}
+	
 
 	$a_texto = array ('pres_nom' => $pres_nom,
 					'pres_telf' => $pres_telf,
