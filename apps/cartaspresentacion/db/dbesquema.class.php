@@ -40,8 +40,8 @@ class DBEsquema extends DBAbstract {
             case "du_presentacion":
                 $datosTabla['tabla'] = "du_presentacion_dl";
                 $nom_tabla = $this->getNomTabla("du_presentacion_dl");
-                $campo_seq = '';
-                $id_seq = '';
+                $campo_seq = 'id_item';
+                $id_seq = $nom_tabla."_".$campo_seq."_seq";
                 break;
         }
         $datosTabla['nom_tabla'] = $nom_tabla;
@@ -64,6 +64,9 @@ class DBEsquema extends DBAbstract {
         $datosTabla = $this->infoTable($tabla);
         
         $nom_tabla = $datosTabla['nom_tabla'];
+        $campo_seq = $datosTabla['campo_seq'];
+        $id_seq = $datosTabla['id_seq'];
+        
         $nom_tabla_parent = 'public';
         if ($this->vf == 'v') {
             $nom_tabla_parent = 'publicv';
@@ -79,7 +82,24 @@ class DBEsquema extends DBAbstract {
         
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
         
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_ubi); ";
+        //secuencia
+        $a_sql[] = "CREATE SEQUENCE IF NOT EXISTS $id_seq;";
+        $a_sql[] = "ALTER SEQUENCE $id_seq
+                    INCREMENT BY 1
+                    MINVALUE 1
+                    MAXVALUE 9223372036854775807
+                    START WITH 1
+                    NO CYCLE;";
+        $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
+        
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
+        
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT du_presentacion_dl_id_tem_ukey
+                    UNIQUE ($campo_seq); ";
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
+        
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT du_presentacion_dl_ukey
+                    UNIQUE (id_ubi, id_direccion); ";
         
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
         

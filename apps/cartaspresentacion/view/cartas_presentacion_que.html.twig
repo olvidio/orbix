@@ -44,20 +44,17 @@ fnjs_cerrar=function(){
 	document.getElementById("overlay").style.display = "none";
 }
 
-fnjs_modificar=function(id_ubi){
+fnjs_modificar=function(id_direccion,id_ubi){
 	$('#div_modificar').addClass('ventana');
 	$('#div_modificar').width('auto');
 	$('#div_modificar').height('auto');
 	document.getElementById("overlay").style.display = "block";
 	
 	var url='{{ url_ajax }}';
-	if (id_ubi) {
-		var parametros='que_mod=form_pres&id_ubi='+id_ubi;
-	} else {
-		id_ubi =$('#id_cdc').val();
-		var parametros='que_mod=nuevo&id_ubi='+id_ubi;
+	if (id_direccion) {
+		var parametros='que_mod=form_pres&id_direccion='+id_direccion+'&id_ubi='+id_ubi;
 	}
-	var parametros = parametros + '{{ h_del|raw }}';
+	var parametros = parametros + '{{ h_update|raw }}';
 	fnjs_update_div('#div_modificar',url+'?'+parametros);
 }
 
@@ -78,11 +75,11 @@ fnjs_ver=function(){
 	document.getElementById("overlay").style.display = "none";
 }
 
-fnjs_eliminar_cp=function(id_ubi){
+fnjs_eliminar_cp=function(id_item){
     seguro=confirm("{{ "¿Está seguro que quiere quitar los datos de presentación de este centro?"|trans }}");
     if (seguro) { 
         var url='{{ url_ajax }}';
-        var parametros='que_mod=eliminar&id_ubi='+id_ubi+'{{ h_del|raw }}';
+        var parametros='que_mod=eliminar&id_item='+id_item+'{{ h_del|raw }}';
         //alert ("param "+parametros);
         $.ajax({
             url: url,

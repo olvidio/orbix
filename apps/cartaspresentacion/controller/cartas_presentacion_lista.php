@@ -8,6 +8,8 @@ use ubis\model\entity\Centro;
 use ubis\model\entity\GestorCentro;
 use ubis\model\entity\GestorDireccionCtr;
 use ubis\model\CuadrosLabor;
+use ubis\model\entity\DireccionCtr;
+use ubis\model\entity\Direccion;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -36,11 +38,10 @@ switch ($Qque) {
 		$a_mega = array();
 		foreach ($colPresentacion as $oPresentacion) {
 			$id_ubi = $oPresentacion->getId_ubi();
-
-			$oCentro = new Centro($id_ubi);
-		    $dl = $oCentro->getDl();
-			if ($solo_dl == 1 && $dl != $mi_dele) continue;
-			$a_mega = array_merge_recursive( $a_mega, mega_array($oPresentacion,$oCentro,$ordenar_dl));
+            $oCentro = new Centro($id_ubi);
+            $dl = $oCentro->getDl();
+            if ($solo_dl == 1 && $dl != $mi_dele) continue;
+            $a_mega = array_merge_recursive( $a_mega, mega_array($oPresentacion,$oCentro,$ordenar_dl));
 		}
 		echo lista_cartas($a_mega,$ordenar_dl);
 		break;
@@ -67,6 +68,7 @@ switch ($Qque) {
 			$cDirecciones = $GesDirecciones->getDirecciones($aWhere,$aOperador);
 			$a_mega = array();
 			foreach ($cDirecciones as $oDireccion) {
+			    $id_direccion = $oDireccion->getId_direccion();
 			    $cId_ubis = $oDireccion->getUbis();
 			    $cCentros = [];
 			    foreach ($cId_ubis as $oUbi) {
@@ -78,7 +80,7 @@ switch ($Qque) {
 				foreach ($cCentros as $oCentro) {
 					$id_ubi = $oCentro->getId_ubi();
 					$GesPresentacion = new GestorCartaPresentacion();
-					$colPresentacion = $GesPresentacion->getCartasPresentacion(array('id_ubi'=>$id_ubi));
+					$colPresentacion = $GesPresentacion->getCartasPresentacion(array('id_ubi'=>$id_ubi,'id_direccion'=>$id_direccion));
 					if (!empty($colPresentacion) && !empty($colPresentacion[0])) {
 						$oPresentacion=$colPresentacion[0];
 						$a_mega = array_merge_recursive($a_mega,mega_array($oPresentacion,$oCentro,$ordenar_dl));
@@ -108,9 +110,8 @@ switch ($Qque) {
 			foreach ($cCentros as $oCentro) {
 				$id_ubi = $oCentro->getId_ubi();
 				$GesPresentacion = new GestorCartaPresentacion();
-				$colPresentacion = $GesPresentacion->getCartasPresentacion(array('id_ubi'=>$id_ubi));
-				if (!empty($colPresentacion) && !empty($colPresentacion[0])) {
-					$oPresentacion=$colPresentacion[0];
+				$cPresentacion = $GesPresentacion->getCartasPresentacion(array('id_ubi'=>$id_ubi));
+				foreach ($cPresentacion as $oPresentacion) {
 					$a_mega = array_merge_recursive($a_mega,mega_array($oPresentacion,$oCentro,$ordenar_dl));
 				}
 			}
@@ -126,9 +127,8 @@ switch ($Qque) {
 			foreach ($cCentros as $oCentro) {
 				$id_ubi = $oCentro->getId_ubi();
 				$GesPresentacion = new GestorCartaPresentacion();
-				$colPresentacion = $GesPresentacion->getCartasPresentacion(array('id_ubi'=>$id_ubi));
-				if (!empty($colPresentacion) && !empty($colPresentacion[0])) {
-					$oPresentacion=$colPresentacion[0];
+				$cPresentacion = $GesPresentacion->getCartasPresentacion(array('id_ubi'=>$id_ubi));
+				foreach ($cPresentacion as $oPresentacion) {
 					$a_mega = array_merge_recursive($a_mega,mega_array($oPresentacion,$oCentro,$ordenar_dl));
 				}
 			}
@@ -139,6 +139,7 @@ switch ($Qque) {
 
 function mega_array($oPresentacion,$oCentro,$ordenar_dl) {
     $a_mega = [];
+    $id_direccion = $oPresentacion->getId_direccion();
 	$pres_nom = $oPresentacion->getPres_nom();
 	$pres_telf = $oPresentacion->getPres_telf();
 	$pres_mail = $oPresentacion->getPres_mail();
@@ -150,8 +151,6 @@ function mega_array($oPresentacion,$oCentro,$ordenar_dl) {
 	$tipo_labor = $oCentro->getTipo_labor();
 	$id_ctr_padre = $oCentro->getId_ctr_padre();
 
-	$cDirecciones = $oCentro->getDirecciones();
-
 	$direccion = '';
 	$nom_sede = '';
 	$a_p = '';
@@ -161,15 +160,11 @@ function mega_array($oPresentacion,$oCentro,$ordenar_dl) {
 	$telf = '';
 	$a_direccion = array();
 
-	$d = 0;
-	foreach ($cDirecciones as $oDireccion) {
-	    $d++;
-	    if ($d > 1) { continue; } // Solo una
-	    $direccion = $oDireccion->getDireccion();
-	    $poblacion = $oDireccion->getPoblacion();
-	    $c_p = $oDireccion->getC_p();
-	    $nom_sede = $oDireccion->getNom_sede();
-	}
+    $oDireccion = new DireccionCtr($id_direccion);
+    $direccion = $oDireccion->getDireccion();
+    $poblacion = $oDireccion->getPoblacion();
+    $c_p = $oDireccion->getC_p();
+    $nom_sede = $oDireccion->getNom_sede();
 
 	$telf = $oCentro->getTeleco("telf","*"," / ") ;
 	$fax = $oCentro->getTeleco("fax","*"," / ");

@@ -22,13 +22,14 @@ use ubis\model\entity as ubis;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
-//$oPosicion->recordar($Qrefresh);
+$oPosicion->recordar($Qrefresh);
 
 $Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
 $Qmod = (string) \filter_input(INPUT_POST, 'mod');
 $Qobj_dir = (string) \filter_input(INPUT_POST, 'obj_dir');
 // id_direccion es string, porque puede ser una lista de varios separados por coma
 $Qid_direccion = (string) \filter_input(INPUT_POST, 'id_direccion');
+$Qid_direccion = urldecode($Qid_direccion);
 
 switch ($Qobj_dir) {
 	case 'DireccionCdc': // tipo dl pero no de la mia
@@ -139,6 +140,19 @@ if ($Qmod == 'nuevo') {
 	$oHashPlano->setCamposForm('obj_dir!act!id_direccion');
 	$h = $oHashPlano->linkSinVal();
 
+	$oHashDir = new web\Hash();
+	$oHashDir->setUrl('apps/ubis/controller/direcciones_editar.php');
+	$oHashDir->setCamposNo('inc');
+	$aCamposHidden = [ 'id_ubi' => $Qid_ubi,
+	                   'id_direccion' => $Qid_direccion,
+	                   'obj_dir' => $Qobj_dir,
+	                   'idx' => $idx,
+	                   'refresh' => 1,
+                     ];
+    $oHashDir->setArrayCamposHidden($aCamposHidden);
+    $go_dir = $oHashDir->linkConVal();
+	//$go_dir = web\Hash::link('apps/ubis/controller/direcciones_editar.php?'.http_build_query(array('id_ubi'=>$Qid_ubi,'id_direccion'=>$Qid_direccion,'obj_dir'=>$Qobj_dir,'idx'=>$idx,'hno'=>'inc')));
+	
 }
 
 //----------------------------------Permisos según el usuario
@@ -188,7 +202,7 @@ $campos_chk = 'cp_dcha!propietario!principal';
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('a_p!c_p!direccion!f_direccion!latitud!longitud!nom_sede!observ!pais!poblacion!provincia!que');
-$oHash->setcamposNo('que!'.$campos_chk);
+$oHash->setcamposNo('que!inc'.$campos_chk);
 $a_camposHidden = array(
 		'campos_chk'=>$campos_chk,
 		'obj_dir'=>$Qobj_dir,
@@ -222,6 +236,7 @@ $a_campos = ['oPosicion' => $oPosicion,
 		'botones' => $botones,
 		'id_direccion_actual' => $id_direccion_actual,
 		'golistadir' => $golistadir,
+		'go_dir' => $go_dir,
 		'mas' => $mas,
 		'menos' => $menos,
 		'h' => $h,

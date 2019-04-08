@@ -47,7 +47,7 @@ fnjs_guardar=function(id_item){
 	var completado=$('#comp'+id_item).prop('checked');
 	var observ=$('#observ'+id_item).val();
 	var url = "{{ url_ajax }}";
-	var parametros='que=update&id_item='+id_item+'&completado='+completado+'&observ='+observ+'&h={{ h_update|raw }}';
+	var parametros='que=update&id_item='+id_item+'&completado='+completado+'&observ='+observ+'{{ h_update|raw }}';
 		 
 	$.ajax({
 		url: url,

@@ -1,21 +1,26 @@
 <?= $oPosicion->mostrar_left_slide(1); ?>
 <div id="top" name="top">
-<table border=1><tr>
-<td>
-<span class=link onclick=fnjs_update_div('#main','<?= $godossiers ?>') ><img src=<?= core\ConfigGlobal::$web_icons ?>/dossiers.gif border=0 width=40 height=40 alt='<?= $alt ?>'>(<?= $dos ?>)</span>
-</td>
-<td class=titulo><span class=link onclick=fnjs_update_div('#main','<?= $gohome ?>')><?= $titulo ?></span></td>
-<td><?= $dl ?>(<?= $region ?>)</td></tr>
-<tr><td colspan=1><?= $direccion ?></td><td><?= $c_p ?></td><td><?= $poblacion ?></td></tr>
-<tr><td colspan=4>telfs: <?= $telfs ?></td></tr>
-<tr><td colspan=4>fax: <?= $fax ?></td></tr>
-<tr><td colspan=4>e-mails: <?= $mails ?></td></tr>
-<tr><th colspan=4><?= ucfirst(_("editar")) ?>: 
-	&nbsp;<span class="link_inv" onclick="fnjs_update_div('#ficha','<?= $go_ubi ?>');"><?= $ubi ?></span>
-	&nbsp;&nbsp;<span class="link_inv" onclick="fnjs_update_div('#ficha','<?= $go_dir ?>');"><?= _("dirección") ?></span>
-	&nbsp;&nbsp;<span class="link_inv" onclick="fnjs_update_div('#ficha','<?= $go_tel ?>');"><?= _("telecos") ?></span>
-</th></tr>
-</table>
+    <table>
+        <tr>
+        <td>
+            <span class=link onclick=fnjs_update_div('#main','<?= $godossiers ?>') ><img src=<?= core\ConfigGlobal::$web_icons ?>/dossiers.gif border=0 width=40 height=40 alt='<?= $alt ?>'>(<?= $dos ?>)</span>
+        </td>
+        <td class=titulo>
+            <span class=link onclick=fnjs_update_div('#main','<?= $gohome ?>')><?= $titulo ?></span></td>
+        <td class=contenido><?= $dl ?>(<?= $region ?>)</td>
+        </tr>
+    </table>
+    <table border=1>
+        <tr><td colspan=1><?= $direccion ?></td><td><?= $c_p ?></td><td><?= $poblacion ?></td></tr>
+        <tr><td colspan=4>telfs: <?= $telfs ?></td></tr>
+        <tr><td colspan=4>fax: <?= $fax ?></td></tr>
+        <tr><td colspan=4>e-mails: <?= $mails ?></td></tr>
+        <tr><th colspan=4><?= ucfirst(_("editar")) ?>: 
+            &nbsp;<span class="link_inv" onclick="fnjs_update_div('#ficha','<?= $go_ubi ?>');"><?= $ubi ?></span>
+            &nbsp;&nbsp;<span class="link_inv" onclick="fnjs_update_div('#ficha','<?= $go_dir ?>');"><?= _("dirección") ?></span>
+            &nbsp;&nbsp;<span class="link_inv" onclick="fnjs_update_div('#ficha','<?= $go_tel ?>');"><?= _("telecos") ?></span>
+        </th></tr>
+    </table>
 </div>
 <div id="ficha" name="ficha">
 <?php

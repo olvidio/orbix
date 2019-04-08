@@ -2,22 +2,22 @@
 namespace cartaspresentacion\model\entity;
 use core;
 /**
- * Fitxer amb la Classe que accedeix a la taula du_presentacion
+ * Fitxer amb la Classe que accedeix a la taula du_presentacion_dl
  *
  * @package orbix
  * @subpackage model
  * @author Daniel Serrabou
  * @version 1.0
- * @created 12/3/2019
+ * @created 7/4/2019
  */
 /**
- * Classe que implementa l'entitat du_presentacion
+ * Classe que implementa l'entitat du_presentacion_dl
  *
  * @package orbix
  * @subpackage model
  * @author Daniel Serrabou
  * @version 1.0
- * @created 12/3/2019
+ * @created 7/4/2019
  */
 class CartaPresentacion Extends core\ClasePropiedades {
 	/* ATRIBUTS ----------------------------------------------------------------- */
@@ -36,6 +36,18 @@ class CartaPresentacion Extends core\ClasePropiedades {
 	 */
 	 protected $aDades;
 
+	/**
+	 * Id_item de CartaPresentacion
+	 *
+	 * @var integer
+	 */
+	 protected $iid_item;
+	/**
+	 * Id_direccion de CartaPresentacion
+	 *
+	 * @var integer
+	 */
+	 protected $iid_direccion;
 	/**
 	 * Id_ubi de CartaPresentacion
 	 *
@@ -92,7 +104,7 @@ class CartaPresentacion Extends core\ClasePropiedades {
 	 * Si només necessita un valor, se li pot passar un integer.
 	 * En general se li passa un array amb les claus primàries.
 	 *
-	 * @param integer|array iid_ubi
+	 * @param integer|array iid_item
 	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
 	 */
 	function __construct($a_id='') {
@@ -100,11 +112,11 @@ class CartaPresentacion Extends core\ClasePropiedades {
 		if (is_array($a_id)) { 
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
-				if (($nom_id == 'id_ubi') && $val_id !== '') $this->iid_ubi = (int)$val_id; // evitem SQL injection fent cast a integer
+				if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; // evitem SQL injection fent cast a integer
 			}	} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->iid_ubi = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('iid_ubi' => $this->iid_ubi);
+				$this->iid_item = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->aPrimary_key = array('iid_item' => $this->iid_item);
 			}
 		}
 		$this->setoDbl($oDbl);
@@ -123,6 +135,8 @@ class CartaPresentacion Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if ($this->DBCarregar('guardar') === FALSE) { $bInsert=TRUE; } else { $bInsert=FALSE; }
 		$aDades=array();
+		$aDades['id_direccion'] = $this->iid_direccion;
+		$aDades['id_ubi'] = $this->iid_ubi;
 		$aDades['pres_nom'] = $this->spres_nom;
 		$aDades['pres_telf'] = $this->spres_telf;
 		$aDades['pres_mail'] = $this->spres_mail;
@@ -133,12 +147,14 @@ class CartaPresentacion Extends core\ClasePropiedades {
 		if ($bInsert === FALSE) {
 			//UPDATE
 			$update="
+					id_direccion             = :id_direccion,
+					id_ubi                   = :id_ubi,
 					pres_nom                 = :pres_nom,
 					pres_telf                = :pres_telf,
 					pres_mail                = :pres_mail,
 					zona                     = :zona,
 					observ                   = :observ";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_ubi='$this->iid_ubi'")) === FALSE) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item'")) === FALSE) {
 				$sClauError = 'CartaPresentacion.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return FALSE;
@@ -151,9 +167,8 @@ class CartaPresentacion Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			array_unshift($aDades, $this->iid_ubi);
-			$campos="(id_ubi,pres_nom,pres_telf,pres_mail,zona,observ)";
-			$valores="(:id_ubi,:pres_nom,:pres_telf,:pres_mail,:zona,:observ)";		
+			$campos="(id_direccion,id_ubi,pres_nom,pres_telf,pres_mail,zona,observ)";
+			$valores="(:id_direccion,:id_ubi,:pres_nom,:pres_telf,:pres_mail,:zona,:observ)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClauError = 'CartaPresentacion.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -165,6 +180,7 @@ class CartaPresentacion Extends core\ClasePropiedades {
 					return FALSE;
 				}
 			}
+			$this->id_item = $oDbl->lastInsertId('du_presentacion_dl_id_item_seq');
 		}
 		$this->setAllAtributes($aDades);
 		return TRUE;
@@ -177,8 +193,8 @@ class CartaPresentacion Extends core\ClasePropiedades {
 	public function DBCarregar($que=null) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (isset($this->iid_ubi)) {
-			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_ubi='$this->iid_ubi'")) === FALSE) {
+		if (isset($this->iid_item)) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item='$this->iid_item'")) === FALSE) {
 				$sClauError = 'CartaPresentacion.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return FALSE;
@@ -207,7 +223,7 @@ class CartaPresentacion Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_ubi='$this->iid_ubi'")) === FALSE) {
+		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item='$this->iid_item'")) === FALSE) {
 			$sClauError = 'CartaPresentacion.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return FALSE;
@@ -225,6 +241,8 @@ class CartaPresentacion Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
+		if (array_key_exists('id_item',$aDades)) $this->setId_item($aDades['id_item']);
+		if (array_key_exists('id_direccion',$aDades)) $this->setId_direccion($aDades['id_direccion']);
 		if (array_key_exists('id_ubi',$aDades)) $this->setId_ubi($aDades['id_ubi']);
 		if (array_key_exists('pres_nom',$aDades)) $this->setPres_nom($aDades['pres_nom']);
 		if (array_key_exists('pres_telf',$aDades)) $this->setPres_telf($aDades['pres_telf']);
@@ -254,11 +272,49 @@ class CartaPresentacion Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('id_ubi' => $this->iid_ubi);
+			$this->aPrimary_key = array('id_item' => $this->iid_item);
 		}
 		return $this->aPrimary_key;
 	}
 
+	/**
+	 * Recupera l'atribut iid_item de CartaPresentacion
+	 *
+	 * @return integer iid_item
+	 */
+	function getId_item() {
+		if (!isset($this->iid_item)) {
+			$this->DBCarregar();
+		}
+		return $this->iid_item;
+	}
+	/**
+	 * estableix el valor de l'atribut iid_item de CartaPresentacion
+	 *
+	 * @param integer iid_item
+	 */
+	function setId_item($iid_item) {
+		$this->iid_item = $iid_item;
+	}
+	/**
+	 * Recupera l'atribut iid_direccion de CartaPresentacion
+	 *
+	 * @return integer iid_direccion
+	 */
+	function getId_direccion() {
+		if (!isset($this->iid_direccion)) {
+			$this->DBCarregar();
+		}
+		return $this->iid_direccion;
+	}
+	/**
+	 * estableix el valor de l'atribut iid_direccion de CartaPresentacion
+	 *
+	 * @param integer iid_direccion='' optional
+	 */
+	function setId_direccion($iid_direccion='') {
+		$this->iid_direccion = $iid_direccion;
+	}
 	/**
 	 * Recupera l'atribut iid_ubi de CartaPresentacion
 	 *
@@ -273,9 +329,9 @@ class CartaPresentacion Extends core\ClasePropiedades {
 	/**
 	 * estableix el valor de l'atribut iid_ubi de CartaPresentacion
 	 *
-	 * @param integer iid_ubi
+	 * @param integer iid_ubi='' optional
 	 */
-	function setId_ubi($iid_ubi) {
+	function setId_ubi($iid_ubi='') {
 		$this->iid_ubi = $iid_ubi;
 	}
 	/**
@@ -382,6 +438,8 @@ class CartaPresentacion Extends core\ClasePropiedades {
 	function getDatosCampos() {
 		$oCartaPresentacionSet = new core\Set();
 
+		$oCartaPresentacionSet->add($this->getDatosId_direccion());
+		$oCartaPresentacionSet->add($this->getDatosId_ubi());
 		$oCartaPresentacionSet->add($this->getDatosPres_nom());
 		$oCartaPresentacionSet->add($this->getDatosPres_telf());
 		$oCartaPresentacionSet->add($this->getDatosPres_mail());
@@ -392,6 +450,30 @@ class CartaPresentacion Extends core\ClasePropiedades {
 
 
 
+	/**
+	 * Recupera les propietats de l'atribut iid_direccion de CartaPresentacion
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosId_direccion() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_direccion'));
+		$oDatosCampo->setEtiqueta(_("id_direccion"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut iid_ubi de CartaPresentacion
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosId_ubi() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_ubi'));
+		$oDatosCampo->setEtiqueta(_("id_ubi"));
+		return $oDatosCampo;
+	}
 	/**
 	 * Recupera les propietats de l'atribut spres_nom de CartaPresentacion
 	 * en una clase del tipus DatosCampo
@@ -449,7 +531,7 @@ class CartaPresentacion Extends core\ClasePropiedades {
 	function getDatosObserv() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'observ'));
-		$oDatosCampo->setEtiqueta(_("observaciones"));
+		$oDatosCampo->setEtiqueta(_("observ"));
 		return $oDatosCampo;
 	}
 }

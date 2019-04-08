@@ -39,7 +39,7 @@ switch ($Qque) {
 		$Qidx = (string) \filter_input(INPUT_POST, 'idx');
 		$Qobj_dir = (string) \filter_input(INPUT_POST, 'obj_dir');
 		$Qpropietario = (string) \filter_input(INPUT_POST, 'propietario');
-		$Qprincipal = (string) \filter_input(INPUT_POST, 'propietario');
+		$Qprincipal = (string) \filter_input(INPUT_POST, 'principal');
 
 		if ($Qidx === 'nuevo') {
 			$obj = 'ubis\\model\\entity\\'.$Qobj_dir;

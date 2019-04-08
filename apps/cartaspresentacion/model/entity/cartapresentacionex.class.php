@@ -29,24 +29,24 @@ class CartaPresentacionEx Extends CartaPresentacion {
 	 * Si només necessita un valor, se li pot passar un integer.
 	 * En general se li passa un array amb les claus primàries.
 	 *
-	 * @param integer|array iid_ubi
+	 * @param integer|array iid_direccion
 	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
 	 */
-	function __construct($a_id='') {
-		$oDbl = $GLOBALS['oDBR'];
-		if (is_array($a_id)) { 
-			$this->aPrimary_key = $a_id;
-			foreach($a_id as $nom_id=>$val_id) {
-				if (($nom_id == 'id_ubi') && $val_id !== '') $this->iid_ubi = (int)$val_id; // evitem SQL injection fent cast a integer
-			}	} else {
-			if (isset($a_id) && $a_id !== '') {
-				$this->iid_ubi = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('iid_ubi' => $this->iid_ubi);
-			}
-		}
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('du_presentacion_ex');
-	}
+    function __construct($a_id='') {
+        $oDbl = $GLOBALS['oDBR'];
+        if (is_array($a_id)) {
+            $this->aPrimary_key = $a_id;
+            foreach($a_id as $nom_id=>$val_id) {
+                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; // evitem SQL injection fent cast a integer
+            }	} else {
+                if (isset($a_id) && $a_id !== '') {
+                    $this->iid_item = intval($a_id); // evitem SQL injection fent cast a integer
+                    $this->aPrimary_key = array('iid_item' => $this->iid_item);
+                }
+            }
+            $this->setoDbl($oDbl);
+            $this->setNomTabla('du_presentacion_ex');
+    }
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
 

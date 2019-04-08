@@ -10,7 +10,7 @@ use core;
  * @subpackage model
  * @author Daniel Serrabou
  * @version 1.0
- * @created 12/3/2019
+ * @created 7/4/2019
  */
 
 class GestorCartaPresentacion Extends core\ClaseGestor {
@@ -49,7 +49,7 @@ class GestorCartaPresentacion Extends core\ClaseGestor {
 			return FALSE;
 		}
 		foreach ($oDbl->query($sQuery) as $aDades) {
-			$a_pkey = array('id_ubi' => $aDades['id_ubi']);
+			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oCartaPresentacion= new CartaPresentacion($a_pkey);
 			$oCartaPresentacion->setAllAtributes($aDades);
 			$oCartaPresentacionSet->add($oCartaPresentacion);
@@ -100,7 +100,7 @@ class GestorCartaPresentacion Extends core\ClaseGestor {
 			return FALSE;
 		}
 		foreach ($oDblSt as $aDades) {
-			$a_pkey = array('id_ubi' => $aDades['id_ubi']);
+			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oCartaPresentacion= new CartaPresentacion($a_pkey);
 			$oCartaPresentacion->setAllAtributes($aDades);
 			$oCartaPresentacionSet->add($oCartaPresentacion);

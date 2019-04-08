@@ -608,9 +608,9 @@ class DBEsquema extends DBAbstract {
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
         
         $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT encargo_sacd_observ_ukey
-                    UNIQUE (id_item); ";
+                    UNIQUE ($campo_seq); ";
         
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
         $a_sql[] = "CREATE UNIQUE INDEX encargo_sacd_observ_id_nom_idx ON $nom_tabla USING btree (id_nom); ";
         
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
@@ -678,8 +678,8 @@ class DBEsquema extends DBAbstract {
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
         
         $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT encargos_sacd_ukey
-                    UNIQUE (id_item); ";
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
+                    UNIQUE ($campo_seq); ";
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
         
         $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT encargos_sacd_id_enc_ukey
                     UNIQUE (id_enc, id_nom, modo, f_ini); ";
@@ -753,12 +753,12 @@ class DBEsquema extends DBAbstract {
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
         
         $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT encargo_datos_cgi_pkey
-                    UNIQUE (id_item); ";
+                    UNIQUE ($campo_seq); ";
         
         $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT encargo_datos_cgi_ukey
                     UNIQUE (id_ubi,curso_ini_any); ";
         
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
         
         $a_sql[] = "CREATE UNIQUE INDEX encargo_datos_cgi_id_ubi_idx ON $nom_tabla USING btree (id_ubi); ";
         
@@ -826,7 +826,7 @@ class DBEsquema extends DBAbstract {
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
         
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
         
         $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT encargo_textos_ukey
                     UNIQUE (idioma,clave); ";

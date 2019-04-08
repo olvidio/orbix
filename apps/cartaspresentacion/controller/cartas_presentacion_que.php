@@ -36,8 +36,8 @@ $oSelects->setAction('fnjs_poblacion()');
 */
 
 
-// OJO el parametro que puede interferir con el de las presentaciones de ubis. 
-// Lo llamo que_mod.
+// OJO el parametro 'que' puede interferir con el de las presentaciones de ubis. 
+// Lo llamo 'que_mod'.
 // Posibles Ciudades
 $aOpcionesCiudad =  array(
 					'get_dl' => $mi_dele,
@@ -60,9 +60,14 @@ $oHashPob->setUrl($url_ajax);
 $oHashPob->setcamposForm('que_mod!filtro');
 $h_pob = $oHashPob->linkSinVal();
 
+$oHashEdit = new Hash();
+$oHashEdit->setUrl($url_ajax);
+$oHashEdit->setcamposForm('id_direccion!id_ubi!que_mod');
+$h_update = $oHashEdit->linkSinVal();
+
 $oHashDel = new Hash();
 $oHashDel->setUrl($url_ajax);
-$oHashDel->setcamposForm('id_ubi!que_mod');
+$oHashDel->setcamposForm('id_item!que_mod');
 $h_del = $oHashDel->linkSinVal();
 
 
@@ -77,6 +82,7 @@ $a_campos = [
     'h_ctr' => $h_ctr,
     'url_ajax' => $url_ajax,
     'h_pob' => $h_pob,
+    'h_update' => $h_update,
     'h_del' => $h_del,
     'oSelCiudades' => $oSelCiudades,
 ];
