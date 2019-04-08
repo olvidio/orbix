@@ -192,7 +192,7 @@ function mega_array($oPresentacion,$oCentro,$ordenar_dl) {
             $oDireccion1 = $cDirecciones1[0];
 			$telf1 = $oCentro1->getTeleco("telf","*"," / ") ;
 			//$telf1 .= 'fax:'.teleco($id_ctr_padre,"fax","*"," / ") ;
-			$a_direccion = array('direccion' => $oDireccion1->getDireccion(),
+			$a_direccion[] = array('direccion' => $oDireccion1->getDireccion(),
 							'a_p'       => $oDireccion1->getA_p(),
 							'c_p'       => $oDireccion1->getC_p(),
 							'poblacion' => $oDireccion1->getPoblacion(),
@@ -208,7 +208,7 @@ function mega_array($oPresentacion,$oCentro,$ordenar_dl) {
 	        if ($id_dir != $id_direccion) {
 	            $oDireccion2 = new DireccionCtr($id_dir);
                 //$telf1 .= 'fax:'.teleco($id_ctr_padre,"fax","*"," / ") ;
-                $a_direccion = array('direccion' => $oDireccion2->getDireccion(),
+                $a_direccion[] = array('direccion' => $oDireccion2->getDireccion(),
                                 'a_p'       => $oDireccion2->getA_p(),
                                 'c_p'       => $oDireccion2->getC_p(),
                                 'poblacion' => $oDireccion2->getPoblacion(),
