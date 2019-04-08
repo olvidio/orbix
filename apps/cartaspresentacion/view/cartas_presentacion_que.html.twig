@@ -75,11 +75,11 @@ fnjs_ver=function(){
 	document.getElementById("overlay").style.display = "none";
 }
 
-fnjs_eliminar_cp=function(id_item){
+fnjs_eliminar_cp=function(id_direccion,id_ubi){
     seguro=confirm("{{ "¿Está seguro que quiere quitar los datos de presentación de este centro?"|trans }}");
     if (seguro) { 
         var url='{{ url_ajax }}';
-        var parametros='que_mod=eliminar&id_item='+id_item+'{{ h_del|raw }}';
+        var parametros='que_mod=eliminar&id_direccion='+id_direccion+'&id_ubi='+id_ubi+'{{ h_del|raw }}';
         //alert ("param "+parametros);
         $.ajax({
             url: url,

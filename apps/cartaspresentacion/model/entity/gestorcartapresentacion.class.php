@@ -10,7 +10,7 @@ use core;
  * @subpackage model
  * @author Daniel Serrabou
  * @version 1.0
- * @created 7/4/2019
+ * @created 8/4/2019
  */
 
 class GestorCartaPresentacion Extends core\ClaseGestor {
@@ -48,22 +48,23 @@ class GestorCartaPresentacion Extends core\ClaseGestor {
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return FALSE;
 		}
-		
 		$clasename = get_class($this);
 		$nomClase = join('', array_slice(explode('\\', $clasename), -1));
 		foreach ($oDbl->query($sQuery) as $aDades) {
-		    $a_pkey = array('iid_item' => $aDades['id_item']);
+			$a_pkey = array('id_direccion' => $aDades['id_direccion'],
+							'id_ubi' => $aDades['id_ubi']);
+			
 		    switch ($nomClase) {
 		        case 'CartaPresentacionDl':
-		            $oCartaPresentacion= new CartaPresentacionDl($a_pkey);
+                    $oCartaPresentacion= new CartaPresentacionDl($a_pkey);
 		            break;
 		        case 'CartaPresentacionEx':
-		            $oCartaPresentacion= new CartaPresentacionEx($a_pkey);
+                    $oCartaPresentacion= new CartaPresentacionEx($a_pkey);
 		            break;
 		        default:
-		            $oCartaPresentacion= new CartaPresentacion($a_pkey);
+                    $oCartaPresentacion= new CartaPresentacion($a_pkey);
 		    }
-		    $oCartaPresentacion->setAllAtributes($aDades);
+			$oCartaPresentacion->setAllAtributes($aDades);
 			$oCartaPresentacionSet->add($oCartaPresentacion);
 		}
 		return $oCartaPresentacionSet->getTot();
@@ -115,18 +116,20 @@ class GestorCartaPresentacion Extends core\ClaseGestor {
 		$clasename = get_class($this);
 		$nomClase = join('', array_slice(explode('\\', $clasename), -1));
 		foreach ($oDblSt as $aDades) {
-		    $a_pkey = array('iid_item' => $aDades['id_item']);
+			$a_pkey = array('id_direccion' => $aDades['id_direccion'],
+							'id_ubi' => $aDades['id_ubi']);
+			
 		    switch ($nomClase) {
 		        case 'CartaPresentacionDl':
-		            $oCartaPresentacion= new CartaPresentacionDl($a_pkey);
+                    $oCartaPresentacion= new CartaPresentacionDl($a_pkey);
 		            break;
 		        case 'CartaPresentacionEx':
-		            $oCartaPresentacion= new CartaPresentacionEx($a_pkey);
+                    $oCartaPresentacion= new CartaPresentacionEx($a_pkey);
 		            break;
 		        default:
-		            $oCartaPresentacion= new CartaPresentacion($a_pkey);
+                    $oCartaPresentacion= new CartaPresentacion($a_pkey);
 		    }
-		    $oCartaPresentacion->setAllAtributes($aDades);
+			$oCartaPresentacion->setAllAtributes($aDades);
 			$oCartaPresentacionSet->add($oCartaPresentacion);
 		}
 		return $oCartaPresentacionSet->getTot();

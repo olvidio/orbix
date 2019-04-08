@@ -203,10 +203,13 @@ switch ($Qque_mod) {
 		echo $txt;
 		break;
 	case "eliminar":
-        $Qid_item = (integer)  \filter_input(INPUT_POST, 'id_item');
+        $Qid_direccion = (integer)  \filter_input(INPUT_POST, 'id_direccion');
+        $Qid_ubi = (integer)  \filter_input(INPUT_POST, 'id_ubi');
         
-		if (!empty($Qid_item)) {
-			$oCartaPresentacion = new CartaPresentacion($Qid_item);
+		if (!empty($Qid_direccion) && !empty($Qid_ubi)) {
+		    $a_pkey = array('id_direccion' => $Qid_direccion,
+		        'id_ubi' => $Qid_ubi);
+			$oCartaPresentacion = new CartaPresentacion($a_pkey);
 			$oCartaPresentacion ->DBCarregar();
             if ($oCartaPresentacion->DBEliminar() === false) {
                 echo _("Hay un error, no se ha borrado.");
@@ -338,7 +341,6 @@ switch ($Qque_mod) {
 				} else {
 					$activo = TRUE;
                     $pres = _("si");
-                    $id_item = $colPresentacion[0]->getId_item();
 				}
 
 				if ($permiso == 'modificar') {
@@ -349,7 +351,7 @@ switch ($Qque_mod) {
 					$script2="fnjs_ver_ubi($id_ubi)";
 					$a_valores[$c][2]=array( 'script2'=>$script2, 'valor'=>$ctr_txt);
 					if ($activo) {
-                        $script3="fnjs_eliminar_cp($id_item)";
+                        $script3="fnjs_eliminar_cp($id_direccion,$id_ubi)";
                         $pres .= ", "._("quitar"); 
                         $a_valores[$c][3]=array( 'script3'=>$script3, 'valor'=>$pres);
 					} else {
@@ -423,7 +425,6 @@ switch ($Qque_mod) {
                 } else {
                     $activo = TRUE;
                     $pres = _("si");
-                    $id_item = $colPresentacion[0]->getId_item();
                 }
 
                 if ($permiso == 'modificar') {
@@ -434,7 +435,7 @@ switch ($Qque_mod) {
                     $script2="fnjs_ver_ubi($id_ubi)";
                     $a_valores[$c][2]=array( 'script2'=>$script2, 'valor'=>$ctr_txt);
                     if ($activo) {
-                        $script3="fnjs_eliminar_cp($id_item)";
+                        $script3="fnjs_eliminar_cp($id_direccion,$id_ubi)";
                         $pres .= ", "._("quitar"); 
                         $a_valores[$c][3]=array( 'script3'=>$script3, 'valor'=>$pres);
                     } else {

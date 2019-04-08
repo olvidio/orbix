@@ -67,7 +67,7 @@ $h_update = $oHashEdit->linkSinVal();
 
 $oHashDel = new Hash();
 $oHashDel->setUrl($url_ajax);
-$oHashDel->setcamposForm('id_item!que_mod');
+$oHashDel->setcamposForm('id_direccion!id_ubi!que_mod');
 $h_del = $oHashDel->linkSinVal();
 
 

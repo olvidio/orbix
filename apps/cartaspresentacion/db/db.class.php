@@ -44,7 +44,6 @@ class DB extends DBAbstract {
         
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
             id_schema integer NOT NULL,
-            id_item integer NOT NULL,
             id_direccion integer NOT NULL,
             id_ubi integer NOT NULL,
             pres_nom text,
@@ -79,7 +78,7 @@ class DB extends DBAbstract {
         if ($this->vf == 'f') {
             $nom_tabla_parent = 'publicf';
         }
-        $campo_seq = 'id_item';
+        $campo_seq = '';
         $id_seq = $nom_tabla."_".$campo_seq."_seq";
         
         $a_sql = [];
@@ -89,21 +88,7 @@ class DB extends DBAbstract {
         
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
         
-        //secuencia
-        $a_sql[] = "CREATE SEQUENCE IF NOT EXISTS $id_seq;";
-        $a_sql[] = "ALTER SEQUENCE $id_seq
-                    INCREMENT BY 1
-                    MINVALUE 1
-                    MAXVALUE 9223372036854775807
-                    START WITH 1
-                    NO CYCLE;";
-        $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
-        
-        $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-        
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT du_presentacion_ex_id_tem_ukey
-                    UNIQUE ($campo_seq); ";
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_ubi,id_direccion); ";
         
         $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT du_presentacion_ex_ukey
                     UNIQUE (id_ubi, id_direccion); ";
