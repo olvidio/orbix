@@ -279,15 +279,17 @@ function datos_a_celdas($a_texto){
 	$col1 = "$pres_nom<br>$nom_sede$direccion<br>$a_p$c_p $poblacion";	
 	$col2 = "$pres_telf<br>$pres_mail<br>$telf";	
 	if (!empty($a_direccion)) {
-		$d1 = $a_direccion['direccion'];  
-		//$a1 = $a_direccion['a_p'];        
-		$c1 = $a_direccion['c_p'];        
-		$p1 = $a_direccion['poblacion'];  
-		$tf1 = $a_direccion['telf'];  
-		$tf1 = format_telf ($tf1);
+	    foreach ($a_direccion as $aa_direccion) {
+            $d1 = $aa_direccion['direccion'];  
+            //$a1 = $a_direccion['a_p'];        
+            $c1 = $aa_direccion['c_p'];        
+            $p1 = $aa_direccion['poblacion'];  
+            $tf1 = $aa_direccion['telf'];  
+            $tf1 = format_telf ($tf1);
 
-		$col1 .= "<br>---<br>$d1<br>$c1  $p1";	
-		$col2 .= "<br>---<br>$tf1";
+            $col1 .= "<br>---<br>$d1<br>$c1  $p1";	
+            $col2 .= "<br>---<br>$tf1";
+	    }
 	}
 
 	$html = "<td class=\"line-top\">$col1</td><td class=\"line-top\">$col2</td>";
