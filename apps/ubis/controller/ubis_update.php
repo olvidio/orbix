@@ -53,8 +53,9 @@ switch ($Qque) {
 			// puede haber más de una dirección
 			$a_id_direccion = explode(',',$_POST['id_direccion']);
 			$obj = 'ubis\\model\\entity\\'.$Qobj_dir;
-			$oUbi = new $obj($a_id_direccion[$Qidx]);
+			$oDireccion = new $obj($a_id_direccion[$Qidx]);
 			$a_pkey= array('id_ubi'=>$Qid_ubi,'id_direccion'=>$a_id_direccion[$Qidx]);
+    		guardarObjeto($oDireccion,$campos_chk);		
 		}
 		
 		switch ($Qobj_dir) {
