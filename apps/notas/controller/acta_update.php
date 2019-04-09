@@ -10,6 +10,7 @@ use notas\model\entity as notas;
 
 $mi_dele = core\ConfigGlobal::mi_dele();
 $mi_dele .= (core\ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
+$mi_region = core\ConfigGlobal::mi_region();
 
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
@@ -28,7 +29,7 @@ if (!empty($a_sel)) { //vengo de un checkbox (caso de eliminar)
 
 $dl_acta = strtok($Qacta,' ');
 
-if ($dl_acta == $mi_dele || $dl_acta == "?") {
+if ($dl_acta == $mi_dele || ($mi_dele == 'cr' && $dl_acta == $mi_region) || $dl_acta == "?") {
 	$oActa = new notas\ActaDl();
 	$oActaTribunal = new notas\ActaTribunalDl();
 } else {
