@@ -172,7 +172,7 @@ if ($Qloc == 'ex') {
             break;
         case "ctr_agd":
             $obj = 'CentroEx';
-            $aWhere['tipo_ctr'] = '^a[^p]'; // que no sea ap (apeadero).
+            $aWhere['tipo_ctr'] = '^a[^p]*'; // que no sea ap (apeadero).
             $aOperador['tipo_ctr'] = '~';
             break;
         case "ctr_s":
