@@ -110,7 +110,7 @@ class ActividadNuevoCurso {
             $rta_txt.=$oActividad->getNom_activ()."<br>";
         }
         if (!empty($rta_txt)) {
-            $txt .= _("quedan actividades sin eliminar, porque no estan en proyecto").":<br>";
+            $txt .= _("actividades no eliminadas, porque su estado no es proyecto").":<br>";
             $txt .= $rta_txt;
         }
         return $txt;

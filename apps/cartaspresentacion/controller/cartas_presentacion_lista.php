@@ -388,7 +388,7 @@ function lista_cartas($a_mega,$ordenar_dl){
 }
 
 function format_telf ($number) {
-  // The regular expression is set to a variable.
+    // The regular expression is set to a variable.
     $regex = "/^(\(?\d{3}\)?)?[- .]?(\d{3})[- .]?(\d{3})[- .]?( \(?.*\)?)?$/";
 	$a_telf = explode(" / ", $number);
 	$formattedValue = [];
