@@ -45,8 +45,11 @@ if ($Qok == 1) {
 	$aWhere = [];
 	$aOperador = [];
 	$aWhere['dl_org'] = core\ConfigGlobal::mi_dele();
-	$aWhere['status'] =  4;
-	$aOperador['status'] =  '<';
+	// No las de proyecto(1) ni borrables(4) >> 2 y 3
+	$a_status = array (3,3);
+	$v = implode(', ',$a_status);
+	$aWhere['status'] = $v;
+	$aOperador['status'] =  'IN';
 	$aWhere['f_ini'] =  "'$inicio_org','$fin_org'";
 	$aOperador['f_ini'] =  'BETWEEN';
 	$aWhere['_ordre'] =  'f_ini';
@@ -65,7 +68,7 @@ if ($Qok == 1) {
 	echo "<h3>".sprintf(_("%s actividades copiadas"),$i) ."</h3>";
 	
 	if (!empty($txt_borrar)) {
-	    echo "<h3>"._("errores al borrar") ."</h3>";
+	    echo "<h3>"._("incidencias al borrar") ."</h3>";
 	    echo $txt_borrar;
 	}
 	if (!empty($txt_crear)) {
