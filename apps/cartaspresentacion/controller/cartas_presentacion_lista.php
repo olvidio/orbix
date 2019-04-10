@@ -300,6 +300,7 @@ function lista_cartas($a_mega,$ordenar_dl){
 	// cartas agd
 	$html = '';
 	$class = "class=\"line-top\"";
+    ksort($a_mega);
 	if ($ordenar_dl == 1) {
 		foreach ($a_mega as $tipo => $a_dl_pob_edad) {
 			ksort($a_dl_pob_edad);
