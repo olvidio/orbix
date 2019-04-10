@@ -311,7 +311,7 @@ function lista_cartas($a_mega,$ordenar_dl){
 			foreach ($a_dl_pob_edad as $dl => $a_pob_edad) {
 				ksort($a_pob_edad);
 				if ($dl != $dl_anterior) {
-					$html .= "</h3>$dl - $tipo</h3>";
+					$html .= "<h3>$dl - $tipo</h3>";
 				}
 				$poblacion_anterior = '';
 				$html .= '<table>';
