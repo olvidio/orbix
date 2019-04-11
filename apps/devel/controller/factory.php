@@ -840,6 +840,7 @@ $txt2.='
 			if ($a = $oCondicion->getCondicion($camp,$sOperador,$val)) $aCondi[]=$a;
 			// operadores que no requieren valores
 			if ($sOperador == \'BETWEEN\' || $sOperador == \'IS NULL\' || $sOperador == \'IS NOT NULL\' || $sOperador == \'OR\') unset($aWhere[$camp]);
+            if ($sOperador == \'IN\' || $sOperador == \'NOT IN\') unset($aWhere[$camp]);
 		}';
 
 $txt2.="\n\t\t".'$sCondi = implode(\' AND \',$aCondi);

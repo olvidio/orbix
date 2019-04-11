@@ -166,6 +166,7 @@ class GestorProceso Extends core\ClaseGestor {
 			if ($a = $oCondicion->getCondicion($camp,$sOperador,$val)) $aCondi[]=$a;
 			// operadores que no requieren valores
 			if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
+			if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
 		}
 		$sCondi = implode(' AND ',$aCondi);
 		if ($sCondi!='') $sCondi = " WHERE ".$sCondi;

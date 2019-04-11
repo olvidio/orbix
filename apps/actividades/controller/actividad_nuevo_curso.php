@@ -46,10 +46,8 @@ if ($Qok == 1) {
 	$aOperador = [];
 	$aWhere['dl_org'] = core\ConfigGlobal::mi_dele();
 	// No las de proyecto(1) ni borrables(4) >> 2 y 3
-	$a_status = array (3,3);
-	$v = implode(', ',$a_status);
-	$aWhere['status'] = $v;
-	$aOperador['status'] =  'IN';
+	$aWhere['status'] = "2,3";
+	$aOperador['status'] = 'IN';
 	$aWhere['f_ini'] =  "'$inicio_org','$fin_org'";
 	$aOperador['f_ini'] =  'BETWEEN';
 	$aWhere['_ordre'] =  'f_ini';

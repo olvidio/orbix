@@ -202,7 +202,8 @@ $campos_chk = 'cp_dcha!propietario!principal';
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('a_p!c_p!direccion!f_direccion!latitud!longitud!nom_sede!observ!pais!poblacion!provincia!que');
-$oHash->setcamposNo('que!inc'.$campos_chk);
+$oHash->setcamposNo('que!inc');
+$oHash->setCamposChk($campos_chk);
 $a_camposHidden = array(
 		'campos_chk'=>$campos_chk,
 		'obj_dir'=>$Qobj_dir,
