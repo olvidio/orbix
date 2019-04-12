@@ -303,13 +303,13 @@ function lista_cartas($a_mega,$ordenar_dl){
     ksort($a_mega);
 	if ($ordenar_dl == 1) {
 		foreach ($a_mega as $tipo => $a_dl_pob_edad) {
-			ksort($a_dl_pob_edad);
+            uksort($a_dl_pob_edad, "core\strsinacentocmp"); // compara sin contar los acentos i insensitive.
 			$html .= '<h3>';
 			$html .= sprintf(_("Cartas de presentación de %s"),$tipo);
 			$html .= '</h3>';
 			$dl_anterior = '';
 			foreach ($a_dl_pob_edad as $dl => $a_pob_edad) {
-				ksort($a_pob_edad);
+                uksort($a_pob_edad, "core\strsinacentocmp"); // compara sin contar los acentos i insensitive.
 				if ($dl != $dl_anterior) {
 					$html .= "<h3>$dl - $tipo</h3>";
 				}
@@ -347,7 +347,7 @@ function lista_cartas($a_mega,$ordenar_dl){
 		}
 	} else {
 		foreach ($a_mega as $tipo => $a_pob_edad) {
-			ksort($a_pob_edad);
+            uksort($a_pob_edad, "core\strsinacentocmp"); // compara sin contar los acentos i insensitive.
 			$html .= '<h3>';
 			$html .= sprintf(_("Cartas de presentación de %s"),$tipo);
 			$html .= '</h3>';

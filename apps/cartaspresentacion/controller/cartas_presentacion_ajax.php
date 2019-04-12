@@ -105,7 +105,7 @@ switch ($Qque_mod) {
                         }
 			        }
 			    }
-			    ksort($aPoblaciones);
+                uksort($aPoblaciones, "core\strsinacentocmp"); // compara sin contar los acentos i insensitive.
 			    $oDesplPoblaciones = new Desplegable();
 			    $oDesplPoblaciones->setOpciones($aPoblaciones);
 				break;
