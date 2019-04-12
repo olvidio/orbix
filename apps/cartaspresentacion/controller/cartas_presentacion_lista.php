@@ -9,8 +9,8 @@ use ubis\model\entity\GestorCentro;
 use ubis\model\entity\GestorDireccionCtr;
 use ubis\model\CuadrosLabor;
 use ubis\model\entity\DireccionCtr;
-use ubis\model\entity\Direccion;
 use ubis\model\entity\GestorCtrxDireccion;
+use function core\strtoupper_dlb;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -318,7 +318,7 @@ function lista_cartas($a_mega,$ordenar_dl){
 				foreach ($a_pob_edad as $poblacion => $a_edad) {
 					krsort($a_edad); // primero m, después j
 					if ($poblacion != $poblacion_anterior OR empty($poblacion)) {
-						$html .= "<tr><td $class>".strtoupper($poblacion)."</td>";
+						$html .= "<tr><td $class>".strtoupper_dlb($poblacion)."</td>";
 					}
 					$f=0;
 					foreach ($a_edad as $edad => $texto) {
@@ -356,9 +356,9 @@ function lista_cartas($a_mega,$ordenar_dl){
 			foreach ($a_pob_edad as $poblacion => $a_edad) {
 				krsort($a_edad); // primero m, después j
 				if ($poblacion != $poblacion_anterior) {
-					$txt_poblacion = strtoupper($poblacion);
+					$txt_poblacion = strtoupper_dlb($poblacion);
 					$txt_poblacion .= empty($pais)? '' :  '<br>('.$pais.')';
-					$html .= "<tr><td $class>".strtoupper($txt_poblacion)."</td>";
+					$html .= "<tr><td $class>".strtoupper_dlb($txt_poblacion)."</td>";
 				}
 				$f=0;
 				foreach ($a_edad as $edad => $texto) {

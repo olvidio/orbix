@@ -587,6 +587,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 *
 	 */
 	public function getDireccionPostal($salto_linea='<br>',$espacio=' ') {
+	    $this->DBCarregar();
 		$txt = '';
 		$rtn = $salto_linea;
 		$spc = $espacio;
