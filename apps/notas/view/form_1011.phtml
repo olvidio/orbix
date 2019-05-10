@@ -165,7 +165,7 @@ fnjs_nota=function(){
 	if (typeof num == 'number' && num > 1) {
  		$('#id_situacion').val(10);
 	}
-	max_default = <?= core\ConfigGlobal::nota_max(); ?>;
+	max_default = <?= $nota_max_default ?>;
 	if (!max)  $('#nota_max').val(max_default);
 }
 fnjs_guardar=function(formulario){

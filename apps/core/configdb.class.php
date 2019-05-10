@@ -1,7 +1,12 @@
 <?php
 namespace core;
 
-class Config {
+/**
+ * Básicamente la conexión a la base de datos, con los passwd para cada esquema.
+ * @author dani
+ *
+ */
+class ConfigDB {
 	
 	private $data;
 	

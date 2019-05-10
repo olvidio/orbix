@@ -27,7 +27,7 @@ $mi_dele = ConfigGlobal::mi_dele();
 /*
 $aOpciones =  array(
 					'get_H' => $mi_dele,
-					'get_r'=>_('regiones')
+					'get_r'=>_("regiones")
 					);
 $oSelects = new DesplegableArray('',$aOpciones,'');
 $oSelects->setBlanco('t');
@@ -41,7 +41,7 @@ $oSelects->setAction('fnjs_poblacion()');
 // Posibles Ciudades
 $aOpcionesCiudad =  array(
 					'get_dl' => $mi_dele,
-					'get_r'=>_('regiones')
+					'get_r'=>_("regiones")
 					);
 $oSelCiudades = new DesplegableArray('',$aOpcionesCiudad,'');
 $oSelCiudades ->setBlanco('t');

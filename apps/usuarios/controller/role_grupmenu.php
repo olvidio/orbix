@@ -46,7 +46,7 @@ foreach ($cGM as $oGrupMenu) {
 	// que no lo tenga
 	if (array_key_exists($id_grupmenu,$aGrupMenus)) continue;
 
-	$grup_menu=$oGrupMenu->getGrup_menu();
+	$grup_menu=$oGrupMenu->getGrup_menu($_SESSION['oConfig']->getAmbito());
 
 	$a_valores[$i]['sel']="$Qid_role#$id_grupmenu";
 	$a_valores[$i][1]=$grup_menu;

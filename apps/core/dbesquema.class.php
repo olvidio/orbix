@@ -211,16 +211,16 @@ class DBEsquema {
 	    }
 		switch ($this->sDb) {
 		    case 'comun':
-                $oConfig = new Config('comun'); //de la database comun
-                $config = $oConfig->getEsquema($esquema); //de la database comun
+                $oConfigDB = new ConfigDB('comun'); //de la database comun
+                $config = $oConfigDB->getEsquema($esquema); //de la database comun
 		        break;
 		    case 'sv':
-                $oConfig = new Config('sv'); //de la database sv
-                $config = $oConfig->getEsquema($esquema); //de la database sv
+                $oConfigDB = new ConfigDB('sv'); //de la database sv
+                $config = $oConfigDB->getEsquema($esquema); //de la database sv
 		        break;
 		    case 'sf':
-                $oConfig = new Config('sf'); //de la database sf
-                $config = $oConfig->getEsquema($esquema); //de la database sf
+                $oConfigDB = new ConfigDB('sf'); //de la database sf
+                $config = $oConfigDB->getEsquema($esquema); //de la database sf
 		        break;
 		}
 	    $host = $config['host'];

@@ -21,8 +21,8 @@ use menus\model\entity as menus;
 
 // Copiar de dlb a public roles-grupmenu, grupmenu, menus
 
-$oConfig = new core\Config('importar'); //de la database comun 
-$config = $oConfig->getEsquema('public'); //de la database comun 
+$oConfigDB = new core\ConfigDB('importar'); //de la database comun 
+$config = $oConfigDB->getEsquema('public'); //de la database comun 
 
 $oConexion = new core\dbConnection($config);
 $oDevelPC = $oConexion->getPDO();

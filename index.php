@@ -86,8 +86,7 @@ if (isset($primera)) {
             break;
         case "avisos":
             $id_grupmenu=$mi_id_grupmenu;
-            //$pag_ini=ConfigGlobal::$directorio."/sistema/avisos_generar.php";
-            $pag_ini='';
+            $pag_ini = ConfigGlobal::$directorio.'/apps/cambios/controller/avisos_generar.php';
             break;
         case "aniversarios":
             $id_grupmenu=$mi_id_grupmenu;
@@ -138,7 +137,7 @@ foreach ($cGrupMenuRoles as $oGrupMenuRole) {
     $cMenuDbs=$gesMenuDb ->getMenuDbs(array('id_grupmenu'=>$id_gm));
     if (is_array($cMenuDbs) && count($cMenuDbs) < 1) continue;
     $oGrupMenu = new menusEntity\GrupMenu($id_gm);
-    $grup_menu = $oGrupMenu->getGrup_menu();
+    $grup_menu = $oGrupMenu->getGrup_menu($_SESSION['oConfig']->getAmbito());
     $iorden = $oGrupMenu->getOrden();
     if ($iorden < 1) continue;
     $clase = ($id_gm == $id_grupmenu)? "class='selec'": '';

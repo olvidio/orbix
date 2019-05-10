@@ -68,12 +68,12 @@ if (!empty($Qtodos) && $Qtodos != 1) {
 switch ($Qsactividad) {
 	case 'ca':
 	case 'cv':
-		$any=  core\ConfigGlobal::any_final_curs('est');
+		$any=  $_SESSION['oConfig']->any_final_curs('est');
 		$inicurs=core\curso_est("inicio",$any,"est")->format('Y-m-d');
 		$fincurs=core\curso_est("fin",$any,"est")->format('Y-m-d');
 		break;
 	case 'crt':
-		$any=  core\ConfigGlobal::any_final_curs('crt');
+		$any=  $_SESSION['oConfig']->any_final_curs('crt');
 		$inicurs=core\curso_est("inicio",$any,"crt")->format('Y-m-d');
 		$fincurs=core\curso_est("fin",$any,"crt")->format('Y-m-d');
 		break;

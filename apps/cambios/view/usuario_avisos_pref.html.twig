@@ -1,0 +1,248 @@
+<script>
+fnjs_actualizar_propiedades=function(id_item_usuario_objeto){
+	if (isNaN(id_item_usuario_objeto)) id_item_usuario_objeto=0;
+	var objeto=$('#objeto').val();
+	// desplegable 'propiedades'
+	var url='{{ url_actualizar }}';
+	var parametros='salida=propiedades&objeto='+objeto+'&id_item_usuario_objeto='+id_item_usuario_objeto+'{{ h_propiedades|raw }}';
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta_txt) {
+			//alert ('respuesta: '+rta_txt);
+			$('#tr_tabla').html(rta_txt);			
+		}
+	});
+
+}
+
+fnjs_actualizar_fases=function(){
+	var dl_propia=$('input[name="dl_propia"]:checked').val();
+	var isfsv=$('#isfsv_val').val();
+	var iasistentes=$('#iasistentes_val').val();
+	var iactividad=$('#iactividad_val').val();
+	var inom_tipo=$('#inom_tipo_val').val();
+	
+	if (!iasistentes) iasistentes='.';
+	if (!iactividad) iactividad='.';
+	if (!inom_tipo) inom_tipo='...';
+
+	id_tipo_activ=isfsv+iasistentes+iactividad+inom_tipo;
+
+	id_usuario=$('#id_usuario').val();
+	objeto=$('#objeto').val();
+
+	// desplegable 'desde'
+	var url='{{ url_actualizar }}';
+	var parametros='salida=av_desde&dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'&id_usuario='+id_usuario+'&objeto='+objeto+'{{ h_actualizar|raw }}';
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		$('#desde').html(rta_txt);			
+	});
+	// desplegable 'hasta'
+	var url='{{ url_actualizar }}';
+	var parametros='salida=av_hasta&dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'&id_usuario='+id_usuario+'&objeto='+objeto+'{{ h_actualizar|raw }}';
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		$('#hasta').html(rta_txt);			
+	});
+}
+
+fnjs_grabar_todo=function(formulario){
+	var err=0;
+	var isfsv=$('#isfsv_val').val();
+	var iasistentes=$('#iasistentes_val').val();
+	var iactividad=$('#iactividad_val').val();
+	var inom_tipo=$('#inom_tipo_val').val();
+	
+	if (!iasistentes) iasistentes='.';
+	if (!iactividad) iactividad='.';
+	if (!inom_tipo) inom_tipo='...';
+
+	var id_tipo_activ=isfsv+iasistentes+iactividad+inom_tipo;
+	$('#id_tipo_activ').val(id_tipo_activ);
+
+	// Comprobaciones
+	var obj=$('#objeto').val();
+	if (!obj) { 
+		alert("{{ "debe indicar dónde mirar los cambios"|trans }}");
+		$('#objeto').focus();
+		err=1;
+	}
+	var tipo=$('#aviso_tipo').val();
+	if (!tipo) { 
+		alert("{{ "debe indicar por dónde avisar"|trans }}");
+		$('#aviso_tipo').focus();
+		err=1;
+	}
+
+	if (err!=1){
+        var url='{{ url_actualizar|raw }}';
+        // guardar objeto
+        form_objeto = $('#usuario_pref'); 
+        $('#salida').val('guardar_objeto');
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: form_objeto.serialize()
+        })
+        .done(function (rta_txt) {
+            id_item_obj=rta_txt;
+            // guardar propiedades
+            // Lo hago en dos fases, porque al calcular el hash de las propiedades, depende del objeto
+            form_propiedades = $('#propiedades_obj'); 
+            //$('#salida_').val('guardar_propiedades');
+            $('#id_item_usuario_objeto_prop').val(id_item_obj);
+            var data = form_propiedades.serializeArray();
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: data
+            })
+            .done(function (r_txt) {
+                if (r_txt) {
+                    alert (r_txt);
+                } else {
+                    {{ oPosicion.js_atras(1)|raw }}
+                }
+            });
+        });
+	}
+}
+
+fnjs_cerrar=function(){
+    $('#div_modificar').html('');
+    $('#div_modificar').width('0');
+    $('#div_modificar').height('0');
+    $('#div_modificar').removeClass('ventana');
+    document.getElementById("overlay").style.display = "none";
+
+	$('#inom_tipo_val').val('');
+}
+
+fnjs_modificar=function(objeto,propiedad,id_item){
+	if (isNaN(id_item)) id_item=0;
+    $('#div_modificar').addClass('ventana');
+    $('#div_modificar').width('auto');
+    $('#div_modificar').height('auto');
+    document.getElementById("overlay").style.display = "block";
+
+	var url='{{ url_actualizar|raw }}';
+	var parametros='salida=condicion&objeto='+objeto+'&propiedad='+propiedad+'&id_item='+id_item+'{{ h_mod|raw }}';;
+	fnjs_update_div('#div_modificar',url+'?'+parametros);
+}
+
+fnjs_guardar_cond=function(que){
+	var err=0;
+	$('#salida_cond').val(que);
+	if (que=="eliminar_cond") {
+		seguro=confirm("{{ "¿Está seguro de borrar esta condición?"|trans }}");
+		if (seguro) { 
+			err=0;
+		} else {
+			err=1;
+		}
+	}
+	if (err!=1) {
+		objeto=$('#objeto_cond').val();
+		propiedad=$('#propiedad_cond').val();
+		td_cond='#td_'+objeto+'_'+propiedad+'_cond';
+        var url='{{ url_actualizar|raw }}';
+        form_cond = $('#frm_cond'); 
+        // guardar condicion
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: form_cond.serialize()
+        })
+        .done(function (rta_txt) {
+            $(td_cond).html(rta_txt);			
+            fnjs_cerrar();
+        });
+	}
+}
+
+fnjs_actualizar_propiedades({{ id_item_usuario_objeto }});
+</script>
+
+{{  oPosicion.mostrar_left_slide(1)|raw }}
+<div id='div_buscar'>
+<form id="usuario_pref"  name="usuario_pref" action="" method="post" >
+{{ oHash.getCamposHtml|raw }}
+<input type='hidden' id='id_tipo_activ' name='id_tipo_activ' value='{{ id_tipo_activ }}'>
+<input type='hidden' id='salida' name='salida'>
+
+<h1>Avisos para {{ nombre }}</h1>
+
+<h3>{{ "cambios en"|trans }}:
+{{ oDesplObjetos.desplegable()|raw }}
+</h3>
+<table>
+<tr>
+<td class=etiqueta>{{ "para actividades que organiza"|trans }}:</td>
+<td colspan=5>
+	<input type=radio name=dl_propia value='t' {{ chk_propia }} onchange='fnjs_actualizar_fases();' > {{ "la propia dl"|trans }}
+	<input type=radio name=dl_propia value='f' {{ chk_otra }} onchange='fnjs_actualizar_fases();' > {{ "otras dl"|trans }}
+</td></tr>
+</table>
+<table>
+<tr><td class=subtitulo>{{ "escoger el tipo de actividad"|trans|capitalize }}
+	</td></tr>
+	<tr>
+		{{ oActividadTipo.getHtml|raw }}
+	</tr>
+</table>
+<br>
+
+<h3>{{ "periodo"|trans }}:</h3>
+{{ "NOTA: Sólo salen las fases comunes a todos los procesos de los tipos de actividad seleccionados.
+Para ver más fases del proceso, debe limitar el tipo de actividad."|trans }}
+<br>
+<br>
+<table>
+<tr>
+    <td class=etiqueta>{{ "desde"|trans }}:</td>
+    <td>
+        <span id=desde> {{ oDesplFasesIni.desplegable()|raw }} </span>
+    </td>
+    <td class=etiqueta>{{ "hasta"|trans }}:</td>
+    <td>
+        <span id=hasta> {{ oDesplFasesFin.desplegable()|raw }} </span>
+    </td>
+</tr>
+<tr><td colspan=2>{{ "ver cambios sólo de las casas"|trans }}:</td>
+    <td id="col_casas" colspan=2>
+        {{ oSelects.ListaSelects|raw }}
+    </td></tr>
+<tr><td>{{ "avisar por"|trans }}:</td>
+    <td>{{ oDesplTiposAviso.desplegable|raw }}</td>
+</tr>
+</table>
+</form>
+
+
+<form id="propiedades_obj"  name="propiedades_obj" action="" method="post" >
+<h3>{{ "campos o propiedades"|trans }}:</h3>
+<table class="tono3">
+    <tr id="tr_tabla"> </tr>
+</table>
+</form>
+
+<br>
+<input type=button onclick="fnjs_grabar_todo('#usuario_pref');" value="{{ "guardar"|trans }}">
+</div>
+
+<hr>
+<br>
+<div id='div_modificar'></div>
+<div id='ficha'></div>
+<div id='overlay'></div>

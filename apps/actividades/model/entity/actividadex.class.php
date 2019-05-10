@@ -1,8 +1,7 @@
 <?php
 namespace actividades\model\entity;
+use cambios\model\gestorAvisoCambios;
 use core;
-//require_once('classes/web/fechas.class');
-use cambios\model\entity as cambios;
 use procesos\model\entity as procesos;
 /**
  * Classe que implementa l'entitat a_actividades_ex
@@ -122,8 +121,9 @@ class ActividadEx Extends ActividadAll {
 				}
 			}
 			if (core\ConfigGlobal::is_app_installed('cambios') && empty($quiet)) {
-				$oGestorCanvis = new cambios\GestorCanvis();
-				$oGestorCanvis->addCanvi("$nom_tabla", 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
+				$oGestorCanvis = new gestorAvisoCambios();
+				$shortClassName = (new \ReflectionClass($this))->getShortName();
+				$oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
 			}
 		} else {
 			// INSERT
@@ -159,8 +159,9 @@ class ActividadEx Extends ActividadAll {
 			}
 			// anotar cambio.
 			if (core\ConfigGlobal::is_app_installed('cambios') && empty($quiet)) {
-				$oGestorCanvis = new cambios\GestorCanvis();
-				$oGestorCanvis->addCanvi("$nom_tabla", 'INSERT', $aDades['id_activ'], $aDades, array());
+				$oGestorCanvis = new gestorAvisoCambios();
+				$shortClassName = (new \ReflectionClass($this))->getShortName();
+				$oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDades['id_activ'], $aDades, array());
 			}
 		}
 		$this->setAllAtributes($aDades);
@@ -187,6 +188,9 @@ class ActividadEx Extends ActividadAll {
 					break;
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
+					// Hay que guardar los boolean de la misma manera que al guardar los datos ('false','true'):
+					$aDades['publicado'] = ($aDades['publicado'] === 't')? 'true' : $aDades['publicado'];
+					if ( filter_var( $aDades['publicado'], FILTER_VALIDATE_BOOLEAN)) { $aDades['publicado']='true'; } else { $aDades['publicado']='false'; }
 					$this->aDadesActuals=$aDades;
 					break;
 				default:
@@ -211,8 +215,9 @@ class ActividadEx Extends ActividadAll {
 		} else {
 			if (core\ConfigGlobal::is_app_installed('cambios')) { 
 				// ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.
-				$oGestorCanvis = new cambios\GestorCanvis();
-				$oGestorCanvis->addCanvi("$nom_tabla", 'DELETE', $this->iid_activ, array(), $this->aDadesActuals);
+				$oGestorCanvis = new gestorAvisoCambios();
+				$shortClassName = (new \ReflectionClass($this))->getShortName();
+				$oGestorCanvis->addCanvi($shortClassName, 'DELETE', $this->iid_activ, array(), $this->aDadesActuals);
 			}
 			if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_activ='$this->iid_activ'")) === false) {
 				$sClauError = 'ActividadEx.eliminar';

@@ -4,6 +4,7 @@ namespace core;
 use usuarios\model\entity as usuarios;
 use permisos\model as permisos;
 use web;
+use config\model\Config;
 
 if (session_id() == "") {
 	session_start(); // if no active session we start a new one
@@ -23,13 +24,13 @@ $_SESSION['oGestorErrores'] = new gestorErrores();
  */
 
 // public para todo el mundo
-$oConfig = new Config('comun'); //de la database comun 
+$oConfigDB = new ConfigDB('comun'); //de la database comun 
 
-$config = $oConfig->getEsquema('public'); 
+$config = $oConfigDB->getEsquema('public'); 
 $oConexion = new dbConnection($config);
 $oDBPC = $oConexion->getPDO();
 
-$config = $oConfig->getEsquema('resto'); 
+$config = $oConfigDB->getEsquema('resto'); 
 $oConexion = new dbConnection($config);
 $oDBRC = $oConexion->getPDO();
 
@@ -40,35 +41,35 @@ switch ($user_sfsv) {
 		$esquema = \substr($esquemav, 0, -1);
 		$esquemaf = $esquema.'f';
 		//comun
-		$oConfig = new Config('comun'); 
-		$config = $oConfig->getEsquema($esquema); 
+		$oConfigDB = new ConfigDB('comun'); 
+		$config = $oConfigDB->getEsquema($esquema); 
 		$oConexion = new dbConnection($config);
 		$oDBC = $oConexion->getPDO();
 		//sv
-		$oConfig = new Config('sv'); 
-		$config = $oConfig->getEsquema($esquemav); 
+		$oConfigDB = new ConfigDB('sv'); 
+		$config = $oConfigDB->getEsquema($esquemav); 
 		$oConexion = new dbConnection($config);
 		$oDB = $oConexion->getPDO();
 
-		$config = $oConfig->getEsquema('publicv'); 
+		$config = $oConfigDB->getEsquema('publicv'); 
 		$oConexion = new dbConnection($config);
 		$oDBP = $oConexion->getPDO();
 
-		$config = $oConfig->getEsquema('restov'); 
+		$config = $oConfigDB->getEsquema('restov'); 
 		$oConexion = new dbConnection($config);
 		$oDBR = $oConexion->getPDO();
 		
 		//sf
-		$oConfig = new Config('sf'); 
-		$config = $oConfig->getEsquema($esquemaf); 
+		$oConfigDB = new ConfigDB('sf'); 
+		$config = $oConfigDB->getEsquema($esquemaf); 
 		$oConexion = new dbConnection($config);
 		$oDBE = $oConexion->getPDO();
 
-		$config = $oConfig->getEsquema('publicf'); 
+		$config = $oConfigDB->getEsquema('publicf'); 
 		$oConexion = new dbConnection($config);
 		$oDBEP = $oConexion->getPDO();
 
-		$config = $oConfig->getEsquema('restof'); 
+		$config = $oConfigDB->getEsquema('restof'); 
 		$oConexion = new dbConnection($config);
 		$oDBER = $oConexion->getPDO();
 		
@@ -78,27 +79,27 @@ switch ($user_sfsv) {
 		$esquema = \substr($esquemaf, 0, -1);
 		$esquemav = $esquema.'v';
 		//comun
-		$oConfig = new Config('comun'); 
-		$config = $oConfig->getEsquema($esquema); 
+		$oConfigDB = new ConfigDB('comun'); 
+		$config = $oConfigDB->getEsquema($esquema); 
 		$oConexion = new dbConnection($config);
 		$oDBC = $oConexion->getPDO();
 		//sf
-		$oConfig = new Config('sf'); 
-		$config = $oConfig->getEsquema($esquemaf); 
+		$oConfigDB = new ConfigDB('sf'); 
+		$config = $oConfigDB->getEsquema($esquemaf); 
 		$oConexion = new dbConnection($config);
 		$oDB = $oConexion->getPDO();
 
-		$config = $oConfig->getEsquema('publicf'); 
+		$config = $oConfigDB->getEsquema('publicf'); 
 		$oConexion = new dbConnection($config);
 		$oDBP = $oConexion->getPDO();
 
-		$config = $oConfig->getEsquema('restof'); 
+		$config = $oConfigDB->getEsquema('restof'); 
 		$oConexion = new dbConnection($config);
 		$oDBR = $oConexion->getPDO();
 		
 		//sv
-		$oConfig = new Config('sv'); 
-		$config = $oConfig->getEsquema($esquemav); 
+		$oConfigDB = new ConfigDB('sv'); 
+		$config = $oConfigDB->getEsquema($esquemav); 
 		$oConexion = new dbConnection($config);
 		$oDBE = $oConexion->getPDO();
 		break;
@@ -109,8 +110,8 @@ if (configGlobal::is_app_installed('dbextern')) {
 	// No en el caso de cr (H-Hv)
 	if ((\core\ConfigGlobal::mi_region() != \core\ConfigGlobal::mi_dele()) && !isset($_SESSION['oDBListas'])){
 		try {
-			$oConfig = new Config('listas'); 
-			$config = $oConfig->getEsquema('public'); 
+			$oConfigDB = new ConfigDB('listas'); 
+			$config = $oConfigDB->getEsquema('public'); 
 			$oConexion = new dbConnection($config);
 			$oDBListas = $oConexion->getPDOListas();
 		} catch (\PDOException $e) {
@@ -140,6 +141,7 @@ if ((\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_dele()) && !isse
 				'p_agregados',
 				'p_numerarios',
 				'personas_dl',
+				'd_teleco_personas_dl',
 			];
 		
 		foreach ($views as $view) {
@@ -182,6 +184,8 @@ if ( ConfigGlobal::is_app_installed('menus') ) {
 	}
 }
 
+// Datos de configuración propios de cada dl.
+$_SESSION['oConfig'] = new Config();
 
 // para mantener los permisos por actividades en una variable
 if (empty($_SESSION['oPermActividades'])) {

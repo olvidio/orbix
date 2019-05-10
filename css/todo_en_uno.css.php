@@ -197,6 +197,15 @@ div.ventana z-index: 160;
 	h2 {
 		font-size : 14pt;
 	}
+	
+	/* Flex box */
+	
+	.flex-container {
+        display: flex;
+        flex-direction: column;
+    }
+	
+	
 	/* Help Tip in line */
 	/*-------------------------
 		Inline help tip
@@ -375,7 +384,8 @@ div.ventana z-index: 160;
 	}
 	div.ventana {
 		background: #FFFFFF;
-		position: absolute;
+		/* cambio de absolute a fixed para que salga en la pantalla aunque el scroll este... */
+		position: fixed;
 		overflow: auto;
 		z-index: 160; /* algo de la slickgrigd está en 90 */
 		padding: 25px;

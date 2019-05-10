@@ -6,13 +6,7 @@
 <table>
 <tr><td><?= ucfirst(_("página central de inicio")) ?>: </td>
 <td>
-<select name=inicio>
-	<option value=exterior <?= $ini_exterior; ?>><?= ucfirst(_("home")) ?></option>
-	<option value=avisos <?= $ini_avisos; ?>><?= ucfirst(_("avisos cambios actividades")) ?></option>
-	<option value=oficina <?= $ini_oficina; ?>><?= ucfirst(_("oficina")) ?></option>
-	<option value=personal <?= $ini_personal; ?>><?= ucfirst(_("personal")) ?></option>
-	<option value=aniversarios <?= $ini_aniv; ?>><?= ucfirst(_("aniversarios")) ?></option>
-</select>
+<?= $oDesplInicio->desplegable(); ?>
 </td>
 </tr>
 <tr>

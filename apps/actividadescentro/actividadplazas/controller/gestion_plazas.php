@@ -52,14 +52,14 @@ if (empty($Qperiodo) || $Qperiodo == 'otro') {
 	switch ($Qsactividad) {
 		case 'ca':
 		case 'cv':
-			$any=  core\ConfigGlobal::any_final_curs('est');
+			$any=  $_SESSION['oConfig']->any_final_curs('est');
 			$Qempiezamin=core\curso_est("inicio",$any,"est")->format('Y-m-d');
 			$Qempiezamax=core\curso_est("fin",$any,"est")->format('Y-m-d');
 			$Qperiodo = 'curso_ca';
 			break;
 		case 'crt':
 		case 'cve':
-			$any=  core\ConfigGlobal::any_final_curs('crt');
+			$any=  $_SESSION['oConfig']->any_final_curs('crt');
 			$Qempiezamin=core\curso_est("inicio",$any,"crt")->format('Y-m-d');
 			$Qempiezamax=core\curso_est("fin",$any,"crt")->format('Y-m-d');
 			$Qperiodo = 'curso_crt';

@@ -92,9 +92,9 @@ if (!empty($id_tipo_activ))  {
 $oActividadTipo->setAsistentes($asistentes);
 $oActividadTipo->setActividad($actividad);
 $oActividadTipo->setNom_tipo($nom_tipo);
-$oActividadTipo->setParaPerm(TRUE);
+$oActividadTipo->setPara('procesos');
 $perm_jefe = FALSE;
-if (ConfigGlobal::is_jefeCalendario()
+if ($_SESSION['oConfig']->is_jefeCalendario()
     or (($_SESSION['oPerm']->have_perm("des") or $_SESSION['oPerm']->have_perm("vcsd")) && ConfigGlobal::mi_sfsv() == 1)
     ) {
     $perm_jefe = TRUE;

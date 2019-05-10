@@ -6,7 +6,7 @@ fnjs_nota=function(n){
 	
 	num = $('#nota_num'+n).val();
 	max = $('#nota_max'+n).val();
-	max_default = <?= core\ConfigGlobal::nota_max(); ?>;
+	max_default = <?= $nota_max_default ?>;
 	if (!max)  $('#nota_max'+n).val(max_default);
 	fnjs_guardar_nota();
 }

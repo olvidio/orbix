@@ -2,12 +2,10 @@
 namespace permisos\controller;
 
 use permisos\model as permisos;
-use usuarios\model\entity as usuarios;
-use web;
 use core;
-use core\ConfigGlobal;
 use core\DBPropiedades;
-        
+use core\ConfigDB;
+            
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -42,7 +40,7 @@ function cambiar_idioma($idioma='') {
 			$idioma = $_SESSION['session_auth']['idioma'];
 		}
 		# Si no hemos encontrado ningún idioma que nos convenga, mostramos la web en el idioma por defecto
-		if (!isset($idioma)){$idioma = core\ConfigGlobal::$x_default_idioma;}  
+		if (!isset($idioma)){$idioma = $_SESSION['oConfig']->getIdioma_default();}  
 	}
 	//$idioma=  str_replace('UTF-8', 'utf8', $idioma);
 	$domain="orbix";
@@ -63,8 +61,8 @@ function cambiar_idioma($idioma='') {
 
 // APLICACIONES POSIBLES
 function getAppsPosibles () {
-	$oConfig = new core\Config('comun');
-	$config = $oConfig->getEsquema('public'); 
+	$oConfigDB = new ConfigDB('comun');
+	$config = $oConfigDB->getEsquema('public'); 
 	$oConexion = new core\dbConnection($config);
 	$oDBP = $oConexion->getPDO();
 	$sQuery = "SELECT * FROM m0_apps";
@@ -78,8 +76,8 @@ function getAppsPosibles () {
 
 // MODULOS POSIBLES
 function getModsPosibles () {
-	$oConfig = new core\Config('comun');
-	$config = $oConfig->getEsquema('public'); 
+	$oConfigDB = new ConfigDB('comun');
+	$config = $oConfigDB->getEsquema('public'); 
 	$oConexion = new core\dbConnection($config);
 	$oDBP = $oConexion->getPDO();
 	$sQuery = "SELECT * FROM m0_modulos";
@@ -114,11 +112,13 @@ function getAppsMods($id_mod) {
 	$a_mods = getModsPosibles();
 	$ajson = $a_mods[$id_mod]['mods_req'];
 	if (preg_match('/^{(.*)}$/', $ajson, $matches)) {
-		$mod_in = str_getcsv($matches[1]);
-		foreach ($mod_in as $mod) {
-			$appsi = getApps($mod);
-			$apps = array_merge($apps,$appsi);
-		}
+	    if (!empty($matches[1])) {
+            $mod_in = str_getcsv($matches[1]);
+            foreach ($mod_in as $mod) {
+                $appsi = getApps($mod);
+                $apps = array_merge($apps,$appsi);
+            }
+	    }
 	}
 	return $apps;
 }
@@ -156,16 +156,16 @@ if ( !isset($_SESSION['session_auth'])) {
 				$esquema = $_POST['esquema'];
 				if (substr($esquema,-1)=='v') {
 					$sfsv = 1;
-					$oConfig = new core\Config('sv'); 
-					$config = $oConfig->getEsquema($esquema); 
+					$oConfigDB = new ConfigDB('sv'); 
+					$config = $oConfigDB->getEsquema($esquema); 
 					$oConexion = new core\dbConnection($config);
 					$oDB = $oConexion->getPDO();
 
 				}
 				if (substr($esquema,-1)=='f') {
 					$sfsv = 2;
-					$oConfig = new core\Config('sf'); 
-					$config = $oConfig->getEsquema($esquema); 
+					$oConfigDB = new ConfigDB('sf'); 
+					$config = $oConfigDB->getEsquema($esquema); 
 					$oConexion = new core\dbConnection($config);
 					$oDB = $oConexion->getPDO();
 				}
@@ -190,8 +190,8 @@ if ( !isset($_SESSION['session_auth'])) {
 					if ($oCrypt->encode($_POST['password'],$sPasswd) == $sPasswd) {
 						$id_usuario = $row['id_usuario'];
 						$id_role = $row['id_role'];
-						$oConfig = new core\Config('comun');
-						$config = $oConfig->getEsquema('public'); 
+						$oConfigDB = new ConfigDB('comun');
+						$config = $oConfigDB->getEsquema('public'); 
 						$oConexion = new core\dbConnection($config);
 						$oDBP = $oConexion->getPDO();
 						$queryr="SELECT * FROM aux_roles WHERE id_role = $id_role";

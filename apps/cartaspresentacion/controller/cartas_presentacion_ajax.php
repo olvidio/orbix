@@ -191,13 +191,13 @@ switch ($Qque_mod) {
             $txt.='<br>';
             $txt.= _("observaciones") ."   <input type=text size=60 name=observ value=\"$observ\">";
             $txt.='<br><br>';
-            $txt.="<input type='button' value='". _('guardar') ."' onclick=\"fnjs_guardar_cp('#frm_pres');\" >";
-            $txt.="<input type='button' value='". _('cancel') ."' onclick=\"fnjs_cerrar();\" >";
+            $txt.="<input type='button' value='". _("guardar") ."' onclick=\"fnjs_guardar_cp('#frm_pres');\" >";
+            $txt.="<input type='button' value='". _("cancel") ."' onclick=\"fnjs_cerrar();\" >";
             $txt.="</form> ";
 		} else {
             $txt="<form id='frm_pres'>";
 		    $txt .= $msg_exit;
-            $txt.="<br><br><input type='button' value='". _('cancel') ."' onclick=\"fnjs_cerrar();\" >";
+            $txt.="<br><br><input type='button' value='". _("cancel") ."' onclick=\"fnjs_cerrar();\" >";
             $txt.="</form> ";
 		}
 		echo $txt;
@@ -384,7 +384,7 @@ switch ($Qque_mod) {
 		$oLista->setDatos($a_valores);
 		echo $oLista->mostrar_tabla();
 		/* DESACTIVADO por no tener acceso a las tablas de cargos
-		echo "<br><input type=button name=\"actualizar\" value=\"". _('actualizar director') ."\" onclick=\"fnjs_actualizar_dtor();\">";
+		echo "<br><input type=button name=\"actualizar\" value=\"". _("actualizar director") ."\" onclick=\"fnjs_actualizar_dtor();\">";
         */
 		break;
 	case "get_r":
@@ -468,7 +468,7 @@ switch ($Qque_mod) {
 		$oLista->setDatos($a_valores);
 		echo $oLista->mostrar_tabla();
 		/* DESACTIVADO por no tener acceso a las tablas de cargos
-		echo "<br><input type=button name=\"actualizar\" value=\"". _('actualizar director') ."\" onclick=\"fnjs_actualizar_dtor();\">";
+		echo "<br><input type=button name=\"actualizar\" value=\"". _("actualizar director") ."\" onclick=\"fnjs_actualizar_dtor();\">";
 		*/
 		break;
 }

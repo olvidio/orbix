@@ -6,7 +6,6 @@ use actividades\model\entity\GestorActividadDl;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use asistentes\model\entity\AsistenteDl;
 use core\ConfigGlobal;
-use encargossacd\model\entity\GestorEncargo;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\PersonaDl;
 use web\Periodo;
@@ -171,7 +170,7 @@ switch ($Qque) {
 			$id_ctr=$oEncargado->getId_ubi();
 			$num_orden = $oEncargado->getNum_orden();
             if (configGlobal::is_app_installed('encargossacd')) {
-                $GesEncargos = new GestorEncargo();
+                $GesEncargos = new GestorEncargoSacd();
                 // Tipos de encargo que son atención centro. No los rt.
                 // 1000,1100,1200,1300
                 $cEncargos = $GesEncargos->getEncargos(array('id_ubi'=>$id_ctr,'id_tipo_enc'=>'1[0123]00'),array('id_tipo_enc'=>'~'));

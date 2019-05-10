@@ -1,0 +1,11 @@
+<div id="condiciones" class="no_print">
+	<form name="frm_cond" id="frm_cond" action="apps/cambios/controller/avisos_generar.php" method="post">
+	{{ oHashCond.getCamposHtml()|raw }}
+	{{ "usuario"|trans }}:
+	{{ oDesplUsuarios.desplegable()|raw }}
+	{{  "tipo de aviso"|trans }}:
+	{{ oDesplTiposAviso.desplegable()|raw }}
+	<input type="button" onclick="fnjs_enviar_formulario('#frm_cond','#exportar')" value="{{ "buscar"|trans }}">
+	</form>
+</div>
+<br><br>

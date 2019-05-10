@@ -2,7 +2,6 @@
 use actividades\model\entity as actividades;
 use actividadestudios\model\entity as actividadestudios;
 use notas\model\entity as notas;
-use personas\model\entity as personas;
 use profesores\model\entity as profesores;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -60,7 +59,7 @@ $continuar = (integer)  filter_input(INPUT_POST, 'continuar');
  } else {
 	//periodo
 	if (empty($Qperiodo) || $Qperiodo == 'otro') {
-		$any=  core\ConfigGlobal::any_final_curs('est');
+		$any=  $_SESSION['oConfig']->any_final_curs('est');
 		$Qempiezamin=core\curso_est("inicio",$any,"est")->format('Y-m-d');
 		$Qempiezamax=core\curso_est("fin",$any,"est")->format('Y-m-d');
 		$Qperiodo = 'curso_ca';
@@ -75,6 +74,8 @@ $continuar = (integer)  filter_input(INPUT_POST, 'continuar');
 		$fin = $oPeriodo->getF_fin_iso();
 	}
 
+	$aWhere = [];
+	$aOperador = [];
 	$aWhere['f_ini'] = "'$inicio','$fin'";
 	$aOperador['f_ini'] = 'BETWEEN';
 	$aWhere['status'] = 3;
@@ -87,8 +88,8 @@ $continuar = (integer)  filter_input(INPUT_POST, 'continuar');
 	$aOperador['id_tipo_activ'] = '~';
 	$GesActividades = new actividades\GestorActividadDl();	
 	$cActividades = $GesActividades->getActividades($aWhere,$aOperador);
-	$ini_d = core\ConfigGlobal::$est_inicio['d'];
-	$ini_m = core\ConfigGlobal::$est_inicio['m'];
+    $ini_d = $_SESSION['oConfig']->getDiaIniStgr();
+    $ini_m = $_SESSION['oConfig']->getMesIniStgr();
 	// busco los profesores que han dado alguna asignatura en actividad.	
 	$GesProfesorDocencia = new profesores\GestorProfesorDocenciaStgr();
 	foreach ($cActividades as $oActividad) {

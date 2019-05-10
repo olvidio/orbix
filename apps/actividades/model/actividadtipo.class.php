@@ -26,7 +26,7 @@ class ActividadTipo {
 	private $status;
 	private $que;
 	private $id_tipo_activ;
-	private $para_perm = FALSE;
+	private $para;
 	private $bperm_jefe = FALSE;
 			
 	public function getHtml() {
@@ -93,7 +93,7 @@ class ActividadTipo {
 
 
 		// si es una búsqueda, también puedo buscar todos. (Excepto sf/sv)
-		if (core\ConfigGlobal::is_jefeCalendario() || (isset($this->que) && $this->que=="buscar" || $this->bperm_jefe)) {
+		if ($_SESSION['oConfig']->is_jefeCalendario() || (isset($this->que) && $this->que=="buscar" || $this->bperm_jefe)) {
 			$oTipoActivB= new web\TiposActividades();
 			if ($this->ssfsv) $oTipoActivB->setSfsvText($this->ssfsv);
 			$a_asistentes_posibles =$oTipoActivB->getAsistentesPosibles();
@@ -115,7 +115,7 @@ class ActividadTipo {
 		$oDesplSfsv = new web\Desplegable();
 		$oDesplSfsv->setNombre('isfsv_val');
 		$oDesplSfsv->setOpciones($a_sfsv_posibles);
-		$oDesplSfsv->setopcion_sel($isfsv);
+		$oDesplSfsv->setOpcion_sel($isfsv);
 		$oDesplSfsv->setBlanco('t');
 		$oDesplSfsv->setValBlanco('.');
 		$oDesplSfsv->setAction('fnjs_asistentes()');
@@ -123,7 +123,7 @@ class ActividadTipo {
 		$oDesplAsistentes = new web\Desplegable();
 		$oDesplAsistentes->setNombre('iasistentes_val');
 		$oDesplAsistentes->setOpciones($a_asistentes_posibles);
-		$oDesplAsistentes->setopcion_sel($iasistentes);
+		$oDesplAsistentes->setOpcion_sel($iasistentes);
 		$oDesplAsistentes->setBlanco('t');
 		$oDesplAsistentes->setValBlanco('.');
 		$oDesplAsistentes->setAction('fnjs_actividad()');
@@ -131,7 +131,7 @@ class ActividadTipo {
 		$oDesplActividad = new web\Desplegable();
 		$oDesplActividad->setNombre('iactividad_val');
 		$oDesplActividad->setOpciones($a_actividades_posibles);
-		$oDesplActividad->setopcion_sel($iactividad);
+		$oDesplActividad->setOpcion_sel($iactividad);
 		$oDesplActividad->setBlanco('t');
 		$oDesplActividad->setValBlanco('.');
 		$oDesplActividad->setAction('fnjs_nom_tipo()');
@@ -139,7 +139,7 @@ class ActividadTipo {
 		$oDesplNomTipo = new web\Desplegable();
 		$oDesplNomTipo->setNombre('inom_tipo_val');
 		$oDesplNomTipo->setOpciones($a_nom_tipo_posibles);
-		$oDesplNomTipo->setopcion_sel($inom_tipo);
+		$oDesplNomTipo->setOpcion_sel($inom_tipo);
 		$oDesplNomTipo->setBlanco('t');
 		$oDesplNomTipo->setValBlanco('...');
 		$oDesplNomTipo->setAction('fnjs_act_id_activ()');
@@ -161,13 +161,21 @@ class ActividadTipo {
 					'oDesplNomTipo' => $oDesplNomTipo,
 					];
 
-		if ($this->para_perm) {
-		    $aditionalPaths = ['actividades' => 'actividades/view'];
-		    $oView = new core\ViewTwig('procesos/controller',$aditionalPaths);
-            return $oView->render('actividad_tipo_que_perm.html.twig',$a_campos);
-		} else {
-            $oView = new core\ViewTwig('actividades/controller');
-            return $oView->render('actividad_tipo_que.html.twig',$a_campos);
+		switch ($this->para) {
+		    case 'procesos':
+                $aditionalPaths = ['actividades' => 'actividades/view'];
+                $oView = new core\ViewTwig('procesos/controller',$aditionalPaths);
+                return $oView->render('actividad_tipo_que_perm.html.twig',$a_campos);
+                break;
+		    case 'cambios':
+                $aditionalPaths = ['actividades' => 'actividades/view'];
+                $oView = new core\ViewTwig('cambios/controller',$aditionalPaths);
+                return $oView->render('actividad_tipo_que_perm.html.twig',$a_campos);
+		        break;
+		    case 'actividades':
+		    default:
+                $oView = new core\ViewTwig('actividades/controller');
+                return $oView->render('actividad_tipo_que.html.twig',$a_campos);
 		}
 	}
 
@@ -203,8 +211,8 @@ class ActividadTipo {
 		$this->id_tipo_activ = $id_tipo_activ;
 	}
 
-	public function setParaPerm($para_perm=FALSE) {
-	    $this->para_perm = $para_perm;
+	public function setPara($para='actividades') {
+	    $this->para = $para;
 	}
 
 }

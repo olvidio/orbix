@@ -12,17 +12,19 @@ class PermDl extends Xpermisos {
   private function omplir() {
 		$permission_users = [];
 		$permission_users["adl"]	= 1;
-		$permission_users["pr"]		= 1;
+		$permission_users["pr"]		 = 1;
 		$permission_users["agd"]	= 1<<1; // 2
 		$permission_users["aop"]    = 1<<2; //4,
 		$permission_users["des"]    = 1<<3; //8,
 		$permission_users["est"]    = 1<<4; //16,
 		$permission_users["scdl"]   = 1<<5; //32,
+		$permission_users["scr"]     = 1<<5; //32,
 		$permission_users["sg"]     = 1<<6; //64,
 		$permission_users["sm"]     = 1<<7; //128,
 		$permission_users["soi"]    = 1<<8; //256,
 		$permission_users["sr"]     = 1<<9; //512,
 		$permission_users["vcsd"]   = 1<<10; //1024,
+		$permission_users["vcsr"]    = 1<<10; //1024,
 		$permission_users["dtor"]   = 1<<11; //2048,
 		$permission_users["ocs"]    = 1<<12; //4096,
 		$permission_users["sddl"]   = 1<<13; //8192,

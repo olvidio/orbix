@@ -48,10 +48,14 @@ switch ($Qque) {
 			$aGruposOn[]=$oUsuarioGrupo->getId_grupo();
 		}
 		$i=0;
-		$a_botones=array();
-		$a_cabeceras=array();
-		$a_cabeceras=array('usuario','seccion',array('name'=>'accion','formatter'=>'clickFormatter'));
-		$a_valores=array();
+		$a_botones = [];
+		$a_cabeceras = [ _("grupo"),
+		                 _("sección"),
+		                 [ 'name' => _("acción"),
+		                   'formatter'=>'clickFormatter'
+		                 ],
+		            ];
+		$a_valores = [];
 		$asfsv=array(1=>'sv',2=>'sf');
 		foreach ($oGrupoColeccion as $oGrupo) {
 			$id_grupo=$oGrupo->getId_usuario();

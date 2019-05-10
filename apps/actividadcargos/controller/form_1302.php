@@ -111,7 +111,7 @@ $oCargos=new actividadcargos\GestorCargo();
 $oDesplegableCargos=$oCargos->getListaCargos();
 $oDesplegableCargos->setNombre('id_cargo');
 $oDesplegableCargos->setBlanco(false);
-$oDesplegableCargos->setopcion_sel($id_cargo);
+$oDesplegableCargos->setOpcion_sel($id_cargo);
 $chk = (!empty($puede_agd) && $puede_agd=='t')? 'checked' : '' ;
 
 $oHash = new web\Hash();

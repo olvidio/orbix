@@ -57,12 +57,12 @@ if (!empty($Qid_activ_old) && !empty($Qid_nom)) {
 	switch ($sactividad) {
 		case 'ca':
 		case 'cv':
-			$any=  core\ConfigGlobal::any_final_curs('est');
+			$any=  $_SESSION['oConfig']->any_final_curs('est');
 			$oInicurs=core\curso_est("inicio",$any,"est");
 			$oFincurs=core\curso_est("fin",$any,"est");
 			break;
 		case 'crt':
-			$any=  core\ConfigGlobal::any_final_curs('crt');
+			$any=  $_SESSION['oConfig']->any_final_curs('crt');
 			$oInicurs=core\curso_est("inicio",$any,"crt");
 			$oFincurs=core\curso_est("fin",$any,"crt");
 			break;

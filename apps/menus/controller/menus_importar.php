@@ -56,13 +56,13 @@ if ($Qseguro == 1) {
 		$sec = substr($esquema,-1); // la v o la f.
 		echo ">>>$sec>>actualizando menus para $esquema<br>";
 		if ($sec == 'v') { 
-			$oConfig = new core\Config('sv'); 
+			$oConfigDB = new core\ConfigDB('sv'); 
 		}
 		if ($sec == 'f') {
-			$oConfig = new core\Config('sf'); 
+			$oConfigDB = new core\ConfigDB('sf'); 
 			
 		}
-		$config = $oConfig->getEsquema($esquema); 
+		$config = $oConfigDB->getEsquema($esquema); 
 		$oConexion = new core\dbConnection($config);
 		$oDB = $oConexion->getPDO();
 

@@ -1,0 +1,95 @@
+<script>
+fnjs_guardar=function(formulario){
+	var url='{{ url }}';
+    $(formulario).attr('action',url);
+    $(formulario).submit(function() {
+		$.ajax({
+			url: $(this).attr('action'),
+			type: 'post',
+			data: $(this).serialize()
+		})
+		.done(function (rta_txt) {
+			if (rta_txt != '' && rta_txt != '\n') {
+				alert (rta_txt);
+			}
+        });
+        return false;
+    });
+    $(formulario).submit();
+    $(formulario).off();
+}
+</script>
+
+<h3>{{ "periodo curso stgr"|trans }}:</h3>
+<form id="frm_stgr" name="frm_stgr" action="">
+{{ oHashStgr.getCamposHtml|raw }}
+
+inicio: 
+dia:<input type="text" name="ini_dia" value="{{ aCursoStgr['ini_dia'] }}" >
+mes:<input type="text" name="ini_mes" value="{{ aCursoStgr['ini_mes'] }}" >
+
+fin: 
+dia:<input type="text" name="fin_dia" value="{{ aCursoStgr['fin_dia'] }}" >
+mes:<input type="text" name="fin_mes" value="{{ aCursoStgr['fin_mes'] }}" >
+
+<input type="button" value="{{ "Guardar"|trans }}" onClick="fnjs_guardar(this.form);" >
+</form>
+<hr>
+
+<h3>{{ "periodo curso crt"|trans }}:</h3>
+<form id="frm_crt" name="frm_crt" action="">
+{{ oHashCrt.getCamposHtml|raw }}
+
+inicio: 
+dia:<input type="text" name="ini_dia" value="{{ aCursoCrt['ini_dia'] }}" >
+mes:<input type="text" name="ini_mes" value="{{ aCursoCrt['ini_mes'] }}" >
+
+fin: 
+dia:<input type="text" name="fin_dia" value="{{ aCursoCrt['fin_dia'] }}" >
+mes:<input type="text" name="fin_mes" value="{{ aCursoCrt['fin_mes'] }}" >
+
+<input type="button" value="{{ "Guardar"|trans }}" onClick="fnjs_guardar(this.form);" >
+</form>
+<hr>
+
+
+<h3>{{ "jefe calendario"|trans }}:</h3>
+<form id="frm_jefecalendario" name="frm_jefecalendario" action="">
+{{ oHashJC.getCamposHtml|raw }}
+<input type="text" name="valor" value="{{ jefe_calendario }}" >
+<input type="button" value="{{ "Guardar"|trans }}" onClick="fnjs_guardar(this.form);" >
+</form>
+<hr>
+
+<h3>{{ "nombre región en latín (html)"|trans }}:</h3>
+<form id="frm_regionlatin" name="frm_regionlatin" action="">
+{{ oHashRL.getCamposHtml|raw }}
+<input type="text" name="valor" value="{{ region_latin }}" >
+<input type="button" value="{{ "guardar"|trans }}" onclick="fnjs_guardar(this.form);" >
+</form>
+<hr>
+
+<h3>{{ "nota máxima stgr"|trans }}:</h3>
+<form id="frm_nota_max" name="frm_nota_max" action="">
+{{ oHashN.getCamposHtml|raw }}
+<input type="text" name="valor" value="{{ nota_max }}" >
+<input type="button" value="{{ "guardar"|trans }}" onclick="fnjs_guardar(this.form);" >
+</form>
+<hr>
+
+<h3>{{ "idioma por defecto"|trans }}:</h3>
+<form id="frm_idioma_default" name="frm_idioma_default" action="">
+{{ oHashI.getCamposHtml|raw }}
+<input type="text" name="valor" value="{{ idioma_default }}" >
+<input type="button" value="{{ "guardar"|trans }}" onclick="fnjs_guardar(this.form);" >
+</form>
+<hr>
+
+<h3>{{ "delegación o región"|trans }}:</h3>
+<form id="frm_dl_r" name="frm_dl_r" action="">
+{{ oHashDLR.getCamposHtml|raw }}
+<input type="radio" name="valor" value="r" {{ chk_r }} >{{ "región"|trans }}
+<input type="radio" name="valor" value="dl" {{ chk_dl }} >{{ "delegación"|trans }}
+<input type="button" value="{{ "guardar"|trans }}" onclick="fnjs_guardar(this.form);" >
+</form>
+<hr>

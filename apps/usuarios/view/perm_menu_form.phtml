@@ -1,18 +1,13 @@
 <script>
-fnjs_add_perm=function(que){
-	if (que=='menu'){
-		$('#frm_usuario').attr('action',"apps/usuarios/controller/usuario_perm_menu.php");
-	}
-	if (que=='activ'){
-		$('#frm_usuario').attr('action',"apps/usuarios/controller/usuario_perm_activ.php");
-	}
+fnjs_add_perm_menu=function(){
+    $('#frm_usuario').attr('action',"apps/usuarios/controller/usuario_perm_menu.php");
 	fnjs_enviar_formulario('#frm_usuario');
 }
 fnjs_del_perm_menu=function(formulario){
 	rta=fnjs_solo_uno(formulario);
 	if (rta==1) {
 		if (confirm("<?= _("¿Está seguro?") ?>")) {
-			$('#que').val("perm_menu_eliminar");
+			$('#perm_menu_que').val("perm_menu_eliminar");
 			$(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
 			$(formulario).submit(function() {
 				$.ajax({
@@ -45,8 +40,8 @@ fnjs_actualizar=function(formulario){
 <h4><?= ucfirst(_("permisos de menús")) ?>:</h4>
 <form id="permisos_menu" name="permisos_menu" action="">
 <?= $oHashPermisos->getCamposHtml(); ?>
-<input type="hidden" id="que" name="que" value="">
-<?= $oTabla->mostrar_tabla(); ?>
+<input type="hidden" id="perm_menu_que" name="que" value="">
+<?= $oTablaPermMenu->mostrar_tabla(); ?>
 <br>
-<input type=button onclick="fnjs_add_perm('menu');" value="<?= _("añadir permiso") ?>">
+<input type=button onclick="fnjs_add_perm_menu();" value="<?= _("añadir permiso") ?>">
 </form>

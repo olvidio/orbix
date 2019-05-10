@@ -85,7 +85,7 @@ switch ($Qque) {
 		$Qid_ubi = (integer)  \filter_input(INPUT_POST, 'id_ubi');
 		$Qyear = (integer)  \filter_input(INPUT_POST, 'year');
 		// permisos:
-		if (core\ConfigGlobal::is_jefeCalendario()) { $permiso = 'modificar'; } else { $permiso = ''; }
+		if ($_SESSION['oConfig']->is_jefeCalendario()) { $permiso = 'modificar'; } else { $permiso = ''; }
 		$permiso = 'modificar';
 		// listado de periodos por casa y año
         if (!empty($Qid_ubi) && !empty($Qyear)) {

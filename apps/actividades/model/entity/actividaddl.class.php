@@ -4,6 +4,7 @@ use core;
 //require_once('classes/web/fechas.class');
 use cambios\model\entity as cambios;
 use procesos\model\entity as procesos;
+use cambios\model\gestorAvisoCambios;
 /**
  * Classe que implementa l'entitat a_actividades_dl
  *
@@ -84,7 +85,7 @@ class ActividadDl Extends ActividadAll {
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		$aDades['publicado'] = ($aDades['publicado'] === 't')? 'true' : $aDades['publicado'];
-		if ( filter_var( $aDades['publicado'], FILTER_VALIDATE_BOOLEAN)) { $aDades['publicado']='t'; } else { $aDades['publicado']='f'; }
+		if ( filter_var( $aDades['publicado'], FILTER_VALIDATE_BOOLEAN)) { $aDades['publicado']='true'; } else { $aDades['publicado']='false'; }
 
 
 		if ($bInsert === false) {
@@ -123,9 +124,12 @@ class ActividadDl Extends ActividadAll {
 					return false;
 				}
 			}
-			if (core\ConfigGlobal::is_app_installed('cambios') && empty($quiet)) {
-				$oGestorCanvis = new cambios\GestorCanvis();
-				$oGestorCanvis->addCanvi("$nom_tabla", 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
+			// Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
+			// Anoto el cambio si la actividad está publicada
+			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') OR $aDades['publicado'] == 'true')) {
+				$oGestorCanvis = new gestorAvisoCambios();
+				$shortClassName = (new \ReflectionClass($this))->getShortName();
+				$oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
 			}
 			$this->setAllAtributes($aDades);
 		} else {
@@ -161,9 +165,12 @@ class ActividadDl Extends ActividadAll {
 				$oGestorActividadProcesoTarea->generarProceso($aDadesLast['id_activ']);
 			}
 			// anotar cambio.
-			if (core\ConfigGlobal::is_app_installed('cambios') && empty($quiet)) {
-				$oGestorCanvis = new cambios\GestorCanvis();
-				$oGestorCanvis->addCanvi("$nom_tabla", 'INSERT', $aDadesLast['id_activ'], $this->aDades, array());
+			// Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
+			// Anoto el cambio si la actividad está publicada
+			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') OR $aDades['publicado'] == 'true')) {
+				$oGestorCanvis = new gestorAvisoCambios();
+				$shortClassName = (new \ReflectionClass($this))->getShortName();
+				$oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $this->aDades, array());
 			}
 		}
 		return true;
@@ -189,6 +196,9 @@ class ActividadDl Extends ActividadAll {
 					break;
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
+					// Hay que guardar los boolean de la misma manera que al guardar los datos ('false','true'):
+                    $aDades['publicado'] = ($aDades['publicado'] === 't')? 'true' : $aDades['publicado'];
+                    if ( filter_var( $aDades['publicado'], FILTER_VALIDATE_BOOLEAN)) { $aDades['publicado']='true'; } else { $aDades['publicado']='false'; }
 					$this->aDadesActuals=$aDades;
 					break;
 				default:
@@ -211,12 +221,15 @@ class ActividadDl Extends ActividadAll {
 		   	// Si no existeix no cal eliminar-el.
 			return false;
 		} else {
-			if (core\ConfigGlobal::is_app_installed('cambios')) { 
+			// Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
+			// Anoto el cambio si la actividad está publicada
+			if (core\ConfigGlobal::is_app_installed('cambios') OR $this->bpublicado === TRUE) {
 				// ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.
-				$oGestorCanvis = new cambios\GestorCanvis();
-				$oGestorCanvis->addCanvi("$nom_tabla", 'DELETE', $this->iid_activ, array(), $this->aDadesActuals);
+				$oGestorCanvis = new gestorAvisoCambios();
+				$shortClassName = (new \ReflectionClass($this))->getShortName();
+				$oGestorCanvis->addCanvi($shortClassName, 'DELETE', $this->iid_activ, array(), $this->aDadesActuals);
 			}
-			if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_activ='$this->iid_activ'")) === false) {
+			if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_activ='$this->iid_activ'")) === false) {
 				$sClauError = 'ActividadDl.eliminar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -263,4 +276,3 @@ class ActividadDl Extends ActividadAll {
 
 	/* METODES GET i SET --------------------------------------------------------*/
 }
-?>

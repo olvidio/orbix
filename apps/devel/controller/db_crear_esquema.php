@@ -32,8 +32,8 @@ $DlNew = $Qdl;
 	
 // comun
 if (!empty($Qcomun)) {
-    $oConfig = new core\Config('importar'); //de la database comun
-    $config = $oConfig->getEsquema('public'); //de la database comun
+    $oConfigDB = new core\ConfigDB('importar'); //de la database comun
+    $config = $oConfigDB->getEsquema('public'); //de la database comun
     
     $oConexion = new core\dbConnection($config);
     $oDevelPC = $oConexion->getPDO();
@@ -66,8 +66,8 @@ if (!empty($Qcomun)) {
 
 // sv
 if (!empty($Qsv)) {
-    $oConfig = new core\Config('importar'); //de la database sv
-    $config = $oConfig->getEsquema('publicv');
+    $oConfigDB = new core\ConfigDB('importar'); //de la database sv
+    $config = $oConfigDB->getEsquema('publicv');
     $oConexion = new core\dbConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
@@ -93,8 +93,8 @@ if (!empty($Qsv)) {
 }
 // sf
 if (!empty($Qsf)) {
-    $oConfig = new core\Config('importar'); //de la database sf
-    $config = $oConfig->getEsquema('publicf');
+    $oConfigDB = new core\ConfigDB('importar'); //de la database sf
+    $config = $oConfigDB->getEsquema('publicf');
     $oConexion = new core\dbConnection($config);
     $oDevelPC = $oConexion->getPDO();
 

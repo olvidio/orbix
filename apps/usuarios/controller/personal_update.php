@@ -12,12 +12,11 @@ use usuarios\model\entity as usuarios;
 $id_usuario= core\ConfigGlobal::mi_id_usuario();
 
 $Qque = (string) \filter_input(INPUT_POST, 'que');
-$Qtabla = (string) \filter_input(INPUT_POST, 'tabla');
-$Qoficina = (string) \filter_input(INPUT_POST, 'oficina');
-$QsPrefs = (string) \filter_input(INPUT_POST, 'sPrefs');
 
 switch ($Qque) {
 	case "slickGrid":
+        $Qtabla = (string) \filter_input(INPUT_POST, 'tabla');
+        $QsPrefs = (string) \filter_input(INPUT_POST, 'sPrefs');
 		$idioma= core\ConfigGlobal::mi_Idioma();
 		$tipo = 'slickGrid_'.$Qtabla.'_'.$idioma;
 		$oPref = new usuarios\Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>$tipo));
@@ -36,6 +35,9 @@ switch ($Qque) {
 		}
 		break;
 	default:
+        $Qoficina = (string) \filter_input(INPUT_POST, 'oficina');
+        $Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
+
 		$Qoficina = empty($Qoficina)? 'exterior' : $Qoficina;
 		$Qinicio = empty($Qinicio)? 'exterior' : $Qinicio;
 		// Guardar página de inicio:

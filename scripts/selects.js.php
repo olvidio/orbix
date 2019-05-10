@@ -24,10 +24,10 @@ function fnjs_selectAll(formulario,Name,val,aviso){
 			if($(item).attr('name') == Name) {
 				switch (val) {
 					case 'all':
-						$(item).attr('checked',true);
+						$(item).prop('checked',true);
 						break;
 					case 'none':
-						$(item).attr('checked',false);
+						$(item).prop('checked',false);
 						break;
 					case 'toggle':
 						$(item).click();

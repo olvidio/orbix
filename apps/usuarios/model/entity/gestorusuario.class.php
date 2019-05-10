@@ -39,13 +39,13 @@ class GestorUsuario Extends  core\ClaseGestor {
 	 * @param integer sfsv
 	 * @return array Una Llista.
 	 */
-	function getListaUsuarios($sfsv='') {
+	function getListaUsuarios() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		$sdonde= empty($sfsv)? '' : "WHERE sfsv='$sfsv'";
+		$sdonde = '';
 		$sQuery = "SELECT id_usuario, usuario FROM $nom_tabla ".$sdonde;
-		$sQuery .= "ORDER BY sfsv,usuario";
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		$sQuery .= "ORDER BY usuario";
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorPersona.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;

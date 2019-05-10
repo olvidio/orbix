@@ -80,8 +80,8 @@ if (!empty($Qsv) && !empty($Qsf)) {
 	
 	// Hay que pasar como parámetro el nombre de la database, que corresponde al archivo database.inc
 	// donde están los passwords. En este caso en importar.inc, tenermos al superadmin.
-	$oConfig = new core\Config('importar');
-	$config = $oConfig->getEsquema('public'); //de la database comun
+	$oConfigDB = new core\ConfigDB('importar');
+	$config = $oConfigDB->getEsquema('public'); //de la database comun
 	
 	$oConexion = new core\dbConnection($config);
 	$oDevelPC = $oConexion->getPDO();

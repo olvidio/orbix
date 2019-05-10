@@ -1,6 +1,13 @@
 <?php
+use actividades\model\entity\ActividadAll;
+use cambios\model\entity\CambioUsuarioObjetoPref;
+use cambios\model\entity\GestorCambioUsuarioObjetoPref;
+use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
+use core\ConfigGlobal;
 use personas\model\entity\GestorPersonaDl;
 use procesos\model\PermAccion;
+use procesos\model\PermAfectados;
+use procesos\model\entity\ActividadFase;
 use procesos\model\entity\GestorPermUsuarioActividad;
 use ubis\model\entity\GestorCasaDl;
 use ubis\model\entity\GestorCentroDl;
@@ -8,7 +15,8 @@ use ubis\model\entity\GestorCentroEllas;
 use usuarios\model\entity\GestorRole;
 use usuarios\model\entity\Role;
 use usuarios\model\entity\Usuario;
-use procesos\model\PermAfectados;
+use web\Lista;
+use web\TiposActividades;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -63,71 +71,93 @@ if (isset($_POST['stack'])) {
 }
 $oPosicion->setParametros(array('id_usuario'=>$Qid_usuario),1);
 
-$oMiUsuario = new Usuario(core\ConfigGlobal::mi_id_usuario());
+$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
 $miRole=$oMiUsuario->getId_role();
-$miSfsv = core\ConfigGlobal::mi_sfsv();
+$miSfsv = ConfigGlobal::mi_sfsv();
 
 if ($Qquien=='usuario') $obj = 'usuarios\\model\\entity\\Usuario';
 
-/*
-if( (core\ConfigGlobal::is_app_installed('avisos')) && (!empty($Qid_usuario)) && ($Qquien == 'usuario') ) {
+if( (ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Qquien == 'usuario') ) {
+    $a_status = ActividadAll::ARRAY_STATUS_TXT;
+    
 	// avisos
-	$oGesCambiosUsuariosTabla = new GestorCambioUsuarioTablaPref();
-	$cListaTablas = $oGesCambiosUsuariosTabla->getCambiosUsuarioTablaPref(array('id_usuario'=>$Qid_usuario));
+	$oGesCambiosUsuariosObjeto = new GestorCambioUsuarioObjetoPref();
+	$cListaTablas = $oGesCambiosUsuariosObjeto->getCambioUsuarioObjetosPrefs(array('id_usuario'=>$Qid_usuario));
 
 	// Tipos de avisos
-	$aTipos_aviso = CambioUsuarioTablaPref::getTipos_aviso();
+	$aTipos_aviso = CambioUsuarioObjetoPref::getTipos_aviso();
 
 	$i=0;
-	$a_cabeceras_avisos=array('dl propia','tipo de actividad','fase inicial','fase final','objeto','tipo de aviso','campos','valor');
-	$a_botones_avisos=array(
-				array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(\"#avisos\")" ),
-				array( 'txt' => _("eliminar"), 'click' =>"fnjs_borrar(\"#avisos\")" ) 
-			);
-	$a_valores_avisos=array();
+	$a_cabeceras_avisos = [_("dl propia"),
+	                   _("tipo de actividad"),
+	                   _("fase inicial"),
+	                   _("fase final"),
+	                   _("objeto"),
+	                   _("tipo de aviso"),
+	                   _("propiedades"),
+	                   _("valor"),
+	               ];
+	$a_botones_avisos = [
+				        array( 'txt' => _("modificar"), 'click' =>"fnjs_mod_cambio(\"#avisos\")" ),
+				        array( 'txt' => _("eliminar"), 'click' =>"fnjs_del_cambio(\"#avisos\")" ) 
+			        ];
+	$a_valores_avisos = [];
 	$oFase = new ActividadFase();
-	foreach ($cListaTablas as $oCambioUsuarioTablaPref) {
+	foreach ($cListaTablas as $oCambioUsuarioObjetoPref) {
 		$i++;
 		
-		$id_item_usuario_tabla=$oCambioUsuarioTablaPref->getId_item_usuario_tabla();
-		$id_tipo=$oCambioUsuarioTablaPref->getId_tipo_activ_txt();
-		$id_fase_ini=$oCambioUsuarioTablaPref->getId_fase_ini();
-		$id_fase_fin=$oCambioUsuarioTablaPref->getId_fase_fin();
-		$dl_propia=$oCambioUsuarioTablaPref->getDl_propia();
-		$tabla_obj=$oCambioUsuarioTablaPref->getTabla_obj();
-		$aviso_tipo=$oCambioUsuarioTablaPref->getAviso_tipo();
+		$id_item_usuario_objeto=$oCambioUsuarioObjetoPref->getId_item_usuario_objeto();
+		$id_tipo=$oCambioUsuarioObjetoPref->getId_tipo_activ_txt();
+		$id_fase_ini=$oCambioUsuarioObjetoPref->getId_fase_ini();
+		$id_fase_fin=$oCambioUsuarioObjetoPref->getId_fase_fin();
+		$dl_org=$oCambioUsuarioObjetoPref->getDl_org();
+		$objeto=$oCambioUsuarioObjetoPref->getObjeto();
+		$aviso_tipo=$oCambioUsuarioObjetoPref->getAviso_tipo();
 
 
-		if ($dl_propia=='t') { $dl_propia_txt = core\ConfigGlobal::$dele; } else { $dl_propia_txt = _("otras"); }
-
-		$oTipoActividad = new web\TiposActividades($oCambioUsuarioTablaPref->getId_tipo_activ_txt());
-
-		$a_valores_avisos[$i]['sel']="$Qid_usuario#$id_item_usuario_tabla";
-		$a_valores_avisos[$i][1]=$dl_propia_txt;
-		$a_valores_avisos[$i][2]=$oTipoActividad->getNom();
-		$oFase->setId_fase($id_fase_ini);
-		$oFase->DBCarregar();
-		$a_valores_avisos[$i][3]= $oFase->getDesc_fase();
-		$oFase->setId_fase($id_fase_fin);
-		$oFase->DBCarregar();
-		$a_valores_avisos[$i][4]= $oFase->getDesc_fase();
-		$a_valores_avisos[$i][5]=$tabla_obj;
-		$a_valores_avisos[$i][6]=$aTipos_aviso[$aviso_tipo];
-		$GesCambiosUsuarioCamposPref = new GestorCambioUsuarioCampoPref();
-		$cListaCampos = $GesCambiosUsuarioCamposPref->getCambiosUsuarioCampoPref(array('id_item_usuario_tabla'=>$id_item_usuario_tabla));
-		$txt_cambio = '';
-		$c = 0;
-		foreach ($cListaCampos as $oCambioUsuarioCampoPref) {
-			$c++;
-			$campo = $oCambioUsuarioCampoPref->getCampo();
-			$operador = $oCambioUsuarioCampoPref->getOperador();
-			$valor = $oCambioUsuarioCampoPref->getValor();
-			$valor_old = $oCambioUsuarioCampoPref->getValor_old();
-			$valor_new = $oCambioUsuarioCampoPref->getValor_new();
-			if ($c > 1) $txt_cambio .= ", ";
-			$txt_cambio .= $campo;
+		if ($dl_org != ConfigGlobal::mi_dele()) {
+		    $dl_org = _("otras");
 		}
-		$a_valores_avisos[$i][7]=$txt_cambio;
+
+		$oTipoActividad = new TiposActividades($oCambioUsuarioObjetoPref->getId_tipo_activ_txt());
+
+		$a_valores_avisos[$i]['sel']="$Qid_usuario#$id_item_usuario_objeto";
+		$a_valores_avisos[$i][1]=$dl_org;
+		$a_valores_avisos[$i][2]=$oTipoActividad->getNom();
+		if (ConfigGlobal::is_app_installed('procesos')) {
+            $oFase->setId_fase($id_fase_ini);
+            $oFase->DBCarregar();
+            $a_valores_avisos[$i][3]= $oFase->getDesc_fase();
+            $oFase->setId_fase($id_fase_fin);
+            $oFase->DBCarregar();
+            $a_valores_avisos[$i][4]= $oFase->getDesc_fase();
+		} else {
+		    
+            $a_valores_avisos[$i][3] = $a_status[$id_fase_ini];
+            $a_valores_avisos[$i][4] = $a_status[$id_fase_fin];
+		}
+		$a_valores_avisos[$i][5]=$objeto;
+		$a_valores_avisos[$i][6]=$aTipos_aviso[$aviso_tipo];
+		$GesCambiosUsuarioPropiedadesPref = new GestorCambioUsuarioPropiedadPref();
+		$cListaPropiedades = $GesCambiosUsuarioPropiedadesPref->getCambioUsuarioPropiedadesPrefs(array('id_item_usuario_objeto'=>$id_item_usuario_objeto));
+		$txt_cambio = '';
+		$txt_propiedades = '';
+		$c = 0;
+		foreach ($cListaPropiedades as $oCambioUsuarioPropiedadPref) {
+			$c++;
+			$propiedad = $oCambioUsuarioPropiedadPref->getPropiedad();
+			$operador = $oCambioUsuarioPropiedadPref->getOperador();
+			$valor = $oCambioUsuarioPropiedadPref->getValor();
+			$valor_old = $oCambioUsuarioPropiedadPref->getValor_old();
+			$valor_new = $oCambioUsuarioPropiedadPref->getValor_new();
+			if ($c > 1) { $txt_propiedades .= ', '; }
+			$txt_cambio .= empty($txt_cambio)? '' : ', ';
+			$txt_propiedades .= $propiedad;
+			$txt_cambio .= $oCambioUsuarioPropiedadPref->getTextCambio();
+			
+		}
+		$a_valores_avisos[$i][7]=$txt_propiedades;
+		$a_valores_avisos[$i][8]=$txt_cambio;
 	}
 
 	$oTablaAvisos = new Lista();
@@ -136,12 +166,15 @@ if( (core\ConfigGlobal::is_app_installed('avisos')) && (!empty($Qid_usuario)) &&
 	$oTablaAvisos->setBotones($a_botones_avisos);
 	$oTablaAvisos->setDatos($a_valores_avisos);
 }
-*/
 
 // a los usuarios normales (no administrador) sólo dejo ver la parte de los avisos.
 if ($miRole < 4) {
 	if ($miRole > 3) exit(_("no tiene permisos para ver esto")); // no es administrador
-	if ($miRole != 1) { $cond_role="WHERE id_role <> 1 "; } else {$cond_role="WHERE id_role > 0 "; } //absurda cond, pero pero para que no se borre el role del superadmin
+	if ($miRole != 1) {
+	    $cond_role="WHERE id_role <> 1 ";
+	} else {
+	    $cond_role="WHERE id_role > 0 "; //absurda cond, pero para que no se borre el role del superadmin
+	}
 
 	switch($miSfsv) {
 		case 1:
@@ -152,8 +185,8 @@ if ($miRole < 4) {
 			break;
 	}
 
-	if( !(core\ConfigGlobal::is_app_installed('personas')) ) { $cond_role.="AND (pau != 'sacd' OR pau IS NULL)"; }
-	if( !(core\ConfigGlobal::is_app_installed('ubis')) ) { $cond_role.="AND (pau != 'ctr' OR pau != 'cdc' OR pau IS NULL)"; }
+	if( !(ConfigGlobal::is_app_installed('personas')) ) { $cond_role.="AND (pau != 'sacd' OR pau IS NULL)"; }
+	if( !(ConfigGlobal::is_app_installed('ubis')) ) { $cond_role.="AND (pau != 'ctr' OR pau != 'cdc' OR pau IS NULL)"; }
 			
 	$oGRoles = new GestorRole();
 	$oDesplRoles= $oGRoles->getListaRoles($cond_role);
@@ -230,7 +263,7 @@ if ($miRole < 4) {
 			$oSelects->setBlanco('t');
 			$camposMas = 'id_sacd';
 		}
-		if (core\ConfigGlobal::is_app_installed('procesos')) { 
+		if (ConfigGlobal::is_app_installed('procesos')) { 
 			$oGesPerm = new GestorPermUsuarioActividad();
 			$oUsuarioUsuarioPerm = $oGesPerm->getPermUsuarioActividades(array('id_usuario'=>$id_usuario));
 		}
@@ -257,7 +290,7 @@ if ($miRole < 4) {
 			);
 	$oHash->setArraycamposHidden($a_camposHidden);
 
-	$url_usuario_ajax = core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_ajax.php';
+	$url_usuario_ajax = ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_ajax.php';
 	$oHash1 = new web\Hash();
 	$oHash1->setUrl($url_usuario_ajax);
 	$oHash1->setCamposForm('que!id_usuario'); 
@@ -319,7 +352,7 @@ if (!empty($id_usuario)) { // si no hay usuario, no puedo poner permisos.
     <br>
     <?php
 //////////// Permisos en actividades ////////////
-    if (core\ConfigGlobal::is_app_installed('procesos')) {
+    if (ConfigGlobal::is_app_installed('procesos')) {
         
         $a_campos = [
                     'quien' => $Qquien,
@@ -337,12 +370,26 @@ if (!empty($id_usuario)) { // si no hay usuario, no puedo poner permisos.
 
 //////////// Esto lo ven todos ////////////
 // si no hay usuario, no puedo poner permisos.
-if( (core\ConfigGlobal::is_app_installed('avisos')) && (!empty($id_usuario)) && ($Qquien == 'usuario') ) {
+if( (ConfigGlobal::is_app_installed('cambios')) && (!empty($id_usuario)) && ($Qquien == 'usuario') ) {
+    
+	$url_usuario_ajax = ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_ajax.php';
+	$oHashAvisos = new web\Hash();
+	$oHashAvisos->setUrl($url_usuario_ajax);
+	$oHashAvisos->setCamposNo('sel!scroll_id'); 
+	$a_camposHidden = array(
+			'id_usuario' => $id_usuario,
+			'quien' => $Qquien,
+	        'salida' => 'aviso_eliminar',
+			);
+	$oHashAvisos->setArraycamposHidden($a_camposHidden);
+	$h1 = $oHashAvisos->linkSinVal();
+	
 	$a_camposAvisos = [
-				'oHash3' => $oHash3,
+	            'oPosicion' => $oPosicion,
+				'oHashAvisos' => $oHashAvisos,
 				'oTablaAvisos' => $oTablaAvisos,
 				];
 
-	$oView = new core\View('usuarios/controller');
-//	echo $oView->render('usuario_form_avisos.phtml',$a_camposAvisos);
+	$oView = new core\View('cambios/controller');
+	echo $oView->render('usuario_form_avisos.phtml',$a_camposAvisos);
 }

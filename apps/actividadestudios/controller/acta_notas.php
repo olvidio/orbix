@@ -108,6 +108,9 @@ if (is_array($cActas) && !empty($cActas)) {
 	$oDesplActas->setOpciones(array('primero gurardar acta'));
 }
 
+
+$nota_max_default = $_SESSION['oConfig']->getNota_max();
+
 $oHashNotas = new web\Hash();
 $oHashNotas->setcamposForm('id_nom!nota_num!nota_max!form_preceptor!acta_nota');
 $oHashNotas->setCamposNo('que');
@@ -137,6 +140,7 @@ $a_campos = ['oPosicion' => $oPosicion,
 			'oDesplActas' => $oDesplActas,
     	    'acta_principal'  => $acta_principal,
 			'txt_alert_acta' => $txt_alert_acta,
+            'nota_max_default' => $nota_max_default,
 			];
 
 $oView = new core\View('actividadestudios/controller');

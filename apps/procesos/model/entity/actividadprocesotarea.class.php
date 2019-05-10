@@ -2,6 +2,8 @@
 namespace procesos\model\entity;
 use core;
 use actividades\model\entity\Actividad;
+use cambios\model\entity\GestorCambio;
+use cambios\model\gestorAvisoCambios;
 /**
  * Fitxer amb la Classe que accedeix a la taula a_actividad_proceso
  *
@@ -170,8 +172,9 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 				} elseif (core\ConfigGlobal::is_app_installed('procesos')) {
 				    if (core\ConfigGlobal::is_app_installed('avisos')) {
                         if (empty($quiet)) {
-                            $oGestorCanvis = new GestorCanvis();
-                            $oGestorCanvis->addCanvi('a_actividad_proceso', 'FASE', $this->iid_activ, $aDades, $this->aDadesActuals);
+                            $oGestorCanvis = new gestorAvisoCambios();
+                            $shortClassName = (new \ReflectionClass($this))->getShortName();
+                            $oGestorCanvis->addCanvi($shortClassName, 'FASE', $this->iid_activ, $aDades, $this->aDadesActuals);
                         }
 				    }
 				    // comprobar si hay que cambiar el estado (status) de la actividad.
@@ -271,8 +274,9 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 		} else {
 		    // ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.
             if (core\ConfigGlobal::is_app_installed('avisos')) {
-                $oGestorCanvis = new GestorCanvis();
-                $oGestorCanvis->addCanvi('a_actividad_proceso', 'FASE', $this->iid_activ, array(), $this->aDadesActuals);
+                $oGestorCanvis = new gestorAvisoCambios();
+				$shortClassName = (new \ReflectionClass($this))->getShortName();
+                $oGestorCanvis->addCanvi($shortClassName, 'FASE', $this->iid_activ, array(), $this->aDadesActuals);
             }
 
             if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item='$this->iid_item'")) === FALSE) {

@@ -27,20 +27,20 @@ $Qid_nom = (integer)  \filter_input(INPUT_POST, 'id_nom');
 
 
 $aOpciones =  array(
-					'tot_any' => _('todo el año'),
-					'trimestre_1'=>_('primer trimestre'),
-					'trimestre_2'=>_('segundo trimestre'),
-					'trimestre_3'=>_('tercer trimestre'),
-					'trimestre_4'=>_('cuarto trimestre'),
+					'tot_any' => _("todo el año"),
+					'trimestre_1'=>_("primer trimestre"),
+					'trimestre_2'=>_("segundo trimestre"),
+					'trimestre_3'=>_("tercer trimestre"),
+					'trimestre_4'=>_("cuarto trimestre"),
 					'separador'=>'---------',
-					'otro'=>_('otro')
+					'otro'=>_("otro")
 					);
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('seleccion');
 $oFormP->setTitulo(core\strtoupper_dlb(_("seleccionar un periodo")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 
-$oFormP->setBoton("<input type=button name=\"buscar\" value=\""._('buscar')."\" onclick=\"fnjs_ver();\">");
+$oFormP->setBoton("<input type=button name=\"buscar\" value=\""._("buscar")."\" onclick=\"fnjs_ver();\">");
 
 $url = "apps/actividadessacd/controller/com_sacd_activ.php";
 

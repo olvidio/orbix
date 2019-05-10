@@ -27,57 +27,57 @@ class ActividadCargo Extends core\ClasePropiedades {
 	 *
 	 * @var array
 	 */
-	 private $aPrimary_key;
+	 protected $aPrimary_key;
 
 	/**
 	 * aDades de ActividadCargo
 	 *
 	 * @var array
 	 */
-	 private $aDades;
+	 protected $aDades;
 
 	/**
 	 * Id_schema de ActividadCargo
 	 *
 	 * @var integer
 	 */
-	 private $iid_schema;
+	 protected $iid_schema;
 	/**
 	 * Id_item de ActividadCargo
 	 *
 	 * @var integer
 	 */
-	 private $iid_item;
+	 protected $iid_item;
 	/**
 	 * Id_activ de ActividadCargo
 	 *
 	 * @var integer
 	 */
-	 private $iid_activ;
+	 protected $iid_activ;
 	/**
 	 * Id_cargo de ActividadCargo
 	 *
 	 * @var integer
 	 */
-	 private $iid_cargo;
+	 protected $iid_cargo;
 	/**
 	 * Id_nom de ActividadCargo
 	 *
 	 * @var integer
 	 */
-	 private $iid_nom;
+	 protected $iid_nom;
 	/**
 	 * Puede_agd de ActividadCargo
 	 *
 	 * @var boolean
 	 */
-	 private $bpuede_agd;
+	 protected $bpuede_agd;
 	/**
 	 * Observ de ActividadCargo
 	 *
 	 * @var string
 	 */
-	 private $sobserv;
+	 protected $sobserv;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
 	 * oDbl de ActividadCargo

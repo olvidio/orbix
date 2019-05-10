@@ -168,7 +168,7 @@ switch ($Qque) {
 }
 
 $perm_jefe = FALSE;
-if (core\ConfigGlobal::is_jefeCalendario()
+if ($_SESSION['oConfig']->is_jefeCalendario()
     or (($_SESSION['oPerm']->have_perm("des") or $_SESSION['oPerm']->have_perm("vcsd")) && ConfigGlobal::mi_sfsv() == 1)
     ) { 
     $perm_jefe = TRUE;

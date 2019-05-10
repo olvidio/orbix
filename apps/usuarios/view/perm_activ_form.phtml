@@ -4,8 +4,8 @@
 $i=0;
 $a_cabeceras=array('tipo de actividad','fase inicial','fase final','permiso','dl propia',array('name'=>'afecta_a','width'=>'350'));
 $a_botones = [];
-$a_botones[] = array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(\"#permisos\")" );
-$a_botones[] = array( 'txt' => _("eliminar"), 'click' =>"fnjs_borrar(\"#permisos\")" ); 
+$a_botones[] = array( 'txt' => _("modificar"), 'click' =>"fnjs_mod_perm_activ(\"#permisos_activ\")" );
+$a_botones[] = array( 'txt' => _("eliminar"), 'click' =>"fnjs_del_perm_activ(\"#permisos_activ\")" ); 
 
 $a_valores=array();
 $oFase = new procesos\model\entity\ActividadFase();
@@ -42,7 +42,7 @@ foreach ($oUsuarioUsuarioPerm as $oUsuarioPerm) {
 }
 $oHash3 = new web\Hash();
 $oHash3->setcamposForm('que!sel');
-$oHash3->setcamposNo('refresh');
+$oHash3->setcamposNo('refresh!scroll_id');
 $a_camposHidden = array(
         'id_usuario' => $id_usuario,
         'quien' => $quien
@@ -50,84 +50,54 @@ $a_camposHidden = array(
 $oHash3->setArraycamposHidden($a_camposHidden);
 ?>
 <script>
-fnjs_modificar=function(formulario){
+fnjs_add_perm_activ=function(){
+    $('#frm_usuario').attr('action',"apps/procesos/controller/usuario_perm_activ.php");
+	fnjs_enviar_formulario('#frm_usuario');
+}
+
+fnjs_mod_perm_activ=function(formulario){
     rta=fnjs_solo_uno(formulario);
     if (rta==1) {
-        switch (formulario) {
-            case '#permisos':
-                $(formulario).attr('action','apps/procesos/controller/usuario_perm_activ.php');
-                break;
-            case '#avisos':
-                $(formulario).attr('action','sistema/usuario_avisos_pref.php');
-                break;
-        }
+        $(formulario).attr('action','apps/procesos/controller/usuario_perm_activ.php');
         fnjs_enviar_formulario(formulario);
     }
 }
 
-fnjs_borrar=function(formulario,que_val){
+fnjs_del_perm_activ=function(formulario,que_val){
     rta=fnjs_solo_uno(formulario);
     if (rta==1) {
-        switch (formulario) {
-            case '#permisos':
-                if (confirm("<?php echo _("¿Esta seguro que desea borrar este permiso?");?>") ) {
-                    $('#que').val('perm_eliminar');
-                    id_usuario=$('#id_usuario').val();
-                    $(formulario).attr('action','apps/usuarios/controller/usuario_update.php');
-                    $(formulario).submit(function() {
-                        $.ajax({
-                            url: $(this).attr('action'),
-                            type: 'post',
-                            data: $(this).serialize()
-						})
-						.done(function (rta_txt) {
-							if (rta_txt != '' && rta_txt != '\n') {
-								alert ('respuesta: '+rta_txt);
-							} else {
-								fnjs_actualizar3(formulario);
-						   	}
-                        });
-                        return false;
-                    });
-                    $(formulario).submit();
-                    $(formulario).off();
-                }
-                break;
-            case '#avisos':
-                if (confirm("<?php echo _("¿Esta seguro que desea borrar este aviso?");?>") ) {
-                    $('#av_que').val('aviso_eliminar');
-                    id_usuario=$('#av_id_usuario').val();
-                    go='sistema/usuario_form.php?quien=usuario&id_usuario='+id_usuario;
-                    $(formulario).attr('action',"sistema/usuario_aviso_update.php");
-                    $(formulario).submit(function() {
-                        $.ajax({
-                            url: $(this).attr('action'),
-                            type: 'post',
-                            data: $(this).serialize()
-						})
-						.done(function (rta_txt) { 
-							if (rta_txt.indexOf('id="ir_a"') != -1) {
-								fnjs_mostra_resposta(rta,'#main'); 
-							} else {
-								if (go) fnjs_update_div('#main',go); 
-							}
-                        });
-                        return false;
-                    });
-                    $(formulario).submit();
-                    $(formulario).off();
-                }
-                break;
+        if (confirm("<?php echo _("¿Esta seguro que desea borrar este permiso?");?>") ) {
+            $('#perm_activ_que').val('perm_eliminar');
+            id_usuario=$('#id_usuario').val();
+            $(formulario).attr('action','apps/usuarios/controller/usuario_update.php');
+            $(formulario).submit(function() {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'post',
+                    data: $(this).serialize()
+                })
+                .done(function (rta_txt) {
+                    if (rta_txt != '' && rta_txt != '\n') {
+                        alert ('respuesta: '+rta_txt);
+                    } else {
+                        fnjs_actualizar3(formulario);
+                       }
+                });
+                return false;
+            });
+            $(formulario).submit();
+            $(formulario).off();
         }
     }
 }
-fnjs_add_alert=function(){
-    $('#avisos').attr('action',"sistema/usuario_avisos_pref.php");
-    fnjs_enviar_formulario('#avisos');
-}
 fnjs_actualizar3=function(formulario){
     var campo = '<input type="hidden" name="refresh" value=1>';
-    $(formulario).attr('action',"apps/usuarios/controller/usuario_form.php");
+    quien = $("#quien").val();
+    if (quien == 'grupo') {
+        $(formulario).attr('action',"apps/usuarios/controller/grupo_form.php");
+    } else {
+        $(formulario).attr('action',"apps/usuarios/controller/usuario_form.php");
+    }
     $(formulario).append(campo);
     fnjs_enviar_formulario(formulario,'#main');
 }
@@ -135,17 +105,17 @@ fnjs_actualizar3=function(formulario){
 <br>
 <h3><?= ucfirst(_("permisos en actividades")) ?>:</h3>
 <b><?= _("propios") ?>:</b>
-<form id=permisos name=permisos action=''>
+<form id="permisos_activ" name="permisos_activ" action=''>
 <?= $oHash3->getCamposHtml(); ?>
-<input type=hidden id=que  name=que value=''>
+<input type="hidden" id="perm_activ_que" name="que" value=''>
 <?php
 $oTabla = new web\Lista();
-$oTabla->setId_tabla('usuario_form_permisos');
+$oTabla->setId_tabla('form_perm_activ');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 echo $oTabla->mostrar_tabla();
 ?>
 <br>
-<input type=button onclick="fnjs_add_perm('activ');" value="<?= _("añadir permiso") ?>">
+<input type=button onclick="fnjs_add_perm_activ();" value="<?= _("añadir permiso") ?>">
 </form>

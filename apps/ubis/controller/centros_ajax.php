@@ -30,8 +30,8 @@ switch ($Qque) {
 		$txt.="<option value=2 >". _("sf") ."</option>";
 		$txt.="<option value=3 >". _("reservado") ."</option></select>";
 		$txt.='<br><br>';
-		$txt.="<input type='button' value='". _('guardar') ."' onclick=\"fnjs_guardar('#frm_periodo');\" >";
-		$txt.="<input type='button' value='". _('cancel') ."' onclick=\"fnjs_cerrar();\" >";
+		$txt.="<input type='button' value='". _("guardar") ."' onclick=\"fnjs_guardar('#frm_periodo');\" >";
+		$txt.="<input type='button' value='". _("cancel") ."' onclick=\"fnjs_cerrar();\" >";
 		$txt.="</form> ";
 		echo $txt;
 		break;
@@ -62,8 +62,8 @@ switch ($Qque) {
 		$txt.='   ';
 		$txt.= $oPermActiv->cuadros_check('tipo_labor',$tipo_labor);
 		$txt.='<br><br>';
-		$txt.="<input type='button' value='". _('guardar') ."' onclick=\"fnjs_guardar('#frm_labor');\" >";
-		$txt.="<input type='button' value='". _('cancel') ."' onclick=\"fnjs_cerrar();\" >";
+		$txt.="<input type='button' value='". _("guardar") ."' onclick=\"fnjs_guardar('#frm_labor');\" >";
+		$txt.="<input type='button' value='". _("cancel") ."' onclick=\"fnjs_cerrar();\" >";
 		$txt.="</form> ";
 		echo $txt;
 		break;
@@ -92,8 +92,8 @@ switch ($Qque) {
 		$txt.='<br>';
 		$txt.= _("número de cartas") ."   <input type=text size=12 name=num_cartas value=\"$num_cartas\">";
 		$txt.='<br><br>';
-		$txt.="<input type='button' value='". _('guardar') ."' onclick=\"fnjs_guardar('#frm_num');\" >";
-		$txt.="<input type='button' value='". _('cancel') ."' onclick=\"fnjs_cerrar();\" >";
+		$txt.="<input type='button' value='". _("guardar") ."' onclick=\"fnjs_guardar('#frm_num');\" >";
+		$txt.="<input type='button' value='". _("cancel") ."' onclick=\"fnjs_cerrar();\" >";
 		$txt.="</form> ";
 		echo $txt;
 		break;
@@ -126,8 +126,8 @@ switch ($Qque) {
 		$txt.= "<input type=hidden name=sede value=\"false\">"; // para evitar valor null.
 		$txt.= _("sede") ."   <input type=checkbox size=12 name=sede $chk_sede value=\"true\">";
 		$txt.='<br><br>';
-		$txt.="<input type='button' value='". _('guardar') ."' onclick=\"fnjs_guardar('#frm_plazas','guardar');\" >";
-		$txt.="<input type='button' value='". _('cancel') ."' onclick=\"fnjs_cerrar();\" >";
+		$txt.="<input type='button' value='". _("guardar") ."' onclick=\"fnjs_guardar('#frm_plazas','guardar');\" >";
+		$txt.="<input type='button' value='". _("cancel") ."' onclick=\"fnjs_cerrar();\" >";
 		$txt.="</form> ";
 		echo $txt;
 		break;
@@ -258,7 +258,7 @@ switch ($Qque) {
 			$nombre_ubi = $oCentro->getNombre_ubi();
 			$num_habit_indiv = $oCentro->getNum_habit_indiv();
 			$plazas = $oCentro->getPlazas();
-			$sede = ($oCentro->getSede())? _('si') : _('no');
+			$sede = ($oCentro->getSede())? _("si") : _("no");
 	
 			if ($permiso == 'modificar') {
 					$script="fnjs_modificar($id_ubi,\"plazas\")";

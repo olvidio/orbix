@@ -216,8 +216,8 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
 }
 
 // Valores por defecto
-$max = core\ConfigGlobal::nota_max();
-$nota_max = empty($nota_max)? $max : $nota_max;
+$nota_max_default = $_SESSION['oConfig']->getNota_max();
+$nota_max = empty($nota_max)? $nota_max_default : $nota_max;
 $id_situacion = empty($id_situacion)? 10 : $id_situacion;
 
 if (!empty($preceptor)) {
@@ -340,6 +340,7 @@ $a_campos = [
 			'oDesplNiveles' => $oDesplNiveles,
 			'nota_num' => $nota_num,
 			'nota_max' => $nota_max,
+			'nota_max_default' => $nota_max_default,
 			'oDesplNotas' => $oDesplNotas,
 			'chk_acta' => $chk_acta,
 			'chk_certificado' => $chk_certificado,

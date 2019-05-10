@@ -391,16 +391,16 @@ function strtoupper_dlb($texto) {
 function curso_est($que,$any,$tipo="est") {
 	switch ($tipo) {
 		case "est":
-		    $ini_d = ConfigGlobal::$est_inicio['d'];
-		    $ini_m = ConfigGlobal::$est_inicio['m'];
-		    $fin_d = ConfigGlobal::$est_fin['d'];
-		    $fin_m = ConfigGlobal::$est_fin['m'];
+		    $ini_d = $_SESSION['oConfig']->getDiaIniStgr();
+		    $ini_m = $_SESSION['oConfig']->getMesIniStgr();
+		    $fin_d = $_SESSION['oConfig']->getDiaFinStgr();
+		    $fin_m = $_SESSION['oConfig']->getMesFinStgr();
 			break;
 		case "crt":
-		    $ini_d = ConfigGlobal::$crt_inicio['d'];
-		    $ini_m = ConfigGlobal::$crt_inicio['m'];
-		    $fin_d = ConfigGlobal::$crt_fin['d'];
-		    $fin_m = ConfigGlobal::$crt_fin['m'];
+		    $ini_d = $_SESSION['oConfig']->getDiaIniCrt();
+		    $ini_m = $_SESSION['oConfig']->getMesIniCrt();
+		    $fin_d = $_SESSION['oConfig']->getDiaFinCrt();
+		    $fin_m = $_SESSION['oConfig']->getMesFinCrt();
 			break;
 	}
 	if (empty($any)) { $any = ConfigGlobal::any_final_curs(); }

@@ -42,7 +42,7 @@ $id_role=$oUsuario->getId_role();
 
 if ($id_role == 7) { //sacd
 	$id_nom_jefe=$oUsuario->getId_pau();
-	if (ConfigGlobal::is_jefeCalendario()) $id_nom_jefe = '';
+	if ($_SESSION['oConfig']->is_jefeCalendario()) $id_nom_jefe = '';
 }
 
 
@@ -58,7 +58,7 @@ if (($_SESSION['oPerm']->have_perm("des")) or ($_SESSION['oPerm']->have_perm("vc
     $perm_des = TRUE;
 }
 
-$is_jefeCalendario = ConfigGlobal::is_jefeCalendario();
+$is_jefeCalendario = $_SESSION['oConfig']->is_jefeCalendario();
 
 $url = 'apps/zonassacd/controller/planning_zones_crida_calendari.php';
 

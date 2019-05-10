@@ -32,16 +32,16 @@ class DBTrasvase {
 	public function setDbConexion() {
 	    switch($this->getDbName()) {
 	        case 'comun':
-                $oConfig = new Config('importar'); //de la database comun
-                $config = $oConfig->getEsquema('public'); //de la database comun
+                $oConfigDB = new ConfigDB('importar'); //de la database comun
+                $config = $oConfigDB->getEsquema('public'); //de la database comun
 	            break;
 	        case 'sv':
-	            $oConfig = new Config('importar'); //de la database sv
-	            $config = $oConfig->getEsquema('publicv');
+	            $oConfigDB = new ConfigDB('importar'); //de la database sv
+	            $config = $oConfigDB->getEsquema('publicv');
 	            break;
 	        case 'sf':
-	            $oConfig = new Config('importar'); //de la database sf
-	            $config = $oConfig->getEsquema('publicf');
+	            $oConfigDB = new ConfigDB('importar'); //de la database sf
+	            $config = $oConfigDB->getEsquema('publicf');
 	            break;
 	    }
 	    

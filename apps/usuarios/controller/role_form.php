@@ -105,7 +105,7 @@ if (!empty($Qid_role)) { // si no hay usuario, no puedo poner permisos.
 		$id_grupmenu = $oGrupMenuRole->getId_grupmenu(); 
 		$oGrupMenu = new menus\GrupMenu($id_grupmenu);
 		
-		$grup_menu=$oGrupMenu->getGrup_menu();
+		$grup_menu=$oGrupMenu->getGrup_menu($_SESSION['oConfig']->getAmbito());
 
 		$a_valores[$i]['sel']="$id_item";
 		$a_valores[$i][1]=$grup_menu;

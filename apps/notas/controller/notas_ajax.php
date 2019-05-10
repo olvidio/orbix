@@ -135,8 +135,8 @@ switch ($Qque) {
         $txt.= $oDesplActividades->desplegable();
         $txt.='<br>';
         $txt.='<br><br>';
-        $txt.="<input type='button' value='". _('guardar') ."' onclick=\"fnjs_update_activ('#frm_buscar');\" >";
-        $txt.="<input type='button' value='". _('cancel') ."' onclick=\"fnjs_cerrar();\" >";
+        $txt.="<input type='button' value='". _("guardar") ."' onclick=\"fnjs_update_activ('#frm_buscar');\" >";
+        $txt.="<input type='button' value='". _("cancel") ."' onclick=\"fnjs_cerrar();\" >";
         $txt.="</form> ";
 
         echo $txt;

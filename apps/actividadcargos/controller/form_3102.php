@@ -142,7 +142,7 @@ $oCargos=new actividadcargos\GestorCargo();
 $oDesplegableCargos=$oCargos->getListaCargos();
 $oDesplegableCargos->setNombre('id_cargo');
 $oDesplegableCargos->setBlanco(false);
-$oDesplegableCargos->setopcion_sel($Qid_cargo);
+$oDesplegableCargos->setOpcion_sel($Qid_cargo);
 $chk = (!empty($puede_agd) && $puede_agd=='t')? 'checked' : '' ;
 
 

@@ -73,6 +73,8 @@ $oGesNomLatin = new personas\GestorNombreLatin();
 $nom_lat = $oGesNomLatin->getVernaculaLatin($nom_vernacula);
 $nom=$trato.$nom_lat.$apellidos;
 
+$region_latin = $_SESSION['oConfig']->getNomRegionLatin();
+
 // conversion 
 $replace  = array(
  'AE' => '&#198;',
@@ -209,7 +211,7 @@ $h = $oHash->linkSinVal();
 if ($Qcara=="A") {
 ?>
 <tr><td class="space"></td></tr>
-<tr><td></td><td class="titulo" colspan="6">STUDIUM GENERALE REGIONIS: <?= core\ConfigGlobal::$x_region ?></td></tr>
+<tr><td></td><td class="titulo" colspan="6">STUDIUM GENERALE REGIONIS: <?= $region_latin ?></td></tr>
 <tr><td></td><td class="subtitulo" colspan="6">TESSERA STUDIORUM DOMINI:  <?= $nom ?></td></tr>
 <?php
 }

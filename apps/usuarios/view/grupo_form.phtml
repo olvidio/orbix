@@ -3,7 +3,7 @@ fnjs_guardar=function(formulario){
 	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
 	//alert ("EEE "+rr);
 	if (rr=='ok') {
-		$('#que_user').val('<?= $que_user ?>');
+		$('#user_que').val('<?= $user_que ?>');
 		$(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
 		$(formulario).submit(function() {
 			$.ajax({
@@ -26,11 +26,10 @@ fnjs_guardar=function(formulario){
 }
 </script>
 <?= $oPosicion->mostrar_left_slide(1); ?>
-<h3><?= $usuario ?></h3>
+<h3><?= _("grupo") ?>: <?= $usuario ?></h3>
 <form id="frm_usuario"  name="frm_usuario" action="" method="post" >
-<?= $oHash->getCamposHtml(); ?>
-<input type=hidden id=pass  name=pass value="<?= $pass ?>">
-<input type=hidden id=que_user  name=que value="">
+<?= $oHashG->getCamposHtml(); ?>
+<input type=hidden id=user_que  name=que value="">
 <br>
 <?= ucfirst(_("nombre")) ?>:<input type=text name=usuario value="<?= $usuario ?>">
 <br>

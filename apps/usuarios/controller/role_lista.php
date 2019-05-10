@@ -40,7 +40,7 @@ $cGM = $gesGrupMenu->getGrupMenus(array('_ordre'=>'grup_menu'));
 $aGrupMenus = array();
 foreach ($cGM as $oGrupMenu) {
 	$id_grupmenu = $oGrupMenu->getId_grupmenu();
-	$grup_menu = $oGrupMenu->getGrup_menu();
+	$grup_menu = $oGrupMenu->getGrup_menu($_SESSION['oConfig']->getAmbito());
 	$aGrupMenus[$id_grupmenu] = $grup_menu;
 }
 

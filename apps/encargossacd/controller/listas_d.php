@@ -31,7 +31,7 @@ require_once ("apps/core/global_object.inc");
 
 $oEncargoFunciones = new EncargoFunciones();
 
-$any=  core\ConfigGlobal::any_final_curs('crt');
+$any=  $_SESSION['oConfig']->any_final_curs('crt');
 $inicurs=core\curso_est("inicio",$any,"crt")->getFromLocal();
 $fincurs=core\curso_est("fin",$any,"crt")->getFromLocal();
 

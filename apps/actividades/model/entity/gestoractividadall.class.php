@@ -276,7 +276,7 @@ class GestorActividadAll Extends core\ClaseGestor {
 		$nom_tabla = $this->getNomTabla();
 		$cond_nivel_stgr = "(nivel_stgr < 6 OR nivel_stgr=11)";
 		if (empty($scondicion)) {
-			$any = core\ConfigGlobal::any_final_curs('est') - 2;
+			$any = $_SESSION['oConfig']->any_final_curs('est') - 2;
 			$inicurs = core\curso_est("inicio",$any,"est")->format('Y-m-d');
 			$scondicion = "AND f_ini > '$inicurs'";
 		}

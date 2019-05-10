@@ -33,7 +33,7 @@ class NullDateTimeLocal Extends \DateTime {
 	static private function getFormat() {
 	    $idioma = $_SESSION['session_auth']['idioma'];
 	    # Si no hemos encontrado ningún idioma que nos convenga, mostramos la web en el idioma por defecto
-		if (!isset($idioma)){ $idioma = ConfigGlobal::$x_default_idioma; }  
+	    if (!isset($idioma)){ $idioma = $_SESSION['oConfig']->getIdioma_default(); }  
 		$a_idioma = explode('.',$idioma);
 		$code_lng = $a_idioma[0];
 		//$code_char = $a_idioma[1];

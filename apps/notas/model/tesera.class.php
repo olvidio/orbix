@@ -23,10 +23,10 @@ class Tesera {
 	private $id_nom;
 
 	private function getCurso() {	
-	    $ini_d = core\ConfigGlobal::$est_inicio['d'];
-	    $ini_m = core\ConfigGlobal::$est_inicio['m'];
-	    $fin_d = core\ConfigGlobal::$est_fin['d'];
-	    $fin_m = core\ConfigGlobal::$est_fin['m'];
+	    $ini_d = $_SESSION['oConfig']->getDiaIniStgr();
+		$ini_m = $_SESSION['oConfig']->getMesIniStgr();
+	    $fin_d = $_SESSION['oConfig']->getDiaFinStgr();
+	    $fin_m = $_SESSION['oConfig']->getMesFinStgr();
 
 		$any = date('Y');
 		$mes = date('m');

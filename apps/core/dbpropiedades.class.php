@@ -14,8 +14,8 @@ class DBPropiedades {
     public function opciones_posibles_esquemas($default='') {
         $txt = '';
         // Lista de posibles esquemas (en comun)
-        $oConfig = new Config('comun');
-        $config = $oConfig->getEsquema('public'); 
+        $oConfigDB = new ConfigDB('comun');
+        $config = $oConfigDB->getEsquema('public'); 
         $oConexion = new dbConnection($config);
         $oDBP = $oConexion->getPDO();
 
@@ -47,8 +47,8 @@ class DBPropiedades {
     public function array_posibles_esquemas() {
         $a_esquemas = [];
         // Lista de posibles esquemas (en comun)
-        $oConfig = new Config('comun');
-        $config = $oConfig->getEsquema('public'); 
+        $oConfigDB = new ConfigDB('comun');
+        $config = $oConfigDB->getEsquema('public'); 
         $oConexion = new dbConnection($config);
         $oDBP = $oConexion->getPDO();
 

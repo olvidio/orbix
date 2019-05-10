@@ -77,7 +77,7 @@ if ($Qid_item != 'nuevo') {
 	$oView = new core\View('actividades/controller');
 	echo $oView->render('actividad_tarifa_tipo_form.phtml',$a_campos);
 	
-} elseif (!ConfigGlobal::is_jefeCalendario()) {  
+} elseif (!$_SESSION['oConfig']->is_jefeCalendario()) {  
     //para una actividad nueva, sólo sv.
 	// -------------- NUEVA TARIFA --------------------
 	$miSfsv = ConfigGlobal::mi_sfsv();

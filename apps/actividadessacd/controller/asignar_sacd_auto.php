@@ -16,7 +16,9 @@ require_once ("apps/core/global_object.inc");
 
 
 //corrijo el dato que está en config, porque este programa se usará para el próximo curso:
-$oF_inicurs_des = new DateTimeLocal('@' .mktime(0,0,0,9,2,ConfigGlobal::any_final_curs())) ;
+//TODO
+$any_final_curs = $_SESSION['oConfig']->any_final_curs();
+$oF_inicurs_des = new DateTimeLocal('@' .mktime(0,0,0,9,2,$any_final_curs)) ;
 $inicurs_des = $oF_inicurs_des->getFromLocal();
 $inicurs_des_iso = $oF_inicurs_des->format('Y-m-d');
 

@@ -28,6 +28,7 @@
 use actividades\model\entity as actividades;
 use usuarios\model\entity as usuarios;
 use actividadescentro\model\entity\GestorCentroEncargado;
+use permisos\model\PermisosActividadesTrue;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -326,17 +327,23 @@ foreach($cActividades as $oActividad) {
 	$tarifa = $oActividad->getTarifa();
 	$observ = $oActividad->getObserv();
 	// Si es para importar, quito las que ya están importadas
+	// y no miro permisos de procesos
 	if (!empty($Qmodo) && $Qmodo == 'importar') {
 		$cImportadas = $GesImportada->getImportadas(array('id_activ'=>$id_activ));
 		if ($cImportadas != false && count($cImportadas) > 0) continue;
+		$oPermActividades = new PermisosActividadesTrue(core\ConfigGlobal::mi_id_usuario());
+        $oPermActiv = $oPermActividades->getPermisoActual('datos');
+        $oPermSacd =  $oPermActividades->getPermisoActual('sacd');
+	} else {
+        // mirar permisos.
+        if(core\ConfigGlobal::is_app_installed('procesos')) {
+            $_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
+            $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
+            $oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
+        }
 	}
 	$i++;
-	// mirar permisos.
-	if(core\ConfigGlobal::is_app_installed('procesos')) {
-		$_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
-		$oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
-		$oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
-	}
+	
 	$oTipoActividad= new web\TiposActividades($id_tipo_activ);
 	$isfsv=$oTipoActividad->getSfsvId();
 	// para ver el nombre en caso de la otra sección

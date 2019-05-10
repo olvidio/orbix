@@ -30,7 +30,7 @@ $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 
 //periodo
 if (empty($Qperiodo) || $Qperiodo == 'otro') {
-	$any=  core\ConfigGlobal::any_final_curs('est');
+	$any=  $_SESSION['oConfig']->any_final_curs('est');
 	$Qempiezamin=core\curso_est("inicio",$any,"est")->format('Y-m-d');
 	$Qempiezamax=core\curso_est("fin",$any,"est")->format('Y-m-d');
 	$Qperiodo = 'curso_ca';

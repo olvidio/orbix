@@ -55,6 +55,19 @@ class GrupMenu Extends core\ClasePropiedades {
 	 */
 	 private $iorden;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
+	 
+	 /**
+	  * Equivalencias de nomenclatura entre la dl => cr
+	  * 
+	  * @var array
+	  */
+	 private $aEquivalencias = [
+	     'dre' => 'der',
+	     'vest' => 'dle',
+	     'scdl' => 'scr',
+	     'vcd'=> 'vcr',
+	     'vcsd' => 'vcsr',
+	 ];
 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
@@ -172,7 +185,7 @@ class GrupMenu Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_grupmenu='$this->iid_grupmenu'")) === false) {
+		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_grupmenu='$this->iid_grupmenu'")) === false) {
 			$sClauError = 'GrupMenu.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -245,11 +258,17 @@ class GrupMenu Extends core\ClasePropiedades {
 	 *
 	 * @return string sgrup_menu
 	 */
-	function getGrup_menu() {
+	function getGrup_menu($dl_r = 'dl') {
 		if (!isset($this->sgrup_menu)) {
 			$this->DBCarregar();
 		}
-		return $this->sgrup_menu;
+		$sgrupmenu = $this->sgrup_menu;
+		if ($dl_r == 'r') {
+		    if(!empty($this->aEquivalencias[$this->sgrup_menu])) {
+		      $sgrupmenu = $this->aEquivalencias[$this->sgrup_menu];
+		    }
+		}
+		return $sgrupmenu;
 	}
 	/**
 	 * estableix el valor de l'atribut sgrup_menu de GrupMenu

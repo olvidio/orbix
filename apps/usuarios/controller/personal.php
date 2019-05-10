@@ -1,6 +1,7 @@
 <?php
 use usuarios\model\entity as usuarios;
 use menus\model\entity as menus;
+use web\Desplegable;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -31,14 +32,24 @@ if (empty($inicio)) {
 	$oDBSt_q=$oDB->query($query_inicio);
 }
 */
-$ini_exterior = "";
-$ini_oficina=($inicio=="oficina")? "selected":'';
-$ini_personal=($inicio=="personal")? "selected":'';
-$ini_avisos=($inicio=="avisos")? "selected":'';
-$ini_aniv=($inicio=="aniversarios")? "selected":'';
 
+$aOpciones = ['exterior' => ucfirst(_("home")),
+            'oficina' => ucfirst(_("oficina")),
+            'personal' => ucfirst(_("personal")),
+            'aniversarios' => ucfirst(_("aniversarios")),
+            ];
+if (core\configGlobal::is_app_installed('cambios')) {
+   $aOpciones['avisos'] = ucfirst(_("avisos cambios actividades"));
+}
+    
+$oDesplInicio = new Desplegable();
+$oDesplInicio->setNombre('inicio');
+$oDesplInicio->setOpciones($aOpciones);
+$oDesplInicio->setOpcion_sel($inicio);
+
+    
+    
 //oficinas posibles:
-
 $GesGMR = new menus\GestorGrupMenuRole();
 $cGMR = $GesGMR->getGrupMenuRoles(array('id_role'=>$id_role));
 $mi_oficina_menu=$cGMR[0]->getId_grupmenu();
@@ -46,7 +57,7 @@ $posibles = '';
 foreach ($cGMR as $oGMR) {
 	$id_grupmenu=$oGMR->getId_grupmenu();
 	$oGrupMenu = new menus\GrupMenu($id_grupmenu);
-	$grup_menu = $oGrupMenu->getGrup_menu();
+	$grup_menu = $oGrupMenu->getGrup_menu($_SESSION['oConfig']->getAmbito());
 
 	if ($id_grupmenu==$oficina) { $sel="selected"; } else { $sel=""; }
 	$posibles.="<option value=$id_grupmenu $sel>$grup_menu</option>";
@@ -111,11 +122,7 @@ $a_campos = [
 			'aniversarios' => $aniversarios,
 			'avisos' => $avisos,
 			'oHash' => $oHash,
-			'ini_exterior' => $ini_exterior,
-			'ini_avisos' => $ini_avisos,
-			'ini_oficina' => $ini_oficina,
-			'ini_personal' => $ini_personal,
-			'ini_aniv' => $ini_aniv,
+			'oDesplInicio' => $oDesplInicio,
 			'posibles' => $posibles,
 			'estil_azul' => $estil_azul,
 			'estil_naranja' => $estil_naranja,
