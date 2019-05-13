@@ -28,6 +28,9 @@ class DB extends DBAbstract {
         $this->create_atn_sacd_textos();
     }
     
+    /**
+     * En la BD Sf/sv (global).
+     */
     public function create_atn_sacd_textos () {
         $this->addPermisoGlobal('svsf');
 

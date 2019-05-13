@@ -47,9 +47,8 @@ class DB extends DBAbstract {
     }
     
     /**
-     * En la BD Comun.
+     * En la BD sf/sv (global).
      */
-    
     public function create_encargos_sacd() {
         $this->addPermisoGlobal('svsf');
 

@@ -48,7 +48,9 @@ class DBEsquema extends DBAbstract {
         $datosTabla['filename'] = $this->dir_base."/$tabla.csv";
         return $datosTabla;
     }
-       
+    /**
+     * En la BD Sf/sv (esquema).
+     */
     public function create_atn_sacd_textos() {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $esquema_org = $this->esquema;

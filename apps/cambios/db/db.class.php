@@ -36,7 +36,7 @@ class DB extends DBAbstract {
     }
     
     /**
-     * En la BD Comun.
+     * En la BD Comun (public).
      * OJO Corresponde al esquema public, no al global.
      */
     public function create_av_cambios() {
@@ -111,109 +111,9 @@ class DB extends DBAbstract {
         $this->esquema = $esquema_org;
     }
     
-    // Global
-    
-    public function create_av_cambios_usuario() {
-        $this->addPermisoGlobal('comun');
-        
-        $tabla = "av_cambios_usuario";
-        $nom_tabla = $this->getNomTabla($tabla);
-        $a_sql = [];
-        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
-                id_schema integer NOT NULL,
-                id_item integer NOT NULL,
-                id_schema_cambio integer NOT NULL,
-                id_item_cambio integer NOT NULL,
-                id_usuario integer NOT NULL,
-                aviso_tipo integer NOT NULL,
-                aviso_donde text,
-                avisado boolean
-                ); ";
-        
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
-        
-        $this->executeSql($a_sql);
-        
-        $this->delPermisoGlobal('comun');
-    }
-    public function eliminar_av_cambios_usuario() {
-        $this->addPermisoGlobal('comun');
-        
-        $tabla = "av_cambios_usuario";
-        $nom_tabla = $this->getNomTabla($tabla);
-        $this->eliminar($nom_tabla);
-        
-        $this->delPermisoGlobal('comun');
-    }
-    public function create_av_cambios_usuario_objeto_pref() {
-        $this->addPermisoGlobal('comun');
-        
-        $tabla = "av_cambios_usuario_objeto_pref";
-        $nom_tabla = $this->getNomTabla($tabla);
-        $a_sql = [];
-        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
-                id_schema integer NOT NULL,
-                id_item_usuario_objeto integer NOT NULL,
-                id_usuario integer NOT NULL,
-                dl_org text NOT NULL,
-                id_tipo_activ_txt character varying(6) NOT NULL,
-                id_fase_ini integer NOT NULL,
-                id_fase_fin integer NOT NULL,
-                objeto text NOT NULL,
-                aviso_tipo integer NOT NULL,
-                aviso_donde text, 	
-                id_pau text
-                ); ";
-        
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
-        
-        $this->executeSql($a_sql);
-        
-        $this->delPermisoGlobal('comun');
-    }
-    public function eliminar_av_cambios_usuario_objeto_pref() {
-        $this->addPermisoGlobal('comun');
-        
-        $tabla = "av_cambios_usuario_objeto_pref";
-        $nom_tabla = $this->getNomTabla($tabla);
-        $this->eliminar($nom_tabla);
-        
-        $this->delPermisoGlobal('comun');
-    }
-    
-    public function create_av_cambios_usuario_propiedades_pref() {
-        $this->addPermisoGlobal('comun');
-        
-        $tabla = "av_cambios_usuario_propiedades_pref";
-        $nom_tabla = $this->getNomTabla($tabla);
-        $a_sql = [];
-        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
-                id_schema integer NOT NULL,
-                id_item integer NOT NULL,
-                id_item_usuario_objeto integer NOT NULL,
-                propiedad text NOT NULL,
-                operador text,
-                valor text,
-                valor_old boolean, 	
-                valor_new boolean
-                ); ";
-        
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
-        
-        $this->executeSql($a_sql);
-        
-        $this->delPermisoGlobal('comun');
-    }
-    public function eliminar_av_cambios_usuario_propiedades_pref() {
-        $this->addPermisoGlobal('comun');
-        
-        $tabla = "av_cambios_usuario_propiedades_pref";
-        $nom_tabla = $this->getNomTabla($tabla);
-        $this->eliminar($nom_tabla);
-        
-        $this->delPermisoGlobal('comun');
-    }
-    
+    /**
+     * En la BD comun (global).
+     */
     public function create_av_cambios_anotados() {
         $this->addPermisoGlobal('comun');
         
@@ -245,6 +145,108 @@ class DB extends DBAbstract {
         $this->delPermisoGlobal('comun');
     }
     
+    /**
+     * En la BD sv/sf (global).
+     */
+    public function create_av_cambios_usuario() {
+        $this->addPermisoGlobal('svsf');
+        
+        $tabla = "av_cambios_usuario";
+        $nom_tabla = $this->getNomTabla($tabla);
+        $a_sql = [];
+        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                id_schema integer NOT NULL,
+                id_item integer NOT NULL,
+                id_schema_cambio integer NOT NULL,
+                id_item_cambio integer NOT NULL,
+                id_usuario integer NOT NULL,
+                aviso_tipo integer NOT NULL,
+                aviso_donde text,
+                avisado boolean
+                ); ";
+        
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
+        
+        $this->executeSql($a_sql);
+        
+        $this->delPermisoGlobal('svsf');
+    }
+    public function eliminar_av_cambios_usuario() {
+        $this->addPermisoGlobal('svsf');
+        
+        $tabla = "av_cambios_usuario";
+        $nom_tabla = $this->getNomTabla($tabla);
+        $this->eliminar($nom_tabla);
+        
+        $this->delPermisoGlobal('svsf');
+    }
+    public function create_av_cambios_usuario_objeto_pref() {
+        $this->addPermisoGlobal('svsf');
+        
+        $tabla = "av_cambios_usuario_objeto_pref";
+        $nom_tabla = $this->getNomTabla($tabla);
+        $a_sql = [];
+        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                id_schema integer NOT NULL,
+                id_item_usuario_objeto integer NOT NULL,
+                id_usuario integer NOT NULL,
+                dl_org text NOT NULL,
+                id_tipo_activ_txt character varying(6) NOT NULL,
+                id_fase_ini integer NOT NULL,
+                id_fase_fin integer NOT NULL,
+                objeto text NOT NULL,
+                aviso_tipo integer NOT NULL,
+                aviso_donde text, 	
+                id_pau text
+                ); ";
+        
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
+        
+        $this->executeSql($a_sql);
+        
+        $this->delPermisoGlobal('svsf');
+    }
+    public function eliminar_av_cambios_usuario_objeto_pref() {
+        $this->addPermisoGlobal('svsf');
+        
+        $tabla = "av_cambios_usuario_objeto_pref";
+        $nom_tabla = $this->getNomTabla($tabla);
+        $this->eliminar($nom_tabla);
+        
+        $this->delPermisoGlobal('svsf');
+    }
     
+    public function create_av_cambios_usuario_propiedades_pref() {
+        $this->addPermisoGlobal('svsf');
+        
+        $tabla = "av_cambios_usuario_propiedades_pref";
+        $nom_tabla = $this->getNomTabla($tabla);
+        $a_sql = [];
+        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                id_schema integer NOT NULL,
+                id_item integer NOT NULL,
+                id_item_usuario_objeto integer NOT NULL,
+                propiedad text NOT NULL,
+                operador text,
+                valor text,
+                valor_old boolean, 	
+                valor_new boolean
+                ); ";
+        
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
+        
+        $this->executeSql($a_sql);
+        
+        $this->delPermisoGlobal('svsf');
+    }
+    public function eliminar_av_cambios_usuario_propiedades_pref() {
+        $this->addPermisoGlobal('svsf');
+        
+        $tabla = "av_cambios_usuario_propiedades_pref";
+        $nom_tabla = $this->getNomTabla($tabla);
+        $this->eliminar($nom_tabla);
+        
+        $this->delPermisoGlobal('svsf');
+    }
 }
     

@@ -113,9 +113,8 @@ class DBEsquema extends DBAbstract {
         return $datosTabla;
     }
     
-    
     /**
-     * En la BD Comun.
+     * En la BD sf/sv (global).
      */
     public function create_encargo_tipo() {
         // OJO Corresponde al esquema sf/sv, no al comun.

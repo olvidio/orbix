@@ -97,7 +97,7 @@ class DBEsquema extends DBAbstract {
     
     
     /**
-     * En la BD Comun.
+     * En la BD Comun (esquema).
      * Tiene un foreing key con el id_activ. Entiendo que no hay problemas con sf, ya
      * los procesoso podrian ser distintos, pero no interfieren los ids.
      */
@@ -401,7 +401,10 @@ class DBEsquema extends DBAbstract {
 
         $this->delPermisoGlobal('comun');
     }
-
+    
+    /**
+     * En la BD sf/sv (esquema).
+     */
     public function create_aux_usuarios_perm() {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $esquema_org = $this->esquema;

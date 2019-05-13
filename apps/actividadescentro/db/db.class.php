@@ -27,7 +27,7 @@ class DB extends DBAbstract {
     }
     
     /**
-     * En la BD Comun.
+     * En la BD Comun (global).
      */
     public function create_da_ctr_encargados() {
         $this->addPermisoGlobal('comun');

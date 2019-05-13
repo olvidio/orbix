@@ -51,7 +51,7 @@ class DBEsquema extends DBAbstract {
     
     
     /**
-     * En la BD Comun.
+     * En la BD Comun (esquema).
      */
     public function create_da_ctr_encargados() {
         // (debe estar después de fijar el role)

@@ -38,7 +38,7 @@ class DB extends DBAbstract {
     }
     
     /**
-     * En la BD Comun.
+     * En la BD Comun (global).
      * Tiene un foreing key con el id_activ. Entiendo que no hay problemas con sf, ya 
      * los procesos podrian ser distintos, pero no interfieren los ids.
      */
@@ -203,6 +203,9 @@ class DB extends DBAbstract {
         $this->delPermisoGlobal('comun');
     }
     
+    /**
+     * En la BD sf/sv (global).
+     */
     public function create_aux_usuarios_perm() {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $this->addPermisoGlobal('svsf');

@@ -63,7 +63,10 @@ class DBEsquema extends DBAbstract {
         $datosTabla['filename'] = $this->dir_base."/$tabla.csv";
         return $datosTabla;
     }
-    
+
+    /**
+     * En la BD sf/sv (esquema).
+     */
     public function create_zonas() {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $esquema_org = $this->esquema;

@@ -35,7 +35,9 @@ class DB extends DBAbstract {
      * En el esquema sv
      *  // OJO Corresponde al esquema sf/sv, no al comun.
      */
-    
+    /**
+     * En la BD sf/sv (global).
+     */
     public function create_zonas() {
         $this->addPermisoGlobal('svsf');
         $tabla = "zonas";
