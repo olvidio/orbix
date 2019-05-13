@@ -105,7 +105,9 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
 	$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 
 	// valores por defeccto
+	// desde 40 dias antes de hoy:
 	$Qempiezamin = empty($Qempiezamin)? date('Y-m-d',mktime(0, 0, 0, date('m'), date('d')-40, date('Y'))) : $Qempiezamin;
+	// hasta dentro de 9 meses desde hoy.
 	$Qempiezamax = empty($Qempiezamax)? date('Y-m-d',mktime(0, 0, 0, date('m')+9, 0, date('Y'))) : $Qempiezamax;
 	$Qstatus = empty($Qstatus)? actividades\ActividadAll::STATUS_ACTUAL : $Qstatus;
 
