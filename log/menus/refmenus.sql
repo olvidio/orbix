@@ -244,6 +244,8 @@
 1217	{70,15}	ficha ctr	\N	62	2056	8	t
 1220	{70,20}	ficha sacd	\N	14	2056	8	t
 1199	{70}	Encargos	\N	186	2056	8	t
+1193	{60,50}	generar tabla avisos	\N	46	33816576	13	t
+1194	{60,60}	ver lista cambios	\N	154	33816576	13	t
 1261	{90,20}	nuevo curso	\N	157	8	8	t
 1289	{90,90}	Tarifas	\N	0	8	8	t
 1236	{70,30}	listados	\N	124	8	8	t
