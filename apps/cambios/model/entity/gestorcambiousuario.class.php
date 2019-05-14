@@ -26,7 +26,7 @@ class GestorCambioUsuario Extends core\ClaseGestor {
 	 *
 	 */
 	function __construct() {
-		$oDbl = $GLOBALS['oDB'];
+		$oDbl = $GLOBALS['oDBC'];
 		$this->setoDbl($oDbl);
 		$this->setNomTabla('av_cambios_usuario');
 	}

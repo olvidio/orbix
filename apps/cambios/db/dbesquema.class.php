@@ -196,18 +196,9 @@ class DBEsquema extends DBAbstract {
         $this->delPermisoGlobal('comun');
     }
     
-    
-    /**
-     * En la BD sv/sf (esquema).
-     */
     public function eliminar_av_cambios_anotados() {
-        // OJO Corresponde al esquema sf/sv, no al comun.
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
-        $this->esquema = ConfigGlobal::mi_region_dl();
-        $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('comun');
 
         $datosTabla = $this->infoTable("av_cambios_anotados");
         
@@ -220,16 +211,17 @@ class DBEsquema extends DBAbstract {
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('comun');
     }
+    
+    /**
+     * En la BD comun (esquema).
+     * Correspondería a sfsv, pero para poder borrar con 'LEFT JOIN'
+     * cuando se eliminan los av_cambios, la pongo en comun.
+     */
     public function create_av_cambios_usuario() {
-        // OJO Corresponde al esquema sf/sv, no al comun.
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
-        $this->esquema = ConfigGlobal::mi_region_dl();
-        $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('comun');
 
         $tabla = "av_cambios_usuario";
         $datosTabla = $this->infoTable($tabla);
@@ -274,16 +266,11 @@ class DBEsquema extends DBAbstract {
         
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('comun');
     }
     public function eliminar_av_cambios_usuario() {
-        // OJO Corresponde al esquema sf/sv, no al comun.
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
-        $this->esquema = ConfigGlobal::mi_region_dl();
-        $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('comun');
 
         $datosTabla = $this->infoTable("av_cambios_usuario");
         
@@ -296,8 +283,12 @@ class DBEsquema extends DBAbstract {
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('comun');
     }
+    
+    /**
+     * En la BD sv/sf (esquema).
+     */
     public function create_av_cambios_usuario_objeto_pref() {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $esquema_org = $this->esquema;
