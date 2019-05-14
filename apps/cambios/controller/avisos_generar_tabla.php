@@ -360,6 +360,7 @@ while ($num_cambios) {
                     }
                 }
             } else {
+                echo "<br>";
                 echo _("ERROR: la fase de la actividad no está en el proceso.");
                 echo " id_activ: $id_activ<br>";
                 echo " id_usuario: $id_usuario<br>";

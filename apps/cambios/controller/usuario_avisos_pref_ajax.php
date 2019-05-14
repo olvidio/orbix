@@ -487,9 +487,8 @@ switch($Qsalida) {
 		    $dl_org = ConfigGlobal::mi_dele();
 		} else {
 		    $dl_org = 'x';
-		    if ($Qobjeto == 'ActividadDl') {
-		        $Qobjeto = 'Actividad';
-		    }
+		    // Aunque tocaría poner $Qobjeto = 'Actividad'; se pone
+		    // ActividadDl porque para la dl que anota el cambio es: 'ActividadDl'
 		}
 		$oCambioUsuarioObjeto->setDl_org($dl_org);
 		$len=strlen($Qid_tipo_activ);
