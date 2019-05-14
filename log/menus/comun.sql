@@ -1,4 +1,3 @@
-2	\N	sistema/avisos_generar_mails.php	\N	\N
 4	\N	scdl/documentos/equipajes_movimientos.php	\N	\N
 5	\N	programas/activ_asistentes.php	\N	\N
 6	\N	scdl/tertulias/devoluciones.php	\N	\N
@@ -25,7 +24,6 @@
 37	\N	programas/dossiers/sql_1010.php	\N	\N
 41	\N	scdl/registro/pen_of_buscar.php	\N	\N
 45	\N	programas/casa_que.php	\N	\N
-46	\N	sistema/avisos_generar_tabla.php	\N	\N
 47	\N	des/sssc_celebraciones_lista.php	\N	\N
 49	\N	scdl/registro/pen_tabla.php	\N	\N
 50	\N	vcsd/dlbf/centrosdlbf.htm	\N	\N
@@ -55,7 +53,6 @@
 86	\N	vcsd/scheduler/sortides.php	\N	\N
 87	\N	des/periodo.php	\N	\N
 89	\N	programas/casas_resumen.php	\N	\N
-90	\N	des/libros/libros_cr_txt.php	\N	\N
 91	\N	../textos/biblio_positiva	\N	\N
 93	\N	scdl/registro/pen_buscar.php	\N	\N
 94	\N	des/tareas/collatio_sacd.php	\N	\N
@@ -105,7 +102,6 @@
 151	\N	sg/list_cp_cr15_86.php	\N	\N
 152	\N	sg/lista_ctrs.php	\N	\N
 153	\N	des/tareas/periodo_prueba.php	\N	\N
-154	\N	sistema/avisos_generar.php	\N	\N
 158	\N	scdl/tabla_mails_moneders.php	\N	\N
 159	\N	scdl/registro/pen_form.php	\N	\N
 138	\N	programas/lista_dossiers.php	\N	\N
@@ -113,6 +109,9 @@
 27	2	apps/devel/controller/modulos_select.php	\N	modulos select
 32	11	apps/procesos/controller/procesos_select.php	\N	procesos select
 85	24	apps/zonassacd/controller/zona_ctr.php	\N	Zona-ctr
+154	26	apps/cambios/controller/avisos_generar.php	\N	avisos generar
+2	26	apps/cambios/controller/avisos_generar_mails.php	\N	avisos mails
+90	1	apps/config/controller/parametros.php	\N	Configuracion esquema
 42	24	apps/zonassacd/controller/zona_sacd.php	\N	Zona sacd
 139	24	apps/zonassacd/controller/planning_zones.php	\N	Planning por zonas
 114	25	apps/cartaspresentacion/controller/cartas_presentacion_que.php	\N	Cartas Presentacion
@@ -187,3 +186,4 @@
 146	3	apps/ubis/controller/centros_que.php	\N	Centros seleccionar
 28	20	apps/actividadessacd/controller/com_sacd_activ_periodo.php	\N	Comunicación activ sacd
 18	20	apps/actividadessacd/controller/asignar_sacd_auto.php	\N	Auto asignar sacd a actividades
+46	26	apps/cambios/controller/avisos_generar_tabla.php	\N	avisos generar tabla

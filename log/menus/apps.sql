@@ -22,3 +22,5 @@
 22	encargossacd	\N
 23	zonassacd	\N
 24	cartaspresentacion	\N
+26	cambios	\N
+27	config	\N

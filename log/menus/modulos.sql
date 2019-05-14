@@ -1,4 +1,3 @@
-1	base		\N	{1,2,3,4,5,6}
 2	devel		{1}	{7}
 3	ubis		{1}	{8}
 4	stgr1		{1}	{9,10,11,12}
@@ -12,3 +11,5 @@
 24	zonassacd	distribuión de sacd por zonas	{1}	{8,9,23}
 25	cartaspresentacion	\N	{1,3}	{24}
 21	encargossacd	encargossacd	{1,3}	{9,22}
+1	base	\N	{}	{1,2,3,4,5,6,27}
+26	avisos	\N	{20,21,1}	{26}
