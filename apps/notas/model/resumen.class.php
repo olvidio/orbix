@@ -193,7 +193,7 @@ class Resumen Extends core\ClasePropiedades {
 		$curs = $this->getCurso();
 		$fincurs = $this->getFinCurso();
 
-		$any = $this->getAnyIniCurs();
+		$any = $this->getAnyIniCurs() + 1; //para los incorporados a partir del 1-jun.
 
 		$sqlDelete="DELETE FROM $tabla";
 		$sqlCreate="CREATE TABLE $tabla(
@@ -245,7 +245,7 @@ class Resumen Extends core\ClasePropiedades {
 					 OR (p.situacion='D' AND p.f_situacion $curs)
 					 OR (p.situacion!='A' AND p.f_situacion > '$fincurs')
 				";
-		//echo "sql: $sqlLlenar<br>";
+		echo "sql: $sqlLlenar<br>";
 		$oDbl->query($sqlLlenar);
 
 		// Busco los que han ido a un ci
