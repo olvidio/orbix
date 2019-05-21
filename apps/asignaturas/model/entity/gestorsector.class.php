@@ -45,7 +45,7 @@ class GestorSector Extends core\ClaseGestor {
 		$nom_tabla = $this->getNomTabla();
 		$sQuery="SELECT id_sector,id_departamento FROM $nom_tabla ORDER BY id_departamento";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorRole.lista';
+			$sClauError = 'GestorSector.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
@@ -69,7 +69,7 @@ class GestorSector Extends core\ClaseGestor {
 		$nom_tabla = $this->getNomTabla();
 		$sQuery="SELECT id_sector,sector FROM $nom_tabla ORDER BY sector";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorRole.lista';
+			$sClauError = 'GestorSector.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}

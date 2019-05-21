@@ -23,10 +23,9 @@ switch($Qque) {
 		$a_status= ActividadAll::ARRAY_STATUS_TXT;
 			
 		$oMiUsuario = new Usuario(core\ConfigGlobal::mi_id_usuario());
-		$miRole = $oMiUsuario->getId_role();
 		$miSfsv = core\ConfigGlobal::mi_sfsv();
 
-		if ($miRole == 1) { // Es administrador
+		if ($oMiUsuario->isRole('SuperAdmin')) { // Es administrador
 		   	$soy = 3;
 		} else {
 			// filtro por sf/sv

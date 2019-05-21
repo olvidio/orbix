@@ -22,10 +22,13 @@ fnjs_left_side_hide();
 {{ oHash.getCamposHtml()|raw }}
 {{ oFormP.getHtml()|raw }}
 </form>
+
+{%  if perm_mod_txt %}
 <li>
 <span class=link onclick="fnjs_update_div('#main','{{ url_com_txt|raw }}')">
     {{ "modificar los textos de las comunicaciones"|trans }}
 	</span></li>
+{% endif %}
 </div>
 <div id='exportar' refe='des/com_sacd_activ.php'>
 </div>

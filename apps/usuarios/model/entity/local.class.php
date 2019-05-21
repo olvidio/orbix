@@ -95,7 +95,8 @@ class Local Extends core\ClasePropiedades {
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
 				if (($nom_id == 'id_locale') && $val_id !== '') $this->sid_locale = (string)$val_id; // evitem SQL injection fent cast a string
-			}	} else {
+			}
+		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->sid_locale = intval($a_id); // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('sid_locale' => $this->sid_locale);

@@ -74,7 +74,8 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
 				if (($nom_id == 'id_tipo') && $val_id !== '') $this->iid_tipo = (int)$val_id; // evitem SQL injection fent cast a integer
-			}	} else {
+			}
+		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_tipo = intval($a_id); // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('iid_tipo' => $this->iid_tipo);

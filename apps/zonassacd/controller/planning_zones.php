@@ -37,11 +37,10 @@ if ($mes > 9 && $mes < 13) $chk_trim4='checked';
 
 $id_nom_jefe = '';
 $id_usuario = ConfigGlobal::mi_id_usuario();
-$oUsuario = new Usuario($id_usuario);
-$id_role=$oUsuario->getId_role();
+$oMiUsuario = new Usuario($id_usuario);
 
-if ($id_role == 7) { //sacd
-	$id_nom_jefe=$oUsuario->getId_pau();
+if ($oMiUsuario->isRole('p-sacd')) { //sacd
+	$id_nom_jefe=$oMiUsuario->getId_pau();
 	if ($_SESSION['oConfig']->is_jefeCalendario()) $id_nom_jefe = '';
 }
 

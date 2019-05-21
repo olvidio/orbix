@@ -76,6 +76,8 @@ if (!empty($Qid_role)) {
 		$chk_sv = '';
 	}
 	$pau=$oRole->getPau();
+	$dmz=$oRole->getDmz();
+    $chk_dmz = !empty($dmz)? 'checked' : '';
 	$txt_sfsv = empty($txt_sfsv)? '' : "($txt_sfsv)";
 } else {
 	$que_user='nuevo';
@@ -85,6 +87,8 @@ if (!empty($Qid_role)) {
 	$sv='';
 	$chk_sv = '';
 	$pau='';
+	$dmz='';
+	$chk_dmz = '';
 }
 
 $oTabla = '';
@@ -118,8 +122,8 @@ if (!empty($Qid_role)) { // si no hay usuario, no puedo poner permisos.
 }
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('que!role!sf!sv!pau');
-$oHash->setcamposNo('sf!sv!refresh');
+$oHash->setcamposForm('que!role!sf!sv!pau!dmz');
+$oHash->setcamposNo('sf!sv!dmz!refresh');
 $a_camposHidden = array(
 		'id_role' => $Qid_role,
 		);
@@ -148,6 +152,7 @@ $a_campos = [
 			'chk_sf' => $chk_sf,
 			'chk_sv' => $chk_sv,
 			'pau' => $pau,
+			'chk_dmz' => $chk_dmz,
 			'txt_guardar' => $txt_guardar,
 			'oTabla' => $oTabla,
 			'nuevo' => $Qnuevo,

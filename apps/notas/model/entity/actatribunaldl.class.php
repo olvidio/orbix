@@ -89,7 +89,8 @@ class ActaTribunalDl Extends core\ClasePropiedades {
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
 				if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; // evitem SQL injection fent cast a integer
-			}	} else {
+			}
+		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_item = intval($a_id); // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('iid_item' => $this->iid_item);

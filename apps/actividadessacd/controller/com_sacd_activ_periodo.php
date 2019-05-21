@@ -2,6 +2,8 @@
 use function core\strtoupper_dlb;
 use web\Hash;
 use web\PeriodoQue;
+use core\ConfigGlobal;
+use usuarios\model\entity\Usuario;
 
 /**
 * Esta página muestra un formulario con las opciones para escoger el periodo.
@@ -54,11 +56,18 @@ $a_camposHidden = array(
     'que' => 'nagd',
 );
 $oHash->setArraycamposHidden($a_camposHidden);
+ 
+$perm_mod_txt = TRUE;
+$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+if ($oMiUsuario->isRole('p-sacd')) {
+    $perm_mod_txt = FALSE;
+}
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,
     'oFormP' => $oFormP,
     'url' => $url,
+    'perm_mod_txt' => $perm_mod_txt,
     'url_com_txt' => $url_com_txt,
 ];
 

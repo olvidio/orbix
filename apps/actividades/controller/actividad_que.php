@@ -12,8 +12,9 @@
 *		
 */
 
-use ubis\model\entity as ubis;
 use core\ConfigGlobal;
+use ubis\model\entity as ubis;
+use usuarios\model\entity\Usuario;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -175,8 +176,10 @@ if ($_SESSION['oConfig']->is_jefeCalendario()
 }
 $oActividadTipo->setPerm_jefe($perm_jefe);
 
+
+$oUsuario = new Usuario(array('id_usuario'=>ConfigGlobal::mi_id_usuario()));
 $perm_ctr = FALSE;
-if (core\ConfigGlobal::mi_id_role() != 8 && core\ConfigGlobal::mi_id_role() != 16) {
+if ( !$oUsuario->isRole('CentroSv') && !$oUsuario->isRole('CentroSf') ) {
     $perm_ctr = TRUE;
 }
 

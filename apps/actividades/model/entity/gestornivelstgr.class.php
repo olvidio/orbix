@@ -54,7 +54,7 @@ class GestorNivelStgr Extends core\ClaseGestor {
 		$nom_tabla = $this->getNomTabla();
 		$sQuery="SELECT nivel_stgr,desc_breve || '(' || desc_nivel || ')' FROM $nom_tabla ORDER BY orden";
 		if (($oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorRole.lista';
+			$sClauError = 'GestorNivelStgr.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}

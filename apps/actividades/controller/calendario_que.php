@@ -23,7 +23,6 @@ require_once ('apps/core/global_object.inc');
 $oPosicion->recordar();
 
 $oMiUsuario = new usuarios\model\entity\Usuario(core\ConfigGlobal::mi_id_usuario());
-$miRole=$oMiUsuario->getId_role();
 $miSfsv = core\ConfigGlobal::mi_sfsv();
 
 //casas
@@ -52,7 +51,7 @@ $oFormP->setDesplAnysOpcion_sel(date('Y')+1);
 
 $oForm = new web\CasasQue();
 $oForm->setTitulo(core\strtoupper_dlb(_("búsqueda de casas cuyo planning interesa")));
-if ($miRole == 9) { //casa
+if ($oMiUsuario->isRole('Casa')) {
 	$id_pau=$oMiUsuario->getId_pau();
 	$sDonde=str_replace(",", " OR id_ubi=", $id_pau);
 	//formulario para casas cuyo calendario de actividades interesa 

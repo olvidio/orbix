@@ -27,6 +27,7 @@
 	require_once ("global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+/*
 include_once(ConfigGlobal::$dir_programas.'/func_web.php'); 
 
 
@@ -108,3 +109,4 @@ case "eliminar":
 	$r=ir_a($go_to);
 	break;
 } // fin del switch de mod.
+*/

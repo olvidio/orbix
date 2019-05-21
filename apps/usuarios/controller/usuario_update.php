@@ -1,8 +1,13 @@
 <?php
-use usuarios\model\entity as usuarios;
-use permisos\model as permisos;
+use permisos\model\MyCrypt;
 use procesos\model\entity\PermUsuarioActividad;
-use phpDocumentor\Reflection\Types\Boolean;
+use usuarios\model\entity\GestorUsuario;
+use usuarios\model\entity\Grupo;
+use usuarios\model\entity\GrupoOUsuario;
+use usuarios\model\entity\PermMenu;
+use usuarios\model\entity\PermUsuarioCentro;
+use usuarios\model\entity\Role;
+use usuarios\model\entity\Usuario;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -16,12 +21,37 @@ use phpDocumentor\Reflection\Types\Boolean;
 $Qque = (string) \filter_input(INPUT_POST, 'que');
 
 switch($Qque) {
+	case 'perm_ctr_update':
+		$Qid_item = (integer) \filter_input(INPUT_POST, 'id_item');
+		$Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
+		$Qid_ctr = (integer) \filter_input(INPUT_POST, 'id_ctr');
+		$Qperm_ctr = (integer) \filter_input(INPUT_POST, 'perm_ctr');
+		
+		$oUsuarioPermCtr = new PermUsuarioCentro(array('id_item'=>$Qid_item));
+		$oUsuarioPermCtr->setId_usuario($Qid_usuario);
+		$oUsuarioPermCtr->setId_ctr($Qid_ctr);
+		$oUsuarioPermCtr->setPerm_ctr($Qperm_ctr);
+		if ($oUsuarioPermCtr->DBGuardar() === false) {
+			echo _("hay un error, no se ha guardado");
+		}
+		break;
+	case 'perm_ctr_eliminar':
+		$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+		if (!empty($a_sel)) { //vengo de un checkbox
+		    $Qid_usuario = (integer) strtok($a_sel[0],"#");
+		    $Qid_item= (integer) strtok("#");
+		} 
+		$oUsuarioPermCtr = new PermUsuarioCentro(array('id_item'=>$Qid_item));
+		if ($oUsuarioPermCtr->DBEliminar() === false) {
+			echo _("hay un error, no se ha eliminado");
+		}
+		break;
 	case 'perm_menu_update':
 		$Qid_item = (integer) \filter_input(INPUT_POST, 'id_item');
 		$Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
 		$Qmenu_perm = (array) \filter_input(INPUT_POST, 'menu_perm', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 		
-		$oUsuarioPerm = new usuarios\PermMenu(array('id_item'=>$Qid_item));
+		$oUsuarioPerm = new PermMenu(array('id_item'=>$Qid_item));
 		$oUsuarioPerm->setId_usuario($Qid_usuario);
 		//cuando el campo es menu_perm, se pasa un array que hay que convertirlo en número.
 		if (!empty($Qmenu_perm)){
@@ -41,7 +71,7 @@ switch($Qque) {
 		    $Qid_usuario = (integer) strtok($a_sel[0],"#");
 		    $Qid_item= (integer) strtok("#");
 		} 
-		$oUsuarioPerm = new usuarios\PermMenu(array('id_item'=>$Qid_item));
+		$oUsuarioPerm = new PermMenu(array('id_item'=>$Qid_item));
 		if ($oUsuarioPerm->DBEliminar() === false) {
 			echo _("hay un error, no se ha eliminado");
 		}
@@ -52,7 +82,7 @@ switch($Qque) {
 		    $Qid_usuario = (integer) strtok($a_sel[0],"#");
 		    $Qid_item= (integer) strtok("#");
 		} 
-		$oUsuario = new usuarios\GrupoOUsuario(array('id_usuario'=>$Qid_usuario)); // La tabla y su heredada
+		$oUsuario = new GrupoOUsuario(array('id_usuario'=>$Qid_usuario)); // La tabla y su heredada
 		$oUsuarioPerm = new PermUsuarioActividad(array('id_item'=>$Qid_item));
 		if ($oUsuarioPerm->DBEliminar() === false) {
 			echo _("hay un error, no se ha eliminado");
@@ -83,7 +113,7 @@ switch($Qque) {
 		} else {
 			$id_tipo_activ_txt=$Qid_tipo_activ;
 		}
-		//$oUsuario = new usuarios\GrupoOUsuario(array('id_usuario'=>$_POST['id_usuario'])); // La tabla y su heredada
+		//$oUsuario = new GrupoOUsuario(array('id_usuario'=>$_POST['id_usuario'])); // La tabla y su heredada
 		$oUsuarioPerm = new PermUsuarioActividad($Qid_item);
 		$oUsuarioPerm->setId_usuario($Qid_usuario);
 		$oUsuarioPerm->setId_tipo_activ_txt($id_tipo_activ_txt);
@@ -106,7 +136,7 @@ switch($Qque) {
 	case "buscar":
 		$Qusuario = (string) \filter_input(INPUT_POST, 'usuario');
 		
-		$oUsuarios = new usuarios\GestorUsuario();
+		$oUsuarios = new GestorUsuario();
 		$oUser=$oUsuarios->getUsuarios(array('usuario'=>$Qusuario));
 		$oUsuario=$oUser[0];
 		break;
@@ -116,11 +146,11 @@ switch($Qque) {
 		$Qpassword = (string) \filter_input(INPUT_POST, 'password');
 		$Qpass = (string) \filter_input(INPUT_POST, 'pass');
 		
-		$oUsuario = new usuarios\Usuario(array('id_usuario' => $Qid_usuario));
+		$oUsuario = new Usuario(array('id_usuario' => $Qid_usuario));
 		$oUsuario->DBCarregar();
 		$oUsuario->setEmail($Qemail);
 		if (!empty($Qpassword)){
-			$oCrypt = new permisos\MyCrypt();
+			$oCrypt = new MyCrypt();
 			$my_passwd=$oCrypt->encode($Qpassword);
 			$oUsuario->setPassword($my_passwd);
 		} else {
@@ -144,11 +174,11 @@ switch($Qque) {
 				$Qnom_usuario = (string) \filter_input(INPUT_POST, 'nom_usuario');
 				$Qpassword = (string) \filter_input(INPUT_POST, 'password');
 				$Qpass = (string) \filter_input(INPUT_POST, 'pass');
-				$Qid_sacd = (integer) \filter_input(INPUT_POST, 'id_sacd');
+				$Qid_nom = (integer) \filter_input(INPUT_POST, 'id_nom');
 				$Qid_ctr = (integer) \filter_input(INPUT_POST, 'id_ctr');
 				$Qcasas = (array) \filter_input(INPUT_POST, 'casas', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 				
-				$oUsuario = new usuarios\Usuario(array('id_usuario' => $Qid_usuario));
+				$oUsuario = new Usuario(array('id_usuario' => $Qid_usuario));
 				$oUsuario->setUsuario($Qusuario);
 				//cuando el campo es perm_activ, se pasa un array que hay que convertirlo en número.
 				if (!empty($Qperm_activ)){
@@ -162,17 +192,17 @@ switch($Qque) {
 				$oUsuario->setEmail($Qemail);
 				$oUsuario->setNom_usuario($Qnom_usuario);
 				if (!empty($Qpassword)){
-					$oCrypt = new permisos\MyCrypt();
+					$oCrypt = new MyCrypt();
 					$my_passwd=$oCrypt->encode($Qpassword);
 					$oUsuario->setPassword($my_passwd);
 				} else {
 					$oUsuario->setPassword($Qpass);
 				}
-				$oRole = new usuarios\Role($Qid_role);
+				$oRole = new Role($Qid_role);
 				$pau = $oRole->getPau();
 				// sacd
-				if ($pau == 'sacd' && !empty($Qid_sacd)) {
-					$oUsuario->setId_pau($Qid_sacd);
+				if (($pau == 'sacd' OR $pau == 'nom') && !empty($Qid_nom)) {
+					$oUsuario->setId_pau($Qid_nom);
 				}
 				// centros (sv o sf)
 				if (($pau == 'ctr') && !empty($Qid_ctr)) {
@@ -195,7 +225,7 @@ switch($Qque) {
 				$Qid_role = (integer) \filter_input(INPUT_POST, 'id_role');
 				$Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
 				
-				$oUsuario = new usuarios\Grupo(array('id_usuario' => $Qid_usuario));
+				$oUsuario = new Grupo(array('id_usuario' => $Qid_usuario));
 				$oUsuario->setUsuario($Qusuario);
 				$oUsuario->setid_role($Qid_role);
 				break;
@@ -216,10 +246,10 @@ switch($Qque) {
 				$Qpassword = (string) \filter_input(INPUT_POST, 'password');
 				
 				if ($Qusuario && $Qpassword) {
-					$oUsuario = new usuarios\Usuario();
+					$oUsuario = new Usuario();
 					$oUsuario->setUsuario($Qusuario);
 					if (!empty($Qpassword)){
-						$oCrypt = new permisos\MyCrypt();
+						$oCrypt = new MyCrypt();
 						$my_passwd=$oCrypt->encode($Qpassword);
 						$oUsuario->setPassword($my_passwd);
 					}
@@ -244,7 +274,7 @@ switch($Qque) {
 				$Qid_role = (integer) \filter_input(INPUT_POST, 'id_role');
 
 				if ($Qusuario) {
-					$oUsuario = new usuarios\Grupo();
+					$oUsuario = new Grupo();
 					$oUsuario->setUsuario($Qusuario);
 					$oUsuario->setid_role($Qid_role);
 					if ($oUsuario->DBGuardar() === false) {

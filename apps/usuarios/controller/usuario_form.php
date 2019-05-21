@@ -4,7 +4,9 @@ use cambios\model\entity\CambioUsuarioObjetoPref;
 use cambios\model\entity\GestorCambioUsuarioObjetoPref;
 use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
 use core\ConfigGlobal;
+use personas\model\entity\GestorPersonaAgd;
 use personas\model\entity\GestorPersonaDl;
+use personas\model\entity\GestorPersonaN;
 use procesos\model\PermAccion;
 use procesos\model\PermAfectados;
 use procesos\model\entity\ActividadFase;
@@ -17,6 +19,7 @@ use usuarios\model\entity\Role;
 use usuarios\model\entity\Usuario;
 use web\Lista;
 use web\TiposActividades;
+use usuarios\model\entity\GestorPermUsuarioCentro;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -194,7 +197,8 @@ if ($miRole < 4) {
 
 	$txt_guardar=_("guardar datos usuario");
 	$oGrupoGrupoPermMenu = array();
-    $oUsuarioUsuarioPerm = [];
+    $cUsuarioPerm = [];
+    $cUsuarioPermCtr = [];
 	$oSelects = array();
 	if (!empty($Qid_usuario)) {
 		$que_user='guardar';
@@ -252,20 +256,38 @@ if ($miRole < 4) {
 			$oSelects->setBlanco('t');
 			$camposMas = 'id_ctr';
 		}
-		if ($pau == 'sacd') { //sacd
+		if ($pau == 'nom' || $pau == 'sacd') { //sacd //personas dl
 			$id_pau=$oUsuario->getId_pau();
 
-			$GesPersonas = new GestorPersonaDl();
-			$oSelects = $GesPersonas->getListaSacd();
+			$nom_role = $oRole->getRole();
+			if ($nom_role == "p-agd") {
+                $GesPersonas = new GestorPersonaAgd();
+                $oSelects = $GesPersonas->getListaPersonas();
+			}
+			if ($nom_role == "p-n") {
+                $GesPersonas = new GestorPersonaN();
+                $oSelects = $GesPersonas->getListaPersonas();
+			}
+			if ($nom_role == "p-sacd") {
+                $GesPersonas = new GestorPersonaDl();
+                // de momento sólo n y agd
+                $oSelects = $GesPersonas->getListaSacd("AND id_tabla ~ '[na]'");
+			}
 
-			$oSelects->setNombre('id_sacd');
+			$oSelects->setNombre('id_nom');
 			$oSelects->setOpcion_sel($id_pau);
 			$oSelects->setBlanco('t');
-			$camposMas = 'id_sacd';
+			$camposMas = 'id_nom';
+			
+			
+			$oGesPermCtr = new GestorPermUsuarioCentro();
+			$cUsuarioPermCtr = $oGesPermCtr->getPermUsuarioCentros(array('id_usuario'=>$id_usuario));
+			
 		}
+		
 		if (ConfigGlobal::is_app_installed('procesos')) { 
 			$oGesPerm = new GestorPermUsuarioActividad();
-			$oUsuarioUsuarioPerm = $oGesPerm->getPermUsuarioActividades(array('id_usuario'=>$id_usuario));
+			$cUsuarioPerm = $oGesPerm->getPermUsuarioActividades(array('id_usuario'=>$id_usuario));
 		}
 	} else {
 		$que_user='nuevo';
@@ -283,7 +305,7 @@ if ($miRole < 4) {
 	$camposForm = !empty($camposMas)? $camposForm.'!'.$camposMas : $camposForm;
 	$oHash = new web\Hash();
 	$oHash->setcamposForm($camposForm);
-	$oHash->setcamposNo('pass!password!id_ctr!id_sacd!casas');
+	$oHash->setcamposNo('pass!password!id_ctr!id_nom!casas');
 	$a_camposHidden = array(
 			'id_usuario' => $id_usuario,
 			'quien' => $Qquien
@@ -317,7 +339,7 @@ if ($miRole < 4) {
 				'nom_usuario' => $nom_usuario,
 				'oDesplRoles' => $oDesplRoles,
 				'oGrupoGrupoPermMenu' => $oGrupoGrupoPermMenu,
-                'oUsuarioUsuarioPerm' => $oUsuarioUsuarioPerm ,
+                'cUsuarioPermCtr' => $cUsuarioPermCtr,
 				'email' => $email,
 				'txt_guardar' => $txt_guardar,
 				'txt_eliminar' => $txt_eliminar,
@@ -351,14 +373,29 @@ if (!empty($id_usuario)) { // si no hay usuario, no puedo poner permisos.
 	<br>
     <br>
     <?php
-//////////// Permisos en actividades ////////////
+    //////////// Permisos en centros ////////////
+    if (ConfigGlobal::is_app_installed('ubis')) {
+        
+        $a_campos = [
+                    'quien' => $Qquien,
+                    'id_usuario' => $id_usuario,
+                    'usuario' => $usuario,
+                    'cUsuarioPermCtr' => $cUsuarioPermCtr,
+                    'oCuadrosAfecta' => $oCuadrosAfecta,
+                    'oPermAccion' => $oPermAccion,
+                    ];
+
+        $oView = new core\View('usuarios/controller');
+        echo $oView->render('perm_ctr_form.phtml',$a_campos);
+    }
+    //////////// Permisos en actividades ////////////
     if (ConfigGlobal::is_app_installed('procesos')) {
         
         $a_campos = [
                     'quien' => $Qquien,
                     'id_usuario' => $id_usuario,
                     'usuario' => $usuario,
-                    'oUsuarioUsuarioPerm' => $oUsuarioUsuarioPerm,
+                    'cUsuarioPerm' => $cUsuarioPerm,
                     'oCuadrosAfecta' => $oCuadrosAfecta,
                     'oPermAccion' => $oPermAccion,
                     ];

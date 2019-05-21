@@ -39,7 +39,8 @@ class ActaEx Extends Acta {
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
 				if (($nom_id == 'acta') && $val_id !== '') $this->sacta = (string)$val_id; // evitem SQL injection fent cast a string
-			}	} else {
+			}
+		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->sacta = intval($a_id); // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('sacta' => $this->sacta);

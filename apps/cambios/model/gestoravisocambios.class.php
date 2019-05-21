@@ -31,7 +31,7 @@ class gestorAvisoCambios {
 		$aNomTablas_obj = array('ActividadDl' => _("actividad"),
 					'ActividadCargoSacd' => _("sacd"),
 					'CentroEncargado'=> _("ctr"),
-					'ActividadCargo' => _("cl"),
+					'ActividadCargoNoSacd' => _("cl"),
 					'ActividadAsistente' => _("asistencias"),
 					'ActividadProcesoTarea'=> _("fases actividad")
 		);
@@ -61,8 +61,8 @@ class gestorAvisoCambios {
 	        case 'CentroEncargado':
 	            $spath = 'actividadescentro\\model\\entity\\CentroEncargado';
 	            break;
-	        case 'ActividadCargo':
-	            $spath = 'actividadcargos\\model\\entity\\ActividadCargo';
+	        case 'ActividadCargoNoSacd':
+	            $spath = 'actividadcargos\\model\\entity\\ActividadCargoNoSacd';
 	            break;
 	        case 'ActividadAsistente':
 	            $spath = 'asistentes\\model\\entity\\Asistente';
@@ -174,7 +174,7 @@ class gestorAvisoCambios {
 						$oActividadCambio->setValor_new($aDadesNew['nom_activ']);
 						break;
 					case 'ActividadAsistente':
-					case 'ActividadCargo':
+					case 'ActividadCargoNoSacd':
 					case 'ActividadCargoSacd':
 						$oActividadCambio->setPropiedad('id_nom');
 						$oActividadCambio->setValor_new($aDadesNew['id_nom']);
@@ -228,7 +228,7 @@ class gestorAvisoCambios {
 						$oActividadCambio->setValor_old($aDadesActuals['nom_activ']);
 						break;
 					case 'ActividadAsistente':
-					case 'ActividadCargo':
+					case 'ActividadCargoNoSacd':
 					case 'ActividadCargoSacd':
 						$oActividadCambio->setPropiedad('id_nom');
 						$oActividadCambio->setValor_old($aDadesActuals['id_nom']);

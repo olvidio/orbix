@@ -60,7 +60,8 @@ class Importada Extends core\ClasePropiedades {
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
 				if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; // evitem SQL injection fent cast a integer
-			}	} else {
+			}
+		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_activ = intval($a_id); // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('iid_activ' => $this->iid_activ);

@@ -49,6 +49,7 @@ switch($Qque) {
 		$Qsf = (integer) \filter_input(INPUT_POST, 'sf');
 		$Qsv = (integer) \filter_input(INPUT_POST, 'sv');
 		$Qpau = (string) \filter_input(INPUT_POST, 'pau');
+		$Qdmz = (integer) \filter_input(INPUT_POST, 'dmz');
 		if ($Qrole) {
 			$oRole = new usuarios\Role(array('id_role' => $Qid_role));
 			$oRole->setRole($Qrole);
@@ -57,6 +58,8 @@ switch($Qque) {
 			$sv = !empty($Qsv)? '1' : 0;
 			$oRole->setSv($sv);
 			$oRole->setPau($Qpau);
+			$dmz = !empty($Qdmz)? '1' : 0;
+			$oRole->setDmz($dmz);
 			if ($oRole->DBGuardar() === false) {
 				echo _("hay un error, no se ha guardado");
 			}
@@ -67,6 +70,7 @@ switch($Qque) {
 		$Qsf = (integer) \filter_input(INPUT_POST, 'sf');
 		$Qsv = (integer) \filter_input(INPUT_POST, 'sv');
 		$Qpau = (string) \filter_input(INPUT_POST, 'pau');
+		$Qdmz = (integer) \filter_input(INPUT_POST, 'dmz');
 		if ($Qrole) {
 			$oRole = new usuarios\Role();
 			$oRole->setRole($Qrole);
@@ -75,6 +79,8 @@ switch($Qque) {
 			$sv = !empty($Qsv)? '1' : 0;
 			$oRole->setSv($sv);
 			$oRole->setPau($Qpau);
+			$dmz = !empty($Qdmz)? '1' : 0;
+			$oRole->setDmz($dmz);
 			if ($oRole->DBGuardar() === false) {
 				echo _("hay un error, no se ha guardado");
 			}

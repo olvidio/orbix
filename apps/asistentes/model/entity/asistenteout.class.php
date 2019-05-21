@@ -1,8 +1,9 @@
 <?php
 namespace asistentes\model\entity;
+use cambios\model\gestorAvisoCambios;
+use core;
 use personas\model\entity as personas;
 use profesores\model\entity as profesores;
-use core;
 /**
  * Fitxer amb la Classe que accedeix a la taula d_asistentes_out
  *
@@ -61,8 +62,9 @@ class AsistenteOut Extends AsistentePub {
 	 * Desa els atributs de l'objecte a la base de dades.
 	 * Si no hi ha el registre, fa el insert, si hi es fa el update.
 	 *
+	 *@param bool optional $quiet : true per que no apunti els canvis. 0 (per defecte) apunta els canvis.
 	 */
-	public function DBGuardar() {
+	public function DBGuardar($quiet=0) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if ($this->DBCarregar('guardar') === false) { $bInsert=true; } else { $bInsert=false; }
@@ -114,6 +116,14 @@ class AsistenteOut Extends AsistentePub {
 					return false;
 				}
 			}
+			// Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
+			// Anoto el cambio si la actividad está publicada
+			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') OR $aDades['publicado'] == 'true')) {
+			    $oGestorCanvis = new gestorAvisoCambios();
+			    $shortClassName = (new \ReflectionClass($this))->getShortName();
+			    $oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
+			}
+			$this->setAllAtributes($aDades);
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_activ, $this->iid_nom);
@@ -129,6 +139,22 @@ class AsistenteOut Extends AsistentePub {
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
+			}
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_nom=$this->iid_nom")) === false) {
+			    $sClauError = get_class($this).'.carregar.Last';
+			    $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			    return false;
+			}
+			$aDadesLast = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			$this->aDades=$aDadesLast;
+			$this->setAllAtributes($aDadesLast);
+			// anotar cambio.
+			// Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
+			// Anoto el cambio si la actividad está publicada
+			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') OR $aDades['publicado'] == 'true')) {
+			    $oGestorCanvis = new gestorAvisoCambios();
+			    $shortClassName = (new \ReflectionClass($this))->getShortName();
+			    $oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $this->aDades, array());
 			}
 			// Hay que copiar los datos del asistente a PersonaOut
 			// Excepto en el caso de estar copiando dossiers por traslado
@@ -156,7 +182,6 @@ class AsistenteOut Extends AsistentePub {
 				}
 			}
 		}
-		$this->setAllAtributes($aDades);
 		return true;
 	}
 

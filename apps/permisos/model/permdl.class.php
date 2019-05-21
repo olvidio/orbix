@@ -9,6 +9,10 @@ class PermDl extends Xpermisos {
 	  $this->omplir();
   }
 
+  /**
+   * debe ser el mismo valor que en los menus,
+   * excepto para los inclusivos (más de uno).
+   */
   private function omplir() {
 		$permission_users = [];
 		$permission_users["adl"]	= 1;
@@ -30,10 +34,13 @@ class PermDl extends Xpermisos {
 		$permission_users["sddl"]   = 1<<13; //8192,
 		$permission_users["nax"]  	= 1<<14; //16384,
 		$permission_users["actividades"] =  31735; //31735, // todos menos des(8) y vcsd(1024).
-		$permission_users["dir"] 	=  1<<15; //32768,
-		$permission_users["pendents"]=  1<<16; //65536,
+		$permission_users["dir"] 	   =  1<<15; //32768,
+		$permission_users["pendents"]  =  1<<16; //65536,
+		$permission_users["sacd"]      =  1<<18; 
+		$permission_users["persona"]   =  1<<19; 
+		$permission_users["casa"]      =  1<<20; 
 
-		$permission_users["admin_sf"]   = 16776183; // En menus tiene 1<<18, cojo uno mayor 
+		$permission_users["admin_sf"]   = 16776183; // En menus tiene 1<<21, cojo uno mayor 
 												// (1<<24 uno menos que sv) y le quito 8(des), 1024(vcsd) y 1
 		$permission_users["admin_sv"]   =  -1; //; // todo unos, depende de la máquina, 32 o 64 bits.
 

@@ -45,7 +45,7 @@ class GestorDepartamento Extends core\ClaseGestor {
 		$nom_tabla = $this->getNomTabla();
 		$sQuery="SELECT id_departamento,departamento FROM $nom_tabla ORDER BY departamento";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorRole.lista';
+			$sClauError = 'GestorDepartamento.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}

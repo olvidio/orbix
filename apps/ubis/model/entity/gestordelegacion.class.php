@@ -56,7 +56,7 @@ class GestorDelegacion Extends ClaseGestor {
 					ORDER BY 2";
 
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorRole.lista';
+			$sClauError = 'GestorDelegacion.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
@@ -89,7 +89,7 @@ class GestorDelegacion Extends ClaseGestor {
 		}
 		//echo "sql: $sQuery<br>";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorRole.lista';
+			$sClauError = 'GestorDelegacion.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
@@ -122,7 +122,7 @@ class GestorDelegacion Extends ClaseGestor {
 		}
 		//echo "sql: $sQuery<br>";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorRole.lista';
+			$sClauError = 'GestorDelegacion.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
@@ -153,7 +153,7 @@ class GestorDelegacion Extends ClaseGestor {
 					ORDER BY dl";
 		}
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorRole.lista';
+			$sClauError = 'GestorDelegacion.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}

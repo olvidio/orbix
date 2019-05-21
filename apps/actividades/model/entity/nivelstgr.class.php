@@ -70,7 +70,8 @@ class NivelStgr Extends core\ClasePropiedades {
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
 				if (($nom_id == 'nivel_stgr') && $val_id !== '') $this->inivel_stgr = (int)$val_id; // evitem SQL injection fent cast a integer
-			}	} else {
+			}
+		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->inivel_stgr = intval($a_id); // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('inivel_stgr' => $this->inivel_stgr);
@@ -129,7 +130,7 @@ class NivelStgr Extends core\ClasePropiedades {
 					return false;
 				}
 				// també a l'exterior
-				if (ConfigGlobal::$ubicacion == 'int') {
+				if (ConfigGlobal::$dmz == FALSE) {
 					if (($oDblAASt = $oDblAA->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 						$sClauError = 'Exterior.NivelStgr.insertar.prepare';
 						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblAASt, $sClauError, __LINE__, __FILE__);

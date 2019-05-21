@@ -1,9 +1,8 @@
 <?php
 namespace procesos\model\entity;
-use core;
 use actividades\model\entity\Actividad;
-use cambios\model\entity\GestorCambio;
 use cambios\model\gestorAvisoCambios;
+use core;
 /**
  * Fitxer amb la Classe que accedeix a la taula a_actividad_proceso
  *
@@ -38,6 +37,13 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 	 * @var array
 	 */
 	 private $aDades;
+
+	/**
+	 * aDades de ActividadProcesoTarea abans dels canvis.
+	 *
+	 * @var array
+	 */
+	 private $aDadesActuals;
 
 	/**
 	 * Id_item de ActividadProcesoTarea
@@ -116,7 +122,8 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
 				if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; // evitem SQL injection fent cast a integer
-			}	} else {
+			}
+		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_item = intval($a_id); // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('iid_item' => $this->iid_item);
@@ -132,8 +139,9 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 	 * Desa els atributs de l'objecte a la base de dades.
 	 * Si no hi ha el registre, fa el insert, si hi es fa el update.
 	 *
+	 *@param bool optional $quiet : true per que no apunti els canvis. 0 (per defecte) apunta els canvis.
 	 */
-	public function DBGuardar() {
+	public function DBGuardar($quiet=0) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if ($this->DBCarregar('guardar') === FALSE) { $bInsert=TRUE; } else { $bInsert=FALSE; }
@@ -170,7 +178,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return FALSE;
 				} elseif (core\ConfigGlobal::is_app_installed('procesos')) {
-				    if (core\ConfigGlobal::is_app_installed('avisos')) {
+				    if (core\ConfigGlobal::is_app_installed('cambios')) {
                         if (empty($quiet)) {
                             $oGestorCanvis = new gestorAvisoCambios();
                             $shortClassName = (new \ReflectionClass($this))->getShortName();
@@ -210,6 +218,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 				    }
 				}
 			}
+            $this->setAllAtributes($aDades);
 		} else {
 			// INSERT
 			$campos="(id_tipo_proceso,id_activ,id_fase,id_tarea,n_orden,completado,observ)";
@@ -225,9 +234,22 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 					return FALSE;
 				}
 			}
-			$this->id_item = $oDbl->lastInsertId('a_actividad_proceso_id_item_seq');
+			$id_item = $oDbl->lastInsertId('a_actividad_proceso_id_item_seq');
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item=$id_item")) === false) {
+			    $sClauError = 'ActividadProcesoTarea.carregar.Last';
+			    $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			    return false;
+			}
+			$aDadesLast = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			$this->aDades=$aDadesLast;
+			$this->setAllAtributes($aDadesLast);
+			// anotar cambio.
+			if (empty($quiet)) {
+			    $oGestorCanvis = new gestorAvisoCambios();
+			    $shortClassName = (new \ReflectionClass($this))->getShortName();
+			    $oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $this->aDades, array());
+			}
 		}
-		$this->setAllAtributes($aDades);
 		return TRUE;
 	}
 
@@ -251,6 +273,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 					break;
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
+					$this->aDadesActuals=$aDades;
 					break;
 				default:
 					$this->setAllAtributes($aDades);
@@ -273,7 +296,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 		    return false;
 		} else {
 		    // ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.
-            if (core\ConfigGlobal::is_app_installed('avisos')) {
+            if (core\ConfigGlobal::is_app_installed('cambios')) {
                 $oGestorCanvis = new gestorAvisoCambios();
 				$shortClassName = (new \ReflectionClass($this))->getShortName();
                 $oGestorCanvis->addCanvi($shortClassName, 'FASE', $this->iid_activ, array(), $this->aDadesActuals);

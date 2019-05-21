@@ -49,7 +49,7 @@ class GestorLocal Extends core\ClaseGestor {
 				FROM $nom_tabla $sWhere
 				ORDER BY nom_idioma";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorRole.lista';
+			$sClauError = 'GestorLocal.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
@@ -71,7 +71,7 @@ class GestorLocal Extends core\ClaseGestor {
 				FROM $nom_tabla $sWhere
 				ORDER BY nom_locale";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorRole.lista';
+			$sClauError = 'GestorLocal.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}

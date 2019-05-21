@@ -122,7 +122,7 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
 				$s++;
 				$modo = $oTareaSacd->getModo();
 				$id_nom = $oTareaSacd->getId_nom();
-				$oPersona = new Persona($id_nom);
+				$oPersona = Persona::NewPersona($id_nom);
 				$nom_ap = $oPersona->getNombreApellidosCrSin();
 				if ($id_tipo_enc == '1101') { // para las meditaciones, es colaborador
 						$sacd_colaborador.="<br>".$nom_ap;
@@ -185,7 +185,7 @@ if (empty($Qsf)) {
 	foreach($cCargosCl as $oCargoCl) {
 		$id_nom = $oCargoCl->getId_nom();
 		$cargo = $oCargoCl->getCargo();
-		$oPersona = new Persona($id_nom);
+		$oPersona = Persona::newPersona($id_nom);
 		$sacd = $oPersona->getSacd();
 		if ($sacd === false) continue; // sólo listo a los sacd.
 		$nom_ap = $oPersona->getNombreApellidosCrSin();

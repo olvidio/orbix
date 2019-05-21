@@ -66,7 +66,15 @@ class Role Extends core\ClasePropiedades {
 	 * @var string
 	 */
 	 private $spau;
+	/**
+	 * Dmz de Role
+	 *
+	 * @var boolean
+	 */
+	 private $bdmz;
+
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
+	 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
 	/**
@@ -83,7 +91,8 @@ class Role Extends core\ClasePropiedades {
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
 				if (($nom_id == 'id_role') && $val_id !== '') $this->iid_role = (int)$val_id; // evitem SQL injection fent cast a integer
-			}	} else {
+			}
+		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_role = intval($a_id); // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('iid_role' => $this->iid_role);
@@ -109,12 +118,15 @@ class Role Extends core\ClasePropiedades {
 		$aDades['sf'] = $this->bsf;
 		$aDades['sv'] = $this->bsv;
 		$aDades['pau'] = $this->spau;
+		$aDades['dmz'] = $this->bdmz;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		$aDades['sf'] = ($aDades['sf'] === 't')? 'true' : $aDades['sf'];
 		if ( filter_var( $aDades['sf'], FILTER_VALIDATE_BOOLEAN)) { $aDades['sf']='t'; } else { $aDades['sf']='f'; }
 		$aDades['sv'] = ($aDades['sv'] === 't')? 'true' : $aDades['sv'];
 		if ( filter_var( $aDades['sv'], FILTER_VALIDATE_BOOLEAN)) { $aDades['sv']='t'; } else { $aDades['sv']='f'; }
+		$aDades['dmz'] = ($aDades['dmz'] === 't')? 'true' : $aDades['dmz'];
+		if ( filter_var( $aDades['dmz'], FILTER_VALIDATE_BOOLEAN)) { $aDades['dmz']='t'; } else { $aDades['dmz']='f'; }
 
 		if ($bInsert === false) {
 			//UPDATE
@@ -122,7 +134,8 @@ class Role Extends core\ClasePropiedades {
 					role                     = :role,
 					sf                       = :sf,
 					sv                       = :sv,
-					pau                      = :pau";
+					pau                      = :pau,
+					dmz                      = :dmz";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_role='$this->iid_role'")) === false) {
 				$sClauError = 'Role.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -136,8 +149,8 @@ class Role Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			$campos="(role,sf,sv,pau)";
-			$valores="(:role,:sf,:sv,:pau)";		
+			$campos="(role,sf,sv,pau,dmz)";
+			$valores="(:role,:sf,:sv,:pau,:dmz)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Role.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -216,6 +229,7 @@ class Role Extends core\ClasePropiedades {
 		if (array_key_exists('sf',$aDades)) $this->setSf($aDades['sf']);
 		if (array_key_exists('sv',$aDades)) $this->setSv($aDades['sv']);
 		if (array_key_exists('pau',$aDades)) $this->setPau($aDades['pau']);
+		if (array_key_exists('dmz',$aDades)) $this->setDmz($aDades['dmz']);
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
@@ -339,6 +353,25 @@ class Role Extends core\ClasePropiedades {
 	function setPau($spau='') {
 		$this->spau = $spau;
 	}
+	/**
+	 * Recupera l'atribut bdmz de Role
+	 *
+	 * @return string bdmz
+	 */
+	function getDmz() {
+		if (!isset($this->bdmz)) {
+			$this->DBCarregar();
+		}
+		return $this->bdmz;
+	}
+	/**
+	 * estableix el valor de l'atribut bdmz de Role
+	 *
+	 * @param string bdmz='' optional
+	 */
+	function setDmz($bdmz='') {
+		$this->bdmz = $bdmz;
+	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
 	/**
@@ -352,6 +385,7 @@ class Role Extends core\ClasePropiedades {
 		$oRoleSet->add($this->getDatosSf());
 		$oRoleSet->add($this->getDatosSv());
 		$oRoleSet->add($this->getDatosPau());
+		$oRoleSet->add($this->getDatosDmz());
 		return $oRoleSet->getTot();
 	}
 
@@ -405,5 +439,16 @@ class Role Extends core\ClasePropiedades {
 		$oDatosCampo->setEtiqueta(_("pau"));
 		return $oDatosCampo;
 	}
+	/**
+	 * Recupera les propietats de l'atribut bdmz de Role
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosDmz() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'dmz'));
+		$oDatosCampo->setEtiqueta(_("dmz"));
+		return $oDatosCampo;
+	}
 }
-?>

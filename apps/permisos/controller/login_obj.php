@@ -5,7 +5,8 @@ use permisos\model as permisos;
 use core;
 use core\DBPropiedades;
 use core\ConfigDB;
-            
+use core\ConfigGlobal;
+                
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -137,9 +138,22 @@ function getApps($id_mod) {
 	return $apps;
 }
 
+function logout($ubicacion,$idioma,$esquema,$error) {
+    $oDBPropiedades = new DBPropiedades();
+    $a_campos = [];
+    $a_campos['error'] = $error;
+    $a_campos['ubicacion'] = $ubicacion;
+    $a_campos['DesplRegiones'] = $oDBPropiedades->posibles_esquemas($esquema);
+    $a_campos['idioma'] = $idioma;
+    $a_campos['url'] = core\ConfigGlobal::getWeb();
+    $oView = new core\View(__NAMESPACE__);
+    echo $oView->render('login_form2.phtml',$a_campos);
+}
 
 // ara a global_obj. $GLOBALS['oPerm'] = new permisos\PermDl();
 //$GLOBALS['oPermActiv'] = new PermActiv;
+$ubicacion = getenv('UBICACION');
+$_SESSION['svsf'] = $ubicacion;
 
 if ( !isset($_SESSION['session_auth'])) { 
     $oDBPropiedades = new DBPropiedades();
@@ -202,6 +216,16 @@ if ( !isset($_SESSION['session_auth'])) {
 						}
 						$row2=$oDBPSt->fetch(\PDO::FETCH_ASSOC);
 						$role_pau = $row2['pau'];
+						
+						// Para la MDZ, solo roles DMZ
+						if (ConfigGlobal::$dmz) {
+						    $role_dmz = $row2['dmz'];
+						    if (empty($role_dmz)) {
+                                $error = 2;
+                                logout($ubicacion,$idioma,$esquema,$error);
+                                die();
+						    }
+						}
 						/*
 						//Para la oficina, de momento cojo la primera
 						$GesGMR = new menus\GestorGrupMenuRole();
@@ -287,21 +311,13 @@ if ( !isset($_SESSION['session_auth'])) {
 						 * No funciona, */
 						//header("Location: ".ConfigGlobal::getWeb(), true, 301);
 					} else {
-						$a_campos = array('error'=>1);
-						$a_campos['DesplRegiones'] = $oDBPropiedades->posibles_esquemas($esquema);
-						$a_campos['idioma'] = $idioma;
-                        $a_campos['url'] = core\ConfigGlobal::getWeb();
-						$oView = new core\View(__NAMESPACE__);
-						echo $oView->render('login_form2.phtml',$a_campos);
+					    $error = 1;
+                        logout($ubicacion,$idioma,$esquema,$error);
 						die();
 					}
 				} else {
-					$a_campos = array('error'=>1);
-					$a_campos['DesplRegiones'] = $oDBPropiedades->posibles_esquemas($esquema);
-					$a_campos['idioma'] = $idioma;
-                    $a_campos['url'] = core\ConfigGlobal::getWeb();
-					$oView = new core\View(__NAMESPACE__);
-					echo $oView->render('login_form2.phtml',$a_campos);
+                    $error = 1;
+                    logout($ubicacion,$idioma,$esquema,$error);
 					die();
 				}
 		}
@@ -309,11 +325,8 @@ if ( !isset($_SESSION['session_auth'])) {
 		$esquema = (!isset($_COOKIE["esquema"]))? "" : $_COOKIE["esquema"];
 		$idioma = (!isset($_COOKIE["idioma"]))? "" : $_COOKIE["idioma"];
 		cambiar_idioma($idioma);	
-		$a_campos['DesplRegiones'] = $oDBPropiedades->posibles_esquemas($esquema);
-		$a_campos['idioma'] = $idioma;
-		$a_campos['url'] = core\ConfigGlobal::getWeb();
-		$oView = new core\View(__NAMESPACE__);
-		echo $oView->render('login_form2.phtml',$a_campos);
+        $error = 0;
+        logout($ubicacion,$idioma,$esquema,$error);
 		die();
 	}
 } else {

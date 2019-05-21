@@ -89,7 +89,8 @@ class Nota Extends core\ClasePropiedades {
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
 				if (($nom_id == 'id_situacion') && $val_id !== '') $this->iid_situacion = (int)$val_id; // evitem SQL injection fent cast a integer
-			}	} else {
+			}
+		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_situacion = intval($a_id); // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('iid_situacion' => $this->iid_situacion);

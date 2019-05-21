@@ -147,7 +147,7 @@ switch ($estilo_color) {
 
 	break;
 }
-if (ConfigGlobal::$web_path == '/pruebas') {
+if (ConfigGlobal::$web_path == '/pruebas' OR ConfigGlobal::$web_path == '/pruebassf') {
 		$fondo_claro="aquamarine";
 }
 ?>

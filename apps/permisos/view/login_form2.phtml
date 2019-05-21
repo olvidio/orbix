@@ -5,7 +5,13 @@ html { height: 100% }
 ::selection { background: #fe57a1; color: #fff; text-shadow: none; }
 body { background-image: radial-gradient( cover, rgba(92,100,111,1) 0%,rgba(31,35,40,1) 100%), url('http://i.minus.com/io97fW9I0NqJq.png') }
 .login {
-  background: #eceeee;
+<?php
+if ($ubicacion == 'sv') {
+  echo "background: #eceeee;";
+} else {
+  echo "background: #74fcf1;";
+}
+?>
   border: 1px solid #42464b;
   border-radius: 6px;
   height: auto;
@@ -144,6 +150,7 @@ fnjs_goTop = function() {
 document.onload = fnjs_goTop();
 </script>
 <div class="login">
+<?= $ubicacion ?>
 <?php
 $PHP_SELF = $_SERVER['PHP_SELF'];
 ?>
@@ -162,12 +169,24 @@ $PHP_SELF = $_SERVER['PHP_SELF'];
 <div id="version">v 1.0</div>
 </div>
 <?php if ( isset($error) && $error==1 ) { ?>
- <!-- failed login code -->
  <p>
  <table>
   <tr>
-   <td colspan=2><font color=red><b>Bé el nom d'usuari, o bé el password són invàlids.<br>
-       Si us plau, torna a provar-ho!</b></font></td>
+   <td colspan=2><font color=red><b>
+   <?= _("El nombre de usuario, o el password no son válidos") ?>
+   <br>
+   <?= _("Por favor, vuelva a intentarlo") ?>
+   </b></font></td>
+  </tr>
+ </table>
+<?php } ?>
+<?php if ( isset($error) && $error==2 ) { ?>
+ <p>
+ <table>
+  <tr>
+   <td colspan=2><font color=red><b>
+   <?= _("Este usuario no puede entrar desde esta instalación") ?>
+   </b></font></td>
   </tr>
  </table>
 <?php } ?>

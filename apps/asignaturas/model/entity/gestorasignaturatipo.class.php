@@ -45,7 +45,7 @@ class GestorAsignaturaTipo Extends core\ClaseGestor {
 		$nom_tabla = $this->getNomTabla();
 		$sQuery="SELECT id_tipo,tipo_asignatura FROM $nom_tabla ORDER BY tipo_asignatura";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorRole.lista';
+			$sClauError = 'GestorAsignaturaTipo.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}

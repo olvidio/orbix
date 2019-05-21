@@ -66,11 +66,9 @@ $oActividadesSacdFunciones = new ActividadesSacdFunciones();
 $poblacion = $oActividadesSacdFunciones->getLugar_dl();
 $lugar_fecha= "$poblacion, $hoy_local";
 
-$oUsuario = new Usuario(array('id_usuario'=>ConfigGlobal::mi_id_usuario()));
-$id_role=$oUsuario->getId_role();
-
-if ($id_role == 7) { //sacd
-    $Qid_nom = $oUsuario->getId_pau();
+$oMiUsuario = new Usuario(array('id_usuario'=>ConfigGlobal::mi_id_usuario()));
+if ($oMiUsuario->isRole('p-sacd')) {
+    $Qid_nom = $oMiUsuario->getId_pau();
     $Qque = 'un_sacd';
 }
 // Si vengo de la página personas_select.php, sólo quiero ver la lista de un sacd.

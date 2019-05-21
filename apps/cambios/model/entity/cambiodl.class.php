@@ -42,7 +42,8 @@ class CambioDl Extends Cambio {
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
 				if (($nom_id == 'id_item_cambio') && $val_id !== '') $this->iid_item_cambio = (int)$val_id; // evitem SQL injection fent cast a integer
-			}	} else {
+			}
+		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_item_cambio = intval($a_id); // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('iid_item_cambio' => $this->iid_item_cambio);
@@ -58,8 +59,9 @@ class CambioDl Extends Cambio {
 	 * Desa els atributs de l'objecte a la base de dades.
 	 * Si no hi ha el registre, fa el insert, si hi es fa el update.
 	 *
+	 *@param bool optional $quiet : true per que no apunti els canvis. 0 (per defecte) apunta els canvis.
 	 */
-	public function DBGuardar() {
+	public function DBGuardar($quiet=0) {
 	    $oDbl = $this->getoDbl();
 	    $nom_tabla = $this->getNomTabla();
 	    if ($this->DBCarregar('guardar') === FALSE) { $bInsert=TRUE; } else { $bInsert=FALSE; }
@@ -124,6 +126,10 @@ class CambioDl Extends Cambio {
 	        $this->id_item_cambio = $oDbl->lastInsertId($id_seq);
 	    }
 	    $this->setAllAtributes($aDades);
+	    // Para el caso de poner anotado, no debo disparar el generador de avisos.
+	    if (empty($quiet)) {
+	        $this->generarTabla();
+	    }
 	    return TRUE;
 	}
 	

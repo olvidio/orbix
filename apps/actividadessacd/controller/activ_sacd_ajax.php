@@ -340,12 +340,12 @@ switch ($Qque) {
 			$f_ini = $oActividad->getF_ini()->getFromLocal();
 			$f_fin = $oActividad->getF_fin()->getFromLocal();
 			// mirar permisos.
-			if(ConfigGlobal::is_app_installed('procesos')) {
+			//if(ConfigGlobal::is_app_installed('procesos')) {
 			    $_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
 			    $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
 			    $oPermCtr = $_SESSION['oPermActividades']->getPermisoActual('ctr');
 				$oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
-			}
+			//}
 
 			if ($oPermActiv->have_perm('ocupado') === false) { $sin++; continue; } // no tiene permisos ni para ver.
 			if ($oPermActiv->have_perm('ver') === false) { // sólo puede ver que està ocupado

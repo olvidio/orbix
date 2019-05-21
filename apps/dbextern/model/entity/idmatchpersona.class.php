@@ -83,7 +83,8 @@ class IdMatchPersona Extends core\ClasePropiedades {
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
 				if (($nom_id == 'id_listas') && $val_id !== '') $this->iid_listas = (int)$val_id; // evitem SQL injection fent cast a integer
-			}	} else {
+			}
+		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_listas = intval($a_id); // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('iid_listas' => $this->iid_listas);

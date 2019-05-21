@@ -83,7 +83,8 @@ class App Extends core\ClasePropiedades {
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
 				if (($nom_id == 'id_app') && $val_id !== '') $this->iid_app = (int)$val_id; // evitem SQL injection fent cast a integer
-			}	} else {
+			}
+		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_app = intval($a_id); // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('iid_app' => $this->iid_app);

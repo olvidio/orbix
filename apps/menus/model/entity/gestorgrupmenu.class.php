@@ -35,7 +35,6 @@ class GestorGrupMenu Extends core\ClaseGestor {
 
 	/**
 	 * retorna un objecte del tipus Desplegable
-	 * Els posibles roles
 	 *
 	 * @return object Desplegable
 	 */
@@ -44,7 +43,7 @@ class GestorGrupMenu Extends core\ClaseGestor {
 		$nom_tabla = $this->getNomTabla();
 		$sQuery="SELECT id_grupmenu,grup_menu FROM $nom_tabla ORDER BY orden,grup_menu";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorRole.lista';
+			$sClauError = 'GestorGrupMenu.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}

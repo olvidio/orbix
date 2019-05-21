@@ -36,7 +36,6 @@ class GestorMetamenu Extends core\ClaseGestor {
 	
 	/**
 	 * retorna un objecte del tipus Desplegable
-	 * Els posibles roles
 	 *
 	 * @return object Desplegable
 	 */

@@ -211,7 +211,10 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	    $statusActividad = '';
 	    foreach ($cProcesos as $oProceso) {
 	        $p++;
-	        extract($oProceso->getTot());
+	        $id_fase = $oProceso->getId_fase();
+	        $id_tarea = $oProceso->getId_tarea();
+	        $n_orden = $oProceso->getN_orden();
+	        $status = $oProceso->getStatus();
 	        $oActividadProcesoTarea = new ActividadProcesoTarea();
 	        $oActividadProcesoTarea->setId_tipo_proceso($iid_tipo_proceso);
 	        $oActividadProcesoTarea->setId_activ($iid_activ);

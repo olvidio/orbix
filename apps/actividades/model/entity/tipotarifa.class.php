@@ -75,7 +75,8 @@ class TipoTarifa Extends core\ClasePropiedades {
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
 				if (($nom_id === 'id_tarifa') && $val_id !== '') $this->iid_tarifa = (int)$val_id; // evitem SQL injection fent cast a integer
-			}	} else {
+			}
+		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_tarifa = intval($a_id); // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('iid_tarifa' => $this->iid_tarifa);

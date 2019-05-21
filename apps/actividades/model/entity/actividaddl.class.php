@@ -1,10 +1,8 @@
 <?php
 namespace actividades\model\entity;
-use core;
-//require_once('classes/web/fechas.class');
-use cambios\model\entity as cambios;
-use procesos\model\entity as procesos;
 use cambios\model\gestorAvisoCambios;
+use core;
+use procesos\model\entity\GestorActividadProcesoTarea;
 /**
  * Classe que implementa l'entitat a_actividades_dl
  *
@@ -161,7 +159,7 @@ class ActividadDl Extends ActividadAll {
 
 			// generar proceso.
 			if (core\configGlobal::is_app_installed('procesos')) {
-				$oGestorActividadProcesoTarea = new procesos\GestorActividadProcesoTarea();
+				$oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
 				$oGestorActividadProcesoTarea->generarProceso($aDadesLast['id_activ']);
 			}
 			// anotar cambio.

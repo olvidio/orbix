@@ -1,6 +1,7 @@
 <?php
 namespace cambios\model\entity;
 use actividades\model\entity\Actividad;
+use core\ConfigGlobal;
 use core;
 use personas\model\entity\Persona;
 use procesos\model\entity\GestorActividadFase;
@@ -154,7 +155,8 @@ class Cambio Extends core\ClasePropiedades {
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
 				if (($nom_id == 'id_item_cambio') && $val_id !== '') $this->iid_item_cambio = (int)$val_id; // evitem SQL injection fent cast a integer
-			}	} else {
+			}
+		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_item_cambio = intval($a_id); // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('iid_item_cambio' => $this->iid_item_cambio);
@@ -170,8 +172,9 @@ class Cambio Extends core\ClasePropiedades {
 	 * Desa els atributs de l'objecte a la base de dades.
 	 * Si no hi ha el registre, fa el insert, si hi es fa el update.
 	 *
+	 *@param bool optional $quiet : true per que no apunti els canvis. 0 (per defecte) apunta els canvis.
 	 */
-	public function DBGuardar() {
+	public function DBGuardar($quiet=0) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if ($this->DBCarregar('guardar') === FALSE) { $bInsert=TRUE; } else { $bInsert=FALSE; }
@@ -242,6 +245,10 @@ class Cambio Extends core\ClasePropiedades {
 			$this->id_item_cambio = $oDbl->lastInsertId($id_seq);
 		}
 		$this->setAllAtributes($aDades);
+		// Para el caso de poner anotado, no debo disparar el generador de avisos.
+		if (empty($quiet)) {
+		    $this->generarTabla();
+		}
 		return TRUE;
 	}
 
@@ -310,7 +317,6 @@ class Cambio Extends core\ClasePropiedades {
 	    $sPropiedad = '';
 	    $sValor_old = '';
 	    $sValor_new = '';
-	    $sid_nom = '';
 	    //$sformat = 'la actividad "%1$s" ha cambiado el campo "%2$s" de "%3$s" a "%4$s" (por %5$s)';
 	    $iTipo_cambio = $this->getId_tipo_cambio();
 	    $sObjeto = $this->getObjeto();
@@ -333,13 +339,11 @@ class Cambio Extends core\ClasePropiedades {
 	    
 	    if ($sPropiedad == 'id_nom') {
 	        if (!empty($sValor_old)) {
-	            $sid_nom = $sValor_old;
-	            $oPersona = new Persona($sValor_old);
+	            $oPersona = Persona::NewPersona($sValor_old);
 	            $sValor_old = $oPersona->getApellidosNombre();
 	        }
 	        if (!empty($sValor_new)) {
-	            $sid_nom = $sValor_new;
-	            $oPersona = new Persona($sValor_new);
+	            $oPersona = Persona::NewPersona($sValor_new);
 	            $sValor_new = $oPersona->getApellidosNombre();
 	        }
 	    }
@@ -466,7 +470,23 @@ class Cambio Extends core\ClasePropiedades {
 	
 	
 	/* METODES PRIVATS ----------------------------------------------------------*/
-
+	
+	/**
+	 * Posa en marxa un procés per generar la taula d'avisos per cada usuari.
+	 *
+	 * @return true.
+	 *
+	 */
+	function generarTabla() {
+	    $program = ConfigGlobal::$directorio.'/apps/cambios/controller/avisos_generar_tabla.php';
+	    $username = ConfigGlobal::mi_usuario();
+	    $pwd = ConfigGlobal::mi_pass();
+	    $err = ConfigGlobal::$directorio.'/log/avisos.err';
+	    $out = ConfigGlobal::$directorio.'/log/avisos.out';
+	    $command = "nohup /usr/bin/php $program $username $pwd >> $out 2>> $err < /dev/null &";
+	    exec($command);
+	}
+	
 	/**
 	 * Estableix el valor de tots els atributs
 	 *

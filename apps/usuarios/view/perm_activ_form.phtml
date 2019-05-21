@@ -9,7 +9,7 @@ $a_botones[] = array( 'txt' => _("eliminar"), 'click' =>"fnjs_del_perm_activ(\"#
 
 $a_valores=array();
 $oFase = new procesos\model\entity\ActividadFase();
-foreach ($oUsuarioUsuarioPerm as $oUsuarioPerm) {
+foreach ($cUsuarioPerm as $oUsuarioPerm) {
     $i++;
     
     $id_item=$oUsuarioPerm->getId_item();

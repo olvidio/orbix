@@ -78,7 +78,8 @@ class Repeticion Extends core\ClasePropiedades {
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
 				if (($nom_id == 'id_repeticion') && $val_id !== '') $this->iid_repeticion = (int)$val_id; // evitem SQL injection fent cast a integer
-			}	} else {
+			}
+		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_repeticion = intval($a_id); // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('iid_repeticion' => $this->iid_repeticion);

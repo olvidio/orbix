@@ -12,6 +12,7 @@ class DBPropiedades {
     }
 
     public function opciones_posibles_esquemas($default='') {
+        $ubicacion = $_SERVER['UBICACION'];
         $txt = '';
         // Lista de posibles esquemas (en comun)
         $oConfigDB = new ConfigDB('comun');
@@ -32,19 +33,24 @@ class DBPropiedades {
                 if ($row[0] == 'public') continue;
                 if ($row[0] == 'resto') continue;
                 if ($row[0] == 'global') continue;
-                $sv = $row[0].'v';
-                if (!empty($default) && $sv == $default) { $sel_sv = 'selected'; } else { $sel_sv = ''; }
-                $txt .= "<option value=\"$sv\" $sel_sv>$sv</option>";
+                if ($ubicacion == 'sv') {
+                    $sv = $row[0].'v';
+                    if (!empty($default) && $sv == $default) { $sel_sv = 'selected'; } else { $sel_sv = ''; }
+                    $txt .= "<option value=\"$sv\" $sel_sv>$sv</option>";
+                }
                 // 7.3.2019 Parece que sf va por su lado.
-                //$sf = $row[0].'f';
-                //if (!empty($default) && $sf == $default) { $sel_sf = 'selected'; } else { $sel_sf = ''; }
-                //$txt .= "<option value=\"$sf\" $sel_sf>$sf</option>";
+                if ($ubicacion == 'sf') {
+                    $sf = $row[0].'f';
+                    if (!empty($default) && $sf == $default) { $sel_sf = 'selected'; } else { $sel_sf = ''; }
+                    $txt .= "<option value=\"$sf\" $sel_sf>$sf</option>";
+                }
             }
         }
         return $txt;
     }
 
     public function array_posibles_esquemas() {
+        $ubicacion = $_SERVER['UBICACION'];
         $a_esquemas = [];
         // Lista de posibles esquemas (en comun)
         $oConfigDB = new ConfigDB('comun');
@@ -64,11 +70,15 @@ class DBPropiedades {
                 if ($row[0] == 'public') continue;
                 if ($row[0] == 'resto') continue;
                 if ($row[0] == 'global') continue;
-                $sv = $row[0].'v';
-                $a_esquemas[$sv] = $sv;
+                if ($ubicacion == 'sv') {
+                    $sv = $row[0].'v';
+                    $a_esquemas[$sv] = $sv;
+                }
                 // 7.3.2019 Parece que sf va por su lado.
-                //$sf = $row[0].'f';
-                //$a_esquemas[$sf] = $sf;
+                if ($ubicacion == 'sf') {
+                    $sf = $row[0].'f';
+                    $a_esquemas[$sf] = $sf;
+                }
             }
         }
         return $a_esquemas;

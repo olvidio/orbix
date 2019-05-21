@@ -48,7 +48,7 @@ class GestorRegion Extends  core\ClaseGestor {
 				WHERE $cond 
 				ORDER BY nombre_region";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorRole.lista';
+			$sClauError = 'GestorRegion.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}

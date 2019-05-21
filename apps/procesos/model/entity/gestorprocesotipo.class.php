@@ -46,7 +46,7 @@ class GestorProcesoTipo Extends core\ClaseGestor {
 	    $nom_tabla = $this->getNomTabla();
 	    $sQuery="SELECT id_tipo_proceso, nom_proceso FROM $nom_tabla ORDER BY nom_proceso";
 	    if (($oDbl->query($sQuery)) === false) {
-	        $sClauError = 'GestorRole.lista';
+	        $sClauError = 'GestorProcesoTipo.lista';
 	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 	        return false;
 	    }

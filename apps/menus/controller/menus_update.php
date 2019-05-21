@@ -1,6 +1,7 @@
 ﻿<?php
+use core\ConfigGlobal;
 use menus\model\entity as menusEntity;
-use menus\model;
+use usuarios\model\entity\Usuario;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -33,7 +34,9 @@ switch ($Qque) {
 		$Qid_metamenu = (integer) \filter_input(INPUT_POST, 'id_metamenu');
 		$Qperm_menu = (array) \filter_input(INPUT_POST, 'perm_menu', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 		$oMenuDb->DBCarregar(); // si no paso el ok, que coja el valor que tiene
-		if (core\ConfigGlobal::mi_id_role() == 1) {
+
+		$oMiusuario = new Usuario(ConfigGlobal::mi_id_usuario());
+        if ($oMiusuario->isRole('SuperAdmin')) {
 			$ok = empty($Qok)? 'f' : $Qok;
 			$oMenuDb->setOk($ok);
 		}

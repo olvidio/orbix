@@ -39,7 +39,7 @@ function llenar_dtor($oCartaPresentacion,$id_ubi) {
 	//solo deberia haber uno
 	if (!empty($cCargosCl[0])) {
 		$id_nom = $cCargosCl[0]->getId_nom();
-		$oPersona = new Persona($id_nom);
+		$oPersona = Persona::newPersona($id_nom);
 		$pres_nom = $oPersona->getNombreApellidos();
 		$GesTelecoPersona = new GestorTelecoPersona();
 		$cTelecos = $GesTelecoPersona->getTelecos($aWhere=array('id_nom'=>$id_nom));

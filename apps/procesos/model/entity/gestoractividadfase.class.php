@@ -47,12 +47,11 @@ class GestorActividadFase Extends core\ClaseGestor {
 		$nom_tabla = $this->getNomTabla();
 	    
 	    $oMiUsuario = new Usuario(core\ConfigGlobal::mi_id_usuario());
-	    $miRole=$oMiUsuario->getId_role();
 	    $miSfsv = core\ConfigGlobal::mi_sfsv();
 	    
 	    $cond='';
 	    if ($FiltroSfSv === true) {
-	        if ($miRole === 1) { // Es administrador
+	        if ($oMiUsuario->isRole('SuperAdmin')) { // Es administrador1
 	            $cond = "(sf = 't' OR sv ='t') ";
 	        } else {
 	            // filtro por sf/sv
@@ -97,11 +96,10 @@ class GestorActividadFase Extends core\ClaseGestor {
 		$nom_tabla = $this->getNomTabla();
 	    
 	    $oMiUsuario = new Usuario(core\ConfigGlobal::mi_id_usuario());
-	    $miRole=$oMiUsuario->getId_role();
 	    $miSfsv = core\ConfigGlobal::mi_sfsv();
 	    
 	    $cond='';
-	    if ($miRole === 1) { // Es administrador
+	    if ($oMiUsuario->isRole('SuperAdmin')) { // Es administrador
 	        $cond = "(sf = 't' OR sv ='t') ";
 	    } else {
 	        // filtro por sf/sv
@@ -155,7 +153,6 @@ class GestorActividadFase Extends core\ClaseGestor {
 		$nom_tabla = $this->getNomTabla();
 	    
 	    $oMiUsuario = new Usuario(core\ConfigGlobal::mi_id_usuario());
-	    $miRole = $oMiUsuario->getId_role();
 	    $miSfsv = core\ConfigGlobal::mi_sfsv();
 	    
 	    if ($bresp) {
@@ -164,7 +161,7 @@ class GestorActividadFase Extends core\ClaseGestor {
 	    }
 	    
 	    $cond='';
-	    if ($miRole === 1) { // Es administrador
+	    if ($oMiUsuario->isRole('SuperAdmin')) { // Es administrador
 	        $cond = "(sf = 't' OR sv ='t') ";
 	    } else {
 	        // filtro por sf/sv

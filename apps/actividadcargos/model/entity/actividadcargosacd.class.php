@@ -9,7 +9,8 @@ namespace actividadcargos\model\entity;
  * @version 1.0
  * @created 17/04/2012
  */
-class ActividadCargoSacd Extends ActividadCargo {
+class ActividadCargoSacd Extends ActividadCargoAbstract {
+    
 	/* de fet no té cap métode adicional (de moment), pero a l'hora de fer els avisos són dues classes diferents,
 	   i es poden donar permisos diferents...
 	*/
@@ -18,4 +19,7 @@ class ActividadCargoSacd Extends ActividadCargo {
 		//$GesCargos->getListaCargosxTipoCargo($sTipoCargo);
         //echo 'Bar: ' . $string . PHP_EOL;
     }
+    
+    
+    
 }

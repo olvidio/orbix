@@ -55,7 +55,7 @@ class GestorActividadTarea Extends core\ClaseGestor {
                        $where_txt
                        ORDER BY id_fase,desc_tarea";
 	    if (($oDbl->query($sQuery)) === false) {
-	        $sClauError = 'GestorRole.lista';
+	        $sClauError = 'GestorActividadTarea.lista';
 	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 	        return false;
 	    }

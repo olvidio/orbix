@@ -60,7 +60,7 @@ fnjs_ver_ficha=function(id_menu){
 <li><?= _("'!' delante significa negado. ej: '!casa'.") ?>
 <li><?= _("se pueden poner varios separados por ','. Importa el orden.") ?>
 <?php
-if (core\ConfigGlobal::$ubicacion == 'int') {
+if (core\ConfigGlobal::$dmz == FALSE) {
 	echo "<li>"._("se compara con los valores (lista csv) del campo 'permiso por oficinas' del usuario.");
 	echo "<li>"._("valores posibles: 'dtor','todos' y las oficinas ('agd', 'sm' ,'scl'...).");
 } else {

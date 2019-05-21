@@ -1,5 +1,6 @@
 <?php
 namespace actividadescentro\model\entity;
+use cambios\model\gestorAvisoCambios;
 use core;
 /**
  * Fitxer amb la Classe que accedeix a la taula da_ctr_encargados
@@ -36,6 +37,13 @@ class CentroEncargado Extends core\ClasePropiedades {
 	 */
 	 private $aDades;
 
+	/**
+	 * aDades de ActividadProcesoTarea abans dels canvis.
+	 *
+	 * @var array
+	 */
+	 private $aDadesActuals;
+	 
 	/**
 	 * Id_activ de CentroEncargado
 	 *
@@ -102,8 +110,9 @@ class CentroEncargado Extends core\ClasePropiedades {
 	 * Desa els atributs de l'objecte a la base de dades.
 	 * Si no hi ha el registre, fa el insert, si hi es fa el update.
 	 *
+	 *@param bool optional $quiet : true per que no apunti els canvis. 0 (per defecte) apunta els canvis.
 	 */
-	public function DBGuardar() {
+	public function DBGuardar($quiet=0) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if ($this->DBCarregar('guardar') === FALSE) { $bInsert=TRUE; } else { $bInsert=FALSE; }
@@ -128,6 +137,13 @@ class CentroEncargado Extends core\ClasePropiedades {
 					return FALSE;
 				}
 			}
+			// Anoto el cambio
+			if (empty($quiet) && core\ConfigGlobal::is_app_installed('cambios')) {
+			    $oGestorCanvis = new gestorAvisoCambios();
+			    $shortClassName = (new \ReflectionClass($this))->getShortName();
+			    $oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
+			}
+            $this->setAllAtributes($aDades);
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_activ, $this->iid_ubi);
@@ -144,8 +160,21 @@ class CentroEncargado Extends core\ClasePropiedades {
 					return FALSE;
 				}
 			}
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_ubi='$this->iid_ubi'")) === false) {
+			    $sClauError = get_class($this).'.carregar.Last';
+			    $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			    return false;
+			}
+			$aDadesLast = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			$this->aDades=$aDadesLast;
+			$this->setAllAtributes($aDadesLast);
+			// Anoto el cambio
+			if (empty($quiet) && core\ConfigGlobal::is_app_installed('cambios')) {
+			    $oGestorCanvis = new gestorAvisoCambios();
+			    $shortClassName = (new \ReflectionClass($this))->getShortName();
+			    $oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $this->aDades, array());
+			}
 		}
-		$this->setAllAtributes($aDades);
 		return TRUE;
 	}
 
@@ -169,6 +198,7 @@ class CentroEncargado Extends core\ClasePropiedades {
 					break;
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
+					$this->aDadesActuals=$aDades;
 					break;
 				default:
 					$this->setAllAtributes($aDades);
@@ -186,6 +216,13 @@ class CentroEncargado Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
+		// que tenga el módulo de 'cambios'
+		if (core\ConfigGlobal::is_app_installed('cambios')) {
+		    // ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.
+		    $oGestorCanvis = new gestorAvisoCambios();
+		    $shortClassName = (new \ReflectionClass($this))->getShortName();
+		    $oGestorCanvis->addCanvi($shortClassName, 'DELETE', $this->iid_activ, array(), $this->aDadesActuals);
+		}
 		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_ubi='$this->iid_ubi'")) === FALSE) {
 			$sClauError = 'CentroEncargado.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);

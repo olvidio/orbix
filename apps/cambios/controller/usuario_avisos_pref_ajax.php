@@ -131,8 +131,7 @@ switch($Qsalida) {
 		if ($Qpropiedad == 'id_ubi') {
 
 			// miro que rol tengo. Si soy casa, sólo veo la mía
-			$miRole=$oMiUsuario->getId_role();
-			if ($miRole == 9) { //casa
+			if ($oMiUsuario->isRole('Casa')) { //casa
 				$id_pau=$oMiUsuario->getId_pau();
 				$sDonde=str_replace(",", " OR id_ubi=", $id_pau);
 				//formulario para casas cuyo calendario de actividades interesa 
@@ -268,8 +267,7 @@ switch($Qsalida) {
                 } else {
                     // para el caso de las casas y los sacd, sólo puede avisar de un cambio suyo.
                     // miro que rol tengo. Si soy casa, sólo veo la mía
-                    $miRole=$oMiUsuario->getId_role();
-                    if ($nom_prop == 'id_ubi' && $miRole == 9) {
+                    if ($nom_prop == 'id_ubi' && $oMiUsuario->isRole('Casa')) {
                         $id_pau=$oMiUsuario->getId_pau();
                         $sDonde=str_replace(",", " OR id_ubi=", $id_pau);
 
@@ -334,7 +332,7 @@ switch($Qsalida) {
                 $aObjPerm = [   'ActividadDl'=>'datos',
                                 'ActividadProcesoTarea'=>'datos',
                                 'ActividadCargoSacd'=>'sacd',
-                                'ActividadCargo'=>'cargos',
+                                'ActividadCargoNoSacd'=>'cargos',
                                 'ActividadAsistente'=>'asistentes',
                                 'CentroEncargado'=>'ctr',
                             ];
@@ -399,7 +397,7 @@ switch($Qsalida) {
                                 'ActividadDl'=>'datos',
                                 'ActividadProcesoTarea'=>'datos',
                                 'ActividadCargoSacd'=>'sacd',
-                                'ActividadCargo'=>'cargos',
+                                'ActividadCargoNoSacd'=>'cargos',
                                 'ActividadAsistente'=>'asistentes',
                                 'CentroEncargado'=>'ctr',
                             ];

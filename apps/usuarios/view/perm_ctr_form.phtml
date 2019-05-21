@@ -1,0 +1,107 @@
+<?php
+
+use ubis\model\entity\CentroDl;
+use usuarios\model\PermCtr;
+
+// propios
+$i=0;
+$a_cabeceras=array('ctr','permiso');
+$a_botones = [];
+$a_botones[] = array( 'txt' => _("modificar"), 'click' =>"fnjs_mod_perm_ctr(\"#permisos_ctr\")" );
+$a_botones[] = array( 'txt' => _("eliminar"), 'click' =>"fnjs_del_perm_ctr(\"#permisos_ctr\")" ); 
+
+$oPermCtr = new PermCtr();
+$a_perm_ctr = $oPermCtr->lista_array();
+$a_valores=array();
+foreach ($cUsuarioPermCtr as $oUsuarioPermCtr) {
+    $i++;
+    
+    $id_item=$oUsuarioPermCtr->getId_item();
+    $id_ctr=$oUsuarioPermCtr->getId_ctr();
+    $perm_ctr=$oUsuarioPermCtr->getPerm_ctr();
+    
+    $oCentroDl = new CentroDl($id_ctr);
+    
+
+    $a_valores[$i]['sel']="$id_usuario#$id_item";
+    $a_valores[$i][1]=$oCentroDl->getNombre_ubi();
+    $a_valores[$i][2] = $a_perm_ctr[$perm_ctr]; 
+}
+$oHash3 = new web\Hash();
+$oHash3->setcamposForm('que!sel');
+$oHash3->setcamposNo('refresh!scroll_id');
+$a_camposHidden = array(
+        'id_usuario' => $id_usuario,
+        'quien' => $quien
+        );
+$oHash3->setArraycamposHidden($a_camposHidden);
+?>
+<script>
+fnjs_add_perm_ctr=function(){
+    $('#frm_usuario').attr('action',"apps/usuarios/controller/usuario_perm_ctr.php");
+	fnjs_enviar_formulario('#frm_usuario');
+}
+
+fnjs_mod_perm_ctr=function(formulario){
+    rta=fnjs_solo_uno(formulario);
+    if (rta==1) {
+        $(formulario).attr('action','apps/usuarios/controller/usuario_perm_ctr.php');
+        fnjs_enviar_formulario(formulario);
+    }
+}
+
+fnjs_del_perm_ctr=function(formulario,que_val){
+    rta=fnjs_solo_uno(formulario);
+    if (rta==1) {
+        if (confirm("<?php echo _("¿Esta seguro que desea borrar este permiso?");?>") ) {
+            $('#perm_ctr_que').val('perm_ctr_eliminar');
+            id_usuario=$('#id_usuario').val();
+            $(formulario).attr('action','apps/usuarios/controller/usuario_update.php');
+            $(formulario).submit(function() {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'post',
+                    data: $(this).serialize()
+                })
+                .done(function (rta_txt) {
+                    if (rta_txt != '' && rta_txt != '\n') {
+                        alert ('respuesta: '+rta_txt);
+                    } else {
+                        fnjs_actualizar3(formulario);
+                       }
+                });
+                return false;
+            });
+            $(formulario).submit();
+            $(formulario).off();
+        }
+    }
+}
+fnjs_actualizar3=function(formulario){
+    var campo = '<input type="hidden" name="refresh" value=1>';
+    quien = $("#quien").val();
+    if (quien == 'grupo') {
+        $(formulario).attr('action',"apps/usuarios/controller/grupo_form.php");
+    } else {
+        $(formulario).attr('action',"apps/usuarios/controller/usuario_form.php");
+    }
+    $(formulario).append(campo);
+    fnjs_enviar_formulario(formulario,'#main');
+}
+</script>
+<br>
+<b><?= ucfirst(_("permisos en centros")) ?>:</b>
+<form id="permisos_ctr" name="permisos_ctr" action=''>
+<?= $oHash3->getCamposHtml(); ?>
+<input type="hidden" id="perm_ctr_que" name="que" value=''>
+<?php
+$oTabla = new web\Lista();
+$oTabla->setId_tabla('form_permisos_ctr');
+$oTabla->setCabeceras($a_cabeceras);
+$oTabla->setBotones($a_botones);
+$oTabla->setDatos($a_valores);
+echo $oTabla->mostrar_tabla();
+?>
+<br>
+<input type=button onclick="fnjs_add_perm_ctr();" value="<?= _("añadir permiso") ?>">
+</form>

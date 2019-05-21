@@ -47,7 +47,7 @@ foreach ($cGM as $oGrupMenu) {
 $oGesRole = new usuarios\GestorRole();
 $cRoles= $oGesRole->getRoles(['_ordre' => 'role']);
 
-$a_cabeceras=array('role','sf','sv','pau','grup menu');
+$a_cabeceras=array('role','sf','sv','pau','dmz','grup menu');
 if ($permiso == 1) {
 	$a_botones[] = array( 'txt'=> _("borrar"),
 						'click'=>"fnjs_eliminar()");
@@ -66,6 +66,7 @@ foreach ($cRoles as $oRole) {
 	$sf=$oRole->getSf();
 	$sv=$oRole->getSv();
 	$pau=$oRole->getPau();
+	$dmz=$oRole->getDmz();
 
 	$oGesGMRol = new menus\GestorGrupMenuRole();
 	$cGMR = $oGesGMRol->getGrupMenuRoles(array('id_role'=>$id_role));
@@ -80,7 +81,8 @@ foreach ($cRoles as $oRole) {
 	$a_valores[$i][2]=$sf;
 	$a_valores[$i][3]=$sv;
 	$a_valores[$i][4]=$pau;
-	$a_valores[$i][5]=$str_GM;
+	$a_valores[$i][5]=$dmz;
+	$a_valores[$i][6]=$str_GM;
 	if (($sf == 1 & $miSfsv == 2) OR ($sv == 1 & $miSfsv == 1) OR ($permiso == 1)) {
 		$a_valores[$i]['sel']="$id_role#";
 	}

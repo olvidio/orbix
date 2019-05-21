@@ -127,9 +127,8 @@ function me_afecta($id_usuario,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cm
 	//echo "usuario: $id_usuario, camp: $propiedad, id_activ: $id_activ, id_pau: $id_pau<br>\n";
 	// Si el usuario es una casa o un sacd, sólo ve los cambios que le afectan:
 	$oMiUsuario = new Usuario($id_usuario);
-	$miRole=$oMiUsuario->getId_role();
 
-	if ($miRole == 9) { //casa
+	if ($oMiUsuario->isRole('Casa')) { //casa
 		$id_pau=$oMiUsuario->getId_pau(); // puede ser una lista separada por comas.
 	}
 	if (!empty($id_pau)) { //casa o un listado de ubis en la preferencia del aviso.
@@ -154,7 +153,7 @@ function me_afecta($id_usuario,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cm
 		}
 	}
 	// si soy un sacd.
-	if ($miRole == 7) { //sacd
+	if ($oMiUsuario->isRole('sacd')) { //sacd
 		$id_nom=$oMiUsuario->getId_pau();
 		if (soy_encargado($id_nom,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cmb,$sObjeto)) {
 			return true;
@@ -190,6 +189,7 @@ function soy_encargado($id_nom,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cm
 					$a_sacd_asistente = array_intersect($cSacds, $a_Asistentes);
 					if (count($a_sacd_asistente)>0) $rta += 1;
 				break;
+				case 'ActividadCargoNoSacd':
 				case 'ActividadCargoSacd':
 					// compruebo si el sacd tiene cargo
 					$a_sacd_con_cargo = array_intersect($cSacds, $a_Sacds);
@@ -315,22 +315,34 @@ while ($num_cambios) {
 			    }
 			} else {
 			/////////////////// COMPARAR FASES //////////////////////////////////////////
-                // aFases es un array con todas las fases (sf o sv) de la actividad ordenado según el proceso.
-                // compruebo que existan las fases inicial i final, sino doy un error 
-                if (in_array($id_fase_ini, $aFases) && in_array($id_fase_fin, $aFases)) {
-                    //mirar si la fase está dentro del intervalo.
-                    $key_ini = array_search($id_fase_ini, $aFases);
-                    $key_fin = array_search($id_fase_fin, $aFases);
-                    // Si la actividad es de otra dl que no tiene instalados los procesos, la $id_fase_cmb 
-                    // corresponde al status de la actividad (1,2,3,4), y por tanto $key_cmb va a dar FALSE.
-                    $key_cmb = array_search($id_fase_cmb, $aFases);
-                    //echo "<br>fases: $id_fase_ini ::$id_fase_cmb:: $id_fase_fin <br>";
-                    //echo "key fases: $key_ini ::$key_cmb:: $key_fin <br>";
-                    //print_r($aFases);
-                    if ($key_ini <= $key_cmb && $key_fin >= $key_cmb) {
+			
+			    // Si tengo instalado el modulo de procesos:
+			    if(ConfigGlobal::is_app_installed('procesos')) {
+                    // aFases es un array con todas las fases (sf o sv) de la actividad ordenado según el proceso.
+                    // compruebo que existan las fases inicial i final, sino doy un error 
+                    if (in_array($id_fase_ini, $aFases) && in_array($id_fase_fin, $aFases)) {
+                        //mirar si la fase está dentro del intervalo.
+                        $key_ini = array_search($id_fase_ini, $aFases);
+                        $key_fin = array_search($id_fase_fin, $aFases);
+                        // Si la actividad es de otra dl que no tiene instalados los procesos, la $id_fase_cmb 
+                        // corresponde al status de la actividad (1,2,3,4), y por tanto $key_cmb va a dar FALSE.
+                        $key_cmb = array_search($id_fase_cmb, $aFases);
+                        //echo "<br>fases: $id_fase_ini ::$id_fase_cmb:: $id_fase_fin <br>";
+                        //echo "key fases: $key_ini ::$key_cmb:: $key_fin <br>";
+                        //print_r($aFases);
+                        if ($key_ini <= $key_cmb && $key_fin >= $key_cmb) {
+                            $fase_correcta = 1;
+                        }
+                    }
+			    } else {
+			        //Yo no tengo instalado el modulo proecesos, pero la dl que ha hecho el cambio si.
+			        // miro que esté en el status.
+            		$oActividad = new Actividad($id_activ);
+            		$status = $oActividad->getStatus();
+                    if ($id_fase_ini <= $status && $id_fase_fin >= $status) {
                         $fase_correcta = 1;
                     }
-                }
+			    }
 			}
 			if ($fase_correcta === 1) {
                 //mirar el valor de la propiedad

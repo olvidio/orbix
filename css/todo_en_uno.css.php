@@ -358,7 +358,7 @@ div.ventana z-index: 160;
 		position:absolute;
 		cursor: pointer;
 		z-index: 22000;
-		<?php if (ConfigGlobal::$ubicacion == 'int') { ?>
+		<?php if (ConfigGlobal::$dmz == FALSE) { ?>
 			top:5px;
 			right:9px;
 			color : <?= $letras_hover; ?>;

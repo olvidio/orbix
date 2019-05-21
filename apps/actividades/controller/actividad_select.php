@@ -197,7 +197,6 @@ if (!empty($Qmodo) && $Qmodo == 'publicar') {
 		
 // miro que rol tengo. Si soy casa, sólo veo la mía
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
-$miRole=$oMiUsuario->getId_role();
 
 if (!empty($Qmodo)) {
     $a_botones = [];
@@ -217,7 +216,7 @@ if (!empty($Qmodo)) {
 		}	
 	}
 } else {
-	if ($miRole == '9' || $miRole == '16') { //casa o centroSf
+	if ($oMiUsuario->isRole('Casa') || $oMiUsuario->isRole('CentroSf')) { 
 		$a_botones=array( array( 'txt' => _("datos"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"datos\")" ) ,);
 	} else {
 		$a_botones[] = array( 'txt' => _("datos"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"datos\")" );
@@ -272,7 +271,7 @@ if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("d
 	$a_cabeceras[]= array('name'=>_("sf/sv"),'width'=>40);
 }
 $a_cabeceras[]= array('name'=>_("tar."),'width'=>40);
-if (core\ConfigGlobal::mi_id_role() != 8 && core\ConfigGlobal::mi_id_role() != 16) { //centros
+if ( !$oMiUsuario->isRole('CentroSv') && !$oMiUsuario->isRole('CentroSf') ) { 
 	$a_cabeceras[]= array('name'=>ucfirst(_("sacd")),'width'=>200);
 	$a_cabeceras[]= array('name'=>_("dl org"),'width'=>50);
 }
@@ -373,7 +372,7 @@ foreach($cActividades as $oActividad) {
 			$a_valores[$i][6]=$ssfsv;
 		}
 		$a_valores[$i][7]='';
-		if (core\ConfigGlobal::mi_id_role() != 8 && core\ConfigGlobal::mi_id_role() != 16) { //centros
+        if ( !$oMiUsuario->isRole('CentroSv') && !$oMiUsuario->isRole('CentroSf') ) { 
 			$a_valores[$i][8]='';
 			$a_valores[$i][9]='';
 			$a_valores[$i][10]='';
@@ -458,7 +457,7 @@ foreach($cActividades as $oActividad) {
 			$a_valores[$i][6]=$ssfsv;
 		}
 		$a_valores[$i][7]=$tarifa_letra;
-		if (core\ConfigGlobal::mi_id_role() != 8 && core\ConfigGlobal::mi_id_role() != 16) { //centros
+        if ( !$oMiUsuario->isRole('CentroSv') && !$oMiUsuario->isRole('CentroSf') ) { 
 			$a_valores[$i][8]=$sacds;
 			$a_valores[$i][9]=$dl_org;
 			$a_valores[$i][10]=$ctrs;
@@ -513,12 +512,17 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
+$perm_nueva = TRUE;
+if ( !$oMiUsuario->isRole('Casa') && !$oMiUsuario->isRole('CentroSf')) { 
+    $perm_nueva = FALSE;
+}
+    
 $a_campos = ['oPosicion' => $oPosicion,
 			'oHash' => $oHash,
 			'oHashSel' => $oHashSel,
 			'Qid_tipo_activ' => $Qid_tipo_activ,
 			'resultado' => $resultado,
-			'miRole' => $miRole,
+			'perm_nueva' => $perm_nueva,
 			'mod' => $mod,
 			'oTabla' => $oTabla,
 			];

@@ -1,5 +1,6 @@
 <?php
 namespace asistentes\model\entity;
+use cambios\model\gestorAvisoCambios;
 use core;
 /**
  * Fitxer amb la Classe que accedeix a la taula d_asistentes_de_paso
@@ -35,6 +36,13 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * @var array
 	 */
 	 protected $aDades;
+
+	/**
+	 * aDades de AsistentePub abans dels canvis.
+	 *
+	 * @var array
+	 */
+	 protected $aDadesActuals;
 
 	/**
 	 * Id_activ de AsistentePub
@@ -191,8 +199,9 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * Desa els atributs de l'objecte a la base de dades.
 	 * Si no hi ha el registre, fa el insert, si hi es fa el update.
 	 *
+	 *@param bool optional $quiet : true per que no apunti els canvis. 0 (per defecte) apunta els canvis.
 	 */
-	public function DBGuardar() {
+	public function DBGuardar($quiet=0) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if ($this->DBCarregar('guardar') === false) { $bInsert=true; } else { $bInsert=false; }
@@ -246,6 +255,14 @@ class AsistentePub Extends core\ClasePropiedades {
 					return false;
 				}
 			}
+			// Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
+			// Anoto el cambio si la actividad está publicada
+			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') OR $aDades['publicado'] == 'true')) {
+			    $oGestorCanvis = new gestorAvisoCambios();
+			    $shortClassName = (new \ReflectionClass($this))->getShortName();
+			    $oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
+			}
+            $this->setAllAtributes($aDades);
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_activ, $this->iid_nom);
@@ -262,8 +279,23 @@ class AsistentePub Extends core\ClasePropiedades {
 					return false;
 				}
 			}
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_nom=$this->iid_nom")) === false) {
+			    $sClauError = get_class($this).'.carregar.Last';
+			    $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			    return false;
+			}
+			$aDadesLast = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			$this->aDades=$aDadesLast;
+			$this->setAllAtributes($aDadesLast);
+			// anotar cambio.
+			// Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
+			// Anoto el cambio si la actividad está publicada
+			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') OR $aDades['publicado'] == 'true')) {
+			    $oGestorCanvis = new gestorAvisoCambios();
+			    $shortClassName = (new \ReflectionClass($this))->getShortName();
+			    $oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $this->aDades, array());
+			}
 		}
-		$this->setAllAtributes($aDades);
 		return true;
 	}
 
@@ -287,6 +319,7 @@ class AsistentePub Extends core\ClasePropiedades {
 					break;
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
+					$this->aDadesActuals=$aDades;
 					break;
 				default:
 					$this->setAllAtributes($aDades);
@@ -304,7 +337,14 @@ class AsistentePub Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_nom=$this->iid_nom")) === false) {
+		// que tenga el módulo de 'cambios'
+		if (core\ConfigGlobal::is_app_installed('cambios')) {
+		    // ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.
+		    $oGestorCanvis = new gestorAvisoCambios();
+		    $shortClassName = (new \ReflectionClass($this))->getShortName();
+		    $oGestorCanvis->addCanvi($shortClassName, 'DELETE', $this->iid_activ, array(), $this->aDadesActuals);
+		}
+		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_nom=$this->iid_nom")) === false) {
 			$sClauError = get_class($this).'.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -344,25 +384,23 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * @param array $aDades
 	 */
 	function getAllAtributes() {
-		if (empty($aDades)) {
-			$aDades = array();
-			$aDades['id_activ'] = $this->getId_activ();
-			$aDades['id_nom'] = $this->getId_nom();
-			$aDades['propio'] = $this->getPropio();
-			$aDades['est_ok'] = $this->getEst_ok();
-			$aDades['cfi'] = $this->getCfi();
-			$aDades['cfi_con'] = $this->getCfi_con();
-			$aDades['falta'] = $this->getFalta();
-			$aDades['encargo'] = $this->getEncargo();
-			$aDades['cama'] = $this->getCama();
-			$aDades['observ'] = $this->getObserv();
-			$aDades['observ_est'] = $this->getObserv_est();
-			$aDades['plaza'] = $this->getPlaza();
-			$aDades['propietario'] = $this->getPropietario();
-			$aDades['id_tabla'] = $this->getId_tabla();
-		} else {
-			return $aDades;
-		}
+        $aDades = array();
+        $aDades['id_activ'] = $this->iid_activ;
+        $aDades['id_nom'] = $this->iid_nom;
+        $aDades['propio'] = $this->bpropio;
+        $aDades['est_ok'] = $this->best_ok;
+        $aDades['cfi'] = $this->bcfi;
+        $aDades['cfi_con'] = $this->icfi_con;
+        $aDades['falta'] = $this->bfalta;
+        $aDades['encargo'] = $this->sencargo;
+        $aDades['cama'] = $this->scama;
+        $aDades['observ'] = $this->sobserv;
+        $aDades['observ_est'] = $this->sobserv_est;
+        $aDades['plaza'] = $this->iplaza;
+        $aDades['propietario'] = $this->spropietario;
+        $aDades['id_tabla'] = $this->sid_tabla;
+        
+        return $aDades;
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
@@ -642,8 +680,8 @@ class AsistentePub Extends core\ClasePropiedades {
 		// tipos de actividad para los que no hay que comprobar la plaza
 		// 132500 => agd ca sem invierno
 		//$aId_tipo_activ_no = [132500,00000];
-		$oActividad = new \actividades\model\entity\Actividad($this->iid_activ);
-		$id_tipo_activ = $oActividad->getId_tipo_activ();
+		//$oActividad = new \actividades\model\entity\Actividad($this->iid_activ);
+		//$id_tipo_activ = $oActividad->getId_tipo_activ();
 		//if (in_array($id_tipo_activ, $aId_tipo_activ_no)) {
 		//	return $this->setPlazaSinComprobar($iplaza);
 		//}

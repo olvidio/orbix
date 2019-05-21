@@ -73,8 +73,8 @@ $id_nom_real = '';
 $ape_nom = '';
 $oDesplegablePersonas = array();
 if (!empty($Qid_item)) { //caso de modificar
-	$oActividadCargo=new actividadcargos\ActividadCargo(array('id_item'=>$Qid_item));
-	$Qid_atciv=$oActividadCargo->getId_activ();
+	$oActividadCargo = new actividadcargos\ActividadCargo(array('id_item'=>$Qid_item));
+	$Qid_activ=$oActividadCargo->getId_activ();
 	$Qid_cargo=$oActividadCargo->getId_cargo();
 	$Qid_nom=$oActividadCargo->getId_nom();
 	$puede_agd=$oActividadCargo->getPuede_agd();

@@ -57,7 +57,7 @@ fnjs_buscar=function(){
 </form>
 <div class="no_print">
 <?php
-if ($miRole != '9' && $miRole != '16') { //casa o centroSf
+if ($perm_nueva) { //casa o centroSf
 ?>
 	<br><span class=link onclick="fnjs_update_div('#main','<?= web\Hash::link('apps/actividades/controller/actividad_ver.php?'.http_build_query(array('id_tipo_activ'=>$Qid_tipo_activ))) ?>')" ><?= _("nueva actividad") ?></span>
 <?php } ?>

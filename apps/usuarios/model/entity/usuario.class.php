@@ -1,6 +1,7 @@
 <?php
 namespace usuarios\model\entity;
 use core;
+use core\ConfigGlobal;
 /**
  * Fitxer amb la Classe que accedeix a la taula aux_usuarios
  *
@@ -79,6 +80,13 @@ class Usuario Extends core\ClasePropiedades {
 	 */
 	 private $iid_role;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
+	/**
+	 * aRoles array amb els roles
+	 *
+	 * @var array
+	 */
+	 private $aRoles;
+	 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
 	/**
@@ -95,7 +103,8 @@ class Usuario Extends core\ClasePropiedades {
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
 				if (($nom_id == 'id_usuario') && $val_id !== '') $this->iid_usuario = (int)$val_id; // evitem SQL injection fent cast a integer
-			}	} else {
+			}
+		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_usuario = intval($a_id); // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('iid_usuario' => $this->iid_usuario);
@@ -103,6 +112,10 @@ class Usuario Extends core\ClasePropiedades {
 		}
 		$this->setoDbl($oDbl);
 		$this->setNomTabla('aux_usuarios');
+		
+		// llista Roles
+		$oGesRoles = new GestorRole();
+		$this->aRoles = $oGesRoles->getArrayRoles();
 	}
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
@@ -215,6 +228,17 @@ class Usuario Extends core\ClasePropiedades {
 	}
 	
 	/* METODES ALTRES  ----------------------------------------------------------*/
+	
+	public function isRole($nom_role) {
+	    $nom_role = strtolower($nom_role);
+	    $aRoles = $this->aRoles;
+	    if (!empty($aRoles[$nom_role]) && $aRoles[$nom_role] == ConfigGlobal::mi_id_role()) {
+	        return TRUE;
+	    } else {
+	        return FALSE;
+	    }
+	    
+	}
 	/* METODES PRIVATS ----------------------------------------------------------*/
 
 	/**

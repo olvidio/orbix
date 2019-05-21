@@ -170,14 +170,25 @@ if ($pau == 'cdc' && $quien == 'usuario') { //casa
 <input type=hidden id=pass  name=pass value='<?= $pass ?>'>
 <input type=hidden id=que_user  name=que value=''>
 <br>
-<?= ucfirst(_("nombre")) ?>:<input type=text name=usuario value="<?= $usuario ?>">
+<?= ucfirst(_("login")) ?>:<input type=text name=usuario value="<?= $usuario ?>" size=60>
 <?php if ($quien == 'usuario') { ?>
+<br>
 <?= ucfirst(_("nombre a mostrar")) ?>:<input type=text name=nom_usuario value="<?= $nom_usuario ?>">
 <?php } ?>
 <?= ucfirst(_("role")) ?>:
 <?= $oDesplRoles->desplegable(); ?>
 <br>
 <?php 
+if ($pau == 'nom') {
+?>
+    <!--  --------------- Sacd --------------- -->
+    <tr>
+        <td class=etiqueta><?= _("persona"); ?>:</td>	
+    <td colspan=8 id="col_sacd">
+    <?php
+    echo $oSelects->desplegable();
+    echo "</td></tr>";
+}
 if ($pau == 'sacd') {
 ?>
     <!--  --------------- Sacd --------------- -->

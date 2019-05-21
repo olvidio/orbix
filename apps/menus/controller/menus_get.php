@@ -1,6 +1,7 @@
 <?php
 use menus\model\entity as menusEntity;
-use menus\model;
+use usuarios\model\entity\Usuario;
+use core\ConfigGlobal;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -70,7 +71,8 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
 	}
 	$txt_ok = '';
 	$campos_chk = '';
-	if (core\ConfigGlobal::mi_id_role() == 1) {
+	$oMiusuario = new Usuario(ConfigGlobal::mi_id_usuario());
+	if ($oMiusuario->isRole('SuperAdmin')) {
 		$txt_ok = "  es ok?<input type='checkbox' name='ok' $chk >";
 		$campos_chk = 'ok';
 	}

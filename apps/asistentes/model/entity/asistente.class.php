@@ -1,6 +1,5 @@
 <?php
 namespace asistentes\model\entity;
-use core;
 /**
  * Fitxer amb la Classe que accedeix a la vista av_asistentes
  *
@@ -38,25 +37,26 @@ class Asistente Extends AsistentePub {
 	 * Desa els atributs de l'objecte a la base de dades.
 	 * Si no hi ha el registre, fa el insert, si hi es fa el update.
 	 *
+	 *@param bool optional $quiet : true per que no apunti els canvis. 0 (per defecte) apunta els canvis.
 	 */
-	public function DBGuardar() {
+	public function DBGuardar($quiet=0) {
 		$aDades = $this->getAllAtributes();
 		$id_tabla = $this->getId_tabla();
 		switch ($id_tabla) {
 			case 'dl':
 				$oAsistente = new AsistenteDl($this->aPrimary_key);
 				$oAsistente->setAllAtributes($aDades);
-				$oAsistente->DBGuardar();
+				$oAsistente->DBGuardar($quiet=0);
 				break;
 			case 'out':
 				$oAsistente = new AsistenteOut($this->aPrimary_key);
 				$oAsistente->setAllAtributes($aDades);
-				$oAsistente->DBGuardar();
+				$oAsistente->DBGuardar($quiet=0);
 				break;
 			case 'ex':
 				$oAsistente = new AsistenteEx($this->aPrimary_key);
 				$oAsistente->setAllAtributes($aDades);
-				$oAsistente->DBGuardar();
+				$oAsistente->DBGuardar($quiet=0);
 				break;
 			case 'in':
 				echo _("el asistente es de otra dl. Se debe modificar en la dl origen.");

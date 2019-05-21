@@ -529,7 +529,7 @@ $txt.='$this->setoDbl($oDbl);
 		$this->setNomTabla(\''.$tabla.'\');';
 $txt.="\n\t}";
 } else {
-$txt.="\t".'} else {
+$txt.="\n\t".'} else {
 			if (isset($a_id) && $a_id !== \'\') {
 				$this->'.$claus_txt.' = intval($a_id); // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array(\''.$claus_txt.'\' => $this->'.$claus_txt.');

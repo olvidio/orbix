@@ -1,0 +1,41 @@
+<script>
+fnjs_grabar=function(formulario){
+	$(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
+	$(formulario).submit(function() {
+		$.ajax({
+			url: $(this).attr('action'),
+			type: 'post',
+			data: $(this).serialize()
+		})
+		.done(function (rta_txt) { 
+			if (rta_txt != '' && rta_txt != '\n') {
+				alert ('respuesta: '+rta_txt);
+			} else {
+				{{ oPosicion.js_atras(1)|raw }}
+			}
+		});
+		return false;
+	});
+	$(formulario).submit();
+	$(formulario).off();
+}
+</script>
+{{  oPosicion.mostrar_left_slide(1)|raw }}
+<h1>{{  "Añadir nuevo permiso para centro a"|trans }} {{ nombre }}</h1>
+<form id=perm_usuario  name=perm_usuario action="" method="post" >
+{{ oHash.getCamposHtml()|raw }}
+<table>
+<tr>
+<td>{{ "seleccionar un centro"|trans }}:</td>
+<td>
+{{ oDesplCentros.desplegable|raw }}
+</td>
+</tr>
+
+<tr>
+<td class=etiqueta>{{ "permiso tipo"|trans }}:</td>
+<td colspan=5> {{ oDesplAccion.desplegable|raw }} </td></tr>
+</table>
+<br>
+<input type=button onclick="fnjs_grabar(this.form);" value="{{ "guardar"|trans }}">
+</form>

@@ -126,8 +126,7 @@ switch ($Qtipo) {
 		$oForm = new web\CasasQue();
 		$oForm->setTitulo(core\strtoupper_dlb(_("búsqueda de casas cuyo planning interesa")));
 		// miro que rol tengo. Si soy casa, sólo veo la mía
-		$miRole=$oMiUsuario->getId_role();
-		if ($miRole == 9) { //casa
+		if ($oMiUsuario->isRole('casa')) {
 			$id_pau=$oMiUsuario->getId_pau();
 			$sDonde=str_replace(",", " OR id_ubi=", $id_pau);
 			//formulario para casas cuyo calendario de actividades interesa 

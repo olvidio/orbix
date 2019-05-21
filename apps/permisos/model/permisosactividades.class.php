@@ -124,7 +124,7 @@ class PermisosActividades {
 			";
 		//echo "<br>permActiv: $Qry<br>";
 		if (($oDbl->query($Qry)) === false) {
-			$sClauError = 'ActividadCargo.carregar';
+			$sClauError = 'PermisosActividades.carregar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
