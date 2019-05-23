@@ -12,7 +12,20 @@ class DBPropiedades {
     }
 
     public function opciones_posibles_esquemas($default='') {
-        $ubicacion = $_SERVER['UBICACION'];
+        /* Para el caso de sf, entrando como en el directorio orbixsf, al redirigir
+         * a orbix, la ubicación acaba siendo sv.
+         * solo me sirve   $_SERVER['UBICACION']; para la entrada.
+         * una vez dentro, debo usar el usuario para saber si es sv o sf
+         */
+        if (empty($GLOBALS['user_sfsv'])) {
+            $ubicacion = $_SERVER['UBICACION'];
+        } else {
+            if ($GLOBALS['user_sfsv'] == 1) {
+                $ubicacion = 'sv';
+            } else {
+                $ubicacion = 'sf';
+            }
+        }
         $txt = '';
         // Lista de posibles esquemas (en comun)
         $oConfigDB = new ConfigDB('comun');

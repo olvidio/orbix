@@ -37,7 +37,7 @@ class DB extends DBAbstract {
      */
     
     public function create_presentacion() {
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
         $tabla = "du_presentacion";
         $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
@@ -56,7 +56,7 @@ class DB extends DBAbstract {
 
         $this->executeSql($a_sql);
         
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
 
     public function create_presentacion_resto() {
@@ -66,7 +66,7 @@ class DB extends DBAbstract {
         $this->esquema = 'resto'.$this->vf;
         $this->role = 'orbix'.$this->vf;
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
         
         $tabla = "du_presentacion";
         
@@ -97,19 +97,19 @@ class DB extends DBAbstract {
         
         $this->executeSql($a_sql);
         
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
         // Devolver los valores al estado original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
     }
     public function eliminar_presentacion() {
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
         $tabla = "du_presentacion";
         $nom_tabla = $this->getNomTabla($tabla);
         
         $this->eliminar($nom_tabla);
         
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
 
 }

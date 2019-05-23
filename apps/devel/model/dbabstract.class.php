@@ -27,7 +27,7 @@ abstract class DBAbstract {
                 // Conexión Comun esquema, para entrar como usuario H-dlb.
                 $this->oDbl = $GLOBALS['oDBC'];
                 break;
-            case 'svsf':
+            case 'sfsv':
                 // Conexión sv esquema, para entrar como usuario H-dlbv.
                 $this->oDbl = $GLOBALS['oDB'];
                 break;
@@ -53,7 +53,6 @@ abstract class DBAbstract {
                 $this->oDbl = $GLOBALS['oDBC'];
                 break;
             case 'sfsv':
-            case 'svsf':
                 // Conexión sv public, para entrar como usuario orbixv/f.
                 $this->oDbl = $GLOBALS['oDBP'];
                 // Dar permisos al role H-dlbv de orbixv/f (para poder aceder a global)
@@ -78,7 +77,7 @@ abstract class DBAbstract {
     /**
      * Añade el permiso (orbix u orbixv/f) para acceder a global.
      * 
-     * @param  $db  'comun'|'svsf'
+     * @param  $db  'comun'|'sfsv'
      */
     protected function addPermisoGlobal($db) {
         switch ($db) {
@@ -96,7 +95,6 @@ abstract class DBAbstract {
                 $this->oDbl = $GLOBALS['oDBC'];
                 break;
             case 'sfsv':
-            case 'svsf':
                 // Conexión sv public, para entrar como usuario orbixv/f.
                 $this->oDbl = $GLOBALS['oDBP'];
                 // Dar permisos al role H-dlbv de orbixv/f (para poder aceder a global)

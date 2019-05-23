@@ -20,7 +20,7 @@
 $Qid_tipo_activ = (string)  filter_input(INPUT_POST, 'id_tipo_activ');
 // Id tipo actividad
 if (empty($Qid_tipo_activ)) {
-	$Qssfsv = (string)  filter_input(INPUT_POST, 'ssvsf');
+	$Qssfsv = (string)  filter_input(INPUT_POST, 'ssfsv');
 	if (empty($Qssfsv)) {
 		$mi_sfsv = core\ConfigGlobal::mi_sfsv();
 		if ($mi_sfsv == 1) $Qssfsv = 'sv';

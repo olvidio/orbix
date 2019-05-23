@@ -37,11 +37,16 @@ $oHash->setcamposForm('id_app!esquema');
 $oHash->setcamposNo('accion');
 $oHash->setArraycamposHidden(['accion' => 'x']);
 
+$perm_global = FALSE;
+if ($GLOBALS['user_sfsv'] == 1) {
+    $perm_global = TRUE;
+}
 $alerta = _("ojo es un modulo principal");
 $a_campos = [
     'oHash' => $oHash,
     'oDesplApps' => $oDeslpApps,
     'alerta' => $alerta,
+    'perm_global' => $perm_global,
 ];
 
 $oDBPropiedades = new DBPropiedades();

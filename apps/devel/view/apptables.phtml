@@ -29,11 +29,13 @@ fnjs_db=function(que){
   <td><?= _("aplicación") ?>:</td>
   <td><?= $oDesplApps->desplegable() ?></td>
   </tr>
+  <?php if ($perm_global) { ?>
   <tr>
   <td><?= _("global") ?>:</td>
   <td><input type="button" name="bcg" onclick="fnjs_db('crear_global')" value="<?= ("crear global") ?>"></td>
   <td><input type="button" name="beg" onclick="fnjs_db('eliminar_global')" value="<?= ("eliminar global") ?>"></td>
  </tr>
+  <?php } ?>
  <tr>
   <td><?= _("esquema") ?>:</td>
   <td><?= $oDesplEsquemas ?></td>

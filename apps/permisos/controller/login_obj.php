@@ -153,7 +153,7 @@ function logout($ubicacion,$idioma,$esquema,$error) {
 // ara a global_obj. $GLOBALS['oPerm'] = new permisos\PermDl();
 //$GLOBALS['oPermActiv'] = new PermActiv;
 $ubicacion = getenv('UBICACION');
-$_SESSION['svsf'] = $ubicacion;
+$_SESSION['sfsv'] = $ubicacion;
 
 if ( !isset($_SESSION['session_auth'])) { 
     $oDBPropiedades = new DBPropiedades();

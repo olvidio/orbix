@@ -123,7 +123,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
 
         $tabla = "encargo_tipo";
         $datosTabla = $this->infoTable($tabla);
@@ -148,7 +148,7 @@ class DBEsquema extends DBAbstract {
         
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
     public function eliminar_encargo_tipo() {
         // OJO Corresponde al esquema sf/sv, no al comun.
@@ -157,7 +157,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
 
         $datosTabla = $this->infoTable("encargo_tipo");
         
@@ -170,7 +170,7 @@ class DBEsquema extends DBAbstract {
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
 
     public function create_encargos() {
@@ -180,7 +180,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
 
         $tabla = "encargos";
         $datosTabla = $this->infoTable($tabla);
@@ -217,7 +217,7 @@ class DBEsquema extends DBAbstract {
         
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
     public function eliminar_encargos() {
         // OJO Corresponde al esquema sf/sv, no al comun.
@@ -226,7 +226,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
 
         $datosTabla = $this->infoTable("encargos");
         
@@ -239,7 +239,7 @@ class DBEsquema extends DBAbstract {
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
     
     public function create_encargo_horario() {
@@ -249,7 +249,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
 
         $tabla = "encargo_horario";
         $datosTabla = $this->infoTable($tabla);
@@ -296,7 +296,7 @@ class DBEsquema extends DBAbstract {
         
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
     public function eliminar_encargo_horario() {
         // OJO Corresponde al esquema sf/sv, no al comun.
@@ -305,7 +305,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
 
         $datosTabla = $this->infoTable("encargo_horario");
         
@@ -318,7 +318,7 @@ class DBEsquema extends DBAbstract {
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
     
     public function create_encargo_horario_excepcion() {
@@ -328,7 +328,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
 
         $tabla = "encargo_horario_excepcion";
         $datosTabla = $this->infoTable($tabla);
@@ -379,7 +379,7 @@ class DBEsquema extends DBAbstract {
         
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
     public function eliminar_encargo_horario_excepcion() {
         // OJO Corresponde al esquema sf/sv, no al comun.
@@ -388,7 +388,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
 
         $datosTabla = $this->infoTable("encargo_horario_excepcion");
         
@@ -401,7 +401,7 @@ class DBEsquema extends DBAbstract {
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
 
     public function create_encargo_sacd_horario() {
@@ -411,7 +411,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
 
         $tabla = "encargo_sacd_horario";
         $datosTabla = $this->infoTable($tabla);
@@ -463,7 +463,7 @@ class DBEsquema extends DBAbstract {
         
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
     public function eliminar_encargo_sacd_horario() {
         // OJO Corresponde al esquema sf/sv, no al comun.
@@ -472,7 +472,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
 
         $datosTabla = $this->infoTable("encargo_sacd_horario");
         
@@ -485,7 +485,7 @@ class DBEsquema extends DBAbstract {
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
     
     public function create_encargo_sacd_horario_excepcion() {
@@ -495,7 +495,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
 
         $tabla = "encargo_sacd_horario_excepcion";
         $datosTabla = $this->infoTable($tabla);
@@ -546,7 +546,7 @@ class DBEsquema extends DBAbstract {
         
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
     public function eliminar_encargo_sacd_horario_excepcion() {
         // OJO Corresponde al esquema sf/sv, no al comun.
@@ -555,7 +555,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
 
         $datosTabla = $this->infoTable("encargo_sacd_horario_excepcion");
         
@@ -568,7 +568,7 @@ class DBEsquema extends DBAbstract {
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
     
     public function create_encargo_sacd_observ() {
@@ -578,7 +578,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
 
         $tabla = "encargo_sacd_observ";
         $datosTabla = $this->infoTable($tabla);
@@ -616,7 +616,7 @@ class DBEsquema extends DBAbstract {
         
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
     public function eliminar_encargo_sacd_observ() {
         // OJO Corresponde al esquema sf/sv, no al comun.
@@ -625,7 +625,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
 
         $datosTabla = $this->infoTable("encargo_sacd_observ");
         
@@ -638,7 +638,7 @@ class DBEsquema extends DBAbstract {
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
 
     public function create_encargos_sacd() {
@@ -648,7 +648,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
 
         $tabla = "encargos_sacd";
         $datosTabla = $this->infoTable($tabla);
@@ -691,7 +691,7 @@ class DBEsquema extends DBAbstract {
         
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
     public function eliminar_encargos_sacd() {
         // OJO Corresponde al esquema sf/sv, no al comun.
@@ -700,7 +700,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
 
         $datosTabla = $this->infoTable("encargos_sacd");
         
@@ -713,7 +713,7 @@ class DBEsquema extends DBAbstract {
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
 
     public function create_encargo_datos_cgi() {
@@ -723,7 +723,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
 
         $tabla = "encargo_datos_cgi";
         $datosTabla = $this->infoTable($tabla);
@@ -765,7 +765,7 @@ class DBEsquema extends DBAbstract {
         
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
     public function eliminar_encargo_datos_cgi() {
         // OJO Corresponde al esquema sf/sv, no al comun.
@@ -774,7 +774,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
 
         $datosTabla = $this->infoTable("encargo_datos_cgi");
         
@@ -787,7 +787,7 @@ class DBEsquema extends DBAbstract {
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
 
     public function create_encargo_textos() {
@@ -797,7 +797,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
 
         $tabla = "encargo_textos";
         $datosTabla = $this->infoTable($tabla);
@@ -834,7 +834,7 @@ class DBEsquema extends DBAbstract {
         
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
     public function eliminar_encargo_textos() {
         // OJO Corresponde al esquema sf/sv, no al comun.
@@ -843,7 +843,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
 
         $datosTabla = $this->infoTable("encargo_textos");
         
@@ -856,7 +856,7 @@ class DBEsquema extends DBAbstract {
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
 
 
@@ -869,8 +869,8 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
-        $this->setConexion('svsf');
+        $this->addPermisoGlobal('sfsv');
+        $this->setConexion('sfsv');
         $datosTabla = $this->infoTable("encargo_tipo");
         
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -893,7 +893,7 @@ class DBEsquema extends DBAbstract {
         
         $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
         
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
 
     public function llenar_encargo_textos() {
@@ -903,8 +903,8 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
-        $this->setConexion('svsf');
+        $this->addPermisoGlobal('sfsv');
+        $this->setConexion('sfsv');
         $datosTabla = $this->infoTable("encargo_textos");
         
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -927,7 +927,7 @@ class DBEsquema extends DBAbstract {
         
         $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
         
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
 
  }

@@ -59,7 +59,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
         
         $tabla = "aux_usuarios_ctr_perm";
         $datosTabla = $this->infoTable($tabla);
@@ -96,7 +96,7 @@ class DBEsquema extends DBAbstract {
         
         $this->executeSql($a_sql);
         
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
         // Devolver los valores al estodo original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
@@ -108,7 +108,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
         
         $datosTabla = $this->infoTable("aux_usuarios_ctr_perm");
         
@@ -121,7 +121,7 @@ class DBEsquema extends DBAbstract {
         
         $this->eliminar($nom_tabla);
         
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
         // Devolver los valores al estodo original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
@@ -134,8 +134,8 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('svsf');
-        $this->setConexion('svsf');
+        $this->addPermisoGlobal('sfsv');
+        $this->setConexion('sfsv');
         
         $datosTabla = $this->infoTable("aux_usuarios_ctr_perm");
         
@@ -165,7 +165,7 @@ class DBEsquema extends DBAbstract {
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);
         
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
         // Devolver los valores al estodo original
         $this->esquema = $esquema_org;
         $this->role = $role_org;

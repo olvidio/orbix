@@ -187,7 +187,7 @@ class DB extends DBAbstract {
      * En la BD sv/sf (global).
      */
     public function create_av_cambios_usuario_objeto_pref() {
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
         
         $tabla = "av_cambios_usuario_objeto_pref";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -210,20 +210,20 @@ class DB extends DBAbstract {
         
         $this->executeSql($a_sql);
         
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
     public function eliminar_av_cambios_usuario_objeto_pref() {
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
         
         $tabla = "av_cambios_usuario_objeto_pref";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
         
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
     
     public function create_av_cambios_usuario_propiedades_pref() {
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
         
         $tabla = "av_cambios_usuario_propiedades_pref";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -243,16 +243,16 @@ class DB extends DBAbstract {
         
         $this->executeSql($a_sql);
         
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
     public function eliminar_av_cambios_usuario_propiedades_pref() {
-        $this->addPermisoGlobal('svsf');
+        $this->addPermisoGlobal('sfsv');
         
         $tabla = "av_cambios_usuario_propiedades_pref";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
         
-        $this->delPermisoGlobal('svsf');
+        $this->delPermisoGlobal('sfsv');
     }
 }
     
