@@ -140,7 +140,12 @@ abstract class DBAbstract {
     }
     protected function eliminar($nom_tabla) {
         $a_sql = [];
-        $a_sql[0] = "DROP TABLE IF EXISTS $nom_tabla CASCADE;" ;
+        // solo borrar todo si estoy en pruebas
+        if (ConfigGlobal::is_debug_mode()) {
+            $a_sql[0] = "DROP TABLE IF EXISTS $nom_tabla CASCADE;" ;
+        } else {
+            $a_sql[0] = "DROP TABLE IF EXISTS $nom_tabla RESTRICT;" ;
+        }
         
         return $this->executeSql($a_sql);
     }
