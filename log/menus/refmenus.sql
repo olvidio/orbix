@@ -1,11 +1,9 @@
 240	{140,40}	agd de paso	tabla=p_de_paso&na=a&tipo=persona	76	64	10	t
-508	{10}	menus ext	\N	\N	131071	9	t
 521	{50}	procesos activ.		72	131071	9	t
 352	{120,25}	buscar crt sg	sasistentes=sg&sactividad=crt	71	2112	10	t
 236	{120,20}	buscar crt s	sasistentes=s&sactividad=crt	71	2112	10	t
 315	{80,60}	lista varios ca	ssfsv=sv&sasistentes=n&sactividad=ca&que=list_cjto	119	2208	2	t
 324	{82,20}	lista varias cve	ssfsv=sv&sasistentes=n&sactividad=cve&que=list_cjto	119	2208	2	t
-820	{1,20,10}	a ODF Calc	\N	162	34078719	1	t
 136	{35,90}	pendientes	sactividad=ca&tipo_personas=n	140	16	12	t
 31	{80,90}	pendientes	sactividad=ca&tipo_personas=agd	140	2	3	t
 131	{37,90}	pendientes	sactividad=ca&tipo_personas=agd	140	16	12	t
@@ -44,7 +42,6 @@
 259	{40,20}	ubis	tipo=u	121	33554432	13	t
 258	{40,10}	personas	tipo=p	121	33554432	13	t
 260	{40,30}	actividades	tipo=a	121	33554432	13	t
-503	{40}	actividades		72	0	9	t
 287	{15,10}	n dl	tabla=p_numerarios&tipo=persona	76	144	2	t
 504	{60}	usuarios web		72	131071	9	t
 137	{35,10}	buscar ca	sasistentes=n&sactividad=ca&que=ver	119	2064	12	t
@@ -66,16 +63,19 @@
 321	{82}	cve	\N	183	128	2	t
 157	{10}	direcciones	\N	181	32767	4	t
 127	{37}	cv agd	\N	183	2064	12	t
+503	{40}	actividades	\N	0	37748735	9	t
+508	{10}	sacd	\N	0	262144	9	t
+820	{1,20,10}	a ODF Calc	\N	162	37748735	1	t
 270	{60,40}	lista grupos	\N	122	33816576	13	t
 144	{40,10}	persona dl	obj_pau=PersonaDl&tipo=planning	61	2064	12	t
 89	{55,29}	propuesta cl cv	ssfsv=sv&sasistentes=sss%2B&sactividad=cv&que=list_cjto	119	8	8	t
 32	{80,60}	list varias cv	ssfsv=sv&sasistentes=agd&sactividad=cv&que=list_cjto	119	2082	3	t
+1008	{20,40}	zonas-ctr	\N	85	2056	8	t
 327	{85,30}	por centro	tipo=planning_ctr	61	2176	2	t
 317	{80,70}	lista por ctr	lista=list_activ&n_agd=n&sasistentes=n&sactividad=ca	147	2208	2	t
 29	{80,70}	list por centros	lista=list_activ&n_agd=a&sasistentes=agd&sactividad=cv	147	2082	3	t
 132	{37,70}	lista por ctr	lista=list_activ&n_agd=a&sasistentes=agd&sactividad=cv	147	2064	12	t
 133	{37,75}	estudios x ctr	lista=list_est&n_agd=a&sasistentes=n&sactividad=cv	147	2064	12	t
-818	{1,10}	preferencias	\N	164	33816575	1	t
 55	{5,70}	cp & as.ecles	tabla=p_cp_ae_sssc&tipo=persona	76	0	8	t
 232	{120}	crt	\N	\N	2112	10	t
 56	{5,10}	sacd num	tabla=p_numerarios&na=n&tipo=persona&es_sacd=1	76	8	8	t
@@ -94,7 +94,6 @@
 141	{35,60}	lista varios ca	ssfsv=sv&sasistentes=n&sactividad=ca&que=list_cjto	119	2064	12	t
 142	{35,75}	estudios x ctr	lista=list_est&n_agd=n&sasistentes=n&sactividad=ca	147	2064	12	t
 375	{50,10,30}	sv s y sg	id_tipo_activ=1[45]&status=2&periodo=desdeHoy	71	8	8	t
-817	{1}	Utilidades	\N	\N	33816575	1	t
 830	{50,10}	buscar activ	que=ver	119	8	8	t
 831	{1,95}	Informar de un bug	\N	167	33816575	1	t
 502	{30}	casas		72	0	9	t
@@ -134,6 +133,8 @@
 250	{10}	menus	\N	182	33816576	13	t
 253	{20}	DB	\N	182	33554432	13	t
 269	{60}	usuarios web	\N	181	33816576	13	t
+817	{1}	Utilidades	\N	0	37748735	1	t
+818	{1,10}	preferencias	\N	164	37748735	1	t
 854	{50}	actividades	\N	\N	131072	20	t
 855	{50,10}	buscar activ	que=ver	119	131072	20	t
 373	{50,10,10}	sv  n	id_tipo_activ=112&status=2&periodo=desdeHoy	71	8	8	t
@@ -172,8 +173,6 @@
 923	{15,40}	Actualizar datos desde Listas	tipo=n	176	128	2	t
 414	{16,40}	Actualizar datos desde Listas	tipo=a	176	2	3	t
 415	{91,20}	Actualizar datos desde Listas	tipo=s	176	64	10	t
-819	{1,20}	exportar	\N	\N	33816575	1	t
-924	{1,20,20}	a ODF Text	\N	163	34078719	1	t
 925	{80,110}	Gestión de plazas	ssfsv=sv&sasistentes=n&sactividad=ca	169	128	2	t
 191	{100,20}	regiones	clase_info=ubis\\model\\inforegiones	160	32	19	t
 926	{70,110}	Gestión de plazas	ssfsv=sv&sasistentes=n&sactividad=crt	169	128	2	t
@@ -194,6 +193,8 @@
 57	{5,20}	n de paso	tabla=p_de_paso&na=n&tipo=persona&es_sacd=1	76	8	8	t
 129	{37,60}	list varias cv	ssfsv=sv&sasistentes=agd&sactividad=cv&que=list_cjto	119	2064	12	t
 140	{35,70}	lista por ctr	lista=list_activ&n_agd=n&sasistentes=n&sactividad=ca	147	2064	12	t
+819	{1,20}	exportar	\N	0	37748735	1	t
+924	{1,20,20}	a ODF Text	\N	163	37748735	1	t
 938	{10,70}	ayuda	\N	177	33816576	13	t
 374	{50,10,20}	sv agd	id_tipo_activ=133&status=2&periodo=desdeHoy	71	8	8	t
 1	{20,70}	listado actas	\N	178	16	12	t
@@ -206,8 +207,9 @@
 978	{10,50,40}	buscar	\N	3	34078719	4	t
 984	{20}	zonas	\N	179	2056	8	t
 972	{10,50}	cartas presentacion	\N	191	34078719	4	t
+960	{10,20}	atención actividades	\N	28	262144	9	t
+961	{10,10}	planning zonas	\N	139	262144	9	t
 1029	{30}	historicos	\N	\N	\N	\N	t
-1008	{20,40}	zonas-ctr	\N	85	2056	8	t
 1010	{20,50}	zonas-sacd	\N	42	2056	8	t
 1012	{20,55}	lista sacd-zona	que=get_lista_tot	34	2056	8	t
 1055	{40}	planning	\N	181	32	4	t
