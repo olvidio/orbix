@@ -37,16 +37,16 @@ $miRole=$oMiUsuario->getId_role();
 $miSfsv=core\ConfigGlobal::mi_sfsv();
 
 if ($miRole > 3) exit(_("no tiene permisos para ver esto")); // no es administrador
-// filtro por sf/sv
 $aWhere=array();
 $aOperador = array();
-if ($miRole != 1) {
+if ($miRole == 1) { // caso de SuperAdmin.
 	$aWhere['id_role'] = 1;
 	$aOperador['id_role'] = '>=';
 } else {
 	$aWhere['id_role'] = 1;
 	$aOperador['id_role'] = '>'; // para no tocar al administrador
 }
+    
 
 if (!empty($Qusername)) {
 	$aWhere['usuario'] = $Qusername;
@@ -68,7 +68,6 @@ $oDesplFases->setNombre('fase');
 $id_usuario='';
 $usuario='';
 $nom_usuario='';
-$miSfsv='';
 $email='';
 $role='';
 $permiso = 1;
@@ -89,6 +88,15 @@ foreach ($oUsuarioColeccion as $oUsuario) {
 	$oRole->setId_role($id_role);
 	$oRole->DBCarregar();
 	$role= $oRole->getRole();
+    // filtro por sf/sv
+    if ($miSfsv == 1) {
+        $role_sv = $oRole->getSv();
+        if ($role_sv === FALSE) { continue; }
+    }
+    if ($miSfsv == 2) {
+        $role_sf = $oRole->getSf();
+        if ($role_sf === FALSE ) { continue; }
+    }
 
 	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?'.http_build_query(array('quien'=>'usuario','id_usuario'=>$id_usuario)));
 

@@ -25,12 +25,12 @@ fnjs_guardar=function(formulario){
 {{ oHashStgr.getCamposHtml|raw }}
 
 inicio: 
-dia:<input type="text" name="ini_dia" value="{{ aCursoStgr['ini_dia'] }}" >
-mes:<input type="text" name="ini_mes" value="{{ aCursoStgr['ini_mes'] }}" >
+dia:<input size="3" type="text" name="ini_dia" value="{{ aCursoStgr['ini_dia'] }}" >
+mes:<input size="3" type="text" name="ini_mes" value="{{ aCursoStgr['ini_mes'] }}" >
 
 fin: 
-dia:<input type="text" name="fin_dia" value="{{ aCursoStgr['fin_dia'] }}" >
-mes:<input type="text" name="fin_mes" value="{{ aCursoStgr['fin_mes'] }}" >
+dia:<input size="3" type="text" name="fin_dia" value="{{ aCursoStgr['fin_dia'] }}" >
+mes:<input size="3" type="text" name="fin_mes" value="{{ aCursoStgr['fin_mes'] }}" >
 
 <input type="button" value="{{ "Guardar"|trans }}" onClick="fnjs_guardar(this.form);" >
 </form>
@@ -41,12 +41,12 @@ mes:<input type="text" name="fin_mes" value="{{ aCursoStgr['fin_mes'] }}" >
 {{ oHashCrt.getCamposHtml|raw }}
 
 inicio: 
-dia:<input type="text" name="ini_dia" value="{{ aCursoCrt['ini_dia'] }}" >
-mes:<input type="text" name="ini_mes" value="{{ aCursoCrt['ini_mes'] }}" >
+dia:<input size="3" type="text" name="ini_dia" value="{{ aCursoCrt['ini_dia'] }}" >
+mes:<input size="3" type="text" name="ini_mes" value="{{ aCursoCrt['ini_mes'] }}" >
 
 fin: 
-dia:<input type="text" name="fin_dia" value="{{ aCursoCrt['fin_dia'] }}" >
-mes:<input type="text" name="fin_mes" value="{{ aCursoCrt['fin_mes'] }}" >
+dia:<input size="3" type="text" name="fin_dia" value="{{ aCursoCrt['fin_dia'] }}" >
+mes:<input size="3" type="text" name="fin_mes" value="{{ aCursoCrt['fin_mes'] }}" >
 
 <input type="button" value="{{ "Guardar"|trans }}" onClick="fnjs_guardar(this.form);" >
 </form>
