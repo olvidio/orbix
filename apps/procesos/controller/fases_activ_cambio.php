@@ -24,12 +24,6 @@ require_once ("apps/core/global_object.inc");
 
 //include_once (ConfigGlobal::$dir_programas.'/func_web.php'); 
 
-$ssfsv = '';
-$sasistentes='';
-$sactividad='';
-$snom_tipo='';
-$Qid_tipo_activ = '';
-
 $oPosicion->recordar();
 
 //Si vengo de vuelta y le paso la referecia del stack donde está la información.
@@ -49,6 +43,8 @@ if (isset($_POST['stack'])) {
 $Qdl_propia = (string) \filter_input(INPUT_POST, 'dl_propia');
 $Qid_fase_nueva = (string) \filter_input(INPUT_POST, 'id_fase_nueva');
 $Qid_tipo_activ = (string) \filter_input(INPUT_POST, 'id_tipo_activ');
+$Qsasistentes = (string) \filter_input(INPUT_POST, 'sasistentes');
+$Qsactividad = (string) \filter_input(INPUT_POST, 'sactividad');
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 $Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
 $Qfin = (string) \filter_input(INPUT_POST, 'fin');
@@ -56,29 +52,26 @@ $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 $Qyear = (string) \filter_input(INPUT_POST, 'year');
 
-
-if (!empty($Qid_tipo_activ))  {
-	$oTipoActiv= new TiposActividades($Qid_tipo_activ);
-} else {
-	$oTipoActiv= new TiposActividades();
+// Id tipo actividad
+if (empty($Qid_tipo_activ)) {
+    // mejor que novenga por menú. Así solo veo las de mi sección.
+    $permiso_des = FALSE;
+    if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
+        $permiso_des = TRUE;
+        $Qssfsv = '';
+    } else {
+        $mi_sfsv = core\ConfigGlobal::mi_sfsv();
+        if ($mi_sfsv == 1) $Qssfsv = 'sv';
+        if ($mi_sfsv == 2) $Qssfsv = 'sf';
+    }
 }
 
-$sfsv=$oTipoActiv->getSfsvText();
-$asistentes=$oTipoActiv->getAsistentesText();
-$actividad=$oTipoActiv->getActividadText();
-$nom_tipo=$oTipoActiv->getNom_tipoText();
-
-$a_sfsv_posibles=$oTipoActiv->getSfsvPosibles();
-$a_asistentes_posibles =$oTipoActiv->getAsistentesPosibles();
-$a_actividades_posibles=$oTipoActiv->getActividadesPosibles();
-$a_nom_tipo_posibles=$oTipoActiv->getNom_tipoPosibles();
-
-
 $oActividadTipo = new actividades\model\ActividadTipo();
+$oActividadTipo->setPerm_jefe($permiso_des);
+$oActividadTipo->setSfsv($Qssfsv);
 $oActividadTipo->setId_tipo_activ($Qid_tipo_activ);
-$oActividadTipo->setAsistentes($sasistentes);
-$oActividadTipo->setActividad($sactividad);
-$oActividadTipo->setNom_tipo($snom_tipo);
+$oActividadTipo->setAsistentes($Qsasistentes);
+$oActividadTipo->setActividad($Qsactividad);
 
 $aOpciones =  array(
 					'tot_any' => _("todo el año"),

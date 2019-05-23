@@ -217,6 +217,7 @@ class TiposActividades {
 	 */
 	public function setSfsvText($sSfsv) {
 		if (is_string($sSfsv)) {
+		    if (empty($sSfsv)) { $sSfsv = 'all'; }
 			$this->ssfsv=$this->aSfsv[$sSfsv];
 		} else {
 			return false;
@@ -276,6 +277,7 @@ class TiposActividades {
 	 */
 	public function setAsistentesText($sAsistentes) {
 		if (is_string($sAsistentes)) {
+		    if (empty($sAsistentes)) { $sAsistentes = 'all'; }
 			$this->sasistentes=$this->aAsistentes[$sAsistentes];
 		} else {
 			return false;
@@ -342,6 +344,7 @@ class TiposActividades {
 	 */
 	public function setActividadText($sActividad) {
 		if (is_string($sActividad)) {
+		    if (empty($sActividad)) { $sActividad = 'all'; }
 			$this->sactividad=$this->aActividad[$sActividad];
 		} else {
 			return false;

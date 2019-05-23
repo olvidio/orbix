@@ -120,9 +120,15 @@ if (!empty($Qid_activ)) { // caso de modificar
 	$id_repeticion = 0;
 	$id_tipo_activ = (string)  \filter_input(INPUT_POST, 'id_tipo_activ');
 	$id_activ = '';
-	$ssfsv = '';
-	$sasistentes='';
-	$sactividad='';
+
+	if ( $permiso_des == TRUE ) {
+        $ssfsv = '';
+	} else {
+        if ($isfsv == 1) $ssfsv = 'sv';
+        if ($isfsv == 2) $ssfsv = 'sf';
+	}
+	$sasistentes = (string) \filter_input(INPUT_POST, 'sasistentes');
+	$sactividad = (string) \filter_input(INPUT_POST, 'sactividad');
 	$snom_tipo='';
 	
 	$nom_activ='';
@@ -225,7 +231,9 @@ $oHash1->setCamposForm('dl_org!ssfsv');
 $h = $oHash1->linkSinVal();
 
 $oActividadTipo = new actividades\model\ActividadTipo();
+$oActividadTipo->setPerm_jefe($permiso_des);
 $oActividadTipo->setId_tipo_activ($id_tipo_activ);
+$oActividadTipo->setSfsv($ssfsv);
 $oActividadTipo->setAsistentes($sasistentes);
 $oActividadTipo->setActividad($sactividad);
 $oActividadTipo->setNom_tipo($snom_tipo);

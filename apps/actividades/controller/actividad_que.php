@@ -54,13 +54,24 @@ $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
 $Qlistar_asistentes = (string) \filter_input(INPUT_POST, 'listar_asistentes');
 
+$isfsv=core\ConfigGlobal::mi_sfsv();
+$permiso_des = FALSE;
+if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
+    $permiso_des = TRUE;
+    $ssfsv = '';
+} else {
+    if ($isfsv == 1) $ssfsv = 'sv';
+    if ($isfsv == 2) $ssfsv = 'sf';
+}
 
 $Qsasistentes = (string) \filter_input(INPUT_POST, 'sasistentes');
 $Qsactividad = (string) \filter_input(INPUT_POST, 'sactividad');
 $Qsnom_tipo = (string) \filter_input(INPUT_POST, 'snom_tipo');
 
 $oActividadTipo = new actividades\model\ActividadTipo();
+$oActividadTipo->setPerm_jefe($permiso_des);
 $oActividadTipo->setId_tipo_activ($Qid_tipo_activ);
+$oActividadTipo->setSfsv($ssfsv);
 $oActividadTipo->setAsistentes($Qsasistentes);
 $oActividadTipo->setActividad($Qsactividad);
 $oActividadTipo->setNom_tipo($Qsnom_tipo);
