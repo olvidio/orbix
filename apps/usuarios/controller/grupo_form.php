@@ -96,7 +96,7 @@ if (!empty($Qid_usuario)) {
 	
 	if (core\ConfigGlobal::is_app_installed('procesos')) { 
 		$oGesPerm = new GestorPermUsuarioActividad();
-		$oUsuarioUsuarioPerm = $oGesPerm->getPermUsuarioActividades(array('id_usuario'=>$Qid_usuario));
+		$cUsuarioPerm = $oGesPerm->getPermUsuarioActividades(array('id_usuario'=>$Qid_usuario));
 	}
 } else {
 	$oGrupoGrupoPermMenu = array();
@@ -105,7 +105,7 @@ if (!empty($Qid_usuario)) {
 	$Qid_usuario='';
 	$usuario='';
 	if (core\ConfigGlobal::is_app_installed('procesos')) {
-	    $oUsuarioUsuarioPerm = [];
+	    $cUsuarioPerm = [];
 	}
 }
 
@@ -177,14 +177,14 @@ if (!empty($Qid_usuario)) { // si no hay usuario, no puedo poner permisos.
     echo $oView->render('perm_menu_form.phtml',$a_camposP);
 }
 
-// permisos actividades
+//////////// Permisos en actividades ////////////
 if ((core\ConfigGlobal::is_app_installed('procesos')) && !empty($Qid_usuario)) { // si no hay usuario, no puedo poner permisos.
     
     $a_campos = [
         'quien' => $Qquien,
         'id_usuario' => $Qid_usuario,
         'usuario' => $usuario,
-        'oUsuarioUsuarioPerm' => $oUsuarioUsuarioPerm,
+        'cUsuarioPerm' => $cUsuarioPerm,
         'oCuadrosAfecta' => $oCuadrosAfecta,
         'oPermAccion' => $oPermAccion,
     ];

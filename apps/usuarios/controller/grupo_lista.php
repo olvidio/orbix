@@ -98,7 +98,7 @@ $oHashBuscar->setArraycamposHidden(array('quien'=>'grupo'));
 $oHashSelect = new web\Hash();
 $oHashSelect->setcamposForm('sel');
 $oHashSelect->setcamposNo('scroll_id');
-$oHashSelect->setArraycamposHidden(array('que'=>'eliminar'));
+$oHashSelect->setArraycamposHidden(array('que'=>'eliminar_grupo'));
 
 $aQuery = [ 'nuevo' => 1, 'quien' => 'grupo' ];
 $url_nuevo = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/grupo_form.php?'.http_build_query($aQuery));

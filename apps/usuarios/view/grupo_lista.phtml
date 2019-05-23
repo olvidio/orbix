@@ -6,6 +6,7 @@ fnjs_buscar=function(){
 fnjs_modificar=function(formulario){
 	rta=fnjs_solo_uno(formulario);
 	if (rta==1) {
+		$('#que').val('');
   		$(formulario).attr('action',"apps/usuarios/controller/grupo_form.php");
   		fnjs_enviar_formulario(formulario);
   	}
@@ -15,7 +16,6 @@ fnjs_eliminar=function(formulario){
 	if (rta==1) {
 		if (confirm("<?= _("¿Está seguro que desea borrar este grupo?");?>") ) {
 			var url='<?= core\ConfigGlobal::getWeb() ?>/apps/usuarios/controller/usuario_ajax.php';
-			$('#que').val('eliminar_grupo');
 			$('#seleccionados').submit(function() {
 				$.ajax({
 					url: url,
@@ -51,7 +51,6 @@ fnjs_left_side_hide();
 <br>
 <form id="seleccionados"  name="seleccionados" action="" method="post" >
 	<?= $oHashSelect->getCamposHtml(); ?>
-	<input type="hidden" id="que"  name="que" value="">
 	<?= $oTabla->mostrar_tabla(); ?>
 </form>
 <br>
