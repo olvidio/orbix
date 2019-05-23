@@ -482,7 +482,7 @@ switch($Qsalida) {
 		}
 		$oCambioUsuarioObjeto->setId_usuario($Qid_usuario);
 		if ($Qdl_propia == 't') { 
-		    $dl_org = ConfigGlobal::mi_dele();
+		    $dl_org = ConfigGlobal::mi_delef();
 		} else {
 		    $dl_org = 'x';
 		    // Aunque tocaría poner $Qobjeto = 'Actividad'; se pone

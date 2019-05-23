@@ -64,9 +64,6 @@ $obj = 'asistentes\\model\\entity\\Asistente';
 
 /* Mirar si la actividad es mia o no */
 $oActividad = new actividades\Actividad($Qid_activ);
-// si es de la sf quito la 'f'
-$dl_org = preg_replace('/f$/', '', $oActividad->getDl_org());
-$id_tabla_dl = $oActividad->getId_tabla();
 
 if (!empty($Qid_nom)) { //caso de modificar
 	$mod="editar";
@@ -76,7 +73,6 @@ if (!empty($Qid_nom)) { //caso de modificar
 		exit($msg_err);
 	}
 	$ape_nom = $oPersona->getApellidosNombre();
-	$id_tabla = $oPersona->getId_tabla();
 	$id_nom_real = $Qid_nom;
 
 	$aWhere = array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom);

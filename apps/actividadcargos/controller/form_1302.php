@@ -91,7 +91,7 @@ if (!empty($Qid_item)) { //caso de modificar
 	if (!empty($Qque_dl)) { 
 		$aWhere['dl_org']=$Qque_dl;
 	} else {
-		$aWhere['dl_org']=core\ConfigGlobal::mi_dele();
+		$aWhere['dl_org']=core\ConfigGlobal::mi_delef();
 		$aOperadores['dl_org']='!=';
 	}
 	

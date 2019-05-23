@@ -209,7 +209,7 @@ class PermisosActividadesTrue {
 		$this->iid_tipo_activ = $id_tipo_activ;
 		$oTipoDeActividad = new actividades\TipoDeActividad($id_tipo_activ);
 
-		if ($dl_org == ConfigGlobal::$dele) {
+		if ($dl_org == ConfigGlobal::$mi_delef()) {
 			$this->bpropia=true;
 			$this->iid_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso();
 		} else {

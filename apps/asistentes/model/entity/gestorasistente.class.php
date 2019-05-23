@@ -116,7 +116,7 @@ class GestorAsistente Extends core\ClaseGestor {
 	 * @return integer
 	 */
 	function getPlazasOcupadasPorDl($iid_activ,$sdl='',$dl_hub='') {
-		$mi_dele = core\ConfigGlobal::mi_dele();
+		$mi_dele = core\ConfigGlobal::mi_delef();
 		/* Mirar si la actividad es mia o no */
 		$oActividad = new actividades\Actividad($iid_activ);
 		$dl_org = $oActividad->getDl_org();
@@ -284,7 +284,7 @@ class GestorAsistente Extends core\ClaseGestor {
 		// si es de la sf quito la 'f'
 		$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
 		$id_tabla = $oActividad->getId_tabla();
-		if ($dl == core\ConfigGlobal::mi_dele()) {
+		if ($dl == core\ConfigGlobal::mi_delef()) {
 			// Todos los asistentes
 			/* Buscar en los tres tipos de asistente: Dl, IN y Out. */
 			$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');

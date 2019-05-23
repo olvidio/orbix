@@ -91,7 +91,7 @@ class Select3103 {
 	}
 
 	private function getTabla() {
-		$mi_dele = core\ConfigGlobal::mi_dele();
+		$mi_dele = core\ConfigGlobal::mi_delef();
 		$oActividad = new actividades\Actividad($this->id_pau);
 		$this->nom_activ = $oActividad->getNom_activ();
 		$dl_org = $oActividad->getDl_org();

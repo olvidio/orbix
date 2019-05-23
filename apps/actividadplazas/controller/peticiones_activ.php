@@ -86,7 +86,7 @@ $aWhere['_ordre'] = 'f_ini,nivel_stgr';
 
 $cActividades = array();
 $sfsv = core\ConfigGlobal::mi_sfsv();
-$mi_dele = core\ConfigGlobal::mi_dele();
+$mi_dele = core\ConfigGlobal::mi_delef();
 switch ($Qna) {
 	case "agd":
 	case "a":

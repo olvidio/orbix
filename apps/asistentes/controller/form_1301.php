@@ -106,7 +106,7 @@ if (!empty($id_activ)) { //caso de modificar
 	if (!empty($que_dl)) { 
 		$condicion .= " AND dl_org = '$que_dl'";
 	} else {
-		$condicion .= " AND dl_org != '".core\ConfigGlobal::mi_dele()."'";
+		$condicion .= " AND dl_org != '".core\ConfigGlobal::mi_delef()."'";
 	}
 	
 	$oGesActividades = new actividades\GestorActividad();

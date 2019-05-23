@@ -103,7 +103,7 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
 		if (!is_object($oPersona)) {
 			// Normalmente es gente a la que no tengoo acceso (otra dl),
 			// sino soy la dl organizadora no me preocupo:
-			if ($dl_org == core\ConfigGlobal::mi_dele()) {
+			if ($dl_org == core\ConfigGlobal::mi_delef()) {
 				$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 			}
 			continue;

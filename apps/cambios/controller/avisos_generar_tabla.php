@@ -251,7 +251,7 @@ while ($num_cambios) {
 		$valor_new_cmb = $oCambio->getValor_new();
 		$id_activ = $oCambio->getId_activ();
 		
-		$dl_propia = (ConfigGlobal::mi_dele() == $dl_org)? 't' : 'f';
+		$dl_propia = (ConfigGlobal::mi_delef() == $dl_org)? 't' : 'f';
 		if (ConfigGlobal::is_app_installed('procesos')) {
             // para evitar repetir el proceso si el tipo de actividad es el mismo.
             if ($id_tipo_activ_anterior != $id_tipo_activ || $dl_org_anterior != $dl_org) {

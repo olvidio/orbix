@@ -110,7 +110,7 @@ $aWhere['_ordre'] = 'f_ini';
 
 //Para ver el tema plazas. Dos tablas:
 //Listar primero las que organiza la dl, después el resto
-$mi_dele = core\ConfigGlobal::mi_dele();
+$mi_dele = core\ConfigGlobal::mi_delef();
 
 /////////////// actividades de mi dl ///////////////////
 // si se ha puesto en condición de búsqueda

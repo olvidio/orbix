@@ -201,7 +201,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 				        // OJO si la actividad no es de la dl, no puedo cambiarla.
 				        $dl_org = $oActividad->getDl_org();
 				        $id_tabla = $oActividad->getId_tabla();
-				        if ($dl_org == core\ConfigGlobal::mi_dele()) {
+				        if ($dl_org == core\ConfigGlobal::mi_delef()) {
                             $oActividad->setStatus($statusProceso);
                             $oActividad->DBGuardar();
 				        } else {

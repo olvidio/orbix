@@ -44,7 +44,7 @@ $num_max_actividades = 200;
 $Qempiezamin = '';
 $Qempiezamax = '';
 
-$mi_dele = core\ConfigGlobal::mi_dele();
+$mi_dele = core\ConfigGlobal::mi_delef();
 $mi_sfsv = core\ConfigGlobal::mi_sfsv();
 
 $oPosicion->recordar();

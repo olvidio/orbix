@@ -401,7 +401,7 @@ case "editar": // editar la actividad.
 	}
 	// Si cambio de dl_propia a otra (o al revés), hay que cambiar el proceso. Se hace al final para que la actividad ya tenga puesta la nueva dl
 	if(core\ConfigGlobal::is_app_installed('procesos')){
-		if (($dl_orig != $dl_org) && ($dl_org==core\ConfigGlobal::mi_dele() || $dl_orig==core\ConfigGlobal::mi_dele())) {
+		if (($dl_orig != $dl_org) && ($dl_org==core\ConfigGlobal::mi_delef() || $dl_orig==core\ConfigGlobal::mi_delef())) {
 			$oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
 			$oGestorActividadProcesoTarea->generarProceso($oActividad->getId_activ());
 		}

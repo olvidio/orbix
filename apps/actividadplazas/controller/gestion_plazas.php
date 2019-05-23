@@ -81,9 +81,9 @@ if (empty($Qperiodo) || $Qperiodo == 'otro') {
 $status = \actividades\model\entity\ActividadAll::STATUS_ACTUAL; //actual
 
 // Seleccionar los id_dl del mismo grupo de estudios
-$esquema = core\ConfigGlobal::mi_region_dl();
-$a_reg = explode('-',$esquema);
-$mi_dl = substr($a_reg[1],0,-1); // quito la v o la f.
+$a_reg = core\ConfigGlobal::mi_region();
+$mi_dl = core\ConfigGlobal::mi_delef();
+
 $aWhere =array('region'=>$a_reg[0],'dl'=>$mi_dl);
 $oMiDelegacion = new ubis\model\entity\Delegacion($aWhere);
 $grupo_estudios = $oMiDelegacion->getGrupo_estudios();

@@ -46,7 +46,7 @@ class ActividadNuevoCurso {
         $GesActividades = new GestorActividadDl();
         $sQry = "SELECT id_activ, to_char(f_ini,'YYYYMMDD')||COALESCE(to_char(h_ini,'HH24MISS'),'200000') as inicio 
                     FROM a_actividades_dl
-                    WHERE dl_org = '".core\ConfigGlobal::mi_dele()."' AND f_ini >= '$inicio' AND f_ini <= '$fin' AND status < 4 
+                    WHERE dl_org = '".core\ConfigGlobal::mi_delef()."' AND f_ini >= '$inicio' AND f_ini <= '$fin' AND status < 4 
                     ORDER BY inicio";
         $cActividades = $GesActividades->getActividadesQuery($sQry);
         $num_act = count($cActividades);

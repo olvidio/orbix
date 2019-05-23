@@ -68,9 +68,9 @@ switch($Qque) {
 		}
 		// dl_org
 		if ($Qdl_propia == 't') {
-			$aWhere['dl_org'] = ConfigGlobal::mi_dele();
+			$aWhere['dl_org'] = ConfigGlobal::mi_delef();
 		} else {
-			$aWhere['dl_org'] = ConfigGlobal::mi_dele();
+			$aWhere['dl_org'] = ConfigGlobal::mi_delef();
 			$aOperador['dl_org'] = '!=';
 		}
 		// las borrables no

@@ -51,7 +51,7 @@ switch ($Qsactividad) {
 		break;
 }
 
-$mi_dele = core\ConfigGlobal::mi_dele();
+$mi_dele = core\ConfigGlobal::mi_delef();
 //Actividades a las que afecta
 $cActividades = array();
 $aWhereA['status'] = actividades\ActividadAll::STATUS_ACTUAL;

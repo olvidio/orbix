@@ -264,7 +264,7 @@ switch ($Qque) {
         
         // valores por defecto:
         $status = 1;
-        $dl_org = ConfigGlobal::mi_dele();
+        $dl_org = ConfigGlobal::mi_delef();
         $id_ubi = $Qid_ubi;
         
         if (!empty($id_ubi) && $id_ubi != 1) {

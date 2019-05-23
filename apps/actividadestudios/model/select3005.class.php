@@ -91,7 +91,7 @@ class Select3005 {
 	
 	private function getTabla() {
 		$this->txt_eliminar = _("¿Está seguro que desea quitar esta asignatura?");
-		$mi_dele = core\ConfigGlobal::mi_dele();
+		$mi_dele = core\ConfigGlobal::mi_delef();
 		// Añadir la posibilidad de ver el plan de estudios aunque la actividad sea importada
 //		$oActividad = new actividades\ActividadAll($this->id_pau);
 //		$dl_org = $oActividad->getDl_org();
@@ -172,7 +172,7 @@ class Select3005 {
 	public function getHtml() {
 		$oActividad = new actividades\ActividadAll($this->id_pau);
 		$this->dl_org = $oActividad->getDl_org();
-		$mi_dele = core\ConfigGlobal::mi_dele();
+		$mi_dele = core\ConfigGlobal::mi_delef();
 		if ($mi_dele == $this->dl_org) {
 			$this->permiso = 3;
 		} else {

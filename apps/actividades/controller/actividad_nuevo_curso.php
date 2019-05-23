@@ -44,7 +44,7 @@ if ($Qok == 1) {
 	$GesActividades = new GestorActividadDl();
 	$aWhere = [];
 	$aOperador = [];
-	$aWhere['dl_org'] = core\ConfigGlobal::mi_dele();
+	$aWhere['dl_org'] = core\ConfigGlobal::mi_delef();
 	// No las de proyecto(1) ni borrables(4) >> 2 y 3
 	$aWhere['status'] = "2,3";
 	$aOperador['status'] = 'IN';
