@@ -91,7 +91,7 @@ if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
 if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
 
 $oTabla = new web\Lista();
-$oTabla->setId_tabla('usuario_lista');
+$oTabla->setId_tabla('roles_lista');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);

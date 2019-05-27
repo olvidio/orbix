@@ -184,7 +184,7 @@ fnjs_modificar=function(formulario){
 <?= $oHash->getCamposHtml(); ?>
 <?php
 $oTabla = new Lista();
-$oTabla->setId_tabla('asig_faltan_select');
+$oTabla->setId_tabla('asig_faltan_personas_select');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);

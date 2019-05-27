@@ -174,7 +174,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 if (!empty($msg_err)) { echo $msg_err; }
 
 $oTabla = new Lista();
-$oTabla->setId_tabla('mtr_pdte');
+$oTabla->setId_tabla('mtr_lista');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);

@@ -195,7 +195,7 @@ $a_cabeceras[] = array('field'=>$dlB,'name'=>$dlB,'children'=>$childrenB);
 $a_botones =array();
 
 $oTabla = new web\TablaEditable();
-$oTabla->setId_tabla('gestion_plazas');
+$oTabla->setId_tabla('plazas_balance');
 $UpdateUrl = core\ConfigGlobal::getWeb().'/apps/actividadplazas/controller/gestion_plazas_ajax.php';
 $oTabla->setUpdateUrl($UpdateUrl);
 $oTabla->setCabeceras($a_cabeceras);

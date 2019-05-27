@@ -115,7 +115,7 @@ if (!empty($Qid_role)) { // si no hay usuario, no puedo poner permisos.
 		$a_valores[$i][1]=$grup_menu;
 	}
 	$oTabla = new web\Lista();
-	$oTabla->setId_tabla('grupmenu');
+	$oTabla->setId_tabla('role_grupmenu');
 	$oTabla->setCabeceras($a_cabeceras);
 	$oTabla->setBotones($a_botones);
 	$oTabla->setDatos($a_valores);
