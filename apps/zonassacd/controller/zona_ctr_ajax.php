@@ -72,7 +72,7 @@ switch($Qque) {
 				$cCentrosDl = $GesCentrosDl->getCentros($aWhere);
 				$GesCentrosSf = new GestorCentroEllas();
 				$cCentrosSf = $GesCentrosSf->getCentros($aWhere);
-				$cCentros = $cCentrosDl + $cCentrosSf;
+				$cCentros = array_merge($cCentrosDl, $cCentrosSf);
 		}
 
 		$a_botones="ninguno";
