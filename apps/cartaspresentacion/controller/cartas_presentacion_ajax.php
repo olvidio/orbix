@@ -136,7 +136,7 @@ switch ($Qque_mod) {
         $nombre_ubi .= empty($nom_sede)? '' : " ($nom_sede)";
         
         $dl = $oCentro->getDl();
-        if ($dl == ConfigGlobal::mi_dele()) {
+        if ($dl == ConfigGlobal::mi_delef()) {
           $oCartaPresentacion = new CartaPresentacionDl();
         } else {
             $tipo_ctr = $oCentro->getTipo_ctr();
@@ -231,7 +231,7 @@ switch ($Qque_mod) {
                 // Busco el ctr para saber si es de la dl o ex.
                 $oCentro = new Centro($Qid_ubi);
                 $dl = $oCentro->getDl();
-                if ($dl == ConfigGlobal::mi_dele()) {
+                if ($dl == ConfigGlobal::mi_delef()) {
                   $oCartaPresentacion = new CartaPresentacionDl();
                 } else {
                     $tipo_ctr = $oCentro->getTipo_ctr();

@@ -29,6 +29,7 @@ use actividades\model\entity as actividades;
 use usuarios\model\entity as usuarios;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use permisos\model\PermisosActividadesTrue;
+use web\DateTimeLocal;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -106,9 +107,20 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
 
 	// valores por defeccto
 	// desde 40 dias antes de hoy:
-	$Qempiezamin = empty($Qempiezamin)? date('Y-m-d',mktime(0, 0, 0, date('m'), date('d')-40, date('Y'))) : $Qempiezamin;
+	if (empty($Qempiezamin)) {
+        $Qempiezamin = date('Y-m-d',mktime(0, 0, 0, date('m'), date('d')-40, date('Y')));
+	} else {
+        $oEmpiezamin = web\DateTimeLocal::createFromLocal($Qempiezamin);
+	    $Qempiezamin = $oEmpiezamin->getIso(); 
+	}
 	// hasta dentro de 9 meses desde hoy.
-	$Qempiezamax = empty($Qempiezamax)? date('Y-m-d',mktime(0, 0, 0, date('m')+9, 0, date('Y'))) : $Qempiezamax;
+	if (empty($Qempiezamin)) {
+	   $Qempiezamax = date('Y-m-d',mktime(0, 0, 0, date('m')+9, 0, date('Y')));
+	} else {
+        $oEmpiezamax = web\DateTimeLocal::createFromLocal($Qempiezamax);
+	    $Qempiezamax = $oEmpiezamax->getIso(); 
+	}
+	
 	$Qstatus = empty($Qstatus)? actividades\ActividadAll::STATUS_ACTUAL : $Qstatus;
 
 	$aGoBack = array (

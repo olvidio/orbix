@@ -22,7 +22,7 @@ include_once ("func_tareas.php");
 $any=date("Y");
 
 $cabecera_left = sprintf(_("Curso %s"),$curso);
-$cabecera_right = ConfigGlobal::mi_dele();
+$cabecera_right = ConfigGlobal::mi_delef();
 $cabecera_right_2 = _("ref. cr 1/14, 10,c)");
 
 // ciudad de la dl

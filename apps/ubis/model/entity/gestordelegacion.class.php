@@ -64,6 +64,7 @@ class GestorDelegacion Extends ClaseGestor {
 	}
 	/**
 	 * retorna un objecte del tipus Desplegable
+	 * Es fa servir ConfigGlobal::mi_dele() sense la 'f' perque es global a les dues seccions.
 	 *
 	 * @param boolean si se incluye la dl o no
 	 * @return object Una Llista de delegacions i regions.

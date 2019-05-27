@@ -8,8 +8,7 @@ use notas\model\entity as notas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$mi_dele = core\ConfigGlobal::mi_dele();
-$mi_dele .= (core\ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
+$mi_dele = core\ConfigGlobal::mi_delef();
 $mi_region = core\ConfigGlobal::mi_region();
 
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);

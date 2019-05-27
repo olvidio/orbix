@@ -17,7 +17,7 @@ switch ($que) {
 		$num_plazas = (integer)  filter_input(INPUT_POST, 'num_plazas');
 		$dl = (string)  filter_input(INPUT_POST, 'dl');
 
-		$mi_dele = core\ConfigGlobal::mi_dele();
+		$mi_dele = core\ConfigGlobal::mi_delef();
 		// buscar el id de la dl
 		$id_dl = 0;
 		$gesDelegacion = new ubis\model\entity\GestorDelegacion();

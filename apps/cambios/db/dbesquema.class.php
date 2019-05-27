@@ -294,7 +294,7 @@ class DBEsquema extends DBAbstract {
         $role_org = $this->role;
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
-        $mi_dele = ConfigGlobal::mi_dele();
+        $mi_dele = ConfigGlobal::mi_delef();
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv');
 

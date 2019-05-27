@@ -98,7 +98,7 @@ switch($Qobj_pau) {
 		$objfull = 'ubis\\model\\entity\\'.$Qobj_pau;
 		$oUbi = new $objfull($Qid_ubi);
 		$dl = $oUbi->getDl();
-		if ($dl == core\ConfigGlobal::mi_dele()) {
+		if ($dl == core\ConfigGlobal::mi_delef()) {
 			// ----- sv sólo a scl -----------------
 			if ($_SESSION['oPerm']->have_perm("scdl")) {
 						$botones= "1,3";

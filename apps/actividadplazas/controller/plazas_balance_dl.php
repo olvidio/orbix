@@ -21,7 +21,7 @@ $Qid_tipo_activ = (integer) \filter_input(INPUT_POST, 'id_tipo_activ');
 $oTipoActiv= new web\TiposActividades($Qid_tipo_activ);
 $sactividad = $oTipoActiv->getActividadText();
 
-$dlA = core\ConfigGlobal::mi_dele();
+$dlA = core\ConfigGlobal::mi_delef();
 if (empty($Qdl)) {
 	die();
 } else {

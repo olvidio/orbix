@@ -64,7 +64,7 @@ switch ($Qtipo_personas) {
 		break;
 }
 
-$mi_dele = core\ConfigGlobal::mi_dele();
+$mi_dele = core\ConfigGlobal::mi_delef();
 // tipo de actividad
 $chk_ca = '';
 $chk_crt = '';

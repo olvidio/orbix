@@ -27,7 +27,7 @@ switch ($Qque) {
         $matches = [];
         preg_match ("/^(\d*)(\/)?(\d*)/", $Qacta, $matches);
         if (!empty($matches[1])) {
-            $mi_dele = ConfigGlobal::mi_dele();
+            $mi_dele = ConfigGlobal::mi_delef();
             $Qacta = empty($matches[3])? "$mi_dele ".$matches[1].'/'.date("y") : "$mi_dele $Qacta";
         }
         $GesActas = new GestorActa();
@@ -67,8 +67,7 @@ switch ($Qque) {
         $Qid_activ = (integer)  filter_input(INPUT_POST, 'id_activ');
         
         if (empty($Qdl_org)) {
-            $mi_dele = core\ConfigGlobal::mi_dele();
-            $Qdl_org = $mi_dele;
+            $Qdl_org = ConfigGlobal::mi_delef();
         }
 
         $oGesDl = new GestorDelegacion();

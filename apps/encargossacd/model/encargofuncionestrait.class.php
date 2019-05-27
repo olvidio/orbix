@@ -55,7 +55,6 @@ Trait EncargoFuncionesTrait {
     }
     
     function getLugar_dl() {
-        $dl = Configglobal::mi_dele();
         $oGesCentrosDl = new GestorCentroDl();
         $cCentros = $oGesCentrosDl->getCentros(['tipo_ctr' => 'dl']);
         $num_dl = count($cCentros);

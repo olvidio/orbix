@@ -65,8 +65,12 @@ $aOperador = [];
 if ($Qloc !== 'ex') {
     $a_reg = explode('-',$Qloc);
     $reg = $a_reg[0];
-    $dl = substr($a_reg[1],0,-1); // quito la v o la f.
-    if ($dl == ConfigGlobal::mi_dele()) {
+    if ($miSfsv === 1) {
+        $dl = substr($a_reg[1],0,-1); // quito la v o la f.
+    } else {
+        $dl = $a_reg[1];
+    }
+    if ($dl == ConfigGlobal::mi_delef()) {
         $objCentro = 'CentroDl';
         $objCasa = 'CasaDl';
     } else {
@@ -317,7 +321,6 @@ $oDesplDl->setAction('fnjs_actualizar()');
 $oDBPropiedades = new DBPropiedades();
 $aOpcionesDl = $oDBPropiedades->array_posibles_esquemas();
 $aOpcionesDl['ex'] = _("otras");
-//$oDesplDl->setOpciones(array('dl'=> core\ConfigGlobal::mi_dele(),'ex'=>_("de otra dl/cr")));
 $oDesplDl->setOpciones($aOpcionesDl);
 $oDesplDl->setOpcion_sel($Qloc);
 $oDesplDl->setAction('fnjs_limpiar()');

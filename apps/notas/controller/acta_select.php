@@ -25,8 +25,7 @@ use function core\curso_est;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$mi_dele = ConfigGlobal::mi_dele();
-$mi_dele .= (ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
+$mi_dele = ConfigGlobal::mi_delef();
 $mi_region = ConfigGlobal::mi_region();
 
 $Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
@@ -79,7 +78,7 @@ if (!empty($Qacta)) {
 			$GesActas = new notas\GestorActaDl();
 		} else {
 			// Si es cr, se mira en todas:
-			if (core\ConfigGlobal::mi_dele() === core\ConfigGlobal::mi_region()) {
+			if (ConfigGlobal::soy_region) {
 				$GesActas = new notas\GestorActa();
 			} else {
 				$GesActas = new notas\GestorActaEx();
@@ -104,9 +103,7 @@ if (!empty($Qacta)) {
 	
 	$titulo=ucfirst(sprintf(_("lista de actas del curso %s"),$txt_curso));
 	// Si es cr, se mira en todas:
-	$s = core\ConfigGlobal::mi_dele();
-	$p = core\ConfigGlobal::mi_region();
-	if (core\ConfigGlobal::mi_dele() === core\ConfigGlobal::mi_region()) {
+	if (ConfigGlobal::soy_region) {
 		$GesActas = new notas\GestorActa();
 	} else {
 		$GesActas = new notas\GestorActaDl();

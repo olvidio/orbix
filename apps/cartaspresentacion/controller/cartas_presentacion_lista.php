@@ -28,7 +28,7 @@ $solo_dl = 0;
 switch ($Qque) {
 	case "lista_dl":
 		$solo_dl = 1;
-		$mi_dele = ConfigGlobal::mi_dele();
+		$mi_dele = ConfigGlobal::mi_delef();
 		$GesPresentacion = new GestorCartaPresentacionDl();
 	case "lista_todo":
 		$ordenar_dl = 1;

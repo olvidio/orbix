@@ -28,7 +28,7 @@ switch ($que) {
 		$dl_org =$obj->dlorg;
 		$plazas =$obj->$dl;
 
-		$mi_dele = core\ConfigGlobal::mi_dele();
+		$mi_dele = core\ConfigGlobal::mi_delef();
 		//Para las plazas totales
 		if ($dl == 'tot' && $mi_dele == $dl_org) {
 			$oActividadDl = new actividades\ActividadDl(array('id_activ'=>$id_activ));
@@ -79,7 +79,7 @@ switch ($que) {
 			}
 		}
 		// valor por defecto
-		$propietario = core\ConfigGlobal::mi_dele().">".$dl_de_paso;
+		$propietario = core\ConfigGlobal::mi_delef().">".$dl_de_paso;
 		$gesActividadPlazas = new \actividadplazas\model\GestorResumenPlazas();
 		$gesActividadPlazas->setId_activ($id_activ);
 		$oDesplPosiblesPropietarios = $gesActividadPlazas->getPosiblesPropietarios($dl_de_paso);

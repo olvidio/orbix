@@ -40,7 +40,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	    $iid_tipo_activ = $oActividad->getId_tipo_activ();
 	    $oTipo = new TipoDeActividad(array('id_tipo_activ'=>$iid_tipo_activ));
 	    
-	    if ($oActividad->getDl_org() == core\ConfigGlobal::mi_dele()) {
+	    if ($oActividad->getDl_org() == core\ConfigGlobal::mi_delef()) {
 	        $id_tipo_proceso=$oTipo->getId_tipo_proceso();
 	    } else {
 	        $id_tipo_proceso=$oTipo->getId_tipo_proceso_ex();

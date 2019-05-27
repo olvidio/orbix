@@ -59,7 +59,7 @@ if (empty($notas) && empty($Qnotas)) {
 //$acta=urldecode($acta);
 //últimos
 $any = date('y');
-$mi_dele = core\ConfigGlobal::mi_dele();
+$mi_dele = core\ConfigGlobal::mi_delef();
 $dl = ($mi_dele=='cr')? core\ConfigGlobal::mi_region() : $mi_dele;
 
 $GesActas = new notas\GestorActa();

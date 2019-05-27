@@ -29,7 +29,7 @@ $oPosiblesCa = new actividadestudios\PosiblesCa();
 $gesDelegacion = new ubis\model\entity\GestorDelegacion();
 $gesActividadPlazas = new \actividadplazas\model\entity\GestorActividadPlazas();
 $gesAsistentes = new \asistentes\model\entity\GestorAsistente();
-$mi_dele = core\ConfigGlobal::mi_dele();
+$mi_dele = core\ConfigGlobal::mi_delef();
 $cDelegaciones = $gesDelegacion->getDelegaciones(array('dl'=> $mi_dele));
 $oDelegacion = $cDelegaciones[0];
 $id_dl = $oDelegacion->getId_dl();

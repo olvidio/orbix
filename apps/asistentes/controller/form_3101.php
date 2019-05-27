@@ -92,10 +92,7 @@ if (!empty($Qid_nom)) { //caso de modificar
 		if (!empty($propietario)) {
 			$padre = strtok($propietario,'>');
 			$child = strtok('>');
-			//$obj_asis = str_replace("personas\\model\\entity\\",'',get_class($oAsistente));
-			//if ($obj_asis == 'AsistenteOut' && $padre != core\ConfigGlobal::mi_dele() ) {
-			// excepto los de paso
-			if ( $obj_pau != 'PersonaEx' && $child != core\ConfigGlobal::mi_dele() ) {
+			if ( $obj_pau != 'PersonaEx' && $child != core\ConfigGlobal::mi_delef() ) {
 				exit (sprintf(_("los datos de asistencia los modifica el propietario de la plaza: %s"),$child));
 			}
 		}

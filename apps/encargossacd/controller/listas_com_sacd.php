@@ -65,7 +65,7 @@ switch ($Qsel) {
 		$aWhere['id_tabla'] = '^n|^a';
 		$aWhere['situacion'] = 'A';
 		$aWhere['sacd'] = 't';
-		$aWhere['dl'] = ConfigGlobal::mi_dele();
+		$aWhere['dl'] = ConfigGlobal::mi_delef();
 		$aWhere['_ordre'] = 'apellido1,apellido2,nom';
 		$aOperador['id_tabla'] = '~';
 		$cPersonas = $GesPersonas->getPersonas($aWhere,$aOperador);
@@ -74,7 +74,7 @@ switch ($Qsel) {
 		$aWhere['id_tabla'] = '^sss';
 		$aWhere['situacion'] = 'A';
 		$aWhere['sacd'] = 't';
-		$aWhere['dl'] = ConfigGlobal::mi_dele();
+		$aWhere['dl'] = ConfigGlobal::mi_delef();
 		$aWhere['_ordre'] = 'apellido1,apellido2,nom';
 		$aOperador['id_tabla'] = '~';
 		$cPersonas = $GesPersonas->getPersonas($aWhere,$aOperador);

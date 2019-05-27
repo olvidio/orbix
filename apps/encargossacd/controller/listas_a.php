@@ -33,7 +33,7 @@ $inicurs=core\curso_est("inicio",$any,"crt")->getFromLocal();
 $fincurs=core\curso_est("fin",$any,"crt")->getFromLocal();
 
 $cabecera_left  = sprintf(_("Curso:  %s - %s"),$inicurs,$fincurs);
-$cabecera_right = ConfigGlobal::mi_dele();
+$cabecera_right = ConfigGlobal::mi_delef();
 $cabecera_right_2 = "ref. cr 1/14, 10, a)";
 
 

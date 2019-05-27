@@ -65,18 +65,19 @@ if (!empty($Qnuevo)) {
 
 	$tipo_ubi = $oUbi->getTipo_ubi();
 	$dl = $oUbi->getDl();
+	/* TODO no sé
     // para el caso de sf, podria ser que en el campo dl, se ponga 'dlbf' y no 'dlb'
 	if (substr($dl, -1) == 'f') {
 	   $dl = substr($dl,0,-1); // quito la f.
 	}
-	
+	*/
 	$region = $oUbi->getRegion();
 	$nombre_ubi = $oUbi->getNombre_ubi();
 	$status = $oUbi->getStatus();
 	$id_direccion = '';
 
 	// Aunque el tipo sea ctrdl, si es diferente a la mia, lo trato como ctrex.
-	if ($dl != core\ConfigGlobal::mi_dele()) {
+	if ($dl != core\ConfigGlobal::mi_delef()) {
 		if ($tipo_ubi == 'ctrdl') $tipo_ubi = 'ctrex';
 		if ($tipo_ubi == 'cdcdl') $tipo_ubi = 'cdcex';
 	}
@@ -95,7 +96,7 @@ $botones = 0;
 4: quitar direccion
 */
 if (strstr($Qobj_pau,'Dl')) {
-	if (!empty($Qnuevo) OR $dl == core\ConfigGlobal::mi_dele()) {
+	if (!empty($Qnuevo) OR $dl == core\ConfigGlobal::mi_delef()) {
 		// ----- sv sólo a scl -----------------
 		if ($_SESSION['oPerm']->have_perm("scdl")) {
 					$botones= "1,2";
@@ -155,7 +156,7 @@ switch ($tipo_ubi) {
         $n_buzon = $oUbi->getN_buzon();
         $observ = $oUbi->getObserv();
         
-        $dl = empty($dl)? core\ConfigGlobal::mi_dele() : $dl;
+        $dl = empty($dl)? core\ConfigGlobal::mi_delef() : $dl;
         $region = empty($region)? core\ConfigGlobal::mi_region() : $region;
         
         $GesCentro = new ubis\model\entity\GestorCentro();
@@ -248,7 +249,7 @@ switch ($tipo_ubi) {
     case "cdcdl":
     case "cdcex":
         if ($tipo_ubi=="cdcdl") {
-            $dl = empty($dl)? core\ConfigGlobal::mi_dele() : $dl;
+            $dl = empty($dl)? core\ConfigGlobal::mi_delef() : $dl;
             $region = empty($region)? core\ConfigGlobal::mi_region() : $region;
         }
 

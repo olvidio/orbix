@@ -46,7 +46,7 @@ switch($Qque) {
             $aClases[] = array('clase'=>'PersonaEx','get'=>'getPersonasEx');
             $GesSacd->setClases($aClases);
             
-			$mi_dl = ConfigGlobal::mi_dele();
+			$mi_dl = ConfigGlobal::mi_delef();
             $aWhere = [];
             $aWhere['sacd'] = 't';
             $aWhere['situacion'] = 'A';
@@ -83,7 +83,7 @@ switch($Qque) {
 				$id_nom = $oZonaSacd->getId_nom();
 				$oPersona = new PersonaDl($id_nom);
 				if ($oPersona->getSituacion() != 'A') continue;
-				if ($oPersona->getDl() != ConfigGlobal::mi_dele()) continue;
+				if ($oPersona->getDl() != ConfigGlobal::mi_delef()) continue;
 				$ap_nom = $oPersona->getApellidosNombre();
 
 				$a_sacds[$ap_nom]=$id_nom;
@@ -119,7 +119,7 @@ switch($Qque) {
 		$aClases[] = array('clase'=>'PersonaEx','get'=>'getPersonasEx');
 		$GesSacd->setClases($aClases);
 		
-        $mi_dl = ConfigGlobal::mi_dele();
+        $mi_dl = ConfigGlobal::mi_delef();
         $aWhere = [];
         $aWhere['sacd'] = 't';
         $aWhere['dl'] = $mi_dl;

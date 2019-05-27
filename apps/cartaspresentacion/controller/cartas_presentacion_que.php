@@ -23,7 +23,7 @@ require_once ("apps/core/global_object.inc");
 
 $Qtipo_lista = (string)  \filter_input(INPUT_POST, 'tipo_lista');
 
-$mi_dele = ConfigGlobal::mi_dele();
+$mi_dele = ConfigGlobal::mi_delef();
 /*
 $aOpciones =  array(
 					'get_H' => $mi_dele,

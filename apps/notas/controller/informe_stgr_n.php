@@ -33,7 +33,7 @@ $a_ce = array('dlb'=>'Barcelona',
 				'dlva' => 'Valencia',
 				'dlz' => 'Zaragoza'
 	);
-$mi_dl = core\ConfigGlobal::mi_dele();
+$mi_dl = core\ConfigGlobal::mi_delef();
 $ce_lugar = $a_ce[$mi_dl];
 	
 /* Cálculo del informe cr 1/18. 

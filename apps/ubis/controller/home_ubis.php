@@ -55,10 +55,12 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $oUbi = ubis\Ubi::NewUbi($id_ubi);
 $nombre_ubi=$oUbi->getNombre_ubi();
 $dl=$oUbi->getDl();
+/* TODO no sé
 // para el caso de sf, podria ser que en el campo dl, se ponga 'dlbf' y no 'dlb'
 if (substr($dl, -1) == 'f') {
     $dl = substr($dl,0,-1); // quito la f.
 }
+*/
 $region=$oUbi->getRegion();
 $tipo_ubi=$oUbi->getTipo_ubi();
 
@@ -84,7 +86,7 @@ foreach ($cDirecciones as $oDireccion) {
 $id_pau=$id_ubi;
 $pau="u";
 
-$mi_dele = ConfigGlobal::mi_dele();
+$mi_dele = ConfigGlobal::mi_delef();
 switch ($tipo_ubi) {
 	case "ctrdl":
 		if ($dl != $mi_dele) {

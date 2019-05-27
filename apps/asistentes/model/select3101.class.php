@@ -823,7 +823,7 @@ class Select3101 {
 		if (empty($ref_perm) OR $this->permiso < 2) { // si es nulo, no tengo permisos de ningún tipo
 			return '';
 		}
-		$mi_dele = core\ConfigGlobal::mi_dele();
+		$mi_dele = core\ConfigGlobal::mi_delef();
 		reset($ref_perm);
 		foreach ($ref_perm as $clave =>$val) {
 			$permis=$val["perm"];
@@ -883,7 +883,7 @@ class Select3101 {
 
 	public function setId_pau($Qid_pau) {
 		$this->id_pau = $Qid_pau;
-		$this->mi_dele = core\ConfigGlobal::mi_dele();
+		$this->mi_dele = core\ConfigGlobal::mi_delef();
 		$this->getDatosActividad();
 	}
 

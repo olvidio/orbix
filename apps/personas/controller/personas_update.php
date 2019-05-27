@@ -26,7 +26,7 @@ switch ($Qque) {
 		$oPersona = new $obj($Qid_nom);
 		$dl = $oPersona->getDl();
 		// solo lo dejo borrar si es de mi dl.
-		if (core\ConfigGlobal::mi_dele()== $dl) {
+		if (core\ConfigGlobal::mi_delef()== $dl) {
 			if ($oPersona->DBEliminar() === false) {
 				echo _("hay un error, no se ha eliminado");
 			}

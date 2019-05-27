@@ -1,8 +1,9 @@
 <?php
 namespace personas\model\entity;
+use core\ConfigGlobal;
 use core;
-use ubis\model\entity as ubis;
 use web;
+use ubis\model\entity as ubis;
 /**
  * Fitxer amb la Classe que accedeix a la taula personas_dl
  *
@@ -894,7 +895,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 					$ctr = $this->getDl();
 					break;
 				case 'PersonaGlobal':
-					if (core\ConfigGlobal::mi_dele() === core\ConfigGlobal::mi_region()) {
+					if (ConfigGlobal::soy_region) {
 						$oCentroDl = new ubis\Centro($this->getId_ctr());
 					} else {
 						$oCentroDl = new ubis\CentroDl($this->getId_ctr());

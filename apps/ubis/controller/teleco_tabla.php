@@ -69,7 +69,7 @@ $botones = 0;
 if (strstr($Qobj_pau,'Dl')) {
 	$oUbi = new $obj_ubi($Qid_ubi);
 	$dl = $oUbi->getDl();
-	if ($dl == core\ConfigGlobal::mi_dele()) {
+	if ($dl == core\ConfigGlobal::mi_delef()) {
 		// ----- sv sólo a scl -----------------
 		if ($_SESSION['oPerm']->have_perm("scdl")) {
 			$botones= "1";

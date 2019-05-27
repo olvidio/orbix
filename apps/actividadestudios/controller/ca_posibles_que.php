@@ -39,7 +39,7 @@ $Qgrupo_estudios = (string) \filter_input(INPUT_POST, 'grupo_estudios');
 
 
 // Grupo de estudios
-$mi_dele = core\ConfigGlobal::mi_dele();
+$mi_dele = core\ConfigGlobal::mi_delef();
 $GesGrupoEst = new ubis\GestorDelegacion();
 $cMiDl = $GesGrupoEst->getDelegaciones(array('dl'=>$mi_dele));
 if (is_array($cMiDl) && !empty($cMiDl)) {

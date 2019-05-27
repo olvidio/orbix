@@ -108,7 +108,7 @@ switch ($user_sfsv) {
 if (configGlobal::is_app_installed('dbextern')) {
 	// Para sincronizar con listas Madrid (SQLSERVER)
 	// No en el caso de cr (H-Hv)
-	if ((\core\ConfigGlobal::mi_region() != \core\ConfigGlobal::mi_dele()) && !isset($_SESSION['oDBListas'])){
+	if ((\core\ConfigGlobal::mi_region() != \core\ConfigGlobal::mi_delef()) && !isset($_SESSION['oDBListas'])){
 		try {
 			$oConfigDB = new ConfigDB('listas'); 
 			$config = $oConfigDB->getEsquema('public'); 
@@ -126,7 +126,7 @@ if (configGlobal::is_app_installed('dbextern')) {
 }
 
 // En el caso cr-stgr, refrescar las vistas
-if ((\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_dele()) && !isset($_SESSION['Refresh'])){
+if ((\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) && !isset($_SESSION['Refresh'])){
 	try {
 		$views = [
 				'd_profesor_latin',

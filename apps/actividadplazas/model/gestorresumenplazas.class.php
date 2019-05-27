@@ -65,7 +65,7 @@ class GestorResumenPlazas {
 	 */
 	public function getPosiblesPropietarios($dl_de_paso = FALSE){
 		$id_activ = $this->getId_activ();
-		$mi_dl = \core\ConfigGlobal::mi_dele();
+		$mi_dl = \core\ConfigGlobal::mi_delef();
 		$id_mi_dl = $this->getDlId($mi_dl);
 		$dl_org = $this->getDl_org();
 
@@ -395,7 +395,7 @@ class GestorResumenPlazas {
 	 */
 	public function getLibres($dl='') {
 		if (empty($dl)) {
-			$dl = core\ConfigGlobal::mi_dele();
+			$dl = core\ConfigGlobal::mi_delef();
 		}
 		
 		$a_plazas = $this->getResumen();
@@ -427,7 +427,7 @@ class GestorResumenPlazas {
 			
 		$propiedad = array();
 		$id_activ = $this->getId_activ();
-		$mi_dl = \core\ConfigGlobal::mi_dele();
+		$mi_dl = \core\ConfigGlobal::mi_delef();
 		
 		$oActividad = new \actividades\model\entity\Actividad($id_activ);
 		$publicado = $oActividad->getPublicado();

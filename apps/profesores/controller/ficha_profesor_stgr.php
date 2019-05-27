@@ -1,5 +1,6 @@
 <?php
 use asignaturas\model\entity as asignaturas;
+use core\ConfigGlobal;
 use personas\model\entity as personas;
 use profesores\model\entity as profesores;
 use ubis\model\entity as ubis;
@@ -27,8 +28,6 @@ use ubis\model\entity as ubis;
 
 $oPosicion->recordar();
 
-$dele = core\ConfigGlobal::mi_dele(); 
-$dele .= (core\ConfigGlobal::mi_sfsv()==2)? 'f' : ''; 
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     $id_nom= (integer) strtok($a_sel[0],"#");
@@ -66,7 +65,7 @@ $Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
 $Qprint = (integer) \filter_input(INPUT_POST, 'print');
 
 // Para cr stgr
-if (core\ConfigGlobal::mi_dele() === core\ConfigGlobal::mi_region()) {
+if (ConfigGlobal::soy_region) {
 	$Qprint = 1;
 }
 
@@ -99,7 +98,7 @@ $nom_ap = $oPersona->getNombreApellidosCrSin();
 $sacd = $oPersona->getSacd();
 $id_ctr = $oPersona->getid_ctr();
 
-if (core\ConfigGlobal::mi_dele() === core\ConfigGlobal::mi_region()) {
+if (ConfigGlobal::soy_region) {
 	$oCentroDl = new ubis\Centro($id_ctr);
 } else {
 	$oCentroDl = new ubis\CentroDl($id_ctr);

@@ -46,10 +46,9 @@ function quitar_asistencia($id_activ,$sacd) {
 function borrar_actividad($id_activ) {
 	$oActividad = new actividades\Actividad($id_activ);
 	$oActividad->DBCarregar();
-	// si es de la sf quito la 'f'
-	$dl = preg_replace('/f$/', '',$oActividad->getDl_org());
+	$dl = $oActividad->getDl_org();
 	$id_tabla = $oActividad->getId_tabla();
-	if ($dl == core\ConfigGlobal::mi_dele()) { // de la propia dl
+	if ($dl == core\ConfigGlobal::mi_delef()) { // de la propia dl
 		$status = $oActividad->getStatus();
 		if (!empty($status) && $status == 1) { // si no esta en proyecto (status=1) no dejo borrar,
 			if ($oActividad->DBEliminar() === false) {
@@ -142,10 +141,8 @@ case "nuevo":
 		die();
 	}
 
-    $mi_dele = ConfigGlobal::mi_dele();
-	// si es de la sf quito la 'f'
-	$dele = preg_replace('/f$/', '',$Qdl_org);
-	if ($dele == $mi_dele) {
+    $mi_dele = ConfigGlobal::mi_delef();
+	if ($Qdl_org == $mi_dele) {
 		$oActividad= new actividades\ActividadDl();
 	} else {
 		$oActividad= new actividades\ActividadEx();
@@ -194,7 +191,7 @@ case "nuevo":
 		echo '<br>'._("hay un error, no se ha guardado");
 	}
 	// si estoy creando una actividad de otra dl es porque la quiero importar.
-	if ($dele != $mi_dele) {
+	if ($Qdl_org != $mi_dele) {
 		$id_activ = $oActividad->getId_activ();
 		$oImportada = new actividades\Importada($id_activ);
 		if ($oImportada->DBGuardar() === false) {
@@ -229,7 +226,7 @@ case "duplicar": // duplicar la actividad.
 	    $id_activ = (integer) strtok($a_sel[0],'#');
 		$oActividadAll = new actividades\Actividad($id_activ);
 		$dl = $oActividadAll->getDl_org();
-		if ($dl == core\ConfigGlobal::mi_dele()) {
+		if ($dl == core\ConfigGlobal::mi_delef()) {
 			$oActividad = new actividades\ActividadDl($id_activ);
 		} else {
 			exit(_("no se puede duplicar actividades que no sean de la propia dl"));
@@ -408,7 +405,7 @@ case "editar": // editar la actividad.
 	}
 	// Por defecto pongo todas las plazas en mi dl
 	if (core\configGlobal::is_app_installed('actividadplazas')) {
-        $mi_dele = ConfigGlobal::mi_dele();
+        $mi_dele = ConfigGlobal::mi_delef();
 	    if (!empty($Qplazas) && ($plazas_old != $Qplazas) && $Qdl_org == $mi_dele) {
 	        $id_dl = 0;
 	        $gesDelegacion = new ubis\model\entity\GestorDelegacion();

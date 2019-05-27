@@ -211,7 +211,7 @@ switch ($que) {
 		$oTrasladoDl = new personas\model\entity\TrasladoDl();
 		$oTrasladoDl->setId_nom($id_nom_orbix);
 		
-		$mi_dele = ConfigGlobal::mi_dele();
+		$mi_dele = ConfigGlobal::mi_delef();
 		$mi_esquema = ConfigGlobal::mi_region_dl();
 		$oHoy = new web\DateTimeLocal();
 		$sfsv_txt = (configGlobal::mi_sfsv() == 1)? 'v' :'f';
@@ -240,7 +240,7 @@ switch ($que) {
 		$oTrasladoDl = new personas\model\entity\TrasladoDl();
 		$oTrasladoDl->setId_nom($id_nom_orbix);
 		
-		$mi_dele = ConfigGlobal::mi_dele();
+		$mi_dele = ConfigGlobal::mi_delef();
 		$mi_esquema = ConfigGlobal::mi_region_dl();
 		$oHoy = new web\DateTimeLocal();
 		$sfsv_txt = (configGlobal::mi_sfsv() == 1)? 'v' :'f';

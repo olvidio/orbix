@@ -88,11 +88,11 @@ $oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones();
 $oDesplDelegacionesOrg->setNombre('dl_org');
 $oDesplDelegacionesOrg->setOpcion_sel($Qdl_org);
 if ($Qmodo == 'importar') {
-	$mi_dele = core\ConfigGlobal::mi_dele();
+	$mi_dele = core\ConfigGlobal::mi_delef();
 	$oDesplDelegacionesOrg->setOpcion_no(array($mi_dele));
 }
 if ($Qmodo == 'publicar') {
-	$mi_dele = core\ConfigGlobal::mi_dele();
+	$mi_dele = core\ConfigGlobal::mi_delef();
 	$oDesplDelegacionesOrg->setOpciones(array($mi_dele=>$mi_dele));
 	$oDesplDelegacionesOrg->setBlanco(false);
 }

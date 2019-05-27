@@ -1,4 +1,5 @@
 <?php
+use core\ConfigGlobal;
 use personas\model\entity as personas;
 use ubis\model\entity as ubis;
 use usuarios\model\entity as usuarios;
@@ -288,7 +289,7 @@ if ($_SESSION['oPerm']->have_perm("est")){
 }
 
 // Solo ver e imprimir tessera
-if (core\ConfigGlobal::mi_dele() === core\ConfigGlobal::mi_region()) {
+if (ConfigGlobal::soy_region) {
 	$a_botones = [];
 	$a_botones[]= array( 'txt' => _("ver tessera"),
 						'click' =>"fnjs_tessera(\"#seleccionados\")" ) ;
@@ -346,7 +347,7 @@ foreach ($cPersonas as $oPersona) {
 	if ($obj_pau != 'PersonaEx') {
 		$id_ctr=$oPersona->getId_ctr();
 
-		if (core\ConfigGlobal::mi_dele() === core\ConfigGlobal::mi_region()) {
+		if (ConfigGlobal::soy_region) {
 			$oCentroDl = new ubis\Centro($id_ctr);
 		} else {
 			$oCentroDl = new ubis\CentroDl($id_ctr);

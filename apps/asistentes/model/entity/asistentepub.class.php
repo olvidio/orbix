@@ -140,7 +140,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * @param integer $id_tabla
 	 */
 	static function getClaseAsistente($obj_persona,$dl,$id_tabla) {
-		if ($dl == core\ConfigGlobal::mi_dele()) {
+		if ($dl == core\ConfigGlobal::mi_delef()) {
 			Switch($obj_persona) {
 				case 'PersonaN':
 				case 'PersonaNax':

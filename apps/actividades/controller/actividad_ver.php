@@ -94,7 +94,7 @@ if (!empty($Qid_activ)) { // caso de modificar
 	$snom_tipo=$oTipoActiv->getNom_tipoText();
 	$isfsv=$oTipoActiv->getSfsvId();
 
-    // Para incluir o no la dl (core\ConfigGlobal::mi_dele()).
+    // Para incluir o no la dl 
     $Bdl = 't';
     if(core\ConfigGlobal::is_app_installed('procesos')) {
         if ($oPermActiv->have_perm('ver')) {
@@ -140,7 +140,7 @@ if (!empty($Qid_activ)) { // caso de modificar
 	$observ='';
 	$publicado='';
 	
-    // Para incluir o no la dl (core\ConfigGlobal::mi_dele()).
+    // Para incluir o no la dl
     $Bdl = 't';
     if(core\ConfigGlobal::is_app_installed('procesos')) {
         // Depende del proceso, para dl u otra

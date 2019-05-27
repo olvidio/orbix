@@ -1,4 +1,5 @@
 <?php
+use core\ConfigGlobal;
 use ubis\model\entity as ubis;
 /**
 * Funciones más comunes de la aplicación
@@ -98,7 +99,7 @@ if (!empty($Qnuevo)) {
 //	}
 	// para el ctr hay que buscar el nombre
 	if (!empty($id_ctr)) {
-		if (core\ConfigGlobal::mi_dele() === core\ConfigGlobal::mi_region()) {
+		if (ConfigGlobal::soy_region) {
 			$oCentroDl = new ubis\Centro($id_ctr);
 		} else {
 			$oCentroDl = new ubis\CentroDl($id_ctr);

@@ -218,7 +218,7 @@ class Select1301 {
 		if (empty($ref_perm)) { // si es nulo, no tengo permisos de ningún tipo
 			return '';
 		}
-		$mi_dele = core\ConfigGlobal::mi_dele();
+		$mi_dele = core\ConfigGlobal::mi_delef();
 		reset($ref_perm);
 		foreach ($ref_perm as $clave =>$val) {
 			$permis=$val["perm"];

@@ -108,7 +108,7 @@ if (empty($Qperiodo) || $Qperiodo == 'otro') {
 }
 
 // los sacd
-$mi_dele = ConfigGlobal::mi_dele();
+$mi_dele = ConfigGlobal::mi_delef();
 if (empty($Qque)) $Qque = "nagd";
 $aWhereP = [];
 switch ($Qque) {

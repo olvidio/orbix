@@ -43,7 +43,7 @@ $desplDelegaciones = $gesDelegacion->getListaDelegaciones($aRegiones);
 $desplDelegaciones->setNombre("dl");
 $desplDelegaciones->setAction("fnjs_comparativa()");
 
-$mi_dele = core\ConfigGlobal::mi_dele();
+$mi_dele = core\ConfigGlobal::mi_delef();
 $txt = sprintf(_("comparar %s con:"),$mi_dele);
 
 $oHash = new web\Hash();

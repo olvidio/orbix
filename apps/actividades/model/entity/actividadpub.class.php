@@ -82,10 +82,9 @@ class ActividadPub Extends ActividadAll {
  		if ( filter_var( $aDades['publicado'], FILTER_VALIDATE_BOOLEAN)) { $aDades['publicado']='t'; } else { $aDades['publicado']='f'; }
 
 		$a_pkey = $this->aPrimary_key;
-		// si es de la sf quito la 'f'
-		$dl = preg_replace('/f$/', '', $aDades['dl_org']);
+		$dl = $aDades['dl_org'];
 		$id_tabla = $this->sid_tabla;
-		if ($dl == core\ConfigGlobal::mi_dele()) {
+		if ($dl == core\ConfigGlobal::mi_delef()) {
 			$oActividad= new ActividadDl($a_pkey);
 		} else {
 			if ($id_tabla == 'dl') {
@@ -139,9 +138,9 @@ class ActividadPub Extends ActividadAll {
 	 */
 	public function DBEliminar() {
 		$a_pkey = $this->aPrimary_key;
-		// si es de la sf quito la 'f'
-		$dl = preg_replace('/f$/', '', $this->sdl_org);
-		if ($dl == core\ConfigGlobal::mi_dele()) {
+		$dl = $this->sdl_org;
+		$id_tabla = $this->id_tabla;
+		if ($dl == core\ConfigGlobal::mi_delef()) {
 			$oActividadAll= new ActividadDl($a_pkey);
 		} else {
 			if ($id_tabla == 'dl') {

@@ -35,7 +35,7 @@ $lugar_nacimiento=$oPersona->getLugar_nacimiento();
 $f_nacimiento=$oPersona->getF_nacimiento()->getFromLocal();
 $txt_nacimiento = "$lugar_nacimiento ($f_nacimiento)";
 
-$dl_origen = core\ConfigGlobal::mi_dele();
+$dl_origen = core\ConfigGlobal::mi_delef();
 $dl_destino = $oPersona->getDl();
 
 $oActividad = new actividades\model\entity\Actividad($Qid_activ);

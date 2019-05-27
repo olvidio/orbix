@@ -15,7 +15,7 @@ use web\Hash;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $tipo_persona = (string)  filter_input(INPUT_POST, 'tipo');	
-$mi_dl = ConfigGlobal::mi_dele();
+$mi_dl = ConfigGlobal::mi_delef();
 $region = ConfigGlobal::mi_region();
 if ($mi_dl == 'cr') {
 	$dl = $region.$mi_dl; // 'Hcr', 'Acr;
