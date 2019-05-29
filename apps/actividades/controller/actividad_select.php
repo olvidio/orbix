@@ -524,9 +524,9 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$perm_nueva = TRUE;
-if ( !$oMiUsuario->isRole('Casa') && !$oMiUsuario->isRole('CentroSf')) { 
-    $perm_nueva = FALSE;
+$perm_nueva = FALSE;
+if ( !$oMiUsuario->isRole('Casa') && !$oMiUsuario->isRole('CentroSf') && !$oMiUsuario->isRole('CentroSv')) { 
+    $perm_nueva = TRUE;
 }
     
 $a_campos = ['oPosicion' => $oPosicion,
