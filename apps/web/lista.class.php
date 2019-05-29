@@ -772,6 +772,12 @@ class Lista {
 				});
 				
 				// wire up the search textbox to apply the filter to the model
+				$(\"#txtSearch_".$id_tabla."\").keydown(function (e) {
+				    // No hacer nada si es el 'enter'
+				    if (e.keyCode == 13) {
+					  return false;
+				    }
+                });
 				$(\"#txtSearch_".$id_tabla."\").keyup(function (e) {
 					Slick.GlobalEditorLock.cancelCurrentEdit();
 					// clear on Esc
