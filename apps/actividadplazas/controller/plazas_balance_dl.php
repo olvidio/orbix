@@ -179,7 +179,7 @@ $a_cabeceras=array(
 		array('field'=>'actividad','name'=>ucfirst(_("actividad")),'width'=>100,'formatter'=>'clickFormatter'),
 		array('field'=>'dlorg','name'=>_("dl org"),'width'=>10),
 		);
-
+/*
 $childrenA = array(
 		array('name'=>_("concedidas"),'field'=>$dlA."-c",'width'=>15,'editor'=>'Slick.Editors.Integer'),
 		array('name'=>_("libres"),'field'=>$dlA."-l",'width'=>15,'editor'=>'Slick.Editors.Integer')
@@ -191,6 +191,14 @@ $childrenB = array(
 		array('name'=>_("libres"),'field'=>$dlB."-l",'width'=>15,'editor'=>'Slick.Editors.Integer')
 	);
 $a_cabeceras[] = array('field'=>$dlB,'name'=>$dlB,'children'=>$childrenB);
+*/
+
+$a_cabeceras[] = array('name'=>$dlA.'-c','title'=>_("concedidas"),'field'=>$dlA."-c",'width'=>15,'editor'=>'Slick.Editors.Integer');
+$a_cabeceras[] = array('name'=>$dlA.'-l','title'=>_("libres"),'field'=>$dlA."-l",'width'=>15,'editor'=>'Slick.Editors.Integer');
+$a_cabeceras[] = array('name'=>$dlB.'-c','title'=>_("concedidas"),'field'=>$dlB."-c",'width'=>15,'editor'=>'Slick.Editors.Integer');
+$a_cabeceras[] = array('name'=>$dlB.'-l','title'=>_("libres"),'field'=>$dlB."-l",'width'=>15,'editor'=>'Slick.Editors.Integer');
+
+
 
 $a_botones =array();
 

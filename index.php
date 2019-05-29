@@ -293,43 +293,53 @@ switch ($tipo_menu) {
 img.calendar:hover { cursor: pointer; }
 </style>
 <!-- jQuery -->
-<!-- <link type="text/css" rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/jquery/ui/1.12/themes/cupertino/jquery-ui.css'; ?>' /> -->
-<!-- <link type="text/css" rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/jquery/ui/jquery-ui.custom.css'; ?>' /> -->
 <link type="text/css" rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/jquery/ui/1.12/jquery-ui.structure.min.css'; ?>' />
 <link type="text/css" rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/jquery/ui/1.12/themes/smoothness/theme.css'; ?>' />
+
 <script type="text/javascript" src='<?= ConfigGlobal::$web_scripts.'/jquery/jquery-1.12.3.min.js'; ?>'></script>
 <script type="text/javascript" src='<?= ConfigGlobal::$web_scripts.'/jquery/ui/1.12/jquery-ui.min.js'; ?>'></script>
 <script type="text/javascript" src='<?= ConfigGlobal::$web_scripts.'/jquery/ui/i18n/jquery.ui.datepicker-es.js'; ?>'></script>
 <script type="text/javascript" src='<?= ConfigGlobal::$web_scripts.'/jquery/ui/i18n/jquery.ui.datepicker-ca.js'; ?>'></script>
+
 <!-- jQuery TokenInput -->
 <script type="text/javascript" src='<?= ConfigGlobal::$web_scripts.'/jquery-tokeninput/src/jquery.tokeninput.js'; ?>'></script>
+
+
 <!-- Slick -->
 <link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.grid.css'; ?>' />
 <link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick-editors.css'; ?>' />
-<link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick-pager.css'; ?>' />
-<link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick-columnpicker.css'; ?>' />
 <!-- <link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/SlickGrid/examples/examples.css'; ?>' />  -->
 
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/lib/firebugx.js'; ?>'></script>
-
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/lib/jquery.event.drag-2.3.0.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/lib/jquery.event.drop-2.3.0.js'; ?>'></script>
+<!--
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/lib/jquery-fixclick.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/lib/_/jquery.event.drag.js'; ?>'></script>
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/lib/detect_browser.js'; ?>'></script>
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/lib/assert.js'; ?>'></script>
+-->
 
-<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.core.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.autocolumnsize.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.autotooltips.js'; ?>'></script>
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.cellrangedecorator.js'; ?>'></script>
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.cellrangeselector.js'; ?>'></script>
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.cellselectionmodel.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.autotooltips.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.rowselectionmodel.js'; ?>'></script>
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.checkboxselectcolumn.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.formatters.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.editors.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.grid.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.rowselectionmodel.js'; ?>'></script>
+
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.core.js'; ?>'></script>
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.dataview.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick.pager.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.editors.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.formatters.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.grid.js'; ?>'></script>
+
+<link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick.columnpicker.css'; ?>' /> 
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick.columnpicker.js'; ?>'></script>
+<link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick.gridmenu.css'; ?>' /> 
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick.gridmenu.js'; ?>'></script>
+<link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick.pager.css'; ?>' />
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick.pager.js'; ?>'></script>
+
 <script type="text/javascript" src="<?= ConfigGlobal::$web_scripts.'/formatos.js.php?'.rand(); ?>"></script>
 <script type="text/javascript" src="<?= ConfigGlobal::$web_scripts.'/selects.js.php?'.rand(); ?>"></script>
 <script type="text/javascript" src="<?= ConfigGlobal::$web_scripts.'/exportar.js?'.rand(); ?>"></script>

@@ -1,0 +1,110 @@
+<script>
+fnjs_listar=function(formulario) {
+    var err=0;
+	var f_ini=0;
+	var f_fin=0;
+    
+    if (!fnjs_comprobar_fecha('#empiezamin')) { err=1; }
+    if (!fnjs_comprobar_fecha('#empiezamax')) { err=1; }
+    
+    f_ini=$('#empiezamin').val();
+    f_fin=$('#empiezamax').val();
+
+    if (!f_ini) { alert("{{ "Debe la fecha de inicio del periodo"|trans }}"); err=1; }
+    if (!f_fin) { alert("{{ "Debe la fecha de fin del periodo"|trans }}"); err=1; }
+    
+
+    var seccion=0;
+    $('[name="seccion[]"]:checked').each(function () {
+        seccion++;
+    });
+    if (!seccion) { alert("{{ "Debe indicar el tipo sv/sf"|trans }}"); err=1; }
+    var status=0;
+    $('[name="status[]"]:checked').each(function () {
+        status++;
+    });
+    if (!status) { alert("{{ "Debe indicar el estado"|trans }}"); err=1; }
+    var asist=0;
+    $('[name="asist[]"]:checked').each(function () {
+        asist++;
+    });
+    if (!asist) { alert("{{ "Debe indicar los asistentes"|trans }}"); err=1; }
+    var activ=0;
+    $('[name="c_activ[]"]:checked').each(function () {
+        activ++;
+    });
+    if (!activ) { alert("{{ "Debe indicar el tipo de actividad"|trans }}"); err=1; }
+    
+	if (err==0) {
+		$(formulario).attr('action','apps/actividades/controller/lista_activ.php');
+		fnjs_enviar_formulario(formulario);
+	}
+	
+}
+$(function() { $( "#empiezamin" ).datepicker(); });
+$(function() { $( "#empiezamax" ).datepicker(); });
+</script>
+{{ oPosicion.mostrar_left_slide(1)|raw }}
+<form id="modifica" name="modifica" action="" method="post" >
+{{ oHash.getCamposHtml|raw }}
+	<table border=1>
+	<tr><th class=titulo_inv colspan="3">
+	{{ titulo }}</th></tr>
+	<tr>
+	<td class=subtitulo>{{ "titulo del listado"|trans }}</td> 
+	<td colspan=2><input class=contenido id="tit_list_grupo" name="tit_list_grupo" size="50"></td></tr>
+	<tr>
+	{% if permiso_des %}
+		<tr><td><input type="Checkbox" name="seccion[]" value="1">{{ "actividades de sv"|trans }}</td></tr>
+		<tr><td><input type="Checkbox" name="seccion[]" value="2">{{ "actividades de sf"|trans }}</td></tr>
+    {% else %}
+		<input type="hidden" name="seccion[]" value="1">
+	{% endif %}
+    <tr><td></td><td>
+    <input type="Checkbox" name="status[]" value="1">{{ "proyecto"|trans }}
+    <input type="Checkbox" name="status[]" value="2" checked>{{ "actual"|trans }}
+    </td></tr>
+<tr>
+	<th class=titulo_inv colspan="2">{{ "período"|trans }}</th></tr>
+<tr>
+<tr>
+	<td class=etiqueta>{{ "desde dd/mm/aa"|trans }}</td>
+	<td>
+		<input class=fecha size="10" id="empiezamin" name="empiezamin" value="">
+	</td></tr>
+<tr>
+	<td class=etiqueta>{{ "hasta dd/mm/aa"|trans }}</td>
+	<td>
+    <input class=fecha size="10" id="empiezamax" name="empiezamax" value="">
+	</td></tr>
+<tr>
+	<td colspan="2">{{ "(por defecto: período desde 1/IX del presente año hasta 30/06 del año siguiente)"|trans }}</td></tr>
+<tr></tr>
+<tr></tr>
+<tr>
+<th colspan=3 class=titulo_inv>{{ "asistentes a la actividad"|trans }}:</th>
+</tr><td colspan=3>
+{% if sr_sg == "sr" %}
+    {% if permiso_des %}
+        <input type="Checkbox" name="asist[]" value="7">{{ "sr"|trans }}
+        <input type="Checkbox" name="asist[]" value="8">{{ "sr_nax"|trans }}
+        <input type="Checkbox" name="asist[]" value="9">{{ "sr_agd"|trans }}
+    {% endif %}
+{% endif %}
+{% if sr_sg == "sg" %}
+    <input type="Checkbox" name="asist[]" value="5">{{ "sg"|trans }}
+    <input type="Checkbox" name="asist[]" value="4">{{ "s"|trans }}
+{% endif %}
+</td>
+</tr><tr>
+<th colspan=3 class=titulo_inv>{{ "actividad"|trans }}:</th>
+</tr><tr>
+<td><input type="Checkbox" name="c_activ[]" value="1">{{ "cursos retiro"|trans }}</td></tr>
+<tr><td><input type="Checkbox" name="c_activ[]" value="3">{{ "convivencias"|trans }}</td></tr>
+{% if sr_sg == "sg" %}
+    <tr><td><input type="Checkbox" name="c_activ[]" value="4">{{ "cve"|trans }}</td></tr>
+{% endif %}
+</table>
+
+<input TYPE="button" onclick=fnjs_listar('#modifica') VALUE="{{ "listar"|trans }}">
+<input TYPE="reset" VALUE="{{ "borrar"|trans }}"> 

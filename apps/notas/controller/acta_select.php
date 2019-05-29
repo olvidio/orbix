@@ -78,7 +78,7 @@ if (!empty($Qacta)) {
 			$GesActas = new notas\GestorActaDl();
 		} else {
 			// Si es cr, se mira en todas:
-			if (ConfigGlobal::soy_region) {
+			if (ConfigGlobal::soy_region()) {
 				$GesActas = new notas\GestorActa();
 			} else {
 				$GesActas = new notas\GestorActaEx();
@@ -103,7 +103,7 @@ if (!empty($Qacta)) {
 	
 	$titulo=ucfirst(sprintf(_("lista de actas del curso %s"),$txt_curso));
 	// Si es cr, se mira en todas:
-	if (ConfigGlobal::soy_region) {
+	if (ConfigGlobal::soy_region()) {
 		$GesActas = new notas\GestorActa();
 	} else {
 		$GesActas = new notas\GestorActaDl();

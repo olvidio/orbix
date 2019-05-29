@@ -550,12 +550,11 @@ class TablaEditable {
 
 
 			$(function () {
-				//$('.slick-columnpicker').remove();
-
 				dataView_$id_tabla = new Slick.Data.DataView();
 				grid_$id_tabla = new Slick.Grid(\"#grid_$id_tabla\", dataView_$id_tabla, columns_$id_tabla, options);
 				grid_$id_tabla.setSelectionModel(new Slick.RowSelectionModel());
 				grid_$id_tabla.registerPlugin(new Slick.AutoTooltips());
+                grid_$id_tabla.registerPlugin(new Slick.AutoColumnSize());
 
 				var pager = new Slick.Controls.Pager(dataView_$id_tabla, grid_$id_tabla, $(\"#pager\"));
 				var columnpicker = new Slick.Controls.ColumnPicker(columnsAll_$id_tabla, grid_$id_tabla, options);
@@ -783,11 +782,14 @@ class TablaEditable {
 				if (!empty($editor)) $sDefCol .= ", editor: $editor";
 
 				if (!empty($Cabecera['children'])) {
+                    $sDefCol .= ", colspan: 2";
+				    /*
 					$aColss = $this->getHeader($Cabecera['children']);
 					$sColss = $aColss['cols'];
 					$sDefCol .= ", children: $sColss";
 					// si tiene sub-titulos, amplio la altura de la tabla.
 					$header_num = 2;
+					*/
 				}
 				$sDefCol .= "}";
 					

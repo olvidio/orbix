@@ -99,7 +99,7 @@ if (!empty($Qnuevo)) {
 //	}
 	// para el ctr hay que buscar el nombre
 	if (!empty($id_ctr)) {
-		if (ConfigGlobal::soy_region) {
+		if (ConfigGlobal::soy_region()) {
 			$oCentroDl = new ubis\Centro($id_ctr);
 		} else {
 			$oCentroDl = new ubis\CentroDl($id_ctr);

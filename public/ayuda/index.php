@@ -30,6 +30,7 @@ include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
     <br>
     <h2><a href="#uso_general">1. Uso en general</a></h2>
     <h2><a href="#gestion_de_ca">2. Gestión de ca</a></h2>
+    <h2><a href="#gestion_de_ctr">3. Gestión de centros</a></h2>
     <h2><a href="public/ayuda/traducciones.php">3. Traducciones</a></h2>
 	<br> 
 	<br> 
@@ -51,6 +52,10 @@ include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
     - ordenar por una columna<br>
     - buscar dentro de la grid<br>
     - guardar la configuración (para cada página web es distinta)<br>
+    - Selección multiple: En algunos casos se puede seleccionar más de una fila para hacer 
+    alguna operación.<br>
+    Ctr + Click. Si se mantiene apretada la tecla 'Control' se puede hacer click en más de una fila.<br>
+    Mays + Click. Si se mantiene apretada la tecla 'Mays' al hacer click se selecciona todas las filas entre el primer y segundo click.<br> 
     ATENCIÓN:<br>
     * para exportar (y quizá alguna otra cosa),&nbsp; primero hay que
     visualizar todas las filas. Explicación: si la lista es larga, el
@@ -125,5 +130,13 @@ include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
         <h4>imprimir situación académica <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::$web_public ?>/ayuda/12-verTessera.mp4')">(video)</span></h4>
       </li>
     </ol>
+	 <br><br><br> 
+    <h2><a name="gestion_de_ctr"></a>3. Gestión de ctr<br>
+    </h2>
+	<ol>
+      <li>
+        <h4>Crear/modificar un nuevo centro <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::$web_public ?>/ayuda/13-modificarCtr.mp4')">(video)</span></h4>
+	  </li>
+	</ol>
   </body>
 </html>

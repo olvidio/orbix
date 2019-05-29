@@ -36,7 +36,7 @@ function fnjs_comprobar_fecha(id) {
   var month  = calDate.getMonth()+1; // sumo 1 porque empieza a contar en 0 (enero)
 
   str_fecha=$(id).val();
-  if (str_fecha=="") return false;
+  if (str_fecha==null || str_fecha=="") return false;
   name_fecha=$(id).attr('name');
   str_fecha=str_fecha.replace(/\-/g,"/");
   v_fecha=str_fecha.split("/");

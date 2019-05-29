@@ -65,7 +65,7 @@ $Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
 $Qprint = (integer) \filter_input(INPUT_POST, 'print');
 
 // Para cr stgr
-if (ConfigGlobal::soy_region) {
+if (ConfigGlobal::soy_region()) {
 	$Qprint = 1;
 }
 
@@ -98,7 +98,7 @@ $nom_ap = $oPersona->getNombreApellidosCrSin();
 $sacd = $oPersona->getSacd();
 $id_ctr = $oPersona->getid_ctr();
 
-if (ConfigGlobal::soy_region) {
+if (ConfigGlobal::soy_region()) {
 	$oCentroDl = new ubis\Centro($id_ctr);
 } else {
 	$oCentroDl = new ubis\CentroDl($id_ctr);
