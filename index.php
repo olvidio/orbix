@@ -307,16 +307,16 @@ img.calendar:hover { cursor: pointer; }
 
 <!-- Slick -->
 <link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.grid.css'; ?>' />
-<!-- <link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/SlickGrid/examples/examples.css'; ?>' />  -->
+
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.core.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.grid.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.dataview.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.formatters.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.editors.js'; ?>'></script>
 
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/lib/firebugx.js'; ?>'></script>
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/lib/jquery.event.drag-2.3.0.js'; ?>'></script>
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/lib/jquery.event.drop-2.3.0.js'; ?>'></script>
-<!--
-<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/lib/jquery-fixclick.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/lib/detect_browser.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/lib/assert.js'; ?>'></script>
--->
 
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.autocolumnsize.js'; ?>'></script>
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.autotooltips.js'; ?>'></script>
@@ -325,12 +325,6 @@ img.calendar:hover { cursor: pointer; }
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.cellselectionmodel.js'; ?>'></script>
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.checkboxselectcolumn.js'; ?>'></script>
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.rowselectionmodel.js'; ?>'></script>
-
-<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.core.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.dataview.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.editors.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.formatters.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.grid.js'; ?>'></script>
 
 <link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick.columnpicker.css'; ?>' /> 
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/controls/slick.columnpicker.js'; ?>'></script>
