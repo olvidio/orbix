@@ -306,6 +306,7 @@ img.calendar:hover { cursor: pointer; }
 
 
 <!-- Slick -->
+<!-- OJO: IMPORTA el orden. Pueden salir avisos (en consola del navegaador) tipo: Grid.xx not defined  -->
 <link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.grid.css'; ?>' />
 
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/lib/firebugx.js'; ?>'></script>
