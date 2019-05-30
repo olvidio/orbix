@@ -308,15 +308,15 @@ img.calendar:hover { cursor: pointer; }
 <!-- Slick -->
 <link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.grid.css'; ?>' />
 
-<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.core.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.grid.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.dataview.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.formatters.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.editors.js'; ?>'></script>
-
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/lib/firebugx.js'; ?>'></script>
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/lib/jquery.event.drag-2.3.0.js'; ?>'></script>
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/lib/jquery.event.drop-2.3.0.js'; ?>'></script>
+
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.core.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.grid.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.editors.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.formatters.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/slick.dataview.js'; ?>'></script>
 
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.autocolumnsize.js'; ?>'></script>
 <script type='text/javascript' src='<?= ConfigGlobal::$web_scripts.'/SlickGrid/plugins/slick.autotooltips.js'; ?>'></script>
