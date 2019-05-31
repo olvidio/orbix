@@ -113,12 +113,11 @@ class Periodo {
 			    $fin_m = $_SESSION['oConfig']->getMesFinCrt();
 			    
 				if ($mes>9) {
-				    $any2=$any-1;
-				    $inicio = "$any2-$ini_m-$ini_d";
-				    $fin = "$any-$fin_m-$fin_d";
+				    $any2=$any+1;
+				    $inicio = "$any-$ini_m-$ini_d";
+				    $fin = "$any2-$fin_m-$fin_d";
 				} else {
-				    $any2=$any-2;
-				    $any--;
+				    $any2=$any-1;
 				    $inicio = "$any2-$ini_m-$ini_d";
 				    $fin = "$any-$fin_m-$fin_d";
 				}
