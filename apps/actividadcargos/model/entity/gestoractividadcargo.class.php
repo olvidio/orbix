@@ -48,7 +48,7 @@ class GestorActividadCargo Extends core\ClaseGestor {
 	function getActividadIdSacds($iid_activ='') {
 	    // Los sacd los pongo en la base de datos comun.
 	    $oDbl = $GLOBALS['oDBC'];
-		$nom_tabla = $this->getNomTabla();
+		$nom_tabla = 'c'.$this->getNomTabla();
 	    $aLista = array();
 	    $sQuery="SELECT id_nom, id_cargo
 				FROM $nom_tabla
@@ -74,7 +74,7 @@ class GestorActividadCargo Extends core\ClaseGestor {
 	function getActividadSacds($iid_activ='') {
 	    // Los sacd los pongo en la base de datos comun.
 		$oDbl = $GLOBALS['oDBC'];
-		$nom_tabla = $this->getNomTabla();
+		$nom_tabla = 'c'.$this->getNomTabla();
 	    $oPersonaSet = new core\Set();
 	    $sQuery="SELECT id_nom, id_cargo
 				FROM $nom_tabla
