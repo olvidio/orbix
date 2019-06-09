@@ -125,7 +125,7 @@ foreach ($cEncargos as $oEncargo) {
 	   $idioma = $cIdiomas[0]->getNom_idioma();
 	}
 	
-	if ($sf_sv==2) $a_valores[$i]['clase']="sf";
+	if ($sf_sv==2) $a_valores[$i]['clase']="tono1";
 	
 	if (!empty($id_ubi)) {
 		$oUbi = Ubi::newUbi($id_ubi);
