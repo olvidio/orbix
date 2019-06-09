@@ -111,17 +111,19 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
 			$sacd_suplente="";
 			$sacd_colaborador="";
 			*/
-			$GesTareasSacd = new GestorEncargoSacd();
+			$aWhereT = [];
+			$aOperadorT = [];
 			$aWhereT['id_enc'] = $id_enc;
 			$aWhereT['f_fin'] = 'null';
 			$aOperadorT['f_fin'] = 'IS NULL';
 			$aWhereT['_ordre'] = 'modo';
-			$cTareasSacd = $GesTareasSacd->getTareasSacd($aWhereT,$aOperadorT);
+			$GesEncargoSacd = new GestorEncargoSacd();
+			$cEncargoSacd = $GesEncargoSacd->getEncargosSacd($aWhereT,$aOperadorT);
 			$s=0;
-			foreach ($cTareasSacd as $oTareaSacd) {
+			foreach ($cEncargoSacd as $oEncargoSacd) {
 				$s++;
-				$modo = $oTareaSacd->getModo();
-				$id_nom = $oTareaSacd->getId_nom();
+				$modo = $oEncargoSacd->getModo();
+				$id_nom = $oEncargoSacd->getId_nom();
 				$oPersona = Persona::NewPersona($id_nom);
 				$nom_ap = $oPersona->getNombreApellidosCrSin();
 				if ($id_tipo_enc == '1101') { // para las meditaciones, es colaborador
