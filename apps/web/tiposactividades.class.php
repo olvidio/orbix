@@ -16,51 +16,51 @@ class TiposActividades {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/**
-	 * aDades de ProcesoTipo
+	 * aDades de TiposActividades
 	 *
 	 * @var array
 	 */
 	 private $aDades;
 
 	/**
-	 * Id_tipo_activ de ProcesoTipo
+	 * Id_tipo_activ de TiposActividades
 	 *
 	 * @var integer
 	 */
 	 private $iid_tipo_activ;
 	/**
-	 * Regexp_id_tipo_activ de ProcesoTipo
+	 * Regexp_id_tipo_activ de TiposActividades
 	 *
 	 * @var string
 	 */
 	 private $sregexp_id_tipo_activ;
 
 	/**
-	 * sfsv de ProcesoTipo
+	 * sfsv de TiposActividades
 	 *
 	 * @var string
 	 */
 	 private $ssfsv;
 	/**
-	 * asistentes de ProcesoTipo
+	 * asistentes de TiposActividades
 	 *
 	 * @var string
 	 */
 	 private $sasistentes;
 	/**
-	 * actividad de ProcesoTipo
+	 * actividad de TiposActividades
 	 *
 	 * @var string
 	 */
 	 private $sactividad;
 	/**
-	 * nom_tipo de ProcesoTipo
+	 * nom_tipo de TiposActividades
 	 *
 	 * @var string
 	 */
 	 private $snom_tipo;
 	/**
-	 * aSfsv de ProcesoTipo
+	 * aSfsv de TiposActividades
 	 *
 	 * @var array
 	 */
@@ -72,7 +72,7 @@ class TiposActividades {
 			);
 
 	/**
-	 * aAsistentes de ProcesoTipo
+	 * aAsistentes de TiposActividades
 	 *
 	 * @var array
 	 */
@@ -90,7 +90,7 @@ class TiposActividades {
 			);
 
 	/**
-	 * aActividad de ProcesoTipo
+	 * aActividad de TiposActividades
 	 *
 	 * @var array
 	 */

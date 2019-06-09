@@ -235,7 +235,7 @@ switch ($mod) {
 	case 'cambiar_tipo':
 		echo "<input TYPE=\"button\" VALUE=\"".ucfirst(_("guardar ficha"))."\" onclick=\"javascript:fnjs_guardar('cmb_tipo')\"> ";
 	case 'editar':
-		if ($oPermActiv->have_perm('modificar') && $mod != 'importar') {
+		if ($oPermActiv->have_perm_activ('modificar') && $mod != 'importar') {
 			echo "<input TYPE='button' VALUE=\"".ucfirst(_("guardar cambios"))."\"  onclick=\"fnjs_guardar('editar')\">";
 		}
 	break;

@@ -62,7 +62,7 @@ $sOperadorD = (string) \filter_input(INPUT_POST, 'sOperadorD');
 $sGestorDir = (string) \filter_input(INPUT_POST, 'sGestorDir');
 $metodo = (string) \filter_input(INPUT_POST, 'metodo');
 $titulo = (string) \filter_input(INPUT_POST, 'titulo');
-$cmb = (string) \filter_input(INPUT_POST, 'cmb');
+$Qcmb = (string) \filter_input(INPUT_POST, 'cmb');
 
 $tipo_ubi = $Qtipo.$Qloc;
 
@@ -129,6 +129,9 @@ if (empty($sWhere)) {
 					$Gestor= "ubis\\model\\entity\\GestorCentroDl";
 					$metodo = 'getCentros';
 					$GestorDir = "ubis\\model\\entity\\GestorDireccionCtrDl";
+					// Añado una condición para el caso de no poner, que salgan todos.
+					// Si no se pone, dice que hay que poner algun criterio de busqueda
+					$aWhere['status']='t';
 					break;
 				case "ex":
 					$Gestor= "ubis\\model\\entity\\GestorCentroEx";
@@ -169,6 +172,9 @@ if (empty($sWhere)) {
 					$metodo = 'getCasas';
 					$titulo=ucfirst(_("tabla de casas de la delegación"));
 					$GestorDir = "ubis\\model\\entity\\GestorDireccionCdcDl"; // Las casas tienen las mismas direcciones que sv.
+					// Añado una condición para el caso de no poner, que salgan todos.
+					// Si no se pone, dice que hay que poner algun criterio de busqueda
+					$aWhere['status']='t';
 					break;
 				case "ex":
 					$Gestor= "ubis\\model\\entity\\GestorCasaEx";
@@ -335,14 +341,16 @@ if (isset($cUbis) && is_array($cUbis) && count($cUbis) && isset($cUbisD) && is_a
 // para descartar duplicados y ordenar
 $aUbis = array();
 $cUbisTot = array();
+$a_region = [];
+$a_nom = [];
 foreach ($cUbis as $key => $oUbi) {
 	$id_ubi = $oUbi->getId_ubi();
 	if (!empty($aUbisIntersec) && !in_array($id_ubi,$aUbisIntersec)) continue;
 	if (in_array($id_ubi,$aUbis)) continue;
 	$aUbis[] = $id_ubi;
 	$cUbisTot[$key] = $oUbi;
-	$region[$key]  = strtolower($oUbi->getRegion());
-	$nom[$key]  = strtolower($oUbi->getNombre_ubi());
+	$a_region[$key]  = strtolower($oUbi->getRegion());
+	$a_nom[$key]  = strtolower($oUbi->getNombre_ubi());
 }
 
 $sWhere = urlsafe_b64encode(serialize($aWhere));
@@ -375,7 +383,7 @@ if (is_array($cUbisTot) && count($cUbisTot) == 0) {
 	}
 	die();
 } else {
-	array_multisort($region,SORT_LOCALE_STRING, SORT_ASC,$nom,SORT_LOCALE_STRING, SORT_ASC, $cUbisTot);
+	array_multisort($a_region,SORT_LOCALE_STRING, SORT_ASC,$a_nom,SORT_LOCALE_STRING, SORT_ASC, $cUbisTot);
 }
 
 /*
@@ -428,15 +436,15 @@ foreach($cUbisTot as $oUbi) {
 	if (is_array($cDirecciones) & !empty($cDirecciones)) {
 	    foreach ($cDirecciones as $oDireccion) {
 			$poblacion= $oDireccion->getPoblacion();
-			$pais= $oDireccion->getPais();
+			$pais = $oDireccion->getPais();
 			$direccion= $oDireccion->getDireccion();
 			$c_p= $oDireccion->getC_p();
 		}
 	} else {
-		$poblacion= '';
-		$pais= '';
-		$direccion= '';
-		$c_p= '';
+		$poblacion = '';
+		$pais = '';
+		$direccion = '';
+		$c_p = '';
 	}
 
 	$pagina=Hash::link('apps/ubis/controller/home_ubis.php?'.http_build_query(array('pau'=>'u','id_ubi'=>$id_ubi))); 

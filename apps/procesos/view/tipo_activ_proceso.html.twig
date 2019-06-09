@@ -1,0 +1,113 @@
+<style>
+.dos {
+	background-attachment:scroll;
+	background-color:wheat;
+	background-image:none;
+	background-position:0 0;
+	background-repeat:repeat;
+	display:inline;
+	float:left;
+	position:absolute;
+	z-index:10;
+}
+div.proceso {
+	display:inline;
+	float:left;
+	height:40%;
+	position:absolute;
+	z-index:10;
+	overflow: scroll;
+	width: 17em;
+	background-color: darkgray;
+}
+div.proceso table{
+	width: 100%;
+	background-color:wheat;
+}
+div.proceso td.cabecera{
+	text-align: center;
+}
+p.tres:hover {
+	background-color:black;
+}
+</style>
+<script>
+fnjs_asignar_proceso=function(evt,id_tipo_activ,propio,id_tipo_proceso){
+	var url='{{ url_ajax|raw }}';
+	var parametros='que=asignar&id_tipo_activ='+id_tipo_activ+'&propio='+propio+'&id_tipo_proceso='+id_tipo_proceso+'{{ h_asignar|raw }}';
+
+	evt.preventDefault(); // que no siga pasanmdo el evento a submit.
+	evt.stopPropagation();
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if (rta_txt != '' && rta_txt != '\n') {
+			alert ('respuesta: '+rta_txt);
+		}
+	});
+	fnjs_lista();
+}
+
+fnjs_cambiar_proceso=function(id_tipo_activ,propio){
+	var url='{{ url_ajax|raw }}';
+	var parametros='que=lst_posibles_procesos&id_tipo_activ='+id_tipo_activ+'&propio='+propio+'{{ h_nuevo|raw }}';
+	var id = '';
+	if (propio == 't') {
+        id = '#dl_'+id_tipo_activ;
+	} else {
+        id = '#nodl_'+id_tipo_activ;
+	}
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		var txt="<div id=div_procesos class=proceso>";
+			txt+=rta_txt;
+			txt+="</ul></div>";
+		$(id).append(txt);
+	});
+}
+
+fnjs_lista=function(){
+	/* obtener el listado */
+	var url='{{ url_ajax|raw }}';
+	var parametros='que=lista'+'{{ h_lista|raw }}';
+		 
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if (rta_txt) {
+			$('#exportar').html(rta_txt);
+		}
+		fnjs_cerrar();
+	});
+
+    $('#exportar').click(function(e){
+        fnjs_cerrar();
+    });
+}
+
+fnjs_cerrar=function(){
+	$('#div_procesos').html('');
+	$('#div_procesos').width('0');
+	$('#div_procesos').height('0');
+	$('#div_procesos').remove();
+}
+	
+
+$(document).ready(function(){
+	fnjs_lista();
+});
+
+fnjs_left_side_hide();
+</script>
+<div id="exportar">
+</div>

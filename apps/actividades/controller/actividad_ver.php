@@ -97,7 +97,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     // Para incluir o no la dl 
     $Bdl = 't';
     if(core\ConfigGlobal::is_app_installed('procesos')) {
-        if ($oPermActiv->have_perm('ver')) {
+        if ($oPermActiv->have_perm_activ('ver')) {
             $Bdl = 't';
         } else {
             $Bdl = 'f';
@@ -118,6 +118,7 @@ if (!empty($Qid_activ)) { // caso de modificar
 	$nivel_stgr = 'r';
 	$id_repeticion = 0;
 	$id_tipo_activ = (string)  \filter_input(INPUT_POST, 'id_tipo_activ');
+	$id_tipo_activ = urldecode($id_tipo_activ); // En el caso de sr, sg, se pasa la cadena tipo 2[789]... (con [, que se encodan).
 	$id_activ = '';
 
 	if ( $permiso_des == TRUE ) {
@@ -151,17 +152,27 @@ if (!empty($Qid_activ)) { // caso de modificar
         $_SESSION['oPermActividades']->setId_tipo_activ($id_tipo_activ);
         
         $crearPropia = $_SESSION['oPermActividades']->getPermisoCrear(TRUE);
-        $of_responsable = $crearPropia['of_responsable'];
-        if ($_SESSION['oPerm']->have_perm($of_responsable)) {
-            $Bdl = 't';
-            $status = $crearPropia['status'];
+        if ($crearPropia === FALSE) {
+            echo '<br>';
+            die (_("No tiene permiso para crear una actividad de este tipo"));
         } else {
-            $Bdl = 'f';
-            $crearEx = $_SESSION['oPermActividades']->getPermisoCrear(FALSE);
-            $of_responsable = $crearEx['of_responsable'];
-            $status = $crearEx['status'];
-            if (!$_SESSION['oPerm']->have_perm($of_responsable)) {
-                die (_("No tiene permiso para crear una actividad de este tipo"));
+            $of_responsable = $crearPropia['of_responsable'];
+            if (!empty($of_responsable) && $_SESSION['oPerm']->have_perm($of_responsable)) {
+                $Bdl = 't';
+                $status = $crearPropia['status'];
+            } else {
+                if (empty($of_responsable)) {
+                    $Bdl = 't';
+                    $status = $crearPropia['status'];
+                } else {
+                    $Bdl = 'f';
+                    $crearEx = $_SESSION['oPermActividades']->getPermisoCrear(FALSE);
+                    $of_responsable = $crearEx['of_responsable'];
+                    $status = $crearEx['status'];
+                    if (!$_SESSION['oPerm']->have_perm($of_responsable)) {
+                        die (_("No tiene permiso para crear una actividad de este tipo"));
+                    }
+                }
             }
         }
         

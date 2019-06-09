@@ -1,6 +1,5 @@
 <?php 
 use web\Hash;
-use web\TiposActividades;
 use web\PeriodoQue;
 use core\ConfigGlobal;
 
@@ -21,8 +20,6 @@ require_once ("apps/core/global_header.inc");
 // Crea los objectos de uso global **********************************************
 require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-
-//include_once (ConfigGlobal::$dir_programas.'/func_web.php'); 
 
 $oPosicion->recordar();
 
@@ -52,18 +49,15 @@ $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 $Qyear = (string) \filter_input(INPUT_POST, 'year');
 
-// Id tipo actividad
-if (empty($Qid_tipo_activ)) {
-    // mejor que novenga por menú. Así solo veo las de mi sección.
-    $permiso_des = FALSE;
-    if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
-        $permiso_des = TRUE;
-        $Qssfsv = '';
-    } else {
-        $mi_sfsv = core\ConfigGlobal::mi_sfsv();
-        if ($mi_sfsv == 1) $Qssfsv = 'sv';
-        if ($mi_sfsv == 2) $Qssfsv = 'sf';
-    }
+$permiso_des = FALSE;
+// mejor que novenga por menú. Así solo veo las de mi sección.
+if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
+    $permiso_des = TRUE;
+    $Qssfsv = '';
+} else {
+    $mi_sfsv = ConfigGlobal::mi_sfsv();
+    if ($mi_sfsv == 1) $Qssfsv = 'sv';
+    if ($mi_sfsv == 2) $Qssfsv = 'sf';
 }
 
 $oActividadTipo = new actividades\model\ActividadTipo();
@@ -103,7 +97,7 @@ $h_actualizar = $oHashAct->linkSinVal();
 
 $url_tipo = "apps/actividades/controller/actividad_tipo_get.php";
 $oHash1 = new web\Hash();
-//$oHash1->setUrl(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tipo_get.php');
+//$oHash1->setUrl(ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tipo_get.php');
 $oHash1->setUrl($url_tipo);
 $oHash1->setCamposForm('salida!entrada');
 $h_tipo = $oHash1->linkSinVal();

@@ -1,4 +1,6 @@
 <?php
+use core\ConfigGlobal;
+
 /**
  * Devuelvo un desplegable con los valores posibles del tipo de actividad
  *  segun el valor de entrada.
@@ -59,5 +61,6 @@ switch ($Qsalida) {
 
 		$oDesplegableCasas = $oActividadLugar->getLugaresPosibles($Qentrada); 
 		echo $oDesplegableCasas->desplegable();
-	break;
+        break;
+        // falta tarifa.
 }

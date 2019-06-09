@@ -77,6 +77,7 @@ $oActividadTipo->setActividad($Qsactividad);
 $oActividadTipo->setNom_tipo($Qsnom_tipo);
 
 if (empty($Qstatus)) { $Qstatus = actividades\model\entity\ActividadAll::STATUS_ACTUAL; }
+
 $oDesplegableCasas = array();
 if (!empty($Qid_ubi)) {
 	$oActividadLugar = new \actividades\model\ActividadLugar();

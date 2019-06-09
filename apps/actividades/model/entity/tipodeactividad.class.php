@@ -1,6 +1,7 @@
 <?php
 namespace actividades\model\entity;
 use core;
+use core\ConfigGlobal;
 /**
  * Fitxer amb la Classe que accedeix a la taula a_tipos_actividad
  *
@@ -55,17 +56,29 @@ class TipoDeActividad Extends core\ClasePropiedades {
 	 */
 	 private $snombre;
 	/**
-	 * Id_tipo_proceso de TipoDeActividad
+	 * Id_tipo_proceso_sv de TipoDeActividad
 	 *
 	 * @var integer
 	 */
-	 private $iid_tipo_proceso;
+	 private $iid_tipo_proceso_sv;
 	/**
-	 * Id_tipo_proceso_ex de TipoDeActividad
+	 * Id_tipo_proceso_ex_sv de TipoDeActividad
 	 *
 	 * @var integer
 	 */
-	 private $iid_tipo_proceso_ex;
+	 private $iid_tipo_proceso_ex_sv;
+	/**
+	 * Id_tipo_proceso_sf de TipoDeActividad
+	 *
+	 * @var integer
+	 */
+	 private $iid_tipo_proceso_sf;
+	/**
+	 * Id_tipo_proceso_ex_sf de TipoDeActividad
+	 *
+	 * @var integer
+	 */
+	 private $iid_tipo_proceso_ex_sf;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
 	 * oDbl de TipoDeActividad
@@ -103,7 +116,7 @@ class TipoDeActividad Extends core\ClasePropiedades {
 			}
 		}
 		$this->setoDbl($oDbl);
-		$this->setNomTabla('a_tipos_actividad');
+        $this->setNomTabla('a_tipos_actividad');
 	}
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
@@ -120,8 +133,10 @@ class TipoDeActividad Extends core\ClasePropiedades {
 		$aDades=array();
 		$aDades['id_schema'] = $this->iid_schema;
 		$aDades['nombre'] = $this->snombre;
-		$aDades['id_tipo_proceso'] = $this->iid_tipo_proceso;
-		$aDades['id_tipo_proceso_ex'] = $this->iid_tipo_proceso_ex;
+		$aDades['id_tipo_proceso_sv'] = $this->iid_tipo_proceso_sv;
+		$aDades['id_tipo_proceso_ex_sv'] = $this->iid_tipo_proceso_ex_sv;
+		$aDades['id_tipo_proceso_sf'] = $this->iid_tipo_proceso_sf;
+		$aDades['id_tipo_proceso_ex_sf'] = $this->iid_tipo_proceso_ex_sf;
 		array_walk($aDades, 'core\poner_null');
 
 		if ($bInsert === false) {
@@ -129,8 +144,10 @@ class TipoDeActividad Extends core\ClasePropiedades {
 			$update="
 					id_schema                = :id_schema,
 					nombre                   = :nombre,
-					id_tipo_proceso          = :id_tipo_proceso,
-					id_tipo_proceso_ex       = :id_tipo_proceso_ex";
+					id_tipo_proceso_sv       = :id_tipo_proceso_sv,
+					id_tipo_proceso_ex_sv    = :id_tipo_proceso_ex_sv,
+					id_tipo_proceso_sf       = :id_tipo_proceso_sf,
+					id_tipo_proceso_ex_sf    = :id_tipo_proceso_ex_sf";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_tipo_activ='$this->iid_tipo_activ'")) === false) {
 				$sClauError = 'TipoDeActividad.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -145,8 +162,8 @@ class TipoDeActividad Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_tipo_activ);
-			$campos="(id_schema,id_tipo_activ,nombre,id_tipo_proceso,id_tipo_proceso_ex)";
-			$valores="(:id_schema,:id_tipo_activ,:nombre,:id_tipo_proceso,:id_tipo_proceso_ex)";		
+			$campos="(id_schema,id_tipo_activ,nombre,id_tipo_proceso_sv,id_tipo_proceso_ex_sv,id_tipo_proceso_sf,id_tipo_proceso_ex_sf)";
+			$valores="(:id_schema,:id_tipo_activ,:nombre,:id_tipo_proceso_sv,:id_tipo_proceso_ex_sv,:id_tipo_proceso_sf,:id_tipo_proceso_ex_sf)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'TipoDeActividad.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -209,6 +226,69 @@ class TipoDeActividad Extends core\ClasePropiedades {
 	}
 	
 	/* METODES ALTRES  ----------------------------------------------------------*/
+	
+	/**
+	 * estableix el valor de l'atribut iid_tipo_proceso_(sf/sv) de TipoDeActividad
+	 *
+	 * @param integer iid_tipo_proceso='' optional
+	 */
+	function setId_tipo_proceso($iid_tipo_proceso='') {
+	    if (ConfigGlobal::mi_sfsv() == 1) {
+            $this->iid_tipo_proceso_sv= $iid_tipo_proceso;
+	    } else {
+            $this->iid_tipo_proceso_sf= $iid_tipo_proceso;
+	    }
+	}
+	/**
+	 * Recupera l'atribut iid_tipo_proceso_(sv/sf) de TipoDeActividad
+	 *
+	 * @return integer iid_tipo_proceso
+	 */
+	function getId_tipo_proceso() {
+	    if (ConfigGlobal::mi_sfsv() == 1) {
+            if (!isset($this->iid_tipo_proceso_sv)) {
+                $this->DBCarregar();
+            }
+            $id_tipo_proceso = $this->iid_tipo_proceso_sv;
+	    } else {
+            if (!isset($this->iid_tipo_proceso_sf)) {
+                $this->DBCarregar();
+            }
+            $id_tipo_proceso = $this->iid_tipo_proceso_sf;
+	    }
+	    return $id_tipo_proceso;
+	}
+	/**
+	 * estableix el valor de l'atribut iid_tipo_proceso_ex_(sf/sv) de TipoDeActividad
+	 *
+	 * @param integer iid_tipo_proceso_ex='' optional
+	 */
+	function setId_tipo_proceso_ex($iid_tipo_proceso_ex='') {
+	    if (ConfigGlobal::mi_sfsv() == 1) {
+            $this->iid_tipo_proceso_ex_sv= $iid_tipo_proceso_ex;
+	    } else {
+            $this->iid_tipo_proceso_ex_sf= $iid_tipo_proceso_ex;
+	    }
+	}
+	/**
+	 * Recupera l'atribut iid_tipo_proceso_ex_(sv/sf) de TipoDeActividad
+	 *
+	 * @return integer iid_tipo_proceso_ex
+	 */
+	function getId_tipo_proceso_ex() {
+	    if (ConfigGlobal::mi_sfsv() == 1) {
+            if (!isset($this->iid_tipo_proceso_ex_sv)) {
+                $this->DBCarregar();
+            }
+            $id_tipo_proceso_ex = $this->iid_tipo_proceso_ex_sv;
+	    } else {
+            if (!isset($this->iid_tipo_proceso_ex_sf)) {
+                $this->DBCarregar();
+            }
+            $id_tipo_proceso_ex = $this->iid_tipo_proceso_ex_sf;
+	    }
+	    return $id_tipo_proceso_ex;
+	}
 	/* METODES PRIVATS ----------------------------------------------------------*/
 
 	/**
@@ -221,8 +301,10 @@ class TipoDeActividad Extends core\ClasePropiedades {
 		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_tipo_activ',$aDades)) $this->setId_tipo_activ($aDades['id_tipo_activ']);
 		if (array_key_exists('nombre',$aDades)) $this->setNombre($aDades['nombre']);
-		if (array_key_exists('id_tipo_proceso',$aDades)) $this->setId_tipo_proceso($aDades['id_tipo_proceso']);
-		if (array_key_exists('id_tipo_proceso_ex',$aDades)) $this->setId_tipo_proceso_ex($aDades['id_tipo_proceso_ex']);
+		if (array_key_exists('id_tipo_proceso_sv',$aDades)) $this->setId_tipo_proceso_sv($aDades['id_tipo_proceso_sv']);
+		if (array_key_exists('id_tipo_proceso_ex_sv',$aDades)) $this->setId_tipo_proceso_ex_sv($aDades['id_tipo_proceso_ex_sv']);
+		if (array_key_exists('id_tipo_proceso_sf',$aDades)) $this->setId_tipo_proceso_sf($aDades['id_tipo_proceso_sf']);
+		if (array_key_exists('id_tipo_proceso_ex_sf',$aDades)) $this->setId_tipo_proceso_ex_sf($aDades['id_tipo_proceso_ex_sf']);
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
@@ -309,42 +391,80 @@ class TipoDeActividad Extends core\ClasePropiedades {
 		$this->snombre = $snombre;
 	}
 	/**
-	 * Recupera l'atribut iid_tipo_proceso de TipoDeActividad
+	 * Recupera l'atribut iid_tipo_proceso_sv de TipoDeActividad
 	 *
-	 * @return integer iid_tipo_proceso
+	 * @return integer iid_tipo_proceso_sv
 	 */
-	function getId_tipo_proceso() {
-		if (!isset($this->iid_tipo_proceso)) {
+	function getId_tipo_proceso_sv() {
+		if (!isset($this->iid_tipo_proceso_sv)) {
 			$this->DBCarregar();
 		}
-		return $this->iid_tipo_proceso;
+		return $this->iid_tipo_proceso_sv;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_tipo_proceso de TipoDeActividad
+	 * estableix el valor de l'atribut iid_tipo_proceso_sv de TipoDeActividad
 	 *
-	 * @param integer iid_tipo_proceso='' optional
+	 * @param integer iid_tipo_proceso_sv='' optional
 	 */
-	function setId_tipo_proceso($iid_tipo_proceso='') {
-		$this->iid_tipo_proceso = $iid_tipo_proceso;
+	function setId_tipo_proceso_sv($iid_tipo_proceso_sv='') {
+		$this->iid_tipo_proceso_sv= $iid_tipo_proceso_sv;
 	}
 	/**
-	 * Recupera l'atribut iid_tipo_proceso_ex de TipoDeActividad
+	 * Recupera l'atribut iid_tipo_proceso_ex_sv de TipoDeActividad
 	 *
-	 * @return integer iid_tipo_proceso_ex
+	 * @return integer iid_tipo_proceso_ex_sv
 	 */
-	function getId_tipo_proceso_ex() {
-		if (!isset($this->iid_tipo_proceso_ex)) {
+	function getId_tipo_proceso_ex_sv() {
+		if (!isset($this->iid_tipo_proceso_ex_sv)) {
 			$this->DBCarregar();
 		}
-		return $this->iid_tipo_proceso_ex;
+		return $this->iid_tipo_proceso_ex_sv;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_tipo_proceso_ex de TipoDeActividad
+	 * estableix el valor de l'atribut iid_tipo_proceso_ex_sv de TipoDeActividad
 	 *
-	 * @param integer iid_tipo_proceso_ex='' optional
+	 * @param integer iid_tipo_proceso_ex_sv='' optional
 	 */
-	function setId_tipo_proceso_ex($iid_tipo_proceso_ex='') {
-		$this->iid_tipo_proceso_ex = $iid_tipo_proceso_ex;
+	function setId_tipo_proceso_ex_sv($iid_tipo_proceso_ex_sv='') {
+		$this->iid_tipo_proceso_ex_sv = $iid_tipo_proceso_ex_sv;
+	}
+	/**
+	 * Recupera l'atribut iid_tipo_proceso_sf de TipoDeActividad
+	 *
+	 * @return integer iid_tipo_proceso_sf
+	 */
+	function getId_tipo_proceso_sf() {
+		if (!isset($this->iid_tipo_proceso_sf)) {
+			$this->DBCarregar();
+		}
+		return $this->iid_tipo_proceso_sf;
+	}
+	/**
+	 * estableix el valor de l'atribut iid_tipo_proceso_sf de TipoDeActividad
+	 *
+	 * @param integer iid_tipo_proceso_sf='' optional
+	 */
+	function setId_tipo_proceso_sf($iid_tipo_proceso_sf='') {
+		$this->iid_tipo_proceso_sf= $iid_tipo_proceso_sf;
+	}
+	/**
+	 * Recupera l'atribut iid_tipo_proceso_ex_sf de TipoDeActividad
+	 *
+	 * @return integer iid_tipo_proceso_ex_sf
+	 */
+	function getId_tipo_proceso_ex_sf() {
+		if (!isset($this->iid_tipo_proceso_ex_sf)) {
+			$this->DBCarregar();
+		}
+		return $this->iid_tipo_proceso_ex_sf;
+	}
+	/**
+	 * estableix el valor de l'atribut iid_tipo_proceso_ex_sf de TipoDeActividad
+	 *
+	 * @param integer iid_tipo_proceso_ex_sf='' optional
+	 */
+	function setId_tipo_proceso_ex_sf($iid_tipo_proceso_ex_sf='') {
+		$this->iid_tipo_proceso_ex_sf = $iid_tipo_proceso_ex_sf;
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
@@ -357,8 +477,10 @@ class TipoDeActividad Extends core\ClasePropiedades {
 
 		$oTipoDeActividadSet->add($this->getDatosId_schema());
 		$oTipoDeActividadSet->add($this->getDatosNombre());
-		$oTipoDeActividadSet->add($this->getDatosId_tipo_proceso());
-		$oTipoDeActividadSet->add($this->getDatosId_tipo_proceso_ex());
+		$oTipoDeActividadSet->add($this->getDatosId_tipo_proceso_sv());
+		$oTipoDeActividadSet->add($this->getDatosId_tipo_proceso_ex_sv());
+		$oTipoDeActividadSet->add($this->getDatosId_tipo_proceso_sf());
+		$oTipoDeActividadSet->add($this->getDatosId_tipo_proceso_ex_sf());
 		return $oTipoDeActividadSet->getTot();
 	}
 
@@ -389,27 +511,51 @@ class TipoDeActividad Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut iid_tipo_proceso de TipoDeActividad
+	 * Recupera les propietats de l'atribut iid_tipo_proceso_sv de TipoDeActividad
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
 	 */
-	function getDatosId_tipo_proceso() {
+	function getDatosId_tipo_proceso_sv() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_tipo_proceso'));
-		$oDatosCampo->setEtiqueta(_("id_tipo_proceso"));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_tipo_proceso_sv'));
+		$oDatosCampo->setEtiqueta(_("id_tipo_proceso_sv"));
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut iid_tipo_proceso_ex de TipoDeActividad
+	 * Recupera les propietats de l'atribut iid_tipo_proceso_ex_sv de TipoDeActividad
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
 	 */
-	function getDatosId_tipo_proceso_ex() {
+	function getDatosId_tipo_proceso_ex_sv() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_tipo_proceso_ex'));
-		$oDatosCampo->setEtiqueta(_("id_tipo_proceso_ex"));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_tipo_proceso_ex_sv'));
+		$oDatosCampo->setEtiqueta(_("id_tipo_proceso_ex_sv"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut iid_tipo_proceso_sf de TipoDeActividad
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosId_tipo_proceso_sf() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_tipo_proceso_sf'));
+		$oDatosCampo->setEtiqueta(_("id_tipo_proceso_sf"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut iid_tipo_proceso_ex_sf de TipoDeActividad
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosId_tipo_proceso_ex_sf() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_tipo_proceso_ex_sf'));
+		$oDatosCampo->setEtiqueta(_("id_tipo_proceso_ex_sf"));
 		return $oDatosCampo;
 	}
 }

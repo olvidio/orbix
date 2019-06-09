@@ -14,6 +14,8 @@
 *
 * Finalmente lo que se hace es lanzar el proceso, al teminar vuelve iniciarse hasta que no haya ningun cambio que analizar. Al principio se anota el pid, y no se borra hasta el final. Si se dispara un proceso en paralelo, al ver que existe el pid, se para y no hace nada. En caso contrario se inicia.
 *
+* OJO: poner en  '/etc/php/7.2/cli/php.ini'
+*       include_path = ".:/usr/share/php:/home/dani/orbix_local/orbix"
 */
 use actividadcargos\model\entity\GestorActividadCargo;
 use actividades\model\entity\Actividad;

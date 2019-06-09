@@ -68,7 +68,7 @@ class GestorActividadFase Extends core\ClaseGestor {
 	    }
 	    
 	    $sQuery="SELECT f.id_fase, f.desc_fase
-				FROM $nom_tabla f JOIN a_procesos p USING (id_fase)
+				FROM $nom_tabla f JOIN a_tareas_proceso p USING (id_fase)
 				WHERE $cond id_tipo_proceso = $idProceso
 				ORDER BY n_orden";
 	    
@@ -118,7 +118,7 @@ class GestorActividadFase Extends core\ClaseGestor {
 	        $sCondicion="WHERE $cond AND id_tipo_proceso =";
 	        $sCondicion.=implode(' OR id_tipo_proceso = ',$aProcesos);
 	        $sQuery="SELECT f.id_fase, f.desc_fase
-					FROM $nom_tabla f JOIN a_procesos p USING (id_fase)
+					FROM $nom_tabla f JOIN a_tareas_proceso p USING (id_fase)
 					$sCondicion
 					GROUP BY f.id_fase, f.desc_fase
 					HAVING Count(p.id_tipo_proceso) = $num_procesos
@@ -167,10 +167,10 @@ class GestorActividadFase Extends core\ClaseGestor {
 	        // filtro por sf/sv
 	        switch ($miSfsv) {
 	            case 1: // sv
-	                $cond = "(sv ='t') ";
+	                $cond = "(sv = 't') ";
 	                break;
 	            case 2: //sf
-	                $cond = "(sf ='t') ";
+	                $cond = "(sf = 't') ";
 	                break;
 	        }
 	    }
@@ -183,14 +183,14 @@ class GestorActividadFase Extends core\ClaseGestor {
 	         */
 	        /*
 	         $sQuery="SELECT f.id_fase, f.desc_fase, p.n_orden
-	         FROM a_fases f JOIN a_procesos p USING (id_fase)
+	         FROM a_fases f JOIN a_tareas_proceso p USING (id_fase)
 	         $sCondicion
 	         GROUP BY f.id_fase, f.desc_fase, p.n_orden
 	         HAVING Count(p.id_tipo_proceso) = $num_procesos
 	         ORDER BY p.n_orden";
 	         */
 	        $sQuery="SELECT f.id_fase, f.desc_fase
-					FROM $nom_tabla f JOIN a_procesos p USING (id_fase)
+					FROM $nom_tabla f JOIN a_tareas_proceso p USING (id_fase)
 					$sCondicion
 					GROUP BY f.id_fase, f.desc_fase
 					HAVING Count(p.id_tipo_proceso) = $num_procesos
@@ -218,7 +218,7 @@ class GestorActividadFase Extends core\ClaseGestor {
 	        // Ordenar según el primer proceso (si hay más de uno).
 	        reset($aProcesos);
 	        $id_tipo_proceso = current($aProcesos);
-	        $oGestorProceso = new GestorProceso();
+	        $oGestorProceso = new GestorTareaProceso();
 	        $aFasesProceso = $oGestorProceso->getFasesProcesoOrdenadas($id_tipo_proceso);
 	        $aFasesProcesoDesc = array();
 	        foreach ($aFasesProceso as $id_item=>$id_fase) {
@@ -227,8 +227,8 @@ class GestorActividadFase Extends core\ClaseGestor {
 	                $oFase = new ActividadFase($id_fase);
 	                // compruebo si soy el responsable
 	                if ($bresp) {
-	                    $oProceso = new Proceso($id_item);
-	                    $responsable = $oProceso->getOf_responsable();
+	                    $oTareaProceso = new TareaProceso($id_item);
+	                    $responsable = $oTareaProceso->getOf_responsable();
 	                    if ($oPermiso->have_perm($responsable)) {
 	                        $aFasesProcesoDesc[$id_fase] = $oFase->getDesc_fase();
 	                    }

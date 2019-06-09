@@ -1,5 +1,5 @@
 <style type="text/css">
-.dos {
+div.orden {
 	background-attachment:scroll;
 	background-color:wheat;
 	background-image:none;
@@ -14,12 +14,13 @@ div.sacd {
 	display:inline;
 	float:left;
 	height:60%;
-	position:fixed;
+	position:absolute;
 	z-index:10;
 	overflow: scroll;
 	width: 25em;
 	bottom: 3em;
 	right: 10em;
+	background-color: darkgray;
 }
 div.sacd table{
 	width: 100%;
@@ -36,6 +37,9 @@ p.tres:hover {
 fnjs_asignar_sacd=function(id_activ,id_nom){
 	var url='{{ url_ajax|raw }}';
 	var parametros='que=asignar&id_activ='+id_activ+'&id_nom='+id_nom+'{{ h_asignar|raw }}';
+
+	//evt.preventDefault(); // que no siga pasanmdo el evento a submit.
+	//evt.stopPropagation();
 	$.ajax({
 		url: url,
 		type: 'post',
@@ -44,11 +48,13 @@ fnjs_asignar_sacd=function(id_activ,id_nom){
 	.done(function (rta_txt) {
 		if (rta_txt != '' && rta_txt != '\n') { alert ('respuesta1: '+rta_txt); }
 	});
-	if ($('#sacd').length) { $('#sacd').remove(); }
-	fnjs_actualizar_activ(id_activ);
+    fnjs_actualizar_activ(id_activ);
 }
 
-fnjs_nuevo_sacd=function(id_activ,f_ini,f_fin){
+fnjs_nuevo_sacd=function(evt,id_activ,f_ini,f_fin){
+	evt.preventDefault(); // que no siga pasanmdo el evento.
+	evt.stopPropagation();
+	//alert("nuevo"+id_activ);
 	// para reritngir la lista de sacd.
 	var na=$('#sacd_na').prop('checked');
 	var p=$('#sacd_p').prop('checked');
@@ -69,8 +75,7 @@ fnjs_nuevo_sacd=function(id_activ,f_ini,f_fin){
 		data: parametros
 	})
 	.done(function (rta_txt) {
-		if ($('#sacd').length) { $('#sacd').remove(); }
-		var txt="<div id=sacd class=sacd>";
+		var txt="<div id=div_sacd class=sacd>";
 			txt+=rta_txt;
 			txt+="</ul></div>";
 		$('#lst_sacd').append(txt);
@@ -80,7 +85,7 @@ fnjs_nuevo_sacd=function(id_activ,f_ini,f_fin){
 fnjs_orden=function(id_activ,id_cargo,id_nom,num_orden){
 	var url='{{ url_ajax|raw }}';
 	var parametros='que=orden&id_activ='+id_activ+'&id_nom='+id_nom+'&id_cargo='+id_cargo+'&num_orden='+num_orden+'{{ h_orden|raw }}';
-		 
+
 	$.ajax({
 		url: url,
 		type: 'post',
@@ -89,14 +94,13 @@ fnjs_orden=function(id_activ,id_cargo,id_nom,num_orden){
 	.done(function (rta_txt) {
 		if (rta_txt != '' && rta_txt != '\n') { alert ('respuesta2: '+rta_txt); }
 	});
-	fnjs_actualizar_activ(id_activ);
+    fnjs_actualizar_activ(id_activ);
 }
 
 fnjs_actualizar_activ=function(id_activ){
 	// obtener el listado de periodos 
 	var url='{{ url_ajax|raw }}';
 	var parametros='que=get&id_activ='+id_activ+'{{ h_actualizar|raw }}';
-		 
 	$.ajax({
 		url: url,
 		type: 'post',
@@ -107,6 +111,7 @@ fnjs_actualizar_activ=function(id_activ){
 			var txt_id='#'+id_activ+'_sacds';
 			$(txt_id).html(rta_txt);
 		}
+		fnjs_cerrar();
 	});
 }
 
@@ -114,9 +119,9 @@ fnjs_cambiar_sacd=function(evt,id_activ,id_cargo,id_nom){
 	//alert("hola"+id_nom);
 	var txt_id_nom='#'+id_activ+'_'+id_nom;
 	// si ya existe lo elimino
-	if ($('#sacd').length) { $('#sacd').remove(); }
+	if ($('#div_orden').length) { $('#div_orden').remove(); }
 	if (id_activ && id_nom) {
-		var txt="<div id=sacd class=dos>";
+		var txt="<div id=div_orden class=orden>";
 		txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_cargo+"','"+id_nom+"','mas')>{{ "+ prioridad"|trans }}</p>";
 		txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_cargo+"','"+id_nom+"','menos')>{{ "- prioridad"|trans }}</p>";
 		txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_cargo+"','"+id_nom+"','borrar')>{{ "borrar"|trans }}</p>";
@@ -128,15 +133,35 @@ fnjs_cambiar_sacd=function(evt,id_activ,id_cargo,id_nom){
 	return false;
 }
 
+fnjs_cerrar=function(){
+	$('#div_sacd').html('');
+	$('#div_sacd').width('0');
+	$('#div_sacd').height('0');
+	$('#div_sacd').remove();
+	
+	if ($('#div_orden').length) { $('#div_orden').remove(); }
+}
+
+$(document).ready(function(){
+    $('#exportar').click(function(e){
+        fnjs_cerrar();
+    });
+});
+
+/**
+ * Esta funcion está en oFormP
+ */
 fnjs_ver=function(){
 	var url='{{ url_ajax|raw }}';
 	
 	$('#frm_cond').attr('action',url);
 	fnjs_enviar_formulario('#frm_cond','#exportar');
 }
+
+fnjs_left_side_hide();
 </script>
 <div id="condiciones" class="no_print">
-<form name="frm_cond" id="frm_cond" target="print" action="" method="post" onkeypress="fnjs_enviar(event,this);">
+<form name="frm_cond" id="frm_cond" action="" method="post" >
 {{ oHash.getCamposHtml()|raw }}
 {{ oFormP.getHtml()|raw }}
 </form>

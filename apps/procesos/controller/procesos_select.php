@@ -1,6 +1,5 @@
 <?php
 use procesos\model\entity\GestorProcesoTipo;
-use core\ConfigGlobal;
 use web\Hash;
 /**
 * Esta página muestra el cuadro para seleccionar el proceso

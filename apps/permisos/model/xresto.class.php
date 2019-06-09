@@ -1,6 +1,7 @@
 <?php
 namespace permisos\model;
 use actividades\model\entity\TipoDeActividad;
+use core\ConfigGlobal;
 class xResto {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 	/**
@@ -46,9 +47,27 @@ class xResto {
 		$this->iid_tipo_activ = $iid_tipo_activ;
 		
 		$oTipoDeActividad = new TipoDeActividad($iid_tipo_activ);
-		$this->iid_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso();
+        $this->iid_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso();
 	}
 
+	/**
+	 * Para mirar si tiene el iAfecta, sino, hay que mirar en el id_tipo_activ 
+	 * de nivel superior.
+	 * 
+	 * @param integer $iAfecta
+	 * @return boolean
+	 */
+	public function hasAfecta($iAfecta) {
+	    foreach($this->aDades as $sumaAfecta => $arr) {
+	        // miro la suma de bits
+	        $has_one = (($sumaAfecta & $iAfecta) != 0);
+	        if ($has_one) {
+	            return TRUE;
+	        }
+	    }
+        return FALSE;
+	}
+	
 	public function getPerm($id_tipo_proceso,$iAfecta,$iFase) {
 		$i=0;
 		foreach ($this->aDades as $key => $a_proceso_perm) {

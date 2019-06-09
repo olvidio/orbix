@@ -1,6 +1,7 @@
 <?php
 namespace procesos\model\entity;
 use core;
+use core\ConfigGlobal;
 /**
  * Fitxer amb la Classe que accedeix a la taula a_fases
  *
@@ -197,12 +198,27 @@ class ActividadFase Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_fase='$this->iid_fase'")) === FALSE) {
-			$sClauError = 'ActividadFase.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return FALSE;
+		if ($this->iid_fase < 10) {
+		    $msg = sprintf(_("no se puede eliminar la fase %s"),$this->iid_fase);
+		    $msg .= "\n";
+		    echo $msg;
+		    return FALSE;
+		} else {
+		    // Sólo puedo eliminar si la otra sección no tiene nada.
+		    if (   (ConfigGlobal::mi_sfsv() == 1 && $this->getSf())
+		        OR (ConfigGlobal::mi_sfsv() == 2 && $this->getSv()) ) {
+                $msg = _("no se puede eliminar, lo usa la otra sección")."\n";
+                echo $msg;
+                return FALSE;
+            } else {
+                if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_fase='$this->iid_fase'")) === FALSE) {
+                    $sClauError = 'ActividadFase.eliminar';
+                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                    return FALSE;
+                }
+                return TRUE;
+            }
 		}
-		return TRUE;
 	}
 	
 	/* METODES ALTRES  ----------------------------------------------------------*/
@@ -217,8 +233,8 @@ class ActividadFase Extends core\ClasePropiedades {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_fase',$aDades)) $this->setId_fase($aDades['id_fase']);
 		if (array_key_exists('desc_fase',$aDades)) $this->setDesc_fase($aDades['desc_fase']);
-		if (array_key_exists('sf',$aDades)) $this->setSf($aDades['sf']);
-		if (array_key_exists('sv',$aDades)) $this->setSv($aDades['sv']);
+		if (array_key_exists('sf',$aDades)) $this->setSf($aDades['sf'],TRUE);
+		if (array_key_exists('sv',$aDades)) $this->setSv($aDades['sv'],TRUE);
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
@@ -300,9 +316,17 @@ class ActividadFase Extends core\ClasePropiedades {
 	 * estableix el valor de l'atribut bsf de ActividadFase
 	 *
 	 * @param boolean bsf='f' optional
+	 * @param boolean fromDB='f' optional, Para cuando se usa para cargar desde la DB
 	 */
-	function setSf($bsf='f') {
-		$this->bsf = $bsf;
+	function setSf($bsf='f',$fromDB=FALSE) {
+	    if ($fromDB) {
+		    $this->bsf = $bsf;
+	    } else {
+            // sólo dejo cambiar si soy sf
+            if (ConfigGlobal::mi_sfsv() == 2) {
+                $this->bsf = $bsf;
+            }
+	    }
 	}
 	/**
 	 * Recupera l'atribut bsv de ActividadFase
@@ -319,9 +343,17 @@ class ActividadFase Extends core\ClasePropiedades {
 	 * estableix el valor de l'atribut bsv de ActividadFase
 	 *
 	 * @param boolean bsv='f' optional
+	 * @param boolean fromDB='f' optional, Para cuando se usa para cargar desde la DB
 	 */
-	function setSv($bsv='f') {
-		$this->bsv = $bsv;
+	function setSv($bsv='f',$fromDB=FALSE) {
+	    if ($fromDB) {
+		    $this->bsv = $bsv;
+	    } else {
+            // sólo dejo cambiar si soy sv
+            if (ConfigGlobal::mi_sfsv() == 1) {
+                $this->bsv = $bsv;
+            }
+	    }
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 

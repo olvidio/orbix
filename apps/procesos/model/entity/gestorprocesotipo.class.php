@@ -2,6 +2,7 @@
 namespace procesos\model\entity;
 use core;
 use web\Desplegable;
+use core\ConfigGlobal;
 /**
  * GestorProcesoTipo
  *
@@ -44,7 +45,11 @@ class GestorProcesoTipo Extends core\ClaseGestor {
 	function getListaProcesoTipos() {
 	    $oDbl = $this->getoDbl();
 	    $nom_tabla = $this->getNomTabla();
-	    $sQuery="SELECT id_tipo_proceso, nom_proceso FROM $nom_tabla ORDER BY nom_proceso";
+	    $mi_sfsv = ConfigGlobal::mi_sfsv();
+	    $sQuery="SELECT id_tipo_proceso, nom_proceso 
+                FROM $nom_tabla
+                WHERE sfsv = $mi_sfsv 
+                ORDER BY nom_proceso";
 	    if (($oDbl->query($sQuery)) === false) {
 	        $sClauError = 'GestorProcesoTipo.lista';
 	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);

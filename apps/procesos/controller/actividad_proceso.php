@@ -1,6 +1,5 @@
 <?php
 use actividades\model\entity\ActividadAll;
-use actividades\model\entity\TipoDeActividad;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
@@ -36,9 +35,9 @@ $dos=_("dossiers");
 $oActividad = new ActividadAll($Qid_activ);
 $nom_activ = $oActividad->getNom_activ();
 
-$permiso_des = FALSE;
-if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
-    $permiso_des = TRUE;
+$permiso_calendario = FALSE;
+if (($_SESSION['oPerm']->have_perm("actividades")) or ($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
+    $permiso_calendario = TRUE;
 }
 
 $oHashGenerar = new web\Hash();
@@ -58,11 +57,11 @@ $oHashActualizar->setArraycamposHidden($a_camposHiddenA);
 $param_actualizar = $oHashActualizar->getParamAjax();
 
 $oHash1 = new web\Hash();
-$oHash1->setUrl(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_proceso_ajax.php');
+$oHash1->setUrl(core\ConfigGlobal::getWeb().'/apps/procesos/controller/actividad_proceso_ajax.php');
 $oHash1->setCamposForm('que!id_item!completado!observ');
 $h_update = $oHash1->linkSinVal();
 
-$url_ajax = 'apps/actividades/controller/actividad_proceso_ajax.php';
+$url_ajax = 'apps/procesos/controller/actividad_proceso_ajax.php';
 $txt_confirm = _("¿Está seguro que desea crear el proceso de nuevo?");
 
 $a_campos = ['oPosicion' => $oPosicion,
@@ -70,7 +69,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'alt' => $alt,
     'dos' => $dos,
     'nom_activ' => $nom_activ,
-    'permiso_des'=> $permiso_des,
+    'permiso_calendario'=> $permiso_calendario,
     'web_icons' => core\ConfigGlobal::$web_icons,
     'url_ajax' => $url_ajax,
     'id_activ' => $Qid_activ,
@@ -80,5 +79,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'txt_confirm' => $txt_confirm,
 ];
 
-$oView = new core\ViewTwig('actividades/controller');
+$oView = new core\ViewTwig('procesos/controller');
 echo $oView->render('actividad_proceso.html.twig',$a_campos);

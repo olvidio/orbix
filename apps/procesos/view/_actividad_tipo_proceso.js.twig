@@ -1,4 +1,10 @@
 <script>
+/* La funcion: 
+ *  fnjs_tipo_proceso()
+ * Está en:
+	  procesos/view/tipos_activ_select.html.twig 
+ *
+*/
 fnjs_asistentes=function(){
     var url='{{ url }}';
 	var isfsv=$('#isfsv_val').val();
@@ -38,6 +44,8 @@ fnjs_actividad=function(){
 	.done(function (rta_txt) {
 		$('#lst_actividad').html(rta_txt);
 	});
+	// borrar el resto.
+	$('#inom_tipo_val').val("...");
 }
 fnjs_nom_tipo=function(){
     var url='{{ url }}';
@@ -65,33 +73,9 @@ fnjs_act_id_activ=function(){
 	var id_tipo_activ=isfsv+iasistentes+iactividad+inom_tipo;
 
 	$('#id_tipo_activ').val(id_tipo_activ);
-    // buscar la tarifa para este tipo de actividad
-    var parametros='salida=tarifa&entrada='+id_tipo_activ+'{{ h|raw }}';
-    $.ajax({
-        url: url,
-        type: 'post',
-        data: parametros
-    })
-    .done(function (rta_txt) {
-            $('#tarifa').val(rta_txt);			
-    });
-    // buscar el desplegable dl_org segun permisos en procesos
-    // Como también afecta al status de la actividad, mejor rehacer toda la página.
-    {% if procesos_installed  %}
-        url = '{{ url_act }}';
-        var parametros='id_tipo_activ='+id_tipo_activ+'{{ h_act|raw }}';
-        $.ajax({
-            url: url,
-            type: 'post',
-            data: parametros
-        })
-        .done(function (rta_txt) {
-                $('#main').html(rta_txt);			
-        });
-    {% endif %}
-    
-	if ( que=="cambiar_tipo" && confirm ("{{ "¿Quiere cambiar el nombre de la actividad?"|trans }}") ) {
-		fnjs_generarNomActiv('#modifica');
-	}
+	fnjs_tipo_proceso();
+
 }
+
+
 </script>

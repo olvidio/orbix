@@ -48,6 +48,12 @@ class ProcesoTipo Extends core\ClasePropiedades {
 	 * @var string
 	 */
 	 private $snom_proceso;
+	/**
+	 * sfsv de ProcesoTipo
+	 *
+	 * @var integer
+	 */
+	 private $isfsv;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
 	 * oDbl de ProcesoTipo
@@ -101,12 +107,14 @@ class ProcesoTipo Extends core\ClasePropiedades {
 		if ($this->DBCarregar('guardar') === FALSE) { $bInsert=TRUE; } else { $bInsert=FALSE; }
 		$aDades=array();
 		$aDades['nom_proceso'] = $this->snom_proceso;
+		$aDades['sfsv'] = $this->isfsv;
 		array_walk($aDades, 'core\poner_null');
 
 		if ($bInsert === FALSE) {
 			//UPDATE
 			$update="
-					nom_proceso              = :nom_proceso";
+					nom_proceso       = :nom_proceso,
+					sfsv              = :sfsv";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_tipo_proceso='$this->iid_tipo_proceso'")) === FALSE) {
 				$sClauError = 'ProcesoTipo.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -120,8 +128,8 @@ class ProcesoTipo Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			$campos="(nom_proceso)";
-			$valores="(:nom_proceso)";		
+			$campos="(nom_proceso,sfsv)";
+			$valores="(:nom_proceso,:sfsv)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClauError = 'ProcesoTipo.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -196,6 +204,7 @@ class ProcesoTipo Extends core\ClasePropiedades {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_tipo_proceso',$aDades)) $this->setId_tipo_proceso($aDades['id_tipo_proceso']);
 		if (array_key_exists('nom_proceso',$aDades)) $this->setNom_proceso($aDades['nom_proceso']);
+		if (array_key_exists('sfsv',$aDades)) $this->setSfsv($aDades['sfsv']);
 	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
@@ -262,6 +271,25 @@ class ProcesoTipo Extends core\ClasePropiedades {
 	function setNom_proceso($snom_proceso='') {
 		$this->snom_proceso = $snom_proceso;
 	}
+	/**
+	 * Recupera l'atribut isfsv de ProcesoTipo
+	 *
+	 * @return integer isfsv
+	 */
+	function getSfsv() {
+		if (!isset($this->isfsv)) {
+			$this->DBCarregar();
+		}
+		return $this->isfsv;
+	}
+	/**
+	 * estableix el valor de l'atribut isfsv de ProcesoTipo
+	 *
+	 * @param integer isfsv='' optional
+	 */
+	function setSfsv($isfsv='') {
+		$this->isfsv = $isfsv;
+	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
 	/**
@@ -272,6 +300,7 @@ class ProcesoTipo Extends core\ClasePropiedades {
 		$oProcesoTipoSet = new core\Set();
 
 		$oProcesoTipoSet->add($this->getDatosNom_proceso());
+		$oProcesoTipoSet->add($this->getDatosSfsv());
 		return $oProcesoTipoSet->getTot();
 	}
 
@@ -289,6 +318,20 @@ class ProcesoTipo Extends core\ClasePropiedades {
 		$oDatosCampo->setEtiqueta(_("nombre del proceso"));
 		$oDatosCampo->setTipo('texto');
 		$oDatosCampo->setArgument('30');
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut isfsv de ProcesoTipo
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosSfsv() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'sfsv'));
+		$oDatosCampo->setEtiqueta(_("sfsv"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument('3');
 		return $oDatosCampo;
 	}
 }

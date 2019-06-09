@@ -1,9 +1,9 @@
 <?php
 use actividades\model\entity\ActividadAll;
-use procesos\model\entity\Proceso;
+use procesos\model\entity\TareaProceso;
 use procesos\model\entity\GestorActividadFase;
 use procesos\model\entity\GestorActividadTarea;
-use procesos\model\entity\GestorProceso;
+use procesos\model\entity\GestorTareaProceso;
 use web\Desplegable;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -24,7 +24,7 @@ $a_status = ActividadAll::ARRAY_STATUS_TXT;
 // para el form
 if ($Qmod == 'editar') {
 
-	$oFicha = new Proceso(array('id_item'=>$Qid_item));
+	$oFicha = new TareaProceso(array('id_item'=>$Qid_item));
 	$n_orden=$oFicha->getN_orden();	
 	$status=$oFicha->getStatus();	
 	$oDesplStatus= new Desplegable('status',$a_status,$status,true);
@@ -70,11 +70,11 @@ if ($Qmod == 'editar') {
 }
 if ($Qmod == 'nuevo') {
 	// lo pongo el último
-	$oGesProceso = new GestorProceso();
-	$oUltimoProceso = $oGesProceso->getProcesos(array('id_tipo_proceso'=>$Qid_tipo_proceso,'_ordre'=>'n_orden'));
+	$oGesTareaProceso = new GestorTareaProceso();
+	$oUltimoProceso = $oGesTareaProceso->getTareasProceso(array('id_tipo_proceso'=>$Qid_tipo_proceso,'_ordre'=>'n_orden'));
 	$num=count($oUltimoProceso);
 	$n_orden=$num + 1;
-	$oFicha = new Proceso();
+	$oFicha = new TareaProceso();
 	$status='';
 	$oDesplStatus= new Desplegable('status',$a_status,$status,true);
 	$of_responsable='';

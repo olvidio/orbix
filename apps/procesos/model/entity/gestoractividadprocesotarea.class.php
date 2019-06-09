@@ -3,6 +3,7 @@ namespace procesos\model\entity;
 use actividades\model\entity\Actividad;
 use actividades\model\entity\TipoDeActividad;
 use core;
+use core\ConfigGlobal;
 /**
  * GestorActividadProcesoTarea
  *
@@ -20,7 +21,16 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
-
+	/**
+	 * Només per aquest cas sobreescric la funció per fer-la publica.
+	 * estableix el valor de l'atribut sNomTabla de Grupo
+	 *
+	 * @param string sNomTabla
+	 */
+	public function setNomTabla($sNomTabla) {
+		$this->sNomTabla = $sNomTabla;
+	}
+	
 	/**
 	 * Constructor de la classe.
 	 *
@@ -30,17 +40,44 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	function __construct() {
 		$oDbl = $GLOBALS['oDBC'];
 		$this->setoDbl($oDbl);
-		$this->setNomTabla('a_actividad_proceso');
+		if (core\ConfigGlobal::mi_sfsv() == 1) {
+		    $this->setNomTabla('a_actividad_proceso_sv');
+		} else {
+		    $this->setNomTabla('a_actividad_proceso_sf');
+		}
 	}
 
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
+	
+	public function getSacdAprobado($iid_activ){
+        $oDbl = $this->getoDbl();
+        // Mirar el proceso de la sv
+        $this->setNomTabla('a_actividad_proceso_sv');
+        // La fase ok sacd es la 1. Por definición
+        $nom_tabla = $this->getNomTabla();
+        
+        $sQry = "SELECT completado FROM $nom_tabla WHERE id_activ=".$iid_activ." AND id_fase=1 ";
+        if (($qRs = $oDbl->query($sQry)) === false) {
+            $sClauError = 'GestorActividadProcesoTarea.getSacdAprobado.prepare';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        if ($qRs->rowCount() == 1 ) {
+            $aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
+            return $aDades['completado'];
+        }
+        return FALSE;
+	}
+	
 	public function generarProceso($iid_activ='') {
 	    $oActividad = new Actividad(array('id_activ'=>$iid_activ));
 	    $iid_tipo_activ = $oActividad->getId_tipo_activ();
 	    $oTipo = new TipoDeActividad(array('id_tipo_activ'=>$iid_tipo_activ));
-	    
-	    if ($oActividad->getDl_org() == core\ConfigGlobal::mi_delef()) {
+	   
+	    $dl_org = $oActividad->getDl_org();
+	    $dl_org_no_f = substr($dl_org, 0, -1);
+	    if ($dl_org == core\ConfigGlobal::mi_delef() OR $dl_org_no_f == core\ConfigGlobal::mi_dele()) {
 	        $id_tipo_proceso=$oTipo->getId_tipo_proceso();
 	    } else {
 	        $id_tipo_proceso=$oTipo->getId_tipo_proceso_ex();
@@ -187,7 +224,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 		$nom_tabla = $this->getNomTabla();
 	    if (!empty($iid_activ)) {
 	        $sQry = "DELETE FROM $nom_tabla WHERE id_activ=$iid_activ";
-	        if (($oDblSt = $oDbl->query($sQry)) === false) {
+	        if (($oDbl->query($sQry)) === false) {
 	            $sClauError = 'GestorActividadProcesoTarea.get.prepare';
 	            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 	            return false;
@@ -205,16 +242,16 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	 */
 	private function generar($iid_activ='',$iid_tipo_proceso='') {
 	    $this->borrar($iid_activ);
-	    $GesProceso = new GestorProceso();
-	    $cProcesos = $GesProceso->getProcesos(array('id_tipo_proceso'=>$iid_tipo_proceso,'_ordre'=>'n_orden'));
+	    $GesTareaProceso = new GestorTareaProceso();
+	    $cTareasProceso = $GesTareaProceso->getTareasProceso(array('id_tipo_proceso'=>$iid_tipo_proceso,'_ordre'=>'n_orden'));
 	    $p=0;
 	    $statusActividad = '';
-	    foreach ($cProcesos as $oProceso) {
+	    foreach ($cTareasProceso as $oTareaProceso) {
 	        $p++;
-	        $id_fase = $oProceso->getId_fase();
-	        $id_tarea = $oProceso->getId_tarea();
-	        $n_orden = $oProceso->getN_orden();
-	        $status = $oProceso->getStatus();
+	        $id_fase = $oTareaProceso->getId_fase();
+	        $id_tarea = $oTareaProceso->getId_tarea();
+	        $n_orden = $oTareaProceso->getN_orden();
+	        $status = $oTareaProceso->getStatus();
 	        $oActividadProcesoTarea = new ActividadProcesoTarea();
 	        $oActividadProcesoTarea->setId_tipo_proceso($iid_tipo_proceso);
 	        $oActividadProcesoTarea->setId_activ($iid_activ);
@@ -235,12 +272,16 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	    if (!empty($statusActividad)) {
 	        $oActividad = new Actividad($iid_activ);
 	        $oActividad->DBCarregar();
-	        $oActividad->setStatus($statusActividad);
-	        $quiet = 1; // Para que no anote el cambio.
-	        $oActividad->DBGuardar($quiet);
+	        $dl_org = $oActividad->getDl_org();
+            $dl_org_no_f = substr($dl_org, 0, -1);
+            if ($dl_org == ConfigGlobal::mi_delef() OR $dl_org_no_f == ConfigGlobal::mi_dele()) {
+                $oActividad->setStatus($statusActividad);
+                $quiet = 1; // Para que no anote el cambio.
+                $oActividad->DBGuardar($quiet);
+	        }
 	    }
-	    if(!empty($cProcesos[0])) {
-	        return $cProcesos[0]->getId_fase();
+	    if(!empty($cTareasProceso[0])) {
+	        return $cTareasProceso[0]->getId_fase();
 	    } else {
 	        echo "error al generar el proceso de la actividad: $iid_activ. tipo de proceso: $iid_tipo_proceso<br>";
 	    }
@@ -315,6 +356,9 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oActividadProcesoTarea= new ActividadProcesoTarea($a_pkey);
+			// OJO hay que cambiar la tabla si estoy modificando la sf
+            $oActividadProcesoTarea->setNomTabla($this->sNomTabla);
+			
 			$oActividadProcesoTarea->setAllAtributes($aDades);
 			$oActividadProcesoTareaSet->add($oActividadProcesoTarea);
 		}

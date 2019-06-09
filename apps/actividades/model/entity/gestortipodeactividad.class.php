@@ -1,6 +1,7 @@
 <?php
 namespace actividades\model\entity;
 use core;
+use core\ConfigGlobal;
 /**
  * GestorTipoDeActividad
  *
@@ -28,7 +29,7 @@ class GestorTipoDeActividad Extends core\ClaseGestor {
 	function __construct() {
 		$oDbl = $GLOBALS['oDBC'];
 		$this->setoDbl($oDbl);
-		$this->setNomTabla('a_tipos_actividad');
+        $this->setNomTabla('a_tipos_actividad');
 	}
 
 
@@ -43,11 +44,24 @@ class GestorTipoDeActividad Extends core\ClaseGestor {
 	function getTiposDeProcesos($sid_tipo_activ='......',$bdl_propia='t') {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
+		if (ConfigGlobal::mi_sfsv() == 1) {
+		   $nom_tipo_proceso = "id_tipo_proceso_sv"; 
+		   $nom_tipo_proceso_ex = "id_tipo_proceso_ex_sv"; 
+		} else {
+		   $nom_tipo_proceso = "id_tipo_proceso_sf"; 
+		   $nom_tipo_proceso_ex = "id_tipo_proceso_ex_sf"; 
+		}
 	    $aTiposDeProcesos = array();
 	    if ($bdl_propia == 't') {
-	        $sQry="SELECT id_tipo_proceso FROM $nom_tabla WHERE id_tipo_activ::text ~ '^$sid_tipo_activ' GROUP BY id_tipo_proceso";
+	        $sQry="SELECT $nom_tipo_proceso as id_tipo_proceso 
+                    FROM $nom_tabla 
+                    WHERE id_tipo_activ::text ~ '^$sid_tipo_activ' 
+                    GROUP BY $nom_tipo_proceso";
 	    } else {
-	        $sQry="SELECT id_tipo_proceso_ex as id_tipo_proceso FROM $nom_tabla WHERE id_tipo_activ::text ~ '^$sid_tipo_activ' GROUP BY id_tipo_proceso_ex";
+	        $sQry="SELECT $nom_tipo_proceso_ex as id_tipo_proceso 
+                    FROM $nom_tabla 
+                    WHERE id_tipo_activ::text ~ '^$sid_tipo_activ' 
+                    GROUP BY $nom_tipo_proceso_ex";
 	    }
 	    if (($oDbl->query($sQry)) === false) {
 	        $sClauError = 'GestorTipoDeActividad.query';

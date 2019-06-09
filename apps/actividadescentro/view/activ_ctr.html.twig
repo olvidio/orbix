@@ -1,5 +1,5 @@
 <style>
-.dos {
+div.orden {
 	background-attachment:scroll;
 	background-color:wheat;
 	background-image:none;
@@ -14,10 +14,11 @@ div.ctr {
 	display:inline;
 	float:left;
 	height:60%;
-	position:fixed;
+	position:absolute;
 	z-index:10;
 	overflow: scroll;
 	width: 17em;
+	background-color: darkgray;
 }
 div.ctr table{
 	width: 100%;
@@ -45,11 +46,12 @@ fnjs_asignar_ctr=function(id_activ,id_ubi){
 			alert ('respuesta: '+rta_txt);
 		}
 	});
-	if ($('#ctr').length) { $('#ctr').remove(); }
 	fnjs_actualizar_activ(id_activ);
 }
 
-fnjs_nuevo_ctr=function(id_activ,inicio,fin,f_ini,f_fin){
+fnjs_nuevo_ctr=function(evt,id_activ,inicio,fin,f_ini,f_fin){
+	evt.preventDefault(); // que no siga pasanmdo el evento.
+	evt.stopPropagation();
 	var url='{{ url_ajax|raw }}';
 	var n_tip="nuevo_{{ tipo }}";
 	var parametros='que='+n_tip+'&id_activ='+id_activ+'&inicio='+inicio+'&fin='+fin+'&f_ini_act='+f_ini+'&f_fin_act='+f_fin+'{{ h_nuevo|raw }}';
@@ -60,8 +62,8 @@ fnjs_nuevo_ctr=function(id_activ,inicio,fin,f_ini,f_fin){
 		data: parametros
 	})
 	.done(function (rta_txt) {
-		if ($('#ctr').length) { $('#ctr').remove(); }
-		var txt="<div id=ctr class=ctr>";
+		if ($('#div_ctr').length) { $('#div_ctr').remove(); }
+		var txt="<div id=div_ctr class=ctr>";
 			txt+=rta_txt;
 			txt+="</ul></div>";
 		$('#lst_ctr').append(txt);
@@ -99,15 +101,16 @@ fnjs_actualizar_activ=function(id_activ){
 			var txt_id='#'+id_activ+'_ctrs';
 			$(txt_id).html(rta_txt);
 		}
+		fnjs_cerrar();
 	});
 }
 
 fnjs_cambiar_ctr=function(evt,id_activ,id_ubi){
 	//alert("hola"+id_ubi);
 	// si ya existe lo elimino
-	if ($('#ctr').length) { $('#ctr').remove(); }
+	if ($('#div_orden').length) { $('#div_orden').remove(); }
 	if (id_activ && id_ubi) {
-		var txt="<div id=ctr class=dos>";
+		var txt="<div id=div_orden class=orden>";
 			txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_ubi+"','mas')>{{ "+ prioridad"|trans }}</p>";
 			txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_ubi+"','menos')>{{ "- prioridad"|trans }}</p>";
 			txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_ubi+"','borrar')>{{ "borrar"|trans }}</p>";
@@ -120,6 +123,24 @@ fnjs_cambiar_ctr=function(evt,id_activ,id_ubi){
 	return false;
 }
 
+fnjs_cerrar=function(){
+	$('#div_ctr').html('');
+	$('#div_ctr').width('0');
+	$('#div_ctr').height('0');
+	$('#div_ctr').remove();
+	
+	if ($('#div_orden').length) { $('#div_orden').remove(); }
+}
+
+$(document).ready(function(){
+    $('#exportar').click(function(e){
+        fnjs_cerrar();
+    });
+});
+
+/**
+ * Esta funcion está en oFormP
+ */
 fnjs_ver=function(){
 	var url='{{ url_ajax|raw }}';
 	
@@ -127,6 +148,7 @@ fnjs_ver=function(){
 	fnjs_enviar_formulario('#frm_cond','#exportar');
 }
 
+fnjs_left_side_hide();
 </script>
 <div id="condiciones" class="no_print">
 <form name="frm_cond" id="frm_cond" target="print" action="" method="post" onkeypress="fnjs_enviar(event,this);">

@@ -86,10 +86,16 @@ class Actividad Extends ActividadAll {
 			$oActividad = new ActividadDl($a_pkey);
 		} else {
 			if ($id_tabla == 'dl') {
-				//$oActividad = new ActividadPub($a_pkey);
-				// No se puede eliminar una actividad de otra dl
-				echo _("no se puede modificar una actividad de otra dl");
-				return false;
+			    // caso especial dre:
+			    $dl_org_no_f = substr($dl_org, 0, -1);
+			    if ($dl_org_no_f == core\ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm('des') ) {
+				        $oActividad = new ActividadDl($a_pkey);
+			    } else {
+                    // No se puede eliminar una actividad de otra dl
+                    $msg = sprintf(_("no se puede modificar una actividad de otra dl: %s"),$dl_org);
+                    echo $msg;
+                    return false;
+			    }
 			} else {
 				$oActividad = new ActividadEx($a_pkey);
 			}

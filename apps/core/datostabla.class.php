@@ -44,6 +44,7 @@ class DatosTabla {
 		$action_form = $this->getAction_form();
 		$action_update = $this->getAction_update();
 		$action_tabla = $this->getAction_tabla();
+		$respuesta = _("respuesta");
 		$html_script = "
 		fnjs_nuevo=function(formulario){
 			$('#mod').val(\"nuevo\");
@@ -76,7 +77,7 @@ class DatosTabla {
 							data: $(this).serialize()})
 						.done(function (rta_txt) {
 							if (rta_txt != '' && rta_txt != '\\n') {
-								alert ('<?= _(\"respuesta\") ?>: '+rta_txt);
+								alert (\"$respuesta: \"+rta_txt);
 							} else { 
 								fnjs_actualizar(formulario);
 							}

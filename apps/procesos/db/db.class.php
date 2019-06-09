@@ -22,7 +22,7 @@ class DB extends DBAbstract {
     public function dropAll() {
         $this->eliminar_a_actividad_proceso();
         $this->eliminar_a_tipos_proceso();
-        $this->eliminar_a_procesos();
+        $this->eliminar_a_tareas_proceso();
         $this->eliminar_a_fases();
         $this->eliminar_a_tareas();
         $this->eliminar_aux_usuarios_perm();
@@ -33,7 +33,7 @@ class DB extends DBAbstract {
         $this->create_a_tipos_procesos();
         $this->create_a_tareas();
         $this->create_a_fases();
-        $this->create_a_procesos();
+        $this->create_a_tareas_proceso();
         $this->create_aux_usuarios_perm();
     }
     
@@ -88,7 +88,8 @@ class DB extends DBAbstract {
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
             id_schema integer NOT NULL,
             id_tipo_proceso integer NOT NULL,
-            nom_proceso text
+            nom_proceso text,
+            sfsv integer
             );";
         
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
@@ -167,10 +168,10 @@ class DB extends DBAbstract {
         $this->delPermisoGlobal('comun');
     }
     
-    public function create_a_procesos() {
+    public function create_a_tareas_proceso() {
         $this->addPermisoGlobal('comun');
 
-        $tabla = "a_procesos";
+        $tabla = "a_tareas_proceso";
         $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
@@ -193,10 +194,10 @@ class DB extends DBAbstract {
         
         $this->delPermisoGlobal('comun');
     }
-    public function eliminar_a_procesos() {
+    public function eliminar_a_tareas_proceso() {
         $this->addPermisoGlobal('comun');
 
-        $tabla = "a_procesos";
+        $tabla = "a_tareas_proceso";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
         

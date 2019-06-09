@@ -251,8 +251,8 @@ foreach ($aa_zonas as $a_zonas) {
 				$_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
 				$oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
 
-				if ($oPermActiv->have_perm('ocupado') === false) continue; // no tiene permisos ni para ver.
-				if ($oPermActiv->have_perm('ver') === false) { // sólo puede ver que està ocupado
+				if ($oPermActiv->have_perm_activ('ocupado') === false) continue; // no tiene permisos ni para ver.
+				if ($oPermActiv->have_perm_activ('ver') === false) { // sólo puede ver que està ocupado
 					$nom_curt= $ssfsv;
 					$nom_llarg= "$ssfsv ($ini-$fi)";
 				} else {

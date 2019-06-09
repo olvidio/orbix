@@ -131,8 +131,9 @@ switch ($Qque) {
 		// mirar permisos.
 		$_SESSION['oPermActividades']->setActividad($Qid_activ);
 		$oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
+
 		$txt='';
-		if ($oPermSacd->have_perm('ver') === true) { // sólo si tiene permiso
+		if ($oPermSacd->have_perm_activ('ver') === true) { // sólo si tiene permiso
 			// listado de sacd encargados
 			$aWhere['id_cargo']='35,39';
 			$aOperador['id_cargo']= 'BETWEEN';
@@ -149,7 +150,7 @@ switch ($Qque) {
 				$ap_nom=$oPersona->getApellidosNombre();
 				$id_txt_nom=$Qid_activ."_".$id_nom;
 
-				if ($oPermSacd->have_perm('modificar') === true) { // sólo si tiene permiso para modificar
+				if ($oPermSacd->have_perm_activ('modificar') === true) { // sólo si tiene permiso para modificar
 					$txt_sacd.="<span class=link id=$id_txt_nom onclick=fnjs_cambiar_sacd(event,$Qid_activ,$id_cargo,$id_nom)> $ap_nom;</span>";
 				} else { // permiso para ver (si no tiene permisos ya estamos aqui)
 					$txt_sacd.="<span> $ap_nom</span>";
@@ -173,7 +174,7 @@ switch ($Qque) {
                 $GesEncargos = new GestorEncargoSacd();
                 // Tipos de encargo que son atención centro. No los rt.
                 // 1000,1100,1200,1300
-                $cEncargos = $GesEncargos->getEncargos(array('id_ubi'=>$id_ctr,'id_tipo_enc'=>'1[0123]00'),array('id_tipo_enc'=>'~'));
+                $cEncargos = $GesEncargos->getEncargosSacd(array('id_ubi'=>$id_ctr,'id_tipo_enc'=>'1[0123]00'),array('id_tipo_enc'=>'~'));
                 if (is_array($cEncargos) && count($cEncargos) > 0) { // puede ser que no haya sacd encargado (dlb, dlbf).
                     // només n'hi hauria d'haver un.
                     $id_enc = $cEncargos[0]->getId_enc();
@@ -347,14 +348,14 @@ switch ($Qque) {
 				$oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
 			//}
 
-			if ($oPermActiv->have_perm('ocupado') === false) { $sin++; continue; } // no tiene permisos ni para ver.
-			if ($oPermActiv->have_perm('ver') === false) { // sólo puede ver que està ocupado
+			if ($oPermActiv->have_perm_activ('ocupado') === false) { $sin++; continue; } // no tiene permisos ni para ver.
+			if ($oPermActiv->have_perm_activ('ver') === false) { // sólo puede ver que està ocupado
 			} else {
 				$a_valores[$i][0]=$id_activ;
 				$a_valores[$i][10]=$oPermSacd; // para no tener que recalcularlo despues.
 				$a_valores[$i][1]=$nom_activ;
 				// permisos centro encargado.
-				if ($oPermCtr->have_perm('ver') === true) {
+				if ($oPermCtr->have_perm_activ('ver') === true) {
 					$oEnc=new GestorCentroEncargado();
 					$ctrs="";
 					foreach($oEnc->getCentrosEncargadosActividad($id_activ) as $oUbi) {;
@@ -366,7 +367,7 @@ switch ($Qque) {
 					}
 				}
 				$sacds=array();
-				if ($oPermSacd->have_perm('ver') === true) { // sólo si tiene permiso
+				if ($oPermSacd->have_perm_activ('ver') === true) { // sólo si tiene permiso
 					//echo "<br>dani: $nom_activ<br>";
 					unset($aWhere);
 					unset($aOperador);
@@ -393,7 +394,7 @@ switch ($Qque) {
 		?>
 		
 		<h3><?= $titulo ?></h3>
-		<table onclick="fnjs_cambiar_sacd(event,'','','');"><tr>
+		<table><tr>
 		<?php
 		foreach ($a_cabeceras as $cabecera) {
 			echo "<td>$cabecera</td>";
@@ -414,7 +415,7 @@ switch ($Qque) {
 					$id_nom=$a_sacd['id_nom'];
 					$id_cargo=$a_sacd['id_cargo'];
 					$id_txt_nom=$id_activ."_".$id_nom;
-					if ($oPermSacd->have_perm('modificar') === true) { // sólo si tiene permiso para modificar
+					if ($oPermSacd->have_perm_activ('modificar') === true) { // sólo si tiene permiso para modificar
 						$txt_sacd.="<span class=link id=$id_txt_nom onclick=fnjs_cambiar_sacd(event,'$id_activ','$id_cargo','$id_nom')> ${a_sacd['ap_nom']};</span>";
 					} else { // permiso para ver (si no tiene permisos el valor($valores[2]) ya está en blanco)
 						$txt_sacd.="<span> ${a_sacd['ap_nom']};</span>";
@@ -422,8 +423,8 @@ switch ($Qque) {
 				}
 			}
 			$txt_id=$id_activ."_sacds";
-			if (($_SESSION['oPerm']->have_perm('des')) && ($oPermSacd->have_perm('crear') === true)) { // sólo si tiene permiso para crear
-				$nuevo_txt="<span class=link onclick=fnjs_nuevo_sacd('$id_activ','$f_ini','$f_fin')>nuevo</span>";
+			if (($_SESSION['oPerm']->have_perm('des')) && ($oPermSacd->have_perm_activ('crear') === true)) { // sólo si tiene permiso para crear
+				$nuevo_txt="<span class=link onclick=fnjs_nuevo_sacd(event,'$id_activ','$f_ini','$f_fin')>nuevo</span>";
 			} else {
 				$nuevo_txt='';
 			}

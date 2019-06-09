@@ -3,6 +3,8 @@ namespace actividadescentro\model\entity;
 use core;
 use ubis\model\entity\CentroDl;
 use actividades\model\entity\ActividadDl;
+use core\ConfigGlobal;
+use ubis\model\entity\CentroEllas;
 /**
  * GestorCentroEncargado
  *
@@ -109,8 +111,15 @@ class GestorCentroEncargado Extends core\ClaseGestor {
 	        return false;
 	    }
 	    foreach ($oDbl->query($sQuery) as $aDades) {
-	        $a_pkey = array('id_ubi' => $aDades['id_ubi']);
-	        $oUbi= new CentroDl($a_pkey);
+	        $id_ubi = $aDades['id_ubi'];
+	        $a_pkey = array('id_ubi' => $id_ubi);
+	        $sfsv = substr($id_ubi, 0, 1);
+	        if (ConfigGlobal::mi_sfsv() == $sfsv) {
+                $oUbi= new CentroDl($a_pkey);
+	        } else {
+                $oUbi= new CentroEllas($a_pkey);
+	        }
+	        
 	        $oUbi->setAllAtributes($aDades);
 	        $oUbiSet->add($oUbi);
 	    }

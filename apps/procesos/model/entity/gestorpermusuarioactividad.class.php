@@ -43,7 +43,7 @@ class GestorPermUsuarioActividad Extends core\ClaseGestor {
 	function getPermUsuarioActividadesQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
 		$oPermUsuarioActividadSet = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === FALSE) {
+		if (($oDbl->query($sQuery)) === FALSE) {
 			$sClauError = 'GestorPermUsuarioActividad.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return FALSE;

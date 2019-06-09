@@ -36,7 +36,7 @@
 		<td class=etiqueta>{{ "hora fin"|trans|capitalize }}: </td><td><input class=contenido size="6" id="h_fin" name="h_fin" value="{{ h_fin }}" title="{{ "formato [hh:mm]"|trans }}">
 </td></tr>
 <tr><td class=etiqueta>{{ "dl/r que organiza"|trans }}:</td>
-<td colspan=2>
+<td id="despl_dl_org" colspan=2>
 	{{  oDesplDelegacionesOrg.desplegable()|raw }}
 	</td>
 	<td class=etiqueta>{{ "plazas totales"|trans|capitalize }}:</td>

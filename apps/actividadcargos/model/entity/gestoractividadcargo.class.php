@@ -1,8 +1,11 @@
 <?php
 namespace actividadcargos\model\entity;
-use actividades\model\entity as actividades;
-use asistentes\model\entity as asistentes;
+
+use actividades\model\entity\Actividad;
+use actividades\model\entity\GestorActividad;
+use asistentes\model\entity\GestorAsistente;
 use core;
+use personas\model\entity\PersonaSacd;
 /**
  * GestorActividadCargo
  *
@@ -35,7 +38,67 @@ class GestorActividadCargo Extends core\ClaseGestor {
 
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
-
+	
+	/**
+	 * retorna l'array de id_nom dels sacd que atenen l'activitat
+	 *
+	 * @param integer iid_activ l'id de l'activitat.
+	 * @return array id_nom
+	 */
+	function getActividadIdSacds($iid_activ='') {
+	    // Los sacd los pongo en la base de datos comun.
+	    $oDbl = $GLOBALS['oDBC'];
+		$nom_tabla = $this->getNomTabla();
+	    $aLista = array();
+	    $sQuery="SELECT id_nom, id_cargo
+				FROM $nom_tabla
+				WHERE id_activ=".$iid_activ." AND id_cargo BETWEEN 35 AND 39
+				ORDER BY id_cargo";
+	    if (($oDbl->query($sQuery)) === false) {
+	        $sClauError = 'GestorActividadCargo.sacds';
+	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+	        return false;
+	    }
+	    foreach ($oDbl->query($sQuery) as $aDades) {
+	        $aLista[] = $aDades['id_nom'];
+	    }
+	    return $aLista;
+	}
+	
+	/**
+	 * retorna l'array d'objectes de tipus Persona
+	 *
+	 * @param integer iid_activ l'id de l'activitat.
+	 * @return array Una col·lecció d'objectes de tipus Persona.
+	 */
+	function getActividadSacds($iid_activ='') {
+	    // Los sacd los pongo en la base de datos comun.
+		$oDbl = $GLOBALS['oDBC'];
+		$nom_tabla = $this->getNomTabla();
+	    $oPersonaSet = new core\Set();
+	    $sQuery="SELECT id_nom, id_cargo
+				FROM $nom_tabla
+				WHERE id_activ=".$iid_activ." AND id_cargo BETWEEN 35 AND 39
+				ORDER BY id_cargo";
+	    if (($oDbl->query($sQuery)) === false) {
+	        $sClauError = 'GestorActividadCargo.sacds';
+	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+	        return false;
+	    }
+	    foreach ($oDbl->query($sQuery) as $aDades) {
+	        $id_nom = $aDades['id_nom'];
+	        $oPersona = new PersonaSacd($id_nom);
+	        $oPersona->DBCarregar();
+	        if (empty($oPersona->getApellido1())) {
+	            $msg = sprintf(_("se necesita sincronizar sacd: %s"),$id_nom);
+	            $msg .= '<br>';
+	            echo $msg;
+	        }
+	        $oPersonaSet->add($oPersona);
+	    }
+	    return $oPersonaSet->getTot();
+	}
+	
 	/**
 	 * retorna l'array d'objectes de tipus ActividadCargo
 	 *
@@ -46,7 +109,7 @@ class GestorActividadCargo Extends core\ClaseGestor {
 	 */
 	function getActividadCargosDeAsistente($aWhereNom,$aWhere=array(),$aOperators=array()) {
 		// seleccionar las actividades segun los criterios de búsqueda.
-		$GesActividades = new actividades\GestorActividad();
+		$GesActividades = new GestorActividad();
 		$aListaIds = $GesActividades->getArrayIds($aWhere,$aOperators);
 	
 		$cCargos = $this->getActividadCargos($aWhereNom);
@@ -55,7 +118,7 @@ class GestorActividadCargo Extends core\ClaseGestor {
 		foreach ($cCargos as $oActividadCargo) {
 			$id_activ = $oActividadCargo->getId_activ();
 			if (in_array($id_activ,$aListaIds)) {
-				$oActividad = new actividades\Actividad($id_activ);
+				$oActividad = new Actividad($id_activ);
 				$oF_ini = $oActividad->getF_ini();
 				$f_ini_iso = $oF_ini->format('Y-m-d'); 
 				$oActividadCargo->DBCarregar();
@@ -75,18 +138,18 @@ class GestorActividadCargo Extends core\ClaseGestor {
 	 */
 	function getCargoOAsistente($iid_nom,$aWhereAct=array(),$aOperadorAct=array()) {
 		$oDbl = $this->getoDbl();
-		$GesAsistente = new asistentes\gestorAsistente();
+		$GesAsistente = new GestorAsistente();
 	   	$cAsistentes = $GesAsistente->getActividadesDeAsistente(array('id_nom'=>$iid_nom),$aWhereAct,$aOperadorAct);
 		$cCargos = $this->getActividadCargos(array('id_nom'=>$iid_nom));
 		// seleccionar las actividades segun los criterios de búsqueda.
-		$GesActividades = new actividades\GestorActividad();
+		$GesActividades = new GestorActividad();
 		$aListaIds = $GesActividades->getArrayIds($aWhereAct,$aOperadorAct);
 		// descarto los que no estan.
 		$cActividadesOk = array();
 		foreach ($cCargos as $oCargo) {
 			$id_activ = $oCargo->getId_activ();
 			if (in_array($id_activ,$aListaIds)) {
-				$oActividad = new actividades\Actividad($id_activ);
+				$oActividad = new Actividad($id_activ);
 				$oF_ini = $oActividad->getF_ini();
 				$f_ini_iso = $oF_ini->format('Y-m-d'); 
 				$cActividadesOk[$id_activ] = $oCargo;

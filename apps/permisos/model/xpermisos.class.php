@@ -81,6 +81,32 @@ class Xpermisos {
 	 * @param string $p nom del permís: ocupado|ver|modificar|crear|borrar
 	 * @return boolean
 	 */
+	public function have_perm_activ($p) {
+		$pageperm = preg_split('/,/', $p);
+		list ($ok0, $pagebits) = $this->permsum($pageperm);
+		$userbits=$this->iaccion;
+		/*
+		echo "user: $userbits<br>";
+		echo "menu: $pagebits<br>";
+		*/
+		/* per els menus va bé. Per les activitats estava posat:
+			$has_all = (($userbits & $pagebits) === $pagebits);
+		 ??
+		*/
+		$has_all = (($userbits & $pagebits) === $pagebits);
+		if (!($has_all && $ok0) ) {
+		  return false;
+		} else {
+		  return true;
+		}
+	}
+	/**
+	 * diu si té el permís $p (en texte i ha d'estar en l'array permissions).
+	 *
+	 *  Ara per els menus va bé.
+	 * @param string $p nom del permís: ocupado|ver|modificar|crear|borrar
+	 * @return boolean
+	 */
 	public function have_perm($p) {
 		$pageperm = preg_split('/,/', $p);
 		list ($ok0, $pagebits) = $this->permsum($pageperm);

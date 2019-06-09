@@ -65,7 +65,7 @@ fnjs_actualizar();
 </script>
 {% endblock %}
 {% block arrow %}
-{{ oPosicion.mostrar_left_slide(2)|raw }}
+{{ oPosicion.mostrar_left_slide(1)|raw }}
 {% endblock %}
 <div id="exportar" export_modo="formulario">
 {% block head %}
@@ -80,7 +80,7 @@ fnjs_actualizar();
 <table>
 <input type='Hidden' id='que' name='que' value=''>
 <tr><th colspan='5' class=titulo_inv>{{ "fases de la actividad"|trans|capitalize }}</th>
-{% if permiso_des %}
+{% if permiso_calendario %}
 	<td><input type="Button" value="{{ "regenerar"|trans }}" onclick="fnjs_generar_proceso()"></td>
 {% endif %}
 </tr>

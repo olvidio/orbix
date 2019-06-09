@@ -1,12 +1,10 @@
 <?php
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\TipoDeActividad;
 use core\ConfigGlobal;
-use procesos\model\entity\ActividadProcesoTarea;
-use procesos\model\entity\GestorActividadProcesoTarea;
 use procesos\model\entity\ActividadFase;
+use procesos\model\entity\ActividadProcesoTarea;
 use procesos\model\entity\ActividadTarea;
-use procesos\model\entity\Proceso;
+use procesos\model\entity\GestorActividadProcesoTarea;
+use procesos\model\entity\GestorTareaProceso;
 
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -29,7 +27,7 @@ switch($Qque) {
 		$GesActividadProceso=new GestorActividadProcesoTarea();
 		$oLista = $GesActividadProceso->getActividadProcesoTareas(array('id_activ'=>$Qid_activ,'_ordre'=>'n_orden'));
 		$txt='<table>';
-		$txt.='<tr><td>'._("ok").'</td><td>'._("fase (tarea)").'</td><td>'._("responsable").'</td><td>'._("observaciones").'</td><td></td></tr>';
+		$txt.='<tr><th>'._("ok").'</th><th>'._("fase (tarea)").'</th><th>'._("responsable").'</th><th>'._("observaciones").'</th><th></th></tr>';
 		foreach($oLista as $oActividadProcesoTarea) {
 			$id_item = $oActividadProcesoTarea->getId_item();
 			$id_tipo_proceso = $oActividadProcesoTarea->getId_tipo_proceso();
@@ -40,14 +38,23 @@ switch($Qque) {
 
 			$oFase = new ActividadFase($id_fase);
 			$fase = $oFase->getDesc_fase();
+			if (empty($fase)) { continue; } // No existe
 			$oTarea = new ActividadTarea($id_tarea);
 			$tarea = $oTarea->getDesc_tarea();
 			$chk= ($completado=='t')? 'checked': '';
 			//buscar of responsable
-			$oProceso = new Proceso(array('id_tipo_proceso'=>$id_tipo_proceso,
-										'id_fase'=>$id_fase,
-										'id_tarea'=>$id_tarea));
-			$responsable=$oProceso->getOf_responsable();
+			$GesTareaProceso = new GestorTareaProceso();
+			$cTareasProceso = $GesTareaProceso->getTareasProceso(['id_tipo_proceso'=>$id_tipo_proceso,
+			                                                'id_fase'=>$id_fase,
+			                                                'id_tarea'=>$id_tarea]);
+			// sólo debería haber uno
+			if (!empty($cTareasProceso)) {
+                $oTareaProceso = $cTareasProceso[0];
+			} else {
+			    $msg_err = sprintf(_("error: La fase del proceso tipo: %s, fase: %s, tarea: %s"),$id_tipo_proceso,$id_fase,$id_tarea);
+                exit($msg_err);
+			}
+			$responsable = $oTareaProceso->getOf_responsable();
 			$txt.='<tr>';
 			if (($_SESSION['oPerm']->have_perm($responsable))) {
 				$txt.="<td><input type='checkbox' id='comp$id_item' name='completado' $chk></td>";
@@ -55,12 +62,15 @@ switch($Qque) {
 			} else {
 				$icon = '';
 				if ($completado == 't') {
-					$icon = '<img src="'. ConfigGlobal::$web_icons .'/check.png" title="ok">';
+					$icon = '<img src="'. ConfigGlobal::$web_icons .'/checkbox-checked.png" title="ok">';
+				} else {
+					$icon = '<img src="'. ConfigGlobal::$web_icons .'/check-box-outline-blank.png" title="">';
 				}
 				$txt.="<td>$icon</td>";
 				$obs = "<td></td>";
 			}
-			$txt.="<td>$fase ($tarea)</td>";
+			$txt_fase = empty($tarea)? '' : "($tarea)";
+			$txt.="<td>$fase $txt_fase</td>";
 			$txt.="<td>$responsable</td>";
 			$txt.= $obs;
 			if (($_SESSION['oPerm']->have_perm($responsable))) {

@@ -3,8 +3,10 @@ namespace procesos\model\entity;
 use actividades\model\entity\Actividad;
 use cambios\model\gestorAvisoCambios;
 use core;
+use actividades\model\entity\ActividadAll;
+use core\ConfigGlobal;
 /**
- * Fitxer amb la Classe que accedeix a la taula a_actividad_proceso
+ * Fitxer amb la Classe que accedeix a la taula a_actividad_proceso_(sf/sv)
  *
  * @package orbix
  * @subpackage model
@@ -13,7 +15,7 @@ use core;
  * @created 06/12/2018
  */
 /**
- * Classe que implementa l'entitat a_actividad_proceso
+ * Classe que implementa l'entitat a_actividad_proceso_(sf/sv)
  *
  * @package orbix
  * @subpackage model
@@ -107,7 +109,17 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 	 */
 	 protected $sNomTabla;
 	/* CONSTRUCTOR -------------------------------------------------------------- */
-
+	 
+	 /**
+	  * Només per aquest cas sobreescric la funció per fer-la publica.
+	  * estableix el valor de l'atribut sNomTabla de Grupo
+	  *
+	  * @param string sNomTabla
+	  */
+	 public function setNomTabla($sNomTabla) {
+	     $this->sNomTabla = $sNomTabla;
+	 }
+	 
 	/**
 	 * Constructor de la classe.
 	 * Si només necessita un valor, se li pot passar un integer.
@@ -130,7 +142,11 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 			}
 		}
 		$this->setoDbl($oDbl);
-		$this->setNomTabla('a_actividad_proceso');
+		if (ConfigGlobal::mi_sfsv() == 1) {
+		  $this->setNomTabla('a_actividad_proceso_sv');
+		} else {
+		  $this->setNomTabla('a_actividad_proceso_sf');
+	    }
 	}
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
@@ -159,66 +175,104 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 		if ( filter_var( $aDades['completado'], FILTER_VALIDATE_BOOLEAN)) { $aDades['completado']='t'; } else { $aDades['completado']='f'; }
 
 		if ($bInsert === FALSE) {
+            // comprobar si hay que cambiar el estado (status) de la actividad.
+            // en caso de completar la fase. Si se quita el 'completado' habría que buscar la fase anterior para saber que status corresponde.
+            $permitido = TRUE;
+            $oActividad = new Actividad($this->iid_activ);
+            $statusActividad = $oActividad->getStatus();
+            $GesTareaProcesos = new GestorTareaProceso();
+            $cTareasProceso = $GesTareaProcesos->getTareasProceso(['id_tipo_proceso'=>$this->iid_tipo_proceso,'id_fase'=>$this->iid_fase,'id_tarea'=>$this->iid_tarea]);
+            // sólo debería haber uno
+            if (!empty($cTareasProceso)) {
+                $oTareaProceso = $cTareasProceso[0];
+            } else {
+                $msg_err = sprintf(_("error: La fase del proceso tipo: %s, fase: %s, tarea: %s"),$this->iid_tipo_proceso,$this->iid_fase,$this->iid_tarea);
+                exit($msg_err);
+            }
+            if ($aDades['completado'] == 't') {
+                $statusProceso = $oTareaProceso->getStatus();
+            } else {
+                $itemProceso = $oTareaProceso->getId_item();
+                $GesTareaProcesos = new GestorTareaProceso();
+                $statusProceso = $GesTareaProcesos->getStatusFaseAnterior($itemProceso);
+            }
+            if ($statusProceso != $statusActividad) { // cambiar el status de la actividad.
+                // OJO si la actividad no es de la dl, no puedo cambiarla.
+                $dl_org = $oActividad->getDl_org();
+                $id_tabla = $oActividad->getId_tabla();
+                // Sólo dre puede aprobar (pasar de proyecto a actual) las actividades
+                // ojo marcha atrás tampoco debería poderse.
+                if ($statusActividad != ActividadAll::STATUS_ACTUAL && $statusProceso == ActividadAll::STATUS_ACTUAL) {
+                    // para dl y dlf:
+                    $dl_org_no_f = substr($dl_org, 0, -1);
+                    if ($dl_org == core\ConfigGlobal::mi_delef() OR $dl_org_no_f == core\ConfigGlobal::mi_delef()) {
+                        if ( $_SESSION['oPerm']->have_perm('des') ) {
+                            $oActividad->setStatus($statusProceso);
+                            $oActividad->DBGuardar();
+                            // además debería marcar como completado la fase correspondiente del proceso de la sf.
+                            $this->marcarFaseActual();
+                        } else {
+                            echo _("no se puede cambiar el status de la actividad a 'actual', porque debe hacerlo dre");
+                            $permitido = FALSE;
+                        }
+                    } else { // para el resto.
+                        if ($id_tabla == 'dl') {
+                            // No se puede eliminar una actividad de otra dl
+                            echo sprintf(_("no se puede modificar el status de una actividad de otra dl (%s)"),$dl_org);
+                            $permitido = FALSE;
+                        } else {
+                            $oActividad->setStatus($statusProceso);
+                            $oActividad->DBGuardar();
+                        }
+                    }
+                } else {
+                    if ($dl_org == core\ConfigGlobal::mi_delef()) {
+                        $oActividad->setStatus($statusProceso);
+                        $oActividad->DBGuardar();
+                    } else {
+                        if ($id_tabla == 'dl') {
+                            // No se puede eliminar una actividad de otra dl
+                            echo sprintf(_("no se puede modificar el status de una actividad de otra dl (%s)"),$dl_org);
+                            $permitido = FALSE;
+                        } else {
+                            $oActividad->setStatus($statusProceso);
+                            $oActividad->DBGuardar();
+                        }
+                    }
+                }
+            }
 			//UPDATE
-			$update="
-					id_tipo_proceso          = :id_tipo_proceso,
-					id_activ                 = :id_activ,
-					id_fase                  = :id_fase,
-					id_tarea                 = :id_tarea,
-					n_orden                  = :n_orden,
-					completado               = :completado,
-					observ                   = :observ";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item'")) === FALSE) {
-				$sClauError = 'ActividadProcesoTarea.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-				return FALSE;
-			} else {
-				if ($oDblSt->execute($aDades) === FALSE) {
-					$sClauError = 'ActividadProcesoTarea.update.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-					return FALSE;
-				} elseif (core\ConfigGlobal::is_app_installed('procesos')) {
-				    if (core\ConfigGlobal::is_app_installed('cambios')) {
+            if ($permitido) {
+                $update="
+                        id_tipo_proceso          = :id_tipo_proceso,
+                        id_activ                 = :id_activ,
+                        id_fase                  = :id_fase,
+                        id_tarea                 = :id_tarea,
+                        n_orden                  = :n_orden,
+                        completado               = :completado,
+                        observ                   = :observ";
+                if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item'")) === FALSE) {
+                    $sClauError = 'ActividadProcesoTarea.update.prepare';
+                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                    return FALSE;
+                } else {
+                    if ($oDblSt->execute($aDades) === FALSE) {
+                        $sClauError = 'ActividadProcesoTarea.update.execute';
+                        $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                        // Dejar la actividad como estaba
+                        $oActividad->setStatus($statusActividad);
+                        $oActividad->DBGuardar();
+                        return FALSE;
+                    } elseif (core\ConfigGlobal::is_app_installed('cambios')) {
                         if (empty($quiet)) {
                             $oGestorCanvis = new gestorAvisoCambios();
                             $shortClassName = (new \ReflectionClass($this))->getShortName();
                             $oGestorCanvis->addCanvi($shortClassName, 'FASE', $this->iid_activ, $aDades, $this->aDadesActuals);
                         }
-				    }
-				    // comprobar si hay que cambiar el estado (status) de la actividad.
-				    // en caso de completar la fase. Si se quita el 'completado' habría que buscar la fase anterior para saber que status corresponde.
-				    $oActividad = new Actividad($this->iid_activ);
-				    $statusActividad = $oActividad->getStatus();
-				    $oProceso = new Proceso(array('id_tipo_proceso'=>$this->iid_tipo_proceso,'id_fase'=>$this->iid_fase,'id_tarea'=>$this->iid_tarea));
-				    if ($aDades['completado'] == 't') {
-				        $statusProceso = $oProceso->getStatus();
-				    } else {
-				        $itemProceso = $oProceso->getId_item();
-				        $GesProcesos = new GestorProceso();
-				        $statusProceso = $GesProcesos->getStatusFaseAnterior($itemProceso);
-				    }
-				    if ($statusProceso != $statusActividad) { // cambiar el status de la actividad.
-				        // OJO si la actividad no es de la dl, no puedo cambiarla.
-				        $dl_org = $oActividad->getDl_org();
-				        $id_tabla = $oActividad->getId_tabla();
-				        if ($dl_org == core\ConfigGlobal::mi_delef()) {
-                            $oActividad->setStatus($statusProceso);
-                            $oActividad->DBGuardar();
-				        } else {
-				            if ($id_tabla == 'dl') {
-				                //$oActividad = new ActividadPub($a_pkey);
-				                // No se puede eliminar una actividad de otra dl
-				                echo _("no se puede modificar el status de una actividad de otra dl");
-				                //return false;
-				            } else {
-                                $oActividad->setStatus($statusProceso);
-                                $oActividad->DBGuardar();
-				            }
-				        }
-				    }
-				}
-			}
-            $this->setAllAtributes($aDades);
+                    }
+                }
+                $this->setAllAtributes($aDades);
+            }
 		} else {
 			// INSERT
 			$campos="(id_tipo_proceso,id_activ,id_fase,id_tarea,n_orden,completado,observ)";
@@ -234,7 +288,8 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 					return FALSE;
 				}
 			}
-			$id_item = $oDbl->lastInsertId('a_actividad_proceso_id_item_seq');
+			$nomSeq = $this->sNomTabla."_id_item_seq";
+			$id_item = $oDbl->lastInsertId($nomSeq);
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item=$id_item")) === false) {
 			    $sClauError = 'ActividadProcesoTarea.carregar.Last';
 			    $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -312,6 +367,25 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 	}
 	
 	/* METODES ALTRES  ----------------------------------------------------------*/
+	
+	function marcarFaseActual() {
+	    //Estoy en sv. debo buscar el proceso de sf, la fase y poner completado:
+	    $aWhere = ['id_activ' => $this->iid_activ, 'id_fase' => $this->iid_fase];
+	    $gesActividadPorcesoTareas = new GestorActividadProcesoTarea();
+		// Al revés para actuar en el proceso de la otra sección.
+		if (core\ConfigGlobal::mi_sfsv() == 1) {
+    	    $gesActividadPorcesoTareas->setNomTabla('a_actividad_proceso_sf');
+		} else {
+    	    $gesActividadPorcesoTareas->setNomTabla('a_actividad_proceso_sv');
+		}
+		$cActividadPorcesoTareas = $gesActividadPorcesoTareas->getActividadProcesoTareas($aWhere);
+		if (!empty($cActividadPorcesoTareas)) {
+		    $oActividadPorcesoTarea = $cActividadPorcesoTareas[0];
+		    $oActividadPorcesoTarea->setCompletado('t');
+		    $oActividadPorcesoTarea->DBGuardar();
+		}
+	}
+	
 	/* METODES PRIVATS ----------------------------------------------------------*/
 
 	/**

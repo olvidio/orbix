@@ -3,7 +3,7 @@ namespace procesos\model\entity;
 use core;
 use actividades\model\entity\Actividad;
 /**
- * Fitxer amb la Classe que accedeix a la taula a_procesos
+ * Fitxer amb la Classe que accedeix a la taula a_tareas_proceso
  *
  * @package orbix
  * @subpackage model
@@ -12,7 +12,7 @@ use actividades\model\entity\Actividad;
  * @created 07/12/2018
  */
 /**
- * Classe que implementa l'entitat a_procesos
+ * Classe que implementa l'entitat a_tareas_proceso
  *
  * @package orbix
  * @subpackage model
@@ -20,92 +20,92 @@ use actividades\model\entity\Actividad;
  * @version 1.0
  * @created 07/12/2018
  */
-class Proceso Extends core\ClasePropiedades {
+class TareaProceso Extends core\ClasePropiedades {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/**
-	 * aPrimary_key de Proceso
+	 * aPrimary_key de TareaProceso
 	 *
 	 * @var array
 	 */
 	 private $aPrimary_key;
 
 	/**
-	 * aDades de Proceso
+	 * aDades de TareaProceso
 	 *
 	 * @var array
 	 */
 	 private $aDades;
 
 	/**
-	 * Id_item de Proceso
+	 * Id_item de TareaProceso
 	 *
 	 * @var integer
 	 */
 	 private $iid_item;
 	/**
-	 * Id_tipo_proceso de Proceso
+	 * Id_tipo_proceso de TareaProceso
 	 *
 	 * @var integer
 	 */
 	 private $iid_tipo_proceso;
 	/**
-	 * N_orden de Proceso
+	 * N_orden de TareaProceso
 	 *
 	 * @var integer
 	 */
 	 private $in_orden;
 	/**
-	 * Id_fase de Proceso
+	 * Id_fase de TareaProceso
 	 *
 	 * @var integer
 	 */
 	 private $iid_fase;
 	/**
-	 * Id_tarea de Proceso
+	 * Id_tarea de TareaProceso
 	 *
 	 * @var integer
 	 */
 	 private $iid_tarea;
 	/**
-	 * Status de Proceso
+	 * Status de TareaProceso
 	 *
 	 * @var integer
 	 */
 	 private $istatus;
 	/**
-	 * Of_responsable de Proceso
+	 * Of_responsable de TareaProceso
 	 *
 	 * @var string
 	 */
 	 private $sof_responsable;
 	/**
-	 * Id_fase_previa de Proceso
+	 * Id_fase_previa de TareaProceso
 	 *
 	 * @var integer
 	 */
 	 private $iid_fase_previa;
 	/**
-	 * Id_tarea_previa de Proceso
+	 * Id_tarea_previa de TareaProceso
 	 *
 	 * @var integer
 	 */
 	 private $iid_tarea_previa;
 	/**
-	 * Mensaje_requisito de Proceso
+	 * Mensaje_requisito de TareaProceso
 	 *
 	 * @var string
 	 */
 	 private $smensaje_requisito;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
-	 * oDbl de Proceso
+	 * oDbl de TareaProceso
 	 *
 	 * @var object
 	 */
 	 protected $oDbl;
 	/**
-	 * NomTabla de Proceso
+	 * NomTabla de TareaProceso
 	 *
 	 * @var string
 	 */
@@ -135,7 +135,7 @@ class Proceso Extends core\ClasePropiedades {
 			}
 		}
 		$this->setoDbl($oDbl);
-		$this->setNomTabla('a_procesos');
+		$this->setNomTabla('a_tareas_proceso');
 	}
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
@@ -174,12 +174,12 @@ class Proceso Extends core\ClasePropiedades {
 					id_tarea_previa          = :id_tarea_previa,
 					mensaje_requisito        = :mensaje_requisito";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item'")) === FALSE) {
-				$sClauError = 'Proceso.update.prepare';
+				$sClauError = 'TareaProceso.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return FALSE;
 			} else {
 				if ($oDblSt->execute($aDades) === FALSE) {
-					$sClauError = 'Proceso.update.execute';
+					$sClauError = 'TareaProceso.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return FALSE;
 				}
@@ -189,12 +189,12 @@ class Proceso Extends core\ClasePropiedades {
 			$campos="(id_tipo_proceso,n_orden,id_fase,id_tarea,status,of_responsable,id_fase_previa,id_tarea_previa,mensaje_requisito)";
 			$valores="(:id_tipo_proceso,:n_orden,:id_fase,:id_tarea,:status,:of_responsable,:id_fase_previa,:id_tarea_previa,:mensaje_requisito)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
-				$sClauError = 'Proceso.insertar.prepare';
+				$sClauError = 'TareaProceso.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return FALSE;
 			} else {
 				if ($oDblSt->execute($aDades) === FALSE) {
-					$sClauError = 'Proceso.insertar.execute';
+					$sClauError = 'TareaProceso.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return FALSE;
 				}
@@ -214,7 +214,7 @@ class Proceso Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iid_item)) {
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item='$this->iid_item'")) === FALSE) {
-				$sClauError = 'Proceso.carregar';
+				$sClauError = 'TareaProceso.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return FALSE;
 			}
@@ -233,7 +233,7 @@ class Proceso Extends core\ClasePropiedades {
 		} elseif (!empty($this->aPrimary_key)) {
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla 
                     WHERE id_tipo_proceso=$this->iid_tipo_proceso AND id_fase=$this->iid_fase AND id_tarea=$this->iid_tarea")) === FALSE) {
-				$sClauError = 'Proceso.carregar';
+				$sClauError = 'TareaProceso.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return FALSE;
 			}
@@ -262,7 +262,7 @@ class Proceso Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item='$this->iid_item'")) === FALSE) {
-			$sClauError = 'Proceso.eliminar';
+			$sClauError = 'TareaProceso.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return FALSE;
 		}
@@ -294,7 +294,7 @@ class Proceso Extends core\ClasePropiedades {
 	/* METODES GET i SET --------------------------------------------------------*/
 
 	/**
-	 * Recupera tots els atributs de Proceso en un array
+	 * Recupera tots els atributs de TareaProceso en un array
 	 *
 	 * @return array aDades
 	 */
@@ -306,7 +306,7 @@ class Proceso Extends core\ClasePropiedades {
 	}
 
 	/**
-	 * Recupera las claus primàries de Proceso en un array
+	 * Recupera las claus primàries de TareaProceso en un array
 	 *
 	 * @return array aPrimary_key
 	 */
@@ -318,7 +318,7 @@ class Proceso Extends core\ClasePropiedades {
 	}
 
 	/**
-	 * Recupera l'atribut iid_item de Proceso
+	 * Recupera l'atribut iid_item de TareaProceso
 	 *
 	 * @return integer iid_item
 	 */
@@ -329,7 +329,7 @@ class Proceso Extends core\ClasePropiedades {
 		return $this->iid_item;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_item de Proceso
+	 * estableix el valor de l'atribut iid_item de TareaProceso
 	 *
 	 * @param integer iid_item
 	 */
@@ -337,7 +337,7 @@ class Proceso Extends core\ClasePropiedades {
 		$this->iid_item = $iid_item;
 	}
 	/**
-	 * Recupera l'atribut iid_tipo_proceso de Proceso
+	 * Recupera l'atribut iid_tipo_proceso de TareaProceso
 	 *
 	 * @return integer iid_tipo_proceso
 	 */
@@ -348,7 +348,7 @@ class Proceso Extends core\ClasePropiedades {
 		return $this->iid_tipo_proceso;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_tipo_proceso de Proceso
+	 * estableix el valor de l'atribut iid_tipo_proceso de TareaProceso
 	 *
 	 * @param integer iid_tipo_proceso='' optional
 	 */
@@ -356,7 +356,7 @@ class Proceso Extends core\ClasePropiedades {
 		$this->iid_tipo_proceso = $iid_tipo_proceso;
 	}
 	/**
-	 * Recupera l'atribut in_orden de Proceso
+	 * Recupera l'atribut in_orden de TareaProceso
 	 *
 	 * @return integer in_orden
 	 */
@@ -367,7 +367,7 @@ class Proceso Extends core\ClasePropiedades {
 		return $this->in_orden;
 	}
 	/**
-	 * estableix el valor de l'atribut in_orden de Proceso
+	 * estableix el valor de l'atribut in_orden de TareaProceso
 	 *
 	 * @param integer in_orden='' optional
 	 */
@@ -375,7 +375,7 @@ class Proceso Extends core\ClasePropiedades {
 		$this->in_orden = $in_orden;
 	}
 	/**
-	 * Recupera l'atribut iid_fase de Proceso
+	 * Recupera l'atribut iid_fase de TareaProceso
 	 *
 	 * @return integer iid_fase
 	 */
@@ -386,7 +386,7 @@ class Proceso Extends core\ClasePropiedades {
 		return $this->iid_fase;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_fase de Proceso
+	 * estableix el valor de l'atribut iid_fase de TareaProceso
 	 *
 	 * @param integer iid_fase='' optional
 	 */
@@ -394,7 +394,7 @@ class Proceso Extends core\ClasePropiedades {
 		$this->iid_fase = $iid_fase;
 	}
 	/**
-	 * Recupera l'atribut iid_tarea de Proceso
+	 * Recupera l'atribut iid_tarea de TareaProceso
 	 *
 	 * @return integer iid_tarea
 	 */
@@ -405,7 +405,7 @@ class Proceso Extends core\ClasePropiedades {
 		return $this->iid_tarea;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_tarea de Proceso
+	 * estableix el valor de l'atribut iid_tarea de TareaProceso
 	 *
 	 * @param integer iid_tarea='' optional
 	 */
@@ -413,7 +413,7 @@ class Proceso Extends core\ClasePropiedades {
 		$this->iid_tarea = $iid_tarea;
 	}
 	/**
-	 * Recupera l'atribut istatus de Proceso
+	 * Recupera l'atribut istatus de TareaProceso
 	 *
 	 * @return integer istatus
 	 */
@@ -424,7 +424,7 @@ class Proceso Extends core\ClasePropiedades {
 		return $this->istatus;
 	}
 	/**
-	 * estableix el valor de l'atribut istatus de Proceso
+	 * estableix el valor de l'atribut istatus de TareaProceso
 	 *
 	 * @param integer istatus='' optional
 	 */
@@ -432,7 +432,7 @@ class Proceso Extends core\ClasePropiedades {
 		$this->istatus = $istatus;
 	}
 	/**
-	 * Recupera l'atribut sof_responsable de Proceso
+	 * Recupera l'atribut sof_responsable de TareaProceso
 	 *
 	 * @return string sof_responsable
 	 */
@@ -443,7 +443,7 @@ class Proceso Extends core\ClasePropiedades {
 		return $this->sof_responsable;
 	}
 	/**
-	 * estableix el valor de l'atribut sof_responsable de Proceso
+	 * estableix el valor de l'atribut sof_responsable de TareaProceso
 	 *
 	 * @param string sof_responsable='' optional
 	 */
@@ -451,7 +451,7 @@ class Proceso Extends core\ClasePropiedades {
 		$this->sof_responsable = $sof_responsable;
 	}
 	/**
-	 * Recupera l'atribut iid_fase_previa de Proceso
+	 * Recupera l'atribut iid_fase_previa de TareaProceso
 	 *
 	 * @return integer iid_fase_previa
 	 */
@@ -462,7 +462,7 @@ class Proceso Extends core\ClasePropiedades {
 		return $this->iid_fase_previa;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_fase_previa de Proceso
+	 * estableix el valor de l'atribut iid_fase_previa de TareaProceso
 	 *
 	 * @param integer iid_fase_previa='' optional
 	 */
@@ -470,7 +470,7 @@ class Proceso Extends core\ClasePropiedades {
 		$this->iid_fase_previa = $iid_fase_previa;
 	}
 	/**
-	 * Recupera l'atribut iid_tarea_previa de Proceso
+	 * Recupera l'atribut iid_tarea_previa de TareaProceso
 	 *
 	 * @return integer iid_tarea_previa
 	 */
@@ -481,7 +481,7 @@ class Proceso Extends core\ClasePropiedades {
 		return $this->iid_tarea_previa;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_tarea_previa de Proceso
+	 * estableix el valor de l'atribut iid_tarea_previa de TareaProceso
 	 *
 	 * @param integer iid_tarea_previa='' optional
 	 */
@@ -489,7 +489,7 @@ class Proceso Extends core\ClasePropiedades {
 		$this->iid_tarea_previa = $iid_tarea_previa;
 	}
 	/**
-	 * Recupera l'atribut smensaje_requisito de Proceso
+	 * Recupera l'atribut smensaje_requisito de TareaProceso
 	 *
 	 * @return string smensaje_requisito
 	 */
@@ -500,7 +500,7 @@ class Proceso Extends core\ClasePropiedades {
 		return $this->smensaje_requisito;
 	}
 	/**
-	 * estableix el valor de l'atribut smensaje_requisito de Proceso
+	 * estableix el valor de l'atribut smensaje_requisito de TareaProceso
 	 *
 	 * @param string smensaje_requisito='' optional
 	 */
@@ -514,24 +514,24 @@ class Proceso Extends core\ClasePropiedades {
 	 *
 	 */
 	function getDatosCampos() {
-		$oProcesoSet = new core\Set();
+		$oTareaProcesoSet = new core\Set();
 
-		$oProcesoSet->add($this->getDatosId_tipo_proceso());
-		$oProcesoSet->add($this->getDatosN_orden());
-		$oProcesoSet->add($this->getDatosId_fase());
-		$oProcesoSet->add($this->getDatosId_tarea());
-		$oProcesoSet->add($this->getDatosStatus());
-		$oProcesoSet->add($this->getDatosOf_responsable());
-		$oProcesoSet->add($this->getDatosId_fase_previa());
-		$oProcesoSet->add($this->getDatosId_tarea_previa());
-		$oProcesoSet->add($this->getDatosMensaje_requisito());
-		return $oProcesoSet->getTot();
+		$oTareaProcesoSet->add($this->getDatosId_tipo_proceso());
+		$oTareaProcesoSet->add($this->getDatosN_orden());
+		$oTareaProcesoSet->add($this->getDatosId_fase());
+		$oTareaProcesoSet->add($this->getDatosId_tarea());
+		$oTareaProcesoSet->add($this->getDatosStatus());
+		$oTareaProcesoSet->add($this->getDatosOf_responsable());
+		$oTareaProcesoSet->add($this->getDatosId_fase_previa());
+		$oTareaProcesoSet->add($this->getDatosId_tarea_previa());
+		$oTareaProcesoSet->add($this->getDatosMensaje_requisito());
+		return $oTareaProcesoSet->getTot();
 	}
 
 
 
 	/**
-	 * Recupera les propietats de l'atribut iid_tipo_proceso de Proceso
+	 * Recupera les propietats de l'atribut iid_tipo_proceso de TareaProceso
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
@@ -547,7 +547,7 @@ class Proceso Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut in_orden de Proceso
+	 * Recupera les propietats de l'atribut in_orden de TareaProceso
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
@@ -561,7 +561,7 @@ class Proceso Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut iid_fase de Proceso
+	 * Recupera les propietats de l'atribut iid_fase de TareaProceso
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
@@ -578,7 +578,7 @@ class Proceso Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut iid_tarea de Proceso
+	 * Recupera les propietats de l'atribut iid_tarea de TareaProceso
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
@@ -593,7 +593,7 @@ class Proceso Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut istatus de Proceso
+	 * Recupera les propietats de l'atribut istatus de TareaProceso
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
@@ -608,7 +608,7 @@ class Proceso Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut sof_responsable de Proceso
+	 * Recupera les propietats de l'atribut sof_responsable de TareaProceso
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
@@ -622,7 +622,7 @@ class Proceso Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut iid_fase_previa de Proceso
+	 * Recupera les propietats de l'atribut iid_fase_previa de TareaProceso
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
@@ -639,7 +639,7 @@ class Proceso Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut iid_tarea_previa de Proceso
+	 * Recupera les propietats de l'atribut iid_tarea_previa de TareaProceso
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
@@ -654,7 +654,7 @@ class Proceso Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut smensaje_requisito de Proceso
+	 * Recupera les propietats de l'atribut smensaje_requisito de TareaProceso
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo

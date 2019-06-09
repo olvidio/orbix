@@ -76,7 +76,7 @@ jsForm.mandar=function(formulario,que){
 	this.SoloUno = true;
 	switch(que) {
 		case "proceso":
-			this.action = "apps/actividades/controller/actividad_proceso.php";
+			this.action = "apps/procesos/controller/actividad_proceso.php";
 			break;
 		case "datos":
 			this.action = "apps/actividades/controller/actividad_ver.php";

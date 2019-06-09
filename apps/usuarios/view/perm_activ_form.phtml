@@ -1,5 +1,7 @@
 <?php
 
+use core\ConfigGlobal;
+
 // propios
 $i=0;
 $a_cabeceras=array('tipo de actividad','fase inicial','fase final','permiso','dl propia',array('name'=>'afecta_a','width'=>'350'));
@@ -20,7 +22,15 @@ foreach ($cUsuarioPerm as $oUsuarioPerm) {
     $dl_propia=$oUsuarioPerm->getDl_propia();
 
     if ($dl_propia=='t') {
-        $dl_propia_txt = core\ConfigGlobal::mi_dele();
+        if (substr($id_tipo, 0, 1) == 1) { //sv
+            $dl_propia_txt = core\ConfigGlobal::mi_dele();
+        } else { //sf
+            if (substr($id_tipo, 0, 1) == '.') { //sf y sv
+                $dl_propia_txt = core\ConfigGlobal::mi_dele().' - '.core\ConfigGlobal::mi_dele().'f';
+            } else {
+                $dl_propia_txt = core\ConfigGlobal::mi_dele().'f';
+            }
+        }
     } else {
         $dl_propia_txt = _("otras");
     }

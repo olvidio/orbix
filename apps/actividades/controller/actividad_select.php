@@ -30,6 +30,8 @@ use usuarios\model\entity as usuarios;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use permisos\model\PermisosActividadesTrue;
 use web\DateTimeLocal;
+use core\ConfigGlobal;
+use procesos\model\entity\GestorActividadProcesoTarea;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -110,14 +112,14 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
 	if (empty($Qempiezamin)) {
         $QempiezaminIso = date('Y-m-d',mktime(0, 0, 0, date('m'), date('d')-40, date('Y')));
 	} else {
-        $oEmpiezamin = web\DateTimeLocal::createFromLocal($Qempiezamin);
+        $oEmpiezamin = DateTimeLocal::createFromLocal($Qempiezamin);
 	    $QempiezaminIso = $oEmpiezamin->getIso(); 
 	}
 	// hasta dentro de 9 meses desde hoy.
 	if (empty($Qempiezamax)) {
 	   $QempiezamaxIso = date('Y-m-d',mktime(0, 0, 0, date('m')+9, 0, date('Y')));
 	} else {
-        $oEmpiezamax = web\DateTimeLocal::createFromLocal($Qempiezamax);
+        $oEmpiezamax = DateTimeLocal::createFromLocal($Qempiezamax);
 	    $QempiezamaxIso = $oEmpiezamax->getIso(); 
 	}
 	
@@ -150,7 +152,7 @@ if (empty($Qid_tipo_activ)) {
 	$Qssfsv = (string) \filter_input(INPUT_POST, 'ssfsv');
 	$Qsasistentes = (string) \filter_input(INPUT_POST, 'sasistentes');
 	$Qsactividad = (string) \filter_input(INPUT_POST, 'sactividad');
-	$Qsnom_tipo = (string) \filter_input(INPUT_POST, 'snom_tipo');
+	//$Qsnom_tipo = (string) \filter_input(INPUT_POST, 'snom_tipo');
 	
 	if (empty($Qssfsv)) {
 		if ($mi_sfsv == 1) $Qssfsv = 'sv';
@@ -158,7 +160,7 @@ if (empty($Qid_tipo_activ)) {
 	}
 	$sasistentes = empty($Qsasistentes)? '.' : $Qsasistentes;
 	$sactividad = empty($Qsactividad)? '.' : $Qsactividad;
-	$snom_tipo = empty($Qsnom_tipo)? '...' : $Qsnom_tipo;
+	//$snom_tipo = empty($Qsnom_tipo)? '...' : $Qsnom_tipo;
 	$oTipoActiv= new web\TiposActividades();
 	$oTipoActiv->setSfsvText($Qssfsv);
 	$oTipoActiv->setAsistentesText($sasistentes);
@@ -169,7 +171,7 @@ if (empty($Qid_tipo_activ)) {
 	$ssfsv=$oTipoActiv->getSfsvText();
 	$sasistentes=$oTipoActiv->getAsistentesText();
 	$sactividad=$oTipoActiv->getActividadText();
-	$nom_tipo=$oTipoActiv->getNom_tipoText();
+	//$nom_tipo=$oTipoActiv->getNom_tipoText();
 }
 if ($Qid_tipo_activ!='......') {
 	$aWhere['id_tipo_activ'] = "^$Qid_tipo_activ";
@@ -370,8 +372,8 @@ foreach($cActividades as $oActividad) {
 	$sasistentes=$oTipoActividad->getAsistentesText();
 	$sactividad=$oTipoActividad->getActividadText();
 	$nom_tipo=$oTipoActividad->getNom_tipoText();
-	if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm('ocupado') === false) { $sin++; continue; } // no tiene permisos ni para ver.
-	if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm('ver') === false) { // sólo puede ver que està ocupado
+	if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ocupado') === false) { $sin++; continue; } // no tiene permisos ni para ver.
+	if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ver') === false) { // sólo puede ver que està ocupado
 		$a_valores[$i]['sel']='';
 		$a_valores[$i]['select']='';
 		$a_valores[$i][1]=$f_ini;
@@ -401,18 +403,22 @@ foreach($cActividades as $oActividad) {
 		$oTarifa = new actividades\TipoTarifa($tarifa);
 		$tarifa_letra= $oTarifa->getLetra();
 
-		//$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/dossiers/controller/dossiers_ver.php?'.http_build_query(array('pau'=>'a','id_pau'=>$id_activ,'obj_pau'=>$obj_pau)));
-		
 		$sacds="";
-		if (!core\ConfigGlobal::is_app_installed('procesos') || $oPermSacd->have_perm('ver') === true) { // sólo si tiene permiso
-			if(core\ConfigGlobal::is_app_installed('actividadessacd')) {
-				$oCargosActividad=new actividadcargos\model\entity\GestorActividadCargo();
-				/*
-				foreach($oCargosActividad->getActividadSacds($id_activ) as $oPersona) {;
+        if(core\ConfigGlobal::is_app_installed('actividadessacd')) {
+            // sólo si tiene permiso
+            $aprobado = TRUE;
+            if (ConfigGlobal::mi_sfsv() == 2) {
+                $gesActividadProcesoTarea = new GestorActividadProcesoTarea();
+                $aprobado = $gesActividadProcesoTarea->getSacdAprobado($id_activ);
+            }
+		    if (!core\ConfigGlobal::is_app_installed('procesos')
+		        OR ($oPermSacd->have_perm_activ('ver') === true && $aprobado) ) 
+		        {
+				$gesCargosActividad=new actividadcargos\model\entity\GestorActividadCargo();
+				foreach($gesCargosActividad->getActividadSacds($id_activ) as $oPersona) {;
 					$sacds.=$oPersona->getApellidosNombre()."# "; // la coma la utilizo como separador de apellidos, nombre.
 				}
 				$sacds=substr($sacds,0,-2);
-				*/
 			}
 		}
 
@@ -493,19 +499,21 @@ if (core\ConfigGlobal::is_app_installed('procesos')) {
 }
 
 $oHash = new web\Hash();
+$oHash->setUrl('apps/actividades/controller/actividad_que.php');
 $a_camposHidden = array(
+		'modo' => $Qmodo,
 		'id_tipo_activ' => $Qid_tipo_activ,
+		'id_ubi' => $Qid_ubi,
 		'periodo' => $Qperiodo,
+		'year' => $Qyear,
+		'dl_org' => $Qdl_org,
+		'status' => $Qstatus,
 		'empiezamin' => $Qempiezamin,
 		'empiezamax' => $Qempiezamax,
-		'year' => $Qyear,
-		'status' => $Qstatus,
-		'dl_org' => $Qdl_org,
-		'id_ubi' => $Qid_ubi,
 		'filtro_lugar' => $Qfiltro_lugar,
-		'modo' => $Qmodo
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
+$oHash->setCamposNo('!modo!id_tipo_activ!id_ubi!periodo!year!dl_org!status!empiezamin!empiezamax!filtro_lugar');
 
 $oHashSel = new web\Hash();
 $oHashSel->setcamposForm('!sel!mod!queSel!id_dossier');

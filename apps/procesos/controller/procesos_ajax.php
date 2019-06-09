@@ -3,8 +3,8 @@ use actividades\model\entity\ActividadAll;
 use procesos\model\entity\ActividadFase;
 use procesos\model\entity\ActividadTarea;
 use procesos\model\entity\GestorActividadTarea;
-use procesos\model\entity\GestorProceso;
-use procesos\model\entity\Proceso;
+use procesos\model\entity\GestorTareaProceso;
+use procesos\model\entity\TareaProceso;
 use usuarios\model\entity\Usuario;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -39,35 +39,43 @@ switch($Qque) {
 			}
 		}
 
-		$oLista = new GestorProceso();
-		$oColection = $oLista->getProcesos(array('id_tipo_proceso'=>$Qid_tipo_proceso,'_ordre'=>'n_orden'));
-		$txt='<table>';
+		$GesTareaPorceso = new GestorTareaProceso();
+		$cTareasProceso = $GesTareaPorceso->getTareasProceso(array('id_tipo_proceso'=>$Qid_tipo_proceso,'_ordre'=>'n_orden'));
+		$txt = '<table>';
+        $txt .= '<tr><th>'._("status").'</th><th>'._("orden").'</th><th>'._("responsable").'</th>';
+        $txt .= '<th colspan=3>'._("fase - tarea").'</th><th>'._("modificar").'</th><th colspan=2>'._("prioridad").'</th><th>'._("eliminar").'</th></tr>';
 		$i=0;
-		foreach ($oColection as $oProceso) {
+		foreach ($cTareasProceso as $oTareaProceso) {
 			$i++;
-			$id_item=$oProceso->getId_item();
-			$status=$oProceso->getStatus();
+			$clase = ($i%2 == 0)? 'tono2' : 'tono4'; 
+			$id_item=$oTareaProceso->getId_item();
+			$status=$oTareaProceso->getStatus();
 			$status_txt=$a_status[$status];
-			$responsable=$oProceso->getOf_responsable();
-			$oFase = new ActividadFase($oProceso->getId_fase());
+			$responsable=$oTareaProceso->getOf_responsable();
+			$oFase = new ActividadFase($oTareaProceso->getId_fase());
 			$fase=$oFase->getDesc_fase();
 			$sf=($oFase->getSf())? 2 : 0;
 			$sv=($oFase->getSv())? 1 : 0;
 			//ojo, que puede ser las dos a la vez
-			if (!(($soy & $sf) OR ($soy & $sv))) continue; 
-			$oTarea = new ActividadTarea($oProceso->getId_tarea());
+			if (!(($soy & $sf) OR ($soy & $sv))) {
+			    $i--;
+			    continue; 
+			}
+			$oTarea = new ActividadTarea($oTareaProceso->getId_tarea());
 			$tarea=$oTarea->getDesc_tarea();
-			$oFase_previa = new ActividadFase($oProceso->getId_fase_previa());
+			$tarea_txt = empty($tarea)? '' : "($tarea)";
+			$oFase_previa = new ActividadFase($oTareaProceso->getId_fase_previa());
 			$fase_previa=$oFase_previa->getDesc_fase();
-			$oTarea_previa = new ActividadTarea($oProceso->getId_tarea_previa());
+			$oTarea_previa = new ActividadTarea($oTareaProceso->getId_tarea_previa());
 			$tarea_previa=$oTarea_previa->getDesc_tarea();
+			$tarea_previa_txt = empty($tarea_previa)? '' : "($tarea_previa)";
 			$mod="<span class=link onclick=fnjs_modificar($id_item) title='"._("modificar")."' >"._("modificar")."</span>";
 			$drop="<span class=link onclick=fnjs_eliminar($id_item) title='"._("eliminar")."' >"._("eliminar")."</span>";
 			$up="<span class=link onclick=fnjs_mover($id_item,'up') title='"._("mover hacia arriba")."' >+</span>";
 			$down="<span class=link onclick=fnjs_mover($id_item,'down') title='"._("mover hacia abajo")."' >-</span>";
 
-			$txt.="<tr><td>($status_txt)</td><td>$i</td><td>$responsable</td><td colspan=3>$fase ($tarea)</td><td>$mod</td><td>$up</td><td>$down</td><td>$drop</td></tr>";
-			$txt.="<tr><td></td><td></td><td>&nbsp;&nbsp;&nbsp;"._("requisito").":</td><td>$fase_previa ($tarea_previa)</td></tr>";
+			$txt.="<tr class=$clase><td>($status_txt)</td><td>$i</td><td>$responsable</td><td colspan=3>$fase $tarea_txt</td><td>$mod</td><td>$up</td><td>$down</td><td>$drop</td></tr>";
+			$txt.="<tr><td></td><td></td><td>&nbsp;&nbsp;&nbsp;"._("requisito").":</td><td>$fase_previa $tarea_previa_txt</td></tr>";
 		}
 		$txt.='</table>';
 		echo $txt;
@@ -75,7 +83,7 @@ switch($Qque) {
 	case 'orden':
 	    $Qid_item = (integer) \filter_input(INPUT_POST, 'id_item');
 	    $Qorden = (string) \filter_input(INPUT_POST, 'orden');
-		$oLista = new GestorProceso();
+		$oLista = new GestorTareaProceso();
 		$rta = $oLista->setProcesosOrden($Qid_item,$Qorden);
 		$error = '';
 		if ($rta === false) {
@@ -116,7 +124,7 @@ switch($Qque) {
 
 		if (empty($Qid_tarea)) $Qid_tarea=0; // no puede ser NULL.
 
-		$oFicha = new Proceso(array('id_item'=>$Qid_item));
+		$oFicha = new TareaProceso(array('id_item'=>$Qid_item));
 		$oFicha->setId_tipo_proceso($Qid_tipo_proceso);	
 		$oFicha->setN_orden($Qn_orden);	
 		$oFicha->setStatus($Qstatus);	
@@ -132,7 +140,7 @@ switch($Qque) {
 		break;
 	case 'eliminar':
 	    $Qid_item = (integer) \filter_input(INPUT_POST, 'id_item');
-		$oFicha = new Proceso(array('id_item'=>$Qid_item));
+		$oFicha = new TareaProceso(array('id_item'=>$Qid_item));
 		if ($oFicha->DBEliminar() === false) {
 			echo _("hay un error, no se ha eliminado");
 		}

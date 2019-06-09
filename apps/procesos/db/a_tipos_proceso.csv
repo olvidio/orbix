@@ -1,8 +1,18 @@
-3	ca n
-4	general
-5	general no dlb
-6	ca n (no dl)
-7	crt n (no dl)
-8	crt agd (no dl)
-9	crt agd
-10	crt n
+3	ca n	1
+4	general	1
+5	general no dl	1
+6	ca n (no dl)	1
+7	crt n (no dl)	1
+8	crt agd (no dl)	1
+9	crt agd	1
+10	crt n	1
+13	ca n	2
+14	general	2
+15	general no dl	2
+16	ca n (no dl)	2
+17	crt n (no dl)	2
+18	crt agd (no dl)	2
+19	crt agd	2
+20	crt n	2
+21	sv	2
+22	sf	1

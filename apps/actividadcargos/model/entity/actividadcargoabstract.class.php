@@ -101,7 +101,7 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 	 protected $sNomTabla;
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
-/**
+    /**
 	 * Constructor de la classe.
 	 * Si només necessita un valor, se li pot passar un integer.
 	 * En general se li passa un array amb les claus primàries.
@@ -240,7 +240,7 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 		} elseif (!empty($this->aPrimary_key)) {
 		    if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla
                     WHERE id_activ=$this->iid_activ AND id_cargo=$this->iid_cargo")) === FALSE) {
-                    $sClauError = 'Proceso.carregar';
+                    $sClauError = 'ActividadCargo.carregar';
                     $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                     return FALSE;
 		    }
@@ -267,6 +267,7 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 	 *
 	 */
 	public function DBEliminar() {
+	    $this->DBCarregar();
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		// que tenga el módulo de 'cambios'

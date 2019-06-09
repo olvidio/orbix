@@ -47,23 +47,23 @@ class GestorActividadTarea Extends core\ClaseGestor {
 	    $oDbl = $this->getoDbl();
 	    $nom_tabla = $this->getNomTabla();
 	    $where_txt = '';
+	    $aOpciones=array();
 	    if (!empty($iid_fase)) {
 	        $where_txt = " WHERE id_fase = $iid_fase ";
-	    }
-	    $sQuery="SELECT  id_tarea, desc_tarea 
-                       FROM $nom_tabla
-                       $where_txt
-                       ORDER BY id_fase,desc_tarea";
-	    if (($oDbl->query($sQuery)) === false) {
-	        $sClauError = 'GestorActividadTarea.lista';
-	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-	        return false;
-	    }
-	    $aOpciones=array();
-	    foreach ($oDbl->query($sQuery) as $aClave) {
-	        $clave=$aClave[0];
-	        $val=$aClave[1];
-	        $aOpciones[$clave]=$val;
+            $sQuery="SELECT  id_tarea, desc_tarea 
+                           FROM $nom_tabla
+                           $where_txt
+                           ORDER BY id_fase,desc_tarea";
+            if (($oDbl->query($sQuery)) === false) {
+                $sClauError = 'GestorActividadTarea.lista';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                return false;
+            }
+            foreach ($oDbl->query($sQuery) as $aClave) {
+                $clave=$aClave[0];
+                $val=$aClave[1];
+                $aOpciones[$clave]=$val;
+            }
 	    }
 	    return new Desplegable('',$aOpciones,'',true);
 	}
@@ -77,7 +77,7 @@ class GestorActividadTarea Extends core\ClaseGestor {
 	function getActividadTareasQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
 		$oActividadTareaSet = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === FALSE) {
+		if (($oDbl->query($sQuery)) === FALSE) {
 			$sClauError = 'GestorActividadTarea.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return FALSE;

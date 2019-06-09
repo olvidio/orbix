@@ -104,8 +104,8 @@ class GestorActividadAll Extends core\ClaseGestor {
 	        $_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
 	        $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
 	        
-	        if ($oPermActiv->have_perm('ocupado') === false) { $a++; continue; } // no tiene permisos ni para ver.
-	        if ($oPermActiv->have_perm('ver') === false) { // sólo puede ver que està ocupado
+	        if ($oPermActiv->have_perm_activ('ocupado') === false) { $a++; continue; } // no tiene permisos ni para ver.
+	        if ($oPermActiv->have_perm_activ('ver') === false) { // sólo puede ver que està ocupado
 	            $nom_curt= $ssfsv;
 	            $nom_llarg= "$ssfsv ($ini-$fi)";
 	        } else {
@@ -113,7 +113,7 @@ class GestorActividadAll Extends core\ClaseGestor {
 	            $nom_llarg=$nom_activ;
 	        }
 	        
-	        if ($oPermActiv->have_perm('modificar')) { // puede modificar
+	        if ($oPermActiv->have_perm_activ('modificar')) { // puede modificar
 	            // en realidad creo que simplemente tiene que haber algo. Activa la funcion de javascript: cambiar_activ.
 	            $pagina='programas/actividad_ver.php';
 	        } else {

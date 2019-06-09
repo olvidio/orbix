@@ -1,15 +1,16 @@
 <?php
-use actividades\model\entity\GestorActividad;
-use actividades\model\entity\TipoDeActividad;
+use actividades\model\entity\GestorActividadDl;
+use actividades\model\entity\GestorActividadPub;
 use actividades\model\entity\GestorTipoDeActividad;
+use actividades\model\entity\TipoDeActividad;
 use core\ConfigGlobal;
 use procesos\model\entity\ActividadFase;
 use procesos\model\entity\GestorActividadFase;
-use procesos\model\entity\GestorProceso;
 use procesos\model\entity\GestorActividadProcesoTarea;
-use procesos\model\entity\Proceso;
+use procesos\model\entity\GestorTareaProceso;
 use web\Lista;
 use web\Periodo;
+use actividades\model\entity\Actividad;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
@@ -69,14 +70,15 @@ switch($Qque) {
 		// dl_org
 		if ($Qdl_propia == 't') {
 			$aWhere['dl_org'] = ConfigGlobal::mi_delef();
+    		$oActividades = new GestorActividadDl();
 		} else {
 			$aWhere['dl_org'] = ConfigGlobal::mi_delef();
 			$aOperador['dl_org'] = '!=';
+    		$oActividades = new GestorActividadPub();
 		}
 		// las borrables no
 		$aWhere['status'] = 4;
 		$aOperador['status'] = '<';
-
 
 		// periodo.
 		if (empty($Qperiodo) || $Qperiodo == 'otro') {
@@ -97,7 +99,6 @@ switch($Qque) {
 			$aWhere['f_ini'] = "'$Qinicio','$Qfin'";
 			$aOperador['f_ini'] = 'BETWEEN';
 		}
-		$oActividades=new GestorActividad();
 
 		$i=0;
 		$a_cabeceras=array();
@@ -128,10 +129,10 @@ switch($Qque) {
 			$oTipoActiv = new TipoDeActividad(array('id_tipo_activ'=>$id_tipo_activ));
 			$id_tipo_proceso = $oTipoActiv->getId_tipo_proceso();
 			// miro cual es la tarea previa.
-			$GesProceso = new GestorProceso();
-			$cProcesos = $GesProceso->getProcesos(array('id_tipo_proceso'=>$id_tipo_proceso,'id_fase'=>$Qid_fase_nueva));
-			foreach ($cProcesos as $oProceso) {
-				$id_fase_previa = $oProceso->getId_fase_previa();
+			$GesTareaProceso = new GestorTareaProceso();
+			$cTareasProceso = $GesTareaProceso->getTareasProceso(array('id_tipo_proceso'=>$id_tipo_proceso,'id_fase'=>$Qid_fase_nueva));
+			foreach ($cTareasProceso as $oTareaProceso) {
+				$id_fase_previa = $oTareaProceso->getId_fase_previa();
 				// Busco el proceso de esta actividad
 				$GesActivProceso = new GestorActividadProcesoTarea();
 				$id_fase_actual = $GesActivProceso->faseActualAcabada($id_activ); // también posible 'START' y 'SIN'
@@ -139,7 +140,7 @@ switch($Qque) {
 				if (!empty($id_fase_previa)) {
 					$cActivProceso = $GesActivProceso->getActividadProcesoTareas(array('id_activ'=>$id_activ,'id_fase'=>$id_fase_previa));
 					if (empty($cActivProceso)) {
-						$mensaje_requisito = $oProceso->getMensaje_requisito();
+						$mensaje_requisito = $oTareaProceso->getMensaje_requisito();
 						$a_valores[$i]['clase']='wrong';
 					} else {
                         $fase_previa_completado = $cActivProceso[0]->getCompletado(); // sólo uno
@@ -148,7 +149,7 @@ switch($Qque) {
                             $num_ok++;
                             if ($Qid_fase_nueva == $id_fase_actual) { $mensaje_requisito = '='; $num_ok--; }
                         } else {
-                            $mensaje_requisito = $oProceso->getMensaje_requisito();
+                            $mensaje_requisito = $oTareaProceso->getMensaje_requisito();
                             $a_valores[$i]['clase']='wrong';
                         }
 					}
@@ -212,7 +213,17 @@ switch($Qque) {
 			$GesActividadProceso = new GestorActividadProcesoTarea();
 			// selecciono todas las tareas de esta fase.
 			$cLista = $GesActividadProceso->getActividadProcesoTareas(array('id_activ'=>$id_activ,'_ordre'=>'n_orden'));
-			$cListaSel = $GesActividadProceso->getActividadProcesoTareas(array('id_activ'=>$id_activ,'id_fase'=>$Qid_fase_nueva , '_ordre'=>'n_orden'));
+			$cListaSel = $GesActividadProceso->getActividadProcesoTareas(array('id_activ'=>$id_activ,'id_fase'=>$Qid_fase_nueva, '_ordre'=>'n_orden'));
+			if (empty($cListaSel)) {
+			    // No se encuentra esta fase para esta actividad
+			    $oActividad = new Actividad($id_activ);
+			    $nom_activ = $oActividad->getNom_activ();
+			    $txt = sprintf(_("No se encuentra esta fase %s para esta actividad %s(%s)"),$Qid_fase_nueva,$nom_activ,$id_activ);
+			    $txt .= '<br>';
+			    $txt .= _("puede que tenga que regenerar el proceso");
+			    echo $txt;
+			    continue;
+			}
 			$n_ordenSel = $cListaSel[0]->getN_orden();
 			foreach($cLista as $oActividadProcesoTarea) {
 				$oActividadProcesoTarea->DBCarregar(); // perque tingui tots els valors, y no esborri al grabar.
@@ -225,10 +236,19 @@ switch($Qque) {
     				$completado = $oActividadProcesoTarea->getCompletado();
     				if ($completado != 't') {
     				    //buscar of responsable
-    				    $oProceso = new Proceso(array('id_tipo_proceso'=>$id_tipo_proceso,
-    				        'id_fase'=>$id_fase,
-    				        'id_tarea'=>$id_tarea));
-    				    $responsable=$oProceso->getOf_responsable();
+    				    $GesTareaProcesos = new GestorTareaProceso();
+    				    $cTareasProceso = $GesTareaProcesos->getTareasProceso(['id_tipo_proceso'=>$id_tipo_proceso,
+    				                                                    'id_fase'=>$id_fase,
+    				                                                    'id_tarea'=>$id_tarea
+    				                                            ]);
+    				    // sólo debería haber uno
+    				    if (!empty($cTareasProceso)) {
+    				        $oTareaProceso = $cTareasProceso[0];
+    				    } else {
+    				        $msg_err = sprintf(_("error: La fase del proceso tipo: %s, fase: %s, tarea: %s"),$id_tipo_proceso,$id_fase,$id_tarea);
+    				        exit($msg_err);
+    				    }
+    				    $responsable=$oTareaProceso->getOf_responsable();
     				    if (($_SESSION['oPerm']->have_perm($responsable))) {
 				            $oActividadProcesoTarea->setCompletado('t');
                             if ($oActividadProcesoTarea->DBGuardar() === false) {

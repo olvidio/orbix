@@ -126,6 +126,7 @@ class PersonaSSSC Extends PersonaDl {
 					return false;
 				}
 			}
+			$this->aDades=$aDades;
 			$this->setAllAtributes($aDades);
 		} else {
 			// INSERT
@@ -159,6 +160,12 @@ class PersonaSSSC Extends PersonaDl {
 			$aDadesLast = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 			$this->aDades=$aDadesLast;
 			$this->setAllAtributes($aDadesLast);
+		}
+        // Modifico la ficha en la BD-comun
+		if ($this->bsacd) {
+		    $aDades = $this->aDades;
+		    $aDades['id_tabla'] = $this->sid_tabla;
+		    $this->copia2Comun($aDades);
 		}
 		return true;
 	}

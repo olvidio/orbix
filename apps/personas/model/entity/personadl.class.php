@@ -133,16 +133,17 @@ class PersonaDl Extends PersonaGlobal {
 					return false;
 				}
 			}
+			$this->aDades=$aDades;
 			$this->setAllAtributes($aDades);
 		} else {
 			// INSERT
-				$campos="id_cr,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,lengua,situacion,f_situacion,apel_fam,inc,f_inc,stgr,profesion,eap,observ,id_ctr,lugar_nacimiento";
+            $campos="id_cr,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,lengua,situacion,f_situacion,apel_fam,inc,f_inc,stgr,profesion,eap,observ,id_ctr,lugar_nacimiento";
 			$valores=":id_cr,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:lengua,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:stgr,:profesion,:eap,:observ,:id_ctr,:lugar_nacimiento";
 			if (empty($this->iid_nom)) {
 				$campos="($campos)";
 				$valores="($valores)";
 			} else {
-				array_unshift($aDades, $this->iid_nom);
+				array_shift($aDades, $this->iid_nom);
 				$campos="(id_nom,$campos)";
 				$valores="(:id_nom,$valores)";
 			}
@@ -167,6 +168,12 @@ class PersonaDl Extends PersonaGlobal {
 			$this->aDades=$aDadesLast;
 			$this->setAllAtributes($aDadesLast);
 		}
+        // Modifico la ficha en la BD-comun
+        if ($this->bsacd) {
+            $aDades = $this->aDades;
+            $aDades['id_tabla'] = $this->sid_tabla;
+            $this->copia2Comun($aDades);
+        }
 		return true;
 	}
 
@@ -207,7 +214,7 @@ class PersonaDl Extends PersonaGlobal {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_nom=$this->iid_nom")) === false) {
+		if (( $oDbl->exec("DELETE FROM $nom_tabla WHERE id_nom=$this->iid_nom")) === false) {
 			$sClauError = 'PersonaDl.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -216,6 +223,12 @@ class PersonaDl Extends PersonaGlobal {
 	}
 	
 	/* METODES ALTRES  ----------------------------------------------------------*/
+	protected function copia2Comun($aDades) {
+	    $oPersonaSacd = new PersonaSacd($this->iid_nom);
+	    $oPersonaSacd->setAllAtributes($aDades);
+	    $oPersonaSacd->DBGuardar();
+	    
+	}
 	/* METODES PRIVATS ----------------------------------------------------------*/
 
 	/**

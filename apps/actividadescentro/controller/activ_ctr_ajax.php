@@ -94,7 +94,7 @@ switch ($Qque) {
 		$oPermCtr = $_SESSION['oPermActividades']->getPermisoActual('ctr');
 
 		$txt='';
-		if ($oPermCtr->have_perm('ver') === true) { // sólo si tiene permiso
+		if ($oPermCtr->have_perm_activ('ver') === true) { // sólo si tiene permiso
 			// listado de centros encargados
 			$GesCtrEncargados = new GestorCentroEncargado();
 			$cCtrsEncargados = $GesCtrEncargados->getCentrosEncargadosActividad($Qid_activ);	
@@ -105,7 +105,7 @@ switch ($Qque) {
 				$nombre_ubi = $oCentro->getNombre_ubi();
 				$id_txt_ubi=$Qid_activ."_".$id_ubi;
 				
-				if ($oPermCtr->have_perm('modificar') === true) { // sólo si tiene permiso para modificar
+				if ($oPermCtr->have_perm_activ('modificar') === true) { // sólo si tiene permiso para modificar
 					$txt_ctr.="<span class=link id=$id_txt_ubi onclick=fnjs_cambiar_ctr(event,'$Qid_activ','$id_ubi')> $nombre_ubi;</span>";
 				} else { // permiso para ver (si no tiene permisos ya estamos aqui)
 					$txt_ctr.="<span> $nombre_ubi</span>";
@@ -205,7 +205,7 @@ switch ($Qque) {
 		$aOperador['tipo_ctr'] = '~';
 		*/
 		$GesCentros = new GestorCentroEllas();
-		$cCentros = $GesCentros->getCentrosSf($aWhere,$aOperador);
+		$cCentros = $GesCentros->getCentros($aWhere,$aOperador);
 		$txt_ctr='';
 		foreach ($cCentros as $oCentro) {
 			$id_ubi = $oCentro->getId_ubi();
@@ -222,7 +222,7 @@ switch ($Qque) {
 		$aWhere['tipo_labor'] = '512'; //sg -> 512
 		$aOperador['tipo_labor'] = '&';
 		$GesCentros = new GestorCentroEllas();
-		$cCentros = $GesCentros->getCentrosSf($aWhere,$aOperador);
+		$cCentros = $GesCentros->getCentros($aWhere,$aOperador);
 		$txt_ctr='';
 		foreach ($cCentros as $oCentro) {
 			$id_ubi = $oCentro->getId_ubi();
@@ -239,7 +239,7 @@ switch ($Qque) {
 		$aWhere['tipo_ctr'] = '^[na]';
 		$aOperador['tipo_ctr'] = '~';
 		$GesCentros = new GestorCentroEllas();
-		$cCentros = $GesCentros->getCentrosSf($aWhere,$aOperador);
+		$cCentros = $GesCentros->getCentros($aWhere,$aOperador);
 		$txt_ctr='';
 		foreach ($cCentros as $oCentro) {
 			$id_ubi = $oCentro->getId_ubi();
@@ -360,8 +360,8 @@ switch ($Qque) {
 			    $oPermCtr = $_SESSION['oPermActividades']->getPermisoActual('ctr');
 			}
 
-			if ($oPermActiv->have_perm('ocupado') === false) { $sin++; continue; } // no tiene permisos ni para ver.
-			if ($oPermActiv->have_perm('ver') === false) { // sólo puede ver que està ocupado
+			if ($oPermActiv->have_perm_activ('ocupado') === false) { $sin++; continue; } // no tiene permisos ni para ver.
+			if ($oPermActiv->have_perm_activ('ver') === false) { // sólo puede ver que està ocupado
 			} else {
 				$a_valores[$i][0]=$id_activ;
 				$a_valores[$i][10]=$oPermCtr; // para no tener que recalcularlo despues.
@@ -371,7 +371,7 @@ switch ($Qque) {
 				$GesCtrEncargados = new GestorCentroEncargado();
 				$cCtrsEncargados = $GesCtrEncargados->getCentrosEncargadosActividad($id_activ);	
 				$a_centros=array();
-				if ($oPermCtr->have_perm('ver') === true) { // sólo si tiene permiso
+				if ($oPermCtr->have_perm_activ('ver') === true) { // sólo si tiene permiso
 					foreach($cCtrsEncargados as $oCentro) {
 						$id_ubi = $oCentro->getId_ubi();
 						$nombre_ubi = $oCentro->getNombre_ubi();
@@ -386,7 +386,7 @@ switch ($Qque) {
 		?>
 
 		<p><h3><?= $titulo ?></h3></p>	
-		<table onclick="fnjs_cambiar_ctr(event,'','','');"><tr>
+		<table><tr>
 		<?php
 		foreach ($a_cabeceras as $cabecera) {
 			echo "<td>$cabecera</td>";
@@ -406,7 +406,7 @@ switch ($Qque) {
 				foreach ($valores[2] as $a_centro){
 					$id_ubi=$a_centro['id_ubi'];
 					$id_txt_ubi=$id_activ."_".$id_ubi;
-					if ($oPermCtr->have_perm('modificar') === true) { // sólo si tiene permiso para modificar
+					if ($oPermCtr->have_perm_activ('modificar') === true) { // sólo si tiene permiso para modificar
 						$txt_ctr.="<span class=link id=$id_txt_ubi onclick=fnjs_cambiar_ctr(event,'$id_activ','$id_ubi')> ${a_centro['nombre_ubi']};</span>";
 					} else { // permiso para ver (si no tiene permisos el valor($valores[2]) ya está en blanco)
 						$txt_ctr.="<span> ${a_centro['nombre_ubi']};</span>";
@@ -414,8 +414,8 @@ switch ($Qque) {
 				}
 			}
 			$txt_id=$valores[0]."_ctrs";
-			if ($oPermCtr->have_perm('crear') === true) { // sólo si tiene permiso para crear
-				$nuevo_txt="<span class=link onclick=fnjs_nuevo_ctr('$id_activ','$inicio','$fin','$f_ini','$f_fin')>nuevo</span>";
+			if ($oPermCtr->have_perm_activ('crear') === true) { // sólo si tiene permiso para crear
+				$nuevo_txt="<span class=link onclick=fnjs_nuevo_ctr(event,'$id_activ','$inicio','$fin','$f_ini','$f_fin')>nuevo</span>";
 			} else {
 				$nuevo_txt='';
 			}

@@ -21,30 +21,32 @@ class DBEsquema extends DBAbstract {
     }
     
     public function dropAll() {
-        $this->eliminar_a_actividad_proceso();
+        $this->eliminar_a_actividad_proceso('sv');
+        $this->eliminar_a_actividad_proceso('sf');
         $this->eliminar_a_tipos_proceso();
-        $this->eliminar_a_procesos();
+        $this->eliminar_a_tareas_proceso();
         $this->eliminar_a_fases();
         $this->eliminar_a_tareas();
         $this->eliminar_aux_usuarios_perm();
     }
     
     public function createAll() {
-        $this->create_a_actividad_proceso();
+        $this->create_a_tareas(); // antes que 'actividad_proceso' por el FOREIGN KEY
+        $this->create_a_fases(); // antes que 'actividad_proceso' por el FOREIGN KEY
+        $this->create_a_actividad_proceso('sv');
+        $this->create_a_actividad_proceso('sf');
         $this->create_a_tipos_procesos();
-        $this->create_a_tareas();
-        $this->create_a_fases();
-        $this->create_a_procesos();
+        $this->create_a_tareas_proceso();
         $this->create_aux_usuarios_perm();
     }
     
     public function llenarAll() {
-        $this->llenar_a_tipos_actividad();
-        $this->llenar_a_actividad_proceso();
-        $this->llenar_a_tipos_procesos();
         $this->llenar_a_tareas();
         $this->llenar_a_fases();
-        $this->llenar_a_procesos();
+        $this->llenar_a_tipos_actividad();
+        $this->llenar_a_tipos_procesos();
+        $this->llenar_a_tareas_proceso();
+        $this->llenar_a_actividad_proceso();
         $this->llenar_aux_usuarios_perm();
     }
     
@@ -57,7 +59,8 @@ class DBEsquema extends DBAbstract {
                 $campo_seq = '';
                 $id_seq = '';
                 break;
-            case "a_actividad_proceso":
+            case "a_actividad_proceso_sv":
+            case "a_actividad_proceso_sf":
                 $nom_tabla = $this->getNomTabla($tabla);
                 $campo_seq = 'id_item';
                 $id_seq = $nom_tabla."_".$campo_seq."_seq";
@@ -77,7 +80,7 @@ class DBEsquema extends DBAbstract {
                 $campo_seq = 'id_fase';
                 $id_seq = $nom_tabla."_".$campo_seq."_seq";
                 break;
-            case "a_procesos":
+            case "a_tareas_proceso":
                 $nom_tabla = $this->getNomTabla($tabla);
                 $campo_seq = 'id_item';
                 $id_seq = $nom_tabla."_".$campo_seq."_seq";
@@ -101,11 +104,17 @@ class DBEsquema extends DBAbstract {
      * Tiene un foreing key con el id_activ. Entiendo que no hay problemas con sf, ya
      * los procesoso podrian ser distintos, pero no interfieren los ids.
      */
-    public function create_a_actividad_proceso() {
+    public function create_a_actividad_proceso($seccion) {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
 
-        $tabla = "a_actividad_proceso";
+        $tabla_padre = "a_actividad_proceso";
+        if ($seccion == 'sv') {
+            $tabla = "a_actividad_proceso_sv";
+        }
+        if ($seccion == 'sf') {
+            $tabla = "a_actividad_proceso_sf";
+        }
         $datosTabla = $this->infoTable($tabla);
         
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -115,7 +124,7 @@ class DBEsquema extends DBAbstract {
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                 ) 
-            INHERITS (global.$tabla);";
+            INHERITS (global.$tabla_padre);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER completado SET DEFAULT false;";
@@ -132,35 +141,41 @@ class DBEsquema extends DBAbstract {
         
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
         
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT a_actividad_proceso_id_tipo_proceso_key
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT ${tabla}_id_tipo_proceso_key
                     UNIQUE (id_tipo_proceso, id_activ, id_fase, id_tarea); ";
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
+        
+        $datosTablaF = $this->infoTable('a_fases');
+        $nom_tabla_fases = $datosTablaF['nom_tabla'];
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT ${tabla}_id_fase_fk
+                    FOREIGN KEY (id_fase) REFERENCES $nom_tabla_fases(id_fase) ON DELETE CASCADE; ";
+        $datosTablaT = $this->infoTable('a_tareas');
+        $nom_tabla_tareas = $datosTablaT['nom_tabla'];
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT ${tabla}_id_tarea
+                    FOREIGN KEY (id_tarea) REFERENCES $nom_tabla_tareas(id_tarea) ON DELETE CASCADE; ";
+        
         // No va con tablas heredadas
         //$a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT a_actividad_proceso_id_activ_fk
         //            FOREIGN KEY (id_activ) REFERENCES public.a_actividades_all(id_activ) ON DELETE CASCADE; ";
         
-        $a_sql[] = "CREATE INDEX a_actividad_proceso_n_orden ON $nom_tabla USING btree (n_orden); ";
+        $a_sql[] = "CREATE INDEX ${tabla}_n_orden ON $nom_tabla USING btree (n_orden); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
-        
-        /*
-        $a_sql[] = "GRANT DELETE ON $nom_tabla TO $this->role WITH GRANT OPTION; ";
-        $a_sql[] = "GRANT INSERT ON $nom_tabla TO $this->role WITH GRANT OPTION; ";
-        $a_sql[] = "GRANT REFERENCES ON $nom_tabla TO $this->role WITH GRANT OPTION; ";
-        $a_sql[] = "GRANT SELECT ON $nom_tabla TO $this->role WITH GRANT OPTION; ";
-        $a_sql[] = "GRANT TRIGGER ON $nom_tabla TO $this->role WITH GRANT OPTION; ";
-        $a_sql[] = "GRANT TRUNCATE ON $nom_tabla TO $this->role WITH GRANT OPTION; ";
-        $a_sql[] = "GRANT UPDATE ON $nom_tabla TO $this->role WITH GRANT OPTION; ";
-        */
         
         $this->executeSql($a_sql);
 
         $this->delPermisoGlobal('comun');
     }
-    public function eliminar_a_actividad_proceso() {
+    public function eliminar_a_actividad_proceso($seccion) {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
 
-        $datosTabla = $this->infoTable("a_actividad_proceso");
+        if ($seccion == 'sv') {
+            $tabla = "a_actividad_proceso_sv";
+        }
+        if ($seccion == 'sf') {
+            $tabla = "a_actividad_proceso_sf";
+        }
+        $datosTabla = $this->infoTable($tabla);
         
         $nom_tabla = $datosTabla['nom_tabla'];
         $id_seq = $datosTabla['id_seq'];
@@ -343,11 +358,11 @@ class DBEsquema extends DBAbstract {
         $this->delPermisoGlobal('comun');
     }
 
-    public function create_a_procesos() {
+    public function create_a_tareas_proceso() {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
 
-        $tabla = "a_procesos";
+        $tabla = "a_tareas_proceso";
         $datosTabla = $this->infoTable($tabla);
         
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -384,11 +399,11 @@ class DBEsquema extends DBAbstract {
 
         $this->delPermisoGlobal('comun');
     }
-    public function eliminar_a_procesos() {
+    public function eliminar_a_tareas_proceso() {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
 
-        $datosTabla = $this->infoTable("a_procesos");
+        $datosTabla = $this->infoTable("a_tareas_proceso");
         
         $nom_tabla = $datosTabla['nom_tabla'];
         $id_seq = $datosTabla['id_seq'];
@@ -484,7 +499,7 @@ class DBEsquema extends DBAbstract {
 
     /* ###################### LLENAR TABLAS ################################ */
     /**
-     * La tabla ya existe, pero hay que e¡actualizar el tipo de proceso
+     * La tabla ya existe, pero hay que actualizar el tipo de proceso
      *  parar cada tipo de actividad. 
      *  Si hay algun añadido en los tipos de actividad se borrará.
      */
@@ -503,7 +518,7 @@ class DBEsquema extends DBAbstract {
         
         $delimiter = "\t"; 
         $null_as = "\\\\N";
-        $fields = "id_tipo_activ, nombre, id_tipo_proceso, id_tipo_proceso_ex";
+        $fields = "id_tipo_activ, nombre, id_tipo_proceso_sv, id_tipo_proceso_ex_sv, id_tipo_proceso_sf, id_tipo_proceso_ex_sf";
        
         // Comprobar que existe el fichero (la ruta esta bien...
         if (!file_exists($filename)) {
@@ -534,7 +549,7 @@ class DBEsquema extends DBAbstract {
         
         $delimiter = "\t"; 
         $null_as = "\\\\N";
-        $fields = "id_tipo_proceso, nom_proceso";
+        $fields = "id_tipo_proceso, nom_proceso, sfsv";
         
         // Comprobar que existe el fichero (la ruta esta bien...
         if (!file_exists($filename)) {
@@ -562,7 +577,8 @@ class DBEsquema extends DBAbstract {
         
         // Borrar los posibles datos de la tabla
         $a_sql = [];
-        $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY;" ;
+        // Con CASCADE para borrar los que dependen de lel por FOREIGN KEY (a_actividad_proceso_sv/sf)
+        $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY CASCADE;" ;
         $this->executeSql($a_sql);
         
         $delimiter = "\t"; 
@@ -595,7 +611,8 @@ class DBEsquema extends DBAbstract {
         $oDbl = $this->oDbl;
         
         $a_sql = [];
-        $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY;" ;
+        // Con CASCADE para borrar los que dependen de lel por FOREIGN KEY (a_actividad_proceso_sv/sf)
+        $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY CASCADE;" ;
         $this->executeSql($a_sql);
         
         $delimiter = "\t"; 
@@ -616,10 +633,10 @@ class DBEsquema extends DBAbstract {
 
         $this->delPermisoGlobal('comun');
     }
-    public function llenar_a_procesos() {
+    public function llenar_a_tareas_proceso() {
         $this->addPermisoGlobal('comun');
         $this->setConexion('comun');
-        $datosTabla = $this->infoTable("a_procesos");
+        $datosTabla = $this->infoTable("a_tareas_proceso");
         
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
@@ -666,6 +683,11 @@ class DBEsquema extends DBAbstract {
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
         $filename = $datosTabla['filename'];
+        if (ConfigGlobal::mi_sfsv() == 1) {
+            $filename .= '_sv';
+        } else {
+            $filename .= '_sf';
+        }
         $oDbl = $this->oDbl;
         
         $a_sql = [];

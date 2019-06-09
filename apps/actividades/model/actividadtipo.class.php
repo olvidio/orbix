@@ -65,6 +65,10 @@ class ActividadTipo {
 			$array_n = array(1=>'n');
 			$array2 = array_merge($array2,$array_n);
 		}
+		if ($_SESSION['oPerm']->have_perm("nax")) {
+			$array_nax = array(1=>'nax');
+			$array2 = array_merge($array2,$array_nax);
+		}
 		if ($_SESSION['oPerm']->have_perm("agd")) {
 			$array_agd = array(3=>'agd');
 			$array2 = array_merge($array2,$array_agd);
@@ -86,7 +90,7 @@ class ActividadTipo {
 			$array2 = array_merge($array2,$array_sr);
 		}
 
-		if ($_SESSION['oPerm']->have_perm("actividades")) { // des de la sf
+		if ($_SESSION['oPerm']->have_perm("actividades")) { // desde la sf
 			$array_des = $oTipoActiv->getAsistentesPosibles(); //todos
 			$array2 = array_merge($array2,$array_des);
 		}
@@ -150,18 +154,35 @@ class ActividadTipo {
 		$oHashTipo->setCamposForm('salida!entrada');
 		$h = $oHashTipo->linkSinVal();
 
+		$url_act = ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_ver.php';
+		$oHashAct = new web\Hash();
+		$oHashAct->setUrl('apps/actividades/controller/actividad_ver.php');
+		$oHashAct->setCamposForm('id_tipo_activ');
+		$h_act = $oHashAct->linkSinVal();
+
+		
+		$procesos_installed = core\ConfigGlobal::is_app_installed('procesos');
+		
 		$a_campos = [
 		            'url' => $url,
 					'h' => $h,
+		            'url_act' => $url_act,
+					'h_act' => $h_act,
 					'perm_jefe' => $this->bperm_jefe,
 					'isfsv' => $isfsv,
 					'oDesplSfsv' => $oDesplSfsv,
 					'oDesplAsistentes' => $oDesplAsistentes,
 					'oDesplActividad' => $oDesplActividad,
 					'oDesplNomTipo' => $oDesplNomTipo,
+                    'procesos_installed' => $procesos_installed,
 					];
 
 		switch ($this->para) {
+		    case 'tipoactiv-procesos':
+                $aditionalPaths = ['actividades' => 'actividades/view'];
+                $oView = new core\ViewTwig('procesos/controller',$aditionalPaths);
+                return $oView->render('actividad_tipo_proceso.html.twig',$a_campos);
+                break;
 		    case 'procesos':
                 $aditionalPaths = ['actividades' => 'actividades/view'];
                 $oView = new core\ViewTwig('procesos/controller',$aditionalPaths);

@@ -184,10 +184,16 @@ class ActividadTarea Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_tarea='$this->iid_tarea'")) === FALSE) {
-			$sClauError = 'ActividadTarea.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return FALSE;
+		if (empty($this->iid_tarea)) {
+		   $msg = _("no se puede eliminar la tarea 0")."\n"; 
+	       echo $msg;
+	       return FALSE;
+		} else {
+            if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_tarea='$this->iid_tarea'")) === FALSE) {
+                $sClauError = 'ActividadTarea.eliminar';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                return FALSE;
+            }
 		}
 		return TRUE;
 	}
@@ -315,7 +321,7 @@ class ActividadTarea Extends core\ClasePropiedades {
 	function getDatosId_fase() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_fase'));
-		$oDatosCampo->setEtiqueta(_("fase"));
+		$oDatosCampo->setEtiqueta(_("fase a la que pertenece"));
 		$oDatosCampo->setTipo('opciones');
 		$oDatosCampo->setArgument('procesos\model\entity\ActividadFase'); // nombre del objeto relacionado
 		$oDatosCampo->setArgument2('getDesc_fase'); // método para obtener el valor a mostrar del objeto relacionado.
@@ -331,7 +337,7 @@ class ActividadTarea Extends core\ClasePropiedades {
 	function getDatosDesc_tarea() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'desc_tarea'));
-		$oDatosCampo->setEtiqueta(_("descripción"));
+		$oDatosCampo->setEtiqueta(_("descripción de la tarea"));
 		$oDatosCampo->setTipo('texto');
 		$oDatosCampo->setArgument('30');
 		return $oDatosCampo;
