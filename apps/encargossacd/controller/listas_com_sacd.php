@@ -10,6 +10,7 @@ use personas\model\entity\GestorPersona;
 use personas\model\entity\PersonaDl;
 use ubis\model\entity\Centro;
 use web\DateTimeLocal;
+use personas\model\entity\GestorPersonaDl;
 
 /**
 * Esta página muestra los encargos de un sacd. 
@@ -57,7 +58,7 @@ $poblacion = $oEncargoFunciones->getLugar_dl();
 $lugar_fecha= "$poblacion, $hoy_local";
 
 // los sacd
-$GesPersonas = new GestorPersona();
+$GesPersonas = new GestorPersonaDl();
 $aWhere = [];
 $aOperador = [];
 switch ($Qsel) {
