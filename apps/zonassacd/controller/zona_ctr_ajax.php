@@ -85,7 +85,7 @@ switch($Qque) {
 			$id_ubi="{$oCentro->getId_ubi()}"; // Para que lo coja como un string.
 			if ($id_ubi[0]==2) {
 				if (($_SESSION['oPerm']->have_perm("des")) or ($_SESSION['oPerm']->have_perm("vcsd"))) {
-					$a_valores[$i]['clase']="tono1";
+					$a_valores[$i]['clase']="tonor2";
 				} else {
 					continue;
 				}
