@@ -3,6 +3,8 @@ use ubis\model\entity\GestorCentroDl;
 use encargossacd\model\entity\GestorEncargo;
 use ubis\model\entity\GestorCentroEllas;
 use encargossacd\model\entity\GestorEncargoSacd;
+use ubis\model\entity\CentroDl;
+use ubis\model\entity\CentroEllas;
 
 /**
 * Esta página limpia la base de datos de los encargos.
@@ -28,35 +30,38 @@ require_once ("apps/core/global_object.inc");
 $Qque = (string) \filter_input(INPUT_POST, 'que');
 
 switch ($Qque) {
-    case "ctr": //Eliminar encargos de centros con status=false
+    case "ctr":
+        //Eliminar encargos de centros con status=false
+        // Añadir los ctr borrados
         $msg = '';
-        // Ctr sv
-        $oGesCentrosDl = new GestorCentroDl();
-        $cCentrosDl = $oGesCentrosDl->getCentros(['status' => 'f']);
+
         $ctrsv = 0;
-        foreach ($cCentrosDl as $oCentroDl) {
-            $id_ubi = $oCentroDl->getId_ubi();
-            $oGesEncargos = new GestorEncargo();
-            $cEncargosCtr = $oGesEncargos->getEncargos(['id_ubi' => $id_ubi]);
-            foreach ($cEncargosCtr as $oEncargo) {
-                $ctrsv++;
-                $oEncargo->DBEliminar();
+        $ctrsf = 0;
+        $oGesEncargos = new GestorEncargo();
+        $aWhere = ['id_ubi' => 'x'];
+        $aOperador = ['id_ubi' => 'IS NOT NULL'];
+        $cEncargosCtr = $oGesEncargos->getEncargos($aWhere,$aOperador);
+        foreach ($cEncargosCtr as $oEncargo) {
+            $id_ubi = $oEncargo->getId_ubi();
+            $sfsv = substr($id_ubi,0,1);
+            if ($sfsv == 1) {
+                // Ctr sv
+                $oCentroDl = new CentroDl($id_ubi);
+                if ($oCentroDl->getStatus() == 't' OR $oCentroDl === FALSE) {
+                    $ctrsv++;
+                    $oEncargo->DBEliminar();
+                }
+            } else {
+                // Ctr sf
+                $oCentroDl = new CentroEllas($id_ubi);
+                if ($oCentroDl->getStatus() == 't' OR $oCentroDl === FALSE) {
+                    $ctrsf++;
+                    $oEncargo->DBEliminar();
+                }
+                
             }
         }
         $msg .= sprintf(_("se han eliminado %s encargos de centros sv \n"),$ctrsv);
-        // Ctr sf
-        $oGesCentrosEllas = new GestorCentroEllas();
-        $cCentrosEllas = $oGesCentrosEllas->getCentros(['status' => 'f']);
-        $ctrsf = 0;
-        foreach ($cCentrosEllas as $oCentroEllas) {
-            $id_ubi = $oCentroEllas->getId_ubi();
-            $oGesEncargos = new GestorEncargo();
-            $cEncargosCtr = $oGesEncargos->getEncargos(['id_ubi' => $id_ubi]);
-            foreach ($cEncargosCtr as $oEncargo) {
-                $ctrsf++;
-                $oEncargo->DBEliminar();
-            }
-        }
         $msg .= sprintf(_("se han eliminado %s encargos de centros sf \n"),$ctrsf);
         
         //También elimino los sacd encargados de encargos inexistentes
