@@ -44,11 +44,12 @@ class GestorCasaPeriodo Extends core\ClaseGestor {
 	 * @return array
 	 */
 	function getArrayCasaPeriodos($id_ubi,$oInicio,$oFin) {
-	    $oDbl = $GLOBALS['oDBA'];
-	    $inicio_iso = $oInicio->fomat('Y-m-d');
-	    $fin_iso = $oFin->fomat('Y-m-d');
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+	    $inicio_iso = $oInicio->getIso();
+	    $fin_iso = $oFin->getIso();
 	    $sQuery="SELECT to_char(f_ini,'YYYYMMDD') as iso_ini,to_char(f_fin,'YYYYMMDD') as iso_fin, sfsv
-			FROM du_periodos
+			FROM $nom_tabla
 			WHERE id_ubi=$id_ubi AND f_fin > '$inicio_iso' AND f_ini <= '$fin_iso'
 			ORDER BY f_ini
 			";
@@ -59,7 +60,7 @@ class GestorCasaPeriodo Extends core\ClaseGestor {
 	    }
 	    $a_periodos = array();
 	    foreach ($oDbl->query($sQuery) as $row) {
-	        $a_periodos[] = array ('iso_ini'=>$row['iso_ini'],'iso_fin'=>$row['iso_fin'],'sfsv'=>$row['sfsv_num']);
+	        $a_periodos[] = array ('iso_ini'=>$row['iso_ini'],'iso_fin'=>$row['iso_fin'],'sfsv'=>$row['sfsv']);
 	    }
 	    // si no hi ha resultat miro que l'ubi sigui només sf o sv.
 	    if (count($a_periodos) == 0) {

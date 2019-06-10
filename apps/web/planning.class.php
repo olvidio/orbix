@@ -1,6 +1,7 @@
 <?php
 namespace web;
 use core;
+use ubis\model\entity\GestorCasaPeriodo;
 /**
 * Esta página sólo tiene las funciones. Es para hacer incluir en la página que sea
 *
@@ -173,19 +174,10 @@ class Planning {
                 //list($pau,$id_pau,$persona,$centro) = preg_split('/#/', $per ); //separo el id_ubi del nombre
                 list($pau,$id_pau,$persona) = preg_split('/#/', $per ); //separo el id_ubi del nombre
 
-                if (core\ConfigGlobal::is_app_installed('calendario')) {
-                    $oDBA=$GLOBALS['oDBA'];
-                    if ($pau=="u") { // para los ubis...
-                        $id_ubi=$id_pau;
-                        // generar un array con los intervalos de fechas válidos para sv
-                        $sql_periodo="SELECT to_char(f_ini,'YYYYMMDD') as f_ini,to_char(f_fin,'YYYYMMDD') as f_fin , sfsv_num
-                                        FROM du_periodos 
-                                        WHERE id_ubi=$id_ubi 
-                                          AND (f_ini BETWEEN '$inicio_iso' AND '$fin_iso' OR f_fin BETWEEN '$inicio_iso' AND '$fin_iso')
-                                        ORDER BY id_ubi,f_ini";
-                        $oDBSt_q_periodo=$oDBA->query($sql_periodo);
-                        $periodos_sv[$id_ubi]=$oDBSt_q_periodo->fetchAll();
-                    }
+                if ($pau=="u") { // para los ubis...
+                    $id_ubi=$id_pau;
+                    $gesCasaPeriodo = new GestorCasaPeriodo();
+                    $periodos_sv[$id_ubi] = $gesCasaPeriodo->getArrayCasaPeriodos($id_ubi, $this->oInicio, $this->oFin);
                 }
                 //mido el tamaño de los nombres
                 $long=strlen($persona);
@@ -411,10 +403,8 @@ class Planning {
                     for ($d=1;$d<$total_dias+1;$d++) {
                         $texto="";
                         $reserva="";
-                        if (core\ConfigGlobal::is_app_installed('calendario')) {
-                            if ($pau=="u") {
-                                $reserva = $this->reservado($mini_0,$dini_0,$d,$aini_0,$id_ubi,$periodos_sv);
-                            }
+                        if ($pau=="u") {
+                            $reserva = $this->reservado($mini_0,$dini_0,$d,$aini_0,$id_ubi,$periodos_sv);
                         }
                         for ($a=0;$a<$num_a;$a++) {
                             if (isset($fila[$a]) && $fila[$a]==$f) {
@@ -501,12 +491,12 @@ class Planning {
         $dia_pascua=date("Ymd", easter_date($aini_0));
         if ($dia_real==$dia_pascua) return "pascua";
         foreach($periodo_ubi as $per) {
-            if ($dia_real <= $per['f_fin'] &&	$dia_real >= $per['f_ini']) {
-                if ($per['sfsv_num']==1) $color="sv";
-                if ($per['sfsv_num']==2) $color="sf";
-                if ($per['sfsv_num']==3) $color="res";
+            if ($dia_real <= $per['iso_fin'] &&	$dia_real >= $per['iso_ini']) {
+                if ($per['sfsv']==1) $color="sv";
+                if ($per['sfsv']==2) $color="sf";
+                if ($per['sfsv']==3) $color="res";
                 break;
-            } elseif ($dia_real < $per['f_ini']) {
+            } elseif ($dia_real < $per['iso_ini']) {
                 $color="";
                 break;
             }
