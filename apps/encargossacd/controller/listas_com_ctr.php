@@ -1,7 +1,6 @@
 <?php
 use core\ConfigGlobal;
 use encargossacd\model\EncargoFunciones;
-use function encargossacd\model\EncargoFuncionesTrait\dedicacion;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoTexto;
 use personas\model\entity\PersonaDl;
@@ -84,19 +83,19 @@ foreach ($cCentros as $oCentro) {
 	$id_enc=$cEncargos[0]->getId_enc();
 	if (empty($id_enc)) continue;
 	// sacd
-	$GesTareaSacd = new GestorEncargoSacd();
-	$cTareaSacd = $GesTareaSacd->getTareasSacd(array('id_enc'=>$id_enc,'f_fin'=>'x','_ordre'=>'modo'),array('f_fin'=>'IS NULL'));
+	$GesEncargoSacd = new GestorEncargoSacd();
+	$cEncargosSacd = $GesEncargoSacd->getEncargosSacd(array('id_enc'=>$id_enc,'f_fin'=>'x','_ordre'=>'modo'),array('f_fin'=>'IS NULL'));
 	$sacd_colaborador=array();  // reset
-	foreach($cTareaSacd as $oTareaSacd) {
-		$id_nom=$oTareaSacd->getId_nom();
+	foreach($cEncargosSacd as $oEncargoSacd) {
+		$id_nom=$oEncargoSacd->getId_nom();
 		$oPersona = new PersonaDl($id_nom);
-		$modo=$oTareaSacd->getModo();
+		$modo=$oEncargoSacd->getModo();
 		switch($modo){
 			case 2: // titular del cl
 			case 3: // titular no del cl
 				$array_atn_sacd[$nombre_ubi]['titular']=$oPersona->getNombreApellidos();
 				// para saber la dedicación
-				$dedicacion_txt=dedicacion($id_nom,$id_enc);
+				$dedicacion_txt=$oEncargoFunciones->dedicacion($id_nom,$id_enc);
 				$array_atn_sacd[$nombre_ubi]['titular_dedicacion']=$dedicacion_txt;
 
 				break;
@@ -104,13 +103,14 @@ foreach ($cCentros as $oCentro) {
 				$array_atn_sacd[$nombre_ubi]['suplente']=$oPersona->getNombreApellidos();
 				break;
 			case 5: // colaborador
-				$dedicacion_txt=dedicacion($id_nom,$id_enc);
+				$dedicacion_txt=$oEncargoFunciones->dedicacion($id_nom,$id_enc);
 				$sacd_col = array('nom'=>$oPersona->getNombreApellidos(), 'dedicacion'=>$dedicacion_txt);
 				$sacd_colaborador[] = $sacd_col;
 				break;
 		}
 	}
 	$array_atn_sacd[$nombre_ubi]['colaborador']=$sacd_colaborador;
+	$array_atn_sacd[$nombre_ubi]['txt']['com_ctr'] = $oEncargoFunciones->getTraduccion('com_ctr', $idioma);
 }
 
 $a_campos = ['oPosicion' => $oPosicion,

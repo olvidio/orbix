@@ -178,11 +178,11 @@ switch ($Qque) {
                 if (is_array($cEncargos) && count($cEncargos) > 0) { // puede ser que no haya sacd encargado (dlb, dlbf).
                     // només n'hi hauria d'haver un.
                     $id_enc = $cEncargos[0]->getId_enc();
-                    $GesTareasSacd = new GestorEncargoSacd();
+                    $GesEncargoSacd = new GestorEncargoSacd();
                     $aWhere=array('id_enc'=>$id_enc,'modo'=>'2|3','f_fin'=>'');
                     $aOperador=array('modo'=>'~','f_fin'=>'IS NULL');
-                    $cTareasSacd = $GesTareasSacd->getTareasSacd($aWhere,$aOperador);
-                    $id_nom = $cTareasSacd[0]->getId_nom();
+                    $cEncargosSacd = $GesEncargoSacd->getEncargoSacd($aWhere,$aOperador);
+                    $id_nom = $cEncargosSacd[0]->getId_nom();
                     $oPersona = new PersonaDl($id_nom);
                     $ap_nom=$oPersona->getApellidosNombre();
                     $sacd_posibles.="<tr><td><span class=link id=$id_nom onclick=fnjs_asignar_sacd('".$Qid_activ."','$id_nom') >$num_orden* $ap_nom</span></td></tr>";

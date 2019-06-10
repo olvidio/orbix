@@ -128,18 +128,20 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
 			$sacd_titular="";
 			$sacd_suplente="";
 			$sacds_colaboradores=array();
-			$GesTareasSacd = new GestorEncargoSacd();
+			$aWhereT = [];
+			$aOperadorT = [];
 			$aWhereT['id_enc'] = $id_enc;
 			$aWhereT['f_fin'] = 'null';
 			$aOperadorT['f_fin'] = 'IS NULL';
 			$aWhereT['_ordre'] = 'modo';
-			$cTareasSacd = $GesTareasSacd->getTareasSacd($aWhereT,$aOperadorT);
+			$GesEncargoSacd = new GestorEncargoSacd();
+			$cEncargosSacd = $GesEncargoSacd->getEncargoSacd($aWhereT,$aOperadorT);
 			$s=0;
 			$dedic_horas_ctr=0;
-			foreach ($cTareasSacd as $oTareaSacd) {
+			foreach ($cEncargosSacd as $oEncargoSacd) {
 				$s++;
-				$modo = $oTareaSacd->getModo();
-				$id_nom = $oTareaSacd->getId_nom();
+				$modo = $oEncargoSacd->getModo();
+				$id_nom = $oEncargoSacd->getId_nom();
 				$oPersona = new PersonaDl($id_nom);
 				$nom_ap = $oPersona->getNombreApellidosCrSin();
 				// para saber la dedicación

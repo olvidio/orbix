@@ -39,7 +39,7 @@ foreach ($array_atn_sacd as $nombre_ubi => $vector) {
 	<cabecera>
 		<izquierda><?= $nombre_ubi ?></izquierda><derecha><?= $origen_txt ?></derecha>
 	</cabecera>
-	<comunicacion><?= $txt ?></comunicacion>
+	<comunicacion><?= $array_atn_sacd[$nombre_ubi]['txt']['com_ctr'] ?></comunicacion>
 	<!-- sacd -->
 	<?php
 	$sacd_titular = empty($array_atn_sacd[$nombre_ubi]['titular'])? '' : $array_atn_sacd[$nombre_ubi]['titular'];
@@ -73,7 +73,7 @@ foreach ($array_atn_sacd as $nombre_ubi => $vector) {
 	?>
 	</table>
 	<pie>
-	<derecha><?= $fecha ?></derecha>
+	<derecha><?= $lugar_fecha ?></derecha>
 	</pie>
 	</div>
 <?php
