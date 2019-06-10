@@ -118,11 +118,11 @@ class PermisosActividades {
 	    $oDbl = $GLOBALS['oDB'];
 	    // Orden: los usuarios empiezan por 4, los grupos por 5.
 	    // Al ordenar, el usuario (queda el último) sobreescribe al grupo.
-	    // Los grupos, como puede haber más de uno los ordeno por orden alfabético.
+	    // Los grupos, como puede haber más de uno los ordeno por orden alfabético DESC (prioridad A-Z). 
 		$Qry="SELECT DISTINCT p.*, SUBSTRING( p.id_usuario::text, 1, 1 ) as orden, u.usuario
 			FROM aux_usuarios_perm p JOIN aux_grupos_y_usuarios u USING (id_usuario)
 			WHERE $sCondicion_usuario AND dl_propia='$dl_propia' 
-			ORDER BY orden DESC, usuario
+			ORDER BY orden DESC, usuario DESC
 			";
 		//echo "<br>permActiv: $Qry<br>";
 		if (($oDbl->query($Qry)) === false) {
