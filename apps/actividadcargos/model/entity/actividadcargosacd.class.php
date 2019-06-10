@@ -183,8 +183,8 @@ class ActividadCargoSacd Extends ActividadCargoAbstract {
             unset($aDades['id_schema']);
 		    // Aqui si hay que poner el id_item, pues es copia de DB-sv
 		    $aDades['id_item'] = $this->iid_item;
-			$campos="(id_item,id_activ,id_cargo,id_nom,puede_agd,observ,id_item)";
-			$valores="(:id_item,:id_activ,:id_cargo,:id_nom,:puede_agd,:observ,:id_item)";		
+			$campos="(id_activ,id_cargo,id_nom,puede_agd,observ,id_item)";
+			$valores="(:id_activ,:id_cargo,:id_nom,:puede_agd,:observ,:id_item)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'ActividadCargoDBComun.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);

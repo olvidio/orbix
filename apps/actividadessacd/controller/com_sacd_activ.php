@@ -82,7 +82,9 @@ if ($Qque == "un_sacd") {
         $scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
         $oPosicion->addParametro('scroll_id',$scroll_id,1);
     } else {
-        $Qid_nom = (integer)  \filter_input(INPUT_POST, 'id_nom');
+        if (empty($Qid_nom)) {
+            $Qid_nom = (integer)  \filter_input(INPUT_POST, 'id_nom');
+        }
         $Qid_tabla = (integer)  \filter_input(INPUT_POST, 'id_tabla');
     }
 	// periodo por derfecto:
@@ -175,14 +177,18 @@ foreach ($cPersonas as $oPersona) {
     $array_actividades[$id_nom]['txt']['t_observ'] = $oActividadesSacdFunciones->getTraduccion('t_observ',$idioma);
     $array_actividades[$id_nom]['txt']['t_nom_tipo'] = $oActividadesSacdFunciones->getTraduccion('t_nom_tipo',$idioma);
 	
+	$array_actividades[$id_nom]['nom_ap']=$nom_ap;
+    /*
+     * No parece que se use
 	$email = '';
 	$oGeTeleco = new GestorTelecoPersona();
 	$cTelecos = $oGeTeleco->getTelecos(array('id_nom'=>$id_nom,'tipo_teleco'=>'e-mail','desc_teleco'=>13));
 	if (!empty($cTelecos)) {
 		$email = $cTelecos[0]->getNum_teleco();
 	}
-	$array_actividades[$id_nom]['nom_ap']=$nom_ap;
 	$array_actividades[$id_nom]['email']=$email;
+     */
+	
 	// busco los datos de las actividades 
 	$GesCargoOAsistente = new GestorCargoOAsistente();
 	$cCargoOAsistente = $GesCargoOAsistente->getCargoOAsistente($id_nom);

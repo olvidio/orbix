@@ -5,7 +5,6 @@ use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorCentroEllas;
 use web\Periodo;
 use actividades\model\entity\GestorActividadDl;
-use encargossacd\model\entity\GestorEncargo;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");

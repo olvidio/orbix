@@ -6,10 +6,11 @@ use actividades\model\entity\GestorActividadDl;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use asistentes\model\entity\AsistenteDl;
 use core\ConfigGlobal;
+use encargossacd\model\entity\GestorEncargo;
+use encargossacd\model\entity\GestorEncargoSacd;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\PersonaDl;
 use web\Periodo;
-use encargossacd\model\entity\GestorEncargoSacd;
 
 /**
 * Esta página sirve para ejecutar las operaciones de guardar, eliminar, listar...
@@ -163,7 +164,8 @@ switch ($Qque) {
 		break;
 	case "nuevo":
 	    $Qseleccion = (string) \filter_input(INPUT_POST, 'seleccion');
-		// una lista con los sacd posibles. Primero el sacd del centro encargado con (*) y después el resto.
+		// una lista con los sacd posibles. 
+		// Primero el sacd del centro encargado [añado (*)] y después el resto.
 		// ctr encargado:
 		$oEnc=new GestorCentroEncargado();
 		$sacd_posibles='';
@@ -171,17 +173,17 @@ switch ($Qque) {
 			$id_ctr=$oEncargado->getId_ubi();
 			$num_orden = $oEncargado->getNum_orden();
             if (configGlobal::is_app_installed('encargossacd')) {
-                $GesEncargos = new GestorEncargoSacd();
+                $GesEncargos = new GestorEncargo();
                 // Tipos de encargo que son atención centro. No los rt.
                 // 1000,1100,1200,1300
-                $cEncargos = $GesEncargos->getEncargosSacd(array('id_ubi'=>$id_ctr,'id_tipo_enc'=>'1[0123]00'),array('id_tipo_enc'=>'~'));
+                $cEncargos = $GesEncargos->getEncargos(array('id_ubi'=>$id_ctr,'id_tipo_enc'=>'1[0123]00'),array('id_tipo_enc'=>'~'));
                 if (is_array($cEncargos) && count($cEncargos) > 0) { // puede ser que no haya sacd encargado (dlb, dlbf).
                     // només n'hi hauria d'haver un.
                     $id_enc = $cEncargos[0]->getId_enc();
                     $GesEncargoSacd = new GestorEncargoSacd();
                     $aWhere=array('id_enc'=>$id_enc,'modo'=>'2|3','f_fin'=>'');
                     $aOperador=array('modo'=>'~','f_fin'=>'IS NULL');
-                    $cEncargosSacd = $GesEncargoSacd->getEncargoSacd($aWhere,$aOperador);
+                    $cEncargosSacd = $GesEncargoSacd->getEncargosSacd($aWhere,$aOperador);
                     $id_nom = $cEncargosSacd[0]->getId_nom();
                     $oPersona = new PersonaDl($id_nom);
                     $ap_nom=$oPersona->getApellidosNombre();
