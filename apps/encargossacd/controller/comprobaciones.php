@@ -43,22 +43,26 @@ switch ($Qque) {
         $cEncargosCtr = $oGesEncargos->getEncargos($aWhere,$aOperador);
         foreach ($cEncargosCtr as $oEncargo) {
             $id_ubi = $oEncargo->getId_ubi();
+            if (empty($id_ubi)) { // OJO también puede ser 0 a demás de NULL.
+                continue;
+            }
             $sfsv = substr($id_ubi,0,1);
             if ($sfsv == 1) {
                 // Ctr sv
                 $oCentroDl = new CentroDl($id_ubi);
-                if ($oCentroDl->getStatus() == 't' OR $oCentroDl === FALSE) {
+                $status = $oCentroDl->getStatus();
+                if ($status === FALSE OR empty($status)) {
                     $ctrsv++;
                     $oEncargo->DBEliminar();
                 }
             } else {
                 // Ctr sf
                 $oCentroDl = new CentroEllas($id_ubi);
-                if ($oCentroDl->getStatus() == 't' OR $oCentroDl === FALSE) {
+                $status = $oCentroDl->getStatus();
+                if ($status === FALSE OR empty($status)) {
                     $ctrsf++;
                     $oEncargo->DBEliminar();
                 }
-                
             }
         }
         $msg .= sprintf(_("se han eliminado %s encargos de centros sv \n"),$ctrsv);
