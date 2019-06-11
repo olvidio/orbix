@@ -29,7 +29,6 @@
 126	{30,10}	posibles ca	\N	155	2194	12	t
 62	{10,20}	listados		48	8	8	t
 500	{60,40}	lista grupos		122	131071	9	t
-495	{30,10}	buscar	simple=1&tipo=tot&loc=tot	133	0	9	t
 82	{50,20}	nueva activ	\N	136	8	8	t
 254	{20,10}	nuevo esquema	\N	17	33554432	13	t
 134	{37,10}	buscar cv	sasistentes=agd&sactividad=cv&que=ver	119	2064	12	t
@@ -65,6 +64,7 @@
 315	{80,60}	lista varios ca	sasistentes=n&sactividad=ca&que=list_cjto	119	2208	2	t
 324	{82,20}	lista varias cve	sasistentes=n&sactividad=cve&que=list_cjto	119	2208	2	t
 339	{20,60}	lista cargos	sasistentes=sr&sactividad=cv&que=list_cjto	119	2560	15	t
+495	{30,10}	buscar	simple=1&tipo=tot&loc=tot	133	1048576	9	t
 270	{60,40}	lista grupos	\N	122	33816576	13	t
 144	{40,10}	persona dl	obj_pau=PersonaDl&tipo=planning	61	2064	12	t
 327	{85,30}	por centro	tipo=planning_ctr	61	2176	2	t
@@ -235,6 +235,8 @@
 1082	{40,40}	por ctr	tipo=planning_ctr	61	32	4	t
 1089	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	32	4	t
 1103	{50,25}	comunic. sacd	\N	28	8	8	t
+1128	{50,70}	listas sg	que=list_activ_inv_sg	143	8	8	t
+1127	{50,70}	listas sg	que=list_activ_inv_sg	143	131072	20	t
 1150	{50,100,20}	activ sr	tipo=sr	43	8	8	t
 1153	{50,100,30}	sv n y agd	tipo=nagd	43	8	8	t
 1155	{50,100,40}	sf s y sg	tipo=sfsg	43	8	8	t

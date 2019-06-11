@@ -84,7 +84,6 @@
 134	\N	scdl/registro/mod_ini.php	\N	\N
 135	\N	sg/que_resumen.php	\N	\N
 137	\N	des/libros/que_libros.php	\N	\N
-143	\N	programas/lista_activ_sr_que.php	\N	\N
 39	20	apps/actividadessacd/controller/activ_sacd.php	\N	Atención sacd
 7	5	apps/ubis/controller/calendario_periodos.php	\N	Calendario Periodos
 23	21	apps/encargossacd/controller/que_tipo_de_encargo.php	\N	Tipo de encargo
@@ -163,7 +162,6 @@
 64	2	apps/menus/controller/menus_ficheros.php	\N	menu a/de ficheros
 177	2	apps/menus/view/como.phtml	\N	ayuda menus
 102	2	apps/devel/controller/apptables.php	\N	Manage tablas de Apps
-44	11	apps/procesos/controller/tipos_activ_select.php	\N	Tipos de actividad
 130	11	apps/procesos/controller/fases_activ_cambio.php	\N	Fases activ cambio
 34	24	apps/zonassacd/controller/zona_sacd_ajax.php	\N	Zona sacd ajax
 180	2	\N	\N	Raiz devel
@@ -187,3 +185,5 @@
 28	20	apps/actividadessacd/controller/com_sacd_activ_periodo.php	\N	Comunicación activ sacd
 18	20	apps/actividadessacd/controller/asignar_sacd_auto.php	\N	Auto asignar sacd a actividades
 46	26	apps/cambios/controller/avisos_generar_tabla.php	\N	avisos generar tabla
+143	6	apps/actividades/controller/lista_activ_que.php	\N	Lista Activ que
+44	11	apps/procesos/controller/tipo_activ_proceso.php	\N	Tipos de actividad
