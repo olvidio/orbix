@@ -99,7 +99,7 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
             $oPosicion2->olvidar($stack);
         }
     }
-    $Qque = (integer) \filter_input(INPUT_POST, 'que');
+    $Qque = (string) \filter_input(INPUT_POST, 'que');
     $Qstatus = (integer) \filter_input(INPUT_POST, 'status');
     $Qid_tipo_activ = (string) \filter_input(INPUT_POST, 'id_tipo_activ');
     $Qfiltro_lugar = (string) \filter_input(INPUT_POST, 'filtro_lugar');
@@ -115,17 +115,17 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     // valores por defeccto
     // desde 40 dias antes de hoy:
     if (empty($Qempiezamin)) {
-        $Qempiezamin = date('Y-m-d',mktime(0, 0, 0, date('m'), date('d')-40, date('Y')));
+        $QempiezaminIso = date('Y-m-d',mktime(0, 0, 0, date('m'), date('d')-40, date('Y')));
     } else {
         $oEmpiezamin = web\DateTimeLocal::createFromLocal($Qempiezamin);
-        $Qempiezamin = $oEmpiezamin->getIso();
+        $QempiezaminIso = $oEmpiezamin->getIso();
     }
     // hasta dentro de 9 meses desde hoy.
-    if (empty($Qempiezamin)) {
-        $Qempiezamax = date('Y-m-d',mktime(0, 0, 0, date('m')+9, 0, date('Y')));
+    if (empty($Qempiezamax)) {
+        $QempiezamaxIso = date('Y-m-d',mktime(0, 0, 0, date('m')+9, 0, date('Y')));
     } else {
         $oEmpiezamax = web\DateTimeLocal::createFromLocal($Qempiezamax);
-        $Qempiezamax = $oEmpiezamax->getIso();
+        $QempiezamaxIso = $oEmpiezamax->getIso();
     }
     
 	// se usan cuando se viene de lista_activ_sr_que.php y lista_activ_sg_que.php
@@ -228,8 +228,8 @@ if (!empty($Qid_ubi)) {
 }
 // periodo.
 if (empty($Qperiodo) || $Qperiodo == 'otro') {
-    $Qinicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
-    $Qfin = empty($Qfin)? $Qempiezamax : $Qfin;
+    $Qinicio = empty($Qinicio)? $QempiezaminIso : $Qinicio;
+    $Qfin = empty($Qfin)? $QempiezamaxIso : $Qfin;
 } else {
     $oPeriodo = new Periodo();
     $any=empty($Qyear)? date('Y')+1 : $Qyear;
@@ -399,7 +399,9 @@ foreach ($cActividades as $oActividad) {
 		$a_valores[$i][14]=$observ;
 	}
 	if (ConfigGlobal::$dmz === FALSE) {
-		$a_valores[$i][15]=array( 'ira'=>"programas/lista_asistentes.php?sel[]=$id_activ&que=$Qque&go_atras=programas/lista_activ.php", 'valor'=>"ver asistentes");
+	    $pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/asistentes/controller/lista_asistentes.php?'."id_pau=$id_activ&que=$Qque");
+	    $txt = _("ver asistentes");
+	    $a_valores[$i][15]= array( 'ira'=>$pagina, 'valor'=>$txt);
 	}
 }
 // ----------------------------- html -----------------------------------

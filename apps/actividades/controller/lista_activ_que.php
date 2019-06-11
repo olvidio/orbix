@@ -42,10 +42,18 @@ $a_camposHidden = array(
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
+$chk_sr_sf = '';
+$chk_sr_sv = '';
 switch ($Qque) {
+    case "list_activ_sr_sf":
+        $titulo = _("datos del listado actividades san rafael sf");
+        $sr_sg = 'sr';
+        $chk_sr_sf = 'checked';
+        break;
     case "list_activ_sr":
         $titulo = _("datos del listado actividades san rafael");
         $sr_sg = 'sr';
+        $chk_sr_sv = 'checked';
         break;
     case "list_activ_inv_sg":
         $titulo = _("datos del listado actividades san gabriel");
@@ -58,6 +66,8 @@ $a_campos = ['oPosicion' => $oPosicion,
     'permiso_des' => $permiso_des,
     'titulo' => $titulo,
     'sr_sg' => $sr_sg,
+    'chk_sr_sf' => $chk_sr_sf,
+    'chk_sr_sv' => $chk_sr_sv,
 ];
 
 $oView = new core\ViewTwig('actividades/controller');

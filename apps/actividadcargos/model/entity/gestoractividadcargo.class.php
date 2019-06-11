@@ -90,7 +90,7 @@ class GestorActividadCargo Extends core\ClaseGestor {
 	        $oPersona = new PersonaSacd($id_nom);
 	        $oPersona->DBCarregar();
 	        if (empty($oPersona->getApellido1())) {
-	            $msg = sprintf(_("se necesita sincronizar sacd: %s"),$id_nom);
+	            $msg = sprintf(_("se necesita sincronizar (no está en DB-comun) sacd: %s"),$id_nom);
 	            $msg .= '<br>';
 	            echo $msg;
 	        }

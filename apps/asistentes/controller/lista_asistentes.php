@@ -5,6 +5,7 @@ use asistentes\model\entity as asistentes;
 use personas\model\entity as personas;
 use usuarios\model\entity as usuarios;
 use ubis\model\entity as ubis;
+use actividades\model\entity\Actividad;
 
 /**
 * Esta página lista los asistentes a una actividad seleccionada
@@ -41,9 +42,9 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else {
 	$id_pau = (integer) \filter_input(INPUT_POST, 'id_pau');
+	$oActividad = new Actividad($id_pau);
+	$nom_activ = $oActividad->getNom_activ();
 }
-
-$pau = (string) \filter_input(INPUT_POST, 'pau');
 
 $id_usuario= core\ConfigGlobal::mi_id_usuario();
 $oPref = new usuarios\Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>'ordenApellidos'));
