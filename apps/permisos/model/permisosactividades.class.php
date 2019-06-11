@@ -322,6 +322,7 @@ class PermisosActividades {
 
 	public function getPermisos($iAfecta,$id_tipo_activ_txt='') {
 		if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->iid_tipo_activ;
+		$id_tipo_activ_txt = $this->completarId($id_tipo_activ_txt);
 		if ($this->bpropia === true) {
 			if (array_key_exists($id_tipo_activ_txt,$this->aPermDl)) {
                 $PermIdTipo = $this->aPermDl[$id_tipo_activ_txt];
@@ -375,6 +376,7 @@ class PermisosActividades {
 
 	public function getIdTipoPrev($id_tipo_activ_txt='') {
 		if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->iid_tipo_activ;
+		$match = [];
 		$rta = preg_match('/(\d+)(\d)(\.*)/',$id_tipo_activ_txt,$match);
 		if (empty($rta)) {
 			if ($id_tipo_activ_txt=='1.....' || $id_tipo_activ_txt=='2.....' || $id_tipo_activ_txt=='3.....') {
@@ -403,5 +405,16 @@ class PermisosActividades {
 	private function getId_tipo_proceso() {
 		// buscar el id_tipo_proceso
 		return $this->iid_tipo_proceso;
+	}
+
+	private function completarId($id_tipo_activ_txt){
+	    $len = strlen($id_tipo_activ_txt);
+	    if ($len < 6) {
+	        $relleno = 6 - $len;
+	        for ($i=0; $i < $relleno; $i++ ) {
+	            $id_tipo_activ_txt .= '.';
+	        }
+	    }
+	    return $id_tipo_activ_txt;
 	}
 }
