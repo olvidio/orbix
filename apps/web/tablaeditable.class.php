@@ -271,6 +271,7 @@ class TablaEditable {
 					continue;
 				}
 				if ($col=="order") { continue; }
+                if ($col=="select") { continue; }
 				if ($col=="sel") {
 					if (empty($b)) continue; // si no hay botones (por permisos...) no tiene sentido el checkbox
 					//$col="";

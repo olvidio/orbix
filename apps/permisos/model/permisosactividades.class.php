@@ -276,7 +276,7 @@ class PermisosActividades {
             }
 		}
 	    
-	    if ($oPerm->have_perm_activ('crear')) {
+	    if ($oPerm !== FALSE && $oPerm->have_perm_activ('crear')) {
             return ['of_responsable' => $of_responsable,
 	           'status' => $status,
 	           ];

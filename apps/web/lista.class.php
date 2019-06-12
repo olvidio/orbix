@@ -145,6 +145,7 @@ class Lista {
             foreach ($aFila as $col=>$valor) {
                 if ($col=="clase") { continue; }
                 if ($col=="order") { continue; }
+                if ($col=="select") { continue; }
                 if ($col=="sel") { continue; }
                 if(is_array($valor)) {
                     $val=$valor['valor'];
@@ -417,6 +418,7 @@ class Lista {
                     continue;
                 }
                 if ($col=="order") { continue; }
+                if ($col=="select") { continue; }
                 if ($col=="sel") {
                     if (empty($b)) continue; // si no hay botones (por permisos...) no tiene sentido el checkbox
                     //$col="";
@@ -917,6 +919,7 @@ class Lista {
             foreach ($fila as $col=>$valor) {
                 if ($col=="clase") { continue; }
                 if ($col=="order") { continue; }
+                if ($col=="select") { continue; }
                 if ($col=="sel") {
                     if (empty($b)) continue; // si no hay botones (por permisos...) no tiene sentido el checkbox
                     $col="";
@@ -1070,6 +1073,7 @@ class Lista {
                 foreach ($fila as $col=>$valor) {
                     if ($col=="clase") { continue; }
                     if ($col=="order") { continue; }
+                    if ($col=="select") { continue; }
                     if ($col=="sel") {
                         if (empty($b)) continue; // si no hay botones (por permisos...) no tiene sentido el checkbox
                         $col="";

@@ -32,7 +32,7 @@ class xResto {
 	/**
 	 * array per posar el permis per cada fase
 	 *
-	 * @var array
+	 * @var array  aDades[$iAfecta][$id_tipo_proceso][$iFase]=$iPerm;
 	 */
 	protected $aDades=array();
 	/**
