@@ -537,10 +537,16 @@ if ( !$oMiUsuario->isRole('Casa') && !$oMiUsuario->isRole('CentroSf') && !$oMiUs
     $perm_nueva = TRUE;
 }
 
+$aTiposActiv = [];
+if (!empty($Qid_tipo_activ)) {
+    $oTipoActiv2 = new web\TiposActividades($Qid_tipo_activ);
+    $aTiposActiv = $oTipoActiv2->getArrayAsistentesIndividual();
+}
+
 $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,
     'oHashSel' => $oHashSel,
-    'Qid_tipo_activ' => $Qid_tipo_activ,
+    'aTiposActiv' => $aTiposActiv,
     'resultado' => $resultado,
     'perm_nueva' => $perm_nueva,
     'mod' => $mod,

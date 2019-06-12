@@ -122,7 +122,8 @@ class TiposActividades {
 		}
 	}
 
-	/* METODES PUBLICS ----------------------------------------------------------*/
+	/* METODES PRIVATS ----------------------------------------------------------*/
+	
 	private function getFlipSfsv(){
 		if (empty($this->afSfsv)) $this->afSfsv = array_flip($this->aSfsv);
 		return $this->afSfsv;
@@ -136,7 +137,7 @@ class TiposActividades {
 		return $this->afActividad;
 	}
 
-	function separarId($sregexp_id_tipo_activ) {
+	private function separarId($sregexp_id_tipo_activ) {
 		if(!empty($sregexp_id_tipo_activ)) {
 			$inc = 0;
 			if (($ini = strpos($sregexp_id_tipo_activ, '[')) !== false) {
@@ -160,6 +161,28 @@ class TiposActividades {
 			return false;
 		}
 	}
+	
+	/* METODES PUBLICS ----------------------------------------------------------*/
+	
+	/**
+	 * Separa un id_tipo_activ con posibles asistentes en 
+	 * un array de id_tipo_activ separados.
+	 * 
+	 * De momento parece que sólo es necesario para los asistentes.
+	 * 
+	 * return array
+	 */
+	public function getArrayAsistentesIndividual(){
+	    $a_tipos = [];
+	    $aAsistentes = $this->getAsistentesPosibles();
+	    foreach ($aAsistentes as $iasistentes => $sasistentes) {
+	        $txt_id = $this->getSfsvText().' '.$sasistentes;
+	        $a_tipos[$txt_id] = $this->getSfsvId().$iasistentes;
+	    }
+	    return $a_tipos; 
+	}
+	
+	
 	/**
 	 * Recupera l'atribut id_tipo_activ en format de regexp
 	 *

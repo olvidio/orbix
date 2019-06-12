@@ -56,10 +56,17 @@ fnjs_buscar=function(){
 <?= $oTabla->mostrar_tabla(); ?>
 </form>
 <div class="no_print">
+<br>
 <?php
 if ($perm_nueva) { //casa o centroSf
+    echo '<table><tr>';
+    foreach ($aTiposActiv as $txt_id => $idTipoActiv) {
+    ?>
+	<td><span class="link titulo" onclick="fnjs_update_div('#main','<?= web\Hash::link('apps/actividades/controller/actividad_ver.php?'.http_build_query(array('id_tipo_activ'=>$idTipoActiv))) ?>')" >
+		<?= _("nueva actividad $txt_id") ?></span></td>     
+<?php }
+    echo '</tr></table>';
+}
 ?>
-	<br><span class=link onclick="fnjs_update_div('#main','<?= web\Hash::link('apps/actividades/controller/actividad_ver.php?'.http_build_query(array('id_tipo_activ'=>$Qid_tipo_activ))) ?>')" ><?= _("nueva actividad") ?></span>
-<?php } ?>
 </div>
 </div>
