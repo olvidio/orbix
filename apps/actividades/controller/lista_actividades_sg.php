@@ -305,29 +305,35 @@ foreach($cActividades as $oActividad) {
 	} else {
 		// ubi
 		if (!empty($id_ubi) && $id_ubi != 1) {
-			$oCasa = new Ubi($id_ubi);
-			$nombre_ubi=$oCasa->getNombre_ubi();
+		    $oCasa = Ubi::newUbi($id_ubi);
+		    $nombre_ubi=$oCasa->getNombre_ubi();
 		} else {
 			if ($id_ubi==1 && $lugar_esp) $nombre_ubi=$lugar_esp;
 			if (!$id_ubi && !$lugar_esp) $nombre_ubi=_("sin determinar");
 		}
 
 		// sacd	
-		$oCargosActividad=new GestorActividadCargo();
-		$sacds="";
-		if ($oPermSacd->have_perm('ver') === true) { // sólo si tiene permiso
-			foreach($oCargosActividad->getActividadSacds($id_activ) as $oPersona) {;
-				$sacds.=$oPersona->getApellidosNombre()."# "; // la coma la utilizo como separador de apellidos, nombre.
-			}
-			$sacds=substr($sacds,0,-2);
+        $sacds="";
+		if(core\ConfigGlobal::is_app_installed('actividadessacd')) {
+            if ($oPermSacd->have_perm('ver') === true) { // sólo si tiene permiso
+                $gesCargosActividad=new GestorActividadCargo();
+                foreach($gesCargosActividad->getActividadSacds($id_activ) as $oPersona) {;
+                    $sacds.=$oPersona->getApellidosNombre()."# "; // la coma la utilizo como separador de apellidos, nombre.
+                }
+                $sacds=substr($sacds,0,-2);
+            }
 		}
 		//ctrs encargados.
-		$oEnc=new GestorCentroEncargado();
 		$ctrs="";
-		foreach($oEnc->getCentrosEncargadosActividad($id_activ) as $oEncargado) {
-			$ctrs.=$oEncargado->getNombre_ubi().", ";
+		if(core\ConfigGlobal::is_app_installed('actividadescentro')) {
+            $oEnc=new GestorCentroEncargado();
+            $n = 0;
+            foreach($oEnc->getCentrosEncargadosActividad($id_activ) as $oEncargado) {
+                $n++;
+                $ctrs.=$oEncargado->getNombre_ubi().", ";
+            }
+            $ctrs = (!empty($n))? substr($ctrs,0,-2) : '';
 		}
-		$ctrs=substr($ctrs,0,-2);
 		
 		//coincidente con sf.
 		$coincide = $GesActividades->getCoincidencia($oActividad,'bool');

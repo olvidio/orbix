@@ -68,9 +68,10 @@ class GestorAsistente Extends core\ClaseGestor {
 	/**
 	 * retorna l'array d'objectes de tipus Asistente
 	 *
-	 * @param integre id_nom. de la persona
+	 * @param integer id_nom. de la persona
 	 * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
 	 * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
+	 * @param boolean reverse: ordenar por fecha de nuevo a viejo.  
 	 * @return array Una col·lecció d'objectes de tipus Asistente
 	 */
 	function getActividadesDeAsistente($aWhereNom,$aWhere=array(),$aOperators=array(),$reverse=FALSE) {

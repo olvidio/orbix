@@ -1,10 +1,11 @@
 <?php
+use actividades\model\entity\GestorActividadDl;
 use actividadescentro\model\entity\CentroEncargado;
 use actividadescentro\model\entity\GestorCentroEncargado;
+use permisos\model\PermisosActividadesTrue;
 use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorCentroEllas;
-use web\Periodo;
-use actividades\model\entity\GestorActividadDl;
+use web\DateTimeLocal;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
@@ -279,24 +280,35 @@ switch ($Qque) {
 	    $Qfin = (string) \filter_input(INPUT_POST, 'fin');
 	    
 		$any=empty($Qyear)? date('Y')+1 : $Qyear;
-		$mes=date("m");
-		$Qempiezamin = empty($Qempiezamin)? "1/$mes/$any" : $Qempiezamin;
-		$Qempiezamax = empty($Qempiezamax)? "1/$mes/$any+1" : $Qempiezamax;
-		
-		if (empty($Qperiodo) || $Qperiodo == 'otro') {
-			$inicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
-			$fin = empty($Qfin)? $Qempiezamax : $Qfin;
+		// valores por defeccto
+		if (empty($Qempiezamin)) {
+		    $QempiezaminIso = date('Y-m-d',mktime(0, 0, 0, date('m'), 1, $any));
 		} else {
-			$oPeriodo = new Periodo();
-			$oPeriodo->setAny($any);
-			$oPeriodo->setPeriodo($Qperiodo);
-			$inicio = $oPeriodo->getF_ini_iso();
-			$fin = $oPeriodo->getF_fin_iso();
+		    $oEmpiezamin = DateTimeLocal::createFromLocal($Qempiezamin);
+		    $QempiezaminIso = $oEmpiezamin->getIso();
 		}
-
-		$aWhere['f_ini']="'$inicio','$fin'";
-		$aOperador['f_ini']='BETWEEN';
-
+		// hasta dentro de 9 meses desde hoy.
+		if (empty($Qempiezamax)) {
+		    $QempiezamaxIso = date('Y-m-d',mktime(0, 0, 0, date('m'), 1, $any+1));
+		} else {
+		    $oEmpiezamax = DateTimeLocal::createFromLocal($Qempiezamax);
+		    $QempiezamaxIso = $oEmpiezamax->getIso();
+		}
+		// periodo.
+		if (empty($Qperiodo) || $Qperiodo == 'otro') {
+		    $Qinicio = empty($Qinicio)? $QempiezaminIso : $Qinicio;
+		    $Qfin = empty($Qfin)? $QempiezamaxIso : $Qfin;
+		} else {
+		    $oPeriodo = new web\Periodo();
+		    $any=empty($Qyear)? date('Y')+1 : $Qyear;
+		    $oPeriodo->setAny($any);
+		    $oPeriodo->setPeriodo($Qperiodo);
+		    $Qinicio = $oPeriodo->getF_ini_iso();
+		    $Qfin = $oPeriodo->getF_fin_iso();
+		}
+        $aWhere['f_ini'] = "'$Qinicio','$Qfin'";
+        $aOperador['f_ini'] = 'BETWEEN';
+		
 		$aWhere['status']=3;
 		$aOperador['status']="<";
 	
@@ -357,6 +369,10 @@ switch ($Qque) {
 			    $_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
 			    $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
 			    $oPermCtr = $_SESSION['oPermActividades']->getPermisoActual('ctr');
+			} else {
+                $oPermActividades = new PermisosActividadesTrue(core\ConfigGlobal::mi_id_usuario());
+                $oPermActiv = $oPermActividades->getPermisoActual('datos');
+                $oPermCtr =  $oPermActividades->getPermisoActual('ctr');
 			}
 
 			if ($oPermActiv->have_perm_activ('ocupado') === false) { $sin++; continue; } // no tiene permisos ni para ver.
@@ -414,7 +430,7 @@ switch ($Qque) {
 			}
 			$txt_id=$valores[0]."_ctrs";
 			if ($oPermCtr->have_perm_activ('crear') === true) { // sólo si tiene permiso para crear
-				$nuevo_txt="<span class=link onclick=fnjs_nuevo_ctr(event,'$id_activ','$inicio','$fin','$f_ini','$f_fin')>nuevo</span>";
+				$nuevo_txt="<span class=link onclick=fnjs_nuevo_ctr(event,'$id_activ','$Qinicio','$Qfin','$f_ini','$f_fin')>nuevo</span>";
 			} else {
 				$nuevo_txt='';
 			}
