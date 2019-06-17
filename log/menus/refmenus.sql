@@ -191,7 +191,7 @@
 933	{80,120}	Balance de plazas	sasistentes=agd&sactividad=cv	170	2	3	t
 23	{70,60}	list varios crt	sasistentes=agd&sactividad=crt&que=list_cjto	119	2082	3	t
 129	{37,60}	list varias cv	sasistentes=agd&sactividad=cv&que=list_cjto	119	2064	12	t
-228	{110,60}	lista cargos	sasistentes=s&sactividad=cv&que=list_cjto	119	2112	10	t
+228	{110,80}	lista cargos	sasistentes=s&sactividad=cv&que=list_cjto	119	2112	10	t
 938	{10,70}	ayuda	\N	177	33816576	13	t
 374	{50,10,20}	sv agd	id_tipo_activ=133&status=2&periodo=desdeHoy	71	8	8	t
 1	{20,70}	listado actas	\N	178	16	12	t
@@ -206,11 +206,13 @@
 972	{10,50}	cartas presentacion	\N	191	34078719	4	t
 960	{10,20}	atención actividades	\N	28	262144	9	t
 961	{10,10}	planning zonas	\N	139	262144	9	t
+950	{91,30}	lista ctr i nº s	\N	152	2112	10	t
 1029	{30}	historicos	\N	\N	\N	\N	t
 1008	{20,40}	zonas-ctr	\N	85	2056	8	t
 1010	{20,50}	zonas-sacd	\N	42	2056	8	t
 1012	{20,55}	lista sacd-zona	que=get_lista_tot	34	2056	8	t
 1055	{40}	planning	\N	181	32	4	t
+1163	{50,110}	cambiar de fase	\N	130	8	8	t
 1061	{40,10}	persona dl	tabla=p_de_casa&tipo=planning	61	32	4	t
 1065	{40,20}	num de paso	tabla=p_de_paso&na=n&tipo=p_de_paso	61	32	4	t
 1099	{50,10}	fases	clase_info=procesos\\model\\infofases	160	33554432	13	t
@@ -248,6 +250,9 @@
 1199	{70}	Encargos	\N	186	2056	8	t
 1193	{60,50}	generar tabla avisos	\N	46	33816576	13	t
 1194	{60,60}	ver lista cambios	\N	154	33816576	13	t
+1224	{110,30}	de la dl	tipo_activ_sg=cv	132	64	10	t
+1207	{120,30}	de la dl	tipo_activ_sg=crt	132	64	10	t
+1209	{120,40}	de cada ctr	tipo_ctr=sg&tipo_lista=crt	12	64	10	t
 1261	{90,20}	nuevo curso	\N	157	8	8	t
 1289	{90,90}	Tarifas	\N	0	8	8	t
 1236	{70,30}	listados	\N	124	8	8	t
@@ -257,6 +262,11 @@
 1255	{90,10}	buscar cve agd	sasistentes=agd&sactividad=cve	71	2050	3	t
 1241	{80}	ausencias	\N	186	8	8	t
 1293	{90,90,20}	tarifa <-> tipo actividad	\N	108	8	8	t
+1250	{85,10}	persona dl	obj_pau=PersonaN&tipo=planning	61	2176	2	t
+1247	{82,30}	lista por ctr	lista=list_activ&n_agd=n&sasistentes=n&sactividad=cve	147	2178	2	t
+1225	{110,40}	de cada ctr	tipo_ctr=sg&tipo_lista=cv	12	64	10	t
+1228	{110,50}	s que no han ido a la cv	\N	0	64	10	t
+1229	{110,50,10}	este curso	que=cv_s&curso=actual	79	64	10	t
 1321	{100}	planning 	\N	183	2	3	t
 1323	{100,10}	persona dl	tabla=p_de_casa&tipo=planning	61	2	3	t
 1326	{100,30}	por centro	tipo=planning_ctr	61	2	3	t
@@ -279,7 +289,6 @@
 1371	{990,20}	posibles idiomas	clase_info=usuarios\\model\\InfoLocales	160	33816576	13	t
 1393	{80}	actividades	\N	0	8	19	t
 1386	{38}	sem inv.	\N	183	16	12	t
-1163	{50,110}	cambiar de fase	\N	130	8	8	t
 1258	{90,10}	Definir periodos	\N	7	8	8	t
 1263	{90,30}	nuevo planing	\N	141	34078719	8	t
 1292	{90,90,10}	definir tarifa	\N	100	8	8	t
@@ -289,7 +298,6 @@
 1238	{70,50}	tipo encargo	clase_info=encargossacd\\model\\infoencargotipo	160	8	8	t
 1394	{70,40}	Tablas de apps	\N	102	33554432	13	t
 71	{40}	planning	\N	183	8	8	t
-529	{90}	Nuevo calendario	\N	183	8	8	t
 257	{40}	perm_dossiers	\N	182	33554432	13	t
 1397	{38,120}	importar	sasistentes=agd&sactividad=ca&que=ver&modo=importar	119	16	12	t
 995	{20,20}	zonas geogr.	clase_info=zonassacd\\model\\infozonagrupo	160	8	8	t
@@ -303,10 +311,11 @@
 1387	{38,10}	buscar	sasistentes=agd&sactividad=ca&que=ver&periodo=curso_ca	119	16	12	t
 942	{5,85}	ca pendientes	sactividad=ca&tipo_personas=sacd	140	8	8	t
 1296	{90,90,30}	tarifas por casa y año	\N	73	8	8	t
-1398	{70,50}	config esquema	\N	90	33816576	13	t
 926	{70,110}	Gestión de plazas	sasistentes=n&sactividad=crt	169	128	2	t
 1395	{70,140}	cambiar de fase	sasistentes=n&sactividad=crt	130	128	2	t
 1389	{82,110}	Gestión de plazas	sasistentes=n&sactividad=cve	169	128	2	t
 1390	{90,110}	Gestión de plazas	sasistentes=agd&sactividad=cve	169	2	3	t
 1391	{38,110}	gestión de plazas	sasistentes=agd&sactividad=ca	169	16	12	t
 309	{70,60}	list varios crt	sasistentes=n&sactividad=crt&que=list_cjto	119	2208	2	t
+529	{90}	Nuevo calendario	\N	183	37748735	8	t
+1398	{70,50}	config esquema	\N	90	33554432	13	t

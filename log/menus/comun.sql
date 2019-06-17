@@ -5,12 +5,10 @@
 9	\N	sistema/trad_campos.php	\N	\N
 10	\N	sg/historics_sg_activ.php	\N	\N
 11	\N	vcsd/escritos_cr/docs.php	\N	\N
-12	\N	programas/centro_que.php	\N	\N
 13	\N	programas/sm-agd/list_ultima_activ.php	\N	\N
 15	\N	des/list_sssc_cr9_05.php	\N	\N
 16	\N	scdl/documentos/centros_que.php	\N	\N
 20	\N	scdl/registro/pen_of_form.php	\N	\N
-21	\N	programas/calendario_listas.php	\N	\N
 22	\N	scdl/registro/control.php	\N	\N
 24	\N	scdl/registro/control_usr.php	\N	\N
 25	\N	vcsd/scheduler/oficina.php	\N	\N
@@ -44,7 +42,6 @@
 75	\N	scdl/registro/registro_imprimir_que.php	\N	\N
 77	\N	scdl/tertulias/lista_que.php	\N	\N
 78	\N	programas/pag_html_editar.php	\N	\N
-79	\N	sg/list_ultim_que_ctr.php	\N	\N
 80	\N	scdl/registro/registro_oficina_tabla.php	\N	\N
 81	\N	programas/calendario_status_cambio.php	\N	\N
 82	\N	scdl/documentos/equipajes_nuevo.php	\N	\N
@@ -80,7 +77,6 @@
 126	\N	sg/que_centro_sg.php	\N	\N
 128	\N	programas/act_tarifas.php	\N	\N
 129	\N	programas/lista_activ_sg_que.php	\N	\N
-132	\N	sg/lista_actividades_sg.php	\N	\N
 134	\N	scdl/registro/mod_ini.php	\N	\N
 135	\N	sg/que_resumen.php	\N	\N
 137	\N	des/libros/que_libros.php	\N	\N
@@ -99,7 +95,6 @@
 149	\N	scdl/registro/pen_of_tabla.php	\N	\N
 150	\N	programas/personas_borrar_B.php	\N	\N
 151	\N	sg/list_cp_cr15_86.php	\N	\N
-152	\N	sg/lista_ctrs.php	\N	\N
 153	\N	des/tareas/periodo_prueba.php	\N	\N
 158	\N	scdl/tabla_mails_moneders.php	\N	\N
 159	\N	scdl/registro/pen_form.php	\N	\N
@@ -111,6 +106,9 @@
 154	26	apps/cambios/controller/avisos_generar.php	\N	avisos generar
 2	26	apps/cambios/controller/avisos_generar_mails.php	\N	avisos mails
 90	1	apps/config/controller/parametros.php	\N	Configuracion esquema
+152	1	apps/ubis/controller/lista_ctrs.php	\N	lista ctr sg
+12	5	apps/actividades/controller/actividades_centro_que.php	\N	Centro que activ
+21	6	apps/actividades/controller/calendario_listas.php	\N	calendario listas
 42	24	apps/zonassacd/controller/zona_sacd.php	\N	Zona sacd
 139	24	apps/zonassacd/controller/planning_zones.php	\N	Planning por zonas
 114	25	apps/cartaspresentacion/controller/cartas_presentacion_que.php	\N	Cartas Presentacion
@@ -187,3 +185,5 @@
 46	26	apps/cambios/controller/avisos_generar_tabla.php	\N	avisos generar tabla
 143	6	apps/actividades/controller/lista_activ_que.php	\N	Lista Activ que
 44	11	apps/procesos/controller/tipo_activ_proceso.php	\N	Tipos de actividad
+132	5	apps/actividades/controller/lista_actividades_sg.php	\N	lista activ sg
+79	6	apps/asistentes/controller/lista_ultim_que_ctr.php	\N	Ultima asistencia

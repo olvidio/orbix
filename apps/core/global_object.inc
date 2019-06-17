@@ -146,7 +146,7 @@ if ((\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) && !iss
 		
 		foreach ($views as $view) {
 			$sql = "REFRESH MATERIALIZED VIEW \"H-Hv\".$view";
-			if (($oDblSt = $oDB->exec($sql)) === false) {
+			if (($oDB->exec($sql)) === false) {
 				$sClauError = 'Refresh';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, __LINE__, __FILE__);
 			}
