@@ -16,7 +16,10 @@ use ubis\model\entity\Ubi;
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$oPosicion->recordar();
+//Necesario cuando tengo que buscar el desplegable dl_org según permisos en procesos
+// (Como también afecta al status de la actividad, mejor rehacer toda la página).
+$Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
+$oPosicion->recordar($Qrefresh);
 
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox

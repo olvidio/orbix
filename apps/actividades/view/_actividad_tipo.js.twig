@@ -79,7 +79,7 @@ fnjs_act_id_activ=function(){
     // Como también afecta al status de la actividad, mejor rehacer toda la página.
     {% if procesos_installed  %}
         url = '{{ url_act }}';
-        var parametros='id_tipo_activ='+id_tipo_activ+'{{ h_act|raw }}';
+        var parametros='refresh=1&id_tipo_activ='+id_tipo_activ+'{{ h_act|raw }}';
         $.ajax({
             url: url,
             type: 'post',

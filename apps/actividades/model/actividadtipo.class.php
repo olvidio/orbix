@@ -157,7 +157,7 @@ class ActividadTipo {
 		$url_act = ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_ver.php';
 		$oHashAct = new web\Hash();
 		$oHashAct->setUrl('apps/actividades/controller/actividad_ver.php');
-		$oHashAct->setCamposForm('id_tipo_activ');
+		$oHashAct->setCamposForm('id_tipo_activ!refresh');
 		$h_act = $oHashAct->linkSinVal();
 
 		

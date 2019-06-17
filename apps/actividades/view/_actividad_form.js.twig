@@ -16,7 +16,7 @@ $(function() {
 
 });
 
-// Para poner por defecto en el mismo dia que el iniciode actividad
+// Para poner por defecto en el mismo dia que el inicio de actividad
 $("#f_fin").click(function() {
 	var fin = '';
     var ini = $( "#f_ini" ).val();
@@ -92,6 +92,8 @@ fnjs_guardar=function(tipo='') {
 			.done(function (rta_txt) {
 				if (rta_txt != '' && rta_txt != '\\n') {
 					alert ('{{ "respuesta"|trans }}: '+rta_txt);
+				} else {
+					{{ oPosicion.js_atras(1)|raw }}
 				}
 				// OJO hay que actualizar el formulario de la lista, no el actual.
 				// Esta función está en calendario_planning.phtml 
@@ -116,6 +118,7 @@ fnjs_actualizar_ctr=function(){
 };
 
 fnjs_tipo_actividad=function(){
+	alert("EEE  JEJEJ");
 	$('#modifica').attr('action','programas/actividad_nueva.php');
 	$('#mod').val('cambiar_tipo');
 	fnjs_enviar_formulario('#modifica');
