@@ -117,8 +117,8 @@ class AsistenteOut Extends AsistentePub {
 				}
 			}
 			// Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
-			// Anoto el cambio si la actividad está publicada
-			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') OR $aDades['publicado'] == 'true')) {
+			// Anoto el cambio.
+			if (empty($quiet)) {
 			    $oGestorCanvis = new gestorAvisoCambios();
 			    $shortClassName = (new \ReflectionClass($this))->getShortName();
 			    $oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
@@ -150,8 +150,8 @@ class AsistenteOut Extends AsistentePub {
 			$this->setAllAtributes($aDadesLast);
 			// anotar cambio.
 			// Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
-			// Anoto el cambio si la actividad está publicada
-			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') OR $aDades['publicado'] == 'true')) {
+			// Anoto el cambio.
+			if (empty($quiet)) {
 			    $oGestorCanvis = new gestorAvisoCambios();
 			    $shortClassName = (new \ReflectionClass($this))->getShortName();
 			    $oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $this->aDades, array());
