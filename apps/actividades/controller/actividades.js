@@ -15,12 +15,21 @@ jsForm.enviar = function(){
 }
 
 jsForm.refresh=function(){
+	if (this.Aviso) {
+		if (confirm(this.Aviso) ) {
+			ok=1;
+		} else {
+			ok=0;
+		}
+	} else {
+		ok=1;
+	}
 	if (this.SoloUno) {
 		rta=fnjs_solo_uno(this.form);
 	} else {
 		rta=1;
 	}
-	if (rta==1) {
+	if (ok == 1 && rta==1) {
 		var param=$(this.form).serialize();
 		var url=this.action;
 		$(this.form).submit(function() {
@@ -64,6 +73,7 @@ jsForm.update=function(formulario,que){
 			this.action = "apps/actividades/controller/actividad_update.php";
 			break;
 		case "duplicar":
+			this.Aviso = "Seguro que desa duplicar esta actividad";
 			$('#mod').val(que);
 			this.action = "apps/actividades/controller/actividad_update.php";
 			break;

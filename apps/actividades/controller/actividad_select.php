@@ -81,6 +81,23 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     $Qid_sel=$oPosicion->getParametro('id_sel');
     $Qscroll_id = $oPosicion->getParametro('scroll_id');
     $oPosicion->olvidar($QGstack); //limpio todos los estados hacia delante.
+    
+    // valores por defeccto (aunque vengo de vuelta, pueden estar vacíos p.ej al duplicar)
+    // desde 40 dias antes de hoy:
+    if (empty($Qempiezamin)) {
+        $QempiezaminIso = date('Y-m-d',mktime(0, 0, 0, date('m'), date('d')-40, date('Y')));
+    } else {
+        $oEmpiezamin = DateTimeLocal::createFromLocal($Qempiezamin);
+        $QempiezaminIso = $oEmpiezamin->getIso();
+    }
+    // hasta dentro de 9 meses desde hoy.
+    if (empty($Qempiezamax)) {
+        $QempiezamaxIso = date('Y-m-d',mktime(0, 0, 0, date('m')+9, 0, date('Y')));
+    } else {
+        $oEmpiezamax = DateTimeLocal::createFromLocal($Qempiezamax);
+        $QempiezamaxIso = $oEmpiezamax->getIso();
+    }
+    
 } else { //si vengo de vuelta y tengo los parametros en el $_POST
     $Qid_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     $Qscroll_id = (string) \filter_input(INPUT_POST, 'scroll_id');
