@@ -21,6 +21,11 @@ fnjs_cmb_propietario=function(){
 }
 ?>
 fnjs_guardar=function(formulario){
+	id_activ = $('#id_activ').val();
+	if (!id_activ) {
+		alert("<?= _("debe indicar una actividad") ?>");
+		return; 
+	}
 	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
 	//alert ("EEE "+rr);
 	if (rr=='ok') {
