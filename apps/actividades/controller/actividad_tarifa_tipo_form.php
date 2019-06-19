@@ -77,10 +77,10 @@ if ($Qid_item != 'nuevo') {
 	$oView = new core\View('actividades/controller');
 	echo $oView->render('actividad_tarifa_tipo_form.phtml',$a_campos);
 	
-} elseif (!$_SESSION['oConfig']->is_jefeCalendario()) {  
-    //para una actividad nueva, sólo sv.
+} else {
 	// -------------- NUEVA TARIFA --------------------
-	$miSfsv = ConfigGlobal::mi_sfsv();
+    //para una actividad nueva, sólo mi sección.
+    $miSfsv = ConfigGlobal::mi_sfsv();
 
 	$txt_eliminar = _("¿Está seguro que desea quitar esta tarifa?");
 	
@@ -95,6 +95,7 @@ if ($Qid_item != 'nuevo') {
     $oActividadTipo->setAsistentes($Qsasistentes);
     $oActividadTipo->setActividad($Qsactividad);
     $oActividadTipo->setNom_tipo($Qsnom_tipo);
+    $oActividadTipo->setPara('tipoactiv-tarifas');
     
 	$oGesTipoTarifa = new GestorTipoTarifa();
 	$oDesplPosiblesTipoTarifas = $oGesTipoTarifa->getListaTipoTarifas($miSfsv);

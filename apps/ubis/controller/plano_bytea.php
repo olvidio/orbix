@@ -131,8 +131,7 @@ switch ($Qact) {
 		$act="upload";
 		?>
 		<!-- jQuery -->
-		<script type="text/javascript" src='<?= core\ConfigGlobal::$web_scripts.'/jquery-ui-latest/js/jquery-1.7.1.min.js'; ?>'></script>
-
+        <script type="text/javascript" src='<?= core\ConfigGlobal::$web_scripts.'/jquery/jquery-1.12.3.min.js'; ?>'></script>
 		<script>
 		fnjs_introducir=function(){
 			var id_direccion=$('#id_direccion').val();
