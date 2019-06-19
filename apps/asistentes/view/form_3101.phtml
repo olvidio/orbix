@@ -25,30 +25,6 @@ fnjs_cmb_propietario=function(){
 <?php	
 }
 ?>
-fnjs_guardar2=function(formulario){
-	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
-	//alert ("EEE "+rr);
-	if (rr=='ok') {
-		$(formulario).attr('action',"apps/asistentes/controller/update_3101.php");
-		$(formulario).submit(function() {
-			$.ajax({
-				url: $(this).attr('action'),
-				type: 'post',
-				data: $(this).serialize()
-			})
-			.done(function (rta_txt) {
-				if (rta_txt != '' && rta_txt != '\\n') {
-					alert ('<?= _("respuesta") ?>: '+rta_txt);
-				} else {
-					<?= $oPosicion->js_atras(1); ?>
-				}
-			});
-			return false;
-		});
-		$(formulario).submit();
-		$(formulario).off();
-	}
-}
 fnjs_guardar=function(formulario,repetir){
 	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
 	//alert ("EEE "+rr);
@@ -66,6 +42,7 @@ fnjs_guardar=function(formulario,repetir){
 				} else {
 					if (repetir == 1) {
 						$('#id_nom').val(0);
+						fnjs_nuevo(formulario);
 					} else {
 						<?= $oPosicion->js_atras(1); ?>
 					}
@@ -76,6 +53,12 @@ fnjs_guardar=function(formulario,repetir){
 		$(formulario).submit();
 		$(formulario).off();
 	}
+}
+
+fnjs_nuevo=function(formulario){
+    $(formulario).attr('action',"apps/asistentes/controller/form_3101.php");
+    fnjs_enviar_formulario(formulario,'#ficha3101');
+        
 }
 </script>
 <?= $oPosicion->mostrar_left_slide(1); ?>

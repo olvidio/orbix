@@ -54,9 +54,14 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$Qid_nom = (integer) \filter_input(INPUT_POST, 'id_nom');
 }
 
-$Qid_activ = (integer)  \filter_input(INPUT_POST, 'id_pau');
+$Qid_activ = (integer)  \filter_input(INPUT_POST, 'id_activ');
 $Qid_pau = (integer)  \filter_input(INPUT_POST, 'id_pau');
 $Qobj_pau = (string)  \filter_input(INPUT_POST, 'obj_pau');
+
+if (empty($Qid_activ)) {
+    $Qid_activ = $Qid_pau;
+}
+
 
 $gesAsistentes = new asistentes\GestorAsistente();
 	
@@ -72,6 +77,27 @@ if (!empty($Qid_nom)) { //caso de modificar
 		$msg_err = "<br>$oPersona con id_nom: $Qid_nom en  ".__FILE__.": line ". __LINE__;
 		exit($msg_err);
 	}
+	// Hay que especificar el tipo de personas para poder crear un nuevo asistente desde la ficha
+	$id_tabla = $oPersona->getId_tabla();
+	switch($id_tabla) {
+	    case 'n':
+	        $obj_pau = 'PersonaN';
+	        break;
+	    case 'a':
+	        $obj_pau = 'PersonaAgd';
+	        break;
+	    case 's':
+	        $obj_pau = 'PersonaS';
+	        break;
+	    case 'nax':
+	        $obj_pau = 'PersonaNax';
+	        break;
+	    case 'sssc':
+		  $obj_pau = 'PersonaSSSC';
+		  break;
+	}
+	//$obj_pau = str_replace("personas\\model\\entity\\",'',get_class($oPersona));
+	
 	$ape_nom = $oPersona->getApellidosNombre();
 	$id_nom_real = $Qid_nom;
 
@@ -79,7 +105,6 @@ if (!empty($Qid_nom)) { //caso de modificar
 	$cAsistentes = $gesAsistentes->getAsistentes($aWhere);
 	$oAsistente = $cAsistentes[0];
 
-	$obj_pau = str_replace("personas\\model\\entity\\",'',get_class($oPersona));
 	$propio=$oAsistente->getPropio();
 	$falta=$oAsistente->getFalta();
 	$est_ok=$oAsistente->getEst_ok();
@@ -185,9 +210,8 @@ $camposForm = 'observ!observ_est';
 if (core\configGlobal::is_app_installed('actividadplazas')) {
 	$camposForm .= '!plaza!propietario';
 }
-$oHash->setCamposNo('propio!falta!est_ok');
 $a_camposHidden = array(
-		'id_activ' => $Qid_pau,
+		'id_activ' => $Qid_activ,
 		'obj_pau'=> $obj_pau,
 		'mod' => $mod,
 		);
@@ -198,8 +222,11 @@ if (!empty($id_nom_real)) {
 }
 $oHash->setcamposForm($camposForm);
 $oHash->setArraycamposHidden($a_camposHidden);
+// EN el caso de guradar y añadir uno nuevo, se pone id_nom=0.
+$oHash->setCamposNo('id_nom!propio!falta!est_ok');
 
-$oPosicion->addParametro('mod',$mod,0);
+
+//$oPosicion->addParametro('mod',$mod,0);
 		
 $a_campos = ['obj' => $obj,
 			'oPosicion' => $oPosicion,
