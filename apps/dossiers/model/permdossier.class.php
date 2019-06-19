@@ -590,7 +590,7 @@ class PermDossier {
 			if ($_SESSION['oPerm']->have_perm("est")) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
+								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
 								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
 								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
 								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
