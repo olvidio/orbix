@@ -288,7 +288,9 @@ class PermisosActividades {
 	public function getPermisoActual($iAfecta) {
 	    // hay que poner a cero el id_tipo_activ, sino 
 	    // aprovecha el que se ha buscado con el anterior iAfecta.
-	    $this->setActividad($this->iid_activ);
+	    if (!empty($this->iid_activ)) {
+	       $this->setActividad($this->iid_activ);
+	    }
 		// para poder pasar el valor de afecta con texto:
 		if (is_string($iAfecta)) $iAfecta = $this->aAfecta[$iAfecta];
 		$id_tipo_proceso = $this->getId_tipo_proceso();

@@ -203,9 +203,11 @@ fnjs_actualizar_propiedades({{ id_item_usuario_objeto }});
 </table>
 <br>
 
-<h3>{{ "periodo"|trans }}:</h3>
+<h3>{{ "en el intervalo"|trans }}:</h3>
 {{ "NOTA: Sólo salen las fases comunes a todos los procesos de los tipos de actividad seleccionados.
 Para ver más fases del proceso, debe limitar el tipo de actividad."|trans }}
+<br>
+{{ "NOTA: En orden alfabético. Al ser común a varios procesos, no se pueden ordenar según el proceso."|trans }}
 <br>
 <br>
 <table>
@@ -219,11 +221,14 @@ Para ver más fases del proceso, debe limitar el tipo de actividad."|trans }}
         <span id=hasta> {{ oDesplFasesFin.desplegable()|raw }} </span>
     </td>
 </tr>
-<tr><td colspan=2>{{ "ver cambios sólo de las casas"|trans }}:</td>
+</table>
+<h3>{{ "opciones"|trans }}:</h3>
+<table>
+<tr><td colspan="2" class="subtitulo">{{ "ver cambios sólo de las casas"|trans }}:</td>
     <td id="col_casas" colspan=2>
         {{ oSelects.ListaSelects|raw }}
     </td></tr>
-<tr><td>{{ "avisar por"|trans }}:</td>
+<tr><td class="subtitulo">{{ "avisar por"|trans }}:</td>
     <td>{{ oDesplTiposAviso.desplegable|raw }}</td>
 </tr>
 </table>
