@@ -19,19 +19,22 @@ require_once ("apps/core/global_object.inc");
 
 
 $oHash = new web\Hash();
-$oHash->setUrl(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tarifa_tipo_ajax.php');
+$oHash->setUrl(core\ConfigGlobal::getWeb().'/apps/actividadtarifas/controller/actividad_tarifa_tipo_ajax.php');
 $oHash->setCamposForm('que');
 $h_ver = $oHash->linkSinVal();
 
 $oHashMod = new web\Hash();
-$oHashMod->setUrl(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tarifa_tipo_form.php');
+$oHashMod->setUrl(core\ConfigGlobal::getWeb().'/apps/actividadtarifas/controller/actividad_tarifa_tipo_form.php');
 $oHashMod->setCamposForm('id_item');
 $h_modificar = $oHashMod->linkSinVal();
+
+$txt_eliminar = _("¿Está seguro que desea quitar esta tarifa?");
 
 $a_campos = ['oPosicion' => $oPosicion,
     'h_ver' => $h_ver,
     'h_modificar' => $h_modificar,
+    'txt_eliminar' => $txt_eliminar,
 ];
 
-$oView = new core\View('actividades/controller');
+$oView = new core\View('actividadtarifas/controller');
 echo $oView->render('actividad_tarifa_tipo.phtml',$a_campos);

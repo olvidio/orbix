@@ -1,17 +1,14 @@
 <?php
 use actividades\model\entity\Actividad;
-use actividades\model\entity\GestorTipoTarifa;
-use actividades\model\entity\TipoTarifa;
-use actividades\model\entity\GestorTipoActivTarifa;
+use actividades\model\entity\GestorNivelStgr;
+use actividades\model\entity\GestorRepeticion;
+use actividadtarifas\model\entity\GestorTipoTarifa;
+use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
-use ubis\model\entity\Tarifa;
 use ubis\model\entity\GestorDelegacion;
-use ubis\model\entity\GestorTarifa;
+use ubis\model\entity\Tarifa;
 use ubis\model\entity\Ubi;
-use usuarios\model\entity\Usuario;
 use web\Desplegable;
-use web\Lista;
-use web\TiposActividades;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -136,17 +133,17 @@ switch ($Qque) {
         $oDesplDelegacionesOrg->setNombre('dl_org');
         $oDesplDelegacionesOrg->setOpcion_sel($dl_org);
         
-        $oGesTipoTarifa = new actividades\model\entity\GestorTipoTarifa();
+        $oGesTipoTarifa = new GestorTipoTarifa();
         $oDesplPosiblesTipoTarifas = $oGesTipoTarifa->getListaTipoTarifas($isfsv);
         $oDesplPosiblesTipoTarifas->setNombre('tarifa');
         $oDesplPosiblesTipoTarifas->setOpcion_sel($tarifa);
         
-        $oGesNivelStgr = new actividades\model\entity\GestorNivelStgr();
+        $oGesNivelStgr = new GestorNivelStgr();
         $oDesplNivelStgr = $oGesNivelStgr->getListaNivelesStgr();
         $oDesplNivelStgr->setNombre('nivel_stgr');
         $oDesplNivelStgr->setOpcion_sel($nivel_stgr);
         
-        $oGesRepeticion = new actividades\model\entity\GestorRepeticion();
+        $oGesRepeticion = new GestorRepeticion();
         $oDesplRepeticion = $oGesRepeticion->getListaRepeticion();
         $oDesplRepeticion->setNombre('id_repeticion');
         $oDesplRepeticion->setOpcion_sel($id_repeticion);
@@ -230,7 +227,7 @@ switch ($Qque) {
         
         $a_status = Actividad::ARRAY_STATUS_TXT;
         
-        $oActividad = new actividades\model\entity\Actividad();
+        $oActividad = new Actividad();
         $id_tipo_activ = $oActividad->getId_tipo_activ();
         $dl_org = $oActividad->getDl_org();
         $nom_activ = $oActividad->getNom_activ();
@@ -284,17 +281,17 @@ switch ($Qque) {
         $oDesplDelegacionesOrg->setNombre('dl_org');
         $oDesplDelegacionesOrg->setOpcion_sel($dl_org);
         
-        $oGesTipoTarifa = new actividades\model\entity\GestorTipoTarifa();
+        $oGesTipoTarifa = new GestorTipoTarifa();
         $oDesplPosiblesTipoTarifas = $oGesTipoTarifa->getListaTipoTarifas($isfsv);
         $oDesplPosiblesTipoTarifas->setNombre('tarifa');
         $oDesplPosiblesTipoTarifas->setOpcion_sel($tarifa);
         
-        $oGesNivelStgr = new actividades\model\entity\GestorNivelStgr();
+        $oGesNivelStgr = new GestorNivelStgr();
         $oDesplNivelStgr = $oGesNivelStgr->getListaNivelesStgr();
         $oDesplNivelStgr->setNombre('nivel_stgr');
         $oDesplNivelStgr->setOpcion_sel($nivel_stgr);
         
-        $oGesRepeticion = new actividades\model\entity\GestorRepeticion();
+        $oGesRepeticion = new GestorRepeticion();
         $oDesplRepeticion = $oGesRepeticion->getListaRepeticion();
         $oDesplRepeticion->setNombre('id_repeticion');
         $oDesplRepeticion->setOpcion_sel($id_repeticion);

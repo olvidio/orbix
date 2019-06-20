@@ -1,5 +1,5 @@
 <?php
-namespace actividades\model\entity;
+namespace actividadtarifas\model\entity;
 use core;
 /**
  * Classe que implementa l'entitat $nom_tabla

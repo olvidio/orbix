@@ -1,5 +1,5 @@
 <?php
-namespace actividades\model\entity;
+namespace actividadtarifas\model\entity;
 use core;
 /**
  * Fitxer amb la Classe que accedeix a la taula xa_tipo_activ_tarifa

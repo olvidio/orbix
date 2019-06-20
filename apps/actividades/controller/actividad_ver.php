@@ -3,7 +3,11 @@
  * Muestra un formulario para poder seleccionar un rgupo de actividades
  * 
  */
+use actividades\model\entity\Actividad;
 use actividades\model\entity\ActividadAll;
+use actividades\model\entity\GestorNivelStgr;
+use actividades\model\entity\GestorRepeticion;
+use actividadtarifas\model\entity\GestorTipoTarifa;
 use ubis\model\entity\GestorDelegacion;
 use ubis\model\entity\Ubi;
 
@@ -45,7 +49,7 @@ $aQuery = array ('pau'=>'a',
 if (is_array($aQuery)) { array_walk($aQuery, 'core\poner_empty_on_null'); }
 $godossiers = web\Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_build_query($aQuery));
 
-$a_status = ActividadAll::ARRAY_STATUS_TXT;
+$a_status = Actividad::ARRAY_STATUS_TXT;
 
 $permiso_des = FALSE;
 if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
@@ -59,7 +63,7 @@ if (!empty($Qid_activ)) { // caso de modificar
 	$dos=_("dossiers");
 	$Qmod = 'editar';
 
-	$oActividad = new actividades\model\entity\Actividad($Qid_activ);
+	$oActividad = new Actividad($Qid_activ);
 	$id_tipo_activ = $oActividad->getId_tipo_activ();
 	$dl_org = $oActividad->getDl_org();
 	$nom_activ = $oActividad->getNom_activ();
@@ -203,17 +207,17 @@ $oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones($Bdl);
 $oDesplDelegacionesOrg->setNombre('dl_org');
 $oDesplDelegacionesOrg->setOpcion_sel($dl_org);
 
-$oGesTipoTarifa = new actividades\model\entity\GestorTipoTarifa();
+$oGesTipoTarifa = new GestorTipoTarifa();
 $oDesplPosiblesTipoTarifas = $oGesTipoTarifa->getListaTipoTarifas($isfsv);
 $oDesplPosiblesTipoTarifas->setNombre('tarifa');
 $oDesplPosiblesTipoTarifas->setOpcion_sel($tarifa);
 
-$oGesNivelStgr = new actividades\model\entity\GestorNivelStgr();
+$oGesNivelStgr = new GestorNivelStgr();
 $oDesplNivelStgr = $oGesNivelStgr->getListaNivelesStgr();
 $oDesplNivelStgr->setNombre('nivel_stgr');
 $oDesplNivelStgr->setOpcion_sel($nivel_stgr);
 
-$oGesRepeticion = new actividades\model\entity\GestorRepeticion();
+$oGesRepeticion = new GestorRepeticion();
 $oDesplRepeticion = $oGesRepeticion->getListaRepeticion();
 $oDesplRepeticion->setNombre('id_repeticion');
 $oDesplRepeticion->setOpcion_sel($id_repeticion);

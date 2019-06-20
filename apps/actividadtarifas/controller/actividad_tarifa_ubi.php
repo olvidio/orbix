@@ -32,17 +32,17 @@ $oForm->setAction('');
 $oFormAny = new web\PeriodoQue();
 
 $oHash = new web\Hash();
-$oHash->setUrl(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tarifa_ajax.php');
+$oHash->setUrl(core\ConfigGlobal::getWeb().'/apps/actividadtarifas/controller/actividad_tarifa_ajax.php');
 $oHash->setCamposForm('que!id_ubi!year');
 $h_ver = $oHash->linkSinVal();
 
 $oHashNew = new web\Hash();
-$oHashNew->setUrl(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tarifa_ajax.php');
+$oHashNew->setUrl(core\ConfigGlobal::getWeb().'/apps/actividadtarifas/controller/actividad_tarifa_ajax.php');
 $oHashNew->setCamposForm('que!id_ubi!year');
 $h_nuevo = $oHashNew->linkSinVal();
 
 $oHashMod = new web\Hash();
-$oHashMod->setUrl(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tarifa_ajax.php');
+$oHashMod->setUrl(core\ConfigGlobal::getWeb().'/apps/actividadtarifas/controller/actividad_tarifa_ajax.php');
 $oHashMod->setCamposForm('que!id_item!letra');
 $h_modificar = $oHashMod->linkSinVal();
 
@@ -54,5 +54,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oFormAny' => $oFormAny,
 ];
 
-$oView = new core\View('actividades/controller');
+$oView = new core\View('actividadtarifas/controller');
 echo $oView->render('actividad_tarifa_ubi.phtml',$a_campos);

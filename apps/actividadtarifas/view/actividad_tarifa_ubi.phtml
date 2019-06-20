@@ -19,7 +19,7 @@ fnjs_guardar=function(formulario,que){
 	}
 	if (err!=1) {
 		$(formulario+' input[name="que"]').val(que)
-        $(formulario).attr('action',"apps/actividades/controller/actividad_tarifa_ajax.php")
+        $(formulario).attr('action',"apps/actividadtarifas/controller/actividad_tarifa_ajax.php")
         $(formulario).submit(function() {
             $.ajax({
                 url: $(this).attr('action'),
@@ -51,7 +51,7 @@ fnjs_modificar=function(id_item,letra){
 	document.getElementById("overlay").style.display = "block";
 	
 
-	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/actividades/controller/actividad_tarifa_ajax.php';
+	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/actividad_tarifa_ajax.php';
 	if (id_item == 'nuevo') {
 		id_ubi =$('#id_cdc').val();
 		year =$('#year').val();
@@ -66,7 +66,7 @@ fnjs_ver=function(){
 	id_ubi =$('#id_cdc').val();
 	year =$('#year').val();
 	// obtener el listado de periodos 
-	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/actividades/controller/actividad_tarifa_ajax.php';
+	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/actividad_tarifa_ajax.php';
 	var parametros='que=get&id_ubi='+id_ubi+'&year='+year+'<?= $h_ver ?>';
 		 
 	$.ajax({

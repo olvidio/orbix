@@ -1,12 +1,10 @@
 <?php
-use actividades\model\entity\Actividad;
-use actividades\model\entity\GestorTipoTarifa;
-use actividades\model\entity\TipoTarifa;
-use actividades\model\entity\GestorTipoActivTarifa;
+use actividadtarifas\model\entity\GestorTipoActivTarifa;
+use actividadtarifas\model\entity\GestorTipoTarifa;
+use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
-use ubis\model\entity\Tarifa;
 use ubis\model\entity\GestorTarifa;
-use usuarios\model\entity\Usuario;
+use ubis\model\entity\Tarifa;
 use web\Desplegable;
 use web\Lista;
 use web\TiposActividades;

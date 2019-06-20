@@ -84,7 +84,7 @@ switch($Qque) {
 	    $Qid_item = (integer) \filter_input(INPUT_POST, 'id_item');
 	    $Qorden = (string) \filter_input(INPUT_POST, 'orden');
 		$oLista = new GestorTareaProceso();
-		$rta = $oLista->setProcesosOrden($Qid_item,$Qorden);
+		$rta = $oLista->setTareasProcesosOrden($Qid_item,$Qorden);
 		$error = '';
 		if ($rta === false) {
 		    $error = _("hay un error, no se ha movido");

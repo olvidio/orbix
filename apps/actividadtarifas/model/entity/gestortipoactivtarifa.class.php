@@ -1,5 +1,5 @@
 <?php
-namespace actividades\model\entity;
+namespace actividadtarifas\model\entity;
 use core;
 /**
  * GestorTipoActivTarifa
@@ -43,7 +43,7 @@ class GestorTipoActivTarifa Extends core\ClaseGestor {
 	function getTipoActivTarifasQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
 		$oTipoActivTarifaSet = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorTipoActivTarifa.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;

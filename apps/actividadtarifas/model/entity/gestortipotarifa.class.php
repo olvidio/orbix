@@ -1,5 +1,5 @@
 <?php
-namespace actividades\model\entity;
+namespace actividadtarifas\model\entity;
 use core;
 use web;
 /**
@@ -43,7 +43,7 @@ class GestorTipoTarifa Extends  core\ClaseGestor {
 
 		$sWhere = empty($isfsv)? '' : "WHERE sfsv=$isfsv"; 
 		$sQuery="SELECT id_tarifa,letra FROM $nom_tabla $sWhere ORDER BY id_tarifa";
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorTipoTarifa.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -66,7 +66,7 @@ class GestorTipoTarifa Extends  core\ClaseGestor {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		$sQuery="SELECT id_tarifa,letra FROM $nom_tabla WHERE sfsv=$isfsv ORDER BY id_tarifa";
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorTipoTarifa.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -88,9 +88,8 @@ class GestorTipoTarifa Extends  core\ClaseGestor {
 	 */
 	function getTipoTarifasQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
 		$oTipoTarifaSet = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorTipoTarifa.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;

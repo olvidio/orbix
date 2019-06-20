@@ -92,4 +92,3 @@ class GestorImportada Extends core\ClaseGestor {
 	/* METODES GET i SET --------------------------------------------------------*/
 
 }
-?>

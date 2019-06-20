@@ -179,8 +179,8 @@ class ActividadTipo {
 
 		switch ($this->para) {
 		    case 'tipoactiv-tarifas':
-                $oView = new core\View('actividades/controller');
-                return $oView->render('actividad_tarifa_tipo_form_nuevo.phtml',$a_campos);
+                $oView = new core\ViewTwig('actividades/controller');
+                return $oView->render('actividad_tarifa_tipo_form_nuevo.html.twig',$a_campos);
                 break;
 		    case 'tipoactiv-procesos':
                 $aditionalPaths = ['actividades' => 'actividades/view'];

@@ -118,7 +118,7 @@ if ($Qok == 1) {
 	<option value=<?= $year1 ?> selected><?= $year1 ?></option>
 	<option value=<?= $year2 ?>><?= $year2 ?></option>
 	</select>
-	<input type=button onclick=fnjs_enviar_formulario('#frm_sin_nombre') value="<?= _("generar nuevo curso") ?>">
+	<input type=button onclick="fnjs_enviar_formulario('#frm_sin_nombre');" value="<?= _("generar nuevo curso") ?>">
 	</form>
 <?php
 }

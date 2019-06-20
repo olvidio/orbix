@@ -63,9 +63,8 @@ class GestorRepeticion Extends core\ClaseGestor {
 	 */
 	function getRepeticionesQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
 		$oRepeticionSet = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorRepeticion.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;

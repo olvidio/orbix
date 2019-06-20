@@ -25,13 +25,17 @@
  *
  */
 
-use actividades\model\entity as actividades;
-use usuarios\model\entity as usuarios;
+use actividades\model\entity\Actividad;
+use actividades\model\entity\GestorActividad;
+use actividades\model\entity\GestorActividadPub;
+use actividades\model\entity\GestorImportada;
 use actividadescentro\model\entity\GestorCentroEncargado;
-use permisos\model\PermisosActividadesTrue;
-use web\DateTimeLocal;
+use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
+use permisos\model\PermisosActividadesTrue;
 use procesos\model\entity\GestorActividadProcesoTarea;
+use usuarios\model\entity as usuarios;
+use web\DateTimeLocal;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
@@ -140,7 +144,7 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
         $QempiezamaxIso = $oEmpiezamax->getIso();
     }
     
-    $Qstatus = empty($Qstatus)? actividades\ActividadAll::STATUS_ACTUAL : $Qstatus;
+    $Qstatus = empty($Qstatus)? Actividad::STATUS_ACTUAL : $Qstatus;
     
     $aGoBack = array (
         'modo'=>$Qmodo,
@@ -312,17 +316,17 @@ $a_cabeceras[]= ucfirst(_("observaciones"));
 if (!empty($Qmodo) && $Qmodo == 'importar') {
     // actividades publicadas
     $mod = 'importar';
-    $GesActividades = new actividades\GestorActividadPub();
+    $GesActividades = new GestorActividadPub();
     if (empty($Qdl_org)) {
         $aWhere['dl_org'] = $mi_dele;
         $aOperador['dl_org'] = '!=';
     }
-    $GesImportada = new actividades\GestorImportada();
+    $GesImportada = new GestorImportada();
     $obj_pau = 'ActividadPub';
 } else {
     //actividades de la dl más las importadas
     $mod = '';
-    $GesActividades = new actividades\GestorActividad();
+    $GesActividades = new GestorActividad();
     $obj_pau = 'Actividad';
 }
 
@@ -417,7 +421,7 @@ foreach($cActividades as $oActividad) {
         if (strlen($h_ini)) {$h_ini=substr($h_ini,0, (strlen($h_ini)-3));}
         if (strlen($h_fin)) {$h_fin=substr($h_fin,0, (strlen($h_fin)-3));}
         
-        $oTarifa = new actividades\TipoTarifa($tarifa);
+        $oTarifa = new TipoTarifa($tarifa);
         $tarifa_letra= $oTarifa->getLetra();
         
         $sacds="";

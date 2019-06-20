@@ -29,13 +29,13 @@
 use actividadcargos\model\entity\GestorActividadCargo;
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
-use actividades\model\entity\TipoTarifa;
 use actividadescentro\model\entity\GestorCentroEncargado;
+use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
+use ubis\model\entity\Casa;
 use web\Lista;
 use web\Periodo;
 use web\TiposActividades;
-use ubis\model\entity\Casa;
 
 require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************

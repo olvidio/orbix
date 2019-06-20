@@ -43,7 +43,7 @@ class GestorTarifa Extends core\ClaseGestor {
 	function gettarifasQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
 		$oTarifaSet = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === FALSE) {
+		if (($oDbl->query($sQuery)) === FALSE) {
 			$sClauError = 'GestorTarifa.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return FALSE;
