@@ -9,7 +9,7 @@ fnjs_cerrar=function(){
 
 fnjs_ver=function(){
 	/* obtener el listado */
-	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/actividad_tarifa_tipo_ajax.php';
+	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/tarifa_tipo_actividad_ajax.php';
 	var parametros='que=get<?= $h_ver ?>';
 		 
 	$.ajax({
@@ -31,7 +31,7 @@ fnjs_modificar=function(id_item){
 	$('#div_modificar').height('auto');
 	document.getElementById("overlay").style.display = "block";
 
-	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/actividad_tarifa_tipo_form.php';
+	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/tarifa_tipo_actividad_form.php';
 	var parametros='id_item='+id_item+'<?= $h_modificar ?>';
 	fnjs_update_div('#div_modificar',url+'?'+parametros);
 }
@@ -66,7 +66,7 @@ fnjs_guardar=function(formulario,que){
 	if (!err) {
 		$('#id_tipo_activ').val(id_tipo_activ);
 		$('#que').val(que);
-		$(formulario).attr('action','<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/actividad_tarifa_tipo_ajax.php');
+		$(formulario).attr('action','<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/tarifa_tipo_actividad_ajax.php');
 		$(formulario).submit(function() {
 			$.ajax({
 				url: $(this).attr('action'),

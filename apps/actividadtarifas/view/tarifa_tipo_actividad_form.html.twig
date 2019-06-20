@@ -11,12 +11,10 @@
 		cursor: pointer;
 	 }
 </style>
-<!-- jQuery -->
-<script type="text/javascript" src='<?= core\ConfigGlobal::$web_scripts.'/jquery/jquery-1.12.3.min.js'; ?>'></script>
 <script>
 fnjs_guardar=function(formulario,que){
 	if (que=="eliminar") {
-		seguro=confirm("<?= $txt_eliminar ?>");
+		seguro=confirm("{{ txt_eliminar }}");
 		if (seguro) { 
 			err=0;
 		} else {
@@ -32,7 +30,7 @@ fnjs_guardar=function(formulario,que){
 		var iactividad=$('#iactividad_val').val();
 		var inom_tipo=$('#inom_tipo_val').val();
 		//alert ("s: "+sfsv+", as: "+asistentes+", act: "+actividad+", tip: "+id_tipo_activ);
-		if (!isfsv || !iasistentes || !iactividad ) { alert ("<?= _("debe indicar el tipo de actividad") ?>"); err=1; }
+		if (!isfsv || !iasistentes || !iactividad ) { alert ("{{ "debe indicar el tipo de actividad"|trans }}"); err=1; }
 		if (!inom_tipo && !err) {
 		   id_tipo_activ=isfsv+iasistentes+iactividad+"000";
 	   	} else {
@@ -40,11 +38,11 @@ fnjs_guardar=function(formulario,que){
 		}
 		//alert ("tipo: "+id_tipo_activ +" err: "+err);
 	}
-	if (!tar) { alert ("<?= _("debe indicar la tarifa") ?>"); err=1; }
+	if (!tar) { alert ("{{ "debe indicar la tarifa"|trans }}"); err=1; }
 	if (!err) {
 		$('#id_tipo_activ').val(id_tipo_activ);
 		$('#que').val(que);
-		$(formulario).attr('action','<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/actividad_tarifa_tipo_ajax.php');
+		$(formulario).attr('action','{{ url_ajax }}');
 		$(formulario).submit(function() {
 			$.ajax({
 				url: $(this).attr('action'),
@@ -67,18 +65,24 @@ fnjs_guardar=function(formulario,que){
 }
 </script>
 <form id="modifica">
-<?= $oHash->getCamposHtml(); ?>
+{{ oActividadTipo.getHtml()|raw  }}
+{{ oHash.getCamposHtml()|raw }}
 <input type=hidden id="que" name="que" value="">
-<table><tr>
-    <td class=etiqueta><?= _("tipo de actividad") ?>:</td>
-    <td class=contenido><?= $oTipoActiv->getNom(); ?> - <?= $txt_temporada ?></td>
-    <td class=etiqueta><?= _("tarifa") ?>:</td><td>
-    <?= $oDesplPosiblesTipoTarifas->desplegable(); ?>
-    </td>
-</tr>
-</table>
+<div class="flex-container">
+    <div>
+    {{ "tipo de actividad"|trans }}:
+    {{ oTipoActiv.getNom()|raw }}
+    -
+    {{ txt_temporada }}
+   </div> 
+    <div>
+    {{ "tarifa"|trans }}:
+    {{ oDesplPosiblesTipoTarifas.desplegable()|raw }}
+   </div> 
+</div>
 <br><br>
-<input type="button" value="<?= _("guardar") ?>" onclick="fnjs_guardar('#modifica','update');">
-<input type="button" value="<?= _("eliminar") ?>" onclick="fnjs_guardar('#modifica','eliminar');" >
-<input type="button" value="<?= _("cancel") ?>" onclick="fnjs_cerrar();" >
+<br><br>
+<input type="button" value="{{ "guardar"|trans }}" onclick="fnjs_guardar('#modifica','update');">
+<input type="button" value="{{ "eliminar"|trans }}" onclick="fnjs_guardar('#modifica','eliminar');">
+<input type="button" value="{{ "cancel"|trans }}" onclick="fnjs_cerrar();" >
 </form>

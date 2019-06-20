@@ -37,8 +37,12 @@ switch ($Qque) {
 		if (!empty($Qid_item)) {
            $a_camposHidden['id_item'] = $Qid_item;
 	   	   $camposForm = 'cantidad';
+	   	   $oTarifa = new Tarifa();
+	   	   $oTarifa->setId_item($Qid_item);
+	   	   $cantidad = $oTarifa->getCantidad();
 		} else {
     		$camposForm = 'cantidad!id_tarifa';
+    		$cantidad = '';
 		}
 		$oHash->setCamposNo('que');
 		$oHash->setcamposForm($camposForm);
@@ -56,9 +60,9 @@ switch ($Qque) {
 			$txt.= $oTipoTarifas->desplegable();
 			$txt.='<br>';
 		}
-		$txt.=_("nuevo importe") .": <input type=text size=6 id='cantidad' name='cantidad' onblur=\"fnjs_comprobar_dinero('#cantidad');\"> "._("€")."<br>";
+		$txt.=_("nuevo importe") .": <input type=text size=6 id='cantidad' name='cantidad' value=\"$cantidad\" onblur=\"fnjs_comprobar_dinero('#cantidad');\"> "._("€")."<br>";
 		$txt.="<br>";
-		$txt.="<input type='button' value='". _("guardar") ."' onclick=\"fnjs_guardar('#frm_tarifa_ubi');\" >";
+		$txt.="<input type='button' value='". _("guardar") ."' onclick=\"fnjs_guardar('#frm_tarifa_ubi','update');\" >";
 		$txt.="<input type='button' value='". _("eliminar") ."' onclick=\"fnjs_guardar('#frm_tarifa_ubi','tar_ubi_eliminar');\" >";
 		$txt.="<input type='button' value='". _("cancel") ."' onclick='fnjs_cerrar();' >";
 		$txt.="</form> ";

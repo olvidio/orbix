@@ -48,9 +48,8 @@ if ($Qid_item != 'nuevo') {
 	$oDesplPosiblesTipoTarifas->setNombre('id_tarifa');
 	$oDesplPosiblesTipoTarifas->setOpcion_sel($id_tarifa);
 	
-	
 	$oHash = new web\Hash();
-	$oHash->setUrl(core\ConfigGlobal::getWeb().'/apps/actividadtarifas/controller/actividad_tarifa_ajax.php');
+	$oHash->setUrl(core\ConfigGlobal::getWeb().'/apps/actividadtarifas/controller/tarifa_ajax.php');
 	$oHash->setCamposForm('que!id_tarifa');
 	$a_camposHidden = array(
 	    'id_tipo_activ' => $id_tipo_activ,
@@ -64,6 +63,8 @@ if ($Qid_item != 'nuevo') {
 	$oHash1->setCamposForm('salida!entrada!opcion_sel!isfsv');
 	$h = $oHash1->linkSinVal();
 
+	$url_ajax = ConfigGlobal::getWeb().'/apps/actividadtarifas/controller/tarifa_tipo_actividad_ajax.php';
+
 	$a_campos = ['oPosicion' => $oPosicion,
 	    'oHash' => $oHash,
 	    'h' => $h,
@@ -71,10 +72,11 @@ if ($Qid_item != 'nuevo') {
 	    'txt_temporada' => $aTipoTemporada[$temporada],
 	    'oDesplPosiblesTipoTarifas' => $oDesplPosiblesTipoTarifas,
 	    'txt_eliminar' => $txt_eliminar,
+	    'url_ajax' => $url_ajax,
 	];
 	
-	$oView = new core\View('actividadtarifas/controller');
-	echo $oView->render('actividad_tarifa_tipo_form.phtml',$a_campos);
+	$oView = new core\ViewTwig('actividadtarifas/controller');
+	echo $oView->render('tarifa_tipo_actividad_form.html.twig',$a_campos);
 	
 } else {
 	// -------------- NUEVA TARIFA --------------------
@@ -101,7 +103,7 @@ if ($Qid_item != 'nuevo') {
 	$oDesplPosiblesTipoTarifas->setNombre('id_tarifa');
 
 	$oHash = new web\Hash();
-	$oHash->setUrl(core\ConfigGlobal::getWeb().'/apps/actividadtarifas/controller/actividad_tarifa_ajax.php');
+	$oHash->setUrl(core\ConfigGlobal::getWeb().'/apps/actividadtarifas/controller/tarifa_ajax.php');
 	$oHash->setcamposForm('iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!temporada!id_tarifa');
 	$oHash->setCamposNo('id_tipo_activ!que');
 	$a_camposHidden = array(
@@ -114,7 +116,8 @@ if ($Qid_item != 'nuevo') {
 	$oHash1->setUrl(core\ConfigGlobal::getWeb().'/apps/actividadtarifas/controller/actividad_tipo_get.php');
 	$oHash1->setCamposForm('salida!entrada!opcion_sel!isfsv');
 	$h = $oHash1->linkSinVal();
-
+	
+	
 	$a_campos = ['oPosicion' => $oPosicion,
 	    'oHash' => $oHash,
 	    'h' => $h,
@@ -124,5 +127,5 @@ if ($Qid_item != 'nuevo') {
 	];
 	
 	$oView = new core\ViewTwig('actividadtarifas/controller');
-	echo $oView->render('actividad_tarifa_tipo_form_nuevo.html.twig',$a_campos);
+	echo $oView->render('tarifa_tipo_actividad_form_nuevo.html.twig',$a_campos);
 }

@@ -132,9 +132,6 @@
 136	5	apps/actividades/controller/actividad_ver.php	\N	actividad nueva
 157	5	apps/actividades/controller/actividad_nuevo_curso.php	\N	Nuevo Curso
 71	5	apps/actividades/controller/actividad_select.php	\N	Listado de Actividades
-100	5	apps/actividades/controller/actividad_tarifa.php	\N	Tarifas actividades
-108	5	apps/actividades/controller/actividad_tarifa_tipo.php	\N	Tipo tarifa
-73	5	apps/actividades/controller/actividad_tarifa_ubi.php	\N	actividad Tarifa Ubi
 141	5	apps/actividades/controller/calendario_que.php	\N	Calendario que
 168	7	apps/actividadestudios/controller/matriculas_pendientes.php	\N	matriculas pendientes
 66	7	apps/actividadestudios/controller/matriculas_lista.php	\N	listas de matriculas
@@ -187,3 +184,6 @@
 44	11	apps/procesos/controller/tipo_activ_proceso.php	\N	Tipos de actividad
 132	5	apps/actividades/controller/lista_actividades_sg.php	\N	lista activ sg
 79	6	apps/asistentes/controller/lista_ultim_que_ctr.php	\N	Ultima asistencia
+73	5	apps/actividadtarifas/controller/tarifa_ubi.php	\N	actividad Tarifa Ubi
+108	5	apps/actividadtarifas/controller/tarifa_tipo_actividad.php	\N	Tipo tarifa
+100	5	apps/actividadtarifas/controller/tarifa.php	\N	Tarifas actividades

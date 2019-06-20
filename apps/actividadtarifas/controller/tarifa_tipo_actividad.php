@@ -19,12 +19,12 @@ require_once ("apps/core/global_object.inc");
 
 
 $oHash = new web\Hash();
-$oHash->setUrl(core\ConfigGlobal::getWeb().'/apps/actividadtarifas/controller/actividad_tarifa_tipo_ajax.php');
+$oHash->setUrl(core\ConfigGlobal::getWeb().'/apps/actividadtarifas/controller/tarifa_tipo_actividad_ajax.php');
 $oHash->setCamposForm('que');
 $h_ver = $oHash->linkSinVal();
 
 $oHashMod = new web\Hash();
-$oHashMod->setUrl(core\ConfigGlobal::getWeb().'/apps/actividadtarifas/controller/actividad_tarifa_tipo_form.php');
+$oHashMod->setUrl(core\ConfigGlobal::getWeb().'/apps/actividadtarifas/controller/tarifa_tipo_actividad_form.php');
 $oHashMod->setCamposForm('id_item');
 $h_modificar = $oHashMod->linkSinVal();
 
@@ -37,4 +37,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('actividadtarifas/controller');
-echo $oView->render('actividad_tarifa_tipo.phtml',$a_campos);
+echo $oView->render('tarifa_tipo_actividad.phtml',$a_campos);

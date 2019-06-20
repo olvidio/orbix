@@ -212,9 +212,14 @@
 1010	{20,50}	zonas-sacd	\N	42	2056	8	t
 1012	{20,55}	lista sacd-zona	que=get_lista_tot	34	2056	8	t
 1055	{40}	planning	\N	181	32	4	t
-1163	{50,110}	cambiar de fase	\N	130	8	8	t
+1392	{20,45}	Matrículas	\N	66	16	12	t
 1061	{40,10}	persona dl	tabla=p_de_casa&tipo=planning	61	32	4	t
 1065	{40,20}	num de paso	tabla=p_de_paso&na=n&tipo=p_de_paso	61	32	4	t
+1028	{30}	Tarifas	\N	0	1	7	t
+1037	{30,20}	tarifa <-> tipus dactivitat	\N	108	1	7	t
+1039	{30,30}	tarifes per casa i any	\N	73	1	7	t
+1040	{30,40}	activ -> tarifa	\N	100	1	7	t
+1033	{30,10}	definir tarifa	\N	100	1	7	t
 1099	{50,10}	fases	clase_info=procesos\\model\\infofases	160	33554432	13	t
 1101	{50,20}	fases-tareas	clase_info=procesos\\model\\infotareas	160	33554432	13	t
 1106	{50,30}	tipos de procesos	clase_info=procesos\\model\\infoprocesotipo	160	33554432	13	t
@@ -284,11 +289,11 @@
 1222	{70,20}	definir módulos		27	33554432	13	t
 1233	{70,30}	instalar módulos	clase_info=permisos\\model\\infomodsinstalled	160	33554432	13	t
 1206	{70,10}	aplicaciones	clase_info=devel\\model\\infoapps	160	33554432	13	t
-1392	{20,45}	Matrículas	\N	66	16	12	t
 1369	{990,10}	menus a texto	\N	142	33816576	13	t
 1371	{990,20}	posibles idiomas	clase_info=usuarios\\model\\InfoLocales	160	33816576	13	t
 1393	{80}	actividades	\N	0	8	19	t
 1386	{38}	sem inv.	\N	183	16	12	t
+1163	{50,110}	cambiar de fase	\N	130	8	8	t
 1258	{90,10}	Definir periodos	\N	7	8	8	t
 1263	{90,30}	nuevo planing	\N	141	34078719	8	t
 1292	{90,90,10}	definir tarifa	\N	100	8	8	t
