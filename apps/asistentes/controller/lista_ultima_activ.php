@@ -78,7 +78,11 @@ switch ($Qque) {
 	case "crt_s_sg":
 	    $aWhereA['id_tipo_activ'] = '^1[45]1';
 	    $aOperadorA['id_tipo_activ'] = '~';
-		$titulo_actividad = sprintf(_("s de %s que todavía no han asistido a crt-s o crt-sg"),$nombre_ubi);
+	    if (empty($nombre_ubi)) {
+            $titulo_actividad = _("s que todavía no han asistido a crt-s o crt-sg");
+	    } else {
+            $titulo_actividad = sprintf(_("s de %s que todavía no han asistido a crt-s o crt-sg"),$nombre_ubi);
+	    }
 		break;
     case "crt_s":
 	    $aWhereA['id_tipo_activ'] = '^141';
@@ -93,8 +97,11 @@ switch ($Qque) {
     case "cv_s":
 	    $aWhereA['id_tipo_activ'] = '^143';
 	    $aOperadorA['id_tipo_activ'] = '~';
-		$titulo_actividad = sprintf(_("s que no han asistido a cv de s"));
-        $titulo_actividad = sprintf(_("s de %s que todavía no han asistido a cv de s"),$nombre_ubi);
+	    if (empty($nombre_ubi)) {
+            $titulo_actividad = _("s que no han asistido a cv de s");
+	    } else {
+            $titulo_actividad = sprintf(_("s de %s que todavía no han asistido a cv de s"),$nombre_ubi);
+	    }
         break;
     case "cv_s_ad":
 	    $aWhereA['id_tipo_activ'] = '143002';
@@ -105,6 +112,7 @@ switch ($Qque) {
         $aWhereP['f_inc'] = "'',''";
         $aOperadorP['f_inc'] = 'BETWEEN';
     case "cv_jovenes":
+        $titulo_actividad = _("s jóvenes (<30) que no han asistido a cv de s");
         $f_joven = date('Y-m-d', mktime(0,0,0,1,1,$any-30));
         //AND f_nacimiento > '$f_joven' AND ini_ce IS NULL AND fin_ce IS NULL
         $aWhereP['f_nacimineto'] = $f_joven;

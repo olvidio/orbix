@@ -17,6 +17,41 @@ switch ($Qque) {
 	case 'nuevo':
 		$Qid_ubi = (integer)  \filter_input(INPUT_POST, 'id_ubi');
 		$Qyear = (integer)  \filter_input(INPUT_POST, 'year');
+
+        //Buscar el último
+        $f_next = '';
+        $sf_chk = '';
+        $sv_chk = '';
+        if (!empty($Qid_ubi) && !empty($Qyear)) {
+            $oTipoActividad = new web\TiposActividades();
+            $inicio = $Qyear."-1-1";
+            $fin = $Qyear."-12-31";
+            $aWhere = [];
+            $aOperador = [];
+            $aWhere['id_ubi'] = $Qid_ubi;
+            $aWhere['f_ini'] = $inicio;
+            $aOperador['f_ini'] = '>=';
+            $aWhere['f_fin'] = $fin;
+            $aOperador['f_fin'] = '<=';
+            $aWhere['_ordre'] = 'f_fin DESC';
+            $GesCasaPeriodos = new GestorCasaPeriodo();
+            $cCasaPeriodos = $GesCasaPeriodos->getCasaPeriodos($aWhere,$aOperador);
+            // Cojo el último
+            if (!empty($cCasaPeriodos)) {
+                $oCasaPeriodo = $cCasaPeriodos[0];
+                $oF_fin = $oCasaPeriodo->getF_fin();
+                $oF_next = $oF_fin->add(new DateInterval('P1D'));
+                $f_next = $oF_next->getFromLocal();
+                $sfsv  = $oCasaPeriodo->getSfsv();
+                if ($sfsv == 1) {
+                    $sf_chk = 'selected';
+                    $sv_chk = '';
+                } else {
+                    $sf_chk = '';
+                    $sv_chk = 'selected';
+                }
+            }
+        }
 		
 		$oHash = new web\Hash();
 		$a_camposHidden = array(
@@ -24,21 +59,17 @@ switch ($Qque) {
 		    'id_ubi' => $Qid_ubi,
 		    'year' => $Qyear,
 		);
-		if (!empty($Qid_item)) {
-		    $a_camposHidden['id_item'] = $Qid_item;
-		    $camposForm = 'cantidad';
-		} else {
-		    $camposForm = 'f_ini!f_fin!sfsv';
-		}
+        $camposForm = 'f_ini!f_fin!sfsv';
 		$oHash->setcamposForm($camposForm);
 		$oHash->setArraycamposHidden($a_camposHidden);
 		
 		$txt="<form id='frm_periodo'>";
 		$txt.= $oHash->getCamposHtml();
 		$txt.='<h3>'._("periodo").'</h3>';
-		$txt.= _("de") ."<input type=text size=12 name=f_ini value=\"\">   "._("hasta")." <input type=text size=12 name=f_fin value=\"\">";
-		$txt.= _("asignado a")." <select name=sfsv><option value=1 >". _("sv")."</option>";
-		$txt.="<option value=2 >". _("sf") ."</option>";
+		$txt.= _("de") ."<input type=text size=12 name=f_ini value=\"$f_next\">   "._("hasta")." <input type=text size=12 name=f_fin value=\"\">";
+		$txt.= _("asignado a")." <select name=sfsv>";
+		$txt.= "<option value=1 $sv_chk>". _("sv")."</option>";
+		$txt.="<option value=2 $sf_chk>". _("sf") ."</option>";
 		$txt.="<option value=3 >". _("reservado") ."</option></select>";
 		$txt.='<br><br>';
 		$txt.="<input type='button' value='". _("guardar") ."' onclick=\"fnjs_guardar(this.form,'guardar');\" >";
@@ -139,9 +170,12 @@ switch ($Qque) {
 		$oLista->setCabeceras($a_cabeceras);
 		$oLista->setDatos($a_valores);
 		echo $oLista->lista();
+		if ($error_txt = comprobar($cCasaPeriodos)) {
+		    echo "<span class='alert'>$error_txt</span>";
+		}
 		// Per afegir un periode
 		if ($permiso == 'modificar') {
-			$txt="<input type='button' value='". _("nuevo") ."' onclick=\"fnjs_modificar();\" >";
+			$txt="<br><input type='button' value='". _("nuevo") ."' onclick=\"fnjs_modificar();\" >";
 			echo $txt;
 		}
 		break;
@@ -228,4 +262,50 @@ switch ($Qque) {
 			echo "{ que: '".$Qque."', error: '$error_txt' }";
 		}
 		break;
+}
+
+function comprobar($cCasaPeriodos) {
+    $i=0;
+    $error_txt='';
+    foreach ($cCasaPeriodos as $oCasaPeriodo) {
+        $i++;
+        $oF_ini = $oCasaPeriodo->getF_ini();
+        $oF_fin = $oCasaPeriodo->getF_fin();
+
+        //Fecha fin periodo debe ser posterior a fecha inicio
+        if ($oF_fin == $oF_ini) {
+            $fecha = $oF_fin->getFromLocal();
+            $error_txt .= empty($error_txt)? '' : '<br>';
+            $error_txt .= sprinitf(_("la fecha fin es igual a la fecha inicio en el periodo %s: %s"),$i);
+        }
+        if ($oF_fin < $oF_ini) {
+            $fecha = $oF_ini->getFromLocal();
+            $error_txt .= empty($error_txt)? '' : '<br>';
+            $error_txt .= sprintf(_("la fecha fin es menor que la fecha inicio en el periodo %s: %s"),$i,$fecha);
+        }
+        
+        // Siguiente
+        if( $oCasaPeriodoNext = next($cCasaPeriodos) ) {
+            $oF_ini_next = $oCasaPeriodoNext->getF_ini();
+            if ($oF_fin > $oF_ini_next) {
+                $fecha = $oF_fin->getFromLocal();
+                $error_txt .= empty($error_txt)? '' : '<br>';
+                $error_txt .= sprintf(_("la fecha inicio del siguiente periodo es menor que la fecha fin del periodo %s: %s"),$i,$fecha);
+            }
+            $interval = $oF_fin->diff($oF_ini_next);
+            if ($interval->format('%d') > 1) {
+                $fecha = $oF_fin->getFromLocal();
+                $error_txt .= empty($error_txt)? '' : '<br>';
+                $error_txt .= sprintf(_("dias libres cerca de %s"),$fecha);
+            }
+        }
+        // volver a la posicion anterior
+        //prev($cCasaPeriodos);
+    }
+    if (empty($error_txt)) {
+        return FALSE;
+    } else {
+        return $error_txt;
+    }
+    
 }
