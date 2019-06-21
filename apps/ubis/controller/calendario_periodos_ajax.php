@@ -1,6 +1,7 @@
 <?php
 use ubis\model\entity\GestorCasaPeriodo;
 use ubis\model\entity\CasaPeriodo;
+use web\DateTimeLocal;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
@@ -145,14 +146,20 @@ switch ($Qque) {
 		$i=0;
 		$txt='';
 		$error_txt='';
-		$a_valores = array();
+		$a_valores = [];
+		$cPeriodos = [];
 		foreach ($cCasaPeriodos as $oCasaPeriodo) {
 			$i++;
             $id_item = $oCasaPeriodo->getId_item();
             $id_ubi = $oCasaPeriodo->getId_ubi();
-			$f_ini = $oCasaPeriodo->getF_ini()->getFromLocal();
-			$f_fin = $oCasaPeriodo->getF_fin()->getFromLocal();
+			$oF_ini = $oCasaPeriodo->getF_ini();
+			$oF_fin = $oCasaPeriodo->getF_fin();
+			$f_ini = $oF_ini->getFromLocal();
+			$f_fin = $oF_fin->getFromLocal();
 			$sfsv  = $oCasaPeriodo->getSfsv();
+			
+			//crear array para comprobación
+			$cPeriodos[] = ['inicio'=>$oF_ini, 'fin'=>$oF_fin, 'desc'=>'periodo cdc'];
 
 			$oTipoActividad->setSfsvId($sfsv); 
 			$ssfsv = $oTipoActividad->getSfsvText();
@@ -170,7 +177,10 @@ switch ($Qque) {
 		$oLista->setCabeceras($a_cabeceras);
 		$oLista->setDatos($a_valores);
 		echo $oLista->lista();
-		if ($error_txt = comprobar($cCasaPeriodos)) {
+		
+		$oDate = new DateTimeLocal(); 
+		$error_txt = $oDate->comprobarSolapes($cPeriodos);
+		if ($error_txt) {
 		    echo "<span class='alert'>$error_txt</span>";
 		}
 		// Per afegir un periode
@@ -262,50 +272,4 @@ switch ($Qque) {
 			echo "{ que: '".$Qque."', error: '$error_txt' }";
 		}
 		break;
-}
-
-function comprobar($cCasaPeriodos) {
-    $i=0;
-    $error_txt='';
-    foreach ($cCasaPeriodos as $oCasaPeriodo) {
-        $i++;
-        $oF_ini = $oCasaPeriodo->getF_ini();
-        $oF_fin = $oCasaPeriodo->getF_fin();
-
-        //Fecha fin periodo debe ser posterior a fecha inicio
-        if ($oF_fin == $oF_ini) {
-            $fecha = $oF_fin->getFromLocal();
-            $error_txt .= empty($error_txt)? '' : '<br>';
-            $error_txt .= sprinitf(_("la fecha fin es igual a la fecha inicio en el periodo %s: %s"),$i);
-        }
-        if ($oF_fin < $oF_ini) {
-            $fecha = $oF_ini->getFromLocal();
-            $error_txt .= empty($error_txt)? '' : '<br>';
-            $error_txt .= sprintf(_("la fecha fin es menor que la fecha inicio en el periodo %s: %s"),$i,$fecha);
-        }
-        
-        // Siguiente
-        if( $oCasaPeriodoNext = next($cCasaPeriodos) ) {
-            $oF_ini_next = $oCasaPeriodoNext->getF_ini();
-            if ($oF_fin > $oF_ini_next) {
-                $fecha = $oF_fin->getFromLocal();
-                $error_txt .= empty($error_txt)? '' : '<br>';
-                $error_txt .= sprintf(_("la fecha inicio del siguiente periodo es menor que la fecha fin del periodo %s: %s"),$i,$fecha);
-            }
-            $interval = $oF_fin->diff($oF_ini_next);
-            if ($interval->format('%d') > 1) {
-                $fecha = $oF_fin->getFromLocal();
-                $error_txt .= empty($error_txt)? '' : '<br>';
-                $error_txt .= sprintf(_("dias libres cerca de %s"),$fecha);
-            }
-        }
-        // volver a la posicion anterior
-        //prev($cCasaPeriodos);
-    }
-    if (empty($error_txt)) {
-        return FALSE;
-    } else {
-        return $error_txt;
-    }
-    
 }

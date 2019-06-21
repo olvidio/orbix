@@ -2,6 +2,7 @@
 namespace web;
 
 use core\ConfigGlobal;
+use phpDocumentor\Reflection\DocBlock\Description;
 /**
  * Classe per les dates. Afageix a la clase del php la vista amn num. romans.
  *
@@ -172,4 +173,57 @@ class DateTimeLocal Extends \DateTime {
         if ($dec > 0.1) { $dec=0.5; } else { $dec=0; }
         return ($e_dias+$dec);
     }
+
+    /**
+     * comprueba que no exista solape o vacios entre periodos.
+     * oInicio y oFin deben ser objetos DatetimeLocal.
+     * 
+     * @param array $cPeriodos ['oInicio','oFin','Descripcion']
+     * @return boolean|string
+     */
+    public function comprobarSolapes($cPeriodos) {
+        $i=0;
+        $error_txt='';
+        foreach ($cPeriodos as $aPeriodo) {
+            $i++;
+            $oF_ini = $aPeriodo['inicio'];
+            $oF_fin = $aPeriodo['fin'];
+
+            //Fecha fin periodo debe ser posterior a fecha inicio
+            if ($oF_fin == $oF_ini) {
+                $fecha = $oF_fin->getFromLocal();
+                $error_txt .= empty($error_txt)? '' : '<br>';
+                $error_txt .= sprinitf(_("la fecha fin es igual a la fecha inicio en el periodo %s: %s"),$i);
+            }
+            if ($oF_fin < $oF_ini) {
+                $fecha = $oF_ini->getFromLocal();
+                $error_txt .= empty($error_txt)? '' : '<br>';
+                $error_txt .= sprintf(_("la fecha fin es menor que la fecha inicio en el periodo %s: %s"),$i,$fecha);
+            }
+            
+            // Siguiente
+            if( $aPeriodoNext = next($cPeriodos) ) {
+                $oF_ini_next = $aPeriodoNext['inicio'];
+                if ($oF_fin > $oF_ini_next) {
+                    $fecha = $oF_fin->getFromLocal();
+                    $error_txt .= empty($error_txt)? '' : '<br>';
+                    $error_txt .= sprintf(_("la fecha inicio del siguiente periodo es menor que la fecha fin del periodo %s: %s"),$i,$fecha);
+                }
+                $interval = $oF_fin->diff($oF_ini_next);
+                if ($interval->format('%d') > 1) {
+                    $fecha = $oF_fin->getFromLocal();
+                    $error_txt .= empty($error_txt)? '' : '<br>';
+                    $error_txt .= sprintf(_("dias libres cerca de %s"),$fecha);
+                }
+            }
+        }
+        if (empty($error_txt)) {
+            return FALSE;
+        } else {
+            return $error_txt;
+        }
+        
+    }
+
+    
 }
