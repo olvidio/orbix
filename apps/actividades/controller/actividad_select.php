@@ -518,6 +518,12 @@ if (core\ConfigGlobal::is_app_installed('procesos')) {
 } else {
     $resultado = sprintf( _("%s actividades encontradas"),$num);
 }
+// Convertir las fechas inicio y fin a formato local:
+$oF_qini = new DateTimeLocal($Qinicio);
+$QinicioLocal = $oF_qini->getFromLocal();
+$oF_qfin = new DateTimeLocal($Qfin);
+$QfinLocal = $oF_qfin->getFromLocal();
+$resultado .= ' ' . sprintf(_("entre %s y %s"),$QinicioLocal,$QfinLocal);
 
 $oHash = new web\Hash();
 $oHash->setUrl('apps/actividades/controller/actividad_que.php');

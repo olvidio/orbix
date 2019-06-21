@@ -190,7 +190,7 @@ $a_cabeceras=array(
 		array('name'=>_("id_activ"),'field'=>'id','visible'=>'no'),
 		array('name'=>_("actividad"),'field'=>'actividad','width'=>200,'formatter'=>'clickFormatter'),
 		array('name'=>_("org"),'title'=>_("organiza"),'field'=>"dlorg",'width'=>40),
-		array('name'=>_("total"),'title'=>_("totales actividad"),'field'=>"tot",'width'=>40,'editor'=>'Slick.Editors.Integer'),
+		array('name'=>_("total"),'title'=>_("totales actividad"),'field'=>"tot",'width'=>40,'editor'=>'Slick.Editors.Integer','formatter'=>'cssFormatter'),
 		);
 foreach ($a_grupo as $dl => $id_dl) {
     /*
@@ -200,8 +200,8 @@ foreach ($a_grupo as $dl => $id_dl) {
 	);
 	$a_cabeceras[] = array('name'=>$dl,'children'=>$sub_cabecera);
 	*/
-	$a_cabeceras[] = array('name'=>$dl.'-c','title'=>_("concedidas"),'field'=>$dl."-c",'width'=>15,'editor'=>'Slick.Editors.Integer');
-	$a_cabeceras[] = array('name'=>$dl.'-p','title'=>_("pedidas"),'field'=>$dl."-p",'width'=>15,'editor'=>'Slick.Editors.Integer');
+	$a_cabeceras[] = array('name'=>$dl.'-c','title'=>_("concedidas"),'field'=>$dl."-c",'width'=>15,'editor'=>'Slick.Editors.Integer','formatter'=>'cssFormatter');
+	$a_cabeceras[] = array('name'=>$dl.'-p','title'=>_("pedidas"),'field'=>$dl."-p",'width'=>15,'editor'=>'Slick.Editors.Integer','formatter'=>'cssFormatter');
 }
 $a_botones =array();
 

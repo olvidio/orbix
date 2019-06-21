@@ -193,10 +193,10 @@ $childrenB = array(
 $a_cabeceras[] = array('field'=>$dlB,'name'=>$dlB,'children'=>$childrenB);
 */
 
-$a_cabeceras[] = array('name'=>$dlA.'-c','title'=>_("concedidas"),'field'=>$dlA."-c",'width'=>15,'editor'=>'Slick.Editors.Integer');
-$a_cabeceras[] = array('name'=>$dlA.'-l','title'=>_("libres"),'field'=>$dlA."-l",'width'=>15,'editor'=>'Slick.Editors.Integer');
-$a_cabeceras[] = array('name'=>$dlB.'-c','title'=>_("concedidas"),'field'=>$dlB."-c",'width'=>15,'editor'=>'Slick.Editors.Integer');
-$a_cabeceras[] = array('name'=>$dlB.'-l','title'=>_("libres"),'field'=>$dlB."-l",'width'=>15,'editor'=>'Slick.Editors.Integer');
+$a_cabeceras[] = array('name'=>$dlA.'-c','title'=>_("concedidas"),'field'=>$dlA."-c",'width'=>15,'editor'=>'Slick.Editors.Integer','formatter'=>'cssFormatter');
+$a_cabeceras[] = array('name'=>$dlA.'-l','title'=>_("libres"),'field'=>$dlA."-l",'width'=>15,'editor'=>'Slick.Editors.Integer','formatter'=>'cssFormatter');
+$a_cabeceras[] = array('name'=>$dlB.'-c','title'=>_("concedidas"),'field'=>$dlB."-c",'width'=>15,'editor'=>'Slick.Editors.Integer','formatter'=>'cssFormatter');
+$a_cabeceras[] = array('name'=>$dlB.'-l','title'=>_("libres"),'field'=>$dlB."-l",'width'=>15,'editor'=>'Slick.Editors.Integer','formatter'=>'cssFormatter');
 
 
 

@@ -468,6 +468,11 @@ class TablaEditable {
 				  return  \"<input class=\\\"sel\\\" type=\\\"checkbox\\\" name=\\\"sel[]\\\" id=\\\"\"+id+\"\\\" value=\\\"\"+val+\"\\\" \"+chk+\">\";
 				}
 			}
+			function cssFormatter(row, cell, value, columnDef, dataContext) {
+				if (isCellEditable(row, cell)) {
+				    return \"<div style='background-color:white'>\"+value+\"</div>\";
+                }
+			}
 
 			";
 		$tt .= "

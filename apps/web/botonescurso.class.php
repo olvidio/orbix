@@ -8,8 +8,6 @@
 
 namespace web;
 
-use core;
-
 /**
  * Description of botonescurso
  *
@@ -40,7 +38,6 @@ class BotonesCurso {
 	}
 
 	public function getDades() {
-		$mi_sfsv = core\ConfigGlobal::mi_sfsv();
 		/* Pongo en la variable $curso el periodo del curso */
 		$mes=date('m');
 		if ($mes>9) { $any=date('Y')+1; } else { $any=date("Y"); }
