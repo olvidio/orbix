@@ -92,7 +92,7 @@ switch ($Qtipo_lista) {
         $parametros = "pata+'&que=getGastos'";
         break;
     case 'ctrsEncargados':
-        $url = ConfigGlobal::getWeb()."/programas/calendario_listas.php";
+        $url = ConfigGlobal::getWeb()."/apps/actividades/controller/calendario_listas.php";
         $parametros = "pata+'&que=lista_cdc&ver_ctr=$Qver_ctr'";
         break;
     case 'crt':

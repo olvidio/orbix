@@ -33,7 +33,6 @@ $oPosicion->recordar();
 
 $Qque = (string) \filter_input(INPUT_POST, 'que');
 $Qver_ctr = (string) \filter_input(INPUT_POST, 'ver_ctr');
-$Qid_cdc = (string) \filter_input(INPUT_POST, 'id_cdc');
 
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 $Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
@@ -61,16 +60,17 @@ $aWhereCasa = [];
 $aOperadorCasa = [];
 switch ($Qque) {
 	case "lista_cdc":
+	    // Esta viene de apps/casas/controller/casa_que.php
+        $Qaid_cdc = (array)  \filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 		$tipo="casa";
-	    exit ('te estaba esperando!');
 		// una lista de casas (id_ubi).
-	    if (!empty($aId_ctrs)) {
-	        $v = "{".implode(', ',$aId_ctrs)."}";
-	        $aWhere['id_ctr'] = $v;
-	        $aOperador['id_ctr'] = 'ANY';
+	    if (!empty($Qaid_cdc)) {
+	        $v = "{".implode(', ',$Qaid_cdc)."}";
+	        $aWhereCasa['id_ubi'] = $v;
+	        $aOperadorCasa['id_ubi'] = 'ANY';
 	    }
-		$condicion_perm = "id_ubi = " .implode(' OR id_ubi =',$Qid_cdc);
-		$aWhere['id_ubi'] = 3;
+		//$condicion_perm = "id_ubi = " .implode(' OR id_ubi =',$Qid_cdc);
+		//$aWhere['id_ubi'] = 3;
 		break;
 	case "c_comunes":
 	case "c_comunes_sf":

@@ -91,13 +91,14 @@ class GestorCasaPeriodo Extends core\ClaseGestor {
 	 * @return integer número de dies.
 	 */
 	function getCasaPeriodosDias($iseccion,$id_ubi,$oInicio,$oFin) {
-	    $oDbl = $GLOBALS['oDBA'];
-	    $inicio_iso = $oInicio->fomat('Y-m-d');
-	    $fin_iso = $oFin->fomat('Y-m-d');
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+	    $inicio_iso = $oInicio->getIso();
+	    $fin_iso = $oFin->getIso();
 
 	    $sQuery="SELECT SUM((date(f_fin)-date(f_ini))+1 )
-			FROM du_periodos
-			WHERE id_ubi=$id_ubi AND f_ini BETWEEN '$inicio_iso' AND '$fin_iso' AND sfsv_num=$iseccion
+			FROM $nom_tabla
+			WHERE id_ubi=$id_ubi AND f_ini BETWEEN '$inicio_iso' AND '$fin_iso' AND sfsv=$iseccion
 			";
 	    
 	    if (($oDblSt = $oDbl->query($sQuery)) === false) {
@@ -105,7 +106,9 @@ class GestorCasaPeriodo Extends core\ClaseGestor {
 	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 	        return false;
 	    }
-	    return $oDblSt->fetchColumn();
+	    $num_dias = $oDblSt->fetchColumn();
+	    $num_dias = empty($num_dias)? 0 : $num_dias;
+	    return $num_dias;
 	}
 	
 	/**

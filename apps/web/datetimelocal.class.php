@@ -150,7 +150,7 @@ class DateTimeLocal Extends \DateTime {
     }
     
     public function duracion($oDateDiff) {
-        $interval = $this->oData->diff($oDateDiff);
+        $interval = $this->diff($oDateDiff);
         $horas = $interval->format('%a')*24 +$interval->format('%h')+$interval->format('%i')/60+$interval->format('%s')/3600;
         /*
          $dias=$horas/24;
@@ -163,7 +163,7 @@ class DateTimeLocal Extends \DateTime {
         return $dias;
     }
     public function duracionAjustada($oDateDiff) {
-        $interval = $this->oData->diff($oDateDiff);
+        $interval = $this->diff($oDateDiff);
         $horas = $interval->format('%a')*24 +$interval->format('%h')+$interval->format('%i')/60+$interval->format('%s')/3600 + 12;
         $dias=$horas/24;
         $e_dias=($dias % $horas);

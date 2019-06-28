@@ -1,0 +1,17 @@
+<script>
+fnjs_buscar=function(){
+	var campo = '<input type="hidden" name="refresh" value=1>';
+	$('#periodo_form').attr('action',"apps/casas/controller/prevision_asistentes.php");
+	$('#periodo_form').append(campo);
+	fnjs_enviar_formulario('#periodo_form','#main');
+}
+fnjs_left_side_hide();
+</script>
+<form id='periodo_form' action=''>
+	{{ oHash.getCamposHtml()|raw }}
+	{{ oFormP.getHtml()|raw }}
+</form>
+<p><h3>{{ titulo }}</h3></p>
+{{ "editar celdas con doble click"|trans }}
+<br>
+{{ oTabla.mostrar_tabla()|raw }}

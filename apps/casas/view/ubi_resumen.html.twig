@@ -1,0 +1,54 @@
+<script>
+fnjs_ver=function(seccion){
+	$('#seccion').val(seccion);
+	pata = $('#frm_que').serialize();
+	url = '{{ url_ajax }}';
+	parametros = pata+'&seccion='+seccion+'&{{ param|raw }}';
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta_txt) {
+			//rta_txt=rta.responseText;
+			//alert ('respuesta: '+rta_txt);
+			if (rta_txt) {
+				$('#exportar').html(rta_txt);
+			}
+		}
+	});
+}
+
+fnjs_guardar=function(formulario){
+    $(formulario).attr('action','{{ url_tarifas }}');
+	$(formulario).submit(function() {
+		$.ajax({
+			url: $(this).attr('action'),
+			type: 'post',
+			data: $(this).serialize()
+		})
+		.done(function (rta_txt) {
+            if (rta_txt != '' && rta_txt != '\n') {
+                alert (rta_txt);
+            }
+		});
+		return false;
+	});
+	$(formulario).submit();
+	$(formulario).off();
+}
+</script>
+<form id=frm_que name=frm_que action="">
+{{ oHash.getCamposHtml|raw }}
+
+{{ oDesplCasas.desplegable()|raw }}
+
+{{ "incremeto tarifa"|trans }} <input type=text size=2 name=inc_t value="{{ Qinc_t }}" >%
+{{ "incremento gasto"|trans }} <input type=text size=2 name=G value="{{ QG }}" >%
+	<input type=hidden id=seccion name=seccion >
+	<br>
+	<input type="button" onclick="fnjs_ver('sf');" value="resumen sf">
+	<input type="button" onclick="fnjs_ver('sv');" value="resumen sv">
+</form>
+<div id='exportar'></div>
+<div id='div_modificar'></div>
+<div id='overlay'></div>

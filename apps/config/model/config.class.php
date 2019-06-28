@@ -26,6 +26,12 @@ class Config {
      */
     private $aCursoCrt;
     
+    public function getGestionCalendario() {
+        $parametro = 'gesCalendario';
+        $oConfigSchema = new ConfigSchema($parametro);
+        return $oConfigSchema->getValor();
+    }
+    
     public function is_jefeCalendario($username = '') {
         $parametro = 'jefe_calendario';
         $oConfigSchema = new ConfigSchema($parametro);

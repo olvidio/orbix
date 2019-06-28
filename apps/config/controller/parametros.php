@@ -161,6 +161,26 @@ $a_campos['oHashDLR'] = $oHashDLR;
 $a_campos['chk_dl'] = $chk_dl;
 $a_campos['chk_r'] = $chk_r;
 
+// ----------- Gestión calendario: centralizada o por oficinas -------------------
+$parametro = 'gesCalendario';
+$oConfigSchema = new ConfigSchema($parametro);
+$valor = $oConfigSchema->getValor();
+
+if (empty($valor)) {
+    $valor = "central";
+}
+$chk_central = ($valor == 'central')? 'checked' : ''; 
+$chk_of = ($valor == 'oficinas')? 'checked' : ''; 
+
+$oHashCal = new Hash();
+$oHashCal->setUrl($url);
+$oHashCal->setcamposForm('valor');
+$oHashCal->setArrayCamposHidden(['parametro' => $parametro]);
+
+$a_campos['oHashCal'] = $oHashCal;
+$a_campos['chk_central'] = $chk_central;
+$a_campos['chk_of'] = $chk_of;
+
 
 $oView = new core\ViewTwig('config/controller');
 echo $oView->render('parametros.html.twig',$a_campos);

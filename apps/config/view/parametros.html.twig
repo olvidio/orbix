@@ -93,3 +93,12 @@ mes:<input size="3" type="text" name="fin_mes" value="{{ aCursoCrt['fin_mes'] }}
 <input type="button" value="{{ "guardar"|trans }}" onclick="fnjs_guardar(this.form);" >
 </form>
 <hr>
+
+<h3>{{ "gestión de calendario"|trans }}:</h3>
+<form id="frm_cal" name="frm_cal" action="">
+{{ oHashCal.getCamposHtml|raw }}
+<input type="radio" name="valor" value="central" {{ chk_central }} >{{ "centralizada"|trans }}
+<input type="radio" name="valor" value="oficinas" {{ chk_of }} >{{ "por oficinas"|trans }}
+<input type="button" value="{{ "guardar"|trans }}" onclick="fnjs_guardar(this.form);" >
+</form>
+<hr>

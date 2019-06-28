@@ -92,6 +92,7 @@ if ($Qmod == 'nuevo') {
 	$mas = '';
 	$menos = '';
 	$h = '';
+	$go_dir = '';
 } else {
 	// puede haber más de una dirección
 	$a_id_direccion = explode(',',$Qid_direccion);
