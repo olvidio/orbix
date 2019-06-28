@@ -208,12 +208,16 @@
 961	{10,10}	planning zonas	\N	139	262144	9	t
 950	{91,30}	lista ctr i nº s	\N	152	2112	10	t
 948	{10}	Gestión casas	\N	0	1	7	t
+957	{10,20}	listado gerentes	periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si	45	1	7	t
+966	{10,40}	Gestión económica	\N	45	1	7	t
 987	{20}	Nuevo Calendario	\N	0	37748735	7	t
+973	{10,50}	gastos casas	tipo_lista=datosEcGastos	45	1	7	t
 990	{20,10}	Definir periodos	\N	7	9	7	t
 979	{10,60}	estadística  por casas	tipo=planning_cdc&ssfsv=sf	89	1	7	t
 998	{20,20}	nuevo planing	\N	141	37748735	7	t
 1004	{20,30}	listados	\N	0	37748735	7	t
 1005	{20,30,10}	Cases comunes	que=c_comunes&ver_ctr=si	21	37748735	7	t
+951	{10,10}	Planing Casas	tipo=planning_cdc	61	1	7	t
 1007	{20,30,30}	listado por oficinas	que=o_todas&ver_ctr=si	21	37748735	7	t
 1006	{20,30,20}	listados de todas las casas	que=c_todas&ver_ctr=si	21	1	7	t
 1029	{30}	historicos	\N	\N	\N	\N	t
