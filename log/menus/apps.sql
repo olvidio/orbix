@@ -25,3 +25,4 @@
 26	cambios	\N
 27	config	\N
 28	actividadtarifas	\N
+29	casas	\N

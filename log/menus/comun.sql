@@ -1,5 +1,4 @@
 4	\N	scdl/documentos/equipajes_movimientos.php	\N	\N
-5	\N	programas/activ_asistentes.php	\N	\N
 6	\N	scdl/tertulias/devoluciones.php	\N	\N
 8	\N	programas/sm-agd/cargos/lista_cl.php	\N	\N
 9	\N	sistema/trad_campos.php	\N	\N
@@ -21,18 +20,15 @@
 36	\N	scdl/registro/can_buscar.php	\N	\N
 37	\N	programas/dossiers/sql_1010.php	\N	\N
 41	\N	scdl/registro/pen_of_buscar.php	\N	\N
-45	\N	programas/casa_que.php	\N	\N
 47	\N	des/sssc_celebraciones_lista.php	\N	\N
 49	\N	scdl/registro/pen_tabla.php	\N	\N
 50	\N	vcsd/dlbf/centrosdlbf.htm	\N	\N
-51	\N	programas/casa_ec_que.php	\N	\N
 53	\N	sg/cp_lista.php	\N	\N
 54	\N	scdl/agenda_vcdl/age_vcdl.php	\N	\N
 55	\N	programas/lor/registros_que.php	\N	\N
 56	\N	programas/sm-agd/cargos/cargos.php	\N	\N
 58	\N	programas/lista_activ_gral_sr.php	\N	\N
 59	\N	scdl/tertulias/devoluciones_pendientes.php	\N	\N
-63	\N	programas/calendario_ubi_resumen.php	\N	\N
 65	\N	vcsd/registro/salidas.php	\N	\N
 67	\N	vcsd/scheduler/calendarios.php	\N	\N
 68	\N	programas/mod_tabla_sql.php	\N	\N
@@ -49,7 +45,6 @@
 84	\N	programas/sm-agd/periodo.php	\N	\N
 86	\N	vcsd/scheduler/sortides.php	\N	\N
 87	\N	des/periodo.php	\N	\N
-89	\N	programas/casas_resumen.php	\N	\N
 91	\N	../textos/biblio_positiva	\N	\N
 93	\N	scdl/registro/pen_buscar.php	\N	\N
 94	\N	des/tareas/collatio_sacd.php	\N	\N
@@ -109,6 +104,9 @@
 152	1	apps/ubis/controller/lista_ctrs.php	\N	lista ctr sg
 12	5	apps/actividades/controller/actividades_centro_que.php	\N	Centro que activ
 21	6	apps/actividades/controller/calendario_listas.php	\N	calendario listas
+51	27	apps/casas/controller/casa_ec_que.php	\N	Casa ec que
+45	27	apps/casas/controller/casa_que.php	\N	Casa que
+63	27	apps/casas/controller/calendario_ubi_resumen.php	\N	Ubi resumen ec
 42	24	apps/zonassacd/controller/zona_sacd.php	\N	Zona sacd
 139	24	apps/zonassacd/controller/planning_zones.php	\N	Planning por zonas
 114	25	apps/cartaspresentacion/controller/cartas_presentacion_que.php	\N	Cartas Presentacion
@@ -185,5 +183,7 @@
 132	5	apps/actividades/controller/lista_actividades_sg.php	\N	lista activ sg
 79	6	apps/asistentes/controller/lista_ultim_que_ctr.php	\N	Ultima asistencia
 73	5	apps/actividadtarifas/controller/tarifa_ubi.php	\N	actividad Tarifa Ubi
+89	27	apps/casas/controller/casas_resumen.php	\N	Casa resumen
 108	5	apps/actividadtarifas/controller/tarifa_tipo_actividad.php	\N	Tipo tarifa
 100	5	apps/actividadtarifas/controller/tarifa.php	\N	Tarifas actividades
+5	27	apps/casas/controller/prevision_asistentes.php	\N	prevision asistentes

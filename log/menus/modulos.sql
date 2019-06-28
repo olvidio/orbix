@@ -13,3 +13,4 @@
 1	base	\N	{}	{1,2,3,4,5,6,27}
 26	avisos	\N	{20,21,1}	{26}
 5	activ1	\N	{1}	{9,13,14,28}
+27	economia	ingresos y gastos de las casas	{3,5}	{29}

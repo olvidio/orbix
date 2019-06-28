@@ -131,8 +131,8 @@
 817	{1}	Utilidades	\N	0	37748735	1	t
 818	{1,10}	preferencias	\N	164	37748735	1	t
 32	{80,60}	list varias cv	sasistentes=agd&sactividad=cv&que=list_cjto	119	2082	3	t
-89	{55,29}	propuesta cl cv	sasistentes=sss%2B&sactividad=cv&que=list_cjto	119	8	8	t
 141	{35,60}	lista varios ca	sasistentes=n&sactividad=ca&que=list_cjto	119	2064	12	t
+89	{55,29}	propuesta cl cv	sasistentes=sss+&sactividad=cv&que=list_cjto	119	8	8	t
 854	{50}	actividades	\N	\N	131072	20	t
 855	{50,10}	buscar activ	que=ver	119	131072	20	t
 373	{50,10,10}	sv  n	id_tipo_activ=112&status=2&periodo=desdeHoy	71	8	8	t
@@ -207,19 +207,29 @@
 960	{10,20}	atención actividades	\N	28	262144	9	t
 961	{10,10}	planning zonas	\N	139	262144	9	t
 950	{91,30}	lista ctr i nº s	\N	152	2112	10	t
+948	{10}	Gestión casas	\N	0	1	7	t
+987	{20}	Nuevo Calendario	\N	0	37748735	7	t
+990	{20,10}	Definir periodos	\N	7	9	7	t
+979	{10,60}	estadística  por casas	tipo=planning_cdc&ssfsv=sf	89	1	7	t
+998	{20,20}	nuevo planing	\N	141	37748735	7	t
+1004	{20,30}	listados	\N	0	37748735	7	t
+1005	{20,30,10}	Cases comunes	que=c_comunes&ver_ctr=si	21	37748735	7	t
+1007	{20,30,30}	listado por oficinas	que=o_todas&ver_ctr=si	21	37748735	7	t
+1006	{20,30,20}	listados de todas las casas	que=c_todas&ver_ctr=si	21	1	7	t
 1029	{30}	historicos	\N	\N	\N	\N	t
 1008	{20,40}	zonas-ctr	\N	85	2056	8	t
 1010	{20,50}	zonas-sacd	\N	42	2056	8	t
 1012	{20,55}	lista sacd-zona	que=get_lista_tot	34	2056	8	t
 1055	{40}	planning	\N	181	32	4	t
-1392	{20,45}	Matrículas	\N	66	16	12	t
 1061	{40,10}	persona dl	tabla=p_de_casa&tipo=planning	61	32	4	t
 1065	{40,20}	num de paso	tabla=p_de_paso&na=n&tipo=p_de_paso	61	32	4	t
 1028	{30}	Tarifas	\N	0	1	7	t
+1019	{20,80}	Previsión económica	\N	63	1	7	t
 1037	{30,20}	tarifa <-> tipus dactivitat	\N	108	1	7	t
 1039	{30,30}	tarifes per casa i any	\N	73	1	7	t
 1040	{30,40}	activ -> tarifa	\N	100	1	7	t
 1033	{30,10}	definir tarifa	\N	100	1	7	t
+1013	{20,60}	Estadística por años	periodo=no&tipo_lista=datosEc	51	1	7	t
 1099	{50,10}	fases	clase_info=procesos\\model\\infofases	160	33554432	13	t
 1101	{50,20}	fases-tareas	clase_info=procesos\\model\\infotareas	160	33554432	13	t
 1106	{50,30}	tipos de procesos	clase_info=procesos\\model\\infoprocesotipo	160	33554432	13	t
@@ -289,6 +299,7 @@
 1222	{70,20}	definir módulos		27	33554432	13	t
 1233	{70,30}	instalar módulos	clase_info=permisos\\model\\infomodsinstalled	160	33554432	13	t
 1206	{70,10}	aplicaciones	clase_info=devel\\model\\infoapps	160	33554432	13	t
+1392	{20,45}	Matrículas	\N	66	16	12	t
 1369	{990,10}	menus a texto	\N	142	33816576	13	t
 1371	{990,20}	posibles idiomas	clase_info=usuarios\\model\\InfoLocales	160	33816576	13	t
 1393	{80}	actividades	\N	0	8	19	t
@@ -316,6 +327,7 @@
 1387	{38,10}	buscar	sasistentes=agd&sactividad=ca&que=ver&periodo=curso_ca	119	16	12	t
 942	{5,85}	ca pendientes	sactividad=ca&tipo_personas=sacd	140	8	8	t
 1296	{90,90,30}	tarifas por casa y año	\N	73	8	8	t
+1399	{10,70}	estadística por años	\N	51	1	7	t
 926	{70,110}	Gestión de plazas	sasistentes=n&sactividad=crt	169	128	2	t
 1395	{70,140}	cambiar de fase	sasistentes=n&sactividad=crt	130	128	2	t
 1389	{82,110}	Gestión de plazas	sasistentes=n&sactividad=cve	169	128	2	t
@@ -324,3 +336,4 @@
 309	{70,60}	list varios crt	sasistentes=n&sactividad=crt&que=list_cjto	119	2208	2	t
 529	{90}	Nuevo calendario	\N	183	37748735	8	t
 1398	{70,50}	config esquema	\N	90	33554432	13	t
+1400	{20,90}	previsión asistentes	\N	5	37748735	7	t
