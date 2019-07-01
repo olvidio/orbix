@@ -6,6 +6,7 @@ use permisos\model\PermisosActividadesTrue;
 use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorCentroEllas;
 use web\DateTimeLocal;
+use web\Periodo;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
@@ -276,38 +277,24 @@ switch ($Qque) {
 	    $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 	    $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
 	    $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
-	    $Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-	    $Qfin = (string) \filter_input(INPUT_POST, 'fin');
+
+	    // valores por defeccto
+	    if (empty($Qperiodo)) {
+	        $Qperiodo = 'actual';
+	    }
 	    
-		$any=empty($Qyear)? date('Y')+1 : $Qyear;
-		// valores por defeccto
-		if (empty($Qempiezamin)) {
-		    $QempiezaminIso = date('Y-m-d',mktime(0, 0, 0, date('m'), 1, $any));
-		} else {
-		    $oEmpiezamin = DateTimeLocal::createFromLocal($Qempiezamin);
-		    $QempiezaminIso = $oEmpiezamin->getIso();
-		}
-		// hasta dentro de 9 meses desde hoy.
-		if (empty($Qempiezamax)) {
-		    $QempiezamaxIso = date('Y-m-d',mktime(0, 0, 0, date('m'), 1, $any+1));
-		} else {
-		    $oEmpiezamax = DateTimeLocal::createFromLocal($Qempiezamax);
-		    $QempiezamaxIso = $oEmpiezamax->getIso();
-		}
-		// periodo.
-		if (empty($Qperiodo) || $Qperiodo == 'otro') {
-		    $Qinicio = empty($Qinicio)? $QempiezaminIso : $Qinicio;
-		    $Qfin = empty($Qfin)? $QempiezamaxIso : $Qfin;
-		} else {
-		    $oPeriodo = new web\Periodo();
-		    $any=empty($Qyear)? date('Y')+1 : $Qyear;
-		    $oPeriodo->setAny($any);
-		    $oPeriodo->setPeriodo($Qperiodo);
-		    $Qinicio = $oPeriodo->getF_ini_iso();
-		    $Qfin = $oPeriodo->getF_fin_iso();
-		}
-        $aWhere['f_ini'] = "'$Qinicio','$Qfin'";
-        $aOperador['f_ini'] = 'BETWEEN';
+	    // periodo.
+	    $oPeriodo = new Periodo();
+	    $oPeriodo->setDefaultAny('next');
+	    $oPeriodo->setAny($Qyear);
+	    $oPeriodo->setEmpiezaMin($Qempiezamin);
+	    $oPeriodo->setEmpiezaMax($Qempiezamax);
+	    $oPeriodo->setPeriodo($Qperiodo);
+	    
+	    $inicioIso = $oPeriodo->getF_ini_iso();
+	    $finIso = $oPeriodo->getF_fin_iso();
+	    $aWhere['f_ini'] = "'$inicioIso','$finIso'";
+	    $aOperador['f_ini'] = 'BETWEEN';
 		
 		$aWhere['status']=3;
 		$aOperador['status']="<";
@@ -430,7 +417,7 @@ switch ($Qque) {
 			}
 			$txt_id=$valores[0]."_ctrs";
 			if ($oPermCtr->have_perm_activ('crear') === true) { // sólo si tiene permiso para crear
-				$nuevo_txt="<span class=link onclick=fnjs_nuevo_ctr(event,'$id_activ','$Qinicio','$Qfin','$f_ini','$f_fin')>nuevo</span>";
+				$nuevo_txt="<span class=link onclick=fnjs_nuevo_ctr(event,'$id_activ','$inicioIso','$finIso','$f_ini','$f_fin')>nuevo</span>";
 			} else {
 				$nuevo_txt='';
 			}

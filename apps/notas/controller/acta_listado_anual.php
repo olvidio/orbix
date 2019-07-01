@@ -7,13 +7,10 @@ Hasta ahora, yo me manejaba con Access y tenía una manera de saber qué acta ib
 
 
 
-use asignaturas\model\entity as asignaturas;
-use core\ConfigGlobal;
-use notas\model\entity as notas;
-use web\Hash;
-use web\Lista;
-use web\Posicion;
-use function core\curso_est;
+use asignaturas\model\entity\Asignatura;
+use notas\model\entity\GestorActaDl;
+use web\DateTimeLocal;
+use web\Periodo;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -23,41 +20,40 @@ use function core\curso_est;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-$Qfin = (string) \filter_input(INPUT_POST, 'fin');
-$Qyear = (string) \filter_input(INPUT_POST, 'year');
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
+$Qyear = (string) \filter_input(INPUT_POST, 'year');
+$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 
-//periodo
-if (empty($Qperiodo) || $Qperiodo == 'otro') {
-	$any=  $_SESSION['oConfig']->any_final_curs('est');
-	$Qempiezamin=core\curso_est("inicio",$any,"est")->format('Y-m-d');
-	$Qempiezamax=core\curso_est("fin",$any,"est")->format('Y-m-d');
-	$Qperiodo = 'curso_ca';
-	$inicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
-	$fin = empty($Qfin)? $Qempiezamax : $Qfin;
-} else {
-	$oPeriodo = new web\Periodo();
-	$any=empty($Qyear)? date('Y')+1 : $Qyear;
-	$oPeriodo->setAny($any);
-	$oPeriodo->setPeriodo($Qperiodo);
-	$inicio = $oPeriodo->getF_ini_iso();
-	$fin = $oPeriodo->getF_fin_iso();
+
+// valores por defeccto
+if (empty($Qperiodo)) {
+    $Qperiodo = 'curso_ca';
 }
+
+// periodo.
+$oPeriodo = new Periodo();
+$oPeriodo->setDefaultAny('next');
+$oPeriodo->setAny($Qyear);
+$oPeriodo->setEmpiezaMin($Qempiezamin);
+$oPeriodo->setEmpiezaMax($Qempiezamax);
+$oPeriodo->setPeriodo($Qperiodo);
+
+$inicioIso = $oPeriodo->getF_ini_iso();
+$finIso = $oPeriodo->getF_fin_iso();
 
 $aWhere = array();
 $aOperador = array();
-
-$aWhere['f_acta'] = "'$inicio','$fin'";
+$aWhere['f_acta'] = "'$inicioIso','$finIso'";
 $aOperador['f_acta'] = 'BETWEEN';
 
-$titulo = _(sprintf("Lista de actas en el periodo: %s - %s.",$inicio,$fin)); 
-$GesActas = new notas\GestorActaDl();
-
+$GesActas = new GestorActaDl();
 $cActas = $GesActas->getActas($aWhere,$aOperador);
 
 $i=0;
 $aActas = array();
+$aFecha = [];
+$aNivel = [];
 foreach ($cActas as $oActa) {
 	$i++;
 	$acta=$oActa->getActa();
@@ -65,7 +61,7 @@ foreach ($cActas as $oActa) {
 	$f_acta=$oF_acta->getFromLocal();
 	$id_asignatura=$oActa->getId_asignatura();
 
-	$oAsignatura = new asignaturas\Asignatura($id_asignatura);
+	$oAsignatura = new Asignatura($id_asignatura);
 	$nombre_corto = $oAsignatura->getNombre_corto();
 	// puede ser una asignatura fantasma (que no exista)
 	if ($nombre_corto === NULL) {
@@ -120,6 +116,12 @@ $a_camposHiddenP = array(
 		);
 $oHashPeriodo->setArraycamposHidden($a_camposHiddenP);
 
+// Convertir las fechas inicio y fin a formato local:
+$oF_qini = new DateTimeLocal($inicioIso);
+$QinicioLocal = $oF_qini->getFromLocal();
+$oF_qfin = new DateTimeLocal($finIso);
+$QfinLocal = $oF_qfin->getFromLocal();
+$titulo = _(sprintf("Lista de actas en el periodo: %s - %s.",$QinicioLocal,$QfinLocal)); 
 
 $a_campos = ['aActas' => $aActas,
 			'titulo' => $titulo,

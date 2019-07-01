@@ -265,28 +265,21 @@ switch ($Qque) {
 	    $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 	    $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
 	    $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
-	    $Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-		$Qfin = (string) \filter_input(INPUT_POST, 'fin');
-
-		$any=empty($Qyear)? date('Y')+1 : $Qyear;
-		$mes=date("m");
-		$Qempiezamin=empty($Qempiezamin)? "1/$mes/$any" : $Qempiezamin;
-		$Qempiezamax=empty($Qempiezamax)? "1/$mes/$any+1" : $Qempiezamax;
+	    
+	    // periodo.
+	    $oPeriodo = new Periodo();
+	    $oPeriodo->setDefaultAny('next');
+	    $oPeriodo->setAny($Qyear);
+	    $oPeriodo->setEmpiezaMin($Qempiezamin);
+	    $oPeriodo->setEmpiezaMax($Qempiezamax);
+	    $oPeriodo->setPeriodo($Qperiodo);
+	    
+	    
+	    $inicioIso = $oPeriodo->getF_ini_iso();
+	    $finIso = $oPeriodo->getF_fin_iso();
+	    $aWhere['f_ini'] = "'$inicioIso','$finIso'";
+	    $aOperador['f_ini'] = 'BETWEEN';
 		
-		if (empty($Qperiodo) || $Qperiodo == 'otro') {
-			$inicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
-			$fin = empty($Qfin)? $Qempiezamax : $Qfin;
-		} else {
-			$oPeriodo = new Periodo();
-			$oPeriodo->setAny($any);
-			$oPeriodo->setPeriodo($Qperiodo);
-			$inicio = $oPeriodo->getF_ini_iso();
-			$fin = $oPeriodo->getF_fin_iso();
-		}
-
-		$aWhere['f_ini']="'$inicio','$fin'";
-		$aOperador['f_ini']='BETWEEN';
-
 		$aWhere['status']=3;
 		$aOperador['status']="<";
 

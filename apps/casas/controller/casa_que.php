@@ -128,6 +128,7 @@ switch ($tipo_lista) {
     default:
         $url_ajax = 'apps/casas/controller/casa_ajax.php';
         $param = 'que=get';
+        $sCamposForm .= '!periodo';
 }
 $oHash->setcamposForm($sCamposForm);
 

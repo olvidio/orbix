@@ -1,10 +1,9 @@
 <?php
 use actividades\model\entity as actividades;
 use actividadestudios\model\entity as actividadestudios;
-use asignaturas\model\entity as asignaturas;
-use notas\model\entity as notas;
 use personas\model\entity as personas;
 use ubis\model\entity as ubis;
+use web\Periodo;
 /**
 * Esta página sirve para calcular los créditos cursables para cada alumno en cada ca.
 *
@@ -24,8 +23,6 @@ use ubis\model\entity as ubis;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 	
-$Qempiezamin = '';
-$Qempiezamax = '';
 $oPosiblesCa = new actividadestudios\PosiblesCa(); 
 
 $oPosicion->recordar();
@@ -55,12 +52,14 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$Qna=strtok("#"); // id_tabla
 	$Qgrupo_estudios = 'todos';
 	$oHoy = new web\DateTimeLocal();
-	$inicio = $oHoy->format("Y-m-d");
-	if (date("m") < 10 ) {
-		$fin = date("Y")."-10-30";
+	$inicioIso = $oHoy->format("Y-m-d");
+	$ini_m = $_SESSION['oConfig']->getMesIniStgr();;
+    $year = date("Y");
+	if (date("m") < $ini_m ) {
+		$finIso = date("Y-m-t",strtotime("$year-$ini_m-01"));
 	} else {
-		$next_year = date("Y")+1;
-		$fin = $next_year."-10-30";
+		$next_year = $year+1;
+		$finIso = date("Y-m-t",strtotime("$next_year-$ini_m-01"));
 	}
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$a_sel,1);
@@ -74,28 +73,30 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$Qna = (string) \filter_input(INPUT_POST, 'na');
 	$Qyear = (integer) \filter_input(INPUT_POST, 'year');
 	$Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
+	$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
+	$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 
 	if (empty($Qid_ctr_agd) && empty($Qid_ctr_n)) { 
 		$msg_txt = _("debe seleccionar un centro o grupo de centros");
 		exit($msg_txt);
 	}
 	
-	if ($Qperiodo == 'otro') {
-		$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
-		$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
-		$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-		$Qfin = (string) \filter_input(INPUT_POST, 'fin');
-		$inicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
-		$fin = empty($Qfin)? $Qempiezamax : $Qfin;
-	} else {
-		$periodo = empty($Qperiodo)? 'curso_ca' : $Qperiodo;
-		$oPeriodo = new web\Periodo();
-        $any=empty($Qyear)? date('Y')+1 : $Qyear;
-		$oPeriodo->setAny($any);
-		$oPeriodo->setPeriodo($periodo);
-		$inicio = $oPeriodo->getF_ini_iso();
-		$fin = $oPeriodo->getF_fin_iso();
+	// valores por defeccto
+	if (empty($Qperiodo)) {
+	    $Qperiodo = 'curso_ca';
 	}
+	
+	// periodo.
+	$oPeriodo = new Periodo();
+	$oPeriodo->setDefaultAny('next');
+	$oPeriodo->setAny($Qyear);
+	$oPeriodo->setEmpiezaMin($Qempiezamin);
+	$oPeriodo->setEmpiezaMax($Qempiezamax);
+	$oPeriodo->setPeriodo($Qperiodo);
+	
+	$inicioIso = $oPeriodo->getF_ini_iso();
+	$finIso = $oPeriodo->getF_fin_iso();
+	
 	$aGoBack = array (
 					'id_ctr_agd' => $Qid_ctr_agd,
 					'id_ctr_n' => $Qid_ctr_n,
@@ -108,10 +109,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 					'ref' => $Qref,
 				);
 	$oPosicion->setParametros($aGoBack,1);
-
 }
-
-
 
 switch ($Qna) {
 	case "agd":
@@ -177,7 +175,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $cPersonas = $GesPersonaDl->getPersonas($aWhere,$aOperador);
 
 //------------- Selección de Actividades ---------------------------------
-$aWhereActividad['f_ini'] = "'$inicio','$fin'";
+$aWhereActividad['f_ini'] = "'$inicioIso','$finIso'";
 $aOperadorActividad['f_ini'] = 'BETWEEN';
 
 if ($Qgrupo_estudios != 'todos') {

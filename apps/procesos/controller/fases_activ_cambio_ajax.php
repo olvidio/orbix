@@ -31,14 +31,14 @@ switch($Qque) {
 		if (empty($Qid_fase_nueva)) exit('<h2>'._("Debe poner la fase nueva").'</h2>');
 
 		$Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
-		$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-		$Qfin = (string) \filter_input(INPUT_POST, 'fin');
 		$Qyear = (string) \filter_input(INPUT_POST, 'year');
 		$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
 		$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
-		
-		$Qempiezamin = empty($Qempiezamin)? date('d/m/Y',mktime(0, 0, 0, date('m'), date('d')-40, date('Y'))) : $Qempiezamin;
-		$Qempiezamax = empty($Qempiezamax)? date('d/m/Y',mktime(0, 0, 0, date('m')+6, 0, date('Y'))) : $Qempiezamax;
+
+		// valores por defeccto
+		if (empty($Qperiodo)) {
+		    $Qperiodo = 'actual';
+		}
 		
 		$refresh = $oPosicion->getParametro('refresh',1);
 		if (empty($refresh)) {
@@ -54,8 +54,6 @@ switch($Qque) {
 		    'id_tipo_activ'=>$Qid_tipo_activ,
 		    'periodo'=>$Qperiodo,
 		    'year'=>$Qyear,
-		    'inicio'=>$Qinicio,
-		    'fin'=>$Qfin,
 		    'empiezamin'=>$Qempiezamin,
 		    'empiezamax'=>$Qempiezamax );
 		$oPosicion->setParametros($aGoBack,1);
@@ -81,22 +79,20 @@ switch($Qque) {
 		$aOperador['status'] = '<';
 
 		// periodo.
-		if (empty($Qperiodo) || $Qperiodo == 'otro') {
-			$Qinicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
-			$Qfin = empty($Qfin)? $Qempiezamax : $Qfin;
-		} else {
-			$oPeriodo = new Periodo();
-			$any=empty($Qyear)? date('Y')+1 : $Qyear;
-			$oPeriodo->setAny($any);
-			$oPeriodo->setPeriodo($Qperiodo);
-			$Qinicio = $oPeriodo->getF_ini_iso();
-			$Qfin = $oPeriodo->getF_fin_iso();
-		}
+		$oPeriodo = new Periodo();
+		$oPeriodo->setDefaultAny('next');
+		$oPeriodo->setAny($Qyear);
+		$oPeriodo->setEmpiezaMin($Qempiezamin);
+		$oPeriodo->setEmpiezaMax($Qempiezamax);
+		$oPeriodo->setPeriodo($Qperiodo);
+		
+		$inicioIso = $oPeriodo->getF_ini_iso();
+		$finIso = $oPeriodo->getF_fin_iso();
 		if (!empty($Qperiodo) && $Qperiodo == 'desdeHoy') {
-			$aWhere['f_fin'] = "'$Qinicio','$Qfin'";
+			$aWhere['f_fin'] = "'$inicioIso','$finIso'";
 			$aOperador['f_fin'] = 'BETWEEN';
 		} else {
-			$aWhere['f_ini'] = "'$Qinicio','$Qfin'";
+			$aWhere['f_ini'] = "'$inicioIso','$finIso'";
 			$aOperador['f_ini'] = 'BETWEEN';
 		}
 

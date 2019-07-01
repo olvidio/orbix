@@ -6,11 +6,11 @@ use actividadessacd\model\ActividadesSacdFunciones;
 use core\ConfigGlobal;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\GestorPersonaSSSC;
-use personas\model\entity\GestorTelecoPersona;
 use personas\model\entity\PersonaDl;
 use ubis\model\entity\Ubi;
 use usuarios\model\entity\Usuario;
 use web\DateTimeLocal;
+use web\Periodo;
 use web\TiposActividades;
 
 /**
@@ -51,8 +51,6 @@ $Qque = (string) \filter_input(INPUT_POST, 'que');
 $Qid_nom = (integer) \filter_input(INPUT_POST, 'id_nom');
 
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
-$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-$Qfin = (string) \filter_input(INPUT_POST, 'fin');
 $Qyear = (string) \filter_input(INPUT_POST, 'year');
 $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
@@ -87,27 +85,22 @@ if ($Qque == "un_sacd") {
         }
         $Qid_tabla = (integer)  \filter_input(INPUT_POST, 'id_tabla');
     }
-	// periodo por derfecto:
-    $any=date("Y");
-    $mes=date("m");
-    if ($mes>8) $any++;
-    $any_1=$any-1;
-    $Qempiezamin = "$any_1/9/1";
-    $Qempiezamax = "$any/8/31";
+	// periodo por defecto:
+    if (empty($Qperiodo)) {
+        $Qperiodo = 'curso_crt';
+    }
 }
 
 // periodo.
-if (empty($Qperiodo) || $Qperiodo == 'otro') {
-    $Qinicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
-    $Qfin = empty($Qfin)? $Qempiezamax : $Qfin;
-} else {
-    $oPeriodo = new web\Periodo();
-    $any=empty($Qyear)? date('Y')+1 : $Qyear;
-    $oPeriodo->setAny($any);
-    $oPeriodo->setPeriodo($Qperiodo);
-    $Qinicio = $oPeriodo->getF_ini_iso();
-    $Qfin = $oPeriodo->getF_fin_iso();
-}
+$oPeriodo = new Periodo();
+$oPeriodo->setDefaultAny('next');
+$oPeriodo->setAny($Qyear);
+$oPeriodo->setEmpiezaMin($Qempiezamin);
+$oPeriodo->setEmpiezaMax($Qempiezamax);
+$oPeriodo->setPeriodo($Qperiodo);
+
+$inicioIso = $oPeriodo->getF_ini_iso();
+$finIso = $oPeriodo->getF_fin_iso();
 
 // los sacd
 $mi_dele = ConfigGlobal::mi_delef();
@@ -137,12 +130,12 @@ switch ($Qque) {
 }
 
 // llista d'activitats posibles en el periode.
-if (empty($Qinicio) OR empty($Qfin)) {
+if (empty($inicioIso) OR empty($finIso)) {
     exit ("<br>"._("falta determinar un periodo"));
 }
 $aWhere = [];
 $aOperador = [];
-$aWhere['f_ini'] = "'$Qinicio','$Qfin'";
+$aWhere['f_ini'] = "'$inicioIso','$finIso'";
 $aOperador['f_ini'] = 'BETWEEN';
 $aWhere['status'] = 2;
 $aWhere['_ordre']='f_ini';

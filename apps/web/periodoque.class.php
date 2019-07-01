@@ -281,6 +281,16 @@ class PeriodoQue {
 	function setAntes($sAntes) {
 		$this->sAntes=$sAntes;
 	}
+	function setEmpiezaMinIso($sEmpiezaMinIso) {
+	    $oEmpiezamin = new DateTimeLocal($sEmpiezaMinIso);
+	    $sEmpiezaMin = $oEmpiezamin->getLocal();
+		$this->sEmpiezaMin=$sEmpiezaMin;
+	}
+	function setEmpiezaMaxIso($sEmpiezaMaxIso) {
+	    $oEmpiezamax = new DateTimeLocal($sEmpiezaMaxIso);
+	    $sEmpiezaMax = $oEmpiezamax->getLocal();
+		$this->sEmpiezaMax=$sEmpiezaMax;
+	}
 	function setEmpiezaMin($sEmpiezaMin) {
 		$this->sEmpiezaMin=$sEmpiezaMin;
 	}

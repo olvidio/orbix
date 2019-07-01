@@ -249,39 +249,23 @@ if ($_POST['cdc_sel']==6) { //añado los ctr de sf
 
 if (empty($Qque)) {
     $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
-    $Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-    $Qfin = (string) \filter_input(INPUT_POST, 'fin');
     $Qyear = (string) \filter_input(INPUT_POST, 'year');
     $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
     $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
     
     // periodo.
-    // valores por defeccto
-    // desde 1 de enero.
-    if (empty($Qempiezamin)) {
-        $QempiezaminIso = date('Y-m-d',mktime(0, 0, 0, 1, 1, date('Y')));
-    } else {
-        $oEmpiezamin = web\DateTimeLocal::createFromLocal($Qempiezamin);
-        $QempiezaminIso = $oEmpiezamin->getIso();
-    }
-    // hasta 31 diciembre
-    if (empty($Qempiezamax)) {
-        $QempiezamaxIso = date('Y-m-d',mktime(0, 0, 0, 12, 31, date('Y')));
-    } else {
-        $oEmpiezamax = web\DateTimeLocal::createFromLocal($Qempiezamax);
-        $QempiezamaxIso = $oEmpiezamax->getIso();
-    }
-    if (empty($Qperiodo) || $Qperiodo == 'otro') {
-        $Qinicio = empty($Qinicio)? $QempiezaminIso : $Qinicio;
-        $Qfin = empty($Qfin)? $QempiezamaxIso : $Qfin;
-    } else {
-        $oPeriodo = new Periodo();
-        $any=empty($Qyear)? date('Y')+1 : $Qyear;
-        $oPeriodo->setAny($any);
-        $oPeriodo->setPeriodo($Qperiodo);
-        $Qinicio = $oPeriodo->getF_ini_iso();
-        $Qfin = $oPeriodo->getF_fin_iso();
-    }
+    $oPeriodo = new Periodo();
+    $oPeriodo->setDefaultAny('next');
+    $oPeriodo->setAny($Qyear);
+    $oPeriodo->setEmpiezaMin($Qempiezamin);
+    $oPeriodo->setEmpiezaMax($Qempiezamax);
+    $oPeriodo->setPeriodo($Qperiodo);
+    
+    $oInicio = $oPeriodo->getF_ini();
+    $oFin = $oPeriodo->getF_fin();
+    $inicioIso = $oPeriodo->getF_ini_iso();
+    $finIso = $oPeriodo->getF_fin_iso();
+    
 
     $tot = [];
     $tot[1]['dias'] = 0; 
@@ -303,9 +287,9 @@ if (empty($Qque)) {
     $tot[2]['superavit'] = 0;
 
     $a_resumen = [];
-    $oInicio = new DateTimeLocal($Qinicio);
-    $oFin = new DateTimeLocal($Qfin);
     foreach ($cCasasDl as $oCasaDl) {
+        $out = [];
+        $in = [];
         $id_ubi=$oCasaDl->getId_ubi();
         $nombre_ubi=$oCasaDl->getNombre_ubi();
         // Caso especial para Castelldaura: Los gastos son comunes a las dos casas.
@@ -334,9 +318,9 @@ if (empty($Qque)) {
         $a=0;
         $aWhere=array();
         $aOperador=array();
-        $aWhere['f_ini']=$Qfin;
+        $aWhere['f_ini']=$finIso;
         $aOperador['f_ini']='<=';
-        $aWhere['f_fin']=$Qinicio;
+        $aWhere['f_fin']=$inicioIso;
         $aOperador['f_fin']='>=';
         $aWhere['id_ubi']=$id_ubi;
         $aWhere['status']=4;
@@ -345,6 +329,7 @@ if (empty($Qque)) {
         $oGesActividades = new GestorActividad();
         $cActividades = $oGesActividades->getActividades($aWhere,$aOperador);
         foreach ($cActividades as $oActividad) {
+            $in = [];
             $id_activ = $oActividad->getId_activ();
             $oInicio = $oActividad->getF_ini();
             $oFin = $oActividad->getF_fin();
@@ -562,7 +547,11 @@ if (empty($Qque)) {
             <td class='derecha'><?= $row[1]['aportacion'] ?></td><td class='derecha'><?= $row[1]['superavit'] ?></td>
 
             </tr>
-    <tr><td><span id='span_detalles_<?= $id_ubi ?>_0' class=link onclick=fnjs_detalles(<?= $id_ubi ?>,0) ><p><?= _("mostrar detalles") ?><p><p style="display: none"><?= _("ocultar detalles") ?><p></span></td><td>dlbf</td>
+    <tr><td><span id='span_detalles_<?= $id_ubi ?>_0' class=link onclick="fnjs_detalles(<?= $id_ubi ?>,0)" >
+    			<p><?= _("mostrar detalles") ?></p>
+    			<p style="display: none"><?= _("ocultar detalles") ?></p>
+    		</span></td>
+    		<td>dlbf</td>
             <td class='derecha'><?= $row[2]['dias'] ?></td><td class='derecha'><?= $row[2]['dias%'] ?></td>
             <td class='derecha'><?= $row[2]['asist_prev'] ?></td><td class='derecha'><?= $row[2]['asist_prev%'] ?></td>
             <td class='derecha'><?= $row[2]['asist'] ?></td><td class='derecha'><?= $row[2]['asist%'] ?></td>

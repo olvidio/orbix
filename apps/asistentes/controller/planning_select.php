@@ -1,6 +1,7 @@
 <?php
 use personas\model\entity as personas;
 use ubis\model\entity as ubis;
+use web\Periodo;
 /**
 * Página de selección de las personas para las que se trazará un planning 
 * Presenta una lista de personas que cumplen la condición fijada en el formulario
@@ -39,10 +40,10 @@ if (isset($_POST['stack'])) {
 		$Qtipo = $oPosicion->getParametro('tipo');
 		$Qobj_pau = $oPosicion->getParametro('obj_pau');
 		$Qna = $oPosicion->getParametro('na');
-		$Qinicio = $oPosicion->getParametro('inicio');
-		$Qfin=$oPosicion->getParametro('fin');
 		$Qperiodo=$oPosicion->getParametro('periodo');
 		$Qyear=$oPosicion->getParametro('year');
+		$Qempiezamin=$oPosicion->getParametro('empiezamin');
+		$Qempiezamax=$oPosicion->getParametro('empiezamax');
 		$QsaWhere= $oPosicion->getParametro('saWhere');
 		$QsaOperador=$oPosicion->getParametro('saOperador');
 		$QsaWhereCtr=$oPosicion->getParametro('saWhereCtr');
@@ -57,32 +58,13 @@ if (isset($_POST['stack'])) {
 		$aOperadorCtr=unserialize(base64_decode($QsaOperadorCtr));
 	}
 } else { //si no vengo por goto.
-	$Qmodo = (string) \filter_input(INPUT_POST, 'modo');
 	$Qtipo = (string) \filter_input(INPUT_POST, 'tipo');
 	$Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
 	$Qna = (string) \filter_input(INPUT_POST, 'na');
-	$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-	$Qfin = (string) \filter_input(INPUT_POST, 'fin');
 	$Qyear = (string) \filter_input(INPUT_POST, 'year');
 	$Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 	$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
 	$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
-
-	// valores por defeccto
-	$Qempiezamin = empty($Qempiezamin)? date('Y-m-d',mktime(0, 0, 0, date('m'), date('d')-40, date('Y'))) : $Qempiezamin;
-	$Qempiezamax = empty($Qempiezamax)? date('Y-m-d',mktime(0, 0, 0, date('m')+9, 0, date('Y'))) : $Qempiezamax;
-
-	if (empty($Qperiodo) || $Qperiodo == 'otro') {
-		$Qinicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
-		$Qfin = empty($Qfin)? $Qempiezamax : $Qfin;
-	} else {
-		$oPeriodo = new web\Periodo();
-		$any=empty($Qyear)? date('Y')+1 : $Qyear;
-		$oPeriodo->setAny($any);
-		$oPeriodo->setPeriodo($Qperiodo);
-		$inicio = $oPeriodo->getF_ini_iso();
-		$fin = $oPeriodo->getF_fin_iso();
-	}
 
 	/*miro las condiciones. las variables son: num, agd, sup, nombre, apellido1, apellido2 */
 	$Qapellido1 = (string) \filter_input(INPUT_POST, 'apellido1');
@@ -178,10 +160,10 @@ $aGoBack = array (
 				'tipo'=>$Qtipo,
 				'obj_pau'=>$Qobj_pau,
 				'na'=>$Qna,
-				'inicio'=>$Qinicio,
-				'fin'=>$Qfin,
 				'periodo'=>$Qperiodo,
 				'year'=>$Qyear,
+                'empiezamin'=>$Qempiezamin,
+                'empiezamax'=>$Qempiezamax,
 				'saWhere'=>$QsaWhere,
 				'saOperador'=>$QsaOperador,
 				'saWhereCtr'=>$QsaWhereCtr,
@@ -233,10 +215,10 @@ $a_camposHidden = array(
 		'tipo' => $Qtipo,
 		'obj_pau' => $Qobj_pau,
 		'na' => $Qna,
-		'inicio' => $Qinicio,
-		'fin' => $Qfin,
 		'periodo' => $Qperiodo,
 		'year' => $Qyear,
+        'empiezamin' => $Qempiezamin,
+        'empiezamax' => $Qempiezamax,
 		'pau' => 'p',
 		);
 $oHash->setArraycamposHidden($a_camposHidden);

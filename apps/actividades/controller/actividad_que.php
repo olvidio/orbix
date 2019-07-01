@@ -46,8 +46,8 @@ $Qid_tipo_activ = (integer) \filter_input(INPUT_POST, 'id_tipo_activ');
 $Qfiltro_lugar = (string) \filter_input(INPUT_POST, 'filtro_lugar');
 $Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
-$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-$Qfin = (string) \filter_input(INPUT_POST, 'fin');
+//$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
+//$Qfin = (string) \filter_input(INPUT_POST, 'fin');
 $Qyear = (string) \filter_input(INPUT_POST, 'year');
 $Qdl_org = (string) \filter_input(INPUT_POST, 'dl_org');
 $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
@@ -120,6 +120,7 @@ $oFormP->setFormName('modifica');
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
+
 $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 

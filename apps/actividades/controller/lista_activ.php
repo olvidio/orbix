@@ -33,6 +33,7 @@ use actividadescentro\model\entity\GestorCentroEncargado;
 use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
 use ubis\model\entity\Casa;
+use web\DateTimeLocal;
 use web\Lista;
 use web\Periodo;
 use web\TiposActividades;
@@ -67,8 +68,6 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     $Qfiltro_lugar = $oPosicion->getParametro('filtro_lugar');
     $Qid_ubi= $oPosicion->getParametro('id_ubi');
     $Qperiodo=$oPosicion->getParametro('periodo');
-    $Qinicio=$oPosicion->getParametro('inicio');
-    $Qfin=$oPosicion->getParametro('fin');
     $Qyear=$oPosicion->getParametro('year');
     $Qdl_org=$oPosicion->getParametro('dl_org');
     $Qempiezamin=$oPosicion->getParametro('empiezamin');
@@ -105,27 +104,14 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     $Qfiltro_lugar = (string) \filter_input(INPUT_POST, 'filtro_lugar');
     $Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
     $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
-    $Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-    $Qfin = (string) \filter_input(INPUT_POST, 'fin');
     $Qyear = (string) \filter_input(INPUT_POST, 'year');
     $Qdl_org = (string) \filter_input(INPUT_POST, 'dl_org');
     $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
     $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
-    
-    // valores por defeccto
-    // desde 40 dias antes de hoy:
-    if (empty($Qempiezamin)) {
-        $QempiezaminIso = date('Y-m-d',mktime(0, 0, 0, date('m'), date('d')-40, date('Y')));
-    } else {
-        $oEmpiezamin = web\DateTimeLocal::createFromLocal($Qempiezamin);
-        $QempiezaminIso = $oEmpiezamin->getIso();
-    }
-    // hasta dentro de 9 meses desde hoy.
-    if (empty($Qempiezamax)) {
-        $QempiezamaxIso = date('Y-m-d',mktime(0, 0, 0, date('m')+9, 0, date('Y')));
-    } else {
-        $oEmpiezamax = web\DateTimeLocal::createFromLocal($Qempiezamax);
-        $QempiezamaxIso = $oEmpiezamax->getIso();
+
+    // valores por defecto
+    if (empty($Qperiodo)) {
+        $Qperiodo = 'actual';
     }
     
 	// se usan cuando se viene de lista_activ_sr_que.php y lista_activ_sg_que.php
@@ -147,8 +133,6 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
         'id_ubi'=>$Qid_ubi,
         'periodo'=>$Qperiodo,
         'year'=>$Qyear,
-        'inicio'=>$Qinicio,
-        'fin'=>$Qfin,
         'dl_org'=>$Qdl_org,
         'empiezamin'=>$Qempiezamin,
         'empiezamax'=>$Qempiezamax,
@@ -226,23 +210,23 @@ if (empty($Qid_tipo_activ)) {
 if (!empty($Qid_ubi)) {
 	$aWhere['id_ubi']=$Qid_ubi;
 }
+
 // periodo.
-if (empty($Qperiodo) || $Qperiodo == 'otro') {
-    $Qinicio = empty($Qinicio)? $QempiezaminIso : $Qinicio;
-    $Qfin = empty($Qfin)? $QempiezamaxIso : $Qfin;
-} else {
-    $oPeriodo = new Periodo();
-    $any=empty($Qyear)? date('Y')+1 : $Qyear;
-    $oPeriodo->setAny($any);
-    $oPeriodo->setPeriodo($Qperiodo);
-    $Qinicio = $oPeriodo->getF_ini_iso();
-    $Qfin = $oPeriodo->getF_fin_iso();
-}
+$oPeriodo = new Periodo();
+$oPeriodo->setDefaultAny('next');
+$oPeriodo->setAny($Qyear);
+$oPeriodo->setEmpiezaMin($Qempiezamin);
+$oPeriodo->setEmpiezaMax($Qempiezamax);
+$oPeriodo->setPeriodo($Qperiodo);
+
+$inicioIso = $oPeriodo->getF_ini_iso();
+$finIso = $oPeriodo->getF_fin_iso();
+// periodo.
 if (!empty($Qperiodo) && $Qperiodo == 'desdeHoy') {
-    $aWhere['f_fin'] = "'$Qinicio','$Qfin'";
+    $aWhere['f_fin'] = "'$inicioIso','$finIso'";
     $aOperador['f_fin'] = 'BETWEEN';
 } else {
-    $aWhere['f_ini'] = "'$Qinicio','$Qfin'";
+    $aWhere['f_fin'] = "'$inicioIso','$finIso'";
     $aOperador['f_ini'] = 'BETWEEN';
 }
 // dl Organizadora.

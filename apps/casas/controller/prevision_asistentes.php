@@ -13,14 +13,15 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 
-use core\ConfigGlobal;
-use function core\strtoupper_dlb;
-use web\DateTimeLocal;
-use web\Desplegable;
-use web\PeriodoQue;
 use actividades\model\entity\GestorActividadDl;
 use casas\model\entity\Ingreso;
+use core\ConfigGlobal;
+use function core\strtoupper_dlb;
 use ubis\model\entity\CasaDl;
+use web\DateTimeLocal;
+use web\Desplegable;
+use web\Periodo;
+use web\PeriodoQue;
 
 require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -35,47 +36,29 @@ $oPosicion->recordar();
 $Qmi_of = (string) \filter_input(INPUT_POST, 'mi_of');
 
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
-$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-$Qfin = (string) \filter_input(INPUT_POST, 'fin');
 $Qyear = (integer) \filter_input(INPUT_POST, 'year');
 $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 
-
 $aWhere = [];
 $aOperador = [];
+
 // periodo.
-// valores por defeccto
-// desde todo el año
-if (empty($Qempiezamin)) {
-    $QempiezaminIso = date('Y-m-d',mktime(0, 0, 0, 1, 1, date('Y')));
-} else {
-    $oEmpiezamin = DateTimeLocal::createFromLocal($Qempiezamin);
-    $QempiezaminIso = $oEmpiezamin->getIso();
-}
-//hasta
-if (empty($Qempiezamax)) {
-    $QempiezamaxIso = date('Y-m-d',mktime(0, 0, 0, 12, 31, date('Y')));
-} else {
-    $oEmpiezamax = DateTimeLocal::createFromLocal($Qempiezamax);
-    $QempiezamaxIso = $oEmpiezamax->getIso();
-}
-if (empty($Qperiodo) || $Qperiodo == 'otro') {
-    $Qinicio = empty($Qinicio)? $QempiezaminIso : $Qinicio;
-    $Qfin = empty($Qfin)? $QempiezamaxIso : $Qfin;
-} else {
-    $oPeriodo = new web\Periodo();
-    $any=empty($Qyear)? date('Y')+1 : $Qyear;
-    $oPeriodo->setAny($any);
-    $oPeriodo->setPeriodo($Qperiodo);
-    $Qinicio = $oPeriodo->getF_ini_iso();
-    $Qfin = $oPeriodo->getF_fin_iso();
-}
+$oPeriodo = new Periodo();
+$oPeriodo->setDefaultAny('next');
+$oPeriodo->setAny($Qyear);
+$oPeriodo->setEmpiezaMin($Qempiezamin);
+$oPeriodo->setEmpiezaMax($Qempiezamax);
+$oPeriodo->setPeriodo($Qperiodo);
+
+
+$inicioIso = $oPeriodo->getF_ini_iso();
+$finIso = $oPeriodo->getF_fin_iso();
 if (!empty($Qperiodo) && $Qperiodo == 'desdeHoy') {
-    $aWhere['f_fin'] = "'$Qinicio','$Qfin'";
+    $aWhere['f_fin'] = "'$inicioIso','$finIso'";
     $aOperador['f_fin'] = 'BETWEEN';
 } else {
-    $aWhere['f_ini'] = "'$Qinicio','$Qfin'";
+    $aWhere['f_ini'] = "'$inicioIso','$finIso'";
     $aOperador['f_ini'] = 'BETWEEN';
 }
 
@@ -144,13 +127,6 @@ $a_cabeceras[]=array('name'=>_("plazas"),'title'=>_("plazas de la casa"),'field'
 $a_cabeceras[]=array('name'=>_("mínimas"),'title'=>_("plazas mínimas"),'field'=>'plazas_min','width'=>20);
 $a_cabeceras[] = array('name'=>_("previstas"),'title'=>_("plazas previstas"),'field'=>"previstas",'width'=>15,'editor'=>'Slick.Editors.Integer','formatter'=>'cssFormatter');
 
-if (empty($mi_of)) {
-    $titulo=ucfirst(_("listado de actividades"));
-} else {
-    $titulo=ucfirst(sprintf(_("listado de actividades de %s"),$mi_of));
-}
-
-
 $aOpciones =  array(
 					'tot_any'=> _('todo el año'),
 					'trimestre_1'=> _('primer trimestre'),
@@ -166,6 +142,8 @@ $oFormP->setTitulo(strtoupper_dlb(_("período del listado del año próximo")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
+$oFormP->setEmpiezaMax($Qempiezamax);
+$oFormP->setEmpiezaMin($Qempiezamin);
 
 $boton = "<input type='button' value='"._("buscar")."' onclick='fnjs_buscar()' >";
 $oFormP->setBoton($boton);
@@ -187,8 +165,6 @@ if ($_SESSION['oConfig']->getGestionCalendario() == 'central') { // central => c
     $oFormP->setAntes($Antes);
 }
 
-
-
 $oTabla = new web\TablaEditable();
 $oTabla->setId_tabla('prevision_asistentes');
 $UpdateUrl = core\ConfigGlobal::getWeb().'/apps/casas/controller/prevision_asistentes_ajax.php';
@@ -199,6 +175,18 @@ $oTabla->setDatos($a_valores);
 $oHash = new web\Hash();
 $oHash->setCamposForm('empiezamax!empiezamin!iactividad_val!iasistentes_val!mi_of!periodo!year');
 $oHash->setCamposNo('!refresh');
+
+if (empty($mi_of)) {
+    $titulo=ucfirst(_("listado de actividades"));
+} else {
+    $titulo=ucfirst(sprintf(_("listado de actividades de %s"),$mi_of));
+}
+// Convertir las fechas inicio y fin a formato local:
+$oF_qini = new DateTimeLocal($inicioIso);
+$QinicioLocal = $oF_qini->getFromLocal();
+$oF_qfin = new DateTimeLocal($finIso);
+$QfinLocal = $oF_qfin->getFromLocal();
+$titulo .= ' ' . sprintf(_("entre %s y %s"),$QinicioLocal,$QfinLocal);
 
 $a_campos = ['oPosicion' => $oPosicion,
     'titulo' => $titulo,

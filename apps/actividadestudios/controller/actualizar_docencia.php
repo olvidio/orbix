@@ -3,6 +3,7 @@ use actividades\model\entity as actividades;
 use actividadestudios\model\entity as actividadestudios;
 use notas\model\entity as notas;
 use profesores\model\entity as profesores;
+use web\Periodo;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -17,10 +18,10 @@ use profesores\model\entity as profesores;
  * Se cogen los ca marcados como terminados (así se copia el acta...)
  */
 
-$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-$Qfin = (string) \filter_input(INPUT_POST, 'fin');
 $Qyear = (string) \filter_input(INPUT_POST, 'year');
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
+$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 $continuar = (integer)  filter_input(INPUT_POST, 'continuar');
 
  if (empty($continuar)) {
@@ -43,6 +44,8 @@ $continuar = (integer)  filter_input(INPUT_POST, 'continuar');
 	$oFormP->setPosiblesPeriodos($aOpciones);
 	$oFormP->setDesplAnysOpcion_sel($Qyear);
 	$oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
+	$oFormP->setEmpiezaMax($Qempiezamax);
+	$oFormP->setEmpiezaMin($Qempiezamin);
 	$oFormP->setBoton($boton);
 	$oHashPeriodo = new web\Hash();
 	$oHashPeriodo->setCamposForm('empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val');
@@ -57,26 +60,25 @@ $continuar = (integer)  filter_input(INPUT_POST, 'continuar');
  				);
 
  } else {
-	//periodo
-	if (empty($Qperiodo) || $Qperiodo == 'otro') {
-		$any=  $_SESSION['oConfig']->any_final_curs('est');
-		$Qempiezamin=core\curso_est("inicio",$any,"est")->format('Y-m-d');
-		$Qempiezamax=core\curso_est("fin",$any,"est")->format('Y-m-d');
-		$Qperiodo = 'curso_ca';
-		$inicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
-		$fin = empty($Qfin)? $Qempiezamax : $Qfin;
-	} else {
-		$oPeriodo = new web\Periodo();
-		$any=empty($Qyear)? date('Y')+1 : $Qyear;
-		$oPeriodo->setAny($any);
-		$oPeriodo->setPeriodo($Qperiodo);
-		$inicio = $oPeriodo->getF_ini_iso();
-		$fin = $oPeriodo->getF_fin_iso();
-	}
-
-	$aWhere = [];
+    // valores por defeccto
+    if (empty($Qperiodo)) {
+        $Qperiodo = 'curso_ca';
+    }
+     
+    // periodo.
+    $oPeriodo = new Periodo();
+    $oPeriodo->setDefaultAny('next');
+    $oPeriodo->setAny($Qyear);
+    $oPeriodo->setEmpiezaMin($Qempiezamin);
+    $oPeriodo->setEmpiezaMax($Qempiezamax);
+    $oPeriodo->setPeriodo($Qperiodo);
+     
+    $inicioIso = $oPeriodo->getF_ini_iso();
+    $finIso = $oPeriodo->getF_fin_iso();
+    
+    $aWhere = [];
 	$aOperador = [];
-	$aWhere['f_ini'] = "'$inicio','$fin'";
+    $aWhere['f_ini'] = "'$inicioIso','$finIso'";
 	$aOperador['f_ini'] = 'BETWEEN';
 	$aWhere['status'] = 3;
 	

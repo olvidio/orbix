@@ -75,8 +75,6 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     $Qfiltro_lugar = $oPosicion->getParametro('filtro_lugar');
     $Qid_ubi= $oPosicion->getParametro('id_ubi');
     $Qperiodo=$oPosicion->getParametro('periodo');
-    $Qinicio=$oPosicion->getParametro('inicio');
-    $Qfin=$oPosicion->getParametro('fin');
     $Qyear=$oPosicion->getParametro('year');
     $Qdl_org=$oPosicion->getParametro('dl_org');
     $Qempiezamin=$oPosicion->getParametro('empiezamin');
@@ -103,43 +101,21 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     $Qfiltro_lugar = (string) \filter_input(INPUT_POST, 'filtro_lugar');
     $Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
     $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
-    $Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-    $Qfin = (string) \filter_input(INPUT_POST, 'fin');
     $Qyear = (string) \filter_input(INPUT_POST, 'year');
     $Qdl_org = (string) \filter_input(INPUT_POST, 'dl_org');
-    
     $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
     $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
     
-    if (empty($Qempiezamin)) {
+    // valores por defecto
+    if (empty($Qperiodo)) {
         switch ($Qtipo_activ_sg) {
             case 'crt':
-                $any = $_SESSION['oConfig']->any_final_curs('crt');
-                $QempiezaminIso = core\curso_est("inicio",$any,"crt")->format('Y-m-d');
+                $Qperiodo = 'curso_crt';
                 break;
             case 'cv':
-                $any = $_SESSION['oConfig']->any_final_curs('est');
-                $QempiezaminIso = core\curso_est("inicio",$any,"est")->format('Y-m-d');
+                $Qperiodo = 'curso_ca';
                 break;
         }
-    } else {
-        $oEmpiezamin = DateTimeLocal::createFromLocal($Qempiezamin);
-        $QempiezaminIso = $oEmpiezamin->getIso();
-    }
-    if (empty($Qempiezamax)) {
-        switch ($Qtipo_activ_sg) {
-            case 'crt':
-                $any = $_SESSION['oConfig']->any_final_curs('crt');
-                $QempiezamaxIso = core\curso_est("fin",$any,"crt")->format('Y-m-d');
-                break;
-            case 'cv':
-                $any = $_SESSION['oConfig']->any_final_curs('est');
-                $QempiezamaxIso = core\curso_est("fin",$any,"est")->format('Y-m-d');
-                break;
-        }
-    } else {
-        $oEmpiezamax = DateTimeLocal::createFromLocal($Qempiezamax);
-        $QempiezamaxIso = $oEmpiezamax->getIso();
     }
 	
 	$Qstatus = empty($Qstatus)? ActividadAll::STATUS_ACTUAL : $Qstatus;
@@ -150,8 +126,6 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
 	    'id_ubi'=>$Qid_ubi,
 	    'periodo'=>$Qperiodo,
 	    'year'=>$Qyear,
-	    'inicio'=>$Qinicio,
-	    'fin'=>$Qfin,
 	    'dl_org'=>$Qdl_org,
 	    'status'=>$Qstatus,
 	    'empiezamin'=>$Qempiezamin,
@@ -185,25 +159,25 @@ $aOperador['id_tipo_activ'] = '~';
 if (!empty($Qid_ubi)) {
 	$aWhere['id_ubi']=$Qid_ubi;
 }
+
 // periodo.
-if (empty($Qperiodo) || $Qperiodo == 'otro') {
-	$Qinicio = empty($Qinicio)? $QempiezaminIso : $Qinicio;
-	$Qfin = empty($Qfin)? $QempiezamaxIso : $Qfin;
-} else {
-	$oPeriodo = new Periodo();
-	$any=empty($Qyear)? date('Y')+1 : $Qyear;
-	$oPeriodo->setAny($any);
-	$oPeriodo->setPeriodo($Qperiodo);
-	$Qinicio = $oPeriodo->getF_ini_iso();
-	$Qfin = $oPeriodo->getF_fin_iso();
-}
+$oPeriodo = new Periodo();
+$oPeriodo->setDefaultAny('next');
+$oPeriodo->setAny($Qyear);
+$oPeriodo->setEmpiezaMin($Qempiezamin);
+$oPeriodo->setEmpiezaMax($Qempiezamax);
+$oPeriodo->setPeriodo($Qperiodo);
+
+$inicioIso = $oPeriodo->getF_ini_iso();
+$finIso = $oPeriodo->getF_fin_iso();
 if (!empty($Qperiodo) && $Qperiodo == 'desdeHoy') {
-	$aWhere['f_fin'] = "'$Qinicio','$Qfin'";
+	$aWhere['f_fin'] = "'$inicioIso','$finIso'";
 	$aOperador['f_fin'] = 'BETWEEN';
 } else {
-	$aWhere['f_ini'] = "'$Qinicio','$Qfin'";
+	$aWhere['f_ini'] = "'$inicioIso','$finIso'";
 	$aOperador['f_ini'] = 'BETWEEN';
 }
+
 // dl Organizadora.
 if (!empty($Qdl_org)) {
    $aWhere['dl_org'] = $Qdl_org; 

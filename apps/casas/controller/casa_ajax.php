@@ -118,8 +118,6 @@ switch ($Qque) {
 
 		$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
 		$Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
-		$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-		$Qfin = (string) \filter_input(INPUT_POST, 'fin');
 		$Qyear = (string) \filter_input(INPUT_POST, 'year');
 		$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
 		$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
@@ -134,38 +132,23 @@ switch ($Qque) {
 		
 		$aWhere = [];
 		$aOperador = [];
+		
 		// periodo.
-		// valores por defeccto
-		// desde 1 de enero.
-		if (empty($Qempiezamin)) {
-		    $QempiezaminIso = date('Y-m-d',mktime(0, 0, 0, 1, 1, date('Y')));
-		} else {
-		    $oEmpiezamin = web\DateTimeLocal::createFromLocal($Qempiezamin);
-		    $QempiezaminIso = $oEmpiezamin->getIso();
-		}
-		// hasta 31 diciembre
-		if (empty($Qempiezamax)) {
-		    $QempiezamaxIso = date('Y-m-d',mktime(0, 0, 0, 12, 31, date('Y')));
-		} else {
-		    $oEmpiezamax = web\DateTimeLocal::createFromLocal($Qempiezamax);
-		    $QempiezamaxIso = $oEmpiezamax->getIso();
-		}
-		if (empty($Qperiodo) || $Qperiodo == 'otro') {
-		    $Qinicio = empty($Qinicio)? $QempiezaminIso : $Qinicio;
-		    $Qfin = empty($Qfin)? $QempiezamaxIso : $Qfin;
-		} else {
-		    $oPeriodo = new Periodo();
-		    $any=empty($Qyear)? date('Y')+1 : $Qyear;
-		    $oPeriodo->setAny($any);
-		    $oPeriodo->setPeriodo($Qperiodo);
-		    $Qinicio = $oPeriodo->getF_ini_iso();
-		    $Qfin = $oPeriodo->getF_fin_iso();
-		}
+		$oPeriodo = new Periodo();
+		$oPeriodo->setDefaultAny('next');
+		$oPeriodo->setAny($Qyear);
+		$oPeriodo->setEmpiezaMin($Qempiezamin);
+		$oPeriodo->setEmpiezaMax($Qempiezamax);
+		$oPeriodo->setPeriodo($Qperiodo);
+		
+		
+		$inicioIso = $oPeriodo->getF_ini_iso();
+		$finIso = $oPeriodo->getF_fin_iso();
 		if (!empty($Qperiodo) && $Qperiodo == 'desdeHoy') {
-		    $aWhere['f_fin'] = "'$Qinicio','$Qfin'";
+		    $aWhere['f_fin'] = "'$inicioIso','$finIso'";
 		    $aOperador['f_fin'] = 'BETWEEN';
 		} else {
-		    $aWhere['f_ini'] = "'$Qinicio','$Qfin'";
+		    $aWhere['f_ini'] = "'$inicioIso','$finIso'";
 		    $aOperador['f_ini'] = 'BETWEEN';
 		}
 
@@ -231,7 +214,7 @@ switch ($Qque) {
 
 				$oTipoTarifa = new TipoTarifa(array('tarifa'=>$tarifa));
 				$modo = $oTipoTarifa->getModo();
-				$oTarifa = new Tarifa(array('id_ubi'=>$id_ubi,'tarifa'=>$tarifa,'year'=>$any));
+				$oTarifa = new Tarifa(array('id_ubi'=>$id_ubi,'tarifa'=>$tarifa,'year'=>$Qyear));
 				$cantidad = $oTarifa->getCantidad();
 				if (empty($precio)) {
 					$flag = ($factor_dias != 1)? '*' : ''; 
@@ -294,8 +277,8 @@ switch ($Qque) {
 				$a_valores[$key][$a]['clase']='derecha';
 				$a++;
 			}
-			$oF_ini_periodo = new DateTimeLocal($Qinicio);
-			$oF_fin_periodo = new DateTimeLocal($Qfin);
+			$oF_ini_periodo = $oPeriodo->getF_ini();
+			$oF_fin_periodo = $oPeriodo->getF_fin();
 			// total sv
 			$a_valores[$key][$a][1]= $oF_ini_periodo->getFromLocal();
 			$a_valores[$key][$a][2]= $oF_fin_periodo->getFromLocal();
@@ -409,24 +392,20 @@ switch ($Qque) {
 	case "lista_activ":
 		$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
 		$Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
-		$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-		$Qfin = (string) \filter_input(INPUT_POST, 'fin');
 		$Qyear = (string) \filter_input(INPUT_POST, 'year');
 		$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
 		$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 		
-		// listado de actividades por casa y periodo.
-		$any=empty($_POST['year'])? date('Y')+1 : $_POST['year'];
-		if (empty($_POST['periodo']) || $_POST['periodo'] == 'otro') {
-			$inicio = empty($_POST['inicio'])? $_POST['empiezamin'] : $_POST['inicio'];
-			$fin = empty($_POST['fin'])? $_POST['empiezamax'] : $_POST['fin'];
-		} else {
-			$oPeriodo = new Periodo();
-			$oPeriodo->setAny($any);
-			$oPeriodo->setPeriodo($_POST['periodo']);
-			$inicio = $oPeriodo->getF_ini();
-			$fin = $oPeriodo->getF_fin();
-		}
+		// periodo.
+		$oPeriodo = new Periodo();
+		$oPeriodo->setDefaultAny('next');
+		$oPeriodo->setAny($Qyear);
+		$oPeriodo->setEmpiezaMin($Qempiezamin);
+		$oPeriodo->setEmpiezaMax($Qempiezamax);
+		$oPeriodo->setPeriodo($Qperiodo);
+		
+		$inicioIso = $oPeriodo->getF_ini_iso();
+		$finIso = $oPeriodo->getF_fin_iso();
 
 		// posible selección múltiple de casas
 		if (!empty($_POST['id_cdc'])) {
@@ -439,9 +418,9 @@ switch ($Qque) {
 		$a_valores = array();
 		foreach ($aGrupos as $key => $Titulo) {
 			$aWhere['id_ubi']=$key; // en este caso $key=$id_ubi
-			$aWhere['f_ini'] = $inicio;
+			$aWhere['f_ini'] = $inicioIso;
 			$aOperador['f_ini'] = '>=';
-			$aWhere['f_fin'] = $fin;
+			$aWhere['f_fin'] = $finIso;
 			$aOperador['f_fin'] = '<=';
 			$aWhere['status'] = 4;
 			$aOperador['status'] = '<';

@@ -8,12 +8,10 @@
  *        	$id_tipo_activ
  *        	$id_ubi
  *        	$periodo
- *        	$inicio
- *        	$fin
  *        	$year
  *        	$dl_org
- *        	$empiezamin por defecto = hoy
- * 		 	$empiezamax por defecto = hoy + 6 meses
+ *        	$empiezamin
+ * 		 	$empiezamax
  *
  * Si el resultado es más de 200, pregunta si quieres seguir.
  *
@@ -36,6 +34,7 @@ use permisos\model\PermisosActividadesTrue;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use usuarios\model\entity as usuarios;
 use web\DateTimeLocal;
+use web\Periodo;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
@@ -48,8 +47,6 @@ require_once ("apps/core/global_object.inc");
 
 // Declarción de variables ******************************************************
 $num_max_actividades = 200;
-$Qempiezamin = '';
-$Qempiezamax = '';
 
 $mi_dele = core\ConfigGlobal::mi_delef();
 $mi_sfsv = core\ConfigGlobal::mi_sfsv();
@@ -76,8 +73,6 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     $Qfiltro_lugar = $oPosicion->getParametro('filtro_lugar');
     $Qid_ubi= $oPosicion->getParametro('id_ubi');
     $Qperiodo=$oPosicion->getParametro('periodo');
-    $Qinicio=$oPosicion->getParametro('inicio');
-    $Qfin=$oPosicion->getParametro('fin');
     $Qyear=$oPosicion->getParametro('year');
     $Qdl_org=$oPosicion->getParametro('dl_org');
     $Qempiezamin=$oPosicion->getParametro('empiezamin');
@@ -86,20 +81,9 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     $Qscroll_id = $oPosicion->getParametro('scroll_id');
     $oPosicion->olvidar($QGstack); //limpio todos los estados hacia delante.
     
-    // valores por defeccto (aunque vengo de vuelta, pueden estar vacíos p.ej al duplicar)
-    // desde 40 dias antes de hoy:
-    if (empty($Qempiezamin)) {
-        $QempiezaminIso = date('Y-m-d',mktime(0, 0, 0, date('m'), date('d')-40, date('Y')));
-    } else {
-        $oEmpiezamin = DateTimeLocal::createFromLocal($Qempiezamin);
-        $QempiezaminIso = $oEmpiezamin->getIso();
-    }
-    // hasta dentro de 9 meses desde hoy.
-    if (empty($Qempiezamax)) {
-        $QempiezamaxIso = date('Y-m-d',mktime(0, 0, 0, date('m')+9, 0, date('Y')));
-    } else {
-        $oEmpiezamax = DateTimeLocal::createFromLocal($Qempiezamax);
-        $QempiezamaxIso = $oEmpiezamax->getIso();
+    // valores por defeccto
+    if (empty($Qperiodo)) {
+        $Qperiodo = 'actual';
     }
     
 } else { //si vengo de vuelta y tengo los parametros en el $_POST
@@ -121,27 +105,14 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     $Qfiltro_lugar = (string) \filter_input(INPUT_POST, 'filtro_lugar');
     $Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
     $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
-    $Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-    $Qfin = (string) \filter_input(INPUT_POST, 'fin');
     $Qyear = (string) \filter_input(INPUT_POST, 'year');
     $Qdl_org = (string) \filter_input(INPUT_POST, 'dl_org');
     $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
     $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
     
     // valores por defeccto
-    // desde 40 dias antes de hoy:
-    if (empty($Qempiezamin)) {
-        $QempiezaminIso = date('Y-m-d',mktime(0, 0, 0, date('m'), date('d')-40, date('Y')));
-    } else {
-        $oEmpiezamin = DateTimeLocal::createFromLocal($Qempiezamin);
-        $QempiezaminIso = $oEmpiezamin->getIso();
-    }
-    // hasta dentro de 9 meses desde hoy.
-    if (empty($Qempiezamax)) {
-        $QempiezamaxIso = date('Y-m-d',mktime(0, 0, 0, date('m')+9, 0, date('Y')));
-    } else {
-        $oEmpiezamax = DateTimeLocal::createFromLocal($Qempiezamax);
-        $QempiezamaxIso = $oEmpiezamax->getIso();
+    if (empty($Qperiodo)) {
+        $Qperiodo = 'actual';
     }
     
     $Qstatus = empty($Qstatus)? Actividad::STATUS_ACTUAL : $Qstatus;
@@ -152,8 +123,6 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
         'id_ubi'=>$Qid_ubi,
         'periodo'=>$Qperiodo,
         'year'=>$Qyear,
-        'inicio'=>$Qinicio,
-        'fin'=>$Qfin,
         'dl_org'=>$Qdl_org,
         'status'=>$Qstatus,
         'empiezamin'=>$Qempiezamin,
@@ -202,25 +171,21 @@ if ($Qid_tipo_activ!='......') {
 if (!empty($Qid_ubi)) {
     $aWhere['id_ubi']=$Qid_ubi;
 }
+
 // periodo.
-if (empty($Qperiodo) || $Qperiodo == 'otro') {
-    $Qinicio = empty($Qinicio)? $QempiezaminIso : $Qinicio;
-    $Qfin = empty($Qfin)? $QempiezamaxIso : $Qfin;
-} else {
-    $oPeriodo = new web\Periodo();
-    $any=empty($Qyear)? date('Y')+1 : $Qyear;
-    $oPeriodo->setAny($any);
-    $oPeriodo->setPeriodo($Qperiodo);
-    $Qinicio = $oPeriodo->getF_ini_iso();
-    $Qfin = $oPeriodo->getF_fin_iso();
-}
-if (!empty($Qperiodo) && $Qperiodo == 'desdeHoy') {
-    $aWhere['f_fin'] = "'$Qinicio','$Qfin'";
-    $aOperador['f_fin'] = 'BETWEEN';
-} else {
-    $aWhere['f_ini'] = "'$Qinicio','$Qfin'";
-    $aOperador['f_ini'] = 'BETWEEN';
-}
+$oPeriodo = new Periodo();
+$oPeriodo->setDefaultAny('next');
+$oPeriodo->setAny($Qyear);
+$oPeriodo->setEmpiezaMin($Qempiezamin);
+$oPeriodo->setEmpiezaMax($Qempiezamax);
+$oPeriodo->setPeriodo($Qperiodo);
+
+
+$inicioIso = $oPeriodo->getF_ini_iso();
+$finIso = $oPeriodo->getF_fin_iso();
+$aWhere['f_ini'] = "'$inicioIso','$finIso'";
+$aOperador['f_ini'] = 'BETWEEN';
+
 // dl Organizadora.
 if (!empty($Qdl_org)) {
     $aWhere['dl_org'] = $Qdl_org;
@@ -519,9 +484,9 @@ if (core\ConfigGlobal::is_app_installed('procesos')) {
     $resultado = sprintf( _("%s actividades encontradas"),$num);
 }
 // Convertir las fechas inicio y fin a formato local:
-$oF_qini = new DateTimeLocal($Qinicio);
+$oF_qini = new DateTimeLocal($inicioIso);
 $QinicioLocal = $oF_qini->getFromLocal();
-$oF_qfin = new DateTimeLocal($Qfin);
+$oF_qfin = new DateTimeLocal($finIso);
 $QfinLocal = $oF_qfin->getFromLocal();
 $resultado .= ' ' . sprintf(_("entre %s y %s"),$QinicioLocal,$QfinLocal);
 

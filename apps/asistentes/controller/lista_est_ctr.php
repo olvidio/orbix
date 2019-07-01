@@ -5,6 +5,7 @@ use asignaturas\model\entity as asignaturas;
 use asistentes\model\entity as asistentes;
 use personas\model\entity as personas;
 use ubis\model\entity as ubis;
+use web\Periodo;
 /**
 * Listado del plan de estudios por ctr
 *
@@ -39,26 +40,20 @@ $Qn_agd = (string) \filter_input(INPUT_POST, 'n_agd');
 $Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 $Qyear = (string) \filter_input(INPUT_POST, 'year');
+$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
+$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
 
 
-if (empty($Qperiodo) || $Qperiodo == 'otro') {
-	$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
-	$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
-	$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-	$Qfin = (string) \filter_input(INPUT_POST, 'fin');
-	$inicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
-	$fin = empty($Qfin)? $Qempiezamax : $Qfin;
-} else {
-	$Qempiezamax = '';
-	$Qempiezamin = '';
-	$oPeriodo = new web\Periodo();
-    $any=empty($Qyear)? date('Y')+1 : $Qyear;
-	$oPeriodo->setAny($any);
-	$oPeriodo->setPeriodo($Qperiodo);
-	$inicio = $oPeriodo->getF_ini_iso();
-	$fin = $oPeriodo->getF_fin_iso();
-}
+// periodo.
+$oPeriodo = new Periodo();
+$oPeriodo->setDefaultAny('next');
+$oPeriodo->setAny($Qyear);
+$oPeriodo->setEmpiezaMin($Qempiezamin);
+$oPeriodo->setEmpiezaMax($Qempiezamax);
+$oPeriodo->setPeriodo($Qperiodo);
 
+$inicioIso = $oPeriodo->getF_ini_iso();
+$finIso = $oPeriodo->getF_fin_iso();
 
 $aGoBack = array (
 			'n_agd' => $Qn_agd,
@@ -70,10 +65,8 @@ $aGoBack = array (
 		);
 $oPosicion->setParametros($aGoBack,1);
 
-
-
 $aWhereNom['propio'] = 't';
-$aWhereAct['f_ini'] = "'$inicio','$fin'";
+$aWhereAct['f_ini'] = "'$inicioIso','$finIso'";
 $aOperadorAct['f_ini'] = 'BETWEEN';
 $aWhereAct['id_tipo_activ'] = "^1(12|33)";
 $aOperadorAct['id_tipo_activ'] = "~";

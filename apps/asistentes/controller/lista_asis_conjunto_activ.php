@@ -1,5 +1,6 @@
 <?php 
 use actividades\model\entity as actividades;
+use web\Periodo;
 
 /**
 * Lista los asistentes de una relación de actividades seleccionada
@@ -28,18 +29,21 @@ $Qstatus = empty($Qstatus)? actividades\ActividadAll::STATUS_ACTUAL : $Qstatus;
 $Qid_tipo_activ = (string) \filter_input(INPUT_POST, 'id_tipo_activ');
 $Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
-$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-$Qfin = (string) \filter_input(INPUT_POST, 'fin');
 $Qyear = (integer) \filter_input(INPUT_POST, 'year');
 $Qyear = empty($Qyear)? date('Y') : $Qyear;
 $Qdl_org = (string) \filter_input(INPUT_POST, 'dl_org');
 $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
-$Qempiezamin = empty($Qempiezamin)? date('Y-m-d',mktime(0, 0, 0, date('m'), date('d')-40, date('Y'))) : $Qempiezamin;
-$Qempiezamax = empty($Qempiezamax)? date('Y-m-d',mktime(0, 0, 0, date('m')+9, 0, date('Y'))) : $Qempiezamax;
-	
+
+// valores por defeccto
+if (empty($Qperiodo)) {
+    $Qperiodo = 'actual';
+}
+
 // Condiciones de búsqueda.
 $aWhere = array();
+$aOperador = [];
+
 // Status
 if ($Qstatus!=5) {
 	$aWhere['status'] = $Qstatus;
@@ -79,23 +83,22 @@ if ($Qid_tipo_activ!='......') {
 if (!empty($Qid_ubi)) {
 	$aWhere['id_ubi']=$Qid_ubi;
 }
+
 // periodo.
-if (empty($Qperiodo) || $Qperiodo == 'otro') {
-	$Qinicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
-	$Qfin = empty($Qfin)? $Qempiezamax : $Qfin;
-} else {
-	$oPeriodo = new web\Periodo();
-	$any=empty($Qyear)? date('Y')+1 : $Qyear;
-	$oPeriodo->setAny($any);
-	$oPeriodo->setPeriodo($Qperiodo);
-	$Qinicio = $oPeriodo->getF_ini_iso();
-	$Qfin = $oPeriodo->getF_fin_iso();
-}
+$oPeriodo = new Periodo();
+$oPeriodo->setDefaultAny('next');
+$oPeriodo->setAny($Qyear);
+$oPeriodo->setEmpiezaMin($Qempiezamin);
+$oPeriodo->setEmpiezaMax($Qempiezamax);
+$oPeriodo->setPeriodo($Qperiodo);
+
+$inicioIso = $oPeriodo->getF_ini_iso();
+$finIso = $oPeriodo->getF_fin_iso();
 if (!empty($Qperiodo) && $Qperiodo == 'desdeHoy') {
-	$aWhere['f_fin'] = "'$Qinicio','$Qfin'";
+	$aWhere['f_fin'] = "'$inicioIso','$finIso'";
 	$aOperador['f_fin'] = 'BETWEEN';
 } else {
-	$aWhere['f_ini'] = "'$Qinicio','$Qfin'";
+	$aWhere['f_ini'] = "'$inicioIso','$finIso'";
 	$aOperador['f_ini'] = 'BETWEEN';
 }
 // dl Organizadora.

@@ -1,8 +1,9 @@
 <?php
 use actividades\model\entity\GestorActividad;
 use ubis\model\entity\GestorCasaDl;
-use ubis\model\entity\Ubi;
 use ubis\model\entity\GestorCentroEllas;
+use ubis\model\entity\Ubi;
+use web\Periodo;
 /**
 * Esta página tiene la misión de realizar la llamada a calendario php;
 * y lo hace con distintos valores, en función de las páginas anteriores
@@ -43,38 +44,32 @@ if (!empty($a_sel)) { //vengo de un checkbox
     }
 }
 
-$Qyear = (integer) \filter_input(INPUT_POST, 'year');
 $Qcdc_sel = (integer) \filter_input(INPUT_POST, 'cdc_sel');
 $Qtipo = (string) \filter_input(INPUT_POST, 'tipo');
 $Qdd = (integer) \filter_input(INPUT_POST, 'dd');
+$Qyear = (integer) \filter_input(INPUT_POST, 'year');
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
+$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 
 $Qid_cdc_mas = (string) \filter_input(INPUT_POST, 'id_cdc_mas');
 $Qid_cdc_num = (string) \filter_input(INPUT_POST, 'id_cdc_num');
 $Qiasistentes_val = (string) \filter_input(INPUT_POST, 'iasistentes_val');
 $Qiactividad_val = (string) \filter_input(INPUT_POST, 'iactividad_val');
-$Qempiezamax = '';
-$Qempiezamin = '';
 
-if (empty($Qperiodo) || $Qperiodo == 'otro') {
-    $Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-    $Qfin = (string) \filter_input(INPUT_POST, 'fin');
-    $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
-    $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
-    $inicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
-    $fin = empty($Qfin)? $Qempiezamax : $Qfin;
-    $oIniPlanning = web\DateTimeLocal::createFromLocal($inicio);
-    $oFinPlanning = web\DateTimeLocal::createFromLocal($fin);
-} else {
-    $oPeriodo = new web\Periodo();
-    $year=empty($Qyear)? date('Y')+1 : $Qyear;
-    $oPeriodo->setAny($year);
-    $oPeriodo->setPeriodo($Qperiodo);
-    $inicio = $oPeriodo->getF_ini_iso();
-    $fin = $oPeriodo->getF_fin_iso();
-    $oIniPlanning = web\DateTimeLocal::createFromFormat('Y/m/d',$inicio);
-    $oFinPlanning = web\DateTimeLocal::createFromFormat('Y/m/d',$fin);
-}
+
+// periodo.
+$oPeriodo = new Periodo();
+$oPeriodo->setDefaultAny('next');
+$oPeriodo->setAny($Qyear);
+$oPeriodo->setEmpiezaMin($Qempiezamin);
+$oPeriodo->setEmpiezaMax($Qempiezamax);
+$oPeriodo->setPeriodo($Qperiodo);
+
+$inicioIso = $oPeriodo->getF_ini_iso();
+$finIso = $oPeriodo->getF_fin_iso();
+$oIniPlanning = $oPeriodo->getF_ini();
+$oFinPlanning = $oPeriodo->getF_fin();
 
 $a_id_cdc = [];
 // valores por defecto.
@@ -183,9 +178,9 @@ if ($Qcdc_sel < 10) { //Para buscar por casas.
 			$aOperador['id_tipo_activ']='~';
 			break;
 	}
-	$aWhere['f_ini']=$fin;
+	$aWhere['f_ini']=$finIso;
 	$aOperador['f_ini']='<=';
-	$aWhere['f_fin']=$inicio;
+	$aWhere['f_fin']=$inicioIso;
 	$aOperador['f_fin']='>=';
 	$aWhere['status']=3;
 	$aOperador['status']='<';

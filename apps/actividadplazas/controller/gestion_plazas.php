@@ -10,7 +10,9 @@
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("apps/core/global_header.inc");
+	use web\Periodo;
+
+require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
 
 // Crea los objectos de uso global **********************************************
@@ -21,10 +23,10 @@ $Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 
 $Qid_tipo_activ = (string)  filter_input(INPUT_POST, 'id_tipo_activ');
-$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-$Qfin = (string) \filter_input(INPUT_POST, 'fin');
 $Qyear = (string) \filter_input(INPUT_POST, 'year');
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
+$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 	
 // Id tipo actividad
 if (empty($Qid_tipo_activ)) {
@@ -50,33 +52,27 @@ if (empty($Qid_tipo_activ)) {
 $Qid_tipo_activ =  '^'.$Qid_tipo_activ;
 
 //periodo
-if (empty($Qperiodo) || $Qperiodo == 'otro') {
+if (empty($Qperiodo)) {
 	switch ($Qsactividad) {
 		case 'ca':
 		case 'cv':
-			$any=  $_SESSION['oConfig']->any_final_curs('est');
-			$Qempiezamin=core\curso_est("inicio",$any,"est")->format('Y-m-d');
-			$Qempiezamax=core\curso_est("fin",$any,"est")->format('Y-m-d');
 			$Qperiodo = 'curso_ca';
 			break;
 		case 'crt':
 		case 'cve':
-			$any=  $_SESSION['oConfig']->any_final_curs('crt');
-			$Qempiezamin=core\curso_est("inicio",$any,"crt")->format('Y-m-d');
-			$Qempiezamax=core\curso_est("fin",$any,"crt")->format('Y-m-d');
 			$Qperiodo = 'curso_crt';
 			break;
 	}
-	$inicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
-	$fin = empty($Qfin)? $Qempiezamax : $Qfin;
-} else {
-	$oPeriodo = new web\Periodo();
-	$any=empty($Qyear)? date('Y')+1 : $Qyear;
-	$oPeriodo->setAny($any);
-	$oPeriodo->setPeriodo($Qperiodo);
-	$inicio = $oPeriodo->getF_ini_iso();
-	$fin = $oPeriodo->getF_fin_iso();
 }
+$oPeriodo = new Periodo();
+$oPeriodo->setDefaultAny('next');
+$oPeriodo->setAny($Qyear);
+$oPeriodo->setEmpiezaMin($Qempiezamin);
+$oPeriodo->setEmpiezaMax($Qempiezamax);
+$oPeriodo->setPeriodo($Qperiodo);
+
+$inicioIso = $oPeriodo->getF_ini_iso();
+$finIso = $oPeriodo->getF_fin_iso();
 
 $status = \actividades\model\entity\ActividadAll::STATUS_ACTUAL; //actual
 
@@ -107,7 +103,7 @@ foreach ($cDelegaciones as $oDelegacion) {
 					'id_tipo_activ'	=>$Qid_tipo_activ,
 					'status' 		=> $status,
 //					'publicado' 		=> 't',
-					'f_ini' 		=> "'$inicio','$fin'",
+					'f_ini' 		=> "'$inicioIso','$finIso'",
 					'_ordre'		=> 'publicado,f_ini');
 	$aOperador = array('id_tipo_activ'=>'~', 'f_ini'=>'BETWEEN');
 	$cActividades1 = $gesActividades->getActividades($aWhere,$aOperador);

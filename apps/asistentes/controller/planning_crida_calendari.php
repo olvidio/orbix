@@ -1,10 +1,10 @@
 <?php
-use actividades\model\entity as actividades;
 use actividadcargos\model\entity as actividadcargos;
+use actividades\model\entity as actividades;
 use actividadestudios\model\entity as actividadestudios;
-use asistentes\model\entity as asistentes;
 use personas\model\entity as personas;
 use ubis\model\entity as ubis;
+use web\Periodo;
 /**
  * Esta página tiene la misión de realizar la llamada a calendario php;
  * y lo hace con distintos valores, en función de las páginas anteriores
@@ -68,35 +68,27 @@ $oPlanning->setColorColumnaUno($colorColumnaUno);
 $oPlanning->setColorColumnaDos($colorColumnaDos);
 $oPlanning->setTable_border($table_border);
 
-$Qyear = (integer) \filter_input(INPUT_POST, 'year');
 $Qcdc_sel = (integer) \filter_input(INPUT_POST, 'cdc_sel');
 $Qtipo = (string) \filter_input(INPUT_POST, 'tipo');
 $Qdd = (integer) \filter_input(INPUT_POST, 'dd');
+$Qyear = (integer) \filter_input(INPUT_POST, 'year');
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
+$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 
-if (empty($Qperiodo) || $Qperiodo == 'otro') {
-    $Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-    $Qfin = (string) \filter_input(INPUT_POST, 'fin');
-    $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
-    $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
-    $inicio_local = empty($Qinicio)? $Qempiezamin : $Qinicio;
-    $fin_local = empty($Qfin)? $Qempiezamax : $Qfin;
-    $oIniPlanning = web\DateTimeLocal::createFromLocal($inicio_local);
-    $oFinPlanning = web\DateTimeLocal::createFromLocal($fin_local);
-    $inicio_iso = $oIniPlanning->format('Y-m-d');
-    $fin_iso = $oFinPlanning->format('Y-m-d');
-} else {
-    $oPeriodo = new web\Periodo();
-    $year=empty($Qyear)? date('Y')+1 : $Qyear;
-    $oPeriodo->setAny($year);
-    $oPeriodo->setPeriodo($Qperiodo);
-    $inicio_iso = $oPeriodo->getF_ini_iso();
-    $fin_iso = $oPeriodo->getF_fin_iso();
-    $oIniPlanning = web\DateTimeLocal::createFromFormat('Y/m/d',$inicio_iso);
-    $oFinPlanning = web\DateTimeLocal::createFromFormat('Y/m/d',$fin_iso);
-    $inicio_local = $oIniPlanning->getFromLocal();
-    $fin_local = $oFinPlanning->getFromLocal();
-}
+// periodo.
+$oPeriodo = new Periodo();
+$oPeriodo->setDefaultAny('next');
+$oPeriodo->setAny($Qyear);
+$oPeriodo->setEmpiezaMin($Qempiezamin);
+$oPeriodo->setEmpiezaMax($Qempiezamax);
+$oPeriodo->setPeriodo($Qperiodo);
+
+$inicio_iso = $oPeriodo->getF_ini_iso();
+$fin_iso = $oPeriodo->getF_fin_iso();
+$oIniPlanning = $oPeriodo->getF_ini();
+$oFinPlanning = $oPeriodo->getF_fin();
+$inicio_local = $oIniPlanning->getFromLocal();
 
 // valores por defecto.
 //divisiones por día

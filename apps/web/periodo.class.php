@@ -37,6 +37,9 @@ class Periodo {
 	 * @var DateTimeLocal
 	 */
 	 private $df_fin;
+	 
+	 private $sempiezamax;
+	 private $sempiezamin;
 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
@@ -49,30 +52,58 @@ class Periodo {
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
 	
-	/**
-	 * Recupera l'atribut id_tipo_activ en format de regexp
-	 *
-	 * @return string
-	 */
-	public function getHtml() {
-		$sHtml='<script>
-			funjs_activar_fecha = function() {
-				var f=$(\'#periodo\').val();	
-				if (f=="otro") {
-					$(\'#span_fechas\').removeClass(\'d_novisible\');
-					$(\'#span_fechas\').toggleClass(\'d_visible\');
-				} else {
-					$(\'#span_fechas\').removeClass(\'d_visible\');
-					$(\'#span_fechas\').toggleClass(\'d_novisible\');
-				}
-			}
-			$(function() { $( "#empiezamin" ).datepicker(); });
-			$(function() { $( "#empiezamax" ).datepicker(); });
-			</script>';
+	
+	// valores por defeccto
+	function setDefaultAny($any){
+	    switch ($any) {
+	        case 'prev':
+	        case 'previo':
+	        case 'previous':
+	            $any = date('Y') - 1;
+	            break;
+	        case 'siguiente':
+	        case 'next':
+	            $any = date('Y') + 1;
+	            break;
+	        case 'actual':
+            default:
+	           $any = date('Y'); 
+	    }
+	    $this->setany($any);
+	}
+	
+	function setEmpiezaMax($sempiezamax='') {
+        if (!empty($sempiezamax)) {
+            $oEmpiezamax = DateTimeLocal::createFromLocal($sempiezamax);
+            $empiezamaxIso = $oEmpiezamax->getIso();
+            $this->setEmpiezaMaxIso($empiezamaxIso);
+        } else {
+            $this->setEmpiezaMaxIso();
+        }
+	}
+	
+	function setEmpiezaMin($sempiezamin='') {
+        if (!empty($sempiezamin)) {
+            $oEmpiezamin = DateTimeLocal::createFromLocal($sempiezamin);
+            $empiezaminIso = $oEmpiezamin->getIso();
+            $this->setEmpiezaMinIso($empiezaminIso);
+        } else {
+            $this->setEmpiezaMinIso();
+        }
+	}
+	
+	function setEmpiezaMaxIso($sempiezamaxiso = '') {
+        $this->sempiezamaxiso = $sempiezamaxiso;
 	}
 
-	function setAny($iany) {
-		$this->iany = $iany;
+	function setEmpiezaMinIso($sempiezaminiso = '') {
+		$this->sempiezaminiso = $sempiezaminiso;
+	}
+
+	function setany($iany) {
+	    if (!empty($iany)) {
+		  $this->iany = $iany;
+	    }
 	}
 	function getF_ini_iso() {
 		return $this->df_ini;
@@ -80,11 +111,51 @@ class Periodo {
 	function getF_fin_iso() {
 		return $this->df_fin;
 	}
+	function getF_ini() {
+        return new DateTimeLocal($this->df_ini);
+	}
+	function getF_fin() {
+        return new DateTimeLocal($this->df_fin);
+	}
 
+	/**
+	 * Establece una fecha inicio y una fecha fin de un periodo. Debe ser el último de todos los set.
+	 * 
+	 * @param string $sPeriodo.
+	 *          El año es el actual, o el que se haya establecido por defecto.
+	 *                 'otro' -> devuelve los valores de empiexamx y empiezamin que sh haya establecido.
+	 *                 'actual' -> desde 40 dias antes de hoy, hasta 9 meses después.$this
+	 *                 'desdeHoy' -> desde hoy hasta 6 meses después.
+	 *                 'curso' -> desde el 1-octubre al 31-mayo
+	 *                 'curso_crt' -> toma los dias de los parámetros de configuración.
+	 *                 'curso_ca' -> toma los dias de los parámetros de configuración.
+	 *                 'trimestre' -> mes actual + 3.
+	 *                 'mes' -> del 1 al 31 del mes actual.
+	 *                 'verano' -> 1-junio al 30-setiembre.
+	 *                 'trimestre_1' -> 1-enero al 31-marzo.
+	 *                 'trimestre_2' -> 1-abril al 30-junio.
+	 *                 'trimestre_3' -> 1-julio al 30-septiembre.
+	 *                 'trimestre_4' -> 1-octubre al 31-diciembre.
+	 *                 'tot_any' -> 1-enero al 31-diciembre.
+	 *                 'any_prox' -> 1--enero al 31-diciembre del año proximo.
+	 *                 
+	 *                 'default' -> 1-enero al 31-diciembre.
+	 *                 
+	 */
 	function setPeriodo($sPeriodo) {
 		$any = empty($this->iany)? date('Y') : $this->iany;
 		$mes = date('m');
 		switch ($sPeriodo) {
+		    case "otro":
+		        $inicio = $this->sempiezaminiso;
+		        $fin = $this->sempiezamaxiso;
+		        break;
+		    case 'actual':
+                // desde 40 dias antes de hoy:
+                $inicio = date('Y-m-d',mktime(0, 0, 0, date('m'), date('d')-40, date('Y')));
+                // hasta dentro de 9 meses desde hoy.
+                $fin = date('Y-m-d',mktime(0, 0, 0, date('m')+9, 0, date('Y')));
+		        break;
 			case "desdeHoy":
 				$inicio = date('Y/m/d');	
 				$fin = date('Y/m/d',mktime(0, 0, 0, $mes+6, 0, $any));
@@ -101,12 +172,6 @@ class Periodo {
 				}
 				break;
 			case "curso_crt":
-			    /*
-			    $ini_d = ConfigGlobal::$crt_inicio['d'];
-			    $ini_m = ConfigGlobal::$crt_inicio['m'];
-			    $fin_d = ConfigGlobal::$crt_fin['d'];
-			    $fin_m = ConfigGlobal::$crt_fin['m'];
-			    */
 			    $ini_d = $_SESSION['oConfig']->getDiaIniCrt();
 			    $ini_m = $_SESSION['oConfig']->getMesIniCrt();
 			    $fin_d = $_SESSION['oConfig']->getDiaFinCrt();
@@ -123,12 +188,6 @@ class Periodo {
 				}
 				break;
 			case "curso_ca":
-			    /*
-			    $ini_d = ConfigGlobal::$est_inicio['d'];
-			    $ini_m = ConfigGlobal::$est_inicio['m'];
-			    $fin_d = ConfigGlobal::$est_fin['d'];
-			    $fin_m = ConfigGlobal::$est_fin['m'];
-			    */
 			    $ini_d = $_SESSION['oConfig']->getDiaIniStgr();
 			    $ini_m = $_SESSION['oConfig']->getMesIniStgr();
 			    $fin_d = $_SESSION['oConfig']->getDiaFinStgr();

@@ -1,14 +1,15 @@
 <?php
 
-use actividades\model\entity as actividades;
-use actividadestudios\model\entity as actividadestudios;
-use asignaturas\model\entity as asignaturas;
-use core\ConfigGlobal;
-use personas\model\entity as personas;
+use actividades\model\entity\Actividad;
+use actividades\model\entity\GestorActividad;
+use actividadestudios\model\entity\GestorMatriculaDl;
+use asignaturas\model\entity\Asignatura;
+use personas\model\entity\Persona;
+use web\DateTimeLocal;
 use web\Hash;
 use web\Lista;
+use web\Periodo;
 use web\Posicion;
-use function core\curso_est;
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
 */
@@ -39,42 +40,47 @@ $aviso = '';
 $form = '';
 $traslados = '';
 $Qmod = (string) \filter_input(INPUT_POST, 'mod');
-$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-$Qfin = (string) \filter_input(INPUT_POST, 'fin');
 $Qyear = (string) \filter_input(INPUT_POST, 'year');
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
+$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 
 //periodo
-if (empty($Qperiodo) || $Qperiodo == 'otro') {
-	$any=  $_SESSION['oConfig']->any_final_curs('est');
-	$Qempiezamin=core\curso_est("inicio",$any,"est")->format('Y-m-d');
-	$Qempiezamax=core\curso_est("fin",$any,"est")->format('Y-m-d');
+if (empty($Qperiodo)) {
 	$Qperiodo = 'curso_ca';
-	$inicio = empty($Qinicio)? $Qempiezamin : $Qinicio;
-	$fin = empty($Qfin)? $Qempiezamax : $Qfin;
-} else {
-	$oPeriodo = new web\Periodo();
-	$any=empty($Qyear)? date('Y')+1 : $Qyear;
-	$oPeriodo->setAny($any);
-	$oPeriodo->setPeriodo($Qperiodo);
-	$inicio = $oPeriodo->getF_ini_iso();
-	$fin = $oPeriodo->getF_fin_iso();
 }
 
-$aWhereActividad['f_ini'] = "'$inicio','$fin'";
+// periodo.
+$oPeriodo = new Periodo();
+$oPeriodo->setDefaultAny('next');
+$oPeriodo->setAny($Qyear);
+$oPeriodo->setEmpiezaMin($Qempiezamin);
+$oPeriodo->setEmpiezaMax($Qempiezamax);
+$oPeriodo->setPeriodo($Qperiodo);
+
+
+$inicioIso = $oPeriodo->getF_ini_iso();
+$finIso = $oPeriodo->getF_fin_iso();
+
+$aWhereActividad['f_ini'] = "'$inicioIso','$finIso'";
 $aOperadorActividad['f_ini'] = 'BETWEEN';
 
-$gesActividades = new actividades\GestorActividad();
+$gesActividades = new GestorActividad();
 $a_IdActividades = $gesActividades->getArrayIds($aWhereActividad,$aOperadorActividad);
 
 $str_actividades = "{".implode(', ',$a_IdActividades)."}";
 $aWhere = ['id_activ' => $str_actividades];
 $aOperador = ['id_activ' => 'ANY'];
 
-$gesMatriculasDl = new actividadestudios\gestorMatriculaDl();
+$gesMatriculasDl = new GestorMatriculaDl();
 $cMatriculas = $gesMatriculasDl->getMatriculas($aWhere,$aOperador);
 
-$titulo = _(sprintf("Lista de matrículas en el periodo: %s - %s.",$inicio,$fin)); 
+// Convertir las fechas inicio y fin a formato local:
+$oF_qini = new DateTimeLocal($inicioIso);
+$QinicioLocal = $oF_qini->getFromLocal();
+$oF_qfin = new DateTimeLocal($finIso);
+$QfinLocal = $oF_qfin->getFromLocal();
+$titulo = _(sprintf("Lista de matrículas en el periodo: %s - %s.",$QinicioLocal,$QfinLocal)); 
 $a_botones=array(
 			array( 'txt' => _("ver asignaturas ca"), 'click' =>"fnjs_ver_ca(this.form)" ) ,
 			array( 'txt' => _("borrar matrícula"), 'click' =>"fnjs_borrar(this.form)" ) 
@@ -106,7 +112,7 @@ foreach ($cMatriculas as $oMatricula) {
 		$preceptor="x"; 
 		$id_preceptor=$oMatricula->getId_preceptor();
 		if (!empty($id_preceptor)) {
-			$oPersona = personas\Persona::newPersona($id_preceptor);
+			$oPersona = Persona::newPersona($id_preceptor);
 			if (!is_object($oPersona)) {
 				$msg_err .= "<br>preceptor: $oPersona con id_nom: $id_preceptor en  ".__FILE__.": line ". __LINE__;
 			} else {
@@ -120,11 +126,11 @@ foreach ($cMatriculas as $oMatricula) {
 	//echo "id_activ: $id_activ<br>";
 	//echo "id_asignatura: $id_asignatura<br>";
 
-	$oActividad = new actividades\Actividad($id_activ);
+	$oActividad = new Actividad($id_activ);
 	$nom_activ = $oActividad->getNom_activ();
 	$f_ini = $oActividad->getF_ini()->getFromLocal();
 	
-	$oPersona = personas\Persona::newPersona($id_nom);
+	$oPersona = Persona::newPersona($id_nom);
 	if (!is_object($oPersona)) {
 		$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 		continue;
@@ -133,7 +139,7 @@ foreach ($cMatriculas as $oMatricula) {
 	$ctr = $oPersona->getCentro_o_dl();
 	$dl = $oPersona->getDl();
 			
-	$oAsignatura = new asignaturas\Asignatura($id_asignatura);
+	$oAsignatura = new Asignatura($id_asignatura);
 	$nombre_corto = $oAsignatura->getNombre_corto();
 	
 	$a_valores[$i]['sel']="$id_activ#$id_asignatura#$id_nom";
@@ -199,6 +205,8 @@ $oFormP->setFormName('que');
 $oFormP->setTitulo(core\strtoupper_dlb(_("periodo de selección de actividades")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
+$oFormP->setEmpiezaMax($Qempiezamax);
+$oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setBoton($boton);
 
