@@ -2,6 +2,8 @@
 use usuarios\model\entity as usuarios;
 use permisos\model\entity as permisos;
 use menus\model\entity as menus;
+use web\Desplegable;
+use usuarios\model\entity\Role;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 
@@ -91,6 +93,14 @@ if (!empty($Qid_role)) {
 	$chk_dmz = '';
 }
 
+$aOpcionesPau = Role::ARRAY_PAU_TXT;
+$oDesplPau = new Desplegable();
+$oDesplPau->setNombre('pau');
+$oDesplPau->setBlanco(TRUE);
+$oDesplPau->setOpciones($aOpcionesPau);
+$oDesplPau->setOpcion_sel($pau);
+
+
 $oTabla = '';
 if (!empty($Qid_role)) { // si no hay usuario, no puedo poner permisos.
 	//grupo
@@ -151,7 +161,7 @@ $a_campos = [
 			'role' => $role,
 			'chk_sf' => $chk_sf,
 			'chk_sv' => $chk_sv,
-			'pau' => $pau,
+			'oDesplPau' => $oDesplPau,
 			'chk_dmz' => $chk_dmz,
 			'txt_guardar' => $txt_guardar,
 			'oTabla' => $oTabla,

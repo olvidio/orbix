@@ -12,6 +12,7 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
 use function core\strtoupper_dlb;
+use usuarios\model\entity\Role;
 use usuarios\model\entity\Usuario;
 use web\CentrosQue;
 use web\DesplegableArray;
@@ -41,9 +42,8 @@ if ($Qtipo_lista == 'crt' || $Qtipo_lista == 'cv') { $any = date('Y'); }
 
 $oForm = new CentrosQue();
 // miro que rol tengo. Si soy centro, sólo veo la mía
-$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
-$miRole = ConfigGlobal::mi_id_role();
-if ($miRole == 8) { //centro
+$miRolePau = ConfigGlobal::mi_role_pau();
+if ($miRolePau == Role::PAU_CTR) { //centro
 	$id_pau = ConfigGlobal::mi_role_pau();
 	$sDonde=str_replace(",", " OR id_ubi=", $id_pau);
 	//formulario para centros cuyo calendario de actividades interesa 

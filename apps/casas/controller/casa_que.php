@@ -17,6 +17,7 @@ use usuarios\model\entity\Usuario;
 use web\CasasQue;
 use web\DesplegableArray;
 use web\PeriodoQue;
+use usuarios\model\entity\Role;
 
 require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -40,8 +41,8 @@ if ($tipo_lista == 'datosEcGastos' ) { $Qperiodo = 'ninguno'; }
 $oForm = new CasasQue();
 // miro que rol tengo. Si soy casa, sólo veo la mía
 $oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
-$miRole = $oMiUsuario->getId_role();
-if ($miRole == 9) { //casa
+$miRolePau = ConfigGlobal::mi_role_pau();
+if ($miRolePau == Role::PAU_CDC) { //casa
 	$id_pau=$oMiUsuario->getId_pau();
 	$sDonde=str_replace(",", " OR id_ubi=", $id_pau);
 	//formulario para casas cuyo calendario de actividades interesa 
@@ -109,6 +110,7 @@ switch ($tipo_lista) {
     case 'lista_activ':
         $url_ajax = 'apps/casas/controller/casa_ajax.php';
         $param = 'que=lista_activ';
+        $sCamposForm .= '!periodo';
         break;
     case 'datosEc':
         //echo "var url='".ConfigGlobal::$web."/programas/casa_ec_ajax.php';\n";

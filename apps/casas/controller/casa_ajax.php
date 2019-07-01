@@ -9,13 +9,12 @@ use actividadescentro\model\entity\GestorCentroEncargado;
 use actividadtarifas\model\entity\GestorTipoTarifa;
 use actividadtarifas\model\entity\TipoTarifa;
 use casas\model\entity\Ingreso;
-use casas\model\entity\UbiGasto;
 use core\ConfigGlobal;
 use ubis\model\entity\CasaDl;
 use ubis\model\entity\Tarifa;
 use ubis\model\entity\Ubi;
+use usuarios\model\entity\Role;
 use usuarios\model\entity\Usuario;
-use web\DateTimeLocal;
 use web\Lista;
 use web\Periodo;
 use web\TiposActividades;
@@ -124,10 +123,12 @@ switch ($Qque) {
 		
 		// permisos:
 		// miro que rol tengo. Si soy casa, sólo veo la mía
-		$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
-		$miRole=$oMiUsuario->getId_role();
-
-		if (($miRole == 9) || ($_SESSION['oPerm']->have_perm("pr")) ) { $permiso = 'modificar'; } else { $permiso = ''; }
+		$miRolePau = ConfigGlobal::mi_role_pau();
+		if ($miRolePau == Role::PAU_CDC || ($_SESSION['oPerm']->have_perm("pr")) ) {
+		    $permiso = 'modificar';
+		} else {
+		    $permiso = '';
+		}
 		// listado de actividades por casa y periodo.
 		
 		$aWhere = [];
@@ -439,7 +440,16 @@ switch ($Qque) {
 			$num_asistentes=0;
 			foreach ($cActividades as $oActividad) {
 				$a++;
-				extract($oActividad->getTot());
+				$id_activ = $oActividad->getId_activ();
+				$id_tipo_activ = $oActividad->getId_tipo_activ();
+				$dl_org = $oActividad->getDl_org();
+				$f_ini = $oActividad->getF_ini()->getFromLocal();
+				$h_ini = $oActividad->getH_ini();
+				$f_fin = $oActividad->getF_fin()->getFromLocal();
+				$h_fin = $oActividad->getH_fin();
+				$tarifa = $oActividad->getTarifa();
+				$observ = $oActividad->getObserv();
+				
 				if (strlen($h_ini)) {$h_ini=substr($h_ini,0, (strlen($h_ini)-3));}
 				if (strlen($h_fin)) {$h_fin=substr($h_fin,0, (strlen($h_fin)-3));}
 				// mirar permisos.
@@ -448,8 +458,8 @@ switch ($Qque) {
 				$oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
 				$oPermCtr = $_SESSION['oPermActividades']->getPermisoActual('ctr');
 
-				$oUbi = new Ubi($id_ubi);
-				$nombre_ubi = $oUbi->getNombre_ubi();
+				$oCasa = new CasaDl($id_ubi);
+				$nombre_ubi = $oCasa->getNombre_ubi();
 				if (!$oPermActiv->have_perm('ocupado')) { continue; } // no tiene permisos ni para ver.
 				if (!$oPermActiv->have_perm('ver')) { // sólo puede ver que està ocupado
 					$oTipoActiv= new TiposActividades($id_tipo_activ);

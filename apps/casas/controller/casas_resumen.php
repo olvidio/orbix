@@ -1,6 +1,7 @@
 <?php 
 use core\ConfigGlobal;
 use function core\strtoupper_dlb;
+use usuarios\model\entity\Role;
 use usuarios\model\entity\Usuario;
 use web\CasasQue;
 use web\PeriodoQue;
@@ -45,7 +46,8 @@ if (date('m')>9) {
 $oForm = new CasasQue();
 $oForm->setTitulo(strtoupper_dlb(_('búsqueda de casas cuyo resumen económico interesa')));
 // miro que rol tengo. Si soy casa, sólo veo la mía
-if ($miRole == 9) { //casa
+$miRolePau = ConfigGlobal::mi_role_pau();
+if ($miRolePau == Role::PAU_CDC) { //casa
 	$id_pau=$oMiUsuario->getId_pau();
 	$sDonde=str_replace(",", " OR id_ubi=", $id_pau);
 	//formulario para casas cuyo calendario de actividades interesa 

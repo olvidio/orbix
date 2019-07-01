@@ -14,6 +14,7 @@
 
 use core\ConfigGlobal;
 use function core\strtoupper_dlb;
+use usuarios\model\entity\Role;
 use usuarios\model\entity\Usuario;
 use web\CasasQue;
 use web\DesplegableArray;
@@ -36,8 +37,8 @@ $Qyear = (string) \filter_input(INPUT_POST, 'year');
 $oForm = new CasasQue();
 // miro que rol tengo. Si soy casa, sólo veo la mía
 $oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
-$miRole=$oMiUsuario->getId_role();
-if ($miRole == 9) { //casa
+$miRolePau = ConfigGlobal::mi_role_pau();
+if ($miRolePau == Role::PAU_CDC) { //casa
 	$id_pau=$oMiUsuario->getId_pau();
 	$sDonde=str_replace(",", " OR id_ubi=", $id_pau);
 	//formulario para casas cuyo calendario de actividades interesa 
@@ -76,7 +77,7 @@ $url_ajax = 'apps/casas/controller/casa_ajax.php';
 $url_resumen = 'apps/casas/controller/casas_resumen_ajax.php';
 
 $oHash = new web\Hash();
-$sCamposForm = 'cdc_sel!id_cdc!id_cdc_mas!id_cdc_num!que!seccion';
+$sCamposForm = 'cdc_sel!id_cdc!id_cdc_mas!id_cdc_num!que';
 $oHash->setcamposForm($sCamposForm);
 
 $oHashEdit = new web\Hash();

@@ -20,6 +20,20 @@ use core;
  * @created 16/01/2014
  */
 class Role Extends core\ClasePropiedades {
+    
+    // pau constants.
+    const PAU_CDC		 = 'cdc'; // Casa.
+	const PAU_CTR 	  	 = 'ctr'; // Centro.
+	const PAU_NOM	  	 = 'nom'; // Persona.
+	const PAU_SACD 	  	 = 'sacd'; // Sacd.
+	
+	const ARRAY_PAU_TXT = [
+            self::PAU_CDC		 => 'cdc',
+            self::PAU_CTR 	  	 => 'ctr',
+            self::PAU_NOM	  	 => 'nom',
+            self::PAU_SACD 	  	 => 'sacd',
+	];
+    
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/**
