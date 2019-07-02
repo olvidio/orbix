@@ -20,16 +20,6 @@ use usuarios\model\entity as usuarios;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-/*
-$id_bloque = (string) \filter_input(INPUT_POST, 'id_bloque');
-if (!empty($id_bloque)) {
-    $oPosicion->setBloque($id_bloque);
-    $oPosicion->addParametro('id_bloque', $id_bloque);
-}
-$Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
-$oPosicion->recordar($Qrefresh);
-*/
-	
 $Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
 $Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
 $Qnuevo = (string) \filter_input(INPUT_POST, 'nuevo');

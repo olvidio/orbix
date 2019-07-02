@@ -29,6 +29,7 @@ use ubis\model\entity\GestorCasaPeriodo;
 use web\DateTimeLocal;
 use web\Periodo;
 use ubis\model\entity\GestorCentroEllas;
+use casas\model\entity\GestorGrupoCasa;
 
 require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -292,10 +293,18 @@ if (empty($Qque)) {
         $in = [];
         $id_ubi=$oCasaDl->getId_ubi();
         $nombre_ubi=$oCasaDl->getNombre_ubi();
-        // Caso especial para Castelldaura: Los gastos son comunes a las dos casas.
-        // id_ubi = 1110196 (MAS), 1110198 (Torre). 
-        $id_ubi_hijo = 1110198;
-        $id_ubi_padre = 1110196;
+        // Caso especial para Grupos: Los gastos son comunes a todas las casas.
+        $gesGrupoCasas = new GestorGrupoCasa();
+        $nom_tabla = $gesGrupoCasas->getNomTabla();
+        $sQuery = "SELECT * FROM $nom_tabla WHERE id_ubi_padre = $id_ubi OR id_ubi_hijo= $id_ubi"; 
+        $cGrupoCasas = $gesGrupoCasas->getGrupoCasasQuery($sQuery);
+        $id_ubi_hijo = 0;
+        $id_ubi_padre = 0;
+        foreach($cGrupoCasas as $oGrupoCasa) {
+            $id_ubi_padre = $oGrupoCasa->getId_ubi_padre();
+            $id_ubi_hijo = $oGrupoCasa->getId_ubi_hijo();
+            
+        }
 
         $GesPeriodos = new GestorCasaPeriodo();
         $aPeriodos = $GesPeriodos->getArrayCasaPeriodos($id_ubi,$oInicio,$oFin);
@@ -620,10 +629,18 @@ if (empty($Qque)) {
     foreach ($cCasasDl as $oCasaDl) {
         $id_ubi=$oCasaDl->getId_ubi();
         $nombre_ubi=$oCasaDl->getNombre_ubi();
-        // Caso especial para Castelldaura: Los gastos son comunes a las dos casas.
-        // id_ubi = 1110196 (MAS), 1110198 (Torre). 
-        $id_ubi_hijo = 1110198;
-        $id_ubi_padre = 1110196;
+        // Caso especial para Grupos: Los gastos son comunes a todas las casas.
+        $gesGrupoCasas = new GestorGrupoCasa();
+        $nom_tabla = $gesGrupoCasas->getNomTabla();
+        $sQuery = "SELECT * FROM $nom_tabla WHERE id_ubi_padre = $id_ubi OR id_ubi_hijo= $id_ubi"; 
+        $cGrupoCasas = $gesGrupoCasas->getGrupoCasasQuery($sQuery);
+        $id_ubi_padre = 0;
+        $id_ubi_hijo = 0;
+        foreach($cGrupoCasas as $oGrupoCasa) {
+            $id_ubi_padre = $oGrupoCasa->getId_ubi_padre();
+            $id_ubi_hijo = $oGrupoCasa->getId_ubi_hijo();
+            
+        }
 
         foreach ($a_anys as $any) {
             $tot[$any][1]['dias'] = 0; 

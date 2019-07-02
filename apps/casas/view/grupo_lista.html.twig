@@ -1,0 +1,45 @@
+<script>
+fnjs_eliminar=function(formulario){
+	rta=fnjs_solo_uno(formulario);
+	if (rta==1) {
+		if (confirm("{{ txt_eliminar }}") ) {
+  			$(formulario).attr('action',"apps/casas/controller/grupo_ajax.php");
+			$(formulario).submit(function() {
+				$.ajax({
+					url: $(this).attr('action'),
+					type: 'post',
+					data: $(this).serialize()
+				})
+				.done(function (rta_txt) {
+					if (rta_txt != '' && rta_txt != '\\n') {
+						alert ("{{ "respuesta"|trans }}: "+rta_txt);
+					} else {
+						fnjs_actualizar(formulario);
+				   	}
+				});
+				return false;
+			});
+			$(formulario).submit();
+			$(formulario).off();
+		}
+	}
+}
+fnjs_actualizar=function(formulario){
+	var campo = '<input type="hidden" name="refresh" value=1>';
+	$(formulario).attr('action',"apps/casas/controller/grupo_lista.php");
+	$(formulario).append(campo);
+	fnjs_enviar_formulario(formulario,'#main');
+}
+fnjs_left_side_hide();
+</script>
+
+<h1>{{ "grupos de casas"|trans }}</h1>
+<form id='seleccionados' id='seleccionados' name='seleccionados' action='' method='post'>
+{{ oHash.getCamposHtml()|raw }}
+
+{{ oTabla.mostrar_tabla()|raw }}
+</form>
+
+<table><tr><th class="no_print">
+	<span class="link_inv" onclick="fnjs_update_div('#main','{{ url_nuevo|raw }}');">{{ "nuevo"|trans }}</span>
+</th></tr></table>

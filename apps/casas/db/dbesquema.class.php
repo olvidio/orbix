@@ -23,11 +23,13 @@ class DBEsquema extends DBAbstract {
     public function dropAll() {
         $this->eliminar_da_ingresos_dl();
         $this->eliminar_du_gastos_dl();
+        $this->eliminar_du_grupos_dl();
     }
     
     public function createAll() {
         $this->create_da_ingresos_dl();
         $this->create_du_gastos_dl();
+        $this->create_du_grupos_dl();
     }
     
     public function llenarAll() {
@@ -44,6 +46,11 @@ class DBEsquema extends DBAbstract {
                 $id_seq = '';
                 break;
             case "du_gastos_dl":
+                $nom_tabla = $this->getNomTabla($tabla);
+                $campo_seq = 'id_item';
+                $id_seq = $nom_tabla."_".$campo_seq."_seq";
+                break;
+            case "du_grupos_dl":
                 $nom_tabla = $this->getNomTabla($tabla);
                 $campo_seq = 'id_item';
                 $id_seq = $nom_tabla."_".$campo_seq."_seq";
@@ -164,6 +171,71 @@ class DBEsquema extends DBAbstract {
         $this->addPermisoGlobal('comun');
         
         $tabla = "du_gastos_dl";
+        $datosTabla = $this->infoTable($tabla);
+        
+        $nom_tabla = $datosTabla['nom_tabla'];
+        $id_seq = $datosTabla['id_seq'];
+        
+        $a_sql = [];
+        $a_sql[0] = "DROP SEQUENCE IF EXISTS $id_seq CASCADE;" ;
+        $this->executeSql($a_sql);
+        
+        $this->eliminar($nom_tabla);
+        
+        $this->delPermisoGlobal('comun');
+    }
+
+    public function create_du_grupos_dl() {
+        $this->addPermisoGlobal('comun');
+        
+        $tabla_padre = "du_grupos";
+        $tabla = "du_grupos_dl";
+        $datosTabla = $this->infoTable($tabla);
+        
+        $nom_tabla = $datosTabla['nom_tabla'];
+        $campo_seq = $datosTabla['campo_seq'];
+        $id_seq = $datosTabla['id_seq'];
+        
+        $a_sql = [];
+        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                    )
+                INHERITS (global.$tabla_padre);";
+        
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+        
+        //secuencia
+        $a_sql[] = "CREATE SEQUENCE IF NOT EXISTS $id_seq;";
+        $a_sql[] = "ALTER SEQUENCE $id_seq
+                        INCREMENT BY 1
+                        MINVALUE 1
+                        MAXVALUE 9223372036854775807
+                        START WITH 1
+                        NO CYCLE;";
+        $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
+        
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
+        
+        $datosTablaA = $this->infoTable('u_cdc_dl');
+        $nom_tabla_activ = $datosTablaA['nom_tabla'];
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT ${tabla}_id_ubi_padre_fk
+                    FOREIGN KEY (id_ubi_padre) REFERENCES $nom_tabla_activ(id_ubi) ON DELETE CASCADE; ";
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT ${tabla}_id_ubi_hijo_fk
+                    FOREIGN KEY (id_ubi_hijo) REFERENCES $nom_tabla_activ(id_ubi) ON DELETE CASCADE; ";
+        
+        // No va con tablas heredadas
+        $a_sql[] = "CREATE INDEX ${tabla}_id_ubi_padre ON $nom_tabla USING btree (id_ubi_padre); ";
+        $a_sql[] = "CREATE INDEX ${tabla}_id_ubi_hijo ON $nom_tabla USING btree (id_ubi_hijo); ";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+        
+        $this->executeSql($a_sql);
+        
+        $this->delPermisoGlobal('comun');
+    }
+    public function eliminar_du_grupos_dl() {
+        $this->addPermisoGlobal('comun');
+        
+        $tabla = "du_grupos_dl";
         $datosTabla = $this->infoTable($tabla);
         
         $nom_tabla = $datosTabla['nom_tabla'];

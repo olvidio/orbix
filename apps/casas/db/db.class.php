@@ -22,11 +22,13 @@ class DB extends DBAbstract {
     public function dropAll() {
         $this->eliminar_da_ingresos();
         $this->eliminar_du_gastos();
+        $this->eliminar_du_grupos();
     }
     
     public function createAll() {
         $this->create_da_ingresos();
         $this->create_du_gastos();
+        $this->create_du_grupos();
     }
     
     /**
@@ -67,7 +69,6 @@ class DB extends DBAbstract {
     }
     public function create_du_gastos() {
         $this->addPermisoGlobal('comun');
-        
 
         $tabla = "du_gastos";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -91,6 +92,36 @@ class DB extends DBAbstract {
         $this->addPermisoGlobal('comun');
 
         $tabla = "du_gastos";
+        $nom_tabla = $this->getNomTabla($tabla);
+        $this->eliminar($nom_tabla);
+        
+        $this->delPermisoGlobal('comun');
+    }
+    
+    public function create_du_grupos() {
+        $this->addPermisoGlobal('comun');
+
+        $tabla = "du_grupos";
+        $nom_tabla = $this->getNomTabla($tabla);
+        $a_sql = [];
+        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                    id_schema integer NOT NULL,
+                    id_item integer NOT NULL,
+                    id_ubi_padre integer NOT NULL,
+                    id_ubi_hijo integer NOT NULL,
+                    UNIQUE (id_ubi_padre, id_ubi_hijo)
+                    );";
+        
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
+        
+        $this->executeSql($a_sql);
+
+        $this->delPermisoGlobal('comun');
+    }
+    public function eliminar_du_grupos() {
+        $this->addPermisoGlobal('comun');
+
+        $tabla = "du_grupos";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
         

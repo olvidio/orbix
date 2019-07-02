@@ -14,7 +14,7 @@ use core;
 class CasaDl Extends Casa {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 	/**
-	 * Id_auto de CasaDlDl
+	 * Id_auto de CasaDl
 	 *
 	 * @var integer
 	 */
@@ -212,7 +212,7 @@ class CasaDl Extends Casa {
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/**
-	 * Recupera l'atribut iid_auto de CasaDlDl
+	 * Recupera l'atribut iid_auto de CasaDl
 	 *
 	 * @return integer iid_auto
 	 */
@@ -223,7 +223,7 @@ class CasaDl Extends Casa {
 		return $this->iid_auto;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_auto de CasaDlDl
+	 * estableix el valor de l'atribut iid_auto de CasaDl
 	 *
 	 * @param integer iid_auto='' optional
 	 */
@@ -231,7 +231,7 @@ class CasaDl Extends Casa {
 		$this->iid_auto = $iid_auto;
 	}
 	/**
-	 * Recupera l'atribut iplazas_min de CasaDlDl
+	 * Recupera l'atribut iplazas_min de CasaDl
 	 *
 	 * @return integer iplazas_min
 	 */
@@ -242,7 +242,7 @@ class CasaDl Extends Casa {
 		return $this->iplazas_min;
 	}
 	/**
-	 * estableix el valor de l'atribut iplazas_min de CasaDlDl
+	 * estableix el valor de l'atribut iplazas_min de CasaDl
 	 *
 	 * @param integer iplazas_min='' optional
 	 */
@@ -252,4 +252,3 @@ class CasaDl Extends Casa {
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
 }
-?>

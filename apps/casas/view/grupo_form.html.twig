@@ -1,0 +1,46 @@
+<script>
+fnjs_guardar=function(formulario){
+	var madre='';
+	var hija='';
+	var err=0;
+
+	madre=$("#id_ubi_padre").val();
+	hija=$("#id_ubi_hijo").val();
+
+	if (madre==hija){
+		alert("{{ "No puede ser la misma casa"|trans }}");
+	} else {
+		$(formulario).attr('action','{{ url_ajax }}');
+		$(formulario).submit(function() {
+			$.ajax({
+				url: $(this).attr('action'),
+				type: 'post',
+				data: $(this).serialize()
+			})
+			.done(function (rta_txt) {
+				if (rta_txt != '' && rta_txt != '\n') {
+					alert ('{{ "respuesta"|trans }}: '+rta_txt);
+				} else {
+                    {{ oPosicion.js_atras(1)|raw }}
+                }
+			});
+			return false;
+		});
+		$(formulario).submit();
+		$(formulario).off();
+	}
+}
+</script>
+<form id="frm_grupo_casa" name="frm_grupo_casa" action="" method="post">
+{{ oHash.getCamposHtml|raw }}
+
+{{ "Casa Madre"|trans }}
+{{ oDesplCasaMadre.desplegable()|raw }}
+
+<br>
+{{ "Casa dependiente"|trans }}
+{{ oDesplCasaHija.desplegable()|raw }}
+<br>
+<br>
+<input type="button" id="ok" name="ok" onclick="fnjs_guardar(this.form);" value="{{ "guardar"|trans }}">
+</form>
