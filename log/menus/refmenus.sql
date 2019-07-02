@@ -58,7 +58,7 @@
 315	{80,60}	lista varios ca	sasistentes=n&sactividad=ca&que=list_cjto	119	2208	2	t
 324	{82,20}	lista varias cve	sasistentes=n&sactividad=cve&que=list_cjto	119	2208	2	t
 339	{20,60}	lista cargos	sasistentes=sr&sactividad=cv&que=list_cjto	119	2560	15	t
-503	{40}	actividades	\N	0	1048576	9	t
+503	{40}	actividades	\N	0	786432	9	t
 495	{30,10}	buscar	simple=1&tipo=tot&loc=tot	133	524288	9	t
 270	{60,40}	lista grupos	\N	122	33816576	13	t
 144	{40,10}	persona dl	obj_pau=PersonaDl&tipo=planning	61	2064	12	t
@@ -334,3 +334,4 @@
 529	{90}	Nuevo calendario	\N	183	37748735	8	t
 1398	{70,50}	config esquema	\N	90	33554432	13	t
 1400	{20,90}	previsión asistentes	\N	5	37748735	7	t
+1405	{10,80}	grupos	\N	91	1	7	t
