@@ -45,7 +45,6 @@
 84	\N	programas/sm-agd/periodo.php	\N	\N
 86	\N	vcsd/scheduler/sortides.php	\N	\N
 87	\N	des/periodo.php	\N	\N
-91	\N	../textos/biblio_positiva	\N	\N
 93	\N	scdl/registro/pen_buscar.php	\N	\N
 94	\N	des/tareas/collatio_sacd.php	\N	\N
 95	\N	programas/sm-agd/lista_celebra_40.php	\N	\N
@@ -107,6 +106,7 @@
 51	27	apps/casas/controller/casa_ec_que.php	\N	Casa ec que
 45	27	apps/casas/controller/casa_que.php	\N	Casa que
 63	27	apps/casas/controller/calendario_ubi_resumen.php	\N	Ubi resumen ec
+91	27	apps/casas/controller/grupo_lista.php	\N	Grupo Casas
 42	24	apps/zonassacd/controller/zona_sacd.php	\N	Zona sacd
 139	24	apps/zonassacd/controller/planning_zones.php	\N	Planning por zonas
 114	25	apps/cartaspresentacion/controller/cartas_presentacion_que.php	\N	Cartas Presentacion
