@@ -28,7 +28,17 @@ class dbConnection {
 		$str_conexio .= " dbname='".$config['dbname']."'";
 		$str_conexio .= " user='".$config['user']."'";
 		$str_conexio .= " password='".$config['password']."'";
-
+		//opcionales
+		if (!empty($config['sslcert'])) {
+            $str_conexio .= " sslcert='".$config['sslcert']."'";
+		}
+		if (!empty($config['sslkey'])) {
+            $str_conexio .= " sslkey='".$config['sslkey']."'";
+		}
+		if (!empty($config['sslrootcert'])) {
+            $str_conexio .= " sslrootcert='".$config['sslrootcert']."'";
+		}
+		    
 		return $str_conexio;
 	}
 	public function getPDO() {
