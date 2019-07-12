@@ -24,11 +24,11 @@ foreach ($cTipoDossier as $oTipoDossier) {
 	$status_dossier = $oDossier->getStatus_dossier();
 	switch ($status_dossier) {
 		case "t":
-			$a_filas[$i]['imagen'] = core\ConfigGlobal::$web_icons.'/folder.open.gif';
+			$a_filas[$i]['imagen'] = core\ConfigGlobal::getWeb_icons().'/folder.open.gif';
 			break;
 		case "f":
 		default:
-			$a_filas[$i]['imagen'] = core\ConfigGlobal::$web_icons.'/folder.gif';
+			$a_filas[$i]['imagen'] = core\ConfigGlobal::getWeb_icons().'/folder.gif';
 			break;
 	}
 	$a_filas[$i]['clase'] = $i % 2  ? 'imp' : 'par';

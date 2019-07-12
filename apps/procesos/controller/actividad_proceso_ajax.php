@@ -62,9 +62,9 @@ switch($Qque) {
 			} else {
 				$icon = '';
 				if ($completado == 't') {
-					$icon = '<img src="'. ConfigGlobal::$web_icons .'/checkbox-checked.png" title="ok">';
+					$icon = '<img src="'. ConfigGlobal::getWeb_icons() .'/checkbox-checked.png" title="ok">';
 				} else {
-					$icon = '<img src="'. ConfigGlobal::$web_icons .'/check-box-outline-blank.png" title="">';
+					$icon = '<img src="'. ConfigGlobal::getWeb_icons() .'/check-box-outline-blank.png" title="">';
 				}
 				$txt.="<td>$icon</td>";
 				$obs = "<td></td>";

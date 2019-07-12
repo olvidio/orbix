@@ -295,7 +295,7 @@ $a_campos = ['oPosicion' => $oPosicion,
 			'oActividadTipo' => $oActividadTipo,
 			'id_tipo_activ' => $id_tipo_activ,
             'web' => core\ConfigGlobal::getWeb(),
-            'web_icons' => core\ConfigGlobal::$web_icons,
+            'web_icons' => core\ConfigGlobal::getWeb_icons(),
             'procesos_installed' => $procesos_installed,
 			];
 

@@ -3,6 +3,10 @@ use core\ConfigGlobal;
 use personas\model\entity as personas;
 use ubis\model\entity as ubis;
 use usuarios\model\entity as usuarios;
+use usuarios\model\entity\Role;
+use usuarios\model\entity\Usuario;
+use personas\model\entity\Persona;
+use personas\model\entity\PersonaDl;
 /**
 * Esta página muestra una tabla con las personas que cumplen con la condicion.
 *
@@ -78,77 +82,114 @@ $aGoBack = array (
 				 );
 $oPosicion->setParametros($aGoBack,1);
 
-/*miro las condiciones. las variables son: num, agd, sup, nombre, apellido1, apellido2 */
-if (empty($sWhere)) {
-	$aWhere=array();
+//Si soy una persona la que consulta
+$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+$miRolePau = ConfigGlobal::mi_role_pau();
+if ($miRolePau == Role::PAU_NOM) { //persona
+    $id_nom=$oMiUsuario->getId_pau();
+    $aWhere = ['id_nom' => $id_nom];
 	$aOperador=array();
 	$aWhereCtr=array();
 	$aOperadorCtr=array();
-
-	if (!empty($Qapellido1)){ 
-		$aWhere['apellido1'] = $Qapellido1;
-		if (empty($Qexacto)){
-			$aWhere['apellido1'] = '^'.$aWhere['apellido1'];
-			$aOperador['apellido1'] = 'sin_acentos';
-		}
-	}
-
-	if (!empty($Qapellido2)){ 
-		$aWhere['apellido2'] = $Qapellido2;
-		if (empty($Qexacto)){
-			$aWhere['apellido2'] = '^'.$aWhere['apellido2'];
-			$aOperador['apellido2'] = 'sin_acentos';
-		}
-	}
-	if (!empty($Qnombre)){ 
-		$aWhere['nom'] = $Qnombre;
-		if (empty($Qexacto)){
-			$aWhere['nom'] = '^'.$aWhere['nom'];
-			$aOperador['nom'] = 'sin_acentos';
-		}
-	}
-		
-	/*Si está puesto el nombre del centro, saco una lista de todos los del centro*/
-	if (!empty($Qcentro)){ 
-		if (!empty($Qexacto)){
-			$Qcentro=addslashes(strtr($Qcentro,"+","."));
-            $aWhereCtr['nombre_ubi'] = $Qcentro;
-		} else {
-			$nom_ubi = str_replace("+", "\+", $Qcentro); // para los centros de la sss+
-			$nom_ubi = addslashes($nom_ubi);
-			$aWhereCtr['nombre_ubi'] = '^'.$nom_ubi;
-			$aOperadorCtr['nombre_ubi'] = 'sin_acentos';
-		}
-	}
-	if (empty($Qcmb)){
-		$aWhere['situacion'] = 'A';
-	} else {
-		if (!$_SESSION['oPerm']->have_perm("dtor")) {
-			$aWhere['situacion'] = 'B';
-			$aOperador['situacion'] = '!=';
-		}
-	}
+    // Sólo válido para las personas de la dl.
+    $oPersona = new PersonaDl($id_nom);
+    $id_tabla = $oPersona->getId_tabla();
+    switch ($id_tabla) {
+        case 'n':
+            $tabla = 'p_numerarios';
+            break;
+        case 's':
+            $tabla = 'p_supernumerarios';
+            break;
+        case 'x':
+            $tabla = 'p_nax';
+            break;
+        case 'a':
+            $tabla = 'p_agregados';
+            break;
+        case 'pa':
+        case 'pn':
+            $tabla = 'p_de_paso';
+            break;
+        default:
+            $tabla = 'nada';
+            break;
+        case 'n':
+    }
+    
 } else {
-	$aWhere = unserialize(core\urlsafe_b64decode($sWhere));
-	$aOperador = unserialize(core\urlsafe_b64decode($sOperador));
-	$aWhereCtr = unserialize(core\urlsafe_b64decode($sWhereCtr));
-	$aOperadorCtr = unserialize(core\urlsafe_b64decode($sOperadorCtr));
-}
+    /*miro las condiciones. las variables son: num, agd, sup, nombre, apellido1, apellido2 */
+    if (empty($sWhere)) {
+        $aWhere=array();
+        $aOperador=array();
+        $aWhereCtr=array();
+        $aOperadorCtr=array();
 
-if (!empty($aWhereCtr)) {
-	$gesCentros = new ubis\GestorCentroDl();
-	$cCentros = $gesCentros->getCentros($aWhereCtr,$aOperadorCtr);
-	$aId_ctrs = [];
-	foreach ($cCentros as $oCentro) {
-		$aId_ctrs[] = $oCentro->getId_ubi();
-	}
-	if (!empty($aId_ctrs)) {
-		$v = "{".implode(', ',$aId_ctrs)."}";
-        $aWhere['id_ctr'] = $v;
-        $aOperador['id_ctr'] = 'ANY';
-	} else {
-		$tabla = 'nada';
-	}
+        if (!empty($Qapellido1)){ 
+            $aWhere['apellido1'] = $Qapellido1;
+            if (empty($Qexacto)){
+                $aWhere['apellido1'] = '^'.$aWhere['apellido1'];
+                $aOperador['apellido1'] = 'sin_acentos';
+            }
+        }
+
+        if (!empty($Qapellido2)){ 
+            $aWhere['apellido2'] = $Qapellido2;
+            if (empty($Qexacto)){
+                $aWhere['apellido2'] = '^'.$aWhere['apellido2'];
+                $aOperador['apellido2'] = 'sin_acentos';
+            }
+        }
+        if (!empty($Qnombre)){ 
+            $aWhere['nom'] = $Qnombre;
+            if (empty($Qexacto)){
+                $aWhere['nom'] = '^'.$aWhere['nom'];
+                $aOperador['nom'] = 'sin_acentos';
+            }
+        }
+            
+        /*Si está puesto el nombre del centro, saco una lista de todos los del centro*/
+        if (!empty($Qcentro)){ 
+            if (!empty($Qexacto)){
+                $Qcentro=addslashes(strtr($Qcentro,"+","."));
+                $aWhereCtr['nombre_ubi'] = $Qcentro;
+            } else {
+                $nom_ubi = str_replace("+", "\+", $Qcentro); // para los centros de la sss+
+                $nom_ubi = addslashes($nom_ubi);
+                $aWhereCtr['nombre_ubi'] = '^'.$nom_ubi;
+                $aOperadorCtr['nombre_ubi'] = 'sin_acentos';
+            }
+        }
+        if (empty($Qcmb)){
+            $aWhere['situacion'] = 'A';
+        } else {
+            if (!$_SESSION['oPerm']->have_perm("dtor")) {
+                $aWhere['situacion'] = 'B';
+                $aOperador['situacion'] = '!=';
+            }
+        }
+    } else {
+        $aWhere = unserialize(core\urlsafe_b64decode($sWhere));
+        $aOperador = unserialize(core\urlsafe_b64decode($sOperador));
+        $aWhereCtr = unserialize(core\urlsafe_b64decode($sWhereCtr));
+        $aOperadorCtr = unserialize(core\urlsafe_b64decode($sOperadorCtr));
+    }
+
+    if (!empty($aWhereCtr)) {
+        $gesCentros = new ubis\GestorCentroDl();
+        $cCentros = $gesCentros->getCentros($aWhereCtr,$aOperadorCtr);
+        $aId_ctrs = [];
+        foreach ($cCentros as $oCentro) {
+            $aId_ctrs[] = $oCentro->getId_ubi();
+        }
+        if (!empty($aId_ctrs)) {
+            $v = "{".implode(', ',$aId_ctrs)."}";
+            $aWhere['id_ctr'] = $v;
+            $aOperador['id_ctr'] = 'ANY';
+        } else {
+            $tabla = 'nada';
+        }
+    }
 }
 
 // por defecto no pongo valor, que lo coja de la base de datos. Sólo sirve para los de paso.
@@ -224,8 +265,10 @@ $sOperadorCtr = core\urlsafe_b64encode(serialize($aOperadorCtr));
 $a_botones = [];
 $script = [];
 
-$a_botones[] = array( 'txt' => _("cambio de ctr"),
+if ($_SESSION['oPerm']->have_perm("sm")){
+    $a_botones[] = array( 'txt' => _("cambio de ctr"),
 					'click' =>"fnjs_modificar_ctr(\"#seleccionados\")" );
+}
 $script['fnjs_modificar_ctr'] = 1;
 $a_botones[] = array( 'txt' => _("ver dossiers"),
 					'click' =>"fnjs_dossiers(\"#seleccionados\")" );
@@ -257,10 +300,12 @@ if (core\configGlobal::is_app_installed('notas')) {
 	}
 }
 if (core\configGlobal::is_app_installed('actividadestudios')) {
-	if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso")) {   
-		$a_botones[]= array( 'txt' => _("posibles ca"),
-							'click' =>"fnjs_posibles_ca(\"#seleccionados\")" ) ;
-		$script['fnjs_posibles_ca'] = 1;
+	if ($_SESSION['oPerm']->have_perm("sm") || $_SESSION['oPerm']->have_perm("est")){
+        if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso")) {   
+            $a_botones[]= array( 'txt' => _("posibles ca"),
+                                'click' =>"fnjs_posibles_ca(\"#seleccionados\")" ) ;
+            $script['fnjs_posibles_ca'] = 1;
+        }
 	}
 }
 if (core\configGlobal::is_app_installed('actividadplazas')) {

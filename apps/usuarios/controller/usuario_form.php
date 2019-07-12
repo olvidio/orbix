@@ -188,8 +188,12 @@ if ($miRole < 4) {
 			break;
 	}
 
-	if( !(ConfigGlobal::is_app_installed('personas')) ) { $cond_role.="AND (pau != 'sacd' OR pau IS NULL)"; }
-	if( !(ConfigGlobal::is_app_installed('ubis')) ) { $cond_role.="AND (pau != 'ctr' OR pau != 'cdc' OR pau IS NULL)"; }
+	if( !(ConfigGlobal::is_app_installed('personas')) ) {
+	    $cond_role.="AND (pau != '".Role::PAU_SACD."' OR pau IS NULL)";
+	}
+	if( !(ConfigGlobal::is_app_installed('ubis')) ) {
+	    $cond_role.="AND (pau != '".Role::PAU_CTR."' OR pau != '".Role::PAU_CDC."' OR pau IS NULL)";
+	}
 			
 	$oGRoles = new GestorRole();
 	$oDesplRoles= $oGRoles->getListaRoles($cond_role);
@@ -256,7 +260,7 @@ if ($miRole < 4) {
 			$oSelects->setBlanco('t');
 			$camposMas = 'id_ctr';
 		}
-		if ($pau == 'nom' || $pau == 'sacd') { //sacd //personas dl
+		if ($pau == Role::PAU_NOM || $pau == Role::PAU_SACD) { //sacd //personas dl
 			$id_pau=$oUsuario->getId_pau();
 
 			$nom_role = $oRole->getRole();
@@ -375,18 +379,19 @@ if (!empty($id_usuario)) { // si no hay usuario, no puedo poner permisos.
     <?php
     //////////// Permisos en centros ////////////
     if (ConfigGlobal::is_app_installed('ubis')) {
-        
-        $a_campos = [
-                    'quien' => $Qquien,
-                    'id_usuario' => $id_usuario,
-                    'usuario' => $usuario,
-                    'cUsuarioPermCtr' => $cUsuarioPermCtr,
-                    'oCuadrosAfecta' => $oCuadrosAfecta,
-                    'oPermAccion' => $oPermAccion,
-                    ];
+        if ($pau == Role::PAU_NOM || $pau == Role::PAU_SACD) { //sacd //personas dl
+            $a_campos = [
+                        'quien' => $Qquien,
+                        'id_usuario' => $id_usuario,
+                        'usuario' => $usuario,
+                        'cUsuarioPermCtr' => $cUsuarioPermCtr,
+                        'oCuadrosAfecta' => $oCuadrosAfecta,
+                        'oPermAccion' => $oPermAccion,
+                        ];
 
-        $oView = new core\View('usuarios/controller');
-        echo $oView->render('perm_ctr_form.phtml',$a_campos);
+            $oView = new core\View('usuarios/controller');
+            echo $oView->render('perm_ctr_form.phtml',$a_campos);
+        }
     }
     //////////// Permisos en actividades ////////////
     if (ConfigGlobal::is_app_installed('procesos')) {

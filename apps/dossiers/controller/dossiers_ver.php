@@ -194,7 +194,7 @@ echo $oPosicion->mostrar_left_slide(1);
 ?>
 <div id="top">
 <table><tr>
-<td><span class="link" onclick="fnjs_update_div('#main','<?= $godossiers ?>')" ><img src=<?= ConfigGlobal::$web_icons ?>/dossiers.gif border=0 width=40 height=40 alt='<?= $alt ?>'>(<?= $dos ?>)</span></td>
+<td><span class="link" onclick="fnjs_update_div('#main','<?= $godossiers ?>')" ><img src=<?= ConfigGlobal::getWeb_icons() ?>/dossiers.gif border=0 width=40 height=40 alt='<?= $alt ?>'>(<?= $dos ?>)</span></td>
 <td class="titulo"><?= $titulo ?></td>
 </table>
 </div>

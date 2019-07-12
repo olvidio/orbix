@@ -285,7 +285,7 @@ class Posicion {
 		$html .= '	<input name="id_div" type="hidden" value="' . $bloque . '" size=70>';
 		$html .= '</form>';
 		$html .= '</div>';
-		$html .= "<img onclick=fnjs_ir_a('#$id_div') src=".core\ConfigGlobal::$web_icons.'/flechas/left.gif border=0 height=40>';
+		$html .= "<img onclick=fnjs_ir_a('#$id_div') src=".core\ConfigGlobal::getWeb_icons().'/flechas/left.gif border=0 height=40>';
 		
 		// vuelvo el cursor al final.
 		$this->goEnd();

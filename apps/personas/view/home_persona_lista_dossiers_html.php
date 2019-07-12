@@ -25,13 +25,13 @@ foreach ($oDBSt_d_lista->fetchAll() as $row) {
 	}
 	switch ($status_dossier) {
 		case "t":
-			$imagen=ConfigGlobal::$web_icons.'/images/folder.open.gif';
+			$imagen=ConfigGlobal::getWeb_icons().'/images/folder.open.gif';
 			break;
 		case "f":
-			$imagen=ConfigGlobal::$web_icons.'/images/folder.gif';
+			$imagen=ConfigGlobal::getWeb_icons().'/images/folder.gif';
 			break;
 		default:
-			$imagen=ConfigGlobal::$web_icons.'/images/generic.sec.gif';
+			$imagen=ConfigGlobal::getWeb_icons().'/images/generic.sec.gif';
 			break;
 	}
 	 
@@ -46,7 +46,7 @@ foreach ($oDBSt_d_lista->fetchAll() as $row) {
 	 echo "<tr class=$clase>";
 	 switch ($perm_a) { 
 		case 1: //no tiene permisos
-			$imagen=ConfigGlobal::$web_icons.'/images/folder.sec.gif';
+			$imagen=ConfigGlobal::getWeb_icons().'/images/folder.sec.gif';
 			?> <td></td><td><?= $descripcion; ?></td>
 			<?php break;
 		case 2: // sólo lectura

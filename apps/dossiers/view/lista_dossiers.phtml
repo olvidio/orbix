@@ -1,14 +1,14 @@
 <h2 class=titulo><?= ucfirst(_("relación de dossiers")); ?></h2>
 <table border=1>
 <?php
-$pencil=core\ConfigGlobal::$web_icons.'/pencil.png';
-$eye=core\ConfigGlobal::$web_icons.'/eye.png';
-$deny=core\ConfigGlobal::$web_icons.'/deny.png';
+$pencil=core\ConfigGlobal::getWeb_icons().'/pencil.png';
+$eye=core\ConfigGlobal::getWeb_icons().'/eye.png';
+$deny=core\ConfigGlobal::getWeb_icons().'/deny.png';
 foreach ($a_filas as $i => $fila) {
 	 echo "<tr class=\"".$fila['clase']."\">";
 	 switch ($fila['perm_a']) { 
 		case 1: //no tiene permisos
-			$imagen=core\ConfigGlobal::$web_icons.'/folder.sec.gif';
+			$imagen=core\ConfigGlobal::getWeb_icons().'/folder.sec.gif';
 			?>
 			<td><img class="dossier" src='<?= $fila['imagen'] ?>' ></td>
 			<td><?= $fila['descripcion']; ?>
