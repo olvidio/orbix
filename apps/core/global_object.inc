@@ -66,7 +66,7 @@ switch ($user_sfsv) {
 		$config = $oConfigDB->getEsquema($esquema); 
 		$oConexion = new dbConnection($config);
 		$oDBE = $oConexion->getPDO();
-
+        /*
 		$config = $oConfigDB->getEsquema('publicf'); 
 		$oConexion = new dbConnection($config);
 		///$oDBEP = $oConexion->getPDO();
@@ -74,7 +74,7 @@ switch ($user_sfsv) {
 		$config = $oConfigDB->getEsquema('restof'); 
 		$oConexion = new dbConnection($config);
 		///$oDBER = $oConexion->getPDO();
-		
+		*/
 		break;
 	case 2: //sf
 		$esquemaf = $_SESSION['session_auth']['esquema'];
