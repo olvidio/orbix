@@ -61,17 +61,18 @@ switch ($user_sfsv) {
 		
 		//sf
 		$oConfigDB = new ConfigDB('sf'); 
-		$config = $oConfigDB->getEsquema($esquemaf); 
+		//$config = $oConfigDB->getEsquema($esquemaf); 
+		$config = $oConfigDB->getEsquema('comun'); 
 		$oConexion = new dbConnection($config);
 		$oDBE = $oConexion->getPDO();
 
 		$config = $oConfigDB->getEsquema('publicf'); 
 		$oConexion = new dbConnection($config);
-		$oDBEP = $oConexion->getPDO();
+		///$oDBEP = $oConexion->getPDO();
 
 		$config = $oConfigDB->getEsquema('restof'); 
 		$oConexion = new dbConnection($config);
-		$oDBER = $oConexion->getPDO();
+		///$oDBER = $oConexion->getPDO();
 		
 		break;
 	case 2: //sf
@@ -99,7 +100,8 @@ switch ($user_sfsv) {
 		
 		//sv
 		$oConfigDB = new ConfigDB('sv'); 
-		$config = $oConfigDB->getEsquema($esquemav); 
+		//$config = $oConfigDB->getEsquema($esquemav); 
+		$config = $oConfigDB->getEsquema('comun'); 
 		$oConexion = new dbConnection($config);
 		$oDBE = $oConexion->getPDO();
 		break;
