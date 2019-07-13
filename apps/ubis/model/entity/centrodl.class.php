@@ -147,7 +147,7 @@ class CentroDl Extends Centro {
 		$aDades['cdc'] = ($aDades['cdc'] === 't')? 'true' : $aDades['cdc'];
 		if ( filter_var( $aDades['cdc'], FILTER_VALIDATE_BOOLEAN)) { $aDades['cdc']='t'; } else { $aDades['cdc']='f'; }
 		$aDades['sede'] = ($aDades['sede'] === 't')? 'true' : $aDades['sede'];
-		if ( filter_var( $aDades['cdc'], FILTER_VALIDATE_BOOLEAN)) { $aDades['sede']='t'; } else { $aDades['sede']='f'; }
+		if ( filter_var( $aDades['sede'], FILTER_VALIDATE_BOOLEAN)) { $aDades['sede']='t'; } else { $aDades['sede']='f'; }
 
 		if ($bInsert === false) {
 			//UPDATE
@@ -205,6 +205,12 @@ class CentroDl Extends Centro {
 			$aDades['id_ubi'] = $oDbl->query("SELECT id_ubi FROM $nom_tabla WHERE id_auto =".$aDades['id_auto'])->fetchColumn();
 		}
 		$this->setAllAtributes($aDades);
+		
+		// Modifico la ficha en la BD-comun
+		// De momento sólo para la sf (comienza por 2).
+		if ( substr($this->id_ubi, 0, 1) == 2 ) {
+		    $this->copia2Comun($aDades);
+		}
 		return true;
 	}
 
@@ -245,7 +251,7 @@ class CentroDl Extends Centro {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_ubi='$this->iid_ubi'")) === false) {
+		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_ubi='$this->iid_ubi'")) === false) {
 			$sClauError = 'CentroDl.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -254,6 +260,23 @@ class CentroDl Extends Centro {
 	}
 
 	/* METODES ALTRES  ----------------------------------------------------------*/
+	protected function copia2Comun($aDades) {
+	    unset($aDades['id_auto']);
+	    unset($aDades['num_cartas']);
+	    unset($aDades['n_buzon']);
+	    unset($aDades['num_pi']);
+	    unset($aDades['num_cartas']);
+	    unset($aDades['observ']);
+	    unset($aDades['num_habit_indiv']);
+	    unset($aDades['plazas']);
+	    unset($aDades['sede']);
+	    unset($aDades['num_cartas_mensuales']);
+	    
+	    $oPersonaSacd = new CentroEllas($this->iid_ubi);
+	    $oPersonaSacd->setAllAtributes($aDades);
+	    $oPersonaSacd->DBGuardar();
+	    
+	}
 	/* METODES PRIVATS ----------------------------------------------------------*/
 
 	/**

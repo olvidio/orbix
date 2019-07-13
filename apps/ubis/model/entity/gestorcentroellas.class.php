@@ -26,7 +26,7 @@ class GestorCentroEllas Extends GestorCentro {
 		//$oDbl = $GLOBALS['oDBEP'];
 		$oDbl = $GLOBALS['oDBE'];
 		$this->setoDbl($oDbl);
-		$this->setNomTabla('u_centros_dl');
+		$this->setNomTabla('cu_centros_dlf');
 		//$this->setNomTabla('u_centros');
 	}
 

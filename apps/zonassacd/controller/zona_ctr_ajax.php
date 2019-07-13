@@ -40,6 +40,7 @@ $Qid_zona = (string) \filter_input(INPUT_POST, 'id_zona');
 $Qid_zona_new = (string) \filter_input(INPUT_POST, 'id_zona_new');
 
 $QAsel = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$QAsel = empty($QAsel)? [] : $QAsel;
 
 switch($Qque) {
 	case 'get_lista':
