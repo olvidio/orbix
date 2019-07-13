@@ -60,9 +60,10 @@ switch ($user_sfsv) {
 		$oDBR = $oConexion->getPDO();
 		
 		//sf
-		$oConfigDB = new ConfigDB('sf'); 
+		//$oConfigDB = new ConfigDB('sf'); 
 		//$config = $oConfigDB->getEsquema($esquemaf); 
-		$config = $oConfigDB->getEsquema('comun'); 
+		$oConfigDB = new ConfigDB('comun'); 
+		$config = $oConfigDB->getEsquema($esquema); 
 		$oConexion = new dbConnection($config);
 		$oDBE = $oConexion->getPDO();
 
@@ -99,9 +100,10 @@ switch ($user_sfsv) {
 		$oDBR = $oConexion->getPDO();
 		
 		//sv
-		$oConfigDB = new ConfigDB('sv'); 
+		//$oConfigDB = new ConfigDB('sv'); 
 		//$config = $oConfigDB->getEsquema($esquemav); 
-		$config = $oConfigDB->getEsquema('comun'); 
+		$oConfigDB = new ConfigDB('comun'); 
+		$config = $oConfigDB->getEsquema($esquema); 
 		$oConexion = new dbConnection($config);
 		$oDBE = $oConexion->getPDO();
 		break;
