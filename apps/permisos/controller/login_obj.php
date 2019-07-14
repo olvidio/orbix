@@ -1,11 +1,12 @@
 <?php
 namespace permisos\controller;
 
-use permisos\model as permisos;
-use core;
-use core\DBPropiedades;
 use core\ConfigDB;
 use core\ConfigGlobal;
+use core\DBPropiedades;
+use core\View;
+use core\dbConnection;
+use permisos\model\MyCrypt;
                 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -55,7 +56,7 @@ function cambiar_idioma($idioma='') {
 	putenv("LC_ALL={$idioma}");
 	putenv("LANG={$idioma}");
 	
-	bindtextdomain($domain,core\ConfigGlobal::$dir_languages);
+	bindtextdomain($domain,ConfigGlobal::$dir_languages);
 	textdomain ($domain);
 	bind_textdomain_codeset($domain,'UTF-8');
 }
@@ -64,7 +65,7 @@ function cambiar_idioma($idioma='') {
 function getAppsPosibles () {
 	$oConfigDB = new ConfigDB('comun');
 	$config = $oConfigDB->getEsquema('public'); 
-	$oConexion = new core\dbConnection($config);
+	$oConexion = new dbConnection($config);
 	$oDBP = $oConexion->getPDO();
 	$sQuery = "SELECT * FROM m0_apps";
 	$a_apps=array();
@@ -79,7 +80,7 @@ function getAppsPosibles () {
 function getModsPosibles () {
 	$oConfigDB = new ConfigDB('comun');
 	$config = $oConfigDB->getEsquema('public'); 
-	$oConexion = new core\dbConnection($config);
+	$oConexion = new dbConnection($config);
 	$oDBP = $oConexion->getPDO();
 	$sQuery = "SELECT * FROM m0_modulos";
 	$a_mods=array();
@@ -145,8 +146,8 @@ function logout($ubicacion,$idioma,$esquema,$error) {
     $a_campos['ubicacion'] = $ubicacion;
     $a_campos['DesplRegiones'] = $oDBPropiedades->posibles_esquemas($esquema);
     $a_campos['idioma'] = $idioma;
-    $a_campos['url'] = core\ConfigGlobal::getWeb();
-    $oView = new core\View(__NAMESPACE__);
+    $a_campos['url'] = ConfigGlobal::getWeb();
+    $oView = new View(__NAMESPACE__);
     echo $oView->render('login_form2.phtml',$a_campos);
 }
 
@@ -160,7 +161,7 @@ if ( !isset($_SESSION['session_auth'])) {
 	//el segon cop tinc el nom i el password
     $idioma='';
 	if (isset($_POST['username']) && isset($_POST['password'])) {
-		switch(core\ConfigGlobal::$auth_method) {
+		switch(ConfigGlobal::$auth_method) {
 			case "ldap":
 				break;
 			case "database":
@@ -172,7 +173,7 @@ if ( !isset($_SESSION['session_auth'])) {
 					$sfsv = 1;
 					$oConfigDB = new ConfigDB('sv'); 
 					$config = $oConfigDB->getEsquema($esquema); 
-					$oConexion = new core\dbConnection($config);
+					$oConexion = new dbConnection($config);
 					$oDB = $oConexion->getPDO();
 
 				}
@@ -180,7 +181,7 @@ if ( !isset($_SESSION['session_auth'])) {
 					$sfsv = 2;
 					$oConfigDB = new ConfigDB('sf'); 
 					$config = $oConfigDB->getEsquema($esquema); 
-					$oConexion = new core\dbConnection($config);
+					$oConexion = new dbConnection($config);
 					$oDB = $oConexion->getPDO();
 				}
 				$query="SELECT * FROM aux_usuarios WHERE usuario = :usuario";
@@ -198,7 +199,7 @@ if ( !isset($_SESSION['session_auth'])) {
 
                 $idioma='';
 				$sPasswd = null;
-				$oCrypt = new permisos\MyCrypt();
+				$oCrypt = new MyCrypt();
 				$oDBSt->bindColumn('password', $sPasswd, \PDO::PARAM_STR);
 				if ($row=$oDBSt->fetch(\PDO::FETCH_ASSOC)) {
 					if ($oCrypt->encode($_POST['password'],$sPasswd) == $sPasswd) {
@@ -206,7 +207,7 @@ if ( !isset($_SESSION['session_auth'])) {
 						$id_role = $row['id_role'];
 						$oConfigDB = new ConfigDB('comun');
 						$config = $oConfigDB->getEsquema('public'); 
-						$oConexion = new core\dbConnection($config);
+						$oConexion = new dbConnection($config);
 						$oDBP = $oConexion->getPDO();
 						$queryr="SELECT * FROM aux_roles WHERE id_role = $id_role";
 						if (($oDBPSt= $oDBP->query($queryr)) === false) {

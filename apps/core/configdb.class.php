@@ -26,6 +26,7 @@ class ConfigDB {
 		if (ConfigGlobal::WEBDIR == 'pruebas') {
 			$database = 'pruebas-'.$database;
 		}
+		echo "<br>db: $database";
 		$this->data = include ConfigGlobal::DIR_PWD.'/'.$database.'.inc';
 	}
 }
