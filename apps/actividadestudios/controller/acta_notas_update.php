@@ -31,6 +31,8 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 	$msg_err = '';
 	foreach ($cMatriculados as $oMatricula) {
 		$i++;
+		$aWhere = [];
+		$aOperador = [];
 		$id_nom=$oMatricula->getId_nom();
 		// para saber a que schema pertenece la persona
 		$oPersona = personas\Persona::NewPersona($id_nom);
@@ -106,38 +108,36 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 			    /* Ahora las opcionales son indiferentes a bienio/cuadrienio
 				case 1:	// sólo de bienio
 					$aWhere['id_nivel'] = "123.";
-					$aOperadores['id_nivel'] = '~';
-					//$cc="id_nivel::text ~ '123.'";
+					$aOperador['id_nivel'] = '~';
 					$op_min=0;
 					$op_max=2;
 					break;
 				case 2:	// sólo de caudrienio
 					$aWhere['id_nivel'] = "243.";
-					$aOperadores['id_nivel'] = '~';
-					//$cc="id_nivel::text ~ '243.'";
+					$aOperador['id_nivel'] = '~';
 					$op_min=3;
 					$op_max=7;
 					break;
                 */
 				default:
-					$aWhere['id_nivel'] = "[12|24]3.";
-					$aOperadores['id_nivel'] = '~';
-					//$cc="id_nivel::text ~ '[12|24]3.'";
+					$aWhere['id_nivel'] = "(12|24)3.";
+					$aOperador['id_nivel'] = '~';
 					$op_min=0;
 					$op_max=7;
 			}
 			$GesPersonaNotas = new notas\GestorPersonaNota();
 			$aWhere['id_nom'] = $id_nom;
 			$aWhere['_ordre'] = 'id_nivel DESC';
-			$cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhere,$aOperadores);
+			$cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhere,$aOperador);
 			$id_op = '';
 			$aOpSuperadas = array();
 			$j=0;
+			$id_nivel = 0;
 			foreach ($cPersonaNotas as $oPersonaNota) {
 				$j++;
 				$id_op = $oPersonaNota->getId_nivel();
 				$id_asignatura = $oPersonaNota->getId_asignatura();
-				if ($id_asignatura ==$Qid_asignatura) { // ya está la que intento meter => actualizar
+				if ($id_asignatura == $Qid_asignatura) { // ya está la que intento meter => actualizar
 					$id_nivel = $id_op;
 					break;
 				}
