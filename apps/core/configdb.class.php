@@ -10,6 +10,10 @@ class ConfigDB {
 	
 	private $data;
 	
+	public function __construct($database) {
+	    $this->setDataBase($database);
+	}
+	
 	public function getEsquema($esquema) {
 		$data = $this->data['default'];
 		$data['schema'] = $esquema;
@@ -21,12 +25,10 @@ class ConfigDB {
 		return $data;
 	}
 
-	public function __construct($database)
-	{
+	public function setDataBase($database) {
 		if (ConfigGlobal::WEBDIR == 'pruebas') {
 			$database = 'pruebas-'.$database;
 		}
-		echo "<br>db: $database";
 		$this->data = include ConfigGlobal::DIR_PWD.'/'.$database.'.inc';
 	}
 }

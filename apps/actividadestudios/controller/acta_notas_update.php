@@ -103,6 +103,7 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 		//Si es una opcional miro el id nivel para cada uno
 		if ($Qid_asignatura > 3000) {
 			switch (substr($Qid_asignatura,1,1)) {
+			    /* Ahora las opcionales son indiferentes a bienio/cuadrienio
 				case 1:	// sólo de bienio
 					$aWhere['id_nivel'] = "123.";
 					$aOperadores['id_nivel'] = '~';
@@ -117,6 +118,7 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 					$op_min=3;
 					$op_max=7;
 					break;
+                */
 				default:
 					$aWhere['id_nivel'] = "[12|24]3.";
 					$aOperadores['id_nivel'] = '~';
@@ -148,7 +150,7 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 					if (!in_array($id_nivel,$aOpSuperadas)) break;
 				}
 			}
-			//if ($nivel > $aNivelOpcionales[$op_max]) { $error.=sprintf (_("ha cursado una opcional que no tocaba (id_nom=%s)")."\n",$id_nom); continue; }
+			if ($id_nivel > $aNivelOpcionales[$op_max]) { $error.=sprintf (_("ha cursado una opcional que no tocaba (id_nom=%s)")."\n",$id_nom); continue; }
 		} else {
 			$oAsignatura = new asignaturas\Asignatura($Qid_asignatura);
 			$id_nivel = $oAsignatura->getId_nivel();
