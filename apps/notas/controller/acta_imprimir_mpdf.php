@@ -2,6 +2,7 @@
 use asignaturas\model\entity as asignaturas;
 use notas\model\entity as notas;
 use personas\model\entity as personas;
+use core\ConfigGlobal;
 /**
 * Esta página sirve para las actas.
 *
@@ -40,6 +41,18 @@ function num_latin($num) {
 	return $latin;
 }	
 
+// conversion
+$replace  = array(
+    'AE' => '&#198;',
+    'Ae' => '&#198;',
+    'ae' => '&#230;',
+    'OE' => '&#140;',
+    'Oe' => '&#140;',
+    'oe' => '&#156;'
+);
+$region_latin = $_SESSION['oConfig']->getNomRegionLatin();
+$nombre_prelatura = strtr("PRAELATURA SANCTAE CRUCIS ET OPERIS DEI", $replace);
+$reg_stgr = "Stgr".ConfigGlobal::mi_region();
 
 // acta
 $oActa = new notas\Acta($acta);
@@ -54,12 +67,12 @@ $observ = $oActa->getObserv();
 
 $oAsignatura = new asignaturas\Asignatura($id_asignatura);
 $nombre_corto=$oAsignatura->getNombre_corto();
-$nombre_asignatura=$oAsignatura->getNombre_asignatura();
+$nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
 $any=$oAsignatura->getYear();
 
 $id_tipo=$oAsignatura->getId_tipo();
 $oAsignaturaTipo = new asignaturas\AsignaturaTipo($id_tipo);
-$curso = $oAsignaturaTipo->getTipo_latin();
+$curso = strtr($oAsignaturaTipo->getTipo_latin(), $replace);
 
 switch ($any) {
 	case 1:
@@ -159,10 +172,10 @@ $tribunal_html .= "<div class=\"sello\">L.S.<br>Studii Generalis</div>";
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <div class="A4" >
 <?php if ($cara=="A") { ?>
-<div class="cabecera"><?= str_replace ("AE", "&#198;", "PRAELATURA SANCTAE CRUCIS ET OPERIS DEI"); ?></div>
-<div class="region"><?= str_replace ("AE", "&#198;", "STUDIUM GENERALE REGIONIS: &nbsp;HISPANIAE"); ?></div>
-<div class="curso"><?= str_replace ("AE", "&#198;",sprintf("CURSUS INSTITUTIONALES:&nbsp;&nbsp;  %s &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ANNUS: %s",$curso,$any)); ?></div><br>
-<div class="curso"><?= str_replace ("ae", "&#230;", "DISCIPLINA: &nbsp;&nbsp;&nbsp;&nbsp;$nombre_asignatura"); ?></div><br>
+<div class="cabecera"><?= $nombre_prelatura ?></div>
+<div class="region">STUDIUM GENERALE REGIONIS: <?= $region_latin ?></div>
+<div class="curso"><?= sprintf("CURSUS INSTITUTIONALES:&nbsp;&nbsp;  %s &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ANNUS: %s",$curso,$any); ?></div>
+<div class="curso">DISCIPLINA: &nbsp;&nbsp;&nbsp;&nbsp;<?= $nombre_asignatura ?></div>
 <div class="intro">Hisce litteris, quas propria uniuscuiusque subsignatione firmamus, fidem facimus hodierna die, coram infrascriptis Iudicibus, periculum de hac disciplina sequentes alumnos rite superasse:</div>
 <table class="alumni" height="<?= $alum_cara_A ?>">
 <tr><td width=55% class=alumni>ALUMNI</td><td  width=10%>&nbsp;</td><td width=35% class=alumni>CUM NOTA</td></tr>
@@ -203,7 +216,7 @@ if ($cara=="A") {
 </div>
 <div class="pie">
 <div class="libro">
-<b>Reg.</b> StgrH &nbsp;
+<b>Reg.</b> <?= $reg_stgr ?> &nbsp;
 <b>lib.</b> <?= $libro; ?> &nbsp;
 <b>pág.</b>  <?= $pagina; ?>
 <b> n.</b> <?= $linea; ?>

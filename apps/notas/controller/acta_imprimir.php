@@ -56,6 +56,19 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $Qcara = (string) \filter_input(INPUT_POST, 'cara');
 $cara = empty($Qcara)? 'A' : $Qcara;
 
+// conversion
+$replace  = array(
+    'AE' => '&#198;',
+    'Ae' => '&#198;',
+    'ae' => '&#230;',
+    'OE' => '&#140;',
+    'Oe' => '&#140;',
+    'oe' => '&#156;'
+);
+$region_latin = $_SESSION['oConfig']->getNomRegionLatin();
+$nombre_prelatura = strtr("PRAELATURA SANCTAE CRUCIS ET OPERIS DEI", $replace);
+$reg_stgr = "Stgr".ConfigGlobal::mi_region();
+
 // acta
 $oActa = new notas\Acta($acta);
 $id_asignatura = $oActa->getId_asignatura();
@@ -69,12 +82,12 @@ $observ = $oActa->getObserv();
 
 $oAsignatura = new asignaturas\Asignatura($id_asignatura);
 $nombre_corto=$oAsignatura->getNombre_corto();
-$nombre_asignatura=$oAsignatura->getNombre_asignatura();
+$nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
 $any=$oAsignatura->getYear();
 
 $id_tipo=$oAsignatura->getId_tipo();
 $oAsignaturaTipo = new asignaturas\AsignaturaTipo($id_tipo);
-$curso = $oAsignaturaTipo->getTipo_latin();
+$curso = strtr($oAsignaturaTipo->getTipo_latin(), $replace);
 
 switch ($any) {
 	case 1:
@@ -179,6 +192,9 @@ $a_campos = [
 			'errores' => $errores,
 			'curso' => $curso,
 			'any' => $any,
+            'region_latin' => $region_latin,
+            'nombre_prelatura' => $nombre_prelatura,
+            'reg_stgr' => $reg_stgr,
 			'nombre_asignatura' => $nombre_asignatura,
 			'alum_cara_A' => $alum_cara_A,
 			'alum_cara_B' => $alum_cara_B,
