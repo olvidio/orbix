@@ -69,7 +69,7 @@ class Periodo {
             default:
 	           $any = date('Y'); 
 	    }
-	    $this->setany($any);
+	    $this->setAny($any);
 	}
 	
 	function setEmpiezaMax($sempiezamax='') {
@@ -100,7 +100,7 @@ class Periodo {
 		$this->sempiezaminiso = $sempiezaminiso;
 	}
 
-	function setany($iany) {
+	function setAny($iany) {
 	    if (!empty($iany)) {
 		  $this->iany = $iany;
 	    }
@@ -177,7 +177,7 @@ class Periodo {
 			    $fin_d = $_SESSION['oConfig']->getDiaFinCrt();
 			    $fin_m = $_SESSION['oConfig']->getMesFinCrt();
 			    
-				if ($mes>9) {
+				if ($mes > $fin_m) {
 				    $any2=$any+1;
 				    $inicio = "$any-$ini_m-$ini_d";
 				    $fin = "$any2-$fin_m-$fin_d";
@@ -193,9 +193,15 @@ class Periodo {
 			    $fin_d = $_SESSION['oConfig']->getDiaFinStgr();
 			    $fin_m = $_SESSION['oConfig']->getMesFinStgr();
 			    
-                $any2=$any-1;
-                $inicio = "$any2-$ini_m-$ini_d";
-                $fin = "$any-$fin_m-$fin_d";
+				if ($mes > $fin_m) {
+				    $any2=$any+1;
+				    $inicio = "$any-$ini_m-$ini_d";
+				    $fin = "$any2-$fin_m-$fin_d";
+				} else {
+                    $any2=$any-1;
+                    $inicio = "$any2-$ini_m-$ini_d";
+                    $fin = "$any-$fin_m-$fin_d";
+				}
 				break;
 			case "trimestre":
 				$inicio = $any."/$mes/1";	

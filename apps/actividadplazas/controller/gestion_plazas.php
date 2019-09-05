@@ -49,8 +49,11 @@ if (empty($Qid_tipo_activ)) {
 	$oTipoActiv= new web\TiposActividades($Qid_tipo_activ);
 	$Qsactividad = $oTipoActiv->getActividadText();
 }
-$Qid_tipo_activ =  '^'.$Qid_tipo_activ;
+$id_tipo_activ =  '^'.$Qid_tipo_activ;
 
+if (empty($Qyear)) {
+    $Qyear = (integer) date('Y');
+}
 //periodo
 if (empty($Qperiodo)) {
 	switch ($Qsactividad) {
@@ -84,9 +87,13 @@ $aWhere =array('region'=>$a_reg[0],'dl'=>$mi_dl);
 $oMiDelegacion = new ubis\model\entity\Delegacion($aWhere);
 $grupo_estudios = $oMiDelegacion->getGrupo_estudios();
 
-$gesDelegacion = new ubis\model\entity\GestorDelegacion();
-$cDelegaciones = $gesDelegacion->getDelegaciones(array('grupo_estudios'=>$grupo_estudios,'_ordre'=>'region,dl'));
-
+$cDelegaciones = [];
+if (empty($grupo_estudios)) {
+    $cDelegaciones[] = $oMiDelegacion;
+} else {
+    $gesDelegacion = new ubis\model\entity\GestorDelegacion();
+    $cDelegaciones = $gesDelegacion->getDelegaciones(array('grupo_estudios'=>$grupo_estudios,'_ordre'=>'region,dl'));
+}
 $gesActividadPlazas = new \actividadplazas\model\entity\GestorActividadPlazas();
 // Seleccionar actividades exportadas de los id_dl
 
@@ -100,7 +107,7 @@ foreach ($cDelegaciones as $oDelegacion) {
 	$id_dl = $oDelegacion->getId_dl();
 	$a_grupo[$dl] = $id_dl;
 	$aWhere =array('dl_org'			=>$dl,
-					'id_tipo_activ'	=>$Qid_tipo_activ,
+					'id_tipo_activ'	=>$id_tipo_activ,
 					'status' 		=> $status,
 //					'publicado' 		=> 't',
 					'f_ini' 		=> "'$inicioIso','$finIso'",
