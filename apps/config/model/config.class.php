@@ -14,6 +14,18 @@ use core\ConfigGlobal;
  */
 class Config {
    
+    // conversion
+    public static $replace  = array(
+            'AE' => '&#198;',
+            'Ae' => '&#198;',
+            'ae' => '&#230;',
+            'aE' => '&#230;',
+            'OE' => '&#140;',
+            'Oe' => '&#140;',
+            'oe' => '&#156;',
+            'oE' => '&#156;'
+        );
+        
     /**
      * 
      * @var array
@@ -64,7 +76,8 @@ class Config {
     public function getNomRegionLatin() {
         $parametro = 'region_latin';
         $oConfigSchema = new ConfigSchema($parametro);
-        return $oConfigSchema->getValor();
+        $nombre_region_latin = strtr($oConfigSchema->getValor(), self::$replace);
+        return $nombre_region_latin;
     }
     
     public function getAmbito() {

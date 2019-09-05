@@ -76,14 +76,7 @@ $nom=$trato.$nom_lat.$apellidos;
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 
 // conversion 
-$replace  = array(
- 'AE' => '&#198;',
- 'Ae' => '&#198;',
- 'ae' => '&#230;',
- 'OE' => '&#140;',
- 'Oe' => '&#140;',
- 'oe' => '&#156;'
- );
+$replace  = config\model\Config::$replace;
 
 function titulo($id_asignatura){
 	$html = '';

@@ -42,14 +42,7 @@ function num_latin($num) {
 }	
 
 // conversion
-$replace  = array(
-    'AE' => '&#198;',
-    'Ae' => '&#198;',
-    'ae' => '&#230;',
-    'OE' => '&#140;',
-    'Oe' => '&#140;',
-    'oe' => '&#156;'
-);
+$replace  = config\model\Config::$replace;
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 $nombre_prelatura = strtr("PRAELATURA SANCTAE CRUCIS ET OPERIS DEI", $replace);
 $reg_stgr = "Stgr".ConfigGlobal::mi_region();
