@@ -7,6 +7,7 @@ use personas\model\entity as personas;
 use devel\model\entity\GestorDbSchema;
 use web;
 use core;
+use core\ConfigGlobal;
 
 /**
  * Gestiona el dossier 3005: Asignaturas de una actividad.
@@ -119,6 +120,9 @@ class Select3005 {
 			$cDbSchemas = $gesDbSchemas->getDbSchemas(['id' => $id_schema]);
 			$a_reg = explode('-',$cDbSchemas[0]->getSchema());
 			$dl_matricula = substr($a_reg[1],0,-1); // quito la v o la f.
+			if ($dl_matricula == 'cr') {
+			    $dl_matricula .= ConfigGlobal::mi_region();
+			}
 			if ($dl_matricula != $this->dl_org) {
 				$nombre_corto = "($dl_matricula) $nombre_corto";
 			}
@@ -173,7 +177,7 @@ class Select3005 {
 		$oActividad = new actividades\ActividadAll($this->id_pau);
 		$this->dl_org = $oActividad->getDl_org();
 		$mi_dele = core\ConfigGlobal::mi_delef();
-		if ($mi_dele == $this->dl_org) {
+		if ( $mi_dele == $this->dl_org ) {
 			$this->permiso = 3;
 		} else {
 			$this->permiso = 1;

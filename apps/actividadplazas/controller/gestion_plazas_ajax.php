@@ -30,7 +30,7 @@ switch ($que) {
 
 		$mi_dele = core\ConfigGlobal::mi_delef();
 		//Para las plazas totales
-		if ($dl == 'tot' && $mi_dele == $dl_org) {
+		if ($dl == 'tot' && $mi_dele == $dl_org ) {
 			$oActividadDl = new actividades\ActividadDl(array('id_activ'=>$id_activ));
 			$oActividadDl->DBCarregar();
 			$oActividadDl->setPlazas($plazas);

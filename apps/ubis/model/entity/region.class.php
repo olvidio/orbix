@@ -59,7 +59,7 @@ class Region Extends core\ClasePropiedades {
 	 * Si només necessita un valor, se li pot passar un integer.
 	 * En general se li passa un array amb les claus primàries.
 	 *
-	 * @param integer|array sregion
+	 * @param integer|array iid_region
 	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
 	 */
 	function __construct($a_id='') {
@@ -73,8 +73,8 @@ class Region Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->sregion = $a_id; // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('sregion' => $this->sregion);
+				$this->iid_region = (integer) $a_id; // evitem SQL injection fent cast a integer
+				$this->aPrimary_key = array('iid_region' => $this->iid_region);
 			}
 		}
 		$this->setoDbl($oDbl);
@@ -109,7 +109,7 @@ class Region Extends core\ClasePropiedades {
 					region                	 = :region,
 					nombre_region            = :nombre_region,
 					status                   = :status";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE region='$this->sregion'")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_region=$this->iid_region")) === false) {
 				$sClauError = 'Region.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -122,7 +122,7 @@ class Region Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			array_unshift($aDades, $this->sregion);
+			array_unshift($aDades, $this->iid_region);
 			$campos="(id_region,region,nombre_region,status)";
 			$valores="(:id_region,:region,:nombre_region,:status)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
@@ -148,8 +148,8 @@ class Region Extends core\ClasePropiedades {
 	public function DBCarregar($que=null) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (isset($this->sregion)) {
-			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE region='$this->sregion'")) === false) {
+		if (isset($this->iid_region)) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_region='$this->iid_region'")) === false) {
 				$sClauError = 'Region.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -178,7 +178,7 @@ class Region Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE region='$this->sregion'")) === false) {
+		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_region=$this->iid_region")) === false) {
 			$sClauError = 'Region.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -222,7 +222,7 @@ class Region Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('sregion' => $this->sregion);
+			$this->aPrimary_key = array('iid_region' => $this->iid_region);
 		}
 		return $this->aPrimary_key;
 	}
@@ -377,4 +377,3 @@ class Region Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 }
-?>

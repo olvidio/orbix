@@ -123,7 +123,7 @@ class GestorRegion Extends  core\ClaseGestor {
 			return false;
 		}
 		foreach ($oDblSt as $aDades) {
-			$a_pkey = array('region' => $aDades['region']);
+			$a_pkey = array('id_region' => $aDades['id_region']);
 			$oRegion= new Region($a_pkey);
 			$oRegion->setAllAtributes($aDades);
 			$oRegionSet->add($oRegion);

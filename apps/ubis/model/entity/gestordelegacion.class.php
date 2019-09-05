@@ -106,6 +106,7 @@ class GestorDelegacion Extends ClaseGestor {
 		$sf = (ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
+		/*
 		if ($bdl == 't') {
 			$sQuery="SELECT dl||'$sf', nombre_dl||' ('||dl||'$sf)'
 					FROM $nom_tabla
@@ -120,7 +121,20 @@ class GestorDelegacion Extends ClaseGestor {
 					SELECT u.region,u.nombre_region||' ('||region||')' 
 					FROM xu_region u 
 					ORDER BY 2";
+		}*/
+		// Ahora pongo las regiones que pueden organizar (todas) en la tabla de las dl.
+		if ($bdl == 't') {
+			$sQuery="SELECT dl||'$sf', nombre_dl||' ('||region||'-'||dl||'$sf)'
+					FROM $nom_tabla
+                    WHERE status = 't'
+					ORDER BY 2";
+		} else {
+			$sQuery="SELECT dl||'$sf', nombre_dl||' ('||region||'-'||dl||'$sf)'
+					FROM $nom_tabla WHERE dl != '".ConfigGlobal::mi_dele()."'
+                    WHERE status = 't'
+					ORDER BY 2";
 		}
+		
 		//echo "sql: $sQuery<br>";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorDelegacion.lista';

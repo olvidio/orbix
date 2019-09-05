@@ -96,7 +96,7 @@ class Select3103 {
 		$this->nom_activ = $oActividad->getNom_activ();
 		$dl_org = $oActividad->getDl_org();
 
-		if ($mi_dele == $dl_org) {
+		if ( $mi_dele == $dl_org ) {
 			$this->permiso = 3;
 			$GesActivAsignaturas = new actividadestudios\GestorActividadAsignaturaDl();
 		} else {

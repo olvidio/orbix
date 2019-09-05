@@ -61,7 +61,7 @@ $aOperador = array();
 if (!empty($Qacta)) {
 	$dl_acta = strtok($Qacta,' ');
 
-	if ($dl_acta == $mi_dele || ($mi_dele == 'cr' && $dl_acta == $mi_region) || $dl_acta == "?") {
+	if ($dl_acta == $mi_dele || $dl_acta == "?") {
 		if ($dl_acta == "?") $Qacta = "\?";
 		$GesActas = new notas\GestorActaDl();
 	} else {
@@ -69,12 +69,7 @@ if (!empty($Qacta)) {
 		$matches = [];
 		preg_match ("/^(\d*)(\/)?(\d*)/", $Qacta, $matches);
 		if (!empty($matches[1])) {
-		    // Para regiones sin dl:
-		    if ($mi_dele == 'cr') {
-			    $Qacta = empty($matches[3])? "$mi_region ".$matches[1].'/'.date("y") : "$mi_region $Qacta";
-		    } else {
-			    $Qacta = empty($matches[3])? "$mi_dele ".$matches[1].'/'.date("y") : "$mi_dele $Qacta";
-		    }
+            $Qacta = empty($matches[3])? "$mi_dele ".$matches[1].'/'.date("y") : "$mi_dele $Qacta";
 			$GesActas = new notas\GestorActaDl();
 		} else {
 			// Si es cr, se mira en todas:

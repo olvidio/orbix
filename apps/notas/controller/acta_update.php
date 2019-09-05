@@ -28,7 +28,7 @@ if (!empty($a_sel)) { //vengo de un checkbox (caso de eliminar)
 
 $dl_acta = strtok($Qacta,' ');
 
-if ($dl_acta == $mi_dele || ($mi_dele == 'cr' && $dl_acta == $mi_region) || $dl_acta == "?") {
+if ($dl_acta == $mi_dele || $dl_acta == "?") {
 	$oActa = new notas\ActaDl();
 	$oActaTribunal = new notas\ActaTribunalDl();
 } else {
