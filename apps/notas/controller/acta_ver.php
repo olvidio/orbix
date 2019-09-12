@@ -60,7 +60,10 @@ if (empty($notas) && empty($Qnotas)) {
 //últimos
 $any = date('y');
 $mi_dele = core\ConfigGlobal::mi_delef();
-$dl = ($mi_dele=='cr')? core\ConfigGlobal::mi_region() : $mi_dele;
+// para las regiones no es 'crA', sino 'A'.
+$a_reg = explode('-',$_SESSION['session_auth']['esquema']);
+$dlEsquema = substr($a_reg[1],0,-1); // quito la v o la f.
+$dl = ($dlEsquema=='cr')? core\ConfigGlobal::mi_region() : $mi_dele;
 
 $GesActas = new notas\GestorActa();
 $ult_lib = $GesActas->getUltimoLibro();
