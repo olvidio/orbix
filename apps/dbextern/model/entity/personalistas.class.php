@@ -374,7 +374,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	public function dividirCe() {
 		$matches = array();
 		$subject = $this->getCe();
-		$pattern = '/^(\d?)(\w+.*),\s*(\d*)-(\d*)/';
+		$pattern = '/^(\d?)(\w+.*)[,:]\s*(\d*)-(\d*)/';
 		$pattern2 = '/^(\d*)-(\d*)/';
 		if (preg_match($pattern, $subject, $matches)) {
 			$this->ice_num = $matches[1];
