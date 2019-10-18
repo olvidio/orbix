@@ -370,7 +370,7 @@ if (!empty($nf)) {
 	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("clic aquí") ."</span>";
 
 	echo "<p class=action>";
-	printf (_("para poner c2 a todos los de la lista, hacer %s"),$pag);
+	printf (_("para poner r a todos los de la lista, hacer %s"),$pag);
 	echo "</p>";
 }
 
