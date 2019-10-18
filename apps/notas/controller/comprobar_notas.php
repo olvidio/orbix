@@ -79,6 +79,25 @@ if ($Qactualizar == 'c2') {
 		$oDBSt_sql_1=$oDB->query($ssql_1);
 	}
 }
+if ($Qactualizar == 'r') {
+	$ssql="SELECT p.id_nom
+		FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
+		WHERE p.stgr != 'r' AND n.id_asignatura = 9998 
+		"; 
+	
+	$oDBSt_sql=$oDB->query($ssql);
+	$nf=$oDBSt_sql->rowCount();
+	
+	$i=0;
+	foreach ($oDBSt_sql->fetchAll() as $row) {
+		$i++;
+		$id_nom=$row["id_nom"];
+		$ssql_1="UPDATE $tabla SET stgr='r'
+			WHERE id_nom=$id_nom
+			";
+		$oDBSt_sql_1=$oDB->query($ssql_1);
+	}
+}
 if ($Qactualizar=="9999") {
 	$ssql="SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(*),stgr
 		FROM $tabla p,e_notas_dl n
@@ -155,6 +174,10 @@ if ($Qactualizar=="9998") {
 }
 ?>
 <html>
+<head><style type="text/css">
+ p {background-color: darkgray;} 
+ p.action {background-color: lightgray;} 
+ </style></head>
 <body topmargin="-0,5cm" background=/icons/fons.gif link=#0000ff vlink=#0000ff>
 <h2><center><font color=red>Comprobación del Fichero de Notas</font></center></h2>
 <hr size="2" aling="center">
@@ -190,9 +213,9 @@ if (!empty($nf)) {
 	echo "<tr><td colspan=7><hr>";
 	echo "</table>";
 	/* end lista */
-	echo "<p>";
 	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>9999)));
 	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("clic aquí") ."</span>";
+	echo "<p class=action>";
 	printf (_("para poner c1 y bienio finalizado a todos los de la lista, hacer %s. Esto pondrá la fecha de acta última."),$pag);
 	echo "</p>";
 }
@@ -225,7 +248,7 @@ if (!empty($nf)) {
 	/* end lista */
 	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>9998)));
 	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("clic aquí") ."</span>";
-	echo "<p>";
+	echo "<p class=action>";
 	printf (_("para poner r y cuadrienio finalizado a todos los de la lista, hacer %s. Esto pondrá la fecha de acta última."),$pag);
 	echo "</p>";
 }
@@ -282,9 +305,9 @@ if (!empty($nf)) {
 	}
 	echo "<tr><td colspan=7><hr>";
 	echo "</table>";
-	echo "<p>";
 	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>'c1')));
 	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("clic aquí") ."</span>";
+	echo "<p class=action>";
 	printf (_("para poner c1 a todos los de la lista, hacer %s"),$pag);
 	echo "</p>";
 }
@@ -316,10 +339,43 @@ if (!empty($nf)) {
 	echo "</table>";
 	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>'c2')));
 	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("clic aquí") ."</span>";
+
+	echo "<p class=action>";
 	printf (_("para poner c2 a todos los de la lista, hacer %s"),$pag);
+	echo "</p>";
 }
 
-/*7. Gente con asignaturas cursadas sin aprobar*/
+// 7. Comprobar que los han terminado tienen pueso r
+$ssql="SELECT p.stgr,p.nom, p.apellido1, p.apellido2
+	FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
+	WHERE p.stgr != 'r' AND n.id_asignatura = 9998
+	ORDER BY apellido1,apellido2,nom"; 
+	
+$oDBSt_sql=$oDB->query($ssql);
+$nf=$oDBSt_sql->rowCount();
+if (!empty($nf)) {
+	echo "<br><p>7. $tabla_txt con \"r\" sin poner: $nf</p>";
+	// Para sacar una lista
+	// Para sacar una lista
+	echo "<table>";
+	foreach ($oDBSt_sql->fetchAll() as $algo) {
+		$nom= $algo['apellido1']." ".$algo['apellido2'].", ".$algo['nom'];
+		$stgr= $algo['stgr'];
+		echo "<tr><td width=20></td>";
+		echo "<td>$nom</td><td>$stgr</td></tr>";
+	}
+	echo "<tr><td colspan=7><hr>";
+	echo "</table>";
+	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>'r')));
+	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("clic aquí") ."</span>";
+
+	echo "<p class=action>";
+	printf (_("para poner c2 a todos los de la lista, hacer %s"),$pag);
+	echo "</p>";
+}
+
+
+/*8. Gente con asignaturas cursadas sin aprobar*/
 $sqlF="SELECT  p.id_nom,p.nom, p.apellido1, p.apellido2, n.f_acta, n.id_asignatura
 FROM $tabla p,e_notas_dl n
 WHERE p.id_nom=n.id_nom AND n.id_situacion = 2
@@ -327,7 +383,7 @@ ORDER BY p.apellido1,p.apellido2 ";
 
 $oDBSt_sql=$oDB->query($sqlF);
 $nf=$oDBSt_sql->rowCount();
-echo "<br><p>7. $tabla_txt con asignaturas cursadas sin examinar: $nf</p>";
+echo "<br><p>8. $tabla_txt con asignaturas cursadas sin examinar: $nf</p>";
 
 /* Para sacar una lista*/
 echo "<table>";
