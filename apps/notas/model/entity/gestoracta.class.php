@@ -46,7 +46,7 @@ class GestorActa Extends core\ClaseGestor {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		$sQuery = "SELECT  (regexp_matches(acta, '^\w{1,6}\s+(\d+)/$any'))::numeric[] as num
-			FROM $nom_tabla WHERE acta ~* '^$sRegion.*/$any'
+			FROM $nom_tabla WHERE acta ~* '^$sRegion\s+.*/$any'
 			ORDER BY num DESC
 			LIMIT 1";
 		//echo "ss: $sQuery<br>";
