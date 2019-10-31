@@ -34,6 +34,9 @@ if ($dl_acta == $mi_dele || $dl_acta == "?") {
 } else {
 	// Ojo si la dl ya existe no deberia hacerse
 	$oActa = new notas\ActaEx();
+	
+	$msg = _("No puede generar una acta de otra dl");
+    exit($msg);
 }
 
 $Qid_asignatura = (integer) \filter_input(INPUT_POST, 'id_asignatura');
