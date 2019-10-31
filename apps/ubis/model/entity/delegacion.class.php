@@ -58,6 +58,12 @@ class Delegacion Extends core\ClasePropiedades {
 	 */
 	 private $sgrupo_estudios;
 	/**
+	 * region_stgr de Delegacion
+	 *
+	 * @var string
+	 */
+	 private $sregion_stgr;
+	/**
 	 * Status de Delegacion
 	 *
 	 * @var boolean
@@ -104,6 +110,7 @@ class Delegacion Extends core\ClasePropiedades {
 		$aDades['region'] = $this->sregion;
 		$aDades['nombre_dl'] = $this->snombre_dl;
 		$aDades['grupo_estudios'] = $this->sgrupo_estudios;
+		$aDades['region_stgr'] = $this->sregion_stgr;
 		$aDades['status'] = $this->bstatus;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
@@ -118,6 +125,7 @@ class Delegacion Extends core\ClasePropiedades {
 					region                   = :region,
 					nombre_dl                = :nombre_dl,
 					grupo_estudios           = :grupo_estudios,
+					region_stgr              = :region_stgr,
 					status                   = :status";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE dl='$this->sdl' AND region='$this->sregion'")) === false) {
 				$sClauError = 'Delegacion.update.prepare';
@@ -133,8 +141,8 @@ class Delegacion Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->sdl, $this->sregion);
-			$campos="(id_dl,dl,region,nombre_dl,status,grupo_estudios)";
-			$valores="(:id_dl,:dl,:region,:nombre_dl,:status,:grupo_estudios)";		
+			$campos="(id_dl,dl,region,nombre_dl,status,grupo_estudios,region_stgr)";
+			$valores="(:id_dl,:dl,:region,:nombre_dl,:status,:grupo_estudios,:region_stgr)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Delegacion.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -211,6 +219,7 @@ class Delegacion Extends core\ClasePropiedades {
 		if (array_key_exists('region',$aDades)) $this->setRegion($aDades['region']);
 		if (array_key_exists('nombre_dl',$aDades)) $this->setNombre_dl($aDades['nombre_dl']);
 		if (array_key_exists('grupo_estudios',$aDades)) $this->setGrupo_estudios($aDades['grupo_estudios']);
+		if (array_key_exists('region_stgr',$aDades)) $this->setRegion_stgr($aDades['region_stgr']);
 		if (array_key_exists('status',$aDades)) $this->setStatus($aDades['status']);
 	}
 
@@ -335,6 +344,25 @@ class Delegacion Extends core\ClasePropiedades {
 		$this->sgrupo_estudios = $sgrupo_estudios;
 	}
 	/**
+	 * Recupera l'atribut sregion_stgr de Delegacion
+	 *
+	 * @return string sregion_stgr
+	 */
+	function getRegion_stgr() {
+		if (!isset($this->sregion_stgr)) {
+			$this->DBCarregar();
+		}
+		return $this->sregion_stgr;
+	}
+	/**
+	 * estableix el valor de l'atribut sregion_stgr de Delegacion
+	 *
+	 * @param string sregion_stgr='' optional
+	 */
+	function setRegion_stgr($region_stgr='') {
+		$this->sregion_stgr = $region_stgr;
+	}
+	/**
 	 * Recupera l'atribut bstatus de Delegacion
 	 *
 	 * @return boolean bstatus
@@ -367,6 +395,7 @@ class Delegacion Extends core\ClasePropiedades {
 		$oDelegacionSet->add($this->getDatosDl());
 		$oDelegacionSet->add($this->getDatosNombre_dl());
 		$oDelegacionSet->add($this->getDatosGrupo_estudios());
+		$oDelegacionSet->add($this->getDatosRegion_stgr());
 		$oDelegacionSet->add($this->getDatosStatus());
 		return $oDelegacionSet->getTot();
 	}
@@ -441,6 +470,20 @@ class Delegacion Extends core\ClasePropiedades {
 		$oDatosCampo->setArgument('ubis\model\entity\Region');
 		$oDatosCampo->setArgument2('getRegion'); // método para obtener el valor a mostrar del objeto relacionado.
 		$oDatosCampo->setArgument3('getListaRegiones');
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut sregion_stgr de Delegacion
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosRegion_stgr() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'region_stgr'));
+		$oDatosCampo->setEtiqueta(_("región del stgr"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument(3);
 		return $oDatosCampo;
 	}
 	/**

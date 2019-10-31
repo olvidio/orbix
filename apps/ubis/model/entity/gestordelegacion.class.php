@@ -38,6 +38,40 @@ class GestorDelegacion Extends ClaseGestor {
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
 	/**
+	 * retorna un objecte del tipus Array, les dl d'una regió del stgr
+	 *
+	 * @param array optional lista de regions.
+	 * @return array Una Llista de delegacions.
+	 */
+	function getArrayDlRegionStgr($aRegiones=array()) {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		
+		$num_regiones=count($aRegiones);
+		if ($num_regiones > 0) {
+			$sCondicion = "WHERE status = 't' AND region_stgr = ";
+			$sReg = implode("'OR region_stgr = '",$aRegiones);
+			$sReg = "'".$sReg."'";
+			$sCondicion .= $sReg;
+			$sQuery="SELECT u.id_dl,u.dl FROM $nom_tabla u 
+					$sCondicion
+					ORDER BY dl";
+		} else {
+			$sQuery="SELECT id_dl, dl
+					FROM $nom_tabla
+					ORDER BY dl";
+		}
+		//echo "query: $sQuery";
+		$a_dl = array();
+		foreach ($oDbl->query($sQuery) as $row) {
+			$id_dl = $row['id_dl'];
+			$dl = $row['dl'];
+			$a_dl[$id_dl] = $dl;
+		}
+		return $a_dl;
+	}
+
+	/**
 	 * retorna un objecte del tipus Desplegable
 	 *
 	 * @param array optional lista de regions.

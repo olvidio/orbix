@@ -16,6 +16,7 @@ use notas\model\entity as notas;
 use web\Hash;
 use web\Lista;
 use function core\curso_est;
+use ubis\model\entity\GestorDelegacion;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -65,20 +66,39 @@ if (!empty($Qacta)) {
 		if ($dl_acta == "?") $Qacta = "\?";
 		$GesActas = new notas\GestorActaDl();
 	} else {
-		// si es número busca en la dl.
-		$matches = [];
-		preg_match ("/^(\d*)(\/)?(\d*)/", $Qacta, $matches);
-		if (!empty($matches[1])) {
-            $Qacta = empty($matches[3])? "$mi_dele ".$matches[1].'/'.date("y") : "$mi_dele $Qacta";
-			$GesActas = new notas\GestorActaDl();
-		} else {
-			// Si es cr, se mira en todas:
-			if (ConfigGlobal::soy_region()) {
-				$GesActas = new notas\GestorActa();
-			} else {
-				$GesActas = new notas\GestorActaEx();
-			}
-		}
+        // Si es cr, se mira en todas (las suyas):
+        if (ConfigGlobal::soy_region()) {
+            $oGesDelegaciones = new GestorDelegacion();
+            $aDl = $oGesDelegaciones->getArrayDlRegionStgr([$mi_dele]);
+            
+            // si es número busca en la dl.
+            $Qacta_dl = '';
+            $matches = [];
+            preg_match ("/^(\d*)(\/)?(\d*)/", $Qacta, $matches);
+            if (!empty($matches[1])) {
+                foreach ($aDl as $dl) {
+                    $Qacta_dl .= empty($Qacta_dl)? '' : "|";
+                    $Qacta_dl .= empty($matches[3])? "$dl ".$matches[1].'/'.date("y") : "$dl $Qacta";
+                }
+                $Qacta = $Qacta_dl;
+            } else { 
+                // otra busqueda que no empieza por número
+                // Si soy región stgr no puedo busacr en 'Ex', sólo en mis dl.
+            }
+            $GesActas = new notas\GestorActa();
+        } else {
+            // Soy dl normal.
+            // si es número busca en la dl.
+            $matches = [];
+            preg_match ("/^(\d*)(\/)?(\d*)/", $Qacta, $matches);
+            if (!empty($matches[1])) {
+                $Qacta = empty($matches[3])? "$mi_dele ".$matches[1].'/'.date("y") : "$mi_dele $Qacta";
+                $GesActas = new notas\GestorActaDl();
+            } else {
+                // Miro en resto: Puede ser un acta de una dl "NO Orbix" que haya  creado yo. 
+                $GesActas = new notas\GestorActaEx();
+            }
+        }
 	}
 
 	$aWhere['_ordre'] = 'f_acta DESC';
@@ -99,21 +119,31 @@ if (!empty($Qacta)) {
 	$titulo=ucfirst(sprintf(_("lista de actas del curso %s"),$txt_curso));
 	// Si es cr, se mira en todas:
 	if (ConfigGlobal::soy_region()) {
-		$GesActas = new notas\GestorActa();
+            $oGesDelegaciones = new GestorDelegacion();
+            $aDl = $oGesDelegaciones->getArrayDlRegionStgr([$mi_dele]);
+            $sReg = implode("|",$aDl);
+            $Qacta = "^($sReg)";
+            $GesActas = new notas\GestorActa();
 	} else {
 		$GesActas = new notas\GestorActaDl();
 	}
 }
-
 $cActas = $GesActas->getActas($aWhere,$aOperador);
 
 $botones = 0; // para 'añadir acta'
 $a_botones = [];
-if ($_SESSION['oPerm']->have_perm("est")) {
-	$a_botones[] = array( 'txt' => _("eliminar"), 'click' =>"fnjs_eliminar(\"#seleccionados\")");
-	$a_botones[] = array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(\"#seleccionados\")");
-	$botones = 1; // para 'añadir acta'
+// Si soy region del stgr, no puedo modificar actas: que lo hagan las dl.
+if (ConfigGlobal::soy_region()) {
+    $a_botones[] = array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(\"#seleccionados\")");
+    $botones = 0;
+} else {
+    if ($_SESSION['oPerm']->have_perm("est")) {
+        $a_botones[] = array( 'txt' => _("eliminar"), 'click' =>"fnjs_eliminar(\"#seleccionados\")");
+        $a_botones[] = array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(\"#seleccionados\")");
+        $botones = 1; // para 'añadir acta'
+    }
 }
+
 $a_botones[] = array( 'txt' => _("imprimir"), 'click' =>"fnjs_imprimir(\"#seleccionados\")" );
 
 $a_cabeceras = array( array('name'=>ucfirst(_("acta")),'formatter'=>'clickFormatter'), 

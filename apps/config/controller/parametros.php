@@ -151,6 +151,7 @@ if (empty($valor)) {
 }
 $chk_dl = ($valor == 'dl')? 'checked' : ''; 
 $chk_r = ($valor == 'r')? 'checked' : ''; 
+$chk_rstgr = ($valor == 'rstgr')? 'checked' : ''; 
 
 $oHashDLR = new Hash();
 $oHashDLR->setUrl($url);
@@ -160,6 +161,7 @@ $oHashDLR->setArrayCamposHidden(['parametro' => $parametro]);
 $a_campos['oHashDLR'] = $oHashDLR;
 $a_campos['chk_dl'] = $chk_dl;
 $a_campos['chk_r'] = $chk_r;
+$a_campos['chk_rstgr'] = $chk_rstgr;
 
 // ----------- Gestión calendario: centralizada o por oficinas -------------------
 $parametro = 'gesCalendario';

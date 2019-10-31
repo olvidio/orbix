@@ -85,11 +85,12 @@ mes:<input size="3" type="text" name="fin_mes" value="{{ aCursoCrt['fin_mes'] }}
 </form>
 <hr>
 
-<h3>{{ "delegación o región"|trans }}:</h3>
+<h3>{{ "Ámbito del esquema: delegación, región, regiónStgr"|trans }}:</h3>
 <form id="frm_dl_r" name="frm_dl_r" action="">
 {{ oHashDLR.getCamposHtml|raw }}
-<input type="radio" name="valor" value="r" {{ chk_r }} >{{ "región"|trans }}
 <input type="radio" name="valor" value="dl" {{ chk_dl }} >{{ "delegación"|trans }}
+<input type="radio" name="valor" value="r" {{ chk_r }} >{{ "región (tiene personas y actividades)"|trans }}
+<input type="radio" name="valor" value="rstgr" {{ chk_rstgr }} >{{ "región del Stgr (gestiona un conjunto de dl,r)"|trans }}
 <input type="button" value="{{ "guardar"|trans }}" onclick="fnjs_guardar(this.form);" >
 </form>
 <hr>

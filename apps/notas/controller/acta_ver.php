@@ -37,6 +37,11 @@ $observ = '';
 $notas = empty($notas)? '': $notas;
 $permiso = empty($permiso)? 3: $permiso;
 
+// Si soy region del stgr, no puedo modificar actas (que lo hagan las dl).
+if (ConfigGlobal::soy_region()) {
+    $permiso = 0;
+}
+
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
 	// el scroll id es de la página anterior, hay que guardarlo allí

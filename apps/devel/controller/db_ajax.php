@@ -31,7 +31,7 @@ switch ($Qsalida) {
 		   $aOpciones[$value] = $value; 
 		}
 		// Añadir cr y gestión
-		$aOpciones['cr'] = _("personas de cr (no dl)");
+		//$aOpciones['cr'] = _("personas de cr (no dl)");
 		$aOpciones[$region] = _("para gestión global");
 		
 		$oDesplDelegaciones = new Desplegable();
