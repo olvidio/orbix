@@ -34,8 +34,17 @@ if ($dl_acta == $mi_dele || $dl_acta == "?") {
 } else {
 	// Ojo si la dl ya existe no deberia hacerse
 	$oActa = new notas\ActaEx();
+    switch ($Qmod) {
+        case 'nueva':
+            $msg = _("No puede generar un acta de otra dl");
+            break;
+        case 'eliminar':
+            $msg = _("No puede eliminar un acta de otra dl");
+            break;
+        case 'modificar':
+            $msg = _("No puede modificar un acta de otra dl");
+            break;
 	
-	$msg = _("No puede generar una acta de otra dl");
     exit($msg);
 }
 
