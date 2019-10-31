@@ -44,7 +44,9 @@ if ($dl_acta == $mi_dele || $dl_acta == "?") {
         case 'modificar':
             $msg = _("No puede modificar un acta de otra dl");
             break;
-	
+        default:
+            $msg = _("No puede modificar un acta de otra dl");
+    }
     exit($msg);
 }
 
