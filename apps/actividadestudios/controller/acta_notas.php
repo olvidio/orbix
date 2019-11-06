@@ -4,6 +4,7 @@ use actividadestudios\model\entity as actividadestudios;
 use notas\model\entity as notas;
 use personas\model\entity as personas;
 use web\Posicion;
+use notas\model\entity\Nota;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -89,7 +90,7 @@ $GesActas = new notas\GestorActa();
 $cActas = $GesActas->getActas(array('id_activ'=>$id_activ,'id_asignatura'=>$id_asignatura, '_ordre'=>'f_acta'));
 $acta_principal = '';
 if (is_array($cActas) && !empty($cActas)) {
-	$a_actas = [ 0 => '', 2 => _("cursada")];
+	$a_actas = [ 0 => '', 2 => Nota::CURSADA];
 	foreach ($cActas as $oActa) {
 		$nom_acta=$oActa->getActa();
 		$a_actas[$nom_acta]=$oActa->getActa();

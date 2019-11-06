@@ -10,6 +10,7 @@ use notas\model\entity as notas;
 use personas\model\entity as personas;
 use web\Hash;
 use web\Lista;
+use notas\model\entity\Nota;
 
 class Select1011 {
 
@@ -147,6 +148,9 @@ class Select1011 {
 			}
 			//$nota = $a_notas[$id_situacion];
 			$nota = $oPersonaNota->getNota_txt();
+			if ($acta == Nota::CURSADA) {
+			    $acta = '';
+			}
 			
 			$oAsignatura = new asignaturas\Asignatura($id_asignatura);
 			$nombre_corto=$oAsignatura->getNombre_corto();

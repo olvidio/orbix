@@ -20,6 +20,10 @@ use core;
  * @created 07/04/2014
  */
 class Nota Extends core\ClasePropiedades {
+    // tipo plaza constantes.
+    // 2:cursada
+    const CURSADA   = 2; // Cursada
+    
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/**

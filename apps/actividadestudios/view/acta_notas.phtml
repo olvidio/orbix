@@ -106,9 +106,9 @@ foreach ($aPersonasMatriculadas as $nom=>$oMatricula) {
 	if (empty($acta)) {
 	   $acta_txt = '-';
        $oDesplActas->setOpcion_sel($acta_principal);
-	} else if ($acta == 2) {
+	} else if ($acta == notas\model\entity\Nota::CURSADA) {
 	   $acta_txt = _("cursada");
-       $oDesplActas->setOpcion_sel($acta_principal);
+       $oDesplActas->setOpcion_sel($acta);
 	} else {
 	   $acta_txt = $acta;
        $oDesplActas->setOpcion_sel($acta);

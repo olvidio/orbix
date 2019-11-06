@@ -22,6 +22,7 @@ use web;
  * @created 07/04/2014
  */
 class Acta Extends core\ClasePropiedades {
+    
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/**

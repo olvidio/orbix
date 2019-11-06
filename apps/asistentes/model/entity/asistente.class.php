@@ -19,7 +19,7 @@ namespace asistentes\model\entity;
  * @created 11/03/2014
  */
 class Asistente Extends AsistentePub {
-	// tipo plaza constants.
+	// tipo plaza constantes.
 	//1:pedida, 2:en espera, 3: denegada, 4:asignada, 5:confirmada
     const PLAZA_PEDIDA     = 1; // Pedida
     const PLAZA_EN_ESPERA   = 2; // En espera.
