@@ -6,7 +6,8 @@
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-
+	
+$QEsquemaRef = (string) \filter_input(INPUT_POST, 'esquema');
 $Qregion = (string) \filter_input(INPUT_POST, 'region');
 $Qdl = (string) \filter_input(INPUT_POST, 'dl');
 $Qcomun = (integer) \filter_input(INPUT_POST, 'comun');
@@ -17,7 +18,14 @@ $esquema = "$Qregion-$Qdl";
 $esquemav = $esquema.'v';
 $esquemaf = $esquema.'f';
 
-$esquemaRef = 'H-dlz';
+// Copiar esquema de...
+$a_reg = explode('-',$QEsquemaRef);
+$RegionRef = $a_reg[0];
+$DlRef = substr($a_reg[1],0,-1); // quito la v o la f.
+
+$esquemaRef = "$RegionRef-$DlRef";
+$esquemaRefv = $esquemaRef.'v';
+$esquemaReff = $esquemaRef.'f';
 
 // COMUN
 if (!empty($Qcomun)) {
@@ -51,7 +59,6 @@ if (!empty($Qcomun)) {
 }
 // SV
 if (!empty($Qsv)) {
-	$esquemaRef = 'H-dlbv';
     $aTablas = ["aux_cross_usuarios_grupos" => ['id_schema' => 'yes'],
                 "aux_grupmenu" => ['id_schema' => 'yes'],
                 "aux_grupmenu_rol" => ['id_schema' => 'yes'],
@@ -64,7 +71,7 @@ if (!empty($Qsv)) {
                 ];
 	$oDBTabla = new core\DBTabla();
 	$oDBTabla->setDb('sv');
-	$oDBTabla->setRef($esquemaRef);
+	$oDBTabla->setRef($esquemaRefv);
 	$oDBTabla->setNew($esquemav);
 	$oDBTabla->setTablas($aTablas);
 	$oDBTabla->copiar();
@@ -83,7 +90,6 @@ if (!empty($Qsv)) {
 }
 // SF
 if (!empty($Qsf)) {
-	$esquemaRef = 'H-dlbf';
     $aTablas = ["aux_cross_usuarios_grupos" => ['id_schema' => 'yes'],
                 "aux_grupmenu" => ['id_schema' => 'yes'],
                 "aux_grupmenu_rol" => ['id_schema' => 'yes'],
@@ -96,7 +102,7 @@ if (!empty($Qsf)) {
                 ];
 	$oDBTabla = new core\DBTabla();
 	$oDBTabla->setDb('sf');
-	$oDBTabla->setRef($esquemaRef);
+	$oDBTabla->setRef($esquemaReff);
 	$oDBTabla->setNew($esquemaf);
 	$oDBTabla->setTablas($aTablas);
 	$oDBTabla->copiar();

@@ -31,4 +31,12 @@ class ConfigDB {
 		}
 		$this->data = include ConfigGlobal::DIR_PWD.'/'.$database.'.inc';
 	}
+	
+	public function addEsquema($database,$esquema,$esquema_pwd){
+	    $this->setDataBase($database);
+        $this->data[$esquema] = ['user' => $esquema, 'password' => $esquema_pwd ];
+        
+		$filename = ConfigGlobal::DIR_PWD.'/'.$database.'.inc';
+	    file_put_contents($filename, '<?php return ' . var_export($this->data, true) . ' ;');
+	}
 }

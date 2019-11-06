@@ -10,6 +10,7 @@ use devel\model\entity\DbSchema;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$QEsquemaRef = (string) \filter_input(INPUT_POST, 'esquema');
 $Qregion = (string) \filter_input(INPUT_POST, 'region');
 $Qdl = (string) \filter_input(INPUT_POST, 'dl');
 $Qcomun = (integer) \filter_input(INPUT_POST, 'comun');
@@ -24,9 +25,10 @@ $oDBRol = new core\DBRol();
 
 // ESQUEMAS 
 // Copiar esquema de...
+$a_reg = explode('-',$QEsquemaRef);
+$RegionRef = $a_reg[0];
+$DlRef = substr($a_reg[1],0,-1); // quito la v o la f.
 
-$RegionRef = 'H';
-$DlRef = 'dlb';
 $RegionNew = $Qregion;
 $DlNew = $Qdl;
 	

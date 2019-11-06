@@ -235,7 +235,7 @@ class DBTabla {
 	    // crear archivo con el password
 	    $dsn = $this->getConexion(1);
 	    
-		$command = "/usr/bin/psql -q ";
+		$command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -q -X -t ";
 		$command .= "--pset pager=off ";
 		$command .= "--file=".$this->getFileNew()." ";
 		$command .= "\"".$dsn."\"";

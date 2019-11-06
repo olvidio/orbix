@@ -61,6 +61,7 @@ class DBRol {
 		$this->sUser = $user;
 	}
 	public function setPwd($password) {
+	    //$password_encoded = urlencode ($password);
 		$this->sPwd = $password;
 	}
 	public function setOptions($options) {
@@ -131,8 +132,14 @@ class DBRol {
 		} else {
 			if ($oDblSt->execute() === false) {
 				$sClauError = 'DBRol.crear.execute';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-				return false;
+				$err=$oDblSt->errorInfo()[2];
+				
+				if (strpos($err, 'already exists') !== FALSE) { // ya existe
+				    $this->camniarPassword();
+				} else {
+                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                    return false;
+				}
 			}
 		}
 	}
@@ -164,6 +171,23 @@ class DBRol {
 		} else {
 			if ($oDblSt->execute() === false) {
 				$sClauError = 'DBRol.eliminar.execute';
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				return false;
+			}
+		}
+	}
+	private function camniarPassword() {
+		$oDbl = $this->getoDbl();
+
+		$sql = "ALTER USER \"$this->sUser\" WITH PASSWORD '$this->sPwd';";
+
+		if (($oDblSt = $oDbl->prepare($sql)) === false) {
+			$sClauError = 'DBRol.pwd.prepare';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		} else {
+			if ($oDblSt->execute() === false) {
+				$sClauError = 'DBRol.pwd.execute';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 				return false;
 			}

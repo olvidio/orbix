@@ -62,14 +62,17 @@ $oDBRol->setDbConexion($oDevelPC);
 $oDBRol->setUser($esquema);
 $oDBRol->setPwd($esquema_pwd);
 $oDBRol->crearUsuario();
+$oConfigDB->addEsquema('comun', $esquema, $esquema_pwd);
 // sv
 $oDBRol->setUser($esquemav);
 $oDBRol->setPwd($esquemav_pwd);
 $oDBRol->crearUsuario();
+$oConfigDB->addEsquema('sv', $esquemav, $esquemav_pwd);
 // sf
 $oDBRol->setUser($esquemaf);
 $oDBRol->setPwd($esquemaf_pwd);
 $oDBRol->crearUsuario();
+$oConfigDB->addEsquema('sf', $esquemaf, $esquemaf_pwd);
 
 $archivo_conf = ConfigGlobal::DIR_PWD.'/  (comun.inc, sv.inc, sf.inc)';
 echo sprintf(_("se han creado los usuarios"));
@@ -80,3 +83,10 @@ echo "<br>";
 echo "$esquema > ". htmlspecialchars($esquema_pwd). "<br>";
 echo "$esquemav > ". htmlspecialchars($esquemav_pwd). "<br>";
 echo "$esquemaf > ". htmlspecialchars($esquemaf_pwd). "<br>";
+echo "<br>";
+echo _("Ya no hace falta, pero interesa saberlo para acceder al a BD directamente.");
+
+
+
+
+

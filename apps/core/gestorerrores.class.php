@@ -61,7 +61,6 @@ class gestorErrores {
 	
 	function muestraMensaje($sClauError,$goto) {
 		$txt=$this->leerErrorAppLastError();
-		$err=$oDBSt->errorInfo();
 		if (strstr($txt, 'duplicate key')) {
 			echo _("ya existe un registro con esta información");
 		} else {

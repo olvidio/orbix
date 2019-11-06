@@ -230,7 +230,7 @@ class DBEsquema {
 	    $user = $config['user'];
 	    $password = $config['password'];
 	    
-	    $password_encoded = rawurlencode ($password);
+	    $password_encoded = urlencode ($password);
 	    $dsn = "postgresql://$user:$password_encoded@$host:$port/".$dbname;
 	    
 	    return $dsn;
@@ -259,7 +259,7 @@ class DBEsquema {
 	    // crear archivo con el password
 	    $dsn = $this->getConexion(1);
 		// Importar el esquema en la base de datos comun
-		$command = "/usr/bin/psql -q ";
+		$command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -q  -X -t --pset pager=off ";
 		$command .= "--file=".$this->getFileNew()." ";
 		$command .= "\"".$dsn."\"";
 		$command .= " > ".$this->getFileLog()." 2>&1"; 
@@ -280,12 +280,11 @@ class DBEsquema {
 	}
 	
 	public function eliminar() {
-	    // crear archivo con el password
 	    $dsn = $this->getConexion(1);
 		$esquema = $this->getNew();
 		$sql = "DROP SCHEMA IF EXISTS \\\"".$esquema."\\\" CASCADE;";
-		
-		$command = "/usr/bin/psql -q ";
+	
+		$command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -q -X -t --pset pager=off";
 		$command .= " -c \"".$sql."\" ";
 		$command .= "\"".$dsn."\"";
 		$command .= " > ".$this->getFileLog()." 2>&1"; 
@@ -297,6 +296,16 @@ class DBEsquema {
 				echo sprintf("PSQL ERROR IN COMMAND: %s<br> mirar en: %s<br>",$command,$this->getFileLog());
 			}
 		}
+		//Quizá hay que hacerlo dos veces:
+		passthru($command); // no output to capture so no need to store it
+		// read the file, if empty all's well
+		$error = file_get_contents($this->getFileLog());
+		if(trim($error) != '') {
+			if (ConfigGlobal::is_debug_mode()) {
+				echo sprintf("PSQL ERROR IN COMMAND(2): %s<br> mirar en: %s<br>",$command,$this->getFileLog());
+			}
+		}
+		
 	}
 	
 	private function deleteFile($file) {
