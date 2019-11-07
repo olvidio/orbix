@@ -22,7 +22,14 @@ use core;
 class Nota Extends core\ClasePropiedades {
     // tipo plaza constantes.
     // 2:cursada
-    const CURSADA   = 2; // Cursada
+    const CURSADA       = 2; // Cursada
+    const ARRAY_STATUS_TXT = [
+        self::CURSADA => "cursada",
+    ];
+    // NO se usan, son solo para asegurar que exista la traducción
+    private function traduccion () {
+        $p = _("cursada");
+    }
     
 	/* ATRIBUTS ----------------------------------------------------------------- */
 

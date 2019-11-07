@@ -90,7 +90,7 @@ $GesActas = new notas\GestorActa();
 $cActas = $GesActas->getActas(array('id_activ'=>$id_activ,'id_asignatura'=>$id_asignatura, '_ordre'=>'f_acta'));
 $acta_principal = '';
 if (is_array($cActas) && !empty($cActas)) {
-	$a_actas = [ 0 => '', 2 => Nota::CURSADA];
+	$a_actas = [ 0 => '', Nota::CURSADA => Nota::ARRAY_STATUS_TXT[Nota::CURSADA]];
 	foreach ($cActas as $oActa) {
 		$nom_acta=$oActa->getActa();
 		$a_actas[$nom_acta]=$oActa->getActa();

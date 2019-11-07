@@ -1,3 +1,6 @@
+<?php
+use notas\model\entity\Nota;
+?>
 <script>
 fnjs_nota=function(n){
 	var num;
@@ -107,7 +110,7 @@ foreach ($aPersonasMatriculadas as $nom=>$oMatricula) {
 	   $acta_txt = '-';
        $oDesplActas->setOpcion_sel($acta_principal);
 	} else if ($acta == notas\model\entity\Nota::CURSADA) {
-	   $acta_txt = _("cursada");
+	   $acta_txt = Nota::ARRAY_STATUS_TXT[Nota::CURSADA];
        $oDesplActas->setOpcion_sel($acta);
 	} else {
 	   $acta_txt = $acta;
