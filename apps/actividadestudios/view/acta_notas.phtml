@@ -108,7 +108,11 @@ foreach ($aPersonasMatriculadas as $nom=>$oMatricula) {
 	$acta=$oMatricula->getActa();
 	if (empty($acta)) {
 	   $acta_txt = '-';
-       $oDesplActas->setOpcion_sel($acta_principal);
+	   if (empty($nota_num)) {
+           $oDesplActas->setOpcion_sel($acta_principal);
+	   } else {
+           $oDesplActas->setOpcion_sel(0);
+	   }
 	} else if ($acta == notas\model\entity\Nota::CURSADA) {
 	   $acta_txt = Nota::ARRAY_STATUS_TXT[Nota::CURSADA];
        $oDesplActas->setOpcion_sel($acta);

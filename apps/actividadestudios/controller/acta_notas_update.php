@@ -3,6 +3,8 @@ use asignaturas\model\entity as asignaturas;
 use actividadestudios\model\entity as actividadestudios;
 use notas\model\entity as notas;
 use personas\model\entity as personas;
+use notas\model\entity\Acta;
+use notas\model\entity\Nota;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -59,7 +61,7 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 				$error .= sprintf(_("nota no guardada para %s porque la nota (%s) no llega al mínimo: 6"),$oPersona->getNombreApellidos(),$nn)."\n";
 				continue;
 			}
-			if ($acta == 2 ) {
+			if ($acta == Nota::CURSADA ) {
 				$error .= sprintf(_("no se puede definir cursada con preceptor")."\n");
 				exit($error);
 			}
@@ -77,13 +79,13 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 				//conseguir una fecha para poner como fecha acta. las cursadas se guardan durante 2 años
 				$f_acta = $cActas[0]->getF_acta()->getFromLocal();
 			} else {
-				if (!$acta) {
+				if (empty($acta)) {
 					$error .= sprintf(_("falta definir el acta para alguna nota")."\n");
 					exit($error);
 				}
 				$oActa =new notas\Acta($acta);
 				$f_acta=$oActa->getF_acta()->getFromLocal();
-				if (!$acta || !$f_acta) {
+				if (empty($acta) || empty($f_acta)) {
 					$error .= sprintf(_("debe introducir los datos del acta. No se ha guardado nada.")."\n");
 					exit($error);
 				}
@@ -173,6 +175,33 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 			$error.=sprintf (_("está intentando poner una nota que ya existe (id_nom=%s)")."\n",$id_nom);
 			continue;
 		} else {
+		    switch ($acta) {
+		        case '':
+                    if (isset($oPersonaNota)) {
+					   $oPersonaNota->DBEliminar();
+                    }
+                    continue 2;
+		            break;
+		        case Nota::CURSADA:
+					$id_situacion = 2;
+		            break;
+		        default:
+                if (empty($id_situacion)) {
+                    if (!empty($nota_num)) {
+                        if ($nota_num/$nota_max < 0.6) {
+                           $id_situacion = 12;
+                        } else {
+                            $id_situacion = 10;
+                        }
+                    } else {
+                        if (isset($oPersonaNota)) {
+                            $oPersonaNota->DBEliminar();
+                        }
+                        continue 2;
+                    }
+                }
+		    }
+		    /*
 			// para borrar	(empty($nota_num))
 			if (!empty($id_activ_old) && ($Qid_activ == $id_activ_old) && empty($nota_num)) {
 				if ($id_situacion != 2 && $id_situacion != 12) {
@@ -182,15 +211,17 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 			} 
 			// Ahora guardo si la ha cursado o examinado
 			if (empty($id_situacion)) {
-				if (empty($nota_num)) {
+				if (!empty($nota_num)) {
+				    if ($nota_num/$nota_max < 0.6) {
+					   $id_situacion = 12;
+                    } else {
+                        $id_situacion = 10;
+                    }
+				} else {
 					$id_situacion = 2;
 				}
-				if (!empty($nota_num) && $nota_num/$nota_max < 0.6) {
-					$id_situacion = 12;
-				} else {
-					$id_situacion = 10;
-				}
 			}
+			*/
 			$oPersonaNota = new notas\PersonaNota(array('id_nom'=>$id_nom,'id_asignatura'=>$Qid_asignatura));
 			// guardo los datos
 			$oPersonaNota->setId_schema($id_schema);
@@ -232,6 +263,11 @@ if ($Qque==1) { // Grabar las notas en la matricula
 		$oMatricula->setPreceptor($preceptor);
 		// admitir coma y punto como separador decimal
 		$nn = str_replace(',', '.', $Qnota_num[$n]);
+		// ERROR
+		if (!empty($Qnota_num[$n]) && $Qnota_num[$n]/$Qnota_max[$n] > 1) {
+            $error = sprintf(_("Hay una nota mayor que el máximo")."\n");
+            exit($error);
+		}
 		$oMatricula->setNota_num($nn);
 		$oMatricula->setNota_max($Qnota_max[$n]);
 		$oMatricula->setActa($Qacta[$n]);
@@ -251,7 +287,7 @@ if ($Qque==1) { // Grabar las notas en la matricula
 				}
 			}
 		} else {
-			if ($Qacta[$n] == 2 && $preceptor == true) {
+			if ($Qacta[$n] == Nota::CURSADA && $preceptor == true) {
 				$error = sprintf(_("no se puede definir cursada con preceptor")."\n");
 				exit($error);
 			}
