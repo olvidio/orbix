@@ -46,6 +46,7 @@ class DBPropiedades {
                 if ($row[0] == 'public') continue;
                 if ($row[0] == 'resto') continue;
                 if ($row[0] == 'global') continue;
+                if ($row[0] == 'bucardo') continue;
                 if ($ubicacion == 'sv') {
                     $sv = $row[0].'v';
                     if (!empty($default) && $sv == $default) { $sel_sv = 'selected'; } else { $sel_sv = ''; }
