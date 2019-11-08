@@ -96,6 +96,7 @@ class DBPropiedades {
                 if ($row[0] == 'public') continue;
                 if ($row[0] == 'resto') continue;
                 if ($row[0] == 'global') continue;
+                if ($row[0] == 'bucardo') continue;
                 if ($ubicacion == 'sv') {
                     $sv = $row[0].'v';
                     $a_esquemas[$sv] = $sv;
