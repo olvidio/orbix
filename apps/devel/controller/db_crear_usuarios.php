@@ -63,12 +63,28 @@ $oDBRol->setUser($esquema);
 $oDBRol->setPwd($esquema_pwd);
 $oDBRol->crearUsuario();
 $oConfigDB->addEsquema('comun', $esquema, $esquema_pwd);
+
+// Con las bases de datos en distintos servidores, hay que ir cambiando la conexión:
 // sv
+$config = $oConfigDB->getEsquema('publicv'); //de la database comun
+$oConexion = new core\dbConnection($config);
+$oDevelPC = $oConexion->getPDO();
+
+$oDBRol = new core\DBRol();
+$oDBRol->setDbConexion($oDevelPC);
+
 $oDBRol->setUser($esquemav);
 $oDBRol->setPwd($esquemav_pwd);
 $oDBRol->crearUsuario();
 $oConfigDB->addEsquema('sv', $esquemav, $esquemav_pwd);
 // sf
+$config = $oConfigDB->getEsquema('publicf'); //de la database comun
+$oConexion = new core\dbConnection($config);
+$oDevelPC = $oConexion->getPDO();
+
+$oDBRol = new core\DBRol();
+$oDBRol->setDbConexion($oDevelPC);
+
 $oDBRol->setUser($esquemaf);
 $oDBRol->setPwd($esquemaf_pwd);
 $oDBRol->crearUsuario();
