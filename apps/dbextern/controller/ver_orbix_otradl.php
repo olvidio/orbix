@@ -35,7 +35,7 @@ foreach ($a_ids_traslados_A as $id_nom_listas) {
 	$a_persona_listas[$i]['id_nom_listas'] = $id_nom_listas;
 	$a_persona_listas[$i]['ape_nom'] = $oPersonaListas->getApeNom();
 	$dl_listas = $oPersonaListas->getDl();
-	preg_match('/(\w*)(cr)$/', $dl_listas, $matches, PREG_OFFSET_CAPTURE);
+	preg_match('/(\w*)(cr)$/', $dl_listas, $matches);
 	if (!empty($matches[2]) && $matches[2] == 'cr') {
 		$dl = $matches[1];
 	} else {
