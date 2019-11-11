@@ -66,6 +66,7 @@ $oConfigDB->addEsquema('comun', $esquema, $esquema_pwd);
 
 // Con las bases de datos en distintos servidores, hay que ir cambiando la conexión:
 // sv
+$oConfigDB = new core\ConfigDB('importar');
 $config = $oConfigDB->getEsquema('publicv'); //de la database comun
 $oConexion = new core\dbConnection($config);
 $oDevelPC = $oConexion->getPDO();
@@ -78,6 +79,7 @@ $oDBRol->setPwd($esquemav_pwd);
 $oDBRol->crearUsuario();
 $oConfigDB->addEsquema('sv', $esquemav, $esquemav_pwd);
 // sf
+$oConfigDB = new core\ConfigDB('importar');
 $config = $oConfigDB->getEsquema('publicf'); //de la database comun
 $oConexion = new core\dbConnection($config);
 $oDevelPC = $oConexion->getPDO();
