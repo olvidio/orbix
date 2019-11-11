@@ -16,9 +16,11 @@ use web\Hash;
 
 $tipo_persona = (string)  filter_input(INPUT_POST, 'tipo');	
 $mi_dl = ConfigGlobal::mi_delef();
-$region = ConfigGlobal::mi_region();
-if ($mi_dl == 'cr') {
-	$dl = substr($region,0,3).$mi_dl; // 'Hcr', 'Acr;
+
+preg_match('/(cr)(\w*)$/', $mi_dl, $matches);
+if (!empty($matches[1])) {
+    $reg = $matches[2];
+	$dl = $reg.'cr'; // 'Hcr', 'Acr;
 } else {
 	$dl = substr($mi_dl, 2);
 }
