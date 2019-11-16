@@ -8,9 +8,9 @@
 
 namespace actividades\model;
 
-use core;
-use web;
 use core\ConfigGlobal;
+use core\ViewTwig;
+use web;
 
 /**
  * Description of actividadtipo
@@ -30,7 +30,7 @@ class ActividadTipo {
 	private $bperm_jefe = FALSE;
 			
 	public function getHtml() {
-		$isfsv=core\ConfigGlobal::mi_sfsv();
+		$isfsv=ConfigGlobal::mi_sfsv();
 
 		$aSfsv=array(1=>'sv',2=>'sf');
 
@@ -161,7 +161,7 @@ class ActividadTipo {
 		$h_act = $oHashAct->linkSinVal();
 
 		
-		$procesos_installed = core\ConfigGlobal::is_app_installed('procesos');
+		$procesos_installed = ConfigGlobal::is_app_installed('procesos');
 		
 		$a_campos = [
 		            'url' => $url,
@@ -180,27 +180,28 @@ class ActividadTipo {
 		switch ($this->para) {
 		    case 'tipoactiv-tarifas':
                 $aditionalPaths = ['actividades' => 'actividades/view'];
-                $oView = new core\ViewTwig('actividadtarifas/controller',$aditionalPaths);
+                $oView = new ViewTwig('actividadtarifas/controller',$aditionalPaths);
                 return $oView->render('actividad_tipo_que.html.twig',$a_campos);
                 break;
 		    case 'tipoactiv-procesos':
                 $aditionalPaths = ['actividades' => 'actividades/view'];
-                $oView = new core\ViewTwig('procesos/controller',$aditionalPaths);
+                $oView = new ViewTwig('procesos/controller',$aditionalPaths);
                 return $oView->render('actividad_tipo_proceso.html.twig',$a_campos);
                 break;
 		    case 'procesos':
                 $aditionalPaths = ['actividades' => 'actividades/view'];
-                $oView = new core\ViewTwig('procesos/controller',$aditionalPaths);
+                $oView = new ViewTwig('procesos/controller',$aditionalPaths);
                 return $oView->render('actividad_tipo_que_perm.html.twig',$a_campos);
                 break;
 		    case 'cambios':
                 $aditionalPaths = ['actividades' => 'actividades/view'];
-                $oView = new core\ViewTwig('cambios/controller',$aditionalPaths);
+                $oView = new ViewTwig('cambios/controller',$aditionalPaths);
                 return $oView->render('actividad_tipo_que_perm.html.twig',$a_campos);
 		        break;
 		    case 'actividades':
 		    default:
-                $oView = new core\ViewTwig('actividades/controller');
+                $aditionalPaths = ['actividades' => 'actividades/view'];
+                $oView = new ViewTwig('actividades/controller',$aditionalPaths);
                 return $oView->render('actividad_tipo_que.html.twig',$a_campos);
 		}
 	}
