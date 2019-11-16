@@ -25,14 +25,15 @@ class ActividadesSacdFunciones {
             }
         }
         if (empty($this->a_txt[$idioma])) {
-            $str = sprintf(_("No existe este idoma: %s. Debe corregirlo en la ficha del sacd"),$idioma);
-            echo $str;
+            $str = sprintf(_("No existe el idoma: %s. Debe corregirlo en la ficha del sacd"),$idioma);
+            echo $str."<br>";
             return FALSE;
         }
         return $this->a_txt[$idioma];
     }
     function getTraduccion($clave,$idioma) {
         $a_traduccion = $this->getArrayTraducciones($idioma);
+        $txt_traduccion = '';
         if (!empty($a_traduccion[$clave])) {
             $txt_traduccion = $a_traduccion[$clave];
         } else {
@@ -42,6 +43,7 @@ class ActividadesSacdFunciones {
                 $txt_traduccion = $a_traduccion[$clave];
             } else {
                 echo sprintf(_("falta definir el texto %s en este idioma: %s"),$clave,$idioma);
+                echo "<br>";
             }
         }
         return $txt_traduccion;
