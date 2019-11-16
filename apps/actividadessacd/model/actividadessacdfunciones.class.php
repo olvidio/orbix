@@ -24,6 +24,11 @@ class ActividadesSacdFunciones {
                 $this->a_txt[$idioma][$clave] = $texto;
             }
         }
+        if (empty($this->a_txt[$idioma])) {
+            $str = sprintf(_("No existe este idoma: %s. Debe corregirlo en la ficha del sacd"),$idioma);
+            echo $str;
+            return FALSE;
+        }
         return $this->a_txt[$idioma];
     }
     function getTraduccion($clave,$idioma) {

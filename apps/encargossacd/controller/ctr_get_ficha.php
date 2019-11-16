@@ -53,6 +53,15 @@ $aWhere['id_tipo_enc'] = '(1|2|3).0';
 $aOperador['id_tipo_enc'] = '~';
 $cEncargos = $GesEncargos->getEncargos($aWhere,$aOperador);
 //print_r($cEncargos);
+$cl_checked = [];
+$mod_horario = [];
+$a_id_enc = [];
+$a_observ = [];
+$a_desc_enc = [];
+$otros_sacd = [];
+$dedic_m = [];
+$dedic_t = [];
+$dedic_v = [];
 if (is_array($cEncargos) && count($cEncargos) == 0) { // nuevo encargo
 	$mod='nuevo'; // es una ficha nueva
 	$Qid_ubi_txt = (string) $Qid_ubi;
