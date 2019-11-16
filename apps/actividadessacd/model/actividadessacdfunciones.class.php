@@ -37,7 +37,7 @@ class ActividadesSacdFunciones {
             $txt_traduccion = $a_traduccion[$clave];
         } else {
             // El idioma por defecto (es) debería existir siempre
-            $a_traduccion = getArrayTraducciones('es');
+            $a_traduccion = $this->getArrayTraducciones('es');
             if (!empty($a_traduccion[$clave])) {
                 $txt_traduccion = $a_traduccion[$clave];
             } else {
