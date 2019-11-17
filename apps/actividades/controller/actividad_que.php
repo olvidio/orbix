@@ -168,6 +168,7 @@ switch ($Qque) {
 		de un grupo de actividades*/
 	break;
 	case "list_cjto" :
+	case "list_cjto_sacd" :
 		$accion=core\ConfigGlobal::getWeb().'/apps/asistentes/controller/lista_asis_conjunto_activ.php';
 		/*es el caso de querer sacar 
 		los asistentes o cargos 

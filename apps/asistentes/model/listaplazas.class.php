@@ -45,6 +45,10 @@ class listaPlazas {
 		$this->aWhere = $aWhere;
 	}
 
+	public function setSacd($sacd) {
+		$this->bsacd = $sacd;
+	}
+
 	public function setOperador($aOperador) {
 		$this->aOperador = $aOperador;
 	}
@@ -56,6 +60,7 @@ class listaPlazas {
 		$this->iid_tipo_activ = $iid_tipo_activ;
 	}
 
+	private $bsacd = FALSE;
 	private $smi_dele;
 	private $aWhere;
 	private $aOperador;
@@ -152,8 +157,6 @@ class listaPlazas {
 					$plazas_pedidas=0; // plazas pedidas o 'en espera'
 					$aIdCargos=array(); // id_nom de los cargos para no ponerlos como asistentes.
 					foreach ($cActividadCargos as $oActividadCargo) {
-						$cl++;
-						$num++;
 						$id_nom = $oActividadCargo->getId_nom();
 						$aIdCargos[] = $id_nom;
 						$id_cargo = $oActividadCargo->getId_cargo();
@@ -164,6 +167,11 @@ class listaPlazas {
 							$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 							continue;
 						}
+						$sacd = $oPersona->getSacd();
+						if ($this->bsacd && $sacd != 't') continue;
+
+						$cl++;
+						$num++;
 						$id_tabla = $oPersona->getId_tabla();
 						$ap_nom = $oPersona->getApellidosNombre();
 						$ctr_dl = $oPersona->getCentro_o_dl();
@@ -195,6 +203,9 @@ class listaPlazas {
 						$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 						continue;
 					}
+                    $sacd = $oPersona->getSacd();
+                    if ($this->bsacd && $sacd != 't') continue;
+
 					$id_tabla = $oPersona->getId_tabla();
 					$ap_nom = $oPersona->getApellidosNombre();
 					$ctr_dl = $oPersona->getCentro_o_dl();
@@ -263,11 +274,17 @@ class listaPlazas {
 				$plazas_txt = sprintf(_("plazas (max-min): %s, para la dl: %s, ocupadas + pedidas: %s"),$plazas_casa,$pl_disponibles,$pl_ocupadas_pedidas);
 				// Nombre actividad y plazas:
 				$aGrupos[$id_activ] = $nom_activ;
-				$aGrupos[$id_activ] .= '<br>'." $plazas_txt, "._("dif").": $pl_dif_txt";
+                //Si es sólo los sacd no tiene sentido el resumen de plazas.
+				if (!$this->bsacd) {
+				    $aGrupos[$id_activ] .= '<br>'." $plazas_txt, "._("dif").": $pl_dif_txt";
+				}
 			} else {
 				$plazas_txt = sprintf(_("plazas (max-min): %s, ocupadas: %s"),$plazas_casa,$num_txt);
 				$aGrupos[$id_activ] = $nom_activ;
-				$aGrupos[$id_activ] .= '<br>'." $plazas_txt";
+                //Si es sólo los sacd no tiene sentido el resumen de plazas.
+				if (!$this->bsacd) {
+				    $aGrupos[$id_activ] .= '<br>'." $plazas_txt";
+				}
 			}
 		}
 

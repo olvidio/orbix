@@ -213,6 +213,7 @@
 1004	{20,30}	listados	\N	0	37748735	7	t
 1007	{20,30,30}	listado por oficinas	que=o_todas&ver_ctr=si	21	37748735	7	t
 1006	{20,30,20}	listados de todas las casas	que=c_todas&ver_ctr=si	21	1	7	t
+941	{5,80}	lista varias activ	ssfsv=sv&sasistentes=n&que=list_cjto_sacd	119	8	8	t
 1029	{30}	historicos	\N	\N	\N	\N	t
 1008	{20,40}	zonas-ctr	\N	85	2056	8	t
 1010	{20,50}	zonas-sacd	\N	42	2056	8	t

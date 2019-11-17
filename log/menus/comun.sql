@@ -49,7 +49,6 @@
 94	\N	des/tareas/collatio_sacd.php	\N	\N
 95	\N	programas/sm-agd/lista_celebra_40.php	\N	\N
 96	\N	scdl/registro/cr_num_bajo_lista.php	\N	\N
-97	\N	vcsd/dlbf/actualizar.php	\N	\N
 99	\N	programas/sm-agd/cargos/listado_propuestas_cl.php	\N	\N
 101	\N	scdl/registro/registro_entradas.php	\N	\N
 103	\N	programas/calendario_importar_sf.php	\N	\N
@@ -107,6 +106,7 @@
 45	27	apps/casas/controller/casa_que.php	\N	Casa que
 63	27	apps/casas/controller/calendario_ubi_resumen.php	\N	Ubi resumen ec
 91	27	apps/casas/controller/grupo_lista.php	\N	Grupo Casas
+97	1	apps/personas/controller/personas_select.php	\N	personas Select
 42	24	apps/zonassacd/controller/zona_sacd.php	\N	Zona sacd
 139	24	apps/zonassacd/controller/planning_zones.php	\N	Planning por zonas
 114	25	apps/cartaspresentacion/controller/cartas_presentacion_que.php	\N	Cartas Presentacion

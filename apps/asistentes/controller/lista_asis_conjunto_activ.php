@@ -24,6 +24,8 @@ use web\Periodo;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$Qque = (string) \filter_input(INPUT_POST, 'que');
+
 $Qstatus = (integer) \filter_input(INPUT_POST, 'status');
 $Qstatus = empty($Qstatus)? actividades\ActividadAll::STATUS_ACTUAL : $Qstatus;
 $Qid_tipo_activ = (string) \filter_input(INPUT_POST, 'id_tipo_activ');
@@ -125,6 +127,11 @@ if (empty($Qdl_org) || $Qdl_org == $mi_dele) {
 	$oListaPlazasDl->setWhere($aWhere);
 	$oListaPlazasDl->setOperador($aOperador);
 	$oListaPlazasDl->setId_tipo_activ($Qid_tipo_activ);
+    // sólo sacd
+    if ($Qque == 'list_cjto_sacd' ) {
+        $oListaPlazasDl->setSacd(TRUE);
+    }
+
 }
 /////////////// actividades de otras dl ///////////////////
 // si se ha puesto en condición de búsqueda
