@@ -33,6 +33,7 @@ $oPosicion->recordar();
 $tabla = (string) \filter_input(INPUT_POST, 'tabla');
 $Qna = (string) \filter_input(INPUT_POST, 'na');
 $tipo = (string) \filter_input(INPUT_POST, 'tipo');
+$Qes_sacd = (integer) \filter_input(INPUT_POST, 'es_sacd');
 $sWhere = (string) \filter_input(INPUT_POST, 'sWhere');
 $sOperador = (string) \filter_input(INPUT_POST, 'sOperador');
 $sWhereCtr = (string) \filter_input(INPUT_POST, 'sWhereCtr');
@@ -75,6 +76,7 @@ $aGoBack = array (
 				'tabla' => $tabla,
 				'na' => $Qna,
 				'tipo' => $tipo,
+				'es_sacd' => $Qes_sacd,
 				'sWhere' => $sWhere,
 				'sOperador' => $sOperador,
 				'sWhereCtr' => $sWhereCtr,
@@ -167,6 +169,9 @@ if ($miRolePau == Role::PAU_NOM) { //persona
                 $aWhere['situacion'] = 'B';
                 $aOperador['situacion'] = '!=';
             }
+        }
+        if ($Qes_sacd === 1) {
+            $aWhere['sacd'] = 't';
         }
     } else {
         $aWhere = unserialize(core\urlsafe_b64decode($sWhere));

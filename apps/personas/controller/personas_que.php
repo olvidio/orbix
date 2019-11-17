@@ -38,6 +38,7 @@ $Qna = (string) \filter_input(INPUT_POST, 'na');
 $Qque = (string) \filter_input(INPUT_POST, 'que');
 $Qtipo = (string) \filter_input(INPUT_POST, 'tipo');
 $Qtabla = (string) \filter_input(INPUT_POST, 'tabla');
+$Qes_sacd = (integer) \filter_input(INPUT_POST, 'es_sacd');
 
 $Qexacto = (string) \filter_input(INPUT_POST, 'exacto');
 $Qcmb = (string) \filter_input(INPUT_POST, 'cmb');
@@ -67,7 +68,8 @@ $a_camposHidden = array(
 		'tipo' => $Qtipo,
 		'tabla' => $Qtabla,
 		'na' => $Qna,
-		'que' => $Qque
+		'que' => $Qque,
+		'es_sacd' => $Qes_sacd,
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 
