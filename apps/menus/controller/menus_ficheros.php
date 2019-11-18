@@ -80,17 +80,16 @@ if ($Qaccion == 'importar') {
     $password_encoded = urlencode ($password);
     $dsn = "postgresql://$user:$password_encoded@$host:$port/".$dbname.$str_conexio;
     
-    $command = "/usr/bin/psql -q ";
-    $command .= "--pset pager=off ";
+    $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -q  -X -t --pset pager=off ";
     $command .= "--file=".$filename." ";
     $command .= "\"".$dsn."\"";
-    $command .= " > ".$filelog." 2>&1";
+    $command .= " > ".$filelog()." 2>&1";
     passthru($command); // no output to capture so no need to store it
     // read the file, if empty all's well
-    $error = file_get_contents($filelog);
+    $error = file_get_contents($filelog());
     if(trim($error) != '') {
         if (ConfigGlobal::is_debug_mode()) {
-            echo sprintf("PSQL ERROR IN COMMAND: %s<br> mirar en: %s<br>",$command,$filelog);
+            echo sprintf("PSQL ERROR IN COMMAND: %s<br> mirar en: %s<br>",$command,$filelog());
         }
     }
 }

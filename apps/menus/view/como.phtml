@@ -38,7 +38,18 @@
 			</em>
 		</p>
 	</li>
-	<li>4. importar desde ficheros
+	<li>4. Cambiar la ruta relativa
+	<p>
+		<p>
+            OJO!!!<br>
+            Ahora hay que pasar los ficheros hasta la maquina donde está la DB comun.
+            Desde orbix en tunel:
+        </p>
+            <pre>
+                scp /var/www/orbix/log/menus/* aquinate@192.168.200.16:/var/www/orbix/log/menus/
+            </pre>
+	</li>
+	<li>5. importar desde ficheros
 	<p>
 	Ejecuta lo que se ha grabado en <br>
 	filename = "$dir_base/log/menus/tot_menus.sql";
@@ -46,7 +57,7 @@
 	Es decir copia a 'comun.public' los menus de referencia.
 	</p>
 	</li>
-	<li>5. importar
+	<li>6. importar
 	<p>
 	Dos opciones:
 	</p><p>

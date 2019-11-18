@@ -55,7 +55,7 @@ if (!empty($Qcomun)) {
 	$oDBEsquema->setDlRef($DlRef);
 	$oDBEsquema->setRegionNew($RegionNew);
 	$oDBEsquema->setDlNew($DlNew);
-	$oDBEsquema->crear();
+	$oDBEsquema->crear_remote();
 	
     // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
 	$oDBRol->delGrupo('orbix');

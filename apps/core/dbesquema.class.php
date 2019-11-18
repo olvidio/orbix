@@ -202,6 +202,33 @@ class DBEsquema {
 		if ($d === false) printf(_("error al escribir el fichero"));
 	}
 
+	protected function getConexionSSH() {
+		switch ($this->sDb) {
+		    case 'comun':
+                $oConfigDB = new ConfigDB('comun'); //de la database comun
+                $config = $oConfigDB->getEsquema($esquema); //de la database comun
+		        break;
+		    case 'sv':
+                $oConfigDB = new ConfigDB('sv'); //de la database sv
+                $config = $oConfigDB->getEsquema($esquema); //de la database sv
+		        break;
+		    case 'sf':
+                $oConfigDB = new ConfigDB('sf'); //de la database sf
+                $config = $oConfigDB->getEsquema($esquema); //de la database sf
+		        break;
+		}
+	    $host = $config['host'];
+	    $port = $config['port'];
+	    $dbname = $config['dbname'];
+	    $user = $config['user'];
+	    $password = $config['password'];
+	    
+	    $password_encoded = urlencode ($password);
+	    $dsn = "postgresql://$user:$password_encoded@$host:$port/".$dbname.$str_conexio;
+	    
+	    return $dsn;
+	}
+	
 	protected function getConexion($new='') {
 	    // No he conseguido que funcione con ~/.pgpass.
 	    if (empty($new)) {
@@ -256,6 +283,30 @@ class DBEsquema {
 	    return $dsn;
 	}
 	
+	public function leer_remote() {
+	    //ssh user@remote_machine "pg_dump -U dbuser -h localhost -C --column-inserts" \
+	    //    > backup_file_on_your_local_machine.sql
+	    
+	    //pg_dump --dbname=postgresql://username:password@host:port/database > file.sql
+	    // crear archivo con el password
+	    $dsn = $this->getConexion();
+		// leer esquema
+		$command_ssh = "/usr/bin/ssh aquinate@192.168.200.16";
+		$command_db = "/usr/bin/pg_dump -s --schema=\\\"".$this->getRef()."\\\" ";
+		$command_db .= "\"".$dsn."\"";
+		$command_db .= " > ".$this->getFileRef()." ";
+		//$command .= " > ".$this->getFileLog()." 2>&1"; 
+	    $command = "$command_ssh \"$command_db\"";	
+		echo "$command<br>";
+		passthru($command); // no output to capture so no need to store it
+		// read the file, if empty all's well
+		$error = file_get_contents($this->getFileLog());
+		if(trim($error) != '') {
+			if (ConfigGlobal::is_debug_mode()) {
+				echo sprintf("PSQL ERROR IN COMMAND: %s<br> mirar: %s<br>",$command,$this->getFileLog());
+			}
+		}
+	}
 	public function leer() {
 	    //pg_dump --dbname=postgresql://username:password@host:port/database > file.sql
 	    // crear archivo con el password
@@ -295,6 +346,15 @@ class DBEsquema {
 
 	public function crear() {
 		$this->leer();
+		$this->cambiar_nombre();
+		$this->importar();
+	}
+	/**
+	 * Para la base de datos comun, que está en otro servidor y además con otra versión,
+	 * No sirve el pg_dump (solo funciona con versiones iguales en los dos extremos)
+	 */
+	public function crear_remote() {
+		$this->leer_remote();
 		$this->cambiar_nombre();
 		$this->importar();
 	}
