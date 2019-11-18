@@ -78,6 +78,8 @@ $oDBRol->setUser($esquemav);
 $oDBRol->setPwd($esquemav_pwd);
 $oDBRol->crearUsuario();
 $oConfigDB->addEsquema('sv', $esquemav, $esquemav_pwd);
+
+/*
 // sf
 $oConfigDB = new core\ConfigDB('importar');
 $config = $oConfigDB->getEsquema('publicf'); //de la database comun
@@ -91,6 +93,8 @@ $oDBRol->setUser($esquemaf);
 $oDBRol->setPwd($esquemaf_pwd);
 $oDBRol->crearUsuario();
 $oConfigDB->addEsquema('sf', $esquemaf, $esquemaf_pwd);
+*/
+$esquemaf_pwd = _("Desde aquí no se tiene acceso a la db sf");
 
 $archivo_conf = ConfigGlobal::DIR_PWD.'/  (comun.inc, sv.inc, sf.inc)';
 echo sprintf(_("se han creado los usuarios"));
