@@ -97,7 +97,7 @@ $oConfigDB->addEsquema('sf', $esquemaf, $esquemaf_pwd);
 $esquemaf_pwd = _("Desde aquí no se tiene acceso a la db sf");
 
 $archivo_conf = ConfigGlobal::DIR_PWD.'/  (comun.inc, sv.inc, sf.inc)';
-echo sprintf(_("se han creado los usuarios"));
+echo sprintf(_("se han creado los usuarios. Ojo, un único usuario para pruebas y producción"));
 echo "<br>";
 echo sprintf(_("debe copiar los siguientes usuarios y passwords en el archivo %s"),$archivo_conf);
 echo "<br>";

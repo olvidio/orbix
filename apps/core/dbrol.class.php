@@ -135,7 +135,7 @@ class DBRol {
 				$err=$oDblSt->errorInfo()[2];
 				
 				if (strpos($err, 'already exists') !== FALSE) { // ya existe
-				    $this->camniarPassword();
+				    $this->cambiarPassword();
 				} else {
                     $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
                     return false;
@@ -176,7 +176,7 @@ class DBRol {
 			}
 		}
 	}
-	private function camniarPassword() {
+	private function cambiarPassword() {
 		$oDbl = $this->getoDbl();
 
 		$sql = "ALTER USER \"$this->sUser\" WITH PASSWORD '$this->sPwd';";
