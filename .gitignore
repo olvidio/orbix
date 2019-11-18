@@ -43,6 +43,7 @@ Thumbs.db
 /nbproject/private/
 ##############
 log/*
+!log/db/
 !log/db/keep
 !log/menus/
 !log/menus/*
