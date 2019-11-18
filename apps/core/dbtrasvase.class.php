@@ -46,16 +46,40 @@ class DBTrasvase {
 	    }
 	    
 	    $host = $config['host'];
-	    //$sslmode = $config['sslmode'];
 	    $port = $config['port'];
 	    $dbname = $config['dbname'];
 	    $user = $config['user'];
 	    $password = $config['password'];
+	    //opcionales
+	    $str_conexio = '';
+	    if (!empty($config['sslmode'])) {
+	        $str_conexio .= empty($str_conexio)? '' : '&';
+	        $str_conexio .= "sslmode=".$config['sslmode'];
+	    }
+	    if (!empty($config['sslcert'])) {
+	        $str_conexio .= empty($str_conexio)? '' : '&';
+	        $str_conexio .= "sslcert=".$config['sslcert'];
+	    }
+	    if (!empty($config['sslkey'])) {
+	        $str_conexio .= empty($str_conexio)? '' : '&';
+	        $str_conexio .= "sslkey=".$config['sslkey'];
+	    }
+	    if (!empty($config['sslrootcert'])) {
+	        $str_conexio .= empty($str_conexio)? '' : '&';
+	        $str_conexio .= "sslrootcert=".$config['sslrootcert'];
+	    }
+	    if (!empty($str_conexio)) {
+	        $str_conexio = '?'.$str_conexio;
+	    }
+	    
+	    $password_encoded = urlencode ($password);
+	    $dsn = "postgresql://$user:$password_encoded@$host:$port/".$dbname.$str_conexio;
+	    
 	    
 	    // OJO Con las comillas dobles para algunos caracteres del password ($...)
-	    $str_conexio = 'pgsql:host='.$host.' port='.$port.' dbname=\''.$dbname.'\' user=\''.$user.'\' password=\''.$password.'\'';
+	    //$str_conexio = 'pgsql:host='.$host.' port='.$port.' dbname=\''.$dbname.'\' user=\''.$user.'\' password=\''.$password.'\'';
 	    
-		$oDbl = new \PDO($str_conexio);
+		$oDbl = new \PDO($dsn);
 		$this->setoDbl($oDbl);
 	}
 

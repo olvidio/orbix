@@ -211,7 +211,7 @@ class DBEsquema {
 	protected function eliminar_sync() {
 		$dump = file_get_contents($this->getFileNew());
 	    
-		$pattern = "/^.*bucardo.*$'/";
+		$pattern = "/^.*bucardo.*$/im";
 		$replacement = '';
 		$dump_nou = preg_replace($pattern, $replacement, $dump);
 		
@@ -290,13 +290,13 @@ class DBEsquema {
 	    
 		// leer esquema
 		$command_ssh = "/usr/bin/ssh aquinate@192.168.200.16";
-		$command_db = "/usr/bin/pg_dump -s --schema=\\\"".$this->getRef()."\\\" ";
+		$command_db = "/usr/bin/pg_dump -s --schema=\\\\\\\"".$this->getRef()."\\\\\\\" ";
 		$command_db .= "-U postgres -h 127.0.0.1 $dbname"; 
 		
 		//$command .= " > ".$this->getFileLog()." 2>&1";
 		
 	    $command = "$command_ssh \"$command_db\" > ".$this->getFileRef();	
-		echo "$command<br>";
+		//echo "$command<br>";
 		passthru($command); // no output to capture so no need to store it
 		// read the file, if empty all's well
 		$error = file_get_contents($this->getFileLog());
