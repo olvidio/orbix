@@ -78,12 +78,6 @@ $oActividadTipo->setNom_tipo($Qsnom_tipo);
 
 if (empty($Qstatus)) { $Qstatus = actividades\model\entity\ActividadAll::STATUS_ACTUAL; }
 
-$oDesplegableCasas = array();
-if (!empty($Qid_ubi)) {
-	$oActividadLugar = new \actividades\model\ActividadLugar();
-	$Qfiltro_lugar = $oActividadLugar->getFiltroLugar($Qid_ubi); 
-}
-
 $oGesDl = new ubis\GestorDelegacion();
 $oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones();
 $oDesplDelegacionesOrg->setNombre('dl_org');
@@ -102,6 +96,15 @@ $oDesplFiltroLugar = $oGesDl->getListaDlURegionesFiltro();
 $oDesplFiltroLugar->setAction('fnjs_lugar()');
 $oDesplFiltroLugar->setNombre('filtro_lugar');
 $oDesplFiltroLugar->setOpcion_sel($Qfiltro_lugar);
+
+$oDesplegableCasas = array();
+if (!empty($Qfiltro_lugar)) {
+	$oActividadLugar = new \actividades\model\ActividadLugar();
+	$oDesplegableCasas = $oActividadLugar->getLugaresPosibles($Qfiltro_lugar); 
+    if (!empty($Qid_ubi)) {
+        $oDesplegableCasas->setOpcion_sel($Qid_ubi);
+    }
+}
 
 $aOpciones =  array(
 					'tot_any' => _("todo el año"),
