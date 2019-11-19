@@ -55,7 +55,7 @@ $oPosicion->recordar();
 
 $Qcontinuar = (string)  filter_input(INPUT_POST, 'continuar');
 // Sólo sirve para esta pagina: importar, publicar, duplicar
-$QGstack = (integer)  filter_input(INPUT_POST, 'Gstack');
+$Qstack = (integer)  filter_input(INPUT_POST, 'stack');
 if (isset($_POST['stack'])) {
     $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
 } else {
@@ -64,8 +64,8 @@ if (isset($_POST['stack'])) {
 
 //Si vengo de vuelta con el parámetro 'continuar', los datos no están en el POST,
 // sino en $Posicion. Le paso la referecia del stack donde está la información.
-if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
-    $oPosicion->goStack($QGstack);
+if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($Qstack != '')) {
+    $oPosicion->goStack($Qstack);
     $Qmodo = $oPosicion->getParametro('modo');
     //	$Qque = $oPosicion->getParametro('que');
     $Qstatus = $oPosicion->getParametro('status');
@@ -79,7 +79,7 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     $Qempiezamax=$oPosicion->getParametro('empiezamax');
     $Qid_sel=$oPosicion->getParametro('id_sel');
     $Qscroll_id = $oPosicion->getParametro('scroll_id');
-    $oPosicion->olvidar($QGstack); //limpio todos los estados hacia delante.
+    $oPosicion->olvidar($Qstack); //limpio todos los estados hacia delante.
     
     // valores por defeccto
     if (empty($Qperiodo)) {
@@ -514,7 +514,7 @@ $a_camposHiddenSel = array(
     'obj_pau' =>$obj_pau,
     'pau' =>'a',
     'permiso' =>'3',
-    'Gstack' => $oPosicion->getStack(),
+    'stack' => $oPosicion->getStack(),
 );
 $oHashSel->setArraycamposHidden($a_camposHiddenSel);
 
