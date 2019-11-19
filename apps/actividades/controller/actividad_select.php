@@ -55,7 +55,7 @@ $oPosicion->recordar();
 
 $Qcontinuar = (string)  filter_input(INPUT_POST, 'continuar');
 // Sólo sirve para esta pagina: importar, publicar, duplicar
-$Qstack = (integer)  filter_input(INPUT_POST, 'stack');
+$QGstack = (integer)  filter_input(INPUT_POST, 'Gstack');
 if (isset($_POST['stack'])) {
     $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
 } else {
@@ -64,8 +64,8 @@ if (isset($_POST['stack'])) {
 
 //Si vengo de vuelta con el parámetro 'continuar', los datos no están en el POST,
 // sino en $Posicion. Le paso la referecia del stack donde está la información.
-if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($Qstack != '')) {
-    $oPosicion->goStack($Qstack);
+if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
+    $oPosicion->goStack($QGstack);
     $Qmodo = $oPosicion->getParametro('modo');
     //	$Qque = $oPosicion->getParametro('que');
     $Qstatus = $oPosicion->getParametro('status');
@@ -79,7 +79,7 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($Qstack != '')) {
     $Qempiezamax=$oPosicion->getParametro('empiezamax');
     $Qid_sel=$oPosicion->getParametro('id_sel');
     $Qscroll_id = $oPosicion->getParametro('scroll_id');
-    $oPosicion->olvidar($Qstack); //limpio todos los estados hacia delante.
+    $oPosicion->olvidar($QGstack); //limpio todos los estados hacia delante.
     
     // valores por defeccto
     if (empty($Qperiodo)) {
@@ -299,7 +299,7 @@ $aWhere['_ordre'] = 'f_ini';
 $cActividades = $GesActividades->getActividades($aWhere,$aOperador);
 $num_activ = count($cActividades);
 if ($num_activ > $num_max_actividades && empty($Qcontinuar)) {
-    $go_avant=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_select.php?'.http_build_query(array('continuar'=>'si','stack'=>$oPosicion->getStack())));
+    $go_avant=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_select.php?'.http_build_query(array('continuar'=>'si','Gstack'=>$oPosicion->getStack())));
     $go_atras=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_que.php?'.http_build_query(array('stack'=>$oPosicion->getStack())));
     echo "<h2>".sprintf(_("son %s actividades a mostrar. ¿Seguro que quiere continuar?."),$num_activ).'</h2>';
     echo "<input type='button' onclick=fnjs_update_div('#main','".$go_avant."') value="._("continuar").">";
@@ -402,7 +402,7 @@ foreach($cActividades as $oActividad) {
             {
                 $gesCargosActividad=new actividadcargos\model\entity\GestorActividadCargo();
                 foreach($gesCargosActividad->getActividadSacds($id_activ) as $oPersona) {;
-                    $sacds.=$oPersona->getApellidosNombre()."# "; // la coma la utilizo como separador de apellidos, nombre.
+                $sacds.=$oPersona->getApellidosNombre()."# "; // la coma la utilizo como separador de apellidos, nombre.
                 }
                 $sacds=substr($sacds,0,-2);
             }
@@ -514,7 +514,7 @@ $a_camposHiddenSel = array(
     'obj_pau' =>$obj_pau,
     'pau' =>'a',
     'permiso' =>'3',
-    'stack' => $oPosicion->getStack(),
+    'Gstack' => $oPosicion->getStack(),
 );
 $oHashSel->setArraycamposHidden($a_camposHiddenSel);
 
