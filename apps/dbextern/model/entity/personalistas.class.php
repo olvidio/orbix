@@ -854,7 +854,7 @@ class PersonaListas Extends core\ClasePropiedades {
 			$this->dividirCe();
 		}
 		if (!empty($this->ice_ini)) {
-			if ($this->ice_ini > 60) {
+			if ($this->ice_ini > 30) {
 				$this->ice_ini = $this->ice_ini + 1900;
 			} else {
 				$this->ice_ini = $this->ice_ini + 2000;
