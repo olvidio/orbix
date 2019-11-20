@@ -206,7 +206,7 @@ class DBEsquema {
 	
 	/**
 	 * Eliminar los triggers de bucardo. (si existen)
-	 * La definición de si ahy que sincronizar se hará desde otro sitio.
+	 * La definición de si hay que sincronizar se hará desde otro sitio.
 	 */
 	protected function eliminar_sync() {
 		$dump = file_get_contents($this->getFileNew());
@@ -299,12 +299,14 @@ class DBEsquema {
 		//echo "$command<br>";
 		passthru($command); // no output to capture so no need to store it
 		// read the file, if empty all's well
+		/*
 		$error = file_get_contents($this->getFileLog());
 		if(trim($error) != '') {
 			if (ConfigGlobal::is_debug_mode()) {
 				echo sprintf("PSQL ERROR IN COMMAND: %s<br> mirar: %s<br>",$command,$this->getFileLog());
 			}
 		}
+		*/
 	}
 	public function leer() {
 	    //pg_dump --dbname=postgresql://username:password@host:port/database > file.sql

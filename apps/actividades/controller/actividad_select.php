@@ -401,8 +401,8 @@ foreach($cActividades as $oActividad) {
                 OR ($oPermSacd->have_perm_activ('ver') === true && $aprobado) )
             {
                 $gesCargosActividad=new actividadcargos\model\entity\GestorActividadCargo();
-                foreach($gesCargosActividad->getActividadSacds($id_activ) as $oPersona) {;
-                $sacds.=$oPersona->getApellidosNombre()."# "; // la coma la utilizo como separador de apellidos, nombre.
+                foreach($gesCargosActividad->getActividadSacds($id_activ) as $oPersona) {
+                    $sacds.=$oPersona->getApellidosNombre()."# "; // la coma la utilizo como separador de apellidos, nombre.
                 }
                 $sacds=substr($sacds,0,-2);
             }
