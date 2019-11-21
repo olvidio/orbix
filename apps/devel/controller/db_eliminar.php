@@ -36,8 +36,8 @@ if (!empty($Qsv)) {
     $oTrasvase = new core\DBTrasvase();
     $oTrasvase->setRegion($Qregion);
     $oTrasvase->setDl($Qdl);
-    
     $oTrasvase->setDbName('sv');
+
 	$oTrasvase->ctr('dl2resto');
 	$oTrasvase->teleco_ctr('dl2resto');
 
@@ -52,8 +52,8 @@ if (!empty($Qsf)) {
     $oTrasvase = new core\DBTrasvase();
     $oTrasvase->setRegion($Qregion);
     $oTrasvase->setDl($Qdl);
-    
     $oTrasvase->setDbName('sf');
+    
 	$oTrasvase->ctr('dl2resto');
 	$oTrasvase->teleco_ctr('dl2resto');
 

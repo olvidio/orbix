@@ -49,10 +49,9 @@ if (!empty($Qcomun)) {
     $oDBTabla->copiar_remote();
 
     $oTrasvase = new core\DBTrasvase();
-    $oTrasvase->setDbName('comun');
-    $oTrasvase->setDbConexion();
     $oTrasvase->setRegion($Qregion);
     $oTrasvase->setDl($Qdl);
+    $oTrasvase->setDbName('comun');
 
     $oTrasvase->actividades('resto2dl');
     $oTrasvase->cdc('resto2dl');
@@ -80,10 +79,9 @@ if (!empty($Qsv)) {
 	$oDBTabla->copiar();
 
     $oTrasvase = new core\DBTrasvase();
-	$oTrasvase->setDbName('sv');
-	$oTrasvase->setDbConexion();
 	$oTrasvase->setRegion($Qregion);
 	$oTrasvase->setDl($Qdl);
+	$oTrasvase->setDbName('sv');
 
 	$oTrasvase->ctr('resto2dl');
 	$oTrasvase->teleco_ctr('resto2dl');
@@ -111,10 +109,9 @@ if (!empty($Qsf)) {
 	$oDBTabla->copiar();
 
     $oTrasvase = new core\DBTrasvase();
-	$oTrasvase->setDbName('sf');
-	$oTrasvase->setDbConexion();
 	$oTrasvase->setRegion($Qregion);
 	$oTrasvase->setDl($Qdl);
+	$oTrasvase->setDbName('sf');
 
 	$oTrasvase->ctr('resto2dl');
 	$oTrasvase->teleco_ctr('resto2dl');
