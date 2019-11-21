@@ -36,7 +36,10 @@ if (!empty($Qcomun)) {
      * 
      * @var array $aTablas
      */
-    $aTablas = ["xa_tipo_tarifa" => ['id_schema' => 'yes'],
+    $aTablas = [
+                "a_tipos_actividad" => ['id_schema' => 'yes'],
+                "xa_tipo_tarifa" => ['id_schema' => 'yes'],
+                "x_config_schema" => ['id_schema' => 'yes'],
                 ];
     $oDBTabla = new core\DBTabla();
     $oDBTabla->setDb('comun');
