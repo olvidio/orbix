@@ -95,3 +95,5 @@ if (!empty($Qsv) && !empty($Qsf)) {
 }
 
 echo _("datos pasados a resto y tablas vaciadas");
+echo "<br>";
+echo _("Sólo elimina el esquema comun y los usuarios si se marcado eliminar sv y sf");

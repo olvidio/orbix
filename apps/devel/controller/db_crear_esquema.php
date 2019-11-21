@@ -74,6 +74,7 @@ if (!empty($Qsv)) {
     $oDevelPC = $oConexion->getPDO();
 
 	// CREAR Esquema 
+    $oDBRol = new core\DBRol();
     $oDBRol->setDbConexion($oDevelPC);
     $oDBRol->setUser($esquemav);
     // Necesito tener los permisos del usuario que tiene las tablas padre para poder crear las heredadas.
@@ -81,15 +82,13 @@ if (!empty($Qsv)) {
     $oDBRol->addGrupo('orbixv');
 	$oDBRol->crearSchema();
 	// Copiar esquema
-	if (!empty($Qsv)) {
-		$oDBEsquema = new core\DBEsquema();
-		$oDBEsquema->setDb('sv');
-		$oDBEsquema->setRegionRef($RegionRef);
-		$oDBEsquema->setDlRef($DlRef);
-		$oDBEsquema->setRegionNew($RegionNew);
-		$oDBEsquema->setDlNew($DlNew);
-		$oDBEsquema->crear();
-	}
+    $oDBEsquema = new core\DBEsquema();
+    $oDBEsquema->setDb('sv');
+    $oDBEsquema->setRegionRef($RegionRef);
+    $oDBEsquema->setDlRef($DlRef);
+    $oDBEsquema->setRegionNew($RegionNew);
+    $oDBEsquema->setDlNew($DlNew);
+    $oDBEsquema->crear();
     // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
 	$oDBRol->delGrupo('orbixv');
 }
