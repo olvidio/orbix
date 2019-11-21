@@ -65,12 +65,14 @@ class GestorDbSchema Extends core\ClaseGestor {
 	/**
 	 * llenar con los nuevos id, las tablas de las tres bases de datos (comun, sv, sf)
 	 */
-	function llenarNuevo($schema) {
+	function llenarNuevo($schema,$database) {
         $newId = $this->getNext($schema);
         $newIdSf = $newId - 1000;
         $newIdSv = $newId - 2000;
         
-	    foreach (['comun','sv','sf'] as $database) {
+	    // No se puede, porque e posible que todavía no exista el esquema
+	    // foreach (['comun','sv','sf'] as $database) {
+
 	        $oDbl = $this->connectar($database);
             $oDbSchema = new DbSchema();
             $oDbSchema->setoDbl($oDbl);
@@ -87,7 +89,6 @@ class GestorDbSchema Extends core\ClaseGestor {
             $oDbSchema->setId($newIdSv);
             $oDbSchema->setSchema($schema.'v');
             $oDbSchema->DBGuardar();
-	    }
 	}
 	/**
 	 *  retorna el id_schema següent per un esquema.

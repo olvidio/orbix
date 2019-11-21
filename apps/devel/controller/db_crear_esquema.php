@@ -63,7 +63,7 @@ if (!empty($Qcomun)) {
     // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
     $schema = $RegionNew.'-'.$DlNew;
     $oGesDbSchema = new GestorDbSchema();
-    $oGesDbSchema->llenarNuevo($schema);
+    $oGesDbSchema->llenarNuevo($schema,'comun');
 }
 
 // sv
@@ -81,7 +81,6 @@ if (!empty($Qsv)) {
     // Despues hay que quitarlo para que no tenga permisos para la tabla padre.
     $oDBRol->addGrupo('orbixv');
 	$oDBRol->crearSchema();
-	// Copiar esquema
     $oDBEsquema = new core\DBEsquema();
     $oDBEsquema->setDb('sv');
     $oDBEsquema->setRegionRef($RegionRef);
@@ -91,6 +90,11 @@ if (!empty($Qsv)) {
     $oDBEsquema->crear();
     // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
 	$oDBRol->delGrupo('orbixv');
+	
+    // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
+    $schema = $RegionNew.'-'.$DlNew;
+    $oGesDbSchema = new GestorDbSchema();
+    $oGesDbSchema->llenarNuevo($schema,'sv');
 }
 // sf
 if (!empty($Qsf)) {
@@ -118,6 +122,11 @@ if (!empty($Qsf)) {
 	}
     // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
 	$oDBRol->delGrupo('orbixf');
+
+    // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
+    $schema = $RegionNew.'-'.$DlNew;
+    $oGesDbSchema = new GestorDbSchema();
+    $oGesDbSchema->llenarNuevo($schema,'sf');
 }
 
 echo "<br>";
