@@ -43,7 +43,7 @@ if (!empty($Qcomun)) {
     $oDBTabla->setRef($esquemaRef);
     $oDBTabla->setNew($esquema);
     $oDBTabla->setTablas($aTablas);
-    $oDBTabla->copiar();
+    $oDBTabla->copiar_remote();
 
     $oTrasvase = new core\DBTrasvase();
     $oTrasvase->setDbName('comun');
