@@ -112,7 +112,7 @@ class DBTabla {
 	}
 	public function setDb($db) {
 		$this->sDb = $db;
-		$this->setFileRef($this->getDir().'/dbRef'.$this->getRef().'.'.$db.'.sql');
+		//$this->setFileRef($this->getDir().'/dbRef'.$this->getRef().'.'.$db.'.sql');
 	}
 	public function getFileRef() {
 		$this->sfileRef = empty($this->sfileRef)? $this->getDir().'/dbRef'.$this->getRef().'.'.$this->getDb().'.sql': $this->sfileRef;
