@@ -8,6 +8,12 @@ class DBTrasvase {
 	 * @var object
 	 */
 	 private $oDbl;
+	 
+	 private $sdbname;
+	 private $sregion;
+	 private $sdir;
+	 private $sdl;
+     private $sEsquema;
 
 	 /* CONSTRUCTOR -------------------------------------------------------------- */
  
