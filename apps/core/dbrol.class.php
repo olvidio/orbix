@@ -105,7 +105,7 @@ class DBRol {
 	}
 	public function crearSchema() {
 		$oDbl = $this->getoDbl();
-		$sql = "CREATE SCHEMA \"$this->sUser\" AUTHORIZATION \"$this->sUser\";";
+		$sql = "CREATE SCHEMA IF NOT EXISTS \"$this->sUser\" AUTHORIZATION \"$this->sUser\";";
 
 		if (($oDblSt = $oDbl->prepare($sql)) === false) {
 			$sClauError = 'DBRol.crearSchema.prepare';
@@ -134,7 +134,7 @@ class DBRol {
 				$sClauError = 'DBRol.crear.execute';
 				$err=$oDblSt->errorInfo()[2];
 				
-				if (strpos($err, 'already exists') !== FALSE) { // ya existe
+				if (strpos($err, 'already exists') !== FALSE OR strpos($err, 'ya existe') !== FALSE) { // ya existe
 				    $this->cambiarPassword();
 				} else {
                     $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
@@ -145,7 +145,7 @@ class DBRol {
 	}
 	public function eliminarSchema() {
 		$oDbl = $this->getoDbl();
-		$sql = "DROP SCHEMA \"$this->sUser\" CASCADE";
+		$sql = "DROP SCHEMA IF EXISTS \"$this->sUser\" CASCADE";
 
 		if (($oDblSt = $oDbl->prepare($sql)) === false) {
 			$sClauError = 'DBRol.eliminarSchema.prepare';
