@@ -48,7 +48,13 @@ class DBTabla {
 	 *
 	 * @var string
 	 */
-	 private $sfileLog;
+	 private $sfileLogR;
+	/**
+	 * Fichero con el log de la accion de Esquema
+	 *
+	 * @var string
+	 */
+	 private $sfileLogW;
 
 	 /* CONSTRUCTOR -------------------------------------------------------------- */
  
@@ -71,7 +77,8 @@ class DBTabla {
 	    if (!ConfigGlobal::is_debug_mode()) {
 	        $this->deleteFile($this->getFileNew());
 	        $this->deleteFile($this->getFileRef());
-	        $this->deleteFile($this->getFileLog());
+	        $this->deleteFile($this->getFileLogR());
+	        $this->deleteFile($this->getFileLogW());
 	    }
 	}
 	/* METODES GET i SET --------------------------------------------------------*/
@@ -114,12 +121,19 @@ class DBTabla {
 	public function setFileRef($fileRef) {
 		$this->sfileRef = $fileRef;
 	}
-	public function getFileLog() {
-		$this->sfileLog = empty($this->sfileLog)? $this->getDir().'/pg_error.'.$this->getDb().'.sql': $this->sfileLog;
-		return $this->sfileLog;
+	public function getFileLogR() {
+		$this->sfileLogR = empty($this->sfileLogR)? $this->getDir().'/pg_error_read.'.$this->getDb().'.sql': $this->sfileLogR;
+		return $this->sfileLogR;
 	}
-	public function setFileLog($fileLog) {
-		$this->sfileLog = $fileLog;
+	public function setFileLogR($fileLog) {
+		$this->sfileLogR = $fileLog;
+	}
+	public function getFileLogW() {
+		$this->sfileLogW = empty($this->sfileLogW)? $this->getDir().'/pg_error_write.'.$this->getDb().'.sql': $this->sfileLogW;
+		return $this->sfileLogW;
+	}
+	public function setFileLogW($fileLog) {
+		$this->sfileLogW = $fileLog;
 	}
 	public function getFileNew() {
 		$this->sfileNew = empty($this->sfileNew)? $this->getDir().'/dbNew'.$this->getNew().'.'.$this->getDb().'.sql': $this->sfileNew;
@@ -127,6 +141,23 @@ class DBTabla {
 	}
 	public function setFileNew($fileNew) {
 		$this->sfileNew = $fileNew;
+	}
+
+	/**
+	 * Para la base de datos comun, que está en otro servidor y además con otra versión,
+	 * No sirve el pg_dump (solo funciona con versiones iguales en los dos extremos)
+	 */
+	public function copiar_remote() {
+		$this->leer_remote();
+		$this->cambiar_nombre();
+		$this->importar();
+		$this->actualizar_schema();
+	}
+	public function copiar() {
+		$this->leer();
+		$this->cambiar_nombre();
+		$this->importar();
+		$this->actualizar_schema();
 	}
 
 	public function cambiar_nombre() {
@@ -152,11 +183,97 @@ class DBTabla {
 		if ($d === false) exit (_("error al escribir el fichero"));
 	}
 	
-	protected function getParamConexion($new='') {
+	/**
+	 * Ejecuta el pg_dump en la máquina remota a través de ssh.
+	 * No conviene hacerlo directamente, porque si las versiones del postgresql
+	 * de la máquina remota y local son distintas, da un error.
+	 *
+	 * Para poder ejecutar el ssh, se debe autorizar via id_rsa al usuario aquinate.
+	 */
+	public function leer_remote() {
+		$sTablas = '';
+		foreach ($this->aTablas as $tabla => $param) {
+			$sTablas .= " -t \\\\\\\"".$this->getRef()."\\\\\\\".$tabla ";
+		}
+	    //ssh user@remote_machine "pg_dump -U dbuser -h localhost -C --column-inserts" \
+	    //    > backup_file_on_your_local_machine.sql
+	    //  /usr/bin/ssh aquinate@192.168.200.16 "/usr/bin/pg_dump -s --schema=\\\"Acse-crAcse\\\"
+	    //          -U postgres -h 127.0.0.1 pruebas-comun" > /var/www/pruebas/log/db/Acse-crAcse.comun.sql
+
+	    $dbname = $this->getDbName();
+	    
+	    // leer esquema
+	    $command_ssh = "/usr/bin/ssh aquinate@192.168.200.16";
+	    $command_db = "/usr/bin/pg_dump -a".$sTablas." ";
+	    $command_db .= "-U postgres -h 127.0.0.1 $dbname";
+	    $command = "$command_ssh \"$command_db\" > ".$this->getFileRef();
+	    //echo "$command<br>";
+	    passthru($command); // no output to capture so no need to store it
+	}
+
+	public function leer() {
+		$sTablas = '';
+		foreach ($this->aTablas as $tabla => $param) {
+			$sTablas .= "-t \\\"".$this->getRef()."\\\".$tabla ";
+		}
+		//pg_dump --dbname=postgresql://username:password@host:port/database > file.sql
+		// crear archivo con el password
+		$dsn = $this->getConexion('ref');
+		// leer esquema
+		$command = "/usr/bin/pg_dump -a $sTablas";
+		$command .= "--file=".$this->getFileRef()." ";
+		$command .= "\"".$dsn."\"";
+		$command .= " > ".$this->getFileLogR()." 2>&1"; 
+		passthru($command); // no output to capture so no need to store it
+		// read the file, if empty all's well
+		$error = file_get_contents($this->getFileLogR());
+		if(trim($error) != '') {
+			if (ConfigGlobal::is_debug_mode()) {
+			    echo sprintf("PG_DUMP ERROR IN COMMAND: %s<br> mirar: %s<br>",$command,$this->getFileLogR());
+			}
+		}
+	}
+
+	public function importar() {
+	    // crear archivo con el password
+	    $dsn = $this->getConexion('new');
+	    
+		$command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -q -X -t ";
+		$command .= "--pset pager=off ";
+		$command .= "--file=".$this->getFileNew()." ";
+		$command .= "\"".$dsn."\"";
+		$command .= " > ".$this->getFileLogW()." 2>&1"; 
+		passthru($command); // no output to capture so no need to store it
+		// read the file, if empty all's well
+		$error = file_get_contents($this->getFileLogW());
+		if(trim($error) != '') {
+			if (ConfigGlobal::is_debug_mode()) {
+			    echo sprintf("PSQL ERROR IN COMMAND: %s<br> mirar en: %s<br>",$command,$this->getFileLogW());
+			}
+		}
+	}
+    /**
+     * Para actualizar el campo id_schema
+     */	
+	public function actualizar_schema() {
+        $oDbl = $this->getConexionPDO('new');
+		foreach ($this->aTablas as $tabla => $param) {
+		    if (!empty($param['id_schema']) && $param['id_schema'] == 'yes') {
+    			$sqlSchema = "UPDATE $tabla SET id_schema = DEFAULT;";
+                if ($oDbl->query($sqlSchema) === false) {
+                    $sClauError = 'DBTabla.schema.execute';
+                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                    return false;
+                }
+		    }
+		}
+	}
+
+	private function getConfigConexion($esq='ref') {
 	    // No he conseguido que funcione con ~/.pgpass.
-	    if (empty($new)) {
+	    if ($esq == 'ref') {
 	        $esquema = $this->getRef();
-	    } else {
+	    } elseif($esq == 'new') {
 	        $esquema = $this->getNew();
 	    }
 	    switch ($this->sDb) {
@@ -176,191 +293,27 @@ class DBTabla {
 	    
 	    return $config;
 	}
-	protected function getConexion($new='') {
-	    $config = $this->getParamConexion($new);
-
-	    $host = $config['host'];
-	    $port = $config['port'];
-	    $dbname = $config['dbname'];
-	    $user = $config['user'];
-	    $password = $config['password'];
-	    //opcionales
-	    $str_conexio = '';
-	    if (!empty($config['sslmode'])) {
-	        $str_conexio .= empty($str_conexio)? '' : '&';
-	        $str_conexio .= "sslmode=".$config['sslmode'];
-	    }
-	    if (!empty($config['sslcert'])) {
-	        $str_conexio .= empty($str_conexio)? '' : '&';
-	        $str_conexio .= "sslcert=".$config['sslcert'];
-	    }
-	    if (!empty($config['sslkey'])) {
-	        $str_conexio .= empty($str_conexio)? '' : '&';
-	        $str_conexio .= "sslkey=".$config['sslkey'];
-	    }
-	    if (!empty($config['sslrootcert'])) {
-	        $str_conexio .= empty($str_conexio)? '' : '&';
-	        $str_conexio .= "sslrootcert=".$config['sslrootcert'];
-	    }
-	    if (!empty($str_conexio)) {
-	        $str_conexio = '?'.$str_conexio;
-	    }
+	
+	private function getConexion($esquema='ref') {
+	    $config = $this->getConfigConexion($esquema);
+	    $this->dbname = $config['dbname'];
 	    
-	    $password_encoded = urlencode ($password);
-	    $dsn = "postgresql://$user:$password_encoded@$host:$port/".$dbname.$str_conexio;
+	    $oConnection = new dbConnection($config);
+	    $dsn = $oConnection->getURI();
 	    
-	    $this->dbname = $dbname;
 	    return $dsn;
 	}
 	
-	protected function getDbName() {
-	    $this->getConexion();
+	private function getDbName() {
+	    $this->getConexion('ref');
 	    return $this->dbname;
 	}
 
-	protected function getConexionPDO($new='') {
-	    $config = $this->getParamConexion($new);
+	private function getConexionPDO($esquema='ref') {
+	    $config = $this->getConfigConexion($esquema);
 
-	    $host = $config['host'];
-	    $port = $config['port'];
-	    $dbname = $config['dbname'];
-	    $user = $config['user'];
-	    $password = $config['password'];
-	    //opcionales
-	    $str_conexio = '';
-	    if (!empty($config['sslmode'])) {
-	        $str_conexio .= empty($str_conexio)? '' : ';';
-	        $str_conexio .= "sslmode=".$config['sslmode'];
-	    }
-	    if (!empty($config['sslcert'])) {
-	        $str_conexio .= empty($str_conexio)? '' : ';';
-	        $str_conexio .= "sslcert=".$config['sslcert'];
-	    }
-	    if (!empty($config['sslkey'])) {
-	        $str_conexio .= empty($str_conexio)? '' : ';';
-	        $str_conexio .= "sslkey=".$config['sslkey'];
-	    }
-	    if (!empty($config['sslrootcert'])) {
-	        $str_conexio .= empty($str_conexio)? '' : ';';
-	        $str_conexio .= "sslrootcert=".$config['sslrootcert'];
-	    }
-	    
-	    $password_encoded = urlencode ($password);
-	    $dsn = "postgresql://$user:$password_encoded@$host:$port/".$dbname.$str_conexio;
-	    
-	    // OJO Con las comillas dobles para algunos caracteres del password ($...)
-	    //$dsn = 'pgsql:host='.$host.' port='.$port.' dbname=\''.$dbname.'\' user=\''.$user.'\' password=\''.$password.'\'';
-	    $dsn = 'pgsql:host='.$host.';port='.$port.';dbname=\''.$dbname.'\';user=\''.$user.'\';password=\''.$password.'\';'.$str_conexio;
-	    
-	    return $dsn;
+	    $oConnection = new dbConnection($config);
+	    return $oConnection->getPDO();
 	}
 	
-	public function leer_remote() {
-		$sTablas = '';
-		foreach ($this->aTablas as $tabla => $param) {
-			$sTablas .= " -t \\\\\\\"".$this->getRef()."\\\\\\\".$tabla ";
-		}
-	    //ssh user@remote_machine "pg_dump -U dbuser -h localhost -C --column-inserts" \
-	    //    > backup_file_on_your_local_machine.sql
-	    //  /usr/bin/ssh aquinate@192.168.200.16 "/usr/bin/pg_dump -s --schema=\\\"Acse-crAcse\\\"
-	    //          -U postgres -h 127.0.0.1 pruebas-comun" > /var/www/pruebas/log/db/Acse-crAcse.comun.sql
-
-	    $dbname = $this->getDbName();
-	    
-	    // leer esquema
-	    $command_ssh = "/usr/bin/ssh aquinate@192.168.200.16";
-	    $command_db = "/usr/bin/pg_dump -a".$sTablas." ";
-	    $command_db .= "-U postgres -h 127.0.0.1 $dbname";
-	    
-	    //$command .= " > ".$this->getFileLog()." 2>&1";
-	    
-	    $command = "$command_ssh \"$command_db\" > ".$this->getFileRef();
-	    //echo "$command<br>";
-	    passthru($command); // no output to capture so no need to store it
-	    // read the file, if empty all's well
-	    /*
-	     $error = file_get_contents($this->getFileLog());
-	     if(trim($error) != '') {
-	     if (ConfigGlobal::is_debug_mode()) {
-	     echo sprintf("PSQL ERROR IN COMMAND: %s<br> mirar: %s<br>",$command,$this->getFileLog());
-	     }
-	     }
-	     */
-	}
-	public function leer() {
-		$sTablas = '';
-		foreach ($this->aTablas as $tabla => $param) {
-			$sTablas .= "-t \\\"".$this->getRef()."\\\".$tabla ";
-		}
-		//pg_dump --dbname=postgresql://username:password@host:port/database > file.sql
-		// crear archivo con el password
-		$dsn = $this->getConexion();
-		// leer esquema
-		$command = "/usr/bin/pg_dump -a $sTablas";
-		$command .= "--file=".$this->getFileRef()." ";
-		$command .= "\"".$dsn."\"";
-		$command .= " > ".$this->getFileLog()." 2>&1"; 
-		passthru($command); // no output to capture so no need to store it
-		// read the file, if empty all's well
-		$error = file_get_contents($this->getFileLog());
-		if(trim($error) != '') {
-			if (ConfigGlobal::is_debug_mode()) {
-			    echo sprintf("PG_DUMP ERROR IN COMMAND: %s<br> mirar: %s<br>",$command,$this->getFileLog());
-			}
-		}
-	}
-
-	public function importar() {
-	    // crear archivo con el password
-	    $dsn = $this->getConexion(1);
-	    
-		$command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -q -X -t ";
-		$command .= "--pset pager=off ";
-		$command .= "--file=".$this->getFileNew()." ";
-		$command .= "\"".$dsn."\"";
-		$command .= " > ".$this->getFileLog()." 2>&1"; 
-		passthru($command); // no output to capture so no need to store it
-		// read the file, if empty all's well
-		$error = file_get_contents($this->getFileLog());
-		if(trim($error) != '') {
-			if (ConfigGlobal::is_debug_mode()) {
-			    echo sprintf("PSQL ERROR IN COMMAND: %s<br> mirar en: %s<br>",$command,$this->getFileLog());
-			}
-		}
-	}
-    /**
-     * Para actualizar el campo id_schema
-     */	
-	public function actualizar_schema() {
-        $str_conexio = $this->getConexionPDO(1);
-        $oDbl = new \PDO($str_conexio);
-		foreach ($this->aTablas as $tabla => $param) {
-		    if (!empty($param['id_schema']) && $param['id_schema'] == 'yes') {
-    			$sqlSchema = "UPDATE $tabla SET id_schema = DEFAULT;";
-                if ($oDbl->query($sqlSchema) === false) {
-                    $sClauError = 'DBTabla.schema.execute';
-                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                    return false;
-                }
-		    }
-		}
-	}
-
-	/**
-	 * Para la base de datos comun, que está en otro servidor y además con otra versión,
-	 * No sirve el pg_dump (solo funciona con versiones iguales en los dos extremos)
-	 */
-	public function copiar_remote() {
-		$this->leer_remote();
-		$this->cambiar_nombre();
-		$this->importar();
-		$this->actualizar_schema();
-	}
-	public function copiar() {
-		$this->leer();
-		$this->cambiar_nombre();
-		$this->importar();
-		$this->actualizar_schema();
-	}
-
 }

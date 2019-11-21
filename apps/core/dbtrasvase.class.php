@@ -24,69 +24,48 @@ class DBTrasvase {
 
 	public function setDbName($dbname) {
 		$this->sdbname = $dbname;
+		
+		$oDbl = $this->getConexionPDO();
+		$this->setoDbl($oDbl);
 	}
 	public function getDbName() {
 		return $this->sdbname;
 	}
 	
-	public function setDbConexion() {
-	    switch($this->getDbName()) {
+	private function getConfigConexion() {
+		$esquema = $this->getEsquema();
+	    switch ($this->getDbName()) {
 	        case 'comun':
-                $oConfigDB = new ConfigDB('importar'); //de la database comun
-                $config = $oConfigDB->getEsquema('public'); //de la database comun
+	            $oConfigDB = new ConfigDB('comun'); //de la database comun
+	            $config = $oConfigDB->getEsquema($esquema); //de la database comun
 	            break;
 	        case 'sv':
-	            $oConfigDB = new ConfigDB('importar'); //de la database sv
-	            $config = $oConfigDB->getEsquema('publicv');
+	            $oConfigDB = new ConfigDB('sv'); //de la database sv
+	            $config = $oConfigDB->getEsquema($esquema); //de la database sv
 	            break;
 	        case 'sf':
-	            $oConfigDB = new ConfigDB('importar'); //de la database sf
-	            $config = $oConfigDB->getEsquema('publicf');
+	            $oConfigDB = new ConfigDB('sf'); //de la database sf
+	            $config = $oConfigDB->getEsquema($esquema); //de la database sf
 	            break;
 	    }
 	    
-	    $host = $config['host'];
-	    $port = $config['port'];
-	    $dbname = $config['dbname'];
-	    $user = $config['user'];
-	    $password = $config['password'];
-	    //opcionales
-	    $str_conexio = '';
-	    if (!empty($config['sslmode'])) {
-	        $str_conexio .= empty($str_conexio)? '' : ';';
-	        $str_conexio .= "sslmode=".$config['sslmode'];
-	    }
-	    if (!empty($config['sslcert'])) {
-	        $str_conexio .= empty($str_conexio)? '' : ';';
-	        $str_conexio .= "sslcert=".$config['sslcert'];
-	    }
-	    if (!empty($config['sslkey'])) {
-	        $str_conexio .= empty($str_conexio)? '' : ';';
-	        $str_conexio .= "sslkey=".$config['sslkey'];
-	    }
-	    if (!empty($config['sslrootcert'])) {
-	        $str_conexio .= empty($str_conexio)? '' : ';';
-	        $str_conexio .= "sslrootcert=".$config['sslrootcert'];
-	    }
-	    
-	    $password_encoded = urlencode ($password);
-	    $dsn = "postgresql://$user:$password_encoded@$host:$port/".$dbname.$str_conexio;
-	    
-	    
-	    // OJO Con las comillas dobles para algunos caracteres del password ($...)
-	    //$dsn = 'pgsql:host='.$host.' port='.$port.' dbname=\''.$dbname.'\' user=\''.$user.'\' password=\''.$password.'\'';
-	    $dsn = 'pgsql:host='.$host.';port='.$port.';dbname=\''.$dbname.'\';user=\''.$user.'\';password=\''.$password.'\';'.$str_conexio;
-
-		$oDbl = new \PDO($dsn);
-		$this->setoDbl($oDbl);
+	    return $config;
 	}
+	
+	private function getConexionPDO() {
+	    $config = $this->getConfigConexion();
+	    
+	    $oConnection = new dbConnection($config);
+	    return $oConnection->getPDO();
+	}
+	
 
 	/**
 	 * Recupera l'atribut oDbl de Grupo
 	 *
 	 * @return object oDbl
 	 */
-	protected function setoDbl($oDbl) {
+	private  function setoDbl($oDbl) {
 		$this->oDbl = $oDbl;
 	}
 

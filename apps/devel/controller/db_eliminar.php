@@ -23,13 +23,10 @@ $DlNew = $Qdl;
 // COMUN
 if (!empty($Qcomun)) {
     $oTrasvase = new core\DBTrasvase();
-    $oTrasvase->setDbName('comun');
-    $oTrasvase->setDbConexion();
     $oTrasvase->setRegion($Qregion);
     $oTrasvase->setDl($Qdl);
-    
     $oTrasvase->setDbName('comun');
-    $oTrasvase->setDbConexion();
+    
     $oTrasvase->actividades('dl2resto');
     $oTrasvase->cdc('dl2resto');
     $oTrasvase->teleco_cdc('dl2resto');
@@ -37,11 +34,10 @@ if (!empty($Qcomun)) {
 // SV
 if (!empty($Qsv)) {
     $oTrasvase = new core\DBTrasvase();
-    $oTrasvase->setDbName('sv');
-    $oTrasvase->setDbConexion();
     $oTrasvase->setRegion($Qregion);
     $oTrasvase->setDl($Qdl);
     
+    $oTrasvase->setDbName('sv');
 	$oTrasvase->ctr('dl2resto');
 	$oTrasvase->teleco_ctr('dl2resto');
 
@@ -54,11 +50,10 @@ if (!empty($Qsv)) {
 // SF
 if (!empty($Qsf)) {
     $oTrasvase = new core\DBTrasvase();
-    $oTrasvase->setDbName('sf');
-    $oTrasvase->setDbConexion();
     $oTrasvase->setRegion($Qregion);
     $oTrasvase->setDl($Qdl);
     
+    $oTrasvase->setDbName('sf');
 	$oTrasvase->ctr('dl2resto');
 	$oTrasvase->teleco_ctr('dl2resto');
 

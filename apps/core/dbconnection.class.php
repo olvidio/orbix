@@ -18,40 +18,80 @@ class dbConnection {
 		$this->config = $config;
     }
 
-	private function getStrConexio() {
+	public function getPDO() {
 		$config = $this->config;
 
-        $str_conexio = "pgsql:";
-		$str_conexio .= "host='".$config['host']."'";
-		$str_conexio .= " sslmode='".$config['sslmode']."'";
-		$str_conexio .= " port='".$config['port']."'";
-		$str_conexio .= " dbname='".$config['dbname']."'";
-		$str_conexio .= " user='".$config['user']."'";
-		$str_conexio .= " password='".$config['password']."'";
+		$host = $config['host'];
+		$port = $config['port'];
+		$dbname = $config['dbname'];
+		$user = $config['user'];
+		$password = $config['password'];
 		//opcionales
+		$str_conexio = '';
+		if (!empty($config['sslmode'])) {
+		    $str_conexio .= empty($str_conexio)? '' : ';';
+		    $str_conexio .= "sslmode=".$config['sslmode'];
+		}
 		if (!empty($config['sslcert'])) {
-            $str_conexio .= " sslcert='".$config['sslcert']."'";
+		    $str_conexio .= empty($str_conexio)? '' : ';';
+		    $str_conexio .= "sslcert=".$config['sslcert'];
 		}
 		if (!empty($config['sslkey'])) {
-            $str_conexio .= " sslkey='".$config['sslkey']."'";
+		    $str_conexio .= empty($str_conexio)? '' : ';';
+		    $str_conexio .= "sslkey=".$config['sslkey'];
 		}
 		if (!empty($config['sslrootcert'])) {
-            $str_conexio .= " sslrootcert='".$config['sslrootcert']."'";
+		    $str_conexio .= empty($str_conexio)? '' : ';';
+		    $str_conexio .= "sslrootcert=".$config['sslrootcert'];
 		}
-		    
-		return $str_conexio;
-	}
-	public function getPDO() {
-		//$datestyle =$this->config['datestyle']; 
+		
+		// OJO Con las comillas dobles para algunos caracteres del password ($...)
+		//$dsn = 'pgsql:host='.$host.' port='.$port.' dbname=\''.$dbname.'\' user=\''.$user.'\' password=\''.$password.'\'';
+		$dsn = 'pgsql:host='.$host.';port='.$port.';dbname=\''.$dbname.'\';user=\''.$user.'\';password=\''.$password.'\';'.$str_conexio;
+		
 		$esquema =$this->config['schema']; 
-		$str_conexio = $this->getStrConexio();		
-		$oDB = new \PDO($str_conexio);
+		$oDB = new \PDO($dsn);
 		$oDB->exec("SET search_path TO \"$esquema\"");
 		/* le paso la gestión a la clase web\datetimelocal */
 		//$oDB->exec("SET DATESTYLE TO '$datestyle'");
-		
 		return $oDB;
 	}
+	
+	public function getURI() {
+		$config = $this->config;
+		
+        $host = $config['host'];
+        $port = $config['port'];
+        $dbname = $config['dbname'];
+        $user = $config['user'];
+        $password = $config['password'];
+        //opcionales
+        $str_conexio = '';
+        if (!empty($config['sslmode'])) {
+            $str_conexio .= empty($str_conexio)? '' : '&';
+            $str_conexio .= "sslmode=".$config['sslmode'];
+        }
+        if (!empty($config['sslcert'])) {
+            $str_conexio .= empty($str_conexio)? '' : '&';
+            $str_conexio .= "sslcert=".$config['sslcert'];
+        }
+        if (!empty($config['sslkey'])) {
+            $str_conexio .= empty($str_conexio)? '' : '&';
+            $str_conexio .= "sslkey=".$config['sslkey'];
+        }
+        if (!empty($config['sslrootcert'])) {
+            $str_conexio .= empty($str_conexio)? '' : '&';
+            $str_conexio .= "sslrootcert=".$config['sslrootcert'];
+        }
+        if (!empty($str_conexio)) {
+            $str_conexio = '?'.$str_conexio;
+        }
+        
+        $password_encoded = urlencode ($password);
+        $dsn = "postgresql://$user:$password_encoded@$host:$port/".$dbname.$str_conexio;
+        
+        return $dsn;
+    }
 	
 	public function getPDOListas() {
 		$config = $this->config;
