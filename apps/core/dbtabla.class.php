@@ -105,10 +105,10 @@ class DBTabla {
 	}
 	public function setDb($db) {
 		$this->sDb = $db;
-		$this->setFileRef($this->getDir().'/dbRef.'.$db.'.sql');
+		$this->setFileRef($this->getDir().'/dbRef'.$this->getRef().'.'.$db.'.sql');
 	}
 	public function getFileRef() {
-		$this->sfileRef = empty($this->sfileRef)? $this->getDir().'/dbRef.'.$this->getDb().'.sql': $this->sfileRef;
+		$this->sfileRef = empty($this->sfileRef)? $this->getDir().'/dbRef'.$this->getRef().'.'.$this->getDb().'.sql': $this->sfileRef;
 		return $this->sfileRef;
 	}
 	public function setFileRef($fileRef) {
@@ -122,7 +122,7 @@ class DBTabla {
 		$this->sfileLog = $fileLog;
 	}
 	public function getFileNew() {
-		$this->sfileNew = empty($this->sfileNew)? $this->getDir().'/dbNew.'.$this->getDb().'.sql': $this->sfileNew;
+		$this->sfileNew = empty($this->sfileNew)? $this->getDir().'/dbNew'.$this->getNew().'.'.$this->getDb().'.sql': $this->sfileNew;
 		return $this->sfileNew;
 	}
 	public function setFileNew($fileNew) {
@@ -258,7 +258,7 @@ class DBTabla {
 	public function leer_remote() {
 		$sTablas = '';
 		foreach ($this->aTablas as $tabla => $param) {
-			$sTablas .= "-t \\\\\\\"".$this->getRef()."\\\\\\\".$tabla ";
+			$sTablas .= " -t \\\\\\\"".$this->getRef()."\\\\\\\".$tabla ";
 		}
 	    //ssh user@remote_machine "pg_dump -U dbuser -h localhost -C --column-inserts" \
 	    //    > backup_file_on_your_local_machine.sql
@@ -269,7 +269,7 @@ class DBTabla {
 	    
 	    // leer esquema
 	    $command_ssh = "/usr/bin/ssh aquinate@192.168.200.16";
-	    $command_db = "/usr/bin/pg_dump -s -a".$sTablas." ";
+	    $command_db = "/usr/bin/pg_dump -a".$sTablas." ";
 	    $command_db .= "-U postgres -h 127.0.0.1 $dbname";
 	    
 	    //$command .= " > ".$this->getFileLog()." 2>&1";
