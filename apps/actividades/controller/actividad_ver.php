@@ -193,10 +193,15 @@ if (!empty($Qid_activ)) { // caso de modificar
 if (!empty($id_ubi) && $id_ubi != 1) {
 	$oCasa = Ubi::newUbi($id_ubi);
 	$nombre_ubi=$oCasa->getNombre_ubi();
-	$delegacion=$oCasa->getDl();
-	$region=$oCasa->getRegion();
-	$sv=$oCasa->getSv();
-	$sf=$oCasa->getSf();
+	// Puede ser que haga referencia a un id_ubi desaparecido.
+	if (empty($nombre_ubi)) {
+	    $nombre_ubi=_("ya no existe: cambiarlo"); 
+	} else {
+        $delegacion=$oCasa->getDl();
+        $region=$oCasa->getRegion();
+        $sv=$oCasa->getSv();
+        $sf=$oCasa->getSf();
+	}
 } else {
 	if ($id_ubi==1 && $lugar_esp) $nombre_ubi=$lugar_esp;
 	if (!$id_ubi && !$lugar_esp) $nombre_ubi=_("sin determinar");
