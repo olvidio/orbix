@@ -27,12 +27,12 @@ Para ello, abrir la plantilla con poedit, y dar a "catalogo > actualizar desde l
  Sistema > traducciones > menus.<br>
  Esto genera un archivo de texto con el texto de los menus. Asi al generar los archivo de tracuccion (.pot) tinene en cuenta estos textos que de hecho están en la base de datos. </li>
 
-<li>Para crear un nuevo idioma:
+<li>Para crear un nuevo idioma:<br>
 a) si queremos usar el google traductor, creamos el fichero .po para el spanish, y lo subimos al traductor toolkit (que es distinto del traductor). Ver más abajo.
 <br>
 https://translate.google.com/toolkit/list?hl=ca#translations/active
 </li>
-<li>Para crear actualizarb n idioma:
+<li>Para actualizar un idioma:<br>
 a) Abrir el archivo de traduccion con poedit. (orbix/languages/ca_ES.UTF-8/LC_MESSAGES/orbix.po).<br>
 b) Ir a "Catálogo > Update from POT file", y seleccionar la plantilla (orbix/languages/es_ES.pot).<br>
 

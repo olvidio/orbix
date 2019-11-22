@@ -156,26 +156,26 @@ class CentrosQue {
 				$this->aCentros[3] = _("centros comunes");
 				$this->aCentros[4] = _("centros sv");
 				$this->aCentros[5] = _("centros sf");
-				$this->aCentros[6] = _("centros y ctr sf");
-				$this->aCentros[9] = _("una centro o lugar");
+				$this->aCentros[6] = _("centros sv y sf");
+				$this->aCentros[9] = _("un centro o lugar");
 				$this->aCentros[11] = _("todas las actividades sv");
 				$this->aCentros[12] = _("todas las actividades sf");
 				break;
 			case 'sv':
 				$this->aCentros[3] = _("centros comunes");
 				$this->aCentros[4] = _("centros sv");
-				$this->aCentros[9] = _("una centro o lugar");
+				$this->aCentros[9] = _("un centro o lugar");
 				$this->aCentros[11] = _("todas las actividades sv");
 				break;
 			case 'sf':
 				$this->aCentros[3] = _("centros comunes");
 				$this->aCentros[5] = _("centros sf");
-				$this->aCentros[6] = _("centros y ctr sf");
-				$this->aCentros[9] = _("una centro o lugar");
+				$this->aCentros[6] = _("centros sv y sf");
+				$this->aCentros[9] = _("un centro o lugar");
 				$this->aCentros[12] = _("todas las actividades sf");
 				break;
 			case 'centro':
-				$this->aCentros[9] = _("una centro o lugar");
+				$this->aCentros[9] = _("un centro o lugar");
 				break;
 		}
 	}

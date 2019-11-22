@@ -105,7 +105,7 @@ switch ($Qque) {
         break;
     case "cv_s_ad":
 	    $aWhereA['id_tipo_activ'] = '143002';
-        $titulo_actividad = sprintf(_("s con ad reciente -entre 6 y 18 meses antes de la fecha última cv admisión del año- que todavía no han asistido a cv de ad "));
+        $titulo_actividad = sprintf(_("s con ad reciente -entre 6 y 18 meses antes de la fecha última cv admisión del año- que todavía no han asistido a cv de ad"));
         
         //AND p.f_ad BETWEEN '$f_ad_min' AND '$f_ad_max'
         $aWhereP['inc'] = 'ad';
@@ -159,7 +159,7 @@ foreach ($cPersonas as $oPersona) {
         $snom_tipo = $oTipoActividad->getNom_tipoText();
         $msg = "$sactividad  $sasistentes  $snom_tipo";
     } else {
-        $msg = _("No hay datos ");
+        $msg = _("No hay datos");
         $f_ini = _("No consta");
         $a_valores[$i]['clase'] = 'tono2';
     }

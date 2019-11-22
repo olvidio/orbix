@@ -385,7 +385,7 @@ class DatosCgi Extends core\ClasePropiedades {
 	function getDatosCurso_ini_any() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'curso_ini_any'));
-		$oDatosCampo->setEtiqueta(_("curso_ini_any"));
+		$oDatosCampo->setEtiqueta(_("año inicio curso"));
 		return $oDatosCampo;
 	}
 	/**
@@ -397,7 +397,7 @@ class DatosCgi Extends core\ClasePropiedades {
 	function getDatosCurso_fin_any() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'curso_fin_any'));
-		$oDatosCampo->setEtiqueta(_("curso_fin_any"));
+		$oDatosCampo->setEtiqueta(_("año fin curso"));
 		return $oDatosCampo;
 	}
 	/**
@@ -409,7 +409,7 @@ class DatosCgi Extends core\ClasePropiedades {
 	function getDatosNum_alum() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'num_alum'));
-		$oDatosCampo->setEtiqueta(_("num_alum"));
+		$oDatosCampo->setEtiqueta(_("número de alumnos"));
 		return $oDatosCampo;
 	}
 }
