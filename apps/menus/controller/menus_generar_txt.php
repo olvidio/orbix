@@ -21,14 +21,27 @@
 $oGesMenus = new menus\model\entity\GestorMenuDb();
 $cMenus = $oGesMenus->getMenuDbs(['ok' => 't', '_ordre' => 'id_grupmenu,orden']);
 
-
 $texto = "<?php\n //Menus interiores\n";
+
 foreach ($cMenus as $oMenuDb) {
 	$menu = $oMenuDb->getMenu();
 	if (!empty($menu))	{
 		$texto.=" _(\"$menu\"); \n";
 	}
 }
+
+// Añadir los tipos de repetición
+$oGesRepeticion = new actividades\model\entity\GestorRepeticion();
+$cRepeticion = $oGesRepeticion->getRepeticiones();
+
+$texto .= "//tipos de repetición actividades\n";
+foreach ($cRepeticion as $oRepeticion) {
+	$repe = $oRepeticion->getRepeticion();
+	if (!empty($repe))	{
+		$texto.=" _(\"$repe\"); \n";
+	}
+}
+
 
 //echo $texto;
 //$dir_base = "/var/www/orbix";
