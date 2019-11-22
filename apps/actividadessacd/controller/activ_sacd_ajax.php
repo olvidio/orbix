@@ -184,10 +184,11 @@ switch ($Qque) {
                     $aWhere=array('id_enc'=>$id_enc,'modo'=>'2|3','f_fin'=>'');
                     $aOperador=array('modo'=>'~','f_fin'=>'IS NULL');
                     $cEncargosSacd = $GesEncargoSacd->getEncargosSacd($aWhere,$aOperador);
+                    if (!is_array($cEncargosSacd) OR count($cEncargosSacd) < 1) { continue; }
                     $id_nom = $cEncargosSacd[0]->getId_nom();
                     $oPersona = new PersonaDl($id_nom);
                     $ap_nom=$oPersona->getApellidosNombre();
-                    $sacd_posibles.="<tr><td><span class=link id=$id_nom onclick=fnjs_asignar_sacd('".$Qid_activ."','$id_nom') >$num_orden* $ap_nom</span></td></tr>";
+                    $sacd_posibles.="<tr><td><span class=link id=$id_nom onclick=fnjs_asignar_sacd('".$Qid_activ."','$id_nom') >$num_orden * $ap_nom</span></td></tr>";
                 }
             }
 		}
