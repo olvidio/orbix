@@ -127,6 +127,7 @@ if (!isset($a_aprobadas['error'])) {
 	SetType($numC,"double");
 	if (!empty($numC)) { $nf=number_format(($aprobadas/$numC),2,',','.'); } else { $nf=0; }
 	$res[11]['num'] = $nf;
+	$res[11]['lista'] = $a_aprobadas['lista'];
 	$a_textos[11] = ucfirst(_("media de asignaturas superadas por alumno en cuadrienio"));
 } else {
 	$res[11] = $a_aprobadas;
