@@ -88,6 +88,7 @@ if ($Qque == "un_sacd") {
 	// periodo por defecto:
     if (empty($Qperiodo)) {
         $Qperiodo = 'curso_crt';
+        $Qyear = date('Y');
     }
 }
 
