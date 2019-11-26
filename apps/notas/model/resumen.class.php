@@ -800,6 +800,7 @@ class Resumen Extends core\ClasePropiedades {
 				WHERE p.id_nom=n.id_nom AND n.id_asignatura=a.id_asignatura
 					AND (n.id_nivel BETWEEN 2100 AND 2500)
 					AND p.stgr ~ '^c'
+                    ABD n.superada = 't'
 				ORDER BY p.apellido1, p.apellido2, p.nom
 				";
 		$statement=$oDbl->query($ssql);
