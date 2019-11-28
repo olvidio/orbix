@@ -741,19 +741,21 @@ class Resumen Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$tabla = $this->getNomTabla();
 		$notas = $this->getNomNotas();
+		$asignaturas = $this->getNomAsignaturas();
 		
-		$ssql="SELECT p.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
-				FROM $tabla p,$notas n
-				WHERE p.id_nom=n.id_nom
+		$ssql="SELECT p.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr, a.nombre_corto, n.acta, n.preceptor
+				FROM $tabla p,$notas n, $asignaturas a
+				WHERE p.id_nom=n.id_nom AND n.id_asignatura=a.id_asignatura
 					AND (n.id_nivel BETWEEN 1100 AND 1232)
 					AND p.stgr ~ '^b'
-				GROUP BY p.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
+                    AND n.superada = 't'
 				ORDER BY p.apellido1, p.apellido2, p.nom
 				";
 		$statement=$oDbl->query($ssql);
 		$rta['num'] = $statement->rowCount();
 		if ($this->blista == true && $rta['num'] > 0) {
 			$rta['lista'] = sprintf(_("total de asignaturas superadas en bienio %s"),$rta['num']);
+			$rta['lista'] .= $this->Lista($ssql,"nom,apellido1,apellido2,ctr,nombre_corto,acta,preceptor",1);
 		} else {
 			$rta['lista'] = '';
 		}

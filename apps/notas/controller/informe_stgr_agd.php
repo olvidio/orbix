@@ -67,6 +67,7 @@ $a_aprobadas = $Resumen->aprobadasBienio();
 $aprobadas = $a_aprobadas['num'];
 if (!empty($nBienio)) { $nf=number_format(($aprobadas/$nBienio),2,',','.'); } else { $nf=0; }
 $res[22]['num'] = $nf;
+$res[22]['lista'] = $a_aprobadas['lista'];
 $a_textos[22] = ucfirst(_("media de asignaturas superadas por alumno en bienio"));
 
 //23 Nº de agd en cuadrienio con bienio pendiente
