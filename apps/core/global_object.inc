@@ -147,13 +147,27 @@ if ((\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) && !iss
 				'personas_dl',
 				'd_teleco_personas_dl',
 			];
+	    /*
+		$views = [
+				'p_agregados',
+			];
+			*/
 		
+        if ($user_sfsv == 1) {
+		    $schema = $esquemav;
+		} elseif ($user_sfsv == 2) {
+		    $schema = $esquemaf;
+		}
+
+		$oMatView = new DBView($schema);
 		foreach ($views as $view) {
-			$sql = "REFRESH MATERIALIZED VIEW \"H-Hv\".$view";
-			if (($oDB->exec($sql)) === false) {
-				$sClauError = 'Refresh';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, __LINE__, __FILE__);
-			}
+		    $oMatView->setView($view);
+		    if ($oMatView->Existe()) {
+		        //true
+		        $oMatView->Refresh();
+		    } else {
+		        $oMatView->create();
+		    }
 		}
 		$_SESSION['Refresh'] = 'ok';
 	} catch (\PDOException $e) {

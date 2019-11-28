@@ -38,6 +38,35 @@ class GestorDelegacion Extends ClaseGestor {
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
 	/**
+	 * retorna un objecte del tipus Array, els esquemes d'una regió del stgr
+	 *
+	 * @param string regio.
+	 * @return array Una Llista d'esquemes.
+	 */
+	function getArraySchemasRegionStgr($sRegionStgr, $mi_sfsv) {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$mi_sfsv = ConfigGlobal::mi_sfsv();
+		
+        $sQuery="SELECT u.id_dl, u.region, u.dl FROM $nom_tabla u 
+                 WHERE status = 't' AND region_stgr = '$sRegionStgr'
+                 ORDER BY region,dl";
+		//echo "query: $sQuery";
+		$a_schema = [];
+		foreach ($oDbl->query($sQuery) as $row) {
+			$id_dl = $row['id_dl'];
+			$region = $row['region'];
+            $dl = $row['dl'];
+			if ($mi_sfsv === 1) {
+			     $dl .= 'v';
+			} elseif($mi_sfsv === 2) {
+			     $dl .= 'f';
+			}
+			$a_schema[$id_dl] = "$region-$dl";
+		}
+		return $a_schema;
+	}
+	/**
 	 * retorna un objecte del tipus Array, les dl d'una regió del stgr
 	 *
 	 * @param array optional lista de regions.

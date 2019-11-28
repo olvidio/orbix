@@ -48,7 +48,7 @@ $esquemaf_pwd = generar_password(11);
 
 // CREAR USUARIOS ----------------------
 // Hay que pasar como parámetro el nombre de la database, que corresponde al archivo database.inc
-// donde están los passwords. En este caso en importar.inc, tenermos al superadmin.
+// donde están los passwords. En este caso en importar.inc, tenemos al superadmin.
 $oConfigDB = new core\ConfigDB('importar');
 $config = $oConfigDB->getEsquema('public'); //de la database comun
 
