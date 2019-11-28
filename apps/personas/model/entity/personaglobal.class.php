@@ -908,8 +908,13 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 				case 'PersonaNax':
 				case 'PersonaS':
 				case 'PersonaSSSC':
-                    $oCentroDl = new ubis\CentroDl($this->getId_ctr());
-					$ctr = $oCentroDl->getNombre_ubi();
+				    // OJO CON las regiones de stgr
+				    if (ConfigGlobal::soy_region()) {
+                        $oCentro = new ubis\Centro($this->getId_ctr());
+				    } else {
+                        $oCentro = new ubis\CentroDl($this->getId_ctr());
+				    }
+					$ctr = $oCentro->getNombre_ubi();
 					break;
 			}
 			$this->sCentro_o_dl=$ctr;
