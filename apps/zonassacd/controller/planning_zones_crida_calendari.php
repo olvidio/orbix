@@ -62,7 +62,7 @@ $Qyear = (integer) \filter_input(INPUT_POST, 'year');
 $year = empty($Qyear)? date('Y')+1 : $Qyear;
 $Qtrimestre = (integer) \filter_input(INPUT_POST, 'trimestre');
 
-$Qid_zona = (integer) \filter_input(INPUT_POST, 'id_zona');
+$Qid_zona = (string) \filter_input(INPUT_POST, 'id_zona');
 $Qactividad = (string) \filter_input(INPUT_POST, 'actividad');
 
 // ISO: mes/dia
@@ -146,7 +146,7 @@ switch ($Qid_zona) {
 	    $aWhere = [];
 		$aWhere['propia'] = 't';
 		$GesZonasSacd = new GestorZonaSacd();
-		$cZonasSacd = $GesZonasSacd->getZonasSacd($aWhere);
+		$cZonasSacd = $GesZonasSacd->getZonasSacds($aWhere);
 		$a_zonas=array();
 		$a_zonas_o=array();
 		foreach ($cZonasSacd as $oZonaSacd) {
