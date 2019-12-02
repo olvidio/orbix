@@ -140,7 +140,7 @@ $a_textos[12] = ucfirst(_("número de numerarios de cuadrienio que han superado 
 $res[13] = $Resumen->masAsignaturasQue(5);
 $a_textos[13] = ucfirst(_("número de numerarios de cuadrienio que han superado 1 semestre"));
 //14. Número de numerarios de cuadrienio que han superado menos de 1 semestre
-$res[14] = $Resumen->menosCreditosQue(5);
+$res[14] = $Resumen->menosAsignaturasQue(5);
 $a_textos[14] = ucfirst(_("número de numerarios de cuadrienio que han superado menos de 1 semestre"));
 //15. Número de numerarios de cuadrienio que no han superado ninguna asignatura
 $res[15] = $Resumen->ningunaSuperada();
