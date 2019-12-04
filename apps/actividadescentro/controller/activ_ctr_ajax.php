@@ -122,7 +122,7 @@ switch ($Qque) {
 		$Qfin = (string) \filter_input(INPUT_POST, 'fin');
 		$Qf_ini_act = (string) \filter_input(INPUT_POST, 'f_ini_act');
 		$aWhere['status'] = 't';
-		$aWhere['tipo_ctr'] = '^s[jm]';
+		$aWhere['tipo_ctr'] = '^s[jm]*';
 		$aOperador['tipo_ctr'] = '~';
 		$GesCentros = new GestorCentroDl();
 		$cCentros = $GesCentros->getCentros($aWhere,$aOperador);
@@ -138,8 +138,7 @@ switch ($Qque) {
 			
 			//próxima actividad
 			$txt_dif = $oGesCtrEncargado->getProximasActividadesDeCentro($id_ubi,$Qf_ini_act);
-			//$txt_ctr.="<tr><td><span class=link id=$id_ubi onclick=fnjs_asignar_ctr('$Qid_activ','$id_ubi')> $nombre_ubi</span></td>";
-			$txt_ctr.="<tr><td class=link id=$id_ubi onclick=fnjs_asignar_ctr('$Qid_activ','$id_ubi')> $nombre_ubi</td></tr>";
+			$txt_ctr.="<tr><td class=link id=$id_ubi onclick=fnjs_asignar_ctr('$Qid_activ','$id_ubi')> $nombre_ubi</td>";
 			$txt_ctr.="<td>$num_activ</td><td>$txt_dif</td></tr>";
 		}
 		$txt="<table><tr><td class=cabecera>"._("centro")."</td><td class=cabecera>"._("num")."</td><td class=cabecera>"._("dif días")."</td></tr>$txt_ctr</table>";
