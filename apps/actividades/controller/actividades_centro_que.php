@@ -54,10 +54,10 @@ if ($miRolePau == Role::PAU_CTR) { //centro
 	if ($Qtipo_ctr == 'sg') {
 		if (ConfigGlobal::mi_sfsv() == 1) {
 			$oForm->setCentros('sv');
-			$donde="WHERE status='t' AND sv='t' AND tipo_ctr ~ '^s[jm]'";
+			$donde="WHERE status='t' AND sv='t' AND tipo_ctr ~ '^s[jm]*$'";
 		} elseif (ConfigGlobal::mi_sfsv() == 2) {
 			$oForm->setCentros('sf');
-			$donde="WHERE status='t' AND sf='t' AND tipo_ctr ~ '^s[jm]'";
+			$donde="WHERE status='t' AND sf='t' AND tipo_ctr ~ '^s[jm]*$'";
 		}
 	} else {
 		// Sólo quiero ver las centros comunes.

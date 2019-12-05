@@ -297,7 +297,7 @@ class sincroDB {
 		$f_nacimiento = $oPersonaListas->getFecha_Naci();
 		$lugar_nacimiento = $oPersonaListas->getLugar_Naci();
 
-		$dl_litas = $oPersonaListas->getDl();
+		$dl_listas = $oPersonaListas->getDl();
 		$Ctr = $oPersonaListas->getCtr();
 		//por alguna razón puede no exitir el centro en la lista
 		if (!empty($a_ctr[$Ctr])) {
