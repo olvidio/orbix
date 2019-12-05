@@ -159,7 +159,7 @@ $ver_910 = Hash::link('apps/dbextern/controller/ver_orbix.php?'.http_build_query
 $url_sincro_ajax = ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro_ajax.php';
 $oHash1 = new Hash();
 $oHash1->setUrl($url_sincro_ajax);
-$oHash1->setCamposForm('que!region!dl!tipo_persona');
+$oHash1->setCamposForm('que!region!dl_listas!tipo_persona');
 $h1 = $oHash1->linkSinVal();
 
 $explicacion_txt = _("en situación normal bastaría hacer click en 'ejecutar' del punto 1.");
