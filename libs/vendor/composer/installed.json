@@ -1795,7 +1795,7 @@
                 "dev-master": "1.5-dev"
             }
         },
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
             "psr-0": {
                 "Twig_Extensions_": "lib/"
