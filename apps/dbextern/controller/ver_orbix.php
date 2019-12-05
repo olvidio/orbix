@@ -35,6 +35,10 @@ switch ($tipo_persona) {
 }
 
 function otro($id,$mov,$max) {
+    $id = (integer)$id;
+    if ($max == 0) {
+        return FALSE;
+    }
 	switch($mov) {
 		case '-':
 			$id--;
@@ -93,67 +97,78 @@ if (empty($id)) {
 
 $max = count($_SESSION['DBOrbix']);
 
-$new_id = otro($id,$mov,$max);
-$persona_listas = $_SESSION['DBOrbix'][$new_id];
+if ($max === 0) {
+    $html_reg = _("No hay registros");
+} else {
+    $new_id = otro($id,$mov,$max);
+    $persona_listas = $_SESSION['DBOrbix'][$new_id];
 
-$url_sincro_ver = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/ver_orbix.php';
-$oHash = new web\Hash();
-$oHash->setUrl($url_sincro_ver);
-$oHash->setcamposNo('mov');
-$a_camposHidden = array(
-		//'dl' => $dl,
-		'tipo_persona' => $tipo_persona,
-		'id' => $new_id,
-		);
-$oHash->setArraycamposHidden($a_camposHidden);
+    $url_sincro_ver = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/ver_orbix.php';
+    $oHash = new web\Hash();
+    $oHash->setUrl($url_sincro_ver);
+    $oHash->setcamposNo('mov');
+    $a_camposHidden = array(
+            //'dl' => $dl,
+            'tipo_persona' => $tipo_persona,
+            'id' => $new_id,
+            );
+    $oHash->setArraycamposHidden($a_camposHidden);
 
-$url_sincro_ajax = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro_ajax.php';
-$oHash1 = new web\Hash();
-$oHash1->setUrl($url_sincro_ajax);
-$oHash1->setCamposForm('que!id_nom_listas!id!id_orbix'); 
-$h1 = $oHash1->linkSinVal();
+    $url_sincro_ajax = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro_ajax.php';
+    $oHash1 = new web\Hash();
+    $oHash1->setUrl($url_sincro_ajax);
+    $oHash1->setCamposForm('que!id_nom_listas!id!id_orbix'); 
+    $h1 = $oHash1->linkSinVal();
 
-
-$html_reg = sprintf(_("registro %s de %s"),$new_id,$max);
-// ------------------ html ----------------------------------
-?>
-<script>
-
-fnjs_submit=function(formulario,mov){
-
-	$('#mov').val(mov);
-	
-	$(formulario).attr('action',"<?= $url_sincro_ver ?>");
-  	fnjs_enviar_formulario(formulario);
+    $html_reg = sprintf(_("registro %s de %s"),$new_id,$max);
 }
-</script>
+// ------------------ html ----------------------------------
 
-<h3><?= _("personas en orbix sin unir a Listas") ?></h3>
 
-<form id="movimiento" name="movimiento" action="">
-	<?= $oHash->getCamposHtml(); ?>
-	<input type="hidden" id="mov" name="mov" value="">
-	<input type="button" value="< <?= _("anterior") ?>" onclick="fnjs_submit(this.form,'-')" />
-	<?= $html_reg ?>
-	<input type="button" value="<?= _("siguiente") ?> >" onclick="fnjs_submit(this.form,'+')" />
-	<br>
-	<br>
-	
-<table>
-<?php
-	echo "<tr>";
-	echo "<td>".$persona_listas['id_nom_orbix'].'</td>';
-	echo "<td class='titulo'>".$persona_listas['ape_nom'].'</td>';
-	echo "<td>".$persona_listas['nombre'].'</td>';
-	echo "<td>".$persona_listas['apellido1'].'</td>';
-	echo "<td>".$persona_listas['apellido2'].'</td>';
-	echo "<td class='titulo'>".$persona_listas['f_nacimiento'].'</td>';
-	echo '</tr>';
+if ($max === 0) {
+   echo $html_reg; 
+} else {
 ?>
-</table>
-<br>
-Por el momento estos botones no hacen nada.
-<input type="button" value="<?= _("borrar") ?>" onclick="">
-<input type="button" value="<?= _("trasladar") ?>" onclick="">
-<input type="button" value="<?= _("baja") ?>" onclick="">
-</form>
+    <script>
+
+    fnjs_submit=function(formulario,mov){
+
+        $('#mov').val(mov);
+        
+        $(formulario).attr('action',"<?= $url_sincro_ver ?>");
+          fnjs_enviar_formulario(formulario);
+    }
+    </script>
+
+    <h3><?= _("personas en orbix sin unir a Listas") ?></h3>
+
+    <form id="movimiento" name="movimiento" action="">
+        <?= $oHash->getCamposHtml(); ?>
+        <input type="hidden" id="mov" name="mov" value="">
+        <input type="button" value="< <?= _("anterior") ?>" onclick="fnjs_submit(this.form,'-')" />
+        <?= $html_reg ?>
+        <input type="button" value="<?= _("siguiente") ?> >" onclick="fnjs_submit(this.form,'+')" />
+        <br>
+        <br>
+        
+    <table>
+    <?php
+        echo "<tr>";
+        echo "<td>".$persona_listas['id_nom_orbix'].'</td>';
+        echo "<td class='titulo'>".$persona_listas['ape_nom'].'</td>';
+        echo "<td>".$persona_listas['nombre'].'</td>';
+        echo "<td>".$persona_listas['apellido1'].'</td>';
+        echo "<td>".$persona_listas['apellido2'].'</td>';
+        echo "<td class='titulo'>".$persona_listas['f_nacimiento'].'</td>';
+        echo '</tr>';
+    ?>
+    </table>
+    <br>
+    Por el momento estos botones no hacen nada.
+    <input type="button" value="<?= _("borrar") ?>" onclick="">
+    <input type="button" value="<?= _("trasladar") ?>" onclick="">
+    <input type="button" value="<?= _("baja") ?>" onclick="">
+    </form>
+<?php 
+}
+?>
