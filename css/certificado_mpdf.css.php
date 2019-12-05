@@ -106,7 +106,7 @@ td.sello {
 td.firma {	
 	}
 table.libro {	
-	margin-top:	3cm;
+	margin-top:	2.5cm;
 	}
 td.secretario {	
 	text-align: right;
