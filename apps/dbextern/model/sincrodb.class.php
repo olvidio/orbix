@@ -118,12 +118,12 @@ class sincroDB {
 	        $this->cargarArrayDl();
 	    }
 		
-	    if (empty($this->aDlListas2Orbix($dl_listas))) {
+	    if (empty($this->aDlListas2Orbix[$dl_listas])) {
 	        $msg = sprintf(_("No se encuentra la dl %s en la tabla Aux de listas"),$dl_listas);
 	        echo $msg;
 	        return FALSE;
 	    } else {
-            return $this->aDlListas2Orbix($dl_listas);
+            return $this->aDlListas2Orbix[$dl_listas];
 	    }
 	}
 	
@@ -132,12 +132,12 @@ class sincroDB {
 	        $this->cargarArrayDl();
 	    }
 		
-	    if (empty($this->aDlOrbix2listas($dl_orbix))) {
+	    if (empty($this->aDlOrbix2listas[$dl_orbix])) {
 	        $msg = sprintf(_("No se encuentra la dl %s en la tabla Aux de listas"),$dl_orbix);
 	        echo $msg;
 	        return FALSE;
 	    } else {
-            return $this->aDlOrbix2listas($dl_orbix);
+            return $this->aDlOrbix2listas[$dl_orbix];
 	    }
 	}
 	
