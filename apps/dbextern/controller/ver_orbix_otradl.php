@@ -13,7 +13,7 @@ use web\Hash;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$dl = (string)  filter_input(INPUT_POST, 'dl');
+//$dl = (string)  filter_input(INPUT_POST, 'dl');
 $tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
 $ids_traslados_A = (string)  filter_input(INPUT_POST, 'ids_traslados_A');
 

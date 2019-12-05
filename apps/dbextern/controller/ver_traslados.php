@@ -9,7 +9,7 @@ use dbextern\model\SincroDB;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$dl = (string)  filter_input(INPUT_POST, 'dl');
+//$dl = (string)  filter_input(INPUT_POST, 'dl');
 $tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
 $ids_traslados = (string)  filter_input(INPUT_POST, 'ids_traslados');
 
@@ -110,11 +110,11 @@ fnjs_trasladar=function(id_orbix,dl,fila){
 	foreach($a_persona_orbix as $persona_orbix) {
 		$i++;
 		$id_orbix = $persona_orbix['id_nom_orbix'];
-		$dl = $persona_orbix['dl'];
+		$dl_orbix = $persona_orbix['dl'];
 		echo "<tr id=fila$i>";
 		echo "<td class='titulo'>".$persona_orbix['ape_nom'].'</td>';
 		echo "<td>".$persona_orbix['dl_actual'].'</td>';
-		echo "<td><span class=link onClick='fnjs_trasladar($id_orbix,\"$dl\",$i)'>" . _("trasladar") . '</span><td>';
+		echo "<td><span class=link onClick='fnjs_trasladar($id_orbix,\"$dl_orbix\",$i)'>" . _("trasladar") . '</span><td>';
 		echo '</tr>';
 	}
 ?>

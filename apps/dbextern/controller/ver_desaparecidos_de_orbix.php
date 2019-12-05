@@ -9,7 +9,7 @@ use dbextern\model\SincroDB;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$dl = (string)  filter_input(INPUT_POST, 'dl');
+//$dl = (string)  filter_input(INPUT_POST, 'dl');
 $tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
 $ids_desaparecidos_de_orbix = (string)  filter_input(INPUT_POST, 'ids_desaparecidos_de_orbix');
 
@@ -69,10 +69,10 @@ fnjs_desunir=function(id_listas,fila){
 	foreach($a_persona_listas as $persona_listas) {
 		$i++;
 		$id_listas = $persona_listas['id_nom_listas'];
-		$dl = $persona_listas['dl'];
+		$dl_listas = $persona_listas['dl'];
 		echo "<tr id=fila$i>";
 		echo "<td class='titulo'>".$persona_listas['ape_nom'].'</td>';
-		echo "<td>".$dl.'</td>';
+		echo "<td>".$dl_listas.'</td>';
 		echo "<td><span class=link onClick='fnjs_desunir($id_listas,$i)'>" . _("desunir") . '</span><td>';
 		echo '</tr>';
 	}

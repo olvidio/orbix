@@ -9,7 +9,7 @@
 
 $mov = '';
 
-$dl = (string)  filter_input(INPUT_POST, 'dl');
+//$dl = (string)  filter_input(INPUT_POST, 'dl');
 $tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
 
 $id = (string)  filter_input(INPUT_POST, 'id');
@@ -101,7 +101,7 @@ $oHash = new web\Hash();
 $oHash->setUrl($url_sincro_ver);
 $oHash->setcamposNo('mov');
 $a_camposHidden = array(
-		'dl' => $dl,
+		//'dl' => $dl,
 		'tipo_persona' => $tipo_persona,
 		'id' => $new_id,
 		);

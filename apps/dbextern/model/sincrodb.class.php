@@ -27,7 +27,7 @@ class sincroDB {
 	private $cPersonasListas;
 	
 	private $region;
-	private $dl;
+	private $dl_listas;
 	private $aCentros;
 
     private $aDlListas2Orbix;
@@ -73,12 +73,12 @@ class sincroDB {
 		$this->region = $region;
 	}
 
-	public function getDl() {
-		return $this->dl;
+	public function getDlListas() {
+		return $this->dl_listas;
 	}
 
-	public function setDl($dl) {
-		$this->dl = $dl;
+	public function setDlListas($dl) {
+		$this->dl_listas = $dl;
 	}
 	public function getCentros() {
 		return $this->aCentros;
@@ -143,7 +143,7 @@ class sincroDB {
 	
 	public function getPersonasListas() {
 		if (empty($this->cPersonasListas)) {
-			$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE pertenece_r='$this->region' AND  Dl='$this->dl' AND Identif LIKE '$this->id_tipo%'";
+			$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE pertenece_r='$this->region' AND  Dl='$this->dl_listas' AND Identif LIKE '$this->id_tipo%'";
 			// todos los de listas
 			$oGesListas = new GestorPersonaListas();	
 			$cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
@@ -421,7 +421,6 @@ class sincroDB {
 	}
 
 	public function buscarEnOrbix($id_orbix) {
-		$dl = '';
 		$oTrasladoDl = new TrasladoDl();
 		$a_esquemas = $oTrasladoDl->getEsquemas($id_orbix,$this->tipo_persona);
 		$esquema = '';
