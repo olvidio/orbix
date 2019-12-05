@@ -105,6 +105,16 @@ fnjs_imp_tessera=function(formulario){
   	}
 }
 <?php } ?>
+<?php if (!empty($script['fnjs_imp_certificado'])) { ?>
+fnjs_imp_certificado=function(formulario){
+	rta=fnjs_solo_uno(formulario);
+	if (rta==1) {
+  		$(formulario).attr('action',"apps/notas/controller/certificado_imprimir.php");
+  		$(formulario).target="print";
+  		fnjs_enviar_formulario(formulario);
+  	}
+}
+<?php } ?>
 <?php if (!empty($script['fnjs_ficha_profe'])) { ?>
 fnjs_ficha_profe=function(formulario){
 	rta=fnjs_solo_uno(formulario);

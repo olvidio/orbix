@@ -80,6 +80,27 @@ class Config {
         return $nombre_region_latin;
     }
     
+    public function getNomVstgr() {
+        $parametro = 'vstgr';
+        $oConfigSchema = new ConfigSchema($parametro);
+        $vstgr = strtr($oConfigSchema->getValor(), self::$replace);
+        return $vstgr;
+    }
+    
+    public function getLugarFirma() {
+        $parametro = 'lugar_firma';
+        $oConfigSchema = new ConfigSchema($parametro);
+        $lugar_firma = strtr($oConfigSchema->getValor(), self::$replace);
+        return $lugar_firma;
+    }
+    
+    public function getDirStgr() {
+        $parametro = 'dir_stgr';
+        $oConfigSchema = new ConfigSchema($parametro);
+        $dir_stgr = strtr($oConfigSchema->getValor(), self::$replace);
+        return $dir_stgr;
+    }
+    
     public function getAmbito() {
         $parametro = 'ambito';
         $oConfigSchema = new ConfigSchema($parametro);

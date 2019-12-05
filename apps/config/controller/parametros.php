@@ -105,6 +105,58 @@ $oHashRL->setArrayCamposHidden(['parametro' => $parametro]);
 $a_campos['oHashRL'] = $oHashRL;
 $a_campos['region_latin'] = $val_region_latin;
 
+// ----------- Nombre secretario estudios región stgr (certificados) -------------------
+$parametro = 'vstgr';
+$oConfigSchema = new ConfigSchema($parametro);
+$valor = $oConfigSchema->getValor();
+
+if (empty($valor)) {
+    $valor = "?";
+}
+$val_vstgr = $valor;
+
+$oHashVE = new Hash();
+$oHashVE->setUrl($url);
+$oHashVE->setcamposForm('valor');
+$oHashVE->setArrayCamposHidden(['parametro' => $parametro]);
+
+$a_campos['oHashVE'] = $oHashVE;
+$a_campos['vstgr'] = $val_vstgr;
+
+// ----------- Lugar firma stgr (certificados) -------------------
+$parametro = 'lugar_firma';
+$oConfigSchema = new ConfigSchema($parametro);
+$valor = $oConfigSchema->getValor();
+
+if (empty($valor)) {
+    $valor = "?";
+}
+
+$oHashLF = new Hash();
+$oHashLF->setUrl($url);
+$oHashLF->setcamposForm('valor');
+$oHashLF->setArrayCamposHidden(['parametro' => $parametro]);
+
+$a_campos['oHashLF'] = $oHashLF;
+$a_campos['lugar_firma'] = $valor;
+
+// ----------- Direccion stgr (certificados) -------------------
+$parametro = 'dir_stgr';
+$oConfigSchema = new ConfigSchema($parametro);
+$valor = $oConfigSchema->getValor();
+
+if (empty($valor)) {
+    $valor = "?";
+}
+
+$oHashDir = new Hash();
+$oHashDir->setUrl($url);
+$oHashDir->setcamposForm('valor');
+$oHashDir->setArrayCamposHidden(['parametro' => $parametro]);
+
+$a_campos['oHashDir'] = $oHashDir;
+$a_campos['dir_stgr'] = $valor;
+
 // ----------- Nota máxima evaluación -------------------
 $parametro = 'nota_max';
 $oConfigSchema = new ConfigSchema($parametro);

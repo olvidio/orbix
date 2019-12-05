@@ -12,6 +12,7 @@ use personas\model\entity\GestorTelecoPersonaDl;
 use personas\model\entity\TelecoPersonaDl;
 use personas\model\entity\TrasladoDl;
 use web\DateTimeLocal;
+use dbextern\model\entity\GestorDlListas;
 
 /**
  * Description of sincroDB
@@ -29,7 +30,9 @@ class sincroDB {
 	private $dl;
 	private $aCentros;
 
-
+    private $aDlListas2Orbix;
+    private $aDlOrbix2listas;
+    
 
 	public function getTipo_persona() {
 		return $this->tipo_persona;
@@ -85,8 +88,59 @@ class sincroDB {
 		$this->aCentros = $aCentros;
 	}
 
+	private function cargarArrayDl() {
+		/* formato de dl en listas, tipo: Acscr (para Acsecr)
+		 * formato de dl en orbix: crAcse
+		 */
+        $gesDllistas = new GestorDlListas();
+        $cDllistas = $gesDllistas->getDlListas();
+        $this->aDlListas2Orbix = [];
+	    $this->aDlOrbix2listas = [];
+	    foreach ($cDllistas as $oDlListas) {
+	        $dl_listas = $oDlListas->getDl();
+	        $nombre_dl = $oDlListas->getNombre_dl();
+	        
+            preg_match('/(cr) (\w*)$/', $nombre_dl, $matches);
+            if (!empty($matches[1])) {
+                $reg = $matches[2];
+                $dl_orbix = 'cr'.$reg; // 'crAcse';
+            } else {
+                $dl_orbix = 'dl'.$dl_listas;
+            }
+	        
+            $this->aDlListas2Orbix[$dl_listas] = $dl_orbix;
+            $this->aDlOrbix2listas[$dl_orbix] = $dl_listas;
+	    }
+	}
+	
+	public function dlListas2Orbix($dl_listas) {
+	    if (empty($this->aDlListas2Orbix)) {
+	        $this->cargarArrayDl();
+	    }
 		
-
+	    if (empty($this->aDlListas2Orbix($dl_listas))) {
+	        $msg = sprintf(_("No se encuentra la dl %s en la tabla Aux de listas"),$dl_listas);
+	        echo $msg;
+	        return FALSE;
+	    } else {
+            return $this->aDlListas2Orbix($dl_listas);
+	    }
+	}
+	
+	public function dlOrbix2Listas($dl_orbix) {
+	    if (empty($this->aDlOrbix2listas)) {
+	        $this->cargarArrayDl();
+	    }
+		
+	    if (empty($this->aDlOrbix2listas($dl_orbix))) {
+	        $msg = sprintf(_("No se encuentra la dl %s en la tabla Aux de listas"),$dl_orbix);
+	        echo $msg;
+	        return FALSE;
+	    } else {
+            return $this->aDlOrbix2listas($dl_orbix);
+	    }
+	}
+	
 	public function getPersonasListas() {
 		if (empty($this->cPersonasListas)) {
 			$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE pertenece_r='$this->region' AND  Dl='$this->dl' AND Identif LIKE '$this->id_tipo%'";
@@ -243,7 +297,7 @@ class sincroDB {
 		$f_nacimiento = $oPersonaListas->getFecha_Naci();
 		$lugar_nacimiento = $oPersonaListas->getLugar_Naci();
 
-		$dl = $oPersonaListas->getDl();
+		$dl_litas = $oPersonaListas->getDl();
 		$Ctr = $oPersonaListas->getCtr();
 		//por alguna razón puede no exitir el centro en la lista
 		if (!empty($a_ctr[$Ctr])) {
@@ -312,11 +366,9 @@ class sincroDB {
 		$oPersona->setProfesion($profesion);
 		$oPersona->setEap($encargos);
 
-		if ($dl == 'Hcr') { 
-			$oPersona->setDl('cr');
-		} else {
-			$oPersona->setDl('dl'.$dl);
-		}
+		$dl_orbix = $this->dlListas2Orbix($dl_listas);
+		$oPersona->setDl($dl_orbix);
+		
 		$oPersona->setId_ctr($id_ubi);
 
 			

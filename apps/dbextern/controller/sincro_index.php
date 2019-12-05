@@ -18,13 +18,8 @@ $tipo_persona = (string)  filter_input(INPUT_POST, 'tipo');
 $mi_dl = ConfigGlobal::mi_delef();
 $region = ConfigGlobal::mi_region();
 
-preg_match('/(cr)(\w*)$/', $mi_dl, $matches);
-if (!empty($matches[1])) {
-    $reg = $matches[2];
-	$dl = $reg.'cr'; // 'Hcr', 'Acr;
-} else {
-	$dl = substr($mi_dl, 2);
-}
+$oSincroDB = new \dbextern\model\sincroDB();
+$dl_listas = $oSincroDB->dlOrbix2Listas($mi_dl);
 
 $id_tipo = 0;
 switch ($tipo_persona) {
@@ -57,7 +52,7 @@ $obj = 'personas\\model\\entity\\'.$obj_pau;
 $GesPersonas = new $obj();
 
 //listas
-$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE pertenece_r='$region' AND Dl='$dl' AND Identif LIKE '$id_tipo%'";
+$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE pertenece_r='$region' AND Dl='$dl_listas' AND Identif LIKE '$id_tipo%'";
 // todos los de listas
 $oGesListas = new GestorPersonaListas();	
 $cPersonasListas = $oGesListas->getPersonaListasQuery($Query);

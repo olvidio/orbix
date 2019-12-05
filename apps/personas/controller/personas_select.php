@@ -338,7 +338,7 @@ if ($_SESSION['oPerm']->have_perm("est")){
 	}
 }
 
-// Solo ver e imprimir tessera
+// Solo ver e imprimir tessera + certificados
 if (ConfigGlobal::soy_region()) {
 	$a_botones = [];
 	$a_botones[]= array( 'txt' => _("ver tessera"),
@@ -347,6 +347,9 @@ if (ConfigGlobal::soy_region()) {
 	$a_botones[]=array( 'txt' => _("imprimir tessera"),
 						'click' =>"fnjs_imp_tessera(\"#seleccionados\")" );
 	$script['fnjs_imp_tessera'] = 1;
+	$a_botones[]=array( 'txt' => _("imprimir certificado"),
+						'click' =>"fnjs_imp_certificado(\"#seleccionados\")" );
+	$script['fnjs_imp_certificado'] = 1;
 	$a_botones[]=array( 'txt' => _("ficha profesor stgr"),
 						'click' =>"fnjs_ficha_profe(\"#seleccionados\")" );
 	$script['fnjs_ficha_profe'] = 1;

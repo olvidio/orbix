@@ -69,6 +69,30 @@ mes:<input size="3" type="text" name="fin_mes" value="{{ aCursoCrt['fin_mes'] }}
 </form>
 <hr>
 
+<h3>{{ "nombre del secreatrio del stgr (y cargo)"|trans }}:</h3>
+<form id="frm_vstgr" name="frm_vstgr" action="">
+{{ oHashVE.getCamposHtml|raw }}
+<input type="text" name="valor" value="{{ vstgr }}" size="70">
+<input type="button" value="{{ "guardar"|trans }}" onclick="fnjs_guardar(this.form);" >
+</form>
+<hr>
+
+<h3>{{ "lugar firma stgr"|trans }}:</h3>
+<form id="frm_firmastgr" name="frm_firmastgr" action="">
+{{ oHashLF.getCamposHtml|raw }}
+<input type="text" name="valor" value="{{ lugar_firma }}" size="70">
+<input type="button" value="{{ "guardar"|trans }}" onclick="fnjs_guardar(this.form);" >
+</form>
+<hr>
+
+<h3>{{ "direccion sede stgr"|trans }}:</h3>
+<form id="frm_dirstgr" name="frm_dirstgr" action="">
+{{ oHashDir.getCamposHtml|raw }}
+<input type="text" name="valor" value="{{ dir_stgr }}" size="70">
+<input type="button" value="{{ "guardar"|trans }}" onclick="fnjs_guardar(this.form);" >
+</form>
+<hr>
+
 <h3>{{ "nota máxima stgr"|trans }}:</h3>
 <form id="frm_nota_max" name="frm_nota_max" action="">
 {{ oHashN.getCamposHtml|raw }}
