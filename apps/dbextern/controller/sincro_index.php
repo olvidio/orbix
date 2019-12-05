@@ -172,7 +172,7 @@ $explicacion_txt .= _("al efectuar alguna acción dentro de las listas, las pers
 <script>
 fnjs_sincronizar=function(){
 	var url='<?= $url_sincro_ajax ?>';
-	var parametros='que=syncro&region=<?= $region ?>&dl=<?= $dl ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>';
+	var parametros='que=syncro&region=<?= $region ?>&dl_listas=<?= $dl_listas ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>';
 			 
 	$.ajax({
 		url: url,
