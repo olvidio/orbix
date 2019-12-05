@@ -123,6 +123,7 @@ switch ($Qque) {
 		$Qf_ini_act = (string) \filter_input(INPUT_POST, 'f_ini_act');
 		$aWhere['status'] = 't';
 		$aWhere['tipo_ctr'] = '^s[jm]*$';
+		$aWhere['_ordre'] = 'nombre_ubi';
 		$aOperador['tipo_ctr'] = '~';
 		$GesCentros = new GestorCentroDl();
 		$cCentros = $GesCentros->getCentros($aWhere,$aOperador);
