@@ -136,7 +136,7 @@ foreach ($cPersonasOrbix as $oPersonaOrbix) {
 		} else {
 			$dl_persona = $oPersonaListas->getDl();
 			//7. En otra dl en listas
-			if ($dl_persona != $dl) {
+			if ($dl_persona != $dl_listas) {
 				$p7_orbix_unidas_otra_dl++;
 				$a_ids_traslados_A[] = $id_nom_listas;
 			}
