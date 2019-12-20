@@ -139,11 +139,12 @@ function getApps($id_mod) {
 	return $apps;
 }
 
-function logout($ubicacion,$idioma,$esquema,$error) {
+function logout($ubicacion,$idioma,$esquema,$error,$esquema_web='') {
     $oDBPropiedades = new DBPropiedades();
     $a_campos = [];
     $a_campos['error'] = $error;
     $a_campos['ubicacion'] = $ubicacion;
+    $a_campos['esquema_web'] = $esquema_web;
     $a_campos['DesplRegiones'] = $oDBPropiedades->posibles_esquemas($esquema);
     $a_campos['idioma'] = $idioma;
     $a_campos['url'] = ConfigGlobal::getWeb();
@@ -153,11 +154,20 @@ function logout($ubicacion,$idioma,$esquema,$error) {
 
 // ara a global_obj. $GLOBALS['oPerm'] = new permisos\PermDl();
 //$GLOBALS['oPermActiv'] = new PermActiv;
+$esquema_web = getenv('ESQUEMA');
 $ubicacion = getenv('UBICACION');
 $_SESSION['sfsv'] = $ubicacion;
 
-if ( !isset($_SESSION['session_auth'])) { 
+if (!empty($esquema_web)) {
     $oDBPropiedades = new DBPropiedades();
+    $a_posibles_esquemas = $oDBPropiedades->array_posibles_esquemas();
+    if (!in_array($esquema_web, $a_posibles_esquemas)) {
+        $msg = sprintf(_("No existe este equema: %s"),$esquema_web);
+        die ($msg);
+    }
+}
+
+if ( !isset($_SESSION['session_auth'])) { 
 	//el segon cop tinc el nom i el password
     $idioma='';
 	if (isset($_POST['username']) && isset($_POST['password'])) {
@@ -223,7 +233,7 @@ if ( !isset($_SESSION['session_auth'])) {
 						    $role_dmz = $row2['dmz'];
 						    if (empty($role_dmz)) {
                                 $error = 2;
-                                logout($ubicacion,$idioma,$esquema,$error);
+                                logout($ubicacion,$idioma,$esquema,$error,$esquema_web);
                                 die();
 						    }
 						}
@@ -313,12 +323,12 @@ if ( !isset($_SESSION['session_auth'])) {
 						//header("Location: ".ConfigGlobal::getWeb(), true, 301);
 					} else {
 					    $error = 1;
-                        logout($ubicacion,$idioma,$esquema,$error);
+                        logout($ubicacion,$idioma,$esquema,$error,$esquema_web);
 						die();
 					}
 				} else {
                     $error = 1;
-                    logout($ubicacion,$idioma,$esquema,$error);
+                    logout($ubicacion,$idioma,$esquema,$error,$esquema_web);
 					die();
 				}
 		}
@@ -327,7 +337,7 @@ if ( !isset($_SESSION['session_auth'])) {
 		$idioma = (!isset($_COOKIE["idioma"]))? "" : $_COOKIE["idioma"];
 		cambiar_idioma($idioma);	
         $error = 0;
-        logout($ubicacion,$idioma,$esquema,$error);
+        logout($ubicacion,$idioma,$esquema,$error,$esquema_web);
 		die();
 	}
 } else {

@@ -159,7 +159,11 @@ $PHP_SELF = $_SERVER['PHP_SELF'];
     <h2>Aquinate</h2>
     <h1>(orbix)</h1>
 	<h1><?= _("stgr y actividades") ?></h1>
-	<h1><?= ucfirst(_("ubicación")) ?>: <?= $DesplRegiones ?></h1>
+	<?php if (empty($esquema_web)) { ?>
+        <h1><?= ucfirst(_("ubicación")) ?>: <?= $DesplRegiones ?></h1>
+	<?php } else { ?>
+		<input type="hidden" name="esquema" value="<?= $esquema_web ?>" />
+	<?php } ?>
     <input type="text" name="username" placeholder="<?= _("nombre de usuario")?>" required="" autofocus="" />
     <input type="password" name="password" placeholder="Password" required=""/>      
 	<br>
