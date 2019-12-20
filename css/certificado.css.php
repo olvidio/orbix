@@ -106,11 +106,11 @@ td.subtitulo2 { font-family : serif;
 	
 tr.opcional {
     background-color : White;
-	line-height: 8pt;
+	line-height: 10pt;
  	}
  
 div.pie {	
-    height: 8cm;
+    height: 6cm;
 	display: block;
 	position: absolute;
 	bottom: 0pt;
@@ -130,16 +130,17 @@ div.g_sello {
     display: block;
     margin-left: 1cm;
     font-size: 10pt;
-	position: absolute;
+	position: relative;
 	top: 0cm;
-	width: 18cm ;
+	width: 18cm;
+	height: 1cm;
 	}
 div.sello {	
 	display: inline-block;
-	margin-top: 1cm;
+	margin-top: 0cm;
 	}
 div.firma {	
-	margin-top: 1.5cm;
+	margin-top: 0.5cm;
 	display: inline-block;
 	margin-left: 6cm;
 	}
@@ -155,7 +156,7 @@ div.g_libro {
 div.libro {	
 	display: inline-block;
 	float: left;
-    margin-left: -1cm;
+    margin-left: 0cm;
     vertical-align: bottom;
     position: absolute;
 	bottom: 0px;

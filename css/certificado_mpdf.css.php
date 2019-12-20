@@ -111,8 +111,8 @@ td.firma {
 	}
 	
 td.espacio_firma {	
-	line-height: 4cm;
-	height: 4cm;
+	line-height: 3cm;
+	height: 3cm;
 	}
 td.libro {	
     font-weight: bold;

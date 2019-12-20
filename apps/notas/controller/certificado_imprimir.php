@@ -332,12 +332,11 @@ while ( $a < count($cAsignaturas)) {
 if ($Qcara=="B") {
 ?>
 </table>
-<table>
+<table style="padding-top: 5pt;">
 <tr><td class="subtitulo2" colspan="5">
 <?= $txt_superavit ?>
 </td></tr>
 </table>
-<div class="pie">
 <div class="fecha"><?= $lugar_fecha ?></div>
 <div class="g_sello">
 	<div class="sello">L.S.<br>Studii Generalis</div>
@@ -351,7 +350,6 @@ if ($Qcara=="B") {
     <b> n. &nbsp</b> 
     </div>
     <div class="secretario"><?= $vstgr ?></div>
-</div>
 </div>
 <div class="ects">(1) ECTS (anglice: European Credit Transfer System): 1 ECTS stat pro viginti quinque horis quas alumnus studio dedicaverit.</div>
 </div>
