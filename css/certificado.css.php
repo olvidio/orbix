@@ -25,26 +25,35 @@ include_once (core\ConfigGlobal::$dir_estilos.'/colores.php');
     padding-top:0em;
 }
 
-div.A4 {  
+div.A4 { 
+    position: relative;
 	display: block;
 	margin-top:	0.8cm;
 	/* margin-left:	0.8cm; */
 	top: 0cm;
-	width: 90% ;
-	height: 780pt;
+	width: 19cm ;
+	height: 27cm;
 	border-width : 1pt;
 	border-color : Black;
 	border-style : solid;
-	padding:	10pt;
+	padding-top: 10pt;
+    padding-right: 10pt;
+    padding-bottom: 14pt;
+    padding-left: 10pt;
 	}
 	
+table {
+	width: 95%;
+}
+
 td {
 	color : black;
 	font-size : 8pt;
 	font-family : serif;
 	text-decoration : none;
-	height : 8pt;
+	height : 9pt;
 	vertical-align: middle;
+	padding: 0pt;
 }
 td.space {
 	height : 2pt;
@@ -58,122 +67,133 @@ td.dato {
 	font-family : arial;
 	text-decoration : none;
 	text-align : center;
-	
-	border-color : Gray;
-	border-style : solid;
-	border-left-width : 0pt;
-	border-right-width : 0pt;
-	border-top-width : 0pt;
-	border-bottom-width : 1pt;
 }
-TD.curso { color : black;
+td.curso { color : black;
 	font-size : 10pt;
 	font-family : serif;
 	text-align : center;
 	font-weight : bold;
 	}
-TD.cabecera { color : black;
-	font-size : 8pt;
+td.cabecera { color : black;
 	font-family : serif;
 	text-align : center;
 	font-weight : bold;
 	}
-TD.any { color : black;
-	font-size : 8pt;
+td.any { color : black;
 	font-family : serif;
 	text-align : left;
 	font-weight : bold;
 	}
-TD.titulo1 { font-family : serif;
+td.titulo1 { font-family : serif;
 	font-size : 18pt;
 	text-align : center;
 	font-weight : bold;
 	}
-TD.titulo2 { font-family : serif;
+td.titulo2 { font-family : serif;
 	font-size : 16pt;
 	text-align : center;
 	}
-TD.subtitulo1 { font-family : serif;
+td.subtitulo1 { font-family : serif;
 	font-size : 14pt;
 	text-align : center;
 	font-weight : bold;
 	padding: 20px;
 	}
-TD.subtitulo2 { font-family : serif;
+td.subtitulo2 { font-family : serif;
 	font-size : 10pt;
 	text-align: justify;
 	}
 	
-tr.impar  {
- 	background-color : White;
-	line-height:  2pt;
- 	}
- 
-tr.par  {
-    background-color : White;
-	line-height: 2pt;
- 	}
 tr.opcional {
     background-color : White;
 	line-height: 8pt;
  	}
  
-pie {	
+div.pie {	
     height: 8cm;
 	display: block;
-	position: relative;
-	margin-left:	1.3cm;
-	margin-right:	1cm;
-	line-height: 14pt ;
+	position: absolute;
+	bottom: 0pt;
+	margin-left: 1cm;
+	line-height: 14pt;
+	width: 90%;
 	}
-fecha {	
-	display: block;
-	float: right;
+div.fecha {	
+	display: inline-block;
 	margin-top:	0.5cm;
 	text-align: right;
+	font-size: 10pt;
+    font-weight: normal;
+    width: 100%;
 	}
-sello {	
-	display: block;
-	float: left;
+div.g_sello {	
+    display: block;
+    margin-left: 1cm;
+    font-size: 10pt;
+	position: absolute;
+	top: 0cm;
+	width: 18cm ;
+	}
+div.sello {	
+	display: inline-block;
 	margin-top: 1cm;
 	}
-libro {	
-	display: block;
-	float: left;
-	margin-top: 7cm;
-    vertical-align: bottom;
-    position: inherit;
-    margin-left: -4cm;
-	}
-firma {	
+div.firma {	
 	margin-top: 1.5cm;
-	display: block;
-	float: right;
+	display: inline-block;
+	margin-left: 6cm;
 	}
-secretario {	
-	margin-top: 5cm;
-	display: block;
-	float: right;
+	
+div.g_libro {	
+    display: block;
+    margin-left: 0cm;
+    font-size: 10pt;
+	position: absolute;
+	bottom: 1cm;
+	width: 17cm ;
 	}
-ects {	
+div.libro {	
+	display: inline-block;
+	float: left;
+    margin-left: -1cm;
+    vertical-align: bottom;
+    position: absolute;
+	bottom: 0px;
+	}
+div.secretario {	
+	display: inline-block;
+    position: absolute;
+	bottom: 0px;
+    margin-right: 1cm;
+    text-align: right;
+    width: 100%;
+}
+	
+div.ects {	
 	font-size: 8pt; 
 	display: block;
 	float: left;
 	text-align: left;
+	margin-left: 0.5cm;
+	position: absolute;
+	bottom: 0px;
 	}
-piepagina{	
+div.piepagina {	
     display: block;
+    margin-left: 1cm;
     font-size: 6pt;
-    position: absolute;
+	position: relative;
+	bottom: 0px;
+	width: 18cm ;
 	}
-f7{	
+div.f7 {	
 	display: inline-block;
 	text-align: left;
 	}
-dir{	
+div.dir {	
 	display: inline-block;
 	text-align: center;
     align-content: center;
-    width: 25cm;
+    width: 95%;
 	}
 </style> 

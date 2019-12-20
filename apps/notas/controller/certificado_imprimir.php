@@ -69,6 +69,7 @@ if (!is_object($oPersona)) {
 $nom = $oPersona->getNombreApellidos();
 $lugar_nacimiento = $oPersona->getLugar_nacimiento();
 $f_nacimiento = $oPersona->getF_nacimiento()->getFechaLatin();
+$nivel_stgr = $oPersona->getStgr();
 
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 $vstgr = $_SESSION['oConfig']->getNomVstgr();
@@ -78,6 +79,14 @@ $lugar_firma = $_SESSION['oConfig']->getLugarFirma();
 
 // conversion 
 $replace  = config\model\Config::$replace;
+
+if ($nivel_stgr == 'r') {
+    $txt_superavit = "Alumnus superavit studiorum portiones (ECTS) requisitas ad implendum academicum";
+    $txt_superavit .= " curriculum quod statutum est Ordinatione Studiorum Praelaturae Santae Crucis et Operis Dei.";
+    $txt_superavit = strtr($txt_superavit, $replace);
+} else {
+    $txt_superavit = '';
+}
 
 $oHoy = new DateTimeLocal();
 $lugar_fecha = $lugar_firma.",  ".$oHoy->getFechaLatin();
@@ -261,15 +270,12 @@ while ( $a < count($cAsignaturas)) {
 		$j++;
 	}
 	while (($oAsignatura->getId_nivel() < $row["id_nivel_asig"]) && ($row["id_nivel"] < 2434) ){
-		$clase = "impar";
-		$i % 2  ? 0: $clase = "par";
-		$i++;
 		echo titulo($oAsignatura->getId_nivel());
 		$nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
         $creditos = $oAsignatura->getCreditos();
         $etcs = number_format(($creditos * 2),0);
 		?>
-		<tr class="<?= $clase;?>" valign="bottom">
+		<tr>
 		<td></td>    
 		<td><?= $nombre_asignatura;?>&nbsp;</td>
         <td class="dato"><?= $etcs;?>&nbsp;</td>
@@ -282,9 +288,6 @@ while ( $a < count($cAsignaturas)) {
 	}
 
 	if ($oAsignatura->getId_nivel() == $row["id_nivel_asig"]) {
-		$clase = "impar";
-		$i % 2  ? 0: $clase = "par";
-		$i++;
 		echo titulo($oAsignatura->getId_nivel());
 		// para las opcionales
 		if ($row["id_asignatura"] > 3000 &&  $row["id_asignatura"] < 9000 ) {
@@ -292,7 +295,7 @@ while ( $a < count($cAsignaturas)) {
 			$nombre_asignatura=strtr ($row["nombre_asignatura"], $replace);
 			$algo=$oAsignatura->getNombre_asignatura()."<br>&nbsp;&nbsp;&nbsp;&nbsp;".$nombre_asignatura;
 			?>
-			<tr class="<?= $clase;?> opcional" valign="bottom">
+			<tr class="opcional" valign="bottom">
 			<td></td>
 			<td><?= $algo; ?>&nbsp;</td>
 			<td class="dato"><?= $row["creditos"];?>&nbsp;</td>
@@ -301,7 +304,7 @@ while ( $a < count($cAsignaturas)) {
 		} else {
 			$nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
 			?>
-			<tr class="<?= $clase;?>">
+			<tr>
 			<td></td>
 			<td><?= $nombre_asignatura; ?>&nbsp;</td>
 			<td class="dato"><?= $row["creditos"];?>&nbsp;</td>
@@ -311,15 +314,12 @@ while ( $a < count($cAsignaturas)) {
 		$num_asig ++;
 	} else {
 		if (!$row["id_nivel"] || ($j==$num_asig)) {
-			$clase = "impar";
-			$i % 2  ? 0: $clase = "par";
-			$i++;
 			echo titulo($oAsignatura->getId_asignatura());
 			$nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
 			$creditos = $oAsignatura->getCreditos();
             $etcs = number_format(($creditos * 2),0);
 			?>
-			<tr class="<?= $clase;?>">
+			<tr>
 				<td></td>
 				<td><?= $nombre_asignatura; ?>&nbsp;</td>
 				<td class="dato"><?= $etcs;?>&nbsp;</td>
@@ -332,27 +332,37 @@ while ( $a < count($cAsignaturas)) {
 if ($Qcara=="B") {
 ?>
 </table>
-<pie>
-<fecha><?= $lugar_fecha ?></fecha>
-<sello>L.S.<br>Studii Generalis</sello>
-<firma>In fidem:</firma>
-<libro>
-<b>Reg.&nbsp&nbsp&nbsp</b>
-<b>lib.&nbsp&nbsp</b>
-<b>pág.</b>
-<b> n.&nbsp</b> 
-</libro>
-<secretario><?= $vstgr ?></secretario>
-</pie>
-<ects>(1) ECTS (anglice: European Credit Transfer System): 1 ECTS stat pro viginti quinque horis quas alumnus studio dedicaverit.</ects>
+<table>
+<tr><td class="subtitulo2" colspan="5">
+<?= $txt_superavit ?>
+</td></tr>
+</table>
+<div class="pie">
+<div class="fecha"><?= $lugar_fecha ?></div>
+<div class="g_sello">
+	<div class="sello">L.S.<br>Studii Generalis</div>
+	<div class="firma">In fidem:</div>
 </div>
-<piepagina><f7>F10</f7><dir><?= $dir_stgr ?></dir></piepagina>
+<div class="g_libro">
+    <div class="libro">
+    <b>Reg. &nbsp&nbsp&nbsp&nbsp</b>
+    <b>lib. &nbsp&nbsp&nbsp</b>
+    <b>pág.</b>
+    <b> n. &nbsp</b> 
+    </div>
+    <div class="secretario"><?= $vstgr ?></div>
+</div>
+</div>
+<div class="ects">(1) ECTS (anglice: European Credit Transfer System): 1 ECTS stat pro viginti quinque horis quas alumnus studio dedicaverit.</div>
+</div>
+<div class="piepagina"><div class="f7">F10</div><div class="dir"><?= $dir_stgr ?></div></div>
 <?php
 } else {
 ?>
 </table>
+<div class="ects">(1) ECTS (anglice: European Credit Transfer System): 1 ECTS stat pro viginti quinque horis quas alumnus studio dedicaverit.</div>
 </div>
-<piepagina><f7>F10</f7><dir><?= $dir_stgr ?></dir></piepagina>
+<div class="piepagina"><div class="f7">F10</div><div class="dir"><?= $dir_stgr ?></div></div>
 <?php
 }
 ?>

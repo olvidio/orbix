@@ -26,8 +26,6 @@ use web\DateTimeLocal;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-
-
 $id_nom = empty($_GET['id_nom'])? '' : $_GET['id_nom'];
 $id_tabla = empty($_GET['id_tabla'])? '' : $_GET['id_tabla'];
 
@@ -39,6 +37,7 @@ if (!is_object($oPersona)) {
 $nom = $oPersona->getNombreApellidos();
 $lugar_nacimiento = $oPersona->getLugar_nacimiento();
 $f_nacimiento = $oPersona->getF_nacimiento()->getFechaLatin();
+$nivel_stgr = $oPersona->getStgr();
 
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 $vstgr = $_SESSION['oConfig']->getNomVstgr();
@@ -47,6 +46,14 @@ $lugar_firma = $_SESSION['oConfig']->getLugarFirma();
 
 // conversion 
 $replace  = config\model\Config::$replace;
+
+if ($nivel_stgr == 'r') {
+    $txt_superavit = "Alumnus superavit studiorum portiones (ECTS) requisitas ad implendum academicum";
+    $txt_superavit .= " curriculum quod statutum est Ordinatione Studiorum Praelaturae Santae Crucis et Operis Dei.";
+    $txt_superavit = strtr($txt_superavit, $replace);
+} else {
+    $txt_superavit = '';
+}
 
 $oHoy = new DateTimeLocal();
 $lugar_fecha = $lugar_firma.",  ".$oHoy->getFechaLatin();
@@ -81,7 +88,9 @@ function titulo($id_asignatura){
         case 2201:
             ?>
             </table>
+            <br>
             </div>
+            <div class="ects">(1) ECTS (anglice: European Credit Transfer System): 1 ECTS stat pro viginti quinque horis quas alumnus studio dedicaverit.</div>
 			<div class="A4">
 			<table>
                 <col style="width: 7%">
@@ -126,6 +135,7 @@ function data($data) {
 <head>
 <?php include_once(core\ConfigGlobal::$dir_estilos.'/certificado_mpdf.css.php'); ?>
 </head>
+<body>
 <div class="A4">
 <table>
 <col style="width: 7%">
@@ -256,19 +266,33 @@ while ( $a < count($cAsignaturas)) {
 }
 ?>
 </table>
+<table>
+<tr><td class="subtitulo2" colspan="5">
+<?= $txt_superavit ?>
+</td></tr>
+</table>
 <div class="pie">
 <div class="fecha"><?= $lugar_fecha ?></div>
-<table class="sello"><tr><td class="sello">L.S.<br>Studii Generalis</td>
-	<td class="firma">In fidem:</td></table>
-<table class="libro">
-<tr><td><pre>Reg.	lib.	pág.	n.</pre></td>
+<table class="g_sello"><tr>
+	<td class="sello">L.S.<br>Studii Generalis</td>
+	<td class="firma">In fidem:</td>
+</tr>
+<tr><td class="espacio_firma"></td></tr>
+</table>
+<table class="g_sello"><tr>
+    <td class="libro">Reg.</td>
+    <td class="libro">Lib.</td>
+    <td class="libro">Pág.</td>
+    <td class="libro">n.</td>
+    
     <td class="secretario"><?= $vstgr ?></td>
 </tr></table>
-<div class="ects">
-(1) ECTS (anglice: European Credit Transfer System): 1 ECTS stat pro viginti quinque horis quas alumnus studio dedicaverit.
 </div>
 </div>
+<div class="ects">(1) ECTS (anglice: European Credit Transfer System): 1 ECTS stat pro viginti quinque horis quas alumnus studio dedicaverit.</div>
 <?php
-$footer = "<table><tr><td class=\"f7\">F10</td><td class=\"dir\">$dir_stgr</td></tr></table>";
+$footer = "<table class=\"piepagina\"><tr><td class=\"f7\">F10</td><td class=\"dir\">$dir_stgr</td></tr></table>";
+//$footer = "<div class=\"piepagina\"><div class=\"f7\">F10</div><div class=\"dir\">$dir_stgr</div></div>";
+
 ?>
-</div>
+</body>
