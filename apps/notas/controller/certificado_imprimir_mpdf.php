@@ -279,7 +279,11 @@ while ( $a < count($cAsignaturas)) {
 </tr>
 <tr><td class="espacio_firma"></td></tr>
 </table>
-<table class="g_sello"><tr>
+</div>
+</div>
+
+<div class="g_libro">
+<table ><tr>
     <td class="libro">Reg.</td>
     <td class="libro">Lib.</td>
     <td class="libro">Pág.</td>
@@ -288,7 +292,7 @@ while ( $a < count($cAsignaturas)) {
     <td class="secretario"><?= $vstgr ?></td>
 </tr></table>
 </div>
-</div>
+
 <div class="ects">(1) ECTS (anglice: European Credit Transfer System): 1 ECTS stat pro viginti quinque horis quas alumnus studio dedicaverit.</div>
 <?php
 $footer = "<table class=\"piepagina\"><tr><td class=\"f7\">F10</td><td class=\"dir\">$dir_stgr</td></tr></table>";

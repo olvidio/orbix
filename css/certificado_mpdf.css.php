@@ -94,11 +94,6 @@ div.fecha {
     font-weight: normal;
     width: 100%;
 	}
-table.g_sello {	
-	position: relative;
-	top: 0cm;
-	width: 18cm ;
-	}
 td.sello {	
     font-size: 12pt;
 	width: 50%;
@@ -109,10 +104,14 @@ td.firma {
 	width: 50%;
 	vertical-align: bottom;
 	}
-	
 td.espacio_firma {	
 	line-height: 3cm;
 	height: 3cm;
+	}
+div.g_libro {	
+	position: absolute;
+	bottom: 2cm;
+	width: 18cm ;
 	}
 td.libro {	
     font-weight: bold;
