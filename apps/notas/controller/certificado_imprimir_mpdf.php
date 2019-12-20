@@ -149,7 +149,7 @@ function data($data) {
 <tr><td class="subtitulo1" colspan="5">CURRICULORUM STUDIORUM</td></tr>
 <tr><td class="subtitulo2" colspan="5">
 Infrascriptus huius Studii Generalis Secretarius testatur ac fidem facit alumnum
- <b><?= $nom ?></b>, natum <?= $lugar_nacimiento ?>, die <?= $f_nacimiento ?>, 
+ <b><?= $nom ?></b>, natum <?= $lugar_nacimiento ?>, <?= $f_nacimiento ?>, 
  prout patet ex actis quæ in archivo nostro prostant,
  pericula rite superasse in disciplinis, ut infra:
 </td></tr>
