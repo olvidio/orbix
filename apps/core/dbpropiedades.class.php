@@ -3,9 +3,20 @@ namespace core;
 
 class DBPropiedades {
 
-
+    var $bBlanco = FALSE;
+    
+    public function setBlanco($blanco=FALSE) {
+        if ($blanco) {
+            $this->bBlanco = TRUE;
+        } else {
+            $this->bBlanco = FALSE;
+        }
+    }
     public function posibles_esquemas($default='') {
         $txt = "<select id=\"esquema\" name=\"esquema\" >";
+        if ($this->bBlanco) {
+            $txt .= "<option></option>";
+        }
         $txt .= $this->opciones_posibles_esquemas($default);
         $txt .= '</select>';
         return $txt;

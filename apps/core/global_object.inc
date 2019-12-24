@@ -59,22 +59,16 @@ switch ($user_sfsv) {
 		$oConexion = new dbConnection($config);
 		$oDBR = $oConexion->getPDO();
 		
-		//sf
-		//$oConfigDB = new ConfigDB('sf'); 
-		//$config = $oConfigDB->getEsquema($esquemaf); 
-		$oConfigDB->setDataBase('comun'); 
-		$config = $oConfigDB->getEsquema($esquema); 
+		//sv exterior
+		$oConfigDB->setDataBase('sv-e'); 
+		$config = $oConfigDB->getEsquema($esquemav); 
 		$oConexion = new dbConnection($config);
 		$oDBE = $oConexion->getPDO();
-        /*
-		$config = $oConfigDB->getEsquema('publicf'); 
-		$oConexion = new dbConnection($config);
-		///$oDBEP = $oConexion->getPDO();
 
-		$config = $oConfigDB->getEsquema('restof'); 
+		$config = $oConfigDB->getEsquema('publicv'); 
 		$oConexion = new dbConnection($config);
-		///$oDBER = $oConexion->getPDO();
-		*/
+		$oDBEP = $oConexion->getPDO();
+
 		break;
 	case 2: //sf
 		$esquemaf = $_SESSION['session_auth']['esquema'];
@@ -85,6 +79,7 @@ switch ($user_sfsv) {
 		$config = $oConfigDB->getEsquema($esquema); 
 		$oConexion = new dbConnection($config);
 		$oDBC = $oConexion->getPDO();
+
 		//sf
 		$oConfigDB->setDataBase('sf'); 
 		$config = $oConfigDB->getEsquema($esquemaf); 
@@ -99,13 +94,16 @@ switch ($user_sfsv) {
 		$oConexion = new dbConnection($config);
 		$oDBR = $oConexion->getPDO();
 		
-		//sv
-		//$oConfigDB = new ConfigDB('sv'); 
-		//$config = $oConfigDB->getEsquema($esquemav); 
-		$oConfigDB->setDataBase('comun'); 
-		$config = $oConfigDB->getEsquema($esquema); 
+		//sf exterior
+		$oConfigDB->setDataBase('sf-e'); 
+		$config = $oConfigDB->getEsquema($esquemaf); 
 		$oConexion = new dbConnection($config);
 		$oDBE = $oConexion->getPDO();
+
+		$config = $oConfigDB->getEsquema('publicf'); 
+		$oConexion = new dbConnection($config);
+		$oDBEP = $oConexion->getPDO();
+
 		break;
 }
 

@@ -205,11 +205,11 @@ class DB extends DBAbstract {
     }
     
     /**
-     * En la BD sf/sv (global).
+     * En la BD sf-e/sv-e [exterior] (global).
      */
     public function create_aux_usuarios_perm() {
         // OJO Corresponde al esquema sf/sv, no al comun.
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
         
         $tabla = "aux_usuarios_perm";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -230,17 +230,17 @@ class DB extends DBAbstract {
         
         $this->executeSql($a_sql);
         
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
     }
     public function eliminar_aux_usuarios_perm() {
-        // OJO Corresponde al esquema sf/sv, no al comun.
-        $this->addPermisoGlobal('sfsv');
+        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
+        $this->addPermisoGlobal('sfsv-e');
         
         $tabla = "aux_usuarios_perm";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
         
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
     }
     
 }

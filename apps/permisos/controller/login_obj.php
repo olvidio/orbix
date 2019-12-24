@@ -181,7 +181,7 @@ if ( !isset($_SESSION['session_auth'])) {
 				$esquema = $_POST['esquema'];
 				if (substr($esquema,-1)=='v') {
 					$sfsv = 1;
-					$oConfigDB = new ConfigDB('sv'); 
+					$oConfigDB = new ConfigDB('sv-e'); 
 					$config = $oConfigDB->getEsquema($esquema); 
 					$oConexion = new dbConnection($config);
 					$oDB = $oConexion->getPDO();
@@ -189,7 +189,7 @@ if ( !isset($_SESSION['session_auth'])) {
 				}
 				if (substr($esquema,-1)=='f') {
 					$sfsv = 2;
-					$oConfigDB = new ConfigDB('sf'); 
+					$oConfigDB = new ConfigDB('sf-e'); 
 					$config = $oConfigDB->getEsquema($esquema); 
 					$oConexion = new dbConnection($config);
 					$oDB = $oConexion->getPDO();

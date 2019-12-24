@@ -31,6 +31,10 @@ abstract class DBAbstract {
                 // Conexión sv esquema, para entrar como usuario H-dlbv.
                 $this->oDbl = $GLOBALS['oDB'];
                 break;
+            case 'sfsv-e':
+                // Conexión sv-e esquema, para entrar como usuario H-dlbv.
+                $this->oDbl = $GLOBALS['oDBE'];
+                break;
         }
     }
     
@@ -70,6 +74,25 @@ abstract class DBAbstract {
                 // Devuelve la conexión a origen.
                 // Conexión sv esquema, para entrar como usuario H-dlbv.
                 $this->oDbl = $GLOBALS['oDB'];
+                break;
+            case 'sfsv-e':
+                // Conexión sv public, para entrar como usuario orbixv/f.
+                $this->oDbl = $GLOBALS['oDBEP'];
+                // Dar permisos al role H-dlbv de orbixv/f (para poder aceder a global)
+                if ( ConfigGlobal::mi_sfsv() === 1 ) {
+                    $vf = 'v';
+                } else {
+                    $vf = 'f';
+                }
+                $this->user_orbix = 'orbix'.$vf;
+
+                $a_sql = [];
+                $a_sql[0] = "REVOKE $this->user_orbix FROM $this->role_vf;" ;
+                
+                $this->executeSql($a_sql);
+                // Devuelve la conexión a origen.
+                // Conexión sv-e esquema, para entrar como usuario H-dlbv.
+                $this->oDbl = $GLOBALS['oDBE'];
                 break;
         }
     }
@@ -112,6 +135,25 @@ abstract class DBAbstract {
                 // Devuelve la conexión a origen.
                 // Conexión sv esquema, para entrar como usuario H-dlbv.
                 $this->oDbl = $GLOBALS['oDB'];
+                break;
+            case 'sfsv-e':
+                // Conexión sv public, para entrar como usuario orbixv/f.
+                $this->oDbl = $GLOBALS['oDBEP'];
+                // Dar permisos al role H-dlbv de orbixv/f (para poder aceder a global)
+                if ( ConfigGlobal::mi_sfsv() === 1 ) {
+                    $vf = 'v';
+                } else {
+                    $vf = 'f';
+                }
+                $this->user_orbix = 'orbix'.$vf;
+
+                $a_sql = [];
+                $a_sql[0] = "GRANT $this->user_orbix TO $this->role_vf;" ;
+                
+                $this->executeSql($a_sql);
+                // Devuelve la conexión a origen.
+                // Conexión sv esquema, para entrar como usuario H-dlbv.
+                $this->oDbl = $GLOBALS['oDBE'];
                 break;
         }
     }

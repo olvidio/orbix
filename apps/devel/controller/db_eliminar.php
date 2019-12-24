@@ -20,6 +20,7 @@ $esquemaf = $esquema.'f';
 $RegionNew = $Qregion;
 $DlNew = $Qdl;
 
+$oConfigDB = new core\ConfigDB('importar');
 // COMUN
 if (!empty($Qcomun)) {
     $oTrasvase = new core\DBTrasvase();
@@ -33,6 +34,8 @@ if (!empty($Qcomun)) {
 }
 // SV
 if (!empty($Qsv)) {
+    $config = $oConfigDB->getEsquema('publicv');
+    
     $oTrasvase = new core\DBTrasvase();
     $oTrasvase->setRegion($Qregion);
     $oTrasvase->setDl($Qdl);
@@ -42,13 +45,22 @@ if (!empty($Qsv)) {
 	$oTrasvase->teleco_ctr('dl2resto');
 
 	$oDBEsquema = new core\DBEsquema();
-	$oDBEsquema->setDb('sv');
+	$oDBEsquema->setConfig($config);
 	$oDBEsquema->setRegionNew($RegionNew);
 	$oDBEsquema->setDlNew($DlNew);
+	$oDBEsquema->eliminar();
+	
+	// exterior: sv-e
+    $config = $oConfigDB->getEsquema('publicv-e');
+	$oDBEsquema->setConfig($config);
 	$oDBEsquema->eliminar();
 }
 // SF
 if (!empty($Qsf)) {
+    $config = $oConfigDB->getEsquema('publicf');
+
+	/* desde dentro la db sf es inaccesible */
+	/*
     $oTrasvase = new core\DBTrasvase();
     $oTrasvase->setRegion($Qregion);
     $oTrasvase->setDl($Qdl);
@@ -58,25 +70,22 @@ if (!empty($Qsf)) {
 	$oTrasvase->teleco_ctr('dl2resto');
 
 	$oDBEsquema = new core\DBEsquema();
-	$oDBEsquema->setDb('sf');
+	$oDBEsquema->setConfig($config);
 	$oDBEsquema->setRegionNew($RegionNew);
 	$oDBEsquema->setDlNew($DlNew);
 	$oDBEsquema->eliminar();
+	*/
 }
 
 // Borrar esquema comun y usuarios.
 if (!empty($Qsv) && !empty($Qsf)) {
+    $config = $oConfigDB->getEsquema('public');
 	$oDBEsquema = new core\DBEsquema();
-	$oDBEsquema->setDb('comun');
+	$oDBEsquema->setConfig($config);
 	$oDBEsquema->setRegionNew($RegionNew);
 	$oDBEsquema->setDlNew($DlNew);
 	$oDBEsquema->eliminar();
 	// Eliminar usuarios
-	
-	// Hay que pasar como parámetro el nombre de la database, que corresponde al archivo database.inc
-	// donde están los passwords. En este caso en importar.inc, tenermos al superadmin.
-	$oConfigDB = new core\ConfigDB('importar');
-	$config = $oConfigDB->getEsquema('public'); //de la database comun
 	
 	$oConexion = new core\dbConnection($config);
 	$oDevelPC = $oConexion->getPDO();

@@ -21,7 +21,6 @@ class ConfigDB {
 		foreach ($this->data[$esquema] as $key => $value){
 			$data[$key] = $value;
 		}
-		
 		return $data;
 	}
 

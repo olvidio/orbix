@@ -27,7 +27,7 @@ class GestorModuloInstalado Extends core\ClaseGestor {
 	 *
 	 */
 	function __construct() {
-		$oDbl = $GLOBALS['oDB'];
+		$oDbl = $GLOBALS['oDBE'];
 		$this->setoDbl($oDbl);
 		$this->setNomTabla('m0_mods_installed_dl');
 	}

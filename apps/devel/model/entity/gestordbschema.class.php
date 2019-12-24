@@ -51,6 +51,12 @@ class GestorDbSchema Extends core\ClaseGestor {
                 $oConexion = new core\dbConnection($config);
                 $oDB = $oConexion->getPDO();
                 break;
+	        case 'sv-e':
+                $oConfigDB = new core\ConfigDB('sv-e');
+                $config = $oConfigDB->getEsquema('public');
+                $oConexion = new core\dbConnection($config);
+                $oDB = $oConexion->getPDO();
+                break;
 	        case 'sf':
                 // Conectar Db df
                 $oConfigDB = new core\ConfigDB('sf');

@@ -49,13 +49,14 @@ if (!empty($Qcomun)) {
     $oDBRol->addGrupo('orbix');
     
 	$oDBRol->crearSchema();
+
 	$oDBEsquema = new core\DBEsquema();
-	$oDBEsquema->setDb('comun');
+	$oDBEsquema->setConfig($config);
 	$oDBEsquema->setRegionRef($RegionRef);
 	$oDBEsquema->setDlRef($DlRef);
 	$oDBEsquema->setRegionNew($RegionNew);
 	$oDBEsquema->setDlNew($DlNew);
-	$oDBEsquema->crear_remote();
+	$oDBEsquema->crear();
 	
     // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
 	$oDBRol->delGrupo('orbix');
@@ -73,7 +74,7 @@ if (!empty($Qsv)) {
     $oConexion = new core\dbConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
-	// CREAR Esquema 
+	// CREAR Esquema sv 
     $oDBRol = new core\DBRol();
     $oDBRol->setDbConexion($oDevelPC);
     $oDBRol->setUser($esquemav);
@@ -82,7 +83,7 @@ if (!empty($Qsv)) {
     $oDBRol->addGrupo('orbixv');
 	$oDBRol->crearSchema();
     $oDBEsquema = new core\DBEsquema();
-    $oDBEsquema->setDb('sv');
+    $oDBEsquema->setConfig($config);
     $oDBEsquema->setRegionRef($RegionRef);
     $oDBEsquema->setDlRef($DlRef);
     $oDBEsquema->setRegionNew($RegionNew);
@@ -95,6 +96,33 @@ if (!empty($Qsv)) {
     $schema = $RegionNew.'-'.$DlNew;
     $oGesDbSchema = new GestorDbSchema();
     $oGesDbSchema->llenarNuevo($schema,'sv');
+    
+	// CREAR Esquema sv-e 
+    $config = $oConfigDB->getEsquema('publicv-e');
+    $oConexion = new core\dbConnection($config);
+    $oDevelPC = $oConexion->getPDO();
+
+    $oDBRol = new core\DBRol();
+    $oDBRol->setDbConexion($oDevelPC);
+    $oDBRol->setUser($esquemav);
+    // Necesito tener los permisos del usuario que tiene las tablas padre para poder crear las heredadas.
+    // Despues hay que quitarlo para que no tenga permisos para la tabla padre.
+    $oDBRol->addGrupo('orbixv');
+	$oDBRol->crearSchema();
+    $oDBEsquema = new core\DBEsquema();
+    $oDBEsquema->setConfig($config);
+    $oDBEsquema->setRegionRef($RegionRef);
+    $oDBEsquema->setDlRef($DlRef);
+    $oDBEsquema->setRegionNew($RegionNew);
+    $oDBEsquema->setDlNew($DlNew);
+    $oDBEsquema->crear();
+    // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
+	$oDBRol->delGrupo('orbixv');
+	
+    // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
+    $schema = $RegionNew.'-'.$DlNew;
+    $oGesDbSchema = new GestorDbSchema();
+    $oGesDbSchema->llenarNuevo($schema,'sv-e');
 }
 // sf
 if (!empty($Qsf)) {
@@ -103,7 +131,7 @@ if (!empty($Qsf)) {
     $oConexion = new core\dbConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
-	// CREAR Esquema 
+	// CREAR Esquema sf
     $oDBRol->setDbConexion($oDevelPC);
     $oDBRol->setUser($esquemaf);
     // Necesito tener los permisos del usuario que tiene las tablas padre para poder crear las heredadas.
@@ -113,7 +141,7 @@ if (!empty($Qsf)) {
 	// Copiar esquema
 	if (!empty($Qsf)) {
 		$oDBEsquema = new core\DBEsquema();
-		$oDBEsquema->setDb('sf');
+		$oDBEsquema->setConfig($config);
 		$oDBEsquema->setRegionRef($RegionRef);
 		$oDBEsquema->setDlRef($DlRef);
 		$oDBEsquema->setRegionNew($RegionNew);
@@ -127,6 +155,33 @@ if (!empty($Qsf)) {
     $schema = $RegionNew.'-'.$DlNew;
     $oGesDbSchema = new GestorDbSchema();
     $oGesDbSchema->llenarNuevo($schema,'sf');
+
+	// CREAR Esquema sf-e 
+    $config = $oConfigDB->getEsquema('publicf-e');
+    $oConexion = new core\dbConnection($config);
+    $oDevelPC = $oConexion->getPDO();
+
+    $oDBRol = new core\DBRol();
+    $oDBRol->setDbConexion($oDevelPC);
+    $oDBRol->setUser($esquemaf);
+    // Necesito tener los permisos del usuario que tiene las tablas padre para poder crear las heredadas.
+    // Despues hay que quitarlo para que no tenga permisos para la tabla padre.
+    $oDBRol->addGrupo('orbixf');
+	$oDBRol->crearSchema();
+    $oDBEsquema = new core\DBEsquema();
+    $oDBEsquema->setConfig($config);
+    $oDBEsquema->setRegionRef($RegionRef);
+    $oDBEsquema->setDlRef($DlRef);
+    $oDBEsquema->setRegionNew($RegionNew);
+    $oDBEsquema->setDlNew($DlNew);
+    $oDBEsquema->crear();
+    // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
+	$oDBRol->delGrupo('orbixf');
+	
+    // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
+    $schema = $RegionNew.'-'.$DlNew;
+    $oGesDbSchema = new GestorDbSchema();
+    $oGesDbSchema->llenarNuevo($schema,'sf-e');
 }
 
 echo "<br>";

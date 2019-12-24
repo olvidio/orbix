@@ -53,6 +53,14 @@ class DBTrasvase {
 	            $oConfigDB = new ConfigDB('sf'); //de la database sf
 	            $config = $oConfigDB->getEsquema($esquema); //de la database sf
 	            break;
+	        case 'sv-e':
+	            $oConfigDB = new ConfigDB('sv-e'); //de la database sv
+	            $config = $oConfigDB->getEsquema($esquema); //de la database sv
+	            break;
+	        case 'sf-e':
+	            $oConfigDB = new ConfigDB('sf-e'); //de la database sf
+	            $config = $oConfigDB->getEsquema($esquema); //de la database sf
+	            break;
 	    }
 	    
 	    return $config;

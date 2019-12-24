@@ -24,14 +24,6 @@ if (is_array($aPref) && count($aPref) > 0) {
 	$inicio='';
 	$oficina='';
 }
-/*
-// si no tiene, grabo una prefernecia por defecto.
-if (empty($inicio)) {
-	$inicio="correo";
-	$query_inicio = sprintf( "INSERT INTO web_preferencias (username,tipo,preferencia) VALUES ('%s','%s','%s') ",core\ConfigGlobal::mi_usuario(),"inicio",$inicio);
-	$oDBSt_q=$oDB->query($query_inicio);
-}
-*/
 
 $aOpciones = ['exterior' => ucfirst(_("home")),
             'oficina' => ucfirst(_("oficina")),

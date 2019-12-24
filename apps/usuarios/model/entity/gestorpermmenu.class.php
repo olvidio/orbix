@@ -25,7 +25,7 @@ class GestorPermMenu Extends  core\ClaseGestor {
 	 *
 	 */
 	function __construct() {
-		$oDbl = $GLOBALS['oDB'];
+		$oDbl = $GLOBALS['oDBE'];
 		$this->setoDbl($oDbl);
 		$this->setNomTabla('aux_grupo_permmenu');
 	}

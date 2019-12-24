@@ -56,6 +56,9 @@ class DBTabla {
 	 */
 	 private $sfileLogW;
 
+	 private $Host;
+	 private $ssh_user;
+	 
 	 /* CONSTRUCTOR -------------------------------------------------------------- */
  
 	 /**
@@ -82,6 +85,13 @@ class DBTabla {
 	    }
 	}
 	/* METODES GET i SET --------------------------------------------------------*/
+	
+	public function setConfig($config) {
+	    $this->setDb($config['dbname']);
+	    $this->setHost($config['host']);
+	    $this->setSsh_user($config['ssh_user']);
+	}
+
 	public function getDir() {
 		$this->sdir = empty($this->sdir)? ConfigGlobal::$directorio.'/log/db' : $this->sdir;
 		return $this->sdir;
@@ -106,6 +116,18 @@ class DBTabla {
 	}
 	public function setRef($esquema) {
 		$this->sRef = $esquema;
+	}
+	public function getHost() {
+	    return $this->Host;
+	}
+	public function setHost($host) {
+	    $this->Host = $host;
+	}
+	public function getSsh_user() {
+	    return $this->ssh_user;
+	}
+	public function setSsh_user($ssh_user) {
+	    $this->ssh_user = $ssh_user;
 	}
 	public function getDb() {
 		return $this->sDb;
@@ -147,14 +169,21 @@ class DBTabla {
 	 * Para la base de datos comun, que está en otro servidor y además con otra versión,
 	 * No sirve el pg_dump (solo funciona con versiones iguales en los dos extremos)
 	 */
-	public function copiar_remote() {
+	public function copiar() {
+	    if ($this->getHost() == 'localhost' || $this->getHost() == '127.0.0.1') {
+	        $this->copiar_local();
+	    } else {
+	        $this->copiar_remote();
+	    }
+	}
+	private function copiar_remote() {
 		$this->leer_remote();
 		$this->cambiar_nombre();
 		$this->importar();
 		$this->actualizar_schema();
 	}
-	public function copiar() {
-		$this->leer();
+	private  function copiar_local() {
+		$this->leer_local();
 		$this->cambiar_nombre();
 		$this->importar();
 		$this->actualizar_schema();
@@ -190,7 +219,7 @@ class DBTabla {
 	 *
 	 * Para poder ejecutar el ssh, se debe autorizar via id_rsa al usuario aquinate.
 	 */
-	public function leer_remote() {
+	private function leer_remote() {
 		$sTablas = '';
 		foreach ($this->aTablas as $tabla => $param) {
 			$sTablas .= " -t \\\\\\\"".$this->getRef()."\\\\\\\".$tabla ";
@@ -203,7 +232,8 @@ class DBTabla {
 	    $dbname = $this->getDbName();
 	    
 	    // leer esquema
-	    $command_ssh = "/usr/bin/ssh aquinate@192.168.200.16";
+	    //$command_ssh = "/usr/bin/ssh aquinate@192.168.200.16";
+	    $command_ssh = "/usr/bin/ssh ".$this->getSsh_user()."@".$this->getHost();
 	    $command_db = "/usr/bin/pg_dump -a".$sTablas." ";
 	    $command_db .= "-U postgres -h 127.0.0.1 $dbname";
 	    $command = "$command_ssh \"$command_db\" > ".$this->getFileRef();
@@ -211,7 +241,7 @@ class DBTabla {
 	    passthru($command); // no output to capture so no need to store it
 	}
 
-	public function leer() {
+	private function leer_local() {
 		$sTablas = '';
 		foreach ($this->aTablas as $tabla => $param) {
 			$sTablas .= "-t \\\"".$this->getRef()."\\\".$tabla ";
@@ -287,6 +317,14 @@ class DBTabla {
 	            break;
 	        case 'sf':
 	            $oConfigDB = new ConfigDB('sf'); //de la database sf
+	            $config = $oConfigDB->getEsquema($esquema); //de la database sf
+	            break;
+	        case 'sv-e':
+	            $oConfigDB = new ConfigDB('sv-e'); //de la database sv
+	            $config = $oConfigDB->getEsquema($esquema); //de la database sv
+	            break;
+	        case 'sf-e':
+	            $oConfigDB = new ConfigDB('sf-e'); //de la database sf
 	            $config = $oConfigDB->getEsquema($esquema); //de la database sf
 	            break;
 	    }

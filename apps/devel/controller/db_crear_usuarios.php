@@ -50,7 +50,8 @@ $esquemaf_pwd = generar_password(11);
 // Hay que pasar como parámetro el nombre de la database, que corresponde al archivo database.inc
 // donde están los passwords. En este caso en importar.inc, tenemos al superadmin.
 $oConfigDB = new core\ConfigDB('importar');
-$config = $oConfigDB->getEsquema('public'); //de la database comun
+//coge los valores de public: 1.la database comun; 2.nombre superusuario; 3.pasword superusuario;
+$config = $oConfigDB->getEsquema('public');
 
 $oConexion = new core\dbConnection($config);
 $oDevelPC = $oConexion->getPDO();
@@ -67,7 +68,8 @@ $oConfigDB->addEsquema('comun', $esquema, $esquema_pwd);
 // Con las bases de datos en distintos servidores, hay que ir cambiando la conexión:
 // sv
 $oConfigDB = new core\ConfigDB('importar');
-$config = $oConfigDB->getEsquema('publicv'); //de la database comun
+//coge los valores de public: 1.la database sv; 2.nombre superusuario; 3.pasword superusuario;
+$config = $oConfigDB->getEsquema('publicv');
 $oConexion = new core\dbConnection($config);
 $oDevelPC = $oConexion->getPDO();
 
@@ -78,6 +80,22 @@ $oDBRol->setUser($esquemav);
 $oDBRol->setPwd($esquemav_pwd);
 $oDBRol->crearUsuario();
 $oConfigDB->addEsquema('sv', $esquemav, $esquemav_pwd);
+
+// sv-e
+// Los mismos parametros que para sv.
+$oConfigDB = new core\ConfigDB('importar');
+//coge los valores de public: 1.la database sv-e; 2.nombre superusuario; 3.pasword superusuario;
+$config = $oConfigDB->getEsquema('publicv-e');
+$oConexion = new core\dbConnection($config);
+$oDevelPC = $oConexion->getPDO();
+
+$oDBRol = new core\DBRol();
+$oDBRol->setDbConexion($oDevelPC);
+
+$oDBRol->setUser($esquemav);
+$oDBRol->setPwd($esquemav_pwd);
+$oDBRol->crearUsuario();
+$oConfigDB->addEsquema('sv-e', $esquemav, $esquemav_pwd);
 
 /*
 // sf

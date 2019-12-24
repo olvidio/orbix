@@ -11,7 +11,7 @@ use core\DBPropiedades;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 // Copiar de dlb a public roles-grupmenu, grupmenu, menus
-$oDB = $GLOBALS['oDB'];
+$oDB = $GLOBALS['oDBE'];
 $oDBPC = $GLOBALS['oDBPC'];
 
 $Qseguro = (integer) \filter_input(INPUT_POST, 'seguro');

@@ -115,7 +115,7 @@ class PermisosActividades {
 	}
 
 	private function carregar($sCondicion_usuario,$dl_propia) {
-	    $oDbl = $GLOBALS['oDB'];
+	    $oDbl = $GLOBALS['oDBE'];
 	    // Orden: los usuarios empiezan por 4, los grupos por 5.
 	    // Al ordenar, el usuario (queda el último) sobreescribe al grupo.
 	    // Los grupos, como puede haber más de uno los ordeno por orden alfabético DESC (prioridad A-Z). 
@@ -182,7 +182,12 @@ class PermisosActividades {
 						if ($id_fase == $id_fase_fin) $grabar = 0;
 					}
 				} else {
-					echo _("error: la fase de permiso no está en el proceso.");
+					$msg = _("para el usuario o grupo") .': '.$row['usuario'];
+					$msg .= '<br>';
+					$msg .= _("tipo de actividad") .': '.$id_tipo_activ_txt.'<br>';
+					$msg .= sprintf(_("error: la fase de permiso (%s) no está en el proceso (%s)."),$id_fase,$id_tipo_proceso);
+					$msg .= '<br>';
+					echo $msg;
 				}
 			}
 		}

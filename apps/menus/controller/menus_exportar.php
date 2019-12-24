@@ -9,7 +9,7 @@ use menus\model\entity as menus;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 // Copiar de dlb a public roles-grupmenu, grupmenu, menus
-$oDevel = $GLOBALS['oDB'];
+$oDevel = $GLOBALS['oDBE'];
 $oDevelPC = $GLOBALS['oDBPC'];
 
 //************ GRUPMENU **************

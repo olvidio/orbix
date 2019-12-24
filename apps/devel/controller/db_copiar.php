@@ -29,6 +29,8 @@ $esquemaReff = $esquemaRef.'f';
 
 // COMUN
 if (!empty($Qcomun)) {
+    $oConfigDB = new core\ConfigDB('importar'); //de la database comun
+    $config = $oConfigDB->getEsquema('public'); //de la database comun
     /**
      * lista de tablas de las que hay que copiar los valores.
      * Posteriormente hay que cambiar el id_schema (si tiene)
@@ -42,11 +44,11 @@ if (!empty($Qcomun)) {
                 "x_config_schema" => ['id_schema' => 'yes'],
                 ];
     $oDBTabla = new core\DBTabla();
-    $oDBTabla->setDb('comun');
+    $oDBTabla->setConfig($config);
     $oDBTabla->setRef($esquemaRef);
     $oDBTabla->setNew($esquema);
     $oDBTabla->setTablas($aTablas);
-    $oDBTabla->copiar_remote();
+    $oDBTabla->copiar();
 
     $oTrasvase = new core\DBTrasvase();
     $oTrasvase->setRegion($Qregion);
@@ -61,6 +63,9 @@ if (!empty($Qcomun)) {
 }
 // SV
 if (!empty($Qsv)) {
+    $oConfigDB = new core\ConfigDB('importar');
+    $config = $oConfigDB->getEsquema('publicv-e'); // Todas estas tablas estan en sv-e
+
     $aTablas = ["aux_cross_usuarios_grupos" => ['id_schema' => 'yes'],
                 "aux_grupmenu" => ['id_schema' => 'yes'],
                 "aux_grupmenu_rol" => ['id_schema' => 'yes'],
@@ -72,7 +77,7 @@ if (!empty($Qsv)) {
                 "m0_mods_installed_dl" => ['id_schema' => 'yes'],
                 ];
 	$oDBTabla = new core\DBTabla();
-	$oDBTabla->setDb('sv');
+    $oDBTabla->setConfig($config);
 	$oDBTabla->setRef($esquemaRefv);
 	$oDBTabla->setNew($esquemav);
 	$oDBTabla->setTablas($aTablas);
@@ -91,6 +96,9 @@ if (!empty($Qsv)) {
 }
 // SF
 if (!empty($Qsf)) {
+    $oConfigDB = new core\ConfigDB('importar');
+    $config = $oConfigDB->getEsquema('publicf-e'); // Todas estas tablas estan en sv-e
+
     $aTablas = ["aux_cross_usuarios_grupos" => ['id_schema' => 'yes'],
                 "aux_grupmenu" => ['id_schema' => 'yes'],
                 "aux_grupmenu_rol" => ['id_schema' => 'yes'],
@@ -102,7 +110,7 @@ if (!empty($Qsf)) {
                 "m0_mods_installed_dl" => ['id_schema' => 'yes'],
                 ];
 	$oDBTabla = new core\DBTabla();
-	$oDBTabla->setDb('sf');
+    $oDBTabla->setConfig($config);
 	$oDBTabla->setRef($esquemaReff);
 	$oDBTabla->setNew($esquemaf);
 	$oDBTabla->setTablas($aTablas);

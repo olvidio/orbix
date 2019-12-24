@@ -11,7 +11,8 @@ use ubis\model\entity\GestorRegion;
 
 // OJO; sólo las que ya tengan el esquema.
 $oDBPropiedades = new DBPropiedades();
-$oEsquemaRef = $oDBPropiedades->posibles_esquemas();
+$oDBPropiedades->setBlanco(TRUE);
+$oEsquemaRef = $oDBPropiedades->posibles_esquemas('');
 	
 $oGesReg = new GestorRegion();
 $oDesplRegiones = $oGesReg->getListaRegiones();
@@ -27,11 +28,16 @@ $oHash1->setUrl(core\ConfigGlobal::getWeb().'/apps/devel/controller/db_ajax.php'
 $oHash1->setCamposForm('salida!entrada'); 
 $h = $oHash1->linkSinVal();
 
+$msg_falta_dl = _("debe poner la delegación");
+$msg_falta_esquema = _("debe poner la delegación de referencia");
+
 $a_campos = [
 			'oHash' => $oHash,
 			'h' => $h,
 			'oDesplRegiones' => $oDesplRegiones,
 			'oEsquemaRef' => $oEsquemaRef,
+            'msg_falta_dl' => $msg_falta_dl,
+            'msg_falta_esquema' => $msg_falta_esquema,
 			];
 
 $oView = new core\View('devel/controller');

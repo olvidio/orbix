@@ -50,16 +50,16 @@ class DBEsquema extends DBAbstract {
     }
     
     /**
-     * En la BD sf/sv (esquema).
+     * En la BD sf-e/sv-e [exterior] (esquema).
      */
     public function create_aux_usuarios_ctr_perm() {
-        // OJO Corresponde al esquema sf/sv, no al comun.
+        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
         $role_org = $this->role;
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
         
         $tabla = "aux_usuarios_ctr_perm";
         $datosTabla = $this->infoTable($tabla);
@@ -96,19 +96,19 @@ class DBEsquema extends DBAbstract {
         
         $this->executeSql($a_sql);
         
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
         // Devolver los valores al estodo original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
     }
     public function eliminar_aux_usuarios_ctr_perm() {
-        // OJO Corresponde al esquema sf/sv, no al comun.
+        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
         $role_org = $this->role;
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
         
         $datosTabla = $this->infoTable("aux_usuarios_ctr_perm");
         
@@ -121,21 +121,21 @@ class DBEsquema extends DBAbstract {
         
         $this->eliminar($nom_tabla);
         
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
         // Devolver los valores al estodo original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
     }
     
     public function llenar_aux_usuarios_ctr_perm() {
-        // OJO Corresponde al esquema sf/sv, no al comun.
+        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
         $role_org = $this->role;
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
-        $this->setConexion('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
+        $this->setConexion('sfsv-e');
         
         $datosTabla = $this->infoTable("aux_usuarios_ctr_perm");
         
@@ -165,7 +165,7 @@ class DBEsquema extends DBAbstract {
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);
         
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
         // Devolver los valores al estodo original
         $this->esquema = $esquema_org;
         $this->role = $role_org;

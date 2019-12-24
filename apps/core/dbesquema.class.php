@@ -50,6 +50,8 @@ class DBEsquema {
 	 private $password;
 	 
 	 private $dbname;
+	 private $Host;
+	 private $ssh_user;
 
 	 /* CONSTRUCTOR -------------------------------------------------------------- */
  
@@ -77,6 +79,13 @@ class DBEsquema {
    	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
+   	
+   	public function setConfig($config) {
+   	    $this->setDb($config['dbname']);
+   	    $this->setHost($config['host']);
+   	    $this->setSsh_user($config['ssh_user']);
+   	}
+   	
 	public function getDir() {
 		$this->sdir = empty($this->sdir)? ConfigGlobal::$directorio.'/log/db' : $this->sdir;
 		return $this->sdir;
@@ -115,9 +124,11 @@ class DBEsquema {
 			case 'comun':
 				break;
 			case 'sv':
+			case 'sv-e':
 				$this->sNew .= 'v';
 				break;
 			case 'sf':
+			case 'sf-e':
 				$this->sNew .= 'f';
 				break;
 		}
@@ -132,9 +143,11 @@ class DBEsquema {
 			case 'comun':
 				break;
 			case 'sv':
+			case 'sv-e':
 				$this->sRef .= 'v';
 				break;
 			case 'sf':
+			case 'sf-e':
 				$this->sRef .= 'f';
 				break;
 		}
@@ -142,6 +155,18 @@ class DBEsquema {
 	}
 	public function setRef($esquema) {
 		$this->sRef = $esquema;
+	}
+	public function getHost() {
+		return $this->Host;
+	}
+	public function setHost($host) {
+		$this->Host = $host;
+	}
+	public function getSsh_user() {
+		return $this->ssh_user;
+	}
+	public function setSsh_user($ssh_user) {
+		$this->ssh_user = $ssh_user;
 	}
 	public function getDb() {
 		return $this->sDb;
@@ -206,7 +231,15 @@ class DBEsquema {
 	}
 
 	public function crear() {
-		$this->leer();
+	    if ($this->getHost() == 'localhost' || $this->getHost() == '127.0.0.1') {
+	        $this->crear_local();
+	    } else {
+	        $this->crear_remote();
+	    }
+	}
+	
+	private function crear_local() {
+		$this->leer_local();
 		$this->cambiar_nombre();
 		$this->importar();
 	}
@@ -214,7 +247,7 @@ class DBEsquema {
 	 * Para la base de datos comun, que está en otro servidor y además con otra versión,
 	 * No sirve el pg_dump (solo funciona con versiones iguales en los dos extremos)
 	 */
-	public function crear_remote() {
+	private function crear_remote() {
 		$this->leer_remote();
 		$this->cambiar_nombre();
 		$this->eliminar_sync();
@@ -229,7 +262,7 @@ class DBEsquema {
 	 * 
 	 * Para poder ejecutar el ssh, se debe autorizar via id_rsa al usuario aquinate.
 	 */
-	public function leer_remote() {
+	private function leer_remote() {
 	    //ssh user@remote_machine "pg_dump -U dbuser -h localhost -C --column-inserts" \
 	    //    > backup_file_on_your_local_machine.sql
 	    //  /usr/bin/ssh aquinate@192.168.200.16 "/usr/bin/pg_dump -s --schema=\\\"Acse-crAcse\\\" 
@@ -237,7 +270,8 @@ class DBEsquema {
 	    
 	    $dbname = $this->getDbName();
 	    // leer esquema
-		$command_ssh = "/usr/bin/ssh aquinate@192.168.200.16";
+		//$command_ssh = "/usr/bin/ssh aquinate@192.168.200.16";
+		$command_ssh = "/usr/bin/ssh ".$this->getSsh_user()."@".$this->getHost();
 		$command_db = "/usr/bin/pg_dump -s --schema=\\\\\\\"".$this->getRef()."\\\\\\\" ";
 		$command_db .= "-U postgres -h 127.0.0.1 $dbname"; 
 	    $command = "$command_ssh \"$command_db\" > ".$this->getFileRef();	
@@ -245,7 +279,7 @@ class DBEsquema {
 		passthru($command); // no output to capture so no need to store it
 	}
 	
-	public function leer() {
+	private function leer_local() {
 	    //pg_dump --dbname=postgresql://username:password@host:port/database > file.sql
 	    // crear archivo con el password
 	    $dsn = $this->getConexion('ref');
@@ -343,6 +377,14 @@ class DBEsquema {
 	            break;
 	        case 'sf':
 	            $oConfigDB = new ConfigDB('sf'); //de la database sf
+	            $config = $oConfigDB->getEsquema($esquema); //de la database sf
+	            break;
+	        case 'sv-e':
+	            $oConfigDB = new ConfigDB('sv-e'); //de la database sv
+	            $config = $oConfigDB->getEsquema($esquema); //de la database sv
+	            break;
+	        case 'sf-e':
+	            $oConfigDB = new ConfigDB('sf-e'); //de la database sf
 	            $config = $oConfigDB->getEsquema($esquema); //de la database sf
 	            break;
 	    }
