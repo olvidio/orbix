@@ -47,11 +47,12 @@ switch ($user_sfsv) {
 		$oDBC = $oConexion->getPDO();
 		//sv
 		if (ConfigGlobal::$dmz) {
+		    /*
             $oConfigDB->setDataBase('comun'); 
             $config = $oConfigDB->getEsquema($esquemav); 
             $oConexion = new dbConnection($config);
             $oDB = $oConexion->getPDO();
-            /*
+            
             $config = $oConfigDB->getEsquema('publicv'); 
             $oConexion = new dbConnection($config);
             $oDBP = $oConexion->getPDO();
