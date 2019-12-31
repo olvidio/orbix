@@ -146,9 +146,11 @@ class GestorActividadCargo Extends core\ClaseGestor {
 	 */
 	function getCargoOAsistente($iid_nom,$aWhereAct=array(),$aOperadorAct=array()) {
 		$oDbl = $this->getoDbl();
+		
 		$GesAsistente = new GestorAsistente();
 	   	$cAsistentes = $GesAsistente->getActividadesDeAsistente(array('id_nom'=>$iid_nom),$aWhereAct,$aOperadorAct);
-		$cCargos = $this->getActividadCargos(array('id_nom'=>$iid_nom));
+		
+	   	$cCargos = $this->getActividadCargos(array('id_nom'=>$iid_nom));
 		// seleccionar las actividades segun los criterios de búsqueda.
 		$GesActividades = new GestorActividad();
 		$aListaIds = $GesActividades->getArrayIds($aWhereAct,$aOperadorAct);

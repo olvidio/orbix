@@ -4,6 +4,7 @@ use core;
 use web;
 use actividades\model\entity as actividades;
 use personas\model\entity as personas;
+use core\ConfigGlobal;
 /**
  * GestorAsistente
  *
@@ -76,6 +77,10 @@ class GestorAsistente Extends core\ClaseGestor {
 	 */
 	function getActividadesDeAsistente($aWhereNom,$aWhere=array(),$aOperators=array(),$reverse=FALSE) {
 		// todas las actividades de la persona
+		// Por el momento si está en la dmz no puede ver las asistencias:
+	    if (ConfigGlobal::$dmz) {
+	        return [];
+	    }
 		//Importa el orden, se queda con la última.
 		$a_Clases[] = array('clase'=>'AsistenteEx','get'=>'getAsistentesEx');
 		$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
@@ -198,6 +203,10 @@ class GestorAsistente Extends core\ClaseGestor {
 	 * @return array Una col·lecció d'objectes de tipus ActividadAsistente
 	 */
 	function getAsistentesDeActividad($iid_activ,$sOrder='') {
+		// Por el momento si está en la dmz no puede ver las asistencias:
+	    if (ConfigGlobal::$dmz) {
+	        return [];
+	    }
 		//$oDbl = $this->getoDbl();
 		if (empty($sOrder)) $sOrder='apellido1,apellido2,nom';
 
