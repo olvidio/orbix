@@ -28,7 +28,7 @@ class GestorEncargoTipo Extends core\ClaseGestor {
 	 *
 	 */
 	function __construct() {
-		$oDbl = $GLOBALS['oDB'];
+		$oDbl = $GLOBALS['oDBE'];
 		$this->setoDbl($oDbl);
 		$this->setNomTabla('encargo_tipo');
 	}
