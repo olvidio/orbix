@@ -46,19 +46,34 @@ switch ($user_sfsv) {
 		$oConexion = new dbConnection($config);
 		$oDBC = $oConexion->getPDO();
 		//sv
-		$oConfigDB->setDataBase('sv'); 
-		$config = $oConfigDB->getEsquema($esquemav); 
-		$oConexion = new dbConnection($config);
-		$oDB = $oConexion->getPDO();
+		if (ConfigGlobal::$dmz) {
+            $oConfigDB->setDataBase('comun'); 
+            $config = $oConfigDB->getEsquema($esquemav); 
+            $oConexion = new dbConnection($config);
+            $oDB = $oConexion->getPDO();
+            /*
+            $config = $oConfigDB->getEsquema('publicv'); 
+            $oConexion = new dbConnection($config);
+            $oDBP = $oConexion->getPDO();
 
-		$config = $oConfigDB->getEsquema('publicv'); 
-		$oConexion = new dbConnection($config);
-		$oDBP = $oConexion->getPDO();
+            $config = $oConfigDB->getEsquema('restov'); 
+            $oConexion = new dbConnection($config);
+            $oDBR = $oConexion->getPDO();
+            */
+		} else {
+            $oConfigDB->setDataBase('sv'); 
+            $config = $oConfigDB->getEsquema($esquemav); 
+            $oConexion = new dbConnection($config);
+            $oDB = $oConexion->getPDO();
 
-		$config = $oConfigDB->getEsquema('restov'); 
-		$oConexion = new dbConnection($config);
-		$oDBR = $oConexion->getPDO();
-		
+            $config = $oConfigDB->getEsquema('publicv'); 
+            $oConexion = new dbConnection($config);
+            $oDBP = $oConexion->getPDO();
+
+            $config = $oConfigDB->getEsquema('restov'); 
+            $oConexion = new dbConnection($config);
+            $oDBR = $oConexion->getPDO();
+		} 
 		//sv exterior
 		$oConfigDB->setDataBase('sv-e'); 
 		$config = $oConfigDB->getEsquema($esquemav); 
