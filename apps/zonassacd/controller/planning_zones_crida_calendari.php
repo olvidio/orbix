@@ -1,13 +1,13 @@
 <?php
+use actividadcargos\model\entity\GestorActividadCargo;
 use actividades\model\entity\GestorActividad;
 use encargossacd\model\entity\Encargo;
+use encargossacd\model\entity\GestorEncargoSacdHorario;
+use personas\model\entity\PersonaSacd;
 use web\TiposActividades;
 use zonassacd\model\entity\GestorZona;
 use zonassacd\model\entity\GestorZonaSacd;
 use zonassacd\model\entity\Zona;
-use encargossacd\model\entity\GestorEncargoSacdHorario;
-use actividadcargos\model\entity\GestorActividadCargo;
-use personas\model\entity\PersonaDl;
 
 /**
 * Esta página tiene la misión de realizar la llamada a calendario php;
@@ -193,7 +193,7 @@ foreach ($aa_zonas as $a_zonas) {
 		$aActivPersona=array(); //inicializo el vector para la siguiente persona
 		$id_nom = $oZonaSacd->getId_nom();
 
-		$oSacd = new PersonaDl($id_nom);
+		$oSacd = new PersonaSacd($id_nom);
 		if ($oSacd->getSituacion() != 'A') continue;
 
 		$ap_nom = $oSacd->getApellidosNombre();
