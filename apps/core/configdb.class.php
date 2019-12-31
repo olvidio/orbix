@@ -32,16 +32,29 @@ class ConfigDB {
 	}
 	
 	public function addEsquema($database,$esquema,$esquema_pwd){
-	    $this->setDataBase($database);
-        $this->data[$esquema] = ['user' => $esquema, 'password' => $esquema_pwd ];
-        
         // Las bases de datos de pruebas y producción están en el mismo cluster, y 
         // por tanto los usuarios son los mismos. Hay que ponerlo en los dos ficheros:
+        // Pero OJO: la parte de definicion de host y dbname son diferentes!!
+        
+        $this->addEsquemaProduccion($database,$esquema,$esquema_pwd);
+        $this->addEsquemaPruebas($database,$esquema,$esquema_pwd);
+	}
+	
+	public function addEsquemaProduccion($database,$esquema,$esquema_pwd){
+		$this->data = include ConfigGlobal::DIR_PWD.'/'.$database.'.inc';
+		
+        $this->data[$esquema] = ['user' => $esquema, 'password' => $esquema_pwd ];
+        
 		$filename = ConfigGlobal::DIR_PWD.'/'.$database.'.inc';
 	    file_put_contents($filename, '<?php return ' . var_export($this->data, true) . ' ;');
-	    
+	}
+	public function addEsquemaPruebas($database,$esquema,$esquema_pwd){
+		$database = 'pruebas-'.$database;
+		$this->data = include ConfigGlobal::DIR_PWD.'/'.$database.'.inc';
+		
+        $this->data[$esquema] = ['user' => $esquema, 'password' => $esquema_pwd ];
+        
 		$filename_pruebas = ConfigGlobal::DIR_PWD.'/pruebas-'.$database.'.inc';
 	    file_put_contents($filename_pruebas, '<?php return ' . var_export($this->data, true) . ' ;');
-	    
 	}
 }
