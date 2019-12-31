@@ -51,18 +51,18 @@ fnjs_left_side_hide();
 </select></th></tr>
 </thead>
 <tbody>
-<tr colspan=4><td>
+<tr><td colspan=4>
 <div class=contenido id="lst_ctrs" ></div></td>
 </tr>
 {% if perm_des %}
 	<tr>
-	<th class=titulo_inv colspan=4>{{ "asignar los centros marcados a la zona"|trans }}:&nbsp;&nbsp;&nbsp;
+	<th class=titulo_inv colspan=3>{{ "asignar los centros marcados a la zona"|trans }}:&nbsp;&nbsp;&nbsp;
 	<select class=contenido id="id_zona_new" name="id_zona_new" >
 	<option></option>
     {{ oDesplZonas.options|raw }}
 	<option value="no">{{ "sin asignar zona"|trans }}</option>
 	</th>
-	<th colspan=4>
+	<th>
 		<input type="button" id="ok" name="ok" onclick="fnjs_guardar(this.form);" value="{{ "asignar"|trans }}">
 	</th>
 	</tr>
