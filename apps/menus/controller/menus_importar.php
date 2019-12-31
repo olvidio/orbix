@@ -56,10 +56,10 @@ if ($Qseguro == 1) {
 		$sec = substr($esquema,-1); // la v o la f.
 		echo ">>>$sec>>actualizando menus para $esquema<br>";
 		if ($sec == 'v') { 
-			$oConfigDB = new core\ConfigDB('sv'); 
+			$oConfigDB = new core\ConfigDB('sv-e'); 
 		}
 		if ($sec == 'f') {
-			$oConfigDB = new core\ConfigDB('sf'); 
+			$oConfigDB = new core\ConfigDB('sf-e'); 
 			
 		}
 		$config = $oConfigDB->getEsquema($esquema); 
