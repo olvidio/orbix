@@ -2,6 +2,7 @@
 namespace actividadcargos\model\entity;
 use cambios\model\gestorAvisoCambios;
 use core;
+use core\ConfigGlobal;
 /**
  * Fitxer amb la Classe que accedeix a la taula d_cargos_activ_dl
  *
@@ -110,7 +111,16 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
 	 */
 	function __construct($a_id='') {
-		$oDbl = $GLOBALS['oDB'];
+	    if (ConfigGlobal::$dmz) {
+            $oDbl = $GLOBALS['oDB'];
+            $this->setoDbl($oDbl);
+            $this->setNomTabla('cd_cargos_activ_dl');
+	        
+	    } else {
+            $oDbl = $GLOBALS['oDB'];
+            $this->setoDbl($oDbl);
+            $this->setNomTabla('d_cargos_activ_dl');
+	    }
 		if (is_array($a_id)) { 
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
@@ -123,8 +133,6 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 				$this->aPrimary_key = array('iid_item' => $this->iid_item);
 			}
 		}
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('d_cargos_activ_dl');
 	}
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
