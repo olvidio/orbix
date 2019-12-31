@@ -367,22 +367,27 @@ class DBEsquema {
 	        $esquema = $this->getNew();
 	    }
 	    switch ($this->sDb) {
+	        case 'pruebas-comun':
 	        case 'comun':
 	            $oConfigDB = new ConfigDB('comun'); //de la database comun
 	            $config = $oConfigDB->getEsquema($esquema); //de la database comun
 	            break;
+	        case 'pruebas-sv':
 	        case 'sv':
 	            $oConfigDB = new ConfigDB('sv'); //de la database sv
 	            $config = $oConfigDB->getEsquema($esquema); //de la database sv
 	            break;
+	        case 'pruebas-sf':
 	        case 'sf':
 	            $oConfigDB = new ConfigDB('sf'); //de la database sf
 	            $config = $oConfigDB->getEsquema($esquema); //de la database sf
 	            break;
+	        case 'pruebas-sv-e':
 	        case 'sv-e':
 	            $oConfigDB = new ConfigDB('sv-e'); //de la database sv
 	            $config = $oConfigDB->getEsquema($esquema); //de la database sv
 	            break;
+	        case 'pruebas-sf-e':
 	        case 'sf-e':
 	            $oConfigDB = new ConfigDB('sf-e'); //de la database sf
 	            $config = $oConfigDB->getEsquema($esquema); //de la database sf
