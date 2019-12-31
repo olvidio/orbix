@@ -6,6 +6,7 @@ use actividades\model\entity\GestorActividad;
 use asistentes\model\entity\GestorAsistente;
 use core;
 use personas\model\entity\PersonaSacd;
+use core\ConfigGlobal;
 /**
  * GestorActividadCargo
  *
@@ -31,9 +32,16 @@ class GestorActividadCargo Extends core\ClaseGestor {
 	 *
 	 */
 	function __construct() {
-		$oDbl = $GLOBALS['oDB'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('d_cargos_activ_dl');
+	    if (ConfigGlobal::$dmz) {
+            $oDbl = $GLOBALS['oDBC'];
+            $this->setoDbl($oDbl);
+            $this->setNomTabla('cd_cargos_activ_dl');
+	        
+	    } else {
+            $oDbl = $GLOBALS['oDB'];
+            $this->setoDbl($oDbl);
+            $this->setNomTabla('d_cargos_activ_dl');
+	    }
 	}
 
 
