@@ -131,14 +131,16 @@ foreach($cPersonaNotas as $oPersonaNota) {
 	$apellidos=$oPersona->getApellidos();
 	$trato=$oPersona->getTrato();
 	$nom_v=$oPersona->getNom();
-	$nom_lat = $oGesNomLatin->getVernaculaLatin($nom_v);
+	//$nom_lat = $oGesNomLatin->getVernaculaLatin($nom_v);
 
 	//Ni la función del postgresql ni la del php convierten los acentos.
 	$apellidos = trim($apellidos);
 
 	$apellidos = empty($apellidos)? '????' : $apellidos;
 	$apellidos=strtoupper_dlb($apellidos);
-	$nom = $apellidos.", ".$trato.$nom_lat;
+	// Ahora los nombre pueden ser en verácula
+	//$nom = $apellidos.", ".$trato.$nom_lat;
+	$nom = $apellidos.", ".$trato.$nom_v;
 		
 	//echo "<br>$id_nom, $apellidos";
 	$nota = $oPersonaNota->getNota_txt();

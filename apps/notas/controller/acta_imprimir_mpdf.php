@@ -115,13 +115,12 @@ foreach($cPersonaNotas as $oPersonaNota) {
 	$apellidos=$oPersona->getApellidos();
 	$trato=$oPersona->getTrato();
 	$nom_v=$oPersona->getNom();
-	$nom_lat = $oGesNomLatin->getVernaculaLatin($nom_v);
 
 	//Ni la función del postgresql ni la del php convierten los acentos.
 	$apellidos = trim($apellidos);
 	if (empty($apellidos)) { continue; }
 	$apellidos=core\strtoupper_dlb($apellidos);
-	$nom = $apellidos.", ".$trato.$nom_lat;
+	$nom = $apellidos.", ".$trato.$nom_v;
 		
 	//$oNota = new notas\Nota($id_situacion);
 	//$nota=$oNota->getDescripcion();

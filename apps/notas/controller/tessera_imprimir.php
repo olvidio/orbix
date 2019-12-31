@@ -68,10 +68,11 @@ if (!is_object($oPersona)) {
 $nom_vernacula = $oPersona->getNom();
 $apellidos = $oPersona->getApellidos();
 $trato = $oPersona->getTrato();
-
+/* Ahora no hace falta el latín
 $oGesNomLatin = new personas\GestorNombreLatin();
 $nom_lat = $oGesNomLatin->getVernaculaLatin($nom_vernacula);
-$nom=$trato.$nom_lat.$apellidos;
+*/
+$nom=$trato.$nom_vernacula.$apellidos;
 
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 
