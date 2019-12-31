@@ -336,3 +336,4 @@
 1398	{70,50}	config esquema	\N	90	33554432	13	t
 1400	{20,90}	previsión asistentes	\N	5	37748735	7	t
 1405	{10,80}	grupos	\N	91	1	7	t
+1034	{30,10}	mover tabla a otra DB	\N	54	33554432	13	t

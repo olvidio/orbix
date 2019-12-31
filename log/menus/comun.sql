@@ -24,7 +24,6 @@
 49	\N	scdl/registro/pen_tabla.php	\N	\N
 50	\N	vcsd/dlbf/centrosdlbf.htm	\N	\N
 53	\N	sg/cp_lista.php	\N	\N
-54	\N	scdl/agenda_vcdl/age_vcdl.php	\N	\N
 55	\N	programas/lor/registros_que.php	\N	\N
 56	\N	programas/sm-agd/cargos/cargos.php	\N	\N
 58	\N	programas/lista_activ_gral_sr.php	\N	\N
@@ -187,3 +186,4 @@
 108	5	apps/actividadtarifas/controller/tarifa_tipo_actividad.php	\N	Tipo tarifa
 100	5	apps/actividadtarifas/controller/tarifa.php	\N	Tarifas actividades
 5	27	apps/casas/controller/prevision_asistentes.php	\N	prevision asistentes
+54	2	apps/devel/controller/db_mover_que.php	\N	DB mover tabla
