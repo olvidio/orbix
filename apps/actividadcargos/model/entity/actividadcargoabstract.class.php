@@ -112,7 +112,7 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 	 */
 	function __construct($a_id='') {
 	    if (ConfigGlobal::$dmz) {
-            $oDbl = $GLOBALS['oDB'];
+            $oDbl = $GLOBALS['oDBC'];
             $this->setoDbl($oDbl);
             $this->setNomTabla('cd_cargos_activ_dl');
 	        
