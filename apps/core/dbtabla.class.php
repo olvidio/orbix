@@ -1,12 +1,14 @@
 <?php
 namespace core;
-class DBTabla {
+use devel\model\DBAbstract;
+
+class DBTabla extends DBAbstract {
 	/**
 	 * oDbl de Esquema
 	 *
 	 * @var object
 	 */
-	 private $oDbl;
+	 protected $oDbl;
 	/**
 	 * Tablas de Esquema
 	 *
@@ -166,6 +168,25 @@ class DBTabla {
 	}
 
 	/**
+	 * Pasa tablas de sv a sv-e
+	 * para la base de datos sv-e, que está en otro servidor y además con otra versión,
+	 * No sirve el pg_dump (solo funciona con versiones iguales en los dos extremos)
+	 */
+	public function mover($configRef,$configNew) {
+	    
+	    
+	    $this->setConfig($configRef);
+		$this->leer_local(FALSE);
+		
+		$this->cambiar_nombre_fichero();
+		// Para crear tablas, permiso de superusuario...
+		
+		
+		$this->setConfig($configNew);
+		$this->importarAsAdmin();
+		
+	}
+	/**
 	 * Para la base de datos comun, que está en otro servidor y además con otra versión,
 	 * No sirve el pg_dump (solo funciona con versiones iguales en los dos extremos)
 	 */
@@ -212,6 +233,12 @@ class DBTabla {
 		if ($d === false) exit (_("error al escribir el fichero"));
 	}
 	
+	public function cambiar_nombre_fichero() {
+		$dump = file_get_contents($this->getFileRef());
+		$d = file_put_contents($this->getFileNew(), $dump);
+		if ($d === false) exit (_("error al escribir el fichero"));
+	}
+	
 	/**
 	 * Ejecuta el pg_dump en la máquina remota a través de ssh.
 	 * No conviene hacerlo directamente, porque si las versiones del postgresql
@@ -241,7 +268,8 @@ class DBTabla {
 	    passthru($command); // no output to capture so no need to store it
 	}
 
-	private function leer_local() {
+	private function leer_local($data_only=TRUE) {
+	    $a = ($data_only)? '-a' : '';
 		$sTablas = '';
 		foreach ($this->aTablas as $tabla => $param) {
 			$sTablas .= "-t \\\"".$this->getRef()."\\\".$tabla ";
@@ -250,7 +278,7 @@ class DBTabla {
 		// crear archivo con el password
 		$dsn = $this->getConexion('ref');
 		// leer esquema
-		$command = "/usr/bin/pg_dump -a $sTablas";
+		$command = "/usr/bin/pg_dump $a $sTablas";
 		$command .= "--file=".$this->getFileRef()." ";
 		$command .= "\"".$dsn."\"";
 		$command .= " > ".$this->getFileLogR()." 2>&1"; 
@@ -264,6 +292,51 @@ class DBTabla {
 		}
 	}
 
+	public function eliminarTabla($nom_tabla) {
+	        // OJO Corresponde al esquema sf/sv, no al comun.
+	        /*
+	        $esquema_org = $this->esquema;
+	        $role_org = $this->role;
+	        $this->esquema = ConfigGlobal::mi_region_dl();
+	        $this->role = '"'. $this->esquema .'"';
+	        // (debe estar después de fijar el role)
+	         */
+	        $this->addPermisoGlobal('sfsv');
+	        
+	        /*
+	        $id_seq = $datosTabla['id_seq'];
+	        
+	        $a_sql = [];
+	        $a_sql[0] = "DROP SEQUENCE IF EXISTS $id_seq CASCADE;" ;
+	        $this->executeSql($a_sql);
+	        */
+	        
+	        $this->eliminar($nom_tabla);
+	        
+	        $this->delPermisoGlobal('sfsv');
+	        // Devolver los valores al estado original
+	        //$this->esquema = $esquema_org;
+	        //$this->role = $role_org;
+	}
+	
+	public function importarAsAdmin() {
+	    // crear archivo con el password
+	    $dsn = $this->getConexionAdmin('publicv-e');
+	    
+		$command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -q -X -t ";
+		$command .= "--pset pager=off ";
+		$command .= "--file=".$this->getFileNew()." ";
+		$command .= "\"".$dsn."\"";
+		$command .= " > ".$this->getFileLogW()." 2>&1"; 
+		passthru($command); // no output to capture so no need to store it
+		// read the file, if empty all's well
+		$error = file_get_contents($this->getFileLogW());
+		if(trim($error) != '') {
+			if (ConfigGlobal::is_debug_mode()) {
+			    echo sprintf("PSQL ERROR IN COMMAND: %s<br> mirar en: %s<br>",$command,$this->getFileLogW());
+			}
+		}
+	}
 	public function importar() {
 	    // crear archivo con el password
 	    $dsn = $this->getConexion('new');
@@ -330,6 +403,17 @@ class DBTabla {
 	    }
 	    
 	    return $config;
+	}
+	
+	private function getConexionAdmin($esquema='ref') {
+        $oConfigDB = new ConfigDB('importar');
+	    $config = $oConfigDB->getEsquema($esquema);
+	    $this->dbname = $config['dbname'];
+	    
+	    $oConnection = new dbConnection($config);
+	    $dsn = $oConnection->getURI();
+	    
+	    return $dsn;
 	}
 	
 	private function getConexion($esquema='ref') {

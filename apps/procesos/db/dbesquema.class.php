@@ -467,7 +467,7 @@ class DBEsquema extends DBAbstract {
         $this->executeSql($a_sql);
         
         $this->delPermisoGlobal('sfsv-e');
-        // Devolver los valores al estodo original
+        // Devolver los valores al estado original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
     }
@@ -492,7 +492,7 @@ class DBEsquema extends DBAbstract {
         $this->eliminar($nom_tabla);
 
         $this->delPermisoGlobal('sfsv-e');
-        // Devolver los valores al estodo original
+        // Devolver los valores al estado original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
     }
@@ -711,7 +711,7 @@ class DBEsquema extends DBAbstract {
         $this->executeSql($a_sql);
 
         $this->delPermisoGlobal('sfsv');
-        // Devolver los valores al estodo original
+        // Devolver los valores al estado original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
     }

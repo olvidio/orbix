@@ -74,7 +74,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
         
         $tabla = "zonas";
         $datosTabla = $this->infoTable($tabla);
@@ -114,8 +114,8 @@ class DBEsquema extends DBAbstract {
         
         $this->executeSql($a_sql);
         
-        $this->delPermisoGlobal('sfsv');
-        // Devolver los valores al estodo original
+        $this->delPermisoGlobal('sfsv-e');
+        // Devolver los valores al estado original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
     }
@@ -126,7 +126,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
         
         $datosTabla = $this->infoTable("zonas");
         
@@ -139,8 +139,8 @@ class DBEsquema extends DBAbstract {
         
         $this->eliminar($nom_tabla);
         
-        $this->delPermisoGlobal('sfsv');
-        // Devolver los valores al estodo original
+        $this->delPermisoGlobal('sfsv-e');
+        // Devolver los valores al estado original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
     }
@@ -152,7 +152,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
         
         $tabla = "zonas_grupos";
         $datosTabla = $this->infoTable($tabla);
@@ -186,8 +186,8 @@ class DBEsquema extends DBAbstract {
         
         $this->executeSql($a_sql);
         
-        $this->delPermisoGlobal('sfsv');
-        // Devolver los valores al estodo original
+        $this->delPermisoGlobal('sfsv-e');
+        // Devolver los valores al estado original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
     }
@@ -198,7 +198,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
         
         $datosTabla = $this->infoTable("zonas_grupos");
         
@@ -211,8 +211,8 @@ class DBEsquema extends DBAbstract {
         
         $this->eliminar($nom_tabla);
         
-        $this->delPermisoGlobal('sfsv');
-        // Devolver los valores al estodo original
+        $this->delPermisoGlobal('sfsv-e');
+        // Devolver los valores al estado original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
     }
@@ -224,7 +224,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
         
         $tabla = "zonas_sacd";
         $datosTabla = $this->infoTable($tabla);
@@ -264,8 +264,8 @@ class DBEsquema extends DBAbstract {
         
         $this->executeSql($a_sql);
         
-        $this->delPermisoGlobal('sfsv');
-        // Devolver los valores al estodo original
+        $this->delPermisoGlobal('sfsv-e');
+        // Devolver los valores al estado original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
     }
@@ -276,7 +276,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
         
         $datosTabla = $this->infoTable("zonas_sacd");
         
@@ -289,8 +289,8 @@ class DBEsquema extends DBAbstract {
         
         $this->eliminar($nom_tabla);
         
-        $this->delPermisoGlobal('sfsv');
-        // Devolver los valores al estodo original
+        $this->delPermisoGlobal('sfsv-e');
+        // Devolver los valores al estado original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
     }
@@ -302,8 +302,8 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
-        $this->setConexion('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
+        $this->setConexion('sfsv-e');
         
         $datosTabla = $this->infoTable("zonas");
         
@@ -345,7 +345,7 @@ class DBEsquema extends DBAbstract {
                         ADD CONSTRAINT zonas_sacd_id_zona_fkey FOREIGN KEY (id_zona) REFERENCES zonas(id_zona) ON DELETE CASCADE; ";
         $this->executeSql($a_sql);
         
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
     }
     public function llenar_zonas_grupos() {
         $esquema_org = $this->esquema;
@@ -353,8 +353,8 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
-        $this->setConexion('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
+        $this->setConexion('sfsv-e');
         $datosTabla = $this->infoTable("zonas_grupos");
         
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -382,7 +382,7 @@ class DBEsquema extends DBAbstract {
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);
         
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
     }
     public function llenar_zonas_sacd() {
         $esquema_org = $this->esquema;
@@ -390,8 +390,8 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
-        $this->setConexion('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
+        $this->setConexion('sfsv-e');
         $datosTabla = $this->infoTable("zonas_sacd");
         
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -419,6 +419,6 @@ class DBEsquema extends DBAbstract {
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);
         
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
     }
 }

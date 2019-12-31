@@ -39,7 +39,7 @@ class DB extends DBAbstract {
      * En la BD sf/sv (global).
      */
     public function create_zonas() {
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
         $tabla = "zonas";
         $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
@@ -56,19 +56,19 @@ class DB extends DBAbstract {
         
         $this->executeSql($a_sql);
         
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
     }
     public function eliminar_zonas() {
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
         $tabla = "zonas";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
         
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
     }
 
     public function create_zonas_grupos() {
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
         $tabla = "zonas_grupos";
         $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
@@ -83,19 +83,19 @@ class DB extends DBAbstract {
         
         $this->executeSql($a_sql);
         
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
     }
     public function eliminar_zonas_grupos() {
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
         $tabla = "zonas_grupos";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
         
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
     }
 
     public function create_zonas_sacd() {
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
         $tabla = "zonas_sacd";
         $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
@@ -111,15 +111,15 @@ class DB extends DBAbstract {
         
         $this->executeSql($a_sql);
         
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
     }
     public function eliminar_zonas_sacd() {
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-d');
         $tabla = "zonas_sacd";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
         
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
     }
 }
     

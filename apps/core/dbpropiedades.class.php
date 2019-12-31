@@ -122,5 +122,70 @@ class DBPropiedades {
         }
         return $a_esquemas;
     }
+    
+    public function posibles_tablas($default='') {
+        $txt = "<select id=\"tabla\" name=\"tabla\" >";
+        if ($this->bBlanco) {
+            $txt .= "<option></option>";
+        }
+        $a_tablas = $this->array_posibles_tablas();
+        foreach ($a_tablas as $tabla) {
+            if (!empty($default) && $tabla == $default) { $sel_tabla = 'selected'; } else { $sel_tabla = ''; }
+            $txt .= "<option value=\"$tabla\" $sel_tabla>$tabla</option>";
+        }
+        $txt .= '</select>';
+        return $txt;
+    }
+
+    public function array_posibles_tablas() {
+        $esquema = "H-dlbv";
+        $a_tablas = [];
+        // Lista de posibles tablas (en sv)
+        $oConfigDB = new ConfigDB('sv');
+        $config = $oConfigDB->getEsquema($esquema); 
+        $oConexion = new dbConnection($config);
+        $oDBP = $oConexion->getPDO();
+        $sQuery = "SELECT table_name FROM information_schema.tables WHERE table_schema ='$esquema' ORDER BY table_name";
+        if (($oDblSt = $oDBP->query($sQuery)) === false) {
+            $sClauError = 'Schemas.lista';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        if (is_object($oDblSt)) {
+            $oDblSt->execute();
+            foreach($oDblSt as $row) {
+                $tabla = $row[0];
+                $a_tablas[] = $tabla;
+            }
+        }
+        return $a_tablas;
+    }
+
+    public function array_esquemas_con_tabla($tabla) {
+        $a_esquemas = [];
+        // Lista de posibles tablas (en sv)
+        $oConfigDB = new ConfigDB('importar');
+        $config = $oConfigDB->getEsquema('publicv'); 
+        $oConexion = new dbConnection($config);
+        $oDBP = $oConexion->getPDO();
+        $sQuery = "SELECT table_schema FROM information_schema.tables WHERE table_name ='$tabla' ORDER BY table_schema";
+        if (($oDblSt = $oDBP->query($sQuery)) === false) {
+            $sClauError = 'Schemas.lista';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        if (is_object($oDblSt)) {
+            $oDblSt->execute();
+            foreach($oDblSt as $row) {
+                if ($row[0] == 'public') continue;
+                if ($row[0] == 'resto') continue;
+                if ($row[0] == 'global') continue;
+                if ($row[0] == 'bucardo') continue;
+                $esquema = $row[0];
+                $a_esquemas[] = $esquema;
+            }
+        }
+        return $a_esquemas;
+    }
 
 }

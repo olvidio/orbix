@@ -112,7 +112,7 @@ class DBEsquema extends DBAbstract {
         $this->eliminar($nom_tabla);
         
         $this->delPermisoGlobal('sfsv');
-        // Devolver los valores al estodo original
+        // Devolver los valores al estado original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
     }
