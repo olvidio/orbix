@@ -180,11 +180,10 @@ class DBTabla extends DBAbstract {
 		
 		$this->cambiar_nombre_fichero();
 		// Para crear tablas, permiso de superusuario...
-		
-		
 		$this->setConfig($configNew);
-		$this->importarAsAdmin();
 		
+		//devuelve FALSE si falla algo.
+		return $this->importarAsAdmin();
 	}
 	/**
 	 * Para la base de datos comun, que está en otro servidor y además con otra versión,
@@ -334,8 +333,10 @@ class DBTabla extends DBAbstract {
 		if(trim($error) != '') {
 			if (ConfigGlobal::is_debug_mode()) {
 			    echo sprintf("PSQL ERROR IN COMMAND: %s<br> mirar en: %s<br>",$command,$this->getFileLogW());
+			    return FALSE;
 			}
 		}
+		return TRUE;
 	}
 	public function importar() {
 	    // crear archivo con el password
@@ -401,7 +402,6 @@ class DBTabla extends DBAbstract {
 	            $config = $oConfigDB->getEsquema($esquema); //de la database sf
 	            break;
 	    }
-	    
 	    return $config;
 	}
 	

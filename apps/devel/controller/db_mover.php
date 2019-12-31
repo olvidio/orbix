@@ -26,6 +26,7 @@ $oConfigDB = new core\ConfigDB('importar');
 $configRef = $oConfigDB->getEsquema('publicv');
 $configNew = $oConfigDB->getEsquema('publicv-e');
     
+$msg = '';
 foreach ($a_esquemas as $esquema) {
     // crear tabla en sv-e y pasar datos
     $esquemaNewv = $esquema;
@@ -37,11 +38,16 @@ foreach ($a_esquemas as $esquema) {
     $oDBTabla->setRef($esquemaRefv);
     $oDBTabla->setNew($esquemaNewv);
 
-    $oDBTabla->mover($configRef,$configNew);
-
-    // Eliminar la original
-    $oDBTabla->eliminarTabla($Qtabla);
-    
+    if ( $oDBTabla->mover($configRef,$configNew) ) {
+        // Eliminar la original
+        $oDBTabla->eliminarTabla($Qtabla);
+    } else {
+        // Si falla no la elimino.
+        $msg .= '<br>'.sprintf(_("Error para %s"),$esquema);
+    }
+}
+if (!empty($msg)) {
+    exit ($msg);
 }
 
 // Cambiar definicion de classes.
@@ -73,7 +79,7 @@ if (ConfigGlobal::SERVIDOR == 'orbix.local') {
 }
 
 // tema sync: bucardo.
-echo "FALTA aclararse con la syncronización: bucardo<br>";
+echo "<br>FALTA aclararse con la syncronización: bucardo<br>";
 // Avisar que hay que cambiar la gestión al instalar el módulo.
 
-echo "Hay que revisar los programas que generan la tabal: instalar módulo<br>";
+echo "<br>Hay que revisar los programas que generan la tabal: instalar módulo<br>";
