@@ -1,5 +1,6 @@
 <?php
 namespace ubis\model\entity;
+use core\ConfigGlobal;
 use core;
 /**
  * Classe que implementa l'entitat u_centros_dl
@@ -85,7 +86,15 @@ class CentroDl Extends Centro {
 	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
 	 */
 	function __construct($a_id='') {
-		$oDbl = $GLOBALS['oDB'];
+	    if (ConfigGlobal::$dmz) {
+	        $oDbl = $GLOBALS['oDBC'];
+	        $this->setoDbl($oDbl);
+            $this->setNomTabla('cu_centros_dl');
+	    } else {
+	        $oDbl = $GLOBALS['oDB'];
+	        $this->setoDbl($oDbl);
+            $this->setNomTabla('u_centros_dl');
+	    }
 		if (is_array($a_id)) { 
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
@@ -98,8 +107,6 @@ class CentroDl Extends Centro {
 				$this->aPrimary_key = array('iid_ubi' => $this->iid_ubi);
 			}
 		}
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('u_centros_dl');
 	}
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
@@ -207,10 +214,8 @@ class CentroDl Extends Centro {
 		$this->setAllAtributes($aDades);
 		
 		// Modifico la ficha en la BD-comun
-		// De momento sólo para la sf (comienza por 2).
-		if ( substr($this->id_ubi, 0, 1) == 2 ) {
-		    $this->copia2Comun($aDades);
-		}
+		$this->copia2Comun($aDades);
+
 		return true;
 	}
 
@@ -256,10 +261,28 @@ class CentroDl Extends Centro {
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
+		// Modifico la ficha en la BD-comun
+		$this->borraDeComun($this->iid_ubi);
 		return true;
 	}
 
 	/* METODES ALTRES  ----------------------------------------------------------*/
+	/**
+	 *
+	 * Elimina el registre de la base de dades comun
+	 *
+	 */
+	protected function borraDeComun($iid_ubi) {
+		// para la sf (comienza por 2).
+		if ( substr($this->id_ubi, 0, 1) == 2 ) {
+            $oCentroEllas = new CentroEllas($iid_ubi);
+            $oCentroEllas->DBEliminar();
+		} else {
+            $oCentroEllos = new CentroEllos($iid_ubi);
+            $oCentroEllos->DBEliminar();
+		}
+	}
+	
 	protected function copia2Comun($aDades) {
 	    unset($aDades['id_auto']);
 	    unset($aDades['num_cartas']);
@@ -272,9 +295,16 @@ class CentroDl Extends Centro {
 	    unset($aDades['sede']);
 	    unset($aDades['num_cartas_mensuales']);
 	    
-	    $oPersonaSacd = new CentroEllas($this->iid_ubi);
-	    $oPersonaSacd->setAllAtributes($aDades);
-	    $oPersonaSacd->DBGuardar();
+		// para la sf (comienza por 2).
+		if ( substr($this->id_ubi, 0, 1) == 2 ) {
+            $oCentroEllas = new CentroEllas($this->iid_ubi);
+            $oCentroEllas->setAllAtributes($aDades);
+            $oCentroEllas->DBGuardar();
+		} else {
+            $oCentroEllos = new CentroEllos($this->iid_ubi);
+            $oCentroEllos->setAllAtributes($aDades);
+            $oCentroEllos->DBGuardar();
+		}
 	    
 	}
 	/* METODES PRIVATS ----------------------------------------------------------*/

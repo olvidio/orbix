@@ -115,7 +115,6 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
             $oDbl = $GLOBALS['oDBC'];
             $this->setoDbl($oDbl);
             $this->setNomTabla('cd_cargos_activ_dl');
-	        
 	    } else {
             $oDbl = $GLOBALS['oDB'];
             $this->setoDbl($oDbl);
