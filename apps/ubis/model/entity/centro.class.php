@@ -1,5 +1,6 @@
 <?php
 namespace ubis\model\entity;
+use core\ConfigGlobal;
 use core;
 /**
  * Classe que implementa l'entitat u_centros
@@ -49,7 +50,15 @@ class Centro Extends UbiGlobal {
 	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
 	 */
 	function __construct($a_id='') {
-		$oDbl = $GLOBALS['oDBP'];
+	    if (ConfigGlobal::$dmz){
+	        $oDbl = $GLOBALS['oDBEP'];
+	        $this->setoDbl($oDbl);
+	        $this->setNomTabla('u_centros');
+	    } else {
+	        $oDbl = $GLOBALS['oDBP'];
+	        $this->setoDbl($oDbl);
+	        $this->setNomTabla('u_centros');
+	    }
 		if (is_array($a_id)) { 
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
@@ -62,8 +71,6 @@ class Centro Extends UbiGlobal {
 				$this->aPrimary_key = array('iid_ubi' => $this->iid_ubi);
 			}
 		}
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('u_centros');
 	}
 
 	/* METODES PUBLICS ----------------------------------------------------------*/

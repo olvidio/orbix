@@ -2,6 +2,7 @@
 namespace ubis\model\entity;
 use core;
 use web;
+use core\ConfigGlobal;
 /**
  * GestorCentro
  *
@@ -26,9 +27,15 @@ class GestorCentro Extends  core\ClaseGestor {
 	 *
 	 */
 	function __construct() {
-		$oDbl = $GLOBALS['oDBP'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('u_centros');
+	    if (ConfigGlobal::$dmz){
+            $oDbl = $GLOBALS['oDBEP'];
+            $this->setoDbl($oDbl);
+            $this->setNomTabla('u_centros');
+	    } else {
+            $oDbl = $GLOBALS['oDBP'];
+            $this->setoDbl($oDbl);
+            $this->setNomTabla('u_centros');
+	    }
 	}
 
 
