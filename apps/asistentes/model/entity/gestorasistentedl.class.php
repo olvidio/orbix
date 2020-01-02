@@ -25,7 +25,7 @@ class GestorAsistenteDl Extends GestorAsistente {
 	 *
 	 */
 	function __construct() {
-		$oDbl = $GLOBALS['oDB'];
+		$oDbl = $GLOBALS['oDBE'];
 		$this->setoDbl($oDbl);
 		$this->setNomTabla('d_asistentes_dl');
 	}

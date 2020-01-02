@@ -26,7 +26,7 @@ class GestorAsistenteOut Extends GestorAsistentePub {
 	 *
 	 */
 	function __construct() {
-		$oDbl = $GLOBALS['oDB'];
+		$oDbl = $GLOBALS['oDBE'];
 		$this->setoDbl($oDbl);
 		$this->setNomTabla('d_asistentes_out');
 	}
