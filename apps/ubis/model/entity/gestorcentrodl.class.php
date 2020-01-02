@@ -1,5 +1,7 @@
 <?php
 namespace ubis\model\entity;
+
+use core\ConfigGlobal;
 /**
  * GestorCentroDl
  *
@@ -23,9 +25,15 @@ class GestorCentroDl Extends  GestorCentro {
 	 *
 	 */
 	function __construct() {
-		$oDbl = $GLOBALS['oDB'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('u_centros_dl');
+	    if (ConfigGlobal::$dmz) {
+	        $oDbl = $GLOBALS['oDBC'];
+	        $this->setoDbl($oDbl);
+	        $this->setNomTabla('cu_centros_dl');
+	    } else {
+	        $oDbl = $GLOBALS['oDB'];
+	        $this->setoDbl($oDbl);
+	        $this->setNomTabla('u_centros_dl');
+	    }
 	}
 	/* METODES PUBLICS -----------------------------------------------------------*/
 	/* METODES PROTECTED --------------------------------------------------------*/
