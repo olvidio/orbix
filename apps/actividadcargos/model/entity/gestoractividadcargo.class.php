@@ -32,16 +32,9 @@ class GestorActividadCargo Extends core\ClaseGestor {
 	 *
 	 */
 	function __construct() {
-	    if (ConfigGlobal::$dmz) {
-            $oDbl = $GLOBALS['oDBC'];
-            $this->setoDbl($oDbl);
-            $this->setNomTabla('cd_cargos_activ_dl');
-	        
-	    } else {
-            $oDbl = $GLOBALS['oDB'];
-            $this->setoDbl($oDbl);
-            $this->setNomTabla('d_cargos_activ_dl');
-	    }
+        $oDbl = $GLOBALS['oDB'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('d_cargos_activ_dl');
 	}
 
 

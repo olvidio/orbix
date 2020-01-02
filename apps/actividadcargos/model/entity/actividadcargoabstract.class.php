@@ -111,15 +111,10 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
 	 */
 	function __construct($a_id='') {
-	    if (ConfigGlobal::$dmz) {
-            $oDbl = $GLOBALS['oDBC'];
-            $this->setoDbl($oDbl);
-            $this->setNomTabla('cd_cargos_activ_dl');
-	    } else {
-            $oDbl = $GLOBALS['oDB'];
-            $this->setoDbl($oDbl);
-            $this->setNomTabla('d_cargos_activ_dl');
-	    }
+        $oDbl = $GLOBALS['oDB'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('d_cargos_activ_dl');
+	    
 		if (is_array($a_id)) { 
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
