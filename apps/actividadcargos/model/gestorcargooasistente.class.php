@@ -1,6 +1,7 @@
 <?php
 namespace actividadcargos\model;
 
+use core\ConfigGlobal;
 use core\Set;
 
 /**
@@ -32,7 +33,13 @@ class GestorCargoOAsistente {
 	 *
 	 */
 	function __construct() {
-	    $this->oDbl = $GLOBALS['oDB'];
+	    if (ConfigGlobal::$dmz) {
+	        $oDbl = $GLOBALS['oDBC'];
+	        $this->setoDbl($oDbl);
+	    } else {
+	        $oDbl = $GLOBALS['oDB'];
+	        $this->setoDbl($oDbl);
+	    }
 	}
 
 
@@ -50,12 +57,21 @@ class GestorCargoOAsistente {
 		
 		$oCargoOAsistenteSet = new Set();
 		// lista de id_activ ordenados, primero los propios.
-		$sQuery="SELECT id_activ,propio,0 as id_cargo FROM d_asistentes_dl WHERE id_nom=$iid_nom
+	    if (ConfigGlobal::$dmz) {
+		  $sQuery="SELECT id_activ,propio,0 as id_cargo FROM d_asistentes_dl WHERE id_nom=$iid_nom
+					UNION ALL
+		        SELECT id_activ,propio,0 as id_cargo FROM d_asistentes_out WHERE id_nom=$iid_nom
+					UNION ALL
+				SELECT id_activ,'f' as propio,id_cargo FROM cd_cargos_activ_dl WHERE id_nom=$iid_nom
+				ORDER BY 1,2 DESC";
+	    } else {
+		  $sQuery="SELECT id_activ,propio,0 as id_cargo FROM d_asistentes_dl WHERE id_nom=$iid_nom
 					UNION ALL
 		        SELECT id_activ,propio,0 as id_cargo FROM d_asistentes_out WHERE id_nom=$iid_nom
 					UNION ALL
 				SELECT id_activ,'f' as propio,id_cargo FROM d_cargos_activ_dl WHERE id_nom=$iid_nom
 				ORDER BY 1,2 DESC";
+	    }
 		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorActividadAsistente.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
