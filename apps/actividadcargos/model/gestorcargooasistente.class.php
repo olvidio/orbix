@@ -33,8 +33,7 @@ class GestorCargoOAsistente {
 	 *
 	 */
 	function __construct() {
-        $oDbl = $GLOBALS['oDBE'];
-        $this->setoDbl($oDbl);
+        $this->oDbl = $GLOBALS['oDBE'];
 	}
 
 
