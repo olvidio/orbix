@@ -58,7 +58,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "a_sacd_textos";
         $datosTabla = $this->infoTable($tabla);
@@ -95,7 +95,7 @@ class DBEsquema extends DBAbstract {
         
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
     }
     public function eliminar_atn_sacd_textos() {
         // OJO Corresponde al esquema sf/sv, no al comun.
@@ -104,7 +104,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
 
         $datosTabla = $this->infoTable("a_sacd_textos");
         
@@ -117,7 +117,7 @@ class DBEsquema extends DBAbstract {
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
     }
 
 
@@ -130,8 +130,8 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
-        $this->setConexion('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
+        $this->setConexion('sfsv-e');
         $datosTabla = $this->infoTable("a_sacd_textos");
         
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -154,7 +154,7 @@ class DBEsquema extends DBAbstract {
         
         $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
         
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
     }
 
  }

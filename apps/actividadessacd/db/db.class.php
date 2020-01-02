@@ -32,7 +32,7 @@ class DB extends DBAbstract {
      * En la BD Sf/sv (global).
      */
     public function create_atn_sacd_textos () {
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "a_sacd_textos";
         $nom_tabla = $this->getNomTabla($tabla);
@@ -48,16 +48,16 @@ class DB extends DBAbstract {
         
         $this->executeSql($a_sql);
         
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
     }
     public function eliminar_atn_sacd_textos() {
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "a_sacd_textos";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
         
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
     }
     
 }

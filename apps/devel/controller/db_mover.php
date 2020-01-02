@@ -82,4 +82,4 @@ if (ConfigGlobal::SERVIDOR == 'orbix.local') {
 echo "<br>FALTA aclararse con la syncronización: bucardo<br>";
 // Avisar que hay que cambiar la gestión al instalar el módulo.
 
-echo "<br>Hay que revisar los programas que generan la tabal: instalar módulo<br>";
+echo "<br>Hay que revisar los programas que generan la tabla: instalar módulo<br>";
