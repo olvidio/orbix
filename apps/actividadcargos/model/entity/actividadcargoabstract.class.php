@@ -111,7 +111,7 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
 	 */
 	function __construct($a_id='') {
-        $oDbl = $GLOBALS['oDB'];
+        $oDbl = $GLOBALS['oDBE'];
         $this->setoDbl($oDbl);
         $this->setNomTabla('d_cargos_activ_dl');
 	    
