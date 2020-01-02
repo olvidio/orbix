@@ -12,6 +12,8 @@ use usuarios\model\entity\Usuario;
 use web\DateTimeLocal;
 use web\Periodo;
 use web\TiposActividades;
+use personas\model\entity\GestorPersonaSacd;
+use personas\model\entity\PersonaSacd;
 
 /**
 * Esta página muestra las actividades que tiene que atender un sacd. 
@@ -113,7 +115,7 @@ switch ($Qque) {
 		$aWhereP['sacd']='t';
 		$aWhereP['dl']=$mi_dele;
 		$aWhereP['_ordre']='apellido1,apellido2,nom';
-		$GesPersonas = new GestorPersonaDl();
+		$GesPersonas = new GestorPersonaSacd();
 		$cPersonas = $GesPersonas->getPersonas($aWhereP);
 		break;
 	case "sssc":
@@ -125,7 +127,7 @@ switch ($Qque) {
 		$cPersonas = $GesPersonas->getPersonasSSSC($aWhereP);
 		break;
 	case "un_sacd":
-		$oPersona = new PersonaDl($Qid_nom);
+		$oPersona = new PersonaSacd($Qid_nom);
 		$cPersonas = array($oPersona);
 		break;
 }

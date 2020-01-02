@@ -3,6 +3,7 @@ namespace actividadessacd\model;
 
 use actividadessacd\model\entity\GestorAtnActivSacdTexto;
 use ubis\model\entity\GestorCentroDl;
+use core\ConfigGlobal;
 
 class ActividadesSacdFunciones {
     
@@ -51,6 +52,9 @@ class ActividadesSacdFunciones {
     
     
     function getLugar_dl() {
+        if (ConfigGlobal::$dmz) {
+            return "xxxx";
+        }
         $oGesCentrosDl = new GestorCentroDl();
         $cCentros = $oGesCentrosDl->getCentros(['tipo_ctr' => 'dl']);
         $num_dl = count($cCentros);
