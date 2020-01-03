@@ -266,8 +266,8 @@ if ($miRole < 4) {
 			$nom_role = $oRole->getRole();
 			switch ($nom_role) {
 			    case "p-agd":
-                $GesPersonas = new GestorPersonaAgd();
-                $oSelects = $GesPersonas->getListaPersonas();
+                    $GesPersonas = new GestorPersonaAgd();
+                    $oSelects = $GesPersonas->getListaPersonas();
                 break;
 			    case "p-n":
 			        $GesPersonas = new GestorPersonaN();
@@ -275,9 +275,9 @@ if ($miRole < 4) {
                     break;
 			    case "p-sacd":
 			    case "p-sacdInt": // para hacer pruebas desde dentro (dmz=false)
-                $GesPersonas = new GestorPersonaDl();
-                // de momento sólo n y agd
-                $oSelects = $GesPersonas->getListaSacd("AND id_tabla ~ '[na]'");
+                    $GesPersonas = new GestorPersonaDl();
+                    // de momento sólo n y agd
+                    $oSelects = $GesPersonas->getListaSacd("AND id_tabla ~ '[na]'");
                 break;
 			}
 
@@ -286,9 +286,10 @@ if ($miRole < 4) {
 			$oSelects->setBlanco('t');
 			$camposMas = 'id_nom';
 			
-			
+			/*			
 			$oGesPermCtr = new GestorPermUsuarioCentro();
 			$cUsuarioPermCtr = $oGesPermCtr->getPermUsuarioCentros(array('id_usuario'=>$id_usuario));
+			*/
 			
 		}
 		
