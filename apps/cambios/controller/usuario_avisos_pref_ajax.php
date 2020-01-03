@@ -131,7 +131,7 @@ switch($Qsalida) {
 		if ($Qpropiedad == 'id_ubi') {
 
 			// miro que rol tengo. Si soy casa, sólo veo la mía
-			if ($oMiUsuario->isRole('Casa')) { //casa
+			if ($oMiUsuario->isRolePau('cdc')) { //casa
 				$id_pau=$oMiUsuario->getId_pau();
 				$sDonde=str_replace(",", " OR id_ubi=", $id_pau);
 				//formulario para casas cuyo calendario de actividades interesa 
@@ -267,7 +267,7 @@ switch($Qsalida) {
                 } else {
                     // para el caso de las casas y los sacd, sólo puede avisar de un cambio suyo.
                     // miro que rol tengo. Si soy casa, sólo veo la mía
-                    if ($nom_prop == 'id_ubi' && $oMiUsuario->isRole('Casa')) {
+                    if ($nom_prop == 'id_ubi' && $oMiUsuario->isRolePau('cdc')) {
                         $id_pau=$oMiUsuario->getId_pau();
                         $sDonde=str_replace(",", " OR id_ubi=", $id_pau);
 

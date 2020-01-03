@@ -86,6 +86,12 @@ class Usuario Extends core\ClasePropiedades {
 	 * @var array
 	 */
 	 private $aRoles;
+	/**
+	 * aPauRoles array amb els id_roles i el seu pau.
+	 *
+	 * @var array
+	 */
+	 private $aPauRoles;
 	 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
@@ -116,6 +122,7 @@ class Usuario Extends core\ClasePropiedades {
 		// llista Roles
 		$oGesRoles = new GestorRole();
 		$this->aRoles = $oGesRoles->getArrayRoles();
+	    $this->aPauRoles = $oGesRoles->getArrayRolesPau();
 	}
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
@@ -237,7 +244,21 @@ class Usuario Extends core\ClasePropiedades {
 	    } else {
 	        return FALSE;
 	    }
-	    
+	}
+	/**
+	 * Devuelve TRUE/FALSE si el Role del usuario actual tiene un pau determinado.
+	 * 
+	 * @param string $nom_role el tipo pau del role: cdc, ctr, nom
+	 * @return boolean
+	 */
+	public function isRolePau($nom_pau) {
+	    $nom_pau = strtolower($nom_pau);
+	    $aPauRoles = $this->aPauRoles;
+	    if (!empty($aPauRoles[ConfigGlobal::mi_id_role()]) && $aPauRoles[ConfigGlobal::mi_id_role()] == $nom_pau) {
+	        return TRUE;
+	    } else {
+	        return FALSE;
+	    }
 	}
 	/* METODES PRIVATS ----------------------------------------------------------*/
 

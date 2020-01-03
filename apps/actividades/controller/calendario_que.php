@@ -51,7 +51,7 @@ $oFormP->setDesplAnysOpcion_sel(date('Y')+1);
 
 $oForm = new web\CasasQue();
 $oForm->setTitulo(core\strtoupper_dlb(_("búsqueda de casas cuyo planning interesa")));
-if ($oMiUsuario->isRole('Casa')) {
+if ($oMiUsuario->isRolePau('cdc')) {
 	$id_pau=$oMiUsuario->getId_pau();
 	$sDonde=str_replace(",", " OR id_ubi=", $id_pau);
 	//formulario para casas cuyo calendario de actividades interesa 

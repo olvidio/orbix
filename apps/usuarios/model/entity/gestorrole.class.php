@@ -82,6 +82,33 @@ class GestorRole Extends  core\ClaseGestor {
 	}
 
 	/**
+	 * retorna un array les pau dels Roles
+	 * (el nom convertit a minúscules) per nom => id
+	 *
+	 * @param string sWhere condicion con el WHERE.
+	 * @return array 
+	 */
+	function getArrayRolesPau() {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$sQuery="SELECT id_role, pau
+				FROM $nom_tabla WHERE pau IS NOT NULL
+				ORDER BY id_role";
+		if (($oDbl->query($sQuery)) === false) {
+			$sClauError = 'GestorRole.lista';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		$aPauRoles = [];
+		foreach ($oDbl->query($sQuery) as $aDades) {
+		   $nom_pau = strtolower($aDades['pau']);
+		   $id_role = strtolower($aDades['id_role']);
+		   $aPauRoles[$id_role] = $nom_pau;
+		}
+		return $aPauRoles;
+	}
+
+	/**
 	 * retorna l'array d'objectes de tipus Role
 	 *
 	 * @param string sQuery la query a executar.

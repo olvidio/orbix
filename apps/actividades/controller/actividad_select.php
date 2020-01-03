@@ -216,7 +216,7 @@ if (!empty($Qmodo)) {
         }
     }
 } else {
-    if ($oMiUsuario->isRole('Casa') || $oMiUsuario->isRole('CentroSf')) {
+    if ($oMiUsuario->isRolePau('cdc') || $oMiUsuario->isRole('CentroSf')) {
         $a_botones=array( array( 'txt' => _("datos"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"datos\")" ) ,);
     } else {
         $a_botones[] = array( 'txt' => _("datos"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"datos\")" );
@@ -271,7 +271,7 @@ if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have
     $a_cabeceras[]= array('name'=>_("sf/sv"),'width'=>40);
 }
 $a_cabeceras[]= array('name'=>_("tar."),'width'=>40);
-if ( !$oMiUsuario->isRole('CentroSv') && !$oMiUsuario->isRole('CentroSf') ) {
+if ( !$oMiUsuario->isRolePau('ctr') ) {
     $a_cabeceras[]= array('name'=>ucfirst(_("sacd")),'width'=>200);
     $a_cabeceras[]= array('name'=>_("dl org"),'width'=>50);
 }
@@ -372,7 +372,7 @@ foreach($cActividades as $oActividad) {
             $a_valores[$i][6]=$ssfsv;
         }
         $a_valores[$i][7]='';
-        if ( !$oMiUsuario->isRole('CentroSv') && !$oMiUsuario->isRole('CentroSf') ) {
+        if ( !$oMiUsuario->isRolePau('ctr') ) {
             $a_valores[$i][8]='';
             $a_valores[$i][9]='';
             $a_valores[$i][10]='';
@@ -461,7 +461,7 @@ foreach($cActividades as $oActividad) {
             $a_valores[$i][6]=$ssfsv;
         }
         $a_valores[$i][7]=$tarifa_letra;
-        if ( !$oMiUsuario->isRole('CentroSv') && !$oMiUsuario->isRole('CentroSf') ) {
+        if ( !$oMiUsuario->isRolePau('ctr') ) {
             $a_valores[$i][8]=$sacds;
             $a_valores[$i][9]=$dl_org;
             $a_valores[$i][10]=$ctrs;
@@ -525,7 +525,7 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
 $perm_nueva = FALSE;
-if ( !$oMiUsuario->isRole('Casa') && !$oMiUsuario->isRole('CentroSf') && !$oMiUsuario->isRole('CentroSv')) {
+if ( !$oMiUsuario->isRolePau('cdc') && !$oMiUsuario->isRolePau('ctr') ) {
     $perm_nueva = TRUE;
 }
 

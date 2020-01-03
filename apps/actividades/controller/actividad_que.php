@@ -196,7 +196,7 @@ $oActividadTipo->setPerm_jefe($perm_jefe);
 
 $oUsuario = new Usuario(array('id_usuario'=>ConfigGlobal::mi_id_usuario()));
 $perm_ctr = FALSE;
-if ( !$oUsuario->isRole('CentroSv') && !$oUsuario->isRole('CentroSf') ) {
+if ( !$oUsuario->isRolePau('ctr') ) {
     $perm_ctr = TRUE;
 }
 

@@ -130,7 +130,7 @@ function me_afecta($id_usuario,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cm
 	// Si el usuario es una casa o un sacd, sólo ve los cambios que le afectan:
 	$oMiUsuario = new Usuario($id_usuario);
 
-	if ($oMiUsuario->isRole('Casa')) { //casa
+	if ($oMiUsuario->isRolePau('cdc')) { //casa
 		$id_pau=$oMiUsuario->getId_pau(); // puede ser una lista separada por comas.
 	}
 	if (!empty($id_pau)) { //casa o un listado de ubis en la preferencia del aviso.
@@ -155,7 +155,7 @@ function me_afecta($id_usuario,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cm
 		}
 	}
 	// si soy un sacd.
-	if ($oMiUsuario->isRole('sacd')) { //sacd
+	if ($oMiUsuario->isRolePau('sacd')) { //sacd
 		$id_nom=$oMiUsuario->getId_pau();
 		if (soy_encargado($id_nom,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cmb,$sObjeto)) {
 			return true;
