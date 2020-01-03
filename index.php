@@ -62,7 +62,6 @@ $oPermisoMenu = new menus\PermisoMenu();
 // ----------- Página de inicio -------------------
 $pag_ini = '';
 $aPref = $oGesPref->getPreferencias(array('id_usuario'=>$id_usuario ,'tipo'=>'inicio'));
-//$aPref = $oGesPref->getPreferencias(array('username'=>$username,'tipo'=>'inicio'));
 if (is_array($aPref) && count($aPref) > 0) {
     $oPreferencia = $aPref[0];
     $preferencia = $oPreferencia->getPreferencia();
