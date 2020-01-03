@@ -88,13 +88,13 @@ $botones = 0;
 if (strstr($Qobj_pau,'Dl')) {
 	if (!empty($Qnuevo) OR $dl == core\ConfigGlobal::mi_delef()) {
 		// ----- sv sólo a scl -----------------
-		if ($_SESSION['oPerm']->have_perm("scdl")) {
+		if ($_SESSION['oPerm']->have_perm_oficina('scdl')) {
 					$botones= "1,2";
 		}
 	}
 } else if (strstr($Qobj_pau,'Ex')) {
 	// ----- sv sólo a scl -----------------
-	if ($_SESSION['oPerm']->have_perm("scdl")) {
+	if ($_SESSION['oPerm']->have_perm_oficina('scdl')) {
 				$botones= "1,2";
 	}
 }

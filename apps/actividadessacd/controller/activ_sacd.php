@@ -82,7 +82,7 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $perm_des = FALSE;
-if ($_SESSION['oPerm']->have_perm('des')) {
+if ($_SESSION['oPerm']->have_perm_oficina('des')) {
     $perm_des = TRUE;
 }
 

@@ -139,7 +139,7 @@ fnjs_tipo_actividad=function(){
 	<?php } ?>
 	<tr>
 		<td class=etiqueta><?= ucfirst(_("tipo de actividad")); ?>: </td>
-		<?php if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) { ?>
+		<?php if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) { ?>
 		<td><?= _("sf/sv"); ?>:
 			<span class=contenido><?= "$ssfsv"?></span></td>
 		<?php } ?>

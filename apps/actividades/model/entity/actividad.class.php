@@ -88,7 +88,7 @@ class Actividad Extends ActividadAll {
 			if ($id_tabla == 'dl') {
 			    // caso especial dre:
 			    $dl_org_no_f = substr($dl_org, 0, -1);
-			    if ($dl_org_no_f == core\ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm('des') ) {
+			    if ($dl_org_no_f == core\ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm_oficina('des') ) {
 				        $oActividad = new ActividadDl($a_pkey);
 			    } else {
                     // No se puede eliminar una actividad de otra dl

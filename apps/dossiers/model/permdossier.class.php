@@ -78,31 +78,31 @@ class PermDossier {
 			$id_tabla = $oPersona->getId_tabla();
 			switch ($id_tabla) {
 				case "n":
-					if (!$_SESSION['oPerm']->have_perm("sm")) { return 2; }
+					if (!$_SESSION['oPerm']->have_perm_oficina('sm')) { return 2; }
 					break;
 				case "x":
-					if (!$_SESSION['oPerm']->have_perm("nax")) { return 2; }
+					if (!$_SESSION['oPerm']->have_perm_oficina('nax')) { return 2; }
 					break;
 				case "a":
-					if (!$_SESSION['oPerm']->have_perm("agd")) { return 2; }
+					if (!$_SESSION['oPerm']->have_perm_oficina('agd')) { return 2; }
 					break;
 				case "s":
-					if (!$_SESSION['oPerm']->have_perm("sg")) { return 2; }
+					if (!$_SESSION['oPerm']->have_perm_oficina('sg')) { return 2; }
 					break;
 				case "sssc":
-					if (!$_SESSION['oPerm']->have_perm("des")) { return 2; }
+					if (!$_SESSION['oPerm']->have_perm_oficina('des')) { return 2; }
 					break;
 				case "pn":
-					if (!$_SESSION['oPerm']->have_perm("sm")) { return 2; }
+					if (!$_SESSION['oPerm']->have_perm_oficina('sm')) { return 2; }
 					break;
 				case "px":
-					if (!$_SESSION['oPerm']->have_perm("nax")) { return 2; }
+					if (!$_SESSION['oPerm']->have_perm_oficina('nax')) { return 2; }
 					break;
 				case "pa":
-					if (!$_SESSION['oPerm']->have_perm("agd")) { return 2; }
+					if (!$_SESSION['oPerm']->have_perm_oficina('agd')) { return 2; }
 					break;
 				case "psssc":
-					if (!$_SESSION['oPerm']->have_perm("des")) { return 2; }
+					if (!$_SESSION['oPerm']->have_perm_oficina('des')) { return 2; }
 					break;
 					default;
 			}
@@ -189,7 +189,7 @@ class PermDossier {
 		switch ($id_tabla) {
 			case "n" : //------------------------- numerarios -------------------
 			case "pn": 
-				if ($_SESSION['oPerm']->have_perm("sm")) { 
+				if ($_SESSION['oPerm']->have_perm_oficina('sm')) { 
 					$ref_perm = array (
 								$sv."11" => array ( 'nom'=>"crt n", 	'perm'=> 1),
 								$sv."21" => array ( 'nom'=>"crt nax", 	'perm'=> 1),
@@ -215,7 +215,7 @@ class PermDossier {
 
 
 				}
-				if ($_SESSION['oPerm']->have_perm("agd")) {
+				if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
 					$ref_perm = array (
 								$sv."11" => array ( 'nom'=>"crt n", 	'perm'=> 0),
 								$sv."21" => array ( 'nom'=>"crt nax", 	'perm'=> 0),
@@ -239,13 +239,13 @@ class PermDossier {
 								$sv."64" => array ( 'nom'=>"cve sss+",	'perm'=> 0)	
 							);
 				}
-				if ($_SESSION['oPerm']->have_perm("sg")) {
+				if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
 					$ref_perm = $ref_perm_sg;
 				}
-				if ($_SESSION['oPerm']->have_perm("sr")) {
+				if ($_SESSION['oPerm']->have_perm_oficina('sr')) {
 					$ref_perm = $ref_perm_sr;
 				}
-				if ($_SESSION['oPerm']->have_perm("est")) {
+				if ($_SESSION['oPerm']->have_perm_oficina('est')) {
 					$ref_perm = array (
 								$sv."11" => array ( 'nom'=>"crt n", 	'perm'=> 0),
 								$sv."21" => array ( 'nom'=>"crt nax", 	'perm'=> 0),
@@ -269,13 +269,13 @@ class PermDossier {
 								$sv."64" => array ( 'nom'=>"cve sss+",	'perm'=> 0)	
 							);
 				}
-				if ($_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("des") ) {
+				if ($_SESSION['oPerm']->have_perm_oficina('vcsd') or $_SESSION['oPerm']->have_perm_oficina('des') ) {
 					$ref_perm = $ref_perm_ss;
 				}
 				break;
 			case "a" : //------------------------- agregados -------------------
 			case "pa":
-				if ($_SESSION['oPerm']->have_perm("sm")) { 
+				if ($_SESSION['oPerm']->have_perm_oficina('sm')) { 
 					$ref_perm = array (
 								$sv."11" => array ( 'nom'=>"crt n", 	'perm'=> 0),
 								$sv."21" => array ( 'nom'=>"crt nax", 	'perm'=> 0),
@@ -299,7 +299,7 @@ class PermDossier {
 								$sv."64" => array ( 'nom'=>"cve sss+",	'perm'=> 0)	
 							);
 				}
-				if ($_SESSION['oPerm']->have_perm("agd")) {
+				if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
 					$ref_perm = array (
 								$sv."11" => array ( 'nom'=>"crt n", 	'perm'=> 0),
 								$sv."21" => array ( 'nom'=>"crt nax", 	'perm'=> 0),
@@ -323,13 +323,13 @@ class PermDossier {
 								$sv."64" => array ( 'nom'=>"cve sss+",	'perm'=> 0)	
 							);
 				}
-				if ($_SESSION['oPerm']->have_perm("sg")) {
+				if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
 					$ref_perm = $ref_perm_sg;
 				}
-				if ($_SESSION['oPerm']->have_perm("sr")) {
+				if ($_SESSION['oPerm']->have_perm_oficina('sr')) {
 					$ref_perm = $ref_perm_sr;
 				}
-				if ($_SESSION['oPerm']->have_perm("est")) {
+				if ($_SESSION['oPerm']->have_perm_oficina('est')) {
 					$ref_perm = array (
 								$sv."11" => array ( 'nom'=>"crt n", 	'perm'=> 0),
 								$sv."21" => array ( 'nom'=>"crt nax", 	'perm'=> 0),
@@ -353,13 +353,13 @@ class PermDossier {
 								$sv."64" => array ( 'nom'=>"cve sss+",	'perm'=> 0)	
 							);
 				}
-				if ($_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("des") ) {
+				if ($_SESSION['oPerm']->have_perm_oficina('vcsd') or $_SESSION['oPerm']->have_perm_oficina('des') ) {
 					$ref_perm = $ref_perm_ss;
 				}
 				break;
 			case "x" : //------------------------- nax -------------------
 			case "px":
-				if ($_SESSION['oPerm']->have_perm("sm")) { 
+				if ($_SESSION['oPerm']->have_perm_oficina('sm')) { 
 					$ref_perm = array (
 								$sv."11" => array ( 'nom'=>"crt n", 	'perm'=> 0),
 								$sv."21" => array ( 'nom'=>"crt nax", 	'perm'=> 0),
@@ -382,7 +382,7 @@ class PermDossier {
 								$sv."64" => array ( 'nom'=>"cve sss+",	'perm'=> 0)	
 							);
 				}
-				if ($_SESSION['oPerm']->have_perm("agd")) {
+				if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
 					$ref_perm = array (
 								$sv."11" => array ( 'nom'=>"crt n", 	'perm'=> 0),
 								$sv."21" => array ( 'nom'=>"crt nax", 	'perm'=> 0),
@@ -405,7 +405,7 @@ class PermDossier {
 								$sv."64" => array ( 'nom'=>"cve sss+",	'perm'=> 0)	
 							);
 				}
-				if ($_SESSION['oPerm']->have_perm("nax")) {
+				if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
 					$ref_perm = array (
 								$sv."11" => array ( 'nom'=>"crt n", 	'perm'=> 0),
 								$sv."21" => array ( 'nom'=>"crt nax", 	'perm'=> 1),
@@ -428,13 +428,13 @@ class PermDossier {
 								$sv."64" => array ( 'nom'=>"cve sss+",	'perm'=> 0)	
 							);
 				}
-				if ($_SESSION['oPerm']->have_perm("sg")) {
+				if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
 					$ref_perm = $ref_perm_sg;
 				}
-				if ($_SESSION['oPerm']->have_perm("sr")) {
+				if ($_SESSION['oPerm']->have_perm_oficina('sr')) {
 					$ref_perm = $ref_perm_sr;
 				}
-				if ($_SESSION['oPerm']->have_perm("est")) {
+				if ($_SESSION['oPerm']->have_perm_oficina('est')) {
 					$ref_perm = array (
 								$sv."11" => array ( 'nom'=>"crt n", 	'perm'=> 0),
 								$sv."21" => array ( 'nom'=>"crt nax", 	'perm'=> 0),
@@ -457,28 +457,28 @@ class PermDossier {
 								$sv."64" => array ( 'nom'=>"cve sss+",	'perm'=> 0)	
 							);
 				}
-				if ($_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("des") ) {
+				if ($_SESSION['oPerm']->have_perm_oficina('vcsd') or $_SESSION['oPerm']->have_perm_oficina('des') ) {
 					$ref_perm = $ref_perm_ss;
 				}
 				break;
 			case "s": //------------------------- supernumerarios -------------------
-				if ($_SESSION['oPerm']->have_perm("agd") || $_SESSION['oPerm']->have_perm("sm") || $_SESSION['oPerm']->have_perm("sg")) {
+				if ($_SESSION['oPerm']->have_perm_oficina('agd') || $_SESSION['oPerm']->have_perm_oficina('sm') || $_SESSION['oPerm']->have_perm_oficina('sg')) {
 					$ref_perm = $ref_perm_sg;
 				}
-				if ($_SESSION['oPerm']->have_perm("sr")) {
+				if ($_SESSION['oPerm']->have_perm_oficina('sr')) {
 					$ref_perm = $ref_perm_sr;
 				}
-				if ($_SESSION['oPerm']->have_perm("est")) {
+				if ($_SESSION['oPerm']->have_perm_oficina('est')) {
 					//$ref_perm = $ref_perm_est;
 					$ref_perm = $ref_perm_sr;
 				}
-				if ($_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("des") ) {
+				if ($_SESSION['oPerm']->have_perm_oficina('vcsd') or $_SESSION['oPerm']->have_perm_oficina('des') ) {
 					$ref_perm = $ref_perm_ss;
 				}
 				break;
 			case "psssc":
 			case "sssc": //------------------------- sss+ -------------------
-				if ($_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("des") ) {
+				if ($_SESSION['oPerm']->have_perm_oficina('vcsd') or $_SESSION['oPerm']->have_perm_oficina('des') ) {
 					$ref_perm = $ref_perm_ss;
 				}
 			default;
@@ -528,7 +528,7 @@ class PermDossier {
 
 	switch ($asistentes) {
 		case "sss+" :
-			if ($_SESSION['oPerm']->have_perm("des")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('des')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
@@ -539,7 +539,7 @@ class PermDossier {
 			}
 			break;
 		case "n" :
-			if ($_SESSION['oPerm']->have_perm("sm")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
@@ -551,7 +551,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("agd") AND ($id_tipo_activ=="114025" OR $id_tipo_activ=="114026")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('agd') AND ($id_tipo_activ=="114025" OR $id_tipo_activ=="114026")) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
@@ -563,7 +563,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("nax")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
@@ -575,7 +575,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("des")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('vcsd') or $_SESSION['oPerm']->have_perm_oficina('des')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
@@ -587,7 +587,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("est")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('est')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
@@ -601,7 +601,7 @@ class PermDossier {
 			}
 			break;
 		case "agd":
-			if ($_SESSION['oPerm']->have_perm("sm")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
@@ -613,7 +613,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("agd")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
@@ -625,7 +625,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("nax")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
@@ -637,7 +637,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("des")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('des')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
@@ -650,7 +650,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("est")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('est')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
@@ -664,7 +664,7 @@ class PermDossier {
 			}
 			break;
 		case "s":
-			if ($_SESSION['oPerm']->have_perm("sm")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
@@ -676,7 +676,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("agd")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
@@ -688,7 +688,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("nax")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
@@ -700,7 +700,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("sg")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
@@ -712,7 +712,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("des")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('des')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
@@ -726,7 +726,7 @@ class PermDossier {
 			}
 			break;
 		case "nax":
-			if ($_SESSION['oPerm']->have_perm("sm")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
@@ -738,7 +738,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("agd")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
@@ -750,7 +750,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("nax")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
@@ -762,7 +762,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("sg")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
@@ -774,7 +774,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("des")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('des')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
@@ -788,7 +788,7 @@ class PermDossier {
 			}
 			break;
 		case "sg":
-			if ($_SESSION['oPerm']->have_perm("sm")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
@@ -800,7 +800,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("agd")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
@@ -812,7 +812,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("nax")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
@@ -824,7 +824,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("sg")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
@@ -836,7 +836,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("des")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('des')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
@@ -852,7 +852,7 @@ class PermDossier {
 			}
 			break;
 		case "sr":
-			if ($_SESSION['oPerm']->have_perm("sm")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
@@ -864,7 +864,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("agd")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
@@ -876,7 +876,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("nax")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
@@ -888,7 +888,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("sg")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
@@ -900,7 +900,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("sr")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('sr')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
@@ -912,7 +912,7 @@ class PermDossier {
 							);
 				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
 			}
-			if ($_SESSION['oPerm']->have_perm("des")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('des')) {
 				$ref_perm_of = array (
 								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
 								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),

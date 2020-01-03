@@ -206,7 +206,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
                     // para dl y dlf:
                     $dl_org_no_f = substr($dl_org, 0, -1);
                     if ($dl_org == core\ConfigGlobal::mi_delef() OR $dl_org_no_f == core\ConfigGlobal::mi_delef()) {
-                        if ( $_SESSION['oPerm']->have_perm('des') ) {
+                        if ( $_SESSION['oPerm']->have_perm_oficina('des') ) {
                             $oActividad->setStatus($statusProceso);
                             $oActividad->DBGuardar();
                             // además debería marcar como completado la fase correspondiente del proceso de la sf.

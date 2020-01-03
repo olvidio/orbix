@@ -131,7 +131,7 @@ class Select1301 {
 			$oTipoActividad = new web\TiposActividades($id_tipo_activ);
 			$isfsv=$oTipoActividad->getSfsvId();
 			// para ver el nombre en caso de la otra sección
-			if ($mi_sfsv != $isfsv && !($_SESSION['oPerm']->have_perm("des")) ) {
+			if ($mi_sfsv != $isfsv && !($_SESSION['oPerm']->have_perm_oficina('des')) ) {
 				$ssfsv=$oTipoActividad->getSfsvText();
 				$sactividad=$oTipoActividad->getActividadText();
 				$nom_activ="$ssfsv $sactividad";

@@ -52,7 +52,7 @@ $godossiers = web\Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_b
 $a_status = Actividad::ARRAY_STATUS_TXT;
 
 $permiso_des = FALSE;
-if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
+if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) {
     $permiso_des = TRUE;
 }
 

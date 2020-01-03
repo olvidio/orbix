@@ -58,7 +58,7 @@ switch ($Qque) {
 			$a_valores[$i][1]=$nom_tipo;
 			$a_valores[$i][2]=$tar;
 			// permiso
-			if ($miSfsv == $isfsv && $_SESSION['oPerm']->have_perm('adl')) {
+			if ($miSfsv == $isfsv && $_SESSION['oPerm']->have_perm_oficina('adl')) {
 				$script="fnjs_modificar($id_item)";
 				$a_valores[$i][3]=array( 'script'=>$script, 'valor'=> _("modificar"));
 			}
@@ -70,7 +70,7 @@ switch ($Qque) {
 		$oLista->setDatos($a_valores);
 		echo $oLista->lista();
 		// sólo pueden añadir: adl, pr i actividades
-		if (($_SESSION['oPerm']->have_perm("adl")) || ($_SESSION['oPerm']->have_perm("pr")) || ($_SESSION['oPerm']->have_perm("actividades"))) {
+		if (($_SESSION['oPerm']->have_perm_oficina('adl')) || ($_SESSION['oPerm']->have_perm_oficina('pr')) || ($_SESSION['oPerm']->have_perm_oficina('actividades'))) {
 		    echo '<br><span class="link" onclick="fnjs_modificar(\'nuevo\');">'._("añadir tarifa tipo").'</span>';
 		}
 		break;

@@ -103,32 +103,36 @@ class Xpermisos {
 	/**
 	 * diu si té el permís $p (en texte i ha d'estar en l'array permissions).
 	 *
-	 *  Ara per els menus va bé.
-	 * @param string $p nom del permís: ocupado|ver|modificar|crear|borrar
+	 * @param string $p el nom de la oficina 
 	 * @return boolean
 	 */
-	public function have_perm($p) {
+	public function have_perm_oficina($p) {
 		$pageperm = preg_split('/,/', $p);
 		list ($ok0, $pagebits) = $this->permsum($pageperm);
 		$userbits=$this->iaccion;
-		/*
-		echo "user: $userbits<br>";
-		echo "menu: $pagebits<br>";
-		*/
-		/* per els menus va bé. Per les activitats estava posat:
-			$has_all = (($userbits & $pagebits) === $pagebits);
-		 ??
-		*/
-		//$has_all = (($userbits & $pagebits) === $userbits);
+
 		$has_one = (($userbits & $pagebits) != 0);
-		/*
-		var_dump($has_one); echo"<br>KKK<br>";
-		echo "AND =page : ".var_dump((($userbits & $pagebits) === $pagebits)) ."<br>";
-		echo "AND : ".var_dump((($userbits & $pagebits) === $userbits)) ."<br>";
-		echo "OR = page : ".var_dump((($userbits | $pagebits) === $pagebits)) ."<br>";
-		echo "OR : ".var_dump((($userbits | $pagebits) === $userbits)) ."<br>";
-		*/
+
 		if (!($has_one && $ok0) ) {
+		  return false;
+		} else {
+		  return true;
+		}
+	}
+	/**
+	 * diu si té el permís $p (en texte i ha d'estar en l'array permissions).
+	 *
+	 * @param string $p nom del permís: ocupado|ver|modificar|crear|borrar
+	 * @return boolean
+	 */
+	public function have_perm_action($p) {
+		$pageperm = preg_split('/,/', $p);
+		list ($ok0, $pagebits) = $this->permsum($pageperm);
+		$userbits=$this->iaccion;
+		
+        $has_all = (($userbits & $pagebits) === $pagebits);
+        
+		if (!($has_all && $ok0) ) {
 		  return false;
 		} else {
 		  return true;

@@ -60,7 +60,7 @@ switch ($Qque) {
 		break;
 	case 'ficha':
 		// permiso para sf:
-		if (($_SESSION['oPerm']->have_perm("des")) or ($_SESSION['oPerm']->have_perm("vcsd"))) {
+		if (($_SESSION['oPerm']->have_perm_oficina('des')) or ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
 			$permiso=1;
 		} else {
 			$permiso=0;
@@ -407,7 +407,7 @@ switch ($Qque) {
 		<tr>
 		<td colspan=4><?= _("observaciones") ?>: <textarea rows=3 cols=50 name=observ ><?= $observ_sacd ?></textarea></td></tr>
 		<?php
-		if (($_SESSION['oPerm']->have_perm("des")) OR ($_SESSION['oPerm']->have_perm("vcsd"))) {
+		if (($_SESSION['oPerm']->have_perm_oficina('des')) OR ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
 		?>
 		<th colspan=4><input type="button" name="ok" onclick="fnjs_guardar('#datos_sacd');" value="<?php echo ucfirst(_("guardar")); ?>"></th>
 		<?php

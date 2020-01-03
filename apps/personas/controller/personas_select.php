@@ -165,7 +165,7 @@ if ($miRolePau == Role::PAU_NOM) { //persona
         if (empty($Qcmb)){
             $aWhere['situacion'] = 'A';
         } else {
-            if (!$_SESSION['oPerm']->have_perm("dtor")) {
+            if (!$_SESSION['oPerm']->have_perm_oficina('dtor')) {
                 $aWhere['situacion'] = 'B';
                 $aOperador['situacion'] = '!=';
             }
@@ -206,7 +206,7 @@ switch ($tabla) {
 		$obj_pau = 'PersonaSSSC';
 		$GesPersona = new personas\GestorPersonaSSSC();
 		$cPersonas = $GesPersona->getPersonasDl($aWhere,$aOperador);
-		if ($_SESSION['oPerm']->have_perm("des")){
+		if ($_SESSION['oPerm']->have_perm_oficina('des')){
 			$permiso = 3;
 		}
 	break;
@@ -214,7 +214,7 @@ switch ($tabla) {
 		$obj_pau = 'PersonaS';
 		$GesPersona = new personas\GestorPersonaS();
 		$cPersonas = $GesPersona->getPersonasDl($aWhere,$aOperador);
-		if ($_SESSION['oPerm']->have_perm("sg")){
+		if ($_SESSION['oPerm']->have_perm_oficina('sg')){
 			$permiso = 3;
 		}
 	break;
@@ -222,7 +222,7 @@ switch ($tabla) {
 		$obj_pau = 'PersonaN';
 		$GesPersona = new personas\GestorPersonaN();
 		$cPersonas = $GesPersona->getPersonasDl($aWhere,$aOperador);
-		if ($_SESSION['oPerm']->have_perm("sm")){
+		if ($_SESSION['oPerm']->have_perm_oficina('sm')){
 			$permiso = 3;
 		}
 	break;
@@ -232,7 +232,7 @@ switch ($tabla) {
 		if (($cPersonas = $GesPersona->getPersonasDl($aWhere,$aOperador)) === false) {
 			$cPersonas = array();
 		}
-		if ($_SESSION['oPerm']->have_perm("nax")){
+		if ($_SESSION['oPerm']->have_perm_oficina('nax')){
 			$permiso = 3;
 		}
 	break;
@@ -240,7 +240,7 @@ switch ($tabla) {
 		$obj_pau = 'PersonaAgd';
 		$GesPersona = new personas\GestorPersonaAgd();
 		$cPersonas = $GesPersona->getPersonasDl($aWhere,$aOperador);
-		if ($_SESSION['oPerm']->have_perm("agd")){
+		if ($_SESSION['oPerm']->have_perm_oficina('agd')){
 			$permiso = 3;
 		}
 	break;
@@ -252,7 +252,7 @@ switch ($tabla) {
 		$obj_pau = 'PersonaEx';
 		$GesPersona = new personas\GestorPersonaEx();
 		$cPersonas = $GesPersona->getPersonas($aWhere,$aOperador);
-		if ($_SESSION['oPerm']->have_perm("sm") OR $_SESSION['oPerm']->have_perm("agd")){
+		if ($_SESSION['oPerm']->have_perm_oficina('sm') OR $_SESSION['oPerm']->have_perm_oficina('agd')){
 			$permiso = 3;
 		}
 	break;
@@ -270,7 +270,7 @@ $sOperadorCtr = core\urlsafe_b64encode(serialize($aOperadorCtr));
 $a_botones = [];
 $script = [];
 
-if ($_SESSION['oPerm']->have_perm("sm")){
+if ($_SESSION['oPerm']->have_perm_oficina('sm')){
     $a_botones[] = array( 'txt' => _("cambio de ctr"),
 					'click' =>"fnjs_modificar_ctr(\"#seleccionados\")" );
 }
@@ -295,7 +295,7 @@ if (core\configGlobal::is_app_installed('notas')) {
 		$script['fnjs_tessera'] = 1;
 	}
 	// en el caso de los de estudios añado la posibilidad de modificar el campo stgr
-	if ($_SESSION['oPerm']->have_perm("est")){
+	if ($_SESSION['oPerm']->have_perm_oficina('est')){
 		$a_botones[]=array( 'txt' => _("modificar stgr"),
 							'click' =>"fnjs_modificar(\"#seleccionados\")" );
 		$script['fnjs_modificar'] = 1;
@@ -305,7 +305,7 @@ if (core\configGlobal::is_app_installed('notas')) {
 	}
 }
 if (core\configGlobal::is_app_installed('actividadestudios')) {
-	if ($_SESSION['oPerm']->have_perm("sm") || $_SESSION['oPerm']->have_perm("est")){
+	if ($_SESSION['oPerm']->have_perm_oficina('sm') || $_SESSION['oPerm']->have_perm_oficina('est')){
         if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso")) {   
             $a_botones[]= array( 'txt' => _("posibles ca"),
                                 'click' =>"fnjs_posibles_ca(\"#seleccionados\")" ) ;
@@ -324,7 +324,7 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 		$script['fnjs_posibles_activ'] = 1;
 	}
 }
-if ($_SESSION['oPerm']->have_perm("est")){
+if ($_SESSION['oPerm']->have_perm_oficina('est')){
 	if (core\configGlobal::is_app_installed('actividadestudios')) {
 		$a_botones[]=array( 'txt' => _("plan estudios"),
 							'click' =>"fnjs_matriculas(\"#seleccionados\")" );
@@ -356,7 +356,7 @@ if (ConfigGlobal::soy_region()) {
 }
 // en el caso de los de dre añado la posibilidad de listar la atencion a las actividades
 if (core\configGlobal::is_app_installed('actividadessacd')) {
-	if ($_SESSION['oPerm']->have_perm("des")){
+	if ($_SESSION['oPerm']->have_perm_oficina('des')){
 		$a_botones[]=array( 'txt' => _("atención actividades"),
 							'click' =>"fnjs_lista_activ(\"#seleccionados\")" );
 		$script['fnjs_lista_activ'] = 1;

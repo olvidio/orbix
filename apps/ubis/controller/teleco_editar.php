@@ -100,7 +100,7 @@ switch($Qobj_pau) {
 		$dl = $oUbi->getDl();
 		if ($dl == core\ConfigGlobal::mi_delef()) {
 			// ----- sv sólo a scl -----------------
-			if ($_SESSION['oPerm']->have_perm("scdl")) {
+			if ($_SESSION['oPerm']->have_perm_oficina('scdl')) {
 						$botones= "1,3";
 			}
 		}
@@ -108,7 +108,7 @@ switch($Qobj_pau) {
 	case 'CentroEx':
 	case 'CasaEx':
 		// ----- sv sólo a scl -----------------
-		if ($_SESSION['oPerm']->have_perm("scdl")) {
+		if ($_SESSION['oPerm']->have_perm_oficina('scdl')) {
 					$botones= "1,3";
 		}
 	break;

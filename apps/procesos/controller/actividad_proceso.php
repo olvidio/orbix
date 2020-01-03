@@ -36,7 +36,7 @@ $oActividad = new ActividadAll($Qid_activ);
 $nom_activ = $oActividad->getNom_activ();
 
 $permiso_calendario = FALSE;
-if (($_SESSION['oPerm']->have_perm("actividades")) or ($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
+if (($_SESSION['oPerm']->have_perm_oficina('actividades')) or ($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) {
     $permiso_calendario = TRUE;
 }
 

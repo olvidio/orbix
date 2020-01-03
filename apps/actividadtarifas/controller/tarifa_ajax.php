@@ -126,7 +126,7 @@ switch ($Qque) {
 
 			$a_valores[$i][1]=$a_seccion[$seccion];
 			// permiso
-			if ($miSfsv == $seccion && $_SESSION['oPerm']->have_perm('adl')) {
+			if ($miSfsv == $seccion && $_SESSION['oPerm']->have_perm_oficina('adl')) {
 				$a_valores[$i][2]=array( 'script'=>$script, 'valor'=>$letra);
 			} else {
 				$a_valores[$i][2]= $letra;
@@ -159,7 +159,7 @@ switch ($Qque) {
 		$oLista->setDatos($a_valores);
 		echo $oLista->lista();
 		// sólo pueden añadir: adl, pr i actividades
-		if (($_SESSION['oPerm']->have_perm("adl")) || ($_SESSION['oPerm']->have_perm("pr")) || ($_SESSION['oPerm']->have_perm("actividades"))) {
+		if (($_SESSION['oPerm']->have_perm_oficina('adl')) || ($_SESSION['oPerm']->have_perm_oficina('pr')) || ($_SESSION['oPerm']->have_perm_oficina('actividades'))) {
 			echo '<br><span class="link" onclick="fnjs_modificar(\'nuevo\');">'._("añadir tarifa").'</span>';
 		}
 		break;
@@ -247,7 +247,7 @@ switch ($Qque) {
 			$a_valores[$t][4]=$a_opciones[$modo];
 			$a_valores[$t][5]=$observ;
 			// permiso
-			if (ConfigGlobal::mi_sfsv() == $sfsv && $_SESSION['oPerm']->have_perm('adl')) {
+			if (ConfigGlobal::mi_sfsv() == $sfsv && $_SESSION['oPerm']->have_perm_oficina('adl')) {
 				$script="fnjs_modificar($id_tarifa)";
 				$a_valores[$t][6]=array( 'script'=>$script, 'valor'=> _("modificar"));
 			}
@@ -257,7 +257,7 @@ switch ($Qque) {
 		$oLista->setDatos($a_valores);
 		echo $oLista->lista();
 		// sólo pueden añadir: adl, pr i actividades
-		if (($_SESSION['oPerm']->have_perm("adl")) || ($_SESSION['oPerm']->have_perm("pr")) || ($_SESSION['oPerm']->have_perm("actividades"))) {
+		if (($_SESSION['oPerm']->have_perm_oficina('adl')) || ($_SESSION['oPerm']->have_perm_oficina('pr')) || ($_SESSION['oPerm']->have_perm_oficina('actividades'))) {
 			echo '<br><span class="link" onclick="fnjs_modificar(\'nuevo\');">'._("nueva tarifa").'</span>';
 		}
 		break;

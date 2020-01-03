@@ -1,6 +1,6 @@
 {% block botones %}
 {% if mod == "editar" %}
-    {% if oPermActiv.have_perm('modificar') and mod != "importar" %}
+    {% if oPermActiv.have_perm_action('modificar') and mod != "importar" %}
         <input TYPE="button" VALUE="{{ "guardar cambios"|trans|capitalize }}"  onclick="fnjs_guardar('editar')">
     {% endif %}
 {% elseif mod == "nuevo" %}

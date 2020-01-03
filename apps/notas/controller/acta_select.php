@@ -137,7 +137,7 @@ if (ConfigGlobal::soy_region()) {
     $a_botones[] = array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(\"#seleccionados\")");
     $botones = 0;
 } else {
-    if ($_SESSION['oPerm']->have_perm("est")) {
+    if ($_SESSION['oPerm']->have_perm_oficina('est')) {
         $a_botones[] = array( 'txt' => _("eliminar"), 'click' =>"fnjs_eliminar(\"#seleccionados\")");
         $a_botones[] = array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(\"#seleccionados\")");
         $botones = 1; // para 'añadir acta'
@@ -165,7 +165,7 @@ foreach ($cActas as $oActa) {
 	//$pagina="apps/notas/controller/acta_ver.php?acta=$acta_2";
 	$pagina=Hash::link('apps/notas/controller/acta_ver.php?'.http_build_query(array('acta'=>$acta)));
 	$a_valores[$i]['sel']=$acta_2;
-	if ($_SESSION['oPerm']->have_perm("est")) {
+	if ($_SESSION['oPerm']->have_perm_oficina('est')) {
 		$a_valores[$i][1]=array( 'ira'=>$pagina, 'valor'=>$acta);
 	} else {
 		$a_valores[$i][1]=$acta;

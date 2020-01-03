@@ -252,7 +252,7 @@ foreach($cActividades as $oActividad) {
 	$oTipoActividad= new TiposActividades($id_tipo_activ);
 	$isfsv=$oTipoActividad->getSfsvId();
 	// para ver el nombre en caso de la otra sección
-	if ($mi_sfsv != $isfsv && !($_SESSION['oPerm']->have_perm("des")) ) {
+	if ($mi_sfsv != $isfsv && !($_SESSION['oPerm']->have_perm_oficina('des')) ) {
 	    $ssfsv=$oTipoActividad->getSfsvText();
 	    $sactividad=$oTipoActividad->getActividadText();
 	    $nom_activ="$ssfsv $sactividad";
@@ -289,7 +289,7 @@ foreach($cActividades as $oActividad) {
 		// sacd	
         $sacds="";
 		if(core\ConfigGlobal::is_app_installed('actividadessacd')) {
-            if ($oPermSacd->have_perm('ver') === true) { // sólo si tiene permiso
+            if ($oPermSacd->have_perm_action('ver') === true) { // sólo si tiene permiso
                 $gesCargosActividad=new GestorActividadCargo();
                 foreach($gesCargosActividad->getActividadSacds($id_activ) as $oPersona) {;
                     $sacds.=$oPersona->getApellidosNombre()."# "; // la coma la utilizo como separador de apellidos, nombre.

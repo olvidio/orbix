@@ -60,7 +60,7 @@ function oficial_dl($id_nom) {
 }
 */
 
-if (($_SESSION['oPerm']->have_perm("vcsd")) || ($_SESSION['oPerm']->have_perm("des"))) {
+if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
 	$permiso_sf="si";
 }
 

@@ -26,7 +26,7 @@ $oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
 // o (ara) no:
 $GesCasas = new GestorCasaDl();
 
-if ($_SESSION['oPerm']->have_perm("des") or $_SESSION['oPerm']->have_perm("vcsd")) {
+if ($_SESSION['oPerm']->have_perm_oficina('des') or $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
 	$donde="WHERE status='t'";
 } else {
 	if ($oMiUsuario->getSfsv() == 1) {

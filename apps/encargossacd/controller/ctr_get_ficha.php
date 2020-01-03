@@ -331,7 +331,7 @@ for ($e=1;$e<=$num_enc;$e++) {
 
 $fase = "AAA";
 $perm_des = FALSE;
-if (($_SESSION['oPerm']->have_perm("des")) OR ($_SESSION['oPerm']->have_perm("vcsd"))) {
+if (($_SESSION['oPerm']->have_perm_oficina('des')) OR ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
     $perm_des = TRUE;
 }
 

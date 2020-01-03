@@ -37,7 +37,7 @@ if (!empty($Qnombre_ubi)){
 }
 switch ($miSfsv) {
 	case 1:
-		if (!($_SESSION['oPerm']->have_perm("vcsd") OR $_SESSION['oPerm']->have_perm("des"))) {
+		if (!($_SESSION['oPerm']->have_perm_oficina('vcsd') OR $_SESSION['oPerm']->have_perm_oficina('des'))) {
 			$aWhereCasa['sv'] = 't';
 		}
 		break;
@@ -66,7 +66,7 @@ foreach ($cCtr as $oCentro) {
 	$a_ubis[$nombre_ubi] = $oCentro;
 }
 /*
-if (!($_SESSION['oPerm']->have_perm("vcsd") OR $_SESSION['oPerm']->have_perm("des"))) {
+if (!($_SESSION['oPerm']->have_perm_oficina('vcsd') OR $_SESSION['oPerm']->have_perm_oficina('des'))) {
 	//Ctrs sf
 	$GesCtrSf = new ubis\GestorCentrosEllas();
 	$cCtrSf = $GesCtrSf->getCentros($aWhereCtrSf,$aOperadorCtrSf);

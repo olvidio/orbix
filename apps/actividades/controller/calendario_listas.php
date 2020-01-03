@@ -282,8 +282,8 @@ foreach ($aGrupos as $key => $Titulo) {
 			    $oPermCtr =  $oPermActividades->getPermisoActual('ctr');
 			}
 
-			if (!$oPermActiv->have_perm('ocupado')) { continue; } // no tiene permisos ni para ver.
-			if (!$oPermActiv->have_perm('ver')) { // sólo puede ver que està ocupado
+			if (!$oPermActiv->have_perm_action('ocupado')) { continue; } // no tiene permisos ni para ver.
+			if (!$oPermActiv->have_perm_action('ver')) { // sólo puede ver que està ocupado
 				$a_ubi_activ[$key][$a]['svsf']=$ssfsv;
 				$a_ubi_activ[$key][$a]['tipo_activ']=_("ocupado");
 				$a_ubi_activ[$key][$a]['fechas']="$f_ini - $f_fin";
@@ -304,7 +304,7 @@ foreach ($aGrupos as $key => $Titulo) {
 
 			$a_ubi_activ[$key][$a]['ctr_encargados']=''; //inicializar
 	
-			if ($ver_ctr == 'si' && $oPermCtr->have_perm('ver')) {
+			if ($ver_ctr == 'si' && $oPermCtr->have_perm_action('ver')) {
 				$oGesEncargados = new GestorCentroEncargado();
 				$cCtrsEncargados = $oGesEncargados->getCentrosEncargados(array('id_activ'=>$id_activ,'_ordre'=>'num_orden'));
 

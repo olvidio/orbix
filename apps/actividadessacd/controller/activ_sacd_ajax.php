@@ -419,7 +419,7 @@ switch ($Qque) {
 				}
 			}
 			$txt_id=$id_activ."_sacds";
-			if (($_SESSION['oPerm']->have_perm('des')) && ($oPermSacd->have_perm_activ('crear') === true)) { // sólo si tiene permiso para crear
+			if (($_SESSION['oPerm']->have_perm_oficina('des')) && ($oPermSacd->have_perm_activ('crear') === true)) { // sólo si tiene permiso para crear
 				$nuevo_txt="<span class=link onclick=fnjs_nuevo_sacd(event,'$id_activ','$f_ini','$f_fin')>nuevo</span>";
 			} else {
 				$nuevo_txt='';

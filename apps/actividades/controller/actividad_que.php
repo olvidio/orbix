@@ -56,7 +56,7 @@ $Qlistar_asistentes = (string) \filter_input(INPUT_POST, 'listar_asistentes');
 
 $isfsv=core\ConfigGlobal::mi_sfsv();
 $permiso_des = FALSE;
-if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
+if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) {
     $permiso_des = TRUE;
     $ssfsv = '';
 } else {
@@ -187,7 +187,7 @@ switch ($Qque) {
 
 $perm_jefe = FALSE;
 if ($_SESSION['oConfig']->is_jefeCalendario()
-    or (($_SESSION['oPerm']->have_perm("des") or $_SESSION['oPerm']->have_perm("vcsd")) && ConfigGlobal::mi_sfsv() == 1)
+    or (($_SESSION['oPerm']->have_perm_oficina('des') or $_SESSION['oPerm']->have_perm_oficina('vcsd')) && ConfigGlobal::mi_sfsv() == 1)
     ) { 
     $perm_jefe = TRUE;
 }

@@ -30,7 +30,7 @@ $oPosicion->recordar();
 $Qssfsv = (string) \filter_input(INPUT_POST, 'ssfsv');
 
 if (core\ConfigGlobal::mi_sfsv() == 1 ) {
-	if ($Qssfsv == 'sf' && (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des")))) {
+	if ($Qssfsv == 'sf' && (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des')))) {
 		$ssfsv = 'sf';
 	} else {
 		$ssfsv = 'sv';

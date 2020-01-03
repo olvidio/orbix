@@ -171,13 +171,13 @@ $botones = 0;
 if (strstr($Qobj_dir,'Dl')) {
 	if ($dl == core\ConfigGlobal::mi_delef()) {
 		// ----- sv sólo a scl -----------------
-		if ($_SESSION['oPerm']->have_perm("scdl")) {
+		if ($_SESSION['oPerm']->have_perm_oficina('scdl')) {
 					$botones= "1,4,5";
 		}
 	}
 } else if (strstr($Qobj_dir,'Ex')) {
 	// ----- sv sólo a scl -----------------
-	if ($_SESSION['oPerm']->have_perm("scdl")) {
+	if ($_SESSION['oPerm']->have_perm_oficina('scdl')) {
 				$botones= "1,4,5";
 	}
 }

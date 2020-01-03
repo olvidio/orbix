@@ -18,17 +18,17 @@ $mov = (string)  filter_input(INPUT_POST, 'mov');
 
 switch ($tipo_persona) {
 	case 'n':
-		if ($_SESSION['oPerm']->have_perm("sm")) {
+		if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
 			$obj_pau = 'GestorPersonaN';
 		}
 		break;
 	case 'a':
-		if ($_SESSION['oPerm']->have_perm("agd")) {
+		if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
 			$obj_pau = 'GestorPersonaAgd';
 		}
 		break;
 	case 's':
-		if ($_SESSION['oPerm']->have_perm("sg")) {
+		if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
 			$obj_pau = 'GestorPersonaS';
 		}
 		break;

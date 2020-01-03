@@ -71,13 +71,13 @@ if (strstr($Qobj_pau,'Dl')) {
 	$dl = $oUbi->getDl();
 	if ($dl == core\ConfigGlobal::mi_delef()) {
 		// ----- sv sólo a scl -----------------
-		if ($_SESSION['oPerm']->have_perm("scdl")) {
+		if ($_SESSION['oPerm']->have_perm_oficina('scdl')) {
 			$botones= "1";
 		}
 	}
 } else if (strstr($Qobj_pau,'Ex')) {
 	// ----- sv sólo a scl -----------------
-	if ($_SESSION['oPerm']->have_perm("scdl")) {
+	if ($_SESSION['oPerm']->have_perm_oficina('scdl')) {
 			$botones= "1";
 	}
 }

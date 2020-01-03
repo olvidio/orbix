@@ -63,7 +63,7 @@ if ($miRolePau == Role::PAU_CTR) { //centro
 		// Sólo quiero ver las centros comunes.
 		//$donde="WHERE status='t' AND sf='t' AND sv='t'";
 		// o (ara) no:
-		if ($_SESSION['oPerm']->have_perm("des") or $_SESSION['oPerm']->have_perm("vcsd")) {
+		if ($_SESSION['oPerm']->have_perm_oficina('des') or $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
 			$oForm->setCentros('all');
 			$donde="WHERE status='t'";
 		} else {

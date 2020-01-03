@@ -1,9 +1,9 @@
 <ul>
-<?php if ($_SESSION['oPerm']->have_perm("est")){ ?>
+<?php if ($_SESSION['oPerm']->have_perm_oficina('est')){ ?>
 	<li><span class="link" onclick="fnjs_update_div('#main','<?= $go['comprobar_n'] ?>');"><?= _("comprobar los datos del fichero de notas para numerarios") ?></span></li>
 	<li><span class="link" onclick="fnjs_update_div('#main','<?= $go['comprobar_a'] ?>');"><?= _("comprobar los datos del fichero de notas para agregados") ?></span></li>
 <?php }
-if (($_SESSION['oPerm']->have_perm("est")) or ($_SESSION['oPerm']->have_perm("dtor"))) { ?>
+if (($_SESSION['oPerm']->have_perm_oficina('est')) or ($_SESSION['oPerm']->have_perm_oficina('dtor'))) { ?>
 	<li><?php printf(_("informe anual del Studium Generale para <b>%s</b>"),_("numerarios")) ?>
 		<ul>
 			<li><span class="link" onclick="fnjs_update_div('#main','<?= $go['n_listado'] ?>');"><?= _("con listados") ?></span></li>

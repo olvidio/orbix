@@ -57,27 +57,27 @@ class ActividadTipo {
 
 
 		$array2=array();
-		if ($_SESSION['oPerm']->have_perm("est")) {
+		if ($_SESSION['oPerm']->have_perm_oficina('est')) {
 			$array_n = array(1=>'n', 3=>'agd');
 			$array2 = array_merge($array2,$array_n);
 		}
-		if ($_SESSION['oPerm']->have_perm("sm")) {
+		if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
 			$array_n = array(1=>'n');
 			$array2 = array_merge($array2,$array_n);
 		}
-		if ($_SESSION['oPerm']->have_perm("nax")) {
+		if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
 			$array_nax = array(1=>'nax');
 			$array2 = array_merge($array2,$array_nax);
 		}
-		if ($_SESSION['oPerm']->have_perm("agd")) {
+		if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
 			$array_agd = array(3=>'agd');
 			$array2 = array_merge($array2,$array_agd);
 		}
-		if ($_SESSION['oPerm']->have_perm("sg")) {
+		if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
 			$array_sg = array(4=>'s', 5=>'sg');
 			$array2 = array_merge($array2,$array_sg);
 		}
-		if ($_SESSION['oPerm']->have_perm("des")) {
+		if ($_SESSION['oPerm']->have_perm_oficina('des')) {
 			if($this->status == entity\ActividadAll::STATUS_ACTUAL) {
 				$array_des = $oTipoActiv->getAsistentesPosibles(); //todos
 			} else {
@@ -85,12 +85,12 @@ class ActividadTipo {
 			}
 			$array2 = array_merge($array2,$array_des);
 		}
-		if ($_SESSION['oPerm']->have_perm("sr")) {
+		if ($_SESSION['oPerm']->have_perm_oficina('sr')) {
 			$array_sr = array(7=>'sr');
 			$array2 = array_merge($array2,$array_sr);
 		}
 
-		if ($_SESSION['oPerm']->have_perm("actividades")) { // desde la sf
+		if ($_SESSION['oPerm']->have_perm_oficina('actividades')) { // desde la sf
 			$array_des = $oTipoActiv->getAsistentesPosibles(); //todos
 			$array2 = array_merge($array2,$array_des);
 		}

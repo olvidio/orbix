@@ -18,21 +18,21 @@ $a_ids_traslados = json_decode(urldecode($ids_traslados));
 $id_tipo = 0;
 switch ($tipo_persona) {
 	case 'n':
-		if ($_SESSION['oPerm']->have_perm("sm")) {
+		if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
 			$id_tipo = 1;
 //			$obj_pau = 'GestorPersonaN';
 			$obj_pau = 'PersonaN';
 		}
 		break;
 	case 'a':
-		if ($_SESSION['oPerm']->have_perm("agd")) {
+		if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
 			$id_tipo = 2;
 //			$obj_pau = 'GestorPersonaAgd';
 			$obj_pau = 'PersonaAgd';
 		}
 		break;
 	case 's':
-		if ($_SESSION['oPerm']->have_perm("sg")) {
+		if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
 			$id_tipo = 3;
 //			$obj_pau = 'GestorPersonaS';
 			$obj_pau = 'PersonaS';

@@ -254,16 +254,16 @@ if (($Qque == 'list_activ_inv_sg') OR ($Qque == 'list_activ_sr')) {
 if (($Qque=="list_activ_compl")
     OR ($Qque=="list_activ_inv_sg")
     OR ($Qque=="list_activ_sr")
-    OR ($_SESSION['oPerm']->have_perm("vcsd"))
-    OR ($_SESSION['oPerm']->have_perm("des"))) {
+    OR ($_SESSION['oPerm']->have_perm_oficina('vcsd'))
+    OR ($_SESSION['oPerm']->have_perm_oficina('des'))) {
 	   $ver_hora = 1;
 } else {
 	$ver_hora = 0;
 }
 // ver tarifa y sacd si...
-if (!(($_SESSION['oPerm']->have_perm("sg"))
+if (!(($_SESSION['oPerm']->have_perm_oficina('sg'))
     AND ($Qque=="list_activ_inv_sg") 
-    AND !($_SESSION['oPerm']->have_perm("admin")))) { 
+    AND !($_SESSION['oPerm']->have_perm_oficina('admin')))) { 
 	   $ver_tarifa = 1;
 	   $ver_sacd = 1;
 } else {
@@ -283,7 +283,7 @@ $a_cabeceras[]= array('name'=>ucfirst(_("termina")),'class'=>'fecha');
 if ($ver_hora == 1) {
 	$a_cabeceras[]=ucfirst(_("hora fin"));
 }
-if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) { 
+if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) { 
 	$a_cabeceras[]="sf/sv";
 }
 $a_cabeceras[]=ucfirst(_("activ."));
@@ -334,9 +334,9 @@ foreach ($cActividades as $oActividad) {
 	$sactividad=$oTipoActiv->getActividadText();
 	$snom_tipo=$oTipoActiv->getNom_tipoText();
 
-	if ((($_SESSION['oPerm']->have_perm("sg")) 
-	    or ($_SESSION['oPerm']->have_perm("vcsd")) 
-	    or ($_SESSION['oPerm']->have_perm("des"))) AND !($_SESSION['oPerm']->have_perm("admin"))) {
+	if ((($_SESSION['oPerm']->have_perm_oficina('sg')) 
+	    or ($_SESSION['oPerm']->have_perm_oficina('vcsd')) 
+	    or ($_SESSION['oPerm']->have_perm_oficina('des'))) AND !($_SESSION['oPerm']->have_perm_oficina('admin'))) {
 		if ($snom_tipo=="(sin especificar)") {	
 			$snom_tipo="&nbsp;";
 		}
@@ -353,7 +353,7 @@ foreach ($cActividades as $oActividad) {
 		$a_valores[$i][3]=$h_ini;
 		$a_valores[$i][5]=$h_fin;
 	}
-	if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
+	if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) {
 		$a_valores[$i][6]=$ssfsv;
     }
 	$a_valores[$i][7]=$sactividad;

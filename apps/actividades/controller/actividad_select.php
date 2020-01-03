@@ -211,7 +211,7 @@ if (!empty($Qmodo)) {
             'click' =>"jsForm.update(\"#seleccionados\",\"publicar\")" );
     }
     if (core\configGlobal::is_app_installed('asignaturas')) {
-        if ($_SESSION['oPerm']->have_perm("est")) {
+        if ($_SESSION['oPerm']->have_perm_oficina('est')) {
             $a_botones[]=array( 'txt'=> _("asignaturas"), 'click'=>"jsForm.mandar(\"#seleccionados\",\"asig\")");
         }
     }
@@ -220,7 +220,7 @@ if (!empty($Qmodo)) {
         $a_botones=array( array( 'txt' => _("datos"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"datos\")" ) ,);
     } else {
         $a_botones[] = array( 'txt' => _("datos"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"datos\")" );
-        if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
+        if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) {
             $duplicar=1; //condición de duplicar
             $a_botones[]=array( 'txt'=> _("duplicar"), 'click' =>"jsForm.update(\"#seleccionados\",\"duplicar\")");
             // Ahora lo generalizo para todas. (no sólo proyecto). 17.X.2011
@@ -245,15 +245,15 @@ if (!empty($Qmodo)) {
         }
         
         if (core\configGlobal::is_app_installed('asignaturas')) {
-            if ($_SESSION['oPerm']->have_perm("est")) {
+            if ($_SESSION['oPerm']->have_perm_oficina('est')) {
                 $a_botones[]=array( 'txt'=> _("asignaturas"), 'click'=>"jsForm.mandar(\"#seleccionados\",\"asig\")");
             }
-            if (($_SESSION['oPerm']->have_perm("est"))
-                or ($_SESSION['oPerm']->have_perm("agd"))
-                or ($_SESSION['oPerm']->have_perm("sm"))) {
+            if (($_SESSION['oPerm']->have_perm_oficina('est'))
+                or ($_SESSION['oPerm']->have_perm_oficina('agd'))
+                or ($_SESSION['oPerm']->have_perm_oficina('sm'))) {
                     $a_botones[]=array( 'txt'=>_("plan estudios"), 'click'=>"jsForm.mandar(\"#seleccionados\",\"plan_estudios\")");
                 }
-                if ($_SESSION['oPerm']->have_perm("est")) {
+                if ($_SESSION['oPerm']->have_perm_oficina('est')) {
                     $a_botones[]=array( 'txt'=>_("listas de clase"), 'click'=>"jsForm.mandar(\"#seleccionados\",\"lista_clase\")");
                 }
         }
@@ -267,7 +267,7 @@ $a_cabeceras=array(
     array('name'=>_("hora ini"),'width'=>40,'class'=>'fecha'),
     array('name'=>_("hora fin"),'width'=>40,'class'=>'fecha')
 );
-if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
+if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) {
     $a_cabeceras[]= array('name'=>_("sf/sv"),'width'=>40);
 }
 $a_cabeceras[]= array('name'=>_("tar."),'width'=>40);
@@ -348,7 +348,7 @@ foreach($cActividades as $oActividad) {
     $oTipoActividad= new web\TiposActividades($id_tipo_activ);
     $isfsv=$oTipoActividad->getSfsvId();
     // para ver el nombre en caso de la otra sección
-    if ($mi_sfsv != $isfsv && !($_SESSION['oPerm']->have_perm("des")) ) {
+    if ($mi_sfsv != $isfsv && !($_SESSION['oPerm']->have_perm_oficina('des')) ) {
         $ssfsv=$oTipoActividad->getSfsvText();
         $sactividad=$oTipoActividad->getActividadText();
         $nom_activ="$ssfsv $sactividad";
@@ -368,7 +368,7 @@ foreach($cActividades as $oActividad) {
         //$a_valores[$i][1]= array( 'ira'=>'x', 'valor'=>'ocupado');
         $a_valores[$i][4]='';
         $a_valores[$i][5]='';
-        if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
+        if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) {
             $a_valores[$i][6]=$ssfsv;
         }
         $a_valores[$i][7]='';
@@ -457,7 +457,7 @@ foreach($cActividades as $oActividad) {
         }
         $a_valores[$i][4]=$h_ini;
         $a_valores[$i][5]=$h_fin;
-        if (($_SESSION['oPerm']->have_perm("vcsd")) or ($_SESSION['oPerm']->have_perm("des"))) {
+        if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) {
             $a_valores[$i][6]=$ssfsv;
         }
         $a_valores[$i][7]=$tarifa_letra;

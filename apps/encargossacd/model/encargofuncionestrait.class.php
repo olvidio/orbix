@@ -161,7 +161,7 @@ Trait EncargoFuncionesTrait {
 
 	// permiso para sf:
 	function getArraySeccion() {
-		if (($_SESSION['oPerm']->have_perm("des")) or ($_SESSION['oPerm']->have_perm("vcsd"))) {
+		if (($_SESSION['oPerm']->have_perm_oficina('des')) or ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
 			$array_seccion = [
 						//'0'=>"personal",
 						'1'=>"sv",

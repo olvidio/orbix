@@ -68,7 +68,7 @@ switch ($Qque) {
 		$oGesTipoTarifa = new GestorTipoTarifa();
 		$isfsv=$oTipoActiv->getSfsvId();
 
-		if ($oPermTar->have_perm('modificar')) {
+		if ($oPermTar->have_perm_action('modificar')) {
 			$oDesplPosiblesTipoTarifas = $oGesTipoTarifa->getListaTipoTarifas($isfsv);
 			$oDesplPosiblesTipoTarifas->setNombre('tarifa');
 			$oDesplPosiblesTipoTarifas->setOpcion_sel($tarifa);
@@ -124,7 +124,7 @@ switch ($Qque) {
 		// permisos:
 		// miro que rol tengo. Si soy casa, sólo veo la mía
 		$miRolePau = ConfigGlobal::mi_role_pau();
-		if ($miRolePau == Role::PAU_CDC || ($_SESSION['oPerm']->have_perm("pr")) ) {
+		if ($miRolePau == Role::PAU_CDC || ($_SESSION['oPerm']->have_perm_oficina('pr')) ) {
 		    $permiso = 'modificar';
 		} else {
 		    $permiso = '';
@@ -206,8 +206,8 @@ switch ($Qque) {
 				//echo "$a, $nom_activ, $permiso<br>";
 				//print_r($oPermEco);
 
-				if (!$oPermEco->have_perm('ver')) { continue; } // no tiene permisos ni para ver.
-				if ($oPermEco->have_perm('modificar')) { // sólo puede ver que està ocupado
+				if (!$oPermEco->have_perm_action('ver')) { continue; } // no tiene permisos ni para ver.
+				if ($oPermEco->have_perm_action('modificar')) { // sólo puede ver que està ocupado
 					$permiso = 'modificar';
 				} else {
 					$permiso = '';
@@ -460,8 +460,8 @@ switch ($Qque) {
 
 				$oCasa = new CasaDl($id_ubi);
 				$nombre_ubi = $oCasa->getNombre_ubi();
-				if (!$oPermActiv->have_perm('ocupado')) { continue; } // no tiene permisos ni para ver.
-				if (!$oPermActiv->have_perm('ver')) { // sólo puede ver que està ocupado
+				if (!$oPermActiv->have_perm_action('ocupado')) { continue; } // no tiene permisos ni para ver.
+				if (!$oPermActiv->have_perm_action('ver')) { // sólo puede ver que està ocupado
 					$oTipoActiv= new TiposActividades($id_tipo_activ);
 					$ssfsv=$oTipoActiv->getSfsvText();
 					$sasistentes='';
@@ -478,7 +478,7 @@ switch ($Qque) {
 
 
 				$ctrs='';
-				if ($oPermCtr->have_perm('ver')) {
+				if ($oPermCtr->have_perm_action('ver')) {
 					$oEnc=new GestorCentroEncargado();
 					foreach($oEnc->getCentrosEncargadosActividad($id_activ) as $oEncargado) {;
 						$ctrs.=$oEncargado->getNombre_ubi().', ';
@@ -486,7 +486,7 @@ switch ($Qque) {
 					$ctrs=substr($ctrs,0,-2);
 				}
 				$sacds='';
-				if ($oPermSacd->have_perm('ver')) {
+				if ($oPermSacd->have_perm_action('ver')) {
 					$oCargosActividad=new GestorActividadCargo();
 					foreach($oCargosActividad->getActividadSacds($id_activ) as $oPersona) {;
 						$sacds.=$oPersona->getApellidosNombre()."# "; // la coma la utilizo como separador de apellidos, nombre.

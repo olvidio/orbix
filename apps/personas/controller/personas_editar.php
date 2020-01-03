@@ -125,8 +125,8 @@ $presentacion="persona_form.phtml";
 switch ($Qobj_pau){
 	case "PersonaAgd":
 		$id_tabla = 'a';
-		if ($_SESSION['oPerm']->have_perm("agd")) { $ok=1; } 
-		if (($_SESSION['oPerm']->have_perm("agd") or $_SESSION['oPerm']->have_perm("dtor"))) {
+		if ($_SESSION['oPerm']->have_perm_oficina('agd')) { $ok=1; } 
+		if (($_SESSION['oPerm']->have_perm_oficina('agd') or $_SESSION['oPerm']->have_perm_oficina('dtor'))) {
 			//$presentacion="p_agregados.phtml";
 			$presentacion="persona_form.phtml";
 			$ok_txt=1;
@@ -136,8 +136,8 @@ switch ($Qobj_pau){
 		break;
 	case "PersonaN":
 		$id_tabla = 'n';
-		if ($_SESSION['oPerm']->have_perm("sm")) { $ok=1; } 
-		if (($_SESSION['oPerm']->have_perm("sm") or $_SESSION['oPerm']->have_perm("dtor"))) { 
+		if ($_SESSION['oPerm']->have_perm_oficina('sm')) { $ok=1; } 
+		if (($_SESSION['oPerm']->have_perm_oficina('sm') or $_SESSION['oPerm']->have_perm_oficina('dtor'))) { 
 			//$presentacion="p_numerarios.phtml";
 			$presentacion="persona_form.phtml";
 			$ok_txt=1;
@@ -147,8 +147,8 @@ switch ($Qobj_pau){
 		break;
 	case "PersonaNax":
 		$id_tabla = 'x';
-		if ($_SESSION['oPerm']->have_perm("sm")) { $ok=1; } 
-		if ($_SESSION['oPerm']->have_perm("sm") or $_SESSION['oPerm']->have_perm("dtor")) { 
+		if ($_SESSION['oPerm']->have_perm_oficina('sm')) { $ok=1; } 
+		if ($_SESSION['oPerm']->have_perm_oficina('sm') or $_SESSION['oPerm']->have_perm_oficina('dtor')) { 
 			//$presentacion="p_numerarios.phtml";
 			$presentacion="persona_form.phtml";
 			$ok_txt=1;
@@ -158,8 +158,8 @@ switch ($Qobj_pau){
 		break;
 	case "PersonaS":
 		$id_tabla = 's';
-		if ($_SESSION['oPerm']->have_perm("sg")) { $ok=1; } 
-		if ($_SESSION['oPerm']->have_perm("sg") or $_SESSION['oPerm']->have_perm("dtor")) { 
+		if ($_SESSION['oPerm']->have_perm_oficina('sg')) { $ok=1; } 
+		if ($_SESSION['oPerm']->have_perm_oficina('sg') or $_SESSION['oPerm']->have_perm_oficina('dtor')) { 
 			//$presentacion="p_supernumerarios.phtml";
 			$presentacion="persona_form.phtml";
 			$ok_txt=1;
@@ -169,8 +169,8 @@ switch ($Qobj_pau){
 		break;
 	case "PersonaSSSC":
 		$id_tabla = 'sssc';
-		if ($_SESSION['oPerm']->have_perm("des") or $_SESSION['oPerm']->have_perm("vcsd")) { $ok=1; } 
-		if ($_SESSION['oPerm']->have_perm("des") or $_SESSION['oPerm']->have_perm("vcsd") or $_SESSION['oPerm']->have_perm("dtor")) { 
+		if ($_SESSION['oPerm']->have_perm_oficina('des') or $_SESSION['oPerm']->have_perm_oficina('vcsd')) { $ok=1; } 
+		if ($_SESSION['oPerm']->have_perm_oficina('des') or $_SESSION['oPerm']->have_perm_oficina('vcsd') or $_SESSION['oPerm']->have_perm_oficina('dtor')) { 
 			//$presentacion="p_sssc.phtml";
 			$presentacion="persona_form.phtml";
 			$ok_txt=1;
@@ -181,7 +181,7 @@ switch ($Qobj_pau){
 	case "PersonaEx":
 		if (empty($id_tabla)) $id_tabla = 'pn';
 		$presentacion="persona_de_paso.phtml";
-		if ($_SESSION['oPerm']->have_perm("agd") or $_SESSION['oPerm']->have_perm("sm") or $_SESSION['oPerm']->have_perm("des") or $_SESSION['oPerm']->have_perm("est")) { $ok=1; } 
+		if ($_SESSION['oPerm']->have_perm_oficina('agd') or $_SESSION['oPerm']->have_perm_oficina('sm') or $_SESSION['oPerm']->have_perm_oficina('des') or $_SESSION['oPerm']->have_perm_oficina('est')) { $ok=1; } 
 		$ok_txt=1;
 		break;
 }

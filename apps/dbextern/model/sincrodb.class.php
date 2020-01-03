@@ -47,17 +47,17 @@ class sincroDB {
 		$id_tipo = 0;
 		switch ($tipo_persona) {
 			case 'n':
-				if ($_SESSION['oPerm']->have_perm("sm")) {
+				if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
 					$id_tipo = 1;
 				}
 				break;
 			case 'a':
-				if ($_SESSION['oPerm']->have_perm("agd")) {
+				if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
 					$id_tipo = 2;
 				}
 				break;
 			case 's':
-				if ($_SESSION['oPerm']->have_perm("sg")) {
+				if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
 					$id_tipo = 3;
 				}
 				break;

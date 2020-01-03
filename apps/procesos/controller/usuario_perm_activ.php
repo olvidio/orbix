@@ -95,8 +95,8 @@ $oActividadTipo->setNom_tipo($nom_tipo);
 $oActividadTipo->setPara('procesos');
 $perm_jefe = FALSE;
 if ($_SESSION['oConfig']->is_jefeCalendario()
-    or (($_SESSION['oPerm']->have_perm("des") or $_SESSION['oPerm']->have_perm("vcsd")) && ConfigGlobal::mi_sfsv() == 1)
-    or ($_SESSION['oPerm']->have_perm("actividades"))
+    or (($_SESSION['oPerm']->have_perm_oficina('des') or $_SESSION['oPerm']->have_perm_oficina('vcsd')) && ConfigGlobal::mi_sfsv() == 1)
+    or ($_SESSION['oPerm']->have_perm_oficina('actividades'))
     ) {
     $perm_jefe = TRUE;
 }

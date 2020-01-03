@@ -333,7 +333,7 @@ class Select3101 {
 				if ($propio=='t') {
 					$chk_propio=_("sí");
 					// Para los de des, elimino el cargo y la asistencia. Para el resto, sólo el cargo (no la asistencia).
-					if (($_SESSION['oPerm']->have_perm("des")) or ($_SESSION['oPerm']->have_perm("vcsd"))) {
+					if (($_SESSION['oPerm']->have_perm_oficina('des')) or ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
 						$eliminar = 2;
 					} else {
 						$eliminar = 1;
