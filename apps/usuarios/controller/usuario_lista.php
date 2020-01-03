@@ -39,10 +39,7 @@ $miSfsv=core\ConfigGlobal::mi_sfsv();
 if ($miRole > 3) exit(_("no tiene permisos para ver esto")); // no es administrador
 $aWhere=array();
 $aOperador = array();
-if ($miRole == 1) { // caso de SuperAdmin.
-	$aWhere['id_role'] = 1;
-	$aOperador['id_role'] = '>=';
-} else {
+if ($miRole != 1) { // id_role=1 => SuperAdmin.
 	$aWhere['id_role'] = 1;
 	$aOperador['id_role'] = '!='; // para no tocar al administrador
 }
