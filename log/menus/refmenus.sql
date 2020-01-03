@@ -337,3 +337,6 @@
 1400	{20,90}	previsión asistentes	\N	5	37748735	7	t
 1405	{10,80}	grupos	\N	91	1	7	t
 1034	{30,10}	mover tabla a otra DB	\N	54	33554432	13	t
+1036	{30,20}	planning por casas	tipo=planning_cdc	61	1048576	9	t
+1401	{30,30}	listado gerentes	periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si	45	1048576	9	t
+1402	{30,40}	lista actividades	periodo=tot_any&tipo_lista=lista_activ	45	1048576	9	t
