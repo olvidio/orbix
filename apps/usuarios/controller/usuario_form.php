@@ -264,18 +264,21 @@ if ($miRole < 4) {
 			$id_pau=$oUsuario->getId_pau();
 
 			$nom_role = $oRole->getRole();
-			if ($nom_role == "p-agd") {
+			switch ($nom_role) {
+			    case "p-agd":
                 $GesPersonas = new GestorPersonaAgd();
                 $oSelects = $GesPersonas->getListaPersonas();
-			}
-			if ($nom_role == "p-n") {
-                $GesPersonas = new GestorPersonaN();
-                $oSelects = $GesPersonas->getListaPersonas();
-			}
-			if ($nom_role == "p-sacd") {
+                break;
+			    case "p-n":
+			        $GesPersonas = new GestorPersonaN();
+                    $oSelects = $GesPersonas->getListaPersonas();
+                    break;
+			    case "p-sacd":
+			    case "p-sacdInt": // para hacer pruebas desde dentro (dmz=false)
                 $GesPersonas = new GestorPersonaDl();
                 // de momento sólo n y agd
                 $oSelects = $GesPersonas->getListaSacd("AND id_tabla ~ '[na]'");
+                break;
 			}
 
 			$oSelects->setNombre('id_nom');
