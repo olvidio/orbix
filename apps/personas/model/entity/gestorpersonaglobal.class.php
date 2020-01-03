@@ -183,14 +183,24 @@ abstract class GestorPersonaGlobal Extends core\ClaseGestor {
 	 */
 	function getPersonasQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
+		$clasename = get_class($this);
+		$nomClase = join('', array_slice(explode('\\', $clasename), -1));
+
 		$oPersonaDlSet = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (( $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorPersonaDl.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_nom' => $aDades['id_nom']);
+			switch ($nomClase) {
+			    case 'GestorPersonaSacd':
+        			$oPersonaDl= new PersonaSacd($a_pkey);
+			        break;
+			    default:
+        			$oPersonaDl= new PersonaDl($a_pkey);
+			}
 			$oPersonaDl= new PersonaDl($a_pkey);
 			$oPersonaDl->setAllAtributes($aDades);
 			$oPersonaDlSet->add($oPersonaDl);
@@ -208,6 +218,9 @@ abstract class GestorPersonaGlobal Extends core\ClaseGestor {
 	function getPersonas($aWhere=array(),$aOperators=array()) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
+		$clasename = get_class($this);
+		$nomClase = join('', array_slice(explode('\\', $clasename), -1));
+		
 		$oPersonaDlSet = new core\Set();
 		$oCondicion = new core\Condicion();
 		$aCondi = array();
@@ -242,9 +255,16 @@ abstract class GestorPersonaGlobal Extends core\ClaseGestor {
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
+		
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_nom' => $aDades['id_nom']);
-			$oPersonaDl= new PersonaDl($a_pkey);
+			switch ($nomClase) {
+			    case 'GestorPersonaSacd':
+        			$oPersonaDl= new PersonaSacd($a_pkey);
+			        break;
+			    default:
+        			$oPersonaDl= new PersonaDl($a_pkey);
+			}
 			$oPersonaDl->setAllAtributes($aDades);
 			$oPersonaDlSet->add($oPersonaDl);
 		}
