@@ -44,7 +44,7 @@ if ($miRole == 1) { // caso de SuperAdmin.
 	$aOperador['id_role'] = '>=';
 } else {
 	$aWhere['id_role'] = 1;
-	$aOperador['id_role'] = '>'; // para no tocar al administrador
+	$aOperador['id_role'] = '!='; // para no tocar al administrador
 }
     
 
@@ -85,18 +85,22 @@ foreach ($oUsuarioColeccion as $oUsuario) {
 	$email=$oUsuario->getEmail();
 	$id_role=$oUsuario->getId_role();
 
-	$oRole->setId_role($id_role);
-	$oRole->DBCarregar();
-	$role= $oRole->getRole();
-    // filtro por sf/sv
-    if ($miSfsv == 1) {
-        $role_sv = $oRole->getSv();
-        if ($role_sv === FALSE) { continue; }
-    }
-    if ($miSfsv == 2) {
-        $role_sf = $oRole->getSf();
-        if ($role_sf === FALSE ) { continue; }
-    }
+	if (!empty($id_role)) {
+        $oRole->setId_role($id_role);
+        $oRole->DBCarregar();
+        $role= $oRole->getRole();
+        // filtro por sf/sv
+        if ($miSfsv == 1) {
+            $role_sv = $oRole->getSv();
+            if ($role_sv === FALSE) { continue; }
+        }
+        if ($miSfsv == 2) {
+            $role_sf = $oRole->getSf();
+            if ($role_sf === FALSE ) { continue; }
+        }
+	} else {
+	    $role = '?';
+	}
 
 	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?'.http_build_query(array('quien'=>'usuario','id_usuario'=>$id_usuario)));
 
