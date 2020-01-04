@@ -50,7 +50,7 @@ class PermDossier {
 				2. Si el permiso es de lectura y
 				3. Si el permiso es de lectura/escritura.
 			Los bits de las oficinas son los mismos que para el phplib (definidos en local.inc):
-				adl(1),agd(2),des(8),est(16),scl(32),sg(64),sm(128),soi(256),sr(512),ss(1024),ocs(2048),dtor(4096)
+				adl(1),agd(2),des(8),est(16),scl(32),sg(64),sm(128),soi(256),sr(512),ss(1024),dtor(2048),ocs(4096)
 		
 		28.10.02	añado:  (para que tenga en cuenta la oficina)
 			$depende = t o f (true, false) si se debe comprobar la oficina

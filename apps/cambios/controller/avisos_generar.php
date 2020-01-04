@@ -39,7 +39,7 @@ $oDesplUsuarios->setBlanco('false');
 $oDesplUsuarios->setOpciones($ListaUsuarios);
 
 
-if ($_SESSION['oPerm']->have_perm_oficina('dir')){ //el admin_sv incluye el admin_sf
+if ($_SESSION['oPerm']->have_perm_oficina('dtor')){ //el admin_sv incluye el admin_sf
     $Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
     $Qaviso_tipo = (integer) \filter_input(INPUT_POST, 'aviso_tipo');
 } else {
