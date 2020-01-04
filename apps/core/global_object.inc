@@ -101,16 +101,20 @@ switch ($user_sfsv) {
 		$config = $oConfigDB->getEsquema($esquemaf); 
 		$oConexion = new dbConnection($config);
 		$oDB = $oConexion->getPDO();
+		$oDBE = $oConexion->getPDO();
 
 		$config = $oConfigDB->getEsquema('publicf'); 
 		$oConexion = new dbConnection($config);
 		$oDBP = $oConexion->getPDO();
+		$oDBEP = $oConexion->getPDO();
 
 		$config = $oConfigDB->getEsquema('restof'); 
 		$oConexion = new dbConnection($config);
 		$oDBR = $oConexion->getPDO();
 		
 		//sf exterior
+		// De momento todo junto. No distingo tunel/dmz
+		/*
 		$oConfigDB->setDataBase('sf-e'); 
 		$config = $oConfigDB->getEsquema($esquemaf); 
 		$oConexion = new dbConnection($config);
@@ -119,7 +123,7 @@ switch ($user_sfsv) {
 		$config = $oConfigDB->getEsquema('publicf'); 
 		$oConexion = new dbConnection($config);
 		$oDBEP = $oConexion->getPDO();
-
+        */
 		break;
 }
 
