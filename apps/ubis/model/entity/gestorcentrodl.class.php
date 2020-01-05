@@ -25,7 +25,7 @@ class GestorCentroDl Extends  GestorCentro {
 	 *
 	 */
 	function __construct() {
-	    if (ConfigGlobal::$dmz) {
+	    if (ConfigGlobal::is_dmz()) {
 	        $oDbl = $GLOBALS['oDBC'];
 	        $this->setoDbl($oDbl);
 	        $this->setNomTabla('cu_centros_dl');

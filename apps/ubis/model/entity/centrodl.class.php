@@ -86,7 +86,7 @@ class CentroDl Extends Centro {
 	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
 	 */
 	function __construct($a_id='') {
-	    if (ConfigGlobal::$dmz) {
+	    if (ConfigGlobal::is_dmz()) {
 	        $oDbl = $GLOBALS['oDBC'];
 	        $this->setoDbl($oDbl);
             $this->setNomTabla('cu_centros_dl');

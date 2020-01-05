@@ -78,7 +78,7 @@ class GestorAsistente Extends core\ClaseGestor {
 	function getActividadesDeAsistente($aWhereNom,$aWhere=array(),$aOperators=array(),$reverse=FALSE) {
 		// todas las actividades de la persona
 		// Por el momento si está en la dmz no puede ver las asistencias:
-	    if (ConfigGlobal::$dmz) {
+	    if (ConfigGlobal::is_dmz()) {
 	        return [];
 	    }
 		//Importa el orden, se queda con la última.
@@ -204,7 +204,7 @@ class GestorAsistente Extends core\ClaseGestor {
 	 */
 	function getAsistentesDeActividad($iid_activ,$sOrder='') {
 		// Por el momento si está en la dmz no puede ver las asistencias:
-	    if (ConfigGlobal::$dmz) {
+	    if (ConfigGlobal::is_dmz()) {
 	        return [];
 	    }
 		//$oDbl = $this->getoDbl();

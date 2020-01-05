@@ -229,7 +229,7 @@ if ( !isset($_SESSION['session_auth'])) {
 						$role_pau = $row2['pau'];
 						
 						// Para la MDZ, solo roles DMZ
-						if (ConfigGlobal::$dmz) {
+						if (ConfigGlobal::is_dmz()) {
 						    $role_dmz = $row2['dmz'];
 						    if (empty($role_dmz)) {
                                 $error = 2;

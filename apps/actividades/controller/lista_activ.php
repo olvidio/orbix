@@ -299,7 +299,7 @@ if ($ver_sacd == 1) {
 	$a_cabeceras[]=ucfirst(_("sacd"));
 	$a_cabeceras[]=ucfirst(_("observaciones"));
 }
-if (ConfigGlobal::$dmz === FALSE) {
+if (ConfigGlobal::is_dmz() === FALSE) {
 	$a_cabeceras[]=array('name'=>'','formatter'=>'clickFormatter');
 }
 
@@ -382,7 +382,7 @@ foreach ($cActividades as $oActividad) {
 		$a_valores[$i][13]=$sacds;
 		$a_valores[$i][14]=$observ;
 	}
-	if (ConfigGlobal::$dmz === FALSE) {
+	if (ConfigGlobal::is_dmz() === FALSE) {
 	    $pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/asistentes/controller/lista_asistentes.php?'."id_pau=$id_activ&que=$Qque");
 	    $txt = _("ver asistentes");
 	    $a_valores[$i][15]= array( 'ira'=>$pagina, 'valor'=>$txt);

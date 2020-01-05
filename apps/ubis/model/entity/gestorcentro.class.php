@@ -27,7 +27,7 @@ class GestorCentro Extends  core\ClaseGestor {
 	 *
 	 */
 	function __construct() {
-	    if (ConfigGlobal::$dmz){
+	    if (ConfigGlobal::is_dmz()){
             $oDbl = $GLOBALS['oDBEP'];
             $this->setoDbl($oDbl);
             $this->setNomTabla('u_centros');

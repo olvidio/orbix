@@ -130,7 +130,7 @@ class NivelStgr Extends core\ClasePropiedades {
 					return false;
 				}
 				// també a l'exterior
-				if (ConfigGlobal::$dmz == FALSE) {
+				if (ConfigGlobal::is_dmz() == FALSE) {
 					if (($oDblAASt = $oDblAA->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 						$sClauError = 'Exterior.NivelStgr.insertar.prepare';
 						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblAASt, $sClauError, __LINE__, __FILE__);

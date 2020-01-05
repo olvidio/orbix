@@ -52,7 +52,7 @@ class ActividadesSacdFunciones {
     
     
     function getLugar_dl() {
-        if (ConfigGlobal::$dmz) {
+        if (ConfigGlobal::is_dmz()) {
             return "xxxx";
         }
         $oGesCentrosDl = new GestorCentroDl();
