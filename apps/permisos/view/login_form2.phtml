@@ -18,6 +18,31 @@ if ($ubicacion == 'sv') {
   margin: 20px auto 0;
   width: 298px;
 }
+div.esquema {
+    display: inline-block;
+	position: relative;
+	text-align: right;
+	margin-right: 10px;
+	margin-top: 8px;
+	width: 85%;
+	font-family: Arial; font-size: 15px;
+}
+div.ubicacion {
+    display: inline-block;
+	position: relative;
+	font-family: Arial; font-size: 15px;
+	text-align: right;
+	margin-left: 10px;
+	margin-top: 8px;
+}
+#version {
+	position: relative;
+  	font: 9px/1 sans-serif;
+	text-align: right;
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+
 .login h2 {
   text-align: center;
 }
@@ -132,13 +157,6 @@ input[type="submit"]:active {
   box-shadow: inset 0px 1px 0px #2ab7ec, 0px 2px 0px 0px #31524d, 0px 5px 3px #999;
 }
 
-#version {
-	position: relative;
-  	font: 9px/1 sans-serif;
-	text-align: right;
-	margin-right: 10px;
-	margin-bottom: 10px;
-}
 </style>
 <script type="text/javascript">
 fnjs_goTop = function() {
@@ -150,7 +168,8 @@ fnjs_goTop = function() {
 document.onload = fnjs_goTop();
 </script>
 <div class="login">
-<?= $ubicacion ?>
+<div class="ubicacion"><?= $ubicacion ?></div>
+<div class="esquema"><?= $esquema_web ?></div>
 <?php
 $PHP_SELF = $_SERVER['PHP_SELF'];
 ?>
