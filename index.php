@@ -46,6 +46,7 @@ require_once ("apps/core/global_object.inc");
 use usuarios\model\entity as usuarios;
 use menus\model as menus;
 use menus\model\entity as menusEntity;
+use usuarios\model\entity\Role;
 
 $oGesPref = new usuarios\GestorPreferencia();
 
@@ -70,6 +71,12 @@ if (is_array($aPref) && count($aPref) > 0) {
     $inicio='';
     $GesGMR = new menusEntity\GestorGrupMenuRole();
     $cGMR = $GesGMR->getGrupMenuRoles(array('id_role'=>$id_role));
+    if (empty($cGMR)) {
+        $oRole = new Role($id_role);
+        $nom_role = $oRole->getRole();
+        $msg = sprintf(_("Error: el role: %s No tiene ningún grupmenu asignado"),$nom_role);
+        die ($msg);
+    }
     $mi_id_grupmenu=$cGMR[0]->getId_grupmenu();
 }
 
