@@ -74,7 +74,7 @@ if (is_array($aPref) && count($aPref) > 0) {
     if (empty($cGMR)) {
         $oRole = new Role($id_role);
         $nom_role = $oRole->getRole();
-        $msg = sprintf(_("Error: el role: %s No tiene ningún grupmenu asignado"),$nom_role);
+        $msg = sprintf(_("El role: '%s' no tiene ningún grupmenu asignado"),$nom_role);
         die ($msg);
     }
     $mi_id_grupmenu=$cGMR[0]->getId_grupmenu();
