@@ -177,8 +177,8 @@ switch ($tipo) {
                 foreach ($aGrupos as $sasistentes) {
                     $oficina = $equivalencias_gm_oficina[$sasistentes]; 
                     $id_perm = $permissions[$oficina];
-                    $e = $oPermisoOficinas->have_perm($oficina);
-                    if (!$oPermisoOficinas->have_perm($oficina)) {
+                    $e = $oPermisoOficinas->have_perm_oficina($oficina);
+                    if (!$oPermisoOficinas->have_perm_oficina($oficina)) {
                         if (($key = array_search($oficina, $aGrupos)) !== false) {
                             unset($aGrupos[$key]);
                         }

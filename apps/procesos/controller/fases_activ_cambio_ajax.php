@@ -244,8 +244,8 @@ switch($Qque) {
     				        $msg_err = sprintf(_("error: La fase del proceso tipo: %s, fase: %s, tarea: %s"),$id_tipo_proceso,$id_fase,$id_tarea);
     				        exit($msg_err);
     				    }
-    				    $responsable=$oTareaProceso->getOf_responsable();
-    				    if (($_SESSION['oPerm']->have_perm($responsable))) {
+    				    $of_responsable=$oTareaProceso->getOf_responsable();
+    				    if (($_SESSION['oPerm']->have_perm_oficna($of_responsable))) {
 				            $oActividadProcesoTarea->setCompletado('t');
                             if ($oActividadProcesoTarea->DBGuardar() === false) {
                                 echo _("hay un error, no se ha guardado");

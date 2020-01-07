@@ -164,7 +164,7 @@ if (!empty($Qid_activ)) { // caso de modificar
             die (_("No tiene permiso para crear una actividad de este tipo"));
         } else {
             $of_responsable = $crearPropia['of_responsable'];
-            if (!empty($of_responsable) && $_SESSION['oPerm']->have_perm($of_responsable)) {
+            if (!empty($of_responsable) && $_SESSION['oPerm']->have_perm_oficina($of_responsable)) {
                 $Bdl = 't';
                 $status = $crearPropia['status'];
             } else {
@@ -176,7 +176,7 @@ if (!empty($Qid_activ)) { // caso de modificar
                     $crearEx = $_SESSION['oPermActividades']->getPermisoCrear(FALSE);
                     $of_responsable = $crearEx['of_responsable'];
                     $status = $crearEx['status'];
-                    if (!$_SESSION['oPerm']->have_perm($of_responsable)) {
+                    if (!$_SESSION['oPerm']->have_perm_oficina($of_responsable)) {
                         die (_("No tiene permiso para crear una actividad de este tipo"));
                     }
                 }

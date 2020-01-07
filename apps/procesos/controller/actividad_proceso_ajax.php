@@ -54,9 +54,9 @@ switch($Qque) {
 			    $msg_err = sprintf(_("error: La fase del proceso tipo: %s, fase: %s, tarea: %s"),$id_tipo_proceso,$id_fase,$id_tarea);
                 exit($msg_err);
 			}
-			$responsable = $oTareaProceso->getOf_responsable();
+			$of_responsable = $oTareaProceso->getOf_responsable();
 			$txt.='<tr>';
-			if (($_SESSION['oPerm']->have_perm($responsable))) {
+			if (($_SESSION['oPerm']->have_perm_oficina($of_responsable))) {
 				$txt.="<td><input type='checkbox' id='comp$id_item' name='completado' $chk></td>";
 				$obs = "<td><input type='text' id='observ$id_item' name='observ' value='$observ' ></td>";
 			} else {
@@ -71,9 +71,9 @@ switch($Qque) {
 			}
 			$txt_fase = empty($tarea)? '' : "($tarea)";
 			$txt.="<td>$fase $txt_fase</td>";
-			$txt.="<td>$responsable</td>";
+			$txt.="<td>$of_responsable</td>";
 			$txt.= $obs;
-			if (($_SESSION['oPerm']->have_perm($responsable))) {
+			if (($_SESSION['oPerm']->have_perm_oficina($of_responsable))) {
 				$txt.="<td><input type='button' name='b_guardar' value='"._("guardar")."' onclick='fnjs_guardar($id_item);'></td>";
 			}
 			$txt .= '</tr>';
