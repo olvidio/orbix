@@ -1,5 +1,4 @@
 # Dani #
-apps/core/configglobal.class.php
 apps/web/hash.class.php
 *.sh
 
