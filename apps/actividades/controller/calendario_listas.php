@@ -284,7 +284,7 @@ foreach ($aGrupos as $key => $Titulo) {
 
 			if (!$oPermActiv->have_perm_action('ocupado')) { continue; } // no tiene permisos ni para ver.
 			if (!$oPermActiv->have_perm_action('ver')) { // sólo puede ver que està ocupado
-				$a_ubi_activ[$key][$a]['svsf']=$ssfsv;
+				$a_ubi_activ[$key][$a]['sfsv']=$ssfsv;
 				$a_ubi_activ[$key][$a]['tipo_activ']=_("ocupado");
 				$a_ubi_activ[$key][$a]['fechas']="$f_ini - $f_fin";
 				$a_ubi_activ[$key][$a]['h_ini']=$h_ini;
@@ -292,7 +292,7 @@ foreach ($aGrupos as $key => $Titulo) {
 				$a_ubi_activ[$key][$a]['num_asistentes']='';
 				$a_ubi_activ[$key][$a]['tarifa']= '';
 			} else {
-				$a_ubi_activ[$key][$a]['svsf']=$ssfsv;
+				$a_ubi_activ[$key][$a]['sfsv']=$ssfsv;
 				$a_ubi_activ[$key][$a]['tipo_activ']="$sasistentes $sactividad $snom_tipo";
 				$a_ubi_activ[$key][$a]['fechas']="$f_ini - $f_fin";
 				$a_ubi_activ[$key][$a]['h_ini']=$h_ini;

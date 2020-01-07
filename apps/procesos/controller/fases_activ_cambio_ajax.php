@@ -61,16 +61,17 @@ switch($Qque) {
 		$aWhere = [];
 		$aOperador = [];
 		// id_tipo_activ
-		if ($Qid_tipo_activ!='......') {
+		if ($Qid_tipo_activ != '......') {
 			$aWhere['id_tipo_activ'] = "^$Qid_tipo_activ";
 			$aOperador['id_tipo_activ'] = '~';
+			$isfsv = (integer) substr($Qid_tipo_activ, 0,1);
 		}
 		// dl_org
 		if ($Qdl_propia == 't') {
-			$aWhere['dl_org'] = ConfigGlobal::mi_delef();
+			$aWhere['dl_org'] = ConfigGlobal::mi_delef($isfsv);
     		$oActividades = new GestorActividadDl();
 		} else {
-			$aWhere['dl_org'] = ConfigGlobal::mi_delef();
+			$aWhere['dl_org'] = ConfigGlobal::mi_delef($isfsv);
 			$aOperador['dl_org'] = '!=';
     		$oActividades = new GestorActividadPub();
 		}

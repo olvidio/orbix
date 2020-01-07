@@ -1,5 +1,5 @@
 <?php
-use core\ConfigGlobal;
+use ubis\model\entity\GestorDelegacion;
 
 /**
  * Devuelvo un desplegable con los valores posibles del tipo de actividad
@@ -63,4 +63,12 @@ switch ($Qsalida) {
 		echo $oDesplegableCasas->desplegable();
         break;
         // falta tarifa.
+        
+	 case "dl_org";
+		$sfsv=$Qentrada;
+		$oGesDl = new GestorDelegacion();
+		$oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones($sfsv);
+		$oDesplDelegacionesOrg->setNombre('dl_org');
+		echo $oDesplDelegacionesOrg->desplegable();
+	   break;
 }

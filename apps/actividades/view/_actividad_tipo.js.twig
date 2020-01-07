@@ -23,6 +23,22 @@ fnjs_asistentes=function(){
 		$('#iactividad_val').val(".");
 		$('#inom_tipo_val').val("...");
 	}
+	// Si está el campo dl_org, Al cambiar sf/sv, también debe 
+	// cambiarse el deplegable de dl_org.
+	var dl_org=$('dl_org').val
+	if (dl_org) {
+		var parametros='salida=dl_org&entrada='+isfsv+'{{ h|raw }}';
+
+		$.ajax({
+			url: url,
+			type: 'post',
+			data: parametros,
+			dataType: 'html'
+		})
+		.done(function (rta_txt) {
+			$('#dl_org').html(rta_txt);
+		});
+	}
 }
 fnjs_actividad=function(){
     var url='{{ url }}';

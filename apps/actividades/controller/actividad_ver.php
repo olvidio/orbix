@@ -128,12 +128,22 @@ if (!empty($Qid_activ)) { // caso de modificar
 	$id_tipo_activ = urldecode($id_tipo_activ); // En el caso de sr, sg, se pasa la cadena tipo 2[789]... (con [, que se encodan).
 	$id_activ = '';
 
+	// si ya le digo un tipo de actividad, sobre-escribo el parametro isfsv:
+	if (!empty($id_tipo_activ)) {
+	    $isfsv = (integer) substr($id_tipo_activ, 0,1);
+	}
 	if ( $permiso_des == TRUE ) {
         $ssfsv = '';
+        // En el caso de des puedo crear acrividades de sf.
+        if ($isfsv == 2) {
+        	$dl_org = core\ConfigGlobal::mi_delef().'f'; 
+        }
 	} else {
         if ($isfsv == 1) $ssfsv = 'sv';
         if ($isfsv == 2) $ssfsv = 'sf';
 	}
+	
+	
 	$sasistentes = (string) \filter_input(INPUT_POST, 'sasistentes');
 	$sactividad = (string) \filter_input(INPUT_POST, 'sactividad');
 	$snom_tipo='';
@@ -208,7 +218,7 @@ if (!empty($id_ubi) && $id_ubi != 1) {
 }
 
 $oGesDl = new GestorDelegacion();
-$oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones($Bdl);
+$oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones($isfsv,$Bdl);
 $oDesplDelegacionesOrg->setNombre('dl_org');
 $oDesplDelegacionesOrg->setOpcion_sel($dl_org);
 

@@ -117,13 +117,21 @@ Class ConfigGlobal extends ServerConf {
 	 * Quizá se debería hacer en la función de mi_dele(),
 	 * pero de momento vamos a ir cambiando poco a poco
 	 * (de momento he cambiado todo lo que  tiene que ver con dl_org de actividades)
+	 * Añado el parametroisfsv, para el caso de des, poder acceder a sf.
 	 * 
+	 * @param $isfsv
 	 * @return string
 	 */
-	public static function mi_delef() {
+	public static function mi_delef($isfsv='') {
 	    $dl = self::mi_dele();
-	    if (self::mi_sfsv() == 2) {
-	        $dl .= 'f';
+	    if (!empty($isfsv)) {
+	        if ($isfsv == 2) {
+                $dl .= 'f';
+	        }
+	    } else {
+            if (self::mi_sfsv() == 2) {
+                $dl .= 'f';
+            }
 	    }
 		return $dl;
 	}

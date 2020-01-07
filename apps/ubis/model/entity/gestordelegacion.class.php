@@ -162,29 +162,14 @@ class GestorDelegacion Extends ClaseGestor {
 	/**
 	 * retorna un objecte del tipus Desplegable
 	 *
+	 * @param integer $sfsv 1 para sv, 2 para sf
 	 * @param boolean si se incluye la dl o no
 	 * @return object Una Llista de delegacions i regions.
 	 */
-	function getListaDelegacionesURegiones($bdl='t') {
-		$sf = (ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
+	function getListaDelegacionesURegiones($sfsv=1, $bdl='t') {
+		$sf = ($sfsv == 2)? 'f' : '';
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		/*
-		if ($bdl == 't') {
-			$sQuery="SELECT dl||'$sf', nombre_dl||' ('||dl||'$sf)'
-					FROM $nom_tabla
-					UNION 
-					SELECT u.region,u.nombre_region||' ('||region||')' 
-					FROM xu_region u 
-					ORDER BY 2";
-		} else {
-			$sQuery="SELECT dl||'$sf', nombre_dl||' ('||dl||'$sf)'
-					FROM $nom_tabla WHERE dl != '".ConfigGlobal::mi_dele()."'
-					UNION 
-					SELECT u.region,u.nombre_region||' ('||region||')' 
-					FROM xu_region u 
-					ORDER BY 2";
-		}*/
 		// Ahora pongo las regiones que pueden organizar (todas) en la tabla de las dl.
 		if ($bdl == 't') {
 			$sQuery="SELECT dl||'$sf', nombre_dl||' ('||region||'-'||dl||'$sf)'
