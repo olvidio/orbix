@@ -329,6 +329,7 @@ foreach($cActividades as $oActividad) {
     $observ = $oActividad->getObserv();
     // Si es para importar, quito las que ya están importadas
     // y no miro permisos de procesos
+    echo "nom: $nom_activ<br>";
     if (!empty($Qmodo) && $Qmodo == 'importar') {
         $cImportadas = $GesImportada->getImportadas(array('id_activ'=>$id_activ));
         if ($cImportadas != false && count($cImportadas) > 0) continue;

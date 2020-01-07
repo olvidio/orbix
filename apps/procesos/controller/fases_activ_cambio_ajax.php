@@ -245,7 +245,7 @@ switch($Qque) {
     				        exit($msg_err);
     				    }
     				    $of_responsable=$oTareaProceso->getOf_responsable();
-    				    if (($_SESSION['oPerm']->have_perm_oficna($of_responsable))) {
+    				    if (($_SESSION['oPerm']->have_perm_oficina($of_responsable))) {
 				            $oActividadProcesoTarea->setCompletado('t');
                             if ($oActividadProcesoTarea->DBGuardar() === false) {
                                 echo _("hay un error, no se ha guardado");

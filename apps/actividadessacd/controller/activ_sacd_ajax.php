@@ -10,6 +10,7 @@ use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoSacd;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\PersonaDl;
+use procesos\model\entity\GestorActividadProcesoTarea;
 use web\Periodo;
 
 /**
@@ -350,6 +351,16 @@ switch ($Qque) {
 				$a_valores[$i][0]=$id_activ;
 				$a_valores[$i][10]=$oPermSacd; // para no tener que recalcularlo despues.
 				$a_valores[$i][1]=$nom_activ;
+				// Fase en la que se en cuentra
+				$GesActividadProceso=new GestorActividadProcesoTarea();
+				$sacd_aprobado = $GesActividadProceso->getSacdAprobado($id_activ);
+				if ($sacd_aprobado === TRUE) {
+				    $clase = 'plaza4'; // color de plaza asignada.
+				} else {
+				    $clase = '';
+				}
+	
+				
 				// permisos centro encargado.
 				if ($oPermCtr->have_perm_activ('ver') === true) {
 					$oEnc=new GestorCentroEncargado();
@@ -385,6 +396,7 @@ switch ($Qque) {
 				$a_valores[$i][2]=$sacds;
 				$a_valores[$i][3]=$f_ini;
 				$a_valores[$i][4]=$f_fin;
+				$a_valores[$i][5]=$clase;
 			}
 		}
 		?>
@@ -405,6 +417,7 @@ switch ($Qque) {
 			$id_activ=$valores[0];
 			$f_ini=$valores[3];
 			$f_fin=$valores[4];
+			$clase=$valores[5];
 			$txt_sacd="";
 			if (is_array($valores[2])) {
 				foreach ($valores[2] as $a_sacd){
@@ -423,8 +436,9 @@ switch ($Qque) {
 				$nuevo_txt="<span class=link onclick=fnjs_nuevo_sacd(event,'$id_activ','$f_ini','$f_fin')>nuevo</span>";
 			} else {
 				$nuevo_txt='';
+
 			}
-			echo "<tr id=$id_activ ><td>$valores[1]</td><td id=$txt_id>$txt_sacd</td><td>$nuevo_txt</td></tr>";
+			echo "<tr class=$clase id=$id_activ ><td>$valores[1]</td><td id=$txt_id>$txt_sacd</td><td>$nuevo_txt</td></tr>";
 
 		}
 		?>

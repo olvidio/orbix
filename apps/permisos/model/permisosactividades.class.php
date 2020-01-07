@@ -303,7 +303,7 @@ class PermisosActividades {
 			return  new PermAccion(0);
 		}
 		$faseActual = $this->getId_fase();
-		//echo "afec: $iAfecta, fase: $faseActual, proceso: $id_tipo_proceso<br>";
+		echo "afec: $iAfecta, fase: $faseActual, proceso: $id_tipo_proceso<br>";
 		$iperm=0;
 		if ($this->btop === true) { return  new PermAccion(0); }
 		if (($oP = $this->getPermisos($iAfecta)) === false) {
