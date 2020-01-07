@@ -1,6 +1,7 @@
 <?php
 namespace actividadplazas\model;
 use core;
+use core\ConfigGlobal;
 /**
  * GestorActividadPlazas
  *
@@ -512,6 +513,9 @@ class GestorResumenPlazas {
 			$this->a_id_dele = array();
 			foreach ($cDelegaciones as $oDelegacion) {
 				$dl = $oDelegacion->getDl();
+				if (ConfigGlobal::mi_sfsv() == 2) {
+				    $dl .= 'f';
+				}
 				$id_dl = $oDelegacion->getId_dl();
 				$a_dele[$id_dl] = $dl;
 				$a_id_dele[$dl] = $id_dl;

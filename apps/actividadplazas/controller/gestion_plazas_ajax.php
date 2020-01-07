@@ -5,6 +5,7 @@
  */
 use actividades\model\entity as actividades;
 use actividadplazas\model\entity as actividadplazas;
+use core\ConfigGlobal;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -40,6 +41,10 @@ switch ($que) {
 		} else { //para el resto
 			// $dl puede ser dlx-c para las concedidas, o dlx-p para las pedidas.
 			$dl_sigla = substr($dl, 0, -2);
+			// OJO, para sf todavia hay que quitar la f:
+			if (ConfigGlobal::mi_sfsv() == 2) {
+			     $dl_sigla = substr($dl_sigla, 0, -1);
+			}
 			// buscar el id de la dl
 			$id_dl = 0;
 			$gesDelegacion = new ubis\model\entity\GestorDelegacion();

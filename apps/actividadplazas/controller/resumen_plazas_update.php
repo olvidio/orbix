@@ -1,6 +1,6 @@
 <?php
-use actividades\model\entity as actividades;
 use actividadplazas\model\entity as actividadplazas;
+use core\ConfigGlobal;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -18,10 +18,14 @@ switch ($que) {
 		$dl = (string)  filter_input(INPUT_POST, 'dl');
 
 		$mi_dele = core\ConfigGlobal::mi_delef();
-		// buscar el id de la dl
+		// OJO, para sf todavia hay que quitar la f:
+		if (ConfigGlobal::mi_sfsv() == 2) {
+		    $dl_sigla = substr($mi_dele, 0, -1);
+		}
+        // buscar el id de la dl
 		$id_dl = 0;
 		$gesDelegacion = new ubis\model\entity\GestorDelegacion();
-		$cDelegaciones = $gesDelegacion->getDelegaciones(array('dl'=>$mi_dele));
+		$cDelegaciones = $gesDelegacion->getDelegaciones(array('dl'=>$dl_sigla));
 		if (is_array($cDelegaciones) && count($cDelegaciones)) {
 			$id_dl = $cDelegaciones[0]->getId_dl();
 		}
