@@ -129,7 +129,7 @@ switch ($Qque) {
         }
         
         $oGesDl = new GestorDelegacion();
-        $oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones('t');
+        $oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones();
         $oDesplDelegacionesOrg->setNombre('dl_org');
         $oDesplDelegacionesOrg->setOpcion_sel($dl_org);
         
@@ -277,7 +277,7 @@ switch ($Qque) {
         }
         
         $oGesDl = new GestorDelegacion();
-        $oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones('t');
+        $oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones();
         $oDesplDelegacionesOrg->setNombre('dl_org');
         $oDesplDelegacionesOrg->setOpcion_sel($dl_org);
         

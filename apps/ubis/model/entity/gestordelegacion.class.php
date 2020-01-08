@@ -166,8 +166,11 @@ class GestorDelegacion Extends ClaseGestor {
 	 * @param boolean si se incluye la dl o no
 	 * @return object Una Llista de delegacions i regions.
 	 */
-	function getListaDelegacionesURegiones($sfsv=1, $bdl='t') {
-		$sf = ($sfsv == 2)? 'f' : '';
+	function getListaDelegacionesURegiones($isfsv=0, $bdl='t') {
+	    if (empty($isfsv)) {
+	       $isfsv = ConfigGlobal::mi_sfsv(); 
+	    }
+		$sf = ($isfsv == 2)? 'f' : '';
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		// Ahora pongo las regiones que pueden organizar (todas) en la tabla de las dl.
