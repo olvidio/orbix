@@ -112,16 +112,7 @@ foreach($cPersonaNotas as $oPersonaNota) {
 		$errores .= " " . _("no aparece en la lista");
 		continue;
 	}
-	$apellidos=$oPersona->getApellidos();
-	$trato=$oPersona->getTrato();
-	$trato = empty($trato)? '' : ' ';
-	$nom_v=$oPersona->getNom();
-
-	//Ni la función del postgresql ni la del php convierten los acentos.
-	$apellidos = trim($apellidos);
-	if (empty($apellidos)) { continue; }
-	$apellidos=core\strtoupper_dlb($apellidos);
-	$nom = $apellidos.", ".$trato.$nom_v;
+	$nom = $oPersona->getApellidosUpperNombre();
 		
 	//$oNota = new notas\Nota($id_situacion);
 	//$nota=$oNota->getDescripcion();

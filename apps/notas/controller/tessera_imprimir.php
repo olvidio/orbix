@@ -65,15 +65,15 @@ if (!is_object($oPersona)) {
 	$msg_err = "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 	exit($msg_err);
 }
+$nom = $oPersona->getNombreApellidos();
+/* Ahora no hace falta el latín
 $nom_vernacula = $oPersona->getNom();
 $apellidos = $oPersona->getApellidos();
 $trato = $oPersona->getTrato();
-$trato = empty($trato)? '' : ' ';
-/* Ahora no hace falta el latín
 $oGesNomLatin = new personas\GestorNombreLatin();
 $nom_lat = $oGesNomLatin->getVernaculaLatin($nom_vernacula);
-*/
 $nom=$trato.$nom_vernacula.$apellidos;
+*/
 
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 

@@ -783,6 +783,19 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 		}
 		return $this->sApellidosNombre;
 	}
+	public function getApellidosUpperNombre() {
+		$apellidos=$this->getApellidos();
+        //Ni la función del postgresql ni la del php convierten los acentos.
+        $apellidos = trim($apellidos);
+        
+        $apellidos = empty($apellidos)? '????' : $apellidos;
+        $apellidos=strtoupper_dlb($apellidos);
+        $ap_nom.= ', ';
+        $ap_nom.= !empty($this->strato)? $this->strato.' ' : '';
+        $ap_nom.= $this->snom;
+        
+        return $ap_nom;
+	}
 	/**
 	 * estableix el valor de l'atribut sApellidosNombre de Persona
 	 *

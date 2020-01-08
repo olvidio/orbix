@@ -128,20 +128,7 @@ foreach($cPersonaNotas as $oPersonaNota) {
 		$errores .= " " . _("no aparece en la lista");
 		continue;
 	}
-	$apellidos=$oPersona->getApellidos();
-	$trato=$oPersona->getTrato();
-	$trato = empty($trato)? '' : ' ';
-	$nom_v=$oPersona->getNom();
-	//$nom_lat = $oGesNomLatin->getVernaculaLatin($nom_v);
-
-	//Ni la función del postgresql ni la del php convierten los acentos.
-	$apellidos = trim($apellidos);
-
-	$apellidos = empty($apellidos)? '????' : $apellidos;
-	$apellidos=strtoupper_dlb($apellidos);
-	// Ahora los nombre pueden ser en verácula
-	//$nom = $apellidos.", ".$trato.$nom_lat;
-	$nom = $apellidos.", ".$trato.$nom_v;
+	$nom = $oPersona->getApellidosUpperNombre();
 		
 	//echo "<br>$id_nom, $apellidos";
 	$nota = $oPersonaNota->getNota_txt();
