@@ -38,6 +38,7 @@ if (!is_object($oPersona)) {
 $nom_vernacula = $oPersona->getNom();
 $apellidos = $oPersona->getApellidos();
 $trato = $oPersona->getTrato();
+$trato = empty($trato)? '' : ' ';
 /* Ahora no hace falta que sea en latín
 $oGesNomLatin = new personas\GestorNombreLatin();
 $nom_lat = $oGesNomLatin->getVernaculaLatin($nom_vernacula);

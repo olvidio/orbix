@@ -130,6 +130,7 @@ foreach($cPersonaNotas as $oPersonaNota) {
 	}
 	$apellidos=$oPersona->getApellidos();
 	$trato=$oPersona->getTrato();
+	$trato = empty($trato)? '' : ' ';
 	$nom_v=$oPersona->getNom();
 	//$nom_lat = $oGesNomLatin->getVernaculaLatin($nom_v);
 

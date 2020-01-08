@@ -114,6 +114,7 @@ foreach($cPersonaNotas as $oPersonaNota) {
 	}
 	$apellidos=$oPersona->getApellidos();
 	$trato=$oPersona->getTrato();
+	$trato = empty($trato)? '' : ' ';
 	$nom_v=$oPersona->getNom();
 
 	//Ni la función del postgresql ni la del php convierten los acentos.
