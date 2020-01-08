@@ -88,7 +88,9 @@ $continuar = (integer)  filter_input(INPUT_POST, 'continuar');
 	$id_tipo_inv='^'.$mi_sfsv.'[123][23]5';
 	$aWhere['id_tipo_activ'] = $id_tipo;
 	$aOperador['id_tipo_activ'] = '~';
-	$GesActividades = new actividades\GestorActividadDl();	
+	//$GesActividades = new actividades\GestorActividadDl();
+	// Lo cambio para actividades de todas las dl. 
+	$GesActividades = new actividades\GestorActividad();	
 	$cActividades = $GesActividades->getActividades($aWhere,$aOperador);
     $ini_d = $_SESSION['oConfig']->getDiaIniStgr();
     $ini_m = $_SESSION['oConfig']->getMesIniStgr();
