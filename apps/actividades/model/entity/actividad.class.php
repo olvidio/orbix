@@ -87,7 +87,7 @@ class Actividad Extends ActividadAll {
 		} else {
 			if ($id_tabla == 'dl') {
 			    // caso especial dre:
-			    $dl_org_no_f = substr($dl_org, 0, -1);
+                $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
 			    if ($dl_org_no_f == core\ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm_oficina('des') ) {
 				        $oActividad = new ActividadDl($a_pkey);
 			    } else {

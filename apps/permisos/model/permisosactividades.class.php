@@ -206,7 +206,7 @@ class PermisosActividades {
 			$id_tipo_activ = $oActividad->getId_tipo_activ();
 			$dl_org = $oActividad->getDl_org();
 		}
-        $dl_org_no_f = substr($dl_org, 0, -1);
+        $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
         
 		$this->iid_tipo_activ = $id_tipo_activ;
 		$oTipoDeActividad = new TipoDeActividad($id_tipo_activ);

@@ -204,8 +204,8 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
                 // ojo marcha atrás tampoco debería poderse.
                 if ($statusActividad != ActividadAll::STATUS_ACTUAL && $statusProceso == ActividadAll::STATUS_ACTUAL) {
                     // para dl y dlf:
-                    $dl_org_no_f = substr($dl_org, 0, -1);
-                    if ($dl_org == core\ConfigGlobal::mi_delef() OR $dl_org_no_f == core\ConfigGlobal::mi_delef()) {
+                    $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
+                    if ($dl_org == core\ConfigGlobal::mi_delef() OR $dl_org_no_f == core\ConfigGlobal::mi_dele()) {
                         if ( $_SESSION['oPerm']->have_perm_oficina('des') ) {
                             $oActividad->setStatus($statusProceso);
                             $oActividad->DBGuardar();

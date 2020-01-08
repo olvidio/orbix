@@ -76,7 +76,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	    $oTipo = new TipoDeActividad(array('id_tipo_activ'=>$iid_tipo_activ));
 	   
 	    $dl_org = $oActividad->getDl_org();
-	    $dl_org_no_f = substr($dl_org, 0, -1);
+        $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
 	    if ($dl_org == core\ConfigGlobal::mi_delef() OR $dl_org_no_f == core\ConfigGlobal::mi_dele()) {
 	        $id_tipo_proceso=$oTipo->getId_tipo_proceso();
 	    } else {
@@ -273,7 +273,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	        $oActividad = new Actividad($iid_activ);
 	        $oActividad->DBCarregar();
 	        $dl_org = $oActividad->getDl_org();
-            $dl_org_no_f = substr($dl_org, 0, -1);
+            $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
             if ($dl_org == ConfigGlobal::mi_delef() OR $dl_org_no_f == ConfigGlobal::mi_dele()) {
                 $oActividad->setStatus($statusActividad);
                 $quiet = 1; // Para que no anote el cambio.
