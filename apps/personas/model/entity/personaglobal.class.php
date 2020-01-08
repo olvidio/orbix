@@ -1,6 +1,7 @@
 <?php
 namespace personas\model\entity;
 use core\ConfigGlobal;
+use function core\strtoupper_dlb;
 use core;
 use web;
 use ubis\model\entity as ubis;
@@ -789,7 +790,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
         $apellidos = trim($apellidos);
         
         $apellidos = empty($apellidos)? '????' : $apellidos;
-        $apellidos=strtoupper_dlb($apellidos);
+        $apellidos = strtoupper_dlb($apellidos);
         $ap_nom.= ', ';
         $ap_nom.= !empty($this->strato)? $this->strato.' ' : '';
         $ap_nom.= $this->snom;
