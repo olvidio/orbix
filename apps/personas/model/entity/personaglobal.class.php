@@ -790,7 +790,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
         $apellidos = trim($apellidos);
         
         $apellidos = empty($apellidos)? '????' : $apellidos;
-        $apellidos = strtoupper_dlb($apellidos);
+        $ap_nom = strtoupper_dlb($apellidos);
         $ap_nom.= ', ';
         $ap_nom.= !empty($this->strato)? $this->strato.' ' : '';
         $ap_nom.= $this->snom;
