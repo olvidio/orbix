@@ -21,7 +21,10 @@ switch ($que) {
 		// OJO, para sf todavia hay que quitar la f:
 		if (ConfigGlobal::mi_sfsv() == 2) {
 		    $dl_sigla = substr($mi_dele, 0, -1);
+		} else {
+		    $dl_sigla = $mi_dele;
 		}
+		
         // buscar el id de la dl
 		$id_dl = 0;
 		$gesDelegacion = new ubis\model\entity\GestorDelegacion();
