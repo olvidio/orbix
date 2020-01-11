@@ -6,12 +6,46 @@
 *
 */
 
-use cambios\model\entity\GestorCambioUsuario;
-use core\ConfigGlobal;
-use usuarios\model\entity\Usuario;
-use web\Lista;
-use cambios\model\entity\CambioDl;
 
+require_once ('/var/www/orbix/cambios/model/entity/gestorcambiousuario.class.php');
+require_once ('/var/www/orbix/cambios/model/entity/cambiodl.class.php');
+require_once ('/var/www/orbix/core/configglobal.class.php');
+require_once ('/var/www/orbix/core/configdb.class.php');
+require_once ('/var/www/orbix/core/configdbconnection.class.php');
+require_once ('/var/www/orbix/usuarios/model/entity/usuario.class.php');
+require_once ('/var/www/orbix/web/lista.class.php');
+
+
+// public para todo el mundo
+$oConfigDB = new ConfigDB('comun'); //de la database comun
+
+$config = $oConfigDB->getEsquema('public');
+$oConexion = new dbConnection($config);
+$oDBPC = $oConexion->getPDO();
+
+$config = $oConfigDB->getEsquema('resto');
+$oConexion = new dbConnection($config);
+$oDBRC = $oConexion->getPDO();
+
+//sv
+$esquemav = "H-dlbv";
+$esquema = \substr($esquemav, 0, -1);
+$esquemaf = $esquema.'f';
+//comun
+$oConfigDB->setDataBase('comun');
+$config = $oConfigDB->getEsquema($esquema);
+$oConexion = new dbConnection($config);
+$oDBC = $oConexion->getPDO();
+//sv exterior
+$oConfigDB->setDataBase('sv-e');
+$config = $oConfigDB->getEsquema($esquemav);
+$oConexion = new dbConnection($config);
+$oDBE = $oConexion->getPDO();
+
+$config = $oConfigDB->getEsquema('publicv');
+$oConexion = new dbConnection($config);
+$oDBEP = $oConexion->getPDO();
+        
 /* Hay que pasarle los argumentos que no tienen si se le llama por command line:
  $username;
  $password;
@@ -24,23 +58,9 @@ $username = '';
 if(!empty($argv[1])) {
     $_POST['username'] = $argv[1];
     $_POST['password'] = $argv[2];
-    $_SERVER['DIRWEB'] = $argv[3];
-    $_SERVER['DOCUMENT_ROOT'] = $argv[4];
-    putenv("ESQUEMA=$argv[5]");
-    putenv("UBICACION=$argv[6]");
-    
     $username = $argv[1];
 }
 
-// INICIO Cabecera global de URL de controlador *********************************
-
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
-
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
-// Crea los objectos para esta url  **********************************************
-// FIN de  Cabecera global de URL de controlador ********************************
 
 /* se ejecuta desde un cron (de momento) en el servidor exterior, que es el que tiene conexión al servidor de correo.
    Hay que hacerlo para todos los usuarios.
