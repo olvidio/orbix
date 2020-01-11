@@ -1,15 +1,35 @@
 <?php
-// si lo ejecuto dese el crontab.
-use cambios\model\entity\Cambio;
+/*
+* si lo ejecuto dese el crontab.
+* OJO: poner en  '/etc/php/7.2/cli/php.ini'
+*       include_path = ".:/usr/share/php:/home/dani/orbix_local/orbix"
+*
+*/
+
 use cambios\model\entity\GestorCambioUsuario;
 use core\ConfigGlobal;
 use usuarios\model\entity\Usuario;
 use web\Lista;
 use cambios\model\entity\CambioDl;
 
+/* Hay que pasarle los argumentos que no tienen si se le llama por command line:
+ $username;
+ $password;
+ $dir_web = orbix | pruebas;
+ document_root = /home/dani/orbix_local
+ $esquema_web = 'H-dlbv';
+ $ubicacion = 'sv';
+ */
+$username = '';
 if(!empty($argv[1])) {
-	$_POST['username'] = $argv[1];
-	$_POST['password'] = $argv[2];
+    $_POST['username'] = $argv[1];
+    $_POST['password'] = $argv[2];
+    $_SERVER['DIRWEB'] = $argv[3];
+    $_SERVER['DOCUMENT_ROOT'] = $argv[4];
+    putenv("ESQUEMA=$argv[5]");
+    putenv("UBICACION=$argv[6]");
+    
+    $username = $argv[1];
 }
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -54,7 +74,6 @@ foreach ($cCambiosUsuario as $oCambioUsuario) {
 			$id = array();
 		}
 		$oMiUsuario = new Usuario($id_usuario);
-		$mySecc = $oMiUsuario->getSfsv();
 		$email = $oMiUsuario->getEmail();
 		$id_usuario_anterior = $id_usuario;
 	}
@@ -67,7 +86,7 @@ foreach ($cCambiosUsuario as $oCambioUsuario) {
 	$aviso_txt=$oCambio->getAvisoTxt();
 	if ($aviso_txt === false) continue;
 	$i++;
-	if ($sfsv_quien_cambia == $mi_sfsv) {
+	if ($sfsv_quien_cambia == ConfigGlobal::mi_sfsv()) {
 	    $oUsuarioCmb = new usuario($quien_cambia);
 	    $quien = $oUsuarioCmb->getUsuario();
 	} else {
@@ -105,7 +124,7 @@ function enviar_mail($email,$datos,$id){
 	$headers .= "Content-type: text/html; charset=utf-8\r\n"; 
 
 	//Dirección del remitente 
-	$headers .= "From: Actividades <no-Reply@moneders.net>\r\n"; 
+	$headers .= "From: Aquinate <no-Reply@moneders.net>\r\n"; 
 	//Dirección de respuesta
 	$headers .= "Reply-To: no-Reply@moneders.net\r\n"; 
 	//Ruta del mensaje desde origen a destino 
@@ -113,7 +132,7 @@ function enviar_mail($email,$datos,$id){
 
 
 	// sólo si no lo ejecuto dese el crontab.
-	if(empty($argv[1])) {
+	if(empty($username)) {
 		// Me lo envia a root (el que ejecuta crontab).
 		//echo "($email<br>$asunto<br>$cuerpo<br>$headers)<br>"; 
 	}
