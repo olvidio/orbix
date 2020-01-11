@@ -79,6 +79,12 @@ class Cambio Extends core\ClasePropiedades {
 	 */
 	 protected $iid_fase;
 	/**
+	 * Id_status de Cambio
+	 *
+	 * @var integer
+	 */
+	 protected $iid_status;
+	/**
 	 * Dl_org de Cambio
 	 *
 	 * @var string
@@ -183,6 +189,7 @@ class Cambio Extends core\ClasePropiedades {
 		$aDades['id_activ'] = $this->iid_activ;
 		$aDades['id_tipo_activ'] = $this->iid_tipo_activ;
 		$aDades['id_fase'] = $this->iid_fase;
+		$aDades['id_status'] = $this->iid_status;
 		$aDades['dl_org'] = $this->sdl_org;
 		$aDades['objeto'] = $this->sobjeto;
 		$aDades['propiedad'] = $this->spropiedad;
@@ -200,6 +207,7 @@ class Cambio Extends core\ClasePropiedades {
 					id_activ                 = :id_activ,
 					id_tipo_activ            = :id_tipo_activ,
 					id_fase                  = :id_fase,
+					id_status                = :id_status,
 					dl_org                   = :dl_org,
 					objeto                   = :objeto,
 					propiedad                = :propiedad,
@@ -228,8 +236,8 @@ class Cambio Extends core\ClasePropiedades {
 			 * 'cambios', puede haber conflico con el id_item_cambio. 
 			 */
 			$mi_esquema = 3000;
-			$campos="(id_schema,id_tipo_cambio,id_activ,id_tipo_activ,id_fase,dl_org,objeto,propiedad,valor_old,valor_new,quien_cambia,sfsv_quien_cambia,timestamp_cambio)";
-			$valores="($mi_esquema,:id_tipo_cambio,:id_activ,:id_tipo_activ,:id_fase,:dl_org,:objeto,:propiedad,:valor_old,:valor_new,:quien_cambia,:sfsv_quien_cambia,:timestamp_cambio)";		
+			$campos="(id_schema,id_tipo_cambio,id_activ,id_tipo_activ,id_fase,id_status,dl_org,objeto,propiedad,valor_old,valor_new,quien_cambia,sfsv_quien_cambia,timestamp_cambio)";
+			$valores="($mi_esquema,:id_tipo_cambio,:id_activ,:id_tipo_activ,:id_fase,:id_status,:dl_org,:objeto,:propiedad,:valor_old,:valor_new,:quien_cambia,:sfsv_quien_cambia,:timestamp_cambio)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClauError = 'Cambio.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -302,7 +310,7 @@ class Cambio Extends core\ClasePropiedades {
 	protected function getNomActivEliminada($iId) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-	    if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_activ=$iId AND tipo_cambio=3")) === false) {
+	    if (($qRs = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_activ=$iId AND id_tipo_cambio=3")) === false) {
 	        $sClauError = 'ActividadCambio.NomActivEliminada';
 	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 	        return false;
@@ -326,6 +334,7 @@ class Cambio Extends core\ClasePropiedades {
 	    $sValor_new = $this->getValor_new();
 	    
 	    $oActividad = new Actividad($iId);
+	    $id_statusActual = $oActividad->getStatus();
 	    $DatosCampoStatus = $oActividad->getDatosStatus();
 	    $aStatus = $DatosCampoStatus->getLista();
 	    
@@ -436,24 +445,38 @@ class Cambio Extends core\ClasePropiedades {
 	                    break;
 	            }
 	            break;
-	        case 4: //cambio de fase.
+	        case 4: //cambio de fase o status.
 	            $GesActividadFase = new GestorActividadFase();
 	            
 	            $idFase = $this->getId_fase();
+	            $idStatus = $this->getId_status();
+
 	            if (!$bEliminada) {
-	                $GestorActividadProcesoTarea = new GestorActividadProcesoTarea();
-	                $id_faseActual = $GestorActividadProcesoTarea->getFaseActual($iId);
-	                
-	                $cFases = $GesActividadFase->getActividadFases(array('id_fase'=>$idFase));
-	                $sFase = $cFases[0]->getDesc_fase();
-	                $cFases = $GesActividadFase->getActividadFases(array('id_fase'=>$id_faseActual));
-	                $sFaseActual = $cFases[0]->getDesc_fase();
-	                
-	                if ($sValor_old == '-' && $sValor_new == 1) {
-	                    $sformat = 'Fase "%2$s" completada en la actividad "%1$s". Fase actual "%3$s"';
-	                }
-	                if ($sValor_old == 1 && $sValor_new == '-') {
-	                    $sformat = 'Fase "%2$s" eliminada en la actividad "%1$s". Fase actual "%3$s"';
+	                if (!empty($idFase)) {
+                        $GestorActividadProcesoTarea = new GestorActividadProcesoTarea();
+                        $id_faseActual = $GestorActividadProcesoTarea->getFaseActual($iId);
+                        
+                        $cFases = $GesActividadFase->getActividadFases(array('id_fase'=>$idFase));
+                        $sFase = $cFases[0]->getDesc_fase();
+                        $cFases = $GesActividadFase->getActividadFases(array('id_fase'=>$id_faseActual));
+                        $sFaseActual = $cFases[0]->getDesc_fase();
+                        
+                        if ($sValor_old == '-' && $sValor_new == 1) {
+                            $sformat = 'Fase "%2$s" completada en la actividad "%1$s". Fase actual "%3$s"';
+                        }
+                        if ($sValor_old == 1 && $sValor_new == '-') {
+                            $sformat = 'Fase "%2$s" eliminada en la actividad "%1$s". Fase actual "%3$s"';
+                        }
+	                } else if (!empty($idStatus)) {
+                        $sFaseActual = $aStatus[$id_statusActual];
+                        $sFase =  $aStatus[$idStatus];
+                        
+                        if ($sValor_old == '-' && $sValor_new == 1) {
+                            $sformat = 'Status "%2$s" completada en la actividad "%1$s". Status actual "%3$s"';
+                        }
+                        if ($sValor_old == 1 && $sValor_new == '-') {
+                            $sformat = 'Status "%2$s" eliminada en la actividad "%1$s". Status actual "%3$s"';
+                        }
 	                }
 	            } else {
 	                $sFase = '';
@@ -483,7 +506,13 @@ class Cambio Extends core\ClasePropiedades {
 	    $pwd = ConfigGlobal::mi_pass();
 	    $err = ConfigGlobal::$directorio.'/log/avisos.err';
 	    $out = ConfigGlobal::$directorio.'/log/avisos.out';
-	    $command = "nohup /usr/bin/php $program $username $pwd >> $out 2>> $err < /dev/null &";
+	    // Ahora además le paso otro parámetro para saber si estoy en pruebas o producción:
+	    $dirweb = $_SERVER['DIRWEB'];
+	    $doc_root = $_SERVER['DOCUMENT_ROOT'];
+        $esquema_web = getenv('ESQUEMA');
+        $ubicacion = getenv('UBICACION');
+        
+	    $command = "nohup /usr/bin/php $program $username $pwd $dirweb $doc_root $esquema_web $ubicacion >> $out 2>> $err < /dev/null &";
 	    exec($command);
 	}
 	
@@ -500,6 +529,7 @@ class Cambio Extends core\ClasePropiedades {
 		if (array_key_exists('id_activ',$aDades)) $this->setId_activ($aDades['id_activ']);
 		if (array_key_exists('id_tipo_activ',$aDades)) $this->setId_tipo_activ($aDades['id_tipo_activ']);
 		if (array_key_exists('id_fase',$aDades)) $this->setId_fase($aDades['id_fase']);
+		if (array_key_exists('id_status',$aDades)) $this->setId_status($aDades['id_status']);
 		if (array_key_exists('dl_org',$aDades)) $this->setDl_org($aDades['dl_org']);
 		if (array_key_exists('objeto',$aDades)) $this->setObjeto($aDades['objeto']);
 		if (array_key_exists('propiedad',$aDades)) $this->setPropiedad($aDades['propiedad']);
@@ -630,6 +660,25 @@ class Cambio Extends core\ClasePropiedades {
 	 */
 	function setId_fase($iid_fase='') {
 		$this->iid_fase = $iid_fase;
+	}
+	/**
+	 * Recupera l'atribut iid_status de Cambio
+	 *
+	 * @return integer iid_status
+	 */
+	function getId_status() {
+		if (!isset($this->iid_status)) {
+			$this->DBCarregar();
+		}
+		return $this->iid_status;
+	}
+	/**
+	 * estableix el valor de l'atribut iid_status de Cambio
+	 *
+	 * @param integer iid_status='' optional
+	 */
+	function setId_status($iid_status='') {
+		$this->iid_status = $iid_status;
 	}
 	/**
 	 * Recupera l'atribut sdl_org de Cambio
@@ -855,6 +904,18 @@ class Cambio Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_fase'));
 		$oDatosCampo->setEtiqueta(_("id_fase"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut iid_status de Cambio
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosId_status() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_status'));
+		$oDatosCampo->setEtiqueta(_("id_status"));
 		return $oDatosCampo;
 	}
 	/**

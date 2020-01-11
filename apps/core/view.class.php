@@ -28,7 +28,6 @@ class View {
 	/**
 	 * Constructor de la classe.
 	 *
-	 * @return GestorActividad
 	 *
 	 */
 	function __construct($namespace) {

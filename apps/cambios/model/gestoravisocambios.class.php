@@ -120,6 +120,9 @@ class gestorAvisoCambios {
 		$oAhora = new DateTimeLocal();
 		$ahora_iso = $oAhora->format('Y-m-d H:i:s');
 		
+        $id_fase = '';
+        $id_status = '';
+		
 		// per saber el tipus d'activitat.
         switch ($sObjeto) {
             case 'Actividad': //si el canvi és a l'activitat, ja el tinc.
@@ -146,11 +149,12 @@ class gestorAvisoCambios {
     		if (ConfigGlobal::is_app_installed('procesos')) {
                 $oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
                 $id_fase = $oGestorActividadProcesoTarea->getFaseActual($iid_activ);
+                $id_status = $status;
     		} else {
-                $id_fase = $status;
+                $id_status = $status;
     		}
 		} else {
-		    $id_fase = $status;
+		    $id_status = $status;
             $oActividadCambio = new Cambio();
 		}
 		
@@ -160,6 +164,7 @@ class gestorAvisoCambios {
 				$oActividadCambio->setId_activ($iid_activ);
 				$oActividadCambio->setId_tipo_activ($iId_tipo_activ);
 				$oActividadCambio->setId_fase($id_fase);
+				$oActividadCambio->setId_status($id_status);
 				$oActividadCambio->setDl_org($dl_org);
 				$oActividadCambio->setObjeto($sObjeto);
 				$oActividadCambio->setQuien_cambia($id_user);
@@ -195,6 +200,7 @@ class gestorAvisoCambios {
 					$oActividadCambio->setId_activ($iid_activ);
 					$oActividadCambio->setId_tipo_activ($iId_tipo_activ);
 					$oActividadCambio->setId_fase($id_fase);
+					$oActividadCambio->setId_status($id_status);
 					$oActividadCambio->setDl_org($dl_org);
 					$oActividadCambio->setObjeto($sObjeto);
 					$oActividadCambio->setPropiedad($key);
@@ -211,6 +217,7 @@ class gestorAvisoCambios {
 				$oActividadCambio->setId_activ($iid_activ);
 				$oActividadCambio->setId_tipo_activ($iId_tipo_activ);
 				$oActividadCambio->setId_fase($id_fase);
+				$oActividadCambio->setId_status($id_status);
 				$oActividadCambio->setDl_org($dl_org);
 				$oActividadCambio->setObjeto($sObjeto);
 				$oActividadCambio->setValor_new();
@@ -251,6 +258,7 @@ class gestorAvisoCambios {
 					$oActividadCambio->setId_activ($iid_activ);
 					$oActividadCambio->setId_tipo_activ($iId_tipo_activ);
 					$oActividadCambio->setId_fase($id_fase);
+					$oActividadCambio->setId_status($id_status);
 					$oActividadCambio->setDl_org($dl_org);
 					$oActividadCambio->setObjeto($sObjeto);
 					$oActividadCambio->setPropiedad('completado');

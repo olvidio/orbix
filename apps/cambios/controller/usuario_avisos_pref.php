@@ -69,8 +69,10 @@ if (!empty($Qid_item_usuario_objeto)) {
 	$objeto=$oCambioUsuarioObjetoPref->getObjeto();
 	$aviso_tipo=$oCambioUsuarioObjetoPref->getAviso_tipo();
 	$id_pau=$oCambioUsuarioObjetoPref->getId_pau();
-
-	$dl_propia = (ConfigGlobal::mi_delef() == $dl_org)? 't' : 'f';
+	
+	// para dl y dlf:
+	$dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
+	$dl_propia = (ConfigGlobal::mi_dele() == $dl_org_no_f)? 't' : 'f';
 	
 	$GesTiposActiv = new GestorTipoDeActividad();
 	$aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ,$dl_propia);

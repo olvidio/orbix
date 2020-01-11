@@ -1,4 +1,5 @@
 <?php
+
 /* En el caso de usarse desde la lienea de comandos (cli), se le pasan parametros ($argv).
 *  No se le puede pasar id de la session, porque sólo puede haber un proceso con un session_id.
 *  Debe crearse una nueva session. Hay que pasarle un usuario y un password.
@@ -7,16 +8,22 @@
 *
 * Inicialmente se ejecutaba manualmente desde menú y no habia problema.
 * Al dispararlo cada vez que se ejecuta un cambio, pasa que pueden ejecutarse varios procesos en paralelo.
-* Como lo primero que hace es coger los cambios que no se han anotado, puede que cuando le toque escribirlo ya lo haya hecho otro proceso antes.
+* Como lo primero que hace es coger los cambios que no se han anotado, puede que cuando le toque escribirlo ya lo haya hecho
+* otro proceso antes.
 * Para evitarlo escribo en un archivo ($pid) que estoy trabajando, y hasta que no acabe no empieza el siguiente proceso. 
-* Esto tampoco funciona, porque en el tiempo de espera para saber si ya ha acabado el primer proceso, se puede colar algun otro proceso, saltándose el orden.
-* Realmente no debería importar, excepto en el caso de asistencias en las que no quiero que se avise de la primera y si cambia el orden, la primera puede ser la segunda...
+* Esto tampoco funciona, porque en el tiempo de espera para saber si ya ha acabado el primer proceso, se puede colar algun
+* otro proceso, saltándose el orden.
+* Realmente no debería importar, excepto en el caso de asistencias en las que no quiero que se avise de la primera y 
+* si cambia el orden, la primera puede ser la segunda...
 *
-* Finalmente lo que se hace es lanzar el proceso, al teminar vuelve iniciarse hasta que no haya ningun cambio que analizar. Al principio se anota el pid, y no se borra hasta el final. Si se dispara un proceso en paralelo, al ver que existe el pid, se para y no hace nada. En caso contrario se inicia.
+* Finalmente lo que se hace es lanzar el proceso, al teminar vuelve iniciarse hasta que no haya ningun cambio que analizar.
+* Al principio se anota el pid, y no se borra hasta el final. Si se dispara un proceso en paralelo, al ver que existe el pid,
+* se para y no hace nada. En caso contrario se inicia.
 *
 * OJO: poner en  '/etc/php/7.2/cli/php.ini'
 *       include_path = ".:/usr/share/php:/home/dani/orbix_local/orbix"
 */
+
 use actividadcargos\model\entity\GestorActividadCargo;
 use actividades\model\entity\Actividad;
 use actividades\model\entity\GestorImportada;
@@ -34,10 +41,27 @@ use usuarios\model\entity\Usuario;
 use zonassacd\model\entity\GestorZona;
 use zonassacd\model\entity\GestorZonaSacd;
 
+/* Hay que pasarle los argumentos que no tienen si se le llama por command line:
+$username;
+$password;
+$dir_web = orbix | pruebas;
+document_root = /home/dani/orbix_local
+$esquema_web = 'H-dlbv';
+$ubicacion = 'sv';
+*/
+
 if(!empty($argv[1])) {
 	$_POST['username'] = $argv[1];
 	$_POST['password'] = $argv[2];
+	$_SERVER['DIRWEB'] = $argv[3];
+	$_SERVER['DOCUMENT_ROOT'] = $argv[4];
+	putenv("ESQUEMA=$argv[5]");
+	putenv("UBICACION=$argv[6]");
+	
+	$username = $argv[1];
+	$esquema = $argv[5];
 }
+
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -48,15 +72,42 @@ require_once ("apps/core/global_header.inc");
 require_once ("apps/core/global_object.inc");
 // Crea los objectos para esta url  **********************************************
 
-if(!empty($argv[1])) {
-	// Si he lanzado el proceso automáticamente, escribo el id del proceso.
-	// si ya existe un proceso en marcha, salgo del proceso.
-	$pid = ConfigGlobal::$directorio.'/log/avisos.pid';
-	$file = file_get_contents($pid);
-	if (!empty($file)) exit;
-	$ahora=date("d/m/Y H:i:s");
-	$mensaje = "$ahora -- ${_POST['username']} \n";
-	file_put_contents($pid, $mensaje);
+if(empty($argv[1])) { // Si lo hago desde el menu ()
+    $username = ConfigGlobal::mi_usuario();
+    $esquema = ConfigGlobal::mi_region_dl();
+}
+
+
+function crear_pid($username,$esquema) {
+    if(!empty($username)) {
+        // Si he lanzado el proceso automáticamente, escribo el id del proceso.
+        // si ya existe un proceso en marcha, salgo del proceso.
+        $filename = ConfigGlobal::$directorio."/log/avisos.$esquema.pid";
+        
+        if (file_exists($filename)) {
+           $fileContent = file_get_contents($filename);
+           if (!empty($fileContent)) exit;
+        }
+        $ahora=date("d/m/Y H:i:s");
+        $mensaje = "$ahora -- $username \n";
+        file_put_contents($filename, $mensaje, LOCK_EX);
+    }
+}
+
+function borrar_pid($username,$esquema) {
+    // al finalizar borro el pid
+    if(!empty($username)) {
+        // Si he lanzado el proceso automáticamente.
+        // Borro el pid, para que empieze el siguiente proceso.
+        // Hay que asegurarse que se han acabado de escribir todos los anotados, para que no los vuelva a escribir.
+        // Por esto espero 7 segundos (con 3 no basta...)
+        $filename = ConfigGlobal::$directorio."/log/avisos.$esquema.pid";
+        
+        if (file_exists($filename)) {
+            $mensaje = "";
+            file_put_contents($filename, $mensaje, LOCK_EX);
+        }
+    }
 }
 
 function fn_apuntar($id_schema_cmb,$id_item_cmb,$id_usuario,$aviso_tipo,$aviso_donde) {
@@ -228,6 +279,8 @@ function soy_encargado($id_nom,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cm
 }
 // FIN de  Cabecera global de URL de controlador ********************************
 
+// Mirar si hay otro proceso en marcha:
+crear_pid($username,$esquema);
 
 $GesCambios = new GestorCambio();
 // Borrar los cambios y sus anotaciones de hace más de un año:
@@ -248,12 +301,15 @@ while ($num_cambios) {
 		$dl_org = $oCambio->getDl_org();
 		$id_tipo_activ = $oCambio->getId_tipo_activ();
 		$id_fase_cmb = $oCambio->getId_fase();
+		$id_status_cmb = $oCambio->getId_status();
 		$propiedad_cmb = $oCambio->getPropiedad();
 		$valor_old_cmb = $oCambio->getValor_old();
 		$valor_new_cmb = $oCambio->getValor_new();
 		$id_activ = $oCambio->getId_activ();
 		
-		$dl_propia = (ConfigGlobal::mi_delef() == $dl_org)? 't' : 'f';
+		// para dl y dlf:
+		$dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
+		$dl_propia = (ConfigGlobal::mi_dele() == $dl_org_no_f)? 't' : 'f';
 		if (ConfigGlobal::is_app_installed('procesos')) {
             // para evitar repetir el proceso si el tipo de actividad es el mismo.
             if ($id_tipo_activ_anterior != $id_tipo_activ || $dl_org_anterior != $dl_org) {
@@ -274,7 +330,11 @@ while ($num_cambios) {
         if ($dl_propia == 'f') {
             $GesImportada = new GestorImportada();
             $cImportadas = $GesImportada->getImportadas(array('id_activ'=>$id_activ));
-            if (empty($cImportadas)) { continue; }
+            if (empty($cImportadas)) { 
+        		// marco el cambio como anotado.
+		        anotado($id_schema_cmb,$id_item_cmb);
+                continue;
+            }
         }
 		
 		$aWhere = [];
@@ -309,14 +369,15 @@ while ($num_cambios) {
 			
 			$fase_correcta = 0;
 			/////////////////// COMPARAR STATUS //////////////////////////////////////////
-			// Si el id_fase es 1,2,3,4 corresponde al status de la actividad,
+			// Si el id_fase es NULL, hay que mirar el id_status
+			// Si el id_status es 1,2,3,4 corresponde al status de la actividad,
 			//   porque no tiene instalado el módulo de procesos.
-			if ($id_fase_ini < 10 || $id_fase_fin < 10) {
-			    if ($id_fase_ini <= $id_fase_cmb && $id_fase_fin >= $id_fase_cmb) {
+			if (empty($id_fase_cmb)) {
+			    if ($id_fase_ini <= $id_status_cmb && $id_fase_fin >= $id_status_cmb) {
                     $fase_correcta = 1;
 			    }
 			} else {
-			/////////////////// COMPARAR FASES //////////////////////////////////////////
+			    /////////////////// COMPARAR FASES //////////////////////////////////////////
 			
 			    // Si tengo instalado el modulo de procesos:
 			    if(ConfigGlobal::is_app_installed('procesos')) {
@@ -337,7 +398,7 @@ while ($num_cambios) {
                         }
                     }
 			    } else {
-			        //Yo no tengo instalado el modulo proecesos, pero la dl que ha hecho el cambio si.
+			        //Yo no tengo instalado el modulo procesos, pero la dl que ha hecho el cambio si.
 			        // miro que esté en el status.
             		$oActividad = new Actividad($id_activ);
             		$status = $oActividad->getStatus();
@@ -346,6 +407,7 @@ while ($num_cambios) {
                     }
 			    }
 			}
+			
 			if ($fase_correcta === 1) {
                 //mirar el valor de la propiedad
                 $GesCambiosUsuarioPropiedadPref = new GestorCambioUsuarioPropiedadPref();
@@ -374,13 +436,18 @@ while ($num_cambios) {
                     }
                 }
             } else {
-                echo "<br>";
-                echo _("ERROR: la fase de la actividad no está en el proceso.");
-                echo " id_activ: $id_activ<br>";
-                echo " id_usuario: $id_usuario<br>";
-                echo " id_fase_ini: $id_fase_ini<br>";
-                echo " id_fase_fin: $id_fase_fin<br>";
-                print_r($aFases);
+                // Por lo menos en el caso de id_status (empty id_fase_cmb) no es un error, simplemente 
+                // significa que el estatus en que se ha cambiado la actividad no pertenece al rango
+                // para el que hay que generar el aviso.
+                if (!empty($id_fase_cmb)) {
+                    echo "<br>";
+                    echo _("ERROR: la fase de la actividad no está en el proceso.");
+                    echo " id_activ: $id_activ<br>";
+                    echo " id_usuario: $id_usuario<br>";
+                    echo " id_fase_ini: $id_fase_ini<br>";
+                    echo " id_fase_fin: $id_fase_fin<br>";
+                    print_r($aFases);
+                }
 			}
 			if ($apuntar) {
 				fn_apuntar($id_schema_cmb,$id_item_cmb,$id_usuario,$aviso_tipo,$aviso_donde);
@@ -394,14 +461,12 @@ while ($num_cambios) {
 	$num_cambios_old = $num_cambios;
 	$cNuevosCambios = $GesCambios->getCambiosNuevos();
 	$num_cambios = count($cNuevosCambios);
-	if ($num_cambios === $num_cambios_old) { exit (_("Algo falla")); }
+	if ($num_cambios === $num_cambios_old) {
+	   // igualmente borro el pid
+        borrar_pid($username,$esquema);
+	    exit (_("Algo falla")); 
+	}
 }
-// al finalizar borro el pid
-if(!empty($argv[1])) {
-	// Si he lanzado el proceso automáticamente.
-	// Borro el pid, para que empieze el siguiente proceso.
-	// Hay que asegurarse que se han acabado de escribir todos los anotados, para que no los vuelva a escribir. Po esto espero 7 segundos (con 3 no basta...)
-	$pid = ConfigGlobal::$directorio.'/log/avisos.pid';
-	$mensaje = "";
-	file_put_contents($pid, $mensaje);
-}
+
+// acabar el proceso:
+borrar_pid($username,$esquema);

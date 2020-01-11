@@ -25,11 +25,11 @@ class DBPropiedades {
     public function opciones_posibles_esquemas($default='') {
         /* Para el caso de sf, entrando como en el directorio orbixsf, al redirigir
          * a orbix, la ubicación acaba siendo sv.
-         * solo me sirve   $_SERVER['UBICACION']; para la entrada.
+         * solo me sirve getenv('UBICACION'); para la entrada.
          * una vez dentro, debo usar el usuario para saber si es sv o sf
          */
         if (empty($GLOBALS['user_sfsv'])) {
-            $ubicacion = $_SERVER['UBICACION'];
+            $ubicacion = getenv('UBICACION');
         } else {
             if ($GLOBALS['user_sfsv'] == 1) {
                 $ubicacion = 'sv';
@@ -77,11 +77,11 @@ class DBPropiedades {
     public function array_posibles_esquemas() {
         /* Para el caso de sf, entrando como en el directorio orbixsf, al redirigir
          * a orbix, la ubicación acaba siendo sv.
-         * solo me sirve   $_SERVER['UBICACION']; para la entrada.
+         * solo me sirve   getenv('UBICACION'); para la entrada.
          * una vez dentro, debo usar el usuario para saber si es sv o sf
          */
         if (empty($GLOBALS['user_sfsv'])) {
-            $ubicacion = $_SERVER['UBICACION'];
+            $ubicacion = getenv('UBICACION');
         } else {
             if ($GLOBALS['user_sfsv'] == 1) {
                 $ubicacion = 'sv';

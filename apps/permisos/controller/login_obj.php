@@ -156,6 +156,7 @@ function logout($ubicacion,$idioma,$esquema,$error,$esquema_web='') {
 //$GLOBALS['oPermActiv'] = new PermActiv;
 $esquema_web = getenv('ESQUEMA');
 $ubicacion = getenv('UBICACION');
+
 $_SESSION['sfsv'] = $ubicacion;
 
 if (!empty($esquema_web)) {
@@ -178,7 +179,7 @@ if ( !isset($_SESSION['session_auth'])) {
 				$mail='';
 
 				$aWhere = array('usuario'=>$_POST['username']);
-				$esquema = $_POST['esquema'];
+				$esquema = empty($_POST['esquema'])? $esquema_web : $_POST['esquema'];
 				if (substr($esquema,-1)=='v') {
 					$sfsv = 1;
 					$oConfigDB = new ConfigDB('sv-e'); 
@@ -283,7 +284,7 @@ if ( !isset($_SESSION['session_auth'])) {
 								'role_pau'=>$role_pau,
 								'username'=>$_POST['username'],
 								'password'=>$_POST['password'],
-								'esquema'=>$_POST['esquema'],
+								'esquema'=>$esquema,
 								'perms_activ'=>$perms_activ,
 								'mi_oficina'=>$mi_oficina,
 								'mi_oficina_menu'=>$mi_oficina_menu,

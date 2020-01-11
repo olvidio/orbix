@@ -70,6 +70,7 @@ class CambioDl Extends Cambio {
 	    $aDades['id_activ'] = $this->iid_activ;
 	    $aDades['id_tipo_activ'] = $this->iid_tipo_activ;
 	    $aDades['id_fase'] = $this->iid_fase;
+	    $aDades['id_status'] = $this->iid_status;
 	    $aDades['dl_org'] = $this->sdl_org;
 	    $aDades['objeto'] = $this->sobjeto;
 	    $aDades['propiedad'] = $this->spropiedad;
@@ -87,6 +88,7 @@ class CambioDl Extends Cambio {
 					id_activ                 = :id_activ,
 					id_tipo_activ            = :id_tipo_activ,
 					id_fase                  = :id_fase,
+					id_status                = :id_status,
 					dl_org                   = :dl_org,
 					objeto                   = :objeto,
 					propiedad                = :propiedad,
@@ -109,8 +111,8 @@ class CambioDl Extends Cambio {
 	        }
 	    } else {
 	        // INSERT
-	        $campos="(id_tipo_cambio,id_activ,id_tipo_activ,id_fase,dl_org,objeto,propiedad,valor_old,valor_new,quien_cambia,sfsv_quien_cambia,timestamp_cambio)";
-	        $valores="(:id_tipo_cambio,:id_activ,:id_tipo_activ,:id_fase,:dl_org,:objeto,:propiedad,:valor_old,:valor_new,:quien_cambia,:sfsv_quien_cambia,:timestamp_cambio)";
+	        $campos="(id_tipo_cambio,id_activ,id_tipo_activ,id_fase,id_status,dl_org,objeto,propiedad,valor_old,valor_new,quien_cambia,sfsv_quien_cambia,timestamp_cambio)";
+	        $valores="(:id_tipo_cambio,:id_activ,:id_tipo_activ,:id_fase,:id_status,:dl_org,:objeto,:propiedad,:valor_old,:valor_new,:quien_cambia,:sfsv_quien_cambia,:timestamp_cambio)";
 	        if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 	            $sClauError = 'Cambio.insertar.prepare';
 	            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);

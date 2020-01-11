@@ -58,6 +58,7 @@ class DB extends DBAbstract {
                 id_activ bigint NOT NULL,
                 id_tipo_activ integer NOT NULL,
                 id_fase integer,
+                id_status integer,
                 dl_org text,
                 objeto text,
                 propiedad text,

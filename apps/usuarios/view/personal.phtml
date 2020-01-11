@@ -1,5 +1,11 @@
-<span class="link" onclick="fnjs_update_div('#main_pref','<?= $aniversarios ?>');"><?= _("ver santos y aniversarios") ?></span><br>
-<span class="link" onclick="fnjs_update_div('#main_pref','<?= $avisos ?>');"><?= _("gestionar avisos en cambios actividades") ?></span><br>
+<?php 
+use core\ConfigGlobal;
+if (ConfigGlobal::is_app_installed('cambios')) {
+?>
+	<span class="link" onclick="fnjs_update_div('#main','<?= $avisos ?>');"><?= _("gestionar avisos en cambios actividades") ?></span><br>
+<?php 
+}
+?>
 <h2><?= ucfirst(_("preferencias personales")) ?><br></h2>
 <form id=preferencias name=preferencias action="apps/usuarios/controller/personal_update.php" method="post">
 <?= $oHash->getCamposHtml(); ?>
