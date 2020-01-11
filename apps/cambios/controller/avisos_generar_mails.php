@@ -7,13 +7,13 @@
 */
 
 
-require_once ('/var/www/orbix/cambios/model/entity/gestorcambiousuario.class.php');
-require_once ('/var/www/orbix/cambios/model/entity/cambiodl.class.php');
-require_once ('/var/www/orbix/core/configglobal.class.php');
-require_once ('/var/www/orbix/core/configdb.class.php');
-require_once ('/var/www/orbix/core/configdbconnection.class.php');
-require_once ('/var/www/orbix/usuarios/model/entity/usuario.class.php');
-require_once ('/var/www/orbix/web/lista.class.php');
+require_once ('/var/www/orbix/apps/cambios/model/entity/gestorcambiousuario.class.php');
+require_once ('/var/www/orbix/apps/cambios/model/entity/cambiodl.class.php');
+require_once ('/var/www/orbix/apps/core/configglobal.class.php');
+require_once ('/var/www/orbix/apps/core/configdb.class.php');
+require_once ('/var/www/orbix/apps/core/configdbconnection.class.php');
+require_once ('/var/www/orbix/apps/usuarios/model/entity/usuario.class.php');
+require_once ('/var/www/orbix/apps/web/lista.class.php');
 
 
 // public para todo el mundo
