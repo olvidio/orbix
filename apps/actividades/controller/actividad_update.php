@@ -141,7 +141,8 @@ case "nuevo":
 		die();
 	}
 
-    $mi_dele = ConfigGlobal::mi_delef();
+	$isfsv = substr($Qid_tipo_activ, 0, 1);
+    $mi_dele = ConfigGlobal::mi_delef($isfsv);
 	if ($Qdl_org == $mi_dele) {
 		$oActividad= new actividades\ActividadDl();
 	} else {

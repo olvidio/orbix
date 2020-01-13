@@ -1,6 +1,7 @@
 <?php
-use ubis\model\entity\GestorDelegacion;
+use actividadtarifas\model\entity\GestorTipoActivTarifa;
 use core\ConfigGlobal;
+use ubis\model\entity\GestorDelegacion;
 
 /**
  * Devuelvo un desplegable con los valores posibles del tipo de actividad
@@ -63,8 +64,25 @@ switch ($Qsalida) {
 		$oDesplegableCasas = $oActividadLugar->getLugaresPosibles($Qentrada); 
 		echo $oDesplegableCasas->desplegable();
         break;
-        // falta tarifa.
-        
+        // Si se tiene instalado el modulo de procesos, no se usa, porque se va
+        // a la página de nuevo para poder manejar mejor los permisos.
+	 case 'tarifa':
+		$id_tipo_activ = $Qentrada;
+		$aWhere = [];
+		$aWhere['id_tipo_activ'] = $id_tipo_activ;
+		$aWhere['_ordre'] = 'temporada';
+		$GesActiTipoTarifa = new GestorTipoActivTarifa();
+		$cActiTipoTarifa = $GesActiTipoTarifa->getTipoActivTarifas($aWhere);
+		if (!empty($cActiTipoTarifa) && $cActiTipoTarifa > 0) {
+		    $tarifa = $cActiTipoTarifa[0]->getId_tarifa();
+		    /*
+		    $aDades['id_tarifa'] = $this->iid_tarifa;
+		    $aDades['id_tipo_activ'] = $this->iid_tipo_activ;
+		    $aDades['temporada'] = $this->itemporada;
+		    */
+		    return $tarifa;
+		}
+        break;
 	 case "dl_org";
 		$sfsv=$Qentrada;
     	$dl_default = ConfigGlobal::mi_delef($sfsv);

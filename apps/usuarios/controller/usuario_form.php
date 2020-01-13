@@ -117,8 +117,9 @@ if( (ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
 		$objeto=$oCambioUsuarioObjetoPref->getObjeto();
 		$aviso_tipo=$oCambioUsuarioObjetoPref->getAviso_tipo();
 
-
-		if ($dl_org != ConfigGlobal::mi_delef()) {
+		$isfsv = substr($id_tipo, 0, 1);
+		$mi_dele = ConfigGlobal::mi_delef($isfsv);
+		if ($dl_org != $mi_dele) {
 		    $dl_org = _("otras");
 		}
 

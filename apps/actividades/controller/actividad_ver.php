@@ -4,9 +4,9 @@
  * 
  */
 use actividades\model\entity\Actividad;
-use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorNivelStgr;
 use actividades\model\entity\GestorRepeticion;
+use actividadtarifas\model\entity\GestorTipoActivTarifa;
 use actividadtarifas\model\entity\GestorTipoTarifa;
 use ubis\model\entity\GestorDelegacion;
 use ubis\model\entity\Ubi;
@@ -131,6 +131,15 @@ if (!empty($Qid_activ)) { // caso de modificar
 	// si ya le digo un tipo de actividad, sobre-escribo el parametro isfsv:
 	if (!empty($id_tipo_activ)) {
 	    $isfsv = (integer) substr($id_tipo_activ, 0,1);
+	    // También prodria buscar la tarifa:
+	    $aWhereT = [];
+	    $aWhereT['id_tipo_activ'] = $id_tipo_activ;
+	    $aWhereT['_ordre'] = 'temporada';
+	    $GesActiTipoTarifa = new GestorTipoActivTarifa();
+	    $cActiTipoTarifa = $GesActiTipoTarifa->getTipoActivTarifas($aWhereT);
+	    if (!empty($cActiTipoTarifa) && $cActiTipoTarifa > 0) {
+	        $tarifa = $cActiTipoTarifa[0]->getId_tarifa();
+	    }
 	}
 	if ( $permiso_des == TRUE ) {
         $ssfsv = '';
