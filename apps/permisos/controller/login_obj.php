@@ -7,7 +7,8 @@ use core\DBPropiedades;
 use core\View;
 use core\dbConnection;
 use permisos\model\MyCrypt;
-                
+
+
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
