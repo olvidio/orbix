@@ -142,7 +142,7 @@ switch($Qque) {
 		break;
 	case "guardar_pwd":
 		$Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
-		$Qemail = (string) \filter_input(INPUT_POST, 'email');
+        $Qemail = (string) \filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
 		$Qpassword = (string) \filter_input(INPUT_POST, 'password');
 		$Qpass = (string) \filter_input(INPUT_POST, 'pass');
 		
@@ -170,7 +170,8 @@ switch($Qque) {
 				$Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
 				$Qperm_activ = (array) \filter_input(INPUT_POST, 'perm_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 				$Qid_role = (integer) \filter_input(INPUT_POST, 'id_role');
-				$Qemail = (string) \filter_input(INPUT_POST, 'email');
+				$Qemail = (string) \filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+				
 				$Qnom_usuario = (string) \filter_input(INPUT_POST, 'nom_usuario');
 				$Qpassword = (string) \filter_input(INPUT_POST, 'password');
 				$Qpass = (string) \filter_input(INPUT_POST, 'pass');
@@ -240,7 +241,7 @@ switch($Qque) {
 			case 'usuario':
 				$Qperm_activ = (array) \filter_input(INPUT_POST, 'perm_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 				$Qusuario = (string) \filter_input(INPUT_POST, 'usuario');
-				$Qemail = (string) \filter_input(INPUT_POST, 'email');
+				$Qemail = (string) \filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
 				$Qid_role = (integer) \filter_input(INPUT_POST, 'id_role');
 				$Qnom_usuario = (string) \filter_input(INPUT_POST, 'nom_usuario');
 				$Qpassword = (string) \filter_input(INPUT_POST, 'password');
