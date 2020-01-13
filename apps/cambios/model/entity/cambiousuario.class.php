@@ -20,6 +20,11 @@ use core;
  * @created 17/4/2019
  */
 class CambioUsuario Extends core\ClasePropiedades {
+    
+    // aviso tipo constants.
+    const TIPO_LISTA		 = 1; // Anotar en lista.
+    const TIPO_MAIL	 	  	 = 2; // por mail.
+    
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/**

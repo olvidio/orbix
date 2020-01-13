@@ -8,6 +8,7 @@ use usuarios\model\entity\GestorUsuario;
 use usuarios\model\entity\Usuario;
 use web\Desplegable;
 use web\Lista;
+use cambios\model\entity\CambioUsuario;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -44,7 +45,7 @@ if ($_SESSION['oPerm']->have_perm_oficina('dtor')){ //el admin_sv incluye el adm
     $Qaviso_tipo = (integer) \filter_input(INPUT_POST, 'aviso_tipo');
 } else {
 	$Qid_usuario = ConfigGlobal::mi_id_usuario();
-	$Qaviso_tipo =  1; // de monent nomes "anotar en lista".
+	$Qaviso_tipo =  CambioUsuario::TIPO_LISTA; // de monent nomes "anotar en lista".
 }
 
 $a_campos = [];

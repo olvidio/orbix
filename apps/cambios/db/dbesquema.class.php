@@ -296,7 +296,7 @@ class DBEsquema extends DBAbstract {
         $this->role = '"'. $this->esquema .'"';
         $mi_dele = ConfigGlobal::mi_delef();
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "av_cambios_usuario_objeto_pref";
         $datosTabla = $this->infoTable($tabla);
@@ -335,7 +335,7 @@ class DBEsquema extends DBAbstract {
         
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
     }
     public function eliminar_av_cambios_usuario_objeto_pref() {
         // OJO Corresponde al esquema sf/sv, no al comun.
@@ -344,7 +344,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
 
         $datosTabla = $this->infoTable("av_cambios_usuario_objeto_pref");
         
@@ -357,7 +357,7 @@ class DBEsquema extends DBAbstract {
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
     }
     public function create_av_cambios_usuario_propiedades_pref() {
         // OJO Corresponde al esquema sf/sv, no al comun.
@@ -366,7 +366,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "av_cambios_usuario_propiedades_pref";
         $datosTabla = $this->infoTable($tabla);
@@ -406,7 +406,7 @@ class DBEsquema extends DBAbstract {
         
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
     }
     public function eliminar_av_cambios_usuario_propiedades_pref() {
         // OJO Corresponde al esquema sf/sv, no al comun.
@@ -415,7 +415,7 @@ class DBEsquema extends DBAbstract {
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
 
         $datosTabla = $this->infoTable("av_cambios_usuario_propiedades_pref");
         
@@ -428,7 +428,7 @@ class DBEsquema extends DBAbstract {
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
     }
     
 }
