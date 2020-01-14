@@ -4,7 +4,7 @@
 *  No se le puede pasar id de la session, porque sólo puede haber un proceso con un session_id.
 *  Debe crearse una nueva session. Hay que pasarle un usuario y un password.
 *  Desde ext_a_cambios.class, se llama a esta página para que funcione en background:
-*	exec('nohup /usr/bin/php /var/www/dl/sistema/avisos_generar_tabla.php $username $password > /tmp/avisos.out 2> /tmp/avisos.err < /dev/null &');
+*	exec('nohup /usr/bin/php /var/www/dl/sistema/avisos_generar_tabla.php $username $password $dirweb $doc_root $ubicacion $esquema_web > /tmp/avisos.out 2> /tmp/avisos.err < /dev/null &');
 *
 * Inicialmente se ejecutaba manualmente desde menú y no habia problema.
 * Al dispararlo cada vez que se ejecuta un cambio, pasa que pueden ejecutarse varios procesos en paralelo.
@@ -46,8 +46,8 @@ $username;
 $password;
 $dir_web = orbix | pruebas;
 document_root = /home/dani/orbix_local
-$esquema_web = 'H-dlbv';
 $ubicacion = 'sv';
+$esquema_web = 'H-dlbv';
 */
 
 if(!empty($argv[1])) {
@@ -55,11 +55,11 @@ if(!empty($argv[1])) {
 	$_POST['password'] = $argv[2];
 	$_SERVER['DIRWEB'] = $argv[3];
 	$_SERVER['DOCUMENT_ROOT'] = $argv[4];
-	putenv("ESQUEMA=$argv[5]");
-	putenv("UBICACION=$argv[6]");
+	putenv("UBICACION=$argv[5]");
+	putenv("ESQUEMA=$argv[6]");
 	
 	$username = $argv[1];
-	$esquema = $argv[5];
+	$esquema = $argv[6];
 }
 
 

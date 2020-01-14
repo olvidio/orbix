@@ -506,13 +506,25 @@ class Cambio Extends core\ClasePropiedades {
 	    $pwd = ConfigGlobal::mi_pass();
 	    $err = ConfigGlobal::$directorio.'/log/avisos.err';
 	    $out = ConfigGlobal::$directorio.'/log/avisos.out';
-	    // Ahora además le paso otro parámetro para saber si estoy en pruebas o producción:
+        /* Hay que pasarle los argumentos que no tienen si se le llama por command line:
+         $username;
+         $password;
+         $dir_web = orbix | pruebas;
+         document_root = /home/dani/orbix_local
+         $esquema_web = 'H-dlbv';
+         $ubicacion = 'sv';
+         */
 	    $dirweb = $_SERVER['DIRWEB'];
 	    $doc_root = $_SERVER['DOCUMENT_ROOT'];
-        $esquema_web = getenv('ESQUEMA');
         $ubicacion = getenv('UBICACION');
+        $esquema_web = getenv('ESQUEMA');
         
-	    $command = "nohup /usr/bin/php $program $username $pwd $dirweb $doc_root $esquema_web $ubicacion >> $out 2>> $err < /dev/null &";
+        // Si he entrado escogiendo el esquema de un desplegable, no tengo el valor
+        if (empty($esquema_web)) {
+            $esquema_web = ConfigGlobal::mi_region_dl();
+        }
+        
+	    $command = "nohup /usr/bin/php $program $username $pwd $dirweb $doc_root $ubicacion $esquema_web >> $out 2>> $err < /dev/null &";
 	    exec($command);
 	}
 	
