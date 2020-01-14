@@ -34,7 +34,7 @@ class GestorTareaProceso Extends core\ClaseGestor {
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
 	/**
-	 * retorna intege de la id_fase anterior
+	 * retorna integer de la id_fase anterior
 	 *
 	 * @param integer id_item la fase tarea.
 	 * @return integer id_true o false si hi ha un error

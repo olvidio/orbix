@@ -1,13 +1,5 @@
 <?php
 // si lo ejecuto dese el crontab.
-use cambios\model\entity\Cambio;
-use cambios\model\entity\CambioDl;
-use cambios\model\entity\CambioUsuario;
-use cambios\model\entity\GestorCambioUsuario;
-use core\ConfigGlobal;
-use usuarios\model\entity\Usuario;
-use web\Lista;
-
 /* Hay que pasarle los argumentos que no tienen si se le llama por command line:
  $username;
  $password;
@@ -21,10 +13,22 @@ if(!empty($argv[1])) {
     $_POST['password'] = $argv[2];
     $_SERVER['DIRWEB'] = $argv[3];
     $_SERVER['DOCUMENT_ROOT'] = $argv[4];
-    putenv("ESQUEMA=$argv[5]");
-    putenv("UBICACION=$argv[6]");
+    putenv("UBICACION=$argv[5]");
+    putenv("ESQUEMA=$argv[6]");
     
 }
+$document_root = $_SERVER['DOCUMENT_ROOT'];
+$dir_web = $_SERVER['DIRWEB'];
+$path = "$document_root/$dir_web";
+set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+
+use cambios\model\entity\Cambio;
+use cambios\model\entity\CambioDl;
+use cambios\model\entity\CambioUsuario;
+use cambios\model\entity\GestorCambioUsuario;
+use core\ConfigGlobal;
+use usuarios\model\entity\Usuario;
+use web\Lista;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -41,10 +45,18 @@ require_once ("apps/core/global_object.inc");
  Comprobar que tengan e-mail
  */
 
+// para asegurar que coje los cambios de otras dl que no tengan instalado el módulo de cambios, 
+// hay que ejecutar el generarTabla().
+$oCambio = new Cambio();
+$oCambio->generarTabla();
+sleep(180); // 3 minutos para asegurar que ha terminado el proceso que lanza el generar tabla.
+
+
 $dele = ConfigGlobal::mi_dele();
 $delef = $dele.'f';
 $aSecciones = array(1=>$dele,2=>$delef);
 
+exit();
 $email = '';
 $aviso_tipo = CambioUsuario::TIPO_MAIL; //e-mail
 

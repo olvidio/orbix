@@ -514,8 +514,8 @@ class Cambio Extends core\ClasePropiedades {
          $password;
          $dir_web = orbix | pruebas;
          document_root = /home/dani/orbix_local
-         $esquema_web = 'H-dlbv';
          $ubicacion = 'sv';
+         $esquema_web = 'H-dlbv';
          */
 	    $dirweb = $_SERVER['DIRWEB'];
 	    $doc_root = $_SERVER['DOCUMENT_ROOT'];

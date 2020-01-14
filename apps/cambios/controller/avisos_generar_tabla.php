@@ -65,6 +65,9 @@ use procesos\model\entity\GestorActividadFase;
 use usuarios\model\entity\Usuario;
 use zonassacd\model\entity\GestorZona;
 use zonassacd\model\entity\GestorZonaSacd;
+use procesos\model\entity\TareaProceso;
+use procesos\model\entity\GestorTareaProceso;
+use procesos\model\entity\GestorActividadProcesoTarea;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -123,6 +126,9 @@ function fn_apuntar($id_schema_cmb,$id_item_cmb,$id_usuario,$aviso_tipo,$aviso_d
 	$oCambioUsuario->setAviso_donde($aviso_donde);
 	//echo "id_item_cmb: $id_item_cmb, id_usuario: $id_usuario, aviso_tipo: $aviso_tipo, aviso_donde: $aviso_donde\n";
 	if ($oCambioUsuario->DBGuardar() === false) {
+	    // Quizá es porque ya existe
+		echo _("apuntar cambio usuario");
+		echo "<br";
 		echo ConfigGlobal::$web_server.'-->'.date('Y/m/d') . " " . _("Hay un error, no se ha guardado");
 		echo " $id_schema_cmb,$id_item_cmb,$id_usuario,$aviso_tipo\r";
 	}
@@ -376,8 +382,25 @@ while ($num_cambios) {
 			// Si el id_status es 1,2,3,4 corresponde al status de la actividad,
 			//   porque no tiene instalado el módulo de procesos.
 			if (empty($id_fase_cmb)) {
-			    if ($id_fase_ini <= $id_status_cmb && $id_fase_fin >= $id_status_cmb) {
-                    $fase_correcta = 1;
+			    // Si yo SI tengo procesos:
+			    if(ConfigGlobal::is_app_installed('procesos')) {
+			        // miro la fase actual de la actividad
+			        $gesActivProcesoTarea = new GestorActividadProcesoTarea();
+			        $id_faseActual = $gesActivProcesoTarea->getFaseActual($id_activ);
+			        // status correspondiente a la fase actual de la actividad
+			        $aWhereTP = ['id_tipo_proceso' => $TipoDeProceso, 'id_fase' => $id_faseActual];
+			        $gesTareaProceso = new GestorTareaProceso();
+			        $cTareaProceso = $gesTareaProceso->getTareasProceso($aWhereTP);
+			        $staus_de_fase = $cTareaProceso[0]->getStatus();
+			        
+                    if ($id_status_cmb == $staus_de_fase) {
+                            $fase_correcta = 1;
+                    }
+			    } else{
+    			    // Si yo no tengo procesos:
+                    if ($id_fase_ini <= $id_status_cmb && $id_fase_fin >= $id_status_cmb) {
+                        $fase_correcta = 1;
+                    }
 			    }
 			} else {
 			    /////////////////// COMPARAR FASES //////////////////////////////////////////
