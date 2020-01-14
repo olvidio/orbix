@@ -49,14 +49,13 @@ require_once ("apps/core/global_object.inc");
 // hay que ejecutar el generarTabla().
 $oCambio = new Cambio();
 $oCambio->generarTabla();
-sleep(180); // 3 minutos para asegurar que ha terminado el proceso que lanza el generar tabla.
+sleep(60); // 1 minutos para asegurar que ha terminado el proceso que lanza el generar tabla.
 
 
 $dele = ConfigGlobal::mi_dele();
 $delef = $dele.'f';
 $aSecciones = array(1=>$dele,2=>$delef);
 
-exit();
 $email = '';
 $aviso_tipo = CambioUsuario::TIPO_MAIL; //e-mail
 
