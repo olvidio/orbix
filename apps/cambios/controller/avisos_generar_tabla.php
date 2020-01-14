@@ -24,23 +24,6 @@
 *       include_path = ".:/usr/share/php:/home/dani/orbix_local/orbix"
 */
 
-use actividadcargos\model\entity\GestorActividadCargo;
-use actividades\model\entity\Actividad;
-use actividades\model\entity\GestorImportada;
-use actividades\model\entity\GestorTipoDeActividad;
-use asistentes\model\entity\GestorAsistenteDl;
-use cambios\model\entity\CambioAnotado;
-use cambios\model\entity\CambioUsuario;
-use cambios\model\entity\GestorCambio;
-use cambios\model\entity\GestorCambioAnotado;
-use cambios\model\entity\GestorCambioUsuarioObjetoPref;
-use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
-use core\ConfigGlobal;
-use procesos\model\entity\GestorActividadFase;
-use usuarios\model\entity\Usuario;
-use zonassacd\model\entity\GestorZona;
-use zonassacd\model\entity\GestorZonaSacd;
-
 /* Hay que pasarle los argumentos que no tienen si se le llama por command line:
 $username;
 $password;
@@ -61,7 +44,27 @@ if(!empty($argv[1])) {
 	$username = $argv[1];
 	$esquema = $argv[6];
 }
+$document_root = $_SERVER['DOCUMENT_ROOT'];
+$dir_web = $_SERVER['DIRWEB'];
+$path = "$document_root/$dir_web";
+set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 
+use actividadcargos\model\entity\GestorActividadCargo;
+use actividades\model\entity\Actividad;
+use actividades\model\entity\GestorImportada;
+use actividades\model\entity\GestorTipoDeActividad;
+use asistentes\model\entity\GestorAsistenteDl;
+use cambios\model\entity\CambioAnotado;
+use cambios\model\entity\CambioUsuario;
+use cambios\model\entity\GestorCambio;
+use cambios\model\entity\GestorCambioAnotado;
+use cambios\model\entity\GestorCambioUsuarioObjetoPref;
+use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
+use core\ConfigGlobal;
+use procesos\model\entity\GestorActividadFase;
+use usuarios\model\entity\Usuario;
+use zonassacd\model\entity\GestorZona;
+use zonassacd\model\entity\GestorZonaSacd;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
