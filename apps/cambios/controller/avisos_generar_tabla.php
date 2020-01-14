@@ -288,6 +288,10 @@ function soy_encargado($id_nom,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cm
 }
 // FIN de  Cabecera global de URL de controlador ********************************
 
+// Para asegurar que no lo ejecuto desde una dl que no lo tenga instalado
+if (!ConfigGlobal::is_app_installed('cambios')) {
+   die(); 
+}
 // Mirar si hay otro proceso en marcha:
 crear_pid($username,$esquema);
 
