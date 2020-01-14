@@ -94,7 +94,8 @@ class gestorErrores {
 	 * @param string $file
 	 */
 	function addErrorAppLastError(&$oDBSt, $sClauError,$line, $file) {
-		$ip = $_SERVER['REMOTE_ADDR'];
+	    // Cuando ejecuto algun controlador desde la linea de comandos, no existe la ip:
+		$ip = empty($_SERVER['REMOTE_ADDR'])? 'localhost' : $_SERVER['REMOTE_ADDR'];
 		$user = ConfigGlobal::mi_usuario();
 		$esquema = ConfigGlobal::mi_region_dl();
 		$ahora = date("Y/m/d H:i:s");
@@ -132,8 +133,9 @@ class gestorErrores {
 	}
 	
 	function addError($err='',$sClauError,$line, $file) {
-		$ip = $_SERVER['REMOTE_ADDR'];
-		$user=ConfigGlobal::mi_usuario();
+	    // Cuando ejecuto algun controlador desde la linea de comandos, no existe la ip:
+		$ip = empty($_SERVER['REMOTE_ADDR'])? 'localhost' : $_SERVER['REMOTE_ADDR'];
+		$user = ConfigGlobal::mi_usuario();
 		$esquema = ConfigGlobal::mi_region_dl();
 		$ahora = date("Y/m/d H:i:s");
 		$id_user = $user."[$esquema]$ip ";
