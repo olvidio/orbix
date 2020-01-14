@@ -253,9 +253,12 @@ class Cambio Extends core\ClasePropiedades {
 			$this->id_item_cambio = $oDbl->lastInsertId($id_seq);
 		}
 		$this->setAllAtributes($aDades);
-		// Para el caso de poner anotado, no debo disparar el generador de avisos.
-		if (empty($quiet)) {
-		    $this->generarTabla();
+		// Creo que solo hay que disparar el generador de avisos en las dl que tengan el módulo.
+		if (ConfigGlobal::is_app_installed('cambios')) {
+		    // Para el caso de poner anotado, no debo disparar el generador de avisos.
+		    if (empty($quiet)) {
+		        $this->generarTabla();
+		    }
 		}
 		return TRUE;
 	}
