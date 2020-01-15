@@ -97,7 +97,7 @@ foreach ($cRoles as $oRole) {
 	$a_valores[$i][4]=$pau;
 	$a_valores[$i][5]=$dmz;
 	$a_valores[$i][6]=$str_GM;
-	if ($permiso >0) {
+	if ($permiso > 0) {
 		$a_valores[$i]['sel']="$id_role#";
 	}
 }
