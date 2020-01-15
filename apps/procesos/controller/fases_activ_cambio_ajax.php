@@ -122,6 +122,7 @@ switch($Qque) {
 			$id_tipo_activ = $oActividad->getId_tipo_activ();
 			$nom_activ = $oActividad->getNom_activ();
 			$i++;
+            $fase_actual = '';
 			// Por el tipo de actividad sé el tipo de proceso
 			$oTipoActiv = new TipoDeActividad(array('id_tipo_activ'=>$id_tipo_activ));
 			$id_tipo_proceso = $oTipoActiv->getId_tipo_proceso();
@@ -159,6 +160,7 @@ switch($Qque) {
 				} else {
 					$oActividadFase = new ActividadFase($id_fase_actual);
 					$fase_actual = $oActividadFase->getDesc_fase();
+                    if ($Qid_fase_nueva == $id_fase_actual) { $mensaje_requisito = '='; $num_ok--; }
 				}
 				if (empty($fase_actual)) {
 				    $fase_actual = _("no existe. Debe crear el proceso");
