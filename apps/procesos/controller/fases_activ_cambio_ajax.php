@@ -160,7 +160,7 @@ switch($Qque) {
 				} else {
 					$oActividadFase = new ActividadFase($id_fase_actual);
 					$fase_actual = $oActividadFase->getDesc_fase();
-                    if ($Qid_fase_nueva == $id_fase_actual) { $mensaje_requisito = '='; $num_ok--; }
+                    if ($Qid_fase_nueva == $id_fase_actual && $mensaje_requisito == 'ok') { $mensaje_requisito = '='; $num_ok--; }
 				}
 				if (empty($fase_actual)) {
 				    $fase_actual = _("no existe. Debe crear el proceso");
