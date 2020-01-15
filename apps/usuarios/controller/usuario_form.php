@@ -374,6 +374,15 @@ if (!empty($id_usuario)) { // si no hay usuario, no puedo poner permisos.
     ?>
 	<br>
 	<h3><?= _("grupos") ?>: </h3>
+    <?php
+    //////////// Aclaración permisos ////////////
+    if (ConfigGlobal::is_app_installed('procesos')) {
+        ?>
+    	<p class="comentario"><?= _("OJO: los permisos en los grupos no tienen una preferencia definida.") ?>
+    	<?= _("Si hay más de uno, deberían ser independiente, sino no se sabe cual sobreescribirá a cual.") ?></p>
+		<?php
+    } ?>
+    <br>
 	<p><?= $txt ?></p>
 	<br>
 	<input type=button onclick="fnjs_add_grup();" value="<?= _("añadir un grupo de permisos") ?>">

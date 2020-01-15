@@ -37,10 +37,9 @@ fnjs_add_cambio=function(){
 }
 </script>
 <br>
-<b><?= _("avisos") ?>:</b>
+<b><?= _("avisos de cambios") ?>:</b>
 <form id="avisos" name="avisos" action=''>
 <?= $oHashAvisos->getCamposHtml(); ?>
 <?= $oTablaAvisos->mostrar_tabla(); ?>
-<br>
 <input type=button onclick="fnjs_add_cambio();" value="<?= _("añadir aviso") ?>">
 </form>

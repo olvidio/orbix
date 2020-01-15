@@ -499,6 +499,11 @@ div.ventana z-index: 160;
 		font-size : 10pt;
 		background-color : <?= $gris_claro; ?>;
 	}
+	.comentario  {
+		font-family : Arial;
+		font-size : 10pt;
+		font-style: italic;
+	}
 	.contenido  {
 		font-family : Arial;
 		font-size : 10pt;

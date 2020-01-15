@@ -115,6 +115,8 @@ fnjs_actualizar3=function(formulario){
 <br>
 <h3><?= ucfirst(_("permisos en actividades")) ?>:</h3>
 <b><?= _("propios") ?>:</b>
+<p class="comentario"><?= _("los permisos propios sobresecriben a los de los grupos") ?></p>
+<br>
 <form id="permisos_activ" name="permisos_activ" action=''>
 <?= $oHash3->getCamposHtml(); ?>
 <input type="hidden" id="perm_activ_que" name="que" value=''>
@@ -126,6 +128,5 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 echo $oTabla->mostrar_tabla();
 ?>
-<br>
 <input type=button onclick="fnjs_add_perm_activ();" value="<?= _("añadir permiso") ?>">
 </form>

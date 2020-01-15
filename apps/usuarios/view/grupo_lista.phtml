@@ -1,3 +1,6 @@
+<?php
+use core\ConfigGlobal;
+?>
 <script>
 fnjs_buscar=function(){
 	$('#frm_buscar').attr('action',"apps/usuarios/controller/grupo_lista.php");
@@ -49,6 +52,10 @@ fnjs_left_side_hide();
 <input type="button" onclick="fnjs_buscar();" id="btn_ok" name="btn_ok" value="<?= ucfirst(_("buscar")); ?>" class="btn_ok">
 </form>
 <br>
+<?php if (ConfigGlobal::is_app_installed('procesos')) { ?>
+<?= _("Poner entre paréntesis si hace referencia a menus (m), permisos (p) o ambos (m+p)") ?>
+<br>
+<?php } ?>
 <form id="seleccionados"  name="seleccionados" action="" method="post" >
 	<?= $oHashSelect->getCamposHtml(); ?>
 	<?= $oTabla->mostrar_tabla(); ?>
