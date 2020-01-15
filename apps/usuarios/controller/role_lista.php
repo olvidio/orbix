@@ -70,7 +70,6 @@ if ($permiso > 0) {
 $a_valores=array();
 $i=0;
 foreach ($cRoles as $oRole) {
-	$i++;
 	$id_role=$oRole->getId_role();
 	$role=$oRole->getRole();
 	$sf=$oRole->getSf();
@@ -78,6 +77,11 @@ foreach ($cRoles as $oRole) {
 	$pau=$oRole->getPau();
 	$dmz=$oRole->getDmz();
 
+	if (($permiso != 1) && (($miSfsv == 2 && !$sf) OR ($miSfsv == 1 && !$sv)) ) {
+        continue;	    
+	}
+	$i++;
+	
 	$oGesGMRol = new menus\GestorGrupMenuRole();
 	$cGMR = $oGesGMRol->getGrupMenuRoles(array('id_role'=>$id_role));
 	$str_GM = '';
@@ -93,7 +97,7 @@ foreach ($cRoles as $oRole) {
 	$a_valores[$i][4]=$pau;
 	$a_valores[$i][5]=$dmz;
 	$a_valores[$i][6]=$str_GM;
-	if (($sf == 1 & $miSfsv == 2) OR ($sv == 1 & $miSfsv == 1) OR ($permiso == 1)) {
+	if ($permiso >0) {
 		$a_valores[$i]['sel']="$id_role#";
 	}
 }
