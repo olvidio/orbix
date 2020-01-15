@@ -44,7 +44,6 @@ $oDesplAccion= new Desplegable('',$aOpciones,'',false);
 $oDesplAccion->setNombre('accion');
 
 $oUsuario = new GrupoOUsuario(array('id_usuario'=>$Qid_usuario)); // La tabla y su heredada
-$seccion=$oUsuario->getSfsv();
 $nombre=$oUsuario->getUsuario();
 
 if (!empty($Qid_item)) {

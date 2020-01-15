@@ -33,8 +33,8 @@ class PermDl extends Xpermisos {
 		$permission_users['ocs']    = 1<<12; //4096,
 		$permission_users['sddl']   = 1<<13; //8192,
 		$permission_users['nax']  	= 1<<14; //16384,
-		$permission_users['actividades'] =  31735; //31735, // todos menos des(8) y vcsd(1024).
-		//$permission_users['dir'] 	   =  1<<15; //32768,
+		//$permission_users['actividades'] =  31735; //31735, // todos menos des(8) y vcsd(1024).
+		$permission_users['actividades'] 	   =  1<<15; //32768,
 		$permission_users['ctr']       =  1<<16; //65536,
 		$permission_users['sacd']      =  1<<18; 
 		$permission_users['persona']   =  1<<19; 

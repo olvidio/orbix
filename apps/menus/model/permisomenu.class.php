@@ -55,9 +55,9 @@ class PermisoMenu extends permisos\Xpermisos {
         $permissions['ocs']       = 1<<12; //4096,
         $permissions['sddl']      = 1<<13; //8192,
         $permissions['nax']   	  = 1<<14; //16384,
-        //$permissions['dir'] 	  = 1<<15; //32768,
+        $permissions['actividades'] 	  = 1<<15; //32768,
         $permissions['ctr']       = 1<<16; //65536,
-        $permissions['actividades'] = 1<<17; //131072,
+        //$permissions['actividades'] = 1<<17; //131072,
         $permissions['sacd']       = 1<<18; //262144,
         $permissions['persona']    = 1<<19; 
         $permissions['casa']       = 1<<20; 

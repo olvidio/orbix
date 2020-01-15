@@ -29,9 +29,9 @@ $GesCasas = new GestorCasaDl();
 if ($_SESSION['oPerm']->have_perm_oficina('des') or $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
 	$donde="WHERE status='t'";
 } else {
-	if ($oMiUsuario->getSfsv() == 1) {
+	if (ConfigGlobal::mi_sfsv() == 1) {
 		$donde="WHERE status='t' AND sv='t'";
-	} elseif ($oMiUsuario->getSfsv() == 2) {
+	} elseif (ConfigGlobal::mi_sfsv() == 2) {
 		$donde="WHERE status='t' AND sf='t'";
 	}
 }

@@ -10,6 +10,7 @@ use usuarios\model\entity\GrupoOUsuario;
 use web\Desplegable;
 use web\DesplegableArray;
 use web\TiposActividades;
+use config\model\Config;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -38,8 +39,8 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $Qquien = (string) \filter_input(INPUT_POST, 'quien');
 
 $oUsuario = new GrupoOUsuario(array('id_usuario'=>$Qid_usuario)); // La tabla y su heredada
-$seccion=$oUsuario->getSfsv();
 $nombre=$oUsuario->getUsuario();
+$mi_sfsv = ConfigGlobal::mi_sfsv();
 
 // Tipos de avisos
 $aTipos_aviso = CambioUsuarioObjetoPref::getTipos_aviso();
@@ -110,7 +111,7 @@ if (!empty($Qid_item_usuario_objeto)) {
 }
 
 $cond = '';
-switch ($seccion) {
+switch ($mi_sfsv) {
 	case 1:
 		$cond = "WHERE sv = 't'";
 		break;
@@ -129,7 +130,6 @@ $oSelects->setAccionConjunto('fnjs_mas_casas(event)');
 if (!empty($id_tipo_activ))  {
     $oTipoActiv= new TiposActividades($id_tipo_activ);
 } else {
-    $mi_sfsv = ConfigGlobal::mi_sfsv();
     if ($mi_sfsv == 1) $ssfsv = 'sv';
     if ($mi_sfsv == 2) $ssfsv = 'sf';
     $oTipoActiv= new TiposActividades();
@@ -154,7 +154,7 @@ $oActividadTipo->setPara('cambios');
 
 $perm_jefe = FALSE;
 if ($_SESSION['oConfig']->is_jefeCalendario()
-    or (($_SESSION['oPerm']->have_perm_oficina('des') or $_SESSION['oPerm']->have_perm_oficina('vcsd')) && ConfigGlobal::mi_sfsv() == 1)
+    or (($_SESSION['oPerm']->have_perm_oficina('des') or $_SESSION['oPerm']->have_perm_oficina('vcsd')) && $mi_sfsv == 1)
     ) {
         $perm_jefe = TRUE;
     }

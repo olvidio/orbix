@@ -56,10 +56,10 @@ if ($miRolePau == Role::PAU_CDC) { //casa
 		$oForm->setCasas('all');
 		$donde="WHERE status='t'";
 	} else {
-		if ($oMiUsuario->getSfsv() == 1) {
+		if (ConfigGlobal::mi_sfsv() == 1) {
 		  	$oForm->setCasas('sv');
 			$donde="WHERE status='t' AND sv='t'";
-		} elseif ($oMiUsuario->getSfsv() == 2) {
+		} elseif (ConfigGlobal::mi_sfsv() == 2) {
 			$oForm->setCasas('sf');
 			$donde="WHERE status='t' AND sf='t'";
 		}
