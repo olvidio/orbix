@@ -474,6 +474,7 @@ class Cambio Extends core\ClasePropiedades {
                         $sFaseActual = $aStatus[$id_statusActual];
                         $sFase =  $aStatus[$idStatus];
                         
+                        $sformat = 'Fase cambiada en la actividad "%1$s". Status "%3$s"' ;
                         if ($sValor_old == '-' && $sValor_new == 1) {
                             $sformat = 'Status "%2$s" completada en la actividad "%1$s". Status actual "%3$s"';
                         }
@@ -490,7 +491,11 @@ class Cambio Extends core\ClasePropiedades {
 	            break;
 	    }
 	    
-	    $sTxt = sprintf($sformat,$sNomActiv,$sPropiedad,$sValor_old,$sValor_new);
+	    if (empty($sformat)) {
+	       $sTxt = "$sNomActiv; $sPropiedad; $sValor_old; $sValor_new";
+	    } else {
+	       $sTxt = sprintf($sformat,$sNomActiv,$sPropiedad,$sValor_old,$sValor_new);
+	    }
 	    return $sTxt;
 	}
 	

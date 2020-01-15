@@ -302,7 +302,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 			if (empty($quiet)) {
 			    $oGestorCanvis = new gestorAvisoCambios();
 			    $shortClassName = (new \ReflectionClass($this))->getShortName();
-			    $oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $this->aDades, array());
+			    $oGestorCanvis->addCanvi($shortClassName, 'FASE', $aDadesLast['id_activ'], $this->aDades, array());
 			}
 		}
 		return TRUE;
