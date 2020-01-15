@@ -1,6 +1,7 @@
 <?php
 use usuarios\model\entity as usuarios;
 use menus\model\entity as menus;
+use core\ConfigGlobal;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -47,12 +48,21 @@ foreach ($cGM as $oGrupMenu) {
 $oGesRole = new usuarios\GestorRole();
 $cRoles= $oGesRole->getRoles(['_ordre' => 'role']);
 
+// Para admin, puede modificar los grupmenus que tiene cada rol, pero no 
+// crear ni borrar
+if ($miRole == 2) {
+    $permiso = 2;
+}
+
+
 $a_cabeceras=array('role','sf','sv','pau','dmz','grup menu');
-if ($permiso == 1) {
-	$a_botones[] = array( 'txt'=> _("borrar"),
-						'click'=>"fnjs_eliminar()");
+if ($permiso > 0) {
 	$a_botones[] = array( 'txt' => _("modificar"),
 					'click' =>"fnjs_modificar(\"#seleccionados\")" );
+	if ($permiso == 1) {
+        $a_botones[] = array( 'txt'=> _("borrar"),
+                            'click'=>"fnjs_eliminar()");
+	}
 } else {
 	$a_botones=array();
 }

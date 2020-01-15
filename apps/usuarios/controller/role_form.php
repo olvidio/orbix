@@ -56,6 +56,11 @@ $permiso = 0;
 if ($miRole == 1) {
 	$permiso = 1;
 }
+// Para admin, puede modificar los grupmenus que tiene cada rol, pero no
+// crear ni borrar
+if ($miRole == 2) {
+    $permiso = 2;
+}
 
 $txt_guardar=_("guardar datos rol");
 $txt_sfsv = '';
