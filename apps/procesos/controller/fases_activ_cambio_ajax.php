@@ -193,6 +193,10 @@ switch($Qque) {
 		
 		$msg = sprintf(_("%s actividades, %s para cambiar"),$num_activ,$num_ok);
 		
+		// Hay que ver la tabla en Html, porque conslickgrid sólo se seleccionan los visibles y 
+		// normalmente queremos todos.
+		$oTabla->setFormatoTabla('html');
+		
 		$txt = '<form id="seleccionados" name="seleccionados" action="" method="post">';
 		$txt .= $oHash->getCamposHtml();
 		$txt .= $oTabla->mostrar_tabla();

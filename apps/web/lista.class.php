@@ -92,11 +92,17 @@ class Lista {
      */
     protected $bColVis = true;
     /**
-     * bRecordar de la Lista
+     * brecordar de la lista
      *
      * @var boolean
      */
-    protected $bRecordar = true;
+    protected $brecordar = true;
+    /**
+     * formato_tabla de la lista
+     *
+     * @var string
+     */
+    protected $formato_tabla = '';
     
     /* CONSTRUCTOR -------------------------------------------------------------- */
     
@@ -230,8 +236,12 @@ class Lista {
         $sPrefs = '';
         $id_usuario= core\ConfigGlobal::mi_id_usuario();
         $tipo = 'tabla_presentacion';
+        if (empty($this->formato_tabla)) {
         $oPref = new usuarios\Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>$tipo));
         $sPrefs=$oPref->getPreferencia();
+        } else {
+            $sPrefs = $this->formato_tabla;
+        }
         if ($sPrefs == 'html') {
             return $this->mostrar_tabla_html();
         } else {
@@ -1183,5 +1193,8 @@ class Lista {
     }
     public function setRecordar($bRecordar) {
         $this->bRecordar = $bRecordar;
+    }
+    public function setFormatoTabla($formatoTabla) {
+        $this->formato_tabla = $formatoTabla;
     }
 }
