@@ -88,6 +88,7 @@ $pau="u";
 
 $mi_dele = ConfigGlobal::mi_delef();
 switch ($tipo_ubi) {
+	case "ctrsf":
 	case "ctrdl":
 		if ($dl != $mi_dele) {
 			$obj_pau="Centro";
