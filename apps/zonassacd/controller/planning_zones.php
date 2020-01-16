@@ -40,10 +40,15 @@ $id_usuario = ConfigGlobal::mi_id_usuario();
 $oMiUsuario = new Usuario($id_usuario);
 
 if ($oMiUsuario->isRole('p-sacd')) { //sacd
-	$id_nom_jefe=$oMiUsuario->getId_pau();
-	if ($_SESSION['oConfig']->is_jefeCalendario()) $id_nom_jefe = '';
+	if ($_SESSION['oConfig']->is_jefeCalendario()) {
+	    $id_nom_jefe = '';
+	} else {
+    	$id_nom_jefe = $oMiUsuario->getId_pau();
+    	if (empty($id_nom_jefe)) {
+            exit(_("No tiene permiso para ver esta página"));
+    	}
+	}
 }
-
 
 $GesZonas = new GestorZona();
 $oDesplZonas = $GesZonas->getListaZonas($id_nom_jefe);

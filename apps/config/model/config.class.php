@@ -44,6 +44,13 @@ class Config {
         return $oConfigSchema->getValor();
     }
     
+    /**
+     * Devuelve TRUR O FALSE si es o no jefe del calendario.
+     * Si no se le pasa ningun valor, compara con el usuario actual
+     * 
+     * @param string $username
+     * @return boolean
+     */
     public function is_jefeCalendario($username = '') {
         $parametro = 'jefe_calendario';
         $oConfigSchema = new ConfigSchema($parametro);
