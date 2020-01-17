@@ -212,9 +212,8 @@ class Traslado Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -256,7 +255,18 @@ class Traslado Extends core\ClasePropiedades {
 		if (array_key_exists('id_ctr_destino',$aDades)) $this->setId_ctr_destino($aDades['id_ctr_destino']);
 		if (array_key_exists('ctr_destino',$aDades)) $this->setCtr_destino($aDades['ctr_destino']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_schema('');
+		$this->setId_item('');
+		$this->setId_nom('');
+		$this->setF_traslado('');
+		$this->setTipo_cmb('');
+		$this->setId_ctr_origen('');
+		$this->setCtr_origen('');
+		$this->setId_ctr_destino('');
+		$this->setCtr_destino('');
+		$this->setObserv('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

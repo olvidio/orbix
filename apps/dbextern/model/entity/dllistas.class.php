@@ -127,9 +127,8 @@ class DlListas Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -162,7 +161,13 @@ class DlListas Extends core\ClasePropiedades {
 		if (array_key_exists('numero_dl',$aDades)) $this->setNumero_dl($aDades['numero_dl']);
 		if (array_key_exists('abr_r',$aDades)) $this->setAbr_r($aDades['abr_r']);
 		if (array_key_exists('numero_r',$aDades)) $this->setNumero_r($aDades['numero_r']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setDl('');
+		$this->setNombre_dl('');
+		$this->setNumero_dl('');
+		$this->setAbr_r('');
+		$this->setNumero_r('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/**

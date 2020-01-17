@@ -272,7 +272,7 @@ switch ($Qque) {
 			$oGesActividades = new GestorActividad();
 			$oActividades = $oGesActividades->getActividades($aWhere,$aOperador);
 			foreach ($oActividades as $oActividad) {
-				extract($oActividad->getTot());
+				$id_activ = $oActividad->getId_activ();
 				$num_dias_act = $oActividad->getDuracion(); // no se carga con getTot() porque no es un campo de la base de datos.
 				$num_dias = $oActividad->getDuracionEnPeriodo($inicio,$fin); // no se carga con getTot() porque no es un campo de la base de datos.
 				$num_dias_real = $oActividad->getDuracionReal(); // no se carga con getTot() porque no es un campo de la base de datos.

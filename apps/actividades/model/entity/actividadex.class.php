@@ -193,9 +193,8 @@ class ActividadEx Extends ActividadAll {
 					if ( filter_var( $aDades['publicado'], FILTER_VALIDATE_BOOLEAN)) { $aDades['publicado']='true'; } else { $aDades['publicado']='false'; }
 					$this->aDadesActuals=$aDades;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;

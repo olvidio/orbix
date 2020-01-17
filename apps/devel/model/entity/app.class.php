@@ -168,9 +168,8 @@ class App Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -206,7 +205,12 @@ class App Extends core\ClasePropiedades {
 		if (array_key_exists('id_app',$aDades)) $this->setId_app($aDades['id_app']);
 		if (array_key_exists('nom',$aDades)) $this->setNom($aDades['nom']);
 		if (array_key_exists('db_prefix',$aDades)) $this->setDb_prefix($aDades['db_prefix']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_schema('');
+		$this->setId_app('');
+		$this->setNom('');
+		$this->setDb_prefix('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

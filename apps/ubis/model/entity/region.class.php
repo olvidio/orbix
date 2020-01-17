@@ -162,9 +162,8 @@ class Region Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -200,7 +199,12 @@ class Region Extends core\ClasePropiedades {
 		if (array_key_exists('region',$aDades)) $this->setRegion($aDades['region']);
 		if (array_key_exists('nombre_region',$aDades)) $this->setNombre_region($aDades['nombre_region']);
 		if (array_key_exists('status',$aDades)) $this->setStatus($aDades['status']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_region('');
+		$this->setRegion('');
+		$this->setNombre_region('');
+		$this->setStatus('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/**

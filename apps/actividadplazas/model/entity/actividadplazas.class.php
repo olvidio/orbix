@@ -191,9 +191,8 @@ class actividadPlazas Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -232,7 +231,15 @@ class actividadPlazas Extends core\ClasePropiedades {
 		if (array_key_exists('cl',$aDades)) $this->setCl($aDades['cl']);
 		if (array_key_exists('dl_tabla',$aDades)) $this->setDl_tabla($aDades['dl_tabla']);
 		if (array_key_exists('cedidas',$aDades)) $this->setCedidas($aDades['cedidas']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_schema('');
+		$this->setId_activ('');
+		$this->setId_dl('');
+		$this->setPlazas('');
+		$this->setCl('');
+		$this->setDl_tabla('');
+		$this->setCedidas('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

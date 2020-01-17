@@ -135,9 +135,8 @@ class UsuarioGrupo Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -172,7 +171,11 @@ class UsuarioGrupo Extends core\ClasePropiedades {
 		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_usuario',$aDades)) $this->setId_usuario($aDades['id_usuario']);
 		if (array_key_exists('id_grupo',$aDades)) $this->setId_grupo($aDades['id_grupo']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_schema('');
+		$this->setId_usuario('');
+		$this->setId_grupo('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

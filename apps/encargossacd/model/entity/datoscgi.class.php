@@ -184,9 +184,8 @@ class DatosCgi Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -223,7 +222,13 @@ class DatosCgi Extends core\ClasePropiedades {
 		if (array_key_exists('curso_ini_any',$aDades)) $this->setCurso_ini_any($aDades['curso_ini_any']);
 		if (array_key_exists('curso_fin_any',$aDades)) $this->setCurso_fin_any($aDades['curso_fin_any']);
 		if (array_key_exists('num_alum',$aDades)) $this->setNum_alum($aDades['num_alum']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_item('');
+		$this->setId_ubi('');
+		$this->setCurso_ini_any('');
+		$this->setCurso_fin_any('');
+		$this->setNum_alum('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

@@ -21,7 +21,6 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
 		$oMetamenu=new menus\Metamenu();
 		// para modificar los valores de un menu.
 		$oMetamenu->setId_menu($Qid_menu);
-		//$row = $oMetamenu->getTot();
 	} else {
 		$row['id_menu']='';
 		$row['orden']='';

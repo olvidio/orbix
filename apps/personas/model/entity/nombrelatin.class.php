@@ -176,9 +176,8 @@ class NombreLatin Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -213,7 +212,11 @@ class NombreLatin Extends core\ClasePropiedades {
 		if (array_key_exists('nom',$aDades)) $this->setNom($aDades['nom']);
 		if (array_key_exists('nominativo',$aDades)) $this->setNominativo($aDades['nominativo']);
 		if (array_key_exists('genitivo',$aDades)) $this->setGenitivo($aDades['genitivo']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setNom('');
+		$this->setNominativo('');
+		$this->setGenitivo('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

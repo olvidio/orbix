@@ -203,6 +203,7 @@ $update="";
 $campos="";
 $valores="";
 $exists="";
+$ToEmpty = "";
 $gets="";
 $altres_gets="";
 $altres_gets_set="";
@@ -384,6 +385,7 @@ foreach($oDbl->query($sql) as $row) {
 	   $exists.="\n\t\t".'if (array_key_exists(\''.$nomcamp.'\',$aDades)) $this->set'.$NomCamp.'($aDades[\''.$nomcamp.'\'],$convert);';
    	} else {
 	   $exists.="\n\t\t".'if (array_key_exists(\''.$nomcamp.'\',$aDades)) $this->set'.$NomCamp.'($aDades[\''.$nomcamp.'\']);';
+	   $ToEmpty.="\n\t\t".'$this->set'.$NomCamp.'([\'\']);';
    	}
 
 	if (!in_array($nomcamp,$aClaus)) {
@@ -635,8 +637,13 @@ $txt.="\n\t\t".'}
 				case \'guardar\':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
+                default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
 			}
 			return TRUE;
 		} else {
@@ -677,6 +684,16 @@ if ($add_convert === TRUE) {
 		if (!is_array($aDades)) return;';
 }
 $txt.=$exists;
+$txt.="\n\t".'}';
+
+$txt.='	
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {';
+
+$txt.=$ToEmpty;
 $txt.="\n\t".'}
 
 	/* METODES GET i SET --------------------------------------------------------*/

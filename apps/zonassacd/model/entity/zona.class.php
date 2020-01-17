@@ -184,9 +184,8 @@ class Zona Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -223,7 +222,13 @@ class Zona Extends core\ClasePropiedades {
 		if (array_key_exists('orden',$aDades)) $this->setOrden($aDades['orden']);
 		if (array_key_exists('id_grupo',$aDades)) $this->setId_grupo($aDades['id_grupo']);
 		if (array_key_exists('id_nom',$aDades)) $this->setId_nom($aDades['id_nom']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_zona('');
+		$this->setNombre_zona('');
+		$this->setOrden('');
+		$this->setId_grupo('');
+		$this->setId_nom('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

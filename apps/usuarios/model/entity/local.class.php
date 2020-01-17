@@ -187,9 +187,8 @@ class Local Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -226,7 +225,13 @@ class Local Extends core\ClasePropiedades {
 		if (array_key_exists('idioma',$aDades)) $this->setIdioma($aDades['idioma']);
 		if (array_key_exists('nom_idioma',$aDades)) $this->setNom_idioma($aDades['nom_idioma']);
 		if (array_key_exists('activo',$aDades)) $this->setActivo($aDades['activo']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_locale('');
+		$this->setNom_Locale('');
+		$this->setIdioma('');
+		$this->setNom_idioma('');
+		$this->setActivo('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

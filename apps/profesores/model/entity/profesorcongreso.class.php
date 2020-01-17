@@ -210,9 +210,8 @@ class ProfesorCongreso Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -253,7 +252,17 @@ class ProfesorCongreso Extends core\ClasePropiedades {
 		if (array_key_exists('f_fin',$aDades)) $this->setF_fin($aDades['f_fin'],$convert);
 		if (array_key_exists('organiza',$aDades)) $this->setOrganiza($aDades['organiza']);
 		if (array_key_exists('tipo',$aDades)) $this->setTipo($aDades['tipo']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_schema('');
+		$this->setId_item('');
+		$this->setId_nom('');
+		$this->setCongreso('');
+		$this->setLugar('');
+		$this->setF_ini('');
+		$this->setF_fin('');
+		$this->setOrganiza('');
+		$this->setTipo('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

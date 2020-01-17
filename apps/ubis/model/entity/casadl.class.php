@@ -156,9 +156,8 @@ class CasaDl Extends Casa {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -208,7 +207,26 @@ class CasaDl Extends Casa {
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
 		if (array_key_exists('id_auto',$aDades)) $this->setId_auto($aDades['id_auto']);
 		if (array_key_exists('plazas_min',$aDades)) $this->setPlazas_min($aDades['plazas_min']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_schema('');
+		$this->setTipo_ubi('');
+		$this->setId_ubi('');
+		$this->setNombre_ubi('');
+		$this->setDl('');
+		$this->setPais('');
+		$this->setRegion('');
+		$this->setStatus('');
+		$this->setF_status('');
+		$this->setSv('');
+		$this->setSf('');
+		$this->setTipo_casa('');
+		$this->setPlazas('');
+		$this->setNum_sacd('');
+		$this->setBiblioteca('');
+		$this->setObserv('');
+		$this->setId_auto('');
+		$this->setPlazas_min('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/**

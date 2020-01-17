@@ -203,9 +203,8 @@ class Profesor Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -246,7 +245,17 @@ class Profesor Extends core\ClasePropiedades {
 		if (array_key_exists('id_tipo_profesor',$aDades)) $this->setId_tipo_profesor($aDades['id_tipo_profesor']);
 		if (array_key_exists('escrito_cese',$aDades)) $this->setEscrito_cese($aDades['escrito_cese']);
 		if (array_key_exists('f_cese',$aDades)) $this->setF_cese($aDades['f_cese'],$convert);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_schema('');
+		$this->setId_item('');
+		$this->setId_nom('');
+		$this->setId_departamento('');
+		$this->setEscrito_nombramiento('');
+		$this->setF_nombramiento('');
+		$this->setId_tipo_profesor('');
+		$this->setEscrito_cese('');
+		$this->setF_cese('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

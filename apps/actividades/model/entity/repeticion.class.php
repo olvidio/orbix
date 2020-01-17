@@ -165,9 +165,8 @@ class Repeticion Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -203,7 +202,12 @@ class Repeticion Extends core\ClasePropiedades {
 		if (array_key_exists('repeticion',$aDades)) $this->setRepeticion($aDades['repeticion']);
 		if (array_key_exists('temporada',$aDades)) $this->setTemporada($aDades['temporada']);
 		if (array_key_exists('tipo',$aDades)) $this->setTipo($aDades['tipo']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_repeticion('');
+		$this->setRepeticion('');
+		$this->setTemporada('');
+		$this->setTipo('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/**

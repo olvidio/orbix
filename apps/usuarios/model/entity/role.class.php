@@ -203,9 +203,8 @@ class Role Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -244,9 +243,16 @@ class Role Extends core\ClasePropiedades {
 		if (array_key_exists('sv',$aDades)) $this->setSv($aDades['sv']);
 		if (array_key_exists('pau',$aDades)) $this->setPau($aDades['pau']);
 		if (array_key_exists('dmz',$aDades)) $this->setDmz($aDades['dmz']);
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_schema('');
+		$this->setId_role('');
+		$this->setRole('');
+		$this->setSf('');
+		$this->setSv('');
+		$this->setPau('');
+		$this->setDmz('');
 	}
-
-	/* METODES GET i SET --------------------------------------------------------*/
+	/* METODES GET i SET --------------------------------------------------------*/
 
 	/**
 	 * Recupera tots els atributs de Role en un array

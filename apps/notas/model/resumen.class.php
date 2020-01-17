@@ -360,7 +360,17 @@ class Resumen Extends core\ClasePropiedades {
 
 		$prep = $oDbl->prepare("INSERT INTO $asignaturas VALUES(:id_asignatura, :id_nivel, :nombre_asignatura, :nombre_corto, :creditos, :year, :id_sector, :status, :id_tipo)");
 		foreach ($cAsignaturas as $oAsignatura) {
-			$aDades = $oAsignatura->getTot();
+		    $aDades = [];
+		    $aDades['id_asignatura'] = $oAsignatura->getId_asignatura();
+		    $aDades['id_nivel'] = $oAsignatura->getId_nivel();
+		    $aDades['nombre_asignatura'] = $oAsignatura->getNombre_asignatura();
+		    $aDades['nombre_corto'] = $oAsignatura->getNombre_corto();
+		    $aDades['creditos'] = $oAsignatura->getCreditos();
+		    $aDades['year'] = $oAsignatura->getYear();
+		    $aDades['id_sector'] = $oAsignatura->getId_sector();
+		    $aDades['status'] = $oAsignatura->getStatus();
+		    $aDades['id_tipo'] = $oAsignatura->getId_tipo();
+		    
 			$prep->execute($aDades);
 		}
 	}

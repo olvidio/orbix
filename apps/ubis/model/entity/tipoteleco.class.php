@@ -162,9 +162,8 @@ class TipoTeleco Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -200,7 +199,12 @@ class TipoTeleco Extends core\ClasePropiedades {
 		if (array_key_exists('nombre_teleco',$aDades)) $this->setNombre_teleco($aDades['nombre_teleco']);
 		if (array_key_exists('ubi',$aDades)) $this->setUbi($aDades['ubi']);
 		if (array_key_exists('persona',$aDades)) $this->setPersona($aDades['persona']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setTipo_teleco('');
+		$this->setNombre_teleco('');
+		$this->setUbi('');
+		$this->setPersona('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/**

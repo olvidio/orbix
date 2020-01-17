@@ -179,9 +179,8 @@ class CambioAnotado Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -217,7 +216,12 @@ class CambioAnotado Extends core\ClasePropiedades {
 		if (array_key_exists('id_schema_cambio',$aDades)) $this->setId_schema_cambio($aDades['id_schema_cambio']);
 		if (array_key_exists('id_item_cambio',$aDades)) $this->setId_item_cambio($aDades['id_item_cambio']);
 		if (array_key_exists('anotado',$aDades)) $this->setAnotado($aDades['anotado']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_item('');
+		$this->setId_schema_cambio('');
+		$this->setId_item_cambio('');
+		$this->setAnotado('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

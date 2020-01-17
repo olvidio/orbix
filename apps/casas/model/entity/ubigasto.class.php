@@ -191,9 +191,8 @@ class UbiGasto Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -230,7 +229,13 @@ class UbiGasto Extends core\ClasePropiedades {
 		if (array_key_exists('f_gasto',$aDades)) $this->setF_gasto($aDades['f_gasto'],$convert);
 		if (array_key_exists('tipo',$aDades)) $this->setTipo($aDades['tipo']);
 		if (array_key_exists('cantidad',$aDades)) $this->setCantidad($aDades['cantidad']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_item('');
+		$this->setId_ubi('');
+		$this->setF_gasto('');
+		$this->setTipo('');
+		$this->setCantidad('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

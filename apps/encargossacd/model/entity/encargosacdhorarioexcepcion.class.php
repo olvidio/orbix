@@ -255,9 +255,8 @@ class EncargoSacdHorarioExcepcion Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -303,7 +302,22 @@ class EncargoSacdHorarioExcepcion Extends core\ClasePropiedades {
 		if (array_key_exists('h_ini',$aDades)) $this->setH_ini($aDades['h_ini']);
 		if (array_key_exists('h_fin',$aDades)) $this->setH_fin($aDades['h_fin']);
 		if (array_key_exists('mes',$aDades)) $this->setMes($aDades['mes']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_item_ex('');
+		$this->setId_enc('');
+		$this->setId_item_h('');
+		$this->setF_ini('');
+		$this->setF_fin('');
+		$this->setDesc_ex('');
+		$this->setHorario('');
+		$this->setDia_ref('');
+		$this->setDia_num('');
+		$this->setMas_menos('');
+		$this->setDia_inc('');
+		$this->setH_ini('');
+		$this->setH_fin('');
+		$this->setMes('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

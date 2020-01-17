@@ -203,9 +203,8 @@ class Dossier Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -245,7 +244,16 @@ class Dossier Extends core\ClasePropiedades {
 		if (array_key_exists('f_camb_dossier',$aDades)) $this->setF_camb_dossier($aDades['f_camb_dossier'],$convert);
 		if (array_key_exists('status_dossier',$aDades)) $this->setStatus_dossier($aDades['status_dossier']);
 		if (array_key_exists('f_status',$aDades)) $this->setF_status($aDades['f_status'],$convert);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_schema('');
+		$this->setTabla('');
+		$this->setId_pau('');
+		$this->setId_tipo_dossier('');
+		$this->setF_ini('');
+		$this->setF_camb_dossier('');
+		$this->setStatus_dossier('');
+		$this->setF_status('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

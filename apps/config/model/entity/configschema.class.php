@@ -160,9 +160,8 @@ class ConfigSchema Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -196,7 +195,10 @@ class ConfigSchema Extends core\ClasePropiedades {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('parametro',$aDades)) $this->setParametro($aDades['parametro']);
 		if (array_key_exists('valor',$aDades)) $this->setValor($aDades['valor']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setParametro('');
+		$this->setValor('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

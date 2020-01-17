@@ -128,7 +128,6 @@ class Tesera {
 		$cNotas = $GesNotas->getPersonaNotas($aWhere,$aOperador);
 		$aAprobadas=array();
 		foreach ($cNotas as $oPersonaNota) {
-			extract($oPersonaNota->getTot());
 			$id_asignatura = $oPersonaNota->getId_asignatura(); 
 			$id_nivel = $oPersonaNota->getId_nivel(); 
 			$oF_acta = $oPersonaNota->getF_acta(); 

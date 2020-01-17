@@ -122,9 +122,8 @@ class TelecoCdcEx Extends TelecoCdc {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -163,7 +162,15 @@ class TelecoCdcEx Extends TelecoCdc {
 		if (array_key_exists('desc_teleco',$aDades)) $this->setDesc_teleco($aDades['desc_teleco']);
 		if (array_key_exists('num_teleco',$aDades)) $this->setNum_teleco($aDades['num_teleco']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_schema('');
+		$this->setId_ubi('');
+		$this->setId_item('');
+		$this->setTipo_teleco('');
+		$this->setDesc_teleco('');
+		$this->setNum_teleco('');
+		$this->setObserv('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 }

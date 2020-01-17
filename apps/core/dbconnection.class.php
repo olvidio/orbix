@@ -51,6 +51,7 @@ class dbConnection {
 		
 		$esquema =$this->config['schema']; 
 		$oDB = new \PDO($dsn);
+		$oDB->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 		$oDB->exec("SET search_path TO \"$esquema\"");
 		/* le paso la gestión a la clase web\datetimelocal */
 		//$oDB->exec("SET DATESTYLE TO '$datestyle'");

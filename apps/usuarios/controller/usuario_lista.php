@@ -83,6 +83,8 @@ foreach ($oUsuarioColeccion as $oUsuario) {
 	$id_role=$oUsuario->getId_role();
 
 	if (!empty($id_role)) {
+	    // Cuando se ha eliminao el Role, el usuario todavia tiene el id, pero no existe:
+	    if ($id_role==6) $id_role = 1423;
         $oRole->setId_role($id_role);
         $oRole->DBCarregar();
         $role= $oRole->getRole();

@@ -197,9 +197,8 @@ class Cargo Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -237,7 +236,14 @@ class Cargo Extends core\ClasePropiedades {
 		if (array_key_exists('sf',$aDades)) $this->setSf($aDades['sf']);
 		if (array_key_exists('sv',$aDades)) $this->setSv($aDades['sv']);
 		if (array_key_exists('tipo_cargo',$aDades)) $this->setTipo_cargo($aDades['tipo_cargo']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_cargo('');
+		$this->setCargo('');
+		$this->setOrden_cargo('');
+		$this->setSf('');
+		$this->setSv('');
+		$this->setTipo_cargo('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

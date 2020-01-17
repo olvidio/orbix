@@ -207,9 +207,8 @@ class EncargoTipo Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -244,7 +243,11 @@ class EncargoTipo Extends core\ClasePropiedades {
 		if (array_key_exists('id_tipo_enc',$aDades)) $this->setId_tipo_enc($aDades['id_tipo_enc']);
 		if (array_key_exists('tipo_enc',$aDades)) $this->setTipo_enc($aDades['tipo_enc']);
 		if (array_key_exists('mod_horario',$aDades)) $this->setMod_horario($aDades['mod_horario']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_tipo_enc('');
+		$this->setTipo_enc('');
+		$this->setMod_horario('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

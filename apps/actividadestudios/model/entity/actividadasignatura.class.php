@@ -206,9 +206,8 @@ class ActividadAsignatura Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -248,7 +247,16 @@ class ActividadAsignatura Extends core\ClasePropiedades {
 		if (array_key_exists('tipo',$aDades)) $this->setTipo($aDades['tipo']);
 		if (array_key_exists('f_ini',$aDades)) $this->setF_ini($aDades['f_ini'],$convert);
 		if (array_key_exists('f_fin',$aDades)) $this->setF_fin($aDades['f_fin'],$convert);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_schema('');
+		$this->setId_activ('');
+		$this->setId_asignatura('');
+		$this->setId_profesor('');
+		$this->setAvis_profesor('');
+		$this->setTipo('');
+		$this->setF_ini('');
+		$this->setF_fin('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

@@ -127,7 +127,14 @@ if (is_array($cEncargos) && count($cEncargos) == 0) { // nuevo encargo
 				$h=0;
 				foreach ($cEncargoHorarios as $oEncargoHorario) {
 					$h++;
-					extract($oEncargoHorario->getTot());
+					$mas_menos = $oEncargoHorario->getMas_menos();
+					$dia_ref =  $oEncargoHorario->getDia_ref();
+					$dia_inc = $oEncargoHorario->getDia_inc();
+					$dia_num = $oEncargoHorario->getDia_num();
+					$h_ini = $oEncargoHorario->getH_ini();
+					$h_fin = $oEncargoHorario->getH_fin();
+					$n_sacd = $oEncargoHorario->getN_sacd();
+
 					$texto_horario=$GesEncargoTipo->texto_horario($mas_menos,$dia_ref,$dia_inc,$dia_num,$h_ini,$h_fin,$n_sacd);
 					if ($h >1) $dedic_ctr[$e] .= " y ";
 					$dedic_ctr[$e] .= $texto_horario;
@@ -201,7 +208,14 @@ if (is_array($cEncargos) && count($cEncargos) == 0) { // nuevo encargo
 							$h=0;
 							foreach ($cEncargoSacdHorarios as $oEncargoSacdHorario) {
 								$h++;
-								extract($oEncargoSacdHorario->getTot());
+                                $mas_menos = $oEncargoSacdHorario->getMas_menos();
+                                $dia_ref =  $oEncargoSacdHorario->getDia_ref();
+                                $dia_inc = $oEncargoSacdHorario->getDia_inc();
+                                $dia_num = $oEncargoSacdHorario->getDia_num();
+                                $h_ini = $oEncargoSacdHorario->getH_ini();
+                                $h_fin = $oEncargoSacdHorario->getH_fin();
+                                $n_sacd = $oEncargoSacdHorario->getN_sacd();
+
 								$texto_horario=$GesEncargoTipo->texto_horario($mas_menos,$dia_ref,$dia_inc,$dia_num,$h_ini,$h_fin,$n_sacd);
 								if ($h >1) $dedic_sacd[$e][0] .= " y ";
 								$dedic_sacd[$e][0] .= $texto_horario;
@@ -249,7 +263,14 @@ if (is_array($cEncargos) && count($cEncargos) == 0) { // nuevo encargo
 							$h=0;
 							foreach ($cEncargoSacdHorarios as $oEncargoSacdHorario) {
 								$h++;
-								extract($oEncargoSacdHorario->getTot());
+                                $mas_menos = $oEncargoSacdHorario->getMas_menos();
+                                $dia_ref =  $oEncargoSacdHorario->getDia_ref();
+                                $dia_inc = $oEncargoSacdHorario->getDia_inc();
+                                $dia_num = $oEncargoSacdHorario->getDia_num();
+                                $h_ini = $oEncargoSacdHorario->getH_ini();
+                                $h_fin = $oEncargoSacdHorario->getH_fin();
+                                $n_sacd = $oEncargoSacdHorario->getN_sacd();
+
 								$texto_horario=$GesEncargoTipo->texto_horario($mas_menos,$dia_ref,$dia_inc,$dia_num,$h_ini,$h_fin,$n_sacd);
 								if ($h >1) $dedic_sacd[$e][$s] .= " y ";
 								$dedic_sacd[$e][$s] .= $texto_horario;

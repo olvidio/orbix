@@ -168,9 +168,8 @@ class ProcesoTipo Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -205,7 +204,11 @@ class ProcesoTipo Extends core\ClasePropiedades {
 		if (array_key_exists('id_tipo_proceso',$aDades)) $this->setId_tipo_proceso($aDades['id_tipo_proceso']);
 		if (array_key_exists('nom_proceso',$aDades)) $this->setNom_proceso($aDades['nom_proceso']);
 		if (array_key_exists('sfsv',$aDades)) $this->setSfsv($aDades['sfsv']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_tipo_proceso('');
+		$this->setNom_proceso('');
+		$this->setSfsv('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

@@ -190,9 +190,8 @@ class TituloEst Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -231,7 +230,15 @@ class TituloEst Extends core\ClasePropiedades {
 		if (array_key_exists('centro_dnt',$aDades)) $this->setCentro_dnt($aDades['centro_dnt']);
 		if (array_key_exists('eclesiastico',$aDades)) $this->setEclesiastico($aDades['eclesiastico']);
 		if (array_key_exists('year',$aDades)) $this->setYear($aDades['year']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_schema('');
+		$this->setId_item('');
+		$this->setId_nom('');
+		$this->setTitulo('');
+		$this->setCentro_dnt('');
+		$this->setEclesiastico('');
+		$this->setYear('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

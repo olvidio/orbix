@@ -194,9 +194,8 @@ class CartaPresentacion Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -235,7 +234,15 @@ class CartaPresentacion Extends core\ClasePropiedades {
 		if (array_key_exists('pres_mail',$aDades)) $this->setPres_mail($aDades['pres_mail']);
 		if (array_key_exists('zona',$aDades)) $this->setZona($aDades['zona']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_direccion('');
+		$this->setId_ubi('');
+		$this->setPres_nom('');
+		$this->setPres_telf('');
+		$this->setPres_mail('');
+		$this->setZona('');
+		$this->setObserv('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

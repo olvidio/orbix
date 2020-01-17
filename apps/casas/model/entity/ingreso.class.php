@@ -192,9 +192,8 @@ class Ingreso Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -232,7 +231,14 @@ class Ingreso Extends core\ClasePropiedades {
 		if (array_key_exists('ingresos_previstos',$aDades)) $this->setIngresos_previstos($aDades['ingresos_previstos']);
 		if (array_key_exists('num_asistentes_previstos',$aDades)) $this->setNum_asistentes_previstos($aDades['num_asistentes_previstos']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_activ('');
+		$this->setIngresos('');
+		$this->setNum_asistentes('');
+		$this->setIngresos_previstos('');
+		$this->setNum_asistentes_previstos('');
+		$this->setObserv('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

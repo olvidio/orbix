@@ -148,9 +148,8 @@ class Situacion Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -184,7 +183,10 @@ class Situacion Extends core\ClasePropiedades {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('situacion',$aDades)) $this->setSituacion($aDades['situacion']);
 		if (array_key_exists('nombre_situacion',$aDades)) $this->setNombre_situacion($aDades['nombre_situacion']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setSituacion('');
+		$this->setNombre_situacion('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/**

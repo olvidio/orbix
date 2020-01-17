@@ -153,9 +153,8 @@ class Preferencia Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -191,7 +190,12 @@ class Preferencia Extends core\ClasePropiedades {
 		if (array_key_exists('id_usuario',$aDades)) $this->setId_usuario($aDades['id_usuario']);
 		if (array_key_exists('tipo',$aDades)) $this->setTipo($aDades['tipo']);
 		if (array_key_exists('preferencia',$aDades)) $this->setPreferencia($aDades['preferencia']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_schema('');
+		$this->setId_usuario('');
+		$this->setTipo('');
+		$this->setPreferencia('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

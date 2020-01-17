@@ -169,9 +169,8 @@ class PersonaSacd Extends PersonaGlobal {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -227,7 +226,32 @@ class PersonaSacd Extends PersonaGlobal {
 		if (array_key_exists('eap',$aDades)) $this->setEap($aDades['eap']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
 		if (array_key_exists('lugar_nacimiento',$aDades)) $this->setLugar_nacimiento($aDades['lugar_nacimiento']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_schema('');
+		$this->setId_nom('');
+		$this->setId_cr('');
+		$this->setId_tabla('');
+		$this->setDl('');
+		$this->setSacd('');
+		$this->setTrato('');
+		$this->setNom('');
+		$this->setNx1('');
+		$this->setApellido1('');
+		$this->setNx2('');
+		$this->setApellido2('');
+		$this->setF_nacimiento('');
+		$this->setLengua('');
+		$this->setSituacion('');
+		$this->setF_situacion('');
+		$this->setApel_fam('');
+		$this->setInc('');
+		$this->setF_inc('');
+		$this->setStgr('');
+		$this->setProfesion('');
+		$this->setEap('');
+		$this->setObserv('');
+		$this->setLugar_nacimiento('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/

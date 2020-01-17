@@ -156,9 +156,8 @@ class DireccionCdcDl Extends DireccionCdc {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -207,7 +206,25 @@ class DireccionCdcDl Extends DireccionCdc {
 		if (array_key_exists('plano_extension',$aDades)) $this->setPlano_extension($aDades['plano_extension']);
 		if (array_key_exists('plano_nom',$aDades)) $this->setPlano_nom($aDades['plano_nom']);
 		if (array_key_exists('nom_sede',$aDades)) $this->setNom_sede($aDades['nom_sede']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_schema('');
+		$this->setId_direccion('');
+		$this->setDireccion('');
+		$this->setC_p('');
+		$this->setPoblacion('');
+		$this->setProvincia('');
+		$this->setA_p('');
+		$this->setPais('');
+		$this->setF_direccion('');
+		$this->setObserv('');
+		$this->setCp_dcha('');
+		$this->setLatitud('');
+		$this->setLongitud('');
+		$this->setPlano_doc('');
+		$this->setPlano_extension('');
+		$this->setPlano_nom('');
+		$this->setNom_sede('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/

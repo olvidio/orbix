@@ -157,9 +157,8 @@ class CentroEllas Extends Centro {
 	            case 'guardar':
 	                if (!$oDblSt->rowCount()) return false;
 	                break;
-	            default:
-	                $this->setAllAtributes($aDades);
-	        }
+	            default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 	        return true;
 	    } else {
 	        return false;
@@ -207,7 +206,24 @@ class CentroEllas Extends Centro {
 	    if (array_key_exists('cdc',$aDades)) $this->setCdc($aDades['cdc']);
 	    if (array_key_exists('id_ctr_padre',$aDades)) $this->setId_ctr_padre($aDades['id_ctr_padre']);
 	    if (array_key_exists('id_zona',$aDades)) $this->setId_zona($aDades['id_zona']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	    $this->setId_schema('');
+		$this->setId_ubi('');
+		$this->setTipo_ubi('');
+		$this->setNombre_ubi('');
+		$this->setDl('');
+		$this->setPais('');
+		$this->setRegion('');
+		$this->setStatus('');
+		$this->setF_status('');
+		$this->setSv('');
+		$this->setSf('');
+		$this->setTipo_ctr('');
+		$this->setTipo_labor('');
+		$this->setCdc('');
+		$this->setId_ctr_padre('');
+		$this->setId_zona('');
+	}
 	
 	/* METODES GET i SET --------------------------------------------------------*/
 	/**

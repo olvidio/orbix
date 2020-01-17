@@ -219,9 +219,8 @@ class Acta Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -264,7 +263,18 @@ class Acta Extends core\ClasePropiedades {
 		if (array_key_exists('linea',$aDades)) $this->setLinea($aDades['linea']);
 		if (array_key_exists('lugar',$aDades)) $this->setLugar($aDades['lugar']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		// la fecha debe estar antes del acta por si hay que usar la funcion inventarActa.
+		$this->setF_acta('');
+		$this->setActa('');
+		$this->setId_asignatura('');
+		$this->setId_activ('');
+		$this->setLibro('');
+		$this->setPagina('');
+		$this->setLinea('');
+		$this->setLugar('');
+		$this->setObserv('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

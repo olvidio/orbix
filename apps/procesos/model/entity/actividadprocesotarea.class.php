@@ -330,9 +330,8 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 					if (!$oDblSt->rowCount()) return FALSE;
 					$this->aDadesActuals=$aDades;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -403,7 +402,16 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 		if (array_key_exists('n_orden',$aDades)) $this->setN_orden($aDades['n_orden']);
 		if (array_key_exists('completado',$aDades)) $this->setCompletado($aDades['completado']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_item('');
+		$this->setId_tipo_proceso('');
+		$this->setId_activ('');
+		$this->setId_fase('');
+		$this->setId_tarea('');
+		$this->setN_orden('');
+		$this->setCompletado('');
+		$this->setObserv('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

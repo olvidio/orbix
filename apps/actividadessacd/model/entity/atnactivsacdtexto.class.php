@@ -176,9 +176,8 @@ class AtnActivSacdTexto Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -214,7 +213,12 @@ class AtnActivSacdTexto Extends core\ClasePropiedades {
 		if (array_key_exists('idioma',$aDades)) $this->setIdioma($aDades['idioma']);
 		if (array_key_exists('clave',$aDades)) $this->setClave($aDades['clave']);
 		if (array_key_exists('texto',$aDades)) $this->setTexto($aDades['texto']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_item('');
+		$this->setIdioma('');
+		$this->setClave('');
+		$this->setTexto('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

@@ -320,9 +320,8 @@ class ActividadAll Extends core\ClasePropiedades {
 					if ( filter_var( $aDades['publicado'], FILTER_VALIDATE_BOOLEAN)) { $aDades['publicado']='true'; } else { $aDades['publicado']='false'; }
 					$this->aDadesActuals=$aDades;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -387,7 +386,32 @@ class ActividadAll Extends core\ClasePropiedades {
 		if (array_key_exists('publicado',$aDades)) $this->setPublicado($aDades['publicado']);
 		if (array_key_exists('id_tabla',$aDades)) $this->setId_tabla($aDades['id_tabla']);
 		if (array_key_exists('plazas',$aDades)) $this->setPlazas($aDades['plazas']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_schema('');
+		$this->setId_activ('');
+		$this->setId_tipo_activ('');
+		$this->setDl_org('');
+		$this->setNom_activ('');
+		$this->setId_ubi('');
+		$this->setDesc_activ('');
+		$this->setF_ini('');
+		$this->setH_ini('');
+		$this->setF_fin('');
+		$this->setH_fin('');
+		$this->setTipo_horario('');
+		$this->setPrecio('');
+		$this->setNum_asistentes('');
+		$this->setStatus('');
+		$this->setObserv('');
+		$this->setNivel_stgr('');
+		$this->setObserv_material('');
+		$this->setLugar_esp('');
+		$this->setTarifa('');
+		$this->setId_repeticion('');
+		$this->setPublicado('');
+		$this->setId_tabla('');
+		$this->setPlazas('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

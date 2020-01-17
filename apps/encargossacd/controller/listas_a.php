@@ -92,7 +92,6 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
 		$sacd_suplente="";
 		$sacd_colaborador="";
 		$contador_ctr++;
-		//extract($oCentro->getTot());
 		$id_ubi = $oCentro->getId_ubi();
 		$nombre_ubi = $oCentro->getNombre_ubi();
 		$tipo_ctr = $oCentro->getTipo_ctr();

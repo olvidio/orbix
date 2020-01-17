@@ -135,9 +135,8 @@ class TipoCentro Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -171,7 +170,10 @@ class TipoCentro Extends core\ClasePropiedades {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('tipo_ctr',$aDades)) $this->setTipo_ctr($aDades['tipo_ctr']);
 		if (array_key_exists('nombre_tipo_ctr',$aDades)) $this->setNombre_tipo_ctr($aDades['nombre_tipo_ctr']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setTipo_ctr('');
+		$this->setNombre_tipo_ctr('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

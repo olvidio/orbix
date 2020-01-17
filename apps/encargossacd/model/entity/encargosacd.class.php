@@ -193,9 +193,8 @@ class EncargoSacd Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -233,7 +232,14 @@ class EncargoSacd Extends core\ClasePropiedades {
 		if (array_key_exists('modo',$aDades)) $this->setModo($aDades['modo']);
 		if (array_key_exists('f_ini',$aDades)) $this->setF_ini($aDades['f_ini'],$convert);
 		if (array_key_exists('f_fin',$aDades)) $this->setF_fin($aDades['f_fin'],$convert);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_item('');
+		$this->setId_enc('');
+		$this->setId_nom('');
+		$this->setModo('');
+		$this->setF_ini('');
+		$this->setF_fin('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

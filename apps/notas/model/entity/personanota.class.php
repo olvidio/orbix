@@ -280,9 +280,8 @@ class PersonaNota Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -330,7 +329,24 @@ class PersonaNota Extends core\ClasePropiedades {
 		if (array_key_exists('nota_num',$aDades)) $this->setNota_num($aDades['nota_num']);
 		if (array_key_exists('nota_max',$aDades)) $this->setNota_max($aDades['nota_max']);
 		if (array_key_exists('tipo_acta',$aDades)) $this->setTipo_acta($aDades['tipo_acta']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_schema('');
+		$this->setId_nom('');
+		$this->setId_nivel('');
+		$this->setId_asignatura('');
+		$this->setId_situacion('');
+		// la fecha debe estar antes del acta por si hay que usar la funcion inventarActa.
+		$this->setF_acta('');
+		$this->setActa('');
+		$this->setDetalle('');
+		$this->setPreceptor('');
+		$this->setId_preceptor('');
+		$this->setEpoca('');
+		$this->setId_activ('');
+		$this->setNota_num('');
+		$this->setNota_max('');
+		$this->setTipo_acta('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

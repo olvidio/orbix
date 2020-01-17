@@ -191,9 +191,8 @@ class CasaPeriodo Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -230,7 +229,13 @@ class CasaPeriodo Extends core\ClasePropiedades {
 		if (array_key_exists('f_ini',$aDades)) $this->setF_ini($aDades['f_ini'],$convert);
 		if (array_key_exists('f_fin',$aDades)) $this->setF_fin($aDades['f_fin'],$convert);
 		if (array_key_exists('sfsv',$aDades)) $this->setSfsv($aDades['sfsv']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_item('');
+		$this->setId_ubi('');
+		$this->setF_ini('');
+		$this->setF_fin('');
+		$this->setSfsv('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

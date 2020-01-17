@@ -170,9 +170,8 @@ class GrupMenu Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return true;
 		} else {
 		   	return false;
@@ -208,7 +207,12 @@ class GrupMenu Extends core\ClasePropiedades {
 		if (array_key_exists('id_grupmenu',$aDades)) $this->setId_grupmenu($aDades['id_grupmenu']);
 		if (array_key_exists('grup_menu',$aDades)) $this->setGrup_menu($aDades['grup_menu']);
 		if (array_key_exists('orden',$aDades)) $this->setOrden($aDades['orden']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_schema('');
+		$this->setId_grupmenu('');
+		$this->setGrup_menu('');
+		$this->setOrden('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/**

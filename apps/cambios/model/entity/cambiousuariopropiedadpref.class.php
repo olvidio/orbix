@@ -206,9 +206,8 @@ class CambioUsuarioPropiedadPref Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:
-					$this->setAllAtributes($aDades);
-			}
+				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -288,7 +287,15 @@ class CambioUsuarioPropiedadPref Extends core\ClasePropiedades {
 		if (array_key_exists('valor',$aDades)) $this->setValor($aDades['valor']);
 		if (array_key_exists('valor_old',$aDades)) $this->setValor_old($aDades['valor_old']);
 		if (array_key_exists('valor_new',$aDades)) $this->setValor_new($aDades['valor_new']);
-	}
+	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+		$this->setId_item('');
+		$this->setId_item_usuario_objeto('');
+		$this->setPropiedad('');
+		$this->setOperador('');
+		$this->setValor('');
+		$this->setValor_old('');
+		$this->setValor_new('');
+	}
 
 	/* METODES GET i SET --------------------------------------------------------*/
 
