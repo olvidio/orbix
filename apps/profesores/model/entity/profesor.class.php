@@ -203,8 +203,14 @@ class Profesor Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -245,7 +251,13 @@ class Profesor Extends core\ClasePropiedades {
 		if (array_key_exists('id_tipo_profesor',$aDades)) $this->setId_tipo_profesor($aDades['id_tipo_profesor']);
 		if (array_key_exists('escrito_cese',$aDades)) $this->setEscrito_cese($aDades['escrito_cese']);
 		if (array_key_exists('f_cese',$aDades)) $this->setF_cese($aDades['f_cese'],$convert);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_item('');
 		$this->setId_nom('');
@@ -255,7 +267,9 @@ class Profesor Extends core\ClasePropiedades {
 		$this->setId_tipo_profesor('');
 		$this->setEscrito_cese('');
 		$this->setF_cese('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 
@@ -368,11 +382,20 @@ class Profesor Extends core\ClasePropiedades {
 	    if (!isset($this->df_nombramiento)) {
 	        $this->DBCarregar();
 	    }
-	    if (empty($this->df_nombramiento)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_nombramiento);
+	    if (empty($this->df_nombramiento)) {
+	    	return new web\NullDateTimeLocal();
+	    }
+	    $oConverter = new core\Converter('date', $this->df_nombramiento);
 	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_nombramiento de Profesor	* Si df_nombramiento es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_nombramiento debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_nombramiento='' optional.	* @param boolean convert=true optional. Si es false, df_nombramiento debe ser un string en formato ISO (Y-m-d).	 */
+	 * estableix el valor de l'atribut df_nombramiento de Profesor
+	* Si df_nombramiento es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
+	* Si convert es false, df_nombramiento debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	*
+	* @param date|string df_nombramiento='' optional.
+	* @param boolean convert=true optional. Si es false, df_nombramiento debe ser un string en formato ISO (Y-m-d).
+	 */
 	function setF_nombramiento($df_nombramiento='',$convert=true) {
 		if ($convert === true && !empty($df_nombramiento)) {
 	        $oConverter = new core\Converter('date', $df_nombramiento);
@@ -428,11 +451,20 @@ class Profesor Extends core\ClasePropiedades {
 	    if (!isset($this->df_cese)) {
 	        $this->DBCarregar();
 	    }
-	    if (empty($this->df_cese)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_cese);
+	    if (empty($this->df_cese)) {
+	    	return new web\NullDateTimeLocal();
+	    }
+	    $oConverter = new core\Converter('date', $this->df_cese);
 	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_cese de Profesor	* Si df_cese es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_cese debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_cese='' optional.	* @param boolean convert=true optional. Si es false, df_cese debe ser un string en formato ISO (Y-m-d).	 */
+	 * estableix el valor de l'atribut df_cese de Profesor
+	* Si df_cese es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
+	* Si convert es false, df_cese debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	*
+	* @param date|string df_cese='' optional.
+	* @param boolean convert=true optional. Si es false, df_cese debe ser un string en formato ISO (Y-m-d).
+	 */
 	function setF_cese($df_cese='',$convert=true) {
 		if ($convert === true && !empty($df_cese)) {
 	        $oConverter = new core\Converter('date', $df_cese);

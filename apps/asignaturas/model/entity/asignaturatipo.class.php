@@ -163,8 +163,14 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -202,14 +208,22 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 		if (array_key_exists('tipo_breve',$aDades)) $this->setTipo_breve($aDades['tipo_breve']);
 		if (array_key_exists('año',$aDades)) $this->setAño($aDades['año']);
 		if (array_key_exists('tipo_latin',$aDades)) $this->setTipo_latin($aDades['tipo_latin']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_tipo('');
 		$this->setTipo_asignatura('');
 		$this->setTipo_breve('');
 		if (array_key_exists('año',$aDades)) $this->setAño($aDades['año']);
 		$this->setTipo_latin('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/**

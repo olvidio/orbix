@@ -148,8 +148,14 @@ class Departamento Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -183,10 +189,18 @@ class Departamento Extends core\ClasePropiedades {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_departamento',$aDades)) $this->setId_departamento($aDades['id_departamento']);
 		if (array_key_exists('departamento',$aDades)) $this->setDepartamento($aDades['departamento']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_departamento('');
 		$this->setDepartamento('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/**

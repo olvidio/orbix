@@ -210,8 +210,14 @@ class ProfesorCongreso Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -252,7 +258,13 @@ class ProfesorCongreso Extends core\ClasePropiedades {
 		if (array_key_exists('f_fin',$aDades)) $this->setF_fin($aDades['f_fin'],$convert);
 		if (array_key_exists('organiza',$aDades)) $this->setOrganiza($aDades['organiza']);
 		if (array_key_exists('tipo',$aDades)) $this->setTipo($aDades['tipo']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_item('');
 		$this->setId_nom('');
@@ -262,7 +274,9 @@ class ProfesorCongreso Extends core\ClasePropiedades {
 		$this->setF_fin('');
 		$this->setOrganiza('');
 		$this->setTipo('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 
@@ -375,11 +389,20 @@ class ProfesorCongreso Extends core\ClasePropiedades {
 	    if (!isset($this->df_ini)) {
 	        $this->DBCarregar();
 	    }
-	    if (empty($this->df_ini)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_ini);
+	    if (empty($this->df_ini)) {
+	    	return new web\NullDateTimeLocal();
+	    }
+	    $oConverter = new core\Converter('date', $this->df_ini);
 	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_ini de ProfesorCongreso	* Si df_ini es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_ini debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_ini='' optional.	* @param boolean convert=true optional. Si es false, df_ini debe ser un string en formato ISO (Y-m-d).	 */
+	 * estableix el valor de l'atribut df_ini de ProfesorCongreso
+	* Si df_ini es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
+	* Si convert es false, df_ini debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	*
+	* @param date|string df_ini='' optional.
+	* @param boolean convert=true optional. Si es false, df_ini debe ser un string en formato ISO (Y-m-d).
+	 */
 	function setF_ini($df_ini='',$convert=true) {
 		if ($convert === true && !empty($df_ini)) {
 	        $oConverter = new core\Converter('date', $df_ini);
@@ -397,11 +420,20 @@ class ProfesorCongreso Extends core\ClasePropiedades {
 	    if (!isset($this->df_fin)) {
 	        $this->DBCarregar();
 	    }
-	    if (empty($this->df_fin)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_fin);
+	    if (empty($this->df_fin)) {
+	    	return new web\NullDateTimeLocal();
+	    }
+	    $oConverter = new core\Converter('date', $this->df_fin);
 	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_fin de ProfesorCongreso	* Si df_fin es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_fin debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_fin='' optional.	* @param boolean convert=true optional. Si es false, df_fin debe ser un string en formato ISO (Y-m-d).	 */
+	 * estableix el valor de l'atribut df_fin de ProfesorCongreso
+	* Si df_fin es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
+	* Si convert es false, df_fin debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	*
+	* @param date|string df_fin='' optional.
+	* @param boolean convert=true optional. Si es false, df_fin debe ser un string en formato ISO (Y-m-d).
+	 */
 	function setF_fin($df_fin='',$convert=true) {
 		if ($convert === true && !empty($df_fin)) {
 	        $oConverter = new core\Converter('date', $df_fin);

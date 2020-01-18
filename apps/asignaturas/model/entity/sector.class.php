@@ -156,8 +156,14 @@ class Sector Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -192,11 +198,19 @@ class Sector Extends core\ClasePropiedades {
 		if (array_key_exists('id_sector',$aDades)) $this->setId_sector($aDades['id_sector']);
 		if (array_key_exists('id_departamento',$aDades)) $this->setId_departamento($aDades['id_departamento']);
 		if (array_key_exists('sector',$aDades)) $this->setSector($aDades['sector']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_sector('');
 		$this->setId_departamento('');
 		$this->setSector('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/**

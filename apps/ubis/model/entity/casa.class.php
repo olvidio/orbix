@@ -187,8 +187,14 @@ class Casa Extends UbiGlobal {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -237,7 +243,13 @@ class Casa Extends UbiGlobal {
 		if (array_key_exists('num_sacd',$aDades)) $this->setNum_sacd($aDades['num_sacd']);
 		if (array_key_exists('biblioteca',$aDades)) $this->setBiblioteca($aDades['biblioteca']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setTipo_ubi('');
 		$this->setId_ubi('');
@@ -255,7 +267,9 @@ class Casa Extends UbiGlobal {
 		$this->setNum_sacd('');
 		$this->setBiblioteca('');
 		$this->setObserv('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

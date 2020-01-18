@@ -201,8 +201,14 @@ class Tarifa Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -240,14 +246,22 @@ class Tarifa Extends core\ClasePropiedades {
 		if (array_key_exists('year',$aDades)) $this->setYear($aDades['year']);
 		if (array_key_exists('cantidad',$aDades)) $this->setCantidad($aDades['cantidad']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_item('');
 		$this->setId_ubi('');
 		$this->setId_tarifa('');
 		$this->setYear('');
 		$this->setCantidad('');
 		$this->setObserv('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

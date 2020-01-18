@@ -235,8 +235,14 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 					if (!$oDblSt->rowCount()) return false;
 					$this->aDadesActuals=$aDades;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return TRUE;
 		} elseif (!empty($this->aPrimary_key)) {
 		    if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla
@@ -254,8 +260,14 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 		            if (!$oDblSt->rowCount()) return FALSE;
 		            $this->aDadesActuals=$aDades;
 		            break;
-		        default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+		        default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 		    return TRUE;
 		} else {
 		   	return FALSE;
@@ -302,7 +314,13 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 		if (array_key_exists('id_nom',$aDades)) $this->setId_nom($aDades['id_nom']);
 		if (array_key_exists('puede_agd',$aDades)) $this->setPuede_agd($aDades['puede_agd']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_item('');
 		$this->setId_activ('');
@@ -310,7 +328,9 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 		$this->setId_nom('');
 		$this->setPuede_agd('');
 		$this->setObserv('');
-	}
+	}
+
+
 	/**
 	 * retorna el valor de tots els atributs
 	 *

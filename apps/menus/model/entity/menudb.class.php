@@ -200,8 +200,14 @@ class MenuDb Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -242,7 +248,13 @@ class MenuDb Extends core\ClasePropiedades {
 		if (array_key_exists('menu_perm',$aDades)) $this->setMenu_perm($aDades['menu_perm']);
 		if (array_key_exists('id_grupmenu',$aDades)) $this->setId_grupmenu($aDades['id_grupmenu']);
 		if (array_key_exists('ok',$aDades)) $this->setOk($aDades['ok']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_menu('');
 		$this->setOrden('');
@@ -252,7 +264,9 @@ class MenuDb Extends core\ClasePropiedades {
 		$this->setMenu_perm('');
 		$this->setId_grupmenu('');
 		$this->setOk('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/**

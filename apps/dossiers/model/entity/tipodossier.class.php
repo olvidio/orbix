@@ -235,8 +235,14 @@ class TipoDossier Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -280,7 +286,13 @@ class TipoDossier Extends core\ClasePropiedades {
 		if (array_key_exists('depende_modificar',$aDades)) $this->setDepende_modificar($aDades['depende_modificar']);
 		if (array_key_exists('app',$aDades)) $this->setApp($aDades['app']);
 		if (array_key_exists('class',$aDades)) $this->setClass($aDades['class']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_tipo_dossier('');
 		$this->setDescripcion('');
@@ -293,7 +305,9 @@ class TipoDossier Extends core\ClasePropiedades {
 		$this->setDepende_modificar('');
 		$this->setApp('');
 		$this->setClass('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

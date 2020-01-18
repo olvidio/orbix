@@ -200,8 +200,14 @@ class CentroEncargado Extends core\ClasePropiedades {
 					if (!$oDblSt->rowCount()) return FALSE;
 					$this->aDadesActuals=$aDades;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -244,12 +250,20 @@ class CentroEncargado Extends core\ClasePropiedades {
 		if (array_key_exists('id_ubi',$aDades)) $this->setId_ubi($aDades['id_ubi']);
 		if (array_key_exists('num_orden',$aDades)) $this->setNum_orden($aDades['num_orden']);
 		if (array_key_exists('encargo',$aDades)) $this->setEncargo($aDades['encargo']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_activ('');
 		$this->setId_ubi('');
 		$this->setNum_orden('');
 		$this->setEncargo('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

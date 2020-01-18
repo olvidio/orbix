@@ -327,8 +327,14 @@ class PersonaListas Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -525,7 +531,13 @@ class PersonaListas Extends core\ClasePropiedades {
         if (array_key_exists('Encargos',$aDades)) $this->setEncargos($aDades['Encargos']);
         if (array_key_exists('INCORP',$aDades)) $this->setIncorporacion($aDades['INCORP']);
         if (array_key_exists('pertenece_r',$aDades)) $this->setIncorporacion($aDades['pertenece_r']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setIdentif('');
 		$this->setApeNom('');
@@ -541,7 +553,9 @@ class PersonaListas Extends core\ClasePropiedades {
 		$this->setEncargos('');
 		$this->setIncorporacion('');
 		$this->setIncorporacion('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/**

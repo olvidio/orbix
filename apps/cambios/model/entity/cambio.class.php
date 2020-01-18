@@ -284,8 +284,14 @@ class Cambio Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -557,7 +563,13 @@ class Cambio Extends core\ClasePropiedades {
 		if (array_key_exists('quien_cambia',$aDades)) $this->setQuien_cambia($aDades['quien_cambia']);
 		if (array_key_exists('sfsv_quien_cambia',$aDades)) $this->setSfsv_quien_cambia($aDades['sfsv_quien_cambia']);
 		if (array_key_exists('timestamp_cambio',$aDades)) $this->setTimestamp_cambio($aDades['timestamp_cambio']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_item_cambio('');
 		$this->setId_tipo_cambio('');
@@ -573,7 +585,9 @@ class Cambio Extends core\ClasePropiedades {
 		$this->setQuien_cambia('');
 		$this->setSfsv_quien_cambia('');
 		$this->setTimestamp_cambio('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

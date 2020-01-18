@@ -237,8 +237,14 @@ class Matricula Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -281,7 +287,13 @@ class Matricula Extends core\ClasePropiedades {
 		if (array_key_exists('nota_num',$aDades)) $this->setNota_num($aDades['nota_num']);
 		if (array_key_exists('nota_max',$aDades)) $this->setNota_max($aDades['nota_max']);
 		if (array_key_exists('acta',$aDades)) $this->setActa($aDades['acta']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_activ('');
 		$this->setId_asignatura('');
@@ -293,7 +305,9 @@ class Matricula Extends core\ClasePropiedades {
 		$this->setNota_num('');
 		$this->setNota_max('');
 		$this->setActa('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

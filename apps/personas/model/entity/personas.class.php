@@ -217,8 +217,14 @@ class PersonaS Extends PersonaDl {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -279,7 +285,13 @@ class PersonaS Extends PersonaDl {
 		if (array_key_exists('ce_ini',$aDades)) $this->setCe_ini($aDades['ce_ini']);
 		if (array_key_exists('ce_fin',$aDades)) $this->setCe_fin($aDades['ce_fin']);
 		if (array_key_exists('ce_lugar',$aDades)) $this->setCe_lugar($aDades['ce_lugar']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_nom('');
 		$this->setId_cr('');
@@ -309,7 +321,9 @@ class PersonaS Extends PersonaDl {
 		$this->setCe_ini('');
 		$this->setCe_fin('');
 		$this->setCe_lugar('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 /**

@@ -168,8 +168,14 @@ class IdMatchPersona Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -205,12 +211,20 @@ class IdMatchPersona Extends core\ClasePropiedades {
 		if (array_key_exists('id_listas',$aDades)) $this->setId_listas($aDades['id_listas']);
 		if (array_key_exists('id_orbix',$aDades)) $this->setId_orbix($aDades['id_orbix']);
 		if (array_key_exists('id_tabla',$aDades)) $this->setId_tabla($aDades['id_tabla']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_listas('');
 		$this->setId_orbix('');
 		$this->setId_tabla('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

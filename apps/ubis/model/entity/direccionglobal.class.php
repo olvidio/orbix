@@ -356,11 +356,20 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	    if (!isset($this->df_direccion)) {
 	        $this->DBCarregar();
 	    }
-	    if (empty($this->df_direccion)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_direccion);
+	    if (empty($this->df_direccion)) {
+	    	return new web\NullDateTimeLocal();
+	    }
+	    $oConverter = new core\Converter('date', $this->df_direccion);
 	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_direccion de Direccion	* Si df_direccion es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_direccion debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_direccion='' optional.	* @param boolean convert=true optional. Si es false, df_direccion debe ser un string en formato ISO (Y-m-d).	 */
+	 * estableix el valor de l'atribut df_direccion de Direccion
+	* Si df_direccion es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
+	* Si convert es false, df_direccion debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	*
+	* @param date|string df_direccion='' optional.
+	* @param boolean convert=true optional. Si es false, df_direccion debe ser un string en formato ISO (Y-m-d).
+	 */
 	function setF_direccion($df_direccion='',$convert=true) {
 		if ($convert === true && !empty($df_direccion)) {
 	        $oConverter = new core\Converter('date', $df_direccion);

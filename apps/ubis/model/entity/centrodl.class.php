@@ -240,8 +240,14 @@ class CentroDl Extends Centro {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -340,7 +346,13 @@ class CentroDl Extends Centro {
 		if (array_key_exists('id_zona',$aDades)) $this->setId_zona($aDades['id_zona']);
 		if (array_key_exists('sede',$aDades)) $this->setSede($aDades['sede']);
 		if (array_key_exists('num_cartas_mensuales',$aDades)) $this->setNum_cartas_mensuales($aDades['num_cartas_mensuales']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setTipo_ubi('');
 		$this->setId_ubi('');
@@ -365,7 +377,9 @@ class CentroDl Extends Centro {
 		$this->setId_zona('');
 		$this->setSede('');
 		$this->setNum_cartas_mensuales('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/**

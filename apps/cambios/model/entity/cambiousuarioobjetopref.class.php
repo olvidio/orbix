@@ -224,8 +224,14 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -282,7 +288,13 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 		if (array_key_exists('aviso_tipo',$aDades)) $this->setAviso_tipo($aDades['aviso_tipo']);
 		if (array_key_exists('aviso_donde',$aDades)) $this->setAviso_donde($aDades['aviso_donde']);
 		if (array_key_exists('id_pau',$aDades)) $this->setId_pau($aDades['id_pau']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_item_usuario_objeto('');
 		$this->setId_usuario('');
 		$this->setDl_org('');
@@ -293,7 +305,9 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 		$this->setAviso_tipo('');
 		$this->setAviso_donde('');
 		$this->setId_pau('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

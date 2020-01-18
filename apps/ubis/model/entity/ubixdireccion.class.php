@@ -153,8 +153,14 @@ Abstract class UbixDireccion Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -191,13 +197,21 @@ Abstract class UbixDireccion Extends core\ClasePropiedades {
 		if (array_key_exists('id_direccion',$aDades)) $this->setId_direccion($aDades['id_direccion']);
 		if (array_key_exists('propietario',$aDades)) $this->setPropietario($aDades['propietario']);
 		if (array_key_exists('principal',$aDades)) $this->setPrincipal($aDades['principal']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_ubi('');
 		$this->setId_direccion('');
 		$this->setPropietario('');
 		$this->setPrincipal('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/**

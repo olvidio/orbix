@@ -321,8 +321,14 @@ class AsistentePub Extends core\ClasePropiedades {
 					if (!$oDblSt->rowCount()) return false;
 					$this->aDadesActuals=$aDades;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -376,7 +382,13 @@ class AsistentePub Extends core\ClasePropiedades {
 		if (array_key_exists('plaza',$aDades)) $this->setPlazaSinComprobar($aDades['plaza']);
 		if (array_key_exists('propietario',$aDades)) $this->setPropietario($aDades['propietario']);
 		if (array_key_exists('id_tabla',$aDades)) $this->setId_tabla($aDades['id_tabla']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_activ('');
 		$this->setId_nom('');
@@ -392,7 +404,9 @@ class AsistentePub Extends core\ClasePropiedades {
 		$this->setPlazaSinComprobar('');
 		$this->setPropietario('');
 		$this->setId_tabla('');
-	}
+	}
+
+
 	/**
 	 * retorna el valor de tots els atributs
 	 *

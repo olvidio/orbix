@@ -190,8 +190,14 @@ class Nota Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -228,13 +234,21 @@ class Nota Extends core\ClasePropiedades {
 		if (array_key_exists('descripcion',$aDades)) $this->setDescripcion($aDades['descripcion']);
 		if (array_key_exists('superada',$aDades)) $this->setSuperada($aDades['superada']);
 		if (array_key_exists('breve',$aDades)) $this->setBreve($aDades['breve']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_situacion('');
 		$this->setDescripcion('');
 		$this->setSuperada('');
 		$this->setBreve('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

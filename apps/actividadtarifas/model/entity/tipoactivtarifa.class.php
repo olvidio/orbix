@@ -182,8 +182,14 @@ class TipoActivTarifa Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -219,12 +225,20 @@ class TipoActivTarifa Extends core\ClasePropiedades {
 		if (array_key_exists('id_tarifa',$aDades)) $this->setId_tarifa($aDades['id_tarifa']);
 		if (array_key_exists('id_tipo_activ',$aDades)) $this->setId_tipo_activ($aDades['id_tipo_activ']);
 		if (array_key_exists('temporada',$aDades)) $this->setTemporada($aDades['temporada']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_item('');
 		$this->setId_tarifa('');
 		$this->setId_tipo_activ('');
 		$this->setTemporada('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

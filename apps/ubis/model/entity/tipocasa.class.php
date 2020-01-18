@@ -140,8 +140,14 @@ class TipoCasa Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -175,10 +181,18 @@ class TipoCasa Extends core\ClasePropiedades {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('tipo_casa',$aDades)) $this->setTipo_casa($aDades['tipo_casa']);
 		if (array_key_exists('nombre_tipo_casa',$aDades)) $this->setNombre_tipo_casa($aDades['nombre_tipo_casa']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setTipo_casa('');
 		$this->setNombre_tipo_casa('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/**

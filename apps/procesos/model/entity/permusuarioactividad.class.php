@@ -219,8 +219,14 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -261,7 +267,13 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 		if (array_key_exists('afecta_a',$aDades)) $this->setAfecta_a($aDades['afecta_a']);
 		if (array_key_exists('dl_propia',$aDades)) $this->setDl_propia($aDades['dl_propia']);
 		if (array_key_exists('id_fases',$aDades)) $this->setId_fases($aDades['id_fases']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_item('');
 		$this->setId_usuario('');
 		$this->setId_tipo_activ_txt('');
@@ -271,7 +283,9 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 		$this->setAfecta_a('');
 		$this->setDl_propia('');
 		$this->setId_fases('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

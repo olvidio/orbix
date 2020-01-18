@@ -163,11 +163,20 @@ class TrasladoDl {
 	    if (!isset($this->df_dl)) {
 	        $this->DBCarregar();
 	    }
-	    if (empty($this->df_dl)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_dl);
+	    if (empty($this->df_dl)) {
+	    	return new web\NullDateTimeLocal();
+	    }
+	    $oConverter = new core\Converter('date', $this->df_dl);
 	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_dl de TrasladoDl	* Si df_dl es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_dl debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_dl='' optional.	* @param boolean convert=true optional. Si es false, df_dl debe ser un string en formato ISO (Y-m-d).	 */
+	 * estableix el valor de l'atribut df_dl de TrasladoDl
+	* Si df_dl es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
+	* Si convert es false, df_dl debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	*
+	* @param date|string df_dl='' optional.
+	* @param boolean convert=true optional. Si es false, df_dl debe ser un string en formato ISO (Y-m-d).
+	 */
 	function setF_dl($df_dl='',$convert=true) {
 		if ($convert === true && !empty($df_dl)) {
 	        $oConverter = new core\Converter('date', $df_dl);

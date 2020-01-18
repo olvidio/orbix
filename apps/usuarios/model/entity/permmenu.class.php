@@ -156,8 +156,14 @@ class PermMenu Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -193,12 +199,20 @@ class PermMenu Extends core\ClasePropiedades {
 		if (array_key_exists('id_item',$aDades)) $this->setId_item($aDades['id_item']);
 		if (array_key_exists('id_usuario',$aDades)) $this->setId_usuario($aDades['id_usuario']);
 		if (array_key_exists('menu_perm',$aDades)) $this->setMenu_perm($aDades['menu_perm']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_item('');
 		$this->setId_usuario('');
 		$this->setMenu_perm('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

@@ -184,8 +184,14 @@ class Modulo Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -223,14 +229,22 @@ class Modulo Extends core\ClasePropiedades {
 		if (array_key_exists('descripcion',$aDades)) $this->setDescripcion($aDades['descripcion']);
 		if (array_key_exists('mods_req',$aDades)) $this->setMods_req($aDades['mods_req']);
 		if (array_key_exists('apps_req',$aDades)) $this->setApps_req($aDades['apps_req']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_mod('');
 		$this->setNom('');
 		$this->setDescripcion('');
 		$this->setMods_req('');
 		$this->setApps_req('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

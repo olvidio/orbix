@@ -438,9 +438,11 @@ class GestorActividadAll Extends core\ClaseGestor {
 		}
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_activ' => $aDades['id_activ']);
-			$dl = $aDades['dl_org'];
 			$id_tabla = $aDades['id_tabla'];
-			if ($dl == core\ConfigGlobal::mi_delef()) {
+			$dl_org = $aDades['dl_org'];
+			// para dl y dlf:
+			$dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
+			if ($dl_org_no_f == core\ConfigGlobal::mi_dele()) {
 				$oActividad = new ActividadDl($a_pkey);
 			} else {
 				if ($id_tabla == 'dl') {

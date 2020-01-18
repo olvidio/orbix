@@ -168,8 +168,14 @@ class ActividadTarea Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -210,11 +216,19 @@ class ActividadTarea Extends core\ClasePropiedades {
 		if (array_key_exists('id_fase',$aDades)) $this->setId_fase($aDades['id_fase']);
 		if (array_key_exists('id_tarea',$aDades)) $this->setId_tarea($aDades['id_tarea']);
 		if (array_key_exists('desc_tarea',$aDades)) $this->setDesc_tarea($aDades['desc_tarea']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_fase('');
 		$this->setId_tarea('');
 		$this->setDesc_tarea('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

@@ -176,8 +176,14 @@ class PermUsuarioCentro Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -213,12 +219,20 @@ class PermUsuarioCentro Extends core\ClasePropiedades {
 		if (array_key_exists('id_usuario',$aDades)) $this->setId_usuario($aDades['id_usuario']);
 		if (array_key_exists('id_ctr',$aDades)) $this->setId_ctr($aDades['id_ctr']);
 		if (array_key_exists('perm_ctr',$aDades)) $this->setPerm_ctr($aDades['perm_ctr']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_item('');
 		$this->setId_usuario('');
 		$this->setId_ctr('');
 		$this->setPerm_ctr('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

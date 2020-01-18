@@ -203,8 +203,14 @@ class Dossier Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -244,7 +250,13 @@ class Dossier Extends core\ClasePropiedades {
 		if (array_key_exists('f_camb_dossier',$aDades)) $this->setF_camb_dossier($aDades['f_camb_dossier'],$convert);
 		if (array_key_exists('status_dossier',$aDades)) $this->setStatus_dossier($aDades['status_dossier']);
 		if (array_key_exists('f_status',$aDades)) $this->setF_status($aDades['f_status'],$convert);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setTabla('');
 		$this->setId_pau('');
@@ -253,7 +265,9 @@ class Dossier Extends core\ClasePropiedades {
 		$this->setF_camb_dossier('');
 		$this->setStatus_dossier('');
 		$this->setF_status('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 
@@ -372,11 +386,20 @@ class Dossier Extends core\ClasePropiedades {
 	    if (!isset($this->df_ini)) {
 	        $this->DBCarregar();
 	    }
-	    if (empty($this->df_ini)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_ini);
+	    if (empty($this->df_ini)) {
+	    	return new web\NullDateTimeLocal();
+	    }
+	    $oConverter = new core\Converter('date', $this->df_ini);
 	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_ini de Dossier	* Si df_ini es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_ini debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_ini='' optional.	* @param boolean convert=true optional. Si es false, df_ini debe ser un string en formato ISO (Y-m-d).	 */
+	 * estableix el valor de l'atribut df_ini de Dossier
+	* Si df_ini es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
+	* Si convert es false, df_ini debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	*
+	* @param date|string df_ini='' optional.
+	* @param boolean convert=true optional. Si es false, df_ini debe ser un string en formato ISO (Y-m-d).
+	 */
 	function setF_ini($df_ini='',$convert=true) {
 		if ($convert === true && !empty($df_ini)) {
 	        $oConverter = new core\Converter('date', $df_ini);
@@ -394,11 +417,20 @@ class Dossier Extends core\ClasePropiedades {
 	    if (!isset($this->df_camb_dossier)) {
 	        $this->DBCarregar();
 	    }
-	    if (empty($this->df_camb_dossier)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_camb_dossier);
+	    if (empty($this->df_camb_dossier)) {
+	    	return new web\NullDateTimeLocal();
+	    }
+	    $oConverter = new core\Converter('date', $this->df_camb_dossier);
 	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_camb_dossier de Dossier	* Si df_camb_dossier es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_camb_dossier debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_camb_dossier='' optional.	* @param boolean convert=true optional. Si es false, df_camb_dossier debe ser un string en formato ISO (Y-m-d).	 */
+	 * estableix el valor de l'atribut df_camb_dossier de Dossier
+	* Si df_camb_dossier es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
+	* Si convert es false, df_camb_dossier debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	*
+	* @param date|string df_camb_dossier='' optional.
+	* @param boolean convert=true optional. Si es false, df_camb_dossier debe ser un string en formato ISO (Y-m-d).
+	 */
 	function setF_camb_dossier($df_camb_dossier='',$convert=true) {
 		if ($convert === true && !empty($df_camb_dossier)) {
 	        $oConverter = new core\Converter('date', $df_camb_dossier);
@@ -435,11 +467,20 @@ class Dossier Extends core\ClasePropiedades {
 	    if (!isset($this->df_status)) {
 	        $this->DBCarregar();
 	    }
-	    if (empty($this->df_status)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_status);
+	    if (empty($this->df_status)) {
+	    	return new web\NullDateTimeLocal();
+	    }
+	    $oConverter = new core\Converter('date', $this->df_status);
 	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_status de Dossier	* Si df_status es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_status debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_status='' optional.	* @param boolean convert=true optional. Si es false, df_status debe ser un string en formato ISO (Y-m-d).	 */
+	 * estableix el valor de l'atribut df_status de Dossier
+	* Si df_status es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
+	* Si convert es false, df_status debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	*
+	* @param date|string df_status='' optional.
+	* @param boolean convert=true optional. Si es false, df_status debe ser un string en formato ISO (Y-m-d).
+	 */
 	function setF_status($df_status='',$convert=true) {
 		if ($convert === true && !empty($df_status)) {
 	        $oConverter = new core\Converter('date', $df_status);

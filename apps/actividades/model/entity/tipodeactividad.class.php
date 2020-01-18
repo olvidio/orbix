@@ -201,8 +201,14 @@ class TipoDeActividad Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -304,7 +310,13 @@ class TipoDeActividad Extends core\ClasePropiedades {
 		if (array_key_exists('id_tipo_proceso_ex_sv',$aDades)) $this->setId_tipo_proceso_ex_sv($aDades['id_tipo_proceso_ex_sv']);
 		if (array_key_exists('id_tipo_proceso_sf',$aDades)) $this->setId_tipo_proceso_sf($aDades['id_tipo_proceso_sf']);
 		if (array_key_exists('id_tipo_proceso_ex_sf',$aDades)) $this->setId_tipo_proceso_ex_sf($aDades['id_tipo_proceso_ex_sf']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_tipo_activ('');
 		$this->setNombre('');
@@ -312,7 +324,9 @@ class TipoDeActividad Extends core\ClasePropiedades {
 		$this->setId_tipo_proceso_ex_sv('');
 		$this->setId_tipo_proceso_sf('');
 		$this->setId_tipo_proceso_ex_sf('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

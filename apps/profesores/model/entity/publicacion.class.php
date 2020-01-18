@@ -231,8 +231,14 @@ class Publicacion Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -276,7 +282,13 @@ class Publicacion Extends core\ClasePropiedades {
 		if (array_key_exists('referencia',$aDades)) $this->setReferencia($aDades['referencia']);
 		if (array_key_exists('lugar',$aDades)) $this->setLugar($aDades['lugar']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_item('');
 		$this->setId_nom('');
@@ -289,7 +301,9 @@ class Publicacion Extends core\ClasePropiedades {
 		$this->setReferencia('');
 		$this->setLugar('');
 		$this->setObserv('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 
@@ -440,11 +454,20 @@ class Publicacion Extends core\ClasePropiedades {
 	    if (!isset($this->df_publicacion)) {
 	        $this->DBCarregar();
 	    }
-	    if (empty($this->df_publicacion)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_publicacion);
+	    if (empty($this->df_publicacion)) {
+	    	return new web\NullDateTimeLocal();
+	    }
+	    $oConverter = new core\Converter('date', $this->df_publicacion);
 	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_publicacion de Publicacion	* Si df_publicacion es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_publicacion debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_publicacion='' optional.	* @param boolean convert=true optional. Si es false, df_publicacion debe ser un string en formato ISO (Y-m-d).	 */
+	 * estableix el valor de l'atribut df_publicacion de Publicacion
+	* Si df_publicacion es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
+	* Si convert es false, df_publicacion debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	*
+	* @param date|string df_publicacion='' optional.
+	* @param boolean convert=true optional. Si es false, df_publicacion debe ser un string en formato ISO (Y-m-d).
+	 */
 	function setF_publicacion($df_publicacion='',$convert=true) {
 		if ($convert === true && !empty($df_publicacion)) {
 	        $oConverter = new core\Converter('date', $df_publicacion);

@@ -160,8 +160,14 @@ class ProfesorTipo Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -195,10 +201,18 @@ class ProfesorTipo Extends core\ClasePropiedades {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_tipo_profesor',$aDades)) $this->setId_tipo_profesor($aDades['id_tipo_profesor']);
 		if (array_key_exists('tipo_profesor',$aDades)) $this->setTipo_profesor($aDades['tipo_profesor']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_tipo_profesor('');
 		$this->setTipo_profesor('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

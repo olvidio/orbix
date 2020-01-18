@@ -199,8 +199,14 @@ class ActividadDl Extends ActividadAll {
                     if ( filter_var( $aDades['publicado'], FILTER_VALIDATE_BOOLEAN)) { $aDades['publicado']='true'; } else { $aDades['publicado']='false'; }
 					$this->aDadesActuals=$aDades;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -269,7 +275,13 @@ class ActividadDl Extends ActividadAll {
 		if (array_key_exists('publicado',$aDades)) $this->setPublicado($aDades['publicado']);
 		if (array_key_exists('id_tabla',$aDades)) $this->setId_tabla($aDades['id_tabla']);
 		if (array_key_exists('plazas',$aDades)) $this->setPlazas($aDades['plazas']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_activ('');
 		$this->setId_tipo_activ('');
@@ -294,7 +306,9 @@ class ActividadDl Extends ActividadAll {
 		$this->setPublicado('');
 		$this->setId_tabla('');
 		$this->setPlazas('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 }

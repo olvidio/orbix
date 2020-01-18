@@ -226,8 +226,14 @@ class TareaProceso Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return TRUE;
 		} elseif (!empty($this->aPrimary_key)) {
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla 
@@ -244,8 +250,14 @@ class TareaProceso Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -287,7 +299,13 @@ class TareaProceso Extends core\ClasePropiedades {
 		if (array_key_exists('id_fase_previa',$aDades)) $this->setId_fase_previa($aDades['id_fase_previa']);
 		if (array_key_exists('id_tarea_previa',$aDades)) $this->setId_tarea_previa($aDades['id_tarea_previa']);
 		if (array_key_exists('mensaje_requisito',$aDades)) $this->setMensaje_requisito($aDades['mensaje_requisito']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_item('');
 		$this->setId_tipo_proceso('');
 		$this->setN_orden('');
@@ -298,7 +316,9 @@ class TareaProceso Extends core\ClasePropiedades {
 		$this->setId_fase_previa('');
 		$this->setId_tarea_previa('');
 		$this->setMensaje_requisito('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

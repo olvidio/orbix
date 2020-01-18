@@ -320,8 +320,14 @@ class ActividadAll Extends core\ClasePropiedades {
 					if ( filter_var( $aDades['publicado'], FILTER_VALIDATE_BOOLEAN)) { $aDades['publicado']='true'; } else { $aDades['publicado']='false'; }
 					$this->aDadesActuals=$aDades;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -386,7 +392,13 @@ class ActividadAll Extends core\ClasePropiedades {
 		if (array_key_exists('publicado',$aDades)) $this->setPublicado($aDades['publicado']);
 		if (array_key_exists('id_tabla',$aDades)) $this->setId_tabla($aDades['id_tabla']);
 		if (array_key_exists('plazas',$aDades)) $this->setPlazas($aDades['plazas']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_activ('');
 		$this->setId_tipo_activ('');
@@ -411,7 +423,9 @@ class ActividadAll Extends core\ClasePropiedades {
 		$this->setPublicado('');
 		$this->setId_tabla('');
 		$this->setPlazas('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 
@@ -499,7 +513,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 */
 	function setId_tipo_activ($iid_tipo_activ='') {
 		// comprovo que té 6 digits
-		if (($iid_tipo_activ/100000) < 1) {
+		if ( empty($iid_tipo_activ) OR (($iid_tipo_activ/100000) < 1) ) {
 			$serr = "id_tipo_activ incorrecto: $iid_tipo_activ";
 			$sClauError = "ActividadAll.setId_tipo_activ";
 			$_SESSION['oGestorErrores']->addError($serr, $sClauError, __LINE__, __FILE__);
@@ -592,7 +606,10 @@ class ActividadAll Extends core\ClasePropiedades {
 		if (!isset($this->df_ini)) {
 			$this->DBCarregar();
 		}
-		if (empty($this->df_ini)) {			return new web\NullDateTimeLocal();		}		$oConverter = new core\Converter('date', $this->df_ini);
+		if (empty($this->df_ini)) {
+			return new web\NullDateTimeLocal();
+		}
+		$oConverter = new core\Converter('date', $this->df_ini);
 		return $oConverter->fromPg();
 	}
 	/**
@@ -639,11 +656,20 @@ class ActividadAll Extends core\ClasePropiedades {
 		if (!isset($this->df_fin)) {
 			$this->DBCarregar();
 		}
-		if (empty($this->df_fin)) {			return new web\NullDateTimeLocal();		}		$oConverter = new core\Converter('date', $this->df_fin);
+		if (empty($this->df_fin)) {
+			return new web\NullDateTimeLocal();
+		}
+		$oConverter = new core\Converter('date', $this->df_fin);
 		return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_fin de ActividadAll	* Si df_fin es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_fin debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_fin='' optional.	* @param boolean convert=true optional. Si es false, df_fin debe ser un string en formato ISO (Y-m-d).	 */
+	 * estableix el valor de l'atribut df_fin de ActividadAll
+	* Si df_fin es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
+	* Si convert es false, df_fin debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	*
+	* @param date|string df_fin='' optional.
+	* @param boolean convert=true optional. Si es false, df_fin debe ser un string en formato ISO (Y-m-d).
+	 */
 	function setF_fin($df_fin='',$convert=true) {
 		if ($convert === true && !empty($df_fin)) {
             $oConverter = new core\Converter('date', $df_fin);

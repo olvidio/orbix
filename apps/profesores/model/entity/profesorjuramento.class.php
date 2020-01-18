@@ -164,8 +164,14 @@ class ProfesorJuramento Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -201,12 +207,20 @@ class ProfesorJuramento Extends core\ClasePropiedades {
 		if (array_key_exists('id_item',$aDades)) $this->setId_item($aDades['id_item']);
 		if (array_key_exists('id_nom',$aDades)) $this->setId_nom($aDades['id_nom']);
 		if (array_key_exists('f_juramento',$aDades)) $this->setF_juramento($aDades['f_juramento'],$convert);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_item('');
 		$this->setId_nom('');
 		$this->setF_juramento('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 
@@ -281,11 +295,20 @@ class ProfesorJuramento Extends core\ClasePropiedades {
 	    if (!isset($this->df_juramento)) {
 	        $this->DBCarregar();
 	    }
-	    if (empty($this->df_juramento)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_juramento);
+	    if (empty($this->df_juramento)) {
+	    	return new web\NullDateTimeLocal();
+	    }
+	    $oConverter = new core\Converter('date', $this->df_juramento);
 	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_juramento de ProfesorJuramento	* Si df_juramento es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_juramento debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_juramento='' optional.	* @param boolean convert=true optional. Si es false, df_juramento debe ser un string en formato ISO (Y-m-d).	 */
+	 * estableix el valor de l'atribut df_juramento de ProfesorJuramento
+	* Si df_juramento es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
+	* Si convert es false, df_juramento debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	*
+	* @param date|string df_juramento='' optional.
+	* @param boolean convert=true optional. Si es false, df_juramento debe ser un string en formato ISO (Y-m-d).
+	 */
 	function setF_juramento($df_juramento='',$convert=true) {
 		if ($convert === true && !empty($df_juramento)) {
 	        $oConverter = new core\Converter('date', $df_juramento);

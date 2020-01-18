@@ -122,8 +122,14 @@ class TelecoPersonaDl Extends TelecoPersonaGlobal {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -162,7 +168,13 @@ class TelecoPersonaDl Extends TelecoPersonaGlobal {
 		if (array_key_exists('desc_teleco',$aDades)) $this->setDesc_teleco($aDades['desc_teleco']);
 		if (array_key_exists('num_teleco',$aDades)) $this->setNum_teleco($aDades['num_teleco']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_nom('');
 		$this->setId_item('');
@@ -170,7 +182,9 @@ class TelecoPersonaDl Extends TelecoPersonaGlobal {
 		$this->setDesc_teleco('');
 		$this->setNum_teleco('');
 		$this->setObserv('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 }

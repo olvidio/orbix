@@ -194,8 +194,14 @@ class PersonaPub Extends PersonaGlobal {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -253,7 +259,13 @@ class PersonaPub Extends PersonaGlobal {
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
 		if (array_key_exists('lugar_nacimiento',$aDades)) $this->setLugar_nacimiento($aDades['lugar_nacimiento']);
 		if (array_key_exists('profesor_stgr',$aDades)) $this->setProfesor_stgr($aDades['profesor_stgr']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_nom('');
 		$this->setId_cr('');
@@ -280,7 +292,9 @@ class PersonaPub Extends PersonaGlobal {
 		$this->setObserv('');
 		$this->setLugar_nacimiento('');
 		$this->setProfesor_stgr('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/**

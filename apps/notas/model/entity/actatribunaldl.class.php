@@ -176,8 +176,14 @@ class ActaTribunalDl Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -214,13 +220,21 @@ class ActaTribunalDl Extends core\ClasePropiedades {
 		if (array_key_exists('examinador',$aDades)) $this->setExaminador($aDades['examinador']);
 		if (array_key_exists('orden',$aDades)) $this->setOrden($aDades['orden']);
 		if (array_key_exists('id_item',$aDades)) $this->setId_item($aDades['id_item']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setActa('');
 		$this->setExaminador('');
 		$this->setOrden('');
 		$this->setId_item('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

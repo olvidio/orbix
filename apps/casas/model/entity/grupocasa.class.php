@@ -168,8 +168,14 @@ class GrupoCasa Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -204,11 +210,19 @@ class GrupoCasa Extends core\ClasePropiedades {
 		if (array_key_exists('id_item',$aDades)) $this->setId_item($aDades['id_item']);
 		if (array_key_exists('id_ubi_padre',$aDades)) $this->setId_ubi_padre($aDades['id_ubi_padre']);
 		if (array_key_exists('id_ubi_hijo',$aDades)) $this->setId_ubi_hijo($aDades['id_ubi_hijo']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_item('');
 		$this->setId_ubi_padre('');
 		$this->setId_ubi_hijo('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 

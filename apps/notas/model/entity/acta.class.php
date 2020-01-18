@@ -219,8 +219,14 @@ class Acta Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -263,7 +269,13 @@ class Acta Extends core\ClasePropiedades {
 		if (array_key_exists('linea',$aDades)) $this->setLinea($aDades['linea']);
 		if (array_key_exists('lugar',$aDades)) $this->setLugar($aDades['lugar']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		// la fecha debe estar antes del acta por si hay que usar la funcion inventarActa.
 		$this->setF_acta('');
 		$this->setActa('');
@@ -274,7 +286,9 @@ class Acta Extends core\ClasePropiedades {
 		$this->setLinea('');
 		$this->setLugar('');
 		$this->setObserv('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 
@@ -400,11 +414,20 @@ class Acta Extends core\ClasePropiedades {
 	    if (!isset($this->df_acta)) {
 	        $this->DBCarregar();
 	    }
-	    if (empty($this->df_acta)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_acta);
+	    if (empty($this->df_acta)) {
+	    	return new web\NullDateTimeLocal();
+	    }
+	    $oConverter = new core\Converter('date', $this->df_acta);
 	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_acta de Acta	* Si df_acta es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_acta debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_acta='' optional.	* @param boolean convert=true optional. Si es false, df_acta debe ser un string en formato ISO (Y-m-d).	 */
+	 * estableix el valor de l'atribut df_acta de Acta
+	* Si df_acta es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
+	* Si convert es false, df_acta debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	*
+	* @param date|string df_acta='' optional.
+	* @param boolean convert=true optional. Si es false, df_acta debe ser un string en formato ISO (Y-m-d).
+	 */
 	function setF_acta($df_acta='',$convert=true) {
 		if ($convert === true && !empty($df_acta)) {
 	        $oConverter = new core\Converter('date', $df_acta);

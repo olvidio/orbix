@@ -212,8 +212,14 @@ class Traslado Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -255,7 +261,13 @@ class Traslado Extends core\ClasePropiedades {
 		if (array_key_exists('id_ctr_destino',$aDades)) $this->setId_ctr_destino($aDades['id_ctr_destino']);
 		if (array_key_exists('ctr_destino',$aDades)) $this->setCtr_destino($aDades['ctr_destino']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setId_item('');
 		$this->setId_nom('');
@@ -266,7 +278,9 @@ class Traslado Extends core\ClasePropiedades {
 		$this->setId_ctr_destino('');
 		$this->setCtr_destino('');
 		$this->setObserv('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 
@@ -341,11 +355,20 @@ class Traslado Extends core\ClasePropiedades {
 	    if (!isset($this->df_traslado)) {
 	        $this->DBCarregar();
 	    }
-	    if (empty($this->df_traslado)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_traslado);
+	    if (empty($this->df_traslado)) {
+	    	return new web\NullDateTimeLocal();
+	    }
+	    $oConverter = new core\Converter('date', $this->df_traslado);
 	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_traslado de Traslado	* Si df_traslado es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_traslado debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_traslado='' optional.	* @param boolean convert=true optional. Si es false, df_traslado debe ser un string en formato ISO (Y-m-d).	 */
+	 * estableix el valor de l'atribut df_traslado de Traslado
+	* Si df_traslado es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
+	* Si convert es false, df_traslado debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	*
+	* @param date|string df_traslado='' optional.
+	* @param boolean convert=true optional. Si es false, df_traslado debe ser un string en formato ISO (Y-m-d).
+	 */
 	function setF_traslado($df_traslado='',$convert=true) {
 		if ($convert === true && !empty($df_traslado)) {
 	        $oConverter = new core\Converter('date', $df_traslado);

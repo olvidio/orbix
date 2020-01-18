@@ -172,8 +172,14 @@ class CentroEllas Extends Centro {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return true;
 		} else {
 		   	return false;
@@ -220,7 +226,13 @@ class CentroEllas Extends Centro {
 		if (array_key_exists('tipo_labor',$aDades)) $this->setTipo_labor($aDades['tipo_labor']);
 		if (array_key_exists('cdc',$aDades)) $this->setCdc($aDades['cdc']);
 		if (array_key_exists('id_ctr_padre',$aDades)) $this->setId_ctr_padre($aDades['id_ctr_padre']);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_schema('');
 		$this->setTipo_ubi('');
 		$this->setId_ubi('');
@@ -236,7 +248,9 @@ class CentroEllas Extends Centro {
 		$this->setTipo_labor('');
 		$this->setCdc('');
 		$this->setId_ctr_padre('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 	/**
@@ -393,11 +407,20 @@ class CentroEllas Extends Centro {
 	    if (!isset($this->df_status)) {
 	        $this->DBCarregar();
 	    }
-	    if (empty($this->df_status)) {	    	return new web\NullDateTimeLocal();	    }	    $oConverter = new core\Converter('date', $this->df_status);
+	    if (empty($this->df_status)) {
+	    	return new web\NullDateTimeLocal();
+	    }
+	    $oConverter = new core\Converter('date', $this->df_status);
 	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut df_status de Centro	* Si df_status es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().	* Si convert es false, df_status debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.	*	* @param date|string df_status='' optional.	* @param boolean convert=true optional. Si es false, df_status debe ser un string en formato ISO (Y-m-d).	 */
+	 * estableix el valor de l'atribut df_status de Centro
+	* Si df_status es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
+	* Si convert es false, df_status debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	*
+	* @param date|string df_status='' optional.
+	* @param boolean convert=true optional. Si es false, df_status debe ser un string en formato ISO (Y-m-d).
+	 */
 	function setF_status($df_status='',$convert=true) {
 		if ($convert === true && !empty($df_status)) {
 	        $oConverter = new core\Converter('date', $df_status);

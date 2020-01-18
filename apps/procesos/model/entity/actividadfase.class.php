@@ -182,8 +182,14 @@ class ActividadFase Extends core\ClasePropiedades {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return FALSE;
 					break;
-				default:					// En el caso de no existir esta fila, $aDades = FALSE:					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();					} else {						$this->setAllAtributes($aDades);					}			}
+				default:
+					// En el caso de no existir esta fila, $aDades = FALSE:
+					if ($aDades === FALSE) {
+						$this->setNullAllAtributes();
+					} else {
+						$this->setAllAtributes($aDades);
+					}
+			}
 			return TRUE;
 		} else {
 		   	return FALSE;
@@ -234,12 +240,20 @@ class ActividadFase Extends core\ClasePropiedades {
 		if (array_key_exists('desc_fase',$aDades)) $this->setDesc_fase($aDades['desc_fase']);
 		if (array_key_exists('sf',$aDades)) $this->setSf($aDades['sf'],TRUE);
 		if (array_key_exists('sv',$aDades)) $this->setSv($aDades['sv'],TRUE);
-	}	/**	 * Estableix a empty el valor de tots els atributs	 *	 */	function setNullAllAtributes() {
+	}
+
+	/**
+	 * Estableix a empty el valor de tots els atributs
+	 *
+	 */
+	function setNullAllAtributes() {
 		$this->setId_fase('');
 		$this->setDesc_fase('');
 		$this->setSf('');
 		$this->setSv('');
-	}
+	}
+
+
 
 	/* METODES GET i SET --------------------------------------------------------*/
 
