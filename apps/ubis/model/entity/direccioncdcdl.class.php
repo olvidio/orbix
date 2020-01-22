@@ -219,6 +219,7 @@ class DireccionCdcDl Extends DireccionCdc {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_direccion('');
 		$this->setDireccion('');
@@ -236,8 +237,8 @@ class DireccionCdcDl Extends DireccionCdc {
 		$this->setPlano_extension('');
 		$this->setPlano_nom('');
 		$this->setNom_sede('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

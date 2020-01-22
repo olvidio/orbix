@@ -225,14 +225,15 @@ class Metamenu Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_metamenu('');
 		$this->setId_mod('');
 		$this->setUrl('');
 		$this->setParametros('');
 		$this->setDescripcion('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

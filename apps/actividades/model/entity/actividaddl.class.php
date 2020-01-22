@@ -282,6 +282,7 @@ class ActividadDl Extends ActividadAll {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_activ('');
 		$this->setId_tipo_activ('');
@@ -306,8 +307,8 @@ class ActividadDl Extends ActividadAll {
 		$this->setPublicado('');
 		$this->setId_tabla('');
 		$this->setPlazas('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

@@ -252,6 +252,7 @@ class PersonaNax Extends PersonaDl {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_nom('');
 		$this->setId_cr('');
@@ -276,8 +277,8 @@ class PersonaNax Extends PersonaDl {
 		$this->setEap('');
 		$this->setObserv('');
 		$this->setId_ctr('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

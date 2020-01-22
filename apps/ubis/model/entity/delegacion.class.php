@@ -233,6 +233,7 @@ class Delegacion Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_dl('');
 		$this->setDl('');
 		$this->setRegion('');
@@ -240,8 +241,8 @@ class Delegacion Extends core\ClasePropiedades {
 		$this->setGrupo_estudios('');
 		$this->setRegion_stgr('');
 		$this->setStatus('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

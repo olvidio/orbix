@@ -220,6 +220,7 @@ class CasaDl Extends Casa {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setTipo_ubi('');
 		$this->setId_ubi('');
@@ -238,8 +239,8 @@ class CasaDl Extends Casa {
 		$this->setObserv('');
 		$this->setId_auto('');
 		$this->setPlazas_min('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

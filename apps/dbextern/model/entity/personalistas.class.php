@@ -538,6 +538,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setIdentif('');
 		$this->setApeNom('');
@@ -553,8 +554,8 @@ class PersonaListas Extends core\ClasePropiedades {
 		$this->setEncargos('');
 		$this->setIncorporacion('');
 		$this->setIncorporacion('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

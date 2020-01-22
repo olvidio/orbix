@@ -247,6 +247,7 @@ class CartaPresentacion Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_direccion('');
 		$this->setId_ubi('');
 		$this->setPres_nom('');
@@ -254,8 +255,8 @@ class CartaPresentacion Extends core\ClasePropiedades {
 		$this->setPres_mail('');
 		$this->setZona('');
 		$this->setObserv('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

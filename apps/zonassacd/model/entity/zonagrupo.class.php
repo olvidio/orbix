@@ -217,11 +217,12 @@ class ZonaGrupo Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_grupo('');
 		$this->setNombre_grupo('');
 		$this->setOrden('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

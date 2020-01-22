@@ -233,6 +233,7 @@ class CentroEllas Extends Centro {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setTipo_ubi('');
 		$this->setId_ubi('');
@@ -248,8 +249,8 @@ class CentroEllas Extends Centro {
 		$this->setTipo_labor('');
 		$this->setCdc('');
 		$this->setId_ctr_padre('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

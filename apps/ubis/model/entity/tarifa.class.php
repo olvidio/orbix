@@ -253,14 +253,15 @@ class Tarifa Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_item('');
 		$this->setId_ubi('');
 		$this->setId_tarifa('');
 		$this->setYear('');
 		$this->setCantidad('');
 		$this->setObserv('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

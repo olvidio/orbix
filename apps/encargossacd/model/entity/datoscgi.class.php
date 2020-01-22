@@ -235,13 +235,14 @@ class DatosCgi Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_item('');
 		$this->setId_ubi('');
 		$this->setCurso_ini_any('');
 		$this->setCurso_fin_any('');
 		$this->setNum_alum('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

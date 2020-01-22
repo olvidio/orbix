@@ -174,6 +174,7 @@ class TelecoCtr Extends TelecoUbiGlobal {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_ubi('');
 		$this->setId_item('');
@@ -181,8 +182,8 @@ class TelecoCtr Extends TelecoUbiGlobal {
 		$this->setDesc_teleco('');
 		$this->setNum_teleco('');
 		$this->setObserv('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

@@ -250,6 +250,7 @@ class Casa Extends UbiGlobal {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setTipo_ubi('');
 		$this->setId_ubi('');
@@ -267,8 +268,8 @@ class Casa Extends UbiGlobal {
 		$this->setNum_sacd('');
 		$this->setBiblioteca('');
 		$this->setObserv('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

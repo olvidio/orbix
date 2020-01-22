@@ -274,6 +274,7 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_item('');
 		$this->setId_usuario('');
 		$this->setId_tipo_activ_txt('');
@@ -283,8 +284,8 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 		$this->setAfecta_a('');
 		$this->setDl_propia('');
 		$this->setId_fases('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

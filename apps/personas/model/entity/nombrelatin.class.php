@@ -225,11 +225,12 @@ class NombreLatin Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setNom('');
 		$this->setNominativo('');
 		$this->setGenitivo('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

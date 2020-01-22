@@ -317,6 +317,7 @@ class TipoDeActividad Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_tipo_activ('');
 		$this->setNombre('');
@@ -324,8 +325,8 @@ class TipoDeActividad Extends core\ClasePropiedades {
 		$this->setId_tipo_proceso_ex_sv('');
 		$this->setId_tipo_proceso_sf('');
 		$this->setId_tipo_proceso_ex_sf('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

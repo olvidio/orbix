@@ -65,7 +65,7 @@ class GestorTipoTarifa Extends  core\ClaseGestor {
 	function getListaTipoTarifas($isfsv) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		$sQuery="SELECT id_tarifa,letra FROM $nom_tabla WHERE sfsv=$isfsv ORDER BY id_tarifa";
+		$sQuery="SELECT id_tarifa,letra FROM $nom_tabla WHERE sfsv=$isfsv ORDER BY letra";
 		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorTipoTarifa.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);

@@ -289,6 +289,7 @@ class ProfesorPublicacion Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_item('');
 		$this->setId_nom('');
@@ -301,8 +302,8 @@ class ProfesorPublicacion Extends core\ClasePropiedades {
 		$this->setReferencia('');
 		$this->setLugar('');
 		$this->setObserv('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

@@ -215,12 +215,13 @@ class Repeticion Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_repeticion('');
 		$this->setRepeticion('');
 		$this->setTemporada('');
 		$this->setTipo('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

@@ -265,6 +265,7 @@ class Congreso Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_item('');
 		$this->setId_nom('');
@@ -274,8 +275,8 @@ class Congreso Extends core\ClasePropiedades {
 		$this->setF_fin('');
 		$this->setOrganiza('');
 		$this->setTipo('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

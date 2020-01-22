@@ -300,6 +300,7 @@ class PersonaN Extends PersonaDl {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_nom('');
 		$this->setId_cr('');
@@ -329,8 +330,8 @@ class PersonaN Extends PersonaDl {
 		$this->setCe_ini('');
 		$this->setCe_fin('');
 		$this->setCe_lugar('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

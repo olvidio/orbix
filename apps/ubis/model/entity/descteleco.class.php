@@ -230,14 +230,15 @@ class DescTeleco Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_item('');
 		$this->setOrden('');
 		$this->setTipo_teleco('');
 		$this->setDesc_teleco('');
 		$this->setUbi('');
 		$this->setPersona('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

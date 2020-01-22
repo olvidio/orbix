@@ -242,13 +242,14 @@ class CasaPeriodo Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_item('');
 		$this->setId_ubi('');
 		$this->setF_ini('');
 		$this->setF_fin('');
 		$this->setSfsv('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

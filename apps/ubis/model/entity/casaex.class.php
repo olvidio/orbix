@@ -220,6 +220,7 @@ class CasaEx Extends Casa {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setTipo_ubi('');
 		$this->setId_ubi('');
@@ -238,8 +239,8 @@ class CasaEx Extends Casa {
 		$this->setBiblioteca('');
 		$this->setObserv('');
 		$this->setId_auto('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

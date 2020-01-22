@@ -223,11 +223,12 @@ class ActividadTarea Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_fase('');
 		$this->setId_tarea('');
 		$this->setDesc_tarea('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

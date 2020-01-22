@@ -297,6 +297,7 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_item('');
 		$this->setId_enc('');
 		$this->setId_nom('');
@@ -309,8 +310,8 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 		$this->setH_ini('');
 		$this->setH_fin('');
 		$this->setId_item_tarea_sacd('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

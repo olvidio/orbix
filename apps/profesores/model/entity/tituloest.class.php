@@ -243,6 +243,7 @@ class TituloEst Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_item('');
 		$this->setId_nom('');
@@ -250,8 +251,8 @@ class TituloEst Extends core\ClasePropiedades {
 		$this->setCentro_dnt('');
 		$this->setEclesiastico('');
 		$this->setYear('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

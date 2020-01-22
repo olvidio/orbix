@@ -262,6 +262,7 @@ class Asignatura Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_asignatura('');
 		$this->setId_nivel('');
 		$this->setNombre_asignatura('');
@@ -271,8 +272,8 @@ class Asignatura Extends core\ClasePropiedades {
 		$this->setId_sector('');
 		$this->setStatus('');
 		$this->setId_tipo('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

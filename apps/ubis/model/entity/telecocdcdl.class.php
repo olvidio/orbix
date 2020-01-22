@@ -175,6 +175,7 @@ class TelecoCdcDl Extends TelecoCdc {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_ubi('');
 		$this->setId_item('');
@@ -182,8 +183,8 @@ class TelecoCdcDl Extends TelecoCdc {
 		$this->setDesc_teleco('');
 		$this->setNum_teleco('');
 		$this->setObserv('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

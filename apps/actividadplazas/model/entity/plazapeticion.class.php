@@ -227,13 +227,14 @@ class PlazaPeticion Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_nom('');
 		$this->setId_activ('');
 		$this->setOrden('');
 		$this->setTipo('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

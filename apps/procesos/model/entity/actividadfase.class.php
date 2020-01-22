@@ -247,12 +247,13 @@ class ActividadFase Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_fase('');
 		$this->setDesc_fase('');
 		$this->setSf('');
 		$this->setSv('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

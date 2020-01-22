@@ -221,12 +221,13 @@ class NivelStgr Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setNivel_stgr('');
 		$this->setDesc_nivel('');
 		$this->setDesc_breve('');
 		$this->setOrden('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

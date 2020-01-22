@@ -321,6 +321,7 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_item('');
 		$this->setId_activ('');
@@ -328,8 +329,8 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 		$this->setId_nom('');
 		$this->setPuede_agd('');
 		$this->setObserv('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 	/**
 	 * retorna el valor de tots els atributs

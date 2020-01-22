@@ -415,6 +415,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_item('');
 		$this->setId_tipo_proceso('');
 		$this->setId_activ('');
@@ -423,8 +424,8 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 		$this->setN_orden('');
 		$this->setCompletado('');
 		$this->setObserv('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

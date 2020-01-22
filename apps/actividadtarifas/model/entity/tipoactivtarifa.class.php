@@ -232,12 +232,13 @@ class TipoActivTarifa Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_item('');
 		$this->setId_tarifa('');
 		$this->setId_tipo_activ('');
 		$this->setTemporada('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

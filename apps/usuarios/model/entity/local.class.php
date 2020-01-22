@@ -238,13 +238,14 @@ class Local Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_locale('');
 		$this->setNom_Locale('');
 		$this->setIdioma('');
 		$this->setNom_idioma('');
 		$this->setActivo('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

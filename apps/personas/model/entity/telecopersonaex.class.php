@@ -175,6 +175,7 @@ class TelecoPersonaEx Extends TelecoPersonaGlobal {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_nom('');
 		$this->setId_item('');
@@ -182,8 +183,8 @@ class TelecoPersonaEx Extends TelecoPersonaGlobal {
 		$this->setDesc_teleco('');
 		$this->setNum_teleco('');
 		$this->setObserv('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

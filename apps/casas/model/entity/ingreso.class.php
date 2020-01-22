@@ -244,14 +244,15 @@ class Ingreso Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_activ('');
 		$this->setIngresos('');
 		$this->setNum_asistentes('');
 		$this->setIngresos_previstos('');
 		$this->setNum_asistentes_previstos('');
 		$this->setObserv('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

@@ -245,14 +245,15 @@ class EncargoSacd Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_item('');
 		$this->setId_enc('');
 		$this->setId_nom('');
 		$this->setModo('');
 		$this->setF_ini('');
 		$this->setF_fin('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

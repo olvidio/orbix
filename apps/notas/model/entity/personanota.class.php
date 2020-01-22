@@ -342,6 +342,7 @@ class PersonaNota Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_nom('');
 		$this->setId_nivel('');
@@ -358,8 +359,8 @@ class PersonaNota Extends core\ClasePropiedades {
 		$this->setNota_num('');
 		$this->setNota_max('');
 		$this->setTipo_acta('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

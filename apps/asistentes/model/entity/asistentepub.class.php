@@ -389,11 +389,10 @@ class AsistentePub Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
-	    // OJO en el caso de mirar si hay algo, da false, pero no interesa borrar tod.
-	    // El primary key se debe mantener para poder crear un registro nuevo.
+	    $aPK = $this->getPrimary_key();
 		$this->setId_schema('');
-		//$this->setId_activ('');
-		//$this->setId_nom('');
+		$this->setId_activ('');
+		$this->setId_nom('');
 		$this->setPropio('');
 		$this->setEst_ok('');
 		$this->setCfi('');
@@ -406,8 +405,8 @@ class AsistentePub Extends core\ClasePropiedades {
 		$this->setPlazaSinComprobar('');
 		$this->setPropietario('');
 		$this->setId_tabla('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 	/**
 	 * retorna el valor de tots els atributs

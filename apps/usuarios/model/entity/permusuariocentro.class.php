@@ -226,12 +226,13 @@ class PermUsuarioCentro Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_item('');
 		$this->setId_usuario('');
 		$this->setId_ctr('');
 		$this->setPerm_ctr('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

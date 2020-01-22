@@ -256,6 +256,7 @@ class Role Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_role('');
 		$this->setRole('');
@@ -263,8 +264,8 @@ class Role Extends core\ClasePropiedades {
 		$this->setSv('');
 		$this->setPau('');
 		$this->setDmz('');
+		$this->setPrimary_key($aPK);
 	}
-
 	/* METODES GET i SET --------------------------------------------------------*/
 
 	/**

@@ -215,14 +215,15 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_tipo('');
 		$this->setTipo_asignatura('');
 		$this->setTipo_breve('');
 		if (array_key_exists('año',$aDades)) $this->setAño($aDades['año']);
 		$this->setTipo_latin('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

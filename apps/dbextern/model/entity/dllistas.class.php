@@ -174,13 +174,14 @@ class DlListas Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setDl('');
 		$this->setNombre_dl('');
 		$this->setNumero_dl('');
 		$this->setAbr_r('');
 		$this->setNumero_r('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

@@ -295,6 +295,7 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_item_usuario_objeto('');
 		$this->setId_usuario('');
 		$this->setDl_org('');
@@ -305,8 +306,8 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 		$this->setAviso_tipo('');
 		$this->setAviso_donde('');
 		$this->setId_pau('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

@@ -294,6 +294,7 @@ class Matricula Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_activ('');
 		$this->setId_asignatura('');
@@ -305,8 +306,8 @@ class Matricula Extends core\ClasePropiedades {
 		$this->setNota_num('');
 		$this->setNota_max('');
 		$this->setActa('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

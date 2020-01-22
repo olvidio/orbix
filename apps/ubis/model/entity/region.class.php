@@ -212,12 +212,13 @@ class Region Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_region('');
 		$this->setRegion('');
 		$this->setNombre_region('');
 		$this->setStatus('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

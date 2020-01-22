@@ -570,6 +570,7 @@ class Cambio Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_item_cambio('');
 		$this->setId_tipo_cambio('');
@@ -585,8 +586,8 @@ class Cambio Extends core\ClasePropiedades {
 		$this->setQuien_cambia('');
 		$this->setSfsv_quien_cambia('');
 		$this->setTimestamp_cambio('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

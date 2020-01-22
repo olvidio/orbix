@@ -257,6 +257,7 @@ class Dossier Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setTabla('');
 		$this->setId_pau('');
@@ -265,8 +266,8 @@ class Dossier Extends core\ClasePropiedades {
 		$this->setF_camb_dossier('');
 		$this->setStatus_dossier('');
 		$this->setF_status('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

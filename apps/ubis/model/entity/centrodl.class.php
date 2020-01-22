@@ -353,6 +353,7 @@ class CentroDl Extends Centro {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setTipo_ubi('');
 		$this->setId_ubi('');
@@ -377,8 +378,8 @@ class CentroDl Extends Centro {
 		$this->setId_zona('');
 		$this->setSede('');
 		$this->setNum_cartas_mensuales('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

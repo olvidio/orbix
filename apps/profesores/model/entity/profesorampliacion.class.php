@@ -250,6 +250,7 @@ class ProfesorAmpliacion Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_item('');
 		$this->setId_nom('');
@@ -258,8 +259,8 @@ class ProfesorAmpliacion Extends core\ClasePropiedades {
 		$this->setF_nombramiento('');
 		$this->setEscrito_cese('');
 		$this->setF_cese('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

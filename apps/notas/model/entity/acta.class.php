@@ -276,6 +276,7 @@ class Acta Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		// la fecha debe estar antes del acta por si hay que usar la funcion inventarActa.
 		$this->setF_acta('');
 		$this->setActa('');
@@ -286,8 +287,8 @@ class Acta Extends core\ClasePropiedades {
 		$this->setLinea('');
 		$this->setLugar('');
 		$this->setObserv('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

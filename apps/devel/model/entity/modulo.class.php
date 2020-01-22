@@ -236,14 +236,15 @@ class Modulo Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_mod('');
 		$this->setNom('');
 		$this->setDescripcion('');
 		$this->setMods_req('');
 		$this->setApps_req('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

@@ -306,6 +306,7 @@ class TareaProceso Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_item('');
 		$this->setId_tipo_proceso('');
 		$this->setN_orden('');
@@ -316,8 +317,8 @@ class TareaProceso Extends core\ClasePropiedades {
 		$this->setId_fase_previa('');
 		$this->setId_tarea_previa('');
 		$this->setMensaje_requisito('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

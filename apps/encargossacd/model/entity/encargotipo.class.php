@@ -256,11 +256,12 @@ class EncargoTipo Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_tipo_enc('');
 		$this->setTipo_enc('');
 		$this->setMod_horario('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

@@ -272,6 +272,7 @@ class Encargo Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_enc('');
 		$this->setId_tipo_enc('');
 		$this->setSf_sv('');
@@ -281,8 +282,8 @@ class Encargo Extends core\ClasePropiedades {
 		$this->setIdioma_enc('');
 		$this->setDesc_lugar('');
 		$this->setObserv('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

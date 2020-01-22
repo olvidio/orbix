@@ -238,6 +238,7 @@ class Centro Extends UbiGlobal {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setTipo_ubi('');
 		$this->setId_ubi('');
@@ -253,8 +254,8 @@ class Centro Extends UbiGlobal {
 		$this->setTipo_labor('');
 		$this->setCdc('');
 		$this->setId_ctr_padre('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

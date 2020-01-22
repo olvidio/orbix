@@ -275,6 +275,7 @@ class PersonaDl Extends PersonaGlobal {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_nom('');
 		$this->setId_cr('');
@@ -300,8 +301,8 @@ class PersonaDl Extends PersonaGlobal {
 		$this->setObserv('');
 		$this->setId_ctr('');
 		$this->setLugar_nacimiento('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

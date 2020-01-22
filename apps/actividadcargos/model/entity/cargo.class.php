@@ -249,14 +249,15 @@ class Cargo Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_cargo('');
 		$this->setCargo('');
 		$this->setOrden_cargo('');
 		$this->setSf('');
 		$this->setSv('');
 		$this->setTipo_cargo('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

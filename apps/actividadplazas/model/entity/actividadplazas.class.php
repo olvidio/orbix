@@ -244,6 +244,7 @@ class actividadPlazas Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_schema('');
 		$this->setId_activ('');
 		$this->setId_dl('');
@@ -251,8 +252,8 @@ class actividadPlazas Extends core\ClasePropiedades {
 		$this->setCl('');
 		$this->setDl_tabla('');
 		$this->setCedidas('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

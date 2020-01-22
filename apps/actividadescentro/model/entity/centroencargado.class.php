@@ -257,12 +257,13 @@ class CentroEncargado Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_activ('');
 		$this->setId_ubi('');
 		$this->setNum_orden('');
 		$this->setEncargo('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/

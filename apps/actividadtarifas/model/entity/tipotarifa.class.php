@@ -217,13 +217,14 @@ class TipoTarifa Extends core\ClasePropiedades {
 	 *
 	 */
 	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
 		$this->setId_tarifa('');
 		$this->setModo('');
 		$this->setLetra('');
 		$this->setSfsv('');
 		$this->setObserv('');
+		$this->setPrimary_key($aPK);
 	}
-
 
 
 	/* METODES GET i SET --------------------------------------------------------*/
