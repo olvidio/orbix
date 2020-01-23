@@ -64,7 +64,7 @@ class Importada Extends core\ClasePropiedades {
 		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_activ = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('iid_activ' => $this->iid_activ);
+				$this->aPrimary_key = array('id_activ' => $this->iid_activ);
 			}
 		}
 		$this->setoDbl($oDbl);
@@ -203,11 +203,25 @@ class Importada Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('iid_activ' => $this->iid_activ);
+			$this->aPrimary_key = array('id_activ' => $this->iid_activ);
 		}
 		return $this->aPrimary_key;
 	}
-
+	
+	/**
+	 * Estableix las claus primàries de Importada en un array
+	 *
+	 * @return array aPrimary_key
+	 */
+	public function setPrimary_key($a_id='') {
+	    if (is_array($a_id)) {
+	        $this->aPrimary_key = $a_id;
+	        foreach($a_id as $nom_id=>$val_id) {
+	            if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; // evitem SQL injection fent cast a integer
+	        }
+	    }
+	}
+	
 	/**
 	 * Recupera l'atribut iid_activ de Importada
 	 *

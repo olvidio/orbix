@@ -82,7 +82,7 @@ class Repeticion Extends core\ClasePropiedades {
 		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_repeticion = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('iid_repeticion' => $this->iid_repeticion);
+				$this->aPrimary_key = array('id_repeticion' => $this->iid_repeticion);
 			}
 		}
 		$this->setoDbl($oDbl);
@@ -244,9 +244,23 @@ class Repeticion Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('iid_repeticion' => $this->iid_repeticion);
+			$this->aPrimary_key = array('id_repeticion' => $this->iid_repeticion);
 		}
 		return $this->aPrimary_key;
+	}
+	
+	/**
+	 * Estableix las claus primàries de ARepeticion en un array
+	 *
+	 * @return array aPrimary_key
+	 */
+	public function setPrimary_key($a_id='') {
+	    if (is_array($a_id)) {
+	        $this->aPrimary_key = $a_id;
+	        foreach($a_id as $nom_id=>$val_id) {
+	            if (($nom_id == 'id_repeticion') && $val_id !== '') $this->iid_repeticion = (int)$val_id; // evitem SQL injection fent cast a integer
+	        }
+	    }
 	}
 
 	/**

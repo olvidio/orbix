@@ -204,11 +204,25 @@ class DlListas Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('iIdentif' => $this->iIdentif);
+			$this->aPrimary_key = array('Identif' => $this->iIdentif);
 		}
 		return $this->aPrimary_key;
 	}
-
+	
+	/**
+	 * Estableix las claus primàries de Listas en un array
+	 *
+	 * @return array aPrimary_key
+	 */
+	public function setPrimary_key($a_id='') {
+	    if (is_array($a_id)) {
+	        $this->aPrimary_key = $a_id;
+	        foreach($a_id as $nom_id=>$val_id) {
+	            if (($nom_id == 'Identif') && $val_id !== '') $this->iIdentif = (int)$val_id; // evitem SQL injection fent cast a integer
+	        }
+	    }
+	}
+	
 	/**
 	 * Recupera l'atribut sDl de Listas
 	 *

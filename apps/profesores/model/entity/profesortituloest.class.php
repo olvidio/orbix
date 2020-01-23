@@ -280,7 +280,21 @@ class ProfesorTituloEst Extends core\ClasePropiedades {
 		}
 		return $this->aPrimary_key;
 	}
-
+	
+	/**
+	 * Estableix las claus primàries de ProfesorTituloEst en un array
+	 *
+	 * @return array aPrimary_key
+	 */
+	public function setPrimary_key($a_id='') {
+	    if (is_array($a_id)) {
+	        $this->aPrimary_key = $a_id;
+	        foreach($a_id as $nom_id=>$val_id) {
+	            if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; // evitem SQL injection fent cast a integer
+	        }
+	    }
+	}
+	
 	/**
 	 * Recupera l'atribut iid_item de ProfesorTituloEst
 	 *

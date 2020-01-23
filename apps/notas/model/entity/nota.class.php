@@ -104,7 +104,7 @@ class Nota Extends core\ClasePropiedades {
 		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_situacion = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('iid_situacion' => $this->iid_situacion);
+				$this->aPrimary_key = array('id_situacion' => $this->iid_situacion);
 			}
 		}
 		$this->setoDbl($oDbl);
@@ -272,11 +272,25 @@ class Nota Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('iid_situacion' => $this->iid_situacion);
+			$this->aPrimary_key = array('id_situacion' => $this->iid_situacion);
 		}
 		return $this->aPrimary_key;
 	}
-
+	
+	/**
+	 * Estableix las claus primàries de Nota en un array
+	 *
+	 * @return array aPrimary_key
+	 */
+	public function setPrimary_key($a_id='') {
+	    if (is_array($a_id)) {
+	        $this->aPrimary_key = $a_id;
+	        foreach($a_id as $nom_id=>$val_id) {
+	            if (($nom_id == 'id_situacion') && $val_id !== '') $this->iid_situacion = (int)$val_id; // evitem SQL injection fent cast a integer
+	        }
+	    }
+	}
+	
 	/**
 	 * Recupera l'atribut iid_situacion de Nota
 	 *

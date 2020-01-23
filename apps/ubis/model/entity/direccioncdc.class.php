@@ -37,7 +37,7 @@ class DireccionCdc Extends DireccionGlobal {
 		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_direccion = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('iid_direccion' => $this->iid_direccion);
+				$this->aPrimary_key = array('id_direccion' => $this->iid_direccion);
 			}
 		}
 		$this->setoDbl($oDbl);

@@ -93,7 +93,7 @@ class ZonaSacd Extends core\ClasePropiedades {
 		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_item = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('iid_item' => $this->iid_item);
+				$this->aPrimary_key = array('id_item' => $this->iid_item);
 			}
 		}
 		$this->setoDbl($oDbl);
@@ -263,7 +263,21 @@ class ZonaSacd Extends core\ClasePropiedades {
 		}
 		return $this->aPrimary_key;
 	}
-
+	
+	/**
+	 * Estableix las claus primàries de ZonaSacd en un array
+	 *
+	 * @return array aPrimary_key
+	 */
+	public function setPrimary_key($a_id='') {
+	    if (is_array($a_id)) {
+	        $this->aPrimary_key = $a_id;
+	        foreach($a_id as $nom_id=>$val_id) {
+	            if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; // evitem SQL injection fent cast a integer
+	        }
+	    }
+	}
+	
 	/**
 	 * Recupera l'atribut iid_item de ZonaSacd
 	 *

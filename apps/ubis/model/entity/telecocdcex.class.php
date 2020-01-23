@@ -36,7 +36,7 @@ class TelecoCdcEx Extends TelecoCdc {
 		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_item = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('iid_item' => $this->iid_item);
+				$this->aPrimary_key = array('id_item' => $this->iid_item);
 			}
 		}
 		$this->setoDbl($oDbl);

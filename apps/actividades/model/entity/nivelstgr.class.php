@@ -250,11 +250,25 @@ class NivelStgr Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('inivel_stgr' => $this->inivel_stgr);
+			$this->aPrimary_key = array('nivel_stgr' => $this->inivel_stgr);
 		}
 		return $this->aPrimary_key;
 	}
-
+	
+	/**
+	 * Estableix las claus primàries de NivelStgr en un array
+	 *
+	 * @return array aPrimary_key
+	 */
+	public function setPrimary_key($a_id='') {
+	    if (is_array($a_id)) {
+	        $this->aPrimary_key = $a_id;
+	        foreach($a_id as $nom_id=>$val_id) {
+	            if (($nom_id == 'nivel_stgr') && $val_id !== '') $this->inivel_stgr = (int)$val_id; // evitem SQL injection fent cast a integer
+	        }
+	    }
+	}
+	
 	/**
 	 * Recupera l'atribut inivel_stgr de NivelStgr
 	 *

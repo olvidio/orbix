@@ -81,7 +81,7 @@ class ProfesorTipo Extends core\ClasePropiedades {
 		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_tipo_profesor = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('iid_tipo_profesor' => $this->iid_tipo_profesor);
+				$this->aPrimary_key = array('id_tipo_profesor' => $this->iid_tipo_profesor);
 			}
 		}
 		$this->setoDbl($oDbl);
@@ -236,11 +236,25 @@ class ProfesorTipo Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('iid_tipo_profesor' => $this->iid_tipo_profesor);
+			$this->aPrimary_key = array('id_tipo_profesor' => $this->iid_tipo_profesor);
 		}
 		return $this->aPrimary_key;
 	}
-
+	
+	/**
+	 * Estableix las claus primàries de ProfesorTipo en un array
+	 *
+	 * @return array aPrimary_key
+	 */
+	public function setPrimary_key($a_id='') {
+	    if (is_array($a_id)) {
+	        $this->aPrimary_key = $a_id;
+	        foreach($a_id as $nom_id=>$val_id) {
+	            if (($nom_id == 'id_tipo_ptofesor') && $val_id !== '') $this->iid_tipo_ptofesor = (int)$val_id; // evitem SQL injection fent cast a integer
+	        }
+	    }
+	}
+	
 	/**
 	 * Recupera l'atribut iid_tipo_profesor de ProfesorTipo
 	 *

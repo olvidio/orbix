@@ -99,7 +99,7 @@ class Local Extends core\ClasePropiedades {
 		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->sid_locale = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('sid_locale' => $this->sid_locale);
+				$this->aPrimary_key = array('id_locale' => $this->sid_locale);
 			}
 		}
 		$this->setoDbl($oDbl);
@@ -273,7 +273,21 @@ class Local Extends core\ClasePropiedades {
 		}
 		return $this->aPrimary_key;
 	}
-
+	
+	/**
+	 * Estableix las claus primàries de Local en un array
+	 *
+	 * @return array aPrimary_key
+	 */
+	public function setPrimary_key($a_id='') {
+	    if (is_array($a_id)) {
+	        $this->aPrimary_key = $a_id;
+	        foreach($a_id as $nom_id=>$val_id) {
+	            if (($nom_id == 'id_locale') && $val_id !== '') $this->slocale = $val_id;
+	        }
+	    }
+	}
+	
 	/**
 	 * Recupera l'atribut sid_locale de Local
 	 *

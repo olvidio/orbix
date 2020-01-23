@@ -135,7 +135,7 @@ class TipoDossier Extends core\ClasePropiedades {
 		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_tipo_dossier = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('iid_tipo_dossier' => $this->iid_tipo_dossier);
+				$this->aPrimary_key = array('id_tipo_dossier' => $this->iid_tipo_dossier);
 			}
 		}
 		$this->setoDbl($oDbl);
@@ -331,11 +331,25 @@ class TipoDossier Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('iid_tipo_dossier' => $this->iid_tipo_dossier);
+			$this->aPrimary_key = array('id_tipo_dossier' => $this->iid_tipo_dossier);
 		}
 		return $this->aPrimary_key;
 	}
 
+	/**
+	 * Estableix las claus primàries de TipoDossier en un array
+	 *
+	 * @return array aPrimary_key
+	 */
+	public function setPrimary_key($a_id='') {
+	    if (is_array($a_id)) {
+	        $this->aPrimary_key = $a_id;
+	        foreach($a_id as $nom_id=>$val_id) {
+	            if (($nom_id == 'id_tipo_dossier') && $val_id !== '') $this->iid_tipo_dossier = (int)$val_id; // evitem SQL injection fent cast a integer
+	        }
+	    }
+	}
+	
 	/**
 	 * Recupera l'atribut iid_tipo_dossier de TipoDossier
 	 *

@@ -81,7 +81,7 @@ class ConfigSchema Extends core\ClasePropiedades {
 		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->sparametro = $a_id;
-				$this->aPrimary_key = array('sparametro' => $this->sparametro);
+				$this->aPrimary_key = array('parametro' => $this->sparametro);
 			}
 		}
 		$this->setoDbl($oDbl);
@@ -239,6 +239,20 @@ class ConfigSchema Extends core\ClasePropiedades {
 			$this->aPrimary_key = array('parametro' => $this->sparametro);
 		}
 		return $this->aPrimary_key;
+	}
+	
+	/**
+	 * Estableix las claus primàries de ConfigSchema en un array
+	 *
+	 * @return array aPrimary_key
+	 */
+	public function setPrimary_key($a_id='') {
+	    if (is_array($a_id)) {
+	        $this->aPrimary_key = $a_id;
+	        foreach($a_id as $nom_id=>$val_id) {
+	            if (($nom_id == 'parametro') && $val_id !== '') $this->sparametro = $val_id;
+	        }
+	    }
 	}
 
 	/**

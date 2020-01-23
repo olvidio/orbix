@@ -61,7 +61,7 @@ class CentroEllas Extends Centro {
 		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_ubi = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('iid_ubi' => $this->iid_ubi);
+				$this->aPrimary_key = array('id_ubi' => $this->iid_ubi);
 			}
 		}
 		$this->setoDbl($oDbl);

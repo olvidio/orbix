@@ -47,7 +47,7 @@ class CambioDl Extends Cambio {
 		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_item_cambio = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('iid_item_cambio' => $this->iid_item_cambio);
+				$this->aPrimary_key = array('id_item_cambio' => $this->iid_item_cambio);
 			}
 		}
 		$this->setoDbl($oDbl);

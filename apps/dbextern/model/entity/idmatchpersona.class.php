@@ -87,7 +87,7 @@ class IdMatchPersona Extends core\ClasePropiedades {
 		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_listas = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('iid_listas' => $this->iid_listas);
+				$this->aPrimary_key = array('id_listas' => $this->iid_listas);
 			}
 		}
 		$this->setoDbl($oDbl);
@@ -253,6 +253,20 @@ class IdMatchPersona Extends core\ClasePropiedades {
 		return $this->aPrimary_key;
 	}
 
+	/**
+	 * Estableix las claus primàries de IdMatchPersona en un array
+	 *
+	 * @return array aPrimary_key
+	 */
+	public function setPrimary_key($a_id='') {
+	    if (is_array($a_id)) {
+	        $this->aPrimary_key = $a_id;
+	        foreach($a_id as $nom_id=>$val_id) {
+	            if (($nom_id == 'id_listas') && $val_id !== '') $this->iid_listas = (int)$val_id; // evitem SQL injection fent cast a integer
+	        }
+	    }
+	}
+	
 	/**
 	 * Recupera l'atribut iid_listas de IdMatchPersona
 	 *

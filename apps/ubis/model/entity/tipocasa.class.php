@@ -61,7 +61,7 @@ class TipoCasa Extends core\ClasePropiedades {
 		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->stipo_casa = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('stipo_casa' => $this->stipo_casa);
+				$this->aPrimary_key = array('tipo_casa' => $this->stipo_casa);
 			}
 		}
 		$this->setoDbl($oDbl);
@@ -215,11 +215,25 @@ class TipoCasa Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('stipo_casa' => $this->stipo_casa);
+			$this->aPrimary_key = array('tipo_casa' => $this->stipo_casa);
 		}
 		return $this->aPrimary_key;
 	}
-
+	
+	/**
+	 * Estableix las claus primàries de TipoCasa en un array
+	 *
+	 * @return array aPrimary_key
+	 */
+	public function setPrimary_key($a_id='') {
+	    if (is_array($a_id)) {
+	        $this->aPrimary_key = $a_id;
+	        foreach($a_id as $nom_id=>$val_id) {
+	            if (($nom_id == 'tipo_casa') && $val_id !== '') $this->stipo_casa = $val_id;
+	        }
+	    }
+	}
+	
 	/**
 	 * Recupera l'atribut stipo_casa de TipoCasa
 	 *

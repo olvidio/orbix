@@ -320,6 +320,22 @@ class Dossier Extends core\ClasePropiedades {
 		}
 		return $this->aPrimary_key;
 	}
+	
+	/**
+	 * Estableix las claus primàries de Dossier en un array
+	 *
+	 * @return array aPrimary_key
+	 */
+	public function setPrimary_key($a_id='') {
+	    if (is_array($a_id)) {
+	        $this->aPrimary_key = $a_id;
+	        foreach($a_id as $nom_id=>$val_id) {
+	            if (($nom_id == 'tabla') && $val_id !== '') $this->stabla = $val_id;
+	            if (($nom_id == 'id_pau') && $val_id !== '') $this->sid_pau = $val_id;
+	            if (($nom_id == 'id_tipo_dossier') && $val_id !== '') $this->iid_tipo_dossier = (int)$val_id; // evitem SQL injection fent cast a integer
+	        }
+	    }
+	}
 
 	/**
 	 * Recupera l'atribut stabla de Dossier

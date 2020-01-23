@@ -74,7 +74,7 @@ class TipoTeleco Extends core\ClasePropiedades {
 		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->stipo_teleco = $a_id;
-				$this->aPrimary_key = array('stipo_teleco' => $this->stipo_teleco);
+				$this->aPrimary_key = array('tipo_teleco' => $this->stipo_teleco);
 			}
 		}
 		$this->setoDbl($oDbl);
@@ -241,11 +241,25 @@ class TipoTeleco Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('stipo_teleco' => $this->stipo_teleco);
+			$this->aPrimary_key = array('tipo_teleco' => $this->stipo_teleco);
 		}
 		return $this->aPrimary_key;
 	}
-
+	
+	/**
+	 * Estableix las claus primàries de TipoTeleco en un array
+	 *
+	 * @return array aPrimary_key
+	 */
+	public function setPrimary_key($a_id='') {
+	    if (is_array($a_id)) {
+	        $this->aPrimary_key = $a_id;
+	        foreach($a_id as $nom_id=>$val_id) {
+	            if (($nom_id == 'tipo_teleco') && $val_id !== '') $this->stipo_teleco = $val_id;
+	        }
+	    }
+	}
+	
 	/**
 	 * Recupera l'atribut stipo_teleco de TipoTeleco
 	 *

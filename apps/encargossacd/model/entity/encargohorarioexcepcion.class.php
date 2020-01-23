@@ -371,6 +371,21 @@ class EncargoHorarioExcepcion Extends core\ClasePropiedades {
 	}
 
 	/**
+	 * Estableix las claus primàries de EncargoHorarioExcepcion en un array
+	 *
+	 * @return array aPrimary_key
+	 */
+	public function setPrimary_key($a_id='') {
+	    if (is_array($a_id)) {
+	        $this->aPrimary_key = $a_id;
+	        foreach($a_id as $nom_id=>$val_id) {
+	            if (($nom_id == 'id_enc') && $val_id !== '') $this->iid_enc = (int)$val_id; // evitem SQL injection fent cast a integer
+	            if (($nom_id == 'id_item_ex') && $val_id !== '') $this->iid_item_ex = (int)$val_id; // evitem SQL injection fent cast a integer
+	        }
+	    }
+	}
+	
+	/**
 	 * Recupera l'atribut iid_enc de EncargoHorarioExcepcion
 	 *
 	 * @return integer iid_enc

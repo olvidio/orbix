@@ -99,7 +99,7 @@ class Zona Extends core\ClasePropiedades {
 		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_zona = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('iid_zona' => $this->iid_zona);
+				$this->aPrimary_key = array('id_zona' => $this->iid_zona);
 			}
 		}
 		$this->setoDbl($oDbl);
@@ -270,7 +270,21 @@ class Zona Extends core\ClasePropiedades {
 		}
 		return $this->aPrimary_key;
 	}
-
+	
+	/**
+	 * Estableix las claus primàries de Zona en un array
+	 *
+	 * @return array aPrimary_key
+	 */
+	public function setPrimary_key($a_id='') {
+	    if (is_array($a_id)) {
+	        $this->aPrimary_key = $a_id;
+	        foreach($a_id as $nom_id=>$val_id) {
+	            if (($nom_id == 'id_zona') && $val_id !== '') $this->iid_zona = (int)$val_id; // evitem SQL injection fent cast a integer
+	        }
+	    }
+	}
+	
 	/**
 	 * Recupera l'atribut iid_zona de Zona
 	 *

@@ -88,7 +88,7 @@ class Metamenu Extends core\ClasePropiedades {
 		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_metamenu = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('iid_metamenu' => $this->iid_metamenu);
+				$this->aPrimary_key = array('id_metamenu' => $this->iid_metamenu);
 			}
 		}
 		$this->setoDbl($oDbl);
@@ -254,11 +254,25 @@ class Metamenu Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('iid_metamenu' => $this->iid_metamenu);
+			$this->aPrimary_key = array('id_metamenu' => $this->iid_metamenu);
 		}
 		return $this->aPrimary_key;
 	}
-
+	
+	/**
+	 * Estableix las claus primàries de MetaMenu en un array
+	 *
+	 * @return array aPrimary_key
+	 */
+	public function setPrimary_key($a_id='') {
+	    if (is_array($a_id)) {
+	        $this->aPrimary_key = $a_id;
+	        foreach($a_id as $nom_id=>$val_id) {
+	            if (($nom_id == 'id_metamenu') && $val_id !== '') $this->iid_metamenu = (int)$val_id; // evitem SQL injection fent cast a integer
+	        }
+	    }
+	}
+	
 	/**
 	 * Recupera l'atribut iid_metamenu de Metamenu
 	 *

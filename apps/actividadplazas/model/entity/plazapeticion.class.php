@@ -264,6 +264,21 @@ class PlazaPeticion Extends core\ClasePropiedades {
 	}
 
 	/**
+	 * Estableix las claus primàries de PlazaPeticion en un array
+	 *
+	 * @return array aPrimary_key
+	 */
+	public function setPrimary_key($a_id='') {
+	    if (is_array($a_id)) {
+	        $this->aPrimary_key = $a_id;
+	        foreach($a_id as $nom_id=>$val_id) {
+	            if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; // evitem SQL injection fent cast a integer
+	            if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; // evitem SQL injection fent cast a integer
+	        }
+	    }
+	}
+	
+	/**
 	 * Recupera l'atribut iid_nom de PlazaPeticion
 	 *
 	 * @return integer iid_nom

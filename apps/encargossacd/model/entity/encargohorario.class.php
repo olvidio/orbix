@@ -143,7 +143,7 @@ class EncargoHorario Extends core\ClasePropiedades {
 		} else {
             if (isset($a_id) && $a_id !== '') {
                 $this->iid_item_h = intval($a_id); // evitem SQL injection fent cast a integer
-                $this->aPrimary_key = array('iid_item_h' => $this->iid_item_h);
+                $this->aPrimary_key = array('id_item_h' => $this->iid_item_h);
             }
 		}
 		$this->setoDbl($oDbl);
@@ -344,6 +344,21 @@ class EncargoHorario Extends core\ClasePropiedades {
 		return $this->aPrimary_key;
 	}
 
+	/**
+	 * Estableix las claus primàries de EncargoHorario en un array
+	 *
+	 * @return array aPrimary_key
+	 */
+	public function setPrimary_key($a_id='') {
+	    if (is_array($a_id)) {
+	        $this->aPrimary_key = $a_id;
+	        foreach($a_id as $nom_id=>$val_id) {
+	            if (($nom_id == 'id_enc') && $val_id !== '') $this->iid_enc = (int)$val_id; // evitem SQL injection fent cast a integer
+	            if (($nom_id == 'id_item_h') && $val_id !== '') $this->iid_item_h = (int)$val_id; // evitem SQL injection fent cast a integer
+	        }
+	    }
+	}
+	
 	/**
 	 * Recupera l'atribut iid_enc de EncargoHorario
 	 *

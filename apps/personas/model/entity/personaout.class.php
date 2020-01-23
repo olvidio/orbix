@@ -43,7 +43,7 @@ class PersonaOut Extends PersonaPub {
 		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_nom = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('iid_nom' => $this->iid_nom);
+				$this->aPrimary_key = array('id_nom' => $this->iid_nom);
 			}
 		}
 		$this->setoDbl($oDbl);

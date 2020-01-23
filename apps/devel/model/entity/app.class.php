@@ -87,7 +87,7 @@ class App Extends core\ClasePropiedades {
 		} else {
 			if (isset($a_id) && $a_id !== '') {
 				$this->iid_app = intval($a_id); // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('iid_app' => $this->iid_app);
+				$this->aPrimary_key = array('id_app' => $this->iid_app);
 			}
 		}
 		$this->setoDbl($oDbl);
@@ -251,6 +251,20 @@ class App Extends core\ClasePropiedades {
 			$this->aPrimary_key = array('id_app' => $this->iid_app);
 		}
 		return $this->aPrimary_key;
+	}
+	
+	/**
+	 * Estableix las claus primàries de App en un array
+	 *
+	 * @return array aPrimary_key
+	 */
+	public function setPrimary_key($a_id='') {
+	    if (is_array($a_id)) {
+	        $this->aPrimary_key = $a_id;
+	        foreach($a_id as $nom_id=>$val_id) {
+	            if (($nom_id == 'id_app') && $val_id !== '') $this->iid_app = (int)$val_id; // evitem SQL injection fent cast a integer
+	        }
+	    }
 	}
 
 	/**

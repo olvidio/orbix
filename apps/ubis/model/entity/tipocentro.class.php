@@ -211,11 +211,25 @@ class TipoCentro Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('stipo_ctr' => $this->stipo_ctr);
+			$this->aPrimary_key = array('tipo_ctr' => $this->stipo_ctr);
 		}
 		return $this->aPrimary_key;
 	}
-
+	
+	/**
+	 * Estableix las claus primàries de TipoCentro en un array
+	 *
+	 * @return array aPrimary_key
+	 */
+	public function setPrimary_key($a_id='') {
+	    if (is_array($a_id)) {
+	        $this->aPrimary_key = $a_id;
+	        foreach($a_id as $nom_id=>$val_id) {
+	            if (($nom_id == 'tipo_ctr') && $val_id !== '') $this->stipo_ctr = $val_id;
+	        }
+	    }
+	}
+	
 	/**
 	 * Recupera l'atribut stipo_ctr de TipoCentro
 	 *
