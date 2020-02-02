@@ -137,7 +137,7 @@ class Congreso Extends core\ClasePropiedades {
 	public function DBGuardar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if ($this->DBCarregar('guardar') === false) { $bInsert=true; } else { $bInsert=false; }
+		if ($this->DBCarregar('guardar') === FALSE) { $bInsert=TRUE; } else { $bInsert=FALSE; }
 		$aDades=array();
 		$aDades['congreso'] = $this->scongreso;
 		$aDades['lugar'] = $this->slugar;
@@ -147,7 +147,7 @@ class Congreso Extends core\ClasePropiedades {
 		$aDades['tipo'] = $this->itipo;
 		array_walk($aDades, 'core\poner_null');
 
-		if ($bInsert === false) {
+		if ($bInsert === FALSE) {
 			//UPDATE
 			$update="
 					congreso                 = :congreso,
@@ -156,15 +156,15 @@ class Congreso Extends core\ClasePropiedades {
 					f_fin                    = :f_fin,
 					organiza                 = :organiza,
 					tipo                     = :tipo";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item=$this->iid_item AND id_nom=$this->iid_nom")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item=$this->iid_item AND id_nom=$this->iid_nom")) === FALSE) {
 				$sClauError = 'Congreso.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-				return false;
+				return FALSE;
 			} else {
-				if ($oDblSt->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === FALSE) {
 					$sClauError = 'Congreso.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-					return false;
+					return FALSE;
 				}
 			}
 		} else {
@@ -172,21 +172,21 @@ class Congreso Extends core\ClasePropiedades {
 			array_unshift($aDades, $this->iid_nom);
 			$campos="(id_nom,congreso,lugar,f_ini,f_fin,organiza,tipo)";
 			$valores="(:id_nom,:congreso,:lugar,:f_ini,:f_fin,:organiza,:tipo)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClauError = 'Congreso.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-				return false;
+				return FALSE;
 			} else {
-				if ($oDblSt->execute($aDades) === false) {
+				if ($oDblSt->execute($aDades) === FALSE) {
 					$sClauError = 'Congreso.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-					return false;
+					return FALSE;
 				}
 			}
 			$this->id_item = $oDbl->lastInsertId('d_congresos_id_item_seq');
 		}
 		$this->setAllAtributes($aDades);
-		return true;
+		return TRUE;
 	}
 
 	/**
@@ -197,10 +197,10 @@ class Congreso Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iid_item) && isset($this->iid_nom)) {
-			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE  id_item=$this->iid_item AND id_nom=$this->iid_nom")) === false) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE  id_item=$this->iid_item AND id_nom=$this->iid_nom")) === FALSE) {
 				$sClauError = 'Congreso.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-				return false;
+				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 			switch ($que) {
@@ -208,7 +208,7 @@ class Congreso Extends core\ClasePropiedades {
 					$this->aDades=$aDades;
 					break;
 				case 'guardar':
-					if (!$oDblSt->rowCount()) return false;
+					if (!$oDblSt->rowCount()) return FALSE;
 					break;
 				default:
 					// En el caso de no existir esta fila, $aDades = FALSE:
@@ -218,9 +218,9 @@ class Congreso Extends core\ClasePropiedades {
 						$this->setAllAtributes($aDades);
 					}
 			}
-			return true;
+			return TRUE;
 		} else {
-		   	return false;
+		   	return FALSE;
 		}
 	}
 
@@ -231,12 +231,12 @@ class Congreso Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE  id_item=$this->iid_item AND id_nom=$this->iid_nom")) === false) {
+		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE  id_item=$this->iid_item AND id_nom=$this->iid_nom")) === FALSE) {
 			$sClauError = 'Congreso.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return false;
+			return FALSE;
 		}
-		return true;
+		return TRUE;
 	}
 	
 	/* METODES ALTRES  ----------------------------------------------------------*/
@@ -413,14 +413,14 @@ class Congreso Extends core\ClasePropiedades {
 	}
 	/**
 	 * estableix el valor de l'atribut df_ini de Congreso
-	* Si df_ini es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
-	* Si convert es false, df_ini debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	* Si df_ini es string, y convert=TRUE se convierte usando el formato webDateTimeLocal->getFormat().
+	* Si convert es FALSE, df_ini debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
 	*
 	* @param date|string df_ini='' optional.
-	* @param boolean convert=true optional. Si es false, df_ini debe ser un string en formato ISO (Y-m-d).
+	* @param boolean convert=TRUE optional. Si es FALSE, df_ini debe ser un string en formato ISO (Y-m-d).
 	 */
-	function setF_ini($df_ini='',$convert=true) {
-		if ($convert === true && !empty($df_ini)) {
+	function setF_ini($df_ini='',$convert=TRUE) {
+		if ($convert === TRUE && !empty($df_ini)) {
 	        $oConverter = new core\Converter('date', $df_ini);
 	        $this->df_ini =$oConverter->toPg();
 	    } else {
@@ -444,14 +444,14 @@ class Congreso Extends core\ClasePropiedades {
 	}
 	/**
 	 * estableix el valor de l'atribut df_fin de Congreso
-	* Si df_fin es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
-	* Si convert es false, df_fin debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	* Si df_fin es string, y convert=TRUE se convierte usando el formato webDateTimeLocal->getFormat().
+	* Si convert es FALSE, df_fin debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
 	*
 	* @param date|string df_fin='' optional.
-	* @param boolean convert=true optional. Si es false, df_fin debe ser un string en formato ISO (Y-m-d).
+	* @param boolean convert=TRUE optional. Si es FALSE, df_fin debe ser un string en formato ISO (Y-m-d).
 	 */
-	function setF_fin($df_fin='',$convert=true) {
-		if ($convert === true && !empty($df_fin)) {
+	function setF_fin($df_fin='',$convert=TRUE) {
+		if ($convert === TRUE && !empty($df_fin)) {
 	        $oConverter = new core\Converter('date', $df_fin);
 	        $this->df_fin =$oConverter->toPg();
 	    } else {

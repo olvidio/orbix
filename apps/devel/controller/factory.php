@@ -192,6 +192,13 @@ $atributs='
 	 * @var array
 	 */
 	 private $aDades;
+
+	/**
+	 * Id_schema de '.$clase.'
+	 *
+	 * @var integer
+	 */
+	 private $iid_schema;
 ';
 $add_convert = FALSE;
 $c=0;
@@ -303,6 +310,9 @@ foreach($oDbl->query($sql) as $row) {
 		if (!isset($this->'.$tip.$nomcamp.')) {
 			$this->DBCarregar();
 		}
+		if (empty($this->'.$tip.$nomcamp.')) {
+			return new web\NullDateTimeLocal();
+		}
         $oConverter = new core\Converter(\'date\', $this->'.$tip.$nomcamp.');
 		return $oConverter->fromPg();
 	}';
@@ -337,11 +347,11 @@ foreach($oDbl->query($sql) as $row) {
 		$gets.='
 	/**
 	 * estableix el valor de l\'atribut '.$tip.$nomcamp.' de '.$clase.'
-	 * Si '.$tip.$nomcamp.' es string, y convert=true se convierte usando el formato web\DateTimeLocal->getForamat().
-	 * Si convert es false, '.$tip.$nomcamp.' debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
+	 * Si '.$tip.$nomcamp.' es string, y convert=TRUE se convierte usando el formato web\DateTimeLocal->getForamat().
+	 * Si convert es FALSE, '.$tip.$nomcamp.' debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
 	 * 
 	 * @param '.$tipo_db.'|string '.$tip.$nomcamp.'=\''.$tip_val.'\' optional.
-     * @param boolean convert=TRUE optional. Si es false, df_ini debe ser un string en formato ISO (Y-m-d).
+     * @param boolean convert=TRUE optional. Si es FALSE, df_ini debe ser un string en formato ISO (Y-m-d).
 	 */
 	function set'.$NomCamp.'($'.$tip.$nomcamp.'=\''.$tip_val.'\',$convert=TRUE) {
         if ($convert === TRUE  && !empty($'.$tip.$nomcamp.')) {
@@ -383,9 +393,10 @@ foreach($oDbl->query($sql) as $row) {
    	if ($tipo == 'date') {
    	   $add_convert = TRUE;
 	   $exists.="\n\t\t".'if (array_key_exists(\''.$nomcamp.'\',$aDades)) $this->set'.$NomCamp.'($aDades[\''.$nomcamp.'\'],$convert);';
+	   $ToEmpty.="\n\t\t".'$this->set'.$NomCamp.'(\'\');';
    	} else {
 	   $exists.="\n\t\t".'if (array_key_exists(\''.$nomcamp.'\',$aDades)) $this->set'.$NomCamp.'($aDades[\''.$nomcamp.'\']);';
-	   $ToEmpty.="\n\t\t".'$this->set'.$NomCamp.'([\'\']);';
+	   $ToEmpty.="\n\t\t".'$this->set'.$NomCamp.'(\'\');';
    	}
 
 	if (!in_array($nomcamp,$aClaus)) {
@@ -517,30 +528,30 @@ $txt.='
 	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
 	 */';
 
-$txt.="\n\t".'function __construct($a_id=\'\') {
-		$oDbl = $GLOBALS[\''.$oDB_txt.'\'];
-		if (is_array($a_id)) { 
+$sForPrimaryK = 'if (is_array($a_id)) { 
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
 '.$claus_if.'
 			}';
 if (count($aClaus2) > 1) { // per el cas de només una clau.
-$txt.="\n\t\t}";
-$txt.="\n\t\t";
-$txt.='$this->setoDbl($oDbl);
-		$this->setNomTabla(\''.$tabla.'\');';
-$txt.="\n\t}";
+	$sForPrimaryK .="\n\t\t}";
 } else {
-$txt.="\n\t\t".'} else {
+	$sForPrimaryK .="\n\t\t".'} else {
 			if (isset($a_id) && $a_id !== \'\') {
 				$this->'.$claus_txt.' = intval($a_id); // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array(\''.$claus_txt.'\' => $this->'.$claus_txt.');
 			}
-		}
-		$this->setoDbl($oDbl);
+		}';
+}
+
+$txt.="\n\t".'function __construct($a_id=\'\') {
+		$oDbl = $GLOBALS[\''.$oDB_txt.'\'];';
+$txt.="\n\t\t".$sForPrimaryK;
+
+$txt.= "\n\t\t".'$this->setoDbl($oDbl);
 		$this->setNomTabla(\''.$tabla.'\');
 	}';
-}
+
 
 $txt.='
 
@@ -677,12 +688,13 @@ $txt.='	/* METODES PRIVATS -----------------------------------------------------
 	 * @param array $aDades
 	 */';
 if ($add_convert === TRUE) {
-    $txt.="\n\t".'function setAllAtributes($aDades,$convert=FALSE) {
-		if (!is_array($aDades)) return;';
+    $txt.="\n\t".'function setAllAtributes($aDades,$convert=FALSE) {';
 } else {
-    $txt.="\n\t".'function setAllAtributes($aDades) {
-		if (!is_array($aDades)) return;';
+    $txt.="\n\t".'function setAllAtributes($aDades) {';
 }
+$txt.="\n\t\t".'if (!is_array($aDades)) return;
+		if (array_key_exists(\'id_schema\',$aDades)) $this->setId_schema($aDades[\'id_schema\']);';
+
 $txt.=$exists;
 $txt.="\n\t".'}';
 
@@ -691,9 +703,11 @@ $txt.='
 	 * Estableix a empty el valor de tots els atributs
 	 *
 	 */
-	function setNullAllAtributes() {';
-
+	function setNullAllAtributes() {
+		$aPK = $this->getPrimary_key();
+		$this->setId_schema(\'\');';
 $txt.=$ToEmpty;
+$txt.="\n\t\t".'$this->setPrimary_key($aPK);';
 $txt.="\n\t".'}
 
 	/* METODES GET i SET --------------------------------------------------------*/
@@ -721,6 +735,14 @@ $txt.="\n\t".'}
 		}
 		return $this->aPrimary_key;
 	}
+	/**
+	 * Estableix las claus primàries de '.$clase.' en un array
+	 *
+	 */
+	public function setPrimary_key($a_id=\'\') {
+	    '.$sForPrimaryK.'
+	}
+	
 ';
 
 $txt.=$gets;
