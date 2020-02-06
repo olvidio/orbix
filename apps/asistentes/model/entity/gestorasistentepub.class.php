@@ -26,7 +26,7 @@ class GestorAsistentePub Extends core\ClaseGestor {
 	 *
 	 */
 	function __construct() {
-		$oDbl = $GLOBALS['oDBP'];
+		$oDbl = $GLOBALS['oDBEP'];
 		$this->setoDbl($oDbl);
 		$this->setNomTabla('d_asistentes_de_paso');
 	}

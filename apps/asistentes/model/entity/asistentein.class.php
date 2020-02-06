@@ -33,7 +33,7 @@ class AsistenteIn Extends AsistentePub {
 	 */
 	// Crec que no cal fer res
 	function __construct($a_id='') {
-		$oDbl = $GLOBALS['oDB'];
+		$oDbl = $GLOBALS['oDBE'];
 		if (is_array($a_id)) { 
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
