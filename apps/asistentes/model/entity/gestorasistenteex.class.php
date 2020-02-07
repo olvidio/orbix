@@ -26,7 +26,7 @@ class GestorAsistenteEx Extends core\ClaseGestor {
 	 *
 	 */
 	function __construct() {
-		$oDbl = $GLOBALS['oDBR'];
+		$oDbl = $GLOBALS['oDBER'];
 		$this->setoDbl($oDbl);
 		$this->setNomTabla('d_asistentes_ex');
 	}
