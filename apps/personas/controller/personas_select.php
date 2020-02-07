@@ -111,7 +111,7 @@ if ($miRolePau == Role::PAU_NOM) { //persona
             break;
         case 'pa':
         case 'pn':
-            $tabla = 'p_de_paso';
+            $tabla = 'p_de_paso_ex';
             break;
         default:
             $tabla = 'nada';
@@ -245,6 +245,7 @@ switch ($tabla) {
 		}
 	break;
 	case "p_de_paso":
+	case "p_de_paso_ex":
 		if (!empty($Qna)) {
 			$aWhere['id_tabla'] = 'p'.$Qna;
 			$id_tabla = 'p'.$Qna;
@@ -289,7 +290,7 @@ if (core\configGlobal::is_app_installed('asistentes')) {
 }
 
 if (core\configGlobal::is_app_installed('notas')) {
-	if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso")) {   
+	if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso_ex")) {   
 		$a_botones[]= array( 'txt' => _("ver tessera"),
 							'click' =>"fnjs_tessera(\"#seleccionados\")" ) ;
 		$script['fnjs_tessera'] = 1;
@@ -306,7 +307,7 @@ if (core\configGlobal::is_app_installed('notas')) {
 }
 if (core\configGlobal::is_app_installed('actividadestudios')) {
 	if ($_SESSION['oPerm']->have_perm_oficina('sm') || $_SESSION['oPerm']->have_perm_oficina('est')){
-        if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso")) {   
+        if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso_ex")) {   
             $a_botones[]= array( 'txt' => _("posibles ca"),
                                 'click' =>"fnjs_posibles_ca(\"#seleccionados\")" ) ;
             $script['fnjs_posibles_ca'] = 1;
@@ -314,7 +315,7 @@ if (core\configGlobal::is_app_installed('actividadestudios')) {
 	}
 }
 if (core\configGlobal::is_app_installed('actividadplazas')) {
-	if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso")) {   
+	if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso_ex")) {   
 		$sactividad = 'ca'; //ca
 		$a_botones[]= array( 'txt' => _("petición ca"),
 							'click' =>"fnjs_peticion_activ(\"#seleccionados\",\"$sactividad\")" ) ;
@@ -373,7 +374,7 @@ if ($tabla=="p_sssc") {
 
 $a_cabeceras[]=ucfirst(_("centro"));
 
-if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso")) {   
+if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso_ex")) {   
 	$a_cabeceras[]=ucfirst(_("stgr"));
 }   
 if (!empty($Qcmb)) { 

@@ -259,6 +259,18 @@ abstract class GestorPersonaGlobal Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_nom' => $aDades['id_nom']);
 			switch ($nomClase) {
+			    case 'GestorPersonaDl':
+        			$oPersonaDl= new PersonaDl($a_pkey);
+			        break;
+			    case 'GestorPersonaIn':
+        			$oPersonaDl= new PersonaIn($a_pkey);
+			        break;
+			    case 'GestorPersonaOut':
+        			$oPersonaDl= new PersonaOut($a_pkey);
+			        break;
+			    case 'GestorPersonaEx':
+        			$oPersonaDl= new PersonaEx($a_pkey);
+			        break;
 			    case 'GestorPersonaSacd':
         			$oPersonaDl= new PersonaSacd($a_pkey);
 			        break;
