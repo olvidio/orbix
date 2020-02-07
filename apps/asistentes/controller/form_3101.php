@@ -93,8 +93,12 @@ if (!empty($Qid_nom)) { //caso de modificar
 	        $obj_pau = 'PersonaNax';
 	        break;
 	    case 'sssc':
-		  $obj_pau = 'PersonaSSSC';
-		  break;
+		    $obj_pau = 'PersonaSSSC';
+		    break;
+	    case 'pn':
+	    case 'pa':
+		    $obj_pau = 'PersonaEx';
+		    break;
 	}
 	//$obj_pau = str_replace("personas\\model\\entity\\",'',get_class($oPersona));
 	
