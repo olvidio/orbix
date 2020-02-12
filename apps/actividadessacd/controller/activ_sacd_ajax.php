@@ -12,6 +12,7 @@ use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\PersonaDl;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use web\Periodo;
+use actividades\model\entity\ActividadAll;
 
 /**
 * Esta página sirve para ejecutar las operaciones de guardar, eliminar, listar...
@@ -333,6 +334,7 @@ switch ($Qque) {
 			$i++;
 			$id_activ = $oActividad->getId_activ();
 			$id_tipo_activ = $oActividad->getId_tipo_activ();
+			$status = $oActividad->getStatus();
 			$dl_org = $oActividad->getDl_org();
 			$nom_activ = $oActividad->getNom_activ();
 			$f_ini = $oActividad->getF_ini()->getFromLocal();
@@ -358,6 +360,9 @@ switch ($Qque) {
 				    $clase = 'plaza4'; // color de plaza asignada.
 				} else {
 				    $clase = '';
+				}
+				if ($status == ActividadAll::STATUS_PROYECTO) {
+				    $clase = 'wrong';
 				}
 	
 				
