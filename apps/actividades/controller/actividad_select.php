@@ -198,7 +198,7 @@ if (!empty($Qmodo) && $Qmodo == 'publicar') {
 // miro que rol tengo. Si soy casa, sólo veo la mía
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 
-if (!empty($Qmodo)) {
+if (!empty($Qmodo) && $Qmodo != 'buscar') {
     $a_botones = [];
     if ($Qmodo == 'importar') {
         $a_botones[] = array( 'txt' => _("importar"),
