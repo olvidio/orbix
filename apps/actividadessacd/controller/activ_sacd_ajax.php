@@ -362,7 +362,7 @@ switch ($Qque) {
 				    $clase = '';
 				}
 				if ($status == ActividadAll::STATUS_PROYECTO) {
-				    $clase = 'wrong';
+				    $clase = 'wrong-soft';
 				}
 	
 				

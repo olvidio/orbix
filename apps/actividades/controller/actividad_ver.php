@@ -145,7 +145,7 @@ if (!empty($Qid_activ)) { // caso de modificar
         $ssfsv = '';
         // En el caso de des puedo crear acrividades de sf.
         if ($isfsv == 2) {
-        	$dl_org = core\ConfigGlobal::mi_delef().'f'; 
+        	$dl_org = core\ConfigGlobal::mi_dele().'f'; 
         }
 	} else {
         if ($isfsv == 1) $ssfsv = 'sv';

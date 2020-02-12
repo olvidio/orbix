@@ -348,10 +348,13 @@ div.ventana z-index: 160;
 	}
 	/* alert  Es para la fila*/
 	.wrong {
-		background: red !important;
+		background-color: red !important;
+	}
+	.wrong-soft {
+		background-color: darksalmon !important;
 	}
 	.alert  {
-		color : red;
+		color : red !important;
 	}
 	/* logout */
 	#logout {
