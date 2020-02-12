@@ -106,7 +106,11 @@ switch($Qque) {
 		$a_botones=[
                 ['txt' => _("cambiar los marcados"), 'click' =>"fnjs_cambiar(\"#seleccionados\")" ],
                 ['txt' => _("ver proceso actividad"), 'click' =>"fnjs_ver_activ(\"#seleccionados\")" ],
-		    ];
+                ['txt' => _("todos"), 'click' =>"fnjs_selectAll(\"#seleccionados\",\"sel[]\",\"all\",0)" ],
+                ['txt' => _("ninguno"), 'click' =>"fnjs_selectAll(\"#seleccionados\",\"sel[]\",\"none\",0)" ],
+                ['txt' => _("invertir"), 'click' =>"fnjs_selectAll(\"#seleccionados\",\"sel[]\",\"toggle\",0)" ],
+		];
+		
 
 		$a_valores=array();
 		$aWhere['_ordre'] = 'f_ini';
@@ -139,16 +143,22 @@ switch($Qque) {
 					$cActivProceso = $GesActivProceso->getActividadProcesoTareas(array('id_activ'=>$id_activ,'id_fase'=>$id_fase_previa));
 					if (empty($cActivProceso)) {
 						$mensaje_requisito = $oTareaProceso->getMensaje_requisito();
-						$a_valores[$i]['clase']='wrong';
+						$a_valores[$i]['clase'] = 'wrong';
 					} else {
                         $fase_previa_completado = $cActivProceso[0]->getCompletado(); // sólo uno
                         if ($fase_previa_completado == 't') {
                             $mensaje_requisito = 'ok';
                             $num_ok++;
-                            if ($Qid_fase_nueva == $id_fase_actual) { $mensaje_requisito = '='; $num_ok--; }
+                            if (  ($GesActivProceso->faseCompletada($id_activ, $Qid_fase_nueva)
+                                   OR ($Qid_fase_nueva == $id_fase_actual))
+                                && $mensaje_requisito == 'ok')
+                            { 
+                                $mensaje_requisito = _("completado");
+                                $num_ok--;
+                            }
                         } else {
                             $mensaje_requisito = $oTareaProceso->getMensaje_requisito();
-                            $a_valores[$i]['clase']='wrong';
+                            $a_valores[$i]['clase'] = 'wrong';
                         }
 					}
 				} else {
@@ -160,7 +170,14 @@ switch($Qque) {
 				} else {
 					$oActividadFase = new ActividadFase($id_fase_actual);
 					$fase_actual = $oActividadFase->getDesc_fase();
-                    if ($Qid_fase_nueva == $id_fase_actual && $mensaje_requisito == 'ok') { $mensaje_requisito = '='; $num_ok--; }
+					// Quito las que ya tienen la fase completada
+                    if (  ($GesActivProceso->faseCompletada($id_activ, $Qid_fase_nueva)
+                           OR ($Qid_fase_nueva == $id_fase_actual))
+                        && $mensaje_requisito == 'ok')
+                    {
+                        $mensaje_requisito = _("completado");
+                        $num_ok--; 
+                    }
 				}
 				if (empty($fase_actual)) {
 				    $fase_actual = _("no existe. Debe crear el proceso");

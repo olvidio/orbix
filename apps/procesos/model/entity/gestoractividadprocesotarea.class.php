@@ -114,6 +114,30 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	}
 	
 	/**
+	 * retorna si té la fase completada o no.
+	 *
+	 * @param integer iid_activ
+	 * @param integer iid_fase
+	 * @return bool
+	 */
+	function faseCompletada($iid_activ='',$iid_fase='') {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+	    $sQry = "SELECT * FROM $nom_tabla WHERE id_activ=$iid_activ AND id_fase=$iid_fase 
+                AND completado='t'
+                ORDER BY n_orden DESC LIMIT 1";
+	    if (($qRs = $oDbl->query($sQry)) === false) {
+	        $sClauError = 'GestorActividadProcesoTarea.faseCompletada.prepare';
+	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+	        return false;
+	    }
+	    if ($qRs->rowCount() == 1 ) {
+	        return TRUE;
+	    } else {
+	        return FALSE;
+	    }
+	}
+	/**
 	 * retorna un integer id_fase que és la última del seu proces.
 	 *
 	 * @param integer iid_activ
