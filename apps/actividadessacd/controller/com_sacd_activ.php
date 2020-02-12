@@ -14,6 +14,7 @@ use web\Periodo;
 use web\TiposActividades;
 use personas\model\entity\GestorPersonaSacd;
 use personas\model\entity\PersonaSacd;
+use procesos\model\entity\GestorActividadProcesoTarea;
 
 /**
 * Esta página muestra las actividades que tiene que atender un sacd. 
@@ -195,6 +196,12 @@ foreach ($cPersonas as $oPersona) {
 			$propio = $oCargoOAsistente->getPropio();
 			$id_cargo = $oCargoOAsistente->getId_cargo();
 			
+			// Comprobar que está en fase ok_atn_sacd:
+			if(core\ConfigGlobal::is_app_installed('procesos')) {
+			    $gesActivProcesoTarea = new GestorActividadProcesoTarea();
+			    $Sacd_ok = $gesActivProcesoTarea->getSacdAprobado($id_activ);
+			    if ( !$Sacd_ok ) { continue; }
+			}
 			$oActividad = $a_actividades[$id_activ];
 			$id_tipo_activ = $oActividad->getId_tipo_activ();
 			$id_ubi = $oActividad->getId_ubi();
