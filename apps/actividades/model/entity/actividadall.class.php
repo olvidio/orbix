@@ -19,12 +19,14 @@ class ActividadAll Extends core\ClasePropiedades {
 	const STATUS_ACTUAL	 	  	 = 2; // Actual.
 	const STATUS_TERMINADA	  	 = 3; // Terminada.
 	const STATUS_BORRABLE 	  	 = 4; // Borrable.
+	const STATUS_ALL    	  	 = 9; // Cualquiera.
 	
 	const ARRAY_STATUS_TXT = [
 	    self::STATUS_PROYECTO => "proyecto",
 	    self::STATUS_ACTUAL => "actual",
 	    self::STATUS_TERMINADA => "terminada",
 	    self::STATUS_BORRABLE => "borrable",
+	    self::STATUS_ALL => "cualquiera",
 	];
 	
 	// NO se usan, son solo para asegurar que exista la traducción
@@ -33,6 +35,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	    $a = _("actual");
 	    $t = _("terminada");
 	    $b = _("borrable");
+	    $c = _("cualquiera");
 	}
 	
 	/* ATRIBUTS ----------------------------------------------------------------- */

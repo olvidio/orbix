@@ -208,6 +208,8 @@ $val_status_3 = actividades\model\entity\ActividadAll::STATUS_TERMINADA;
 $chk_status_3 = ($Qstatus== $val_status_3)? "checked='true'" : '';
 $val_status_4 = actividades\model\entity\ActividadAll::STATUS_BORRABLE;
 $chk_status_4 = ($Qstatus== $val_status_4)? "checked='true'" : '';
+$val_status_9 = actividades\model\entity\ActividadAll::STATUS_ALL;
+$chk_status_9 = ($Qstatus== $val_status_9)? "checked='true'" : '';
 
 $a_campos = ['oPosicion' => $oPosicion,
 			'oHash' => $oHash,
@@ -230,6 +232,8 @@ $a_campos = ['oPosicion' => $oPosicion,
 			'chk_status_3' => $chk_status_3,
 			'val_status_4' => $val_status_4,
 			'chk_status_4' => $chk_status_4,
+			'val_status_9' => $val_status_9,
+			'chk_status_9' => $chk_status_9,
 			];
 
 $oView = new core\ViewTwig('actividades/controller');
