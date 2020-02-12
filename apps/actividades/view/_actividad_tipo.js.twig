@@ -71,6 +71,27 @@ fnjs_nom_tipo=function(){
 		$('#lst_nom_tipo').html(rta_txt);
 	});
 }
+fnjs_id_activ=function(){
+    var url='{{ url }}';
+	var que=$('#que').val();
+	var isfsv=$('#isfsv_val').val();
+	var iasistentes=$('#iasistentes_val').val();
+	var iactividad=$('#iactividad_val').val();
+	var inom_tipo=$('#inom_tipo_val').val();
+	var id_tipo_activ=isfsv+iasistentes+iactividad+inom_tipo;
+
+	$('#id_tipo_activ').val(id_tipo_activ);
+    // buscar la tarifa para este tipo de actividad
+    var parametros='salida=tarifa&entrada='+id_tipo_activ+'{{ h|raw }}';
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: parametros
+    })
+    .done(function (rta_txt) {
+            $('#tarifa').val(rta_txt);			
+    });
+}
 fnjs_act_id_activ=function(){
     var url='{{ url }}';
 	var que=$('#que').val();

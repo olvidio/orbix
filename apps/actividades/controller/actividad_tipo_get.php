@@ -19,6 +19,8 @@ use ubis\model\entity\GestorDelegacion;
 
 $Qentrada = (string) \filter_input(INPUT_POST, 'entrada');
 $Qsalida = (string) \filter_input(INPUT_POST, 'salida');
+$Qmodo = (string) \filter_input(INPUT_POST, 'modo');
+$Qmodo = empty($Qmodo)? 'buscar' : $Qmodo;
 
 switch ($Qsalida) {
 	case "asistentes":
@@ -46,9 +48,13 @@ switch ($Qsalida) {
 		$oTipoActiv= new web\TiposActividades($aux);
 		$a_nom_tipo_posibles=$oTipoActiv->getNom_tipoPosibles();
 		$oDespl = new web\Desplegable('inom_tipo_val',$a_nom_tipo_posibles,'',true);
-	   	$oDespl->setAction('fnjs_act_id_activ()');
 	   	$oDespl->setValBlanco('...');
 	   	$oDespl->setOpcion_sel('...');
+	   	if ($Qmodo == 'buscar') {
+           $oDespl->setAction('fnjs_id_activ()');
+	   	} else {
+           $oDespl->setAction('fnjs_act_id_activ()');
+	   	}
 		echo $oDespl->desplegable();
 	 break;
 	 case "lugar":

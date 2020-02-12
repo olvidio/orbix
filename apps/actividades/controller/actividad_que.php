@@ -40,6 +40,7 @@ if (isset($_POST['stack'])) {
 }
 
 $Qmodo = (string) \filter_input(INPUT_POST, 'modo');
+$Qmodo = empty($Qmodo)? 'buscar' : $Qmodo;
 $Qque = (string) \filter_input(INPUT_POST, 'que');
 $Qstatus = (integer) \filter_input(INPUT_POST, 'status');
 $Qid_tipo_activ = (integer) \filter_input(INPUT_POST, 'id_tipo_activ');
@@ -139,7 +140,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 
 $oHash1 = new web\Hash();
 $oHash1->setUrl(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tipo_get.php');
-$oHash1->setCamposForm('salida!entrada!opcion_sel!isfsv'); 
+$oHash1->setCamposForm('salida!entrada!modo!opcion_sel!isfsv'); 
 $h = $oHash1->linkSinVal();
 
 $aQuery = array('que'=>$Qque,'sactividad'=>$Qsactividad,'sasistentes'=>$Qsasistentes);

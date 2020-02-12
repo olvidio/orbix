@@ -146,7 +146,7 @@ class ActividadTipo {
 		$oDesplNomTipo->setOpcion_sel($inom_tipo);
 		$oDesplNomTipo->setBlanco('t');
 		$oDesplNomTipo->setValBlanco('...');
-		$oDesplNomTipo->setAction('fnjs_act_id_activ()');
+		//$oDesplNomTipo->setAction('fnjs_act_id_activ()');
 
 		$url = ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tipo_get.php';
 		$oHashTipo = new web\Hash();
