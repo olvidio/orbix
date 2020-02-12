@@ -134,7 +134,7 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
 $aWhere = array();
 $aOperador = array();
 // Status
-if ($Qstatus != 5) {
+if ($Qstatus != 9) {
     $aWhere['status'] = $Qstatus;
 }
 // Id tipo actividad
