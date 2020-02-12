@@ -46,9 +46,13 @@ function quitar_asistencia($id_activ,$sacd) {
 function borrar_actividad($id_activ) {
 	$oActividad = new actividades\Actividad($id_activ);
 	$oActividad->DBCarregar();
-	$dl = $oActividad->getDl_org();
+	$dl_org = $oActividad->getDl_org();
 	$id_tabla = $oActividad->getId_tabla();
-	if ($dl == core\ConfigGlobal::mi_delef()) { // de la propia dl
+	// para des => dl y dlf:
+	$dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
+	$dl_propia = (ConfigGlobal::mi_dele() == $dl_org_no_f)? TRUE : FALSE;
+	
+	if ($dl_propia) { // de la propia dl
 		$status = $oActividad->getStatus();
 		if (!empty($status) && $status == 1) { // si no esta en proyecto (status=1) no dejo borrar,
 			if ($oActividad->DBEliminar() === false) {
