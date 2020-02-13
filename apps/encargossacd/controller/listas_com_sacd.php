@@ -5,12 +5,11 @@ use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorEncargoSacd;
 use encargossacd\model\entity\GestorEncargoSacdHorario;
 use encargossacd\model\entity\GestorEncargoSacdObserv;
-use encargossacd\model\entity\GestorEncargoTexto;
-use personas\model\entity\GestorPersona;
-use personas\model\entity\PersonaDl;
-use ubis\model\entity\Centro;
-use web\DateTimeLocal;
 use personas\model\entity\GestorPersonaDl;
+use personas\model\entity\PersonaDl;
+use ubis\model\entity\CentroDl;
+use ubis\model\entity\CentroEllas;
+use web\DateTimeLocal;
 
 /**
 * Esta página muestra los encargos de un sacd. 
@@ -125,7 +124,12 @@ foreach ($cPersonas as $oPersona) {
 		$id_ubi=$oEncargo->getId_ubi();
 		$grupo = $array_orden[$modo];
 		if (!empty($id_ubi)) { // en algunos encargos no hay ubi
-			$oUbi = new Centro($id_ubi);
+			//$oUbi = new Centro($id_ubi);
+		    if (subbstring($id_ubi,0,1) == 2) {
+		        $oUbi = new CentroEllas($id_ubi);
+		    } else {
+		        $oUbi = new CentroDl($id_ubi);
+		    }
 			$nombre_ubi=$oUbi->getNombre_ubi();
 		} else {
 			$nombre_ubi="";
