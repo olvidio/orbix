@@ -125,7 +125,7 @@ foreach ($cPersonas as $oPersona) {
 		$grupo = $array_orden[$modo];
 		if (!empty($id_ubi)) { // en algunos encargos no hay ubi
 			//$oUbi = new Centro($id_ubi);
-		    if (substring($id_ubi,0,1) == 2) {
+		    if (substr($id_ubi,0,1) == 2) {
 		        $oUbi = new CentroEllas($id_ubi);
 		    } else {
 		        $oUbi = new CentroDl($id_ubi);
