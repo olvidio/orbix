@@ -141,14 +141,6 @@ $finIso = $oPeriodo->getF_fin_iso();
 
 switch ($tipo) {
 	case "casa":
-	    /*
-		$query_cdc="SELECT nombre_ubi, id_ubi, CASE WHEN sv='t' AND sf='t' THEN 1 ELSE 2 END AS orden
-					FROM u_cdc 
-					WHERE  $condicion_perm 
-					ORDER BY orden, nombre_ubi ";
-		//echo "sql casa: $query_cdc<br>";
-		 * 
-		 */
 		$GesCasas = new GestorCasaDl();
 		$cCasas = $GesCasas->getCasas($aWhereCasa,$aOperadorCasa);
 		foreach ($cCasas as $oCasa) {
@@ -244,7 +236,7 @@ foreach ($aGrupos as $key => $Titulo) {
 		break;
 	}
 
-	if (is_array($cActividades) && count($cActividades) > 1) {
+	if (is_array($cActividades) && count($cActividades) > 0) {
 		$a=0;
 		foreach ($cActividades as $oActividad) {
 			$a++;
