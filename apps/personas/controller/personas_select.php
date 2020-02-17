@@ -253,7 +253,11 @@ switch ($tabla) {
 		$obj_pau = 'PersonaEx';
 		$GesPersona = new personas\GestorPersonaEx();
 		$cPersonas = $GesPersona->getPersonas($aWhere,$aOperador);
-		if ($_SESSION['oPerm']->have_perm_oficina('sm') OR $_SESSION['oPerm']->have_perm_oficina('agd')){
+		if ($_SESSION['oPerm']->have_perm_oficina('sm')
+             OR $_SESSION['oPerm']->have_perm_oficina('agd')
+             OR $_SESSION['oPerm']->have_perm_oficina('des')
+             OR $_SESSION['oPerm']->have_perm_oficina('sg'))
+		{
 			$permiso = 3;
 		}
 	break;

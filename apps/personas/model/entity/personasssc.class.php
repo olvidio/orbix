@@ -79,7 +79,6 @@ class PersonaSSSC Extends PersonaDl {
 		$aDades['inc'] = $this->sinc;
 		$aDades['f_inc'] = $this->df_inc;
 		$aDades['stgr'] = $this->sstgr;
-		$aDades['edad'] = $this->iedad;
 		$aDades['profesion'] = $this->sprofesion;
 		$aDades['eap'] = $this->seap;
 		$aDades['observ'] = $this->sobserv;
@@ -110,7 +109,6 @@ class PersonaSSSC Extends PersonaDl {
 					inc                      = :inc,
 					f_inc                    = :f_inc,
 					stgr                     = :stgr,
-					edad                     = :edad,
 					profesion                = :profesion,
 					eap                      = :eap,
 					observ                   = :observ,
@@ -250,7 +248,6 @@ class PersonaSSSC Extends PersonaDl {
 		if (array_key_exists('inc',$aDades)) $this->setInc($aDades['inc']);
 		if (array_key_exists('f_inc',$aDades)) $this->setF_inc($aDades['f_inc'],$convert);
 		if (array_key_exists('stgr',$aDades)) $this->setStgr($aDades['stgr']);
-		if (array_key_exists('edad',$aDades)) $this->setEdad($aDades['edad']);
 		if (array_key_exists('profesion',$aDades)) $this->setProfesion($aDades['profesion']);
 		if (array_key_exists('eap',$aDades)) $this->setEap($aDades['eap']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
@@ -283,7 +280,6 @@ class PersonaSSSC Extends PersonaDl {
 		$this->setInc('');
 		$this->setF_inc('');
 		$this->setStgr('');
-		$this->setEdad('');
 		$this->setProfesion('');
 		$this->setEap('');
 		$this->setObserv('');
@@ -321,7 +317,6 @@ class PersonaSSSC Extends PersonaDl {
 		$oPersonaSSSCSet->add($this->getDatosInc());
 		$oPersonaSSSCSet->add($this->getDatosF_inc());
 		$oPersonaSSSCSet->add($this->getDatosStgr());
-		$oPersonaSSSCSet->add($this->getDatosEdad());
 		$oPersonaSSSCSet->add($this->getDatosProfesion());
 		$oPersonaSSSCSet->add($this->getDatosEap());
 		$oPersonaSSSCSet->add($this->getDatosObserv());

@@ -172,7 +172,7 @@ switch ($Qobj_pau){
 		if ($_SESSION['oPerm']->have_perm_oficina('des') or $_SESSION['oPerm']->have_perm_oficina('vcsd')) { $ok=1; } 
 		if ($_SESSION['oPerm']->have_perm_oficina('des') or $_SESSION['oPerm']->have_perm_oficina('vcsd') or $_SESSION['oPerm']->have_perm_oficina('dtor')) { 
 			//$presentacion="p_sssc.phtml";
-			$presentacion="persona_form.phtml";
+			$presentacion="persona_sss_form.phtml";
 			$ok_txt=1;
 		} else {
 			$presentacion="p_public_personas.phtml";
@@ -237,6 +237,10 @@ $oHash = new web\Hash();
 $campos_chk = 'sacd';
 $camposForm = 'que!id_ctr!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!f_situacion!inc!lengua!nom!nx1!nx2!observ!profesion!situacion!stgr!trato!lugar_nacimiento!ce!ce_lugar!ce_ini!ce_fin';
 
+//Para la presentacion "de_sss" los campos un poco distintos:
+if ($Qobj_pau == 'PersonaSSSC') {
+    $camposForm = 'que!id_ctr!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!f_situacion!inc!lengua!nom!nx1!nx2!observ!profesion!situacion!stgr!trato!lugar_nacimiento';
+}
 //Para la presentacion "de_paso" los campos un poco distintos:
 if ($Qobj_pau == 'PersonaEx') {
 	$campos_chk = 'sacd!profesor_stgr';
