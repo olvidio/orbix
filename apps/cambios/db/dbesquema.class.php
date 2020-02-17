@@ -77,7 +77,6 @@ class DBEsquema extends DBAbstract {
         return $datosTabla;
     }
     
-    
     /**
      * En la BD Comun (esquema).
      */
@@ -93,6 +92,12 @@ class DBEsquema extends DBAbstract {
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        
+        // Al ser de la DB comun, puede ser que al intentar crear como sf, las
+        // tablas ya se hayan creado como sv (o al revés).
+        if ($this->tableExists($tabla)) {
+            return  TRUE;
+        }
         
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
@@ -155,6 +160,12 @@ class DBEsquema extends DBAbstract {
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        
+        // Al ser de la DB comun, puede ser que al intentar crear como sf, las
+        // tablas ya se hayan creado como sv (o al revés).
+        if ($this->tableExists($tabla)) {
+            return  TRUE;
+        }
         
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
@@ -229,6 +240,12 @@ class DBEsquema extends DBAbstract {
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        
+        // Al ser de la DB comun, puede ser que al intentar crear como sf, las
+        // tablas ya se hayan creado como sv (o al revés).
+        if ($this->tableExists($tabla)) {
+            return  TRUE;
+        }
         
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (

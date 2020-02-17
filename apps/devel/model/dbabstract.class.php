@@ -39,6 +39,31 @@ abstract class DBAbstract {
     }
     
     /**
+     *
+     * Al ser de la DB comun, puede ser que al intentar crear como sf, las
+     * tablas ya se hayan creado como sv (o al revés).
+     *
+     * @param   string  nombre de la tabla sin schema
+     * @return boolean
+     */
+    protected function tableExists($nom_tabla) {
+        $oDbl = $this->oDbl;
+        $sql = "SELECT to_regclass('$nom_tabla');";
+        
+        if (($oDblSt = $oDbl->query($sql)) === FALSE) {
+            $sClauError = 'comprobar';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return FALSE;
+        }
+        $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+        if ($aDades['to_regclass'] == $nom_tabla) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+    
+    /**
      * Quita el permiso (orbix u orbixv/f) para acceder a global.
      */
     protected function delPermisoGlobal($db) {
