@@ -106,17 +106,32 @@ class GestorDelegacion Extends ClaseGestor {
 	 * @param array optional lista de regions.
 	 * @return object Una Llista de delegacions i regions per filtrar.
 	 */
-	function getListaDlURegionesFiltro() {
-		$sf = (ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
+	function getListaDlURegionesFiltro($isfsv='') {
+	    switch ($isfsv) {
+	        case 1:
+	            $sf = '';
+	            break;
+	        case 2:
+	            $sf = 'f';
+	            break;
+            default:
+                $sf = (ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
+	    }
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		
+		/* Creo que todas las regiones ahora tinen su dl tipo: crArg
 			$sQuery="SELECT 'dl|'||dl||'$sf', nombre_dl||' ('||dl||'$sf)'
 					FROM $nom_tabla
 					UNION 
 					SELECT 'r|'||u.region,u.nombre_region||' ('||region||')' 
 					FROM xu_region u 
 					ORDER BY 2";
+		*/
+        $sQuery="SELECT 'dl|'||dl||'$sf', nombre_dl||' ('||dl||'$sf)'
+                FROM $nom_tabla
+                WHERE status = 't'
+                ORDER BY 2";
 
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorDelegacion.lista';

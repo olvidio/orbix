@@ -38,51 +38,71 @@ class ActividadLugar {
 	}
 
 	public function getLugaresPosibles($Qentrada='') {
-	 /* Para que los de dre puedan introducir actividades de la sf habrá que hacer de otra manera... */
 		$donde='';
 		if (empty($Qentrada)) die();
 
 		$dl_r=strtok($Qentrada,"|");
 		$reg=strtok("|");
-		switch ($dl_r) {
-			case "dl":
-				$donde = "WHERE dl='$reg' ";
-				$tabla_ctr="u_centros";
-				$donde_ctr = "$donde AND cdc='t'";
-				break;
-			case "r":
-				$donde = "WHERE region='$reg' ";
-				$tabla_ctr="u_centros";
-				$donde_ctr = "$donde AND cdc='t'";
-				break;
+		// las regiones pequeñas, las cr se tratan como dl (p. ej: crBel)
+		$cr = substr($reg, 0, 2);
+		if ($cr == 'cr') {
+		    $dl_r = 'r';
+		    $reg = substr($reg, 2);
 		}
+		// En el caso de sf, $reg acaba en 'f' (dlbf)
+		$reg_no_f = preg_replace('/(\.*)f$/', '\1', $reg);
+		
 		if ($this->ssfsv == 'sv') $this->isfsv = 1;
 		if ($this->ssfsv == 'sf') $this->isfsv = 2;
 		switch ($this->isfsv) {
 			case 1:
-				$donde_ctr = "$donde AND cdc='t'";
-				$donde .= "AND sv='true' ";
+				$donde_sfsv = "AND sv='t' ";
 				break;
 			case 2:
-				$donde_ctr = "$donde AND cdc='t'";
-				$donde .= "AND sf='true' ";
+				$donde_sfsv = "AND sf='t' ";
 				break;
 		}
+	   // Casas
+		switch ($dl_r) {
+			case "dl":
+				$donde = "WHERE dl='$reg_no_f' ";
+				break;
+			case "r":
+				$donde = "WHERE region='$reg_no_f' ";
+				break;
+		}
+		$donde .= $donde_sfsv;
+
 		if ($dl_r!="dl" and $dl_r!="r") { $donde=""; }
 		if (!empty($donde)) { $donde.=" AND status='t'"; } else { $donde="WHERE status='t'"; }
 		$oGesCasas= new ubis\GestorCasa();
-		$oOpcionesCasas = $oGesCasas->getPosiblesCasas($donde);
+		$oOpcionesCasas = $oGesCasas->getArrayPosiblesCasas($donde);
 	
-		$oGesCentros = new ubis\GestorCentroDl();
-		$oOpcionesCentros = $oGesCentros->getPosiblesCentros($donde_ctr);
-
-		$oDesplCasas = new web\Desplegable(array('oOpciones'=>$oOpcionesCasas));	
+		// Centros (hay una copia en BD comun)
+		$donde_ctr = '';
+		switch ($dl_r) {
+			case "dl":
+				$donde_ctr = "dl='$reg' ";
+				break;
+			case "r":
+				$donde_ctr = "region='$reg_no_f' ";
+				break;
+		}
+		$donde_ctr .= $donde_sfsv;
+		
+        $oGesCentros = new ubis\GestorCentroCdc();
+		$oOpcionesCentros = $oGesCentros->getOpcionesCentrosCdc($donde_ctr);
+		
+		$oOpcionesTotal = $oOpcionesCasas + $oOpcionesCentros;
+		
+		$oDesplCasas = new web\Desplegable(array('oOpciones'=>$oOpcionesTotal));	
 		$oDesplCasas->setNombre('id_ubi');
 		$oDesplCasas->setBlanco(true);
 		if (!empty($this->opcion_sel)) {
 			$oDesplCasas->setOpcion_sel($this->opcion_sel);
 		}
 		return $oDesplCasas;
+		
 	}
 	
 	public function setIsfsv($isfsv) {

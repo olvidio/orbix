@@ -140,7 +140,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 
 $oHash1 = new web\Hash();
 $oHash1->setUrl(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tipo_get.php');
-$oHash1->setCamposForm('salida!entrada!modo!opcion_sel!isfsv'); 
+$oHash1->setCamposForm('modo!salida!entrada!opcion_sel!isfsv'); 
 $h = $oHash1->linkSinVal();
 
 $aQuery = array('que'=>$Qque,'sactividad'=>$Qsactividad,'sasistentes'=>$Qsasistentes);

@@ -98,4 +98,14 @@ switch ($Qsalida) {
 		$oDesplDelegacionesOrg->setOpcion_sel($dl_default);
 		echo $oDesplDelegacionesOrg->desplegable();
 	   break;
+	 case "filtro_lugar";
+		$sfsv=$Qentrada;
+    	$dl_default = ConfigGlobal::mi_delef($sfsv);
+		$oGesDl = new GestorDelegacion();
+		
+		$oDesplFiltroLugar = $oGesDl->getListaDlURegionesFiltro($sfsv);
+		$oDesplFiltroLugar->setAction('fnjs_lugar()');
+		$oDesplFiltroLugar->setNombre('filtro_lugar');
+		echo $oDesplFiltroLugar->desplegable();
+	   break;
 }

@@ -35,6 +35,38 @@ class GestorCasa Extends  core\ClaseGestor {
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
 	/**
+	 * retorna un array
+	 * Les posibles cases
+	 *
+	 * @param string optional $sCondicion Condició de búsqueda (amb el WHERE).
+	 * @return array  (id_ubi => nombre_ubi)
+	 */
+	function getArrayPosiblesCasas($sCondicion='') {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$sQuery="SELECT id_ubi, nombre_ubi
+				FROM $nom_tabla
+				$sCondicion
+				ORDER BY nombre_ubi";
+		//echo "q: $sQuery<br>";
+		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+			$sClauError = 'GestorCasa.lista';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		
+		$a_casa = [];
+		foreach ($oDbl->query($sQuery) as $row) {
+		    $id_ubi = $row['id_ubi'];
+		    $nombre_ubi = $row['nombre_ubi'];
+		    
+		    $a_casa[$id_ubi] = $nombre_ubi;
+		}
+		
+		return $a_casa;
+	}
+
+	/**
 	 * retorna un objecte del tipus PDO (base de dades)
 	 * Les posibles cases
 	 *

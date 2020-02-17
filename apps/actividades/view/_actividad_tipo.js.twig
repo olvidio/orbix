@@ -25,7 +25,7 @@ fnjs_asistentes=function(){
 	}
 	// Si está el campo dl_org, Al cambiar sf/sv, también debe 
 	// cambiarse el deplegable de dl_org.
-	var dl_org=$('dl_org').val
+	var dl_org=$('#dl_org').val
 	if (dl_org) {
 		var parametros='modo=buscar&salida=dl_org&entrada='+isfsv+'{{ h|raw }}';
 
@@ -37,6 +37,21 @@ fnjs_asistentes=function(){
 		})
 		.done(function (rta_txt) {
 			$('#dl_org').html(rta_txt);
+		});
+	}
+	// y ya puestos el del filtro lugar:
+	var filtro_lugar=$('#filtro_lugar').val
+	if (filtro_lugar) {
+		var parametros='modo=buscar&salida=filtro_lugar&entrada='+isfsv+'{{ h|raw }}';
+
+		$.ajax({
+			url: url,
+			type: 'post',
+			data: parametros,
+			dataType: 'html'
+		})
+		.done(function (rta_txt) {
+			$('#filtro_lugar').html(rta_txt);
 		});
 	}
 }

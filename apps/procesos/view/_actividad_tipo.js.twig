@@ -13,7 +13,7 @@ fnjs_asistentes=function(){
 		$('#iactividad_val').hide();
 		fnjs_nom_tipo();
 	} else {
-		var parametros='salida=asistentes&entrada='+isfsv+'{{ h|raw }}';
+		var parametros='modo=buscar&salida=asistentes&entrada='+isfsv+'{{ h|raw }}';
 
 		$.ajax({
 			url: url,
@@ -35,7 +35,7 @@ fnjs_actividad=function(){
     var url='{{ url }}';
 	var isfsv=$('#isfsv_val').val();
 	var iasistentes=$('#iasistentes_val').val();
-	var parametros='salida=actividad&entrada='+isfsv+iasistentes+'{{ h|raw }}';
+	var parametros='modo=buscar&salida=actividad&entrada='+isfsv+iasistentes+'{{ h|raw }}';
 	$.ajax({
 		url: url,
 		type: 'post',
@@ -54,7 +54,7 @@ fnjs_nom_tipo=function(){
 	var isfsv=$('#isfsv_val').val();
 	var iasistentes=$('#iasistentes_val').val();
 	var iactividad=$('#iactividad_val').val();
-	var parametros='salida=nom_tipo&entrada='+isfsv+iasistentes+iactividad+'{{ h|raw }}';
+	var parametros='modo=buscar&salida=nom_tipo&entrada='+isfsv+iasistentes+iactividad+'{{ h|raw }}';
 	$.ajax({
 		url: url,
 		type: 'post',

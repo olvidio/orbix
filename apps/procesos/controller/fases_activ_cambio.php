@@ -99,7 +99,7 @@ $url_tipo = "apps/actividades/controller/actividad_tipo_get.php";
 $oHash1 = new web\Hash();
 //$oHash1->setUrl(ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tipo_get.php');
 $oHash1->setUrl($url_tipo);
-$oHash1->setCamposForm('salida!entrada');
+$oHash1->setCamposForm('modo!salida!entrada');
 $h_tipo = $oHash1->linkSinVal();
 		
 $txt_eliminar = _("¿Esta seguro que desea borrar esta fase?");

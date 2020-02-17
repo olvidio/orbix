@@ -58,7 +58,7 @@ if (!empty($_REQUEST['dl_org'])) {
 
 $oHash = new web\Hash();
 $oHash->setUrl(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tipo_get.php');
-$oHash->setCamposForm('salida!entrada!modo!isfsv');
+$oHash->setCamposForm('modo!salida!entrada!isfsv');
 $h = $oHash->linkSinVal();
 
 $oHash1 = new web\Hash();
