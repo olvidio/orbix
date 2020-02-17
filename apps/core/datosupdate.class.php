@@ -2,7 +2,7 @@
 namespace core;
 
 /**
- * Classe que implementa l'entitat d_dossiers_abiertos
+ * Classe que implementa 
  *
  * @package delegación
  * @subpackage model
