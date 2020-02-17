@@ -67,7 +67,6 @@
 123	\N	programas/lista_para_historicos.php	\N	\N
 125	\N	programas/sm-agd/cr1_05_E4.php	\N	\N
 126	\N	sg/que_centro_sg.php	\N	\N
-128	\N	programas/act_tarifas.php	\N	\N
 129	\N	programas/lista_activ_sg_que.php	\N	\N
 134	\N	scdl/registro/mod_ini.php	\N	\N
 135	\N	sg/que_resumen.php	\N	\N
@@ -184,6 +183,7 @@
 73	5	apps/actividadtarifas/controller/tarifa_ubi.php	\N	actividad Tarifa Ubi
 89	27	apps/casas/controller/casas_resumen.php	\N	Casa resumen
 108	5	apps/actividadtarifas/controller/tarifa_tipo_actividad.php	\N	Tipo tarifa
-100	5	apps/actividadtarifas/controller/tarifa.php	\N	Tarifas actividades
+128	5	apps/actividadtarifas/controller/tarifa_actividad.php	\N	Tarifa actividades
 5	27	apps/casas/controller/prevision_asistentes.php	\N	prevision asistentes
 54	2	apps/devel/controller/db_mover_que.php	\N	DB mover tabla
+100	5	apps/actividadtarifas/controller/tarifa.php	\N	Tarifa definir
