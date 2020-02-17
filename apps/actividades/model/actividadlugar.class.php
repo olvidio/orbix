@@ -10,6 +10,7 @@ namespace actividades\model;
 
 use ubis\model\entity as ubis;
 use web;
+use core\ConfigGlobal;
 
 /**
  * Description of actividadlugar
@@ -38,7 +39,7 @@ class ActividadLugar {
 	}
 
 	public function getLugaresPosibles($Qentrada='') {
-		$donde='';
+		$donde_sfsv = '';
 		if (empty($Qentrada)) die();
 
 		$dl_r=strtok($Qentrada,"|");
@@ -54,7 +55,8 @@ class ActividadLugar {
 		
 		if ($this->ssfsv == 'sv') $this->isfsv = 1;
 		if ($this->ssfsv == 'sf') $this->isfsv = 2;
-		switch ($this->isfsv) {
+		$isfsv = empty($this->isfsv)? ConfigGlobal::mi_sfsv() : $this->isfsv; 
+		switch ($isfsv) {
 			case 1:
 				$donde_sfsv = "AND sv='t' ";
 				break;
@@ -63,6 +65,7 @@ class ActividadLugar {
 				break;
 		}
 	   // Casas
+		$donde = '';
 		switch ($dl_r) {
 			case "dl":
 				$donde = "WHERE dl='$reg_no_f' ";
