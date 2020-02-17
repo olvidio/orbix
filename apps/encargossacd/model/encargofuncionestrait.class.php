@@ -163,7 +163,7 @@ Trait EncargoFuncionesTrait {
 	function getArraySeccion() {
 		if (($_SESSION['oPerm']->have_perm_oficina('des')) or ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
 			$array_seccion = [
-						//'0'=>"personal",
+						'0'=>"personal",
 						'1'=>"sv",
 						'2'=>"sf",
 						'3'=>"sss+",
@@ -172,7 +172,7 @@ Trait EncargoFuncionesTrait {
 					];
 		} else {
 			$array_seccion = [
-						//'0'=>"personal",
+						'0'=>"personal",
 						'1'=>"sv",
 						'3'=>"sss+",
 						'4'=>"igl",
