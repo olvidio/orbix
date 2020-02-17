@@ -70,7 +70,7 @@ switch ($Qque) {
 		$oLista->setDatos($a_valores);
 		echo $oLista->lista();
 		// sólo pueden añadir: adl, pr i actividades
-		if (($_SESSION['oPerm']->have_perm_oficina('adl')) || ($_SESSION['oPerm']->have_perm_oficina('pr')) || ($_SESSION['oPerm']->have_perm_oficina('actividades'))) {
+		if (($_SESSION['oPerm']->have_perm_oficina('adl')) || ($_SESSION['oPerm']->have_perm_oficina('pr')) || ($_SESSION['oPerm']->have_perm_oficina('calendario'))) {
 		    echo '<br><span class="link" onclick="fnjs_modificar(\'nuevo\');">'._("añadir tarifa tipo").'</span>';
 		}
 		break;

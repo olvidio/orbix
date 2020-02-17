@@ -90,7 +90,7 @@ class ActividadTipo {
 			$array2 = array_merge($array2,$array_sr);
 		}
 
-		if ($_SESSION['oPerm']->have_perm_oficina('actividades')) { // desde la sf
+		if ($_SESSION['oPerm']->have_perm_oficina('calendario')) { // desde la sf
 			$array_des = $oTipoActiv->getAsistentesPosibles(); //todos
 			$array2 = array_merge($array2,$array_des);
 		}
