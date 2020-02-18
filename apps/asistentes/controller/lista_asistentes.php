@@ -150,14 +150,14 @@ if (core\configGlobal::is_app_installed('actividadcargos')) {
 
 		$cargo=$oCargo->getCargo();
 		$puede_agd=$oActividadCargo->getPuede_agd();
-		$observ=$oActividadCargo->getObserv();
+		$observ_c=$oActividadCargo->getObserv();
 		$ctr_dl=$oPersona->getCentro_o_dl();
 
 		$puede_agd=='t' ? $chk_puede_agd="si" : $chk_puede_agd="no" ;
 
 		// ahora miro si también asiste:
-		$aWhere=array('id_activ'=>$id_pau,'id_nom'=>$id_nom);
-		$aOperador=array('id_activ'=>'=','id_nom'=>'=');
+		$aWhere = array('id_activ'=>$id_pau,'id_nom'=>$id_nom);
+		$aOperador = [];
 		// me aseguro de que no sea un cargo vacio (sin id_nom)
 		if (!empty($id_nom) && $cAsistente=$gesAsistentes->getAsistentes($aWhere,$aOperador)) {
 			if(is_array($cAsistente) && count($cAsistente)>1) {
@@ -194,7 +194,7 @@ if (core\configGlobal::is_app_installed('actividadcargos')) {
 
 		$a_valores[$c][1]=$cargo;
 		$a_valores[$c][2]="$nom  ($ctr_dl)";
-		$a_valores[$c][6]=$observ;
+		$a_valores[$c][6]="$observ_c $observ";
 		$a_valores[$c][7]=$oPersona;
 	}
 }
@@ -262,7 +262,11 @@ foreach ($a_valores as $k => $val) {
 	$c = $val[1];
 	$oPersona = $val[7];
 	$a_datos_cl = array();
-    if ($queSel=="listcl") { $a_datos_cl = datos($oPersona); }
+    if ($queSel=="listcl") { 
+        $a_datos_cl = datos($oPersona);
+        // las observ no son las personales, sino de la asistencia:
+        $a_datos_cl['observ'] = $a_valores[$k][6];
+    }
     
 	$aAsistentes[$c]=array('nombre' => $val[2],
 							'a_datos_cl' => $a_datos_cl
