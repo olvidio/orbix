@@ -154,7 +154,8 @@ class Select3101 {
 							array('name'=>_("propio"),'width'=>40),
 							array('name'=>_("est. ok"),'width'=>40),
 							array('name'=>_("falta"),'width'=>40),
-							array('name'=>_("observ."),'width'=>150)
+							array('name'=>_("observ."),'width'=>150),
+							array('name'=>_("sacd."),'width'=>10),
 						);
 		return $a_cabeceras;
 	}
@@ -254,6 +255,7 @@ class Select3101 {
 			$oCargo=new actividadcargos\Cargo($id_cargo);
 
 			$nom=$oPersona->getApellidosNombre();
+			$sacd= ($oPersona->getSacd())? _("sí") : '';
 
 			$cargo=$oCargo->getCargo();
 			$puede_agd=$oActividadCargo->getPuede_agd();
@@ -371,6 +373,7 @@ class Select3101 {
 			$a_valores[$c][2]="$nom  ($ctr_dl)";
 			$a_valores[$c][3]=$dl_asistente;
 			$a_valores[$c][7]="$observ_cargo $observ";
+			$a_valores[$c][8]="$sacd";
 		}
 		
 		$this->num = $num;
@@ -401,6 +404,7 @@ class Select3101 {
 				continue;
 			}
 			$nom=$oPersona->getApellidosNombre();
+			$sacd= ($oPersona->getSacd())? _("sí") : '';
 			$dl_asistente=$oPersona->getDl();
 			$ctr_dl=$oPersona->getCentro_o_dl();
 
@@ -479,6 +483,7 @@ class Select3101 {
 			$a_val[5]=$chk_est_ok;
 			$a_val[6]=$chk_falta;
 			$a_val[7]=$observ;
+			$a_val[8]=$sacd;
 			
 			$this->a_asistentes[$nom] = $a_val;
 		}
