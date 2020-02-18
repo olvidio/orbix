@@ -154,7 +154,7 @@ class Select3101 {
 							array('name'=>_("propio"),'width'=>40),
 							array('name'=>_("est. ok"),'width'=>40),
 							array('name'=>_("falta"),'width'=>40),
-							array('name'=>_("observ."),'width'=>150),
+							array('name'=>_("observaciones actividad"),'width'=>150),
 							array('name'=>_("sacd."),'width'=>10),
 						);
 		return $a_cabeceras;

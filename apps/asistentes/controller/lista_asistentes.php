@@ -71,7 +71,6 @@ function datos($oPersona) {
 		case 'PersonaDl':
 			$profesion=$oPersona->getProfesion();
 			$f_nacimiento=$oPersona->getF_nacimiento()->getFromLocal();
-			$observ=$oPersona->getObserv();
 			$inc=$oPersona->getInc();
 			if (empty($inc) OR $inc=="?") {
 				$f_inc="?";
@@ -97,7 +96,6 @@ function datos($oPersona) {
                 $inc_f_inc=$inc .' : '. $f_inc;
 			}
 			$eap=$oPersona->getEap();
-			$observ=$oPersona->getObserv();
 			break;
 	}
 
@@ -174,7 +172,7 @@ if (core\configGlobal::is_app_installed('actividadcargos')) {
 			$propio=$cAsistente[0]->getPropio();
 			$falta=$cAsistente[0]->getFalta();
 			$est_ok=$cAsistente[0]->getEst_ok();
-			$observ1=$cAsistente[0]->getObserv();
+			$observ=$cAsistente[0]->getObserv();
 
 			if ($propio=='t') {
 				$chk_propio=_("sí");
@@ -189,14 +187,14 @@ if (core\configGlobal::is_app_installed('actividadcargos')) {
 			$a_valores[$c][5]=$chk_falta;
 		} else {
 			$a_valores[$c][3]= array( 'span'=>3, 'valor'=> _("no asiste"));
-			$observ1='';
+			$observ='';
 			$num--;
 			$asis="f";
 		}
 
 		$a_valores[$c][1]=$cargo;
 		$a_valores[$c][2]="$nom  ($ctr_dl)";
-		$a_valores[$c][6]="$observ $observ1";
+		$a_valores[$c][6]=$observ;
 		$a_valores[$c][7]=$oPersona;
 	}
 }
