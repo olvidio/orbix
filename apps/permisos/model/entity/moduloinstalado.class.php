@@ -121,14 +121,6 @@ class ModuloInstalado Extends core\ClasePropiedades {
 		$aDades['status'] = ($aDades['status'] === 't')? 'true' : $aDades['status'];
 		if ( filter_var( $aDades['status'], FILTER_VALIDATE_BOOLEAN)) { $aDades['status']='t'; } else { $aDades['status']='f'; }
 
-		/*
-		 * Activar la creación de tablas necesarias para la app.
-		 */
-		if ($aPrevDades['status'] === FALSE && $aDades['status'] === 't') {
-		    $oAppDB = new appDB($this->iid_mod);
-		    $oAppDB->createTables();
-		}
-		
 		if ($bInsert === false) {
 			//UPDATE
 			$update="
@@ -145,6 +137,13 @@ class ModuloInstalado Extends core\ClasePropiedades {
 					return false;
 				}
 			}
+            /*
+             * Activar la creación de tablas necesarias para la app.
+             */
+            if ($aPrevDades['status'] === FALSE && $aDades['status'] === 't') {
+                $oAppDB = new appDB($this->iid_mod);
+                $oAppDB->createTables();
+            }
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_mod);
@@ -161,6 +160,13 @@ class ModuloInstalado Extends core\ClasePropiedades {
 					return false;
 				}
 			}
+            /*
+             * Activar la creación de tablas necesarias para la app.
+             */
+            if ($aDades['status'] === 't') {
+                $oAppDB = new appDB($this->iid_mod);
+                $oAppDB->createTables();
+            }
 		}
 		$this->setAllAtributes($aDades);
 		return true;
@@ -214,6 +220,12 @@ class ModuloInstalado Extends core\ClasePropiedades {
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
+		/*
+		 * Eliminar las tablas necesarias para la app.
+		 */
+		$oAppDB = new appDB($this->iid_mod);
+		$oAppDB->dropTables();
+
 		return true;
 	}
 	
