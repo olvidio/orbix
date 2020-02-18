@@ -277,12 +277,11 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
 
 	public function createAsignaturas() {
 		//Como ahora las asignaturas estan en otra base de datos(comun) hago una copia para poder hacer unions...
-		//$sqlDelete="DELETE FROM $asignaturas";
 		$oDbl = $this->getoDbl();
 		$asignaturas = $this->getNomAsignaturas();
 
-		// No hace falta DELETE si pongo TEMP.
-		//$sqlDelete="DELETE FROM $asignaturas";
+		// No hace falta DELETE si pongo TEMP. (Por alguna razon SI existe)
+		$sqlDelete="DROP TABLE IF EXISTS $asignaturas";
 		$sqlCreate="CREATE TEMP TABLE $asignaturas(
 						id_asignatura integer,
 						id_nivel integer,
@@ -296,11 +295,10 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
 					 )";
 
 			
-		//if( !$oDbl->query($sqlDelete) ) {
-			$oDbl->query($sqlCreate);
-			$oDbl->query("CREATE INDEX $asignaturas"."_nivel"." ON $asignaturas (id_nivel)");
-			$oDbl->query("CREATE INDEX $asignaturas"."_id_asignatura"." ON $asignaturas (id_asignatura)");
-		//}
+		$oDbl->query($sqlDelete);
+        $oDbl->query($sqlCreate);
+        $oDbl->query("CREATE INDEX $asignaturas"."_nivel"." ON $asignaturas (id_nivel)");
+        $oDbl->query("CREATE INDEX $asignaturas"."_id_asignatura"." ON $asignaturas (id_asignatura)");
 
 		$gesAsignaturas = new asignaturas\gestorAsignatura();
 		$cAsignaturas = $gesAsignaturas->getAsignaturas(array('status'=>'true'));
