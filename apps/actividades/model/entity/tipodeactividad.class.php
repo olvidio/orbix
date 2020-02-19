@@ -234,11 +234,16 @@ class TipoDeActividad Extends core\ClasePropiedades {
 	
 	/**
 	 * estableix el valor de l'atribut iid_tipo_proceso_(sf/sv) de TipoDeActividad
+	 * Si el parametro isfsv no existe, se toma el del usuario.
 	 *
 	 * @param integer iid_tipo_proceso='' optional
+	 * @param integer iid_tipo_proceso_ex='' optional
 	 */
-	function setId_tipo_proceso($iid_tipo_proceso='') {
-	    if (ConfigGlobal::mi_sfsv() == 1) {
+	function setId_tipo_proceso($iid_tipo_proceso='',$isfsv='') {
+	    if (empty($isfsv)) {
+	       $isfsv = ConfigGlobal::mi_sfsv();
+	    }
+	    if ($isfsv == 1) {
             $this->iid_tipo_proceso_sv= $iid_tipo_proceso;
 	    } else {
             $this->iid_tipo_proceso_sf= $iid_tipo_proceso;
@@ -246,11 +251,16 @@ class TipoDeActividad Extends core\ClasePropiedades {
 	}
 	/**
 	 * Recupera l'atribut iid_tipo_proceso_(sv/sf) de TipoDeActividad
-	 *
+	 * Si el parametro isfsv no existe, se toma el del usuario.
+	 * 
+	 * @param integer isvsf optional
 	 * @return integer iid_tipo_proceso
 	 */
-	function getId_tipo_proceso() {
-	    if (ConfigGlobal::mi_sfsv() == 1) {
+	function getId_tipo_proceso($isfsv='') {
+	    if (empty($isfsv)) {
+	       $isfsv = ConfigGlobal::mi_sfsv();
+	    }
+	    if ($isfsv == 1) {
             if (!isset($this->iid_tipo_proceso_sv)) {
                 $this->DBCarregar();
             }
@@ -265,11 +275,16 @@ class TipoDeActividad Extends core\ClasePropiedades {
 	}
 	/**
 	 * estableix el valor de l'atribut iid_tipo_proceso_ex_(sf/sv) de TipoDeActividad
+	 * Si el parametro isfsv no existe, se toma el del usuario.
 	 *
 	 * @param integer iid_tipo_proceso_ex='' optional
+	 * @param integer isfssv optional
 	 */
-	function setId_tipo_proceso_ex($iid_tipo_proceso_ex='') {
-	    if (ConfigGlobal::mi_sfsv() == 1) {
+	function setId_tipo_proceso_ex($iid_tipo_proceso_ex='',$isfsv='') {
+	    if (empty($isfsv)) {
+	       $isfsv = ConfigGlobal::mi_sfsv();
+	    }
+	    if ($isfsv == 1) {
             $this->iid_tipo_proceso_ex_sv= $iid_tipo_proceso_ex;
 	    } else {
             $this->iid_tipo_proceso_ex_sf= $iid_tipo_proceso_ex;
@@ -277,11 +292,16 @@ class TipoDeActividad Extends core\ClasePropiedades {
 	}
 	/**
 	 * Recupera l'atribut iid_tipo_proceso_ex_(sv/sf) de TipoDeActividad
+	 * Si el parametro isfsv no existe, se toma el del usuario.
 	 *
+	 * @param integer isvsf optional
 	 * @return integer iid_tipo_proceso_ex
 	 */
-	function getId_tipo_proceso_ex() {
-	    if (ConfigGlobal::mi_sfsv() == 1) {
+	function getId_tipo_proceso_ex($isfsv) {
+	    if (empty($isfsv)) {
+	       $isfsv = ConfigGlobal::mi_sfsv();
+	    }
+	    if ($isfsv == 1) {
             if (!isset($this->iid_tipo_proceso_ex_sv)) {
                 $this->DBCarregar();
             }

@@ -70,25 +70,46 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
         return FALSE;
 	}
 	
-	public function generarProceso($iid_activ='') {
+	/**
+	 * En gerneral genera los dos porcesos, para sv y sf.
+	 * Si se le pasa el parametro isfsv, sólo genera el proceso correspondiente.
+	 * 
+	 * @param string $iid_activ
+	 * @param integer $isfsv
+	 * @return boolean|\procesos\model\entity\id_fase.
+	 */
+	public function generarProceso($iid_activ='',$isfsv) {
 	    $oActividad = new Actividad(array('id_activ'=>$iid_activ));
 	    $iid_tipo_activ = $oActividad->getId_tipo_activ();
 	    $oTipo = new TipoDeActividad(array('id_tipo_activ'=>$iid_tipo_activ));
 	   
 	    $dl_org = $oActividad->getDl_org();
         $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
-	    if ($dl_org == core\ConfigGlobal::mi_delef() OR $dl_org_no_f == core\ConfigGlobal::mi_dele()) {
-	        $id_tipo_proceso=$oTipo->getId_tipo_proceso();
-	    } else {
-	        $id_tipo_proceso=$oTipo->getId_tipo_proceso_ex();
-	    }
-	    if (empty($id_tipo_proceso)) {
-	        echo _("No tiene definido el proceso para este tipo de actividad");
-	        return TRUE;
-	    }
-	    $iid_fase = $this->generar($iid_activ,$id_tipo_proceso);
-	    return $iid_fase;
+        
+        if (empty($isfsv)) {
+            $a_sfsv = [1,2];
+            $isfsv = ConfigGlobal::mi_sfsv();
+        } else {
+            $a_sfsv = [$isfsv];
+        }
+        $iid_fase = [];
+        foreach ($a_sfsv as $sfsv) {
+            if ($dl_org == core\ConfigGlobal::mi_delef() OR $dl_org_no_f == core\ConfigGlobal::mi_dele()) {
+                $id_tipo_proceso=$oTipo->getId_tipo_proceso($sfsv);
+            } else {
+                $id_tipo_proceso=$oTipo->getId_tipo_proceso_ex($sfsv);
+            }
+            if (empty($id_tipo_proceso)) {
+                echo sprintf(_("No tiene definido el proceso para este tipo de actividad: %s de sv/sf: %s"),$iid_tipo_activ,$sfsv);
+                return TRUE;
+            }
+    	    $iid_fase[$sfsv] = $this->generar($iid_activ,$id_tipo_proceso);
+        }
+
+        // devuelve la fase del proceso propio
+	    return $iid_fase[$isfsv];
 	}
+	
 	public function getFaseActual($iid_activ='') {
 	    if (empty($iid_activ)) return false;
 	    // fase en la que se encuentra actualmente
