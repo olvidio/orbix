@@ -68,6 +68,7 @@ use zonassacd\model\entity\GestorZonaSacd;
 use procesos\model\entity\TareaProceso;
 use procesos\model\entity\GestorTareaProceso;
 use procesos\model\entity\GestorActividadProcesoTarea;
+use cambios\model\entity\GestorCambioUsuario;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -117,21 +118,32 @@ function borrar_pid($username,$esquema) {
 }
 
 function fn_apuntar($id_schema_cmb,$id_item_cmb,$id_usuario,$aviso_tipo,$aviso_donde) {
-	//echo "<br>$id_item_cmb,$id_usuario,$aviso_tipo;";
-	$oCambioUsuario = new CambioUsuario();
-	$oCambioUsuario->setId_schema_cambio($id_schema_cmb);
-	$oCambioUsuario->setId_item_cambio($id_item_cmb);
-	$oCambioUsuario->setId_usuario($id_usuario);
-	$oCambioUsuario->setAviso_tipo($aviso_tipo);
-	$oCambioUsuario->setAviso_donde($aviso_donde);
-	//echo "id_item_cmb: $id_item_cmb, id_usuario: $id_usuario, aviso_tipo: $aviso_tipo, aviso_donde: $aviso_donde\n";
-	if ($oCambioUsuario->DBGuardar() === false) {
-	    // Quizá es porque ya existe
+	// Asegurar que no existe:
+	$aWhere = [];
+	$aWhere['id_schema_cambio'] = $id_schema_cmb;
+	$aWhere['id_item_cambio'] = $id_item_cmb;
+	$aWhere['id_usuario'] = $id_usuario;
+	$aWhere['aviso_tipo'] = $aviso_tipo;
+    $oGesCambiosUsuario = new GestorCambioUsuario();
+    $cCambioUsuario = $oGesCambiosUsuario->getCambiosUsuario($aWhere);
+    // ya existe
+    if (count($cCambioUsuario) > 0) {
 		echo _("apuntar cambio usuario");
-		echo "<br";
+		echo "<br>";
 		echo ConfigGlobal::$web_server.'-->'.date('Y/m/d') . " " . _("Hay un error, no se ha guardado");
 		echo " $id_schema_cmb,$id_item_cmb,$id_usuario,$aviso_tipo\r";
-	}
+    } else {
+        $oCambioUsuario = new CambioUsuario();
+        $oCambioUsuario->setId_schema_cambio($id_schema_cmb);
+        $oCambioUsuario->setId_item_cambio($id_item_cmb);
+        $oCambioUsuario->setId_usuario($id_usuario);
+        $oCambioUsuario->setAviso_tipo($aviso_tipo);
+        $oCambioUsuario->setAviso_donde($aviso_donde);
+        //echo "id_item_cmb: $id_item_cmb, id_usuario: $id_usuario, aviso_tipo: $aviso_tipo, aviso_donde: $aviso_donde\n";
+        if ($oCambioUsuario->DBGuardar() === false) {
+            echo ConfigGlobal::$web_server.'-->'.date('Y/m/d') . " " . _("Hay un error, no se ha guardado");
+        }
+    }
 	//anotado($id_item_cmb); // En principio ya lo hace al final de todo.
 }
 function anotado($id_schema_cmb,$id_item_cmb) {
