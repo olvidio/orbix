@@ -1,3 +1,10 @@
+<p class="comentario">
+	{{ "Para los avisos por mail, debe existir una linea en el crontab del servidor externo (conexión a internet)."|trans }}
+	{{ "Es un cron distinto para cada dl (sv y sf)."|trans }}
+	<br>
+	<?= _("Los grupos de menus que se asignan a cada role son propios para cada dl (sv y sf distintos). Y los puede modificar el admin.") ?>
+    </p>
+    <br>
 <div id="condiciones" class="no_print">
 	<form name="frm_cond" id="frm_cond" action="apps/cambios/controller/avisos_generar.php" method="post">
 	{{ oHashCond.getCamposHtml()|raw }}
