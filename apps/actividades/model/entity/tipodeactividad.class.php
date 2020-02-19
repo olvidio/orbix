@@ -297,7 +297,7 @@ class TipoDeActividad Extends core\ClasePropiedades {
 	 * @param integer isvsf optional
 	 * @return integer iid_tipo_proceso_ex
 	 */
-	function getId_tipo_proceso_ex($isfsv) {
+	function getId_tipo_proceso_ex($isfsv='') {
 	    if (empty($isfsv)) {
 	       $isfsv = ConfigGlobal::mi_sfsv();
 	    }
