@@ -128,9 +128,9 @@ function fn_apuntar($id_schema_cmb,$id_item_cmb,$id_usuario,$aviso_tipo,$aviso_d
     $cCambioUsuario = $oGesCambiosUsuario->getCambiosUsuario($aWhere);
     // ya existe
     if (count($cCambioUsuario) > 0) {
-		echo _("apuntar cambio usuario");
 		echo "<br>";
-		echo ConfigGlobal::$web_server.'-->'.date('Y/m/d') . " " . _("Hay un error, no se ha guardado");
+		echo _("apuntar cambio usuario");
+		echo " ".ConfigGlobal::$web_server.'-->'.date('Y/m/d') . " " . _("Ya existe").": ";
 		echo " $id_schema_cmb,$id_item_cmb,$id_usuario,$aviso_tipo\r";
     } else {
         $oCambioUsuario = new CambioUsuario();
@@ -484,10 +484,12 @@ while ($num_cambios) {
                 if (!empty($id_fase_cmb)) {
                     echo "<br>";
                     echo _("ERROR: la fase de la actividad no está en el proceso.");
+                    echo "<br>";
                     echo " id_activ: $id_activ<br>";
                     echo " id_usuario: $id_usuario<br>";
                     echo " id_fase_ini: $id_fase_ini<br>";
                     echo " id_fase_fin: $id_fase_fin<br>";
+                    echo " fases:";
                     print_r($aFases);
                 }
 			}
