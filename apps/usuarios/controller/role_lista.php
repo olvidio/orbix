@@ -57,9 +57,10 @@ if ($miRole == 2) {
 
 
 $a_cabeceras=array('role','sf','sv','pau','dmz','grup menu');
+
+$a_botones[] = array( 'txt' => _("modificar"),
+        'click' =>"fnjs_modificar(\"#seleccionados\")" );
 if ($permiso > 0) {
-    $a_botones[] = array( 'txt' => _("modificar"),
-					'click' =>"fnjs_modificar(\"#seleccionados\")" );
 	if ($permiso == 1) {
         $a_botones[] = array( 'txt'=> _("borrar"),
                             'click'=>"fnjs_eliminar()");
