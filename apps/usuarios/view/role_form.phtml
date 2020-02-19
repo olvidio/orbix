@@ -92,6 +92,10 @@ if ($permiso == 1) {
 if (!empty($Qid_role)) { // si no hay role, no puedo poner permisos.
 	?>
 	<h4><?= ucfirst(_("grupos de menús")) ?>:</h4>
+    <p class="comentario">
+	<?= _("Los roles son universales, pero los grupos de menus que se asignan a cada role son propios para cada dl (sv y sf distintos).") ?>
+    </p>
+    <br>
 	<form id="form_grup_menu" name="form_grup_menu" action="">
 	<?= $oHash1->getCamposHtml(); ?>
 	<input type="hidden" id="que"  name="que" value="">
