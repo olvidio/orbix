@@ -56,7 +56,6 @@ $dele = ConfigGlobal::mi_dele();
 $delef = $dele.'f';
 $aSecciones = array(1=>$dele,2=>$delef);
 
-$email = '';
 $aviso_tipo = CambioUsuario::TIPO_MAIL; //e-mail
 $mi_sfsv = ConfigGlobal::mi_sfsv();
 
@@ -68,6 +67,7 @@ $GesCambiosUsuario = new GestorCambioUsuario();
 $cCambiosUsuario = $GesCambiosUsuario->getCambiosUsuario($aWhere);
 $i = 0;
 $id_usuario_anterior = '';
+$email = '';
 $a_datos = array();
 $a_id = array();
 foreach ($cCambiosUsuario as $oCambioUsuario) {

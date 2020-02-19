@@ -26,7 +26,14 @@ use ubis\model\entity\Ubi;
  * @created 17/4/2019
  */
 class Cambio Extends core\ClasePropiedades {
-	/* ATRIBUTS ----------------------------------------------------------------- */
+    
+    //  tipo cambio constants.
+    const TIPO_CMB_INSERT		 = 1;
+    const TIPO_CMB_UPDATE	 	 = 2;
+    const TIPO_CMB_DELETE	 	 = 3;
+    const TIPO_CMB_FASE	 	  	 = 4;
+	
+    /* ATRIBUTS ----------------------------------------------------------------- */
 
 	/**
 	 * aPrimary_key de Cambio
@@ -389,7 +396,7 @@ class Cambio Extends core\ClasePropiedades {
 	    $sValor_new = empty($sValor_new)? '-':$sValor_new;
 	    
 	    switch($iTipo_cambio) {
-	        case 1: // insert.
+	        case Cambio::TIPO_CMB_INSERT: // (1) insert.
 	            switch($sObjeto) {
 	                case 'Actividad':
 	                case 'ActividadDl':
@@ -410,7 +417,7 @@ class Cambio Extends core\ClasePropiedades {
 	                    break;
 	            }
 	            break;
-	        case 2: //update.
+	        case Cambio::TIPO_CMB_UPDATE: // (2) update.
 	            switch($sObjeto) {
 	                case 'Actividad':
 	                case 'ActividadDl':
@@ -431,7 +438,7 @@ class Cambio Extends core\ClasePropiedades {
 	                    break;
 	            }
 	            break;
-	        case 3: //delete.
+	        case Cambio::TIPO_CMB_DELETE: // (3) delete.
 	            switch($sObjeto) {
 	                case 'Actividad':
 	                case 'ActividadDl':
@@ -453,7 +460,7 @@ class Cambio Extends core\ClasePropiedades {
 	                    break;
 	            }
 	            break;
-	        case 4: //cambio de fase o status.
+	        case Cambio::TIPO_CMB_FASE: // (4) cambio de fase o status.
 	            $GesActividadFase = new GestorActividadFase();
 	            
 	            $idFase = $this->getId_fase();

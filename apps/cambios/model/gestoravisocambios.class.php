@@ -160,7 +160,7 @@ class gestorAvisoCambios {
 		
 		switch ($sTipoCambio) {
 			case 'INSERT':
-				$oActividadCambio->setId_tipo_cambio(1);
+				$oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_INSERT);
 				$oActividadCambio->setId_activ($iid_activ);
 				$oActividadCambio->setId_tipo_activ($iId_tipo_activ);
 				$oActividadCambio->setId_fase($id_fase);
@@ -193,10 +193,13 @@ class gestorAvisoCambios {
 				break;
 			case 'UPDATE':
 				$result = array_diff_assoc($aDadesNew, $aDadesActuals);
+				// OJO para los campos bool no basta... Se mira más abajo.
 				$classname = get_class($oActividadCambio);
 				foreach ($result as $key=>$value) {
+				    if ($aDadesActuals[$key] === FALSE && $value == 'f') { continue; }
+				    if ($aDadesActuals[$key] === TRUE && $value == 't') { continue; }
     				$oActividadCambio = new $classname();
-					$oActividadCambio->setId_tipo_cambio(2);
+					$oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_UPDATE);
 					$oActividadCambio->setId_activ($iid_activ);
 					$oActividadCambio->setId_tipo_activ($iId_tipo_activ);
 					$oActividadCambio->setId_fase($id_fase);
@@ -213,7 +216,7 @@ class gestorAvisoCambios {
 				}
 				break;
 			case 'DELETE':
-				$oActividadCambio->setId_tipo_cambio(3);
+				$oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_DELETE);
 				$oActividadCambio->setId_activ($iid_activ);
 				$oActividadCambio->setId_tipo_activ($iId_tipo_activ);
 				$oActividadCambio->setId_fase($id_fase);
@@ -254,7 +257,7 @@ class gestorAvisoCambios {
 				if (empty($aDadesActuals['completado']) || ($aDadesActuals['completado'] === 'off') || ($aDadesActuals['completado'] === 'false') || ($aDadesActuals['completado'] === 'f')) { $boolCompletadoActuals=false; } else { $boolCompletadoActuals=true; }
 
 				if ($boolCompletadoNew != $boolCompletadoActuals) {
-					$oActividadCambio->setId_tipo_cambio(4);
+					$oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_FASE);
 					$oActividadCambio->setId_activ($iid_activ);
 					$oActividadCambio->setId_tipo_activ($iId_tipo_activ);
 					$oActividadCambio->setId_fase($id_fase);
