@@ -69,6 +69,7 @@ use procesos\model\entity\TareaProceso;
 use procesos\model\entity\GestorTareaProceso;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use cambios\model\entity\GestorCambioUsuario;
+use web\DateTimeLocal;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -92,10 +93,29 @@ function crear_pid($username,$esquema) {
         $filename = ConfigGlobal::$directorio."/log/avisos.$esquema.pid";
         
         if (file_exists($filename)) {
-           $fileContent = file_get_contents($filename);
-           if (!empty($fileContent)) exit;
+            $fileContent = file_get_contents($filename);
+            if (!empty($fileContent)) {
+                // Comprobar que no sea por que el anterior ha dadao un error y 
+                // no se ha borrado. Miaramos que sea de hace más de 15 min.
+                $delta = 15;
+                preg_match('@(\d+/\d+/\d+ \d+:\d+:\d+) -- .*@', $fileContent, $matches);
+                $f_iso = $matches[1];
+
+                $oDiaFichero = new DateTimeLocal($f_iso);
+                $oAhora = new DateTimeLocal('now');
+
+                $interval = $oDiaFichero->diff($oAhora);
+                $a = $interval->format('%i');
+
+                if ($a > $delta) {
+                    echo sprintf(_("El fichero %s no està vacio"),$filename);
+                    echo _("Posiblemente la anterior operación finalizó con error");
+                } else {
+                    exit;
+                }
+            }
         }
-        $ahora=date("d/m/Y H:i:s");
+        $ahora=date("Y/m/d H:i:s");
         $mensaje = "$ahora -- $username \n";
         file_put_contents($filename, $mensaje, LOCK_EX);
     }
@@ -112,7 +132,7 @@ function borrar_pid($username,$esquema) {
         
         if (file_exists($filename)) {
             $mensaje = "";
-            file_put_contents($filename, $mensaje, LOCK_EX);
+            //file_put_contents($filename, $mensaje, LOCK_EX);
         }
     }
 }
