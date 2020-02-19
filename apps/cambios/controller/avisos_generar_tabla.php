@@ -132,7 +132,7 @@ function borrar_pid($username,$esquema) {
         
         if (file_exists($filename)) {
             $mensaje = "";
-            //file_put_contents($filename, $mensaje, LOCK_EX);
+            file_put_contents($filename, $mensaje, LOCK_EX);
         }
     }
 }
