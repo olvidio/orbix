@@ -39,6 +39,12 @@ fnjs_actualizar=function(){
 fnjs_left_side_hide();
 </script>
 <h1><?= _("listado de roles") ?></h1>
+<p class="comentario">
+	<?= _("Los roles son universales y solamente los puede modificar el superusuario.") ?>
+	<br>
+	<?= _("Los grupos de menus que se asignan a cada role son propios para cada dl (sv y sf distintos). Y los puede modificar el admin.") ?>
+    </p>
+    <br>
 <form id="seleccionados"  name="seleccionados" action="" method="post" >
 <?= $oHash->getCamposHtml(); ?>
 <input type=hidden id=que  name=que value=''>
