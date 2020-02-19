@@ -150,9 +150,14 @@ class Actividad Extends ActividadAll {
 	 */
 	public function DBEliminar() {
 		$a_pkey = $this->aPrimary_key;
-		$dl = $this->sdl_org;
+		$dl_org = $this->sdl_org;
 		$id_tabla = $this->sid_tabla;
-		if ($dl == core\ConfigGlobal::mi_delef()) {
+		
+		// para des => dl y dlf:
+		$dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
+		$dl_propia = (core\ConfigGlobal::mi_dele() == $dl_org_no_f)? TRUE : FALSE;
+		
+		if ($dl_propia) {
 			$oActividadAll= new ActividadDl($a_pkey);
 		} else {
 			if ($id_tabla == 'dl') {
