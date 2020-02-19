@@ -17,8 +17,9 @@ $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miRole=$oMiUsuario->getId_role();
 $miSfsv=core\ConfigGlobal::mi_sfsv();
 // Sólo puede manipular los roles el superadmin (id_role=1).
+// y desde el sv
 $permiso = 0;
-if ($miRole == 1) {
+if ($miRole == 1 && ConfigGlobal::mi_sfsv() == 1) {
 	$permiso = 1;
 }
 
