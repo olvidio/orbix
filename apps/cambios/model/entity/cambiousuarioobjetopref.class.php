@@ -262,9 +262,9 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 	 */
 	
 	public static function getTipos_aviso() {
-	    $aTipos_aviso = [ 1 =>  _("anotar en lista"),
-                        2 =>  _("e-mail")
-                    ];
+	    $aTipos_aviso = [ CambioUsuario::TIPO_LISTA =>  _("anotar en lista"),
+	                      CambioUsuario::TIPO_MAIL  =>  _("e-mail"),
+                        ];
 	    
 	    return $aTipos_aviso;
 	}

@@ -58,25 +58,27 @@ $aSecciones = array(1=>$dele,2=>$delef);
 
 $email = '';
 $aviso_tipo = CambioUsuario::TIPO_MAIL; //e-mail
+$mi_sfsv = ConfigGlobal::mi_sfsv();
 
 $aWhere = array();
 $aWhere['_ordre'] = 'id_usuario,id_item_cambio';
 $aWhere['aviso_tipo'] = $aviso_tipo;
-$aWhere['avisado'] = 'f';
+$aWhere['avisado'] = 'false';
 $GesCambiosUsuario = new GestorCambioUsuario();
 $cCambiosUsuario = $GesCambiosUsuario->getCambiosUsuario($aWhere);
 $i = 0;
 $id_usuario_anterior = '';
-$datos = array();
-$id = array();
+$a_datos = array();
+$a_id = array();
 foreach ($cCambiosUsuario as $oCambioUsuario) {
     $id_usuario = $oCambioUsuario->getId_usuario();
+    
     if ($id_usuario != $id_usuario_anterior) {
         // solo en el primer caso no lo hago
         if (!empty($id_usuario_anterior)) {
-            enviar_mail($email,$datos,$id);
-            $datos = array();
-            $id = array();
+            enviar_mail($email,$a_datos,$a_id);
+            $a_datos = array();
+            $a_id = array();
         }
         $oMiUsuario = new Usuario($id_usuario);
         $email = $oMiUsuario->getEmail();
@@ -100,29 +102,29 @@ foreach ($cCambiosUsuario as $oCambioUsuario) {
     
     if ($aviso_txt === false) continue;
     $i++;
-    if ($sfsv_quien_cambia == ConfigGlobal::mi_sfsv()) {
-        $oUsuarioCmb = new usuario($quien_cambia);
+    if ($sfsv_quien_cambia == $mi_sfsv) {
+        $oUsuarioCmb = new Usuario($quien_cambia);
         $quien = $oUsuarioCmb->getUsuario();
     } else {
         $quien = $aSecciones[$sfsv_quien_cambia] ;
     }
 
-    $datos[$i][1] = $timestamp_cambio;
-    $datos[$i][2] = $quien;
-    $datos[$i][3] = $aviso_txt;
-    $id[$i] = "$id_item_cmb,$id_usuario,$aviso_tipo";
+    $a_datos[$i][1] = $timestamp_cambio;
+    $a_datos[$i][2] = $quien;
+    $a_datos[$i][3] = $aviso_txt;
+    $a_id[$i] = "$id_item_cmb,$id_usuario,$aviso_tipo";
 }
 // El último de la lista no se envia.
-if (!empty($email)) enviar_mail($email,$datos,$id);
+if (!empty($email)) enviar_mail($email,$a_datos,$a_id);
 
-function enviar_mail($email,$datos,$id){
+function enviar_mail($email,$a_datos,$a_id){
     $a_cabeceras=array( ucfirst(_("fecha cambio")),
-        ucfirst(_("quien")),
-        ucfirst(_("cambio"))
-    );
+                        ucfirst(_("quien")),
+                        ucfirst(_("cambio"))
+                    );
     $oTabla = new Lista();
     $oTabla->setCabeceras($a_cabeceras);
-    $oTabla->setDatos($datos);
+    $oTabla->setDatos($a_datos);
     
     $asunto = _("Avisos de cambios en actividades");
     $cuerpo = '
@@ -148,7 +150,7 @@ function enviar_mail($email,$datos,$id){
     
     //echo "($email<br>$asunto<br>$cuerpo<br>$headers)<br>";
     mail($email,$asunto,$cuerpo,$headers);
-    eliminar_enviado($id);
+    eliminar_enviado($a_id);
 }
 
 function eliminar_enviado($a_id){

@@ -45,7 +45,7 @@ if ($_SESSION['oPerm']->have_perm_oficina('dtor')){ //el admin_sv incluye el adm
     $Qaviso_tipo = (integer) \filter_input(INPUT_POST, 'aviso_tipo');
 } else {
 	$Qid_usuario = ConfigGlobal::mi_id_usuario();
-	$Qaviso_tipo =  CambioUsuario::TIPO_LISTA; // de monent nomes "anotar en lista".
+	$Qaviso_tipo =  CambioUsuario::TIPO_LISTA; // de moment nomes "anotar en lista".
 }
 
 $a_campos = [];
@@ -82,7 +82,7 @@ if (!empty($Qid_usuario)) {
 		if ($aviso_txt === false) continue;
 		$i++;
 		if ($sfsv_quien_cambia == $mi_sfsv) {
-            $oUsuarioCmb = new usuario($quien_cambia);
+            $oUsuarioCmb = new Usuario($quien_cambia);
             $quien = $oUsuarioCmb->getUsuario();
 		} else {
             $quien = $aSecciones[$sfsv_quien_cambia] ;
