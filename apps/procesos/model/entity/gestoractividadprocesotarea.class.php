@@ -78,7 +78,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	 * @param integer $isfsv
 	 * @return boolean|\procesos\model\entity\id_fase.
 	 */
-	public function generarProceso($iid_activ='',$isfsv) {
+	public function generarProceso($iid_activ='',$isfsv='') {
 	    $oActividad = new Actividad(array('id_activ'=>$iid_activ));
 	    $iid_tipo_activ = $oActividad->getId_tipo_activ();
 	    $oTipo = new TipoDeActividad(array('id_tipo_activ'=>$iid_tipo_activ));
