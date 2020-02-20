@@ -209,7 +209,6 @@ if ($miRole < 4) {
 		$que_user='guardar';
 		$oUsuario = new Usuario(array('id_usuario'=>$Qid_usuario));
 
-		$id_usuario=$oUsuario->getId_usuario();
 		$seccion=$miSfsv;
 		$usuario=$oUsuario->getUsuario();
 		$nom_usuario=$oUsuario->getNom_usuario();
@@ -289,19 +288,19 @@ if ($miRole < 4) {
 			
 			/*			
 			$oGesPermCtr = new GestorPermUsuarioCentro();
-			$cUsuarioPermCtr = $oGesPermCtr->getPermUsuarioCentros(array('id_usuario'=>$id_usuario));
+			$cUsuarioPermCtr = $oGesPermCtr->getPermUsuarioCentros(array('id_usuario'=>$Qid_usuario));
 			*/
 			
 		}
 		
 		if (ConfigGlobal::is_app_installed('procesos')) { 
 			$oGesPerm = new GestorPermUsuarioActividad();
-			$cUsuarioPerm = $oGesPerm->getPermUsuarioActividades(array('id_usuario'=>$id_usuario));
+			$cUsuarioPerm = $oGesPerm->getPermUsuarioActividades(array('id_usuario'=>$Qid_usuario));
 		}
 	} else {
 		$que_user='nuevo';
 		$id_role='';
-		$id_usuario='';
+		$Qid_usuario='';
 		$usuario='';
 		$nom_usuario='';
 		$pass='';
@@ -316,7 +315,7 @@ if ($miRole < 4) {
 	$oHash->setcamposForm($camposForm);
 	$oHash->setcamposNo('pass!password!id_ctr!id_nom!casas');
 	$a_camposHidden = array(
-			'id_usuario' => $id_usuario,
+			'id_usuario' => $Qid_usuario,
 			'quien' => $Qquien
 			);
 	$oHash->setArraycamposHidden($a_camposHidden);
@@ -338,7 +337,6 @@ if ($miRole < 4) {
 				'obj' => $obj,
 				'que_user' => $que_user,
 				'quien' => $Qquien,
-				'id_usuario' => $id_usuario,
 				'pau' => $pau,
 				'oSelects' => $oSelects,
 				'usuario' => $usuario,
@@ -356,84 +354,84 @@ if ($miRole < 4) {
 
 	$oView = new core\View('usuarios/controller');
 	echo $oView->render('usuario_form.phtml',$a_campos);
-} 
 
-//////////// Permisos de grupos ////////////
-if (!empty($id_usuario)) { // si no hay usuario, no puedo poner permisos.
-    //grupo
-    $oGesUsuarioGrupo = new usuarios\model\entity\GestorUsuarioGrupo();
-    $oListaGrupos = $oGesUsuarioGrupo->getUsuariosGrupos(array('id_usuario'=>$id_usuario));
-    $i=0;
-    $txt='';
-    foreach ($oListaGrupos as $oUsuarioGrupo) {
-        $i++;
-        $oGrupo = new usuarios\model\entity\Grupo($oUsuarioGrupo->getId_grupo());
-        if ($i > 1) $txt.=", ";
-        $txt.= $oGrupo->getUsuario();
-    }
-    ?>
-	<br>
-	<h3><?= _("grupos") ?>: </h3>
-    <?php
-    //////////// Aclaración permisos ////////////
-    if (ConfigGlobal::is_app_installed('procesos')) {
+    //////////// Permisos de grupos ////////////
+    if (!empty($Qid_usuario)) { // si no hay usuario, no puedo poner permisos.
+        //grupo
+        $oGesUsuarioGrupo = new usuarios\model\entity\GestorUsuarioGrupo();
+        $oListaGrupos = $oGesUsuarioGrupo->getUsuariosGrupos(array('id_usuario'=>$Qid_usuario));
+        $i=0;
+        $txt='';
+        foreach ($oListaGrupos as $oUsuarioGrupo) {
+            $i++;
+            $oGrupo = new usuarios\model\entity\Grupo($oUsuarioGrupo->getId_grupo());
+            if ($i > 1) $txt.=", ";
+            $txt.= $oGrupo->getUsuario();
+        }
         ?>
-    	<p class="comentario"><?= _("OJO: los permisos en los grupos no tienen una preferencia definida.") ?>
-    	<?= _("Si hay más de uno, deberían ser independiente, sino no se sabe cual sobreescribirá a cual.") ?></p>
-		<?php
-    } ?>
-    <br>
-	<p><?= $txt ?></p>
-	<br>
-	<input type=button onclick="fnjs_add_grup();" value="<?= _("añadir un grupo de permisos") ?>">
-	<input type=button onclick="fnjs_del_grup();" value="<?= _("quitar de un grupo de permisos") ?>">
-	<div id=lst_grupos></div>
-	<br>
-    <br>
-    <?php
-    //////////// Permisos en centros ////////////
-    if (ConfigGlobal::is_app_installed('ubis')) {
-        if ($pau == Role::PAU_NOM || $pau == Role::PAU_SACD) { //sacd //personas dl
+        <br>
+        <h3><?= _("grupos") ?>: </h3>
+        <?php
+        //////////// Aclaración permisos ////////////
+        if (ConfigGlobal::is_app_installed('procesos')) {
+            ?>
+            <p class="comentario"><?= _("OJO: los permisos en los grupos no tienen una preferencia definida.") ?>
+            <?= _("Si hay más de uno, deberían ser independiente, sino no se sabe cual sobreescribirá a cual.") ?></p>
+            <?php
+        } ?>
+        <br>
+        <p><?= $txt ?></p>
+        <br>
+        <input type=button onclick="fnjs_add_grup();" value="<?= _("añadir un grupo de permisos") ?>">
+        <input type=button onclick="fnjs_del_grup();" value="<?= _("quitar de un grupo de permisos") ?>">
+        <div id=lst_grupos></div>
+        <br>
+        <br>
+        <?php
+        //////////// Permisos en centros ////////////
+        if (ConfigGlobal::is_app_installed('ubis')) {
+            if ($pau == Role::PAU_NOM || $pau == Role::PAU_SACD) { //sacd //personas dl
+                $a_campos = [
+                            'quien' => $Qquien,
+                            'id_usuario' => $Qid_usuario,
+                            'usuario' => $usuario,
+                            'cUsuarioPermCtr' => $cUsuarioPermCtr,
+                            'oCuadrosAfecta' => $oCuadrosAfecta,
+                            'oPermAccion' => $oPermAccion,
+                            ];
+
+                $oView = new core\View('usuarios/controller');
+                echo $oView->render('perm_ctr_form.phtml',$a_campos);
+            }
+        }
+        //////////// Permisos en actividades ////////////
+        if (ConfigGlobal::is_app_installed('procesos')) {
+            
             $a_campos = [
                         'quien' => $Qquien,
-                        'id_usuario' => $id_usuario,
+                        'id_usuario' => $Qid_usuario,
                         'usuario' => $usuario,
-                        'cUsuarioPermCtr' => $cUsuarioPermCtr,
+                        'cUsuarioPerm' => $cUsuarioPerm,
                         'oCuadrosAfecta' => $oCuadrosAfecta,
                         'oPermAccion' => $oPermAccion,
                         ];
 
             $oView = new core\View('usuarios/controller');
-            echo $oView->render('perm_ctr_form.phtml',$a_campos);
+            echo $oView->render('perm_activ_form.phtml',$a_campos);
         }
     }
-    //////////// Permisos en actividades ////////////
-    if (ConfigGlobal::is_app_installed('procesos')) {
-        
-        $a_campos = [
-                    'quien' => $Qquien,
-                    'id_usuario' => $id_usuario,
-                    'usuario' => $usuario,
-                    'cUsuarioPerm' => $cUsuarioPerm,
-                    'oCuadrosAfecta' => $oCuadrosAfecta,
-                    'oPermAccion' => $oPermAccion,
-                    ];
-
-        $oView = new core\View('usuarios/controller');
-        echo $oView->render('perm_activ_form.phtml',$a_campos);
-    }
-}
+} // fin solo administradores. 
 
 //////////// Esto lo ven todos ////////////
 // si no hay usuario, no puedo poner permisos.
-if( (ConfigGlobal::is_app_installed('cambios')) && (!empty($id_usuario)) && ($Qquien == 'usuario') ) {
+if( (ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Qquien == 'usuario') ) {
     
 	$url_usuario_ajax = ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_ajax.php';
 	$oHashAvisos = new web\Hash();
 	$oHashAvisos->setUrl($url_usuario_ajax);
 	$oHashAvisos->setCamposNo('sel!scroll_id'); 
 	$a_camposHidden = array(
-			'id_usuario' => $id_usuario,
+			'id_usuario' => $Qid_usuario,
 			'quien' => $Qquien,
 	        'salida' => 'aviso_eliminar',
 			);
