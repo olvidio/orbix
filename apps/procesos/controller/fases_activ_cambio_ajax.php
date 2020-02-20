@@ -1,6 +1,7 @@
 <?php
+use actividades\model\entity\Actividad;
+use actividades\model\entity\GestorActividad;
 use actividades\model\entity\GestorActividadDl;
-use actividades\model\entity\GestorActividadPub;
 use actividades\model\entity\GestorTipoDeActividad;
 use actividades\model\entity\TipoDeActividad;
 use core\ConfigGlobal;
@@ -10,7 +11,6 @@ use procesos\model\entity\GestorActividadProcesoTarea;
 use procesos\model\entity\GestorTareaProceso;
 use web\Lista;
 use web\Periodo;
-use actividades\model\entity\Actividad;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
@@ -69,11 +69,11 @@ switch($Qque) {
 		// dl_org
 		if ($Qdl_propia == 't') {
 			$aWhere['dl_org'] = ConfigGlobal::mi_delef($isfsv);
-    		$oActividades = new GestorActividadDl();
+    		$gesActividades = new GestorActividadDl();
 		} else {
 			$aWhere['dl_org'] = ConfigGlobal::mi_delef($isfsv);
 			$aOperador['dl_org'] = '!=';
-    		$oActividades = new GestorActividadPub();
+    		$gesActividades = new GestorActividad();
 		}
 		// las borrables no
 		$aWhere['status'] = 4;
@@ -114,13 +114,13 @@ switch($Qque) {
 
 		$a_valores=array();
 		$aWhere['_ordre'] = 'f_ini';
-		$cActividades = $oActividades->getActividades($aWhere,$aOperador);
+		$cActividades = $gesActividades->getActividades($aWhere,$aOperador);
 		if (!is_array($cActividades)) {
 		    exit (_("faltan condiciones para la selección"));
 		}
 		$num_activ=count($cActividades);
 		$num_ok = 0;
-		foreach($oActividades->getActividades($aWhere,$aOperador) as $oActividad) {
+		foreach($cActividades as $oActividad) {
 			//print_r($oActividad);
 			$id_activ = $oActividad->getId_activ();
 			$id_tipo_activ = $oActividad->getId_tipo_activ();
