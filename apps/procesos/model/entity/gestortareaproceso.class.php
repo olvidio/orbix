@@ -33,6 +33,34 @@ class GestorTareaProceso Extends core\ClaseGestor {
 
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
+	
+	/**
+	 * retorna la primera fase del status.
+	 *
+	 * @param integer iid_tipo_proceso tipus de procés.
+	 * @param integer status
+	 * @return integer id_fase.
+	 */
+	function getFaseStatus($iid_tipo_proceso,$status) {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+	    $sQuery = "SELECT * FROM $nom_tabla 
+                    WHERE id_tipo_proceso = $iid_tipo_proceso AND status = $status 
+                    ORDER BY n_orden
+                    LIMIT 1";
+	    
+	    if (($oDbl->query($sQuery)) === false) {
+	        $sClauError = 'GestorTareaProceso.query';
+	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+	        return false;
+	    }
+	    $id_fase = '';
+	    foreach ($oDbl->query($sQuery) as $aDades) {
+	        $id_fase = $aDades['id_fase'];
+	    }
+	    return $id_fase;
+	}
+	
 	/**
 	 * retorna integer de la id_fase anterior
 	 *

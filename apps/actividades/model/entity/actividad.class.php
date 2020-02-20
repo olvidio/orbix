@@ -86,12 +86,12 @@ class Actividad Extends ActividadAll {
 			$oActividad = new ActividadDl($a_pkey);
 		} else {
 			if ($id_tabla == 'dl') {
-			    // caso especial dre:
+			    // caso especial dre puede cambiar las actividades de sf:
                 $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
 			    if ($dl_org_no_f == core\ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm_oficina('des') ) {
 				        $oActividad = new ActividadDl($a_pkey);
 			    } else {
-                    // No se puede eliminar una actividad de otra dl
+                    // No se puede modificar una actividad de otra dl
                     $msg = sprintf(_("no se puede modificar una actividad de otra dl: %s"),$dl_org);
                     echo $msg;
                     return false;

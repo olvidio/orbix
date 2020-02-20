@@ -50,6 +50,33 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
 	
+	/**
+	 *  Buscar la primera fase del estado del proceso
+	 *
+	 *  @param integer status
+	 *  @param integer id_proceso
+	 *  @return integer fase
+	 */
+	public function getFaseStatus($status, $iid_activ) {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+	    $sQry = "SELECT * FROM $nom_tabla WHERE id_activ=".$iid_activ." ORDER BY n_orden DESC LIMIT 1";
+	    if (($qRs = $oDbl->query($sQry)) === false) {
+	        $sClauError = 'GestorActividadProcesoTarea.faseUltima.prepare';
+	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+	        return false;
+	    }
+	    if ($qRs->rowCount() == 1 ) {
+	        $aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
+	        return $aDades['id_fase'];
+	    } else {
+	        return false;
+	    }
+	    $id_fase = $this->getFaseStatus(2);
+	    
+	}
+	
+	
 	public function getSacdAprobado($iid_activ){
         $oDbl = $this->getoDbl();
         // Mirar el proceso de la sv
@@ -94,7 +121,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
         }
         $iid_fase = [];
         foreach ($a_sfsv as $sfsv) {
-            if ($dl_org == core\ConfigGlobal::mi_delef() OR $dl_org_no_f == core\ConfigGlobal::mi_dele()) {
+            if ($dl_org_no_f == core\ConfigGlobal::mi_dele()) {
                 $id_tipo_proceso=$oTipo->getId_tipo_proceso($sfsv);
             } else {
                 $id_tipo_proceso=$oTipo->getId_tipo_proceso_ex($sfsv);
@@ -319,7 +346,8 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	        $oActividad->DBCarregar();
 	        $dl_org = $oActividad->getDl_org();
             $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
-            if ($dl_org == ConfigGlobal::mi_delef() OR $dl_org_no_f == ConfigGlobal::mi_dele()) {
+            // El status solo se puede guardar si la actividad es de la propia dl (o des desde sv).
+            if ($dl_org_no_f == ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm_oficina('des')) {
                 $oActividad->setStatus($statusActividad);
                 $quiet = 1; // Para que no anote el cambio.
                 $oActividad->DBGuardar($quiet);

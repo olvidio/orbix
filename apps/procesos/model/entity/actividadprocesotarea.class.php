@@ -5,6 +5,7 @@ use cambios\model\gestorAvisoCambios;
 use core;
 use actividades\model\entity\ActividadAll;
 use core\ConfigGlobal;
+use vendor\project\StatusTest;
 /**
  * Fitxer amb la Classe que accedeix a la taula a_actividad_proceso_(sf/sv)
  *
@@ -210,14 +211,14 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
                             $oActividad->setStatus($statusProceso);
                             $oActividad->DBGuardar();
                             // además debería marcar como completado la fase correspondiente del proceso de la sf.
-                            $this->marcarFaseActual();
+                            $this->marcarFaseEnSfSv();
                         } else {
                             echo _("no se puede cambiar el status de la actividad a 'actual', porque debe hacerlo dre");
                             $permitido = FALSE;
                         }
                     } else { // para el resto.
                         if ($id_tabla == 'dl') {
-                            // No se puede eliminar una actividad de otra dl
+                            // No se puede modificar una actividad de otra dl
                             echo sprintf(_("no se puede modificar el status de una actividad de otra dl (%s)"),$dl_org);
                             $permitido = FALSE;
                         } else {
@@ -231,9 +232,9 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
                         $oActividad->DBGuardar();
                     } else {
                         if ($id_tabla == 'dl') {
-                            // No se puede eliminar una actividad de otra dl
+                            // No se puede modificar una actividad de otra dl
                             echo sprintf(_("no se puede modificar el status de una actividad de otra dl (%s)"),$dl_org);
-                            $permitido = FALSE;
+                            //$permitido = FALSE;
                         } else {
                             $oActividad->setStatus($statusProceso);
                             $oActividad->DBGuardar();
@@ -373,16 +374,23 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
 	
 	/* METODES ALTRES  ----------------------------------------------------------*/
 	
-	function marcarFaseActual() {
-	    //Estoy en sv. debo buscar el proceso de sf, la fase y poner completado:
-	    $aWhere = ['id_activ' => $this->iid_activ, 'id_fase' => $this->iid_fase];
+	function marcarFaseEnSfSv() {
 	    $gesActividadPorcesoTareas = new GestorActividadProcesoTarea();
-		// Al revés para actuar en el proceso de la otra sección.
+	    // buscar el id_tipo_proceso para esta actividad de la otra sección
 		if (core\ConfigGlobal::mi_sfsv() == 1) {
     	    $gesActividadPorcesoTareas->setNomTabla('a_actividad_proceso_sf');
 		} else {
     	    $gesActividadPorcesoTareas->setNomTabla('a_actividad_proceso_sv');
 		}
+		$cActividadPorcesoTarea = $gesActividadPorcesoTareas->getActividadProcesoTareas(['id_activ' => $this->iid_activ]);
+	    // una fase cualquiera:
+	    $id_tipo_proceso = $cActividadPorcesoTarea[0]->getId_tipo_proceso();
+	    // buscar la primera fase del proceso para el estado 'actual'
+	    $status = ActividadAll::STATUS_ACTUAL;
+	    $gesTareaProceso = new GestorTareaProceso();
+	    $id_fase = $gesTareaProceso->getFaseStatus($id_tipo_proceso, $status);
+	    
+	    $aWhere = ['id_activ' => $this->iid_activ, 'id_fase' => $id_fase];
 		$cActividadPorcesoTareas = $gesActividadPorcesoTareas->getActividadProcesoTareas($aWhere);
 		if (!empty($cActividadPorcesoTareas)) {
 		    $oActividadPorcesoTarea = $cActividadPorcesoTareas[0];
