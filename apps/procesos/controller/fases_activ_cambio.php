@@ -66,6 +66,7 @@ $oActividadTipo->setSfsv($Qssfsv);
 $oActividadTipo->setId_tipo_activ($Qid_tipo_activ);
 $oActividadTipo->setAsistentes($Qsasistentes);
 $oActividadTipo->setActividad($Qsactividad);
+$oActividadTipo->setPara('procesos');
 
 $aOpciones =  array(
 					'tot_any' => _("todo el año"),

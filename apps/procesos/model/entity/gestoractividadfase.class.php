@@ -229,7 +229,10 @@ class GestorActividadFase Extends core\ClaseGestor {
 	                if ($bresp) {
 	                    $oTareaProceso = new TareaProceso($id_item);
 	                    $of_responsable = $oTareaProceso->getOf_responsable();
-	                    if ($oPermiso->have_perm_oficina($of_responsable)) {
+	                    // Si no hay oficina responsable, pueden todos:
+	                    if (empty($of_responsable)) {
+	                        $aFasesProcesoDesc[$id_fase] = $oFase->getDesc_fase();
+	                    } elseif ($oPermiso->have_perm_oficina($of_responsable)) {
 	                        $aFasesProcesoDesc[$id_fase] = $oFase->getDesc_fase();
 	                    }
 	                } else {
