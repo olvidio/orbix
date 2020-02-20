@@ -1,10 +1,23 @@
-<p class="comentario">
-	{{ "Para los avisos por mail, debe existir una linea en el crontab del servidor externo (conexión a internet)."|trans }}
+<ul>
+    <li class="comentario">
+	{{ "Para los avisos por mail, debe existir una linea en el crontab del servidor externo 
+	(conexión a internet)."|trans }}
 	{{ "Es un cron distinto para cada dl (sv y sf)."|trans }}
-	<br>
-	<?= _("Los grupos de menus que se asignan a cada role son propios para cada dl (sv y sf distintos). Y los puede modificar el admin.") ?>
-    </p>
-    <br>
+	</li>
+	<li class="comentario">
+	{{ "Si no está instalado el módulo de procesos, las fases de los avisos son los estados de la actividad."|trans }}
+	</li>
+	<li class="comentario">
+	{{ "Si el cambio es en una actividad de otra dl, la tabla de avisos no se genera automáticamente 
+	(si se hace para la dl que ha hecho el cambio) Hay que hacerlo manual, o por cron, 
+	o esperar a que se genere por algún cambio de la propia dl."|trans }}
+	</li>
+	<li class="comentario">
+	{{ "El sistema no es perfecto. Si hay dudas, hay que mirar la web para ver como está.
+	Por ejemplo (para cambios en otras dl) puede ser que apunte cambios que se han hecho en una fase en la que no se debe avisar,
+	 y al hacer otro cambio en una fase que si debe avisar, puede anotar el cambio que se había reallizado con anterioridad..."|trans }}
+	</li>
+</ul>
 <div id="condiciones" class="no_print">
 	<form name="frm_cond" id="frm_cond" action="apps/cambios/controller/avisos_generar.php" method="post">
 	{{ oHashCond.getCamposHtml()|raw }}

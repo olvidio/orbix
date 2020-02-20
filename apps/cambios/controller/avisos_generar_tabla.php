@@ -108,7 +108,10 @@ function crear_pid($username,$esquema) {
                 $a = $interval->format('%i');
 
                 if ($a > $delta) {
-                    echo sprintf(_("El fichero %s no està vacio"),$filename);
+                    $ahora=date("Y/m/d H:i:s");
+                    echo "$ahora ";
+                    echo sprintf(_("El fichero %s no està vacio."),$filename);
+                    echo " ";
                     echo _("Posiblemente la anterior operación finalizó con error");
                 } else {
                     exit;
