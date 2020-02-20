@@ -167,8 +167,8 @@ switch ($Qque) {
 			exit (_("Debe seleccionar una casa."));
 		}
 		$a_valores = [];
-		foreach ($aGrupos as $key => $Titulo) {
-			$aWhere['id_ubi']=$key; // en este caso $key=$id_ubi
+		foreach ($aGrupos as $id_ubi => $Titulo) {
+			$aWhere['id_ubi']=$id_ubi;
 			$aWhere['status'] = 4;
 			$aOperador['status'] = '<';
 			$aWhere['_ordre'] = 'f_ini';
@@ -229,17 +229,17 @@ switch ($Qque) {
 				} else {
 					$precio_pr = round($factor_dias*$precio,2);
 				}
-				$a_valores[$key][$a][1]=$oF_ini->getFromLocal();
-				$a_valores[$key][$a][2]=$oF_fin->getFromLocal();
+				$a_valores[$id_ubi][$a][1]=$oF_ini->getFromLocal();
+				$a_valores[$id_ubi][$a][2]=$oF_fin->getFromLocal();
 				// trec les dates del nom perque ocupi menys.
 				//$nom_activ = preg_replace('/\(.*\)(.*)/','\1',$nom_activ);
 				$oTipoActiv= new TiposActividades($id_tipo_activ);
 				$nom_activ = $oTipoActiv->getNomGral();
 				if ($permiso == 'modificar') {
 					$script="fnjs_modificar($id_activ)";
-					$a_valores[$key][$a][3]=array( 'script'=>$script, 'valor'=>$nom_activ);
+					$a_valores[$id_ubi][$a][3]=array( 'script'=>$script, 'valor'=>$nom_activ);
 				} else {
-					$a_valores[$key][$a][3]=$nom_activ;
+					$a_valores[$id_ubi][$a][3]=$nom_activ;
 				}
 
 				$oIngreso = new Ingreso(array('id_activ'=>$id_activ));
@@ -266,64 +266,64 @@ switch ($Qque) {
 				$tot_ing_pr['tot'] += $ingresos_previstos;
 				$tot_ing['tot'] += $ingresos;
 
-				$a_valores[$key][$a][4]=$precio;
-				$a_valores[$key][$a][5]=$num_asistentes_previstos;
-				$a_valores[$key][$a][6]=$num_asistentes;
-				$a_valores[$key][$a][7]=$num_asistentes-$num_asistentes_previstos;
-				$a_valores[$key][$a][8]=$ingresos_previstos;
-				$a_valores[$key][$a][9]=$ingresos;
-				$a_valores[$key][$a][10]=$i_previstos_acumulados;
-				$a_valores[$key][$a][11]=$i_acumulados;
-				$a_valores[$key][$a][12]=$observ;
-				$a_valores[$key][$a]['clase']='derecha';
+				$a_valores[$id_ubi][$a][4]=$precio;
+				$a_valores[$id_ubi][$a][5]=$num_asistentes_previstos;
+				$a_valores[$id_ubi][$a][6]=$num_asistentes;
+				$a_valores[$id_ubi][$a][7]=$num_asistentes-$num_asistentes_previstos;
+				$a_valores[$id_ubi][$a][8]=$ingresos_previstos;
+				$a_valores[$id_ubi][$a][9]=$ingresos;
+				$a_valores[$id_ubi][$a][10]=$i_previstos_acumulados;
+				$a_valores[$id_ubi][$a][11]=$i_acumulados;
+				$a_valores[$id_ubi][$a][12]=$observ;
+				$a_valores[$id_ubi][$a]['clase']='derecha';
 				$a++;
 			}
 			$oF_ini_periodo = $oPeriodo->getF_ini();
 			$oF_fin_periodo = $oPeriodo->getF_fin();
 			// total sv
-			$a_valores[$key][$a][1]= $oF_ini_periodo->getFromLocal();
-			$a_valores[$key][$a][2]= $oF_fin_periodo->getFromLocal();
-			$a_valores[$key][$a][3]=_('totales sv');
-			$a_valores[$key][$a][4]= '';
-			$a_valores[$key][$a][5]= $tot_asis_pr[1];
-			$a_valores[$key][$a][6]= $tot_asis[1];
-			$a_valores[$key][$a][7]= empty($tot_asis['tot'])? '-' : round($tot_asis[1]/$tot_asis['tot']*100,2).'%';
-			$a_valores[$key][$a][8]= $tot_ing_pr[1];
-			$a_valores[$key][$a][9]= $tot_ing[1];
-			$a_valores[$key][$a][10]= empty($tot_ing['tot'])? '-' : round($tot_ing[1]/$tot_ing['tot']*100,2).'%';
-			$a_valores[$key][$a][11]= $tot_ing_acu[1];
-			$a_valores[$key][$a][12]= '';
-			$a_valores[$key][$a]['clase']='derecha';
+			$a_valores[$id_ubi][$a][1]= $oF_ini_periodo->getFromLocal();
+			$a_valores[$id_ubi][$a][2]= $oF_fin_periodo->getFromLocal();
+			$a_valores[$id_ubi][$a][3]=_('totales sv');
+			$a_valores[$id_ubi][$a][4]= '';
+			$a_valores[$id_ubi][$a][5]= $tot_asis_pr[1];
+			$a_valores[$id_ubi][$a][6]= $tot_asis[1];
+			$a_valores[$id_ubi][$a][7]= empty($tot_asis['tot'])? '-' : round($tot_asis[1]/$tot_asis['tot']*100,2).'%';
+			$a_valores[$id_ubi][$a][8]= $tot_ing_pr[1];
+			$a_valores[$id_ubi][$a][9]= $tot_ing[1];
+			$a_valores[$id_ubi][$a][10]= empty($tot_ing['tot'])? '-' : round($tot_ing[1]/$tot_ing['tot']*100,2).'%';
+			$a_valores[$id_ubi][$a][11]= $tot_ing_acu[1];
+			$a_valores[$id_ubi][$a][12]= '';
+			$a_valores[$id_ubi][$a]['clase']='derecha';
 
 			// total sf
-			$a_valores[$key][$a+1][1]= $oF_ini_periodo->format('d/m/y');
-			$a_valores[$key][$a+1][2]= $oF_fin_periodo->format('d/m/y');
-			$a_valores[$key][$a+1][3]=_('totales sf');
-			$a_valores[$key][$a+1][4]= '';
-			$a_valores[$key][$a+1][5]= $tot_asis_pr[2];
-			$a_valores[$key][$a+1][6]= $tot_asis[2];
-			$a_valores[$key][$a+1][7]= empty($tot_asis['tot'])? '-' : round($tot_asis[2]/$tot_asis['tot']*100,2).'%';
-			$a_valores[$key][$a+1][8]= $tot_ing_pr[2];
-			$a_valores[$key][$a+1][9]= $tot_ing[2];
-			$a_valores[$key][$a+1][10]= empty($tot_ing['tot'])? '-' : round($tot_ing[2]/$tot_ing['tot']*100,2).'%';
-			$a_valores[$key][$a+1][11]= $tot_ing_acu[2];
-			$a_valores[$key][$a+1][12]= '';
-			$a_valores[$key][$a+1]['clase']='derecha';
+			$a_valores[$id_ubi][$a+1][1]= $oF_ini_periodo->format('d/m/y');
+			$a_valores[$id_ubi][$a+1][2]= $oF_fin_periodo->format('d/m/y');
+			$a_valores[$id_ubi][$a+1][3]=_('totales sf');
+			$a_valores[$id_ubi][$a+1][4]= '';
+			$a_valores[$id_ubi][$a+1][5]= $tot_asis_pr[2];
+			$a_valores[$id_ubi][$a+1][6]= $tot_asis[2];
+			$a_valores[$id_ubi][$a+1][7]= empty($tot_asis['tot'])? '-' : round($tot_asis[2]/$tot_asis['tot']*100,2).'%';
+			$a_valores[$id_ubi][$a+1][8]= $tot_ing_pr[2];
+			$a_valores[$id_ubi][$a+1][9]= $tot_ing[2];
+			$a_valores[$id_ubi][$a+1][10]= empty($tot_ing['tot'])? '-' : round($tot_ing[2]/$tot_ing['tot']*100,2).'%';
+			$a_valores[$id_ubi][$a+1][11]= $tot_ing_acu[2];
+			$a_valores[$id_ubi][$a+1][12]= '';
+			$a_valores[$id_ubi][$a+1]['clase']='derecha';
 
 			// total
-			$a_valores[$key][$a+2][1]= $oF_ini_periodo->format('d/m/y');
-			$a_valores[$key][$a+2][2]= $oF_fin_periodo->format('d/m/y');
-			$a_valores[$key][$a+2][3]=_('totales');
-			$a_valores[$key][$a+2][4]= '';
-			$a_valores[$key][$a+2][5]= $tot_asis_pr['tot'];
-			$a_valores[$key][$a+2][6]= $tot_asis['tot'];
-			$a_valores[$key][$a+2][7]= '';
-			$a_valores[$key][$a+2][8]= $tot_ing_pr['tot'];
-			$a_valores[$key][$a+2][9]= $tot_ing['tot'];
-			$a_valores[$key][$a+2][10]= $i_previstos_acumulados; // es el último valor de la tabla (ya se ha sumado).
-			$a_valores[$key][$a+2][11]= $i_acumulados; // es el último valor de la tabla (ya se ha sumado).
-			$a_valores[$key][$a+2][12]= '';
-			$a_valores[$key][$a+2]['clase']='derecha';
+			$a_valores[$id_ubi][$a+2][1]= $oF_ini_periodo->format('d/m/y');
+			$a_valores[$id_ubi][$a+2][2]= $oF_fin_periodo->format('d/m/y');
+			$a_valores[$id_ubi][$a+2][3]=_('totales');
+			$a_valores[$id_ubi][$a+2][4]= '';
+			$a_valores[$id_ubi][$a+2][5]= $tot_asis_pr['tot'];
+			$a_valores[$id_ubi][$a+2][6]= $tot_asis['tot'];
+			$a_valores[$id_ubi][$a+2][7]= '';
+			$a_valores[$id_ubi][$a+2][8]= $tot_ing_pr['tot'];
+			$a_valores[$id_ubi][$a+2][9]= $tot_ing['tot'];
+			$a_valores[$id_ubi][$a+2][10]= $i_previstos_acumulados; // es el último valor de la tabla (ya se ha sumado).
+			$a_valores[$id_ubi][$a+2][11]= $i_acumulados; // es el último valor de la tabla (ya se ha sumado).
+			$a_valores[$id_ubi][$a+2][12]= '';
+			$a_valores[$id_ubi][$a+2]['clase']='derecha';
 		}
 		$a_cabeceras = [ _("inicio"),
                     _("fin"),
@@ -417,8 +417,8 @@ switch ($Qque) {
 			}
 		}
 		$a_valores = array();
-		foreach ($aGrupos as $key => $Titulo) {
-			$aWhere['id_ubi']=$key; // en este caso $key=$id_ubi
+		foreach ($aGrupos as $id_ubi => $Titulo) {
+			$aWhere['id_ubi']=$id_ubi;
 			$aWhere['f_ini'] = $inicioIso;
 			$aOperador['f_ini'] = '>=';
 			$aWhere['f_fin'] = $finIso;
@@ -497,20 +497,20 @@ switch ($Qque) {
 				$oTipoTarifa = new TipoTarifa(array('tarifa'=>$tarifa));
 				$letra_tarifa = $oTipoTarifa->getLetra();
 
-				$a_valores[$key][$a][1]=$f_ini;
-				$a_valores[$key][$a][2]=$h_ini;
-				$a_valores[$key][$a][3]=$f_fin;
-				$a_valores[$key][$a][4]=$h_fin;
-				$a_valores[$key][$a][5]=$ssfsv;
-				$a_valores[$key][$a][6]=$sactividad;
-				$a_valores[$key][$a][7]=$sasistentes;
-				$a_valores[$key][$a][8]=$snom_tipo;
+				$a_valores[$id_ubi][$a][1]=$f_ini;
+				$a_valores[$id_ubi][$a][2]=$h_ini;
+				$a_valores[$id_ubi][$a][3]=$f_fin;
+				$a_valores[$id_ubi][$a][4]=$h_fin;
+				$a_valores[$id_ubi][$a][5]=$ssfsv;
+				$a_valores[$id_ubi][$a][6]=$sactividad;
+				$a_valores[$id_ubi][$a][7]=$sasistentes;
+				$a_valores[$id_ubi][$a][8]=$snom_tipo;
 
-				$a_valores[$key][$a][9]=$nombre_ubi;
-				$a_valores[$key][$a][10]=$letra_tarifa;
-				$a_valores[$key][$a][11]=$ctrs;
-				$a_valores[$key][$a][12]=$sacds;
-				$a_valores[$key][$a][13]=$observ;
+				$a_valores[$id_ubi][$a][9]=$nombre_ubi;
+				$a_valores[$id_ubi][$a][10]=$letra_tarifa;
+				$a_valores[$id_ubi][$a][11]=$ctrs;
+				$a_valores[$id_ubi][$a][12]=$sacds;
+				$a_valores[$id_ubi][$a][13]=$observ;
 			}
 		}
 		$a_cabeceras[]=ucfirst(_("empieza"));
