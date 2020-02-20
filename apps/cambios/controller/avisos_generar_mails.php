@@ -97,16 +97,20 @@ foreach ($cCambiosUsuario as $oCambioUsuario) {
     $quien_cambia = $oCambio->getQuien_cambia();
     $sfsv_quien_cambia = $oCambio->getSfsv_quien_cambia();
     $timestamp_cambio = $oCambio->getTimestamp_cambio();
-    
     $aviso_txt = $oCambio->getAvisoTxt();
-    
     if ($aviso_txt === false) continue;
+    
     $i++;
-    if ($sfsv_quien_cambia == $mi_sfsv) {
-        $oUsuarioCmb = new Usuario($quien_cambia);
-        $quien = $oUsuarioCmb->getUsuario();
+    // Quien cambia
+    if ($id_schema_cmb == 3000) {
+        $quien = $oCambio->getDl_org();
     } else {
-        $quien = $aSecciones[$sfsv_quien_cambia] ;
+        if ($sfsv_quien_cambia == $mi_sfsv) {
+            $oUsuarioCmb = new Usuario($quien_cambia);
+            $quien = $oUsuarioCmb->getUsuario();
+        } else {
+            $quien = $aSecciones[$sfsv_quien_cambia] ;
+        }
     }
 
     $a_datos[$i][1] = $timestamp_cambio;
