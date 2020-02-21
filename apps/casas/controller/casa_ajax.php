@@ -488,8 +488,8 @@ switch ($Qque) {
 				if ($oPermCtr->have_perm_action('ver')) {
 					$oEnc=new GestorCentroEncargado();
 					foreach($oEnc->getCentrosEncargadosActividad($id_activ) as $oCentroEncargado) {;
-						$id_ubi = $oCentroEncargado->getId_ubi();
-						$Centro = new CentroDl($id_ubi);
+						$id_ctr = $oCentroEncargado->getId_ubi();
+						$Centro = new CentroDl($id_ctr);
 						$nombre_ctr = $Centro->getNombre_ubi();
 						$txt_ctr .= empty($txt_ctr)? $nombre_ctr : "; $nombre_ctr";
 					}
