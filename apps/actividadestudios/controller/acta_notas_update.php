@@ -4,6 +4,7 @@ use actividadestudios\model\entity\ActividadAsignaturaDl;
 use actividadestudios\model\entity\GestorMatricula;
 use actividadestudios\model\entity\Matricula;
 use asignaturas\model\entity\Asignatura;
+use core\ConfigGlobal;
 use notas\model\entity\Acta;
 use notas\model\entity\GestorActa;
 use notas\model\entity\GestorPersonaNota;
@@ -201,20 +202,20 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 					$id_situacion = 2;
 		            break;
 		        default:
-                if (empty($id_situacion)) {
-                    if (!empty($nota_num)) {
-                        if ($nota_num/$nota_max < 0.6) {
-                           $id_situacion = 12;
+                    if (empty($id_situacion)) {
+                        if (!empty($nota_num)) {
+                            if ($nota_num/$nota_max < 0.6) {
+                               $id_situacion = 12;
+                            } else {
+                                $id_situacion = 10;
+                            }
                         } else {
-                            $id_situacion = 10;
+                            if (isset($oPersonaNotaAnterior)) {
+                                $oPersonaNotaAnterior->DBEliminar();
+                            }
+                            continue 2;
                         }
-                    } else {
-                        if (isset($oPersonaNotaAnterior)) {
-                            $oPersonaNotaAnterior->DBEliminar();
-                        }
-                        continue 2;
                     }
-                }
 		    }
 
 			$oPersonaNota = new PersonaNota(array('id_nom'=>$id_nom,'id_asignatura'=>$Qid_asignatura));
@@ -236,7 +237,7 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 			}
 		}
 	}
-	$go_to=core\ConfigGlobal::getWeb()."/apps/notas/controller/acta_imprimir.php?acta=$acta|main";
+	$go_to=ConfigGlobal::getWeb()."/apps/notas/controller/acta_imprimir.php?acta=$acta|main";
 }
 
 if ($Qque==1) { // Grabar las notas en la matricula
