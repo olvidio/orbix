@@ -115,6 +115,8 @@ if (!empty($Qid_activ)) { // caso de modificar
 	$Qmod = 'nuevo';
 	$isfsv=core\ConfigGlobal::mi_sfsv();
 	
+	$oActividad = new Actividad();
+    $a_status = $oActividad->getArrayStatus();
 	// Valores por defecto	
 	$dl_org = core\ConfigGlobal::mi_delef(); 
 	// si es nueva, obligatorio estado: proyecto (14.X.2011)
