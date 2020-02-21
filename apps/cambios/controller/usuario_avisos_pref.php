@@ -39,8 +39,16 @@ if (!empty($a_sel)) { //vengo de un checkbox
 
 $Qquien = (string) \filter_input(INPUT_POST, 'quien');
 
-$oUsuario = new GrupoOUsuario(array('id_usuario'=>$Qid_usuario)); // La tabla y su heredada
+// Si empieza por 4 es usuario, por 5 es grupo
+if (substr($Qid_usuario,0,1) == 4) {
+    $oUsuario = new Usuario(array('id_usuario'=>$Qid_usuario));
+    $grupo = FALSE;   
+} else {
+    $oUsuario = new GrupoOUsuario(array('id_usuario'=>$Qid_usuario)); // La tabla y su heredada
+    $grupo = TRUE;   
+}
 $nombre=$oUsuario->getUsuario();
+
 $mi_sfsv = ConfigGlobal::mi_sfsv();
 
 // Tipos de avisos
@@ -122,9 +130,8 @@ switch ($mi_sfsv) {
 		break;
 }
 // miro que rol tengo. Si soy casa, sólo veo la mía
-$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
-if ($oMiUsuario->isRolePau(Role::PAU_CDC)) {
-    $id_pau=$oMiUsuario->getId_pau();
+if ($grupo === FALSE && $oUsuario->isRolePau(Role::PAU_CDC)) {
+    $id_pau=$oUsuario->getId_pau();
     $sDonde=str_replace(",", " OR id_ubi=", $id_pau);
     //formulario para casas cuyo calendario de actividades interesa
     $cond = "WHERE status='t' AND (id_ubi=$sDonde)";
@@ -142,7 +149,7 @@ if (!empty($id_tipo_activ))  {
     if ($mi_sfsv == 1) $ssfsv = 'sv';
     if ($mi_sfsv == 2) $ssfsv = 'sf';
     // las casas, sf y sv
-    if ($oMiUsuario->isRolePau(Role::PAU_CDC)) {
+    if ($grupo === FALSE && $oUsuario->isRolePau(Role::PAU_CDC)) {
         $ssfsv = '';
     }
     $oTipoActiv= new TiposActividades();
@@ -166,12 +173,11 @@ if (!empty($id_tipo_activ))  {
 $oActividadTipo->setPara('cambios');
 $oActividadTipo->setQue('buscar');
 
-// para admin y las casas también: sf y sv
+// para las casas también: sf y sv
 $perm_jefe = FALSE;
 if ($_SESSION['oConfig']->is_jefeCalendario()
     OR (($_SESSION['oPerm']->have_perm_oficina('des') or $_SESSION['oPerm']->have_perm_oficina('vcsd')) && $mi_sfsv == 1) 
-    OR $oMiUsuario->isRolePau(Role::PAU_CDC)
-    OR $_SESSION['oPerm']->have_perm_oficina('admin') 
+    OR ($grupo === FALSE && $oUsuario->isRolePau(Role::PAU_CDC))
     )
 {
     $perm_jefe = TRUE;
