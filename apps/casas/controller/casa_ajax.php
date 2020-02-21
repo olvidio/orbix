@@ -2,7 +2,6 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 
-use actividadcargos\model\entity\GestorActividadCargo;
 use actividades\model\entity\Actividad;
 use actividades\model\entity\GestorActividad;
 use actividadescentro\model\entity\GestorCentroEncargado;
@@ -10,11 +9,12 @@ use actividadtarifas\model\entity\GestorTipoTarifa;
 use actividadtarifas\model\entity\TipoTarifa;
 use casas\model\entity\Ingreso;
 use core\ConfigGlobal;
+use permisos\model\PermisosActividadesTrue;
+use procesos\model\entity\GestorActividadProcesoTarea;
 use ubis\model\entity\CasaDl;
+use ubis\model\entity\CentroDl;
 use ubis\model\entity\Tarifa;
-use ubis\model\entity\Ubi;
 use usuarios\model\entity\Role;
-use usuarios\model\entity\Usuario;
 use web\Lista;
 use web\Periodo;
 use web\TiposActividades;
@@ -453,10 +453,17 @@ switch ($Qque) {
 				if (strlen($h_ini)) {$h_ini=substr($h_ini,0, (strlen($h_ini)-3));}
 				if (strlen($h_fin)) {$h_fin=substr($h_fin,0, (strlen($h_fin)-3));}
 				// mirar permisos.
-				$_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
-				$oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
-				$oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
-				$oPermCtr = $_SESSION['oPermActividades']->getPermisoActual('ctr');
+				if(core\ConfigGlobal::is_app_installed('procesos')) {
+				    $_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
+				    $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
+				    $oPermCtr = $_SESSION['oPermActividades']->getPermisoActual('ctr');
+                    $oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
+				} else {
+				    $oPermActividades = new PermisosActividadesTrue(core\ConfigGlobal::mi_id_usuario());
+				    $oPermActiv = $oPermActividades->getPermisoActual('datos');
+				    $oPermCtr =  $oPermActividades->getPermisoActual('ctr');
+                    $oPermSacd = $$oPermActividades->getPermisoActual('sacd');
+				}
 
 				$oCasa = new CasaDl($id_ubi);
 				$nombre_ubi = $oCasa->getNombre_ubi();
@@ -477,23 +484,37 @@ switch ($Qque) {
 				}
 
 
-				$ctrs='';
+				$txt_ctr='';
 				if ($oPermCtr->have_perm_action('ver')) {
 					$oEnc=new GestorCentroEncargado();
-					foreach($oEnc->getCentrosEncargadosActividad($id_activ) as $oEncargado) {;
-						$ctrs.=$oEncargado->getNombre_ubi().', ';
+					foreach($oEnc->getCentrosEncargadosActividad($id_activ) as $oCentroEncargado) {;
+						$id_ubi = $oCentroEncargado->getId_ubi();
+						$Centro = new CentroDl($id_ubi);
+						$nombre_ctr = $Centro->getNombre_ubi();
+						$txt_ctr .= empty($txt_ctr)? $nombre_ctr : "; $nombre_ctr";
 					}
-					$ctrs=substr($ctrs,0,-2);
 				}
-				$sacds='';
-				if ($oPermSacd->have_perm_action('ver')) {
-					$oCargosActividad=new GestorActividadCargo();
-					foreach($oCargosActividad->getActividadSacds($id_activ) as $oPersona) {;
-						$sacds.=$oPersona->getApellidosNombre()."# "; // la coma la utilizo como separador de apellidos, nombre.
-					}
-					$sacds=substr($sacds,0,-2);
+				
+				$txt_sacds='';
+				if(core\ConfigGlobal::is_app_installed('actividadessacd')) {
+				    // sólo si tiene permiso
+				    $aprobado = TRUE;
+				    if (ConfigGlobal::mi_sfsv() == 2) {
+				        $gesActividadProcesoTarea = new GestorActividadProcesoTarea();
+				        $aprobado = $gesActividadProcesoTarea->getSacdAprobado($id_activ);
+				    }
+				    if (!core\ConfigGlobal::is_app_installed('procesos')
+				        OR ($oPermSacd->have_perm_activ('ver') === true && $aprobado) )
+				    {
+				        $gesCargosActividad=new actividadcargos\model\entity\GestorActividadCargo();
+				        foreach($gesCargosActividad->getActividadSacds($id_activ) as $oPersona) {
+				            $nom_sacd = $oPersona->getApellidosNombre();
+				            //separar con #. la coma la utilizo como separador de apellidos, nombre.
+				            $txt_sacds .= empty($txt_sacds)? $nom_sacd : "# $nom_sacd";
+				        }
+				    }
 				}
-			
+				
 				$oTipoTarifa = new TipoTarifa(array('tarifa'=>$tarifa));
 				$letra_tarifa = $oTipoTarifa->getLetra();
 
@@ -508,8 +529,8 @@ switch ($Qque) {
 
 				$a_valores[$id_ubi][$a][9]=$nombre_ubi;
 				$a_valores[$id_ubi][$a][10]=$letra_tarifa;
-				$a_valores[$id_ubi][$a][11]=$ctrs;
-				$a_valores[$id_ubi][$a][12]=$sacds;
+				$a_valores[$id_ubi][$a][11]=$txt_ctr;
+				$a_valores[$id_ubi][$a][12]=$txt_sacds;
 				$a_valores[$id_ubi][$a][13]=$observ;
 			}
 		}

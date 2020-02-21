@@ -81,7 +81,8 @@ $miSfsv = ConfigGlobal::mi_sfsv();
 if ($Qquien=='usuario') $obj = 'usuarios\\model\\entity\\Usuario';
 
 if( (ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Qquien == 'usuario') ) {
-    $a_status = ActividadAll::ARRAY_STATUS_TXT;
+    $oActividad = new ActividadAll();
+    $a_status = $oActividad->getArrayStatus();
     
 	// avisos
 	$oGesCambiosUsuariosObjeto = new GestorCambioUsuarioObjetoPref();

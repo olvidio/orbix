@@ -88,7 +88,8 @@ if (!empty($Qid_item_usuario_objeto)) {
         $oDesplFasesFin->setNombre('fase_fin');
         $oDesplFasesFin->setOpcion_sel($id_fase_fin);
 	} else {
-	    $a_status = ActividadAll::ARRAY_STATUS_TXT;
+	    $oActividad = new ActividadAll();
+	    $a_status = $oActividad->getArrayStatus();
         $oDesplFasesIni = new Desplegable();
         $oDesplFasesIni->setOpciones($a_status);
         $oDesplFasesIni->setNombre('fase_ini');

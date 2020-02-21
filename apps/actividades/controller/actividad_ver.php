@@ -49,8 +49,6 @@ $aQuery = array ('pau'=>'a',
 if (is_array($aQuery)) { array_walk($aQuery, 'core\poner_empty_on_null'); }
 $godossiers = web\Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_build_query($aQuery));
 
-$a_status = Actividad::ARRAY_STATUS_TXT;
-
 $permiso_des = FALSE;
 if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) {
     $permiso_des = TRUE;
@@ -64,6 +62,8 @@ if (!empty($Qid_activ)) { // caso de modificar
 	$Qmod = 'editar';
 
 	$oActividad = new Actividad($Qid_activ);
+    $a_status = $oActividad->getArrayStatus();
+    
 	$id_tipo_activ = $oActividad->getId_tipo_activ();
 	$dl_org = $oActividad->getDl_org();
 	$nom_activ = $oActividad->getNom_activ();

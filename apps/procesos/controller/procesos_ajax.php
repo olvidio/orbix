@@ -20,7 +20,8 @@ $Qque = (string) \filter_input(INPUT_POST, 'que');
 switch($Qque) {
 	case 'get':
 	    $Qid_tipo_proceso = (integer) \filter_input(INPUT_POST, 'id_tipo_proceso');
-		$a_status= ActividadAll::ARRAY_STATUS_TXT;
+	    $oActividad = new ActividadAll();
+		$a_status= $oActividad->getArrayStatus();
 			
 		$oMiUsuario = new Usuario(core\ConfigGlobal::mi_id_usuario());
 		$miSfsv = core\ConfigGlobal::mi_sfsv();

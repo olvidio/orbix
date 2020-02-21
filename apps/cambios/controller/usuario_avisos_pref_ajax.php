@@ -365,7 +365,8 @@ switch($Qsalida) {
                 }
             } else {
                 // Sólo los estado de la actividad
-                $aFasesConPerm = ActividadAll::ARRAY_STATUS_TXT;
+                $oActividad = new ActividadAll();
+                $aFasesConPerm = $oActividad->getArrayStatus();
             }
             $oDesplFasesIni = new Desplegable();
             $oDesplFasesIni->setOpciones($aFasesConPerm);
@@ -431,7 +432,8 @@ switch($Qsalida) {
                 }
             } else {
                 // Sólo los estado de la actividad
-                $aFasesConPerm = ActividadAll::ARRAY_STATUS_TXT;
+                $oActividad = new ActividadAll();
+                $aFasesConPerm = $oActividad->getArrayStatus();
             }
             $oDesplFasesFin = new Desplegable();
             $oDesplFasesFin->setOpciones($aFasesConPerm);

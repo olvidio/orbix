@@ -21,23 +21,6 @@ class ActividadAll Extends core\ClasePropiedades {
 	const STATUS_BORRABLE 	  	 = 4; // Borrable.
 	const STATUS_ALL    	  	 = 9; // Cualquiera.
 	
-	const ARRAY_STATUS_TXT = [
-	    self::STATUS_PROYECTO => "proyecto",
-	    self::STATUS_ACTUAL => "actual",
-	    self::STATUS_TERMINADA => "terminada",
-	    self::STATUS_BORRABLE => "borrable",
-	    self::STATUS_ALL => "cualquiera",
-	];
-	
-	// NO se usan, son solo para asegurar que exista la traducción
-	private function traduccion () {
-	    $p = _("proyecto");
-	    $a = _("actual");
-	    $t = _("terminada");
-	    $b = _("borrable");
-	    $c = _("cualquiera");
-	}
-	
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/**
@@ -362,6 +345,19 @@ class ActividadAll Extends core\ClasePropiedades {
 	}
 	
 	/* METODES ALTRES  ----------------------------------------------------------*/
+	
+	public function getArrayStatus() {
+        $a_status = [
+            self::STATUS_PROYECTO => _("proyecto"),
+            self::STATUS_ACTUAL => _("actual"),
+            self::STATUS_TERMINADA => _("terminada"),
+            self::STATUS_BORRABLE => _("borrable"),
+            self::STATUS_ALL => _("cualquiera"),
+            ];
+        
+        return $a_status;
+	}
+
 	/* METODES PRIVATS ----------------------------------------------------------*/
 
 	/**
@@ -1295,11 +1291,12 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return object DatosCampo
 	 */
 	function getDatosStatus() {
+	    $a_status = $this->getArrayStatus();
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'status'));
 		$oDatosCampo->setEtiqueta(_("status"));
 		$oDatosCampo->setTipo('array');
-		$oDatosCampo->setLista(array(1=>'proyecto',2=>'actual',3=>'terminada',4=>'borrable'));
+		$oDatosCampo->setLista( $a_status );
 		return $oDatosCampo;
 	}
 	/**

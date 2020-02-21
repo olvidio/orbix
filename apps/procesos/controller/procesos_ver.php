@@ -20,7 +20,8 @@ $Qmod = (string) \filter_input(INPUT_POST, 'mod');
 $Qid_item = (integer) \filter_input(INPUT_POST, 'id_item');
 $Qid_tipo_proceso = (integer) \filter_input(INPUT_POST, 'id_tipo_proceso');
 
-$a_status = ActividadAll::ARRAY_STATUS_TXT;
+$oActividad = new ActividadAll();
+$a_status = $oActividad->getArrayStatus();
 // para el form
 if ($Qmod == 'editar') {
 

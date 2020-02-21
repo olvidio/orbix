@@ -75,9 +75,10 @@ switch ($Qque) {
             $permiso_des = TRUE;
         }
         
-        $a_status = Actividad::ARRAY_STATUS_TXT;
         
         $oActividad = new actividades\model\entity\Actividad($Qid_activ);
+        $a_status = $oActividad->getArrayStatus();
+        
         $id_tipo_activ = $oActividad->getId_tipo_activ();
         $dl_org = $oActividad->getDl_org();
         $nom_activ = $oActividad->getNom_activ();
@@ -225,9 +226,9 @@ switch ($Qque) {
             $permiso_des = TRUE;
         }
         
-        $a_status = Actividad::ARRAY_STATUS_TXT;
-        
         $oActividad = new Actividad();
+        $a_status = $oActividad->getArrayStatus();
+
         $id_tipo_activ = $oActividad->getId_tipo_activ();
         $dl_org = $oActividad->getDl_org();
         $nom_activ = $oActividad->getNom_activ();

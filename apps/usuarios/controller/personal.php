@@ -44,7 +44,7 @@ $oDesplInicio->setOpcion_sel($inicio);
 //oficinas posibles:
 $GesGMR = new menus\GestorGrupMenuRole();
 $cGMR = $GesGMR->getGrupMenuRoles(array('id_role'=>$id_role));
-$mi_oficina_menu=$cGMR[0]->getId_grupmenu();
+//$mi_oficina_menu=$cGMR[0]->getId_grupmenu();
 $posibles = '';
 foreach ($cGMR as $oGMR) {
 	$id_grupmenu=$oGMR->getId_grupmenu();

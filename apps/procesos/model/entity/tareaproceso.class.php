@@ -1,7 +1,7 @@
 <?php
 namespace procesos\model\entity;
 use core;
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 /**
  * Fitxer amb la Classe que accedeix a la taula a_tareas_proceso
  *
@@ -643,11 +643,13 @@ class TareaProceso Extends core\ClasePropiedades {
 	 * @return core\DatosCampo
 	 */
 	function getDatosStatus() {
+	    $oActividad = new ActividadAll();
+	    $a_status = $oActividad->getArrayStatus();
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'status'));
 		$oDatosCampo->setEtiqueta(_("status"));
 		$oDatosCampo->setTipo('array');
-		$oDatosCampo->setLista(Actividad::ARRAY_STATUS_TXT);
+		$oDatosCampo->setLista($a_status);
 		
 		return $oDatosCampo;
 	}
