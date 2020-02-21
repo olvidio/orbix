@@ -5,6 +5,9 @@ use notas\model\entity as notas;
 use personas\model\entity as personas;
 use notas\model\entity\Acta;
 use notas\model\entity\Nota;
+use actividades\model\entity\Actividad;
+use notas\model\entity\PersonaNota;
+use web\TiposActividades;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -26,6 +29,16 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 	// miro el acta
 	$GesActas = new notas\GestorActa();
 	$cActas = $GesActas->getActas(array('id_activ'=>$Qid_activ,'id_asignatura'=>$Qid_asignatura));
+	// miro la epoca
+	$oActividad = new Actividad($Qid_activ);
+	$id_tipo_activ = $oActividad->getId_tipo_activ();
+	$iepoca = PersonaNota::EPOCA_CA;
+	$oTipoActividad = new TiposActividades($id_tipo_activ);
+	$asistentes = $oTipoActividad->getAsistentesText();
+	$actividad = $oTipoActividad->getActividadText();
+	if ($asistentes == 'agd' && $actividad == 'ca') {
+        $iepoca = PersonaNota::EPOCA_INVIERNO;
+	}
 
 	$GesMatriculas = new actividadestudios\GestorMatricula();
 	$cMatriculados = $GesMatriculas->getMatriculas(array('id_asignatura'=>$Qid_asignatura, 'id_activ'=>$Qid_activ));
@@ -232,6 +245,7 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 			$oPersonaNota->setId_activ($Qid_activ);
 			$oPersonaNota->setPreceptor($preceptor);
 			$oPersonaNota->setId_preceptor($id_preceptor);
+			$oPersonaNota->setEpoca($iepoca);
 			$oPersonaNota->setNota_num($nota_num);
 			$oPersonaNota->setNota_max($nota_max);
 			$oPersonaNota->setTipo_acta(notas\PersonaNota::FORMATO_ACTA);
