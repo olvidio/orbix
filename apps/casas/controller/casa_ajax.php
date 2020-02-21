@@ -462,7 +462,7 @@ switch ($Qque) {
 				    $oPermActividades = new PermisosActividadesTrue(core\ConfigGlobal::mi_id_usuario());
 				    $oPermActiv = $oPermActividades->getPermisoActual('datos');
 				    $oPermCtr =  $oPermActividades->getPermisoActual('ctr');
-                    $oPermSacd = $$oPermActividades->getPermisoActual('sacd');
+                    $oPermSacd = $oPermActividades->getPermisoActual('sacd');
 				}
 
 				$oCasa = new CasaDl($id_ubi);
