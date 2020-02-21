@@ -166,11 +166,12 @@ if (!empty($id_tipo_activ))  {
 $oActividadTipo->setPara('cambios');
 $oActividadTipo->setQue('buscar');
 
-// las casas tambien: sf y sv
+// para admin y las casas también: sf y sv
 $perm_jefe = FALSE;
 if ($_SESSION['oConfig']->is_jefeCalendario()
     OR (($_SESSION['oPerm']->have_perm_oficina('des') or $_SESSION['oPerm']->have_perm_oficina('vcsd')) && $mi_sfsv == 1) 
     OR $oMiUsuario->isRolePau(Role::PAU_CDC)
+    OR $_SESSION['oPerm']->have_perm_oficina('admin') 
     )
 {
     $perm_jefe = TRUE;
