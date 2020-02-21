@@ -192,8 +192,8 @@ class PersonaNota Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if ($this->DBCarregar('guardar') === false) { $bInsert=true; } else { $bInsert=false; }
 		$aDades=array();
-		$aDades['id_asignatura'] = $this->iid_asignatura;
 		$aDades['id_nivel'] = $this->iid_nivel;
+		$aDades['id_asignatura'] = $this->iid_asignatura;
 		$aDades['id_situacion'] = $this->iid_situacion;
 		$aDades['acta'] = $this->sacta;
 		$aDades['f_acta'] = $this->df_acta;
@@ -213,8 +213,8 @@ class PersonaNota Extends core\ClasePropiedades {
 		if ($bInsert === false) {
 			//UPDATE
 			$update="
-					id_asignatura            = :id_asignatura,
 					id_nivel	             = :id_nivel,
+					id_asignatura            = :id_asignatura,
 					id_situacion             = :id_situacion,
 					acta                     = :acta,
 					f_acta                   = :f_acta,
@@ -239,7 +239,7 @@ class PersonaNota Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			array_unshift($aDades, $this->iid_schema, $this->iid_nom, $this->iid_nivel);
+			array_unshift($aDades, $this->iid_schema, $this->iid_nom);
 			$campos="(id_schema,id_nom,id_nivel,id_asignatura,id_situacion,acta,f_acta,detalle,preceptor,id_preceptor,epoca,id_activ,nota_num,nota_max,tipo_acta)";
 			$valores="(:id_schema,:id_nom,:id_nivel,:id_asignatura,:id_situacion,:acta,:f_acta,:detalle,:preceptor,:id_preceptor,:epoca,:id_activ,:nota_num,:nota_max,:tipo_acta)";		
 			//echo "INSERT INTO $nom_tabla $campos VALUES $valores";
