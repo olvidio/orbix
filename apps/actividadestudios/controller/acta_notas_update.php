@@ -57,7 +57,7 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 			// Acepto nota_num=0 para borrar.
 			if (!empty($nota_num) && $nota_num/$nota_max < 0.6) {
 				$nn = $nota_num/$nota_max * 10;
-				// Ahora si la gurado como examinado
+				// Ahora si la guardo como examinado
 				$error .= sprintf(_("nota no guardada para %s porque la nota (%s) no llega al mínimo: 6"),$oPersona->getNombreApellidos(),$nn)."\n";
 				continue;
 			}
