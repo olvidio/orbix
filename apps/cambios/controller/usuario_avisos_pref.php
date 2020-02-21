@@ -7,10 +7,11 @@ use core\ConfigGlobal;
 use procesos\model\entity\GestorActividadFase;
 use ubis\model\entity\GestorCasaDl;
 use usuarios\model\entity\GrupoOUsuario;
+use usuarios\model\entity\Role;
+use usuarios\model\entity\Usuario;
 use web\Desplegable;
 use web\DesplegableArray;
 use web\TiposActividades;
-use config\model\Config;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -120,19 +121,30 @@ switch ($mi_sfsv) {
 		$cond = "WHERE sf = 't'";
 		break;
 }
+// miro que rol tengo. Si soy casa, sólo veo la mía
+$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+if ($oMiUsuario->isRolePau(Role::PAU_CDC)) {
+    $id_pau=$oMiUsuario->getId_pau();
+    $sDonde=str_replace(",", " OR id_ubi=", $id_pau);
+    //formulario para casas cuyo calendario de actividades interesa
+    $cond = "WHERE status='t' AND (id_ubi=$sDonde)";
+}
 $oGCasas = new GestorCasaDl();
 $oOpcionesCasas = $oGCasas->getPosiblesCasas($cond);
-//$oDesplCasas = new Desplegable(array('oOpciones'=>$oOpcionesCasas));	
 
-$oSelects = new DesplegableArray($id_pau,$oOpcionesCasas,'casas');
-$oSelects->setBlanco('t');
-$oSelects->setAccionConjunto('fnjs_mas_casas(event)');
+$oDesplArrayCasas = new DesplegableArray($id_pau,$oOpcionesCasas,'casas');
+$oDesplArrayCasas->setBlanco('t');
+$oDesplArrayCasas->setAccionConjunto('fnjs_mas_casas(event)');
 
 if (!empty($id_tipo_activ))  {
     $oTipoActiv= new TiposActividades($id_tipo_activ);
 } else {
     if ($mi_sfsv == 1) $ssfsv = 'sv';
     if ($mi_sfsv == 2) $ssfsv = 'sf';
+    // las casas, sf y sv
+    if ($oMiUsuario->isRolePau(Role::PAU_CDC)) {
+        $ssfsv = '';
+    }
     $oTipoActiv= new TiposActividades();
     $oTipoActiv->setSfsvText($ssfsv);
 }
@@ -152,14 +164,18 @@ if (!empty($id_tipo_activ))  {
     $oActividadTipo->setNom_tipo($nom_tipo);
 }
 $oActividadTipo->setPara('cambios');
+$oActividadTipo->setQue('buscar');
 
+// las casas tambien: sf y sv
 $perm_jefe = FALSE;
 if ($_SESSION['oConfig']->is_jefeCalendario()
-    or (($_SESSION['oPerm']->have_perm_oficina('des') or $_SESSION['oPerm']->have_perm_oficina('vcsd')) && $mi_sfsv == 1)
-    ) {
-        $perm_jefe = TRUE;
-    }
-    $oActividadTipo->setPerm_jefe($perm_jefe);
+    OR (($_SESSION['oPerm']->have_perm_oficina('des') or $_SESSION['oPerm']->have_perm_oficina('vcsd')) && $mi_sfsv == 1) 
+    OR $oMiUsuario->isRolePau(Role::PAU_CDC)
+    )
+{
+    $perm_jefe = TRUE;
+}
+$oActividadTipo->setPerm_jefe($perm_jefe);
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('salida!aviso_tipo!objeto!dl_propia!fase_ini!fase_fin!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val');
@@ -212,7 +228,7 @@ $a_campos = [
     'oActividadTipo' => $oActividadTipo,
     'oDesplFasesIni' => $oDesplFasesIni,
     'oDesplFasesFin' => $oDesplFasesFin,
-    'oSelects' => $oSelects,
+    'oDesplArrayCasas' => $oDesplArrayCasas,
     'oDesplTiposAviso' => $oDesplTiposAviso,
     'id_item_usuario_objeto' => $Qid_item_usuario_objeto,
 ];

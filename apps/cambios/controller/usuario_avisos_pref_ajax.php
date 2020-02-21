@@ -10,6 +10,7 @@ use permisos\model\PermisosActividades;
 use procesos\model\entity\ActividadFase;
 use procesos\model\entity\GestorActividadFase;
 use ubis\model\entity\GestorCasaDl;
+use usuarios\model\entity\Role;
 use usuarios\model\entity\Usuario;
 use web\Desplegable;
 use web\DesplegableArray;
@@ -131,7 +132,7 @@ switch($Qsalida) {
 		if ($Qpropiedad == 'id_ubi') {
 
 			// miro que rol tengo. Si soy casa, sólo veo la mía
-			if ($oMiUsuario->isRolePau('cdc')) { //casa
+			if ($oMiUsuario->isRolePau(Role::PAU_CDC)) { //casa
 				$id_pau=$oMiUsuario->getId_pau();
 				$sDonde=str_replace(",", " OR id_ubi=", $id_pau);
 				//formulario para casas cuyo calendario de actividades interesa 
@@ -267,7 +268,7 @@ switch($Qsalida) {
                 } else {
                     // para el caso de las casas y los sacd, sólo puede avisar de un cambio suyo.
                     // miro que rol tengo. Si soy casa, sólo veo la mía
-                    if ($nom_prop == 'id_ubi' && $oMiUsuario->isRolePau('cdc')) {
+                    if ($nom_prop == 'id_ubi' && $oMiUsuario->isRolePau(Role::PAU_CDC)) {
                         $id_pau=$oMiUsuario->getId_pau();
                         $sDonde=str_replace(",", " OR id_ubi=", $id_pau);
 
