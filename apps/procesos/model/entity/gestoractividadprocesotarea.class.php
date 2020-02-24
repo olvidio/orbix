@@ -3,7 +3,6 @@ namespace procesos\model\entity;
 use actividades\model\entity\Actividad;
 use actividades\model\entity\TipoDeActividad;
 use core;
-use core\ConfigGlobal;
 /**
  * GestorActividadProcesoTarea
  *
@@ -124,7 +123,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
         
         if (empty($isfsv)) {
             $a_sfsv = [1,2];
-            $isfsv = ConfigGlobal::mi_sfsv();
+            $isfsv = core\ConfigGlobal::mi_sfsv();
         } else {
             $a_sfsv = [$isfsv];
         }
@@ -321,7 +320,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	 * @param integer iid_tipo_proceso
 	 * @return id_fase.
 	 */
-	private function generar($iid_activ='',$iid_tipo_proceso='') {
+	public function generar($iid_activ='',$iid_tipo_proceso='') {
 	    $this->borrar($iid_activ);
 	    $GesTareaProceso = new GestorTareaProceso();
 	    $cTareasProceso = $GesTareaProceso->getTareasProceso(array('id_tipo_proceso'=>$iid_tipo_proceso,'_ordre'=>'n_orden'));
@@ -356,7 +355,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	        $dl_org = $oActividad->getDl_org();
             $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
             // El status solo se puede guardar si la actividad es de la propia dl (o des desde sv).
-            if ($dl_org_no_f == ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm_oficina('des')) {
+            if ($dl_org_no_f == core\ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm_oficina('des')) {
                 $oActividad->setStatus($statusActividad);
                 $quiet = 1; // Para que no anote el cambio.
                 $oActividad->DBGuardar($quiet);
