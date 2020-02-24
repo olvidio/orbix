@@ -143,7 +143,7 @@ switch($Qque) {
 					$cActivProceso = $GesActivProceso->getActividadProcesoTareas(array('id_activ'=>$id_activ,'id_fase'=>$id_fase_previa));
 					if (empty($cActivProceso)) {
 						$mensaje_requisito = $oTareaProceso->getMensaje_requisito();
-						$a_valores[$i]['clase'] = 'wrong';
+						$a_valores[$i]['clase'] = 'wrong-soft';
 					} else {
                         $fase_previa_completado = $cActivProceso[0]->getCompletado(); // sólo uno
                         if ($fase_previa_completado == 't') {
@@ -158,7 +158,7 @@ switch($Qque) {
                             }
                         } else {
                             $mensaje_requisito = $oTareaProceso->getMensaje_requisito();
-                            $a_valores[$i]['clase'] = 'wrong';
+                            $a_valores[$i]['clase'] = 'wrong-soft';
                         }
 					}
 				} else {
