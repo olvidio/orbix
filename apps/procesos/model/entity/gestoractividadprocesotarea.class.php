@@ -58,7 +58,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
                 FROM ( SELECT n_orden FROM $nom_tabla
                     WHERE id_activ=$iid_activ AND id_fase=$iid_fase
                 ) AS OrdenFase
-                WHERE $nom_tabla.id_activ=$iid_activ AND n_orden > OrdenFase.n_orden 
+                WHERE $nom_tabla.id_activ=$iid_activ AND $nom_tabla.n_orden > OrdenFase.n_orden 
                 ";
 	    if ($oDbl->query($sQry) === false) {
 	        $sClauError = 'GestorActividadProcesoTarea.faseCompletada.prepare';
