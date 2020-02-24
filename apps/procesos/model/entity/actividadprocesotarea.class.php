@@ -387,10 +387,9 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         $id_tipo_proceso = $cActividadPorcesoTarea[0]->getId_tipo_proceso();
         
         if ( $statusActividad < $statusProceso ) {
-            // buscar la primera fase del proceso para el estado 'actual'
-            $status = ActividadAll::STATUS_ACTUAL;
+            // buscar la primera fase del proceso para el estado del proceso
             $gesTareaProceso = new GestorTareaProceso();
-            $id_fase = $gesTareaProceso->getFirstFaseStatus($id_tipo_proceso, $status);
+            $id_fase = $gesTareaProceso->getFirstFaseStatus($id_tipo_proceso, $statusProceso);
             
             $aWhere = ['id_activ' => $this->iid_activ, 'id_fase' => $id_fase];
             $cActividadPorcesoTareas = $gesActividadPorcesoTareas->getActividadProcesoTareas($aWhere);
@@ -401,10 +400,9 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
             }
         }
         if ( $statusActividad > $statusProceso ) {
-            // buscar la primera fase del proceso para el estado 'actual'
-            $status = ActividadAll::STATUS_ACTUAL;
+            // buscar la ultima fase del proceso para el estado del proceso
             $gesTareaProceso = new GestorTareaProceso();
-            $id_fase = $gesTareaProceso->getLastFaseStatus($id_tipo_proceso, $status);
+            $id_fase = $gesTareaProceso->getLastFaseStatus($id_tipo_proceso, $statusProceso);
             
             $aWhere = ['id_activ' => $this->iid_activ, 'id_fase' => $id_fase];
             $cActividadPorcesoTareas = $gesActividadPorcesoTareas->getActividadProcesoTareas($aWhere);
