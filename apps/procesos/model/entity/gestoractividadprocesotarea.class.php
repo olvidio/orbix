@@ -50,32 +50,23 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
 	
-	/**
-	 *  Buscar la primera fase del estado del proceso
-	 *
-	 *  @param integer status
-	 *  @param integer id_proceso
-	 *  @return integer fase
-	 */
-	public function getFaseStatus($status, $iid_activ) {
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
-	    $sQry = "SELECT * FROM $nom_tabla WHERE id_activ=".$iid_activ." ORDER BY n_orden DESC LIMIT 1";
-	    if (($qRs = $oDbl->query($sQry)) === false) {
-	        $sClauError = 'GestorActividadProcesoTarea.faseUltima.prepare';
+	public function borrarFasesSiguientes($iid_activ, $iid_fase) {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+
+	    $sQry = "UPDATE $nom_tabla SET completado='f'
+                FROM ( SELECT n_orden FROM $nom_tabla
+                    WHERE id_activ=$iid_activ AND id_fase=$iid_fase
+                ) AS OrdenFase
+                WHERE $nom_tabla.id_activ=$iid_activ AND n_orden > OrdenFase.n_orden 
+                ";
+	    if ($oDbl->query($sQry) === false) {
+	        $sClauError = 'GestorActividadProcesoTarea.faseCompletada.prepare';
 	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-	        return false;
+	        return FALSE;
 	    }
-	    if ($qRs->rowCount() == 1 ) {
-	        $aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
-	        return $aDades['id_fase'];
-	    } else {
-	        return false;
-	    }
-	    $id_fase = $this->getFaseStatus(2);
-	    
+        return TRUE;
 	}
-	
 	
 	public function getSacdAprobado($iid_activ){
         $oDbl = $this->getoDbl();

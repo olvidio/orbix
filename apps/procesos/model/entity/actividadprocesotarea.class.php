@@ -5,7 +5,6 @@ use cambios\model\gestorAvisoCambios;
 use core;
 use actividades\model\entity\ActividadAll;
 use core\ConfigGlobal;
-use vendor\project\StatusTest;
 /**
  * Fitxer amb la Classe que accedeix a la taula a_actividad_proceso_(sf/sv)
  *
@@ -203,7 +202,8 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
                 $id_tabla = $oActividad->getId_tabla();
                 // Sólo dre puede aprobar (pasar de proyecto a actual) las actividades
                 // ojo marcha atrás tampoco debería poderse.
-                if ($statusActividad != ActividadAll::STATUS_ACTUAL && $statusProceso == ActividadAll::STATUS_ACTUAL) {
+                if ( ($statusProceso == ActividadAll::STATUS_ACTUAL && $statusActividad < ActividadAll::STATUS_ACTUAL) 
+                    OR ($statusActividad == ActividadAll::STATUS_ACTUAL && $statusProceso < ActividadAll::STATUS_ACTUAL) ) {
                     // para dl y dlf:
                     $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
                     if ($dl_org == core\ConfigGlobal::mi_delef() OR $dl_org_no_f == core\ConfigGlobal::mi_dele()) {
@@ -211,7 +211,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
                             $oActividad->setStatus($statusProceso);
                             $oActividad->DBGuardar();
                             // además debería marcar como completado la fase correspondiente del proceso de la sf.
-                            $this->marcarFaseEnSfSv($statusProceso,$statusActividad);
+                            $this->marcarFaseEnSf($statusProceso,$statusActividad);
                         } else {
                             echo _("no se puede cambiar el status de la actividad a 'actual', porque debe hacerlo dre");
                             $permitido = FALSE;
@@ -374,7 +374,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
     
     /* METODES ALTRES  ----------------------------------------------------------*/
     
-    function marcarFaseEnSfSv($statusProceso,$statusActividad) {
+    function marcarFaseEnSf($statusProceso,$statusActividad) {
         $gesActividadPorcesoTareas = new GestorActividadProcesoTarea();
         // buscar el id_tipo_proceso para esta actividad de la otra sección
         if (core\ConfigGlobal::mi_sfsv() == 1) {
@@ -390,7 +390,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
             // buscar la primera fase del proceso para el estado 'actual'
             $status = ActividadAll::STATUS_ACTUAL;
             $gesTareaProceso = new GestorTareaProceso();
-            $id_fase = $gesTareaProceso->getFaseStatus($id_tipo_proceso, $status);
+            $id_fase = $gesTareaProceso->getFirstFaseStatus($id_tipo_proceso, $status);
             
             $aWhere = ['id_activ' => $this->iid_activ, 'id_fase' => $id_fase];
             $cActividadPorcesoTareas = $gesActividadPorcesoTareas->getActividadProcesoTareas($aWhere);
@@ -400,6 +400,21 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
                 $oActividadPorcesoTarea->DBGuardar();
             }
         }
+        if ( $statusActividad > $statusProceso ) {
+            // buscar la primera fase del proceso para el estado 'actual'
+            $status = ActividadAll::STATUS_ACTUAL;
+            $gesTareaProceso = new GestorTareaProceso();
+            $id_fase = $gesTareaProceso->getLastFaseStatus($id_tipo_proceso, $status);
+            
+            $aWhere = ['id_activ' => $this->iid_activ, 'id_fase' => $id_fase];
+            $cActividadPorcesoTareas = $gesActividadPorcesoTareas->getActividadProcesoTareas($aWhere);
+            if (!empty($cActividadPorcesoTareas)) {
+                $oActividadPorcesoTarea = $cActividadPorcesoTareas[0];
+                $oActividadPorcesoTarea->setCompletado('t');
+                $oActividadPorcesoTarea->DBGuardar();
+            }
+        }
+        $gesActividadPorcesoTareas->borrarFasesSiguientes($this->iid_activ, $id_fase);
     }
     
     /* METODES PRIVATS ----------------------------------------------------------*/
