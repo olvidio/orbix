@@ -181,6 +181,7 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 		$id_activ_old = 0;
 		$oGesPersonaNota = new GestorPersonaNota();
 		$cBuscarPersonaNotas = $oGesPersonaNota->getPersonaNotas(array('id_nom'=>$id_nom,'id_asignatura'=>$Qid_asignatura));
+		unset($oPersonaNotaAnterior);
 		if (!empty($cBuscarPersonaNotas)) {
 			$oPersonaNotaAnterior = $cBuscarPersonaNotas[0];
 			$id_activ_old = $oPersonaNotaAnterior->getId_activ();

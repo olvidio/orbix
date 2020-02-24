@@ -226,7 +226,7 @@ class PersonaNota Extends core\ClasePropiedades {
 					nota_num                 = :nota_num,
 					nota_max                 = :nota_max,
 					tipo_acta                = :tipo_acta";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_nom=$this->iid_nom AND id_nivel='$this->iid_nivel'")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_nom=$this->iid_nom AND id_nivel=$this->iid_nivel ")) === false) {
 				$sClauError = 'PersonaNota.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -267,7 +267,7 @@ class PersonaNota Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iid_nom) && isset($this->iid_nivel)) {
-			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_nom=$this->iid_nom AND id_nivel='$this->iid_nivel'")) === false) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_nom=$this->iid_nom AND id_nivel=$this->iid_nivel ")) === false) {
 				$sClauError = 'PersonaNota.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
