@@ -50,6 +50,24 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
 	
+	public function marcarFasesAnteriores($iid_activ, $iid_fase) {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+
+	    $sQry = "UPDATE $nom_tabla SET completado='t'
+                FROM ( SELECT n_orden FROM $nom_tabla
+                    WHERE id_activ=$iid_activ AND id_fase=$iid_fase
+                ) AS OrdenFase
+                WHERE $nom_tabla.id_activ=$iid_activ AND $nom_tabla.n_orden < OrdenFase.n_orden 
+                ";
+	    if ($oDbl->query($sQry) === false) {
+	        $sClauError = 'GestorActividadProcesoTarea.faseCompletada.prepare';
+	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+	        return FALSE;
+	    }
+        return TRUE;
+	}
+	
 	public function borrarFasesSiguientes($iid_activ, $iid_fase) {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

@@ -230,10 +230,9 @@ switch($Qque) {
         
 		foreach ($a_sel as $id_activ) {
 			$id_activ=strtok($id_activ,"#");
-			$GesActividadProceso = new GestorActividadProcesoTarea();
+			$gesActividadProcesoTareas = new GestorActividadProcesoTarea();
 			// selecciono todas las tareas de esta fase.
-			$cLista = $GesActividadProceso->getActividadProcesoTareas(array('id_activ'=>$id_activ,'_ordre'=>'n_orden'));
-			$cListaSel = $GesActividadProceso->getActividadProcesoTareas(array('id_activ'=>$id_activ,'id_fase'=>$Qid_fase_nueva, '_ordre'=>'n_orden'));
+			$cListaSel = $gesActividadProcesoTareas->getActividadProcesoTareas(array('id_activ'=>$id_activ,'id_fase'=>$Qid_fase_nueva, '_ordre'=>'n_orden'));
 			if (empty($cListaSel)) {
 			    // No se encuentra esta fase para esta actividad
 			    $oActividad = new Actividad($id_activ);
@@ -244,6 +243,37 @@ switch($Qque) {
 			    echo $txt;
 			    continue;
 			}
+			$oActividadProcesoTarea = $cListaSel[0];
+            $id_tipo_proceso = $oActividadProcesoTarea->getId_tipo_proceso();
+            $id_fase = $oActividadProcesoTarea->getId_fase();
+            $id_tarea = $oActividadProcesoTarea->getId_tarea();
+            //buscar of responsable
+            $GesTareaProcesos = new GestorTareaProceso();
+            $cTareasProceso = $GesTareaProcesos->getTareasProceso(['id_tipo_proceso'=>$id_tipo_proceso,
+                                                            'id_fase'=>$id_fase,
+                                                            'id_tarea'=>$id_tarea
+                                                    ]);
+            // sólo debería haber uno
+            if (!empty($cTareasProceso)) {
+                $oTareaProceso = $cTareasProceso[0];
+            } else {
+                $msg_err = sprintf(_("error: La fase del proceso tipo: %s, fase: %s, tarea: %s"),$id_tipo_proceso,$id_fase,$id_tarea);
+                exit($msg_err);
+            }
+            $of_responsable=$oTareaProceso->getOf_responsable();
+            if (empty($of_responsable) OR $_SESSION['oPerm']->have_perm_oficina($of_responsable) ) {
+                $oActividadProcesoTarea->setCompletado('t');
+                if ($oActividadProcesoTarea->DBGuardar() === false) {
+                    echo _("hay un error, no se ha guardado");
+                }
+                $gesActividadProcesoTareas->borrarFasesSiguientes($id_activ, $id_fase);
+                $gesActividadProcesoTareas->marcarFasesAnteriores($id_activ, $id_fase);
+                
+            } else {
+                echo _("No tiene permiso para completar la fase, no se ha guardado");
+            }
+			
+			/*
 			$n_ordenSel = $cListaSel[0]->getN_orden();
 			foreach($cLista as $oActividadProcesoTarea) {
 				$oActividadProcesoTarea->DBCarregar(); // perque tingui tots els valors, y no esborri al grabar.
@@ -281,11 +311,12 @@ switch($Qque) {
 				} elseif ($n_orden > $n_ordenSel) {
                     // Cuando se va hacia atras (pongo sin completar las fases siguientes)
 				    $oActividadProcesoTarea->setCompletado('f');
-                    if ($oActividadProcesoTarea->DBGuardar() === false) {
+                    if ($oActividadProcesoTarea->DBMarcar() === false) {
                         echo _("hay un error, no se ha guardado");
                     }
 				}
 			}
+			*/
 		}
 		break;
 	case 'get':

@@ -371,18 +371,64 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
             return TRUE;
         }
     }
+
+    /**
+     * Creo esta nueva función para poder guardar sin volver a repetir el proceso de mirar si hay que cambiar el
+     * estado de la actividad. Sólo sirve para hacer UPDATE de completada.
+     *
+     */
+    public function DBMarcar() {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $this->DBCarregar('guardar');
+        
+        $aDades=array();
+        $aDades['id_tipo_proceso'] = $this->iid_tipo_proceso;
+        $aDades['id_activ'] = $this->iid_activ;
+        $aDades['id_fase'] = $this->iid_fase;
+        $aDades['id_tarea'] = $this->iid_tarea;
+        $aDades['n_orden'] = $this->in_orden;
+        $aDades['completado'] = $this->bcompletado;
+        $aDades['observ'] = $this->sobserv;
+        array_walk($aDades, 'core\poner_null');
+        //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+        $aDades['completado'] = ($aDades['completado'] === 't')? 'true' : $aDades['completado'];
+        if ( filter_var( $aDades['completado'], FILTER_VALIDATE_BOOLEAN)) { $aDades['completado']='t'; } else { $aDades['completado']='f'; }
+        
+        //UPDATE
+        $update="
+                id_tipo_proceso          = :id_tipo_proceso,
+                id_activ                 = :id_activ,
+                id_fase                  = :id_fase,
+                id_tarea                 = :id_tarea,
+                n_orden                  = :n_orden,
+                completado               = :completado,
+                observ                   = :observ";
+        if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item'")) === FALSE) {
+            $sClauError = 'ActividadProcesoTarea.update.prepare';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return FALSE;
+        } else {
+            if ($oDblSt->execute($aDades) === FALSE) {
+                $sClauError = 'ActividadProcesoTarea.update.execute';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                return FALSE;
+            }
+        }
+        $this->setAllAtributes($aDades);
+    }
     
     /* METODES ALTRES  ----------------------------------------------------------*/
     
     function marcarFaseEnSf($statusProceso,$statusActividad) {
-        $gesActividadPorcesoTareas = new GestorActividadProcesoTarea();
+        $gesActividadProcesoTareas = new GestorActividadProcesoTarea();
         // buscar el id_tipo_proceso para esta actividad de la otra sección
         if (core\ConfigGlobal::mi_sfsv() == 1) {
-            $gesActividadPorcesoTareas->setNomTabla('a_actividad_proceso_sf');
+            $gesActividadProcesoTareas->setNomTabla('a_actividad_proceso_sf');
         } else {
-            $gesActividadPorcesoTareas->setNomTabla('a_actividad_proceso_sv');
+            $gesActividadProcesoTareas->setNomTabla('a_actividad_proceso_sv');
         }
-        $cActividadPorcesoTarea = $gesActividadPorcesoTareas->getActividadProcesoTareas(['id_activ' => $this->iid_activ]);
+        $cActividadPorcesoTarea = $gesActividadProcesoTareas->getActividadProcesoTareas(['id_activ' => $this->iid_activ]);
         // una fase cualquiera:
         $id_tipo_proceso = $cActividadPorcesoTarea[0]->getId_tipo_proceso();
         
@@ -392,11 +438,11 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
             $id_fase = $gesTareaProceso->getFirstFaseStatus($id_tipo_proceso, $statusProceso);
             
             $aWhere = ['id_activ' => $this->iid_activ, 'id_fase' => $id_fase];
-            $cActividadPorcesoTareas = $gesActividadPorcesoTareas->getActividadProcesoTareas($aWhere);
+            $cActividadPorcesoTareas = $gesActividadProcesoTareas->getActividadProcesoTareas($aWhere);
             if (!empty($cActividadPorcesoTareas)) {
                 $oActividadPorcesoTarea = $cActividadPorcesoTareas[0];
                 $oActividadPorcesoTarea->setCompletado('t');
-                $oActividadPorcesoTarea->DBGuardar();
+                $oActividadPorcesoTarea->DBMarcar();
             }
         }
         if ( $statusActividad > $statusProceso ) {
@@ -405,14 +451,15 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
             $id_fase = $gesTareaProceso->getLastFaseStatus($id_tipo_proceso, $statusProceso);
             
             $aWhere = ['id_activ' => $this->iid_activ, 'id_fase' => $id_fase];
-            $cActividadPorcesoTareas = $gesActividadPorcesoTareas->getActividadProcesoTareas($aWhere);
+            $cActividadPorcesoTareas = $gesActividadProcesoTareas->getActividadProcesoTareas($aWhere);
             if (!empty($cActividadPorcesoTareas)) {
                 $oActividadPorcesoTarea = $cActividadPorcesoTareas[0];
                 $oActividadPorcesoTarea->setCompletado('t');
-                $oActividadPorcesoTarea->DBGuardar();
+                $oActividadPorcesoTarea->DBMarcar();
             }
         }
-        $gesActividadPorcesoTareas->borrarFasesSiguientes($this->iid_activ, $id_fase);
+        $gesActividadProcesoTareas->borrarFasesSiguientes($this->iid_activ, $id_fase);
+        $gesActividadProcesoTareas->marcarFasesAnteriores($this->iid_activ, $id_fase);
     }
     
     /* METODES PRIVATS ----------------------------------------------------------*/
