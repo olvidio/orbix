@@ -119,6 +119,23 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
     public function setNomTabla($sNomTabla) {
         $this->sNomTabla = $sNomTabla;
     }
+
+    public function setSfsv ($isfsv='') {
+        if (empty($isfsv)) {
+            if (ConfigGlobal::mi_sfsv() == 1) {
+                $this->setNomTabla('a_actividad_proceso_sv');
+            } else {
+                $this->setNomTabla('a_actividad_proceso_sf');
+            }
+        } else {
+            if ($isfsv == 1) {
+                $this->setNomTabla('a_actividad_proceso_sv');
+            } else {
+                $this->setNomTabla('a_actividad_proceso_sf');
+            }
+        }
+    }
+    
     
     /**
      * Constructor de la classe.
@@ -142,11 +159,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
             }
         }
         $this->setoDbl($oDbl);
-        if (ConfigGlobal::mi_sfsv() == 1) {
-            $this->setNomTabla('a_actividad_proceso_sv');
-        } else {
-            $this->setNomTabla('a_actividad_proceso_sf');
-        }
+        $this->setSfsv();
     }
     
     /* METODES PUBLICS ----------------------------------------------------------*/

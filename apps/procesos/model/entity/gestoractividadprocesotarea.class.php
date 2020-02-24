@@ -138,7 +138,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
                 echo sprintf(_("No tiene definido el proceso para este tipo de actividad: %s de sv/sf: %s"),$iid_tipo_activ,$sfsv);
                 return TRUE;
             }
-    	    $iid_fase[$sfsv] = $this->generar($iid_activ,$id_tipo_proceso);
+    	    $iid_fase[$sfsv] = $this->generar($iid_activ,$id_tipo_proceso,$sfsv);
         }
 
         // devuelve la fase del proceso propio
@@ -320,7 +320,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	 * @param integer iid_tipo_proceso
 	 * @return id_fase.
 	 */
-	public function generar($iid_activ='',$iid_tipo_proceso='') {
+	public function generar($iid_activ='',$iid_tipo_proceso='',$isfsv='') {
 	    $this->borrar($iid_activ);
 	    $GesTareaProceso = new GestorTareaProceso();
 	    $cTareasProceso = $GesTareaProceso->getTareasProceso(array('id_tipo_proceso'=>$iid_tipo_proceso,'_ordre'=>'n_orden'));
@@ -333,6 +333,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	        $n_orden = $oTareaProceso->getN_orden();
 	        $status = $oTareaProceso->getStatus();
 	        $oActividadProcesoTarea = new ActividadProcesoTarea();
+            $oActividadProcesoTarea->setSfsv($isfsv);
 	        $oActividadProcesoTarea->setId_tipo_proceso($iid_tipo_proceso);
 	        $oActividadProcesoTarea->setId_activ($iid_activ);
 	        $oActividadProcesoTarea->setId_fase($id_fase);
