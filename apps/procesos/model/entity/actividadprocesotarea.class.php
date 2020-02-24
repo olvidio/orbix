@@ -428,14 +428,15 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         } else {
             $gesActividadProcesoTareas->setNomTabla('a_actividad_proceso_sv');
         }
-        $cActividadPorcesoTareas = $gesActividadProcesoTareas->getActividadProcesoTareas(['id_activ' => $this->iid_activ]);
-        if (empty($cActividadPorcesoTareas)) {
+        
+        $id_fase_actual = $gesActividadProcesoTareas->faseActualAcabada($this->iid_activ);
+        if (empty($id_fase_actual) || $id_fase_actual === 'SIN') {
             // Puede ser queel proceso no exista (para sfsv=2):
             $gesActividadProcesoTareas->generarProceso($this->iid_activ, 2);
-            // volver a probar:
-            $cActividadPorcesoTareas = $gesActividadProcesoTareas->getActividadProcesoTareas(['id_activ' => $this->iid_activ]);
         }
-        // una fase cualquiera:
+        
+        $cActividadPorcesoTareas = $gesActividadProcesoTareas->getActividadProcesoTareas(['id_activ' => $this->iid_activ]);
+        // obtengo el id_tipo_proceso de una fase cualquiera:
         $id_tipo_proceso = $cActividadPorcesoTareas[0]->getId_tipo_proceso();
         
         if ( $statusActividad < $statusProceso ) {

@@ -263,7 +263,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	 * @param integer iid_activ
 	 * @return integer|string
 	 */
-	function faseActualAcabada($iid_activ='') {
+	public function faseActualAcabada($iid_activ='') {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 	    $sQry = "SELECT * FROM $nom_tabla WHERE id_activ=".$iid_activ." AND completado='t'
