@@ -38,6 +38,9 @@ if ($Qseguro == 2) {
     $html = "Esto pondrá los menus por defecto. Se eliminaran todas las modificaciones que se hayan hecho en los menus y grupos de menu";
     $html .= "<br>";
     $html .= "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("continuar")."</span>";
+    $html .= "<br><br><ul><li>";
+    $html .= _("Para sf: también se copian los grupMenu de los Roles (de sv). Hay que volver a poner lo que había.");
+    $html .= "</li></ul>";
     echo $html;
 }
 

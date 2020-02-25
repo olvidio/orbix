@@ -130,7 +130,6 @@ switch($Qsalida) {
 		$txt2 .= '<tr><td>'._("a").':';
 		$txt3 = '<input type="input" name="valor" value="'.$valor.'">';
 		if ($Qpropiedad == 'id_ubi') {
-
 			// miro que rol tengo. Si soy casa, sólo veo la mía
 			if ($oMiUsuario->isRolePau(Role::PAU_CDC)) { //casa
 				$id_pau=$oMiUsuario->getId_pau();
@@ -180,7 +179,8 @@ switch($Qsalida) {
 			$txt3 .= $oSelects->ListaSelects(); 
 		}
 		$txt2 .= $txt3;
-		$txt2 .= '</td></tr>';
+		$txt2 .= '  ';
+		$txt2 .= _("fecha en formato ISO (YYYY-MM-dd)").'</td></tr>';
 
 		$txt="<form id='frm_cond'>";
 		$txt.='<h3>'.sprintf(_("condición para %s de %s"),$Qpropiedad,$Qobjeto).'</h3>';
