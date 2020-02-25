@@ -56,9 +56,6 @@ class ActividadNuevoCurso {
             $id_ubi2 = $cActividades[$i+1]->getId_ubi();
             if ($id_ubi1 != $id_ubi2) {
                 // cambio de ubi
-                //$Ubi = new Ubi($id_ubi2);
-                //$nombre_ubi = $Ubi->getNombre_ubi();
-                //echo "<br>$nombre_ubi<br>";
                 continue; //salto al siguiente.
             }
             $oF_fin = $cActividades[$i]->getF_fin();

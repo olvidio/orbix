@@ -374,11 +374,11 @@ class Cambio Extends core\ClasePropiedades {
 	    }
 	    if ($sPropiedad == 'id_ubi') {
 	        if (!empty($sValor_old)) {
-	            $oUbi = new Ubi($sValor_old);
+	            $oUbi = Ubi::NewUbi($sValor_old);
 	            $sValor_old = $oUbi->getNombre_ubi();
 	        }
 	        if (!empty($sValor_new)) {
-	            $oUbi = new Ubi($sValor_new);
+	            $oUbi = Ubi::NewUbi($sValor_new);
 	            $sValor_new = $oUbi->getNombre_ubi();
 	        }
 	    }
