@@ -1,6 +1,7 @@
 <?php
 namespace cambios\model\entity;
 use actividades\model\entity\Actividad;
+use cambios\model\gestorAvisoCambios;
 use core\ConfigGlobal;
 use core;
 use personas\model\entity\Persona;
@@ -392,6 +393,16 @@ class Cambio Extends core\ClasePropiedades {
 	        $sValor_new = empty($sValor_new)? $sValor_new : $aTarifas[$sValor_new];
 	    }
 	    
+	    $ObjetoFullPath = gestorAvisoCambios::getFullPathObj($sObjeto);
+	    $oObject = new $ObjetoFullPath();
+	    $cDatosCampos = $oObject->getDatosCampos();
+	    $etiqueta = $sPropiedad;
+	    foreach ($cDatosCampos as $oDatosCampo) {
+	        if ($oDatosCampo->getNom_camp() == $sPropiedad) {
+                $etiqueta = $oDatosCampo->getEtiqueta();
+	        }
+	    }
+	    
 	    $sValor_old = empty($sValor_old)? '-':$sValor_old;
 	    $sValor_new = empty($sValor_new)? '-':$sValor_new;
 	    
@@ -504,9 +515,9 @@ class Cambio Extends core\ClasePropiedades {
 	    }
 	    
 	    if (empty($sformat)) {
-	       $sTxt = "$sNomActiv; $sPropiedad; $sValor_old; $sValor_new";
+	       $sTxt = "$sNomActiv; $etiqueta; $sValor_old; $sValor_new";
 	    } else {
-	       $sTxt = sprintf($sformat,$sNomActiv,$sPropiedad,$sValor_old,$sValor_new);
+	       $sTxt = sprintf($sformat,$sNomActiv,$etiqueta,$sValor_old,$sValor_new);
 	    }
 	    return $sTxt;
 	}

@@ -247,9 +247,9 @@ switch($Qsalida) {
             $oObject = new $ObjetoFullPath();
             $cDatosCampos = $oObject->getDatosCampos();
             $html = "<td><table><tr><th>";
-            $html .="[<span class='link' onclick='fnjs_selectAll(\"#propiedades_obj\",\"{$Qobjeto}[]\",\"all\",0);'>"._("todos")."</span>]";
-            $html .="  [<span class='link' onclick='fnjs_selectAll(\"#propiedades_obj\",\"{$Qobjeto}[]\",\"none\",0);'>"._("ninguno")."</span>]";
-            $html .="  [<span class='link' onclick='fnjs_selectAll(\"#propiedades_obj\",\"{$Qobjeto}[]\",\"toggle\",0);'>"._("invertir")."</span>]";
+            $html .="[<span class='link_inv' onclick='fnjs_selectAll(\"#propiedades_obj\",\"{$Qobjeto}[]\",\"all\",0);'>"._("todos")."</span>]";
+            $html .="  [<span class='link_inv' onclick='fnjs_selectAll(\"#propiedades_obj\",\"{$Qobjeto}[]\",\"none\",0);'>"._("ninguno")."</span>]";
+            $html .="  [<span class='link_inv' onclick='fnjs_selectAll(\"#propiedades_obj\",\"{$Qobjeto}[]\",\"toggle\",0);'>"._("invertir")."</span>]";
             $html .= "</th><th>"._("condición")."</th><th></th></tr>";
             $condicion = _("cualquier cambio");
             $cambio_prop = '';

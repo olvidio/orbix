@@ -272,51 +272,6 @@ switch($Qque) {
             } else {
                 echo _("No tiene permiso para completar la fase, no se ha guardado");
             }
-			
-			/*
-			$n_ordenSel = $cListaSel[0]->getN_orden();
-			foreach($cLista as $oActividadProcesoTarea) {
-				$oActividadProcesoTarea->DBCarregar(); // perque tingui tots els valors, y no esborri al grabar.
-				$n_orden = $oActividadProcesoTarea->getN_orden();
-				$id_tipo_proceso = $oActividadProcesoTarea->getId_tipo_proceso();
-				$id_fase = $oActividadProcesoTarea->getId_fase();
-				$id_tarea = $oActividadProcesoTarea->getId_tarea();
-				// Relleno las fases intermedias
-				if ($n_orden <= $n_ordenSel) {
-    				$completado = $oActividadProcesoTarea->getCompletado();
-    				if ($completado != 't') {
-    				    //buscar of responsable
-    				    $GesTareaProcesos = new GestorTareaProceso();
-    				    $cTareasProceso = $GesTareaProcesos->getTareasProceso(['id_tipo_proceso'=>$id_tipo_proceso,
-    				                                                    'id_fase'=>$id_fase,
-    				                                                    'id_tarea'=>$id_tarea
-    				                                            ]);
-    				    // sólo debería haber uno
-    				    if (!empty($cTareasProceso)) {
-    				        $oTareaProceso = $cTareasProceso[0];
-    				    } else {
-    				        $msg_err = sprintf(_("error: La fase del proceso tipo: %s, fase: %s, tarea: %s"),$id_tipo_proceso,$id_fase,$id_tarea);
-    				        exit($msg_err);
-    				    }
-    				    $of_responsable=$oTareaProceso->getOf_responsable();
-    				    if (($_SESSION['oPerm']->have_perm_oficina($of_responsable))) {
-				            $oActividadProcesoTarea->setCompletado('t');
-                            if ($oActividadProcesoTarea->DBGuardar() === false) {
-                                echo _("hay un error, no se ha guardado");
-                            }
-    				    } else {
-                            echo _("No tiene permiso para completar la fase, no se ha guardado");
-    				    }
-    				}
-				} elseif ($n_orden > $n_ordenSel) {
-                    // Cuando se va hacia atras (pongo sin completar las fases siguientes)
-				    $oActividadProcesoTarea->setCompletado('f');
-                    if ($oActividadProcesoTarea->DBMarcar() === false) {
-                        echo _("hay un error, no se ha guardado");
-                    }
-				}
-			}
-			*/
 		}
 		break;
 	case 'get':
