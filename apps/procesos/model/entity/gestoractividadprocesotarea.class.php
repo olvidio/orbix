@@ -139,7 +139,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
                     $id_ubi = $oActividad->getId_ubi();
                     $oUbi = new Casa($id_ubi);
                     $dl_casa = $oUbi->getDl();
-                    if ($dl_casa != $dl_org_no_f) {
+                    if ($dl_casa != core\ConfigGlobal::mi_dele()) {
                         continue;
                     }
                 }
