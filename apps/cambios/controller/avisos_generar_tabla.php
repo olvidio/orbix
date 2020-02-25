@@ -58,18 +58,18 @@ use cambios\model\entity\CambioAnotado;
 use cambios\model\entity\CambioUsuario;
 use cambios\model\entity\GestorCambio;
 use cambios\model\entity\GestorCambioAnotado;
+use cambios\model\entity\GestorCambioUsuario;
 use cambios\model\entity\GestorCambioUsuarioObjetoPref;
 use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
 use core\ConfigGlobal;
 use procesos\model\entity\GestorActividadFase;
+use procesos\model\entity\GestorActividadProcesoTarea;
+use procesos\model\entity\GestorTareaProceso;
+use usuarios\model\entity\Role;
 use usuarios\model\entity\Usuario;
+use web\DateTimeLocal;
 use zonassacd\model\entity\GestorZona;
 use zonassacd\model\entity\GestorZonaSacd;
-use procesos\model\entity\TareaProceso;
-use procesos\model\entity\GestorTareaProceso;
-use procesos\model\entity\GestorActividadProcesoTarea;
-use cambios\model\entity\GestorCambioUsuario;
-use web\DateTimeLocal;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -183,7 +183,11 @@ function anotado($id_schema_cmb,$id_item_cmb) {
 	   $oCambioAnotado->setId_item_cambio($id_item_cmb);
 	   $oCambioAnotado->setId_schema_cambio($id_schema_cmb);
 	}
-	$oCambioAnotado->setAnotado('t');
+	if (ConfigGlobal::mi_sfsv() == 1) {
+        $oCambioAnotado->setAnotado_sv('t');
+	} else {
+        $oCambioAnotado->setAnotado_sf('t');
+	}
 	if ($oCambioAnotado->DBGuardar(true) === false) { //'true' para que no genere la tabla de avisos.
 		echo _("Hay un error, no se ha guardado");
 		echo _("anotado");
@@ -225,8 +229,9 @@ function me_afecta($id_usuario,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cm
 	// Si el usuario es una casa o un sacd, sólo ve los cambios que le afectan:
 	$oMiUsuario = new Usuario($id_usuario);
 
-	if ($oMiUsuario->isRolePau('cdc')) { //casa
-		$id_pau=$oMiUsuario->getId_pau(); // puede ser una lista separada por comas.
+	$id_pau = '';
+	if ($oMiUsuario->isRolePau(Role::PAU_CDC)) { //casa
+		$id_pau = $oMiUsuario->getId_pau(); // puede ser una lista separada por comas.
 	}
 	if (!empty($id_pau)) { //casa o un listado de ubis en la preferencia del aviso.
 		$a_id_pau = explode(',',$id_pau);
@@ -250,7 +255,7 @@ function me_afecta($id_usuario,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cm
 		}
 	}
 	// si soy un sacd.
-	if ($oMiUsuario->isRolePau('sacd')) { //sacd
+	if ($oMiUsuario->isRolePau(Role::PAU_SACD)) { //sacd
 		$id_nom=$oMiUsuario->getId_pau();
 		if (soy_encargado($id_nom,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cmb,$sObjeto)) {
 			return true;

@@ -55,11 +55,17 @@ class CambioAnotado Extends core\ClasePropiedades {
 	 */
 	 private $iid_item_cambio;
 	/**
-	 * Anotado de CambioAnotado
+	 * Anotado_sv de CambioAnotado
 	 *
 	 * @var boolean
 	 */
-	 private $banotado;
+	 private $banotado_sv;
+	/**
+	 * Anotado_sf de CambioAnotado
+	 *
+	 * @var boolean
+	 */
+	 private $banotado_sf;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
 	 * oDbl de CambioAnotado
@@ -114,18 +120,22 @@ class CambioAnotado Extends core\ClasePropiedades {
 		$aDades=array();
 		$aDades['id_schema_cambio'] = $this->iid_schema_cambio;
 		$aDades['id_item_cambio'] = $this->iid_item_cambio;
-		$aDades['anotado'] = $this->banotado;
+		$aDades['anotado_sv'] = $this->banotado_sv;
+		$aDades['anotado_sf'] = $this->banotado_sf;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		$aDades['anotado'] = ($aDades['anotado'] === 't')? 'true' : $aDades['anotado'];
-		if ( filter_var( $aDades['anotado'], FILTER_VALIDATE_BOOLEAN)) { $aDades['anotado']='t'; } else { $aDades['anotado']='f'; }
+		$aDades['anotado_sv'] = ($aDades['anotado_sv'] === 't')? 'true' : $aDades['anotado_sv'];
+		if ( filter_var( $aDades['anotado_sv'], FILTER_VALIDATE_BOOLEAN)) { $aDades['anotado_sv']='t'; } else { $aDades['anotado_sv']='f'; }
+		$aDades['anotado_sf'] = ($aDades['anotado_sf'] === 't')? 'true' : $aDades['anotado_sf'];
+		if ( filter_var( $aDades['anotado_sf'], FILTER_VALIDATE_BOOLEAN)) { $aDades['anotado_sf']='t'; } else { $aDades['anotado_sf']='f'; }
 
 		if ($bInsert === FALSE) {
 			//UPDATE
 			$update="
 					id_schema_cambio         = :id_schema_cambio,
 					id_item_cambio           = :id_item_cambio,
-					anotado                  = :anotado";
+					anotado_sv               = :anotado_sv,
+					anotado_sf               = :anotado_sf";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item'")) === FALSE) {
 				$sClauError = 'CambioAnotado.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -139,8 +149,8 @@ class CambioAnotado Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			$campos="(id_schema_cambio,id_item_cambio,anotado)";
-			$valores="(:id_schema_cambio,:id_item_cambio,:anotado)";		
+			$campos="(id_schema_cambio,id_item_cambio,anotado_sv,anotado_sf)";
+			$valores="(:id_schema_cambio,:id_item_cambio,:anotado_sv,:anotado_sf)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClauError = 'CambioAnotado.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -221,7 +231,8 @@ class CambioAnotado Extends core\ClasePropiedades {
 		if (array_key_exists('id_item',$aDades)) $this->setId_item($aDades['id_item']);
 		if (array_key_exists('id_schema_cambio',$aDades)) $this->setId_schema_cambio($aDades['id_schema_cambio']);
 		if (array_key_exists('id_item_cambio',$aDades)) $this->setId_item_cambio($aDades['id_item_cambio']);
-		if (array_key_exists('anotado',$aDades)) $this->setAnotado($aDades['anotado']);
+		if (array_key_exists('anotado_sv',$aDades)) $this->setAnotado_sv($aDades['anotado_sv']);
+		if (array_key_exists('anotado_sf',$aDades)) $this->setAnotado_sf($aDades['anotado_sf']);
 	}
 
 	/**
@@ -233,7 +244,8 @@ class CambioAnotado Extends core\ClasePropiedades {
 		$this->setId_item('');
 		$this->setId_schema_cambio('');
 		$this->setId_item_cambio('');
-		$this->setAnotado('');
+		$this->setAnotado_sv('');
+		$this->setAnotado_sf('');
 		$this->setPrimary_key($aPK);
 	}
 
@@ -336,23 +348,42 @@ class CambioAnotado Extends core\ClasePropiedades {
 		$this->iid_item_cambio = $iid_item_cambio;
 	}
 	/**
-	 * Recupera l'atribut banotado de CambioAnotado
+	 * Recupera l'atribut banotado_sv de CambioAnotado
 	 *
-	 * @return boolean banotado
+	 * @return boolean banotado_sv
 	 */
-	function getAnotado() {
-		if (!isset($this->banotado)) {
+	function getAnotado_sv() {
+		if (!isset($this->banotado_sv)) {
 			$this->DBCarregar();
 		}
-		return $this->banotado;
+		return $this->banotado_sv;
 	}
 	/**
-	 * estableix el valor de l'atribut banotado de CambioAnotado
+	 * estableix el valor de l'atribut banotado_sv de CambioAnotado
 	 *
-	 * @param boolean banotado='f' optional
+	 * @param boolean banotado_sv='f' optional
 	 */
-	function setAnotado($banotado='f') {
-		$this->banotado = $banotado;
+	function setAnotado_sv($banotado_sv='f') {
+		$this->banotado_sv = $banotado_sv;
+	}
+	/**
+	 * Recupera l'atribut banotado_sf de CambioAnotado
+	 *
+	 * @return boolean banotado_sf
+	 */
+	function getAnotado_sf() {
+		if (!isset($this->banotado_sf)) {
+			$this->DBCarregar();
+		}
+		return $this->banotado_sf;
+	}
+	/**
+	 * estableix el valor de l'atribut banotado_sf de CambioAnotado
+	 *
+	 * @param boolean banotado_sf='f' optional
+	 */
+	function setAnotado_sf($banotado_sf='f') {
+		$this->banotado_sf = $banotado_sf;
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
@@ -365,7 +396,8 @@ class CambioAnotado Extends core\ClasePropiedades {
 
 		$oCambioAnotadoSet->add($this->getDatosId_schema_cambio());
 		$oCambioAnotadoSet->add($this->getDatosId_item_cambio());
-		$oCambioAnotadoSet->add($this->getDatosAnotado());
+		$oCambioAnotadoSet->add($this->getDatosAnotado_sv());
+		$oCambioAnotadoSet->add($this->getDatosAnotado_sf());
 		return $oCambioAnotadoSet->getTot();
 	}
 
@@ -396,15 +428,27 @@ class CambioAnotado Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut banotado de CambioAnotado
+	 * Recupera les propietats de l'atribut banotado_sv de CambioAnotado
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
 	 */
-	function getDatosAnotado() {
+	function getDatosAnotado_sv() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'anotado'));
-		$oDatosCampo->setEtiqueta(_("anotado"));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'anotado_sv'));
+		$oDatosCampo->setEtiqueta(_("anotado sv"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut banotado_sf de CambioAnotado
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosAnotado_sf() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'anotado_sf'));
+		$oDatosCampo->setEtiqueta(_("anotado sf"));
 		return $oDatosCampo;
 	}
 }

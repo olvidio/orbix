@@ -934,7 +934,6 @@ class Cambio Extends core\ClasePropiedades {
 		$oCambioSet->add($this->getDatosValor_new());
 		$oCambioSet->add($this->getDatosQuien_cambia());
 		$oCambioSet->add($this->getDatosTimestamp_cambio());
-		$oCambioSet->add($this->getDatosAnotado());
 		return $oCambioSet->getTot();
 	}
 

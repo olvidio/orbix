@@ -173,7 +173,8 @@ class DBEsquema extends DBAbstract {
             INHERITS (global.$tabla);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-        $a_sql[] = "ALTER TABLE $nom_tabla ALTER anotado SET DEFAULT false;";
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER anotado_sv SET DEFAULT false;";
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER anotado_sf SET DEFAULT false;";
         
         //secuencia
         $a_sql[] = "CREATE SEQUENCE IF NOT EXISTS $id_seq;";
@@ -199,7 +200,8 @@ class DBEsquema extends DBAbstract {
         $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_${campo_seq}_idx ON $nom_tabla USING btree ($campo_seq); ";
         $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_id_schema_cambio_idx ON $nom_tabla USING btree (id_schema_cambio); ";
         $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_id_item_cambio_idx ON $nom_tabla USING btree (id_item_cambio); ";
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_anotado_idx ON $nom_tabla USING btree (anotado); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_anotado_sv_idx ON $nom_tabla USING btree (anotado_sv); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_anotado_sf_idx ON $nom_tabla USING btree (anotado_sf); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
         
         $this->executeSql($a_sql);

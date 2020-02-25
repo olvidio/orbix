@@ -126,10 +126,12 @@ class DB extends DBAbstract {
                 id_item integer NOT NULL,
                 id_schema_cambio integer NOT NULL,
                 id_item_cambio integer NOT NULL,
-                anotado boolean
+                anotado_sv boolean,
+                anotado_sf boolean
                 ); ";
         
-        $a_sql[] = "ALTER TABLE $nom_tabla ALTER anotado SET DEFAULT false;";
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER anotado_sv SET DEFAULT false;";
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER anotado_sf SET DEFAULT false;";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
         
         $this->executeSql($a_sql);
