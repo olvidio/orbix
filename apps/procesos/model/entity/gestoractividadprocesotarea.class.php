@@ -3,6 +3,7 @@ namespace procesos\model\entity;
 use actividades\model\entity\Actividad;
 use actividades\model\entity\TipoDeActividad;
 use core;
+use ubis\model\entity\Casa;
 /**
  * GestorActividadProcesoTarea
  *
@@ -132,6 +133,16 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
             if ($dl_org_no_f == core\ConfigGlobal::mi_dele()) {
                 $id_tipo_proceso=$oTipo->getId_tipo_proceso($sfsv);
             } else {
+                // NO se genera: si es una actividad de otra dl, y de la otra seccion
+                // y no se hace en una casa de la dl.
+                if ($isfsv != $sfsv) {
+                    $id_ubi = $oActividad->getId_ubi();
+                    $oUbi = new Casa($id_ubi);
+                    $dl_casa = $oUbi->getDl();
+                    if ($dl_casa != $dl_org_no_f) {
+                        continue;
+                    }
+                }
                 $id_tipo_proceso=$oTipo->getId_tipo_proceso_ex($sfsv);
             }
             if (empty($id_tipo_proceso)) {
