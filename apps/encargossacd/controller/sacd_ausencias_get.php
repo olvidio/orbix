@@ -21,6 +21,7 @@ require_once ("apps/core/global_header.inc");
 // Crea los objectos de uso global **********************************************
 require_once ("apps/core/global_object.inc");
 //
+$oPosicion->recordar();
 
 $Qhistorial = (integer) \filter_input(INPUT_POST, 'historial');
 $Qid_nom = (integer) \filter_input(INPUT_POST, 'id_nom');
@@ -130,7 +131,7 @@ $aCamposHidden = [
 $oHash->setUrl($url_update);
 $campos_form = 'id_item!id_enc!fin!inicio';
 $oHash->setcamposForm($campos_form);
-$oHash->setcamposNo('enc_num!id_item!refresh');
+$oHash->setcamposNo('enc_num!id_item!refresh!mas');
 $oHash->setArrayCamposHidden($aCamposHidden);
 
 $a_campos = ['oPosicion' => $oPosicion,
