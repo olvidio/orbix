@@ -1102,16 +1102,18 @@ class ActividadAll Extends core\ClasePropiedades {
 	function getDatosCampos() {
 		$oActividadAllSet = new core\Set();
 
+		// Quito descripcion y tipo_horario para que no salgan a la hora de
+		// avisar cambios. De momento parece que no se usan en ningun sitio.
 		$oActividadAllSet->add($this->getDatosId_tipo_activ());
 		$oActividadAllSet->add($this->getDatosDl_org());
 		$oActividadAllSet->add($this->getDatosNom_activ());
 		$oActividadAllSet->add($this->getDatosId_ubi());
-		$oActividadAllSet->add($this->getDatosDesc_activ());
+		//$oActividadAllSet->add($this->getDatosDesc_activ());
 		$oActividadAllSet->add($this->getDatosF_ini());
 		$oActividadAllSet->add($this->getDatosH_ini());
 		$oActividadAllSet->add($this->getDatosF_fin());
 		$oActividadAllSet->add($this->getDatosH_fin());
-		$oActividadAllSet->add($this->getDatosTipo_horario());
+		//$oActividadAllSet->add($this->getDatosTipo_horario());
 		$oActividadAllSet->add($this->getDatosPrecio());
 		$oActividadAllSet->add($this->getDatosNum_asistentes());
 		$oActividadAllSet->add($this->getDatosStatus());
@@ -1344,7 +1346,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	function getDatosLugar_esp() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'lugar_esp'));
-		$oDatosCampo->setEtiqueta(_("lugar_esp"));
+		$oDatosCampo->setEtiqueta(_("lugar especial"));
 		return $oDatosCampo;
 	}
 	/**
@@ -1368,7 +1370,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	function getDatosId_repeticion() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_repeticion'));
-		$oDatosCampo->setEtiqueta(_("id_repeticion"));
+		$oDatosCampo->setEtiqueta(_("id repeticion"));
 		return $oDatosCampo;
 	}
 	/**
