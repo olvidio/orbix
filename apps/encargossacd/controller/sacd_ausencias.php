@@ -19,8 +19,9 @@ require_once ("apps/core/global_header.inc");
 require_once ("apps/core/global_object.inc");
 //
 
-$Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
-$oPosicion->recordar($Qrefresh);
+//$Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
+//$oPosicion->recordar($Qrefresh);
+$oPosicion->recordar();
 
 $Qfiltro_sacd = (string) \filter_input(INPUT_POST, 'filtro_sacd');
 
