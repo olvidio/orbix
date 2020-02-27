@@ -102,6 +102,7 @@ fnjs_guardar=function(tipo='') {
             return false;
 		});
 		$('#modifica').submit();
+		$('#modifica').trigger("reset");
 		//$('#modifica').off(); -->si está, parece que no vuelve al js_atras(1)
 	}
 };
