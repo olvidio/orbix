@@ -1,5 +1,4 @@
 <script>
-
 fnjs_guardar=function(formulario){
 	var err=0;
 	//var desc_enc=$('#desc_enc').val();
@@ -47,14 +46,30 @@ fnjs_mas_enc=function(){
 	$('#pie').before(dedicacion);
 	$('#mas').val(0);
 	$('#inicio_'+n).datepicker();
+	$('#inicio_'+n).change(fnjs_date_fin);
 	$('#fin_'+n).datepicker();
 	$('#inicio_'+n).focus();
 	$('#enc_num').val(++n);
 }
 
+fnjs_date_fin=function(id){
+    id_name = $(this).attr('id'); // formato: fin_3 inicio_3
+    var id = id_name.match(/\d+/g);
+  	var id_fin='#'+'fin_'+id;
+    var id_ini='#'+'inicio_'+id;
+    var ini = $(id_ini).val();
+    var fin = $(id_fin).val();
+    if (ini && !fin) {
+        $(id_fin).datepicker('setDate',ini);
+    } else {
+        $(id_fin).datepicker();
+    }
+}
+
 $('#frm_ausencias').ready(function(){
 	$('#frm_ausencias .fecha').each(function(i){
-		$(this).datepicker();
+		// si f_fin: poner misma fecha que f_ini (por defecto).
+        $(this).datepicker();
 	});
 });
 
@@ -71,8 +86,10 @@ $('#frm_ausencias').ready(function(){
 		<input type=hidden name=id_enc[{{ j }}] value="{{ id_enc[j] }}">
 		<input type=hidden name=id_item[{{ j }}] value="{{ id_item[j] }}">
 		{{ desc_enc[j] }}</td>
-		<td>{{ "inicio"|trans }} <input class=fecha type=text size=12 name=inicio[{{ j }}] value="{{ inicio[j] }}">
-		<td>{{ "fin"|trans }}    <input class=fecha type=text size=12 name=fin[{{ j }}] value="{{ fin[j] }}"></td>
+		<td>{{ "inicio"|trans }} 
+		<input class=fecha type=text size=12 name=inicio[{{ j }}] value="{{ inicio[j] }}" >
+		<td>{{ "fin"|trans }}
+		<input class=fecha type=text size=12 name=fin[{{ j }}] value="{{ fin[j] }}"></td>
 		<td><span class="link" onclick="fnjs_horario({{ id_enc[j] }})">{{ "crear horario"|trans }}</span></td>
     {% endfor %}
 {% endif %}

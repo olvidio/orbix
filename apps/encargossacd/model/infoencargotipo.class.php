@@ -10,7 +10,7 @@ class InfoEncargoTipo extends core\datosInfo {
         $this->setTxtTitulo(_("tipos de encargos"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar este tipo de encargo?"));
         $this->setTxtBuscar(_("buscar un tipo de encargo"));
-        $this->setTxtExplicacion();
+        $this->setTxtExplicacion(_("solo los tipos 4000 y 7000 aparecen en el planning"));
         
         $this->setClase('encargossacd\\model\\entity\\EncargoTipo');
         $this->setMetodoGestor('getEncargoTipos');
