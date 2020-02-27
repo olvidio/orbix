@@ -165,6 +165,7 @@ class DB extends DBAbstract {
                 id_schema_cambio integer NOT NULL,
                 id_item_cambio integer NOT NULL,
                 id_usuario integer NOT NULL,
+                sfsv smallint NOT NULL,
                 aviso_tipo integer NOT NULL,
                 aviso_donde text,
                 avisado boolean

@@ -268,10 +268,11 @@ class DBEsquema extends DBAbstract {
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
         
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER sfsv SET DEFAULT 1;";
         
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
         
-        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS ${tabla}_udx ON $nom_tabla USING btree (id_schema_cambio,id_item_cambio,id_usuario, aviso_tipo); ";
+        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS ${tabla}_udx ON $nom_tabla USING btree (id_schema_cambio,id_item_cambio,id_usuario,sfsv,aviso_tipo); ";
         // FOREIGN KEYS
         /* No sirve con tablas heredadas
         $tabla1 = 'public.av_cambios'; // la de public.

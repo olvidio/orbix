@@ -66,6 +66,12 @@ class CambioUsuario Extends core\ClasePropiedades {
 	 */
 	 private $iid_usuario;
 	/**
+	 * Sfsv de CambioUsuario
+	 *
+	 * @var integer
+	 */
+	 private $isfsv;
+	/**
 	 * Aviso_tipo de CambioUsuario
 	 *
 	 * @var integer
@@ -138,6 +144,7 @@ class CambioUsuario Extends core\ClasePropiedades {
 		$aDades['id_schema_cambio'] = $this->iid_schema_cambio;
 		$aDades['id_item_cambio'] = $this->iid_item_cambio;
 		$aDades['id_usuario'] = $this->iid_usuario;
+		$aDades['sfsv'] = $this->isfsv;
 		$aDades['aviso_tipo'] = $this->iaviso_tipo;
 		$aDades['aviso_donde'] = $this->saviso_donde;
 		$aDades['avisado'] = $this->bavisado;
@@ -152,6 +159,7 @@ class CambioUsuario Extends core\ClasePropiedades {
 					id_schema_cambio         = :id_schema_cambio,
 					id_item_cambio           = :id_item_cambio,
 					id_usuario               = :id_usuario,
+					sfsv                     = :sfsv,
 					aviso_tipo               = :aviso_tipo,
 					aviso_donde              = :aviso_donde,
 					avisado                  = :avisado";
@@ -168,8 +176,8 @@ class CambioUsuario Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			$campos="(id_schema_cambio,id_item_cambio,id_usuario,aviso_tipo,aviso_donde,avisado)";
-			$valores="(:id_schema_cambio,:id_item_cambio,:id_usuario,:aviso_tipo,:aviso_donde,:avisado)";		
+			$campos="(id_schema_cambio,id_item_cambio,id_usuario,sfsv,aviso_tipo,aviso_donde,avisado)";
+			$valores="(:id_schema_cambio,:id_item_cambio,:id_usuario,:sfsv,:aviso_tipo,:aviso_donde,:avisado)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClauError = 'CambioUsuario.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -251,6 +259,7 @@ class CambioUsuario Extends core\ClasePropiedades {
 		if (array_key_exists('id_schema_cambio',$aDades)) $this->setId_schema_cambio($aDades['id_schema_cambio']);
 		if (array_key_exists('id_item_cambio',$aDades)) $this->setId_item_cambio($aDades['id_item_cambio']);
 		if (array_key_exists('id_usuario',$aDades)) $this->setId_usuario($aDades['id_usuario']);
+		if (array_key_exists('sfsv',$aDades)) $this->setSfsv($aDades['sfsv']);
 		if (array_key_exists('aviso_tipo',$aDades)) $this->setAviso_tipo($aDades['aviso_tipo']);
 		if (array_key_exists('aviso_donde',$aDades)) $this->setAviso_donde($aDades['aviso_donde']);
 		if (array_key_exists('avisado',$aDades)) $this->setAvisado($aDades['avisado']);
@@ -266,6 +275,7 @@ class CambioUsuario Extends core\ClasePropiedades {
 		$this->setId_schema_cambio('');
 		$this->setId_item_cambio('');
 		$this->setId_usuario('');
+		$this->setSfsv('');
 		$this->setAviso_tipo('');
 		$this->setAviso_donde('');
 		$this->setAvisado('');
@@ -390,6 +400,25 @@ class CambioUsuario Extends core\ClasePropiedades {
 		$this->iid_usuario = $iid_usuario;
 	}
 	/**
+	 * Recupera l'atribut isfsv de CambioUsuario
+	 *
+	 * @return integer isfsv
+	 */
+	function getSfsv() {
+		if (!isset($this->isfsv)) {
+			$this->DBCarregar();
+		}
+		return $this->isfsv;
+	}
+	/**
+	 * estableix el valor de l'atribut isfsv de CambioUsuario
+	 *
+	 * @param integer isfsv='' optional
+	 */
+	function setSfsv($isfsv='') {
+		$this->isfsv = $isfsv;
+	}
+	/**
 	 * Recupera l'atribut iaviso_tipo de CambioUsuario
 	 *
 	 * @return integer iaviso_tipo
@@ -458,6 +487,7 @@ class CambioUsuario Extends core\ClasePropiedades {
 		$oCambioUsuarioSet->add($this->getDatosId_item_cambio());
 		$oCambioUsuarioSet->add($this->getDatosId_schema_cambio());
 		$oCambioUsuarioSet->add($this->getDatosId_usuario());
+		$oCambioUsuarioSet->add($this->getDatosSfsv());
 		$oCambioUsuarioSet->add($this->getDatosAviso_tipo());
 		$oCambioUsuarioSet->add($this->getDatosAviso_donde());
 		$oCambioUsuarioSet->add($this->getDatosAvisado());
@@ -500,6 +530,18 @@ class CambioUsuario Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_usuario'));
 		$oDatosCampo->setEtiqueta(_("id_usuario"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut isfsv de CambioUsuario
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosSfsv() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'sfsv'));
+		$oDatosCampo->setEtiqueta(_("sfsv"));
 		return $oDatosCampo;
 	}
 	/**

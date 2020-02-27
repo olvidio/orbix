@@ -59,6 +59,7 @@ if (!empty($Qid_usuario)) {
 
 	$aWhere = array();
 	$aWhere['id_usuario'] = $Qid_usuario;
+	$aWhere['sfsv'] = $mi_sfsv;
 	$aWhere['aviso_tipo'] = $Qaviso_tipo;
 	$aWhere['avisado'] = 'false';
 	$GesCambiosUsuario = new GestorCambioUsuario();
@@ -87,7 +88,7 @@ if (!empty($Qid_usuario)) {
 		} else {
             $quien = $aSecciones[$sfsv_quien_cambia] ;
 		}
-		$a_valores[$i]['sel']="$id_item_cmb#$Qid_usuario#$Qaviso_tipo";
+		$a_valores[$i]['sel']="$id_item_cmb#$mi_sfsv#$Qid_usuario#$Qaviso_tipo";
 		$a_valores[$i][1]=$timestamp_cambio;
 		$a_valores[$i][2]=$quien;
 		$a_valores[$i][3]=$aviso_txt;

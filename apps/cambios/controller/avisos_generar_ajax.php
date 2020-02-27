@@ -21,9 +21,15 @@ switch($Qque) {
         foreach($a_sel as $id) {
             $id_item_cmb = strtok($id,'#');
             $id_usuario = strtok('#');
+            $sfsv = strtok('#');
             $aviso_tipo = strtok('#');
+            $aWhere = ['id_item_cambio'=>$id_item_cmb,
+                'id_usuario'=>$id_usuario,
+                'sfsv'=>$sfsv,
+                'aviso_tipo'=>$aviso_tipo,
+            ];
             $GesCambioUsuario = new GestorCambioUsuario();
-            $cCambiosUsuario = $GesCambioUsuario->getCambiosUsuario(array('id_item_cambio'=>$id_item_cmb,'id_usuario'=>$id_usuario,'aviso_tipo'=>$aviso_tipo));
+            $cCambiosUsuario = $GesCambioUsuario->getCambiosUsuario($aWhere);
             foreach($cCambiosUsuario as $oCambioUsuario) {
                 if ($oCambioUsuario ->DBEliminar() === false) {
                     echo _("Hay un error, no se ha eliminado");

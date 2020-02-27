@@ -63,6 +63,7 @@ $aWhere = array();
 $aWhere['_ordre'] = 'id_usuario,id_item_cambio';
 $aWhere['aviso_tipo'] = $aviso_tipo;
 $aWhere['avisado'] = 'false';
+$aWhere['sfsv'] = $mi_sfsv;
 $GesCambiosUsuario = new GestorCambioUsuario();
 $cCambiosUsuario = $GesCambiosUsuario->getCambiosUsuario($aWhere);
 $i = 0;
@@ -116,7 +117,7 @@ foreach ($cCambiosUsuario as $oCambioUsuario) {
     $a_datos[$i][1] = $timestamp_cambio;
     $a_datos[$i][2] = $quien;
     $a_datos[$i][3] = $aviso_txt;
-    $a_id[$i] = "$id_item_cmb,$id_usuario,$aviso_tipo";
+    $a_id[$i] = "$id_item_cmb,$id_usuario,$mi_sfsv,$aviso_tipo";
 }
 // El último de la lista no se envia.
 if (!empty($email)) enviar_mail($email,$a_datos,$a_id);
@@ -162,9 +163,16 @@ function eliminar_enviado($a_id){
         $ids = explode(',',$id);
         $id_item_cmb = $ids[0];
         $id_usuario = $ids[1];
-        $aviso_tipo = $ids[2];
+        $sfsv = $ids[2];
+        $aviso_tipo = $ids[3];
         $GesCambioUsuario = new GestorCambioUsuario();
-        $cCambiosUsuario = $GesCambioUsuario->getCambiosUsuario(array('id_item_cambio'=>$id_item_cmb,'id_usuario'=>$id_usuario,'aviso_tipo'=>$aviso_tipo));
+        $aWhere = ['id_item_cambio'=>$id_item_cmb,
+                    'id_usuario'=>$id_usuario,
+                    'sfsv'=>$sfsv,
+                    'aviso_tipo'=>$aviso_tipo,
+                    ];
+        
+        $cCambiosUsuario = $GesCambioUsuario->getCambiosUsuario($aWhere);
         foreach($cCambiosUsuario as $oCambioUsuario) {
             if ($oCambioUsuario ->DBEliminar() === false) {
                 echo _("Hay un error, no se ha eliminado");

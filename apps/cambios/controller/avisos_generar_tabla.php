@@ -141,10 +141,12 @@ function borrar_pid($username,$esquema) {
 }
 
 function fn_apuntar($id_schema_cmb,$id_item_cmb,$id_usuario,$aviso_tipo,$aviso_donde) {
+    $sfsv = ConfigGlobal::mi_sfsv();
 	// Asegurar que no existe:
 	$aWhere = [];
 	$aWhere['id_schema_cambio'] = $id_schema_cmb;
 	$aWhere['id_item_cambio'] = $id_item_cmb;
+	$aWhere['sfsv'] = $sfsv;
 	$aWhere['id_usuario'] = $id_usuario;
 	$aWhere['aviso_tipo'] = $aviso_tipo;
     $oGesCambiosUsuario = new GestorCambioUsuario();
@@ -160,6 +162,7 @@ function fn_apuntar($id_schema_cmb,$id_item_cmb,$id_usuario,$aviso_tipo,$aviso_d
         $oCambioUsuario->setId_schema_cambio($id_schema_cmb);
         $oCambioUsuario->setId_item_cambio($id_item_cmb);
         $oCambioUsuario->setId_usuario($id_usuario);
+        $oCambioUsuario->setSfsv($sfsv);
         $oCambioUsuario->setAviso_tipo($aviso_tipo);
         $oCambioUsuario->setAviso_donde($aviso_donde);
         //echo "id_item_cmb: $id_item_cmb, id_usuario: $id_usuario, aviso_tipo: $aviso_tipo, aviso_donde: $aviso_donde\n";
