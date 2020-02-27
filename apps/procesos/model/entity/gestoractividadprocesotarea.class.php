@@ -130,6 +130,11 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
         }
         $iid_fase = [];
         foreach ($a_sfsv as $sfsv) {
+            if ($sfsv == 1) {
+                $this->setNomTabla('a_actividad_proceso_sv');
+            } else {
+                $this->setNomTabla('a_actividad_proceso_sf');
+            }
             if ($dl_org_no_f == core\ConfigGlobal::mi_dele()) {
                 $id_tipo_proceso=$oTipo->getId_tipo_proceso($sfsv);
             } else {
