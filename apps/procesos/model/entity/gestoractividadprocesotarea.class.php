@@ -158,6 +158,8 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	        $test_id_fase = $this->faseActualAcabada($iid_activ);
 	        if (empty($test_id_fase) || $test_id_fase === 'SIN') {
                 $iid_fase[$sfsv] = $this->generar($iid_activ,$id_tipo_proceso,$sfsv);
+	        } else {
+	            $iid_fase[$sfsv] = $test_id_fase;
 	        }
         }
 
@@ -182,8 +184,8 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	        }
 	        if (empty($iid_fase) || $iid_fase === 'SIN') {
 	            //echo sprintf(_("esta actividad: %s no tiene ninguna fase. Se está generando..."),$oActividad->getNom_activ());
-	            echo '<br>'._("ATENCIÓN: puede que tenga que actualizar la página para que salgan todas las actividades.");
-	            echo '<br>';
+	            //echo '<br>'._("ATENCIÓN: puede que tenga que actualizar la página para que salgan todas las actividades.");
+	            //echo '<br>';
 	            return $this->generarProceso($iid_activ);
 	        }
 	    }
