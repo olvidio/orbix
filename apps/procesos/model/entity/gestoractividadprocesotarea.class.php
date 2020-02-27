@@ -149,7 +149,11 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
                 echo sprintf(_("No tiene definido el proceso para este tipo de actividad: %s de sv/sf: %s"),$iid_tipo_activ,$sfsv);
                 return TRUE;
             }
-    	    $iid_fase[$sfsv] = $this->generar($iid_activ,$id_tipo_proceso,$sfsv);
+            // Asegurar que no existe, a veces al hacerlo para las dos secciones, una lo tiene y otra no:
+	        $test_id_fase = $this->faseActualAcabada($iid_activ);
+	        if (empty($test_id_fase) || $test_id_fase === 'SIN') {
+                $iid_fase[$sfsv] = $this->generar($iid_activ,$id_tipo_proceso,$sfsv);
+	        }
         }
 
         // devuelve la fase del proceso propio
