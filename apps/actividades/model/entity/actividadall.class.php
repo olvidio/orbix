@@ -1175,7 +1175,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	function getDatosId_ubi() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_ubi'));
-		$oDatosCampo->setEtiqueta(_("id_ubi"));
+		$oDatosCampo->setEtiqueta(_("id del Lugar"));
 		return $oDatosCampo;
 	}
 	/**

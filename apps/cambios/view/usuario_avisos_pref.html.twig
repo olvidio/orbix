@@ -90,10 +90,11 @@ fnjs_grabar_todo=function(formulario){
         // guardar objeto
         form_objeto = $('#usuario_pref'); 
         $('#salida').val('guardar_objeto');
+        var data_obj = form_objeto.serializeArray();
         $.ajax({
             url: url,
             type: 'post',
-            data: form_objeto.serialize()
+            data: data_obj
         })
         .done(function (rta_txt) {
             id_item_obj=rta_txt;

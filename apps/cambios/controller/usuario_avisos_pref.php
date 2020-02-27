@@ -186,7 +186,7 @@ $oActividadTipo->setPerm_jefe($perm_jefe);
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('salida!aviso_tipo!objeto!dl_propia!fase_ini!fase_fin!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val');
-$oHash->setcamposNo('casas_mas!casas_num!id_tipo_activ!inom_tipo_val');
+$oHash->setcamposNo('casas!casas_mas!casas_num!id_tipo_activ!inom_tipo_val');
 $a_camposHidden = array(
     'id_usuario' => $Qid_usuario,
     'id_item_usuario_objeto' => $Qid_item_usuario_objeto,

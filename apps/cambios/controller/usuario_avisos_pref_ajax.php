@@ -305,7 +305,7 @@ switch($Qsalida) {
                             ];
             $oHash->setArrayCamposHidden($aCamposHidden);
             $oHash->setCamposChk($scamposChk);
-            $oHash->setCamposNo('test');
+            $oHash->setCamposNo('casas!test');
 
             $html .= "<input type='hidden' id='salida_prop' name='salida' value=\"guardar_propiedades\" >";
             $html .= "<input type='hidden' id='id_item_usuario_objeto_prop' name='id_item_usuario_objeto_prop' value=\"$Qid_item_usuario_objeto\" >";
