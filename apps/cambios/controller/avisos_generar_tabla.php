@@ -516,10 +516,12 @@ while ($num_cambios) {
                     echo "<br>";
                     echo _("ERROR: la fase de la actividad no está en el proceso.");
                     echo "<br>";
+                    echo " fase correcta: $fase_correcta<br>";
                     echo " id_activ: $id_activ<br>";
                     echo " id_usuario: $id_usuario<br>";
                     echo " id_fase_ini: $id_fase_ini<br>";
                     echo " id_fase_fin: $id_fase_fin<br>";
+                    echo " id_fase_cmb: $id_fase_cmb<br>";
                     echo " fases:";
                     print_r($aFases);
                 }
