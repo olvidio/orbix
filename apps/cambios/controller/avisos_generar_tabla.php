@@ -519,8 +519,10 @@ while ($num_cambios) {
                 // significa que el estatus en que se ha cambiado la actividad no pertenece al rango
                 // para el que hay que generar el aviso.
                 if (!empty($id_fase_cmb)) {
+                    /*
                     echo "<br>";
-                    echo _("ERROR: la fase de la actividad no está en el proceso.");
+                    echo _("ERROR: la fase en que se cambió la actividad no está en el intervalo 
+                            de fases del proceso donde hay que avisar.");
                     echo "<br>";
                     echo " fase correcta: $fase_correcta<br>";
                     echo " id_activ: $id_activ<br>";
@@ -530,6 +532,7 @@ while ($num_cambios) {
                     echo " id_fase_cmb: $id_fase_cmb<br>";
                     echo " fases:";
                     print_r($aFases);
+                    */
                 }
 			}
 			if ($apuntar) {
