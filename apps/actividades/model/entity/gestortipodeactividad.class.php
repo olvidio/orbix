@@ -39,40 +39,61 @@ class GestorTipoDeActividad Extends core\ClaseGestor {
 	 * retorna l'array de tipos de procesos posibles per el tipus d'activitat.
 	 *
 	 * @param string sid_tipo_activ
+	 * @param boolean dl_propia
+	 * @param string ssfsv ( '',1,2,all)
 	 * @return array Una llista de id_tipo_proceso
 	 */
-	function getTiposDeProcesos($sid_tipo_activ='......',$bdl_propia='t') {
+	function getTiposDeProcesos($sid_tipo_activ='......',$bdl_propia='t',$sfsv='') {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (ConfigGlobal::mi_sfsv() == 1) {
-		   $nom_tipo_proceso = "id_tipo_proceso_sv"; 
-		   $nom_tipo_proceso_ex = "id_tipo_proceso_ex_sv"; 
-		} else {
-		   $nom_tipo_proceso = "id_tipo_proceso_sf"; 
-		   $nom_tipo_proceso_ex = "id_tipo_proceso_ex_sf"; 
+		
+		$a_sfsv = [];
+		switch ($sfsv) {
+		    case 'all':
+		        $a_sfsv = [1,2];
+                break;
+		    case 1:
+		        $a_sfsv = [1];
+                break;
+		    case 2:
+		        $a_sfsv = [2];
+                break;
+		    default:
+		        $isfsv = ConfigGlobal::mi_sfsv();
+		        $a_sfsv = [$isfsv];
 		}
+		
 	    $aTiposDeProcesos = array();
-	    if ($bdl_propia == 't') {
-	        $sQry="SELECT $nom_tipo_proceso as id_tipo_proceso 
-                    FROM $nom_tabla 
-                    WHERE id_tipo_activ::text ~ '^$sid_tipo_activ' 
-                    GROUP BY $nom_tipo_proceso";
-	    } else {
-	        $sQry="SELECT $nom_tipo_proceso_ex as id_tipo_proceso 
-                    FROM $nom_tabla 
-                    WHERE id_tipo_activ::text ~ '^$sid_tipo_activ' 
-                    GROUP BY $nom_tipo_proceso_ex";
-	    }
-	    if (($oDbl->query($sQry)) === false) {
-	        $sClauError = 'GestorTipoDeActividad.query';
-	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-	        return false;
-	    }
-	    foreach ($oDbl->query($sQry) as $aDades) {
-	        if (!empty($aDades['id_tipo_proceso'])) {
-	            $aTiposDeProcesos[]=$aDades['id_tipo_proceso'];
-	        }
-	    }
+		foreach ($a_sfsv as $isfsv) {
+            if ($isfsv == 1) {
+               $nom_tipo_proceso = "id_tipo_proceso_sv"; 
+               $nom_tipo_proceso_ex = "id_tipo_proceso_ex_sv"; 
+            } else {
+               $nom_tipo_proceso = "id_tipo_proceso_sf"; 
+               $nom_tipo_proceso_ex = "id_tipo_proceso_ex_sf"; 
+            }
+            if ($bdl_propia == 't') {
+                $sQry="SELECT $nom_tipo_proceso as id_tipo_proceso 
+                            FROM $nom_tabla 
+                            WHERE id_tipo_activ::text ~ '^$sid_tipo_activ' 
+                            GROUP BY $nom_tipo_proceso";
+            } else {
+                $sQry="SELECT $nom_tipo_proceso_ex as id_tipo_proceso 
+                        FROM $nom_tabla 
+                        WHERE id_tipo_activ::text ~ '^$sid_tipo_activ' 
+                        GROUP BY $nom_tipo_proceso_ex";
+            }
+            if (($oDbl->query($sQry)) === false) {
+                $sClauError = 'GestorTipoDeActividad.query';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                return false;
+            }
+            foreach ($oDbl->query($sQry) as $aDades) {
+                if (!empty($aDades['id_tipo_proceso'])) {
+                    $aTiposDeProcesos[]=$aDades['id_tipo_proceso'];
+                }
+            }
+		}
 	    return $aTiposDeProcesos;
 	}
 	

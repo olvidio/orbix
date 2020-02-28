@@ -42,7 +42,7 @@ class GestorActividadFase Extends core\ClaseGestor {
 	 * @param array optional lista de procesos.
 	 * @return object Una Llista de totes les fases posibles dels procesos
 	 */
-	function getTodasActividadFases($idProceso,$FiltroSfSv=false) {
+	function getTodasActividadFases($a_id_tipo_proceso,$FiltroSfSv=false) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 	    
@@ -66,21 +66,23 @@ class GestorActividadFase Extends core\ClaseGestor {
 	        }
 	        $cond .= ' AND';
 	    }
-	    
-	    $sQuery="SELECT f.id_fase, f.desc_fase
-				FROM $nom_tabla f JOIN a_tareas_proceso p USING (id_fase)
-				WHERE $cond id_tipo_proceso = $idProceso
-				ORDER BY n_orden";
-	    
-	    //echo "w: $sQuery<br>";
-	    if (($oDbl->query($sQuery)) === false) {
-	        $sClauError = 'GestorRole.lista';
-	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-	        return false;
-	    }
-	    $aFases = array();
-	    foreach ($oDbl->query($sQuery) as $row) {
-	        $aFases[] = $row['id_fase'];
+	   
+        $aFases = array();
+	    foreach ($a_id_tipo_proceso as $idTipoProceso) {
+            $sQuery="SELECT f.id_fase, f.desc_fase
+                    FROM $nom_tabla f JOIN a_tareas_proceso p USING (id_fase)
+                    WHERE $cond id_tipo_proceso = $idTipoProceso
+                    ORDER BY n_orden";
+            
+            //echo "w: $sQuery<br>";
+            if (($oDbl->query($sQuery)) === false) {
+                $sClauError = 'GestorRole.lista';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                return false;
+            }
+            foreach ($oDbl->query($sQuery) as $row) {
+                $aFases[] = $row['id_fase'];
+            }
 	    }
 	    return $aFases;
 	}

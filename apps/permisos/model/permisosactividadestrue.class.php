@@ -167,7 +167,7 @@ class PermisosActividadesTrue {
 			foreach ($aTiposDeProcesos as $id_tipo_proceso) {
 				// buscar las fases para estos procesos
 				$oGesFases= new procesos\GestorActividadFase();
-				$aFases = $oGesFases->getTodasActividadFases($id_tipo_proceso);
+				$aFases = $oGesFases->getTodasActividadFases([$id_tipo_proceso]);
 				// aFases es un array con todas las fases (sf o sv) de la actividad ordenado según el proceso.
 				// compruebo que existan las fases inicial i final, sino doy un error 
 				if (in_array($id_fase_ini, $aFases) && in_array($id_fase_ini, $aFases)) {

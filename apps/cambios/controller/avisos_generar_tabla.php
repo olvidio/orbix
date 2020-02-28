@@ -373,11 +373,11 @@ while ($num_cambios) {
                 $dl_org_anterior = $dl_org;
                 // buscar los procesos posibles para estos tipos de actividad
                 $GesTiposActiv = new GestorTipoDeActividad();
-                $aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ,$dl_propia);
-                $TipoDeProceso = $aTiposDeProcesos[0];
+                $aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ,$dl_propia,'all');
+                //$TipoDeProceso = $aTiposDeProcesos[0];
                 // buscar las fases para estos procesos
                 $oGesFases= new GestorActividadFase();
-                $aFases = $oGesFases->getTodasActividadFases($TipoDeProceso);
+                $aFases = $oGesFases->getTodasActividadFases($aTiposDeProcesos);
             }
 		} else {
 		    $aFases = [1,2,3,4]; // id correspondientes al status de la actividad.

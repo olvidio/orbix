@@ -158,7 +158,7 @@ class PermisosActividades {
 			foreach ($aTiposDeProcesos as $id_tipo_proceso) {
 				// buscar las fases para estos procesos
 				$oGesFases= new procesos\GestorActividadFase();
-				$aFases = $oGesFases->getTodasActividadFases($id_tipo_proceso);
+				$aFases = $oGesFases->getTodasActividadFases([$id_tipo_proceso]);
 				if ($aFases === FALSE) {
 				    echo '<br>';
 				    echo sprintf(_("No se encuentran las fases de este tipo de proceso:%s"),$id_tipo_proceso);
