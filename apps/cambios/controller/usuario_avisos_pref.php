@@ -178,6 +178,7 @@ $perm_jefe = FALSE;
 if ($_SESSION['oConfig']->is_jefeCalendario()
     OR (($_SESSION['oPerm']->have_perm_oficina('des') or $_SESSION['oPerm']->have_perm_oficina('vcsd')) && $mi_sfsv == 1) 
     OR ($grupo === FALSE && $oUsuario->isRolePau(Role::PAU_CDC))
+    OR ($_SESSION['oPerm']->have_perm_oficina('calendario'))
     )
 {
     $perm_jefe = TRUE;
