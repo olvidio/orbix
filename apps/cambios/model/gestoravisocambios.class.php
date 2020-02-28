@@ -120,7 +120,8 @@ class gestorAvisoCambios {
 		$oAhora = new DateTimeLocal();
 		$ahora_iso = $oAhora->format('Y-m-d H:i:s');
 		
-        $id_fase = '';
+        $id_fase_sv = '';
+        $id_fase_sf = '';
         $id_status = '';
 		
 		// per saber el tipus d'activitat.
@@ -148,7 +149,13 @@ class gestorAvisoCambios {
             // si no tengo instalado procesos, la fase es el status.
     		if (ConfigGlobal::is_app_installed('procesos')) {
                 $oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
-                $id_fase = $oGestorActividadProcesoTarea->getFaseActual($iid_activ);
+                // para sv:
+                $oGestorActividadProcesoTarea->setNomTabla('a_actividad_proceso_sv');
+                $id_fase_sv = $oGestorActividadProcesoTarea->getFaseActual($iid_activ);
+                // para sf
+                $oGestorActividadProcesoTarea->setNomTabla('a_actividad_proceso_sf');
+                $id_fase_sf = $oGestorActividadProcesoTarea->getFaseActual($iid_activ);
+                
                 $id_status = $status;
     		} else {
                 $id_status = $status;
@@ -163,7 +170,8 @@ class gestorAvisoCambios {
 				$oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_INSERT);
 				$oActividadCambio->setId_activ($iid_activ);
 				$oActividadCambio->setId_tipo_activ($iId_tipo_activ);
-				$oActividadCambio->setId_fase($id_fase);
+                $oActividadCambio->setId_fase_sv($id_fase_sv);
+                $oActividadCambio->setId_fase_sf($id_fase_sf);
 				$oActividadCambio->setId_status($id_status);
 				$oActividadCambio->setDl_org($dl_org);
 				$oActividadCambio->setObjeto($sObjeto);
@@ -202,7 +210,8 @@ class gestorAvisoCambios {
 					$oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_UPDATE);
 					$oActividadCambio->setId_activ($iid_activ);
 					$oActividadCambio->setId_tipo_activ($iId_tipo_activ);
-					$oActividadCambio->setId_fase($id_fase);
+					$oActividadCambio->setId_fase_sv($id_fase_sv);
+					$oActividadCambio->setId_fase_sf($id_fase_sf);
 					$oActividadCambio->setId_status($id_status);
 					$oActividadCambio->setDl_org($dl_org);
 					$oActividadCambio->setObjeto($sObjeto);
@@ -219,7 +228,8 @@ class gestorAvisoCambios {
 				$oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_DELETE);
 				$oActividadCambio->setId_activ($iid_activ);
 				$oActividadCambio->setId_tipo_activ($iId_tipo_activ);
-				$oActividadCambio->setId_fase($id_fase);
+				$oActividadCambio->setId_fase_sv($id_fase_sv);
+				$oActividadCambio->setId_fase_sf($id_fase_sf);
 				$oActividadCambio->setId_status($id_status);
 				$oActividadCambio->setDl_org($dl_org);
 				$oActividadCambio->setObjeto($sObjeto);
@@ -260,7 +270,8 @@ class gestorAvisoCambios {
 					$oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_FASE);
 					$oActividadCambio->setId_activ($iid_activ);
 					$oActividadCambio->setId_tipo_activ($iId_tipo_activ);
-					$oActividadCambio->setId_fase($id_fase);
+					$oActividadCambio->setId_fase_sv($id_fase_sv);
+					$oActividadCambio->setId_fase_sf($id_fase_sf);
 					$oActividadCambio->setId_status($id_status);
 					$oActividadCambio->setDl_org($dl_org);
 					$oActividadCambio->setObjeto($sObjeto);

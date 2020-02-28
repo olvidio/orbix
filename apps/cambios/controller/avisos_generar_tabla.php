@@ -356,13 +356,19 @@ while ($num_cambios) {
 		$sObjeto = $oCambio->getObjeto();
 		$dl_org = $oCambio->getDl_org();
 		$id_tipo_activ = $oCambio->getId_tipo_activ();
-		$id_fase_cmb = $oCambio->getId_fase();
+		$id_fase_cmb_sv = $oCambio->getId_fase_sv();
+		$id_fase_cmb_sf = $oCambio->getId_fase_sf();
 		$id_status_cmb = $oCambio->getId_status();
 		$propiedad_cmb = $oCambio->getPropiedad();
 		$valor_old_cmb = $oCambio->getValor_old();
 		$valor_new_cmb = $oCambio->getValor_new();
 		$id_activ = $oCambio->getId_activ();
 		
+		if (ConfigGlobal::mi_sfsv() == 1) {
+            $id_fase_cmb = $id_fase_cmb_sv;		    
+		} else {
+            $id_fase_cmb = $id_fase_cmb_sf;		    
+		}
 		// para dl y dlf:
 		$dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
 		$dl_propia = (ConfigGlobal::mi_dele() == $dl_org_no_f)? 't' : 'f';
@@ -373,7 +379,7 @@ while ($num_cambios) {
                 $dl_org_anterior = $dl_org;
                 // buscar los procesos posibles para estos tipos de actividad
                 $GesTiposActiv = new GestorTipoDeActividad();
-                $aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ,$dl_propia,'all');
+                $aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ,$dl_propia);
                 //$TipoDeProceso = $aTiposDeProcesos[0];
                 // buscar las fases para estos procesos
                 $oGesFases= new GestorActividadFase();

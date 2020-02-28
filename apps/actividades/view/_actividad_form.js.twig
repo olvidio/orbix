@@ -102,7 +102,11 @@ fnjs_guardar=function(tipo='') {
             return false;
 		});
 		$('#modifica').submit();
-		$('#modifica').trigger("reset");
+		// para borra el formulario y no repetir si se vuelve a hacer click
+		if (tipo=='nuevo') {
+			//Syntax to convert jQuery element to a JavaScript object.
+			$('#modifica')[0].reset();
+		}
 		//$('#modifica').off(); -->si está, parece que no vuelve al js_atras(1)
 	}
 };
