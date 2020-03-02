@@ -36,6 +36,7 @@ class GestorActaTribunal Extends core\ClaseGestor {
 
 	/**
 	 * retorna JSON llista d'examinadors
+	 * des del 2020 (perque els d'abans són amb llatí)
 	 *
 	 * @param string sQuery la query a executar.
 	 * @return object Json 
@@ -44,9 +45,10 @@ class GestorActaTribunal Extends core\ClaseGestor {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (!empty($sQuery)) {
-			$sCondi = "WHERE public.sin_acentos(examinador::text)  ~* public.sin_acentos('$sQuery'::text)";
+			$sCondi = "WHERE public.sin_acentos(examinador::text)  ~* public.sin_acentos('$sQuery'::text)
+                        AND substring(acta, '\/(\d{2})')::integer > 19 ";
 		} else {
-			$sCondi = '';
+			$sCondi = "WHERE substring(acta, '\/(\d{2})')::integer > 19 ";
 		}
 		$sOrdre = " ORDER BY examinador";
 		$sLimit = " LIMIT 25";
