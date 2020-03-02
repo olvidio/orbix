@@ -221,6 +221,12 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @var string
 	 */
 	 protected $sTituloNombreLatin;
+	 /**
+	 * Nombre del porfesor, para las actas
+	 *
+	 * @var string
+	 */
+	 protected $sTituloNombre;
 
 	/**
 	 * Centro_o_dl de Persona
@@ -883,6 +889,26 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 			$this->sNombreApellidosCrSin=$nom_ap;
 		}
 		return $this->sNombreApellidosCrSin;
+	}
+	/**
+	 * Recupera l'atribut sTituloNombre de Persona
+	 * el nombre más los nexos más los apellidos (para des actas).
+	 *
+	 * @return string sTituloNombre
+	 */
+	function getTituloNombre() {
+		if (!isset($this->sTituloNombre)) {
+			$this->DBCarregar();
+			$nom_ap = 'Dr. ';
+			$nom_ap .= $this->snom; 
+			$nom_ap .= !empty($this->snx1)? ' '.$this->snx1 : '';
+			$nom_ap .= ' '.$this->sapellido1;
+			$nom_ap .= !empty($this->snx2)? ' '.$this->snx2 : ' ';
+			$nom_ap .= !empty($this->sapellido2)? ' '.$this->sapellido2 : '';
+
+			$this->sTituloNombre=$nom_ap;
+		}
+		return $this->sTituloNombre;
 	}
 	/**
 	 * Recupera l'atribut sTituloNombreLatin de Persona

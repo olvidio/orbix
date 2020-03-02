@@ -155,7 +155,7 @@ if ($notas != 'nuevo' && $Qmod != 'nueva' && !empty($acta_actual))  { //signific
 		$oActividadAsignatura->DBCarregar();
 		$id_profesor=$oActividadAsignatura->getId_profesor();
 		$oPersonaDl = new personas\PersonaDl($id_profesor);
-		$ap_nom = $oPersonaDl->getTituloNombreLatin();
+		$ap_nom = $oPersonaDl->getTituloNombre();
 		$examinador = $ap_nom;
 		$json_examinadores = 'prePopulate: [';
 		$json_examinadores .= '{name: "'.htmlspecialchars($examinador).'"}';

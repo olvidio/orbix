@@ -106,7 +106,7 @@ if (is_array($cActas) && !empty($cActas)) {
 } else {
 	$notas="nuevo";// para indicar a la página de actas que está dentro de ésta.
 	$oDesplActas = new web\Desplegable();
-	$oDesplActas->setOpciones(array('primero gurardar acta'));
+	$oDesplActas->setOpciones(array('primero guardar acta'));
 }
 
 
