@@ -179,8 +179,8 @@ foreach ($cCentros as $oCentro) {
 			$nom_activ=_("pendiente de solicitar");
 		} else {
 			$a=0;
-			foreach ($cAsistencias as $oActividadAsistente) {
-				$id_activ = $oActividadAsistente->getId_activ();
+			foreach ($cAsistencias as $oAsistente) {
+				$id_activ = $oAsistente->getId_activ();
 				$oActividad = new actividades\Actividad($id_activ);
 				$nom_activ=$oActividad->getNom_activ();
 				$a++;

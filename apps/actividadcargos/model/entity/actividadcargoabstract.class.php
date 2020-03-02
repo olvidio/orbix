@@ -284,6 +284,8 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		// que tenga el módulo de 'cambios'
 		if (core\ConfigGlobal::is_app_installed('cambios')) {
+		    // per carregar les dades a $this->aDadesActuals i poder posar-les als canvis.
+		    $this->DBCarregar('guardar');
 		    // ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.
 		    $oGestorCanvis = new gestorAvisoCambios();
 		    $shortClassName = (new \ReflectionClass($this))->getShortName();

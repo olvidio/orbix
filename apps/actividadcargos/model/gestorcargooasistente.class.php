@@ -5,9 +5,9 @@ use core\ConfigGlobal;
 use core\Set;
 
 /**
- * GestorActividadAsistente
+ * GestorCargoOAsistente
  *
- * Classe per gestionar la llista d'objectes de la clase ActividadAsistente
+ * Classe per gestionar la llista d'objectes de la clase CargoOAsistente
  *
  * @package delegación
  * @subpackage model
@@ -59,7 +59,7 @@ class GestorCargoOAsistente {
 				ORDER BY 1,2 DESC";
 		  
 		if (($oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorActividadAsistente.query';
+			$sClauError = 'GestorCargoOAsistente.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}

@@ -209,9 +209,9 @@ foreach ($aa_zonas as $a_zonas) {
 		    $aOperador['f_fin']='>=';
 			$aWhere['status']='2';
 			$oGesActividadCargo = new GestorActividadCargo();
-			$cActividadAsistentes = $oGesActividadCargo ->getCargoOAsistente($id_nom,$aWhere,$aOperador);
+			$cAsistentes = $oGesActividadCargo ->getCargoOAsistente($id_nom,$aWhere,$aOperador);
 					
-			foreach ($cActividadAsistentes as $aAsistente) {
+			foreach ($cAsistentes as $aAsistente) {
 				$id_activ = $aAsistente['id_activ'];
 				$propio = $aAsistente['propio'];
 

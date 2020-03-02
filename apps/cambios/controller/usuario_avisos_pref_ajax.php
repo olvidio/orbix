@@ -334,7 +334,7 @@ switch($Qsalida) {
                                 'ActividadProcesoTarea'=>'datos',
                                 'ActividadCargoSacd'=>'sacd',
                                 'ActividadCargoNoSacd'=>'cargos',
-                                'ActividadAsistente'=>'asistentes',
+                                'Asistente'=>'asistentes',
                                 'CentroEncargado'=>'ctr',
                             ];
                 $afecta = $aObjPerm[$Qobjeto];
@@ -400,7 +400,7 @@ switch($Qsalida) {
                                 'ActividadProcesoTarea'=>'datos',
                                 'ActividadCargoSacd'=>'sacd',
                                 'ActividadCargoNoSacd'=>'cargos',
-                                'ActividadAsistente'=>'asistentes',
+                                'Asistente'=>'asistentes',
                                 'CentroEncargado'=>'ctr',
                             ];
                 $afecta = $aObjPerm[$Qobjeto];

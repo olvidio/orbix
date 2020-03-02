@@ -428,7 +428,7 @@ class Cambio Extends core\ClasePropiedades {
 	                case 'ActividadCargoSacd':
 	                    $sformat = 'Sacd: se ha asignado el sacd "%4$s" a la actividad "%1$s"';
 	                    break;
-	                case 'ActividadAsistente':
+	                case 'Asistente':
 	                    $sformat = 'Asistencia: "%4$s" se ha incorporado a la actividad "%1$s"';
 	                    break;
 	                case 'CentroEncargado':
@@ -454,7 +454,7 @@ class Cambio Extends core\ClasePropiedades {
 	                case 'ActividadCargoSacd':
 	                    $sformat = 'Sacd: ha cambiado el cargo en la actividad "%1$s" el campo "%2$s" de "%3$s" a "%4$s"';
 	                    break;
-	                case 'ActividadAsistente':
+	                case 'Asistente':
 	                    $sformat = 'Asistente: ha cambiado la asistencia en la actividad "%1$s" el campo "%2$s" de "%3$s" a "%4$s"';
 	                    break;
 	                case 'CentroEncargado':
@@ -476,7 +476,7 @@ class Cambio Extends core\ClasePropiedades {
 	                case 'ActividadCargoSacd':
 	                    $sformat = 'Sacd: se ha quitado al sacd "%3$s" de la actividad "%1$s"';
 	                    break;
-	                case 'ActividadAsistente':
+	                case 'Asistente':
 	                    $sformat = 'Asistencia: "%3$s" se ha borrado de la actividad "%1$s"';
 	                    break;
 	                case 'CentroEncargado':

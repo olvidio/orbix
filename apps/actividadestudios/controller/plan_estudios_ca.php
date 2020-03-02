@@ -101,11 +101,11 @@ $cAsistentes = $GesAsistentes->getAsistentesDeActividad($id_activ,'apellido1,ape
 $a=0;
 $a_old=0;
 $aAlumnos = array();
-foreach ($cAsistentes as $oActividadAsistente) {
-	if ($oActividadAsistente->getPropio() === FALSE) { continue; }
+foreach ($cAsistentes as $oAsistente) {
+	if ($oAsistente->getPropio() === FALSE) { continue; }
 	$a++;
-	$id_nom=$oActividadAsistente->getId_nom();
-	$observ_est=$oActividadAsistente->getObserv_est();
+	$id_nom=$oAsistente->getId_nom();
+	$observ_est=$oAsistente->getObserv_est();
 	$oPersona = personas\Persona::NewPersona($id_nom);
 	if (!is_object($oPersona)) {
 		$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;

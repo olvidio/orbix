@@ -112,10 +112,10 @@ class Select1301 {
 		$i=0;
 		$a_valores=array();
 		$cActividadesAsistente = $gesAsistente->getActividadesDeAsistente(array('id_nom'=>  $this->id_pau),$aWhere,$aOperator,TRUE);
-		foreach ($cActividadesAsistente as $oActividadAsistente) {
+		foreach ($cActividadesAsistente as $oAsistente) {
 			$i++;
-			$id_activ=$oActividadAsistente->getId_activ();
-			$id_tabla_asist=$oActividadAsistente->getId_tabla();
+			$id_activ=$oAsistente->getId_activ();
+			$id_tabla_asist=$oAsistente->getId_tabla();
 			$oActividad=new actividades\Actividad($id_activ);
 			$nom_activ=$oActividad->getNom_activ();
 			$id_tipo_activ=$oActividad->getId_tipo_activ();
@@ -123,10 +123,10 @@ class Select1301 {
 			$f_ini=$oActividad->getF_ini()->getFromLocal();
 			$f_fin=$oActividad->getF_fin()->getFromLocal();
 
-			$propio=$oActividadAsistente->getPropio();
-			$falta=$oActividadAsistente->getFalta();
-			$est_ok=$oActividadAsistente->getEst_ok();
-			$observ=$oActividadAsistente->getObserv();
+			$propio=$oAsistente->getPropio();
+			$falta=$oAsistente->getFalta();
+			$est_ok=$oAsistente->getEst_ok();
+			$observ=$oAsistente->getObserv();
 
 			$oTipoActividad = new web\TiposActividades($id_tipo_activ);
 			$isfsv=$oTipoActividad->getSfsvId();

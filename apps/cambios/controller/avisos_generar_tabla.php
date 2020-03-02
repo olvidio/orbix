@@ -306,7 +306,7 @@ function soy_encargado($id_nom,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cm
 						}
 					}
 				break;
-				case 'ActividadAsistente':
+				case 'Asistente':
 					// si lo que cambia es el id_nom, compruebo que el valor old o new sean de algun sacd de la zona.
 					if ($propiedad == 'id_nom') {
 						if (in_array($valor_old_cmb,$cSacds) || in_array($valor_new_cmb,$cSacds)) {

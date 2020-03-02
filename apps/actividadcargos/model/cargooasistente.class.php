@@ -14,39 +14,39 @@ class CargoOAsistente {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/**
-	 * aPrimary_key de ActividadAsistente
+	 * aPrimary_key de CargoOAsistente
 	 *
 	 * @var array
 	 */
 	 private $aPrimary_key;
 
 	/**
-	 * aDades de ActividadAsistente
+	 * aDades de CargoOAsistente
 	 *
 	 * @var array
 	 */
 	 private $aDades;
 
 	/**
-	 * Id_activ de ActividadAsistente
+	 * Id_activ de CargoOAsistente
 	 *
 	 * @var integer
 	 */
 	 private $iid_activ;
 	/**
-	 * Id_nom de ActividadAsistente
+	 * Id_nom de CargoOAsistente
 	 *
 	 * @var integer
 	 */
 	 private $iid_nom;
 	/**
-	 * Propio de ActividadAsistente
+	 * Propio de CargoOAsistente
 	 *
 	 * @var boolean
 	 */
 	 private $bpropio;
 	/**
-	 * Id_cargo de ActividadAsistente
+	 * Id_cargo de CargoOAsistente
 	 *
 	 * @var integer
 	 */
@@ -76,7 +76,7 @@ class CargoOAsistente {
 	/* METODES PUBLICS ----------------------------------------------------------*/
 
 	/**
-	 * Recupera l'atribut iid_activ de ActividadAsistente
+	 * Recupera l'atribut iid_activ de CargoOAsistente
 	 *
 	 * @return integer iid_activ
 	 */
@@ -84,7 +84,7 @@ class CargoOAsistente {
 		return $this->iid_activ;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_activ de ActividadAsistente
+	 * estableix el valor de l'atribut iid_activ de CargoOAsistente
 	 *
 	 * @param integer iid_activ
 	 */
@@ -92,7 +92,7 @@ class CargoOAsistente {
 		$this->iid_activ = $iid_activ;
 	}
 	/**
-	 * Recupera l'atribut iid_nom de ActividadAsistente
+	 * Recupera l'atribut iid_nom de CargoOAsistente
 	 *
 	 * @return integer iid_nom
 	 */
@@ -100,7 +100,7 @@ class CargoOAsistente {
 		return $this->iid_nom;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_nom de ActividadAsistente
+	 * estableix el valor de l'atribut iid_nom de CargoOAsistente
 	 *
 	 * @param integer iid_nom
 	 */
@@ -108,7 +108,7 @@ class CargoOAsistente {
 		$this->iid_nom = $iid_nom;
 	}
 	/**
-	 * Recupera l'atribut bpropio de ActividadAsistente
+	 * Recupera l'atribut bpropio de CargoOAsistente
 	 *
 	 * @return boolean bpropio
 	 */
@@ -116,7 +116,7 @@ class CargoOAsistente {
 		return $this->bpropio;
 	}
 	/**
-	 * estableix el valor de l'atribut bpropio de ActividadAsistente
+	 * estableix el valor de l'atribut bpropio de CargoOAsistente
 	 *
 	 * @param boolean bpropio='f' optional
 	 */
@@ -124,7 +124,7 @@ class CargoOAsistente {
 		$this->bpropio = $bpropio;
 	}
 	/**
-	 * Recupera l'atribut iid_cargo de ActividadAsistente
+	 * Recupera l'atribut iid_cargo de CargoOAsistente
 	 *
 	 * @return integer iid_cargo
 	 */
@@ -132,7 +132,7 @@ class CargoOAsistente {
 		return $this->iid_cargo;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_cargo de ActividadAsistente
+	 * estableix el valor de l'atribut iid_cargo de CargoOAsistente
 	 *
 	 * @param integer iid_nom
 	 */

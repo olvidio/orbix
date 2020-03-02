@@ -7,7 +7,7 @@ use personas\model\entity as personas;
 
 /**
  * Actualiza los datos de un objeto ActividadCargo.
- * Si asiste (['asis']), se crea el objeto ActividadAsistente y se pone como propio
+ * Si asiste (['asis']), se crea el objeto Asistente y se pone como propio
  *
  * 
  * @package	orbix
@@ -120,9 +120,9 @@ switch ($Qmod) {
 					}
 					break;
 			}
-			$oActividadAsistente=new asistentes\Asistente(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom));
-			$oActividadAsistente->setId_tabla($id_tabla);
-			if ($oActividadAsistente->DBEliminar() === false) {
+			$oAsistente=new asistentes\Asistente(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom));
+			$oAsistente->setId_tabla($id_tabla);
+			if ($oAsistente->DBEliminar() === false) {
 				$msg_err = _("hay un error, no se ha eliminado");
 			}
 			$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$Qid_nom,'id_tipo_dossier'=>1301));
@@ -186,11 +186,11 @@ switch ($Qmod) {
 					}
 					break;
 			}
-			$oActividadAsistente=new asistentes\Asistente(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom));
-			$oActividadAsistente->setId_tabla($id_tabla);
-			$oActividadAsistente->setPropio('t'); // por defecto lo pongo como propio
-			$oActividadAsistente->setFalta('f');
-			if ($oActividadAsistente->DBGuardar() === false) {
+			$oAsistente=new asistentes\Asistente(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom));
+			$oAsistente->setId_tabla($id_tabla);
+			$oAsistente->setPropio('t'); // por defecto lo pongo como propio
+			$oAsistente->setFalta('f');
+			if ($oAsistente->DBGuardar() === false) {
 				$msg_err = _("hay un error, no se ha guardado");
 			}
 			// si no está abierto, hay que abrir el dossier para esta persona
@@ -223,12 +223,12 @@ switch ($Qmod) {
 			}
 		}
 		// Modifico la asistencia:
-		$oActividadAsistente=new asistentes\AsistenteDl(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom));
-		if ($oActividadAsistente->DBCarregar('guardar') === false) { //no existe
+		$oAsistente=new asistentes\AsistenteDl(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom));
+		if ($oAsistente->DBCarregar('guardar') === false) { //no existe
 			if (!empty($Qasis)) { // lo añado
-				$oActividadAsistente->setPropio('t'); // por defecto lo pongo como propio
-				$oActividadAsistente->setFalta('f');
-				if ($oActividadAsistente->DBGuardar() === false) {
+				$oAsistente->setPropio('t'); // por defecto lo pongo como propio
+				$oAsistente->setFalta('f');
+				if ($oAsistente->DBGuardar() === false) {
 					$msg_err = _("hay un error, no se ha guardado");
 				}
 				// si no está abierto, hay que abrir el dossier para esta persona
@@ -242,7 +242,7 @@ switch ($Qmod) {
 			}
 		} else {
 			if (isset($_POST['asis']) && empty($Qasis)) { // lo borro. OJO hay que mirar el $_POST para isset
-				if ($oActividadAsistente->DBEliminar() === false) {
+				if ($oAsistente->DBEliminar() === false) {
 					$msg_err = _("hay un error, no se ha eliminado");
 				}
 				// si no está abierto, hay que abrir el dossier para esta persona

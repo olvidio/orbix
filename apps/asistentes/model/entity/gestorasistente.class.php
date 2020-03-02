@@ -195,12 +195,12 @@ class GestorAsistente Extends core\ClaseGestor {
 	}
 
 	/**
-	 * retorna l'array d'objectes de tipus ActividadAsistente
+	 * retorna l'array d'objectes de tipus Asistente
 	 *   ordenats sOrder. Per defecte: apellido1,apellido1,nom.per apellido1
 	 *
 	 * @param integer iid_activ el id de l'activitat.
 	 * @param string sOrder(null) l'ordre que es vol. Per defecte: apellido1,apellido1,nom.
-	 * @return array Una col·lecció d'objectes de tipus ActividadAsistente
+	 * @return array Una col·lecció d'objectes de tipus Asistente
 	 */
 	function getAsistentesDeActividad($iid_activ,$sOrder='') {
 		// Por el momento si está en la dmz no puede ver las asistencias:
@@ -270,7 +270,7 @@ class GestorAsistente Extends core\ClaseGestor {
 		   		WHERE a.id_activ=$iid_activ
 				ORDER BY ".$sOrder;
 		if (($oDblSt = $oDbl->query($sQry)) === false) {
-			$sClauError = 'GestorActividadAsistente.query_order';
+			$sClauError = 'GestorAsistente.query_order';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
