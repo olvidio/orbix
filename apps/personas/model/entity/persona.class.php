@@ -42,7 +42,7 @@ class Persona {
         } else {
 		    $gesPersonaDl = new GestorPersonaDl();
         }
-		$cPersonasDl = $gesPersonaDl->getPersonasDl(array('id_nom'=>$id_nom,'situacion'=>'A'));
+		$cPersonasDl = $gesPersonaDl->getPersonas(array('id_nom'=>$id_nom,'situacion'=>'A'));
 		if (count($cPersonasDl) > 0) {
 			$oPersona = $cPersonasDl[0];
 		} else {
@@ -57,7 +57,7 @@ class Persona {
 					$oPersona = $cPersonasIn[0];
 				} else {
 					//Puede ser que este buscando una personaDl con situacion != 'A'
-					$cPersonasDl = $gesPersonaDl->getPersonasDl(array('id_nom'=>$id_nom));
+					$cPersonasDl = $gesPersonaDl->getPersonas(array('id_nom'=>$id_nom));
 					if (count($cPersonasDl) > 0) {
 						$oPersona = $cPersonasDl[0];
 					} else {
