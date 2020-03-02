@@ -26,7 +26,12 @@ class Ubi {
 
 
 	public static function NewUbi($id_ubi) { 
-		$gesCentro = new GestorCentro;
+	    // para la sf (comienza por 2).
+	    if ( substr($id_ubi, 0, 1) == 2 ) {
+    		$gesCentro = new GestorCentroEllas();
+	    } else {
+    		$gesCentro = new GestorCentroEllos();
+	    }
 		$cCentros = $gesCentro->getCentros(array('id_ubi'=>$id_ubi));
 		if (count($cCentros) > 0) {
 			$oUbi = $cCentros[0];
