@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2020-02-14 17:16+0100\n"
+"POT-Creation-Date: 2020-03-02 09:14+0100\n"
 "PO-Revision-Date: 2018-06-08 09:00+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -21,7 +21,7 @@ msgstr ""
 #: actividadcargos/controller/update_3102.php:126
 #: actividadcargos/controller/update_3102.php:246
 #: actividades/controller/actividad_update.php:59
-#: actividades/controller/calendario_ajax.php:396
+#: actividades/controller/calendario_ajax.php:397
 #: actividadestudios/controller/matricular.php:118
 #: actividadtarifas/controller/tarifa_ajax.php:196
 #: asistentes/controller/update_3101.php:85
@@ -36,7 +36,7 @@ msgstr ""
 #: encargossacd/model/encargofuncionestrait.class.php:455
 #: menus/controller/menus_update.php:26 notas/controller/acta_update.php:133
 #: personas/controller/personas_update.php:31
-#: procesos/controller/procesos_ajax.php:145
+#: procesos/controller/procesos_ajax.php:146
 #: ubis/controller/calendario_periodos_ajax.php:268
 #: ubis/controller/direcciones_quitar.php:48
 #: ubis/controller/teleco_update.php:54 ubis/controller/ubis_update.php:29
@@ -71,10 +71,10 @@ msgstr ""
 #: actividades/controller/actividad_update.php:335
 #: actividades/controller/actividad_update.php:401
 #: actividades/controller/actividad_update.php:444
-#: actividades/controller/calendario_ajax.php:387
-#: actividades/controller/calendario_ajax.php:416
-#: actividades/controller/calendario_ajax.php:478
-#: actividades/model/actividadnuevocurso.class.php:205
+#: actividades/controller/calendario_ajax.php:388
+#: actividades/controller/calendario_ajax.php:417
+#: actividades/controller/calendario_ajax.php:479
+#: actividades/model/actividadnuevocurso.class.php:202
 #: actividadescentro/controller/activ_ctr_ajax.php:36
 #: actividadescentro/controller/activ_ctr_ajax.php:40
 #: actividadescentro/controller/activ_ctr_ajax.php:51
@@ -83,8 +83,8 @@ msgstr ""
 #: actividadessacd/controller/activ_sacd_ajax.php:74
 #: actividadessacd/controller/activ_sacd_ajax.php:85
 #: actividadessacd/controller/activ_sacd_ajax.php:89
-#: actividadestudios/controller/acta_notas_update.php:239
-#: actividadestudios/controller/acta_notas_update.php:301
+#: actividadestudios/controller/acta_notas_update.php:237
+#: actividadestudios/controller/acta_notas_update.php:299
 #: actividadestudios/controller/update_3005.php:103
 #: actividadestudios/controller/update_3103.php:171
 #: actividadestudios/controller/update_3103.php:210
@@ -142,9 +142,8 @@ msgstr ""
 #: personas/model/entity/trasladodl.class.php:466
 #: personas/model/entity/trasladodl.class.php:718
 #: procesos/controller/actividad_proceso_ajax.php:94
-#: procesos/controller/fases_activ_cambio_ajax.php:275
-#: procesos/controller/fases_activ_cambio_ajax.php:285
-#: procesos/controller/procesos_ajax.php:138
+#: procesos/controller/fases_activ_cambio_ajax.php:267
+#: procesos/controller/procesos_ajax.php:139
 #: ubis/controller/calendario_periodos_ajax.php:260
 #: ubis/controller/direcciones_asignar.php:42
 #: ubis/controller/ubis_update.php:150
@@ -172,7 +171,7 @@ msgid "hay un error, no se ha guardado"
 msgstr ""
 
 #: actividadcargos/model/entity/actividadcargoabstract.class.php:537
-#: actividades/model/entity/tipodeactividad.class.php:533
+#: actividades/model/entity/tipodeactividad.class.php:553
 #: actividadestudios/model/entity/matricula.class.php:607
 #: actividadplazas/model/entity/actividadplazas.class.php:441
 #: actividadplazas/model/entity/plazapeticion.class.php:383
@@ -200,15 +199,15 @@ msgstr ""
 #: actividadcargos/model/select1302.class.php:83
 #: actividadcargos/model/select3102.class.php:78
 #: actividades/controller/actividad_select.php:279
-#: actividades/controller/calendario_ajax.php:453
+#: actividades/controller/calendario_ajax.php:454
 #: actividades/controller/lista_activ.php:300
-#: actividades/model/entity/actividadall.class.php:1314
+#: actividades/model/entity/actividadall.class.php:1313
 #: actividadtarifas/controller/tarifa_ajax.php:297
 #: actividadtarifas/model/entity/tipotarifa.class.php:447
 #: asistentes/model/entity/asistentepub.class.php:897
 #: cartaspresentacion/controller/cartas_presentacion_ajax.php:192
 #: casas/controller/casa_ajax.php:103 casas/controller/casa_ajax.php:339
-#: casas/controller/casa_ajax.php:528
+#: casas/controller/casa_ajax.php:549
 #: encargossacd/controller/sacd_ficha_ajax.php:408
 #: notas/model/entity/acta.class.php:683
 #: personas/model/entity/personaglobal.class.php:1248
@@ -227,8 +226,7 @@ msgstr ""
 #: actividades/view/actividad_form.phtml:211
 #: actividadestudios/view/ca_posibles_cuadro.phtml:86
 #: actividadestudios/view/selectUnCa.phtml:14
-#: asistentes/view/form_1301.phtml:74 asistentes/view/form_3101.phtml:86
-#: asistentes/view/form_mover.phtml:8 asistentes/view/lista_asistentes.phtml:17
+#: asistentes/view/form_1301.phtml:74 asistentes/view/form_mover.phtml:8
 #: notas/view/acta_ver.phtml:103 ubis/view/ctrdl_form.phtml:92
 #: ubis/view/teleco_form.phtml:42
 #: actividades/view/_actividad_form_body.html.twig:62
@@ -342,7 +340,7 @@ msgstr ""
 #: asistentes/model/select3101.class.php:152
 #: notas/controller/asig_faltan_personas_select.php:118
 #: notas/controller/asig_faltan_select.php:115
-#: personas/controller/personas_select.php:368
+#: personas/controller/personas_select.php:372
 #: actividadestudios/view/e43.phtml:21
 msgid "nombre y apellidos"
 msgstr ""
@@ -424,7 +422,7 @@ msgstr ""
 #: casas/controller/casas_resumen.php:74
 #: casas/controller/prevision_asistentes.php:131
 #: notas/controller/acta_listado_anual.php:94
-#: procesos/controller/fases_activ_cambio.php:71
+#: procesos/controller/fases_activ_cambio.php:76
 msgid "todo el año"
 msgstr ""
 
@@ -444,7 +442,7 @@ msgstr ""
 #: casas/controller/casas_resumen.php:75
 #: casas/controller/prevision_asistentes.php:132
 #: notas/controller/acta_listado_anual.php:95
-#: procesos/controller/fases_activ_cambio.php:72
+#: procesos/controller/fases_activ_cambio.php:77
 msgid "primer trimestre"
 msgstr ""
 
@@ -464,7 +462,7 @@ msgstr ""
 #: casas/controller/casas_resumen.php:76
 #: casas/controller/prevision_asistentes.php:133
 #: notas/controller/acta_listado_anual.php:96
-#: procesos/controller/fases_activ_cambio.php:73
+#: procesos/controller/fases_activ_cambio.php:78
 msgid "segundo trimestre"
 msgstr ""
 
@@ -484,7 +482,7 @@ msgstr ""
 #: casas/controller/casas_resumen.php:77
 #: casas/controller/prevision_asistentes.php:134
 #: notas/controller/acta_listado_anual.php:97
-#: procesos/controller/fases_activ_cambio.php:74
+#: procesos/controller/fases_activ_cambio.php:79
 msgid "tercer trimestre"
 msgstr ""
 
@@ -504,7 +502,7 @@ msgstr ""
 #: casas/controller/casas_resumen.php:78
 #: casas/controller/prevision_asistentes.php:135
 #: notas/controller/acta_listado_anual.php:98
-#: procesos/controller/fases_activ_cambio.php:75
+#: procesos/controller/fases_activ_cambio.php:80
 msgid "cuarto trimestre"
 msgstr ""
 
@@ -543,7 +541,7 @@ msgstr ""
 #: asistentes/controller/que_ctr_lista.php:125 casas/controller/casa_que.php:90
 #: casas/controller/casas_resumen.php:80
 #: notas/controller/acta_listado_anual.php:102
-#: procesos/controller/fases_activ_cambio.php:77
+#: procesos/controller/fases_activ_cambio.php:82
 msgid "otro"
 msgstr ""
 
@@ -589,10 +587,10 @@ msgid "duplicar"
 msgstr ""
 
 #: actividades/controller/actividad_select.php:228
-#: cambios/controller/avisos_generar.php:101
+#: cambios/controller/avisos_generar.php:102
 #: dbextern/controller/ver_orbix.php:168
 #: ubis/controller/calendario_periodos_ajax.php:239
-#: usuarios/controller/grupo_lista.php:67 usuarios/controller/role_lista.php:63
+#: usuarios/controller/grupo_lista.php:67 usuarios/controller/role_lista.php:65
 #: usuarios/controller/usuario_lista.php:73
 #: actividadplazas/view/peticiones_activ.phtml:64
 #: asistentes/view/que_ctr_lista.phtml:71 notas/view/asig_faltan_que.phtml:11
@@ -614,7 +612,7 @@ msgid "lista cl"
 msgstr ""
 
 #: actividades/controller/actividad_select.php:236
-#: actividades/controller/calendario_listas.php:336
+#: actividades/controller/calendario_listas.php:328
 #: actividades/controller/lista_actividades_sg.php:190
 #: casas/controller/casa_ajax.php:101 actividades/view/actividad_form.phtml:146
 #: actividadestudios/view/plan_estudios_ca.phtml:25
@@ -629,7 +627,7 @@ msgid "lista"
 msgstr ""
 
 #: actividades/controller/actividad_select.php:241
-#: actividades/model/entity/actividadall.class.php:1410
+#: actividades/model/entity/actividadall.class.php:1409
 #: actividadplazas/model/entity/actividadplazas.class.php:453
 #: casas/controller/prevision_asistentes.php:126
 #: ubis/controller/centros_ajax.php:124 ubis/controller/centros_ajax.php:276
@@ -648,7 +646,7 @@ msgstr ""
 
 #: actividades/controller/actividad_select.php:254
 #: asistentes/model/select3101.class.php:139
-#: personas/controller/personas_select.php:330
+#: personas/controller/personas_select.php:334
 msgid "plan estudios"
 msgstr ""
 
@@ -661,8 +659,8 @@ msgstr ""
 #: actividadestudios/model/select3005.class.php:80
 #: casas/controller/casa_ajax.php:328
 #: profesores/view/ficha_profesor_stgr.print.phtml:80
-#: encargossacd/view/sacd_ausencias_get.html.twig:43
-#: encargossacd/view/sacd_ausencias_get.html.twig:74
+#: encargossacd/view/sacd_ausencias_get.html.twig:42
+#: encargossacd/view/sacd_ausencias_get.html.twig:89
 msgid "inicio"
 msgstr ""
 
@@ -671,23 +669,23 @@ msgstr ""
 #: actividadestudios/model/select3005.class.php:81
 #: casas/controller/casa_ajax.php:329
 #: profesores/view/ficha_profesor_stgr.print.phtml:80
-#: encargossacd/view/sacd_ausencias_get.html.twig:44
-#: encargossacd/view/sacd_ausencias_get.html.twig:75
+#: encargossacd/view/sacd_ausencias_get.html.twig:43
+#: encargossacd/view/sacd_ausencias_get.html.twig:91
 msgid "fin"
 msgstr ""
 
 #: actividades/controller/actividad_select.php:267
 #: actividades/controller/lista_activ.php:280
-#: casas/controller/casa_ajax.php:517
+#: casas/controller/casa_ajax.php:538
 #: encargossacd/controller/encargo_horario_select.php:52
 msgid "hora ini"
 msgstr ""
 
 #: actividades/controller/actividad_select.php:268
-#: actividades/controller/calendario_listas.php:335
+#: actividades/controller/calendario_listas.php:327
 #: actividades/controller/lista_activ.php:284
-#: actividades/model/entity/actividadall.class.php:1242
-#: casas/controller/casa_ajax.php:519
+#: actividades/model/entity/actividadall.class.php:1240
+#: casas/controller/casa_ajax.php:540
 #: encargossacd/controller/encargo_horario_select.php:53
 #: encargossacd/controller/horario_sacd_ver.php:207
 #: actividades/view/actividad_form.phtml:183
@@ -697,7 +695,7 @@ msgid "hora fin"
 msgstr ""
 
 #: actividades/controller/actividad_select.php:271
-#: casas/controller/casa_ajax.php:520 actividades/view/actividad_form.phtml:143
+#: casas/controller/casa_ajax.php:541 actividades/view/actividad_form.phtml:143
 #: actividades/view/_actividad_form_head.html.twig:27
 #: actividades/view/_actividad_tipo_body.html.twig:3
 msgid "sf/sv"
@@ -705,7 +703,7 @@ msgstr ""
 
 #: actividades/controller/actividad_select.php:273
 #: actividades/controller/lista_activ.php:295
-#: casas/controller/casa_ajax.php:525
+#: casas/controller/casa_ajax.php:546
 msgid "tar."
 msgstr ""
 
@@ -714,7 +712,7 @@ msgstr ""
 #: actividades/controller/lista_actividades_sg.php:203
 #: actividadessacd/controller/activ_sacd_ajax.php:231
 #: cambios/model/gestoravisocambios.class.php:32
-#: casas/controller/casa_ajax.php:527
+#: casas/controller/casa_ajax.php:548
 #: encargossacd/controller/sacd_ficha_ajax.php:58
 #: personas/model/entity/personaglobal.class.php:1040
 #: zonassacd/controller/zona_sacd_ajax.php:105
@@ -747,12 +745,12 @@ msgstr ""
 #: cartaspresentacion/controller/cartas_presentacion_ajax.php:182
 #: cartaspresentacion/controller/cartas_presentacion_ajax.php:377
 #: cartaspresentacion/controller/cartas_presentacion_ajax.php:461
-#: casas/controller/casa_ajax.php:526
+#: casas/controller/casa_ajax.php:547
 #: notas/controller/asig_faltan_personas_select.php:118
 #: notas/controller/asig_faltan_select.php:115
 #: notas/controller/asignaturas_pendientes.php:39
 #: notas/controller/asignaturas_pendientes_resumen.php:79
-#: personas/controller/personas_select.php:375
+#: personas/controller/personas_select.php:379
 #: profesores/controller/profesor_asignatura_ajax.php:30
 #: ubis/controller/centros_ajax.php:58 ubis/controller/centros_ajax.php:88
 #: ubis/controller/centros_ajax.php:121 ubis/controller/centros_ajax.php:195
@@ -841,37 +839,37 @@ msgstr ""
 msgid "dup"
 msgstr ""
 
-#: actividades/controller/actividad_ver.php:62
+#: actividades/controller/actividad_ver.php:60
 #: dossiers/controller/dossiers_ver.php:187
-#: personas/controller/personas_select.php:279
+#: personas/controller/personas_select.php:283
 #: procesos/controller/actividad_proceso.php:32
 #: ubis/controller/home_ubis.php:137 personas/view/home_persona.phtml:7
 #: personas/view/persona_de_paso.phtml:65 personas/view/persona_form.phtml:74
-#: personas/view/traslado_form.phtml:51
+#: personas/view/persona_sss_form.phtml:74 personas/view/traslado_form.phtml:51
 msgid "ver dossiers"
 msgstr ""
 
-#: actividades/controller/actividad_ver.php:63
+#: actividades/controller/actividad_ver.php:61
 #: dossiers/controller/dossiers_ver.php:188
 #: procesos/controller/actividad_proceso.php:33
 #: ubis/controller/home_ubis.php:138 personas/view/home_persona.phtml:7
 #: personas/view/persona_de_paso.phtml:65 personas/view/persona_form.phtml:74
-#: personas/view/traslado_form.phtml:51
+#: personas/view/persona_sss_form.phtml:74 personas/view/traslado_form.phtml:51
 msgid "dossiers"
 msgstr ""
 
-#: actividades/controller/actividad_ver.php:183
-#: actividades/controller/actividad_ver.php:199
+#: actividades/controller/actividad_ver.php:185
+#: actividades/controller/actividad_ver.php:201
 msgid "No tiene permiso para crear una actividad de este tipo"
 msgstr ""
 
-#: actividades/controller/actividad_ver.php:217
+#: actividades/controller/actividad_ver.php:219
 msgid "ya no existe: cambiarlo"
 msgstr ""
 
-#: actividades/controller/actividad_ver.php:226
-#: actividades/controller/calendario_ajax.php:128
-#: actividades/controller/calendario_ajax.php:276
+#: actividades/controller/actividad_ver.php:228
+#: actividades/controller/calendario_ajax.php:129
+#: actividades/controller/calendario_ajax.php:277
 #: actividades/controller/lista_actividades_sg.php:286
 #: actividades/view/actividad_select_ubi.phtml:179
 msgid "sin determinar"
@@ -911,7 +909,7 @@ msgstr ""
 #: ubis/view/ubis_buscar.phtml:136 usuarios/view/grupo_lista.phtml:52
 #: usuarios/view/usuario_lista.phtml:45
 #: actividades/view/actividad_que.html.twig:89
-#: cambios/view/avisos_generar_condicion.html.twig:8
+#: cambios/view/avisos_generar_condicion.html.twig:28
 #: cartaspresentacion/view/cartas_presentacion_buscar.html.twig:19
 #: cartaspresentacion/view/cartas_presentacion_que.html.twig:158
 #: casas/view/casa_resumen_que.html.twig:20
@@ -924,7 +922,7 @@ msgstr ""
 msgid "seleccionar un centro y un período"
 msgstr ""
 
-#: actividades/controller/calendario_ajax.php:400
+#: actividades/controller/calendario_ajax.php:401
 #: actividadescentro/controller/activ_ctr_ajax.php:82
 #: actividadessacd/controller/activ_sacd_ajax.php:124
 #: actividadtarifas/controller/tarifa_ajax.php:200
@@ -933,14 +931,14 @@ msgstr ""
 msgid "no sé cuál he de borar"
 msgstr ""
 
-#: actividades/controller/calendario_ajax.php:433
+#: actividades/controller/calendario_ajax.php:434
 #: actividadtarifas/controller/tarifa_ajax.php:223
 #: actividadtarifas/controller/tarifa_ajax.php:277
 #: actividadtarifas/controller/tarifa_tipo_actividad_ajax.php:55
 msgid "por dia"
 msgstr ""
 
-#: actividades/controller/calendario_ajax.php:433
+#: actividades/controller/calendario_ajax.php:434
 #: actividadplazas/controller/gestion_plazas.php:196
 #: actividadtarifas/controller/tarifa_ajax.php:223
 #: actividadtarifas/controller/tarifa_ajax.php:277
@@ -952,9 +950,9 @@ msgstr ""
 msgid "total"
 msgstr ""
 
-#: actividades/controller/calendario_ajax.php:448
-#: actividades/controller/calendario_listas.php:337
-#: actividades/model/entity/actividadall.class.php:1362
+#: actividades/controller/calendario_ajax.php:449
+#: actividades/controller/calendario_listas.php:329
+#: actividades/model/entity/actividadall.class.php:1361
 #: actividadtarifas/controller/tarifa_ajax.php:59
 #: actividadtarifas/controller/tarifa_ajax.php:292
 #: actividadtarifas/controller/tarifa_tipo_actividad_ajax.php:67
@@ -968,14 +966,14 @@ msgstr ""
 msgid "tarifa"
 msgstr ""
 
-#: actividades/controller/calendario_ajax.php:449
+#: actividades/controller/calendario_ajax.php:450
 #: actividadtarifas/controller/tarifa_ajax.php:231
 #: actividadtarifas/controller/tarifa_ajax.php:293
 #: actividadtarifas/model/entity/tipotarifa.class.php:423
 msgid "letra"
 msgstr ""
 
-#: actividades/controller/calendario_ajax.php:451
+#: actividades/controller/calendario_ajax.php:452
 #: actividadtarifas/controller/tarifa_ajax.php:232
 #: actividadtarifas/controller/tarifa_ajax.php:295
 #: actividadtarifas/model/entity/tipotarifa.class.php:411
@@ -984,10 +982,10 @@ msgstr ""
 msgid "modo"
 msgstr ""
 
-#: actividades/controller/calendario_ajax.php:455
+#: actividades/controller/calendario_ajax.php:456
 #: actividadtarifas/controller/tarifa_ajax.php:65
 #: actividadtarifas/controller/tarifa_ajax.php:299
-#: cambios/controller/usuario_avisos_pref_ajax.php:194
+#: cambios/controller/usuario_avisos_pref_ajax.php:195
 #: cartaspresentacion/controller/cartas_presentacion_ajax.php:194
 #: casas/controller/casa_ajax.php:49 casas/controller/casa_ajax.php:105
 #: casas/controller/casa_ec_ajax.php:156 core/mod_tabla_form.php:172
@@ -1008,7 +1006,7 @@ msgstr ""
 #: actividadessacd/view/com_sacd_txt.html.twig:52
 #: actividadtarifas/view/tarifa_tipo_actividad_form.html.twig:85
 #: actividadtarifas/view/tarifa_tipo_actividad_form_nuevo.html.twig:22
-#: cambios/view/usuario_avisos_pref.html.twig:246
+#: cambios/view/usuario_avisos_pref.html.twig:247
 #: casas/view/grupo_form.html.twig:45 config/view/parametros.html.twig:68
 #: config/view/parametros.html.twig:76 config/view/parametros.html.twig:84
 #: config/view/parametros.html.twig:92 config/view/parametros.html.twig:100
@@ -1016,41 +1014,41 @@ msgstr ""
 #: config/view/parametros.html.twig:127
 #: encargossacd/view/ctr_get_ficha.html.twig:102
 #: encargossacd/view/listas_com_txt.html.twig:51
-#: encargossacd/view/sacd_ausencias_get.html.twig:89
+#: encargossacd/view/sacd_ausencias_get.html.twig:106
 #: procesos/view/procesos_ver.html.twig:39
 #: procesos/view/usuario_perm_activ.html.twig:100
 #: usuarios/view/usuario_perm_ctr.html.twig:40
 msgid "guardar"
 msgstr ""
 
-#: actividades/controller/calendario_ajax.php:456
+#: actividades/controller/calendario_ajax.php:457
 #: actividadtarifas/controller/tarifa_ajax.php:66
 #: actividadtarifas/controller/tarifa_ajax.php:300
-#: cambios/controller/usuario_avisos_pref_ajax.php:195
+#: cambios/controller/usuario_avisos_pref_ajax.php:196
 #: casas/controller/casa_ajax.php:106 casas/controller/grupo_lista.php:46
 #: core/datostabla.class.php:104 devel/controller/metamenus_get.php:51
 #: devel/controller/modulos_select.php:59
 #: encargossacd/controller/encargo_horario_select.php:43
 #: encargossacd/controller/encargo_select.php:87
 #: notas/controller/acta_select.php:141
-#: procesos/controller/procesos_ajax.php:46
-#: procesos/controller/procesos_ajax.php:73
+#: procesos/controller/procesos_ajax.php:47
+#: procesos/controller/procesos_ajax.php:74
 #: ubis/controller/calendario_periodos_ajax.php:111
 #: ubis/controller/teleco_tabla.php:90 ubis/controller/ubis_tabla.php:411
-#: usuarios/controller/usuario_form.php:105
+#: usuarios/controller/usuario_form.php:106
 #: dossiers/view/perm_dossier_pres.phtml:78 menus/view/menus_get.phtml:48
 #: personas/view/persona_de_paso.phtml:154 personas/view/persona_form.phtml:176
-#: ubis/view/cdc_form.phtml:100 ubis/view/ctrdl_form.phtml:110
-#: ubis/view/ctrex_form.phtml:89 usuarios/view/perm_activ_form.phtml:10
-#: usuarios/view/perm_ctr_form.phtml:11
+#: personas/view/persona_sss_form.phtml:171 ubis/view/cdc_form.phtml:100
+#: ubis/view/ctrdl_form.phtml:110 ubis/view/ctrex_form.phtml:89
+#: usuarios/view/perm_activ_form.phtml:10 usuarios/view/perm_ctr_form.phtml:11
 #: actividadtarifas/view/tarifa_tipo_actividad_form.html.twig:86
 msgid "eliminar"
 msgstr ""
 
-#: actividades/controller/calendario_ajax.php:457
+#: actividades/controller/calendario_ajax.php:458
 #: actividadtarifas/controller/tarifa_ajax.php:67
 #: actividadtarifas/controller/tarifa_ajax.php:301
-#: cambios/controller/usuario_avisos_pref_ajax.php:196
+#: cambios/controller/usuario_avisos_pref_ajax.php:197
 #: cartaspresentacion/controller/cartas_presentacion_ajax.php:195
 #: cartaspresentacion/controller/cartas_presentacion_ajax.php:200
 #: casas/controller/casa_ajax.php:50 casas/controller/casa_ajax.php:107
@@ -1066,7 +1064,7 @@ msgstr ""
 msgid "cancel"
 msgstr ""
 
-#: actividades/controller/calendario_ajax.php:485
+#: actividades/controller/calendario_ajax.php:486
 #: actividadestudios/controller/update_3005.php:42
 #: actividadestudios/controller/update_3103.php:125
 #: actividadestudios/controller/update_3103.php:148
@@ -1077,32 +1075,32 @@ msgstr ""
 msgid "hay un error, no se ha borrado"
 msgstr ""
 
-#: actividades/controller/calendario_listas.php:288
-#: casas/controller/casa_ajax.php:469
+#: actividades/controller/calendario_listas.php:280
+#: casas/controller/casa_ajax.php:476
 msgid "ocupado"
 msgstr ""
 
-#: actividades/controller/calendario_listas.php:331
+#: actividades/controller/calendario_listas.php:323
 msgid "sv/sf"
 msgstr ""
 
-#: actividades/controller/calendario_listas.php:332
+#: actividades/controller/calendario_listas.php:324
 #: actividades/controller/lista_activ.php:291
 #: actividadtarifas/controller/tarifa_tipo_actividad_ajax.php:66
 #: asistentes/controller/lista_ultima_activ.php:177
-#: casas/controller/casa_ajax.php:523
+#: casas/controller/casa_ajax.php:544
 #: procesos/controller/tipo_activ_proceso_ajax.php:37
 msgid "tipo actividad"
 msgstr ""
 
-#: actividades/controller/calendario_listas.php:333
+#: actividades/controller/calendario_listas.php:325
 #: asistentes/model/select1301.class.php:77
-#: encargossacd/view/sacd_ausencias_get.html.twig:66
+#: encargossacd/view/sacd_ausencias_get.html.twig:81
 msgid "fechas"
 msgstr ""
 
-#: actividades/controller/calendario_listas.php:334
-#: actividades/model/entity/actividadall.class.php:1217
+#: actividades/controller/calendario_listas.php:326
+#: actividades/model/entity/actividadall.class.php:1215
 #: encargossacd/controller/horario_sacd_ver.php:206
 #: actividades/view/actividad_form.phtml:179
 #: actividades/view/_actividad_form_body.html.twig:32
@@ -1110,7 +1108,7 @@ msgstr ""
 msgid "hora inicio"
 msgstr ""
 
-#: actividades/controller/calendario_listas.php:338
+#: actividades/controller/calendario_listas.php:330
 msgid "centros encargados"
 msgstr ""
 
@@ -1149,29 +1147,29 @@ msgid "común"
 msgstr ""
 
 #: actividades/controller/lista_activ.php:277
-#: casas/controller/casa_ajax.php:516
+#: casas/controller/casa_ajax.php:537
 msgid "empieza"
 msgstr ""
 
 #: actividades/controller/lista_activ.php:282
-#: casas/controller/casa_ajax.php:518
+#: casas/controller/casa_ajax.php:539
 msgid "termina"
 msgstr ""
 
 #: actividades/controller/lista_activ.php:289
-#: casas/controller/casa_ajax.php:521
+#: casas/controller/casa_ajax.php:542
 msgid "activ."
 msgstr ""
 
 #: actividades/controller/lista_activ.php:290
 #: actividades/controller/lista_actividades_sg.php:200
-#: casas/controller/casa_ajax.php:522
+#: casas/controller/casa_ajax.php:543
 msgid "asist."
 msgstr ""
 
 #: actividades/controller/lista_activ.php:292
 #: actividades/controller/lista_actividades_sg.php:201
-#: casas/controller/casa_ajax.php:524
+#: casas/controller/casa_ajax.php:545
 #: encargossacd/controller/encargo_select.php:90
 #: notas/model/entity/acta.class.php:671
 #: profesores/model/entity/congreso.class.php:540
@@ -1233,7 +1231,7 @@ msgid "ctrs"
 msgstr ""
 
 #: actividades/controller/lista_actividades_sg.php:204
-#: actividades/model/entity/actividadall.class.php:1266
+#: actividades/model/entity/actividadall.class.php:1264
 #: actividadtarifas/controller/tarifa_ajax.php:90
 #: casas/controller/casa_ajax.php:98 casas/controller/casa_ajax.php:331
 #: actividades/view/actividad_form.phtml:206
@@ -1248,25 +1246,25 @@ msgstr ""
 msgid "periodo"
 msgstr ""
 
-#: actividades/model/actividadnuevocurso.class.php:80
+#: actividades/model/actividadnuevocurso.class.php:77
 msgid "hay un solape entre"
 msgstr ""
 
-#: actividades/model/actividadnuevocurso.class.php:82
+#: actividades/model/actividadnuevocurso.class.php:79
 #: encargossacd/model/encargofuncionestrait.class.php:497
 #: web/periodoque.class.php:138 web/periodoque.class.php:189
 msgid "y"
 msgstr ""
 
-#: actividades/model/actividadnuevocurso.class.php:102
+#: actividades/model/actividadnuevocurso.class.php:99
 msgid "error al intentar borrar las actividades"
 msgstr ""
 
-#: actividades/model/actividadnuevocurso.class.php:113
+#: actividades/model/actividadnuevocurso.class.php:110
 msgid "actividades no eliminadas, porque su estado no es proyecto"
 msgstr ""
 
-#: actividades/model/actividadnuevocurso.class.php:125
+#: actividades/model/actividadnuevocurso.class.php:122
 #, php-format
 msgid "error (no tiene definida la repetición) en la actividad: %s"
 msgstr ""
@@ -1276,7 +1274,7 @@ msgstr ""
 msgid "no se puede modificar una actividad de otra dl: %s"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:34
+#: actividades/model/entity/actividadall.class.php:351
 #: actividades/view/actividad_form.phtml:161
 #: actividades/view/_actividad_form_body.html.twig:8
 #: actividades/view/actividad_que.html.twig:61
@@ -1284,8 +1282,8 @@ msgstr ""
 msgid "proyecto"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:35
-#: cambios/controller/usuario_avisos_pref_ajax.php:117
+#: actividades/model/entity/actividadall.class.php:352
+#: cambios/controller/usuario_avisos_pref_ajax.php:118
 #: casas/controller/calendario_ubi_resumen_ajax.php:283
 #: actividades/view/actividad_form.phtml:162
 #: actividades/view/_actividad_form_body.html.twig:11
@@ -1294,53 +1292,49 @@ msgstr ""
 msgid "actual"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:36
+#: actividades/model/entity/actividadall.class.php:353
 #: actividades/view/actividad_form.phtml:163
 #: actividades/view/_actividad_form_body.html.twig:14
 #: actividades/view/actividad_que.html.twig:63
 msgid "terminada"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:37
+#: actividades/model/entity/actividadall.class.php:354
 #: actividades/view/actividad_form.phtml:164
 #: actividades/view/_actividad_form_body.html.twig:17
 #: actividades/view/actividad_que.html.twig:64
 msgid "borrable"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:38
+#: actividades/model/entity/actividadall.class.php:355
 #: actividades/view/actividad_que.html.twig:65
 msgid "cualquiera"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1144
+#: actividades/model/entity/actividadall.class.php:1142
 #: actividadtarifas/model/entity/tipoactivtarifa.class.php:430
-#: cambios/model/entity/cambio.class.php:958
+#: cambios/model/entity/cambio.class.php:1009
 #: procesos/controller/tipo_activ_proceso_ajax.php:36
 msgid "id_tipo_activ"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1156
-#: cambios/model/entity/cambio.class.php:994
+#: actividades/model/entity/actividadall.class.php:1154
+#: cambios/model/entity/cambio.class.php:1057
 #: cambios/model/entity/cambiousuarioobjetopref.class.php:587
 msgid "dl_org"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1168
+#: actividades/model/entity/actividadall.class.php:1166
 #: actividades/view/actividad_form.phtml:173
 #: actividades/view/_actividad_form_body.html.twig:26
 msgid "nombre actividad"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1180
-#: casas/model/entity/ubigasto.class.php:426
-#: encargossacd/model/entity/datoscgi.class.php:410
-#: encargossacd/model/entity/encargo.class.php:555
-#: ubis/model/entity/casaperiodo.class.php:435
-msgid "id_ubi"
+#: actividades/model/entity/actividadall.class.php:1178
+msgid "id del Lugar"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1192
+#: actividades/model/entity/actividadall.class.php:1190
 #: devel/controller/modulos_select.php:65
 #: devel/model/entity/modulo.class.php:424
 #: dossiers/model/entity/tipodossier.class.php:595
@@ -1355,7 +1349,7 @@ msgstr ""
 msgid "descripción"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1204
+#: actividades/model/entity/actividadall.class.php:1202
 #: actividadestudios/model/entity/actividadasignatura.class.php:538
 #: dossiers/model/entity/dossier.class.php:549
 #: profesores/model/entity/congreso.class.php:554
@@ -1365,7 +1359,7 @@ msgstr ""
 msgid "fecha inicio"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1229
+#: actividades/model/entity/actividadall.class.php:1227
 #: actividadestudios/model/entity/actividadasignatura.class.php:551
 #: profesores/model/entity/congreso.class.php:567
 #: profesores/model/entity/profesorcongreso.class.php:566
@@ -1374,64 +1368,64 @@ msgstr ""
 msgid "fecha fin"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1254
+#: actividades/model/entity/actividadall.class.php:1252
 #: encargossacd/model/entity/encargotipo.class.php:417
 msgid "tipo de horario"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1268
+#: actividades/model/entity/actividadall.class.php:1266
 msgid "tiene un formato no válido."
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1270
+#: actividades/model/entity/actividadall.class.php:1268
 msgid "se admite un separador para los decimales (máximo 2)"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1272
+#: actividades/model/entity/actividadall.class.php:1270
 msgid "no se admite separador para los miles"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1274
+#: actividades/model/entity/actividadall.class.php:1272
 msgid "ejemplo: 1254.56"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1288
+#: actividades/model/entity/actividadall.class.php:1286
 msgid "número de asistentes"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1300
-#: procesos/controller/procesos_ajax.php:45
-#: procesos/model/entity/tareaproceso.class.php:648
+#: actividades/model/entity/actividadall.class.php:1299
+#: procesos/controller/procesos_ajax.php:46
+#: procesos/model/entity/tareaproceso.class.php:650
 #: ubis/model/entity/ubiglobal.class.php:547
 #: procesos/view/procesos_ver.html.twig:27
 msgid "status"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1326
+#: actividades/model/entity/actividadall.class.php:1325
 #: actividades/view/actividad_form.phtml:218
 #: actividades/view/_actividad_form_body.html.twig:69
 msgid "nivel de stgr"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1338
+#: actividades/model/entity/actividadall.class.php:1337
 msgid "observaciones material"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1350
-msgid "lugar_esp"
+#: actividades/model/entity/actividadall.class.php:1349
+msgid "lugar especial"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1374
-msgid "id_repeticion"
+#: actividades/model/entity/actividadall.class.php:1373
+msgid "id repeticion"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1386
+#: actividades/model/entity/actividadall.class.php:1385
 #: actividades/view/actividad_form.phtml:223
 #: actividades/view/_actividad_form_body.html.twig:74
 msgid "publicado"
 msgstr ""
 
-#: actividades/model/entity/actividadall.class.php:1398
+#: actividades/model/entity/actividadall.class.php:1397
 #: dbextern/model/entity/idmatchpersona.class.php:364
 #: personas/model/entity/personaglobal.class.php:1016
 msgid "id_tabla"
@@ -1455,7 +1449,7 @@ msgstr ""
 #: menus/model/entity/grupmenu.class.php:373
 #: menus/model/entity/menudb.class.php:493
 #: notas/model/entity/actatribunaldl.class.php:406
-#: procesos/controller/procesos_ajax.php:45
+#: procesos/controller/procesos_ajax.php:46
 #: procesos/model/entity/tareaproceso.class.php:602
 #: ubis/model/entity/descteleco.class.php:425
 #: zonassacd/model/entity/zona.class.php:424
@@ -1473,7 +1467,7 @@ msgstr ""
 msgid "temporada"
 msgstr ""
 
-#: actividades/model/entity/tipodeactividad.class.php:545
+#: actividades/model/entity/tipodeactividad.class.php:565
 #: asistentes/controller/lista_est_ctr.php:208
 #: asistentes/model/listaplazas.class.php:292
 #: asistentes/model/select1301.class.php:78
@@ -1486,7 +1480,7 @@ msgstr ""
 #: dbextern/controller/ver_traslados.php:107
 #: devel/controller/modulos_select.php:64 devel/model/entity/app.class.php:352
 #: devel/model/entity/modulo.class.php:412
-#: permisos/model/entity/moduloinstalado.class.php:365
+#: permisos/model/entity/moduloinstalado.class.php:377
 #: personas/model/entity/personaglobal.class.php:1065
 #: asistentes/view/lista_activ_ctr.phtml:13
 #: asistentes/view/lista_asistentes.phtml:9
@@ -1498,19 +1492,19 @@ msgstr ""
 msgid "nombre"
 msgstr ""
 
-#: actividades/model/entity/tipodeactividad.class.php:557
+#: actividades/model/entity/tipodeactividad.class.php:577
 msgid "id_tipo_proceso_sv"
 msgstr ""
 
-#: actividades/model/entity/tipodeactividad.class.php:569
+#: actividades/model/entity/tipodeactividad.class.php:589
 msgid "id_tipo_proceso_ex_sv"
 msgstr ""
 
-#: actividades/model/entity/tipodeactividad.class.php:581
+#: actividades/model/entity/tipodeactividad.class.php:601
 msgid "id_tipo_proceso_sf"
 msgstr ""
 
-#: actividades/model/entity/tipodeactividad.class.php:593
+#: actividades/model/entity/tipodeactividad.class.php:613
 msgid "id_tipo_proceso_ex_sf"
 msgstr ""
 
@@ -1739,39 +1733,39 @@ msgstr ""
 msgid "primero debe guadar los datos del acta"
 msgstr ""
 
-#: actividadestudios/controller/acta_notas_update.php:61
+#: actividadestudios/controller/acta_notas_update.php:77
 #, php-format
 msgid "nota no guardada para %s porque la nota (%s) no llega al mínimo: 6"
 msgstr ""
 
-#: actividadestudios/controller/acta_notas_update.php:65
-#: actividadestudios/controller/acta_notas_update.php:291
+#: actividadestudios/controller/acta_notas_update.php:81
+#: actividadestudios/controller/acta_notas_update.php:289
 #, php-format
 msgid "no se puede definir cursada con preceptor"
 msgstr ""
 
-#: actividadestudios/controller/acta_notas_update.php:72
-#: actividadestudios/controller/acta_notas_update.php:89
+#: actividadestudios/controller/acta_notas_update.php:88
+#: actividadestudios/controller/acta_notas_update.php:105
 #, php-format
 msgid "debe introducir los datos del acta. No se ha guardado nada."
 msgstr ""
 
-#: actividadestudios/controller/acta_notas_update.php:83
+#: actividadestudios/controller/acta_notas_update.php:99
 #, php-format
 msgid "falta definir el acta para alguna nota"
 msgstr ""
 
-#: actividadestudios/controller/acta_notas_update.php:155
+#: actividadestudios/controller/acta_notas_update.php:171
 #, php-format
 msgid "ha cursado una opcional que no tocaba (id_nom=%s)"
 msgstr ""
 
-#: actividadestudios/controller/acta_notas_update.php:175
+#: actividadestudios/controller/acta_notas_update.php:192
 #, php-format
 msgid "está intentando poner una nota que ya existe (id_nom=%s)"
 msgstr ""
 
-#: actividadestudios/controller/acta_notas_update.php:268
+#: actividadestudios/controller/acta_notas_update.php:266
 #, php-format
 msgid "Hay una nota mayor que el máximo"
 msgstr ""
@@ -2117,11 +2111,11 @@ msgstr ""
 #: encargossacd/controller/encargo_horario_select.php:42
 #: encargossacd/controller/encargo_select.php:86
 #: notas/controller/acta_select.php:137 notas/controller/acta_select.php:142
-#: procesos/controller/procesos_ajax.php:46
-#: procesos/controller/procesos_ajax.php:72 ubis/controller/list_ctr.php:244
+#: procesos/controller/procesos_ajax.php:47
+#: procesos/controller/procesos_ajax.php:73 ubis/controller/list_ctr.php:244
 #: ubis/controller/teleco_tabla.php:89 ubis/controller/ubis_tabla.php:408
-#: usuarios/controller/role_lista.php:60
-#: usuarios/controller/usuario_form.php:104 menus/view/traducir_menu.phtml:77
+#: usuarios/controller/role_lista.php:61
+#: usuarios/controller/usuario_form.php:105 menus/view/traducir_menu.phtml:77
 #: usuarios/view/perm_activ_form.phtml:9 usuarios/view/perm_ctr_form.phtml:10
 msgid "modificar"
 msgstr ""
@@ -2131,7 +2125,7 @@ msgid "no está como propio, no debería tener plan de estudios"
 msgstr ""
 
 #: actividadestudios/model/select1303.class.php:244
-#: encargossacd/controller/sacd_ausencias_get.php:120
+#: encargossacd/controller/sacd_ausencias_get.php:121
 msgid "ver anteriores"
 msgstr ""
 
@@ -2172,7 +2166,7 @@ msgid "¿Está seguro que desea quitar esta asignatura?"
 msgstr ""
 
 #: actividadestudios/model/select3005.class.php:143
-#: cambios/model/entity/cambiousuario.class.php:538
+#: cambios/model/entity/cambiousuario.class.php:580
 #: actividadestudios/view/form_3005.phtml:97
 msgid "avisado"
 msgstr ""
@@ -2192,11 +2186,11 @@ msgstr ""
 
 #: actividadplazas/controller/gestion_plazas.php:193
 #: actividadplazas/controller/plazas_balance_dl.php:178
-#: cambios/model/entity/cambio.class.php:946
+#: cambios/model/entity/cambio.class.php:997
 #: casas/controller/prevision_asistentes.php:124
 #: notas/model/entity/acta.class.php:610
 #: notas/model/entity/personanota.class.php:870
-#: procesos/model/entity/actividadprocesotarea.class.php:666
+#: procesos/model/entity/actividadprocesotarea.class.php:757
 msgid "id_activ"
 msgstr ""
 
@@ -2325,7 +2319,7 @@ msgstr ""
 #: casas/model/entity/ingreso.class.php:488
 #: encargossacd/model/entity/encargo.class.php:615
 #: encargossacd/model/entity/encargosacdobserv.class.php:362
-#: procesos/model/entity/actividadprocesotarea.class.php:726
+#: procesos/model/entity/actividadprocesotarea.class.php:817
 #: ubis/model/entity/tarifa.class.php:481
 msgid "observ"
 msgstr ""
@@ -2367,6 +2361,7 @@ msgid "por día"
 msgstr ""
 
 #: actividadtarifas/model/entity/tipotarifa.class.php:435
+#: cambios/model/entity/cambiousuario.class.php:544
 #: procesos/model/entity/procesotipo.class.php:364
 #: ubis/model/entity/casaperiodo.class.php:473
 msgid "sfsv"
@@ -2523,18 +2518,20 @@ msgstr ""
 msgid "actividades de otras dl"
 msgstr ""
 
-#: asistentes/controller/lista_asistentes.php:180
-#: asistentes/controller/lista_asistentes.php:184
-#: asistentes/controller/lista_asistentes.php:185
-#: asistentes/controller/lista_asistentes.php:231
-#: asistentes/controller/lista_asistentes.php:235
-#: asistentes/controller/lista_asistentes.php:236
-#: asistentes/model/select3101.class.php:334
-#: asistentes/model/select3101.class.php:345
-#: asistentes/model/select3101.class.php:346
-#: asistentes/model/select3101.class.php:458
+#: asistentes/controller/lista_asistentes.php:178
+#: asistentes/controller/lista_asistentes.php:182
+#: asistentes/controller/lista_asistentes.php:183
+#: asistentes/controller/lista_asistentes.php:229
+#: asistentes/controller/lista_asistentes.php:233
+#: asistentes/controller/lista_asistentes.php:234
+#: asistentes/model/select3101.class.php:258
+#: asistentes/model/select3101.class.php:336
+#: asistentes/model/select3101.class.php:347
+#: asistentes/model/select3101.class.php:348
+#: asistentes/model/select3101.class.php:407
 #: asistentes/model/select3101.class.php:462
-#: asistentes/model/select3101.class.php:463 core/datostabla.class.php:162
+#: asistentes/model/select3101.class.php:466
+#: asistentes/model/select3101.class.php:467 core/datostabla.class.php:162
 #: notas/model/select1011.class.php:171 ubis/controller/teleco_tabla.php:124
 #: actividades/view/actividad_form.phtml:224
 #: actividadestudios/view/selectUnCa.phtml:9
@@ -2546,18 +2543,18 @@ msgstr ""
 msgid "sí"
 msgstr ""
 
+#: asistentes/controller/lista_asistentes.php:180
 #: asistentes/controller/lista_asistentes.php:182
-#: asistentes/controller/lista_asistentes.php:184
-#: asistentes/controller/lista_asistentes.php:185
+#: asistentes/controller/lista_asistentes.php:183
+#: asistentes/controller/lista_asistentes.php:231
 #: asistentes/controller/lista_asistentes.php:233
-#: asistentes/controller/lista_asistentes.php:235
-#: asistentes/controller/lista_asistentes.php:236
-#: asistentes/model/select3101.class.php:342
-#: asistentes/model/select3101.class.php:345
-#: asistentes/model/select3101.class.php:346
-#: asistentes/model/select3101.class.php:460
-#: asistentes/model/select3101.class.php:462
-#: asistentes/model/select3101.class.php:463
+#: asistentes/controller/lista_asistentes.php:234
+#: asistentes/model/select3101.class.php:344
+#: asistentes/model/select3101.class.php:347
+#: asistentes/model/select3101.class.php:348
+#: asistentes/model/select3101.class.php:464
+#: asistentes/model/select3101.class.php:466
+#: asistentes/model/select3101.class.php:467
 #: cartaspresentacion/controller/cartas_presentacion_ajax.php:340
 #: cartaspresentacion/controller/cartas_presentacion_ajax.php:424
 #: core/datostabla.class.php:162 notas/model/select1011.class.php:171
@@ -2573,8 +2570,8 @@ msgstr ""
 msgid "no"
 msgstr ""
 
-#: asistentes/controller/lista_asistentes.php:191
-#: asistentes/model/select3101.class.php:358
+#: asistentes/controller/lista_asistentes.php:189
+#: asistentes/model/select3101.class.php:360
 msgid "no asiste"
 msgstr ""
 
@@ -2587,8 +2584,8 @@ msgid "(*) El preceptor no asiste al ca"
 msgstr ""
 
 #: asistentes/controller/lista_ultim_que_ctr.php:40
-#: cambios/controller/avisos_generar.php:102
-#: cambios/controller/usuario_avisos_pref_ajax.php:249
+#: cambios/controller/avisos_generar.php:103
+#: cambios/controller/usuario_avisos_pref_ajax.php:250
 #: encargossacd/model/encargoconstants.class.php:33
 #: personas/controller/personas_que.php:55
 #: procesos/controller/fases_activ_cambio_ajax.php:109
@@ -2761,7 +2758,7 @@ msgid "vista para imprimir"
 msgstr ""
 
 #: asistentes/controller/planning_select.php:179
-#: personas/controller/personas_select.php:287
+#: personas/controller/personas_select.php:291
 msgid "ver actividades"
 msgstr ""
 
@@ -2915,12 +2912,11 @@ msgid "est. ok"
 msgstr ""
 
 #: asistentes/model/select1301.class.php:82
-#: asistentes/model/select3101.class.php:157
 msgid "observ."
 msgstr ""
 
 #: asistentes/model/select1301.class.php:172
-#: asistentes/model/select3101.class.php:725
+#: asistentes/model/select3101.class.php:730
 msgid "¿Está seguro que desea borrar a esta persona de esta actividad?"
 msgstr ""
 
@@ -2940,29 +2936,38 @@ msgstr ""
 msgid "E43"
 msgstr ""
 
-#: asistentes/model/select3101.class.php:184
+#: asistentes/model/select3101.class.php:157 asistentes/view/form_3101.phtml:86
+#: asistentes/view/lista_asistentes.phtml:17
+msgid "observaciones actividad"
+msgstr ""
+
+#: asistentes/model/select3101.class.php:158
+msgid "sacd."
+msgstr ""
+
+#: asistentes/model/select3101.class.php:185
 msgid "plazas casa (max - min)"
 msgstr ""
 
-#: asistentes/model/select3101.class.php:188
+#: asistentes/model/select3101.class.php:189
 msgid "plazas actividad"
 msgstr ""
 
-#: asistentes/model/select3101.class.php:509
+#: asistentes/model/select3101.class.php:514
 msgid ""
 "plaza que contabiliza pero que las otras delegaciones no ven. Podría "
 "explicarse como una plaza que se desea pero no se puede conceder porque no "
 "hay sitio"
 msgstr ""
 
-#: asistentes/model/select3101.class.php:510
+#: asistentes/model/select3101.class.php:515
 msgid ""
 "como la plaza pedida, pero cuando ya se ha solicitado a la otra delegación "
 "que nos conceda ese plaza. Implica que por nuestra parte nos parece correcto "
 "que vaya pero necesitamos confirmación de que hay sitio"
 msgstr ""
 
-#: asistentes/model/select3101.class.php:511
+#: asistentes/model/select3101.class.php:516
 msgid ""
 "plaza ocupada en toda regla. Las delegaciones organizadoras ven a los "
 "nuestros. Si somos nosotros los organizadores, podemos ocupar más plazas de "
@@ -2970,133 +2975,141 @@ msgid ""
 "si no hay plazas"
 msgstr ""
 
-#: asistentes/model/select3101.class.php:512
+#: asistentes/model/select3101.class.php:517
 msgid ""
 "como la anterior pero con el plus de que se ha comunicado al interesado y no "
 "hay cambio"
 msgstr ""
 
-#: asistentes/model/select3101.class.php:515
+#: asistentes/model/select3101.class.php:520
 msgid "para seleccionar varios: 'Ctrl+Click' o bien 'Mays+Click'"
 msgstr ""
 
-#: asistentes/model/select3101.class.php:608
-#: asistentes/model/select3101.class.php:664
+#: asistentes/model/select3101.class.php:613
+#: asistentes/model/select3101.class.php:669
 #, php-format
 msgid "(de las %s cedidas por %s)"
 msgstr ""
 
-#: asistentes/model/select3101.class.php:616
+#: asistentes/model/select3101.class.php:621
 #: actividadplazas/view/resumen_plazas.phtml:42
 msgid "cedidas"
 msgstr ""
 
-#: asistentes/model/select3101.class.php:617
+#: asistentes/model/select3101.class.php:622
 #: actividadplazas/view/resumen_plazas.phtml:41
 msgid "ocupadas"
 msgstr ""
 
-#: asistentes/model/select3101.class.php:625
-#: asistentes/model/select3101.class.php:667
+#: asistentes/model/select3101.class.php:630
+#: asistentes/model/select3101.class.php:672
 #, php-format
 msgid "(%s en espera)"
 msgstr ""
 
-#: asistentes/model/select3101.class.php:626
-#: asistentes/model/select3101.class.php:668
+#: asistentes/model/select3101.class.php:631
+#: asistentes/model/select3101.class.php:673
 #, php-format
 msgid "(%s por decidir)"
 msgstr ""
 
-#: cambios/controller/avisos_generar.php:96
-#: cambios/controller/avisos_generar.php:110
-#: cambios/controller/avisos_generar_mails.php:119
+#: cambios/controller/avisos_generar.php:97
+#: cambios/controller/avisos_generar.php:111
+#: cambios/controller/avisos_generar_mails.php:126
 msgid "fecha cambio"
 msgstr ""
 
-#: cambios/controller/avisos_generar.php:97
-#: cambios/controller/avisos_generar_mails.php:120
+#: cambios/controller/avisos_generar.php:98
+#: cambios/controller/avisos_generar_mails.php:127
 msgid "quien"
 msgstr ""
 
-#: cambios/controller/avisos_generar.php:98
-#: cambios/controller/avisos_generar_mails.php:121
+#: cambios/controller/avisos_generar.php:99
+#: cambios/controller/avisos_generar_mails.php:128
 msgid "cambio"
 msgstr ""
 
-#: cambios/controller/avisos_generar.php:103
-#: cambios/controller/usuario_avisos_pref_ajax.php:250
+#: cambios/controller/avisos_generar.php:104
+#: cambios/controller/usuario_avisos_pref_ajax.php:251
 #: casas/controller/casa_que.php:81
 #: procesos/controller/fases_activ_cambio_ajax.php:110
 #: menus/view/menus_get.phtml:33
 msgid "ninguno"
 msgstr ""
 
-#: cambios/controller/avisos_generar.php:104
-#: cambios/controller/usuario_avisos_pref_ajax.php:251
+#: cambios/controller/avisos_generar.php:105
+#: cambios/controller/usuario_avisos_pref_ajax.php:252
 #: procesos/controller/fases_activ_cambio_ajax.php:111
 msgid "invertir"
 msgstr ""
 
-#: cambios/controller/avisos_generar_ajax.php:29
-#: cambios/controller/avisos_generar_mails.php:164
-#: cambios/controller/usuario_avisos_pref_ajax.php:463
-#: cambios/controller/usuario_avisos_pref_ajax.php:584
+#: cambios/controller/avisos_generar_ajax.php:35
+#: cambios/controller/avisos_generar_mails.php:178
+#: cambios/controller/usuario_avisos_pref_ajax.php:466
+#: cambios/controller/usuario_avisos_pref_ajax.php:587
 #: casas/controller/casa_ajax.php:386
 msgid "Hay un error, no se ha eliminado"
 msgstr ""
 
-#: cambios/controller/avisos_generar_mails.php:127
+#: cambios/controller/avisos_generar_mails.php:134
 msgid "Avisos de cambios en actividades"
 msgstr ""
 
-#: cambios/controller/avisos_generar_tabla.php:130
+#: cambios/controller/avisos_generar_tabla.php:113
+#, php-format
+msgid "El fichero %s no està vacio."
+msgstr ""
+
+#: cambios/controller/avisos_generar_tabla.php:115
+msgid "Posiblemente la anterior operación finalizó con error"
+msgstr ""
+
+#: cambios/controller/avisos_generar_tabla.php:157
 msgid "apuntar cambio usuario"
 msgstr ""
 
-#: cambios/controller/avisos_generar_tabla.php:132
-#: cambios/controller/avisos_generar_tabla.php:153
-#: cambios/controller/usuario_avisos_pref_ajax.php:522
-#: cambios/controller/usuario_avisos_pref_ajax.php:562
+#: cambios/controller/avisos_generar_tabla.php:158
+msgid "Ya existe"
+msgstr ""
+
+#: cambios/controller/avisos_generar_tabla.php:170
+#: cambios/controller/avisos_generar_tabla.php:195
+#: cambios/controller/usuario_avisos_pref_ajax.php:525
+#: cambios/controller/usuario_avisos_pref_ajax.php:565
 #: casas/controller/prevision_asistentes_ajax.php:30
 msgid "Hay un error, no se ha guardado"
 msgstr ""
 
-#: cambios/controller/avisos_generar_tabla.php:154
-#: cambios/model/entity/cambioanotado.class.php:407
+#: cambios/controller/avisos_generar_tabla.php:196
 msgid "anotado"
 msgstr ""
 
-#: cambios/controller/avisos_generar_tabla.php:474
-msgid "ERROR: la fase de la actividad no está en el proceso."
-msgstr ""
-
-#: cambios/controller/avisos_generar_tabla.php:497
+#: cambios/controller/avisos_generar_tabla.php:553
 msgid "Algo falla"
 msgstr ""
 
-#: cambios/controller/usuario_avisos_pref_ajax.php:91
+#: cambios/controller/usuario_avisos_pref_ajax.php:92
 msgid "igual"
 msgstr ""
 
-#: cambios/controller/usuario_avisos_pref_ajax.php:92
+#: cambios/controller/usuario_avisos_pref_ajax.php:93
 msgid "menor"
 msgstr ""
 
-#: cambios/controller/usuario_avisos_pref_ajax.php:93
+#: cambios/controller/usuario_avisos_pref_ajax.php:94
 msgid "mayor"
 msgstr ""
 
-#: cambios/controller/usuario_avisos_pref_ajax.php:94
+#: cambios/controller/usuario_avisos_pref_ajax.php:95
 msgid "regExp"
 msgstr ""
 
-#: cambios/controller/usuario_avisos_pref_ajax.php:115
+#: cambios/controller/usuario_avisos_pref_ajax.php:116
 msgid "avisar si el valor"
 msgstr ""
 
-#: cambios/controller/usuario_avisos_pref_ajax.php:116
-#: core/mod_tabla_sql.php:142 devel/controller/metamenus_get.php:56
+#: cambios/controller/usuario_avisos_pref_ajax.php:117
+#: core/mod_tabla_sql.php:143 devel/controller/metamenus_get.php:56
 #: dossiers/controller/dossiers_ver.php:331
 #: encargossacd/controller/horario_sacd_ver.php:68
 #: encargossacd/controller/horario_ver.php:66
@@ -3107,106 +3120,121 @@ msgstr ""
 msgid "nuevo"
 msgstr ""
 
-#: cambios/controller/usuario_avisos_pref_ajax.php:119
+#: cambios/controller/usuario_avisos_pref_ajax.php:120
 #: cambios/model/entity/cambiousuariopropiedadpref.class.php:253
 msgid "es"
 msgstr ""
 
-#: cambios/controller/usuario_avisos_pref_ajax.php:129
+#: cambios/controller/usuario_avisos_pref_ajax.php:130
 #: cambios/model/entity/cambiousuariopropiedadpref.class.php:254
 #: cambios/model/entity/cambiousuariopropiedadpref.class.php:257
 msgid "a"
 msgstr ""
 
-#: cambios/controller/usuario_avisos_pref_ajax.php:185
+#: cambios/controller/usuario_avisos_pref_ajax.php:183
+msgid "fecha en formato ISO (YYYY-MM-dd)"
+msgstr ""
+
+#: cambios/controller/usuario_avisos_pref_ajax.php:186
 #, php-format
 msgid "condición para %s de %s"
 msgstr ""
 
-#: cambios/controller/usuario_avisos_pref_ajax.php:252
+#: cambios/controller/usuario_avisos_pref_ajax.php:253
 msgid "condición"
 msgstr ""
 
-#: cambios/controller/usuario_avisos_pref_ajax.php:253
-#: cambios/controller/usuario_avisos_pref_ajax.php:264
-#: cambios/controller/usuario_avisos_pref_ajax.php:282
+#: cambios/controller/usuario_avisos_pref_ajax.php:254
+#: cambios/controller/usuario_avisos_pref_ajax.php:265
+#: cambios/controller/usuario_avisos_pref_ajax.php:283
 msgid "cualquier cambio"
 msgstr ""
 
-#: cambios/controller/usuario_avisos_pref_ajax.php:277
+#: cambios/controller/usuario_avisos_pref_ajax.php:278
 msgid "ja veurem"
 msgstr ""
 
-#: cambios/controller/usuario_avisos_pref_ajax.php:290
+#: cambios/controller/usuario_avisos_pref_ajax.php:291
 msgid "modificar condición"
 msgstr ""
 
-#: cambios/controller/usuario_avisos_pref_ajax.php:376
-#: cambios/controller/usuario_avisos_pref_ajax.php:442
+#: cambios/controller/usuario_avisos_pref_ajax.php:378
+#: cambios/controller/usuario_avisos_pref_ajax.php:445
 msgid "primero debe elegir un objeto sobre el que mirar los cambios"
 msgstr ""
 
-#: cambios/model/entity/cambio.class.php:327
+#: cambios/model/entity/cambio.class.php:343
 msgid "Eliminado"
 msgstr ""
 
-#: cambios/model/entity/cambio.class.php:934
+#: cambios/model/entity/cambio.class.php:985
 msgid "id_tipo_cambio"
 msgstr ""
 
-#: cambios/model/entity/cambio.class.php:970
-#: procesos/model/entity/actividadprocesotarea.class.php:678
-msgid "id_fase"
+#: cambios/model/entity/cambio.class.php:1021
+msgid "id fase sv"
 msgstr ""
 
-#: cambios/model/entity/cambio.class.php:982
+#: cambios/model/entity/cambio.class.php:1033
+msgid "id fase sf"
+msgstr ""
+
+#: cambios/model/entity/cambio.class.php:1045
 msgid "id_status"
 msgstr ""
 
-#: cambios/model/entity/cambio.class.php:1006
+#: cambios/model/entity/cambio.class.php:1069
 #: cambios/model/entity/cambiousuarioobjetopref.class.php:635
-#: usuarios/controller/usuario_form.php:98
+#: usuarios/controller/usuario_form.php:99
 msgid "objeto"
 msgstr ""
 
-#: cambios/model/entity/cambio.class.php:1018
+#: cambios/model/entity/cambio.class.php:1081
 #: cambios/model/entity/cambiousuariopropiedadpref.class.php:529
 msgid "propiedad"
 msgstr ""
 
-#: cambios/model/entity/cambio.class.php:1030
+#: cambios/model/entity/cambio.class.php:1093
 #: cambios/model/entity/cambiousuariopropiedadpref.class.php:565
 msgid "valor_old"
 msgstr ""
 
-#: cambios/model/entity/cambio.class.php:1042
+#: cambios/model/entity/cambio.class.php:1105
 #: cambios/model/entity/cambiousuariopropiedadpref.class.php:577
 msgid "valor_new"
 msgstr ""
 
-#: cambios/model/entity/cambio.class.php:1054
+#: cambios/model/entity/cambio.class.php:1117
 msgid "quien_cambia"
 msgstr ""
 
-#: cambios/model/entity/cambio.class.php:1066
+#: cambios/model/entity/cambio.class.php:1129
 msgid "sección de quien cambia"
 msgstr ""
 
-#: cambios/model/entity/cambio.class.php:1078
+#: cambios/model/entity/cambio.class.php:1141
 msgid "timestamp_cambio"
 msgstr ""
 
-#: cambios/model/entity/cambioanotado.class.php:383
-#: cambios/model/entity/cambiousuario.class.php:478
+#: cambios/model/entity/cambioanotado.class.php:415
+#: cambios/model/entity/cambiousuario.class.php:508
 msgid "id_schema_cambio"
 msgstr ""
 
-#: cambios/model/entity/cambioanotado.class.php:395
-#: cambios/model/entity/cambiousuario.class.php:490
+#: cambios/model/entity/cambioanotado.class.php:427
+#: cambios/model/entity/cambiousuario.class.php:520
 msgid "id_item_cambio"
 msgstr ""
 
-#: cambios/model/entity/cambiousuario.class.php:502
+#: cambios/model/entity/cambioanotado.class.php:439
+msgid "anotado sv"
+msgstr ""
+
+#: cambios/model/entity/cambioanotado.class.php:451
+msgid "anotado sf"
+msgstr ""
+
+#: cambios/model/entity/cambiousuario.class.php:532
 #: cambios/model/entity/cambiousuarioobjetopref.class.php:575
 #: procesos/model/entity/permusuarioactividad.class.php:533
 #: usuarios/model/entity/permmenu.class.php:340
@@ -3214,12 +3242,12 @@ msgstr ""
 msgid "id_usuario"
 msgstr ""
 
-#: cambios/model/entity/cambiousuario.class.php:514
+#: cambios/model/entity/cambiousuario.class.php:556
 #: cambios/model/entity/cambiousuarioobjetopref.class.php:647
 msgid "aviso_tipo"
 msgstr ""
 
-#: cambios/model/entity/cambiousuario.class.php:526
+#: cambios/model/entity/cambiousuario.class.php:568
 #: cambios/model/entity/cambiousuarioobjetopref.class.php:659
 msgid "aviso_donde"
 msgstr ""
@@ -3284,7 +3312,7 @@ msgstr ""
 
 #: cambios/model/entity/cambiousuariopropiedadpref.class.php:553
 #: config/model/entity/configschema.class.php:320
-#: usuarios/controller/usuario_form.php:101
+#: usuarios/controller/usuario_form.php:102
 msgid "valor"
 msgstr ""
 
@@ -3590,7 +3618,7 @@ msgstr ""
 #: ubis/controller/calendario_periodos_ajax.php:143
 #: ubis/controller/calendario_periodos_ajax.php:234
 #: ubis/controller/centros_ajax.php:28
-#: cambios/view/usuario_avisos_pref.html.twig:219
+#: cambios/view/usuario_avisos_pref.html.twig:220
 #: encargossacd/view/horario_ver.html.twig:79
 #: procesos/view/usuario_perm_activ.html.twig:89
 msgid "hasta"
@@ -3646,7 +3674,7 @@ msgstr ""
 
 #: casas/controller/casa_ajax.php:330
 #: permisos/model/permisosactividades.class.php:186
-#: usuarios/controller/usuario_form.php:95
+#: usuarios/controller/usuario_form.php:96
 #: actividades/view/actividad_form.phtml:141
 #: actividades/view/actividad_form.phtml:152
 #: actividades/view/_actividad_form_head.html.twig:25
@@ -3904,6 +3932,13 @@ msgstr ""
 msgid "num_asistentes_previstos"
 msgstr ""
 
+#: casas/model/entity/ubigasto.class.php:426
+#: encargossacd/model/entity/datoscgi.class.php:410
+#: encargossacd/model/entity/encargo.class.php:555
+#: ubis/model/entity/casaperiodo.class.php:435
+msgid "id_ubi"
+msgstr ""
+
 #: casas/model/entity/ubigasto.class.php:438
 msgid "f_gasto"
 msgstr ""
@@ -3993,7 +4028,8 @@ msgstr ""
 #: notas/view/form_1011.phtml:213 notas/view/select1011.phtml:24
 #: personas/view/persona_de_paso.phtml:21
 #: personas/view/persona_de_paso.phtml:44 personas/view/persona_form.phtml:30
-#: personas/view/persona_form.phtml:53 personas/view/traslado_form.phtml:26
+#: personas/view/persona_form.phtml:53 personas/view/persona_sss_form.phtml:30
+#: personas/view/persona_sss_form.phtml:53 personas/view/traslado_form.phtml:26
 #: ubis/view/cdc_form.phtml:26 ubis/view/cdc_form.phtml:49
 #: ubis/view/ctrdl_form.phtml:16 ubis/view/ctrdl_form.phtml:39
 #: ubis/view/ctrex_form.phtml:16 ubis/view/ctrex_form.phtml:39
@@ -4011,7 +4047,7 @@ msgstr ""
 #: encargossacd/view/encargo_select.html.twig:36
 #: encargossacd/view/encargo_ver.html.twig:42
 #: encargossacd/view/horario_ver.html.twig:54
-#: encargossacd/view/sacd_ausencias_get.html.twig:19
+#: encargossacd/view/sacd_ausencias_get.html.twig:18
 #: zonassacd/view/zona_ctr.html.twig:28 zonassacd/view/zona_sacd.html.twig:29
 msgid "respuesta"
 msgstr ""
@@ -4371,9 +4407,9 @@ msgstr ""
 #: actividades/view/actividad_form.phtml:239 devel/view/modulos_form.phtml:123
 #: dossiers/view/perm_dossier_pres.phtml:75
 #: personas/view/persona_de_paso.phtml:151 personas/view/persona_form.phtml:173
-#: ubis/view/cdc_form.phtml:97 ubis/view/ctrdl_form.phtml:107
-#: ubis/view/ctrex_form.phtml:86 ubis/view/direccion_form.phtml:204
-#: ubis/view/teleco_form.phtml:50
+#: personas/view/persona_sss_form.phtml:168 ubis/view/cdc_form.phtml:97
+#: ubis/view/ctrdl_form.phtml:107 ubis/view/ctrex_form.phtml:86
+#: ubis/view/direccion_form.phtml:204 ubis/view/teleco_form.phtml:50
 #: actividades/view/_actividad_form_botones.html.twig:4
 #: actividades/view/_calendario_form_botones.html.twig:2
 msgid "guardar cambios"
@@ -4391,7 +4427,7 @@ msgstr ""
 #: devel/controller/metamenus_get.php:41
 #: menus/model/entity/menudb.class.php:517
 #: menus/model/entity/metamenu.class.php:428
-#: permisos/model/entity/moduloinstalado.class.php:394
+#: permisos/model/entity/moduloinstalado.class.php:406
 #: menus/view/menus_get.phtml:30
 msgid "parametros"
 msgstr ""
@@ -4579,7 +4615,7 @@ msgstr ""
 #: encargossacd/controller/sacd_ficha_ajax.php:334
 #: encargossacd/controller/sacd_ficha_ajax.php:383
 #: encargossacd/view/ctr_get_ficha.html.twig:27
-#: encargossacd/view/sacd_ausencias_get.html.twig:76
+#: encargossacd/view/sacd_ausencias_get.html.twig:93
 msgid "crear horario"
 msgstr ""
 
@@ -4664,7 +4700,7 @@ msgstr ""
 #: encargossacd/controller/encargo_select.php:85
 #: encargossacd/model/entity/encargohorarioexcepcion.class.php:775
 #: encargossacd/model/entity/encargosacdhorarioexcepcion.class.php:745
-#: encargossacd/view/sacd_ausencias_get.html.twig:66
+#: encargossacd/view/sacd_ausencias_get.html.twig:81
 msgid "horario"
 msgstr ""
 
@@ -5252,7 +5288,7 @@ msgstr ""
 #: notas/controller/asig_faltan_select.php:115
 #: notas/controller/asignaturas_pendientes.php:38
 #: notas/controller/asignaturas_pendientes_resumen.php:78
-#: personas/controller/personas_select.php:378
+#: personas/controller/personas_select.php:382
 #: personas/model/entity/personaglobal.class.php:1212
 #: personas/view/zp_agregados.pres.php:111
 #: personas/view/zp_agregados.pres.php:366
@@ -5297,12 +5333,22 @@ msgstr ""
 msgid "buscar un tipo de encargo"
 msgstr ""
 
+#: encargossacd/model/infoencargotipo.class.php:13
+msgid "solo los tipos 4000 y 7000 aparecen en el planning"
+msgstr ""
+
 #: menus/controller/menus_importar.php:25
 msgid "casi seguro que no quieres hacerlo"
 msgstr ""
 
 #: menus/controller/menus_importar.php:32
 msgid "Poner todas las dl igual"
+msgstr ""
+
+#: menus/controller/menus_importar.php:42
+msgid ""
+"Para sf: también se copian los grupMenu de los Roles (de sv). Hay que volver "
+"a poner lo que había."
 msgstr ""
 
 #: menus/model/entity/grupmenu.class.php:359
@@ -5440,14 +5486,14 @@ msgstr ""
 
 #: notas/controller/asig_faltan_personas_select.php:114
 #: notas/controller/asig_faltan_select.php:111
-#: personas/controller/personas_select.php:300
+#: personas/controller/personas_select.php:304
 msgid "modificar stgr"
 msgstr ""
 
 #: notas/controller/asig_faltan_personas_select.php:115
 #: notas/controller/asig_faltan_select.php:112
-#: personas/controller/personas_select.php:294
-#: personas/controller/personas_select.php:345
+#: personas/controller/personas_select.php:298
+#: personas/controller/personas_select.php:349
 msgid "ver tessera"
 msgstr ""
 
@@ -5889,7 +5935,7 @@ msgstr ""
 msgid "No existe este equema: %s"
 msgstr ""
 
-#: permisos/model/entity/moduloinstalado.class.php:381
+#: permisos/model/entity/moduloinstalado.class.php:393
 #: usuarios/model/entity/local.class.php:455
 msgid "activo"
 msgstr ""
@@ -5945,69 +5991,69 @@ msgstr ""
 msgid "cuadrienio año II-IV"
 msgstr ""
 
-#: personas/controller/personas_select.php:261
+#: personas/controller/personas_select.php:265
 msgid "No se encuentra ningún centro con esta condición"
 msgstr ""
 
-#: personas/controller/personas_select.php:275
+#: personas/controller/personas_select.php:279
 msgid "cambio de ctr"
 msgstr ""
 
-#: personas/controller/personas_select.php:282
+#: personas/controller/personas_select.php:286
 msgid "ficha"
 msgstr ""
 
-#: personas/controller/personas_select.php:303
-#: personas/controller/personas_select.php:348
+#: personas/controller/personas_select.php:307
+#: personas/controller/personas_select.php:352
 msgid "imprimir tessera"
 msgstr ""
 
-#: personas/controller/personas_select.php:311
+#: personas/controller/personas_select.php:315
 #: menus/view/traducir_menu.phtml:253 menus/view/traducir_menu.phtml:254
 msgid "posibles ca"
 msgstr ""
 
-#: personas/controller/personas_select.php:320
+#: personas/controller/personas_select.php:324
 msgid "petición ca"
 msgstr ""
 
-#: personas/controller/personas_select.php:323
+#: personas/controller/personas_select.php:327
 msgid "petición crt"
 msgstr ""
 
-#: personas/controller/personas_select.php:336
-#: personas/controller/personas_select.php:354
+#: personas/controller/personas_select.php:340
+#: personas/controller/personas_select.php:358
 msgid "ficha profesor stgr"
 msgstr ""
 
-#: personas/controller/personas_select.php:351
+#: personas/controller/personas_select.php:355
 msgid "imprimir certificado"
 msgstr ""
 
-#: personas/controller/personas_select.php:361
+#: personas/controller/personas_select.php:365
 #: menus/view/traducir_menu.phtml:199
 msgid "atención actividades"
 msgstr ""
 
-#: personas/controller/personas_select.php:367 devel/view/db_mover_que.phtml:18
+#: personas/controller/personas_select.php:371 devel/view/db_mover_que.phtml:18
 msgid "tabla"
 msgstr ""
 
-#: personas/controller/personas_select.php:372
+#: personas/controller/personas_select.php:376
 msgid "socio"
 msgstr ""
 
-#: personas/controller/personas_select.php:381
+#: personas/controller/personas_select.php:385
 #: personas/model/entity/personaglobal.class.php:1150
 #: notas/view/form_1011.phtml:257 personas/view/traslado_form.phtml:81
 msgid "situación"
 msgstr ""
 
-#: personas/controller/personas_select.php:382
+#: personas/controller/personas_select.php:386
 msgid "fecha cambio situación"
 msgstr ""
 
-#: personas/controller/personas_select.php:460
+#: personas/controller/personas_select.php:464
 #: asistentes/view/planning_select.phtml:27
 #, php-format
 msgid "%s personas encontradas"
@@ -6250,6 +6296,7 @@ msgstr ""
 #: personas/view/zp_supernumerarios.pres.php:123
 #: personas/view/p_public_personas.phtml:22
 #: personas/view/persona_de_paso.phtml:80 personas/view/persona_form.phtml:87
+#: personas/view/persona_sss_form.phtml:87
 #: personas/view/zp_numerarios.phtml:103 personas/view/zp_numerarios.phtml:128
 msgid "datos personales"
 msgstr ""
@@ -6333,18 +6380,18 @@ msgid "fase (tarea)"
 msgstr ""
 
 #: procesos/controller/actividad_proceso_ajax.php:30
-#: procesos/controller/procesos_ajax.php:45
+#: procesos/controller/procesos_ajax.php:46
 msgid "responsable"
 msgstr ""
 
 #: procesos/controller/actividad_proceso_ajax.php:54
-#: procesos/controller/fases_activ_cambio_ajax.php:268
-#: procesos/model/entity/actividadprocesotarea.class.php:189
+#: procesos/controller/fases_activ_cambio_ajax.php:260
+#: procesos/model/entity/actividadprocesotarea.class.php:202
 #, php-format
 msgid "error: La fase del proceso tipo: %s, fase: %s, tarea: %s"
 msgstr ""
 
-#: procesos/controller/fases_activ_cambio.php:105
+#: procesos/controller/fases_activ_cambio.php:110
 #: procesos/controller/procesos_select.php:71
 msgid "¿Esta seguro que desea borrar esta fase?"
 msgstr ""
@@ -6379,7 +6426,7 @@ msgstr ""
 
 #: procesos/controller/fases_activ_cambio_ajax.php:156
 #: procesos/controller/fases_activ_cambio_ajax.php:178
-#: procesos/model/entity/actividadprocesotarea.class.php:714
+#: procesos/model/entity/actividadprocesotarea.class.php:805
 msgid "completado"
 msgstr ""
 
@@ -6396,40 +6443,40 @@ msgstr ""
 msgid "%s actividades, %s para cambiar"
 msgstr ""
 
-#: procesos/controller/fases_activ_cambio_ajax.php:241
+#: procesos/controller/fases_activ_cambio_ajax.php:240
 #, php-format
 msgid "No se encuentra esta fase %s para esta actividad %s(%s)"
 msgstr ""
 
-#: procesos/controller/fases_activ_cambio_ajax.php:243
+#: procesos/controller/fases_activ_cambio_ajax.php:242
 msgid "puede que tenga que regenerar el proceso"
 msgstr ""
 
-#: procesos/controller/fases_activ_cambio_ajax.php:278
+#: procesos/controller/fases_activ_cambio_ajax.php:273
 msgid "No tiene permiso para completar la fase, no se ha guardado"
 msgstr ""
 
-#: procesos/controller/procesos_ajax.php:46
+#: procesos/controller/procesos_ajax.php:47
 msgid "fase - tarea"
 msgstr ""
 
-#: procesos/controller/procesos_ajax.php:46
+#: procesos/controller/procesos_ajax.php:47
 msgid "prioridad"
 msgstr ""
 
-#: procesos/controller/procesos_ajax.php:74
+#: procesos/controller/procesos_ajax.php:75
 msgid "mover hacia arriba"
 msgstr ""
 
-#: procesos/controller/procesos_ajax.php:75
+#: procesos/controller/procesos_ajax.php:76
 msgid "mover hacia abajo"
 msgstr ""
 
-#: procesos/controller/procesos_ajax.php:78
+#: procesos/controller/procesos_ajax.php:79
 msgid "requisito"
 msgstr ""
 
-#: procesos/controller/procesos_ajax.php:90
+#: procesos/controller/procesos_ajax.php:91
 msgid "hay un error, no se ha movido"
 msgstr ""
 
@@ -6455,32 +6502,36 @@ msgstr ""
 msgid "no se puede eliminar, lo usa la otra sección"
 msgstr ""
 
-#: procesos/model/entity/actividadprocesotarea.class.php:215
+#: procesos/model/entity/actividadprocesotarea.class.php:229
 msgid ""
 "no se puede cambiar el status de la actividad a 'actual', porque debe "
 "hacerlo dre"
 msgstr ""
 
-#: procesos/model/entity/actividadprocesotarea.class.php:221
 #: procesos/model/entity/actividadprocesotarea.class.php:235
+#: procesos/model/entity/actividadprocesotarea.class.php:249
 #, php-format
 msgid "no se puede modificar el status de una actividad de otra dl (%s)"
 msgstr ""
 
-#: procesos/model/entity/actividadprocesotarea.class.php:575
+#: procesos/model/entity/actividadprocesotarea.class.php:666
 #, php-format
 msgid "No debería ser 0. En %s, linea %s"
 msgstr ""
 
-#: procesos/model/entity/actividadprocesotarea.class.php:654
+#: procesos/model/entity/actividadprocesotarea.class.php:745
 msgid "id_tipo_proceso"
 msgstr ""
 
-#: procesos/model/entity/actividadprocesotarea.class.php:690
+#: procesos/model/entity/actividadprocesotarea.class.php:769
+msgid "id_fase"
+msgstr ""
+
+#: procesos/model/entity/actividadprocesotarea.class.php:781
 msgid "id_tarea"
 msgstr ""
 
-#: procesos/model/entity/actividadprocesotarea.class.php:702
+#: procesos/model/entity/actividadprocesotarea.class.php:793
 msgid "n_orden"
 msgstr ""
 
@@ -6496,14 +6547,10 @@ msgstr ""
 msgid "descripción de la tarea"
 msgstr ""
 
-#: procesos/model/entity/gestoractividadprocesotarea.class.php:86
-msgid "No tiene definido el proceso para este tipo de actividad"
-msgstr ""
-
-#: procesos/model/entity/gestoractividadprocesotarea.class.php:109
+#: procesos/model/entity/gestoractividadprocesotarea.class.php:154
+#, php-format
 msgid ""
-"ATENCIÓN: puede que tenga que actualizar la página para que salgan todas las "
-"actividades."
+"No tiene definido el proceso para este tipo de actividad: %s de sv/sf: %s"
 msgstr ""
 
 #: procesos/model/entity/permusuarioactividad.class.php:581
@@ -6540,22 +6587,22 @@ msgstr ""
 msgid "tarea"
 msgstr ""
 
-#: procesos/model/entity/tareaproceso.class.php:663
+#: procesos/model/entity/tareaproceso.class.php:665
 #: procesos/view/procesos_ver.html.twig:29
 msgid "oficina responsable"
 msgstr ""
 
-#: procesos/model/entity/tareaproceso.class.php:677
+#: procesos/model/entity/tareaproceso.class.php:679
 #: procesos/view/procesos_ver.html.twig:32
 msgid "fase previa"
 msgstr ""
 
-#: procesos/model/entity/tareaproceso.class.php:694
+#: procesos/model/entity/tareaproceso.class.php:696
 #: procesos/view/procesos_ver.html.twig:33
 msgid "tarea previa"
 msgstr ""
 
-#: procesos/model/entity/tareaproceso.class.php:709
+#: procesos/model/entity/tareaproceso.class.php:711
 #: procesos/view/procesos_ver.html.twig:36
 msgid "mensaje requisito"
 msgstr ""
@@ -6774,7 +6821,7 @@ msgid "dossier de actividad docente"
 msgstr ""
 
 #: ubis/controller/calendario_periodos_ajax.php:142
-#: cambios/view/usuario_avisos_pref.html.twig:215
+#: cambios/view/usuario_avisos_pref.html.twig:216
 #: procesos/view/usuario_perm_activ.html.twig:85
 msgid "desde"
 msgstr ""
@@ -6900,6 +6947,7 @@ msgstr ""
 
 #: ubis/controller/home_ubis.php:139 personas/view/persona_de_paso.phtml:157
 #: personas/view/persona_form.phtml:179
+#: personas/view/persona_sss_form.phtml:174
 msgid "formato texto"
 msgstr ""
 
@@ -6916,7 +6964,7 @@ msgstr ""
 msgid "tipo ctr o casa"
 msgstr ""
 
-#: ubis/controller/list_ctr.php:323 usuarios/controller/usuario_form.php:123
+#: ubis/controller/list_ctr.php:323 usuarios/controller/usuario_form.php:124
 #: usuarios/view/perm_activ_form.phtml:35
 msgid "otras"
 msgstr ""
@@ -7398,7 +7446,7 @@ msgid "buscar un tipo de centro"
 msgstr ""
 
 #: usuarios/controller/grupo_form.php:67 usuarios/controller/grupo_lista.php:35
-#: usuarios/controller/usuario_form.php:176
+#: usuarios/controller/usuario_form.php:177
 #: usuarios/controller/usuario_lista.php:39
 msgid "no tiene permisos para ver esto"
 msgstr ""
@@ -7457,28 +7505,28 @@ msgstr ""
 msgid "acción"
 msgstr ""
 
-#: usuarios/controller/usuario_form.php:94
+#: usuarios/controller/usuario_form.php:95
 msgid "dl propia"
 msgstr ""
 
-#: usuarios/controller/usuario_form.php:96
+#: usuarios/controller/usuario_form.php:97
 msgid "fase inicial"
 msgstr ""
 
-#: usuarios/controller/usuario_form.php:97
+#: usuarios/controller/usuario_form.php:98
 msgid "fase final"
 msgstr ""
 
-#: usuarios/controller/usuario_form.php:99
-#: cambios/view/avisos_generar_condicion.html.twig:6
+#: usuarios/controller/usuario_form.php:100
+#: cambios/view/avisos_generar_condicion.html.twig:26
 msgid "tipo de aviso"
 msgstr ""
 
-#: usuarios/controller/usuario_form.php:100
+#: usuarios/controller/usuario_form.php:101
 msgid "propiedades"
 msgstr ""
 
-#: usuarios/controller/usuario_form.php:203
+#: usuarios/controller/usuario_form.php:204
 msgid "guardar datos usuario"
 msgstr ""
 
@@ -7486,25 +7534,25 @@ msgstr ""
 msgid "¿Está seguro que desea quitar este permiso?"
 msgstr ""
 
-#: usuarios/controller/usuario_form.php:376 menus/view/traducir_menu.phtml:95
+#: usuarios/controller/usuario_form.php:374 menus/view/traducir_menu.phtml:95
 msgid "grupos"
 msgstr ""
 
-#: usuarios/controller/usuario_form.php:381
+#: usuarios/controller/usuario_form.php:379
 msgid "OJO: los permisos en los grupos no tienen una preferencia definida."
 msgstr ""
 
-#: usuarios/controller/usuario_form.php:382
+#: usuarios/controller/usuario_form.php:380
 msgid ""
 "Si hay más de uno, deberían ser independiente, sino no se sabe cual "
 "sobreescribirá a cual."
 msgstr ""
 
-#: usuarios/controller/usuario_form.php:388
+#: usuarios/controller/usuario_form.php:386
 msgid "añadir un grupo de permisos"
 msgstr ""
 
-#: usuarios/controller/usuario_form.php:389
+#: usuarios/controller/usuario_form.php:387
 msgid "quitar de un grupo de permisos"
 msgstr ""
 
@@ -7522,7 +7570,7 @@ msgstr ""
 
 #: usuarios/model/entity/grupo.class.php:336
 #: usuarios/model/entity/usuario.class.php:508
-#: cambios/view/avisos_generar_condicion.html.twig:4
+#: cambios/view/avisos_generar_condicion.html.twig:24
 msgid "usuario"
 msgstr ""
 
@@ -7900,7 +7948,7 @@ msgstr ""
 #: actividades/view/_actividad_form_head.html.twig:7
 #: actividades/view/_calendario_form_head.html.twig:6
 #: actividades/view/actividad_que.html.twig:55
-#: cambios/view/usuario_avisos_pref.html.twig:198
+#: cambios/view/usuario_avisos_pref.html.twig:199
 msgid "escoger el tipo de actividad"
 msgstr ""
 
@@ -9656,7 +9704,7 @@ msgstr ""
 msgid "numeraria auxiliar"
 msgstr ""
 
-#: personas/view/persona_form.phtml:42
+#: personas/view/persona_form.phtml:42 personas/view/persona_sss_form.phtml:42
 msgid "¿Está seguro que desea borrar esta persona?"
 msgstr ""
 
@@ -10032,7 +10080,13 @@ msgstr ""
 msgid "grupos de menús"
 msgstr ""
 
-#: usuarios/view/role_form.phtml:102
+#: usuarios/view/role_form.phtml:96
+msgid ""
+"Los roles son universales, pero los grupos de menus que se asignan a cada "
+"role son propios para cada dl (sv y sf distintos)."
+msgstr ""
+
+#: usuarios/view/role_form.phtml:106
 msgid "añadir grup menu"
 msgstr ""
 
@@ -10049,7 +10103,18 @@ msgstr ""
 msgid "listado de roles"
 msgstr ""
 
-#: usuarios/view/role_lista.phtml:50
+#: usuarios/view/role_lista.phtml:43
+msgid ""
+"Los roles son universales y solamente los puede modificar el superusuario."
+msgstr ""
+
+#: usuarios/view/role_lista.phtml:45
+msgid ""
+"Los grupos de menus que se asignan a cada role son propios para cada dl (sv "
+"y sf distintos). Y los puede modificar el admin."
+msgstr ""
+
+#: usuarios/view/role_lista.phtml:56
 msgid "nuevo rol"
 msgstr ""
 
@@ -10113,7 +10178,7 @@ msgstr ""
 msgid "nuevo usuario"
 msgstr ""
 
-#: actividades/view/_actividad_tipo.js.twig:130
+#: actividades/view/_actividad_tipo.js.twig:145
 msgid "¿Quiere cambiar el nombre de la actividad?"
 msgstr ""
 
@@ -10238,6 +10303,42 @@ msgstr ""
 msgid "textos para las comunicaciones de las actividades"
 msgstr ""
 
+#: cambios/view/avisos_generar_condicion.html.twig:3
+msgid ""
+"Para los avisos por mail, debe existir una linea en el crontab del servidor "
+"externo \n"
+"        (conexión a internet)."
+msgstr ""
+
+#: cambios/view/avisos_generar_condicion.html.twig:5
+msgid "Es un cron distinto para cada dl (sv y sf)."
+msgstr ""
+
+#: cambios/view/avisos_generar_condicion.html.twig:8
+msgid ""
+"Si no está instalado el módulo de procesos, las fases de los avisos son los "
+"estados de la actividad."
+msgstr ""
+
+#: cambios/view/avisos_generar_condicion.html.twig:11
+msgid ""
+"Si el cambio es en una actividad de otra dl, la tabla de avisos no se genera "
+"automáticamente \n"
+"        (si se hace para la dl que ha hecho el cambio) Hay que hacerlo "
+"manual, o por cron, \n"
+"        o esperar a que se genere por algún cambio de la propia dl."
+msgstr ""
+
+#: cambios/view/avisos_generar_condicion.html.twig:16
+msgid ""
+"El sistema no es perfecto. Si hay dudas, hay que mirar la web para ver como "
+"está.\n"
+"        Por ejemplo (para cambios en otras dl) puede ser que apunte cambios "
+"que se han hecho en una fase en la que no se debe avisar,\n"
+"         y al hacer otro cambio en una fase que si debe avisar, puede anotar "
+"el cambio que se había reallizado con anterioridad..."
+msgstr ""
+
 #: cambios/view/usuario_avisos_pref.html.twig:77
 msgid "debe indicar dónde mirar los cambios"
 msgstr ""
@@ -10246,37 +10347,37 @@ msgstr ""
 msgid "debe indicar por dónde avisar"
 msgstr ""
 
-#: cambios/view/usuario_avisos_pref.html.twig:148
+#: cambios/view/usuario_avisos_pref.html.twig:149
 msgid "¿Está seguro de borrar esta condición?"
 msgstr ""
 
-#: cambios/view/usuario_avisos_pref.html.twig:186
+#: cambios/view/usuario_avisos_pref.html.twig:187
 msgid "cambios en"
 msgstr ""
 
-#: cambios/view/usuario_avisos_pref.html.twig:191
+#: cambios/view/usuario_avisos_pref.html.twig:192
 #: procesos/view/fases_activ_cambio.html.twig:109
 #: procesos/view/usuario_perm_activ.html.twig:68
 msgid "para actividades que organiza"
 msgstr ""
 
-#: cambios/view/usuario_avisos_pref.html.twig:193
+#: cambios/view/usuario_avisos_pref.html.twig:194
 #: procesos/view/fases_activ_cambio.html.twig:110
 #: procesos/view/usuario_perm_activ.html.twig:70
 msgid "la propia dl"
 msgstr ""
 
-#: cambios/view/usuario_avisos_pref.html.twig:194
+#: cambios/view/usuario_avisos_pref.html.twig:195
 #: procesos/view/fases_activ_cambio.html.twig:111
 #: procesos/view/usuario_perm_activ.html.twig:71
 msgid "otras dl"
 msgstr ""
 
-#: cambios/view/usuario_avisos_pref.html.twig:206
+#: cambios/view/usuario_avisos_pref.html.twig:207
 msgid "en el intervalo"
 msgstr ""
 
-#: cambios/view/usuario_avisos_pref.html.twig:207
+#: cambios/view/usuario_avisos_pref.html.twig:208
 #: procesos/view/usuario_perm_activ.html.twig:80
 msgid ""
 "NOTA: Sólo salen las fases comunes a todos los procesos de los tipos de "
@@ -10284,25 +10385,25 @@ msgid ""
 "Para ver más fases del proceso, debe limitar el tipo de actividad."
 msgstr ""
 
-#: cambios/view/usuario_avisos_pref.html.twig:210
+#: cambios/view/usuario_avisos_pref.html.twig:211
 msgid ""
 "NOTA: En orden alfabético. Al ser común a varios procesos, no se pueden "
 "ordenar según el proceso."
 msgstr ""
 
-#: cambios/view/usuario_avisos_pref.html.twig:225
+#: cambios/view/usuario_avisos_pref.html.twig:226
 msgid "opciones"
 msgstr ""
 
-#: cambios/view/usuario_avisos_pref.html.twig:227
+#: cambios/view/usuario_avisos_pref.html.twig:228
 msgid "ver cambios sólo de las casas"
 msgstr ""
 
-#: cambios/view/usuario_avisos_pref.html.twig:231
+#: cambios/view/usuario_avisos_pref.html.twig:232
 msgid "avisar por"
 msgstr ""
 
-#: cambios/view/usuario_avisos_pref.html.twig:239
+#: cambios/view/usuario_avisos_pref.html.twig:240
 msgid "campos o propiedades"
 msgstr ""
 
@@ -10528,15 +10629,15 @@ msgstr ""
 msgid "otros encargos y ausencias"
 msgstr ""
 
-#: encargossacd/view/sacd_ausencias_get.html.twig:66
+#: encargossacd/view/sacd_ausencias_get.html.twig:81
 msgid "ausencias/tareas"
 msgstr ""
 
-#: encargossacd/view/sacd_ausencias_get.html.twig:80
+#: encargossacd/view/sacd_ausencias_get.html.twig:97
 msgid "añadir actividades personales"
 msgstr ""
 
-#: encargossacd/view/sacd_ausencias_get.html.twig:91
+#: encargossacd/view/sacd_ausencias_get.html.twig:108
 msgid "Para borrar basta dejar en blanco la fecha inicio y la fecha fin"
 msgstr ""
 

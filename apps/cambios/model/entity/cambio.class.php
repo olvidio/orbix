@@ -441,7 +441,12 @@ class Cambio Extends core\ClasePropiedades {
 	                case 'Actividad':
 	                case 'ActividadDl':
 	                case 'ActividadEx':
-	                    $sformat = 'Actividad: la actividad "%1$s" ha cambiado el campo "%2$s" de "%3$s" a "%4$s"';
+	                    // Casso especial si el campo es: 'status'
+	                    if ($sPropiedad == 'status') {
+	                       $sValor_old = $aStatus[$sValor_old]; 
+	                       $sValor_new = $aStatus[$sValor_new]; 
+	                    }
+                       $sformat = 'Actividad: la actividad "%1$s" ha cambiado el campo "%2$s" de "%3$s" a "%4$s"';
 	                    break;
 	                case 'ActividadCargo':
 	                    $sformat = 'Cl: ha cambiado el cargo en la actividad "%1$s" el campo "%2$s" de "%3$s" a "%4$s"';
