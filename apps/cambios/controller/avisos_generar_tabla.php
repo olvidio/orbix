@@ -233,41 +233,43 @@ function me_afecta($id_usuario,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cm
 	$oMiUsuario = new Usuario($id_usuario);
 
 	$id_pau = '';
-	if ($oMiUsuario->isRolePau(Role::PAU_CDC)) { //casa
+    //casa
+	if ($oMiUsuario->isRolePau(Role::PAU_CDC)) {
 		$id_pau = $oMiUsuario->getId_pau(); // puede ser una lista separada por comas.
-	}
-	if (!empty($id_pau)) { //casa o un listado de ubis en la preferencia del aviso.
-		$a_id_pau = explode(',',$id_pau);
+        if (!empty($id_pau)) { //casa o un listado de ubis en la preferencia del aviso.
+            $a_id_pau = explode(',',$id_pau);
 
-		$oActividad = new Actividad($id_activ);
-		$id_ubi = $oActividad->getId_ubi(); // id ubi actual.
+            $oActividad = new Actividad($id_activ);
+            $id_ubi = $oActividad->getId_ubi(); // id ubi actual.
 
-		// si lo que cambia es el id_ubi, compruebo que el valor old o new sean de la casa.
-		if ($propiedad == 'id_ubi') {
-			if (in_array($valor_old_cmb,$a_id_pau) || in_array($id_ubi,$a_id_pau)) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-		// si cambia qualquier otra cosa en mi id_ubi.
-		if (in_array($id_ubi,$a_id_pau)) {
-			return true;
-		} else {
-			return false;
-		}
+            // si lo que cambia es el id_ubi, compruebo que el valor old o new sean de la casa.
+            if ($propiedad == 'id_ubi') {
+                if (in_array($valor_old_cmb,$a_id_pau) || in_array($id_ubi,$a_id_pau)) {
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+            } else {
+                // si cambia qualquier otra cosa en mi id_ubi.
+                if (in_array($id_ubi,$a_id_pau)) {
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+            }
+        }
 	}
 	// si soy un sacd.
-	if ($oMiUsuario->isRolePau(Role::PAU_SACD)) { //sacd
+	if ($oMiUsuario->isRolePau(Role::PAU_SACD)) {
 		$id_nom=$oMiUsuario->getId_pau();
 		if (soy_encargado($id_nom,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cmb,$sObjeto)) {
-			return true;
+			return TRUE;
 		} else {
-			return false;
+			return FALSE;
 		}
 
 	}
-	return true;
+	return TRUE;
 }
 function soy_encargado($id_nom,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cmb,$sObjeto) {
 	// sacd encargados de esta actividad
