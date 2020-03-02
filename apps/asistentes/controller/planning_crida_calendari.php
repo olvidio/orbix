@@ -33,10 +33,10 @@ require_once ("apps/core/global_object.inc");
 $oPosicion->recordar();
 
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$aid_nom = array();
 if (!empty($a_sel)) { //vengo de un checkbox
     // puede ser más de uno
     if (is_array($a_sel) && count($a_sel) > 1) {
-        $aid_nom = array();
         foreach ($a_sel as $nom_sel) {
             $aid_nom[] = $nom_sel;
         }
@@ -350,11 +350,15 @@ if ($Qtipo=='planning_cdc' || $Qtipo=='casa') {
             $persona[$p]="p#$id_nom#$nombre";
         }
         
+        // Seleccionar sólo las del periodo y actuales o terminadas
         $aWhere=array();
+        $aOperador = [];
         $aWhere['f_ini']="'$fin_iso'";
         $aOperador['f_ini']='<=';
         $aWhere['f_fin']="'$inicio_iso'";
         $aOperador['f_fin']='>=';
+        $aWhere['status']='2,3';
+        $aOperador['status']='BETWEEN';
         
         if (core\ConfigGlobal::is_app_installed('actividadcargos')) {
             $oGesActividadCargos = new actividadcargos\GestorActividadCargo();
@@ -369,7 +373,6 @@ if ($Qtipo=='planning_cdc' || $Qtipo=='casa') {
             $id_activ = $oAsistente['id_activ'];
             $propio = $oAsistente['propio'];
             
-            // Seleccionar sólo las del periodo
             $aWhere['id_activ']=$id_activ;
             $cActividades = $GesActividades->getActividades($aWhere,$aOperador);
             if (is_array($cActividades) && count($cActividades) == 0) continue;
