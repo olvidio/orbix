@@ -1,9 +1,20 @@
+<script>
+fnjs_left_side_hide();
+</script>
 <?php 
 use core\ConfigGlobal;
 if (ConfigGlobal::is_app_installed('cambios')) {
-?>
-	<span class="link" onclick="fnjs_update_div('#main','<?= $avisos ?>');"><?= _("gestionar avisos en cambios actividades") ?></span><br>
-<?php 
+    ?>
+    <h2><?= ucfirst(_("gestión de avisos para cambios en actividades")) ?><br></h2>
+    <table><tr><td>
+        <input type="button" onclick="fnjs_update_div('#main','<?= $avisos_lista ?>');" value="<?= _("ver lista") ?>" >
+        </td><td>
+        <input type="button" onclick="fnjs_update_div('#main','<?= $avisos_mails ?>');" value="<?= _("ver mails sin enviar") ?>" >
+        </td><td>
+        <input type="button" onclick="fnjs_update_div('#main','<?= $avisos ?>');" value="<?= _("gestionar avisos en cambios actividades") ?>" >
+        </td>
+    </table>
+    <?php 
 }
 ?>
 <h2><?= ucfirst(_("preferencias personales")) ?><br></h2>

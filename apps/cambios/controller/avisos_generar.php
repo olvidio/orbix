@@ -19,6 +19,7 @@ require_once ("apps/core/global_header.inc");
 require_once ("apps/core/global_object.inc");
 // Crea los objectos para esta url  **********************************************
 
+$oPosicion->recordar();
 
 // Tipos de avisos
 $aTipos_aviso = CambioUsuarioObjetoPref::getTipos_aviso();

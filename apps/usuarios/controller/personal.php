@@ -2,6 +2,8 @@
 use usuarios\model\entity as usuarios;
 use menus\model\entity as menus;
 use web\Desplegable;
+use cambios\model\entity\Cambio;
+use cambios\model\entity\CambioUsuario;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -10,6 +12,9 @@ use web\Desplegable;
 // Crea los objectos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
+
+$oPosicion->recordar();
+
 $oGesPref = new usuarios\GestorPreferencia();
 
 $id_usuario= core\ConfigGlobal::mi_id_usuario();
@@ -105,6 +110,8 @@ $oDesplLocales->setOpcion_sel($idioma);
 
 $aniversarios=web\Hash::link(core\ConfigGlobal::getWeb().'/programas/aniversarios.php');
 $avisos=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?'.http_build_query(array('quien'=>'usuario','id_usuario'=>$id_usuario)));
+$avisos_lista=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/cambios/controller/avisos_generar.php?'.http_build_query(array('id_usuario'=>$id_usuario,'avis_tipo' => CambioUsuario::TIPO_LISTA)));
+$avisos_mails=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/cambios/controller/avisos_generar.php?'.http_build_query(array('id_usuario'=>$id_usuario,'avis_tipo' => CambioUsuario::TIPO_MAIL)));
 $cambio_password=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form_pwd.php');
 
 $oHash = new web\Hash();
@@ -113,6 +120,8 @@ $oHash->setcamposForm('inicio!oficina!estilo_color!tipo_menu!tipo_tabla!ordenApe
 $a_campos = [
 			'aniversarios' => $aniversarios,
 			'avisos' => $avisos,
+			'avisos_lista' => $avisos_lista,
+			'avisos_mails' => $avisos_mails,
 			'oHash' => $oHash,
 			'oDesplInicio' => $oDesplInicio,
 			'posibles' => $posibles,
