@@ -502,7 +502,10 @@ while ($num_cambios) {
                     
                     if ($propiedad_cmb == $propiedad) {
                         // En el caso de casas o sacd, comprobar que me afecta.
-                        if (!me_afecta($id_usuario,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cmb,$id_pau,$sObjeto)) { $apuntar = false; continue; }
+                        if (!me_afecta($id_usuario,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cmb,$id_pau,$sObjeto)) {
+                            $apuntar = false;
+                            continue; 
+                        }
                         if (!empty($valor)) {
                             $operador = empty($operador)? '=' : $operador;
                             if ($valor_old == 't') {

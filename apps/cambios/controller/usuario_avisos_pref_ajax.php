@@ -177,6 +177,7 @@ switch($Qsalida) {
 			$txt3 .= $oSelects->ComprobarSelectJs(); 
 			$txt3 .= '</script>';
 			$txt3 .= $oSelects->ListaSelects(); 
+    		$txt3 .= '<input type="hidden" name="valor" value="'.$valor.'">';
 		}
 		$txt2 .= $txt3;
 		$txt2 .= '  ';
@@ -199,6 +200,7 @@ switch($Qsalida) {
 		$oHash = new web\Hash();
 		$oHash->setcamposForm("salida!objeto!propiedad!operador!valor");
 		$oHash->setCamposChk("valor_old!valor_new");
+		$oHash->setCamposNo("id_ubi!id_ubi_mas!id_ubi_num");
 		$aCamposHidden = [
 		              'id_item' => $Qid_item,
                         ];

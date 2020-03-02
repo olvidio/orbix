@@ -262,11 +262,11 @@ class gestorAvisoCambios {
 				break;
 			case 'FASE':
 				// només mi fixo en el 'completado'
-				// amb els boolean no s'aclar: 0,1,false ,true,f,t...
+				// amb els boolean no s'aclara: 0,1,false ,true,f,t...
 				if (empty($aDadesNew['completado']) || ($aDadesNew['completado'] === 'off') || ($aDadesNew['completado'] === 'false') || ($aDadesNew['completado'] === 'f')) { $boolCompletadoNew=false; } else { $boolCompletadoNew=true; }
-				if (empty($aDadesActuals['completado']) || ($aDadesActuals['completado'] === 'off') || ($aDadesActuals['completado'] === 'false') || ($aDadesActuals['completado'] === 'f')) { $boolCompletadoActuals=false; } else { $boolCompletadoActuals=true; }
+				if (empty($aDadesActuals['completado']) || ($aDadesActuals['completado'] === 'off') || ($aDadesActuals['completado'] === 'false') || ($aDadesActuals['completado'] === 'f')) { $boolCompletadoActual=false; } else { $boolCompletadoActual=true; }
 
-				if ($boolCompletadoNew != $boolCompletadoActuals) {
+				if ($boolCompletadoNew != $boolCompletadoActual) {
 					$oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_FASE);
 					$oActividadCambio->setId_activ($iid_activ);
 					$oActividadCambio->setId_tipo_activ($iId_tipo_activ);
@@ -276,7 +276,7 @@ class gestorAvisoCambios {
 					$oActividadCambio->setDl_org($dl_org);
 					$oActividadCambio->setObjeto($sObjeto);
 					$oActividadCambio->setPropiedad('completado');
-					$oActividadCambio->setValor_old($boolCompletadoActuals);
+					$oActividadCambio->setValor_old($boolCompletadoActual);
 					$oActividadCambio->setValor_new($boolCompletadoNew);
 					$oActividadCambio->setQuien_cambia($id_user);
                     $oActividadCambio->setSfsv_quien_cambia($sfsv);
