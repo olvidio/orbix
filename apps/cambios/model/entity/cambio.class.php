@@ -253,8 +253,8 @@ class Cambio Extends core\ClasePropiedades {
 			 * 'cambios', puede haber conflico con el id_item_cambio. 
 			 */
 			$mi_esquema = 3000;
-			$campos="(id_tipo_cambio,id_activ,id_tipo_activ,id_fase_sv,id_fase_sf,id_status,dl_org,objeto,propiedad,valor_old,valor_new,quien_cambia,sfsv_quien_cambia,timestamp_cambio)";
-			$valores="(:id_tipo_cambio,:id_activ,:id_tipo_activ,:id_fase_sv,:id_fase_sf,:id_status,:dl_org,:objeto,:propiedad,:valor_old,:valor_new,:quien_cambia,:sfsv_quien_cambia,:timestamp_cambio)";
+			$campos="(id_schema,id_tipo_cambio,id_activ,id_tipo_activ,id_fase_sv,id_fase_sf,id_status,dl_org,objeto,propiedad,valor_old,valor_new,quien_cambia,sfsv_quien_cambia,timestamp_cambio)";
+			$valores="($mi_esquema,:id_tipo_cambio,:id_activ,:id_tipo_activ,:id_fase_sv,:id_fase_sf,:id_status,:dl_org,:objeto,:propiedad,:valor_old,:valor_new,:quien_cambia,:sfsv_quien_cambia,:timestamp_cambio)";
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClauError = 'Cambio.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);

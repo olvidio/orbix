@@ -87,6 +87,7 @@ class DB extends DBAbstract {
         
         $a_sql[] = "CREATE UNIQUE INDEX ${tabla}_udx ON $nom_tabla USING btree (id_schema,id_item_cambio); ";
         
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT 3000"; 
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
         // Aseguarme que todos pueden leer:
         $a_sql[] = "GRANT SELECT,DELETE ON $nom_tabla TO PUBLIC; ";
