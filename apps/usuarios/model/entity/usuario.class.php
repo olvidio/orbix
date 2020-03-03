@@ -244,7 +244,7 @@ class Usuario Extends core\ClasePropiedades {
 	public function isRole($nom_role) {
 	    $nom_role = strtolower($nom_role);
 	    $aRoles = $this->aRoles;
-	    if (!empty($aRoles[$nom_role]) && $aRoles[$nom_role] == ConfigGlobal::mi_id_role()) {
+	    if (!empty($aRoles[$nom_role]) && $aRoles[$nom_role] == $this->getId_role()) {
 	        return TRUE;
 	    } else {
 	        return FALSE;
@@ -259,7 +259,7 @@ class Usuario Extends core\ClasePropiedades {
 	public function isRolePau($nom_pau) {
 	    $nom_pau = strtolower($nom_pau);
 	    $aPauRoles = $this->aPauRoles;
-	    if (!empty($aPauRoles[ConfigGlobal::mi_id_role()]) && $aPauRoles[ConfigGlobal::mi_id_role()] == $nom_pau) {
+	    if (!empty($aPauRoles[$this->getId_role()]) && $aPauRoles[$this->getId_role()] == $nom_pau) {
 	        return TRUE;
 	    } else {
 	        return FALSE;

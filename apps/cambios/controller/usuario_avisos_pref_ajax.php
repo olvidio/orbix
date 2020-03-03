@@ -361,7 +361,7 @@ switch($Qsalida) {
                         $oPermActividades->setId_fase($id_fase);
                         $oPermActiv = $oPermActividades->getPermisoActual($afecta);
                         //print_r($oPermActiv);
-                        if ( !$oPermActiv->have_perm_activ('ver') ) { continue; }
+                        if ( !$oPermActiv->have_perm_activ('ocupado') ) { continue; }
                         $oFase = new ActividadFase($id_fase);
                         $aFasesConPerm[$id_fase] = $oFase->getDesc_fase();
                     }

@@ -93,7 +93,9 @@ fnjs_guardar=function(tipo='') {
 				if (rta_txt != '' && rta_txt != '\\n') {
 					alert ('{{ "respuesta"|trans }}: '+rta_txt);
 				} else {
-					{{ oPosicion.js_atras(1)|raw }}
+                    if (tipo!='nuevo') { // En el caso de nuevo, me quedo en el formulario.
+                        {{ oPosicion.js_atras(1)|raw }}
+                    }
 				}
 				// OJO hay que actualizar el formulario de la lista, no el actual.
 				// Esta función está en calendario_planning.phtml 

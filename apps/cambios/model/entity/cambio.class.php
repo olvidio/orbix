@@ -8,6 +8,7 @@ use personas\model\entity\Persona;
 use procesos\model\entity\GestorActividadFase;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use ubis\model\entity\Ubi;
+use web\DateTimeLocal;
 /**
  * Fitxer amb la Classe que accedeix a la taula av_cambios
  *
@@ -441,10 +442,17 @@ class Cambio Extends core\ClasePropiedades {
 	                case 'Actividad':
 	                case 'ActividadDl':
 	                case 'ActividadEx':
-	                    // Casso especial si el campo es: 'status'
+	                    // Caso especial si el campo es: 'status'
 	                    if ($sPropiedad == 'status') {
 	                       $sValor_old = $aStatus[$sValor_old]; 
 	                       $sValor_new = $aStatus[$sValor_new]; 
+	                    }
+	                    // Caso especial si el campo es fecha.
+	                    if ($sPropiedad == 'f_ini' OR $sPropiedad == 'f_fin') {
+	                        $oFOld = new DateTimeLocal($sValor_old);
+	                        $sValor_old = $oFOld->getFromLocal();
+	                        $oFNew = new DateTimeLocal($sValor_new);
+	                        $sValor_new = $oFNew->getFromLocal();
 	                    }
                        $sformat = 'Actividad: la actividad "%1$s" ha cambiado el campo "%2$s" de "%3$s" a "%4$s"';
 	                    break;
