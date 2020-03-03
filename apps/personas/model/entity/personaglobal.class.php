@@ -899,7 +899,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	function getTituloNombre() {
 		if (!isset($this->sTituloNombre)) {
 			$this->DBCarregar();
-			$nom_ap = 'Dr. ';
+			$nom_ap = 'Dnus. Dr. ';
 			$nom_ap .= $this->snom; 
 			$nom_ap .= !empty($this->snx1)? ' '.$this->snx1 : '';
 			$nom_ap .= ' '.$this->sapellido1;
