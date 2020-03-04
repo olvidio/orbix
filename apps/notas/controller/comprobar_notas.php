@@ -1,6 +1,5 @@
 <?php
-use asignaturas\model\entity as asignaturas;
-use core\ConfigGlobal;
+use asignaturas\model\entity\Asignatura;
 /**
 * Esta página sirve para comprobar las notas de la tabla e_notas.
 *
@@ -188,16 +187,12 @@ if ($Qactualizar=="9998") {
 <?php
 //0. Asegurar que las notas estan en el esquema correspondiente. Por traslados etc. 
 // pueden quedar en otra dl.
-$mi_region_dl = ConfigGlobal::mi_region_dl();
-
-$sql="SELECT nom, apellido1,apellido2,situacion,id_schema 
-        FROM personas_dl 
-        WHERE situacion = 'A' AND id_nom IN (
-                SELECT DISTINCT p.id_nom FROM publicv.e_notas n LEFT JOIN personas_dl p USING (id_nom) 
-                WHERE p.situacion != 'A' AND p.situacion != 'B' AND p.situacion != 'F' AND f_acta IS NOT NULL AND p.id_schema=n.id_schema)
-        AND id_schema = public.idschema('\"$mi_region_dl\"')   
-        ORDER BY id_schema,apellido1;
+$sql="SELECT n.id_schema,n.acta,n.f_acta,p.nom,p.apellido1,p.apellido2
+        FROM publicv.e_notas n LEFT JOIN personas_dl p USING (id_nom)
+        WHERE p.situacion='A' AND n.id_schema != p.id_schema
+        ORDER BY id_nom,n.id_schema
     ";
+
 $oDBSt_traslados=$oDB->query($sql);
 $nf=$oDBSt_traslados->rowCount();
 echo "<p>0. Personas con notas sin trasladar: $nf</p>";
@@ -207,9 +202,9 @@ if (!empty($nf)) {
 	foreach ($oDBSt_traslados->fetchAll() as $algo) {
 		$nom= $algo['apellido1']." ".$algo['apellido2'].", ".$algo['nom'];
 		$id_schema= $algo['id_schema'];
-		$stgr=$algo['stgr'];
+		$acta=$algo['acta'];
 		echo "<tr><td width=20></td>";
-		echo "<td>$nom</td><td>$id_schema</td><td>$stgr</td></tr>";
+		echo "<td>$nom</td><td>$id_schema</td><td>$acta</td></tr>";
 	}
 	echo "<tr><td colspan=7><hr>";
 	echo "</table>";
@@ -308,7 +303,7 @@ foreach ($oDBSt_sql->fetchAll() as $algo) {
 	$nom= $algo['apellido1']." ".$algo['apellido2'].", ".$algo['nom'];
 	$fecha= $algo['f_acta'];
 	$id_asignatura = $algo['id_asignatura'];
-	$oAsignatura = new asignaturas\Asignatura($id_asignatura);
+	$oAsignatura = new Asignatura($id_asignatura);
 	$asig= $oAsignatura->getNombre_corto();
 	echo "<tr><td width=20></td>";
 	echo "<td>$nom</td><td>$fecha</td><td>$asig</td></tr>";
@@ -427,7 +422,7 @@ foreach ($oDBSt_sql->fetchAll() as $algo) {
 	$nom= $algo['apellido1']." ".$algo['apellido2'].", ".$algo['nom'];
 	$fecha= $algo['f_acta'];
 	$id_asignatura = $algo['id_asignatura'];
-	$oAsignatura = new asignaturas\Asignatura($id_asignatura);
+	$oAsignatura = new Asignatura($id_asignatura);
 	$asig= $oAsignatura->getNombre_corto();
 	echo "<tr><td width=20></td>";
 	echo "<td>$nom</td><td>$fecha</td><td>$asig</td></tr>";
@@ -437,4 +432,3 @@ echo "</table>";
 /* end lista */
 
 echo "</body>";
-?>
