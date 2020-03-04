@@ -96,9 +96,11 @@ $aWhere=array();
 $aOperador=array();
 $aWhere['situacion'] = 'A';
 $aWhere['stgr'] = 'b|c1|c2';
-//$aWhere['_ordre'] = 'stgr,apellido1,nom';
-
 $aOperador['stgr'] = '~';
+// Sólo n y agd
+$aWhere['id_tabla'] = '^[na]';
+$aOperador['id_tabla'] = '~';
+
 
 $GesPersonas = new personas\GestorPersonaDl();
 $cPersonas = $GesPersonas->getPersonasDl($aWhere,$aOperador);
