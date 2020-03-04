@@ -1,5 +1,6 @@
 <?php
 use asignaturas\model\entity as asignaturas;
+use core\ConfigGlobal;
 /**
 * Esta página sirve para comprobar las notas de la tabla e_notas.
 *
@@ -185,7 +186,42 @@ if ($Qactualizar=="9998") {
 </html>
 
 <?php
-//0. Asegurar que el año de fin de ce está puesto con 4 cifras
+//0. Asegurar que las notas estan en el esquema correspondiente. Por traslados etc. 
+// pueden quedar en otra dl.
+$mi_region_dl = ConfigGlobal::mi_region_dl();
+
+$sql="SELECT nom, apellido1,apellido2,situacion,id_schema 
+        FROM personas_dl 
+        WHERE situacion = 'A' AND id_nom IN (
+                SELECT DISTINCT p.id_nom FROM publicv.e_notas n LEFT JOIN personas_dl p USING (id_nom) 
+                WHERE p.situacion != 'A' AND p.situacion != 'B' AND p.situacion != 'F' AND f_acta IS NOT NULL AND p.id_schema=n.id_schema)
+        AND id_schema = public.idschema('\"$mi_region_dl\"')   
+        ORDER BY id_schema,apellido1;
+    ";
+$oDBSt_traslados=$oDB->query($sql);
+$nf=$oDBSt_traslados->rowCount();
+echo "<p>0. Personas con notas sin trasladar: $nf</p>";
+if (!empty($nf)) {
+	/* Para sacar una lista*/
+	echo "<table>";
+	foreach ($oDBSt_traslados->fetchAll() as $algo) {
+		$nom= $algo['apellido1']." ".$algo['apellido2'].", ".$algo['nom'];
+		$id_schema= $algo['id_schema'];
+		$stgr=$algo['stgr'];
+		echo "<tr><td width=20></td>";
+		echo "<td>$nom</td><td>$id_schema</td><td>$stgr</td></tr>";
+	}
+	echo "<tr><td colspan=7><hr>";
+	echo "</table>";
+	/* end lista
+	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>9999)));
+	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("clic aquí") ."</span>";
+	echo "<p class=action>";
+	printf (_("para poner c1 y bienio finalizado a todos los de la lista, hacer %s. Esto pondrá la fecha de acta última."),$pag);
+	echo "</p>"; 
+	*/
+}
+echo "<br>";
 
 /*1. Numerarios con el bienio terminado y sin poner que lo ha terminado */
 $sql="SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(*) as num_asig,stgr
