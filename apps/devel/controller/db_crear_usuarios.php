@@ -83,22 +83,35 @@ $oConfigDB->addEsquema('sv', $esquemav, $esquemav_pwd);
 
 // sv-e
 // Los mismos parametros que para sv.
+// Si es el mismo servidor (portatil) me lo salto:
+$host_sv = $config['host'];
+$port_sv = $config['port'];
 $oConfigDB = new core\ConfigDB('importar');
 //coge los valores de public: 1.la database sv-e; 2.nombre superusuario; 3.pasword superusuario;
 $config = $oConfigDB->getEsquema('publicv-e');
 $oConexion = new core\dbConnection($config);
 $oDevelPC = $oConexion->getPDO();
+$host_sve = $config['host'];
+$port_sve = $config['port'];
 
-$oDBRol = new core\DBRol();
-$oDBRol->setDbConexion($oDevelPC);
+// Si es el mismo servidor (portatil) me lo salto:
+if ($host_sv != $host_sve && $port_sv != $port_sve) {
+    $oDBRol = new core\DBRol();
+    $oDBRol->setDbConexion($oDevelPC);
 
-$oDBRol->setUser($esquemav);
-$oDBRol->setPwd($esquemav_pwd);
-$oDBRol->crearUsuario();
+    $oDBRol->setUser($esquemav);
+    $oDBRol->setPwd($esquemav_pwd);
+    $oDBRol->crearUsuario();
+}
 $oConfigDB->addEsquema('sv-e', $esquemav, $esquemav_pwd);
 
-/*
 // sf
+/* Si se crea desde sv, hay que crear el Role de sf para la database comun
+ * (Garantiza el acceso a actividades y importadas)
+ * Si se hace desde sf, además se crea el esquema. (Actualmente en el servidor de sve)
+ */
+
+// desde sv y sf:
 $oConfigDB = new core\ConfigDB('importar');
 $config = $oConfigDB->getEsquema('publicf'); //de la database comun
 $oConexion = new core\dbConnection($config);
@@ -110,9 +123,23 @@ $oDBRol->setDbConexion($oDevelPC);
 $oDBRol->setUser($esquemaf);
 $oDBRol->setPwd($esquemaf_pwd);
 $oDBRol->crearUsuario();
-$oConfigDB->addEsquema('sf', $esquemaf, $esquemaf_pwd);
-*/
-$esquemaf_pwd = _("Desde aquí no se tiene acceso a la db sf");
+
+// desde sf (añado el esquema al Role)
+if ($_SESSION['sfsv'] == 'sf') {
+    $oConfigDB = new core\ConfigDB('importar');
+    //coge los valores de public: 1.la database sv-e; 2.nombre superusuario; 3.pasword superusuario;
+    $config = $oConfigDB->getEsquema('publicv-e');
+    $oConexion = new core\dbConnection($config);
+    $oDevelPC = $oConexion->getPDO();
+
+    $oDBRol = new core\DBRol();
+    $oDBRol->setDbConexion($oDevelPC);
+
+    $oDBRol->setUser($esquemaf);
+    $oDBRol->setPwd($esquemaf_pwd);
+    $oDBRol->crearUsuario();
+    $oConfigDB->addEsquema('sf', $esquemaf, $esquemaf_pwd);
+}
 
 $archivo_conf = ConfigGlobal::DIR_PWD.'/  (comun.inc, sv.inc, sf.inc)';
 echo sprintf(_("se han creado los usuarios. Ojo, un único usuario para pruebas y producción"));

@@ -130,9 +130,12 @@ class DBRol {
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		} else {
-			if ($oDblSt->execute() === false) {
+		    try {
+			     $oDblSt->execute();
+		    } 
+		    catch (\PDOException $e) {
 				$sClauError = 'DBRol.crear.execute';
-				$err=$oDblSt->errorInfo()[2];
+				$err=$e->errorInfo[2];
 				
 				if (strpos($err, 'already exists') !== FALSE OR strpos($err, 'ya existe') !== FALSE) { // ya existe
 				    $this->cambiarPassword();
