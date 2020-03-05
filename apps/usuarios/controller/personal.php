@@ -110,8 +110,8 @@ $oDesplLocales->setOpcion_sel($idioma);
 
 $aniversarios=web\Hash::link(core\ConfigGlobal::getWeb().'/programas/aniversarios.php');
 $avisos=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?'.http_build_query(array('quien'=>'usuario','id_usuario'=>$id_usuario)));
-$avisos_lista=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/cambios/controller/avisos_generar.php?'.http_build_query(array('id_usuario'=>$id_usuario,'avis_tipo' => CambioUsuario::TIPO_LISTA)));
-$avisos_mails=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/cambios/controller/avisos_generar.php?'.http_build_query(array('id_usuario'=>$id_usuario,'avis_tipo' => CambioUsuario::TIPO_MAIL)));
+$avisos_lista=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/cambios/controller/avisos_generar.php?'.http_build_query(array('id_usuario'=>$id_usuario,'aviso_tipo' => CambioUsuario::TIPO_LISTA)));
+$avisos_mails=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/cambios/controller/avisos_generar.php?'.http_build_query(array('id_usuario'=>$id_usuario,'aviso_tipo' => CambioUsuario::TIPO_MAIL)));
 $cambio_password=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form_pwd.php');
 
 $oHash = new web\Hash();
