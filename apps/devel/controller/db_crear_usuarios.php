@@ -95,7 +95,7 @@ $host_sve = $config['host'];
 $port_sve = $config['port'];
 
 // Si es el mismo servidor (portatil) me lo salto:
-if ($host_sv != $host_sve && $port_sv != $port_sve) {
+if ($host_sv != $host_sve OR $port_sv != $port_sve) {
     $oDBRol = new core\DBRol();
     $oDBRol->setDbConexion($oDevelPC);
 
@@ -113,7 +113,7 @@ $oConfigDB->addEsquema('sv-e', $esquemav, $esquemav_pwd);
 
 // desde sv y sf:
 $oConfigDB = new core\ConfigDB('importar');
-$config = $oConfigDB->getEsquema('publicf'); //de la database comun
+$config = $oConfigDB->getEsquema('public'); //de la database comun
 $oConexion = new core\dbConnection($config);
 $oDevelPC = $oConexion->getPDO();
 
