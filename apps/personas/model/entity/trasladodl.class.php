@@ -2,14 +2,20 @@
 namespace personas\model\entity;
 
 use actividades\model\entity\ActividadAll;
+use actividadestudios\model\entity\GestorMatriculaDl;
 use asignaturas\model\entity\Asignatura;
 use asistentes\model\entity\AsistenteDl;
 use asistentes\model\entity\AsistenteOut;
-use actividadestudios\model\entity\gestorMatriculaDl;
-use core;
-use dossiers;
-use personas;
+use asistentes\model\entity\GestorAsistenteDl;
+use asistentes\model\entity\GestorAsistenteOut;
+use core\ConfigGlobal;
+use core\Converter;
+use dossiers\model\entity\GestorDossier;
+use dossiers\model\entity\TipoDossier;
 use web;
+use actividades\model\entity\GestorActividadAll;
+use actividadcargos\model\entity\GestorCargo;
+
 
 /**
  * Fitxer amb la Classe que accedeix a la taula d_traslados
@@ -166,7 +172,7 @@ class TrasladoDl {
 	    if (empty($this->df_dl)) {
 	    	return new web\NullDateTimeLocal();
 	    }
-	    $oConverter = new core\Converter('date', $this->df_dl);
+	    $oConverter = new Converter('date', $this->df_dl);
 	    return $oConverter->fromPg();
 	}
 	/**
@@ -179,21 +185,30 @@ class TrasladoDl {
 	 */
 	function setF_dl($df_dl='',$convert=true) {
 		if ($convert === true && !empty($df_dl)) {
-	        $oConverter = new core\Converter('date', $df_dl);
+	        $oConverter = new Converter('date', $df_dl);
 	        $this->df_dl =$oConverter->toPg();
 	    } else {
 	        $this->df_dl = $df_dl;
 	    }
 	}
-	private function conexionOrg() {
+
+	private function conexionOrg($exterior=FALSE) {
 		$this->snew_esquema = $this->sreg_dl_org;
-		if (core\ConfigGlobal::mi_region_dl() == $this->snew_esquema) {
+		if (ConfigGlobal::mi_region_dl() == $this->snew_esquema) {
 			//Utilizo la conexión oDB para cambiar momentáneamente el search_path.
-			$oDB = $GLOBALS['oDB'];
+		    if ($exterior) {
+			    $oDB = $GLOBALS['oDBE'];
+		    } else {
+			    $oDB = $GLOBALS['oDB'];
+		    }
 		} else {
 			// Sólo funciona con la conexión oDBR porque el usuario es orbixv que 
 			// tiene permiso de lectura para todos los esquemas
-			$oDB = $GLOBALS['oDBR'];
+		    if ($exterior) {
+                $oDB = $GLOBALS['oDBER'];
+		    } else {
+                $oDB = $GLOBALS['oDBR'];
+		    }
 		}
 		$qRs = $oDB->query('SHOW search_path');
 		$aPath = $qRs->fetch(\PDO::FETCH_ASSOC);
@@ -206,16 +221,24 @@ class TrasladoDl {
 		$oDB->exec("SET search_path TO $this->path_ini_org");
 		//$GLOBALS['oDBR'] = $oDBR;
 	}
-	private function conexionDst() {
+	private function conexionDst($exterior=FALSE) {
 		$this->snew_esquema = $this->sreg_dl_dst;
 		//Utilizo la conexión oDBR para cambiar momentáneamente el search_path.
-		if (core\ConfigGlobal::mi_region_dl() == $this->snew_esquema) {
+		if (ConfigGlobal::mi_region_dl() == $this->snew_esquema) {
 			//Utilizo la conexión oDB para cambiar momentáneamente el search_path.
-			$oDB = $GLOBALS['oDB'];
+		    if ($exterior) {
+			    $oDB = $GLOBALS['oDBE'];
+		    } else {
+			    $oDB = $GLOBALS['oDB'];
+		    }
 		} else {
 			// Sólo funciona con la conexión oDBR porque el usuario es orbixv que 
 			// tiene permiso de lectura para todos los esquemas
-			$oDB = $GLOBALS['oDBR'];
+		    if ($exterior) {
+                $oDB = $GLOBALS['oDBER'];
+		    } else {
+                $oDB = $GLOBALS['oDBR'];
+		    }
 		}
 		$qRs = $oDB->query('SHOW search_path');
 		$aPath = $qRs->fetch(\PDO::FETCH_ASSOC);
@@ -258,16 +281,19 @@ class TrasladoDl {
 			$msg = $this->serror;
 			return _("copiar notas").$msg;
 		}
-		
 		// apunto el traslado. Lo pongo antes para que se copie trasladar dossiers.
 		if ($this->apuntar() === false) {
 			$msg = $this->serror;
 			return _("apuntar traslado").$msg;
 		}
-		
 		if ($this->trasladarDossiers() === false) {
 			$msg = $this->serror;
 			return _("copiar dossiers").$msg;
+		}
+		
+		if ($this->copiarAsistencias() === false) {
+			$msg = $this->serror;
+			return _("copiar asistencias").$msg;
 		}
 		return true;
 	}
@@ -289,10 +315,8 @@ class TrasladoDl {
 		// Aviso si le faltan notas
 		$error = '';
 		$oDBorg = $this->conexionOrg();
-		$qRs = $oDBorg->query('SHOW search_path');
-		$aPath = $qRs->fetch(\PDO::FETCH_ASSOC);
 		
-		$gesMatriculas = new gestorMatriculaDl();
+		$gesMatriculas = new GestorMatriculaDl();
 		$gesMatriculas->setoDbl($oDBorg);
 		$cMatriculasPendientes = $gesMatriculas->getMatriculasPendientes($this->iid_nom);
 		$msg = '';
@@ -325,7 +349,7 @@ class TrasladoDl {
 		$error = '';
 		$oDBorg = $this->conexionOrg();
 		// dar permisos al usuario orbixv para acceder a personas_dl (?) o buscar tipo de perona
-		$oPersonaDl = new personas\model\entity\PersonaDl();
+		$oPersonaDl = new PersonaDl();
 		$oPersonaDl->setoDbl($oDBorg);
 		$oPersonaDl->setId_nom($this->iid_nom);
 		$oPersonaDl->DBCarregar();
@@ -415,7 +439,7 @@ class TrasladoDl {
 	public function copiarPersona() {
 		$error = '';
 		$oDBorg = $this->conexionOrg();
-		$oPersonaDl = new personas\model\entity\PersonaDl();
+		$oPersonaDl = new PersonaDl();
 		$oPersonaDl->setoDbl($oDBorg);
 		$oPersonaDl->setId_nom($this->iid_nom);
 		$oPersonaDl->DBCarregar();
@@ -525,11 +549,83 @@ class TrasladoDl {
 		}
 	}
 
+	public function copiarAsistencias () {
+	    $error = '';
+        // Está en la DB externa.
+        $oDBorgE = $this->conexionOrg(TRUE);
+        $oDBdstE = $this->conexionDst(TRUE);
+        // Los Out pasan a Dl si la dl destino es la que organiza.
+        $ges = new GestorAsistenteOut();
+        $colection = $ges->getAsistentesOut(array('id_nom'=>$this->iid_nom));
+        foreach ($colection as $oAsistenteOut) {
+            $err = 0;
+            $oAsistenteOut->setoDbl($oDBorgE);
+            $oAsistenteOut->DBCarregar();
+            $id_activ = $oAsistenteOut->getId_activ();
+            $oActividad = new ActividadAll($id_activ);
+            // si es de la sf quito la 'f'
+            $dl_org = preg_replace('/f$/', '', $oActividad->getDl_org());
+            if ($dl_org == $this->sdl_dst) {
+                $oAsistenteDl = new AsistenteDl();
+                $oAsistenteDl->setoDbl($oDBdstE);
+                $oAsistenteDl = $this->copiarAsistencia($oAsistenteOut,$oAsistenteDl); 
+                if ($oAsistenteDl->DBGuardar() === false) {
+                    $error .= '<br>'.sprintf(_("No se ha guardado la asistencia(dl) a id_activ: %s"),$id_activ);
+                    $err=1;
+                }
+            } else{
+                $NuevoObj = clone $oAsistenteOut;
+                $NuevoObj->setoDbl($oDBdstE);
+                if (method_exists($NuevoObj,'setId_item') === true) $NuevoObj->setId_item(null);
+                $NuevoObj->setTraslado('t');
+                $NuevoObj->DBGuardar();
+                if ($NuevoObj->DBGuardar() === false) {
+                    $error .= '<br>'.sprintf(_("No se ha guardado la asistencia(out) a id_activ: %s"),$id_activ);
+                    $err=1;
+                }
+            }
+            // borrar el original
+            if ($err == 0) {
+                $oAsistenteOut->DBEliminar();
+            }
+        }
+        // Los Dl pasan a Out
+        $ges = new GestorAsistenteDl();
+        $colection = $ges->getAsistentesDl(array('id_nom'=>$this->iid_nom));
+        foreach ($colection as $oAsistenteDl) {
+            $err = 0;
+            $oAsistenteDl->setoDbl($oDBorgE);
+            $oAsistenteDl->DBCarregar();
+            $oAsistenteOut = new AsistenteOut();
+            $oAsistenteOut->setoDbl($oDBdstE);
+            $oAsistenteOut = $this->copiarAsistencia($oAsistenteDl,$oAsistenteOut); 
+            $oAsistenteOut->setTraslado('t');
+            if ($oAsistenteOut->DBGuardar() === false) {
+                $error .= '<br>'.sprintf(_("No se ha guardado la asistencia(out) a id_activ: %s"),$id_activ);
+                $err=1;
+            }
+            // borrar el origen
+            if ($err == 0) {
+                $oAsistenteDl->DBEliminar();
+            }
+        }
+        // Los Ex no deberían existir, son gente de otras dl, no afecta al traslado
+        
+        $this->restaurarConexionOrg($oDBorgE);
+        $this->restaurarConexionDst($oDBdstE);
+        if (empty($error)) {
+            return true;
+        } else {
+            $this->serror = $error;
+            return false;
+        }
+	}
+	
 	public function trasladarDossiers () {
 		$error = '';
 		$oDBorg = $this->conexionOrg();
 		$oDBdst = $this->conexionDst();
-		$GesDossiers = new dossiers\model\entity\GestorDossier();
+		$GesDossiers = new GestorDossier();
 		$GesDossiers->setoDbl($oDBorg);
 		// Comprobar que estan apuntados.
 		$cDossiers = $GesDossiers->DossiersNotEmpty('p',$this->iid_nom);
@@ -537,7 +633,7 @@ class TrasladoDl {
 		//$cDossiers = $GesDossiers->getDossiers(array('tabla'=>'p','id_nom'=>$this->iid_nom));
 		foreach ($cDossiers as $oDossier) {
 			$id_tipo_dossier = $oDossier->getId_tipo_dossier();
-			$oTipoDossier = new dossiers\model\entity\TipoDossier($id_tipo_dossier);
+			$oTipoDossier = new TipoDossier($id_tipo_dossier);
 			$app = $oTipoDossier->getApp();
 			$class = $oTipoDossier->getClass();
 			if (empty($class)) continue;
@@ -607,12 +703,10 @@ class TrasladoDl {
 					// Lo hago a parte.
 					break;
 				case 'MatriculaDl':
-					/*
 					$gestor = "$app\\model\\entity\\Gestor$class";
 					$ges = new $gestor();
 					$ges->setoDbl($oDBorg);
 					$colection = $ges->getMatriculas(array('id_nom'=>$this->iid_nom));
-					*/
 					break;
 				case 'Traslado':
 					$gestor = "$app\\model\\entity\\Gestor$class";
@@ -621,57 +715,11 @@ class TrasladoDl {
 					$colection = $ges->getTraslados(array('id_nom'=>$this->iid_nom));
 					break;
 				case 'AsistenteDl':
-					// Los Out pasan a Dl si la dl destino es la que organiza.
-					$gestor = "$app\\model\\entity\\GestorAsistenteOut";
-					$ges = new $gestor();
-					$ges->setoDbl($oDBorg);
-					$colection = $ges->getAsistentesOut(array('id_nom'=>$this->iid_nom));
-					foreach ($colection as $oAsistenteOut) {
-						$oAsistenteOut->setoDbl($oDBorg);
-						$oAsistenteOut->DBCarregar();
-						$id_activ = $oAsistenteOut->getId_activ();
-						$oActividad = new ActividadAll($id_activ);
-						// si es de la sf quito la 'f'
-						$dl_org = preg_replace('/f$/', '', $oActividad->getDl_org());
-						if ($dl_org == $this->sdl_dst) {
-							$oAsistenteDl = new AsistenteDl();
-							$oAsistenteDl->setoDbl($oDBdst);
-							$oAsistenteDl = $this->copiar($oAsistenteOut,$oAsistenteDl); 
-							$oAsistenteDl->DBGuardar();
-						} else{
-							$NuevoObj = clone $oAsistenteOut;
-							$NuevoObj->setoDbl($oDBdst);
-							if (method_exists($NuevoObj,'setId_item') === true) $NuevoObj->setId_item(null);
-							$NuevoObj->setTraslado('t');
-							$NuevoObj->DBGuardar();
-						}
-					}
-					// Los Dl pasan a Out
-					$gestor = "$app\\model\\entity\\GestorAsistenteDl";
-					$ges = new $gestor();
-					$ges->setoDbl($oDBorg);
-					$colection = $ges->getAsistentesDl(array('id_nom'=>$this->iid_nom));
-					foreach ($colection as $oAsistenteDl) {
-						$oAsistenteDl->setoDbl($oDBorg);
-						$oAsistenteDl->DBCarregar();
-						$oAsistenteOut = new AsistenteOut();
-						$oAsistenteOut->setoDbl($oDBdst);
-						$oAsistenteOut = $this->copiar($oAsistenteDl,$oAsistenteOut); 
-						$oAsistenteOut->setTraslado('t');
-						$oAsistenteOut->DBGuardar();
-					}
-					// Los Ex no deberían existir, son gente de otras dl, no afecta al traslado
-					// reseteo la variable.
-					$colection = array();
+					// Lo hago a parte porque está en la base de datos exterior.
 					break;
 				case 'AsistenteCargo':
-					// De momento no lo traslado.
-					/*
-					$gestor = "$app\\model\\entity\\Gestor$class";
-					$ges = new $gestor();
-					$ges->setoDbl($oDBorg);
-					$colection = $ges->getActividadCargos(array('id_nom'=>$this->iid_nom));
-					*/
+					// No hace falta, porque se guardan en la dl que organiza la actividad.
+					// Está en la base de datos exterior.
 					break;
 			}
 			if (!empty($colection)) {
@@ -682,7 +730,13 @@ class TrasladoDl {
 					$NuevoObj = clone $Objeto;
 					$NuevoObj->setoDbl($oDBdst);
 					if (method_exists($NuevoObj,'setId_item') === true) $NuevoObj->setId_item(null);
-					$NuevoObj->DBGuardar();
+                    if ($NuevoObj->DBGuardar() === false) {
+                        $error .= '<br>'.sprintf(_("No se ha guardado el dossier: %s"),$class);
+                    } else { // Borrar excepto traslado
+                        if ($class != 'Traslado') {
+                            $Objeto->DBEliminar();
+                        }
+                    }
 				}
 			}
 			// también copia el estado del dossier
@@ -705,7 +759,7 @@ class TrasladoDl {
 		$error = '';
 		// apunto el traslado.
 		$oDBorg = $this->conexionOrg();
-		$oTraslado = new personas\model\entity\Traslado();
+		$oTraslado = new Traslado();
 		$oTraslado->setoDbl($oDBorg);
 		$oTraslado->setId_nom($this->iid_nom);
 		$oTraslado->setF_traslado($this->df_dl,FALSE);
@@ -726,18 +780,32 @@ class TrasladoDl {
 		}
 	}
 
-	private function copiar($oOrigen, $oDestino) {
-		$oDestino->setId_activ($oOrigen->getId_activ()); 
-		$oDestino->setId_nom($oOrigen->getId_nom()); 
-		$oDestino->setPropio($oOrigen->getPropio()); 
-		$oDestino->setEst_ok($oOrigen->getEst_ok()); 
-		$oDestino->setCfi($oOrigen->getCfi());    
-		$oDestino->setCfi_con($oOrigen->getCfi_con()); 
-		$oDestino->setFalta($oOrigen->getFalta()); 
-		$oDestino->setEncargo($oOrigen->getEncargo()); 
-		$oDestino->setCama($oOrigen->getCama()); 
-		$oDestino->setObserv($oOrigen->getObserv()); 
-		return $oDestino;
+	private function copiarAsistencia($oOrigen, $oDestino) {
+	    // Hay que comprobar que la actividad existe,
+	    // TODO: y que esta accesible. Sino, ver si hay que importarla.
+	    if ($this->testActividad($oOrigen->getId_activ()) ) {
+            $oDestino->setId_activ($oOrigen->getId_activ()); 
+            $oDestino->setId_nom($oOrigen->getId_nom()); 
+            $oDestino->setPropio($oOrigen->getPropio()); 
+            $oDestino->setEst_ok($oOrigen->getEst_ok()); 
+            $oDestino->setCfi($oOrigen->getCfi());    
+            $oDestino->setCfi_con($oOrigen->getCfi_con()); 
+            $oDestino->setFalta($oOrigen->getFalta()); 
+            $oDestino->setEncargo($oOrigen->getEncargo()); 
+            $oDestino->setCama($oOrigen->getCama()); 
+            $oDestino->setObserv($oOrigen->getObserv()); 
+            return $oDestino;
+	    }
+	}
+	
+	private function testActividad($id_activ) {
+	    $gesActividades = new GestorActividadAll();
+	    $cActividades = $gesActividades->getActividades(['id_activ' => $id_activ]);
+	    if (!empty($cActividades) && count($cActividades) == 1) {
+	        return TRUE;
+	    } else {
+	        return FALSE;
+	    }
 	}
 
 }

@@ -239,6 +239,19 @@ class PersonaNota Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
+			/* En la base de datos esite un trigger 'e_notas_insert_trigger' para poner la nota en el esquema correspondiente
+			 * Por eso hay que decir el id_schema en el INSERT:
+             *       DECLARE n text;
+             *       BEGIN
+             *       SELECT schema into n FROM public.db_idschema WHERE id=NEW.id_schema;
+             *       CASE n
+             *           WHEN 'restov', 'restof' THEN
+             *               EXECUTE 'INSERT INTO ' || quote_ident(n) || '.e_notas_ex SELECT $1.* ' USING NEW;
+             *           ELSE
+             *               EXECUTE 'INSERT INTO ' || quote_ident(n) || '.e_notas_dl SELECT $1.* ' USING NEW;
+             *       END CASE;
+			 */
+		        
 			array_unshift($aDades, $this->iid_schema, $this->iid_nom);
 			$campos="(id_schema,id_nom,id_nivel,id_asignatura,id_situacion,acta,f_acta,detalle,preceptor,id_preceptor,epoca,id_activ,nota_num,nota_max,tipo_acta)";
 			$valores="(:id_schema,:id_nom,:id_nivel,:id_asignatura,:id_situacion,:acta,:f_acta,:detalle,:preceptor,:id_preceptor,:epoca,:id_activ,:nota_num,:nota_max,:tipo_acta)";		

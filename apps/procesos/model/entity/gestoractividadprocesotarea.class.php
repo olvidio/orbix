@@ -119,6 +119,11 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	    $iid_tipo_activ = $oActividad->getId_tipo_activ();
 	    $oTipo = new TipoDeActividad(array('id_tipo_activ'=>$iid_tipo_activ));
 	   
+	    // Creo que cuando pasa es que no existe la actividad (pero se tiene el id_activ)
+	    if (empty($oActividad) OR empty($iid_tipo_activ)) {
+            echo sprintf(_("La actividad: %s ya no existe"),$iid_activ);
+            return TRUE;
+	    }
 	    $dl_org = $oActividad->getDl_org();
         $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
         

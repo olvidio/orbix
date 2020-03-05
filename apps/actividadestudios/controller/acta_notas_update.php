@@ -52,13 +52,8 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 		$aWhere = [];
 		$aOperador = [];
 		$id_nom=$oMatricula->getId_nom();
-		// para saber a que schema pertenece la persona
-		$oPersona = Persona::NewPersona($id_nom);
-		if (!is_object($oPersona)) {
-			$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
-			continue;
-		}
-		$id_schema = $oPersona->getId_schema();
+		// para saber a que schema pertenece la persona, utilizo el de la matrícula
+		$id_schema = $oMatricula->getId_schema();
 		$id_situacion=$oMatricula->getId_situacion();
 		$preceptor=$oMatricula->getPreceptor();
 		$nota_num=$oMatricula->getNota_num();
@@ -74,6 +69,11 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 			if (!empty($nota_num) && $nota_num/$nota_max < 0.6) {
 				$nn = $nota_num/$nota_max * 10;
 				// Ahora si la guardo como examinado
+                $oPersona = Persona::NewPersona($id_nom);
+                if (!is_object($oPersona)) {
+                    $msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
+                    continue;
+                }
 				$error .= sprintf(_("nota no guardada para %s porque la nota (%s) no llega al mínimo: 6"),$oPersona->getNombreApellidos(),$nn)."\n";
 				continue;
 			}

@@ -77,6 +77,9 @@ class GestorMatricula Extends core\ClaseGestor {
 	 */
 	function getMatriculasQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
+		$clasename = get_class($this);
+		$nomClase = join('', array_slice(explode('\\', $clasename), -1));
+		
 		$oMatriculaSet = new core\Set();
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorMatricula.query';
@@ -87,7 +90,14 @@ class GestorMatricula Extends core\ClaseGestor {
 			$a_pkey = array('id_activ' => $aDades['id_activ'],
 							'id_asignatura' => $aDades['id_asignatura'],
 							'id_nom' => $aDades['id_nom']);
-			$oMatricula= new Matricula($a_pkey);
+			switch ($nomClase) {
+			    case 'GestorMatricula':
+                    $oMatricula= new Matricula($a_pkey);
+			        break;
+			    case 'GestorMatriculaDl':
+                    $oMatricula= new MatriculaDl($a_pkey);
+			        break;
+			}
 			$oMatricula->setAllAtributes($aDades);
 			$oMatriculaSet->add($oMatricula);
 		}
@@ -104,6 +114,9 @@ class GestorMatricula Extends core\ClaseGestor {
 	function getMatriculas($aWhere=array(),$aOperators=array()) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
+		$clasename = get_class($this);
+		$nomClase = join('', array_slice(explode('\\', $clasename), -1));
+		
 		$oMatriculaSet = new core\Set();
 		$oCondicion = new core\Condicion();
 		$aCondi = array();
@@ -141,7 +154,14 @@ class GestorMatricula Extends core\ClaseGestor {
 			$a_pkey = array('id_activ' => $aDades['id_activ'],
 							'id_asignatura' => $aDades['id_asignatura'],
 							'id_nom' => $aDades['id_nom']);
-			$oMatricula= new Matricula($a_pkey);
+			switch ($nomClase) {
+			    case 'GestorMatricula':
+                    $oMatricula= new Matricula($a_pkey);
+			        break;
+			    case 'GestorMatriculaDl':
+                    $oMatricula= new MatriculaDl($a_pkey);
+			        break;
+			}
 			$oMatricula->setAllAtributes($aDades);
 			$oMatriculaSet->add($oMatricula);
 		}
@@ -152,4 +172,3 @@ class GestorMatricula Extends core\ClaseGestor {
 
 	/* METODES GET i SET --------------------------------------------------------*/
 }
-?>

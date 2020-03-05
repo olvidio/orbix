@@ -30,10 +30,9 @@ class AsistenteIn Extends AsistentePub {
 	 *
 	 * @param integer|array iid_activ,iid_nom
 	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
-	 */
 	// Crec que no cal fer res
 	function __construct($a_id='') {
-		$oDbl = $GLOBALS['oDBE'];
+		$oDbl = $GLOBALS['oDBEP'];
 		if (is_array($a_id)) { 
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
@@ -42,8 +41,9 @@ class AsistenteIn Extends AsistentePub {
 			}
 		}
 		$this->setoDbl($oDbl);
-		$this->setNomTabla('av_asistentes_in');
+		$this->setNomTabla('d_asistentes_de_paso');
 	}
+	 */
 	/* METODES PUBLICS ----------------------------------------------------------*/
 	/* METODES ALTRES  ----------------------------------------------------------*/
 	/* METODES PRIVATS ----------------------------------------------------------*/

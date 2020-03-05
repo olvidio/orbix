@@ -47,12 +47,12 @@ class Persona {
 			$oPersona = $cPersonasDl[0];
 		} else {
 			$gesPersonaEx = new GestorPersonaEx();
-			$cPersonasEx = $gesPersonaEx->getPersonasEx(array('id_nom'=>$id_nom));
+			$cPersonasEx = $gesPersonaEx->getPersonasEx(array('id_nom'=>$id_nom,'situacion'=>'A'));
 			if (count($cPersonasEx) > 0) {
 				$oPersona = $cPersonasEx[0];
 			} else {
 				$gesPersonaIn = new GestorPersonaIn();
-				$cPersonasIn = $gesPersonaIn->getPersonasIn(array('id_nom'=>$id_nom));
+				$cPersonasIn = $gesPersonaIn->getPersonasIn(array('id_nom'=>$id_nom,'situacion'=>'A'));
 				if (count($cPersonasIn) > 0) {
 					$oPersona = $cPersonasIn[0];
 				} else {

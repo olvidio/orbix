@@ -46,15 +46,23 @@ class GestorDossier Extends core\ClaseGestor {
 		$oDossierSet = new core\Set();
 		$gesTipoDossier = new GestorTipoDossier();
 		$cTiposDossier = $gesTipoDossier->getTiposDossiers(array('tabla_from'=>$pau));
+		$db_anterior = 0;
 		foreach ($cTiposDossier as $oTipoDossier) {
 			$id_tipo_dossier = $oTipoDossier->getId_tipo_dossier();
 			$tabla_to = $oTipoDossier->getTabla_to();
 			$campo_to = $oTipoDossier->getCampo_to();
+			$db = $oTipoDossier->getDb();
+			// Cambiar la conexión a la DB si está en otra:
+			if ($db != $db_anterior) {
+			    $this->cambiarConexion($db);
+        		$oDbl = $this->getoDbl();
+			}
 			//comprobar que la tabla existe
 			if (empty($tabla_to)) {	continue; }
 			$sQry = "SELECT to_regclass('\"$esquema\".$tabla_to')";
 			$exist = $oDbl->query($sQry)->fetchColumn();
 			if (empty($exist)) {
+    			$db_anterior = $db;
 				continue;
 			}
 			//miro si tiene contenido
@@ -72,7 +80,11 @@ class GestorDossier Extends core\ClaseGestor {
 				$oDossier->DBCarregar();
 				$oDossierSet->add($oDossier);
 			}
+			$db_anterior = $db;
 		}
+		// Volver la conexión al orignal, por si acaso.
+        $this->cambiarConexion(TipoDossier::DB_INTERIOR);
+		
 		return $oDossierSet->getTot();
 	}
 	/**
@@ -156,6 +168,22 @@ class GestorDossier Extends core\ClaseGestor {
 
 	/* METODES PROTECTED --------------------------------------------------------*/
 
+	private function cambiarConexion($db) {
+	    switch ($db) {
+	        case TipoDossier::DB_COMUN:
+                $oDbl = $GLOBALS['oDBC'];
+                $this->setoDbl($oDbl);
+	            break;
+	        case TipoDossier::DB_INTERIOR:
+                $oDbl = $GLOBALS['oDB'];
+                $this->setoDbl($oDbl);
+	            break;
+	        case TipoDossier::DB_EXTERIOR:
+                $oDbl = $GLOBALS['oDBE'];
+                $this->setoDbl($oDbl);
+	            break;
+	    }
+	}
 	/* METODES GET i SET --------------------------------------------------------*/
 }
 ?>
