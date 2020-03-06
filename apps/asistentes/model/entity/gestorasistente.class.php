@@ -254,31 +254,6 @@ class GestorAsistente Extends core\ClaseGestor {
 		if (!empty($msg_err)) { echo $msg_err; }
 		return $cAsistentesOk;
 	}
-	/**
-	 * retorna l'array de id_nom d'Asistents
-	 *   ordenats sOrder. Per defecte: id_nom
-	 *
-	 * @param integer iid_activ el id de l'activitat.
-	 * @param string sOrder(null) l'ordre que es vol. Per defecte: apellido1,apellido1,nom.
-	 * @return array llista de id_nom d'Asistents
-	 */
-	function getListaAsistentesDeActividad($iid_activ,$sOrder='') {
-		//$oDbl = $this->getoDbl();
-		if (empty($sOrder)) $sOrder='id_nom';
-		$a_Lista = array();
-		$sQry = "SELECT a.* FROM d_asistentes_activ a JOIN personas p USING (id_nom)
-		   		WHERE a.id_activ=$iid_activ
-				ORDER BY ".$sOrder;
-		if (($oDblSt = $oDbl->query($sQry)) === false) {
-			$sClauError = 'GestorAsistente.query_order';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return false;
-		}
-		foreach ($oDbl->query($sQry) as $aDades) {
-			$a_Lista[] = $aDades['id_nom'];
-		}
-		return $a_Lista;
-	}
 
 	/**
 	 * retorna l'array d'objectes de tipus Asistente

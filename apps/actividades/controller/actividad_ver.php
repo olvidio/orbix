@@ -275,6 +275,7 @@ $h = $oHash1->linkSinVal();
 
 $oActividadTipo = new actividades\model\ActividadTipo();
 $oActividadTipo->setPerm_jefe($permiso_des);
+$oActividadTipo->setQue('buscar');
 $oActividadTipo->setId_tipo_activ($id_tipo_activ);
 $oActividadTipo->setSfsv($ssfsv);
 $oActividadTipo->setAsistentes($sasistentes);

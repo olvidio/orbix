@@ -146,7 +146,13 @@ class ActividadTipo {
 		$oDesplNomTipo->setOpcion_sel($inom_tipo);
 		$oDesplNomTipo->setBlanco('t');
 		$oDesplNomTipo->setValBlanco('...');
-		//$oDesplNomTipo->setAction('fnjs_act_id_activ()');
+		if (isset($this->que)) {
+		    if ( $this->que == 'buscar') {
+                $oDesplNomTipo->setAction('fnjs_id_activ()');
+            } else {
+                $oDesplNomTipo->setAction('fnjs_act_id_activ()');
+            }
+		}
 
 		$url = ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tipo_get.php';
 		$oHashTipo = new web\Hash();

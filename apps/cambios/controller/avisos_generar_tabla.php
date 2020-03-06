@@ -279,9 +279,6 @@ function soy_encargado($id_nom,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cm
 	$GesZonas = new GestorZona();
 	$cZonas = $GesZonas->getZonas(array('id_nom'=>$id_nom));
 	if (is_array($cZonas) && count($cZonas)>0) {
-		// sacd asistentes de esta actividad
-		$GesAsistentes = new GestorAsistenteDl();
-		$a_Asistentes = $GesAsistentes->getListaAsistentesDeActividad($id_activ); // si estoy en el exterior sólo están los sacd.
 		// sacd de mi zona
 		$GesZonaSacd = new GestorZonaSacd();
 		$rta = 0;
@@ -292,9 +289,13 @@ function soy_encargado($id_nom,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cm
 				case 'Actividad':
 				case 'ActividadDl':
 				case 'ActividadEx':
-					// compruebo si el sacd asiste. En caso de que no lo haya apuntado todavía.
-					$a_sacd_asistente = array_intersect($cSacds, $a_Asistentes);
-					if (count($a_sacd_asistente)>0) $rta += 1;
+					// compruebo si el sacd asiste.
+				    foreach ($cSacds as $id_nom) {
+				        $aWhere = ['id_nom' => $id_nom, 'id_activ' => $id_activ];
+                        $GesAsistentes = new GestorAsistenteDl();
+                        $a_Asistentes = $GesAsistentes->getAsistentes($aWhere);
+					    if (count($a_Asistentes)>0) $rta += 1;
+				    }
 				break;
 				case 'ActividadCargoNoSacd':
 				case 'ActividadCargoSacd':
