@@ -168,7 +168,7 @@ class ActividadDl Extends ActividadAll {
 			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') OR $aDades['publicado'] == 'true')) {
 				$oGestorCanvis = new gestorAvisoCambios();
 				$shortClassName = (new \ReflectionClass($this))->getShortName();
-				$oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $this->aDades, array());
+				$oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $aDadesLast, array());
 			}
 		}
 		return true;

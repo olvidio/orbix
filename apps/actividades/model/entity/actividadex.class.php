@@ -125,6 +125,7 @@ class ActividadEx Extends ActividadAll {
 				$shortClassName = (new \ReflectionClass($this))->getShortName();
 				$oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
 			}
+            $this->setAllAtributes($aDades);
 		} else {
 			// INSERT
 			//$campos="(id_tipo_activ,dl_org,nom_activ,id_ubi,desc_activ,f_ini,h_ini,f_fin,h_fin,tipo_horario,precio,num_asistentes,status,observ,nivel_stgr,observ_material,lugar_esp,tarifa,id_repeticion,publicado,id_tabla,plazas)";
@@ -155,16 +156,16 @@ class ActividadEx Extends ActividadAll {
 			// generar proceso.
 			if (core\ConfigGlobal::is_app_installed('procesos')) {
 				$oGestorActividadProcesoTarea = new procesos\GestorActividadProcesoTarea();
-				$oGestorActividadProcesoTarea->generarProceso($aDades['id_activ']);
+                $oGestorActividadProcesoTarea->generarProceso($aDadesLast['id_activ']);
 			}
+			
 			// anotar cambio.
 			if (core\ConfigGlobal::is_app_installed('cambios') && empty($quiet)) {
 				$oGestorCanvis = new gestorAvisoCambios();
 				$shortClassName = (new \ReflectionClass($this))->getShortName();
-				$oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDades['id_activ'], $aDades, array());
+				$oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $aDadesLast, array());
 			}
 		}
-		$this->setAllAtributes($aDades);
 		return true;
 	}
 

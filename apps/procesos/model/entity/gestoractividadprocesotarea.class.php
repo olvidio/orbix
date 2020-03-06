@@ -1,6 +1,7 @@
 <?php
 namespace procesos\model\entity;
 use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadEx;
 use actividades\model\entity\TipoDeActividad;
 use core;
 use ubis\model\entity\Casa;
@@ -115,7 +116,15 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	 * @return boolean|\procesos\model\entity\id_fase.
 	 */
 	public function generarProceso($iid_activ='',$isfsv='') {
-	    $oActividad = new Actividad(array('id_activ'=>$iid_activ));
+	    // Si se genera al crear una actividad Ex. El objeto Actividad no la encuentra
+	    // porque todavía no se ha importado (y no está en su grupo de actividades).
+	    // Para evitar errores accedo directamente a los datos sin esperar a importarla,
+	    // En principio la dl que la crea es porque va a importarla...
+	    if ($iid_activ < 0 ) {
+	       $oActividad = new ActividadEx(array('id_activ'=>$iid_activ));
+	    } else {
+	       $oActividad = new Actividad(array('id_activ'=>$iid_activ));
+	    }
 	    $iid_tipo_activ = $oActividad->getId_tipo_activ();
 	    $oTipo = new TipoDeActividad(array('id_tipo_activ'=>$iid_tipo_activ));
 	   

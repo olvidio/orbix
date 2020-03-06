@@ -2,6 +2,7 @@
 namespace cambios\model;
 
 use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadEx;
 use cambios\model\entity\Cambio;
 use cambios\model\entity\CambioDl;
 use core\ConfigGlobal;
@@ -140,7 +141,15 @@ class gestorAvisoCambios {
                 $status = $aDadesNew['status']?? $aDadesActuals['status'];
 			break;
             default:
-                $oActividad = new Actividad($iid_activ);
+                // Si se genera al crear una actividad Ex. El objeto Actividad no la encuentra
+                // porque todavía no se ha importado (y no está en su grupo de actividades).
+                // Para evitar errores accedo directamente a los datos sin esperar a importarla,
+                // En principio la dl que la crea es porque va a importarla...
+                if ($iid_activ < 0) {
+                    $oActividad = new ActividadEx($iid_activ);
+                } else {
+                    $oActividad = new Actividad($iid_activ);
+                }
                 $iId_tipo_activ = $oActividad->getId_tipo_activ();
                 $sNomActiv = $oActividad->getNom_activ();
                 $dl_org = $oActividad->getDl_org();

@@ -1,5 +1,7 @@
 <?php
 namespace core;
+use actividades\model\entity\GestorActividadEx;
+
 class DBTrasvase {
 
 	/**
@@ -164,8 +166,51 @@ class DBTrasvase {
 		$esquema = $this->getEsquema();
 		$region = $this->getRegion();
 		$dl = $this->getDl();
+		
+		// Conexión DB resto (comun)
+		$oDBRC = $GLOBALS['oDBRC'];
 		switch ($que) {
 			case 'resto2dl':
+			    // via objetos, para no dar permisos especiales a las tablas:
+				if ($dl == 'cr') {
+				    $dl_org = $region;
+				} else {
+				    $dl_org = $dl;
+				}
+			    $GesActividadesEx = new GestorActividadEx();
+			    $cActividades = $GesActividadesEx->getActividades(['dl_org' => $dl_org]);
+			    if (!empty($cActividades)) {
+			        // Para saber el nuevo id_schema de la dl destino:
+			        if (($qRs = $oDbl->query("SELECT id FROM public.db_idschema WHERE schema = '$this->snew_esquema'")) === false) {
+			            $sClauError = 'Controller.Traslados';
+			            $_SESSION['oGestorErrores']->addErrorAppLastError($qRs, $sClauError, __LINE__, __FILE__);
+			            return false;
+			        }
+			        $aSchema = $qRs->fetch(\PDO::FETCH_ASSOC);
+			        $id_schema = $aSchema['id'];
+			        foreach ($cActividades as $Objeto) {
+			            $Objeto->setoDbl($oDBRC);
+			            $Objeto->DBCarregar();
+			            //print_r($Objeto);
+			            $NuevoObj = clone $Objeto;
+			            if (method_exists($NuevoObj,'setId_item') === true) $NuevoObj->setId_item(null);
+			            $NuevoObj->setoDbl($oDbl);
+			            $NuevoObj->setId_schema($id_schema);
+			            if ($NuevoObj->DBGuardar() === false) {
+			                $error .= '<br>'._("no se ha guardado la nota");
+			            } else {
+			                //borrar la origen:
+			                $Objeto->DBEliminar();
+			            }
+			        }
+			    }
+			    if (empty($error)) {
+			        return true;
+			    } else {
+			        $this->serror = $error;
+			        return false;
+			    }
+			    
 				$oDbl->beginTransaction();
 				if ($dl == 'cr') {
 				    $sql = "INSERT INTO \"$esquema\".a_actividades_dl SELECT * FROM resto.a_actividades_ex WHERE dl_org = '$region';";

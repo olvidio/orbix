@@ -332,7 +332,8 @@ class DBTabla extends DBAbstract {
 		$error = file_get_contents($this->getFileLogW());
 		if(trim($error) != '') {
 			if (ConfigGlobal::is_debug_mode()) {
-			    echo sprintf("PSQL ERROR IN COMMAND: %s<br> mirar en: %s<br>",$command,$this->getFileLogW());
+			    echo sprintf("PSQL ERROR IN COMMAND: %s<br><br> mirar en: %s",$command,$this->getFileLogW());
+			    echo "<pre>$error</pre>";
 			    return FALSE;
 			}
 		}
@@ -352,7 +353,8 @@ class DBTabla extends DBAbstract {
 		$error = file_get_contents($this->getFileLogW());
 		if(trim($error) != '') {
 			if (ConfigGlobal::is_debug_mode()) {
-			    echo sprintf("PSQL ERROR IN COMMAND: %s<br> mirar en: %s<br>",$command,$this->getFileLogW());
+			    echo sprintf("PSQL ERROR IN COMMAND: %s<br><br> mirar en: %s",$command,$this->getFileLogW());
+			    echo "<pre>$error</pre>";
 			}
 		}
 	}
