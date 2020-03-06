@@ -143,32 +143,50 @@ class GestorCambio Extends core\ClaseGestor {
 		} else {
 		    $campo_anotado = 'anotado_sf';
 		}
-		$sQry = "SELECT a.id_schema as id_schema_dl, c.id_schema, c.id_item_cambio, c.id_tipo_cambio, c.id_activ, c.id_tipo_activ, 
+		// Cuando av_cambios_anotados no tiene la fila, No podemos saber si en n cambio de la dl o no.
+		// Vamos a hacer dos consultas separadas y unimos.
+		
+		// Cambios Dl
+		$sQry = "SELECT c.id_schema, c.id_item_cambio, c.id_tipo_cambio, c.id_activ, c.id_tipo_activ, 
                 c.id_fase_sv, c.id_fase_sf, c.dl_org,
                 c.objeto, c.propiedad, c.valor_old, c.valor_new, c.quien_cambia, c.sfsv_quien_cambia, c.timestamp_cambio
-                FROM public.$nom_tabla c LEFT JOIN av_cambios_anotados a
+                FROM av_cambios_dl c LEFT JOIN av_cambios_anotados a
                 ON (c.id_schema = a.id_schema_cambio AND c.id_item_cambio=a.id_item_cambio)
                 WHERE a.$campo_anotado IS NULL OR a.$campo_anotado = 'f'
                 ORDER BY dl_org,id_tipo_activ,timestamp_cambio
                 ";
-
 		if ($oDbl->query($sQry) === FALSE) {
 			$sClauError = 'GestorCambio.llistar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return FALSE;
 		}
 		foreach ($oDbl->query($sQry) as $aDades) {
-		    $id_schema_dl = $aDades['id_schema_dl'];
-		    $id_schema_cambio = $aDades['id_schema'];
 			$a_pkey = array('id_item_cambio' => $aDades['id_item_cambio']);
-			if ($id_schema_dl == $id_schema_cambio) {
-                $oCambio= new CambioDl($a_pkey);
-			} else {
-                $oCambio= new Cambio($a_pkey);
-			}
+            $oCambio= new CambioDl($a_pkey);
 			$oCambio->setAllAtributes($aDades);
 			$oCambioSet->add($oCambio);
 		}
+		// Cambios NO dl
+		$sQry = "SELECT c.id_schema, c.id_item_cambio, c.id_tipo_cambio, c.id_activ, c.id_tipo_activ, 
+                c.id_fase_sv, c.id_fase_sf, c.dl_org,
+                c.objeto, c.propiedad, c.valor_old, c.valor_new, c.quien_cambia, c.sfsv_quien_cambia, c.timestamp_cambio
+                FROM ONLY public.av_cambios c LEFT JOIN av_cambios_anotados a
+                ON (c.id_schema = a.id_schema_cambio AND c.id_item_cambio=a.id_item_cambio)
+                WHERE a.$campo_anotado IS NULL OR a.$campo_anotado = 'f'
+                ORDER BY dl_org,id_tipo_activ,timestamp_cambio
+                ";
+		if ($oDbl->query($sQry) === FALSE) {
+			$sClauError = 'GestorCambio.llistar.prepare';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return FALSE;
+		}
+		foreach ($oDbl->query($sQry) as $aDades) {
+			$a_pkey = array('id_item_cambio' => $aDades['id_item_cambio']);
+            $oCambio= new Cambio($a_pkey);
+			$oCambio->setAllAtributes($aDades);
+			$oCambioSet->add($oCambio);
+		}
+		
 		return $oCambioSet->getTot();
 	}
 	/**
