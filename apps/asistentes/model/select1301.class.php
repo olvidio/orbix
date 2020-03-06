@@ -111,7 +111,9 @@ class Select1301 {
 
 		$i=0;
 		$a_valores=array();
-		$cActividadesAsistente = $gesAsistente->getActividadesDeAsistente(array('id_nom'=>  $this->id_pau),$aWhere,$aOperator,TRUE);
+		$aWhereNom = ['id_nom'=>  $this->id_pau];
+		$aOperadorNom = [];
+		$cActividadesAsistente = $gesAsistente->getActividadesDeAsistente($aWhereNom, $aOperadorNom,$aWhere,$aOperator,TRUE);
 		foreach ($cActividadesAsistente as $oAsistente) {
 			$i++;
 			$id_activ=$oAsistente->getId_activ();

@@ -169,11 +169,12 @@ foreach ($cCentros as $oCentro) {
 		$ap_nom=$oPersona->getApellidosNombre();
 		$aWhereNom['id_nom'] = $id_nom;
 		$aWhereNom['propio'] = 't';
+		$aOperadorNom = [];
         $aWhereAct['f_ini'] = "'$inicioIso','$finIso'";
 		$aOperadorAct['f_ini'] = "BETWEEN";
 
 		$GesAsistencias = new asistentes\GestorAsistente();
-		$cAsistencias = $GesAsistencias->getActividadesDeAsistente($aWhereNom,$aWhereAct,$aOperadorAct);
+		$cAsistencias = $GesAsistencias->getActividadesDeAsistente($aWhereNom,$aOperadorNom,$aWhereAct,$aOperadorAct);
 		$aActividades = array();
 		if (is_array($cAsistencias) && count($cAsistencias) == 0) {
 			$nom_activ=_("pendiente de solicitar");

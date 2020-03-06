@@ -143,8 +143,9 @@ foreach ($cCentros as $oCentroDl) {
 		//consulta de las actividades de cada persona
 		//$condicion = "propio='t' AND $periodo AND id_tipo_activ::text ~ '^1(12|33)'";
 		$aWhereNom['id_nom'] = $id_nom;
+		$aOperadorNom = [];
 		$GesAsistente = new asistentes\GestorAsistente();
-		$cAsistentes = $GesAsistente->getActividadesDeAsistente($aWhereNom,$aWhereAct,$aOperadorAct);
+		$cAsistentes = $GesAsistente->getActividadesDeAsistente($aWhereNom,$aOperadorNom,$aWhereAct,$aOperadorAct);
 		$a=0;
 		foreach ($cAsistentes as $oAsistente) {
 			$a++;

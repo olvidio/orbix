@@ -7,6 +7,7 @@ use asistentes\model\entity\GestorAsistente;
 use core;
 use personas\model\entity\PersonaSacd;
 use core\ConfigGlobal;
+use asistentes\model\entity\Asistente;
 /**
  * GestorActividadCargo
  *
@@ -138,10 +139,11 @@ class GestorActividadCargo Extends core\ClaseGestor {
 	 * @return array Una col·lecció d'arrays: id_activ,id_nom,propio,id_cargo;
 	 */
 	function getCargoOAsistente($iid_nom,$aWhereAct=array(),$aOperadorAct=array()) {
-		$oDbl = $this->getoDbl();
 		
 		$GesAsistente = new GestorAsistente();
-	   	$cAsistentes = $GesAsistente->getActividadesDeAsistente(array('id_nom'=>$iid_nom),$aWhereAct,$aOperadorAct);
+		$aWhereNom = ['id_nom' => $iid_nom, 'plaza' => Asistente::PLAZA_ASIGNADA];
+		$aOperadorNom = ['plaza' => '>=']; 
+	   	$cAsistentes = $GesAsistente->getActividadesDeAsistente($aWhereNom,$aOperadorNom,$aWhereAct,$aOperadorAct);
 		
 	   	$cCargos = $this->getActividadCargos(array('id_nom'=>$iid_nom));
 		// seleccionar las actividades segun los criterios de búsqueda.

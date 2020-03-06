@@ -208,7 +208,9 @@ class Select1303 {
 		$GesAsistentes = new asistentes\GestorAsistente();
 		if (!empty($this->Qid_activ)) {  // ¿? ya tengo una actividad concreta (vengo del dossier de esa actividad).
 			$aWhere['id_activ'] = $this->Qid_activ;
-			$cAsistencias = $GesAsistentes->getActividadesDeAsistente(array('id_nom'=>  $this->id_pau,'id_activ'=>  $this->Qid_activ),$aWhere,$aOperadores,true);
+			$aWhereNom = ['id_nom'=>  $this->id_pau,'id_activ'=> $this->Qid_activ];
+			$aOperadorNom = [];
+			$cAsistencias = $GesAsistentes->getActividadesDeAsistente($aWhereNom, $aOperadorNom,$aWhere,$aOperadores,true);
 		} else {
 			if (empty($this->todos)) {
 				$aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
@@ -218,7 +220,9 @@ class Select1303 {
 			$aWhere['id_tipo_activ'] = '^'.core\ConfigGlobal::mi_sfsv().'(12)|(22)|(33)|(325)'; // el 325 correponde al semestre de invierno.
 			$aOperadores['id_tipo_activ'] = '~';
 
-			$cAsistencias = $GesAsistentes->getActividadesDeAsistente(array('id_nom'=>  $this->id_pau,'propio'=>'t'),$aWhere,$aOperadores,true);
+			$aWhereNom = ['id_nom'=>  $this->id_pau,'propio'=> 't'];
+			$aOperadorNom = [];
+			$cAsistencias = $GesAsistentes->getActividadesDeAsistente($aWhereNom, $aOperadorNom,$aWhere,$aOperadores,true);
 		}
 		if (is_array($cAsistencias)) {
 			$n = count($cAsistencias);

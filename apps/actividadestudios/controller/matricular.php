@@ -91,7 +91,8 @@ foreach($cAlumnos as $oPersonaDl) {
 	if (empty($Qid_activ)) { 
 		$GesAsistentes  = new asistentes\GestorAsistenteDl();
 		$aWhereNom = array('id_nom'=>$id_nom,'propio'=>'t');
-		$cAsistencias  = $GesAsistentes->getActividadesDeAsistente($aWhereNom,$aWhere,$aOperadores);
+		$aOperadorNom = [];
+		$cAsistencias  = $GesAsistentes->getActividadesDeAsistente($aWhereNom,$aOperadorNom,$aWhere,$aOperadores);
 	} else { // puede ser que ya le pase la actividad
 		$oAsistente = new asistentes\AsistenteDl(array('id_activ'=>$Qid_activ,'id_nom'=>$id_nom));
 		$oAsistente->DBCarregar();

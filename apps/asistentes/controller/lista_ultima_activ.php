@@ -139,7 +139,9 @@ foreach ($cPersonas as $oPersona) {
     $ape_nom = $oPersona->getApellidosNombre();
     
     $GesAsistente = new GestorAsistente();
-    $cAsistentes = $GesAsistente->getActividadesDeAsistente(['id_nom'=>$id_nom],$aWhereA,$aOperadorA,TRUE);
+    $aWhereNom = ['id_nom'=>$id_nom];
+    $aOperadorNom = [];
+    $cAsistentes = $GesAsistente->getActividadesDeAsistente($aWhereNom,$aOperadorNom,$aWhereA,$aOperadorA,TRUE);
     if (count($cAsistentes) > 0) {
         reset($cAsistentes);
         $oAsistente = current($cAsistentes);

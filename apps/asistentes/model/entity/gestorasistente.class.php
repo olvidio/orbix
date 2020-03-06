@@ -75,7 +75,7 @@ class GestorAsistente Extends core\ClaseGestor {
 	 * @param boolean reverse: ordenar por fecha de nuevo a viejo.  
 	 * @return array Una col·lecció d'objectes de tipus Asistente
 	 */
-	function getActividadesDeAsistente($aWhereNom,$aWhere=array(),$aOperators=array(),$reverse=FALSE) {
+	function getActividadesDeAsistente($aWhereNom,$aOperadorNom,$aWhere=array(),$aOperators=array(),$reverse=FALSE) {
 		// todas las actividades de la persona
 		// Por el momento si está en la dmz no puede ver las asistencias:
 	    if (ConfigGlobal::is_dmz()) {
@@ -88,7 +88,7 @@ class GestorAsistente Extends core\ClaseGestor {
 		$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');
 
 		$namespace = __NAMESPACE__;
-		$cAsistencias = $this->getConjunt($a_Clases,$namespace,$aWhereNom, array());
+		$cAsistencias = $this->getConjunt($a_Clases,$namespace,$aWhereNom, $aOperadorNom);
 		//$cAsistencias = $this->getConjunt($a_Clases,$namespace,array('id_nom'=>$id_nom), array());
 		// seleccionar las actividades segun los criterios de búsqueda.
 		$GesActividades = new actividades\GestorActividad();
