@@ -117,7 +117,7 @@ case "nuevo":
 	$Qid_repeticion = (integer) \filter_input(INPUT_POST, 'id_repeticion');
 	$Qplazas = (integer) \filter_input(INPUT_POST, 'plazas');
 	$Qtarifa = (integer) \filter_input(INPUT_POST, 'tarifa');
-	$Qprecio = (float) \filter_input(INPUT_POST, 'precio');
+	$Qprecio = \filter_input(INPUT_POST, 'precio', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 	
 	$Qdl_org = (string) \filter_input(INPUT_POST, 'dl_org');
 	$Qnom_activ = (string) \filter_input(INPUT_POST, 'nom_activ');
@@ -278,7 +278,7 @@ case "cmb_tipo": // sólo cambio el tipo a una actividad existente //___________
 	$Qid_repeticion = (integer) \filter_input(INPUT_POST, 'id_repeticion');
 	$Qplazas = (integer) \filter_input(INPUT_POST, 'plazas');
 	$Qtarifa = (integer) \filter_input(INPUT_POST, 'tarifa');
-	$Qprecio = (float) \filter_input(INPUT_POST, 'precio');
+	$Qprecio = \filter_input(INPUT_POST, 'precio', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 	
 	$Qnom_activ = (string) \filter_input(INPUT_POST, 'nom_activ');
 	$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
@@ -345,7 +345,7 @@ case "editar": // editar la actividad.
 	$Qid_repeticion = (integer) \filter_input(INPUT_POST, 'id_repeticion');
 	$Qplazas = (integer) \filter_input(INPUT_POST, 'plazas');
 	$Qtarifa = (integer) \filter_input(INPUT_POST, 'tarifa');
-	$Qprecio = (float) \filter_input(INPUT_POST, 'precio');
+	$Qprecio = \filter_input(INPUT_POST, 'precio', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 	
 	$Qdl_org = (string) \filter_input(INPUT_POST, 'dl_org');
 	$Qnom_activ = (string) \filter_input(INPUT_POST, 'nom_activ');

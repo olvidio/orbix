@@ -1,11 +1,5 @@
 <?php
 namespace cambios\model\entity;
-use actividades\model\entity\Actividad;
-use core;
-use personas\model\entity\Persona;
-use procesos\model\entity\GestorActividadFase;
-use procesos\model\entity\GestorActividadProcesoTarea;
-use ubis\model\entity\Ubi;
 use core\ConfigGlobal;
 /**
  * Fitxer amb la Classe que accedeix a la taula av_cambios
