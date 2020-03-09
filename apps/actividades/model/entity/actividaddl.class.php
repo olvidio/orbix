@@ -15,7 +15,7 @@ use procesos\model\entity\GestorActividadProcesoTarea;
 
 class ActividadDl Extends ActividadAll {
 	/* ATRIBUTS ----------------------------------------------------------------- */
-
+    
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
 	/**
@@ -158,7 +158,7 @@ class ActividadDl Extends ActividadAll {
 			$this->setAllAtributes($aDadesLast);
 
 			// generar proceso.
-			if (core\configGlobal::is_app_installed('procesos')) {
+			if (core\configGlobal::is_app_installed('procesos') && $this->NoGenerarProceso === FALSE) {
 				$oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
 				$oGestorActividadProcesoTarea->generarProceso($aDadesLast['id_activ']);
 			}
@@ -217,7 +217,7 @@ class ActividadDl Extends ActividadAll {
 	 * Elimina el registre de la base de dades corresponent a l'objecte.
 	 *
 	 */
-	public function DBEliminar() {
+	public function DBEliminar($quiet=0) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if ($this->DBCarregar('guardar') === false) {
@@ -226,7 +226,7 @@ class ActividadDl Extends ActividadAll {
 		} else {
 			// Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
 			// Anoto el cambio si la actividad está publicada
-			if (core\ConfigGlobal::is_app_installed('cambios') OR $this->bpublicado === TRUE) {
+			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') OR $this->bpublicado === TRUE)) {
 			    // per carregar les dades a $this->aDadesActuals i poder posar-les als canvis.
 			    $this->DBCarregar('guardar');
 				// ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.
@@ -241,6 +241,23 @@ class ActividadDl Extends ActividadAll {
 			}
 			return true;
 		}
+	}
+
+	/**
+	 * Canvia el id_activ
+	 *
+	 */
+	public function DBCambioId($id_new) {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		
+		$id_actual = $this->getId_activ();
+        if (($oDbl->exec("UPDATE $nom_tabla SET id_activ=$id_new WHERE id_activ=$id_actual")) === false) {
+            $sClauError = 'ActividadDl.CambioId';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        return true;
 	}
 	
 	/* METODES ALTRES  ----------------------------------------------------------*/

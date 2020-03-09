@@ -333,6 +333,7 @@ class DBTabla extends DBAbstract {
 		if(trim($error) != '') {
 			if (ConfigGlobal::is_debug_mode()) {
 			    echo sprintf("PSQL ERROR IN COMMAND: %s<br><br> mirar en: %s",$command,$this->getFileLogW());
+			    echo "<br>"._("Si sólo salen números, son las filas que se ha insertado: Está bien.");
 			    echo "<pre>$error</pre>";
 			    return FALSE;
 			}
@@ -354,6 +355,7 @@ class DBTabla extends DBAbstract {
 		if(trim($error) != '') {
 			if (ConfigGlobal::is_debug_mode()) {
 			    echo sprintf("PSQL ERROR IN COMMAND: %s<br><br> mirar en: %s",$command,$this->getFileLogW());
+			    echo "<br>"._("Si sólo salen números, son las filas que se ha insertado: Está bien.");
 			    echo "<pre>$error</pre>";
 			}
 		}

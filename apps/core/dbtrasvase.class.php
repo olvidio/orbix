@@ -1,6 +1,27 @@
 <?php
 namespace core;
+use actividades\model\entity\ActividadDl;
+use actividades\model\entity\ActividadEx;
+use actividades\model\entity\GestorActividadDl;
 use actividades\model\entity\GestorActividadEx;
+use devel\model\entity\MapId;
+use ubis\model\entity\CasaDl;
+use ubis\model\entity\CdcDlxDireccion;
+use ubis\model\entity\CentroDl;
+use ubis\model\entity\CentroEllas;
+use ubis\model\entity\CentroEllos;
+use ubis\model\entity\CtrDlxDireccion;
+use ubis\model\entity\DireccionCdcDl;
+use ubis\model\entity\DireccionCdcEx;
+use ubis\model\entity\DireccionCtrDl;
+use ubis\model\entity\DireccionCtrEx;
+use ubis\model\entity\GestorCasaEx;
+use ubis\model\entity\GestorCdcExxDireccion;
+use ubis\model\entity\GestorCentroEx;
+use ubis\model\entity\GestorCtrExxDireccion;
+use ubis\model\entity\GestorTelecoCdcEx;
+use ubis\model\entity\GestorTelecoCtrEx;
+use ubis\model\entity\TelecoCdcDl;
 
 class DBTrasvase {
 
@@ -40,8 +61,10 @@ class DBTrasvase {
 		return $this->sdbname;
 	}
 	
-	private function getConfigConexion() {
-		$esquema = $this->getEsquema();
+	private function getConfigConexion($esquema='') {
+	    if (empty($esquema)) {
+	        $esquema = $this->getEsquema();
+	    }
 	    switch ($this->getDbName()) {
 	        case 'comun':
 	            $oConfigDB = new ConfigDB('comun'); //de la database comun
@@ -68,8 +91,8 @@ class DBTrasvase {
 	    return $config;
 	}
 	
-	private function getConexionPDO() {
-	    $config = $this->getConfigConexion();
+	private function getConexionPDO($esquema='') {
+	    $config = $this->getConfigConexion($esquema);
 	    
 	    $oConnection = new dbConnection($config);
 	    return $oConnection->getPDO();
@@ -93,6 +116,19 @@ class DBTrasvase {
 	private function getoDbl() {
 		return $this->oDbl;
 	}
+
+	/**
+	 * Recupera l'atribut oDbl de Grupo
+	 *
+	 * @return object oDbResto
+	 */
+	private function getoDbResto() {
+	    if (empty($this->oDbResto)) {
+	       $this->oDbResto = $this->getConexionPDO('resto');
+	    }
+		return $this->oDbResto;
+	}
+
 
 	public function getDir() {
 		$this->sdir = empty($this->sdir)? ConfigGlobal::$directorio.'/log/db' : $this->sdir;
@@ -140,7 +176,6 @@ class DBTrasvase {
 	public function fix_seq() {
 		$oDbl = $this->getoDbl();
 		$esquema = $this->getEsquema();
-		$dl = $this->getDl();
 		// buscar todas las secuencias del esquema y crear la instruccion sql para poner el valor MAX.
 		// Guardo las instrucciones en un fichero <== No se puede si no soy superusuario: Lo hago una por una:
 		$sql = "SELECT  'SELECT SETVAL(' ||quote_literal(quote_ident(PGT.schemaname)|| '.'||quote_ident(S.relname))|| ', MAX(' ||quote_ident(C.attname)|| ') ) FROM ' ||quote_ident(PGT.schemaname)|| '.'||quote_ident(T.relname)|| ';'
@@ -162,13 +197,12 @@ class DBTrasvase {
 	// COMUN
 	//-------------- Actividades ----------------------
 	public function actividades($que) {
+		// Conexión DB comun
 		$oDbl = $this->getoDbl();
-		$esquema = $this->getEsquema();
+
 		$region = $this->getRegion();
 		$dl = $this->getDl();
 		
-		// Conexión DB resto (comun)
-		$oDBRC = $GLOBALS['oDBRC'];
 		switch ($que) {
 			case 'resto2dl':
 			    // via objetos, para no dar permisos especiales a las tablas:
@@ -179,28 +213,28 @@ class DBTrasvase {
 				}
 			    $GesActividadesEx = new GestorActividadEx();
 			    $cActividades = $GesActividadesEx->getActividades(['dl_org' => $dl_org]);
+			    $error = '';
 			    if (!empty($cActividades)) {
-			        // Para saber el nuevo id_schema de la dl destino:
-			        if (($qRs = $oDbl->query("SELECT id FROM public.db_idschema WHERE schema = '$this->snew_esquema'")) === false) {
-			            $sClauError = 'Controller.Traslados';
-			            $_SESSION['oGestorErrores']->addErrorAppLastError($qRs, $sClauError, __LINE__, __FILE__);
-			            return false;
-			        }
-			        $aSchema = $qRs->fetch(\PDO::FETCH_ASSOC);
-			        $id_schema = $aSchema['id'];
-			        foreach ($cActividades as $Objeto) {
-			            $Objeto->setoDbl($oDBRC);
-			            $Objeto->DBCarregar();
-			            //print_r($Objeto);
-			            $NuevoObj = clone $Objeto;
-			            if (method_exists($NuevoObj,'setId_item') === true) $NuevoObj->setId_item(null);
-			            $NuevoObj->setoDbl($oDbl);
-			            $NuevoObj->setId_schema($id_schema);
-			            if ($NuevoObj->DBGuardar() === false) {
-			                $error .= '<br>'._("no se ha guardado la nota");
+			        foreach ($cActividades as $oActividad) {
+			            $oActividad->DBCarregar();
+			            $aDades = $oActividad->getTot();
+			            //print_r($oActividad);
+			            $oActividadDl = new ActividadDl();
+			            $oActividadDl->setoDbl($oDbl);
+			            $oActividadDl->setAllAtributes($aDades,TRUE);
+			            $oActividadDl->setNoGenerarProceso(TRUE);
+			            
+			            if ($oActividadDl->DBGuardar(1) === false) { // Pongo el param quiet=1 para que no anote cambios.
+			                $error .= '<br>'._("no se ha guardado la actividad");
 			            } else {
+			                // Al hacer INSERT se genera un id_activ nuevo. Para conservar el original:
+			                $id_old = $aDades['id_activ'];
+			                $pkey = ['objeto' => 'Actividad', 'id_resto' => $id_old];
+			                $oMapId = new MapId($pkey);
+			                $oMapId->setId_dl($oActividadDl->getId_activ());
+			                $oMapId->DBGuardar();
 			                //borrar la origen:
-			                $Objeto->DBEliminar();
+			                $oActividad->DBEliminar();
 			            }
 			        }
 			    }
@@ -210,106 +244,142 @@ class DBTrasvase {
 			        $this->serror = $error;
 			        return false;
 			    }
-			    
-				$oDbl->beginTransaction();
-				if ($dl == 'cr') {
-				    $sql = "INSERT INTO \"$esquema\".a_actividades_dl SELECT * FROM resto.a_actividades_ex WHERE dl_org = '$region';";
-				} else {
-				    $sql = "INSERT INTO \"$esquema\".a_actividades_dl SELECT * FROM resto.a_actividades_ex WHERE dl_org = '$dl';";
-				}
-				$oDbl->exec($sql);
-				$sql = "UPDATE \"$esquema\".a_actividades_dl SET id_tabla='dl';";
-				$oDbl->exec($sql);
-				if ($dl == 'cr') {
-                    $sql = "DELETE FROM resto.a_actividades_ex WHERE dl_org = '$region'";
-				} else {
-                    $sql = "DELETE FROM resto.a_actividades_ex WHERE dl_org = '$dl'";
-				}
-				$oDbl->exec($sql);
-				if ($oDbl->commit() === false) {
-					$sClauError = 'DBTrasvase.actividades.resto2dl';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-					return false;
-				}
 				break;
 			case 'dl2resto':
-				$oDbl->beginTransaction();
-				$sql = "UPDATE \"$esquema\".a_actividades_dl SET id_tabla='ex';";
-				$oDbl->exec($sql);
-				$sql = "INSERT INTO resto.a_actividades_ex SELECT * FROM \"$esquema\".a_actividades_dl;";
-				$oDbl->exec($sql);
-				$sql = "TRUNCATE \"$esquema\".a_actividades_dl";
-				$oDbl->exec($sql);
-				if ($oDbl->commit() === false) {
-					$sClauError = 'DBTrasvase.actividades.dl2resto';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-					return false;
-				}
+			    $GesActividadesDl = new GestorActividadDl();
+			    $GesActividadesDl->setoDbl($oDbl);
+			    $cActividades = $GesActividadesDl->getActividades(['dl_org' => $dl]);
+			    $error = '';
+			    if (!empty($cActividades)) {
+			        foreach ($cActividades as $oActividad) {
+			            $oActividad->DBCarregar();
+			            $aDades = $oActividad->getTot();
+			            //print_r($oActividad);
+			            $oActividadEx = new ActividadEx();
+			            $oActividadEx->setoDbl($oDbl);
+			            $oActividadEx->setAllAtributes($aDades,TRUE);
+			            $oActividadEx->setNoGenerarProceso(TRUE);
+			            
+			            if ($oActividadEx->DBGuardar(1) === false) { // Pongo el param quiet=1 para que no anote cambios.
+			                $error .= '<br>'._("no se ha guardado la actividad");
+			            } else {
+			                // Al hacer INSERT se genera un id_activ nuevo. Para conservar el original:
+			                $id_new = $aDades['id_activ'];
+			                $oActividadEx->DBCambioId($id_new);
+			                //borrar la origen:
+			                $oActividad->DBEliminar();
+			            }
+			        }
+			    }
+			    if (empty($error)) {
+			        return true;
+			    } else {
+			        $this->serror = $error;
+			        return false;
+			    }
 				break;
 		}
 	}
 
 	//---------------- CDC --------------------
+	//---------------- Direcciones CDC --------------------
+	//---------------- Teleco CDC --------------------
 	public function cdc($que) {
+		// Conexión DB comun
 		$oDbl = $this->getoDbl();
+		
 		$esquema = $this->getEsquema();
 		$dl = $this->getDl();
 		$region = $this->getRegion();
+		$tipoUbicacion = substr($dl,0,2); // puede ser: cr => cominsión, dl => delegacion, ci => centro interregional.
+		
 		switch ($que) {
 			case 'resto2dl':
-			    if ($dl == 'cr') { //no hay delegaciones. Se pone todo.
-                    $sql = "INSERT INTO \"$esquema\".u_cdc_dl SELECT * FROM resto.u_cdc_ex WHERE dl IS NULL AND region='$region'; ";
-			    } else {
-                    $sql = "INSERT INTO \"$esquema\".u_cdc_dl SELECT * FROM resto.u_cdc_ex WHERE dl = '$dl' AND region='$region'; ";
-			    }
-				if ($oDbl->query($sql) === false) {
-					$sClauError = 'DBTrasvase.cdc.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-					return false;
-				} else {
+                if ($tipoUbicacion == 'cr') { //no hay delegaciones.
+                    $aWhere = [ 'dl' => '', 'region' => $region];
+                    $aOperador = ['dl' => 'IS NULL'];
+                } else {
+                    $aWhere = [ 'dl' => $dl, 'region' => $region];
+                    $aOperador = [];
+                }
+			    $gesCasaEx = new GestorCasaEx();
+			    $cCasasEx = $gesCasaEx->getCasas($aWhere,$aOperador);
+			    $error = '';
+			    foreach ($cCasasEx as $oCasaEx) {
+			        $oCasaEx->DBCarregar();
+			        $aDades = $oCasaEx->getTot();
+			        $oCasaDl = new CasaDl();
+			        $oCasaDl->setoDbl($oDbl);
+			        $oCasaDl->setAllAtributes($aDades,TRUE);
 					// actualizar el tipo_ubi.
-					$sql = "UPDATE \"$esquema\".u_cdc_dl SET tipo_ubi='cdcdl'";
-					if ($oDbl->query($sql) === false) {
-						$sClauError = 'DBTrasvase.cdc.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-						return false;
-					}
-					// primero las direcciones porque 'u_cross' tiene como foreign key id_direccion e id_ubi.
-					$sql = "INSERT INTO \"$esquema\".u_dir_cdc_dl SELECT  DISTINCT rd.* 
-						FROM  resto.u_dir_cdc_ex rd JOIN resto.u_cross_cdc_ex_dir rx USING (id_direccion), \"$esquema\".u_cdc_dl u 
-						WHERE u.id_ubi = rx.id_ubi";
-					if ($oDbl->query($sql) === false) {
-						$sClauError = 'DBTrasvase.cdc.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-						return false;
-					}
-					$sql = "INSERT INTO \"$esquema\".u_cross_cdc_dl_dir SELECT r.* FROM  resto.u_cross_cdc_ex_dir r JOIN \"$esquema\".u_cdc_dl a USING (id_ubi)";
-					if ($oDbl->query($sql) === false) {
-						$sClauError = 'DBTrasvase.cdc.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-						return false;
-					}
-					// delete cdc
-                    if ($dl == 'cr') { //no hay delegaciones.
-                        $sql = "DELETE FROM resto.u_cdc_ex WHERE dl IS NULL AND region='$region'";
+					$oCasaDl->setTipo_ubi('cdcdl');
+			        if ($oCasaDl->DBGuardar() === FALSE) {
+                        $error .= '<br>'._("no se ha guardado la casa");
                     } else {
-                        $sql = "DELETE FROM resto.u_cdc_ex WHERE dl = '$dl' AND region='$region'";
+                        // Al hacer INSERT se genera un id_ubi nuevo. Para conservar el original:
+                        $id_ubi = $oCasaDl->getId_ubi();
+                        $id_ubi_old = $aDades['id_ubi'];
+                        $pkey = ['objeto' => 'Casa', 'id_resto' => $id_ubi_old];
+                        $oMapId = new MapId($pkey);
+                        $oMapId->setId_dl($id_ubi);
+                        $oMapId->DBGuardar();
+                        // Buscar la dirección
+                        $gesCdcExxDireccion = new GestorCdcExxDireccion();
+                        $cUbixDirecciones = $gesCdcExxDireccion->getCdcxDirecciones(['id_ubi' => $id_ubi_old]);
+                        foreach ($cUbixDirecciones as $oUbixDireccion) {
+                            $id_direccion_old = $oUbixDireccion->getId_direccion();
+                            $oDireccion = new DireccionCdcEx($id_direccion_old); 
+                            $oDireccion->DBCarregar();
+                            $aDades = $oDireccion->getTot();
+                            $oDireccionCdcDl = new DireccionCdcDl();
+                            $oDireccionCdcDl->setoDbl($oDbl);
+                            $oDireccionCdcDl->setAllAtributes($aDades,FALSE);
+                            $oDireccionCdcDl->DBGuardar();
+                            $id_direccion = $oDireccionCdcDl->getId_direccion();
+                            $pkey = ['objeto'=>'Direccion', 'id_resto' => $id_direccion_old];
+                            $oMapId = new MapId($pkey);
+                            $oMapId->setId_dl($id_direccion);
+                            $oMapId->DBGuardar();
+                            // cross Direccion
+                            $pkey = ['id_ubi' => $id_ubi, 'id_direccion' => $id_direccion];
+                            $oCrosDireccion = new CdcDlxDireccion($pkey);
+                            $propietario = $oUbixDireccion->getPropietario();
+                            $principal = $oUbixDireccion->getPrincipal();
+                            $oCrosDireccion->setoDbl($oDbl);
+                            $oCrosDireccion->setPropietario($propietario);
+                            $oCrosDireccion->setPrincipal($principal);
+                            $oCrosDireccion->DBGuardar();
+                            // Eliminar el cross y la direccion
+                            $oDireccion->DBEliminar();
+                            // delete cross (deberia borrarse sólo; por el foreign key).
+                            $oUbixDireccion->DBEliminar();
+                        }
+                        // Buscar las telecos
+                        $gesTelecoCdcEx = new GestorTelecoCdcEx();
+                        $cTelecos = $gesTelecoCdcEx->getTelecos(['id_ubi' => $id_ubi_old]);
+                        foreach ($cTelecos as $oTelecoCdcEx) {
+                            $oTelecoCdcEx->DBCarregar();
+                            $aDades = $oTelecoCdcEx->getTot();
+                            $oTelecoCdcDl = new TelecoCdcDl();
+                            $oTelecoCdcDl->setoDbl($oDbl);
+                            $oTelecoCdcDl->setAllAtributes($aDades,TRUE);
+                            if ($oTelecoCdcDl->DBGuardar() === FALSE) {
+                                $error .= '<br>'._("no se ha guardado la casa");
+                            } else {
+                                // Eliminar la teleco
+                                $oTelecoCdcEx->DBEliminar();
+                            }
+                        }
+                        //borrar la origen:
+                        $oCasaEx->DBEliminar();
                     }
-					if ($oDbl->query($sql) === false) {
-						$sClauError = 'DBCopiar.cdc.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-						return false;
-					}
-					// delete dir
-					$sql = "DELETE FROM resto.u_dir_cdc_ex
-							WHERE id_direccion IN (SELECT id_direccion FROM \"$esquema\".u_dir_cdc_dl)"; 
-					if ($oDbl->query($sql) === false) {
-						$sClauError = 'DBTrasvase.cdc.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-						return false;
-					}
-					// delete cross (deberia borrarse sólo; por el foreign key).
-				}
+			    }
+			    if (empty($error)) {
+			        return true;
+			    } else {
+			        $this->serror = $error;
+			        return false;
+			    }
 				break;
 			case 'dl2resto':
 				// actualizar el tipo_ubi.
@@ -358,108 +428,127 @@ class DBTrasvase {
 				break;
 		}
 	}
-	//---------------- Teleco CDC --------------------
-	public function teleco_cdc($que) {
-		$oDbl = $this->getoDbl();
-		$esquema = $this->getEsquema();
-		$dl = $this->getDl();
-		switch ($que) {
-			case 'resto2dl':
-				$sql = "INSERT INTO \"$esquema\".d_teleco_cdc_dl SELECT r.* FROM  resto.d_teleco_cdc_ex r JOIN \"$esquema\".u_cdc_dl a USING (id_ubi)";
-				if ($oDbl->query($sql) === false) {
-					$sClauError = 'DBTrasvase.telecocdc.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-					return false;
-				} else {
-					$sql = "DELETE FROM resto.d_teleco_cdc_ex  WHERE id_ubi IN (SELECT id_ubi FROM \"$esquema\".u_cdc_dl)";
-					if ($oDbl->query($sql) === false) {
-						$sClauError = 'DBTrasvase.telecocdc.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-						return false;
-					}
-				}
-				break;
-			case 'dl2resto':
-				$sql = "INSERT INTO resto.d_teleco_cdc_ex SELECT * FROM \"$esquema\".d_teleco_cdc_dl";
-				if ($oDbl->query($sql) === false) {
-					$sClauError = 'DBTrasvase.telecocdc.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-					return false;
-				} else {
-					$sql = "TRUNCATE \"$esquema\".d_teleco_cdc_dl";
-					if ($oDbl->query($sql) === false) {
-						$sClauError = 'DBTrasvase.telecocdc.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-						return false;
-					}
-				}
-				break;
-		}
-	}
 
 	// SV o SF
 	//---------------- Ctr --------------------
+	//---------------- Diressiones Ctr --------------------
+	//---------------- Teleco Ctr --------------------
 	public function ctr($que) {
+		// Conexión DB SV/SF
 		$oDbl = $this->getoDbl();
+		// Conexión DB comun
+		$this->setDbName('comun');
+		$oDblC = $this->getoDbl();
+
 		$esquema = $this->getEsquema();
 		$resto = $this->getResto();
 		$dl = $this->getDl();
 		$region = $this->getRegion();
+		$tipoUbicacion = substr($dl,0,2); // puede ser: cr => cominsión, dl => delegacion, ci => centro interregional.
+		
 		switch ($que) {
 			case 'resto2dl':
-                if ($dl == 'cr') { //no hay delegaciones.
-                    $sql = "INSERT INTO \"$esquema\".u_centros_dl SELECT * FROM \"$resto\".u_centros_ex WHERE dl IS NULL AND region='$region'; ";
+                if ($tipoUbicacion == 'cr') { //no hay delegaciones.
+                    $aWhere = [ 'dl' => '', 'region' => $region];
+                    $aOperador = ['dl' => 'IS NULL'];
                 } else {
-                    $sql = "INSERT INTO \"$esquema\".u_centros_dl SELECT * FROM \"$resto\".u_centros_ex WHERE dl = '$dl' AND region='$region'; ";
+                    $aWhere = [ 'dl' => $dl, 'region' => $region];
+                    $aOperador = [];
                 }
-				if ($oDbl->query($sql) === false) {
-					$sClauError = 'DBTrasvase.ctr.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-					return false;
-				} else {
+			    $gesCentroEx = new GestorCentroEx();
+			    $cCentroEx = $gesCentroEx->getCentros($aWhere,$aOperador);
+			    $error = '';
+			    foreach ($cCentroEx as $oCentroEx) {
+			        $oCentroEx->DBCarregar();
+			        $aDades = $oCentroEx->getTot();
 					// actualizar el tipo_ubi.
-					$sql = "UPDATE \"$esquema\".u_centros_dl SET tipo_ubi='ctrdl'";
-					if ($oDbl->query($sql) === false) {
-						$sClauError = 'DBTrasvase.ctr.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-						return false;
-					}
-					// primero las direcciones porque 'u_cross' tiene como foreign key id_direccion e id_ubi.
-					$sql = "INSERT INTO \"$esquema\".u_dir_ctr_dl SELECT DISTINCT rd.* 
-						FROM  \"$resto\".u_dir_ctr_ex rd JOIN \"$resto\".u_cross_ctr_ex_dir rx USING (id_direccion), \"$esquema\".u_centros_dl u 
-						WHERE u.id_ubi = rx.id_ubi";
-					if ($oDbl->query($sql) === false) {
-						$sClauError = 'DBTrasvase.ctr.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-						return false;
-					}
-					$sql = "INSERT INTO \"$esquema\".u_cross_ctr_dl_dir SELECT r.* FROM  \"$resto\".u_cross_ctr_ex_dir r JOIN \"$esquema\".u_centros_dl a USING (id_ubi)";
-					if ($oDbl->query($sql) === false) {
-						$sClauError = 'DBTrasvase.ctr.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-						return false;
-					}
-					// delete ctr
-                    if ($dl == 'cr') { //no hay delegaciones.
-					   $sql = "DELETE FROM \"$resto\".u_centros_ex WHERE dl IS NULL AND region='$region'";
+			        $aDades['tipo_ubi'] = 'ctrdl';
+					// Ahora uso la nomenclatura para dl tipo 'crA' 
+			        $aDades['dl'] = $dl;
+
+			        $oCentroDl = new CentroDl();
+			        $oCentroDl->setoDbl($oDbl);
+			        $oCentroDl->setAllAtributes($aDades,TRUE);
+			        if ($oCentroDl->DBGuardar() === FALSE) {
+                        $error .= '<br>'._("no se ha guardado la casa");
                     } else {
-					   $sql = "DELETE FROM \"$resto\".u_centros_ex WHERE dl = '$dl' AND region='$region'";
+                        // Al hacer INSERT se genera un id_ubi nuevo. Para conservar el original:
+                        $id_ubi = $oCentroDl->getId_ubi();
+                        $id_ubi_old = $aDades['id_ubi'];
+                        $pkey = ['objeto' => 'Centro', 'id_resto' => $id_ubi_old];
+                        $oMapId = new MapId($pkey);
+                        $oMapId->setId_dl($id_ubi);
+                        $oMapId->DBGuardar();
+                        // Además hay que añadirlo a la copia en DB comun:
+                        // para la sf (comienza por 2).
+                        if ( substr($id_ubi, 0, 1) == 2 ) {
+                            $oCentroEllas = new CentroEllas($id_ubi);
+                            $oCentroEllas->setAllAtributes($aDades);
+        			        $oCentroEllas->setoDbl($oDblC);
+                            $oCentroEllas->DBGuardar();
+                        } else {
+                            $oCentroEllos = new CentroEllos($id_ubi);
+                            $oCentroEllos->setAllAtributes($aDades);
+        			        $oCentroEllos->setoDbl($oDblC);
+                            $oCentroEllos->DBGuardar();
+                        }
+                        // Buscar la dirección
+                        $gesCtrExxDireccion = new GestorCtrExxDireccion();
+                        $cUbixDirecciones = $gesCtrExxDireccion->getCtrxDirecciones(['id_ubi' => $id_ubi_old]);
+                        foreach ($cUbixDirecciones as $oUbixDireccion) {
+                            $id_direccion_old = $oUbixDireccion->getId_direccion();
+                            $oDireccion = new DireccionCtrEx($id_direccion_old); 
+                            $oDireccion->DBCarregar();
+                            $aDades = $oDireccion->getTot();
+                            $oDireccionCtrDl = new DireccionCtrDl();
+                            $oDireccionCtrDl->setoDbl($oDbl);
+                            $oDireccionCtrDl->setAllAtributes($aDades,FALSE);
+                            $oDireccionCtrDl->DBGuardar();
+                            $id_direccion = $oDireccionCtrDl->getId_direccion();
+                            $pkey = ['objeto'=>'Direccion', 'id_resto' => $id_direccion_old];
+                            $oMapId = new MapId($pkey);
+                            $oMapId->setId_dl($id_direccion);
+                            $oMapId->DBGuardar();
+                            // cross Direccion
+                            $pkey = ['id_ubi' => $id_ubi, 'id_direccion' => $id_direccion];
+                            $oCrosDireccion = new CtrDlxDireccion($pkey);
+                            $propietario = $oUbixDireccion->getPropietario();
+                            $principal = $oUbixDireccion->getPrincipal();
+                            $oCrosDireccion->setoDbl($oDbl);
+                            $oCrosDireccion->setPropietario($propietario);
+                            $oCrosDireccion->setPrincipal($principal);
+                            $oCrosDireccion->DBGuardar();
+                            // Eliminar el cross y la direccion
+                            $oDireccion->DBEliminar();
+                            // delete cross (deberia borrarse sólo; por el foreign key).
+                            $oUbixDireccion->DBEliminar();
+                        }
+                        // Buscar las telecos
+                        $gesTelecoCtrEx = new GestorTelecoCtrEx();
+                        $cTelecos = $gesTelecoCtrEx->getTelecos(['id_ubi' => $id_ubi_old]);
+                        foreach ($cTelecos as $oTelecoCtrEx) {
+                            $oTelecoCtrEx->DBCarregar();
+                            $aDades = $oTelecoCtrEx->getTot();
+                            $oTelecoCdcDl = new TelecoCdcDl();
+                            $oTelecoCdcDl->setoDbl($oDbl);
+                            $oTelecoCdcDl->setAllAtributes($aDades,TRUE);
+                            if ($oTelecoCdcDl->DBGuardar() === FALSE) {
+                                $error .= '<br>'._("no se ha guardado la casa");
+                            } else {
+                                // Eliminar la teleco
+                                $oTelecoCtrEx->DBEliminar();
+                            }
+                        }
+                        //borrar la origen:
+                        $oCentroEx->DBEliminar();
                     }
-					if ($oDbl->query($sql) === false) {
-						$sClauError = 'DBTrasvase.ctr.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-						return false;
-					}
-					// delete dir
-					$sql = "DELETE FROM \"$resto\".u_dir_ctr_ex
-							WHERE id_direccion IN (SELECT id_direccion FROM \"$esquema\".u_dir_ctr_dl)"; 
-					if ($oDbl->query($sql) === false) {
-						$sClauError = 'DBTrasvase.ctr.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-						return false;
-					}
-					// delete cross (deberia borrarse sólo; por el foreign key).
 				}
+			    if (empty($error)) {
+			        return true;
+			    } else {
+			        $this->serror = $error;
+			        return false;
+			    }
 				break;
 			case 'dl2resto':
 				// actualizar el tipo_ubi.
@@ -505,44 +594,6 @@ class DBTrasvase {
 					// delete cross (deberia borrarse sólo; por el foreign key).
 				}
 			   break;
-		}
-	}
-	//---------------- Teleco Ctr --------------------
-	public function teleco_ctr($que) {
-		$oDbl = $this->getoDbl();
-		$esquema = $this->getEsquema();
-		$resto = $this->getResto();
-		switch ($que) {
-			case 'resto2dl':
-				$sql = "INSERT INTO \"$esquema\".d_teleco_ctr_dl SELECT r.* FROM  \"$resto\".d_teleco_ctr_ex r JOIN \"$esquema\".u_centros_dl a USING (id_ubi)";
-				if ($oDbl->query($sql) === false) {
-					$sClauError = 'DBTrasvase.telecoctr.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-					return false;
-				} else {
-					$sql = "DELETE FROM \"$resto\".d_teleco_ctr_ex  WHERE id_ubi IN (SELECT id_ubi FROM \"$esquema\".u_centros_dl)";
-					if ($oDbl->query($sql) === false) {
-						$sClauError = 'DBTrasvase.telecoctr.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-						return false;
-					}
-				}
-				break;
-			case 'dl2resto':
-				$sql = "INSERT INTO \"$resto\".d_teleco_ctr_ex SELECT * FROM \"$esquema\".d_teleco_ctr_dl ";
-				if ($oDbl->query($sql) === false) {
-					$sClauError = 'DBTrasvase.telecoctr.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-					return false;
-				} else {
-					$sql = "TRUNCATE \"$esquema\".d_teleco_ctr_dl";
-					if ($oDbl->query($sql) === false) {
-						$sClauError = 'DBTrasvase.telecoctr.execute';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-						return false;
-					}
-				}
-				break;
 		}
 	}
 

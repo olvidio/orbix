@@ -57,7 +57,6 @@ if (!empty($Qcomun)) {
 
     $oTrasvase->actividades('resto2dl');
     $oTrasvase->cdc('resto2dl');
-    $oTrasvase->teleco_cdc('resto2dl');
     // fijar secuencias
     $oTrasvase->fix_seq();
 }
@@ -89,7 +88,6 @@ if (!empty($Qsv)) {
 	$oTrasvase->setDbName('sv');
 
 	$oTrasvase->ctr('resto2dl');
-	$oTrasvase->teleco_ctr('resto2dl');
 	// fijar secuencias
 	$oTrasvase->fix_seq();
 	
@@ -122,7 +120,6 @@ if (!empty($Qsf)) {
 	$oTrasvase->setDbName('sf');
 
 	$oTrasvase->ctr('resto2dl');
-	$oTrasvase->teleco_ctr('resto2dl');
 	// fijar secuencias
 	$oTrasvase->fix_seq();
 	

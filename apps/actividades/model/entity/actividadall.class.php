@@ -197,6 +197,13 @@ class ActividadAll Extends core\ClasePropiedades {
 	 */
 	 protected $iduracionR;
 
+	/**
+	 * bNoGenerarProceso de ActividadAll
+	 *
+	 * @var boolean
+	 */
+	 protected $bNoGenerarProceso=FALSE;
+
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
 	/**
@@ -961,6 +968,25 @@ class ActividadAll Extends core\ClasePropiedades {
 		$this->iplazas = $iplazas;
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
+
+	/**
+	 * Recupera l'atribut per si s'ha de generar el procés o no.
+	 * 
+	 * @return boolean
+	 */
+	public function getNoGenerarProceso() {
+	    return $this->bNoGenerarProceso;
+	}
+
+	/**
+	 * Estableix l'atribut $bNoGenerarProceso per si s'ha de generar el procés o no.
+	 * 
+	 * @param boolean
+	 */
+	public function setNoGenerarProceso($bNoGenerarProceso=FALSE) {
+	    $this->bNoGenerarProceso = $bNoGenerarProceso;
+	}
+
 	/**
 	 * Recupera l'atribut idias de ActividadAll
 	 *
@@ -1055,7 +1081,6 @@ class ActividadAll Extends core\ClasePropiedades {
 		}
 		return $this->iduracion;
 	}
-	
 
 	/**
 	 * Retorna el nivel_sgtr calculat a partir del id_tipo_activ

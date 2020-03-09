@@ -214,7 +214,10 @@ class CentroDl Extends Centro {
 		$this->setAllAtributes($aDades);
 		
 		// Modifico la ficha en la BD-comun
-		$this->copia2Comun($aDades);
+		// Solo los de mi dl
+		if ($this->sdl == ConfigGlobal::mi_delef()) {
+		    $this->copia2Comun($aDades);
+		}
 
 		return true;
 	}

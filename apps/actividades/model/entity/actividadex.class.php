@@ -212,14 +212,14 @@ class ActividadEx Extends ActividadAll {
 	 * Elimina el registre de la base de dades corresponent a l'objecte.
 	 *
 	 */
-	public function DBEliminar() {
+	public function DBEliminar($quiet=0) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if ($this->DBCarregar('guardar') === false) {
 		   	// Si no existeix no cal eliminar-el.
 			return false;
 		} else {
-			if (core\ConfigGlobal::is_app_installed('cambios')) { 
+			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') OR $this->bpublicado === TRUE)) {
 			    // per carregar les dades a $this->aDadesActuals i poder posar-les als canvis.
 			    $this->DBCarregar('guardar');
 				// ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.

@@ -30,7 +30,6 @@ if (!empty($Qcomun)) {
     
     $oTrasvase->actividades('dl2resto');
     $oTrasvase->cdc('dl2resto');
-    $oTrasvase->teleco_cdc('dl2resto');
 }
 // SV
 if (!empty($Qsv)) {
@@ -42,7 +41,6 @@ if (!empty($Qsv)) {
     $oTrasvase->setDbName('sv');
 
 	$oTrasvase->ctr('dl2resto');
-	$oTrasvase->teleco_ctr('dl2resto');
 
 	$oDBEsquema = new core\DBEsquema();
 	$oDBEsquema->setConfig($config);

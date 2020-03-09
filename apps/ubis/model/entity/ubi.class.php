@@ -1,6 +1,7 @@
 <?php
 namespace ubis\model\entity;
 use core;
+use core\ConfigGlobal;
 /**
  * Classe que implementa l'entitat ubis
  *
@@ -28,9 +29,21 @@ class Ubi {
 	public static function NewUbi($id_ubi) { 
 	    // para la sf (comienza por 2).
 	    if ( substr($id_ubi, 0, 1) == 2 ) {
-    		$gesCentro = new GestorCentroEllas();
+	        // Si soy sv solo tengo acceso a los de la dl,
+	        // En caso contrario puedo ver los de todas las regiones.
+	        if (ConfigGlobal::mi_sfsv() == 1) {
+                $gesCentro = new GestorCentroEllas();
+	        } else {
+                $gesCentro = new GestorCentro();
+	        }
 	    } else {
-    		$gesCentro = new GestorCentroEllos();
+	        // Si soy sf solo tengo acceso a los de la dl,
+	        // En caso contrario puedo ver los de todas las regiones.
+	        if (ConfigGlobal::mi_sfsv() == 2) {
+                $gesCentro = new GestorCentroEllos();
+	        } else {
+                $gesCentro = new GestorCentro();
+	        }
 	    }
 		$cCentros = $gesCentro->getCentros(array('id_ubi'=>$id_ubi));
 		if (count($cCentros) > 0) {
