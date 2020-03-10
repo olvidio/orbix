@@ -219,7 +219,23 @@ class EncargoSacd Extends core\ClasePropiedades {
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return FALSE;
 		}
+		// Eliminar los objetos dependientes:
+		$this->DBEliminarRestricciones();
 		return TRUE;
+	}
+	
+    /**
+	 * Elimina los objetos relacionados con llave foránea
+	 * 
+	 */
+	public function DBEliminarRestricciones() {
+	    $id_item = $this->getId_item();
+	    $aWhere = ['id_item_tarea_sacd' => $id_item];
+	    $gesEncargoSacdHorario = new GestorEncargoSacdHorario();
+	    $cEncargosSacdHorario = $gesEncargoSacdHorario->getEncargoSacdHorarios($aWhere);
+	    foreach ($cEncargosSacdHorario as $oEncargoSacdHorario) {
+	        $oEncargoSacdHorario->DBEliminar();
+	    }
 	}
 	
 	/* METODES ALTRES  ----------------------------------------------------------*/

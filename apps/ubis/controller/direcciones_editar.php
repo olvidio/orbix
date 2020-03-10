@@ -189,7 +189,7 @@ if (empty($Qmod) & empty($Qid_direccion)) {
 	<table><tr><td><?= _("este ubi no dispone de una dirección. Compruebe primero si existe, en este caso, asígnesela. En caso contrario cree una nueva.") ?></td></tr></table>
 	<br>
 	<span class="link" onclick="fnjs_update_div('#ficha','<?= $golistadir ?>');">
-	<?=  mb_strtoupper(_("asignar una dirección")) ?>
+	<?=  \mb_strtoupper(_("asignar una dirección")) ?>
 	</span>
 	<?php
 	die();

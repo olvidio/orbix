@@ -108,6 +108,9 @@ if (empty($Qque) || $Qque === 'editar') { //significa que no es nuevo
 	if (!empty($Qid_ubi)) {
 		$Qfiltro_ctr = filtro($Qid_ubi);
 	}
+	if (empty($Qfiltro_ctr)) {
+	    $Qfiltro_ctr = $oEncargo->getSf_sv();
+	}
 }
 
 $oGesEncargoTipo = new GestorEncargoTipo();

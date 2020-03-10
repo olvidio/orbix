@@ -243,7 +243,51 @@ class Encargo Extends core\ClasePropiedades {
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return FALSE;
 		}
+		// Eliminar os objetos dependientes:
+		$this->DBEliminarRestricciones();
 		return TRUE;
+	}
+	
+	/**
+	 * Elimina los objetos relacionados con llave foránea
+	 * En teoría debería hacerse a nivel de la base de datos, por foreign key,
+	 * pero al sincronizar con bucardo se ha acabado perdiendo esta referencia.
+	 *
+	 */
+	public function DBEliminarRestricciones() {
+	    $id_enc = $this->getId_enc();
+	    $aWhere = ['id_enc' => $id_enc];
+	    // encargo_horario
+	    $gesEncargoHorario = new GestorEncargoHorario();
+	    $cEncargoHorario = $gesEncargoHorario->getEncargoHorarios($aWhere);
+	    foreach ($cEncargoHorario as $oEncargoHorario) {
+	        $oEncargoHorario->DBEliminar();
+	    }
+	    // encargo_horario_excepcion
+	    $gesEncargoHorarioExcepcion = new GestorEncargoHorarioExcepcion();
+	    $cEncargoHorarioExcepcion = $gesEncargoHorarioExcepcion->getEncargoHorarioExcepciones($aWhere);
+	    foreach ($cEncargoHorarioExcepcion as $oEncargoHorarioExcepcion) {
+	        $oEncargoHorarioExcepcion->DBEliminar();
+	    }
+	    // encargos_sacd
+	    $gesEncargoSacd = new GestorEncargoSacd();
+	    $cEncargosSacd = $gesEncargoSacd->getEncargosSacd($aWhere);
+	    foreach ($cEncargosSacd as $oEncargoSacd) {
+	        $oEncargoSacd->DBEliminar();
+	    }
+	    // encargo_sacd_horario
+	    $gesEncargoSacdHorario = new GestorEncargoSacdHorario();
+	    $cEncargosSacdHorario = $gesEncargoSacdHorario->getEncargoSacdHorarios($aWhere);
+	    foreach ($cEncargosSacdHorario as $oEncargoSacdHorario) {
+	        $oEncargoSacdHorario->DBEliminar();
+	    }
+	    //encargo_sacd_horario_excepcion
+	    $gesEncargoSacdHorarioExcepcion = new GestorEncargoSacdHorarioExcepcion();
+	    $cEncargosSacdHorarioExcepcion = $gesEncargoSacdHorarioExcepcion->getEncargoSacdHorarioExcepciones($aWhere);
+	    foreach ($cEncargosSacdHorarioExcepcion as $oEncargoSacdHorarioExcepcion) {
+	        $oEncargoSacdHorarioExcepcion->DBEliminar();
+	    }
+	    
 	}
 	
 	/* METODES ALTRES  ----------------------------------------------------------*/
