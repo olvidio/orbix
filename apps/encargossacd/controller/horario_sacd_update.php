@@ -6,7 +6,7 @@
 *	Si es 1 >> inserta un nuevo encargo.
 *	Si es 2 >> sólo cambia el tipo de encargo. Antes utiliza la función comprobar_cambio_tipo($id_activ,$valor)
 * que está en func_tablas.
-*       Si es 3 >> elimina.
+*   Si es 3 >> elimina.
 * Existe otra variable: $que. Si vale "actualizar", el $go_to se cambia para volver a ver_ficha_cos.
 *
 *@package	delegacion

@@ -36,6 +36,16 @@ function modifica_sacd_ausencias($id_item,$id_enc,$id_nom,$f_ini,$f_fin){
 		if ($oEncargoSacd->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
 		}
+        $id_item_tarea_sacd = $id_item;
+        $oHorario = new EncargoSacdHorario();
+        $oHorario->setId_item_tarea_sacd($id_item_tarea_sacd);
+        $oHorario->setId_enc($id_enc);
+        $oHorario->setId_nom($id_nom);
+        $oHorario->setF_ini($f_ini);
+        $oHorario->setF_fin($f_fin);
+        if ($oHorario->DBGuardar() === false) {
+            echo _("hay un error, no se ha guardado");
+        }
 	}
 }
 
