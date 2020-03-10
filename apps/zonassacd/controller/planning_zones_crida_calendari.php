@@ -332,7 +332,7 @@ foreach ($aa_zonas as $a_zonas) {
 			}
 			// ++++++++++++++++++++++++++++++++++++++++++++++++++
 			// pongo el apellido como índice para poder ordenar por apellido.
-			$actividades[$ap_nom]=array($persona[$p]=>$aActivPersona);
+			$actividades[$ap_nom]=array($persona[$p] => $aActivPersona);
 			$p++;
 		}
 		else {

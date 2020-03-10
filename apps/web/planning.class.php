@@ -364,13 +364,11 @@ class Planning {
                         }
                     }
                     //poner los cambios (sólo desocupados) en $fila_dia
-                    $f=0;
-                    foreach($fila_dia_new as $val) {
+                    foreach($fila_dia_new as $f => $val) {
                          if ($val=="v") { 
                             $fila_dia[$f]="v";
                             $fila_dia_new[$f]="";
                          }
-                         $f++;
                     }
                 }
 
