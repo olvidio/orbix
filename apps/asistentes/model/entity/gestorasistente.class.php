@@ -93,14 +93,19 @@ class GestorAsistente Extends core\ClaseGestor {
 		// seleccionar las actividades segun los criterios de búsqueda.
 		$GesActividades = new actividades\GestorActividad();
 		$aListaIds = $GesActividades->getArrayIds($aWhere,$aOperators);
+		if (ConfigGlobal::mi_id_usuario() == 443) {
+		    
+		}
 		// descarto los que no estan.
 		$cActividadesOk = array();
+		$i = 0;
 		foreach ($cAsistencias as $oAsistente) {
 			$id_activ = $oAsistente->getId_activ();
 			if (in_array($id_activ,$aListaIds)) {
+			    $i++;
 				$oActividad = new actividades\Actividad($id_activ);
 				$oF_ini = $oActividad->getF_ini();
-				$f_ini_iso = $oF_ini->format('Y-m-d'); 
+				$f_ini_iso = $oF_ini->format('Y-m-d').'#'.$i; // Añado $i por si empezan el mismo dia.
 				$oAsistente->DBCarregar();
 				$cActividadesOk[$f_ini_iso] = $oAsistente;
 			}

@@ -117,12 +117,14 @@ class GestorActividadCargo Extends core\ClaseGestor {
 		$cCargos = $this->getActividadCargos($aWhereNom);
 		// descarto los que no estan.
 		$cCargosOk = array();
+		$i = 0;
 		foreach ($cCargos as $oActividadCargo) {
 			$id_activ = $oActividadCargo->getId_activ();
 			if (in_array($id_activ,$aListaIds)) {
+			    $i++;
 				$oActividad = new Actividad($id_activ);
 				$oF_ini = $oActividad->getF_ini();
-				$f_ini_iso = $oF_ini->format('Y-m-d'); 
+				$f_ini_iso = $oF_ini->format('Y-m-d').'#'.$i; // Añado $i por si empezan el mismo dia. 
 				$oActividadCargo->DBCarregar();
 				$cCargosOk[$f_ini_iso] = $oActividadCargo;
 			}
@@ -156,7 +158,6 @@ class GestorActividadCargo Extends core\ClaseGestor {
 			if (in_array($id_activ,$aListaIds)) {
 				$oActividad = new Actividad($id_activ);
 				$oF_ini = $oActividad->getF_ini();
-				$f_ini_iso = $oF_ini->format('Y-m-d'); 
 				$cActividadesOk[$id_activ] = $oCargo;
 			}
 		}

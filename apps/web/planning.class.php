@@ -219,7 +219,7 @@ class Planning {
                     $hfi = (isset($activi["h_fi"]))? $activi["h_fi"] : '';
                     $id_tipo_activ[$a] = (isset($activi["id_tipo_activ"]))? $activi["id_tipo_activ"] : '';
                     $lnk[$a] = (isset($activi["pagina"]))? $activi["pagina"] : '';
-                    $id_activ[$a] = (isset($activi["id_activ"]))? $activi["id_activ"] : '';
+                    $id_activ[$a] = (isset($activi["id_activ"]))? $activi["id_activ"] : 0;
                     $propio[$a] = (isset($activi["propio"]))? $activi["propio"] : '';
                     
                     $hora_ini[$a]=0;
