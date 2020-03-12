@@ -163,14 +163,11 @@ class AsistentePub Extends core\ClasePropiedades {
 		} else {
 		    // Creo que en cualquier caso debe ser un asistente Out.
 		    // El Ex es solo para una persona Ex ?¿
-		    /*
-			if ($id_tabla == 'dl') {
-				$clase = 'asistentes\\model\\entity\\AsistenteOut';
-			} else {
+		    if ($obj_persona == 'PersonaEx') {
 				$clase = 'asistentes\\model\\entity\\AsistenteEx';
-			}
-			*/
-            $clase = 'asistentes\\model\\entity\\AsistenteOut';
+		    } else {
+                $clase = 'asistentes\\model\\entity\\AsistenteOut';
+		    }
 		}
 		return new $clase;
 	}

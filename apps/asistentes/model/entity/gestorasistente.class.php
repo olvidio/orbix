@@ -83,7 +83,10 @@ class GestorAsistente Extends core\ClaseGestor {
 	    }
 		//Importa el orden, se queda con la primera.
 		$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');
+		/*
 		$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
+		 *  El In es suma de Ex + Out, pero sin los out de mi propia dl.
+		*/
 		$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
 		$a_Clases[] = array('clase'=>'AsistenteEx','get'=>'getAsistentesEx');
 

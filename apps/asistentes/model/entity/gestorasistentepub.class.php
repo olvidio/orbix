@@ -131,6 +131,7 @@ class GestorAsistentePub Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_activ' => $aDades['id_activ'],
 							'id_nom' => $aDades['id_nom']);
+			// Puede ser AsistenteEx, AsistenteOut o AsistenteIn.
 			$oAsistentePub= new AsistentePub($a_pkey);
 			$oAsistentePub->setAllAtributes($aDades);
 			$oAsistentePubSet->add($oAsistentePub);

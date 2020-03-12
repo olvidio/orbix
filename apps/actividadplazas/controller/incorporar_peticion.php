@@ -151,12 +151,12 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
 					break;
 			}
 		} else {
-			if ($id_tabla == 'dl') {
-				$GesAsistentes = new asistentes\GestorAsistenteOut();
-				$cAsistentes = $GesAsistentes->getAsistentesOut(array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'propio'=>'t'));
-			} else {
+			if ($obj_persona == 'PersonaEx') {
 				$GesAsistentes = new asistentes\GestorAsistenteEx();
 				$cAsistentes = $GesAsistentes->getAsistentesEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'propio'=>'t'));
+			} else {
+				$GesAsistentes = new asistentes\GestorAsistenteOut();
+				$cAsistentes = $GesAsistentes->getAsistentesOut(array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'propio'=>'t'));
 			}
 		}
 		//Comprobar que no tiene alguno asignado como propio
