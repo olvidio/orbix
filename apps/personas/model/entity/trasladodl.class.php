@@ -224,7 +224,7 @@ class TrasladoDl {
 	    
 	    $oDB = $oConexion->getPDO();
 	    
-		$this->verConexion($oDB);
+		//$this->verConexion($oDB);
 	    return $oDB;
 	}
 	
