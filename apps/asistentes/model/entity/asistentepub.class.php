@@ -136,8 +136,8 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * actividad a la que asisto
 	 * 
 	 * @param string $obj_persona
-	 * @param string $dl
-	 * @param integer $id_tabla
+	 * @param string $dl dl que organiza la actividad
+	 * @param integer $id_tabla de la actividad
 	 */
 	static function getClaseAsistente($obj_persona,$dl,$id_tabla) {
 		if ($dl == core\ConfigGlobal::mi_delef()) {
@@ -161,11 +161,16 @@ class AsistentePub Extends core\ClasePropiedades {
 					break;
 			}
 		} else {
+		    // Creo que en cualquier caso debe ser un asistente Out.
+		    // El Ex es solo para una persona Ex ?¿
+		    /*
 			if ($id_tabla == 'dl') {
 				$clase = 'asistentes\\model\\entity\\AsistenteOut';
 			} else {
 				$clase = 'asistentes\\model\\entity\\AsistenteEx';
 			}
+			*/
+            $clase = 'asistentes\\model\\entity\\AsistenteOut';
 		}
 		return new $clase;
 	}

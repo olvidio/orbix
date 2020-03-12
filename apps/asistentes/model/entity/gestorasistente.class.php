@@ -234,6 +234,7 @@ class GestorAsistente Extends core\ClaseGestor {
 				$cAsistentes = $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
 				break;
 			case 'ex': // asistentesEx
+				$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
 				$a_Clases[] = array('clase'=>'AsistenteEx','get'=>'getAsistentesEx');
 				$namespace = __NAMESPACE__;
 				$cAsistentes = $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
@@ -284,8 +285,12 @@ class GestorAsistente Extends core\ClaseGestor {
 			if ($id_tabla == 'dl') {
 				$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
 			} else {
+			    /*
 				$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');
 				$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
+				*/
+				$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
+				$a_Clases[] = array('clase'=>'AsistenteEx','get'=>'getAsistentesEx');
 			}
 		}
 		$namespace = __NAMESPACE__;
