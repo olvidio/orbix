@@ -81,11 +81,11 @@ class GestorAsistente Extends core\ClaseGestor {
 	    if (ConfigGlobal::is_dmz()) {
 	        return [];
 	    }
-		//Importa el orden, se queda con la última.
-		$a_Clases[] = array('clase'=>'AsistenteEx','get'=>'getAsistentesEx');
-		$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
-		$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
+		//Importa el orden, se queda con la primera.
 		$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');
+		$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
+		$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
+		$a_Clases[] = array('clase'=>'AsistenteEx','get'=>'getAsistentesEx');
 
 		$namespace = __NAMESPACE__;
 		$cAsistencias = $this->getConjunt($a_Clases,$namespace,$aWhereNom, $aOperadorNom);
@@ -99,8 +99,11 @@ class GestorAsistente Extends core\ClaseGestor {
 		// descarto los que no estan.
 		$cActividadesOk = array();
 		$i = 0;
+        $id_actividad_old = 0;
 		foreach ($cAsistencias as $oAsistente) {
 			$id_activ = $oAsistente->getId_activ();
+			// Si es la misma actividad salto.
+			if ($id_activ == $id_actividad_old) { continue; }
 			if (in_array($id_activ,$aListaIds)) {
 			    $i++;
 				$oActividad = new actividades\Actividad($id_activ);
@@ -109,6 +112,7 @@ class GestorAsistente Extends core\ClaseGestor {
 				$oAsistente->DBCarregar();
 				$cActividadesOk[$f_ini_iso] = $oAsistente;
 			}
+			$id_actividad_old = $id_activ;
 		}
 		if ($reverse === true) {
 			krsort($cActividadesOk);
