@@ -360,7 +360,6 @@ class TrasladoDl {
 		$error = '';
 		$oDBorg = $this->conexionOrg();
 		
-		print_r($oDBorg);
 		$gesMatriculas = new GestorMatriculaDl();
 		$gesMatriculas->setoDbl($oDBorg);
 		$cMatriculasPendientes = $gesMatriculas->getMatriculasPendientes($this->iid_nom);
