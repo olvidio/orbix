@@ -224,6 +224,7 @@ class TrasladoDl {
 	    
 	    $oDB = $oConexion->getPDO();
 	    
+		$this->verConexion($oDB);
 	    return $oDB;
 	}
 	
@@ -359,6 +360,7 @@ class TrasladoDl {
 		// Aviso si le faltan notas
 		$error = '';
 		$oDBorg = $this->conexionOrg();
+		
 		
 		$gesMatriculas = new GestorMatriculaDl();
 		$gesMatriculas->setoDbl($oDBorg);
@@ -850,6 +852,31 @@ class TrasladoDl {
 	    } else {
 	        return FALSE;
 	    }
+	}
+
+	/**
+	 * para poder ver donde esta conectado al hacer pruebas.
+	 * 
+	 * @param \PDO $conn
+	 */
+	private function verConexion($conn) {
+        $conn->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION );
+        
+        $attributes = array(
+            "ERRMODE", "CASE", "CLIENT_VERSION", "CONNECTION_STATUS",
+            "ORACLE_NULLS", "SERVER_INFO", "SERVER_VERSION",
+        );
+        
+        $attr = '';
+        foreach ( $attributes as $val ) {
+            echo "PDO::ATTR_$val: ";
+            try {
+                $attr .= $conn->getAttribute( constant( "PDO::ATTR_$val" ) ) . "\n";
+            } catch ( \PDOException $e ) {
+                echo $e->getMessage() . "\n";
+            }
+        }
+        echo $attr;
 	}
 
 }
