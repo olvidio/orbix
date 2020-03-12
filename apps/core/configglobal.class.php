@@ -96,6 +96,9 @@ Class ConfigGlobal extends ServerConf {
 	public static function mi_pass() {
 		return $_SESSION['session_auth']['password'];
 	}
+	public static function mi_id_schema() {
+		return $_SESSION['session_auth']['mi_id_schema'];
+	}
 	public static function mi_region_dl() {
 		return $_SESSION['session_auth']['esquema'];
 	}

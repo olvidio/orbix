@@ -1,6 +1,7 @@
 <?php
 namespace asistentes\model\entity;
 use core;
+use core\ConfigGlobal;
 /**
  * GestorAsistenteIn
  *
@@ -28,6 +29,12 @@ class GestorAsistenteIn Extends GestorAsistentePub {
 	 * @return array Una col·lecció d'objectes de tipus AsistenteIn
 	 */
 	function getAsistentesIn($aWhere=array(),$aOperators=array()) {
+	    // En la misma tabla también están los que son AsistenteOut de mi dl
+	    // Para saber los AsistentesIn debo quitar los que provienen de mi esquema.
+	    $id_esquema = ConfigGlobal::mi_id_schema();
+	    
+	    $aWhere['id_schema'] = $id_esquema;
+	    $aOperators['id_schema'] = '!=';
 		return  $this->getAsistentesPub($aWhere,$aOperators);
 	}
 

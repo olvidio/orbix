@@ -187,5 +187,28 @@ class DBPropiedades {
         }
         return $a_esquemas;
     }
+    
+    public function getIdSchema($esquema) {
+        $oConfigDB = new ConfigDB('comun');
+        $config = $oConfigDB->getEsquema('public'); 
+        $oConexion = new dbConnection($config);
+        $oDBP = $oConexion->getPDO();
+        $sQuery = "SELECT idschema('$esquema'::text) ";
+        if (($oDblSt = $oDBP->query($sQuery)) === false) {
+            $sClauError = 'Schemas.lista';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        $oDblSt->execute();
+        $id_esquema = '';
+        foreach($oDblSt as $row) {
+            $id_esquema = $row[0];
+        }
+        if (!empty($id_esquema )) {
+            return $id_esquema;
+        } else {
+            return false;
+        }
+    }
 
 }

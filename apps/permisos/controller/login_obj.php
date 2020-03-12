@@ -275,7 +275,11 @@ if ( !isset($_SESSION['session_auth'])) {
 						$oDBStI=$oDB->query($query_idioma);
 						$row = $oDBStI->fetch(\PDO::FETCH_ASSOC);
 						$idioma = $row['preferencia'];
-
+						
+						// Id_schema
+                        $oDBPropiedades = new DBPropiedades();
+                        $id_schema = $oDBPropiedades->getIdSchema($esquema);
+    
 						//si existe, registro la sesion con los permisos
 						if ( !isset($_SESSION['session_auth'])) { 
 							$session_auth=array (
@@ -291,7 +295,8 @@ if ( !isset($_SESSION['session_auth'])) {
 								'mi_oficina_menu'=>$mi_oficina_menu,
 								'expire'=>$expire,
 								'mail'=>$mail,
-								'idioma'=>$idioma
+								'idioma'=>$idioma,
+								'mi_id_schema'=>$id_schema,
 								 );
 							$_SESSION['session_auth']=$session_auth;
 						}
