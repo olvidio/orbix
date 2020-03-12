@@ -2,19 +2,21 @@
 namespace personas\model\entity;
 
 use actividades\model\entity\ActividadAll;
+use actividades\model\entity\GestorActividadAll;
 use actividadestudios\model\entity\GestorMatriculaDl;
 use asignaturas\model\entity\Asignatura;
 use asistentes\model\entity\AsistenteDl;
 use asistentes\model\entity\AsistenteOut;
 use asistentes\model\entity\GestorAsistenteDl;
 use asistentes\model\entity\GestorAsistenteOut;
+use core\ConfigDB;
 use core\ConfigGlobal;
 use core\Converter;
+use core\DBPropiedades;
+use core\dbConnection;
 use dossiers\model\entity\GestorDossier;
 use dossiers\model\entity\TipoDossier;
 use web;
-use actividades\model\entity\GestorActividadAll;
-use actividadcargos\model\entity\GestorCargo;
 
 
 /**
@@ -192,7 +194,46 @@ class TrasladoDl {
 	    }
 	}
 
+	private function setConexion($esquema,$exterior=FALSE) {
+	    
+		if (ConfigGlobal::mi_sfsv() == 2) {
+		    $database = 'sf';
+		    if ($exterior) {
+                $database = 'sf-e';
+		    }
+            if (ConfigGlobal::mi_region_dl() != $esquema) {
+                $esquema = 'restof';
+            }
+		} else {
+		    $database = 'sv';
+		    if ($exterior) {
+                $database = 'sv-e';
+		    }
+		    // dlp?
+		    $oDBPropiedades = new DBPropiedades();
+		    $aEsquemas = $oDBPropiedades->array_posibles_esquemas();
+		    
+            if (!in_array($esquema, $aEsquemas)) {
+                $esquema = 'restov';
+            }
+		}
+
+	    $oConfigDB = new ConfigDB($database);
+        $config = $oConfigDB->getEsquema($esquema);
+	    $oConexion = new dbConnection($config);
+	    
+	    $oDB = $oConexion->getPDO();
+	    
+	    return $oDB;
+	}
+	
 	private function conexionOrg($exterior=FALSE) {
+	    
+		$this->snew_esquema = $this->sreg_dl_org;
+		
+		return $this->setConexion($this->snew_esquema,$exterior);
+
+	    /*
 		$this->snew_esquema = $this->sreg_dl_org;
 		if (ConfigGlobal::mi_region_dl() == $this->snew_esquema) {
 			//Utilizo la conexión oDB para cambiar momentáneamente el search_path.
@@ -214,7 +255,7 @@ class TrasladoDl {
 		$aPath = $qRs->fetch(\PDO::FETCH_ASSOC);
 		$this->path_ini_org = $aPath['search_path'];
 		$oDB->exec('SET search_path TO public,"'.$this->snew_esquema.'"');
-		return $oDB;
+		*/
 	}
 	private function restaurarConexionOrg($oDB) {
 		// Volver oDB a su estado original:
@@ -223,6 +264,8 @@ class TrasladoDl {
 	}
 	private function conexionDst($exterior=FALSE) {
 		$this->snew_esquema = $this->sreg_dl_dst;
+		return $this->setConexion($this->snew_esquema,$exterior);
+		/*
 		//Utilizo la conexión oDBR para cambiar momentáneamente el search_path.
 		if (ConfigGlobal::mi_region_dl() == $this->snew_esquema) {
 			//Utilizo la conexión oDB para cambiar momentáneamente el search_path.
@@ -246,6 +289,7 @@ class TrasladoDl {
 		$this->path_ini_dst = $aPath['search_path'];
 		$oDB->exec('SET search_path TO public,"'.$this->snew_esquema.'"');
 		return $oDB;
+		*/
 	}
 	private function restaurarConexionDst($oDB) {
 		// Volver oDBR a su estado original:
@@ -316,6 +360,7 @@ class TrasladoDl {
 		$error = '';
 		$oDBorg = $this->conexionOrg();
 		
+		print_r($oDBorg);
 		$gesMatriculas = new GestorMatriculaDl();
 		$gesMatriculas->setoDbl($oDBorg);
 		$cMatriculasPendientes = $gesMatriculas->getMatriculasPendientes($this->iid_nom);
@@ -330,7 +375,7 @@ class TrasladoDl {
 			$msg .= empty($msg)? '' : '<br>';
 			$msg .= sprintf(_("ca: %s, asignatura: %s"),$nom_activ,$nombre_corto);
 		}
-		$this->restaurarConexionOrg($oDBorg);
+		//$this->restaurarConexionOrg($oDBorg);
 		if (!empty($msg)) {
 			$error = _("tiene pendiente de poner las notas de:") .'<br>'.$msg;
 		}
@@ -359,7 +404,7 @@ class TrasladoDl {
 		if ($oPersonaDl->DBGuardar() === false) {
 			$error .= '<br>'._("hay un error, no se ha guardado");
 		}
-		$this->restaurarConexionOrg($oDBorg);
+		//$this->restaurarConexionOrg($oDBorg);
 		if (empty($error)) {
 			return true;
 		} else {
@@ -490,8 +535,8 @@ class TrasladoDl {
 				$error .= '<br>'._("hay un error, no se ha guardado");
 			}
 		}
-		$this->restaurarConexionOrg($oDBorg);
-		$this->restaurarConexionDst($oDBdst);
+		//$this->restaurarConexionOrg($oDBorg);
+		//$this->restaurarConexionDst($oDBdst);
 		if (empty($error)) {
 			return true;
 		} else {
@@ -539,8 +584,8 @@ class TrasladoDl {
 				}
 			}
 		}
-		$this->restaurarConexionOrg($oDBorg);
-		$this->restaurarConexionDst($oDBdst);
+		//$this->restaurarConexionOrg($oDBorg);
+		//$this->restaurarConexionDst($oDBdst);
 		if (empty($error)) {
 			return true;
 		} else {
@@ -611,8 +656,8 @@ class TrasladoDl {
         }
         // Los Ex no deberían existir, son gente de otras dl, no afecta al traslado
         
-        $this->restaurarConexionOrg($oDBorgE);
-        $this->restaurarConexionDst($oDBdstE);
+        //$this->restaurarConexionOrg($oDBorgE);
+        //$this->restaurarConexionDst($oDBdstE);
         if (empty($error)) {
             return true;
         } else {
@@ -745,8 +790,8 @@ class TrasladoDl {
 			$NuevoObj->DBGuardar();
 		}
 		// Volver oDBdst a su estado original:
-		$this->restaurarConexionDst($oDBdst);
-		$this->restaurarConexionOrg($oDBorg);
+		//$this->restaurarConexionDst($oDBdst);
+		//$this->restaurarConexionOrg($oDBorg);
 		if (empty($error)) {
 			return true;
 		} else {
@@ -771,7 +816,7 @@ class TrasladoDl {
 		if ($oTraslado->DBGuardar() === false) {
 			$error .= '<br>'._("hay un error, no se ha guardado");
 		}
-		$this->restaurarConexionOrg($oDBorg);
+		//$this->restaurarConexionOrg($oDBorg);
 		if (empty($error)) {
 			return true;
 		} else {
