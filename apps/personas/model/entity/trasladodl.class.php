@@ -17,6 +17,7 @@ use core\dbConnection;
 use dossiers\model\entity\GestorDossier;
 use dossiers\model\entity\TipoDossier;
 use web;
+use ubis\model\entity\GestorDelegacion;
 
 
 /**
@@ -125,6 +126,7 @@ class TrasladoDl {
 		$this->sreg_dl_org = $sreg_dl_org;
 
 		$a_reg = explode('-',$sreg_dl_org);
+		//$this->sdl_org = $a_reg[1];
 		$this->sdl_org = substr($a_reg[1],0,-1); // quito la v o la f.
 	}
 	/**
@@ -144,6 +146,7 @@ class TrasladoDl {
 		$this->sreg_dl_dst = $sreg_dl_dst;
 
 		$a_reg = explode('-',$sreg_dl_dst);
+		//$this->sdl_dst = $a_reg[1];
 		$this->sdl_dst = substr($a_reg[1],0,-1); // quito la v o la f.
 	}
 	/**
@@ -347,6 +350,15 @@ class TrasladoDl {
 		$error = '';
 		if (!empty($this->sdl_dst) AND $this->sdl_dst == $this->sdl_persona) {
 			$error = _("ya está trasladado. No se ha hecho ningún cambio.");
+		}
+		// Que la dl destino exista:
+		$gesDelegacion = new GestorDelegacion();
+        $a_dl = $gesDelegacion->getArrayDelegaciones();
+		if (!empty($this->sdl_org) AND !in_array($this->sdl_org, $a_dl)) {
+			$error = _("No existe la dl origen. Ponerla bien en al ficha de la persona.");
+		}
+		if (!empty($this->sdl_dst) AND !in_array($this->sdl_dst, $a_dl)) {
+			$error = _("No existe la dl destino.");
 		}
 		if (empty($error)) {
 			return true;

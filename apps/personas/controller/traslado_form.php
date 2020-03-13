@@ -44,7 +44,7 @@ $oDesplCentroDl = $gesCentroDl->getListaCentros($sCondicion);
 $oDesplCentroDl->setNombre('new_ctr');
 			
 $gesDl = new ubis\GestorDelegacion();
-$oDesplDlyR = $gesDl->getListaRegDele();
+$oDesplDlyR = $gesDl->getListaRegDele(FALSE); // False para no incluir mi propia dl en la lista
 $oDesplDlyR->setNombre('new_dl');
 
 $GesSituacion = new personas\GestorSituacion();

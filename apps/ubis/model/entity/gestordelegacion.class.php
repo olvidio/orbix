@@ -145,7 +145,7 @@ class GestorDelegacion Extends ClaseGestor {
 	 * Es fa servir ConfigGlobal::mi_dele() sense la 'f' perque es global a les dues seccions.
 	 *
 	 * @param boolean si se incluye la dl o no
-	 * @return object Una Llista de delegacions i regions.
+	 * @return object Una Llista de delegacions (amb el nom de la regió).
 	 */
 	function getListaRegDele($bdl='t') {
 		$sf = (ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
@@ -154,16 +154,13 @@ class GestorDelegacion Extends ClaseGestor {
 		if ($bdl == 't') {
 			$sQuery="SELECT region||'-'||dl||'$sf', nombre_dl||' ('||dl||'$sf)'
 					FROM $nom_tabla
-					UNION 
-					SELECT u.region||'-'||u.region,u.nombre_region||' ('||region||')' 
-					FROM xu_region u 
+                    WHERE status = 't'
 					ORDER BY 2";
 		} else {
 			$sQuery="SELECT region||'-'||dl||'$sf', nombre_dl||' ('||dl||'$sf)'
-					FROM $nom_tabla WHERE dl != '".ConfigGlobal::mi_dele()."'
-					UNION 
-					SELECT u.region||'-'||u.region,u.nombre_region||' ('||region||')' 
-					FROM xu_region u 
+					FROM $nom_tabla 
+                    WHERE dl != '".ConfigGlobal::mi_dele()."'
+                        AND status = 't'
 					ORDER BY 2";
 		}
 		//echo "sql: $sQuery<br>";

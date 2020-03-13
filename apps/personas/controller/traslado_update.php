@@ -61,9 +61,6 @@ $Qdl = (string) \filter_input(INPUT_POST, 'dl');
 $reg_dl_org  = empty($Qdl)? '' : ConfigGlobal::mi_region().'-'.$Qdl;
 $sfsv_txt = (configGlobal::mi_sfsv() == 1)? 'v' :'f';
 
-if (empty($Qdl) OR $Qdl == 'dl') {
-    exit (_("No se puede trasladar. Debe poner la dl actual en la ficha de la persona"));
-}
 if (!empty($Qnew_dl) AND !empty($Qf_dl)){
 	$reg_dl_org  .= $sfsv_txt;
 	$Qnew_dl  .= $sfsv_txt;
