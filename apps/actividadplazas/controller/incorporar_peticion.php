@@ -22,6 +22,27 @@ use personas\model\entity as personas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+function tieneAistencia($id_nom,$aId_activ) {
+	// Comprobar que no tienen alguna actividad ya asignada como propia
+    $GesAsistentes = new asistentes\GestorAsistenteDl();
+    $cAsistentes = $GesAsistentes->getAsistentesDl(array('id_nom'=>$id_nom,'propio'=>'t'));
+    foreach ($cAsistentes as $oAsistente) {
+        $id_activ = $oAsistente->getId_activ();
+        if (array_key_exists($id_activ, $aId_activ)) {
+            return TRUE;
+        }
+    }
+    $GesAsistentesOut = new asistentes\GestorAsistenteOut();
+    $cAsistentesOut = $GesAsistentesOut->getAsistentesOut(array('id_nom'=>$id_nom,'propio'=>'t'));
+    foreach ($cAsistentesOut as $oAsistente) {
+        $id_activ = $oAsistente->getId_activ();
+        if (array_key_exists($id_activ, $aId_activ)) {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
 $Qsactividad = (string)  filter_input(INPUT_POST, 'sactividad');
 $Qsasistentes = (string)  filter_input(INPUT_POST, 'sasistentes');
 
@@ -76,12 +97,13 @@ switch ($Qsasistentes) {
 		$cActividadesPub = $GesActividadesPub->getActividades($aWhereA,$aOperadorA);
 		
 		$cActividades = array_merge($cActividadesDl,$cActividadesPub);
+		$filtro_id_nom = 2;
 		break;
 	case "n":
 		// caso de n
-		$id_tabla_persona='n';
 		$aWhereA['id_tipo_activ'] = $Qid_tipo_activ;
 		$aOperadorA['id_tipo_activ'] = '~';
+		/*
 		//inicialmente estaba sólo con las activiades publicadas. 
 		//Ahora añado las no publicadas de midl.
 		$GesActividadesDl = new actividades\GestorActividadDl();
@@ -91,122 +113,61 @@ switch ($Qsasistentes) {
 		$aOperadorA['dl_org'] = '!=';
 		$GesActividadesPub = new actividades\GestorActividadPub();
 		$cActividadesPub = $GesActividadesPub->getActividades($aWhereA,$aOperadorA);
-		
 		$cActividades = array_merge($cActividadesDl,$cActividadesPub);
+		*/
+		// las de la dl + las importadas
+		$GesActividades = new actividades\GestorActividad();
+		$cActividades = $GesActividades->getActividades($aWhereA,$aOperadorA);
+		$filtro_id_nom = 1;
 	break;
 }
-$a_id_activ = array();
-foreach ($cActividades as $oActividad) {
-	$a_id_activ[] = $oActividad->getId_activ();
-}
 
+$aId_activ = [];
+foreach ($cActividades as $oActividad) {
+    $id_activ = $oActividad->getId_activ();
+    $dl_org = $oActividad->getDl_org();
+    $aId_activ[$id_activ] = $dl_org;
+}
 //Miro las peticiones actuales
 $gesPlazasPeticion = new \actividadplazas\model\entity\GestorPlazaPeticion();
-$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('tipo'=>$Qsactividad,'_ordre'=>'id_nom,orden'));
-$id_nom_old = 0;
+$aWhereP = ['orden' => 1, 'tipo' => $Qsactividad ];
+$aWhereP['id_nom'] = '^\d{4}'.$filtro_id_nom;
+$aOperadorP = ['id_nom' => '~'];
+$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion($aWhereP,$aOperadorP);
 $msg_err = '';
 foreach ($cPlazasPeticion as $oPlazaPeticion) {
 	// solo apunto la primera (segun orden)
 	$id_nom = $oPlazaPeticion->getId_nom();
 	$id_activ_new = $oPlazaPeticion->getId_activ();
-	if ($id_nom_old == $id_nom) { continue; }
-	$id_nom_old = $id_nom;
-
-	// hay que averiguar si la persona es de la dl o de fuera.
-	$oPersona = personas\Persona::NewPersona($id_nom);
-	// Debo saltarme las asistencias de personas que no son del grupo (n, agd)
-	$id_tabla_p = $oPersona->getId_tabla();
-	if ($id_tabla_p != $id_tabla_persona) { continue; }
-	if (!is_object($oPersona)) {
-		$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
-		exit($msg_err);
-	}
-	$obj_persona = get_class($oPersona);
-	$obj_persona = str_replace("personas\\model\\entity\\",'',$obj_persona);
-
-	//Comprobar que no tienen alguna actividad ya asignada como propia
-	//Con el tiempo habrá menos actividades (curso) que asistencias (todas). Miro por actividades:
-	$ya_tiene = 0;
-	foreach ($cActividades as $oActividad) {
-		// hay que averiguar si la actividad es de la dl o de fuera.
-		$id_activ = $oActividad->getId_activ();
-		// si es de la sf quito la 'f'
-		$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
-		$id_tabla = $oActividad->getId_tabla();
-		if ($dl == $mi_dele) {
-			Switch($obj_persona) {
-				case 'PersonaN':
-				case 'PersonaNax':
-				case 'PersonaAgd':
-				case 'PersonaS':
-				case 'PersonaSSSC':
-				case 'PersonaDl':
-					$GesAsistentes = new asistentes\GestorAsistenteDl();
-					$cAsistentes = $GesAsistentes->getAsistentesDl(array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'propio'=>'t'));
-					break;
-				case 'PersonaIn':
-				case 'PersonaEx':
-					$GesAsistentes = new asistentes\GestorAsistenteEx();
-					$cAsistentes = $GesAsistentes->getAsistentesEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'propio'=>'t'));
-					break;
-			}
-		} else {
-			if ($obj_persona == 'PersonaEx') {
-				$GesAsistentes = new asistentes\GestorAsistenteEx();
-				$cAsistentes = $GesAsistentes->getAsistentesEx(array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'propio'=>'t'));
-			} else {
-				$GesAsistentes = new asistentes\GestorAsistenteOut();
-				$cAsistentes = $GesAsistentes->getAsistentesOut(array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'propio'=>'t'));
-			}
-		}
-		//Comprobar que no tiene alguno asignado como propio
-		if (is_array($cAsistentes) && count($cAsistentes) > 0) {
-			$ya_tiene++;
-			break;
-		}
-	}
+    // Comprobar que la actividad está en la lista
+    if (!array_key_exists($id_activ_new, $aId_activ)) {
+        continue;
+    }
+    
+	// Comprobar si ya tiene asignada una actividad
+	if (tieneAistencia($id_nom,$aId_activ)) { continue; }
 	
-	if ($ya_tiene == 0) {
-		$oActividad = new actividades\ActividadAll(array('id_activ'=>$id_activ_new));
-		// si es de la sf quito la 'f'
-		$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
-		$id_tabla = $oActividad->getId_tabla();
-		if ($dl == $mi_dele) {
-			Switch($obj_persona) {
-				case 'PersonaN':
-				case 'PersonaNax':
-				case 'PersonaAgd':
-				case 'PersonaS':
-				case 'PersonaSSSC':
-				case 'PersonaDl':
-					$oAsistenteNew = new asistentes\AsistenteDl();
-					break;
-				case 'PersonaIn':
-				case 'PersonaEx':
-					$oAsistenteNew = new asistentes\AsistenteEx();
-					break;
-			}
-		} else {
-			if ($id_tabla == 'dl') {
-				$oAsistenteNew = new asistentes\AsistenteOut();
-			} else {
-				$oAsistenteNew = new asistentes\AsistenteEx();
-			}
-		}
-		//asignar uno nuevo.
-		$oAsistenteNew->setId_activ($id_activ_new);
-		$oAsistenteNew->setId_nom($id_nom);
-		$oAsistenteNew->DBCarregar();
-		$oAsistenteNew->setPropio('t');
-		//1:pedida, 2:en espera, 3: denegada, 4:asignada, 5:confirmada
-		$oAsistenteNew->setPlaza(asistentes\Asistente::PLAZA_ASIGNADA);
-		// IMPORTANT: Propietario del a plaza
-		$oAsistenteNew->setPropietario("$dl>$mi_dele");
-		if ($oAsistenteNew->DBGuardar() === false) {
-			$msg_err = _("hay un error, no se ha guardado");
-			echo $msg_err;
-		}
-	}
+	// Solo para personas de la dl
+    $dl_org = $aId_activ[$id_activ_new];
+    $dl = preg_replace('/f$/', '', $dl_org);
+    if ($dl == $mi_dele) {
+        $oAsistenteNew = new asistentes\AsistenteDl();
+    } else {
+        $oAsistenteNew = new asistentes\AsistenteOut();
+    }
+    //asignar uno nuevo.
+    $oAsistenteNew->setId_activ($id_activ_new);
+    $oAsistenteNew->setId_nom($id_nom);
+    $oAsistenteNew->DBCarregar();
+    $oAsistenteNew->setPropio('t');
+    //1:pedida, 2:en espera, 3: denegada, 4:asignada, 5:confirmada
+    $oAsistenteNew->setPlaza(asistentes\Asistente::PLAZA_ASIGNADA);
+    // IMPORTANT: Propietario del a plaza
+    $oAsistenteNew->setPropietario("$dl>$mi_dele");
+    if ($oAsistenteNew->DBGuardar() === false) {
+        $msg_err = _("hay un error, no se ha guardado");
+        echo $msg_err;
+    }
 }
 
 $txt = sprintf(_("no se incorporán las peticiones si la persona ya tiene una actividad como propia en el periodo: %s - %s."),$inicurs,$fincurs);

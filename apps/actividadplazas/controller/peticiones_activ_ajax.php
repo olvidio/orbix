@@ -20,11 +20,18 @@ $Qque = (string) \filter_input(INPUT_POST, 'que');
 
 switch ($Qque) {
 	case "update":
+	    // borro todo y grabo lo nuevo:
+		$gesPlazasPeticion = new actividadplazas\GestorPlazaPeticion();
+		$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom'=>$Qid_nom, 'tipo'=>$Qsactividad));
+		foreach ($cPlazasPeticion as $oPlazaPeticion) {
+			$oPlazaPeticion->DBEliminar();
+		}
+		// grabar
 		$i = 0;
 		$a_actividades = (array)  \filter_input(INPUT_POST, 'actividades', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 		foreach ($a_actividades as $id_activ) {
-			$i++;
 			if (empty($id_activ)) { continue; }
+			$i++;
 			$oPlazaPeticion = new actividadplazas\PlazaPeticion(array('id_nom'=>$Qid_nom, 'id_activ'=>$id_activ));
 			$oPlazaPeticion->setOrden($i);
 			$oPlazaPeticion->setTipo($Qsactividad);
