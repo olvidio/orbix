@@ -77,10 +77,7 @@ class GestorAsistente Extends core\ClaseGestor {
 	 */
 	function getActividadesDeAsistente($aWhereNom,$aOperadorNom,$aWhere=array(),$aOperators=array(),$reverse=FALSE) {
 		// todas las actividades de la persona
-		// Por el momento si está en la dmz no puede ver las asistencias:
-	    if (ConfigGlobal::is_dmz()) {
-	        return [];
-	    }
+
 		//Importa el orden, se queda con la primera.
 		$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');
 		/*
@@ -96,9 +93,7 @@ class GestorAsistente Extends core\ClaseGestor {
 		// seleccionar las actividades segun los criterios de búsqueda.
 		$GesActividades = new actividades\GestorActividad();
 		$aListaIds = $GesActividades->getArrayIds($aWhere,$aOperators);
-		if (ConfigGlobal::mi_id_usuario() == 443) {
-		    
-		}
+		
 		// descarto los que no estan.
 		$cActividadesOk = array();
 		$i = 0;
@@ -216,8 +211,9 @@ class GestorAsistente Extends core\ClaseGestor {
 	 */
 	function getAsistentesDeActividad($iid_activ,$sOrder='') {
 		// Por el momento si está en la dmz no puede ver las asistencias:
+		// Las de los sacd si
 	    if (ConfigGlobal::is_dmz()) {
-	        return [];
+	        //return [];
 	    }
 		//$oDbl = $this->getoDbl();
 		if (empty($sOrder)) $sOrder='apellido1,apellido2,nom';
