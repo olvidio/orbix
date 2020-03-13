@@ -95,7 +95,9 @@ if (!$nuevo) {
 			?>
 	</select></td>
 	<td><span class=etiqueta ondblclick="fnjs_help('<?php //echo $dl_help_ref; ?>')" >Delegación</span></td>
-	<td><input class=datos size="6" name="dl" value="<?= $dl ?>" title="<?php //echo $dl_help; ?>"></td>
+	<td>
+		<?= $oDesplDl->desplegable() ?>
+	</td>
 	</tr>
 <tr>
 <?php

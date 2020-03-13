@@ -88,7 +88,9 @@ if (!$nuevo) {
 </td></tr>
 <tr>
 	<td><span class="etiqueta">Delegación</span></td>
-	<td><input class="datos" size="6" name="dl" value="<?= $dl ?>" ></td>
+	<td>
+		<?= $oDesplDl->desplegable() ?>
+	</td>
 	<?php //en el caso de nueva ficha o sin ctr actual, pongo el nombre del centro sin llenar el dossier de traslados.
 	if (empty($id_nom) || empty($nom_ctr)){
 		?>

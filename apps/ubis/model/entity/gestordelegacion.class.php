@@ -213,6 +213,8 @@ class GestorDelegacion Extends ClaseGestor {
 	 * @return object Una Llista de delegacions.
 	 */
 	function getListaDelegaciones($aRegiones=array()) {
+        $isfsv = ConfigGlobal::mi_sfsv(); 
+		$sf = ($isfsv == 2)? 'f' : '';
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		
@@ -222,13 +224,15 @@ class GestorDelegacion Extends ClaseGestor {
 			$sReg = implode("'OR region = '",$aRegiones);
 			$sReg = "'".$sReg."'";
 			$sCondicion .= $sReg;
-			$sQuery="SELECT u.dl,u.nombre_dl FROM $nom_tabla u 
+			$sQuery="SELECT dl, nombre_dl||' ('||region||'-'||dl||'$sf)'
+                    FROM $nom_tabla 
 					$sCondicion
 					ORDER BY nombre_dl";
 		} else {
-			$sQuery="SELECT dl, nombre_dl
+			$sQuery="SELECT dl, nombre_dl||' ('||region||'-'||dl||'$sf)'
 					FROM $nom_tabla
-					ORDER BY dl";
+                    WHERE status = 't'
+					ORDER BY nombre_dl";
 		}
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorDelegacion.lista';

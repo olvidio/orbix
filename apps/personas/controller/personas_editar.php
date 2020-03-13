@@ -37,7 +37,7 @@ if (!empty($Qnuevo)) {
 	$oPersona->setF_situacion($oF_hoy);
 	$id_tabla = (string) filter_input(INPUT_POST, 'tabla');
 	$stgr = '';
-	$dl = '';
+	$dl = ConfigGlobal::mi_delef();
 	$nom_ctr = '';
 	$id_ctr = '';
 	$Qid_nom = '';
@@ -110,6 +110,12 @@ if (!empty($Qnuevo)) {
 		$nom_ctr = '';
 	}
 }
+
+// para la dl
+$gesDl = new ubis\GestorDelegacion();
+$oDesplDl = $gesDl->getListaDelegaciones();
+$oDesplDl->setNombre('dl');
+$oDesplDl->setOpcion_sel($dl);
 
 // para el ctr, si es nuevo o está vacio
 if (empty($nom_ctr)) {
@@ -281,6 +287,7 @@ $a_campos = ['obj_txt' => $obj,
 			'dl' => $dl,
 			'id_ctr' => $id_ctr,
 			'nom_ctr' => $nom_ctr,
+			'oDesplDl' => $oDesplDl,
 			'oDesplCentro' => $oDesplCentroDl,
 			'oDesplSituacion' => $oDesplSituacion,
 			'oDesplLengua' => $oDesplLengua,
