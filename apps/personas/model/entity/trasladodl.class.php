@@ -627,7 +627,7 @@ class TrasladoDl {
                 $oAsistenteDl = new AsistenteDl();
                 $oAsistenteDl->setoDbl($oDBdstE);
                 $oAsistenteDl = $this->copiarAsistencia($oAsistenteOut,$oAsistenteDl); 
-                if ($oAsistenteDl->DBGuardar() === false) {
+                if ($oAsistenteDl->DBGuardar(1) === false) { // param quiet=1 para que no anote cambios
                     $error .= '<br>'.sprintf(_("No se ha guardado la asistencia(dl) a id_activ: %s"),$id_activ);
                     $err=1;
                 }
@@ -636,8 +636,7 @@ class TrasladoDl {
                 $NuevoObj->setoDbl($oDBdstE);
                 if (method_exists($NuevoObj,'setId_item') === true) $NuevoObj->setId_item(null);
                 $NuevoObj->setTraslado('t');
-                $NuevoObj->DBGuardar();
-                if ($NuevoObj->DBGuardar() === false) {
+                if ($NuevoObj->DBGuardar(1) === false) { // param quiet=1 para que no anote cambios
                     $error .= '<br>'.sprintf(_("No se ha guardado la asistencia(out) a id_activ: %s"),$id_activ);
                     $err=1;
                 }
