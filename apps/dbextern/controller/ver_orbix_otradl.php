@@ -39,7 +39,7 @@ foreach ($a_ids_traslados_A as $id_nom_listas) {
 	if (!empty($matches[2]) && $matches[2] == 'cr') {
 		$dl = $matches[1];
 	} else {
-		$dl = "dl".$dl;
+		$dl = "dl".$dl_listas;
 	}
 	$a_persona_listas[$i]['dl'] = $dl;
 }
