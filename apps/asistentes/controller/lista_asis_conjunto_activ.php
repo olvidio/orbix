@@ -47,7 +47,7 @@ $aWhere = array();
 $aOperador = [];
 
 // Status
-if ($Qstatus!=5) {
+if ($Qstatus != actividades\ActividadAll::STATUS_ALL) {
 	$aWhere['status'] = $Qstatus;
 }
 // Id tipo actividad
