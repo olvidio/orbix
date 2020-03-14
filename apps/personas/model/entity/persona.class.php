@@ -61,7 +61,14 @@ class Persona {
 					if (count($cPersonasDl) > 0) {
 						$oPersona = $cPersonasDl[0];
 					} else {
-						return _("no encuentro a nadie");
+					    // o de otra dl.
+                        $gesPersonaIn = new GestorPersonaIn();
+                        $cPersonasIn = $gesPersonaIn->getPersonasIn(array('id_nom'=>$id_nom));
+                        if (count($cPersonasIn) > 0) {
+                            $oPersona = $cPersonasIn[0];
+                        } else {
+						    return _("no encuentro a nadie");
+                        }
 					}
 				}
 			}

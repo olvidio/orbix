@@ -164,7 +164,8 @@ class listaPlazas {
 						$cargo_cl = $oCargo->getCargo();
 						$oPersona = personas\Persona::NewPersona($id_nom);
 						if (!is_object($oPersona)) {
-							$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
+							$msg_err .= "<br>$oPersona con id_nom: $id_nom para la actividad $nom_activ";
+							$msg_err .= "<br>en  ".__FILE__.": line ". __LINE__;
 							continue;
 						}
 						$sacd = $oPersona->getSacd();
