@@ -97,7 +97,7 @@ foreach ( $cActividadAsignaturas as $oActividadAsignatura) {
 
 //buco los asistentes:
 $GesAsistentes = new asistentes\GestorAsistente(); 
-$cAsistentes = $GesAsistentes->getAsistentesDeActividad($id_activ,'apellido1,apellido2,nom');
+$cAsistentes = $GesAsistentes->getAsistentesDeActividad($id_activ);
 $a=0;
 $a_old=0;
 $aAlumnos = array();

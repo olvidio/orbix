@@ -203,13 +203,12 @@ class GestorAsistente Extends core\ClaseGestor {
 
 	/**
 	 * retorna l'array d'objectes de tipus Asistente
-	 *   ordenats sOrder. Per defecte: apellido1,apellido1,nom.per apellido1
 	 *
 	 * @param integer iid_activ el id de l'activitat.
 	 * @param string sOrder(null) l'ordre que es vol. Per defecte: apellido1,apellido1,nom.
 	 * @return array Una col·lecció d'objectes de tipus Asistente
 	 */
-	function getAsistentesDeActividad($iid_activ,$sOrder='') {
+	function getAsistentesDeActividad($iid_activ) {
 		// Por el momento si está en la dmz no puede ver las asistencias:
 		// Las de los sacd si
 		/*
@@ -225,9 +224,6 @@ class GestorAsistente Extends core\ClaseGestor {
 		$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
 		
 		$aWhere['id_activ'] = $iid_activ;
-		if (empty($sOrder)) {
-		    $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-		}
 		$aOperators = array();
 		
 		$msg_err = '';

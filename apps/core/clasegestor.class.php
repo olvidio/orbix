@@ -60,6 +60,12 @@ abstract class ClaseGestor {
 	protected function getConjunt($a_Clases,$namespace,$aWhere,$aOperators) {
 		$cClassesTot = array();
 		$ord_Tot = array();
+		
+		$paraOrdenar = '';
+        if (isset($aWhere['_ordre']) && $aWhere['_ordre']!='') {
+            $paraOrdenar = $aWhere['_ordre'];       
+            unset($aWhere['_ordre']);       
+        }
 		foreach ($a_Clases as $aClasse) {
 			$Classe = $aClasse['clase'];
 			$get = $aClasse['get'];
@@ -73,8 +79,8 @@ abstract class ClaseGestor {
 		}
 
 		//ordenar
-		if (isset($aWhere['_ordre']) && $aWhere['_ordre']!='') {
-			$a_ordre = explode(',',$aWhere['_ordre']);
+		if (!empty($paraOrdenar)) {
+			$a_ordre = explode(',',$paraOrdenar);
 			foreach ($cClassesTot as $key_c=>$oClass) {
 				$get = '';
 				foreach ($a_ordre as $key_o=>$ordre) {
