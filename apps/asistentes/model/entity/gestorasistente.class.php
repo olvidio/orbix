@@ -212,42 +212,42 @@ class GestorAsistente Extends core\ClaseGestor {
 	function getAsistentesDeActividad($iid_activ,$sOrder='') {
 		// Por el momento si está en la dmz no puede ver las asistencias:
 		// Las de los sacd si
+		/*
 	    if (ConfigGlobal::is_dmz()) {
 	        //return [];
 	    }
-		//$oDbl = $this->getoDbl();
-		if (empty($sOrder)) $sOrder='apellido1,apellido2,nom';
-
+        */
+	    
 		/* Mirar si la actividad es mia o no */
 		$oActividad = new actividades\Actividad($iid_activ);
-		$dl = $oActividad->getDl_org();
 		$id_tabla = $oActividad->getId_tabla();
+		// si es de la sf quito la 'f'
+		$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
+		
 		$aWhere['id_activ'] = $iid_activ;
-		$aOperators = array();
-		$namespace = __NAMESPACE__;
-		$msg_err = '';
-		switch($id_tabla) {
-			case 'dl': // AsistentesDl + AsistentesIn
-				$gesAsistenteDl = new GestorAsistenteDl();
-				$cAsistentesDl = $gesAsistenteDl->getAsistentesDl(array('id_activ'=>$iid_activ));
-				// todas las actividades de la persona
-				$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');
-				$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
-				$namespace = __NAMESPACE__;
-				$cAsistentes = $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
-				break;
-			case 'ex': // asistentesEx
-				$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
-				$a_Clases[] = array('clase'=>'AsistenteEx','get'=>'getAsistentesEx');
-				$namespace = __NAMESPACE__;
-				$cAsistentes = $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
-				break;
-//			case 'ex': // asistentesOut
-//				$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
-//				$namespace = __NAMESPACE__;
-//				$cAsistentes = $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
-//				break;
+		if (empty($sOrder)) {
+		    $aWhere['_ordre'] = 'apellido1,apellido2,nom';
 		}
+		$aOperators = array();
+		
+		$msg_err = '';
+		if ($dl == core\ConfigGlobal::mi_delef()) {
+		    // Todos los asistentes
+		    /* Buscar en los tres tipos de asistente: Dl, IN y Out. */
+		    $a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');
+		    $a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
+		    $a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
+		} else {
+		    if ($id_tabla == 'dl') {
+		        $a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
+		    } else {
+		        $a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
+		        $a_Clases[] = array('clase'=>'AsistenteEx','get'=>'getAsistentesEx');
+		    }
+		}
+		$namespace = __NAMESPACE__;
+		$cAsistentes = $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
+		
 		$cAsistentesOk = array();
 		foreach ($cAsistentes as $oAsistente) {
 			$id_nom = $oAsistente->getId_nom();
