@@ -199,7 +199,7 @@ class TareaProceso Extends core\ClasePropiedades {
 					return FALSE;
 				}
 			}
-			$this->id_item = $oDbl->lastInsertId('a_procesos_id_item_seq');
+			$this->id_item = $oDbl->lastInsertId('a_tareas_proceso_id_item_seq');
 		}
 		$this->setAllAtributes($aDades);
 		return TRUE;
