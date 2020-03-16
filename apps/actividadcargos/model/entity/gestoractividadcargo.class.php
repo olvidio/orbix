@@ -182,8 +182,7 @@ class GestorActividadCargo Extends core\ClaseGestor {
 			if (array_key_exists ( $id_activ , $aAsis)) { // Añado al primero el id_cargo del segundo.
 				$aAsis[$id_activ]['id_cargo'] = $id_cargo;
 			} else { // añado la actividad
-				$aAsis[$id_activ] = array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'propio'=>'f','id_cargo'=>$id_cargo);
-			}
+				$aAsis[$id_activ] = array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'propio'=>'f','id_cargo'=>$id_cargo,'plaza'=>0);			}
 		}
 		return $aAsis;
 	}
