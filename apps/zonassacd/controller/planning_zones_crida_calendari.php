@@ -267,11 +267,12 @@ foreach ($aa_zonas as $a_zonas) {
 					$nom_llarg=$nom_activ;
 				}
 
+				$sin_permiso = FALSE;
 				// Si es una asistencia (plaza != 0) mirar permisos en la asistencia
 				if ($plaza != 0) {
                     $oPermAsistencia = $_SESSION['oPermActividades']->getPermisoActual('asistentes');
                     if ($oPermAsistencia->have_perm_activ('ver') === false) {
-                        continue;
+        				$sin_permiso = TRUE;
                     }
 				}
 				
@@ -281,15 +282,18 @@ foreach ($aa_zonas as $a_zonas) {
                     if ($id_cargo >= 34 AND $id_cargo <= 39) {
                         $oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
                         if ($oPermSacd->have_perm_activ('ver') === false) {
-                            continue;
+                            $sin_permiso = TRUE;
                         }
                     } else {
                         // mirar permisos en la cargos
                         $oPermCargos = $_SESSION['oPermActividades']->getPermisoActual('cargos');
                         if ($oPermCargos->have_perm_activ('ver') === false) {
-                            continue;
+                            $sin_permiso = TRUE;
                         }
                     }
+				}
+				if ($sin_permiso) {
+				    continue;
 				}
 				
 				$aActivPersona[]=array(
