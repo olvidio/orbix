@@ -220,6 +220,7 @@ foreach ($aa_zonas as $a_zonas) {
 				$id_activ = $aAsistente['id_activ'];
 				$propio = $aAsistente['propio'];
 				$plaza = $aAsistente['plaza'];
+				$id_cargo = $aAsistente['id_cargo'];
 
 				// Seleccionar sólo las del periodo
 				$aWhereAct['id_activ']=$id_activ;
@@ -266,19 +267,31 @@ foreach ($aa_zonas as $a_zonas) {
 					$nom_llarg=$nom_activ;
 				}
 
-				// mirar permisos en la asistencia
-				$oPermAsistencia = $_SESSION['oPermActividades']->getPermisoActual('asistentes');
-				// mirar permisos para atn sacd
-				$oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
-				// mirar permisos en la cargos
-				$oPermCargos = $_SESSION['oPermActividades']->getPermisoActual('cargos');
-				if ($oPermSacd->have_perm_activ('ver') === false 
-				    && $oPermCargos->have_perm_activ('ver') === false 
-				    && $oPermAsistencia->have_perm_activ('ver') === false)
-				{ // No puede ver la asistencia en esta fase.
-				    continue;
+				// Si es una asistencia (plaza != 0) mirar permisos en la asistencia
+				if ($plaza != 0) {
+                    $oPermAsistencia = $_SESSION['oPermActividades']->getPermisoActual('asistentes');
+                    if ($oPermAsistencia->have_perm_activ('ver') === false) {
+                        continue;
+                    }
 				}
-
+				
+				// Si es un Cargo (tiene id_cargo) mirar permisos para atn sacd
+                if (!empty($id_cargo)) {
+                    // Sacd: AND id_cargo BETWEEN 35 AND 39
+                    if ($id_cargo >= 34 AND $id_cargo <= 39) {
+                        $oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
+                        if ($oPermSacd->have_perm_activ('ver') === false) {
+                            continue;
+                        }
+                    } else {
+                        // mirar permisos en la cargos
+                        $oPermCargos = $_SESSION['oPermActividades']->getPermisoActual('cargos');
+                        if ($oPermCargos->have_perm_activ('ver') === false) {
+                            continue;
+                        }
+                    }
+				}
+				
 				$aActivPersona[]=array(
 								'nom_curt'=>$nom_curt,
 								'nom_llarg'=>$nom_llarg,
