@@ -173,16 +173,28 @@ class GestorActividadCargo Extends core\ClaseGestor {
 			$id_activ = $oAsistente->getId_activ();
 			$propio = $oAsistente->getPropio();
 			$plaza = $oAsistente->getPlaza();
-			$aAsis[$id_activ] = array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'propio'=>$propio,'plaza'=>$plaza);
+			$aAsis[$id_activ] = [ 'id_activ'=>$id_activ,
+			                     'id_nom'=>$id_nom,
+			                     'propio'=>$propio,
+			                     'plaza'=>$plaza,
+			                     ];
 		}
 		// Añado los cargos
 		foreach ($cActividadesOk as $id_activ=>$oCargo) {
 			$oCargo = $cActividadesOk[$id_activ];
 			$id_cargo = $oCargo->getId_cargo();
-			if (array_key_exists ( $id_activ , $aAsis)) { // Añado al primero el id_cargo del segundo.
+			if (array_key_exists ( $id_activ , $aAsis)) { 
+			    // Añado al primero el id_cargo del segundo.
 				$aAsis[$id_activ]['id_cargo'] = $id_cargo;
-			} else { // añado la actividad
-				$aAsis[$id_activ] = array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'propio'=>'f','id_cargo'=>$id_cargo,'plaza'=>0);			}
+			} else {
+			    // añado la actividad
+				$aAsis[$id_activ] = [   'id_activ'=>$id_activ,
+				                        'id_nom'=>$id_nom,
+				                        'propio'=>'f',
+				                        'id_cargo'=>$id_cargo,
+				                        'plaza'=>0,
+				                    ];
+			}
 		}
 		return $aAsis;
 	}

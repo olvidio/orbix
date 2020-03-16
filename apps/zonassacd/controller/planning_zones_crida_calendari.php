@@ -209,9 +209,12 @@ foreach ($aa_zonas as $a_zonas) {
 		    $aWhereAct['f_fin']="'$inicio_iso'";
 		    $aOperadorAct['f_fin']='>=';
 			$aWhereAct['status']='2';
-			
+            /*			
 			$aWhere = ['id_nom' => $id_nom, 'plaza' => Asistente::PLAZA_PEDIDA];
-			$aOperador = ['plaza' => '>=']; 
+			$aOperador = ['plaza' => '>='];
+			*/ 
+			$aWhere = ['id_nom' => $id_nom];
+			$aOperador = []; 
 			
 			$oGesActividadCargo = new GestorActividadCargo();
 			$cAsistentes = $oGesActividadCargo ->getAsistenteCargoDeActividad($aWhere,$aOperador,$aWhereAct,$aOperadorAct);
@@ -269,7 +272,7 @@ foreach ($aa_zonas as $a_zonas) {
 
 				$sin_permiso = FALSE;
 				// Si es una asistencia (plaza != 0) mirar permisos en la asistencia
-				if ($plaza != 0) {
+				if (!empty($plaza)) {
                     $oPermAsistencia = $_SESSION['oPermActividades']->getPermisoActual('asistentes');
                     if ($oPermAsistencia->have_perm_activ('ver') === false) {
         				$sin_permiso = TRUE;
@@ -279,13 +282,13 @@ foreach ($aa_zonas as $a_zonas) {
 				// Si es un Cargo (tiene id_cargo) mirar permisos para atn sacd
                 if (!empty($id_cargo)) {
                     // Sacd: AND id_cargo BETWEEN 35 AND 39
-                    if ($id_cargo >= 34 AND $id_cargo <= 39) {
+                    if ($id_cargo >= 35 AND $id_cargo <= 39) {
                         $oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
                         if ($oPermSacd->have_perm_activ('ver') === false) {
                             $sin_permiso = TRUE;
                         }
                     } else {
-                        // mirar permisos en la cargos
+                        // mirar permisos en los cargos
                         $oPermCargos = $_SESSION['oPermActividades']->getPermisoActual('cargos');
                         if ($oPermCargos->have_perm_activ('ver') === false) {
                             $sin_permiso = TRUE;
