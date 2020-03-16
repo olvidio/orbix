@@ -289,6 +289,12 @@ class PermisosActividades {
 	    }
 	}
 
+	/**
+	 * OJO devuelve TRUE si no está definido nada.
+	 * 
+	 * @param string|integer $iAfecta
+	 * @return \procesos\model\PermAccion
+	 */
 	public function getPermisoActual($iAfecta) {
 	    // hay que poner a cero el id_tipo_activ, sino 
 	    // aprovecha el que se ha buscado con el anterior iAfecta.
@@ -305,7 +311,9 @@ class PermisosActividades {
 		$faseActual = $this->getId_fase();
 		//echo "afec: $iAfecta, fase: $faseActual, proceso: $id_tipo_proceso<br>";
 		$iperm=0;
-		if ($this->btop === true) { return  new PermAccion(0); }
+		if ($this->btop === true) { 
+		    return  new PermAccion(0);
+		}
 		if (($oP = $this->getPermisos($iAfecta)) === false) {
 			return  new PermAccion(0);
 		} else {
@@ -386,6 +394,7 @@ class PermisosActividades {
 		$rta = preg_match('/(\d+)(\d)(\.*)/',$id_tipo_activ_txt,$match);
 		if (empty($rta)) {
 			if ($id_tipo_activ_txt=='1.....' || $id_tipo_activ_txt=='2.....' || $id_tipo_activ_txt=='3.....') {
+				$this->btop = true; // ja no puc pujar més amunt.
 				return '......';
 			} else {
 				$this->btop = true; // ja no puc pujar més amunt.

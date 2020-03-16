@@ -113,9 +113,10 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	 * 
 	 * @param string $iid_activ
 	 * @param integer $isfsv
+	 * @param boolean $force para forzar a borrar el proceso y generarlo de nuevo
 	 * @return boolean|\procesos\model\entity\id_fase.
 	 */
-	public function generarProceso($iid_activ='',$isfsv='') {
+	public function generarProceso($iid_activ='',$isfsv='',$force=FALSE) {
 	    // Si se genera al crear una actividad Ex. El objeto Actividad no la encuentra
 	    // porque todavía no se ha importado (y no está en su grupo de actividades).
 	    // Para evitar errores accedo directamente a los datos sin esperar a importarla,
@@ -169,12 +170,17 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
                 return TRUE;
             }
             // Asegurar que no existe, a veces al hacerlo para las dos secciones, una lo tiene y otra no:
-	        $test_id_fase = $this->faseActualAcabada($iid_activ);
-	        if (empty($test_id_fase) || $test_id_fase === 'SIN') {
+            // >> Cuando se hace manuel, es porque se quiere regenerar y ahy que forzar:
+            if ($force === FALSE) {
+                $test_id_fase = $this->faseActualAcabada($iid_activ);
+                if (empty($test_id_fase) || $test_id_fase === 'SIN') {
+                    $iid_fase[$sfsv] = $this->generar($iid_activ,$id_tipo_proceso,$sfsv);
+                } else {
+                    $iid_fase[$sfsv] = $test_id_fase;
+                }
+            } else {
                 $iid_fase[$sfsv] = $this->generar($iid_activ,$id_tipo_proceso,$sfsv);
-	        } else {
-	            $iid_fase[$sfsv] = $test_id_fase;
-	        }
+            }
         }
 
         // devuelve la fase del proceso propio

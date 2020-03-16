@@ -202,90 +202,69 @@ El atributo BORDER indica en pixels el ancho del reborde de las tablas. BORDER =
 
      
 
-     td.actsv  {
-
-     	border-color : navy;
-
-     	border-width : 1px;
-
-     	background-color : #C0F0F0;
-
+     td.provisional  {
+        text-decoration: line-through;
      }
-
-     td.actsv_nomod  {
-
-     	border-color : navy;
-
-     	border-width : 1px;
-
-     	background-color : #EEFFFF;
-
-     }
-
-     
 
 	 td.actpropio  {
-
+     	border-style : solid;
      	border-color : green;
-
      	border-width : 1px;
-
      	background-color : #33F033;
+     }
 
+	 td.actpropio_nomod  {
+     	border-color : green;
+     	border-width : 1px;
+     	background-color : #33F033;
      }
 
 	 td.actpersonal  {
-
      	border-color : yellow;
-
      	border-width : 1px;
-
      	background-color : #FFFF00;
-
      }
 
+	 td.actpersonal_nomod  {
+     	border-color : yellow;
+     	border-width : 1px;
+     	background-color : #FFFF00;
+     }
 
+     td.actsv  {
+     	border-color : navy;
+     	border-width : 1px;
+     	background-color : #C0F0F0;
+     }
+
+     td.actsv_nomod  {
+     	border-color : navy;
+     	border-width : 1px;
+     	background-color : #EEFFFF;
+     }
 
      td.actsf  {
-
      	border-color : red;
-
      	border-width : 1px;
-
      	background-color : #FF9999;
-
      }
 
      td.actsf_nomod  {
-
      	border-color : red;
-
      	border-width : 1px;
-
      	background-color : #FFEEEE;
-
      }
 
-     
-
      td.actotras  {
-
      	border-color : lime;
-
      	border-width : 1px;
-
 		background-color : #33FF99;
-
      }
 
      td.actotras_nomod  {
-
      	border-color : lime;
-
      	border-width : 1px;
-
 		background-color : #33FF99;
-
      }
 
 

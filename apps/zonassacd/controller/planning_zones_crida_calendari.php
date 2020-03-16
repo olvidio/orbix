@@ -1,6 +1,7 @@
 <?php
 use actividadcargos\model\entity\GestorActividadCargo;
 use actividades\model\entity\GestorActividad;
+use asistentes\model\entity\Asistente;
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorEncargoSacdHorario;
 use personas\model\entity\PersonaSacd;
@@ -201,24 +202,29 @@ foreach ($aa_zonas as $a_zonas) {
 			
 		if ($Qactividad == 'si') {
 			$a=0;
-			$aWhere = [];
-			$aOperador = [];
-		    $aWhere['f_ini']="'$fin_iso'";
-		    $aOperador['f_ini']='<=';
-		    $aWhere['f_fin']="'$inicio_iso'";
-		    $aOperador['f_fin']='>=';
-			$aWhere['status']='2';
+			$aWhereAct = [];
+			$aOperadorAct = [];
+		    $aWhereAct['f_ini']="'$fin_iso'";
+		    $aOperadorAct['f_ini']='<=';
+		    $aWhereAct['f_fin']="'$inicio_iso'";
+		    $aOperadorAct['f_fin']='>=';
+			$aWhereAct['status']='2';
+			
+			$aWhere = ['id_nom' => $id_nom, 'plaza' => Asistente::PLAZA_PEDIDA];
+			$aOperador = ['plaza' => '>=']; 
+			
 			$oGesActividadCargo = new GestorActividadCargo();
-			$cAsistentes = $oGesActividadCargo ->getCargoOAsistente($id_nom,$aWhere,$aOperador);
+			$cAsistentes = $oGesActividadCargo ->getAsistenteCargoDeActividad($aWhere,$aOperador,$aWhereAct,$aOperadorAct);
 					
 			foreach ($cAsistentes as $aAsistente) {
 				$id_activ = $aAsistente['id_activ'];
 				$propio = $aAsistente['propio'];
+				$plaza = $aAsistente['plaza'];
 
 				// Seleccionar sólo las del periodo
-				$aWhere['id_activ']=$id_activ;
+				$aWhereAct['id_activ']=$id_activ;
 				$GesActividades = new GestorActividad();
-				$cActividades = $GesActividades->getActividades($aWhere,$aOperador); 
+				$cActividades = $GesActividades->getActividades($aWhereAct,$aOperadorAct); 
 				if (is_array($cActividades) && count($cActividades) == 0) continue;
 
 				$oActividad = $cActividades[0]; // sólo debería haber una.
@@ -247,7 +253,7 @@ foreach ($aa_zonas as $a_zonas) {
 				$fi= (string) $oF_fin->getFromLocal();
 				$hfi=(string) $h_fin;
 					
-				// mirar permisos.
+				// mirar permisos en la actividad.
 				$_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
 				$oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
 
@@ -260,6 +266,13 @@ foreach ($aa_zonas as $a_zonas) {
 					$nom_llarg=$nom_activ;
 				}
 
+				// mirar permisos en la asistencia
+				$oPermAsistencia = $_SESSION['oPermActividades']->getPermisoActual('asistentes');
+				// OJO da true si no está definido nada...
+				if ($oPermAsistencia->have_perm_activ('ver') === false) { // No puede ver la asistencia en esta fase.
+				    continue;
+				}
+
 				$aActivPersona[]=array(
 								'nom_curt'=>$nom_curt,
 								'nom_llarg'=>$nom_llarg,
@@ -270,7 +283,8 @@ foreach ($aa_zonas as $a_zonas) {
 								'id_tipo_activ'=>$id_tipo_activ,
 								'pagina'=>'',
 								'id_activ'=>$id_activ,
-								'propio'=>$propio
+								'propio'=>$propio,
+				                'plaza' => $plaza,
 							);
 				$a++;
 			}

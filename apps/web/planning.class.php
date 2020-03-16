@@ -2,6 +2,7 @@
 namespace web;
 use core;
 use ubis\model\entity\GestorCasaPeriodo;
+use asistentes\model\entity\Asistente;
 /**
 * Esta página sólo tiene las funciones. Es para hacer incluir en la página que sea
 *
@@ -54,6 +55,7 @@ use ubis\model\entity\GestorCasaPeriodo;
 *							 			Se le añaden los parámetros: id_nom (o id_ubi), id_actividad, $mod
 *					[8] id				- id_activ
 *					[9] propio			- si la actividad es propia o no (f o t). Añadido para des: 23.1.2007
+*				   [10] plaza			- si la asistencia esta en pedida o asignada. Añadido para des: 14.3.2020
 *
 *@param integer	$doble		- 0 ó 1. Para que las cabeceras de filas y columnas también a la izquierda y abajo. 
 *					
@@ -205,6 +207,7 @@ class Planning {
                 $lnk = [];
                 $id_activ = [];
                 $propio = [];
+                $plaza = [];
                 $n_dini = [];
                 $n_dfi = [];
                 for ($a=0;$a<$num_a;$a++) {
@@ -221,6 +224,7 @@ class Planning {
                     $lnk[$a] = (isset($activi["pagina"]))? $activi["pagina"] : '';
                     $id_activ[$a] = (isset($activi["id_activ"]))? $activi["id_activ"] : 0;
                     $propio[$a] = (isset($activi["propio"]))? $activi["propio"] : '';
+                    $plaza[$a] = (isset($activi["plaza"]))? $activi["plaza"] : '';
                     
                     $hora_ini[$a]=0;
                     $m_ini[$a]=0;
@@ -411,7 +415,7 @@ class Planning {
                                     // en el caso de que se acabe la hoja, hay que cortar:
                                     if ( $n_dfi[$a] > $total_dias ) { $inc= $total_dias - $n_dini[$a]; }
                                     $inc2 = $inc+1;
-                                    $clase_act = $this->clase($id_tipo_activ[$a],$propio[$a]);
+                                    $clase_act = $this->clase($id_tipo_activ[$a],$propio[$a],$plaza[$a]);
                                     if (substr($id_tipo_activ[$a],0,1)==1 && $reserva=="sf") { $conflicto="link_red"; } else { $conflicto="link"; }
                                     if (!empty($this->imod) && !empty($lnk[$a])){
                                         $texto="<td colspan=\"$inc2\" class=\"$clase_act\" title=\"$nom[$a]\"><span class=\"$conflicto\" onclick=\"fnjs_cambiar_activ('$id_activ[$a]','$this->imod');\">$nom_curt[$a]</span></td>";
@@ -507,9 +511,7 @@ class Planning {
     *Es para no volver a escribir todo en la función select.
     *Sirve para selecionar el color en funcion del tipo de actividad: sv, sf, resto
     */
-    private function clase($id_tipo_activ,$propio){
-        if ($propio=="t") return "actpropio";
-        if ($propio=="p") return "actpersonal";
+    private function clase($id_tipo_activ,$propio,$plaza){
         switch (substr($id_tipo_activ,0,1)) {
             case 1:
                 $clase="actsv";
@@ -519,6 +521,16 @@ class Planning {
                 break;
             default: 
                 $clase = "actotras";
+        }
+        // sobreescribo
+        if ($propio === TRUE) {
+            $clase = 'actpropio';
+        }
+        if ($propio === "p") {
+            $clase = 'actpersonal';
+        }
+        if (!empty($plaza) && $plaza <= Asistente::PLAZA_ASIGNADA) {
+            $clase = 'provisional '.$clase;
         }
         return $clase;
     }

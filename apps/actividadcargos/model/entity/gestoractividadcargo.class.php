@@ -135,19 +135,26 @@ class GestorActividadCargo Extends core\ClaseGestor {
 
 
 	/**
-	 * retorna l'array d'objectes tipus CargoOAsistente
+	 * retorna un array amb els asistents i el carrec (si el té):
+	 *		$aAsis[$id_activ] = array('id_activ','id_nom','propio','id_cargo');
 	 *
-	 * @param integer id_nom
-	 * @return array Una col·lecció d'arrays: id_activ,id_nom,propio,id_cargo;
+	 * @param array $aWhere para la asistencia (id_nom y plaza)
+	 * @param array $aOperador para la asistencia (id_nom y plaza)
+	 * @param array $aWhereAct para la Actividad
+	 * @param array $aOperadorAct para la Actividad
+	 * @return array Una col·lecció d'arrays: id_activ,id_nom,propio,id_cargo,plaza;
 	 */
-	function getCargoOAsistente($iid_nom,$aWhereAct=array(),$aOperadorAct=array()) {
+	function getAsistenteCargoDeActividad($aWhere,$aOperador=[],$aWhereAct=[],$aOperadorAct=[]) {
 		
+	    if (empty($aWhere['id_nom'])) {
+	        return FALSE;
+	    }
+	    $id_nom = $aWhere['id_nom'];
+	    
 		$GesAsistente = new GestorAsistente();
-		$aWhereNom = ['id_nom' => $iid_nom, 'plaza' => Asistente::PLAZA_ASIGNADA];
-		$aOperadorNom = ['plaza' => '>=']; 
-	   	$cAsistentes = $GesAsistente->getActividadesDeAsistente($aWhereNom,$aOperadorNom,$aWhereAct,$aOperadorAct);
+	   	$cAsistentes = $GesAsistente->getActividadesDeAsistente($aWhere,$aOperador,$aWhereAct,$aOperadorAct);
 		
-	   	$cCargos = $this->getActividadCargos(array('id_nom'=>$iid_nom));
+	   	$cCargos = $this->getActividadCargos(array('id_nom'=>$id_nom));
 		// seleccionar las actividades segun los criterios de búsqueda.
 		$GesActividades = new GestorActividad();
 		$aListaIds = $GesActividades->getArrayIds($aWhereAct,$aOperadorAct);
@@ -157,7 +164,6 @@ class GestorActividadCargo Extends core\ClaseGestor {
 			$id_activ = $oCargo->getId_activ();
 			if (in_array($id_activ,$aListaIds)) {
 				$oActividad = new Actividad($id_activ);
-				$oF_ini = $oActividad->getF_ini();
 				$cActividadesOk[$id_activ] = $oCargo;
 			}
 		}
@@ -166,7 +172,8 @@ class GestorActividadCargo Extends core\ClaseGestor {
 		foreach ($cAsistentes as $f_ini_iso=>$oAsistente) {
 			$id_activ = $oAsistente->getId_activ();
 			$propio = $oAsistente->getPropio();
-			$aAsis[$id_activ] = array('id_activ'=>$id_activ,'id_nom'=>$iid_nom,'propio'=>$propio);
+			$plaza = $oAsistente->getPlaza();
+			$aAsis[$id_activ] = array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'propio'=>$propio,'plaza'=>$plaza);
 		}
 		// Añado los cargos
 		foreach ($cActividadesOk as $id_activ=>$oCargo) {
@@ -175,7 +182,7 @@ class GestorActividadCargo Extends core\ClaseGestor {
 			if (array_key_exists ( $id_activ , $aAsis)) { // Añado al primero el id_cargo del segundo.
 				$aAsis[$id_activ]['id_cargo'] = $id_cargo;
 			} else { // añado la actividad
-				$aAsis[$id_activ] = array('id_activ'=>$id_activ,'id_nom'=>$iid_nom,'propio'=>'f','id_cargo'=>$id_cargo);
+				$aAsis[$id_activ] = array('id_activ'=>$id_activ,'id_nom'=>$id_nom,'propio'=>'f','id_cargo'=>$id_cargo);
 			}
 		}
 		return $aAsis;
