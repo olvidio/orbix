@@ -220,7 +220,7 @@ foreach ($aa_zonas as $a_zonas) {
 				$id_activ = $aAsistente['id_activ'];
 				$propio = $aAsistente['propio'];
 				$plaza = $aAsistente['plaza'];
-				$id_cargo = $aAsistente['id_cargo'];
+				$id_cargo = empty($aAsistente['id_cargo'])? '' : $aAsistente['id_cargo'];
 
 				// Seleccionar sólo las del periodo
 				$aWhereAct['id_activ']=$id_activ;
