@@ -268,9 +268,14 @@ foreach ($aa_zonas as $a_zonas) {
 
 				// mirar permisos en la asistencia
 				$oPermAsistencia = $_SESSION['oPermActividades']->getPermisoActual('asistentes');
+				// mirar permisos para atn sacd
+				$oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
 				// mirar permisos en la cargos
 				$oPermCargos = $_SESSION['oPermActividades']->getPermisoActual('cargos');
-				if ($oPermCargos->have_perm_activ('ver') === false && $oPermAsistencia->have_perm_activ('ver') === false) { // No puede ver la asistencia en esta fase.
+				if ($oPermCargos->have_perm_activ('ver') === false 
+				    && $oPermCargos->have_perm_activ('ver') === false 
+				    && $oPermAsistencia->have_perm_activ('ver') === false)
+				{ // No puede ver la asistencia en esta fase.
 				    continue;
 				}
 
