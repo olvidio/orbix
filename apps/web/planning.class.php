@@ -529,7 +529,7 @@ class Planning {
         if ($propio === "p") {
             $clase = 'actpersonal';
         }
-        if (!empty($plaza) && $plaza <= Asistente::PLAZA_ASIGNADA) {
+        if (!empty($plaza) && $plaza < Asistente::PLAZA_ASIGNADA) {
             $clase = 'provisional '.$clase;
         }
         return $clase;
