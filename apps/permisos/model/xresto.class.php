@@ -74,6 +74,10 @@ class xResto {
 			$i++;
 			$c = (int)$key & (int)$iAfecta;
 			if ($c > 0) {
+			    // si no existe 
+			    if (empty($a_proceso_perm[$id_tipo_proceso])) {
+			        continue;
+			    }
 				$val = $a_proceso_perm[$id_tipo_proceso];
 				if (array_key_exists($iFase,$val) && !empty($val[$iFase])) {
 					return $val[$iFase];
