@@ -268,8 +268,9 @@ foreach ($aa_zonas as $a_zonas) {
 
 				// mirar permisos en la asistencia
 				$oPermAsistencia = $_SESSION['oPermActividades']->getPermisoActual('asistentes');
-				// OJO da true si no está definido nada...
-				if ($oPermAsistencia->have_perm_activ('ver') === false) { // No puede ver la asistencia en esta fase.
+				// mirar permisos en la cargos
+				$oPermCargos = $_SESSION['oPermActividades']->getPermisoActual('cargos');
+				if ($oPermCargos->have_perm_activ('ver') === false && $oPermAsistencia->have_perm_activ('ver') === false) { // No puede ver la asistencia en esta fase.
 				    continue;
 				}
 
