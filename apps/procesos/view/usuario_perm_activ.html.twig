@@ -14,25 +14,14 @@ fnjs_actualizar_fases=function(){
 
 	// desplegable 'desde'
 	var url='{{ url_actualizar }}';
-	var parametros='salida=desde&dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'{{ h_actualizar|raw }}';
+	var parametros='dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'{{ h_actualizar|raw }}';
 	$.ajax({
 		url: url,
 		type: 'post',
 		data: parametros
 	})
 	.done(function (rta_txt) {
-		$('#desde').html(rta_txt);			
-	});
-	// desplegable 'hasta'
-	var url='{{ url_actualizar }}';
-	var parametros='salida=hasta&dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'{{ h_actualizar|raw }}';
-	$.ajax({
-		url: url,
-		type: 'post',
-		data: parametros
-	})
-	.done(function (rta_txt) {
-		$('#hasta').html(rta_txt);			
+		$('#fases').html(rta_txt);			
 	});
 }
 
@@ -76,26 +65,18 @@ fnjs_grabar=function(formulario){
 <table>
 </tr>
 </table>
-<h3>{{ "periodo del permiso"|trans }}:</h3>
-{{ "NOTA: Sólo salen las fases comunes a todos los procesos de los tipos de actividad seleccionados.
-Para ver más fases del proceso, debe limitar el tipo de actividad."|trans }}
+<h3>{{ "afecta a"|trans }}:</h3>
+{{ oCuadros.cuadros_check('afecta_a',afecta_a)|raw }}
+
+<h3>{{ "permiso para cada fase del proceso"|trans }}:</h3>
+<span class="comentario">
+{{ "NOTA: Sólo salen las fases comunes a todos los procesos de los tipos de actividad seleccionados."|trans }}
 <br>
-<table>
-<tr>
-<td class=etiqueta>{{ "desde"|trans }}:</td>
-<td>
-<span id=desde> {{ oDesplFasesIni.desplegable()|raw }} </span>
-</td>
-<td class=etiqueta>{{ "hasta"|trans }}:</td>
-<td>
-<span id=hasta> {{ oDesplFasesFin.desplegable()|raw }} </span>
-</td>
-<td class=etiqueta>{{ "acción"|trans }}:</td>
-<td>{{ oDesplAccion.desplegable()|raw }}</td></tr>
-<tr>
-<td class=etiqueta>{{ "afecta a"|trans }}:</td>
-<td colspan=5> {{ oCuadros.cuadros_check('afecta_a',afecta_a)|raw }} </td></tr>
-</table>
+{{ "Para ver más fases del proceso, debe limitar el tipo de actividad."|trans }}
+<br></span>
+<br>
+<span id=fases> {{ oCuadrosFases.cuadros_check('afases',fases_sel)|raw }} </span>
+<br>
 <br>
 <input type=button onclick="fnjs_grabar(this.form);" value="{{ "guardar"|trans }}">
 </form>

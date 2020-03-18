@@ -31,6 +31,7 @@ require_once ("apps/core/global_header.inc");
 // Crea los objectos para esta url  **********************************************
 	$oCuadrosAfecta = new PermAfectados();
 	$oPermAccion = new PermAccion();
+	$oCuadrosFases = new \procesos\model\CuadrosFases();
 
 
 // FIN de  Cabecera global de URL de controlador ********************************
@@ -112,8 +113,7 @@ if( (ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
 		
 		$id_item_usuario_objeto=$oCambioUsuarioObjetoPref->getId_item_usuario_objeto();
 		$id_tipo=$oCambioUsuarioObjetoPref->getId_tipo_activ_txt();
-		$id_fase_ini=$oCambioUsuarioObjetoPref->getId_fase_ini();
-		$id_fase_fin=$oCambioUsuarioObjetoPref->getId_fase_fin();
+		$fases_csv=$oCambioUsuarioObjetoPref->getFases_csv();
 		$dl_org=$oCambioUsuarioObjetoPref->getDl_org();
 		$objeto=$oCambioUsuarioObjetoPref->getObjeto();
 		$aviso_tipo=$oCambioUsuarioObjetoPref->getAviso_tipo();
@@ -414,6 +414,7 @@ if ($miRole < 4) {
                         'usuario' => $usuario,
                         'cUsuarioPerm' => $cUsuarioPerm,
                         'oCuadrosAfecta' => $oCuadrosAfecta,
+                        'oCuadrosFases' => $oCuadrosFases,
                         'oPermAccion' => $oPermAccion,
                         ];
 

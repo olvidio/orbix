@@ -8,6 +8,7 @@ use procesos\model\entity\PermUsuarioActividad;
 use usuarios\model\entity\GrupoOUsuario;
 use web\Desplegable;
 use web\TiposActividades;
+use procesos\model\CuadrosFases;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
@@ -18,6 +19,7 @@ require_once ("apps/core/global_object.inc");
 // Crea los objectos para esta url  **********************************************
 	$oCuadros = new PermAfectados();
 	$oAcciones = new PermAccion();
+	$oCuadrosFases = new CuadrosFases();
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -39,10 +41,6 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $Qquien = (string) \filter_input(INPUT_POST, 'quien');
 $Qque = (string) \filter_input(INPUT_POST, 'que');
 
-$aOpciones = $oAcciones->lista_array();
-$oDesplAccion= new Desplegable('',$aOpciones,'',false);
-$oDesplAccion->setNombre('accion');
-
 $oUsuario = new GrupoOUsuario(array('id_usuario'=>$Qid_usuario)); // La tabla y su heredada
 $nombre=$oUsuario->getUsuario();
 
@@ -51,27 +49,23 @@ if (!empty($Qid_item)) {
 	$afecta_a=$oPermiso->getAfecta_a();
 	$dl_propia=$oPermiso->getDl_propia();
 	$id_tipo_activ=$oPermiso->getId_tipo_activ_txt();
+	$json_fases = $oPermiso->getId_fases();
+    $oFases = json_decode($json_fases);
+    if (empty($oFases)) {
+        $oFases = new stdClass;
+    }
+	
 	$GesTiposActiv = new GestorTipoDeActividad();
 	$aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ,$dl_propia);
-
+	
 	$oGesFases= new GestorActividadFase();
-	$oDesplFasesIni = $oGesFases->getListaActividadFases($aTiposDeProcesos);
-	$oDesplFasesIni->setNombre('fase_ini');
-	$oDesplFasesIni->setOpcion_sel($oPermiso->getId_fase_ini());
-	$oGesFases2= new GestorActividadFase();
-	$oDesplFasesFin = $oGesFases2->getListaActividadFases($aTiposDeProcesos);
-	$oDesplFasesFin->setNombre('fase_fin');
-	$oDesplFasesFin->setOpcion_sel($oPermiso->getId_fase_fin());
-
-	$oDesplAccion->setOpcion_sel($oPermiso->getAccion());
+	$aFases = $oGesFases->getArrayFasesProcesos($aTiposDeProcesos);
+    $oCuadrosFases->setPermissions($aFases);
+    $oCuadrosFases->setoFases($oFases);
 } else { // es nuevo
 	$oPermiso = new PermUsuarioActividad(array('id_usuario'=>$Qid_usuario));
 	$afecta_a=0;
 	$dl_propia='t';
-	$oDesplFasesIni = new Desplegable();
-	$oDesplFasesIni->setOpciones([]);
-	$oDesplFasesFin = new Desplegable();
-	$oDesplFasesFin->setOpciones([]);
 }
 
 if (!empty($id_tipo_activ))  {
@@ -102,7 +96,7 @@ if ($_SESSION['oConfig']->is_jefeCalendario()
 $oActividadTipo->setPerm_jefe($perm_jefe);
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('accion!afecta_a!dl_propia!fase_fin!fase_ini!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val');
+$oHash->setcamposForm('afecta_a!dl_propia!afases!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val');
 $oHash->setcamposNo('id_tipo_activ');
 $a_camposHidden = array(
     'id_usuario' => $Qid_usuario,
@@ -116,7 +110,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 $url_actualizar = core\ConfigGlobal::getWeb().'/apps/procesos/controller/usuario_perm_activ_ajax.php';
 $oHash1 = new web\Hash();
 $oHash1->setUrl($url_actualizar);
-$oHash1->setCamposForm('salida!dl_propia!id_tipo_activ');
+$oHash1->setCamposForm('dl_propia!id_tipo_activ');
 $h_actualizar = $oHash1->linkSinVal();
 
 if ($dl_propia == 't') { 
@@ -136,9 +130,7 @@ $a_campos = [
     'chk_propia' =>$chk_propia,
     'chk_otra' => $chk_otra,
     'oActividadTipo' => $oActividadTipo,
-    'oDesplFasesIni' => $oDesplFasesIni,
-    'oDesplFasesFin' => $oDesplFasesFin,
-    'oDesplAccion' => $oDesplAccion,
+    'oCuadrosFases' => $oCuadrosFases,
     'oCuadros' => $oCuadros,
     'afecta_a' => $afecta_a,
 ];

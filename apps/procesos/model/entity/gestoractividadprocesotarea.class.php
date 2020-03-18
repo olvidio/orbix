@@ -212,6 +212,29 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	}
 	
 	/**
+	 * retorna un array amb les fases completades.
+	 *
+	 * @param integer iid_activ
+	 * @return array
+	 */
+	function getFasesCompletadas($iid_activ='') {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+	    $sQuery = "SELECT * FROM $nom_tabla WHERE id_activ=$iid_activ
+                AND completado='t'
+                ORDER BY n_orden";
+		if (($oDblSt = $oDbl->query($sQuery)) === FALSE) {
+	        $sClauError = 'GestorActividadProcesoTarea.fasesCompletadas.prepare';
+	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+	        return false;
+	    }
+	    $aFasesCompletadas = [];
+		foreach ($oDblSt as $aDades) {
+		    $aFasesCompletadas[] = $aDades['id_fase'];
+	    }
+	    return $aFasesCompletadas;
+	}
+	/**
 	 * retorna si té la fase completada o no.
 	 *
 	 * @param integer iid_activ
@@ -235,6 +258,19 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	        return FALSE;
 	    }
 	}
+	
+	public function getFaseAnteriorCompletada($iid_activ,$id_fase) {
+	    $a_fases_proceso = $this->getFasesCompletadas($iid_activ);
+	    
+	    $id_fase_anterior = '';
+	    while (current($a_fases_proceso) !== $id_fase) {
+	        $id_fase_anterior = current($a_fases_proceso);
+	        next($a_fases_proceso);
+	    }
+	    return $id_fase_anterior;
+
+	}
+
 	/**
 	 * retorna un integer id_fase que és la última del seu proces.
 	 *

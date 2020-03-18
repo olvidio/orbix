@@ -1,10 +1,11 @@
 <?php
 
-use core\ConfigGlobal;
+use actividades\model\entity\GestorTipoDeActividad;
+use procesos\model\entity\GestorActividadFase;
 
 // propios
 $i=0;
-$a_cabeceras=array('tipo de actividad','fase inicial','fase final','permiso','dl propia',array('name'=>'afecta_a','width'=>'350'));
+$a_cabeceras=array('dl propia','tipo de actividad',array('name'=>'afecta_a','width'=>'350'),'fases => permiso');
 $a_botones = [];
 $a_botones[] = array( 'txt' => _("modificar"), 'click' =>"fnjs_mod_perm_activ(\"#permisos_activ\")" );
 $a_botones[] = array( 'txt' => _("eliminar"), 'click' =>"fnjs_del_perm_activ(\"#permisos_activ\")" ); 
@@ -13,13 +14,15 @@ $a_valores=array();
 $oFase = new procesos\model\entity\ActividadFase();
 foreach ($cUsuarioPerm as $oUsuarioPerm) {
     $i++;
-    
     $id_item=$oUsuarioPerm->getId_item();
     $id_tipo=$oUsuarioPerm->getId_tipo_activ_txt();
-    $id_fase_ini=$oUsuarioPerm->getId_fase_ini();
-    $id_fase_fin=$oUsuarioPerm->getId_fase_fin();
-    $id_accion=$oUsuarioPerm->getAccion();
+    $fases_csv=$oUsuarioPerm->getFases_csv();
     $dl_propia=$oUsuarioPerm->getDl_propia();
+    $json_fases = $oUsuarioPerm->getId_fases();
+    $oFases = json_decode($json_fases);
+    if (empty($oFases)) {
+        $oFases = new stdClass;
+    }
 
     if ($dl_propia=='t') {
         if (substr($id_tipo, 0, 1) == 1) { //sv
@@ -36,19 +39,23 @@ foreach ($cUsuarioPerm as $oUsuarioPerm) {
     }
 
     $oTipoActividad = new web\TiposActividades($oUsuarioPerm->getId_tipo_activ_txt());
-
+    $id_tipo_activ = $oTipoActividad->getId_tipo_activ();
+    
+    $GesTiposActiv = new GestorTipoDeActividad();
+    $aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ,$dl_propia);
+    
+    $oGesFases= new GestorActividadFase();
+    $aFases = $oGesFases->getArrayFasesProcesos($aTiposDeProcesos);
+    $oCuadrosFases->setPermissions($aFases);
+    
     $a_valores[$i]['sel']="$id_usuario#$id_item";
-    $a_valores[$i][1]=$oTipoActividad->getNom();
-    $oFase->setId_fase($id_fase_ini);
-    $oFase->DBCarregar();
-    $a_valores[$i][2]= $oFase->getDesc_fase();
-    $oFase->setId_fase($id_fase_fin);
-    $oFase->DBCarregar();
-    $a_valores[$i][3]= $oFase->getDesc_fase();
-    $a_valores[$i][4]=$oPermAccion->lista_txt($oUsuarioPerm->getAccion());
-    $a_valores[$i][5]=$dl_propia_txt;
+    $a_valores[$i][1]=$dl_propia_txt;
+    $a_valores[$i][2]=$oTipoActividad->getNom();
+    $a_valores[$i][3]=$oCuadrosAfecta->lista_tiene_txt($oUsuarioPerm->getAfecta_a());
+    
+    $a_valores[$i][4]= $oCuadrosFases->lista_tiene_txt($oFases);
+    
 
-    $a_valores[$i][6]=$oCuadrosAfecta->lista_tiene_txt($oUsuarioPerm->getAfecta_a());
 }
 $oHash3 = new web\Hash();
 $oHash3->setcamposForm('que!sel');

@@ -359,8 +359,16 @@ foreach($cActividades as $oActividad) {
     $sasistentes=$oTipoActividad->getAsistentesText();
     $sactividad=$oTipoActividad->getActividadText();
     $nom_tipo=$oTipoActividad->getNom_tipoText();
-    if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ocupado') === false) { $sin++; continue; } // no tiene permisos ni para ver.
-    if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ver') === false) { // sólo puede ver que està ocupado
+    if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ocupado') === false) { 
+        // no tiene permisos ni para ver.
+        $sin++;
+        echo "<pre>";
+        print_r($oActividad);
+        echo "</pre>";
+        continue;
+    }
+    if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ver') === false) {
+        // sólo puede ver que està ocupado
         $a_valores[$i]['sel']='';
         $a_valores[$i]['select']='';
         $a_valores[$i][1]=$f_ini;

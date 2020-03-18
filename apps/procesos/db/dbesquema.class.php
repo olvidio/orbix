@@ -457,8 +457,6 @@ class DBEsquema extends DBAbstract {
         
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
         
-        $a_sql[] = "CREATE INDEX ${tabla}_id_fase_fin ON $nom_tabla USING btree (id_fase_fin); ";
-        $a_sql[] = "CREATE INDEX ${tabla}_id_fase_ini ON $nom_tabla USING btree (id_fase_ini); ";
         $a_sql[] = "CREATE INDEX ${tabla}_id_usuario ON $nom_tabla USING btree (id_usuario); ";
         $a_sql[] = "CREATE INDEX ${tabla}_tipo_activ ON $nom_tabla USING btree (id_tipo_activ_txt); ";
         

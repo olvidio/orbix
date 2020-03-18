@@ -204,7 +204,9 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
             }
             if ($aDades['completado'] == 't') {
                 $statusProceso = $oTareaProceso->getStatus();
+                $this->marcarDependencias($oTareaProceso);
             } else {
+                $this->desmarcarDependencias($oTareaProceso);
                 $itemProceso = $oTareaProceso->getId_item();
                 $GesTareaProcesos = new GestorTareaProceso();
                 $statusProceso = $GesTareaProcesos->getStatusFaseAnterior($itemProceso);
@@ -433,6 +435,19 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
     
     /* METODES ALTRES  ----------------------------------------------------------*/
     
+    private function marcarDependencias($oTareaProceso) {
+        
+                $itemProceso = $oTareaProceso->getId_item();
+                $GesTareaProcesos = new GestorTareaProceso();
+                $statusProceso = $GesTareaProcesos->getStatusFaseAnterior($itemProceso);
+    }
+    private function desmarcarDependencias($oTareaProceso) {
+        
+                $itemProceso = $oTareaProceso->getId_item();
+                $GesTareaProcesos = new GestorTareaProceso();
+                $statusProceso = $GesTareaProcesos->getStatusFaseAnterior($itemProceso);
+    }
+
     function marcarFaseEnSf($statusProceso,$statusActividad) {
         $gesActividadProcesoTareas = new GestorActividadProcesoTarea();
         // buscar el id_tipo_proceso para esta actividad de la otra sección

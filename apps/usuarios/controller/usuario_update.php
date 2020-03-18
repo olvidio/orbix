@@ -92,13 +92,11 @@ switch($Qque) {
 		$Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
 		$Qid_tipo_activ = (integer) \filter_input(INPUT_POST, 'id_tipo_activ');
 		$Qid_item = (integer) \filter_input(INPUT_POST, 'id_item');
-		$Qfase_ini = (integer) \filter_input(INPUT_POST, 'fase_ini');
-		$Qfase_fin = (integer) \filter_input(INPUT_POST, 'fase_fin');
 		$Qaccion = (integer) \filter_input(INPUT_POST, 'accion');
 		$Qdl_propia = (string) \filter_input(INPUT_POST, 'dl_propia');
 		$Qafecta_a = (array) \filter_input(INPUT_POST, 'afecta_a', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+		$Qafases = (array) \filter_input(INPUT_POST, 'afases', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
-		
 		if (empty($Qid_tipo_activ)) {
 			$Qisfsv_val = (string) \filter_input(INPUT_POST, 'isfsv_val');
 			$Qiasistentes_val = (string) \filter_input(INPUT_POST, 'iasistentes_val');
@@ -117,8 +115,6 @@ switch($Qque) {
 		$oUsuarioPerm = new PermUsuarioActividad($Qid_item);
 		$oUsuarioPerm->setId_usuario($Qid_usuario);
 		$oUsuarioPerm->setId_tipo_activ_txt($id_tipo_activ_txt);
-		$oUsuarioPerm->setId_fase_ini($Qfase_ini);
-		$oUsuarioPerm->setId_fase_fin($Qfase_fin);
 		$oUsuarioPerm->setAccion($Qaccion);
 		$oUsuarioPerm->setDl_propia($Qdl_propia);
 		//cuando el campo es afecta_a, se pasa un array que hay que convertirlo en número.
@@ -128,9 +124,18 @@ switch($Qque) {
 				$byte=$byte+$bit;
 			}
 			$oUsuarioPerm->setAfecta_a($byte);
-		} 
-		if ($oUsuarioPerm->DBGuardar() === false) {
-			echo _("hay un error, no se ha guardado");
+		}
+		//cuando el campo es afases, se pasa un array que hay que convertirlo texto (separado por comas).
+		if (!empty($Qafases)){
+		    $oFases = new stdClass;
+			foreach($Qafases as $id_fase => $iAccion) {
+			     $oFases->$id_fase = $iAccion;    
+			}
+    		$json_fases = json_encode($oFases);
+            $oUsuarioPerm->setId_fases($json_fases);
+            if ($oUsuarioPerm->DBGuardar() === false) {
+                echo _("hay un error, no se ha guardado");
+            }
 		}
 		break;
 	case "buscar":

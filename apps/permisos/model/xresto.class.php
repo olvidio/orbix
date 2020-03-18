@@ -2,6 +2,8 @@
 namespace permisos\model;
 use actividades\model\entity\TipoDeActividad;
 use core\ConfigGlobal;
+use procesos\model\entity\GestorActividadFase;
+use procesos\model\entity\GestorActividadProcesoTarea;
 class xResto {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 	/**
@@ -68,7 +70,7 @@ class xResto {
         return FALSE;
 	}
 	
-	public function getPerm($id_tipo_proceso,$iAfecta,$iFase) {
+	public function getPerm($id_tipo_proceso,$iAfecta,$iFase,$id_activ='') {
 		$i=0;
 		foreach ($this->aDades as $key => $a_proceso_perm) {
 			$i++;
@@ -79,13 +81,7 @@ class xResto {
 			        continue;
 			    }
 				$val = $a_proceso_perm[$id_tipo_proceso];
-				if (array_key_exists($iFase,$val) && !empty($val[$iFase])) {
-					return $val[$iFase];
-				} else {
-					//echo "<br>posible error: Fase=>$iFase, Afecta=>$iAfecta.  dades:<br>";
-					//print_r($this->aDades);
-					//continue;
-				}
+            	return $this->getPermFase($val,$id_tipo_proceso,$iFase,$id_activ);
 			} else {
 				//return false;
 				//echo "i: $i<br>";
@@ -94,6 +90,29 @@ class xResto {
 		return false;
 		//return 'next';
 	}
+	
+	
+	private function getPermFase($val,$id_tipo_proceso,$id_fase,$id_activ) {
+        if (array_key_exists($id_fase,$val) && !empty($val[$id_fase])) {
+            return $val[$id_fase];
+        } else {
+            // En el caso de crear, no hay id_activ. Miro la fase según el proceso:
+            if (empty($id_activ)) {
+                $gesActividadFase = new GestorActividadFase();
+                $id_fase_anterior = $gesActividadFase->getFaseAnterior($id_tipo_proceso,$id_fase);
+            } else {
+                $gesActividadProcesoTarea = new GestorActividadProcesoTarea();
+                $id_fase_anterior = $gesActividadProcesoTarea->getFaseAnteriorCompletada($id_activ,$id_fase);
+            }
+            if (empty($id_fase_anterior)) {
+                //No hay fase anterior
+                return FALSE;
+            } else {
+                return $this->getPermFase($val,$id_tipo_proceso,$id_fase_anterior,$id_activ);
+            }
+        }
+	}
+	
 	public function setFasesInterval($iFaseIni,$iFaseFin) {
 	}
 	public function setOmplir($id_tipo_proceso,$iFase,$iPerm,$iAfecta) {
@@ -101,5 +120,19 @@ class xResto {
 	}
 	public function setOrdenar() {
 		if (is_array($this->aDades)) ksort($this->aDades);
+	}
+	
+	public function getFases() {
+	    $aFases = [];
+	    foreach($this->aDades as $iAfecta => $byProceso) {
+	        $aa = $byProceso;
+	        foreach ($byProceso as $id_tipo_proceso => $byFase) {
+	            foreach ($byFase as $id_fase => $perm) {
+	               $aFases[] = $id_fase;
+	            }
+	        }
+	    }
+		//[$id_tipo_proceso][$iFase]=$iPerm;
+	   return $aFases; 
 	}
 }

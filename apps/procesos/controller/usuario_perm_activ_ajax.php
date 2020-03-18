@@ -1,6 +1,7 @@
 <?php
 use actividades\model\entity\GestorTipoDeActividad;
 use procesos\model\entity\GestorActividadFase;
+use procesos\model\CuadrosFases;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -17,8 +18,20 @@ $Qsalida = (string) \filter_input(INPUT_POST, 'salida');
 $Qdl_propia = (string) \filter_input(INPUT_POST, 'dl_propia');
 $Qid_tipo_activ = (string) \filter_input(INPUT_POST, 'id_tipo_activ');
 
+// Versión cuadrícula:
+$GesTiposActiv = new GestorTipoDeActividad();
+$aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($Qid_tipo_activ,$Qdl_propia);
+$oGesFases= new GestorActividadFase();
+$aFases = $oGesFases->getArrayFasesProcesos($aTiposDeProcesos);
+
+$oCuadrosFases = new CuadrosFases();
+$oCuadrosFases->setPermissions($aFases);
+
+echo $oCuadrosFases->cuadros_check('afases', 34);
+/*
 // buscar las fases para estos procesos
 switch($Qsalida) {
+    
 	case 'desde':
 		// buscar los procesos posibles para estos tipos de actividad
 		$GesTiposActiv = new GestorTipoDeActividad();
@@ -38,3 +51,4 @@ switch($Qsalida) {
 		echo $oDesplFasesFin->desplegable();
 		break;
 }
+*/

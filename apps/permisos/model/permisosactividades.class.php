@@ -8,6 +8,7 @@ use procesos\model\PermAccion;
 use procesos\model\entity as procesos;
 use procesos\model\entity\GestorTareaProceso;
 use usuarios\model\entity as usuarios;
+use procesos\model\entity\GestorActividadProcesoTarea;
 /**
  * Classe que genera un array amb els permisos per cada usuari. Es guarda a la sesió per tenir-ho a l'abast en qualsevol moment:
  *
@@ -134,10 +135,15 @@ class PermisosActividades {
 		foreach ($oDbl->query($Qry) as $row) {
 			$f++;
 			$id_tipo_activ_txt = $row['id_tipo_activ_txt'];	
-			$id_fase_ini = $row['id_fase_ini'];	
-			$id_fase_fin = $row['id_fase_fin'];	
+			//$fases_csv = $row['fases_csv'];	
 			$iAccion = $row['accion'];	
 			$iAfecta = $row['afecta_a'];
+			$json_fases = $row['id_fases'];
+			$oFases = json_decode($json_fases);
+			if (empty($oFases)) {
+			    $oFases = new \stdClass;
+			}
+			
 			if ($dl_propia == 't') {
 				if (array_key_exists($id_tipo_activ_txt,$this->aPermDl)) {
 					// machaco los valores existentes. Si he ordenado por id usuario (DESC), el último és el más importante.
@@ -164,7 +170,15 @@ class PermisosActividades {
 				    echo sprintf(_("No se encuentran las fases de este tipo de proceso:%s"),$id_tipo_proceso);
 				    continue;
 				}
-				// aFases es un array con todas las fases (sf o sv) de la actividad ordenado según el proceso.
+				foreach ($oFases as $id_fase => $iAccion) {
+                    if ($dl_propia == 't') {
+                        $this->aPermDl[$id_tipo_activ_txt]->setOmplir($id_tipo_proceso,$id_fase,$iAccion,$iAfecta);
+                    } else {
+                        $this->aPermOtras[$id_tipo_activ_txt]->setOmplir($id_tipo_proceso,$id_fase,$iAccion,$iAfecta);
+                    }
+				}
+				
+				/*
 				// compruebo que existan las fases inicial i final, sino doy un error 
 				if (in_array($id_fase_ini, $aFases) && in_array($id_fase_ini, $aFases)) {
 					// por cada fase generar los permisos
@@ -188,6 +202,7 @@ class PermisosActividades {
 					$msg .= '<br>';
 					echo $msg;
 				}
+				*/
 			}
 		}
 		if (!empty($id_tipo_activ_txt)) {
@@ -290,7 +305,6 @@ class PermisosActividades {
 	}
 
 	/**
-	 * OJO devuelve TRUE si no está definido nada.
 	 * 
 	 * @param string|integer $iAfecta
 	 * @return \procesos\model\PermAccion
@@ -317,7 +331,7 @@ class PermisosActividades {
 		if (($oP = $this->getPermisos($iAfecta)) === false) {
 			return  new PermAccion(0);
 		} else {
-			$iperm = $oP->getPerm($id_tipo_proceso,$iAfecta,$faseActual);
+			$iperm = $oP->getPerm($id_tipo_proceso,$iAfecta,$faseActual,$this->iid_activ);
 			if ($iperm == 'next') {
 				return $this->getPermisoActualPrev($iAfecta);
 			} elseif ($iperm !== false) {
