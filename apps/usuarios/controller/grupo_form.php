@@ -98,7 +98,9 @@ if (!empty($Qid_usuario)) {
 	
 	if (core\ConfigGlobal::is_app_installed('procesos')) { 
 		$oGesPerm = new GestorPermUsuarioActividad();
-		$cUsuarioPerm = $oGesPerm->getPermUsuarioActividades(array('id_usuario'=>$Qid_usuario));
+		$aWhere = ['id_usuario' => $Qid_usuario, '_ordre' => 'dl_propia DESC, id_tipo_activ_txt'];
+		$aOperador = [];
+		$cUsuarioPerm = $oGesPerm->getPermUsuarioActividades($aWhere, $aOperador);
 	}
 } else {
 	$oGrupoGrupoPermMenu = array();
