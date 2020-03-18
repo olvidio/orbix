@@ -132,7 +132,7 @@ switch($Qque) {
 			     $oFases->$id_fase = $iAccion;    
 			}
     		$json_fases = json_encode($oFases);
-            $oUsuarioPerm->setId_fases($json_fases);
+            $oUsuarioPerm->setJsonFaseAccion($json_fases);
             if ($oUsuarioPerm->DBGuardar() === false) {
                 echo _("hay un error, no se ha guardado");
             }

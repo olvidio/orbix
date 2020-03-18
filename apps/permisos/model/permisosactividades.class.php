@@ -138,7 +138,7 @@ class PermisosActividades {
 			//$fases_csv = $row['fases_csv'];	
 			$iAccion = $row['accion'];	
 			$iAfecta = $row['afecta_a'];
-			$json_fases = $row['id_fases'];
+			$json_fases = $row['json_fase_accion'];
 			$oFases = json_decode($json_fases);
 			if (empty($oFases)) {
 			    $oFases = new \stdClass;

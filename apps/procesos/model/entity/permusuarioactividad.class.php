@@ -79,11 +79,11 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 	 */
 	 private $bdl_propia;
 	/**
-	 * Id_fases de PermUsuarioActividad
+	 * JSON fase-accion de PermUsuarioActividad
 	 *
-	 * @var string
+	 * @var object JSON
 	 */
-	 private $sid_fases;
+	 private $json_fase_accion;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
 	 * oDbl de PermUsuarioActividad
@@ -142,7 +142,7 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 		$aDades['accion'] = $this->iaccion;
 		$aDades['afecta_a'] = $this->iafecta_a;
 		$aDades['dl_propia'] = $this->bdl_propia;
-		$aDades['id_fases'] = $this->sid_fases;
+		$aDades['json_fase_accion'] = $this->json_fase_accion;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		$aDades['dl_propia'] = ($aDades['dl_propia'] === 't')? 'true' : $aDades['dl_propia'];
@@ -157,7 +157,7 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 					accion                   = :accion,
 					afecta_a                 = :afecta_a,
 					dl_propia                = :dl_propia,
-					id_fases                 = :id_fases";
+					json_fase_accion         = :json_fase_accion";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item'")) === FALSE) {
 				$sClauError = 'PermUsuarioActividad.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -171,8 +171,8 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			$campos="(id_usuario,id_tipo_activ_txt,fases_csv,accion,afecta_a,dl_propia,id_fases)";
-			$valores="(:id_usuario,:id_tipo_activ_txt,:fases_csv,:accion,:afecta_a,:dl_propia,:id_fases)";		
+			$campos="(id_usuario,id_tipo_activ_txt,fases_csv,accion,afecta_a,dl_propia,json_fase_accion)";
+			$valores="(:id_usuario,:id_tipo_activ_txt,:fases_csv,:accion,:afecta_a,:dl_propia,:json_fase_accion)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClauError = 'PermUsuarioActividad.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -257,7 +257,7 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 		if (array_key_exists('accion',$aDades)) $this->setAccion($aDades['accion']);
 		if (array_key_exists('afecta_a',$aDades)) $this->setAfecta_a($aDades['afecta_a']);
 		if (array_key_exists('dl_propia',$aDades)) $this->setDl_propia($aDades['dl_propia']);
-		if (array_key_exists('id_fases',$aDades)) $this->setId_fases($aDades['id_fases']);
+		if (array_key_exists('json_fase_accion',$aDades)) $this->setJsonFaseAccion($aDades['json_fase_accion']);
 	}
 
 	/**
@@ -273,7 +273,7 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 		$this->setAccion('');
 		$this->setAfecta_a('');
 		$this->setDl_propia('');
-		$this->setId_fases('');
+		$this->setJsonFaseAccion('');
 		$this->setPrimary_key($aPK);
 	}
 
@@ -452,23 +452,23 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 		$this->bdl_propia = $bdl_propia;
 	}
 	/**
-	 * Recupera l'atribut sid_fases de PermUsuarioActividad
+	 * Recupera l'atribut json_fase_accion de PermUsuarioActividad
 	 *
-	 * @return string sid_fases
+	 * @return string json_fase_accion
 	 */
-	function getId_fases() {
-		if (!isset($this->sid_fases)) {
+	function getJsonFaseAccion() {
+		if (!isset($this->json_fase_accion)) {
 			$this->DBCarregar();
 		}
-		return $this->sid_fases;
+		return $this->json_fase_accion;
 	}
 	/**
-	 * estableix el valor de l'atribut sid_fases de PermUsuarioActividad
+	 * estableix el valor de l'atribut json_fase_accion de PermUsuarioActividad
 	 *
-	 * @param string sid_fases='' optional
+	 * @param string json_fase_accion='' optional
 	 */
-	function setId_fases($sid_fases='') {
-		$this->sid_fases = $sid_fases;
+	function setJsonFaseAccion($json_fase_accion='') {
+		$this->json_fase_accion = $json_fase_accion;
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
@@ -485,7 +485,7 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 		$oPermUsuarioActividadSet->add($this->getDatosAccion());
 		$oPermUsuarioActividadSet->add($this->getDatosAfecta_a());
 		$oPermUsuarioActividadSet->add($this->getDatosDl_propia());
-		$oPermUsuarioActividadSet->add($this->getDatosId_fases());
+		$oPermUsuarioActividadSet->add($this->getDatosJsonFaseAccion());
 		return $oPermUsuarioActividadSet->getTot();
 	}
 
@@ -564,15 +564,15 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut sid_fases de PermUsuarioActividad
+	 * Recupera les propietats de l'atribut json_fase_accion de PermUsuarioActividad
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
 	 */
-	function getDatosId_fases() {
+	function getDatosJsonFaseAccion() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_fases'));
-		$oDatosCampo->setEtiqueta(_("id_fases"));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'json_fase_accion'));
+		$oDatosCampo->setEtiqueta(_("json_fase_accion"));
 		return $oDatosCampo;
 	}
 }

@@ -327,7 +327,8 @@ class Lista {
             if ($sPrefs=$oPref->getPreferencia()) {;
             $aPrefs = json_decode($sPrefs, true);
             if (!empty($aPrefs['colVisible'])) {
-                $aColsVisible = empty($aPrefs['colVisible'])? '*' : $aPrefs['colVisible'];
+                $aColsVisible = $aPrefs['colVisible'];
+                //$aColsVisible = empty($aPrefs['colVisible'])? '*' : $aPrefs['colVisible'];
                 //$aColsVisible = explode(',',$aPrefs['colVisible']);
             }
             $bPanelVis = ($aPrefs['panelVis'] == "si")? true: false;
@@ -369,6 +370,8 @@ class Lista {
                 $class = !empty($Cabecera['class'])? ", cssClass: \"${Cabecera['class']}\"" : '';
                 $sortable = !empty($Cabecera['sortable'])? $Cabecera['sortable'] : 'true';
                 $width = !empty($Cabecera['width'])? $Cabecera['width'] : '';
+                // asegurar que es sólo número (en pixels) no debe haber unidades (da error el javascript)
+                $width = filter_var($width, FILTER_SANITIZE_NUMBER_INT);
                 $formatter = !empty($Cabecera['formatter'])? $Cabecera['formatter'] : '';
                 if (!empty($Cabecera['visible'])) {
                     if ($Cabecera['visible'] == 'No' || $Cabecera['visible'] == 'no' ) { $visible = FALSE; }
@@ -410,7 +413,7 @@ class Lista {
         $sColumns .= ']';
         $sColumnsVisible .= ']';
         $sColFilters .= ']';
-        
+
         // Para generar un id único
         $ahora=date("Hms");
         $f=1;
@@ -896,13 +899,27 @@ class Lista {
                 $botones.="</td></tr>";
             }
         }
+
         $cab=1;
-        foreach ($a_cabeceras as $Cabecera) {
-            if (!empty($Cabecera)) {
-                if (is_array($Cabecera)) { $name = $Cabecera['name']; } else { $name = $Cabecera; }
-                $cabecera .= "<th class=cabecera title='"._("ordenar por...")."'>".trim($name)."</th>\n";
+        foreach($a_cabeceras as $Cabecera) {
+            $class = '';
+            $width = '';
+            if (is_array($Cabecera)) {
+                $name = $Cabecera['name']; // esta tiene que existir siempre
+                if (!empty($Cabecera['class'])) {
+                    $class = "class=\"${Cabecera['class']}\"";
+                }
+                if (!empty($Cabecera['width'])) {
+                    $width = "width=\"${Cabecera['width']}\"";
+                }
+                
             } else {
-                $cabecera .= "<th class=cabecera tipo='notext' ></th>\n";
+                $name = $Cabecera;
+            }
+            if (!empty($name)) {
+                $cabecera .= "<th class=cabecera $width $class >".trim($name)."</th>\n";
+            } else {
+                $cabecera .= "<th class=cabecera tipo='notext' $width $class ></th>\n";
             }
             $cab++;
         }

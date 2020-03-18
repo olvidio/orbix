@@ -113,7 +113,6 @@ if( (ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
 		
 		$id_item_usuario_objeto=$oCambioUsuarioObjetoPref->getId_item_usuario_objeto();
 		$id_tipo=$oCambioUsuarioObjetoPref->getId_tipo_activ_txt();
-		$fases_csv=$oCambioUsuarioObjetoPref->getFases_csv();
 		$dl_org=$oCambioUsuarioObjetoPref->getDl_org();
 		$objeto=$oCambioUsuarioObjetoPref->getObjeto();
 		$aviso_tipo=$oCambioUsuarioObjetoPref->getAviso_tipo();

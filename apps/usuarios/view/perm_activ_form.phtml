@@ -5,7 +5,18 @@ use procesos\model\entity\GestorActividadFase;
 
 // propios
 $i=0;
-$a_cabeceras=array('dl propia','tipo de actividad',array('name'=>'afecta_a','width'=>'350'),'fases => permiso');
+/**
+ * Para la tabla slickGrid, el width debe ser en pixels
+ * No hay que poner unidades, pues da un error de javascript.
+ * 
+ * @var array $a_cabeceras
+ */
+$a_cabeceras = [ ['name'=>'dl propia','width'=>'5%'],
+                 ['name'=>'tipo de actividad','width'=>'10%'],
+                 ['name'=>'afecta_a','width'=>'40%'],
+                 ['name' => 'fases - permiso','width'=>'45%'],
+               ];
+                
 $a_botones = [];
 $a_botones[] = array( 'txt' => _("modificar"), 'click' =>"fnjs_mod_perm_activ(\"#permisos_activ\")" );
 $a_botones[] = array( 'txt' => _("eliminar"), 'click' =>"fnjs_del_perm_activ(\"#permisos_activ\")" ); 
@@ -18,7 +29,7 @@ foreach ($cUsuarioPerm as $oUsuarioPerm) {
     $id_tipo=$oUsuarioPerm->getId_tipo_activ_txt();
     $fases_csv=$oUsuarioPerm->getFases_csv();
     $dl_propia=$oUsuarioPerm->getDl_propia();
-    $json_fases = $oUsuarioPerm->getId_fases();
+    $json_fases = $oUsuarioPerm->getJsonFaseAccion();
     $oFases = json_decode($json_fases);
     if (empty($oFases)) {
         $oFases = new stdClass;
@@ -133,7 +144,7 @@ $oTabla->setId_tabla('form_perm_activ');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
-echo $oTabla->mostrar_tabla();
+echo $oTabla->mostrar_tabla_html();
 ?>
 <input type=button onclick="fnjs_add_perm_activ();" value="<?= _("añadir permiso") ?>">
 </form>

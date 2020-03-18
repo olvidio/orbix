@@ -26,24 +26,36 @@ fnjs_actualizar_fases=function(){
 }
 
 fnjs_grabar=function(formulario){
-	$(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
-	$(formulario).submit(function() {
-		$.ajax({
-			url: $(this).attr('action'),
-			type: 'post',
-			data: $(this).serialize()
-		})
-		.done(function (rta_txt) { 
-			if (rta_txt != '' && rta_txt != '\n') {
-				alert ('respuesta: '+rta_txt);
-			} else {
-				{{ oPosicion.js_atras(1)|raw }}
-			}
-		});
-		return false;
-	});
-	$(formulario).submit();
-	$(formulario).off();
+	var err=0;
+	var afecta = $("input:checkbox[name^='afecta_a']:checked").map(function(){return $(this).val()}).get()
+	var afases = $("select[name^='afases'] option:selected").map(function(){return $(this).val()}).get()
+	
+	if (afecta.length == 0) { 
+		alert("{{ "debe indicar a qué afecta"|trans }}"); err=1;
+	}
+	if (afases.length == 0) { 
+		alert("{{ "debe indicar las fases"|trans }}"); err=1;
+	}
+	if (err==0) {
+        $(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
+        $(formulario).submit(function() {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                data: $(this).serialize()
+            })
+            .done(function (rta_txt) { 
+                if (rta_txt != '' && rta_txt != '\n') {
+                    alert ('respuesta: '+rta_txt);
+                } else {
+                    {{ oPosicion.js_atras(1)|raw }}
+                }
+            });
+            return false;
+        });
+        $(formulario).submit();
+        $(formulario).off();
+	}
 }
 </script>
 {{  oPosicion.mostrar_left_slide(1)|raw }}

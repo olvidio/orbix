@@ -49,7 +49,7 @@ if (!empty($Qid_item)) {
 	$afecta_a=$oPermiso->getAfecta_a();
 	$dl_propia=$oPermiso->getDl_propia();
 	$id_tipo_activ=$oPermiso->getId_tipo_activ_txt();
-	$json_fases = $oPermiso->getId_fases();
+	$json_fases = $oPermiso->getJsonFaseAccion();
     $oFases = json_decode($json_fases);
     if (empty($oFases)) {
         $oFases = new stdClass;

@@ -48,6 +48,9 @@ class CuadrosFases {
         $this->permissions = $permissions;
     }
     function getoFases() {
+        if (!is_object($this->oFases)) {
+            $this->oFases = new \stdClass;
+        }
         return $this->oFases;
     }
     function setoFases($oFases) {
@@ -75,9 +78,7 @@ class CuadrosFases {
      *
      */
     public function cuadros_check($nomcamp,$fases_csv){
-        
-       $oFases = $this->getoFases();
-        
+        $oFases = $this->getoFases();
         
         $txt = '<table class="semi">';
         $txt .= '<tr><th>';
@@ -89,14 +90,17 @@ class CuadrosFases {
         foreach($this->permissions as $nom=>$id_fase) {
             $camp=$nomcamp."[$id_fase]";
             $this->oDesplAccion->setNombre($camp);
-            if($accion = $oFases->$id_fase) {
+            $accion = '';
+            if (property_exists($oFases, $id_fase)) {
+                $accion = $oFases->$id_fase;
+            }
+            if (!empty($accion)) {
                 $this->oDesplAccion->setOpcion_sel($accion);
             } else {
                 $this->oDesplAccion->setOpcion_sel(0);
             }
     
             $txt .= '<tr>';
-            //$txt .="<td><input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"$id_fase\" $chk>$nom</td>";
             $txt .="<td>$nom</td>";
             $txt .= '<td>'.$this->oDesplAccion->desplegable().'</td>';
             $txt .= '</tr>';
