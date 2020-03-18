@@ -362,9 +362,6 @@ foreach($cActividades as $oActividad) {
     if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ocupado') === false) { 
         // no tiene permisos ni para ver.
         $sin++;
-        echo "<pre>";
-        print_r($oActividad);
-        echo "</pre>";
         continue;
     }
     if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ver') === false) {

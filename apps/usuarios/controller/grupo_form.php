@@ -1,5 +1,6 @@
 <?php
 use permisos\model\PermDl;
+use procesos\model\CuadrosFases;
 use procesos\model\PermAccion;
 use procesos\model\PermAfectados;
 use procesos\model\entity\GestorPermUsuarioActividad;
@@ -16,6 +17,7 @@ use usuarios\model\entity as usuarios;
 	$oCuadros = new PermDl();
 	$oCuadrosAfecta = new PermAfectados();
 	$oPermAccion = new PermAccion();
+	$oCuadrosFases = new CuadrosFases();
 	
 	
 $Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
@@ -186,6 +188,7 @@ if ((core\ConfigGlobal::is_app_installed('procesos')) && !empty($Qid_usuario)) {
         'usuario' => $usuario,
         'cUsuarioPerm' => $cUsuarioPerm,
         'oCuadrosAfecta' => $oCuadrosAfecta,
+        'oCuadrosFases' => $oCuadrosFases,
         'oPermAccion' => $oPermAccion,
     ];
     

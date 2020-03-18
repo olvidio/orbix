@@ -7,6 +7,7 @@ use core\ConfigGlobal;
 use personas\model\entity\GestorPersonaAgd;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\GestorPersonaN;
+use procesos\model\CuadrosFases;
 use procesos\model\PermAccion;
 use procesos\model\PermAfectados;
 use procesos\model\entity\ActividadFase;
@@ -19,7 +20,6 @@ use usuarios\model\entity\Role;
 use usuarios\model\entity\Usuario;
 use web\Lista;
 use web\TiposActividades;
-use usuarios\model\entity\GestorPermUsuarioCentro;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -31,7 +31,7 @@ require_once ("apps/core/global_header.inc");
 // Crea los objectos para esta url  **********************************************
 	$oCuadrosAfecta = new PermAfectados();
 	$oPermAccion = new PermAccion();
-	$oCuadrosFases = new \procesos\model\CuadrosFases();
+	$oCuadrosFases = new CuadrosFases();
 
 
 // FIN de  Cabecera global de URL de controlador ********************************
