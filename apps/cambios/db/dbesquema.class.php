@@ -324,9 +324,11 @@ class DBEsquema extends DBAbstract {
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla.'_pkey';
         
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                    CONSTRAINT $nompkey PRIMARY KEY ($campo_seq)
                 ) 
             INHERITS (global.$tabla);";
 
@@ -345,7 +347,12 @@ class DBEsquema extends DBAbstract {
         
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
         
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausaula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado. 
+         *  
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
+         */
         
         // FOREIGN KEYS
         // con los usuarios no va porque estan en otra base de datos (sv). 
@@ -394,9 +401,14 @@ class DBEsquema extends DBAbstract {
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla.'_pkey';
+        $tabla1 = $this->getNomTabla('av_cambios_usuario_objeto_pref');
         
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                    CONSTRAINT $nompkey PRIMARY KEY ($campo_seq),
+                    CONSTRAINT av_cambios_usuario_propiedades_pref_id_item_usuario_objeto_fk
+                         FOREIGN KEY (id_item_usuario_objeto) REFERENCES $tabla1(id_item_usuario_objeto) ON DELETE CASCADE
                 ) 
             INHERITS (global.$tabla);";
 
@@ -414,12 +426,16 @@ class DBEsquema extends DBAbstract {
         
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
         
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausaula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado. 
+         *  
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
         
         // FOREIGN KEYS
-        $tabla1 = $this->getNomTabla('av_cambios_usuario_objeto_pref');
         $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT av_cambios_usuario_propiedades_pref_id_item_usuario_objeto_fk
                     FOREIGN KEY (id_item_usuario_objeto) REFERENCES $tabla1(id_item_usuario_objeto) ON DELETE CASCADE; ";
+         */ 
         
         $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_${campo_seq}_idx ON $nom_tabla USING btree ($campo_seq); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";

@@ -41,6 +41,7 @@ class DBEsquema extends DBAbstract {
     }
     
     public function llenarAll() {
+        /*
         $this->llenar_a_tareas();
         $this->llenar_a_fases();
         $this->llenar_a_tipos_actividad();
@@ -48,6 +49,7 @@ class DBEsquema extends DBAbstract {
         $this->llenar_a_tareas_proceso();
         $this->llenar_a_actividad_proceso();
         $this->llenar_aux_usuarios_perm();
+        */
     }
     
     private function infoTable($tabla) {
@@ -120,9 +122,22 @@ class DBEsquema extends DBAbstract {
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla.'_pkey';
+        
+        $datosTablaF = $this->infoTable('a_fases');
+        $nom_tabla_fases = $datosTablaF['nom_tabla'];
+        $datosTablaT = $this->infoTable('a_tareas');
+        $nom_tabla_tareas = $datosTablaT['nom_tabla'];
         
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                    CONSTRAINT $nompkey PRIMARY KEY ($campo_seq),
+                    CONSTRAINT ${tabla}_id_tipo_proceso_key
+                        UNIQUE (id_tipo_proceso, id_activ, id_fase, id_tarea),
+                    CONSTRAINT ${tabla}_id_fase_fk
+                        FOREIGN KEY (id_fase) REFERENCES $nom_tabla_fases(id_fase) ON DELETE CASCADE,
+                    CONSTRAINT ${tabla}_id_tarea
+                        FOREIGN KEY (id_tarea) REFERENCES $nom_tabla_tareas(id_tarea) ON DELETE CASCADE
                 ) 
             INHERITS (global.$tabla_padre);";
 
@@ -141,24 +156,34 @@ class DBEsquema extends DBAbstract {
         
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
         
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausaula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         *  
+        
         $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT ${tabla}_id_tipo_proceso_key
                     UNIQUE (id_tipo_proceso, id_activ, id_fase, id_tarea); ";
+        
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
         
         $datosTablaF = $this->infoTable('a_fases');
         $nom_tabla_fases = $datosTablaF['nom_tabla'];
+        
         $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT ${tabla}_id_fase_fk
                     FOREIGN KEY (id_fase) REFERENCES $nom_tabla_fases(id_fase) ON DELETE CASCADE; ";
+        
         $datosTablaT = $this->infoTable('a_tareas');
         $nom_tabla_tareas = $datosTablaT['nom_tabla'];
+        
         $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT ${tabla}_id_tarea
                     FOREIGN KEY (id_tarea) REFERENCES $nom_tabla_tareas(id_tarea) ON DELETE CASCADE; ";
+        */
         
         // No va con tablas heredadas
         //$a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT a_actividad_proceso_id_activ_fk
         //            FOREIGN KEY (id_activ) REFERENCES public.a_actividades_all(id_activ) ON DELETE CASCADE; ";
         
-        $a_sql[] = "CREATE INDEX ${tabla}_n_orden ON $nom_tabla USING btree (n_orden); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_n_orden ON $nom_tabla USING btree (n_orden); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
         
         $this->executeSql($a_sql);
@@ -199,9 +224,11 @@ class DBEsquema extends DBAbstract {
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla.'_pkey';
         
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                    CONSTRAINT $nompkey PRIMARY KEY ($campo_seq)
                 ) 
             INHERITS (global.$tabla);";
 
@@ -219,7 +246,13 @@ class DBEsquema extends DBAbstract {
         
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
         
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausaula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         *  
+        
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_tipo_proceso); ";
+        */
         
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
         
@@ -255,9 +288,11 @@ class DBEsquema extends DBAbstract {
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla.'_pkey';
         
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                    CONSTRAINT $nompkey PRIMARY KEY ($campo_seq)
                 ) 
             INHERITS (global.$tabla);";
 
@@ -274,7 +309,7 @@ class DBEsquema extends DBAbstract {
         
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
         
-        $a_sql[] = "CREATE UNIQUE INDEX ${tabla}_id_tarea_key ON $nom_tabla USING btree (id_tarea); ";
+        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS ${tabla}_id_tarea_key ON $nom_tabla USING btree (id_tarea); ";
             
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
         
@@ -310,9 +345,11 @@ class DBEsquema extends DBAbstract {
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla.'_pkey';
         
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                    CONSTRAINT $nompkey PRIMARY KEY ($campo_seq)
                 ) 
             INHERITS (global.$tabla);";
 
@@ -332,7 +369,12 @@ class DBEsquema extends DBAbstract {
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER sv SET DEFAULT true; ";
         
         
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausaula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         *
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_fase); ";
+        */
             
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
         
@@ -368,9 +410,13 @@ class DBEsquema extends DBAbstract {
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla.'_pkey';
         
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                    CONSTRAINT $nompkey PRIMARY KEY ($campo_seq),
+                    CONSTRAINT a_procesos_ukey
+                        UNIQUE (id_tipo_proceso, id_fase, id_tarea)
                 ) 
             INHERITS (global.$tabla);";
 
@@ -387,11 +433,17 @@ class DBEsquema extends DBAbstract {
         
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
         
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausaula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         *
+         
         $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT a_procesos_ukey
                         UNIQUE (id_tipo_proceso, id_fase, id_tarea); ";
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
+        */
         
-        $a_sql[] = "CREATE UNIQUE INDEX ${tabla}_idx ON $nom_tabla USING btree (id_tipo_proceso, id_fase, id_tarea); ";
+        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS ${tabla}_idx ON $nom_tabla USING btree (id_tipo_proceso, id_fase, id_tarea); ";
             
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
         
@@ -435,9 +487,11 @@ class DBEsquema extends DBAbstract {
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla.'_pkey';
         
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                    CONSTRAINT $nompkey PRIMARY KEY ($campo_seq)
                 ) 
             INHERITS (global.$tabla);";
 
@@ -455,10 +509,16 @@ class DBEsquema extends DBAbstract {
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
         
         
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausaula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         *
+         
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
+        */
         
-        $a_sql[] = "CREATE INDEX ${tabla}_id_usuario ON $nom_tabla USING btree (id_usuario); ";
-        $a_sql[] = "CREATE INDEX ${tabla}_tipo_activ ON $nom_tabla USING btree (id_tipo_activ_txt); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_id_usuario ON $nom_tabla USING btree (id_usuario); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_tipo_activ ON $nom_tabla USING btree (id_tipo_activ_txt); ";
         
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
         
@@ -694,7 +754,7 @@ class DBEsquema extends DBAbstract {
         
         $delimiter = "\t"; 
         $null_as = "\\\\N";
-        $fields = "id_item, id_usuario, id_tipo_activ_txt, id_fase_ini, id_fase_fin, accion, afecta_a, dl_propia, id_fases";
+        $fields = "id_item, id_usuario, id_tipo_activ_txt, fases_csv, accion, afecta_a, dl_propia, json_fase_accion";
         
         // Comprobar que existe el fichero (la ruta esta bien...
         if (!file_exists($filename)) {
