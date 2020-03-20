@@ -349,11 +349,10 @@ class Resumen Extends core\ClasePropiedades {
 						id_tipo integer
 					 )";
 		
-		if (!$oDbl->query($sqlDelete) ) {
-				$oDbl->query($sqlCreate);
-				$oDbl->query("CREATE INDEX $asignaturas"."_nivel"." ON $asignaturas (id_nivel)");
-				$oDbl->query("CREATE INDEX $asignaturas"."_id_asignatura"." ON $asignaturas (id_asignatura)");
-		}
+		$oDbl->query($sqlDelete);
+        $oDbl->query($sqlCreate);
+        $oDbl->query("CREATE INDEX $asignaturas"."_nivel"." ON $asignaturas (id_nivel)");
+        $oDbl->query("CREATE INDEX $asignaturas"."_id_asignatura"." ON $asignaturas (id_asignatura)");
 
 		$gesAsignaturas = new asignaturas\gestorAsignatura();
 		$cAsignaturas = $gesAsignaturas->getAsignaturas(array('status'=>'true'));
