@@ -336,6 +336,7 @@ class Resumen Extends core\ClasePropiedades {
 
 		//Ahora las asignaturas
 		//Como ahora las asignaturas estan en otra base de datos(comun) hago una copia para poder hacer unions...
+		$sqlDelete="TRUNCATE TABLE IF EXISTS $asignaturas CASCADE";
 		$sqlCreate="CREATE TABLE $asignaturas(
 						id_asignatura integer,
 						id_nivel integer,
@@ -348,11 +349,11 @@ class Resumen Extends core\ClasePropiedades {
 						id_tipo integer
 					 )";
 		
-		$sql = "$sqlCreate IF NOT EXISTS TABLE $asignaturas ELSE TRUNCATE $asignaturas";
-
-        $oDbl->query($sql);
-        $oDbl->query("CREATE INDEX $asignaturas"."_nivel"." ON $asignaturas (id_nivel)");
-        $oDbl->query("CREATE INDEX $asignaturas"."_id_asignatura"." ON $asignaturas (id_asignatura)");
+		if (!$oDbl->query($sqlDelete) ) {
+				$oDbl->query($sqlCreate);
+				$oDbl->query("CREATE INDEX $asignaturas"."_nivel"." ON $asignaturas (id_nivel)");
+				$oDbl->query("CREATE INDEX $asignaturas"."_id_asignatura"." ON $asignaturas (id_asignatura)");
+		}
 
 		$gesAsignaturas = new asignaturas\gestorAsignatura();
 		$cAsignaturas = $gesAsignaturas->getAsignaturas(array('status'=>'true'));
