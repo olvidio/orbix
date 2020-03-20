@@ -336,7 +336,7 @@ class Resumen Extends core\ClasePropiedades {
 
 		//Ahora las asignaturas
 		//Como ahora las asignaturas estan en otra base de datos(comun) hago una copia para poder hacer unions...
-		$sqlDelete="TRUNCATE TABLE IF EXISTS $asignaturas CASCADE";
+		$sqlDelete="DROP TABLE IF EXISTS $asignaturas CASCADE";
 		$sqlCreate="CREATE TABLE $asignaturas(
 						id_asignatura integer,
 						id_nivel integer,
