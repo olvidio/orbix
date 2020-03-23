@@ -13,7 +13,7 @@ fnjs_eliminar=function(){
 fnjs_guardar=function(){
    	$('#que').val("guardar");
 	$('#frm2').attr('action',"<?= $url_update ?>");
-	$('#frm2').submit(function() {
+	$('#frm2').one("submit", function() {
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'post',

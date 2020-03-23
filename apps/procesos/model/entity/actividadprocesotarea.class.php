@@ -1,10 +1,11 @@
 <?php
 namespace procesos\model\entity;
 use actividades\model\entity\Actividad;
-use cambios\model\gestorAvisoCambios;
-use core;
 use actividades\model\entity\ActividadAll;
+use cambios\model\gestorAvisoCambios;
 use core\ConfigGlobal;
+use function core\is_true;
+use core;
 /**
  * Fitxer amb la Classe que accedeix a la taula a_actividad_proceso_(sf/sv)
  *
@@ -202,7 +203,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
                 $msg_err = sprintf(_("error: La fase del proceso tipo: %s, fase: %s, tarea: %s"),$this->iid_tipo_proceso,$this->iid_fase,$this->iid_tarea);
                 exit($msg_err);
             }
-            if ($aDades['completado'] == 't') {
+            if ( is_true($aDades['completado']) ) {
                 $statusProceso = $oTareaProceso->getStatus();
                 $this->marcarDependencias($oTareaProceso);
             } else {

@@ -79,7 +79,7 @@
 fnjs_enviar_form=function(id_form,bloque){
 	if (!bloque) { bloque='#main'; }
 	$(id_form).attr('action','<?= core\ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_lista.php' ?>');
-	$(id_form).submit(function() {
+	$(id_form).one("submit", function() {
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'post',

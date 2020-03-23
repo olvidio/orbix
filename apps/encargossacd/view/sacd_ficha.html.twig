@@ -38,7 +38,7 @@ fnjs_lista_sacd=function(id_nom){
 }
 
 fnjs_guardar=function(formulario){
-	$(formulario).submit(function() {
+	$(formulario).one("submit", function() {
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'post',

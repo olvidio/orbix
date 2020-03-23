@@ -1,14 +1,14 @@
 <?php
 use actividades\model\entity\GestorTipoDeActividad;
 use core\ConfigGlobal;
+use function core\is_true;
+use procesos\model\CuadrosFases;
 use procesos\model\PermAccion;
 use procesos\model\PermAfectados;
 use procesos\model\entity\GestorActividadFase;
 use procesos\model\entity\PermUsuarioActividad;
 use usuarios\model\entity\GrupoOUsuario;
-use web\Desplegable;
 use web\TiposActividades;
-use procesos\model\CuadrosFases;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
@@ -113,7 +113,7 @@ $oHash1->setUrl($url_actualizar);
 $oHash1->setCamposForm('dl_propia!id_tipo_activ');
 $h_actualizar = $oHash1->linkSinVal();
 
-if ($dl_propia == 't') { 
+if ( is_true($dl_propia) ) { 
     $chk_propia='checked'; 
     $chk_otra=''; 
 } else { 

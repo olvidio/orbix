@@ -202,7 +202,7 @@ fnjs_guardar=function(formulario){
 	//alert ("EEE "+rr);
 	if (rr=='ok' && err!=1) {
 		$(formulario).attr('action',"apps/notas/controller/update_1011.php");
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',

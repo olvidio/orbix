@@ -32,7 +32,7 @@ jsForm.refresh=function(){
 	if (ok == 1 && rta==1) {
 		var param=$(this.form).serialize();
 		var url=this.action;
-		$(this.form).submit(function() {
+		$(this.form).one("submit", function() {
 			$.ajax({
 				url: url,
 				type: 'post',

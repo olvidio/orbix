@@ -1,9 +1,10 @@
 <?php
 namespace ubis\model\entity;
 use core\ClaseGestor;
-use core\ConfigGlobal;
 use core\Condicion;
+use core\ConfigGlobal;
 use core\Set;
+use function core\is_true;
 use web;
 /**
  * GestorDelegacion
@@ -151,7 +152,7 @@ class GestorDelegacion Extends ClaseGestor {
 		$sf = (ConfigGlobal::mi_sfsv() == 2)? 'f' : '';
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if ($bdl == 't') {
+		if ( is_true($bdl) ) {
 			$sQuery="SELECT region||'-'||dl||'$sf', nombre_dl||' ('||dl||'$sf)'
 					FROM $nom_tabla
                     WHERE status = 't'
@@ -186,7 +187,7 @@ class GestorDelegacion Extends ClaseGestor {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		// Ahora pongo las regiones que pueden organizar (todas) en la tabla de las dl.
-		if ($bdl == 't') {
+		if ( is_true($bdl) ) {
 			$sQuery="SELECT dl||'$sf', nombre_dl||' ('||region||'-'||dl||'$sf)'
 					FROM $nom_tabla
                     WHERE status = 't'

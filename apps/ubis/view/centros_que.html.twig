@@ -42,7 +42,7 @@ fnjs_ver=function(){
 
 fnjs_guardar=function(formulario) {
     $(formulario).attr('action','{{ url_ajax }}');
-    $(formulario).submit(function() {
+    $(formulario).one("submit", function() {
         $.ajax({
             url: $(this).attr('action'),
             type: 'post',

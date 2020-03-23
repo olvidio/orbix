@@ -43,7 +43,7 @@ fnjs_guardar=function(formulario,que){
 		$('#id_tipo_activ').val(id_tipo_activ);
 		$('#que').val(que);
 		$(formulario).attr('action','{{ url_ajax }}');
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',

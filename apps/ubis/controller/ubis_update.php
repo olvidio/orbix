@@ -1,4 +1,5 @@
 ﻿<?php
+use function core\is_true;
 use ubis\model\entity as ubis;
 use usuarios\model\entity as usuarios;
 /**
@@ -133,7 +134,7 @@ function guardarObjeto($oObjeto,$campos_chk) {
             //pongo el valor nulo, sobretodo para las fechas.
             if (!is_array($_POST[$camp]) && (empty($_POST[$camp]) or trim($_POST[$camp])=="")) {
                 //si es un campo not null (y es null), pongo el valor por defecto
-                if ($oDatosCampo->datos_campo($oDbl,'nulo') == 't') {
+                if ( is_true($oDatosCampo->datos_campo($oDbl,'nulo')) ) {
                     $valor_predeterminado=$oDatosCampo->datos_campo($oDbl,'valor');
                     $a_values_o[$camp] = $valor_predeterminado;
                 } else {

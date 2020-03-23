@@ -1,5 +1,6 @@
 <?php
 namespace notas\model\entity;
+use function core\is_true;
 use core;
 /**
  * GestorPersonaNota
@@ -46,7 +47,7 @@ class GestorPersonaNota Extends core\ClaseGestor {
 		$oPersonaNotaSet = new core\Set();
 		
 		$cond_nivel = '';
-		if ($nivel == 't') {
+		if ( is_true($nivel) ) {
 			$cond_nivel = "AND id_nivel >= 1100 AND id_nivel <= 2500 ";
 		}
 

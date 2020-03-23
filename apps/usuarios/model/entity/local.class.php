@@ -124,8 +124,7 @@ class Local Extends core\ClasePropiedades {
 		$aDades['activo'] = $this->bactivo;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		$aDades['activo'] = ($aDades['activo'] === 't')? 'true' : $aDades['activo'];
-		if ( filter_var( $aDades['activo'], FILTER_VALIDATE_BOOLEAN)) { $aDades['activo']='t'; } else { $aDades['activo']='f'; }
+		if ( core\is_true($aDades['activo']) ) { $aDades['activo']='true'; } else { $aDades['activo']='false'; }
 
 		if ($bInsert === false) {
 			//UPDATE

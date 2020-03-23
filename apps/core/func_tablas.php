@@ -51,6 +51,25 @@ $a_num_romanos=array('1'=>"I",'2'=>"II",'3'=>"III",'4'=>"IV",'5'=>"V",'6'=>"VI",
 '11'=>"XI",'12'=>"XII",'13'=>"XIII",'14'=>"XIV",'15'=>"XV",'16'=>"XVI",'17'=>"XVII",'18'=>"XVIII");
 
 /**
+* Para unificar los valores true ('t', 'true', 1, 'on...)
+*
+*
+*@author	Daniel Serrabou
+*@since		23/3/2020.
+*		
+*/
+function is_true($val) {
+    if ( is_string($val) ) {
+        $val = ($val=='t')? 'true' : $val;
+        $boolval = filter_var($val, FILTER_VALIDATE_BOOLEAN);
+    } else {
+        $boolval = $val;
+    }
+    
+    return $boolval;
+}
+
+/**
 * Para poner null en los valores vacios de un array
 *
 *

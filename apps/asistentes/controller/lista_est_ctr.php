@@ -3,6 +3,7 @@ use actividades\model\entity as actividades;
 use actividadestudios\model\entity as actividadestudios;
 use asignaturas\model\entity as asignaturas;
 use asistentes\model\entity as asistentes;
+use function core\is_true;
 use personas\model\entity as personas;
 use ubis\model\entity as ubis;
 use web\Periodo;
@@ -177,7 +178,7 @@ foreach ($cCentros as $oCentroDl) {
 							$oAsignatura = new asignaturas\Asignatura($id_asignatura);
 							$nombre_corto = $oAsignatura->getNombre_corto();
 							$creditos = $oAsignatura->getCreditos();
-							if ($preceptor == 't') { 
+							if (is_true($preceptor)) { 
 								if (!empty($id_preceptor)) {
 									$oPersona = personas\Persona::NewPersona($id_preceptor);
 									// Comprobar si el preceptor asiste al ca.

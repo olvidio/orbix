@@ -1,7 +1,7 @@
 <script>
 fnjs_add_grupmenu=function(formulario){
 	$(formulario).attr('action',"apps/usuarios/controller/role_update.php");
-	$(formulario).submit(function() {
+	$(formulario).one("submit", function() {
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'post',

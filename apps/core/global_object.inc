@@ -226,6 +226,9 @@ if ( ConfigGlobal::is_app_installed('menus') ) {
 // Datos de configuración propios de cada dl.
 $_SESSION['oConfig'] = new Config();
 
+// func_tablas. Es necesaria para permisos\PermisosActividades->carregar()...
+include_once('func_tablas.php'); 
+
 // para mantener los permisos por actividades en una variable
 if (empty($_SESSION['oPermActividades'])) {
     if ( ConfigGlobal::is_app_installed('procesos') ) {
@@ -236,9 +239,6 @@ if (empty($_SESSION['oPermActividades'])) {
 	}
 	//$oPermActividades = $_SESSION['oPermActividades'];
 }
-
-// func_tablas necesita $oDB (Ya no!)
-include_once('func_tablas.php'); 
 
 // Para validar los parametros enviados via POST
 $oValidator = new web\Hash();

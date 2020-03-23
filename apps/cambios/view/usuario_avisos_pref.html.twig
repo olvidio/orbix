@@ -35,25 +35,14 @@ fnjs_actualizar_fases=function(){
 
 	// desplegable 'desde'
 	var url='{{ url_actualizar }}';
-	var parametros='salida=av_desde&dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'&id_usuario='+id_usuario+'&objeto='+objeto+'{{ h_actualizar|raw }}';
+	var parametros='salida=av_fases&dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'&id_usuario='+id_usuario+'&objeto='+objeto+'{{ h_actualizar|raw }}';
 	$.ajax({
 		url: url,
 		type: 'post',
 		data: parametros
 	})
 	.done(function (rta_txt) {
-		$('#desde').html(rta_txt);			
-	});
-	// desplegable 'hasta'
-	var url='{{ url_actualizar }}';
-	var parametros='salida=av_hasta&dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'&id_usuario='+id_usuario+'&objeto='+objeto+'{{ h_actualizar|raw }}';
-	$.ajax({
-		url: url,
-		type: 'post',
-		data: parametros
-	})
-	.done(function (rta_txt) {
-		$('#hasta').html(rta_txt);			
+		$('#fases').html(rta_txt);			
 	});
 }
 
@@ -78,6 +67,11 @@ fnjs_grabar_todo=function(formulario){
 		$('#objeto').focus();
 		err=1;
 	}
+	var afases = $("input[name^='afases']:checked").map(function(){return $(this).val()}).get()
+	if (afases.length == 0) { 
+		alert("{{ "debe indicar las fases"|trans }}"); err=1;
+	}
+
 	var tipo=$('#aviso_tipo').val();
 	if (!tipo) { 
 		alert("{{ "debe indicar por dónde avisar"|trans }}");
@@ -204,25 +198,15 @@ fnjs_actualizar_propiedades({{ id_item_usuario_objeto }});
 </table>
 <br>
 
-<h3>{{ "en el intervalo"|trans }}:</h3>
+<h3>{{ "en las fases"|trans }}:</h3>
+<span class="comentario">
 {{ "NOTA: Sólo salen las fases comunes a todos los procesos de los tipos de actividad seleccionados.
 Para ver más fases del proceso, debe limitar el tipo de actividad."|trans }}
+</span>
 <br>
-{{ "NOTA: En orden alfabético. Al ser común a varios procesos, no se pueden ordenar según el proceso."|trans }}
 <br>
+<span id=fases> {{ oCuadrosFases.cuadros_check('afases')|raw }} </span>
 <br>
-<table>
-<tr>
-    <td class=etiqueta>{{ "desde"|trans }}:</td>
-    <td>
-        <span id=desde> {{ oDesplFasesIni.desplegable()|raw }} </span>
-    </td>
-    <td class=etiqueta>{{ "hasta"|trans }}:</td>
-    <td>
-        <span id=hasta> {{ oDesplFasesFin.desplegable()|raw }} </span>
-    </td>
-</tr>
-</table>
 <h3>{{ "opciones"|trans }}:</h3>
 <table>
 <tr><td colspan="2" class="subtitulo">{{ "ver cambios sólo de las casas"|trans }}:</td>

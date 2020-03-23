@@ -5,7 +5,7 @@ fnjs_guardar=function(formulario){
 	if (rr=='ok') {
 		$('#que').val('ubi');
 		$(formulario).attr('action',"apps/ubis/controller/ubis_update.php");
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',
@@ -28,7 +28,7 @@ fnjs_eliminar=function(formulario){
 	if (confirm("<?= _("¿Está seguro que desea borrar este centro?");?>") ) {
 	   	$('#que').val('eliminar_ubi');
 	   	$(formulario).attr('action','apps/ubis/controller/ubis_update.php');
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',

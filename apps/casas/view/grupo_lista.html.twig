@@ -4,7 +4,7 @@ fnjs_eliminar=function(formulario){
 	if (rta==1) {
 		if (confirm("{{ txt_eliminar }}") ) {
   			$(formulario).attr('action',"apps/casas/controller/grupo_ajax.php");
-			$(formulario).submit(function() {
+			$(formulario).one("submit", function() {
 				$.ajax({
 					url: $(this).attr('action'),
 					type: 'post',

@@ -70,7 +70,7 @@ class DatosTabla {
 				if (confirm(eliminar) ) {
 					$('#mod').val(\"eliminar\");
 					$(formulario).attr('action',\"$action_update\");
-					$(formulario).submit(function() {
+					$(formulario).one(\"submit\", function() {
 						$.ajax({
 							url: $(this).attr('action'),
 							type: 'post',

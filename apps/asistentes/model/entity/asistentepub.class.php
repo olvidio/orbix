@@ -222,15 +222,11 @@ class AsistentePub Extends core\ClasePropiedades {
 		//$aDades['id_tabla'] = $this->sid_tabla;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		$aDades['propio'] = ($aDades['propio'] === 't')? 'true' : $aDades['propio'];
-		if ( filter_var( $aDades['propio'], FILTER_VALIDATE_BOOLEAN)) { $aDades['propio']='t'; } else { $aDades['propio']='f'; }
-		$aDades['est_ok'] = ($aDades['est_ok'] === 't')? 'true' : $aDades['est_ok'];
-		if ( filter_var( $aDades['est_ok'], FILTER_VALIDATE_BOOLEAN)) { $aDades['est_ok']='t'; } else { $aDades['est_ok']='f'; }
-		$aDades['cfi'] = ($aDades['cfi'] === 't')? 'true' : $aDades['cfi'];
-		if ( filter_var( $aDades['cfi'], FILTER_VALIDATE_BOOLEAN)) { $aDades['cfi']='t'; } else { $aDades['cfi']='f'; }
-		$aDades['falta'] = ($aDades['falta'] === 't')? 'true' : $aDades['falta'];
-		if ( filter_var( $aDades['falta'], FILTER_VALIDATE_BOOLEAN)) { $aDades['falta']='t'; } else { $aDades['falta']='f'; }
-
+		if ( core\is_true($aDades['propio']) ) { $aDades['propio']='true'; } else { $aDades['propio']='false'; }
+		if ( core\is_true($aDades['est_ok']) ) { $aDades['est_ok']='true'; } else { $aDades['est_ok']='false'; }
+		if ( core\is_true($aDades['cfi']) ) { $aDades['cfi']='true'; } else { $aDades['cfi']='false'; }
+		if ( core\is_true($aDades['falta']) ) { $aDades['falta']='true'; } else { $aDades['falta']='false'; }
+		
 		if ($bInsert === false) {
 			//UPDATE
 			$update="
@@ -791,6 +787,8 @@ class AsistentePub Extends core\ClasePropiedades {
 	function getDatosCampos() {
 		$oAsistentePubSet = new core\Set();
 
+		//$oAsistentePubSet->add($this->getDatosId_activ());
+		$oAsistentePubSet->add($this->getDatosId_nom());
 		$oAsistentePubSet->add($this->getDatosPropio());
 		$oAsistentePubSet->add($this->getDatosEst_ok());
 		$oAsistentePubSet->add($this->getDatosCfi());
@@ -804,6 +802,33 @@ class AsistentePub Extends core\ClasePropiedades {
 	}
 
 
+
+	/**
+	 * Recupera les propietats de l'atribut iid_activ de AsistentePub
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosId_activ() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_activ'));
+		$oDatosCampo->setEtiqueta(_("id actividad"));
+		return $oDatosCampo;
+	}
+
+
+	/**
+	 * Recupera les propietats de l'atribut iid_nom de AsistentePub
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosId_nom() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_nom'));
+		$oDatosCampo->setEtiqueta(_("id nombre"));
+		return $oDatosCampo;
+	}
 
 	/**
 	 * Recupera les propietats de l'atribut bpropio de AsistentePub

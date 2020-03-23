@@ -449,6 +449,7 @@ case "editar": // editar la actividad.
 	    }
 	}
 	break;
+	/*
 case "actualizar_sacd": // para actualizar los sacd encargados.
 	if (!empty($_POST['sacd1_antiguo']))	{
 	  if ($_POST['sacd1']<>$_POST['sacd1_antiguo']) { 
@@ -588,5 +589,6 @@ case "actualizar_ctr": // cambiar sólo los ctr encargados
 
 		  }
 		}  
-	}	
+	}
+	*/	
 } // fin del switch de mod.

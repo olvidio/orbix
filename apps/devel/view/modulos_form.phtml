@@ -1,7 +1,7 @@
 <script>
 fnjs_sql=function(formulario){
 	$(formulario).attr('action','apps/devel/controller/modulos_sql.php');
-	$(formulario).submit(function() {
+	$(formulario).one("submit", function() {
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'post',
@@ -21,7 +21,7 @@ fnjs_sql=function(formulario){
 }
 fnjs_guardar=function(formulario){
 	$(formulario).attr('action','apps/devel/controller/modulos_update.php');
-	$(formulario).submit(function() {
+	$(formulario).one("submit", function() {
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'post',
@@ -41,7 +41,7 @@ fnjs_guardar=function(formulario){
 }
 fnjs_cambio=function(formulario){
 	$(formulario).attr('action','apps/devel/controller/modulos_update.php');
-	$(formulario).submit(function() {
+	$(formulario).one("submit", function() {
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'post',

@@ -21,7 +21,7 @@ fnjs_guardar=function(formulario,que){
 		id = $(formulario).attr('id');
 		$('#'+id+' input[name=que]').val(que);
 	    $(formulario).attr('action',"apps/ubis/controller/calendario_periodos_ajax.php")
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',

@@ -21,7 +21,7 @@ fnjs_guardar_acta=function(formulario){
 	if (rr=='ok') {
 		$(formulario).attr('action','apps/notas/controller/acta_update.php');
 	<?php if (!empty($notas) && $notas != 'nuevo') { ?>
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',
@@ -37,7 +37,7 @@ fnjs_guardar_acta=function(formulario){
 		$(formulario).submit();
 		$(formulario).off();
 	<?php } else { ?>
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',

@@ -55,7 +55,7 @@ fnjs_guardar=function(formulario){
 	//alert ("EEE "+rr);
 	if (rr=='ok') {
 		$(formulario).attr('action',"apps/actividadestudios/controller/update_3103.php");
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',

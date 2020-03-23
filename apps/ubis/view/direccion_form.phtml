@@ -4,7 +4,7 @@ fnjs_guardar_dir=function(formulario){
 	if (rr=='ok') {
 	   	$('#que').val('direccion');
 		$(formulario).attr('action',"apps/ubis/controller/ubis_update.php");
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',
@@ -28,7 +28,7 @@ fnjs_quitar_dir=function(idx){
 	var formulario = '#frm2';
 	$('#idx').val(idx);
 	$(formulario).attr('action',"apps/ubis/controller/direcciones_quitar.php");
-	$(formulario).submit(function() {
+	$(formulario).one("submit", function() {
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'post',

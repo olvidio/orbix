@@ -72,7 +72,7 @@ fnjs_guardar=function(formulario,que){
 	if (err!=1) {
 		$(formulario+' input[name="que"]').val(que);
 		$(formulario).attr('action','programas/centro_ajax.php');
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
 				data: $(this).serialize(),
 				url: $(this).attr('action'),

@@ -1,10 +1,11 @@
 <?php
 use actividades\model\entity\GestorTipoDeActividad;
+use actividades\model\entity\TipoDeActividad;
 use core\ConfigGlobal;
+use function core\is_true;
 use procesos\model\entity\GestorProcesoTipo;
 use web\Lista;
 use web\TiposActividades;
-use actividades\model\entity\TipoDeActividad;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
@@ -99,7 +100,7 @@ switch ($Qque) {
 		
 		$oTipoActividad = new TipoDeActividad($Qid_tipo_activ);
 		$oTipoActividad->DBCarregar();
-		if ($Qpropio == 't') {
+		if ( is_true($Qpropio) ) {
 		    $oTipoActividad->setId_tipo_proceso($Qid_tipo_proceso);
 		} else {
 		    $oTipoActividad->setId_tipo_proceso_ex($Qid_tipo_proceso);

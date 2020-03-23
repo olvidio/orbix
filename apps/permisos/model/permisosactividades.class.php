@@ -4,11 +4,11 @@ use actividades\model\entity\Actividad;
 use actividades\model\entity\GestorTipoDeActividad;
 use actividades\model\entity\TipoDeActividad;
 use core\ConfigGlobal;
+use function core\is_true;
 use procesos\model\PermAccion;
 use procesos\model\entity as procesos;
 use procesos\model\entity\GestorTareaProceso;
 use usuarios\model\entity as usuarios;
-use procesos\model\entity\GestorActividadProcesoTarea;
 /**
  * Classe que genera un array amb els permisos per cada usuari. Es guarda a la sesió per tenir-ho a l'abast en qualsevol moment:
  *
@@ -144,7 +144,7 @@ class PermisosActividades {
 			    $oFases = new \stdClass;
 			}
 			
-			if ($dl_propia == 't') {
+			if ( is_true($dl_propia) ) {
 				if (array_key_exists($id_tipo_activ_txt,$this->aPermDl)) {
 					// machaco los valores existentes. Si he ordenado por id usuario (DESC), el último és el más importante.
 				} else { //nuevo
@@ -171,38 +171,12 @@ class PermisosActividades {
 				    continue;
 				}
 				foreach ($oFases as $id_fase => $iAccion) {
-                    if ($dl_propia == 't') {
+                    if ( is_true($dl_propia) ) {
                         $this->aPermDl[$id_tipo_activ_txt]->setOmplir($id_tipo_proceso,$id_fase,$iAccion,$iAfecta);
                     } else {
                         $this->aPermOtras[$id_tipo_activ_txt]->setOmplir($id_tipo_proceso,$id_fase,$iAccion,$iAfecta);
                     }
 				}
-				
-				/*
-				// compruebo que existan las fases inicial i final, sino doy un error 
-				if (in_array($id_fase_ini, $aFases) && in_array($id_fase_ini, $aFases)) {
-					// por cada fase generar los permisos
-					$grabar = 0;
-					foreach ($aFases as $id_fase) {
-						if ($id_fase == $id_fase_ini) $grabar = 1;
-						if ($grabar == 1) {
-							if ($dl_propia == 't') {
-								$this->aPermDl[$id_tipo_activ_txt]->setOmplir($id_tipo_proceso,$id_fase,$iAccion,$iAfecta);
-							} else {
-								$this->aPermOtras[$id_tipo_activ_txt]->setOmplir($id_tipo_proceso,$id_fase,$iAccion,$iAfecta);
-							}
-						}
-						if ($id_fase == $id_fase_fin) $grabar = 0;
-					}
-				} else {
-					$msg = _("para el usuario o grupo") .': '.$row['usuario'];
-					$msg .= '<br>';
-					$msg .= _("tipo de actividad") .': '.$id_tipo_activ_txt.'<br>';
-					$msg .= sprintf(_("error: la fase de permiso (%s) no está en el proceso (%s)."),$id_fase,$id_tipo_proceso);
-					$msg .= '<br>';
-					echo $msg;
-				}
-				*/
 			}
 		}
 		if (!empty($id_tipo_activ_txt)) {
@@ -395,7 +369,8 @@ class PermisosActividades {
 	}
 	public function setPropia($bpropia) {
 		// actualitza el bpropia
-		if ($bpropia == 't' || $bpropia == 'true' || $bpropia == 'on' || $bpropia == 1) {
+
+		if (is_true($bpropia))  { 
 			$this->bpropia = true;
 		} else {
 			$this->bpropia = false;

@@ -12,7 +12,7 @@ fnjs_eliminar=function(){
 	if (rta==1) {
 		if (confirm("<?= _("¿Está seguro que desea borrar este usuario?");?>") ) {
 			var url='<?= core\ConfigGlobal::getWeb() ?>/apps/usuarios/controller/usuario_ajax.php';
-			$('#seleccionados').submit(function() {
+			$('#seleccionados').one("submit", function() {
 				$.ajax({
 					url: url,
 					type: 'post',

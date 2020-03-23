@@ -2,7 +2,7 @@
 	fnjs_borrar=function(formulario){
 		$('#que').val('eliminar');
 		$(formulario).attr('action',"apps/cambios/controller/avisos_generar_ajax.php");
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
 				data: $(this).serialize(),
 				url: $(this).attr('action'),

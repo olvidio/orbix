@@ -87,17 +87,19 @@ if( (ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
     
 	// avisos
 	$oGesCambiosUsuariosObjeto = new GestorCambioUsuarioObjetoPref();
-	$cListaTablas = $oGesCambiosUsuariosObjeto->getCambioUsuarioObjetosPrefs(array('id_usuario'=>$Qid_usuario));
+	$aWhere = ['id_usuario' => $Qid_usuario, '_ordre' => 'objeto, dl_org, id_tipo_activ_txt'];
+	$aOperador = [];
+	$cListaTablas = $oGesCambiosUsuariosObjeto->getCambioUsuarioObjetosPrefs($aWhere,$aOperador);
 
 	// Tipos de avisos
 	$aTipos_aviso = CambioUsuarioObjetoPref::getTipos_aviso();
 
 	$i=0;
-	$a_cabeceras_avisos = [_("dl propia"),
-	                   _("tipo de actividad"),
-	                   _("fase inicial"),
-	                   _("fase final"),
+	$a_cabeceras_avisos = [
 	                   _("objeto"),
+                       _("dl propia"),
+	                   _("tipo de actividad"),
+	                   _("fases"),
 	                   _("tipo de aviso"),
 	                   _("propiedades"),
 	                   _("valor"),
@@ -116,6 +118,11 @@ if( (ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
 		$dl_org=$oCambioUsuarioObjetoPref->getDl_org();
 		$objeto=$oCambioUsuarioObjetoPref->getObjeto();
 		$aviso_tipo=$oCambioUsuarioObjetoPref->getAviso_tipo();
+		$json_fases = $oCambioUsuarioObjetoPref->getJson_fases();
+		$oFases = json_decode($json_fases);
+		if (empty($oFases)) {
+		    $oFases = new stdClass;
+		}
 
 		$isfsv = substr($id_tipo, 0, 1);
 		$mi_dele = ConfigGlobal::mi_delef($isfsv);
@@ -126,22 +133,23 @@ if( (ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
 		$oTipoActividad = new TiposActividades($oCambioUsuarioObjetoPref->getId_tipo_activ_txt());
 
 		$a_valores_avisos[$i]['sel']="$Qid_usuario#$id_item_usuario_objeto";
-		$a_valores_avisos[$i][1]=$dl_org;
-		$a_valores_avisos[$i][2]=$oTipoActividad->getNom();
-		if (ConfigGlobal::is_app_installed('procesos')) {
-            $oFase->setId_fase($id_fase_ini);
-            $oFase->DBCarregar();
-            $a_valores_avisos[$i][3]= $oFase->getDesc_fase();
-            $oFase->setId_fase($id_fase_fin);
-            $oFase->DBCarregar();
-            $a_valores_avisos[$i][4]= $oFase->getDesc_fase();
-		} else {
-		    
-            $a_valores_avisos[$i][3] = $a_status[$id_fase_ini];
-            $a_valores_avisos[$i][4] = $a_status[$id_fase_fin];
+		$a_valores_avisos[$i][1]=$objeto;
+		$a_valores_avisos[$i][2]=$dl_org;
+		$a_valores_avisos[$i][3]=$oTipoActividad->getNom();
+        $txt_fases = '';
+        foreach ($oFases as $id_fase => $ok) {
+            if (ConfigGlobal::is_app_installed('procesos')) {
+                $oFase->setId_fase($id_fase);
+                $oFase->DBCarregar();
+    		    $txt_fases .= empty($txt_fases)? '' : ', ';
+    		    $txt_fases .= $oFase->getDesc_fase();
+    		} else {
+    		    $txt_fases .= empty($txt_fases)? '' : ', ';
+    		    $txt_fases .= $a_status[$id_fase];
+		    }
+            $a_valores_avisos[$i][4]= $txt_fases;
 		}
-		$a_valores_avisos[$i][5]=$objeto;
-		$a_valores_avisos[$i][6]=$aTipos_aviso[$aviso_tipo];
+		$a_valores_avisos[$i][5]=$aTipos_aviso[$aviso_tipo];
 		$GesCambiosUsuarioPropiedadesPref = new GestorCambioUsuarioPropiedadPref();
 		$cListaPropiedades = $GesCambiosUsuarioPropiedadesPref->getCambioUsuarioPropiedadesPrefs(array('id_item_usuario_objeto'=>$id_item_usuario_objeto));
 		$txt_cambio = '';
@@ -160,8 +168,8 @@ if( (ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
 			$txt_cambio .= $oCambioUsuarioPropiedadPref->getTextCambio();
 			
 		}
-		$a_valores_avisos[$i][7]=$txt_propiedades;
-		$a_valores_avisos[$i][8]=$txt_cambio;
+		$a_valores_avisos[$i][6]=$txt_propiedades;
+		$a_valores_avisos[$i][7]=$txt_cambio;
 	}
 
 	$oTablaAvisos = new Lista();

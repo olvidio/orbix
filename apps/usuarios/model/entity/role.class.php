@@ -135,13 +135,10 @@ class Role Extends core\ClasePropiedades {
 		$aDades['dmz'] = $this->bdmz;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		$aDades['sf'] = ($aDades['sf'] === 't')? 'true' : $aDades['sf'];
-		if ( filter_var( $aDades['sf'], FILTER_VALIDATE_BOOLEAN)) { $aDades['sf']='t'; } else { $aDades['sf']='f'; }
-		$aDades['sv'] = ($aDades['sv'] === 't')? 'true' : $aDades['sv'];
-		if ( filter_var( $aDades['sv'], FILTER_VALIDATE_BOOLEAN)) { $aDades['sv']='t'; } else { $aDades['sv']='f'; }
-		$aDades['dmz'] = ($aDades['dmz'] === 't')? 'true' : $aDades['dmz'];
-		if ( filter_var( $aDades['dmz'], FILTER_VALIDATE_BOOLEAN)) { $aDades['dmz']='t'; } else { $aDades['dmz']='f'; }
-
+		if ( core\is_true($aDades['sf']) ) { $aDades['sf']='true'; } else { $aDades['sf']='false'; }
+		if ( core\is_true($aDades['sv']) ) { $aDades['sv']='true'; } else { $aDades['sv']='false'; }
+		if ( core\is_true($aDades['dmz']) ) { $aDades['dmz']='true'; } else { $aDades['dmz']='false'; }
+		
 		if ($bInsert === false) {
 			//UPDATE
 			$update="

@@ -2,7 +2,7 @@
 fnjs_del_grupmenu=function(formulario){
 	$('#que').val('del_grupmenu');
 	$(formulario).attr('action',"apps/usuarios/controller/role_update.php");
-	$(formulario).submit(function() {
+	$(formulario).one("submit", function() {
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'post',
@@ -32,7 +32,7 @@ fnjs_guardar=function(formulario){
 	if (rr=='ok') {
 		$('#que_user').val('<?= $que_user ?>');
 		$(formulario).attr('action',"apps/usuarios/controller/role_update.php");
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',

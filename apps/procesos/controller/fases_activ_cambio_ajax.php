@@ -5,6 +5,7 @@ use actividades\model\entity\GestorActividadDl;
 use actividades\model\entity\GestorTipoDeActividad;
 use actividades\model\entity\TipoDeActividad;
 use core\ConfigGlobal;
+use function core\is_true;
 use procesos\model\entity\ActividadFase;
 use procesos\model\entity\GestorActividadFase;
 use procesos\model\entity\GestorActividadProcesoTarea;
@@ -67,7 +68,7 @@ switch($Qque) {
 			$isfsv = (integer) substr($Qid_tipo_activ, 0,1);
 		}
 		// dl_org
-		if ($Qdl_propia == 't') {
+		if ( is_true($Qdl_propia) ) {
 			$aWhere['dl_org'] = ConfigGlobal::mi_delef($isfsv);
     		$gesActividades = new GestorActividadDl();
 		} else {
@@ -146,7 +147,7 @@ switch($Qque) {
 						$a_valores[$i]['clase'] = 'wrong-soft';
 					} else {
                         $fase_previa_completado = $cActivProceso[0]->getCompletado(); // sólo uno
-                        if ($fase_previa_completado == 't') {
+                        if ( is_true($fase_previa_completado) ) {
                             $mensaje_requisito = 'ok';
                             $num_ok++;
                             if (  ($GesActivProceso->faseCompletada($id_activ, $Qid_fase_nueva)

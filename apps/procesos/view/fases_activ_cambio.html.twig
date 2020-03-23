@@ -4,7 +4,7 @@ fnjs_ver_activ=function(formulario) {
 	rta=fnjs_solo_uno(formulario);
 	if (rta == 1) {
         $(formulario).attr('action',url);
-        $(formulario).submit(function() {
+        $(formulario).one("submit", function() {
             $.ajax({
                 url: $(this).attr('action'),
                 type: 'post',
@@ -27,7 +27,7 @@ fnjs_cambiar=function(formulario){
 	rta=fnjs_solo_uno(formulario,true);
 	if (rta != 0 ) {
         $(formulario).attr('action',url);
-        $(formulario).submit(function() {
+        $(formulario).one("submit", function() {
             $.ajax({
                 url: $(this).attr('action'),
                 type: 'post',

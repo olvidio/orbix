@@ -20,7 +20,7 @@ fnjs_borrar_asignatura=function(formulario){
 		if (confirm("<?= $txt_eliminar ?>")) { 
 			$('#mod').val("eliminar");
 			$(formulario).attr('action',"apps/actividadestudios/controller/update_3005.php");
-			$(formulario).submit(function() {
+			$(formulario).one("submit", function() {
 				$.ajax({
 					url: $(this).attr('action'),
 					type: 'post',

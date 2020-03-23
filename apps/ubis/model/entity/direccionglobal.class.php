@@ -1,5 +1,6 @@
 <?php
 namespace ubis\model\entity;
+use function core\is_true;
 use core;
 use web;
 /**
@@ -615,7 +616,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 		$rtn = $salto_linea;
 		$spc = $espacio;
 		if (isset($this->sdireccion)) $txt .= $this->sdireccion.$rtn;
-		if (!empty($this->scp_dcha) && $this->scp_dcha == 't') {
+		if ( is_true($this->scp_dcha) ) {
 			if (!empty($this->spoblacion)) $txt .= $this->spoblacion.$spc;
 			if (!empty($this->sc_p)) $txt .= $this->sc_p;
 		} else {

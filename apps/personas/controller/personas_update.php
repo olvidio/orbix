@@ -1,6 +1,6 @@
 ﻿<?php
+use function core\is_true;
 use usuarios\model\entity as usuarios;
-use personas\model\entity as personas;
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
 */
@@ -63,7 +63,7 @@ foreach ($cDatosCampo as $oDatosCampo) {
 		//pongo el valor nulo, sobretodo para las fechas.
 		if (isset($_POST[$camp]) && (empty($_POST[$camp]) or trim($_POST[$camp])=="") && !is_array($_POST[$camp])) {
 			//si es un campo not null (y es null), pongo el valor por defecto
-			if ($oDatosCampo->datos_campo($oDbl,'nulo') == 't') {
+			if ( is_true($oDatosCampo->datos_campo($oDbl,'nulo')) ) {
 				$valor_predeterminado=$oDatosCampo->datos_campo($oDbl,'valor');
 				$a_values_o[$camp] = $valor_predeterminado;
 			} else {

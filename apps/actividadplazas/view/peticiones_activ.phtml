@@ -26,7 +26,7 @@ fnjs_guardar=function(formulario){
 fnjs_borrar=function(formulario){
 	$('#que').val('borrar');
 	$(formulario).attr('action',"apps/actividadplazas/controller/peticiones_activ_ajax.php");
-	$(formulario).submit(function() {
+	$(formulario).one("submit", function() {
 		$.ajax({
 			type: 'post',
 			url: $(this).attr('action'),

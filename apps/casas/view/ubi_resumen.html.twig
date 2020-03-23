@@ -20,7 +20,7 @@ fnjs_ver=function(seccion){
 
 fnjs_guardar=function(formulario){
     $(formulario).attr('action','{{ url_tarifas }}');
-	$(formulario).submit(function() {
+	$(formulario).one("submit", function() {
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'post',

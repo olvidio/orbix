@@ -1,9 +1,7 @@
 <?php
 namespace permisos\model;
+use function core\is_true;
 use procesos\model\PermAccion;
-use actividades\model\entity as actividades;
-use procesos\model\entity as procesos;
-use usuarios\model\entity as usuarios;
 /**
  * Classe que genera un array amb els permisos per cada usuari. Es guarda a la sesió per tenir-ho a l'abast en qualsevol moment:
  *
@@ -101,124 +99,12 @@ class PermisosActividadesTrue {
 
 	/* METODES ----------------------------------------------------------------- */
 	public function __construct($iid_usuario) {
-		/*
-		$oDbl = $GLOBALS['oDBC'];
-		// permiso para el usuario
-		$sCondicion_usuario="u.id_usuario=$iid_usuario";
-		// miro en els grups als que pertany
-		$oGesGrupos = new usuarios\GestorUsuarioGrupo();
-		$oGrupos = $oGesGrupos->getUsuariosGrupos(array('id_usuario'=>$iid_usuario));
-		if (count($oGrupos) > 0) {
-			foreach ($oGrupos as $oUsuarioGrupo) {
-				$id = $oUsuarioGrupo->getId_grupo();
-				$sCondicion_usuario.=" OR u.id_usuario=$id";
-			}
-			$sCondicion_usuario="($sCondicion_usuario)";
-		}
-		// carrego dues vegades, per la dl_propia i la resta.
-		$this->carregarTrue($sCondicion_usuario,'t');
-		$this->carregarTrue($sCondicion_usuario,'f');
-		
-		$this->oGesActiv = new procesos\GestorActividadProcesoTarea();
-		$this->setoDbl($oDbl);
-		*/
 	}
 
 	public function carregarTrue($sCondicion_usuario,$dl_propia) {
-		/*
-		$oDbl = $this->getoDbl();
-		$Qry="SELECT DISTINCT u.*
-			FROM aux_usuarios_perm u
-			WHERE $sCondicion_usuario AND dl_propia='$dl_propia' 
-			ORDER BY id_usuario DESC
-			";
-		//echo "<br>permActiv: $Qry<br>";
-		if (($oDblSt = $oDbl->query($Qry)) === false) {
-			$sClauError = 'PermisosActividades.carregarTrue';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return false;
-		}
-		// per cada fila genero els permisos
-		$f=0;
-		foreach ($oDbl->query($Qry) as $row) {
-			$f++;
-			$id_tipo_activ_txt = $row['id_tipo_activ_txt'];	
-			$id_fase_ini = $row['id_fase_ini'];	
-			$id_fase_fin = $row['id_fase_fin'];	
-			$iAccion = $row['accion'];	
-			$iAfecta = $row['afecta_a'];
-			if ($dl_propia == 't') {
-				if (array_key_exists($id_tipo_activ_txt,$this->aPermDl)) {
-					// machaco los valores existentes. Si he ordenado por id usuario (DESC), el último és el más importante.
-				} else { //nuevo
-					$this->aPermDl[$id_tipo_activ_txt] = new xResto($id_tipo_activ_txt);
-				}
-			} else {
-				if (array_key_exists($id_tipo_activ_txt,$this->aPermOtras)) {
-					// machaco los valores existentes. Si he ordenado por id usuario (DESC), el último és el más importante.
-				} else { //nuevo
-					$this->aPermOtras[$id_tipo_activ_txt] = new xResto($id_tipo_activ_txt);
-				}
-			}
-			// buscar los procesos posibles para estos tipos de actividad
-			$GesTiposActiv = new actividades\GestorTipoDeActividad();
-			$aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ_txt,$dl_propia);
-			// para cada proceso hay que generar una entrada.
-			foreach ($aTiposDeProcesos as $id_tipo_proceso) {
-				// buscar las fases para estos procesos
-				$oGesFases= new procesos\GestorActividadFase();
-				$aFases = $oGesFases->getTodasActividadFases([$id_tipo_proceso]);
-				// aFases es un array con todas las fases (sf o sv) de la actividad ordenado según el proceso.
-				// compruebo que existan las fases inicial i final, sino doy un error 
-				if (in_array($id_fase_ini, $aFases) && in_array($id_fase_ini, $aFases)) {
-					// por cada fase generar los permisos
-					$grabar = 0;
-					foreach ($aFases as $id_fase) {
-						if ($id_fase == $id_fase_ini) $grabar = 1;
-						if ($grabar == 1) {
-							if ($dl_propia == 't') {
-								$this->aPermDl[$id_tipo_activ_txt]->setOmplir($id_tipo_proceso,$id_fase,$iAccion,$iAfecta);
-							} else {
-								$this->aPermOtras[$id_tipo_activ_txt]->setOmplir($id_tipo_proceso,$id_fase,$iAccion,$iAfecta);
-							}
-						}
-						if ($id_fase == $id_fase_fin) $grabar = 0;
-					}
-				} else {
-					echo _("ERROR: la fase de permiso no está en el proceso.");
-				}
-			}
-		}
-		if (!empty($id_tipo_activ_txt)) {
-			if (!empty($this->aPermDl[$id_tipo_activ_txt])) $this->aPermDl[$id_tipo_activ_txt]->setOrdenar();
-			if (!empty($this->aPermOtras[$id_tipo_activ_txt])) $this->aPermOtras[$id_tipo_activ_txt]->setOrdenar();
-		}
-		*/
 	}
 
 	public function setActividad($id_activ,$id_tipo_activ='',$dl_org='') {
-		/*
-		$this->btop = false;
-		$this->iid_activ = $id_activ;
-		// Si sólo paso el id_activ:
-		if (empty($id_tipo_activ)) {
-			$oActividad = new actividades\Actividad($id_activ);
-			$id_tipo_activ = $oActividad->getId_tipo_activ();
-			$dl_org = $oActividad->getDl_org();
-		}
-		$this->iid_tipo_activ = $id_tipo_activ;
-		$oTipoDeActividad = new actividades\TipoDeActividad($id_tipo_activ);
-
-		if ($dl_org == ConfigGlobal::$mi_delef()) {
-			$this->bpropia=true;
-			$this->iid_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso();
-		} else {
-			$this->bpropia=false;
-			$this->iid_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso_ex();
-		}
-		$this->iid_fase = $this->oGesActiv->getFaseActual($this->iid_activ); 
-		//print_r($this);
-		*/
 	}
 
 	public function setId_fase($iid_fase) {
@@ -304,7 +190,7 @@ class PermisosActividadesTrue {
 	}
 	public function setPropia($bpropia) {
 		// actualitza el bpropia
-		if ($bpropia == 't' || $bpropia == 'true' || $bpropia == 'on' || $bpropia == 1) {
+		if (is_true($bpropia))  { 
 			$this->bpropia = true;
 		} else {
 			$this->bpropia = false;

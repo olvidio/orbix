@@ -77,7 +77,32 @@ class CuadrosFases {
      * dibuja una lista de checkbox
      *
      */
-    public function cuadros_check($nomcamp,$fases_csv){
+    public function cuadros_check($nomcamp){
+        $oFases = $this->getoFases();
+        
+        $txt = '';
+        
+        foreach($this->permissions as $nom=>$id_fase) {
+            $camp=$nomcamp."[]";
+            $accion = '';
+            if (property_exists($oFases, $id_fase)) {
+                $accion = $oFases->$id_fase;
+            }
+            if (!empty($accion)) {
+                $chk = 'checked';
+            } else {
+                $chk = '';
+            }
+            $txt.="   <input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"$id_fase\" $chk>$nom";
+        }
+        return $txt;
+    }
+    
+    /**
+     * dibuja una tabla con fase => permiso
+     *
+     */
+    public function cuadros_lista_perm($nomcamp){
         $oFases = $this->getoFases();
         
         $txt = '<table class="semi">';

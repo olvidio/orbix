@@ -57,7 +57,7 @@ fnjs_del_perm_ctr=function(formulario,que_val){
             $('#perm_ctr_que').val('perm_ctr_eliminar');
             id_usuario=$('#id_usuario').val();
             $(formulario).attr('action','apps/usuarios/controller/usuario_update.php');
-            $(formulario).submit(function() {
+            $(formulario).one("submit", function() {
                 $.ajax({
                     url: $(this).attr('action'),
                     type: 'post',

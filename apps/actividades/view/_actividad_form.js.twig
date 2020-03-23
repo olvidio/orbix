@@ -83,8 +83,8 @@ fnjs_guardar=function(tipo='') {
 	if (rr=='ok' && err==0) {
 		$('#mod').val(tipo);
 		$('#modifica').attr('action','apps/actividades/controller/actividad_update.php');
-		$('#modifica').submit(function(event) {
-			event.preventDefault();
+		$('#modifica').one( "submit", function( event ) {
+            event.preventDefault();
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',
@@ -114,21 +114,5 @@ fnjs_guardar=function(tipo='') {
 	}
 };
 
-fnjs_actualizar_sacd=function(){
-	$('#modifica').attr('action','programas/actividad_update.php');
-	$('#mod').val('actualizar_sacd');
-	fnjs_enviar_formulario('#modifica');
-};
-fnjs_actualizar_ctr=function(){
-	$('#modifica').attr('action','programas/actividad_update.php');
-	$('#mod').val('actualizar_ctr');
-	fnjs_enviar_formulario('#modifica');
-};
-
-fnjs_tipo_actividad=function(){
-	$('#modifica').attr('action','programas/actividad_nueva.php');
-	$('#mod').val('cambiar_tipo');
-	fnjs_enviar_formulario('#modifica');
-};
 </script>
 {% endblock %}

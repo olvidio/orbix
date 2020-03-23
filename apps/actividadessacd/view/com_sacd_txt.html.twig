@@ -17,7 +17,7 @@ fnjs_get_texto=function(){
 }
 
 fnjs_guardar=function(formulario){
-	$(formulario).submit(function() {
+	$(formulario).one("submit", function() {
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'post',

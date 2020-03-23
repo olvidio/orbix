@@ -13,7 +13,7 @@ fnjs_borrar=function(formulario){
 		if (confirm("<?= $txt_eliminar ?>") ) {
 			$('#mod').val("eliminar");
 			$(formulario).attr('action',"apps/notas/controller/update_1011.php");
-			$(formulario).submit(function() {
+			$(formulario).one("submit", function() {
 				$.ajax({
 					url: $(this).attr('action'),
 					type: 'post',

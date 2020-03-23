@@ -79,10 +79,9 @@ class ActividadEx Extends ActividadAll {
 		//$aDades['id_tabla'] = $this->sid_tabla;
 		$aDades['plazas'] = $this->iplazas;
 		array_walk($aDades, 'core\poner_null');
-		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		$aDades['publicado'] = ($aDades['publicado'] === 't')? 'true' : $aDades['publicado'];
-		if ( filter_var( $aDades['publicado'], FILTER_VALIDATE_BOOLEAN)) { $aDades['publicado']='t'; } else { $aDades['publicado']='f'; }
-
+        // Una actividad del esquema resto, debe ser publicada siempre, sino no se puede ver 
+        // desde ningún sitio.
+		$aDades['publicado'] = 'true';
 
 		if ($bInsert === false) {
 			//UPDATE
@@ -120,10 +119,12 @@ class ActividadEx Extends ActividadAll {
 					return false;
 				}
 			}
-			if (core\ConfigGlobal::is_app_installed('cambios') && empty($quiet)) {
-				$oGestorCanvis = new gestorAvisoCambios();
-				$shortClassName = (new \ReflectionClass($this))->getShortName();
-				$oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
+			// Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
+			// Anoto el cambio si la actividad está publicada
+			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') OR $aDades['publicado'] == TRUE)) {
+			    $oGestorCanvis = new gestorAvisoCambios();
+			    $shortClassName = (new \ReflectionClass($this))->getShortName();
+			    $oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
 			}
             $this->setAllAtributes($aDades);
 		} else {
@@ -160,10 +161,12 @@ class ActividadEx Extends ActividadAll {
 			}
 			
 			// anotar cambio.
-			if (core\ConfigGlobal::is_app_installed('cambios') && empty($quiet)) {
-				$oGestorCanvis = new gestorAvisoCambios();
-				$shortClassName = (new \ReflectionClass($this))->getShortName();
-				$oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $aDadesLast, array());
+			// Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
+			// Anoto el cambio si la actividad está publicada
+			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') OR $aDades['publicado'] == TRUE)) {
+			    $oGestorCanvis = new gestorAvisoCambios();
+			    $shortClassName = (new \ReflectionClass($this))->getShortName();
+			    $oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $aDadesLast, array());
 			}
 		}
 		return true;

@@ -75,14 +75,10 @@ class CentroEllos Extends Centro {
 	    $aDades['id_zona'] = $this->iid_zona;
 	    array_walk($aDades, 'core\poner_null');
 	    //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-	    $aDades['status'] = ($aDades['status'] === 't')? 'true' : $aDades['status'];
-	    if ( filter_var( $aDades['status'], FILTER_VALIDATE_BOOLEAN)) { $aDades['status']='t'; } else { $aDades['status']='f'; }
-	    $aDades['sv'] = ($aDades['sv'] === 't')? 'true' : $aDades['sv'];
-	    if ( filter_var( $aDades['sv'], FILTER_VALIDATE_BOOLEAN)) { $aDades['sv']='t'; } else { $aDades['sv']='f'; }
-	    $aDades['sf'] = ($aDades['sf'] === 't')? 'true' : $aDades['sf'];
-	    if ( filter_var( $aDades['sf'], FILTER_VALIDATE_BOOLEAN)) { $aDades['sf']='t'; } else { $aDades['sf']='f'; }
-	    $aDades['cdc'] = ($aDades['cdc'] === 't')? 'true' : $aDades['cdc'];
-	    if ( filter_var( $aDades['cdc'], FILTER_VALIDATE_BOOLEAN)) { $aDades['cdc']='t'; } else { $aDades['cdc']='f'; }
+	    if ( core\is_true($aDades['status']) ) { $aDades['status']='true'; } else { $aDades['status']='false'; }
+	    if ( core\is_true($aDades['sv']) ) { $aDades['sv']='true'; } else { $aDades['sv']='false'; }
+	    if ( core\is_true($aDades['sf']) ) { $aDades['sf']='true'; } else { $aDades['sf']='false'; }
+	    if ( core\is_true($aDades['cdc']) ) { $aDades['cdc']='true'; } else { $aDades['cdc']='false'; }
 	    
 	    if ($bInsert === false) {
 	        //UPDATE

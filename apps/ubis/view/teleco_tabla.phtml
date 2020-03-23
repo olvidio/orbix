@@ -20,7 +20,7 @@ fnjs_eliminar=function(formulario){
 		if (confirm(eliminar) ) {
 			$('#mod').val("eliminar_teleco");
 			$(formulario).attr('action',"apps/ubis/controller/teleco_update.php");
-			$(formulario).submit(function() {
+			$(formulario).one("submit", function() {
 				$.ajax({
 					url: $(this).attr('action'),
 					type: 'post',

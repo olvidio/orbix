@@ -43,7 +43,7 @@ fnjs_guardar=function(formulario){
 
 	if (rr=='ok') {
 		$(formulario).attr('action','apps/actividadestudios/controller/update_3005.php');
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',

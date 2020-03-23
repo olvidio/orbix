@@ -57,7 +57,7 @@
 		});
 
 		// addTab form: calls addTab function on submit and closes the dialog
-		var $form = $( "form", $dialog ).submit(function() {
+		var $form = $( "form", $dialog ).one("submit", function() {
 			addTab();
 			$dialog.dialog( "close" );
 			return false;

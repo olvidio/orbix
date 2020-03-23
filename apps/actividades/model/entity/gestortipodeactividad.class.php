@@ -1,7 +1,8 @@
 <?php
 namespace actividades\model\entity;
-use core;
 use core\ConfigGlobal;
+use function core\is_true;
+use core;
 /**
  * GestorTipoDeActividad
  *
@@ -72,7 +73,7 @@ class GestorTipoDeActividad Extends core\ClaseGestor {
                $nom_tipo_proceso = "id_tipo_proceso_sf"; 
                $nom_tipo_proceso_ex = "id_tipo_proceso_ex_sf"; 
             }
-            if ($bdl_propia == 't') {
+            if (is_true($bdl_propia)) {
                 $sQry="SELECT $nom_tipo_proceso as id_tipo_proceso 
                             FROM $nom_tabla 
                             WHERE id_tipo_activ::text ~ '^$sid_tipo_activ' 

@@ -25,7 +25,7 @@ fnjs_borrar=function(formulario){
 		if (seguro) {
             $('#que').val("eliminar");
 			$(formulario).attr('action','apps/encargossacd/controller/encargo_ajax.php');
-			$(formulario).submit(function() {
+			$(formulario).one("submit", function() {
 				$.ajax({
 		               url: $(this).attr('action'),
 		               type: 'post',

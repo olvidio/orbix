@@ -61,17 +61,11 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 	 */
 	 private $sid_tipo_activ_txt;
 	/**
-	 * Id_fase_ini de CambioUsuarioObjetoPref
+	 * json_fases de CambioUsuarioObjetoPref
 	 *
-	 * @var integer
+	 * @var object JSON
 	 */
-	 private $iid_fase_ini;
-	/**
-	 * Id_fase_fin de CambioUsuarioObjetoPref
-	 *
-	 * @var integer
-	 */
-	 private $iid_fase_fin;
+	 private $json_fases;
 	/**
 	 * Objeto de CambioUsuarioObjetoPref
 	 *
@@ -151,8 +145,7 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 		$aDades['id_usuario'] = $this->iid_usuario;
 		$aDades['dl_org'] = $this->sdl_org;
 		$aDades['id_tipo_activ_txt'] = $this->sid_tipo_activ_txt;
-		$aDades['id_fase_ini'] = $this->iid_fase_ini;
-		$aDades['id_fase_fin'] = $this->iid_fase_fin;
+		$aDades['json_fases'] = $this->json_fases;
 		$aDades['objeto'] = $this->sobjeto;
 		$aDades['aviso_tipo'] = $this->iaviso_tipo;
 		$aDades['aviso_donde'] = $this->saviso_donde;
@@ -165,8 +158,7 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 					id_usuario               = :id_usuario,
 					dl_org                   = :dl_org,
 					id_tipo_activ_txt        = :id_tipo_activ_txt,
-					id_fase_ini              = :id_fase_ini,
-					id_fase_fin              = :id_fase_fin,
+					json_fases               = :json_fases,
 					objeto                   = :objeto,
 					aviso_tipo               = :aviso_tipo,
 					aviso_donde              = :aviso_donde,
@@ -184,8 +176,8 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			$campos="(id_usuario,dl_org,id_tipo_activ_txt,id_fase_ini,id_fase_fin,objeto,aviso_tipo,aviso_donde,id_pau)";
-			$valores="(:id_usuario,:dl_org,:id_tipo_activ_txt,:id_fase_ini,:id_fase_fin,:objeto,:aviso_tipo,:aviso_donde,:id_pau)";		
+			$campos="(id_usuario,dl_org,id_tipo_activ_txt,json_fases,objeto,aviso_tipo,aviso_donde,id_pau)";
+			$valores="(:id_usuario,:dl_org,:id_tipo_activ_txt,:json_fases,:objeto,:aviso_tipo,:aviso_donde,:id_pau)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClauError = 'CambioUsuarioObjetoPref.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -282,8 +274,7 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 		if (array_key_exists('id_usuario',$aDades)) $this->setId_usuario($aDades['id_usuario']);
 		if (array_key_exists('dl_org',$aDades)) $this->setDl_org($aDades['dl_org']);
 		if (array_key_exists('id_tipo_activ_txt',$aDades)) $this->setId_tipo_activ_txt($aDades['id_tipo_activ_txt']);
-		if (array_key_exists('id_fase_ini',$aDades)) $this->setId_fase_ini($aDades['id_fase_ini']);
-		if (array_key_exists('id_fase_fin',$aDades)) $this->setId_fase_fin($aDades['id_fase_fin']);
+		if (array_key_exists('json_fases',$aDades)) $this->setJson_fases($aDades['json_fases']);
 		if (array_key_exists('objeto',$aDades)) $this->setObjeto($aDades['objeto']);
 		if (array_key_exists('aviso_tipo',$aDades)) $this->setAviso_tipo($aDades['aviso_tipo']);
 		if (array_key_exists('aviso_donde',$aDades)) $this->setAviso_donde($aDades['aviso_donde']);
@@ -300,8 +291,7 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 		$this->setId_usuario('');
 		$this->setDl_org('');
 		$this->setId_tipo_activ_txt('');
-		$this->setId_fase_ini('');
-		$this->setId_fase_fin('');
+		$this->setJson_fases('');
 		$this->setObjeto('');
 		$this->setAviso_tipo('');
 		$this->setAviso_donde('');
@@ -427,42 +417,23 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 		$this->sid_tipo_activ_txt = $sid_tipo_activ_txt;
 	}
 	/**
-	 * Recupera l'atribut iid_fase_ini de CambioUsuarioObjetoPref
+	 * Recupera l'atribut json_fases de CambioUsuarioObjetoPref
 	 *
-	 * @return integer iid_fase_ini
+	 * @return integer json_fases
 	 */
-	function getId_fase_ini() {
-		if (!isset($this->iid_fase_ini)) {
+	function getJson_fases() {
+		if (!isset($this->json_fases)) {
 			$this->DBCarregar();
 		}
-		return $this->iid_fase_ini;
+		return $this->json_fases;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_fase_ini de CambioUsuarioObjetoPref
+	 * estableix el valor de l'atribut json_fases de CambioUsuarioObjetoPref
 	 *
-	 * @param integer iid_fase_ini='' optional
+	 * @param integer json_fases='' optional
 	 */
-	function setId_fase_ini($iid_fase_ini='') {
-		$this->iid_fase_ini = $iid_fase_ini;
-	}
-	/**
-	 * Recupera l'atribut iid_fase_fin de CambioUsuarioObjetoPref
-	 *
-	 * @return integer iid_fase_fin
-	 */
-	function getId_fase_fin() {
-		if (!isset($this->iid_fase_fin)) {
-			$this->DBCarregar();
-		}
-		return $this->iid_fase_fin;
-	}
-	/**
-	 * estableix el valor de l'atribut iid_fase_fin de CambioUsuarioObjetoPref
-	 *
-	 * @param integer iid_fase_fin='' optional
-	 */
-	function setId_fase_fin($iid_fase_fin='') {
-		$this->iid_fase_fin = $iid_fase_fin;
+	function setJson_fases($json_fases='') {
+		$this->json_fases = $json_fases;
 	}
 	/**
 	 * Recupera l'atribut sobjeto de CambioUsuarioObjetoPref
@@ -552,8 +523,7 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 		$oCambioUsuarioObjetoPrefSet->add($this->getDatosId_usuario());
 		$oCambioUsuarioObjetoPrefSet->add($this->getDatosDl_org());
 		$oCambioUsuarioObjetoPrefSet->add($this->getDatosId_tipo_activ_txt());
-		$oCambioUsuarioObjetoPrefSet->add($this->getDatosId_fase_ini());
-		$oCambioUsuarioObjetoPrefSet->add($this->getDatosId_fase_fin());
+		$oCambioUsuarioObjetoPrefSet->add($this->getDatosJson_fases());
 		$oCambioUsuarioObjetoPrefSet->add($this->getDatosObjeto());
 		$oCambioUsuarioObjetoPrefSet->add($this->getDatosAviso_tipo());
 		$oCambioUsuarioObjetoPrefSet->add($this->getDatosAviso_donde());
@@ -600,27 +570,15 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut iid_fase_ini de CambioUsuarioObjetoPref
+	 * Recupera les propietats de l'atribut json_fases de CambioUsuarioObjetoPref
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
 	 */
-	function getDatosId_fase_ini() {
+	function getDatosJson_fases() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_fase_ini'));
-		$oDatosCampo->setEtiqueta(_("id_fase_ini"));
-		return $oDatosCampo;
-	}
-	/**
-	 * Recupera les propietats de l'atribut iid_fase_fin de CambioUsuarioObjetoPref
-	 * en una clase del tipus DatosCampo
-	 *
-	 * @return core\DatosCampo
-	 */
-	function getDatosId_fase_fin() {
-		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_fase_fin'));
-		$oDatosCampo->setEtiqueta(_("id_fase_fin"));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'json_fases'));
+		$oDatosCampo->setEtiqueta(_("json_fases"));
 		return $oDatosCampo;
 	}
 	/**

@@ -31,7 +31,7 @@ fnjs_guardar=function(enc){
 	}
 	if (!error) {
 		$(formulario).attr('action','apps/encargossacd/controller/ctr_ficha_update.php');
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',

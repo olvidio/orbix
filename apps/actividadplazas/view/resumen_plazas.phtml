@@ -2,7 +2,7 @@
 fnjs_guardar=function(formulario){
 	$('#que').value = 'ceder';
 	$(formulario).attr('action',"apps/actividadplazas/controller/resumen_plazas_update.php");
-	$(formulario).submit(function() {
+	$(formulario).one("submit", function() {
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'post',

@@ -7,7 +7,7 @@ fnjs_guardar=function(formulario){
 
 	if (err != 1) {
         $(formulario).attr('action','{{ url_update }}');
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
                 url: $(this).attr('action'),
                 type: 'post',

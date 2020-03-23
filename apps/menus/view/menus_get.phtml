@@ -1,7 +1,7 @@
 <script>
 fnjs_guardar=function(formulario){
 	$(formulario).attr('action', "apps/menus/controller/menus_update.php");
-	$(formulario).submit(function() {
+	$(formulario).one("submit", function() {
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'post',

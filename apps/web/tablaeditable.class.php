@@ -869,7 +869,7 @@ class TablaEditable {
 		if (!empty($url)) {
 			$fnjs ="
 				var url='$url';
-				$('#form_update').submit(function() {
+				$('#form_update').one('submit', function() {
 					$.ajax({
 						url: url,
 						type: 'post',

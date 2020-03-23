@@ -13,7 +13,7 @@ fnjs_borrar_cargo=function(formulario){
 		if (confirm("<?= $txt_eliminar ?>") ) {
 			$('#mod').val("eliminar");
 			$(formulario).attr('action',"apps/actividadcargos/controller/update_3102.php");
-			$(formulario).submit(function() {
+			$(formulario).one("submit", function() {
 				$.ajax({
 					url: $(this).attr('action'),
 					type: 'post',

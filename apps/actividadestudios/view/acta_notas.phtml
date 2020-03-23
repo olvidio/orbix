@@ -34,7 +34,7 @@ fnjs_guardar_tessera=function(form_acta){
 	} else {
 		$('#que').val("3");
 		$('#f_1303').attr('action',"apps/actividadestudios/controller/acta_notas_update.php");
-		$('#f_1303').submit(function() {
+		$('#f_1303').one("submit", function() {
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',
@@ -61,7 +61,7 @@ fnjs_guardar_nota=function(){
 	} else {
 		$('#que').val("1");
 		$('#f_1303').attr('action',"apps/actividadestudios/controller/acta_notas_update.php");
-		$('#f_1303').submit(function() {
+		$('#f_1303').one("submit", function() {
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',

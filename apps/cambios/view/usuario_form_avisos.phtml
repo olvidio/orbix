@@ -11,7 +11,7 @@ fnjs_del_cambio=function(formulario,que_val){
 	if (rta==1) {
         if (confirm("<?= _("¿Está seguro que desea borrar este aviso?");?>") ) {
 	        $(formulario).attr('action','apps/cambios/controller/usuario_avisos_pref_ajax.php');
-            $(formulario).submit(function() {
+            $(formulario).one("submit", function() {
                 $.ajax({
                     url: $(this).attr('action'),
                     type: 'post',

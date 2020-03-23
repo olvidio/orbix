@@ -1,5 +1,6 @@
 <?php
 namespace cambios\model\entity;
+use function core\is_true;
 use core;
 use ubis\model\entity\Ubi;
 /**
@@ -243,12 +244,12 @@ class CambioUsuarioPropiedadPref Extends core\ClasePropiedades {
 	 * @return string sCondicio
 	 */
 	function getTextCambio() {
-	    if (($this->getValor_new() != 'on' && $this->getValor_new() != 't') && ($this->getValor_old() != 'on' && $this->getValor_old() != 't' )) return false;
+	    if ( !is_true($this->getValor_new()) && !is_true($this->getValor_old()) ) return FALSE;
 	    $sText = _("si el");
 	    $sText .= ' ';
-	    if ($this->getValor_new() == 'on' || $this->getValor_new() == 't' ) $sText .= _("nuevo valor");
-	    if (($this->getValor_new() == 'on' || $this->getValor_new() == 't') && ($this->getValor_old() == 'on' || $this->getValor_old() == 't' )) $sText .= ' '._("o el").' ';
-	    if ($this->getValor_old() == 'on' || $this->getValor_old() == 't' ) $sText .= _("valor actual");
+	    if ( is_true($this->getValor_new()) ) $sText .= _("nuevo valor");
+	    if ( is_true($this->getValor_new()) && is_true($this->getValor_old()) ) $sText .= ' '._("o el").' ';
+	    if ( is_true($this->getValor_old()) ) $sText .= _("valor actual");
 	    $sText .= ' ';
 	    $sText .= _("es");
 	    if ($this->getOperador() == '=' ) $sText .= ' = ' . _("a");

@@ -5,7 +5,7 @@ fnjs_guardar=function(formulario){
 	if (rr=='ok') {
 		$('#user_que').val('<?= $user_que ?>');
 		$(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',

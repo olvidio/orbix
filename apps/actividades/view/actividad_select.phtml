@@ -6,7 +6,7 @@ fnjs_borrar=function(formulario,que_val){
 		if (confirm("<?= _("¿Está seguro que desea borrar esta actividad?");?>") ) {
 			$('#mod').val(que_val);
 			$(formulario).attr('action',"apps/actividades/controller/actividad_update.php");
-			$(formulario).submit(function() {
+			$(formulario).one("submit", function() {
 				$.ajax({
 					url: $(this).attr('action'),
 					type: 'post',

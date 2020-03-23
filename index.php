@@ -763,7 +763,7 @@ function fnjs_ref_absoluta(base,path) {
 function fnjs_enviar_formulario(id_form,bloque) {
 	fnjs_borrar_posibles_atras();
 	if (!bloque) { bloque='#main'; }
-	$(id_form).submit(function() { // catch the form's submit event
+	$(id_form).one("submit", function() { // catch the form's submit event
 			$.ajax({ // create an AJAX call...
 				data: $(this).serialize(), // get the form data
 				type: 'post', // GET or POST

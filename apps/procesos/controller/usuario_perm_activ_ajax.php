@@ -27,7 +27,7 @@ $aFases = $oGesFases->getArrayFasesProcesos($aTiposDeProcesos);
 $oCuadrosFases = new CuadrosFases();
 $oCuadrosFases->setPermissions($aFases);
 
-echo $oCuadrosFases->cuadros_check('afases', 34);
+echo $oCuadrosFases->cuadros_lista_perm('afases');
 /*
 // buscar las fases para estos procesos
 switch($Qsalida) {

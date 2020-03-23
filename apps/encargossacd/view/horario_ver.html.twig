@@ -43,7 +43,7 @@ fnjs_guardar=function(formulario){
 	    } 
 	    fnjs_enviar_formulario('#modifica');
 	    $(formulario).attr('action','apps/encargossacd/controller/horario_update.php');
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
                 url: $(this).attr('action'),
                 type: 'post',

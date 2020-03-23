@@ -5,7 +5,7 @@ fnjs_guardar=function(formulario){
 	if (rr=='ok') {
 	   	$('#mod').val('teleco');
 	   	$(formulario).attr('action','apps/ubis/controller/teleco_update.php');
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',

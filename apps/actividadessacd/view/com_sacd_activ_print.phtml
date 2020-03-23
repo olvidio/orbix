@@ -93,7 +93,7 @@ foreach ($array_actividades as $id_nom => $vector) {
 	<?php
 	if (is_array($a_actividades)){
 	foreach ($a_actividades as $act) {
-		if ($act['propio'] == 't') { $marca='*'; } else { $marca=''; }
+		if (core\is_true($act['propio'])) { $marca='*'; } else { $marca=''; }
 		if (!empty($act['cargo'])) { $cargo_observ = $act['cargo'] . '. ' . $act['observ']; } else { $cargo_observ=$act['observ']; }
 	?>
 		<tr>

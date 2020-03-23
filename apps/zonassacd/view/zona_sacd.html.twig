@@ -18,7 +18,7 @@ fnjs_busca_sacds=function(){
 fnjs_guardar=function(formulario,n){
 	$('#acumular').val(n);
 	$(formulario).attr('action','{{ url_ajax }}');
-	$(formulario).submit(function() {
+	$(formulario).one("submit", function() {
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'post',

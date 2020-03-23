@@ -6,13 +6,14 @@ use cambios\model\entity\CambioUsuarioObjetoPref;
 use cambios\model\entity\CambioUsuarioPropiedadPref;
 use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
 use core\ConfigGlobal;
+use function core\is_true;
 use permisos\model\PermisosActividades;
+use procesos\model\CuadrosFases;
 use procesos\model\entity\ActividadFase;
 use procesos\model\entity\GestorActividadFase;
 use ubis\model\entity\GestorCasaDl;
 use usuarios\model\entity\Role;
 use usuarios\model\entity\Usuario;
-use web\Desplegable;
 use web\DesplegableArray;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -317,14 +318,14 @@ switch($Qsalida) {
 		}
 		echo $html;
 		break;
-	case 'av_desde':
+	case 'av_fases':
         $Qobjeto = (string) \filter_input(INPUT_POST, 'objeto');
 
 		if (!empty($Qobjeto)) {
             $Qid_tipo_activ = (string) \filter_input(INPUT_POST, 'id_tipo_activ');
             $Qid_usuario = (string) \filter_input(INPUT_POST, 'id_usuario');
             $Qdl_propia = (string) \filter_input(INPUT_POST, 'dl_propia');
-            if ($Qdl_propia == 't') {
+            if (is_true($Qdl_propia)) {
                 $dl_propia = TRUE;
             } else {
                 $dl_propia = FALSE;
@@ -332,7 +333,7 @@ switch($Qsalida) {
             
             if (ConfigGlobal::is_app_installed('procesos')) {
                 // para las fases cojo los mismos permisos que para las actividades (datos).
-                $aObjPerm = [   'ActividadDl'=>'datos',
+                $aObjPerm = [   'Actividad'=>'datos',
                                 'ActividadProcesoTarea'=>'datos',
                                 'ActividadCargoSacd'=>'sacd',
                                 'ActividadCargoNoSacd'=>'cargos',
@@ -363,85 +364,22 @@ switch($Qsalida) {
                         //print_r($oPermActiv);
                         if ( !$oPermActiv->have_perm_activ('ocupado') ) { continue; }
                         $oFase = new ActividadFase($id_fase);
-                        $aFasesConPerm[$id_fase] = $oFase->getDesc_fase();
+                        $desc_fase = $oFase->getDesc_fase();
+                        $aFasesConPerm[$desc_fase] = $id_fase; 
                     }
                 }
             } else {
                 // Sólo los estado de la actividad
                 $oActividad = new ActividadAll();
-                $aFasesConPerm = $oActividad->getArrayStatus();
+                $a_status = $oActividad->getArrayStatus();
+                // Quitar el status 'qualquiera'
+                unset($a_status[ActividadAll::STATUS_ALL]);
+                $aFasesConPerm = array_flip($a_status);
             }
-            $oDesplFasesIni = new Desplegable();
-            $oDesplFasesIni->setOpciones($aFasesConPerm);
-            $oDesplFasesIni->setNombre('fase_ini');
-            echo $oDesplFasesIni->desplegable();
-		} else {
-		    $html = "<span class='alert'>";
-		    $html .= _("primero debe elegir un objeto sobre el que mirar los cambios");
-		    $html .= "</span>";
-		    echo $html;
-		}
-		break;
-	case 'av_hasta':
-        $Qobjeto = (string) \filter_input(INPUT_POST, 'objeto');
-
-		if (!empty($Qobjeto)) {
-            $Qid_tipo_activ = (string) \filter_input(INPUT_POST, 'id_tipo_activ');
-            $Qid_usuario = (string) \filter_input(INPUT_POST, 'id_usuario');
-            $Qdl_propia = (string) \filter_input(INPUT_POST, 'dl_propia');
-            if ($Qdl_propia == 't') {
-                $dl_propia = TRUE;
-            } else {
-                $dl_propia = FALSE;
-            }
-
-            if (ConfigGlobal::is_app_installed('procesos')) {
-                // para las fases cojo los mismos permisos que para las actividades (datos).
-                $aObjPerm = [   
-                                'ActividadDl'=>'datos',
-                                'ActividadProcesoTarea'=>'datos',
-                                'ActividadCargoSacd'=>'sacd',
-                                'ActividadCargoNoSacd'=>'cargos',
-                                'Asistente'=>'asistentes',
-                                'CentroEncargado'=>'ctr',
-                            ];
-                $afecta = $aObjPerm[$Qobjeto];
-                
-                $id_tipo_activ_txt = "......";
-                for ($i=0;$i<6;$i++) {
-                    if (!empty($Qid_tipo_activ[$i])) $id_tipo_activ_txt[$i] = $Qid_tipo_activ[$i];
-                }
-                // buscar los procesos posibles para estos tipos de actividad
-                $GesTiposActiv = new GestorTipoDeActividad();
-                $aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($Qid_tipo_activ,$dl_propia);
-                $oGesFases= new GestorActividadFase();
-                $aFases = $oGesFases->getArrayActividadFases($aTiposDeProcesos);
-
-                $oPermActividades = new PermisosActividades($Qid_usuario);
-                $oPermActividades->setId_tipo_activ($id_tipo_activ_txt);
-                $oPermActividades->setPropia($dl_propia);
-                $aFasesConPerm=array();
-                foreach ($aTiposDeProcesos as $id_proceso) {
-                    $oPermActividades->setId_tipo_proceso($id_proceso);
-                    foreach ($aFases as $id_fase) {
-                        //echo "id_fase: $id_fase<br>";
-                        $oPermActividades->setId_fase($id_fase);
-                        $oPermActiv = $oPermActividades->getPermisoActual($afecta);
-                        //print_r($oPermActiv);
-                        if ($oPermActiv->have_perm_activ('ocupado') === false) continue;
-                        $oFase = new ActividadFase($id_fase);
-                        $aFasesConPerm[$id_fase] = $oFase->getDesc_fase();
-                    }
-                }
-            } else {
-                // Sólo los estado de la actividad
-                $oActividad = new ActividadAll();
-                $aFasesConPerm = $oActividad->getArrayStatus();
-            }
-            $oDesplFasesFin = new Desplegable();
-            $oDesplFasesFin->setOpciones($aFasesConPerm);
-            $oDesplFasesFin->setNombre('fase_fin');
-            echo $oDesplFasesFin->desplegable();
+            $oCuadrosFases = new CuadrosFases();
+            $oCuadrosFases->setPermissions($aFasesConPerm);
+            
+            echo $oCuadrosFases->cuadros_check('afases','');
 		} else {
 		    $html = "<span class='alert'>";
 		    $html .= _("primero debe elegir un objeto sobre el que mirar los cambios");
@@ -473,11 +411,10 @@ switch($Qsalida) {
         $Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
         $Qid_tipo_activ = (string) \filter_input(INPUT_POST, 'id_tipo_activ');
         $Qdl_propia = (string) \filter_input(INPUT_POST, 'dl_propia');
-        $Qfase_ini = (integer) \filter_input(INPUT_POST, 'fase_ini');
-        $Qfase_fin = (integer) \filter_input(INPUT_POST, 'fase_fin');
         $Qobjeto = (string) \filter_input(INPUT_POST, 'objeto');
         $Qaviso_tipo = (string) \filter_input(INPUT_POST, 'aviso_tipo');
         $Qaviso_donde = (string) \filter_input(INPUT_POST, 'aviso_donde');
+        $Qafases = (array) \filter_input(INPUT_POST, 'afases', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 		$a_relleno = array( 1=>'.',2=>'..',3=>'...',4=>'....',5=>'.....');
 		if(!empty($Qid_item_usuario_objeto)) {
@@ -486,7 +423,7 @@ switch($Qsalida) {
 			$oCambioUsuarioObjeto = new CambioUsuarioObjetoPref();
 		}
 		$oCambioUsuarioObjeto->setId_usuario($Qid_usuario);
-		if ($Qdl_propia == 't') { 
+		if (is_true($Qdl_propia)) { 
 		    $isfsv = substr($Qid_tipo_activ, 0, 1);
 		    $dl_org = ConfigGlobal::mi_delef($isfsv);
 		} else {
@@ -505,8 +442,6 @@ switch($Qsalida) {
 			}
 		}
 		$oCambioUsuarioObjeto->setId_tipo_activ_txt($Qid_tipo_activ);
-		$oCambioUsuarioObjeto->setId_fase_ini($Qfase_ini);
-		$oCambioUsuarioObjeto->setId_fase_fin($Qfase_fin);
 		$oCambioUsuarioObjeto->setObjeto($Qobjeto);
 		$oCambioUsuarioObjeto->setAviso_tipo($Qaviso_tipo);
 		if (!empty($Qaviso_donde)) $oCambioUsuarioObjeto->setAviso_donde($Qaviso_donde);
@@ -521,6 +456,15 @@ switch($Qsalida) {
 				$txt_casa .= $id_ubi;
 			}
 			$oCambioUsuarioObjeto->setId_pau($txt_casa);
+		}
+		//cuando el campo es afases, se pasa un array que hay que convertirlo texto (separado por comas).
+		if (!empty($Qafases)){
+		    $oFases = new stdClass;
+		    foreach($Qafases as $key => $id_fase) {
+		        $oFases->$id_fase = 'ok';
+		    }
+		    $json_fases = json_encode($oFases);
+		    $oCambioUsuarioObjeto->setJson_fases($json_fases);
 		}
 
 		if ($oCambioUsuarioObjeto->DBGuardar() === false) {

@@ -81,7 +81,7 @@ fnjs_guardar=function(tipo=''){
 	if (rr=='ok' && err==0) {
 		$('#mod').val(tipo);
 		$('#modifica').attr('action','apps/actividades/controller/actividad_update.php');
-		$('#modifica').submit(function() {
+		$('#modifica').one("submit", function() {
 			$.ajax({
 				data: $(this).serialize(),
 				url: $(this).attr('action'),

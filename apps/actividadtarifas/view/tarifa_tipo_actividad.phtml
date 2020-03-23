@@ -67,7 +67,7 @@ fnjs_guardar=function(formulario,que){
 		$('#id_tipo_activ').val(id_tipo_activ);
 		$('#que').val(que);
 		$(formulario).attr('action','<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/tarifa_tipo_actividad_ajax.php');
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',

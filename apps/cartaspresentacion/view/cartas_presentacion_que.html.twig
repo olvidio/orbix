@@ -98,7 +98,7 @@ fnjs_eliminar_cp=function(id_direccion,id_ubi){
 fnjs_guardar_cp=function(formulario){
 	var url='{{ url_ajax }}';
     $(formulario).attr('action',url);
-    $(formulario).submit(function() {
+    $(formulario).one("submit", function() {
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'post',

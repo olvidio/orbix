@@ -15,7 +15,7 @@ fnjs_guardar=function(formulario){
 
 	if (err== 0) {
 		$(formulario).attr('action',"apps/personas/controller/traslado_update.php");
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',

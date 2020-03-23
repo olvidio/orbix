@@ -78,7 +78,7 @@ fnjs_guardar=function(formulario){
 	id_usuario=$('#id_usuario').val();
 	go='apps/usuarios/controller/usuario_form.php?quien=usuario&id_usuario='+id_usuario;
 	$(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
-	$(formulario).submit(function() {
+	$(formulario).one("submit", function() {
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'post',

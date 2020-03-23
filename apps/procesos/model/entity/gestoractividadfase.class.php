@@ -115,32 +115,40 @@ class GestorActividadFase Extends core\ClaseGestor {
 	        }
 	    }
 	    
-	    $num_procesos=count($aProcesos);
-	    if ($num_procesos > 0) {
-	        $sCondicion="WHERE $cond AND id_tipo_proceso =";
-	        $sCondicion.=implode(' OR id_tipo_proceso = ',$aProcesos);
+	    // intentar ordenar. No se puede por que los num de orden son distintos para cada proceso
+	    $aDescFases = [];
+	    $aFasesComunes = [];
+	    foreach ($aProcesos as $id_tipo_proceso) {
+	        $sCondicion="WHERE $cond AND id_tipo_proceso = $id_tipo_proceso";
 	        $sQuery="SELECT f.id_fase, f.desc_fase
 					FROM $nom_tabla f JOIN a_tareas_proceso p USING (id_fase)
 					$sCondicion
-					GROUP BY f.id_fase, f.desc_fase
-					HAVING Count(p.id_tipo_proceso) = $num_procesos
-					ORDER BY f.desc_fase";
-	    } else {
-	        $sQuery="SELECT id_fase, desc_fase
-					FROM $nom_tabla
-					WHERE $cond
-					ORDER BY desc_fase";
+					ORDER BY p.n_orden";
+					
+					$aFasesProceso = [];
+					foreach ($oDbl->query($sQuery) as $row) {
+					    $id_fase = $row['id_fase'];
+					    $desc_fase = $row['desc_fase'];
+					    $aDescFases[$id_fase] = $desc_fase;
+					    
+					    $aFasesProceso[] = $id_fase;
+					    
+					}
+					// la primera vuelta no hay nada y hay que saltarlo:
+					if (empty($aFasesComunes)) {
+    					$aFasesComunes = $aFasesProceso;
+					    continue;
+					}
+					$aFasesComunes = array_intersect($aFasesComunes, $aFasesProceso);
 	    }
-	    if (($oDbl->query($sQuery)) === false) {
-	        $sClauError = 'GestorRole.lista';
-	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-	        return false;
+	    // poner la descripcion de la fase en el array resultante.
+	    $aFasesComunesOrden = [];
+	    foreach ($aFasesComunes as $id_fase) {
+	        $desc_fase = $aDescFases[$id_fase];
+	        $aFasesComunesOrden[$desc_fase] = $id_fase;
 	    }
-	    $aFases = array();
-	    foreach ($oDbl->query($sQuery) as $row) {
-	        $aFases[] = $row['id_fase'];
-	    }
-	    return $aFases;
+	    
+	    return $aFasesComunesOrden;
 	}
 
 	/**
@@ -179,8 +187,9 @@ class GestorActividadFase Extends core\ClaseGestor {
 	    
 	    $num_procesos=count($aProcesos);
 	    if ($num_procesos !== false && $num_procesos > 0) {
-	        $sCondicion="WHERE $cond AND id_tipo_proceso =";
-	        $sCondicion.=implode(' OR id_tipo_proceso = ',$aProcesos);
+	        $sCondicion = "WHERE $cond AND (id_tipo_proceso =";
+	        $sCondicion .= implode(' OR id_tipo_proceso = ',$aProcesos);
+	        $sCondicion .= ')';
 	        /*OJO: No se puede ordenar por n_orden, pues pueden ser distintos de un proceso a otro...
 	         */
 	        /*

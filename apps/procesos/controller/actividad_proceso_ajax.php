@@ -1,5 +1,6 @@
 <?php
 use core\ConfigGlobal;
+use function core\is_true;
 use procesos\model\entity\ActividadFase;
 use procesos\model\entity\ActividadProcesoTarea;
 use procesos\model\entity\ActividadTarea;
@@ -61,7 +62,7 @@ switch($Qque) {
 				$obs = "<td><input type='text' id='observ$id_item' name='observ' value='$observ' ></td>";
 			} else {
 				$icon = '';
-				if ($completado == 't') {
+				if ( is_true($completado) ) {
 					$icon = '<img src="'. ConfigGlobal::getWeb_icons() .'/checkbox-checked.png" title="ok">';
 				} else {
 					$icon = '<img src="'. ConfigGlobal::getWeb_icons() .'/check-box-outline-blank.png" title="">';

@@ -196,7 +196,7 @@ switch ($Qmod) {
 		break;
 	//------------ BORRAR --------
 	case "eliminar":
-	$msg_err = eliminar($Qid_activ,$Qid_nom);
+        $msg_err = eliminar($Qid_activ,$Qid_nom);
 		break;
 	//------------ NUEVO --------
 	//------------ EDITAR --------

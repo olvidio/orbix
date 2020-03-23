@@ -9,7 +9,7 @@ fnjs_del_perm_menu=function(formulario){
 		if (confirm("<?= _("¿Está seguro?") ?>")) {
 			$('#perm_menu_que').val("perm_menu_eliminar");
 			$(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
-			$(formulario).submit(function() {
+			$(formulario).one("submit", function() {
 				$.ajax({
 					url: $(this).attr('action'),
 					type: 'post',

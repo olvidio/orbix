@@ -52,7 +52,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 use actividadcargos\model\entity\GestorActividadCargo;
 use actividades\model\entity\Actividad;
 use actividades\model\entity\GestorImportada;
-use actividades\model\entity\GestorTipoDeActividad;
+use actividades\model\entity\TipoDeActividad;
 use asistentes\model\entity\GestorAsistenteDl;
 use cambios\model\entity\CambioAnotado;
 use cambios\model\entity\CambioUsuario;
@@ -62,7 +62,7 @@ use cambios\model\entity\GestorCambioUsuario;
 use cambios\model\entity\GestorCambioUsuarioObjetoPref;
 use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
 use core\ConfigGlobal;
-use procesos\model\entity\GestorActividadFase;
+use function core\is_true;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use procesos\model\entity\GestorTareaProceso;
 use usuarios\model\entity\Role;
@@ -287,8 +287,6 @@ function soy_encargado($id_nom,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cm
 			$cSacds = $GesZonaSacd->getSacdsZona($id_zona);
 			switch ($sObjeto) {
 				case 'Actividad':
-				case 'ActividadDl':
-				case 'ActividadEx':
 					// compruebo si el sacd asiste.
 				    foreach ($cSacds as $id_nom) {
 				        $aWhere = ['id_nom' => $id_nom, 'id_activ' => $id_activ];
@@ -367,6 +365,18 @@ while ($num_cambios) {
 		$valor_new_cmb = $oCambio->getValor_new();
 		$id_activ = $oCambio->getId_activ();
 		
+		// Para las actividades, en el cambio se anota: 'ActividadDl' 'ActividadEx'
+		// pero en las preferencias, solo 'Actividad'.
+		if(strpos($sObjeto, 'Actividad') !== false){
+		    $sObjeto = 'Actividad';
+		}
+		
+		// Para los asistentes, en el cambio se anota: 'Asistente' 'AsistenteDl' 'AsistenteEx' 'AsistenteIn' 'AsistenteOut'
+		// pero en las preferencias, solo 'Asistente'.
+		if(strpos($sObjeto, 'Asistente') !== false){
+		    $sObjeto = 'Asistente';
+		}
+		
 		if (ConfigGlobal::mi_sfsv() == 1) {
             $id_fase_cmb = $id_fase_cmb_sv;		    
 		} else {
@@ -375,6 +385,7 @@ while ($num_cambios) {
 		// para dl y dlf:
 		$dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
 		$dl_propia = (ConfigGlobal::mi_dele() == $dl_org_no_f)? 't' : 'f';
+        /*
 		if (ConfigGlobal::is_app_installed('procesos')) {
             // para evitar repetir el proceso si el tipo de actividad es el mismo.
             if ($id_tipo_activ_anterior != $id_tipo_activ || $dl_org_anterior != $dl_org) {
@@ -391,6 +402,7 @@ while ($num_cambios) {
 		} else {
 		    $aFases = [1,2,3,4]; // id correspondientes al status de la actividad.
 		}
+		*/
         // Si es de otra dl, compruebo que sea una actividad importada, sino no tiene sentido avisar.
         if ($dl_propia == 'f') {
             $GesImportada = new GestorImportada();
@@ -429,8 +441,11 @@ while ($num_cambios) {
 			}
 			$aviso_donde = $oCambioUsuarioObjetoPref->getAviso_donde();
 			$id_pau = $oCambioUsuarioObjetoPref->getId_pau();
-			$id_fase_ini = $oCambioUsuarioObjetoPref->getId_fase_ini();
-			$id_fase_fin = $oCambioUsuarioObjetoPref->getId_fase_fin();
+			$json_fases = $oCambioUsuarioObjetoPref->getJson_fases();
+			$oFases = json_decode($json_fases);
+			if (empty($oFases)) {
+			    $oFases = new stdClass;
+			}
 			
 			$fase_correcta = 0;
 			/////////////////// COMPARAR STATUS //////////////////////////////////////////
@@ -440,11 +455,15 @@ while ($num_cambios) {
 			if (empty($id_fase_cmb)) {
 			    // Si yo SI tengo procesos:
 			    if(ConfigGlobal::is_app_installed('procesos')) {
+			        // Busco el status de la actividad qe corresponde a la dase actual
 			        // miro la fase actual de la actividad
 			        $gesActivProcesoTarea = new GestorActividadProcesoTarea();
 			        $id_faseActual = $gesActivProcesoTarea->getFaseActual($id_activ);
+                    // busco el tipo de proceso			        
+			        $oTipo = new TipoDeActividad(array('id_tipo_activ'=>$id_tipo_activ));
+			        $id_tipo_proceso=$oTipo->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
 			        // status correspondiente a la fase actual de la actividad
-			        $aWhereTP = ['id_tipo_proceso' => $TipoDeProceso, 'id_fase' => $id_faseActual];
+			        $aWhereTP = ['id_tipo_proceso' => $id_tipo_proceso, 'id_fase' => $id_faseActual];
 			        $gesTareaProceso = new GestorTareaProceso();
 			        $cTareaProceso = $gesTareaProceso->getTareasProceso($aWhereTP);
 			        $staus_de_fase = $cTareaProceso[0]->getStatus();
@@ -454,17 +473,31 @@ while ($num_cambios) {
                     }
 			    } else{
     			    // Si yo no tengo procesos:
+			        foreach ($oFases as $id_fase => $ok) {
+			            if ($id_status_cmb == $id_fase) {
+                            $fase_correcta = 1;
+			            }
+			        }
+			        /*
                     if ($id_fase_ini <= $id_status_cmb && $id_fase_fin >= $id_status_cmb) {
                         $fase_correcta = 1;
                     }
+                    */
 			    }
 			} else {
 			    /////////////////// COMPARAR FASES //////////////////////////////////////////
 			
 			    // Si tengo instalado el modulo de procesos:
 			    if(ConfigGlobal::is_app_installed('procesos')) {
+			        foreach ($oFases as $id_fase => $ok) {
+			            if ($id_fase_cmb == $id_fase) {
+                            $fase_correcta = 1;
+			            }
+			        }
+                    /*
                     // aFases es un array con todas las fases (sf o sv) de la actividad ordenado según el proceso.
                     // compruebo que existan las fases inicial i final, sino doy un error 
+                    
                     if (in_array($id_fase_ini, $aFases) && in_array($id_fase_fin, $aFases)) {
                         //mirar si la fase está dentro del intervalo.
                         $key_ini = array_search($id_fase_ini, $aFases);
@@ -479,14 +512,22 @@ while ($num_cambios) {
                             $fase_correcta = 1;
                         }
                     }
+                    */
 			    } else {
 			        //Yo no tengo instalado el modulo procesos, pero la dl que ha hecho el cambio si.
 			        // miro que esté en el status.
             		$oActividad = new Actividad($id_activ);
             		$status = $oActividad->getStatus();
+			        foreach ($oFases as $id_fase => $ok) {
+			            if ($status == $id_fase) {
+                            $fase_correcta = 1;
+			            }
+			        }
+			        /*
                     if ($id_fase_ini <= $status && $id_fase_fin >= $status) {
                         $fase_correcta = 1;
                     }
+                    */
 			    }
 			}
 			
@@ -509,10 +550,10 @@ while ($num_cambios) {
                         }
                         if (!empty($valor)) {
                             $operador = empty($operador)? '=' : $operador;
-                            if ($valor_old == 't') {
+                            if ( is_true($valor_old) ) {
                                 $apuntar = comparar($valor_old_cmb,$operador,$valor); 
                             }
-                            if ($apuntar === false && $valor_new == 't') {
+                            if ($apuntar === false && is_true($valor_new) ) {
                                 $apuntar = comparar($valor_new_cmb,$operador,$valor); 
                             }
                         } else {

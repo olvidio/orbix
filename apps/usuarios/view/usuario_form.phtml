@@ -79,7 +79,7 @@ fnjs_del_perm=function(formulario){
 		if (confirm("<?= $txt_eliminar ?>") ) {
 			$('#mod').val("eliminar");
 			$(formulario).attr('action',"apps/usuarios/controller/usuario_ajax.php");
-			$(formulario).submit(function() {
+			$(formulario).one("submit", function() {
 				$.ajax({
 					url: $(this).attr('action'),
 					type: 'post',
@@ -117,7 +117,7 @@ fnjs_guardar=function(formulario){
 	if (rr=='ok') {
 		$('#que_user').val('<?= $que_user ?>');
 		$(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',

@@ -415,6 +415,7 @@ class Cambio Extends core\ClasePropiedades {
 	    $sValor_old = empty($sValor_old)? '-':$sValor_old;
 	    $sValor_new = empty($sValor_new)? '-':$sValor_new;
 	    
+	    $sformat = '';
 	    switch($iTipo_cambio) {
 	        case Cambio::TIPO_CMB_INSERT: // (1) insert.
 	            switch($sObjeto) {
@@ -430,6 +431,10 @@ class Cambio Extends core\ClasePropiedades {
 	                    $sformat = 'Sacd: se ha asignado el sacd "%4$s" a la actividad "%1$s"';
 	                    break;
 	                case 'Asistente':
+	                case 'AsistenteDl':
+	                case 'AsistenteOut':
+	                case 'AsistenteEx':
+	                case 'AsistenteIn':
 	                    $sformat = 'Asistencia: "%4$s" se ha incorporado a la actividad "%1$s"';
 	                    break;
 	                case 'CentroEncargado':
@@ -463,6 +468,10 @@ class Cambio Extends core\ClasePropiedades {
 	                    $sformat = 'Sacd: ha cambiado el cargo en la actividad "%1$s" el campo "%2$s" de "%3$s" a "%4$s"';
 	                    break;
 	                case 'Asistente':
+	                case 'AsistenteDl':
+	                case 'AsistenteOut':
+	                case 'AsistenteEx':
+	                case 'AsistenteIn':
 	                    $sformat = 'Asistente: ha cambiado la asistencia en la actividad "%1$s" el campo "%2$s" de "%3$s" a "%4$s"';
 	                    break;
 	                case 'CentroEncargado':
@@ -485,6 +494,10 @@ class Cambio Extends core\ClasePropiedades {
 	                    $sformat = 'Sacd: se ha quitado al sacd "%3$s" de la actividad "%1$s"';
 	                    break;
 	                case 'Asistente':
+	                case 'AsistenteDl':
+	                case 'AsistenteOut':
+	                case 'AsistenteEx':
+	                case 'AsistenteIn':
 	                    $sformat = 'Asistencia: "%3$s" se ha borrado de la actividad "%1$s"';
 	                    break;
 	                case 'CentroEncargado':

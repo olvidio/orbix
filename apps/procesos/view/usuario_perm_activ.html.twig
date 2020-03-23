@@ -38,7 +38,7 @@ fnjs_grabar=function(formulario){
 	}
 	if (err==0) {
         $(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
-        $(formulario).submit(function() {
+        $(formulario).one("submit", function() {
             $.ajax({
                 url: $(this).attr('action'),
                 type: 'post',
@@ -87,7 +87,7 @@ fnjs_grabar=function(formulario){
 {{ "Para ver más fases del proceso, debe limitar el tipo de actividad."|trans }}
 <br></span>
 <br>
-<span id=fases> {{ oCuadrosFases.cuadros_check('afases',fases_sel)|raw }} </span>
+<span id=fases> {{ oCuadrosFases.cuadros_lista_perm('afases',fases_sel)|raw }} </span>
 <br>
 <br>
 <input type=button onclick="fnjs_grabar(this.form);" value="{{ "guardar"|trans }}">

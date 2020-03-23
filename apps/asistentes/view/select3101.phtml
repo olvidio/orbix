@@ -8,7 +8,7 @@ fnjs_cmb_plaza=function(formulario,plaza){
 	var lista_json=JSON.stringify($('#'+form+' input.sel:checked').serializeArray());
 	var url='apps/asistentes/controller/update_3101.php';
 	var parametros='mod=plaza&plaza='+plaza+'&lista_json='+lista_json+'&id_activ=<?= $id_pau ?><?= $h4 ?>';
-	$(formulario).submit(function() {
+	$(formulario).one("submit", function() {
 		$.ajax({
 			url: url,
 			type: 'post',
@@ -39,7 +39,7 @@ fnjs_mover_guardar=function(formulario){
 	var err=0;
 	//$(formulario+' input[name="que"]').val(que);
 	//$(formulario).attr('action','programas/casa_ajax.php');
-	$(formulario).submit(function() {
+	$(formulario).one("submit", function() {
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'post',
@@ -137,7 +137,7 @@ fnjs_borrar=function(formulario){
 		if (confirm("<?= $txt_eliminar ?>") ) {
 			$('#mod').val("eliminar");
 			$(formulario).attr('action',"apps/asistentes/controller/update_3101.php");
-			$(formulario).submit(function() {
+			$(formulario).one("submit", function() {
 				$.ajax({
 					url: $(this).attr('action'),
 					type: 'post',
@@ -164,7 +164,7 @@ fnjs_borrar_cargo=function(formulario){
 		if (confirm("<?= _("¿Está seguro que desea quitar este cargo a esta persona?");?>") ) {
 			$('#mod').val("eliminar");
 			$(formulario).attr('action',"apps/actividadcargos/controller/update_3102.php");
-			$(formulario).submit(function() {
+			$(formulario).one("submit", function() {
 				$.ajax({
 					url: $(this).attr('action'),
 					type: 'post',

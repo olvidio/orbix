@@ -115,7 +115,7 @@ fnjs_grabar=function(formulario){
 	//alert ("EEE "+rr);
 	if (rr=='ok') {
 		$(formulario).attr('action',"apps/core/mod_tabla_update.php");
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',

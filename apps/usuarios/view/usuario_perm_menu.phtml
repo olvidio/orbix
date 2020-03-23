@@ -1,7 +1,7 @@
 <script>
 fnjs_grabar=function(formulario){
 	$(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
-	$(formulario).submit(function() {
+	$(formulario).one("submit", function() {
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'post',

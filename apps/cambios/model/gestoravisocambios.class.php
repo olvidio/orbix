@@ -6,6 +6,7 @@ use actividades\model\entity\ActividadEx;
 use cambios\model\entity\Cambio;
 use cambios\model\entity\CambioDl;
 use core\ConfigGlobal;
+use function core\is_true;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use web\DateTimeLocal;
 use web\Posicion;
@@ -29,17 +30,15 @@ class gestorAvisoCambios {
 	 * @return array
 	 */
 	public static function getArrayObjetosPosibles() {
-		$aNomTablas_obj = array('ActividadDl' => _("actividad"),
+		$aNomTablas_obj = array('Actividad' => _("actividad"),
 					'ActividadCargoSacd' => _("sacd"),
 					'CentroEncargado'=> _("ctr"),
 					'ActividadCargoNoSacd' => _("cl"),
 					'Asistente' => _("asistencias"),
-					'AsistenteDl' => _("asistencias"),
-					'AsistenteEx' => _("asistencias"),
-					'AsistenteIn' => _("asistencias"),
-					'AsistenteOut' => _("asistencias"),
-					'ActividadProcesoTarea'=> _("fases actividad")
 		);
+        if(ConfigGlobal::is_app_installed('procesos')) {
+            $aNomTablas_obj['ActividadProcesoTarea'] = _("fases actividad");
+		}
 		return $aNomTablas_obj;
 	}
 	/**
@@ -52,14 +51,18 @@ class gestorAvisoCambios {
         $spath = '';
 	    switch ($obj_txt) {
 	        case 'Actividad':
+	        case 'ActividadDl':
+	        case 'ActividadEx':
 	            $spath = 'actividades\\model\\entity\\Actividad';
 	            break;
+	            /*
 	        case 'ActividadDl':
 	            $spath = 'actividades\\model\\entity\\ActividadDl';
 	            break;
 	        case 'ActividadEx':
 	            $spath = 'actividades\\model\\entity\\ActividadEx';
 	            break;
+	            */
 	        case 'ActividadCargoSacd':
 	            $spath = 'actividadcargos\\model\\entity\\ActividadCargoSacd';
 	            break;
@@ -71,6 +74,9 @@ class gestorAvisoCambios {
 	            break;
 	        case 'Asistente':
             case 'AsistenteDl':
+            case 'AsistenteOut':
+            case 'AsistenteEx':
+            case 'AsistenteIn':
 	            $spath = 'asistentes\\model\\entity\\Asistente';
 	            break;
 	        case 'ActividadProcesoTarea':
@@ -222,8 +228,8 @@ class gestorAvisoCambios {
 				// OJO para los campos bool no basta... Se mira más abajo.
 				$classname = get_class($oActividadCambio);
 				foreach ($result as $key=>$value) {
-				    if ($aDadesActuals[$key] === FALSE && $value == 'f') { continue; }
-				    if ($aDadesActuals[$key] === TRUE && $value == 't') { continue; }
+    				// amb els boolean no s'aclara: 0,1,false ,true,f,t...
+				    //if (is_true($aDadesActuals[$key]) === is_true($value) ) { continue; }
     				$oActividadCambio = new $classname();
 					$oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_UPDATE);
 					$oActividadCambio->setId_activ($iid_activ);
@@ -285,8 +291,13 @@ class gestorAvisoCambios {
 			case 'FASE':
 				// només mi fixo en el 'completado'
 				// amb els boolean no s'aclara: 0,1,false ,true,f,t...
+				if (!empty($aDadesNew['completado']) && is_true($aDadesNew['completado']))  { $boolCompletadoNew=TRUE; } else { $boolCompletadoNew=FALSE; }
+				if (!empty($aDadesActuals['completado']) && is_true($aDadesActuals['completado']))  { $boolCompletadoActual=TRUE; } else { $boolCompletadoActual=FALSE; }
+				
+				/*
 				if (empty($aDadesNew['completado']) || ($aDadesNew['completado'] === 'off') || ($aDadesNew['completado'] === 'false') || ($aDadesNew['completado'] === 'f')) { $boolCompletadoNew=false; } else { $boolCompletadoNew=true; }
 				if (empty($aDadesActuals['completado']) || ($aDadesActuals['completado'] === 'off') || ($aDadesActuals['completado'] === 'false') || ($aDadesActuals['completado'] === 'f')) { $boolCompletadoActual=false; } else { $boolCompletadoActual=true; }
+				*/
 
 				if ($boolCompletadoNew != $boolCompletadoActual) {
 					$oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_FASE);

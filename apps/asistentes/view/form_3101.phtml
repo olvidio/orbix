@@ -30,7 +30,7 @@ fnjs_guardar=function(formulario,repetir){
 	//alert ("EEE "+rr);
 	if (rr=='ok') {
 		$(formulario).attr('action',"apps/asistentes/controller/update_3101.php");
-		$(formulario).submit(function() {
+		$(formulario).one("submit", function() {
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',

@@ -4,6 +4,8 @@ use actividades\model\entity\GestorTipoDeActividad;
 use cambios\model\gestorAvisoCambios;
 use cambios\model\entity\CambioUsuarioObjetoPref;
 use core\ConfigGlobal;
+use function core\is_true;
+use procesos\model\CuadrosFases;
 use procesos\model\entity\GestorActividadFase;
 use ubis\model\entity\GestorCasaDl;
 use usuarios\model\entity\GrupoOUsuario;
@@ -69,17 +71,18 @@ $oDesplObjetos->setOpciones($aObjetos);
 $oDesplObjetos->setAction('fnjs_actualizar_fases(); fnjs_actualizar_propiedades()');
 
 
-
 if (!empty($Qid_item_usuario_objeto)) {
 	$oCambioUsuarioObjetoPref = new CambioUsuarioObjetoPref(array('id_item_usuario_objeto'=>$Qid_item_usuario_objeto));
 	$id_tipo_activ=$oCambioUsuarioObjetoPref->getId_tipo_activ_txt();
-	$id_fase_ini=$oCambioUsuarioObjetoPref->getId_fase_ini();
-	$id_fase_fin=$oCambioUsuarioObjetoPref->getId_fase_fin();
 	$dl_org=$oCambioUsuarioObjetoPref->getDl_org();
 	$objeto=$oCambioUsuarioObjetoPref->getObjeto();
 	$aviso_tipo=$oCambioUsuarioObjetoPref->getAviso_tipo();
 	$id_pau=$oCambioUsuarioObjetoPref->getId_pau();
-	
+	$json_fases = $oCambioUsuarioObjetoPref->getJson_fases();
+	$oFases = json_decode($json_fases);
+	if (empty($oFases)) {
+	    $oFases = new stdClass;
+	}
 	// para dl y dlf:
 	$dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
 	$dl_propia = (ConfigGlobal::mi_dele() == $dl_org_no_f)? 't' : 'f';
@@ -87,37 +90,35 @@ if (!empty($Qid_item_usuario_objeto)) {
 	$GesTiposActiv = new GestorTipoDeActividad();
 	$aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ,$dl_propia);
 
-	if (ConfigGlobal::is_app_installed('procesos')) {
-        $oGesFases= new GestorActividadFase();
-        $oDesplFasesIni = $oGesFases->getListaActividadFases($aTiposDeProcesos);
-        $oDesplFasesIni->setNombre('fase_ini');
-        $oDesplFasesIni->setOpcion_sel($id_fase_ini);
-        $oGesFases2= new GestorActividadFase();
-        $oDesplFasesFin = $oGesFases2->getListaActividadFases($aTiposDeProcesos);
-        $oDesplFasesFin->setNombre('fase_fin');
-        $oDesplFasesFin->setOpcion_sel($id_fase_fin);
-	} else {
-	    $oActividad = new ActividadAll();
-	    $a_status = $oActividad->getArrayStatus();
-        $oDesplFasesIni = new Desplegable();
-        $oDesplFasesIni->setOpciones($a_status);
-        $oDesplFasesIni->setNombre('fase_ini');
-        $oDesplFasesIni->setOpcion_sel($id_fase_ini);
-        $oDesplFasesFin = new Desplegable();
-        $oDesplFasesFin->setOpciones($a_status);
-        $oDesplFasesFin->setNombre('fase_fin');
-        $oDesplFasesFin->setOpcion_sel($id_fase_fin);
-	}
-
 	$oDesplObjetos->setOpcion_sel($objeto);
 	$oDesplTiposAviso->setOpcion_sel($aviso_tipo);
 } else { // es nuevo
 	$dl_propia='t';
 	$id_pau='';
-	$oDesplFasesIni = new Desplegable();
-	$oDesplFasesIni->setOpciones([]);
-	$oDesplFasesFin = new Desplegable();
-	$oDesplFasesFin->setOpciones([]);
+
+    $oFases = new stdClass;
+}
+
+if (ConfigGlobal::is_app_installed('procesos')) {
+    
+    // Versión cuadrícula:
+    $oGesFases= new GestorActividadFase();
+    $aFases = $oGesFases->getArrayFasesProcesos($aTiposDeProcesos);
+    
+    $oCuadrosFases = new CuadrosFases();
+    $oCuadrosFases->setPermissions($aFases);
+    $oCuadrosFases->setoFases($oFases);
+    
+} else {
+    $oActividad = new ActividadAll();
+    $a_status = $oActividad->getArrayStatus();
+    // Quitar el status 'qualquiera'
+    unset($a_status[ActividadAll::STATUS_ALL]);
+    $aStatusFlip = array_flip($a_status);
+    
+    $oCuadrosFases = new CuadrosFases();
+    $oCuadrosFases->setPermissions($aStatusFlip);
+    $oCuadrosFases->setoFases($oFases);
 }
 
 $cond = '';
@@ -186,7 +187,7 @@ if ($_SESSION['oConfig']->is_jefeCalendario()
 $oActividadTipo->setPerm_jefe($perm_jefe);
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('salida!aviso_tipo!objeto!dl_propia!fase_ini!fase_fin!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val');
+$oHash->setcamposForm('afases!salida!aviso_tipo!objeto!dl_propia!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val');
 $oHash->setcamposNo('casas!casas_mas!casas_num!id_tipo_activ!inom_tipo_val');
 $a_camposHidden = array(
     'id_usuario' => $Qid_usuario,
@@ -213,7 +214,7 @@ $oHash3->setCamposForm('salida!objeto!propiedad!id_item');
 $h_mod = $oHash3->linkSinVal();
 
 
-if ($dl_propia == 't') {
+if (is_true($dl_propia)) {
     $chk_propia='checked';
     $chk_otra='';
 } else {
@@ -234,8 +235,7 @@ $a_campos = [
     'oDesplObjetos' => $oDesplObjetos,
     'id_tipo_activ' => $id_tipo_activ,
     'oActividadTipo' => $oActividadTipo,
-    'oDesplFasesIni' => $oDesplFasesIni,
-    'oDesplFasesFin' => $oDesplFasesFin,
+    'oCuadrosFases' => $oCuadrosFases,
     'oDesplArrayCasas' => $oDesplArrayCasas,
     'oDesplTiposAviso' => $oDesplTiposAviso,
     'id_item_usuario_objeto' => $Qid_item_usuario_objeto,

@@ -1,6 +1,7 @@
 <?php
-use dossiers\model\entity\TipoDossier;
+use function core\is_true;
 use dossiers\model\PermisoDossier;
+use dossiers\model\entity\TipoDossier;
 /**
 * Página de visualización de los permisos de los dossiers
 * Le llegan las variables $tipo y $id_tipo
@@ -47,7 +48,7 @@ if ($_SESSION['oPerm']->have_perm_oficina('admin_sv') OR $_SESSION['oPerm']->hav
 
 $oCuadros = new PermisoDossier();
 
-$chk = ($depende_modificar == 't')? 'checked' : '';
+$chk = (is_true($depende_modificar))? 'checked' : '';
 $campos_chk = 'depende_modificar!permiso_lectura!permiso_escritura';
 
 $oHash = new web\Hash();

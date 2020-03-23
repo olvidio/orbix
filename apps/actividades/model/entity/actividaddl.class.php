@@ -82,10 +82,8 @@ class ActividadDl Extends ActividadAll {
 		$aDades['plazas'] = $this->iplazas;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		$aDades['publicado'] = ($aDades['publicado'] === 't')? 'true' : $aDades['publicado'];
-		if ( filter_var( $aDades['publicado'], FILTER_VALIDATE_BOOLEAN)) { $aDades['publicado']='true'; } else { $aDades['publicado']='false'; }
-
-
+		if ( core\is_true($aDades['publicado']) ) { $aDades['publicado']='true'; } else { $aDades['publicado']='false'; }
+		
 		if ($bInsert === false) {
 			//UPDATE
 			$update="
@@ -124,7 +122,7 @@ class ActividadDl Extends ActividadAll {
 			}
 			// Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
 			// Anoto el cambio si la actividad está publicada
-			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') OR $aDades['publicado'] == 'true')) {
+			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') OR $aDades['publicado'] == TRUE)) {
 				$oGestorCanvis = new gestorAvisoCambios();
 				$shortClassName = (new \ReflectionClass($this))->getShortName();
 				$oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
@@ -165,7 +163,7 @@ class ActividadDl Extends ActividadAll {
 			// anotar cambio.
 			// Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
 			// Anoto el cambio si la actividad está publicada
-			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') OR $aDades['publicado'] == 'true')) {
+			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') OR $aDades['publicado'] == TRUE)) {
 				$oGestorCanvis = new gestorAvisoCambios();
 				$shortClassName = (new \ReflectionClass($this))->getShortName();
 				$oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $aDadesLast, array());

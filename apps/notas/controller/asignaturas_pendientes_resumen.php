@@ -1,5 +1,6 @@
 <?php
 use asignaturas\model\entity as asignaturas;
+use function core\is_true;
 use notas\model\entity as notas;
 use personas\model\entity as personas;
 
@@ -142,7 +143,7 @@ foreach ($cPersonas as $oPersona) {
 		}
 		$n=$id_nivel_asig;
 		$oNota = new notas\Nota($id_situacion);
-		$aAprobadas[$n]['nota']= ($oNota->getSuperada() == 't')? '' : 2;
+		$aAprobadas[$n]['nota']= is_true($oNota->getSuperada())? '' : 2;
 	}
 
 

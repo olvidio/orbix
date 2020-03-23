@@ -3,7 +3,7 @@ fnjs_grabar_observ=function(formulario,n){
 	var mod="#mod"+n;
 	$(mod).val("observ_est");
 	$(formulario).attr('action',"apps/actividadestudios/controller/update_3103.php");
-	$(formulario).submit(function() {
+	$(formulario).one("submit", function() {
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'post',
@@ -25,7 +25,7 @@ fnjs_grabar_est=function(formulario,n){
 	var mod="#mod"+n;
 	$(mod).val("plan");
 	$(formulario).attr('action',"apps/actividadestudios/controller/update_3103.php");
-	$(formulario).submit(function() {
+	$(formulario).one("submit", function() {
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'post',
@@ -59,7 +59,7 @@ fnjs_borrar=function(formulario,n){
 			var mod="#mod"+n;
 			$(mod).val("eliminar");
 			$(formulario).attr('action',"apps/actividadestudios/controller/update_3103.php");
-			$(formulario).submit(function() {
+			$(formulario).one("submit", function() {
 				$.ajax({
 					url: $(this).attr('action'),
 					type: 'post',
@@ -83,7 +83,7 @@ fnjs_matricular=function(formulario,n){
 	var mod="#mod"+n;
 	$(mod).val("matricular");
 	$(formulario).attr('action',"apps/actividadestudios/controller/matricular.php");
-	$(formulario).submit(function() {
+	$(formulario).one("submit", function() {
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'post',
