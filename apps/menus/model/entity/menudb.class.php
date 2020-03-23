@@ -133,7 +133,7 @@ class MenuDb Extends core\ClasePropiedades {
 		$aDades['id_grupmenu'] = $this->iid_grupmenu;
 		$aDades['ok'] = $this->bok;
 		array_walk($aDades, 'core\poner_null');
-		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
         if ( core\is_true($aDades['ok']) ) { $aDades['ok']='true'; } else { $aDades['ok']='false'; }
 
 		if ($bInsert === false) {

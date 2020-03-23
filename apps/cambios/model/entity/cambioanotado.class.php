@@ -124,10 +124,8 @@ class CambioAnotado Extends core\ClasePropiedades {
 		$aDades['anotado_sf'] = $this->banotado_sf;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		$aDades['anotado_sv'] = ($aDades['anotado_sv'] === 't')? 'true' : $aDades['anotado_sv'];
-		if ( filter_var( $aDades['anotado_sv'], FILTER_VALIDATE_BOOLEAN)) { $aDades['anotado_sv']='t'; } else { $aDades['anotado_sv']='f'; }
-		$aDades['anotado_sf'] = ($aDades['anotado_sf'] === 't')? 'true' : $aDades['anotado_sf'];
-		if ( filter_var( $aDades['anotado_sf'], FILTER_VALIDATE_BOOLEAN)) { $aDades['anotado_sf']='t'; } else { $aDades['anotado_sf']='f'; }
+		if ( core\is_true($aDades['anotado_sv']) ) { $aDades['anotado_sv']='true'; } else { $aDades['anotado_sv']='false'; }
+		if ( core\is_true($aDades['anotado_sf']) ) { $aDades['anotado_sf']='true'; } else { $aDades['anotado_sf']='false'; }
 
 		if ($bInsert === FALSE) {
 			//UPDATE

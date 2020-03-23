@@ -140,10 +140,8 @@ class CambioUsuarioPropiedadPref Extends core\ClasePropiedades {
 		$aDades['valor_new'] = $this->bvalor_new;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		$aDades['valor_old'] = ($aDades['valor_old'] === 't')? 'true' : $aDades['valor_old'];
-		if ( filter_var( $aDades['valor_old'], FILTER_VALIDATE_BOOLEAN)) { $aDades['valor_old']='t'; } else { $aDades['valor_old']='f'; }
-		$aDades['valor_new'] = ($aDades['valor_new'] === 't')? 'true' : $aDades['valor_new'];
-		if ( filter_var( $aDades['valor_new'], FILTER_VALIDATE_BOOLEAN)) { $aDades['valor_new']='t'; } else { $aDades['valor_new']='f'; }
+		if ( core\is_true($aDades['valor_old']) ) { $aDades['valor_old']='true'; } else { $aDades['valor_old']='false'; }
+		if ( core\is_true($aDades['valor_new']) ) { $aDades['valor_new']='true'; } else { $aDades['valor_new']='false'; }
 
 		if ($bInsert === FALSE) {
 			//UPDATE

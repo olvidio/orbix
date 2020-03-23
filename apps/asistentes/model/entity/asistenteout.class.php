@@ -81,7 +81,7 @@ class AsistenteOut Extends AsistentePub {
 		$aDades['plaza'] = $this->iplaza;
 		$aDades['propietario'] = $this->spropietario;
 		array_walk($aDades, 'core\poner_null');
-		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if ( core\is_true($aDades['propio']) ) { $aDades['propio']='true'; } else { $aDades['propio']='false'; }
 		if ( core\is_true($aDades['est_ok']) ) { $aDades['est_ok']='true'; } else { $aDades['est_ok']='false'; }
 		if ( core\is_true($aDades['cfi']) ) { $aDades['cfi']='true'; } else { $aDades['cfi']='false'; }

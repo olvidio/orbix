@@ -206,7 +206,7 @@ class PersonaNota Extends core\ClasePropiedades {
 		$aDades['nota_max'] = $this->inota_max;
 		$aDades['tipo_acta'] = $this->itipo_acta;
 		array_walk($aDades, 'core\poner_null');
-		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if ( core\is_true($aDades['preceptor']) ) { $aDades['preceptor']='true'; } else { $aDades['preceptor']='false'; }
 
 		if ($bInsert === false) {

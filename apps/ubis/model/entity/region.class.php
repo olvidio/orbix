@@ -98,7 +98,7 @@ class Region Extends core\ClasePropiedades {
 		$aDades['nombre_region'] = $this->snombre_region;
 		$aDades['status'] = $this->bstatus;
 		array_walk($aDades, 'core\poner_null');
-		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if ( core\is_true($aDades['status']) ) { $aDades['status']='true'; } else { $aDades['status']='false'; }
 
 		if ($bInsert === false) {

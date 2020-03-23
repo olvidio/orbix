@@ -193,8 +193,7 @@ class ActividadEx Extends ActividadAll {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					// Hay que guardar los boolean de la misma manera que al guardar los datos ('false','true'):
-					$aDades['publicado'] = ($aDades['publicado'] === 't')? 'true' : $aDades['publicado'];
-					if ( filter_var( $aDades['publicado'], FILTER_VALIDATE_BOOLEAN)) { $aDades['publicado']='true'; } else { $aDades['publicado']='false'; }
+					if ( core\is_true($aDades['publicado']) ) { $aDades['publicado']='true'; } else { $aDades['publicado']='false'; }
 					$this->aDadesActuals=$aDades;
 					break;
 				default:

@@ -139,7 +139,7 @@ class Dossier Extends core\ClasePropiedades {
 		$aDades['status_dossier'] = $this->bstatus_dossier;
 		$aDades['f_status'] = $this->df_status;
 		array_walk($aDades, 'core\poner_null');
-		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if ( core\is_true($aDades['status_dossier']) ) { $aDades['status_dossier']='true'; } else { $aDades['status_dossier']='false'; }
 		
 		if ($bInsert === false) {

@@ -78,7 +78,7 @@ class DireccionCtrDl Extends DireccionCtr {
 		$aDades['plano_extension'] = $this->splano_extension;
 		$aDades['nom_sede'] = $this->snom_sede;
 		array_walk($aDades, 'core\poner_null');
-		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if ( core\is_true($aDades['cp_dcha']) ) { $aDades['cp_dcha']='true'; } else { $aDades['cp_dcha']='false'; }
 
 		if ($bInsert === false) {

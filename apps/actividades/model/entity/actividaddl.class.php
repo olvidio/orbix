@@ -81,7 +81,7 @@ class ActividadDl Extends ActividadAll {
 		//$aDades['id_tabla'] = $this->sid_tabla;
 		$aDades['plazas'] = $this->iplazas;
 		array_walk($aDades, 'core\poner_null');
-		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if ( core\is_true($aDades['publicado']) ) { $aDades['publicado']='true'; } else { $aDades['publicado']='false'; }
 		
 		if ($bInsert === false) {
@@ -193,8 +193,7 @@ class ActividadDl Extends ActividadAll {
 				case 'guardar':
 					if (!$oDblSt->rowCount()) return false;
 					// Hay que guardar los boolean de la misma manera que al guardar los datos ('false','true'):
-                    $aDades['publicado'] = ($aDades['publicado'] === 't')? 'true' : $aDades['publicado'];
-                    if ( filter_var( $aDades['publicado'], FILTER_VALIDATE_BOOLEAN)) { $aDades['publicado']='true'; } else { $aDades['publicado']='false'; }
+					if ( core\is_true($aDades['publicado']) ) { $aDades['publicado']='true'; } else { $aDades['publicado']='false'; }
 					$this->aDadesActuals=$aDades;
 					break;
 				default:

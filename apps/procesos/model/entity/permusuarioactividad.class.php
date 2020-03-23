@@ -145,8 +145,7 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 		$aDades['json_fase_accion'] = $this->json_fase_accion;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		$aDades['dl_propia'] = ($aDades['dl_propia'] === 't')? 'true' : $aDades['dl_propia'];
-		if ( filter_var( $aDades['dl_propia'], FILTER_VALIDATE_BOOLEAN)) { $aDades['dl_propia']='t'; } else { $aDades['dl_propia']='f'; }
+		if ( core\is_true($aDades['dl_propia']) ) { $aDades['dl_propia']='true'; } else { $aDades['dl_propia']='false'; }
 
 		if ($bInsert === FALSE) {
 			//UPDATE

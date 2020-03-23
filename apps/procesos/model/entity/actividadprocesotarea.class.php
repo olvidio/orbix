@@ -185,8 +185,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         $aDades['observ'] = $this->sobserv;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        $aDades['completado'] = ($aDades['completado'] === 't')? 'true' : $aDades['completado'];
-        if ( filter_var( $aDades['completado'], FILTER_VALIDATE_BOOLEAN)) { $aDades['completado']='t'; } else { $aDades['completado']='f'; }
+        if ( core\is_true($aDades['completado']) ) { $aDades['completado']='true'; } else { $aDades['completado']='false'; }
         
         if ($bInsert === FALSE) {
             // comprobar si hay que cambiar el estado (status) de la actividad.
@@ -408,8 +407,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         $aDades['observ'] = $this->sobserv;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        $aDades['completado'] = ($aDades['completado'] === 't')? 'true' : $aDades['completado'];
-        if ( filter_var( $aDades['completado'], FILTER_VALIDATE_BOOLEAN)) { $aDades['completado']='t'; } else { $aDades['completado']='f'; }
+        if ( core\is_true($aDades['completado']) ) { $aDades['completado']='true'; } else { $aDades['completado']='false'; }
         
         //UPDATE
         $update="

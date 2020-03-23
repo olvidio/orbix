@@ -123,7 +123,7 @@ class Local Extends core\ClasePropiedades {
 		$aDades['nom_idioma'] = $this->snom_idioma;
 		$aDades['activo'] = $this->bactivo;
 		array_walk($aDades, 'core\poner_null');
-		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if ( core\is_true($aDades['activo']) ) { $aDades['activo']='true'; } else { $aDades['activo']='false'; }
 
 		if ($bInsert === false) {

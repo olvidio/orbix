@@ -92,7 +92,7 @@ class PersonaDl Extends PersonaGlobal {
 		$aDades['id_ctr'] = $this->iid_ctr;
 		$aDades['lugar_nacimiento'] = $this->slugar_nacimiento;
 		array_walk($aDades, 'core\poner_null');
-		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if ( core\is_true($aDades['sacd']) ) { $aDades['sacd']='true'; } else { $aDades['sacd']='false'; }
 
 		if ($bInsert === false) {

@@ -99,7 +99,7 @@ class PersonaPub Extends PersonaGlobal {
 		$aDades['lugar_nacimiento'] = $this->slugar_nacimiento;
 		$aDades['profesor_stgr'] = $this->bprofesor_stgr;
 		array_walk($aDades, 'core\poner_null');
-		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if ( core\is_true($aDades['sacd']) ) { $aDades['sacd']='true'; } else { $aDades['sacd']='false'; }
 		if ( core\is_true($aDades['profesor_stgr']) ) { $aDades['profesor_stgr']='true'; } else { $aDades['profesor_stgr']='false'; }
 

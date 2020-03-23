@@ -117,8 +117,7 @@ class ZonaSacd Extends core\ClasePropiedades {
 		$aDades['propia'] = $this->bpropia;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		$aDades['propia'] = ($aDades['propia'] === 't')? 'true' : $aDades['propia'];
-		if ( filter_var( $aDades['propia'], FILTER_VALIDATE_BOOLEAN)) { $aDades['propia']='t'; } else { $aDades['propia']='f'; }
+		if ( core\is_true($aDades['propia']) ) { $aDades['propia']='true'; } else { $aDades['propia']='false'; }
 
 		if ($bInsert === FALSE) {
 			//UPDATE

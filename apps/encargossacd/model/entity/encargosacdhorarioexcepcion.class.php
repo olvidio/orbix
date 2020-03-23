@@ -183,8 +183,7 @@ class EncargoSacdHorarioExcepcion Extends core\ClasePropiedades {
 		$aDades['mes'] = $this->imes;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		$aDades['horario'] = ($aDades['horario'] === 't')? 'true' : $aDades['horario'];
-		if ( filter_var( $aDades['horario'], FILTER_VALIDATE_BOOLEAN)) { $aDades['horario']='t'; } else { $aDades['horario']='f'; }
+		if ( core\is_true($aDades['horario']) ) { $aDades['horario']='true'; } else { $aDades['horario']='false'; }
 
 		if ($bInsert === FALSE) {
 			//UPDATE

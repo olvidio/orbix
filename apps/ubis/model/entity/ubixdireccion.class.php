@@ -89,7 +89,7 @@ Abstract class UbixDireccion Extends core\ClasePropiedades {
 		$aDades['propietario'] = $this->bpropietario;
 		$aDades['principal'] = $this->bprincipal;
 		array_walk($aDades, 'core\poner_null');
-		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if ( core\is_true($aDades['propietario']) ) { $aDades['propietario']='true'; } else { $aDades['propietario']='false'; }
 		if ( core\is_true($aDades['principal']) ) { $aDades['principal']='true'; } else { $aDades['principal']='false'; }
 		
