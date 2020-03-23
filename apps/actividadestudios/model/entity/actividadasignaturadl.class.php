@@ -1,6 +1,5 @@
 <?php
 namespace actividadestudios\model\entity;
-use core;
 /**
  * Fitxer amb la Classe que accedeix a la taula d_asignaturas_activ_dl
  *

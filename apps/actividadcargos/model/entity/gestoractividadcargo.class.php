@@ -6,8 +6,6 @@ use actividades\model\entity\GestorActividad;
 use asistentes\model\entity\GestorAsistente;
 use core;
 use personas\model\entity\PersonaSacd;
-use core\ConfigGlobal;
-use asistentes\model\entity\Asistente;
 /**
  * GestorActividadCargo
  *
@@ -163,7 +161,6 @@ class GestorActividadCargo Extends core\ClaseGestor {
 		foreach ($cCargos as $oCargo) {
 			$id_activ = $oCargo->getId_activ();
 			if (in_array($id_activ,$aListaIds)) {
-				$oActividad = new Actividad($id_activ);
 				$cActividadesOk[$id_activ] = $oCargo;
 			}
 		}
@@ -208,7 +205,7 @@ class GestorActividadCargo Extends core\ClaseGestor {
 	function getActividadCargosQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
 		$oActividadCargoSet = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorActividadCargo.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;

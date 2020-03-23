@@ -53,8 +53,6 @@ class DBEsquema extends DBAbstract {
      */
     public function create_atn_sacd_textos() {
         // OJO Corresponde al esquema sf/sv, no al comun.
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
@@ -99,8 +97,6 @@ class DBEsquema extends DBAbstract {
     }
     public function eliminar_atn_sacd_textos() {
         // OJO Corresponde al esquema sf/sv, no al comun.
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
@@ -125,8 +121,6 @@ class DBEsquema extends DBAbstract {
 
     public function llenar_atn_sacd_textos() {
         // OJO Corresponde al esquema sf/sv, no al comun.
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)

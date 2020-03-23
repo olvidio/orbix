@@ -1,6 +1,5 @@
 <?php
 namespace actividadestudios\model\entity;
-use core;
 /**
  * GestorMatriculaDl
  *
@@ -38,4 +37,3 @@ class GestorMatriculaDl Extends GestorMatricula {
 
 	/* METODES GET i SET --------------------------------------------------------*/
 }
-?>

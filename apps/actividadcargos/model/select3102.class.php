@@ -114,7 +114,7 @@ class Select3102 {
 			}
 			$oPersona=personas\Persona::NewPersona($id_nom);
 			if (!is_object($oPersona)) {
-				$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
+				$this->msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 				continue;
 			}
 			$oCargo=new actividadcargos\Cargo($id_cargo);

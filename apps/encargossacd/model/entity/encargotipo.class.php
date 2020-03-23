@@ -57,6 +57,8 @@ class EncargoTipo Extends core\ClasePropiedades {
                 _("otros").
                 _("personales").
                 _("Zona Misas");
+        
+        return $p.$a.$t.$txt;
     }
     
 	/* ATRIBUTS ----------------------------------------------------------------- */

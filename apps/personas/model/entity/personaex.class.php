@@ -1,6 +1,5 @@
 <?php
 namespace personas\model\entity;
-use core;
 /**
  * Fitxer amb la Classe que accedeix a la taula resto(v|f).p_de_paso_ex
  *

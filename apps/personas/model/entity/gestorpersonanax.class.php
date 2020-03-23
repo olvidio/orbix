@@ -1,6 +1,5 @@
 <?php
 namespace personas\model\entity;
-use core;
 /**
  * GestorPersonaN
  *
@@ -40,4 +39,3 @@ class GestorPersonaNax Extends GestorPersonaDl {
 	/* METODES GET i SET --------------------------------------------------------*/
 
 }
-?>

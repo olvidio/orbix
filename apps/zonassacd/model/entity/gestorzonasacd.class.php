@@ -48,7 +48,7 @@ class GestorZonaSacd Extends core\ClaseGestor {
 				FROM $nom_tabla
 				WHERE id_zona=$iid_zona
 				ORDER BY id_nom";
-	    if (($oDblSt = $oDbl->query($sQuery)) === false) {
+	    if (($oDbl->query($sQuery)) === false) {
 	        $sClauError = 'GestorZonaSacd.sacds';
 	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 	        return false;

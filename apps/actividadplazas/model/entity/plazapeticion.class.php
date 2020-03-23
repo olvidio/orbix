@@ -197,7 +197,7 @@ class PlazaPeticion Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_nom=$this->iid_nom AND id_activ='$this->iid_activ'")) === false) {
+		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_nom=$this->iid_nom AND id_activ='$this->iid_activ'")) === false) {
 			$sClauError = 'PlazaPeticion.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;

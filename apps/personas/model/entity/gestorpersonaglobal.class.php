@@ -115,65 +115,6 @@ abstract class GestorPersonaGlobal Extends core\ClaseGestor {
 		}
 		return new web\Desplegable('',$oDblSt,'',true);
 	}
-	
-	/**
-	 * retorna una llista id_nom=>apellidosNombre
-	 *
-	 * @param string sTabla
-	 * @return array Una Llista.
-	 */
-	function getListaPersonasTabla($sTabla='personas',$sTipo='') {
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
-		$sdonde= empty($sTipo)? '' : "AND id_tabla='$sTipo'";
-		$sQuery="SELECT id_tabla,id_nom, ".$this->sApeNom." as ape_nom
-		   	FROM ".$sTabla." p
-		   	WHERE situacion='A' $sdonde
-		   	ORDER by apellido1";
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorPersonaDl.query';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return false;
-		}
-		$aLista=array();
-		foreach ($oDbl->query($sQuery) as $aDades) {
-			$id_nom=$aDades['id_nom'];
-			switch($aDades['id_tabla']) {
-				case 'p':
-					$sql='SELECT dl FROM vp_de_paso_in
-					   		WHERE id_nom='.$id_nom;
-					$ctr=$oDbl->query($sql)->fetchColumn();
-					break;
-				case 'n':
-				case 'x':
-				case 'a':
-				case 's':
-					$sql='SELECT nombre_ubi FROM u_centros_dl u JOIN personas_dl p ON (u.id_ubi=p.id_ctr)
-					   		WHERE id_nom='.$id_nom;
-					$ctr=$oDbl->query($sql)->fetchColumn();
-					break;
-			}
-			$aLista[$id_nom]=$aDades['ape_nom'] ." ($ctr)";
-		}
-		return $aLista;
-	}
-	function getListaPersonasTabla2($sTabla='personas',$sTipo='') {
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
-		$sdonde= empty($sTipo)? '' : "AND id_tabla='$sTipo'";
-		$sQuery="SELECT id_nom, ".$this->sApeNom." as ape_nom
-		   	FROM ".$sTabla." p
-		   	WHERE situacion='A' $sdonde
-		   	ORDER by apellido1";
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorPersona.query';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return false;
-		}
-		return $oDblSt;
-	}
-
-
 
 	/**
 	 * retorna l'array d'objectes de tipus PersonaDl

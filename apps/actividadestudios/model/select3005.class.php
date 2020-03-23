@@ -92,23 +92,13 @@ class Select3005 {
 	
 	private function getTabla() {
 		$this->txt_eliminar = _("¿Está seguro que desea quitar esta asignatura?");
-		$mi_dele = core\ConfigGlobal::mi_delef();
-		// Añadir la posibilidad de ver el plan de estudios aunque la actividad sea importada
-//		$oActividad = new actividades\ActividadAll($this->id_pau);
-//		$dl_org = $oActividad->getDl_org();
-//		if ($mi_dele == $dl_org) {
-//			$this->permiso = 3;
-//		} else {
-//			$this->permiso = 1;
-//		}
-//		$this->permiso = 3;
+		
 		$GesActivAsignaturas = new entity\GestorActividadAsignatura();
 		$cActivAsignaturas = $GesActivAsignaturas->getActividadAsignaturas(array('id_activ'=>  $this->id_pau,'_ordre'=>'id_asignatura')); 
 
 		$gesDbSchemas = new GestorDbSchema();
 		$c=0;
 		$a_valores=array();
-		$msg_err = '';
 		foreach ($cActivAsignaturas as $oActividadAsignatura) {
 			$c++;
 			$id_activ=$oActividadAsignatura->getId_activ();
@@ -131,7 +121,7 @@ class Select3005 {
 			if (!empty($id_profesor)) {
 				$oPersona = personas\Persona::NewPersona($id_profesor);
 				if (!is_object($oPersona)) {
-					$msg_err .= "<br>$oPersona con id_nom: $id_profesor (profesor) en  ".__FILE__.": line ". __LINE__;
+					$this->msg_err .= "<br>$oPersona con id_nom: $id_profesor (profesor) en  ".__FILE__.": line ". __LINE__;
 					$nom='';
 				} else {
 					$nom = $oPersona->getApellidosNombre();

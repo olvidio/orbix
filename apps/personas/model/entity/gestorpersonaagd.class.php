@@ -1,6 +1,5 @@
 <?php
 namespace personas\model\entity;
-use core;
 /**
  * GestorPersonaN
  *

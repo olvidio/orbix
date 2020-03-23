@@ -43,7 +43,7 @@ class GestorTraslado Extends core\ClaseGestor {
 	function getTrasladosQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
 		$oTrasladoSet = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorTraslado.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;

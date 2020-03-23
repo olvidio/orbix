@@ -45,7 +45,7 @@ class GestorCargo Extends core\ClaseGestor {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		$sQuery="SELECT id_cargo,cargo FROM $nom_tabla ORDER BY orden_cargo";
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorCargo.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -69,7 +69,7 @@ class GestorCargo Extends core\ClaseGestor {
 	function getCargosQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
 		$ocargoSet = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorCargo.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;

@@ -297,8 +297,6 @@ class DBEsquema extends DBAbstract {
     
     //// LLENAR 
     public function llenar_zonas() {
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
@@ -348,8 +346,6 @@ class DBEsquema extends DBAbstract {
         $this->delPermisoGlobal('sfsv-e');
     }
     public function llenar_zonas_grupos() {
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
@@ -385,8 +381,6 @@ class DBEsquema extends DBAbstract {
         $this->delPermisoGlobal('sfsv-e');
     }
     public function llenar_zonas_sacd() {
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)

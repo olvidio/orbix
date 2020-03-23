@@ -1,8 +1,6 @@
 <?php
 namespace actividades\model\entity;
 use core;
-use cambios\model\entity as cambios;
-use procesos\model\entity as procesos;
 /**
  * Classe que implementa l'entitat a_actividades_dl
  *

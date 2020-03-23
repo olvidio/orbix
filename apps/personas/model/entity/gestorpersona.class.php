@@ -1,7 +1,6 @@
 <?php
 namespace personas\model\entity;
 use core;
-use actividades\model\entity as actividades;
 /**
  * GestorPersona
  *

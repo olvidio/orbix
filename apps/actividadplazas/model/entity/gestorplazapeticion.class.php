@@ -43,7 +43,7 @@ class GestorPlazaPeticion Extends core\ClaseGestor {
 	function getPlazasPeticionQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
 		$oPlazaPeticionSet = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorPlazaPeticion.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;

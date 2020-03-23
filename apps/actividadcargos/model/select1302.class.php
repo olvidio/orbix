@@ -104,8 +104,6 @@ class Select1302 {
 			$this->msg_err = "<br>$oPersona con id_nom: $this->id_pau en  ".__FILE__.": line ". __LINE__;
 			exit ($this->msg_err);
 		}
-		$nom=$oPersona->getApellidosNombre();
-		$ctr_dl=$oPersona->getCentro_o_dl();
 
 		// permisos Según el tipo de persona: n, agd, s
 		$id_tabla=$oPersona->getId_tabla();

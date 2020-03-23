@@ -1,7 +1,6 @@
 <?php
 namespace actividadcargos\model;
 
-use core\ConfigGlobal;
 use core\Set;
 
 /**

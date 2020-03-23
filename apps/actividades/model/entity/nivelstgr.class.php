@@ -1,6 +1,5 @@
 <?php
 namespace actividades\model\entity;
-use core\ConfigGlobal;
 use core;
 /**
  * Classe que implementa l'entitat $nom_tabla
@@ -129,20 +128,6 @@ class NivelStgr Extends core\ClasePropiedades {
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
-				// també a l'exterior
-				if (ConfigGlobal::is_dmz() == FALSE) {
-					if (($oDblAASt = $oDblAA->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-						$sClauError = 'Exterior.NivelStgr.insertar.prepare';
-						$_SESSION['oGestorErrores']->addErrorAppLastError($oDblAASt, $sClauError, __LINE__, __FILE__);
-						return false;
-					} else {
-						if ($oDblAASt->execute($aDades) === false) {
-							$sClauError = 'Exterior.NivelStgr.insertar.execute';
-							$_SESSION['oGestorErrores']->addErrorAppLastError($oDblAASt, $sClauError, __LINE__, __FILE__);
-							return false;
-						}
-					}
-				}
 			}
 			$aDades['nivel_stgr'] = $oDbl->lastInsertId($nom_tabla.'_nivel_stgr_seq');
 		}
@@ -192,7 +177,7 @@ class NivelStgr Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE nivel_stgr='$this->inivel_stgr'")) === false) {
+		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE nivel_stgr='$this->inivel_stgr'")) === false) {
 			$sClauError = 'NivelStgr.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;

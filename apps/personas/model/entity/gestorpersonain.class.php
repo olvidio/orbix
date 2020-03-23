@@ -1,6 +1,5 @@
 <?php
 namespace personas\model\entity;
-use core;
 /**
  * GestorPersonaIn
  *
@@ -47,4 +46,3 @@ class GestorPersonaIn Extends GestorPersonaPub {
 
 	/* METODES GET i SET --------------------------------------------------------*/
 }
-?>

@@ -148,16 +148,10 @@ class Select3103 {
 				}
 				$nom_persona=$oPersona->getApellidosNombre();
 				$ctr=$oPersona->getCentro_o_dl();
-				$stgr=$oPersona->getStgr();
 
-				$clase = "impar";
-				$m % 2  ? 0: $clase = "par";
-				$m++;
-				
 				$a_valores[$id_asignatura][$m]['sel']="$id_nom#$id_asignatura";
 				$a_valores[$id_asignatura][$m][1]="$nombre_corto";
 				$a_valores[$id_asignatura][$m][2]="$nom_persona ($ctr)";
-				
 			}
 		}
 		if (!empty($a_valores)) {

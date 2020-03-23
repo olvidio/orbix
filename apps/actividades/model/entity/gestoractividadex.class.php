@@ -1,7 +1,5 @@
 <?php
 namespace actividades\model\entity;
-use core;
-use web;
 /**
  * GestorActividadEx
  *

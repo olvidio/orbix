@@ -1,6 +1,5 @@
 <?php
 namespace actividadestudios\model\entity;
-use core;
 /**
  * Fitxer amb la Classe que accedeix a la taula e_actas
  *

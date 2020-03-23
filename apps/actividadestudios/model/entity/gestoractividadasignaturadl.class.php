@@ -1,7 +1,5 @@
 <?php
 namespace actividadestudios\model\entity;
-use asignaturas\model\entity as asignaturas;
-use core;
 /**
  * GestorActividadAsignatura
  *
@@ -36,4 +34,3 @@ class GestorActividadAsignaturaDl Extends GestorActividadAsignatura {
 	/* METODES PROTECTED --------------------------------------------------------*/
 	/* METODES GET i SET --------------------------------------------------------*/
 }
-?>

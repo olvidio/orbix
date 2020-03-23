@@ -2,7 +2,6 @@
 namespace actividadcargos\model\entity;
 use cambios\model\gestorAvisoCambios;
 use core;
-use core\ConfigGlobal;
 /**
  * Fitxer amb la Classe que accedeix a la taula d_cargos_activ_dl
  *

@@ -61,8 +61,6 @@ class DBEsquema extends DBAbstract {
         $datosTabla = $this->infoTable($tabla);
         
         $nom_tabla = $datosTabla['nom_tabla'];
-        $campo_seq = $datosTabla['campo_seq'];
-        $id_seq = $datosTabla['id_seq'];
         
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (

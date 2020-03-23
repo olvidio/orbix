@@ -48,7 +48,7 @@ class GestorSituacion Extends core\ClaseGestor {
 			$Condicion = " WHERE situacion IN ('A','D','E','L','T','X')";
 		}
 		$sQuery="SELECT situacion,nombre_situacion FROM $nom_tabla $Condicion ORDER BY situacion";
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorSituacion.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -71,7 +71,7 @@ class GestorSituacion Extends core\ClaseGestor {
 	function getSituacionesQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
 		$oSituacionSet = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorSituacion.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;

@@ -45,16 +45,13 @@ class GestorMatricula Extends core\ClaseGestor {
 		$nom_tabla = $this->getNomTabla();
 		$oMatriculaSet = new core\Set();
 		
-		$qRs = $oDbl->query('SHOW search_path');
-		$aPath = $qRs->fetch(\PDO::FETCH_ASSOC);
-		
 		if (!empty($id_nom)) {
 			$sQry = "SELECT * FROM $nom_tabla Where id_nom = $id_nom AND id_situacion IS NULL";
 		} else {
 			$sQry = "SELECT * FROM $nom_tabla Where id_situacion IS NULL";
 		}
 
-		if (($oDblSt = $oDbl->query($sQry)) === false) {
+		if (($oDbl->query($sQry)) === false) {
 			$sClauError = 'GestorMatricula.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -81,7 +78,7 @@ class GestorMatricula Extends core\ClaseGestor {
 		$nomClase = join('', array_slice(explode('\\', $clasename), -1));
 		
 		$oMatriculaSet = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorMatricula.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;

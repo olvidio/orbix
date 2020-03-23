@@ -43,7 +43,7 @@ class GestorActividadPlazas Extends core\ClaseGestor {
 	function getactividadesPlazasQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
 		$oactividadPlazasSet = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorActividadPlazas.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;

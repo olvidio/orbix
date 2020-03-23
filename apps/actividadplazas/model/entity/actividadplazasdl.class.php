@@ -1,6 +1,5 @@
 <?php
 namespace actividadplazas\model\entity;
-use core;
 /**
  * Fitxer amb la Classe que accedeix a la taula da_plazas_dl
  *

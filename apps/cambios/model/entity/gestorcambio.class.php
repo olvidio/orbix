@@ -135,7 +135,6 @@ class GestorCambio Extends core\ClaseGestor {
 	function getCambiosNuevos() {
 		$oDbl = $this->getoDbl();
 		$oDbl = $GLOBALS['oDBC'];
-		$nom_tabla = $this->getNomTabla();
 		$oCambioSet = new core\Set();
 		
 		if (ConfigGlobal::mi_sfsv() == 1) {

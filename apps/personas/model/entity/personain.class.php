@@ -1,6 +1,5 @@
 <?php
 namespace personas\model\entity;
-use core;
 /**
  * Fitxer amb la Classe que accedeix a la taula Hdlb(v|f).pv_de_paso_in
  *

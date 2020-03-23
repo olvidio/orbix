@@ -142,7 +142,6 @@ class gestorAvisoCambios {
             case 'ActividadDl': //si el canvi és a l'activitat, ja el tinc.
             case 'ActividadEx': //si el canvi és a l'activitat, ja el tinc.
                 $iId_tipo_activ = empty($aDadesNew['id_tipo_activ'])? $aDadesActuals['id_tipo_activ'] : $aDadesNew['id_tipo_activ'];
-                $sNomActiv = empty($aDadesNew['nom_activ'])? $aDadesActuals['nom_activ'] : $aDadesNew['nom_activ'];
                 $dl_org = empty($aDadesActuals['dl_org'])? $aDadesNew['dl_org'] : $aDadesActuals['dl_org'];
                 $status = $aDadesNew['status']?? $aDadesActuals['status'];
 			break;
@@ -157,7 +156,6 @@ class gestorAvisoCambios {
                     $oActividad = new Actividad($iid_activ);
                 }
                 $iId_tipo_activ = $oActividad->getId_tipo_activ();
-                $sNomActiv = $oActividad->getNom_activ();
                 $dl_org = $oActividad->getDl_org();
                 $status = $oActividad->getStatus();
 		}

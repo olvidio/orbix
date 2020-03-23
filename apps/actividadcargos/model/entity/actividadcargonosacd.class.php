@@ -15,9 +15,7 @@ class ActividadCargoNoSacd Extends ActividadCargoAbstract {
 	   i es poden donar permisos diferents...
 	*/
 	public function printItem($string) {
-		$GesCargos = new GestorCargo();
-		//$GesCargos->getListaCargosxTipoCargo($sTipoCargo);
-        //echo 'Bar: ' . $string . PHP_EOL;
+	    
     }
     
     
