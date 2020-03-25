@@ -72,8 +72,15 @@ if ($Qmod == 'editar') {
 if ($Qmod == 'nuevo') {
 	// lo pongo el último
 	$oGesTareaProceso = new GestorTareaProceso();
-	$oUltimoProceso = $oGesTareaProceso->getTareasProceso(array('id_tipo_proceso'=>$Qid_tipo_proceso,'_ordre'=>'n_orden'));
-	$num=count($oUltimoProceso);
+	$aWhere = [ 'id_tipo_proceso' => $Qid_tipo_proceso,
+                '_ordre'=>'n_orden DESC',
+            ];
+	$cUltimoProceso = $oGesTareaProceso->getTareasProceso($aWhere);
+	if (count($cUltimoProceso) == 0) {
+	    $num = 0;
+	} else {
+        $num = $cUltimoProceso[0]->getN_orden();
+	}
 	$n_orden=$num + 1;
 	$oFicha = new TareaProceso();
 	$status='';

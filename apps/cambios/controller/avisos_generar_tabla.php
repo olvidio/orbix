@@ -349,8 +349,6 @@ $num_cambios = count($cNuevosCambios);
 // Repito el proceso por si se han apuntado cambios mientras estaba realizando el proceso.
 while ($num_cambios) {
 	//print_r($cNuevosCambios);
-	$id_tipo_activ_anterior = '';
-	$dl_org_anterior = '';
 	foreach ($cNuevosCambios as $oCambio) {
 		$id_item_cmb = $oCambio->getId_item_cambio();
 		$id_schema_cmb = $oCambio->getId_schema();
@@ -385,24 +383,6 @@ while ($num_cambios) {
 		// para dl y dlf:
 		$dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
 		$dl_propia = (ConfigGlobal::mi_dele() == $dl_org_no_f)? 't' : 'f';
-        /*
-		if (ConfigGlobal::is_app_installed('procesos')) {
-            // para evitar repetir el proceso si el tipo de actividad es el mismo.
-            if ($id_tipo_activ_anterior != $id_tipo_activ || $dl_org_anterior != $dl_org) {
-                $id_tipo_activ_anterior = $id_tipo_activ;
-                $dl_org_anterior = $dl_org;
-                // buscar los procesos posibles para estos tipos de actividad
-                $GesTiposActiv = new GestorTipoDeActividad();
-                $aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ,$dl_propia);
-                //$TipoDeProceso = $aTiposDeProcesos[0];
-                // buscar las fases para estos procesos
-                $oGesFases= new GestorActividadFase();
-                $aFases = $oGesFases->getTodasActividadFases($aTiposDeProcesos);
-            }
-		} else {
-		    $aFases = [1,2,3,4]; // id correspondientes al status de la actividad.
-		}
-		*/
         // Si es de otra dl, compruebo que sea una actividad importada, sino no tiene sentido avisar.
         if ($dl_propia == 'f') {
             $GesImportada = new GestorImportada();
@@ -494,25 +474,6 @@ while ($num_cambios) {
                             $fase_correcta = 1;
 			            }
 			        }
-                    /*
-                    // aFases es un array con todas las fases (sf o sv) de la actividad ordenado según el proceso.
-                    // compruebo que existan las fases inicial i final, sino doy un error 
-                    
-                    if (in_array($id_fase_ini, $aFases) && in_array($id_fase_fin, $aFases)) {
-                        //mirar si la fase está dentro del intervalo.
-                        $key_ini = array_search($id_fase_ini, $aFases);
-                        $key_fin = array_search($id_fase_fin, $aFases);
-                        // Si la actividad es de otra dl que no tiene instalados los procesos, la $id_fase_cmb 
-                        // corresponde al status de la actividad (1,2,3,4), y por tanto $key_cmb va a dar FALSE.
-                        $key_cmb = array_search($id_fase_cmb, $aFases);
-                        //echo "<br>fases: $id_fase_ini ::$id_fase_cmb:: $id_fase_fin <br>";
-                        //echo "key fases: $key_ini ::$key_cmb:: $key_fin <br>";
-                        //print_r($aFases);
-                        if ($key_ini <= $key_cmb && $key_fin >= $key_cmb) {
-                            $fase_correcta = 1;
-                        }
-                    }
-                    */
 			    } else {
 			        //Yo no tengo instalado el modulo procesos, pero la dl que ha hecho el cambio si.
 			        // miro que esté en el status.
@@ -523,11 +484,6 @@ while ($num_cambios) {
                             $fase_correcta = 1;
 			            }
 			        }
-			        /*
-                    if ($id_fase_ini <= $status && $id_fase_fin >= $status) {
-                        $fase_correcta = 1;
-                    }
-                    */
 			    }
 			}
 			

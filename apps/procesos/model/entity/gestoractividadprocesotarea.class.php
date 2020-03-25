@@ -51,6 +51,34 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
 	
+	/**
+	 * retorna un array amb les fases i el seu estat. ordenades de ultima a primera.
+	 * 
+	 * @param integer $iid_activ
+	 * @return array $aFasesEstado = [ id_fase => $completado ]
+	 */
+	public function getListaFaseEstado($iid_activ) {
+        $oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+	    $sQuery = "SELECT * FROM $nom_tabla WHERE id_activ=$iid_activ
+                ORDER BY n_orden DESC";
+		if (($oDblSt = $oDbl->query($sQuery)) === FALSE) {
+	        $sClauError = 'GestorActividadProcesoTarea.fasesCompletadas.prepare';
+	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+	        return false;
+	    }
+
+	    $aFasesEstado = [];
+		foreach ($oDblSt as $aDades) {
+		    $id_fase = $aDades['id_fase'];
+		    $id_tarea = $aDades['id_tarea'];
+		    $completado = $aDades['completado'];
+            $f = "$id_fase#$id_tarea";
+		    $aFasesEstado[$f] = $completado;
+	    }
+	    return $aFasesEstado;
+	}
+	
 	public function marcarFasesAnteriores($iid_activ, $iid_fase) {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

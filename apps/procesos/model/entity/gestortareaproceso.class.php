@@ -35,6 +35,105 @@ class GestorTareaProceso Extends core\ClaseGestor {
 	/* METODES PUBLICS -----------------------------------------------------------*/
 	
 	/**
+	 * retorna array de fase#traea => fase_previa, tarea_previa.
+	 *
+	 * @param integer iid_tipo_proceso tipus de procés.
+	 * @return array $aFases . $aFases[$fase_tarea] = ['id_fase' => $id_fase_previa, 'id_tarea' => $id_tarea_previa]; 
+	 */
+	function getArrayFasesDependientes($iid_tipo_proceso) {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+	    $sQuery = "SELECT * FROM $nom_tabla 
+                    WHERE id_tipo_proceso = $iid_tipo_proceso
+		            ORDER BY n_orden DESC;
+                    ";
+	    
+	    if (($oDbl->query($sQuery)) === false) {
+	        $sClauError = 'GestorTareaProceso.query';
+	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+	        return false;
+	    }
+        $aFases = [];
+	    foreach ($oDbl->query($sQuery) as $aDades) {
+	        $id_fase = $aDades['id_fase'];
+	        $id_tarea = $aDades['id_tarea'];
+	        // tarea puede ser empty en vez de 0:
+	        $id_tarea = empty($id_tarea)? 0 : $id_tarea;
+	        $fase_tarea = $id_fase.'#'.$id_tarea;
+	        
+	        $id_fase_previa = $aDades['id_fase_previa'];
+	        $id_tarea_previa = $aDades['id_tarea_previa'];
+	        // tarea puede ser empty en vez de 0:
+	        $id_tarea_previa = empty($id_tarea_previa)? 0 : $id_tarea_previa;
+	
+	        $aFases[$fase_tarea] = ['id_fase' => $id_fase_previa, 'id_tarea' => $id_tarea_previa]; 
+	    }
+	    return $aFases;
+	}
+	
+	/**
+	 * retorna un array
+	 *
+	 * @param integer iid_tipo_proceso tipus de procés.
+	 * @param integer id_fase.
+	 * @param integer id_tarea.
+	 * @param integer $f   nº de fila
+	 * @return array  $aFases = [$f => "$id_fase#$id_tarea"];
+	 */
+	function getListaFasesDependientes($iid_tipo_proceso,$id_fase,$id_tarea=0,$f=0) {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+	    $sQuery = "SELECT * FROM $nom_tabla 
+                    WHERE id_tipo_proceso = $iid_tipo_proceso
+		            ORDER BY n_orden DESC
+                    ";
+	    
+	    if (($oDbl->query($sQuery)) === false) {
+	        $sClauError = 'GestorTareaProceso.query';
+	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+	        return false;
+	    }
+        $aFases = [$f => "$id_fase#$id_tarea"];
+	    foreach ($oDbl->query($sQuery) as $aDades) {
+	        $id_fase_i = $aDades['id_fase'];
+	        $id_tarea_i = $aDades['id_tarea'];
+	        // tarea puede ser empty en vez de 0:
+	        $id_tarea_i = empty($id_tarea_i)? 0 : $id_tarea_i;
+	        
+	        if ($id_fase == $id_fase_i && $id_tarea == $id_tarea_i) {
+                
+                $id_fase_previa = $aDades['id_fase_previa'];
+                $id_tarea_previa = $aDades['id_tarea_previa'];
+                if (!empty($id_fase_previa)) {
+                    // si no hay tarea previa, vale cualquier fase previa,
+                    // pero busco la primera en orden
+                    if (empty($id_tarea_previa)) {
+                        $aWhereFP = ['id_tipo_proceso' => $iid_tipo_proceso,
+                                      'id_fase' => $id_fase_previa,
+                                      '_ordre' => 'n_orden',
+                                    ];
+                    } else {
+                        $aWhereFP = ['id_tipo_proceso' => $iid_tipo_proceso,
+                                      'id_fase' => $id_fase_previa,
+                                      'id_tarea' => $id_tarea_previa,
+                                      '_ordre' => 'n_orden',
+                                    ];
+                    }
+                    $cTareas = $this->getTareasProceso($aWhereFP);
+                    $oTareaProceso = $cTareas[0];
+                    $id_fase_j = $oTareaProceso->getId_fase();
+                    $id_tarea_j = $oTareaProceso->getId_tarea();
+                    
+                    $f++;
+                    $aF2 = $this->getListaFasesDependientes($iid_tipo_proceso, $id_fase_j,$id_tarea_j,$f);
+                    $aFases = $aFases + $aF2;
+                }
+                return $aFases;
+	        }
+	    }
+	}
+	
+	/**
 	 * retorna la primera fase del status.
 	 *
 	 * @param integer iid_tipo_proceso tipus de procés.

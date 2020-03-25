@@ -29,6 +29,7 @@ switch($Qque) {
 		$oLista = $GesActividadProceso->getActividadProcesoTareas(array('id_activ'=>$Qid_activ,'_ordre'=>'n_orden'));
 		$txt='<table>';
 		$txt.='<tr><th>'._("ok").'</th><th>'._("fase (tarea)").'</th><th>'._("responsable").'</th><th>'._("observaciones").'</th><th></th></tr>';
+		$i = 0;
 		foreach($oLista as $oActividadProcesoTarea) {
 			$id_item = $oActividadProcesoTarea->getId_item();
 			$id_tipo_proceso = $oActividadProcesoTarea->getId_tipo_proceso();
@@ -56,9 +57,13 @@ switch($Qque) {
                 exit($msg_err);
 			}
 			$of_responsable = $oTareaProceso->getOf_responsable();
-			$txt.='<tr>';
+			
+			$clase = "tono1";
+			$i % 2  ? 0: $clase = "tono3";
+			$i++;
+			$txt.="<tr  class='$clase'>";
 			if (($_SESSION['oPerm']->have_perm_oficina($of_responsable))) {
-				$txt.="<td><input type='checkbox' id='comp$id_item' name='completado' $chk></td>";
+				$txt.="<td style='text-align: center;' ><input type='checkbox' id='comp$id_item' name='completado' $chk></td>";
 				$obs = "<td><input type='text' id='observ$id_item' name='observ' value='$observ' ></td>";
 			} else {
 				$icon = '';
@@ -67,15 +72,17 @@ switch($Qque) {
 				} else {
 					$icon = '<img src="'. ConfigGlobal::getWeb_icons() .'/check-box-outline-blank.png" title="">';
 				}
-				$txt.="<td>$icon</td>";
+				$txt.="<td style='text-align: center;' >$icon</td>";
 				$obs = "<td></td>";
 			}
 			$txt_fase = empty($tarea)? '' : "($tarea)";
-			$txt.="<td>$fase $txt_fase</td>";
+			$txt.="<td style='text-align: left;' >$fase $txt_fase</td>";
 			$txt.="<td>$of_responsable</td>";
 			$txt.= $obs;
 			if (($_SESSION['oPerm']->have_perm_oficina($of_responsable))) {
 				$txt.="<td><input type='button' name='b_guardar' value='"._("guardar")."' onclick='fnjs_guardar($id_item);'></td>";
+			} else {
+			    $txt .= '<td></td>';
 			}
 			$txt .= '</tr>';
 		}
