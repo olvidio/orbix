@@ -141,6 +141,7 @@ switch ($Qque) {
 }
 
 if (!empty($msgError)) {
+    echo '<br>';
     echo _("Centros con el campo 'tipo labor' mal puesto:");
     echo $msgError;
 }
@@ -254,7 +255,7 @@ function mega_array($oPresentacion,$oCentro,$ordenar_dl) {
         if (($tipo_labor & 4) == 4) { $edad .= !empty($edad)? ', ' : ''; $edad .= $aTiposLabor[4]; }  //'universitarios';
         if (($tipo_labor & 8) == 8) { $edad .= !empty($edad)? ', ' : ''; $edad .= $aTiposLabor[8]; }  //'bachilleres';
 	} else {
-	    $msgError = empty($msgError)? '' : ', ';
+	    $msgError .= empty($msgError)? '' : ', ';
 	    $msgError .= $oCentro->getNombre_ubi();
 	}
 	//zona
