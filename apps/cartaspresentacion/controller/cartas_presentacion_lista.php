@@ -140,6 +140,7 @@ switch ($Qque) {
 
 function mega_array($oPresentacion,$oCentro,$ordenar_dl) {
     $a_mega = [];
+    $msg = '';
     $id_ubi = $oPresentacion->getId_ubi();
     $id_direccion = $oPresentacion->getId_direccion();
 	$pres_nom = $oPresentacion->getPres_nom();
@@ -232,16 +233,21 @@ function mega_array($oPresentacion,$oCentro,$ordenar_dl) {
 	$oTipoLabor = new CuadrosLabor();
 	$aTiposLabor = $oTipoLabor->getTxtTiposLabor();
 	$aTipo = [];
-	if (($tipo_labor & 128) == 128) $aTipo[] = $aTiposLabor[128];  //'agd';
-	if (($tipo_labor & 256) == 256) $aTipo[] = $aTiposLabor[256];  //'numerarios';
-	if (($tipo_labor & 64) == 64) $aTipo[] = $aTiposLabor[64];  //'s';
-	if (($tipo_labor & 32) == 32) $aTipo[] = $aTiposLabor[32];  //'sss+';
-	if ($tipo_ctr == 'dl' OR $tipo_ctr == 'cr') $aTipo[] = 'otras r';
-	$edad = '';
-	if (($tipo_labor & 2) == 2) { $edad .= $aTiposLabor[2]; }  //'jóvenes'
-	if (($tipo_labor & 1) == 1) { $edad .= !empty($edad)? ', ' : ''; $edad .= $aTiposLabor[1]; }  //'mayores'; }
-	if (($tipo_labor & 4) == 4) { $edad .= !empty($edad)? ', ' : ''; $edad .= $aTiposLabor[4]; }  //'universitarios'; }
-	if (($tipo_labor & 8) == 8) { $edad .= !empty($edad)? ', ' : ''; $edad .= $aTiposLabor[8]; }  //'bachilleres'; }
+	if (!empty($tipo_labor)) {
+        if (($tipo_labor & 128) == 128) $aTipo[] = $aTiposLabor[128];  //'agd';
+        if (($tipo_labor & 256) == 256) $aTipo[] = $aTiposLabor[256];  //'numerarios';
+        if (($tipo_labor & 64) == 64) $aTipo[] = $aTiposLabor[64];  //'s';
+        if (($tipo_labor & 32) == 32) $aTipo[] = $aTiposLabor[32];  //'sss+';
+        if ($tipo_ctr == 'dl' OR $tipo_ctr == 'cr') $aTipo[] = 'otras r';
+        $edad = '';
+        if (($tipo_labor & 2) == 2) { $edad .= $aTiposLabor[2]; }  //'jóvenes'
+        if (($tipo_labor & 1) == 1) { $edad .= !empty($edad)? ', ' : ''; $edad .= $aTiposLabor[1]; }  //'mayores';
+        if (($tipo_labor & 4) == 4) { $edad .= !empty($edad)? ', ' : ''; $edad .= $aTiposLabor[4]; }  //'universitarios';
+        if (($tipo_labor & 8) == 8) { $edad .= !empty($edad)? ', ' : ''; $edad .= $aTiposLabor[8]; }  //'bachilleres';
+	} else {
+	    $msg = empty($msg)? '' : ', ';
+	    $msg .= $oCentro->getNombre_ubi();
+	}
 	//zona
 	if (!empty($zona)) $edad .= "<br>$zona";
 
@@ -254,6 +260,11 @@ function mega_array($oPresentacion,$oCentro,$ordenar_dl) {
 	    foreach($aTipo as $tipo) {
             $a_mega[$tipo][$poblacion][$edad]= datos_a_celdas($a_texto);
 	    }
+	}
+	
+	if (!empty($msg)) {
+	    echo _("Centros con el campo 'tipo labor' mal puesto:");
+	    echo $msg;
 	}
 	return $a_mega;
 }
