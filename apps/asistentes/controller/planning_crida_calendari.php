@@ -1,5 +1,5 @@
 <?php
-use actividadcargos\model\entity as actividadcargos;
+use actividadcargos\model\GestorCargoOAsistente;
 use actividades\model\entity as actividades;
 use actividadestudios\model\entity as actividadestudios;
 use personas\model\entity as personas;
@@ -134,15 +134,16 @@ switch ($Qtipo) {
         if (empty($Qsacd)) { $aWhereP['sacd']='f'; }
         if (!empty($Qctr)) {
             $nom_ubi = str_replace("+", "\+", $Qctr); // para los centros de la sss+
-            $cabecera=ucfirst(sprintf(_("personas de: %s"),$Qctr));
             $aWhere['nombre_ubi']='^'.$nom_ubi;
-            $aOperador['nombre_ubi']='~*';
+            $aOperador['nombre_ubi'] = 'sin_acentos';
             $GesCentros = new ubis\GestorCentroDl();
             $cCentros = $GesCentros->getCentros($aWhere,$aOperador);
             $cPersonas = []; // para unir todas las personas de más de un centro.
             $GesPersonas = new personas\GestorPersonaDl();
             foreach($cCentros as $oCentro) {
                 $id_ubi = $oCentro->getId_ubi();
+                $nombre_ubi = $oCentro->getNombre_ubi(); 
+                $cabecera=ucfirst(sprintf(_("personas de: %s"),$nombre_ubi));
                 $aWhereP['id_ctr'] = $id_ubi;
                 $aWhereP['_ordre'] = 'apellido1';
                 $cPersonas2 = $GesPersonas->getPersonas($aWhereP);
@@ -361,17 +362,15 @@ if ($Qtipo=='planning_cdc' || $Qtipo=='casa') {
         $aOperador['status']='BETWEEN';
         
         if (core\ConfigGlobal::is_app_installed('actividadcargos')) {
-            $oGesActividadCargos = new actividadcargos\GestorActividadCargo();
-            $cActividades = $oGesActividadCargos ->getCargoOAsistente($id_nom,$aWhere,$aOperador);
+            $GesCargoOAsistente = new GestorCargoOAsistente();
+            $cCargoOAsistente = $GesCargoOAsistente->getCargoOAsistente($id_nom,$aWhere,$aOperador);
         } else {
             //$oGesAsistentes = new asistentes\GestorActividadCargo();
             echo "ja veurem...";
         }
-        
-        $a=0;
-        foreach ($cActividades as $oAsistente) {
-            $id_activ = $oAsistente['id_activ'];
-            $propio = $oAsistente['propio'];
+        foreach ($cCargoOAsistente as $oCargoOAsistente) {
+            $id_activ=$oCargoOAsistente->getId_activ();
+            $propio = $oCargoOAsistente->getPropio();
             
             $aWhere['id_activ']=$id_activ;
             $cActividades = $GesActividades->getActividades($aWhere,$aOperador);
@@ -434,7 +433,6 @@ if ($Qtipo=='planning_cdc' || $Qtipo=='casa') {
                 'id_activ'=>$id_activ,
                 'propio'=>$propio
             );
-            $a++;
         }
         // En los profesores, añado las clases del stgr en actividades
         /*
