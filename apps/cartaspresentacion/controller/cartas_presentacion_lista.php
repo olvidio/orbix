@@ -143,6 +143,7 @@ switch ($Qque) {
 if (!empty($msgError)) {
     echo '<br>';
     echo _("Centros con el campo 'tipo labor' mal puesto:");
+    echo '<br>';
     echo $msgError;
 }
 
