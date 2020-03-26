@@ -1,5 +1,6 @@
 <?php
 namespace personas\model\entity;
+use function core\is_true;
 /**
  * Fitxer amb la Classe que accedeix a la taula Hdlb(v|f).p_de_paso_out
  *
@@ -87,8 +88,8 @@ class PersonaOut Extends PersonaPub {
 		$aDades['profesor_stgr'] = $this->bprofesor_stgr;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if ( core\is_true($aDades['sacd']) ) { $aDades['sacd']='true'; } else { $aDades['sacd']='false'; }
-		if ( core\is_true($aDades['profesor_stgr']) ) { $aDades['profesor_stgr']='true'; } else { $aDades['profesor_stgr']='false'; }
+		if ( is_true($aDades['sacd']) ) { $aDades['sacd']='true'; } else { $aDades['sacd']='false'; }
+		if ( is_true($aDades['profesor_stgr']) ) { $aDades['profesor_stgr']='true'; } else { $aDades['profesor_stgr']='false'; }
 
 		if ($bInsert === false) {
 			//UPDATE
