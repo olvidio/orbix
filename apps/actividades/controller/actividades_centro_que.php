@@ -13,7 +13,6 @@
 use core\ConfigGlobal;
 use function core\strtoupper_dlb;
 use usuarios\model\entity\Role;
-use usuarios\model\entity\Usuario;
 use web\CentrosQue;
 use web\DesplegableArray;
 
@@ -31,14 +30,9 @@ $Qtipo_lista = (string) \filter_input(INPUT_POST, 'tipo_lista');
 $Qver_ctr = (string) \filter_input(INPUT_POST, 'ver_ctr');
 
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
-$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-$Qfin = (string) \filter_input(INPUT_POST, 'fin');
 $Qyear = (string) \filter_input(INPUT_POST, 'year');
 $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
-
-// para listados del año en curso:
-if ($Qtipo_lista == 'crt' || $Qtipo_lista == 'cv') { $any = date('Y'); }
 
 $oForm = new CentrosQue();
 // miro que rol tengo. Si soy centro, sólo veo la mía

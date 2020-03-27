@@ -96,6 +96,9 @@ if (!empty($Qid_item_usuario_objeto)) {
 	$dl_propia='t';
 	$id_pau='';
 
+    $id_tipo_activ = $mi_sfsv.'.....';
+	$GesTiposActiv = new GestorTipoDeActividad();
+	$aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ,$dl_propia);
     $oFases = new stdClass;
 }
 
