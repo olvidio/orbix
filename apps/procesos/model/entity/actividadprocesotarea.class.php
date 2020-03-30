@@ -293,12 +293,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
                     $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                     return FALSE;
                 } else {
-                    try {
-                    	$oDblSt->execute($aDades);
-                    }
-                    catch ( \PDOException $e) {
-                    	$err_txt=$e->errorInfo[2];
-                    	$this->setErrorTxt($err_txt);
+                    if ($oDblSt->execute($aDades) === FALSE) {
                         $sClauError = 'ActividadProcesoTarea.update.execute';
                         $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
                         // Dejar la actividad como estaba
