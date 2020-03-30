@@ -103,7 +103,8 @@ if (!empty($Qid_usuario)) {
 	           array( 'txt' => _("borrar"), 'click' =>"fnjs_borrar(\"#seleccionados\")" ),
 	           array( 'txt' => _("todos"), 'click' =>"fnjs_selectAll(\"#seleccionados\",\"sel[]\",\"all\",0)" ),
 	           array( 'txt' => _("ninguno"), 'click' =>"fnjs_selectAll(\"#seleccionados\",\"sel[]\",\"none\",0)" ),
-	           array( 'txt' => _("invertir"), 'click' =>"fnjs_selectAll(\"#seleccionados\",\"sel[]\",\"toggle\",0)" ),
+	           // de momento no funciona para la slcikGrid
+	           // array( 'txt' => _("invertir"), 'click' =>"fnjs_selectAll(\"#seleccionados\",\"sel[]\",\"toggle\",0)" ),
 	           ];
 
     $oTabla = new Lista();

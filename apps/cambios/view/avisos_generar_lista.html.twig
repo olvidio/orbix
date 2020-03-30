@@ -29,6 +29,9 @@
 	}
 </script>
 {{ oPosicion.mostrar_left_slide(1)|raw }}
+<span class="comentario">{{ "Sólo se seleccionan las filas que se ven"|trans }}</span>
+<br>
+<br>
 <div id="exportar" >
 <form id='seleccionados' name='seleccionados' action='' method='post'>
 	{{ oHash.getCamposHtml()|raw }}
