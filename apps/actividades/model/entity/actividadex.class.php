@@ -113,10 +113,15 @@ class ActividadEx Extends ActividadAll {
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($oDblSt->execute($aDades) === false) {
-					$sClauError = 'ActividadEx.update.execute';
+			    try {
+			        $oDblSt->execute($aDades);
+			    }
+			    catch (\PDOException $e) {
+			        $err_txt=$e->errorInfo[2];
+			        $this->setErrorTxt($err_txt);
+			    	$sClauError = 'ActividadEx.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-					return false;
+					return FALSE;
 				}
 			}
 			// Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
@@ -138,7 +143,12 @@ class ActividadEx Extends ActividadAll {
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($oDblSt->execute($aDades) === false) {
+				try {
+					$oDblSt->execute($aDades);
+				}
+				catch ( \PDOException $e) {
+					$err_txt=$e->errorInfo[2];
+					$this->setErrorTxt($err_txt);
 					$sClauError = 'ActividadEx.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;

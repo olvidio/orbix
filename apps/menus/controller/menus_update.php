@@ -54,6 +54,7 @@ switch ($Qque) {
 		} 
 		if ($oMenuDb->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oMenuDb->getErrorTxt();
 		}
 		break;
 	case 'move':
@@ -64,6 +65,7 @@ switch ($Qque) {
 		$oMenuDb->setId_grupmenu($Qgm_new);
 		if ($oMenuDb->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oMenuDb->getErrorTxt();
 		}
 		break;
 	case 'copy':
@@ -75,6 +77,7 @@ switch ($Qque) {
 		$oMenuDb->setId_menu(''); //al borrar el id_menu, me generará uno nuevo.
 		if ($oMenuDb->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oMenuDb->getErrorTxt();
 		}
 		break;
 }

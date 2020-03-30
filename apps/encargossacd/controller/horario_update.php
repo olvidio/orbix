@@ -65,6 +65,7 @@ switch ($Qmod) {
 		$oEncargoHorario->setMes($Qmes);
 		if ($oEncargoHorario->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oEncargoHorario->getErrorTxt();
 		}
 		break;
 	case "editar": 
@@ -89,6 +90,7 @@ switch ($Qmod) {
 		$oEncargoHorario->setMes($Qmes);
 		if ($oEncargoHorario->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oEncargoHorario->getErrorTxt();
 		}
 		break;
 	case "eliminar":

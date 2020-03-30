@@ -36,6 +36,7 @@ function modifica_sacd_ausencias($id_item,$id_enc,$id_nom,$f_ini,$f_fin){
 		$oEncargoSacd->setF_fin($f_fin);
 		if ($oEncargoSacd->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oEncargoSacd->getErrorTxt();
 		}
         $aWhere = [
             'id_enc' => $id_enc,
@@ -49,6 +50,7 @@ function modifica_sacd_ausencias($id_item,$id_enc,$id_nom,$f_ini,$f_fin){
             $oHorario->setF_fin($f_fin);
             if ($oHorario->DBGuardar() === false) {
                 echo _("hay un error, no se ha guardado");
+                echo "\n".$oHorario->getErrorTxt();
             }
         }
 	}
@@ -63,6 +65,7 @@ function insert_sacd_ausencias($id_enc,$id_nom,$modo,$f_ini,$f_fin){
 	$oEncargoSacd->setF_fin($f_fin);
 	if ($oEncargoSacd->DBGuardar() === false) {
 		echo _("hay un error, no se ha guardado");
+		echo "\n".$oEncargoSacd->getErrorTxt();
 	}
 	$id_item_tarea_sacd = $oEncargoSacd->getId_item();
 	$oHorario = new EncargoSacdHorario();
@@ -73,6 +76,7 @@ function insert_sacd_ausencias($id_enc,$id_nom,$modo,$f_ini,$f_fin){
 	$oHorario->setF_fin($f_fin);
 	if ($oHorario->DBGuardar() === false) {
 		echo _("hay un error, no se ha guardado");
+		echo "\n".$oHorario->getErrorTxt();
 	}
 }
 

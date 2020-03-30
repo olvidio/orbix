@@ -200,6 +200,7 @@ class ActividadNuevoCurso {
                 $newEncargado->setId_activ($id_actividad_new);
                 if ($newEncargado->DBGuardar() === false) {
                     echo _("hay un error, no se ha guardado");
+                    echo "\n".$newEncargado->getErrorTxt();
                 }
             }
         }

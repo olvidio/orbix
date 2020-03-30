@@ -33,6 +33,7 @@ switch($Qque) {
 		$oUsuarioPermCtr->setPerm_ctr($Qperm_ctr);
 		if ($oUsuarioPermCtr->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oUsuarioPermCtr->getErrorTxt();
 		}
 		break;
 	case 'perm_ctr_eliminar':
@@ -63,6 +64,7 @@ switch($Qque) {
 		} 
 		if ($oUsuarioPerm->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oUsuarioPerm->getErrorTxt();
 		}
 		break;
 	case 'perm_menu_eliminar':
@@ -135,6 +137,7 @@ switch($Qque) {
             $oUsuarioPerm->setJsonFaseAccion($json_fases);
             if ($oUsuarioPerm->DBGuardar() === false) {
                 echo _("hay un error, no se ha guardado");
+                echo "\n".$oUsuarioPerm->getErrorTxt();
             }
 		}
 		break;
@@ -163,6 +166,7 @@ switch($Qque) {
 		}
 		if ($oUsuario->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oUsuario->getErrorTxt();
 		}
 	break;
 	case "guardar":
@@ -238,6 +242,7 @@ switch($Qque) {
 		}
 		if ($oUsuario->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oUsuario->getErrorTxt();
 		}
 	break;
 	case "nuevo":
@@ -272,6 +277,7 @@ switch($Qque) {
 					} 
 					if ($oUsuario->DBGuardar() === false) {
 						echo _("hay un error, no se ha guardado");
+						echo "\n".$oUsuario->getErrorTxt();
 					}
 				} else { echo _("debe poner un nombre y el password"); }
 				break;
@@ -285,6 +291,7 @@ switch($Qque) {
 					$oUsuario->setid_role($Qid_role);
 					if ($oUsuario->DBGuardar() === false) {
 						echo _("hay un error, no se ha guardado");
+						echo "\n".$oUsuario->getErrorTxt();
 					}
 				} else { exit("debe poner un nombre"); }
 				break;

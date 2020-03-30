@@ -100,8 +100,12 @@ class Actividad Extends ActividadAll {
 			}
 		}
 		$oActividad->setAllAtributes($aDades);
-		$oActividad->DBGuardar();
-		return true;
+		if ($oActividad->DBGuardar() === FALSE) {
+		    $this->setErrorTxt($oActividad->getErrorTxt());
+            return FALSE;
+		} else {
+            return TRUE;
+		}
 	}
 
 	/**

@@ -158,7 +158,12 @@ class Asignatura Extends core\ClasePropiedades {
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($oDblSt->execute($aDades) === false) {
+				try {
+					$oDblSt->execute($aDades);
+				}
+				catch ( \PDOException $e) {
+					$err_txt=$e->errorInfo[2];
+					$this->setErrorTxt($err_txt);
 					$sClauError = 'Asignatura.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;
@@ -174,7 +179,12 @@ class Asignatura Extends core\ClasePropiedades {
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
-				if ($oDblSt->execute($aDades) === false) {
+				try {
+					$oDblSt->execute($aDades);
+				}
+				catch ( \PDOException $e) {
+					$err_txt=$e->errorInfo[2];
+					$this->setErrorTxt($err_txt);
 					$sClauError = 'Asignatura.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return false;

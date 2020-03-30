@@ -103,7 +103,12 @@ class CentroEllas Extends Centro {
 	            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 	            return false;
 	        } else {
-	            if ($oDblSt->execute($aDades) === false) {
+	            try {
+	            	$oDblSt->execute($aDades);
+	            }
+	            catch ( \PDOException $e) {
+	            	$err_txt=$e->errorInfo[2];
+	            	$this->setErrorTxt($err_txt);
 	                $sClauError = 'CentroDl.update.execute';
 	                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 	                return false;
@@ -121,7 +126,12 @@ class CentroEllas Extends Centro {
 	            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 	            return false;
 	        } else {
-	            if ($oDblSt->execute($aDades) === false) {
+	            try {
+	            	$oDblSt->execute($aDades);
+	            }
+	            catch ( \PDOException $e) {
+	            	$err_txt=$e->errorInfo[2];
+	            	$this->setErrorTxt($err_txt);
 	                $sClauError = 'CentroDl.insertar.execute';
 	                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 	                return false;

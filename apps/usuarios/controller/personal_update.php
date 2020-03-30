@@ -32,6 +32,7 @@ switch ($Qque) {
 		$oPref->setPreferencia($QsPrefs);
 		if ($oPref->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oPref->getErrorTxt();
 		}
 		break;
 	default:
@@ -46,6 +47,7 @@ switch ($Qque) {
 		$oPref->setPreferencia($inicio);
 		if ($oPref->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oPref->getErrorTxt();
 		}
 
 		// Guardar estilo:
@@ -56,6 +58,7 @@ switch ($Qque) {
 		$oPref->setPreferencia($estilo);
 		if ($oPref->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oPref->getErrorTxt();
 		}
 
 		// Guardar presentacion tablas:
@@ -64,6 +67,7 @@ switch ($Qque) {
 		$oPref->setPreferencia($Qtipo_tabla);
 		if ($oPref->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oPref->getErrorTxt();
 		}
 
 		// Guardar presentacion nombre Apellidos:
@@ -72,6 +76,7 @@ switch ($Qque) {
 		$oPref->setPreferencia($QordenApellidos);
 		if ($oPref->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oPref->getErrorTxt();
 		}
 
 		// Guardar idioma:
@@ -80,6 +85,7 @@ switch ($Qque) {
 		$oPref->setPreferencia($Qidioma_nou);
 		if ($oPref->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oPref->getErrorTxt();
 		}
 
 		// volver a la página de configuración

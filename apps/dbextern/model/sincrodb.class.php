@@ -180,6 +180,7 @@ class sincroDB {
 			
 			if ($oIdMatch->DBGuardar() === false) {
 				echo _("hay un error, no se ha guardado");
+				echo "\n".$oIdMatch->getErrorTxt();
 				print_r($oIdMatch);
 				echo '<br>';
 				return false;

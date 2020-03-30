@@ -1,7 +1,7 @@
 <?php
+use actividadessacd\model\entity\GestorAtnActivSacdTexto;
 use web\Desplegable;
 use web\Hash;
-use actividadessacd\model\entity\GestorAtnActivSacdTexto;
 /**
 * Esta es para cambiar los textos de comunicación de las actividades a los sacd. 
 *

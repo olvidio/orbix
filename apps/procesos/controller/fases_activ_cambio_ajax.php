@@ -266,6 +266,7 @@ switch($Qque) {
                 $oActividadProcesoTarea->setCompletado('t');
                 if ($oActividadProcesoTarea->DBGuardar() === false) {
                     echo _("hay un error, no se ha guardado");
+                    echo "\n".$oActividadProcesoTarea->getErrorTxt();
                 }
                 $gesActividadProcesoTareas->borrarFasesSiguientes($id_activ, $id_fase);
                 $gesActividadProcesoTareas->marcarFasesAnteriores($id_activ, $id_fase);

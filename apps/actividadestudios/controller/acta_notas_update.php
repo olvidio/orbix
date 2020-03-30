@@ -235,6 +235,7 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 			$oPersonaNota->setTipo_acta(PersonaNota::FORMATO_ACTA);
 			if ($oPersonaNota->DBGuardar() === false) {
 				echo _("hay un error, no se ha guardado");
+				echo "\n".$oPersonaNota->getErrorTxt();
 			}
 		}
 	}
@@ -297,6 +298,7 @@ if ($Qque==1) { // Grabar las notas en la matricula
 		}
 		if ($oMatricula->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oMatricula->getErrorTxt();
 		}
 	}
 	$go_to = '';

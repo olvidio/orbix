@@ -497,6 +497,7 @@ switch ($Qque) {
 			$oEncargoSacdObserv->setObserv($Qobserv);
 			if ($oEncargoSacdObserv->DBGuardar() === false) {
 				echo _("hay un error, no se ha guardado");
+				echo "\n".$oEncargoSacdObserv->getErrorTxt();
 			}
 		}
 		break;

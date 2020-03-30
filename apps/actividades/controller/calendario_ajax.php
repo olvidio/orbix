@@ -386,6 +386,7 @@ switch ($Qque) {
 		if (!empty($Qobserv)) $oTarifa->setObserv($Qobserv);
 		if ($oTarifa->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oTarifa->getErrorTxt();
 		}
 		break;
 	case "borrar":
@@ -415,6 +416,7 @@ switch ($Qque) {
 			if (isset($cantidad)) $oTarifa->setCantidad($cantidad);
 			if ($oTarifa->DBGuardar() === false) {
 				echo _("hay un error, no se ha guardado");
+				echo "\n".$oTarifa->getErrorTxt();
 			}
 		}
 		break;
@@ -477,6 +479,7 @@ switch ($Qque) {
 		if (isset($Qobserv)) $oTipoTarifa->setObserv($Qobserv);
 		if ($oTipoTarifa->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oTipoTarifa->getErrorTxt();
 		}
 		break;
 	case "tar_eliminar":

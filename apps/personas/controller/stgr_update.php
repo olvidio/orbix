@@ -20,6 +20,7 @@ $oPersona->DBCarregar();
 $oPersona->setStgr($Qstgr);
 if ($oPersona->DBGuardar() === false) {
 	echo _("hay un error, no se ha guardado");
+	echo "\n".$oPersona->getErrorTxt();
 }
 
 echo $oPosicion->go_atras(1);

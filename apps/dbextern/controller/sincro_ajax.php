@@ -107,6 +107,7 @@ switch ($que) {
 		
 		if ($oIdMatch->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oIdMatch->getErrorTxt();
 		}
 		//Elimino el valor del array
 		unset($_SESSION['DBListas'][$id]);

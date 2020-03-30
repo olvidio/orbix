@@ -130,7 +130,12 @@ class ZonaSacd Extends core\ClasePropiedades {
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return FALSE;
 			} else {
-				if ($oDblSt->execute($aDades) === FALSE) {
+				try {
+					$oDblSt->execute($aDades);
+				}
+				catch ( \PDOException $e) {
+					$err_txt=$e->errorInfo[2];
+					$this->setErrorTxt($err_txt);
 					$sClauError = 'ZonaSacd.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return FALSE;
@@ -145,7 +150,12 @@ class ZonaSacd Extends core\ClasePropiedades {
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return FALSE;
 			} else {
-				if ($oDblSt->execute($aDades) === FALSE) {
+				try {
+					$oDblSt->execute($aDades);
+				}
+				catch ( \PDOException $e) {
+					$err_txt=$e->errorInfo[2];
+					$this->setErrorTxt($err_txt);
 					$sClauError = 'ZonaSacd.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return FALSE;

@@ -469,6 +469,7 @@ switch($Qsalida) {
 
 		if ($oCambioUsuarioObjeto->DBGuardar() === false) {
 			echo _("Hay un error, no se ha guardado");
+			echo "\n".$oCambioUsuarioObjeto->getErrorTxt();
 		}
 		$id_item_usuario_objeto = $oCambioUsuarioObjeto->getId_item_usuario_objeto();
 		echo $id_item_usuario_objeto;
@@ -509,6 +510,7 @@ switch($Qsalida) {
                 }
                 if ($oCambioPropiedad->DBGuardar() === false) {
                     echo _("Hay un error, no se ha guardado");
+                    echo "\n".$oCambioPropiedad->getErrorTxt();
                 }
             }
 		}

@@ -258,6 +258,7 @@ switch ($Qque) {
 		if (!empty($Qsfsv)) $oCasaPeriodo->setSfsv($Qsfsv);
 		if ($oCasaPeriodo->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oCasaPeriodo->getErrorTxt();
 		}
 		break;
 	case "eliminar":

@@ -100,6 +100,7 @@ switch($Qque) {
 		$oFicha->setObserv($Qobserv);	
 		if ($oFicha->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oFicha->getErrorTxt();
 		}
 		break;
 }

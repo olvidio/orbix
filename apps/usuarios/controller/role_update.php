@@ -39,6 +39,7 @@ switch($Qque) {
 				$oGrupMenuRole->setId_grupmenu($id_grupmenu);
 				if ($oGrupMenuRole->DBGuardar() === false) {
 					echo _("hay un error, no se ha guardado");
+					echo "\n".$oGrupMenuRole->getErrorTxt();
 				}
 			} 
 		}
@@ -62,6 +63,7 @@ switch($Qque) {
 			$oRole->setDmz($dmz);
 			if ($oRole->DBGuardar() === false) {
 				echo _("hay un error, no se ha guardado");
+				echo "\n".$oRole->getErrorTxt();
 			}
 		} else { exit("debe poner un nombre"); }
 	break;
@@ -83,6 +85,7 @@ switch($Qque) {
 			$oRole->setDmz($dmz);
 			if ($oRole->DBGuardar() === false) {
 				echo _("hay un error, no se ha guardado");
+				echo "\n".$oRole->getErrorTxt();
 			}
 		} else { exit("debe poner un nombre"); }
 		break;

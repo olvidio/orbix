@@ -123,6 +123,7 @@ switch ($Qque) {
 		$oUsuarioGrupo = new usuarios\UsuarioGrupo(array('id_usuario'=>$Qid_usuario,'id_grupo'=>$Qid_grupo));
 		if ($oUsuarioGrupo->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oUsuarioGrupo->getErrorTxt();
 		}
 		$a_parametros = array('quien' => 'usuario', 'id_usuario' => $Qid_usuario, 'refresh' => 1);
 		$pagina = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?'.http_build_query($a_parametros));

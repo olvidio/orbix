@@ -189,6 +189,7 @@ switch($Qque) {
 						$oZonaSacd->DBCarregar(); // para coger el id_item.
 						if ($oZonaSacd->DBGuardar() === false) {
 							echo _("hay un error, no se ha guardado");
+							echo "\n".$oZonaSacd->getErrorTxt();
 						}
 					}
 				} else {
@@ -200,6 +201,7 @@ switch($Qque) {
 						$oZonaSacd->setPropia('t');
 						if ($oZonaSacd->DBGuardar() === false) {
 							echo _("hay un error, no se ha guardado");
+							echo "\n".$oZonaSacd->getErrorTxt();
 						}
 					} elseif (empty($id_zona_new)) {
 						$oZonaSacd = new ZonaSacd();
@@ -218,6 +220,7 @@ switch($Qque) {
 						$oZonaSacd->setPropia('t');
 						if ($oZonaSacd->DBGuardar() === false) {
 							echo _("hay un error, no se ha guardado");
+							echo "\n".$oZonaSacd->getErrorTxt();
 						}
 					}
 				}

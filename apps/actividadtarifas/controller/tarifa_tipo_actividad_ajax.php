@@ -91,6 +91,7 @@ switch ($Qque) {
 		$oTipoActivTarifa->setId_tipo_activ($Qid_tipo_activ);
 		if ($oTipoActivTarifa->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oTipoActivTarifa->getErrorTxt();
 		}
 		break;
 	case "eliminar":

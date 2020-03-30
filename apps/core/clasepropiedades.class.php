@@ -2,17 +2,23 @@
 namespace core;
 abstract class ClasePropiedades {
 	/**
-	 * oDbl de Grupo
+	 * oDbl de ClasePropiedades
 	 *
 	 * @var object
 	 */
 	 protected $oDbl;
 	/**
-	 * NomTabla de Grupo
+	 * NomTabla de ClasePropiedades
 	 *
 	 * @var string
 	 */
 	 protected $sNomTabla;
+	/**
+	 * ErrorTxt de ClasePropiedades
+	 *
+	 * @var string
+	 */
+	 protected $sErrorTxt;
 	/* METODES GET i SET --------------------------------------------------------*/
 	
 	 
@@ -37,7 +43,7 @@ abstract class ClasePropiedades {
 	}
 	
 	/**
-	 * Recupera l'atribut oDbl de Grupo
+	 * Recupera l'atribut oDbl de ClasePropiedades
 	 *
 	 * @return object oDbl
 	 */
@@ -45,7 +51,7 @@ abstract class ClasePropiedades {
 		return $this->oDbl;
 	}
 	/**
-	 * estableix el valor de l'atribut oDbl de Grupo
+	 * estableix el valor de l'atribut oDbl de ClasePropiedades
 	 * El faig public per quan s'ha de copiar dades d'un esquema a un altre.
 	 *
 	 * @param object oDbl
@@ -54,7 +60,7 @@ abstract class ClasePropiedades {
 		$this->oDbl = $oDbl;
 	}
 	/**
-	 * Recupera l'atribut sNomTabla de Grupo
+	 * Recupera l'atribut sNomTabla de ClasePropiedades
 	 *
 	 * @return string sNomTabla
 	 */
@@ -62,7 +68,7 @@ abstract class ClasePropiedades {
 		return $this->sNomTabla;
 	}
 	/**
-	 * estableix el valor de l'atribut sNomTabla de Grupo
+	 * estableix el valor de l'atribut sNomTabla de ClasePropiedades
 	 *
 	 * @param string sNomTabla
 	 */
@@ -80,5 +86,24 @@ abstract class ClasePropiedades {
       $metodo = 'set' . ucfirst($nombre);
       if (method_exists($this, $metodo)) $this->$metodo($valor);
 	}
+
+	/**
+	 * sErrorTxt
+	 * @return string
+	 */
+	public function getErrorTxt(){
+		return $this->sErrorTxt;
+	}
+
+	/**
+	 * sErrorTxt
+	 * @param string $sErrorTxt
+	 * @return ClasePropiedades
+	 */
+	public function setErrorTxt($sErrorTxt){
+		$this->sErrorTxt = $sErrorTxt;
+		return $this;
+	}
+
 }
 ?>

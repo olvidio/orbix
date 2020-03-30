@@ -125,6 +125,7 @@ case "nuevo": //nuevo
 	$oEncargo->setObserv($Qobserv);
 	if ($oEncargo->DBGuardar() === false) {
 		echo _("hay un error, no se ha guardado");
+		echo "\n".$oEncargo->getErrorTxt();
 	}
 
 	/* crear horario encargo */
@@ -183,6 +184,7 @@ case "editar": //modificar
 		$oEncargo->setObserv($Qobserv);
 		if ($oEncargo->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oEncargo->getErrorTxt();
 		}
 		/* modificar horario encargo */
 		// horario de mañana (m-matí)
@@ -207,6 +209,7 @@ case "editar": //modificar
 		$oEncargoSacd->setF_fin($oF_fin);
 		if ($oEncargoSacd->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oEncargoSacd->getErrorTxt();
 		}
 		// también a todos los horarios
 		$id_nom = $oEncargoSacd->getId_nom();
@@ -256,6 +259,7 @@ case "editar": //modificar
 				$oEncargoSacd->setModo($modo);
 				if ($oEncargoSacd->DBGuardar() === false) {
 					echo _("hay un error, no se ha guardado");
+					echo "\n".$oEncargoSacd->getErrorTxt();
 				}
 			}
 			$QAid_sacd[0]=$Qid_sacd_titular;
@@ -302,6 +306,7 @@ case "editar": //modificar
 					$oEncargoSacd->setF_fin($oF_fin);
 					if ($oEncargoSacd->DBGuardar() === false) {
 						echo _("hay un error, no se ha guardado");
+						echo "\n".$oEncargoSacd->getErrorTxt();
 					}
 					$GesEncargoTipo->insert_sacd($Qid_enc,$Qid_sacd_suplente,4);
 				}
@@ -315,6 +320,7 @@ case "editar": //modificar
 			$oEncargoSacd->setF_fin($oF_fin);
 			if ($oEncargoSacd->DBGuardar() === false) {
 				echo _("hay un error, no se ha guardado");
+				echo "\n".$oEncargoSacd->getErrorTxt();
 			}
 		}
 	}

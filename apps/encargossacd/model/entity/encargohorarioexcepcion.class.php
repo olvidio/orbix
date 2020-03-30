@@ -213,7 +213,12 @@ class EncargoHorarioExcepcion Extends core\ClasePropiedades {
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return FALSE;
 			} else {
-				if ($oDblSt->execute($aDades) === FALSE) {
+				try {
+					$oDblSt->execute($aDades);
+				}
+				catch ( \PDOException $e) {
+					$err_txt=$e->errorInfo[2];
+					$this->setErrorTxt($err_txt);
 					$sClauError = 'EncargoHorarioExcepcion.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return FALSE;
@@ -229,7 +234,12 @@ class EncargoHorarioExcepcion Extends core\ClasePropiedades {
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return FALSE;
 			} else {
-				if ($oDblSt->execute($aDades) === FALSE) {
+				try {
+					$oDblSt->execute($aDades);
+				}
+				catch ( \PDOException $e) {
+					$err_txt=$e->errorInfo[2];
+					$this->setErrorTxt($err_txt);
 					$sClauError = 'EncargoHorarioExcepcion.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return FALSE;

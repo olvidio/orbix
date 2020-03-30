@@ -62,6 +62,7 @@ function borrar_actividad($id_activ) {
 			$oActividad->setStatus(4); // la pongo en estado borrable
 			if ($oActividad->DBGuardar() === false) {
 				echo _("hay un error, no se ha guardado");
+				echo "\n".$oActividad->getErrorTxt();
 			}
 		}
 	} else {
@@ -73,6 +74,7 @@ function borrar_actividad($id_activ) {
 			$oActividad->setStatus(4); // la pongo en estado borrable
 			if ($oActividad->DBGuardar() === false) {
 				echo _("hay un error, no se ha guardado");
+				echo "\n".$oActividad->getErrorTxt();
 			}
 		}
 	}
@@ -92,6 +94,7 @@ case 'publicar':
 			$oActividad->setPublicado('t');
 			if ($oActividad->DBGuardar() === false) { 
 				echo _("hay un error, no se ha guardado");
+                echo "\n".$oActividad->getErrorTxt();
 				$err = 1;
 			}
 		}
@@ -105,6 +108,7 @@ case 'importar':
 			$oImportada = new actividades\Importada($id_activ);
 			if ($oImportada->DBGuardar() === false) {
 				echo _("hay un error, no se ha importado");
+                echo "\n".$oActividad->getErrorTxt();
 			}
 		}
 	}
@@ -195,7 +199,8 @@ case "nuevo":
 	$oActividad->setPublicado($Qpublicado);
 	$oActividad->setPlazas($Qplazas);
 	if ($oActividad->DBGuardar() === false) { 
-		echo '<br>'._("hay un error, no se ha guardado");
+		echo _("hay un error, no se ha guardado");
+		echo "\n".$oActividad->getErrorTxt();
 	}
 	// si estoy creando una actividad de otra dl es porque la quiero importar.
 	if ($Qdl_org != $mi_dele) {
@@ -203,6 +208,7 @@ case "nuevo":
 		$oImportada = new actividades\Importada($id_activ);
 		if ($oImportada->DBGuardar() === false) {
 			echo _("hay un error, no se ha importado");
+            echo "\n".$oActividad->getErrorTxt();
 		}
 	}
 	// Por defecto pongo todas las plazas en mi dl
@@ -223,6 +229,7 @@ case "nuevo":
 	        //print_r($oActividadPlazasDl);
 	        if ($oActividadPlazasDl->DBGuardar() === false) {
 	            echo _("hay un error, no se ha guardado");
+	            echo "\n".$oActividadPlazasDl->getErrorTxt();
 	        }
 	    }
 	}
@@ -245,6 +252,7 @@ case "duplicar": // duplicar la actividad.
 		$oActividad->setStatus(1); // la pongo en estado proyecto
 		if ($oActividad->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oActividad->getErrorTxt();
 		}
 		$oActividad->DBCarregar();
 	}
@@ -335,6 +343,7 @@ case "cmb_tipo": // sólo cambio el tipo a una actividad existente //___________
 	$oActividad->setPlazas($Qplazas);
 	if ($oActividad->DBGuardar() === false) { 
 		echo _("hay un error, no se ha guardado");
+		echo "\n".$oActividad->getErrorTxt();
 	}
 	break;
 case "editar": // editar la actividad.
@@ -400,53 +409,55 @@ case "editar": // editar la actividad.
 	$oActividad->setPublicado($Qpublicado);
 	$oActividad->setPlazas($Qplazas);
 	if ($oActividad->DBGuardar() === false) { 
-		echo '<br>'._("hay un error, no se ha guardado");
-		$err = 1;
-	}
-	// Si cambio de dl_propia a otra (o al revés), hay que cambiar el proceso. Se hace al final para que la actividad ya tenga puesta la nueva dl
-	if(core\ConfigGlobal::is_app_installed('procesos')){
-		if (($dl_orig != $dl_org) && ($dl_org==core\ConfigGlobal::mi_delef() || $dl_orig==core\ConfigGlobal::mi_delef())) {
-			$oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
-			$oGestorActividadProcesoTarea->generarProceso($oActividad->getId_activ());
-		}
-	}
-	// Por defecto pongo todas las plazas en mi dl
-	if (core\configGlobal::is_app_installed('actividadplazas')) {
-        $mi_dele = ConfigGlobal::mi_delef();
-	    if (!empty($Qplazas) && ($plazas_old != $Qplazas) && $Qdl_org == $mi_dele) {
-	        $id_dl = 0;
-	        $gesDelegacion = new ubis\model\entity\GestorDelegacion();
-	        $cDelegaciones = $gesDelegacion->getDelegaciones(array('dl'=>$mi_dele));
-	        if (is_array($cDelegaciones) && count($cDelegaciones)) {
-	            $id_dl = $cDelegaciones[0]->getId_dl();
-	        }
-	        // si ya tengo algo, mejor no toco. (a no ser que tenga todas)
-	        $oGesActividadPlazas = new GestorActividadPlazas();
-	        $aWhere = [];
-	        $aWhere['id_activ'] = $Qid_activ;
-	        $aWhere['id_dl'] = $id_dl;
-	        $aWhere['dl_tabla'] = $mi_dele;
-	        $cActividadPlazas = $oGesActividadPlazas->getactividadesPlazas($aWhere);
-	        $salta = 0;
-	        if (count($cActividadPlazas) == 1) {
-	            $oActividadPlazasDl = $cActividadPlazas[0];
-	            $plazas_dl = $oActividadPlazasDl->getPlazas();
-	            if ($plazas_dl != $plazas_old) {
-	                $salta = 1;
-	            }
-	        }
-	        if ($salta != 1) {
-                //Si es la dl_org, son plazas concedidas, sino pedidas.
-                $oActividadPlazasDl = new ActividadPlazasDl($aWhere);
-                $oActividadPlazasDl->DBCarregar();
-                $oActividadPlazasDl->setPlazas($Qplazas);
-                
-                //print_r($oActividadPlazasDl);
-                if ($oActividadPlazasDl->DBGuardar() === false) {
-                    echo _("hay un error, no se ha guardado");
+		echo _("hay un error, no se ha guardado");
+		echo "\n".$oActividad->getErrorTxt();
+	} else {
+        // Si cambio de dl_propia a otra (o al revés), hay que cambiar el proceso. Se hace al final para que la actividad ya tenga puesta la nueva dl
+        if(core\ConfigGlobal::is_app_installed('procesos')){
+            if (($dl_orig != $dl_org) && ($dl_org==core\ConfigGlobal::mi_delef() || $dl_orig==core\ConfigGlobal::mi_delef())) {
+                $oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
+                $oGestorActividadProcesoTarea->generarProceso($oActividad->getId_activ());
+            }
+        }
+        // Por defecto pongo todas las plazas en mi dl
+        if (core\configGlobal::is_app_installed('actividadplazas')) {
+            $mi_dele = ConfigGlobal::mi_delef();
+            if (!empty($Qplazas) && ($plazas_old != $Qplazas) && $Qdl_org == $mi_dele) {
+                $id_dl = 0;
+                $gesDelegacion = new ubis\model\entity\GestorDelegacion();
+                $cDelegaciones = $gesDelegacion->getDelegaciones(array('dl'=>$mi_dele));
+                if (is_array($cDelegaciones) && count($cDelegaciones)) {
+                    $id_dl = $cDelegaciones[0]->getId_dl();
                 }
-	        }
-	    }
+                // si ya tengo algo, mejor no toco. (a no ser que tenga todas)
+                $oGesActividadPlazas = new GestorActividadPlazas();
+                $aWhere = [];
+                $aWhere['id_activ'] = $Qid_activ;
+                $aWhere['id_dl'] = $id_dl;
+                $aWhere['dl_tabla'] = $mi_dele;
+                $cActividadPlazas = $oGesActividadPlazas->getactividadesPlazas($aWhere);
+                $salta = 0;
+                if (count($cActividadPlazas) == 1) {
+                    $oActividadPlazasDl = $cActividadPlazas[0];
+                    $plazas_dl = $oActividadPlazasDl->getPlazas();
+                    if ($plazas_dl != $plazas_old) {
+                        $salta = 1;
+                    }
+                }
+                if ($salta != 1) {
+                    //Si es la dl_org, son plazas concedidas, sino pedidas.
+                    $oActividadPlazasDl = new ActividadPlazasDl($aWhere);
+                    $oActividadPlazasDl->DBCarregar();
+                    $oActividadPlazasDl->setPlazas($Qplazas);
+                    
+                    //print_r($oActividadPlazasDl);
+                    if ($oActividadPlazasDl->DBGuardar() === false) {
+                        echo _("hay un error, no se ha guardado");
+                        echo "\n".$oActividadPlazasDl->getErrorTxt();
+                    }
+                }
+            }
+        }
 	}
 	break;
 	/*

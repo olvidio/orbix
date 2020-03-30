@@ -137,6 +137,7 @@ switch($Qque) {
 		$oFicha->setId_tarea_previa($Qid_tarea_previa);	
 		if ($oFicha->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oFicha->getErrorTxt();
 		}
 		break;
 	case 'eliminar':

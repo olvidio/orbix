@@ -104,6 +104,7 @@ switch ($Qque) {
         $oEncargo->setObserv($Qobserv);
         if ($oEncargo->DBGuardar() === false) {
             echo _("hay un error, no se ha guardado");
+            echo "\n".$oEncargo->getErrorTxt();
         }
         $oEncargo->DBCarregar();
 
@@ -141,6 +142,7 @@ switch ($Qque) {
         $oEncargo->setObserv($Qobserv);
         if ($oEncargo->DBGuardar() === false) {
             echo _("hay un error, no se ha guardado");
+            echo "\n".$oEncargo->getErrorTxt();
         }
 
         break;

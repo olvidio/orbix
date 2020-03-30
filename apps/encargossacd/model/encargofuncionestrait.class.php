@@ -191,6 +191,7 @@ Trait EncargoFuncionesTrait {
             $oDatosCgi->setNum_alum($num_alum);
             if ($oDatosCgi->DBGuardar() === false) {
                 echo _("hay un error, no se ha guardado");
+                echo "\n".$oDatosCgi->getErrorTxt();
             }
         } else {
             if ($oDatosCgi->DBEliminar() === false) {
@@ -312,6 +313,7 @@ Trait EncargoFuncionesTrait {
         $oEncargoHorario->setN_sacd($n_sacd);
         if ($oEncargoHorario->DBGuardar() === false) {
             echo _("hay un error, no se ha guardado");
+            echo "\n".$oEncargoHorario->getErrorTxt();
         }
     }
     function modificar_horario_ctr($id_enc,$modulo,$dedicacion,$n_sacd) {
@@ -351,6 +353,7 @@ Trait EncargoFuncionesTrait {
         $oEncargoSacdHorario->setId_item_tarea_sacd($id_item_t_sacd);
         if ($oEncargoSacdHorario->DBGuardar() === false) {
             echo _("hay un error, no se ha guardado");
+            echo "\n".$oEncargoSacdHorario->getErrorTxt();
         }
     }
     function finalizar_horario_sacd($id_enc,$id_nom,$f_fin) {
@@ -365,6 +368,7 @@ Trait EncargoFuncionesTrait {
             $oEncargoSacdHorario->setF_fin($f_fin);
             if ($oEncargoSacdHorario->DBGuardar() === false) {
                 echo _("hay un error, no se ha guardado");
+                echo "\n".$oEncargoSacdHorario->getErrorTxt();
             }
         }
     }
@@ -416,6 +420,7 @@ Trait EncargoFuncionesTrait {
                 $oEncargoSacd->setF_fin(NULL);
                 if ($oEncargoSacd->DBGuardar() === false) {
                     echo _("hay un error, no se ha guardado");
+                    echo "\n".$oEncargoSacd->getErrorTxt();
                 }
                 $flag=1; 
             }
@@ -430,6 +435,7 @@ Trait EncargoFuncionesTrait {
             $oEncargoSacd->setF_fin(NULL);
             if ($oEncargoSacd->DBGuardar() === false) {
                 echo _("hay un error, no se ha guardado");
+                echo "\n".$oEncargoSacd->getErrorTxt();
             }
         }
         $oEncargoSacd->DBCarregar();
@@ -444,6 +450,7 @@ Trait EncargoFuncionesTrait {
             $oEncargoSacd->setF_fin($f_fin);
             if ($oEncargoSacd->DBGuardar() === false) {
                 echo _("hay un error, no se ha guardado");
+                echo "\n".$oEncargoSacd->getErrorTxt();
             }
         }
     }
@@ -469,6 +476,7 @@ Trait EncargoFuncionesTrait {
         $oEncargo->setObserv($observ);
         if ($oEncargo->DBGuardar() === false) {
             echo _("hay un error, no se ha guardado");
+            echo "\n".$oEncargo->getErrorTxt();
         }
 
         return $oEncargo->getId_enc();

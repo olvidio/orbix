@@ -87,6 +87,7 @@ switch ($Qmod) {
 		$oActa->setObserv($Qobserv);
 		if ($oActa->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oActa->getErrorTxt();
 		}
 	break;
 	case 'eliminar':
@@ -121,6 +122,7 @@ switch ($Qmod) {
 		$oActa->setObserv($Qobserv);
 		if ($oActa->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oActa->getErrorTxt();
 		}
 		break;
 }
@@ -146,6 +148,7 @@ if (!empty($Qexaminadores)) {
 		$oActaTribunal->setOrden($i);
 		if ($oActaTribunal->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
+			echo "\n".$oActaTribunal->getErrorTxt();
 		}
     }
 }
