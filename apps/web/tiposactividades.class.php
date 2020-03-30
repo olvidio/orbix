@@ -164,6 +164,11 @@ class TiposActividades {
 	
 	/* METODES PUBLICS ----------------------------------------------------------*/
 	
+	public function setPosiblesAll($bAll) {
+	    if ($bAll === FALSE) {
+	        unset ($this->aSfsv['all']); 
+	    }
+	}
 	/**
 	 * Separa un id_tipo_activ con posibles asistentes en 
 	 * un array de id_tipo_activ separados.

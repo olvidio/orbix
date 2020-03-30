@@ -28,6 +28,7 @@ class ActividadTipo {
 	private $id_tipo_activ;
 	private $para;
 	private $bperm_jefe = FALSE;
+	private $bAll = FALSE;
 			
 	public function getHtml() {
 		$isfsv=ConfigGlobal::mi_sfsv();
@@ -49,6 +50,8 @@ class ActividadTipo {
 			if (!empty($this->ssfsv)) $oTipoActiv->setSfsvText($this->ssfsv);
 			if (!empty($this->sasistentes)) $oTipoActiv->setAsistentesText($this->sasistentes);
 			if (!empty($this->sactividad)) $oTipoActiv->setActividadText($this->sactividad);
+			// limitar el uso de all (sv,sf, resevado):
+            $oTipoActiv->setPosiblesAll($this->bAll); 
 		}
 
 		$a_sfsv_posibles=$oTipoActiv->getSfsvPosibles();
@@ -120,8 +123,10 @@ class ActividadTipo {
 		$oDesplSfsv->setNombre('isfsv_val');
 		$oDesplSfsv->setOpciones($a_sfsv_posibles);
 		$oDesplSfsv->setOpcion_sel($isfsv);
-		$oDesplSfsv->setBlanco('t');
-		$oDesplSfsv->setValBlanco('.');
+		if ($this->bAll === TRUE ) {
+            $oDesplSfsv->setBlanco('t');
+            $oDesplSfsv->setValBlanco('.');
+		}
 		$oDesplSfsv->setAction('fnjs_asistentes()');
 
 		$oDesplAsistentes = new web\Desplegable();
@@ -214,6 +219,10 @@ class ActividadTipo {
 
 	public function setPerm_jefe($perm_jefe) {
 		$this->bperm_jefe = $perm_jefe;
+	}
+
+	public function setSfsvAll($bAll=FALSE) {
+		$this->bAll = $bAll;
 	}
 
 	public function setSfsv($ssfsv) {

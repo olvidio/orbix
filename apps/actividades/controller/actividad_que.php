@@ -194,6 +194,7 @@ if ( $_SESSION['oConfig']->is_jefeCalendario()
     $perm_jefe = TRUE;
 }
 $oActividadTipo->setPerm_jefe($perm_jefe);
+$oActividadTipo->setSfsvAll(TRUE);
 
 
 $oUsuario = new Usuario(array('id_usuario'=>ConfigGlobal::mi_id_usuario()));

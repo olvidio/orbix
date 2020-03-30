@@ -166,6 +166,7 @@ $nom_tipo=$oTipoActiv->getNom_tipoText();
 $id_tipo_activ = $oTipoActiv->getId_tipo_activ();
 
 $oActividadTipo = new actividades\model\ActividadTipo();
+$oActividadTipo->setSfsvAll(FALSE);
 if (!empty($id_tipo_activ))  {
     $oActividadTipo->setId_tipo_activ($id_tipo_activ);
 } else {
@@ -178,10 +179,12 @@ $oActividadTipo->setPara('cambios');
 $oActividadTipo->setQue('buscar');
 
 // para las casas también: sf y sv
+// y los sacd
 $perm_jefe = FALSE;
 if ($_SESSION['oConfig']->is_jefeCalendario()
     OR (($_SESSION['oPerm']->have_perm_oficina('des') or $_SESSION['oPerm']->have_perm_oficina('vcsd')) && $mi_sfsv == 1) 
     OR ($grupo === FALSE && $oUsuario->isRolePau(Role::PAU_CDC))
+    OR ($grupo === FALSE && $oUsuario->isRolePau(Role::PAU_SACD))
     OR ($_SESSION['oPerm']->have_perm_oficina('calendario'))
     )
 {
