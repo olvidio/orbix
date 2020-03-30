@@ -261,8 +261,10 @@ class GestorActividadFase Extends core\ClaseGestor {
     	$a_fases_proceso = $this->getArrayFasesProcesos([$id_tipo_proceso]);
     	
     	$id_fase_anterior = '';
+    	reset($a_fases_proceso);
     	while (current($a_fases_proceso) !== $iFase) {
-    	    $id_fase_anterior = current($a_fases_proceso); 
+    	    $id_fase_anterior = current($a_fases_proceso);
+    	    if ($id_fase_anterior === FALSE) return FALSE;
     	    next($a_fases_proceso); 
     	}
     	return $id_fase_anterior;
