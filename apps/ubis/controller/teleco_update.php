@@ -52,6 +52,7 @@ switch ($Qmod) {
 		$oUbi = new $obj($a_pkey);
 		if ($oUbi->DBEliminar() === false) {
 			echo _("hay un error, no se ha eliminado");
+			echo "\n".$oUbi->getErrorTxt();
 		}
 //		echo $oPosicion->go_atras(1);
 		die();

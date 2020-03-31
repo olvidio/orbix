@@ -117,6 +117,7 @@ foreach($cAlumnos as $oPersonaDl) {
 				foreach ($cMatriculas as $oMatricula) {
 					if ($oMatricula->DBEliminar() === false) {
 						echo _("hay un error, no se ha eliminado");
+						echo "\n".$oMatricula->getErrorTxt();
 					}
 				}
 			

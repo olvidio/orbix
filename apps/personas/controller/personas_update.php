@@ -29,6 +29,7 @@ switch ($Qque) {
 		if (core\ConfigGlobal::mi_delef()== $dl) {
 			if ($oPersona->DBEliminar() === false) {
 				echo _("hay un error, no se ha eliminado");
+				echo "\n".$oPersona->getErrorTxt();
 			}
 		}
 //		echo $oPosicion->go_atras(1);

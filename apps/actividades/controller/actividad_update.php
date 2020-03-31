@@ -57,6 +57,7 @@ function borrar_actividad($id_activ) {
 		if (!empty($status) && $status == 1) { // si no esta en proyecto (status=1) no dejo borrar,
 			if ($oActividad->DBEliminar() === false) {
 				echo _("hay un error, no se ha eliminado");
+				echo "\n".$oActividad->getErrorTxt();
 			}
 		} else {
 			$oActividad->setStatus(4); // la pongo en estado borrable

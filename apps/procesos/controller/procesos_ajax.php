@@ -145,6 +145,7 @@ switch($Qque) {
 		$oFicha = new TareaProceso(array('id_item'=>$Qid_item));
 		if ($oFicha->DBEliminar() === false) {
 			echo _("hay un error, no se ha eliminado");
+			echo "\n".$oFicha->getErrorTxt();
 		}
 		break;
 }

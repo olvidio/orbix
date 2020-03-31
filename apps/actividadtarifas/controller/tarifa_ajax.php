@@ -195,6 +195,7 @@ switch ($Qque) {
 			$oTarifa->setId_item($Qid_item);
 			if ($oTarifa->DBEliminar() === false) {
 				echo _("hay un error, no se ha eliminado");
+				echo "\n".$oTarifa->getErrorTxt();
 			}
 		} else {
             $Qque = (string)  \filter_input(INPUT_POST, 'que');

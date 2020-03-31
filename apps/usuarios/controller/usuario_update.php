@@ -45,6 +45,7 @@ switch($Qque) {
 		$oUsuarioPermCtr = new PermUsuarioCentro(array('id_item'=>$Qid_item));
 		if ($oUsuarioPermCtr->DBEliminar() === false) {
 			echo _("hay un error, no se ha eliminado");
+			echo "\n".$oUsuarioPermCtr->getErrorTxt();
 		}
 		break;
 	case 'perm_menu_update':
@@ -76,6 +77,7 @@ switch($Qque) {
 		$oUsuarioPerm = new PermMenu(array('id_item'=>$Qid_item));
 		if ($oUsuarioPerm->DBEliminar() === false) {
 			echo _("hay un error, no se ha eliminado");
+			echo "\n".$oUsuarioPerm->getErrorTxt();
 		}
 		break;
 	case 'perm_eliminar':
@@ -88,6 +90,7 @@ switch($Qque) {
 		$oUsuarioPerm = new PermUsuarioActividad(array('id_item'=>$Qid_item));
 		if ($oUsuarioPerm->DBEliminar() === false) {
 			echo _("hay un error, no se ha eliminado");
+			echo "\n".$oUsuarioPerm->getErrorTxt();
 		}
 		break;
 	case 'perm_update':

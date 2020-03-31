@@ -382,7 +382,7 @@ switch ($Qque) {
         $Qid_activ = (integer) \filter_input(INPUT_POST, 'id_activ');
 		if (!empty($Qid_activ)) {
 			$oIngreso = new Ingreso(array('id_activ'=>$Qid_activ));
-			if ($oIngreso ->DBEliminar() === false) {
+			if ($oIngreso->DBEliminar() === false) {
 				echo _('Hay un error, no se ha eliminado');
 			}
 		} else {

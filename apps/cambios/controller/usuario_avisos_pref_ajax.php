@@ -404,6 +404,7 @@ switch($Qsalida) {
 		$oCambioUsuarioObjeto = new CambioUsuarioObjetoPref(array('id_item_usuario_objeto'=>$Qid_item_usuario_objeto));
 		if ($oCambioUsuarioObjeto->DBEliminar() === false) {
 			echo _("Hay un error, no se ha eliminado");
+			echo "\n".$oCambioUsuarioObjeto->getErrorTxt();
 		}
 		break;
 	case "guardar_objeto":
@@ -533,6 +534,7 @@ switch($Qsalida) {
 				$oCambioUsuarioPropiedadPref = new CambioUsuarioPropiedadPref(array('id_item'=>$a_item_tot[$key]));
 				if ($oCambioUsuarioPropiedadPref->DBEliminar() === false) {
 					echo _("Hay un error, no se ha eliminado");
+					echo "\n".$oCambioUsuarioPropiedadPref->getErrorTxt();
 				}
 			}
 		}

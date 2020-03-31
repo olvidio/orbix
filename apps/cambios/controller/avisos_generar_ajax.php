@@ -14,6 +14,13 @@ require_once ("apps/core/global_object.inc");
 $Qque = (string) \filter_input(INPUT_POST, 'que');
 
 switch($Qque) {
+    case 'eliminar_fecha':
+        $Qf_fin = (string) \filter_input(INPUT_POST, 'f_fin');
+
+        $GesCambioUsuario = new GestorCambioUsuario();
+        $GesCambioUsuario->eliminarHastaFecha($Qf_fin);
+        
+        break;
 	case 'eliminar':
 	    
 	    $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -31,8 +38,9 @@ switch($Qque) {
             $GesCambioUsuario = new GestorCambioUsuario();
             $cCambiosUsuario = $GesCambioUsuario->getCambiosUsuario($aWhere);
             foreach($cCambiosUsuario as $oCambioUsuario) {
-                if ($oCambioUsuario ->DBEliminar() === false) {
+                if ($oCambioUsuario->DBEliminar() === false) {
                     echo _("Hay un error, no se ha eliminado");
+                    echo "\n".$oCambioUsuario->getErrorTxt();
                 }
             }
         }

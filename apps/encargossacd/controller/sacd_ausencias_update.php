@@ -29,6 +29,7 @@ function modifica_sacd_ausencias($id_item,$id_enc,$id_nom,$f_ini,$f_fin){
 	if (empty($f_ini) && empty($f_fin)) {
 		if ($oEncargoSacd->DBEliminar() === false) {
 			echo _("hay un error, no se ha eliminado");
+			echo "\n".$oEncargoSacd->getErrorTxt();
 		}
 	} else {
 		$oEncargoSacd->DBCarregar();

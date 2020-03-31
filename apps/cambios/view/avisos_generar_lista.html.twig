@@ -1,40 +1,81 @@
 <script>
-	fnjs_borrar=function(formulario){
-		$('#que').val('eliminar');
-		$(formulario).attr('action',"apps/cambios/controller/avisos_generar_ajax.php");
-		$(formulario).one("submit", function() {
-			$.ajax({
-				data: $(this).serialize(),
-				url: $(this).attr('action'),
-				type: 'post',
-				complete: function (rta) {
-					rta_txt=rta.responseText;
-					if (rta_txt != '' && rta_txt != '\n') {
-						alert (rta_txt);
-					}
-				}
-			});
-			return false;
+$(function() {
+	$( "#f_fin" ).datepicker( {
+		numberOfMonths: 1,
+		showButtonPanel: true
 		});
-		$(formulario).submit();
-		$(formulario).off();
-		// tacho los marcados y les quito el checkbox=0
-		/* selecciono los elementos con class="sel" de las tablas del id=formulario */
-		$(formulario+' input.sel').each(function(i){
-			if($(this).prop('checked')== true){
-				$(this).parent().siblings().addClass('tachado');
-				$(this).prop('checked',false);
-			}
-		});
-	}
+
+});
+
+fnjs_borrar_hasta_fecha=function(formulario){
+    $('#que').val('eliminar_fecha');
+    $(formulario).attr('action',"apps/cambios/controller/avisos_generar_ajax.php");
+    $(formulario).one("submit", function() {
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'post',
+            data: $(this).serialize()
+        })
+        .done(function (rta_txt) {
+            if (rta_txt != '' && rta_txt != '\\n') {
+                alert ('{{ "respuesta"|trans }}: '+rta_txt);
+            } else {
+            	fnjs_actualizar(formulario);
+            }
+        });
+        return false;
+    });
+    $(formulario).submit();
+}
+
+fnjs_actualizar=function(formulario){
+	var campo = '<input type="hidden" name="refresh" value=1>';
+    $(formulario).attr('action',"apps/cambios/controller/avisos_generar.php");
+	$(formulario).append(campo);
+	fnjs_enviar_formulario(formulario,'#exportar');
+}
+
+fnjs_borrar=function(formulario){
+    $('#que').val('eliminar');
+    $(formulario).attr('action',"apps/cambios/controller/avisos_generar_ajax.php");
+    $(formulario).one("submit", function() {
+        $.ajax({
+            data: $(this).serialize(),
+            url: $(this).attr('action'),
+            type: 'post',
+            complete: function (rta) {
+                rta_txt=rta.responseText;
+                if (rta_txt != '' && rta_txt != '\n') {
+                    alert (rta_txt);
+                }
+            }
+        });
+        return false;
+    });
+    $(formulario).submit();
+    $(formulario).off();
+    // tacho los marcados y les quito el checkbox=0
+    /* selecciono los elementos con class="sel" de las tablas del id=formulario */
+    $(formulario+' input.sel').each(function(i){
+        if($(this).prop('checked')== true){
+            $(this).parent().siblings().addClass('tachado');
+            $(this).prop('checked',false);
+        }
+    });
+}
 </script>
 {{ oPosicion.mostrar_left_slide(1)|raw }}
+<div id="exportar" >
 <span class="comentario">{{ "Sólo se seleccionan las filas que se ven"|trans }}</span>
 <br>
 <br>
-<div id="exportar" >
 <form id='seleccionados' name='seleccionados' action='' method='post'>
 	{{ oHash.getCamposHtml()|raw }}
 	{{ oTabla.mostrar_tabla()|raw }}
+	<br>
+	{{ "borrar avisos anteriores a"|trans }}: 
+	<input class=fecha size="11" id="f_fin" name="f_fin" >
+	<input TYPE="button" VALUE="{{ "eliminar"|trans|capitalize }}" onclick="javascript:fnjs_borrar_hasta_fecha(this.form);">
+	
 </form>
 </div>

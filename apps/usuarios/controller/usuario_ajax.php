@@ -137,6 +137,7 @@ switch ($Qque) {
 		$oUsuarioGrupo = new usuarios\UsuarioGrupo(array('id_usuario'=>$Qid_usuario,'id_grupo'=>$Qid_grupo));
 		if ($oUsuarioGrupo->DBEliminar() === false) {
 			echo _("hay un error, no se ha eliminado");
+			echo "\n".$oUsuarioGrupo->getErrorTxt();
 		}
 		$a_parametros = array('quien' => 'usuario', 'id_usuario' => $Qid_usuario, 'refresh' => 1);
 		$pagina = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form.php?'.http_build_query($a_parametros));
@@ -152,6 +153,7 @@ switch ($Qque) {
 		$oUsuario= new usuarios\Usuario(array('id_usuario'=>$id_usuario));
 		if ($oUsuario->DBEliminar() === false) {
 			echo _("hay un error, no se ha eliminado");
+			echo "\n".$oUsuario->getErrorTxt();
 		}
 	case "eliminar_grupo":
 		// elimna el grupo.
@@ -162,6 +164,7 @@ switch ($Qque) {
 		$oUsuario= new usuarios\Grupo(array('id_usuario'=>$id_usuario));
 		if ($oUsuario->DBEliminar() === false) {
 			echo _("hay un error, no se ha eliminado");
+			echo "\n".$oUsuario->getErrorTxt();
 		}
 		break;
 	case "eliminar_role":
@@ -173,6 +176,7 @@ switch ($Qque) {
 		$oRole= new usuarios\Role(array('id_role'=>$id_role));
 		if ($oRole->DBEliminar() === false) {
 			echo _("hay un error, no se ha eliminado");
+			echo "\n".$oRole->getErrorTxt();
 		}
 		break;
 }

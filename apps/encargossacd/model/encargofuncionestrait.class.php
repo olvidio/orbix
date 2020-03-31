@@ -196,6 +196,7 @@ Trait EncargoFuncionesTrait {
         } else {
             if ($oDatosCgi->DBEliminar() === false) {
                 echo _("hay un error, no se ha eliminado");
+                echo "\n".$oDatosCgi->getErrorTxt();
             }
         }
     }
@@ -460,6 +461,7 @@ Trait EncargoFuncionesTrait {
         foreach ($cEncargosSacd as $oEncargoSacd) { // aunque sólo debería haber una.
             if ($oEncargoSacd->DBEliminar() === false) {
                 echo _("hay un error, no se ha eliminado");
+                echo "\n".$oEncargoSacd->getErrorTxt();
             }
         }
     }

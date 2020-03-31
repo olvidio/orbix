@@ -28,6 +28,7 @@ switch ($Qque) {
 		$oUbi = new $obj($Qid_ubi);
 		if ($oUbi->DBEliminar() === false) {
 			echo _("hay un error, no se ha eliminado");
+			echo "\n".$oUbi->getErrorTxt();
 		}
 		die();
 		break;

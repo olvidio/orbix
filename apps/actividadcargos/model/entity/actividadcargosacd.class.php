@@ -3,6 +3,7 @@ namespace actividadcargos\model\entity;
 
 use cambios\model\gestorAvisoCambios;
 use core\ConfigGlobal;
+use function core\is_true;
 /**
  * Classe que implementa l'entitat d_cargos_activ amb restricció a només els sacd.
  *
@@ -38,7 +39,7 @@ class ActividadCargoSacd Extends ActividadCargoAbstract {
 		$aDades['observ'] = $this->sobserv;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if ( core\is_true($aDades['puede_agd']) ) { $aDades['puede_agd']='true'; } else { $aDades['puede_agd']='false'; }
+		if ( is_true($aDades['puede_agd']) ) { $aDades['puede_agd']='true'; } else { $aDades['puede_agd']='false'; }
 
 		if ($bInsert === false) {
 			//UPDATE
@@ -165,7 +166,7 @@ class ActividadCargoSacd Extends ActividadCargoAbstract {
 		$nom_tabla = 'c'.$this->getNomTabla();
 		
 		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if ( core\is_true($aDades['puede_agd']) ) { $aDades['puede_agd']='true'; } else { $aDades['puede_agd']='false'; }
+		if ( is_true($aDades['puede_agd']) ) { $aDades['puede_agd']='true'; } else { $aDades['puede_agd']='false'; }
 		
 		if ($bInsert === false) {
 			//UPDATE

@@ -19,7 +19,9 @@ require_once ("apps/core/global_header.inc");
 require_once ("apps/core/global_object.inc");
 // Crea los objectos para esta url  **********************************************
 
-$oPosicion->recordar();
+$Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
+$oPosicion->recordar($Qrefresh);
+$QGstack = (integer)  filter_input(INPUT_POST, 'Gstack');
 
 // Tipos de avisos
 $aTipos_aviso = CambioUsuarioObjetoPref::getTipos_aviso();
@@ -42,12 +44,26 @@ $oDesplUsuarios->setOpciones($ListaUsuarios);
 
 
 if ($_SESSION['oPerm']->have_perm_oficina('dtor')){ //el admin_sv incluye el admin_sf
-    $Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
-    $Qaviso_tipo = (integer) \filter_input(INPUT_POST, 'aviso_tipo');
+    // sino en $Posicion. Le paso la referecia del stack donde está la información.
+    if (!empty($Qrefresh) && ($QGstack != '')) {
+        $oPosicion->goStack($QGstack);
+        $Qid_usuario = $oPosicion->getParametro('id_usuario');
+        $Qaviso_tipo = $oPosicion->getParametro('aviso_tipo');
+    } else {
+        $Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
+        $Qaviso_tipo = (integer) \filter_input(INPUT_POST, 'aviso_tipo');
+    }
 } else {
 	$Qid_usuario = ConfigGlobal::mi_id_usuario();
 	$Qaviso_tipo =  CambioUsuario::TIPO_LISTA; // de moment nomes "anotar en lista".
 }
+
+$aGoBack = [
+        'id_usuario'=>$Qid_usuario,
+        'aviso_tipo'=>$Qaviso_tipo,
+    ];
+$oPosicion->setParametros($aGoBack,1);
+
 
 $a_campos = [];
 
@@ -114,9 +130,14 @@ if (!empty($Qid_usuario)) {
     $oTabla->setBotones($a_botones);
     $oTabla->setDatos($a_valores);
 
+    $stack = $oPosicion->getStack();
     $oHash = new web\Hash();
-    $oHash->setArrayCamposHidden(['que' => 'eliminar']);
-    $oHash->setCamposNo('scroll_id!sel');
+    $oHash->setArrayCamposHidden(['que' => 'eliminar',
+                                    'id_usuario' => $Qid_usuario,
+                                    'aviso_tipo' => $Qaviso_tipo,
+                                    'Gstack' => $stack,
+                                ]);
+    $oHash->setCamposNo('f_fin!que!scroll_id!sel!refresh');
 
     $a_campos = [
         'oPosicion' => $oPosicion,
@@ -125,7 +146,9 @@ if (!empty($Qid_usuario)) {
     ];
     
 } else {
+    $stack = $oPosicion->getStack();
     $oHashCond = new web\Hash();
+    $oHashCond->setArrayCamposHidden(['Gstack' => $stack]);
     $oHashCond->setcamposForm("id_usuario!aviso_tipo");
     
     $a_camposCond = [

@@ -254,6 +254,7 @@ case "editar": //modificar
 				foreach ($cEncargosSacd2 as $oEncargoSacd2) { // aunque sólo debería haber una.
 					if ($oEncargoSacd2->DBEliminar() === false) {
 						echo _("hay un error, no se ha eliminado");
+						echo "\n".$oEncargoSacd2->getErrorTxt();
 					}
 				}
 				$oEncargoSacd->setModo($modo);

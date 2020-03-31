@@ -180,6 +180,7 @@ switch($Qque) {
 						$oZonaSacd->DBCarregar(); // para coger el id_item.
 						if ($oZonaSacd->DBEliminar() === false) {
 							echo _("hay un error, no se ha eliminado");
+							echo "\n".$oZonaSacd->getErrorTxt();
 						}
 					} else {
 						$oZonaSacd = new ZonaSacd();
@@ -210,6 +211,7 @@ switch($Qque) {
 						$oZonaSacd->DBCarregar(); // para coger el id_item.
 						if ($oZonaSacd->DBEliminar() === false) {
 							echo _("hay un error, no se ha eliminado");
+							echo "\n".$oZonaSacd->getErrorTxt();
 						}
 					} else {
 						$oZonaSacd = new ZonaSacd();

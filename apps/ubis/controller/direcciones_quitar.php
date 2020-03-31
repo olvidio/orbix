@@ -46,4 +46,5 @@ switch ($Qobj_dir) {
 }
 if ($oUbi->DBEliminar() === false) {
 	echo _("hay un error, no se ha eliminado");
+	echo "\n".$oUbi->getErrorTxt();
 }

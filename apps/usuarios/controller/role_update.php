@@ -23,6 +23,7 @@ switch($Qque) {
 				$oGrupMenuRole = new menus\GrupMenuRole($id_item);
 				if ($oGrupMenuRole->DBEliminar() === false) {
 					echo _("hay un error, no se ha eliminado");
+					echo "\n".$oGrupMenuRole->getErrorTxt();
 				}
 			} 
 		}

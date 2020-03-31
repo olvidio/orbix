@@ -1,6 +1,7 @@
 <?php
 namespace cambios\model\entity;
 use core;
+use web\DateTimeLocal;
 /**
  * GestorCambioUsuario
  *
@@ -34,6 +35,32 @@ class GestorCambioUsuario Extends core\ClaseGestor {
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
+	/**
+	 * para eliminar avisos masivamente, anteriores a una fecha.
+	 * 
+	 * @param date|string df_fin.
+	 */
+	public function eliminarHastaFecha($df_fin) {
+        if (empty($df_fin)) return FALSE;
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$nom_tabla_cambios =  'public.av_cambios';
+		
+        $oConverter = new core\Converter('date', $df_fin);
+        $sf_fin =$oConverter->toPg();
+
+        $sql = "DELETE FROM $nom_tabla u USING $nom_tabla_cambios c 
+                WHERE u.id_schema_cambio=c.id_schema AND u.id_item_cambio=c.id_item_cambio 
+                    AND c.timestamp_cambio < '$sf_fin'
+                ";
+        
+        if ($oDbl->exec($sql) === FALSE) {
+            $sClauError = 'CambioUsuario.eliminar';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return FALSE;
+        }
+        return TRUE;
+	}
 	/**
 	 * retorna l'array d'objectes de tipus CambioUsuario
 	 *

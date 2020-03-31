@@ -125,6 +125,7 @@ switch ($que) {
 		
 		if ($oIdMatch->DBEliminar() === false) {
 			echo _("hay un error, no se ha eliminado");
+			echo "\n".$oIdMatch->getErrorTxt();
 		}
 		break;
 	case 'syncro':

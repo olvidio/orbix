@@ -21,6 +21,7 @@ switch ($Qque) {
 		$oTipoDossier = new dossiers\TipoDossier($Qid_tipo_dossier);
 		if ($oTipoDossier->DBEliminar() === false) {
 			echo _("hay un error, no se ha eliminado");
+			echo "\n".$oTipoDossier->getErrorTxt();
 		}
 		echo $oPosicion->go_atras(1);
 		die();

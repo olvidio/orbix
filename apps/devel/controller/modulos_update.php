@@ -51,7 +51,8 @@ switch ($Qmod) {
 	case 'eliminar':
 		$oModulo = new \devel\model\entity\Modulo($Qid_mod);
 		if ($oModulo->DBEliminar() === false) {
-			echo _("hay un error, no se ha guardado");
+			echo _("hay un error, no se ha eliminado");
+			echo "\n".$oModulo->getErrorTxt();
 		}
 		break;
 	default :

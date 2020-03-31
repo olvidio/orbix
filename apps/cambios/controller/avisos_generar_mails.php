@@ -180,8 +180,9 @@ function eliminar_enviado($a_id){
         
         $cCambiosUsuario = $GesCambioUsuario->getCambiosUsuario($aWhere);
         foreach($cCambiosUsuario as $oCambioUsuario) {
-            if ($oCambioUsuario ->DBEliminar() === false) {
+            if ($oCambioUsuario->DBEliminar() === false) {
                 echo _("Hay un error, no se ha eliminado");
+                echo "\n".$oCambioUsuario->getErrorTxt();
             }
         }
     }

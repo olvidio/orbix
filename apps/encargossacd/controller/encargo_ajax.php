@@ -152,6 +152,7 @@ switch ($Qque) {
             $oEncargo = new Encargo(array('id_enc'=>$id_enc));
             if ($oEncargo->DBEliminar() === false) {
                 echo _("hay un error, no se ha eliminado");
+                echo "\n".$oEncargo->getErrorTxt();
             }
             // También elimino todos los horarios con sus excepciones (por el postgres: foreginKey)
             /*

@@ -95,7 +95,8 @@ switch ($Qmod) {
 		$oActa->DBCarregar();
 
 		if ($oActa->DBEliminar() === false) {
-			echo _("hay un error, no se ha guardado");
+			echo _("hay un error, no se ha eliminado");
+			echo "\n".$oActa->getErrorTxt();
 		}
 		break;
 	case 'modificar':
@@ -133,6 +134,7 @@ $cActaTribunal = $oGesActaTribunal->getActasTribunales(array('acta'=>$Qacta));
 foreach ($cActaTribunal as $oActaTribunal) {
 	if ($oActaTribunal->DBEliminar() === false) {
 		echo _("hay un error, no se ha eliminado");
+		echo "\n".$oActaTribunal->getErrorTxt();
 	}
 }
 

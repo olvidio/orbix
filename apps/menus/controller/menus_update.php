@@ -24,6 +24,7 @@ switch ($Qque) {
 	case 'del': // Para borrar un registro
 		if ($oMenuDb->DBEliminar() === false) {
 			echo _("hay un error, no se ha eliminado");
+			echo "\n".$oMenuDb->getErrorTxt();
 		}
 		break;
 	case 'guardar':

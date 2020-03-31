@@ -267,6 +267,7 @@ switch ($Qque) {
 			$oCasaPeriodo = new CasaPeriodo($Qid_item);
 			if ($oCasaPeriodo->DBEliminar() === false) {
 				echo _("hay un error, no se ha eliminado");
+				echo "\n".$oCasaPeriodo->getErrorTxt();
 			}
 		} else {
 			$error_txt=_("no sé cuál he de borar");
