@@ -173,10 +173,10 @@ function fn_apuntar($id_schema_cmb,$id_item_cmb,$id_usuario,$aviso_tipo,$aviso_d
 	//anotado($id_item_cmb); // En principio ya lo hace al final de todo.
 }
 function anotado($id_schema_cmb,$id_item_cmb) {
-    if (ConfigGlobal::is_dmz()) {
-        $server = 2;
-    } else {
+	if (ConfigGlobal::mi_sfsv() == 1) {
         $server = 1;
+    } else {
+        $server = 2;
     }
 	// marcar como apuntado
 	$aWhere = ['id_schema_cambio' => $id_schema_cmb,
@@ -184,6 +184,7 @@ function anotado($id_schema_cmb,$id_item_cmb) {
 	           'server' => $server,
 	];
     $gesCambiosAnotados = new GestorCambioAnotado();
+    $gesCambiosAnotados->setTabla($server);
 	$cCambiosAnotados = $gesCambiosAnotados->getCambiosAnotados($aWhere);
 	// debería ser único
 	if (count($cCambiosAnotados) > 0) {
@@ -191,15 +192,13 @@ function anotado($id_schema_cmb,$id_item_cmb) {
     	$oCambioAnotado->DBCarregar();
 	} else {
 	   $oCambioAnotado = new CambioAnotado();
+	   $oCambioAnotado->setTabla($server);
 	   $oCambioAnotado->setId_item_cambio($id_item_cmb);
 	   $oCambioAnotado->setId_schema_cambio($id_schema_cmb);
 	   $oCambioAnotado->setServer($server);
 	}
-	if (ConfigGlobal::mi_sfsv() == 1) {
-        $oCambioAnotado->setAnotado_sv('t');
-	} else {
-        $oCambioAnotado->setAnotado_sf('t');
-	}
+
+    $oCambioAnotado->setAnotado('t');
 	if ($oCambioAnotado->DBGuardar(true) === false) { //'true' para que no genere la tabla de avisos.
 		echo _("Hay un error, no se ha guardado");
 		echo _("anotado");

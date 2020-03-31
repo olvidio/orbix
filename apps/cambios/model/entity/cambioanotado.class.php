@@ -2,7 +2,7 @@
 namespace cambios\model\entity;
 use core;
 /**
- * Fitxer amb la Classe que accedeix a la taula av_cambios_anotados
+ * Fitxer amb la Classe que accedeix a la taula av_cambios_anotados_dl
  *
  * @package orbix
  * @subpackage model
@@ -11,7 +11,7 @@ use core;
  * @created 2/5/2019
  */
 /**
- * Classe que implementa l'entitat av_cambios_anotados
+ * Classe que implementa l'entitat av_cambios_anotados_dl
  *
  * @package orbix
  * @subpackage model
@@ -21,7 +21,12 @@ use core;
  */
 class CambioAnotado Extends core\ClasePropiedades {
 	/* ATRIBUTS ----------------------------------------------------------------- */
-
+    /**
+     * corresponde a 1:sv, 2:sf
+     * 
+     * @var integer
+     */
+     private $server_sfsv;
 	/**
 	 * aPrimary_key de CambioAnotado
 	 *
@@ -55,17 +60,11 @@ class CambioAnotado Extends core\ClasePropiedades {
 	 */
 	 private $iid_item_cambio;
 	/**
-	 * Anotado_sv de CambioAnotado
+	 * Anotado de CambioAnotado
 	 *
 	 * @var boolean
 	 */
-	 private $banotado_sv;
-	/**
-	 * Anotado_sf de CambioAnotado
-	 *
-	 * @var boolean
-	 */
-	 private $banotado_sf;
+	 private $banotado;
 	/**
 	 * Server de CambioAnotado
 	 * 
@@ -116,11 +115,28 @@ class CambioAnotado Extends core\ClasePropiedades {
 			}
 		}
 		$this->setoDbl($oDbl);
-		$this->setNomTabla('av_cambios_anotados');
+		//$this->setNomTabla('av_cambios_anotados_dl');
 	}
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
-
+	
+	/**
+	 * Se añade esta funcion para cambiar de tabla. Si se tienen una instalación en
+	 * la dmz, hay desfases en la sincronización de la tabla y ocasiona algunos problemas.
+	 * Se tiene una tabla distinta para sv y sf.
+	 *
+	 * @param integer $server
+	 */
+	public function setTabla($server){
+	    $this->server_sfsv = $server;
+	    if ($server === 1 ) {
+	        $this->setNomTabla('av_cambios_anotados_dl');
+	    }
+	    if ($server === 2 ) {
+	        $this->setNomTabla('av_cambios_anotados_dl_sf');
+	    }
+	}
+	
 	/**
 	 * Desa els atributs de l'objecte a la base de dades.
 	 * Si no hi ha el registre, fa el insert, si hi es fa el update.
@@ -133,21 +149,18 @@ class CambioAnotado Extends core\ClasePropiedades {
 		$aDades=array();
 		$aDades['id_schema_cambio'] = $this->iid_schema_cambio;
 		$aDades['id_item_cambio'] = $this->iid_item_cambio;
-		$aDades['anotado_sv'] = $this->banotado_sv;
-		$aDades['anotado_sf'] = $this->banotado_sf;
+		$aDades['anotado'] = $this->banotado;
 		$aDades['server'] = $this->iserver;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if ( core\is_true($aDades['anotado_sv']) ) { $aDades['anotado_sv']='true'; } else { $aDades['anotado_sv']='false'; }
-		if ( core\is_true($aDades['anotado_sf']) ) { $aDades['anotado_sf']='true'; } else { $aDades['anotado_sf']='false'; }
+		if ( core\is_true($aDades['anotado']) ) { $aDades['anotado']='true'; } else { $aDades['anotado']='false'; }
 
 		if ($bInsert === FALSE) {
 			//UPDATE
 			$update="
 					id_schema_cambio         = :id_schema_cambio,
 					id_item_cambio           = :id_item_cambio,
-					anotado_sv               = :anotado_sv,
-					anotado_sf               = :anotado_sf,
+					anotado                  = :anotado,
 					server                   = :server";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item'")) === FALSE) {
 				$sClauError = 'CambioAnotado.update.prepare';
@@ -167,8 +180,8 @@ class CambioAnotado Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			$campos="(id_schema_cambio,id_item_cambio,anotado_sv,anotado_sf,server)";
-			$valores="(:id_schema_cambio,:id_item_cambio,:anotado_sv,:anotado_sf,:server)";		
+			$campos="(id_schema_cambio,id_item_cambio,anotado,server)";
+			$valores="(:id_schema_cambio,:id_item_cambio,:anotado,:server)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClauError = 'CambioAnotado.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -185,7 +198,7 @@ class CambioAnotado Extends core\ClasePropiedades {
 					return FALSE;
 				}
 			}
-			$this->id_item = $oDbl->lastInsertId('av_cambios_anotados_id_item_seq');
+			$this->id_item = $oDbl->lastInsertId('av_cambios_anotados_dl_id_item_seq');
 		}
 		$this->setAllAtributes($aDades);
 		return TRUE;
@@ -254,8 +267,7 @@ class CambioAnotado Extends core\ClasePropiedades {
 		if (array_key_exists('id_item',$aDades)) $this->setId_item($aDades['id_item']);
 		if (array_key_exists('id_schema_cambio',$aDades)) $this->setId_schema_cambio($aDades['id_schema_cambio']);
 		if (array_key_exists('id_item_cambio',$aDades)) $this->setId_item_cambio($aDades['id_item_cambio']);
-		if (array_key_exists('anotado_sv',$aDades)) $this->setAnotado_sv($aDades['anotado_sv']);
-		if (array_key_exists('anotado_sf',$aDades)) $this->setAnotado_sf($aDades['anotado_sf']);
+		if (array_key_exists('anotado',$aDades)) $this->setAnotado($aDades['anotado']);
 		if (array_key_exists('server',$aDades)) $this->setServer($aDades['server']);
 	}
 
@@ -268,8 +280,7 @@ class CambioAnotado Extends core\ClasePropiedades {
 		$this->setId_item('');
 		$this->setId_schema_cambio('');
 		$this->setId_item_cambio('');
-		$this->setAnotado_sv('');
-		$this->setAnotado_sf('');
+		$this->setAnotado('');
 		$this->setServer('');
 		$this->setPrimary_key($aPK);
 	}
@@ -373,42 +384,23 @@ class CambioAnotado Extends core\ClasePropiedades {
 		$this->iid_item_cambio = $iid_item_cambio;
 	}
 	/**
-	 * Recupera l'atribut banotado_sv de CambioAnotado
+	 * Recupera l'atribut banotado de CambioAnotado
 	 *
-	 * @return boolean banotado_sv
+	 * @return boolean banotado
 	 */
-	function getAnotado_sv() {
-		if (!isset($this->banotado_sv)) {
+	function getAnotado() {
+		if (!isset($this->banotado)) {
 			$this->DBCarregar();
 		}
-		return $this->banotado_sv;
+		return $this->banotado;
 	}
 	/**
-	 * estableix el valor de l'atribut banotado_sv de CambioAnotado
+	 * estableix el valor de l'atribut banotado de CambioAnotado
 	 *
-	 * @param boolean banotado_sv='f' optional
+	 * @param boolean banotado='f' optional
 	 */
-	function setAnotado_sv($banotado_sv='f') {
-		$this->banotado_sv = $banotado_sv;
-	}
-	/**
-	 * Recupera l'atribut banotado_sf de CambioAnotado
-	 *
-	 * @return boolean banotado_sf
-	 */
-	function getAnotado_sf() {
-		if (!isset($this->banotado_sf)) {
-			$this->DBCarregar();
-		}
-		return $this->banotado_sf;
-	}
-	/**
-	 * estableix el valor de l'atribut banotado_sf de CambioAnotado
-	 *
-	 * @param boolean banotado_sf='f' optional
-	 */
-	function setAnotado_sf($banotado_sf='f') {
-		$this->banotado_sf = $banotado_sf;
+	function setAnotado($banotado='f') {
+		$this->banotado = $banotado;
 	}
 	/**
 	 * Recupera l'atribut iserver de CambioAnotado
@@ -440,8 +432,7 @@ class CambioAnotado Extends core\ClasePropiedades {
 
 		$oCambioAnotadoSet->add($this->getDatosId_schema_cambio());
 		$oCambioAnotadoSet->add($this->getDatosId_item_cambio());
-		$oCambioAnotadoSet->add($this->getDatosAnotado_sv());
-		$oCambioAnotadoSet->add($this->getDatosAnotado_sf());
+		$oCambioAnotadoSet->add($this->getDatosAnotado());
 		$oCambioAnotadoSet->add($this->getDatosServer());
 		return $oCambioAnotadoSet->getTot();
 	}
@@ -473,27 +464,15 @@ class CambioAnotado Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut banotado_sv de CambioAnotado
+	 * Recupera les propietats de l'atribut banotado de CambioAnotado
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
 	 */
-	function getDatosAnotado_sv() {
+	function getDatosAnotado() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'anotado_sv'));
-		$oDatosCampo->setEtiqueta(_("anotado sv"));
-		return $oDatosCampo;
-	}
-	/**
-	 * Recupera les propietats de l'atribut banotado_sf de CambioAnotado
-	 * en una clase del tipus DatosCampo
-	 *
-	 * @return core\DatosCampo
-	 */
-	function getDatosAnotado_sf() {
-		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'anotado_sf'));
-		$oDatosCampo->setEtiqueta(_("anotado sf"));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'anotado'));
+		$oDatosCampo->setEtiqueta(_("anotado"));
 		return $oDatosCampo;
 	}
 	/**

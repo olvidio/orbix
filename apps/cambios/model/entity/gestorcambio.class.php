@@ -88,10 +88,16 @@ class GestorCambio Extends core\ClaseGestor {
 	    $this->setoDbl($oDbl);
 	    $this->setNomTabla('av_cambios');
 	    
-	    $sQry = "DELETE FROM av_cambios_anotados USING av_cambios_anotados a
+		if (ConfigGlobal::mi_sfsv() == 1) {
+		    $nom_tabla_anotados = 'av_cambios_anotados_dl';
+		} else {
+		    $nom_tabla_anotados = 'av_cambios_anotados_dl_sf';
+		}
+
+	    $sQry = "DELETE FROM $nom_tabla_anotados USING $nom_tabla_anotados a
                 LEFT JOIN public.av_cambios c
                  ON (a.id_schema_cambio = c.id_schema AND a.id_item_cambio = c.id_item_cambio)
-                WHERE av_cambios_anotados.id_item = a.id_item
+                WHERE $nom_tabla_anotados.id_item = a.id_item
                 AND c.id_item_cambio IS NULL
                 ";
 
@@ -138,9 +144,9 @@ class GestorCambio Extends core\ClaseGestor {
 		$oCambioSet = new core\Set();
 		
 		if (ConfigGlobal::mi_sfsv() == 1) {
-		    $campo_anotado = 'anotado_sv';
+		    $nom_tabla_anotados = 'av_cambios_anotados_dl';
 		} else {
-		    $campo_anotado = 'anotado_sf';
+		    $nom_tabla_anotados = 'av_cambios_anotados_dl_sf';
 		}
 		// Cuando av_cambios_anotados no tiene la fila, No podemos saber si en n cambio de la dl o no.
 		// Vamos a hacer dos consultas separadas y unimos.
@@ -149,9 +155,9 @@ class GestorCambio Extends core\ClaseGestor {
 		$sQry = "SELECT c.id_schema, c.id_item_cambio, c.id_tipo_cambio, c.id_activ, c.id_tipo_activ, 
                 c.id_fase_sv, c.id_fase_sf, c.dl_org,
                 c.objeto, c.propiedad, c.valor_old, c.valor_new, c.quien_cambia, c.sfsv_quien_cambia, c.timestamp_cambio
-                FROM av_cambios_dl c LEFT JOIN av_cambios_anotados a
+                FROM av_cambios_dl c LEFT JOIN $nom_tabla_anotados a
                 ON (c.id_schema = a.id_schema_cambio AND c.id_item_cambio=a.id_item_cambio)
-                WHERE a.$campo_anotado IS NULL OR a.$campo_anotado = 'f'
+                WHERE a.anotado IS NULL OR a.anotado = 'f'
                 ORDER BY dl_org,id_tipo_activ,timestamp_cambio
                 ";
 		if ($oDbl->query($sQry) === FALSE) {
@@ -169,9 +175,9 @@ class GestorCambio Extends core\ClaseGestor {
 		$sQry = "SELECT c.id_schema, c.id_item_cambio, c.id_tipo_cambio, c.id_activ, c.id_tipo_activ, 
                 c.id_fase_sv, c.id_fase_sf, c.dl_org,
                 c.objeto, c.propiedad, c.valor_old, c.valor_new, c.quien_cambia, c.sfsv_quien_cambia, c.timestamp_cambio
-                FROM ONLY public.av_cambios c LEFT JOIN av_cambios_anotados a
+                FROM ONLY public.av_cambios c LEFT JOIN $nom_tabla_anotados a
                 ON (c.id_schema = a.id_schema_cambio AND c.id_item_cambio=a.id_item_cambio)
-                WHERE a.$campo_anotado IS NULL OR a.$campo_anotado = 'f'
+                WHERE a.anotado IS NULL OR a.anotado = 'f'
                 ORDER BY dl_org,id_tipo_activ,timestamp_cambio
                 ";
 		if ($oDbl->query($sQry) === FALSE) {

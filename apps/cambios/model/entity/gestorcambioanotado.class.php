@@ -15,7 +15,13 @@ use core;
 
 class GestorCambioAnotado Extends core\ClaseGestor {
 	/* ATRIBUTS ----------------------------------------------------------------- */
-
+    /**
+     * corresponde a 1:sv, 2:sf
+     *
+     * @var integer
+     */
+    private $server_sfsv;
+    
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
 
@@ -28,12 +34,28 @@ class GestorCambioAnotado Extends core\ClaseGestor {
 	function __construct() {
 		$oDbl = $GLOBALS['oDBC'];
 		$this->setoDbl($oDbl);
-		$this->setNomTabla('av_cambios_anotados');
+		//$this->setNomTabla('av_cambios_anotados_dl');
 	}
 
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
+	/**
+	 * Se añade esta funcion para cambiar de tabla. Si se tienen una instalación en 
+	 * la dmz, hay desfases en la sincronización de la tabla y ocasiona algunos problemas.
+	 * Se tiene una tabla distinta para sv y sf.
+	 * 
+	 * @param integer $server
+	 */
+	public function setTabla($server){
+	    $this->server_sfsv = $server;
+	    if ($server === 1 ) {
+            $this->setNomTabla('av_cambios_anotados_dl');
+	    }
+	    if ($server === 2 ) {
+            $this->setNomTabla('av_cambios_anotados_dl_sf');
+	    }
+	}
 	/**
 	 * retorna l'array d'objectes de tipus CambioAnotado
 	 *
@@ -51,6 +73,7 @@ class GestorCambioAnotado Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oCambioAnotado= new CambioAnotado($a_pkey);
+			$oCambioAnotado->setTabla($this->server_sfsv);
 			$oCambioAnotado->setAllAtributes($aDades);
 			$oCambioAnotadoSet->add($oCambioAnotado);
 		}
@@ -103,6 +126,7 @@ class GestorCambioAnotado Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oCambioAnotado= new CambioAnotado($a_pkey);
+			$oCambioAnotado->setTabla($this->server_sfsv);
 			$oCambioAnotado->setAllAtributes($aDades);
 			$oCambioAnotadoSet->add($oCambioAnotado);
 		}

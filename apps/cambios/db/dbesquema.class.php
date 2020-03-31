@@ -154,7 +154,8 @@ class DBEsquema extends DBAbstract {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
 
-        $tabla = "av_cambios_anotados";
+        $tabla = "av_cambios_anotados_dl";
+        $tabla_padre = "av_cambios_anotados";
         $datosTabla = $this->infoTable($tabla);
         
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -170,7 +171,7 @@ class DBEsquema extends DBAbstract {
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                 ) 
-            INHERITS (global.$tabla);";
+            INHERITS (global.$tabla_padre);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER anotado_sv SET DEFAULT false;";
