@@ -349,7 +349,9 @@ switch($Qsalida) {
                 $GesTiposActiv = new GestorTipoDeActividad();
                 $aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($Qid_tipo_activ,$dl_propia);
                 $oGesFases= new GestorActividadFase();
-                $aFases = $oGesFases->getArrayActividadFases($aTiposDeProcesos);
+                // Cambio, en vez de ver fases comunes ahora veo las de todos los procesos.
+                //$aFases = $oGesFases->getArrayActividadFases($aTiposDeProcesos);
+                $aFases = $oGesFases->getArrayActividadFasesTodas($aTiposDeProcesos);
 
                 $oPermActividades = new PermisosActividades($Qid_usuario);
                 $oPermActividades->setId_tipo_activ($id_tipo_activ_txt);

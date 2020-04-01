@@ -91,6 +91,69 @@ class GestorActividadFase Extends core\ClaseGestor {
 	 * retorna un array
 	 *
 	 * @param array optional lista de procesos.
+	 * @return object Una Llista de Todas las fases de tots els procesos
+	 */
+	function getArrayActividadFasesTodas($aProcesos=array()) {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+	    
+	    $oMiUsuario = new Usuario(core\ConfigGlobal::mi_id_usuario());
+	    $miSfsv = core\ConfigGlobal::mi_sfsv();
+	    
+	    $cond='';
+	    if ($oMiUsuario->isRole('SuperAdmin')) { // Es administrador
+	        $cond = "(sf = 't' OR sv ='t') ";
+	    } else {
+	        // filtro por sf/sv
+	        switch ($miSfsv) {
+	            case 1: // sv
+	                $cond = "(sv ='t') ";
+	                break;
+	            case 2: //sf
+	                $cond = "(sf ='t') ";
+	                break;
+	        }
+	    }
+	    
+	    // intentar ordenar. No se puede por que los num de orden son distintos para cada proceso
+	    $aDescFases = [];
+	    $aFasesComunes = [];
+	    foreach ($aProcesos as $id_tipo_proceso) {
+	        $sCondicion="WHERE $cond AND id_tipo_proceso = $id_tipo_proceso";
+	        $sQuery="SELECT f.id_fase, f.desc_fase
+					FROM $nom_tabla f JOIN a_tareas_proceso p USING (id_fase)
+					$sCondicion
+					ORDER BY p.n_orden";
+					
+					$aFasesProceso = [];
+					foreach ($oDbl->query($sQuery) as $row) {
+					    $id_fase = $row['id_fase'];
+					    $desc_fase = $row['desc_fase'];
+					    $aDescFases[$id_fase] = $desc_fase;
+					    
+					    $aFasesProceso[] = $id_fase;
+					    
+					}
+					// la primera vuelta no hay nada y hay que saltarlo:
+					if (empty($aFasesComunes)) {
+    					$aFasesComunes = $aFasesProceso;
+					    continue;
+					}
+					$aFasesComunes = $aFasesComunes + $aFasesProceso;
+	    }
+	    // poner la descripcion de la fase en el array resultante.
+	    $aFasesComunesOrden = [];
+	    foreach ($aFasesComunes as $id_fase) {
+	        $desc_fase = $aDescFases[$id_fase];
+	        $aFasesComunesOrden[$desc_fase] = $id_fase;
+	    }
+	    
+	    return $aFasesComunesOrden;
+	}
+	/**
+	 * retorna un array
+	 *
+	 * @param array optional lista de procesos.
 	 * @return object Una Llista de fases comunes a tots els procesos
 	 */
 	function getArrayActividadFases($aProcesos=array()) {
