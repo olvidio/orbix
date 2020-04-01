@@ -32,6 +32,7 @@ $Qok = (integer)  \filter_input(INPUT_POST, 'ok');
 if ($Qok == 1) {
     $Qyear = (integer)  \filter_input(INPUT_POST, 'year');
     $oNuevoCurso = new ActividadNuevoCurso();
+    $oNuevoCurso->setQuiet(TRUE);
 	// eliminar las que hay.
 	$inicio_iso = $Qyear.'-1-1';
 	$fin_iso = $Qyear.'-12-31';

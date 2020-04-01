@@ -18,6 +18,11 @@ class ActividadNuevoCurso {
 
    /**
     * 
+    * @var bool
+    */ 
+    private $bQuiet = FALSE;
+   /**
+    * 
     * @var array
     */ 
     private $aRepeticion;
@@ -183,8 +188,9 @@ class ActividadNuevoCurso {
         $oActividad->setTarifa($oActividadOrigen->getTarifa());
         $oActividad->setH_ini($oActividadOrigen->getH_ini());
         $oActividad->setH_fin($oActividadOrigen->getH_fin());
-        if ($oActividad->DBGuardar() === false) {
+        if ($oActividad->DBGuardar($this->getQuiet()) === false) {
             echo "ERROR: no se ha guardado la actividad<br>";
+            echo "\n".$oActividad->getErrorTxt();
             exit;
         }
 
@@ -215,4 +221,25 @@ class ActividadNuevoCurso {
         $oGesActividadProcesoTarea = new procesos\model\entity\GestorActividadProcesoTarea();
         $oGesActividadProcesoTarea->generarProceso($id_activ); 
     }
+
+
+
+	/**
+	 * bQuiet
+	 * @return bool
+	 */
+	public function getQuiet(){
+		return $this->bQuiet;
+	}
+
+	/**
+	 * bQuiet
+	 * @param bool $bQuiet
+	 * @return ActividadNuevoCurso
+	 */
+	public function setQuiet($bQuiet){
+		$this->bQuiet = $bQuiet;
+		return $this;
+	}
+
 }
