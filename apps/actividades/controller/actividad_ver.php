@@ -144,7 +144,8 @@ if (!empty($Qid_activ)) { // caso de modificar
 	    }
 	}
 	if ( $permiso_des == TRUE ) {
-        $ssfsv = '';
+	    $id_tipo_activ = '1';
+        $ssfsv = 'sv'; //valor por defecto. Si está vacio dira que no tiene permiso.
         // En el caso de des puedo crear acrividades de sf.
         if ($isfsv == 2) {
         	$dl_org = core\ConfigGlobal::mi_dele().'f'; 
