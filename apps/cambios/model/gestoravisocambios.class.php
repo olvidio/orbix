@@ -223,11 +223,11 @@ class gestorAvisoCambios {
 				break;
 			case 'UPDATE':
 				$result = array_diff_assoc($aDadesNew, $aDadesActuals);
-				// OJO para los campos bool no basta... Se mira más abajo.
+				// OJO para los campos bool no basta... ("false" != false).
 				$classname = get_class($oActividadCambio);
 				foreach ($result as $key=>$value) {
     				// amb els boolean no s'aclara: 0,1,false ,true,f,t...
-				    //if (is_true($aDadesActuals[$key]) === is_true($value) ) { continue; }
+				    if (is_true($aDadesActuals[$key]) === is_true($value) ) { continue; }
     				$oActividadCambio = new $classname();
 					$oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_UPDATE);
 					$oActividadCambio->setId_activ($iid_activ);
