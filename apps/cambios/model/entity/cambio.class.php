@@ -605,13 +605,14 @@ class Cambio Extends core\ClasePropiedades {
 	    $doc_root = $_SERVER['DOCUMENT_ROOT'];
         $ubicacion = getenv('UBICACION');
         $esquema_web = getenv('ESQUEMA');
+        $private = getenv('PRIVATE');
         
         // Si he entrado escogiendo el esquema de un desplegable, no tengo el valor
         if (empty($esquema_web)) {
             $esquema_web = ConfigGlobal::mi_region_dl();
         }
         
-	    $command = "nohup /usr/bin/php $program $username $pwd $dirweb $doc_root $ubicacion $esquema_web >> $out 2>> $err < /dev/null &";
+	    $command = "nohup /usr/bin/php $program $username $pwd $dirweb $doc_root $ubicacion $esquema_web $private >> $out 2>> $err < /dev/null &";
 	    exec($command);
 	}
 	

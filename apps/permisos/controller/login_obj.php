@@ -157,6 +157,7 @@ function logout($ubicacion,$idioma,$esquema,$error,$esquema_web='') {
 //$GLOBALS['oPermActiv'] = new PermActiv;
 $esquema_web = getenv('ESQUEMA');
 $ubicacion = getenv('UBICACION');
+$private = getenv('PRIVATE');
 
 $_SESSION['sfsv'] = $ubicacion;
 

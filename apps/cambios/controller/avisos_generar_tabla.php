@@ -31,6 +31,7 @@ $dir_web = orbix | pruebas;
 document_root = /home/dani/orbix_local
 $ubicacion = 'sv';
 $esquema_web = 'H-dlbv';
+$private = 'sf'; para el caso del servido exterior en dlb. puerto distinto.
 */
 
 if(!empty($argv[1])) {
@@ -40,6 +41,7 @@ if(!empty($argv[1])) {
 	$_SERVER['DOCUMENT_ROOT'] = $argv[4];
 	putenv("UBICACION=$argv[5]");
 	putenv("ESQUEMA=$argv[6]");
+	putenv("PRIVATE=$argv[7]");
 	
 	$username = $argv[1];
 	$esquema = $argv[6];

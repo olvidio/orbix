@@ -7,6 +7,7 @@
  document_root = /home/dani/orbix_local
  $esquema_web = 'H-dlbv';
  $ubicacion = 'sv';
+ $private => pongo el mismo valor que ubicación. Se supone que el cron está en private.
  */
 if(!empty($argv[1])) {
     $_POST['username'] = $argv[1];
@@ -15,7 +16,7 @@ if(!empty($argv[1])) {
     $_SERVER['DOCUMENT_ROOT'] = $argv[4];
     putenv("UBICACION=$argv[5]");
     putenv("ESQUEMA=$argv[6]");
-    
+	putenv("PRIVATE=$argv[5]");
 }
 $document_root = $_SERVER['DOCUMENT_ROOT'];
 $dir_web = $_SERVER['DIRWEB'];
