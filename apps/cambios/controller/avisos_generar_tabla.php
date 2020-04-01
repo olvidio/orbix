@@ -42,6 +42,7 @@ if(!empty($argv[1])) {
 	putenv("UBICACION=$argv[5]");
 	putenv("ESQUEMA=$argv[6]");
 	putenv("PRIVATE=$argv[7]");
+	$_SERVER['PRIVATE'] = $argv[7];
 	
 	$username = $argv[1];
 	$esquema = $argv[6];
