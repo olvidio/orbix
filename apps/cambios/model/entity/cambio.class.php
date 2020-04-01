@@ -9,6 +9,7 @@ use procesos\model\entity\GestorActividadFase;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use ubis\model\entity\Ubi;
 use web\DateTimeLocal;
+use personas\model\entity\PersonaSacd;
 /**
  * Fitxer amb la Classe que accedeix a la taula av_cambios
  *
@@ -381,13 +382,20 @@ class Cambio Extends core\ClasePropiedades {
 	    
 	    $sPropiedad = empty($sPropiedad)? '-':$sPropiedad;
 	    
+	    /*
+	     * De momento, desde el servidor exterior (conexión a mail) solo 
+	     * están accesibles los sacd.
+	     * 
+	     */
 	    if ($sPropiedad == 'id_nom') {
 	        if (!empty($sValor_old)) {
-	            $oPersona = Persona::NewPersona($sValor_old);
+	            //$oPersona = Persona::NewPersona($sValor_old);
+	            $oPersona = new PersonaSacd($sValor_old);
 	            $sValor_old = $oPersona->getApellidosNombre();
 	        }
 	        if (!empty($sValor_new)) {
-	            $oPersona = Persona::NewPersona($sValor_new);
+	            //$oPersona = Persona::NewPersona($sValor_new);
+	            $oPersona = new PersonaSacd($sValor_new);
 	            $sValor_new = $oPersona->getApellidosNombre();
 	        }
 	    }
