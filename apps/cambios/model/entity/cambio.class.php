@@ -606,6 +606,7 @@ class Cambio Extends core\ClasePropiedades {
         $ubicacion = getenv('UBICACION');
         $esquema_web = getenv('ESQUEMA');
         $private = getenv('PRIVATE');
+        $private = empty($private)? 'x' : $private;
         
         // Si he entrado escogiendo el esquema de un desplegable, no tengo el valor
         if (empty($esquema_web)) {
