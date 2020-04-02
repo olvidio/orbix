@@ -1,20 +1,19 @@
 <?php
 use actividadcargos\model\GestorCargoOAsistente;
+use actividadcargos\model\entity\GestorCargo;
 use actividades\model\entity\GestorActividad;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use actividadessacd\model\ActividadesSacdFunciones;
 use core\ConfigGlobal;
-use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\GestorPersonaSSSC;
-use personas\model\entity\PersonaDl;
+use personas\model\entity\GestorPersonaSacd;
+use personas\model\entity\PersonaSacd;
+use procesos\model\entity\GestorActividadProcesoTarea;
 use ubis\model\entity\Ubi;
 use usuarios\model\entity\Usuario;
 use web\DateTimeLocal;
 use web\Periodo;
 use web\TiposActividades;
-use personas\model\entity\GestorPersonaSacd;
-use personas\model\entity\PersonaSacd;
-use procesos\model\entity\GestorActividadProcesoTarea;
 
 /**
 * Esta página muestra las actividades que tiene que atender un sacd. 
@@ -72,6 +71,10 @@ if ($oMiUsuario->isRole('p-sacd')) {
     $Qid_nom = $oMiUsuario->getId_pau();
     $Qque = 'un_sacd';
 }
+// valores del id_cargo de tipo_cargo = sacd:
+$gesCargos = new GestorCargo();
+$aIdCargos_sacd = $gesCargos->getArrayCargosDeTipo('sacd');
+			
 // Si vengo de la página personas_select.php, sólo quiero ver la lista de un sacd.
 if ($Qque == "un_sacd") {
     $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -246,7 +249,7 @@ foreach ($cPersonas as $oPersona) {
 			}
 
 			$cargo='';
-			if (!empty($id_cargo) && $id_cargo < 35 ) { 
+			if (!empty($id_cargo) && !array_key_exists($id_cargo, $aIdCargos_sacd)) {
 				$cargo='te carrec';
 			}
 			$array_act=array( "propio" => $propio,

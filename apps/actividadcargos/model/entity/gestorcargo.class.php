@@ -36,6 +36,33 @@ class GestorCargo Extends core\ClaseGestor {
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
 	/**
+	 * Retorna un array amb els id_cargo de un tipo de cargo.
+	 * 
+	 * @param string $tipo_cargo
+	 * @return array $aIdCargo[$id_cargo] = $cargo;
+	 */
+	public function getArrayCargosDeTipo($tipo_cargo='sacd'){
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$sQuery="SELECT id_cargo,cargo 
+                FROM $nom_tabla
+                WHERE tipo_cargo = '$tipo_cargo' 
+                ORDER BY orden_cargo";
+		if (($oDbl->query($sQuery)) === false) {
+			$sClauError = 'GestorCargo.lista';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		$aIdCargo=array();
+		foreach ($oDbl->query($sQuery) as $aDades) {
+		    $id_cargo = $aDades['id_cargo'];
+		    $cargo = $aDades['cargo'];
+			$aIdCargo[$id_cargo] = $cargo;
+		}
+		return $aIdCargo;
+	    
+	}
+	/**
 	 * retorna un objecte del tipus Desplegable
 	 * Els posibles cargos.
 	 *

@@ -46,13 +46,18 @@ class GestorActividadCargo Extends core\ClaseGestor {
 	 * @return array id_nom
 	 */
 	function getActividadIdSacds($iid_activ='') {
+        // valores del id_cargo de tipo_cargo = sacd:
+	    $gesCargos = new GestorCargo();
+	    $aIdCargos_sacd = $gesCargos->getArrayCargosDeTipo('sacd');
+	    $txt_where_cargos = implode(',',array_keys($aIdCargos_sacd));
+	    
 	    // Los sacd los pongo en la base de datos comun.
 	    $oDbl = $GLOBALS['oDBC'];
 		$nom_tabla = 'c'.$this->getNomTabla();
 	    $aLista = array();
 	    $sQuery="SELECT id_nom, id_cargo
 				FROM $nom_tabla
-				WHERE id_activ=".$iid_activ." AND id_cargo BETWEEN 35 AND 39
+				WHERE id_activ=".$iid_activ." AND id_cargo IN ($txt_where_cargos)
 				ORDER BY id_cargo";
 	    if (($oDbl->query($sQuery)) === false) {
 	        $sClauError = 'GestorActividadCargo.sacds';
@@ -72,13 +77,18 @@ class GestorActividadCargo Extends core\ClaseGestor {
 	 * @return array Una col·lecció d'objectes de tipus Persona.
 	 */
 	function getActividadSacds($iid_activ='') {
+        // valores del id_cargo de tipo_cargo = sacd:
+	    $gesCargos = new GestorCargo();
+	    $aIdCargos_sacd = $gesCargos->getArrayCargosDeTipo('sacd');
+	    $txt_where_cargos = implode(',',array_keys($aIdCargos_sacd));
+	    
 	    // Los sacd los pongo en la base de datos comun.
 		$oDbl = $GLOBALS['oDBC'];
 		$nom_tabla = 'c'.$this->getNomTabla();
 	    $oPersonaSet = new core\Set();
 	    $sQuery="SELECT id_nom, id_cargo
 				FROM $nom_tabla
-				WHERE id_activ=".$iid_activ." AND id_cargo BETWEEN 35 AND 39
+				WHERE id_activ=".$iid_activ." AND id_cargo IN ($txt_where_cargos)
 				ORDER BY id_cargo";
 	    if (($oDbl->query($sQuery)) === false) {
 	        $sClauError = 'GestorActividadCargo.sacds';

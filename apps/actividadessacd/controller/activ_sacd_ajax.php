@@ -13,6 +13,7 @@ use personas\model\entity\PersonaDl;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use web\Periodo;
 use actividades\model\entity\ActividadAll;
+use actividadcargos\model\entity\GestorCargo;
 
 /**
 * Esta página sirve para ejecutar las operaciones de guardar, eliminar, listar...
@@ -45,21 +46,23 @@ require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 // valores del id_cargo de tipo_cargo = sacd:
-$id_sacd_min = 35;
-$id_sacd_max = 39;
+$gesCargos = new GestorCargo();
+$aIdCargos_sacd = $gesCargos->getArrayCargosDeTipo('sacd');
+$txt_where_cargos = implode(',',array_keys($aIdCargos_sacd));
 
 /**
-* En teroia tendria que cambiar el orden de la lista de los centros encargados
+* En teoria tendria que cambiar el orden de la lista de los centros encargados
 * de la actividad. Si num_orden és '+' (más importante), hago descender el orden un valor, y reordeno el resto de cargos...
 */
 function ordena($id_activ,$id_nom,$num_orden) {
-    global $id_sacd_min, $id_sacd_max;
+    global $txt_where_cargos;
     
     $aWhere = [];
     $aOperador = [];
-	$aWhere['id_cargo']="$id_sacd_min,$id_sacd_max";
-	$aOperador['id_cargo']= 'BETWEEN';
 	$aWhere['id_activ']=$id_activ;
+	$aWhere['id_cargo'] = $txt_where_cargos;
+	$aOperador['id_cargo']= 'IN';
+	
 	$aWhere['_ordre']='id_cargo';
 	$GesActividadCargos = new GestorActividadCargo();
 	$cActividadCargos = $GesActividadCargos->getActividadCargos($aWhere,$aOperador);
@@ -144,8 +147,8 @@ switch ($Qque) {
 		$txt='';
 		if ($oPermSacd->have_perm_activ('ver') === true) { // sólo si tiene permiso
 			// listado de sacd encargados
-            $aWhere['id_cargo']="$id_sacd_min,$id_sacd_max";
-			$aOperador['id_cargo']= 'BETWEEN';
+            $aWhere['id_cargo'] = $txt_where_cargos;
+            $aOperador['id_cargo']= 'IN';
 			$aWhere['id_activ']=$Qid_activ;
 			$aWhere['_ordre']='id_cargo';
 			$GesActividadCargos = new GestorActividadCargo();
@@ -241,31 +244,31 @@ switch ($Qque) {
 	    $Qid_nom = (integer) \filter_input(INPUT_POST, 'id_nom');
 		// miro si hay sacds encargados
 		$aWhere['id_activ']=$Qid_activ;
-        $aWhere['id_cargo']="$id_sacd_min,$id_sacd_max";
-        $aOperador['id_cargo']= 'BETWEEN';
+        $aWhere['id_cargo'] = $txt_where_cargos;
+        $aOperador['id_cargo']= 'IN';
 		$aWhere['_ordre']='id_cargo DESC';
 		$GesCargoActiv = new GestorActividadCargo();
 		$cCargosActiv = $GesCargoActiv->getActividadCargos($aWhere,$aOperador);
 		if (is_array($cCargosActiv) && count($cCargosActiv) >= 1) {
 			$id_cargo = $cCargosActiv[0]->getId_cargo() + 1;
-			if ($id_cargo > $id_sacd_max) {
-                // lo meto en el primero vacio, 
-                $a_cargos_ocupados = [];
-                foreach ($cCargosActiv as $oCargoActiv) {
-                     $a_cargos_ocupados[] = $cCargosActiv[0]->getId_cargo();
+            // lo meto en el primero vacio, 
+            $a_cargos_ocupados = [];
+            foreach ($cCargosActiv as $oCargoActiv) {
+                 $a_cargos_ocupados[] = $oCargoActiv->getId_cargo();
+            }
+            $flag_stop = TRUE;
+            foreach($aIdCargos_sacd as $id_cargo_x => $cargo) {
+                if (!in_array($id_cargo_x,$a_cargos_ocupados)) {
+                    $id_cargo = $id_cargo_x;
+                    $flag_stop = FALSE;
+                    break;
                 }
-                for ($i=$id_sacd_min; $i++; $i<=$id_sacd_max) {
-                    if (!in_array($i,$a_cargos_ocupados)) {
-                        $id_cargo = $i;
-                        break;
-                    }
-                }
-                if ($id_cargo > $id_sacd_max) {
-                    exit (_("No puede haber tantos cargos sacd en una actividad"));
-                }
-			}
+            }
+            if ($flag_stop) {
+                exit (_("No puede haber tantos cargos de sacd en una actividad"));
+            }
 		} else {
-			$id_cargo=35;
+		    $id_cargo = array_key_first($aIdCargos_sacd);
 		}
 		$oCargoActiv = new ActividadCargo();
 		$oCargoActiv->setId_activ($Qid_activ);
@@ -406,8 +409,8 @@ switch ($Qque) {
 					unset($aWhere);
 					unset($aOperador);
 					$aWhere['id_activ']=$id_activ;
-                    $aWhere['id_cargo']="$id_sacd_min,$id_sacd_max";
-                    $aOperador['id_cargo']= 'BETWEEN';
+                    $aWhere['id_cargo'] = $txt_where_cargos;
+                    $aOperador['id_cargo']= 'IN';
 					$aWhere['_ordre']='id_cargo DESC';
 					$GesCargoActiv = new GestorActividadCargo();
 					$cCargosActividad = $GesCargoActiv->getActividadCargos($aWhere,$aOperador);
@@ -429,6 +432,10 @@ switch ($Qque) {
 		?>
 		
 		<h3><?= $titulo ?></h3>
+		<span class="comentario">
+		<?= _("NOTA: en sv, al asignar un sacd, se añade la asistencia a la actividad."); ?>
+		</span>
+		<br>
 		<table><tr>
 		<?php
 		foreach ($a_cabeceras as $cabecera) {

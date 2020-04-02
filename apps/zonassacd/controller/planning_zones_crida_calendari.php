@@ -1,7 +1,7 @@
 <?php
 use actividadcargos\model\entity\GestorActividadCargo;
+use actividadcargos\model\entity\GestorCargo;
 use actividades\model\entity\GestorActividad;
-use asistentes\model\entity\Asistente;
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorEncargoSacdHorario;
 use personas\model\entity\PersonaSacd;
@@ -37,6 +37,11 @@ require_once ("apps/core/global_header.inc");
 // Crea los objectos de uso global **********************************************
 require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
+
+
+// valores del id_cargo de tipo_cargo = sacd:
+$gesCargos = new GestorCargo();
+$aIdCargos_sacd = $gesCargos->getArrayCargosDeTipo('sacd');
 
 $oPosicion->recordar();
 
@@ -282,8 +287,8 @@ foreach ($aa_zonas as $a_zonas) {
 				// Si es un Cargo (tiene id_cargo) mirar permisos para atn sacd
 				$permiso_cargo = FALSE;
                 if (!empty($id_cargo)) {
-                    // Sacd: AND id_cargo BETWEEN 35 AND 39
-                    if ($id_cargo >= 35 AND $id_cargo <= 39) {
+                    // Sacd.
+                    if (array_key_exists($id_cargo, $aIdCargos_sacd)) {
                         $oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
                         if ($oPermSacd->have_perm_activ('ver') === TRUE) {
                             $permiso_cargo = TRUE;

@@ -1,11 +1,12 @@
 <?php
 namespace actividadessacd\model;
 use actividadcargos\model\entity\ActividadCargo;
+use actividadcargos\model\entity\GestorActividadCargo;
+use actividadcargos\model\entity\GestorCargo;
 use actividades\model\entity\GestorActividadDl;
 use actividadescentro\model\entity\GestorCentroEncargado;
-use actividadcargos\model\entity\GestorActividadCargo;
-use encargossacd\model\entity\GestorEncargoSacd;
 use encargossacd\model\entity\GestorEncargo;
+use encargossacd\model\entity\GestorEncargoSacd;
 
 class AsignarSacd {
     
@@ -110,11 +111,22 @@ class AsignarSacd {
 	}
 
 	public function ActivSinSacd() {
-	    $a_actividades = $this->a_actividades;
+	    // valores del id_cargo de tipo_cargo = sacd:
+	    $gesCargos = new GestorCargo();
+	    $aIdCargos_sacd = $gesCargos->getArrayCargosDeTipo('sacd');
+	    $txt_where_cargos = implode(',',array_keys($aIdCargos_sacd));
+	    
+	    $aWhere = [];
+	    $aOperador = [];
+	    $aWhere['id_cargo'] = $txt_where_cargos;
+	    $aOperador['id_cargo']= 'IN';
+	    
 	    $a_sin_sacd = [];
 	    $oGesActividadCargo = new GestorActividadCargo();
+	    $a_actividades = $this->a_actividades;
 	    foreach($a_actividades as $id_activ) {
-	        $cActividadCargo = $oGesActividadCargo->getActividadCargos(['id_activ'=>$id_activ, 'id_cargo' => 35]);
+            $aWhere['id_activ']=$id_activ;
+	        $cActividadCargo = $oGesActividadCargo->getActividadCargos($aWhere,$aOperador);
 	        // me interesa los que no tienen asignado a nadie:
 	        if (count($cActividadCargo) == 0) {
 	           $a_sin_sacd[] = $id_activ;
@@ -143,6 +155,10 @@ class AsignarSacd {
 	}
 	
 	public function AsignarSacd($id_activ) {
+	    // valores del id_cargo de tipo_cargo = sacd:
+	    $gesCargos = new GestorCargo();
+	    $aIdCargos_sacd = $gesCargos->getArrayCargosDeTipo('sacd');
+	    $id_cargo = array_key_first($aIdCargos_sacd);
 	   
 	    // ctr encargado de la actividad
 	    $a_activ_ctr = $this->getCtrActiv();
@@ -154,7 +170,7 @@ class AsignarSacd {
             $id_nom = $a_ctr_sacd[$id_ubi];
             $oActividadcargo = new ActividadCargo();
             $oActividadcargo->setId_activ($id_activ);
-            $oActividadcargo->setId_cargo(35);
+            $oActividadcargo->setId_cargo($id_cargo);
             $oActividadcargo->setId_nom($id_nom);
             $oActividadcargo->setObserv('auto');
             $oActividadcargo->DBGuardar();
