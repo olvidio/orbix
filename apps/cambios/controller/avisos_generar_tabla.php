@@ -386,7 +386,8 @@ while ($num_cambios) {
 		
 		// Para las actividades, en el cambio se anota: 'ActividadDl' 'ActividadEx'
 		// pero en las preferencias, solo 'Actividad'.
-		if(strpos($sObjeto, 'Actividad') !== false){
+		// OJO strpos no sirve, porque me anula ActividadCargo
+		if ($sObjeto == 'Actividad' OR $sObjeto == 'ActividadDl' OR  $sObjeto == 'ActividadEx') {
 		    $sObjeto = 'Actividad';
 		}
 		

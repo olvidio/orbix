@@ -4,7 +4,6 @@ use actividades\model\entity\Actividad;
 use cambios\model\gestorAvisoCambios;
 use core\ConfigGlobal;
 use core;
-use personas\model\entity\Persona;
 use procesos\model\entity\GestorActividadFase;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use ubis\model\entity\Ubi;
