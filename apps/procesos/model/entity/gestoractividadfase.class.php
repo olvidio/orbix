@@ -219,105 +219,62 @@ class GestorActividadFase Extends core\ClaseGestor {
 	 * poder marcarlas. para sustituir a la funcion de getListaActividadFases.
 	 * 
 	 * @param array $aProcesos
-	 * @param boolean $bresp
 	 */
-	public function getArrayFasesProcesos($aProcesos=array(),$bresp=false) {
+	public function getArrayFasesProcesos($aProcesos=array()) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 	    
-	    $oMiUsuario = new Usuario(core\ConfigGlobal::mi_id_usuario());
 	    $miSfsv = core\ConfigGlobal::mi_sfsv();
 	    
-	    if ($bresp) {
-	        //$miPerm=$oMiUsuario->getPerm_oficinas();
-	        $oPermiso = new PermDl();
-	    }
-	    
 	    $cond='';
-	    if ($oMiUsuario->isRole('SuperAdmin')) { // Es administrador
-	        $cond = "(sf = 't' OR sv ='t') ";
-	    } else {
-	        // filtro por sf/sv
-	        switch ($miSfsv) {
-	            case 1: // sv
-	                $cond = "(sv = 't') ";
-	                break;
-	            case 2: //sf
-	                $cond = "(sf = 't') ";
-	                break;
-	        }
-	    }
+        // filtro por sf/sv
+        switch ($miSfsv) {
+            case 1: // sv
+                $cond = "(sv = 't') ";
+                break;
+            case 2: //sf
+                $cond = "(sf = 't') ";
+                break;
+        }
 	    
 	    $num_procesos=count($aProcesos);
 	    if ($num_procesos !== false && $num_procesos > 0) {
-	        $sCondicion = "WHERE $cond AND (id_tipo_proceso =";
-	        $sCondicion .= implode(' OR id_tipo_proceso = ',$aProcesos);
-	        $sCondicion .= ')';
-	        /*OJO: No se puede ordenar por n_orden, pues pueden ser distintos de un proceso a otro...
-	         */
-	        /*
-	         $sQuery="SELECT f.id_fase, f.desc_fase, p.n_orden
-	         FROM a_fases f JOIN a_tareas_proceso p USING (id_fase)
-	         $sCondicion
-	         GROUP BY f.id_fase, f.desc_fase, p.n_orden
-	         HAVING Count(p.id_tipo_proceso) = $num_procesos
-	         ORDER BY p.n_orden";
-	         */
-	        $sQuery="SELECT f.id_fase, f.desc_fase
+	        // con una sola consulta no acaba de hacerlo bien, al haber fases con varias tareas...
+            //$aFasesComunes = [];
+	        $aFasesProcesoDesc = [];
+	        foreach ($aProcesos as $id_tipo_proceso) {
+    	        $sCondicion = "WHERE $cond AND id_tipo_proceso = $id_tipo_proceso";
+                $sQuery="SELECT f.id_fase, f.desc_fase
 					FROM $nom_tabla f JOIN a_tareas_proceso p USING (id_fase)
 					$sCondicion
 					GROUP BY f.id_fase, f.desc_fase
-					HAVING Count(p.id_tipo_proceso) = $num_procesos
 					ORDER BY desc_fase";
+                if (($oDblSt = $oDbl->query($sQuery)) === false) {
+                    $sClauError = 'GestorRole.lista';
+                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                    return false;
+                }
+                foreach ($oDblSt as $aDades) {
+                    //$aFasesComunes[$aDades['id_fase']] = $aDades['desc_fase'];
+                    $aFasesProcesoDesc[$aDades['desc_fase']] = $aDades['id_fase'];
+                }
+	        }
 	    } else {
-	        $sQuery="SELECT id_fase, desc_fase
+            $sQuery="SELECT id_fase, desc_fase
 					FROM $nom_tabla
 					WHERE $cond
 					ORDER BY desc_fase";
+            if (($oDblSt = $oDbl->query($sQuery)) === false) {
+                $sClauError = 'GestorRole.lista';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                return false;
+            }
+            foreach ($oDblSt as $aDades) {
+                //$aFasesComunes[$aDades['id_fase']] = $aDades['desc_fase'];
+                $aFasesProcesoDesc[$aDades['desc_fase']] = $aDades['id_fase'];
+            }
 	    }
-	    if (($oDblSt = $oDbl->query($sQuery)) === false) {
-	        $sClauError = 'GestorRole.lista';
-	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-	        return false;
-	    }
-	    
-	    // Si no hay proceso se muestra todo.
-	    if (empty($aProcesos)) {
-	        return new Desplegable('',$oDblSt,'',true);
-	    } else {
-	        $aFasesComunes = array();
-	        foreach ($oDblSt as $aDades) {
-	            $aFasesComunes[$aDades['id_fase']] = $aDades['desc_fase'];
-	        }
-	        // Ordenar según el primer proceso (si hay más de uno).
-	        reset($aProcesos);
-	        $id_tipo_proceso = current($aProcesos);
-	        $oGestorProceso = new GestorTareaProceso();
-	        $aFasesProceso = $oGestorProceso->getFasesProcesoOrdenadas($id_tipo_proceso);
-	        $aFasesProcesoDesc = array();
-	        foreach ($aFasesProceso as $id_item=>$id_fase) {
-	            // compruebo que está en la lista de las fases comunes.
-	            if (array_key_exists($id_fase,$aFasesComunes)) {
-	                $oFase = new ActividadFase($id_fase);
-	                // compruebo si soy el responsable
-	                if ($bresp) {
-	                    $oTareaProceso = new TareaProceso($id_item);
-	                    $of_responsable = $oTareaProceso->getOf_responsable();
-	                    // Si no hay oficina responsable, pueden todos:
-	                    if (empty($of_responsable)) {
-                            $aFasesProcesoDesc[$oFase->getDesc_fase()] = $id_fase;
-	                    } elseif ($oPermiso->have_perm_oficina($of_responsable)) {
-                            $aFasesProcesoDesc[$oFase->getDesc_fase()] = $id_fase;
-	                    }
-	                } else {
-	                    $aFasesProcesoDesc[$oFase->getDesc_fase()] = $id_fase;
-	                }
-	            }
-	        }
-	        return $aFasesProcesoDesc;
-	    }
-	
-	    
+        return $aFasesProcesoDesc;
 	}
 	
 	public function getFaseAnterior($id_tipo_proceso,$iFase) {

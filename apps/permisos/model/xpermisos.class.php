@@ -85,14 +85,6 @@ class Xpermisos {
 		$pageperm = preg_split('/,/', $p);
 		list ($ok0, $pagebits) = $this->permsum($pageperm);
 		$userbits=$this->iaccion;
-		/*
-		echo "user: $userbits<br>";
-		echo "menu: $pagebits<br>";
-		*/
-		/* per els menus va bé. Per les activitats estava posat:
-			$has_all = (($userbits & $pagebits) === $pagebits);
-		 ??
-		*/
 		$has_all = (($userbits & $pagebits) === $pagebits);
 		if (!($has_all && $ok0) ) {
 		  return false;

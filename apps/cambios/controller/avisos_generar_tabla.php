@@ -488,12 +488,7 @@ while ($num_cambios) {
 			
 			    // Temgo permiso de ver esta fase?
                 $oPermActividades = new PermisosActividades($id_usuario);
-                $oPermActividades->setId_tipo_activ($id_tipo_activ);
-                // busco el tipo de proceso			        
-                $oTipo = new TipoDeActividad(array('id_tipo_activ'=>$id_tipo_activ));
-                $id_tipo_proceso=$oTipo->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
-                $oPermActividades->setId_tipo_proceso($id_tipo_proceso);
-                $oPermActividades->setPropia($dl_propia);
+                $oPermActividades->setActividad($id_activ);
 			    $oPermActividades->setId_fase($id_fase_cmb);
 			    $oPermActiv = $oPermActividades->getPermisoActual($afecta);
 			    if ( !$oPermActiv->have_perm_activ('ocupado') ) { continue; }
