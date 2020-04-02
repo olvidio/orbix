@@ -268,7 +268,8 @@ switch ($Qque) {
                 exit (_("No puede haber tantos cargos de sacd en una actividad"));
             }
 		} else {
-		    $id_cargo = array_key_first($aIdCargos_sacd);
+		    // Solo a partir de php 7.3: $id_cargo = array_key_first($aIdCargos_sacd);
+		    $id_cargo = key($aIdCargos_sacd);
 		}
 		$oCargoActiv = new ActividadCargo();
 		$oCargoActiv->setId_activ($Qid_activ);

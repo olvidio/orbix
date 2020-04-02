@@ -158,7 +158,8 @@ class AsignarSacd {
 	    // valores del id_cargo de tipo_cargo = sacd:
 	    $gesCargos = new GestorCargo();
 	    $aIdCargos_sacd = $gesCargos->getArrayCargosDeTipo('sacd');
-	    $id_cargo = array_key_first($aIdCargos_sacd);
+	    // Solo a partir de php 7.3: $id_cargo = array_key_first($aIdCargos_sacd);
+	    $id_cargo = key($aIdCargos_sacd);
 	   
 	    // ctr encargado de la actividad
 	    $a_activ_ctr = $this->getCtrActiv();
