@@ -66,6 +66,7 @@ use cambios\model\entity\GestorCambioUsuarioObjetoPref;
 use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
 use core\ConfigGlobal;
 use function core\is_true;
+use permisos\model\PermisosActividades;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use procesos\model\entity\GestorTareaProceso;
 use usuarios\model\entity\Role;
@@ -354,6 +355,15 @@ $GesCambios = new GestorCambio();
 // Borrar los cambios y sus anotaciones de hace más de un año:
 $GesCambios->borrarCambios('P1Y');
 
+// para mirar los permisos
+$aObjPerm = [   'Actividad'=>'datos',
+    'ActividadProcesoTarea'=>'datos',
+    'ActividadCargoSacd'=>'sacd',
+    'ActividadCargoNoSacd'=>'cargos',
+    'Asistente'=>'asistentes',
+    'CentroEncargado'=>'ctr',
+];
+
 // seleccionar cambios no anotados:
 $cNuevosCambios = $GesCambios->getCambiosNuevos();
 $num_cambios = count($cNuevosCambios);
@@ -386,6 +396,8 @@ while ($num_cambios) {
 		    $sObjeto = 'Asistente';
 		}
 		
+        $afecta = $aObjPerm[$sObjeto];
+		
 		if (ConfigGlobal::mi_sfsv() == 1) {
             $id_fase_cmb = $id_fase_cmb_sv;		    
 		} else {
@@ -404,7 +416,7 @@ while ($num_cambios) {
                 continue;
             }
         }
-		
+
 		$aWhere = [];
 		$aOperador = [];
 		$aWhere['objeto'] = $sObjeto;
@@ -469,15 +481,22 @@ while ($num_cambios) {
                             $fase_correcta = 1;
 			            }
 			        }
-			        /*
-                    if ($id_fase_ini <= $id_status_cmb && $id_fase_fin >= $id_status_cmb) {
-                        $fase_correcta = 1;
-                    }
-                    */
 			    }
 			} else {
 			    /////////////////// COMPARAR FASES //////////////////////////////////////////
 			
+			    // Temgo permiso de ver esta fase?
+                $oPermActividades = new PermisosActividades($id_usuario);
+                $oPermActividades->setId_tipo_activ($id_tipo_activ);
+                // busco el tipo de proceso			        
+                $oTipo = new TipoDeActividad(array('id_tipo_activ'=>$id_tipo_activ));
+                $id_tipo_proceso=$oTipo->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
+                $oPermActividades->setId_tipo_proceso($id_tipo_proceso);
+                $oPermActividades->setPropia($dl_propia);
+			    $oPermActividades->setId_fase($id_fase_cmb);
+			    $oPermActiv = $oPermActividades->getPermisoActual($afecta);
+			    if ( !$oPermActiv->have_perm_activ('ocupado') ) { continue; }
+			    
 			    // Si tengo instalado el modulo de procesos:
 			    if(ConfigGlobal::is_app_installed('procesos')) {
 			        foreach ($oFases as $id_fase => $ok) {

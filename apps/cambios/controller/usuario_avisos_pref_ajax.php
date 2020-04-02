@@ -332,6 +332,8 @@ switch($Qsalida) {
             }
             
             if (ConfigGlobal::is_app_installed('procesos')) {
+                /* Ahora no tengo en cuenta el permiso: la idea es ver todas y comprobar
+                 * el permiso a la hora de generar el aviso.
                 // para las fases cojo los mismos permisos que para las actividades (datos).
                 $aObjPerm = [   'Actividad'=>'datos',
                                 'ActividadProcesoTarea'=>'datos',
@@ -341,6 +343,7 @@ switch($Qsalida) {
                                 'CentroEncargado'=>'ctr',
                             ];
                 $afecta = $aObjPerm[$Qobjeto];
+                */
                 $id_tipo_activ_txt = "......";
                 for ($i=0;$i<6;$i++) {
                     if (!empty($Qid_tipo_activ[$i])) $id_tipo_activ_txt[$i] = $Qid_tipo_activ[$i];
@@ -361,10 +364,14 @@ switch($Qsalida) {
                     $oPermActividades->setId_tipo_proceso($id_proceso);
                     foreach ($aFases as $id_fase) {
                         //echo "id_fase: $id_fase<br>";
-                        $oPermActividades->setId_fase($id_fase);
-                        $oPermActiv = $oPermActividades->getPermisoActual($afecta);
+                        /* Ahora no tengo en cuenta el permiso: la idea es ver todas y comprobar
+                        // el permiso a la hora de generar el aviso.
+                        //$oPermActividades->setId_fase($id_fase);
+                        //$oPermActiv = $oPermActividades->getPermisoActual($afecta);
                         //print_r($oPermActiv);
-                        if ( !$oPermActiv->have_perm_activ('ocupado') ) { continue; }
+                        //if ( !$oPermActiv->have_perm_activ('ocupado') ) { continue; }
+                         * 
+                         */
                         $oFase = new ActividadFase($id_fase);
                         $desc_fase = $oFase->getDesc_fase();
                         $aFasesConPerm[$desc_fase] = $id_fase; 
