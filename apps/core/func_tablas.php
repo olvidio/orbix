@@ -61,7 +61,7 @@ $a_num_romanos=array('1'=>"I",'2'=>"II",'3'=>"III",'4'=>"IV",'5'=>"V",'6'=>"VI",
 function is_true($val) {
     if ( is_string($val) ) {
         $val = ($val=='t')? 'true' : $val;
-        $boolval = filter_var($val, FILTER_VALIDATE_BOOLEAN);
+        $boolval = filter_var($val, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
     } else {
         $boolval = $val;
     }

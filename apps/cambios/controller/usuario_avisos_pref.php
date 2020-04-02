@@ -106,7 +106,7 @@ if (ConfigGlobal::is_app_installed('procesos')) {
     
     // Versión cuadrícula:
     $oGesFases= new GestorActividadFase();
-    $aFases = $oGesFases->getArrayFasesProcesos($aTiposDeProcesos);
+    $aFases = $oGesFases->getArrayActividadFasesTodas($aTiposDeProcesos);
     
     $oCuadrosFases = new CuadrosFases();
     $oCuadrosFases->setPermissions($aFases);
