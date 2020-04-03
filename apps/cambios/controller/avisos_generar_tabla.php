@@ -299,12 +299,21 @@ function soy_encargado($id_nom,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cm
 			$cSacds = $GesZonaSacd->getSacdsZona($id_zona);
 			switch ($sObjeto) {
 				case 'Actividad':
-					// compruebo si el sacd asiste.
+					// compruebo si el sacd tienen cargo.
 				    foreach ($cSacds as $id_nom) {
 				        $aWhere = ['id_nom' => $id_nom, 'id_activ' => $id_activ];
-                        $GesAsistentes = new GestorAsistenteDl();
-                        $a_Asistentes = $GesAsistentes->getAsistentes($aWhere);
+                        $GesActividadCargo = new GestorActividadCargo();
+                        $a_Asistentes = $GesActividadCargo->getActividadCargos($aWhere);
 					    if (count($a_Asistentes)>0) $rta += 1;
+				    }
+                    // sino, compruebo si el sacd asiste.
+				    if (empty($rta)) {
+                        foreach ($cSacds as $id_nom) {
+                            $aWhere = ['id_nom' => $id_nom, 'id_activ' => $id_activ];
+                            $GesAsistentes = new GestorAsistenteDl();
+                            $a_Asistentes = $GesAsistentes->getAsistentes($aWhere);
+                            if (count($a_Asistentes)>0) $rta += 1;
+                        }
 				    }
 				break;
 				case 'ActividadCargoNoSacd':
