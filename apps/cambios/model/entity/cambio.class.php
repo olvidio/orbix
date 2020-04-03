@@ -385,6 +385,8 @@ class Cambio Extends core\ClasePropiedades {
 	     * De momento, desde el servidor exterior (conexión a mail) solo 
 	     * están accesibles los sacd.
 	     * 
+	     * Para el resto de id_nom devuelvo false para que no lo ponga en la lista.
+	     * 
 	     */
 	    if ($sPropiedad == 'id_nom') {
 	        if (!empty($sValor_old)) {
@@ -429,6 +431,15 @@ class Cambio Extends core\ClasePropiedades {
 	        }
 	    }
 	    
+        // para los asistentes que no son sacd. No tengo su nombre.
+        if ($sObjeto == 'Asistente' OR
+	        $sObjeto == 'AsistenteDl' OR
+	        $sObjeto == 'AsistenteOut' OR
+	        $sObjeto == 'AsistenteEx' OR
+            $sObjeto == 'AsistenteIn')
+        {
+	        if (empty($sValor_new) && empty($sValor_old)) return FALSE;
+        }
 	    $sValor_old = empty($sValor_old)? '-':$sValor_old;
 	    $sValor_new = empty($sValor_new)? '-':$sValor_new;
 	    

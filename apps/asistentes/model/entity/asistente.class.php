@@ -46,17 +46,17 @@ class Asistente Extends AsistentePub {
 			case 'dl':
 				$oAsistente = new AsistenteDl($this->aPrimary_key);
 				$oAsistente->setAllAtributes($aDades);
-				$oAsistente->DBGuardar($quiet=0);
+				return $oAsistente->DBGuardar($quiet=0);
 				break;
 			case 'out':
 				$oAsistente = new AsistenteOut($this->aPrimary_key);
 				$oAsistente->setAllAtributes($aDades);
-				$oAsistente->DBGuardar($quiet=0);
+				return $oAsistente->DBGuardar($quiet=0);
 				break;
 			case 'ex':
 				$oAsistente = new AsistenteEx($this->aPrimary_key);
 				$oAsistente->setAllAtributes($aDades);
-				$oAsistente->DBGuardar($quiet=0);
+				return $oAsistente->DBGuardar($quiet=0);
 				break;
 			case 'in':
 				echo _("el asistente es de otra dl. Se debe modificar en la dl origen.");

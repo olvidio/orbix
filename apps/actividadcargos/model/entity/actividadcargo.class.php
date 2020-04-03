@@ -35,12 +35,12 @@ class ActividadCargo Extends ActividadCargoAbstract {
             case 'sacd':
                 $oActividadCargoI = new ActividadCargoSacd($this->aPrimary_key);
                 $oActividadCargoI->setAllAtributes($aDades);
-                $oActividadCargoI->DBGuardar($quiet);
+                return $oActividadCargoI->DBGuardar($quiet);
                 break;
             default:
                 $oActividadCargoI = new ActividadCargoNoSacd($this->aPrimary_key);
                 $oActividadCargoI->setAllAtributes($aDades);
-                $oActividadCargoI->DBGuardar($quiet);
+                return $oActividadCargoI->DBGuardar($quiet);
                 break;
         }
     }
