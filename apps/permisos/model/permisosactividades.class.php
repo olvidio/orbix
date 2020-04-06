@@ -208,7 +208,7 @@ class PermisosActividades {
             $this->iid_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso_ex();
 		}
 		
-        exit (_("Hay que indicar para que fase 222"));
+        //exit (_("Hay que indicar para que fase 222"));
 		$oGesActiv = new procesos\GestorActividadProcesoTarea();
 		$this->iid_fase = $oGesActiv->getFaseActual($this->iid_activ); 
 		//print_r($this);
