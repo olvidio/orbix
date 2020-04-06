@@ -208,6 +208,7 @@ class PermisosActividades {
             $this->iid_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso_ex();
 		}
 		
+        exit (_("Hay que indicar para que fase 222"));
 		$oGesActiv = new procesos\GestorActividadProcesoTarea();
 		$this->iid_fase = $oGesActiv->getFaseActual($this->iid_activ); 
 		//print_r($this);
@@ -218,6 +219,7 @@ class PermisosActividades {
 	}
 	public function getId_fase() {
 		if (empty($this->iid_fase)) {
+		    exit (_("Hay que indicar para que fase"));
     		$oGesActiv = new procesos\GestorActividadProcesoTarea();
 			$this->iid_fase = $oGesActiv->getFaseActual($this->iid_activ); 
 		}
@@ -279,6 +281,8 @@ class PermisosActividades {
 	}
 
 	/**
+	 * Devuelve el Objeto PermAction para $iAfecta
+	 * Para la actividad $this->iidactiv y en la fase $this->id_fase 
 	 * 
 	 * @param string|integer $iAfecta
 	 * @return \procesos\model\PermAccion

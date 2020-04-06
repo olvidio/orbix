@@ -651,7 +651,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         return $b;
     }
 
-    function marcarFaseEnSf($statusProceso,$statusActividad) {
+    private function marcarFaseEnSf($statusProceso,$statusActividad) {
         $gesActividadProcesoTareas = new GestorActividadProcesoTarea();
         // buscar el id_tipo_proceso para esta actividad de la otra sección
         if (core\ConfigGlobal::mi_sfsv() == 1) {
@@ -660,7 +660,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
             $gesActividadProcesoTareas->setNomTabla('a_actividad_proceso_sv');
         }
         
-        $id_fase_actual = $gesActividadProcesoTareas->faseActualAcabada($this->iid_activ);
+        $id_fase_actual = $gesActividadProcesoTareas->getFaseActualAcabada($this->iid_activ);
         if (empty($id_fase_actual) || $id_fase_actual === 'SIN') {
             // Puede ser queel proceso no exista (para sfsv=2):
             $gesActividadProcesoTareas->generarProceso($this->iid_activ, 2);

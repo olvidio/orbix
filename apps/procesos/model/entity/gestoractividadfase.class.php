@@ -39,33 +39,25 @@ class GestorActividadFase Extends core\ClaseGestor {
 	/**
 	 * retorna un array
 	 *
-	 * @param array optional lista de procesos.
-	 * @return object Una Llista de totes les fases posibles dels procesos
+	 * @param array lista de procesos.
+	 * @return array Una Llista de totes les fases posibles dels procesos
 	 */
-	function getTodasActividadFases($a_id_tipo_proceso,$FiltroSfSv=false) {
+	function getTodasActividadFases($a_id_tipo_proceso=[]) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 	    
-	    $oMiUsuario = new Usuario(core\ConfigGlobal::mi_id_usuario());
-	    $miSfsv = core\ConfigGlobal::mi_sfsv();
-	    
 	    $cond='';
-	    if ($FiltroSfSv === true) {
-	        if ($oMiUsuario->isRole('SuperAdmin')) { // Es administrador1
-	            $cond = "(sf = 't' OR sv ='t') ";
-	        } else {
-	            // filtro por sf/sv
-	            switch ($miSfsv) {
-	                case 1: // sv
-	                    $cond = "(sv ='t') ";
-	                    break;
-	                case 2: //sf
-	                    $cond = "(sf ='t') ";
-	                    break;
-	            }
-	        }
-	        $cond .= ' AND';
-	    }
+        // filtro por sf/sv
+	    $miSfsv = core\ConfigGlobal::mi_sfsv();
+        switch ($miSfsv) {
+            case 1: // sv
+                $cond = "(sv ='t') ";
+                break;
+            case 2: //sf
+                $cond = "(sf ='t') ";
+                break;
+        }
+        $cond .= ' AND';
 	   
         $aFases = array();
 	    foreach ($a_id_tipo_proceso as $idTipoProceso) {
@@ -91,7 +83,7 @@ class GestorActividadFase Extends core\ClaseGestor {
 	 * retorna un array
 	 *
 	 * @param array optional lista de procesos.
-	 * @return object Una Llista de Todas las fases de tots els procesos
+	 * @return array $aFases[$desc_fase] = $id_fase;
 	 */
 	function getArrayActividadFasesTodas($aProcesos=array()) {
 		$oDbl = $this->getoDbl();
@@ -150,13 +142,14 @@ class GestorActividadFase Extends core\ClaseGestor {
 	    
 	    return $aFasesComunesOrden;
 	}
+	
 	/**
 	 * retorna un array
 	 *
 	 * @param array optional lista de procesos.
 	 * @return object Una Llista de fases comunes a tots els procesos
 	 */
-	function getArrayActividadFases($aProcesos=array()) {
+	function zzgetArrayActividadFases($aProcesos=array()) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 	    
@@ -299,7 +292,7 @@ class GestorActividadFase Extends core\ClaseGestor {
 	 * @param boolean optional només les fases de les que sóc responsable.
 	 * @return Desplegable Una Llista de fases comunes a tots els procesos
 	 */
-	function getListaActividadFases($aProcesos=array(),$bresp=false) {
+	function zzgetListaActividadFases($aProcesos=array(),$bresp=false) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 	    

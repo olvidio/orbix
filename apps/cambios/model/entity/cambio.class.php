@@ -82,17 +82,17 @@ class Cambio Extends core\ClasePropiedades {
 	 */
 	 protected $iid_tipo_activ;
 	/**
-	 * Id_fase_sv de Cambio
+	 * JSON fases-sv de Cambio
 	 *
-	 * @var integer
+	 * @var object JSON
 	 */
-	 protected $iid_fase_sv;
+	 protected $json_fases_sv;
 	/**
-	 * Id_fase_sf de Cambio
+	 * JSON fases-sf de Cambio
 	 *
-	 * @var integer
+	 * @var object JSON
 	 */
-	 protected $iid_fase_sf;
+	 protected $json_fases_sf;
 	/**
 	 * Id_status de Cambio
 	 *
@@ -203,8 +203,8 @@ class Cambio Extends core\ClasePropiedades {
 		$aDades['id_tipo_cambio'] = $this->iid_tipo_cambio;
 		$aDades['id_activ'] = $this->iid_activ;
 		$aDades['id_tipo_activ'] = $this->iid_tipo_activ;
-		$aDades['id_fase_sv'] = $this->iid_fase_sv;
-		$aDades['id_fase_sf'] = $this->iid_fase_sf;
+		$aDades['json_fases_sv'] = $this->json_fases_sv;
+		$aDades['json_fases_sf'] = $this->json_fases_sf;
 		$aDades['id_status'] = $this->iid_status;
 		$aDades['dl_org'] = $this->sdl_org;
 		$aDades['objeto'] = $this->sobjeto;
@@ -222,8 +222,8 @@ class Cambio Extends core\ClasePropiedades {
 					id_tipo_cambio           = :id_tipo_cambio,
 					id_activ                 = :id_activ,
 					id_tipo_activ            = :id_tipo_activ,
-                    id_fase_sv               = :id_fase_sv,
-					id_fase_sf               = :id_fase_sf,
+                    json_fases_sv            = :json_fases_sv,
+					json_fases_sf            = :json_fases_sf,
 					id_status                = :id_status,
 					dl_org                   = :dl_org,
 					objeto                   = :objeto,
@@ -258,8 +258,8 @@ class Cambio Extends core\ClasePropiedades {
 			 * 'cambios', puede haber conflico con el id_item_cambio. 
 			 */
 			$mi_esquema = 3000;
-			$campos="(id_schema,id_tipo_cambio,id_activ,id_tipo_activ,id_fase_sv,id_fase_sf,id_status,dl_org,objeto,propiedad,valor_old,valor_new,quien_cambia,sfsv_quien_cambia,timestamp_cambio)";
-			$valores="($mi_esquema,:id_tipo_cambio,:id_activ,:id_tipo_activ,:id_fase_sv,:id_fase_sf,:id_status,:dl_org,:objeto,:propiedad,:valor_old,:valor_new,:quien_cambia,:sfsv_quien_cambia,:timestamp_cambio)";
+			$campos="(id_schema,id_tipo_cambio,id_activ,id_tipo_activ,json_fases_sv,json_fases_sf,id_status,dl_org,objeto,propiedad,valor_old,valor_new,quien_cambia,sfsv_quien_cambia,timestamp_cambio)";
+			$valores="($mi_esquema,:id_tipo_cambio,:id_activ,:id_tipo_activ,:json_fases_sv,:json_fases_sf,:id_status,:dl_org,:objeto,:propiedad,:valor_old,:valor_new,:quien_cambia,:sfsv_quien_cambia,:timestamp_cambio)";
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClauError = 'Cambio.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -537,9 +537,9 @@ class Cambio Extends core\ClasePropiedades {
 	            $GesActividadFase = new GestorActividadFase();
 	            
 	            if (ConfigGlobal::mi_sfsv() == 1) {
-                    $idFase = $this->getId_fase_sv();
+                    $idFase = $this->getJson_fases_sv();
 	            } else {
-                    $idFase = $this->getId_fase_sf();
+                    $idFase = $this->getJson_fases_sf();
 	            }
 	            $idStatus = $this->getId_status();
 
@@ -639,8 +639,8 @@ class Cambio Extends core\ClasePropiedades {
 		if (array_key_exists('id_tipo_cambio',$aDades)) $this->setId_tipo_cambio($aDades['id_tipo_cambio']);
 		if (array_key_exists('id_activ',$aDades)) $this->setId_activ($aDades['id_activ']);
 		if (array_key_exists('id_tipo_activ',$aDades)) $this->setId_tipo_activ($aDades['id_tipo_activ']);
-		if (array_key_exists('id_fase_sv',$aDades)) $this->setId_fase_sv($aDades['id_fase_sv']);
-		if (array_key_exists('id_fase_sf',$aDades)) $this->setId_fase_sf($aDades['id_fase_sf']);
+		if (array_key_exists('json_fases_sv',$aDades)) $this->setJson_fases_sv($aDades['json_fases_sv']);
+		if (array_key_exists('json_fases_sf',$aDades)) $this->setJson_fases_sf($aDades['json_fases_sf']);
 		if (array_key_exists('id_status',$aDades)) $this->setId_status($aDades['id_status']);
 		if (array_key_exists('dl_org',$aDades)) $this->setDl_org($aDades['dl_org']);
 		if (array_key_exists('objeto',$aDades)) $this->setObjeto($aDades['objeto']);
@@ -663,8 +663,8 @@ class Cambio Extends core\ClasePropiedades {
 		$this->setId_tipo_cambio('');
 		$this->setId_activ('');
 		$this->setId_tipo_activ('');
-		$this->setId_fase_sv('');
-		$this->setId_fase_sf('');
+		$this->setJson_fases_sv('');
+		$this->setJson_fases_sf('');
 		$this->setId_status('');
 		$this->setDl_org('');
 		$this->setObjeto('');
@@ -795,42 +795,42 @@ class Cambio Extends core\ClasePropiedades {
 		$this->iid_tipo_activ = $iid_tipo_activ;
 	}
 	/**
-	 * Recupera l'atribut iid_fase_sv de Cambio
+	 * Recupera l'atribut json_fases_sv de Cambio
 	 *
-	 * @return integer iid_fase_sv
+	 * @return integer json_fases_sv
 	 */
-	function getId_fase_sv() {
-		if (!isset($this->iid_fase_sv)) {
+	function getJson_fases_sv() {
+		if (!isset($this->json_fases_sv)) {
 			$this->DBCarregar();
 		}
-		return $this->iid_fase_sv;
+		return $this->json_fases_sv;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_fase_sv de Cambio
+	 * estableix el valor de l'atribut json_fases_sv de Cambio
 	 *
-	 * @param integer iid_fase_sv='' optional
+	 * @param integer json_fases_sv='' optional
 	 */
-	function setId_fase_sv($iid_fase_sv='') {
-		$this->iid_fase_sv = $iid_fase_sv;
+	function setJson_fases_sv($json_fases_sv='') {
+		$this->json_fases_sv = $json_fases_sv;
 	}
 	/**
-	 * Recupera l'atribut iid_fase_sf de Cambio
+	 * Recupera l'atribut json_fases_sf de Cambio
 	 *
-	 * @return integer iid_fase_sf
+	 * @return integer json_fases_sf
 	 */
-	function getId_fase_sf() {
-		if (!isset($this->iid_fase_sf)) {
+	function getJson_fases_sf() {
+		if (!isset($this->json_fases_sf)) {
 			$this->DBCarregar();
 		}
-		return $this->iid_fase_sf;
+		return $this->json_fases_sf;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_fase_sf de Cambio
+	 * estableix el valor de l'atribut json_fases_sf de Cambio
 	 *
-	 * @param integer iid_fase_sf='' optional
+	 * @param integer json_fases_sf='' optional
 	 */
-	function setId_fase_sf($iid_fase_sf='') {
-		$this->iid_fase_sf = $iid_fase_sf;
+	function setJson_fases_sf($json_fases_sf='') {
+		$this->json_fases_sf = $json_fases_sf;
 	}
 	/**
 	 * Recupera l'atribut iid_status de Cambio
@@ -1015,8 +1015,8 @@ class Cambio Extends core\ClasePropiedades {
 		$oCambioSet->add($this->getDatosId_tipo_cambio());
 		$oCambioSet->add($this->getDatosId_activ());
 		$oCambioSet->add($this->getDatosId_tipo_activ());
-		$oCambioSet->add($this->getDatosId_fase_sv());
-		$oCambioSet->add($this->getDatosId_fase_sf());
+		$oCambioSet->add($this->getDatosJson_fases_sv());
+		$oCambioSet->add($this->getDatosJson_fases_sf());
 		$oCambioSet->add($this->getDatosDl_org());
 		$oCambioSet->add($this->getDatosObjeto());
 		$oCambioSet->add($this->getDatosPropiedad());
@@ -1066,26 +1066,26 @@ class Cambio Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut iid_fase_sv de Cambio
+	 * Recupera les propietats de l'atribut json_fases_sv de Cambio
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
 	 */
-	function getDatosId_fase_sv() {
+	function getDatosJson_fases_sv() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_fase_sv'));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'json_fases_sv'));
 		$oDatosCampo->setEtiqueta(_("id fase sv"));
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut iid_fase_sf de Cambio
+	 * Recupera les propietats de l'atribut json_fases_sf de Cambio
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
 	 */
-	function getDatosId_fase_sf() {
+	function getDatosJson_fases_sf() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_fase_sf'));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'json_fases_sf'));
 		$oDatosCampo->setEtiqueta(_("id fase sf"));
 		return $oDatosCampo;
 	}

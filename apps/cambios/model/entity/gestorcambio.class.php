@@ -153,7 +153,7 @@ class GestorCambio Extends core\ClaseGestor {
 		
 		// Cambios Dl
 		$sQry = "SELECT c.id_schema, c.id_item_cambio, c.id_tipo_cambio, c.id_activ, c.id_tipo_activ, 
-                c.id_fase_sv, c.id_fase_sf, c.dl_org,
+                c.fases_sv, c.fases_sf, c.dl_org,
                 c.objeto, c.propiedad, c.valor_old, c.valor_new, c.quien_cambia, c.sfsv_quien_cambia, c.timestamp_cambio
                 FROM av_cambios_dl c LEFT JOIN $nom_tabla_anotados a
                 ON (c.id_schema = a.id_schema_cambio AND c.id_item_cambio=a.id_item_cambio)
@@ -173,7 +173,7 @@ class GestorCambio Extends core\ClaseGestor {
 		}
 		// Cambios NO dl
 		$sQry = "SELECT c.id_schema, c.id_item_cambio, c.id_tipo_cambio, c.id_activ, c.id_tipo_activ, 
-                c.id_fase_sv, c.id_fase_sf, c.dl_org,
+                c.fases_sv, c.fases_sf, c.dl_org,
                 c.objeto, c.propiedad, c.valor_old, c.valor_new, c.quien_cambia, c.sfsv_quien_cambia, c.timestamp_cambio
                 FROM ONLY public.av_cambios c LEFT JOIN $nom_tabla_anotados a
                 ON (c.id_schema = a.id_schema_cambio AND c.id_item_cambio=a.id_item_cambio)

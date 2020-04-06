@@ -138,7 +138,7 @@ switch($Qque) {
 				$id_fase_previa = $oTareaProceso->getId_fase_previa();
 				// Busco el proceso de esta actividad
 				$GesActivProceso = new GestorActividadProcesoTarea();
-				$id_fase_actual = $GesActivProceso->faseActualAcabada($id_activ); // también posible 'START' y 'SIN'
+				$id_fase_actual = $GesActivProceso->getFaseActualAcabada($id_activ); // también posible 'START' y 'SIN'
 				// miro si tiene la fase requerida.
 				if (!empty($id_fase_previa)) {
 					$cActivProceso = $GesActivProceso->getActividadProcesoTareas(array('id_activ'=>$id_activ,'id_fase'=>$id_fase_previa));

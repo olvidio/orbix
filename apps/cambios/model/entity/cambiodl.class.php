@@ -64,8 +64,8 @@ class CambioDl Extends Cambio {
 	    $aDades['id_tipo_cambio'] = $this->iid_tipo_cambio;
 	    $aDades['id_activ'] = $this->iid_activ;
 	    $aDades['id_tipo_activ'] = $this->iid_tipo_activ;
-	    $aDades['id_fase_sv'] = $this->iid_fase_sv;
-	    $aDades['id_fase_sf'] = $this->iid_fase_sf;
+	    $aDades['json_fases_sv'] = $this->json_fases_sv;
+	    $aDades['json_fases_sf'] = $this->json_fases_sf;
 	    $aDades['id_status'] = $this->iid_status;
 	    $aDades['dl_org'] = $this->sdl_org;
 	    $aDades['objeto'] = $this->sobjeto;
@@ -83,8 +83,8 @@ class CambioDl Extends Cambio {
 					id_tipo_cambio           = :id_tipo_cambio,
 					id_activ                 = :id_activ,
 					id_tipo_activ            = :id_tipo_activ,
-					id_fase_sv               = :id_fase_sv,
-					id_fase_sf               = :id_fase_sf,
+					json_fases_sv            = :json_fases_sv,
+					json_fases_sf            = :json_fases_sf,
 					id_status                = :id_status,
 					dl_org                   = :dl_org,
 					objeto                   = :objeto,
@@ -113,8 +113,8 @@ class CambioDl Extends Cambio {
 	        }
 	    } else {
 	        // INSERT
-	        $campos="(id_tipo_cambio,id_activ,id_tipo_activ,id_fase_sv,id_fase_sf,id_status,dl_org,objeto,propiedad,valor_old,valor_new,quien_cambia,sfsv_quien_cambia,timestamp_cambio)";
-	        $valores="(:id_tipo_cambio,:id_activ,:id_tipo_activ,:id_fase_sv,:id_fase_sf,:id_status,:dl_org,:objeto,:propiedad,:valor_old,:valor_new,:quien_cambia,:sfsv_quien_cambia,:timestamp_cambio)";
+	        $campos="(id_tipo_cambio,id_activ,id_tipo_activ,json_fases_sv,json_fases_sf,id_status,dl_org,objeto,propiedad,valor_old,valor_new,quien_cambia,sfsv_quien_cambia,timestamp_cambio)";
+	        $valores="(:id_tipo_cambio,:id_activ,:id_tipo_activ,:json_fases_sv,:json_fases_sf,:id_status,:dl_org,:objeto,:propiedad,:valor_old,:valor_new,:quien_cambia,:sfsv_quien_cambia,:timestamp_cambio)";
 	        if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 	            $sClauError = 'Cambio.insertar.prepare';
 	            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);

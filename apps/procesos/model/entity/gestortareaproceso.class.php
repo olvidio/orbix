@@ -40,7 +40,7 @@ class GestorTareaProceso Extends core\ClaseGestor {
 	 * @param integer iid_tipo_proceso tipus de procés.
 	 * @return array $aFases . $aFases[$fase_tarea] = ['id_fase' => $id_fase_previa, 'id_tarea' => $id_tarea_previa]; 
 	 */
-	function getArrayFasesDependientes($iid_tipo_proceso) {
+	public function getArrayFasesDependientes($iid_tipo_proceso) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 	    $sQuery = "SELECT * FROM $nom_tabla 
@@ -80,7 +80,7 @@ class GestorTareaProceso Extends core\ClaseGestor {
 	 * @param integer $f   nº de fila
 	 * @return array  $aFases = [$f => "$id_fase#$id_tarea"];
 	 */
-	function getListaFasesDependientes($iid_tipo_proceso,$id_fase,$id_tarea=0,$f=0) {
+	public function getListaFasesDependientes($iid_tipo_proceso,$id_fase,$id_tarea=0,$f=0) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 	    $sQuery = "SELECT * FROM $nom_tabla 
@@ -140,7 +140,7 @@ class GestorTareaProceso Extends core\ClaseGestor {
 	 * @param integer status
 	 * @return integer id_fase.
 	 */
-	function getFirstFaseStatus($iid_tipo_proceso,$status) {
+	public function getFirstFaseStatus($iid_tipo_proceso,$status) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 	    $sQuery = "SELECT * FROM $nom_tabla 
@@ -167,7 +167,7 @@ class GestorTareaProceso Extends core\ClaseGestor {
 	 * @param integer status
 	 * @return integer id_fase.
 	 */
-	function getLastFaseStatus($iid_tipo_proceso,$status) {
+	public function getLastFaseStatus($iid_tipo_proceso,$status) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 	    $sQuery = "SELECT * FROM $nom_tabla 
@@ -193,7 +193,7 @@ class GestorTareaProceso Extends core\ClaseGestor {
 	 * @param integer id_item la fase tarea.
 	 * @return integer id_true o false si hi ha un error
 	 */
-	function getStatusFaseAnterior($iid_item) {
+	public function getStatusFaseAnterior($iid_item) {
 		$nom_tabla = $this->getNomTabla();
 	    $oActual = new TareaProceso(array('id_item'=>$iid_item));
 	    $iid_tipo_proceso = $oActual->getId_tipo_proceso();
@@ -217,7 +217,7 @@ class GestorTareaProceso Extends core\ClaseGestor {
 	 * @param integer id_item la fase tarea en concret que s'ha de modificar.
 	 * @return true o false si hi ha un error
 	 */
-	function setTareasProcesosOrden($iid_item,$sque) {
+	public function setTareasProcesosOrden($iid_item,$sque) {
 		$nom_tabla = $this->getNomTabla();
 	    $oActual = new TareaProceso(array('id_item'=>$iid_item));
 	    $iid_tipo_proceso = $oActual->getId_tipo_proceso();
@@ -260,7 +260,7 @@ class GestorTareaProceso Extends core\ClaseGestor {
 	 * @param integer iid_tipo_proceso tipus de procés.
 	 * @return array Una llista de fases.
 	 */
-	function getFasesProcesoOrdenadas($iid_tipo_proceso='') {
+	function zzgetFasesProcesoOrdenadas($iid_tipo_proceso='') {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 	    if (empty($iid_tipo_proceso)) return array();

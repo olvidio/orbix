@@ -7,6 +7,7 @@ use cambios\model\entity\Cambio;
 use cambios\model\entity\CambioDl;
 use core\ConfigGlobal;
 use function core\is_true;
+use stdClass;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use web\DateTimeLocal;
 use web\Posicion;
@@ -55,14 +56,6 @@ class gestorAvisoCambios {
 	        case 'ActividadEx':
 	            $spath = 'actividades\\model\\entity\\Actividad';
 	            break;
-	            /*
-	        case 'ActividadDl':
-	            $spath = 'actividades\\model\\entity\\ActividadDl';
-	            break;
-	        case 'ActividadEx':
-	            $spath = 'actividades\\model\\entity\\ActividadEx';
-	            break;
-	            */
 	        case 'ActividadCargoSacd':
 	            $spath = 'actividadcargos\\model\\entity\\ActividadCargoSacd';
 	            break;
@@ -109,7 +102,7 @@ class gestorAvisoCambios {
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
 
-	function muestraMensaje($sClauError,$goto) {
+	function zzmuestraMensaje($sClauError,$goto) {
 		//$_SESSION['oGestorErrores']->addErrorAppLastError($oDBSt, $sClauError, $file);
 		$txt=$this->leerErrorAppLastError();
 		if (strstr($txt, 'duplicate key')) {
@@ -125,15 +118,15 @@ class gestorAvisoCambios {
 
 	}
 
-	function addCanvi($sObjeto, $sTipoCambio, $iid_activ, $aDadesNew, $aDadesActuals) {
+	public function addCanvi($sObjeto, $sTipoCambio, $iid_activ, $aDadesNew, $aDadesActuals) {
 		// poso el nom de l'objecte que gestiona la taula en comptes del nom de la taula.
 		$id_user = ConfigGlobal::mi_id_usuario();
 		$sfsv = ConfigGlobal::mi_sfsv();
 		$oAhora = new DateTimeLocal();
 		$ahora_iso = $oAhora->format('Y-m-d H:i:s');
 		
-        $id_fase_sv = '';
-        $id_fase_sf = '';
+        $json_fases_sv = '';
+        $json_fases_sf = '';
         $id_status = '';
 		
 		// per saber el tipus d'activitat.
@@ -169,10 +162,18 @@ class gestorAvisoCambios {
                 $oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
                 // para sv:
                 $oGestorActividadProcesoTarea->setNomTabla('a_actividad_proceso_sv');
-                $id_fase_sv = $oGestorActividadProcesoTarea->getFaseActual($iid_activ);
+                $aFases_sv = $oGestorActividadProcesoTarea->getFasesCompletadas($iid_activ);
+                $oFases_sv = new stdClass;
+                foreach($aFases_sv as $id_fase) {
+                    $oFases_sv->$id_fase;
+                }
                 // para sf
                 $oGestorActividadProcesoTarea->setNomTabla('a_actividad_proceso_sf');
-                $id_fase_sf = $oGestorActividadProcesoTarea->getFaseActual($iid_activ);
+                $aFases_sf = $oGestorActividadProcesoTarea->getFasesCompletadas($iid_activ);
+                $oFases_sf = new stdClass;
+                foreach($aFases_sf as $id_fase) {
+                    $oFases_sf->$id_fase;
+                }
                 
                 $id_status = $status;
     		} else {
@@ -183,13 +184,16 @@ class gestorAvisoCambios {
             $oActividadCambio = new Cambio();
 		}
 		
+		$json_fases_sv = json_encode($oFases_sv);
+		$json_fases_sf = json_encode($oFases_sf);
+		
 		switch ($sTipoCambio) {
 			case 'INSERT':
 				$oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_INSERT);
 				$oActividadCambio->setId_activ($iid_activ);
 				$oActividadCambio->setId_tipo_activ($iId_tipo_activ);
-                $oActividadCambio->setId_fase_sv($id_fase_sv);
-                $oActividadCambio->setId_fase_sf($id_fase_sf);
+                $oActividadCambio->setJson_fases_sv($json_fases_sv);
+                $oActividadCambio->setJson_fases_sf($json_fases_sf);
 				$oActividadCambio->setId_status($id_status);
 				$oActividadCambio->setDl_org($dl_org);
 				$oActividadCambio->setObjeto($sObjeto);
@@ -233,8 +237,8 @@ class gestorAvisoCambios {
 					$oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_UPDATE);
 					$oActividadCambio->setId_activ($iid_activ);
 					$oActividadCambio->setId_tipo_activ($iId_tipo_activ);
-					$oActividadCambio->setId_fase_sv($id_fase_sv);
-					$oActividadCambio->setId_fase_sf($id_fase_sf);
+					$oActividadCambio->setJson_fases_sv($json_fases_sv);
+					$oActividadCambio->setJson_fases_sf($json_fases_sf);
 					$oActividadCambio->setId_status($id_status);
 					$oActividadCambio->setDl_org($dl_org);
 					$oActividadCambio->setObjeto($sObjeto);
@@ -251,8 +255,8 @@ class gestorAvisoCambios {
 				$oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_DELETE);
 				$oActividadCambio->setId_activ($iid_activ);
 				$oActividadCambio->setId_tipo_activ($iId_tipo_activ);
-				$oActividadCambio->setId_fase_sv($id_fase_sv);
-				$oActividadCambio->setId_fase_sf($id_fase_sf);
+				$oActividadCambio->setJson_fases_sv($json_fases_sv);
+				$oActividadCambio->setJson_fases_sf($json_fases_sf);
 				$oActividadCambio->setId_status($id_status);
 				$oActividadCambio->setDl_org($dl_org);
 				$oActividadCambio->setObjeto($sObjeto);
@@ -302,8 +306,8 @@ class gestorAvisoCambios {
 					$oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_FASE);
 					$oActividadCambio->setId_activ($iid_activ);
 					$oActividadCambio->setId_tipo_activ($iId_tipo_activ);
-					$oActividadCambio->setId_fase_sv($id_fase_sv);
-					$oActividadCambio->setId_fase_sf($id_fase_sf);
+					$oActividadCambio->setJson_fases_sv($json_fases_sv);
+					$oActividadCambio->setJson_fases_sf($json_fases_sf);
 					$oActividadCambio->setId_status($id_status);
 					$oActividadCambio->setDl_org($dl_org);
 					$oActividadCambio->setObjeto($sObjeto);
