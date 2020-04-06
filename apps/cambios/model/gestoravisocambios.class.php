@@ -165,14 +165,14 @@ class gestorAvisoCambios {
                 $aFases_sv = $oGestorActividadProcesoTarea->getFasesCompletadas($iid_activ);
                 $oFases_sv = new stdClass;
                 foreach($aFases_sv as $id_fase) {
-                    $oFases_sv->$id_fase;
+                    $oFases_sv->$id_fase = 'ok';
                 }
                 // para sf
                 $oGestorActividadProcesoTarea->setNomTabla('a_actividad_proceso_sf');
                 $aFases_sf = $oGestorActividadProcesoTarea->getFasesCompletadas($iid_activ);
                 $oFases_sf = new stdClass;
                 foreach($aFases_sf as $id_fase) {
-                    $oFases_sf->$id_fase;
+                    $oFases_sf->$id_fase = 'ok';
                 }
                 
                 $id_status = $status;

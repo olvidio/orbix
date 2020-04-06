@@ -222,8 +222,8 @@ class Cambio Extends core\ClasePropiedades {
 					id_tipo_cambio           = :id_tipo_cambio,
 					id_activ                 = :id_activ,
 					id_tipo_activ            = :id_tipo_activ,
-                    json_fases_sv            = :json_fases_sv,
-					json_fases_sf            = :json_fases_sf,
+                    fases_sv                 = :json_fases_sv,
+					fases_sf                 = :json_fases_sf,
 					id_status                = :id_status,
 					dl_org                   = :dl_org,
 					objeto                   = :objeto,
@@ -258,7 +258,7 @@ class Cambio Extends core\ClasePropiedades {
 			 * 'cambios', puede haber conflico con el id_item_cambio. 
 			 */
 			$mi_esquema = 3000;
-			$campos="(id_schema,id_tipo_cambio,id_activ,id_tipo_activ,json_fases_sv,json_fases_sf,id_status,dl_org,objeto,propiedad,valor_old,valor_new,quien_cambia,sfsv_quien_cambia,timestamp_cambio)";
+			$campos="(id_schema,id_tipo_cambio,id_activ,id_tipo_activ,fases_sv,fases_sf,id_status,dl_org,objeto,propiedad,valor_old,valor_new,quien_cambia,sfsv_quien_cambia,timestamp_cambio)";
 			$valores="($mi_esquema,:id_tipo_cambio,:id_activ,:id_tipo_activ,:json_fases_sv,:json_fases_sf,:id_status,:dl_org,:objeto,:propiedad,:valor_old,:valor_new,:quien_cambia,:sfsv_quien_cambia,:timestamp_cambio)";
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClauError = 'Cambio.insertar.prepare';
