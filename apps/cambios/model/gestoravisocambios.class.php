@@ -153,8 +153,6 @@ class gestorAvisoCambios {
                 $status = $oActividad->getStatus();
 		}
 		
-		// Si no tengo instalado el módulo de 'cambios', no tengo la tabla en mi esquema.
-		// Lo anoto en public
 		if (ConfigGlobal::is_app_installed('cambios')) {
             $oActividadCambio = new CambioDl();
             // si no tengo instalado procesos, la fase es el status.
@@ -180,8 +178,14 @@ class gestorAvisoCambios {
                 $id_status = $status;
     		}
 		} else {
+            // Si no tengo instalado el módulo de 'cambios', no tengo la tabla en mi esquema.
+            // Lo anoto en public. Como fase anoto el estado de la actividad.
 		    $id_status = $status;
             $oActividadCambio = new Cambio();
+            $oFases_sv = new stdClass;
+            $oFases_sv->$id_status = 'ok';
+            $oFases_sf = new stdClass;
+            $oFases_sf->$id_status = 'ok';
 		}
 		
 		$json_fases_sv = json_encode($oFases_sv);
