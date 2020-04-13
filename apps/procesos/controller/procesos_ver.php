@@ -23,7 +23,7 @@ $Qid_tipo_proceso = (integer) \filter_input(INPUT_POST, 'id_tipo_proceso');
 // para crear un desplegable de oficinas. Uso los de los menus
 $oPermMenus = new PermisoMenu;
 $aOpcionesOficinas = $oPermMenus->lista_array();
-$oDesplOficinas = new  Desplegable('of_responsable',$aOpcionesOficinas,'',true);
+$oDesplOficinas = new  Desplegable('id_of_responsable',$aOpcionesOficinas,'',true);
 
 
 $oActividad = new ActividadAll();
@@ -35,14 +35,14 @@ $aMensajes_requisitos = [];
 // para el form
 if ($Qmod == 'editar') {
 
-	$oFicha = new TareaProceso(array('id_item'=>$Qid_item));
-	$status = $oFicha->getStatus();	
+	$oTareaProceso = new TareaProceso(array('id_item'=>$Qid_item));
+	$status = $oTareaProceso->getStatus();	
 	$oDesplStatus = new Desplegable('status',$a_status,$status,true);
-	$of_responsable = $oFicha->getOf_responsable();	
-	$oDesplOficinas->setOpcion_sel($of_responsable);
-	$aFases_previas = $oFicha->getJson_fases_previas(TRUE);
+	$id_of_responsable = $oTareaProceso->getId_of_responsable();	
+	$oDesplOficinas->setOpcion_sel($id_of_responsable);
+	$aFases_previas = $oTareaProceso->getJson_fases_previas(TRUE);
 	
-	$id_fase=$oFicha->getId_fase();	
+	$id_fase=$oTareaProceso->getId_fase();	
     $oGesFase = new GestorActividadFase();
     $oDesplFase=$oGesFase->getListaActividadFases();
     $oDesplFase->setNombre('id_fase');
@@ -50,7 +50,7 @@ if ($Qmod == 'editar') {
     $oDesplFase->setOpcion_sel($id_fase);
     $oDesplFase->setBlanco(true);
     /* id_tarea */
-    $id_tarea=$oFicha->getId_tarea();	
+    $id_tarea=$oTareaProceso->getId_tarea();	
     $oGesTarea = new GestorActividadTarea();
     $oDesplTarea=$oGesTarea->getListaActividadTareas($id_fase);
     $oDesplTarea->setNombre('id_tarea');
@@ -92,10 +92,8 @@ if ($Qmod == 'editar') {
 	}
 }
 if ($Qmod == 'nuevo') {
-	$oFicha = new TareaProceso();
 	$status = '';
 	$oDesplStatus = new Desplegable('status',$a_status,$status,true);
-	$of_responsable = '';
 
     $oGesFase = new GestorActividadFase();
     $oDesplFase=$oGesFase->getListaActividadFases();
@@ -117,7 +115,7 @@ $url_ajax = "apps/procesos/controller/procesos_ajax.php";
 
 
 $oHash = new web\Hash();
-$oHash->setCamposForm('dep_num!id_fase!id_fase_previa!id_tarea!id_tarea_previa!mensaje_requisito!of_responsable!status');
+$oHash->setCamposForm('dep_num!id_fase!id_fase_previa!id_tarea!id_tarea_previa!mensaje_requisito!id_of_responsable!status');
 $oHash->setCamposNo('que!id_fase_previa[]!id_tarea_previa[]!mensaje_requisito[]');
 $oHash->setCamposChk('id_tarea_previa');
 $a_camposHidden = [

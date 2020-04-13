@@ -3,6 +3,7 @@ namespace procesos\model\entity;
 use actividades\model\entity\ActividadAll;
 use core;
 use stdClass;
+use menus\model\PermisoMenu;
 /**
  * Fitxer amb la Classe que accedeix a la taula a_tareas_proceso
  *
@@ -69,11 +70,11 @@ class TareaProceso Extends core\ClasePropiedades {
 	 */
 	 private $istatus;
 	/**
-	 * Of_responsable de TareaProceso
+	 * Id_of_responsable de TareaProceso
 	 *
-	 * @var string
+	 * @var integer
 	 */
-	 private $sof_responsable;
+	 private $iid_of_responsable;
 	/**
 	 * Id_fase_previa de TareaProceso
 	 *
@@ -137,7 +138,7 @@ class TareaProceso Extends core\ClasePropiedades {
 		$aDades['id_fase'] = $this->iid_fase;
 		$aDades['id_tarea'] = $this->iid_tarea;
 		$aDades['status'] = $this->istatus;
-		$aDades['of_responsable'] = $this->sof_responsable;
+		$aDades['id_of_responsable'] = $this->iid_of_responsable;
 		$aDades['json_fases_previas'] = $this->json_fases_previas;
 		array_walk($aDades, 'core\poner_null');
 
@@ -148,7 +149,7 @@ class TareaProceso Extends core\ClasePropiedades {
 					id_fase                  = :id_fase,
 					id_tarea                 = :id_tarea,
 					status                   = :status,
-					of_responsable           = :of_responsable,
+					id_of_responsable        = :id_of_responsable,
 					json_fases_previas       = :json_fases_previas";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item'")) === FALSE) {
 				$sClauError = 'TareaProceso.update.prepare';
@@ -168,8 +169,8 @@ class TareaProceso Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			$campos="(id_tipo_proceso,id_fase,id_tarea,status,of_responsable,json_fases_previas)";
-			$valores="(:id_tipo_proceso,:id_fase,:id_tarea,:status,:of_responsable,:json_fases_previas)";		
+			$campos="(id_tipo_proceso,id_fase,id_tarea,status,id_of_responsable,json_fases_previas)";
+			$valores="(:id_tipo_proceso,:id_fase,:id_tarea,:status,:id_of_responsable,:json_fases_previas)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClauError = 'TareaProceso.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -281,7 +282,7 @@ class TareaProceso Extends core\ClasePropiedades {
 		if (array_key_exists('id_fase',$aDades)) $this->setId_fase($aDades['id_fase']);
 		if (array_key_exists('id_tarea',$aDades)) $this->setId_tarea($aDades['id_tarea']);
 		if (array_key_exists('status',$aDades)) $this->setStatus($aDades['status']);
-		if (array_key_exists('of_responsable',$aDades)) $this->setOf_responsable($aDades['of_responsable']);
+		if (array_key_exists('id_of_responsable',$aDades)) $this->setId_of_responsable($aDades['id_of_responsable']);
 		if (array_key_exists('json_fases_previas',$aDades)) $this->setJson_fases_previas($aDades['json_fases_previas']);
 	}
 
@@ -296,7 +297,7 @@ class TareaProceso Extends core\ClasePropiedades {
 		$this->setId_fase('');
 		$this->setId_tarea('');
 		$this->setStatus('');
-		$this->setOf_responsable('');
+		$this->setId_of_responsable('');
 		$this->setJson_fases_previas('');
 		$this->setPrimary_key($aPK);
 	}
@@ -438,23 +439,23 @@ class TareaProceso Extends core\ClasePropiedades {
 		$this->istatus = $istatus;
 	}
 	/**
-	 * Recupera l'atribut sof_responsable de TareaProceso
+	 * Recupera l'atribut iid_of_responsable de TareaProceso
 	 *
-	 * @return string sof_responsable
+	 * @return string iid_of_responsable
 	 */
-	function getOf_responsable() {
-		if (!isset($this->sof_responsable)) {
+	function getId_of_responsable() {
+		if (!isset($this->iid_of_responsable)) {
 			$this->DBCarregar();
 		}
-		return $this->sof_responsable;
+		return $this->iid_of_responsable;
 	}
 	/**
-	 * estableix el valor de l'atribut sof_responsable de TareaProceso
+	 * estableix el valor de l'atribut iid_of_responsable de TareaProceso
 	 *
-	 * @param string sof_responsable='' optional
+	 * @param string iid_of_responsable='' optional
 	 */
-	function setOf_responsable($sof_responsable='') {
-		$this->sof_responsable = $sof_responsable;
+	function setId_of_responsable($iid_of_responsable='') {
+		$this->iid_of_responsable = $iid_of_responsable;
 	}
 	/**
 	 * Recupera l'atribut json_fases_previas de TareaProceso
@@ -489,6 +490,20 @@ class TareaProceso Extends core\ClasePropiedades {
     /* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
 	/**
+	 * Recupera l'atribut iid_of_responsable de TareaProceso en texte
+	 *
+	 * @return string of_responsable_txt
+	 */
+	function getOf_responsable_txt() {
+	    // para crear el array id_oficina => oficina_txt. Uso los de los menus
+	    $oPermMenus = new PermisoMenu;
+	    $aOpcionesOficinas = $oPermMenus->lista_array();
+	    $id_of_responsable = $this->getId_of_responsable();
+	    $of_responsable_txt = empty($aOpcionesOficinas[$id_of_responsable])? '' : $aOpcionesOficinas[$id_of_responsable];
+		return $of_responsable_txt;
+	}
+
+	/**
 	 * Retorna una col·lecció d'objectes del tipus DatosCampo
 	 *
 	 */
@@ -499,7 +514,7 @@ class TareaProceso Extends core\ClasePropiedades {
 		$oTareaProcesoSet->add($this->getDatosId_fase());
 		$oTareaProcesoSet->add($this->getDatosId_tarea());
 		$oTareaProcesoSet->add($this->getDatosStatus());
-		$oTareaProcesoSet->add($this->getDatosOf_responsable());
+		$oTareaProcesoSet->add($this->getDatosId_of_responsable());
 		$oTareaProcesoSet->add($this->getDatosId_fase_previa());
 		return $oTareaProcesoSet->getTot();
 	}
@@ -572,14 +587,14 @@ class TareaProceso Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut sof_responsable de TareaProceso
+	 * Recupera les propietats de l'atribut iid_of_responsable de TareaProceso
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
 	 */
-	function getDatosOf_responsable() {
+	function getDatosId_of_responsable() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'of_responsable'));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_of_responsable'));
 		$oDatosCampo->setEtiqueta(_("oficina responsable"));
 		$oDatosCampo->setTipo('texto');
 		$oDatosCampo->setArgument('7');

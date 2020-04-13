@@ -234,7 +234,7 @@ class PermisosActividades {
             // La primera fase:
             $oTareaProceso = $cFasesdelProcesos[0];
             $fasePrimera = $oTareaProceso->getId_Fase();
-            $of_responsable = $oTareaProceso->getOf_responsable();	
+            $of_responsable_txt = $oTareaProceso->getOf_responsable_txt();	
             $status = $oTareaProceso->getStatus();	
 
             // devolver false si no puedo crear
@@ -251,7 +251,7 @@ class PermisosActividades {
 		}
 	    
 	    if ($oPerm !== FALSE && $oPerm->have_perm_activ('crear')) {
-            return ['of_responsable' => $of_responsable,
+            return ['of_responsable_txt' => $of_responsable_txt,
 	           'status' => $status,
 	           ];
 	    } else {

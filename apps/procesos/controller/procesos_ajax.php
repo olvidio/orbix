@@ -37,7 +37,7 @@ switch($Qque) {
             $id_fase = $oTareaProceso->getId_fase();
             $id_tarea = $oTareaProceso->getId_tarea();
             $status = $oTareaProceso->getStatus();
-            $of_responsable = $oTareaProceso->getOf_responsable();
+            $id_of_responsable = $oTareaProceso->getId_of_responsable();
             $json_fases_previas = $oTareaProceso->getJson_fases_previas();
             
             $oTareaProcesoNew = new TareaProceso();
@@ -45,7 +45,7 @@ switch($Qque) {
             $oTareaProcesoNew->setId_fase($id_fase);
             $oTareaProcesoNew->setId_tarea($id_tarea);
             $oTareaProcesoNew->setStatus($status);
-            $oTareaProcesoNew->setOf_responsable($of_responsable);
+            $oTareaProcesoNew->setId_of_responsable($id_of_responsable);
             $oTareaProcesoNew->setJson_fases_previas($json_fases_previas);
             $oTareaProcesoNew->DBGuardar();
 		}
@@ -88,8 +88,8 @@ switch($Qque) {
 			$id_item=$oTareaProceso->getId_item();
 			$status=$oTareaProceso->getStatus();
 			$status_txt=$a_status[$status];
-			$of_responsable=$oTareaProceso->getOf_responsable();
-			$responsable = empty($aOpcionesOficinas[$of_responsable])? '' : $aOpcionesOficinas[$of_responsable];
+			$id_of_responsable=$oTareaProceso->getId_of_responsable();
+			$responsable = empty($aOpcionesOficinas[$id_of_responsable])? '' : $aOpcionesOficinas[$id_of_responsable];
 			
 			$oFase = new ActividadFase($oTareaProceso->getId_fase());
 			$fase=$oFase->getDesc_fase();
@@ -149,7 +149,7 @@ switch($Qque) {
 	    $Qid_item = (integer) \filter_input(INPUT_POST, 'id_item');
 	    $Qid_tipo_proceso = (integer) \filter_input(INPUT_POST, 'id_tipo_proceso');
 	    $Qstatus = (integer) \filter_input(INPUT_POST, 'status');
-	    $Qof_responsable = (string) \filter_input(INPUT_POST, 'of_responsable');
+	    $Qid_of_responsable = (integer) \filter_input(INPUT_POST, 'id_of_responsable');
 	    $Qid_fase = (integer) \filter_input(INPUT_POST, 'id_fase');
 	    $Qid_tarea = (integer) \filter_input(INPUT_POST, 'id_tarea');
         // arrays
@@ -169,24 +169,24 @@ switch($Qque) {
         }
 		if (empty($Qid_tarea)) $Qid_tarea=0; // no puede ser NULL.
 
-		$oFicha = new TareaProceso(array('id_item'=>$Qid_item));
-		$oFicha->setId_tipo_proceso($Qid_tipo_proceso);	
-		$oFicha->setStatus($Qstatus);	
-		$oFicha->setOf_responsable($Qof_responsable);	
-		$oFicha->setId_fase($Qid_fase);	
-		$oFicha->setId_tarea($Qid_tarea);	
-		$oFicha->setJson_fases_previas($aFases_previas);	
-		if ($oFicha->DBGuardar() === false) {
+		$oTareaProceso = new TareaProceso(array('id_item'=>$Qid_item));
+		$oTareaProceso->setId_tipo_proceso($Qid_tipo_proceso);	
+		$oTareaProceso->setStatus($Qstatus);	
+		$oTareaProceso->setId_of_responsable($Qid_of_responsable);	
+		$oTareaProceso->setId_fase($Qid_fase);	
+		$oTareaProceso->setId_tarea($Qid_tarea);	
+		$oTareaProceso->setJson_fases_previas($aFases_previas);	
+		if ($oTareaProceso->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
-			echo "\n".$oFicha->getErrorTxt();
+			echo "\n".$oTareaProceso->getErrorTxt();
 		}
 		break;
 	case 'eliminar':
 	    $Qid_item = (integer) \filter_input(INPUT_POST, 'id_item');
-		$oFicha = new TareaProceso(array('id_item'=>$Qid_item));
-		if ($oFicha->DBEliminar() === false) {
+		$oTareaProceso = new TareaProceso(array('id_item'=>$Qid_item));
+		if ($oTareaProceso->DBEliminar() === false) {
 			echo _("hay un error, no se ha eliminado");
-			echo "\n".$oFicha->getErrorTxt();
+			echo "\n".$oTareaProceso->getErrorTxt();
 		}
 		break;
 }

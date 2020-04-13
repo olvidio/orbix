@@ -31,9 +31,6 @@ switch($Qque) {
 		$txt='<table>';
 		$txt.='<tr><th>'._("ok").'</th><th>'._("fase (tarea)").'</th><th>'._("responsable").'</th><th>'._("observaciones").'</th><th></th></tr>';
 		$i = 0;
-        //para crear un desplegable de oficinas. Uso los de los menus
-        $oPermMenus = new PermisoMenu;
-        $aOpcionesOficinas = $oPermMenus->lista_array();
 		foreach($oLista as $oActividadProcesoTarea) {
 			$id_item = $oActividadProcesoTarea->getId_item();
 			$id_tipo_proceso = $oActividadProcesoTarea->getId_tipo_proceso();
@@ -60,14 +57,13 @@ switch($Qque) {
 			    $msg_err = sprintf(_("error: La fase del proceso tipo: %s, fase: %s, tarea: %s"),$id_tipo_proceso,$id_fase,$id_tarea);
                 exit($msg_err);
 			}
-			$id_of_responsable = $oTareaProceso->getOf_responsable();
-			$of_responsable = empty($aOpcionesOficinas[$id_of_responsable])? '' : $aOpcionesOficinas[$id_of_responsable];
+			$of_responsable_txt = $oTareaProceso->getOf_responsable_txt();
 			
 			$clase = "tono1";
 			$i % 2  ? 0: $clase = "tono3";
 			$i++;
 			$txt.="<tr  class='$clase'>";
-			if (($_SESSION['oPerm']->have_perm_oficina($of_responsable))) {
+			if (($_SESSION['oPerm']->have_perm_oficina($of_responsable_txt))) {
 				$txt.="<td style='text-align: center;' ><input type='checkbox' id='comp$id_item' name='completado' $chk></td>";
 				$obs = "<td><input type='text' id='observ$id_item' name='observ' value='$observ' ></td>";
 			} else {
@@ -82,9 +78,9 @@ switch($Qque) {
 			}
 			$txt_fase = empty($tarea)? '' : "($tarea)";
 			$txt.="<td style='text-align: left;' >$fase $txt_fase</td>";
-			$txt.="<td>$of_responsable</td>";
+			$txt.="<td>$of_responsable_txt</td>";
 			$txt.= $obs;
-			if (($_SESSION['oPerm']->have_perm_oficina($of_responsable))) {
+			if (($_SESSION['oPerm']->have_perm_oficina($of_responsable_txt))) {
 				$txt.="<td><input type='button' name='b_guardar' value='"._("guardar")."' onclick='fnjs_guardar($id_item);'></td>";
 			} else {
 			    $txt .= '<td></td>';

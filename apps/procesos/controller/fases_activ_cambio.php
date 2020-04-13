@@ -92,7 +92,7 @@ $url_ajax = "apps/procesos/controller/fases_activ_cambio_ajax.php";
 
 $oHashLista = new Hash();
 $oHashLista->setUrl($url_ajax);
-$oHashLista->setcamposForm('que!dl_propia!id_tipo_activ!id_fase_nueva!periodo!year!empiezamax!empiezamin');
+$oHashLista->setcamposForm('que!dl_propia!id_tipo_activ!id_fase_nueva!periodo!year!empiezamax!empiezamin!accion');
 $h_lista = $oHashLista->linkSinVal();
 
 $oHashAct = new Hash();

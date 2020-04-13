@@ -12,6 +12,8 @@ use procesos\model\entity\GestorActividadProcesoTarea;
 use procesos\model\entity\GestorTareaProceso;
 use web\Lista;
 use web\Periodo;
+use procesos\model\entity\TareaProceso;
+use procesos\model\entity\ActividadProcesoTarea;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
@@ -35,6 +37,7 @@ switch($Qque) {
 		$Qyear = (string) \filter_input(INPUT_POST, 'year');
 		$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
 		$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
+		$Qaccion = (string) \filter_input(INPUT_POST, 'accion');
 
 		// valores por defeccto
 		if (empty($Qperiodo)) {
@@ -56,7 +59,9 @@ switch($Qque) {
 		    'periodo'=>$Qperiodo,
 		    'year'=>$Qyear,
 		    'empiezamin'=>$Qempiezamin,
-		    'empiezamax'=>$Qempiezamax );
+		    'empiezamax'=>$Qempiezamax,
+		    'accion'=>$Qaccion,
+		);
 		$oPosicion->setParametros($aGoBack,1);
 		
 		$aWhere = [];
@@ -101,11 +106,15 @@ switch($Qque) {
 		$i=0;
 		$a_cabeceras=array();
 		$a_cabeceras[] = _("nom");
-		$a_cabeceras[] = _("última fase completada");
 		$a_cabeceras[] = _("cumple requisito");
 		
+		if ($Qaccion == 'desmarcar') {
+		    $txt_cambiar = _("descambiar los marcados");
+		} else {
+		    $txt_cambiar = _("cambiar los marcados");
+		}
 		$a_botones=[
-                ['txt' => _("cambiar los marcados"), 'click' =>"fnjs_cambiar(\"#seleccionados\")" ],
+                ['txt' => $txt_cambiar, 'click' =>"fnjs_cambiar(\"#seleccionados\")" ],
                 ['txt' => _("ver proceso actividad"), 'click' =>"fnjs_ver_activ(\"#seleccionados\")" ],
                 ['txt' => _("todos"), 'click' =>"fnjs_selectAll(\"#seleccionados\",\"sel[]\",\"all\",0)" ],
                 ['txt' => _("ninguno"), 'click' =>"fnjs_selectAll(\"#seleccionados\",\"sel[]\",\"none\",0)" ],
@@ -127,75 +136,77 @@ switch($Qque) {
 			$id_tipo_activ = $oActividad->getId_tipo_activ();
 			$nom_activ = $oActividad->getNom_activ();
 			$i++;
-            $fase_actual = '';
 			// Por el tipo de actividad sé el tipo de proceso
 			$oTipoActiv = new TipoDeActividad(array('id_tipo_activ'=>$id_tipo_activ));
 			$id_tipo_proceso = $oTipoActiv->getId_tipo_proceso();
-			// miro cual es la tarea previa.
-			$GesTareaProceso = new GestorTareaProceso();
-			$cTareasProceso = $GesTareaProceso->getTareasProceso(array('id_tipo_proceso'=>$id_tipo_proceso,'id_fase'=>$Qid_fase_nueva));
-			foreach ($cTareasProceso as $oTareaProceso) {
-				$oFases_previas = $oTareaProceso->getJson_fases_previas();
-				// Busco el proceso de esta actividad
-				$GesActivProceso = new GestorActividadProcesoTarea();
-				$id_fase_actual = $GesActivProceso->getFaseActualAcabada($id_activ); // también posible 'START' y 'SIN'
-				// miro si tiene la fase requerida.
-				if (!empty($oFases_previas)) {
-				    foreach($oFases_previas as $id_fase_previa) {
-				        
-				    }
-					$cActivProceso = $GesActivProceso->getActividadProcesoTareas(array('id_activ'=>$id_activ,'id_fase'=>$id_fase_previa));
-					if (empty($cActivProceso)) {
-						$mensaje_requisito = $oTareaProceso->getMensaje_requisito();
-						$a_valores[$i]['clase'] = 'wrong-soft';
-					} else {
-                        $fase_previa_completado = $cActivProceso[0]->getCompletado(); // sólo uno
-                        if ( is_true($fase_previa_completado) ) {
-                            $mensaje_requisito = 'ok';
-                            $num_ok++;
-                            if (  ($GesActivProceso->faseCompletada($id_activ, $Qid_fase_nueva)
-                                   OR ($Qid_fase_nueva == $id_fase_actual))
-                                && $mensaje_requisito == 'ok')
-                            { 
-                                $mensaje_requisito = _("completado");
-                                $num_ok--;
+			$aWhereTP = [
+			    'id_tipo_proceso' => $id_tipo_proceso,
+			    'id_fase' => $Qid_fase_nueva,
+			];
+            $GesTareaProcesos = new GestorTareaProceso();
+            $cTareasProceso = $GesTareaProcesos->getTareasProceso($aWhereTP);
+			$aFases_previas = $cTareasProceso[0]->getJson_fases_previas(TRUE);
+            
+            // Busco el proceso de esta actividad. Las fases completadas.
+            $GesActivProceso = new GestorActividadProcesoTarea();
+            $aFases_estado = $GesActivProceso->getListaFaseEstado($id_activ);
+            $aFases_completadas = $GesActivProceso->getFasesCompletadas($id_activ);
+            
+            $mensaje = '';
+            if ($Qaccion == 'desmarcar') {
+                // para desmarcar solo miro si está marcada:
+                $ok_fases_previas = FALSE;
+                $mensaje = _("No tiene marcada la fase");
+                if (in_array($Qid_fase_nueva, $aFases_completadas)) {
+                    $ok_fases_previas = TRUE;
+                    $mensaje = 'ok';
+                }
+            } else {
+                if (empty($aFases_estado)) {
+                    // 1.- No tiene proceso. 
+                    $ok_fases_previas = FALSE;
+                    $mensaje = _("No tiene proceso. Debe crearlo");
+                    $a_valores[$i]['clase'] = 'wrong-soft';
+                } else {
+                    // 2.- ya la tiene completada
+                    if (in_array($Qid_fase_nueva, $aFases_completadas)) {
+                        $ok_fases_previas = FALSE;
+                        $mensaje = _("Ya la tiene");
+                    } else {
+                        // miro si tiene la fase requerida.
+                        if (!empty($aFases_previas)) {
+                            $ok_fases_previas = TRUE;
+                            foreach ($aFases_previas as $aaFase_previa) {
+                                $id_fase_previa = $aaFase_previa['id_fase'];
+                                $mensaje_requisito = $aaFase_previa['mensaje'];
+                                if (in_array($id_fase_previa, $aFases_completadas)) {
+                                    // 3.- Si tiene la fase requerida
+                                    $mensaje = _("ok, tiene la(s) fase(s) previa(s)");
+                                } else {
+                                    // 4.- Falta por lo menos una fase requerida
+                                    $ok_fases_previas = FALSE;
+                                    $oActividadProcesoTarea = new ActividadProcesoTarea();
+                                    $fase_tarea_previa = $id_fase_previa.'#0';
+                                    $mensaje .= empty($mensaje_requisito)? $oActividadProcesoTarea->getMensaje($fase_tarea_previa,'marcar') : $mensaje_requisito;
+                                }
                             }
                         } else {
-                            $mensaje_requisito = $oTareaProceso->getMensaje_requisito();
-                            $a_valores[$i]['clase'] = 'wrong-soft';
+                            // 5.- No requiere fases previas, ok requisito.
+                            $ok_fases_previas = TRUE;
+                            $mensaje = 'ok';
                         }
-					}
-				} else {
-					$mensaje_requisito = 'ok'; //si no tiene fase previa, ok requisito.
-					$num_ok++;
-				}
-				if ($id_fase_actual == 'START') {
-					$fase_actual = _("por empezar");
-				} else {
-					$oActividadFase = new ActividadFase($id_fase_actual);
-					$fase_actual = $oActividadFase->getDesc_fase();
-					// Quito las que ya tienen la fase completada
-                    if (  ($GesActivProceso->faseCompletada($id_activ, $Qid_fase_nueva)
-                           OR ($Qid_fase_nueva == $id_fase_actual))
-                        && $mensaje_requisito == 'ok')
-                    {
-                        $mensaje_requisito = _("completado");
-                        $num_ok--; 
                     }
-				}
-				if (empty($fase_actual)) {
-				    $fase_actual = _("no existe. Debe crear el proceso");
-				}
-
-				// mostrar lista
-				if ($mensaje_requisito == 'ok') {
-                    $a_valores['select'][] = $id_activ;
-				}
-				$a_valores[$i]['sel'] = $id_activ;
-				$a_valores[$i][1]= $nom_activ;
-				$a_valores[$i][2]= $fase_actual;
-				$a_valores[$i][3]= $mensaje_requisito;
-			}
+                }
+            }
+            
+            // mostrar lista
+            if ($ok_fases_previas) {
+                $a_valores['select'][] = $id_activ;
+                $num_ok++;
+            }
+            $a_valores[$i]['sel'] = $id_activ;
+            $a_valores[$i][1]= $nom_activ;
+            $a_valores[$i][2]= $mensaje;
 
 		}
 
@@ -211,6 +222,7 @@ switch($Qque) {
 		$a_camposHidden = array(
 		    'id_fase_nueva' => $Qid_fase_nueva,
 		    'que' => 'update',
+		    'accion' => $Qaccion,
 		);
 		$oHash->setArraycamposHidden($a_camposHidden);
 		
@@ -231,6 +243,7 @@ switch($Qque) {
 	case 'update':
         $Qid_fase_nueva = (string) \filter_input(INPUT_POST, 'id_fase_nueva');
         $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $Qaccion = (string) \filter_input(INPUT_POST, 'accion');
         
 		foreach ($a_sel as $id_activ) {
 			$id_activ=strtok($id_activ,"#");
@@ -264,16 +277,17 @@ switch($Qque) {
                 $msg_err = sprintf(_("error: La fase del proceso tipo: %s, fase: %s, tarea: %s"),$id_tipo_proceso,$id_fase,$id_tarea);
                 exit($msg_err);
             }
-            $of_responsable=$oTareaProceso->getOf_responsable();
-            if (empty($of_responsable) OR $_SESSION['oPerm']->have_perm_oficina($of_responsable) ) {
-                $oActividadProcesoTarea->setCompletado('t');
+            $of_responsable_txt = $oTareaProceso->getOf_responsable_txt();
+            if (empty($of_responsable_txt) OR $_SESSION['oPerm']->have_perm_oficina($of_responsable_txt) ) {
+                if ($Qaccion == 'desmarcar') {
+                    $oActividadProcesoTarea->setCompletado('f');
+                } else {
+                    $oActividadProcesoTarea->setCompletado('t');
+                }
                 if ($oActividadProcesoTarea->DBGuardar() === false) {
                     echo _("hay un error, no se ha guardado");
                     echo "\n".$oActividadProcesoTarea->getErrorTxt();
                 }
-                $gesActividadProcesoTareas->borrarFasesSiguientes($id_activ, $id_fase);
-                $gesActividadProcesoTareas->marcarFasesAnteriores($id_activ, $id_fase);
-                
             } else {
                 echo _("No tiene permiso para completar la fase, no se ha guardado");
             }

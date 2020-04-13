@@ -349,6 +349,7 @@ class GestorActividadFase Extends core\ClaseGestor {
 	        foreach ($oDblSt as $aDades) {
 	            $aFasesComunes[$aDades['id_fase']] = $aDades['desc_fase'];
 	        }
+	        
 	        // Ordenar según el primer proceso (si hay más de uno).
 	        reset($aProcesos);
 	        $id_tipo_proceso = current($aProcesos);
@@ -362,11 +363,12 @@ class GestorActividadFase Extends core\ClaseGestor {
 	                // compruebo si soy el responsable
 	                if ($bresp) {
 	                    $oTareaProceso = new TareaProceso($id_item);
-	                    $of_responsable = $oTareaProceso->getOf_responsable();
+	                    $of_responsable_txt = $oTareaProceso->getOf_responsable_txt();
+	                    
 	                    // Si no hay oficina responsable, pueden todos:
-	                    if (empty($of_responsable)) {
+	                    if (empty($of_responsable_txt)) {
 	                        $aFasesProcesoDesc[$id_fase] = $oFase->getDesc_fase();
-	                    } elseif ($oPermiso->have_perm_oficina($of_responsable)) {
+	                    } elseif ($oPermiso->have_perm_oficina($of_responsable_txt)) {
 	                        $aFasesProcesoDesc[$id_fase] = $oFase->getDesc_fase();
 	                    }
 	                } else {

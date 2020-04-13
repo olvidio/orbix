@@ -576,7 +576,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         return ['marcada' => $bMarcada, 'mensaje' => $msg];
     }
     
-    private function getMensaje($fase_tarea,$para) {
+    public function getMensaje($fase_tarea,$para) {
         $id_fase = strtok($fase_tarea, '#');
         
         $oFase = new ActividadFase($id_fase);
@@ -613,9 +613,8 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
             exit ($msg);
         }
         $oTareaProceso = $cTareaProceso[0];
-        $id_of_responsable = $oTareaProceso->getOf_responsable();
-        $of_responsable = empty($this->aOpcionesOficinas[$id_of_responsable])? '' : $this->aOpcionesOficinas[$id_of_responsable];
-        if ($_SESSION['oPerm']->have_perm_oficina($of_responsable)) {
+        $of_responsable_txt = $oTareaProceso->getOf_responsable_txt();
+        if ($_SESSION['oPerm']->have_perm_oficina($of_responsable_txt)) {
             return TRUE; 
         } else {
             return FALSE;

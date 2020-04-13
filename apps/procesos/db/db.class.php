@@ -180,7 +180,7 @@ class DB extends DBAbstract {
                     id_fase integer NOT NULL,
                     id_tarea integer NOT NULL,
                     status smallint NOT NULL,
-                    of_responsable integer,
+                    id_of_responsable integer,
                     json_fases_previas json
                     );";
         

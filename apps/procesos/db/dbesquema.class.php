@@ -707,7 +707,7 @@ class DBEsquema extends DBAbstract {
         
         $delimiter = "\t"; 
         $null_as = "\\\\N";
-        $fields = "id_item, id_tipo_proceso, id_fase, id_tarea, status, of_responsable, json_fases_previas";
+        $fields = "id_item, id_tipo_proceso, id_fase, id_tarea, status, id_of_responsable, json_fases_previas";
         
         // Comprobar que existe el fichero (la ruta esta bien...
         if (!file_exists($filename)) {
