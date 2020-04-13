@@ -4,11 +4,12 @@ use actividades\model\entity\Actividad;
 use cambios\model\gestorAvisoCambios;
 use core\ConfigGlobal;
 use core;
+use stdClass;
+use personas\model\entity\PersonaSacd;
 use procesos\model\entity\GestorActividadFase;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use ubis\model\entity\Ubi;
 use web\DateTimeLocal;
-use personas\model\entity\PersonaSacd;
 /**
  * Fitxer amb la Classe que accedeix a la taula av_cambios
  *
@@ -82,13 +83,13 @@ class Cambio Extends core\ClasePropiedades {
 	 */
 	 protected $iid_tipo_activ;
 	/**
-	 * JSON fases-sv de Cambio
+	 * JSON json_fases_sv de Cambio
 	 *
 	 * @var object JSON
 	 */
 	 protected $json_fases_sv;
 	/**
-	 * JSON fases-sf de Cambio
+	 * JSON json_fases_sf de Cambio
 	 *
 	 * @var object JSON
 	 */
@@ -222,8 +223,8 @@ class Cambio Extends core\ClasePropiedades {
 					id_tipo_cambio           = :id_tipo_cambio,
 					id_activ                 = :id_activ,
 					id_tipo_activ            = :id_tipo_activ,
-                    fases_sv                 = :json_fases_sv,
-					fases_sf                 = :json_fases_sf,
+                    json_fases_sv            = :json_fases_sv,
+					json_fases_sf            = :json_fases_sf,
 					id_status                = :id_status,
 					dl_org                   = :dl_org,
 					objeto                   = :objeto,
@@ -258,7 +259,7 @@ class Cambio Extends core\ClasePropiedades {
 			 * 'cambios', puede haber conflico con el id_item_cambio. 
 			 */
 			$mi_esquema = 3000;
-			$campos="(id_schema,id_tipo_cambio,id_activ,id_tipo_activ,fases_sv,fases_sf,id_status,dl_org,objeto,propiedad,valor_old,valor_new,quien_cambia,sfsv_quien_cambia,timestamp_cambio)";
+			$campos="(id_schema,id_tipo_cambio,id_activ,id_tipo_activ,json_fases_sv,json_fases_sf,id_status,dl_org,objeto,propiedad,valor_old,valor_new,quien_cambia,sfsv_quien_cambia,timestamp_cambio)";
 			$valores="($mi_esquema,:id_tipo_cambio,:id_activ,:id_tipo_activ,:json_fases_sv,:json_fases_sf,:id_status,:dl_org,:objeto,:propiedad,:valor_old,:valor_new,:quien_cambia,:sfsv_quien_cambia,:timestamp_cambio)";
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClauError = 'Cambio.insertar.prepare';
@@ -797,20 +798,25 @@ class Cambio Extends core\ClasePropiedades {
 	/**
 	 * Recupera l'atribut json_fases_sv de Cambio
 	 *
-	 * @return integer json_fases_sv
+	 * @return object json_fases_sv
 	 */
 	function getJson_fases_sv() {
 		if (!isset($this->json_fases_sv)) {
 			$this->DBCarregar();
 		}
-		return $this->json_fases_sv;
+		$oFases = json_decode($this->json_fases_sv);
+		if (empty($oFases)) {
+		    $oFases = new stdClass;
+		}
+		return $oFases;
 	}
 	/**
 	 * estableix el valor de l'atribut json_fases_sv de Cambio
 	 *
-	 * @param integer json_fases_sv='' optional
+	 * @param object $oFases
 	 */
-	function setJson_fases_sv($json_fases_sv='') {
+	function setJson_fases_sv($oFases) {
+	    $json_fases_sv = json_encode($oFases);
 		$this->json_fases_sv = $json_fases_sv;
 	}
 	/**
@@ -822,14 +828,19 @@ class Cambio Extends core\ClasePropiedades {
 		if (!isset($this->json_fases_sf)) {
 			$this->DBCarregar();
 		}
-		return $this->json_fases_sf;
+		$oFases = json_decode($this->json_fases_sf);
+		if (empty($oFases)) {
+		    $oFases = new stdClass;
+		}
+		return $oFases;
 	}
 	/**
 	 * estableix el valor de l'atribut json_fases_sf de Cambio
 	 *
-	 * @param integer json_fases_sf='' optional
+	 * @param object oFases
 	 */
-	function setJson_fases_sf($json_fases_sf='') {
+	function setJson_fases_sf($oFases) {
+	    $json_fases_sf = json_encode($oFases);
 		$this->json_fases_sf = $json_fases_sf;
 	}
 	/**

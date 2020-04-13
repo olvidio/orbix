@@ -1,6 +1,7 @@
 <?php
 use core\ConfigGlobal;
 use function core\is_true;
+use menus\model\PermisoMenu;
 use procesos\model\entity\ActividadFase;
 use procesos\model\entity\ActividadProcesoTarea;
 use procesos\model\entity\ActividadTarea;
@@ -26,10 +27,13 @@ switch($Qque) {
 		break;
 	case 'get':
 		$GesActividadProceso=new GestorActividadProcesoTarea();
-		$oLista = $GesActividadProceso->getActividadProcesoTareas(array('id_activ'=>$Qid_activ,'_ordre'=>'n_orden'));
+		$oLista = $GesActividadProceso->getActividadProcesoTareas(array('id_activ'=>$Qid_activ));
 		$txt='<table>';
 		$txt.='<tr><th>'._("ok").'</th><th>'._("fase (tarea)").'</th><th>'._("responsable").'</th><th>'._("observaciones").'</th><th></th></tr>';
 		$i = 0;
+        //para crear un desplegable de oficinas. Uso los de los menus
+        $oPermMenus = new PermisoMenu;
+        $aOpcionesOficinas = $oPermMenus->lista_array();
 		foreach($oLista as $oActividadProcesoTarea) {
 			$id_item = $oActividadProcesoTarea->getId_item();
 			$id_tipo_proceso = $oActividadProcesoTarea->getId_tipo_proceso();
@@ -56,7 +60,8 @@ switch($Qque) {
 			    $msg_err = sprintf(_("error: La fase del proceso tipo: %s, fase: %s, tarea: %s"),$id_tipo_proceso,$id_fase,$id_tarea);
                 exit($msg_err);
 			}
-			$of_responsable = $oTareaProceso->getOf_responsable();
+			$id_of_responsable = $oTareaProceso->getOf_responsable();
+			$of_responsable = empty($aOpcionesOficinas[$id_of_responsable])? '' : $aOpcionesOficinas[$id_of_responsable];
 			
 			$clase = "tono1";
 			$i % 2  ? 0: $clase = "tono3";
@@ -93,11 +98,13 @@ switch($Qque) {
         $Qid_item = (integer)  \filter_input(INPUT_POST, 'id_item');
         $Qcompletado = (string)  \filter_input(INPUT_POST, 'completado');
         $Qobserv = (string)  \filter_input(INPUT_POST, 'observ');
+        $Qforce = (string)  \filter_input(INPUT_POST, 'force');
         
 		$oFicha = new ActividadProcesoTarea(array('id_item'=>$Qid_item));
 		$oFicha->DBCarregar(); // perque tingui tots els valors, y no esbori al grabar.
 		$oFicha->setCompletado($Qcompletado);	
 		$oFicha->setObserv($Qobserv);	
+		$oFicha->setForce($Qforce);	
 		if ($oFicha->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
 			echo "\n".$oFicha->getErrorTxt();

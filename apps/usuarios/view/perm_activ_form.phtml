@@ -1,6 +1,7 @@
 <?php
 
 use actividades\model\entity\GestorTipoDeActividad;
+use procesos\model\PermAccion;
 use procesos\model\entity\GestorActividadFase;
 
 // propios
@@ -14,33 +15,34 @@ $i=0;
  */
 $a_cabeceras = [ ['name' => _("dl propia"), 'width' => '5%'],
                  ['name' => _("tipo de actividad"), 'width' => '10%'],
-                 ['name' => _("afecta a"), 'width' => '40%'],
-                 ['name' => _("fase => permiso"), 'width' => '45%'],
+                 ['name' => _("afecta a"), 'width' => '20%'],
+                 ['name' => _("fase de referenca"), 'width' => '30%'],
+                 ['name' => _("permiso off"), 'width' => '20%'],
+                 ['name' => _("permiso on"), 'width' => '20%'],
                ];
                 
 $a_botones = [];
 $a_botones[] = array( 'txt' => _("modificar"), 'click' =>"fnjs_mod_perm_activ(\"#permisos_activ\")" );
 $a_botones[] = array( 'txt' => _("eliminar"), 'click' =>"fnjs_del_perm_activ(\"#permisos_activ\")" ); 
 
+$oAcciones = new PermAccion();
+$aOpcionesAction = $oAcciones->lista_array();
 $a_valores=array();
-$oFase = new procesos\model\entity\ActividadFase();
 foreach ($cUsuarioPerm as $oUsuarioPerm) {
     $i++;
     $id_item=$oUsuarioPerm->getId_item();
-    $id_tipo=$oUsuarioPerm->getId_tipo_activ_txt();
-    $fases_csv=$oUsuarioPerm->getFases_csv();
+    $id_tipo_activ_txt=$oUsuarioPerm->getId_tipo_activ_txt();
     $dl_propia=$oUsuarioPerm->getDl_propia();
-    $json_fases = $oUsuarioPerm->getJsonFaseAccion();
-    $oFases = json_decode($json_fases);
-    if (empty($oFases)) {
-        $oFases = new stdClass;
-    }
-
+    $fase_ref=$oUsuarioPerm->getFase_ref();
+    $afecta_a=$oUsuarioPerm->getAfecta_a();
+    $perm_on=$oUsuarioPerm->getPerm_on();
+    $perm_off=$oUsuarioPerm->getPerm_off();
+    
     if ($dl_propia=='t') {
-        if (substr($id_tipo, 0, 1) == 1) { //sv
+        if (substr($id_tipo_activ_txt, 0, 1) == 1) { //sv
             $dl_propia_txt = core\ConfigGlobal::mi_dele();
         } else { //sf
-            if (substr($id_tipo, 0, 1) == '.') { //sf y sv
+            if (substr($id_tipo_activ_txt, 0, 1) == '.') { //sf y sv
                 $dl_propia_txt = core\ConfigGlobal::mi_dele().' - '.core\ConfigGlobal::mi_dele().'f';
             } else {
                 $dl_propia_txt = core\ConfigGlobal::mi_dele().'f';
@@ -50,7 +52,7 @@ foreach ($cUsuarioPerm as $oUsuarioPerm) {
         $dl_propia_txt = _("otras");
     }
 
-    $oTipoActividad = new web\TiposActividades($oUsuarioPerm->getId_tipo_activ_txt());
+    $oTipoActividad = new web\TiposActividades($id_tipo_activ_txt);
     $id_tipo_activ = $oTipoActividad->getId_tipo_activ();
     
     $GesTiposActiv = new GestorTipoDeActividad();
@@ -58,14 +60,16 @@ foreach ($cUsuarioPerm as $oUsuarioPerm) {
     
     $oGesFases= new GestorActividadFase();
     $aFases = $oGesFases->getArrayFasesProcesos($aTiposDeProcesos);
-    $oCuadrosFases->setPermissions($aFases);
+    $fase_ref_txt = array_search($fase_ref, $aFases);
     
     $a_valores[$i]['sel']="$id_usuario#$id_item";
     $a_valores[$i][1]=$dl_propia_txt;
     $a_valores[$i][2]=$oTipoActividad->getNom();
-    $a_valores[$i][3]=$oCuadrosAfecta->lista_tiene_txt($oUsuarioPerm->getAfecta_a());
+    $a_valores[$i][3]=$oCuadrosAfecta->lista_tiene_txt($afecta_a);
     
-    $a_valores[$i][4]= $oCuadrosFases->lista_tiene_txt($oFases);
+    $a_valores[$i][4]= $fase_ref_txt;
+    $a_valores[$i][5]= $aOpcionesAction[$perm_off];
+    $a_valores[$i][6]= $aOpcionesAction[$perm_on];
     
 
 }

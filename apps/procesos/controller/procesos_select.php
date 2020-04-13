@@ -48,6 +48,11 @@ $oHashAct->setUrl($url_ajax);
 $oHashAct->setcamposForm('que!id_tipo_proceso');
 $h_actualizar = $oHashAct->linkSinVal();
 
+$oHashClone = new Hash();
+$oHashClone->setUrl($url_ajax);
+$oHashClone->setcamposForm('que!id_tipo_proceso!id_tipo_proceso_ref');
+$h_clonar = $oHashClone->linkSinVal();
+
 $oHashDel = new web\Hash();
 $oHashDel->setUrl($url_ajax);
 $oHashDel->setCamposForm('que!id_item');
@@ -69,9 +74,11 @@ $oHashMover->setCamposForm('que!id_item!orden');
 $h_mover = $oHashMover->linkSinVal();
 
 $txt_eliminar = _("¿Esta seguro que desea borrar esta fase?");
+$txt_clonar = _("No ha determinado para que proceso");
 
 $a_campos = ['oPosicion' => $oPosicion,
     'h_actualizar' => $h_actualizar,
+    'h_clonar' => $h_clonar,
     'h_eliminar' => $h_eliminar,
     'h_nuevo' => $h_nuevo,
     'h_modificar' => $h_modificar,
@@ -80,6 +87,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_ajax' => $url_ajax,
     'url_ver' => $url_ver,
     'txt_eliminar' => $txt_eliminar,
+    'txt_clonar' => $txt_clonar,
 ];
 
 $oView = new core\ViewTwig('procesos/controller');

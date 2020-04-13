@@ -44,10 +44,11 @@ fnjs_actualizar=function(){
 }
 
 fnjs_guardar=function(id_item){
+	var force=$('#force').prop("checked");
 	var completado=$('#comp'+id_item).prop('checked');
 	var observ=$('#observ'+id_item).val();
 	var url = "{{ url_ajax }}";
-	var parametros='que=update&id_item='+id_item+'&completado='+completado+'&observ='+observ+'{{ h_update|raw }}';
+	var parametros='que=update&id_item='+id_item+'&completado='+completado+'&force='+force+'&observ='+observ+'{{ h_update|raw }}';
 		 
 	$.ajax({
 		url: url,
@@ -83,6 +84,7 @@ fnjs_actualizar();
 {% if permiso_calendario %}
 	<td><input type="Button" value="{{ "regenerar"|trans }}" onclick="fnjs_generar_proceso()"></td>
 {% endif %}
+<td style="text-align: right;">{{ "forzar"|trans }}<input type="checkbox" name=force id=force></td>
 </tr>
 </table>
 

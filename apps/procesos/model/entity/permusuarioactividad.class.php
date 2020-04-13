@@ -1,6 +1,7 @@
 <?php
 namespace procesos\model\entity;
 use core;
+use stdClass;
 /**
  * Fitxer amb la Classe que accedeix a la taula aux_usuarios_perm
  *
@@ -49,23 +50,23 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 	 */
 	 private $iid_usuario;
 	/**
+	 * Dl_propia de PermUsuarioActividad
+	 *
+	 * @var boolean
+	 */
+	 private $bdl_propia;
+	/**
 	 * Id_tipo_activ_txt de PermUsuarioActividad
 	 *
 	 * @var string
 	 */
 	 private $sid_tipo_activ_txt;
 	/**
-	 * fases_csv de PermUsuarioActividad
-	 *
-	 * @var string
-	 */
-	 private $sfases_csv;
-	/**
-	 * Accion de PermUsuarioActividad
+	 * Fase_ref de PermUsuarioActividad
 	 *
 	 * @var integer
 	 */
-	 private $iaccion;
+	 private $ifase_ref;
 	/**
 	 * Afecta_a de PermUsuarioActividad
 	 *
@@ -73,17 +74,17 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 	 */
 	 private $iafecta_a;
 	/**
-	 * Dl_propia de PermUsuarioActividad
+	 * PermOn de PermUsuarioActividad
 	 *
-	 * @var boolean
+	 * @var integer
 	 */
-	 private $bdl_propia;
+	 private $iperm_on;
 	/**
-	 * JSON fase-accion de PermUsuarioActividad
+	 * PermOn de PermUsuarioActividad
 	 *
-	 * @var object JSON
+	 * @var integer
 	 */
-	 private $json_fase_accion;
+	 private $iperm_off;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
 	 * oDbl de PermUsuarioActividad
@@ -137,12 +138,12 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 		if ($this->DBCarregar('guardar') === FALSE) { $bInsert=TRUE; } else { $bInsert=FALSE; }
 		$aDades=array();
 		$aDades['id_usuario'] = $this->iid_usuario;
-		$aDades['id_tipo_activ_txt'] = $this->sid_tipo_activ_txt;
-		$aDades['fases_csv'] = $this->sfases_csv;
-		$aDades['accion'] = $this->iaccion;
-		$aDades['afecta_a'] = $this->iafecta_a;
 		$aDades['dl_propia'] = $this->bdl_propia;
-		$aDades['json_fase_accion'] = $this->json_fase_accion;
+		$aDades['id_tipo_activ_txt'] = $this->sid_tipo_activ_txt;
+		$aDades['fase_ref'] = $this->ifase_ref;
+		$aDades['afecta_a'] = $this->iafecta_a;
+		$aDades['perm_on'] = $this->iperm_on;
+		$aDades['perm_off'] = $this->iperm_off;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if ( core\is_true($aDades['dl_propia']) ) { $aDades['dl_propia']='true'; } else { $aDades['dl_propia']='false'; }
@@ -151,12 +152,12 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 			//UPDATE
 			$update="
 					id_usuario               = :id_usuario,
-					id_tipo_activ_txt        = :id_tipo_activ_txt,
-					fases_csv                = :fases_csv,
-					accion                   = :accion,
-					afecta_a                 = :afecta_a,
 					dl_propia                = :dl_propia,
-					json_fase_accion         = :json_fase_accion";
+					id_tipo_activ_txt        = :id_tipo_activ_txt,
+					fase_ref                 = :fase_ref,
+					afecta_a                 = :afecta_a,
+					perm_on                  = :perm_on,
+					perm_off                 = :perm_off";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item'")) === FALSE) {
 				$sClauError = 'PermUsuarioActividad.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -175,8 +176,8 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			$campos="(id_usuario,id_tipo_activ_txt,fases_csv,accion,afecta_a,dl_propia,json_fase_accion)";
-			$valores="(:id_usuario,:id_tipo_activ_txt,:fases_csv,:accion,:afecta_a,:dl_propia,:json_fase_accion)";		
+			$campos="(id_usuario,dl_propia,id_tipo_activ_txt,fase_ref,afecta_a,perm_on,perm_off)";
+			$valores="(:id_usuario,:dl_propia,:id_tipo_activ_txt,:fase_ref,:afecta_a,:perm_on,:perm_off)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClauError = 'PermUsuarioActividad.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -261,12 +262,12 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_item',$aDades)) $this->setId_item($aDades['id_item']);
 		if (array_key_exists('id_usuario',$aDades)) $this->setId_usuario($aDades['id_usuario']);
-		if (array_key_exists('id_tipo_activ_txt',$aDades)) $this->setId_tipo_activ_txt($aDades['id_tipo_activ_txt']);
-		if (array_key_exists('fases_csv',$aDades)) $this->setFases_csv($aDades['fases_csv']);
-		if (array_key_exists('accion',$aDades)) $this->setAccion($aDades['accion']);
-		if (array_key_exists('afecta_a',$aDades)) $this->setAfecta_a($aDades['afecta_a']);
 		if (array_key_exists('dl_propia',$aDades)) $this->setDl_propia($aDades['dl_propia']);
-		if (array_key_exists('json_fase_accion',$aDades)) $this->setJsonFaseAccion($aDades['json_fase_accion']);
+		if (array_key_exists('id_tipo_activ_txt',$aDades)) $this->setId_tipo_activ_txt($aDades['id_tipo_activ_txt']);
+		if (array_key_exists('fase_ref',$aDades)) $this->setFase_ref($aDades['fase_ref']);
+		if (array_key_exists('afecta_a',$aDades)) $this->setAfecta_a($aDades['afecta_a']);
+		if (array_key_exists('perm_on',$aDades)) $this->setPerm_on($aDades['perm_on']);
+		if (array_key_exists('perm_off',$aDades)) $this->setPerm_off($aDades['perm_off']);
 	}
 
 	/**
@@ -277,12 +278,12 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 		$aPK = $this->getPrimary_key();
 		$this->setId_item('');
 		$this->setId_usuario('');
-		$this->setId_tipo_activ_txt('');
-		$this->setFases_csv('');
-		$this->setAccion('');
-		$this->setAfecta_a('');
 		$this->setDl_propia('');
-		$this->setJsonFaseAccion('');
+		$this->setId_tipo_activ_txt('');
+		$this->setFase_ref('');
+		$this->setAfecta_a('');
+		$this->setPerm_on('');
+		$this->setPerm_off('');
 		$this->setPrimary_key($aPK);
 	}
 
@@ -366,6 +367,25 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 		$this->iid_usuario = $iid_usuario;
 	}
 	/**
+	 * Recupera l'atribut bdl_propia de PermUsuarioActividad
+	 *
+	 * @return boolean bdl_propia
+	 */
+	function getDl_propia() {
+		if (!isset($this->bdl_propia)) {
+			$this->DBCarregar();
+		}
+		return $this->bdl_propia;
+	}
+	/**
+	 * estableix el valor de l'atribut bdl_propia de PermUsuarioActividad
+	 *
+	 * @param boolean bdl_propia='f' optional
+	 */
+	function setDl_propia($bdl_propia='f') {
+		$this->bdl_propia = $bdl_propia;
+	}
+	/**
 	 * Recupera l'atribut sid_tipo_activ_txt de PermUsuarioActividad
 	 *
 	 * @return string sid_tipo_activ_txt
@@ -385,42 +405,23 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 		$this->sid_tipo_activ_txt = $sid_tipo_activ_txt;
 	}
 	/**
-	 * Recupera l'atribut sfases_csv de PermUsuarioActividad
+	 * Recupera l'atribut ifase_ref de PermUsuarioActividad
 	 *
-	 * @return string sfases_csv
+	 * @return integer ifase_ref
 	 */
-	function getFases_csv() {
-		if (!isset($this->sfases_csv)) {
+	function getFase_ref() {
+		if (!isset($this->ifase_ref)) {
 			$this->DBCarregar();
 		}
-		return $this->sfases_csv;
+		return $this->ifase_ref;
 	}
 	/**
-	 * estableix el valor de l'atribut sfases_csv de PermUsuarioActividad
+	 * estableix el valor de l'atribut ifase_ref de PermUsuarioActividad
 	 *
-	 * @param string sfases_csv='' optional
+	 * @param integer ifase_ref='' optional
 	 */
-	function setFases_csv($sfases_csv='') {
-		$this->sfases_csv = $sfases_csv;
-	}
-	/**
-	 * Recupera l'atribut iaccion de PermUsuarioActividad
-	 *
-	 * @return integer iaccion
-	 */
-	function getAccion() {
-		if (!isset($this->iaccion)) {
-			$this->DBCarregar();
-		}
-		return $this->iaccion;
-	}
-	/**
-	 * estableix el valor de l'atribut iaccion de PermUsuarioActividad
-	 *
-	 * @param integer iaccion='' optional
-	 */
-	function setAccion($iaccion='') {
-		$this->iaccion = $iaccion;
+	function setFase_ref($ifase_ref='') {
+		$this->ifase_ref = $ifase_ref;
 	}
 	/**
 	 * Recupera l'atribut iafecta_a de PermUsuarioActividad
@@ -442,42 +443,42 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 		$this->iafecta_a = $iafecta_a;
 	}
 	/**
-	 * Recupera l'atribut bdl_propia de PermUsuarioActividad
+	 * recupera l'atribut iperm_on de permusuarioactividad
 	 *
-	 * @return boolean bdl_propia
+	 * @return integer iperm_on
 	 */
-	function getDl_propia() {
-		if (!isset($this->bdl_propia)) {
-			$this->DBCarregar();
+	function getPerm_on() {
+		if (!isset($this->iperm_on)) {
+			$this->dbcarregar();
 		}
-		return $this->bdl_propia;
+		return $this->iperm_on;
 	}
 	/**
-	 * estableix el valor de l'atribut bdl_propia de PermUsuarioActividad
+	 * estableix el valor de l'atribut iperm_on de permusuarioactividad
 	 *
-	 * @param boolean bdl_propia='f' optional
+	 * @param integer iperm_on='' optional
 	 */
-	function setDl_propia($bdl_propia='f') {
-		$this->bdl_propia = $bdl_propia;
+	function setPerm_on($iperm_on='') {
+		$this->iperm_on = $iperm_on;
 	}
 	/**
-	 * Recupera l'atribut json_fase_accion de PermUsuarioActividad
+	 * recupera l'atribut iperm_off de permusuarioactividad
 	 *
-	 * @return string json_fase_accion
+	 * @return integer iperm_off
 	 */
-	function getJsonFaseAccion() {
-		if (!isset($this->json_fase_accion)) {
-			$this->DBCarregar();
+	function getPerm_off() {
+		if (!isset($this->iperm_off)) {
+			$this->dbcarregar();
 		}
-		return $this->json_fase_accion;
+		return $this->iperm_off;
 	}
 	/**
-	 * estableix el valor de l'atribut json_fase_accion de PermUsuarioActividad
+	 * estableix el valor de l'atribut iperm_off de permusuarioactividad
 	 *
-	 * @param string json_fase_accion='' optional
+	 * @param integer iperm_off='' optional
 	 */
-	function setJsonFaseAccion($json_fase_accion='') {
-		$this->json_fase_accion = $json_fase_accion;
+	function setPerm_off($iperm_off='') {
+		$this->iperm_off = $iperm_off;
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
@@ -489,16 +490,14 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 		$oPermUsuarioActividadSet = new core\Set();
 
 		$oPermUsuarioActividadSet->add($this->getDatosId_usuario());
-		$oPermUsuarioActividadSet->add($this->getDatosId_tipo_activ_txt());
-		$oPermUsuarioActividadSet->add($this->getDatosFases_csv());
-		$oPermUsuarioActividadSet->add($this->getDatosAccion());
-		$oPermUsuarioActividadSet->add($this->getDatosAfecta_a());
 		$oPermUsuarioActividadSet->add($this->getDatosDl_propia());
-		$oPermUsuarioActividadSet->add($this->getDatosJsonFaseAccion());
+		$oPermUsuarioActividadSet->add($this->getDatosId_tipo_activ_txt());
+		$oPermUsuarioActividadSet->add($this->getDatosFase_ref());
+		$oPermUsuarioActividadSet->add($this->getDatosAfecta_a());
+		$oPermUsuarioActividadSet->add($this->getDatosPerm_on());
+		$oPermUsuarioActividadSet->add($this->getDatosPerm_off());
 		return $oPermUsuarioActividadSet->getTot();
 	}
-
-
 
 	/**
 	 * Recupera les propietats de l'atribut iid_usuario de PermUsuarioActividad
@@ -510,54 +509,6 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_usuario'));
 		$oDatosCampo->setEtiqueta(_("id_usuario"));
-		return $oDatosCampo;
-	}
-	/**
-	 * Recupera les propietats de l'atribut sid_tipo_activ_txt de PermUsuarioActividad
-	 * en una clase del tipus DatosCampo
-	 *
-	 * @return core\DatosCampo
-	 */
-	function getDatosId_tipo_activ_txt() {
-		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_tipo_activ_txt'));
-		$oDatosCampo->setEtiqueta(_("id_tipo_activ_txt"));
-		return $oDatosCampo;
-	}
-	/**
-	 * Recupera les propietats de l'atribut sfases_csv de PermUsuarioActividad
-	 * en una clase del tipus DatosCampo
-	 *
-	 * @return core\DatosCampo
-	 */
-	function getDatosFases_csv() {
-		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'fases_csv'));
-		$oDatosCampo->setEtiqueta(_("fases_csv"));
-		return $oDatosCampo;
-	}
-	/**
-	 * Recupera les propietats de l'atribut iaccion de PermUsuarioActividad
-	 * en una clase del tipus DatosCampo
-	 *
-	 * @return core\DatosCampo
-	 */
-	function getDatosAccion() {
-		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'accion'));
-		$oDatosCampo->setEtiqueta(_("accion"));
-		return $oDatosCampo;
-	}
-	/**
-	 * Recupera les propietats de l'atribut iafecta_a de PermUsuarioActividad
-	 * en una clase del tipus DatosCampo
-	 *
-	 * @return core\DatosCampo
-	 */
-	function getDatosAfecta_a() {
-		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'afecta_a'));
-		$oDatosCampo->setEtiqueta(_("afecta_a"));
 		return $oDatosCampo;
 	}
 	/**
@@ -573,15 +524,63 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut json_fase_accion de PermUsuarioActividad
+	 * Recupera les propietats de l'atribut sid_tipo_activ_txt de PermUsuarioActividad
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
 	 */
-	function getDatosJsonFaseAccion() {
+	function getDatosId_tipo_activ_txt() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'json_fase_accion'));
-		$oDatosCampo->setEtiqueta(_("json_fase_accion"));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_tipo_activ_txt'));
+		$oDatosCampo->setEtiqueta(_("id_tipo_activ_txt"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut ifase_ref de PermUsuarioActividad
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosFase_ref() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'fase_ref'));
+		$oDatosCampo->setEtiqueta(_("Fase de referencia"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut iafecta_a de PermUsuarioActividad
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosAfecta_a() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'afecta_a'));
+		$oDatosCampo->setEtiqueta(_("afecta_a"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut iperm_on de PermUsuarioActividad
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosPerm_on() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'perm_on'));
+		$oDatosCampo->setEtiqueta(_("perm_on"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut iperm_off de PermUsuarioActividad
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosPerm_off() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'perm_off'));
+		$oDatosCampo->setEtiqueta(_("perm_off"));
 		return $oDatosCampo;
 	}
 }

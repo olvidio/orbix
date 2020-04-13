@@ -1,6 +1,7 @@
 <?php
 namespace cambios\model\entity;
 use core;
+use stdClass;
 /**
  * Fitxer amb la Classe que accedeix a la taula av_cambios_usuario_objeto_pref
  *
@@ -429,20 +430,25 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 	/**
 	 * Recupera l'atribut json_fases de CambioUsuarioObjetoPref
 	 *
-	 * @return integer json_fases
+	 * @return object json_fases
 	 */
 	function getJson_fases() {
 		if (!isset($this->json_fases)) {
 			$this->DBCarregar();
 		}
-		return $this->json_fases;
+		$oFases = json_decode($this->json_fases);
+		if (empty($oFases)) {
+		    $oFases = new stdClass;
+		}
+		return $oFases;
 	}
 	/**
 	 * estableix el valor de l'atribut json_fases de CambioUsuarioObjetoPref
 	 *
-	 * @param integer json_fases='' optional
+	 * @param object json_fases
 	 */
-	function setJson_fases($json_fases='') {
+	function setJson_fases($oFases) {
+	    $json_fases = json_encode($oFases);
 		$this->json_fases = $json_fases;
 	}
 	/**

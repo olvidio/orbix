@@ -47,9 +47,11 @@ class xResto {
 	/* METODES ----------------------------------------------------------------- */
 	public function __construct($iid_tipo_activ) {
 		$this->iid_tipo_activ = $iid_tipo_activ;
-		
-		$oTipoDeActividad = new TipoDeActividad($iid_tipo_activ);
-        $this->iid_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso();
+	}
+
+	public function setOmplir($iAfecta,$fase_ref,$perm_on,$perm_off) {
+		$this->aDades[$iAfecta][$fase_ref]['on'] = $perm_on;
+		$this->aDades[$iAfecta][$fase_ref]['off'] = $perm_off;
 	}
 
 	/**
@@ -70,7 +72,19 @@ class xResto {
         return FALSE;
 	}
 	
-	public function getPerm($id_tipo_proceso,$iAfecta,$iFase,$id_activ='') {
+	public function getFaseRef($iAfecta) {
+		$fase_ref = key($this->aDades[$iAfecta]);
+		return $fase_ref;
+	}
+	
+	public function getPerm($iAfecta,$id_fase_ref,$on_off) {
+        $perm = $this->aDades[$iAfecta][$id_fase_ref][$on_off];
+        return $perm;    
+	}
+	
+	
+	
+	public function zzgetPerm($id_tipo_proceso,$iAfecta,$iFase,$id_activ='') {
 		$i=0;
 		foreach ($this->aDades as $key => $a_proceso_perm) {
 			$i++;
@@ -113,11 +127,6 @@ class xResto {
         }
 	}
 	
-	public function setFasesInterval($iFaseIni,$iFaseFin) {
-	}
-	public function setOmplir($id_tipo_proceso,$iFase,$iPerm,$iAfecta) {
-		$this->aDades[$iAfecta][$id_tipo_proceso][$iFase]=$iPerm;
-	}
 	public function setOrdenar() {
 		if (is_array($this->aDades)) ksort($this->aDades);
 	}

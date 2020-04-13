@@ -1,7 +1,8 @@
 <?php
 namespace procesos\model\entity;
-use core;
 use actividades\model\entity\ActividadAll;
+use core;
+use stdClass;
 /**
  * Fitxer amb la Classe que accedeix a la taula a_tareas_proceso
  *
@@ -50,12 +51,6 @@ class TareaProceso Extends core\ClasePropiedades {
 	 */
 	 private $iid_tipo_proceso;
 	/**
-	 * N_orden de TareaProceso
-	 *
-	 * @var integer
-	 */
-	 private $in_orden;
-	/**
 	 * Id_fase de TareaProceso
 	 *
 	 * @var integer
@@ -82,21 +77,9 @@ class TareaProceso Extends core\ClasePropiedades {
 	/**
 	 * Id_fase_previa de TareaProceso
 	 *
-	 * @var integer
+	 * @var object JSON
 	 */
-	 private $iid_fase_previa;
-	/**
-	 * Id_tarea_previa de TareaProceso
-	 *
-	 * @var integer
-	 */
-	 private $iid_tarea_previa;
-	/**
-	 * Mensaje_requisito de TareaProceso
-	 *
-	 * @var string
-	 */
-	 private $smensaje_requisito;
+	 private $json_fases_previas;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
 	 * oDbl de TareaProceso
@@ -151,28 +134,22 @@ class TareaProceso Extends core\ClasePropiedades {
 		if ($this->DBCarregar('guardar') === FALSE) { $bInsert=TRUE; } else { $bInsert=FALSE; }
 		$aDades=array();
 		$aDades['id_tipo_proceso'] = $this->iid_tipo_proceso;
-		$aDades['n_orden'] = $this->in_orden;
 		$aDades['id_fase'] = $this->iid_fase;
 		$aDades['id_tarea'] = $this->iid_tarea;
 		$aDades['status'] = $this->istatus;
 		$aDades['of_responsable'] = $this->sof_responsable;
-		$aDades['id_fase_previa'] = $this->iid_fase_previa;
-		$aDades['id_tarea_previa'] = $this->iid_tarea_previa;
-		$aDades['mensaje_requisito'] = $this->smensaje_requisito;
+		$aDades['json_fases_previas'] = $this->json_fases_previas;
 		array_walk($aDades, 'core\poner_null');
 
 		if ($bInsert === FALSE) {
 			//UPDATE
 			$update="
 					id_tipo_proceso          = :id_tipo_proceso,
-					n_orden                  = :n_orden,
 					id_fase                  = :id_fase,
 					id_tarea                 = :id_tarea,
 					status                   = :status,
 					of_responsable           = :of_responsable,
-					id_fase_previa           = :id_fase_previa,
-					id_tarea_previa          = :id_tarea_previa,
-					mensaje_requisito        = :mensaje_requisito";
+					json_fases_previas       = :json_fases_previas";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item'")) === FALSE) {
 				$sClauError = 'TareaProceso.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -191,8 +168,8 @@ class TareaProceso Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			$campos="(id_tipo_proceso,n_orden,id_fase,id_tarea,status,of_responsable,id_fase_previa,id_tarea_previa,mensaje_requisito)";
-			$valores="(:id_tipo_proceso,:n_orden,:id_fase,:id_tarea,:status,:of_responsable,:id_fase_previa,:id_tarea_previa,:mensaje_requisito)";		
+			$campos="(id_tipo_proceso,id_fase,id_tarea,status,of_responsable,json_fases_previas)";
+			$valores="(:id_tipo_proceso,:id_fase,:id_tarea,:status,:of_responsable,:json_fases_previas)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClauError = 'TareaProceso.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -301,14 +278,11 @@ class TareaProceso Extends core\ClasePropiedades {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_item',$aDades)) $this->setId_item($aDades['id_item']);
 		if (array_key_exists('id_tipo_proceso',$aDades)) $this->setId_tipo_proceso($aDades['id_tipo_proceso']);
-		if (array_key_exists('n_orden',$aDades)) $this->setN_orden($aDades['n_orden']);
 		if (array_key_exists('id_fase',$aDades)) $this->setId_fase($aDades['id_fase']);
 		if (array_key_exists('id_tarea',$aDades)) $this->setId_tarea($aDades['id_tarea']);
 		if (array_key_exists('status',$aDades)) $this->setStatus($aDades['status']);
 		if (array_key_exists('of_responsable',$aDades)) $this->setOf_responsable($aDades['of_responsable']);
-		if (array_key_exists('id_fase_previa',$aDades)) $this->setId_fase_previa($aDades['id_fase_previa']);
-		if (array_key_exists('id_tarea_previa',$aDades)) $this->setId_tarea_previa($aDades['id_tarea_previa']);
-		if (array_key_exists('mensaje_requisito',$aDades)) $this->setMensaje_requisito($aDades['mensaje_requisito']);
+		if (array_key_exists('json_fases_previas',$aDades)) $this->setJson_fases_previas($aDades['json_fases_previas']);
 	}
 
 	/**
@@ -319,14 +293,11 @@ class TareaProceso Extends core\ClasePropiedades {
 		$aPK = $this->getPrimary_key();
 		$this->setId_item('');
 		$this->setId_tipo_proceso('');
-		$this->setN_orden('');
 		$this->setId_fase('');
 		$this->setId_tarea('');
 		$this->setStatus('');
 		$this->setOf_responsable('');
-		$this->setId_fase_previa('');
-		$this->setId_tarea_previa('');
-		$this->setMensaje_requisito('');
+		$this->setJson_fases_previas('');
 		$this->setPrimary_key($aPK);
 	}
 
@@ -410,25 +381,6 @@ class TareaProceso Extends core\ClasePropiedades {
 		$this->iid_tipo_proceso = $iid_tipo_proceso;
 	}
 	/**
-	 * Recupera l'atribut in_orden de TareaProceso
-	 *
-	 * @return integer in_orden
-	 */
-	function getN_orden() {
-		if (!isset($this->in_orden)) {
-			$this->DBCarregar();
-		}
-		return $this->in_orden;
-	}
-	/**
-	 * estableix el valor de l'atribut in_orden de TareaProceso
-	 *
-	 * @param integer in_orden='' optional
-	 */
-	function setN_orden($in_orden='') {
-		$this->in_orden = $in_orden;
-	}
-	/**
 	 * Recupera l'atribut iid_fase de TareaProceso
 	 *
 	 * @return integer iid_fase
@@ -505,63 +457,36 @@ class TareaProceso Extends core\ClasePropiedades {
 		$this->sof_responsable = $sof_responsable;
 	}
 	/**
-	 * Recupera l'atribut iid_fase_previa de TareaProceso
+	 * Recupera l'atribut json_fases_previas de TareaProceso
 	 *
-	 * @return integer iid_fase_previa
+	 * @param boolean $bArray si hay que devolver un array en vez de un objeto.
+	 * @return object $oFases
 	 */
-	function getId_fase_previa() {
-		if (!isset($this->iid_fase_previa)) {
+	function getJson_fases_previas($bArray=FALSE) {
+		if (!isset($this->json_fases_previas)) {
 			$this->DBCarregar();
 		}
-		return $this->iid_fase_previa;
+        $oFases = json_decode(json_decode($this->json_fases_previas),$bArray);
+        if (empty($oFases) OR $oFases == '[]') {
+            if ($bArray) {
+                $oFases = []; 
+            } else {
+                $oFases = new stdClass;
+            }
+        }
+        return $oFases;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_fase_previa de TareaProceso
+	 * estableix el valor de l'atribut json_fases_previas de TareaProceso
 	 *
-	 * @param integer iid_fase_previa='' optional
+	 * @param object $oFases
 	 */
-	function setId_fase_previa($iid_fase_previa='') {
-		$this->iid_fase_previa = $iid_fase_previa;
+	function setJson_fases_previas($oFases) {
+        $json_fases_previas = json_encode($oFases);
+		$this->json_fases_previas = $json_fases_previas;
 	}
-	/**
-	 * Recupera l'atribut iid_tarea_previa de TareaProceso
-	 *
-	 * @return integer iid_tarea_previa
-	 */
-	function getId_tarea_previa() {
-		if (!isset($this->iid_tarea_previa)) {
-			$this->DBCarregar();
-		}
-		return $this->iid_tarea_previa;
-	}
-	/**
-	 * estableix el valor de l'atribut iid_tarea_previa de TareaProceso
-	 *
-	 * @param integer iid_tarea_previa='' optional
-	 */
-	function setId_tarea_previa($iid_tarea_previa='') {
-		$this->iid_tarea_previa = $iid_tarea_previa;
-	}
-	/**
-	 * Recupera l'atribut smensaje_requisito de TareaProceso
-	 *
-	 * @return string smensaje_requisito
-	 */
-	function getMensaje_requisito() {
-		if (!isset($this->smensaje_requisito)) {
-			$this->DBCarregar();
-		}
-		return $this->smensaje_requisito;
-	}
-	/**
-	 * estableix el valor de l'atribut smensaje_requisito de TareaProceso
-	 *
-	 * @param string smensaje_requisito='' optional
-	 */
-	function setMensaje_requisito($smensaje_requisito='') {
-		$this->smensaje_requisito = $smensaje_requisito;
-	}
-	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
+
+    /* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
 	/**
 	 * Retorna una col·lecció d'objectes del tipus DatosCampo
@@ -571,14 +496,11 @@ class TareaProceso Extends core\ClasePropiedades {
 		$oTareaProcesoSet = new core\Set();
 
 		$oTareaProcesoSet->add($this->getDatosId_tipo_proceso());
-		$oTareaProcesoSet->add($this->getDatosN_orden());
 		$oTareaProcesoSet->add($this->getDatosId_fase());
 		$oTareaProcesoSet->add($this->getDatosId_tarea());
 		$oTareaProcesoSet->add($this->getDatosStatus());
 		$oTareaProcesoSet->add($this->getDatosOf_responsable());
 		$oTareaProcesoSet->add($this->getDatosId_fase_previa());
-		$oTareaProcesoSet->add($this->getDatosId_tarea_previa());
-		$oTareaProcesoSet->add($this->getDatosMensaje_requisito());
 		return $oTareaProcesoSet->getTot();
 	}
 
@@ -598,20 +520,6 @@ class TareaProceso Extends core\ClasePropiedades {
 		$oDatosCampo->setArgument('ProcesoTipo'); // nombre del objeto relacionado
 		$oDatosCampo->setArgument2('getNom_proceso'); // método para obtener el valor a mostrar del objeto relacionado.
 		$oDatosCampo->setArgument3('getListaProcesoTipos'); // método con que crear la lista de opciones del Gestor objeto relacionado.
-		return $oDatosCampo;
-	}
-	/**
-	 * Recupera les propietats de l'atribut in_orden de TareaProceso
-	 * en una clase del tipus DatosCampo
-	 *
-	 * @return core\DatosCampo
-	 */
-	function getDatosN_orden() {
-		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'n_orden'));
-		$oDatosCampo->setEtiqueta(_("orden"));
-		$oDatosCampo->setTipo('texto');
-		$oDatosCampo->setArgument('4');
 		return $oDatosCampo;
 	}
 	/**
@@ -678,7 +586,7 @@ class TareaProceso Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut iid_fase_previa de TareaProceso
+	 * Recupera les propietats de l'atribut json_fases_previas de TareaProceso
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
@@ -692,35 +600,6 @@ class TareaProceso Extends core\ClasePropiedades {
 		$oDatosCampo->setArgument2('getDesc_fase'); // método para obtener el valor a mostrar del objeto relacionado.
 		$oDatosCampo->setArgument3('getListaActividadFases'); // método con que crear la lista de opciones del Gestor objeto relacionado.
 		$oDatosCampo->setAccion('id_tarea_previa'); // campo que hay que actualizar al cambiar este.
-		return $oDatosCampo;
-	}
-	/**
-	 * Recupera les propietats de l'atribut iid_tarea_previa de TareaProceso
-	 * en una clase del tipus DatosCampo
-	 *
-	 * @return core\DatosCampo
-	 */
-	function getDatosId_tarea_previa() {
-		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_tarea_previa'));
-		$oDatosCampo->setEtiqueta(_("tarea previa"));
-		$oDatosCampo->setTipo('depende');
-		$oDatosCampo->setArgument('ActividadTarea');
-		$oDatosCampo->setArgument2('getDesc_tarea'); // método para obtener el valor a mostrar del objeto relacionado.
-		return $oDatosCampo;
-	}
-	/**
-	 * Recupera les propietats de l'atribut smensaje_requisito de TareaProceso
-	 * en una clase del tipus DatosCampo
-	 *
-	 * @return core\DatosCampo
-	 */
-	function getDatosMensaje_requisito() {
-		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'mensaje_requisito'));
-		$oDatosCampo->setEtiqueta(_("mensaje requisito"));
-		$oDatosCampo->setTipo('texto');
-		$oDatosCampo->setArgument('70');
 		return $oDatosCampo;
 	}
 }

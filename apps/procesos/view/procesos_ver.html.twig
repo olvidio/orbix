@@ -16,25 +16,48 @@ fnjs_get_depende=function(id_campo,acc){
 		}
 	});
 }
+
+fnjs_mas_dependencias=function(){
+	var n=$('#dep_num').val();
+	var dedicacion;
+	++n;
+	alert('HOLA2');
+	
+    dedicacion='<tr><td>';
+    dedicacion+={{ oDesplFasePrevia.desplegable()|json_encode|raw }};
+    dedicacion+='</td><td>';
+	dedicacion+={{ oDesplTareaPrevia.desplegable()|json_encode|raw }};
+    dedicacion+='</td><td>';
+    dedicacion+='<input colspan=2 type="text" size="50" name="mensaje_requisito[]" value="{{ mensaje_requisito }}" >';
+	dedicacion+='</td></tr>';
+
+	/* antes del desplegable de añadir */
+	$('#pie').before(dedicacion);
+	$('#dep_num').val(n);
+}
 </script>
 <form id=frm_proceso name=frm_proceso action=''>
 {{ oHash.getCamposHtml()|raw }}
+<input type="hidden" id="dep_num" name="dep_num" value="{{ dep_num }}">
 <table>
 <tr>
 <td>{{ "fase"|trans }}:</td><td>{{  oDesplFase.desplegable()|raw }}</td>
-<td>{{ "tarea"|trans }}:</td><td>{{  oDesplTarea.desplegable()|raw }}</td>
+<td>{{ "tarea"|trans }}: {{  oDesplTarea.desplegable()|raw }}</td>
 </tr>
 <tr><td>{{ "status"|trans }}:</td><td>{{  oDesplStatus.desplegable()|raw }}</td>
 </tr>
 <tr><td>{{ "oficina responsable"|trans }}:</td>
-<td><input type='text' name='of_responsable' value='{{ of_responsable }}'</td></tr>
+<td>{{ oDesplOficinas.desplegable()|raw }}</td></tr>
+<tr><th colspan=4>{{ "Depende de"|trans }}</th></tr>
+<tr><td>{{ "fase previa"|trans }}:</td><td>{{ "tarea previa"|trans  }}:</td><td>{{ "mensaje requisito"|trans }}:</td></tr>
+{% for j in range(0,dep_num-1) %}
+<tr><td>{{  aDesplFasesPrevias[j].desplegable()|raw }}</td>
+<td>{{  aDesplTareasPrevias[j].desplegable()|raw }}</td>
+<td><input colspan=2 type='text' size=50 name='mensaje_requisito[]' value='{{ aMensajes_requisitos[j] }}'></td>
 <tr>
-<td>{{ "fase previa"|trans }}:</td><td>{{  oDesplFasePrevia.desplegable()|raw }}</td>
-<td>{{ "tarea previa"|trans  }}:</td><td>{{  oDesplTareaPrevia.desplegable()|raw }}</td>
-</tr>
-<tr>
-<td>{{ "mensaje requisito"|trans }}:</td>
-<td colspan=4><input type='text' size=50 name='mensaje_requisito' value='{{ mensaje_requisito }}'></td></tr>
+{% endfor %}
+<tr id=pie><td><span class="link" onclick='fnjs_mas_dependencias();'>{{ "añadir depende"|trans }}</span>
+		</td></tr>
 </table>
 <input type='button' value='{{ "guardar"|trans }}' onclick='fnjs_guardar(this.form);' >
 <input type='button' value='{{ "cancel"|trans }}' onclick='fnjs_cerrar();' >

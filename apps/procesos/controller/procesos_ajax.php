@@ -1,5 +1,6 @@
 <?php
 use actividades\model\entity\ActividadAll;
+use menus\model\PermisoMenu;
 use procesos\model\entity\ActividadFase;
 use procesos\model\entity\ActividadTarea;
 use procesos\model\entity\GestorActividadTarea;
@@ -18,6 +19,37 @@ require_once ("apps/core/global_object.inc");
 $Qque = (string) \filter_input(INPUT_POST, 'que');
 
 switch($Qque) {
+    case 'clonar':
+	    $Qid_tipo_proceso = (integer) \filter_input(INPUT_POST, 'id_tipo_proceso');
+	    $Qid_tipo_proceso_ref = (integer) \filter_input(INPUT_POST, 'id_tipo_proceso_ref');
+        
+	    // borrar lo anterior:
+		$GesTareaPorceso = new GestorTareaProceso();
+		$cTareasProceso = $GesTareaPorceso->getTareasProceso(array('id_tipo_proceso'=>$Qid_tipo_proceso));
+		foreach ($cTareasProceso as $oTareaProceso) {
+            $oTareaProceso->DBEliminar();
+		}
+	    // clonar 
+		$GesTareaPorceso = new GestorTareaProceso();
+		$cTareasProceso = $GesTareaPorceso->getTareasProceso(array('id_tipo_proceso'=>$Qid_tipo_proceso_ref));
+		$i=0;
+		foreach ($cTareasProceso as $oTareaProceso) {
+            $id_fase = $oTareaProceso->getId_fase();
+            $id_tarea = $oTareaProceso->getId_tarea();
+            $status = $oTareaProceso->getStatus();
+            $of_responsable = $oTareaProceso->getOf_responsable();
+            $json_fases_previas = $oTareaProceso->getJson_fases_previas();
+            
+            $oTareaProcesoNew = new TareaProceso();
+            $oTareaProcesoNew->setId_tipo_proceso($Qid_tipo_proceso);
+            $oTareaProcesoNew->setId_fase($id_fase);
+            $oTareaProcesoNew->setId_tarea($id_tarea);
+            $oTareaProcesoNew->setStatus($status);
+            $oTareaProcesoNew->setOf_responsable($of_responsable);
+            $oTareaProcesoNew->setJson_fases_previas($json_fases_previas);
+            $oTareaProcesoNew->DBGuardar();
+		}
+		// Omito el break, para que a haga el get.
 	case 'get':
 	    $Qid_tipo_proceso = (integer) \filter_input(INPUT_POST, 'id_tipo_proceso');
 	    $oActividad = new ActividadAll();
@@ -25,7 +57,11 @@ switch($Qque) {
 			
 		$oMiUsuario = new Usuario(core\ConfigGlobal::mi_id_usuario());
 		$miSfsv = core\ConfigGlobal::mi_sfsv();
-
+		
+		// para crear un desplegable de oficinas. Uso los de los menus
+		$oPermMenus = new PermisoMenu;
+		$aOpcionesOficinas = $oPermMenus->lista_array();
+		
 		if ($oMiUsuario->isRole('SuperAdmin')) { // Es administrador
 		   	$soy = 3;
 		} else {
@@ -41,10 +77,10 @@ switch($Qque) {
 		}
 
 		$GesTareaPorceso = new GestorTareaProceso();
-		$cTareasProceso = $GesTareaPorceso->getTareasProceso(array('id_tipo_proceso'=>$Qid_tipo_proceso,'_ordre'=>'n_orden'));
+		$cTareasProceso = $GesTareaPorceso->getTareasProceso(array('id_tipo_proceso'=>$Qid_tipo_proceso));
 		$txt = '<table>';
-        $txt .= '<tr><th>'._("status").'</th><th>'._("orden").'</th><th>'._("responsable").'</th>';
-        $txt .= '<th colspan=3>'._("fase - tarea").'</th><th>'._("modificar").'</th><th colspan=2>'._("prioridad").'</th><th>'._("eliminar").'</th></tr>';
+        $txt .= '<tr><th>'._("status").'</th><th>'._("responsable").'</th>';
+        $txt .= '<th colspan=3>'._("fase - tarea").'</th><th>'._("modificar").'</th><th>'._("eliminar").'</th></tr>';
 		$i=0;
 		foreach ($cTareasProceso as $oTareaProceso) {
 			$i++;
@@ -52,7 +88,9 @@ switch($Qque) {
 			$id_item=$oTareaProceso->getId_item();
 			$status=$oTareaProceso->getStatus();
 			$status_txt=$a_status[$status];
-			$responsable=$oTareaProceso->getOf_responsable();
+			$of_responsable=$oTareaProceso->getOf_responsable();
+			$responsable = empty($aOpcionesOficinas[$of_responsable])? '' : $aOpcionesOficinas[$of_responsable];
+			
 			$oFase = new ActividadFase($oTareaProceso->getId_fase());
 			$fase=$oFase->getDesc_fase();
 			$sf=($oFase->getSf())? 2 : 0;
@@ -63,34 +101,30 @@ switch($Qque) {
 			    continue; 
 			}
 			$oTarea = new ActividadTarea($oTareaProceso->getId_tarea());
-			$tarea=$oTarea->getDesc_tarea();
+			$tarea = $oTarea->getDesc_tarea();
 			$tarea_txt = empty($tarea)? '' : "($tarea)";
-			$oFase_previa = new ActividadFase($oTareaProceso->getId_fase_previa());
-			$fase_previa=$oFase_previa->getDesc_fase();
-			$oTarea_previa = new ActividadTarea($oTareaProceso->getId_tarea_previa());
-			$tarea_previa=$oTarea_previa->getDesc_tarea();
-			$tarea_previa_txt = empty($tarea_previa)? '' : "($tarea_previa)";
+			$fase_previa = '';
+            $tarea_previa_txt = '';
+			$aFases_previas = $oTareaProceso->getJson_fases_previas(TRUE);
+			foreach ($aFases_previas as $oFaseP) {
+			    $id_fase_previa = $oFaseP['id_fase'];
+			    if (empty($id_fase_previa)) continue;
+			    //$id_tarea_previa = $oFaseP['id_tarea'];
+			    //$mensaje_requisito = $oFaseP['mensaje'];
+                $oFase_previa = new ActividadFase($id_fase_previa);
+                $fase_previa .= empty($fase_previa)? '' : ' '._("y").' ';
+                $fase_previa .= $oFase_previa->getDesc_fase();
+                $tarea_previa_txt = empty($tarea_previa)? '' : "($tarea_previa)";
+			}
+			
 			$mod="<span class=link onclick=fnjs_modificar($id_item) title='"._("modificar")."' >"._("modificar")."</span>";
 			$drop="<span class=link onclick=fnjs_eliminar($id_item) title='"._("eliminar")."' >"._("eliminar")."</span>";
-			$up="<span class=link onclick=fnjs_mover($id_item,'up') title='"._("mover hacia arriba")."' >+</span>";
-			$down="<span class=link onclick=fnjs_mover($id_item,'down') title='"._("mover hacia abajo")."' >-</span>";
 
-			$txt.="<tr class=$clase><td>($status_txt)</td><td>$i</td><td>$responsable</td><td colspan=3>$fase $tarea_txt</td><td>$mod</td><td>$up</td><td>$down</td><td>$drop</td></tr>";
+			$txt.="<tr class=$clase><td>($status_txt)</td><td>$responsable</td><td colspan=3>$fase $tarea_txt</td><td>$mod</td><td>$drop</td></tr>";
 			$txt.="<tr><td></td><td></td><td>&nbsp;&nbsp;&nbsp;"._("requisito").":</td><td>$fase_previa $tarea_previa_txt</td></tr>";
 		}
 		$txt.='</table>';
 		echo $txt;
-		break;
-	case 'orden':
-	    $Qid_item = (integer) \filter_input(INPUT_POST, 'id_item');
-	    $Qorden = (string) \filter_input(INPUT_POST, 'orden');
-		$oLista = new GestorTareaProceso();
-		$rta = $oLista->setTareasProcesosOrden($Qid_item,$Qorden);
-		$error = '';
-		if ($rta === false) {
-		    $error = _("hay un error, no se ha movido");
-		}
-		echo trim($error);
 		break;
 	case 'depende':
 	    $Qacc = (string) \filter_input(INPUT_POST, 'acc');
@@ -114,27 +148,34 @@ switch($Qque) {
 	case 'update':
 	    $Qid_item = (integer) \filter_input(INPUT_POST, 'id_item');
 	    $Qid_tipo_proceso = (integer) \filter_input(INPUT_POST, 'id_tipo_proceso');
-	    $Qn_orden = (integer) \filter_input(INPUT_POST, 'n_orden');
 	    $Qstatus = (integer) \filter_input(INPUT_POST, 'status');
 	    $Qof_responsable = (string) \filter_input(INPUT_POST, 'of_responsable');
-	    $Qmensaje_requisito = (string) \filter_input(INPUT_POST, 'mensaje_requisito');
 	    $Qid_fase = (integer) \filter_input(INPUT_POST, 'id_fase');
 	    $Qid_tarea = (integer) \filter_input(INPUT_POST, 'id_tarea');
-	    $Qid_fase_previa = (integer) \filter_input(INPUT_POST, 'id_fase_previa');
-	    $Qid_tarea_previa = (integer) \filter_input(INPUT_POST, 'id_tarea_previa');
+        // arrays
+        $Qid_fase_previa = (array)  \filter_input(INPUT_POST, 'id_fase_previa', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $Qid_tarea_previa = (array)  \filter_input(INPUT_POST, 'id_tarea_previa', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $Qmensaje_requisito = (array)  \filter_input(INPUT_POST, 'mensaje_requisito', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
+        $aFases_previas = [];
+        $num_fases_previas = count($Qid_fase_previa);
+        for ($i=0; $i<$num_fases_previas; $i++) {
+            $oFase_previa = [];
+            $oFase_previa['id_fase'] = $Qid_fase_previa[$i];
+            $oFase_previa['id_tarea'] = $Qid_tarea_previa[$i];
+            $oFase_previa['mensaje'] = $Qmensaje_requisito[$i];
+            if (empty($Qid_fase_previa[$i])) continue;
+            $aFases_previas[] = $oFase_previa;
+        }
 		if (empty($Qid_tarea)) $Qid_tarea=0; // no puede ser NULL.
 
 		$oFicha = new TareaProceso(array('id_item'=>$Qid_item));
 		$oFicha->setId_tipo_proceso($Qid_tipo_proceso);	
-		$oFicha->setN_orden($Qn_orden);	
 		$oFicha->setStatus($Qstatus);	
 		$oFicha->setOf_responsable($Qof_responsable);	
-		$oFicha->setMensaje_requisito($Qmensaje_requisito);	
 		$oFicha->setId_fase($Qid_fase);	
 		$oFicha->setId_tarea($Qid_tarea);	
-		$oFicha->setId_fase_previa($Qid_fase_previa);	
-		$oFicha->setId_tarea_previa($Qid_tarea_previa);	
+		$oFicha->setJson_fases_previas($aFases_previas);	
 		if ($oFicha->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
 			echo "\n".$oFicha->getErrorTxt();

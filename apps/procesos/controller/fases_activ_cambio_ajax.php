@@ -135,12 +135,15 @@ switch($Qque) {
 			$GesTareaProceso = new GestorTareaProceso();
 			$cTareasProceso = $GesTareaProceso->getTareasProceso(array('id_tipo_proceso'=>$id_tipo_proceso,'id_fase'=>$Qid_fase_nueva));
 			foreach ($cTareasProceso as $oTareaProceso) {
-				$id_fase_previa = $oTareaProceso->getId_fase_previa();
+				$oFases_previas = $oTareaProceso->getJson_fases_previas();
 				// Busco el proceso de esta actividad
 				$GesActivProceso = new GestorActividadProcesoTarea();
 				$id_fase_actual = $GesActivProceso->getFaseActualAcabada($id_activ); // también posible 'START' y 'SIN'
 				// miro si tiene la fase requerida.
-				if (!empty($id_fase_previa)) {
+				if (!empty($oFases_previas)) {
+				    foreach($oFases_previas as $id_fase_previa) {
+				        
+				    }
 					$cActivProceso = $GesActivProceso->getActividadProcesoTareas(array('id_activ'=>$id_activ,'id_fase'=>$id_fase_previa));
 					if (empty($cActivProceso)) {
 						$mensaje_requisito = $oTareaProceso->getMensaje_requisito();
@@ -233,7 +236,7 @@ switch($Qque) {
 			$id_activ=strtok($id_activ,"#");
 			$gesActividadProcesoTareas = new GestorActividadProcesoTarea();
 			// selecciono todas las tareas de esta fase.
-			$cListaSel = $gesActividadProcesoTareas->getActividadProcesoTareas(array('id_activ'=>$id_activ,'id_fase'=>$Qid_fase_nueva, '_ordre'=>'n_orden'));
+			$cListaSel = $gesActividadProcesoTareas->getActividadProcesoTareas(array('id_activ'=>$id_activ,'id_fase'=>$Qid_fase_nueva));
 			if (empty($cListaSel)) {
 			    // No se encuentra esta fase para esta actividad
 			    $oActividad = new Actividad($id_activ);

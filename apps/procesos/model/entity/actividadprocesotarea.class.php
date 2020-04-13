@@ -6,6 +6,7 @@ use cambios\model\gestorAvisoCambios;
 use core\ConfigGlobal;
 use function core\is_true;
 use core;
+use menus\model\PermisoMenu;
 /**
  * Fitxer amb la Classe que accedeix a la taula a_actividad_proceso_(sf/sv)
  *
@@ -79,12 +80,6 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
      */
     private $iid_tarea;
     /**
-     * N_orden de ActividadProcesoTarea
-     *
-     * @var integer
-     */
-    private $in_orden;
-    /**
      * Completado de ActividadProcesoTarea
      *
      * @var boolean
@@ -113,23 +108,49 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
     
     
     /**
+     * force de ActividadProcesoTarea
+     * para forzar a cambiar fases dependientes
+     *
+     * @var boolean
+     */
+    protected $bForce = FALSE;
+    /**
      * Per les funcions de mirar i marcar dependientes.
      * 
      * @var array
      */
     protected $aFasesTareasEncadenadas;
     /**
-     * Per les funcions de mirar i marcar dependientes.
+     * Para cada fase, las fases que dependen de ella.
      * 
      * @var array
      */
-    protected $aFasesDependientes;
+    protected $aFasesPosteriores;
+    /**
+     * para cada fase, las fases de las que depende.
+     * 
+     * @var array
+     */
+    protected $aFasesPrevias;
     /**
      * Per les funcions de mirar i marcar dependientes.
      * 
      * @var array
      */
     protected $aFasesEstado;
+
+    /**
+     * Per les funcions de mirar i marcar dependientes.
+     * 
+     * @var array
+     */
+    protected $aOpcionesOficinas;
+    /**
+     * Per evitar referencias circulars.
+     * 
+     * @var array
+     */
+    protected $aStack = [];
     /* CONSTRUCTOR -------------------------------------------------------------- */
     
     /**
@@ -182,6 +203,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         }
         $this->setoDbl($oDbl);
         $this->setSfsv();
+        $this->cargar_permisos();
     }
     
     /* METODES PUBLICS ----------------------------------------------------------*/
@@ -201,7 +223,6 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         $aDades['id_activ'] = $this->iid_activ;
         $aDades['id_fase'] = $this->iid_fase;
         $aDades['id_tarea'] = $this->iid_tarea;
-        $aDades['n_orden'] = $this->in_orden;
         $aDades['completado'] = $this->bcompletado;
         $aDades['observ'] = $this->sobserv;
         array_walk($aDades, 'core\poner_null');
@@ -223,14 +244,20 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
                 $msg_err = sprintf(_("error: La fase del proceso tipo: %s, fase: %s, tarea: %s"),$this->iid_tipo_proceso,$this->iid_fase,$this->iid_tarea);
                 exit($msg_err);
             }
+            $fase_tarea = $this->iid_fase.'#'.$this->iid_tarea;
+            // comprobar que tengo permiso
+            if (!$this->tiene_permiso($fase_tarea)) {
+                // No se puede marcar por alguna razón.
+                echo _("No tiene permiso para marcar o desmarcar esta fase");
+                exit();
+            }
+            $this->cargarFases();
             if ( is_true($aDades['completado']) ) {
                 $statusProceso = $oTareaProceso->getStatus();
-                $this->marcarDependencias();
+                $this->marcar($fase_tarea);
             } else {
-                $this->desmarcarDependencias();
-                $itemProceso = $oTareaProceso->getId_item();
-                $GesTareaProcesos = new GestorTareaProceso();
-                $statusProceso = $GesTareaProcesos->getStatusFaseAnterior($itemProceso);
+                $this->desmarcar($fase_tarea);
+                $statusProceso = $GesTareaProcesos->getStatusProceso($this->iid_tipo_proceso,$this->aFasesEstado);
             }
             if ($statusProceso != $statusActividad) { // cambiar el status de la actividad.
                 // OJO si la actividad no es de la dl, no puedo cambiarla.
@@ -285,7 +312,6 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
                         id_activ                 = :id_activ,
                         id_fase                  = :id_fase,
                         id_tarea                 = :id_tarea,
-                        n_orden                  = :n_orden,
                         completado               = :completado,
                         observ                   = :observ";
                 if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item'")) === FALSE) {
@@ -312,8 +338,8 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
             }
         } else {
             // INSERT
-            $campos="(id_tipo_proceso,id_activ,id_fase,id_tarea,n_orden,completado,observ)";
-            $valores="(:id_tipo_proceso,:id_activ,:id_fase,:id_tarea,:n_orden,:completado,:observ)";
+            $campos="(id_tipo_proceso,id_activ,id_fase,id_tarea,completado,observ)";
+            $valores="(:id_tipo_proceso,:id_activ,:id_fase,:id_tarea,:completado,:observ)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
                 $sClauError = 'ActividadProcesoTarea.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -428,7 +454,6 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         $aDades['id_activ'] = $this->iid_activ;
         $aDades['id_fase'] = $this->iid_fase;
         $aDades['id_tarea'] = $this->iid_tarea;
-        $aDades['n_orden'] = $this->in_orden;
         $aDades['completado'] = $this->bcompletado;
         $aDades['observ'] = $this->sobserv;
         array_walk($aDades, 'core\poner_null');
@@ -441,7 +466,6 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
                 id_activ                 = :id_activ,
                 id_fase                  = :id_fase,
                 id_tarea                 = :id_tarea,
-                n_orden                  = :n_orden,
                 completado               = :completado,
                 observ                   = :observ";
         if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item'")) === FALSE) {
@@ -466,7 +490,14 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
     /* METODES ALTRES  ----------------------------------------------------------*/
     
     private function desmarcar($fase_tarea) {
-        // mirar si está desmarcada la siguiente
+        // comprobar si hay dependencias insatisfechas
+        $rta = $this->comprobar_dependientes($fase_tarea);
+        if ($rta['marcada'] === FALSE) {
+            // No se puede marcar por alguna razón.
+            echo $rta['mensaje'];
+            exit();
+        }
+
         $id_fase = strtok($fase_tarea, '#');
         $id_tarea = strtok('#');
         
@@ -487,134 +518,150 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
     }
     
     private function marcar($fase_tarea) {
-        // mirar si está marcada la anterior
-        if ($this->mirar_anterior($fase_tarea)) {
-            
-            $id_fase = strtok($fase_tarea, '#');
-            $id_tarea = strtok('#');
-            
-            $aWhere = [
-                'id_activ' => $this->iid_activ,
-                'id_fase' => $id_fase,
-                'id_tarea' => $id_tarea,
-            ];
-            $gesActividadProcesoTarea = new GestorActividadProcesoTarea();
-            $cActividadProcesoTarea = $gesActividadProcesoTarea->getActividadProcesoTareas($aWhere);
-            $oActividadProcesoTarea = $cActividadProcesoTarea[0];
-            
-            $oActividadProcesoTarea->DBCarregar();
-            $oActividadProcesoTarea->SetCompletado('t');
-            $oActividadProcesoTarea->DBMarcar();
-            // Hay que cambiarlo en el array, porque sino no se actualiza:
-            $this->aFasesEstado[$fase_tarea] = TRUE;
-            
-            // marcar la siguiente
-            $fase_tarea_siguiente = $this->siguiente($fase_tarea);
-            if ($fase_tarea_siguiente === TRUE ) {
-                return TRUE; //se ha llegado al final.
-            }
-            $this->marcar($fase_tarea_siguiente);
-        } else {
-            // marcar la anterior
-            $fase_tarea_anterior = $this->anterior($fase_tarea);
-            if ($fase_tarea_anterior === TRUE) {
-                return TRUE; //se ha llegado al final.
-            }
-            $this->marcar($fase_tarea_anterior);
+        // Cuando un proceso está mal y se da el caso de referencias circulares en las dependecias,
+        // se emple una variable global para poder detectar cuando se está intentando marcar una fase por segunda vez.
+        if (in_array($fase_tarea, $this->aStack)) {
+            $msg = _("Hay un error en el diseño del proceso: referencias circulares.");
+            exit($msg);
         }
+        $this->aStack[] = $fase_tarea;
+        // comprobar si hay dependencias insatisfechas
+        $rta = $this->comprobar_dependencia($fase_tarea);
+        if ($rta['marcada'] === FALSE) {
+            // No se puede marcar por alguna razón.
+            echo $rta['mensaje'];
+            exit();
+        }
+                
+        $id_fase = strtok($fase_tarea, '#');
+        $id_tarea = strtok('#');
+        
+        $aWhere = [
+            'id_activ' => $this->iid_activ,
+            'id_fase' => $id_fase,
+            'id_tarea' => $id_tarea,
+        ];
+        $gesActividadProcesoTarea = new GestorActividadProcesoTarea();
+        $cActividadProcesoTarea = $gesActividadProcesoTarea->getActividadProcesoTareas($aWhere);
+        $oActividadProcesoTarea = $cActividadProcesoTarea[0];
+        
+        $oActividadProcesoTarea->DBCarregar();
+        $oActividadProcesoTarea->SetCompletado('t');
+        $oActividadProcesoTarea->DBMarcar();
+        // Hay que cambiarlo en el array, porque sino no se actualiza:
+        $this->aFasesEstado[$fase_tarea] = TRUE;
     }
     
-    private function siguiente($fase_tarea) {
-        $not_found = FALSE;
-        $f = array_search($fase_tarea,$this->aFasesDependientes);
-        if ($f === FALSE ) {
-            $not_found = TRUE;
-        } else {
-            $f_prev = $f - 1;
-            if (empty($this->aFasesDependientes[$f_prev])) {
-                $not_found = TRUE;
-            } else {
-                $fase_tarea_i = $this->aFasesDependientes[$f_prev];
-            }
-        }
-        // si no encuentro interpreto que es el ultimo y devuelvo TRUE
-        if ($not_found) return TRUE;
-        
-        return $fase_tarea_i;
-    }
-    private function anterior($fase_tarea) {
-        $not_found = FALSE;
-        $f = array_search($fase_tarea,$this->aFasesDependientes);
-        if ($f === FALSE ) {
-            $not_found = TRUE;
-        } else {
-            $f_next = ++$f;
-            if (empty($this->aFasesDependientes[$f_next])) {
-                $not_found = TRUE;
-            } else {
-                $fase_tarea_i = $this->aFasesDependientes[$f_next];
-            }
-        }
-        // si no encuentro interpreto que es el ultimo y devuelvo TRUE
-        if ($not_found) return TRUE;
-        
-        return $fase_tarea_i;
-    }
-    
-    private function mirar_siguiente($fase_tarea) {
-        $fase_tarea_siguiente = $this->siguiente($fase_tarea);
-        $completado = empty($this->aFasesEstado[$fase_tarea_siguiente])? FALSE : $this->aFasesEstado[$fase_tarea_siguiente];
-        
-        if ( is_true($completado) ) {
-            return TRUE;
-        } else {
-            return FALSE;
-        }
-    }
-    private function mirar_anterior($fase_tarea) {
-        $fase_tarea_anterior = $this->anterior($fase_tarea);
-        $completado = empty($this->aFasesEstado[$fase_tarea_anterior])? FALSE : $this->aFasesEstado[$fase_tarea_anterior];
-        
-        if ( is_true($completado) ) {
-            return TRUE;
-        } else {
-            return FALSE;
-        }
-    }
-    private function marcarDependencias() {
-        $gesTareaProceso = new GestorTareaProceso();
-        $this->aFasesDependientes = $gesTareaProceso->getListaFasesDependientes($this->iid_tipo_proceso, $this->iid_fase, $this->iid_tarea);   
-        
-        $gesActividadProcesoTareas = new GestorActividadProcesoTarea();
-        $this->aFasesEstado = $gesActividadProcesoTareas->getListaFaseEstado($this->iid_activ);
-            
-        $fase_tarea = $this->iid_fase.'#'.$this->iid_tarea;
-        $this->marcar($fase_tarea);
-    }
-    
-    private function desmarcarDependencias() {
-        $gesActividadProcesoTareas = new GestorActividadProcesoTarea();
-        $this->aFasesEstado = $gesActividadProcesoTareas->getListaFaseEstado($this->iid_activ);
-
-        $gesTareaProceso = new GestorTareaProceso();
-        $this->aFasesDependientes = $gesTareaProceso->getArrayFasesDependientes($this->iid_tipo_proceso);   
-        
-        $fase_tarea_actual = $this->iid_fase.'#'.$this->iid_tarea;
- 
-        $this->aFasesTareasEncadenadas = [];
-        $this->agregar_dependientes($fase_tarea_actual);
-        
-        foreach ($this->aFasesTareasEncadenadas as $fase_tarea) {
-            $completado = FALSE;
-            if (array_key_exists($fase_tarea, $this->aFasesEstado)) {
-                $completado = $this->aFasesEstado[$fase_tarea];
-                if (is_true($completado)) {
-                    $this->desmarcar($fase_tarea);
+    private function comprobar_dependencia($fase_tarea) {
+        $msg = '';
+        $bMarcada = TRUE;
+        // Si no tiene ninguna fase previa, devuelve directamente TRUE.
+        if (array_key_exists($fase_tarea, $this->aFasesPrevias)) {
+            // comprobar el estado de cada una:
+            $aFasesPrevias = $this->aFasesPrevias[$fase_tarea];
+            foreach ($aFasesPrevias as $fase_tarea_previa => $mensaje) {
+                if (!$this->is_completa($fase_tarea_previa)) {
+                    // Si es forzado, solo me aseguro de tener permiso.
+                    if ($this->isForce()) {
+                        if ($this->tiene_permiso($fase_tarea_previa)) {
+                            $this->marcar($fase_tarea_previa);
+                            continue;
+                        }
+                    }
+                    $msg .= empty($mensaje)? $this->getMensaje($fase_tarea_previa,'marcar') : $mensaje;
+                    $bMarcada = FALSE;
                 }
             }
         }
-        // desmarcar la propia fase:
-        $this->desmarcar($fase_tarea_actual);
+        return ['marcada' => $bMarcada, 'mensaje' => $msg];
+    }
+    
+    private function getMensaje($fase_tarea,$para) {
+        $id_fase = strtok($fase_tarea, '#');
+        
+        $oFase = new ActividadFase($id_fase);
+        $descFase = $oFase->getDesc_fase();
+        switch($para) {
+            case 'marcar':
+                $mensaje = sprintf (_("No tienen completada la fase: %s"),$descFase);
+                break;
+            case 'desmarcar':
+                $mensaje = sprintf (_("La fase: %s está marcada, y depende de esta."),$descFase);
+                break;
+        }
+        return $mensaje;
+    }
+    private function is_completa($fase_tarea) {
+        $completado = empty($this->aFasesEstado[$fase_tarea])? FALSE : $this->aFasesEstado[$fase_tarea];
+        return $completado;
+    }
+        
+    private function tiene_permiso($fase_tarea) {
+        $id_fase = strtok($fase_tarea, '#');
+        $id_tarea = strtok('#');
+        
+        $aWhere = [
+                    'id_tipo_proceso'  => $this->iid_tipo_proceso,
+                    'id_fase'          => $id_fase,
+                    'id_tarea'         => $id_tarea,
+        ];
+        $gesTareaProceso = new GestorTareaProceso();
+        $cTareaProceso = $gesTareaProceso->getTareasProceso($aWhere);
+        if (empty($cTareaProceso)) {
+            // la fase de la que depende no está en el proceso
+            $msg = sprintf(_("Proceso mal diseñado. La fase %s, con tarea %s no está en el proceso"),$id_fase,$id_tarea);                
+            exit ($msg);
+        }
+        $oTareaProceso = $cTareaProceso[0];
+        $id_of_responsable = $oTareaProceso->getOf_responsable();
+        $of_responsable = empty($this->aOpcionesOficinas[$id_of_responsable])? '' : $this->aOpcionesOficinas[$id_of_responsable];
+        if ($_SESSION['oPerm']->have_perm_oficina($of_responsable)) {
+            return TRUE; 
+        } else {
+            return FALSE;
+        }
+    }
+    
+    private function cargarFases() {
+        $gesTareaProceso = new GestorTareaProceso();
+        $this->aFasesPrevias = $gesTareaProceso->arbolPrevio($this->iid_tipo_proceso);   
+        $this->aFasesPosteriores = $gesTareaProceso->getArrayFasesDependientes($this->iid_tipo_proceso);   
+        
+        $gesActividadProcesoTareas = new GestorActividadProcesoTarea();
+        $this->aFasesEstado = $gesActividadProcesoTareas->getListaFaseEstado($this->iid_activ);
+    }
+    
+    private function cargar_permisos() {
+        //para crear un desplegable de oficinas. Uso los de los menus
+        $oPermMenus = new PermisoMenu;
+        $this->aOpcionesOficinas = $oPermMenus->lista_array();
+    }
+    
+    private function comprobar_dependientes($fase_tarea) {
+        $msg = '';
+        $bMarcada = TRUE;
+ 
+        $this->aFasesTareasEncadenadas = [];
+        $this->agregar_dependientes($fase_tarea);
+
+        foreach ($this->aFasesTareasEncadenadas as $fase_tarea_anterior) {
+            $completado = FALSE;
+            if (array_key_exists($fase_tarea_anterior, $this->aFasesEstado)) {
+                $completado = $this->aFasesEstado[$fase_tarea_anterior];
+                if (is_true($completado)) {
+                    // Si es forzado, solo me aseguro de tener permiso.
+                    if ($this->isForce()) {
+                        if ($this->tiene_permiso($fase_tarea_anterior)) {
+                            $this->desmarcar($fase_tarea_anterior);
+                            continue;
+                        }
+                    }
+                    $msg .= empty($mensaje)? $this->getMensaje($fase_tarea_anterior,'desmarcar') : $mensaje;
+                    $bMarcada = FALSE;
+                }
+            }
+        }
+        return ['marcada' => $bMarcada, 'mensaje' => $msg];
     }
     
     private function agregar_dependientes($fase_tarea_org) {
@@ -631,18 +678,12 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         return [];
     }
     private function dependientes_de($fase_tarea_org) {
-        $id_fase_org = strtok($fase_tarea_org, '#');
-        $id_tarea_org = strtok('#');
         // buscar id_fase_org en array
         $b = [];
-        foreach ($this->aFasesDependientes as $fase_tarea => $a_previa) {
-            if ($a_previa['id_fase'] == $id_fase_org) {
-                if ($id_tarea_org == $a_previa['id_tarea']) {
-                    $b[] = $fase_tarea;
-                } else {
-                    //*todo: comprobar que es la única opción...
-                    // solo si es 0
-                    if ($a_previa['id_tarea'] == 0) {
+        foreach ($this->aFasesPosteriores as $fase_tarea => $aaFase_tarea_previa) {
+            foreach ($aaFase_tarea_previa as $aFase_tarea_previa) {
+                foreach ($aFase_tarea_previa as $fase_tarea_previa => $mensaje) {
+                    if ($fase_tarea_org == $fase_tarea_previa) {
                         $b[] = $fase_tarea;
                     }
                 }
@@ -660,44 +701,36 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
             $gesActividadProcesoTareas->setNomTabla('a_actividad_proceso_sv');
         }
         
-        $id_fase_actual = $gesActividadProcesoTareas->getFaseActualAcabada($this->iid_activ);
-        if (empty($id_fase_actual) || $id_fase_actual === 'SIN') {
-            // Puede ser queel proceso no exista (para sfsv=2):
+        $cActividadProcesoTareas = $gesActividadProcesoTareas->getActividadProcesoTareas(['id_activ' => $this->iid_activ]);
+        
+        // Puede ser queel proceso no exista (para sfsv=2):
+        if (empty($cActividadProcesoTareas)) {
             $gesActividadProcesoTareas->generarProceso($this->iid_activ, 2);
         }
         
-        $cActividadPorcesoTareas = $gesActividadProcesoTareas->getActividadProcesoTareas(['id_activ' => $this->iid_activ]);
-        // obtengo el id_tipo_proceso de una fase cualquiera:
-        $id_tipo_proceso = $cActividadPorcesoTareas[0]->getId_tipo_proceso();
-        
-        if ( $statusActividad < $statusProceso ) {
-            // buscar la primera fase del proceso para el estado del proceso
-            $gesTareaProceso = new GestorTareaProceso();
-            $id_fase = $gesTareaProceso->getFirstFaseStatus($id_tipo_proceso, $statusProceso);
-            
+        /* Para no andar buscando que fase corresponde a status, finalmente he decidido
+         * que las id_fase para el cambio de status son fijas, e iguales al status de la actividad.
+         */
+        if ( $statusActividad == 1 && $statusProceso == 2 ) {
+            $id_fase = ActividadFase::FASE_APROBADA;
             $aWhere = ['id_activ' => $this->iid_activ, 'id_fase' => $id_fase];
-            $cActividadPorcesoTareas = $gesActividadProcesoTareas->getActividadProcesoTareas($aWhere);
-            if (!empty($cActividadPorcesoTareas)) {
-                $oActividadPorcesoTarea = $cActividadPorcesoTareas[0];
+            $cActividadProcesoTareas = $gesActividadProcesoTareas->getActividadProcesoTareas($aWhere);
+            if (!empty($cActividadProcesoTareas)) {
+                $oActividadPorcesoTarea = $cActividadProcesoTareas[0];
                 $oActividadPorcesoTarea->setCompletado('t');
-                $oActividadPorcesoTarea->DBMarcar();
+                $oActividadPorcesoTarea->DBGuardar();
             }
         }
         if ( $statusActividad > $statusProceso ) {
-            // buscar la ultima fase del proceso para el estado del proceso
-            $gesTareaProceso = new GestorTareaProceso();
-            $id_fase = $gesTareaProceso->getLastFaseStatus($id_tipo_proceso, $statusProceso);
-            
+            $id_fase = ActividadFase::FASE_APROBADA;
             $aWhere = ['id_activ' => $this->iid_activ, 'id_fase' => $id_fase];
-            $cActividadPorcesoTareas = $gesActividadProcesoTareas->getActividadProcesoTareas($aWhere);
-            if (!empty($cActividadPorcesoTareas)) {
-                $oActividadPorcesoTarea = $cActividadPorcesoTareas[0];
-                $oActividadPorcesoTarea->setCompletado('t');
-                $oActividadPorcesoTarea->DBMarcar();
+            $cActividadProcesoTareas = $gesActividadProcesoTareas->getActividadProcesoTareas($aWhere);
+            if (!empty($cActividadProcesoTareas)) {
+                $oActividadPorcesoTarea = $cActividadProcesoTareas[0];
+                $oActividadPorcesoTarea->setCompletado('f');
+                $oActividadPorcesoTarea->DBGuardar();
             }
         }
-        $gesActividadProcesoTareas->borrarFasesSiguientes($this->iid_activ, $id_fase);
-        $gesActividadProcesoTareas->marcarFasesAnteriores($this->iid_activ, $id_fase);
     }
     
     /* METODES PRIVATS ----------------------------------------------------------*/
@@ -714,7 +747,6 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         if (array_key_exists('id_activ',$aDades)) $this->setId_activ($aDades['id_activ']);
         if (array_key_exists('id_fase',$aDades)) $this->setId_fase($aDades['id_fase']);
         if (array_key_exists('id_tarea',$aDades)) $this->setId_tarea($aDades['id_tarea']);
-        if (array_key_exists('n_orden',$aDades)) $this->setN_orden($aDades['n_orden']);
         if (array_key_exists('completado',$aDades)) $this->setCompletado($aDades['completado']);
         if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
     }
@@ -730,7 +762,6 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         $this->setId_activ('');
         $this->setId_fase('');
         $this->setId_tarea('');
-        $this->setN_orden('');
         $this->setCompletado('');
         $this->setObserv('');
         $this->setPrimary_key($aPK);
@@ -873,26 +904,6 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         $this->iid_tarea = $iid_tarea;
     }
     /**
-     * Recupera l'atribut in_orden de ActividadProcesoTarea
-     *
-     * @return integer in_orden
-     */
-    function getN_orden() {
-        if (!isset($this->in_orden)) {
-            $this->DBCarregar();
-        }
-        if (empty($this->in_orden)) printf(_("No debería ser 0. En %s, linea %s"), __FILE__,__LINE__);
-        return $this->in_orden;
-    }
-    /**
-     * estableix el valor de l'atribut in_orden de ActividadProcesoTarea
-     *
-     * @param integer in_orden='' optional
-     */
-    function setN_orden($in_orden='') {
-        $this->in_orden = $in_orden;
-    }
-    /**
      * Recupera l'atribut bcompletado de ActividadProcesoTarea
      *
      * @return boolean bcompletado
@@ -930,6 +941,27 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
     function setObserv($sobserv='') {
         $this->sobserv = $sobserv;
     }
+
+    /**
+     * @return boolean
+     */
+    public function isForce()
+    {
+        return $this->bForce;
+    }
+
+    /**
+     * @param boolean $bForce
+     */
+    public function setForce($bForce)
+    {
+        if (is_true($bForce)) {
+            $this->bForce = TRUE;
+        } else {
+            $this->bForce = FALSE;
+        }
+    }
+
     /* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
     
     /**
@@ -943,7 +975,6 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         $oActividadProcesoTareaSet->add($this->getDatosId_activ());
         $oActividadProcesoTareaSet->add($this->getDatosId_fase());
         $oActividadProcesoTareaSet->add($this->getDatosId_tarea());
-        $oActividadProcesoTareaSet->add($this->getDatosN_orden());
         $oActividadProcesoTareaSet->add($this->getDatosCompletado());
         $oActividadProcesoTareaSet->add($this->getDatosObserv());
         return $oActividadProcesoTareaSet->getTot();
@@ -997,18 +1028,6 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_tarea'));
         $oDatosCampo->setEtiqueta(_("id_tarea"));
-        return $oDatosCampo;
-    }
-    /**
-     * Recupera les propietats de l'atribut in_orden de ActividadProcesoTarea
-     * en una clase del tipus DatosCampo
-     *
-     * @return core\DatosCampo
-     */
-    function getDatosN_orden() {
-        $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'n_orden'));
-        $oDatosCampo->setEtiqueta(_("n_orden"));
         return $oDatosCampo;
     }
     /**

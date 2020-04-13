@@ -64,7 +64,7 @@ class GestorActividadFase Extends core\ClaseGestor {
             $sQuery="SELECT f.id_fase, f.desc_fase
                     FROM $nom_tabla f JOIN a_tareas_proceso p USING (id_fase)
                     WHERE $cond id_tipo_proceso = $idTipoProceso
-                    ORDER BY n_orden";
+                    ";
             
             //echo "w: $sQuery<br>";
             if (($oDbl->query($sQuery)) === false) {
@@ -115,7 +115,7 @@ class GestorActividadFase Extends core\ClaseGestor {
 	        $sQuery="SELECT f.id_fase, f.desc_fase
 					FROM $nom_tabla f JOIN a_tareas_proceso p USING (id_fase)
 					$sCondicion
-					ORDER BY p.n_orden";
+					";
 					
 					$aFasesProceso = [];
 					foreach ($oDbl->query($sQuery) as $row) {
@@ -179,7 +179,7 @@ class GestorActividadFase Extends core\ClaseGestor {
 	        $sQuery="SELECT f.id_fase, f.desc_fase
 					FROM $nom_tabla f JOIN a_tareas_proceso p USING (id_fase)
 					$sCondicion
-					ORDER BY p.n_orden";
+					";
 					
 					$aFasesProceso = [];
 					foreach ($oDbl->query($sQuery) as $row) {
@@ -292,7 +292,7 @@ class GestorActividadFase Extends core\ClaseGestor {
 	 * @param boolean optional només les fases de les que sóc responsable.
 	 * @return Desplegable Una Llista de fases comunes a tots els procesos
 	 */
-	function zzgetListaActividadFases($aProcesos=array(),$bresp=false) {
+	function getListaActividadFases($aProcesos=array(),$bresp=false) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 	    
@@ -323,16 +323,6 @@ class GestorActividadFase Extends core\ClaseGestor {
 	    if ($num_procesos !== false && $num_procesos > 0) {
 	        $sCondicion="WHERE $cond AND id_tipo_proceso =";
 	        $sCondicion.=implode(' OR id_tipo_proceso = ',$aProcesos);
-	        /*OJO: No se puede ordenar por n_orden, pues pueden ser distintos de un proceso a otro...
-	         */
-	        /*
-	         $sQuery="SELECT f.id_fase, f.desc_fase, p.n_orden
-	         FROM a_fases f JOIN a_tareas_proceso p USING (id_fase)
-	         $sCondicion
-	         GROUP BY f.id_fase, f.desc_fase, p.n_orden
-	         HAVING Count(p.id_tipo_proceso) = $num_procesos
-	         ORDER BY p.n_orden";
-	         */
 	        $sQuery="SELECT f.id_fase, f.desc_fase
 					FROM $nom_tabla f JOIN a_tareas_proceso p USING (id_fase)
 					$sCondicion
@@ -363,7 +353,7 @@ class GestorActividadFase Extends core\ClaseGestor {
 	        reset($aProcesos);
 	        $id_tipo_proceso = current($aProcesos);
 	        $oGestorProceso = new GestorTareaProceso();
-	        $aFasesProceso = $oGestorProceso->getFasesProcesoOrdenadas($id_tipo_proceso);
+	        $aFasesProceso = $oGestorProceso->getFasesProceso($id_tipo_proceso);
 	        $aFasesProcesoDesc = array();
 	        foreach ($aFasesProceso as $id_item=>$id_fase) {
 	            // compruebo que está en la lista de las fases comunes.

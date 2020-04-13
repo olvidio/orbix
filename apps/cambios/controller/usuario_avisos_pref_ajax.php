@@ -473,8 +473,7 @@ switch($Qsalida) {
 		    foreach($Qafases as $key => $id_fase) {
 		        $oFases->$id_fase = 'ok';
 		    }
-		    $json_fases = json_encode($oFases);
-		    $oCambioUsuarioObjeto->setJson_fases($json_fases);
+		    $oCambioUsuarioObjeto->setJson_fases($oFases);
 		}
 
 		if ($oCambioUsuarioObjeto->DBGuardar() === false) {

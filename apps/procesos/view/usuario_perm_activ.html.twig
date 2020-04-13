@@ -27,6 +27,7 @@ fnjs_actualizar_fases=function(){
 
 fnjs_grabar=function(formulario){
 	var err=0;
+	/*
 	var afecta = $("input:checkbox[name^='afecta_a']:checked").map(function(){return $(this).val()}).get()
 	var afases = $("select[name^='afases'] option:selected").map(function(){return $(this).val()}).get()
 	
@@ -36,6 +37,7 @@ fnjs_grabar=function(formulario){
 	if (afases.length == 0) { 
 		alert("{{ "debe indicar las fases"|trans }}"); err=1;
 	}
+	*/
 	if (err==0) {
         $(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
         $(formulario).one("submit", function() {
@@ -78,16 +80,17 @@ fnjs_grabar=function(formulario){
 </tr>
 </table>
 <h3>{{ "afecta a"|trans }}:</h3>
-{{ oCuadros.cuadros_check('afecta_a',afecta_a)|raw }}
+{{ oDesplAfecta.desplegable()|raw }}
 
-<h3>{{ "permiso para cada fase del proceso"|trans }}:</h3>
-<span class="comentario">
-{{ "NOTA: Salen todas las fases de los procesos de los tipos de actividad seleccionados. No todos los procesos tienen todas las fases."|trans }}
+<h3>{{ "fase de referencia"|trans }}:</h3>
+<span id=fases>
+{{ oDesplFases.desplegable()|raw }}
+</span>
 <br>
-{{ "Por orden alfabético."|trans }}
-<br></span>
 <br>
-<span id=fases> {{ oCuadrosFases.cuadros_lista_perm('afases',fases_sel)|raw }} </span>
+permiso antes: off (sin marcar): {{ oDesplPermOff.desplegable()|raw }}
+<br>
+permiso después: on (marcado): {{ oDesplPermOn.desplegable()|raw }}
 <br>
 <br>
 <input type=button onclick="fnjs_grabar(this.form);" value="{{ "guardar"|trans }}">

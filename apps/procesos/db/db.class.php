@@ -55,7 +55,6 @@ class DB extends DBAbstract {
                 id_activ bigint NOT NULL,
                 id_fase integer,
                 id_tarea integer,
-                n_orden smallint,
                 completado boolean,
                 observ text
                 ); ";
@@ -178,14 +177,11 @@ class DB extends DBAbstract {
                     id_schema integer NOT NULL,
                     id_item integer NOT NULL,
                     id_tipo_proceso integer NOT NULL,
-                    n_orden smallint,
                     id_fase integer NOT NULL,
                     id_tarea integer NOT NULL,
                     status smallint NOT NULL,
-                    of_responsable character varying(7),
-                    id_fase_previa integer,
-                    id_tarea_previa integer,
-                    mensaje_requisito text
+                    of_responsable integer,
+                    json_fases_previas json
                     );";
         
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
@@ -218,12 +214,12 @@ class DB extends DBAbstract {
                 id_schema integer NOT NULL,
                 id_item integer NOT NULL,
                 id_usuario integer,
-                id_tipo_activ_txt character varying(6),
-                fases_csv text,
-                accion integer,
-                afecta_a integer,
                 dl_propia boolean DEFAULT true NOT NULL,
-                id_fases text
+                id_tipo_activ_txt character varying(6),
+                fase_ref integer,
+                afecta_a integer,
+                perm_on integer,
+                perm_off integer
             );";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
         

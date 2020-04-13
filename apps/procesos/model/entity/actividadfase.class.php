@@ -21,8 +21,15 @@ use core\ConfigGlobal;
  * @created 07/12/2018
  */
 class ActividadFase Extends core\ClasePropiedades {
-	/* ATRIBUTS ----------------------------------------------------------------- */
+	
+    // Fases constants.
+    const FASE_PROYECTO 		 = 1; // Proyecto.
+    const FASE_APROBADA 	  	 = 2; // Actual.
+    const FASE_TERMINADA	  	 = 3; // Terminada.
+    const FASE_OK_SACD    	  	 = 5; // ok_atn_sacd.
 
+    /* ATRIBUTS ----------------------------------------------------------------- */
+    
 	/**
 	 * aPrimary_key de ActividadFase
 	 *

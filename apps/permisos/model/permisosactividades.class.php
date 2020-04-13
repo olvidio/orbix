@@ -135,14 +135,10 @@ class PermisosActividades {
 		foreach ($oDbl->query($Qry) as $row) {
 			$f++;
 			$id_tipo_activ_txt = $row['id_tipo_activ_txt'];	
-			//$fases_csv = $row['fases_csv'];	
-			$iAccion = $row['accion'];	
+			$fase_ref = $row['fase_ref'];	
 			$iAfecta = $row['afecta_a'];
-			$json_fases = $row['json_fase_accion'];
-			$oFases = json_decode($json_fases);
-			if (empty($oFases)) {
-			    $oFases = new \stdClass;
-			}
+			$perm_on = $row['perm_on'];
+			$perm_off = $row['perm_off'];
 			
 			if ( is_true($dl_propia) ) {
 				if (array_key_exists($id_tipo_activ_txt,$this->aPermDl)) {
@@ -157,27 +153,11 @@ class PermisosActividades {
 					$this->aPermOtras[$id_tipo_activ_txt] = new xResto($id_tipo_activ_txt);
 				}
 			}
-			// buscar los procesos posibles para estos tipos de actividad
-			$GesTiposActiv = new GestorTipoDeActividad();
-			$aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ_txt,$dl_propia);
-			// para cada proceso hay que generar una entrada.
-			foreach ($aTiposDeProcesos as $id_tipo_proceso) {
-				// buscar las fases para estos procesos
-				$oGesFases= new procesos\GestorActividadFase();
-				$aFases = $oGesFases->getTodasActividadFases([$id_tipo_proceso]);
-				if ($aFases === FALSE) {
-				    echo '<br>';
-				    echo sprintf(_("No se encuentran las fases de este tipo de proceso:%s"),$id_tipo_proceso);
-				    continue;
-				}
-				foreach ($oFases as $id_fase => $iAccion) {
-                    if ( is_true($dl_propia) ) {
-                        $this->aPermDl[$id_tipo_activ_txt]->setOmplir($id_tipo_proceso,$id_fase,$iAccion,$iAfecta);
-                    } else {
-                        $this->aPermOtras[$id_tipo_activ_txt]->setOmplir($id_tipo_proceso,$id_fase,$iAccion,$iAfecta);
-                    }
-				}
-			}
+            if ( is_true($dl_propia) ) {
+                $this->aPermDl[$id_tipo_activ_txt]->setOmplir($iAfecta,$fase_ref,$perm_on,$perm_off);
+            } else {
+                $this->aPermOtras[$id_tipo_activ_txt]->setOmplir($iAfecta,$fase_ref,$perm_on,$perm_off);
+            }
 		}
 		if (!empty($id_tipo_activ_txt)) {
 			if (!empty($this->aPermDl[$id_tipo_activ_txt])) $this->aPermDl[$id_tipo_activ_txt]->setOrdenar();
@@ -185,6 +165,13 @@ class PermisosActividades {
 		}
 	}
 
+	/**
+	 * fija las propiedades de dl_propia y id_tipo_activ.
+	 * 
+	 * @param integer $id_activ
+	 * @param string (opcional) $id_tipo_activ
+	 * @param string (opcional) $dl_org
+	 */
 	public function setActividad($id_activ,$id_tipo_activ='',$dl_org='') {
 		$this->btop = false;
 		$this->iid_activ = $id_activ;
@@ -198,32 +185,24 @@ class PermisosActividades {
         $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
         
 		$this->iid_tipo_activ = $id_tipo_activ;
-		$oTipoDeActividad = new TipoDeActividad($id_tipo_activ);
 
         if ($dl_org == ConfigGlobal::mi_delef() OR $dl_org_no_f == ConfigGlobal::mi_dele()) {
 			$this->bpropia=true;
-            $this->iid_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso();
 		} else {
 			$this->bpropia=false;
-            $this->iid_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso_ex();
 		}
-		
-        //exit (_("Hay que indicar para que fase 222"));
-		$oGesActiv = new procesos\GestorActividadProcesoTarea();
-		$this->iid_fase = $oGesActiv->getFaseActual($this->iid_activ); 
-		//print_r($this);
 	}
 
 	public function setId_fase($iid_fase) {
 		$this->iid_fase = $iid_fase;
 	}
-	public function getId_fase() {
-		if (empty($this->iid_fase)) {
+	private function isCompletada($id_fase) {
+		if (empty($id_fase)) {
 		    exit (_("Hay que indicar para que fase"));
-    		$oGesActiv = new procesos\GestorActividadProcesoTarea();
-			$this->iid_fase = $oGesActiv->getFaseActual($this->iid_activ); 
 		}
-		return $this->iid_fase;
+        $oGesActiv = new procesos\GestorActividadProcesoTarea();
+        $completada = $oGesActiv->faseCompletada($this->iid_activ,$id_fase); 
+		return $completada;
 	}
 
 	/**
@@ -251,7 +230,7 @@ class PermisosActividades {
 		foreach($aTiposDeProcesos as $id_tipo_proceso) {
             //$this->iid_tipo_proceso = $aTiposDeProcesos[0];
             $GesTareaProceso = new GestorTareaProceso();
-            $cFasesdelProcesos = $GesTareaProceso->getTareasProceso(array('id_tipo_proceso'=>$id_tipo_proceso,'_ordre'=>'n_orden'));
+            $cFasesdelProcesos = $GesTareaProceso->getTareasProceso(array('id_tipo_proceso'=>$id_tipo_proceso));
             // La primera fase:
             $oTareaProceso = $cFasesdelProcesos[0];
             $fasePrimera = $oTareaProceso->getId_Fase();
@@ -295,31 +274,66 @@ class PermisosActividades {
 	    }
 		// para poder pasar el valor de afecta con texto:
 		if (is_string($iAfecta)) $iAfecta = $this->aAfecta[$iAfecta];
-		$id_tipo_proceso = $this->getId_tipo_proceso();
-		if (empty($id_tipo_proceso)) {
-		    echo _("No tiene definido el proceso para este tipo de actividad. Puede que falte definir la dl org");
+		
+		// buscar fase_ref para iAfecta
+		$id_fase_ref = $this->getFaseRef($iAfecta);
+		if ($this->btop === TRUE ) {
 			return  new PermAccion(0);
 		}
-		$faseActual = $this->getId_fase();
-		//echo "afec: $iAfecta, fase: $faseActual, proceso: $id_tipo_proceso<br>";
-		$iperm=0;
-		if ($this->btop === true) { 
-		    return  new PermAccion(0);
+		// buscar estado de la fase ref
+		$completada = $this->isCompletada($id_fase_ref);
+		if (is_true($completada)) {
+		    $on_off = 'on';
+		} else {
+		    $on_off = 'off';
 		}
-		if (($oP = $this->getPermisos($iAfecta)) === false) {
+		
+		$oPerm = $this->aPermDl[$this->iid_tipo_activ];
+		$perm = $oPerm->getPerm($iAfecta,$id_fase_ref,$on_off);
+		if ($perm === FALSE) {
 			return  new PermAccion(0);
 		} else {
-			$iperm = $oP->getPerm($id_tipo_proceso,$iAfecta,$faseActual,$this->iid_activ);
-			if ($iperm == 'next') {
-				return $this->getPermisoActualPrev($iAfecta);
-			} elseif ($iperm !== false) {
-				//return $iperm;
-				$oPerm = new PermAccion($iperm);
-				return $oPerm;
-			}
-			return  new PermAccion(0);
+		    return new PermAccion($perm);
 		}
 	}
+	
+	private function getFaseRef($iAfecta,$id_tipo_activ_txt='') {
+		if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->iid_tipo_activ;
+		$id_tipo_activ_txt = $this->completarId($id_tipo_activ_txt);
+		if ($this->bpropia === true) {
+            if (array_key_exists($id_tipo_activ_txt,$this->aPermDl)) {
+                $PermIdTipo = $this->aPermDl[$id_tipo_activ_txt];
+			    // a ver si existe el iAfecta para este id_tipo_activ:
+			    if ($PermIdTipo->hasAfecta($iAfecta)) {
+				    return $PermIdTipo->getFaseRef($iAfecta);
+			    } else {
+                    return $this->getFaseRefPrev($iAfecta,$id_tipo_activ_txt);
+			    }
+			} else {
+				return $this->getFaseRefPrev($iAfecta,$id_tipo_activ_txt);
+			}
+	    } else {
+	        if (array_key_exists($id_tipo_activ_txt,$this->aPermOtras)) {
+                $PermIdTipo = $this->aPermOtras[$id_tipo_activ_txt];
+			    // a ver si existe el iAfecta para este id_tipo_activ:
+			    if ($PermIdTipo->hasAfecta($iAfecta)) {
+				    return $PermIdTipo->getFaseRef($iAfecta);
+			    } else {
+                    return $this->getFaseRefPrev($iAfecta,$id_tipo_activ_txt);
+			    }
+	        } else {
+	            return $this->getFaseRefPrev($iAfecta,$id_tipo_activ_txt);
+	        }
+	    }
+	}
+	private function getFaseRefPrev($iAfecta,$id_tipo_activ_txt='') {
+		if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->iid_tipo_activ;
+		if (($prev_id_tipo = $this->getIdTipoPrev($id_tipo_activ_txt)) === false ) {
+			return false;
+		}
+		return $this->getFaseRef($iAfecta,$prev_id_tipo);
+	}
+	
 	public function getPermisoActualPrev($iAfecta) {
 		//if ($this->getIdTipoPrev() === false) return false;
 		if ($this->getIdTipoPrev() === false) return new PermAccion(0);
@@ -381,7 +395,7 @@ class PermisosActividades {
 		}
 	}
 
-	public function getIdTipoPrev($id_tipo_activ_txt='') {
+	private function getIdTipoPrev($id_tipo_activ_txt='') {
 		if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->iid_tipo_activ;
 		$match = [];
 		$rta = preg_match('/(\d+)(\d)(\.*)/',$id_tipo_activ_txt,$match);

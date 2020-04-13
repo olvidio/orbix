@@ -41,7 +41,7 @@ class DBEsquema extends DBAbstract {
     }
     
     public function llenarAll() {
-        /*
+        
         $this->llenar_a_tareas();
         $this->llenar_a_fases();
         $this->llenar_a_tipos_actividad();
@@ -49,7 +49,7 @@ class DBEsquema extends DBAbstract {
         $this->llenar_a_tareas_proceso();
         $this->llenar_a_actividad_proceso();
         $this->llenar_aux_usuarios_perm();
-        */
+        
     }
     
     private function infoTable($tabla) {
@@ -183,7 +183,6 @@ class DBEsquema extends DBAbstract {
         //$a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT a_actividad_proceso_id_activ_fk
         //            FOREIGN KEY (id_activ) REFERENCES public.a_actividades_all(id_activ) ON DELETE CASCADE; ";
         
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_n_orden ON $nom_tabla USING btree (n_orden); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
         
         $this->executeSql($a_sql);
@@ -708,7 +707,7 @@ class DBEsquema extends DBAbstract {
         
         $delimiter = "\t"; 
         $null_as = "\\\\N";
-        $fields = "id_item, id_tipo_proceso, n_orden, id_fase, id_tarea, status, of_responsable, id_fase_previa, id_tarea_previa, mensaje_requisito";
+        $fields = "id_item, id_tipo_proceso, id_fase, id_tarea, status, of_responsable, json_fases_previas";
         
         // Comprobar que existe el fichero (la ruta esta bien...
         if (!file_exists($filename)) {
@@ -754,7 +753,7 @@ class DBEsquema extends DBAbstract {
         
         $delimiter = "\t"; 
         $null_as = "\\\\N";
-        $fields = "id_item, id_usuario, id_tipo_activ_txt, fases_csv, accion, afecta_a, dl_propia, json_fase_accion";
+        $fields = "id_item, id_usuario, dl_propia, id_tipo_activ_txt, fase_ref, afecta_a, perm_on, perm_off";
         
         // Comprobar que existe el fichero (la ruta esta bien...
         if (!file_exists($filename)) {

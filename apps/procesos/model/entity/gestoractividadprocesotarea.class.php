@@ -52,7 +52,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	/* METODES PUBLICS -----------------------------------------------------------*/
 	
 	/**
-	 * retorna un array amb les fases i el seu estat. ordenades de ultima a primera.
+	 * retorna un array amb les fases i el seu estat.
 	 * 
 	 * @param integer $iid_activ
 	 * @return array $aFasesEstado = [ id_fase => $completado ]
@@ -61,7 +61,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
         $oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 	    $sQuery = "SELECT * FROM $nom_tabla WHERE id_activ=$iid_activ
-                ORDER BY n_orden DESC";
+                ";
 		if (($oDblSt = $oDbl->query($sQuery)) === FALSE) {
 	        $sClauError = 'GestorActividadProcesoTarea.fasesCompletadas.prepare';
 	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -79,7 +79,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	    return $aFasesEstado;
 	}
 	
-	public function marcarFasesAnteriores($iid_activ, $iid_fase) {
+	public function zzmarcarFasesAnteriores($iid_activ, $iid_fase) {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
 
@@ -97,7 +97,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
         return TRUE;
 	}
 	
-	public function borrarFasesSiguientes($iid_activ, $iid_fase) {
+	public function zzborrarFasesSiguientes($iid_activ, $iid_fase) {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
 
@@ -126,10 +126,11 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
         $oDbl = $this->getoDbl();
         // Mirar el proceso de la sv
         $this->setNomTabla('a_actividad_proceso_sv');
-        // La fase ok sacd es la 1. Por definición
+        // La fase ok sacd es la 5. Por definición
+        $id_fase_atn_sacd = ActividadFase::FASE_OK_SACD;
         $nom_tabla = $this->getNomTabla();
         
-        $sQry = "SELECT completado FROM $nom_tabla WHERE id_activ=".$iid_activ." AND id_fase=1 ";
+        $sQry = "SELECT completado FROM $nom_tabla WHERE id_activ=".$iid_activ." AND id_fase=$id_fase_atn_sacd ";
         if (($qRs = $oDbl->query($sQry)) === false) {
             $sClauError = 'GestorActividadProcesoTarea.getSacdAprobado.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -205,13 +206,13 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
                 return TRUE;
             }
             // Asegurar que no existe, a veces al hacerlo para las dos secciones, una lo tiene y otra no:
-            // >> Cuando se hace manuel, es porque se quiere regenerar y ahy que forzar:
+            // >> Cuando se hace manual, es porque se quiere regenerar y hay que forzar:
             if ($force === FALSE) {
-                $test_id_fase = $this->getFaseActualAcabada($iid_activ);
-                if (empty($test_id_fase) || $test_id_fase === 'SIN') {
+                $cActividadProcesoTarea = $this->getActividadProcesoTareas(['id_activ' => $iid_activ]);
+                if (empty($cActividadProcesoTarea)) {
                     $iid_fase[$sfsv] = $this->generar($iid_activ,$id_tipo_proceso,$sfsv);
                 } else {
-                    $iid_fase[$sfsv] = $test_id_fase;
+                    $iid_fase[$sfsv] = $cActividadProcesoTarea[0]->getId_fase();
                 }
             } else {
                 $iid_fase[$sfsv] = $this->generar($iid_activ,$id_tipo_proceso,$sfsv);
@@ -222,7 +223,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	    return $iid_fase[$isfsv];
 	}
 	
-	public function getFaseActual($iid_activ='') {
+	public function zzgetFaseActual($iid_activ='') {
 	    if (empty($iid_activ)) return false;
 	    // fase en la que se encuentra actualmente
 	    $iid_fase = $this->getFaseActualAcabada($iid_activ);
@@ -257,7 +258,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 		$nom_tabla = $this->getNomTabla();
 	    $sQuery = "SELECT * FROM $nom_tabla WHERE id_activ=$iid_activ
                 AND completado='t'
-                ORDER BY n_orden";
+                ";
 		if (($oDblSt = $oDbl->query($sQuery)) === FALSE) {
 	        $sClauError = 'GestorActividadProcesoTarea.fasesCompletadas.prepare';
 	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -276,12 +277,12 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	 * @param integer iid_fase
 	 * @return bool
 	 */
-	public function faseCompletada($iid_activ='',$iid_fase='') {
+	public function faseCompletada($iid_activ,$iid_fase) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 	    $sQry = "SELECT * FROM $nom_tabla WHERE id_activ=$iid_activ AND id_fase=$iid_fase 
                 AND completado='t'
-                ORDER BY n_orden DESC LIMIT 1";
+                ";
 	    if (($qRs = $oDbl->query($sQry)) === false) {
 	        $sClauError = 'GestorActividadProcesoTarea.faseCompletada.prepare';
 	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -294,7 +295,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	    }
 	}
 	
-	public function getFaseAnteriorCompletada($iid_activ,$id_fase) {
+	public function zzgetFaseAnteriorCompletada($iid_activ,$id_fase) {
 	    $a_fases_proceso = $this->getFasesCompletadas($iid_activ);
 	    
 	    $id_fase_anterior = '';
@@ -312,10 +313,10 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	 * @param integer iid_activ
 	 * @return integer
 	 */
-	private function getFasePrimera($iid_activ='') {
+	private function zzgetFasePrimera($iid_activ='') {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-	    $sQry = "SELECT * FROM $nom_tabla WHERE id_activ=".$iid_activ." ORDER BY n_orden LIMIT 1";
+	    $sQry = "SELECT * FROM $nom_tabla WHERE id_activ=".$iid_activ;
 	    if (($qRs = $oDbl->query($sQry)) === false) {
 	        $sClauError = 'GestorActividadProcesoTarea.getFasePrimera.prepare';
 	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -334,10 +335,10 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	 * @param integer iid_activ
 	 * @return integer
 	 */
-	private function getFaseUltima($iid_activ='') {
+	private function zzgetFaseUltima($iid_activ='') {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-	    $sQry = "SELECT * FROM $nom_tabla WHERE id_activ=".$iid_activ." ORDER BY n_orden DESC LIMIT 1";
+	    $sQry = "SELECT * FROM $nom_tabla WHERE id_activ=".$iid_activ;
 	    if (($qRs = $oDbl->query($sQry)) === false) {
 	        $sClauError = 'GestorActividadProcesoTarea.getFaseUltima.prepare';
 	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -398,7 +399,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	 * @param integer iid_activ
 	 * @return integer|string
 	 */
-	public function getFaseActualAcabada($iid_activ='') {
+	public function zzgetFaseActualAcabada($iid_activ='') {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 	    $sQry = "SELECT * FROM $nom_tabla WHERE id_activ=".$iid_activ." AND completado='t'
@@ -455,17 +456,16 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	 * @param integer iid_tipo_proceso
 	 * @return id_fase.
 	 */
-	public function generar($iid_activ='',$iid_tipo_proceso='',$isfsv='') {
+	private function generar($iid_activ='',$iid_tipo_proceso='',$isfsv='') {
 	    $this->borrar($iid_activ);
 	    $GesTareaProceso = new GestorTareaProceso();
-	    $cTareasProceso = $GesTareaProceso->getTareasProceso(array('id_tipo_proceso'=>$iid_tipo_proceso,'_ordre'=>'n_orden'));
+	    $cTareasProceso = $GesTareaProceso->getTareasProceso(array('id_tipo_proceso'=>$iid_tipo_proceso));
 	    $p=0;
 	    $statusActividad = '';
 	    foreach ($cTareasProceso as $oTareaProceso) {
 	        $p++;
 	        $id_fase = $oTareaProceso->getId_fase();
 	        $id_tarea = $oTareaProceso->getId_tarea();
-	        $n_orden = $oTareaProceso->getN_orden();
 	        $status = $oTareaProceso->getStatus();
 	        $oActividadProcesoTarea = new ActividadProcesoTarea();
             $oActividadProcesoTarea->setSfsv($isfsv);
@@ -473,7 +473,6 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	        $oActividadProcesoTarea->setId_activ($iid_activ);
 	        $oActividadProcesoTarea->setId_fase($id_fase);
 	        $oActividadProcesoTarea->setId_tarea($id_tarea);
-	        $oActividadProcesoTarea->setN_orden($n_orden);
 	        if ($p == 1) {
 	            $oActividadProcesoTarea->setCompletado('t'); // Marco la primera fase como completado.
 	            // marco el status correspondiente en la actividad. Hay que hacerlo al final para no entrar en
@@ -481,7 +480,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	            $statusActividad = $status;
 	        }
 	        if (($oActividadProcesoTarea->DBGuardar()) === false) {
-	            echo "error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea,$n_orden<br>";
+	            echo "error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea<br>";
 	            //return false;
 	        }
 	    }
@@ -500,7 +499,10 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	    if(!empty($cTareasProceso[0])) {
 	        return $cTareasProceso[0]->getId_fase();
 	    } else {
-	        echo "error al generar el proceso de la actividad: $iid_activ. tipo de proceso: $iid_tipo_proceso<br>";
+	        $msg = sprintf(_("error al generar el proceso de la actividad: %s. tipo de proceso: %s"), $iid_activ,$iid_tipo_proceso);
+            $msg .= "\n";
+            $msg .= _("Probablemente no esté defindo el proceso");
+            echo $msg;
 	    }
 	}
 	

@@ -1,4 +1,30 @@
 <script>
+fnjs_clonar=function(){
+	var id_tipo_proceso=$('#k_buscar').val();
+	var id_tipo_proceso_ref=$('#k_clonar').val();
+
+	if (!id_tipo_proceso) {
+		alert ("{{ txt_clonar }}");
+	} else {
+        /* obtener el listado de fases */
+        var url="{{ url_ajax }}";
+        var parametros='que=clonar&id_tipo_proceso='+id_tipo_proceso+'&id_tipo_proceso_ref='+id_tipo_proceso_ref+'{{ h_clonar|raw }}';
+             
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros
+        })
+        .done(function (rta_txt) {
+            if (rta_txt != '' && rta_txt != '\\n') {
+                /* añadir debajo de la actividad */
+                $('#div_proceso').html(rta_txt);
+            }
+        });
+        document.getElementById("overlay").style.display = "none";
+    }
+}
+
 fnjs_cerrar=function(){
 	$('#div_modificar').html('');
 	$('#div_modificar').width('0');
@@ -88,23 +114,6 @@ fnjs_modificar=function(id_item){
 	fnjs_update_div('#div_modificar',url+'?'+parametros);
 }
 
-fnjs_mover=function(id_item,orden){
-    var url="{{ url_ajax }}";
-	var parametros='que=orden&id_item='+id_item+'&orden='+orden+'{{ h_mover|raw }}';
-		 
-	$.ajax({
-		url: url,
-		type: 'post',
-		data: parametros
-	})
-	.done(function (rta_txt) {
-		if (rta_txt != '' && rta_txt != '\n') {
-			alert ('respuesta: '+rta_txt);
-		} else {
-	   		fnjs_actualizar();
-		}
-	});
-}
 fnjs_left_side_hide();
 </script>
 <div id='div_modificar'></div>
@@ -118,6 +127,11 @@ fnjs_left_side_hide();
 <select id="k_buscar" name="k_buscar" onchange='fnjs_actualizar();'>
 {{ oDespl.options()|raw }}
 </select>
+<th class=titulo_inv style="text-align: right;">{{ "clonar de"|trans }}
+<select id="k_clonar" name="k_clonar">
+{{ oDespl.options()|raw }}
+</select>
+<input type='button' name='b_clonar' value='{{ "clonar"|trans }}' onclick='fnjs_clonar();'>
 </th>
 </thead>
 </table>

@@ -58,7 +58,7 @@ $param_actualizar = $oHashActualizar->getParamAjax();
 
 $oHash1 = new web\Hash();
 $oHash1->setUrl(core\ConfigGlobal::getWeb().'/apps/procesos/controller/actividad_proceso_ajax.php');
-$oHash1->setCamposForm('que!id_item!completado!observ');
+$oHash1->setCamposForm('force!que!id_item!completado!observ');
 $h_update = $oHash1->linkSinVal();
 
 $url_ajax = 'apps/procesos/controller/actividad_proceso_ajax.php';

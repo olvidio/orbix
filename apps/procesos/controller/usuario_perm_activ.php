@@ -9,6 +9,7 @@ use procesos\model\entity\GestorActividadFase;
 use procesos\model\entity\PermUsuarioActividad;
 use usuarios\model\entity\GrupoOUsuario;
 use web\TiposActividades;
+use web\Desplegable;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
@@ -44,29 +45,49 @@ $Qque = (string) \filter_input(INPUT_POST, 'que');
 $oUsuario = new GrupoOUsuario(array('id_usuario'=>$Qid_usuario)); // La tabla y su heredada
 $nombre=$oUsuario->getUsuario();
 
+$oAcciones = new PermAccion();
+$aOpcionesAction = $oAcciones->lista_array();
+$oDesplPermOn = new Desplegable('perm_on',$aOpcionesAction,'',false);
+$oDesplPermOff = new Desplegable('perm_off',$aOpcionesAction,'',false);
+
 if (!empty($Qid_item)) {
 	$oPermiso = new PermUsuarioActividad(array('id_item'=>$Qid_item, 'id_usuario'=>$Qid_usuario));
-	$afecta_a=$oPermiso->getAfecta_a();
-	$dl_propia=$oPermiso->getDl_propia();
-	$id_tipo_activ=$oPermiso->getId_tipo_activ_txt();
-	$json_fases = $oPermiso->getJsonFaseAccion();
-    $oFases = json_decode($json_fases);
-    if (empty($oFases)) {
-        $oFases = new stdClass;
-    }
+	$dl_propia = $oPermiso->getDl_propia();
+	$id_tipo_activ = $oPermiso->getId_tipo_activ_txt();
+	$fase_ref = $oPermiso->getFase_ref();
+	$afecta_a = $oPermiso->getAfecta_a();
+	$perm_on = $oPermiso->getPerm_on();
+	$perm_off = $oPermiso->getPerm_off();
+	
 	
 	$GesTiposActiv = new GestorTipoDeActividad();
 	$aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ,$dl_propia);
 	
 	$oGesFases= new GestorActividadFase();
-	$aFases = $oGesFases->getArrayFasesProcesos($aTiposDeProcesos);
-    $oCuadrosFases->setPermissions($aFases);
-    $oCuadrosFases->setoFases($oFases);
+    $oDesplFases = $oGesFases->getListaActividadFases($aTiposDeProcesos);
+    $oDesplFases->setOpcion_sel($fase_ref);
+    
+    $oDesplPermOn->setOpcion_sel($perm_on);
+    $oDesplPermOff->setOpcion_sel($perm_off);
 } else { // es nuevo
 	$oPermiso = new PermUsuarioActividad(array('id_usuario'=>$Qid_usuario));
-	$afecta_a=0;
 	$dl_propia='t';
+	$id_tipo_activ = '1.....';
+	$afecta_a = '';
+	
+	$GesTiposActiv = new GestorTipoDeActividad();
+	$aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ,$dl_propia);
+	
+	$oGesFases= new GestorActividadFase();
+    $oDesplFases = $oGesFases->getListaActividadFases($aTiposDeProcesos);
 }
+$oDesplFases->setNombre('fase_ref');
+
+$aOpciones = $oCuadros->lista_array();
+$oDesplAfecta = new Desplegable();
+$oDesplAfecta->setNombre('afecta_a');
+$oDesplAfecta->setOpciones($aOpciones);
+$oDesplAfecta->setOpcion_sel($afecta_a);
 
 if (!empty($id_tipo_activ))  {
 	$oTipoActiv= new TiposActividades($id_tipo_activ);
@@ -96,7 +117,7 @@ if ($_SESSION['oConfig']->is_jefeCalendario()
 $oActividadTipo->setPerm_jefe($perm_jefe);
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('afecta_a!dl_propia!afases!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val');
+$oHash->setcamposForm('afecta_a!dl_propia!fase_ref!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val!perm_on!perm_off');
 $oHash->setcamposNo('id_tipo_activ');
 $a_camposHidden = array(
     'id_usuario' => $Qid_usuario,
@@ -130,9 +151,10 @@ $a_campos = [
     'chk_propia' =>$chk_propia,
     'chk_otra' => $chk_otra,
     'oActividadTipo' => $oActividadTipo,
-    'oCuadrosFases' => $oCuadrosFases,
-    'oCuadros' => $oCuadros,
-    'afecta_a' => $afecta_a,
+    'oDesplFases' => $oDesplFases,
+    'oDesplPermOn' => $oDesplPermOn,
+    'oDesplPermOff' => $oDesplPermOff,
+    'oDesplAfecta' => $oDesplAfecta,
 ];
 
 $oView = new core\ViewTwig('procesos/controller');

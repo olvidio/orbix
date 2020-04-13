@@ -1,19 +1,11 @@
 # cambios
 
-problemas con este módulo han llevado a la reconsideración de todo el tema de los procesos.
+(problemas con este módulo han llevado a la reconsideración de todo el tema de los procesos).
 
-Hasta ahora el proceso era considerado como una secuencia de fases por las que debe ir pasando la actividad.
-La prespectiva que se propone ahora es que la actividad tinene unas fases que se pueden marcar como completadas o no.
+Aunque parece que los objetos a los que se hace referencia (conjuto de datos) son los mismos que en los permisos, no es así. En los permisos se hace referencia a conceptos que pueden englobar más de un objeto (o menos). Esta información se usa a nivel de programa para dejar hacer o no alguna cosa. En los avisos, los objetos se refieren directamente a la base de datos: si ha cambiado este registro. El programa de avisos informa de los cambios sufridos en la base de datos, con independencia del proceso que los haya provocado. 
 
-En las preferencias, cada usuario puede especificar en que fases quiere que se le avise de un cambio.
-Por ejemplo:
+Para generar el aviso, se emplea el mismo criterio que en los permisos. Se define una fase de referencia, si está marcada se avisa. Se mantiene la opción de poder definir que avise si no está marcada, que a primera vista no parece lógica, pero quizá podría usarse en algún caso. Por ejemplo si estoy preparando las actividades de sg, quiero que me avise si alguien cambia algo, pero una vez aprobadas ya no quiero que me avise (ya he hecho mi trabajo y ahora depende de otros).
 
-	- si las preferencias tiene marcado que avise en las fases 2 y 3 
-	 y una actividad tiene las fases 1,2,3,4,5
-	- Si están marcadas como completadas la 2 y 4. => si avisa
-	- Si están marcadas como completadas la 4 y 5. => NO avisa
-	- Si está marcada como completada la 1		 => NO avisa
-	- Si está marcada como completada la 3		 => si avisa
+Una vez determinado que hay que avisar según el criterio de la fase, se comprueba que el usuario tiene permiso para ver esos datos. Si no tiene permiso no se avisa.
 
-
-IMPORTANTE: después de esta decisión, antes de avisar, se comprueba que el usuario tiene permiso de 'ocupado' para la fase en la que se avisa. Si no tiene permiso no se avisa.
+Se ha añadido un concepto adicional: "Avisar si ha finalizado la actividad". Por defecto desmarcado. Si se marca, se avisa aunque el cambio tenga una fecha posterior a la de fin de la actividad.
