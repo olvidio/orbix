@@ -451,7 +451,7 @@ class TipoActivTarifa Extends core\ClasePropiedades {
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'temporada'));
 		$oDatosCampo->setEtiqueta(_("temporada"));
 		$oDatosCampo->setTipo('array');
-		$oDatosCampo->setArgument(array( "A"=> _("t.alta"), "B"=> _("t.baja")));
+		$oDatosCampo->setLista(array( "A"=> _("t.alta"), "B"=> _("t.baja")));
 		return $oDatosCampo;
 	}
 }

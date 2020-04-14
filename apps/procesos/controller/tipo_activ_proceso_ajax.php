@@ -53,20 +53,20 @@ switch ($Qque) {
             $propio = 't';
             $id_txt_dl = 'dl_'.$id_tipo_activ;
             if (empty($a_procesos_tipo[$id_tipo_proceso])) {
-				$txt_proceso_dl = "<span class=link onclick=fnjs_nuevo_proceso('$id_tipo_activ','$propio')>nuevo</span>";
+                $nom_proceso = '----';
             } else {
                 $nom_proceso = $a_procesos_tipo[$id_tipo_proceso];
-			    $txt_proceso_dl = "<span class=link id=$id_txt_dl onclick=fnjs_cambiar_proceso('$id_tipo_activ','$propio')> $nom_proceso</span>";
             }
+            $txt_proceso_dl = "<span class=link id=$id_txt_dl onclick=fnjs_cambiar_proceso('$id_tipo_activ','$propio')> $nom_proceso</span>";
 
             $propio = 'f';
             $id_txt_nodl = 'nodl_'.$id_tipo_activ;
             if (empty($a_procesos_tipo[$id_tipo_proceso_ex])) {
-				$txt_proceso_nodl = "<span class=link onclick=fnjs_nuevo_proceso('$id_tipo_activ','$propio')>nuevo</span>";
+                $nom_proceso = '----';
             } else {
                 $nom_proceso = $a_procesos_tipo[$id_tipo_proceso_ex];
-			    $txt_proceso_nodl = "<span class=link id=$id_txt_nodl onclick=fnjs_cambiar_proceso('$id_tipo_activ','$propio')> $nom_proceso</span>";
             }
+            $txt_proceso_nodl = "<span class=link id=$id_txt_nodl onclick=fnjs_cambiar_proceso('$id_tipo_activ','$propio')> $nom_proceso</span>";
 						
             $a_valores[$i][3] = $txt_proceso_dl;
             $a_valores[$i][4] = $txt_proceso_nodl;

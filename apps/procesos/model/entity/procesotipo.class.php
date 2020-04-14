@@ -371,9 +371,9 @@ class ProcesoTipo Extends core\ClasePropiedades {
 	function getDatosSfsv() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'sfsv'));
-		$oDatosCampo->setEtiqueta(_("sfsv"));
-		$oDatosCampo->setTipo('texto');
-		$oDatosCampo->setArgument('3');
+		$oDatosCampo->setEtiqueta(_("sf / sv"));
+		$oDatosCampo->setTipo('array');
+		$oDatosCampo->setLista( [ 1 => _("sv"), 2 => _("sf")] );
 		return $oDatosCampo;
 	}
 }

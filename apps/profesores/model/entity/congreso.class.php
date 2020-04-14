@@ -607,4 +607,3 @@ class Congreso Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 }
-?>
