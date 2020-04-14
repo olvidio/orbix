@@ -6,13 +6,22 @@
 8	crt agd (no dl)	1
 9	crt agd	1
 10	crt n	1
-13	ca n	2
-14	general	2
-15	general no dl	2
-16	ca n (no dl)	2
-17	crt n (no dl)	2
-18	crt agd (no dl)	2
-19	crt agd	2
-20	crt n	2
-21	sv	2
 22	sf	1
+23	actividad sg	1
+24	actividad sg (no dl)	1
+25	activdad sr	1
+13	ca n sf	2
+19	crt agd sf	2
+17	crt n (no dl) sf	2
+14	general sf	2
+21	sv en sf	2
+16	ca n (no dl) sf	2
+18	crt agd (no dl) sf	2
+20	crt n sf	2
+15	general no dl sf	2
+26	ca nax	2
+27	crt nax	2
+28	actividad sr sf	2
+29	actividad sg sf	2
+30	actividad sg (no dl) sf	2
+31	cve	1
