@@ -363,7 +363,7 @@ class DBEsquema extends DBAbstract {
                     NO CYCLE;";
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
         
-        $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT (10 * nextval('$id_seq'::regclass)); ";
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER sf SET DEFAULT false; ";
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER sv SET DEFAULT true; ";
         
@@ -685,7 +685,7 @@ class DBEsquema extends DBAbstract {
         $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
 
         // Fix sequences
-        $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq)/10 FROM $nom_tabla) )";
+        $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);
 
         $this->delPermisoGlobal('comun');
