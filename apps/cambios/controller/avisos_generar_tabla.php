@@ -458,11 +458,7 @@ while ($num_cambios) {
 			}
 			$aviso_donde = $oCambioUsuarioObjetoPref->getAviso_donde();
 			$id_pau = $oCambioUsuarioObjetoPref->getId_pau();
-			$json_fases = $oCambioUsuarioObjetoPref->getJson_fases();
-			$oFases = json_decode($json_fases);
-			if (empty($oFases)) {
-			    $oFases = new stdClass;
-			}
+			$id_fase_ref = $oCambioUsuarioObjetoPref->getId_fase_ref();
 			
 			$fase_correcta = 0;
 			/////////////////// COMPARAR STATUS //////////////////////////////////////////

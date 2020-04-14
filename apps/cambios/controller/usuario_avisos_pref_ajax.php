@@ -334,49 +334,16 @@ switch($Qsalida) {
             if (ConfigGlobal::is_app_installed('procesos')) {
                 /* Ahora no tengo en cuenta el permiso: la idea es ver todas y comprobar
                  * el permiso a la hora de generar el aviso.
-                // para las fases cojo los mismos permisos que para las actividades (datos).
-                $aObjPerm = [   'Actividad'=>'datos',
-                                'ActividadProcesoTarea'=>'datos',
-                                'ActividadCargoSacd'=>'sacd',
-                                'ActividadCargoNoSacd'=>'cargos',
-                                'Asistente'=>'asistentes',
-                                'CentroEncargado'=>'ctr',
-                            ];
-                $afecta = $aObjPerm[$Qobjeto];
                 */
-                $id_tipo_activ_txt = "......";
-                for ($i=0;$i<6;$i++) {
-                    if (!empty($Qid_tipo_activ[$i])) $id_tipo_activ_txt[$i] = $Qid_tipo_activ[$i];
-                }
+                
                 // buscar los procesos posibles para estos tipos de actividad
                 $GesTiposActiv = new GestorTipoDeActividad();
                 $aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($Qid_tipo_activ,$dl_propia);
                 $oGesFases= new GestorActividadFase();
-                // Cambio, en vez de ver fases comunes ahora veo las de todos los procesos.
-                //$aFases = $oGesFases->getArrayActividadFases($aTiposDeProcesos);
-                $aFases = $oGesFases->getArrayActividadFasesTodas($aTiposDeProcesos);
-
-                $oPermActividades = new PermisosActividades($Qid_usuario);
-                $oPermActividades->setId_tipo_activ($id_tipo_activ_txt);
-                $oPermActividades->setPropia($dl_propia);
-                $aFasesConPerm=array();
-                foreach ($aTiposDeProcesos as $id_proceso) {
-                    $oPermActividades->setId_tipo_proceso($id_proceso);
-                    foreach ($aFases as $id_fase) {
-                        //echo "id_fase: $id_fase<br>";
-                        /* Ahora no tengo en cuenta el permiso: la idea es ver todas y comprobar
-                        // el permiso a la hora de generar el aviso.
-                        //$oPermActividades->setId_fase($id_fase);
-                        //$oPermActiv = $oPermActividades->getPermisoActual($afecta);
-                        //print_r($oPermActiv);
-                        //if ( !$oPermActiv->have_perm_activ('ocupado') ) { continue; }
-                         * 
-                         */
-                        $oFase = new ActividadFase($id_fase);
-                        $desc_fase = $oFase->getDesc_fase();
-                        $aFasesConPerm[$desc_fase] = $id_fase; 
-                    }
-                }
+                $oDesplFases = $oGesFases->getListaActividadFases($aTiposDeProcesos);
+                $oDesplFases->setNombre('id_fase_ref');
+                //$oDesplFases->setOpcion_sel($id_fase_ref);
+                
             } else {
                 // Sólo los estado de la actividad
                 $oActividad = new ActividadAll();
@@ -385,10 +352,8 @@ switch($Qsalida) {
                 unset($a_status[ActividadAll::STATUS_ALL]);
                 $aFasesConPerm = array_flip($a_status);
             }
-            $oCuadrosFases = new CuadrosFases();
-            $oCuadrosFases->setPermissions($aFasesConPerm);
             
-            echo $oCuadrosFases->cuadros_check('afases','');
+            echo $oDesplFases->desplegable();
 		} else {
 		    $html = "<span class='alert'>";
 		    $html .= _("primero debe elegir un objeto sobre el que mirar los cambios");
@@ -424,7 +389,10 @@ switch($Qsalida) {
         $Qobjeto = (string) \filter_input(INPUT_POST, 'objeto');
         $Qaviso_tipo = (string) \filter_input(INPUT_POST, 'aviso_tipo');
         $Qaviso_donde = (string) \filter_input(INPUT_POST, 'aviso_donde');
-        $Qafases = (array) \filter_input(INPUT_POST, 'afases', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $Qid_fase_ref = (integer) \filter_input(INPUT_POST, 'id_fase_ref');
+        $Qaviso_off = (string) \filter_input(INPUT_POST, 'aviso_off');
+        $Qaviso_on = (string) \filter_input(INPUT_POST, 'aviso_on');
+        $Qaviso_outdate = (string) \filter_input(INPUT_POST, 'aviso_outdate');
 
 		$a_relleno = array( 1=>'.',2=>'..',3=>'...',4=>'....',5=>'.....');
 		if(!empty($Qid_item_usuario_objeto)) {
@@ -455,6 +423,13 @@ switch($Qsalida) {
 		$oCambioUsuarioObjeto->setObjeto($Qobjeto);
 		$oCambioUsuarioObjeto->setAviso_tipo($Qaviso_tipo);
 		if (!empty($Qaviso_donde)) $oCambioUsuarioObjeto->setAviso_donde($Qaviso_donde);
+        $oCambioUsuarioObjeto->setId_fase_ref($Qid_fase_ref);
+		$aviso_off = is_true($Qaviso_off)? 't' : 'f';
+		$oCambioUsuarioObjeto->setAviso_off($aviso_off);
+		$aviso_on = is_true($Qaviso_on )? 't' : 'f';
+		$oCambioUsuarioObjeto->setAviso_on($aviso_on);
+		$aviso_outdate = is_true($Qaviso_outdate)? 't' : 'f';
+		$oCambioUsuarioObjeto->setAviso_outdate($aviso_outdate);
 		// En el caso de filtrar por casas
 		if (!empty($_POST['casas'])) {
 			$txt_casa='';
@@ -467,15 +442,6 @@ switch($Qsalida) {
 			}
 			$oCambioUsuarioObjeto->setId_pau($txt_casa);
 		}
-		//cuando el campo es afases, se pasa un array que hay que convertirlo texto (separado por comas).
-		if (!empty($Qafases)){
-		    $oFases = new stdClass;
-		    foreach($Qafases as $key => $id_fase) {
-		        $oFases->$id_fase = 'ok';
-		    }
-		    $oCambioUsuarioObjeto->setJson_fases($oFases);
-		}
-
 		if ($oCambioUsuarioObjeto->DBGuardar() === false) {
 			echo _("Hay un error, no se ha guardado");
 			echo "\n".$oCambioUsuarioObjeto->getErrorTxt();

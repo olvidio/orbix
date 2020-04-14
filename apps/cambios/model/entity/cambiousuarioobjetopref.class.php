@@ -1,7 +1,6 @@
 <?php
 namespace cambios\model\entity;
 use core;
-use stdClass;
 /**
  * Fitxer amb la Classe que accedeix a la taula av_cambios_usuario_objeto_pref
  *
@@ -62,11 +61,29 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 	 */
 	 private $sid_tipo_activ_txt;
 	/**
-	 * json_fases de CambioUsuarioObjetoPref
+	 * id_fase_ref de CambioUsuarioObjetoPref
 	 *
-	 * @var object JSON
+	 * @var integer
 	 */
-	 private $json_fases;
+	 private $iid_fase_ref;
+	/**
+	 * aviso_off de CambioUsuarioObjetoPref
+	 *
+	 * @var boolean
+	 */
+	 private $baviso_off;
+	/**
+	 * aviso_on de CambioUsuarioObjetoPref
+	 *
+	 * @var boolean JSON
+	 */
+	 private $baviso_on;
+	/**
+	 * aviso_outdate de CambioUsuarioObjetoPref
+	 *
+	 * @var boolean
+	 */
+	 private $baviso_outdate;
 	/**
 	 * Objeto de CambioUsuarioObjetoPref
 	 *
@@ -146,20 +163,30 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 		$aDades['id_usuario'] = $this->iid_usuario;
 		$aDades['dl_org'] = $this->sdl_org;
 		$aDades['id_tipo_activ_txt'] = $this->sid_tipo_activ_txt;
-		$aDades['json_fases'] = $this->json_fases;
+		$aDades['id_fase_ref'] = $this->iid_fase_ref;
+		$aDades['aviso_off'] = $this->baviso_off;
+		$aDades['aviso_on'] = $this->baviso_on;
+		$aDades['aviso_outdate'] = $this->baviso_outdate;
 		$aDades['objeto'] = $this->sobjeto;
 		$aDades['aviso_tipo'] = $this->iaviso_tipo;
 		$aDades['aviso_donde'] = $this->saviso_donde;
 		$aDades['id_pau'] = $this->sid_pau;
 		array_walk($aDades, 'core\poner_null');
-
+		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		if ( core\is_true($aDades['aviso_off']) ) { $aDades['aviso_off']='true'; } else { $aDades['aviso_off']='false'; }
+		if ( core\is_true($aDades['aviso_on']) ) { $aDades['aviso_on']='true'; } else { $aDades['aviso_on']='false'; }
+		if ( core\is_true($aDades['aviso_outdate']) ) { $aDades['aviso_outdate']='true'; } else { $aDades['aviso_outdate']='false'; }
+		
 		if ($bInsert === FALSE) {
 			//UPDATE
 			$update="
 					id_usuario               = :id_usuario,
 					dl_org                   = :dl_org,
 					id_tipo_activ_txt        = :id_tipo_activ_txt,
-					json_fases               = :json_fases,
+					id_fase_ref              = :id_fase_ref,
+                    aviso_off                = :aviso_off,
+                    aviso_on                 = :aviso_on,
+                    aviso_outdate            = :aviso_outdate,
 					objeto                   = :objeto,
 					aviso_tipo               = :aviso_tipo,
 					aviso_donde              = :aviso_donde,
@@ -182,8 +209,8 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			$campos="(id_usuario,dl_org,id_tipo_activ_txt,json_fases,objeto,aviso_tipo,aviso_donde,id_pau)";
-			$valores="(:id_usuario,:dl_org,:id_tipo_activ_txt,:json_fases,:objeto,:aviso_tipo,:aviso_donde,:id_pau)";		
+			$campos="(id_usuario,dl_org,id_tipo_activ_txt,id_fase_ref,aviso_off,aviso_on,aviso_outdate,objeto,aviso_tipo,aviso_donde,id_pau)";
+			$valores="(:id_usuario,:dl_org,:id_tipo_activ_txt,:id_fase_ref,:aviso_off,:aviso_on,:aviso_outdate,:objeto,:aviso_tipo,:aviso_donde,:id_pau)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClauError = 'CambioUsuarioObjetoPref.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -285,7 +312,10 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 		if (array_key_exists('id_usuario',$aDades)) $this->setId_usuario($aDades['id_usuario']);
 		if (array_key_exists('dl_org',$aDades)) $this->setDl_org($aDades['dl_org']);
 		if (array_key_exists('id_tipo_activ_txt',$aDades)) $this->setId_tipo_activ_txt($aDades['id_tipo_activ_txt']);
-		if (array_key_exists('json_fases',$aDades)) $this->setJson_fases($aDades['json_fases']);
+		if (array_key_exists('id_fase_ref',$aDades)) $this->setId_fase_ref($aDades['id_fase_ref']);
+		if (array_key_exists('aviso_off',$aDades)) $this->setAviso_off($aDades['aviso_off']);
+		if (array_key_exists('aviso_on',$aDades)) $this->setAviso_on($aDades['aviso_on']);
+		if (array_key_exists('aviso_outdate',$aDades)) $this->setAviso_outdate($aDades['aviso_outdate']);
 		if (array_key_exists('objeto',$aDades)) $this->setObjeto($aDades['objeto']);
 		if (array_key_exists('aviso_tipo',$aDades)) $this->setAviso_tipo($aDades['aviso_tipo']);
 		if (array_key_exists('aviso_donde',$aDades)) $this->setAviso_donde($aDades['aviso_donde']);
@@ -302,7 +332,10 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 		$this->setId_usuario('');
 		$this->setDl_org('');
 		$this->setId_tipo_activ_txt('');
-		$this->setJson_fases('');
+		$this->setId_fase_ref('');
+		$this->setAviso_off('');
+		$this->setAviso_on('');
+		$this->setAviso_outdate('');
 		$this->setObjeto('');
 		$this->setAviso_tipo('');
 		$this->setAviso_donde('');
@@ -428,30 +461,71 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 		$this->sid_tipo_activ_txt = $sid_tipo_activ_txt;
 	}
 	/**
-	 * Recupera l'atribut json_fases de CambioUsuarioObjetoPref
+	 * Recupera l'atribut id_fase_ref de CambioUsuarioObjetoPref
 	 *
-	 * @return object json_fases
+	 * @return integer
 	 */
-	function getJson_fases() {
-		if (!isset($this->json_fases)) {
+	function getId_fase_ref() {
+		if (!isset($this->iid_fase_ref)) {
 			$this->DBCarregar();
 		}
-		$oFases = json_decode($this->json_fases);
-		if (empty($oFases)) {
-		    $oFases = new stdClass;
-		}
-		return $oFases;
+		return $this->iid_fase_ref;
 	}
 	/**
-	 * estableix el valor de l'atribut json_fases de CambioUsuarioObjetoPref
+	 * estableix el valor de l'atribut id_fase_ref de CambioUsuarioObjetoPref
 	 *
-	 * @param object json_fases
+	 * @param integer
 	 */
-	function setJson_fases($oFases) {
-	    $json_fases = json_encode($oFases);
-		$this->json_fases = $json_fases;
+	function setId_fase_ref($id_fase_ref) {
+		$this->iid_fase_ref = $id_fase_ref;
 	}
 	/**
+     * @return boolean
+     */
+    public function getAviso_off() {
+		if (!isset($this->baviso_off)) {
+			$this->DBCarregar();
+		}
+        return $this->baviso_off;
+    }
+    /**
+     * @param boolean $baviso_off
+     */
+    public function setAviso_off($baviso_off) {
+        $this->baviso_off = $baviso_off;
+    }
+	/**
+     * @return boolean
+     */
+    public function getAviso_on() {
+		if (!isset($this->baviso_on)) {
+			$this->DBCarregar();
+		}
+        return $this->baviso_on;
+    }
+    /**
+     * @param boolean $baviso_on
+     */
+    public function setAviso_on($baviso_on) {
+        $this->baviso_on = $baviso_on;
+    }
+	/**
+     * @return boolean
+     */
+    public function getAviso_outdate() {
+		if (!isset($this->baviso_outdate)) {
+			$this->DBCarregar();
+		}
+        return $this->baviso_outdate;
+    }
+    /**
+     * @param boolean $baviso_outdate
+     */
+    public function setAviso_outdate($baviso_outdate) {
+        $this->baviso_outdate = $baviso_outdate;
+    }
+
+    /**
 	 * Recupera l'atribut sobjeto de CambioUsuarioObjetoPref
 	 *
 	 * @return string sobjeto
@@ -539,7 +613,10 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 		$oCambioUsuarioObjetoPrefSet->add($this->getDatosId_usuario());
 		$oCambioUsuarioObjetoPrefSet->add($this->getDatosDl_org());
 		$oCambioUsuarioObjetoPrefSet->add($this->getDatosId_tipo_activ_txt());
-		$oCambioUsuarioObjetoPrefSet->add($this->getDatosJson_fases());
+		$oCambioUsuarioObjetoPrefSet->add($this->getDatosId_fase_ref());
+		$oCambioUsuarioObjetoPrefSet->add($this->getDatosAviso_off());
+		$oCambioUsuarioObjetoPrefSet->add($this->getDatosAviso_on());
+		$oCambioUsuarioObjetoPrefSet->add($this->getDatosAviso_outdate());
 		$oCambioUsuarioObjetoPrefSet->add($this->getDatosObjeto());
 		$oCambioUsuarioObjetoPrefSet->add($this->getDatosAviso_tipo());
 		$oCambioUsuarioObjetoPrefSet->add($this->getDatosAviso_donde());
@@ -586,15 +663,51 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut json_fases de CambioUsuarioObjetoPref
+	 * Recupera les propietats de l'atribut id_fase_ref de CambioUsuarioObjetoPref
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
 	 */
-	function getDatosJson_fases() {
+	function getDatosId_fase_ref() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'json_fases'));
-		$oDatosCampo->setEtiqueta(_("json_fases"));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_fase_ref'));
+		$oDatosCampo->setEtiqueta(_("Fase de referencia"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut aviso_off de CambioUsuarioObjetoPref
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosAviso_off() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'aviso_off'));
+		$oDatosCampo->setEtiqueta(_("aviso_off"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut aviso_on de CambioUsuarioObjetoPref
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosAviso_on() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'aviso_on'));
+		$oDatosCampo->setEtiqueta(_("aviso_on"));
+		return $oDatosCampo;
+	}
+	/**
+	 * Recupera les propietats de l'atribut aviso_outdate de CambioUsuarioObjetoPref
+	 * en una clase del tipus DatosCampo
+	 *
+	 * @return core\DatosCampo
+	 */
+	function getDatosAviso_outdate() {
+		$nom_tabla = $this->getNomTabla();
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'aviso_outdate'));
+		$oDatosCampo->setEtiqueta(_("aviso_outdate"));
 		return $oDatosCampo;
 	}
 	/**

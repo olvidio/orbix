@@ -148,10 +148,10 @@
         }
       }
 
+	  // .css("max-height", $(window).height() - e.pageY -10)
       $menu
           .css("top", e.pageY - 10)
           .css("left", e.pageX - 10)
-          .css("max-height", $(window).height() - e.pageY -10)
           .fadeIn(_options.fadeSpeed);
 
       $list.appendTo($menu);

@@ -67,9 +67,9 @@ fnjs_grabar_todo=function(formulario){
 		$('#objeto').focus();
 		err=1;
 	}
-	var afases = $("input[name^='afases']:checked").map(function(){return $(this).val()}).get()
-	if (afases.length == 0) { 
-		alert("{{ "debe indicar las fases"|trans }}"); err=1;
+	var id_fase_ref=$('#id_fase_ref').val();
+	if (!id_fase_ref) { 
+		alert("{{ "debe indicar la fase de referencia"|trans }}"); err=1;
 	}
 
 	var tipo=$('#aviso_tipo').val();
@@ -97,11 +97,11 @@ fnjs_grabar_todo=function(formulario){
             form_propiedades = $('#propiedades_obj'); 
             //$('#salida_').val('guardar_propiedades');
             $('#id_item_usuario_objeto_prop').val(id_item_obj);
-            var data = form_propiedades.serializeArray();
+            var data_prop = form_propiedades.serializeArray();
             $.ajax({
                 url: url,
                 type: 'post',
-                data: data
+                data: data_prop
             })
             .done(function (r_txt) {
                 if (r_txt) {
@@ -198,7 +198,7 @@ fnjs_actualizar_propiedades({{ id_item_usuario_objeto }});
 </table>
 <br>
 
-<h3>{{ "en las fases"|trans }}:</h3>
+<h3>{{ "fase de referencia"|trans }}:</h3>
 <span class="comentario">
 {{ "NOTA: Salen todas las fases posibles, aunque en algún proceso no existan.
 Para ver menos fases, debe limitar el tipo de actividad."|trans }}
@@ -207,8 +207,17 @@ Para ver menos fases, debe limitar el tipo de actividad."|trans }}
 El permiso se comprueba cuando se genera el aviso."|trans }}
 </span>
 <br>
+<span id=fases>
+{{ oDesplFases.desplegable()|raw }}
+</span>
 <br>
-<span id=fases> {{ oCuadrosFases.cuadros_check('afases')|raw }} </span>
+<br>
+<input type="checkbox" {{ chk_off }} name="aviso_off"> {{ "avisar antes de que esté marcada (off)"|trans }}
+<br>
+<input type="checkbox" {{ chk_on }} name="aviso_on">  {{ "avisar si está marcada (on)"|trans }}
+<br>
+<input type="checkbox" {{ chk_outdate }} name="aviso_outdate">  {{ "avisar aunque la actividad haya finalizado (fecha cambio  > fecha fin actividad)"|trans }}
+<br>
 <br>
 <h3>{{ "opciones"|trans }}:</h3>
 <table>

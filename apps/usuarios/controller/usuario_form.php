@@ -99,7 +99,10 @@ if( (ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
 	                   _("objeto"),
                        _("dl propia"),
 	                   _("tipo de actividad"),
-	                   _("fases"),
+	                   _("fase ref."),
+	                   _("off"),
+	                   _("on"),
+	                   _("outdate"),
 	                   _("tipo de aviso"),
 	                   _("propiedades"),
 	                   _("valor"),
@@ -118,11 +121,10 @@ if( (ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
 		$dl_org=$oCambioUsuarioObjetoPref->getDl_org();
 		$objeto=$oCambioUsuarioObjetoPref->getObjeto();
 		$aviso_tipo=$oCambioUsuarioObjetoPref->getAviso_tipo();
-		$json_fases = $oCambioUsuarioObjetoPref->getJson_fases();
-		$oFases = json_decode($json_fases);
-		if (empty($oFases)) {
-		    $oFases = new stdClass;
-		}
+		$id_fase_ref = $oCambioUsuarioObjetoPref->getId_fase_ref();
+		$aviso_off = $oCambioUsuarioObjetoPref->getAviso_off();
+		$aviso_on = $oCambioUsuarioObjetoPref->getAviso_on();
+		$aviso_outdate = $oCambioUsuarioObjetoPref->getAviso_outdate();
 
 		$isfsv = substr($id_tipo, 0, 1);
 		$mi_dele = ConfigGlobal::mi_delef($isfsv);
@@ -137,19 +139,21 @@ if( (ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
 		$a_valores_avisos[$i][2]=$dl_org;
 		$a_valores_avisos[$i][3]=$oTipoActividad->getNom();
         $txt_fases = '';
-        foreach ($oFases as $id_fase => $ok) {
-            if (ConfigGlobal::is_app_installed('procesos')) {
-                $oFase->setId_fase($id_fase);
-                $oFase->DBCarregar();
-    		    $txt_fases .= empty($txt_fases)? '' : ', ';
-    		    $txt_fases .= $oFase->getDesc_fase();
-    		} else {
-    		    $txt_fases .= empty($txt_fases)? '' : ', ';
-    		    $txt_fases .= $a_status[$id_fase];
-		    }
-            $a_valores_avisos[$i][4]= $txt_fases;
-		}
-		$a_valores_avisos[$i][5]=$aTipos_aviso[$aviso_tipo];
+        if (ConfigGlobal::is_app_installed('procesos')) {
+            $oFase->setId_fase($id_fase_ref);
+            $oFase->DBCarregar();
+            $txt_fases .= empty($txt_fases)? '' : ', ';
+            $txt_fases .= $oFase->getDesc_fase();
+        } else {
+            $txt_fases .= empty($txt_fases)? '' : ', ';
+            $txt_fases .= $a_status[$id_fase_ref];
+        }
+        $a_valores_avisos[$i][4]= $txt_fases;
+        $a_valores_avisos[$i][5]= $aviso_off;
+        $a_valores_avisos[$i][6]= $aviso_on;
+        $a_valores_avisos[$i][7]= $aviso_outdate;
+        
+		$a_valores_avisos[$i][8]=$aTipos_aviso[$aviso_tipo];
 		$GesCambiosUsuarioPropiedadesPref = new GestorCambioUsuarioPropiedadPref();
 		$cListaPropiedades = $GesCambiosUsuarioPropiedadesPref->getCambioUsuarioPropiedadesPrefs(array('id_item_usuario_objeto'=>$id_item_usuario_objeto));
 		$txt_cambio = '';
@@ -168,8 +172,8 @@ if( (ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
 			$txt_cambio .= $oCambioUsuarioPropiedadPref->getTextCambio();
 			
 		}
-		$a_valores_avisos[$i][6]=$txt_propiedades;
-		$a_valores_avisos[$i][7]=$txt_cambio;
+		$a_valores_avisos[$i][9]=$txt_propiedades;
+		$a_valores_avisos[$i][10]=$txt_cambio;
 	}
 
 	$oTablaAvisos = new Lista();

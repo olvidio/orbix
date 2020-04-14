@@ -88,9 +88,9 @@ fnjs_grabar=function(formulario){
 </span>
 <br>
 <br>
-permiso antes: off (sin marcar): {{ oDesplPermOff.desplegable()|raw }}
+{{ "permiso antes: off (sin marcar)"|trans }}: {{ oDesplPermOff.desplegable()|raw }}
 <br>
-permiso después: on (marcado): {{ oDesplPermOn.desplegable()|raw }}
+{{ "permiso después: on (marcado)"|trans }}: {{ oDesplPermOn.desplegable()|raw }}
 <br>
 <br>
 <input type=button onclick="fnjs_grabar(this.form);" value="{{ "guardar"|trans }}">
