@@ -129,13 +129,19 @@ include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
       <li>
         <h4>imprimir situación académica <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::getWeb_public() ?>/ayuda/12-verTessera.mp4')">(video)</span></h4>
       </li>
+      <li>
+        <h4>exportar tessera a archivo <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::getWeb_public() ?>/ayuda/13-tessera-curriculum.wmv')">(video)</span></h4>
+      </li>
     </ol>
 	 <br><br><br> 
     <h2><a name="gestion_de_ctr"></a>3. Gestión de ctr<br>
     </h2>
 	<ol>
       <li>
-        <h4>Crear/modificar un nuevo centro <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::getWeb_public() ?>/ayuda/13-modificarCtr.mp4')">(video)</span></h4>
+        <h4>Crear/modificar un nuevo centro <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::getWeb_public() ?>/ayuda/14-modificarCtr.mp4')">(video)</span></h4>
+      </li>
+      <li>
+        <h4>modificar datos centro <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::getWeb_public() ?>/ayuda/15-cambiarDatosCentro.wmv')">(video)</span></h4>
 	  </li>
 	</ol>
   </body>

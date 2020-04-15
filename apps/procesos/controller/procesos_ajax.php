@@ -77,7 +77,7 @@ switch($Qque) {
 		}
 
 		$GesTareaPorceso = new GestorTareaProceso();
-		$cTareasProceso = $GesTareaPorceso->getTareasProceso(array('id_tipo_proceso'=>$Qid_tipo_proceso));
+		$cTareasProceso = $GesTareaPorceso->getTareasProceso(['id_tipo_proceso'=>$Qid_tipo_proceso,'_ordre'=>'status,id_of_responsable']);
 		$txt = '<table>';
         $txt .= '<tr><th>'._("status").'</th><th>'._("responsable").'</th>';
         $txt .= '<th colspan=3>'._("fase - tarea").'</th><th>'._("modificar").'</th><th>'._("eliminar").'</th></tr>';

@@ -798,17 +798,22 @@ class Cambio Extends core\ClasePropiedades {
 	/**
 	 * Recupera l'atribut json_fases_sv de Cambio
 	 *
-	 * @return object json_fases_sv
+	 * @param boolean $bArray si hay que devolver un array en vez de un objeto.
+	 * @return object $oFases
 	 */
-	function getJson_fases_sv() {
-		if (!isset($this->json_fases_sv)) {
-			$this->DBCarregar();
-		}
-		$oFases = json_decode($this->json_fases_sv);
-		if (empty($oFases)) {
-		    $oFases = new stdClass;
-		}
-		return $oFases;
+	function getJson_fases_sv($bArray=FALSE) {
+	    if (!isset($this->json_fases_sv)) {
+	        $this->DBCarregar();
+	    }
+	    $oFases = json_decode(json_decode($this->json_fases_sv),$bArray);
+	    if (empty($oFases) OR $oFases == '[]') {
+	        if ($bArray) {
+	            $oFases = [];
+	        } else {
+	            $oFases = new stdClass;
+	        }
+	    }
+	    return $oFases;
 	}
 	/**
 	 * estableix el valor de l'atribut json_fases_sv de Cambio
@@ -817,31 +822,37 @@ class Cambio Extends core\ClasePropiedades {
 	 */
 	function setJson_fases_sv($oFases) {
 	    $json_fases_sv = json_encode($oFases);
-		$this->json_fases_sv = $json_fases_sv;
+	    $this->json_fases_sv = $json_fases_sv;
 	}
+
 	/**
 	 * Recupera l'atribut json_fases_sf de Cambio
 	 *
-	 * @return integer json_fases_sf
+	 * @param boolean $bArray si hay que devolver un array en vez de un objeto.
+	 * @return object $oFases
 	 */
-	function getJson_fases_sf() {
-		if (!isset($this->json_fases_sf)) {
-			$this->DBCarregar();
-		}
-		$oFases = json_decode($this->json_fases_sf);
-		if (empty($oFases)) {
-		    $oFases = new stdClass;
-		}
-		return $oFases;
+	function getJson_fases_sf($bArray=FALSE) {
+	    if (!isset($this->json_fases_sf)) {
+	        $this->DBCarregar();
+	    }
+	    $oFases = json_decode(json_decode($this->json_fases_sf),$bArray);
+	    if (empty($oFases) OR $oFases == '[]') {
+	        if ($bArray) {
+	            $oFases = [];
+	        } else {
+	            $oFases = new stdClass;
+	        }
+	    }
+	    return $oFases;
 	}
 	/**
 	 * estableix el valor de l'atribut json_fases_sf de Cambio
 	 *
-	 * @param object oFases
+	 * @param object $oFases
 	 */
 	function setJson_fases_sf($oFases) {
 	    $json_fases_sf = json_encode($oFases);
-		$this->json_fases_sf = $json_fases_sf;
+	    $this->json_fases_sf = $json_fases_sf;
 	}
 	/**
 	 * Recupera l'atribut iid_status de Cambio

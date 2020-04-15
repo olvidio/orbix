@@ -385,8 +385,8 @@ while ($num_cambios) {
 		$sObjeto = $oCambio->getObjeto();
 		$dl_org = $oCambio->getDl_org();
 		$id_tipo_activ = $oCambio->getId_tipo_activ();
-		$json_fases_cmb_sv = $oCambio->getJson_fases_sv();
-		$json_fases_cmb_sf = $oCambio->getJson_fases_sf();
+		$aFases_cmb_sv = $oCambio->getJson_fases_sv(TRUE);
+		$aFases_cmb_sf = $oCambio->getJson_fases_sf(TRUE);
 		$id_status_cmb = $oCambio->getId_status();
 		$propiedad_cmb = $oCambio->getPropiedad();
 		$valor_old_cmb = $oCambio->getValor_old();
@@ -409,13 +409,10 @@ while ($num_cambios) {
         $afecta = $aObjPerm[$sObjeto];
 		
 		if (ConfigGlobal::mi_sfsv() == 1) {
-		    $oFases_cmb = json_decode($json_fases_cmb_sv);
+		    $aFases_cmb = $aFases_cmb_sv;
 		} else {
-		    $oFases_cmb = json_decode($json_fases_cmb_sf);
+		    $aFases_cmb = $aFases_cmb_sf;
 		}
-        if (empty($oFases_cmb)) {
-            $oFases = new stdClass;
-        }
 
 		// para dl y dlf:
 		$dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
@@ -463,9 +460,9 @@ while ($num_cambios) {
 			$fase_correcta = 0;
 			/////////////////// COMPARAR STATUS //////////////////////////////////////////
 			// Si el id_fase es NULL, hay que mirar el id_status
-			// Si el id_status es 1,2,3,4 corresponde al status de la actividad,
+			// Si el id_status es 1,2,3 corresponde al status de la actividad,
 			//   porque no tiene instalado el módulo de procesos.
-			if (empty($oFases_cmb)) {
+			if (empty($aFases_cmb)) {
 			    // Si yo SI tengo procesos:
 			    if(ConfigGlobal::is_app_installed('procesos')) {
 			        // Busco el status de la actividad qe corresponde a la dase actual
@@ -486,7 +483,7 @@ while ($num_cambios) {
                     }
 			    } else{
     			    // Si yo no tengo procesos:
-			        foreach ($oFases as $id_fase => $ok) {
+			        foreach ($aFases_cmb as $id_fase) {
 			            if ($id_status_cmb == $id_fase) {
                             $fase_correcta = 1;
 			            }
@@ -495,27 +492,23 @@ while ($num_cambios) {
 			} else {
 			    /////////////////// COMPARAR FASES //////////////////////////////////////////
 			
-			    foreach ($oFases_cmb as $id_fase_cmb) {
+			    if (in_array($id_fase_ref, $aFases_cmb)) {
                     // Temgo permiso de ver esta fase?
                     $oPermActividades = new PermisosActividades($id_usuario);
                     $oPermActividades->setActividad($id_activ);
-                    $oPermActividades->setId_fase($id_fase_cmb);
+                    $oPermActividades->setId_fase($id_fase_ref);
                     $oPermActiv = $oPermActividades->getPermisoActual($afecta);
                     if ( !$oPermActiv->have_perm_activ('ocupado') ) { continue; }
                     
                     // Si tengo instalado el modulo de procesos:
                     if(ConfigGlobal::is_app_installed('procesos')) {
-                        foreach ($oFases as $id_fase => $ok) {
-                            if ($id_fase_cmb == $id_fase) {
-                                $fase_correcta = 1;
-                            }
-                        }
+                            $fase_correcta = 1;
                     } else {
                         //Yo no tengo instalado el modulo procesos, pero la dl que ha hecho el cambio si.
                         // miro que esté en el status.
                         $oActividad = new Actividad($id_activ);
                         $status = $oActividad->getStatus();
-                        foreach ($oFases as $id_fase => $ok) {
+                        foreach ($aFases_cmb as $id_fase) {
                             if ($status == $id_fase) {
                                 $fase_correcta = 1;
                             }

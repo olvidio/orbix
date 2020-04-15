@@ -1,5 +1,8 @@
 <?php
 use usuarios\model\entity as usuarios;
+use ubis\model\entity\GestorDelegacion;
+use core\ConfigGlobal;
+use ubis\model\entity\GestorRegion;
 /**
 * Es el frame inferior. Muestra la ficha de los ubis
 *
@@ -23,6 +26,18 @@ use usuarios\model\entity as usuarios;
 $Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
 $Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
 $Qnuevo = (string) \filter_input(INPUT_POST, 'nuevo');
+
+$isfsv = ConfigGlobal::mi_sfsv();
+// Para incluir o no la propia dl
+$Bdl = 't';
+$oGesDl = new GestorDelegacion();
+$oDesplDelegaciones = $oGesDl->getListaDelegacionesURegiones($isfsv,$Bdl);
+$oDesplDelegaciones->setNombre('dl');
+
+$gesReiones = new GestorRegion();
+$oDesplRegiones = $gesReiones->getListaRegiones();
+$oDesplRegiones->setNombre('region');
+
 
 if (!empty($Qnuevo)) {
 	$tipo_ubi = (string) \filter_input(INPUT_POST, 'tipo_ubi');
@@ -166,12 +181,13 @@ switch ($tipo_ubi) {
         $oTiposCentroOpciones=$oTiposCentro->getListaTiposCentro();
         $oDesplegableTiposCentro=new web\Desplegable('tipo_ctr',$oTiposCentroOpciones,$tipo_ctr,true);
 
+        $oDesplDelegaciones->setOpcion_sel($dl);
+        $oDesplRegiones->setOpcion_sel($region);
         $a_campos = ['botones' => $botones,
                 'oPosicion' => $oPosicion,
                 'obj' => $obj,
                 'oHash' => $oHash,
                 'tipo_ubi' => $tipo_ubi,
-                'dl' => $dl,
                 'chk' => $chk,
                 'region' => $region,
                 'nombre_ubi' => $nombre_ubi,
@@ -188,6 +204,8 @@ switch ($tipo_ubi) {
                 'chk_cdc' => $chk_cdc,
                 'oDesplCentros' => $oDesplCentros,
                 'oDesplegableTiposCentro' => $oDesplegableTiposCentro,
+                'oDesplDelegaciones' => $oDesplDelegaciones,
+                'oDesplRegiones' => $oDesplRegiones,
                 ];
 
         echo $oView->render('ctrdl_form.phtml',$a_campos);
@@ -217,14 +235,14 @@ switch ($tipo_ubi) {
         $oTiposCentroOpciones=$oTiposCentro->getListaTiposCentro();
         $oDesplegableTiposCentro=new web\Desplegable('tipo_ctr',$oTiposCentroOpciones,$tipo_ctr,true);
 
+        $oDesplDelegaciones->setOpcion_sel($dl);
+        $oDesplRegiones->setOpcion_sel($region);
         $a_campos = ['botones' => $botones,
                 'oPosicion' => $oPosicion,
                 'obj' => $obj,
                 'oHash' => $oHash,
                 'tipo_ubi' => $tipo_ubi,
-                'dl' => $dl,
                 'chk' => $chk,
-                'region' => $region,
                 'nombre_ubi' => $nombre_ubi,
                 'tipo_ctr' => $tipo_ctr,
                 'chk_cdc' => $chk_cdc,
@@ -232,6 +250,8 @@ switch ($tipo_ubi) {
                 'tipo_labor' => $tipo_labor,
                 'oPermActiv' => $oPermActiv,
                 'oDesplegableTiposCentro' => $oDesplegableTiposCentro,
+                'oDesplDelegaciones' => $oDesplDelegaciones,
+                'oDesplRegiones' => $oDesplRegiones,
                 ];
 
         echo $oView->render('ctrex_form.phtml',$a_campos);
@@ -256,14 +276,14 @@ switch ($tipo_ubi) {
         $oTiposCasaOpciones=$oTiposCasa->getListaTiposCasa();
         $oDesplegableTiposCasa=new web\Desplegable('tipo_casa',$oTiposCasaOpciones,$tipo_casa,true);
 
+        $oDesplDelegaciones->setOpcion_sel($dl);
+        $oDesplRegiones->setOpcion_sel($region);
         $a_campos = ['botones' => $botones,
                 'oPosicion' => $oPosicion,
                 'obj' => $obj,
                 'oHash' => $oHash,
                 'tipo_ubi' => $tipo_ubi,
-                'dl' => $dl,
                 'chk' => $chk,
-                'region' => $region,
                 'nombre_ubi' => $nombre_ubi,
                 'plazas' => $plazas,
                 'plazas_min' => $plazas_min,
@@ -271,6 +291,8 @@ switch ($tipo_ubi) {
                 'sv_chk' => $sv_chk,
                 'sf_chk' => $sf_chk,
                 'oDesplegableTiposCasa' => $oDesplegableTiposCasa,
+                'oDesplDelegaciones' => $oDesplDelegaciones,
+                'oDesplRegiones' => $oDesplRegiones,
                 ];
         
         echo $oView->render('cdc_form.phtml',$a_campos);

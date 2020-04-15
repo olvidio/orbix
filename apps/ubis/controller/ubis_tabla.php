@@ -7,6 +7,7 @@ use web\Lista;
 use web\Posicion;
 use function core\urlsafe_b64decode;
 use function core\urlsafe_b64encode;
+use function core\strtoupper_dlb;
 /**
 * Esta página muestra una tabla con los ubis seleccionados.
 *
@@ -370,16 +371,30 @@ if (is_array($cUbisTot) && count($cUbisTot) == 0) {
 					'dl' => $Qdl,
 					'region' => $Qregion,
 					); 
-	$pagina=Hash::link(ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_editar.php?'.http_build_query($a_link));
 	
 	if ($Qtipo=="tot" || $Qloc=="tot") {
-		echo _("no existe esta ficha");
-		echo "<br>";
-		echo _("OJO!: para crear un centro/casa debe especificar el tipo de centro/casa. Para ello debe buscar a través de 'ver más opciones' definiendo el tipo y la localización distinto a 'todos'.");
+	    $pagina=web\Hash::link('apps/ubis/controller/ubis_buscar.php?'.http_build_query(array('simple'=>'2'))); 
+	    ?>
+	    <span style="font-size:large">
+		<?= _("no existe este centro o casa"); ?>.<br>
+		<br>
+		<?= _("OJO!: para crear un centro/casa debe especificar el tipo de centro/casa") ?>.
+		<br>
+		<?= _("Para ello debe buscar a través de 'ver más opciones' definiendo el tipo y la localización distinto a 'todos'."); ?>
+		<br>
+	    </span>
+	    <br>
+	    <input id="b_mas" name="b_mas" TYPE="button" VALUE="<?= _("buscar otras opciones"); ?>" onclick="fnjs_update_div('#main','<?= $pagina ?>')" >
+	    <?php
 	} else {
-		$aviso = _("no existe esta ficha, puede crear una nueva, hacer click");
-		$txt = $aviso."<span class=link onclick=fnjs_update_div('#main','$pagina') >  "._("aquí")."</span>";
-		echo $txt;
+        $pagina=Hash::link(ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_editar.php?'.http_build_query($a_link));
+	    ?>
+	    <span style="font-size:large">
+		<?= _("no existe este nombre de centro o casa. Puede crear una nueva ficha"); ?>.
+	    </span>
+	    <br>
+	    <input id="b_mas" name="b_mas" TYPE="button" VALUE="<?= _("nuevo centro o casa"); ?>" onclick="fnjs_update_div('#main','<?= $pagina ?>')" >
+		<?php
 	}
 	die();
 } else {

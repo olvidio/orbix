@@ -21,12 +21,11 @@ fnjs_mas_dependencias=function(){
 	var n=$('#dep_num').val();
 	var dedicacion;
 	++n;
-	alert('HOLA2');
 	
     dedicacion='<tr><td>';
-    dedicacion+={{ oDesplFasePrevia.desplegable()|json_encode|raw }};
+    dedicacion+={{ aDesplFasesPrevias[n].desplegable()|json_encode|raw }};
     dedicacion+='</td><td>';
-	dedicacion+={{ oDesplTareaPrevia.desplegable()|json_encode|raw }};
+	dedicacion+={{ aDesplFasesPrevia[n].desplegable()|json_encode|raw }};
     dedicacion+='</td><td>';
     dedicacion+='<input colspan=2 type="text" size="50" name="mensaje_requisito[]" value="{{ mensaje_requisito }}" >';
 	dedicacion+='</td></tr>';

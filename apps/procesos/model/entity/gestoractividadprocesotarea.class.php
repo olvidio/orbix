@@ -3,6 +3,7 @@ namespace procesos\model\entity;
 use actividades\model\entity\Actividad;
 use actividades\model\entity\ActividadEx;
 use actividades\model\entity\TipoDeActividad;
+use function core\is_true;
 use core;
 use ubis\model\entity\Casa;
 /**
@@ -189,8 +190,10 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
             if ($dl_org_no_f == core\ConfigGlobal::mi_dele()) {
                 $id_tipo_proceso=$oTipo->getId_tipo_proceso($sfsv);
             } else {
-                // NO se genera: si es una actividad de otra dl, y de la otra seccion
-                // y no se hace en una casa de la dl.
+                // NO se genera si:
+                // - es una actividad de otra dl,
+                // - y de la otra sección
+                // - y no se hace en una casa de la dl.
                 if ($isfsv != $sfsv) {
                     $id_ubi = $oActividad->getId_ubi();
                     $oUbi = new Casa($id_ubi);
@@ -256,19 +259,30 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	function getFasesCompletadas($iid_activ='') {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-	    $sQuery = "SELECT * FROM $nom_tabla WHERE id_activ=$iid_activ
-                AND completado='t'
-                ";
+		// No puedo hacer la consulta con WHERE completado='t',
+		// porque hay que distinguirlo de si existe el proceso o no, y hay que crearlo.
+	    //$sQuery = "SELECT * FROM $nom_tabla WHERE id_activ=$iid_activ
+        //        AND completado='t' ";
+	    $sQuery = "SELECT * FROM $nom_tabla WHERE id_activ=$iid_activ ";
 		if (($oDblSt = $oDbl->query($sQuery)) === FALSE) {
 	        $sClauError = 'GestorActividadProcesoTarea.fasesCompletadas.prepare';
 	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 	        return false;
 	    }
-	    $aFasesCompletadas = [];
-		foreach ($oDblSt as $aDades) {
-		    $aFasesCompletadas[] = $aDades['id_fase'];
+	    if ($oDblSt->rowCount() == 1 ) {
+            $aFasesCompletadas = [];
+            foreach ($oDblSt as $aDades) {
+                if (is_true($aDades['completado'])) {
+                    $aFasesCompletadas[] = $aDades['id_fase'];
+                }
+            }
+            return $aFasesCompletadas;
+	    } else {
+            // no existe el proceso:
+            $this->generarProceso($iid_activ);
+            ////return $this->getFasesCompletadas($iid_activ);	        
+            return []; 
 	    }
-	    return $aFasesCompletadas;
 	}
 	/**
 	 * retorna si té la fase completada o no.
@@ -280,17 +294,26 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	public function faseCompletada($iid_activ,$iid_fase) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-	    $sQry = "SELECT * FROM $nom_tabla WHERE id_activ=$iid_activ AND id_fase=$iid_fase 
-                AND completado='t'
-                ";
-	    if (($qRs = $oDbl->query($sQry)) === false) {
+		// No puedo hacer la consulta con WHERE completado='t',
+		// porque hay que distinguirlo de si existe el proceso o no, y hay que crearlo.
+	    $sQry = "SELECT * FROM $nom_tabla WHERE id_activ=$iid_activ AND id_fase=$iid_fase ";
+	    if (($oDblSt = $oDbl->query($sQry)) === false) {
 	        $sClauError = 'GestorActividadProcesoTarea.faseCompletada.prepare';
 	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 	        return false;
 	    }
-	    if ($qRs->rowCount() == 1 ) {
-	        return TRUE;
+	    if ($oDblSt->rowCount() == 1 ) {
+            // aunque realmente solo debería existir un fila
+            foreach ($oDblSt as $aDades) {
+                if (is_true($aDades['completado'])) {
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+            }
 	    } else {
+            // no existe el proceso:
+            $this->generarProceso($iid_activ);
 	        return FALSE;
 	    }
 	}
@@ -487,6 +510,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	    if (!empty($statusActividad)) {
 	        $oActividad = new Actividad($iid_activ);
 	        $oActividad->DBCarregar();
+	        $nom_activ = $oActividad->getNom_activ();
 	        $dl_org = $oActividad->getDl_org();
             $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
             // El status solo se puede guardar si la actividad es de la propia dl (o des desde sv).
@@ -499,9 +523,15 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	    if(!empty($cTareasProceso[0])) {
 	        return $cTareasProceso[0]->getId_fase();
 	    } else {
-	        $msg = sprintf(_("error al generar el proceso de la actividad: %s. tipo de proceso: %s"), $iid_activ,$iid_tipo_proceso);
+	        $oProcesoTipo = new ProcesoTipo($iid_tipo_proceso);
+	        $nom_proceso = empty($oProcesoTipo->getNom_proceso())? $iid_tipo_proceso : $oProcesoTipo->getNom_proceso();
+	        $nom_activ = empty($nom_activ)? $iid_activ : $nom_activ;
+	        
+	        $msg = sprintf(_("error al generar el proceso de la actividad: '%s'. Tipo de proceso: '%s' para sf/sv: %s."), $iid_activ,$nom_proceso,$isfsv);
             $msg .= "\n";
             $msg .= _("Probablemente no esté defindo el proceso");
+            $msg .= "\n";
+            $msg .= "<br>";
             echo $msg;
 	    }
 	}

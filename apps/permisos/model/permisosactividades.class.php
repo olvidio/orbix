@@ -334,12 +334,6 @@ class PermisosActividades {
 		return $this->getFaseRef($iAfecta,$prev_id_tipo);
 	}
 	
-	public function getPermisoActualPrev($iAfecta) {
-		//if ($this->getIdTipoPrev() === false) return false;
-		if ($this->getIdTipoPrev() === false) return new PermAccion(0);
-		return $this->getPermisoActual($iAfecta);
-	}
-
 	public function getPermisos($iAfecta,$id_tipo_activ_txt='') {
 		if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->iid_tipo_activ;
 		$id_tipo_activ_txt = $this->completarId($id_tipo_activ_txt);

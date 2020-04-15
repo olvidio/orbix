@@ -1,6 +1,7 @@
 <?php
 use config\model\entity\ConfigSchema;
 use web\Hash;
+use usuarios\model\entity\GestorLocal;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -180,10 +181,16 @@ $parametro = 'idioma_default';
 $oConfigSchema = new ConfigSchema($parametro);
 $valor = $oConfigSchema->getValor();
 
+$gesIdiomas = new GestorLocal();
+$oDeplIdiomas = $gesIdiomas->getListaLocales();
+$oDeplIdiomas->setNombre('valor');
+$oDeplIdiomas->setOpcion_sel($valor);
+
 if (empty($valor)) {
-    $valor = "es_ES.UTF-8";
+    //$valor = "es_ES.UTF-8";
+    $oDeplIdiomas->setOpcion_sel('es_ES.UTF-8');
 }
-$val_idioma_default = $valor;
+$val_idioma_default = $oDeplIdiomas;
 
 $oHashI = new Hash();
 $oHashI->setUrl($url);

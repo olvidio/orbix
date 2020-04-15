@@ -63,11 +63,14 @@ fnjs_eliminar=function(formulario){
 <?= $oHash->getCamposHtml(); ?>
 <input type="Hidden" id="que"  name="que" value="">
 <table>
-<tr><td class="etiqueta"><?= ucfirst(_("tipo de ubi")) ?>
-	<input class="contenido" id="tipo_ubi"  name="tipo_ubi" value="<?= $tipo_ubi ?>" size="5">
-	<?= ucfirst(_("delegación")) ?><input class="contenido" name="dl"  value="<?= $dl ?>" size="6">
+<tr><td class="etiqueta">
+	<!-- <?= ucfirst(_("tipo de ubi")) ?> -->
+	<input type="hidden" class="contenido" id="tipo_ubi"  name="tipo_ubi" value="<?= $tipo_ubi ?>" size="5">
+	<?= ucfirst(_("región o delegación")) ?>
+	<?= $oDesplDelegaciones->desplegable() ?>
 	<?= ucfirst(_("en uso")) ?><input class="contenido" type="Checkbox" name="status" <?= $chk ?>>
-	<?= ucfirst(_("región")) ?><input class="contenido" name="region" value="<?= $region ?>" size="7">
+	<?= ucfirst(_("región")) ?>
+	<?= $oDesplRegiones->desplegable() ?>
 </td></tr>
 <tr><td class="etiqueta">
 	<?=  ucfirst(_("nombre del centro")) ?>

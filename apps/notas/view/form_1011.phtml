@@ -234,6 +234,19 @@ fnjs_guardar=function(formulario){
 <table>
 <thead><tr><th colspan=4><?= _("asignaturas aprobadas") ?></th></tr></thead>
 <tbody>
+<tr>
+<td>
+	<input type="radio" id="tipo_acta_a" name="tipo_acta" value="<?= notas\model\entity\PersonaNota::FORMATO_ACTA ?>" <?= $chk_acta ?> >
+		<?= _("acta") ?>
+	<input type="radio" id="tipo_acta_c" name="tipo_acta" value="<?= notas\model\entity\PersonaNota::FORMATO_CERTIFICADO ?>" <?= $chk_certificado ?> >
+	<?= _("certificado") ?>
+</td>
+<td colspan=1><input type="text" id="acta" name="acta" value="<?= $acta ?>" size="20" onChange="fnjs_buscar_acta();">
+</td>
+<td colspan=2>
+("?": <?= _("significa inventado") ?>   <?= _("formato") ?>: "dlx nn/aa" o "dlx" o "region" o "?"</td>
+</tr>
+
 <?php
 if (!empty($Qid_asignatura_real)) { //caso de modificar
 	?>
@@ -257,19 +270,6 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
 <td><?= _("situación") ?></td><td>
 	<?= $oDesplNotas->desplegable(); ?>
 </td></tr>
-<tr>
-<td>
-	<input type="radio" id="tipo_acta_a" name="tipo_acta" value="<?= notas\model\entity\PersonaNota::FORMATO_ACTA ?>" <?= $chk_acta ?> >
-		<?= _("acta") ?>
-	<input type="radio" id="tipo_acta_c" name="tipo_acta" value="<?= notas\model\entity\PersonaNota::FORMATO_CERTIFICADO ?>" <?= $chk_certificado ?> >
-	<?= _("certificado") ?>
-</td>
-<td colspan=1><input type="text" id="acta" name="acta" value="<?= $acta ?>" size="20" onChange="fnjs_buscar_acta();">
-</td>
-<td colspan=2>
-("?": <?= _("significa inventado") ?>   <?= _("formato") ?>: "dlx nn/aa" o "dlx" o "region" o "?"</td>
-</tr>
-
 <tr><td><?= _("fecha acta") ?></td>
 	<td><input type="text" id="f_acta" name="f_acta" value="<?= $f_acta ?>" size="12"></td>
 </tr>

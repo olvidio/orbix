@@ -104,7 +104,7 @@ mes:<input size="3" type="text" name="fin_mes" value="{{ aCursoCrt['fin_mes'] }}
 <h3>{{ "idioma por defecto"|trans }}:</h3>
 <form id="frm_idioma_default" name="frm_idioma_default" action="">
 {{ oHashI.getCamposHtml|raw }}
-<input type="text" name="valor" value="{{ idioma_default }}" >
+{{ idioma_default.desplegable|raw }}
 <input type="button" value="{{ "guardar"|trans }}" onclick="fnjs_guardar(this.form);" >
 </form>
 <hr>

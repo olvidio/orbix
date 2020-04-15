@@ -137,6 +137,8 @@ $a_campos = ['oPosicion' => $oPosicion,
     'aDesplFasesPrevias' => $aDesplFasesPrevias,
     'aDesplTareasPrevias' => $aDesplTareasPrevias,
     'aMensajes_requisitos' => $aMensajes_requisitos, 
+    'oDesplFasesPrevias' => $oDesplFasePrevia,
+    'oDesplTareasPrevias' => $oDesplTareaPrevia,
     ];
 
 $oView = new core\ViewTwig('procesos/controller');
