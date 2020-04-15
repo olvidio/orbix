@@ -26,8 +26,12 @@ switch($Qque) {
 		$oActividadProceso->generarProceso($Qid_activ,ConfigGlobal::mi_sfsv(),TRUE); // TRUE para forzar
 		break;
 	case 'get':
+	    $aWhere = [
+	           'id_activ' => $Qid_activ,
+	           '_ordre' => 'id_fase',
+	    ];
 		$GesActividadProceso=new GestorActividadProcesoTarea();
-		$oLista = $GesActividadProceso->getActividadProcesoTareas(array('id_activ'=>$Qid_activ));
+		$oLista = $GesActividadProceso->getActividadProcesoTareas($aWhere);
 		$txt='<table>';
 		$txt.='<tr><th>'._("ok").'</th><th>'._("fase (tarea)").'</th><th>'._("responsable").'</th><th>'._("observaciones").'</th><th></th></tr>';
 		$i = 0;

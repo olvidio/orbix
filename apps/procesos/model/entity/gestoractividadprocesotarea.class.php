@@ -269,7 +269,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 	        return false;
 	    }
-	    if ($oDblSt->rowCount() == 1 ) {
+	    if ($oDblSt->rowCount() > 0 ) {
             $aFasesCompletadas = [];
             foreach ($oDblSt as $aDades) {
                 if (is_true($aDades['completado'])) {
@@ -279,9 +279,9 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
             return $aFasesCompletadas;
 	    } else {
             // no existe el proceso:
-            $this->generarProceso($iid_activ);
+            $id_fase_primera = $this->generarProceso($iid_activ);
             ////return $this->getFasesCompletadas($iid_activ);	        
-            return []; 
+            return [$id_fase_primera]; 
 	    }
 	}
 	/**
@@ -481,8 +481,12 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	 */
 	private function generar($iid_activ='',$iid_tipo_proceso='',$isfsv='') {
 	    $this->borrar($iid_activ);
+	    $aWhere = [
+	        'id_tipo_proceso'=>$iid_tipo_proceso,
+	        '_ordre' => '(json_fases_previas::json->0)::text DESC'
+	    ];
 	    $GesTareaProceso = new GestorTareaProceso();
-	    $cTareasProceso = $GesTareaProceso->getTareasProceso(['id_tipo_proceso'=>$iid_tipo_proceso,'_ordre' => 'status']);
+	    $cTareasProceso = $GesTareaProceso->getTareasProceso($aWhere);
 	    $p=0;
 	    $statusActividad = '';
 	    foreach ($cTareasProceso as $oTareaProceso) {
