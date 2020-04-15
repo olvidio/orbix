@@ -614,6 +614,9 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         }
         $oTareaProceso = $cTareaProceso[0];
         $of_responsable_txt = $oTareaProceso->getOf_responsable_txt();
+        if (empty($of_responsable_txt)) {
+            return TRUE; 
+        }
         if ($_SESSION['oPerm']->have_perm_oficina($of_responsable_txt)) {
             return TRUE; 
         } else {

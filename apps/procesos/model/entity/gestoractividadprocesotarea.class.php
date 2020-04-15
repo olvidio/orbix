@@ -482,7 +482,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	private function generar($iid_activ='',$iid_tipo_proceso='',$isfsv='') {
 	    $this->borrar($iid_activ);
 	    $GesTareaProceso = new GestorTareaProceso();
-	    $cTareasProceso = $GesTareaProceso->getTareasProceso(array('id_tipo_proceso'=>$iid_tipo_proceso));
+	    $cTareasProceso = $GesTareaProceso->getTareasProceso(['id_tipo_proceso'=>$iid_tipo_proceso,'_ordre' => 'status']);
 	    $p=0;
 	    $statusActividad = '';
 	    foreach ($cTareasProceso as $oTareaProceso) {
