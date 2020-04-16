@@ -30,8 +30,9 @@ include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
     <br>
     <h2><a href="#uso_general">1. Uso en general</a></h2>
     <h2><a href="#gestion_de_ca">2. Gestión de ca</a></h2>
-    <h2><a href="#gestion_de_ctr">3. Gestión de centros</a></h2>
-    <h2><a href="public/ayuda/traducciones.php">3. Traducciones</a></h2>
+    <h2><a href="#gestion_de_ca">3. Gestión de personas</a></h2>
+    <h2><a href="#gestion_de_ctr">4. Gestión de centros</a></h2>
+    <h2><a href="public/ayuda/traducciones.php">x. Traducciones</a></h2>
 	<br> 
 	<br> 
 	<br> 
@@ -130,19 +131,27 @@ include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
         <h4>imprimir situación académica <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::getWeb_public() ?>/ayuda/12-verTessera.mp4')">(video)</span></h4>
       </li>
       <li>
-        <h4>exportar tessera a archivo <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::getWeb_public() ?>/ayuda/13-tessera-curriculum.wmv')">(video)</span></h4>
+        <h4>exportar tessera a archivo <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::getWeb_public() ?>/ayuda/13-tessera-curriculum.mp4')">(video)</span></h4>
       </li>
     </ol>
 	 <br><br><br> 
-    <h2><a name="gestion_de_ctr"></a>3. Gestión de ctr<br>
+    <h2><a name="gestion_de_personas"></a>3. Gestión de personas<br>
     </h2>
 	<ol>
       <li>
-        <h4>Crear/modificar un nuevo centro <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::getWeb_public() ?>/ayuda/14-modificarCtr.mp4')">(video)</span></h4>
+        <h4>Nueva persona <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::getWeb_public() ?>/ayuda/31-nuevaPersona.mp4')">(video)</span></h4>
       </li>
       <li>
-        <h4>modificar datos centro <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::getWeb_public() ?>/ayuda/15-cambiarDatosCentro.wmv')">(video)</span></h4>
-	  </li>
+        <h4>crear / Modificar nota <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::getWeb_public() ?>/ayuda/32-modificarNota.mp4')">(video)</span></h4>
+      </li>
+	</ol>
+	 <br><br><br> 
+    <h2><a name="gestion_de_ctr"></a>4. Gestión de ctr<br>
+    </h2>
+	<ol>
+      <li>
+        <h4>Crear/modificar un nuevo centro <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::getWeb_public() ?>/ayuda/41-modificarCtr.mp4')">(video)</span></h4>
+      </li>
 	</ol>
   </body>
 </html>
