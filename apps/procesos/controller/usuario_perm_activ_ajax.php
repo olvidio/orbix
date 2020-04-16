@@ -22,7 +22,6 @@ $GesTiposActiv = new GestorTipoDeActividad();
 $aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($Qid_tipo_activ,$Qdl_propia);
 $oGesFases= new GestorActividadFase();
 $oDesplFases = $oGesFases->getListaActividadFases($aTiposDeProcesos);
-$oDesplFases->setNombre('fase_ref');
 
 
-echo $oDesplFases->desplegable();
+echo $oDesplFases->options();

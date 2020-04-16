@@ -98,7 +98,7 @@ if (!empty($Qid_usuario)) {
 	
 	if (core\ConfigGlobal::is_app_installed('procesos')) { 
 		$oGesPerm = new GestorPermUsuarioActividad();
-		$aWhere = ['id_usuario' => $Qid_usuario, '_ordre' => 'dl_propia DESC, id_tipo_activ_txt'];
+		$aWhere = ['id_usuario' => $Qid_usuario, '_ordre' => 'dl_propia DESC, id_tipo_activ_txt, afecta_a'];
 		$aOperador = [];
 		$cUsuarioPerm = $oGesPerm->getPermUsuarioActividades($aWhere, $aOperador);
 	}

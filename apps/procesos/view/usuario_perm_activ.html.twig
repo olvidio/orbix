@@ -21,7 +21,9 @@ fnjs_actualizar_fases=function(){
 		data: parametros
 	})
 	.done(function (rta_txt) {
-		$('#fases').html(rta_txt);			
+		$("select[name^='fase_ref']").each(function() {
+				$(this).html(rta_txt);			
+			});
 	});
 }
 
@@ -79,19 +81,24 @@ fnjs_grabar=function(formulario){
 <table>
 </tr>
 </table>
-<h3>{{ "afecta a"|trans }}:</h3>
-{{ oDesplAfecta.desplegable()|raw }}
-
-<h3>{{ "fase de referencia"|trans }}:</h3>
-<span id=fases>
-{{ oDesplFases.desplegable()|raw }}
-</span>
 <br>
-<br>
-{{ "permiso antes: off (sin marcar)"|trans }}: {{ oDesplPermOff.desplegable()|raw }}
-<br>
-{{ "permiso después: on (marcado)"|trans }}: {{ oDesplPermOn.desplegable()|raw }}
-<br>
+<table>
+<tr>
+	<th>{{ "afecta a"|trans }}:</th>
+	<th>{{ "fase de referencia"|trans }}:</th>
+    <th>{{ "permiso off (sin marcar)"|trans }}:</th>
+    <th>{{ "permiso on (marcado)"|trans }}:</th>
+	</tr>
+{% for oPerm in aPerm %}
+<tr>
+	<td>
+	<input type="Checkbox" name="{{ oPerm.nameAfecta_a }}" value="{{ oPerm.num }}" {{ oPerm.chk }}>{{ oPerm.afecta_a }}</td>
+	<td> <span name=fases> {{ oPerm.oDesplFases.desplegable()|raw }} </span></td>
+	<td>{{ oPerm.oDesplPermOff.desplegable()|raw }}</td>
+	<td>{{ oPerm.oDesplPermOn.desplegable()|raw }}</td>
+</tr>
+{% endfor %}
+</table>
 <br>
 <input type=button onclick="fnjs_grabar(this.form);" value="{{ "guardar"|trans }}">
 </form>

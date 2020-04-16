@@ -1,5 +1,7 @@
 <?php
 use permisos\model\MyCrypt;
+use procesos\model\PermAfectados;
+use procesos\model\entity\GestorPermUsuarioActividad;
 use procesos\model\entity\PermUsuarioActividad;
 use usuarios\model\entity\GestorUsuario;
 use usuarios\model\entity\Grupo;
@@ -98,10 +100,10 @@ switch($Qque) {
 		$Qid_tipo_activ = (integer) \filter_input(INPUT_POST, 'id_tipo_activ');
 		$Qid_item = (integer) \filter_input(INPUT_POST, 'id_item');
 		$Qdl_propia = (string) \filter_input(INPUT_POST, 'dl_propia');
-		$Qafecta_a = (integer) \filter_input(INPUT_POST, 'afecta_a');
-		$Qfase_ref = (integer) \filter_input(INPUT_POST, 'fase_ref');
-		$Qperm_on = (integer) \filter_input(INPUT_POST, 'perm_on');
-		$Qperm_off = (integer) \filter_input(INPUT_POST, 'perm_off');
+		$QaFase_ref = (array) \filter_input(INPUT_POST, 'fase_ref', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+		$QaPerm_on = (array) \filter_input(INPUT_POST, 'perm_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+		$QaPerm_off = (array) \filter_input(INPUT_POST, 'perm_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+		$QaAfecta_a = (array) \filter_input(INPUT_POST, 'afecta_a', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 		if (empty($Qid_tipo_activ)) {
 			$Qisfsv_val = (string) \filter_input(INPUT_POST, 'isfsv_val');
@@ -117,19 +119,56 @@ switch($Qque) {
 		} else {
 			$id_tipo_activ_txt=$Qid_tipo_activ;
 		}
-		//$oUsuario = new GrupoOUsuario(array('id_usuario'=>$_POST['id_usuario'])); // La tabla y su heredada
-		$oUsuarioPerm = new PermUsuarioActividad($Qid_item);
-		$oUsuarioPerm->setId_usuario($Qid_usuario);
-		$oUsuarioPerm->setId_tipo_activ_txt($id_tipo_activ_txt);
-		$oUsuarioPerm->setDl_propia($Qdl_propia);
-        $oUsuarioPerm->setAfecta_a($Qafecta_a);
-        $oUsuarioPerm->setFase_ref($Qfase_ref);
-        $oUsuarioPerm->setperm_on($Qperm_on);
-        $oUsuarioPerm->setperm_off($Qperm_off);
-        if ($oUsuarioPerm->DBGuardar() === false) {
-            echo _("hay un error, no se ha guardado");
-            echo "\n".$oUsuarioPerm->getErrorTxt();
-        }
+		
+		
+		// afecta a:
+		$oCuadros = new PermAfectados();
+		$aAfecta_a = $oCuadros->getPermissions();
+		$gesPermUsuarioActividad = new GestorPermUsuarioActividad();
+		foreach ($aAfecta_a as $afecta_a) {
+		    $aWhere = [
+		        'id_usuario'         => $Qid_usuario,
+		        'dl_propia'          => $Qdl_propia,
+		        'id_tipo_activ_txt'  => $id_tipo_activ_txt,
+		        'afecta_a'           => $afecta_a,
+		    ];
+		    
+		    $fase_ref = '';
+		    $perm_on = '';
+		    $perm_off = '';
+		    // si tiene valor grabo, sino elimino:
+            if ( in_array($afecta_a,$QaAfecta_a)) {
+                $i = array_search($afecta_a, $QaAfecta_a);
+                $fase_ref = $QaFase_ref[$i];
+                $perm_off = empty($QaPerm_off[$i])? 0 : $QaPerm_off[$i];
+                $perm_on = empty($QaPerm_on[$i])? 0 : $QaPerm_on[$i];
+                $cPermUsuarioActividad = $gesPermUsuarioActividad->getPermUsuarioActividades($aWhere);
+                // Solo deberia haber uno???
+                if (count($cPermUsuarioActividad) == 1) {
+                        $oUsuarioPerm = $cPermUsuarioActividad[0]; 
+                } else {
+                        $oUsuarioPerm = new PermUsuarioActividad(); 
+                }
+                $oUsuarioPerm->setId_usuario($Qid_usuario);
+                $oUsuarioPerm->setId_tipo_activ_txt($id_tipo_activ_txt);
+                $oUsuarioPerm->setDl_propia($Qdl_propia);
+                $oUsuarioPerm->setAfecta_a($afecta_a);
+                $oUsuarioPerm->setFase_ref($fase_ref);
+                $oUsuarioPerm->setperm_on($perm_on);
+                $oUsuarioPerm->setperm_off($perm_off);
+                if ($oUsuarioPerm->DBGuardar() === false) {
+                    echo _("hay un error, no se ha guardado");
+                    echo "\n".$oUsuarioPerm->getErrorTxt();
+                }
+            } else {
+                $cPermUsuarioActividad = $gesPermUsuarioActividad->getPermUsuarioActividades($aWhere);
+                // Solo deberia haber uno???
+                if (count($cPermUsuarioActividad) == 1) {
+                    $oUsuarioPerm = $cPermUsuarioActividad[0]; 
+                    $oUsuarioPerm->DBEliminar();
+                }
+		    }
+		}
 		break;
 	case "buscar":
 		$Qusuario = (string) \filter_input(INPUT_POST, 'usuario');

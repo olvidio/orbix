@@ -28,6 +28,8 @@ $a_botones[] = array( 'txt' => _("eliminar"), 'click' =>"fnjs_del_perm_activ(\"#
 $oAcciones = new PermAccion();
 $aOpcionesAction = $oAcciones->lista_array();
 $a_valores=array();
+$id_tipo_activ_anterior = '';
+$dl_propia_anterior = '';
 foreach ($cUsuarioPerm as $oUsuarioPerm) {
     $i++;
     $id_item=$oUsuarioPerm->getId_item();
@@ -62,16 +64,23 @@ foreach ($cUsuarioPerm as $oUsuarioPerm) {
     $aFases = $oGesFases->getArrayFasesProcesos($aTiposDeProcesos);
     $fase_ref_txt = array_search($fase_ref, $aFases);
     
-    $a_valores[$i]['sel']="$id_usuario#$id_item";
-    $a_valores[$i][1]=$dl_propia_txt;
-    $a_valores[$i][2]=$oTipoActividad->getNom();
+    if ($dl_propia == $dl_propia_anterior && $id_tipo_activ == $id_tipo_activ_anterior) {
+        $a_valores[$i]['sel'] = "";
+        $a_valores[$i][1] = '';
+        $a_valores[$i][2] = '';
+    } else {
+        $a_valores[$i]['sel']="$id_usuario#$id_item#$id_tipo_activ_txt#$dl_propia";
+        $a_valores[$i][1]=$dl_propia_txt;
+        $a_valores[$i][2]=$oTipoActividad->getNom();
+    }
     $a_valores[$i][3]=$oCuadrosAfecta->lista_tiene_txt($afecta_a);
     
     $a_valores[$i][4]= $fase_ref_txt;
     $a_valores[$i][5]= $aOpcionesAction[$perm_off];
     $a_valores[$i][6]= $aOpcionesAction[$perm_on];
     
-
+    $id_tipo_activ_anterior = $id_tipo_activ;
+    $dl_propia_anterior = $dl_propia;
 }
 $oHash3 = new web\Hash();
 $oHash3->setcamposForm('que!sel');
