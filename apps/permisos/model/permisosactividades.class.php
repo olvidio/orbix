@@ -288,7 +288,11 @@ class PermisosActividades {
 		    $on_off = 'off';
 		}
 		
-		$oPerm = $this->aPermDl[$this->iid_tipo_activ];
+		if ($this->bpropia === true) {
+            $oPerm = $this->aPermDl[$this->iid_tipo_activ];
+		} else {
+            $oPerm = $this->aPermOtras[$this->iid_tipo_activ];
+		}
 		$perm = $oPerm->getPerm($iAfecta,$id_fase_ref,$on_off);
 		if ($perm === FALSE) {
 			return  new PermAccion(0);
