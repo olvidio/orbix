@@ -1,10 +1,14 @@
 <?php
 namespace procesos\model\entity;
+
 use actividades\model\entity\Actividad;
 use actividades\model\entity\ActividadEx;
 use actividades\model\entity\TipoDeActividad;
+use core\ClaseGestor;
+use core\Condicion;
+use core\ConfigGlobal;
+use core\Set;
 use function core\is_true;
-use core;
 use ubis\model\entity\Casa;
 /**
  * GestorActividadProcesoTarea
@@ -18,7 +22,7 @@ use ubis\model\entity\Casa;
  * @created 06/12/2018
  */
 
-class GestorActividadProcesoTarea Extends core\ClaseGestor {
+class GestorActividadProcesoTarea Extends ClaseGestor {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
@@ -42,7 +46,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	function __construct() {
 		$oDbl = $GLOBALS['oDBC'];
 		$this->setoDbl($oDbl);
-		if (core\ConfigGlobal::mi_sfsv() == 1) {
+		if (ConfigGlobal::mi_sfsv() == 1) {
 		    $this->setNomTabla('a_actividad_proceso_sv');
 		} else {
 		    $this->setNomTabla('a_actividad_proceso_sf');
@@ -51,6 +55,66 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
+	public function borrarFaseTareaInexistente($id_tipo_proceso,$id_fase,$id_tarea) {
+        $oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$nom_tabla_procesos = 'a_tareas_proceso'; 
+		
+		$temp_table = "tmp_borrar";
+		$sQuery = "CREATE TEMPORARY TABLE $temp_table AS ";
+		$sQuery .= "SELECT a.id_activ,a.id_fase,id_tarea
+                    FROM $nom_tabla a LEFT JOIN $nom_tabla_procesos p USING (id_tipo_proceso,id_fase,id_tarea)
+                    WHERE id_tipo_proceso=$id_tipo_proceso AND p.id_fase IS NULL";
+
+		if (($oDblSt = $oDbl->query($sQuery)) === FALSE) {
+	        $sClauError = 'GestorActividadProcesoTarea.fasesCompletadas.prepare';
+	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+	        return false;
+	    }
+
+		// Borrar:
+		$sQry_INSERT = "DELETE FROM $nom_tabla a
+                        USING $temp_table t
+                        WHERE  a.id_activ = t.id_activ
+                            AND a.id_fase = t.id_fase
+                            AND a.id_tarea = t.id_tarea
+                       ";
+	       
+		if (($oDblSt = $oDbl->query($sQry_INSERT)) === FALSE) {
+	        $sClauError = 'GestorActividadProcesoTarea.fasesCompletadas.prepare';
+	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+	        return false;
+	    }
+	    
+        
+	}
+	public function añadirFaseTarea($id_tipo_proceso,$id_fase,$id_tarea) {
+        $oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		
+		$temp_table = "tmp_proceso_".$id_fase."_".$id_tarea;
+		$sQuery = "CREATE TEMPORARY TABLE $temp_table AS ";
+	    $sQuery .= "(SELECT DISTINCT id_activ FROM $nom_tabla WHERE id_tipo_proceso=$id_tipo_proceso)";
+	    $sQuery .= " EXCEPT "; 
+        $sQuery .= "(SELECT DISTINCT id_activ FROM $nom_tabla 
+                    WHERE id_tipo_proceso=$id_tipo_proceso AND id_fase=$id_fase AND id_tarea=$id_tarea)";
+        
+		if (($oDblSt = $oDbl->query($sQuery)) === FALSE) {
+	        $sClauError = 'GestorActividadProcesoTarea.fasesCompletadas.prepare';
+	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+	        return false;
+	    }
+
+		// Añadir fase:
+		$sQry_INSERT = "INSERT INTO $nom_tabla (id_tipo_proceso,id_activ,id_fase,id_tarea)    
+                        SELECT $id_tipo_proceso, id_activ, $id_fase, $id_tarea FROM $temp_table";
+	       
+		if (($oDblSt = $oDbl->query($sQry_INSERT)) === FALSE) {
+	        $sClauError = 'GestorActividadProcesoTarea.fasesCompletadas.prepare';
+	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+	        return false;
+	    }
+	}
 	
 	/**
 	 * retorna un array amb les fases i el seu estat.
@@ -176,7 +240,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
         
         if (empty($isfsv)) {
             $a_sfsv = [1,2];
-            $isfsv = core\ConfigGlobal::mi_sfsv();
+            $isfsv = ConfigGlobal::mi_sfsv();
         } else {
             $a_sfsv = [$isfsv];
         }
@@ -187,7 +251,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
             } else {
                 $this->setNomTabla('a_actividad_proceso_sf');
             }
-            if ($dl_org_no_f == core\ConfigGlobal::mi_dele()) {
+            if ($dl_org_no_f == ConfigGlobal::mi_dele()) {
                 $id_tipo_proceso=$oTipo->getId_tipo_proceso($sfsv);
             } else {
                 // NO se genera si:
@@ -198,7 +262,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
                     $id_ubi = $oActividad->getId_ubi();
                     $oUbi = new Casa($id_ubi);
                     $dl_casa = $oUbi->getDl();
-                    if ($dl_casa != core\ConfigGlobal::mi_dele()) {
+                    if ($dl_casa != ConfigGlobal::mi_dele()) {
                         continue;
                     }
                 }
@@ -518,7 +582,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	        $dl_org = $oActividad->getDl_org();
             $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
             // El status solo se puede guardar si la actividad es de la propia dl (o des desde sv).
-            if ($dl_org_no_f == core\ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm_oficina('des')) {
+            if ($dl_org_no_f == ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm_oficina('des')) {
                 $oActividad->setStatus($statusActividad);
                 $quiet = 1; // Para que no anote el cambio.
                 $oActividad->DBGuardar($quiet);
@@ -548,7 +612,7 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	 */
 	function getActividadProcesoTareasQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
-		$oActividadProcesoTareaSet = new core\Set();
+		$oActividadProcesoTareaSet = new Set();
 		if (($oDbl->query($sQuery)) === FALSE) {
 			$sClauError = 'GestorActividadProcesoTarea.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -573,8 +637,8 @@ class GestorActividadProcesoTarea Extends core\ClaseGestor {
 	function getActividadProcesoTareas($aWhere=array(),$aOperators=array()) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		$oActividadProcesoTareaSet = new core\Set();
-		$oCondicion = new core\Condicion();
+		$oActividadProcesoTareaSet = new Set();
+		$oCondicion = new Condicion();
 		$aCondi = array();
 		foreach ($aWhere as $camp => $val) {
 			if ($camp == '_ordre') continue;

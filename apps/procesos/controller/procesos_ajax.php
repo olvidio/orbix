@@ -3,6 +3,7 @@ use actividades\model\entity\ActividadAll;
 use menus\model\PermisoMenu;
 use procesos\model\entity\ActividadFase;
 use procesos\model\entity\ActividadTarea;
+use procesos\model\entity\GestorActividadProcesoTarea;
 use procesos\model\entity\GestorActividadTarea;
 use procesos\model\entity\GestorTareaProceso;
 use procesos\model\entity\TareaProceso;
@@ -19,6 +20,25 @@ require_once ("apps/core/global_object.inc");
 $Qque = (string) \filter_input(INPUT_POST, 'que');
 
 switch($Qque) {
+    case 'regenerar':
+        // para cada fase del proceso
+        // mirar que actividades les falta y añadir.
+	    $Qid_tipo_proceso = (integer) \filter_input(INPUT_POST, 'id_tipo_proceso');
+		$GesTareaPorceso = new GestorTareaProceso();
+		$cTareasProceso = $GesTareaPorceso->getTareasProceso(['id_tipo_proceso'=>$Qid_tipo_proceso]);
+		$i=0;
+        $gesActividadProcesoTarea =  new GestorActividadProcesoTarea();
+		foreach ($cTareasProceso as $oTareaProceso) {
+			$i++;
+			$id_item=$oTareaProceso->getId_item();
+			$id_fase = $oTareaProceso->getId_fase();
+			$id_tarea = $oTareaProceso->getId_tarea();
+			$gesActividadProcesoTarea->añadirFaseTarea($Qid_tipo_proceso,$id_fase,$id_tarea);
+		}
+        // buscar las fases a eliminar
+        $gesActividadProcesoTarea->borrarFaseTareaInexistente($Qid_tipo_proceso,$id_fase,$id_tarea);
+        
+        break;
     case 'clonar':
 	    $Qid_tipo_proceso = (integer) \filter_input(INPUT_POST, 'id_tipo_proceso');
 	    $Qid_tipo_proceso_ref = (integer) \filter_input(INPUT_POST, 'id_tipo_proceso_ref');

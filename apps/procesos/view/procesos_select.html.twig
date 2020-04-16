@@ -1,4 +1,29 @@
 <script>
+fnjs_regenerar=function(){
+	var id_tipo_proceso=$('#k_buscar').val();
+
+	if (!id_tipo_proceso) {
+		alert ("{{ txt_clonar }}");
+	} else {
+        /* obtener el listado de fases */
+        var url="{{ url_ajax }}";
+        var parametros='que=regenerar&id_tipo_proceso='+id_tipo_proceso+'{{ h_actualizar|raw }}';
+             
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros
+        })
+        .done(function (rta_txt) {
+            if (rta_txt != '' && rta_txt != '\\n') {
+                /* añadir debajo de la actividad */
+                $('#div_proceso').html(rta_txt);
+            }
+        });
+        document.getElementById("overlay").style.display = "none";
+    }
+	
+}
 fnjs_clonar=function(){
 	var id_tipo_proceso=$('#k_buscar').val();
 	var id_tipo_proceso_ref=$('#k_clonar').val();
@@ -138,3 +163,6 @@ fnjs_left_side_hide();
 </div>
 <div id='div_proceso'></div>
 <input type='button' name='b_nuevo' value='{{ "nuevo"|trans }}' onclick='fnjs_modificar();'>
+<br>
+<br>
+<input type='button' name='b_regenrear' value='{{ "rehacer los procesos de las actividades"|trans }}' onclick='fnjs_regenerar();'>
