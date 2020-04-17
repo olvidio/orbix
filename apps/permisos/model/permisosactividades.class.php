@@ -383,13 +383,16 @@ class PermisosActividades {
 		// actualitzar el id_tipo_activ
 		$this->iid_tipo_activ = $id_tipo_activ;
 	}
+	public function setId_activ($id_activ) {
+		// actualitza el id_tipo_activ
+		$this->iid_activ = $id_activ;
+	}
 	public function setId_tipo_proceso($id_tipo_proceso) {
 		// actualitza el id_tipo_proceso
 		$this->iid_tipo_proceso = $id_tipo_proceso;
 	}
 	public function setPropia($bpropia) {
 		// actualitza el bpropia
-
 		if (is_true($bpropia))  { 
 			$this->bpropia = true;
 		} else {
@@ -397,6 +400,8 @@ class PermisosActividades {
 		}
 	}
 
+	/* METODES PRIVATS ----------------------------------------------------------*/
+	
 	private function getIdTipoPrev($id_tipo_activ_txt='') {
 		if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->iid_tipo_activ;
 		$match = [];
@@ -421,7 +426,7 @@ class PermisosActividades {
 		$this->iid_tipo_activ = $prev_id_tipo;
 		return $prev_id_tipo;
 	}
-	/* METODES PRIVATS ----------------------------------------------------------*/
+
 	private function getId_tipo_activ() {
 		// buscar el id_tipo_activ
 		return $this->iid_tipo_activ;

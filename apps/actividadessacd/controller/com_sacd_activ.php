@@ -193,9 +193,9 @@ foreach ($cPersonas as $oPersona) {
 	$GesCargoOAsistente = new GestorCargoOAsistente();
 	$cCargoOAsistente = $GesCargoOAsistente->getCargoOAsistente($id_nom);
 	$ord_activ = [];
-    $_SESSION['oPermActividades']->setActividad($id_activ);
 	foreach ($cCargoOAsistente as $oCargoOAsistente) {
 		$id_activ=$oCargoOAsistente->getId_activ();
+        $_SESSION['oPermActividades']->setId_activ($id_activ);
 		if (in_array($id_activ,$a_id_actividades)) {
 			$propio = $oCargoOAsistente->getPropio();
 			$id_cargo = $oCargoOAsistente->getId_cargo();
@@ -215,12 +215,12 @@ foreach ($cPersonas as $oPersona) {
             			$permiso_ver = TRUE;
                     }
                     //si también asiste. tiene propio = 't'
-                    if ($propio == 't' && $oPermAsisSacd->have_perm_activ('ver') === true) {
+                    if ($propio == 't' && $oPermAsisSacd->have_perm_activ('ver') === TRUE) {
             			$permiso_ver = TRUE;
                     }
                 } else {
                     // sólo asiste
-                    if ($oPermAsisSacd->have_perm_activ('ver') === true) {
+                    if ($oPermAsisSacd->have_perm_activ('ver') === TRUE) {
             			$permiso_ver = TRUE;
                     }
                 }
