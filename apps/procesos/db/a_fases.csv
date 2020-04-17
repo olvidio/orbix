@@ -1,25 +1,29 @@
-0	--	True	True
-1	Crear inicial des (proyecto)	True	True
-2	Aprobada (actual)	True	True
-3	Terminada	True	True
-5	ok atención sacd	True	True
-10	ok distribución de plazas	True	True
-12	posibles ca para cada ctr	True	True
-13	cuadro profesorado	True	True
-14	minuta ctr	True	True
-15	ok asistentes	True	True
-16	ok asist. sacd	True	True
-17	confirmación a los ctr	True	True
-18	ok profesores	True	True
-19	ok plan de estudios personal	True	True
-20	ok oficina correspondiente	True	True
-21	maleta material de estudios	True	True
-22	ok distribución cl	True	True
-23	distribución cfi	True	True
-24	reunión cl ca con d dl	True	True
-25	reunión d.est con vest	True	True
-28	ok actas y notas	True	True
-29	ok E43 enviados	True	True
-30	ok E43 recibidos	True	True
-31	guardar historial	True	True
-32	ok plan de estudios	True	True
+0	--	t	t
+1	Crear inicial des (proyecto)	t	t
+2	Aprobada (actual)	t	t
+3	Terminada	t	t
+5	ok atención sacd	t	t
+10	ok distribución de plazas	t	t
+12	posibles ca para cada ctr	t	t
+13	cuadro profesorado	t	t
+14	minuta ctr	t	t
+15	ok asistentes	t	t
+16	ok asist. sacd	t	t
+17	confirmación a los ctr	t	t
+18	ok profesores	t	t
+19	ok plan de estudios personal	t	t
+20	ok oficina correspondiente	t	t
+21	maleta material de estudios	t	t
+22	ok distribución cl	t	t
+23	distribución cfi	t	t
+24	reunión cl ca con d dl	t	t
+25	reunión d.est con vest	t	t
+28	ok actas y notas	t	t
+29	ok E43 enviados	t	t
+30	ok E43 recibidos	t	t
+31	guardar historial	t	t
+32	ok plan de estudios	t	t
+33	ok ctr	t	t
+37	ok cargos	t	t
+35	ok dossiers económicos	t	t
+36	ok tarifas	t	t

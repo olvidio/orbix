@@ -125,8 +125,6 @@ class gestorAvisoCambios {
 		$oAhora = new DateTimeLocal();
 		$ahora_iso = $oAhora->format('Y-m-d H:i:s');
 		
-        $json_fases_sv = '';
-        $json_fases_sf = '';
         $id_status = '';
 		
 		// per saber el tipus d'activitat.

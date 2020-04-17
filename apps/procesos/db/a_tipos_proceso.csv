@@ -1,27 +1,34 @@
-3	ca n	1
 4	general	1
-5	general no dl	1
-6	ca n (no dl)	1
-7	crt n (no dl)	1
-8	crt agd (no dl)	1
-9	crt agd	1
-10	crt n	1
 22	sf	1
 23	actividad sg	1
 24	actividad sg (no dl)	1
-25	activdad sr	1
-13	ca n sf	2
-19	crt agd sf	2
-17	crt n (no dl) sf	2
 14	general sf	2
 21	sv en sf	2
-16	ca n (no dl) sf	2
-18	crt agd (no dl) sf	2
-20	crt n sf	2
-15	general no dl sf	2
-26	ca nax	2
-27	crt nax	2
 28	actividad sr sf	2
 29	actividad sg sf	2
 30	actividad sg (no dl) sf	2
-31	cve	1
+26	actividad nax	2
+19	actividad agd sf	2
+18	actividad agd (no dl) sf	2
+35	actividad nax (no dl)	2
+9	actividad agd	1
+8	actividad agd (no dl)	1
+33	general (no dl) sf	2
+5	general (no dl)	1
+32	actividad sacd	1
+34	actividad sacd (no dl)	1
+36	actividad sr (no dl)	1
+37	actividad sr (no dl) sf	2
+10	actividad n	1
+3	actividad estudios n	1
+7	actividad n (no dl)	1
+20	actividad n sf	2
+17	actividad n (no dl) sf	2
+6	actividad estudios n (no dl)	1
+16	actividad estudios n (no dl) sf	2
+13	actividad estudios n sf	2
+39	actividad estudios agd (no dl)	1
+40	actividad estudios agd sf	2
+41	actividad estudios agd (no dl) sf	2
+38	actividad estudios agd	1
+25	actividad sr	1

@@ -110,6 +110,9 @@ class DateTimeLocal Extends \DateTime {
         return $extnd_dt;
     }
     
+    public function getIsoTime() {
+        return parent::format('Y-m-d H:i:s');
+    }
     public function getIso() {
         return parent::format('Y-m-d');
     }
@@ -222,6 +225,4 @@ class DateTimeLocal Extends \DateTime {
         }
         
     }
-
-    
 }

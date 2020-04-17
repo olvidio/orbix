@@ -392,6 +392,7 @@ while ($num_cambios) {
 		$valor_old_cmb = $oCambio->getValor_old();
 		$valor_new_cmb = $oCambio->getValor_new();
 		$id_activ = $oCambio->getId_activ();
+		$oF_cmb = $oCambio->getTimestamp_cambio();
 		
 		// Para las actividades, en el cambio se anota: 'ActividadDl' 'ActividadEx'
 		// pero en las preferencias, solo 'Actividad'.
@@ -456,8 +457,20 @@ while ($num_cambios) {
 			$aviso_donde = $oCambioUsuarioObjetoPref->getAviso_donde();
 			$id_pau = $oCambioUsuarioObjetoPref->getId_pau();
 			$id_fase_ref = $oCambioUsuarioObjetoPref->getId_fase_ref();
+			$aviso_off = $oCambioUsuarioObjetoPref->getAviso_off();
+			$aviso_on = $oCambioUsuarioObjetoPref->getAviso_on();
+			$aviso_outdate = $oCambioUsuarioObjetoPref->getAviso_outdate();
 			
 			$fase_correcta = 0;
+			/////////////////// COMPARAR DATE //////////////////////////////////////////
+			if (!is_true($aviso_outdate)) {
+                $oActividad = new Actividad($id_activ);
+                $oF_fin = $oActividad->getF_fin();
+                if ($oF_cmb > $oF_fin) {
+                    continue;
+                }
+			}
+			    
 			/////////////////// COMPARAR STATUS //////////////////////////////////////////
 			// Si el id_fase es NULL, hay que mirar el id_status
 			// Si el id_status es 1,2,3 corresponde al status de la actividad,
@@ -465,7 +478,7 @@ while ($num_cambios) {
 			if (empty($aFases_cmb)) {
 			    // Si yo SI tengo procesos:
 			    if(ConfigGlobal::is_app_installed('procesos')) {
-			        // Busco el status de la actividad qe corresponde a la dase actual
+			        // Busco el status de la actividad que corresponde a la fase actual
 			        // miro la fase actual de la actividad
 			        $gesActivProcesoTarea = new GestorActividadProcesoTarea();
 			        $id_faseActual = $gesActivProcesoTarea->getFaseActual($id_activ);
@@ -491,28 +504,44 @@ while ($num_cambios) {
 			    }
 			} else {
 			    /////////////////// COMPARAR FASES //////////////////////////////////////////
-			
-			    if (in_array($id_fase_ref, $aFases_cmb)) {
-                    // Temgo permiso de ver esta fase?
-                    $oPermActividades = new PermisosActividades($id_usuario);
-                    $oPermActividades->setActividad($id_activ);
-                    $oPermActividades->setId_fase($id_fase_ref);
-                    $oPermActiv = $oPermActividades->getPermisoActual($afecta);
-                    if ( !$oPermActiv->have_perm_activ('ocupado') ) { continue; }
-                    
-                    // Si tengo instalado el modulo de procesos:
-                    if(ConfigGlobal::is_app_installed('procesos')) {
-                            $fase_correcta = 1;
-                    } else {
-                        //Yo no tengo instalado el modulo procesos, pero la dl que ha hecho el cambio si.
-                        // miro que esté en el status.
-                        $oActividad = new Actividad($id_activ);
-                        $status = $oActividad->getStatus();
-                        foreach ($aFases_cmb as $id_fase) {
-                            if ($status == $id_fase) {
+			    // fase on
+                if (in_array($id_fase_ref, $aFases_cmb)) {
+			    // aviso_on
+                    if (is_true($aviso_on)) {
+                        // Tengo permiso de ver esta fase?
+                        $oPermActividades = new PermisosActividades($id_usuario);
+                        $oPermActividades->setActividad($id_activ);
+                        $oPermActividades->setId_fase($id_fase_ref);
+                        $oPermActiv = $oPermActividades->getPermisoActual($afecta);
+                        if ( !$oPermActiv->have_perm_activ('ocupado') ) { continue; }
+                        
+                        // Si tengo instalado el modulo de procesos:
+                        if(ConfigGlobal::is_app_installed('procesos')) {
                                 $fase_correcta = 1;
+                        } else {
+                            //Yo no tengo instalado el modulo procesos, pero la dl que ha hecho el cambio si.
+                            // miro que esté en el status.
+                            $oActividad = new Actividad($id_activ);
+                            $status = $oActividad->getStatus();
+                            foreach ($aFases_cmb as $id_fase) {
+                                if ($status == $id_fase) {
+                                    $fase_correcta = 1;
+                                }
                             }
                         }
+                    } 
+                } else {
+                    // fase off
+                    // aviso_off
+                    if (is_true($aviso_off)) {
+                        // Tengo permiso de ver esta fase?
+                        $oPermActividades = new PermisosActividades($id_usuario);
+                        $oPermActividades->setActividad($id_activ);
+                        $oPermActividades->setId_fase($id_fase_ref);
+                        $oPermActiv = $oPermActividades->getPermisoActual($afecta);
+                        if ( !$oPermActiv->have_perm_activ('ocupado') ) { continue; }
+
+                        $fase_correcta = 1;
                     }
 			    }
 			}

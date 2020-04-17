@@ -98,7 +98,7 @@ foreach ($cCambiosUsuario as $oCambioUsuario) {
     }
     $quien_cambia = $oCambio->getQuien_cambia();
     $sfsv_quien_cambia = $oCambio->getSfsv_quien_cambia();
-    $timestamp_cambio = $oCambio->getTimestamp_cambio();
+    $timestamp_cambio = $oCambio->getTimestamp_cambio()->getFromLocal();
     $aviso_txt = $oCambio->getAvisoTxt();
     if ($aviso_txt === false) continue;
     

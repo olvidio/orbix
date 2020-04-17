@@ -10,6 +10,7 @@ use procesos\model\entity\GestorActividadFase;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use ubis\model\entity\Ubi;
 use web\DateTimeLocal;
+use web\NullDateTimeLocal;
 /**
  * Fitxer amb la Classe que accedeix a la taula av_cambios
  *
@@ -633,7 +634,7 @@ class Cambio Extends core\ClasePropiedades {
 	 *
 	 * @param array $aDades
 	 */
-	function setAllAtributes($aDades) {
+	function setAllAtributes($aDades,$convert=FALSE) {
 		if (!is_array($aDades)) return;
 		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_item_cambio',$aDades)) $this->setId_item_cambio($aDades['id_item_cambio']);
@@ -650,7 +651,7 @@ class Cambio Extends core\ClasePropiedades {
 		if (array_key_exists('valor_new',$aDades)) $this->setValor_new($aDades['valor_new']);
 		if (array_key_exists('quien_cambia',$aDades)) $this->setQuien_cambia($aDades['quien_cambia']);
 		if (array_key_exists('sfsv_quien_cambia',$aDades)) $this->setSfsv_quien_cambia($aDades['sfsv_quien_cambia']);
-		if (array_key_exists('timestamp_cambio',$aDades)) $this->setTimestamp_cambio($aDades['timestamp_cambio']);
+		if (array_key_exists('timestamp_cambio',$aDades)) $this->setTimestamp_cambio($aDades['timestamp_cambio'],$convert);
 	}
 
 	/**
@@ -1007,23 +1008,35 @@ class Cambio Extends core\ClasePropiedades {
 		$this->isfsv_quien_cambia = $isfsv_quien_cambia;
 	}
 	/**
-	 * Recupera l'atribut itimestamp_cambio de Cambio
+	 * Recupera l'atribut itiimestamp de Cambio
 	 *
-	 * @return integer itimestamp_cambio
+	 * @return DateTimeLocal itimestamp
 	 */
 	function getTimestamp_cambio() {
-		if (!isset($this->itimestamp_cambio)) {
-			$this->DBCarregar();
-		}
-		return $this->itimestamp_cambio;
+	    if (!isset($this->itimestamp_cambio)) {
+	        $this->DBCarregar();
+	    }
+	    if (empty($this->itimestamp_cambio)) {
+	        return new NullDateTimeLocal();
+	    }
+	    $oConverter = new core\Converter('datetime', $this->itimestamp_cambio);
+	    return $oConverter->fromPg();
 	}
 	/**
-	 * estableix el valor de l'atribut itimestamp_cambio de Cambio
+	 * estableix el valor de l'atribut itiimestamp de Cambio
+	 * Si itiimestamp es string, y convert=true se convierte usando el formato web\DateTimeLocal->getFormat().
+	 * Si convert es false, df_ini debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
 	 *
-	 * @param integer itimestamp_cambio='' optional
+	 * @param date|string itiimestamp='' optional.
+	 * @param boolean convert=true optional. Si es false, itiimestamp debe ser un string en formato ISO (Y-m-d).
 	 */
-	function setTimestamp_cambio($itimestamp_cambio='') {
-		$this->itimestamp_cambio = $itimestamp_cambio;
+	function setTimestamp_cambio($itimestamp_cambio='',$convert=false) {
+	    if ($convert === true && !empty($itimestamp_cambio)) {
+	        $oConverter = new core\Converter('datetime', $itimestamp_cambio);
+	        $this->itimestamp_cambio =$oConverter->toPg();
+	    } else {
+	        $this->itimestamp_cambio = $itimestamp_cambio;
+	    }
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
