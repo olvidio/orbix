@@ -547,8 +547,7 @@ class Cambio Extends core\ClasePropiedades {
 
 	            if (!$bEliminada) {
 	                if (!empty($idFase)) {
-                        $GestorActividadProcesoTarea = new GestorActividadProcesoTarea();
-                        $id_faseActual = $GestorActividadProcesoTarea->getFaseActual($iId);
+	                    /* REVISAR
                         
                         $cFases = $GesActividadFase->getActividadFases(array('id_fase'=>$idFase));
                         $sFase = $cFases[0]->getDesc_fase();
@@ -561,6 +560,7 @@ class Cambio Extends core\ClasePropiedades {
                         if ($sValor_old == 1 && $sValor_new == '-') {
                             $sformat = 'Fase "%2$s" eliminada en la actividad "%1$s". Fase actual "%3$s"';
                         }
+                        */
 	                } else if (!empty($idStatus)) {
                         $sFaseActual = $aStatus[$id_statusActual];
                         $sFase =  $aStatus[$idStatus];

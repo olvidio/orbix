@@ -330,6 +330,31 @@ class GestorTareaProceso Extends core\ClaseGestor {
 	    return $aFases;
 	}
 	
+	public function getFaseIndependiente($id_tipo_proceso) {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$sQry = "SELECT * FROM $nom_tabla 
+                WHERE id_tipo_proceso = $id_tipo_proceso AND json_fases_previas::text = '[]'::text ";
+
+		if (($oDbl->query($sQry)) === FALSE) {
+			$sClauError = 'GestorTareaProceso.llistar.prepare';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return FALSE;
+		}
+        $i = 0;
+		foreach ($oDbl->query($sQry) as $aDades) {
+            $i++;
+			$a_pkey = array('id_item' => $aDades['id_item']);
+			$oTareaProceso= new TareaProceso($a_pkey);
+			$oTareaProceso->setAllAtributes($aDades);
+		}
+		if ($i > 1) {
+		  $txt = _("No debería haber más de una fase independiente en un proceso. Hay %s para el id_proceso: %s");  
+		  $msg = sprintf($txt,$i,$id_tipo_proceso);
+		  echo $msg;
+		}
+        return $oTareaProceso;
+	}
 	/**
 	 * retorna l'array d'objectes de tipus TareaProceso
 	 *

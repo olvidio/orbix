@@ -9,6 +9,8 @@ use procesos\model\PermAccion;
 use procesos\model\entity as procesos;
 use procesos\model\entity\GestorTareaProceso;
 use usuarios\model\entity as usuarios;
+use procesos\model\entity\TareaProceso;
+use procesos\model\entity\ActividadFase;
 /**
  * Classe que genera un array amb els permisos per cada usuari. Es guarda a la sesió per tenir-ho a l'abast en qualsevol moment:
  *
@@ -41,14 +43,15 @@ class PermisosActividades {
 	 *
 	 * @var array
 	 */
-	private $aAfecta = array ('datos'	=>1,
-							'economic'	=>2,
-							'sacd'		=>4,
-							'ctr'		=>8,
-							'tarifa'	=>16,
-							'cargos'	=>32,
-							'asistentes'=>64
-							);
+	private $aAfecta = ['datos'	        =>1,
+                        'economic'	    =>2,
+                        'sacd'		    =>4,
+                        'ctr'		    =>8,
+                        'tarifa'	    =>16,
+                        'cargos'	    =>32,
+                        'asistentes'    =>64,
+                        'asistentesSacd'=>128,
+                        ];
 	/**
 	 * Array amb els permisos.
 	 *
@@ -228,21 +231,22 @@ class PermisosActividades {
 		// Cojo el primero
 		$oPerm = FALSE;
 		foreach($aTiposDeProcesos as $id_tipo_proceso) {
-            //$this->iid_tipo_proceso = $aTiposDeProcesos[0];
+		    // Buscar la primera fase (no depende de fases previas)
             $GesTareaProceso = new GestorTareaProceso();
-            $cFasesdelProcesos = $GesTareaProceso->getTareasProceso(array('id_tipo_proceso'=>$id_tipo_proceso));
-            // La primera fase:
-            $oTareaProceso = $cFasesdelProcesos[0];
-            $fasePrimera = $oTareaProceso->getId_Fase();
+            $oTareaProceso = $GesTareaProceso->getFaseIndependiente($id_tipo_proceso);
+            //$id_fase = $oTareaProceso->getId_fase();
             $of_responsable_txt = $oTareaProceso->getOf_responsable_txt();	
             $status = $oTareaProceso->getStatus();	
 
             // devolver false si no puedo crear
             $iAfecta = 1; //datos
+            $id_fase_ref = ActividadFase::FASE_APROBADA;
+            $on_off = 'off';
+            
             if (($oP = $this->getPermisos($iAfecta)) === false) {
                 return FALSE;
             } else {
-                $iperm = $oP->getPerm($id_tipo_proceso,$iAfecta,$fasePrimera);
+        		$iperm = $oP->getPerm($iAfecta,$id_fase_ref,$on_off);
                 if ($iperm !== false) {
                     $oPerm = new PermAccion($iperm);
                     break;

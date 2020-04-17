@@ -78,53 +78,11 @@ class xResto {
 	}
 	
 	public function getPerm($iAfecta,$id_fase_ref,$on_off) {
+	    if (empty($this->aDades[$iAfecta][$id_fase_ref][$on_off])) {
+	        return 0; // No tiene permiso
+	    }
         $perm = $this->aDades[$iAfecta][$id_fase_ref][$on_off];
         return $perm;    
-	}
-	
-	
-	
-	public function zzgetPerm($id_tipo_proceso,$iAfecta,$iFase,$id_activ='') {
-		$i=0;
-		foreach ($this->aDades as $key => $a_proceso_perm) {
-			$i++;
-			$c = (int)$key & (int)$iAfecta;
-			if ($c > 0) {
-			    // si no existe 
-			    if (empty($a_proceso_perm[$id_tipo_proceso])) {
-			        continue;
-			    }
-				$val = $a_proceso_perm[$id_tipo_proceso];
-            	return $this->getPermFase($val,$id_tipo_proceso,$iFase,$id_activ);
-			} else {
-				//return false;
-				//echo "i: $i<br>";
-			}
-		}
-		return false;
-		//return 'next';
-	}
-	
-	
-	private function getPermFase($val,$id_tipo_proceso,$id_fase,$id_activ) {
-        if (array_key_exists($id_fase,$val) && !empty($val[$id_fase])) {
-            return $val[$id_fase];
-        } else {
-            // En el caso de crear, no hay id_activ. Miro la fase según el proceso:
-            if (empty($id_activ)) {
-                $gesActividadFase = new GestorActividadFase();
-                $id_fase_anterior = $gesActividadFase->getFaseAnterior($id_tipo_proceso,$id_fase);
-            } else {
-                $gesActividadProcesoTarea = new GestorActividadProcesoTarea();
-                $id_fase_anterior = $gesActividadProcesoTarea->getFaseAnteriorCompletada($id_activ,$id_fase);
-            }
-            if (empty($id_fase_anterior)) {
-                //No hay fase anterior
-                return FALSE;
-            } else {
-                return $this->getPermFase($val,$id_tipo_proceso,$id_fase_anterior,$id_activ);
-            }
-        }
 	}
 	
 	public function setOrdenar() {

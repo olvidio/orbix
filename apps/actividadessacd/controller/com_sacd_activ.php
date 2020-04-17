@@ -193,18 +193,43 @@ foreach ($cPersonas as $oPersona) {
 	$GesCargoOAsistente = new GestorCargoOAsistente();
 	$cCargoOAsistente = $GesCargoOAsistente->getCargoOAsistente($id_nom);
 	$ord_activ = [];
+    $_SESSION['oPermActividades']->setActividad($id_activ);
 	foreach ($cCargoOAsistente as $oCargoOAsistente) {
 		$id_activ=$oCargoOAsistente->getId_activ();
 		if (in_array($id_activ,$a_id_actividades)) {
 			$propio = $oCargoOAsistente->getPropio();
 			$id_cargo = $oCargoOAsistente->getId_cargo();
 			
-			// Comprobar que está en fase ok_atn_sacd:
-			if(core\ConfigGlobal::is_app_installed('procesos')) {
-			    $gesActivProcesoTarea = new GestorActividadProcesoTarea();
-			    $Sacd_ok = $gesActivProcesoTarea->getSacdAprobado($id_activ);
-			    if ( !$Sacd_ok ) { continue; }
-			}
+            if(core\ConfigGlobal::is_app_installed('procesos')) {
+                $permiso_ver = FALSE;
+                $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
+                $oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
+                $oPermAsisSacd = $_SESSION['oPermActividades']->getPermisoActual('asistentesSacd');
+                // para ver la actividad:
+                if ($oPermActiv->have_perm_activ('ver') === FALSE) {
+                    continue;
+                }
+                // si es solo cargo, tiene propio='f' como sacd de la actividad
+                if (!empty($id_cargo)) {
+                    if ($oPermSacd->have_perm_activ('ver') === TRUE) {
+            			$permiso_ver = TRUE;
+                    }
+                    //si también asiste. tiene propio = 't'
+                    if ($propio == 't' && $oPermAsisSacd->have_perm_activ('ver') === true) {
+            			$permiso_ver = TRUE;
+                    }
+                } else {
+                    // sólo asiste
+                    if ($oPermAsisSacd->have_perm_activ('ver') === true) {
+            			$permiso_ver = TRUE;
+                    }
+                }
+            } else {
+                $permiso_ver = TRUE;
+            }
+            
+            if ($permiso_ver === FALSE) { continue; }
+			
 			$oActividad = $a_actividades[$id_activ];
 			$id_tipo_activ = $oActividad->getId_tipo_activ();
 			$id_ubi = $oActividad->getId_ubi();

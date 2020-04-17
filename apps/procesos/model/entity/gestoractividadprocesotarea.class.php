@@ -144,44 +144,8 @@ class GestorActividadProcesoTarea Extends ClaseGestor {
 	    return $aFasesEstado;
 	}
 	
-	public function zzmarcarFasesAnteriores($iid_activ, $iid_fase) {
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
-
-	    $sQry = "UPDATE $nom_tabla SET completado='t'
-                FROM ( SELECT n_orden FROM $nom_tabla
-                    WHERE id_activ=$iid_activ AND id_fase=$iid_fase
-                ) AS OrdenFase
-                WHERE $nom_tabla.id_activ=$iid_activ AND $nom_tabla.n_orden < OrdenFase.n_orden 
-                ";
-	    if ($oDbl->query($sQry) === false) {
-	        $sClauError = 'GestorActividadProcesoTarea.faseCompletada.prepare';
-	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-	        return FALSE;
-	    }
-        return TRUE;
-	}
-	
-	public function zzborrarFasesSiguientes($iid_activ, $iid_fase) {
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
-
-	    $sQry = "UPDATE $nom_tabla SET completado='f'
-                FROM ( SELECT n_orden FROM $nom_tabla
-                    WHERE id_activ=$iid_activ AND id_fase=$iid_fase
-                ) AS OrdenFase
-                WHERE $nom_tabla.id_activ=$iid_activ AND $nom_tabla.n_orden > OrdenFase.n_orden 
-                ";
-	    if ($oDbl->query($sQry) === false) {
-	        $sClauError = 'GestorActividadProcesoTarea.faseCompletada.prepare';
-	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-	        return FALSE;
-	    }
-        return TRUE;
-	}
-	
 	/**
-	 * Devueleve el estado de la fase ("ok atn sacd" que es la 1) 
+	 * Devueleve el estado de la fase ("ok atn sacd" que es la 5) 
 	 * o FALSE si falla.
 	 * 
 	 * @param $iid_activ
@@ -290,30 +254,6 @@ class GestorActividadProcesoTarea Extends ClaseGestor {
 	    return $iid_fase[$isfsv];
 	}
 	
-	public function zzgetFaseActual($iid_activ='') {
-	    if (empty($iid_activ)) return false;
-	    // fase en la que se encuentra actualmente
-	    $iid_fase = $this->getFaseActualAcabada($iid_activ);
-	    if (is_numeric($iid_fase)) {
-	        return $iid_fase;
-	    } else {
-	        if ($iid_fase === 'START') { // devuelve la primera
-	            $iid_fase = $this->getFasePrimera($iid_activ);
-	            return $iid_fase;
-	        }
-	        if ($iid_fase === 'END') { // devuelve la última fase
-	            $iid_fase = $this->getFaseUltima($iid_activ);
-	            return $iid_fase;
-	        }
-	        if (empty($iid_fase) || $iid_fase === 'SIN') {
-	            //echo sprintf(_("esta actividad: %s no tiene ninguna fase. Se está generando..."),$oActividad->getNom_activ());
-	            //echo '<br>'._("ATENCIÓN: puede que tenga que actualizar la página para que salgan todas las actividades.");
-	            //echo '<br>';
-	            return $this->generarProceso($iid_activ);
-	        }
-	    }
-	}
-	
 	/**
 	 * retorna un array amb les fases completades.
 	 *
@@ -348,6 +288,7 @@ class GestorActividadProcesoTarea Extends ClaseGestor {
             return [$id_fase_primera]; 
 	    }
 	}
+
 	/**
 	 * retorna si té la fase completada o no.
 	 *
@@ -382,140 +323,6 @@ class GestorActividadProcesoTarea Extends ClaseGestor {
 	    }
 	}
 	
-	public function zzgetFaseAnteriorCompletada($iid_activ,$id_fase) {
-	    $a_fases_proceso = $this->getFasesCompletadas($iid_activ);
-	    
-	    $id_fase_anterior = '';
-	    while (current($a_fases_proceso) !== $id_fase) {
-	        $id_fase_anterior = current($a_fases_proceso);
-	        next($a_fases_proceso);
-	    }
-	    return $id_fase_anterior;
-
-	}
-
-	/**
-	 * retorna un integer id_fase que és la primera del seu proces.
-	 *
-	 * @param integer iid_activ
-	 * @return integer
-	 */
-	private function zzgetFasePrimera($iid_activ='') {
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
-	    $sQry = "SELECT * FROM $nom_tabla WHERE id_activ=".$iid_activ;
-	    if (($qRs = $oDbl->query($sQry)) === false) {
-	        $sClauError = 'GestorActividadProcesoTarea.getFasePrimera.prepare';
-	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-	        return false;
-	    }
-	    if ($qRs->rowCount() == 1 ) {
-	        $aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
-	        return $aDades['id_fase'];
-	    } else {
-	        return false;
-	    }
-	}
-	/**
-	 * retorna un integer id_fase que és la última del seu proces.
-	 *
-	 * @param integer iid_activ
-	 * @return integer
-	 */
-	private function zzgetFaseUltima($iid_activ='') {
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
-	    $sQry = "SELECT * FROM $nom_tabla WHERE id_activ=".$iid_activ;
-	    if (($qRs = $oDbl->query($sQry)) === false) {
-	        $sClauError = 'GestorActividadProcesoTarea.getFaseUltima.prepare';
-	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-	        return false;
-	    }
-	    if ($qRs->rowCount() == 1 ) {
-	        $aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
-	        return $aDades['id_fase'];
-	    } else {
-	        return false;
-	    }
-	}
-	/**
-	 * //retorna un objecte de tipus ActividadProcesoTarea que és l'actual.
-	 * retorna integer id_fase que és l'actual. No torna l'objecte per guanyar temps. Penso només ho fa servir PermActiv.
-	 *		o un string: 'END' -> Totes les fases completades.
-	 *					  'SIN' -> no té cap procés associat.
-	 *
-	 * @param integer iid_activ
-	 * @return integer|string
-	 */
-	function zzfaseActual($iid_activ='') {
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
-	    $sQry = "SELECT * FROM $nom_tabla WHERE id_activ=".$iid_activ." AND completado='f'
-				ORDER BY n_orden LIMIT 1";
-	    if (($qRs = $oDbl->query($sQry)) === false) {
-	        $sClauError = 'GestorActividadProcesoTarea.faseActual.prepare';
-	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-	        return false;
-	    }
-	    if ($qRs->rowCount() == 1 ) {
-	        $aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
-	        
-	        return $aDades['id_fase'];
-	    } else { // puede ser que no exista el proceso, o que estén todas las fases completadas.
-	        $sQry2 = "SELECT * FROM $nom_tabla WHERE id_activ=".$iid_activ." AND completado='t'
-					ORDER BY n_orden LIMIT 1";
-	        if (($qRs2 = $oDbl->query($sQry2)) === false) {
-	            $sClauError = 'GestorActividadProcesoTarea.faseActual.prepare';
-	            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-	            return false;
-	        }
-	        if ($qRs2->rowCount() == 1 ) {
-	            return 'END';
-	        } else {
-	            return 'SIN';
-	        }
-	    }
-	}
-	
-	/**
-	 * //retorna un objecte de tipus ActividadProcesoTarea que és la última acabada.
-	 * retorna integer id_fase que és la última acabada. No torna l'objecte per guanyar temps.
-	 *		o un string: 'START' -> Totes les fases en blanc.
-	 *					  'SIN' -> no té cap procés associat.
-	 *
-	 * @param integer iid_activ
-	 * @return integer|string
-	 */
-	public function zzgetFaseActualAcabada($iid_activ='') {
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
-	    $sQry = "SELECT * FROM $nom_tabla WHERE id_activ=".$iid_activ." AND completado='t'
-				ORDER BY n_orden DESC LIMIT 1";
-	    if (($qRs = $oDbl->query($sQry)) === false) {
-	        $sClauError = 'GestorActividadProcesoTarea.getFaseActual.prepare';
-	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-	        return false;
-	    }
-	    if ($qRs->rowCount() == 1 ) {
-	        $aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
-	        
-	        return $aDades['id_fase'];
-	    } else { // puede ser que no exista el proceso, o que estén todas las fases en blanco.
-	        $sQry2 = "SELECT * FROM $nom_tabla WHERE id_activ=".$iid_activ." AND completado='f'
-					ORDER BY n_orden LIMIT 1";
-	        if (($qRs2 = $oDbl->query($sQry2)) === false) {
-	            $sClauError = 'GestorActividadProcesoTarea.getFaseActual.prepare';
-	            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-	            return false;
-	        }
-	        if ($qRs2->rowCount() == 1 ) {
-	            return 'START';
-	        } else {
-	            return 'SIN';
-	        }
-	    }
-	}
-	
 	/**
 	 * Borra el procés per l'activitat.
 	 *
@@ -537,7 +344,7 @@ class GestorActividadProcesoTarea Extends ClaseGestor {
 	
 	/**
 	 * Genera el procés per l'activitat, segons el tipus de procés.
-	 * retorna el id_fase de la primera fase. Serveix per la funció getFaseActual.
+	 * retorna el id_fase de la primera fase.
 	 *
 	 * @param integer iid_activ
 	 * @param integer iid_tipo_proceso

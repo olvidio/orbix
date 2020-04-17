@@ -480,8 +480,8 @@ while ($num_cambios) {
 			    if(ConfigGlobal::is_app_installed('procesos')) {
 			        // Busco el status de la actividad que corresponde a la fase actual
 			        // miro la fase actual de la actividad
+			        /* YA NO SIRVE
 			        $gesActivProcesoTarea = new GestorActividadProcesoTarea();
-			        $id_faseActual = $gesActivProcesoTarea->getFaseActual($id_activ);
                     // busco el tipo de proceso			        
 			        $oTipo = new TipoDeActividad(array('id_tipo_activ'=>$id_tipo_activ));
 			        $id_tipo_proceso=$oTipo->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
@@ -490,7 +490,7 @@ while ($num_cambios) {
 			        $gesTareaProceso = new GestorTareaProceso();
 			        $cTareaProceso = $gesTareaProceso->getTareasProceso($aWhereTP);
 			        $staus_de_fase = $cTareaProceso[0]->getStatus();
-			        
+			        */
                     if ($id_status_cmb == $staus_de_fase) {
                             $fase_correcta = 1;
                     }

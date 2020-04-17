@@ -35,14 +35,16 @@ class PermisosActividadesTrue {
 	 *
 	 * @var array
 	 */
-	private $aAfecta = array ('datos'	=>1,
-							'economic'	=>2,
-							'sacd'		=>4,
-							'ctr'		=>8,
-							'tarifa'	=>16,
-							'cargos'	=>32,
-							'asistentes'=>64
-							);
+    private $aAfecta = ['datos'	        =>1,
+                        'economic'	    =>2,
+                        'sacd'		    =>4,
+                        'ctr'		    =>8,
+                        'tarifa'	    =>16,
+                        'cargos'	    =>32,
+                        'asistentes'    =>64,
+                        'asistentesSacd'=>128,
+                    ];
+    
 	/**
 	 * Array amb els permisos.
 	 *
@@ -112,36 +114,16 @@ class PermisosActividadesTrue {
 	}
 	public function getId_fase() {
 		if (empty($this->iid_fase)) {
-		//	$this->iid_fase = $this->oGesActiv->getFaseActual($this->iid_activ); 
+		    echo "No hay fase!!";
 		}
 		return $this->iid_fase;
 	}
 
 	public function getPermisoActual($iAfecta) {
 		// devuleve permiso de crear (15) en cualquier caso
-			return  new PermAccion(15);
-		// para poder pasar el valor de afecta con texto:
-		if (is_string($iAfecta)) $iAfecta = $this->aAfecta[$iAfecta];
-		$id_tipo_activ_txt = $this->getId_tipo_activ();
-		$id_tipo_proceso = $this->getId_tipo_proceso();
-		$faseActual = $this->getId_fase();
-		//echo "afec: $iAfecta, fase: $faseActual, proceso: $id_tipo_proceso, tipo_activ: $id_tipo_activ_txt<br>";
-		$iperm=0;
-		if ($this->btop === true) { return  new PermAccion(0); }
-		if (($oP = $this->getPermisos()) === false) {
-			return  new PermAccion(0);
-		} else {
-			$iperm = $oP->getPerm($id_tipo_proceso,$iAfecta,$faseActual);
-			if ($iperm == 'next') {
-				return $this->getPermisoActualPrev($iAfecta);
-			} elseif ($iperm !== false) {
-				//return $iperm;
-				$oPerm = new PermAccion($iperm);
-				return $oPerm;
-			}
-			return  new PermAccion(0);
-		}
+		return  new PermAccion(15);
 	}
+	
 	public function getPermisoActualPrev($iAfecta) {
 		//if ($this->getIdTipoPrev() === false) return false;
 		if ($this->getIdTipoPrev() === false) return new PermAccion(0);
