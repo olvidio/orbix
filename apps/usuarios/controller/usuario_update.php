@@ -137,32 +137,38 @@ switch($Qque) {
 		    $perm_on = '';
 		    $perm_off = '';
 		    // si tiene valor grabo, sino elimino:
+		    $eliminar = TRUE;
             if ( in_array($afecta_a,$QaAfecta_a)) {
                 $i = array_search($afecta_a, $QaAfecta_a);
                 $fase_ref = $QaFase_ref[$i];
-                // si no hay fase ref, no guardo nada:
-                if(empty($fase_ref)) { continue; }
-                $perm_off = empty($QaPerm_off[$i])? 0 : $QaPerm_off[$i];
-                $perm_on = empty($QaPerm_on[$i])? 0 : $QaPerm_on[$i];
-                $cPermUsuarioActividad = $gesPermUsuarioActividad->getPermUsuarioActividades($aWhere);
-                // Solo deberia haber uno???
-                if (count($cPermUsuarioActividad) == 1) {
-                        $oUsuarioPerm = $cPermUsuarioActividad[0]; 
+                // si no hay fase ref, hay que eliminar
+                if(empty($fase_ref)) { 
+                    $eliminar =TRUE;
                 } else {
-                        $oUsuarioPerm = new PermUsuarioActividad(); 
+                    $perm_off = empty($QaPerm_off[$i])? 0 : $QaPerm_off[$i];
+                    $perm_on = empty($QaPerm_on[$i])? 0 : $QaPerm_on[$i];
+                    $cPermUsuarioActividad = $gesPermUsuarioActividad->getPermUsuarioActividades($aWhere);
+                    // Solo deberia haber uno???
+                    if (count($cPermUsuarioActividad) == 1) {
+                            $oUsuarioPerm = $cPermUsuarioActividad[0]; 
+                    } else {
+                            $oUsuarioPerm = new PermUsuarioActividad(); 
+                    }
+                    $oUsuarioPerm->setId_usuario($Qid_usuario);
+                    $oUsuarioPerm->setId_tipo_activ_txt($id_tipo_activ_txt);
+                    $oUsuarioPerm->setDl_propia($Qdl_propia);
+                    $oUsuarioPerm->setAfecta_a($afecta_a);
+                    $oUsuarioPerm->setFase_ref($fase_ref);
+                    $oUsuarioPerm->setperm_on($perm_on);
+                    $oUsuarioPerm->setperm_off($perm_off);
+                    if ($oUsuarioPerm->DBGuardar() === false) {
+                        echo _("hay un error, no se ha guardado");
+                        echo "\n".$oUsuarioPerm->getErrorTxt();
+                    }
+                    $eliminar = FALSE;
                 }
-                $oUsuarioPerm->setId_usuario($Qid_usuario);
-                $oUsuarioPerm->setId_tipo_activ_txt($id_tipo_activ_txt);
-                $oUsuarioPerm->setDl_propia($Qdl_propia);
-                $oUsuarioPerm->setAfecta_a($afecta_a);
-                $oUsuarioPerm->setFase_ref($fase_ref);
-                $oUsuarioPerm->setperm_on($perm_on);
-                $oUsuarioPerm->setperm_off($perm_off);
-                if ($oUsuarioPerm->DBGuardar() === false) {
-                    echo _("hay un error, no se ha guardado");
-                    echo "\n".$oUsuarioPerm->getErrorTxt();
-                }
-            } else {
+            }
+            if ($eliminar == TRUE) {
                 $cPermUsuarioActividad = $gesPermUsuarioActividad->getPermUsuarioActividades($aWhere);
                 // Solo deberia haber uno???
                 if (count($cPermUsuarioActividad) == 1) {

@@ -234,7 +234,6 @@ class PermisosActividades {
 		    // Buscar la primera fase (no depende de fases previas)
             $GesTareaProceso = new GestorTareaProceso();
             $oTareaProceso = $GesTareaProceso->getFaseIndependiente($id_tipo_proceso);
-            //$id_fase = $oTareaProceso->getId_fase();
             $of_responsable_txt = $oTareaProceso->getOf_responsable_txt();	
             $status = $oTareaProceso->getStatus();	
 

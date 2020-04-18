@@ -109,6 +109,12 @@ fnjs_guardar=function(tipo='') {
 		if (tipo=='nuevo') {
 			//Syntax to convert jQuery element to a JavaScript object.
 			$('#modifica')[0].reset();
+			fnjs_asistentes();
+			// borrar ubi:
+			var txt="{{ "sin determinar"|trans }}";
+		  	$('#id_ubi').val("");
+			$('#span_nom_ubi').html(txt);
+			$('#lugar_esp').val("");
 		}
 		//$('#modifica').off(); -->si está, parece que no vuelve al js_atras(1)
 	}

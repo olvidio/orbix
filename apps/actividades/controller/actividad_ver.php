@@ -37,7 +37,6 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 $Qmod = (string)  \filter_input(INPUT_POST, 'mod');
-$Qtipo = (string)  \filter_input(INPUT_POST, 'tipo');
 $Qobj_pau = (string)  \filter_input(INPUT_POST, 'obj_pau');
 
 $obj = 'actividades\\model\\entity\\ActividadAll';
@@ -144,10 +143,18 @@ if (!empty($Qid_activ)) { // caso de modificar
 	    }
 	}
 	if ( $permiso_des == TRUE ) {
-	    $id_tipo_activ = '1';
-        $ssfsv = 'sv'; //valor por defecto. Si está vacio dira que no tiene permiso.
+	    if (empty($id_tipo_activ)) {
+            //valor por defecto. Si está vacio dira que no tiene permiso.
+            $id_tipo_activ = '1';
+            $ssfsv = 'sv';
+	    }
         // En el caso de des puedo crear acrividades de sf.
+        if ($isfsv == 1) {
+            $ssfsv = 'sv';
+        	$dl_org = core\ConfigGlobal::mi_dele(); 
+        }
         if ($isfsv == 2) {
+            $ssfsv = 'sf';
         	$dl_org = core\ConfigGlobal::mi_dele().'f'; 
         }
 	} else {
