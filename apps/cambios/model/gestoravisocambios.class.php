@@ -102,22 +102,6 @@ class gestorAvisoCambios {
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
 
-	function zzmuestraMensaje($sClauError,$goto) {
-		//$_SESSION['oGestorErrores']->addErrorAppLastError($oDBSt, $sClauError, $file);
-		$txt=$this->leerErrorAppLastError();
-		if (strstr($txt, 'duplicate key')) {
-			echo _("ya existe un registro con esta información");
-		} else {
-			echo "\n dd".$txt."\n $sClauError <br>";
-		}
-		$oPosicion = new Posicion();
-		$seguir = $oPosicion->link_a($goto,0);
-		//$seguir=link_a($goto,0);
-		echo "<br><span class='link' onclick=fnjs_update_div('#main',$seguir)>"._("continuar")."</span>";
-
-
-	}
-
 	public function addCanvi($sObjeto, $sTipoCambio, $iid_activ, $aDadesNew, $aDadesActuals) {
 		// poso el nom de l'objecte que gestiona la taula en comptes del nom de la taula.
 		$id_user = ConfigGlobal::mi_id_usuario();

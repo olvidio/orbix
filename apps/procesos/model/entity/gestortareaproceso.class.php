@@ -175,58 +175,6 @@ class GestorTareaProceso Extends core\ClaseGestor {
 	}
 	
 	/**
-	 * retorna la primera fase del status.
-	 *
-	 * @param integer iid_tipo_proceso tipus de procés.
-	 * @param integer status
-	 * @return integer id_fase.
-	 */
-	public function zzsfgetFirstFaseStatus($iid_tipo_proceso,$status) {
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
-	    $sQuery = "SELECT * FROM $nom_tabla 
-                    WHERE id_tipo_proceso = $iid_tipo_proceso AND status = $status 
-                    ";
-	    
-	    if (($oDbl->query($sQuery)) === false) {
-	        $sClauError = 'GestorTareaProceso.query';
-	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-	        return false;
-	    }
-	    $id_fase = '';
-	    foreach ($oDbl->query($sQuery) as $aDades) {
-	        $id_fase = $aDades['id_fase'];
-	    }
-	    return $id_fase;
-	}
-	
-	/**
-	 * retorna la ultima fase del status.
-	 *
-	 * @param integer iid_tipo_proceso tipus de procés.
-	 * @param integer status
-	 * @return integer id_fase.
-	 */
-	public function zzsfgetLastFaseStatus($iid_tipo_proceso,$status) {
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
-	    $sQuery = "SELECT * FROM $nom_tabla 
-                    WHERE id_tipo_proceso = $iid_tipo_proceso AND status = $status 
-                    LIMIT 1";
-	    
-	    if (($oDbl->query($sQuery)) === false) {
-	        $sClauError = 'GestorTareaProceso.query';
-	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-	        return false;
-	    }
-	    $id_fase = '';
-	    foreach ($oDbl->query($sQuery) as $aDades) {
-	        $id_fase = $aDades['id_fase'];
-	    }
-	    return $id_fase;
-	}
-	
-	/**
 	 * retorna integer de la id_fase anterior
 	 *
 	 * @param integer id_item la fase tarea.
@@ -258,51 +206,6 @@ class GestorTareaProceso Extends core\ClaseGestor {
 	    $ultimo_status = end($aFasesOn);
 	    
 	    return $ultimo_status;
-	}
-	
-	/**
-	 * retorna res
-	 * fa el canvi d'ordre
-	 *
-	 * @param string +/- avançar o retrocedir una posició.
-	 * @param integer id_item la fase tarea en concret que s'ha de modificar.
-	 * @return true o false si hi ha un error
-	 */
-	public function zzsetTareasProcesosOrden($iid_item,$sque) {
-		$nom_tabla = $this->getNomTabla();
-	    $oActual = new TareaProceso(array('id_item'=>$iid_item));
-	    $iid_tipo_proceso = $oActual->getId_tipo_proceso();
-	    $in_orden = $oActual->getN_orden();
-	    switch ($sque) {
-	        case "up":
-	            // buscar el anterior
-	            $sQry="SELECT id_item FROM $nom_tabla
-						WHERE id_tipo_proceso=$iid_tipo_proceso AND n_orden < $in_orden
-						ORDER BY n_orden DESC LIMIT 1";
-	            $ColeccionProcesos=$this->getTareasProcesosQuery($sQry);
-	            if (count($ColeccionProcesos) > 0) {
-	                $oAnterior=$ColeccionProcesos[0];
-	                $oActual->setN_orden($oAnterior->getN_orden());
-	                $oActual->DBGuardar();
-	                $oAnterior->setN_orden($in_orden);
-	                $oAnterior->DBGuardar();
-	            } //ja està el primer
-	            break;
-	        case "down":
-	            // buscar el siguiente
-	            $sQry="SELECT id_item FROM $nom_tabla
-						WHERE id_tipo_proceso=$iid_tipo_proceso AND n_orden > $in_orden
-						ORDER BY n_orden ASC LIMIT 1";
-	            $ColeccionProcesos=$this->getTareasProcesosQuery($sQry);
-	            if (count($ColeccionProcesos) > 0) {
-	                $oNext=$ColeccionProcesos[0];
-	                $oActual->setN_orden($oNext->getN_orden());
-	                $oActual->DBGuardar();
-	                $oNext->setN_orden($in_orden);
-	                $oNext->DBGuardar();
-	            } //ja està l'últim
-	            break;
-	    }
 	}
 	
 	/**
