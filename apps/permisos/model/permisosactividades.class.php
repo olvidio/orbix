@@ -43,7 +43,7 @@ class PermisosActividades {
 	 *
 	 * @var array
 	 */
-	private $aAfecta = ['datos'	        =>1,
+	const  Afecta = ['datos'	        =>1,
                         'economic'	    =>2,
                         'sacd'		    =>4,
                         'ctr'		    =>8,
@@ -277,7 +277,7 @@ class PermisosActividades {
 	       $this->setActividad($this->iid_activ);
 	    }
 		// para poder pasar el valor de afecta con texto:
-		if (is_string($iAfecta)) $iAfecta = $this->aAfecta[$iAfecta];
+		if (is_string($iAfecta)) $iAfecta = self::Afecta[$iAfecta];
 		
 		// buscar fase_ref para iAfecta
 		$id_fase_ref = $this->getFaseRef($iAfecta);
@@ -374,6 +374,10 @@ class PermisosActividades {
 		return $this->getPermisos($iAfecta,$prev_id_tipo);
 	}
 
+	public function getAfecta() {
+	    return self::Afecta;
+	}
+	
 	public function setId_tipo_activ($id_tipo_activ) {
 		if ($id_tipo_activ == '......') {
 			$this->btop = true;

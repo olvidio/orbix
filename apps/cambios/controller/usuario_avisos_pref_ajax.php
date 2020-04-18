@@ -7,9 +7,6 @@ use cambios\model\entity\CambioUsuarioPropiedadPref;
 use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
 use core\ConfigGlobal;
 use function core\is_true;
-use permisos\model\PermisosActividades;
-use procesos\model\CuadrosFases;
-use procesos\model\entity\ActividadFase;
 use procesos\model\entity\GestorActividadFase;
 use ubis\model\entity\GestorCasaDl;
 use usuarios\model\entity\Role;
@@ -287,7 +284,7 @@ switch($Qsalida) {
                     }
                 }
                 
-                $id = $Qobjeto.'_'.$nom_prop;
+                //$id = $Qobjeto.'_'.$nom_prop;
                 $id_cond = $Qobjeto.'_'.$nom_prop.'_cond';
                 $td_item = $Qobjeto.'_'.$nom_prop.'_item';
                 $td_cond = "td_$id_cond";

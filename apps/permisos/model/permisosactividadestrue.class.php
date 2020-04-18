@@ -30,20 +30,6 @@ use procesos\model\PermAccion;
  */
 class PermisosActividadesTrue {
 	/* ATRIBUTS ----------------------------------------------------------------- */
-	/**
-	 * Perm de PermisoActividad
-	 *
-	 * @var array
-	 */
-    private $aAfecta = ['datos'	        =>1,
-                        'economic'	    =>2,
-                        'sacd'		    =>4,
-                        'ctr'		    =>8,
-                        'tarifa'	    =>16,
-                        'cargos'	    =>32,
-                        'asistentes'    =>64,
-                        'asistentesSacd'=>128,
-                    ];
     
 	/**
 	 * Array amb els permisos.

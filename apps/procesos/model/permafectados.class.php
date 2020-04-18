@@ -1,15 +1,13 @@
 <?php
 namespace procesos\model;
 use permisos\model as permisos;
+use permisos\model\PermisosActividades;
 class PermAfectados extends permisos\Xpermisos {
   public static $classname = "CuadrosPermActiv";
-  public $permissions = ['datos'	        =>1,
-                      'economic'	    =>2,
-                      'sacd'		    =>4,
-                      'ctr'		    =>8,
-                      'tarifa'	    =>16,
-                      'cargos'	    =>32,
-                      'asistentes'    =>64,
-                      'asistentesSacd'=>128,
-                  ];
+  public $permissions;
+  
+  public function __construct($iaccion=0) {
+      $this->iaccion = $iaccion;
+      $this->permissions = PermisosActividades::Afecta;
+  }
 }

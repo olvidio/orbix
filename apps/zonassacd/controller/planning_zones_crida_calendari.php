@@ -278,7 +278,7 @@ foreach ($aa_zonas as $a_zonas) {
 				$permiso_asis = FALSE;
 				// Si es una asistencia (plaza != 0) mirar permisos en la asistencia
 				if (!empty($plaza)) {
-                    $oPermAsistencia = $_SESSION['oPermActividades']->getPermisoActual('asistentes');
+                    $oPermAsistencia = $_SESSION['oPermActividades']->getPermisoActual('asistentesSacd');
                     if ($oPermAsistencia->have_perm_activ('ver') === TRUE) {
         				$permiso_asis = TRUE;
                     }

@@ -140,6 +140,8 @@ switch($Qque) {
             if ( in_array($afecta_a,$QaAfecta_a)) {
                 $i = array_search($afecta_a, $QaAfecta_a);
                 $fase_ref = $QaFase_ref[$i];
+                // si no hay fase ref, no guardo nada:
+                if(empty($fase_ref)) { continue; }
                 $perm_off = empty($QaPerm_off[$i])? 0 : $QaPerm_off[$i];
                 $perm_on = empty($QaPerm_on[$i])? 0 : $QaPerm_on[$i];
                 $cPermUsuarioActividad = $gesPermUsuarioActividad->getPermUsuarioActividades($aWhere);

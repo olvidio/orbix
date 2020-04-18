@@ -2,15 +2,13 @@
 use actividades\model\entity\GestorTipoDeActividad;
 use core\ConfigGlobal;
 use function core\is_true;
-use procesos\model\CuadrosFases;
+use permisos\model\PermisosActividades;
 use procesos\model\PermAccion;
-use procesos\model\PermAfectados;
 use procesos\model\entity\GestorActividadFase;
-use procesos\model\entity\PermUsuarioActividad;
-use usuarios\model\entity\GrupoOUsuario;
-use web\TiposActividades;
-use web\Desplegable;
 use procesos\model\entity\GestorPermUsuarioActividad;
+use usuarios\model\entity\GrupoOUsuario;
+use web\Desplegable;
+use web\TiposActividades;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
@@ -19,9 +17,8 @@ require_once ("apps/core/global_header.inc");
 // Crea los objectos de uso global **********************************************
 require_once ("apps/core/global_object.inc");
 // Crea los objectos para esta url  **********************************************
-	$oCuadros = new PermAfectados();
+	$oPermActividades = new PermisosActividades();
 	$oAcciones = new PermAccion();
-	$oCuadrosFases = new CuadrosFases();
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -50,7 +47,7 @@ $Qque = (string) \filter_input(INPUT_POST, 'que');
 $oUsuario = new GrupoOUsuario(array('id_usuario'=>$Qid_usuario)); // La tabla y su heredada
 $nombre=$oUsuario->getUsuario();
 
-$aAfecta_a = $oCuadros->getPermissions();
+$aAfecta_a = $oPermActividades::Afecta;
 $oAcciones = new PermAccion();
 $aOpcionesAction = $oAcciones->lista_array();
 
@@ -134,22 +131,6 @@ foreach ($aAfecta_a as $afecta_a_txt => $num) {
                 ];
     $i++; // para que cuente los indices desde 0.
 }
-
-/*
-} else { // es nuevo
-	$oPermiso = new PermUsuarioActividad(array('id_usuario'=>$Qid_usuario));
-	$dl_propia='t';
-	$id_tipo_activ = '1.....';
-	$afecta_a = '';
-	
-	$GesTiposActiv = new GestorTipoDeActividad();
-	$aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ,$dl_propia);
-	
-	$oGesFases= new GestorActividadFase();
-    $oDesplFases = $oGesFases->getListaActividadFases($aTiposDeProcesos);
-}
-*/
-
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('dl_propia!fase_ref!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val!perm_on!perm_off');

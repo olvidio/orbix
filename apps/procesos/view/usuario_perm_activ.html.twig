@@ -29,17 +29,18 @@ fnjs_actualizar_fases=function(){
 
 fnjs_grabar=function(formulario){
 	var err=0;
-	/*
+
 	var afecta = $("input:checkbox[name^='afecta_a']:checked").map(function(){return $(this).val()}).get()
-	var afases = $("select[name^='afases'] option:selected").map(function(){return $(this).val()}).get()
-	
 	if (afecta.length == 0) { 
 		alert("{{ "debe indicar a qué afecta"|trans }}"); err=1;
 	}
+	/*
+	var afases = $("select[name^='fases'] option:selected").map(function(){return $(this).val()}).get()
 	if (afases.length == 0) { 
 		alert("{{ "debe indicar las fases"|trans }}"); err=1;
 	}
 	*/
+	
 	if (err==0) {
         $(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
         $(formulario).one("submit", function() {
