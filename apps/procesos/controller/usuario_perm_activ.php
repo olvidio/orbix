@@ -17,7 +17,6 @@ require_once ("apps/core/global_header.inc");
 // Crea los objectos de uso global **********************************************
 require_once ("apps/core/global_object.inc");
 // Crea los objectos para esta url  **********************************************
-	$oPermActividades = new PermisosActividades();
 	$oAcciones = new PermAccion();
 
 // FIN de  Cabecera global de URL de controlador ********************************
@@ -47,7 +46,7 @@ $Qque = (string) \filter_input(INPUT_POST, 'que');
 $oUsuario = new GrupoOUsuario(array('id_usuario'=>$Qid_usuario)); // La tabla y su heredada
 $nombre=$oUsuario->getUsuario();
 
-$aAfecta_a = $oPermActividades::Afecta;
+$aAfecta_a = PermisosActividades::Afecta;
 $oAcciones = new PermAccion();
 $aOpcionesAction = $oAcciones->lista_array();
 
