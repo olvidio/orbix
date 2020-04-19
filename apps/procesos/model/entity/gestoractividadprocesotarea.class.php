@@ -10,6 +10,7 @@ use core\ConfigGlobal;
 use core\Set;
 use function core\is_true;
 use ubis\model\entity\Casa;
+use web\DateTimeLocal;
 /**
  * GestorActividadProcesoTarea
  *
@@ -241,12 +242,12 @@ class GestorActividadProcesoTarea Extends ClaseGestor {
             if ($force === FALSE) {
                 $cActividadProcesoTarea = $this->getActividadProcesoTareas(['id_activ' => $iid_activ]);
                 if (empty($cActividadProcesoTarea)) {
-                    $iid_fase[$sfsv] = $this->generar($iid_activ,$id_tipo_proceso,$sfsv);
+                    $iid_fase[$sfsv] = $this->generar($iid_activ,$id_tipo_proceso,$sfsv,$force);
                 } else {
                     $iid_fase[$sfsv] = $cActividadProcesoTarea[0]->getId_fase();
                 }
             } else {
-                $iid_fase[$sfsv] = $this->generar($iid_activ,$id_tipo_proceso,$sfsv);
+                $iid_fase[$sfsv] = $this->generar($iid_activ,$id_tipo_proceso,$sfsv,$force);
             }
         }
 
@@ -350,51 +351,155 @@ class GestorActividadProcesoTarea Extends ClaseGestor {
 	 * @param integer iid_tipo_proceso
 	 * @return id_fase.
 	 */
-	private function generar($iid_activ='',$iid_tipo_proceso='',$isfsv='') {
+	private function generar($iid_activ='',$iid_tipo_proceso='',$isfsv='',$force=FALSE) {
 	    $this->borrar($iid_activ);
+	    
+	    // ordena por fases previas, no importa la fase: simplemente las vacias primero
+	    // para saber cual es la primera: que no depende de ninguna.
 	    $aWhere = [
 	        'id_tipo_proceso'=>$iid_tipo_proceso,
 	        '_ordre' => '(json_fases_previas::json->0)::text DESC'
 	    ];
 	    $GesTareaProceso = new GestorTareaProceso();
 	    $cTareasProceso = $GesTareaProceso->getTareasProceso($aWhere);
-	    $p=0;
-	    $statusActividad = '';
-	    foreach ($cTareasProceso as $oTareaProceso) {
-	        $p++;
-	        $id_fase = $oTareaProceso->getId_fase();
-	        $id_tarea = $oTareaProceso->getId_tarea();
-	        $status = $oTareaProceso->getStatus();
-	        $oActividadProcesoTarea = new ActividadProcesoTarea();
-            $oActividadProcesoTarea->setSfsv($isfsv);
-	        $oActividadProcesoTarea->setId_tipo_proceso($iid_tipo_proceso);
-	        $oActividadProcesoTarea->setId_activ($iid_activ);
-	        $oActividadProcesoTarea->setId_fase($id_fase);
-	        $oActividadProcesoTarea->setId_tarea($id_tarea);
-	        if ($p == 1) {
-	            $oActividadProcesoTarea->setCompletado('t'); // Marco la primera fase como completado.
-	            // marco el status correspondiente en la actividad. Hay que hacerlo al final para no entrar en
-	            // un bucle recurente al modifiar una actividad nueva que todavía no tinen el proceso.
-	            $statusActividad = $status;
-	        }
-	        if (($oActividadProcesoTarea->DBGuardar()) === false) {
-	            echo "error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea<br>";
-	            //return false;
-	        }
-	    }
-	    if (!empty($statusActividad)) {
-	        $oActividad = new Actividad($iid_activ);
-	        $oActividad->DBCarregar();
-	        $nom_activ = $oActividad->getNom_activ();
-	        $dl_org = $oActividad->getDl_org();
-            $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
-            // El status solo se puede guardar si la actividad es de la propia dl (o des desde sv).
-            if ($dl_org_no_f == ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm_oficina('des')) {
-                $oActividad->setStatus($statusActividad);
-                $quiet = 1; // Para que no anote el cambio.
-                $oActividad->DBGuardar($quiet);
-	        }
-	    }
+
+        // OJO: cuando se accede actividades ya existentes,
+        // hay que intentar conservar el status que tenga. Para las actividades anteriores
+        // (antes de instalar el módulo de procesos), se marcarán todas las fases del status.
+        // Para las posteriores, sólo la primera fase del status.
+        // Vamos a establecer la fecha de hoy como criterio para distinguir entre 
+        // actividades anteriores y posteriores.
+        $oActividad = new Actividad($iid_activ);
+        $oActividad->DBCarregar();
+        $nom_activ = $oActividad->getNom_activ();
+        $statusActividad = $oActividad->getStatus();
+	    
+        // Si es borrable, hay que ver que hacemos: de momento nada.
+        if ($statusActividad == Actividad::STATUS_BORRABLE) {
+            $nom_activ = empty($nom_activ)? $iid_activ : $nom_activ;
+            $msg = sprintf(_("error al generar el proceso de la actividad: '%s'. Está para borrar."), $nom_activ);
+            $msg .= "\n";
+            $msg .= "<br>";
+            echo $msg;
+            return FALSE; 
+        }
+        // Si es anterior a hoy, mantengo el status de la actividad. 
+        $oFini = $oActividad->getF_ini();
+        $oHoy = new DateTimeLocal();
+        if ($oFini < $oHoy && $force === FALSE) {
+            // Anterior
+            foreach ($cTareasProceso as $oTareaProceso) {
+                $id_fase = $oTareaProceso->getId_fase();
+                $id_tarea = $oTareaProceso->getId_tarea();
+                $statusFase = $oTareaProceso->getStatus();
+                if ($statusFase <= $statusActividad) {
+                    $completado = 't';
+                } else {
+                    $completado = 'f';
+                }
+                $oActividadProcesoTarea = new ActividadProcesoTarea();
+                $oActividadProcesoTarea->setSfsv($isfsv);
+                $oActividadProcesoTarea->setId_tipo_proceso($iid_tipo_proceso);
+                $oActividadProcesoTarea->setId_activ($iid_activ);
+                $oActividadProcesoTarea->setId_fase($id_fase);
+                $oActividadProcesoTarea->setId_tarea($id_tarea);
+                $oActividadProcesoTarea->setCompletado($completado);
+                if (($oActividadProcesoTarea->DBGuardar(1)) === false) {
+                    echo "1.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea<br>";
+                    //return false;
+                }
+            }
+        } else {
+            // Posterior.
+            // para el caso de frozar, pongo todo a 0.
+            if ($force == TRUE) {
+                $p=0;
+                $statusNew = '';
+                foreach ($cTareasProceso as $oTareaProceso) {
+                    $p++;
+                    $id_fase = $oTareaProceso->getId_fase();
+                    $id_tarea = $oTareaProceso->getId_tarea();
+                    $statusFase = $oTareaProceso->getStatus();
+                    $oActividadProcesoTarea = new ActividadProcesoTarea();
+                    $oActividadProcesoTarea->setSfsv($isfsv);
+                    $oActividadProcesoTarea->setId_tipo_proceso($iid_tipo_proceso);
+                    $oActividadProcesoTarea->setId_activ($iid_activ);
+                    $oActividadProcesoTarea->setId_fase($id_fase);
+                    $oActividadProcesoTarea->setId_tarea($id_tarea);
+                    if ($p == 1) {
+                        $oActividadProcesoTarea->setCompletado('t'); // Marco la primera fase como completado.
+                        // marco el status correspondiente en la actividad. Hay que hacerlo al final para no entrar en
+                        // un bucle recurente al modifiar una actividad nueva que todavía no tinen el proceso.
+                        $statusNew = $statusFase;
+                    }
+                    if (($oActividadProcesoTarea->DBGuardar(1)) === false) {
+                        echo "2.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea<br>";
+                        //return false;
+                    }
+                }
+                // cambiar el status de la actividad para que se ajuste al de la fase.
+                $dl_org = $oActividad->getDl_org();
+                $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
+                // El status solo se puede guardar si la actividad es de la propia dl (o des desde sv).
+                if ($dl_org_no_f == ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm_oficina('des')) {
+                    $oActividad->setStatus($statusNew);
+                    $quiet = 1; // Para que no anote el cambio.
+                    $oActividad->DBGuardar($quiet);
+                }
+            } else {
+                // conservo el status
+                // al hacer 'insert' no marca dependecias (sólo con 'update').
+                // por tanto doy dos vueltas, una para crear las fases y otra para marcar las completadas
+                foreach ($cTareasProceso as $oTareaProceso) {
+                    $id_fase = $oTareaProceso->getId_fase();
+                    $id_tarea = $oTareaProceso->getId_tarea();
+                    $statusFase = $oTareaProceso->getStatus();
+                    $oActividadProcesoTarea = new ActividadProcesoTarea();
+                    $oActividadProcesoTarea->setSfsv($isfsv);
+                    $oActividadProcesoTarea->setId_tipo_proceso($iid_tipo_proceso);
+                    $oActividadProcesoTarea->setId_activ($iid_activ);
+                    $oActividadProcesoTarea->setId_fase($id_fase);
+                    $oActividadProcesoTarea->setId_tarea($id_tarea);
+                    if (($oActividadProcesoTarea->DBGuardar(1)) === false) {
+                        echo "3.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea<br>";
+                        //return false;
+                    }
+                }
+                $aWhere = [
+                    'id_activ'=>$iid_activ,
+                    '_ordre' => 'id_fase',
+                ];
+                $cActividadProcesoTarea = $this->getActividadProcesoTareas($aWhere);
+                foreach ($cActividadProcesoTarea as $oActividadProcesoTarea) {
+                    $id_fase = $oActividadProcesoTarea->getId_fase();
+                    $completado = 'f';
+                    // marco el status correspondiente en la actividad.
+                    if ($statusActividad == Actividad::STATUS_PROYECTO) {
+                        if ($id_fase <= ActividadFase::FASE_PROYECTO){
+                            $completado = 't';
+                        }
+                    }
+                    if ($statusActividad == Actividad::STATUS_ACTUAL) {
+                        if ($id_fase <= ActividadFase::FASE_APROBADA){
+                            $completado = 't';
+                        }
+                    }
+                    if ($statusActividad == Actividad::STATUS_TERMINADA) {
+                        if ($id_fase <= ActividadFase::FASE_TERMINADA){
+                            $completado = 't';
+                        }
+                    }
+                    if ($completado == 't' ) {
+                        $oActividadProcesoTarea->setCompletado($completado);
+                        if (($oActividadProcesoTarea->DBGuardar(1)) === false) {
+                            echo "4.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea<br>";
+                            //return false;
+                        }
+                    }
+                }
+            }
+        }
+
 	    if(!empty($cTareasProceso[0])) {
 	        return $cTareasProceso[0]->getId_fase();
 	    } else {
@@ -402,7 +507,7 @@ class GestorActividadProcesoTarea Extends ClaseGestor {
 	        $nom_proceso = empty($oProcesoTipo->getNom_proceso())? $iid_tipo_proceso : $oProcesoTipo->getNom_proceso();
 	        $nom_activ = empty($nom_activ)? $iid_activ : $nom_activ;
 	        
-	        $msg = sprintf(_("error al generar el proceso de la actividad: '%s'. Tipo de proceso: '%s' para sf/sv: %s."), $iid_activ,$nom_proceso,$isfsv);
+	        $msg = sprintf(_("error al generar el proceso de la actividad: '%s'. Tipo de proceso: '%s' para sf/sv: %s."), $nom_activ,$nom_proceso,$isfsv);
             $msg .= "\n";
             $msg .= _("Probablemente no esté defindo el proceso");
             $msg .= "\n";

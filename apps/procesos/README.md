@@ -8,6 +8,8 @@ Se define un proceso para cada tipo de actividad.
 
 Un proceso consta de una serie de fases. Se ha descartado la perspectiva de que tengan un orden, dado que el proceso no tiene porqué ser lineal, puede avanzar por varias líneas en paralelo. Esto implica que no existe una única fase actual que determine la posición de la actividad, sino que la actividad tiene varias fases completadas. El orden de las fases dentro del proceso viene determinado por las dependencias. Una fase depende de otra (previa), y esto obliga a que no se pueda marcar la fase hasta que lo esté la previa.
 
+OJO: cuando se accede actividades ya existentes, hay que intentar conservar el status que tenga. Para las actividades anteriores (antes de instalar el módulo de procesos), se marcarán todas las fases del status. Para las posteriores, sólo la primera fase del status. Vamos a establecer la fecha de hoy como criterio para distinguir entre actividades anteriores y posteriores.
+
 ## definición
 
 Se pueden definir de manera independiente los siguientes conceptos:
@@ -68,6 +70,23 @@ Para definir un permiso hay que especificar:
  
   Los permisos pueden asignarse a usuarios o a grupos. Los usuarios tienen preferencia sobre los grupos. La preferencia entre los grupos es aleatoria, por tanto hay que procurar dar permisos que no se pisen. Pro ejemplo al grupo "ofina_agd" se le puede asignar permiso para borrar en "sv agd" y para ver en "sv". Al grupo "oficina_n" permiso para borrar en "sv n" y para ver en "sv". De esta manera el unico tipo de actividad común a las dos oficinas (sv) tiene idéntico permiso, y los otros tipos de actividad sólo están en en un grupo.
 
+## instalar el módulo.
+
+
+Sólo ha servido al modificar las tablas y programas. Para eliminar todo lo referente a procesos y volver a empezar de cero.
+El proceso de crear las tablas, para cuando existe la instalación en dos servidores con tablas sincronizadas por bucardo.
+
+1. bucardo stop
+1. borrar tablas anteriores.
+1. en sv: crear tablas global
+1. en sv: crear tablas esquema
+1. en sv: llenar tablas esquema
+1. en sf: crear tablas global
+1. en sf: crear tablas esquema
+1. en sf: llenar tablas esquema
+1. buacrdo start
+
+ 
 ## Avisos
 
 Se requiere tener instalado el módulo correspondiente.

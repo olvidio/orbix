@@ -52,7 +52,6 @@ $aOpcionesAction = $oAcciones->lista_array();
 
 
 if (empty($Qid_tipo_activ_txt))  {// nuevo
-	$Qid_tipo_activ_txt = '1.....';
 	$Qdl_propia = 't';
 }
 
