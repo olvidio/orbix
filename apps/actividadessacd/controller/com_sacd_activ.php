@@ -13,6 +13,7 @@ use usuarios\model\entity\Usuario;
 use web\DateTimeLocal;
 use web\Periodo;
 use web\TiposActividades;
+use procesos\model\entity\GestorActividadProcesoTarea;
 
 /**
 * Esta página muestra las actividades que tiene que atender un sacd. 
@@ -210,12 +211,15 @@ foreach ($cPersonas as $oPersona) {
         if(core\ConfigGlobal::is_app_installed('procesos')) {
             $permiso_ver = FALSE;
             $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
-            $oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
-            $oPermAsisSacd = $_SESSION['oPermActividades']->getPermisoActual('asistentesSacd');
+            // sólo si la fase de 'ok sacd' está completada:
+            $oPermSacd = $_SESSION['oPermActividades']->getPermisoOn('sacd');
+            // sólo si la fase de 'ok asist. sacd' está completada:
+            $oPermAsisSacd = $_SESSION['oPermActividades']->getPermisoOn('asistentesSacd');
             // para ver la actividad:
             if ($oPermActiv->have_perm_activ('ver') === FALSE) {
                 continue;
             }
+            
             // si es solo cargo, tiene propio='f' como sacd de la actividad
             if (!empty($id_cargo)) {
                 if ($oPermSacd->have_perm_activ('ver') === TRUE) {
