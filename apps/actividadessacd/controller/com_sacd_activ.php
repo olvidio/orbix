@@ -1,6 +1,7 @@
 <?php
 use actividadcargos\model\entity\GestorActividadCargo;
 use actividadcargos\model\entity\GestorCargo;
+use actividades\model\entity\Actividad;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use actividadessacd\model\ActividadesSacdFunciones;
 use core\ConfigGlobal;
@@ -236,7 +237,7 @@ foreach ($cPersonas as $oPersona) {
         
         if ($permiso_ver === FALSE) { continue; }
         
-        $oActividad = $a_actividades[$id_activ];
+        $oActividad = new Actividad($id_activ);
         $id_tipo_activ = $oActividad->getId_tipo_activ();
         $id_ubi = $oActividad->getId_ubi();
         $lugar_esp = $oActividad->getLugar_esp();
