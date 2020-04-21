@@ -304,6 +304,49 @@ class PermisosActividades {
 		}
 	}
 	
+	/**
+	 * Devuelve el Objeto PermAction para $iAfecta
+	 * Para la actividad $this->iidactiv 
+	 * que esté con la $this->id_fase en 'on'. 
+	 * 
+	 * @param string|integer $iAfecta
+	 * @return \procesos\model\PermAccion
+	 */
+	public function getPermisoOn($iAfecta) {
+	    // hay que poner a cero el id_tipo_activ, sino 
+	    // aprovecha el que se ha buscado con el anterior iAfecta.
+	    if (!empty($this->iid_activ)) {
+	       $this->setActividad($this->iid_activ);
+	    }
+		// para poder pasar el valor de afecta con texto:
+		if (is_string($iAfecta)) $iAfecta = self::Afecta[$iAfecta];
+		
+		// buscar fase_ref para iAfecta
+		$id_fase_ref = $this->getFaseRef($iAfecta);
+		if ($this->btop === TRUE ) {
+			return  new PermAccion(0);
+		}
+		// buscar estado de la fase ref
+		$completada = $this->isCompletada($id_fase_ref);
+		if (is_true($completada)) {
+		    $on_off = 'on';
+		} else {
+			return  new PermAccion(0);
+		}
+		
+		if ($this->bpropia === true) {
+            $oPerm = $this->aPermDl[$this->iid_tipo_activ];
+		} else {
+            $oPerm = $this->aPermOtras[$this->iid_tipo_activ];
+		}
+		$perm = $oPerm->getPerm($iAfecta,$id_fase_ref,$on_off);
+		if ($perm === FALSE) {
+			return  new PermAccion(0);
+		} else {
+		    return new PermAccion($perm);
+		}
+	}
+	
 	private function getFaseRef($iAfecta,$id_tipo_activ_txt='') {
 		if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->iid_tipo_activ;
 		$id_tipo_activ_txt = $this->completarId($id_tipo_activ_txt);
