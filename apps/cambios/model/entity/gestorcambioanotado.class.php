@@ -49,10 +49,10 @@ class GestorCambioAnotado Extends core\ClaseGestor {
 	 */
 	public function setTabla($server){
 	    $this->server_sfsv = $server;
-	    if ($server === 1 ) {
+	    if ($server == 1 ) {
             $this->setNomTabla('av_cambios_anotados_dl');
 	    }
-	    if ($server === 2 ) {
+	    if ($server == 2 ) {
             $this->setNomTabla('av_cambios_anotados_dl_sf');
 	    }
 	}
