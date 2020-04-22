@@ -273,8 +273,7 @@ function me_afecta($id_usuario,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cm
 	}
 	// si soy un sacd.
 	if ($oMiUsuario->isRolePau(Role::PAU_SACD)) {
-		$id_nom=$oMiUsuario->getId_pau();
-		if (soy_encargado($id_nom,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cmb,$sObjeto)) {
+		if (soy_encargado($id_usuario,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cmb,$sObjeto)) {
 			return TRUE;
 		} else {
 			return FALSE;
@@ -283,7 +282,9 @@ function me_afecta($id_usuario,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cm
 	}
 	return TRUE;
 }
-function soy_encargado($id_nom,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cmb,$sObjeto) {
+function soy_encargado($id_usuario,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cmb,$sObjeto) {
+	$oMiUsuario = new Usuario($id_usuario);
+    $id_nom=$oMiUsuario->getId_pau();
 	// sacd encargados de esta actividad
 	$GesCargos = new GestorActividadCargo();
 	$a_Sacds = $GesCargos->getActividadIdSacds($id_activ);
@@ -300,19 +301,33 @@ function soy_encargado($id_nom,$propiedad,$id_activ,$valor_old_cmb,$valor_new_cm
 			switch ($sObjeto) {
 				case 'Actividad':
 					// compruebo si el sacd tienen cargo.
+					// y la fase okSacd está on:
 				    foreach ($cSacds as $id_nom) {
 				        $aWhere = ['id_nom' => $id_nom, 'id_activ' => $id_activ];
                         $GesActividadCargo = new GestorActividadCargo();
                         $a_Asistentes = $GesActividadCargo->getActividadCargos($aWhere);
-					    if (count($a_Asistentes)>0) $rta += 1;
+                        if (count($a_Asistentes)>0) {
+                            $oPermActividades = new PermisosActividades($id_usuario);
+                            $oPermActividades->setActividad($id_activ);
+                            $oPermSacd = $oPermActividades->getPermisoOn('sacd');
+                            if ( !$oPermSacd->have_perm_activ('ver') ) { continue; }
+                            $rta += 1;
+                        }
 				    }
                     // sino, compruebo si el sacd asiste.
+                    // y la fase es ok.
 				    if (empty($rta)) {
                         foreach ($cSacds as $id_nom) {
                             $aWhere = ['id_nom' => $id_nom, 'id_activ' => $id_activ];
                             $GesAsistentes = new GestorAsistenteDl();
                             $a_Asistentes = $GesAsistentes->getAsistentes($aWhere);
-                            if (count($a_Asistentes)>0) $rta += 1;
+                            if (count($a_Asistentes)>0) {
+                                $oPermActividades = new PermisosActividades($id_usuario);
+                                $oPermActividades->setActividad($id_activ);
+                                $oPermAsisSacd = $oPermActividades->getPermisoOn('asistentesSacd');
+                                if ( !$oPermAsisSacd->have_perm_activ('ver') ) { continue; }
+                                $rta += 1;
+                            }
                         }
 				    }
 				break;
