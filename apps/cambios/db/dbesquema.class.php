@@ -25,21 +25,21 @@ class DBEsquema extends DBAbstract {
         $this->eliminar_av_cambios_usuario_objeto_pref();
         $this->eliminar_av_cambios_usuario();
         $this->eliminar_av_cambios_anotados();
-        $this->eliminar_av_cambios_dl();
         if (ConfigGlobal::mi_sfsv() == 2) {
             $this->eliminar_av_cambios_anotados_sf();
         }
+        $this->eliminar_av_cambios_dl();
     }
     
     public function createAll() {
         $this->create_av_cambios_dl();
         $this->create_av_cambios_anotados();
-        $this->create_av_cambios_usuario();
-        $this->create_av_cambios_usuario_objeto_pref();
-        $this->create_av_cambios_usuario_propiedades_pref();
         if (ConfigGlobal::mi_sfsv() == 2) {
             $this->create_av_cambios_anotados_sf();
         }
+        $this->create_av_cambios_usuario();
+        $this->create_av_cambios_usuario_objeto_pref();
+        $this->create_av_cambios_usuario_propiedades_pref();
     }
     
     public function llenarAll() {
