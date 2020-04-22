@@ -26,6 +26,9 @@ class DBEsquema extends DBAbstract {
         $this->eliminar_av_cambios_usuario();
         $this->eliminar_av_cambios_anotados();
         $this->eliminar_av_cambios_dl();
+        if (ConfigGlobal::mi_sfsv() == 2) {
+            $this->eliminar_av_cambios_anotados_sf();
+        }
     }
     
     public function createAll() {
@@ -34,6 +37,9 @@ class DBEsquema extends DBAbstract {
         $this->create_av_cambios_usuario();
         $this->create_av_cambios_usuario_objeto_pref();
         $this->create_av_cambios_usuario_propiedades_pref();
+        if (ConfigGlobal::mi_sfsv() == 2) {
+            $this->create_av_cambios_anotados_sf();
+        }
     }
     
     public function llenarAll() {
@@ -49,6 +55,7 @@ class DBEsquema extends DBAbstract {
                 $campo_seq = 'id_item_cambio';
                 $id_seq = $nom_tabla."_".$campo_seq."_seq";
                 break;
+            case "av_cambios_anotados_dl_sf":
             case "av_cambios_anotados_dl":
                 $nom_tabla = $this->getNomTabla($tabla);
                 $campo_seq = 'id_item';
@@ -215,6 +222,88 @@ class DBEsquema extends DBAbstract {
         $this->addPermisoGlobal('comun');
 
         $datosTabla = $this->infoTable("av_cambios_anotados");
+        
+        $nom_tabla = $datosTabla['nom_tabla'];
+        $id_seq = $datosTabla['id_seq'];
+        
+        $a_sql = [];
+        $a_sql[0] = "DROP SEQUENCE IF EXISTS $id_seq CASCADE;" ;
+        $this->executeSql($a_sql);
+
+        $this->eliminar($nom_tabla);
+
+        $this->delPermisoGlobal('comun');
+    }
+
+    /**
+     * En la BD Comun (esquema).
+     */
+    public function create_av_cambios_anotados_sf() {
+        
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('comun');
+
+        $tabla = "av_cambios_anotados_dl_sf";
+        $tabla_padre = "av_cambios_anotados";
+        $datosTabla = $this->infoTable($tabla);
+        
+        $nom_tabla = $datosTabla['nom_tabla'];
+        $campo_seq = $datosTabla['campo_seq'];
+        $id_seq = $datosTabla['id_seq'];
+        
+        // Al ser de la DB comun, puede ser que al intentar crear como sf, las
+        // tablas ya se hayan creado como sv (o al revés).
+        if ($this->tableExists($tabla)) {
+            return  TRUE;
+        }
+        
+        $a_sql = [];
+        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                ) 
+            INHERITS (global.$tabla_padre);";
+
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER anotado SET DEFAULT false;";
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER server SET DEFAULT 1;";
+        
+        //secuencia
+        $a_sql[] = "CREATE SEQUENCE IF NOT EXISTS $id_seq;";
+        $a_sql[] = "ALTER SEQUENCE $id_seq
+                    INCREMENT BY 1
+                    MINVALUE 1
+                    MAXVALUE 9223372036854775807
+                    START WITH 1
+                    NO CYCLE;";
+        $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
+        
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
+        
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
+        
+        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS ${tabla}_udx ON $nom_tabla USING btree (server,id_schema_cambio,id_item_cambio); ";
+        /* No sirve con tablas heredadas
+        $tabla1 = 'public.av_cambios'; //la de public
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT av_cambios_anotados_id_item_cambio_fk
+                    FOREIGN KEY (id_schema_cambio,id_item_cambio) REFERENCES $tabla1(id_schema,id_item_cambio) ON DELETE CASCADE; ";
+        */
+        
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_${campo_seq}_idx ON $nom_tabla USING btree ($campo_seq); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_id_schema_cambio_idx ON $nom_tabla USING btree (id_schema_cambio); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_id_item_cambio_idx ON $nom_tabla USING btree (id_item_cambio); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_anotado_idx ON $nom_tabla USING btree (anotado); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_server_idx ON $nom_tabla USING btree (server); ";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+        
+        $this->executeSql($a_sql);
+
+        $this->delPermisoGlobal('comun');
+    }
+    
+    public function eliminar_av_cambios_anotados_sf() {
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('comun');
+
+        $datosTabla = $this->infoTable("av_cambios_anotados_sf");
         
         $nom_tabla = $datosTabla['nom_tabla'];
         $id_seq = $datosTabla['id_seq'];
