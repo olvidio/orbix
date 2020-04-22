@@ -40,7 +40,7 @@ fnjs_borrar=function(formulario){
 				});
 				return false;
 			});
-			$(formulario).submit();
+			$(formulario).trigger("submit");
 			$(formulario).off();
 		}
   	}

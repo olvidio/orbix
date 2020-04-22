@@ -31,7 +31,7 @@ function fnjs_selectAll(formulario,Name,val,aviso){
 						$(item).prop('checked',false);
 						break;
 					case 'toggle':
-						$(item).click();
+						$(item).trigger("click");
 						break;
 				}
 			}

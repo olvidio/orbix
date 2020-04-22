@@ -526,7 +526,7 @@ function dibujar_calendario ($dd,$cabecera,$oInicio,$oFin,$actividades,$mod,$nue
 		,enableColumnReorder: false
 		,topPanelHeight: 25
 		,autoHeight: false
-		,forceFitColumns: false
+		,autosizeColumns: false
 		,autoEdit: false
 		,frozenColumn: 0
 		,frozenRow: 3
@@ -548,10 +548,10 @@ function dibujar_calendario ($dd,$cabecera,$oInicio,$oFin,$actividades,$mod,$nue
 	$tt .= "
 	$(\".grid-header .ui-icon\")
 			.addClass(\"ui-state-default ui-corner-all\")
-			.mouseover(function (e) {
+			.on(\"mouseover\", function (e) {
 			  $(e.target).addClass(\"ui-state-hover\")
 			})
-			.mouseout(function (e) {
+			.on(\"mouseout\", function (e) {
 			  $(e.target).removeClass(\"ui-state-hover\")
 			});
 

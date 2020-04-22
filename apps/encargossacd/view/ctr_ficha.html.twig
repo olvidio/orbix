@@ -44,7 +44,7 @@ fnjs_guardar=function(enc){
 			});
 			return false;
 		});
-		$(formulario).submit();
+		$(formulario).trigger("submit");
 		$(formulario).off();
 		fnjs_ver_ficha();
 	}

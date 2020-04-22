@@ -25,7 +25,7 @@ fnjs_borrar_hasta_fecha=function(formulario){
         });
         return false;
     });
-    $(formulario).submit();
+    $(formulario).trigger("submit");
 }
 
 fnjs_actualizar=function(formulario){
@@ -52,7 +52,7 @@ fnjs_borrar=function(formulario){
         });
         return false;
     });
-    $(formulario).submit();
+    $(formulario).trigger("submit");
     $(formulario).off();
     // tacho los marcados y les quito el checkbox=0
     /* selecciono los elementos con class="sel" de las tablas del id=formulario */

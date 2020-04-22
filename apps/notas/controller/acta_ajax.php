@@ -22,7 +22,7 @@ use notas\model\entity as notas;
 
 
 $Qque = (string) \filter_input(INPUT_POST, 'que');
-$sQuery = (string) \filter_input(INPUT_POST, 'q');
+$sQuery = (string) \filter_input(INPUT_POST, 'search');
 
 switch($Qque) {
 	case 'examinadores':

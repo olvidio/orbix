@@ -1,7 +1,15 @@
 <div id='acta'>
-<link rel="stylesheet" type="text/css" href="<?= core\ConfigGlobal::getWeb_scripts().'/jquery-tokeninput/styles/token-input.css' ?>" />
+<style>
+  .ui-autocomplete { max-height: 200px; overflow-y: scroll; overflow-x: hidden;}
+</style>
 <script>
 $(function() { $( "#f_acta" ).datepicker(); });
+
+fnjs_add_examinador=function(){
+	var txt = "<input class='examinador' type='text'  size='60' name='examinadores[]' value='' >";
+	$( "#examinador_span" ).append( txt );
+	fnjs_autocomplete_exam();
+}
 
 fnjs_nueva_convocatoria=function(formulario){
 	$('#notas').val("nuevo");
@@ -34,7 +42,7 @@ fnjs_guardar_acta=function(formulario){
 			});
 			return false;
 		});
-		$(formulario).submit();
+		$(formulario).trigger("submit");
 		$(formulario).off();
 	<?php } else { ?>
 		$(formulario).one("submit", function() {
@@ -52,7 +60,7 @@ fnjs_guardar_acta=function(formulario){
 			});
 			return false;
 		});
-		$(formulario).submit();
+		$(formulario).trigger("submit");
 		$(formulario).off();
 	<?php } ?>
 	}
@@ -104,7 +112,8 @@ fnjs_guardar_acta=function(formulario){
 	<td colspan=2><input class=contenido size="60" id="observ" name="observ" value="<?= htmlspecialchars($observ) ?>"></td>
 </tr>
 <tr><td class=etiqueta><?= ucfirst(_("asignatura")) ?>:</td>
-	<td><input type='text'  size='60' id='id_asignatura' name='id_asignatura' value='' ></td></tr>
+	<td><input class=contenido type='text'  size='60' id='name_asignatura' name='name_asignatura' value='<?= $nombre_asignatura ?>' >
+	<input type='hidden' id='id_asignatura' name='id_asignatura' value='<?= $id_asignatura ?>' ></td></tr>
 </table>
 <br>
 <!--  --------------- TRIBUNAL --------------- -->
@@ -112,8 +121,19 @@ fnjs_guardar_acta=function(formulario){
 	<tr><th class=titulo_inv colspan=4><?= ucfirst(_("tribunal")); ?></th></tr>
 	<tr><td class=subtitulo valign='TOP'><?= ucfirst(_("examinador")) ?>:</td>
 		<td colspan=8 id="col_examinador"><span id="examinador_span" >
-			<input type='text'  size='60' id='examinadores' name='examinadores' value='' >
+		<?php
+		$i = 0;
+		foreach ($examinadores as $examinador) {
+		    $i++;
+		    ?>
+			<input class="examinador" type='text'  size='60' name='examinadores[]' value='<?= $examinador ?>' >
+            <?php
+		}
+        ?>
+			<input class="examinador" type='text'  size='60' name='examinadores[]' value='' >
 		</span>
+
+	<input id="g3" TYPE="button" VALUE="<?= ucfirst(_("más")); ?>"  onclick="fnjs_add_examinador()">
 		</td></tr>
 </table>
 <br>
@@ -129,30 +149,67 @@ fnjs_guardar_acta=function(formulario){
 <?php } ?>
 </form>
 <script type="text/javascript">
+
+fnjs_autocomplete_exam=function () {
+	$('.examinador').autocomplete({
+		source: function(request, response) {
+            //Fetch data
+            $.ajax({
+                url:"<?= $url_ajax ?>",
+                type:"POST",
+                dataType: "json",
+                data: { 
+                    <?= $h_ajax ?>,
+                    que: 'examinadores', 
+                    search: request.term
+                },
+                success: response
+            });
+        },
+        minLength: 2
+    })
+    .autocomplete( "instance" )._renderItem = function( ul, item ) {
+	      return $( "<li>" )
+	        .append( "<div>" + item.label + "</div>" )
+	        .appendTo( ul );
+    };
+}
 $(document).ready(function () {
-    $("#id_asignatura").tokenInput("<?= $loc_asig ?>", {
-		method: "POST",
-		propertyToSearch: "name",
-		tokenValue: "id",
-		tokenLimit: 1,
-		<?= $json_asignaturas ?>
-		hintText: "<?= _("escriba parte del nombre para buscar") ?>",
-		noResultsText: "<?= _("no hay resultados") ?>",
-		searchingText: "<?= _("buscando...") ?>"
-	});
-    $("#examinadores").tokenInput("<?= $location ?>", {
-		method: "POST",
-		propertyToSearch: "name",
-		tokenValue: "name",
-		tokenLimit: 4,
-		tokenDelimiter: '#',
-		hintText: "<?= _("escriba un texto para buscar") ?>",
-		noResultsText: "<?= _("no hay resultados") ?>",
-		searchingText: "<?= _("buscando...") ?>",
-		<?= $json_examinadores ?>
-		allowCustomEntry: true,
-		allowFreeTagging: true
-	});
+	fnjs_autocomplete_exam();
+	
+	$('#name_asignatura').autocomplete({
+		source: function(request, response) {
+            //Fetch data
+            $.ajax({
+                url:"<?= $url_ajax ?>",
+                type:"POST",
+                dataType: "json",
+                data: { 
+                    <?= $h_ajax ?>,
+                    que: 'asignaturas', 
+                    search: request.term
+                },
+                success: response
+            });
+        },
+        select: function (event, ui) {
+           // Set selection
+           $('#id_asignatura').val(ui.item.value); // display the selected text
+           $('#name_asignatura').val(ui.item.label); // display the selected text
+           return false;
+        },
+        focus: function( event, ui ) {
+            $( "#name_asignatura" ).val( ui.item.label );
+            return false;
+        },
+        minLength: 2
+    })
+    .autocomplete( "instance" )._renderItem = function( ul, item ) {
+	      return $( "<li>" )
+	        .append( "<div>" + item.label + "</div>" )
+	        .appendTo( ul );
+    };
+
 });
 </script>
 </div>

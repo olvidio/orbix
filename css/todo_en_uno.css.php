@@ -168,7 +168,6 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 		font-size : 12pt;
 		border-style: solid;
 		border-width: 3px 3px 3px 3px;
-
 	}
 	td.calif {
 		font-size : 12pt;

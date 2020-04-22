@@ -18,7 +18,7 @@ fnjs_grabar_observ=function(formulario,n){
 		});
 		return false;
 	});
-	$(formulario).submit();
+	$(formulario).trigger("submit");
 	$(formulario).off();
 }
 fnjs_grabar_est=function(formulario,n){
@@ -40,7 +40,7 @@ fnjs_grabar_est=function(formulario,n){
 		});
 		return false;
 	});
-	$(formulario).submit();
+	$(formulario).trigger("submit");
 	$(formulario).off();
 }
 fnjs_modificar=function(formulario,n){
@@ -74,7 +74,7 @@ fnjs_borrar=function(formulario,n){
 				});
 				return false;
 			});
-			$(formulario).submit();
+			$(formulario).trigger("submit");
 			$(formulario).off();
 		}
 	}
@@ -98,7 +98,7 @@ fnjs_matricular=function(formulario,n){
 		});
 		return false;
 	});
-	$(formulario).submit();
+	$(formulario).trigger("submit");
 	$(formulario).off();
 }	
 fnjs_actualizar=function(formulario){

@@ -34,7 +34,7 @@ fnjs_guardar=function(formulario){
 			});
 			return false;
 		});
-		$(formulario).submit();
+		$(formulario).trigger("submit");
 		$(formulario).off();
 	}
 }
@@ -57,7 +57,7 @@ fnjs_eliminar=function(formulario){
 			});
 			return false;
 		});
-		$(formulario).submit();
+		$(formulario).trigger("submit");
 		$(formulario).off();
 	}
 }

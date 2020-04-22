@@ -50,7 +50,7 @@ fnjs_guardar=function(formulario,repetir){
 			});
 			return false;
 		});
-		$(formulario).submit();
+		$(formulario).trigger("submit");
 		$(formulario).off();
 	}
 }

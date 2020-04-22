@@ -64,7 +64,7 @@ fnjs_grabar_todo=function(formulario){
 	var obj=$('#objeto').val();
 	if (!obj) { 
 		alert("{{ "debe indicar dónde mirar los cambios"|trans }}");
-		$('#objeto').focus();
+		$('#objeto').trigger("focus");
 		err=1;
 	}
 	var id_fase_ref=$('#id_fase_ref').val();
@@ -75,7 +75,7 @@ fnjs_grabar_todo=function(formulario){
 	var tipo=$('#aviso_tipo').val();
 	if (!tipo) { 
 		alert("{{ "debe indicar por dónde avisar"|trans }}");
-		$('#aviso_tipo').focus();
+		$('#aviso_tipo').trigger("focus");
 		err=1;
 	}
 

@@ -29,6 +29,9 @@ Class ConfigGlobal extends ServerConf {
 	public static function getWeb_scripts() {
 	    return self::getWeb().'/scripts';
 	}
+	public static function getWeb_NodeScripts() {
+	    return self::getWeb().'/node_modules';
+	}
 	public static function getWeb_public() {
 	    return self::getWeb().'/public';
 	}

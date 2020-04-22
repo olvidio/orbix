@@ -34,7 +34,7 @@ fnjs_eliminar=function(formulario){
 				});
 				return false;
 			});
-			$('#seleccionados').submit();
+			$('#seleccionados').trigger("submit");
 			$('#seleccionados').off();
 		}
 	}

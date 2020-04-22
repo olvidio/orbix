@@ -429,6 +429,6 @@ function fnjs_exportar(formato){
 	$('#frm_export_modo').val(export_modo);
 	$('#frm_export_tipo').val(formato);
 	$('#frm_export_ex').val(myText);
-	$('#frm_export').submit();
+	$('#frm_export').trigger("submit");
 }
 

@@ -23,7 +23,7 @@ fnjs_cmb_plaza=function(formulario,plaza){
 		});
 		return false;
 	});
-	$(formulario).submit();
+	$(formulario).trigger("submit");
 	$(formulario).off();
 }
 <?php	
@@ -59,7 +59,7 @@ fnjs_mover_guardar=function(formulario){
 		});
 		return false;
 	});
-	$(formulario).submit();
+	$(formulario).trigger("submit");
 	$(formulario).off();
 }
 fnjs_mover=function(formulario,id_activ){
@@ -152,7 +152,7 @@ fnjs_borrar=function(formulario){
 				});
 				return false;
 			});
-			$(formulario).submit();
+			$(formulario).trigger("submit");
 			$(formulario).off();
 		}
 	}
@@ -179,7 +179,7 @@ fnjs_borrar_cargo=function(formulario){
 				});
 				return false;
 			});
-			$(formulario).submit();
+			$(formulario).trigger("submit");
 			$(formulario).off();
 		}
 	}

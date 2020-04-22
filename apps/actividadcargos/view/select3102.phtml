@@ -28,7 +28,7 @@ fnjs_borrar_cargo=function(formulario){
 				});
 				return false;
 			});
-			$(formulario).submit();
+			$(formulario).trigger("submit");
 			$(formulario).off();
 		}
 	}

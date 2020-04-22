@@ -16,7 +16,7 @@ fnjs_add_grupmenu=function(formulario){
 		});
 		return false;
 	});
-	$(formulario).submit();
+	$(formulario).trigger("submit");
 	$(formulario).off();
 }
 </script>

@@ -90,7 +90,7 @@ fnjs_enviar_form=function(id_form,bloque){
 		});
 		return false;
 	});
-	$(id_form).submit();
+	$(id_form).trigger("submit");
 	$(id_form).off();
 }
 

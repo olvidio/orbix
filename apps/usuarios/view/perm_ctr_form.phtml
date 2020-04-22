@@ -72,7 +72,7 @@ fnjs_del_perm_ctr=function(formulario,que_val){
                 });
                 return false;
             });
-            $(formulario).submit();
+            $(formulario).trigger("submit");
             $(formulario).off();
         }
     }

@@ -91,7 +91,7 @@ class GestorAsignatura Extends core\ClaseGestor {
 			$nombre_asignatura = str_replace('"', '\\"', $nombre_asignatura );
 			$nombre_asignatura = str_replace("'", "\\'", $nombre_asignatura );
 			$json .= ($i > 1)? ',' : ''; 
-			$json .= "{\"id\":\"$id_asignatura\",\"name\":\"$nombre_asignatura\"}";
+			$json .= "{\"value\":\"$id_asignatura\",\"label\":\"$nombre_asignatura\"}";
 		}
 		$json .= ']';
 		return $json;

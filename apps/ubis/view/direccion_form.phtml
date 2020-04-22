@@ -19,7 +19,7 @@ fnjs_guardar_dir=function(formulario){
 			});
 			return false;
 		});
-		$(formulario).submit();
+		$(formulario).trigger("submit");
 		$(formulario).off();
 	}
 }
@@ -43,7 +43,7 @@ fnjs_quitar_dir=function(idx){
 		});
 		return false;
 	});
-	$(formulario).submit();
+	$(formulario).trigger("submit");
 	$(formulario).off();
 }
 
@@ -89,9 +89,9 @@ fnjs_ver_documento=function(id_direccion){
 			var winPrefs="";
 			var pagina=url+'?id_direccion='+id_direccion+'&act=download&obj_dir=<?= $obj_dir?><?= $h ?>&PHPSESSID=<?= session_id() ?>';
 			top.newWin = window.open(pagina, "abrir", winPrefs);
-			top.newWin.focus();
+			top.newWin.trigger("focus");
 		} else {
-			//$(siguiente).focus();
+			//$(siguiente).trigger("focus");
 		}
 	});
 
@@ -101,7 +101,7 @@ fnjs_adjuntar=function(act,id_direccion){
 
 	var winPrefs="dependent=yes,width=850,height=300,screenX=300,screenY=300,titlebar=yes,scrollbars=yes";
 	top.newWin = window.open(pagina, "files", winPrefs);
-	top.newWin.focus();
+	top.newWin.trigger("focus");
 }
 
 fnjs_otro=function(n){

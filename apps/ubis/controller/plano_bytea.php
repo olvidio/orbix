@@ -152,9 +152,9 @@ switch ($Qact) {
 				}
 				if (seguro) { 
 					$('#name_file').val($('#userfile').val());
-					$('#frm_doc1').submit();
+					$('#frm_doc1').trigger("submit");
 				} else {
-					//$(siguiente).focus();
+					//$(siguiente).trigger("focus");
 				}
 			});
 		}

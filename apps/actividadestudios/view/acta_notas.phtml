@@ -47,7 +47,7 @@ fnjs_guardar_tessera=function(form_acta){
 			});
 			return false;
 		});
-		$('#f_1303').submit();
+		$('#f_1303').trigger("submit");
 		$('#f_1303').off();
 	}
 }
@@ -74,7 +74,7 @@ fnjs_guardar_nota=function(){
 			});
 			return false;
 		});
-		$('#f_1303').submit();
+		$('#f_1303').trigger("submit");
 		$('#f_1303').off();
 	}
 }

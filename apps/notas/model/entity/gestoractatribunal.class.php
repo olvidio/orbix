@@ -64,7 +64,7 @@ class GestorActaTribunal Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQry) as $aDades) {
 			$i++;
 			$json .= ($i > 1)? ',' : ''; 
-			$json .= "{\"name\":\"".$aDades['examinador']."\"}";
+			$json .= "{\"label\":\"".$aDades['examinador']."\"}";
 		}
 		$json .= ']';
 		return $json;

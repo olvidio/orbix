@@ -17,7 +17,7 @@ $(function() {
 });
 
 // Para poner por defecto en el mismo dia que el inicio de actividad
-$("#f_fin").click(function() {
+$("#f_fin").on("click", function() {
 	var fin = '';
     var ini = $( "#f_ini" ).val();
 
@@ -48,7 +48,7 @@ fnjs_cambiar_ubi=function(){
         WinId.document.open();
         WinId.document.write(result);
         WinId.document.close();
-        WinId.focus();
+        WinId.trigger("focus");
 	});
 };
 fnjs_guardar=function(tipo=''){
@@ -97,7 +97,7 @@ fnjs_guardar=function(tipo=''){
             });
             return false;
         });
-        $('#modifica').submit();
+        $('#modifica').trigger("submit");
         $('#modifica').off();
 	}
 };

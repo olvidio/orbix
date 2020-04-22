@@ -24,7 +24,7 @@ fnjs_del_perm_menu=function(formulario){
 				});
 				return false;
 			});
-			$(formulario).submit();
+			$(formulario).trigger("submit");
 			$(formulario).off();
 		}
 	}

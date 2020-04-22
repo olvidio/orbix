@@ -127,7 +127,7 @@ fnjs_del_perm_activ=function(formulario,que_val){
                 });
                 return false;
             });
-            $(formulario).submit();
+            $(formulario).trigger("submit");
             $(formulario).off();
         }
     }

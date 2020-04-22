@@ -13,7 +13,7 @@
         }, 300);
      };
 
-   $top_link.hide().click(function(event) {
+   $top_link.hide().on("click", function(event) {
     event.preventDefault();
     $body.animate({scrollTop:0}, 800);
    });

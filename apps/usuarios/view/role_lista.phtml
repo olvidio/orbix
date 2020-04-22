@@ -27,7 +27,7 @@ fnjs_eliminar=function(){
 				});
 				return false;
 			});
-			$('#seleccionados').submit();
+			$('#seleccionados').trigger("submit");
 			$('#seleccionados').off();
 		}
 	}

@@ -138,12 +138,13 @@ foreach ($cActaTribunal as $oActaTribunal) {
 	}
 }
 
-$Qexaminadores = (string) \filter_input(INPUT_POST, 'examinadores');
+$Qexaminadores = (array)  \filter_input(INPUT_POST, 'examinadores', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($Qexaminadores)) {
-    $examinadores = explode("#",$Qexaminadores);
 	$i = 0;
-    foreach($examinadores as $examinador){
+    foreach($Qexaminadores as $examinador){
 		$i++;
+		// puede estar en blanco => no guardar.
+		if (empty($examinador)) { continue; }
 		$oActaTribunal = new notas\ActaTribunalDl();
 		$oActaTribunal->setActa($Qacta);
 		$oActaTribunal->setExaminador($examinador);

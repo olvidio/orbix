@@ -83,7 +83,7 @@ fnjs_guardar=function(formulario,que){
 			});
 			return false;
 		});
-		$(formulario).submit();
+		$(formulario).trigger("submit");
 		$(formulario).off();
 	}
 }

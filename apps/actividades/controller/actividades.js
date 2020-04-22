@@ -47,7 +47,7 @@ jsForm.refresh=function(){
 			});
 			return false;
 		});
-		$(this.form).submit();
+		$(this.form).trigger("submit");
 		$(this.form).off();
 	}
 }

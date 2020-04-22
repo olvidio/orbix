@@ -16,7 +16,7 @@ fnjs_sql=function(formulario){
 		});
 		return false;
 	});
-	$(formulario).submit();
+	$(formulario).trigger("submit");
 	$(formulario).off();
 }
 fnjs_guardar=function(formulario){
@@ -36,7 +36,7 @@ fnjs_guardar=function(formulario){
 		});
 		return false;
 	});
-	$(formulario).submit();
+	$(formulario).trigger("submit");
 	$(formulario).off();
 }
 fnjs_cambio=function(formulario){
@@ -56,7 +56,7 @@ fnjs_cambio=function(formulario){
 		});
 		return false;
 	});
-	$(formulario).submit();
+	$(formulario).trigger("submit");
 	$(formulario).off();
 }
 fnjs_actualizar=function(formulario){

@@ -26,7 +26,7 @@ fnjs_del_cambio=function(formulario,que_val){
                 });
                 return false;
             });
-            $(formulario).submit();
+            $(formulario).trigger("submit");
             $(formulario).off();
         }
 	}

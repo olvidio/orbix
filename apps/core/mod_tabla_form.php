@@ -130,7 +130,7 @@ fnjs_grabar=function(formulario){
 			});
 			return false;
 		});
-		$(formulario).submit();
+		$(formulario).trigger("submit");
 		$(formulario).off();
 	}
 }

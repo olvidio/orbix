@@ -298,48 +298,51 @@ switch ($tipo_menu) {
 <style>
 img.calendar:hover { cursor: pointer; }
 </style>
+
+<!-- jQuery CSS -->
+<link type="text/css" rel='stylesheet' href='<?= ConfigGlobal::getWeb_NodeScripts().'/jquery-ui/themes/base/all.css'; ?>' />
+
 <!-- jQuery -->
-<link type="text/css" rel='stylesheet' href='<?= ConfigGlobal::getWeb_scripts().'/jquery/ui/1.12/jquery-ui.structure.min.css'; ?>' />
-<link type="text/css" rel='stylesheet' href='<?= ConfigGlobal::getWeb_scripts().'/jquery/ui/1.12/themes/smoothness/theme.css'; ?>' />
+<script type="text/javascript" src='<?= ConfigGlobal::getWeb_NodeScripts().'/jquery/dist/jquery.min.js'; ?>'></script>
+<script type="text/javascript" src='<?= ConfigGlobal::getWeb_NodeScripts().'/jquery-ui-dist/jquery-ui.min.js'; ?>'></script>
+<script type="text/javascript" src='<?= ConfigGlobal::getWeb_NodeScripts().'/jquery-ui/ui/widgets/datepicker.js'; ?>'></script>
+<script type="text/javascript" src='<?= ConfigGlobal::getWeb_NodeScripts().'/jquery-ui/ui/i18n/datepicker-es.js'; ?>'></script>
+<script type="text/javascript" src='<?= ConfigGlobal::getWeb_NodeScripts().'/jquery-ui/ui/i18n/datepicker-ca.js'; ?>'></script>
 
-<script type="text/javascript" src='<?= ConfigGlobal::getWeb_scripts().'/jquery/jquery-1.12.3.min.js'; ?>'></script>
-<script type="text/javascript" src='<?= ConfigGlobal::getWeb_scripts().'/jquery/ui/1.12/jquery-ui.min.js'; ?>'></script>
-<script type="text/javascript" src='<?= ConfigGlobal::getWeb_scripts().'/jquery/ui/i18n/jquery.ui.datepicker-es.js'; ?>'></script>
-<script type="text/javascript" src='<?= ConfigGlobal::getWeb_scripts().'/jquery/ui/i18n/jquery.ui.datepicker-ca.js'; ?>'></script>
-
-<!-- jQuery TokenInput -->
-<script type="text/javascript" src='<?= ConfigGlobal::getWeb_scripts().'/jquery-tokeninput/src/jquery.tokeninput.js'; ?>'></script>
-
+ 
+<script type="text/javascript" src='<?= ConfigGlobal::getWeb_scripts().'/jquery-migrate-3.1.0.js'; ?>'></script>
 
 <!-- Slick -->
 <!-- OJO: IMPORTA el orden. Pueden salir avisos (en consola del navegaador) tipo: Grid.xx not defined  -->
-<link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::getWeb_scripts().'/SlickGrid/slick.grid.css'; ?>' />
+<link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::getWeb_NodeScripts().'/slickgrid/slick.grid.css'; ?>' />
+ 
+<script type='text/javascript' src='<?= ConfigGlobal::getWeb_NodeScripts().'/slickgrid/lib/firebugx.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::getWeb_NodeScripts().'/slickgrid/lib/jquery.event.drag-2.3.0.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::getWeb_NodeScripts().'/slickgrid/lib/jquery.event.drop-2.3.0.js'; ?>'></script>
+ 
+<script type='text/javascript' src='<?= ConfigGlobal::getWeb_NodeScripts().'/slickgrid/slick.core.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::getWeb_NodeScripts().'/slickgrid/slick.grid.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::getWeb_NodeScripts().'/slickgrid/slick.editors.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::getWeb_NodeScripts().'/slickgrid/slick.formatters.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::getWeb_NodeScripts().'/slickgrid/slick.dataview.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::getWeb_NodeScripts().'/slickgrid/plugins/slick.autotooltips.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::getWeb_NodeScripts().'/slickgrid/plugins/slick.cellrangedecorator.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::getWeb_NodeScripts().'/slickgrid/plugins/slick.cellrangeselector.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::getWeb_NodeScripts().'/slickgrid/plugins/slick.cellselectionmodel.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::getWeb_NodeScripts().'/slickgrid/plugins/slick.checkboxselectcolumn.js'; ?>'></script>
+<script type='text/javascript' src='<?= ConfigGlobal::getWeb_NodeScripts().'/slickgrid/plugins/slick.rowselectionmodel.js'; ?>'></script>
 
-<script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts().'/SlickGrid/lib/firebugx.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts().'/SlickGrid/lib/jquery.event.drag-2.3.0.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts().'/SlickGrid/lib/jquery.event.drop-2.3.0.js'; ?>'></script>
+<link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::getWeb_NodeScripts().'/slickgrid/controls/slick.columnpicker.css'; ?>' /> 
+<script type='text/javascript' src='<?= ConfigGlobal::getWeb_NodeScripts().'/slickgrid/controls/slick.columnpicker.js'; ?>'></script>
+<link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::getWeb_NodeScripts().'/slickgrid/controls/slick.gridmenu.css'; ?>' /> 
+<script type='text/javascript' src='<?= ConfigGlobal::getWeb_NodeScripts().'/slickgrid/controls/slick.gridmenu.js'; ?>'></script>
+<link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::getWeb_NodeScripts().'/slickgrid/controls/slick.pager.css'; ?>' />
+<script type='text/javascript' src='<?= ConfigGlobal::getWeb_NodeScripts().'/slickgrid/controls/slick.pager.js'; ?>'></script>
 
-<script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts().'/SlickGrid/slick.core.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts().'/SlickGrid/slick.grid.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts().'/SlickGrid/slick.editors.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts().'/SlickGrid/slick.formatters.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts().'/SlickGrid/slick.dataview.js'; ?>'></script>
-
+<!--
 <script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts().'/SlickGrid/plugins/slick.autocolumnsize.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts().'/SlickGrid/plugins/slick.autotooltips.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts().'/SlickGrid/plugins/slick.cellrangedecorator.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts().'/SlickGrid/plugins/slick.cellrangeselector.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts().'/SlickGrid/plugins/slick.cellselectionmodel.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts().'/SlickGrid/plugins/slick.checkboxselectcolumn.js'; ?>'></script>
-<script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts().'/SlickGrid/plugins/slick.rowselectionmodel.js'; ?>'></script>
-
-<link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::getWeb_scripts().'/SlickGrid/controls/slick.columnpicker.css'; ?>' /> 
-<script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts().'/SlickGrid/controls/slick.columnpicker.js'; ?>'></script>
-<link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::getWeb_scripts().'/SlickGrid/controls/slick.gridmenu.css'; ?>' /> 
-<script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts().'/SlickGrid/controls/slick.gridmenu.js'; ?>'></script>
-<link type='text/css' rel='stylesheet' href='<?= ConfigGlobal::getWeb_scripts().'/SlickGrid/controls/slick.pager.css'; ?>' />
-<script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts().'/SlickGrid/controls/slick.pager.js'; ?>'></script>
-
+-->
+ 
 <script type="text/javascript" src="<?= ConfigGlobal::getWeb_scripts().'/formatos.js.php?'.rand(); ?>"></script>
 <script type="text/javascript" src="<?= ConfigGlobal::getWeb_scripts().'/selects.js.php?'.rand(); ?>"></script>
 <script type="text/javascript" src="<?= ConfigGlobal::getWeb_scripts().'/exportar.js?'.rand(); ?>"></script>
@@ -365,27 +368,6 @@ function fnjs_slick_col_visible() {
 		//alert ("name: "+name+" vis: "+v);
 		colsVisible[name_idx]=v;
 	});
-	/*
-	$("span", ".slick-columnpicker", "input").each(function(i){
-		ci++;
-		alert("hola");
-		id = $(this).attr('id');
-		var pattern=/columnpicker/;
-		if (pattern.test(id)) {
-			v = $(this).attr('checked');
-			if (v==undefined) {
-				v ="false";
-			} else {
-				v ="true";
-			}
-			// para saber el nombre
-			name=$(this).siblings('[for="'+id+'"]').text();
-			name_idx = name.replace(/ /g,''); // quito posibles espacios en el indice
-			//(alert ("name: "+name+" vis: "+v);
-			colsVisible[name_idx]=v;
-		}
-	});
-		*/
 	if (ci == 0) { colsVisible = 'noCambia'; }
 	//alert (ci+'  cols: '+colsVisible);
 	return colsVisible;
@@ -772,7 +754,7 @@ function fnjs_enviar_formulario(id_form,bloque) {
 			});
 			return false; // cancel original event to prevent form submitting
 		});
-	$(id_form).submit();
+	$(id_form).trigger("submit");
 	$(id_form).off();
 }
 
@@ -799,7 +781,8 @@ function fnjs_mostra_resposta(resposta,bloque) {
 			var myText=resposta.trim();
 			break;
 	}
-	$(bloque).empty().append(myText);
+	$(bloque).empty();
+	$(bloque).append(myText);
 	fnjs_cambiar_link(bloque); 
 }
 /*

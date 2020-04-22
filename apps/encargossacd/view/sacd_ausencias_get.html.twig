@@ -22,7 +22,7 @@ fnjs_guardar=function(formulario){
 			});
 			return false;
 		});
-		$(formulario).submit();
+		$(formulario).trigger("submit");
 		$(formulario).off();
 	}
 	
@@ -48,7 +48,7 @@ fnjs_mas_enc=function(){
 	$('#inicio_'+n).datepicker();
 	$('#inicio_'+n).change(fnjs_date_fin);
 	$('#fin_'+n).datepicker();
-	$('#inicio_'+n).focus();
+	$('#inicio_'+n).trigger("focus");
 	$('#enc_num').val(++n);
 }
 

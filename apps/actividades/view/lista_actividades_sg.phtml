@@ -21,7 +21,7 @@ fnjs_borrar=function(formulario,que_val){
 				});
 				return false;
 			});
-			$(formulario).submit();
+			$(formulario).trigger("submit");
 			$(formulario).off();
 			// tacho los marcados
 			$(formulario+' input.sel').each(function(i){

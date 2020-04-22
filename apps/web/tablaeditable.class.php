@@ -152,7 +152,7 @@ class TablaEditable {
 	 * 			  	return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"') \\\" >\"+value+\"</span>\";
 	 * 	[fila][col] = array( 'script'=>$script, 'valor'=>$txt);
 	 * 				=> crea un 'link' que ejecuta  al funcion de $cript:
-					return \"<span class=link onclick='this.closest(\\\".slick-cell\\\").click();\"+ira+\";' >\"+value+\"</span>\";
+					return \"<span class=link onclick='this.closest(\\\".slick-cell\\\").trigger("click");\"+ira+\";' >\"+value+\"</span>\";
 	 * 	[fila][col] = array( 'span'=>3, 'valor'=> $txt) => de momento no hace nada. Sirve para la funcion mostrar_tabla_html
 	 * 
 	 *@return string Html Grid
@@ -378,9 +378,10 @@ class TablaEditable {
 				,asyncEditorLoading: false
 				,autoEdit: false
 				,enableColumnReorder: true
-				,forceFitColumns: true
+				,autosizeColsMode: true
 				,topPanelHeight: 50
 				,autoHeight: false
+				,forceFitColumns: true
 			};
 
 			var sortcol = \"".$sortcol."\";
@@ -547,10 +548,10 @@ class TablaEditable {
 		$tt .= "
 			$(\".grid-header .ui-icon\")
 				.addClass(\"ui-state-default ui-corner-all\")
-				.mouseover(function (e) {
+				.on(\"mouseover\", function (e) {
 				  $(e.target).addClass(\"ui-state-hover\")
 				})
-				.mouseout(function (e) {
+				.on(\"mouseout\", function (e) {
 				  $(e.target).removeClass(\"ui-state-hover\")
 				});
 
@@ -560,7 +561,7 @@ class TablaEditable {
 				grid_$id_tabla = new Slick.Grid(\"#grid_$id_tabla\", dataView_$id_tabla, columns_$id_tabla, options);
 				grid_$id_tabla.setSelectionModel(new Slick.RowSelectionModel());
 				grid_$id_tabla.registerPlugin(new Slick.AutoTooltips());
-                grid_$id_tabla.registerPlugin(new Slick.AutoColumnSize());
+                //grid_$id_tabla.registerPlugin(new Slick.AutoColumnSize());
 
 				var pager = new Slick.Controls.Pager(dataView_$id_tabla, grid_$id_tabla, $(\"#pager\"));
 				var columnpicker = new Slick.Controls.ColumnPicker(columnsAll_$id_tabla, grid_$id_tabla, options);
@@ -654,7 +655,7 @@ class TablaEditable {
 				});
 
 				// wire up the search textbox to apply the filter to the model
-				$(\"#txtSearch_".$id_tabla."\").keyup(function (e) {
+				$(\"#txtSearch_".$id_tabla."\").on(\"keyup\", function (e) {
 					Slick.GlobalEditorLock.cancelCurrentEdit();
 					// clear on Esc
 					if (e.which == 27) {
@@ -882,7 +883,7 @@ class TablaEditable {
 					});
 					return false;
 				});
-				$('#form_update').submit();
+				$('#form_update').trigger(\"submit\");
 				";
 		}
 		return $fnjs;

@@ -17,7 +17,7 @@ fnjs_ver_activ=function(formulario) {
             });
             return false;
         });
-        $(formulario).submit();
+        $(formulario).trigger("submit");
         $(formulario).off();
 	}
 }
@@ -41,7 +41,7 @@ fnjs_cambiar=function(formulario){
             });
             return false;
         });
-        $(formulario).submit();
+        $(formulario).trigger("submit");
         $(formulario).off();
 	}
 }

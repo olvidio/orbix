@@ -118,7 +118,7 @@ fnjs_guardar_cp=function(formulario){
         });
         return false;
     });
-    $(formulario).submit();
+    $(formulario).trigger("submit");
     $(formulario).off();
 }
 

@@ -190,7 +190,7 @@ fnjs_guardar=function(formulario){
 		// situacion = 2 es para cursada, 11 exento
 		if (!acta && !(jQuery.inArray(situacion, arr_no_superadas) !== -1)) { 
 			alert("debe llenar el campo del acta");
-			$('#acta').focus();
+			$('#acta').trigger("focus");
 			err=1;
 		}
 	}
@@ -217,7 +217,7 @@ fnjs_guardar=function(formulario){
 			});
 			return false;
 		});
-		$(formulario).submit();
+		$(formulario).trigger("submit");
 		$(formulario).off();
 	}
 }

@@ -84,7 +84,7 @@ class DatosTabla {
 						});
 						return false;
 					});
-					$(formulario).submit();
+					$(formulario).trigger(\"submit\");
 					$(formulario).off();
 				}
 			}

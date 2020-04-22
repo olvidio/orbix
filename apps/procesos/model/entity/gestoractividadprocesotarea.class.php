@@ -164,7 +164,7 @@ class GestorActividadProcesoTarea Extends ClaseGestor {
         if (($qRs = $oDbl->query($sQry)) === false) {
             $sClauError = 'GestorActividadProcesoTarea.getSacdAprobado.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
+            return FALSE;
         }
         if ($qRs->rowCount() == 1 ) {
             $aDades = $qRs->fetch(\PDO::FETCH_ASSOC);

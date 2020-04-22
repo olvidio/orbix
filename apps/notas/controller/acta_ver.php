@@ -110,7 +110,6 @@ if (empty($notas) && empty($Qnotas)) {
 	}
 }
 
-$json_examinadores = '';
 if ($notas != 'nuevo' && $Qmod != 'nueva' && !empty($acta_actual))  { //significa que no es nuevo
 	if (false && !empty($Qacta) && !empty($notas)) { // vengo de actualizar esta pág.
 		// estoy actualizando la página
@@ -157,9 +156,6 @@ if ($notas != 'nuevo' && $Qmod != 'nueva' && !empty($acta_actual))  { //signific
 		$oPersonaDl = new personas\PersonaDl($id_profesor);
 		$ap_nom = $oPersonaDl->getTituloNombre();
 		$examinador = $ap_nom;
-		$json_examinadores = 'prePopulate: [';
-		$json_examinadores .= '{name: "'.htmlspecialchars($examinador).'"}';
-		$json_examinadores .= '],';
 	} else { // estoy actualizando la página
 		if (!empty($a_sel) && !empty($notas)) { //vengo de un checkbox y estoy en la página de acta_notas ($notas).
 		    $id_activ = (integer) strtok($a_sel[0],'#');
@@ -193,17 +189,18 @@ if (!empty($acta_actual)) {
 	$cTribunal = array();
 }
 
-$GesAsignaturas = new asignaturas\GestorAsignatura();
-$oDesplAsignaturas = $GesAsignaturas->getListaAsignaturas();
+    $nombre_asignatura = '';
 if (!empty($id_asignatura_actual)) {
-	$jsonTodas = $GesAsignaturas->getJsonAsignaturas(array('id'=>$id_asignatura_actual));
-	$json_asignaturas = 'prePopulate: '.$jsonTodas.',';
-} else {
-	$json_asignaturas = '';
+    $GesAsignaturas = new asignaturas\GestorAsignatura();
+    $cAsignatura = $GesAsignaturas->getAsignaturas(['id_asignatura' => $id_asignatura_actual]);
+    if (!empty($cAsignatura)) {
+        $oAsignatura = $cAsignatura[0];
+        $nombre_asignatura = $oAsignatura->getNombre_asignatura();
+    }
 }
 
 $oHashActa = new Hash();
-$sCamposForm = 'libro!linea!pagina!lugar!observ!id_asignatura!f_acta!acta';
+$sCamposForm = 'libro!linea!pagina!lugar!observ!id_asignatura!f_acta!acta!name_asignatura';
 if ($Qmod == 'nueva' || $notas=="nuevo") { 
 	$sCamposForm .= '!acta';
 	$sCamposForm .= '!f_acta';
@@ -233,29 +230,20 @@ $oHashActa->setArraycamposHidden($a_camposHidden);
 
 $titulo=strtoupper(_("datos del acta"));
 
-$e = 0;
+$examinadores = [];
 if (!empty($cTribunal)) { 
-	$json_examinadores = 'prePopulate: [';
 	foreach ($cTribunal as $oActaTribunal) {
 		$id_item=$oActaTribunal->getId_item();
 		$examinador=$oActaTribunal->getExaminador();
-		$orden=$oActaTribunal->getOrden();
-		$json_examinadores .= ($e > 0)? ',' : '';
-		$json_examinadores .= '{name: "'.htmlspecialchars($examinador).'"}';
-		$e++;
+		$examinadores[] = $examinador;
 	}
-	$json_examinadores .= '],';
 }
 
-$url = ConfigGlobal::getWeb().'/apps/notas/controller/acta_ajax.php';
+$url_ajax = ConfigGlobal::getWeb().'/apps/notas/controller/acta_ajax.php';
 $oHashLink = new Hash();
-$oHashLink->setUrl($url);
-$oHashLink->setCamposForm('que!q'); 
-$h = $oHashLink->linkSinVal();
-
-$location = "{$url}?que=examinadores&$h";
-$loc_asig = "{$url}?que=asignaturas&$h";
-
+$oHashLink->setUrl($url_ajax);
+$oHashLink->setCamposForm('que!search'); 
+$h_ajax = $oHashLink->getParamAjax2();
 
 $a_campos = ['obj' => $obj,
 			'oPosicion' => $oPosicion,
@@ -275,10 +263,11 @@ $a_campos = ['obj' => $obj,
 			'ult_lin' => $ult_lin,
 			'lugar' => $lugar,
 			'observ' => $observ,
-			'location' => $location,
-			'loc_asig' => $loc_asig,
-			'json_asignaturas' => $json_asignaturas,
-			'json_examinadores' => $json_examinadores,
+            'url_ajax' => $url_ajax,
+			'h_ajax' => $h_ajax,
+			'id_asignatura' => $id_asignatura_actual,
+			'nombre_asignatura' => $nombre_asignatura,
+			'examinadores' => $examinadores,
 			'a_actas' => $a_actas,
 			'permiso' => $permiso,
 			];
