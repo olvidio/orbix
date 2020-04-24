@@ -521,7 +521,7 @@ while ($num_cambios) {
 			    /////////////////// COMPARAR FASES //////////////////////////////////////////
 			    // fase on
                 if (in_array($id_fase_ref, $aFases_cmb)) {
-			    // aviso_on
+                    // aviso_on
                     if (is_true($aviso_on)) {
                         // Tengo permiso de ver esta fase?
                         $oPermActividades = new PermisosActividades($id_usuario);

@@ -98,6 +98,97 @@ switch($Qque) {
 
 		$GesTareaPorceso = new GestorTareaProceso();
 		$cTareasProceso = $GesTareaPorceso->getTareasProceso(['id_tipo_proceso'=>$Qid_tipo_proceso,'_ordre'=>'status,id_of_responsable']);
+		$node = '[';
+		$i=0;
+		foreach ($cTareasProceso as $oTareaProceso) {
+			$i++;
+			$clase = ($i%2 == 0)? 'tono2' : 'tono4'; 
+			$id_item=$oTareaProceso->getId_item();
+			$id_fase=$oTareaProceso->getId_fase();
+			$status=$oTareaProceso->getStatus();
+			$status_txt=$a_status[$status];
+			$id_of_responsable=$oTareaProceso->getId_of_responsable();
+			$responsable = empty($aOpcionesOficinas[$id_of_responsable])? '' : $aOpcionesOficinas[$id_of_responsable];
+			
+			$oFase = new ActividadFase($id_fase);
+			$fase=$oFase->getDesc_fase();
+			$sf=($oFase->getSf())? 2 : 0;
+			$sv=($oFase->getSv())? 1 : 0;
+			//ojo, que puede ser las dos a la vez
+			if (!(($soy & $sf) OR ($soy & $sv))) {
+			    $i--;
+			    continue; 
+			}
+			$oTarea = new ActividadTarea($oTareaProceso->getId_tarea());
+			$tarea = $oTarea->getDesc_tarea();
+			$tarea_txt = empty($tarea)? '' : "($tarea)";
+			$fase_previa = '';
+            $tarea_previa_txt = '';
+			$aFases_previas = $oTareaProceso->getJson_fases_previas(TRUE);
+			$id_fase_previa = '';
+			foreach ($aFases_previas as $oFaseP) {
+			    $id_fase_previa = $oFaseP['id_fase'];
+			    if (empty($id_fase_previa)) continue;
+			    //$id_tarea_previa = $oFaseP['id_tarea'];
+			    //$mensaje_requisito = $oFaseP['mensaje'];
+                $oFase_previa = new ActividadFase($id_fase_previa);
+                $fase_previa .= empty($fase_previa)? '' : ' '._("y").' ';
+                $fase_previa .= $oFase_previa->getDesc_fase();
+                $tarea_previa_txt = empty($tarea_previa)? '' : "($tarea_previa)";
+			}
+			
+			$id_fase_previa = empty($id_fase_previa)? 'null' : $id_fase_previa; 
+			$node .= ($i > 1)? ',' : '';
+			$node .= "{id: $id_fase, title: '$fase $tarea_txt', parent: $id_fase_previa, optional: false, link: '$id_item'}";
+		}
+		$node .= ']';
+		
+		$txt2 ="
+         <div class='workflow'>
+    </div>
+		<script>
+		$(function () {
+		    $('.workflow').workflowChart({
+                circleSize: 30,
+                textSize: 16,
+                chartColor: '#800080',
+                textColor: '#00D700',
+                height: 500,
+		        data: $node 
+		    })
+		});
+		    </script>
+        ";
+		echo $txt2;
+		break;
+	case 'get_listado':
+	    $Qid_tipo_proceso = (integer) \filter_input(INPUT_POST, 'id_tipo_proceso');
+	    $oActividad = new ActividadAll();
+		$a_status= $oActividad->getArrayStatus();
+			
+		$oMiUsuario = new Usuario(core\ConfigGlobal::mi_id_usuario());
+		$miSfsv = core\ConfigGlobal::mi_sfsv();
+		
+		// para crear un desplegable de oficinas. Uso los de los menus
+		$oPermMenus = new PermisoMenu;
+		$aOpcionesOficinas = $oPermMenus->lista_array();
+		
+		if ($oMiUsuario->isRole('SuperAdmin')) { // Es administrador
+		   	$soy = 3;
+		} else {
+			// filtro por sf/sv
+			switch ($miSfsv) {
+				case 1: // sv
+					$soy = 1;
+					break;
+				case 2: //sf
+					$soy = 2;
+					break;
+			}
+		}
+
+		$GesTareaPorceso = new GestorTareaProceso();
+		$cTareasProceso = $GesTareaPorceso->getTareasProceso(['id_tipo_proceso'=>$Qid_tipo_proceso,'_ordre'=>'status,id_of_responsable']);
 		$txt = '<table>';
         $txt .= '<tr><th>'._("status").'</th><th>'._("responsable").'</th>';
         $txt .= '<th colspan=3>'._("fase - tarea").'</th><th>'._("modificar").'</th><th>'._("eliminar").'</th></tr>';

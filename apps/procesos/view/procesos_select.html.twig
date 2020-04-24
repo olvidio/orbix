@@ -1,3 +1,4 @@
+<script type="text/javascript" src="{{ pag_flowChart|raw }}"></script>
 <script>
 fnjs_regenerar=function(){
 	var id_tipo_proceso=$('#k_buscar').val();
@@ -104,6 +105,26 @@ fnjs_actualizar=function(){
 	document.getElementById("overlay").style.display = "none";
 }
 
+fnjs_listado=function(){
+	var id_tipo_proceso=$('#k_buscar').val();
+	/* obtener el listado de fases */
+	var url="{{ url_ajax }}";
+	var parametros='que=get_listado&id_tipo_proceso='+id_tipo_proceso+'{{ h_actualizar|raw }}';
+		 
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if (rta_txt != '' && rta_txt != '\\n') {
+			/* añadir debajo de la actividad */
+			$('#div_proceso').html(rta_txt);
+		}
+	});
+	document.getElementById("overlay").style.display = "none";
+}
+
 fnjs_eliminar=function(id_item){
 	if (confirm("{{ txt_eliminar }}")) {
         var url="{{ url_ajax }}";
@@ -161,8 +182,9 @@ fnjs_left_side_hide();
 </thead>
 </table>
 </div>
-<div id='div_proceso'></div>
+<div id='div_proceso' style="{widht: 800px;}"></div>
 <input type='button' name='b_nuevo' value='{{ "nuevo"|trans }}' onclick='fnjs_modificar();'>
+<input type='button' name='b_listado' value='{{ "ver listado"|trans }}' onclick='fnjs_listado();'>
 <br>
 <br>
 <input type='button' name='b_regenrear' value='{{ "rehacer los procesos de las actividades"|trans }}' onclick='fnjs_regenerar();'>
