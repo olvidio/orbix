@@ -526,7 +526,7 @@ while ($num_cambios) {
                         // Tengo permiso de ver esta fase?
                         $oPermActividades = new PermisosActividades($id_usuario);
                         $oPermActividades->setActividad($id_activ);
-                        $oPermActividades->setId_fase($id_fase_ref);
+                        //$oPermActividades->setId_fase($id_fase_ref);
                         $oPermActiv = $oPermActividades->getPermisoActual($afecta);
                         if ( !$oPermActiv->have_perm_activ('ocupado') ) { continue; }
                         
@@ -552,7 +552,7 @@ while ($num_cambios) {
                         // Tengo permiso de ver esta fase?
                         $oPermActividades = new PermisosActividades($id_usuario);
                         $oPermActividades->setActividad($id_activ);
-                        $oPermActividades->setId_fase($id_fase_ref);
+                        //$oPermActividades->setId_fase($id_fase_ref);
                         $oPermActiv = $oPermActividades->getPermisoActual($afecta);
                         if ( !$oPermActiv->have_perm_activ('ocupado') ) { continue; }
 
