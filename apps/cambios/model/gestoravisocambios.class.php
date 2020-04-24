@@ -7,10 +7,8 @@ use cambios\model\entity\Cambio;
 use cambios\model\entity\CambioDl;
 use core\ConfigGlobal;
 use function core\is_true;
-use stdClass;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use web\DateTimeLocal;
-use web\Posicion;
 
 /**
  * Classe para manejar los cambios
