@@ -97,6 +97,13 @@ class PermisosActividades {
 	 */
 	 private $btop;
 
+	/**
+	 * fases de la actividad completadas.
+	 *
+	 * @var array
+	 */
+	 private $aFasesCompletadas=[];
+
 	/* METODES ----------------------------------------------------------------- */
 	public function __construct($iid_usuario) {
 		// permiso para el usuario
@@ -203,9 +210,23 @@ class PermisosActividades {
 		if (empty($id_fase)) {
 		    exit (_("Hay que indicar para que fase"));
 		}
+		// para cuando se mira la actividad en un estado anterior, se cargan las
+		// fases completadas con la funcion setFasesCompletadas($aFases) en la variable
+		// $this->aFasesCompletadas
+		if (!empty($this->aFasesCompletadas)) {
+		    if (in_array($id_fase, $this->aFasesCompletadas)) {
+		        return TRUE;
+		    } else {
+		        return FALSE;
+		    }
+		}
         $oGesActiv = new procesos\GestorActividadProcesoTarea();
         $completada = $oGesActiv->faseCompletada($this->iid_activ,$id_fase); 
 		return $completada;
+	}
+	
+	public function setFasesCompletadas($aFases=[]) {
+		$this->aFasesCompletadas = $aFases;
 	}
 
 	/**
