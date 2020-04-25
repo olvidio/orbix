@@ -237,8 +237,12 @@ class Avisos {
                 foreach ($cZonas as $oZona) {
                     $id_zona = $oZona->getId_zona();
                     $cSacds = $GesZonaSacd->getSacdsZona($id_zona);
-                    foreach ($cSacds as $id_nom) {
-                        $rta = $this->tengoPermiso($propiedad,$id_activ,$id_nom,$valor_old_cmb,$valor_new_cmb); 
+                    foreach ($cSacds as $id_nom_sacd) {
+                        $rta = $this->tengoPermiso($propiedad,$id_activ,$id_nom_sacd,$valor_old_cmb,$valor_new_cmb); 
+                        if ($rta === TRUE) {
+                            return TRUE;
+                            // no hace falta seguir mirando todos.
+                        }
                     }
                 }
             } else { // No soy jefe de zona
@@ -257,14 +261,25 @@ class Avisos {
     private function tengoPermiso($propiedad,$id_activ,$id_nom,$valor_old_cmb,$valor_new_cmb) {
         switch ($this->sObjeto) {
             case 'Actividad':
-                if ($this->cargo($id_nom, $id_activ)) {
-                    return TRUE;
-                } else {
-                    if ($this->asiste($id_nom, $id_activ)) {
-                        return TRUE;
-                    }
+                // busco los datos de las actividades
+                $aWhereAct = [ 'id_activ' => $id_activ];
+                $aOperadorAct = [];
+                $aWhere = ['id_nom' => $id_nom];
+                $aOperador = [];
+                
+                $permiso_ver = FALSE;
+                $oGesActividadCargo = new GestorActividadCargo();
+                $cAsistentes = $oGesActividadCargo ->getAsistenteCargoDeActividad($aWhere,$aOperador,$aWhereAct,$aOperadorAct);
+                if (is_array($cAsistentes) && count($cAsistentes) > 0) {
+                    $aAsistente = $cAsistentes[0];
+                    $propio = $aAsistente['propio'];
+                    //$plaza = $aAsistente['plaza'];
+                    $id_cargo = empty($aAsistente['id_cargo'])? '' : $aAsistente['id_cargo'];
+                    
+                    $_SESSION['oPermActividades']->setId_activ($id_activ);
+                    $permiso_ver = $_SESSION['oPermActividades']->havePermisoSacd($id_cargo, $propio);
                 }
-                return FALSE;
+                return $permiso_ver;
                 break;
             case 'ActividadCargoNoSacd':
             case 'ActividadCargoSacd':
@@ -296,6 +311,7 @@ class Avisos {
         }
     }
 
+    /*
     private function cargo($id_nom,$id_activ) {
         // compruebo si el sacd tiene cargo.
         // y la fase okSacd está on:
@@ -330,7 +346,7 @@ class Avisos {
         }
         return FALSE; 
     }
-    
+   */ 
     
     /*
     private function tengoPermiso($propiedad,$id_activ,$id_nom,$valor_old_cmb,$valor_new_cmb) {

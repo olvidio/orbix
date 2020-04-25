@@ -405,6 +405,47 @@ class PermisosActividades {
 		return $this->getFaseRef($iAfecta,$prev_id_tipo);
 	}
 	
+	/**
+	 * para saber si un sacd puede ver una actividad, segun sea el encargado, o asistente
+	 * o los dos.
+	 * los parametros provienen de la consulta:
+	 * $cAsistentes = $oGesActividadCargo ->getAsistenteCargoDeActividad();
+	 * 
+	 * @param integer $id_cargo  
+	 * @param boolean $propio
+	 * @return boolean  
+	 */
+	public function havePermisoSacd($id_cargo, $propio) {
+	    $permiso_ver = FALSE;
+	    $oPermActiv = $this->getPermisoActual('datos');
+	    // sólo si la fase de 'ok sacd' está completada:
+	    $oPermSacd = $this->getPermisoOn('sacd');
+	    // sólo si la fase de 'ok asist. sacd' está completada:
+	    $oPermAsisSacd = $this->getPermisoOn('asistentesSacd');
+	    // para ver la actividad:
+	    if ($oPermActiv->have_perm_activ('ver') === FALSE) {
+	        return FALSE;
+	        // No hace falta seguir mirando.
+	    }
+	    
+	    // si es solo cargo, tiene propio='f' como sacd de la actividad
+	    if (!empty($id_cargo)) {
+	        if ($oPermSacd->have_perm_activ('ver') === TRUE) {
+	            $permiso_ver = TRUE;
+	        }
+	        //si también asiste. tiene propio = 't'
+	        if ($propio == 't' && $oPermAsisSacd->have_perm_activ('ver') === TRUE) {
+	            $permiso_ver = TRUE;
+	        }
+	    } else {
+	        // sólo asiste
+	        if ($oPermAsisSacd->have_perm_activ('ver') === TRUE) {
+	            $permiso_ver = TRUE;
+	        }
+	    }
+	    return $permiso_ver;
+	}
+
 	public function getPermisos($iAfecta,$id_tipo_activ_txt='') {
 		if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->iid_tipo_activ;
 		$id_tipo_activ_txt = $this->completarId($id_tipo_activ_txt);

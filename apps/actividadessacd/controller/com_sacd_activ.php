@@ -203,12 +203,14 @@ foreach ($cPersonas as $oPersona) {
 	foreach ($cAsistentes as $aAsistente) {
 	    $id_activ = $aAsistente['id_activ'];
 	    $propio = $aAsistente['propio'];
-	    $plaza = $aAsistente['plaza'];
+	    //$plaza = $aAsistente['plaza'];
 	    $id_cargo = empty($aAsistente['id_cargo'])? '' : $aAsistente['id_cargo'];
 	    
         $_SESSION['oPermActividades']->setId_activ($id_activ);
 			
         if(core\ConfigGlobal::is_app_installed('procesos')) {
+            $permiso_ver = $_SESSION['oPermActividades']->havePermisoSacd($id_cargo, $propio);
+            /*
             $permiso_ver = FALSE;
             $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
             // sólo si la fase de 'ok sacd' está completada:
@@ -235,6 +237,7 @@ foreach ($cPersonas as $oPersona) {
                     $permiso_ver = TRUE;
                 }
             }
+            */
         } else {
             $permiso_ver = TRUE;
         }
