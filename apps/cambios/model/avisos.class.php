@@ -271,7 +271,7 @@ class Avisos {
                 $oGesActividadCargo = new GestorActividadCargo();
                 $cAsistentes = $oGesActividadCargo ->getAsistenteCargoDeActividad($aWhere,$aOperador,$aWhereAct,$aOperadorAct);
                 if (is_array($cAsistentes) && count($cAsistentes) > 0) {
-                    $aAsistente = $cAsistentes[0];
+                    $aAsistente = $cAsistentes[$id_activ];
                     $propio = $aAsistente['propio'];
                     //$plaza = $aAsistente['plaza'];
                     $id_cargo = empty($aAsistente['id_cargo'])? '' : $aAsistente['id_cargo'];
