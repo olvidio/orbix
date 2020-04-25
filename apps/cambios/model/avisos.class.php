@@ -276,8 +276,9 @@ class Avisos {
                     //$plaza = $aAsistente['plaza'];
                     $id_cargo = empty($aAsistente['id_cargo'])? '' : $aAsistente['id_cargo'];
                     
-                    $_SESSION['oPermActividades']->setId_activ($id_activ);
-                    $permiso_ver = $_SESSION['oPermActividades']->havePermisoSacd($id_cargo, $propio);
+                    $oPermActividades = new PermisosActividades($this->id_usuario);
+                    $oPermActividades->setActividad($id_activ);
+                    $permiso_ver = $oPermActividades->havePermisoSacd($id_cargo, $propio);
                 }
                 return $permiso_ver;
                 break;
