@@ -225,12 +225,12 @@ class Avisos {
         // si soy un sacd.
         if ($oMiUsuario->isRolePau(Role::PAU_SACD)) {
             $oMiUsuario = new Usuario($this->id_usuario);
-            $id_nom=$oMiUsuario->getId_pau();
+            $id_nom_usuario = $oMiUsuario->getId_pau();
             // soy jefe zona?
             // si soy jefe de zona me afectan todos los sacd de la zona.
             $rta = 0;
             $GesZonas = new GestorZona();
-            $cZonas = $GesZonas->getZonas(array('id_nom'=>$id_nom));
+            $cZonas = $GesZonas->getZonas(array('id_nom' => $id_nom_usuario));
             if (is_array($cZonas) && count($cZonas)>0) {
                 // sacd de mi zona
                 $GesZonaSacd = new GestorZonaSacd();
@@ -242,7 +242,7 @@ class Avisos {
                     }
                 }
             } else { // No soy jefe de zona
-                $rta = $this->tengoPermiso($propiedad,$id_activ,$id_nom,$valor_old_cmb,$valor_new_cmb); 
+                $rta = $this->tengoPermiso($propiedad,$id_activ,$id_nom_usuario,$valor_old_cmb,$valor_new_cmb); 
             }
             if ($rta) {
                 return TRUE;

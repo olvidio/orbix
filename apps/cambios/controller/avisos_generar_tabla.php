@@ -285,8 +285,7 @@ while ($num_cambios) {
                         if (!$oAvisos->me_afecta($propiedad,$id_activ,$valor_old_cmb,$valor_new_cmb,$id_pau,$sObjeto)) {
                             $apuntar = false;
                             continue; 
-                        }
-                        if (!empty($valor)) {
+                        } elseif (!empty($valor)) {
                             $operador = empty($operador)? '=' : $operador;
                             if ( is_true($valor_old) ) {
                                 $apuntar = $oAvisos->comparar($valor_old_cmb,$operador,$valor); 
