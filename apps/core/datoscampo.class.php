@@ -35,6 +35,13 @@ class DatosCampo {
 	 */
 	 private $setiqueta;
 	/**
+	 * Aviso de DatosCampo:
+	 * para indicar si debe salir en las opciones de avisar si hay un cambio.
+	 *
+	 * @var boolean
+	 */
+	 private $baviso;
+	/**
 	 * Tipo de DatosCampo
 	 *
 	 * @var string
@@ -294,6 +301,25 @@ class DatosCampo {
 	 */
 	function setEtiqueta($setiqueta) {
 		$this->setiqueta = $setiqueta;
+	}
+	/**
+	 * Recupera l'atribut baviso de DatosCampo
+	 *
+	 * @return boolean baviso
+	 */
+	function getAviso() {
+		if (!isset($this->baviso)) {
+			$this->baviso = TRUE;
+		}
+		return $this->baviso;
+	}
+	/**
+	 * estableix el valor de l'atribut baviso de DatosCampo
+	 *
+	 * @param boolean baviso
+	 */
+	function setAviso($baviso) {
+		$this->baviso = $baviso;
 	}
 	/**
 	 * Recupera l'atribut stipodb de DatosCampo

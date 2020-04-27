@@ -26,7 +26,7 @@ class gestorAvisoCambios {
 	/**
 	 * Recupera un array amb els objectes (de taula) dels que es pot avisar i els seus noms.
 	 *
-	 * @return array
+	 * @return array  $aNomTablas_obj['ActividadProcesoTarea'] = _("fases actividad");
 	 */
 	public static function getArrayObjetosPosibles() {
 		$aNomTablas_obj = array('Actividad' => _("actividad"),

@@ -40,6 +40,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 $Qquien = (string) \filter_input(INPUT_POST, 'quien');
+$Qsalida = (string) \filter_input(INPUT_POST, 'salida');
 
 // Si empieza por 4 es usuario, por 5 es grupo
 if (substr($Qid_usuario,0,1) == 4) {
@@ -71,7 +72,7 @@ $oDesplObjetos->setOpciones($aObjetos);
 $oDesplObjetos->setAction('fnjs_actualizar_fases(); fnjs_actualizar_propiedades()');
 
 
-if (!empty($Qid_item_usuario_objeto)) {
+if ($Qsalida == 'modificar' && !empty($Qid_item_usuario_objeto)) {
 	$oCambioUsuarioObjetoPref = new CambioUsuarioObjetoPref(array('id_item_usuario_objeto'=>$Qid_item_usuario_objeto));
 	$id_tipo_activ=$oCambioUsuarioObjetoPref->getId_tipo_activ_txt();
 	$dl_org=$oCambioUsuarioObjetoPref->getDl_org();
@@ -91,7 +92,8 @@ if (!empty($Qid_item_usuario_objeto)) {
 
 	$oDesplObjetos->setOpcion_sel($objeto);
 	$oDesplTiposAviso->setOpcion_sel($aviso_tipo);
-} else { // es nuevo
+} elseif ($Qsalida == 'nuevo') { // es nuevo
+    $Qid_item_usuario_objeto = '';
 	$dl_propia='t';
 	$id_pau='';
 

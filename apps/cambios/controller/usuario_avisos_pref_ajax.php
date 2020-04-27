@@ -259,6 +259,10 @@ switch($Qsalida) {
                 $nom_prop = $oDatosCampo->getNom_camp();
                 // me salto el id_schema.
                 if ($nom_prop == 'id_schema') continue;
+                // me salto los que pone FALSE en condicion aviso
+                $condicion_aviso = $oDatosCampo->getAviso();
+                if (!is_true($condicion_aviso)) continue;
+                
                 $etiqueta = $oDatosCampo->getEtiqueta();
                 if ($key=array_search($nom_prop,$a_propiedades_sel)) { 
                     $chk_prop = 'checked';
@@ -358,7 +362,7 @@ switch($Qsalida) {
 		    echo $html;
 		}
 		break;
-    case "aviso_eliminar":
+    case "eliminar":
 	    $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 	    if (!empty($a_sel)) { //vengo de un checkbox
 	        $Qid_usuario = (integer) strtok($a_sel[0],"#");

@@ -1163,6 +1163,7 @@ class ActividadAll Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_tipo_activ'));
 		$oDatosCampo->setEtiqueta(_("id_tipo_activ"));
+		$oDatosCampo->setAviso(FALSE);
 		return $oDatosCampo;
 	}
 	/**
@@ -1175,6 +1176,7 @@ class ActividadAll Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'dl_org'));
 		$oDatosCampo->setEtiqueta(_("dl_org"));
+		$oDatosCampo->setAviso(FALSE);
 		return $oDatosCampo;
 	}
 	/**
@@ -1418,6 +1420,7 @@ class ActividadAll Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_tabla'));
 		$oDatosCampo->setEtiqueta(_("id_tabla"));
+		$oDatosCampo->setAviso(FALSE);
 		return $oDatosCampo;
 	}
 	/**

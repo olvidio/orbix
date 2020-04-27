@@ -1,5 +1,6 @@
 <?php
 use actividades\model\entity\ActividadAll;
+use cambios\model\gestorAvisoCambios;
 use cambios\model\entity\CambioUsuarioObjetoPref;
 use cambios\model\entity\GestorCambioUsuarioObjetoPref;
 use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
@@ -93,7 +94,9 @@ if( (ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
 
 	// Tipos de avisos
 	$aTipos_aviso = CambioUsuarioObjetoPref::getTipos_aviso();
-
+	// Nombre de los possibles objetos (que manejan la tablas) susceptibles de avisar.
+	$aObjetos = gestorAvisoCambios::getArrayObjetosPosibles();
+	
 	$i=0;
 	$a_cabeceras_avisos = [
 	                   _("objeto"),
@@ -133,9 +136,10 @@ if( (ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
 		}
 
 		$oTipoActividad = new TiposActividades($oCambioUsuarioObjetoPref->getId_tipo_activ_txt());
-
+        $objeto_txt = $aObjetos[$objeto];
+		
 		$a_valores_avisos[$i]['sel']="$Qid_usuario#$id_item_usuario_objeto";
-		$a_valores_avisos[$i][1]=$objeto;
+		$a_valores_avisos[$i][1]=$objeto_txt;
 		$a_valores_avisos[$i][2]=$dl_org;
 		$a_valores_avisos[$i][3]=$oTipoActividad->getNom();
         $txt_fases = '';
@@ -444,11 +448,11 @@ if( (ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
 	$url_usuario_ajax = ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_ajax.php';
 	$oHashAvisos = new web\Hash();
 	$oHashAvisos->setUrl($url_usuario_ajax);
-	$oHashAvisos->setCamposNo('sel!scroll_id'); 
+	$oHashAvisos->setCamposNo('sel!scroll_id!salida'); 
 	$a_camposHidden = array(
 			'id_usuario' => $Qid_usuario,
 			'quien' => $Qquien,
-	        'salida' => 'aviso_eliminar',
+	        'salida' => '',
 			);
 	$oHashAvisos->setArraycamposHidden($a_camposHidden);
 	$h1 = $oHashAvisos->linkSinVal();
