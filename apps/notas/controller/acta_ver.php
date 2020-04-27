@@ -243,7 +243,7 @@ $url_ajax = ConfigGlobal::getWeb().'/apps/notas/controller/acta_ajax.php';
 $oHashLink = new Hash();
 $oHashLink->setUrl($url_ajax);
 $oHashLink->setCamposForm('que!search'); 
-$h_ajax = $oHashLink->getParamAjax2();
+$h_ajax = $oHashLink->getParamAjaxEnArray();
 
 $a_campos = ['obj' => $obj,
 			'oPosicion' => $oPosicion,

@@ -283,8 +283,20 @@ class Avisos {
                 return $permiso_ver;
                 break;
             case 'ActividadCargoNoSacd':
-            case 'ActividadCargoSacd':
                 if ($this->cargo($id_nom, $id_activ)) {
+                    return TRUE;
+                } else {
+                    // si lo que cambia es el id_nom, compruebo que el valor old o new sean del sacd.
+                    if ($propiedad == 'id_nom') {
+                        if (($valor_old_cmb == $id_nom) || ($valor_new_cmb == $id_nom)) {
+                            return TRUE;
+                        }
+                    }
+                }
+                return FALSE;
+                break;
+            case 'ActividadCargoSacd':
+                if ($this->cargoSacd($id_nom, $id_activ)) {
                     return TRUE;
                 } else {
                     // si lo que cambia es el id_nom, compruebo que el valor old o new sean del sacd.
@@ -312,8 +324,25 @@ class Avisos {
         }
     }
 
-    /*
     private function cargo($id_nom,$id_activ) {
+        // compruebo si el sacd tiene cargo.
+        // y la fase okSacd está on:
+        $aWhere = ['id_nom' => $id_nom, 'id_activ' => $id_activ];
+        $GesActividadCargo = new GestorActividadCargo();
+        $a_Asistentes = $GesActividadCargo->getActividadCargos($aWhere);
+        if (count($a_Asistentes)>0) {
+            $oPermActividades = new PermisosActividades($this->id_usuario);
+            $oPermActividades->setActividad($id_activ);
+            $oPermActividades->setFasesCompletadas($this->aFases_cmb);
+            $oPermSacd = $oPermActividades->getPermisoOn('cargos');
+            if ( $oPermSacd->have_perm_activ('ver') ) {
+                return TRUE;
+            }
+        }
+        return FALSE; 
+    }
+
+    private function cargoSacd($id_nom,$id_activ) {
         // compruebo si el sacd tiene cargo.
         // y la fase okSacd está on:
         $aWhere = ['id_nom' => $id_nom, 'id_activ' => $id_activ];
@@ -347,7 +376,6 @@ class Avisos {
         }
         return FALSE; 
     }
-   */ 
     
     /*
     private function tengoPermiso($propiedad,$id_activ,$id_nom,$valor_old_cmb,$valor_new_cmb) {

@@ -12,9 +12,12 @@
 *		
 */
 
+use actividades\model\entity\GestorTipoDeActividad;
 use core\ConfigGlobal;
+use procesos\model\entity\GestorActividadFase;
 use ubis\model\entity as ubis;
 use usuarios\model\entity\Usuario;
+use config\model\Config;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -53,6 +56,8 @@ $Qyear = (string) \filter_input(INPUT_POST, 'year');
 $Qdl_org = (string) \filter_input(INPUT_POST, 'dl_org');
 $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
+$Qfases_on = (array)  \filter_input(INPUT_POST, 'fases_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qfases_off = (array)  \filter_input(INPUT_POST, 'fases_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $Qlistar_asistentes = (string) \filter_input(INPUT_POST, 'listar_asistentes');
 
 $isfsv=core\ConfigGlobal::mi_sfsv();
@@ -79,16 +84,15 @@ $oActividadTipo->setNom_tipo($Qsnom_tipo);
 
 if (empty($Qstatus)) { $Qstatus = actividades\model\entity\ActividadAll::STATUS_ACTUAL; }
 
+$mi_dele = core\ConfigGlobal::mi_delef();
 $oGesDl = new ubis\GestorDelegacion();
 $oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones();
 $oDesplDelegacionesOrg->setNombre('dl_org');
 $oDesplDelegacionesOrg->setOpcion_sel($Qdl_org);
 if ($Qmodo == 'importar') {
-	$mi_dele = core\ConfigGlobal::mi_delef();
 	$oDesplDelegacionesOrg->setOpcion_no(array($mi_dele));
 }
 if ($Qmodo == 'publicar') {
-	$mi_dele = core\ConfigGlobal::mi_delef();
 	$oDesplDelegacionesOrg->setOpciones(array($mi_dele=>$mi_dele));
 	$oDesplDelegacionesOrg->setBlanco(false);
 }
@@ -131,6 +135,9 @@ $oFormP->setEmpiezaMax($Qempiezamax);
 $oHash = new web\Hash();
 $oHash->setcamposForm('dl_org!empiezamax!empiezamin!filtro_lugar!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!periodo!status!year');
 $oHash->setcamposNo('id_ubi');
+if (core\configGlobal::is_app_installed('procesos')) {
+    $oHash->setCamposNo('fases_on!fases_off');
+}
 $a_camposHidden = array(
 		'modo' => $Qmodo,
 		'listar_asistentes' => $Qlistar_asistentes,
@@ -214,6 +221,33 @@ $chk_status_4 = ($Qstatus== $val_status_4)? "checked='true'" : '';
 $val_status_9 = actividades\model\entity\ActividadAll::STATUS_ALL;
 $chk_status_9 = ($Qstatus== $val_status_9)? "checked='true'" : '';
 
+//////////// PROCESOS /////////////////
+$proceso_installed = FALSE;
+$url_actualizar_fases = '';
+$h_actualizar_fases = '';
+$CuadrosFasesOn = '';
+$CuadrosFasesOff = '';
+if (core\configGlobal::is_app_installed('procesos')) {
+    $proceso_installed = TRUE;
+    $url_actualizar_fases = ConfigGlobal::getWeb().'/apps/procesos/controller/actividad_que_fases_ajax.php';
+    $oHash1 = new web\Hash();
+    $oHash1->setUrl($url_actualizar_fases);
+    $oHash1->setCamposForm('salida!dl_propia!id_tipo_activ');
+    $h_actualizar_fases = $oHash1->linkSinVal();
+    
+    $dl_propia = ($Qdl_org == $mi_dele)? 't' : 'f';
+    $GesTiposActiv = new GestorTipoDeActividad();
+    $aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($Qid_tipo_activ,$dl_propia);
+    $oGesFases= new GestorActividadFase();
+    $aFases = $oGesFases->getArrayFasesProcesos($aTiposDeProcesos);
+    foreach ($aFases as $descripcion => $id_fase) {
+        if (in_array($id_fase, $Qfases_on)) { $chk = 'checked'; } else { $chk = ''; }
+        $CuadrosFasesOn .= "<input type='checkbox' name='fases_on[]' value='$id_fase' $chk /> $descripcion";
+        if (in_array($id_fase, $Qfases_off)) { $chk = 'checked'; } else { $chk = ''; }
+        $CuadrosFasesOff .= "<input type='checkbox' name='fases_off[]' value='$id_fase' $chk /> $descripcion";
+    }
+}
+
 $a_campos = ['oPosicion' => $oPosicion,
 			'oHash' => $oHash,
 			'accion' => $accion,
@@ -237,6 +271,12 @@ $a_campos = ['oPosicion' => $oPosicion,
 			'chk_status_4' => $chk_status_4,
 			'val_status_9' => $val_status_9,
 			'chk_status_9' => $chk_status_9,
+            'proceso_installed'  => $proceso_installed,
+            'url_actualizar_fases' => $url_actualizar_fases,
+            'h_actualizar_fases' => $h_actualizar_fases,
+            'CuadrosFasesOn' => $CuadrosFasesOn,
+            'CuadrosFasesOff' => $CuadrosFasesOff,
+            'mi_dele' => $mi_dele,
 			];
 
 $oView = new core\ViewTwig('actividades/controller');

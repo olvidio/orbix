@@ -23,7 +23,8 @@ $Qid_activ = (integer)  \filter_input(INPUT_POST, 'id_activ');
 switch($Qque) {
 	case 'generar':
 		$oActividadProceso=new GestorActividadProcesoTarea();
-		$oActividadProceso->generarProceso($Qid_activ,ConfigGlobal::mi_sfsv(),TRUE); // TRUE para forzar
+		//$oActividadProceso->generarProceso($Qid_activ,ConfigGlobal::mi_sfsv(),TRUE); // TRUE para forzar
+		$oActividadProceso->generarProceso($Qid_activ,ConfigGlobal::mi_sfsv(),FALSE); // FALSE
 		break;
 	case 'get':
 	    $aWhere = [

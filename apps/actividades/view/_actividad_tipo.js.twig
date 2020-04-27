@@ -17,6 +17,9 @@ fnjs_asistentes=function(){
 		})
 		.done(function (rta_txt) {
 			$('#lst_asistentes').html(rta_txt);
+            {% if procesos_installed  %}
+				fnjs_actualizar_fases();
+            {% endif %}
 		});
 		// borrar el resto.
 		$('#iasistentes_val').val(".");
@@ -68,6 +71,9 @@ fnjs_actividad=function(){
 	})
 	.done(function (rta_txt) {
 		$('#lst_actividad').html(rta_txt);
+            {% if procesos_installed  %}
+				fnjs_actualizar_fases();
+            {% endif %}
 	});
 }
 fnjs_nom_tipo=function(){
@@ -84,6 +90,9 @@ fnjs_nom_tipo=function(){
 	})
 	.done(function (rta_txt) {
 		$('#lst_nom_tipo').html(rta_txt);
+        {% if procesos_installed  %}
+            fnjs_actualizar_fases();
+        {% endif %}
 	});
 }
 fnjs_id_activ=function(){
@@ -105,6 +114,9 @@ fnjs_id_activ=function(){
     })
     .done(function (rta_txt) {
             $('#tarifa').val(rta_txt);			
+            {% if procesos_installed  %}
+				fnjs_actualizar_fases();
+            {% endif %}
     });
 }
 fnjs_act_id_activ=function(){

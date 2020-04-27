@@ -77,6 +77,8 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     $Qdl_org=$oPosicion->getParametro('dl_org');
     $Qempiezamin=$oPosicion->getParametro('empiezamin');
     $Qempiezamax=$oPosicion->getParametro('empiezamax');
+    $Qfases_on =  $oPosicion->getParametro('fases_on');
+    $Qfases_off =  $oPosicion->getParametro('fases_off');
     $Qid_sel=$oPosicion->getParametro('id_sel');
     $Qscroll_id = $oPosicion->getParametro('scroll_id');
     $oPosicion->olvidar($QGstack); //limpio todos los estados hacia delante.
@@ -109,6 +111,8 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     $Qdl_org = (string) \filter_input(INPUT_POST, 'dl_org');
     $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
     $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
+    $Qfases_on = (array)  \filter_input(INPUT_POST, 'fases_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $Qfases_off = (array)  \filter_input(INPUT_POST, 'fases_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     
     // valores por defeccto
     if (empty($Qperiodo)) {
@@ -126,7 +130,10 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
         'dl_org'=>$Qdl_org,
         'status'=>$Qstatus,
         'empiezamin'=>$Qempiezamin,
-        'empiezamax'=>$Qempiezamax );
+        'empiezamax'=>$Qempiezamax ,
+        'fases_on'=>$Qfases_on,
+        'fases_off'=>$Qfases_off,
+    );
     $oPosicion->setParametros($aGoBack,1);
 }
 
@@ -339,6 +346,27 @@ foreach($cActividades as $oActividad) {
     } else {
         // mirar permisos.
         if(core\ConfigGlobal::is_app_installed('procesos')) {
+            //mirar por la seleccion
+            if (!empty($Qfases_on) OR !empty($Qfases_off)) {
+                $gesActividadProcesoTarea = new GestorActividadProcesoTarea();
+                $aFasesCompletadas = $gesActividadProcesoTarea->getFasesCompletadas($id_activ);
+                if (!empty($Qfases_on)) {
+                    foreach ($Qfases_on as $id_fase) {
+                        if (!in_array($id_fase, $aFasesCompletadas)) {
+                            // falta una fase -> otra actividad:
+                            continue 2;
+                        }
+                    }
+                }
+                if (!empty($Qfases_off)) {
+                    foreach ($Qfases_off as $id_fase) {
+                        if (in_array($id_fase, $aFasesCompletadas)) {
+                            // Hay un fase on que debería estar off -> otra actividad:
+                            continue 2;
+                        }
+                    }
+                }
+            }
             $_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
             $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
             $oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
@@ -509,13 +537,15 @@ $a_camposHidden = array(
     'empiezamin' => $Qempiezamin,
     'empiezamax' => $Qempiezamax,
     'filtro_lugar' => $Qfiltro_lugar,
+    'fases_on' => $Qfases_on,
+    'fases_off' => $Qfases_off,
 );
 $oHash->setArraycamposHidden($a_camposHidden);
-$oHash->setCamposNo('!modo!id_tipo_activ!id_ubi!periodo!year!dl_org!status!empiezamin!empiezamax!filtro_lugar');
+$oHash->setCamposNo('!modo!id_tipo_activ!id_ubi!periodo!year!dl_org!status!empiezamin!empiezamax!filtro_lugar!fases_on!fases_off');
 
 $oHashSel = new web\Hash();
 $oHashSel->setcamposForm('!mod!queSel!id_dossier');
-$oHashSel->setcamposNo('continuar!sel!scroll_id');
+$oHashSel->setcamposNo('continuar!sel!scroll_id!fases_on!fases_off');
 $a_camposHiddenSel = array(
     'obj_pau' =>$obj_pau,
     'pau' =>'a',
