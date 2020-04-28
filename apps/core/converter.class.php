@@ -24,6 +24,9 @@ class Converter {
             case 'datetime':
                 $this->Converter = new PgTimestamp($data);
             break;
+            case 'timestamp':
+                $this->Converter = new PgTimestamp($data);
+            break;
             
             default:
                 ;

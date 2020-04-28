@@ -1015,7 +1015,7 @@ class Cambio Extends core\ClasePropiedades {
 	    if (empty($this->itimestamp_cambio)) {
 	        return new NullDateTimeLocal();
 	    }
-	    $oConverter = new core\Converter('datetime', $this->itimestamp_cambio);
+	    $oConverter = new core\Converter('timestamp', $this->itimestamp_cambio);
 	    return $oConverter->fromPg();
 	}
 	/**
