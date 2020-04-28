@@ -11,6 +11,7 @@ use procesos\model\entity\GestorActividadProcesoTarea;
 use ubis\model\entity\Ubi;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
+use procesos\model\entity\ActividadProcesoTarea;
 /**
  * Fitxer amb la Classe que accedeix a la taula av_cambios
  *
@@ -536,38 +537,34 @@ class Cambio Extends core\ClasePropiedades {
 	            }
 	            break;
 	        case Cambio::TIPO_CMB_FASE: // (4) cambio de fase o status.
+                // en el caso especial de completado fase, uso el valor_old para poner el id_fase, y el new el estado de completado.
+	            $id_fase = $sValor_old;
 	            $GesActividadFase = new GestorActividadFase();
 	            
 	            if (ConfigGlobal::mi_sfsv() == 1) {
-                    $idFase = $this->getJson_fases_sv();
+                    $aFases = $this->getJson_fases_sv();
 	            } else {
-                    $idFase = $this->getJson_fases_sf();
+                    $aFases = $this->getJson_fases_sf();
 	            }
 	            $idStatus = $this->getId_status();
 
 	            if (!$bEliminada) {
-	                if (!empty($idFase)) {
-	                    /* REVISAR
-                        
-                        $cFases = $GesActividadFase->getActividadFases(array('id_fase'=>$idFase));
+	                if (!empty($sPropiedad)) {
+                        $cFases = $GesActividadFase->getActividadFases(array('id_fase'=>$id_fase));
                         $sFase = $cFases[0]->getDesc_fase();
-                        $cFases = $GesActividadFase->getActividadFases(array('id_fase'=>$id_faseActual));
-                        $sFaseActual = $cFases[0]->getDesc_fase();
                         
-                        if ($sValor_old == '-' && $sValor_new == 1) {
-                            $sformat = 'Fase "%2$s" completada en la actividad "%1$s". Fase actual "%3$s"';
+                        if ($sValor_new == 1) {
+                            $sformat = 'Fase "%2$s" marcada en la actividad "%1$s"';
                         }
-                        if ($sValor_old == 1 && $sValor_new == '-') {
-                            $sformat = 'Fase "%2$s" eliminada en la actividad "%1$s". Fase actual "%3$s"';
+                        if ($sValor_new == '-') {
+                            $sformat = 'Fase "%2$s" desmarcada en la actividad "%1$s"';
                         }
-                        */
 	                } else if (!empty($idStatus)) {
-                        $sFaseActual = $aStatus[$id_statusActual];
                         $sFase =  $aStatus[$idStatus];
                         
                         $sformat = 'Fase cambiada en la actividad "%1$s". Status "%3$s"' ;
                         if ($sValor_old == '-' && $sValor_new == 1) {
-                            $sformat = 'Status "%2$s" completada en la actividad "%1$s". Status actual "%3$s"';
+                            $sformat = 'Status "%2$s" completado en la actividad "%1$s". Status actual "%3$s"';
                         }
                         if ($sValor_old == 1 && $sValor_new == '-') {
                             $sformat = 'Status "%2$s" eliminada en la actividad "%1$s". Status actual "%3$s"';
@@ -575,10 +572,9 @@ class Cambio Extends core\ClasePropiedades {
 	                }
 	            } else {
 	                $sFase = '';
-	                $sFaseActual = '';
 	                $sformat = 'Fase cambiada en la actividad "%1$s".';
 	            }
-	            return sprintf($sformat,$sNomActiv,$sFase,$sFaseActual);
+	            return sprintf($sformat,$sNomActiv,$sFase);
 	            break;
 	    }
 	    

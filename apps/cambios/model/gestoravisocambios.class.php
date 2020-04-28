@@ -279,10 +279,7 @@ class gestorAvisoCambios {
 				if (!empty($aDadesNew['completado']) && is_true($aDadesNew['completado']))  { $boolCompletadoNew=TRUE; } else { $boolCompletadoNew=FALSE; }
 				if (!empty($aDadesActuals['completado']) && is_true($aDadesActuals['completado']))  { $boolCompletadoActual=TRUE; } else { $boolCompletadoActual=FALSE; }
 				
-				/*
-				if (empty($aDadesNew['completado']) || ($aDadesNew['completado'] === 'off') || ($aDadesNew['completado'] === 'false') || ($aDadesNew['completado'] === 'f')) { $boolCompletadoNew=false; } else { $boolCompletadoNew=true; }
-				if (empty($aDadesActuals['completado']) || ($aDadesActuals['completado'] === 'off') || ($aDadesActuals['completado'] === 'false') || ($aDadesActuals['completado'] === 'f')) { $boolCompletadoActual=false; } else { $boolCompletadoActual=true; }
-				*/
+				// En vez del nombre del valor_old, pongo el id de la fase que se marca.
 
 				if ($boolCompletadoNew != $boolCompletadoActual) {
 					$oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_FASE);
@@ -294,7 +291,7 @@ class gestorAvisoCambios {
 					$oActividadCambio->setDl_org($dl_org);
 					$oActividadCambio->setObjeto($sObjeto);
 					$oActividadCambio->setPropiedad('completado');
-					$oActividadCambio->setValor_old($boolCompletadoActual);
+					$oActividadCambio->setValor_old($aDadesActuals['id_fase']);
 					$oActividadCambio->setValor_new($boolCompletadoNew);
 					$oActividadCambio->setQuien_cambia($id_user);
                     $oActividadCambio->setSfsv_quien_cambia($sfsv);
