@@ -36,6 +36,32 @@ class GestorRepeticion Extends core\ClaseGestor {
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
 	/**
+	 * retorna un array 
+	 * Els posibles tipus de repetició
+	 *
+	 * @return array Una Llista desplegable
+	 */
+	function getArrayRepeticion() {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$sQuery="SELECT id_repeticion, repeticion
+				FROM $nom_tabla
+				ORDER BY repeticion";
+		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+			$sClauError = 'GestorRepeticion.lista';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		$aRepeticion = [];
+		foreach ($oDblSt as $aDades) {
+			$id_repeticion = $aDades['id_repeticion'];
+			$repeticion = $aDades['repeticion'];
+			$aRepeticion[$id_repeticion] = $repeticion;
+		}
+		return $aRepeticion;
+	}
+
+	/**
 	 * retorna un objecte del tipus Desplegable
 	 * Els posibles tipus de repetició
 	 *

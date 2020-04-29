@@ -1148,6 +1148,7 @@ class ActividadAll Extends core\ClasePropiedades {
 		$oActividadAllSet->add($this->getDatosId_repeticion());
 		$oActividadAllSet->add($this->getDatosId_tabla());
 		$oActividadAllSet->add($this->getDatosPlazas());
+		$oActividadAllSet->add($this->getDatosPublicado());
 		return $oActividadAllSet->getTot();
 	}
 

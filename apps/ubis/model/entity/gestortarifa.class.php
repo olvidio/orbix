@@ -40,7 +40,7 @@ class GestorTarifa Extends core\ClaseGestor {
 	 * @param string sQuery la query a executar.
 	 * @return array Una col·lecció d'objectes de tipus Tarifa
 	 */
-	function gettarifasQuery($sQuery='') {
+	function getTarifasQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
 		$oTarifaSet = new core\Set();
 		if (($oDbl->query($sQuery)) === FALSE) {
@@ -66,7 +66,7 @@ class GestorTarifa Extends core\ClaseGestor {
 	 * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
 	 * @return array Una col·lecció d'objectes de tipus Tarifa
 	 */
-	function gettarifas($aWhere=array(),$aOperators=array()) {
+	function getTarifas($aWhere=array(),$aOperators=array()) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		$oTarifaSet = new core\Set();

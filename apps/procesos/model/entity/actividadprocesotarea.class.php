@@ -994,6 +994,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_tipo_proceso'));
         $oDatosCampo->setEtiqueta(_("id_tipo_proceso"));
+        $oDatosCampo->setAviso(FALSE);
         return $oDatosCampo;
     }
     /**
@@ -1006,6 +1007,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_activ'));
         $oDatosCampo->setEtiqueta(_("id_activ"));
+        $oDatosCampo->setAviso(FALSE);
         return $oDatosCampo;
     }
     /**
@@ -1018,6 +1020,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_fase'));
         $oDatosCampo->setEtiqueta(_("id_fase"));
+        $oDatosCampo->setAviso(FALSE);
         return $oDatosCampo;
     }
     /**
@@ -1030,6 +1033,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_tarea'));
         $oDatosCampo->setEtiqueta(_("id_tarea"));
+        $oDatosCampo->setAviso(FALSE);
         return $oDatosCampo;
     }
     /**

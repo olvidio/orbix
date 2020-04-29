@@ -215,6 +215,14 @@ class Avisos {
                 } else {
                     // si cambia qualquier otra cosa en mi id_ubi.
                     if (in_array($id_ubi,$a_id_pau)) {
+                        switch ($this->sObjeto) {
+                            case 'ActividadCargoNoSacd':
+                            case 'ActividadCargoSacd':
+                                // si lo que cambia es el campo observaciones, no hace falata informar.
+                                if ($propiedad == 'observ') {
+                                    return FALSE;
+                                }
+                        }
                         return TRUE;
                     } else {
                         return FALSE;
@@ -309,11 +317,11 @@ class Avisos {
                 return FALSE;
                 break;
             case 'Asistente':
-                if ($this->asite($id_nom, $id_activ)) {
-                    return TRUE;
-                } else {
-                    // si lo que cambia es el id_nom, compruebo que el valor old o new sean de algun sacd de la zona.
-                    if ($propiedad == 'id_nom') {
+                // si lo que cambia es el id_nom, compruebo que el valor old o new sean de algun sacd de la zona.
+                if ($propiedad == 'id_nom') {
+                    if ($this->asite($id_nom, $id_activ)) {
+                        return TRUE;
+                    } else {
                         if (($valor_old_cmb == $id_nom) || ($valor_new_cmb == $id_nom)) {
                             return TRUE;
                         }

@@ -874,6 +874,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'cfi'));
 		$oDatosCampo->setEtiqueta(_("cfi"));
+		$oDatosCampo->setAviso(FALSE);
 		return $oDatosCampo;
 	}
 	/**
@@ -886,6 +887,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'cfi_con'));
 		$oDatosCampo->setEtiqueta(_("cfi con"));
+		$oDatosCampo->setAviso(FALSE);
 		return $oDatosCampo;
 	}
 	/**
@@ -910,6 +912,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'encargo'));
 		$oDatosCampo->setEtiqueta(_("encargo"));
+		$oDatosCampo->setAviso(FALSE);
 		return $oDatosCampo;
 	}
 	/**
@@ -922,6 +925,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'cama'));
 		$oDatosCampo->setEtiqueta(_("cama"));
+		$oDatosCampo->setAviso(FALSE);
 		return $oDatosCampo;
 	}
 	/**

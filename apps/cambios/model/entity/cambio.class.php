@@ -1,17 +1,19 @@
 <?php
 namespace cambios\model\entity;
 use actividades\model\entity\Actividad;
+use actividades\model\entity\GestorNivelStgr;
+use actividades\model\entity\GestorRepeticion;
+use actividadtarifas\model\entity\GestorTipoTarifa;
 use cambios\model\gestorAvisoCambios;
 use core\ConfigGlobal;
+use function core\is_true;
 use core;
 use stdClass;
 use personas\model\entity\PersonaSacd;
 use procesos\model\entity\GestorActividadFase;
-use procesos\model\entity\GestorActividadProcesoTarea;
 use ubis\model\entity\Ubi;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
-use procesos\model\entity\ActividadProcesoTarea;
 /**
  * Fitxer amb la Classe que accedeix a la taula av_cambios
  *
@@ -372,7 +374,6 @@ class Cambio Extends core\ClasePropiedades {
 	    $sValor_new = $this->getValor_new();
 	    
 	    $oActividad = new Actividad($iId);
-	    $id_statusActual = $oActividad->getStatus();
 	    $DatosCampoStatus = $oActividad->getDatosStatus();
 	    $aStatus = $DatosCampoStatus->getLista();
 	    
@@ -414,23 +415,54 @@ class Cambio Extends core\ClasePropiedades {
             }
 	    }
 	    /* Per posar noms que s'entenguin als camps de l'activitat */
-	    if ($sObjeto == 'Actividad' && $sPropiedad == 'status') {
-	        $sValor_old = $aStatus[$sValor_old];
-	        $sValor_new = $aStatus[$sValor_new];
-	    }
-	    if ($sObjeto == 'Actividad' && $sPropiedad == 'tarifa') {
-	        $aTarifas = $this->getTarifas();
-	        $sValor_old = empty($sValor_old)? $sValor_old : $aTarifas[$sValor_old];
-	        $sValor_new = empty($sValor_new)? $sValor_new : $aTarifas[$sValor_new];
+	    if ($sObjeto == 'Actividad' OR
+	        $sObjeto == 'ActividadDl' OR
+	        $sObjeto == 'ActividadEx')
+	    {
+	        
+	       if( $sPropiedad == 'status') {
+                $sValor_old = $aStatus[$sValor_old];
+                $sValor_new = $aStatus[$sValor_new];
+            }
+            if ($sPropiedad == 'tarifa') {
+                $gesTarifas = new GestorTipoTarifa();
+                $aTarifas = $gesTarifas->getArrayTipoTarifas();
+                $sValor_old = empty($sValor_old)? $sValor_old : $aTarifas[$sValor_old];
+                $sValor_new = empty($sValor_new)? $sValor_new : $aTarifas[$sValor_new];
+            }
+            if ($sPropiedad == 'id_repeticion') {
+                $gesRepeticion = new GestorRepeticion();
+                $aRepeticion = $gesRepeticion->getArrayRepeticion();
+                $sValor_old = empty($sValor_old)? $sValor_old : $aRepeticion[$sValor_old];
+                $sValor_new = empty($sValor_new)? $sValor_new : $aRepeticion[$sValor_new];
+            }
+            if ($sPropiedad == 'nivel_stgr') {
+                $gesNivelStgr = new GestorNivelStgr();
+                $aNivelStgr = $gesNivelStgr->getArrayNivelesStgr();
+                $sValor_old = empty($sValor_old)? $sValor_old : $aNivelStgr[$sValor_old];
+                $sValor_new = empty($sValor_new)? $sValor_new : $aNivelStgr[$sValor_new];
+            }
 	    }
 	    
 	    $ObjetoFullPath = gestorAvisoCambios::getFullPathObj($sObjeto);
 	    $oObject = new $ObjetoFullPath();
+	    $oDbl = $oObject->getoDbl();
 	    $cDatosCampos = $oObject->getDatosCampos();
+	    // para ajustar el nombre del campo y el valor a algo más legible:
 	    $etiqueta = $sPropiedad;
 	    foreach ($cDatosCampos as $oDatosCampo) {
 	        if ($oDatosCampo->getNom_camp() == $sPropiedad) {
                 $etiqueta = $oDatosCampo->getEtiqueta();
+                // si es boolean, traduzco a true-false:
+                $tipo = $oDatosCampo->datos_campo($oDbl,'tipo');
+                if ($tipo == 'bool') {
+                    // OJO. Excepción en el caso de completra una fase, el campo es completado (bool), pero en el 
+                    // valor_old lo que pongo es el id_fase.
+                    if ($sObjeto != 'ActividadProcesoTarea' && $sPropiedad != 'completado') {
+                       $sValor_old = is_true($sValor_old)? 'true' : 'false';
+                    }
+                    $sValor_new = is_true($sValor_new)? 'true' : 'false'; 
+                }
 	        }
 	    }
 	    
@@ -553,10 +585,9 @@ class Cambio Extends core\ClasePropiedades {
                         $cFases = $GesActividadFase->getActividadFases(array('id_fase'=>$id_fase));
                         $sFase = $cFases[0]->getDesc_fase();
                         
-                        if ($sValor_new == 1) {
+                        if (is_true($sValor_new)) {
                             $sformat = 'Fase "%2$s" marcada en la actividad "%1$s"';
-                        }
-                        if ($sValor_new == '-') {
+                        } else {
                             $sformat = 'Fase "%2$s" desmarcada en la actividad "%1$s"';
                         }
 	                } else if (!empty($idStatus)) {

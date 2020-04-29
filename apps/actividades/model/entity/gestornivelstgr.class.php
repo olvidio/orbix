@@ -44,6 +44,30 @@ class GestorNivelStgr Extends core\ClaseGestor {
 	/* METODES PUBLICS -----------------------------------------------------------*/
 	
 	/**
+	 * retorna un Array amb els nivells d'stgr
+	 *
+	 * @return array (nivel_stgr => descripcion.
+	 */
+	function getArrayNivelesStgr() {
+	    $oDbl = $this->getoDbl();
+	    $nom_tabla = $this->getNomTabla();
+	    
+		$sQuery="SELECT nivel_stgr,desc_breve || '(' || desc_nivel || ')' FROM $nom_tabla ORDER BY orden";
+		if (($oDbl->query($sQuery)) === false) {
+			$sClauError = 'GestorNivelStgr.lista';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		$aOpciones=array();
+		foreach ($oDbl->query($sQuery) as $aClave) {
+			$clave=$aClave[0];
+			$val=$aClave[1];
+			$aOpciones[$clave]=$val;
+		}
+		return $aOpciones;
+	}
+	
+	/**
 	 * retorna un objecte del tipus Desplegable
 	 * Els posibles nivells de stgr.
 	 *
