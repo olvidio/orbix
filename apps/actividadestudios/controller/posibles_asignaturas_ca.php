@@ -113,7 +113,7 @@ foreach($cAsignaturas as $oAsignatura) {
         $datos = $aAlumno['datos'];
         $id_nom = $datos['id_nom'];
         $aprobadas = $datos['aprobadas'];
-        if (array_key_exists($id_asignatura, $aprobadas)) {
+        if (!array_key_exists($id_asignatura, $aprobadas)) {
             $posibles_alumnos++;
             $aNombresAlumnos[] = $datos['oPersona']->getApellidosNombre();
         }
