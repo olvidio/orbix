@@ -88,7 +88,7 @@ foreach($gesAsistentes->getAsistentes(array('id_activ'=>$id_activ)) as $oAsisten
         $aAprobadas[$id_asignatura] = $id_situacion;
     }
     $datos =  ['id_nom' => $id_nom, 'oPersona' => $oPersona, 'aprobadas' => $aAprobadas];
-    $a_alumnos[] = ['apelidos_nombre' => $ap_nom, 'datos' => $datos];
+    $a_alumnos[] = ['apellidos_nombre' => $ap_nom, 'datos' => $datos];
     
 }
 // por orden alfabético.
