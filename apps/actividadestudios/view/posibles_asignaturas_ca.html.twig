@@ -43,7 +43,7 @@ fnjs_detalles=function(id_asignatura){
 <h3>{{ "alumnos a los faltan 4 o menos asignaturas para teminar el cuadrienio" }}</h3>
 <table>
 {% for asignatura_alumno in a_alumnos_fin_c %}
-<tr><td>{{  asignatura_alumno.apellidos_nomre }}<td>
+<tr><td>{{  asignatura_alumno.apellidos_nombre }}<td>
     <td>
         {% for asignatura in asignatura_alumno.asignaturas %}
             {{ asignatura }}<br>
