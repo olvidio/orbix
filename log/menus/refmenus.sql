@@ -248,7 +248,6 @@
 1099	{50,10}	fases	clase_info=procesos\\model\\infofases	160	35651584	13	t
 1101	{50,20}	fases-tareas	clase_info=procesos\\model\\infotareas	160	35651584	13	t
 1180	{60}	propuestas	\N	0	8	8	t
-1182	{60,10}	planing zonas	propuestas=true	139	8	8	t
 1133	{60,90}	asignar sacd	\N	39	8	8	t
 1134	{60,90,10}	activ sv sg	tipo=sg&periodo=desdeHoy	39	8	8	t
 1136	{60,90,20}	activ sv sr	tipo=sr	39	8	8	t
@@ -257,6 +256,7 @@
 1140	{60,90,60}	activ sf sr	tipo=sf_sr	39	8	8	t
 1141	{60,90,70}	activ sf n,nax y agd	tipo=sf_na	39	8	8	t
 1142	{60,90,90}	activ sss+	tipo=sssc	39	8	8	t
+1182	{60,10}	planing zonas	propuesta=true	139	8	8	t
 1150	{50,100,20}	activ sr	tipo=sr	43	8	8	t
 1153	{50,100,30}	sv n y agd	tipo=nagd	43	8	8	t
 1155	{50,100,40}	sf s y sg	tipo=sfsg	43	8	8	t

@@ -71,7 +71,7 @@ $Qtrimestre = (integer) \filter_input(INPUT_POST, 'trimestre');
 
 $Qid_zona = (string) \filter_input(INPUT_POST, 'id_zona');
 $Qactividad = (string) \filter_input(INPUT_POST, 'actividad');
-$Qpropuestas = (string) \filter_input(INPUT_POST, 'propuestas');
+$Qpropuesta = (string) \filter_input(INPUT_POST, 'propuesta');
 
 // ISO: mes/dia
 switch ($Qtrimestre) {
@@ -265,7 +265,7 @@ foreach ($aa_zonas as $a_zonas) {
 				$hfi=(string) $h_fin;
 				
 				
-				if(!is_true($Qpropuestas) && core\ConfigGlobal::is_app_installed('procesos')) {
+				if(!is_true($Qpropuesta) && core\ConfigGlobal::is_app_installed('procesos')) {
     				$_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
 				    $permiso_ver = $_SESSION['oPermActividades']->havePermisoSacd($id_cargo, $propio);
 				} else {
