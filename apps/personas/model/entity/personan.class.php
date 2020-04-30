@@ -508,4 +508,3 @@ class PersonaN Extends PersonaDl {
 		return $oDatosCampo;
 	}
 }
-?>

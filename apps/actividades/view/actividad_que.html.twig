@@ -27,7 +27,7 @@ fnjs_comprobar_fase_no_duplicadas=function() {
 }
 
 fnjs_actualizar_fases=function(){
-	var dl_org=$('input[name="dl_org"]:selected').val();
+	var dl_org=$('#dl_org').val();
 	if (dl_org == '{{ mi_dele }}' ) {
 		dl_propia = 't';
 	} else {
@@ -149,7 +149,7 @@ fnjs_left_side_hide();
 <br>
 {% if proceso_installed %}
 <table>
-<tr><th colspan=6 class=titulo_inv>{{ "según fases"|trans }}</th></tr>
+<tr><th colspan=6 class=titulo_inv>{{ "según fases (depende del tipo de actividad y de organiza)"|trans }}</th></tr>
     <tr class="tono2" ><td class="etiqueta">{{ "marcadas"|trans }}:</td>
     	<td id=td_fases_on>
             {{ CuadrosFasesOn|raw }}

@@ -1,6 +1,7 @@
 <?php
 use core\ConfigGlobal;
 use ubis\model\entity as ubis;
+use personas\model\entity\PersonaGlobal;
 /**
 * Funciones más comunes de la aplicación
 */
@@ -226,16 +227,10 @@ $oDesplLengua->setNombre("lengua");
 $oDesplLengua->setOpcion_sel($oPersona->getLengua());
 
 //posibles valores de stgr
-$tipos= array (  "n"=> _("no cursa est."),
-				"b"=> _("bienio"),
-				"c1"=>  _("cuadrienio año I"),
-				"c2"=> _("cuadrienio año II-IV"),
-				"r"=> _("repaso"),
-				);
-
+$aTipos_stgr = PersonaGlobal::$stgr_posibles;
 $oDesplStgr = new web\Desplegable();
 $oDesplStgr->setNombre('stgr');
-$oDesplStgr->setOpciones($tipos);
+$oDesplStgr->setOpciones($aTipos_stgr);
 $oDesplStgr->setOpcion_sel($stgr);
 $oDesplStgr->setBlanco(true);
 

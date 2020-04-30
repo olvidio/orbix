@@ -262,6 +262,7 @@ if (!empty($Qmodo) && $Qmodo != 'buscar') {
                 }
                 if ($_SESSION['oPerm']->have_perm_oficina('est')) {
                     $a_botones[]=array( 'txt'=>_("listas de clase"), 'click'=>"jsForm.mandar(\"#seleccionados\",\"lista_clase\")");
+                    $a_botones[]=array( 'txt'=>_("posibles asignaturas"), 'click'=>"jsForm.mandar(\"#seleccionados\",\"posibles_asignaturas\")");
                 }
         }
     }

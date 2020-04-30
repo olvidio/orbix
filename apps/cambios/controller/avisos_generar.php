@@ -1,14 +1,15 @@
 <?php
 use cambios\model\entity\Cambio;
 use cambios\model\entity\CambioDl;
+use cambios\model\entity\CambioUsuario;
 use cambios\model\entity\CambioUsuarioObjetoPref;
 use cambios\model\entity\GestorCambioUsuario;
 use core\ConfigGlobal;
+use menus\model\PermisoMenu;
 use usuarios\model\entity\GestorUsuario;
 use usuarios\model\entity\Usuario;
 use web\Desplegable;
 use web\Lista;
-use cambios\model\entity\CambioUsuario;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -42,8 +43,7 @@ $oDesplUsuarios->setNombre('id_usuario');
 $oDesplUsuarios->setBlanco('false');
 $oDesplUsuarios->setOpciones($ListaUsuarios);
 
-
-if ($_SESSION['oPerm']->have_perm_oficina('dtor')){ //el admin_sv incluye el admin_sf
+if ($_SESSION['oPerm']->only_perm('admin_sf') OR $_SESSION['oPerm']->only_perm('admin_sv')) {
     // sino en $Posicion. Le paso la referecia del stack donde está la información.
     if (!empty($Qrefresh) && ($QGstack != '')) {
         $oPosicion->goStack($QGstack);

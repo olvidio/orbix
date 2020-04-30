@@ -96,6 +96,11 @@ if ($Qmodo == 'publicar') {
 	$oDesplDelegacionesOrg->setOpciones(array($mi_dele=>$mi_dele));
 	$oDesplDelegacionesOrg->setBlanco(false);
 }
+// para cambiar el listado de fases si no el la dl_propia
+if (core\configGlobal::is_app_installed('procesos')) {
+    $oDesplDelegacionesOrg->setAction('fnjs_actualizar_fases();');
+}
+
 
 $oDesplFiltroLugar = $oGesDl->getListaDlURegionesFiltro();
 $oDesplFiltroLugar->setAction('fnjs_lugar()');
@@ -237,6 +242,10 @@ if (core\configGlobal::is_app_installed('procesos')) {
     
     $dl_propia = ($Qdl_org == $mi_dele)? 't' : 'f';
     $GesTiposActiv = new GestorTipoDeActividad();
+    // Para limitar las opciones:
+    if (empty($Qid_tipo_activ)) {
+        $Qid_tipo_activ = ConfigGlobal::mi_sfsv();
+    }
     $aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($Qid_tipo_activ,$dl_propia);
     $oGesFases= new GestorActividadFase();
     $aFases = $oGesFases->getArrayFasesProcesos($aTiposDeProcesos);

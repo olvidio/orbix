@@ -24,6 +24,21 @@ use ubis\model\entity as ubis;
  * @created 11/03/2014
  */
 abstract class PersonaGlobal Extends core\ClasePropiedades {
+    
+    // Para que la variable stgr_posibles coja las traducciones, hay 
+    // que ejecutar la funcion 'traduccion_init()'. Cosa que se hace justo
+    // al final de la definicion de la clase: PersonaGlobal::traduccion_init();
+    static $stgr_posibles;
+    static function traduccion_init () {
+        self::$stgr_posibles = [
+                'n'  => _("no cursa est."),
+                'b'  => _("bienio"),
+                'c1' => _("cuadrienio año I"),
+                'c2' => _("cuadrienio año II-IV"),
+                'r'  => _("repaso"),
+                ];
+    }
+    
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/**
@@ -1287,3 +1302,4 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 }
+PersonaGlobal::traduccion_init();

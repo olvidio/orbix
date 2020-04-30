@@ -720,11 +720,20 @@ if (empty($Qque)) {
                 $a_resumen[$id_ubi][$any][2]['dias'] += $a_ocupacion[2]; // sf
 
                 $oIngreso = new Ingreso(array('id_activ'=>$id_activ));
-                $num_asistentes_previstos=$oIngreso->getNum_asistentes_previstos();
-                $num_asistentes=$oIngreso->getNum_asistentes();
-                $ingresos_previstos=$factor_dias*$oIngreso->getIngresos_previstos();
-                $ingresos=$factor_dias*$oIngreso->getIngresos();
+                $num_asistentes_previstos=empty($oIngreso->getNum_asistentes_previstos())? 0 : $oIngreso->getNum_asistentes_previstos();
+                $num_asistentes=empty($oIngreso->getNum_asistentes())? 0 : $oIngreso->getNum_asistentes();
+                if (empty($oIngreso->getIngresos_previstos())) {
+                    echo "<br>".sprintf(_("No hay ingresos previstos para la actividad %s"),$nom_activ);
+                    $ingresos_previstos=0;
+                    $ingresos=0;
+                } else {
+                    $ingresos_previstos=$factor_dias*$oIngreso->getIngresos_previstos();
+                    $ingresos=$factor_dias*$oIngreso->getIngresos();
+                }
 
+                if (empty($num_asistentes_previstos)) {
+                    echo "<br>".sprintf(_("No hay asistentes previstos para la actividad %s"),$nom_activ);
+                }
                 $a_resumen[$id_ubi][$any][1]['asist_prev']+=$num_asistentes_previstos*$a_ocupacion[1]; // sv
                 $a_resumen[$id_ubi][$any][2]['asist_prev']+=$num_asistentes_previstos*$a_ocupacion[2]; // sf
 

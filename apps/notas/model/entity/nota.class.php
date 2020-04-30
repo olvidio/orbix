@@ -20,15 +20,17 @@ use core;
  * @created 07/04/2014
  */
 class Nota Extends core\ClasePropiedades {
-    // tipo plaza constantes.
+    // tipo constantes.
     // 2:cursada
     const CURSADA       = 2; // Cursada
-    const ARRAY_STATUS_TXT = [
-        self::CURSADA => "cursada",
-    ];
-    // NO se usan, son solo para asegurar que exista la traducción
-    private function traduccion () {
-        $p = _("cursada");
+    // Para que la variable stgr_posibles coja las traducciones, hay
+    // que ejecutar la funcion 'traduccion_init()'. Cosa que se hace justo
+    // al final de la definicion de la clase: Nota::traduccion_init();
+    static $array_status_txt;
+    static function traduccion_init () {
+        self::$array_status_txt = [
+                self::CURSADA => _("cursada"),
+            ];
     }
     
 	/* ATRIBUTS ----------------------------------------------------------------- */
@@ -430,4 +432,4 @@ class Nota Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 }
-?>
+Nota::traduccion_init();

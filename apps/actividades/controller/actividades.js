@@ -94,6 +94,9 @@ jsForm.mandar=function(formulario,que){
 		case "lista_clase":
 			this.action = "apps/actividadestudios/controller/lista_clases_ca.php";
 			break;
+		case "posibles_asignaturas":
+			this.action = "apps/actividadestudios/controller/posibles_asignaturas_ca.php";
+			break;
 		case "plan_estudios":
 			this.action = "apps/actividadestudios/controller/plan_estudios_ca.php";
 			break;
