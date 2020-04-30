@@ -265,25 +265,30 @@ foreach ($aa_zonas as $a_zonas) {
 				$hfi=(string) $h_fin;
 				
 				
-				if(!is_true($Qpropuesta) && core\ConfigGlobal::is_app_installed('procesos')) {
-    				$_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
-				    $permiso_ver = $_SESSION['oPermActividades']->havePermisoSacd($id_cargo, $propio);
+				if(is_true($Qpropuesta)) {
+                    $nom_curt=$oTipoActividad->getAsistentesText()." ".$oTipoActividad->getActividadText();
+                    $nom_llarg=$nom_activ;
 				} else {
-				    $permiso_ver = TRUE;
-				}
-				
-				if ($permiso_ver === FALSE) { continue; }
-				
-				// mirar permisos en la actividad.
-				$_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
-				$oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
-				if ($oPermActiv->have_perm_activ('ver') === false) { // sólo puede ver que està ocupado
-					$nom_curt= $ssfsv;
-					$nom_llarg= "$ssfsv ($ini-$fi)";
-				} else {
-					$nom_curt=$oTipoActividad->getAsistentesText()." ".$oTipoActividad->getActividadText();
-					$nom_llarg=$nom_activ;
-				}
+                    if(core\ConfigGlobal::is_app_installed('procesos')) {
+                        $_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
+                        $permiso_ver = $_SESSION['oPermActividades']->havePermisoSacd($id_cargo, $propio);
+                    } else {
+                        $permiso_ver = TRUE;
+                    }
+                    
+                    if ($permiso_ver === FALSE) { continue; }
+                    
+                    // mirar permisos en la actividad.
+                    $_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
+                    $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
+                    if ($oPermActiv->have_perm_activ('ver') === false) { // sólo puede ver que està ocupado
+                        $nom_curt= $ssfsv;
+                        $nom_llarg= "$ssfsv ($ini-$fi)";
+                    } else {
+                        $nom_curt=$oTipoActividad->getAsistentesText()." ".$oTipoActividad->getActividadText();
+                        $nom_llarg=$nom_activ;
+                    }
+                }
 				
 				$aActivPersona[]=array(
 								'nom_curt'=>$nom_curt,
