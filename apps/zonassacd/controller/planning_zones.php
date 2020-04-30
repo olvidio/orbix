@@ -50,6 +50,8 @@ if ($oMiUsuario->isRole('p-sacd')) { //sacd
 	}
 }
 
+$Qpropuesta = (string) \filter_input(INPUT_POST, 'propuesta');
+
 $GesZonas = new GestorZona();
 $oDesplZonas = $GesZonas->getListaZonas($id_nom_jefe);
 $oDesplZonas->setBlanco(0);
@@ -68,7 +70,10 @@ $url = 'apps/zonassacd/controller/planning_zones_crida_calendari.php';
 
 $oHash = new Hash();
 $oHash->setUrl($url);
-$a_camposHidden = [ 'modelo' => 1 ];
+$a_camposHidden = [ 
+    'modelo' => 1,
+    'propuesta' => $Qpropuesta,
+];
 $oHash->setArraycamposHidden($a_camposHidden);
 $oHash->setcamposForm('actividad!year!id_zona!trimestre');
 $oHash->setCamposNo('modelo');
