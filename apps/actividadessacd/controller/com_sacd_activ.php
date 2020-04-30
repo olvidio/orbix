@@ -5,6 +5,7 @@ use actividades\model\entity\Actividad;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use actividadessacd\model\ActividadesSacdFunciones;
 use core\ConfigGlobal;
+use function core\is_true;
 use personas\model\entity\GestorPersonaSSSC;
 use personas\model\entity\GestorPersonaSacd;
 use personas\model\entity\PersonaSacd;
@@ -13,7 +14,6 @@ use usuarios\model\entity\Usuario;
 use web\DateTimeLocal;
 use web\Periodo;
 use web\TiposActividades;
-use procesos\model\entity\GestorActividadProcesoTarea;
 
 /**
 * Esta página muestra las actividades que tiene que atender un sacd. 
@@ -51,6 +51,7 @@ require_once ("apps/core/global_object.inc");
 
 $Qque = (string) \filter_input(INPUT_POST, 'que');
 $Qid_nom = (integer) \filter_input(INPUT_POST, 'id_nom');
+$Qpropuesta = (string) \filter_input(INPUT_POST, 'propuesta');
 
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 $Qyear = (string) \filter_input(INPUT_POST, 'year');
@@ -208,36 +209,8 @@ foreach ($cPersonas as $oPersona) {
 	    
         $_SESSION['oPermActividades']->setId_activ($id_activ);
 			
-        if(core\ConfigGlobal::is_app_installed('procesos')) {
+        if( !is_true($Qpropuesta) && core\ConfigGlobal::is_app_installed('procesos')) {
             $permiso_ver = $_SESSION['oPermActividades']->havePermisoSacd($id_cargo, $propio);
-            /*
-            $permiso_ver = FALSE;
-            $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
-            // sólo si la fase de 'ok sacd' está completada:
-            $oPermSacd = $_SESSION['oPermActividades']->getPermisoOn('sacd');
-            // sólo si la fase de 'ok asist. sacd' está completada:
-            $oPermAsisSacd = $_SESSION['oPermActividades']->getPermisoOn('asistentesSacd');
-            // para ver la actividad:
-            if ($oPermActiv->have_perm_activ('ver') === FALSE) {
-                continue;
-            }
-            
-            // si es solo cargo, tiene propio='f' como sacd de la actividad
-            if (!empty($id_cargo)) {
-                if ($oPermSacd->have_perm_activ('ver') === TRUE) {
-                    $permiso_ver = TRUE;
-                }
-                //si también asiste. tiene propio = 't'
-                if ($propio == 't' && $oPermAsisSacd->have_perm_activ('ver') === TRUE) {
-                    $permiso_ver = TRUE;
-                }
-            } else {
-                // sólo asiste
-                if ($oPermAsisSacd->have_perm_activ('ver') === TRUE) {
-                    $permiso_ver = TRUE;
-                }
-            }
-            */
         } else {
             $permiso_ver = TRUE;
         }
@@ -329,6 +302,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'Qque' => $Qque,
     'mi_dele' => $mi_dele,
     'lugar_fecha' => $lugar_fecha,
+    'propuesta' => $Qpropuesta,
 ];
 
 $oView = new core\View('actividadessacd/controller');

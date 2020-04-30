@@ -535,7 +535,7 @@ class Select3101 {
 				$expl = "explicacion$plaza";
 				$explicacion = $$expl;
 				// No se puede poner 'this.form' com formulario, porque <div> no es un elemento de formulario
-				$leyenda_html .= "<div class='box plaza$plaza' onCLick=fnjs_cmb_plaza('#frm_3101','$plaza') title='$explicacion'>$plaza_txt</div>  ";
+				$leyenda_html .= "<div class='box plaza$plaza' onCLick=fnjs_cmb_plaza('#frm_3101','$plaza') title=\"$explicacion\">$plaza_txt</div>  ";
 			}
 			$leyenda_html .= "</p>";
 			////////////////////////////////////////////////////////////////////

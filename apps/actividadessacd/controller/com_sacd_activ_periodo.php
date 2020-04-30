@@ -26,6 +26,7 @@ require_once ("apps/core/global_object.inc");
 
 $Qsacd = (string)  \filter_input(INPUT_POST, 'sacd');
 $Qid_nom = (integer)  \filter_input(INPUT_POST, 'id_nom');
+$Qpropuesta = (string)  \filter_input(INPUT_POST, 'propuesta');
 
 
 $aOpciones =  array(
@@ -54,6 +55,7 @@ $a_camposHidden = array(
     'sacd' => 'uno',
     'id_nom' => $Qid_nom,
     'que' => 'nagd',
+    'propuesta' => $Qpropuesta,
 );
 $oHash->setArraycamposHidden($a_camposHidden);
  

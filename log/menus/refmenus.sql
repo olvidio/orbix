@@ -7,9 +7,7 @@
 120	{10,20}	agd de paso	tabla=p_de_paso&na=a&tipo=persona	76	2064	12	t
 286	{15,20}	n de paso	tabla=p_de_paso&na=n&tipo=persona	76	144	2	t
 187	{100}	ubis	\N	\N	32	19	t
-118	{10,15}	agd dl	tabla=p_agregados&tipo=persona	76	2064	12	t
 33	{80,20}	buscar cv	sasistentes=agd&sactividad=cv&que=ver	71	2050	3	t
-122	{10,5}	n dl	tabla=p_numerarios&tipo=persona	76	2064	12	t
 54	{5,30}	sacd agd	tabla=p_agregados&na=a&tipo=persona&es_sacd=1	76	8	8	t
 193	{91}	buscar	\N	\N	2112	10	t
 310	{70,20}	buscar crt	sasistentes=n&sactividad=crt&que=ver	71	2208	2	t
@@ -24,7 +22,6 @@
 148	{40,40}	por centro	tipo=planning_ctr	61	2064	12	t
 126	{30,10}	posibles ca	\N	155	2194	12	t
 62	{10,20}	listados		48	8	8	t
-82	{50,20}	nueva activ	\N	136	8	8	t
 254	{20,10}	nuevo esquema	\N	17	33554432	13	t
 134	{37,10}	buscar cv	sasistentes=agd&sactividad=cv&que=ver	119	2064	12	t
 158	{10,30}	listados	\N	48	33816575	4	t
@@ -32,7 +29,6 @@
 259	{40,20}	ubis	tipo=u	121	33554432	13	t
 258	{40,10}	personas	tipo=p	121	33554432	13	t
 260	{40,30}	actividades	tipo=a	121	33554432	13	t
-287	{15,10}	n dl	tabla=p_numerarios&tipo=persona	76	144	2	t
 137	{35,10}	buscar ca	sasistentes=n&sactividad=ca&que=ver	119	2064	12	t
 376	{50,10,40}	sv sr	id_tipo_activ=17&status=2&periodo=desdeHoy	71	8	8	t
 377	{50,10,50}	sf n	id_tipo_activ=21&status=2&periodo=desdeHoy	71	8	8	t
@@ -54,7 +50,6 @@
 324	{82,20}	lista varias cve	sasistentes=n&sactividad=cve&que=list_cjto	119	2208	2	t
 339	{20,60}	lista cargos	sasistentes=sr&sactividad=cv&que=list_cjto	119	2560	15	t
 495	{30,10}	buscar	simple=1&tipo=tot&loc=tot	133	524288	9	t
-144	{40,10}	persona dl	obj_pau=PersonaDl&tipo=planning	61	2064	12	t
 327	{85,30}	por centro	tipo=planning_ctr	61	2176	2	t
 317	{80,70}	lista por ctr	lista=list_activ&n_agd=n&sasistentes=n&sactividad=ca	147	2208	2	t
 29	{80,70}	list por centros	lista=list_activ&n_agd=a&sasistentes=agd&sactividad=cv	147	2082	3	t
@@ -64,32 +59,32 @@
 263	{60,30}	lista usuarios	\N	131	35651584	13	t
 266	{60,20}	lista de roles	\N	161	35651584	13	t
 270	{60,40}	lista grupos	\N	122	35651584	13	t
+287	{15,10}	n r/dl	tabla=p_numerarios&tipo=persona	76	144	2	t
+82	{50,20}	nueva activ	\N	136	8	8	t
+122	{10,5}	n r/dl	tabla=p_numerarios&tipo=persona	76	2064	12	t
+118	{10,15}	agd r/dl	tabla=p_agregados&tipo=persona	76	2064	12	t
+144	{40,10}	persona r/dl	obj_pau=PersonaDl&tipo=planning	61	2064	12	t
 133	{37,75}	estudios x ctr	lista=list_est&n_agd=a&sasistentes=n&sactividad=cv	147	2064	12	t
 55	{5,70}	cp & as.ecles	tabla=p_cp_ae_sssc&tipo=persona	76	0	8	t
 232	{120}	crt	\N	\N	2112	10	t
 56	{5,10}	sacd num	tabla=p_numerarios&na=n&tipo=persona&es_sacd=1	76	8	8	t
 53	{5,40}	agd de paso	tabla=p_de_paso&na=a&tipo=persona&es_sacd=1	76	8	8	t
 59	{5,50}	sacd sssc	tabla=p_sssc&tipo=persona	76	8	8	t
-194	{91,10}	s de la dl	tabla=p_supernumerarios&tipo=persona	76	2112	10	t
-243	{140,30}	agd dl	tabla=p_agregados&tipo=persona	76	64	10	t
 619	{20,20}	tabla alumnos-asignaturas	\N	88	16	12	t
 151	{90}	estudios	\N	\N	16	19	t
 242	{140,20}	n de paso	tabla=p_de_paso&na=n&tipo=persona	76	64	10	t
 188	{100,30}	tipo de casa	clase_info=ubis\\model\\infotipocasa	160	32	19	t
 800	{10,30}	meta menus	clase_info=menus\\model\\infometamenus	160	33554432	13	t
-241	{140,10}	n dl	tabla=p_numerarios&tipo=persona	76	64	10	t
 142	{35,75}	estudios x ctr	lista=list_est&n_agd=n&sasistentes=n&sactividad=ca	147	2064	12	t
 375	{50,10,30}	sv s y sg	id_tipo_activ=1[45]&status=2&periodo=desdeHoy	71	8	8	t
 830	{50,10}	buscar activ	que=ver	119	8	8	t
 831	{1,95}	Informar de un bug	\N	167	33816575	1	t
 5	{16,25}	agd de paso	tabla=p_de_paso&na=a&tipo=persona	76	2050	3	t
 226	{110}	cv	\N	\N	2112	10	t
-6	{16,10}	agd dl	tabla=p_agregados&tipo=persona	76	2050	3	t
 832	{50,16}	publicar activ	que=ver&modo=publicar	119	8	8	t
 79	{50,15}	importar activ	que=ver&modo=importar	119	8	8	t
 322	{82,10}	buscar cve	sasistentes=n&sactividad=cve&que=ver	71	2210	2	t
 124	{20,30}	resúmenes	\N	57	2066	12	t
-834	{10,10}	nax dl	tabla=p_nax&tipo=persona	76	18432	16	t
 835	{10,20}	nax de paso	tabla=p_de_paso&na=x&tipo=persona	76	18432	16	t
 316	{80,20}	buscar ca	sasistentes=n&sactividad=ca&que=ver	71	2208	2	t
 229	{110,20}	buscar cv	sasistentes=s&sactividad=cv&que=ver	71	2112	10	t
@@ -127,7 +122,12 @@
 855	{50,10}	buscar activ	que=ver	119	32768	20	t
 269	{60}	usuarios web	\N	181	35651584	13	t
 822	{10,25}	importar	\N	40	35651584	13	t
+834	{10,10}	nax r/dl	tabla=p_nax&tipo=persona	76	18432	16	t
 250	{10}	menus	\N	182	35651584	13	t
+6	{16,10}	agd r/dl	tabla=p_agregados&tipo=persona	76	2050	3	t
+194	{91,10}	s de la r/dl	tabla=p_supernumerarios&tipo=persona	76	2112	10	t
+241	{140,10}	n r/dl	tabla=p_numerarios&tipo=persona	76	64	10	t
+243	{140,30}	agd r/dl	tabla=p_agregados&tipo=persona	76	64	10	t
 866	{50,16}	publicar activ	que=ver&modo=publicar	119	131072	20	t
 909	{70,15}	importar crt	sasistentes=agd&sactividad=crt&que=ver&modo=importar	119	2	3	t
 907	{80,15}	importar cv	sasistentes=agd&sactividad=cv&que=ver&modo=importar	119	2	3	t
@@ -145,9 +145,6 @@
 921	{20,50}	resumen pendientes	\N	174	16	12	t
 922	{20,60}	buscar asig. pendientes	\N	175	16	12	t
 190	{100,40}	tipo de ctr	clase_info=ubis\\model\\infotipoctr	160	32	19	t
-923	{15,40}	Actualizar datos desde Listas	tipo=n	176	128	2	t
-414	{16,40}	Actualizar datos desde Listas	tipo=a	176	2	3	t
-415	{91,20}	Actualizar datos desde Listas	tipo=s	176	64	10	t
 191	{100,20}	regiones	clase_info=ubis\\model\\inforegiones	160	32	19	t
 928	{70,130}	Incorporar 1ª petición	sasistentes=n&sactividad=crt	172	128	2	t
 919	{80,130}	Incorporar 1ª petición	sasistentes=n&sactividad=ca	172	128	2	t
@@ -179,6 +176,9 @@
 867	{50,20}	nueva activ	\N	136	32768	20	t
 801	{60,25}	grup menu	clase_info=menus\\model\\infogrupmenus	160	35651584	13	t
 938	{10,70}	ayuda	\N	177	35651584	13	t
+923	{15,40}	Actualizar datos desde BDU	tipo=n	176	128	2	t
+414	{16,40}	Actualizar datos desde BDU	tipo=a	176	2	3	t
+415	{91,20}	Actualizar datos desde BDU	tipo=s	176	64	10	t
 943	{5,86}	crt pendientes	sactividad=crt&tipo_personas=sacd	140	8	8	t
 1003	{20,30}	zonas	clase_info=zonassacd\\model\\infozona	160	8	8	t
 975	{10,50,10}	modificar	\N	114	32	4	t
@@ -229,14 +229,6 @@
 1086	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	8	8	t
 1146	{50,100,10}	activ sg	tipo=sg	43	8	8	t
 1144	{50,100}	asignar centros	\N	43	8	8	t
-1138	{50,90,30}	activ sv n y agd	tipo=na	39	8	8	t
-1133	{50,90}	asignar sacd	\N	39	8	8	t
-1134	{50,90,10}	activ sv sg	tipo=sg&periodo=desdeHoy	39	8	8	t
-1136	{50,90,20}	activ sv sr	tipo=sr	39	8	8	t
-1139	{50,90,50}	activ sf sg	tipo=sf_sg	39	8	8	t
-1140	{50,90,60}	activ sf sr	tipo=sf_sr	39	8	8	t
-1141	{50,90,70}	activ sf n,nax y agd	tipo=sf_na	39	8	8	t
-1142	{50,90,90}	activ sss+	tipo=sssc	39	8	8	t
 1091	{40,60}	por zonas	\N	139	2056	8	t
 1079	{40,30}	agd de paso	tabla=p_de_paso&na=a&tipo=p_de_paso	61	32	4	t
 1082	{40,40}	por ctr	tipo=planning_ctr	61	32	4	t
@@ -255,6 +247,16 @@
 1106	{50,30}	tipos de procesos	clase_info=procesos\\model\\infoprocesotipo	160	35651584	13	t
 1099	{50,10}	fases	clase_info=procesos\\model\\infofases	160	35651584	13	t
 1101	{50,20}	fases-tareas	clase_info=procesos\\model\\infotareas	160	35651584	13	t
+1180	{60}	propuestas	\N	0	8	8	t
+1182	{60,10}	planing zonas	propuestas=true	139	8	8	t
+1133	{60,90}	asignar sacd	\N	39	8	8	t
+1134	{60,90,10}	activ sv sg	tipo=sg&periodo=desdeHoy	39	8	8	t
+1136	{60,90,20}	activ sv sr	tipo=sr	39	8	8	t
+1138	{60,90,30}	activ sv n y agd	tipo=na	39	8	8	t
+1139	{60,90,50}	activ sf sg	tipo=sf_sg	39	8	8	t
+1140	{60,90,60}	activ sf sr	tipo=sf_sr	39	8	8	t
+1141	{60,90,70}	activ sf n,nax y agd	tipo=sf_na	39	8	8	t
+1142	{60,90,90}	activ sss+	tipo=sssc	39	8	8	t
 1150	{50,100,20}	activ sr	tipo=sr	43	8	8	t
 1153	{50,100,30}	sv n y agd	tipo=nagd	43	8	8	t
 1155	{50,100,40}	sf s y sg	tipo=sfsg	43	8	8	t
@@ -264,8 +266,6 @@
 1217	{70,15}	ficha ctr	\N	62	2056	8	t
 1220	{70,20}	ficha sacd	\N	14	2056	8	t
 1199	{70}	Encargos	\N	186	2056	8	t
-1224	{110,30}	de la dl	tipo_activ_sg=cv	132	64	10	t
-1207	{120,30}	de la dl	tipo_activ_sg=crt	132	64	10	t
 1209	{120,40}	de cada ctr	tipo_ctr=sg&tipo_lista=crt	12	64	10	t
 1267	{90,40}	listados	\N	0	32768	20	t
 1281	{90,40,30}	listado por oficinas	que=o_todas&ver_ctr=si	21	32768	20	t
@@ -279,6 +279,9 @@
 1284	{90,40,40}	listado oficina propia	que=o_actual&ver_ctr=si	21	32768	20	t
 1193	{60,50}	generar tabla avisos	\N	46	35651584	13	t
 1194	{60,60}	ver lista cambios	\N	154	35651584	13	t
+1224	{110,30}	de la r/dl	tipo_activ_sg=cv	132	64	10	t
+1207	{120,30}	de la r/dl	tipo_activ_sg=crt	132	64	10	t
+1188	{60,20}	lista activ. sacd	propuesta=true	28	8	8	t
 1261	{90,20}	nuevo curso	\N	157	8	8	t
 1289	{90,90}	Tarifas	\N	0	8	8	t
 1236	{70,30}	listados	\N	124	8	8	t
@@ -288,7 +291,6 @@
 1255	{90,10}	buscar cve agd	sasistentes=agd&sactividad=cve	71	2050	3	t
 1241	{80}	ausencias	\N	186	8	8	t
 1293	{90,90,20}	tarifa <-> tipo actividad	\N	108	8	8	t
-1250	{85,10}	persona dl	obj_pau=PersonaN&tipo=planning	61	2176	2	t
 1247	{82,30}	lista por ctr	lista=list_activ&n_agd=n&sasistentes=n&sactividad=cve	147	2178	2	t
 1225	{110,40}	de cada ctr	tipo_ctr=sg&tipo_lista=cv	12	64	10	t
 1228	{110,50}	s que no han ido a la cv	\N	0	64	10	t
@@ -302,16 +304,14 @@
 1282	{90,40,30}	listado por oficinas	que=o_todas&ver_ctr=si	21	33947647	8	t
 1283	{90,40,40}	listado oficina propia	que=o_actual&ver_ctr=si	21	33947647	8	t
 1294	{90,90,20}	tarifa <-> tipus dactivitat	\N	108	32768	20	t
+1250	{85,10}	persona r/dl	obj_pau=PersonaN&tipo=planning	61	2176	2	t
 1321	{100}	planning 	\N	183	2	3	t
-1323	{100,10}	persona dl	tabla=p_de_casa&tipo=planning	61	2	3	t
 1326	{100,30}	por centro	tipo=planning_ctr	61	2	3	t
 1329	{100,40}	por casas	tipo=planning_cdc&ssfsv=sv	61	2	3	t
-1373	{10,5}	n dl	tabla=p_numerarios&tipo=persona	76	2064	21	t
 1374	{20,10}	actas	\N	60	16	21	t
 1375	{20,20}	tabla alumnos-asignaturas	\N	88	16	21	t
 1378	{10,40}	profesor para asignatura	\N	171	16	21	t
 1379	{10,50}	claustro	\N	173	16	21	t
-1372	{10,10}	agd dl	tabla=p_agregados&tipo=persona	76	2064	21	t
 1384	{10}	personas	\N	0	16	21	t
 1385	{20}	actas	\N	0	16	21	t
 61	{10,10}	buscar	simple=1&tipo=ctr&loc=dl	133	8	8	t
@@ -324,7 +324,6 @@
 1258	{90,10}	Definir periodos	\N	7	8	8	t
 1263	{90,30}	nuevo planing	\N	141	34078719	8	t
 1292	{90,90,10}	definir tarifa	\N	100	8	8	t
-1060	{40,10}	persona dl	obj_pau=PersonaDl&tipo=planning	61	8	8	t
 143	{40}	planning	\N	183	2064	12	t
 1396	{70,140}	cambiar de fase	id_tipo_activ=131	130	2	3	t
 1238	{70,50}	tipo encargo	clase_info=encargossacd\\model\\infoencargotipo	160	8	8	t
@@ -344,6 +343,10 @@
 1095	{50}	procesos activ.	\N	188	35651584	13	t
 1369	{990,10}	menus a texto	\N	142	33554432	13	t
 1371	{990,20}	posibles idiomas	clase_info=usuarios\\model\\InfoLocales	160	33554432	13	t
+1323	{100,10}	persona r/dl	tabla=p_de_casa&tipo=planning	61	2	3	t
+1060	{40,10}	persona r/dl	obj_pau=PersonaDl&tipo=planning	61	8	8	t
+1373	{10,5}	n r/dl	tabla=p_numerarios&tipo=persona	76	2064	21	t
+1372	{10,10}	agd r/dl	tabla=p_agregados&tipo=persona	76	2064	21	t
 942	{5,85}	ca pendientes	sactividad=ca&tipo_personas=sacd	140	8	8	t
 1296	{90,90,30}	tarifas por casa y año	\N	73	8	8	t
 1399	{10,70}	estadística por años	\N	51	1	7	t
@@ -377,3 +380,4 @@
 1233	{70,30}	instalar módulos	clase_info=permisos\\model\\infomodsinstalled	160	35651584	13	t
 1398	{70,50}	config esquema	\N	90	35651584	13	t
 252	{10,10}	seleccionar	\N	148	35651584	13	t
+1414	{1,30}	lista de cambios	\N	137	37617663	1	t

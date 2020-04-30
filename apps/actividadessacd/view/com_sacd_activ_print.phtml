@@ -73,11 +73,15 @@ foreach ($array_actividades as $id_nom => $vector) {
 	?>
 	<div class=salta_pag id="<?= $i ?>" >
 	<br><!-- si no pongo esta linea, no me imprime el nombre (a partir de la 2ª página -->
-	<cabecera>
-	<izquierda><?= $nom_ap ?></izquierda>
-	<?php if ($Qque == "nagd") { ?><derecha>vc-<?= $mi_dele ?></derecha><?php } ?>
-	</cabecera>
-	<comunicacion><?= $txt ?></comunicacion>
+    <cabecera>
+    <izquierda><?= $nom_ap ?></izquierda>
+	<?php if ($propuesta != "true") { ?>
+        <?php if ($Qque == "nagd") { ?><derecha>vc-<?= $mi_dele ?></derecha><?php } ?>
+        </cabecera>
+        <comunicacion><?= $txt ?></comunicacion>
+	<?php } else { ?>
+        </cabecera>
+	<?php }?>
 	<!-- Actividades -->
 	<table class=enc border=1>
 	<tr><td class=cabecera_izq><?= $f_ini ?></td>
@@ -112,10 +116,12 @@ foreach ($array_actividades as $id_nom => $vector) {
 	}
 	?>
 	</table>
-	<cabecera>
-	<izquierda>*) <?= $propio ?></izquierda>
-	<derecha><?= $lugar_fecha ?></derecha>
-	</cabecera>
+	<?php if ($propuesta != "true") { ?>
+        <cabecera>
+        <izquierda>*) <?= $propio ?></izquierda>
+        <derecha><?= $lugar_fecha ?></derecha>
+        </cabecera>
+	<?php } // fin propuesta?>
 	</div>
 <?php
 }

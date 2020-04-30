@@ -70,7 +70,6 @@
 129	\N	programas/lista_activ_sg_que.php	\N	\N
 134	\N	scdl/registro/mod_ini.php	\N	\N
 135	\N	sg/que_resumen.php	\N	\N
-137	\N	des/libros/que_libros.php	\N	\N
 39	20	apps/actividadessacd/controller/activ_sacd.php	\N	Atención sacd
 7	5	apps/ubis/controller/calendario_periodos.php	\N	Calendario Periodos
 23	21	apps/encargossacd/controller/que_tipo_de_encargo.php	\N	Tipo de encargo
@@ -187,3 +186,4 @@
 5	27	apps/casas/controller/prevision_asistentes.php	\N	prevision asistentes
 54	2	apps/devel/controller/db_mover_que.php	\N	DB mover tabla
 100	5	apps/actividadtarifas/controller/tarifa.php	\N	Tarifa definir
+137	26	apps/cambios/controller/avisos_generar.php	\N	lista avisos

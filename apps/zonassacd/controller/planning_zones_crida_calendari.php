@@ -9,6 +9,7 @@ use web\TiposActividades;
 use zonassacd\model\entity\GestorZona;
 use zonassacd\model\entity\GestorZonaSacd;
 use zonassacd\model\entity\Zona;
+use function core\is_true;
 
 /**
 * Esta página tiene la misión de realizar la llamada a calendario php;
@@ -70,6 +71,7 @@ $Qtrimestre = (integer) \filter_input(INPUT_POST, 'trimestre');
 
 $Qid_zona = (string) \filter_input(INPUT_POST, 'id_zona');
 $Qactividad = (string) \filter_input(INPUT_POST, 'actividad');
+$Qpropuestas = (string) \filter_input(INPUT_POST, 'propuestas');
 
 // ISO: mes/dia
 switch ($Qtrimestre) {
@@ -263,7 +265,7 @@ foreach ($aa_zonas as $a_zonas) {
 				$hfi=(string) $h_fin;
 				
 				
-				if(core\ConfigGlobal::is_app_installed('procesos')) {
+				if(!is_true($Qpropuestas) && core\ConfigGlobal::is_app_installed('procesos')) {
     				$_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
 				    $permiso_ver = $_SESSION['oPermActividades']->havePermisoSacd($id_cargo, $propio);
 				} else {
@@ -272,51 +274,6 @@ foreach ($aa_zonas as $a_zonas) {
 				
 				if ($permiso_ver === FALSE) { continue; }
 				
-				/*
-				// mirar permisos en la actividad.
-				$_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
-				$oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
-
-				if ($oPermActiv->have_perm_activ('ocupado') === false) continue; // no tiene permisos ni para ver.
-				if ($oPermActiv->have_perm_activ('ver') === false) { // sólo puede ver que està ocupado
-					$nom_curt= $ssfsv;
-					$nom_llarg= "$ssfsv ($ini-$fi)";
-				} else {
-					$nom_curt=$oTipoActividad->getAsistentesText()." ".$oTipoActividad->getActividadText();
-					$nom_llarg=$nom_activ;
-				}
-
-				$permiso_asis = FALSE;
-				// Si es una asistencia (plaza != 0) mirar permisos en la asistencia
-				if (!empty($plaza)) {
-                    $oPermAsistencia = $_SESSION['oPermActividades']->getPermisoActual('asistentesSacd');
-                    if ($oPermAsistencia->have_perm_activ('ver') === TRUE) {
-        				$permiso_asis = TRUE;
-                    }
-				}
-				
-				// Si es un Cargo (tiene id_cargo) mirar permisos para atn sacd
-				$permiso_cargo = FALSE;
-                if (!empty($id_cargo)) {
-                    // Sacd.
-                    if (array_key_exists($id_cargo, $aIdCargos_sacd)) {
-                        $oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
-                        if ($oPermSacd->have_perm_activ('ver') === TRUE) {
-                            $permiso_cargo = TRUE;
-                        }
-                    } else {
-                        // mirar permisos en los cargos
-                        $oPermCargos = $_SESSION['oPermActividades']->getPermisoActual('cargos');
-                        if ($oPermCargos->have_perm_activ('ver') === TRUE) {
-                            $permiso_cargo = TRUE;
-                        }
-                    }
-				}
-				if (!$permiso_asis && !$permiso_cargo) {
-				    continue;
-				}
-				*/
-
 				// mirar permisos en la actividad.
 				$_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
 				$oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
