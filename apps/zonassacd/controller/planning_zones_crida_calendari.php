@@ -215,7 +215,9 @@ foreach ($aa_zonas as $a_zonas) {
 		    $aOperadorAct['f_ini']='<=';
 		    $aWhereAct['f_fin']="'$inicio_iso'";
 		    $aOperadorAct['f_fin']='>=';
-			$aWhereAct['status']='2';
+            if(!is_true($Qpropuesta)) {
+			    $aWhereAct['status']='2';
+            }
             /*			
 			$aWhere = ['id_nom' => $id_nom, 'plaza' => Asistente::PLAZA_PEDIDA];
 			$aOperador = ['plaza' => '>='];
