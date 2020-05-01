@@ -227,6 +227,7 @@ class Planning {
                         echo "<br>";
                         echo sprintf(_("id_activ: %s, nombre: %s %s"),$id_activ[$a],$nom_curt[$a], $nom[$a]);
                         echo "<br>";
+                        $a--;
                         continue;
                     }
                     if (empty($fi)) {
@@ -234,6 +235,7 @@ class Planning {
                         echo "<br>";
                         echo sprintf(_("id_activ: %s, nombre: %s %s"),$id_activ[$a],$nom_curt[$a], $nom[$a]);
                         echo "<br>";
+                        $a--;
                         continue;
                     }
                     $id_tipo_activ[$a] = (isset($activi["id_tipo_activ"]))? $activi["id_tipo_activ"] : '';
