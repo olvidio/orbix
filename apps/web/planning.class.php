@@ -227,7 +227,7 @@ class Planning {
                         echo "<br>";
                         echo sprintf(_("id_activ: %s, nombre: %s %s"),$id_activ[$a],$nom_curt[$a], $nom[$a]);
                         echo "<br>";
-                        $a--;
+                        unset($actividad[$a]);
                         continue;
                     }
                     if (empty($fi)) {
@@ -235,7 +235,7 @@ class Planning {
                         echo "<br>";
                         echo sprintf(_("id_activ: %s, nombre: %s %s"),$id_activ[$a],$nom_curt[$a], $nom[$a]);
                         echo "<br>";
-                        $a--;
+                        unset($actividad[$a]);
                         continue;
                     }
                     $id_tipo_activ[$a] = (isset($activi["id_tipo_activ"]))? $activi["id_tipo_activ"] : '';
@@ -353,6 +353,7 @@ class Planning {
                 for ($d=1;$d<$total_dias;$d++) {
                     $n_act=0; //numero de actividades para el dia $d.
                     for ($a=0;$a<$num_a;$a++) {
+                        if (empty($actividad[$a])) { continnue; } 
                         if ($n_dfi[$a] < $n_dini[$a]) { //error no puede ser la fecha ini porsterior a fin
                             $error="Error. La actividad: ".$nom[$a]." de ".$persona." Termina antes de empezar.";
                             $e3=$n_dfi[$a];
