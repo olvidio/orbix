@@ -40,6 +40,11 @@ if ($Qseguro == 2) {
     $html .= "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("continuar")."</span>";
     $html .= "<br><br><ul><li>";
     $html .= _("Para sf: también se copian los grupMenu de los Roles (de sv). Hay que volver a poner lo que había.");
+    $html .= " ";
+    $html .= _("De momento se pueden comentar las lineas").":";
+    $html .= "<pre>TRUNCATE TABLE public.ref_grupmenu_rol RESTART IDENTITY;\nCOPY public.ref_grupmenu_rol FROM 'DIRBASE/log/menus/refgrupmenu_rol.sql';
+              </pre>";
+    $html .= "en el fichero: '/var/www/orbix/log/menus/tot_menus_base.sql' de la máquina donde esté la sf (moneders.net).";
     $html .= "</li></ul>";
     echo $html;
 }

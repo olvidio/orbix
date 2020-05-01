@@ -26,6 +26,7 @@
 	file_refmenus = "$dir_base/log/menus/refmenus.sql";<br>
 	</p>
 	</li>
+	<hr>
 	<li>3. Copiar via ssh, o git Hub (commit) al directorio destino
 	
 		<p>Cambiar los permisos de los ficheros *.sql
@@ -38,17 +39,20 @@
 			</em>
 		</p>
 	</li>
+	<hr>
 	<li>4. Cambiar la ruta relativa
-	<p>
 		<p>
-            OJO!!!<br>
-            Ahora hay que pasar los ficheros hasta la maquina donde está la DB comun.
-            Desde orbix en tunel:
+            OJO!!!: Ahora hay que pasar los ficheros hasta la maquina donde está la DB comun:
         </p>
+        a) desde la aplicación del túnel ejecutar una vez el "importar desde ficheros" para que cambie la ruta en los ficheros sql.
+        <br>
+        b) copiar los ficheros a la maquina de la dmz que tiene la base de datos comun, donde hay que poner los menus de referencia:
             <pre>
                 scp /var/www/orbix/log/menus/* aquinate@192.168.200.16:/var/www/orbix/log/menus/
             </pre>
+        c) Volver a ejecutar el menú: "importar desde ficheros". Ahora debería poder ejecutar los nuevos ficheros de la máquina dmz.
 	</li>
+	<hr>
 	<li>5. importar desde ficheros
 	<p>
 	Ejecuta lo que se ha grabado en <br>
