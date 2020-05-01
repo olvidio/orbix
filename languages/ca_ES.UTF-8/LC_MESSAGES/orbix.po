@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
 "POT-Creation-Date: 2020-04-30 18:27+0200\n"
-"PO-Revision-Date: 2020-04-30 18:30+0200\n"
+"PO-Revision-Date: 2020-05-01 11:24+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
 "Language: ca_ES\n"
@@ -3375,7 +3375,7 @@ msgstr "direcció"
 
 #: cartaspresentacion/controller/cartas_presentacion_lista.php:145
 msgid "Centros con el campo 'tipo labor' mal puesto:"
-msgstr "Centres amb el camp \"tipus de labor\" mal posat:"
+msgstr "Centres amb el camp 'tipus de labor' mal posat:"
 
 #: cartaspresentacion/controller/cartas_presentacion_lista.php:326
 #: cartaspresentacion/controller/cartas_presentacion_lista.php:370
@@ -6666,7 +6666,7 @@ msgstr ""
 #: procesos/model/entity/gestoractividadprocesotarea.class.php:380
 #, php-format
 msgid "error al generar el proceso de la actividad: '%s'. Está para borrar."
-msgstr "no s'ha pogut generar el procés d'activitat: \" %s\". És per esborrar."
+msgstr "no s'ha pogut generar el procés d'activitat: '%s'. És per esborrar."
 
 #: procesos/model/entity/gestoractividadprocesotarea.class.php:510
 #, php-format
@@ -6674,8 +6674,8 @@ msgid ""
 "error al generar el proceso de la actividad: '%s'. Tipo de proceso: '%s' "
 "para sf/sv: %s."
 msgstr ""
-"no s'ha pogut generar el procés d'activitat: \" %s\". Tipus de procés: \" %s"
-"\" per a sf/sv: %s."
+"no s'ha pogut generar el procés d'activitat: '%s'. Tipus de procés: '%s' per "
+"a sf/sv: %s."
 
 #: procesos/model/entity/gestoractividadprocesotarea.class.php:512
 msgid "Probablemente no esté defindo el proceso"
@@ -7316,8 +7316,8 @@ msgid ""
 "Para ello debe buscar a través de 'ver más opciones' definiendo el tipo y la "
 "localización distinto a 'todos'."
 msgstr ""
-"Per fer-ho, heu de cercar a través de \"veure més opcions\" definint el "
-"tipus i la ubicació que no siguin \"totes\"."
+"Per fer-ho, heu de cercar a través de 'veure més opcions' definint el tipus "
+"i la ubicació que no siguin 'totes'."
 
 #: ubis/controller/ubis_tabla.php:387
 msgid "buscar otras opciones"
@@ -10400,8 +10400,7 @@ msgstr "heu d'introduir la data de finalització del període"
 
 #: actividades/view/actividad_que.html.twig:89
 msgid "No puede seleccionar la misma fase como 'marcada' y 'sin marcar'"
-msgstr ""
-"No es pot seleccionar la mateixa fase com a \"marcada\" i \"sense marcar\""
+msgstr "No es pot seleccionar la mateixa fase com a 'marcada' i 'sense marcar'"
 
 #: actividades/view/actividad_que.html.twig:152
 msgid "según fases (depende del tipo de actividad y de organiza)"
