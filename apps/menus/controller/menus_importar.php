@@ -60,6 +60,7 @@ if ($Qseguro == 1) {
 	}
 
     foreach ($aEsquemas as $esquema) {
+        if ($esquema == "H-Hv") { continue; }
 		echo ">>>>actualizando menus para $esquema<br>";
 		$sec = substr($esquema,-1); // la v o la f.
 		echo ">>>$sec>>actualizando menus para $esquema<br>";
