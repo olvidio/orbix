@@ -353,7 +353,7 @@ class Planning {
                 for ($d=1;$d<$total_dias;$d++) {
                     $n_act=0; //numero de actividades para el dia $d.
                     for ($a=0;$a<$num_a;$a++) {
-                        if (empty($actividad[$a])) { continnue; } 
+                        if (empty($actividad[$a])) { continue; } 
                         if ($n_dfi[$a] < $n_dini[$a]) { //error no puede ser la fecha ini porsterior a fin
                             $error="Error. La actividad: ".$nom[$a]." de ".$persona." Termina antes de empezar.";
                             $e3=$n_dfi[$a];
