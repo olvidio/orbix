@@ -224,16 +224,16 @@ class Planning {
                     if (empty($ini)) {
                         echo _("PREMIO: Ha conseguido crear una actividad sin fecha de inicio.");
                         echo "<br>";
-                        echo sprintf(_("id_activ: %s, nombre: %s %s"),$id_activ,$nom_curt[$a], $nom[$a]);
+                        echo sprintf(_("id_activ: %s, nombre: %s %s"),$id_activ[$a],$nom_curt[$a], $nom[$a]);
                         echo "<br>";
-                        continue;
+                        continue 2;
                     }
                     if (empty($fi)) {
                         echo _("PREMIO: Ha conseguido crear una actividad sin fecha finalización.");
                         echo "<br>";
-                        echo sprintf(_("id_activ: %s, nombre: %s %s"),$id_activ,$nom_curt[$a], $nom[$a]);
+                        echo sprintf(_("id_activ: %s, nombre: %s %s"),$id_activ[$a],$nom_curt[$a], $nom[$a]);
                         echo "<br>";
-                        continue;
+                        continue 2;
                     }
                     $id_tipo_activ[$a] = (isset($activi["id_tipo_activ"]))? $activi["id_tipo_activ"] : '';
                     $lnk[$a] = (isset($activi["pagina"]))? $activi["pagina"] : '';
