@@ -1310,6 +1310,7 @@ class ActividadAll Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'num_asistentes'));
 		$oDatosCampo->setEtiqueta(_("número de asistentes"));
+		$oDatosCampo->setAviso(FALSE);
 		return $oDatosCampo;
 	}
 	/**
