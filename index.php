@@ -309,8 +309,9 @@ img.calendar:hover { cursor: pointer; }
 <script type="text/javascript" src='<?= ConfigGlobal::getWeb_NodeScripts().'/jquery-ui/ui/i18n/datepicker-es.js'; ?>'></script>
 <script type="text/javascript" src='<?= ConfigGlobal::getWeb_NodeScripts().'/jquery-ui/ui/i18n/datepicker-ca.js'; ?>'></script>
 
- 
+<!--
 <script type="text/javascript" src='<?= ConfigGlobal::getWeb_scripts().'/jquery-migrate-3.1.0.js'; ?>'></script>
+-->
 
 <!-- Slick -->
 <!-- OJO: IMPORTA el orden. Pueden salir avisos (en consola del navegaador) tipo: Grid.xx not defined  -->
