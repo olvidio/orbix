@@ -114,7 +114,7 @@ foreach ($aPersonasMatriculadas as $nom=>$oMatricula) {
            $oDesplActas->setOpcion_sel(0);
 	   }
 	} else if ($acta == notas\model\entity\Nota::CURSADA) {
-	   $acta_txt = Nota::ARRAY_STATUS_TXT[Nota::CURSADA];
+	   $acta_txt = Nota::$array_status_txt[Nota::CURSADA];
        $oDesplActas->setOpcion_sel((int)$acta);
 	} else {
 	   $acta_txt = $acta;

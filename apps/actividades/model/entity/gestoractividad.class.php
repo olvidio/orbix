@@ -33,4 +33,3 @@ class GestorActividad extends GestorActividadAll {
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
 }
-?>
