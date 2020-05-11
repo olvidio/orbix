@@ -72,6 +72,7 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     $Qid_tipo_activ = $oPosicion->getParametro('id_tipo_activ');
     $Qfiltro_lugar = $oPosicion->getParametro('filtro_lugar');
     $Qid_ubi= $oPosicion->getParametro('id_ubi');
+    $Qnom_activ= $oPosicion->getParametro('nom_activ');
     $Qperiodo=$oPosicion->getParametro('periodo');
     $Qyear=$oPosicion->getParametro('year');
     $Qdl_org=$oPosicion->getParametro('dl_org');
@@ -106,6 +107,7 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     $Qid_tipo_activ = (string) \filter_input(INPUT_POST, 'id_tipo_activ');
     $Qfiltro_lugar = (string) \filter_input(INPUT_POST, 'filtro_lugar');
     $Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
+    $Qnom_activ = (string) \filter_input(INPUT_POST, 'nom_activ');
     $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
     $Qyear = (string) \filter_input(INPUT_POST, 'year');
     $Qdl_org = (string) \filter_input(INPUT_POST, 'dl_org');
@@ -125,6 +127,7 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
         'modo'=>$Qmodo,
         'id_tipo_activ'=>$Qid_tipo_activ,
         'id_ubi'=>$Qid_ubi,
+        'nom_activ'=>$Qnom_activ,
         'periodo'=>$Qperiodo,
         'year'=>$Qyear,
         'dl_org'=>$Qdl_org,
@@ -176,7 +179,12 @@ if ($Qid_tipo_activ!='......') {
 }
 // Lugar
 if (!empty($Qid_ubi)) {
-    $aWhere['id_ubi']=$Qid_ubi;
+    $aWhere['id_ubi'] = $Qid_ubi;
+}
+// Por el nombre
+if (!empty($Qnom_activ)) {
+    $aWhere['nom_activ'] = '%'.$Qnom_activ.'%';
+    $aOperador['nom_activ'] = 'ILIKE';
 }
 
 // periodo.
@@ -531,6 +539,7 @@ $a_camposHidden = array(
     'modo' => $Qmodo,
     'id_tipo_activ' => $Qid_tipo_activ,
     'id_ubi' => $Qid_ubi,
+    'nom_activ' => $Qnom_activ,
     'periodo' => $Qperiodo,
     'year' => $Qyear,
     'dl_org' => $Qdl_org,
@@ -542,7 +551,7 @@ $a_camposHidden = array(
     'fases_off' => $Qfases_off,
 );
 $oHash->setArraycamposHidden($a_camposHidden);
-$oHash->setCamposNo('!modo!id_tipo_activ!id_ubi!periodo!year!dl_org!status!empiezamin!empiezamax!filtro_lugar!fases_on!fases_off');
+$oHash->setCamposNo('!modo!id_tipo_activ!id_ubi!nom_activ!periodo!year!dl_org!status!empiezamin!empiezamax!filtro_lugar!fases_on!fases_off');
 
 $oHashSel = new web\Hash();
 $oHashSel->setcamposForm('!mod!queSel!id_dossier');

@@ -164,6 +164,10 @@ fnjs_left_side_hide();
 {% endif %}
 <table>
 <tr><th colspan=6 class=titulo_inv>{{ "escoger la actividad"|trans }}</th></tr>
+<tr>
+    <td class=etiqueta>{{ "el nombre contiene"|trans }}:</td>
+    <td colspan=6><input name="nom_activ" type="text" size="80" value="{{ Qnom_activ|raw }}"></td>
+</tr>
 {% if perm_ctr %}
     <tr>
         <td class=etiqueta>{{ "lugar según país o dl"|trans }}:</td>

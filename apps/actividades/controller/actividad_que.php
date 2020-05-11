@@ -49,6 +49,7 @@ $Qstatus = (integer) \filter_input(INPUT_POST, 'status');
 $Qid_tipo_activ = (integer) \filter_input(INPUT_POST, 'id_tipo_activ');
 $Qfiltro_lugar = (string) \filter_input(INPUT_POST, 'filtro_lugar');
 $Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
+$Qnom_activ = (string) \filter_input(INPUT_POST, 'nom_activ');
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 //$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
 //$Qfin = (string) \filter_input(INPUT_POST, 'fin');
@@ -138,8 +139,8 @@ $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('dl_org!empiezamax!empiezamin!filtro_lugar!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!periodo!status!year');
-$oHash->setcamposNo('id_ubi');
+$oHash->setcamposForm('dl_org!empiezamax!empiezamin!filtro_lugar!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!nom_activ!periodo!status!year');
+$oHash->setcamposNo('id_ubi!nom_activ');
 if (core\configGlobal::is_app_installed('procesos')) {
     $oHash->setCamposNo('fases_on!fases_off');
 }
@@ -261,6 +262,7 @@ $a_campos = ['oPosicion' => $oPosicion,
 			'oHash' => $oHash,
 			'accion' => $accion,
 			'Qid_ubi' => $Qid_ubi,
+			'Qnom_activ' => $Qnom_activ,
 			'h' => $h,
 			'titulo' => $titulo,
 			'oDesplFiltroLugar' => $oDesplFiltroLugar,
