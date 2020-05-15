@@ -381,3 +381,4 @@
 1398	{70,50}	config esquema	\N	90	35651584	13	t
 252	{10,10}	seleccionar	\N	148	35651584	13	t
 1414	{1,30}	lista de cambios	\N	137	37617663	1	t
+1415	{30,30}	borrar passwords	\N	145	33554432	13	t

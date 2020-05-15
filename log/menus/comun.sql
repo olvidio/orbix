@@ -81,7 +81,6 @@
 40	1	apps/menus/controller/menus_importar.php	\N	importar menus
 122	1	apps/usuarios/controller/grupo_lista.php	\N	lista grupos
 144	\N	scdl/documentos/cabecera_pie_txt.php	\N	\N
-145	\N	scdl/tabla_mails_ex.php	\N	\N
 149	\N	scdl/registro/pen_of_tabla.php	\N	\N
 150	\N	programas/personas_borrar_B.php	\N	\N
 151	\N	sg/list_cp_cr15_86.php	\N	\N
@@ -104,6 +103,7 @@
 63	27	apps/casas/controller/calendario_ubi_resumen.php	\N	Ubi resumen ec
 91	27	apps/casas/controller/grupo_lista.php	\N	Grupo Casas
 97	1	apps/personas/controller/personas_select.php	\N	personas Select
+145	2	apps/usuarios/controller/borrar_pwd.php	\N	borrar passwords
 42	24	apps/zonassacd/controller/zona_sacd.php	\N	Zona sacd
 139	24	apps/zonassacd/controller/planning_zones.php	\N	Planning por zonas
 114	25	apps/cartaspresentacion/controller/cartas_presentacion_que.php	\N	Cartas Presentacion
