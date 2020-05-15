@@ -73,12 +73,28 @@ switch ($Qque) {
 		if (empty($Qgm_new)) {
 			echo _("hay un error, no se ha guardado");
 		}
-		$oMenuDb->DBCarregar(); // Clonar y poner en otro grupmenu
-		$oMenuDb->setId_grupmenu($Qgm_new);
-		$oMenuDb->setId_menu(''); //al borrar el id_menu, me generará uno nuevo.
-		if ($oMenuDb->DBGuardar() === false) {
+		$oMenuDb->DBCarregar();
+		// Clonar y poner en otro grupmenu
+		$ok = $oMenuDb->getOk();
+		$orden = $oMenuDb->getOrden();
+		$id_grupmenu = $oMenuDb->getId_grupmenu();
+		$txt_menu = $oMenuDb->getMenu();
+		$parametros = $oMenuDb->getParametros();
+		$id_metamenu = $oMenuDb->getId_metamenu();
+		$perm_menu = $oMenuDb->getMenu_perm();
+		
+		$oNewMenuDb = new menusEntity\MenuDb();
+		$oNewMenuDb->setOrden($orden);
+		$oNewMenuDb->setId_grupmenu($id_grupmenu);
+		$oNewMenuDb->setMenu($txt_menu);
+		$oNewMenuDb->setParametros($parametros);
+		$oNewMenuDb->setId_metamenu($id_metamenu);
+		$oNewMenuDb->setMenu_perm($perm_menu);
+		$oNewMenuDb->setId_grupmenu($Qgm_new);
+		
+		if ($oNewMenuDb->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
-			echo "\n".$oMenuDb->getErrorTxt();
+			echo "\n".$oNewMenuDb->getErrorTxt();
 		}
 		break;
 }
