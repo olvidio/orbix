@@ -1,5 +1,6 @@
 <?php
 use asignaturas\model\entity\Asignatura;
+use web\DateTimeLocal;
 /**
 * Esta página sirve para comprobar las notas de la tabla e_notas.
 *
@@ -99,9 +100,16 @@ if ($Qactualizar == 'r') {
 	}
 }
 if ($Qactualizar == 'caduca_cursada') {
+	$caduca_cursada = $_SESSION['oConfig']->getCaduca_cursada();
+	$oHoy = new DateTimeLocal();
+	$interval = 'P'.$caduca_cursada.'Y';
+	$oHoy->sub(new DateInterval($interval));
+	$f_caduca_iso = $oHoy->getIso();
+	
 	$ssql="SELECT p.id_nom, n.id_asignatura
 		FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
 		WHERE n.id_situacion = 2
+            AND f_acta < '$f_caduca_iso'
 		"; 
 	
 	$oDBSt_sql=$oDB->query($ssql);
