@@ -99,7 +99,7 @@ class TipoTeleco Extends core\ClasePropiedades {
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if ( core\is_true($aDades['ubi']) ) { $aDades['ubi']='true'; } else { $aDades['ubi']='false'; }
-		if ( core\is_true($aDades['ubi']) ) { $aDades['ubi']='true'; } else { $aDades['ubi']='false'; }
+		if ( core\is_true($aDades['persona']) ) { $aDades['persona']='true'; } else { $aDades['persona']='false'; }
 		
 		if ($bInsert === false) {
 			//UPDATE

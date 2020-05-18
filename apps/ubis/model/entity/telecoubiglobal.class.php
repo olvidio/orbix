@@ -247,8 +247,6 @@ Abstract class TelecoUbiGlobal Extends core\ClasePropiedades {
 		$oTelecoUbiSet->add($this->getDatosObserv());
 		return $oTelecoUbiSet->getTot();
 	}
-
-
 	function getDatosTipo_teleco() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'tipo_teleco'));

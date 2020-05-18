@@ -125,7 +125,7 @@ $godossiers = Hash::link(ConfigGlobal::getWeb()."/apps/dossiers/controller/dossi
 switch ($pau) {
 	case 'p':
 		//Hay que aclararse si la persona es de la dl o no
-		if ($Qobj_pau == 'Persona') {
+		if (empty($Qobj_pau) OR $Qobj_pau == 'Persona') {
 			$oPersona = personas\Persona::NewPersona($id_pau);
 			if (!is_object($oPersona)) {
 				$msg_err = "<br>$oPersona con id_nom: $id_pau en  ".__FILE__.": line ". __LINE__;

@@ -116,7 +116,7 @@ foreach ($Coleccion as $oFila) {
 			case 'depende':
 			case 'opciones':
 				$oRelacionado = new $var_1($valor_camp);
-				$var=$oRelacionado->$var_2;
+				$var=$oRelacionado->$var_2();
 				if (empty($var)) $var=$valor_camp;
 				$a_valores[$c][$v]=$var;	
 				break;

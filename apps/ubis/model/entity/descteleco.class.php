@@ -482,4 +482,3 @@ class DescTeleco Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 }
-?>
