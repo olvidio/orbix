@@ -101,6 +101,14 @@ mes:<input size="3" type="text" name="fin_mes" value="{{ aCursoCrt['fin_mes'] }}
 </form>
 <hr>
 
+<h3>{{ "años que se conserva si se ha cursado una asignatura"|trans }}:</h3>
+<form id="frm_caduca_cursada" name="frm_caduca_cursada" action="">
+{{ oHashC.getCamposHtml|raw }}
+<input type="text" name="valor" value="{{ caduca_cursada }}" >
+<input type="button" value="{{ "guardar"|trans }}" onclick="fnjs_guardar(this.form);" >
+</form>
+<hr>
+
 <h3>{{ "idioma por defecto"|trans }}:</h3>
 <form id="frm_idioma_default" name="frm_idioma_default" action="">
 {{ oHashI.getCamposHtml|raw }}

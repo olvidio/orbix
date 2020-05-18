@@ -256,7 +256,8 @@ switch ($tabla) {
 		if ($_SESSION['oPerm']->have_perm_oficina('sm')
              OR $_SESSION['oPerm']->have_perm_oficina('agd')
              OR $_SESSION['oPerm']->have_perm_oficina('des')
-             OR $_SESSION['oPerm']->have_perm_oficina('sg'))
+             OR $_SESSION['oPerm']->have_perm_oficina('sg')
+             OR $_SESSION['oPerm']->have_perm_oficina('est'))
 		{
 			$permiso = 3;
 		}
@@ -334,7 +335,7 @@ if ($_SESSION['oPerm']->have_perm_oficina('est')){
 		$a_botones[]=array( 'txt' => _("plan estudios"),
 							'click' =>"fnjs_matriculas(\"#seleccionados\")" );
 		$script['fnjs_matriculas'] = 1;
-		$permiso = 3;
+		//$permiso = 3;
 	}
 	if (core\configGlobal::is_app_installed('profesores')) {
 		$a_botones[]=array( 'txt' => _("ficha profesor stgr"),

@@ -13,8 +13,10 @@ fnjs_left_side_hide();
 </tfoot>
 <tbody>
 <tr>
-	<td class=etiqueta ><input type="Checkbox" name="personas_n" value="n" <?= $chk_n ?>><?= _("numerarios"); ?></td>
-	<td class=etiqueta ><input type="Checkbox" name="personas_agd" value="agd" <?= $chk_agd ?>><?= _("agregados"); ?></td>
+	<td class=etiqueta width=25%><input type="Checkbox" name="personas_n" value="n" <?= $chk_n ?>><?= _("numerarios"); ?></td>
+	<td class=etiqueta width=25% ><input type="Checkbox" name="personas_agd" value="agd" <?= $chk_agd ?>><?= _("agregados"); ?></td>
+	<td width=25%></td>
+	<td width=25%></td>
 </tr>
 <tr>
 	<td class=etiqueta ><input type="Radio" name="b_c" value=b <?= $chk_b ?>><?= _("bienio"); ?></td>
@@ -23,11 +25,12 @@ fnjs_left_side_hide();
 	<td class=etiqueta align="RIGHT"><input type="checkbox" name="c2"  <?= $chk_c2 ?>><?= _("año II-IV"); ?></td>
 </tr>
 <tr>
-	<td class=etiqueta><b><?= ucfirst(_("número de asignaturas que faltan")); ?></b></td> 
+	<td colspan=2 class=etiqueta><b><?= ucfirst(_("número de asignaturas que faltan (no se incluyen las cusradas sin examinar)")); ?></b></td> 
 	<td><input class=contenido name="numero" size="3" value="<?= $numero ?>"></td>
+	<td></td>
 </tr>
 <tr>
-<td class=etiqueta colspan="2"><input type="checkbox" name="lista"><?= _("incluir lista de asignaturas"); ?></td>
+<td class=etiqueta colspan="4"><input type="checkbox" name="lista"><?= _("incluir lista de asignaturas"); ?></td>
 </tr>
 </tbody>
 </table>

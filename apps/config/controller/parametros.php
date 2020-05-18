@@ -176,6 +176,24 @@ $oHashN->setArrayCamposHidden(['parametro' => $parametro]);
 $a_campos['oHashN'] = $oHashN;
 $a_campos['nota_max'] = $val_nota_max;
 
+// ----------- Años en los que caduca el asignatura cursada  -------------------
+$parametro = 'caduca_cursada';
+$oConfigSchema = new ConfigSchema($parametro);
+$valor = $oConfigSchema->getValor();
+
+if (empty($valor)) {
+    $valor = "2";
+}
+$val_caduca_cursada = $valor;
+
+$oHashC = new Hash();
+$oHashC->setUrl($url);
+$oHashC->setcamposForm('valor');
+$oHashC->setArrayCamposHidden(['parametro' => $parametro]);
+
+$a_campos['oHashC'] = $oHashC;
+$a_campos['caduca_cursada'] = $val_caduca_cursada;
+
 // ----------- Idioma por defecto de la dl -------------------
 $parametro = 'idioma_default';
 $oConfigSchema = new ConfigSchema($parametro);

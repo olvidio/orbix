@@ -40,7 +40,7 @@ $superada = "(n.id_situacion = 10 OR n.id_situacion::text ~ '[1345]')";
 if ($Qactualizar == 'c1') {
 	$ssql="SELECT p.id_nom
 		FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
-		WHERE p.stgr != 'b' AND p.stgr !='c1'
+		WHERE p.stgr != 'b' AND p.stgr !='c1' AND p.stgr !='n'
 			AND n.id_nivel BETWEEN 2100 AND 2113
 		GROUP BY p.id_nom
 		HAVING count(*) < 13 
@@ -60,7 +60,7 @@ if ($Qactualizar == 'c1') {
 if ($Qactualizar == 'c2') {
 	$ssql="SELECT p.id_nom
 		FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
-		WHERE p.stgr != 'b' AND p.stgr !='c2'
+		WHERE p.stgr != 'b' AND p.stgr !='c2' AND p.stgr !='n'
 			AND n.id_nivel BETWEEN 2100 AND 2113
 		GROUP BY p.id_nom
 		HAVING count(*) > 12 
@@ -94,6 +94,26 @@ if ($Qactualizar == 'r') {
 		$id_nom=$row["id_nom"];
 		$ssql_1="UPDATE $tabla SET stgr='r'
 			WHERE id_nom=$id_nom
+			";
+		$oDBSt_sql_1=$oDB->query($ssql_1);
+	}
+}
+if ($Qactualizar == 'caduca_cursada') {
+	$ssql="SELECT p.id_nom, n.id_asignatura
+		FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
+		WHERE n.id_situacion = 2
+		"; 
+	
+	$oDBSt_sql=$oDB->query($ssql);
+	$nf=$oDBSt_sql->rowCount();
+	
+	$i=0;
+	foreach ($oDBSt_sql->fetchAll() as $row) {
+		$i++;
+		$id_nom=$row["id_nom"];
+		$id_asignatura=$row["id_asignatura"];
+		$ssql_1="DELETE FROM e_notas_dl
+			WHERE id_nom=$id_nom AND id_asignatura = $id_asignatura
 			";
 		$oDBSt_sql_1=$oDB->query($ssql_1);
 	}
@@ -315,7 +335,7 @@ echo "</table>";
 // 5. Comprobar que los de año I tienen puesto c1
 $ssql="SELECT p.stgr,p.nom, p.apellido1, p.apellido2, count(*) AS NumAsig
 	FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
-	WHERE p.stgr != 'b' AND p.stgr != 'r' AND p.stgr !='c1'
+	WHERE p.stgr != 'b' AND p.stgr != 'r' AND p.stgr !='c1' AND p.stgr !='n'
 		AND ((n.id_nivel BETWEEN 2100 AND 2113) OR n.id_nivel=2430)
 	GROUP BY p.id_nom,p.stgr,p.nom, p.apellido1, p.apellido2
 	HAVING count(*) < 14 
@@ -346,7 +366,7 @@ if (!empty($nf)) {
 // 6. Comprobar que los de año II-IV tienen puesto c2
 $ssql="SELECT p.stgr,p.nom, p.apellido1, p.apellido2, count(*) AS NumAsig
 	FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
-	WHERE p.stgr != 'b' AND p.stgr != 'r' AND p.stgr !='c2'
+	WHERE p.stgr != 'b' AND p.stgr != 'r' AND p.stgr !='c2' AND p.stgr !='n'
 		AND ((n.id_nivel BETWEEN 2100 AND 2113) OR n.id_nivel=2430)
 	GROUP BY p.id_nom,p.stgr,p.nom, p.apellido1, p.apellido2
 	HAVING count(*) > 13 
@@ -409,7 +429,7 @@ if (!empty($nf)) {
 /*8. Gente con asignaturas cursadas sin aprobar*/
 $sqlF="SELECT  p.id_nom,p.nom, p.apellido1, p.apellido2, n.f_acta, n.id_asignatura
 FROM $tabla p,e_notas_dl n
-WHERE p.id_nom=n.id_nom AND n.id_situacion = 2
+WHERE p.situacion != 'B' AND p.id_nom = n.id_nom AND n.id_situacion = 2
 ORDER BY p.apellido1,p.apellido2 ";
 
 $oDBSt_sql=$oDB->query($sqlF);
@@ -429,6 +449,13 @@ foreach ($oDBSt_sql->fetchAll() as $algo) {
 }
 echo "<tr><td colspan=7><hr>";
 echo "</table>";
+	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>'caduca_cursada')));
+	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("clic aquí") ."</span>";
+	$caduca_cursada = $_SESSION['oConfig']->getCaduca_cursada();
+	
+	echo "<p class=action>";
+	printf (_("para borrar las cursadas de más de %s años, hacer %s"),$caduca_cursada,$pag);
+	echo "</p>";
 /* end lista */
 
 echo "</body>";

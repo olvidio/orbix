@@ -80,6 +80,12 @@ class Config {
         return $oConfigSchema->getValor();
     }
     
+    public function getCaduca_cursada() {
+        $parametro = 'caduca_cursada';
+        $oConfigSchema = new ConfigSchema($parametro);
+        return $oConfigSchema->getValor();
+    }
+    
     public function getNomRegionLatin() {
         $parametro = 'region_latin';
         $oConfigSchema = new ConfigSchema($parametro);
