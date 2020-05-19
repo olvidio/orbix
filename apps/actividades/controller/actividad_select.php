@@ -236,7 +236,9 @@ if (!empty($Qmodo) && $Qmodo != 'buscar') {
         $a_botones=array( array( 'txt' => _("datos"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"datos\")" ) ,);
     } else {
         $a_botones[] = array( 'txt' => _("datos"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"datos\")" );
-        if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+        if (($_SESSION['oPerm']->have_perm_oficina('vcsd'))
+            OR ($_SESSION['oPerm']->have_perm_oficina('des'))
+            OR ($_SESSION['oPerm']->have_perm_oficina('calendario'))) {
             $duplicar=1; //condición de duplicar
             $a_botones[]=array( 'txt'=> _("duplicar"), 'click' =>"jsForm.update(\"#seleccionados\",\"duplicar\")");
             // Ahora lo generalizo para todas. (no sólo proyecto). 17.X.2011

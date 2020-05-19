@@ -544,11 +544,13 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         $gesActividadProcesoTarea = new GestorActividadProcesoTarea();
         $cActividadProcesoTarea = $gesActividadProcesoTarea->getActividadProcesoTareas($aWhere);
         if (empty($cActividadProcesoTarea[0])) {
+            // Daba error, no sé exactamente...
+            /*
             echo "<pre>";
             print_r($aWhere);
             print_r($cActividadProcesoTarea);
             echo "</pre>";
-            
+            */
         } else {
             $oActividadProcesoTarea = $cActividadProcesoTarea[0];
             
