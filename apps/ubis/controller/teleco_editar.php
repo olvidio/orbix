@@ -1,5 +1,6 @@
 <?php
 use usuarios\model\entity as usuarios;
+use web\Desplegable;
 /**
 * Es el frame inferior. Muestra la ficha de los ubis
 *
@@ -120,7 +121,22 @@ $oTiposTeleco=new ubis\model\entity\GestorTipoTeleco();
 $oDesplegableTiposTeleco=$oTiposTeleco->getListaTiposTelecoUbi();
 $oDesplegableTiposTeleco->setNombre('tipo_teleco');
 $oDesplegableTiposTeleco->setOpcion_sel($tipo_teleco);
+$oDesplegableTiposTeleco->setAction('fnjs_actualizar_descripcion()');
 $oDesplegableTiposTeleco->setBlanco(true);
+
+$oDescTeleco=new ubis\model\entity\GestorDescTeleco();
+$aOpciones = $oDescTeleco->getListaDescTelecoUbis($tipo_teleco);
+$oDesplegableDescTeleco= new Desplegable();
+$oDesplegableDescTeleco->setOpciones($aOpciones);
+$oDesplegableDescTeleco->setNombre('desc_teleco');
+$oDesplegableDescTeleco->setOpcion_sel($desc_teleco);
+$oDesplegableDescTeleco->setBlanco(true);
+
+$url_actualizar = core\ConfigGlobal::getWeb().'/apps/ubis/controller/teleco_ajax.php';
+$oHash1 = new web\Hash();
+$oHash1->setUrl($url_actualizar);
+$oHash1->setCamposForm('tipo_teleco');
+$h_actualizar = $oHash1->linkSinVal();
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('mod!tipo_teleco!desc_teleco!num_teleco!observ');
@@ -138,10 +154,12 @@ $a_campos = [ 'obj' =>$obj,
 		'oPosicion' => $oPosicion,
 		'oHash' => $oHash,
 		'oDesplegableTiposTeleco' => $oDesplegableTiposTeleco,
-		'desc_teleco' => $desc_teleco,
+		'oDesplegableDescTeleco' => $oDesplegableDescTeleco,
 		'num_teleco' => $num_teleco,
 		'observ' => $observ,
 		'botones' => $botones,
+        'url_actualizar' => $url_actualizar,
+        'h_actualizar' => $h_actualizar,
 		];
 
 $oView = new core\View('ubis\controller');

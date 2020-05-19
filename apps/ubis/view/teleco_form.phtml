@@ -24,6 +24,20 @@ fnjs_guardar=function(formulario){
 		$(formulario).off();
 	}
 }
+fnjs_actualizar_descripcion=function() {
+	var tipo_teleco=$('#tipo_teleco').val();
+
+	var url='<?= $url_actualizar ?>';
+	var parametros='tipo_teleco='+tipo_teleco+'<?= $h_actualizar ?>';
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros
+	})
+	.done(function (rta_txt) {
+            $('#span_descripcion').html(rta_txt);			
+	});
+}
 </script>
 <?= $oPosicion->mostrar_left_slide(1); ?>
 <form id='frm2' >
@@ -34,7 +48,9 @@ fnjs_guardar=function(formulario){
 	<?= $oDesplegableTiposTeleco->desplegable(); ?>
 </td></tr>
 <tr><td class="etiqueta"><?= ucfirst(_("descripción")) ?>
-	<input class="contenido" id="desc_teleco"  name="desc_teleco" value="<?= $desc_teleco ?>" size="30">
+	<span id='span_descripcion'>
+        <?= $oDesplegableDescTeleco->desplegable(); ?>
+	</span>
 </td></tr>
 <tr><td class="etiqueta"><?= ucfirst(_("número")) ?>
 	<input class="contenido" id="num_teleco"  name="num_teleco" value="<?= $num_teleco ?>" size="30">
