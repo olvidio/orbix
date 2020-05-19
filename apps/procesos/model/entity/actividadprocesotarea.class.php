@@ -543,17 +543,21 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         ];
         $gesActividadProcesoTarea = new GestorActividadProcesoTarea();
         $cActividadProcesoTarea = $gesActividadProcesoTarea->getActividadProcesoTareas($aWhere);
-        $oActividadProcesoTarea = $cActividadProcesoTarea[0];
-        echo "<pre>";
-        print_r($aWhere);
-        print_r($cActividadProcesoTarea);
-        echo "</pre>";
-        
-        $oActividadProcesoTarea->DBCarregar();
-        $oActividadProcesoTarea->SetCompletado('t');
-        $oActividadProcesoTarea->DBMarcar();
-        // Hay que cambiarlo en el array, porque sino no se actualiza:
-        $this->aFasesEstado[$fase_tarea] = TRUE;
+        if (empty($cActividadProcesoTarea[0])) {
+            echo "<pre>";
+            print_r($aWhere);
+            print_r($cActividadProcesoTarea);
+            echo "</pre>";
+            
+        } else {
+            $oActividadProcesoTarea = $cActividadProcesoTarea[0];
+            
+            $oActividadProcesoTarea->DBCarregar();
+            $oActividadProcesoTarea->SetCompletado('t');
+            $oActividadProcesoTarea->DBMarcar();
+            // Hay que cambiarlo en el array, porque sino no se actualiza:
+            $this->aFasesEstado[$fase_tarea] = TRUE;
+        }
     }
     
     private function comprobar_dependencia($fase_tarea) {
