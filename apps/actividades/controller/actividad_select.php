@@ -126,6 +126,7 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     $aGoBack = array (
         'modo'=>$Qmodo,
         'id_tipo_activ'=>$Qid_tipo_activ,
+        'filtro_lugar'=>$Qfiltro_lugar,
         'id_ubi'=>$Qid_ubi,
         'nom_activ'=>$Qnom_activ,
         'periodo'=>$Qperiodo,

@@ -25,7 +25,12 @@
  */
 
 use actividadcargos\model\entity as actividadcargos;
-use personas\model\entity as personas;
+use personas\model\entity\GestorPersonaAgd;
+use personas\model\entity\GestorPersonaEx;
+use personas\model\entity\GestorPersonaN;
+use personas\model\entity\GestorPersonaNax;
+use personas\model\entity\GestorPersonaS;
+use personas\model\entity\Persona;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -80,7 +85,7 @@ if (!empty($Qid_item)) { //caso de modificar
 	$puede_agd=$oActividadCargo->getPuede_agd();
 	$observ=$oActividadCargo->getObserv();
 	
-	$oPersona=personas\Persona::NewPersona($Qid_nom);
+	$oPersona = Persona::NewPersona($Qid_nom);
 	if (!is_object($oPersona)) {
 		$msg_err = "<br>$oPersona con id_nom: $Qid_nom en  ".__FILE__.": line ". __LINE__;
 		exit ($msg_err);
@@ -92,7 +97,7 @@ if (!empty($Qid_item)) { //caso de modificar
 	$observ="";
 	// Si vengo de la lista de asistentes, ya sé el id_nom y el id_activ (es como modificar)
 	if ($Qid_dossier == 3101) {  // vengo del listado de asistencias
-		$oPersona=personas\Persona::NewPersona($Qid_nom);
+		$oPersona = Persona::NewPersona($Qid_nom);
 		if (!is_object($oPersona)) {
 			$msg_err = "<br>$oPersona con id_nom: $Qid_nom en  ".__FILE__.": line ". __LINE__;
 			exit ($msg_err);
@@ -107,28 +112,28 @@ if (!empty($Qid_item)) { //caso de modificar
 		$na_val = 'p'.strtok('=');
 		switch ($obj_pau) {
 			case 'PersonaN':
-				$oPersonas=new personas\GestorPersonaN();
+				$oPersonas = new GestorPersonaN();
 				$oDesplegablePersonas = $oPersonas->getListaPersonas();
 				$oDesplegablePersonas->setNombre('id_nom');
 				break;
 			case 'PersonaNax':
-				$oPersonas=new personas\GestorPersonaNax();
+				$oPersonas = new GestorPersonaNax();
 				$oDesplegablePersonas = $oPersonas->getListaPersonas();
 				$oDesplegablePersonas->setNombre('id_nom');
 				break;
 			case 'PersonaAgd':
-				$oPersonas=new personas\GestorPersonaAgd();
+				$oPersonas = new GestorPersonaAgd();
 				$oDesplegablePersonas = $oPersonas->getListaPersonas();
 				$oDesplegablePersonas->setNombre('id_nom');
 				break;
 			case 'PersonaS':
-				$oPersonas=new personas\GestorPersonaS();
+				$oPersonas = new GestorPersonaS();
 				$oDesplegablePersonas = $oPersonas->getListaPersonas();
 				$oDesplegablePersonas->setNombre('id_nom');
 				break;
 			case 'PersonaSSSC':
 			case 'PersonaEx':
-				$oPersonas=new personas\GestorPersonaEx();
+				$oPersonas = new GestorPersonaEx();
 				$oDesplegablePersonas = $oPersonas->getListaPersonas($na_val);
 				$oDesplegablePersonas->setNombre('id_nom');
 				$obj_pau = 'PersonaEx';

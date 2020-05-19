@@ -85,9 +85,10 @@ $oActividadTipo->setNom_tipo($Qsnom_tipo);
 
 if (empty($Qstatus)) { $Qstatus = actividades\model\entity\ActividadAll::STATUS_ACTUAL; }
 
-$mi_dele = core\ConfigGlobal::mi_delef();
+$Qisfsv = substr($Qid_tipo_activ,0,1);
+$mi_dele = core\ConfigGlobal::mi_delef($Qisfsv);
 $oGesDl = new ubis\GestorDelegacion();
-$oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones();
+$oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones($Qisfsv);
 $oDesplDelegacionesOrg->setNombre('dl_org');
 $oDesplDelegacionesOrg->setOpcion_sel($Qdl_org);
 if ($Qmodo == 'importar') {
@@ -103,7 +104,7 @@ if (core\configGlobal::is_app_installed('procesos')) {
 }
 
 
-$oDesplFiltroLugar = $oGesDl->getListaDlURegionesFiltro();
+$oDesplFiltroLugar = $oGesDl->getListaDlURegionesFiltro($Qisfsv);
 $oDesplFiltroLugar->setAction('fnjs_lugar()');
 $oDesplFiltroLugar->setNombre('filtro_lugar');
 $oDesplFiltroLugar->setOpcion_sel($Qfiltro_lugar);
@@ -139,11 +140,12 @@ $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('dl_org!empiezamax!empiezamin!filtro_lugar!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!nom_activ!periodo!status!year');
-$oHash->setcamposNo('id_ubi!nom_activ');
+$oHash->setcamposForm('dl_org!empiezamax!empiezamin!filtro_lugar!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!id_ubi!nom_activ!periodo!status!year');
+$camposNo = 'id_ubi!nom_activ';
 if (core\configGlobal::is_app_installed('procesos')) {
-    $oHash->setCamposNo('fases_on!fases_off');
+    $camposNo .= '!fases_on!fases_off';
 }
+$oHash->setcamposNo($camposNo);
 $a_camposHidden = array(
 		'modo' => $Qmodo,
 		'listar_asistentes' => $Qlistar_asistentes,

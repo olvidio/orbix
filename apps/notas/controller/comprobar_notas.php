@@ -99,6 +99,19 @@ if ($Qactualizar == 'r') {
 		$oDBSt_sql_1=$oDB->query($ssql_1);
 	}
 }
+if ($Qactualizar == 'borrar_cursada') {
+	
+    $Qid_nom = (string) \filter_input(INPUT_POST, 'id_nom');
+    $Qid_asignatura = (string) \filter_input(INPUT_POST, 'id_asignatura');
+
+	$ssql="DELETE FROM e_notas_dl n 
+		WHERE n.id_situacion = 2
+            AND id_nom = $Qid_nom
+            AND id_asignatura = $Qid_asignatura
+		"; 
+	
+	$oDBSt_sql=$oDB->query($ssql);
+}
 if ($Qactualizar == 'caduca_cursada') {
 	$caduca_cursada = $_SESSION['oConfig']->getCaduca_cursada();
 	$oHoy = new DateTimeLocal();
@@ -445,6 +458,9 @@ $nf=$oDBSt_sql->rowCount();
 echo "<br><p>8. $tabla_txt con asignaturas cursadas sin examinar: $nf</p>";
 
 /* Para sacar una lista*/
+$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>'caduca_cursada')));
+$caduca_cursada = $_SESSION['oConfig']->getCaduca_cursada();
+	
 echo "<table>";
 foreach ($oDBSt_sql->fetchAll() as $algo) {
 	$nom= $algo['apellido1']." ".$algo['apellido2'].", ".$algo['nom'];
@@ -452,18 +468,23 @@ foreach ($oDBSt_sql->fetchAll() as $algo) {
 	$id_asignatura = $algo['id_asignatura'];
 	$oAsignatura = new Asignatura($id_asignatura);
 	$asig= $oAsignatura->getNombre_corto();
+	$id_nom = $algo['id_nom'];
+
+	$aParam = ['id_nom' => $id_nom,
+	           'id_asignatura' => $id_asignatura,
+	           'id_tabla' => $Qid_tabla,
+	           'actualizar' => 'borrar_cursada'];
+    $go_borrar = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query($aParam));
+    $pag_borrar = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go_borrar');\">". _("borrar") ."</span>";
 	echo "<tr><td width=20></td>";
-	echo "<td>$nom</td><td>$fecha</td><td>$asig</td></tr>";
+	echo "<td>$nom</td><td>$fecha</td><td>$asig</td><td>$pag_borrar</td></tr>";
 }
 echo "<tr><td colspan=7><hr>";
 echo "</table>";
-	$go=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>'caduca_cursada')));
-	$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("clic aquí") ."</span>";
-	$caduca_cursada = $_SESSION['oConfig']->getCaduca_cursada();
-	
-	echo "<p class=action>";
-	printf (_("para borrar las cursadas de más de %s años, hacer %s"),$caduca_cursada,$pag);
-	echo "</p>";
+$pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("clic aquí") ."</span>";
+echo "<p class=action>";
+    printf (_("para borrar las cursadas de más de %s años, hacer %s"),$caduca_cursada,$pag);
+echo "</p>";
 /* end lista */
 
 echo "</body>";
