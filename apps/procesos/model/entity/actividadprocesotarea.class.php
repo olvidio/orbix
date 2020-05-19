@@ -519,7 +519,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
     
     private function marcar($fase_tarea) {
         // Cuando un proceso está mal y se da el caso de referencias circulares en las dependecias,
-        // se emple una variable global para poder detectar cuando se está intentando marcar una fase por segunda vez.
+        // se emplea una variable global para poder detectar cuando se está intentando marcar una fase por segunda vez.
         if (in_array($fase_tarea, $this->aStack)) {
             $msg = _("Hay un error en el diseño del proceso: referencias circulares.");
             exit($msg);
@@ -544,6 +544,10 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         $gesActividadProcesoTarea = new GestorActividadProcesoTarea();
         $cActividadProcesoTarea = $gesActividadProcesoTarea->getActividadProcesoTareas($aWhere);
         $oActividadProcesoTarea = $cActividadProcesoTarea[0];
+        echo "<pre>";
+        print_r($aWhere);
+        print_r($cActividadProcesoTarea);
+        echo "</pre>";
         
         $oActividadProcesoTarea->DBCarregar();
         $oActividadProcesoTarea->SetCompletado('t');
