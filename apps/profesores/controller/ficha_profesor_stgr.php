@@ -69,6 +69,10 @@ if (ConfigGlobal::soy_region()) {
 	$Qprint = 1;
 }
 
+if ($_SESSION['oPerm']->have_perm_oficina('est')) {
+    $Qpermiso = 3;
+}
+
 $aWhere = array('id_nom'=>$id_nom,'_ordre'=>'f_nombramiento');
 $aOperador = array();
 if (!empty($Qprint)) { $aWhere['f_cese'] = 'NULL'; $aOperador['f_cese'] = 'IS NULL'; }
