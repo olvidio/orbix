@@ -160,7 +160,6 @@
 155	7	apps/actividadestudios/controller/ca_posibles_que.php	\N	Posibles ca
 162	1	fnjs_exportar('odfc')	\N	exportar a odf calc
 163	1	fnjs_exportar('odft')	\N	exportar a odft txt
-165	1	fnjs_windowopen('http://orbix.local/orbix/public/ayuda/index.php')	\N	Ayuda
 167	1	fnjs_windowopen('http://10.0.0.16/redmine')	\N	abrir pag redmine
 183	5	\N	\N	Raiz activ1
 184	6	\N	\N	Raiz activ2
@@ -186,4 +185,5 @@
 5	27	apps/casas/controller/prevision_asistentes.php	\N	prevision asistentes
 54	2	apps/devel/controller/db_mover_que.php	\N	DB mover tabla
 100	5	apps/actividadtarifas/controller/tarifa.php	\N	Tarifa definir
+165	1	public/ayuda/index.php	\N	Ayuda
 137	26	apps/cambios/controller/avisos_generar.php	\N	lista avisos

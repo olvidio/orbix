@@ -208,6 +208,7 @@
 374	{50,10,20}	sv agd	id_tipo_activ=13&status=2&periodo=desdeHoy	71	8	8	t
 1029	{30}	historicos	\N	\N	\N	\N	t
 1290	{90,90}	Tarifas	\N	0	32768	20	t
+940	{1,90}	Ayuda	\N	165	37617663	1	t
 1008	{20,40}	zonas-ctr	\N	85	2056	8	t
 1010	{20,50}	zonas-sacd	\N	42	2056	8	t
 1012	{20,55}	lista sacd-zona	que=get_lista_tot	34	2056	8	t
