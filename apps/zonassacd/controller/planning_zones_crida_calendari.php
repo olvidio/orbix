@@ -10,6 +10,7 @@ use zonassacd\model\entity\GestorZona;
 use zonassacd\model\entity\GestorZonaSacd;
 use zonassacd\model\entity\Zona;
 use function core\is_true;
+use actividades\model\entity\ActividadAll;
 
 /**
 * Esta página tiene la misión de realizar la llamada a calendario php;
@@ -216,7 +217,10 @@ foreach ($aa_zonas as $a_zonas) {
 		    $aWhereAct['f_fin']="'$inicio_iso'";
 		    $aOperadorAct['f_fin']='>=';
             if(!is_true($Qpropuesta)) {
-			    $aWhereAct['status']='2';
+			    $aWhereAct['status'] = ActividadAll::STATUS_ACTUAL;
+            } else {
+			    $aWhereAct['status'] = ActividadAll::STATUS_BORRABLE;
+                $aOperadorAct['status'] = '!=';
             }
             /*			
 			$aWhere = ['id_nom' => $id_nom, 'plaza' => Asistente::PLAZA_PEDIDA];
