@@ -335,4 +335,3 @@ $oTabla->setGrupos($aGrupos);
 $oTabla->setCabeceras($aCabeceras);
 $oTabla->setDatos($a_ubi_activ);
 echo $oTabla->listaPaginada();
-?>

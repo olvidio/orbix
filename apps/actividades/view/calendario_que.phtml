@@ -1,7 +1,48 @@
 <script>
 fnjs_ver_planning = function(formulario,n) {
-	$('#modelo').val(n);
-	fnjs_enviar_formulario(formulario);
+	var err=0;
+	var cdc_sel = $('input[name="cdc_sel"]:checked').val();
+
+	// comprobar seleccion periodo
+	var f=$('#periodo').val();	
+	if (f=='otro') {
+		if (!fnjs_comprobar_fecha('#empiezamin')) {
+			 err=1;
+             alert("<?= _("debe inrtoducir la fecha inicio del periodo") ?>"); 
+         }
+		if (!fnjs_comprobar_fecha('#empiezamax')) {
+			 err=1;
+             alert("<?= _("debe inrtoducir la fecha fin del periodo") ?>"); 
+		}
+	} else {
+		if (f == 0 ) {
+			 err=1;
+             alert("<?= _("debe inrtoducir el periodo") ?>"); 
+		}
+	}
+	// comprobar seleccion casa	
+	if (!cdc_sel) {
+		alert ("<?= _("Debe seleccionar una casa") ?>");
+		err = 1;
+	} else {
+		if (cdc_sel == 9) {
+			sum = 0;
+			$('select[name^="id_cdc"]').each(function() {
+			    c = $(this).val();
+                sum = sum + c;
+			});
+            //alert ("sum c: "+sum);
+            if (sum == 0) {
+                alert ("<?= _("Debe seleccionar una casa") ?>");
+                err=1;
+            }
+		}
+	}
+	
+	if (err==0) { 
+		$('#modelo').val(n);
+		fnjs_enviar_formulario(formulario);
+	}
 }
 </script>
 <form name="que" id="que" target="print" action="apps/actividades/controller/calendario_planning.php" method="post" onkeypress="fnjs_enviar(event,this);">

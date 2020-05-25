@@ -419,13 +419,10 @@ switch ($Qque) {
 		$a_valores = array();
 		foreach ($aGrupos as $id_ubi => $Titulo) {
 			$aWhere['id_ubi']=$id_ubi;
-			$aWhere['f_ini'] = $inicioIso;
-			$aOperador['f_ini'] = '>=';
-			$aWhere['f_fin'] = $finIso;
-			$aOperador['f_fin'] = '<=';
+			$aWhere['f_ini'] = "'$inicioIso','$finIso'";
+			$aOperador['f_ini'] = 'BETWEEN';
 			$aWhere['status'] = 4;
 			$aOperador['status'] = '<';
-			
 			$aWhere['_ordre'] = 'f_ini';
 			$GesActividades = new GestorActividad();
 			$cActividades = $GesActividades->getActividades($aWhere,$aOperador);
