@@ -1,6 +1,8 @@
 <?php
 use asignaturas\model\entity as asignaturas;
 use core\ConfigGlobal;
+use dossiers\model\PermDossier;
+use dossiers\model\entity\TipoDossier;
 use personas\model\entity as personas;
 use profesores\model\entity as profesores;
 use ubis\model\entity as ubis;
@@ -69,9 +71,51 @@ if (ConfigGlobal::soy_region()) {
 	$Qprint = 1;
 }
 
+/*
+// Permisos por dossiers:
+1012 | stgr: publicaciones                     | d_publicaciones
+1017 | stgr: titulos                           | d_titulo_est
+1018 | stgr: nombramientos profesor            | d_profesor_stgr
+1019 | stgr: ampliacion docencia               | d_profesor_ampliacion
+1020 | stgr: director departamento             | d_profesor_director 
+1021 | stgr: juramento                         | d_profesor_juramento
+1022 | stgr: latin                             | d_profesor_latin
+1024 | stgr: congresos                         | d_congresos
+1025 | stgr: docencia                          | d_docencia_stgr
+*/
+
+$a_tipos_dossier = [
+            1012 => 'publicaciones',
+            1017 => 'curriculum',
+            1018 => 'nombramientos',
+            1019 => 'ampliacion',
+            1020 => 'director',
+            1021 => 'juramento',
+            1022 => 'latin',
+            1024 => 'congresos',
+            1025 => 'docencia',
+            ];
+
+foreach ($a_tipos_dossier as $id_tipo_dossier => $nom_dossier) {
+    $oTipoDossier = new TipoDossier($id_tipo_dossier);
+    $permiso_lectura = $oTipoDossier->getPermiso_lectura();
+    $permiso_escritura = $oTipoDossier->getPermiso_escritura();
+    $depende_modificar = $oTipoDossier->getDepende_modificar();	
+    $pau = 'p';
+
+    $oPermDossier = new PermDossier();
+    $perm_a=$oPermDossier->permiso($permiso_lectura,$permiso_escritura,$depende_modificar,$pau,$id_nom);
+    // 1: no tiene permisos
+    // 2: sólo lectura
+    // 3: lectura y escritura
+    $aPerm[$nom_dossier] = $perm_a;
+}
+
+/*
 if ($_SESSION['oPerm']->have_perm_oficina('est')) {
     $Qpermiso = 3;
 }
+*/
 
 $aWhere = array('id_nom'=>$id_nom,'_ordre'=>'f_nombramiento');
 $aOperador = array();

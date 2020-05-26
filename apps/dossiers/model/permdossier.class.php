@@ -498,435 +498,434 @@ class PermDossier {
 		// Esta función devuelve un array con los permisos (si o no) para añadir las
 		// personas (agd, n...) según el tipo de actividad de que se trate y 
 		// quién seamos nosotros.
-		
 
-	//para inicializar la matriz:
-	$ref_perm = array (
-							"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
-							"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
-							"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-							"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-							"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
-							"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
-							"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0),
-							"sssc" => array ( 'nom'=> "sss+", 'obj'=>"PersonaSSSC", 	'perm'=> 0),
-							"psssc" => array ( 'nom'=> "sss+ de paso", 'obj'=>"PersonaEx&na=sss", 	'perm'=> 0),
-						);
-	//para no repetir los permisos comunes a sr,sg est
-	$ref_perm_sg = array (
-							"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
-							"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
-							"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 1),
-							"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-							"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
-							"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
-							"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-						);
-						
-	$oTipoActiv= new web\TiposActividades($id_tipo_activ);
-	$asistentes = $oTipoActiv->getAsistentesText();
+        //para inicializar la matriz:
+        $ref_perm = array (
+                                "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
+                                "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
+                                "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
+                                "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
+                                "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0),
+                                "sssc" => array ( 'nom'=> "sss+", 'obj'=>"PersonaSSSC", 	'perm'=> 0),
+                                "psssc" => array ( 'nom'=> "sss+ de paso", 'obj'=>"PersonaEx&na=sss", 	'perm'=> 0),
+                            );
+        //para no repetir los permisos comunes a sr,sg est
+        $ref_perm_sg = array (
+                                "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
+                                "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
+                                "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 1),
+                                "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
+                                "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
+                                "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                            );
+                            
+        $oTipoActiv= new web\TiposActividades($id_tipo_activ);
+        $asistentes = $oTipoActiv->getAsistentesText();
 
-	switch ($asistentes) {
-		case "sss+" :
-			if ($_SESSION['oPerm']->have_perm_oficina('des')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
-								"psssc" => array ( 'nom'=> "sss+ de paso", 'obj'=>"PersonaEx&na=sss", 	'perm'=> 1),
-								"sssc" => array ( 'nom'=> "sss+", 'obj'=>"PersonaSSSC",	'perm'=> 1),
-								);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			break;
-		case "n" :
-			if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('agd') AND ($id_tipo_activ=="114025" OR $id_tipo_activ=="114026")) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('vcsd') or $_SESSION['oPerm']->have_perm_oficina('des')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('est')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			break;
-		case "agd":
-			if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('des')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0),
-								"sssc" => array ( 'nom'=> "sss+", 'obj'=>"PersonaSSSC",	'perm'=> 1)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('est')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			break;
-		case "s":
-			if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 1),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('des')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			break;
-		case "nax":
-			if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 1),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 1)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('des')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 1),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 1)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			break;
-		case "sg":
-			if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 1),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('des')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0),
-								"sssc" => array ( 'nom'=> "sss+", 'obj'=>"PersonaSSSC", 	'perm'=> 1),
-								"psssc" => array ( 'nom'=> "sss+ de paso", 'obj'=>"PersonaEx&na=sss", 	'perm'=> 1)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			break;
-		case "sr":
-			if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 1),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 1)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 1),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('sr')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 1),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 1),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 1)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			if ($_SESSION['oPerm']->have_perm_oficina('des')) {
-				$ref_perm_of = array (
-								"n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
-								"a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
-								"s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
-								"x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-								"pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
-								"pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
-								"px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0),
-								"sssc" => array ( 'nom'=> "sss+", 'obj'=>"PersonaSSSC", 	'perm'=> 1),
-								"psssc" => array ( 'nom'=> "sss+ de paso", 'obj'=>"PersonaEx&na=sss", 	'perm'=> 1)
-							);
-				$ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
-			}
-			break;
+        switch ($asistentes) {
+            case "sss+" :
+                if ($_SESSION['oPerm']->have_perm_oficina('des')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
+                                    "psssc" => array ( 'nom'=> "sss+ de paso", 'obj'=>"PersonaEx&na=sss", 	'perm'=> 1),
+                                    "sssc" => array ( 'nom'=> "sss+", 'obj'=>"PersonaSSSC",	'perm'=> 1),
+                                    );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                break;
+            case "n" :
+                if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('agd') AND ($id_tipo_activ=="114025" OR $id_tipo_activ=="114026")) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('vcsd') or $_SESSION['oPerm']->have_perm_oficina('des')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('est')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                break;
+            case "agd":
+                if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('des')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0),
+                                    "sssc" => array ( 'nom'=> "sss+", 'obj'=>"PersonaSSSC",	'perm'=> 1)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('est')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                break;
+            case "s":
+                if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 1),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('des')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                break;
+            case "nax":
+                if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 1),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 1)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('des')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 1),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 1)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                break;
+            case "sg":
+                if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 1),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('des')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0),
+                                    "sssc" => array ( 'nom'=> "sss+", 'obj'=>"PersonaSSSC", 	'perm'=> 1),
+                                    "psssc" => array ( 'nom'=> "sss+ de paso", 'obj'=>"PersonaEx&na=sss", 	'perm'=> 1)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                break;
+            case "sr":
+                if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 1),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 1)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 1),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 0),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('sr')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 1),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 1),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 1)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                if ($_SESSION['oPerm']->have_perm_oficina('des')) {
+                    $ref_perm_of = array (
+                                    "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
+                                    "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
+                                    "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 0),
+                                    "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
+                                    "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
+                                    "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
+                                    "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0),
+                                    "sssc" => array ( 'nom'=> "sss+", 'obj'=>"PersonaSSSC", 	'perm'=> 1),
+                                    "psssc" => array ( 'nom'=> "sss+ de paso", 'obj'=>"PersonaEx&na=sss", 	'perm'=> 1)
+                                );
+                    $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
+                }
+                break;
 		}
 		return $ref_perm;
 	}
