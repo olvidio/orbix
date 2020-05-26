@@ -27,7 +27,14 @@ switch ($Qsalida) {
 		$aux=$Qentrada.'.....';
 		$oTipoActiv= new web\TiposActividades($aux);
 		$a_asistentes_posibles =$oTipoActiv->getAsistentesPosibles();
-		$oDespl = new web\Desplegable('iasistentes_val',$a_asistentes_posibles,'',true);
+		// la opción en blanco sólo es válida para des o calendario
+        if (($_SESSION['oPerm']->have_perm_oficina('des'))
+		    OR ($_SESSION['oPerm']->have_perm_oficina('calendario'))) {
+		        $blanco = TRUE;
+		    } else {
+		        $blanco = FALSE;
+		    }
+		$oDespl = new web\Desplegable('iasistentes_val',$a_asistentes_posibles,'',$blanco);
 	   	$oDespl->setAction('fnjs_actividad()');
 	   	$oDespl->setValBlanco('.');
 	   	$oDespl->setOpcion_sel('.');

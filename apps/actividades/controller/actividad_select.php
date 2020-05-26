@@ -578,10 +578,12 @@ if ( !$oMiUsuario->isRolePau('cdc') && !$oMiUsuario->isRolePau('ctr') ) {
     $perm_nueva = TRUE;
 }
 
+// Es para los botones de crear nueva actividad. Puede ser que tenga permiso para ver
+// pero no para crear. Hay que determinar los asistentes:
 $aTiposActiv = [];
-if (!empty($Qid_tipo_activ)) {
-    $oTipoActiv2 = new web\TiposActividades($Qid_tipo_activ);
-    $aTiposActiv = $oTipoActiv2->getArrayAsistentesIndividual();
+if (!empty($Qid_tipo_activ) && ($Qid_tipo_activ[1] != '.')) {
+    $oTipoActivCrear = new web\TiposActividades($Qid_tipo_activ);
+    $aTiposActiv = $oTipoActivCrear->getArrayAsistentesIndividual();
 }
 
 $a_campos = ['oPosicion' => $oPosicion,
