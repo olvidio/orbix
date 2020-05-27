@@ -5,10 +5,8 @@
 31	{80,90}	pendientes	sactividad=ca&tipo_personas=agd	140	2	3	t
 131	{37,90}	pendientes	sactividad=ca&tipo_personas=agd	140	16	12	t
 120	{10,20}	agd de paso	tabla=p_de_paso&na=a&tipo=persona	76	2064	12	t
-286	{15,20}	n de paso	tabla=p_de_paso&na=n&tipo=persona	76	144	2	t
 187	{100}	ubis	\N	\N	32	19	t
 33	{80,20}	buscar cv	sasistentes=agd&sactividad=cv&que=ver	71	2050	3	t
-54	{5,30}	sacd agd	tabla=p_agregados&na=a&tipo=persona&es_sacd=1	76	8	8	t
 193	{91}	buscar	\N	\N	2112	10	t
 310	{70,20}	buscar crt	sasistentes=n&sactividad=crt&que=ver	71	2208	2	t
 147	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	2064	12	t
@@ -18,10 +16,8 @@
 24	{70,30}	lista por ctr	lista=list_activ&n_agd=a&sasistentes=agd&sactividad=crt	147	2082	3	t
 351	{70,90}	pendientes	sactividad=crt&tipo_personas=n	140	128	2	t
 319	{80,90}	pendientes	sactividad=ca&tipo_personas=n	140	2176	2	t
-58	{5,60}	sssc de paso	tabla=p_de_paso&na=sss&tipo=persona	76	8	8	t
 148	{40,40}	por centro	tipo=planning_ctr	61	2064	12	t
 126	{30,10}	posibles ca	\N	155	2194	12	t
-62	{10,20}	listados		48	8	8	t
 254	{20,10}	nuevo esquema	\N	17	33554432	13	t
 134	{37,10}	buscar cv	sasistentes=agd&sactividad=cv&que=ver	119	2064	12	t
 158	{10,30}	listados	\N	48	33816575	4	t
@@ -30,25 +26,17 @@
 258	{40,10}	personas	tipo=p	121	33554432	13	t
 260	{40,30}	actividades	tipo=a	121	33554432	13	t
 137	{35,10}	buscar ca	sasistentes=n&sactividad=ca&que=ver	119	2064	12	t
-376	{50,10,40}	sv sr	id_tipo_activ=17&status=2&periodo=desdeHoy	71	8	8	t
-377	{50,10,50}	sf n	id_tipo_activ=21&status=2&periodo=desdeHoy	71	8	8	t
-378	{50,10,60}	sf nax	id_tipo_activ=22&status=2&periodo=desdeHoy	71	8	8	t
-379	{50,10,70}	sf agd	id_tipo_activ=23&status=2&periodo=desdeHoy	71	8	8	t
-380	{50,10,80}	sf s y sg	id_tipo_activ=2[45]&status=2&periodo=desdeHoy	71	8	8	t
-381	{50,10,90}	sf sr,sr-nax,sr-agd	id_tipo_activ=2[789]&status=2&periodo=desdeHoy	71	8	8	t
 255	{30}	historicos	\N	\N	\N	\N	t
 115	{10}	agenda vcdl		72	0	5	t
 836	{20,10}	actas	\N	60	16	12	t
 239	{140}	buscar n o agd	\N	\N	64	10	t
 100	{55,10}	buscar activ	que=ver&ssfsv=sv&sasistentes=sss+	119	8	8	t
-321	{82}	cve	\N	183	128	2	t
 157	{10}	direcciones	\N	181	32767	4	t
 127	{37}	cv agd	\N	183	2064	12	t
 508	{10}	sacd	\N	0	262144	9	t
 820	{1,20,10}	a ODF Calc	\N	162	37748735	1	t
 315	{80,60}	lista varios ca	sasistentes=n&sactividad=ca&que=list_cjto	119	2208	2	t
 324	{82,20}	lista varias cve	sasistentes=n&sactividad=cve&que=list_cjto	119	2208	2	t
-339	{20,60}	lista cargos	sasistentes=sr&sactividad=cv&que=list_cjto	119	2560	15	t
 495	{30,10}	buscar	simple=1&tipo=tot&loc=tot	133	524288	9	t
 327	{85,30}	por centro	tipo=planning_ctr	61	2176	2	t
 317	{80,70}	lista por ctr	lista=list_activ&n_agd=n&sasistentes=n&sactividad=ca	147	2208	2	t
@@ -59,25 +47,32 @@
 263	{60,30}	lista usuarios	\N	131	35651584	13	t
 266	{60,20}	lista de roles	\N	161	35651584	13	t
 270	{60,40}	lista grupos	\N	122	35651584	13	t
-287	{15,10}	n r/dl	tabla=p_numerarios&tipo=persona	76	144	2	t
+286	{15,20}	n de paso	tabla=p_de_paso&na=n&tipo=persona	76	2192	2	t
 82	{50,20}	nueva activ	\N	136	8	8	t
 122	{10,5}	n r/dl	tabla=p_numerarios&tipo=persona	76	2064	12	t
 118	{10,15}	agd r/dl	tabla=p_agregados&tipo=persona	76	2064	12	t
 144	{40,10}	persona r/dl	obj_pau=PersonaDl&tipo=planning	61	2064	12	t
+287	{15,10}	n r/dl	tabla=p_numerarios&tipo=persona	76	2192	2	t
+321	{82}	cve	\N	183	2208	2	t
+54	{5,30}	sacd agd	tabla=p_agregados&na=a&tipo=persona&es_sacd=1	76	2056	8	t
+58	{5,60}	sssc de paso	tabla=p_de_paso&na=sss&tipo=persona	76	2056	8	t
+62	{10,20}	listados	\N	48	1032	8	t
+377	{50,10,50}	sf n	id_tipo_activ=21&status=2&periodo=desdeHoy	71	1032	8	t
+378	{50,10,60}	sf nax	id_tipo_activ=22&status=2&periodo=desdeHoy	71	1032	8	t
+379	{50,10,70}	sf agd	id_tipo_activ=23&status=2&periodo=desdeHoy	71	1032	8	t
+380	{50,10,80}	sf s y sg	id_tipo_activ=2[45]&status=2&periodo=desdeHoy	71	1032	8	t
+381	{50,10,90}	sf sr,sr-nax,sr-agd	id_tipo_activ=2[789]&status=2&periodo=desdeHoy	71	1032	8	t
+339	{20,60}	lista cargos	sasistentes=sr&sactividad=cv&que=list_cjto	119	2560	15	t
 133	{37,75}	estudios x ctr	lista=list_est&n_agd=a&sasistentes=n&sactividad=cv	147	2064	12	t
-55	{5,70}	cp & as.ecles	tabla=p_cp_ae_sssc&tipo=persona	76	0	8	t
 232	{120}	crt	\N	\N	2112	10	t
-56	{5,10}	sacd num	tabla=p_numerarios&na=n&tipo=persona&es_sacd=1	76	8	8	t
 53	{5,40}	agd de paso	tabla=p_de_paso&na=a&tipo=persona&es_sacd=1	76	8	8	t
-59	{5,50}	sacd sssc	tabla=p_sssc&tipo=persona	76	8	8	t
 619	{20,20}	tabla alumnos-asignaturas	\N	88	16	12	t
 151	{90}	estudios	\N	\N	16	19	t
 242	{140,20}	n de paso	tabla=p_de_paso&na=n&tipo=persona	76	64	10	t
+921	{20,50}	resumen pendientes	\N	174	16	12	t
 188	{100,30}	tipo de casa	clase_info=ubis\\model\\infotipocasa	160	32	19	t
 800	{10,30}	meta menus	clase_info=menus\\model\\infometamenus	160	33554432	13	t
 142	{35,75}	estudios x ctr	lista=list_est&n_agd=n&sasistentes=n&sactividad=ca	147	2064	12	t
-375	{50,10,30}	sv s y sg	id_tipo_activ=1[45]&status=2&periodo=desdeHoy	71	8	8	t
-830	{50,10}	buscar activ	que=ver	119	8	8	t
 831	{1,95}	Informar de un bug	\N	167	33816575	1	t
 5	{16,25}	agd de paso	tabla=p_de_paso&na=a&tipo=persona	76	2050	3	t
 226	{110}	cv	\N	\N	2112	10	t
@@ -92,7 +87,6 @@
 840	{80,20}	buscar ca	sasistentes=nax&sactividad=ca&que=ver	71	18464	16	t
 842	{82,20}	buscar cve	sasistentes=nax&sactividad=cve&que=ver	71	18464	16	t
 838	{70,20}	buscar crt	sasistentes=nax&sactividad=crt&que=ver	71	18464	16	t
-285	{15}	buscar n	\N	181	128	2	t
 326	{85}	planning	\N	183	128	2	t
 833	{10}	buscar nax	\N	181	18432	16	t
 837	{70}	crt	\N	183	18464	16	t
@@ -104,9 +98,6 @@
 123	{20}	actas...	\N	189	2066	12	t
 125	{30}	posibles ca	\N	183	2194	12	t
 828	{90}	mantenimiento	\N	181	16	12	t
-52	{5}	personas	\N	181	8	8	t
-60	{10}	centros y casas	\N	190	8	8	t
-78	{50}	actividades	\N	183	8	8	t
 88	{55}	sssc	\N	183	8	8	t
 253	{20}	DB	\N	182	33554432	13	t
 817	{1}	Utilidades	\N	0	37748735	1	t
@@ -128,6 +119,15 @@
 194	{91,10}	s de la r/dl	tabla=p_supernumerarios&tipo=persona	76	2112	10	t
 241	{140,10}	n r/dl	tabla=p_numerarios&tipo=persona	76	64	10	t
 243	{140,30}	agd r/dl	tabla=p_agregados&tipo=persona	76	64	10	t
+285	{15}	buscar n	\N	181	2176	2	t
+52	{5}	personas	\N	181	2056	8	t
+56	{5,10}	sacd num	tabla=p_numerarios&na=n&tipo=persona&es_sacd=1	76	2056	8	t
+59	{5,50}	sacd sssc	tabla=p_sssc&tipo=persona	76	2056	8	t
+55	{5,70}	cp & as.ecles	tabla=p_cp_ae_sssc&tipo=persona	76	2056	8	t
+60	{10}	centros y casas	\N	190	1032	8	t
+78	{50}	actividades	\N	183	1032	8	t
+830	{50,10}	buscar activ	que=ver	119	1032	8	t
+375	{50,10,30}	sv s y sg	id_tipo_activ=1[45]&status=2&periodo=desdeHoy	71	1032	8	t
 866	{50,16}	publicar activ	que=ver&modo=publicar	119	131072	20	t
 909	{70,15}	importar crt	sasistentes=agd&sactividad=crt&que=ver&modo=importar	119	2	3	t
 907	{80,15}	importar cv	sasistentes=agd&sactividad=cv&que=ver&modo=importar	119	2	3	t
@@ -142,7 +142,6 @@
 476	{90,10}	dic latin	clase_info=personas\\model\\infoLatin	160	16	12	t
 192	{100,10}	delegaciones	clase_info=ubis\\model\\infodelegaciones	160	32	19	t
 920	{10,50}	claustro	\N	173	16	12	t
-921	{20,50}	resumen pendientes	\N	174	16	12	t
 922	{20,60}	buscar asig. pendientes	\N	175	16	12	t
 190	{100,40}	tipo de ctr	clase_info=ubis\\model\\infotipoctr	160	32	19	t
 191	{100,20}	regiones	clase_info=ubis\\model\\inforegiones	160	32	19	t
@@ -168,19 +167,21 @@
 933	{80,120}	Balance de plazas	sasistentes=agd&sactividad=cv	170	2	3	t
 23	{70,60}	list varios crt	sasistentes=agd&sactividad=crt&que=list_cjto	119	2082	3	t
 129	{37,60}	list varias cv	sasistentes=agd&sactividad=cv&que=list_cjto	119	2064	12	t
-373	{50,10,10}	sv  n	id_tipo_activ=11&status=2&periodo=desdeHoy	71	8	8	t
 228	{110,80}	lista cargos	sasistentes=s&sactividad=cv&que=list_cjto	119	2112	10	t
 1	{20,70}	listado actas	\N	178	16	12	t
 864	{50,10,90}	sf sr,sr-nax,sr-agd	id_tipo_activ=2[789]....&status=2&periodo=desdeHoy	71	32768	20	t
 865	{50,15}	importar activ	que=ver&modo=importar	119	32768	20	t
 867	{50,20}	nueva activ	\N	136	32768	20	t
 801	{60,25}	grup menu	clase_info=menus\\model\\infogrupmenus	160	35651584	13	t
+956	{10,20}	n de paso 	tabla=p_de_paso&na=n&tipo=persona	76	512	15	t
 938	{10,70}	ayuda	\N	177	35651584	13	t
 923	{15,40}	Actualizar datos desde BDU	tipo=n	176	128	2	t
 414	{16,40}	Actualizar datos desde BDU	tipo=a	176	2	3	t
 415	{91,20}	Actualizar datos desde BDU	tipo=s	176	64	10	t
+373	{50,10,10}	sv  n	id_tipo_activ=11&status=2&periodo=desdeHoy	71	1032	8	t
+945	{10}	buscar personas	\N	0	512	15	t
+954	{10,10}	n r/dl	tabla=p_numerarios&tipo=persona	76	512	15	t
 943	{5,86}	crt pendientes	sactividad=crt&tipo_personas=sacd	140	8	8	t
-1003	{20,30}	zonas	clase_info=zonassacd\\model\\infozona	160	8	8	t
 975	{10,50,10}	modificar	\N	114	32	4	t
 976	{10,50,20}	lista todo	que=lista_todo	98	34078719	4	t
 965	{10,40}	modificar centros	\N	146	32	4	t
@@ -191,13 +192,8 @@
 960	{10,20}	atención actividades	\N	28	262144	9	t
 961	{10,10}	planning zonas	\N	139	262144	9	t
 950	{91,30}	lista ctr i nº s	\N	152	2112	10	t
-948	{10}	Gestión casas	\N	0	1	7	t
-957	{10,20}	listado gerentes	periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si	45	1	7	t
-966	{10,40}	Gestión económica	\N	45	1	7	t
 987	{20}	Nuevo Calendario	\N	0	37748735	7	t
-973	{10,50}	gastos casas	tipo_lista=datosEcGastos	45	1	7	t
 990	{20,10}	Definir periodos	\N	7	9	7	t
-979	{10,60}	estadística  por casas	tipo=planning_cdc&ssfsv=sf	89	1	7	t
 998	{20,20}	nuevo planing	\N	141	37748735	7	t
 1004	{20,30}	listados	\N	0	37748735	7	t
 1005	{20,30,10}	Cases comunes	que=c_comunes&ver_ctr=si	21	37748735	7	t
@@ -205,27 +201,44 @@
 1007	{20,30,30}	listado por oficinas	que=o_todas&ver_ctr=si	21	37748735	7	t
 1006	{20,30,20}	listados de todas las casas	que=c_todas&ver_ctr=si	21	1	7	t
 941	{5,80}	lista varias activ	ssfsv=sv&sasistentes=n&que=list_cjto_sacd	119	8	8	t
-374	{50,10,20}	sv agd	id_tipo_activ=13&status=2&periodo=desdeHoy	71	8	8	t
 1029	{30}	historicos	\N	\N	\N	\N	t
 1290	{90,90}	Tarifas	\N	0	32768	20	t
+970	{10,40}	agd de paso	tabla=p_de_paso&na=a&tipo=persona	76	512	15	t
+1000	{20,20}	buscar cv	sasistentes=sr&sactividad=cv	71	2560	15	t
 940	{1,90}	Ayuda	\N	165	37617663	1	t
+948	{10}	Gestión casas	\N	0	2049	7	t
+966	{10,40}	Gestión económica	\N	45	2049	7	t
+973	{10,50}	gastos casas	tipo_lista=datosEcGastos	45	2049	7	t
+1003	{20,30}	zonas	clase_info=zonassacd\\model\\infozona	160	1032	8	t
+979	{10,60}	estadística  por casas	tipo=planning_cdc&ssfsv=sf	89	1	7	t
+374	{50,10,20}	sv agd	id_tipo_activ=13&status=2&periodo=desdeHoy	71	1032	8	t
+964	{10,30}	agd r/dl	tabla=p_agregados&tipo=persona	76	512	15	t
+982	{20}	cv sr	\N	0	2560	15	t
+1016	{20,70}	tabla de cv	que=list_activ&ssfsv=sv&sasistentes=sr&sactividad=cv	119	2560	15	t
+1030	{30}	crt sr	\N	0	2560	15	t
+1041	{30,80}	tabla de crt	que=list_activ&ssfsv=sv&sasistentes=sr&sactividad=crt	119	2560	15	t
 1008	{20,40}	zonas-ctr	\N	85	2056	8	t
 1010	{20,50}	zonas-sacd	\N	42	2056	8	t
 1012	{20,55}	lista sacd-zona	que=get_lista_tot	34	2056	8	t
 1055	{40}	planning	\N	181	32	4	t
 1061	{40,10}	persona dl	tabla=p_de_casa&tipo=planning	61	32	4	t
 1065	{40,20}	num de paso	tabla=p_de_paso&na=n&tipo=p_de_paso	61	32	4	t
-1028	{30}	Tarifas	\N	0	1	7	t
 1019	{20,80}	Previsión económica	\N	63	1	7	t
-1037	{30,20}	tarifa <-> tipus dactivitat	\N	108	1	7	t
-1039	{30,30}	tarifes per casa i any	\N	73	1	7	t
-1033	{30,10}	definir tarifa	\N	100	1	7	t
 1013	{20,60}	Estadística por años	periodo=no&tipo_lista=datosEc	51	1	7	t
 1087	{40,50}	por casas	tipo=planning_cdc&ssfsv=sf	61	32768	20	t
 1058	{40,10}	buscar	que=ver	119	65536	9	t
 1080	{40,40}	por centro	tipo=planning_ctr	61	32768	20	t
 1074	{40,30}	lista por casas	periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si	45	65536	9	t
-1040	{30,40}	activ -> tarifa	\N	128	1	7	t
+1028	{30}	Tarifas	\N	0	2049	7	t
+1033	{30,10}	definir tarifa	\N	100	2049	7	t
+1037	{30,20}	tarifa <-> tipus dactivitat	\N	108	2049	7	t
+1039	{30,30}	tarifes per casa i any	\N	73	2049	7	t
+1040	{30,40}	activ -> tarifa	\N	128	2049	7	t
+1035	{30,20}	buscar crt	sasistentes=sr&sactividad=crt	71	2560	15	t
+1042	{35}	listas actividades	\N	0	2560	15	t
+1047	{35,20}	actividades-centros	tipo=sr	43	512	15	t
+1053	{40}	planning	\N	0	512	15	t
+1084	{40,40}	por ctr	tipo=planning_ctr	61	512	15	t
 1083	{40,40}	por centro	tipo=planning_ctr	61	8	8	t
 1086	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	8	8	t
 1146	{50,100,10}	activ sg	tipo=sg	43	8	8	t
@@ -234,8 +247,6 @@
 1079	{40,30}	agd de paso	tabla=p_de_paso&na=a&tipo=p_de_paso	61	32	4	t
 1082	{40,40}	por ctr	tipo=planning_ctr	61	32	4	t
 1089	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	32	4	t
-1103	{50,25}	comunic. sacd	\N	28	8	8	t
-1128	{50,70}	listas sg	que=list_activ_inv_sg	143	8	8	t
 1159	{50,100,50}	sf sr	tipo=sfsr	43	32768	20	t
 1160	{50,100,60}	sf n, nax y agd	tipo=sfnagd	43	32768	20	t
 1156	{50,100,40}	sf s y sg	tipo=sfsg	43	32768	20	t
@@ -249,6 +260,7 @@
 1099	{50,10}	fases	clase_info=procesos\\model\\infofases	160	35651584	13	t
 1101	{50,20}	fases-tareas	clase_info=procesos\\model\\infotareas	160	35651584	13	t
 1180	{60}	propuestas	\N	0	8	8	t
+1103	{50,25}	comunic. sacd	\N	28	1032	8	t
 1133	{60,90}	asignar sacd	\N	39	8	8	t
 1134	{60,90,10}	activ sv sg	tipo=sg&periodo=desdeHoy	39	8	8	t
 1136	{60,90,20}	activ sv sr	tipo=sr	39	8	8	t
@@ -258,6 +270,7 @@
 1141	{60,90,70}	activ sf n,nax y agd	tipo=sf_na	39	8	8	t
 1142	{60,90,90}	activ sss+	tipo=sssc	39	8	8	t
 1182	{60,10}	planing zonas	propuesta=true	139	8	8	t
+1128	{50,70}	listas sg	que=list_activ_inv_sg	143	1032	8	t
 1150	{50,100,20}	activ sr	tipo=sr	43	8	8	t
 1153	{50,100,30}	sv n y agd	tipo=nagd	43	8	8	t
 1155	{50,100,40}	sf s y sg	tipo=sfsg	43	8	8	t
@@ -283,6 +296,9 @@
 1224	{110,30}	de la r/dl	tipo_activ_sg=cv	132	64	10	t
 1207	{120,30}	de la r/dl	tipo_activ_sg=crt	132	64	10	t
 1188	{60,20}	lista activ. sacd	propuesta=true	28	8	8	t
+1211	{120,50}	s que no han ido al crt	\N	0	64	10	t
+1213	{120,50,10}	este curso	que=crt_s_sg&curso=actual	79	64	10	t
+1214	{120,50,20}	el curso pasado	que=crt_s_sg&curso=anterior	79	64	10	t
 1261	{90,20}	nuevo curso	\N	157	8	8	t
 1289	{90,90}	Tarifas	\N	0	8	8	t
 1236	{70,30}	listados	\N	124	8	8	t
@@ -306,6 +322,7 @@
 1283	{90,40,40}	listado oficina propia	que=o_actual&ver_ctr=si	21	33947647	8	t
 1294	{90,90,20}	tarifa <-> tipus dactivitat	\N	108	32768	20	t
 1250	{85,10}	persona r/dl	obj_pau=PersonaN&tipo=planning	61	2176	2	t
+1230	{110,50,20}	el curso pasado	que=cv_s&curso=anterior	79	64	10	t
 1321	{100}	planning 	\N	183	2	3	t
 1326	{100,30}	por centro	tipo=planning_ctr	61	2	3	t
 1329	{100,40}	por casas	tipo=planning_cdc&ssfsv=sv	61	2	3	t
@@ -315,7 +332,6 @@
 1379	{10,50}	claustro	\N	173	16	21	t
 1384	{10}	personas	\N	0	16	21	t
 1385	{20}	actas	\N	0	16	21	t
-61	{10,10}	buscar	simple=1&tipo=ctr&loc=dl	133	8	8	t
 1222	{70,20}	definir módulos		27	33554432	13	t
 1206	{70,10}	aplicaciones	clase_info=devel\\model\\infoapps	160	33554432	13	t
 1392	{20,45}	Matrículas	\N	66	16	12	t
@@ -329,10 +345,8 @@
 1396	{70,140}	cambiar de fase	id_tipo_activ=131	130	2	3	t
 1238	{70,50}	tipo encargo	clase_info=encargossacd\\model\\infoencargotipo	160	8	8	t
 1394	{70,40}	Tablas de apps	\N	102	33554432	13	t
-71	{40}	planning	\N	183	8	8	t
 257	{40}	perm_dossiers	\N	182	33554432	13	t
 1397	{38,120}	importar	sasistentes=agd&sactividad=ca&que=ver&modo=importar	119	16	12	t
-995	{20,20}	zonas geogr.	clase_info=zonassacd\\model\\infozonagrupo	160	8	8	t
 308	{70}	crt	\N	183	2208	2	t
 314	{80}	ca	\N	183	2208	2	t
 4	{16}	buscar agd	\N	181	2050	3	t
@@ -348,9 +362,19 @@
 1060	{40,10}	persona r/dl	obj_pau=PersonaDl&tipo=planning	61	8	8	t
 1373	{10,5}	n r/dl	tabla=p_numerarios&tipo=persona	76	2064	21	t
 1372	{10,10}	agd r/dl	tabla=p_agregados&tipo=persona	76	2064	21	t
+61	{10,10}	buscar	simple=1&tipo=ctr&loc=dl	133	1032	8	t
+995	{20,20}	zonas geogr.	clase_info=zonassacd\\model\\infozonagrupo	160	1032	8	t
+71	{40}	planning	\N	183	2056	8	t
+1356	{120,90}	falta hacer crt	que=crt_s_sg_curso	79	64	10	t
+1349	{110,100}	falta hacer cv	que=cv_s_curso	79	64	10	t
+1359	{130,30}	actividades-centros	tipo=sg	43	64	10	t
+1357	{130}	listas activ	\N	0	64	10	t
+1362	{150}	planning	\N	0	64	10	t
+1363	{150,10}	persona r/dl	tabla=p_de_casa&tipo=planning	61	64	10	t
+1366	{150,40}	por centro	tipo=planning_ctr	61	64	10	t
+1367	{150,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	64	10	t
 942	{5,85}	ca pendientes	sactividad=ca&tipo_personas=sacd	140	8	8	t
 1296	{90,90,30}	tarifas por casa y año	\N	73	8	8	t
-1399	{10,70}	estadística por años	\N	51	1	7	t
 926	{70,110}	Gestión de plazas	sasistentes=n&sactividad=crt	169	128	2	t
 1395	{70,140}	cambiar de fase	sasistentes=n&sactividad=crt	130	128	2	t
 1389	{82,110}	Gestión de plazas	sasistentes=n&sactividad=cve	169	128	2	t
@@ -383,3 +407,7 @@
 252	{10,10}	seleccionar	\N	148	35651584	13	t
 1414	{1,30}	lista de cambios	\N	137	37617663	1	t
 1415	{30,30}	borrar passwords	\N	145	33554432	13	t
+957	{10,20}	listado gerentes	periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si	45	2049	7	t
+1399	{10,70}	estadística por años	\N	51	1	7	t
+376	{50,10,40}	sv sr	id_tipo_activ=17&status=2&periodo=desdeHoy	71	1032	8	t
+1085	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	512	15	t
