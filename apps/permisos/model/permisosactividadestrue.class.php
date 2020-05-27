@@ -152,6 +152,12 @@ class PermisosActividadesTrue {
 		// actualitzar el id_tipo_activ
 		$this->iid_tipo_activ = $id_tipo_activ;
 	}
+	
+	public function setId_activ($id_activ) {
+	    // actualitza el id_tipo_activ
+	    $this->iid_activ = $id_activ;
+	}
+	
 	public function setId_tipo_proceso($id_tipo_proceso) {
 		// actualitza el id_tipo_proceso
 		$this->iid_tipo_proceso = $id_tipo_proceso;
