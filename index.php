@@ -175,6 +175,7 @@ $indice=1;
 $indice_old=1;
 $num_menu_1="";
 $m=0;
+$raiz_pral = '';
 foreach ($oMenuDbs as $oMenuDb) {
     $m++;
     $orden = $oMenuDb->getOrden();
@@ -206,6 +207,22 @@ foreach ($oMenuDbs as $oMenuDb) {
             } else {
                 //echo " | ". _("url invàlida en $menu");
             }
+        }
+    }
+    // compruebo que el menu raiz exista:
+    if (!empty($orden)) {
+        $a_matches = [];
+        $rta2 = preg_match('/\{(\d+).*\}/', $orden ,$a_matches);
+        if ($rta2 === FALSE) {
+            echo _("error en orden menus");
+        } else {
+            $raiz = '{'.$a_matches[1].'}';
+            if ($a_matches[0] == $raiz) {
+                $raiz_pral = $raiz;
+            }
+        }
+        if ($raiz != $raiz_pral) {
+            continue;
         }
     }
     
