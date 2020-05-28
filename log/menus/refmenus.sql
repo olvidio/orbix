@@ -239,6 +239,8 @@
 1047	{35,20}	actividades-centros	tipo=sr	43	512	15	t
 1053	{40}	planning	\N	0	512	15	t
 1084	{40,40}	por ctr	tipo=planning_ctr	61	512	15	t
+1049	{35,100}	cambiar de fase	id_tipo_activ=133	130	16	12	t
+1052	{37,100}	cambiar de fase	id_tipo_activ=112	130	16	12	t
 1083	{40,40}	por centro	tipo=planning_ctr	61	8	8	t
 1086	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	8	8	t
 1146	{50,100,10}	activ sg	tipo=sg	43	8	8	t
@@ -412,3 +414,8 @@
 376	{50,10,40}	sv sr	id_tipo_activ=17&status=2&periodo=desdeHoy	71	1032	8	t
 1085	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	512	15	t
 1034	{20,10}	mover tabla a otra DB	\N	54	33554432	13	t
+1417	{80,140}	cambiar de fase	sasistentes=n&sactividad=ca	130	128	2	t
+1418	{82,140}	cambiar de fase	sasistentes=n&sactividad=cve	130	128	2	t
+1420	{90,140}	cambiar de fase	sasistentes=agd&sactividad=cve	130	2	3	t
+1419	{80,140}	cambiar de fase	sasistentes=agd&sactividad=ca	130	2	3	t
+1421	{38,130}	cambiar de fase	sasistentes=agd&sactividad=ca	130	16	12	t
