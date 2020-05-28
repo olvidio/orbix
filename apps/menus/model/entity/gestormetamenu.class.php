@@ -44,7 +44,7 @@ class GestorMetamenu Extends core\ClaseGestor {
 		$nom_tabla = $this->getNomTabla();
 		$Where = implode(' AND ',$a_modulos);
 		if (!empty($Where)) $Where = "WHERE $Where";
-		$sQuery="SELECT id_metamenu,descripcion FROM $nom_tabla $Where ORDER BY id_mod,descripcion";
+		$sQuery="SELECT id_metamenu,descripcion FROM $nom_tabla $Where ORDER BY descripcion";
 		if (($oDblSt = $oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorMetamenu.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
