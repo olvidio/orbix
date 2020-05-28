@@ -384,7 +384,7 @@
 529	{90}	Nuevo calendario	\N	183	37748735	8	t
 1400	{20,90}	previsión asistentes	\N	5	37748735	7	t
 1405	{10,80}	grupos	\N	91	1	7	t
-1034	{30,10}	mover tabla a otra DB	\N	54	33554432	13	t
+1415	{20,30}	borrar passwords	\N	145	33554432	13	t
 1036	{30,20}	planning por casas	tipo=planning_cdc	61	1048576	9	t
 1401	{30,30}	listado gerentes	periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si	45	1048576	9	t
 1402	{30,40}	lista actividades	periodo=tot_any&tipo_lista=lista_activ	45	1048576	9	t
@@ -406,8 +406,9 @@
 1398	{70,50}	config esquema	\N	90	35651584	13	t
 252	{10,10}	seleccionar	\N	148	35651584	13	t
 1414	{1,30}	lista de cambios	\N	137	37617663	1	t
-1415	{30,30}	borrar passwords	\N	145	33554432	13	t
 957	{10,20}	listado gerentes	periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si	45	2049	7	t
+1416	{40,60}	por zonas	\N	139	512	15	t
 1399	{10,70}	estadística por años	\N	51	1	7	t
 376	{50,10,40}	sv sr	id_tipo_activ=17&status=2&periodo=desdeHoy	71	1032	8	t
 1085	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	512	15	t
+1034	{20,10}	mover tabla a otra DB	\N	54	33554432	13	t

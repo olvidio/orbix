@@ -39,7 +39,7 @@ class GestorCentroEncargado Extends core\ClaseGestor {
 	/* METODES PUBLICS -----------------------------------------------------------*/
 	
 	/**
-	 * retorna un texto con los dias que flatan para la siguiente actividad a partir de la fecha
+	 * retorna un texto con los dias que faltan para la siguiente actividad a partir de la fecha
 	 *     que se le pasa como parámetro. (o en negativo para una actividad anterior).
 	 *
 	 * @param integer id_ubi.
