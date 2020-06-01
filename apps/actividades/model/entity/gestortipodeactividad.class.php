@@ -3,6 +3,8 @@ namespace actividades\model\entity;
 use core\ConfigGlobal;
 use function core\is_true;
 use core;
+use web\Desplegable;
+use web\TiposActividades;
 /**
  * GestorTipoDeActividad
  *
@@ -35,6 +37,31 @@ class GestorTipoDeActividad Extends core\ClaseGestor {
 
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
+	
+	/**
+	 * obtener una lista de los tipos de actividad, para el dossier de históricos.
+	 * 
+	 * @param string $sid_tipo_activ
+	 * @return boolean[]
+	 */
+	public function getListaTiposActividad($sid_tipo_activ='......') {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+	    $a_id_tipos = [];
+	    $query="SELECT id_tipo_activ
+		   	FROM $nom_tabla  where id_tipo_activ::text ~'".$sid_tipo_activ."' order by id_tipo_activ";
+	    //echo $query;
+	    $oDBPCASt_id=$oDbl->query($query);
+	    foreach ($oDBPCASt_id->fetchAll() as $row) {
+	        $id_tipo_activ = $row['id_tipo_activ'];
+	        $oTiposActividades = new TiposActividades($id_tipo_activ);
+	        $nom_tipo = $oTiposActividades->getNom();
+	        
+	        $a_id_tipos[$id_tipo_activ] = $nom_tipo;
+	    }
+	    
+	    return new Desplegable('id_tipo_activ',$a_id_tipos,'','');
+	}
 	
 	/**
 	 * retorna l'array de tipos de procesos posibles per el tipus d'activitat.

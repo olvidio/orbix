@@ -41,10 +41,8 @@ if ($Qseguro == 2) {
     $html .= "<br><br><ul><li>";
     $html .= _("Para sf: también se copian los grupMenu de los Roles (de sv). Hay que volver a poner lo que había.");
     $html .= " ";
-    $html .= _("De momento se pueden comentar las lineas").":";
-    $html .= "<pre>TRUNCATE TABLE public.ref_grupmenu_rol RESTART IDENTITY;\nCOPY public.ref_grupmenu_rol FROM 'DIRBASE/log/menus/refgrupmenu_rol.sql';
-              </pre>";
-    $html .= "en el fichero: '/var/www/orbix/log/menus/tot_menus_base.sql' de la máquina donde esté la sf (moneders.net).";
+    $html .= _("De momento se ha anulado la restauración. Se queda como está").":<br>";
+    $html .= _("Hay que corregir a mano");
     $html .= "</li></ul>";
     echo $html;
 }
@@ -78,64 +76,68 @@ if ($Qseguro == 1) {
 		echo "actualizando menus para $esquema<br>";
 
         //************ GRUPMENU **************
-		$sql_del = 'TRUNCATE TABLE aux_grupmenu RESTART IDENTITY CASCADE';
-		if ($oDblSt = $oDB->query($sql_del) === false) {
-			$sClauError = 'ExportarMenu.VaciarTabla';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-			return false;
-		}
+        $sql_del = 'TRUNCATE TABLE aux_grupmenu RESTART IDENTITY CASCADE';
+        if ($oDblSt = $oDB->query($sql_del) === false) {
+            $sClauError = 'ExportarMenu.VaciarTabla';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
 
-		$sQry = 'SELECT * FROM ref_grupmenu';
-		foreach ( $oDBPC->query($sQry,\PDO::FETCH_ASSOC) as $aDades) { 
-			//print_r($aDades);
-			$campos="(id_grupmenu,grup_menu,orden)";
-			$valores="(:id_grupmenu,:grup_menu,:orden)";
-			if (($oDblSt = $oDB->prepare("INSERT INTO aux_grupmenu $campos VALUES $valores")) === false) {
-				$sClauError = 'Importar.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-				return false;
-			} else {
-				try {
-					$oDblSt->execute($aDades);
-				}
-				catch ( \PDOException $e) {
-					$err_txt=$e->errorInfo[2];
-					$this->setErrorTxt($err_txt);
-					$sClauError = 'Importar.insertar.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-					return false;
-				}
-			}
-		}
+        $sQry = 'SELECT * FROM ref_grupmenu';
+        foreach ( $oDBPC->query($sQry,\PDO::FETCH_ASSOC) as $aDades) { 
+            //print_r($aDades);
+            $campos="(id_grupmenu,grup_menu,orden)";
+            $valores="(:id_grupmenu,:grup_menu,:orden)";
+            if (($oDblSt = $oDB->prepare("INSERT INTO aux_grupmenu $campos VALUES $valores")) === false) {
+                $sClauError = 'Importar.insertar.prepare';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                return false;
+            } else {
+                try {
+                    $oDblSt->execute($aDades);
+                }
+                catch ( \PDOException $e) {
+                    $err_txt=$e->errorInfo[2];
+                    $this->setErrorTxt($err_txt);
+                    $sClauError = 'Importar.insertar.execute';
+                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                    return false;
+                }
+            }
+        }
 		//************ GRUPMENU_ROL**************
-		$sql_del = 'TRUNCATE TABLE aux_grupmenu_rol RESTART IDENTITY CASCADE';
-		if ($oDblSt = $oDB->query($sql_del) === false) {
-			$sClauError = 'ExportarMenu.VaciarTabla';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-			return false;
-		}
+        // En el caso de la sf, los grupmenu asociados a los roles son distintos.
+        // de momento no los copio. los dejo como están.
+		if ($sec == 'f') {
+            $sql_del = 'TRUNCATE TABLE aux_grupmenu_rol RESTART IDENTITY CASCADE';
+            if ($oDblSt = $oDB->query($sql_del) === false) {
+                $sClauError = 'ExportarMenu.VaciarTabla';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                return false;
+            }
 
-		$sQry = 'SELECT * FROM ref_grupmenu_rol';
-		foreach ( $oDBPC->query($sQry,\PDO::FETCH_ASSOC) as $aDades) { 
-			//print_r($aDades);
-			$campos="(id_item,id_grupmenu,id_role)";
-			$valores="(:id_item,:id_grupmenu,:id_role)";
-			if (($oDblSt = $oDB->prepare("INSERT INTO aux_grupmenu_rol $campos VALUES $valores")) === false) {
-				$sClauError = 'Importar.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-				return false;
-			} else {
-				try {
-					$oDblSt->execute($aDades);
-				}
-				catch ( \PDOException $e) {
-					$err_txt=$e->errorInfo[2];
-					$this->setErrorTxt($err_txt);
-					$sClauError = 'Importar.insertar.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-					return false;
-				}
-			}
+            $sQry = 'SELECT * FROM ref_grupmenu_rol';
+            foreach ( $oDBPC->query($sQry,\PDO::FETCH_ASSOC) as $aDades) { 
+                //print_r($aDades);
+                $campos="(id_item,id_grupmenu,id_role)";
+                $valores="(:id_item,:id_grupmenu,:id_role)";
+                if (($oDblSt = $oDB->prepare("INSERT INTO aux_grupmenu_rol $campos VALUES $valores")) === false) {
+                    $sClauError = 'Importar.insertar.prepare';
+                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                    return false;
+                } else {
+                    try {
+                        $oDblSt->execute($aDades);
+                    }
+                    catch ( \PDOException $e) {
+                        $err_txt=$e->errorInfo[2];
+                        $this->setErrorTxt($err_txt);
+                        $sClauError = 'Importar.insertar.execute';
+                        $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                        return false;
+                    }
+                }
+            }
 		}
 		//************ MENUS**************
 		$sql_del = 'TRUNCATE TABLE aux_menus RESTART IDENTITY CASCADE';

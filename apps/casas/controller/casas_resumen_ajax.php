@@ -45,6 +45,34 @@ $Qsfsv = (string) \filter_input(INPUT_POST, 'sfsv');
 $Qque = (string) \filter_input(INPUT_POST, 'que');
 
 /**
+ * devuelve el dia anterior a las 20:00 de una fecha.
+ * 
+ * @param string $iso_ini
+ * @param integer $delta_h horas a quitar a la fecha
+ * @return string
+ */
+function inicio_periodo($iso_ini,$delta_h=4) {
+    $oInicio = DateTimeLocal::createFromFormat('Ymd', $iso_ini);
+    // dia anterior a las 20:00h
+    $interval = 'PT'.$delta_h.'H';
+    $oInicio->sub(new DateInterval($interval));
+    return $oInicio->getIsoTime();
+}
+/**
+ * devuelve el dia siguiente a las 10:00 de una fecha.
+ * 
+ * @param string $iso_fin
+ * @param integer $delta_h  horas a añadir a la fecha
+ * @return string
+ */
+function fin_periodo($iso_fin,$delta_h=10) {
+    $oFin = DateTimeLocal::createFromFormat('Ymd', $iso_fin);
+    // dia siguiente a las 10:00h
+    $interval = 'PT1DT'.$delta_h.'H';
+    $oFin->add(new DateInterval($interval));
+    return $oFin->getIsoTime();
+}
+/**
  * Función para calcular los dias que ocupa cada dl según los
  * los periodos definidos para sf y sv.
  *
@@ -133,8 +161,8 @@ function dias_ocupacion($aPeriodos,$oActividad,$oIniTot,$oFinTot) {
 	$aOcupacion[1] = 0;
 	$aOcupacion[2] = 0;
 	foreach ($aPeriodos as $row) {
-		$iniPeriodo = ($row['iso_ini']-1)."200000";
-		$finPeriodo = ($row['iso_fin']+1)."100000";
+		$iniPeriodo = inicio_periodo($row['iso_ini']);
+		$finPeriodo = fin_periodo($row['iso_fin']);
 		if ($isoActivIni <= $finPeriodo && $isoActivIni >= $iniPeriodo) {
 			if ($isoActivFin >= $iniPeriodo && $isoActivFin <= $finPeriodo) { 
 				//empieza y termina en el periodo.
@@ -143,18 +171,18 @@ function dias_ocupacion($aPeriodos,$oActividad,$oIniTot,$oFinTot) {
 				break;
 			} else {
 				if ($isoActivFin > $finPeriodo) { //salta de periodo
-					$iniPeriodoNext = ($aPeriodos[$p+1]['iso_ini']-1)."200000";
-					$finPeriodoNext = ($aPeriodos[$p+1]['iso_fin']+1)."100000";
+					$iniPeriodoNext = inicio_periodo($aPeriodos[$p+1]['iso_ini']);
+					$finPeriodoNext = fin_periodo($aPeriodos[$p+1]['iso_fin']);
 					if ($isoActivFin > $finPeriodoNext) {  //salta de periodo
 						echo '<br>'.sprintf(_("OJO: %s ocupa más de 2 periodos. Lo calcula bien"),$nom_activ);
-						$iniPeriodoNext = ($aPeriodos[$p+2]['iso_ini']-1)."200000";
-						$finPeriodoNext = ($aPeriodos[$p+2]['iso_fin']+1)."100000";
+						$iniPeriodoNext = inicio_periodo($aPeriodos[$p+2]['iso_ini']);
+						$finPeriodoNext = fin_periodo($aPeriodos[$p+2]['iso_fin']);
 						if ($isoActivFin > $finPeriodoNext) {  //salta de periodo
 							echo '<br>'.sprintf(_("OJO: %s ocupa más de 3 periodos. No calcula bien"),$nom_activ);
 							break;
 						}
 						// días hasta aquí:
-						$finPeriodoLimit = ($aPeriodos[$p+1]['iso_fin']+1)."000000";
+						$finPeriodoLimit = fin_periodo($aPeriodos[$p+1]['iso_fin'],0);
 						$oFinPer = new DateTimeLocal($finPeriodoLimit);
 						//$oLocal = new DateTimeLocal();
 						//$oLocal->setDateTime($oF_ini);
@@ -162,7 +190,7 @@ function dias_ocupacion($aPeriodos,$oActividad,$oIniTot,$oFinTot) {
 						$sfsv = $aPeriodos[$p+1]['sfsv'];
 						$aOcupacion[$sfsv]=$num_dias;
 						// días siguientes:
-						$iniPeriodoNextLimit = ($aPeriodos[$p+2]['iso_ini'])."000000";
+						$iniPeriodoNextLimit = inicio_periodo($aPeriodos[$p+2]['iso_ini'],0);
 						$oIniPer = new DateTimeLocal($iniPeriodoNextLimit);
 						//$oLocal = new DateTimeLocal();
 						//$oLocal->setDateTime($oIniPer);
@@ -172,7 +200,7 @@ function dias_ocupacion($aPeriodos,$oActividad,$oIniTot,$oFinTot) {
 						//break; // debe seguir contando los dias del periodo anterior.
 					}
 					// días hasta aquí:
-					$finPeriodoLimit = ($aPeriodos[$p]['iso_fin']+1)."000000";
+                    $finPeriodoLimit = fin_periodo($aPeriodos[$p]['iso_fin'],0);
 					$oFinPer = new DateTimeLocal($finPeriodoLimit);
 					//$oLocal = new DateTimeLocal();
 				    //$oLocal->setDateTime($oF_ini);
@@ -180,7 +208,7 @@ function dias_ocupacion($aPeriodos,$oActividad,$oIniTot,$oFinTot) {
 					$sfsv = $aPeriodos[$p]['sfsv'];
 					$aOcupacion[$sfsv]=$num_dias;
 					// días siguientes:
-					$iniPeriodoNextLimit = ($aPeriodos[$p+1]['iso_ini'])."000000";
+                    $iniPeriodoNextLimit = inicio_periodo($aPeriodos[$p+1]['iso_ini'],0);
 					$oIniPer = new DateTimeLocal($iniPeriodoNextLimit);
 					//$oLocal = new DateTimeLocal();
 					//$oLocal->setDateTime($oIniPer);

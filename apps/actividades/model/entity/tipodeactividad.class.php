@@ -1,7 +1,8 @@
 <?php
 namespace actividades\model\entity;
-use core;
 use core\ConfigGlobal;
+use core;
+use web\TiposActividades;
 /**
  * Fitxer amb la Classe que accedeix a la taula a_tipos_actividad
  *
@@ -359,6 +360,11 @@ class TipoDeActividad Extends core\ClasePropiedades {
 
 	/* METODES GET i SET --------------------------------------------------------*/
 
+	public function getNombreCompleto() {
+        $oTiposActividades = new TiposActividades($this->getId_tipo_activ());
+        return $oTiposActividades->getNom();
+	}
+	
 	/**
 	 * Recupera tots els atributs de TipoDeActividad en un array
 	 *
