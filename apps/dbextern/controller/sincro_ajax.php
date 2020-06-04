@@ -137,7 +137,8 @@ switch ($que) {
 		$GesCentros = new GestorCentroDl();
         // Hay que asegurarse que ya no se distingue entre ctr de n y agd		
         //$cCentros = $GesCentros->getCentros(array('tipo_ctr'=>'^'.$tipo_persona),array('tipo_ctr'=>'~'));
-		$cCentros = $GesCentros->getCentros(array('tipo_ctr'=>'^[na]'),array('tipo_ctr'=>'~'));
+		//$cCentros = $GesCentros->getCentros(array('tipo_ctr'=>'^[na]'),array('tipo_ctr'=>'~'));
+		$cCentros = $GesCentros->getCentros();
 		$a_centros = array();
 		foreach ($cCentros as $oCentro) {
 			$id_ubi = $oCentro->getId_ubi();

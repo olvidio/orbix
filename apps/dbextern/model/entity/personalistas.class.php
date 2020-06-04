@@ -7,22 +7,25 @@ class PersonaListas Extends core\ClasePropiedades {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/*
-	Identif int 19 NOTNULL
+	Identif bigint NOTNULL
 	ApeNom varchar (56)
 	Dl vachar (5)
 	Ctr varchar (40)
 	Lugar_Naci varchar (45)
-	Fecha_Naci date (10)
+	Fecha_Naci date
 	Email varchar (50)
 	Tfno_Movil varchar(17)
 	Ce varchar (40)
-	ID_TABLA int 10 NOT NULL
+	>>ID_TABLA int 10 NOT NULL -- Ya no  está ?¿
 	Edad int (10)
 	Prof_Carg varchar(350)
 	Titu_Estu varchar(110)
 	Encargos varchar (150)
 	INCORP varchar (14)
 	pertenece_r varchar(5)
+	---
+	camb_fic varchar(1)
+	fecha_c_fic date
 	 * 
 	 */
 	
@@ -831,6 +834,7 @@ class PersonaListas Extends core\ClasePropiedades {
     {
         return $this->sIncorporacion;
     }
+
 
     /**
      * @param string $sProfesion_cargo
