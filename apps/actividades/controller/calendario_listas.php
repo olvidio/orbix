@@ -31,6 +31,17 @@ require_once ("apps/core/global_header.inc");
 require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+function nomUbi($id_ubi) {
+    
+    $oCasa = new Casa($id_ubi);
+    if (empty($oCasa)) {
+        // probar con los ctr.
+        $oCasa =  new CentroDl($id_ubi);
+    }
+    $nombre_ubi = $oCasa->getNombre_ubi();
+    return $nombre_ubi;
+}
+
 $oPosicion->recordar();
 
 $Qque = (string) \filter_input(INPUT_POST, 'que');
@@ -245,8 +256,7 @@ foreach ($aGrupos as $key => $Titulo) {
 
 			
 			$id_ubi = $oActividad->getId_ubi();
-			$oCasa = new Casa($id_ubi);
-			$nombre_ubi = $oCasa->getNombre_ubi();
+			$nombre_ubi = nomUbi($id_ubi);
 			
 			$oTipoActiv= new TiposActividades($id_tipo_activ);
 			$ssfsv=$oTipoActiv->getSfsvText();
