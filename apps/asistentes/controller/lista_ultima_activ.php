@@ -1,6 +1,5 @@
 ﻿<?php 
 use actividades\model\entity\Actividad;
-use actividades\model\entity\GestorActividad;
 use asistentes\model\entity\GestorAsistente;
 use personas\model\entity\GestorPersonaS;
 use ubis\model\entity\CentroDl;
@@ -48,7 +47,7 @@ if (!empty($Qid_ubi) AND ($Qid_ubi != 999)){
     $aWhereP['id_ctr'] = $Qid_ubi;
     $aWhereP['_ordre'] = 'apellido1, apellido2, nom';
 } else { //todos los crt
-    
+    $nombre_ubi = '';
 }
 
 //// FECHAS
@@ -58,8 +57,7 @@ switch ($Qcurso) {
     case 'anterior':
         $any = $_SESSION['oConfig']->any_final_curs('crt') - 2 ;
         $QempiezaminIso = core\curso_est("inicio",$any,"crt")->format('Y-m-d');
-        $QempiezamaxIso = core\curso_est("fin",$any,"crt")->format('Y-m-d');
-        $fecha_ini = core\curso_est("ini",$any,"crt")->getFromLocal('-');
+        $fecha_ini = core\curso_est("inicio",$any,"crt")->getFromLocal('-');
         $fecha_fin = core\curso_est("fin",$any,"crt")->getFromLocal('-');
         $titulo_fecha = sprintf(_("entre %s y %s"),$fecha_ini,$fecha_fin);
         break;
@@ -67,7 +65,6 @@ switch ($Qcurso) {
     default:
         $any = $_SESSION['oConfig']->any_final_curs('crt') - 1 ;
         $QempiezaminIso = core\curso_est("inicio",$any,"crt")->format('Y-m-d');
-        $QempiezamaxIso = core\curso_est("fin",$any,"crt")->format('Y-m-d');
         $fecha = core\curso_est("fin",$any,"crt")->getFromLocal('-');
         $titulo_fecha = sprintf(_("tras la fecha %s"),$fecha);
         break;
