@@ -11,6 +11,7 @@ use web\DateTimeLocal;
 use web\Lista;
 use web\Periodo;
 use web\TiposActividades;
+use ubis\model\entity\Casa;
 
 /**
 * Esta página muestra 
@@ -124,7 +125,8 @@ switch ($Qque) {
 }
 // valores por defecto
 if (empty($Qperiodo)) {
-    $Qperiodo = 'actual';
+    //$Qperiodo = 'actual'; // desde 40 dias antes de hoy hasta dentro de 9 meses desde hoy.
+    $Qperiodo = ''; // del 1-ene al 31-dic
 }
 
 // periodo.
@@ -151,27 +153,16 @@ switch ($tipo) {
 		$oTiposActividades = new TiposActividades();
 		$oTiposActividades->setSfSvId($miSfsv);
         switch ($mi_of) {
-            case 'sg':
-                $mi_of_id = '[45]';
-                $oTiposActividades->setAsistentesId($mi_of_id);
-                $aGrupos = array('[45]'=>'s y sg');
-                break;
-            case 'des':
-                $aGrupos = array('6'=>'des');
-                break;
             case 'all':
                 $aGrupos = 	$oTiposActividades->getAsistentesPosibles();
                 break;
             default:
                 $oPermisoOficinas = new PermisoDossier();
-                $permissions = $oPermisoOficinas->getPermissions();
                 $aGrupos = 	$oTiposActividades->getAsistentesPosibles();
                 foreach ($aGrupos as $sasistentes) {
                     $oficina = $equivalencias_gm_oficina[$sasistentes]; 
-                    $id_perm = $permissions[$oficina];
-                    $e = $oPermisoOficinas->have_perm_oficina($oficina);
                     if (!$oPermisoOficinas->have_perm_oficina($oficina)) {
-                        if (($key = array_search($oficina, $aGrupos)) !== false) {
+                        if (($key = array_search($sasistentes, $aGrupos)) !== false) {
                             unset($aGrupos[$key]);
                         }
                     }
@@ -253,6 +244,10 @@ foreach ($aGrupos as $key => $Titulo) {
 			$h_fin = preg_replace('/(\d+):(\d+):(\d+)/', '$1:$2', $h_fin);
 
 			
+			$id_ubi = $oActividad->getId_ubi();
+			$oCasa = new Casa($id_ubi);
+			$nombre_ubi = $oCasa->getNombre_ubi();
+			
 			$oTipoActiv= new TiposActividades($id_tipo_activ);
 			$ssfsv=$oTipoActiv->getSfsvText();
 			$sasistentes=$oTipoActiv->getAsistentesText();
@@ -278,6 +273,9 @@ foreach ($aGrupos as $key => $Titulo) {
 			if (!$oPermActiv->have_perm_action('ver')) { // sólo puede ver que està ocupado
 				$a_ubi_activ[$key][$a]['sfsv']=$ssfsv;
 				$a_ubi_activ[$key][$a]['tipo_activ']=_("ocupado");
+				if ($tipo == 'oficina') {
+				    $a_ubi_activ[$key][$a]['cdc']="$nombre_ubi";
+				}
 				$a_ubi_activ[$key][$a]['fechas']="$f_ini - $f_fin";
 				$a_ubi_activ[$key][$a]['h_ini']=$h_ini;
 				$a_ubi_activ[$key][$a]['h_fin']=$h_fin;
@@ -286,6 +284,9 @@ foreach ($aGrupos as $key => $Titulo) {
 			} else {
 				$a_ubi_activ[$key][$a]['sfsv']=$ssfsv;
 				$a_ubi_activ[$key][$a]['tipo_activ']="$sasistentes $sactividad $snom_tipo";
+				if ($tipo == 'oficina') {
+				    $a_ubi_activ[$key][$a]['cdc']="$nombre_ubi";
+				}
 				$a_ubi_activ[$key][$a]['fechas']="$f_ini - $f_fin";
 				$a_ubi_activ[$key][$a]['h_ini']=$h_ini;
 				$a_ubi_activ[$key][$a]['h_fin']=$h_fin;
@@ -320,15 +321,31 @@ foreach ($aGrupos as $key => $Titulo) {
 
 
 // ----------------- HTML ---------------------------------------
-$aCabeceras = [ _("sv/sf"),
-             _("tipo actividad"),
-             _("fechas"),
-             _("hora inicio"),
-             _("hora fin"),
-             _("asistentes"),
-             _("tarifa"),
-             _("centros encargados"),
-            ];
+switch ($tipo) {
+    case 'casa':
+        $aCabeceras = [ _("sv/sf"),
+                     _("tipo actividad"),
+                     _("fechas"),
+                     _("hora inicio"),
+                     _("hora fin"),
+                     _("asistentes"),
+                     _("tarifa"),
+                     _("centros encargados"),
+                    ];
+        break;
+    case 'oficina':
+        $aCabeceras = [ _("sv/sf"),
+                     _("tipo actividad"),
+                     _("cdc"),
+                     _("fechas"),
+                     _("hora inicio"),
+                     _("hora fin"),
+                     _("asistentes"),
+                     _("tarifa"),
+                     _("centros encargados"),
+                    ];
+        break;
+}
 
 $oTabla = new Lista();
 $oTabla->setGrupos($aGrupos);

@@ -1,10 +1,11 @@
 <?php
 namespace core;
 
-use usuarios\model\entity as usuarios;
-use permisos\model as permisos;
-use web;
 use config\model\Config;
+use web;
+use menus\model\entity\GestorGrupMenuRole;
+use permisos\model as permisos;
+use usuarios\model\entity as usuarios;
 
 if (session_id() == "") {
 	session_start(); // if no active session we start a new one
@@ -22,6 +23,13 @@ $_SESSION['oGestorErrores'] = new gestorErrores();
  * De esta manera (no persistente) se cierra la conexión cada vez que acaba el script.
  * 
  */
+
+/*
+$oConfigDB = new ConfigDB('tramity'); //de la database comun 
+$config = $oConfigDB->getEsquema('public'); 
+$oConexion = new dbConnection($config);
+$oDBT = $oConexion->getPDO();
+*/
 
 // public para todo el mundo
 $oConfigDB = new ConfigDB('comun'); //de la database comun 

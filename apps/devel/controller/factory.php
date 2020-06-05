@@ -39,7 +39,7 @@ if ($schema !== $tabla) {
 
 if (isset($Qdb)) {
 	switch($Qdb) {
-		case "filmoteca":
+		case "tramity":
 			$oDbl=$oDBT;
 			$oDB_txt='oDBT';
 			$prefix='';

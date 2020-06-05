@@ -239,15 +239,10 @@ if ( !isset($_SESSION['session_auth'])) {
                                 die();
 						    }
 						}
-						/*
-						//Para la oficina, de momento cojo la primera
-						$GesGMR = new menus\GestorGrupMenuRole();
-						$cGMR = $GesGMR->getGrupMenuRoles(array('id_role'=>$id_role));
-						$mi_oficina_menu=$cGMR[0];
-						*/
-								$perms_activ='';
-								$mi_oficina = '';
-								$mi_oficina_menu = '';
+						
+                        $perms_activ='';
+                        $mi_oficina = '';
+                        $mi_oficina_menu = '';
 
 						// si no tiene mail interior, cojo el exterior.
 						$mail = empty($mail)? $row['email'] : $mail;
