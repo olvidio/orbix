@@ -61,6 +61,7 @@ use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
 use core\ConfigGlobal;
 use function core\is_true;
 use permisos\model\PermisosActividades;
+use personas\model\entity\PersonaSacd;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -108,6 +109,7 @@ $num_cambios = count($cNuevosCambios);
 // Repito el proceso por si se han apuntado cambios mientras estaba realizando el proceso.
 while ($num_cambios) {
 	foreach ($cNuevosCambios as $oCambio) {
+	    $afecta = '';
 		$id_item_cmb = $oCambio->getId_item_cambio();
 		$id_schema_cmb = $oCambio->getId_schema();
 		$sObjeto = $oCambio->getObjeto();
@@ -132,9 +134,17 @@ while ($num_cambios) {
 		// pero en las preferencias, solo 'Asistente'.
 		if(strpos($sObjeto, 'Asistente') !== false){
 		    $sObjeto = 'Asistente';
+		    // Para el caso de los sacd, el permiso es 'asistentessacd'
+		    if ($propiedad_cmb == 'id_nom') {
+		        $id_nom = empty($valor_new_cmb)? $valor_old_cmb : $valor_new_cmb;
+		        $oPersonaSacd = new PersonaSacd($id_nom);
+		        if (!empty($oPersonaSacd)) {
+		           $afecta = 'asistentesSacd'; 
+		        }
+		    }
 		}
 		
-        $afecta = $aObjPerm[$sObjeto];
+        $afecta = empty($afecta)? $aObjPerm[$sObjeto] : $afecta;
 		
 		if (ConfigGlobal::mi_sfsv() == 1) {
 		    $aFases_cmb = $aFases_cmb_sv;

@@ -463,7 +463,7 @@ class Cambio Extends core\ClasePropiedades {
                 // si es boolean, traduzco a true-false:
                 $tipo = $oDatosCampo->datos_campo($oDbl,'tipo');
                 if ($tipo == 'bool') {
-                    // OJO. Excepción en el caso de completra una fase, el campo es completado (bool), pero en el 
+                    // OJO. Excepción en el caso de completar una fase, el campo es completado (bool), pero en el 
                     // valor_old lo que pongo es el id_fase.
                     if ($sObjeto != 'ActividadProcesoTarea' && $sPropiedad != 'completado') {
                        $sValor_old = is_true($sValor_old)? 'true' : 'false';
