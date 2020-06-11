@@ -13,12 +13,15 @@ use usuarios\model\entity as usuarios;
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$expire = $_SESSION['session_auth']['expire'];
+    
+
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $id_usuario = $oMiUsuario->getId_usuario();
 
-$txt_guardar=_("guardar datos");
+$txt_guardar = _("guardar datos");
+$txt_ok = _("se ha cambiado el password");
 
-$que_user='guardar_pwd';
 $oUsuario = new usuarios\Usuario(array('id_usuario'=>$id_usuario));
 
 $id_usuario=$oUsuario->getId_usuario();
@@ -35,17 +38,19 @@ $oHash->setcamposNo('que');
 $a_camposHidden = array(
 		'pass' => $pass,
 		'id_usuario' => $id_usuario,
-		'quien' => 'usuario'
+		'quien' => 'usuario',
+        'que' => 'guardar_pwd',
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 
 
 $a_campos = [
 			'usuario' => $usuario,
+    		'expire' => $expire,
 			'oHash' => $oHash,
 			'email' => $email,
 			'txt_guardar' => $txt_guardar,
-			'que_user' => $que_user,
+			'txt_ok' => $txt_ok,
  			];
 
 $oView = new core\View('usuarios/controller');
