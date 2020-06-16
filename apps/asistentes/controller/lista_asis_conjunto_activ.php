@@ -30,6 +30,7 @@ $Qstatus = (integer) \filter_input(INPUT_POST, 'status');
 $Qstatus = empty($Qstatus)? actividades\ActividadAll::STATUS_ACTUAL : $Qstatus;
 $Qid_tipo_activ = (string) \filter_input(INPUT_POST, 'id_tipo_activ');
 $Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
+$Qnom_activ= (string) \filter_input(INPUT_POST, 'nom_activ');
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 $Qyear = (integer) \filter_input(INPUT_POST, 'year');
 $Qyear = empty($Qyear)? date('Y') : $Qyear;
@@ -106,6 +107,11 @@ if (!empty($Qperiodo) && $Qperiodo == 'desdeHoy') {
 // dl Organizadora.
 if (!empty($Qdl_org)) {
    $aWhere['dl_org'] = $Qdl_org; 
+}
+// Por el nombre
+if (!empty($Qnom_activ)) {
+    $aWhere['nom_activ'] = '%'.$Qnom_activ.'%';
+    $aOperador['nom_activ'] = 'ILIKE';
 }
 // Publicar
 if (!empty($Qmodo) && $Qmodo == 'publicar') {
