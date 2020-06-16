@@ -2,6 +2,7 @@
 namespace permisos\model\entity;
 use core;
 use devel\model\appDB;
+use function core\is_true;
 /**
  * Fitxer amb la Classe que accedeix a la taula m0_mods_installed_dl
  *
@@ -172,7 +173,7 @@ class ModuloInstalado Extends core\ClasePropiedades {
             /*
              * Activar la creación de tablas necesarias para la app.
              */
-            if ($aDades['status'] === 't') {
+            if (is_true($aDades['status'])) {
                 $oAppDB = new appDB($this->iid_mod);
                 $oAppDB->createTables();
             }
