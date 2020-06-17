@@ -172,11 +172,12 @@ class ModuloInstalado Extends core\ClasePropiedades {
 			}
             /*
              * Activar la creación de tablas necesarias para la app.
+             * las creo siempre, aunque no esté activo. (17/6/2020)
              */
-            if (is_true($aDades['status'])) {
+            //if (is_true($aDades['status'])) {
                 $oAppDB = new appDB($this->iid_mod);
                 $oAppDB->createTables();
-            }
+            //}
 		}
 		$this->setAllAtributes($aDades);
 		return true;
