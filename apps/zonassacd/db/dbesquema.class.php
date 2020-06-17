@@ -100,12 +100,13 @@ class DBEsquema extends DBAbstract {
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
         
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-        
+
         
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_zona); ";
         
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
         
+        /* Finalmente no se puede tampoco con sv, porque las zonas estan en sv-e, i los centros en sv.
         // Foreign key en la tabla de centros (solo la sv, la sf está en otra base de datos y no se puede):
         // Sólo se puede si el campo id_zona de u_centros_dl está vacio.
         $a_sql[] = "UPDATE u_centros_dl SET id_zona = NULL; ";
@@ -113,6 +114,7 @@ class DBEsquema extends DBAbstract {
                     ADD CONSTRAINT u_centros_dl_id_zona_fk FOREIGN KEY (id_zona) REFERENCES zonas(id_zona) ON UPDATE CASCADE ON DELETE SET NULL; ";
         
         $this->executeSql($a_sql);
+        */
         
         $this->delPermisoGlobal('sfsv-e');
         // Devolver los valores al estado original
@@ -314,7 +316,7 @@ class DBEsquema extends DBAbstract {
         $a_sql = [];
         // Como tiene un forign key, si se añade CASCADE, borrará todos los centros
         // hay que borrar el fk y volverlo a crear.
-        $a_sql[] = "ALTER TABLE u_centros_dl DROP CONSTRAINT u_centros_dl_id_zona_fk; ";
+        // NO $a_sql[] = "ALTER TABLE u_centros_dl DROP CONSTRAINT u_centros_dl_id_zona_fk; ";
         $a_sql[] = "ALTER TABLE zonas_sacd DROP CONSTRAINT zonas_sacd_id_zona_fkey; ";
         $a_sql[] = "TRUNCATE $nom_tabla RESTART IDENTITY;" ;
         $this->executeSql($a_sql);
@@ -336,9 +338,11 @@ class DBEsquema extends DBAbstract {
         $this->executeSql($a_sql);
         
         $a_sql = [];
+        /* Está en sv-e, y centros en sv
         $a_sql[] = "UPDATE u_centros_dl SET id_zona = NULL; ";
         $a_sql[] = "ALTER TABLE u_centros_dl
                     ADD CONSTRAINT u_centros_dl_id_zona_fk FOREIGN KEY (id_zona) REFERENCES zonas(id_zona) ON UPDATE CASCADE ON DELETE SET NULL; ";
+        */
         $a_sql[] = "ALTER TABLE $nom_tabla
                         ADD CONSTRAINT zonas_sacd_id_zona_fkey FOREIGN KEY (id_zona) REFERENCES zonas(id_zona) ON DELETE CASCADE; ";
         $this->executeSql($a_sql);
