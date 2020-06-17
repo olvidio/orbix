@@ -112,9 +112,9 @@ class DBEsquema extends DBAbstract {
         $a_sql[] = "UPDATE u_centros_dl SET id_zona = NULL; ";
         $a_sql[] = "ALTER TABLE u_centros_dl
                     ADD CONSTRAINT u_centros_dl_id_zona_fk FOREIGN KEY (id_zona) REFERENCES zonas(id_zona) ON UPDATE CASCADE ON DELETE SET NULL; ";
+        */
         
         $this->executeSql($a_sql);
-        */
         
         $this->delPermisoGlobal('sfsv-e');
         // Devolver los valores al estado original
