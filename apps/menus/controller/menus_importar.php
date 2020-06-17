@@ -108,7 +108,7 @@ if ($Qseguro == 1) {
 		//************ GRUPMENU_ROL**************
         // En el caso de la sf, los grupmenu asociados a los roles son distintos.
         // de momento no los copio. los dejo como están.
-		if ($sec == 'f') {
+		if ($sec == 'v') {
             $sql_del = 'TRUNCATE TABLE aux_grupmenu_rol RESTART IDENTITY CASCADE';
             if ($oDblSt = $oDB->query($sql_del) === false) {
                 $sClauError = 'ExportarMenu.VaciarTabla';
