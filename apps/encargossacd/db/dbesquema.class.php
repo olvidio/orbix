@@ -863,14 +863,15 @@ class DBEsquema extends DBAbstract {
     /* ###################### LLENAR TABLAS ################################ */
     
     public function llenar_encargo_tipo() {
-        // OJO Corresponde al esquema sf/sv, no al comun.
+        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
         $role_org = $this->role;
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv-e');
-        $this->setConexion('sfsv');
+        $this->setConexion('sfsv-e');
+        
         $datosTabla = $this->infoTable("encargo_tipo");
         
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -904,7 +905,7 @@ class DBEsquema extends DBAbstract {
         $this->role = '"'. $this->esquema .'"';
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv-e');
-        $this->setConexion('sfsv');
+        $this->setConexion('sfsv-e');
         $datosTabla = $this->infoTable("encargo_textos");
         
         $nom_tabla = $datosTabla['nom_tabla'];
