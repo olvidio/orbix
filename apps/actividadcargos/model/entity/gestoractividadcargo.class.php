@@ -259,9 +259,28 @@ class GestorActividadCargo Extends core\ClaseGestor {
 		}
 		if ($sLimit===false) return;
 		$sOrdre = '';
+		if (empty($aWhere['_ordre'])) {
+            // Por defecto ordenar por orden_cargo:
+            $aWhere['_ordre'] = 'orden_cargo';
+		    $gesOrdenCargo = new GestorCargo();
+            $cOrdenCargo = $gesOrdenCargo->getCargos();
+            $csvNestIdCargo = '';
+            $csvNestOrdenCargo = '';
+            foreach($cOrdenCargo as $oOrdenCargo) {
+                $id_cargo = $oOrdenCargo->getId_cargo();
+                $orden_cargo = $oOrdenCargo->getOrden_cargo();
+                $csvNestIdCargo .= empty($csvNestIdCargo)? '' : ',';
+                $csvNestIdCargo .= $id_cargo;
+                $csvNestOrdenCargo .=  empty($csvNestOrdenCargo)? '' : ',';
+                $csvNestOrdenCargo .=  $orden_cargo;
+            }
+		}
 		if (isset($aWhere['_ordre']) && $aWhere['_ordre']!='') $sOrdre = ' ORDER BY '.$aWhere['_ordre'];
 		if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
-		$sQry = "SELECT * FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
+		
+		$sQry = "SELECT a.* 
+                FROM $nom_tabla a LEFT JOIN UNNEST (ARRAY[$csvNestIdCargo], ARRAY[$csvNestOrdenCargo]) AS c (id_cargo,orden_cargo) ON (a.id_cargo = c.id_cargo) 
+                ".$sCondi.$sOrdre.$sLimit;
 		//echo "query $sQry <br>";
 		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClauError = 'GestorActividadCargo.llistar.prepare';
