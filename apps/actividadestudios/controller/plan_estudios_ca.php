@@ -36,7 +36,7 @@ $GesCargos = new actividadcargos\GestorCargo();
 $cCargos = $GesCargos->getCargos(array('cargo'=>'d.est.'));
 $id_cargo = $cCargos[0]->getId_cargo(); // solo hay un cargo de director de estudios.
 $GesActividadCargos = new actividadcargos\GestorActividadCargo();
-$cActividadCargos = $GesActividadCargos->getActividadCargos(array('id_activ'=>$id_activ,'id_cargo'=>$id_cargo));
+$cActividadCargos = $GesActividadCargos->getActividadCargos(array('id_activ'=>$id_activ));
 if (is_array($cActividadCargos) && count($cActividadCargos) > 0) {
 	$id_nom_dtor_est = $cActividadCargos[0]->getId_nom(); // Imagino que sólo hay uno.
 } else {

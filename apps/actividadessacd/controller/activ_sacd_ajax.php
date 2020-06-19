@@ -63,7 +63,8 @@ function ordena($id_activ,$id_nom,$num_orden) {
 	$aWhere['id_cargo'] = $txt_where_cargos;
 	$aOperador['id_cargo']= 'IN';
 	
-	$aWhere['_ordre']='id_cargo';
+	// Si no pongo nada me lo ordena por orden cargo.
+	//$aWhere['_ordre']='id_cargo';
 	$GesActividadCargos = new GestorActividadCargo();
 	$cActividadCargos = $GesActividadCargos->getActividadCargos($aWhere,$aOperador);
 	$i_max=count($cActividadCargos);
@@ -150,7 +151,8 @@ switch ($Qque) {
             $aWhere['id_cargo'] = $txt_where_cargos;
             $aOperador['id_cargo']= 'IN';
 			$aWhere['id_activ']=$Qid_activ;
-			$aWhere['_ordre']='id_cargo';
+			// Si no pongo nada me lo ordena por orden cargo.
+			//$aWhere['_ordre']='id_cargo';
 			$GesActividadCargos = new GestorActividadCargo();
 			$cActividadCargos = $GesActividadCargos->getActividadCargos($aWhere,$aOperador);
 			$txt_sacd='';
@@ -246,7 +248,7 @@ switch ($Qque) {
 		$aWhere['id_activ']=$Qid_activ;
         $aWhere['id_cargo'] = $txt_where_cargos;
         $aOperador['id_cargo']= 'IN';
-		$aWhere['_ordre']='id_cargo DESC';
+		$aWhere['_ordre']='a.id_cargo DESC';
 		$GesCargoActiv = new GestorActividadCargo();
 		$cCargosActiv = $GesCargoActiv->getActividadCargos($aWhere,$aOperador);
 		if (is_array($cCargosActiv) && count($cCargosActiv) >= 1) {
@@ -412,7 +414,7 @@ switch ($Qque) {
 					$aWhere['id_activ']=$id_activ;
                     $aWhere['id_cargo'] = $txt_where_cargos;
                     $aOperador['id_cargo']= 'IN';
-					$aWhere['_ordre']='id_cargo DESC';
+					$aWhere['_ordre']='a.id_cargo DESC';
 					$GesCargoActiv = new GestorActividadCargo();
 					$cCargosActividad = $GesCargoActiv->getActividadCargos($aWhere,$aOperador);
 					foreach($cCargosActividad as $oActividadCargo) {;
