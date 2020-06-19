@@ -141,24 +141,6 @@ switch ($Qque) {
 if (empty($inicioIso) OR empty($finIso)) {
     exit ("<br>"._("falta determinar un periodo"));
 }
-/*
-$aWhere = [];
-$aOperador = [];
-$aWhere['f_ini'] = "'$inicioIso','$finIso'";
-$aOperador['f_ini'] = 'BETWEEN';
-$aWhere['status'] = 2;
-$aWhere['_ordre']='f_ini';
-$GesActividades = new GestorActividad();
-$cActividades = $GesActividades->getActividades($aWhere,$aOperador);
-$a_id_actividades = [];
-$a_actividades = [];
-foreach ($cActividades as $oActividad) {
-	$id_activ = $oActividad->getId_activ();
-	$a_id_actividades[] = $id_activ;
-	$a_actividades[$id_activ] = $oActividad;
-}
-unset($cActividades);
-*/
 
 $s=0;
 $array_actividades = [];

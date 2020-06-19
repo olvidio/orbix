@@ -174,24 +174,28 @@ switch($Qque) {
 			foreach($QAsel as $id_nom) {
 				if ($Qacumular == 2) {
 					if (empty($id_zona_new)) {
-						$oZonaSacd = new ZonaSacd();
-						$oZonaSacd->setId_nom($id_nom);
-						$oZonaSacd->setId_zona($Qid_zona);
-						$oZonaSacd->DBCarregar(); // para coger el id_item.
-						if ($oZonaSacd->DBEliminar() === false) {
-							echo _("hay un error, no se ha eliminado");
-							echo "\n".$oZonaSacd->getErrorTxt();
-						}
+					    $aWhere = ['id_nom' => $id_nom, 'id_zona' => $Qid_zona];
+					    $GesZonasSacd = new GestorZonaSacd();
+					    $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere);
+					    if (!empty($cZonaSacd)) {
+                            $oZonaSacd = $cZonaSacd[0];
+                            if ($oZonaSacd->DBEliminar() === false) {
+                                echo _("hay un error, no se ha eliminado");
+                                echo "\n".$oZonaSacd->getErrorTxt();
+                            }
+					    }
 					} else {
-						$oZonaSacd = new ZonaSacd();
-						$oZonaSacd->setId_nom($id_nom);
-						$oZonaSacd->setId_zona($id_zona_new);
-						$oZonaSacd->setPropia('f');
-						$oZonaSacd->DBCarregar(); // para coger el id_item.
-						if ($oZonaSacd->DBGuardar() === false) {
-							echo _("hay un error, no se ha guardado");
-							echo "\n".$oZonaSacd->getErrorTxt();
-						}
+					    $aWhere = ['id_nom' => $id_nom, 'id_zona' => $id_zona_new];
+					    $GesZonasSacd = new GestorZonaSacd();
+					    $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere);
+					    if (!empty($cZonaSacd)) {
+                            $oZonaSacd = $cZonaSacd[0];
+                            $oZonaSacd->setPropia('f');
+                            if ($oZonaSacd->DBGuardar() === false) {
+                                echo _("hay un error, no se ha guardado");
+                                echo "\n".$oZonaSacd->getErrorTxt();
+                            }
+					    }
 					}
 				} else {
 					// Si el id_zona es 0, son nuevos: hay que hacer insert.
@@ -205,25 +209,29 @@ switch($Qque) {
 							echo "\n".$oZonaSacd->getErrorTxt();
 						}
 					} elseif (empty($id_zona_new)) {
-						$oZonaSacd = new ZonaSacd();
-						$oZonaSacd->setId_nom($id_nom);
-						$oZonaSacd->setId_zona($Qid_zona);
-						$oZonaSacd->DBCarregar(); // para coger el id_item.
-						if ($oZonaSacd->DBEliminar() === false) {
-							echo _("hay un error, no se ha eliminado");
-							echo "\n".$oZonaSacd->getErrorTxt();
-						}
+					    $aWhere = ['id_nom' => $id_nom, 'id_zona' => $Qid_zona];
+					    $GesZonasSacd = new GestorZonaSacd();
+					    $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere);
+					    if (!empty($cZonaSacd)) {
+                            $oZonaSacd = $cZonaSacd[0];
+                            if ($oZonaSacd->DBEliminar() === false) {
+                                echo _("hay un error, no se ha eliminado");
+                                echo "\n".$oZonaSacd->getErrorTxt();
+                            }
+					    }
 					} else {
-						$oZonaSacd = new ZonaSacd();
-						$oZonaSacd->setId_nom($id_nom);
-						$oZonaSacd->setId_zona($Qid_zona);
-						$oZonaSacd->DBCarregar();
-						$oZonaSacd->setId_zona($id_zona_new);
-						$oZonaSacd->setPropia('t');
-						if ($oZonaSacd->DBGuardar() === false) {
-							echo _("hay un error, no se ha guardado");
-							echo "\n".$oZonaSacd->getErrorTxt();
-						}
+					    $aWhere = ['id_nom' => $id_nom, 'id_zona' => $Qid_zona];
+					    $GesZonasSacd = new GestorZonaSacd();
+					    $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere);
+					    if (!empty($cZonaSacd)) {
+                            $oZonaSacd = $cZonaSacd[0];
+                            $oZonaSacd->setId_zona($id_zona_new);
+                            $oZonaSacd->setPropia('t');
+                            if ($oZonaSacd->DBGuardar() === false) {
+                                echo _("hay un error, no se ha guardado");
+                                echo "\n".$oZonaSacd->getErrorTxt();
+                            }
+					    }
 					}
 				}
 			}
