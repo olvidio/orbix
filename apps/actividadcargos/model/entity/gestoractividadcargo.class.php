@@ -278,9 +278,15 @@ class GestorActividadCargo Extends core\ClaseGestor {
 		if (isset($aWhere['_ordre']) && $aWhere['_ordre']!='') $sOrdre = ' ORDER BY '.$aWhere['_ordre'];
 		if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
 		
-		$sQry = "SELECT a.* 
+		if (!empty($csvNestIdCargo) && !empty($csvNestOrdenCargo)) {
+            $sQry = "SELECT a.* 
                 FROM $nom_tabla a LEFT JOIN UNNEST (ARRAY[$csvNestIdCargo], ARRAY[$csvNestOrdenCargo]) AS c (id_cargo,orden_cargo) ON (a.id_cargo = c.id_cargo) 
                 ".$sCondi.$sOrdre.$sLimit;
+		} else {
+            $sQry = "SELECT a.* 
+                FROM $nom_tabla a 
+                ".$sCondi.$sOrdre.$sLimit;
+		}
 		//echo "query $sQry <br>";
 		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClauError = 'GestorActividadCargo.llistar.prepare';
