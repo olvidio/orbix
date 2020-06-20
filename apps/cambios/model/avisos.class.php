@@ -319,7 +319,7 @@ class Avisos {
             case 'Asistente':
                 // si lo que cambia es el id_nom, compruebo que el valor old o new sean de algun sacd de la zona.
                 if ($propiedad == 'id_nom') {
-                    if ($this->asite($id_nom, $id_activ)) {
+                    if ($this->asiste($id_nom, $id_activ)) {
                         return TRUE;
                     } else {
                         if (($valor_old_cmb == $id_nom) || ($valor_new_cmb == $id_nom)) {
