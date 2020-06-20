@@ -1,0 +1,32 @@
+<script>
+fnjs_guardar=function(formulario){
+	id_usuario=$('#id_usuario').val();
+	$(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
+	$(formulario).one("submit", function() {
+		$.ajax({
+			url: $(this).attr('action'),
+			type: 'post',
+			data: $(this).serialize()
+		})
+		.done(function (rta_txt) { 
+			if (rta_txt != '' && rta_txt != '\n') {
+				alert (rta_txt);
+			} else {
+				$('#main').html('<?= $txt_ok ?>');
+			}
+		});
+		return false;
+	});
+	$(formulario).trigger("submit");
+	$(formulario).off();
+}
+</script>
+
+<h3><?= $usuario ?></h3>
+<form id=frm_usuario  name=frm_usuario action='' method="post" >
+<?= $oHash->getCamposHtml(); ?>
+<?= ucfirst(_("email")) ?>:<input type=text name=email value="<?= $email ?>"><br>
+<br>
+<input type=button onclick="fnjs_guardar(this.form);" value="<?= $txt_guardar ?>">
+<br>
+</form>

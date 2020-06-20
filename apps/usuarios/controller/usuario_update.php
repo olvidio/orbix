@@ -187,7 +187,6 @@ switch($Qque) {
 		break;
 	case "guardar_pwd":
 		$Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
-        $Qemail = (string) \filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
 		$Qpassword = (string) \filter_input(INPUT_POST, 'password');
 		$Qpass = (string) \filter_input(INPUT_POST, 'pass');
 		
@@ -203,7 +202,6 @@ switch($Qque) {
             die();
         }
 		
-		$oUsuario->setEmail($Qemail);
 		if (!empty($Qpassword)){
 			$oCrypt = new MyCrypt();
 			$my_passwd=$oCrypt->encode($Qpassword);
@@ -211,6 +209,20 @@ switch($Qque) {
 		} else {
 			$oUsuario->setPassword($Qpass);
 		}
+		if ($oUsuario->DBGuardar() === false) {
+			echo _("hay un error, no se ha guardado");
+			echo "\n".$oUsuario->getErrorTxt();
+		}
+	break;
+	case "guardar_mail":
+		$Qid_usuario = (integer) \filter_input(INPUT_POST, 'id_usuario');
+        $Qemail = (string) \filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+		
+		$oUsuario = new Usuario(array('id_usuario' => $Qid_usuario));
+		$oUsuario->DBCarregar();
+		
+		$usuario = $oUsuario->getUsuario();
+		$oUsuario->setEmail($Qemail);
 		if ($oUsuario->DBGuardar() === false) {
 			echo _("hay un error, no se ha guardado");
 			echo "\n".$oUsuario->getErrorTxt();

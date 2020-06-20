@@ -67,4 +67,5 @@ if (ConfigGlobal::is_app_installed('cambios')) {
 <br>
 <input type="button" onclick=fnjs_enviar_formulario('#preferencias') value="guardar preferencias">
 </form>
+<br><span class="link" onclick="fnjs_update_div('#main','<?= $cambio_mail ?>');"><?= _("cambiar el mail") ?></span><br>
 <br><span class="link" onclick="fnjs_update_div('#main','<?= $cambio_password ?>');"><?= _("cambiar el password") ?></span><br>

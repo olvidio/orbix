@@ -113,6 +113,7 @@ $avisos=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/us
 $avisos_lista=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/cambios/controller/avisos_generar.php?'.http_build_query(array('id_usuario'=>$id_usuario,'aviso_tipo' => CambioUsuario::TIPO_LISTA)));
 $avisos_mails=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/cambios/controller/avisos_generar.php?'.http_build_query(array('id_usuario'=>$id_usuario,'aviso_tipo' => CambioUsuario::TIPO_MAIL)));
 $cambio_password=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form_pwd.php');
+$cambio_mail=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_form_mail.php');
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('inicio!oficina!estilo_color!tipo_menu!tipo_tabla!ordenApellidos!idioma_nou');
@@ -136,6 +137,7 @@ $a_campos = [
 			'tipo_apellidos_nom_ap' => $tipo_apellidos_nom_ap,
 			'oDesplLocales' => $oDesplLocales,
 			'cambio_password' => $cambio_password,
+			'cambio_mail' => $cambio_mail,
  			];
 
 $oView = new core\View('usuarios/controller');
