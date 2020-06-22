@@ -226,7 +226,7 @@ El atributo BORDER indica en pixels el ancho del reborde de las tablas. BORDER =
      }
 
 	 td.actpersonal_nomod  {
-     	border-color : yellow;
+     	border-color : black;
      	border-width : 1px;
      	background-color : #FFFF00;
      }

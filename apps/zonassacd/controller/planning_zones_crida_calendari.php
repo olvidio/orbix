@@ -47,6 +47,8 @@ $aIdCargos_sacd = $gesCargos->getArrayCargosDeTipo('sacd');
 
 $oPosicion->recordar();
 
+echo "<button class='no_print' onclick=\"fnjs_exportar('html');\" >Descargar html</button>";
+echo "<div id=\"exportar\">";
 $Qmodelo = (integer) \filter_input(INPUT_POST, 'modelo');
 switch($Qmodelo) {
     case 2:
@@ -397,6 +399,7 @@ $oPlanning->setInicio($oIniPlanning);
 $oPlanning->setFin($oFinPlanning);
 // ---------------- html ---------------------------------------------
 if ($z==1) { $titulo = $cabeceras_por_zona[$z]; } else { $titulo = _("planning por zonas"); }
+
 echo "<span id=\"span_exportar\"  title=\"$titulo\">";
 for ( $i=1;$i <= $z; $i++) {
 	$a_actividades = $actividades_por_zona[$i];
@@ -406,3 +409,4 @@ for ( $i=1;$i <= $z; $i++) {
 	$oPlanning->setActividades($a_actividades);
 	echo $oPlanning->dibujar();
 }
+echo "</div>"; //exportar
