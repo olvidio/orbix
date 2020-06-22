@@ -245,7 +245,7 @@ class GestorActividadCargo Extends core\ClaseGestor {
 		foreach ($aWhere as $camp => $val) {
 			if ($camp == '_ordre') continue;
 			$sOperador = isset($aOperators[$camp])? $aOperators[$camp] : '';
-			if ($a = $oCondicion->getCondicion($camp,$sOperador,$val)) $aCondi[]=$a;
+			if ($a = $oCondicion->getCondicion($camp,$sOperador,$val)) $aCondi[]='a.'.$a;
 			// operadores que no requieren valores
 			if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
 			if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
