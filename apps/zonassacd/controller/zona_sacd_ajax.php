@@ -195,6 +195,15 @@ switch($Qque) {
                                 echo _("hay un error, no se ha guardado");
                                 echo "\n".$oZonaSacd->getErrorTxt();
                             }
+					    } else {
+                            $oZonaSacd = new ZonaSacd();
+                            $oZonaSacd->setId_nom($id_nom);
+                            $oZonaSacd->setId_zona($id_zona_new);
+                            $oZonaSacd->setPropia('f');
+                            if ($oZonaSacd->DBGuardar() === false) {
+                                echo _("hay un error, no se ha guardado");
+                                echo "\n".$oZonaSacd->getErrorTxt();
+                            }
 					    }
 					}
 				} else {
