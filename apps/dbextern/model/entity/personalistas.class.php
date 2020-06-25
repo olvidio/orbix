@@ -560,7 +560,7 @@ class PersonaListas Extends core\ClasePropiedades {
         if (array_key_exists('Encargos',$aDades)) $this->setEncargos($aDades['Encargos']);
         if (array_key_exists('INCORP',$aDades)) $this->setIncorporacion($aDades['INCORP']);
         if (array_key_exists('pertenece_r',$aDades)) $this->setPertenece_r($aDades['pertenece_r']);
-        if (array_key_exists('camb_fic',$aDades)) $this->setCam_fic($aDades['camb_fic']);
+        if (array_key_exists('camb_fic',$aDades)) $this->setCamb_fic($aDades['camb_fic']);
         if (array_key_exists('fecha_c_fic',$aDades)) $this->setFecha_c_fic($aDades['fecha_c_fic']);
 	}
 
@@ -585,7 +585,7 @@ class PersonaListas Extends core\ClasePropiedades {
 		$this->setEncargos('');
 		$this->setIncorporacion('');
 		$this->setPertenece_r('');
-		$this->setCam_fic('');
+		$this->setCamb_fic('');
 		$this->setFecha_c_fic('');
 		$this->setPrimary_key($aPK);
 	}
