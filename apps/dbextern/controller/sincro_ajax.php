@@ -26,7 +26,7 @@ switch ($que) {
 		$id = (integer)  filter_input(INPUT_POST, 'id');
 		$tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
 		
-		$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE Identif = $id_nom_listas";
+		$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE Identif = $id_nom_listas AND camb_fic IS NULL";
 		$oGesListas = new GestorPersonaListas();	
 		$cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
 		if ($cPersonasListas !== FALSE && count($cPersonasListas) == 1)  {

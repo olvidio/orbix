@@ -52,7 +52,7 @@ $obj = 'personas\\model\\entity\\'.$obj_pau;
 $GesPersonas = new $obj();
 
 //listas
-$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE pertenece_r='$region' AND Dl='$dl_listas' AND Identif LIKE '$id_tipo%'";
+$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE pertenece_r='$region' AND Dl='$dl_listas' AND Identif LIKE '$id_tipo%' AND camb_fic IS NULL";
 // todos los de listas
 $oGesListas = new GestorPersonaListas();	
 $cPersonasListas = $oGesListas->getPersonaListasQuery($Query);

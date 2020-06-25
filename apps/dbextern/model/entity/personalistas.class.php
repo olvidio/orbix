@@ -134,6 +134,19 @@ class PersonaListas Extends core\ClasePropiedades {
 	 */
 	private $spertenece_r;
 	 
+	/**
+	 * Camb_fic de Listas
+	 *
+	 * @var string
+	 */
+	private $scamb_fic;
+	/**
+	 * Fecha_c_fic de Listas
+	 *
+	 * @var web\DateTimeLocal
+	 */
+	private $dfecha_c_fic;
+
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
 	 * nombre de Listas
@@ -202,7 +215,6 @@ class PersonaListas Extends core\ClasePropiedades {
 	 */
 	 private $df_inc;
 
-
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
 	/**
@@ -259,6 +271,8 @@ class PersonaListas Extends core\ClasePropiedades {
         $aDades['Encargos'] = $this->sEncargos;
         $aDades['INCORP'] = $this->sIncorporacion;
         $aDades['pertenece_r'] = $this->spertenece_r;
+        $aDades['camb_fic'] = $this->scamb_fic;
+        $aDades['fecha_c_fic'] = $this->dfecha_c_fic;
 		array_walk($aDades, 'core\poner_null');
 
 		if ($bInsert === false) {
@@ -276,7 +290,9 @@ class PersonaListas Extends core\ClasePropiedades {
                     Titu_Estu               = :Titu_Estu,
                     Encargos                = :Encargos,
                     INCORP                  = :INCORP,
-                    pertenece_r             = :pertenece_r";
+                    pertenece_r             = :pertenece_r,
+                    camb_fic                 = :camb_fic,
+                    fecha_c_fic             = :fecha_c_fic";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE Identif='$this->iIdentif'")) === false) {
 				$sClauError = 'Listas.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -295,8 +311,8 @@ class PersonaListas Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			$campos="(ApeNom,Dl,Ctr,Lugar_Naci,Fecha_Naci,Email,Tfno_Movil,Ce,Prof_Carg,Titu_Estu,Encargos,INCORP,pertenece_r)";
-			$valores="(:ApeNom,:Dl,:Ctr,:Lugar_Naci,:Fecha_Naci,:Email,:Tfno_Movil,:Ce,:Prof_Carg,:Titu_Estu,:Encargos,:INCORP:pertenece_r)";
+			$campos="(ApeNom,Dl,Ctr,Lugar_Naci,Fecha_Naci,Email,Tfno_Movil,Ce,Prof_Carg,Titu_Estu,Encargos,INCORP,pertenece_r,camb_fic,fecha_c_fic)";
+			$valores="(:ApeNom,:Dl,:Ctr,:Lugar_Naci,:Fecha_Naci,:Email,:Tfno_Movil,:Ce,:Prof_Carg,:Titu_Estu,:Encargos,:INCORP:pertenece_r,:camb_fic,:fecha_c_fic)";
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Listas.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -543,7 +559,9 @@ class PersonaListas Extends core\ClasePropiedades {
         if (array_key_exists('Titu_Estu',$aDades)) $this->setTitulo_Estudios($aDades['Titu_Estu']);
         if (array_key_exists('Encargos',$aDades)) $this->setEncargos($aDades['Encargos']);
         if (array_key_exists('INCORP',$aDades)) $this->setIncorporacion($aDades['INCORP']);
-        if (array_key_exists('pertenece_r',$aDades)) $this->setIncorporacion($aDades['pertenece_r']);
+        if (array_key_exists('pertenece_r',$aDades)) $this->setPertenece_r($aDades['pertenece_r']);
+        if (array_key_exists('camb_fic',$aDades)) $this->setCam_fic($aDades['camb_fic']);
+        if (array_key_exists('fecha_c_fic',$aDades)) $this->setFecha_c_fic($aDades['fecha_c_fic']);
 	}
 
 	/**
@@ -566,7 +584,9 @@ class PersonaListas Extends core\ClasePropiedades {
 		$this->setTitulo_Estudios('');
 		$this->setEncargos('');
 		$this->setIncorporacion('');
-		$this->setIncorporacion('');
+		$this->setPertenece_r('');
+		$this->setCam_fic('');
+		$this->setFecha_c_fic('');
 		$this->setPrimary_key($aPK);
 	}
 
@@ -867,6 +887,56 @@ class PersonaListas Extends core\ClasePropiedades {
     {
         $this->sIncorporacion = $sIncorporacion;
     }
+    
+
+    /**
+     * @return string
+     */
+    public function getPertenece_r()
+    {
+        return $this->spertenece_r;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCamb_fic()
+    {
+        return $this->scamb_fic;
+    }
+
+    /**
+     * @return \web\DateTimeLocal
+     */
+    public function getFecha_c_fic()
+    {
+        return $this->dfecha_c_fic;
+    }
+
+    /**
+     * @param string $spertenece_r
+     */
+    public function setPertenece_r($spertenece_r)
+    {
+        $this->spertenece_r = $spertenece_r;
+    }
+
+    /**
+     * @param string $scamb_fic
+     */
+    public function setCamb_fic($scamb_fic)
+    {
+        $this->scamb_fic = $scamb_fic;
+    }
+
+    /**
+     * @param \web\DateTimeLocal $dfecha_c_fic
+     */
+    public function setFecha_c_fic($dfecha_c_fic)
+    {
+        $this->dfecha_c_fic = $dfecha_c_fic;
+    }
+
 	
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
