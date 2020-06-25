@@ -143,7 +143,8 @@ class sincroDB {
 	
 	public function getPersonasListas() {
 		if (empty($this->cPersonasListas)) {
-			$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE pertenece_r='$this->region' AND  Dl='$this->dl_listas' AND Identif LIKE '$this->id_tipo%'";
+			$Query = "SELECT * FROM dbo.q_dl_Estudios_b 
+                        WHERE pertenece_r='$this->region' AND  Dl='$this->dl_listas' AND Identif LIKE '$this->id_tipo%' AND camb_fic IS NULL";
 			// todos los de listas
 			$oGesListas = new GestorPersonaListas();	
 			$cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
