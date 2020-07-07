@@ -33,10 +33,11 @@ $("#f_fin").on("click", function() {
 fnjs_cambiar_ubi=function(){
 	var dl_org=$('#dl_org').val();
 	var ssfsv=$('#ssfsv').val();
+	var isfsv=$('#isfsv_val option:selected').val();
 	var array_org=dl_org.split('#');
 	var winPrefs="dependent=yes,width=950,height=700,screenX=200,screenY=200,titlebar=yes,scrollbars=yes";
 	url = "{{ web }}/apps/actividades/controller/actividad_select_ubi.php";
-	param_json = { dl_org : array_org[0], ssfsv: ssfsv };
+	param_json = { dl_org : array_org[0], ssfsv: ssfsv, isfsv: isfsv };
 	var h_param = "{{ h|raw }}";
 	var params = h_param.split('&');
 	for (var i = 0; i < params.length; i++) {       

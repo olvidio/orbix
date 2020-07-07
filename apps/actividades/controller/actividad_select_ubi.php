@@ -13,17 +13,21 @@
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-// Debo incluuirlo aqui por que se abre en una página nueva
-//include_once(core\ConfigGlobal::$dir_estilos.'/todo_en_uno.css.php');
+// Que mande el isvsf, que es el desplegable.
 
+$isfsv = empty($_REQUEST['isfsv'])? '' : $_REQUEST['isfsv'];
 $ssfsv = empty($_REQUEST['ssfsv'])? '' : $_REQUEST['ssfsv'];
-switch($ssfsv){
-	case "sv":
-		$isfsv = 1;
+
+if (empty($isfsv)) {
+    if ($ssfsv == 'sv') $isfsv = 1;
+    if ($ssfsv == 'sf') $isfsv = 2;
+}
+
+switch($isfsv){
+	case 1:
 		$donde_sfsv="AND sv='t'";
 		break;
-	case "sf":
-		$isfsv = 2;
+	case 2:
 		$donde_sfsv="AND sf='t'";
 		break;
 	default:

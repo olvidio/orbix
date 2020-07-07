@@ -278,7 +278,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 
 $oHash1 = new web\Hash();
 $oHash1->setUrl(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_select_ubi.php');
-$oHash1->setCamposForm('dl_org!ssfsv'); 
+$oHash1->setCamposForm('dl_org!ssfsv!isfsv'); 
 $h = $oHash1->linkSinVal();
 
 $oActividadTipo = new actividades\model\ActividadTipo();
