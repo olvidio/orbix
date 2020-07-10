@@ -1,6 +1,8 @@
 <?php
 use actividadcargos\model\entity\ActividadCargo;
 use actividadcargos\model\entity\GestorActividadCargo;
+use actividadcargos\model\entity\GestorCargo;
+use actividades\model\entity\ActividadAll;
 use actividades\model\entity\ActividadDl;
 use actividades\model\entity\GestorActividadDl;
 use actividadescentro\model\entity\GestorCentroEncargado;
@@ -8,12 +10,10 @@ use asistentes\model\entity\AsistenteDl;
 use core\ConfigGlobal;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoSacd;
-use personas\model\entity\GestorPersonaDl;
+use personas\model\entity\GestorPersona;
 use personas\model\entity\PersonaDl;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use web\Periodo;
-use actividades\model\entity\ActividadAll;
-use actividadcargos\model\entity\GestorCargo;
 
 /**
 * Esta página sirve para ejecutar las operaciones de guardar, eliminar, listar...
@@ -207,32 +207,27 @@ switch ($Qque) {
 		}
 		// listado de todos los sacd.
 		// selecciono según la variable selecion ('2'=> n y agd, '4'=> de paso, '8'=> sssc, '16'=>cp)
-		$cond_personas='';
+		$a_Clases = [];
 		if ($Qseleccion & 2) {
-			if (!empty($cond_personas)) $cond_personas.= "|";
-			$cond_personas.= "n|a";
+    		$a_Clases[] = array('clase'=>'PersonaN','get'=>'getPersonas');
+    		$a_Clases[] = array('clase'=>'PersonaAgd','get'=>'getPersonas');
 		}
 		if ($Qseleccion & 4) {
-			if (!empty($cond_personas)) $cond_personas.= "|";
-			$cond_personas.="p";
+            $a_Clases[] = array('clase'=>'PersonaEx','get'=>'getPersonasEx');
 		}
 		if ($Qseleccion & 8) {
-			if (!empty($cond_personas)) $cond_personas.= "|";
-			$cond_personas.="sss";
+            $a_Clases[] = array('clase'=>'PersonaSSSC','get'=>'getPersonas');
 		}
 		if ($Qseleccion & 16) {
-			if (!empty($cond_personas)) $cond_personas.= "|";
-			$cond_personas.="cp_sss";
 		}
-		$cond_personas='^('.$cond_personas.')';
-		unset($aWhere);
-		unset($aOperador);
-		$aWhere['id_tabla'] = $cond_personas;
-		$aOperador['id_tabla'] = '~';
+		
+		$aWhere = [];
+		$aOperador = [];
 		$aWhere['sacd'] = 't';
 		$aWhere['situacion'] = 'A';
 		$aWhere['_ordre'] = 'apellido1,apellido2,nom';
-		$GesPersonas = new GestorPersonaDl();
+		$GesPersonas = new GestorPersona();
+		$GesPersonas->setClases($a_Clases);
 		$cPersonas = $GesPersonas->getPersonas($aWhere,$aOperador);
 		foreach ($cPersonas as $oPersona) {
 			$id_nom=$oPersona->getId_nom();
