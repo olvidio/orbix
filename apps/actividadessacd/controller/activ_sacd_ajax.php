@@ -11,6 +11,7 @@ use core\ConfigGlobal;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoSacd;
 use personas\model\entity\GestorPersona;
+use personas\model\entity\Persona;
 use personas\model\entity\PersonaDl;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use web\Periodo;
@@ -160,7 +161,8 @@ switch ($Qque) {
 			foreach($cActividadCargos as $oActividadCargo) {
 				$id_nom=$oActividadCargo->getId_nom();
 				$id_cargo=$oActividadCargo->getId_cargo();
-				$oPersona = new PersonaDl($id_nom);
+				// OJO puede ser de la dl o de_paso
+				$oPersona = Persona::NewPersona($id_nom);
 				$ap_nom=$oPersona->getApellidosNombre();
 				$id_txt_nom=$Qid_activ."_".$id_nom;
 

@@ -227,7 +227,7 @@ class listaPlazas {
 								continue;
 							}
 							$plazas_pedidas++;
-							$key = $plazas + $plazas_pedidas; // al final de la lista
+							$key = $num + $plazas + $plazas_pedidas; // al final de la lista
 							$a_activ[$id_activ][$key]['cargo']='';
 							$a_activ[$id_activ][$key]['ap_nom']="<span class=\"alert\">$ap_nom ($ctr_dl)</span>";
 						} else { // asignados y confirmados
