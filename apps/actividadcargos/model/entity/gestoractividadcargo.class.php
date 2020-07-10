@@ -4,7 +4,9 @@ namespace actividadcargos\model\entity;
 use actividades\model\entity\Actividad;
 use actividades\model\entity\GestorActividad;
 use asistentes\model\entity\GestorAsistente;
+use core\ConfigGlobal;
 use core;
+use personas\model\entity\Persona;
 use personas\model\entity\PersonaSacd;
 /**
  * GestorActividadCargo
@@ -103,6 +105,10 @@ class GestorActividadCargo Extends core\ClaseGestor {
 	            $msg = sprintf(_("se necesita sincronizar (no está en DB-comun) sacd: %s"),$id_nom);
 	            $msg .= '<br>';
 	            echo $msg;
+                // si estoy dentro y soy sv, puedo mirar la tabla correcta:
+	            if (ConfigGlobal::is_dmz() === FALSE && ConfigGlobal::mi_sfsv() === 1) {
+        	        $oPersona = Persona::NewPersona($id_nom);
+	            }
 	        }
 	        $oPersonaSet->add($oPersona);
 	    }
