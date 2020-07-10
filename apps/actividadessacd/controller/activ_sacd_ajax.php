@@ -12,7 +12,6 @@ use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoSacd;
 use personas\model\entity\GestorPersona;
 use personas\model\entity\Persona;
-use personas\model\entity\PersonaDl;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use web\Periodo;
 
@@ -201,7 +200,8 @@ switch ($Qque) {
                     $cEncargosSacd = $GesEncargoSacd->getEncargosSacd($aWhere,$aOperador);
                     if (!is_array($cEncargosSacd) OR count($cEncargosSacd) < 1) { continue; }
                     $id_nom = $cEncargosSacd[0]->getId_nom();
-                    $oPersona = new PersonaDl($id_nom);
+                    // OJO puede ser de la dl o de_paso
+                    $oPersona = Persona::NewPersona($id_nom);
                     $ap_nom=$oPersona->getApellidosNombre();
                     $sacd_posibles.="<tr><td><span class=link id=$id_nom onclick=fnjs_asignar_sacd('".$Qid_activ."','$id_nom') >$num_orden * $ap_nom</span></td></tr>";
                 }
@@ -416,7 +416,8 @@ switch ($Qque) {
 					$cCargosActividad = $GesCargoActiv->getActividadCargos($aWhere,$aOperador);
 					foreach($cCargosActividad as $oActividadCargo) {;
 						$id_nom=$oActividadCargo->getId_nom();
-						$oPersona = new PersonaDl($id_nom);
+                        // OJO puede ser de la dl o de_paso
+                        $oPersona = Persona::NewPersona($id_nom);
 						$sacds[] = array ('id_nom'=>$id_nom,
 									'id_cargo'=>$oActividadCargo->getId_cargo(),
 									'ap_nom'=>$oPersona->getApellidosNombre()
