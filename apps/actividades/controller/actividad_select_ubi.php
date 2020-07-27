@@ -46,10 +46,13 @@ if (!empty($_REQUEST['dl_org'])) {
 
 // desplegable región
 $oDbl = $GLOBALS['oDBPC'];
-$sql_dl_lugar="SELECT 'dl|'||u.dl,u.nombre_dl FROM xu_dl u WHERE status='t' ";
+// $sql_dl_lugar="SELECT 'dl|'||u.dl,u.nombre_dl FROM xu_dl u WHERE status='t' ";
+// Ahora hay que quitar las cr, que se han puesto como dl:
+$sql_dl_lugar="SELECT 'dl|'||u.dl,u.nombre_dl FROM xu_dl u WHERE status='t' AND u.dl !~ '^cr' ";
 $sql_r_lugar="SELECT 'r|'||u.region,u.nombre_region FROM xu_region u WHERE status='t' ";
 $sql_u_lugar=$sql_dl_lugar." UNION ".$sql_r_lugar." ORDER BY 2";
 $oDBSt_dl_r_lugar=$oDbl->query($sql_u_lugar);
+//$oDBSt_dl_r_lugar=$oDbl->query($sql_dl_lugar);
 
 $oDesplRegion = new web\Desplegable();
 $oDesplRegion->setNombre('filtro_lugar');
