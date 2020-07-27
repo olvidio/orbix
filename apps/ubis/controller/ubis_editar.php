@@ -31,7 +31,12 @@ $isfsv = ConfigGlobal::mi_sfsv();
 // Para incluir o no la propia dl
 $Bdl = 't';
 $oGesDl = new GestorDelegacion();
-$oDesplDelegaciones = $oGesDl->getListaDelegacionesURegiones($isfsv,$Bdl);
+// si es ctr, dlbf, si es casa dlb
+if ($Qobj_pau == 'Casa') {
+    $oDesplDelegaciones = $oGesDl->getListaDelegacionesURegiones(1,$Bdl);
+} else {
+    $oDesplDelegaciones = $oGesDl->getListaDelegacionesURegiones($isfsv,$Bdl);
+}
 $oDesplDelegaciones->setNombre('dl');
 
 $gesReiones = new GestorRegion();
@@ -84,7 +89,10 @@ if (!empty($Qnuevo)) {
 	// Aunque el tipo sea ctrdl, si es diferente a la mia, lo trato como ctrex.
 	if ($dl != core\ConfigGlobal::mi_delef()) {
 		if ($tipo_ubi == 'ctrdl') $tipo_ubi = 'ctrex';
-		if ($tipo_ubi == 'cdcdl') $tipo_ubi = 'cdcex';
+		// para las casas
+		if ($dl != core\ConfigGlobal::mi_dele()) {
+		  if ($tipo_ubi == 'cdcdl') $tipo_ubi = 'cdcex';
+		}
 	}
 }
 
@@ -258,8 +266,9 @@ switch ($tipo_ubi) {
         break;
     case "cdcdl":
     case "cdcex":
+        // OJO LAS CASAS pueden ser comunes. la dl es sin 'f'.
         if ($tipo_ubi=="cdcdl") {
-            $dl = empty($dl)? core\ConfigGlobal::mi_delef() : $dl;
+            $dl = empty($dl)? core\ConfigGlobal::mi_dele() : $dl;
             $region = empty($region)? core\ConfigGlobal::mi_region() : $region;
         }
 
