@@ -43,7 +43,6 @@ fnjs_cambiar_ubi=function(){
 	var isfsv=$('#isfsv_val option:selected').val();
 	if (!isfsv) isfsv='';
 	var array_org=dl_org.split('#');
-	debugger;
 	var winPrefs="dependent=yes,width=950,height=700,screenX=200,screenY=200,titlebar=yes,scrollbars=yes";
 	var url = "{{ web }}/apps/actividades/controller/actividad_select_ubi.php";
 	var param_json = { dl_org : array_org[0], ssfsv: ssfsv, isfsv: isfsv };
