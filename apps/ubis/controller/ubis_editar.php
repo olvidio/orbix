@@ -32,7 +32,7 @@ $isfsv = ConfigGlobal::mi_sfsv();
 $Bdl = 't';
 $oGesDl = new GestorDelegacion();
 // si es ctr, dlbf, si es casa dlb
-if ($Qobj_pau == 'Casa') {
+if ($Qobj_pau == 'CasaDl' || $Qobj_pau == 'Casa' || $Qobj_pau == 'CasaEx') {
     $oDesplDelegaciones = $oGesDl->getListaDelegacionesURegiones(1,$Bdl);
 } else {
     $oDesplDelegaciones = $oGesDl->getListaDelegacionesURegiones($isfsv,$Bdl);
