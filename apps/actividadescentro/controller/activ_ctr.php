@@ -1,6 +1,7 @@
 ﻿<?php 
 use web\Hash;
 use web\PeriodoQue;
+use core\ConfigGlobal;
 
 /**
 * Esta página lista las actividades de s y sg con los centros encargados.
@@ -71,6 +72,22 @@ $h_orden = $oHashOrden->linkSinVal();
 
 $oHash = new Hash();
 $oHash->setCamposForm('empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
+
+// $Qtipo viene por menú. Para la sf, debería ser sfsg pero en el menu está sólo sg:
+if (ConfigGlobal::mi_sfsv() == 2) {
+    switch ($Qtipo){
+        case 'sg':
+            $Qtipo = 'sfsg';
+            break;
+        case 'sr':
+            $Qtipo = 'sfsr';
+            break;
+        case 'nagd':
+            $Qtipo = 'sfnagd';
+            break;
+    }
+}
+
 $a_camposHidden = array(
     'que' => 'lista_activ',
     'tipo' => $Qtipo,
