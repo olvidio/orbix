@@ -730,16 +730,17 @@ class PersonaNota Extends core\ClasePropiedades {
 				$num_local = $a->format($num);
                 $max = $this->getNota_max();
                 $nota_txt = $num_local.'/'.$max;
-				if ($max == 10) {
-					if ($num > 9.5) {
+				if ($max >= 1) {
+				    $nota_x_uno = $num/$max;
+					if ($nota_x_uno > 0.95) {
 						$nota_txt = _("Summa cum laude") . ' (' .$nota_txt .')'; 
-					} elseif ($num > 8.5) {
+					} elseif ($nota_x_uno > 0.85) {
 						$nota_txt = _("Magna cum laude") . ' (' .$nota_txt .')'; 
-					} elseif ($num > 7.5) {
+					} elseif ($nota_x_uno > 0.75) {
 						$nota_txt = _("Cum laude") . ' (' .$nota_txt .')'; 
-					} elseif ($num > 6.5) {
+					} elseif ($nota_x_uno > 0.65) {
 						$nota_txt = _("Bene probatus") . ' (' .$nota_txt .')'; 
-					} elseif ($num >= 6) {
+					} elseif ($nota_x_uno >= 0.6) {
 						$nota_txt = _("Probatus") . ' (' .$nota_txt .')'; 
 					} else {
 						$nota_txt = _("Non probatus") . ' (' .$nota_txt .')'; 
