@@ -66,6 +66,14 @@ $Qdepende = (string) \filter_input(INPUT_POST, 'depende');
 $Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
 $Qprint = (integer) \filter_input(INPUT_POST, 'print');
 
+// No uso el que viene por POST porque en la lista de personas si se 
+// cambia el permiso también afecta a otros botones.
+if ($_SESSION['oPerm']->have_perm_oficina('est')) {
+    $Qpermiso = 3;
+}
+
+
+
 // Para cr stgr
 if (ConfigGlobal::soy_region()) {
 	$Qprint = 1;
@@ -110,12 +118,6 @@ foreach ($a_tipos_dossier as $id_tipo_dossier => $nom_dossier) {
     // 3: lectura y escritura
     $aPerm[$nom_dossier] = $perm_a;
 }
-
-/*
-if ($_SESSION['oPerm']->have_perm_oficina('est')) {
-    $Qpermiso = 3;
-}
-*/
 
 $aWhere = array('id_nom'=>$id_nom,'_ordre'=>'f_nombramiento');
 $aOperador = array();
