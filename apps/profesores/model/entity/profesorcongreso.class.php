@@ -601,9 +601,12 @@ class ProfesorCongreso Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'tipo'));
 		$oDatosCampo->setEtiqueta(_("tipo"));
-		 $oDatosCampo->setTipo('array');
-        $oDatosCampo->setLista(array( 1=> _("cv"), 2=> _("congreso"), 3=> _("reunión") ));
+		$oDatosCampo->setTipo('array');
+        $oDatosCampo->setLista([ 1 => _("cv"),
+                                 2 => _("congreso"),
+                                 3 => _("reunión"),
+                                 4 => _("claustro"),
+                              ]);
 		return $oDatosCampo;
 	}
 }
-?>
