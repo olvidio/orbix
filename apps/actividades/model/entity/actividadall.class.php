@@ -531,6 +531,11 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @param integer iid_tipo_activ='' optional
 	 */
 	function setId_tipo_activ($iid_tipo_activ='') {
+	    // para evitar errores.
+	    if (empty($iid_tipo_activ)) {
+            $this->iid_tipo_activ = $iid_tipo_activ;
+            return;
+	    }
 		// comprovo que té 6 digits
 		if ( empty($iid_tipo_activ) OR (($iid_tipo_activ/100000) < 1) ) {
 			$serr = "id_tipo_activ incorrecto: $iid_tipo_activ";
