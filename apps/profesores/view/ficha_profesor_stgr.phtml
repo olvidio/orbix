@@ -169,7 +169,7 @@ foreach($cProfesorCongresos as $oProfesorCongreso) {
     $f_ini = $oProfesorCongreso->getF_ini()->getFromLocal();
     $f_fin = $oProfesorCongreso->getF_fin()->getFromLocal();
     
-	$array_tipo_c = $oProfesorCongreso->getDatosTipo()->getArgument();
+	$array_tipo_c = $oProfesorCongreso->getDatosTipo()->getLista();
 	$tipo_congreso=$array_tipo_c[$tipo];
     echo "<tr><td>$tipo_congreso</td><td>$congreso</td><td>$lugar</td><td>$f_ini</td><td>$f_fin</td><td>$organiza</td></tr>";
 }
