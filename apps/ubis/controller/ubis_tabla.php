@@ -362,6 +362,31 @@ $sOperadorD = urlsafe_b64encode(serialize($aOperadorD));
 $sGestorDir = urlsafe_b64encode(serialize($GestorDir));
 
 //si no existe la ficha, hacer una nueva	
+$nueva_ficha = '';
+$pagina_link = '';
+if ($Qtipo=="tot" || $Qloc=="tot") {
+    if (is_array($cUbisTot) && count($cUbisTot) == 0) {
+        $nueva_ficha = 'especificar';
+        $pagina_link = web\Hash::link('apps/ubis/controller/ubis_buscar.php?'.http_build_query(array('simple'=>'2'))); 
+    }
+} else {
+    $nueva_ficha = 'nueva';
+	$nombre_ubi=$Qnombre_ubi;
+	$a_link = array('sGestor' => $sGestor,
+					'tipo_ubi' => $tipo_ubi,
+					'nombre_ubi' => $Qnombre_ubi,
+					'nuevo' => 1,
+					'dl' => $Qdl,
+					'region' => $Qregion,
+					); 
+    $pagina_link = Hash::link(ConfigGlobal::getWeb().'/apps/ubis/controller/ubis_editar.php?'.http_build_query($a_link));
+    if (is_array($cUbisTot) && count($cUbisTot) == 0) {
+        $nueva_ficha = 'aviso';
+    }
+}
+array_multisort($a_region,SORT_LOCALE_STRING, SORT_ASC,$a_nom,SORT_LOCALE_STRING, SORT_ASC, $cUbisTot);
+
+/*
 if (is_array($cUbisTot) && count($cUbisTot) == 0) {
 	$nombre_ubi=$Qnombre_ubi;
 	$a_link = array('sGestor' => $sGestor,
@@ -400,6 +425,7 @@ if (is_array($cUbisTot) && count($cUbisTot) == 0) {
 } else {
 	array_multisort($a_region,SORT_LOCALE_STRING, SORT_ASC,$a_nom,SORT_LOCALE_STRING, SORT_ASC, $cUbisTot);
 }
+*/
 
 /*
 * Defino un array con los datos actuales, para saber volver después de navegar un rato
@@ -499,6 +525,8 @@ $a_campos = [
 			'oHash' => $oHash,
 			'titulo' => $titulo,
 			'oTabla' => $oTabla,
+            'nueva_ficha' => $nueva_ficha,
+            'pagina_link' => $pagina_link,
 			];
 
 $oView = new core\View('ubis\controller');

@@ -34,3 +34,35 @@ fnjs_borrar=function(formulario){
 <h2 class=titulo><?= $titulo; ?></h2>
 <?= $oTabla->mostrar_tabla(); ?>
 </form>
+<?php
+switch ($nueva_ficha) {
+    case 'especificar':
+        ?>
+        <span style="font-size:large">
+		<?= _("no existe este centro o casa"); ?>.<br>
+		<br>
+		<?= _("OJO!: para crear un centro/casa debe especificar el tipo de centro/casa") ?>.
+		<br>
+		<?= _("Para ello debe buscar a través de 'ver más opciones' definiendo el tipo y la localización distinto a 'todos'."); ?>
+		<br>
+	    </span>
+	    <br>
+	    <input id="b_mas" name="b_mas" TYPE="button" VALUE="<?= _("buscar otras opciones"); ?>" onclick="fnjs_update_div('#main','<?= $pagina_link ?>')" >
+        <?php
+        break;
+    case 'aviso':
+        ?>
+        <span style="font-size:large">
+        <?= _("no existe este nombre de centro o casa. Puede crear una nueva ficha"); ?>.
+        </span>
+        <?php
+    case 'nueva':
+        ?>
+        <br>
+        <input id="b_mas" name="b_mas" TYPE="button" VALUE="<?= _("nuevo centro o casa"); ?>" onclick="fnjs_update_div('#main','<?= $pagina_link ?>')" >
+        <?php
+        break;
+    default:
+        ?>
+        <?php
+}
