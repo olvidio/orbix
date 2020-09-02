@@ -101,7 +101,7 @@ class Resumen Extends core\ClasePropiedades {
 		
 		// En el caso cr-stgr, se consulta la tabla de notas
 		if (\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) {
-            $this->tablaNotas = 'e_notas';
+            $this->tablaNotas = 'publicv.e_notas';
 		} else {
             $this->tablaNotas = 'e_notas_dl';
 		}
@@ -204,8 +204,8 @@ class Resumen Extends core\ClasePropiedades {
 
 		$any = $this->getAnyIniCurs() + 1; //para los incorporados a partir del 1-jun.
 
-		$sqlDelete="DELETE FROM $tabla";
-		$sqlCreate="CREATE TABLE $tabla(
+		$sqlDelete="TRUNCATE FROM $tabla";
+		$sqlCreate="CREATE TABLE IF NOT EXISTS $tabla(
 										id_nom int4 NOT NULL PRIMARY KEY,
 										id_tabla char(6),
 										nom varchar(40),
@@ -225,7 +225,7 @@ class Resumen Extends core\ClasePropiedades {
 		
 		// En el caso cr-stgr, Hay que permitir duplicados (PRIMARY KEY)
 		if (\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) {
-            $sqlCreate="CREATE TABLE $tabla(
+            $sqlCreate="CREATE TABLE IF NOT EXISTS $tabla(
 										id_nom int4 NOT NULL,
 										id_tabla char(6),
 										nom varchar(40),
@@ -245,11 +245,11 @@ class Resumen Extends core\ClasePropiedades {
 		    
 		}
 	
-		if( !$oDbl->query($sqlDelete) ) {
-				$oDbl->query($sqlCreate);
-				$oDbl->query("CREATE INDEX $tabla"."_apellidos"." ON $tabla (apellido1,apellido2,nom)");
-				$oDbl->query("CREATE INDEX $tabla"."_stgr"." ON $tabla (stgr)");
-		}
+		$oDbl->query($sqlCreate);
+		$oDbl->query("CREATE INDEX IF NOT EXISTS $tabla"."_apellidos"." ON $tabla (apellido1,apellido2,nom)");
+		$oDbl->query("CREATE INDEX IF NOT EXISTS $tabla"."_stgr"." ON $tabla (stgr)");
+		$oDbl->query($sqlDelete);
+
 		/*
 		   * OOJO De momento estos campos no existen:
 				f_o date,
@@ -330,8 +330,8 @@ class Resumen Extends core\ClasePropiedades {
 		$nf=$statement->rowCount();
 		
 		//Ahora las notas
-		$sqlDelete="DELETE FROM $notas";
-		$sqlCreate="CREATE TABLE $notas(
+		$sqlDelete="TRUNCATE FROM $notas";
+		$sqlCreate="CREATE TABLE IF NOT EXISTS $notas(
 										id_nom int4 NOT NULL,
 										id_asignatura int4 NOT NULL, 
 										id_nivel int4 NOT NULL,
@@ -343,11 +343,10 @@ class Resumen Extends core\ClasePropiedades {
 										PRIMARY KEY (id_nom,id_asignatura)
 										 )";
 
-		if (!$oDbl->query($sqlDelete) ) {
-				$oDbl->query($sqlCreate);
-				$oDbl->query("CREATE INDEX $notas"."_nivel"." ON $notas (id_nivel)");
-				$oDbl->query("CREATE INDEX $notas"."_sup"." ON $notas (superada)");
-		}
+        $oDbl->query($sqlCreate);
+        $oDbl->query("CREATE INDEX IF NOT EXISTS $notas"."_nivel"." ON $notas (id_nivel)");
+        $oDbl->query("CREATE INDEX IF NOT EXISTS $notas"."_sup"." ON $notas (superada)");
+		$oDbl->query($sqlDelete);
 
 		$gesNotas = new entity\gestorNota();
 		$a_superadas = $gesNotas->getArrayNotasSuperadas();
