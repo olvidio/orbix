@@ -60,6 +60,8 @@ class Resumen Extends core\ClasePropiedades {
 	 protected $sNomNotas;
 	 protected $sNomPersonas;
 	 protected $sNomAsignaturas;
+	 // para las cr, se mira directamente en la table de 'e_notas', no 'e_notas_dl'.
+	 protected $tablaNotas;
 
 
 	 /* CONSTRUCTOR -------------------------------------------------------------- */
@@ -96,6 +98,13 @@ class Resumen Extends core\ClasePropiedades {
 		$this->setNomNotas($notas);
 		$this->setNomAsignaturas($asignaturas);
 		$this->setNomPersonas($personas);
+		
+		// En el caso cr-stgr, se consulta la tabla de notas
+		if (\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) {
+            $this->tablaNotas = 'e_notas';
+		} else {
+            $this->tablaNotas = 'e_notas_dl';
+		}
 
 	}
 
@@ -213,6 +222,28 @@ class Resumen Extends core\ClasePropiedades {
 										ce_fin int2,
 										sacd bool,
 										ctr text )";
+		
+		// En el caso cr-stgr, Hay que permitir duplicados (PRIMARY KEY)
+		if (\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) {
+            $sqlCreate="CREATE TABLE $tabla(
+										id_nom int4 NOT NULL,
+										id_tabla char(6),
+										nom varchar(40),
+										apellido1  varchar(25),
+										apellido2  varchar(25),
+										stgr char(2),
+										situacion char(1),
+										f_situacion date, 
+										f_o date,
+										f_fl date,
+										f_orden date,
+										ce_lugar varchar(40),
+										ce_ini int2,
+										ce_fin int2,
+										sacd bool,
+										ctr text )";
+		    
+		}
 	
 		if( !$oDbl->query($sqlDelete) ) {
 				$oDbl->query($sqlCreate);
@@ -244,6 +275,9 @@ class Resumen Extends core\ClasePropiedades {
 				WHERE (p.situacion='A' AND (p.f_situacion < '$fincurs' OR p.f_situacion IS NULL))
 					 OR (p.situacion='D' AND p.f_situacion $curs)
 					 OR (p.situacion!='A' AND p.f_situacion > '$fincurs')
+                ON CONFLICT (p.id_nom) 
+                DO 
+                UPDATE SET p.apellido1 = '(dup) ' || EXCLUDED.p.apellido1 ;
 				";
 		//echo "sql: $sqlLlenar<br>";
 		$oDbl->query($sqlLlenar);
@@ -284,7 +318,7 @@ class Resumen Extends core\ClasePropiedades {
 	
 		//Pongo 'b' en stgr a los que han terminado el bienio este curso
 		$ssql="UPDATE $tabla SET stgr='b'
-				FROM e_notas_dl n
+				FROM $this->tablaNotas n
 				WHERE $tabla.id_nom=n.id_nom AND n.id_asignatura=9999 AND n.f_acta $curs
 				 "; 
 		$statement=$oDbl->query($ssql);
@@ -292,7 +326,7 @@ class Resumen Extends core\ClasePropiedades {
 		
 		//Pongo 'c2' en stgr a los que han terminado el cuadrienio este curso
 		$ssql="UPDATE $tabla SET stgr='c2'
-				FROM e_notas_dl n
+				FROM $this->tablaNotas n
 				WHERE $tabla.id_nom=n.id_nom AND n.id_asignatura=9998 AND n.f_acta $curs
 				 "; 
 		$statement=$oDbl->query($ssql);
@@ -698,7 +732,7 @@ class Resumen Extends core\ClasePropiedades {
                 WHERE p.stgr ~ '^c'
                 EXCEPT
                 SELECT t.id_nom, t.nom, t.apellido1, t.apellido2, t.ctr
-                FROM $tabla t JOIN e_notas_dl n USING (id_nom)
+                FROM $tabla t JOIN $this->tablaNotas n USING (id_nom)
                 WHERE n.id_nivel=9999
                 ORDER BY 3
                 ";

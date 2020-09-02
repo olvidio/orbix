@@ -31,7 +31,8 @@ $a_ce = array('dlb'=>'Barcelona',
 				'dlst' => 'Santiago',
 				'dlv' => 'Valladolid',
 				'dlva' => 'Valencia',
-				'dlz' => 'Zaragoza'
+				'dlz' => 'Zaragoza',
+                'H' => 'región stgr H',
 	);
 $mi_dl = core\ConfigGlobal::mi_delef();
 $ce_lugar = $a_ce[$mi_dl];

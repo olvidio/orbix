@@ -175,6 +175,7 @@ if ((\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) && !iss
 				'p_numerarios',
 				'personas_dl',
 				'd_teleco_personas_dl',
+				'u_centros_dl',
 			];
 	    /*
 		$views = [
