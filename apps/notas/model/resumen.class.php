@@ -1104,7 +1104,7 @@ class Resumen Extends core\ClasePropiedades {
 		$personas = $this->getNomPersonas();
 		
 		// Finalmente no distingo porque los cojo todos de la tabla padre (personas_dl)
-		$sqlDelete="DROP TABLE $tabla";
+		$sqlDelete="DROP TABLE IF EXISTS $tabla";
 		$oDbl->query($sqlDelete);
 		$sqlCreate="CREATE TABLE $tabla AS
 						SELECT DISTINCT  p.id_nom,p.nom,p.apellido1,p.apellido2,u.nombre_ubi as ctr
