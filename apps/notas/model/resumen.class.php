@@ -275,9 +275,6 @@ class Resumen Extends core\ClasePropiedades {
 				WHERE (p.situacion='A' AND (p.f_situacion < '$fincurs' OR p.f_situacion IS NULL))
 					 OR (p.situacion='D' AND p.f_situacion $curs)
 					 OR (p.situacion!='A' AND p.f_situacion > '$fincurs')
-                ON CONFLICT (p.id_nom) 
-                DO 
-                UPDATE SET p.apellido1 = '(dup) ' || EXCLUDED.p.apellido1 ;
 				";
 		//echo "sql: $sqlLlenar<br>";
 		$oDbl->query($sqlLlenar);
