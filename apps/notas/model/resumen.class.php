@@ -1217,7 +1217,12 @@ class Resumen Extends core\ClasePropiedades {
 
 					$nom_activ = '';
 					if (!empty($id_activ)) {
-						$oActividad = new actividades\Actividad($id_activ);
+                        // En el caso cr-stgr, se consulta la tabla global.
+                        if (\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) {
+                            $oActividad = new actividades\ActividadAll($id_activ);
+                        } else {
+                            $oActividad = new actividades\Actividad($id_activ);
+                        }
 						$nom_activ = $oActividad->getNom_activ();
 					}
 					$nombres[$id_nom] = array('nom'=>$nom,
