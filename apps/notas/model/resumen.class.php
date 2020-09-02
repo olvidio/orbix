@@ -204,7 +204,7 @@ class Resumen Extends core\ClasePropiedades {
 
 		$any = $this->getAnyIniCurs() + 1; //para los incorporados a partir del 1-jun.
 
-		$sqlDelete="TRUNCATE FROM $tabla";
+		$sqlDelete="TRUNCATE TABLE $tabla";
 		$sqlCreate="CREATE TABLE IF NOT EXISTS $tabla(
 										id_nom int4 NOT NULL PRIMARY KEY,
 										id_tabla char(6),
@@ -330,7 +330,7 @@ class Resumen Extends core\ClasePropiedades {
 		$nf=$statement->rowCount();
 		
 		//Ahora las notas
-		$sqlDelete="TRUNCATE FROM $notas";
+		$sqlDelete="TRUNCATE TABLE $notas";
 		$sqlCreate="CREATE TABLE IF NOT EXISTS $notas(
 										id_nom int4 NOT NULL,
 										id_asignatura int4 NOT NULL, 
