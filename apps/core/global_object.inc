@@ -177,12 +177,7 @@ if ((\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) && !iss
 				'd_teleco_personas_dl',
 				'u_centros_dl',
 			];
-	    /*
-		$views = [
-				'p_agregados',
-			];
-			*/
-		
+	    		
         if ($user_sfsv == 1) {
 		    $schema = $esquemav;
 		} elseif ($user_sfsv == 2) {

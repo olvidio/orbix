@@ -120,6 +120,9 @@ class DBView {
 	}
 	
 	public function Create() {
+	    /*
+	     * OJO, hay que dar permisos...
+	     */
 	    $oDbl = $this->getoDbl(); 
 	    $nameView = " \"$this->sSchema\".$this->sView";
 	    
