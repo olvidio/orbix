@@ -242,7 +242,6 @@ class Resumen Extends core\ClasePropiedades {
 										ce_fin int2,
 										sacd bool,
 										ctr text )";
-		    
 		}
 	
 		$oDbl->query($sqlCreate);
@@ -276,6 +275,21 @@ class Resumen Extends core\ClasePropiedades {
 					 OR (p.situacion='D' AND p.f_situacion $curs)
 					 OR (p.situacion!='A' AND p.f_situacion > '$fincurs')
 				";
+		// En el caso cr-stgr, Especifico la dl.
+		if (\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) {
+            $sqlLlenar="INSERT INTO $tabla 
+				SELECT p.id_nom,p.id_tabla,p.nom,p.apellido1,p.apellido2,p.stgr,
+				p.situacion,p.f_situacion,
+				NULL,NULL,NULL,
+				p.ce_lugar,p.ce_ini,p.ce_fin,
+				p.sacd,u.nombre_ubi || ' (' || u.dl || ')'
+				FROM $personas p LEFT JOIN u_centros_dl u ON (p.id_ctr = u.id_ubi)
+				WHERE (p.situacion='A' AND (p.f_situacion < '$fincurs' OR p.f_situacion IS NULL))
+					 OR (p.situacion='D' AND p.f_situacion $curs)
+					 OR (p.situacion!='A' AND p.f_situacion > '$fincurs')
+				";
+
+		}
 		//echo "sql: $sqlLlenar<br>";
 		$oDbl->query($sqlLlenar);
 
