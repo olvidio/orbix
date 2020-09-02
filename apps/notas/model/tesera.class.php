@@ -31,13 +31,13 @@ class Tesera {
 		$any = date('Y');
 		$mes = date('m');
 
-		if ($mes>9) {
-			$any2=$any-1;
+		if ($mes > $fin_m) {
+			$any2 = $any-1;
 			$inicio = "$any2-$ini_m-$ini_d";	
 			$fin = "$any-$fin_m-$fin_d";
 			$this->curso_txt = "$any2-$any";
 		} else {
-			$any2=$any-2;
+			$any2 = $any-2;
 			$any--;
 			$inicio = "$any2-$ini_m-$ini_d";	
 			$fin = "$any-$fin_m-$fin_d";
