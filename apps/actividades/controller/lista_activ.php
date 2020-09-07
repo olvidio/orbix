@@ -226,7 +226,7 @@ if (!empty($Qperiodo) && $Qperiodo == 'desdeHoy') {
     $aWhere['f_fin'] = "'$inicioIso','$finIso'";
     $aOperador['f_fin'] = 'BETWEEN';
 } else {
-    $aWhere['f_fin'] = "'$inicioIso','$finIso'";
+    $aWhere['f_ini'] = "'$inicioIso','$finIso'";
     $aOperador['f_ini'] = 'BETWEEN';
 }
 // dl Organizadora.
@@ -234,7 +234,6 @@ if (!empty($Qdl_org)) {
     $aWhere['dl_org'] = $Qdl_org;
 }
 
-//echo"query:$query <br>";
 $aWhere['_ordre']='f_ini';
 $GesActividades=new GestorActividad();
 $cActividades = $GesActividades->getActividades($aWhere,$aOperador);
