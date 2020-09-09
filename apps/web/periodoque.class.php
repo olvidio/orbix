@@ -120,11 +120,11 @@ class PeriodoQue {
 			$(document).ready(funjs_activar_fecha);
 			</script>';
 
-		$sHtml.='<td>';
+		//$sHtml.='<td>';
 		//-- para que funcione el script de 'omplir_limits_dates' 
 		//$sHtml.='<input type=hidden id=iasistentes_val name=iasistentes_val value="x">';
 		//$sHtml.='<input type=hidden id=iactividad_val name=iactividad_val value="x">';
-		$sHtml.='</td>';
+		//$sHtml.='</td>';
 		if (isset($this->sAntes)) {
 			$sHtml.='<td>'.$this->sAntes.'</td>';
 		}

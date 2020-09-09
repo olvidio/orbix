@@ -174,7 +174,6 @@ class Lista {
                     // si es una fecha, pongo la clase fecha, para exportar a excel...
                     $formato_fecha = DateTimeLocal::getFormat();
                     if ($formato_fecha === 'd/m/Y') {
-                        //if (preg_match("/^(\d)+[\/-]\d\d[\/-](\d\d)+$/",$valor)) {
                         if (preg_match("/^(\d)+[\/-](\d)+[\/-](\d\d)+$/",$valor)) {
                             list( $d,$m,$y) = preg_split('/[:\/\.-]/',$valor);
                             $es_fecha = TRUE;
@@ -999,7 +998,7 @@ class Lista {
                     }
                 } else {
                     // si es una fecha, pongo la clase fecha, para exportar a excel...
-                    if (preg_match("/^(\d)+[\/-]\d\d[\/-](\d\d)+$/",$valor)) {
+                    if (preg_match("/^(\d)+[\/-](\d)+[\/-](\d\d)+$/",$valor)) {
                         list( $d,$m,$y) = preg_split('/[:\/\.-]/',$valor);
                         $fecha_iso=date("Y-m-d",mktime(0,0,0,$m,$d,$y));
                         $tbody.="<td class='fecha' fecha_iso='$fecha_iso'>$valor</td>";
@@ -1150,7 +1149,7 @@ class Lista {
                         }
                     } else {
                         // si es una fecha, pongo la clase fecha, para exportar a excel...
-                        if (preg_match("/^(\d)+[\/-]\d\d[\/-](\d\d)+$/",$valor)) {
+                        if (preg_match("/^(\d)+[\/-](\d+)[\/-](\d\d)+$/",$valor)) {
                             list( $d,$m,$y) = preg_split('/[:\/\.-]/',$valor);
                             $fecha_iso=date("Y-m-d",mktime(0,0,0,$m,$d,$y));
                             $tbody.="<td class='fecha' fecha_iso='$fecha_iso'>$valor</td>";
@@ -1176,6 +1175,69 @@ class Lista {
         $tt.="</tbody></table>\n";
         
         return $tt;
+    }
+    
+    public function getCsv($filename) {
+        $a_cabeceras = $this->aCabeceras;
+        $a_valores = $this->aDatos;
+        
+        // http headers for downloads
+        header("Pragma: public");
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Cache-Control: public");
+        header("Content-Description: File Transfer");
+        header("Content-type: application/octet-stream");
+        header("Content-Disposition: attachment; filename=\"".$filename."\"");
+        header("Content-Transfer-Encoding: binary");
+        
+        $fp = fopen('php://output', 'w');
+        foreach($a_valores as $num_fila=>$fila) {
+            $a_valores_simple = [];
+            ksort($fila);
+            //$tbody.="<tr id='$id_fila' class='$clase'>";
+            foreach ($fila as $col=>$valor) {
+                if ($col=="clase") { continue; }
+                if ($col=="order") { continue; }
+                if ($col=="select") { continue; }
+                if ($col=="sel") {
+                    if (empty($b)) continue; // si no hay botones (por permisos...) no tiene sentido el checkbox
+                    $col="";
+                    if(is_array($valor)) {
+                        if (!empty($valor['select'])) { $chk=$valor['select']; } else { $chk=""; }
+                        $id=$valor['id'];
+                    } else {
+                        $id=$valor;
+                    }
+                    if (!empty($id)) {
+                        if ( in_array($id, $a_valores_chk)) { $chk ='checked'; } else { $chk = ''; }
+                        //$tbody.="<td tipo='sel' title='". _("clic para seleccionar")."'>";
+                        //$tbody.="<input class='sel' type='checkbox' $chk  name='sel[]' id='a$id' value='$id'>";
+                        $a_valores_simple[] = $id;
+                        //$tbody.="</td>";
+                    } else { // no hay que dibujar el checkbox, pero si la columna
+                        //$tbody.="<td></td>";
+                    }
+                } elseif(is_array($valor)) {
+                    $val=$valor['valor'];
+                    $a_valores_simple[] = $val;
+                } else {
+                    // si es una fecha, pongo la clase fecha, para exportar a excel...
+                    if (preg_match("/^(\d)+[\/-](\d)+[\/-](\d\d)+$/",$valor)) {
+                        list( $d,$m,$y) = preg_split('/[:\/\.-]/',$valor);
+                        $fecha_iso=date("Y-m-d",mktime(0,0,0,$m,$d,$y));
+                        //$tbody.="<td class='fecha' fecha_iso='$fecha_iso'>$valor</td>";
+                        $a_valores_simple[] = $fecha_iso;
+                    } else {
+                        //$tbody.="<td>$valor</td>";
+                        $a_valores_simple[] = $valor;
+                    }
+                }
+            }
+            fputcsv($fp, $a_valores_simple, "\t");
+        }  
+        fclose($fp);
+        
     }
     
     /* METODES GET i SET ----------------------------------------------------------*/

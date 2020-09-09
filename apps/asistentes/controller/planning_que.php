@@ -26,10 +26,12 @@ $oPosicion->recordar();
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miSfsv = core\ConfigGlobal::mi_sfsv();
 
-if (date('m')>9) {
-	$periodo_txt= _("(por defecto: periodo desde 1/10 hasta 31/5)"); 
+$mes = date('m');
+$fin_m = $_SESSION['oConfig']->getMesFinStgr();
+if ($mes > $fin_m) {
+	$periodo_txt= sprintf(_("(por defecto: periodo desde 1/%s hasta 31/5)"),$fin_m+1); 
 } else {
-	$periodo_txt= _("(por defecto: periodo desde 1/6 hasta 30/9)"); 
+	$periodo_txt= sprintf(_("(por defecto: periodo desde 1/6 hasta 30/%s)"),$fin_m+1);
 }
 $Qtipo = (string) \filter_input(INPUT_POST, 'tipo');
 $Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');

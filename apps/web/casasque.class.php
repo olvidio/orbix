@@ -31,6 +31,12 @@ class CasasQue {
 	 * @var object tipo Desplegble
 	 */
 	 private $oDesplCasas;
+	 
+	 /**
+	  * 
+	  * @var array
+	  */
+	 private $sSeleccionados;
 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
@@ -53,6 +59,10 @@ class CasasQue {
 		$oSelects = new DesplegableArray('',$aOpcionesCasas,'id_cdc');
 		$oSelects->setBlanco('t');
 		$oSelects->setAccionConjunto('fnjs_mas_casas(event)');
+		if (!empty($this->sSeleccionados)) {
+		    $oSelects->setSeleccionados($this->sSeleccionados);
+		}
+		
 		$sHtml='<script>
 		fnjs_mas_casas = function(evt) {
 			if(evt=="x") {
@@ -99,6 +109,7 @@ class CasasQue {
 		$oSelects = new DesplegableArray('',$aOpcionesCasas,'id_cdc');
 		$oSelects->setBlanco('t');
 		$oSelects->setAccionConjunto('fnjs_mas_casas(event)');
+
 		$sHtml='<script>
 		funjs_otro = function(v) {
 			if (v==1) {
@@ -225,5 +236,8 @@ class CasasQue {
 	function setAntes($sAntes) {
 		$this->sAntes=$sAntes;
 	}
+	
+	public function setSeleccionados($sSeleccionados) {
+	    $this->sSeleccionados = $sSeleccionados;
+	}
 }
-?>

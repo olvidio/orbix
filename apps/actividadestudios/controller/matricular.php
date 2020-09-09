@@ -37,7 +37,8 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 $mes=date('m');
-if ($mes>9)  { $any=date('Y')+1; } else { $any = date('Y'); }
+$fin_m = $_SESSION['oConfig']->getMesFinStgr();
+if ($mes > $fin_m) { $any=date('Y')+1; } else { $any = date('Y'); }
 $inicurs_ca=core\curso_est("inicio",$any)->format('Y-m-d');
 $fincurs_ca=core\curso_est("fin",$any)->format('Y-m-d');
 

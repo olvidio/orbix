@@ -161,7 +161,8 @@ class Periodo {
 				$fin = date('Y/m/d',mktime(0, 0, 0, $mes+6, 0, $any));
 				break;
 			case "curso":
-				if ($mes>9) {
+			    $fin_m = $_SESSION['oConfig']->getMesFinStgr();
+			    if ($mes > $fin_m) {
 					$any2=$any+1;
 					$inicio = $any."/10/1";	
 					$fin = $any2."/5/31";

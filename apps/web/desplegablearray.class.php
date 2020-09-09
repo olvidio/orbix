@@ -6,7 +6,7 @@ class DesplegableArray Extends Desplegable{
 	/**
 	 * sSeleccionados del Desplegable
 	 *
-	 * @var string
+	 * @var array
 	 */
 	 private $sSeleccionados;
 
@@ -56,8 +56,6 @@ class DesplegableArray Extends Desplegable{
 	
 	/**
 	 *
-	 * Esta función sirve para hacer el echo en html de un input tipo select.
-	 * Dentro de una tabla.
 	 *
 	 * @retrun html <select>...</select> 	
 	 */
@@ -93,8 +91,6 @@ class DesplegableArray Extends Desplegable{
 
 	/**
 	 *
-	 * Esta función sirve para hacer el echo en html de un input tipo select.
-	 * Dentro de una tabla.
 	 *
 	 * @retrun string para javascript. 	
 	 */
@@ -131,8 +127,6 @@ class DesplegableArray Extends Desplegable{
 
 	/**
 	 *
-	 * Esta función sirve para hacer el echo en html de un input tipo select.
-	 * Dentro de una tabla.
 	 *
 	 * @retrun string para javascript. 	
 	 */
@@ -157,6 +151,10 @@ class DesplegableArray Extends Desplegable{
 
 	public function setAccionConjunto($sAccionConjunto) {
 		$this->sAccionConjunto = $sAccionConjunto;
+	}
+
+	public function setSeleccionados($sSeleccionados) {
+		$this->sSeleccionados = $sSeleccionados;
 	}
 }
 ?>

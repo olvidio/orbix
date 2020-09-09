@@ -192,8 +192,8 @@ class Select1303 {
 	public function getAsistencias() {
 		/* Pongo en la variable $curso el periodo del curso */
 		$mes=date('m');
-		$any=date('Y');
-		if ($mes>9) { $any=$any+1; } 
+        $fin_m = $_SESSION['oConfig']->getMesFinStgr();
+        if ($mes > $fin_m) { $any=date('Y')+1; } else { $any = date('Y'); }
 		$inicurs_ca=core\curso_est("inicio",$any)->format('Y-m-d');
 		$fincurs_ca=core\curso_est("fin",$any)->format('Y-m-d');
 

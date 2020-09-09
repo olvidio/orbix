@@ -1,7 +1,6 @@
 <?php
 namespace encargossacd\model;
 
-use core\ConfigGlobal;
 use encargossacd\model\entity\DatosCgi;
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\EncargoHorario;
@@ -184,7 +183,11 @@ Trait EncargoFuncionesTrait {
 
     // para grabar los datos del número de alumnos (si es un cgi).
     function grabar_alumnos($id_ubi,$num_alum) {
-        $oDatosCgi = new DatosCgi(array('id_ubi'=>$id_ubi,'curso_ini_any'=>$_SESSION['any1']));
+        $mes=date('m');
+        $fin_m = $_SESSION['oConfig']->getMesFinStgr();
+        if ($mes > $fin_m) { $any=date('Y')+1; } else { $any = date('Y'); }
+        
+        $oDatosCgi = new DatosCgi(array('id_ubi'=>$id_ubi,'curso_ini_any'=>$any));
         $oDatosCgi->DBcarregar();
 
         if (!empty($num_alum)) {
