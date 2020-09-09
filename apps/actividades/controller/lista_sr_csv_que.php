@@ -42,11 +42,19 @@ $tipo = 'busqueda_activ_sr';
 $oPref = new Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>$tipo));
 $json_busqueda = $oPref->getPreferencia();
 $oBusqueda = json_decode($json_busqueda);
-$a_status = json_decode($oBusqueda->status);
-$Qperiodo = $oBusqueda->periodo;
-$a_tipo_activ = json_decode($oBusqueda->tipo_activ);
-$a_ubis = json_decode($oBusqueda->ubis_compartidos);
-$sel_ubis = implode(',', $a_ubis);
+if (is_object($oBusqueda)) {
+    $a_status = json_decode($oBusqueda->status);
+    $Qperiodo = $oBusqueda->periodo;
+    $a_tipo_activ = json_decode($oBusqueda->tipo_activ);
+    $a_ubis = json_decode($oBusqueda->ubis_compartidos);
+    $sel_ubis = implode(',', $a_ubis);
+} else {
+    $a_status = [1,2];
+    $Qperiodo = 'curso_ca';
+    $a_tipo_activ = [1,3]; 
+    $a_ubis = [];
+    $sel_ubis = '';
+}
 
 $chk_status_1 = '';
 $chk_status_2 = '';
@@ -70,12 +78,6 @@ foreach ($a_tipo_activ as $tipo_activ) {
     }
 }
     
-if (empty($Qperiodo)) {
-    $Qperiodo = 'curso_ca';
-}
-
-
-
 $oFormP = new web\PeriodoQue();
 $oFormP->setFormName('modifica');
 $oFormP->setAntes('Periodo');
