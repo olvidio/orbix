@@ -6,6 +6,8 @@ use ubis\model\entity\CentroDl;
 use web\Lista;
 use web\TiposActividades;
 use ubis\model\entity\GestorCentroDl;
+use actividades\model\entity\GestorActividadDl;
+use web\DateTimeLocal;
 
 /**
 * Esta página lista las personas que asistieron hace x años a
@@ -72,6 +74,7 @@ switch ($Qcurso) {
 }
 
 //// Tipo Actvividad
+$alert = '';
 switch ($Qque) {
 	case "crt_s_sg":
 	    $aWhereA['id_tipo_activ'] = '^1[45]1';
@@ -86,6 +89,7 @@ switch ($Qque) {
 	    $aWhereA['id_tipo_activ'] = '^141';
 	    $aOperadorA['id_tipo_activ'] = '~';
 		$titulo_actividad = sprintf(_("s no celadores que han asistido por última vez a crt interno"));
+		$alert = '*' .sprintf(_("para indicar si es celador, el campo Eap debe contener algo tipo: 'C12'"));
         $aWhereP['eap'] = "COALESCE(eap,'x') !~* 'C\d\d'";
         $aOperadorP['eap'] = 'TXT';
 		break;
@@ -93,6 +97,7 @@ switch ($Qque) {
 	    $aWhereA['id_tipo_activ'] = '^141';
 	    $aOperadorA['id_tipo_activ'] = '~';
 		$titulo_actividad = sprintf(_("s celadores que han asistido por última vez a crt interno"));
+		$alert = '*' .sprintf(_("para indicar si es celador, el campo Eap debe contener algo tipo: 'C12'"));
         $aWhereP['eap'] = "COALESCE(eap,'x') ~* 'C\d\d'";
         $aOperadorP['eap'] = 'TXT';
         break;
@@ -108,17 +113,46 @@ switch ($Qque) {
     case "cv_s_ad":
 	    $aWhereA['id_tipo_activ'] = '143002';
         $titulo_actividad = sprintf(_("s con ad reciente -entre 6 y 18 meses antes de la fecha última cv admisión del año- que todavía no han asistido a cv de ad"));
+        // fecha última actividad:
+        // final de curso:
+        $any = date('Y');
+        $fin_d = $_SESSION['oConfig']->getDiaFinCrt();
+        $fin_m = $_SESSION['oConfig']->getMesFinCrt();
+        $f_iso_final = "$any-$fin_m-$fin_d";
         
+        $aWhereUltima = ['id_tipo_activ' => '143002',
+                           'status' => 2,
+                            'f_ini' => $f_iso_final,
+                            '_ordre' => 'f_ini DESC',
+        ];
+        $aOperadorUltima = ['f_ini' => '<'];
+        $gesActividades = new GestorActividadDl();
+        $cActividades = $gesActividades->getActividades($aWhereUltima,$aOperadorUltima);
+        if (is_array($cActividades) && count($cActividades) > 0) {
+            $oActividadU = $cActividades[0];
+            $oFini = $oActividadU->getF_fin();
+            $nom_activ = $oActividadU->getNom_activ();
+        } else {
+            // fin de año
+            $oFini = new DateTimeLocal();
+            $nom_activ = _("No hay");
+        }
+        // 6 meses antes:
+        $iso_fin = $oFini->sub(new DateInterval('P6M'))->getIso();
+        // 18 meses antes:
+        $iso_ini = $oFini->sub(new DateInterval('P12M'))->getIso();
         //AND p.f_ad BETWEEN '$f_ad_min' AND '$f_ad_max'
         $aWhereP['inc'] = 'ad';
-        $aWhereP['f_inc'] = "'',''";
+        $aWhereP['f_inc'] = "'$iso_ini','$iso_fin'";
         $aOperadorP['f_inc'] = 'BETWEEN';
+		$alert = '*' .sprintf(_("última cv: %s"),$nom_activ);
+        break;
     case "cv_jovenes":
         $titulo_actividad = _("s jóvenes (<30) que no han asistido a cv de s");
         $f_joven = date('Y-m-d', mktime(0,0,0,1,1,$any-30));
         //AND f_nacimiento > '$f_joven' AND ini_ce IS NULL AND fin_ce IS NULL
-        $aWhereP['f_nacimineto'] = $f_joven;
-        $aOperadorP['f_nacimineto'] = '>';
+        $aWhereP['f_nacimiento'] = $f_joven;
+        $aOperadorP['f_nacimiento'] = '>';
         $aWhereP['ce_ini'] = 'x';
         $aOperadorP['ce_ini'] = 'IS NULL';
         $aWhereP['ce_fin'] = 'x';
@@ -142,7 +176,7 @@ foreach ($cPersonas as $oPersona) {
     $ape_nom = $oPersona->getApellidosNombre();
     
     //Buscar el ctr (si no está en la seleccion)
-    if ($Qid_ubi == 999){
+    if ($Qid_ubi == 999 OR empty($Qid_ubi)){
         $nombre_ubi = '';
         $id_ctr = $oPersona->getId_ctr();
         $cCentros = $gesCentros->getCentros(['id_ubi' => $id_ctr]);
@@ -197,6 +231,7 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setDatos($a_valores);
 //-------------------------------------- html -------------------------------------------------
 ?>
+<?= $alert ?>
 <h3><?= $titulo ?></h3>
 <?php
 printf(_('número de personas: %s de %s'),$falta,$i);

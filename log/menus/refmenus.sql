@@ -302,6 +302,8 @@
 1211	{120,50}	s que no han ido al crt	\N	0	64	10	t
 1213	{120,50,10}	este curso	que=crt_s_sg&curso=actual	79	64	10	t
 1214	{120,50,20}	el curso pasado	que=crt_s_sg&curso=anterior	79	64	10	t
+1215	{120,60}	s que han de hacer crt interno	que=crt_s	79	64	10	t
+1216	{120,70}	s que han de hacer el crt de cel	que=crt_cel	79	64	10	t
 1261	{90,20}	nuevo curso	\N	157	8	8	t
 1289	{90,90}	Tarifas	\N	0	8	8	t
 1236	{70,30}	listados	\N	124	8	8	t
