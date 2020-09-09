@@ -4,9 +4,10 @@
 *Página que pregunta dónde está la foto, y la copia en la base de datos
 *
 */
+use core\ConfigGlobal;
 
 // para que funcione bien la seguridad
-$_POST = $_GET;
+$_POST = $_REQUEST;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -115,34 +116,48 @@ switch ($Qact) {
 		die();
 	break;
 	case 'adjuntar': 
+	    $url = ConfigGlobal::getWeb().'/apps/ubis/controller/plano_bytea.php';
+		$oHashComprobar = new web\Hash();
+		$oHashComprobar->setUrl($url);
+		/*
+		$a_camposHidden = array(
+				'id_direccion' => $Qid_direccion,
+				'obj_dir' => $Qobj_dir,
+				'act' => 'comprobar',
+				);
+		$oHashComprobar->setArraycamposHidden($a_camposHidden);
+		*/
+		$oHashComprobar->setcamposForm('id_direccion!obj_dir!act');
+		$h = $oHashComprobar->linkSinVal();
+		
 		$oHash = new web\Hash();
-		$camposForm = 'name_file!user_file';
 		$a_camposHidden = array(
 				'id_direccion' => $Qid_direccion,
 				'obj_dir' => $Qobj_dir,
 				'act' => 'upload',
 				);
+		$camposForm = 'name_file!userfile';
 		$oHash->setcamposForm($camposForm);
+		$oHash->setCamposNo('userfile');
 		$oHash->setArraycamposHidden($a_camposHidden);
-		$h = $oHash->linkSinVal();
 
 		$titulo=_("introducir documento");
 		$txt_btn=ucfirst(_("introducir"));
 		$act="upload";
 		?>
 		<!-- jQuery -->
-        <script type="text/javascript" src='<?= core\ConfigGlobal::getWeb_scripts().'/jquery/jquery-1.12.3.min.js'; ?>'></script>
+		<script type="text/javascript" src='<?= ConfigGlobal::getWeb_NodeScripts().'/jquery/dist/jquery.min.js'; ?>'></script>
 		<script>
 		fnjs_introducir=function(){
 			var id_direccion=$('#id_direccion').val();
 
-			var url='<?= core\ConfigGlobal::getWeb() ?>/apps/ubis/controller/plano_bytea.php';
+			var url='<?= ConfigGlobal::getWeb() ?>/apps/ubis/controller/plano_bytea.php';
 			var parametros='act=comprobar&obj_dir=<?= $Qobj_dir?><?= $h ?>&id_direccion='+id_direccion;
 				 
 			$.ajax({
 				url: url,
 				type: 'post',
-				data: parametros,
+				data: parametros
 			})
 			.done(function(rta_txt) { 
 				if (rta_txt=='si') { 

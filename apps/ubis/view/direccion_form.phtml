@@ -84,24 +84,24 @@ fnjs_ver_documento=function(id_direccion){
 		type: 'post',
 		data: parametros
 	})
-	.done(function() { 
-		if (seguro == 1) { 
+	.done(function(rta_txt) { 
+		if (rta_txt=='si') { 
 			var winPrefs="";
-			var pagina=url+'?id_direccion='+id_direccion+'&act=download&obj_dir=<?= $obj_dir?><?= $h ?>&PHPSESSID=<?= session_id() ?>';
+			var pagina=url+'?id_direccion='+id_direccion+'&act=download&obj_dir=<?= $obj_dir?><?= $h ?>';
 			top.newWin = window.open(pagina, "abrir", winPrefs);
-			top.newWin.trigger("focus");
+			top.newWin.focus();
 		} else {
-			//$(siguiente).trigger("focus");
+			alert("<?= _("No existe ningún plano"); ?>");
 		}
 	});
 
 }
 fnjs_adjuntar=function(act,id_direccion){
-	var pagina='<?= core\ConfigGlobal::getWeb() ?>/apps/ubis/controller/plano_bytea.php?id_direccion='+id_direccion+'&act='+act+'&obj_dir=<?= $obj_dir ?><?= $h ?>&PHPSESSID=<?= session_id() ?>';
+	var pagina='<?= core\ConfigGlobal::getWeb() ?>/apps/ubis/controller/plano_bytea.php?id_direccion='+id_direccion+'&act='+act+'&obj_dir=<?= $obj_dir ?><?= $h ?>';
 
 	var winPrefs="dependent=yes,width=850,height=300,screenX=300,screenY=300,titlebar=yes,scrollbars=yes";
 	top.newWin = window.open(pagina, "files", winPrefs);
-	top.newWin.trigger("focus");
+	top.newWin.focus();
 }
 
 fnjs_otro=function(n){
