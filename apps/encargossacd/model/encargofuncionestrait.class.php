@@ -417,6 +417,7 @@ Trait EncargoFuncionesTrait {
     function insert_sacd($id_enc,$id_sacd,$modo){
         $GesEncargoSacd = new GestorEncargoSacd();
         $cEncargosSacd = $GesEncargoSacd->getEncargosSacd(array('id_enc'=>$id_enc,'id_nom'=>$id_sacd,'modo'=>$modo));
+        $flag=0; 
         foreach ($cEncargosSacd as $oEncargoSacd) { // aunque sólo debería haber una.
             $oFactual_f_fin = $oEncargoSacd->getF_fin();
             $oFactual_f_ini = $oEncargoSacd->getF_ini();
@@ -428,7 +429,7 @@ Trait EncargoFuncionesTrait {
                 }
                 $flag=1; 
             }
-            if (empty($actual_f_fin)) { $flag=1; }
+            if (empty($oFactual_f_fin)) { $flag=1; }
         }
         if (empty($flag)) { //nuevo
             $oEncargoSacd = new EncargoSacd();
