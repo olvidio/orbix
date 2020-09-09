@@ -327,7 +327,7 @@ case "editar": //modificar
 	}
 	// para grabar los datos del número de alumnos (si es un cgi).
 	if (strstr($Qtipo_centro,"cgi")) { 
-		$GesEncargoTipo->grabar_alumnos($Qid_ubi,$Qnum_alum);
+		//$GesEncargoTipo->grabar_alumnos($Qid_ubi,$Qnum_alum);
 	}
 	break;
 }
