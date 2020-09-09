@@ -328,6 +328,8 @@
 1294	{90,90,20}	tarifa <-> tipus dactivitat	\N	108	32768	20	t
 1250	{85,10}	persona r/dl	obj_pau=PersonaN&tipo=planning	61	2176	2	t
 1230	{110,50,20}	el curso pasado	que=cv_s&curso=anterior	79	64	10	t
+1231	{110,60}	corresponde ir a cv ad	que=cv_s_ad	79	64	10	t
+1232	{110,70}	corresponde ir a cv joves	que=cv_jovenes	79	64	10	t
 1321	{100}	planning 	\N	183	2	3	t
 1326	{100,30}	por centro	tipo=planning_ctr	61	2	3	t
 1329	{100,40}	por casas	tipo=planning_cdc&ssfsv=sv	61	2	3	t
