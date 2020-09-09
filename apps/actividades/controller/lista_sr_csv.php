@@ -180,6 +180,7 @@ $a_cabeceras[]= array('name'=>ucfirst(_("empieza")),'class'=>'fecha');
 $a_cabeceras[]= array('name'=>ucfirst(_("termina")),'class'=>'fecha');
 $a_cabeceras[]=ucfirst(_("nom activ."));
 $a_cabeceras[]=ucfirst(_("asist."));
+$a_cabeceras[]=ucfirst(_("actividad"));
 $a_cabeceras[]=ucfirst(_("tipo actividad"));
 $a_cabeceras[]=ucfirst(_("lugar"));
 $a_cabeceras[]=ucfirst(_("centro"));
@@ -223,8 +224,9 @@ foreach ($cActividades as $oActividad) {
 	$a_valores[$i][4]=$f_fin;
 	$a_valores[$i][7]=$nom_activ;
 	$a_valores[$i][8]=$sasistentes;
-	$a_valores[$i][9]=$snom_tipo;
-	$a_valores[$i][10]=$nombre_ubi;
+	$a_valores[$i][9]=$sactividad;
+	$a_valores[$i][10]=$snom_tipo;
+	$a_valores[$i][11]=$nombre_ubi;
 
 	$oEnc=new GestorCentroEncargado();
 	$ctrs='';

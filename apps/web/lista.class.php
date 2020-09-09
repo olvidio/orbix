@@ -1234,7 +1234,7 @@ class Lista {
                     }
                 }
             }
-            fputcsv($fp, $a_valores_simple, "\t");
+            fputcsv($fp, $a_valores_simple, "\t", '"' );
         }  
         fclose($fp);
         
