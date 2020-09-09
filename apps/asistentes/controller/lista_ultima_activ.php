@@ -5,6 +5,7 @@ use personas\model\entity\GestorPersonaS;
 use ubis\model\entity\CentroDl;
 use web\Lista;
 use web\TiposActividades;
+use ubis\model\entity\GestorCentroDl;
 
 /**
 * Esta página lista las personas que asistieron hace x años a
@@ -84,12 +85,16 @@ switch ($Qque) {
     case "crt_s":
 	    $aWhereA['id_tipo_activ'] = '^141';
 	    $aOperadorA['id_tipo_activ'] = '~';
-		$titulo_actividad = sprintf(_("s no celadores que han asistido por última vez a crt intern"));
+		$titulo_actividad = sprintf(_("s no celadores que han asistido por última vez a crt interno"));
+        $aWhereP['eap'] = "COALESCE(eap,'x') !~* 'C\d\d'";
+        $aOperadorP['eap'] = 'TXT';
 		break;
     case "crt_cel":
 	    $aWhereA['id_tipo_activ'] = '^141';
 	    $aOperadorA['id_tipo_activ'] = '~';
-		$titulo_actividad = sprintf(_("s celadores que han asistido por última vez a crt intern"));
+		$titulo_actividad = sprintf(_("s celadores que han asistido por última vez a crt interno"));
+        $aWhereP['eap'] = "COALESCE(eap,'x') ~* 'C\d\d'";
+        $aOperadorP['eap'] = 'TXT';
         break;
     case "cv_s":
 	    $aWhereA['id_tipo_activ'] = '^143';
@@ -130,10 +135,21 @@ $cPersonas = $GesPersonasS->getPersonasDl($aWhereP,$aOperadorP);
 $i = 0;
 $falta = 0;
 $a_valores = [];
+$gesCentros = new GestorCentroDl();
 foreach ($cPersonas as $oPersona) {
     $i++;
     $id_nom = $oPersona->getId_nom();
     $ape_nom = $oPersona->getApellidosNombre();
+    
+    //Buscar el ctr (si no está en la seleccion)
+    if ($Qid_ubi == 999){
+        $nombre_ubi = '';
+        $id_ctr = $oPersona->getId_ctr();
+        $cCentros = $gesCentros->getCentros(['id_ubi' => $id_ctr]);
+        if (is_array($cCentros) && count($cCentros) > 0) {
+            $nombre_ubi = $cCentros[0]->getNombre_ubi();
+        }
+    }
     
     $GesAsistente = new GestorAsistente();
     $aWhereNom = ['id_nom'=>$id_nom];

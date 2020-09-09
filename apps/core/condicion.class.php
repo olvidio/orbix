@@ -56,8 +56,14 @@ class Condicion {
 				case '!~':
 					$sCondi = "$campo::text !~ :$campo";
 					break;
+				case '!~*':
+					$sCondi = "$campo::text !~* :$campo";
+					break;
 				case '~':
 					$sCondi = "$campo::text ~ :$campo";
+					break;
+				case '~*':
+					$sCondi = "$campo::text ~* :$campo";
 					break;
 				case '~INV':
 					$sCondi = ":$campo::text ~ $campo";
@@ -83,6 +89,9 @@ class Condicion {
 					/* Se hace como el BETWEEN */
 					$sCondi = "$campo $operador ($valor)";
 					break;
+				case 'TXT':
+					$sCondi = "$valor";
+				    break;
 				default:
 					$sCondi = "$campo $operador :$campo";
 			}
