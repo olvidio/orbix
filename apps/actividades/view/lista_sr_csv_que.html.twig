@@ -1,0 +1,55 @@
+<script>
+fnjs_listar=function(formulario) {
+    var err=0;
+    var status=0;
+    $('[name="status[]"]:checked').each(function () {
+        status++;
+    });
+    if (!status) { alert("{{ "Debe indicar el estado"|trans }}"); err=1; }
+    
+    var activ=0;
+    $('[name="c_activ[]"]:checked').each(function () {
+        activ++;
+    });
+    if (!activ) { alert("{{ "Debe indicar el tipo de actividad"|trans }}"); err=1; }
+    
+	if (err==0) {
+		$('#que').val('lista');
+		$(formulario).attr('action','apps/actividades/controller/lista_sr_csv.php');
+		fnjs_enviar_formulario(formulario);
+	}
+	
+}
+fnjs_download=function(formulario){
+	var url='{{ fullUrl }}';
+	// IMPORTANTE. Para que abra en nueva ventana: poner un target en el formulario
+	$("formulario").attr("target", "newWindow");
+    $('#que').val('file');
+	$(formulario).attr('action','apps/actividades/controller/lista_sr_csv.php');
+	$(formulario).submit();
+
+}
+</script>
+
+{{ oPosicion.mostrar_left_slide(1)|raw }}
+<form id="modifica" name="modifica" action="" method="post">
+    {{ oHash.getCamposHtml|raw }}
+	<table border=1>
+	<tr><th class=titulo_inv colspan="6">
+	{{ titulo }}</th></tr>
+	<tr><td class=etiqueta>{{ "estado"|trans }}:</td>
+	<td>
+    <input type="Checkbox" name="status[]" value="1" {{ chk_status_1 }}>{{ "proyecto"|trans }}
+    <input type="Checkbox" name="status[]" value="2" {{ chk_status_2 }}>{{ "actual"|trans }}
+    </td></tr>
+	<tr>
+        {{ oFormP.getTd()|raw }}
+    </tr>
+	<tr><td class=etiqueta>{{ "tipo de actividad"|trans }}:</td>
+    <td><input type="Checkbox" name="c_activ[]" value="1" {{ chk_activ_crt }}>{{ "cursos retiro"|trans }}</td>
+    <td><input type="Checkbox" name="c_activ[]" value="3" {{ chk_activ_cv }}>{{ "convivencias"|trans }}</td></tr>
+</table>
+   {{ oForm.getHtmlTabla2()|raw }}
+<br>
+<input TYPE="button" onclick=fnjs_listar('#modifica') VALUE="{{ "listar"|trans }}">
+<input TYPE="button" onclick=fnjs_download('#modifica') VALUE="{{ "descargar"|trans }}">

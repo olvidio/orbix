@@ -241,6 +241,7 @@
 1084	{40,40}	por ctr	tipo=planning_ctr	61	512	15	t
 1049	{35,100}	cambiar de fase	id_tipo_activ=133	130	16	12	t
 1052	{37,100}	cambiar de fase	id_tipo_activ=112	130	16	12	t
+1046	{35,10}	listado csv	\N	58	2560	15	t
 1083	{40,40}	por centro	tipo=planning_ctr	61	8	8	t
 1086	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	8	8	t
 1146	{50,100,10}	activ sg	tipo=sg	43	8	8	t
@@ -367,8 +368,6 @@
 61	{10,10}	buscar	simple=1&tipo=ctr&loc=dl	133	1032	8	t
 995	{20,20}	zonas geogr.	clase_info=zonassacd\\model\\infozonagrupo	160	1032	8	t
 71	{40}	planning	\N	183	2056	8	t
-1356	{120,90}	falta hacer crt	que=crt_s_sg_curso	79	64	10	t
-1349	{110,100}	falta hacer cv	que=cv_s_curso	79	64	10	t
 1359	{130,30}	actividades-centros	tipo=sg	43	64	10	t
 1357	{130}	listas activ	\N	0	64	10	t
 1362	{150}	planning	\N	0	64	10	t

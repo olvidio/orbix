@@ -26,7 +26,6 @@
 53	\N	sg/cp_lista.php	\N	\N
 55	\N	programas/lor/registros_que.php	\N	\N
 56	\N	programas/sm-agd/cargos/cargos.php	\N	\N
-58	\N	programas/lista_activ_gral_sr.php	\N	\N
 59	\N	scdl/tertulias/devoluciones_pendientes.php	\N	\N
 65	\N	vcsd/registro/salidas.php	\N	\N
 67	\N	vcsd/scheduler/calendarios.php	\N	\N
@@ -104,6 +103,7 @@
 91	27	apps/casas/controller/grupo_lista.php	\N	Grupo Casas
 97	1	apps/personas/controller/personas_select.php	\N	personas Select
 145	2	apps/usuarios/controller/borrar_pwd.php	\N	borrar passwords
+58	6	apps/actividades/controller/lista_sr_csv_que.php	\N	Activ Sr Que (csv)
 42	24	apps/zonassacd/controller/zona_sacd.php	\N	Zona sacd
 139	24	apps/zonassacd/controller/planning_zones.php	\N	Planning por zonas
 114	25	apps/cartaspresentacion/controller/cartas_presentacion_que.php	\N	Cartas Presentacion
