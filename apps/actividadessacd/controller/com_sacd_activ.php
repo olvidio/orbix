@@ -2,13 +2,13 @@
 use actividadessacd\model\ActividadesSacdFunciones;
 use actividadessacd\model\ComunicarActividadesSacd;
 use core\ConfigGlobal;
+use personas\model\entity\GestorPersonaEx;
 use personas\model\entity\GestorPersonaSSSC;
 use personas\model\entity\GestorPersonaSacd;
 use personas\model\entity\PersonaSacd;
 use usuarios\model\entity\Usuario;
 use web\DateTimeLocal;
 use web\Periodo;
-use personas\model\entity\GestorPersonaPub;
 
 /**
 * Esta página muestra las actividades que tiene que atender un sacd. 
@@ -160,7 +160,7 @@ if ($Qque != "un sacd") {
     $aWhereP['sacd']='t';
     $aWhereP['dl']=$mi_dele;
     $aWhereP['_ordre']='apellido1,apellido2,nom';
-    $GesPersonas = new GestorPersonaPub();
+    $GesPersonas = new GestorPersonaEx();
     $cPersonas = $GesPersonas->getPersonas($aWhereP);
     
     $oComunicarActividadesSacd = new ComunicarActividadesSacd();
