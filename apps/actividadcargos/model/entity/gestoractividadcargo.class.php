@@ -211,6 +211,55 @@ class GestorActividadCargo Extends core\ClaseGestor {
 		}
 		return $aAsis;
 	}
+	/**
+	 * retorna un array amb els carrecs (perque sigui compatible amb: getAsistenteCargoDeActividad).
+	 * 	   $aAsis[$id_activ] = array('id_activ','id_nom','propio','id_cargo');
+	 *
+	 * @param array $aWhere para la asistencia (id_nom y plaza)
+	 * @param array $aOperador para la asistencia (id_nom y plaza)
+	 * @param array $aWhereAct para la Actividad
+	 * @param array $aOperadorAct para la Actividad
+	 * @return array Una col·lecció d'arrays: id_activ,id_nom,propio,id_cargo,plaza;
+	 */
+	function getCargoDeActividad($aWhere,$aOperador=[],$aWhereAct=[],$aOperadorAct=[]) {
+		
+	    if (empty($aWhere['id_nom'])) {
+	        return FALSE;
+	    }
+	    $id_nom = $aWhere['id_nom'];
+	    
+	   	$cCargos = $this->getActividadCargos(array('id_nom'=>$id_nom));
+		// seleccionar las actividades segun los criterios de búsqueda.
+		$GesActividades = new GestorActividad();
+		$aListaIds = $GesActividades->getArrayIds($aWhereAct,$aOperadorAct);
+		// descarto los que no estan.
+		$cActividadesOk = array();
+		foreach ($cCargos as $oCargo) {
+			$id_activ = $oCargo->getId_activ();
+			if (in_array($id_activ,$aListaIds)) {
+				$cActividadesOk[$id_activ] = $oCargo;
+			}
+		}
+		// lista de id_activ ordenados.
+		$aAsis = array();
+		foreach ($cActividadesOk as $id_activ=>$oCargo) {
+			$oCargo = $cActividadesOk[$id_activ];
+			$id_cargo = $oCargo->getId_cargo();
+			if (array_key_exists ( $id_activ , $aAsis)) { 
+			    // Añado al primero el id_cargo del segundo.
+				$aAsis[$id_activ]['id_cargo'] = $id_cargo;
+			} else {
+			    // añado la actividad
+				$aAsis[$id_activ] = [   'id_activ'=>$id_activ,
+				                        'id_nom'=>$id_nom,
+				                        'propio'=>'f',
+				                        'id_cargo'=>$id_cargo,
+				                        'plaza'=>0,
+				                    ];
+			}
+		}
+		return $aAsis;
+	}
 
 	/**
 	 * retorna l'array d'objectes de tipus ActividadCargo

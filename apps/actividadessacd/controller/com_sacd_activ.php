@@ -1,19 +1,14 @@
 <?php
-use actividadcargos\model\entity\GestorActividadCargo;
-use actividadcargos\model\entity\GestorCargo;
-use actividades\model\entity\Actividad;
-use actividadescentro\model\entity\GestorCentroEncargado;
 use actividadessacd\model\ActividadesSacdFunciones;
+use actividadessacd\model\ComunicarActividadesSacd;
 use core\ConfigGlobal;
-use function core\is_true;
 use personas\model\entity\GestorPersonaSSSC;
 use personas\model\entity\GestorPersonaSacd;
 use personas\model\entity\PersonaSacd;
-use ubis\model\entity\Ubi;
 use usuarios\model\entity\Usuario;
 use web\DateTimeLocal;
 use web\Periodo;
-use web\TiposActividades;
+use personas\model\entity\GestorPersonaPub;
 
 /**
 * Esta página muestra las actividades que tiene que atender un sacd. 
@@ -72,9 +67,6 @@ if ($oMiUsuario->isRole('p-sacd')) {
     $Qid_nom = $oMiUsuario->getId_pau();
     $Qque = 'un_sacd';
 }
-// valores del id_cargo de tipo_cargo = sacd:
-$gesCargos = new GestorCargo();
-$aIdCargos_sacd = $gesCargos->getArrayCargosDeTipo('sacd');
 			
 // Si vengo de la página personas_select.php, sólo quiero ver la lista de un sacd.
 if ($Qque == "un_sacd") {
@@ -110,6 +102,11 @@ $oPeriodo->setPeriodo($Qperiodo);
 $inicioIso = $oPeriodo->getF_ini_iso();
 $finIso = $oPeriodo->getF_fin_iso();
 
+// llista d'activitats posibles en el periode.
+if (empty($inicioIso) OR empty($finIso)) {
+    exit ("<br>"._("falta determinar un periodo"));
+}
+
 // los sacd
 $mi_dele = ConfigGlobal::mi_delef();
 if (empty($Qque)) $Qque = "nagd";
@@ -136,148 +133,14 @@ switch ($Qque) {
 		$cPersonas = array($oPersona);
 		break;
 }
+$oComunicarActividadesSacd = new ComunicarActividadesSacd();
+$oComunicarActividadesSacd->setInicioIso($inicioIso);
+$oComunicarActividadesSacd->setFinIso($finIso);
+$oComunicarActividadesSacd->setPropuesta($Qpropuesta);
 
-// llista d'activitats posibles en el periode.
-if (empty($inicioIso) OR empty($finIso)) {
-    exit ("<br>"._("falta determinar un periodo"));
-}
+$oComunicarActividadesSacd->setPersonas($cPersonas);
 
-$s=0;
-$array_actividades = [];
-foreach ($cPersonas as $oPersona) {
-	$s++;
-	$id_nom=$oPersona->getId_nom();
-	$nom_ap=$oPersona->getApellidosNombre();
-	$idioma = $oPersona->getLengua();
-
-	$array_actividades[$id_nom]['txt']['com_sacd'] = $oActividadesSacdFunciones->getTraduccion('com_sacd', $idioma);
-    $array_actividades[$id_nom]['txt']['t_propio'] = $oActividadesSacdFunciones->getTraduccion('t_propio',$idioma);
-    $array_actividades[$id_nom]['txt']['t_f_ini'] = $oActividadesSacdFunciones->getTraduccion('t_f_ini',$idioma);
-    $array_actividades[$id_nom]['txt']['t_f_fin'] = $oActividadesSacdFunciones->getTraduccion('t_f_fin',$idioma);
-    $array_actividades[$id_nom]['txt']['t_nombre_ubi'] = $oActividadesSacdFunciones->getTraduccion('t_nombre_ubi',$idioma);
-    $array_actividades[$id_nom]['txt']['t_sfsv'] = $oActividadesSacdFunciones->getTraduccion('t_sfsv',$idioma);
-    $array_actividades[$id_nom]['txt']['t_actividad'] = $oActividadesSacdFunciones->getTraduccion('t_actividad',$idioma);
-    $array_actividades[$id_nom]['txt']['t_asistentes'] = $oActividadesSacdFunciones->getTraduccion('t_asistentes',$idioma);
-    $array_actividades[$id_nom]['txt']['t_encargado'] = $oActividadesSacdFunciones->getTraduccion('t_encargado',$idioma);
-    $array_actividades[$id_nom]['txt']['t_observ'] = $oActividadesSacdFunciones->getTraduccion('t_observ',$idioma);
-    $array_actividades[$id_nom]['txt']['t_nom_tipo'] = $oActividadesSacdFunciones->getTraduccion('t_nom_tipo',$idioma);
-	
-	$array_actividades[$id_nom]['nom_ap']=$nom_ap;
-	
-	// busco los datos de las actividades 
-	$aWhereAct = [];
-	$aOperadorAct = [];
-	$aWhereAct['f_ini']="'$finIso'";
-	$aOperadorAct['f_ini']='<=';
-	$aWhereAct['f_fin']="'$inicioIso'";
-	$aOperadorAct['f_fin']='>=';
-	$aWhereAct['status']='2';
-	/*
-	 $aWhere = ['id_nom' => $id_nom, 'plaza' => Asistente::PLAZA_PEDIDA];
-	 $aOperador = ['plaza' => '>='];
-	 */
-	$aWhere = ['id_nom' => $id_nom];
-	$aOperador = [];
-	
-	$oGesActividadCargo = new GestorActividadCargo();
-	$cAsistentes = $oGesActividadCargo ->getAsistenteCargoDeActividad($aWhere,$aOperador,$aWhereAct,$aOperadorAct);
-	
-	$ord_activ = [];
-	foreach ($cAsistentes as $aAsistente) {
-	    $id_activ = $aAsistente['id_activ'];
-	    $propio = $aAsistente['propio'];
-	    //$plaza = $aAsistente['plaza'];
-	    $id_cargo = empty($aAsistente['id_cargo'])? '' : $aAsistente['id_cargo'];
-	    
-        $_SESSION['oPermActividades']->setId_activ($id_activ);
-			
-        if( !is_true($Qpropuesta) && core\ConfigGlobal::is_app_installed('procesos')) {
-            $permiso_ver = $_SESSION['oPermActividades']->havePermisoSacd($id_cargo, $propio);
-        } else {
-            $permiso_ver = TRUE;
-        }
-        
-        if ($permiso_ver === FALSE) { continue; }
-        
-        $oActividad = new Actividad($id_activ);
-        $id_tipo_activ = $oActividad->getId_tipo_activ();
-        $id_ubi = $oActividad->getId_ubi();
-        $lugar_esp = $oActividad->getLugar_esp();
-        $oF_ini = $oActividad->getF_ini();
-        $oF_fin = $oActividad->getF_fin();
-        $h_ini = $oActividad->getH_ini();
-        $h_fin = $oActividad->getH_fin();
-        $observ = $oActividad->getObserv();
-        
-        $f_ini=$oF_ini->formatRoman();
-        $f_fin=$oF_fin->formatRoman();
-
-        if (!empty($h_ini)) {
-               $h_ini = preg_replace('/(\d{2}):(\d{2}):(\d{2})/','\1:\2',$h_ini);
-               $f_ini.=" ($h_ini)";
-        }
-        if (!empty($h_fin)) {
-               $h_fin = preg_replace('/(\d{2}):(\d{2}):(\d{2})/','\1:\2',$h_fin);
-               $f_fin.=" ($h_fin)";
-        }
-
-        $oTipoActiv= new TiposActividades($id_tipo_activ);
-        $ssfsv=$oTipoActiv->getSfsvText();
-        $sasistentes=$oTipoActiv->getAsistentesText();
-        $sactividad=$oTipoActiv->getActividadText();
-        $snom_tipo=$oTipoActiv->getNom_tipoText();
-        // lugar 
-        if (empty($lugar_esp)) {
-            $oCasa = Ubi::NewUbi($id_ubi);
-            $nombre_ubi = $oCasa->getNombre_ubi();
-        } else {
-            $nombre_ubi = $lugar_esp;
-        }
-
-        // ctr que organiza:
-        $GesCentroEncargado = new GestorCentroEncargado();
-        $ctrs = '';
-        foreach($GesCentroEncargado->getCentrosEncargadosActividad($id_activ) as $oCentro) {;
-            if (!empty($ctrs)) $ctrs.=", ";
-            $ctrs .= $oCentro->getNombre_ubi();
-        }
-
-        $cargo='';
-        if (!empty($id_cargo) && !array_key_exists($id_cargo, $aIdCargos_sacd)) {
-            $cargo='te carrec';
-        }
-        $array_act=array( "propio" => $propio,
-                            "f_ini" => $f_ini,
-                            "f_fin" =>		$f_fin, 
-                            "nombre_ubi" =>	$nombre_ubi, 
-                            "id_activ" 	=>	$id_activ, 
-                            "sfsv" 		=>	$ssfsv, 
-                            "asistentes" =>	$sasistentes, 
-                            "actividad" =>	$sactividad,
-                            "nom_tipo" =>	$snom_tipo, 
-                            "observ" =>		$observ, 
-                            "cargo" =>		$cargo, 
-                            "encargado" =>	$ctrs
-                        );
-        //if (!empty($id_activ)) { $array_actividades[$id_nom]['actividades'][]= $array_act; }
-        // para ordenar por fecha_ini
-        $f_ord = $oF_ini->format('Ymd');
-        // ojo. Si hay más de una actividad que empieza el mismo día, hay que poner algo para distinguirlas: les sumo un dia.
-        if (isset($ord_activ) && array_key_exists($f_ord,$ord_activ)) {
-            $f_ord++;
-            $ord_activ[$f_ord]=$array_act;
-        } else {
-            $ord_activ[$f_ord]=$array_act;
-        }
-	}
-	if (!empty($ord_activ)) {
-		ksort($ord_activ);
-		$array_actividades[$id_nom]['actividades']= $ord_activ;
-	} else {
-		$array_actividades[$id_nom]['actividades']= '';
-	}
-	$ord_activ=array();
-} // fin del while de los sacd
+$array_actividades = $oComunicarActividadesSacd->getArrayComunicacion();
 
 $a_campos = ['oPosicion' => $oPosicion,
     'array_actividades' => $array_actividades,
@@ -289,3 +152,38 @@ $a_campos = ['oPosicion' => $oPosicion,
 
 $oView = new core\View('actividadessacd/controller');
 echo $oView->render('com_sacd_activ_print.phtml',$a_campos);
+// Añado la lista de los sacd de paso:
+
+if ($Qque != "un sacd") {
+    $aWhereP = [];
+    $aWhereP['situacion']='A';
+    $aWhereP['sacd']='t';
+    $aWhereP['dl']=$mi_dele;
+    $aWhereP['_ordre']='apellido1,apellido2,nom';
+    $GesPersonas = new GestorPersonaPub();
+    $cPersonas = $GesPersonas->getPersonas($aWhereP);
+    
+    $oComunicarActividadesSacd = new ComunicarActividadesSacd();
+    $oComunicarActividadesSacd->setInicioIso($inicioIso);
+    $oComunicarActividadesSacd->setFinIso($finIso);
+    $oComunicarActividadesSacd->setPropuesta($Qpropuesta);
+    $oComunicarActividadesSacd->setSoloCargos(TRUE);
+    $oComunicarActividadesSacd->setQuitarInactivos(TRUE);
+
+    $oComunicarActividadesSacd->setPersonas($cPersonas);
+
+    $array_actividades = $oComunicarActividadesSacd->getArrayComunicacion();
+
+    $a_campos = ['oPosicion' => $oPosicion,
+        'array_actividades' => $array_actividades,
+        'Qque' => $Qque,
+        'mi_dele' => $mi_dele,
+        'lugar_fecha' => $lugar_fecha,
+        'propuesta' => $Qpropuesta,
+    ];
+    
+    echo "<br><br><hr>";
+    echo "<h3>"._("Sacd de paso")."</h3>";
+    echo "<hr>";
+    echo $oView->render('com_sacd_activ_print.phtml',$a_campos);
+}

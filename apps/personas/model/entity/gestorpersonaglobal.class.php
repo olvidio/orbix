@@ -213,6 +213,9 @@ abstract class GestorPersonaGlobal Extends core\ClaseGestor {
 			    case 'GestorPersonaEx':
         			$oPersonaDl= new PersonaEx($a_pkey);
 			        break;
+			    case 'GestorPersonaPub':
+        			$oPersonaDl= new PersonaPub($a_pkey);
+			        break;
 			    case 'GestorPersonaSacd':
         			$oPersonaDl= new PersonaSacd($a_pkey);
 			        break;
