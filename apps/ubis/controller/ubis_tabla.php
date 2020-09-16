@@ -66,6 +66,10 @@ $titulo = (string) \filter_input(INPUT_POST, 'titulo');
 $Qcmb = (string) \filter_input(INPUT_POST, 'cmb');
 
 $tipo_ubi = $Qtipo.$Qloc;
+// si es sf, el tipi_ubi = ctrsf
+if ($tipo_ubi == 'ctrdl' && ConfigGlobal::mi_sfsv() == 2) {
+    $tipo_ubi = 'ctrsf';
+}
 
 $Qnombre_ubi = '';
 $Qdl = '';
