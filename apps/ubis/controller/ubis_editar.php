@@ -156,6 +156,7 @@ $oView = new core\View('ubis/controller');
 
 switch ($tipo_ubi) {
     case "ctrdl": 
+    case "ctrsf":
         $cdc = $oUbi->getCdc();
         $chk_cdc = ($cdc=="t" OR $cdc=="true")? 'checked' :'';
         $tipo_labor = $oUbi->getTipo_labor();
@@ -219,7 +220,6 @@ switch ($tipo_ubi) {
         echo $oView->render('ctrdl_form.phtml',$a_campos);
         break;
     case "ctrex":
-    case "ctrsf":
         $cdc = $oUbi->getCdc();
         $chk_cdc = ($cdc=="t" OR $cdc=="true")? 'checked' :'';
         $tipo_labor = $oUbi->getTipo_labor();
