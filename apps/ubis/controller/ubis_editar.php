@@ -128,7 +128,7 @@ $chk = ($status=="t" OR $status=="true")? 'checked' :'';
 $campos_chk = 'status!sv!sf';
 
 $camposForm = 'que!dl!tipo_ubi!status!region!nombre_ubi';
-if ($tipo_ubi=="ctrdl") { 
+if ($tipo_ubi=="ctrdl" or $tipo_ubi=="ctrsf") { 
 	$camposForm .= '!num_pi!num_cartas!num_cartas_mensuales!plazas!num_habit_indiv!n_buzon!observ';
 }
 if ($tipo_ubi=="ctrdl" or $tipo_ubi=="ctrex" or $tipo_ubi=="ctrsf") {
