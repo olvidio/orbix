@@ -19,4 +19,23 @@ class Info1017 extends core\datosInfo {
 	public function getId_dossier() {
 		return 1017;
 	}
+	
+	public function getColeccion() {
+	    // para el datos_sql.php
+	    // Si se quiere listar una selección, $this->k_buscar
+	    if (!empty($this->id_pau)) {
+	        $aWhere['id_nom'] = $this->id_pau;
+	    }
+	    if (empty($this->k_buscar)) {
+	        $aWhere['_ordre'] = 'year DESC';
+	        $aOperador='';
+	    } else {
+	        $aWhere['titulo'] = $this->k_buscar;
+	        $aOperador['titulo'] ='sin_acentos';
+	    }
+	    $oLista=new entity\GestorTituloEst();
+	    $Coleccion=$oLista->getTitulosEst($aWhere,$aOperador);
+	    
+	    return $Coleccion;
+	}
 }

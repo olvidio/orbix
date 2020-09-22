@@ -80,7 +80,8 @@ $oHashBuscar->setcamposForm('k_buscar');
 $a_camposHiddenBuscar = array(
 		'clase_info' => $Qclase_info,
 		'datos_buscar' => $Qdatos_buscar,
-		'aSerieBuscar' => $QaSerieBuscar
+		'aSerieBuscar' => $QaSerieBuscar,
+		'id_pau' => $Qid_pau,
 		);
 $oHashBuscar->setArraycamposHidden($a_camposHiddenBuscar);
 
