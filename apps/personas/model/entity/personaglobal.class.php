@@ -443,7 +443,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string snx1
 	 */
 	function getNx1() {
-		if (!isset($this->snx1)) {
+		if (!property_exists($this,'snx1')) {
 			$this->DBCarregar();
 		}
 		return $this->snx1;

@@ -154,7 +154,7 @@ $oView = new core\View('actividadessacd/controller');
 echo $oView->render('com_sacd_activ_print.phtml',$a_campos);
 // Añado la lista de los sacd de paso:
 
-if ($Qque != "un sacd") {
+if ($Qque != "un_sacd") {
     $aWhereP = [];
     $aWhereP['situacion']='A';
     $aWhereP['sacd']='t';
@@ -174,16 +174,18 @@ if ($Qque != "un sacd") {
 
     $array_actividades = $oComunicarActividadesSacd->getArrayComunicacion();
 
-    $a_campos = ['oPosicion' => $oPosicion,
-        'array_actividades' => $array_actividades,
-        'Qque' => $Qque,
-        'mi_dele' => $mi_dele,
-        'lugar_fecha' => $lugar_fecha,
-        'propuesta' => $Qpropuesta,
-    ];
-    
-    echo "<br><br><hr>";
-    echo "<h3>"._("Sacd de paso")."</h3>";
-    echo "<hr>";
-    echo $oView->render('com_sacd_activ_print.phtml',$a_campos);
+    if (count($array_actividades) > 0) {
+        $a_campos = ['oPosicion' => $oPosicion,
+            'array_actividades' => $array_actividades,
+            'Qque' => $Qque,
+            'mi_dele' => $mi_dele,
+            'lugar_fecha' => $lugar_fecha,
+            'propuesta' => $Qpropuesta,
+        ];
+        
+        echo "<br><br><hr>";
+        echo "<h3>"._("Sacd de paso")."</h3>";
+        echo "<hr>";
+        echo $oView->render('com_sacd_activ_print.phtml',$a_campos);
+    }
 }

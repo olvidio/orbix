@@ -1,6 +1,7 @@
 <?php
 namespace personas\model\entity;
 use core;
+use core\ConfigGlobal;
 /**
  * Fitxer amb la Classe que accedeix a la taula p_de_paso
  *
@@ -147,6 +148,7 @@ class PersonaPub Extends PersonaGlobal {
 				}
 			}
 			$this->setAllAtributes($aDades);
+			$this->aDades=$aDades;
 		} else {
 			// INSERT
 			//array_unshift($aDades, $this->iid_nom);
@@ -177,6 +179,13 @@ class PersonaPub Extends PersonaGlobal {
 			$aDadesLast = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 			$this->aDades=$aDadesLast;
 			$this->setAllAtributes($aDadesLast);
+		}
+		// Modifico la ficha en la BD-comun. En el caso de los de paso (ex) y dl = mi_dele
+		// Cuando se va, cambio la dl y allí lo borro.
+		if (get_class($this) == 'personas\model\entity\PersonaEx' && $this->bsacd && $this->sdl == ConfigGlobal::mi_dele()) {
+		    $aDades = $this->aDades;
+		    $aDades['id_tabla'] = $this->sid_tabla;
+		    $this->copia2Comun($aDades);
 		}
 		return true;
 	}
@@ -232,6 +241,17 @@ class PersonaPub Extends PersonaGlobal {
 	}
 	
 	/* METODES ALTRES  ----------------------------------------------------------*/
+	protected function copia2Comun($aDades) {
+	    $oPersonaSacd = new PersonaSacd($this->iid_nom);
+	    $oPersonaSacd->setAllAtributes($aDades);
+	    $oPersonaSacd->DBGuardar();
+	    
+	}
+	protected function eliminarDeComun() {
+	    $oPersonaSacd = new PersonaSacd($this->iid_nom);
+	    $oPersonaSacd->DBEliminar();
+	    
+	}
 	/* METODES PRIVATS ----------------------------------------------------------*/
 
 	/**
@@ -306,6 +326,46 @@ class PersonaPub Extends PersonaGlobal {
 
 
 	/* METODES GET i SET --------------------------------------------------------*/
+	
+	/**
+	 * estableix el valor de l'atribut bsacd de PersonaGlobal
+	 *
+	 * @param boolean bsacd='f' optional
+	 */
+	function setSacd($bsacd='f') {
+		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		if ( core\is_true($bsacd) ) { $bsacd_new='true'; } else { $bsacd_new='false'; }
+		if ( core\is_true($this->bsacd) ) { $bsacd='true'; } else { $bsacd='false'; }
+		// Si un sacd de paso lo cambio a NO sacd (de mi_dele), lo elimino de cp_sacd.
+		if (get_class($this) == 'personas\model\entity\PersonaEx' &&
+		    $this->sdl == ConfigGlobal::mi_dele() &&
+		    $bsacd && 
+		    $bsacd_new !== TRUE)
+		{
+		    $this->eliminarDeComun();
+	    }
+	    $this->bsacd = $bsacd;
+	}
+	/**
+	 * estableix el valor de l'atribut sdl de PersonaGlobal
+	 *
+	 * @param string sdl='' optional
+	 */
+	function setDl($sdl='') {
+		// Si un sacd de paso pasa a estar el dl, lo copio a cp_sacd.
+		// (ya se hace al guardar)
+		// Si un sacd de paso marcha de la dl, lo elimino de cp_sacd.
+		if (get_class($this) == 'personas\model\entity\PersonaEx' &&
+		    $this->bsacd && 
+		    $this->sdl == ConfigGlobal::mi_dele() &&
+		    $sdl != ConfigGlobal::mi_dele())
+		{
+		    $this->eliminarDeComun();
+	    }
+		    
+		$this->sdl = $sdl;
+	}
+	
 	/**
 	 * Recupera l'atribut iedad de PersonaPub
 	 *
