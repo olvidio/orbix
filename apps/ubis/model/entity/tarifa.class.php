@@ -37,6 +37,13 @@ class Tarifa Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_schema de Tarifa
 	 *
 	 * @var integer
@@ -204,6 +211,8 @@ class Tarifa Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -322,7 +331,7 @@ class Tarifa Extends core\ClasePropiedades {
 	 * @return integer iid_schema
 	 */
 	function getId_schema() {
-		if (!isset($this->iid_schema)) {
+		if (!isset($this->iid_schema) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_schema;
@@ -333,7 +342,7 @@ class Tarifa Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -352,7 +361,7 @@ class Tarifa Extends core\ClasePropiedades {
 	 * @return integer iid_ubi
 	 */
 	function getId_ubi() {
-		if (!isset($this->iid_ubi)) {
+		if (!isset($this->iid_ubi) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_ubi;
@@ -371,7 +380,7 @@ class Tarifa Extends core\ClasePropiedades {
 	 * @return integer iid_tarifa
 	 */
 	function getId_tarifa() {
-		if (!isset($this->iid_tarifa)) {
+		if (!isset($this->iid_tarifa) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tarifa;
@@ -390,7 +399,7 @@ class Tarifa Extends core\ClasePropiedades {
 	 * @return integer iyear
 	 */
 	function getYear() {
-		if (!isset($this->iyear)) {
+		if (!isset($this->iyear) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iyear;
@@ -409,7 +418,7 @@ class Tarifa Extends core\ClasePropiedades {
 	 * @return float icantidad
 	 */
 	function getCantidad() {
-		if (!isset($this->icantidad)) {
+		if (!isset($this->icantidad) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->icantidad;
@@ -428,7 +437,7 @@ class Tarifa Extends core\ClasePropiedades {
 	 * @return string sobserv
 	 */
 	function getObserv() {
-		if (!isset($this->sobserv)) {
+		if (!isset($this->sobserv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sobserv;

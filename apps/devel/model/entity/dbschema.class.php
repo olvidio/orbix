@@ -37,6 +37,13 @@ class DbSchema Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Schema de DbSchema
 	 *
 	 * @var string
@@ -163,6 +170,8 @@ class DbSchema Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -271,7 +280,7 @@ class DbSchema Extends core\ClasePropiedades {
 	 * @return string sschema
 	 */
 	function getSchema() {
-		if (!isset($this->sschema)) {
+		if (!isset($this->sschema) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sschema;
@@ -290,7 +299,7 @@ class DbSchema Extends core\ClasePropiedades {
 	 * @return integer iid
 	 */
 	function getId() {
-		if (!isset($this->iid)) {
+		if (!isset($this->iid) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid;

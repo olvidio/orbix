@@ -28,6 +28,13 @@ class CargoOAsistente {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_activ de CargoOAsistente
 	 *
 	 * @var integer

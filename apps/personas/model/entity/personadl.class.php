@@ -200,6 +200,8 @@ class PersonaDl Extends PersonaGlobal {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -321,7 +323,7 @@ class PersonaDl Extends PersonaGlobal {
 	 * @return integer iid_ctr
 	 */
 	function getId_ctr() {
-		if (!isset($this->iid_ctr)) {
+		if (!isset($this->iid_ctr) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_ctr;

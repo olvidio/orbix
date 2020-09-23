@@ -38,6 +38,13 @@ class ProfesorJuramento Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_item de ProfesorJuramento
 	 *
 	 * @var integer
@@ -167,6 +174,8 @@ class ProfesorJuramento Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -280,7 +289,7 @@ class ProfesorJuramento Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -299,7 +308,7 @@ class ProfesorJuramento Extends core\ClasePropiedades {
 	 * @return integer iid_nom
 	 */
 	function getId_nom() {
-		if (!isset($this->iid_nom)) {
+		if (!isset($this->iid_nom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_nom;
@@ -318,7 +327,7 @@ class ProfesorJuramento Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_juramento
 	 */
 	function getF_juramento() {
-	    if (!isset($this->df_juramento)) {
+	    if (!isset($this->df_juramento) && !$this->bLoaded) {
 	        $this->DBCarregar();
 	    }
 	    if (empty($this->df_juramento)) {

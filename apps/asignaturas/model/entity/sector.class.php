@@ -37,6 +37,13 @@ class Sector Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_sector de Sector
 	 *
 	 * @var integer
@@ -159,6 +166,8 @@ class Sector Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -268,7 +277,7 @@ class Sector Extends core\ClasePropiedades {
 	 * @return integer iid_sector
 	 */
 	function getId_sector() {
-		if (!isset($this->iid_sector)) {
+		if (!isset($this->iid_sector) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_sector;
@@ -287,7 +296,7 @@ class Sector Extends core\ClasePropiedades {
 	 * @return integer iid_departamento
 	 */
 	function getId_departamento() {
-		if (!isset($this->iid_departamento)) {
+		if (!isset($this->iid_departamento) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_departamento;
@@ -306,7 +315,7 @@ class Sector Extends core\ClasePropiedades {
 	 * @return string ssector
 	 */
 	function getSector() {
-		if (!isset($this->ssector)) {
+		if (!isset($this->ssector) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->ssector;

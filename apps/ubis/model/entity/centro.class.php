@@ -176,6 +176,8 @@ class Centro Extends UbiGlobal {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -271,7 +273,7 @@ class Centro Extends UbiGlobal {
 	 * @return string stipo_ctr
 	 */
 	function getTipo_ctr() {
-		if (!isset($this->stipo_ctr)) {
+		if (!isset($this->stipo_ctr) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stipo_ctr;
@@ -290,7 +292,7 @@ class Centro Extends UbiGlobal {
 	 * @return integer itipo_labor
 	 */
 	function getTipo_labor() {
-		if (!isset($this->itipo_labor)) {
+		if (!isset($this->itipo_labor) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->itipo_labor;
@@ -309,7 +311,7 @@ class Centro Extends UbiGlobal {
 	 * @return boolean bcdc
 	 */
 	function getCdc() {
-		if (!isset($this->bcdc)) {
+		if (!isset($this->bcdc) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bcdc;
@@ -328,7 +330,7 @@ class Centro Extends UbiGlobal {
 	 * @return integer iid_ctr_padre
 	 */
 	function getId_ctr_padre() {
-		if (!isset($this->iid_ctr_padre)) {
+		if (!isset($this->iid_ctr_padre) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_ctr_padre;

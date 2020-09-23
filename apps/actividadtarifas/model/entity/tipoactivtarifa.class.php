@@ -37,6 +37,13 @@ class TipoActivTarifa Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_schema de TipoActivTarifa
 	 *
 	 * @var integer
@@ -185,6 +192,8 @@ class TipoActivTarifa Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -297,7 +306,7 @@ class TipoActivTarifa Extends core\ClasePropiedades {
 	 * @return integer iid_schema
 	 */
 	function getId_schema() {
-		if (!isset($this->iid_schema)) {
+		if (!isset($this->iid_schema) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_schema;
@@ -316,7 +325,7 @@ class TipoActivTarifa Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -335,7 +344,7 @@ class TipoActivTarifa Extends core\ClasePropiedades {
 	 * @return integer iid_tarifa
 	 */
 	function getId_tarifa() {
-		if (!isset($this->iid_tarifa)) {
+		if (!isset($this->iid_tarifa) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tarifa;
@@ -354,7 +363,7 @@ class TipoActivTarifa Extends core\ClasePropiedades {
 	 * @return integer iid_tipo_activ
 	 */
 	function getId_tipo_activ() {
-		if (!isset($this->iid_tipo_activ)) {
+		if (!isset($this->iid_tipo_activ) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tipo_activ;
@@ -373,7 +382,7 @@ class TipoActivTarifa Extends core\ClasePropiedades {
 	 * @return integer itemporada
 	 */
 	function getTemporada() {
-		if (!isset($this->itemporada)) {
+		if (!isset($this->itemporada) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->itemporada;

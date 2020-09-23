@@ -37,6 +37,13 @@ class ZonaGrupo Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_grupo de ZonaGrupo
 	 *
 	 * @var integer
@@ -171,6 +178,8 @@ class ZonaGrupo Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -281,7 +290,7 @@ class ZonaGrupo Extends core\ClasePropiedades {
 	 * @return integer iid_grupo
 	 */
 	function getId_grupo() {
-		if (!isset($this->iid_grupo)) {
+		if (!isset($this->iid_grupo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_grupo;
@@ -300,7 +309,7 @@ class ZonaGrupo Extends core\ClasePropiedades {
 	 * @return string snombre_grupo
 	 */
 	function getNombre_grupo() {
-		if (!isset($this->snombre_grupo)) {
+		if (!isset($this->snombre_grupo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snombre_grupo;
@@ -319,7 +328,7 @@ class ZonaGrupo Extends core\ClasePropiedades {
 	 * @return integer iorden
 	 */
 	function getOrden() {
-		if (!isset($this->iorden)) {
+		if (!isset($this->iorden) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iorden;

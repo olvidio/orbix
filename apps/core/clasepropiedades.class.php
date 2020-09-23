@@ -28,7 +28,7 @@ abstract class ClasePropiedades {
 	 * @return integer iid_schema
 	 */
 	function getId_schema() {
-		if (!isset($this->iid_schema)) {
+		if (!isset($this->iid_schema) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_schema;

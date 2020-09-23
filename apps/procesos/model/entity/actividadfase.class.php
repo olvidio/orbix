@@ -45,6 +45,13 @@ class ActividadFase Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_fase de ActividadFase
 	 *
 	 * @var integer
@@ -190,6 +197,8 @@ class ActividadFase Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -317,7 +326,7 @@ class ActividadFase Extends core\ClasePropiedades {
 	 * @return integer iid_fase
 	 */
 	function getId_fase() {
-		if (!isset($this->iid_fase)) {
+		if (!isset($this->iid_fase) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_fase;
@@ -336,7 +345,7 @@ class ActividadFase Extends core\ClasePropiedades {
 	 * @return string sdesc_fase
 	 */
 	function getDesc_fase() {
-		if (!isset($this->sdesc_fase)) {
+		if (!isset($this->sdesc_fase) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdesc_fase;
@@ -355,7 +364,7 @@ class ActividadFase Extends core\ClasePropiedades {
 	 * @return boolean bsf
 	 */
 	function getSf() {
-		if (!isset($this->bsf)) {
+		if (!isset($this->bsf) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bsf;
@@ -382,7 +391,7 @@ class ActividadFase Extends core\ClasePropiedades {
 	 * @return boolean bsv
 	 */
 	function getSv() {
-		if (!isset($this->bsv)) {
+		if (!isset($this->bsv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bsv;

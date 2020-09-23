@@ -37,6 +37,13 @@ class ZonaSacd Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_item de ZonaSacd
 	 *
 	 * @var integer
@@ -181,6 +188,8 @@ class ZonaSacd Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -293,7 +302,7 @@ class ZonaSacd Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -312,7 +321,7 @@ class ZonaSacd Extends core\ClasePropiedades {
 	 * @return integer iid_nom
 	 */
 	function getId_nom() {
-		if (!isset($this->iid_nom)) {
+		if (!isset($this->iid_nom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_nom;
@@ -331,7 +340,7 @@ class ZonaSacd Extends core\ClasePropiedades {
 	 * @return integer iid_zona
 	 */
 	function getId_zona() {
-		if (!isset($this->iid_zona)) {
+		if (!isset($this->iid_zona) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_zona;
@@ -350,7 +359,7 @@ class ZonaSacd Extends core\ClasePropiedades {
 	 * @return boolean bpropia
 	 */
 	function getPropia() {
-		if (!isset($this->bpropia)) {
+		if (!isset($this->bpropia) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bpropia;

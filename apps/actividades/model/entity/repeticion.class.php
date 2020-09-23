@@ -37,6 +37,13 @@ class Repeticion Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_repeticion de Repeticion
 	 *
 	 * @var integer
@@ -168,6 +175,8 @@ class Repeticion Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -279,7 +288,7 @@ class Repeticion Extends core\ClasePropiedades {
 	 * @return integer iid_repeticion
 	 */
 	function getId_repeticion() {
-		if (!isset($this->iid_repeticion)) {
+		if (!isset($this->iid_repeticion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_repeticion;
@@ -298,7 +307,7 @@ class Repeticion Extends core\ClasePropiedades {
 	 * @return string srepeticion
 	 */
 	function getRepeticion() {
-		if (!isset($this->srepeticion)) {
+		if (!isset($this->srepeticion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->srepeticion;
@@ -317,7 +326,7 @@ class Repeticion Extends core\ClasePropiedades {
 	 * @return string stemporada
 	 */
 	function getTemporada() {
-		if (!isset($this->stemporada)) {
+		if (!isset($this->stemporada) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stemporada;
@@ -336,7 +345,7 @@ class Repeticion Extends core\ClasePropiedades {
 	 * @return string itipo
 	 */
 	function getTipo() {
-		if (!isset($this->itipo)) {
+		if (!isset($this->itipo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->itipo;

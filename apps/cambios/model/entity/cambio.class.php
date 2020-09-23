@@ -57,6 +57,13 @@ class Cambio Extends core\ClasePropiedades {
 	 protected $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 protected $bLoaded = FALSE;
+
+	/**
 	 * Id_schema de Cambio
 	 *
 	 * @var integer
@@ -309,6 +316,8 @@ class Cambio Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -762,7 +771,7 @@ class Cambio Extends core\ClasePropiedades {
 	 * @return integer iid_item_cambio
 	 */
 	function getId_item_cambio() {
-		if (!isset($this->iid_item_cambio)) {
+		if (!isset($this->iid_item_cambio) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item_cambio;
@@ -781,7 +790,7 @@ class Cambio Extends core\ClasePropiedades {
 	 * @return integer iid_tipo_cambio
 	 */
 	function getId_tipo_cambio() {
-		if (!isset($this->iid_tipo_cambio)) {
+		if (!isset($this->iid_tipo_cambio) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tipo_cambio;
@@ -800,7 +809,7 @@ class Cambio Extends core\ClasePropiedades {
 	 * @return integer iid_activ
 	 */
 	function getId_activ() {
-		if (!isset($this->iid_activ)) {
+		if (!isset($this->iid_activ) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_activ;
@@ -819,7 +828,7 @@ class Cambio Extends core\ClasePropiedades {
 	 * @return integer iid_tipo_activ
 	 */
 	function getId_tipo_activ() {
-		if (!isset($this->iid_tipo_activ)) {
+		if (!isset($this->iid_tipo_activ) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tipo_activ;
@@ -839,7 +848,7 @@ class Cambio Extends core\ClasePropiedades {
 	 * @return object $oFases
 	 */
 	function getJson_fases_sv($bArray=FALSE) {
-	    if (!isset($this->json_fases_sv)) {
+	    if (!isset($this->json_fases_sv) && !$this->bLoaded) {
 	        $this->DBCarregar();
 	    }
 	    $oFases = json_decode(json_decode($this->json_fases_sv),$bArray);
@@ -869,7 +878,7 @@ class Cambio Extends core\ClasePropiedades {
 	 * @return object $oFases
 	 */
 	function getJson_fases_sf($bArray=FALSE) {
-	    if (!isset($this->json_fases_sf)) {
+	    if (!isset($this->json_fases_sf) && !$this->bLoaded) {
 	        $this->DBCarregar();
 	    }
 	    $oFases = json_decode(json_decode($this->json_fases_sf),$bArray);
@@ -897,7 +906,7 @@ class Cambio Extends core\ClasePropiedades {
 	 * @return integer iid_status
 	 */
 	function getId_status() {
-		if (!isset($this->iid_status)) {
+		if (!isset($this->iid_status) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_status;
@@ -916,7 +925,7 @@ class Cambio Extends core\ClasePropiedades {
 	 * @return boolean sdl_org
 	 */
 	function getDl_org() {
-		if (!isset($this->sdl_org)) {
+		if (!isset($this->sdl_org) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdl_org;
@@ -935,7 +944,7 @@ class Cambio Extends core\ClasePropiedades {
 	 * @return string sobjeto
 	 */
 	function getObjeto() {
-		if (!isset($this->sobjeto)) {
+		if (!isset($this->sobjeto) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sobjeto;
@@ -954,7 +963,7 @@ class Cambio Extends core\ClasePropiedades {
 	 * @return string spropiedad
 	 */
 	function getPropiedad() {
-		if (!isset($this->spropiedad)) {
+		if (!isset($this->spropiedad) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->spropiedad;
@@ -973,7 +982,7 @@ class Cambio Extends core\ClasePropiedades {
 	 * @return string svalor_old
 	 */
 	function getValor_old() {
-		if (!isset($this->svalor_old)) {
+		if (!isset($this->svalor_old) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->svalor_old;
@@ -992,7 +1001,7 @@ class Cambio Extends core\ClasePropiedades {
 	 * @return string svalor_new
 	 */
 	function getValor_new() {
-		if (!isset($this->svalor_new)) {
+		if (!isset($this->svalor_new) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->svalor_new;
@@ -1011,7 +1020,7 @@ class Cambio Extends core\ClasePropiedades {
 	 * @return integer iquien_cambia
 	 */
 	function getQuien_cambia() {
-		if (!isset($this->iquien_cambia)) {
+		if (!isset($this->iquien_cambia) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iquien_cambia;
@@ -1030,7 +1039,7 @@ class Cambio Extends core\ClasePropiedades {
 	 * @return integer isfsv_quien_cambia
 	 */
 	function getSfsv_quien_cambia() {
-		if (!isset($this->isfsv_quien_cambia)) {
+		if (!isset($this->isfsv_quien_cambia) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->isfsv_quien_cambia;
@@ -1049,7 +1058,7 @@ class Cambio Extends core\ClasePropiedades {
 	 * @return DateTimeLocal itimestamp
 	 */
 	function getTimestamp_cambio() {
-	    if (!isset($this->itimestamp_cambio)) {
+	    if (!isset($this->itimestamp_cambio) && !$this->bLoaded) {
 	        $this->DBCarregar();
 	    }
 	    if (empty($this->itimestamp_cambio)) {

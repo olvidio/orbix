@@ -171,7 +171,7 @@ class TrasladoDl {
 	 * @return web\DateTimeLocal df_dl
 	 */
 	function getF_dl() {
-	    if (!isset($this->df_dl)) {
+	    if (!isset($this->df_dl) && !$this->bLoaded) {
 	        $this->DBCarregar();
 	    }
 	    if (empty($this->df_dl)) {

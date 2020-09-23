@@ -37,6 +37,13 @@ class CartaPresentacion Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_direccion de CartaPresentacion
 	 *
 	 * @var integer
@@ -197,6 +204,8 @@ class CartaPresentacion Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -316,7 +325,7 @@ class CartaPresentacion Extends core\ClasePropiedades {
 	 * @return integer iid_direccion
 	 */
 	function getId_direccion() {
-		if (!isset($this->iid_direccion)) {
+		if (!isset($this->iid_direccion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_direccion;
@@ -335,7 +344,7 @@ class CartaPresentacion Extends core\ClasePropiedades {
 	 * @return integer iid_ubi
 	 */
 	function getId_ubi() {
-		if (!isset($this->iid_ubi)) {
+		if (!isset($this->iid_ubi) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_ubi;
@@ -354,7 +363,7 @@ class CartaPresentacion Extends core\ClasePropiedades {
 	 * @return string spres_nom
 	 */
 	function getPres_nom() {
-		if (!isset($this->spres_nom)) {
+		if (!isset($this->spres_nom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->spres_nom;
@@ -373,7 +382,7 @@ class CartaPresentacion Extends core\ClasePropiedades {
 	 * @return string spres_telf
 	 */
 	function getPres_telf() {
-		if (!isset($this->spres_telf)) {
+		if (!isset($this->spres_telf) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->spres_telf;
@@ -392,7 +401,7 @@ class CartaPresentacion Extends core\ClasePropiedades {
 	 * @return string spres_mail
 	 */
 	function getPres_mail() {
-		if (!isset($this->spres_mail)) {
+		if (!isset($this->spres_mail) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->spres_mail;
@@ -411,7 +420,7 @@ class CartaPresentacion Extends core\ClasePropiedades {
 	 * @return string szona
 	 */
 	function getZona() {
-		if (!isset($this->szona)) {
+		if (!isset($this->szona) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->szona;
@@ -430,7 +439,7 @@ class CartaPresentacion Extends core\ClasePropiedades {
 	 * @return string sobserv
 	 */
 	function getObserv() {
-		if (!isset($this->sobserv)) {
+		if (!isset($this->sobserv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sobserv;

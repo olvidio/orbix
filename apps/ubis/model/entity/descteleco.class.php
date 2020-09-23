@@ -29,6 +29,13 @@ class DescTeleco Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_item de DescTeleco
 	 *
 	 * @var integer
@@ -179,6 +186,8 @@ class DescTeleco Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -294,7 +303,7 @@ class DescTeleco Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -313,7 +322,7 @@ class DescTeleco Extends core\ClasePropiedades {
 	 * @return integer iorden
 	 */
 	function getOrden() {
-		if (!isset($this->iorden)) {
+		if (!isset($this->iorden) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iorden;
@@ -332,7 +341,7 @@ class DescTeleco Extends core\ClasePropiedades {
 	 * @return string stipo_teleco
 	 */
 	function getTipo_teleco() {
-		if (!isset($this->stipo_teleco)) {
+		if (!isset($this->stipo_teleco) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stipo_teleco;
@@ -351,7 +360,7 @@ class DescTeleco Extends core\ClasePropiedades {
 	 * @return string sdesc_teleco
 	 */
 	function getDesc_teleco() {
-		if (!isset($this->sdesc_teleco)) {
+		if (!isset($this->sdesc_teleco) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdesc_teleco;
@@ -370,7 +379,7 @@ class DescTeleco Extends core\ClasePropiedades {
 	 * @return boolean bubi
 	 */
 	function getUbi() {
-		if (!isset($this->bubi)) {
+		if (!isset($this->bubi) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bubi;
@@ -389,7 +398,7 @@ class DescTeleco Extends core\ClasePropiedades {
 	 * @return boolean bpersona
 	 */
 	function getPersona() {
-		if (!isset($this->bpersona)) {
+		if (!isset($this->bpersona) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bpersona;

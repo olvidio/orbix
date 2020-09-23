@@ -37,6 +37,13 @@ class ConfigSchema Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Parametro de ConfigSchema
 	 *
 	 * @var string
@@ -163,6 +170,8 @@ class ConfigSchema Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -271,7 +280,7 @@ class ConfigSchema Extends core\ClasePropiedades {
 	 * @return string sparametro
 	 */
 	function getParametro() {
-		if (!isset($this->sparametro)) {
+		if (!isset($this->sparametro) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sparametro;
@@ -290,7 +299,7 @@ class ConfigSchema Extends core\ClasePropiedades {
 	 * @return string svalor
 	 */
 	function getValor() {
-		if (!isset($this->svalor)) {
+		if (!isset($this->svalor) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->svalor;

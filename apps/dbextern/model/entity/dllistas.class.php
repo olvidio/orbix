@@ -29,6 +29,13 @@ class DlListas Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Numero_dl de Listas
 	 *
 	 * @var integer
@@ -120,6 +127,8 @@ class DlListas Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -229,7 +238,7 @@ class DlListas Extends core\ClasePropiedades {
 	 * @return string sDl
 	 */
 	function getDl() {
-		if (!isset($this->sDl)) {
+		if (!isset($this->sDl) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sDl;
@@ -248,7 +257,7 @@ class DlListas Extends core\ClasePropiedades {
 	 * @return string sNombre_dl
 	 */
 	function getNombre_dl() {
-		if (!isset($this->sNombre_dl)) {
+		if (!isset($this->sNombre_dl) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sNombre_dl;
@@ -267,7 +276,7 @@ class DlListas Extends core\ClasePropiedades {
 	 * @return string sAbr_r
 	 */
 	function getAbr_r() {
-		if (!isset($this->sAbr_r)) {
+		if (!isset($this->sAbr_r) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sAbr_r;
@@ -286,7 +295,7 @@ class DlListas Extends core\ClasePropiedades {
 	 * @return string iNumero_dl
 	 */
 	function getNumero_dl() {
-		if (!isset($this->iNumero_dl)) {
+		if (!isset($this->iNumero_dl) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iNumero_dl;
@@ -305,7 +314,7 @@ class DlListas Extends core\ClasePropiedades {
 	 * @return string iNumero_r
 	 */
 	function getNumero_r() {
-		if (!isset($this->iNumero_r)) {
+		if (!isset($this->iNumero_r) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iNumero_r;

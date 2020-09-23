@@ -38,6 +38,13 @@ class ActividadAll Extends core\ClasePropiedades {
 	 protected $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 protected $bLoaded = FALSE;
+
+	/**
 	 * aDades de ActividadAll abans dels canvis.
 	 *
 	 * @var array
@@ -301,6 +308,8 @@ class ActividadAll Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -501,7 +510,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return integer iid_activ
 	 */
 	function getId_activ() {
-		if (!isset($this->iid_activ)) {
+		if (!isset($this->iid_activ) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_activ;
@@ -520,7 +529,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return integer iid_tipo_activ
 	 */
 	function getId_tipo_activ() {
-		if (!isset($this->iid_tipo_activ)) {
+		if (!isset($this->iid_tipo_activ) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tipo_activ;
@@ -551,7 +560,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return string sdl_org
 	 */
 	function getDl_org() {
-		if (!isset($this->sdl_org)) {
+		if (!isset($this->sdl_org) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdl_org;
@@ -570,7 +579,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return string snom_activ
 	 */
 	function getNom_activ() {
-		if (!isset($this->snom_activ)) {
+		if (!isset($this->snom_activ) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snom_activ;
@@ -589,7 +598,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return integer iid_ubi
 	 */
 	function getId_ubi() {
-		if (!isset($this->iid_ubi)) {
+		if (!isset($this->iid_ubi) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_ubi;
@@ -608,7 +617,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return string sdesc_activ
 	 */
 	function getDesc_activ() {
-		if (!isset($this->sdesc_activ)) {
+		if (!isset($this->sdesc_activ) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdesc_activ;
@@ -627,7 +636,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_ini
 	 */
 	function getF_ini() {
-		if (!isset($this->df_ini)) {
+		if (!isset($this->df_ini) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		if (empty($this->df_ini)) {
@@ -658,7 +667,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return string time th_ini
 	 */
 	function getH_ini() {
-		if (!isset($this->th_ini)) {
+		if (!isset($this->th_ini) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->th_ini;
@@ -677,7 +686,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_fin
 	 */
 	function getF_fin() {
-		if (!isset($this->df_fin)) {
+		if (!isset($this->df_fin) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		if (empty($this->df_fin)) {
@@ -708,7 +717,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return string time th_fin
 	 */
 	function getH_fin() {
-		if (!isset($this->th_fin)) {
+		if (!isset($this->th_fin) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->th_fin;
@@ -727,7 +736,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return integer itipo_horario
 	 */
 	function getTipo_horario() {
-		if (!isset($this->itipo_horario)) {
+		if (!isset($this->itipo_horario) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->itipo_horario;
@@ -746,7 +755,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return integer iprecio
 	 */
 	function getPrecio() {
-		if (!isset($this->iprecio)) {
+		if (!isset($this->iprecio) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iprecio;
@@ -767,7 +776,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return integer inum_asistentes
 	 */
 	function getNum_asistentes() {
-		if (!isset($this->inum_asistentes)) {
+		if (!isset($this->inum_asistentes) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->inum_asistentes;
@@ -786,7 +795,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return integer istatus
 	 */
 	function getStatus() {
-		if (!isset($this->istatus)) {
+		if (!isset($this->istatus) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->istatus;
@@ -805,7 +814,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return string sobserv
 	 */
 	function getObserv() {
-		if (!isset($this->sobserv)) {
+		if (!isset($this->sobserv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sobserv;
@@ -824,7 +833,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return integer inivel_stgr
 	 */
 	function getNivel_stgr() {
-		if (!isset($this->inivel_stgr)) {
+		if (!isset($this->inivel_stgr) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->inivel_stgr;
@@ -843,7 +852,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return string sobserv_material
 	 */
 	function getObserv_material() {
-		if (!isset($this->sobserv_material)) {
+		if (!isset($this->sobserv_material) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sobserv_material;
@@ -862,7 +871,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return string slugar_esp
 	 */
 	function getLugar_esp() {
-		if (!isset($this->slugar_esp)) {
+		if (!isset($this->slugar_esp) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->slugar_esp;
@@ -881,7 +890,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return integer itarifa
 	 */
 	function getTarifa() {
-		if (!isset($this->itarifa)) {
+		if (!isset($this->itarifa) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->itarifa;
@@ -900,7 +909,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return integer iid_repeticion
 	 */
 	function getId_repeticion() {
-		if (!isset($this->iid_repeticion)) {
+		if (!isset($this->iid_repeticion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_repeticion;
@@ -919,7 +928,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return boolean bpublicado
 	 */
 	function getPublicado() {
-		if (!isset($this->bpublicado)) {
+		if (!isset($this->bpublicado) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bpublicado;
@@ -938,7 +947,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return string sid_tabla
 	 */
 	function getId_tabla() {
-		if (!isset($this->sid_tabla)) {
+		if (!isset($this->sid_tabla) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sid_tabla;
@@ -957,7 +966,7 @@ class ActividadAll Extends core\ClasePropiedades {
 	 * @return string iplazas
 	 */
 	function getPlazas() {
-		if (!isset($this->iplazas)) {
+		if (!isset($this->iplazas) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iplazas;

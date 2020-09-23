@@ -56,6 +56,13 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 protected $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 protected $bLoaded = FALSE;
+
+	/**
 	 * Id_schema de PersonaGlobal
 	 *
 	 * @var integer
@@ -310,7 +317,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return integer iid_nom
 	 */
 	function getId_nom() {
-		if (!isset($this->iid_nom)) {
+		if (!isset($this->iid_nom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_nom;
@@ -329,7 +336,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return integer iid_cr
 	 */
 	function getId_cr() {
-		if (!isset($this->iid_cr)) {
+		if (!isset($this->iid_cr) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_cr;
@@ -348,7 +355,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string sid_tabla
 	 */
 	function getId_tabla() {
-		if (!isset($this->sid_tabla)) {
+		if (!isset($this->sid_tabla) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sid_tabla;
@@ -367,7 +374,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string sdl
 	 */
 	function getDl() {
-		if (!isset($this->sdl)) {
+		if (!isset($this->sdl) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdl;
@@ -386,7 +393,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return boolean bsacd
 	 */
 	function getSacd() {
-		if (!isset($this->bsacd)) {
+		if (!isset($this->bsacd) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bsacd;
@@ -405,7 +412,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string strato
 	 */
 	function getTrato() {
-		if (!isset($this->strato)) {
+		if (!isset($this->strato) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->strato;
@@ -424,7 +431,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string snom
 	 */
 	function getNom() {
-		if (!isset($this->snom)) {
+		if (!isset($this->snom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snom;
@@ -443,7 +450,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string snx1
 	 */
 	function getNx1() {
-		if (!property_exists($this,'snx1')) {
+		if (!isset($this->snx1) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snx1;
@@ -462,7 +469,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string sapellido1
 	 */
 	function getApellido1() {
-		if (!isset($this->sapellido1)) {
+		if (!isset($this->sapellido1) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sapellido1;
@@ -481,7 +488,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string snx2
 	 */
 	function getNx2() {
-		if (!isset($this->snx2)) {
+		if (!isset($this->snx2) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snx2;
@@ -500,7 +507,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string sapellido2
 	 */
 	function getApellido2() {
-		if (!isset($this->sapellido2)) {
+		if (!isset($this->sapellido2) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sapellido2;
@@ -519,7 +526,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_nacimiento
 	 */
 	function getF_nacimiento() {
-	    if (!isset($this->df_nacimiento)) {
+	    if (!isset($this->df_nacimiento) && !$this->bLoaded) {
 	        $this->DBCarregar();
 	    }
 	    if (empty($this->df_nacimiento)) {
@@ -550,7 +557,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string slengua
 	 */
 	function getLengua() {
-		if (!isset($this->slengua)) {
+		if (!isset($this->slengua) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->slengua;
@@ -569,7 +576,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string ssituacion
 	 */
 	function getSituacion() {
-		if (!isset($this->ssituacion)) {
+		if (!isset($this->ssituacion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->ssituacion;
@@ -588,7 +595,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_situacion
 	 */
 	function getF_situacion() {
-	    if (!isset($this->df_situacion)) {
+	    if (!isset($this->df_situacion) && !$this->bLoaded) {
 	        $this->DBCarregar();
 	    }
 	    if (empty($this->df_situacion)) {
@@ -619,7 +626,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string sapel_fam
 	 */
 	function getApel_fam() {
-		if (!isset($this->sapel_fam)) {
+		if (!isset($this->sapel_fam) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sapel_fam;
@@ -638,7 +645,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string sinc
 	 */
 	function getInc() {
-		if (!isset($this->sinc)) {
+		if (!isset($this->sinc) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sinc;
@@ -657,7 +664,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_inc
 	 */
 	function getF_inc() {
-	    if (!isset($this->df_inc)) {
+	    if (!isset($this->df_inc) && !$this->bLoaded) {
 	        $this->DBCarregar();
 	    }
 	    if (empty($this->df_inc)) {
@@ -688,7 +695,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string sstgr
 	 */
 	function getStgr() {
-		if (!isset($this->sstgr)) {
+		if (!isset($this->sstgr) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sstgr;
@@ -707,7 +714,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string sprofesion
 	 */
 	function getProfesion() {
-		if (!isset($this->sprofesion)) {
+		if (!isset($this->sprofesion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sprofesion;
@@ -726,7 +733,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string seap
 	 */
 	function getEap() {
-		if (!isset($this->seap)) {
+		if (!isset($this->seap) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->seap;
@@ -745,7 +752,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string sobserv
 	 */
 	function getObserv() {
-		if (!isset($this->sobserv)) {
+		if (!isset($this->sobserv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sobserv;
@@ -764,7 +771,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return integer slugar_nacimiento
 	 */
 	function getLugar_nacimiento() {
-		if (!isset($this->slugar_nacimiento)) {
+		if (!isset($this->slugar_nacimiento) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->slugar_nacimiento;
@@ -785,7 +792,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string sApellidos
 	 */
 	function getApellidos() {
-		if (!isset($this->sApellidos)) {
+		if (!isset($this->sApellidos) && !$this->bLoaded) {
 			$this->DBCarregar();
 			$ap_nom= !empty($this->snx1)? $this->snx1.' ' : '';
 			$ap_nom.= $this->sapellido1;
@@ -802,7 +809,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string sApellidosNombre
 	 */
 	function getApellidosNombre() {
-		if (!isset($this->sApellidosNombre)) {
+		if (!isset($this->sApellidosNombre) && !$this->bLoaded) {
 			$this->DBCarregar();
 			if (empty($this->sapellido1)) {
 				$ap_nom = '';
@@ -846,7 +853,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string sApellidosNombreCr1_05
 	 */
 	function getApellidosNombreCr1_05() {
-		if (!isset($this->sApellidosNombreCr1_05)) {
+		if (!isset($this->sApellidosNombreCr1_05) && !$this->bLoaded) {
 			$this->DBCarregar();
 			$ap_nom= !empty($this->snx1)? $this->snx1.' ' : '';
 			$ap_nom.= $this->sapellido1;
@@ -873,7 +880,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string sNombreApellidos
 	 */
 	public function getNombreApellidos() {
-		if (!isset($this->sNombreApellidos)) {
+		if (!isset($this->sNombreApellidos) && !$this->bLoaded) {
 			$this->DBCarregar();
 			$nom_ap = !empty($this->strato)? $this->strato.' ' : '';
 			$nom_ap.= !empty($this->sapel_fam)? $this->sapel_fam : $this->snom;
@@ -893,7 +900,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string sNombreApellidosCrSin
 	 */
 	function getNombreApellidosCrSin() {
-		if (!isset($this->sNombreApellidosCrSin)) {
+		if (!isset($this->sNombreApellidosCrSin) && !$this->bLoaded) {
 			$this->DBCarregar();
 			$nom_ap = $this->snom;
 			$nom_ap.= !empty($this->snx1)? ' '.$this->snx1 : '';
@@ -912,7 +919,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string sTituloNombre
 	 */
 	function getTituloNombre() {
-		if (!isset($this->sTituloNombre)) {
+		if (!isset($this->sTituloNombre) && !$this->bLoaded) {
 			$this->DBCarregar();
 			$nom_ap = 'Dnus. Dr. ';
 			$nom_ap .= $this->snom; 
@@ -932,7 +939,7 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 * @return string sTituloNombreLatin
 	 */
 	function getTituloNombreLatin() {
-		if (!isset($this->sTituloNombreLatin)) {
+		if (!isset($this->sTituloNombreLatin) && !$this->bLoaded) {
 			$this->DBCarregar();
 			$oGesNomLatin = new GestorNombreLatin();
 			$nom_ap = 'Dnus. Dr. ';

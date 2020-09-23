@@ -37,6 +37,13 @@ class PlazaPeticion Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_schema de PlazaPeticion
 	 *
 	 * @var integer
@@ -179,6 +186,8 @@ class PlazaPeticion Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -294,7 +303,7 @@ class PlazaPeticion Extends core\ClasePropiedades {
 	 * @return integer iid_nom
 	 */
 	function getId_nom() {
-		if (!isset($this->iid_nom)) {
+		if (!isset($this->iid_nom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_nom;
@@ -313,7 +322,7 @@ class PlazaPeticion Extends core\ClasePropiedades {
 	 * @return integer iid_activ
 	 */
 	function getId_activ() {
-		if (!isset($this->iid_activ)) {
+		if (!isset($this->iid_activ) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_activ;
@@ -332,7 +341,7 @@ class PlazaPeticion Extends core\ClasePropiedades {
 	 * @return integer iorden
 	 */
 	function getOrden() {
-		if (!isset($this->iorden)) {
+		if (!isset($this->iorden) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iorden;
@@ -351,7 +360,7 @@ class PlazaPeticion Extends core\ClasePropiedades {
 	 * @return string stipo
 	 */
 	function getTipo() {
-		if (!isset($this->stipo)) {
+		if (!isset($this->stipo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stipo;

@@ -37,6 +37,13 @@ class GrupMenuRole Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_item de GrupMenuRole
 	 *
 	 * @var integer
@@ -159,6 +166,8 @@ class GrupMenuRole Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -271,7 +280,7 @@ class GrupMenuRole Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -290,7 +299,7 @@ class GrupMenuRole Extends core\ClasePropiedades {
 	 * @return integer iid_grupmenu
 	 */
 	function getId_grupmenu() {
-		if (!isset($this->iid_grupmenu)) {
+		if (!isset($this->iid_grupmenu) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_grupmenu;
@@ -309,7 +318,7 @@ class GrupMenuRole Extends core\ClasePropiedades {
 	 * @return integer iid_role
 	 */
 	function getId_role() {
-		if (!isset($this->iid_role)) {
+		if (!isset($this->iid_role) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_role;

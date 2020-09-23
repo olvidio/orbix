@@ -37,6 +37,13 @@ class Local Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_locale de Local
 	 *
 	 * @var string
@@ -189,6 +196,8 @@ class Local Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -303,7 +312,7 @@ class Local Extends core\ClasePropiedades {
 	 * @return string sid_locale
 	 */
 	function getId_locale() {
-		if (!isset($this->sid_locale)) {
+		if (!isset($this->sid_locale) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sid_locale;
@@ -322,7 +331,7 @@ class Local Extends core\ClasePropiedades {
 	 * @return string snom_locale
 	 */
 	function getNom_Locale() {
-		if (!isset($this->snom_locale)) {
+		if (!isset($this->snom_locale) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snom_locale;
@@ -341,7 +350,7 @@ class Local Extends core\ClasePropiedades {
 	 * @return string sidioma
 	 */
 	function getIdioma() {
-		if (!isset($this->sidioma)) {
+		if (!isset($this->sidioma) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sidioma;
@@ -360,7 +369,7 @@ class Local Extends core\ClasePropiedades {
 	 * @return string snom_idioma
 	 */
 	function getNom_idioma() {
-		if (!isset($this->snom_idioma)) {
+		if (!isset($this->snom_idioma) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snom_idioma;
@@ -379,7 +388,7 @@ class Local Extends core\ClasePropiedades {
 	 * @return boolean bactivo
 	 */
 	function getActivo() {
-		if (!isset($this->bactivo)) {
+		if (!isset($this->bactivo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bactivo;

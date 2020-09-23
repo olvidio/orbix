@@ -37,6 +37,13 @@ class ActaTribunalDl Extends core\ClasePropiedades {
 	 protected $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 protected $bLoaded = FALSE;
+
+	/**
 	 * Acta de ActaTribunalDl
 	 *
 	 * @var string
@@ -179,6 +186,8 @@ class ActaTribunalDl Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -293,7 +302,7 @@ class ActaTribunalDl Extends core\ClasePropiedades {
 	 * @return string sacta
 	 */
 	function getActa() {
-		if (!isset($this->sacta)) {
+		if (!isset($this->sacta) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sacta;
@@ -312,7 +321,7 @@ class ActaTribunalDl Extends core\ClasePropiedades {
 	 * @return string sexaminador
 	 */
 	function getExaminador() {
-		if (!isset($this->sexaminador)) {
+		if (!isset($this->sexaminador) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sexaminador;
@@ -331,7 +340,7 @@ class ActaTribunalDl Extends core\ClasePropiedades {
 	 * @return integer iorden
 	 */
 	function getOrden() {
-		if (!isset($this->iorden)) {
+		if (!isset($this->iorden) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iorden;
@@ -350,7 +359,7 @@ class ActaTribunalDl Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;

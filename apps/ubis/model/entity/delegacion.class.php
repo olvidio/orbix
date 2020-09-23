@@ -28,6 +28,13 @@ class Delegacion Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_dl de Delegacion
 	 *
 	 * @var integer
@@ -182,6 +189,8 @@ class Delegacion Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -300,7 +309,7 @@ class Delegacion Extends core\ClasePropiedades {
 	 * @return integer iid_dl
 	 */
 	function getId_dl() {
-		if (!isset($this->iid_dl)) {
+		if (!isset($this->iid_dl) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_dl;
@@ -319,7 +328,7 @@ class Delegacion Extends core\ClasePropiedades {
 	 * @return string sdl
 	 */
 	function getDl() {
-		if (!isset($this->sdl)) {
+		if (!isset($this->sdl) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdl;
@@ -338,7 +347,7 @@ class Delegacion Extends core\ClasePropiedades {
 	 * @return string sregion
 	 */
 	function getRegion() {
-		if (!isset($this->sregion)) {
+		if (!isset($this->sregion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sregion;
@@ -357,7 +366,7 @@ class Delegacion Extends core\ClasePropiedades {
 	 * @return string snombre_dl
 	 */
 	function getNombre_dl() {
-		if (!isset($this->snombre_dl)) {
+		if (!isset($this->snombre_dl) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snombre_dl;
@@ -376,7 +385,7 @@ class Delegacion Extends core\ClasePropiedades {
 	 * @return string sgrupo_estudios
 	 */
 	function getGrupo_estudios() {
-		if (!isset($this->sgrupo_estudios)) {
+		if (!isset($this->sgrupo_estudios) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sgrupo_estudios;
@@ -395,7 +404,7 @@ class Delegacion Extends core\ClasePropiedades {
 	 * @return string sregion_stgr
 	 */
 	function getRegion_stgr() {
-		if (!isset($this->sregion_stgr)) {
+		if (!isset($this->sregion_stgr) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sregion_stgr;
@@ -414,7 +423,7 @@ class Delegacion Extends core\ClasePropiedades {
 	 * @return boolean bstatus
 	 */
 	function getStatus() {
-		if (!isset($this->bstatus)) {
+		if (!isset($this->bstatus) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bstatus;

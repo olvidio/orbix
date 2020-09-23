@@ -28,6 +28,13 @@ class TipoTarifa Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_tarifa de TipoTarifa
 	 *
 	 * @var integer
@@ -169,6 +176,8 @@ class TipoTarifa Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -283,7 +292,7 @@ class TipoTarifa Extends core\ClasePropiedades {
 	 * @return integer iid_tarifa
 	 */
 	function getId_tarifa() {
-		if (!isset($this->iid_tarifa)) {
+		if (!isset($this->iid_tarifa) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tarifa;
@@ -302,7 +311,7 @@ class TipoTarifa Extends core\ClasePropiedades {
 	 * @return integer imodo
 	 */
 	function getModo() {
-		if (!isset($this->imodo)) {
+		if (!isset($this->imodo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->imodo;
@@ -313,7 +322,7 @@ class TipoTarifa Extends core\ClasePropiedades {
 	 * @return string imodo
 	 */
 	function getModoTxt() {
-		if (!isset($this->imodo)) {
+		if (!isset($this->imodo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		switch ($this->imodo) {
@@ -340,7 +349,7 @@ class TipoTarifa Extends core\ClasePropiedades {
 	 * @return string sletra
 	 */
 	function getLetra() {
-		if (!isset($this->sletra)) {
+		if (!isset($this->sletra) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sletra;
@@ -359,7 +368,7 @@ class TipoTarifa Extends core\ClasePropiedades {
 	 * @return integer isfsv
 	 */
 	function getSfsv() {
-		if (!isset($this->isfsv)) {
+		if (!isset($this->isfsv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->isfsv;
@@ -378,7 +387,7 @@ class TipoTarifa Extends core\ClasePropiedades {
 	 * @return string sobserv
 	 */
 	function getObserv() {
-		if (!isset($this->sobserv)) {
+		if (!isset($this->sobserv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sobserv;

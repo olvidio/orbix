@@ -37,6 +37,13 @@ class Zona Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_zona de Zona
 	 *
 	 * @var integer
@@ -187,6 +194,8 @@ class Zona Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -301,7 +310,7 @@ class Zona Extends core\ClasePropiedades {
 	 * @return integer iid_zona
 	 */
 	function getId_zona() {
-		if (!isset($this->iid_zona)) {
+		if (!isset($this->iid_zona) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_zona;
@@ -320,7 +329,7 @@ class Zona Extends core\ClasePropiedades {
 	 * @return string snombre_zona
 	 */
 	function getNombre_zona() {
-		if (!isset($this->snombre_zona)) {
+		if (!isset($this->snombre_zona) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snombre_zona;
@@ -339,7 +348,7 @@ class Zona Extends core\ClasePropiedades {
 	 * @return integer iorden
 	 */
 	function getOrden() {
-		if (!isset($this->iorden)) {
+		if (!isset($this->iorden) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iorden;
@@ -358,7 +367,7 @@ class Zona Extends core\ClasePropiedades {
 	 * @return integer iid_grupo
 	 */
 	function getId_grupo() {
-		if (!isset($this->iid_grupo)) {
+		if (!isset($this->iid_grupo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_grupo;
@@ -377,7 +386,7 @@ class Zona Extends core\ClasePropiedades {
 	 * @return integer iid_nom
 	 */
 	function getId_nom() {
-		if (!isset($this->iid_nom)) {
+		if (!isset($this->iid_nom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_nom;

@@ -56,6 +56,8 @@ abstract class DBAbstract {
             return FALSE;
         }
         $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+        // Para evitar posteriores cargas
+        $this->bLoaded = TRUE;
         if ($aDades['to_regclass'] == $nom_tabla) {
             return TRUE;
         } else {

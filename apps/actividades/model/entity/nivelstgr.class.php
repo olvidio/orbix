@@ -28,6 +28,13 @@ class NivelStgr Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Nivel_stgr de NivelStgr
 	 *
 	 * @var integer
@@ -159,6 +166,8 @@ class NivelStgr Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -270,7 +279,7 @@ class NivelStgr Extends core\ClasePropiedades {
 	 * @return integer inivel_stgr
 	 */
 	function getNivel_stgr() {
-		if (!isset($this->inivel_stgr)) {
+		if (!isset($this->inivel_stgr) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->inivel_stgr;
@@ -289,7 +298,7 @@ class NivelStgr Extends core\ClasePropiedades {
 	 * @return string sdesc_nivel
 	 */
 	function getDesc_nivel() {
-		if (!isset($this->sdesc_nivel)) {
+		if (!isset($this->sdesc_nivel) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdesc_nivel;
@@ -308,7 +317,7 @@ class NivelStgr Extends core\ClasePropiedades {
 	 * @return string sdesc_breve
 	 */
 	function getDesc_breve() {
-		if (!isset($this->sdesc_breve)) {
+		if (!isset($this->sdesc_breve) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdesc_breve;
@@ -327,7 +336,7 @@ class NivelStgr Extends core\ClasePropiedades {
 	 * @return integer iorden
 	 */
 	function getOrden() {
-		if (!isset($this->iorden)) {
+		if (!isset($this->iorden) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iorden;

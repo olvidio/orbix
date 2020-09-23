@@ -37,6 +37,13 @@ class ProcesoTipo Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_tipo_proceso de ProcesoTipo
 	 *
 	 * @var integer
@@ -171,6 +178,8 @@ class ProcesoTipo Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -281,7 +290,7 @@ class ProcesoTipo Extends core\ClasePropiedades {
 	 * @return integer iid_tipo_proceso
 	 */
 	function getId_tipo_proceso() {
-		if (!isset($this->iid_tipo_proceso)) {
+		if (!isset($this->iid_tipo_proceso) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tipo_proceso;
@@ -300,7 +309,7 @@ class ProcesoTipo Extends core\ClasePropiedades {
 	 * @return string snom_proceso
 	 */
 	function getNom_proceso() {
-		if (!isset($this->snom_proceso)) {
+		if (!isset($this->snom_proceso) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snom_proceso;
@@ -319,7 +328,7 @@ class ProcesoTipo Extends core\ClasePropiedades {
 	 * @return integer isfsv
 	 */
 	function getSfsv() {
-		if (!isset($this->isfsv)) {
+		if (!isset($this->isfsv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->isfsv;

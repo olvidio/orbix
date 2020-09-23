@@ -37,6 +37,13 @@ class Modulo Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_mod de Modulo
 	 *
 	 * @var integer
@@ -187,6 +194,8 @@ class Modulo Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -303,7 +312,7 @@ class Modulo Extends core\ClasePropiedades {
 	 * @return integer iid_mod
 	 */
 	function getId_mod() {
-		if (!isset($this->iid_mod)) {
+		if (!isset($this->iid_mod) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_mod;
@@ -322,7 +331,7 @@ class Modulo Extends core\ClasePropiedades {
 	 * @return string snom
 	 */
 	function getNom() {
-		if (!isset($this->snom)) {
+		if (!isset($this->snom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snom;
@@ -341,7 +350,7 @@ class Modulo Extends core\ClasePropiedades {
 	 * @return string sdescripcion
 	 */
 	function getDescripcion() {
-		if (!isset($this->sdescripcion)) {
+		if (!isset($this->sdescripcion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdescripcion;
@@ -360,7 +369,7 @@ class Modulo Extends core\ClasePropiedades {
 	 * @return string smods_req
 	 */
 	function getMods_req() {
-		if (!isset($this->smods_req)) {
+		if (!isset($this->smods_req) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->smods_req;
@@ -379,7 +388,7 @@ class Modulo Extends core\ClasePropiedades {
 	 * @return string sapps_req
 	 */
 	function getApps_req() {
-		if (!isset($this->sapps_req)) {
+		if (!isset($this->sapps_req) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sapps_req;

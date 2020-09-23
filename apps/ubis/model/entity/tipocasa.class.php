@@ -29,6 +29,13 @@ class TipoCasa Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Tipo_casa de TipoCasa
 	 *
 	 * @var string
@@ -143,6 +150,8 @@ class TipoCasa Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -250,7 +259,7 @@ class TipoCasa Extends core\ClasePropiedades {
 	 * @return string stipo_casa
 	 */
 	function getTipo_casa() {
-		if (!isset($this->stipo_casa)) {
+		if (!isset($this->stipo_casa) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stipo_casa;
@@ -269,7 +278,7 @@ class TipoCasa Extends core\ClasePropiedades {
 	 * @return string snombre_tipo_casa
 	 */
 	function getNombre_tipo_casa() {
-		if (!isset($this->snombre_tipo_casa)) {
+		if (!isset($this->snombre_tipo_casa) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snombre_tipo_casa;

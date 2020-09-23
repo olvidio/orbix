@@ -37,6 +37,13 @@ class MapId Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Objeto de MapId
 	 *
 	 * @var string
@@ -165,6 +172,8 @@ class MapId Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -273,7 +282,7 @@ class MapId Extends core\ClasePropiedades {
 	 * @return string sobjeto
 	 */
 	function getObjeto() {
-		if (!isset($this->sobjeto)) {
+		if (!isset($this->sobjeto) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sobjeto;
@@ -292,7 +301,7 @@ class MapId Extends core\ClasePropiedades {
 	 * @return integer iid_resto
 	 */
 	function getId_resto() {
-		if (!isset($this->iid_resto)) {
+		if (!isset($this->iid_resto) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_resto;
@@ -311,7 +320,7 @@ class MapId Extends core\ClasePropiedades {
 	 * @return integer iid_dl
 	 */
 	function getId_dl() {
-		if (!isset($this->iid_dl)) {
+		if (!isset($this->iid_dl) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_dl;

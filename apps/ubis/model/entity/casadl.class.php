@@ -156,6 +156,8 @@ class CasaDl Extends Casa {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -257,7 +259,7 @@ class CasaDl Extends Casa {
 	 * @return integer iid_auto
 	 */
 	function getId_auto() {
-		if (!isset($this->iid_auto)) {
+		if (!isset($this->iid_auto) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_auto;
@@ -276,7 +278,7 @@ class CasaDl Extends Casa {
 	 * @return integer iplazas_min
 	 */
 	function getPlazas_min() {
-		if (!isset($this->iplazas_min)) {
+		if (!isset($this->iplazas_min) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iplazas_min;

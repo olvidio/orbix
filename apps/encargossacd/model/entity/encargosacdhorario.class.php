@@ -38,6 +38,13 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_item de EncargoSacdHorario
 	 *
 	 * @var integer
@@ -242,6 +249,8 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -372,7 +381,7 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -391,7 +400,7 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 	 * @return integer iid_enc
 	 */
 	function getId_enc() {
-		if (!isset($this->iid_enc)) {
+		if (!isset($this->iid_enc) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_enc;
@@ -410,7 +419,7 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 	 * @return integer iid_nom
 	 */
 	function getId_nom() {
-		if (!isset($this->iid_nom)) {
+		if (!isset($this->iid_nom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_nom;
@@ -429,7 +438,7 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_ini
 	 */
 	function getF_ini() {
-		if (!isset($this->df_ini)) {
+		if (!isset($this->df_ini) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
         $oConverter = new core\Converter('date', $this->df_ini);
@@ -457,7 +466,7 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_fin
 	 */
 	function getF_fin() {
-		if (!isset($this->df_fin)) {
+		if (!isset($this->df_fin) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
         $oConverter = new core\Converter('date', $this->df_fin);
@@ -485,7 +494,7 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 	 * @return string sdia_ref
 	 */
 	function getDia_ref() {
-		if (!isset($this->sdia_ref)) {
+		if (!isset($this->sdia_ref) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdia_ref;
@@ -504,7 +513,7 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 	 * @return integer idia_num
 	 */
 	function getDia_num() {
-		if (!isset($this->idia_num)) {
+		if (!isset($this->idia_num) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->idia_num;
@@ -523,7 +532,7 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 	 * @return string smas_menos
 	 */
 	function getMas_menos() {
-		if (!isset($this->smas_menos)) {
+		if (!isset($this->smas_menos) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->smas_menos;
@@ -542,7 +551,7 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 	 * @return integer idia_inc
 	 */
 	function getDia_inc() {
-		if (!isset($this->idia_inc)) {
+		if (!isset($this->idia_inc) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->idia_inc;
@@ -561,7 +570,7 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 	 * @return string time th_ini
 	 */
 	function getH_ini() {
-		if (!isset($this->th_ini)) {
+		if (!isset($this->th_ini) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->th_ini;
@@ -580,7 +589,7 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 	 * @return string time th_fin
 	 */
 	function getH_fin() {
-		if (!isset($this->th_fin)) {
+		if (!isset($this->th_fin) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->th_fin;
@@ -599,7 +608,7 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 	 * @return integer iid_item_tarea_sacd
 	 */
 	function getId_item_tarea_sacd() {
-		if (!isset($this->iid_item_tarea_sacd)) {
+		if (!isset($this->iid_item_tarea_sacd) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item_tarea_sacd;

@@ -51,6 +51,13 @@ class Role Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_role de Role
 	 *
 	 * @var integer
@@ -203,6 +210,8 @@ class Role Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -319,7 +328,7 @@ class Role Extends core\ClasePropiedades {
 	 * @return integer iid_role
 	 */
 	function getId_role() {
-		if (!isset($this->iid_role)) {
+		if (!isset($this->iid_role) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_role;
@@ -338,7 +347,7 @@ class Role Extends core\ClasePropiedades {
 	 * @return string srole
 	 */
 	function getRole() {
-		if (!isset($this->srole)) {
+		if (!isset($this->srole) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->srole;
@@ -357,7 +366,7 @@ class Role Extends core\ClasePropiedades {
 	 * @return boolean bsf
 	 */
 	function getSf() {
-		if (!isset($this->bsf)) {
+		if (!isset($this->bsf) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bsf;
@@ -376,7 +385,7 @@ class Role Extends core\ClasePropiedades {
 	 * @return boolean bsv
 	 */
 	function getSv() {
-		if (!isset($this->bsv)) {
+		if (!isset($this->bsv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bsv;
@@ -395,7 +404,7 @@ class Role Extends core\ClasePropiedades {
 	 * @return string spau
 	 */
 	function getPau() {
-		if (!isset($this->spau)) {
+		if (!isset($this->spau) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->spau;
@@ -414,7 +423,7 @@ class Role Extends core\ClasePropiedades {
 	 * @return string bdmz
 	 */
 	function getDmz() {
-		if (!isset($this->bdmz)) {
+		if (!isset($this->bdmz) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bdmz;

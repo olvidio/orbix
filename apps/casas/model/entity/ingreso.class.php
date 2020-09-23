@@ -37,6 +37,13 @@ class Ingreso Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_activ de Ingreso
 	 *
 	 * @var integer
@@ -195,6 +202,8 @@ class Ingreso Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -311,7 +320,7 @@ class Ingreso Extends core\ClasePropiedades {
 	 * @return integer iid_activ
 	 */
 	function getId_activ() {
-		if (!isset($this->iid_activ)) {
+		if (!isset($this->iid_activ) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_activ;
@@ -330,7 +339,7 @@ class Ingreso Extends core\ClasePropiedades {
 	 * @return float iingresos
 	 */
 	function getIngresos() {
-		if (!isset($this->iingresos)) {
+		if (!isset($this->iingresos) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iingresos;
@@ -349,7 +358,7 @@ class Ingreso Extends core\ClasePropiedades {
 	 * @return integer inum_asistentes
 	 */
 	function getNum_asistentes() {
-		if (!isset($this->inum_asistentes)) {
+		if (!isset($this->inum_asistentes) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->inum_asistentes;
@@ -368,7 +377,7 @@ class Ingreso Extends core\ClasePropiedades {
 	 * @return float iingresos_previstos
 	 */
 	function getIngresos_previstos() {
-		if (!isset($this->iingresos_previstos)) {
+		if (!isset($this->iingresos_previstos) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iingresos_previstos;
@@ -387,7 +396,7 @@ class Ingreso Extends core\ClasePropiedades {
 	 * @return integer inum_asistentes_previstos
 	 */
 	function getNum_asistentes_previstos() {
-		if (!isset($this->inum_asistentes_previstos)) {
+		if (!isset($this->inum_asistentes_previstos) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->inum_asistentes_previstos;
@@ -406,7 +415,7 @@ class Ingreso Extends core\ClasePropiedades {
 	 * @return string sobserv
 	 */
 	function getObserv() {
-		if (!isset($this->sobserv)) {
+		if (!isset($this->sobserv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sobserv;

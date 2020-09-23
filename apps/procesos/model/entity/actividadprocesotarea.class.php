@@ -41,6 +41,13 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
      * @var array
      */
     private $aDades;
+
+	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
     
     /**
      * aDades de ActividadProcesoTarea abans dels canvis.
@@ -390,6 +397,8 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
                 return FALSE;
             }
             $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+            // Para evitar posteriores cargas
+            $this->bLoaded = TRUE;
             switch ($que) {
                 case 'tot':
                     $this->aDades=$aDades;
@@ -826,7 +835,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
      * @return integer iid_item
      */
     function getId_item() {
-        if (!isset($this->iid_item)) {
+        if (!isset($this->iid_item) && !$this->bLoaded) {
             $this->DBCarregar();
         }
         return $this->iid_item;
@@ -845,7 +854,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
      * @return integer iid_tipo_proceso
      */
     function getId_tipo_proceso() {
-        if (!isset($this->iid_tipo_proceso)) {
+        if (!isset($this->iid_tipo_proceso) && !$this->bLoaded) {
             $this->DBCarregar();
         }
         return $this->iid_tipo_proceso;
@@ -864,7 +873,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
      * @return integer iid_activ
      */
     function getId_activ() {
-        if (!isset($this->iid_activ)) {
+        if (!isset($this->iid_activ) && !$this->bLoaded) {
             $this->DBCarregar();
         }
         return $this->iid_activ;
@@ -883,7 +892,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
      * @return integer iid_fase
      */
     function getId_fase() {
-        if (!isset($this->iid_fase)) {
+        if (!isset($this->iid_fase) && !$this->bLoaded) {
             $this->DBCarregar();
         }
         return $this->iid_fase;
@@ -902,7 +911,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
      * @return integer iid_tarea
      */
     function getId_tarea() {
-        if (!isset($this->iid_tarea)) {
+        if (!isset($this->iid_tarea) && !$this->bLoaded) {
             $this->DBCarregar();
         }
         return $this->iid_tarea;
@@ -921,7 +930,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
      * @return boolean bcompletado
      */
     function getCompletado() {
-        if (!isset($this->bcompletado)) {
+        if (!isset($this->bcompletado) && !$this->bLoaded) {
             $this->DBCarregar();
         }
         return $this->bcompletado;
@@ -940,7 +949,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
      * @return string sobserv
      */
     function getObserv() {
-        if (!isset($this->sobserv)) {
+        if (!isset($this->sobserv) && !$this->bLoaded) {
             $this->DBCarregar();
         }
         return $this->sobserv;

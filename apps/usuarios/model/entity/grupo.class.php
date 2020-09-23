@@ -28,6 +28,13 @@ class Grupo Extends core\ClasePropiedades {
 	 protected $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 protected $bLoaded = FALSE;
+
+	/**
 	 * Id_usuario de Grupo
 	 *
 	 * @var integer
@@ -154,6 +161,8 @@ class Grupo Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -266,7 +275,7 @@ class Grupo Extends core\ClasePropiedades {
 	 * @return integer iid_usuario
 	 */
 	function getId_usuario() {
-		if (!isset($this->iid_usuario)) {
+		if (!isset($this->iid_usuario) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_usuario;
@@ -285,7 +294,7 @@ class Grupo Extends core\ClasePropiedades {
 	 * @return string susuario
 	 */
 	function getUsuario() {
-		if (!isset($this->susuario)) {
+		if (!isset($this->susuario) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->susuario;
@@ -304,7 +313,7 @@ class Grupo Extends core\ClasePropiedades {
 	 * @return integer iid_role
 	 */
 	function getId_role() {
-		if (!isset($this->iid_role)) {
+		if (!isset($this->iid_role) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_role;

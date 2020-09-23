@@ -187,6 +187,8 @@ class Casa Extends UbiGlobal {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -287,7 +289,7 @@ class Casa Extends UbiGlobal {
 	 * @return string stipo_casa
 	 */
 	function getTipo_casa() {
-		if (!isset($this->stipo_casa)) {
+		if (!isset($this->stipo_casa) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stipo_casa;
@@ -306,7 +308,7 @@ class Casa Extends UbiGlobal {
 	 * @return integer iplazas
 	 */
 	function getPlazas() {
-		if (!isset($this->iplazas)) {
+		if (!isset($this->iplazas) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iplazas;
@@ -325,7 +327,7 @@ class Casa Extends UbiGlobal {
 	 * @return integer iplazas_min
 	 */
 	function getPlazas_min() {
-		if (!isset($this->iplazas_min)) {
+		if (!isset($this->iplazas_min) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iplazas_min;
@@ -344,7 +346,7 @@ class Casa Extends UbiGlobal {
 	 * @return integer inum_sacd
 	 */
 	function getNum_sacd() {
-		if (!isset($this->inum_sacd)) {
+		if (!isset($this->inum_sacd) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->inum_sacd;
@@ -363,7 +365,7 @@ class Casa Extends UbiGlobal {
 	 * @return string sbiblioteca
 	 */
 	function getBiblioteca() {
-		if (!isset($this->sbiblioteca)) {
+		if (!isset($this->sbiblioteca) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sbiblioteca;
@@ -382,7 +384,7 @@ class Casa Extends UbiGlobal {
 	 * @return string sobserv
 	 */
 	function getObserv() {
-		if (!isset($this->sobserv)) {
+		if (!isset($this->sobserv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sobserv;

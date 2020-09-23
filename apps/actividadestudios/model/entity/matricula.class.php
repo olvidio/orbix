@@ -38,6 +38,13 @@ class Matricula Extends core\ClasePropiedades {
 	 protected $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 protected $bLoaded = FALSE;
+
+	/**
 	 * Id_schema de Matricula
 	 *
 	 * @var integer
@@ -239,6 +246,8 @@ class Matricula Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -367,7 +376,7 @@ class Matricula Extends core\ClasePropiedades {
 	 * @return integer iid_activ
 	 */
 	function getId_activ() {
-		if (!isset($this->iid_activ)) {
+		if (!isset($this->iid_activ) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_activ;
@@ -386,7 +395,7 @@ class Matricula Extends core\ClasePropiedades {
 	 * @return integer iid_asignatura
 	 */
 	function getId_asignatura() {
-		if (!isset($this->iid_asignatura)) {
+		if (!isset($this->iid_asignatura) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_asignatura;
@@ -405,7 +414,7 @@ class Matricula Extends core\ClasePropiedades {
 	 * @return integer iid_nom
 	 */
 	function getId_nom() {
-		if (!isset($this->iid_nom)) {
+		if (!isset($this->iid_nom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_nom;
@@ -424,7 +433,7 @@ class Matricula Extends core\ClasePropiedades {
 	 * @return integer iid_nivel
 	 */
 	function getId_nivel() {
-		if (!isset($this->iid_nivel)) {
+		if (!isset($this->iid_nivel) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_nivel;
@@ -443,7 +452,7 @@ class Matricula Extends core\ClasePropiedades {
 	 * @return integer iid_situacion
 	 */
 	function getId_situacion() {
-		if (!isset($this->iid_situacion)) {
+		if (!isset($this->iid_situacion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_situacion;
@@ -462,7 +471,7 @@ class Matricula Extends core\ClasePropiedades {
 	 * @return boolean bpreceptor
 	 */
 	function getPreceptor() {
-		if (!isset($this->bpreceptor)) {
+		if (!isset($this->bpreceptor) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bpreceptor;
@@ -481,7 +490,7 @@ class Matricula Extends core\ClasePropiedades {
 	 * @return integer iid_preceptor
 	 */
 	function getId_preceptor() {
-		if (!isset($this->iid_preceptor)) {
+		if (!isset($this->iid_preceptor) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_preceptor;
@@ -500,7 +509,7 @@ class Matricula Extends core\ClasePropiedades {
 	 * @return string sacta
 	 */
 	function getActa() {
-		if (!isset($this->sacta)) {
+		if (!isset($this->sacta) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sacta;
@@ -519,7 +528,7 @@ class Matricula Extends core\ClasePropiedades {
 	 * @return integer inota_num
 	 */
 	function getNota_num() {
-		if (!isset($this->inota_num)) {
+		if (!isset($this->inota_num) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->inota_num;
@@ -538,7 +547,7 @@ class Matricula Extends core\ClasePropiedades {
 	 * @return integer inota_max
 	 */
 	function getNota_max() {
-		if (!isset($this->inota_max)) {
+		if (!isset($this->inota_max) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->inota_max;

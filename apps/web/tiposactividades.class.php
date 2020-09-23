@@ -23,6 +23,13 @@ class TiposActividades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_tipo_activ de TiposActividades
 	 *
 	 * @var integer

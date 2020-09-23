@@ -37,6 +37,13 @@ class Encargo Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_enc de Encargo
 	 *
 	 * @var integer
@@ -220,6 +227,8 @@ class Encargo Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -386,7 +395,7 @@ class Encargo Extends core\ClasePropiedades {
 	 * @return integer iid_enc
 	 */
 	function getId_enc() {
-		if (!isset($this->iid_enc)) {
+		if (!isset($this->iid_enc) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_enc;
@@ -405,7 +414,7 @@ class Encargo Extends core\ClasePropiedades {
 	 * @return integer iid_tipo_enc
 	 */
 	function getId_tipo_enc() {
-		if (!isset($this->iid_tipo_enc)) {
+		if (!isset($this->iid_tipo_enc) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tipo_enc;
@@ -424,7 +433,7 @@ class Encargo Extends core\ClasePropiedades {
 	 * @return integer isf_sv
 	 */
 	function getSf_sv() {
-		if (!isset($this->isf_sv)) {
+		if (!isset($this->isf_sv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->isf_sv;
@@ -443,7 +452,7 @@ class Encargo Extends core\ClasePropiedades {
 	 * @return integer iid_ubi
 	 */
 	function getId_ubi() {
-		if (!isset($this->iid_ubi)) {
+		if (!isset($this->iid_ubi) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_ubi;
@@ -462,7 +471,7 @@ class Encargo Extends core\ClasePropiedades {
 	 * @return integer iid_zona
 	 */
 	function getId_zona() {
-		if (!isset($this->iid_zona)) {
+		if (!isset($this->iid_zona) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_zona;
@@ -481,7 +490,7 @@ class Encargo Extends core\ClasePropiedades {
 	 * @return string sdesc_enc
 	 */
 	function getDesc_enc() {
-		if (!isset($this->sdesc_enc)) {
+		if (!isset($this->sdesc_enc) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdesc_enc;
@@ -500,7 +509,7 @@ class Encargo Extends core\ClasePropiedades {
 	 * @return string sidioma_enc
 	 */
 	function getIdioma_enc() {
-		if (!isset($this->sidioma_enc)) {
+		if (!isset($this->sidioma_enc) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sidioma_enc;
@@ -519,7 +528,7 @@ class Encargo Extends core\ClasePropiedades {
 	 * @return string sdesc_lugar
 	 */
 	function getDesc_lugar() {
-		if (!isset($this->sdesc_lugar)) {
+		if (!isset($this->sdesc_lugar) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdesc_lugar;
@@ -538,7 +547,7 @@ class Encargo Extends core\ClasePropiedades {
 	 * @return string sobserv
 	 */
 	function getObserv() {
-		if (!isset($this->sobserv)) {
+		if (!isset($this->sobserv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sobserv;

@@ -37,6 +37,13 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
      * @var array
      */
     private $aDades;
+
+	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
     
     /**
      * Id_schema de ProfesorDocenciaStgr
@@ -206,6 +213,8 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
                 return false;
             }
             $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+            // Para evitar posteriores cargas
+            $this->bLoaded = TRUE;
             switch ($que) {
                 case 'tot':
                     $this->aDades=$aDades;
@@ -326,7 +335,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
      * @return integer iid_item
      */
     function getId_item() {
-        if (!isset($this->iid_item)) {
+        if (!isset($this->iid_item) && !$this->bLoaded) {
             $this->DBCarregar();
         }
         return $this->iid_item;
@@ -345,7 +354,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
      * @return integer iid_nom
      */
     function getId_nom() {
-        if (!isset($this->iid_nom)) {
+        if (!isset($this->iid_nom) && !$this->bLoaded) {
             $this->DBCarregar();
         }
         return $this->iid_nom;
@@ -364,7 +373,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
      * @return integer iid_asignatura
      */
     function getId_asignatura() {
-        if (!isset($this->iid_asignatura)) {
+        if (!isset($this->iid_asignatura) && !$this->bLoaded) {
             $this->DBCarregar();
         }
         return $this->iid_asignatura;
@@ -383,7 +392,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
      * @return integer iid_activ
      */
     function getId_activ() {
-        if (!isset($this->iid_activ)) {
+        if (!isset($this->iid_activ) && !$this->bLoaded) {
             $this->DBCarregar();
         }
         return $this->iid_activ;
@@ -402,7 +411,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
      * @return string stipo
      */
     function getTipo() {
-        if (!isset($this->stipo)) {
+        if (!isset($this->stipo) && !$this->bLoaded) {
             $this->DBCarregar();
         }
         return $this->stipo;
@@ -421,7 +430,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
      * @return string icurso_inicio
      */
     function getCurso_inicio() {
-        if (!isset($this->icurso_inicio)) {
+        if (!isset($this->icurso_inicio) && !$this->bLoaded) {
             $this->DBCarregar();
         }
         return $this->icurso_inicio;
@@ -440,7 +449,7 @@ class ProfesorDocenciaStgr Extends core\ClasePropiedades {
      * @return string sacta
      */
     function getActa() {
-        if (!isset($this->sacta)) {
+        if (!isset($this->sacta) && !$this->bLoaded) {
             $this->DBCarregar();
         }
         return $this->sacta;

@@ -44,6 +44,13 @@ class UbiGasto Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_item de UbiGasto
 	 *
 	 * @var integer
@@ -194,6 +201,8 @@ class UbiGasto Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -308,7 +317,7 @@ class UbiGasto Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -327,7 +336,7 @@ class UbiGasto Extends core\ClasePropiedades {
 	 * @return integer iid_ubi
 	 */
 	function getId_ubi() {
-		if (!isset($this->iid_ubi)) {
+		if (!isset($this->iid_ubi) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_ubi;
@@ -346,7 +355,7 @@ class UbiGasto Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_gasto
 	 */
 	function getF_gasto() {
-		if (!isset($this->df_gasto)) {
+		if (!isset($this->df_gasto) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
         $oConverter = new core\Converter('date', $this->df_gasto);
@@ -374,7 +383,7 @@ class UbiGasto Extends core\ClasePropiedades {
 	 * @return integer itipo
 	 */
 	function getTipo() {
-		if (!isset($this->itipo)) {
+		if (!isset($this->itipo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->itipo;
@@ -393,7 +402,7 @@ class UbiGasto Extends core\ClasePropiedades {
 	 * @return float icantidad
 	 */
 	function getCantidad() {
-		if (!isset($this->icantidad)) {
+		if (!isset($this->icantidad) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->icantidad;

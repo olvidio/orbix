@@ -37,6 +37,13 @@ class NombreLatin Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_item de NombreLatin
 	 *
 	 * @var integer
@@ -179,6 +186,8 @@ class NombreLatin Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -289,7 +298,7 @@ class NombreLatin Extends core\ClasePropiedades {
 	 * @return string snom
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -300,7 +309,7 @@ class NombreLatin Extends core\ClasePropiedades {
 	 * @return string snom
 	 */
 	function getNom() {
-		if (!isset($this->snom)) {
+		if (!isset($this->snom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snom;
@@ -319,7 +328,7 @@ class NombreLatin Extends core\ClasePropiedades {
 	 * @return string snominativo
 	 */
 	function getNominativo() {
-		if (!isset($this->snominativo)) {
+		if (!isset($this->snominativo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snominativo;
@@ -338,7 +347,7 @@ class NombreLatin Extends core\ClasePropiedades {
 	 * @return string sgenitivo
 	 */
 	function getGenitivo() {
-		if (!isset($this->sgenitivo)) {
+		if (!isset($this->sgenitivo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sgenitivo;

@@ -194,6 +194,13 @@ $atributs='
 	 private $aDades;
 
 	/**
+	 * bLoaded de '.$clase.'
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_schema de '.$clase.'
 	 *
 	 * @var integer
@@ -307,7 +314,7 @@ foreach($oDbl->query($sql) as $row) {
 	 * @return '.$tipo_db.' '.$tip.$nomcamp.'
 	 */
 	function get'.$NomCamp.'() {
-		if (!isset($this->'.$tip.$nomcamp.')) {
+		if (!isset($this->'.$tip.$nomcamp.') && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		if (empty($this->'.$tip.$nomcamp.')) {
@@ -324,7 +331,7 @@ foreach($oDbl->query($sql) as $row) {
 	 * @return '.$tipo_db.' '.$tip.$nomcamp.'
 	 */
 	function get'.$NomCamp.'() {
-		if (!isset($this->'.$tip.$nomcamp.')) {
+		if (!isset($this->'.$tip.$nomcamp.') && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->'.$tip.$nomcamp.';
@@ -650,6 +657,8 @@ $txt.="\n\t\t".'}
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\\PDO::FETCH_ASSOC);
+            // Para evitar posteriores cargas
+            $this->bLoaded = TRUE;
 			switch ($que) {
 				case \'tot\':
 					$this->aDades=$aDades;

@@ -37,6 +37,13 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_item_usuario_objeto de CambioUsuarioObjetoPref
 	 *
 	 * @var integer
@@ -247,6 +254,8 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -390,7 +399,7 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 	 * @return integer iid_item_usuario_objeto
 	 */
 	function getId_item_usuario_objeto() {
-		if (!isset($this->iid_item_usuario_objeto)) {
+		if (!isset($this->iid_item_usuario_objeto) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item_usuario_objeto;
@@ -409,7 +418,7 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 	 * @return integer iid_usuario
 	 */
 	function getId_usuario() {
-		if (!isset($this->iid_usuario)) {
+		if (!isset($this->iid_usuario) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_usuario;
@@ -428,7 +437,7 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 	 * @return boolean sdl_org
 	 */
 	function getDl_org() {
-		if (!isset($this->sdl_org)) {
+		if (!isset($this->sdl_org) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdl_org;
@@ -447,7 +456,7 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 	 * @return string sid_tipo_activ_txt
 	 */
 	function getId_tipo_activ_txt() {
-		if (!isset($this->sid_tipo_activ_txt)) {
+		if (!isset($this->sid_tipo_activ_txt) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sid_tipo_activ_txt;
@@ -466,7 +475,7 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 	 * @return integer
 	 */
 	function getId_fase_ref() {
-		if (!isset($this->iid_fase_ref)) {
+		if (!isset($this->iid_fase_ref) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_fase_ref;
@@ -483,7 +492,7 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
      * @return boolean
      */
     public function getAviso_off() {
-		if (!isset($this->baviso_off)) {
+		if (!isset($this->baviso_off) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
         return $this->baviso_off;
@@ -498,7 +507,7 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
      * @return boolean
      */
     public function getAviso_on() {
-		if (!isset($this->baviso_on)) {
+		if (!isset($this->baviso_on) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
         return $this->baviso_on;
@@ -513,7 +522,7 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
      * @return boolean
      */
     public function getAviso_outdate() {
-		if (!isset($this->baviso_outdate)) {
+		if (!isset($this->baviso_outdate) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
         return $this->baviso_outdate;
@@ -531,7 +540,7 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 	 * @return string sobjeto
 	 */
 	function getObjeto() {
-		if (!isset($this->sobjeto)) {
+		if (!isset($this->sobjeto) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sobjeto;
@@ -550,7 +559,7 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 	 * @return integer iaviso_tipo
 	 */
 	function getAviso_tipo() {
-		if (!isset($this->iaviso_tipo)) {
+		if (!isset($this->iaviso_tipo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iaviso_tipo;
@@ -569,7 +578,7 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 	 * @return string saviso_donde
 	 */
 	function getAviso_donde() {
-		if (!isset($this->saviso_donde)) {
+		if (!isset($this->saviso_donde) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->saviso_donde;
@@ -588,7 +597,7 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 	 * @return string sid_pau
 	 */
 	function getId_pau() {
-		if (!isset($this->sid_pau)) {
+		if (!isset($this->sid_pau) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sid_pau;

@@ -38,6 +38,13 @@ class ProfesorCongreso Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_schema de ProfesorCongreso
 	 *
 	 * @var integer
@@ -213,6 +220,8 @@ class ProfesorCongreso Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -335,7 +344,7 @@ class ProfesorCongreso Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -354,7 +363,7 @@ class ProfesorCongreso Extends core\ClasePropiedades {
 	 * @return integer iid_nom
 	 */
 	function getId_nom() {
-		if (!isset($this->iid_nom)) {
+		if (!isset($this->iid_nom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_nom;
@@ -373,7 +382,7 @@ class ProfesorCongreso Extends core\ClasePropiedades {
 	 * @return string scongreso
 	 */
 	function getCongreso() {
-		if (!isset($this->scongreso)) {
+		if (!isset($this->scongreso) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->scongreso;
@@ -392,7 +401,7 @@ class ProfesorCongreso Extends core\ClasePropiedades {
 	 * @return string slugar
 	 */
 	function getLugar() {
-		if (!isset($this->slugar)) {
+		if (!isset($this->slugar) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->slugar;
@@ -411,7 +420,7 @@ class ProfesorCongreso Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_ini
 	 */
 	function getF_ini() {
-	    if (!isset($this->df_ini)) {
+	    if (!isset($this->df_ini) && !$this->bLoaded) {
 	        $this->DBCarregar();
 	    }
 	    if (empty($this->df_ini)) {
@@ -442,7 +451,7 @@ class ProfesorCongreso Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_fin
 	 */
 	function getF_fin() {
-	    if (!isset($this->df_fin)) {
+	    if (!isset($this->df_fin) && !$this->bLoaded) {
 	        $this->DBCarregar();
 	    }
 	    if (empty($this->df_fin)) {
@@ -473,7 +482,7 @@ class ProfesorCongreso Extends core\ClasePropiedades {
 	 * @return string sorganiza
 	 */
 	function getOrganiza() {
-		if (!isset($this->sorganiza)) {
+		if (!isset($this->sorganiza) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sorganiza;
@@ -492,7 +501,7 @@ class ProfesorCongreso Extends core\ClasePropiedades {
 	 * @return integer itipo
 	 */
 	function getTipo() {
-		if (!isset($this->itipo)) {
+		if (!isset($this->itipo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->itipo;

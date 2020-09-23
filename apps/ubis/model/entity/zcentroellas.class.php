@@ -171,6 +171,8 @@ class CentroEllas Extends Centro {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -278,7 +280,7 @@ class CentroEllas Extends Centro {
 	 * @return string stipo_ubi
 	 */
 	function getTipo_ubi() {
-		if (!isset($this->stipo_ubi)) {
+		if (!isset($this->stipo_ubi) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stipo_ubi;
@@ -297,7 +299,7 @@ class CentroEllas Extends Centro {
 	 * @return integer iid_ubi
 	 */
 	function getId_ubi() {
-		if (!isset($this->iid_ubi)) {
+		if (!isset($this->iid_ubi) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_ubi;
@@ -316,7 +318,7 @@ class CentroEllas Extends Centro {
 	 * @return string snombre_ubi
 	 */
 	function getNombre_ubi() {
-		if (!isset($this->snombre_ubi)) {
+		if (!isset($this->snombre_ubi) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snombre_ubi;
@@ -335,7 +337,7 @@ class CentroEllas Extends Centro {
 	 * @return string sdl
 	 */
 	function getDl() {
-		if (!isset($this->sdl)) {
+		if (!isset($this->sdl) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdl;
@@ -354,7 +356,7 @@ class CentroEllas Extends Centro {
 	 * @return string spais
 	 */
 	function getPais() {
-		if (!isset($this->spais)) {
+		if (!isset($this->spais) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->spais;
@@ -373,7 +375,7 @@ class CentroEllas Extends Centro {
 	 * @return string sregion
 	 */
 	function getRegion() {
-		if (!isset($this->sregion)) {
+		if (!isset($this->sregion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sregion;
@@ -392,7 +394,7 @@ class CentroEllas Extends Centro {
 	 * @return boolean bstatus
 	 */
 	function getStatus() {
-		if (!isset($this->bstatus)) {
+		if (!isset($this->bstatus) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bstatus;
@@ -411,7 +413,7 @@ class CentroEllas Extends Centro {
 	 * @return web\DateTimeLocal df_status
 	 */
 	function getF_status() {
-	    if (!isset($this->df_status)) {
+	    if (!isset($this->df_status) && !$this->bLoaded) {
 	        $this->DBCarregar();
 	    }
 	    if (empty($this->df_status)) {
@@ -442,7 +444,7 @@ class CentroEllas Extends Centro {
 	 * @return boolean bsv
 	 */
 	function getSv() {
-		if (!isset($this->bsv)) {
+		if (!isset($this->bsv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bsv;
@@ -461,7 +463,7 @@ class CentroEllas Extends Centro {
 	 * @return boolean bsf
 	 */
 	function getSf() {
-		if (!isset($this->bsf)) {
+		if (!isset($this->bsf) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bsf;
@@ -480,7 +482,7 @@ class CentroEllas Extends Centro {
 	 * @return string stipo_ctr
 	 */
 	function getTipo_ctr() {
-		if (!isset($this->stipo_ctr)) {
+		if (!isset($this->stipo_ctr) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stipo_ctr;
@@ -499,7 +501,7 @@ class CentroEllas Extends Centro {
 	 * @return integer itipo_labor
 	 */
 	function getTipo_labor() {
-		if (!isset($this->itipo_labor)) {
+		if (!isset($this->itipo_labor) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->itipo_labor;
@@ -518,7 +520,7 @@ class CentroEllas Extends Centro {
 	 * @return boolean bcdc
 	 */
 	function getCdc() {
-		if (!isset($this->bcdc)) {
+		if (!isset($this->bcdc) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bcdc;
@@ -537,7 +539,7 @@ class CentroEllas Extends Centro {
 	 * @return integer iid_ctr_padre
 	 */
 	function getId_ctr_padre() {
-		if (!isset($this->iid_ctr_padre)) {
+		if (!isset($this->iid_ctr_padre) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_ctr_padre;

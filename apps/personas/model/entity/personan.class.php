@@ -227,6 +227,8 @@ class PersonaN Extends PersonaDl {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -350,7 +352,7 @@ class PersonaN Extends PersonaDl {
 	 * @return integer ice
 	 */
 	function getCe() {
-		if (!isset($this->ice)) {
+		if (!isset($this->ice) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->ice;
@@ -369,7 +371,7 @@ class PersonaN Extends PersonaDl {
 	 * @return integer ice_ini
 	 */
 	function getCe_ini() {
-		if (!isset($this->ice_ini)) {
+		if (!isset($this->ice_ini) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->ice_ini;
@@ -388,7 +390,7 @@ class PersonaN Extends PersonaDl {
 	 * @return integer ice_fin
 	 */
 	function getCe_fin() {
-		if (!isset($this->ice_fin)) {
+		if (!isset($this->ice_fin) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->ice_fin;
@@ -407,7 +409,7 @@ class PersonaN Extends PersonaDl {
 	 * @return integer sce_lugar
 	 */
 	function getCe_lugar() {
-		if (!isset($this->sce_lugar)) {
+		if (!isset($this->sce_lugar) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sce_lugar;

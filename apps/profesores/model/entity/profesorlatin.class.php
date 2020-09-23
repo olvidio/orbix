@@ -37,6 +37,13 @@ class ProfesorLatin Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_nom de ProfesorLatin
 	 *
 	 * @var integer
@@ -165,6 +172,8 @@ class ProfesorLatin Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -275,7 +284,7 @@ class ProfesorLatin Extends core\ClasePropiedades {
 	 * @return integer iid_nom
 	 */
 	function getId_nom() {
-		if (!isset($this->iid_nom)) {
+		if (!isset($this->iid_nom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_nom;
@@ -294,7 +303,7 @@ class ProfesorLatin Extends core\ClasePropiedades {
 	 * @return boolean blatin
 	 */
 	function getLatin() {
-		if (!isset($this->blatin)) {
+		if (!isset($this->blatin) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->blatin;

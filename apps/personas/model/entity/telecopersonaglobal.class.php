@@ -29,6 +29,13 @@ Abstract class TelecoPersonaGlobal Extends core\ClasePropiedades {
 	 protected $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 protected $bLoaded = FALSE;
+
+	/**
 	 * Id_nom de TelecoPersona
 	 *
 	 * @var integer
@@ -124,7 +131,7 @@ Abstract class TelecoPersonaGlobal Extends core\ClasePropiedades {
 	 * @return integer iid_nom
 	 */
 	function getId_nom() {
-		if (!isset($this->iid_nom)) {
+		if (!isset($this->iid_nom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_nom;
@@ -143,7 +150,7 @@ Abstract class TelecoPersonaGlobal Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -162,7 +169,7 @@ Abstract class TelecoPersonaGlobal Extends core\ClasePropiedades {
 	 * @return string stipo_teleco
 	 */
 	function getTipo_teleco() {
-		if (!isset($this->stipo_teleco)) {
+		if (!isset($this->stipo_teleco) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stipo_teleco;
@@ -181,7 +188,7 @@ Abstract class TelecoPersonaGlobal Extends core\ClasePropiedades {
 	 * @return string sdesc_teleco
 	 */
 	function getDesc_teleco() {
-		if (!isset($this->sdesc_teleco)) {
+		if (!isset($this->sdesc_teleco) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdesc_teleco;
@@ -200,7 +207,7 @@ Abstract class TelecoPersonaGlobal Extends core\ClasePropiedades {
 	 * @return string snum_teleco
 	 */
 	function getNum_teleco() {
-		if (!isset($this->snum_teleco)) {
+		if (!isset($this->snum_teleco) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snum_teleco;
@@ -219,7 +226,7 @@ Abstract class TelecoPersonaGlobal Extends core\ClasePropiedades {
 	 * @return string sobserv
 	 */
 	function getObserv() {
-		if (!isset($this->sobserv)) {
+		if (!isset($this->sobserv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sobserv;

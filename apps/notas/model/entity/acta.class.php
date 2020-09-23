@@ -40,6 +40,13 @@ class Acta Extends core\ClasePropiedades {
 	 protected $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 protected $bLoaded = FALSE;
+
+	/**
 	 * Acta de Acta
 	 *
 	 * @var string
@@ -222,6 +229,8 @@ class Acta Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -347,7 +356,7 @@ class Acta Extends core\ClasePropiedades {
 	 * @return string sacta
 	 */
 	function getActa() {
-		if (!isset($this->sacta)) {
+		if (!isset($this->sacta) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sacta;
@@ -398,7 +407,7 @@ class Acta Extends core\ClasePropiedades {
 	 * @return integer iid_asignatura
 	 */
 	function getId_asignatura() {
-		if (!isset($this->iid_asignatura)) {
+		if (!isset($this->iid_asignatura) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_asignatura;
@@ -417,7 +426,7 @@ class Acta Extends core\ClasePropiedades {
 	 * @return integer iid_activ
 	 */
 	function getId_activ() {
-		if (!isset($this->iid_activ)) {
+		if (!isset($this->iid_activ) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_activ;
@@ -436,7 +445,7 @@ class Acta Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_acta
 	 */
 	function getF_acta() {
-	    if (!isset($this->df_acta)) {
+	    if (!isset($this->df_acta) && !$this->bLoaded) {
 	        $this->DBCarregar();
 	    }
 	    if (empty($this->df_acta)) {
@@ -467,7 +476,7 @@ class Acta Extends core\ClasePropiedades {
 	 * @return integer ilibro
 	 */
 	function getLibro() {
-		if (!isset($this->ilibro)) {
+		if (!isset($this->ilibro) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->ilibro;
@@ -486,7 +495,7 @@ class Acta Extends core\ClasePropiedades {
 	 * @return integer ipagina
 	 */
 	function getPagina() {
-		if (!isset($this->ipagina)) {
+		if (!isset($this->ipagina) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->ipagina;
@@ -505,7 +514,7 @@ class Acta Extends core\ClasePropiedades {
 	 * @return integer ilinea
 	 */
 	function getLinea() {
-		if (!isset($this->ilinea)) {
+		if (!isset($this->ilinea) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->ilinea;
@@ -524,7 +533,7 @@ class Acta Extends core\ClasePropiedades {
 	 * @return string slugar
 	 */
 	function getLugar() {
-		if (!isset($this->slugar)) {
+		if (!isset($this->slugar) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->slugar;
@@ -543,7 +552,7 @@ class Acta Extends core\ClasePropiedades {
 	 * @return string sobserv
 	 */
 	function getObserv() {
-		if (!isset($this->sobserv)) {
+		if (!isset($this->sobserv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sobserv;

@@ -37,6 +37,13 @@ class PermMenu Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_item de PermMenu
 	 *
 	 * @var integer
@@ -159,6 +166,8 @@ class PermMenu Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -271,7 +280,7 @@ class PermMenu Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -290,7 +299,7 @@ class PermMenu Extends core\ClasePropiedades {
 	 * @return integer iid_usuario
 	 */
 	function getId_usuario() {
-		if (!isset($this->iid_usuario)) {
+		if (!isset($this->iid_usuario) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_usuario;
@@ -309,7 +318,7 @@ class PermMenu Extends core\ClasePropiedades {
 	 * @return integer imenu_perm
 	 */
 	function getMenu_perm() {
-		if (!isset($this->imenu_perm)) {
+		if (!isset($this->imenu_perm) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->imenu_perm;

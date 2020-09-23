@@ -37,6 +37,13 @@ class ProfesorTituloEst Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_item de ProfesorTituloEst
 	 *
 	 * @var integer
@@ -192,6 +199,8 @@ class ProfesorTituloEst Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -310,7 +319,7 @@ class ProfesorTituloEst Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -329,7 +338,7 @@ class ProfesorTituloEst Extends core\ClasePropiedades {
 	 * @return integer iid_nom
 	 */
 	function getId_nom() {
-		if (!isset($this->iid_nom)) {
+		if (!isset($this->iid_nom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_nom;
@@ -348,7 +357,7 @@ class ProfesorTituloEst Extends core\ClasePropiedades {
 	 * @return string stitulo
 	 */
 	function getTitulo() {
-		if (!isset($this->stitulo)) {
+		if (!isset($this->stitulo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stitulo;
@@ -367,7 +376,7 @@ class ProfesorTituloEst Extends core\ClasePropiedades {
 	 * @return string scentro_dnt
 	 */
 	function getCentro_dnt() {
-		if (!isset($this->scentro_dnt)) {
+		if (!isset($this->scentro_dnt) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->scentro_dnt;
@@ -386,7 +395,7 @@ class ProfesorTituloEst Extends core\ClasePropiedades {
 	 * @return boolean beclesiastico
 	 */
 	function getEclesiastico() {
-		if (!isset($this->beclesiastico)) {
+		if (!isset($this->beclesiastico) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->beclesiastico;
@@ -405,7 +414,7 @@ class ProfesorTituloEst Extends core\ClasePropiedades {
 	 * @return integer iyear
 	 */
 	function getYear() {
-		if (!isset($this->iyear)) {
+		if (!isset($this->iyear) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iyear;

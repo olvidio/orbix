@@ -29,6 +29,13 @@ class TipoTeleco Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Tipo_teleco de TipoTeleco
 	 *
 	 * @var string
@@ -163,6 +170,8 @@ class TipoTeleco Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -274,7 +283,7 @@ class TipoTeleco Extends core\ClasePropiedades {
 	 * @return string stipo_teleco
 	 */
 	function getTipo_teleco() {
-		if (!isset($this->stipo_teleco)) {
+		if (!isset($this->stipo_teleco) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stipo_teleco;
@@ -293,7 +302,7 @@ class TipoTeleco Extends core\ClasePropiedades {
 	 * @return string snombre_teleco
 	 */
 	function getNombre_teleco() {
-		if (!isset($this->snombre_teleco)) {
+		if (!isset($this->snombre_teleco) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snombre_teleco;
@@ -312,7 +321,7 @@ class TipoTeleco Extends core\ClasePropiedades {
 	 * @return boolean bubi
 	 */
 	function getUbi() {
-		if (!isset($this->bubi)) {
+		if (!isset($this->bubi) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bubi;
@@ -331,7 +340,7 @@ class TipoTeleco Extends core\ClasePropiedades {
 	 * @return boolean bpersona
 	 */
 	function getPersona() {
-		if (!isset($this->bpersona)) {
+		if (!isset($this->bpersona) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bpersona;

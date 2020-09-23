@@ -40,6 +40,13 @@ class TareaProceso Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_item de TareaProceso
 	 *
 	 * @var integer
@@ -207,6 +214,8 @@ class TareaProceso Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -231,6 +240,8 @@ class TareaProceso Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -349,7 +360,7 @@ class TareaProceso Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -368,7 +379,7 @@ class TareaProceso Extends core\ClasePropiedades {
 	 * @return integer iid_tipo_proceso
 	 */
 	function getId_tipo_proceso() {
-		if (!isset($this->iid_tipo_proceso)) {
+		if (!isset($this->iid_tipo_proceso) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tipo_proceso;
@@ -387,7 +398,7 @@ class TareaProceso Extends core\ClasePropiedades {
 	 * @return integer iid_fase
 	 */
 	function getId_fase() {
-		if (!isset($this->iid_fase)) {
+		if (!isset($this->iid_fase) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_fase;
@@ -406,7 +417,7 @@ class TareaProceso Extends core\ClasePropiedades {
 	 * @return integer iid_tarea
 	 */
 	function getId_tarea() {
-		if (!isset($this->iid_tarea)) {
+		if (!isset($this->iid_tarea) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tarea;
@@ -425,7 +436,7 @@ class TareaProceso Extends core\ClasePropiedades {
 	 * @return integer istatus
 	 */
 	function getStatus() {
-		if (!isset($this->istatus)) {
+		if (!isset($this->istatus) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->istatus;
@@ -444,7 +455,7 @@ class TareaProceso Extends core\ClasePropiedades {
 	 * @return string iid_of_responsable
 	 */
 	function getId_of_responsable() {
-		if (!isset($this->iid_of_responsable)) {
+		if (!isset($this->iid_of_responsable) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_of_responsable;
@@ -464,7 +475,7 @@ class TareaProceso Extends core\ClasePropiedades {
 	 * @return object $oFases
 	 */
 	function getJson_fases_previas($bArray=FALSE) {
-		if (!isset($this->json_fases_previas)) {
+		if (!isset($this->json_fases_previas) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
         $oFases = json_decode(json_decode($this->json_fases_previas),$bArray);

@@ -38,6 +38,13 @@ class Usuario Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_usuario de Usuario
 	 *
 	 * @var integer
@@ -210,6 +217,8 @@ class Usuario Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			// Llegeixo el password (la BD només em passa el handler)
 			$pass = $aDades['password'];
 			$aDades['password'] = fread($pass,2048);
@@ -358,7 +367,7 @@ class Usuario Extends core\ClasePropiedades {
 	 * @return integer iid_usuario
 	 */
 	function getId_usuario() {
-		if (!isset($this->iid_usuario)) {
+		if (!isset($this->iid_usuario) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_usuario;
@@ -377,7 +386,7 @@ class Usuario Extends core\ClasePropiedades {
 	 * @return string susuario
 	 */
 	function getUsuario() {
-		if (!isset($this->susuario)) {
+		if (!isset($this->susuario) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->susuario;
@@ -396,7 +405,7 @@ class Usuario Extends core\ClasePropiedades {
 	 * @return integer spassword
 	 */
 	function getPassword() {
-		if (!isset($this->spassword)) {
+		if (!isset($this->spassword) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->spassword;
@@ -415,7 +424,7 @@ class Usuario Extends core\ClasePropiedades {
 	 * @return string semail
 	 */
 	function getEmail() {
-		if (!isset($this->semail)) {
+		if (!isset($this->semail) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->semail;
@@ -434,7 +443,7 @@ class Usuario Extends core\ClasePropiedades {
 	 * @return string sid_pau
 	 */
 	function getId_pau() {
-		if (!isset($this->sid_pau)) {
+		if (!isset($this->sid_pau) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sid_pau;
@@ -453,7 +462,7 @@ class Usuario Extends core\ClasePropiedades {
 	 * @return string snom_usuario
 	 */
 	function getNom_usuario() {
-		if (!isset($this->snom_usuario)) {
+		if (!isset($this->snom_usuario) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snom_usuario;
@@ -472,7 +481,7 @@ class Usuario Extends core\ClasePropiedades {
 	 * @return integer iid_role
 	 */
 	function getId_role() {
-		if (!isset($this->iid_role)) {
+		if (!isset($this->iid_role) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_role;

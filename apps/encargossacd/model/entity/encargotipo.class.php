@@ -78,6 +78,13 @@ class EncargoTipo Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_tipo_enc de EncargoTipo
 	 *
 	 * @var integer
@@ -212,6 +219,8 @@ class EncargoTipo Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -322,7 +331,7 @@ class EncargoTipo Extends core\ClasePropiedades {
 	 * @return integer iid_tipo_enc
 	 */
 	function getId_tipo_enc() {
-		if (!isset($this->iid_tipo_enc)) {
+		if (!isset($this->iid_tipo_enc) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tipo_enc;
@@ -341,7 +350,7 @@ class EncargoTipo Extends core\ClasePropiedades {
 	 * @return string stipo_enc
 	 */
 	function getTipo_enc() {
-		if (!isset($this->stipo_enc)) {
+		if (!isset($this->stipo_enc) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stipo_enc;
@@ -360,7 +369,7 @@ class EncargoTipo Extends core\ClasePropiedades {
 	 * @return integer imod_horario
 	 */
 	function getMod_horario() {
-		if (!isset($this->imod_horario)) {
+		if (!isset($this->imod_horario) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->imod_horario;

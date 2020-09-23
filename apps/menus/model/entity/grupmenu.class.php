@@ -37,6 +37,13 @@ class GrupMenu Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_grupmenu de GrupMenu
 	 *
 	 * @var integer
@@ -173,6 +180,8 @@ class GrupMenu Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -284,7 +293,7 @@ class GrupMenu Extends core\ClasePropiedades {
 	 * @return integer iid_grupmenu
 	 */
 	function getId_grupmenu() {
-		if (!isset($this->iid_grupmenu)) {
+		if (!isset($this->iid_grupmenu) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_grupmenu;
@@ -303,7 +312,7 @@ class GrupMenu Extends core\ClasePropiedades {
 	 * @return string sgrup_menu
 	 */
 	function getGrup_menu($dl_r = 'dl') {
-		if (!isset($this->sgrup_menu)) {
+		if (!isset($this->sgrup_menu) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		$sgrupmenu = $this->sgrup_menu;
@@ -328,7 +337,7 @@ class GrupMenu Extends core\ClasePropiedades {
 	 * @return integer iorden
 	 */
 	function getOrden() {
-		if (!isset($this->iorden)) {
+		if (!isset($this->iorden) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iorden;

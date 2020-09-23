@@ -37,6 +37,13 @@ class Asignatura Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_asignatura de Asignatura
 	 *
 	 * @var integer
@@ -209,6 +216,8 @@ class Asignatura Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -330,7 +339,7 @@ class Asignatura Extends core\ClasePropiedades {
 	 * @return integer iid_asignatura
 	 */
 	function getId_asignatura() {
-		if (!isset($this->iid_asignatura)) {
+		if (!isset($this->iid_asignatura) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_asignatura;
@@ -349,7 +358,7 @@ class Asignatura Extends core\ClasePropiedades {
 	 * @return integer iid_nivel
 	 */
 	function getId_nivel() {
-		if (!isset($this->iid_nivel)) {
+		if (!isset($this->iid_nivel) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_nivel;
@@ -368,7 +377,7 @@ class Asignatura Extends core\ClasePropiedades {
 	 * @return string snombre_asignatura
 	 */
 	function getNombre_asignatura() {
-		if (!isset($this->snombre_asignatura)) {
+		if (!isset($this->snombre_asignatura) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snombre_asignatura;
@@ -387,7 +396,7 @@ class Asignatura Extends core\ClasePropiedades {
 	 * @return string snombre_corto
 	 */
 	function getNombre_corto() {
-		if (!isset($this->snombre_corto)) {
+		if (!isset($this->snombre_corto) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snombre_corto;
@@ -406,7 +415,7 @@ class Asignatura Extends core\ClasePropiedades {
 	 * @return string screditos
 	 */
 	function getCreditos() {
-		if (!isset($this->screditos)) {
+		if (!isset($this->screditos) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->screditos;
@@ -425,7 +434,7 @@ class Asignatura Extends core\ClasePropiedades {
 	 * @return string syear
 	 */
 	function getYear() {
-		if (!isset($this->syear)) {
+		if (!isset($this->syear) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->syear;
@@ -444,7 +453,7 @@ class Asignatura Extends core\ClasePropiedades {
 	 * @return integer iid_sector
 	 */
 	function getId_sector() {
-		if (!isset($this->iid_sector)) {
+		if (!isset($this->iid_sector) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_sector;
@@ -463,7 +472,7 @@ class Asignatura Extends core\ClasePropiedades {
 	 * @return boolean bstatus
 	 */
 	function getStatus() {
-		if (!isset($this->bstatus)) {
+		if (!isset($this->bstatus) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bstatus;
@@ -482,7 +491,7 @@ class Asignatura Extends core\ClasePropiedades {
 	 * @return integer iid_tipo
 	 */
 	function getId_tipo() {
-		if (!isset($this->iid_tipo)) {
+		if (!isset($this->iid_tipo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tipo;

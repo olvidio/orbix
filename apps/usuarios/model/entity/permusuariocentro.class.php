@@ -37,6 +37,13 @@ class PermUsuarioCentro Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_item de PermUsuarioCentro
 	 *
 	 * @var integer
@@ -179,6 +186,8 @@ class PermUsuarioCentro Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -291,7 +300,7 @@ class PermUsuarioCentro Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -310,7 +319,7 @@ class PermUsuarioCentro Extends core\ClasePropiedades {
 	 * @return integer iid_usuario
 	 */
 	function getId_usuario() {
-		if (!isset($this->iid_usuario)) {
+		if (!isset($this->iid_usuario) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_usuario;
@@ -329,7 +338,7 @@ class PermUsuarioCentro Extends core\ClasePropiedades {
 	 * @return integer iid_ctr
 	 */
 	function getId_ctr() {
-		if (!isset($this->iid_ctr)) {
+		if (!isset($this->iid_ctr) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_ctr;
@@ -348,7 +357,7 @@ class PermUsuarioCentro Extends core\ClasePropiedades {
 	 * @return integer iperm_ctr
 	 */
 	function getPerm_ctr() {
-		if (!isset($this->iperm_ctr)) {
+		if (!isset($this->iperm_ctr) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iperm_ctr;

@@ -43,6 +43,13 @@ class TipoDossier Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_tipo_dossier de TipoDossier
 	 *
 	 * @var integer
@@ -251,6 +258,8 @@ class TipoDossier Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -381,7 +390,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * @return integer iid_tipo_dossier
 	 */
 	function getId_tipo_dossier() {
-		if (!isset($this->iid_tipo_dossier)) {
+		if (!isset($this->iid_tipo_dossier) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tipo_dossier;
@@ -400,7 +409,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * @return string sdescripcion
 	 */
 	function getDescripcion() {
-		if (!isset($this->sdescripcion)) {
+		if (!isset($this->sdescripcion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdescripcion;
@@ -419,7 +428,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * @return string stabla_from
 	 */
 	function getTabla_from() {
-		if (!isset($this->stabla_from)) {
+		if (!isset($this->stabla_from) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stabla_from;
@@ -438,7 +447,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * @return string stabla_to
 	 */
 	function getTabla_to() {
-		if (!isset($this->stabla_to)) {
+		if (!isset($this->stabla_to) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stabla_to;
@@ -457,7 +466,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * @return string scampo_to
 	 */
 	function getCampo_to() {
-		if (!isset($this->scampo_to)) {
+		if (!isset($this->scampo_to) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->scampo_to;
@@ -476,7 +485,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * @return integer iid_tipo_dossier_rel
 	 */
 	function getId_tipo_dossier_rel() {
-		if (!isset($this->iid_tipo_dossier_rel)) {
+		if (!isset($this->iid_tipo_dossier_rel) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tipo_dossier_rel;
@@ -495,7 +504,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * @return integer ipermiso_lectura
 	 */
 	function getPermiso_lectura() {
-		if (!isset($this->ipermiso_lectura)) {
+		if (!isset($this->ipermiso_lectura) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->ipermiso_lectura;
@@ -514,7 +523,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * @return integer ipermiso_escritura
 	 */
 	function getPermiso_escritura() {
-		if (!isset($this->ipermiso_escritura)) {
+		if (!isset($this->ipermiso_escritura) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->ipermiso_escritura;
@@ -533,7 +542,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * @return boolean bdepende_modificar
 	 */
 	function getDepende_modificar() {
-		if (!isset($this->bdepende_modificar)) {
+		if (!isset($this->bdepende_modificar) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bdepende_modificar;
@@ -552,7 +561,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * @return string sapp
 	 */
 	function getApp() {
-		if (!isset($this->sapp)) {
+		if (!isset($this->sapp) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sapp;
@@ -571,7 +580,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * @return string sclass
 	 */
 	function getClass() {
-		if (!isset($this->sclass)) {
+		if (!isset($this->sclass) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sclass;
@@ -590,7 +599,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	 * @return string idb
 	 */
 	function getDb() {
-		if (!isset($this->idb)) {
+		if (!isset($this->idb) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->idb;

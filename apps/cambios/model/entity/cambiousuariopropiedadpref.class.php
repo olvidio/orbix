@@ -39,6 +39,13 @@ class CambioUsuarioPropiedadPref Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_item de CambioUsuarioPropiedadPref
 	 *
 	 * @var integer
@@ -208,6 +215,8 @@ class CambioUsuarioPropiedadPref Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -367,7 +376,7 @@ class CambioUsuarioPropiedadPref Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -386,7 +395,7 @@ class CambioUsuarioPropiedadPref Extends core\ClasePropiedades {
 	 * @return integer iid_item_usuario_objeto
 	 */
 	function getId_item_usuario_objeto() {
-		if (!isset($this->iid_item_usuario_objeto)) {
+		if (!isset($this->iid_item_usuario_objeto) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item_usuario_objeto;
@@ -405,7 +414,7 @@ class CambioUsuarioPropiedadPref Extends core\ClasePropiedades {
 	 * @return string spropiedad
 	 */
 	function getPropiedad() {
-		if (!isset($this->spropiedad)) {
+		if (!isset($this->spropiedad) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->spropiedad;
@@ -424,7 +433,7 @@ class CambioUsuarioPropiedadPref Extends core\ClasePropiedades {
 	 * @return string soperador
 	 */
 	function getOperador() {
-		if (!isset($this->soperador)) {
+		if (!isset($this->soperador) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->soperador;
@@ -443,7 +452,7 @@ class CambioUsuarioPropiedadPref Extends core\ClasePropiedades {
 	 * @return string svalor
 	 */
 	function getValor() {
-		if (!isset($this->svalor)) {
+		if (!isset($this->svalor) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->svalor;
@@ -462,7 +471,7 @@ class CambioUsuarioPropiedadPref Extends core\ClasePropiedades {
 	 * @return boolean bvalor_old
 	 */
 	function getValor_old() {
-		if (!isset($this->bvalor_old)) {
+		if (!isset($this->bvalor_old) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bvalor_old;
@@ -481,7 +490,7 @@ class CambioUsuarioPropiedadPref Extends core\ClasePropiedades {
 	 * @return boolean bvalor_new
 	 */
 	function getValor_new() {
-		if (!isset($this->bvalor_new)) {
+		if (!isset($this->bvalor_new) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bvalor_new;

@@ -36,6 +36,13 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 	 * @var array
 	 */
 	 protected $aDades;
+
+	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 protected $bLoaded = FALSE;
 	 
 	 /**
 	  * aDades de ActividadCargo abans dels canvis.
@@ -235,6 +242,8 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -260,6 +269,8 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
                     return FALSE;
 		    }
 		    $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+		    // Para evitar posteriores cargas
+		    $this->bLoaded = TRUE;
 		    switch ($que) {
 		        case 'tot':
 		            $this->aDades=$aDades;
@@ -404,7 +415,7 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -424,7 +435,7 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 	 * @return integer iid_activ
 	 */
 	function getId_activ() {
-		if (!isset($this->iid_activ)) {
+		if (!isset($this->iid_activ) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_activ;
@@ -443,7 +454,7 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 	 * @return integer iid_cargo
 	 */
 	function getId_cargo() {
-		if (!isset($this->iid_cargo)) {
+		if (!isset($this->iid_cargo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_cargo;
@@ -466,7 +477,7 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 	 * @return integer iid_nom
 	 */
 	function getId_nom() {
-		if (!isset($this->iid_nom)) {
+		if (!isset($this->iid_nom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_nom;
@@ -485,7 +496,7 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 	 * @return boolean bpuede_agd
 	 */
 	function getPuede_agd() {
-		if (!isset($this->bpuede_agd)) {
+		if (!isset($this->bpuede_agd) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bpuede_agd;
@@ -504,7 +515,7 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 	 * @return string sobserv
 	 */
 	function getObserv() {
-		if (!isset($this->sobserv)) {
+		if (!isset($this->sobserv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sobserv;

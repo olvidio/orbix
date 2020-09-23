@@ -29,6 +29,13 @@ class TipoCentro Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Tipo_ctr de TipoCentro
 	 *
 	 * @var string
@@ -138,6 +145,8 @@ class TipoCentro Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -246,7 +255,7 @@ class TipoCentro Extends core\ClasePropiedades {
 	 * @return string stipo_ctr
 	 */
 	function getTipo_ctr() {
-		if (!isset($this->stipo_ctr)) {
+		if (!isset($this->stipo_ctr) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stipo_ctr;
@@ -265,7 +274,7 @@ class TipoCentro Extends core\ClasePropiedades {
 	 * @return string snombre_tipo_ctr
 	 */
 	function getNombre_tipo_ctr() {
-		if (!isset($this->snombre_tipo_ctr)) {
+		if (!isset($this->snombre_tipo_ctr) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snombre_tipo_ctr;

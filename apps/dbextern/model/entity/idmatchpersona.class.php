@@ -37,6 +37,13 @@ class IdMatchPersona Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_listas de IdMatchPersona
 	 *
 	 * @var integer
@@ -171,6 +178,8 @@ class IdMatchPersona Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -283,7 +292,7 @@ class IdMatchPersona Extends core\ClasePropiedades {
 	 * @return integer iid_listas
 	 */
 	function getId_listas() {
-		if (!isset($this->iid_listas)) {
+		if (!isset($this->iid_listas) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_listas;
@@ -302,7 +311,7 @@ class IdMatchPersona Extends core\ClasePropiedades {
 	 * @return integer iid_orbix
 	 */
 	function getId_orbix() {
-		if (!isset($this->iid_orbix)) {
+		if (!isset($this->iid_orbix) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_orbix;
@@ -321,7 +330,7 @@ class IdMatchPersona Extends core\ClasePropiedades {
 	 * @return string sid_tabla
 	 */
 	function getId_tabla() {
-		if (!isset($this->sid_tabla)) {
+		if (!isset($this->sid_tabla) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sid_tabla;

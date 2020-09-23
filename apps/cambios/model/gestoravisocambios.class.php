@@ -87,6 +87,13 @@ class gestorAvisoCambios {
 	 */
 	 private $aDades;
 
+	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 

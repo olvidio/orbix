@@ -38,6 +38,13 @@ class CasaPeriodo Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_schema de CasaPeriodo
 	 *
 	 * @var integer
@@ -194,6 +201,8 @@ class CasaPeriodo Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -308,7 +317,7 @@ class CasaPeriodo Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -327,7 +336,7 @@ class CasaPeriodo Extends core\ClasePropiedades {
 	 * @return integer iid_ubi
 	 */
 	function getId_ubi() {
-		if (!isset($this->iid_ubi)) {
+		if (!isset($this->iid_ubi) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_ubi;
@@ -346,7 +355,7 @@ class CasaPeriodo Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_ini
 	 */
 	function getF_ini() {
-		if (!isset($this->df_ini)) {
+		if (!isset($this->df_ini) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
         if (empty($this->df_ini)) {
@@ -375,7 +384,7 @@ class CasaPeriodo Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_fin
 	 */
 	function getF_fin() {
-		if (!isset($this->df_fin)) {
+		if (!isset($this->df_fin) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
         if (empty($this->df_fin)) {
@@ -404,7 +413,7 @@ class CasaPeriodo Extends core\ClasePropiedades {
 	 * @return integer isfsv
 	 */
 	function getSfsv() {
-		if (!isset($this->isfsv)) {
+		if (!isset($this->isfsv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->isfsv;

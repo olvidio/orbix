@@ -37,6 +37,13 @@ class DatosCgi Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_item de DatosCgi
 	 *
 	 * @var integer
@@ -187,6 +194,8 @@ class DatosCgi Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -301,7 +310,7 @@ class DatosCgi Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -320,7 +329,7 @@ class DatosCgi Extends core\ClasePropiedades {
 	 * @return integer iid_ubi
 	 */
 	function getId_ubi() {
-		if (!isset($this->iid_ubi)) {
+		if (!isset($this->iid_ubi) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_ubi;
@@ -339,7 +348,7 @@ class DatosCgi Extends core\ClasePropiedades {
 	 * @return integer icurso_ini_any
 	 */
 	function getCurso_ini_any() {
-		if (!isset($this->icurso_ini_any)) {
+		if (!isset($this->icurso_ini_any) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->icurso_ini_any;
@@ -358,7 +367,7 @@ class DatosCgi Extends core\ClasePropiedades {
 	 * @return integer icurso_fin_any
 	 */
 	function getCurso_fin_any() {
-		if (!isset($this->icurso_fin_any)) {
+		if (!isset($this->icurso_fin_any) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->icurso_fin_any;
@@ -377,7 +386,7 @@ class DatosCgi Extends core\ClasePropiedades {
 	 * @return integer inum_alum
 	 */
 	function getNum_alum() {
-		if (!isset($this->inum_alum)) {
+		if (!isset($this->inum_alum) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->inum_alum;

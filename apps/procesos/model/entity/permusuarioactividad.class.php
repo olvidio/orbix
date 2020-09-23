@@ -38,6 +38,13 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_item de PermUsuarioActividad
 	 *
 	 * @var integer
@@ -214,6 +221,8 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -334,7 +343,7 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -353,7 +362,7 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 	 * @return integer iid_usuario
 	 */
 	function getId_usuario() {
-		if (!isset($this->iid_usuario)) {
+		if (!isset($this->iid_usuario) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_usuario;
@@ -372,7 +381,7 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 	 * @return boolean bdl_propia
 	 */
 	function getDl_propia() {
-		if (!isset($this->bdl_propia)) {
+		if (!isset($this->bdl_propia) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bdl_propia;
@@ -391,7 +400,7 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 	 * @return string sid_tipo_activ_txt
 	 */
 	function getId_tipo_activ_txt() {
-		if (!isset($this->sid_tipo_activ_txt)) {
+		if (!isset($this->sid_tipo_activ_txt) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sid_tipo_activ_txt;
@@ -410,7 +419,7 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 	 * @return integer ifase_ref
 	 */
 	function getFase_ref() {
-		if (!isset($this->ifase_ref)) {
+		if (!isset($this->ifase_ref) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->ifase_ref;
@@ -429,7 +438,7 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 	 * @return integer iafecta_a
 	 */
 	function getAfecta_a() {
-		if (!isset($this->iafecta_a)) {
+		if (!isset($this->iafecta_a) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iafecta_a;
@@ -448,7 +457,7 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 	 * @return integer iperm_on
 	 */
 	function getPerm_on() {
-		if (!isset($this->iperm_on)) {
+		if (!isset($this->iperm_on) && !$this->bLoaded) {
 			$this->dbcarregar();
 		}
 		return $this->iperm_on;
@@ -467,7 +476,7 @@ class PermUsuarioActividad Extends core\ClasePropiedades {
 	 * @return integer iperm_off
 	 */
 	function getPerm_off() {
-		if (!isset($this->iperm_off)) {
+		if (!isset($this->iperm_off) && !$this->bLoaded) {
 			$this->dbcarregar();
 		}
 		return $this->iperm_off;

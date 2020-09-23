@@ -38,6 +38,13 @@ class UltimaAsistencia Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_schema de UltimaAsistencia
 	 *
 	 * @var integer
@@ -205,6 +212,8 @@ class UltimaAsistencia Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -325,7 +334,7 @@ class UltimaAsistencia Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -344,7 +353,7 @@ class UltimaAsistencia Extends core\ClasePropiedades {
 	 * @return integer iid_nom
 	 */
 	function getId_nom() {
-		if (!isset($this->iid_nom)) {
+		if (!isset($this->iid_nom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_nom;
@@ -363,7 +372,7 @@ class UltimaAsistencia Extends core\ClasePropiedades {
 	 * @return integer iid_tipo_activ
 	 */
 	function getId_tipo_activ() {
-		if (!isset($this->iid_tipo_activ)) {
+		if (!isset($this->iid_tipo_activ) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tipo_activ;
@@ -382,7 +391,7 @@ class UltimaAsistencia Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_ini
 	 */
 	function getF_ini() {
-		if (!isset($this->df_ini)) {
+		if (!isset($this->df_ini) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		if (empty($this->df_ini)) {
@@ -413,7 +422,7 @@ class UltimaAsistencia Extends core\ClasePropiedades {
 	 * @return string sdescripcion
 	 */
 	function getDescripcion() {
-		if (!isset($this->sdescripcion)) {
+		if (!isset($this->sdescripcion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdescripcion;
@@ -432,7 +441,7 @@ class UltimaAsistencia Extends core\ClasePropiedades {
 	 * @return boolean bcdr
 	 */
 	function getCdr() {
-		if (!isset($this->bcdr)) {
+		if (!isset($this->bcdr) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bcdr;

@@ -38,6 +38,13 @@ class Preferencia Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Tipo de Preferencia
 	 *
 	 * @var string
@@ -156,6 +163,8 @@ class Preferencia Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -267,7 +276,7 @@ class Preferencia Extends core\ClasePropiedades {
 	 * @return integer iid_usuario
 	 */
 	function getId_usuario() {
-		if (!isset($this->iid_usuario)) {
+		if (!isset($this->iid_usuario) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_usuario;
@@ -286,7 +295,7 @@ class Preferencia Extends core\ClasePropiedades {
 	 * @return string stipo
 	 */
 	function getTipo() {
-		if (!isset($this->stipo)) {
+		if (!isset($this->stipo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stipo;
@@ -305,7 +314,7 @@ class Preferencia Extends core\ClasePropiedades {
 	 * @return string spreferencia
 	 */
 	function getPreferencia() {
-		if (!isset($this->spreferencia)) {
+		if (!isset($this->spreferencia) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->spreferencia;

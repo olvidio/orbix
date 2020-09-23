@@ -38,6 +38,13 @@ class Publicacion Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_item de Publicacion
 	 *
 	 * @var integer
@@ -233,6 +240,8 @@ class Publicacion Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -362,7 +371,7 @@ class Publicacion Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -381,7 +390,7 @@ class Publicacion Extends core\ClasePropiedades {
 	 * @return integer iid_nom
 	 */
 	function getId_nom() {
-		if (!isset($this->iid_nom)) {
+		if (!isset($this->iid_nom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_nom;
@@ -400,7 +409,7 @@ class Publicacion Extends core\ClasePropiedades {
 	 * @return string stipo_publicacion
 	 */
 	function getTipo_publicacion() {
-		if (!isset($this->stipo_publicacion)) {
+		if (!isset($this->stipo_publicacion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stipo_publicacion;
@@ -419,7 +428,7 @@ class Publicacion Extends core\ClasePropiedades {
 	 * @return string stitulo
 	 */
 	function getTitulo() {
-		if (!isset($this->stitulo)) {
+		if (!isset($this->stitulo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stitulo;
@@ -438,7 +447,7 @@ class Publicacion Extends core\ClasePropiedades {
 	 * @return string seditorial
 	 */
 	function getEditorial() {
-		if (!isset($this->seditorial)) {
+		if (!isset($this->seditorial) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->seditorial;
@@ -457,7 +466,7 @@ class Publicacion Extends core\ClasePropiedades {
 	 * @return string scoleccion
 	 */
 	function getColeccion() {
-		if (!isset($this->scoleccion)) {
+		if (!isset($this->scoleccion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->scoleccion;
@@ -476,7 +485,7 @@ class Publicacion Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_publicacion Publicacion
 	 */
 	function getF_publicacion() {
-	    if (!isset($this->df_publicacion)) {
+	    if (!isset($this->df_publicacion) && !$this->bLoaded) {
 	        $this->DBCarregar();
 	    }
 	    if (empty($this->df_publicacion)) {
@@ -507,7 +516,7 @@ class Publicacion Extends core\ClasePropiedades {
 	 * @return boolean bpendiente
 	 */
 	function getPendiente() {
-		if (!isset($this->bpendiente)) {
+		if (!isset($this->bpendiente) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bpendiente;
@@ -526,7 +535,7 @@ class Publicacion Extends core\ClasePropiedades {
 	 * @return string sreferencia
 	 */
 	function getReferencia() {
-		if (!isset($this->sreferencia)) {
+		if (!isset($this->sreferencia) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sreferencia;
@@ -545,7 +554,7 @@ class Publicacion Extends core\ClasePropiedades {
 	 * @return string slugar
 	 */
 	function getLugar() {
-		if (!isset($this->slugar)) {
+		if (!isset($this->slugar) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->slugar;
@@ -564,7 +573,7 @@ class Publicacion Extends core\ClasePropiedades {
 	 * @return string sobserv
 	 */
 	function getObserv() {
-		if (!isset($this->sobserv)) {
+		if (!isset($this->sobserv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sobserv;

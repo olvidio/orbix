@@ -37,6 +37,13 @@ class MenuDb Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_menu de MenuDb
 	 *
 	 * @var integer
@@ -202,6 +209,8 @@ class MenuDb Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -323,7 +332,7 @@ class MenuDb Extends core\ClasePropiedades {
 	 * @return integer iid_menu
 	 */
 	function getId_menu() {
-		if (!isset($this->iid_menu)) {
+		if (!isset($this->iid_menu) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_menu;
@@ -342,7 +351,7 @@ class MenuDb Extends core\ClasePropiedades {
 	 * @return integer iorden
 	 */
 	function getOrden() {
-		if (!isset($this->iorden)) {
+		if (!isset($this->iorden) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iorden;
@@ -361,7 +370,7 @@ class MenuDb Extends core\ClasePropiedades {
 	 * @return string smenu
 	 */
 	function getMenu() {
-		if (!isset($this->smenu)) {
+		if (!isset($this->smenu) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->smenu;
@@ -380,7 +389,7 @@ class MenuDb Extends core\ClasePropiedades {
 	 * @return string sparametros
 	 */
 	function getParametros() {
-		if (!isset($this->sparametros)) {
+		if (!isset($this->sparametros) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sparametros;
@@ -399,7 +408,7 @@ class MenuDb Extends core\ClasePropiedades {
 	 * @return integer iid_metamenu
 	 */
 	function getId_metamenu() {
-		if (!isset($this->iid_metamenu)) {
+		if (!isset($this->iid_metamenu) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_metamenu;
@@ -418,7 +427,7 @@ class MenuDb Extends core\ClasePropiedades {
 	 * @return integer imenu_perm
 	 */
 	function getMenu_perm() {
-		if (!isset($this->imenu_perm)) {
+		if (!isset($this->imenu_perm) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->imenu_perm;
@@ -437,7 +446,7 @@ class MenuDb Extends core\ClasePropiedades {
 	 * @return integer iid_grupmenu
 	 */
 	function getId_grupmenu() {
-		if (!isset($this->iid_grupmenu)) {
+		if (!isset($this->iid_grupmenu) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_grupmenu;
@@ -456,7 +465,7 @@ class MenuDb Extends core\ClasePropiedades {
 	 * @return boolean bok
 	 */
 	function getOk() {
-		if (!isset($this->bok)) {
+		if (!isset($this->bok) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bok;

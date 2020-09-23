@@ -37,6 +37,13 @@ class ActividadTarea Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_fase de ActividadTarea
 	 *
 	 * @var integer
@@ -171,6 +178,8 @@ class ActividadTarea Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -287,7 +296,7 @@ class ActividadTarea Extends core\ClasePropiedades {
 	 * @return integer iid_fase
 	 */
 	function getId_fase() {
-		if (!isset($this->iid_fase)) {
+		if (!isset($this->iid_fase) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_fase;
@@ -306,7 +315,7 @@ class ActividadTarea Extends core\ClasePropiedades {
 	 * @return integer iid_tarea
 	 */
 	function getId_tarea() {
-		if (!isset($this->iid_tarea)) {
+		if (!isset($this->iid_tarea) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tarea;
@@ -325,7 +334,7 @@ class ActividadTarea Extends core\ClasePropiedades {
 	 * @return string sdesc_tarea
 	 */
 	function getDesc_tarea() {
-		if (!isset($this->sdesc_tarea)) {
+		if (!isset($this->sdesc_tarea) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdesc_tarea;

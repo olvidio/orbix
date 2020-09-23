@@ -39,6 +39,13 @@ class ModuloInstalado Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_schema de ModuloInstalado
 	 *
 	 * @var integer
@@ -197,6 +204,8 @@ class ModuloInstalado Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
             $this->aDades=$aDades;
 			switch ($que) {
 				case 'tot':
@@ -316,7 +325,7 @@ class ModuloInstalado Extends core\ClasePropiedades {
 	 * @return integer iid_mod
 	 */
 	function getId_mod() {
-		if (!isset($this->iid_mod)) {
+		if (!isset($this->iid_mod) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_mod;
@@ -335,7 +344,7 @@ class ModuloInstalado Extends core\ClasePropiedades {
 	 * @return boolean bstatus
 	 */
 	function getStatus() {
-		if (!isset($this->bstatus)) {
+		if (!isset($this->bstatus) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bstatus;
@@ -354,7 +363,7 @@ class ModuloInstalado Extends core\ClasePropiedades {
 	 * @return string sparam
 	 */
 	function getParam() {
-		if (!isset($this->sparam)) {
+		if (!isset($this->sparam) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sparam;

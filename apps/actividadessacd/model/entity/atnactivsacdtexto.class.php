@@ -37,6 +37,13 @@ class AtnActivSacdTexto Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_item de AtnActivSacdTexto
 	 *
 	 * @var integer
@@ -179,6 +186,8 @@ class AtnActivSacdTexto Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -291,7 +300,7 @@ class AtnActivSacdTexto Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -310,7 +319,7 @@ class AtnActivSacdTexto Extends core\ClasePropiedades {
 	 * @return string sidioma
 	 */
 	function getIdioma() {
-		if (!isset($this->sidioma)) {
+		if (!isset($this->sidioma) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sidioma;
@@ -329,7 +338,7 @@ class AtnActivSacdTexto Extends core\ClasePropiedades {
 	 * @return string sclave
 	 */
 	function getClave() {
-		if (!isset($this->sclave)) {
+		if (!isset($this->sclave) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sclave;
@@ -348,7 +357,7 @@ class AtnActivSacdTexto Extends core\ClasePropiedades {
 	 * @return string stexto
 	 */
 	function getTexto() {
-		if (!isset($this->stexto)) {
+		if (!isset($this->stexto) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stexto;

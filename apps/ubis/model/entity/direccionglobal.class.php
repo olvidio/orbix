@@ -30,6 +30,13 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 protected $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 protected $bLoaded = FALSE;
+
+	/**
 	 * Id_direccion de Direccion
 	 *
 	 * @var integer
@@ -235,7 +242,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * @return integer iid_direccion
 	 */
 	function getId_direccion() {
-		if (!isset($this->iid_direccion)) {
+		if (!isset($this->iid_direccion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_direccion;
@@ -254,7 +261,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * @return string sdireccion
 	 */
 	function getDireccion() {
-		if (!isset($this->sdireccion)) {
+		if (!isset($this->sdireccion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdireccion;
@@ -273,7 +280,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * @return string sc_p
 	 */
 	function getC_p() {
-		if (!isset($this->sc_p)) {
+		if (!isset($this->sc_p) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sc_p;
@@ -292,7 +299,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * @return string spoblacion
 	 */
 	function getPoblacion() {
-		if (!isset($this->spoblacion)) {
+		if (!isset($this->spoblacion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->spoblacion;
@@ -311,7 +318,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * @return string sprovincia
 	 */
 	function getProvincia() {
-		if (!isset($this->sprovincia)) {
+		if (!isset($this->sprovincia) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sprovincia;
@@ -330,7 +337,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * @return string sa_p
 	 */
 	function getA_p() {
-		if (!isset($this->sa_p)) {
+		if (!isset($this->sa_p) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sa_p;
@@ -349,7 +356,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * @return string spais
 	 */
 	function getPais() {
-		if (!isset($this->spais)) {
+		if (!isset($this->spais) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->spais;
@@ -368,7 +375,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_direccion
 	 */
 	function getF_direccion() {
-	    if (!isset($this->df_direccion)) {
+	    if (!isset($this->df_direccion) && !$this->bLoaded) {
 	        $this->DBCarregar();
 	    }
 	    if (empty($this->df_direccion)) {
@@ -399,7 +406,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * @return string sobserv
 	 */
 	function getObserv() {
-		if (!isset($this->sobserv)) {
+		if (!isset($this->sobserv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sobserv;
@@ -418,7 +425,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * @return boolean bcp_dcha
 	 */
 	function getCp_dcha() {
-		if (!isset($this->bcp_dcha)) {
+		if (!isset($this->bcp_dcha) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bcp_dcha;
@@ -437,7 +444,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * @return string ilatitud
 	 */
 	function getLatitud() {
-		if (!isset($this->ilatitud)) {
+		if (!isset($this->ilatitud) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->ilatitud;
@@ -456,7 +463,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * @return string ilongitud
 	 */
 	function getLongitud() {
-		if (!isset($this->ilongitud)) {
+		if (!isset($this->ilongitud) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->ilongitud;
@@ -475,7 +482,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * @return string iplano_doc
 	 */
 	function getPlano_doc() {
-		if (!isset($this->iplano_doc)) {
+		if (!isset($this->iplano_doc) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iplano_doc;
@@ -494,7 +501,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * @return string splano_extension
 	 */
 	function getPlano_extension() {
-		if (!isset($this->splano_extension)) {
+		if (!isset($this->splano_extension) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->splano_extension;
@@ -513,7 +520,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * @return string splano_nom
 	 */
 	function getPlano_nom() {
-		if (!isset($this->splano_nom)) {
+		if (!isset($this->splano_nom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->splano_nom;
@@ -532,7 +539,7 @@ Abstract class DireccionGlobal Extends core\ClasePropiedades {
 	 * @return string snom_sede
 	 */
 	function getNom_sede() {
-		if (!isset($this->snom_sede)) {
+		if (!isset($this->snom_sede) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snom_sede;

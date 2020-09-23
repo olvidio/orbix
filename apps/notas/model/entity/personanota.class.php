@@ -47,6 +47,13 @@ class PersonaNota Extends core\ClasePropiedades {
 	 protected $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 protected $bLoaded = FALSE;
+
+	/**
 	 * Id_schema de PersonaNota
 	 *
 	 * @var integer
@@ -295,6 +302,8 @@ class PersonaNota Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -432,7 +441,7 @@ class PersonaNota Extends core\ClasePropiedades {
 	 * @return integer iid_nom
 	 */
 	function getId_nom() {
-		if (!isset($this->iid_nom)) {
+		if (!isset($this->iid_nom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_nom;
@@ -451,7 +460,7 @@ class PersonaNota Extends core\ClasePropiedades {
 	 * @return integer iid_nivel
 	 */
 	function getId_nivel() {
-		if (!isset($this->iid_nivel)) {
+		if (!isset($this->iid_nivel) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_nivel;
@@ -470,7 +479,7 @@ class PersonaNota Extends core\ClasePropiedades {
 	 * @return integer iid_asignatura
 	 */
 	function getId_asignatura() {
-		if (!isset($this->iid_asignatura)) {
+		if (!isset($this->iid_asignatura) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_asignatura;
@@ -489,7 +498,7 @@ class PersonaNota Extends core\ClasePropiedades {
 	 * @return integer iid_situacion
 	 */
 	function getId_situacion() {
-		if (!isset($this->iid_situacion)) {
+		if (!isset($this->iid_situacion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_situacion;
@@ -508,7 +517,7 @@ class PersonaNota Extends core\ClasePropiedades {
 	 * @return string sacta
 	 */
 	function getActa() {
-		if (!isset($this->sacta)) {
+		if (!isset($this->sacta) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sacta;
@@ -527,7 +536,7 @@ class PersonaNota Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_acta
 	 */
 	function getF_acta() {
-	    if (!isset($this->df_acta)) {
+	    if (!isset($this->df_acta) && !$this->bLoaded) {
 	        $this->DBCarregar();
 	    }
 	    if (empty($this->df_acta)) {
@@ -558,7 +567,7 @@ class PersonaNota Extends core\ClasePropiedades {
 	 * @return string sdetalle
 	 */
 	function getDetalle() {
-		if (!isset($this->sdetalle)) {
+		if (!isset($this->sdetalle) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdetalle;
@@ -577,7 +586,7 @@ class PersonaNota Extends core\ClasePropiedades {
 	 * @return boolean bpreceptor
 	 */
 	function getPreceptor() {
-		if (!isset($this->bpreceptor)) {
+		if (!isset($this->bpreceptor) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bpreceptor;
@@ -596,7 +605,7 @@ class PersonaNota Extends core\ClasePropiedades {
 	 * @return integer iid_preceptor
 	 */
 	function getId_preceptor() {
-		if (!isset($this->iid_preceptor)) {
+		if (!isset($this->iid_preceptor) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_preceptor;
@@ -615,7 +624,7 @@ class PersonaNota Extends core\ClasePropiedades {
 	 * @return integer iepoca
 	 */
 	function getEpoca() {
-		if (!isset($this->iepoca)) {
+		if (!isset($this->iepoca) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iepoca;
@@ -634,7 +643,7 @@ class PersonaNota Extends core\ClasePropiedades {
 	 * @return integer iid_activ
 	 */
 	function getId_activ() {
-		if (!isset($this->iid_activ)) {
+		if (!isset($this->iid_activ) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_activ;
@@ -653,7 +662,7 @@ class PersonaNota Extends core\ClasePropiedades {
 	 * @return integer inota_num
 	 */
 	function getNota_num() {
-		if (!isset($this->inota_num)) {
+		if (!isset($this->inota_num) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->inota_num;
@@ -674,7 +683,7 @@ class PersonaNota Extends core\ClasePropiedades {
 	 * @return integer inota_max
 	 */
 	function getNota_max() {
-		if (!isset($this->inota_max)) {
+		if (!isset($this->inota_max) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->inota_max;
@@ -693,7 +702,7 @@ class PersonaNota Extends core\ClasePropiedades {
 	 * @return integer itipo_acta
 	 */
 	function getTipo_acta() {
-		if (!isset($this->itipo_acta)) {
+		if (!isset($this->itipo_acta) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->itipo_acta;

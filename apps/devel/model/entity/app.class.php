@@ -37,6 +37,13 @@ class App Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_app de App
 	 *
 	 * @var integer
@@ -171,6 +178,8 @@ class App Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -283,7 +292,7 @@ class App Extends core\ClasePropiedades {
 	 * @return integer iid_app
 	 */
 	function getId_app() {
-		if (!isset($this->iid_app)) {
+		if (!isset($this->iid_app) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_app;
@@ -302,7 +311,7 @@ class App Extends core\ClasePropiedades {
 	 * @return string snom
 	 */
 	function getNom() {
-		if (!isset($this->snom)) {
+		if (!isset($this->snom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snom;
@@ -321,7 +330,7 @@ class App Extends core\ClasePropiedades {
 	 * @return string sdb_prefix
 	 */
 	function getDb_prefix() {
-		if (!isset($this->sdb_prefix)) {
+		if (!isset($this->sdb_prefix) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdb_prefix;

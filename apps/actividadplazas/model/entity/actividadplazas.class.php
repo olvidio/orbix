@@ -37,6 +37,13 @@ class actividadPlazas Extends core\ClasePropiedades {
 	 protected $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 protected $bLoaded = FALSE;
+
+	/**
 	 * Id_schema de actividadPlazas
 	 *
 	 * @var integer
@@ -194,6 +201,8 @@ class actividadPlazas Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -314,7 +323,7 @@ class actividadPlazas Extends core\ClasePropiedades {
 	 * @return integer iid_activ
 	 */
 	function getId_activ() {
-		if (!isset($this->iid_activ)) {
+		if (!isset($this->iid_activ) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_activ;
@@ -333,7 +342,7 @@ class actividadPlazas Extends core\ClasePropiedades {
 	 * @return integer iid_dl
 	 */
 	function getId_dl() {
-		if (!isset($this->iid_dl)) {
+		if (!isset($this->iid_dl) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_dl;
@@ -352,7 +361,7 @@ class actividadPlazas Extends core\ClasePropiedades {
 	 * @return integer iplazas
 	 */
 	function getPlazas() {
-		if (!isset($this->iplazas)) {
+		if (!isset($this->iplazas) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iplazas;
@@ -371,7 +380,7 @@ class actividadPlazas Extends core\ClasePropiedades {
 	 * @return string scl
 	 */
 	function getCl() {
-		if (!isset($this->scl)) {
+		if (!isset($this->scl) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->scl;
@@ -390,7 +399,7 @@ class actividadPlazas Extends core\ClasePropiedades {
 	 * @return string sdl_tabla
 	 */
 	function getDl_tabla() {
-		if (!isset($this->sdl_tabla)) {
+		if (!isset($this->sdl_tabla) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdl_tabla;
@@ -409,7 +418,7 @@ class actividadPlazas Extends core\ClasePropiedades {
 	 * @return object json ocedidas
 	 */
 	function getCedidas() {
-		if (!isset($this->ocedidas)) {
+		if (!isset($this->ocedidas) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->ocedidas;

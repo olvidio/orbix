@@ -38,6 +38,13 @@ class AsistentePub Extends core\ClasePropiedades {
 	 protected $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 protected $bLoaded = FALSE;
+
+	/**
 	 * aDades de AsistentePub abans dels canvis.
 	 *
 	 * @var array
@@ -321,6 +328,8 @@ class AsistentePub Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -488,7 +497,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * @return integer iid_activ
 	 */
 	function getId_activ() {
-		if (!isset($this->iid_activ)) {
+		if (!isset($this->iid_activ) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_activ;
@@ -507,7 +516,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * @return integer iid_nom
 	 */
 	function getId_nom() {
-		if (!isset($this->iid_nom)) {
+		if (!isset($this->iid_nom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_nom;
@@ -526,7 +535,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * @return boolean bpropio
 	 */
 	function getPropio() {
-		if (!isset($this->bpropio)) {
+		if (!isset($this->bpropio) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bpropio;
@@ -545,7 +554,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * @return boolean best_ok
 	 */
 	function getEst_ok() {
-		if (!isset($this->best_ok)) {
+		if (!isset($this->best_ok) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->best_ok;
@@ -564,7 +573,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * @return boolean bcfi
 	 */
 	function getCfi() {
-		if (!isset($this->bcfi)) {
+		if (!isset($this->bcfi) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bcfi;
@@ -583,7 +592,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * @return integer icfi_con
 	 */
 	function getCfi_con() {
-		if (!isset($this->icfi_con)) {
+		if (!isset($this->icfi_con) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->icfi_con;
@@ -602,7 +611,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * @return boolean bfalta
 	 */
 	function getFalta() {
-		if (!isset($this->bfalta)) {
+		if (!isset($this->bfalta) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bfalta;
@@ -621,7 +630,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * @return string sencargo
 	 */
 	function getEncargo() {
-		if (!isset($this->sencargo)) {
+		if (!isset($this->sencargo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sencargo;
@@ -640,7 +649,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * @return string scama
 	 */
 	function getCama() {
-		if (!isset($this->scama)) {
+		if (!isset($this->scama) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->scama;
@@ -659,7 +668,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * @return string sobserv
 	 */
 	function getObserv() {
-		if (!isset($this->sobserv)) {
+		if (!isset($this->sobserv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sobserv;
@@ -678,7 +687,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * @return string sobserv_est
 	 */
 	function getObserv_est() {
-		if (!isset($this->sobserv_est)) {
+		if (!isset($this->sobserv_est) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sobserv_est;
@@ -697,7 +706,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * @return integer iplaza
 	 */
 	function getPlaza() {
-		if (!isset($this->iplaza)) {
+		if (!isset($this->iplaza) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iplaza;
@@ -756,7 +765,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * @return integer spropietario
 	 */
 	function getPropietario() {
-		if (!isset($this->spropietario)) {
+		if (!isset($this->spropietario) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->spropietario;
@@ -775,7 +784,7 @@ class AsistentePub Extends core\ClasePropiedades {
 	 * @return string sid_tabla
 	 */
 	function getId_tabla() {
-		if (!isset($this->sid_tabla)) {
+		if (!isset($this->sid_tabla) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sid_tabla;

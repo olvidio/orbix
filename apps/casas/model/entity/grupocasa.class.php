@@ -37,6 +37,13 @@ class GrupoCasa Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_item de GrupoCasa
 	 *
 	 * @var integer
@@ -171,6 +178,8 @@ class GrupoCasa Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -281,7 +290,7 @@ class GrupoCasa Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -300,7 +309,7 @@ class GrupoCasa Extends core\ClasePropiedades {
 	 * @return integer iid_ubi_padre
 	 */
 	function getId_ubi_padre() {
-		if (!isset($this->iid_ubi_padre)) {
+		if (!isset($this->iid_ubi_padre) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_ubi_padre;
@@ -319,7 +328,7 @@ class GrupoCasa Extends core\ClasePropiedades {
 	 * @return integer iid_ubi_hijo
 	 */
 	function getId_ubi_hijo() {
-		if (!isset($this->iid_ubi_hijo)) {
+		if (!isset($this->iid_ubi_hijo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_ubi_hijo;

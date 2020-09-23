@@ -28,6 +28,13 @@ class Region Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_region de Region
 	 *
 	 * @var integer
@@ -164,6 +171,8 @@ class Region Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -275,7 +284,7 @@ class Region Extends core\ClasePropiedades {
 	 * @return integer iid_region
 	 */
 	function getId_region() {
-		if (!isset($this->iid_region)) {
+		if (!isset($this->iid_region) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_region;
@@ -294,7 +303,7 @@ class Region Extends core\ClasePropiedades {
 	 * @return string sregion
 	 */
 	function getRegion() {
-		if (!isset($this->sregion)) {
+		if (!isset($this->sregion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sregion;
@@ -313,7 +322,7 @@ class Region Extends core\ClasePropiedades {
 	 * @return string snombre_region
 	 */
 	function getNombre_region() {
-		if (!isset($this->snombre_region)) {
+		if (!isset($this->snombre_region) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snombre_region;
@@ -332,7 +341,7 @@ class Region Extends core\ClasePropiedades {
 	 * @return boolean bstatus
 	 */
 	function getStatus() {
-		if (!isset($this->bstatus)) {
+		if (!isset($this->bstatus) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bstatus;

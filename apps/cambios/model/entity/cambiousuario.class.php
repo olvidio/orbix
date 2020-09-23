@@ -42,6 +42,13 @@ class CambioUsuario Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_item de CambioUsuario
 	 *
 	 * @var integer
@@ -218,6 +225,8 @@ class CambioUsuario Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -338,7 +347,7 @@ class CambioUsuario Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -357,7 +366,7 @@ class CambioUsuario Extends core\ClasePropiedades {
 	 * @return integer iid_schema_cambio
 	 */
 	function getId_schema_cambio() {
-		if (!isset($this->iid_schema_cambio)) {
+		if (!isset($this->iid_schema_cambio) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_schema_cambio;
@@ -376,7 +385,7 @@ class CambioUsuario Extends core\ClasePropiedades {
 	 * @return integer iid_item_cambio
 	 */
 	function getId_item_cambio() {
-		if (!isset($this->iid_item_cambio)) {
+		if (!isset($this->iid_item_cambio) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item_cambio;
@@ -395,7 +404,7 @@ class CambioUsuario Extends core\ClasePropiedades {
 	 * @return integer iid_usuario
 	 */
 	function getId_usuario() {
-		if (!isset($this->iid_usuario)) {
+		if (!isset($this->iid_usuario) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_usuario;
@@ -414,7 +423,7 @@ class CambioUsuario Extends core\ClasePropiedades {
 	 * @return integer isfsv
 	 */
 	function getSfsv() {
-		if (!isset($this->isfsv)) {
+		if (!isset($this->isfsv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->isfsv;
@@ -433,7 +442,7 @@ class CambioUsuario Extends core\ClasePropiedades {
 	 * @return integer iaviso_tipo
 	 */
 	function getAviso_tipo() {
-		if (!isset($this->iaviso_tipo)) {
+		if (!isset($this->iaviso_tipo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iaviso_tipo;
@@ -452,7 +461,7 @@ class CambioUsuario Extends core\ClasePropiedades {
 	 * @return string saviso_donde
 	 */
 	function getAviso_donde() {
-		if (!isset($this->saviso_donde)) {
+		if (!isset($this->saviso_donde) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->saviso_donde;
@@ -471,7 +480,7 @@ class CambioUsuario Extends core\ClasePropiedades {
 	 * @return boolean bavisado
 	 */
 	function getAvisado() {
-		if (!isset($this->bavisado)) {
+		if (!isset($this->bavisado) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bavisado;

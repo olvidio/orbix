@@ -28,6 +28,13 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_tipo de AsignaturaTipo
 	 *
 	 * @var integer
@@ -166,6 +173,8 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -281,7 +290,7 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 	 * @return integer iid_tipo
 	 */
 	function getId_tipo() {
-		if (!isset($this->iid_tipo)) {
+		if (!isset($this->iid_tipo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tipo;
@@ -300,7 +309,7 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 	 * @return string stipo_asignatura
 	 */
 	function getTipo_asignatura() {
-		if (!isset($this->stipo_asignatura)) {
+		if (!isset($this->stipo_asignatura) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stipo_asignatura;
@@ -319,7 +328,7 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 	 * @return string stipo_breve
 	 */
 	function getTipo_breve() {
-		if (!isset($this->stipo_breve)) {
+		if (!isset($this->stipo_breve) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stipo_breve;
@@ -357,7 +366,7 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 	 * @return string stipo_latin
 	 */
 	function getTipo_latin() {
-		if (!isset($this->stipo_latin)) {
+		if (!isset($this->stipo_latin) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stipo_latin;

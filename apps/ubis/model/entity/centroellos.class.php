@@ -157,6 +157,8 @@ class CentroEllos Extends Centro {
 	            return false;
 	        }
 	        $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+	        // Para evitar posteriores cargas
+	        $this->bLoaded = TRUE;
 	        switch ($que) {
 	            case 'tot':
 	                $this->aDades=$aDades;
@@ -254,7 +256,7 @@ class CentroEllos Extends Centro {
 	 * @return integer iid_zona
 	 */
 	function getId_zona() {
-	    if (!isset($this->iid_zona)) {
+	    if (!isset($this->iid_zona) && !$this->bLoaded) {
 	        $this->DBCarregar();
 	    }
 	    return $this->iid_zona;

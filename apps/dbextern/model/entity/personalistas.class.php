@@ -44,6 +44,13 @@ class PersonaListas Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Identif de Listas
 	 *
 	 * @var integer
@@ -349,6 +356,8 @@ class PersonaListas Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -636,7 +645,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	 * @return integer iIdentif
 	 */
 	function getIdentif() {
-		if (!isset($this->iIdentif)) {
+		if (!isset($this->iIdentif) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iIdentif;
@@ -655,7 +664,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	 * @return string sApeNom
 	 */
 	function getApeNom() {
-		if (!isset($this->sApeNom)) {
+		if (!isset($this->sApeNom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sApeNom;
@@ -674,7 +683,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	 * @return string sDl
 	 */
 	function getDl() {
-		if (!isset($this->sDl)) {
+		if (!isset($this->sDl) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sDl;
@@ -693,7 +702,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	 * @return string sCtr
 	 */
 	function getCtr() {
-		if (!isset($this->sCtr)) {
+		if (!isset($this->sCtr) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sCtr;
@@ -712,7 +721,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	 * @return string sLugar_Naci
 	 */
 	function getLugar_Naci() {
-		if (!isset($this->sLugar_Naci)) {
+		if (!isset($this->sLugar_Naci) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sLugar_Naci;
@@ -731,7 +740,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	 * @return string date dFecha_Naci
 	 */
 	function getFecha_Naci() {
-		if (!isset($this->dFecha_Naci)) {
+		if (!isset($this->dFecha_Naci) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->dFecha_Naci;
@@ -752,7 +761,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	 * @return string sEmail
 	 */
 	function getEmail() {
-		if (!isset($this->sEmail)) {
+		if (!isset($this->sEmail) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sEmail;
@@ -771,7 +780,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	 * @return string sTfno_Movil
 	 */
 	function getTfno_Movil() {
-		if (!isset($this->sTfno_Movil)) {
+		if (!isset($this->sTfno_Movil) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sTfno_Movil;
@@ -790,7 +799,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	 * @return string sCe
 	 */
 	function getCe() {
-		if (!isset($this->sCe)) {
+		if (!isset($this->sCe) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sCe;
@@ -809,7 +818,7 @@ class PersonaListas Extends core\ClasePropiedades {
 	 * @return integer iID_TABLA
 	 */
 	function getID_TABLA() {
-		if (!isset($this->iID_TABLA)) {
+		if (!isset($this->iID_TABLA) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iID_TABLA;

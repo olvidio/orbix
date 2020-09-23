@@ -50,6 +50,13 @@ class Nota Extends core\ClasePropiedades {
 	 protected $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 protected $bLoaded = FALSE;
+
+	/**
 	 * Id_situacion de Nota
 	 *
 	 * @var integer
@@ -194,6 +201,8 @@ class Nota Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -308,7 +317,7 @@ class Nota Extends core\ClasePropiedades {
 	 * @return integer iid_situacion
 	 */
 	function getId_situacion() {
-		if (!isset($this->iid_situacion)) {
+		if (!isset($this->iid_situacion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_situacion;
@@ -327,7 +336,7 @@ class Nota Extends core\ClasePropiedades {
 	 * @return string sdescripcion
 	 */
 	function getDescripcion() {
-		if (!isset($this->sdescripcion)) {
+		if (!isset($this->sdescripcion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdescripcion;
@@ -346,7 +355,7 @@ class Nota Extends core\ClasePropiedades {
 	 * @return boolean bsuperada
 	 */
 	function getSuperada() {
-		if (!isset($this->bsuperada)) {
+		if (!isset($this->bsuperada) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bsuperada;
@@ -365,7 +374,7 @@ class Nota Extends core\ClasePropiedades {
 	 * @return string sbreve
 	 */
 	function getBreve() {
-		if (!isset($this->sbreve)) {
+		if (!isset($this->sbreve) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sbreve;

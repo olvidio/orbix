@@ -37,6 +37,13 @@ class ProfesorTipo Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_tipo_profesor de ProfesorTipo
 	 *
 	 * @var integer
@@ -163,6 +170,8 @@ class ProfesorTipo Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -271,7 +280,7 @@ class ProfesorTipo Extends core\ClasePropiedades {
 	 * @return integer iid_tipo_profesor
 	 */
 	function getId_tipo_profesor() {
-		if (!isset($this->iid_tipo_profesor)) {
+		if (!isset($this->iid_tipo_profesor) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tipo_profesor;
@@ -290,7 +299,7 @@ class ProfesorTipo Extends core\ClasePropiedades {
 	 * @return string stipo_profesor
 	 */
 	function getTipo_profesor() {
-		if (!isset($this->stipo_profesor)) {
+		if (!isset($this->stipo_profesor) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stipo_profesor;

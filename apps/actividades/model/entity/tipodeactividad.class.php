@@ -39,6 +39,13 @@ class TipoDeActividad Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_schema de TipoDeActividad
 	 *
 	 * @var integer
@@ -205,6 +212,8 @@ class TipoDeActividad Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -272,12 +281,12 @@ class TipoDeActividad Extends core\ClasePropiedades {
 	       $isfsv = ConfigGlobal::mi_sfsv();
 	    }
 	    if ($isfsv == 1) {
-            if (!isset($this->iid_tipo_proceso_sv)) {
+            if (!isset($this->iid_tipo_proceso_sv) && !$this->bLoaded) {
                 $this->DBCarregar();
             }
             $id_tipo_proceso = $this->iid_tipo_proceso_sv;
 	    } else {
-            if (!isset($this->iid_tipo_proceso_sf)) {
+            if (!isset($this->iid_tipo_proceso_sf) && !$this->bLoaded) {
                 $this->DBCarregar();
             }
             $id_tipo_proceso = $this->iid_tipo_proceso_sf;
@@ -313,12 +322,12 @@ class TipoDeActividad Extends core\ClasePropiedades {
 	       $isfsv = ConfigGlobal::mi_sfsv();
 	    }
 	    if ($isfsv == 1) {
-            if (!isset($this->iid_tipo_proceso_ex_sv)) {
+            if (!isset($this->iid_tipo_proceso_ex_sv) && !$this->bLoaded) {
                 $this->DBCarregar();
             }
             $id_tipo_proceso_ex = $this->iid_tipo_proceso_ex_sv;
 	    } else {
-            if (!isset($this->iid_tipo_proceso_ex_sf)) {
+            if (!isset($this->iid_tipo_proceso_ex_sf) && !$this->bLoaded) {
                 $this->DBCarregar();
             }
             $id_tipo_proceso_ex = $this->iid_tipo_proceso_ex_sf;
@@ -410,7 +419,7 @@ class TipoDeActividad Extends core\ClasePropiedades {
 	 * @return integer iid_schema
 	 */
 	function getId_schema() {
-		if (!isset($this->iid_schema)) {
+		if (!isset($this->iid_schema) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_schema;
@@ -429,7 +438,7 @@ class TipoDeActividad Extends core\ClasePropiedades {
 	 * @return integer iid_tipo_activ
 	 */
 	function getId_tipo_activ() {
-		if (!isset($this->iid_tipo_activ)) {
+		if (!isset($this->iid_tipo_activ) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tipo_activ;
@@ -448,7 +457,7 @@ class TipoDeActividad Extends core\ClasePropiedades {
 	 * @return string snombre
 	 */
 	function getNombre() {
-		if (!isset($this->snombre)) {
+		if (!isset($this->snombre) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snombre;
@@ -467,7 +476,7 @@ class TipoDeActividad Extends core\ClasePropiedades {
 	 * @return integer iid_tipo_proceso_sv
 	 */
 	function getId_tipo_proceso_sv() {
-		if (!isset($this->iid_tipo_proceso_sv)) {
+		if (!isset($this->iid_tipo_proceso_sv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tipo_proceso_sv;
@@ -486,7 +495,7 @@ class TipoDeActividad Extends core\ClasePropiedades {
 	 * @return integer iid_tipo_proceso_ex_sv
 	 */
 	function getId_tipo_proceso_ex_sv() {
-		if (!isset($this->iid_tipo_proceso_ex_sv)) {
+		if (!isset($this->iid_tipo_proceso_ex_sv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tipo_proceso_ex_sv;
@@ -505,7 +514,7 @@ class TipoDeActividad Extends core\ClasePropiedades {
 	 * @return integer iid_tipo_proceso_sf
 	 */
 	function getId_tipo_proceso_sf() {
-		if (!isset($this->iid_tipo_proceso_sf)) {
+		if (!isset($this->iid_tipo_proceso_sf) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tipo_proceso_sf;
@@ -524,7 +533,7 @@ class TipoDeActividad Extends core\ClasePropiedades {
 	 * @return integer iid_tipo_proceso_ex_sf
 	 */
 	function getId_tipo_proceso_ex_sf() {
-		if (!isset($this->iid_tipo_proceso_ex_sf)) {
+		if (!isset($this->iid_tipo_proceso_ex_sf) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tipo_proceso_ex_sf;

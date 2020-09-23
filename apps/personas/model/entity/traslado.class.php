@@ -38,6 +38,13 @@ class Traslado Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_item de Traslado
 	 *
 	 * @var integer
@@ -215,6 +222,8 @@ class Traslado Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -339,7 +348,7 @@ class Traslado Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -358,7 +367,7 @@ class Traslado Extends core\ClasePropiedades {
 	 * @return integer iid_nom
 	 */
 	function getId_nom() {
-		if (!isset($this->iid_nom)) {
+		if (!isset($this->iid_nom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_nom;
@@ -377,7 +386,7 @@ class Traslado Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_traslado
 	 */
 	function getF_traslado() {
-	    if (!isset($this->df_traslado)) {
+	    if (!isset($this->df_traslado) && !$this->bLoaded) {
 	        $this->DBCarregar();
 	    }
 	    if (empty($this->df_traslado)) {
@@ -408,7 +417,7 @@ class Traslado Extends core\ClasePropiedades {
 	 * @return string stipo_cmb
 	 */
 	function getTipo_cmb() {
-		if (!isset($this->stipo_cmb)) {
+		if (!isset($this->stipo_cmb) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stipo_cmb;
@@ -427,7 +436,7 @@ class Traslado Extends core\ClasePropiedades {
 	 * @return integer iid_ctr_origen
 	 */
 	function getId_ctr_origen() {
-		if (!isset($this->iid_ctr_origen)) {
+		if (!isset($this->iid_ctr_origen) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_ctr_origen;
@@ -446,7 +455,7 @@ class Traslado Extends core\ClasePropiedades {
 	 * @return string sctr_origen
 	 */
 	function getCtr_origen() {
-		if (!isset($this->sctr_origen)) {
+		if (!isset($this->sctr_origen) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sctr_origen;
@@ -465,7 +474,7 @@ class Traslado Extends core\ClasePropiedades {
 	 * @return integer iid_ctr_destino
 	 */
 	function getId_ctr_destino() {
-		if (!isset($this->iid_ctr_destino)) {
+		if (!isset($this->iid_ctr_destino) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_ctr_destino;
@@ -484,7 +493,7 @@ class Traslado Extends core\ClasePropiedades {
 	 * @return string sctr_destino
 	 */
 	function getCtr_destino() {
-		if (!isset($this->sctr_destino)) {
+		if (!isset($this->sctr_destino) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sctr_destino;
@@ -503,7 +512,7 @@ class Traslado Extends core\ClasePropiedades {
 	 * @return string sobserv
 	 */
 	function getObserv() {
-		if (!isset($this->sobserv)) {
+		if (!isset($this->sobserv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sobserv;

@@ -38,6 +38,13 @@ class CentroEncargado Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * aDades de ActividadProcesoTarea abans dels canvis.
 	 *
 	 * @var array
@@ -202,6 +209,8 @@ class CentroEncargado Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -325,7 +334,7 @@ class CentroEncargado Extends core\ClasePropiedades {
 	 * @return integer iid_activ
 	 */
 	function getId_activ() {
-		if (!isset($this->iid_activ)) {
+		if (!isset($this->iid_activ) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_activ;
@@ -344,7 +353,7 @@ class CentroEncargado Extends core\ClasePropiedades {
 	 * @return integer iid_ubi
 	 */
 	function getId_ubi() {
-		if (!isset($this->iid_ubi)) {
+		if (!isset($this->iid_ubi) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_ubi;
@@ -363,7 +372,7 @@ class CentroEncargado Extends core\ClasePropiedades {
 	 * @return integer inum_orden
 	 */
 	function getNum_orden() {
-		if (!isset($this->inum_orden)) {
+		if (!isset($this->inum_orden) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->inum_orden;
@@ -382,7 +391,7 @@ class CentroEncargado Extends core\ClasePropiedades {
 	 * @return string sencargo
 	 */
 	function getEncargo() {
-		if (!isset($this->sencargo)) {
+		if (!isset($this->sencargo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sencargo;

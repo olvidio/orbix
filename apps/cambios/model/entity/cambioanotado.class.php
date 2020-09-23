@@ -42,6 +42,13 @@ class CambioAnotado Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_item de CambioAnotado
 	 *
 	 * @var integer
@@ -225,6 +232,8 @@ class CambioAnotado Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -339,7 +348,7 @@ class CambioAnotado Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -358,7 +367,7 @@ class CambioAnotado Extends core\ClasePropiedades {
 	 * @return integer iid_schema_cambio
 	 */
 	function getId_schema_cambio() {
-		if (!isset($this->iid_schema_cambio)) {
+		if (!isset($this->iid_schema_cambio) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_schema_cambio;
@@ -377,7 +386,7 @@ class CambioAnotado Extends core\ClasePropiedades {
 	 * @return integer iid_item_cambio
 	 */
 	function getId_item_cambio() {
-		if (!isset($this->iid_item_cambio)) {
+		if (!isset($this->iid_item_cambio) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item_cambio;
@@ -396,7 +405,7 @@ class CambioAnotado Extends core\ClasePropiedades {
 	 * @return boolean banotado
 	 */
 	function getAnotado() {
-		if (!isset($this->banotado)) {
+		if (!isset($this->banotado) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->banotado;
@@ -415,7 +424,7 @@ class CambioAnotado Extends core\ClasePropiedades {
 	 * @return integer iserver
 	 */
 	function getServer() {
-		if (!isset($this->iserver)) {
+		if (!isset($this->iserver) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iserver;

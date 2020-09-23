@@ -37,6 +37,13 @@ class Cargo Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_cargo de cargo
 	 *
 	 * @var integer
@@ -198,6 +205,8 @@ class Cargo Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -314,7 +323,7 @@ class Cargo Extends core\ClasePropiedades {
 	 * @return integer iid_cargo
 	 */
 	function getId_cargo() {
-		if (!isset($this->iid_cargo)) {
+		if (!isset($this->iid_cargo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_cargo;
@@ -333,7 +342,7 @@ class Cargo Extends core\ClasePropiedades {
 	 * @return string scargo
 	 */
 	function getCargo() {
-		if (!isset($this->scargo)) {
+		if (!isset($this->scargo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->scargo;
@@ -352,7 +361,7 @@ class Cargo Extends core\ClasePropiedades {
 	 * @return integer iorden_cargo
 	 */
 	function getOrden_cargo() {
-		if (!isset($this->iorden_cargo)) {
+		if (!isset($this->iorden_cargo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iorden_cargo;
@@ -371,7 +380,7 @@ class Cargo Extends core\ClasePropiedades {
 	 * @return boolean bsf
 	 */
 	function getSf() {
-		if (!isset($this->bsf)) {
+		if (!isset($this->bsf) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bsf;
@@ -390,7 +399,7 @@ class Cargo Extends core\ClasePropiedades {
 	 * @return boolean bsv
 	 */
 	function getSv() {
-		if (!isset($this->bsv)) {
+		if (!isset($this->bsv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bsv;
@@ -409,7 +418,7 @@ class Cargo Extends core\ClasePropiedades {
 	 * @return string stipo_cargo
 	 */
 	function getTipo_cargo() {
-		if (!isset($this->stipo_cargo)) {
+		if (!isset($this->stipo_cargo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stipo_cargo;

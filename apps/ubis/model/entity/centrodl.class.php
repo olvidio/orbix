@@ -241,6 +241,8 @@ class CentroDl Extends Centro {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -397,7 +399,7 @@ class CentroDl Extends Centro {
 	 * @return integer in_buzon
 	 */
 	function getN_buzon() {
-		if (!isset($this->in_buzon)) {
+		if (!isset($this->in_buzon) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->in_buzon;
@@ -416,7 +418,7 @@ class CentroDl Extends Centro {
 	 * @return integer inum_pi
 	 */
 	function getNum_pi() {
-		if (!isset($this->inum_pi)) {
+		if (!isset($this->inum_pi) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->inum_pi;
@@ -435,7 +437,7 @@ class CentroDl Extends Centro {
 	 * @return integer inum_cartas
 	 */
 	function getNum_cartas() {
-		if (!isset($this->inum_cartas)) {
+		if (!isset($this->inum_cartas) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->inum_cartas;
@@ -454,7 +456,7 @@ class CentroDl Extends Centro {
 	 * @return string sobserv
 	 */
 	function getObserv() {
-		if (!isset($this->sobserv)) {
+		if (!isset($this->sobserv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sobserv;
@@ -473,7 +475,7 @@ class CentroDl Extends Centro {
 	 * @return integer inum_habit_indiv
 	 */
 	function getNum_habit_indiv() {
-		if (!isset($this->inum_habit_indiv)) {
+		if (!isset($this->inum_habit_indiv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->inum_habit_indiv;
@@ -492,7 +494,7 @@ class CentroDl Extends Centro {
 	 * @return integer iplazas
 	 */
 	function getPlazas() {
-		if (!isset($this->iplazas)) {
+		if (!isset($this->iplazas) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iplazas;
@@ -511,7 +513,7 @@ class CentroDl Extends Centro {
 	 * @return integer iid_zona
 	 */
 	function getId_zona() {
-		if (!isset($this->iid_zona)) {
+		if (!isset($this->iid_zona) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_zona;
@@ -530,7 +532,7 @@ class CentroDl Extends Centro {
 	 * @return boolean bsede
 	 */
 	function getSede() {
-		if (!isset($this->bsede)) {
+		if (!isset($this->bsede) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bsede;
@@ -549,7 +551,7 @@ class CentroDl Extends Centro {
 	 * @return integer inum_cartas_mensuales
 	 */
 	function getNum_cartas_mensuales() {
-		if (!isset($this->inum_cartas_mensuales)) {
+		if (!isset($this->inum_cartas_mensuales) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->inum_cartas_mensuales;

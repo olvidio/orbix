@@ -29,6 +29,13 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	 protected $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 protected $bLoaded = FALSE;
+
+	/**
 	 * Tipo_ubi de Ubi
 	 *
 	 * @var string
@@ -256,7 +263,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	 * @return string stipo_ubi
 	 */
 	function getTipo_ubi() {
-		if (!isset($this->stipo_ubi)) {
+		if (!isset($this->stipo_ubi) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stipo_ubi;
@@ -275,7 +282,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	 * @return integer iid_ubi
 	 */
 	function getId_ubi() {
-		if (!isset($this->iid_ubi)) {
+		if (!isset($this->iid_ubi) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_ubi;
@@ -294,7 +301,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	 * @return string snombre_ubi
 	 */
 	function getNombre_ubi() {
-		if (!isset($this->snombre_ubi)) {
+		if (!isset($this->snombre_ubi) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snombre_ubi;
@@ -313,7 +320,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	 * @return string sdl
 	 */
 	function getDl() {
-		if (!isset($this->sdl)) {
+		if (!isset($this->sdl) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdl;
@@ -332,7 +339,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	 * @return string spais
 	 */
 	function getPais() {
-		if (!isset($this->spais)) {
+		if (!isset($this->spais) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->spais;
@@ -351,7 +358,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	 * @return string sregion
 	 */
 	function getRegion() {
-		if (!isset($this->sregion)) {
+		if (!isset($this->sregion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sregion;
@@ -370,7 +377,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	 * @return boolean bstatus
 	 */
 	function getStatus() {
-		if (!isset($this->bstatus)) {
+		if (!isset($this->bstatus) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bstatus;
@@ -389,7 +396,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_status
 	 */
 	function getF_status() {
-	    if (!isset($this->df_status)) {
+	    if (!isset($this->df_status) && !$this->bLoaded) {
 	        $this->DBCarregar();
 	    }
 	    if (empty($this->df_status)) {
@@ -420,7 +427,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	 * @return boolean bsv
 	 */
 	function getSv() {
-		if (!isset($this->bsv)) {
+		if (!isset($this->bsv) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bsv;
@@ -439,7 +446,7 @@ Abstract class UbiGlobal Extends core\ClasePropiedades {
 	 * @return boolean bsf
 	 */
 	function getSf() {
-		if (!isset($this->bsf)) {
+		if (!isset($this->bsf) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bsf;

@@ -38,6 +38,13 @@ class EncargoHorarioExcepcion Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_enc de EncargoHorarioExcepcion
 	 *
 	 * @var integer
@@ -265,6 +272,8 @@ class EncargoHorarioExcepcion Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -400,7 +409,7 @@ class EncargoHorarioExcepcion Extends core\ClasePropiedades {
 	 * @return integer iid_enc
 	 */
 	function getId_enc() {
-		if (!isset($this->iid_enc)) {
+		if (!isset($this->iid_enc) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_enc;
@@ -419,7 +428,7 @@ class EncargoHorarioExcepcion Extends core\ClasePropiedades {
 	 * @return integer iid_item_ex
 	 */
 	function getId_item_ex() {
-		if (!isset($this->iid_item_ex)) {
+		if (!isset($this->iid_item_ex) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item_ex;
@@ -438,7 +447,7 @@ class EncargoHorarioExcepcion Extends core\ClasePropiedades {
 	 * @return integer iid_item_h
 	 */
 	function getId_item_h() {
-		if (!isset($this->iid_item_h)) {
+		if (!isset($this->iid_item_h) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item_h;
@@ -457,7 +466,7 @@ class EncargoHorarioExcepcion Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_ini
 	 */
 	function getF_ini() {
-		if (!isset($this->df_ini)) {
+		if (!isset($this->df_ini) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
         $oConverter = new core\Converter('date', $this->df_ini);
@@ -485,7 +494,7 @@ class EncargoHorarioExcepcion Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_fin
 	 */
 	function getF_fin() {
-		if (!isset($this->df_fin)) {
+		if (!isset($this->df_fin) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
         $oConverter = new core\Converter('date', $this->df_fin);
@@ -513,7 +522,7 @@ class EncargoHorarioExcepcion Extends core\ClasePropiedades {
 	 * @return string sdesc_ex
 	 */
 	function getDesc_ex() {
-		if (!isset($this->sdesc_ex)) {
+		if (!isset($this->sdesc_ex) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdesc_ex;
@@ -532,7 +541,7 @@ class EncargoHorarioExcepcion Extends core\ClasePropiedades {
 	 * @return boolean bhorario
 	 */
 	function getHorario() {
-		if (!isset($this->bhorario)) {
+		if (!isset($this->bhorario) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bhorario;
@@ -551,7 +560,7 @@ class EncargoHorarioExcepcion Extends core\ClasePropiedades {
 	 * @return string sdia_ref
 	 */
 	function getDia_ref() {
-		if (!isset($this->sdia_ref)) {
+		if (!isset($this->sdia_ref) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdia_ref;
@@ -570,7 +579,7 @@ class EncargoHorarioExcepcion Extends core\ClasePropiedades {
 	 * @return integer idia_num
 	 */
 	function getDia_num() {
-		if (!isset($this->idia_num)) {
+		if (!isset($this->idia_num) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->idia_num;
@@ -589,7 +598,7 @@ class EncargoHorarioExcepcion Extends core\ClasePropiedades {
 	 * @return string smas_menos
 	 */
 	function getMas_menos() {
-		if (!isset($this->smas_menos)) {
+		if (!isset($this->smas_menos) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->smas_menos;
@@ -608,7 +617,7 @@ class EncargoHorarioExcepcion Extends core\ClasePropiedades {
 	 * @return integer idia_inc
 	 */
 	function getDia_inc() {
-		if (!isset($this->idia_inc)) {
+		if (!isset($this->idia_inc) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->idia_inc;
@@ -627,7 +636,7 @@ class EncargoHorarioExcepcion Extends core\ClasePropiedades {
 	 * @return string time th_ini
 	 */
 	function getH_ini() {
-		if (!isset($this->th_ini)) {
+		if (!isset($this->th_ini) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->th_ini;
@@ -646,7 +655,7 @@ class EncargoHorarioExcepcion Extends core\ClasePropiedades {
 	 * @return string time th_fin
 	 */
 	function getH_fin() {
-		if (!isset($this->th_fin)) {
+		if (!isset($this->th_fin) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->th_fin;
@@ -665,7 +674,7 @@ class EncargoHorarioExcepcion Extends core\ClasePropiedades {
 	 * @return integer in_sacd
 	 */
 	function getN_sacd() {
-		if (!isset($this->in_sacd)) {
+		if (!isset($this->in_sacd) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->in_sacd;
@@ -684,7 +693,7 @@ class EncargoHorarioExcepcion Extends core\ClasePropiedades {
 	 * @return integer imes
 	 */
 	function getMes() {
-		if (!isset($this->imes)) {
+		if (!isset($this->imes) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->imes;

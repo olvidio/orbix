@@ -37,6 +37,13 @@ Abstract class UbixDireccion Extends core\ClasePropiedades {
 	 protected $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 protected $bLoaded = FALSE;
+
+	/**
 	 * Id_ubi de UbixDireccion
 	 *
 	 * @var integer
@@ -154,6 +161,8 @@ Abstract class UbixDireccion Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -268,7 +277,7 @@ Abstract class UbixDireccion Extends core\ClasePropiedades {
 	 * @return integer iid_ubi
 	 */
 	function getId_ubi() {
-		if (!isset($this->iid_ubi)) {
+		if (!isset($this->iid_ubi) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_ubi;
@@ -287,7 +296,7 @@ Abstract class UbixDireccion Extends core\ClasePropiedades {
 	 * @return integer iid_direccion
 	 */
 	function getId_direccion() {
-		if (!isset($this->iid_direccion)) {
+		if (!isset($this->iid_direccion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_direccion;
@@ -306,7 +315,7 @@ Abstract class UbixDireccion Extends core\ClasePropiedades {
 	 * @return boolean bpropietario
 	 */
 	function getPropietario() {
-		if (!isset($this->bpropietario)) {
+		if (!isset($this->bpropietario) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bpropietario;
@@ -325,7 +334,7 @@ Abstract class UbixDireccion Extends core\ClasePropiedades {
 	 * @return boolean bprincipal
 	 */
 	function getPrincipal() {
-		if (!isset($this->bprincipal)) {
+		if (!isset($this->bprincipal) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bprincipal;

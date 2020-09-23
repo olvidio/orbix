@@ -37,6 +37,13 @@ class Situacion Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Situacion de Situacion
 	 *
 	 * @var string
@@ -151,6 +158,8 @@ class Situacion Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -258,7 +267,7 @@ class Situacion Extends core\ClasePropiedades {
 	 * @return string ssituacion
 	 */
 	function getSituacion() {
-		if (!isset($this->ssituacion)) {
+		if (!isset($this->ssituacion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->ssituacion;
@@ -277,7 +286,7 @@ class Situacion Extends core\ClasePropiedades {
 	 * @return string snombre_situacion
 	 */
 	function getNombre_situacion() {
-		if (!isset($this->snombre_situacion)) {
+		if (!isset($this->snombre_situacion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->snombre_situacion;

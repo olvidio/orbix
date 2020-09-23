@@ -37,6 +37,13 @@ class Metamenu Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_metamenu de Metamenu
 	 *
 	 * @var integer
@@ -176,6 +183,8 @@ class Metamenu Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -289,7 +298,7 @@ class Metamenu Extends core\ClasePropiedades {
 	 * @return integer iid_metamenu
 	 */
 	function getId_metamenu() {
-		if (!isset($this->iid_metamenu)) {
+		if (!isset($this->iid_metamenu) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_metamenu;
@@ -308,7 +317,7 @@ class Metamenu Extends core\ClasePropiedades {
 	 * @return string iid_mod
 	 */
 	function getId_Mod() {
-		if (!isset($this->iid_mod)) {
+		if (!isset($this->iid_mod) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_mod;
@@ -327,7 +336,7 @@ class Metamenu Extends core\ClasePropiedades {
 	 * @return string surl
 	 */
 	function getUrl() {
-		if (!isset($this->surl)) {
+		if (!isset($this->surl) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->surl;
@@ -346,7 +355,7 @@ class Metamenu Extends core\ClasePropiedades {
 	 * @return string sparametros
 	 */
 	function getParametros() {
-		if (!isset($this->sparametros)) {
+		if (!isset($this->sparametros) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sparametros;
@@ -365,7 +374,7 @@ class Metamenu Extends core\ClasePropiedades {
 	 * @return string sdescripcion
 	 */
 	function getDescripcion() {
-		if (!isset($this->sdescripcion)) {
+		if (!isset($this->sdescripcion) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdescripcion;

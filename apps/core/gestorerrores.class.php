@@ -21,6 +21,13 @@ class gestorErrores {
 	 */
 	 private $aDades;
 
+	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
 	 private $filename;
 
 	/* CONSTRUCTOR -------------------------------------------------------------- */

@@ -38,6 +38,13 @@ class EncargoSacd Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_item de EncargoSacd
 	 *
 	 * @var integer
@@ -196,6 +203,8 @@ class EncargoSacd Extends core\ClasePropiedades {
 				return FALSE;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -328,7 +337,7 @@ class EncargoSacd Extends core\ClasePropiedades {
 	 * @return integer iid_item
 	 */
 	function getId_item() {
-		if (!isset($this->iid_item)) {
+		if (!isset($this->iid_item) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_item;
@@ -347,7 +356,7 @@ class EncargoSacd Extends core\ClasePropiedades {
 	 * @return integer iid_enc
 	 */
 	function getId_enc() {
-		if (!isset($this->iid_enc)) {
+		if (!isset($this->iid_enc) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_enc;
@@ -366,7 +375,7 @@ class EncargoSacd Extends core\ClasePropiedades {
 	 * @return integer iid_nom
 	 */
 	function getId_nom() {
-		if (!isset($this->iid_nom)) {
+		if (!isset($this->iid_nom) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_nom;
@@ -385,7 +394,7 @@ class EncargoSacd Extends core\ClasePropiedades {
 	 * @return integer imodo
 	 */
 	function getModo() {
-		if (!isset($this->imodo)) {
+		if (!isset($this->imodo) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->imodo;
@@ -404,7 +413,7 @@ class EncargoSacd Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_ini
 	 */
 	function getF_ini() {
-		if (!isset($this->df_ini)) {
+		if (!isset($this->df_ini) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
         $oConverter = new core\Converter('date', $this->df_ini);
@@ -432,7 +441,7 @@ class EncargoSacd Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_fin
 	 */
 	function getF_fin() {
-		if (!isset($this->df_fin)) {
+		if (!isset($this->df_fin) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
         $oConverter = new core\Converter('date', $this->df_fin);

@@ -37,6 +37,13 @@ class Departamento Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_departamento de Departamento
 	 *
 	 * @var integer
@@ -151,6 +158,8 @@ class Departamento Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -258,7 +267,7 @@ class Departamento Extends core\ClasePropiedades {
 	 * @return integer iid_departamento
 	 */
 	function getId_departamento() {
-		if (!isset($this->iid_departamento)) {
+		if (!isset($this->iid_departamento) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_departamento;
@@ -277,7 +286,7 @@ class Departamento Extends core\ClasePropiedades {
 	 * @return string sdepartamento
 	 */
 	function getDepartamento() {
-		if (!isset($this->sdepartamento)) {
+		if (!isset($this->sdepartamento) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sdepartamento;

@@ -38,6 +38,13 @@ class Dossier Extends core\ClasePropiedades {
 	 private $aDades;
 
 	/**
+	 * bLoaded
+	 *
+	 * @var boolean
+	 */
+	 private $bLoaded = FALSE;
+
+	/**
 	 * Id_schema de Dossier
 	 *
 	 * @var integer
@@ -205,6 +212,8 @@ class Dossier Extends core\ClasePropiedades {
 				return false;
 			}
 			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			// Para evitar posteriores cargas
+			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
 					$this->aDades=$aDades;
@@ -352,7 +361,7 @@ class Dossier Extends core\ClasePropiedades {
 	 * @return string stabla
 	 */
 	function getTabla() {
-		if (!isset($this->stabla)) {
+		if (!isset($this->stabla) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->stabla;
@@ -371,7 +380,7 @@ class Dossier Extends core\ClasePropiedades {
 	 * @return string sid_pau
 	 */
 	function getId_pau() {
-		if (!isset($this->sid_pau)) {
+		if (!isset($this->sid_pau) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->sid_pau;
@@ -390,7 +399,7 @@ class Dossier Extends core\ClasePropiedades {
 	 * @return integer iid_tipo_dossier
 	 */
 	function getId_tipo_dossier() {
-		if (!isset($this->iid_tipo_dossier)) {
+		if (!isset($this->iid_tipo_dossier) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->iid_tipo_dossier;
@@ -409,7 +418,7 @@ class Dossier Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_ini
 	 */
 	function getF_ini() {
-	    if (!isset($this->df_ini)) {
+	    if (!isset($this->df_ini) && !$this->bLoaded) {
 	        $this->DBCarregar();
 	    }
 	    if (empty($this->df_ini)) {
@@ -440,7 +449,7 @@ class Dossier Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_camb_dossier
 	 */
 	function getF_camb_dossier() {
-	    if (!isset($this->df_camb_dossier)) {
+	    if (!isset($this->df_camb_dossier) && !$this->bLoaded) {
 	        $this->DBCarregar();
 	    }
 	    if (empty($this->df_camb_dossier)) {
@@ -471,7 +480,7 @@ class Dossier Extends core\ClasePropiedades {
 	 * @return boolean bstatus_dossier
 	 */
 	function getStatus_dossier() {
-		if (!isset($this->bstatus_dossier)) {
+		if (!isset($this->bstatus_dossier) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
 		return $this->bstatus_dossier;
@@ -490,7 +499,7 @@ class Dossier Extends core\ClasePropiedades {
 	 * @return web\DateTimeLocal df_status
 	 */
 	function getF_status() {
-	    if (!isset($this->df_status)) {
+	    if (!isset($this->df_status) && !$this->bLoaded) {
 	        $this->DBCarregar();
 	    }
 	    if (empty($this->df_status)) {
