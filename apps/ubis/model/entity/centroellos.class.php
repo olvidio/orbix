@@ -194,7 +194,7 @@ class CentroEllos Extends Centro {
 	    }
 	    return true;
 	}
-	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
+	
 	/* METODES PRIVATS ----------------------------------------------------------*/
 	
 	/**
