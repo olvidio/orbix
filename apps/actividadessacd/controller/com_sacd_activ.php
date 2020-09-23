@@ -11,14 +11,14 @@ use web\DateTimeLocal;
 use web\Periodo;
 
 /**
-* Esta página muestra las actividades que tiene que atender un sacd. 
-*
-*@package	delegacion
-*@subpackage	des
-*@author	Daniel Serrabou
-*@since		17/4/07.
-*		
-*/
+ * Esta página muestra las actividades que tiene que atender un sacd.
+ *
+ *@package	delegacion
+ *@subpackage	des
+ *@author	Daniel Serrabou
+ *@since		17/4/07.
+ *
+ */
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -56,7 +56,7 @@ $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 $oPosicion->recordar();
 
 $oDateLocal = new DateTimeLocal();
-$hoy_local = $oDateLocal->getFromLocal('.'); 
+$hoy_local = $oDateLocal->getFromLocal('.');
 // ciudad de la dl
 $oActividadesSacdFunciones = new ActividadesSacdFunciones();
 $poblacion = $oActividadesSacdFunciones->getLugar_dl();
@@ -67,13 +67,13 @@ if ($oMiUsuario->isRole('p-sacd')) {
     $Qid_nom = $oMiUsuario->getId_pau();
     $Qque = 'un_sacd';
 }
-			
+
 // Si vengo de la página personas_select.php, sólo quiero ver la lista de un sacd.
 if ($Qque == "un_sacd") {
     $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     if (!empty($a_sel)) { //vengo de un checkbox
         $Qid_nom = (integer) strtok($a_sel[0],"#");
-		$Qid_tabla=strtok("#");
+        $Qid_tabla=strtok("#");
         // el scroll id es de la página anterior, hay que guardarlo allí
         $oPosicion->addParametro('id_sel',$a_sel,1);
         $scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
@@ -84,7 +84,7 @@ if ($Qque == "un_sacd") {
         }
         $Qid_tabla = (integer)  \filter_input(INPUT_POST, 'id_tabla');
     }
-	// periodo por defecto:
+    // periodo por defecto:
     if (empty($Qperiodo)) {
         $Qperiodo = 'curso_crt';
         $Qyear = date('Y');
@@ -112,26 +112,26 @@ $mi_dele = ConfigGlobal::mi_delef();
 if (empty($Qque)) $Qque = "nagd";
 $aWhereP = [];
 switch ($Qque) {
-	case "nagd":
-		$aWhereP['situacion']='A';
-		$aWhereP['sacd']='t';
-		$aWhereP['dl']=$mi_dele;
-		$aWhereP['_ordre']='apellido1,apellido2,nom';
-		$GesPersonas = new GestorPersonaSacd();
-		$cPersonas = $GesPersonas->getPersonas($aWhereP);
-		break;
-	case "sssc":
-		$aWhereP['situacion']='A';
-		$aWhereP['sacd']='t';
-		$aWhereP['dl']=$mi_dele;
-		$aWhereP['_ordre']='apellido1,apellido2,nom';
-		$GesPersonas = new GestorPersonaSSSC();
-		$cPersonas = $GesPersonas->getPersonasSSSC($aWhereP);
-		break;
-	case "un_sacd":
-		$oPersona = new PersonaSacd($Qid_nom);
-		$cPersonas = array($oPersona);
-		break;
+    case "nagd":
+        $aWhereP['situacion']='A';
+        $aWhereP['sacd']='t';
+        $aWhereP['dl']=$mi_dele;
+        $aWhereP['_ordre']='apellido1,apellido2,nom';
+        $GesPersonas = new GestorPersonaSacd();
+        $cPersonas = $GesPersonas->getPersonas($aWhereP);
+        break;
+    case "sssc":
+        $aWhereP['situacion']='A';
+        $aWhereP['sacd']='t';
+        $aWhereP['dl']=$mi_dele;
+        $aWhereP['_ordre']='apellido1,apellido2,nom';
+        $GesPersonas = new GestorPersonaSSSC();
+        $cPersonas = $GesPersonas->getPersonasSSSC($aWhereP);
+        break;
+    case "un_sacd":
+        $oPersona = new PersonaSacd($Qid_nom);
+        $cPersonas = array($oPersona);
+        break;
 }
 $oComunicarActividadesSacd = new ComunicarActividadesSacd();
 $oComunicarActividadesSacd->setInicioIso($inicioIso);
@@ -169,11 +169,11 @@ if ($Qque != "un_sacd") {
     $oComunicarActividadesSacd->setPropuesta($Qpropuesta);
     $oComunicarActividadesSacd->setSoloCargos(TRUE);
     $oComunicarActividadesSacd->setQuitarInactivos(TRUE);
-
+    
     $oComunicarActividadesSacd->setPersonas($cPersonas);
-
+    
     $array_actividades = $oComunicarActividadesSacd->getArrayComunicacion();
-
+    
     if (count($array_actividades) > 0) {
         $a_campos = ['oPosicion' => $oPosicion,
             'array_actividades' => $array_actividades,
