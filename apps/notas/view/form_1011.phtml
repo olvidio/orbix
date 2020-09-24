@@ -54,7 +54,8 @@ fnjs_buscar_acta=function() {
                         }
                     });
                 } else {
-                    $('#id_nivel').val(id_asignatura);
+		            id_nivel = rta_json.id_nivel;
+                    $('#id_nivel').val(id_nivel);
                 }
             }
         });

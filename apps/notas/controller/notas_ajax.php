@@ -8,6 +8,7 @@ use ubis\model\entity\GestorDelegacion;
 use web\Hash;
 use actividades\model\entity\Actividad;
 use core\ConfigGlobal;
+use asignaturas\model\entity\Asignatura;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -50,7 +51,11 @@ switch ($Qque) {
                 $nom_activ = '';
                 $epoca = notas\PersonaNota::EPOCA_OTRO;
             }
+            // hace falta el id_nivel (para las no opcionales):
+            $oAsignatura = new Asignatura($id_asignatura);
+            $id_nivel = $oAsignatura->getId_nivel();
             $json = "{\"id_asignatura\":\"$id_asignatura\",
+                        \"id_nivel\":\"$id_nivel\",
                         \"id_activ\":\"$id_activ\",
                           \"f_acta\":\"$f_acta\",
                        \"nom_activ\":\"$nom_activ\",
