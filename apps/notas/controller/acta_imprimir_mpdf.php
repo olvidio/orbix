@@ -101,6 +101,7 @@ $GesPersonaNotas = new notas\GestorPersonaNota();
 $cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhere,$aOperador);
 
 // para ordenar
+$errores = '';
 $aPersonasNotas = array(); 
 $oGesNomLatin = new personas\GestorNombreLatin();
 foreach($cPersonaNotas as $oPersonaNota) {
