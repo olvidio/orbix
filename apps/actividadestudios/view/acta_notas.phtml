@@ -8,6 +8,9 @@ fnjs_nota=function(n){
 	var sit;
 	
 	num = $('#nota_num'+n).val();
+	// poner '.' si se ha puesto ','
+	value = num.replace(/,/g, '.');
+	$('#nota_num'+n).val(value);
 	max = $('#nota_max'+n).val();
 	max_default = <?= $nota_max_default ?>;
 	if (!max)  $('#nota_max'+n).val(max_default);

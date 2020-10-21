@@ -160,6 +160,8 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 					break;
 				}
 				// compruebo que corresponde a 'superada'
+				$nota_num = $oPersonaNota1->getNota_num();
+				$nota_max = $oPersonaNota1->getNota_max();
 				if ($nota_num/$nota_max >= 0.6)  $aOpSuperadas[$j] = $id_op;
 			}
 			if (empty($id_nivel)) {
