@@ -210,7 +210,7 @@ class Select1303 {
 			$aWhere['id_activ'] = $this->Qid_activ;
 			$aWhereNom = ['id_nom'=>  $this->id_pau,'id_activ'=> $this->Qid_activ];
 			$aOperadorNom = [];
-			$cAsistencias = $GesAsistentes->getActividadesDeAsistente($aWhereNom, $aOperadorNom,$aWhere,$aOperadores,true);
+			$cAsistencias = $GesAsistentes->getActividadesDeAsistente2($aWhereNom, $aOperadorNom,$aWhere,$aOperadores,true);
 		} else {
 			if (empty($this->todos)) {
 				$aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
@@ -222,7 +222,7 @@ class Select1303 {
 
 			$aWhereNom = ['id_nom'=>  $this->id_pau,'propio'=> 't'];
 			$aOperadorNom = [];
-			$cAsistencias = $GesAsistentes->getActividadesDeAsistente($aWhereNom, $aOperadorNom,$aWhere,$aOperadores,true);
+			$cAsistencias = $GesAsistentes->getActividadesDeAsistente2($aWhereNom, $aOperadorNom,$aWhere,$aOperadores,true);
 		}
 		if (is_array($cAsistencias)) {
 			$n = count($cAsistencias);
