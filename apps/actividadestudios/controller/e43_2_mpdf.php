@@ -20,7 +20,7 @@ $nom = web\QuitarAcentos::convert($nom);
 //$mpdf = new \Mpdf\Mpdf(['','A4','','',10,10,10,10,6,3]);
 $config = [ 'mode' => 'utf-8',
     'format' => 'A4-P',
-    'margin_left' => 5,
+    'margin_left' => 10,
     'margin_right' => 10,
     'margin_top' => 10,
     'margin_bottom' => 10,

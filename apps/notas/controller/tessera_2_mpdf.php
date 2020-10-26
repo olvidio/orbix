@@ -15,8 +15,15 @@ require_once(core\ConfigGlobal::$dir_libs.'/vendor/autoload.php');
 // quitar los acentos , ñ etc. del nombre
 $nom = web\QuitarAcentos::convert($nom);
 
-//$mpdf = new mPDF('','A4','','',10,10,10,10,6,3); 
-$mpdf = new \Mpdf\Mpdf(['','A4','','',10,10,10,10,6,3]);
+//$mpdf = new \Mpdf\Mpdf(['','A4','','',10,10,10,10,6,3]);
+$config = [ 'mode' => 'utf-8',
+    'format' => 'A4-P',
+    'margin_left' => 10,
+    'margin_right' => 10,
+    'margin_top' => 10,
+    'margin_bottom' => 10,
+];
+$mpdf = new \Mpdf\Mpdf($config);
 $mpdf->SetDisplayMode('fullpage');
 $mpdf->list_indent_first_level = 0;	// 1 or 0 - whether to indent the first level of a list
 $mpdf->WriteHTML($content);
