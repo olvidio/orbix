@@ -75,6 +75,11 @@ class Posicion {
 		$aPosition = end($_SESSION['position']);
 		for ($i=0; $i < $n; $i++) {
 			$aPosition = prev($_SESSION['position']);
+			// si ha llegado al final, se devuelve la primera:
+			if ($aPosition === FALSE) {
+                $aPosition = reset($_SESSION['position']);
+			    break;
+			}
 		}
 		$this->stack = key($_SESSION['position']);
 		$this->surl = $aPosition['url'];
