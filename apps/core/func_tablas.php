@@ -302,7 +302,7 @@ function profesion_1_linea($id_nom) {
 *      al final del número...
 */
 
-function telecos_persona($id_nom,$tipo_teleco,$desc_teleco='',$separador) {
+function telecos_persona($id_nom,$tipo_teleco,$desc_teleco='',$separador,$bDescripcion=TRUE) {
 
     $aWhere = [];
 	$aWhere['id_nom'] = $id_nom;
@@ -317,7 +317,7 @@ function telecos_persona($id_nom,$tipo_teleco,$desc_teleco='',$separador) {
 	foreach ($cTelecos as $oTelecoPersona) {
 		$iDescTel = $oTelecoPersona->getDesc_teleco();
 		$num_teleco = $oTelecoPersona->getNum_teleco();
-		if ($desc_teleco=="*" && !empty($iDescTel)) {
+		if ($desc_teleco=="*" && !empty($iDescTel) && $bDescripcion) {
 			$oDescTel = new DescTeleco($iDescTel);
 			$tels.=$num_teleco."(".$oDescTel->getDesc_teleco().")".$separador;
 		} else {

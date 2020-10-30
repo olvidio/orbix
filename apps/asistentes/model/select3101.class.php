@@ -1,14 +1,16 @@
 <?php
 namespace asistentes\model;
 
-use actividades\model\entity as actividades;
 use actividadcargos\model\entity as actividadcargos;
+use actividades\model\entity as actividades;
 use asistentes\model\entity as asistentes;
+use core\ConfigGlobal;
+use core\View;
+use function core\telecos_persona;
 use dossiers\model as dossiers;
-use personas\model\entity as personas;
 use ubis;
-use core;
 use web;
+use personas\model\entity as personas;
 
 /**
  * Esta página muestra una tabla con los asistentes de una actividad.
@@ -110,7 +112,7 @@ class Select3101 {
 	}
 
 	private function getBotones() {
-		if (core\configGlobal::is_app_installed('asistentes')) {
+		if (ConfigGlobal::is_app_installed('asistentes')) {
 			$a_botones[] = array( 'txt' => _("modificar asistencia"),
 								'click' =>"fnjs_modificar(this.form)"
 							);
@@ -124,7 +126,7 @@ class Select3101 {
 								'click'=>"fnjs_transferir(this.form)"
 							);
 		}
-		if (core\configGlobal::is_app_installed('actividadcargos')) {
+		if (ConfigGlobal::is_app_installed('actividadcargos')) {
 			$a_botones[] = array( 'txt' => _("añadir cargo"),
 									'click' =>"fnjs_add_cargo(this.form)" 
 							);
@@ -135,7 +137,7 @@ class Select3101 {
 									'click' =>"fnjs_borrar_cargo(this.form)" 
 							);
 		}
-		if (core\configGlobal::is_app_installed('actividadestudios')) {
+		if (ConfigGlobal::is_app_installed('actividadestudios')) {
 			$a_botones[] = array( 'txt' => _("plan estudios"),
 									'click' =>"fnjs_matriculas(this.form,\"#frm_matriculas\")" 
 							);
@@ -156,6 +158,8 @@ class Select3101 {
 							array('name'=>_("falta"),'width'=>40),
 							array('name'=>_("observaciones actividad"),'width'=>150),
 							array('name'=>_("sacd."),'width'=>10),
+							array('name'=>_("telf."),'width'=>80),
+							array('name'=>_("mails"),'width'=>100),
 						);
 		return $a_cabeceras;
 	}
@@ -232,7 +236,7 @@ class Select3101 {
 		$this->aListaCargos=array();
 		$GesCargosEnActividad=new actividadcargos\GestorActividadCargo();
 		$cCargosEnActividad = $GesCargosEnActividad->getActividadCargos(array('id_activ'=>  $this->id_pau));
-		$mi_sfsv = core\ConfigGlobal::mi_sfsv();
+		$mi_sfsv = ConfigGlobal::mi_sfsv();
 		foreach($cCargosEnActividad as $oActividadCargo) {
 			$c++;
 			$num++; // número total de asistentes.
@@ -256,6 +260,18 @@ class Select3101 {
 
 			$nom=$oPersona->getApellidosNombre();
 			$sacd= ($oPersona->getSacd())? _("sí") : '';
+			// Añado los telf:
+			$telfs = '';
+			$telfs_fijo = telecos_persona($id_nom,"telf","*"," / ",FALSE) ;
+			$telfs_movil = telecos_persona($id_nom,"móvil","*"," / ",FALSE) ;
+			if (!empty($telfs_fijo) && !empty($telfs_movil)) {
+			    $telfs = $telfs_fijo ." / ". $telfs_movil;
+			} else {
+			    $telfs .= $telfs_fijo??'';
+			    $telfs .= $telfs_movil??'';
+			}
+			$mails = '';
+			$mails = telecos_persona($id_nom,"e-mail","*"," / ",FALSE) ;
 
 			$cargo=$oCargo->getCargo();
 			$puede_agd=$oActividadCargo->getPuede_agd();
@@ -293,7 +309,7 @@ class Select3101 {
 				$plaza= empty($oAsistente->getPlaza())? asistentes\Asistente::PLAZA_PEDIDA : $oAsistente->getPlaza();
 
 				// contar plazas
-				if (core\configGlobal::is_app_installed('actividadplazas')) {
+				if (ConfigGlobal::is_app_installed('actividadplazas')) {
 					// las cuento todas y a la hora de enseñar miro si soy la dl org o no.
 					// propiedad de la plaza:
 					$propietario = $oAsistente->getPropietario();
@@ -374,6 +390,8 @@ class Select3101 {
 			$a_valores[$c][3]=$dl_asistente;
 			$a_valores[$c][7]="$observ_cargo $observ";
 			$a_valores[$c][8]="$sacd";
+			$a_valores[$c][9]="$telfs";
+			$a_valores[$c][10]="$mails";
 		}
 		
 		$this->num = $num;
@@ -407,6 +425,18 @@ class Select3101 {
 			$sacd= ($oPersona->getSacd())? _("sí") : '';
 			$dl_asistente=$oPersona->getDl();
 			$ctr_dl=$oPersona->getCentro_o_dl();
+			// Añado los telf:
+			$telfs = '';
+			$telfs_fijo = telecos_persona($id_nom,"telf","*"," / ",FALSE) ;
+			$telfs_movil = telecos_persona($id_nom,"móvil","*"," / ",FALSE) ;
+			if (!empty($telfs_fijo) && !empty($telfs_movil)) {
+			    $telfs = $telfs_fijo ." / ". $telfs_movil;
+			} else {
+			    $telfs .= $telfs_fijo??'';
+			    $telfs .= $telfs_movil??'';
+			}
+			$mails = '';
+			$mails = telecos_persona($id_nom,"e-mail","*"," / ",FALSE) ;
 
 			$propio=$oAsistente->getPropio();
 			$falta=$oAsistente->getFalta();
@@ -415,8 +445,8 @@ class Select3101 {
 			$plaza = asistentes\Asistente::PLAZA_PEDIDA;
 			
 			// contar plazas
-			//if (core\configGlobal::is_app_installed('actividadplazas') && !empty($dl)) {
-			if (core\configGlobal::is_app_installed('actividadplazas')) {
+			//if (core\ConfigGlobal::is_app_installed('actividadplazas') && !empty($dl)) {
+			if (ConfigGlobal::is_app_installed('actividadplazas')) {
 				$plaza= empty($oAsistente->getPlaza())? asistentes\Asistente::PLAZA_PEDIDA : $oAsistente->getPlaza();
 				// las cuento todas y a la hora de enseñar miro si soy la dl org o no.
 				// propiedad de la plaza:
@@ -484,6 +514,8 @@ class Select3101 {
 			$a_val[6]=$chk_falta;
 			$a_val[7]=$observ;
 			$a_val[8]=$sacd;
+			$a_val[9]="$telfs";
+			$a_val[10]="$mails";
 			
 			$this->a_asistentes[$nom] = $a_val;
 		}
@@ -509,7 +541,7 @@ class Select3101 {
 		$disponibles ='';
 		$resumen_plazas = '';
 		$resumen_plazas2 = '';
-		if (core\configGlobal::is_app_installed('actividadplazas')) {
+		if (ConfigGlobal::is_app_installed('actividadplazas')) {
 			//leyenda colores
 			$explicacion1 = _("plaza que contabiliza pero que las otras delegaciones no ven. Podría explicarse como una plaza que se desea pero no se puede conceder porque no hay sitio");
 			$explicacion2 = _("como la plaza pedida, pero cuando ya se ha solicitado a la otra delegación que nos conceda ese plaza. Implica que por nuestra parte nos parece correcto que vaya pero necesitamos confirmación de que hay sitio");
@@ -687,7 +719,7 @@ class Select3101 {
 	}
 	
 	public function getTabla() {
-		if (core\configGlobal::is_app_installed('actividadcargos')) {
+		if (ConfigGlobal::is_app_installed('actividadcargos')) {
 			$this->getCargos();
 			$c = count($this->a_valores);
 		} else {
@@ -704,7 +736,7 @@ class Select3101 {
 			$c++;
 			$val[1] = "-";
 			// sólo numero los asignados y confirmados
-			if (core\configGlobal::is_app_installed('actividadplazas')) {
+			if (ConfigGlobal::is_app_installed('actividadplazas')) {
 				if ($val['clase'] == 'plaza4' || $val['clase'] == 'plaza5') {
 					$n++;
 					$val[1] = "$n.-";
@@ -729,7 +761,7 @@ class Select3101 {
 		$this->msg_err = '';
 		$this->txt_eliminar = _("¿Está seguro que desea borrar a esta persona de esta actividad?");
 	
-		if (core\configGlobal::is_app_installed('actividadplazas')) {
+		if (ConfigGlobal::is_app_installed('actividadplazas')) {
 			$this->contarPlazas();
 		}
 		$this->getTabla(); // antes debe estar el contarPlazas
@@ -779,7 +811,7 @@ class Select3101 {
 				);
 		$oHash1->setArraycamposHidden($a_camposHidden);
 
-		$url = core\ConfigGlobal::getWeb()."/apps/dossiers/controller/dossiers_ver.php";
+		$url = ConfigGlobal::getWeb()."/apps/dossiers/controller/dossiers_ver.php";
 		$oHash2 = new web\Hash();
 		$oHash2->setUrl($url);
 		$oHash2->setCamposForm('depende!pau!obj_pau!id_pau!id_dossier!permiso'); 
@@ -787,12 +819,12 @@ class Select3101 {
 		$pagina = "depende=1&pau=a&obj_pau=Actividad&id_pau=$this->id_pau&id_dossier=3101&permiso=3$h";
 
 		$oHash3 = new web\Hash();
-		$oHash3->setUrl(core\ConfigGlobal::getWeb()."/apps/asistentes/controller/form_mover.php");
+		$oHash3->setUrl(ConfigGlobal::getWeb()."/apps/asistentes/controller/form_mover.php");
 		$oHash3->setCamposForm('id_pau!id_activ'); 
 		$h3 = $oHash3->linkSinVal();
 
 		$oHash4 = new web\Hash();
-		$oHash4->setUrl(core\ConfigGlobal::getWeb()."/apps/asistentes/controller/update_3101.php");
+		$oHash4->setUrl(ConfigGlobal::getWeb()."/apps/asistentes/controller/update_3101.php");
 		$oHash4->setCamposForm('mod!plaza!lista_json!id_activ'); 
 		$h4 = $oHash4->linkSinVal();
 
@@ -816,7 +848,7 @@ class Select3101 {
 					'bloque' => $this->bloque,
 					];
 		
-		$oView = new core\View(__NAMESPACE__);
+		$oView = new View(__NAMESPACE__);
 		
 		return $oView->render('select3101.phtml',$a_campos);
 
@@ -828,7 +860,7 @@ class Select3101 {
 		if (empty($ref_perm) OR $this->permiso < 2) { // si es nulo, no tengo permisos de ningún tipo
 			return '';
 		}
-		$mi_dele = core\ConfigGlobal::mi_delef();
+		$mi_dele = ConfigGlobal::mi_delef();
 		reset($ref_perm);
 		foreach ($ref_perm as $clave =>$val) {
 			$permis=$val["perm"];
@@ -888,7 +920,7 @@ class Select3101 {
 
 	public function setId_pau($Qid_pau) {
 		$this->id_pau = $Qid_pau;
-		$this->mi_dele = core\ConfigGlobal::mi_delef();
+		$this->mi_dele = ConfigGlobal::mi_delef();
 		$this->getDatosActividad();
 	}
 

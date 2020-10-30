@@ -30,7 +30,7 @@ class GestorTelecoPersona Extends core\ClaseGestor {
 		$this->setNomTabla('d_teleco_personas');
 	}
 	/* METODES PUBLICS -----------------------------------------------------------*/
-
+	
 	/**
 	 * retorna l'array d'objectes de tipus TelecoPersona
 	 *
