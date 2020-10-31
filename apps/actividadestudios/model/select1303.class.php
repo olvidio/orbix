@@ -7,6 +7,7 @@ use asistentes\model\entity as asistentes;
 use personas\model\entity as personas;
 use core;
 use web;
+use core\ConfigGlobal;
 
 /**
  * Gestiona el dossier 1303: Asignaturas que cursa una persona (matrículas)
@@ -84,10 +85,23 @@ class Select1303 {
 		$this->id_activ=$oAsistente->getId_activ();
 		$propio=$oAsistente->getPropio();
 		if ($propio != 't')  echo _("no está como propio, no debería tener plan de estudios");
+		
 		$est_ok=$oAsistente->getEst_ok();
 		$observ_est=$oAsistente->getObserv_est();
 		$oActividad = new actividades\Actividad(array('id_activ'=>  $this->id_activ));
 		$nom_activ = $oActividad->getNom_activ();
+		
+		// el plan de estudios solo puede modificarlo la dl del alumno (a no ser que sea de paso)
+        $oAlumno = personas\Persona::NewPersona($this->id_pau);
+		$dl_alumno = $oAlumno->getDl();
+		$classname = str_replace("personas\\model\\entity\\",'',get_class($oAlumno));
+        $this->permiso = 3;
+		if ($classname == 'PersonaEx') {
+		    $this->permiso = 3;
+		} elseif ($dl_alumno != ConfigGlobal::mi_delef()) {
+		    $this->permiso = 2;
+		}
+
 		
 		$GesMatriculas = new entity\GestorMatricula();
 		$cMatriculas = $GesMatriculas->getMatriculas(array('id_nom'=>  $this->id_pau,'id_activ'=>  $this->id_activ,'_ordre'=>'id_nivel'));
@@ -149,7 +163,7 @@ class Select1303 {
 				'obj_pau' => $this->obj_pau,
 				'queSel' => $this->queSel,
 				'id_dossier' => $this->id_dossier,
-				'permiso' => $this->permiso
+				'permiso' => $this->permiso,
 				);
 		$oHashCa->setArraycamposHidden($a_camposHiddenCa);
 		
@@ -166,6 +180,7 @@ class Select1303 {
 					'link_add' => $this->link_add,
 					'bloque' => $this->bloque,
 					'observ_est' => $observ_est,
+    				'permiso' => $this->permiso,
 					];
 		
 		
