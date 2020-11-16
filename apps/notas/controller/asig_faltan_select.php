@@ -1,7 +1,6 @@
 <?php
-use asignaturas\model\entity as asignaturas;
+use function core\telecos_persona;
 use notas\model as notas;
-use personas\model\entity as personas;
 use ubis\model\entity as ubis;
 /**
 * Esta página muestra una tabla con las personas que cumplen con la condicion.
@@ -112,7 +111,14 @@ $a_botones=array( array( 'txt' => _("modificar stgr"), 'click' =>"fnjs_modificar
 				array( 'txt' => _("ver tessera"), 'click' =>"fnjs_tesera(\"#seleccionados\")" ) 
 				);
 
-$a_cabeceras=array( ucfirst(_("tipo")), array('name'=>_("nombre y apellidos"),'formatter'=>'clickFormatter'), ucfirst(_("centro")), ucfirst(_("stgr")), ucfirst(_("asignaturas")) );
+$a_cabeceras = array( ucfirst(_("tipo")),
+                    array('name'=>_("nombre y apellidos"),'formatter'=>'clickFormatter'),
+                    ucfirst(_("centro")),
+                    ucfirst(_("stgr")),
+                    ucfirst(_("asignaturas")),
+                    array('name'=>_("telf."),'width'=>80),
+                    array('name'=>_("mails"),'width'=>100),
+                );
 
 $titulo=sprintf(_("lista de %s a los que faltan %d o menos asignaturas para finalizar el %s"),$gente,$Qnumero,$curso_txt);
 		
@@ -129,7 +135,20 @@ foreach ($aId_nom as $id_nom=>$aAsignaturas) {
 	$id_ctr=$oPersona->getId_ctr();
 	$oCentroDl = new ubis\CentroDl($id_ctr);
 	$nombre_ubi = $oCentroDl->getNombre_ubi();
-
+	
+	// Añado los telf:
+	$telfs = '';
+	$telfs_fijo = telecos_persona($id_nom,"telf","*"," / ",FALSE) ;
+	$telfs_movil = telecos_persona($id_nom,"móvil","*"," / ",FALSE) ;
+	if (!empty($telfs_fijo) && !empty($telfs_movil)) {
+	    $telfs = $telfs_fijo ." / ". $telfs_movil;
+	} else {
+	    $telfs .= $telfs_fijo??'';
+	    $telfs .= $telfs_movil??'';
+	}
+	$mails = '';
+	$mails = telecos_persona($id_nom,"e-mail","*"," / ",FALSE);
+	
 	$condicion_2="Where id_nom='".$id_nom."'";
 	$condicion_2=urlencode($condicion_2);
 	$pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/home_persona.php?'.http_build_query(array('id_nom'=>$id_nom,'obj_pau'=>$obj_pau)));
@@ -149,6 +168,9 @@ foreach ($aId_nom as $id_nom=>$aAsignaturas) {
 	$a_valores[$i][3] = $nombre_ubi;
 	$a_valores[$i][4] = $stgr;
 	$a_valores[$i][5] = $as;
+	$a_valores[$i][6] = "$telfs";
+	$a_valores[$i][7] = "$mails";
+	
 }
 if (!empty($a_valores)) {
     if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
@@ -196,3 +218,4 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 echo $oTabla->mostrar_tabla();
 ?>
+</form>
