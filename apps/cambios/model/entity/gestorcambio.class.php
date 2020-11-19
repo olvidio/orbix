@@ -143,13 +143,13 @@ class GestorCambio Extends core\ClaseGestor {
 		$oDbl = $GLOBALS['oDBC'];
 		$oCambioSet = new core\Set();
 		
-		/*
+		
 		if ( $_SERVER['DB_SERVER'] == 1) {
 		    $nom_tabla_anotados = 'av_cambios_anotados_dl';
 		} else {
 		    $nom_tabla_anotados = 'av_cambios_anotados_dl_sf';
 		}
-		*/
+		
 		// Unir los anotados en seervidor 1 y en servidor 2:
 		//select * from "H-dlb".av_cambios_anotados_dl UNION SELECT * from "H-dlb".av_cambios_anotados_dl_sf
 		
