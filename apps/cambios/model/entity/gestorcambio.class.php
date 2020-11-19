@@ -87,7 +87,12 @@ class GestorCambio Extends core\ClaseGestor {
 	    $oDbl = $GLOBALS['oDBC'];
 	    $this->setoDbl($oDbl);
 	    $this->setNomTabla('av_cambios');
-        $nom_tabla_anotados = 'av_cambios_anotados_dl';
+
+		if ( $_SERVER['DB_SERVER'] == 1) {
+		    $nom_tabla_anotados = 'av_cambios_anotados_dl';
+		} else {
+		    $nom_tabla_anotados = 'av_cambios_anotados_dl_sf';
+		}
 	    
 	    $sQry = "DELETE FROM $nom_tabla_anotados USING $nom_tabla_anotados a
                 LEFT JOIN public.av_cambios c
@@ -138,7 +143,7 @@ class GestorCambio Extends core\ClaseGestor {
 		$oDbl = $GLOBALS['oDBC'];
 		$oCambioSet = new core\Set();
 		
-		if (ConfigGlobal::mi_sfsv() == 1) {
+		if ( $_SERVER['DB_SERVER'] == 1) {
 		    $nom_tabla_anotados = 'av_cambios_anotados_dl';
 		} else {
 		    $nom_tabla_anotados = 'av_cambios_anotados_dl_sf';
