@@ -1,6 +1,26 @@
+<div id="condiciones" class="no_print">
+	<form id="modifica" name="modifica" action="">
+	    <?= $oHash->getCamposHtml() ?>
+	<table><tr>
+	    <?= $oFormP->getTd(); ?>
+		<td>
+			<input id="b_buscar" name="b_buscar" TYPE="button" VALUE="<?php echo _("buscar"); ?>" onclick="fnjs_buscar()" >
+        </td>
+	</tr>
+	</table>
+	</form>
+</div>
+<div id="resultados" >
+<h3><?= $result_busqueda ?></h3>
+<form id='seleccionados' name='seleccionados' action='' method='post'>
+	<input type='hidden' id='mod' name='mod' value="">
+	<?= $oHashSel->getCamposHtml() ?>
+    <?= $oTabla->mostrar_tabla(); ?>
+</form>
+</div>
+
 <script type="text/javascript" src="<?= 'apps/actividades/controller/actividades.js?'.rand(); ?>"></script>
 <script>
-
 fnjs_borrar=function(formulario,que_val){
 	rta=fnjs_solo_uno(formulario);
 	if (rta==1) {
@@ -39,22 +59,3 @@ fnjs_buscar=function(){
 	fnjs_enviar_formulario('#modifica','#main');
 }
 </script>
-<div id="condiciones" class="no_print">
-	<form id="modifica" name="modifica" action="">
-	<table><tr><td class="derecha">
-	<?= $oHash->getCamposHtml() ?>
-	<?= $oFormP->getTd(); ?>
-	<td>
-		<input id="b_buscar" name="b_buscar" TYPE="button" VALUE="<?php echo _("buscar"); ?>" onclick="fnjs_buscar()" >
-	</td></tr>
-	</table>
-	</form>
-</div>
-<div id="resultados" >
-<h3><?= $result_busqueda ?></h3>
-<form id='seleccionados' name='seleccionados' action='' method='post'>
-	<input type='hidden' id='mod' name='mod' value="">
-	<?= $oHashSel->getCamposHtml() ?>
-    <?= $oTabla->mostrar_tabla(); ?>
-</form>
-</div>

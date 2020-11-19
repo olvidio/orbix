@@ -36,7 +36,6 @@ use function core\strtoupper_dlb;
 use permisos\model\PermisosActividadesTrue;
 use ubis\model\entity\Ubi;
 use usuarios\model\entity\Preferencia;
-use web\DateTimeLocal;
 use web\Lista;
 use web\Periodo;
 use web\PeriodoQue;
@@ -129,7 +128,8 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
 	    'dl_org'=>$Qdl_org,
 	    'status'=>$Qstatus,
 	    'empiezamin'=>$Qempiezamin,
-	    'empiezamax'=>$Qempiezamax );
+	    'empiezamax'=>$Qempiezamax,
+        );
 	$oPosicion->setParametros($aGoBack,1);
 }
 
@@ -359,12 +359,9 @@ $a_camposHidden = array(
     'que' => $Qque,
     'tipo_activ_sg' => $Qtipo_activ_sg,
     'id_ubi' => $Qid_ubi,
-    'periodo' => $Qperiodo,
     'year' => $Qyear,
     'dl_org' => $Qdl_org,
     'status' => $Qstatus,
-    'empiezamin' => $Qempiezamin,
-    'empiezamax' => $Qempiezamax,
     'filtro_lugar' => $Qfiltro_lugar,
 );
 $oHash->setArraycamposHidden($a_camposHidden);
