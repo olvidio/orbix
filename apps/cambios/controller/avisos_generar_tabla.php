@@ -314,7 +314,7 @@ while ($num_cambios) {
                 }
 			}
 			if ($apuntar) {
-				$err_fila = $oAvisos->fn_apuntar($aviso_tipo,$aviso_donde);
+				$err_fila .= $oAvisos->fn_apuntar($aviso_tipo,$aviso_donde);
 			}
 			$apuntar = false;
 		}
