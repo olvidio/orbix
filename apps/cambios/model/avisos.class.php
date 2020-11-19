@@ -128,7 +128,7 @@ class Avisos {
     }
     
     public function anotado() {
-        if (ConfigGlobal::mi_sfsv() == 1) {
+        if ( $_SERVER['DB_SERVER'] == 1) {
             $server = 1;
         } else {
             $server = 2;

@@ -43,7 +43,7 @@ Class ConfigGlobal extends ServerConf {
 	}
 	
 	public static function is_dmz() {
-	    $dmz = self::$dmz;
+	    $dmz = self::$dmz; // heredada de ServerConf (FALSE), TRUE En la instalacion exterior
 	    if ($dmz) {
             if (!empty($_SERVER['PRIVATE']) && $_SERVER['PRIVATE'] == 'sf') {
                 $dmz = FALSE;
