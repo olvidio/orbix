@@ -106,11 +106,23 @@ class Avisos {
         $oGesCambiosUsuario = new GestorCambioUsuario();
         $cCambioUsuario = $oGesCambiosUsuario->getCambiosUsuario($aWhere);
         // ya existe
+        $err_tabla = '';
         if (count($cCambioUsuario) > 0) {
-            echo "<br>";
-            echo _("apuntar cambio usuario");
-            echo " ".ConfigGlobal::$web_server.'-->'.date('Y/m/d') . " " . _("Ya existe").": ";
-            echo " $this->id_schema_cmb,$this->id_item_cmb,$this->id_usuario,$aviso_tipo\r";
+            if (empty($err_tabla)) {
+                $err_tabla .= _("apuntar cambio usuario");
+                $err_tabla .= " ".ConfigGlobal::$web_server.'-->'.date('Y/m/d') . " " . _("Ya existe").": ";
+                $err_tabla .= '<table><tr>'; 
+                $err_tabla .= '<th>' . _("schema") . '</th>'; 
+                $err_tabla .= '<th>' . _("id_item_cmb") . '</th>'; 
+                $err_tabla .= '<th>' . _("id_usuario") . '</th>'; 
+                $err_tabla .= '<th>' . _("aviso tipo") . '</th>'; 
+                $err_tabla .= '</tr>'; 
+            }
+            $err_tabla .= "<tr><td>". $this->id_schema_cmb . "</td>";
+            $err_tabla .= "<td>". $this->id_item_cmb . "</td>";
+            $err_tabla .= "<td>". $this->id_usuario . "</td>";
+            $err_tabla .= "<td>". $aviso_tipo . "</td>";
+            $err_tabla .= "</tr>";
         } else {
             $oCambioUsuario = new CambioUsuario();
             $oCambioUsuario->setId_schema_cambio($this->id_schema_cmb);
@@ -125,6 +137,10 @@ class Avisos {
             }
         }
         //anotado($id_item_cmb); // En principio ya lo hace al final de todo.
+        if (!empty($err_tabla)) {
+            $err_tabla .="</table>";
+            echo $err_tabla;
+        }
     }
     
     public function anotado() {
