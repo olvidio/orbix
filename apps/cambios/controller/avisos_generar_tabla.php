@@ -109,6 +109,7 @@ $aObjPerm = [
 // seleccionar cambios no anotados:
 $cNuevosCambios = $GesCambios->getCambiosNuevos();
 $num_cambios = count($cNuevosCambios);
+$err_fila = '';
 // Repito el proceso por si se han apuntado cambios mientras estaba realizando el proceso.
 while ($num_cambios) {
 	foreach ($cNuevosCambios as $oCambio) {
@@ -313,7 +314,7 @@ while ($num_cambios) {
                 }
 			}
 			if ($apuntar) {
-				$oAvisos->fn_apuntar($aviso_tipo,$aviso_donde);
+				$err_fila = $oAvisos->fn_apuntar($aviso_tipo,$aviso_donde);
 			}
 			$apuntar = false;
 		}
@@ -329,6 +330,21 @@ while ($num_cambios) {
         $oAvisos->borrar_pid($username,$esquema);
 	    exit (_("Algo falla")); 
 	}
+}
+
+if (!empty($err_fila)) {
+    $err_tabla = _("apuntar cambio usuario");
+    $err_tabla .= " ".ConfigGlobal::$web_server.'-->'.date('Y/m/d') . " " . _("Ya existe").": ";
+    $err_tabla .= '<table><tr>';
+    $err_tabla .= '<th>' . _("schema") . '</th>';
+    $err_tabla .= '<th>' . _("id_item_cmb") . '</th>';
+    $err_tabla .= '<th>' . _("id_usuario") . '</th>';
+    $err_tabla .= '<th>' . _("aviso tipo") . '</th>';
+    $err_tabla .= '</tr>';
+    $err_tabla .= $err_fila;
+    $err_tabla .= "</table>";
+    
+    echo $err_tabla;
 }
 
 // acabar el proceso:
