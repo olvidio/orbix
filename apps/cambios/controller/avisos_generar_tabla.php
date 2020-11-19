@@ -31,7 +31,8 @@ $dir_web = orbix | pruebas;
 document_root = /home/dani/orbix_local
 $ubicacion = 'sv';
 $esquema_web = 'H-dlbv';
-$private = 'sf'; para el caso del servido exterior en dlb. puerto distinto.
+$private = 'sf'; para el caso del servidor exterior en dlb. puerto distinto.
+$DB_SERVER = 1 o 2; para indicar el servidor dede el que se ejecuta. (ver comentario en clase: CambioAnotado)
 */
 
 if(!empty($argv[1])) {
@@ -42,7 +43,9 @@ if(!empty($argv[1])) {
 	putenv("UBICACION=$argv[5]");
 	putenv("ESQUEMA=$argv[6]");
 	putenv("PRIVATE=$argv[7]");
+	putenv("DB_SERVER=$argv[8]");
 	$_SERVER['PRIVATE'] = $argv[7];
+	$_SERVER['DB_SERVER'] = $argv[8]; 
 	
 	$username = $argv[1];
 	$esquema = $argv[6];
@@ -224,7 +227,7 @@ while ($num_cambios) {
 			if (empty($aFases_cmb)) {
 			    // Si yo SI tengo procesos:
 			    if(ConfigGlobal::is_app_installed('procesos')) {
-                    if ($id_status_cmb == $staus_de_fase) {
+                    if ($id_status_cmb == $status_de_fase) {
                             $fase_correcta = 1;
                     }
 			    } else{

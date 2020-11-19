@@ -8,6 +8,7 @@
  $esquema_web = 'H-dlbv';
  $ubicacion = 'sv';
  $private => pongo el mismo valor que ubicación. Se supone que el cron está en private.
+ $DB_SERVER = 1 o 2; para indicar el servidor dede el que se ejecuta. (ver comentario en clase: CambioAnotado)
  */
 if(!empty($argv[1])) {
     $_POST['username'] = $argv[1];
@@ -15,8 +16,9 @@ if(!empty($argv[1])) {
     $_SERVER['DIRWEB'] = $argv[3];
     $_SERVER['DOCUMENT_ROOT'] = $argv[4];
     putenv("UBICACION=$argv[5]");
-    putenv("ESQUEMA=$argv[6]");
 	putenv("PRIVATE=$argv[5]");
+	putenv("DB_SERVER=$argv[6]");
+    putenv("ESQUEMA=$argv[7]");
 }
 $document_root = $_SERVER['DOCUMENT_ROOT'];
 $dir_web = $_SERVER['DIRWEB'];

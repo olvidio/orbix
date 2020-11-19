@@ -657,6 +657,8 @@ class Cambio Extends core\ClasePropiedades {
          document_root = /home/dani/orbix_local
          $ubicacion = 'sv';
          $esquema_web = 'H-dlbv';
+         $private = 'sf'; para el caso del servidor exterior en dlb. puerto distinto.
+         $DB_SERVER = 1 o 2; para indicar el servidor dede el que se ejecuta. (ver comentario en clase: CambioAnotado)
          */
 	    $dirweb = $_SERVER['DIRWEB'];
 	    $doc_root = $_SERVER['DOCUMENT_ROOT'];
@@ -664,13 +666,14 @@ class Cambio Extends core\ClasePropiedades {
         $esquema_web = getenv('ESQUEMA');
         $private = getenv('PRIVATE');
         $private = empty($private)? 'x' : $private;
+        $db_server = getenv('DB_SERVER');
         
         // Si he entrado escogiendo el esquema de un desplegable, no tengo el valor
         if (empty($esquema_web)) {
             $esquema_web = ConfigGlobal::mi_region_dl();
         }
         
-	    $command = "nohup /usr/bin/php $program $username $pwd $dirweb $doc_root $ubicacion $esquema_web $private >> $out 2>> $err < /dev/null &";
+	    $command = "nohup /usr/bin/php $program $username $pwd $dirweb $doc_root $ubicacion $esquema_web $private $db_server >> $out 2>> $err < /dev/null &";
 	    exec($command);
 	}
 	

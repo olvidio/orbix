@@ -143,15 +143,20 @@ class GestorCambio Extends core\ClaseGestor {
 		$oDbl = $GLOBALS['oDBC'];
 		$oCambioSet = new core\Set();
 		
+		/*
 		if ( $_SERVER['DB_SERVER'] == 1) {
 		    $nom_tabla_anotados = 'av_cambios_anotados_dl';
 		} else {
 		    $nom_tabla_anotados = 'av_cambios_anotados_dl_sf';
 		}
-		// Cuando av_cambios_anotados no tiene la fila, No podemos saber si en n cambio de la dl o no.
+		*/
+		// Unir los anotados en seervidor 1 y en servidor 2:
+		//select * from "H-dlb".av_cambios_anotados_dl UNION SELECT * from "H-dlb".av_cambios_anotados_dl_sf
+		
+		// Cuando av_cambios_anotados no tiene la fila, No podemos saber si es un cambio de la dl o no.
 		// Vamos a hacer dos consultas separadas y unimos.
 		
-		// Cambios Dl
+		// Cambios Dl (av_cambios_dl)
 		$sQry = "SELECT c.id_schema, c.id_item_cambio, c.id_tipo_cambio, c.id_activ, c.id_tipo_activ, 
                 c.json_fases_sv, c.json_fases_sf, c.dl_org,
                 c.objeto, c.propiedad, c.valor_old, c.valor_new, c.quien_cambia, c.sfsv_quien_cambia, c.timestamp_cambio
@@ -171,7 +176,7 @@ class GestorCambio Extends core\ClaseGestor {
 			$oCambio->setAllAtributes($aDades);
 			$oCambioSet->add($oCambio);
 		}
-		// Cambios NO dl
+		// Cambios NO dl (sólo public.av_cambios)
 		$sQry = "SELECT c.id_schema, c.id_item_cambio, c.id_tipo_cambio, c.id_activ, c.id_tipo_activ, 
                 c.json_fases_sv, c.json_fases_sf, c.dl_org,
                 c.objeto, c.propiedad, c.valor_old, c.valor_new, c.quien_cambia, c.sfsv_quien_cambia, c.timestamp_cambio
