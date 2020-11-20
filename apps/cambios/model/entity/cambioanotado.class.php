@@ -199,12 +199,8 @@ class CambioAnotado Extends core\ClasePropiedades {
 				}
 			}
 
-            if ($this->iserver === 1 ) {
-                $nom_seq = 'av_cambios_anotados_dl_id_item_seq';
-            }
-            if ($this->iserver === 2 ) {
-                $nom_seq = 'av_cambios_anotados_dl_sf_id_item_seq';
-            }
+	        $nom_seq = $this->getNomTabla() . '_id_item_seq';
+	        
 			$this->id_item = $oDbl->lastInsertId($nom_seq);
 		}
 		$this->setAllAtributes($aDades);
