@@ -679,10 +679,17 @@ class Resumen Extends core\ClasePropiedades {
         $oDbl = $this->getoDbl();
         //$tabla = $this->getNomTabla();
         $tabla = 'p_numerarios';
-        $notas = $this->getNomNotas();
+        //$notas = $this->getNomNotas();
+        if (core\ConfigGlobal::mi_sfsv() == 1) { $notas_vf = 'publicv.e_notas'; }
+        if (core\ConfigGlobal::mi_sfsv() == 2) { $notas_vf = 'publicf.e_notas'; }
         $ce_lugar = $this->getCe_lugar();
         $any = $this->getAnyFiCurs();
+        $curs = $this->getCurso();
         
+        $gesNotas = new entity\gestorNota();
+        $a_superadas = $gesNotas->getArrayNotasSuperadas();
+        $Where_superada = "AND id_situacion IN (".implode(',', $a_superadas).")";
+        /*
         $ssql="SELECT count(*)
 			FROM $tabla p, $notas n
 			WHERE p.id_nom=n.id_nom
@@ -690,7 +697,16 @@ class Resumen Extends core\ClasePropiedades {
                 AND (p.ce_lugar = '$ce_lugar' AND p.ce_ini IS NOT NULL AND (p.ce_fin IS NULL OR p.ce_fin = '$any'))
                 AND (p.situacion = 'A' OR p.situacion = 'D' OR p.situacion = 'L')
 			";
-        
+        */
+        $ssql="SELECT count(*)
+            FROM $tabla p, $notas_vf n
+			WHERE p.id_nom=n.id_nom
+				AND n.f_acta $curs
+				AND (n.id_nivel BETWEEN 1100 AND 1229 OR n.id_nivel BETWEEN 2100 AND 2429)
+                AND (p.ce_lugar = '$ce_lugar' AND p.ce_ini IS NOT NULL AND (p.ce_fin IS NULL OR p.ce_fin = '$any'))
+                AND (p.situacion = 'A' OR p.situacion = 'D' OR p.situacion = 'L')
+                $Where_superada
+				";
         $statement=$oDbl->query($ssql);
         $rta['num'] = $statement->fetchColumn();
         if ($this->blista == true && $rta['num'] > 0) {
