@@ -364,7 +364,7 @@ class Resumen Extends core\ClasePropiedades {
 
 		$gesNotas = new entity\gestorNota();
 		$a_superadas = $gesNotas->getArrayNotasSuperadas();
-		$case_superada = ", id_situacion IN (".implode(',', $a_superadas).")";
+		$case_superada = "AND id_situacion IN (".implode(',', $a_superadas).")";
 		// Tengo que acceder a publicv, porque con los traslados las notas se cambian de esquema.
 		if (core\ConfigGlobal::mi_sfsv() == 1) { $notas_vf = 'publicv.e_notas'; }
 		if (core\ConfigGlobal::mi_sfsv() == 2) { $notas_vf = 'publicf.e_notas'; }
