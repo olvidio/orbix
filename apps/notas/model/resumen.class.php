@@ -688,7 +688,7 @@ class Resumen Extends core\ClasePropiedades {
 			WHERE p.id_nom=n.id_nom
 				AND (n.id_nivel BETWEEN 1100 AND 1229 OR n.id_nivel BETWEEN 2100 AND 2429)
                 AND (p.ce_lugar = '$ce_lugar' AND p.ce_ini IS NOT NULL AND (p.ce_fin IS NULL OR p.ce_fin = '$any'))
-                AND (p.situacion = 'A' OR p.situacion = 'D')
+                AND (p.situacion = 'A' OR p.situacion = 'D' OR p.situacion = 'L')
 			";
         
         $statement=$oDbl->query($ssql);
