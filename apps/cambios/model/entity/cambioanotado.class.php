@@ -21,12 +21,6 @@ use core;
  */
 class CambioAnotado Extends core\ClasePropiedades {
 	/* ATRIBUTS ----------------------------------------------------------------- */
-    /**
-     * corresponde a 1:sv, 2:sf
-     * 
-     * @var integer
-     */
-     private $server_sfsv;
 	/**
 	 * aPrimary_key de CambioAnotado
 	 *
@@ -134,12 +128,11 @@ class CambioAnotado Extends core\ClasePropiedades {
 	 *
 	 * @param integer $server
 	 */
-	public function setTabla($server){
-	    $this->server_sfsv = $server;
-	    if ($server === 1 ) {
+	public function setTabla($ubicacion){
+	    if ($ubicacion === 'sv' ) {
 	        $this->setNomTabla('av_cambios_anotados_dl');
 	    }
-	    if ($server === 2 ) {
+	    if ($ubicacion === 'sf' ) {
 	        $this->setNomTabla('av_cambios_anotados_dl_sf');
 	    }
 	}

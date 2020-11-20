@@ -88,7 +88,7 @@ class GestorCambio Extends core\ClaseGestor {
 	    $this->setoDbl($oDbl);
 	    $this->setNomTabla('av_cambios');
 
-		if ( $_SERVER['DB_SERVER'] == 1) {
+		if ( $_SERVER['UBICACION'] == 'sv') {
 		    $nom_tabla_anotados = 'av_cambios_anotados_dl';
 		} else {
 		    $nom_tabla_anotados = 'av_cambios_anotados_dl_sf';
@@ -144,7 +144,7 @@ class GestorCambio Extends core\ClaseGestor {
 		$oCambioSet = new core\Set();
 		
 		
-		if ( $_SERVER['DB_SERVER'] == 1) {
+		if ( $_SERVER['UBICACION'] == 'sv') {
 		    $nom_tabla_anotados = 'av_cambios_anotados_dl';
 		} else {
 		    $nom_tabla_anotados = 'av_cambios_anotados_dl_sf';

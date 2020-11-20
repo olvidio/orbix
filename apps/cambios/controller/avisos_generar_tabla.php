@@ -3,7 +3,7 @@
 /* En el caso de usarse desde la lienea de comandos (cli), se le pasan parametros ($argv).
 *  No se le puede pasar id de la session, porque sólo puede haber un proceso con un session_id.
 *  Debe crearse una nueva session. Hay que pasarle un usuario y un password.
-*  Desde ext_a_cambios.class, se llama a esta página para que funcione en background:
+*  Desde la clase Cambio y CambioDl, se llama a esta página para que funcione en background:
 *	exec('nohup /usr/bin/php /var/www/dl/sistema/avisos_generar_tabla.php $username $password $dirweb $doc_root $ubicacion $esquema_web > /tmp/avisos.out 2> /tmp/avisos.err < /dev/null &');
 *
 * Inicialmente se ejecutaba manualmente desde menú y no habia problema.

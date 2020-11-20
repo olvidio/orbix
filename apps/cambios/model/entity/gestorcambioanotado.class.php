@@ -16,11 +16,11 @@ use core;
 class GestorCambioAnotado Extends core\ClaseGestor {
 	/* ATRIBUTS ----------------------------------------------------------------- */
     /**
-     * corresponde a 1:sv, 2:sf
+     * corresponde a :sv, sf
      *
-     * @var integer
+     * @var string
      */
-    private $server_sfsv;
+    private $ubicacion;
     
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
@@ -47,12 +47,12 @@ class GestorCambioAnotado Extends core\ClaseGestor {
 	 * 
 	 * @param integer $server
 	 */
-	public function setTabla($server){
-	    $this->server_sfsv = $server;
-	    if ($server == 1 ) {
+	public function setTabla($ubicacion){
+	    $this->ubicacion = $ubicacion;
+	    if ($ubicacion == 'sv' ) {
             $this->setNomTabla('av_cambios_anotados_dl');
 	    }
-	    if ($server == 2 ) {
+	    if ($ubicacion == 'sf' ) {
             $this->setNomTabla('av_cambios_anotados_dl_sf');
 	    }
 	}
@@ -73,7 +73,7 @@ class GestorCambioAnotado Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oCambioAnotado= new CambioAnotado($a_pkey);
-			$oCambioAnotado->setTabla($this->server_sfsv);
+			$oCambioAnotado->setTabla($this->ubicacion);
 			$oCambioAnotado->setAllAtributes($aDades);
 			$oCambioAnotadoSet->add($oCambioAnotado);
 		}
@@ -127,7 +127,7 @@ class GestorCambioAnotado Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oCambioAnotado= new CambioAnotado($a_pkey);
-			$oCambioAnotado->setTabla($this->server_sfsv);
+			$oCambioAnotado->setTabla($this->ubicacion);
 			$oCambioAnotado->setAllAtributes($aDades);
 			$oCambioAnotadoSet->add($oCambioAnotado);
 		}

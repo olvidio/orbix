@@ -134,18 +134,16 @@ class Avisos {
     }
     
     public function anotado() {
-        if ( $_SERVER['DB_SERVER'] == 1) {
-            $server = 1;
-        } else {
-            $server = 2;
-        }
+        $ubicacion = $_SERVER['UBICACION'];
+        $server = $_SERVER['DB_SERVER'];
+        
         // marcar como apuntado
         $aWhere = ['id_schema_cambio' => $this->id_schema_cmb,
                    'id_item_cambio' => $this->id_item_cmb,
                    'server' => $server,
         ];
         $gesCambiosAnotados = new GestorCambioAnotado();
-        $gesCambiosAnotados->setTabla($server);
+        $gesCambiosAnotados->setTabla($ubicacion);
         $cCambiosAnotados = $gesCambiosAnotados->getCambiosAnotados($aWhere);
         // debería ser único
         if (count($cCambiosAnotados) > 0) {
@@ -153,7 +151,7 @@ class Avisos {
             $oCambioAnotado->DBCarregar();
         } else {
            $oCambioAnotado = new CambioAnotado();
-           $oCambioAnotado->setTabla($server);
+           $oCambioAnotado->setTabla($ubicacion);
            $oCambioAnotado->setId_item_cambio($this->id_item_cmb);
            $oCambioAnotado->setId_schema_cambio($this->id_schema_cmb);
            $oCambioAnotado->setServer($server);
