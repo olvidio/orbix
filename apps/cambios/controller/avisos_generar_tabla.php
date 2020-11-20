@@ -65,6 +65,10 @@ use core\ConfigGlobal;
 use function core\is_true;
 use permisos\model\PermisosActividades;
 use personas\model\entity\PersonaSacd;
+use procesos\model\entity\GestorProcesoTipo;
+use actividades\model\entity\GestorTipoDeActividad;
+use procesos\model\entity\TareaProceso;
+use procesos\model\entity\GestorTareaProceso;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -228,8 +232,21 @@ while ($num_cambios) {
 			if (empty($aFases_cmb)) {
 			    // Si yo SI tengo procesos:
 			    if(ConfigGlobal::is_app_installed('procesos')) {
+                    $status_de_fase = 0;
+			        $gesTiposActividad = new GestorTipoDeActividad();
+			        $cTiposActividad = $gesTiposActividad->getTiposDeActividades(['id_tipo_activ' => $id_tipo_activ]);
+			        if (!empty($cTiposActividad)) {
+			            $id_tipo_proceso = $cTiposActividad[0]->getId_tipo_proceso();
+                        $gesTareaProceso = new GestorTareaProceso();
+                        $cTareasProceso = $gesTareaProceso->getTareasProceso(['id_tipo_proceso' => $id_tipo_proceso, 'id_fase' => $id_fase_ref]);
+                        if (!empty($cTareasProceso)) {
+                            $status_de_fase = $cTareasProceso[0]->getId_status();
+                        }
+			        }
                     if ($id_status_cmb == $status_de_fase) {
+                        if (is_true($aviso_on)) {
                             $fase_correcta = 1;
+                        }
                     }
 			    } else{
     			    // Si yo no tengo procesos:
