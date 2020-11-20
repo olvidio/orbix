@@ -6,7 +6,8 @@ Class ConfigGlobal extends ServerConf {
     
 
 	public static function getWebPort() {
-	    if (!empty($_SERVER['PRIVATE']) && $_SERVER['PRIVATE'] == 'sf') {
+        $private = getenv('PRIVATE');
+	    if (!empty($private) && $private == 'sf') {
 	        return self::$web_port_sf;
 	    } else {
 	        return self::$web_port;
@@ -18,8 +19,9 @@ Class ConfigGlobal extends ServerConf {
         if ($_SESSION['sfsv'] == 'sf') {
             $path .= 'sf';
         }
-        if (!empty($_SERVER['ESQUEMA'])) {
-            $path .= '/'.$_SERVER['ESQUEMA'];
+        $esquema_web = getenv('ESQUEMA');
+        if (!empty($esquema_web)) {
+            $path .= '/'.$esquema_web;
         }
         return $path;
 	}
@@ -45,7 +47,8 @@ Class ConfigGlobal extends ServerConf {
 	public static function is_dmz() {
 	    $dmz = self::$dmz; // heredada de ServerConf (FALSE), TRUE En la instalacion exterior
 	    if ($dmz) {
-            if (!empty($_SERVER['PRIVATE']) && $_SERVER['PRIVATE'] == 'sf') {
+            $private = getenv('PRIVATE');
+            if (!empty($private) && $private == 'sf') {
                 $dmz = FALSE;
             }
 	    }

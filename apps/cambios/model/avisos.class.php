@@ -134,8 +134,8 @@ class Avisos {
     }
     
     public function anotado() {
-        $ubicacion = $_SERVER['UBICACION'];
-        $server = $_SERVER['DB_SERVER'];
+        $ubicacion = getenv('UBICACION');
+        $server = getenv('DB_SERVER');
         
         // marcar como apuntado
         $aWhere = ['id_schema_cambio' => $this->id_schema_cmb,
