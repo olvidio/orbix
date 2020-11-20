@@ -349,7 +349,6 @@ class Resumen Extends core\ClasePropiedades {
 										id_nom int4 NOT NULL,
 										id_asignatura int4 NOT NULL,
 										id_nivel int4 NOT NULL,
-										superada bool,
 										epoca int2,
 										f_acta  date NOT NULL,
 										acta  varchar(50),
@@ -359,19 +358,16 @@ class Resumen Extends core\ClasePropiedades {
         
         $oDbl->query($sqlCreate);
         $oDbl->query("CREATE INDEX IF NOT EXISTS $notas"."_nivel"." ON $notas (id_nivel)");
-        $oDbl->query("CREATE INDEX IF NOT EXISTS $notas"."_sup"." ON $notas (superada)");
         $oDbl->query($sqlDelete);
         
         $gesNotas = new entity\gestorNota();
         $a_superadas = $gesNotas->getArrayNotasSuperadas();
-        $case_superada = " id_situacion IN (".implode(',', $a_superadas).")";
         $Where_superada = "AND id_situacion IN (".implode(',', $a_superadas).")";
         // Tengo que acceder a publicv, porque con los traslados las notas se cambian de esquema.
         if (core\ConfigGlobal::mi_sfsv() == 1) { $notas_vf = 'publicv.e_notas'; }
         if (core\ConfigGlobal::mi_sfsv() == 2) { $notas_vf = 'publicf.e_notas'; }
         $sqlLlenar="INSERT INTO $notas
 					SELECT n.id_nom,n.id_asignatura,n.id_nivel,
-						   $case_superada,
 						   n.epoca,n.f_acta,n.acta,n.preceptor
 					FROM $tabla p, $notas_vf n
 					WHERE p.id_nom=n.id_nom AND n.f_acta $curs
@@ -803,7 +799,6 @@ class Resumen Extends core\ClasePropiedades {
 				WHERE p.id_nom=n.id_nom AND n.id_asignatura=a.id_asignatura
 					AND (n.id_nivel BETWEEN 1100 AND 1232)
 					AND p.stgr ~ '^b'
-                    AND n.superada = 't'
 				ORDER BY p.apellido1, p.apellido2, p.nom
 				";
         $statement=$oDbl->query($ssql);
@@ -857,7 +852,6 @@ class Resumen Extends core\ClasePropiedades {
 				WHERE p.id_nom=n.id_nom AND n.id_asignatura=a.id_asignatura
 					AND (n.id_nivel BETWEEN 2100 AND 2500)
 					AND p.stgr ~ '^c'
-                    AND n.superada = 't'
 				ORDER BY p.apellido1, p.apellido2, p.nom
 				";
         $statement=$oDbl->query($ssql);
