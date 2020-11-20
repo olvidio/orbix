@@ -364,16 +364,16 @@ class Resumen Extends core\ClasePropiedades {
 
 		$gesNotas = new entity\gestorNota();
 		$a_superadas = $gesNotas->getArrayNotasSuperadas();
-		$case_superada = " id_situacion IN (".implode(',', $a_superadas).")";
+		$case_superada = ", id_situacion IN (".implode(',', $a_superadas).")";
 		// Tengo que acceder a publicv, porque con los traslados las notas se cambian de esquema.
 		if (core\ConfigGlobal::mi_sfsv() == 1) { $notas_vf = 'publicv.e_notas'; }
 		if (core\ConfigGlobal::mi_sfsv() == 2) { $notas_vf = 'publicf.e_notas'; }
 		$sqlLlenar="INSERT INTO $notas
 					SELECT n.id_nom,n.id_asignatura,n.id_nivel,
-						   $case_superada,
 						   n.epoca,n.f_acta,n.acta,n.preceptor
 					FROM $tabla p, $notas_vf n
 					WHERE p.id_nom=n.id_nom AND n.f_acta $curs
+						  $case_superada
 					";
 		//echo "sql: $sqlLlenar<br>";
 		$oDbl->query($sqlLlenar);
@@ -690,7 +690,7 @@ class Resumen Extends core\ClasePropiedades {
 			WHERE p.id_nom=n.id_nom 
 				AND (n.id_nivel BETWEEN 1100 AND 1229 OR n.id_nivel BETWEEN 2100 AND 2429)
                 AND (p.ce_lugar = '$ce_lugar' AND p.ce_ini IS NOT NULL AND (p.ce_fin IS NULL OR p.ce_fin = '$any'))
-                AND (p.situacion = 'A' OR p.situacion = 'D')
+                AND (p.situacion = 'A' OR p.situacion = 'D' OR p.situacion = 'L')
 			"; 
 
 		$statement=$oDbl->query($ssql);
