@@ -29,9 +29,9 @@ Trait EncargoFuncionesTrait {
             $cEncargoTextos = $oGesEncargoTextos->getEncargoTextos();
             foreach ($cEncargoTextos as $oEncargoTexto) {
                 $clave = $oEncargoTexto->getClave();
-                $idioma = $oEncargoTexto->getIdioma();
+                $idioma_x = $oEncargoTexto->getIdioma();
                 $texto = $oEncargoTexto->getTexto();
-                $this->a_txt[$idioma][$clave] = $texto;
+                $this->a_txt[$idioma_x][$clave] = $texto;
             }
         }
         return $this->a_txt[$idioma];
