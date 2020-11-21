@@ -76,7 +76,7 @@ case "nuevo": //nuevo
 	/* crear encargo: atencion ctr. El tipo de encargo es distinto según el ctr.
 	   si el id ubi empieza por 1 es sv, si empieza por 2 es sf. */
 	$Qid_ubi_txt = (string) $Qid_ubi;
-	if ($Qid_ubi_txt{0}==2) { // sf
+	if ($Qid_ubi_txt[0]==2) { // sf
 		$sf_sv=2;
 		$oCentroSf = new CentroEllas($Qid_ubi);
 		$nombre_ubi = $oCentroSf->getNombre_ubi();
@@ -89,7 +89,7 @@ case "nuevo": //nuevo
 			default:
 				$id_tipo_enc=1200;
 		}
-	} elseif ($Qid_ubi_txt{0}==1) { //sv 
+	} elseif ($Qid_ubi_txt[0]==1) { //sv 
 		$sf_sv=1;
 		$oCentroDl = new CentroDl($Qid_ubi);
 		$nombre_ubi = $oCentroDl->getNombre_ubi();

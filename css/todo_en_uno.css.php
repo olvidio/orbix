@@ -28,7 +28,7 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
    /* Uso la etiqueta <div> </div> para hacer un salto de página al imprimir */
 	.salta_pag {page-break-after:always;}
 
-	.vertical{
+	.vertical {
 		writing-mode:sideways-lr;
 		vertical-align: bottom;
 		bottom: 0;
@@ -211,7 +211,7 @@ div.ventana z-index: 160;
 	--------------------------*/
 
 
-	.help-tip{
+	.help-tip {
 		position: relative;
 		display: inline-block;
 		/*top: 18px;
@@ -229,13 +229,13 @@ div.ventana z-index: 160;
 		z-index: 100;
 	}
 
-	.help-tip:before{
+	.help-tip:before {
 		content:'?';
 		font-weight: bold;
 		color:<?= $letras; ?>;
 	}
 
-	.help-tip:hover p{
+	.help-tip:hover p {
 		display:block;
 		transform-origin: 100% 0%;
 
@@ -244,7 +244,7 @@ div.ventana z-index: 160;
 
 	}
 
-	.help-tip p{
+	.help-tip p {
 		display: none;
 		text-align: left;
 		/* background-color: #1E2021; */
@@ -260,7 +260,7 @@ div.ventana z-index: 160;
 		line-height: 1.4;
 	}
 
-	.help-tip p:before{
+	.help-tip p:before {
 		position: absolute;
 		content: '';
 		width:0;
@@ -271,7 +271,7 @@ div.ventana z-index: 160;
 		top:-12px;
 	}
 
-	.help-tip p:after{
+	.help-tip p:after {
 		width:100%;
 		height:40px;
 		content:'';
@@ -418,7 +418,7 @@ div.ventana z-index: 160;
 		background-color : <?= $fondo_claro; ?>;
 	 }
 
-	.vertical{
+	.vertical {
 		writing-mode:sideways-lr;
 		vertical-align: bottom;
 		bottom: 0px;

@@ -66,7 +66,7 @@ fnjs_traslado=function($id_orbix){
 
 </script>
 
-<h3><?= _("personas de orbix que habían estado en listas y no se encuentran") ?></h3>
+<h3><?= _("personas de aquinate que habían estado en la BDU y no se encuentran") ?></h3>
 <table>
 	<tr><th><?= _("nombre") ?></th><th><?= _("dl") ?></th><th></th></tr>
 <?php

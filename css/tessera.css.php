@@ -10,7 +10,7 @@
 include_once (core\ConfigGlobal::$dir_estilos.'/colores.php'); 
 ?>
 <style>
-@media print{
+@media print {
 
 	#otro, #main { 
 		width: auto; 

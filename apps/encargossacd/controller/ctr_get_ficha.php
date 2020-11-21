@@ -65,7 +65,7 @@ $dedic_v = [];
 if (is_array($cEncargos) && count($cEncargos) == 0) { // nuevo encargo
 	$mod='nuevo'; // es una ficha nueva
 	$Qid_ubi_txt = (string) $Qid_ubi;
-	if ($Qid_ubi_txt{0} == 2 ) { // los de la sf nunca son del cl
+	if ($Qid_ubi_txt[0] == 2 ) { // los de la sf nunca son del cl
 		$cl_checked[1]='';
 	} else {
 		$cl_checked[1]='checked';

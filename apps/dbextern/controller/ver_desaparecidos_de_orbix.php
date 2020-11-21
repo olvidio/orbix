@@ -61,7 +61,7 @@ fnjs_desunir=function(id_listas,fila){
 
 </script>
 
-<h3><?= _("personas de listas que habían estado en orbix y no se encuentran") ?></h3>
+<h3><?= _("personas de la BDU que habían estado en aquinate y no se encuentran") ?></h3>
 <table>
 	<tr><th><?= _("nombre") ?></th><th><?= _("dl actual") ?></th><th></th></tr>
 <?php

@@ -1,6 +1,6 @@
 <?php
 namespace web;
-class DesplegableArray Extends Desplegable{
+class DesplegableArray Extends Desplegable {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/**

@@ -120,7 +120,7 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
 						$nombre_ubi = ''; // no tine encargo en ctr: descanso, estudio...
 					} else {
 						$iid = (string)$id_ubi_enc;
-						if ($iid{0} == 2) {
+						if ($iid[0] == 2) {
 							$oCentroEnc = new CentroEllas($id_ubi_enc);
 						} else {
 							$oCentroEnc = new CentroDl($id_ubi_enc);

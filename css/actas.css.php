@@ -118,7 +118,7 @@ acta {
 	float: right;
 	text-align: right;
 	}
-f7{	
+f7 {	
 	display: block;
 	position: relative;
 	left: -6.6cm;

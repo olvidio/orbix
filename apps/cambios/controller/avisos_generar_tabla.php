@@ -245,7 +245,7 @@ while ($num_cambios) {
                             $fase_correcta = 1;
                         }
                     }
-			    } else{
+			    } else {
     			    // Si yo no tengo procesos:
 			        foreach ($aFases_cmb as $id_fase) {
 			            if ($id_status_cmb == $id_fase) {

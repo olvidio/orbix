@@ -631,7 +631,7 @@ class TrasladoDl {
                     $error .= '<br>'.sprintf(_("No se ha guardado la asistencia(dl) a id_activ: %s"),$id_activ);
                     $err=1;
                 }
-            } else{
+            } else {
                 $NuevoObj = clone $oAsistenteOut;
                 $NuevoObj->setoDbl($oDBdstE);
                 if (method_exists($NuevoObj,'setId_item') === true) $NuevoObj->setId_item(null);

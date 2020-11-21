@@ -85,7 +85,7 @@ switch ($Qque) {
             }
         }
         // para los encargos personales, no hay sección:
-        if ($Qid_tipo_enc{0}==7) $Qsf_sv=0;
+        if ($Qid_tipo_enc[0]==7) $Qsf_sv=0;
 
         //Compruebo que estén todos los campos necesarios
         if (empty($Qdesc_enc)) {

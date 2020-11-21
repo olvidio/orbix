@@ -191,7 +191,7 @@ fnjs_sincronizar=function(){
 </p>
 <br>
 <table>
-	<tr><th colspan="4"><?= _("personas en listas")?></th>
+	<tr><th colspan="4"><?= _("personas en la BDU")?></th>
 	<tr><td>1.</td>
 		<td><?= _("personas a sincronizar") ?></td>
 		<td><?= $p1_unidas_dl ?></td>
@@ -203,28 +203,28 @@ fnjs_sincronizar=function(){
 		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_2 ?>')"><?=_("ver")?></span></td>
 	</tr>
 	<tr><td>3.</td>
-		<td><?= _("personas en listas desaparecidas en orbix") ?></td>
+		<td><?= _("personas en la BDU desaparecidas en aquinate") ?></td>
 		<td><?= $p3_unidas_desaparecidas ?></td>
 		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_3 ?>')"><?=_("ver")?></span></td>
 	</tr>
 	<tr><td>4.</td>
-		<td><?= _("personas no estan unidas a orbix") ?></td>
+		<td><?= _("personas no estan unidas a aquinate") ?></td>
 		<td><?= $p456_listas_no_unidas ?></td>
 		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_456 ?>')"><?=_("ver")?></span></td>
 	</tr>
-	<tr><th colspan="4"><?= _("personas en orbix")?></th>
+	<tr><th colspan="4"><?= _("personas en aquinate")?></th>
 	<tr><td>7.</td>
-		<td><?= _("personas en orbix que deberían trasladarse a otra dl") ?></td>
+		<td><?= _("personas en aquinate que deberían trasladarse a otra dl") ?></td>
 		<td><?= $p7_orbix_unidas_otra_dl ?></td>
 		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_7 ?>')"><?=_("ver")?></span></td>
 	</tr>
 	<tr><td>8.</td>
-		<td><?= _("personas en orbix con correspondencia en listas y desaparecidos de listas") ?></td>
+		<td><?= _("personas en aquinate con correspondencia en la BDU y desaparecidos de la BDU") ?></td>
 		<td><?= $p8_orbix_unidas_desaparecidas ?></td>
 		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_8 ?>')"><?=_("ver")?></span></td>
 	</tr>
 	<tr><td>9.</td>
-		<td><?= _("personas en orbix sin correspondencia en listas") ?></td>
+		<td><?= _("personas en aquinate sin correspondencia en la BDU") ?></td>
 		<td><?= $p910_orbix_no_unidas ?></td>
 		<td><span class=link onclick="fnjs_update_div('#main','<?= $ver_910 ?>')"><?=_("ver")?></span></td>
 </table>

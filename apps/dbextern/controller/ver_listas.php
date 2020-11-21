@@ -166,7 +166,7 @@ fnjs_submit=function(formulario,mov){
 }
 </script>
 
-<h3><?= _("personas en listas Madrid") ?></h3>
+<h3><?= _("personas en la BDU") ?></h3>
 <?php
 if (empty($mov)) {
 	echo sprintf(_("unidas automáticamente: %s"),$cont_sync);

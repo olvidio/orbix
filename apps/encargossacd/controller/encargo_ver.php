@@ -40,7 +40,7 @@ include_once("func_tareas.php");
 
 function filtro($id_ubi) {
 	$id_ubi_str = (string)$id_ubi; 
-	if ($id_ubi_str{0} == 2) {
+	if ($id_ubi_str[0] == 2) {
 		$oCentro = new CentroEllas($id_ubi);
 	} else {
 		$oCentro = new CentroDl($id_ubi);

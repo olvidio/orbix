@@ -140,7 +140,7 @@ if ($max === 0) {
     }
     </script>
 
-    <h3><?= _("personas en orbix sin unir a Listas") ?></h3>
+    <h3><?= _("personas en aquinate sin unir a la BDU") ?></h3>
 
     <form id="movimiento" name="movimiento" action="">
         <?= $oHash->getCamposHtml(); ?>

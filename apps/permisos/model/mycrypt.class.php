@@ -1,6 +1,6 @@
 <?php
 namespace permisos\model;
-Class MyCrypt{
+Class MyCrypt {
 	/*
 	 * Funcion para encriptar password 
 	 *

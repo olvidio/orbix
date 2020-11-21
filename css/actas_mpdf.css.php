@@ -108,7 +108,7 @@ div.acta {
 	text-align: right;
 	margin-right: 0cm;
 	}
-div.f7{	
+div.f7 {	
 	display: block;
 	position: relative;
 	margin-top:	3mm;

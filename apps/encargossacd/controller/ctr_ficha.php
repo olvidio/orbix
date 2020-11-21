@@ -32,7 +32,7 @@ $Qfiltro_ctr = (string) \filter_input(INPUT_POST, 'filtro_ctr');
 if (!empty($Qid_ubi)) {
 	// si empieza por 2 es de la sf.
 	$Qid_ubi_txt = (string) $Qid_ubi;
-	if ($Qid_ubi_txt{0} == 2) {
+	if ($Qid_ubi_txt[0] == 2) {
 		$oCentro = new CentroEllas($Qid_ubi);
 	} else {
 		$oCentro = new CentroDl($Qid_ubi);
@@ -44,6 +44,9 @@ if (!empty($Qid_ubi)) {
 		$Qfiltro_ctr = 2;
 	} else {
 		switch ($tipo_ctr) {
+			case 'a':
+			case 'n':
+			case 's':
 			case 'aj':
 			case 'am':
 			case 'nj':
