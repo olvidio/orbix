@@ -169,7 +169,6 @@ class DB extends DBAbstract {
                 id_usuario integer NOT NULL,
                 sfsv smallint NOT NULL,
                 aviso_tipo integer NOT NULL,
-                aviso_donde text,
                 avisado boolean
                 ); ";
         
@@ -210,7 +209,6 @@ class DB extends DBAbstract {
                 aviso_outdate boolean NOT NULL DEFAULT FALSE,
                 objeto text NOT NULL,
                 aviso_tipo integer NOT NULL,
-                aviso_donde text, 	
                 id_pau text
                 ); ";
         

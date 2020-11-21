@@ -104,12 +104,6 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 	 */
 	 private $iaviso_tipo;
 	/**
-	 * Aviso_donde de CambioUsuarioObjetoPref
-	 *
-	 * @var string
-	 */
-	 private $saviso_donde;
-	/**
 	 * Id_pau de CambioUsuarioObjetoPref
 	 *
 	 * @var string
@@ -176,7 +170,6 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 		$aDades['aviso_outdate'] = $this->baviso_outdate;
 		$aDades['objeto'] = $this->sobjeto;
 		$aDades['aviso_tipo'] = $this->iaviso_tipo;
-		$aDades['aviso_donde'] = $this->saviso_donde;
 		$aDades['id_pau'] = $this->sid_pau;
 		array_walk($aDades, 'core\poner_null');
 		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
@@ -196,7 +189,6 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
                     aviso_outdate            = :aviso_outdate,
 					objeto                   = :objeto,
 					aviso_tipo               = :aviso_tipo,
-					aviso_donde              = :aviso_donde,
 					id_pau                   = :id_pau";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item_usuario_objeto='$this->iid_item_usuario_objeto'")) === FALSE) {
 				$sClauError = 'CambioUsuarioObjetoPref.update.prepare';
@@ -216,8 +208,8 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			$campos="(id_usuario,dl_org,id_tipo_activ_txt,id_fase_ref,aviso_off,aviso_on,aviso_outdate,objeto,aviso_tipo,aviso_donde,id_pau)";
-			$valores="(:id_usuario,:dl_org,:id_tipo_activ_txt,:id_fase_ref,:aviso_off,:aviso_on,:aviso_outdate,:objeto,:aviso_tipo,:aviso_donde,:id_pau)";		
+			$campos="(id_usuario,dl_org,id_tipo_activ_txt,id_fase_ref,aviso_off,aviso_on,aviso_outdate,objeto,aviso_tipo,id_pau)";
+			$valores="(:id_usuario,:dl_org,:id_tipo_activ_txt,:id_fase_ref,:aviso_off,:aviso_on,:aviso_outdate,:objeto,aviso_tipo,:id_pau)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClauError = 'CambioUsuarioObjetoPref.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -327,7 +319,6 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 		if (array_key_exists('aviso_outdate',$aDades)) $this->setAviso_outdate($aDades['aviso_outdate']);
 		if (array_key_exists('objeto',$aDades)) $this->setObjeto($aDades['objeto']);
 		if (array_key_exists('aviso_tipo',$aDades)) $this->setAviso_tipo($aDades['aviso_tipo']);
-		if (array_key_exists('aviso_donde',$aDades)) $this->setAviso_donde($aDades['aviso_donde']);
 		if (array_key_exists('id_pau',$aDades)) $this->setId_pau($aDades['id_pau']);
 	}
 
@@ -347,7 +338,6 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 		$this->setAviso_outdate('');
 		$this->setObjeto('');
 		$this->setAviso_tipo('');
-		$this->setAviso_donde('');
 		$this->setId_pau('');
 		$this->setPrimary_key($aPK);
 	}
@@ -573,25 +563,6 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 		$this->iaviso_tipo = $iaviso_tipo;
 	}
 	/**
-	 * Recupera l'atribut saviso_donde de CambioUsuarioObjetoPref
-	 *
-	 * @return string saviso_donde
-	 */
-	function getAviso_donde() {
-		if (!isset($this->saviso_donde) && !$this->bLoaded) {
-			$this->DBCarregar();
-		}
-		return $this->saviso_donde;
-	}
-	/**
-	 * estableix el valor de l'atribut saviso_donde de CambioUsuarioObjetoPref
-	 *
-	 * @param string saviso_donde='' optional
-	 */
-	function setAviso_donde($saviso_donde='') {
-		$this->saviso_donde = $saviso_donde;
-	}
-	/**
 	 * Recupera l'atribut sid_pau de CambioUsuarioObjetoPref
 	 *
 	 * @return string sid_pau
@@ -628,7 +599,6 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 		$oCambioUsuarioObjetoPrefSet->add($this->getDatosAviso_outdate());
 		$oCambioUsuarioObjetoPrefSet->add($this->getDatosObjeto());
 		$oCambioUsuarioObjetoPrefSet->add($this->getDatosAviso_tipo());
-		$oCambioUsuarioObjetoPrefSet->add($this->getDatosAviso_donde());
 		$oCambioUsuarioObjetoPrefSet->add($this->getDatosId_pau());
 		return $oCambioUsuarioObjetoPrefSet->getTot();
 	}
@@ -741,18 +711,6 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'aviso_tipo'));
 		$oDatosCampo->setEtiqueta(_("aviso_tipo"));
-		return $oDatosCampo;
-	}
-	/**
-	 * Recupera les propietats de l'atribut saviso_donde de CambioUsuarioObjetoPref
-	 * en una clase del tipus DatosCampo
-	 *
-	 * @return core\DatosCampo
-	 */
-	function getDatosAviso_donde() {
-		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'aviso_donde'));
-		$oDatosCampo->setEtiqueta(_("aviso_donde"));
 		return $oDatosCampo;
 	}
 	/**

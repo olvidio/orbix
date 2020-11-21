@@ -94,7 +94,7 @@ class Avisos {
         }
     }
 
-    public function fn_apuntar($aviso_tipo,$aviso_donde) {
+    public function fn_apuntar($aviso_tipo) {
         $sfsv = ConfigGlobal::mi_sfsv();
         // Asegurar que no existe:
         $aWhere = [];
@@ -121,8 +121,7 @@ class Avisos {
             $oCambioUsuario->setId_usuario($this->id_usuario);
             $oCambioUsuario->setSfsv($sfsv);
             $oCambioUsuario->setAviso_tipo($aviso_tipo);
-            $oCambioUsuario->setAviso_donde($aviso_donde);
-            //echo "id_item_cmb: $id_item_cmb, id_usuario: $id_usuario, aviso_tipo: $aviso_tipo, aviso_donde: $aviso_donde\n";
+            //echo "id_item_cmb: $id_item_cmb, id_usuario: $id_usuario, aviso_tipo: $aviso_tipo \n";
             if ($oCambioUsuario->DBGuardar() === false) {
                 echo ConfigGlobal::$web_server.'-->'.date('Y/m/d') . " " . _("Hay un error, no se ha guardado");
             }

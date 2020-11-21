@@ -389,7 +389,6 @@ switch($Qsalida) {
         $Qdl_propia = (string) \filter_input(INPUT_POST, 'dl_propia');
         $Qobjeto = (string) \filter_input(INPUT_POST, 'objeto');
         $Qaviso_tipo = (string) \filter_input(INPUT_POST, 'aviso_tipo');
-        $Qaviso_donde = (string) \filter_input(INPUT_POST, 'aviso_donde');
         $Qid_fase_ref = (integer) \filter_input(INPUT_POST, 'id_fase_ref');
         $Qaviso_off = (string) \filter_input(INPUT_POST, 'aviso_off');
         $Qaviso_on = (string) \filter_input(INPUT_POST, 'aviso_on');
@@ -424,7 +423,6 @@ switch($Qsalida) {
 		$oCambioUsuarioObjeto->setId_tipo_activ_txt($Qid_tipo_activ);
 		$oCambioUsuarioObjeto->setObjeto($Qobjeto);
 		$oCambioUsuarioObjeto->setAviso_tipo($Qaviso_tipo);
-		if (!empty($Qaviso_donde)) $oCambioUsuarioObjeto->setAviso_donde($Qaviso_donde);
         $oCambioUsuarioObjeto->setId_fase_ref($Qid_fase_ref);
 		$aviso_off = is_true($Qaviso_off)? 't' : 'f';
 		$oCambioUsuarioObjeto->setAviso_off($aviso_off);

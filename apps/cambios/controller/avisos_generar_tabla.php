@@ -206,7 +206,6 @@ while ($num_cambios) {
 				$aviso_tipo_anterior = $aviso_tipo;
 				$id_usuario_anterior = $id_usuario;
 			}
-			$aviso_donde = $oCambioUsuarioObjetoPref->getAviso_donde();
 			$id_pau = $oCambioUsuarioObjetoPref->getId_pau();
 			$id_fase_ref = $oCambioUsuarioObjetoPref->getId_fase_ref();
 			$aviso_off = $oCambioUsuarioObjetoPref->getAviso_off();
@@ -329,7 +328,7 @@ while ($num_cambios) {
                 }
 			}
 			if ($apuntar) {
-				$err_fila .= $oAvisos->fn_apuntar($aviso_tipo,$aviso_donde);
+				$err_fila .= $oAvisos->fn_apuntar($aviso_tipo);
 			}
 			$apuntar = false;
 		}
