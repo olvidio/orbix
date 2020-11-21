@@ -194,31 +194,30 @@ class Avisos {
         
     }	
 
-    public function me_afecta($propiedad,$id_activ,$valor_old_cmb,$valor_new_cmb) {
+    public function me_afecta($propiedad,$id_activ,$valor_old_cmb,$valor_new_cmb,$id_pau,$sObjeto) {
         //echo "usuario: $id_usuario, camp: $propiedad, id_activ: $id_activ <br>\n";
         // Si el usuario es una casa o un sacd, sólo ve los cambios que le afectan:
         $oMiUsuario = new Usuario($this->id_usuario);
 
-        $id_pau = '';
         //casa
         if ($oMiUsuario->isRolePau(Role::PAU_CDC)) {
-            $id_pau = $oMiUsuario->getId_pau(); // puede ser una lista separada por comas.
-            if (!empty($id_pau)) { //casa o un listado de ubis en la preferencia del aviso.
-                $a_id_pau = explode(',',$id_pau);
+            $mis_id_ubis = $oMiUsuario->getId_pau(); // puede ser una lista separada por comas.
+            if (!empty($mis_id_ubis)) { //casa o un listado de ubis en la preferencia del aviso.
+                $a_mis_id_ubis = explode(',',$mis_id_ubis);
 
                 $oActividad = new Actividad($id_activ);
                 $id_ubi = $oActividad->getId_ubi(); // id ubi actual.
 
                 // si lo que cambia es el id_ubi, compruebo que el valor old o new sean de la casa.
                 if ($propiedad == 'id_ubi') {
-                    if (in_array($valor_old_cmb,$a_id_pau) || in_array($id_ubi,$a_id_pau)) {
+                    if (in_array($valor_old_cmb,$a_mis_id_ubis) || in_array($id_ubi,$a_mis_id_ubis)) {
                         return TRUE;
                     } else {
                         return FALSE;
                     }
                 } else {
                     // si cambia qualquier otra cosa en mi id_ubi.
-                    if (in_array($id_ubi,$a_id_pau)) {
+                    if (in_array($id_ubi,$a_mis_id_ubis)) {
                         switch ($this->sObjeto) {
                             case 'ActividadCargoNoSacd':
                             case 'ActividadCargoSacd':
@@ -266,8 +265,40 @@ class Avisos {
                 return FALSE;
             }
         }
-        // En el caso de no ser casa ni sacd retornar TRUE
-        return TRUE;
+        // En el caso de no ser casa ni sacd 
+        // comparar si el aviso corresponde a la casa (id_pau)
+        if (!empty($id_pau)) { //casa o un listado de ubis en la preferencia del aviso.
+            $a_id_pau = explode(',',$id_pau);
+
+            $oActividad = new Actividad($id_activ);
+            $id_ubi = $oActividad->getId_ubi(); // id ubi actual.
+            // si lo que cambia es el id_ubi, compruebo que el valor old o new sean de la casa.
+            if ($propiedad == 'id_ubi') {
+                if (in_array($valor_old_cmb,$a_id_pau) || in_array($id_ubi,$a_id_pau)) {
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+            } else {
+                // si cambia qualquier otra cosa en mi id_ubi.
+                if (in_array($id_ubi,$a_id_pau)) {
+                    switch ($this->sObjeto) {
+                        case 'ActividadCargoNoSacd':
+                        case 'ActividadCargoSacd':
+                            // si lo que cambia es el campo observaciones, no hace falata informar.
+                            if ($propiedad == 'observ') {
+                                return FALSE;
+                            }
+                    }
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+            }
+        } else {
+            // En el caso de no tener ninguna casa: retornar TRUE
+            return TRUE;
+        }
     }
     
     private function tengoPermiso($propiedad,$id_activ,$id_nom,$valor_old_cmb,$valor_new_cmb) {
