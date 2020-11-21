@@ -1,7 +1,4 @@
 <?php
-use asignaturas\model\entity as asignaturas;
-use notas\model\entity as notas;
-use personas\model\entity as personas;
 /**
 * Esta página sirve para la tessera de una persona.
 *

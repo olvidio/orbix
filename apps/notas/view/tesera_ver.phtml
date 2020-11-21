@@ -32,7 +32,7 @@ fnjs_left_side_hide();
 				$fecha = '';
 			} else {
 				$class = '';
-				if ($row['nota'] == 'cursada') {
+				if ($row['nota'] == 'cursada' OR $row['nota'] == 'examinado') {
 					$class="alert";
 				}
 				$nota = $row['nota'];
