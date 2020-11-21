@@ -93,7 +93,7 @@ if (!empty($Qid_usuario)) {
 		}
 		$quien_cambia = $oCambio->getQuien_cambia();
 		$sfsv_quien_cambia = $oCambio->getSfsv_quien_cambia();
-		$timestamp_cambio = $oCambio->getTimestamp_cambio()->getIsoTime();
+		$timestamp_cambio = $oCambio->getTimestamp_cambio()->getFromLocalHora();
 		
 		$aviso_txt = $oCambio->getAvisoTxt();
 		

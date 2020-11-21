@@ -394,6 +394,7 @@ switch($Qsalida) {
         $Qaviso_off = (string) \filter_input(INPUT_POST, 'aviso_off');
         $Qaviso_on = (string) \filter_input(INPUT_POST, 'aviso_on');
         $Qaviso_outdate = (string) \filter_input(INPUT_POST, 'aviso_outdate');
+        $Qa_casas = (array)  \filter_input(INPUT_POST, 'casas', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 		$a_relleno = array( 1=>'.',2=>'..',3=>'...',4=>'....',5=>'.....');
 		if(!empty($Qid_item_usuario_objeto)) {
@@ -432,15 +433,8 @@ switch($Qsalida) {
 		$aviso_outdate = is_true($Qaviso_outdate)? 't' : 'f';
 		$oCambioUsuarioObjeto->setAviso_outdate($aviso_outdate);
 		// En el caso de filtrar por casas
-		if (!empty($_POST['casas'])) {
-			$txt_casa='';
-			$i=0;	
-			foreach ($_POST['casas'] as $id_ubi) {
-				if (empty($id_ubi)) continue;
-				$i++;
-				if ($i > 1) $txt_casa .= ',';
-				$txt_casa .= $id_ubi;
-			}
+		if (!empty($Qa_casas)) {
+		    $txt_casa = implode(",", $Qa_casas);
 			$oCambioUsuarioObjeto->setId_pau($txt_casa);
 		}
 		if ($oCambioUsuarioObjeto->DBGuardar() === false) {

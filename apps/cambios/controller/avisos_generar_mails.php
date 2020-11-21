@@ -100,7 +100,7 @@ foreach ($cCambiosUsuario as $oCambioUsuario) {
     }
     $quien_cambia = $oCambio->getQuien_cambia();
     $sfsv_quien_cambia = $oCambio->getSfsv_quien_cambia();
-    $timestamp_cambio = $oCambio->getTimestamp_cambio()->getFromLocal();
+    $timestamp_cambio = $oCambio->getTimestamp_cambio()->getFromLocalHora();
     $aviso_txt = $oCambio->getAvisoTxt();
     if ($aviso_txt === false) continue;
     
@@ -144,7 +144,7 @@ function enviar_mail($email,$a_datos,$a_id){
     $cuerpo = '
 	<html>
 	<head>
-	<title>Prueba de correo electronico</title>
+	<title>Tabla de cambios en actividades</title>
 	</head>
 	<body>';
     $cuerpo .= $oTabla->lista();

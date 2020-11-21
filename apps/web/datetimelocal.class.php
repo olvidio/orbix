@@ -14,8 +14,8 @@ class DateTimeLocal Extends \DateTime {
     private $oData;
     
     public static function Meses() {
-		$aMeses = [
-			'1'=>_("enero"),
+        $aMeses = [
+            '1'=>_("enero"),
             '2'=>_("febrero"),
             '3'=>_("marzo"),
             '4'=>_("abril"),
@@ -27,26 +27,26 @@ class DateTimeLocal Extends \DateTime {
             '10'=>_("octubre"),
             '11'=>_("noviembre"),
             '12'=>_("diciembre")
-		];
+        ];
         return $aMeses;
     }
     
     public static function Meses_latin() {
         $aMes_latin = [
-				'1'=>'ianuario',
-				'2'=>'februario',
-				'3'=>'martio',
-				'4'=>'aprili',
-				'5'=>'maio',
-				'6'=>'iunio',
-				'7'=>'iulio',
-				'8'=>'augusto',
-				'9'=>'septembri',
-				'10'=>'octobri',
-				'11'=>'novembri',
-				'12'=>'decembri',
-            ];
-       return $aMes_latin;
+            '1'=>'ianuario',
+            '2'=>'februario',
+            '3'=>'martio',
+            '4'=>'aprili',
+            '5'=>'maio',
+            '6'=>'iunio',
+            '7'=>'iulio',
+            '8'=>'augusto',
+            '9'=>'septembri',
+            '10'=>'octobri',
+            '11'=>'novembri',
+            '12'=>'decembri',
+        ];
+        return $aMes_latin;
     }
     
     public function getFechaLatin() {
@@ -59,12 +59,12 @@ class DateTimeLocal Extends \DateTime {
         $fecha_latin="die ".$dia." mense  ".$mes_latin[$mes]."  anno  ".$any;
         return $fecha_latin;
     }
-   /**
-    * Devuelve el formato de fecha según el idioma del usuario (d/m/y, o m/d/Y)
-    * 
-    * @param string $separador separador entre dia, mes año
-    * @return string
-    */ 
+    /**
+     * Devuelve el formato de fecha según el idioma del usuario (d/m/y, o m/d/Y)
+     *
+     * @param string $separador separador entre dia, mes año
+     * @return string
+     */
     static public function getFormat($separador='/') {
         $idioma = $_SESSION['session_auth']['idioma'];
         # Si no hemos encontrado ningún idioma que nos convenga, mostramos la web en el idioma por defecto
@@ -118,7 +118,19 @@ class DateTimeLocal Extends \DateTime {
     }
     /**
      * Devuelve la fecha en el formato local (según el idioma del usuario)
-     * 
+     *
+     * @param string $separador (.-/)
+     * @return string
+     */
+    public function getFromLocalHora($separador='/') {
+        $format = $this->getFormat($separador);
+        $format .= ' H:i:s';
+        return parent::format($format);
+    }
+    
+    /**
+     * Devuelve la fecha en el formato local (según el idioma del usuario)
+     *
      * @param string $separador (.-/)
      * @return string
      */
@@ -174,11 +186,11 @@ class DateTimeLocal Extends \DateTime {
         if ($dec > 0.1) { $dec=0.5; } else { $dec=0; }
         return ($e_dias+$dec);
     }
-
+    
     /**
      * comprueba que no exista solape o vacios entre periodos.
      * oInicio y oFin deben ser objetos DatetimeLocal.
-     * 
+     *
      * @param array $cPeriodos ['oInicio','oFin','Descripcion']
      * @return boolean|string
      */
@@ -189,7 +201,7 @@ class DateTimeLocal Extends \DateTime {
             $i++;
             $oF_ini = $aPeriodo['inicio'];
             $oF_fin = $aPeriodo['fin'];
-
+            
             //Fecha fin periodo debe ser posterior a fecha inicio
             if ($oF_fin == $oF_ini) {
                 $fecha = $oF_fin->getFromLocal();
