@@ -283,6 +283,7 @@
 1217	{70,15}	ficha ctr	\N	62	2056	8	t
 1220	{70,20}	ficha sacd	\N	14	2056	8	t
 1199	{70}	Encargos	\N	186	2056	8	t
+1379	{10,50}	claustro	\N	173	16	21	t
 1209	{120,40}	de cada ctr	tipo_ctr=sg&tipo_lista=crt	12	64	10	t
 1267	{90,40}	listados	\N	0	32768	20	t
 1281	{90,40,30}	listado por oficinas	que=o_todas&ver_ctr=si	21	32768	20	t
@@ -336,7 +337,6 @@
 1374	{20,10}	actas	\N	60	16	21	t
 1375	{20,20}	tabla alumnos-asignaturas	\N	88	16	21	t
 1378	{10,40}	profesor para asignatura	\N	171	16	21	t
-1379	{10,50}	claustro	\N	173	16	21	t
 1384	{10}	personas	\N	0	16	21	t
 1385	{20}	actas	\N	0	16	21	t
 1222	{70,20}	definir módulos		27	33554432	13	t
@@ -422,3 +422,9 @@
 1420	{90,140}	cambiar de fase	sasistentes=agd&sactividad=cve	130	2	3	t
 1419	{80,140}	cambiar de fase	sasistentes=agd&sactividad=ca	130	2	3	t
 1421	{38,130}	cambiar de fase	sasistentes=agd&sactividad=ca	130	16	12	t
+1422	{120,110}	Gestión de plazas	sasistentes=s&sactividad=crt	169	64	10	t
+1423	{120,120}	Balance de plazas	sasistentes=s&sactividad=crt	170	64	10	t
+1424	{120,140}	cambiar de fase	sasistentes=s&sactividad=crt	130	64	10	t
+1425	{110,110}	Gestión de plazas	sasistentes=s&sactividad=cv	169	64	10	t
+1426	{110,120}	Balace de plazas	sasistentes=s&sactividad=cv	170	64	10	t
+1427	{110,140}	cambiar de fase	sasistentes=s&sactividad=cv	130	64	10	t
