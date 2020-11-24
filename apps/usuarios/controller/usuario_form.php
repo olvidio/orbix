@@ -345,6 +345,12 @@ if ($miRole < 4) {
 	$oHash1->setCamposNo('scroll_id'); 
 	$h1 = $oHash1->linkSinVal();
 	
+	$url_usuario_update = ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_update.php';
+	$oHash2 = new web\Hash();
+	$oHash2->setUrl($url_usuario_update);
+	$oHash2->setCamposForm('que!id_usuario!password'); 
+	$h2 = $oHash2->linkSinVal();
+	
 	$txt_eliminar = _("¿Está seguro que desea quitar este permiso?");
 	
 	$a_campos = [
@@ -352,6 +358,7 @@ if ($miRole < 4) {
 				'url_usuario_ajax' => $url_usuario_ajax,
 				'id_usuario' => $Qid_usuario,
 				'h1' => $h1,
+				'h2' => $h2,
 				'obj' => $obj,
 				'que_user' => $que_user,
 				'quien' => $Qquien,

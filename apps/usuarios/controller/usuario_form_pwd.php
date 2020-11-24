@@ -1,5 +1,6 @@
 <?php
-use usuarios\model\entity as usuarios;
+use core\ConfigGlobal;
+use usuarios\model\entity\Usuario;
 /**
 * Formulario para cambiar el password por parte del usuario.
 */
@@ -16,13 +17,13 @@ use usuarios\model\entity as usuarios;
 $expire = $_SESSION['session_auth']['expire'];
     
 
-$oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
+$oMiUsuario = new Usuario(core\ConfigGlobal::mi_id_usuario());
 $id_usuario = $oMiUsuario->getId_usuario();
 
 $txt_guardar = _("guardar datos");
 $txt_ok = _("se ha cambiado el password");
 
-$oUsuario = new usuarios\Usuario(array('id_usuario'=>$id_usuario));
+$oUsuario = new Usuario(array('id_usuario'=>$id_usuario));
 
 $id_usuario=$oUsuario->getId_usuario();
 $usuario=$oUsuario->getUsuario();
@@ -39,11 +40,18 @@ $a_camposHidden = array(
 		);
 $oHash->setArraycamposHidden($a_camposHidden);
 
+$url_usuario_update = ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_update.php';
+$oHash2 = new web\Hash();
+$oHash2->setUrl($url_usuario_update);
+$oHash2->setCamposForm('que!id_usuario!password');
+$h2 = $oHash2->linkSinVal();
 
 $a_campos = [
+			'id_usuario' => $id_usuario,
 			'usuario' => $usuario,
     		'expire' => $expire,
 			'oHash' => $oHash,
+            'h2' => $h2,
 			'txt_guardar' => $txt_guardar,
 			'txt_ok' => $txt_ok,
  			];

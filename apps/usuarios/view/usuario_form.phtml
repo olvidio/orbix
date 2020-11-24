@@ -66,13 +66,38 @@ fnjs_actualizar=function(formulario){
 	$(formulario).append(campo);
 	fnjs_enviar_formulario(formulario,'#main');
 }
-fnjs_guardar=function(formulario){
-	// si es 0, no se cambia el password.
-	if (strong != 0 && strong < 5) {
-	  alert("<?= _("debe poner un password 'fuerte' o 'muy fuerte'") ?>");
-	  return false;
-	}
 
+fnjs_chk_passwd=function(formulario){
+	var password=$('#password').val();
+	var url = 'apps/usuarios/controller/usuario_update.php';
+	var parametros='que=check_pwd&id_usuario=<?= $id_usuario ?>&password='+password+'<?= $h2 ?>';
+	
+	var request=$.ajax({
+        data: parametros,
+        url: url,
+        type: 'post',
+        dataType: 'json'
+    });
+    request.done( function (json) {
+        if (json.success != true) {
+            alert ("password error:\n"+json.mensaje);
+            return false;
+        } else {
+			fnjs_guardar_datos(formulario);
+        }
+    });
+}
+fnjs_guardar=function(formulario){
+	var password=$('#password').val();
+	// si es 0, no se cambia el password.
+	if (password) {
+		fnjs_chk_passwd(formulario);
+    } else {
+        fnjs_guardar_datos(formulario);
+    }
+}
+
+fnjs_guardar_datos=function(formulario){
 	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
 	//alert ("EEE "+rr);
 	if (rr=='ok') {
@@ -182,7 +207,7 @@ if ($pau == 'cdc') {
 }
 ?>
 <br>
-<?= ucfirst(_("password")) ?>:<input type="password" type="password" name="password"><br>
+<?= ucfirst(_("password")) ?>:<input type="password" id="password" name="password"><br>
 <?= ucfirst(_("email")) ?>:<input type=text name=email value="<?= $email ?>"><br>
 <input type=button onclick="fnjs_guardar(this.form);" value="<?= $txt_guardar ?>">
 <br>

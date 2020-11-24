@@ -1,4 +1,25 @@
 <script>
+fnjs_chk_passwd=function(formulario){
+	var password=$('#password').val();
+	var url = 'apps/usuarios/controller/usuario_update.php';
+	var parametros='que=check_pwd&id_usuario=<?= $id_usuario ?>&password='+password+'<?= $h2 ?>';
+	
+	var request=$.ajax({
+        data: parametros,
+        url: url,
+        type: 'post',
+        dataType: 'json'
+    });
+    request.done( function (json) {
+        if (json.success != true) {
+            alert ("password error:\n"+json.mensaje);
+            return false;
+        } else {
+			fnjs_guardar_datos(formulario);
+        }
+    });
+}
+
 fnjs_guardar=function(formulario){
 	// si es 0, no se cambia el password.
 	var pwd=$("#password").val();
@@ -16,6 +37,11 @@ fnjs_guardar=function(formulario){
 		alert ("<?= _("error: passwords no coincidentes") ?>");
 		return false;
 	}
+	
+	fnjs_chk_passwd(formulario);
+}
+
+fnjs_guardar_datos=function(formulario){
 	id_usuario=$('#id_usuario').val();
 	$(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
 	$(formulario).one("submit", function() {
@@ -55,12 +81,12 @@ fnjs_guardar=function(formulario){
 <?= _("Requerimientos del password") ?>:<br>
 <ol>
 <li><?= _("Los passwords no pueden contener el valor del \"login\" o de qualquiera de las palabras del \"nombre\". (no tiene en cuenta mayúsculas/minúsculas)") ?>.</li>
-<li><?= _("El password ha de tener más de 8 carácteres") ?>.</li>
-<li><?= _("El password ha de tener como mínimo 3 de los segientes grupos de carácteres") ?>:
+<li><?= _("El password ha de tener más de 8 caracteres") ?>.</li>
+<li><?= _("El password ha de tener como mínimo 3 de los segientes grupos de caracteres") ?>:
 <ul>
 <li><?= _("Mayúsculas ('A' a 'Z')") ?></li>
 <li><?= _("Minúsculas ('a' a 'z')") ?></li>
 <li><?= _("Números ('0' a '9')") ?></li>
-<li><?= _("(No pueden ser comillas dobles!!) Carácteres: ~!@#$%^&*_-+=`|(){}[]:;<>,.?/") ?></li>
+<li><?= _("(No pueden ser comillas dobles!!) Caracteres: ~!@#$%^&*_-+=`|(){}[]:;<>,.?/") ?></li>
 </ul>
 </ol>
