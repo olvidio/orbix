@@ -1,6 +1,6 @@
 <h1>orbix.po</h1>
 <ol>
-<li>El arxivo que se edita con el poedit (orbix.po) no debe contener doble comillas(") (ni carácteres especiales) en la traducción.
+<li>El arxivo que se edita con el poedit (orbix.po) no debe contener doble comillas(") (ni caracteres especiales) en la traducción.
  En su caso deben ir precedidos por un escape (\).
  </li>
  <li>

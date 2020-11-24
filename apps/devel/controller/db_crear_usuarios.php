@@ -20,7 +20,7 @@ require_once ("apps/core/global_object.inc");
 function generar_password($largo){
     $cadena_base =  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     $cadena_base .= '0123456789';
-    // OJO no se puede usar el caracter punto y coma ';',
+    // OJO no se puede usar el carácter punto y coma ';',
     // porque al crear la cadena de conexión (DSN) del PDO lo usa como separador... 
     // idem comillas.
     // idem barra de escape '\'
