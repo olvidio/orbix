@@ -249,18 +249,24 @@ switch ($Qque) {
 				$num_asistentes_previstos=$oIngreso->getNum_asistentes_previstos();
 				if (empty($num_asistentes_previstos)) {
 				    $txt_err .= empty($txt_err)? '' : "<br>";
-                    $txt_err .= sprintf(_("No está definido el núm. de asistente previstos para %s"),$nom_activ); 
+                    $txt_err .= sprintf(_("No está definido el núm. de asistente previstos para: %s"),$nom_activ); 
                     $num_asistentes_previstos = 0;
 				}
 				$num_asistentes=$oIngreso->getNum_asistentes();
 				if (empty($num_asistentes)) {
 				    $txt_err .= empty($txt_err)? '' : "<br>";
-                    $txt_err .= sprintf(_("No está definido el núm. de asistente para %s"),$nom_activ); 
+                    $txt_err .= sprintf(_("No está definido el núm. de asistente para: %s"),$nom_activ); 
                     $num_asistentes = 0;
 				}
 				//$ingresos_previstos=round($factor_dias*$oIngreso->getIngresos_previstos(),2);
 				$ingresos_previstos=$num_asistentes_previstos*$precio_pr;
-				$ingresos=round($factor_dias*$oIngreso->getIngresos(),2);
+				$ingresos_reales=$oIngreso->getIngresos();
+				if (empty($ingresos_reales)) {
+				    $txt_err .= empty($txt_err)? '' : "<br>";
+                    $txt_err .= sprintf(_("No se han introducido los ingresos para: %s"),$nom_activ); 
+                    $ingresos_reales = 0;
+				}
+				$ingresos=round($factor_dias*$ingresos_reales,2);
 				$observ=$oIngreso->getObserv();
 				
 				$i_previstos_acumulados+=$ingresos_previstos;
