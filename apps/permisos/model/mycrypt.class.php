@@ -31,7 +31,6 @@ Class MyCrypt {
     	$cmd_cracklib_check = shell_exec(sprintf("command -v cracklib-check"));
     	$cmd_pwscore = shell_exec(sprintf("command -v pwscore"));
     	
-    	    return $this->is_valid_password_1($user, $password);
     	if (!empty($cmd_cracklib_check) && !empty($cmd_pwscore)) {
     	    return $this->is_valid_password_2($user, $password, 55);
     	} else {
