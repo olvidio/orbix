@@ -182,9 +182,11 @@ switch ($Qque) {
 			$ingresos=0;
 			$num_asistentes_previstos=0;
 			$num_asistentes=0;
+			$txt_err = '';
 			foreach ($cActividades as $oActividad) {
 			    $id_activ = $oActividad->getId_activ();
 			    $id_tipo_activ = $oActividad->getId_tipo_activ();
+			    $nom_activ = $oActividad->getNom_activ();
 			    $dl_org = $oActividad->getDl_org();
 			    $tarifa = $oActividad->getTarifa();
 			    $precio = $oActividad->getPrecio();
@@ -242,9 +244,20 @@ switch ($Qque) {
 					$a_valores[$id_ubi][$a][3]=$nom_activ;
 				}
 
+				$err = 0;
 				$oIngreso = new Ingreso(array('id_activ'=>$id_activ));
 				$num_asistentes_previstos=$oIngreso->getNum_asistentes_previstos();
+				if (empty($num_asistentes_previstos)) {
+				    $txt_err .= empty($txt_err)? '' : "<br>";
+                    $txt_err .= sprintf(_("No está definido el núm. de asistente previstos para %s"),$nom_activ); 
+                    $num_asistentes_previstos = 0;
+				}
 				$num_asistentes=$oIngreso->getNum_asistentes();
+				if (empty($num_asistentes)) {
+				    $txt_err .= empty($txt_err)? '' : "<br>";
+                    $txt_err .= sprintf(_("No está definido el núm. de asistente para %s"),$nom_activ); 
+                    $num_asistentes = 0;
+				}
 				//$ingresos_previstos=round($factor_dias*$oIngreso->getIngresos_previstos(),2);
 				$ingresos_previstos=$num_asistentes_previstos*$precio_pr;
 				$ingresos=round($factor_dias*$oIngreso->getIngresos(),2);
@@ -345,6 +358,12 @@ switch ($Qque) {
 		$oLista->setDatos($a_valores);
 		echo $oLista->listaPaginada();
 		echo _("* Se cuentan los ingresos proporcionales correspondientes al periodo.");
+		if (!empty($txt_err)) {
+            echo "<br>";
+		    echo _("CUIDADO. Falta introducir datos");
+            echo "<br>";
+		    echo $txt_err;
+		}
 		break;
 	case "guardar":
         $Qid_activ = (integer) \filter_input(INPUT_POST, 'id_activ');
