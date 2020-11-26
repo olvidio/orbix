@@ -95,7 +95,7 @@ switch ($Qn_agd) {
 		$aWhereCtr['tipo_ctr'] = 'nj(ce)*';
 		$aOperadorCtr['tipo_ctr'] = '~';
 		break;
-	case "sss":
+	case "sssc":
 		$tabla="p_n_agd";
 		$aWhereCtr['tipo_ctr'] = 'ss';
 		$aOperadorCtr['tipo_ctr'] = '=';

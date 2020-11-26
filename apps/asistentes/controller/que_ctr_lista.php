@@ -75,7 +75,7 @@ $n='';
 $nj='';
 $nm='';
 $a='';
-$sss='';
+$sssc='';
 $nax='';
 $c='';
 
@@ -92,8 +92,8 @@ switch ($Qn_agd) {
 	case "a":
 		$a="checked";
 		break;
-	case "sss":
-		$sss="checked";
+	case "sssc":
+		$sssc="checked";
 		break;
 	case "nax":
 		$nax="checked";
@@ -158,7 +158,7 @@ $a_campos = [
 			'nj' => $nj,
 			'nm' => $nm,
 			'a' => $a,
-			'sss' => $sss,
+			'sssc' => $sssc,
 			'nax' => $nax,
 			'c' => $c,
 			'oDesplCentros' => $oDesplCentros,

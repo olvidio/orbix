@@ -89,7 +89,7 @@ foreach ($oDBSt_prop->fetchAll() as $cargos) {
 		case "a":
 			$agd=" (agd)";
 			break;
-		case "sss":
+		case "sssc":
 			$socio=$noms_p["socio"];
 			$agd=" ($socio sss+)";
 			break;	
