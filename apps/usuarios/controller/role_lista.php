@@ -2,6 +2,7 @@
 use usuarios\model\entity as usuarios;
 use menus\model\entity as menus;
 use core\ConfigGlobal;
+use menus\model\entity\GestorGrupMenu;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -86,13 +87,21 @@ foreach ($cRoles as $oRole) {
 	
 	$oGesGMRol = new menus\GestorGrupMenuRole();
 	$cGMR = $oGesGMRol->getGrupMenuRoles(array('id_role'=>$id_role));
-	$str_GM = '';
+	// intentar ordenar por el nombre del grupmenu
+	$a_GM = [];
 	foreach ($cGMR as $oGrupMenuRole) {
-		$id_grupmenu = $oGrupMenuRole->getId_grupmenu(); 
-		$str_GM .= !empty($str_GM)? ',' : '';
-		$str_GM .= $aGrupMenus[$id_grupmenu];
+		$id_grupmenu = $oGrupMenuRole->getId_grupmenu();
+		$grup_menu = $aGrupMenus[$id_grupmenu];
+		$a_GM[$id_grupmenu] = $grup_menu;
 	}
-
+	sort($a_GM);
+    // pasar a texto:
+	$str_GM = '';
+	foreach ($a_GM as $grup_menu) {
+		$str_GM .= !empty($str_GM)? ',' : '';
+		$str_GM .= $grup_menu;
+	}
+	
 	$a_valores[$i][1]=$role;
 	$a_valores[$i][2]=$sf;
 	$a_valores[$i][3]=$sv;
