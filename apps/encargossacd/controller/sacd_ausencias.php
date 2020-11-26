@@ -28,7 +28,7 @@ $Qfiltro_sacd = (string) \filter_input(INPUT_POST, 'filtro_sacd');
 // Tipos de sacd
 $aFiltroSacd = [ "n" => "n",
                 "a" => "agd",
-                "sss" => "sss+",
+                "sssc" => "sss+",
                 "cp_sss" => "cp",
                 ];
     

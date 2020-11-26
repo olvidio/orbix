@@ -107,7 +107,7 @@ if ($Qloc !== 'ex') {
             $aWhere['tipo_ctr'] = '^(sj|sm|s)$';
             $aOperador['tipo_ctr'] = '~';
             break;
-        case "ctr_sss":
+        case "ctr_sssc":
             $obj = $objCentro;
             $aWhere['tipo_ctr'] = '^(ss|sss)$';
             $aOperador['tipo_ctr'] = '~';
@@ -337,7 +337,7 @@ if ($Qloc!=='ex') {
 			'ctr_s'=>ucfirst(_("sólo centros de s")),
 			);
 	if ($miSfsv == 1) { // sv
-		$aOpciones['ctr_sss'] = ucfirst(_("sólo centros de sss+")); 
+		$aOpciones['ctr_sssc'] = ucfirst(_("sólo centros de sss+")); 
 	}
 	if ($miSfsv == 2) { // sf
 		$aOpciones['ctr_nax'] = ucfirst(_("sólo centros de nax")); 

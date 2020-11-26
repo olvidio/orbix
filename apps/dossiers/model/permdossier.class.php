@@ -509,7 +509,7 @@ class PermDossier {
                                 "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
                                 "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0),
                                 "sssc" => array ( 'nom'=> "sss+", 'obj'=>"PersonaSSSC", 	'perm'=> 0),
-                                "psssc" => array ( 'nom'=> "sss+ de paso", 'obj'=>"PersonaEx&na=sss", 	'perm'=> 0),
+                                "psssc" => array ( 'nom'=> "sss+ de paso", 'obj'=>"PersonaEx&na=sssc", 	'perm'=> 0),
                             );
         //para no repetir los permisos comunes a sr,sg est
         $ref_perm_sg = array (
@@ -531,7 +531,7 @@ class PermDossier {
                     $ref_perm_of = array (
                                     "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
                                     "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 1),
-                                    "psssc" => array ( 'nom'=> "sss+ de paso", 'obj'=>"PersonaEx&na=sss", 	'perm'=> 1),
+                                    "psssc" => array ( 'nom'=> "sss+ de paso", 'obj'=>"PersonaEx&na=sssc", 	'perm'=> 1),
                                     "sssc" => array ( 'nom'=> "sss+", 'obj'=>"PersonaSSSC",	'perm'=> 1),
                                     );
                     $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
@@ -845,7 +845,7 @@ class PermDossier {
                                     "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
                                     "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0),
                                     "sssc" => array ( 'nom'=> "sss+", 'obj'=>"PersonaSSSC", 	'perm'=> 1),
-                                    "psssc" => array ( 'nom'=> "sss+ de paso", 'obj'=>"PersonaEx&na=sss", 	'perm'=> 1)
+                                    "psssc" => array ( 'nom'=> "sss+ de paso", 'obj'=>"PersonaEx&na=sssc", 	'perm'=> 1)
                                 );
                     $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
                 }
@@ -921,7 +921,7 @@ class PermDossier {
                                     "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 1),
                                     "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0),
                                     "sssc" => array ( 'nom'=> "sss+", 'obj'=>"PersonaSSSC", 	'perm'=> 1),
-                                    "psssc" => array ( 'nom'=> "sss+ de paso", 'obj'=>"PersonaEx&na=sss", 	'perm'=> 1)
+                                    "psssc" => array ( 'nom'=> "sss+ de paso", 'obj'=>"PersonaEx&na=sssc", 	'perm'=> 1)
                                 );
                     $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
                 }
