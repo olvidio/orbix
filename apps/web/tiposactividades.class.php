@@ -313,7 +313,20 @@ class TiposActividades {
 	public function setAsistentesText($sAsistentes) {
 		if (is_string($sAsistentes)) {
 		    if (empty($sAsistentes)) { $sAsistentes = 'all'; }
-			$this->sasistentes=$this->aAsistentes[$sAsistentes];
+		    // puede ser un string separado por comas (s,sg)
+		    $a_asistentes_multiple = explode(',',$sAsistentes);
+		    if (count($a_asistentes_multiple) > 1) {
+		        $asistentes_txt = "[";
+		        foreach ($a_asistentes_multiple as $asis) {
+		            $asistentes_txt .= $this->aAsistentes[$asis];
+		        }
+		        $asistentes_txt .= "]";
+		    } else {
+		        $asis = $a_asistentes_multiple[0];
+                $asistentes_txt = $this->aAsistentes[$asis];
+		    }
+		    
+			$this->sasistentes = $asistentes_txt;
 		} else {
 			return false;
 		}
