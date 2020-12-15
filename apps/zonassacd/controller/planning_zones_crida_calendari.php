@@ -327,6 +327,8 @@ foreach ($aa_zonas as $a_zonas) {
 				$id_enc = $oTareaHorarioSacd->getId_enc();
 				$oF_ini = $oTareaHorarioSacd->getF_ini();
 				$oF_fin = $oTareaHorarioSacd->getF_fin();
+				$h_ini = '';
+				$h_fi = '';
 
 				$oEncargo = new Encargo($id_enc);
 				$id_tipo_enc = $oEncargo->getId_tipo_enc();
