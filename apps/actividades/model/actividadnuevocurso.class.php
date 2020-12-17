@@ -18,9 +18,16 @@ class ActividadNuevoCurso {
 
    /**
     * 
+    * bQuiet: Para indicar a la clase Actividad que no apunte los cambios al guardar
+    * 
     * @var bool
     */ 
     private $bQuiet = FALSE;
+   /**
+    * 
+    * @var bool
+    */ 
+    private $bVer_lista = FALSE;
    /**
     * 
     * @var integer
@@ -154,8 +161,8 @@ class ActividadNuevoCurso {
             case 2: // por dia del año
                 $inc_year = $this->iyear - $this->iyear_ref;
                 $periodo = "P".$inc_year."Y";
-                $oFini->add(new \DateInterval('P1Y'));
-                $oFfin->add(new \DateInterval('P1Y'));
+                $oFini->add(new \DateInterval($periodo));
+                $oFfin->add(new \DateInterval($periodo));
                 break;
             case 3: // por dia de domingo de pascua
                 $oDomingo_pascua = new web\DateTimeLocal();
@@ -179,7 +186,9 @@ class ActividadNuevoCurso {
         $sustitución = '${1}('.$fechas_new.')$3';
         $nom_activ_new = preg_replace($patrón, $sustitución, $nom_activ);
         
-        echo "$tipo=> $fechas_new :: $nom_activ_new<br>";
+        if ($this->bVer_lista) {
+            echo "$tipo=> $fechas_new :: $nom_activ_new<br>";
+        }
         //cambio el status a proyecto:
         $status=1;
         $oActividad = new ActividadDl();
@@ -202,6 +211,7 @@ class ActividadNuevoCurso {
         $oActividad->setTarifa($oActividadOrigen->getTarifa());
         $oActividad->setH_ini($oActividadOrigen->getH_ini());
         $oActividad->setH_fin($oActividadOrigen->getH_fin());
+        // se le pasa el valor Quiet, para que no apunte los cambios.
         if ($oActividad->DBGuardar($this->getQuiet()) === false) {
             echo "ERROR: no se ha guardado la actividad<br>";
             echo "\n".$oActividad->getErrorTxt();
@@ -239,7 +249,7 @@ class ActividadNuevoCurso {
 
 
 	/**
-	 * bQuiet
+	 * bQuiet Para indicar a la clase Actividad que no apunte los cambios al guardar
 	 * @return bool
 	 */
 	public function getQuiet(){
@@ -253,6 +263,24 @@ class ActividadNuevoCurso {
 	 */
 	public function setQuiet($bQuiet){
 		$this->bQuiet = $bQuiet;
+		return $this;
+	}
+
+	/**
+	 * bVer_lista
+	 * @return bool
+	 */
+	public function getVer_lista(){
+		return $this->bVer_lista;
+	}
+
+	/**
+	 * bVer_lista
+	 * @param bool $bVer_lista
+	 * @return ActividadNuevoCurso
+	 */
+	public function setVer_lista($bVer_lista){
+		$this->bVer_lista = $bVer_lista;
 		return $this;
 	}
 

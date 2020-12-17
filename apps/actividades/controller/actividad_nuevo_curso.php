@@ -28,12 +28,19 @@ require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qok = (integer)  \filter_input(INPUT_POST, 'ok');
+$Qver_lista = (string)  \filter_input(INPUT_POST, 'ver_lista');
 
 if ($Qok == 1) {
     $Qyear_ref = (integer)  \filter_input(INPUT_POST, 'year_ref');
     $Qyear = (integer)  \filter_input(INPUT_POST, 'year');
     $oNuevoCurso = new ActividadNuevoCurso();
-    $oNuevoCurso->setQuiet(TRUE);
+    $oNuevoCurso->setQuiet(TRUE); // para que no anote los cambios.
+    if (!empty($Qver_lista)) {
+        $ver_lista = TRUE;
+    } else {
+        $ver_lista = FALSE;
+    }
+    $oNuevoCurso->setVer_lista($ver_lista);
     $oNuevoCurso->setYear($Qyear);
     $oNuevoCurso->setYear_ref($Qyear_ref);
 	// eliminar las que hay.
@@ -60,6 +67,11 @@ if ($Qok == 1) {
 
 	$txt_crear = '';
 	$i = 0;
+	// cabeceras de la lista
+	if ($Qver_lista == 't') {
+	    echo _("tipo repetición => fechas_new :: nom_activ_new")."<br>";
+	}
+	
 	foreach ($cActividades as $oActividadOrg) {
 		$rta = $oNuevoCurso->crear_actividad($oActividadOrg);
 		if (empty($rta)) { $i++; }
@@ -90,6 +102,7 @@ if ($Qok == 1) {
     );
     $camposForm = 'year_ref!year';
     $oHash->setcamposForm($camposForm);
+    $oHash->setcamposNo('ver_lista');
     $oHash->setArraycamposHidden($a_camposHidden);
     
 	$any0=date("Y");
@@ -104,6 +117,7 @@ if ($Qok == 1) {
 	$txt_estado = _("Las actividades nuevas creadas, quedarán en el estado: proyecto");
 	$txt_ctr = _("Se copiarán los centros encargados de las actividades");
 	$txt_fases = _("Se crean las fases de cada actividad");
+	$txt_lento = _("Tarda un rato. Tómate un café...");
 	
 	$txt = "<h1>"._("atención").":</h1>";
 	$txt .= "<p>$txt_borrar.";
@@ -117,6 +131,9 @@ if ($Qok == 1) {
 	}
 	?>
 	<?= $txt ?>
+	<br>
+	<br>
+	<?= $txt_lento ?>
 	<br>
 	<br>
 	<form id="frm_sin_nombre" name="frm_sin_nombre" action="apps/actividades/controller/actividad_nuevo_curso.php">
@@ -133,6 +150,9 @@ if ($Qok == 1) {
 	<option value=<?= $year2 ?>><?= $year2 ?></option>
 	<option value=<?= $year3 ?>><?= $year3 ?></option>
 	</select>
+	<br>
+	<input type=checkbox name="ver_lista" value="t"><?= _("Ver listado") ?>
+	<br>
 	<input type=button onclick="fnjs_enviar_formulario('#frm_sin_nombre');" value="<?= _("generar nuevo curso") ?>">
 	</form>
 <?php
