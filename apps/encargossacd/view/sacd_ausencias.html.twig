@@ -33,20 +33,21 @@ fnjs_lista_sacd=function(id_nom){
 		$('#sacds').html(rta_txt);
 	});
 }
+
 fnjs_horario=function(id_enc){
 	var filtro_sacd=$('#filtro_sacd').val();
 	var id_nom=$('#lst_sacds').val();
     var url='{{ url_horario }}';
-	var parametros='filtro_sacd='+filtro_sacd+'&id_enc='+id_enc+'&id_nom='+id_nom+'{{ h_lista|raw }}';
-		$.ajax({
-			url: url,
-			type: 'post',
-			data: parametros,
-			dataType: 'html'
-		})
-		.done(function (rta_txt) {
-			$('#ficha').html(rta_txt);
-		});
+	var parametros='filtro_sacd='+filtro_sacd+'&id_enc='+id_enc+'&id_nom='+id_nom+'{{ h_horario|raw }}';
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: parametros,
+        dataType: 'html'
+    })
+    .done(function (rta_txt) {
+        $('#ficha').html(rta_txt);
+    });
 }
 </script>
 

@@ -22,27 +22,34 @@ require_once ("apps/core/global_header.inc");
 // Crea los objectos de uso global **********************************************
 require_once ("apps/core/global_object.inc");
 //
+$oDbl = $GLOBALS['oDBE'];
 
 $oEncargoFunciones = new EncargoFunciones();
 
 $Qid_nom = (integer) \filter_input(INPUT_POST, 'id_nom');
 $Qid_enc = (integer) \filter_input(INPUT_POST, 'id_enc');
-$Qfiltro_sacd = (integer) \filter_input(INPUT_POST, 'filtro_sacd');
 $Qmod = (integer) \filter_input(INPUT_POST, 'mod');
+$Qfiltro_sacd = (string) \filter_input(INPUT_POST, 'filtro_sacd');
+$Qid_item = (integer) \filter_input(INPUT_POST, 'id_item');
+$Qdesc_enc = (string) \filter_input(INPUT_POST, 'desc_enc');
 
-$oPersona = new PersonaDl($_POST['id_nom']);
+
+
+
+$oPersona = new PersonaDl($Qid_nom);
 $ap_nom = $oPersona->getApellidosNombre();
-
+/*
 $GesEncargosSacdHorario = new GestorEncargoSacdHorario();
-$cTareasHorario = $GesEncargosSacdHorario->getTareaHorariosSacd(array('id_nom'=>$_POST['id_nom']));
+$cTareasHorario = $GesEncargosSacdHorario->getTareaHorariosSacd(array('id_nom'=>$Qid_nom));
 
 $GesEncargos = new GestorEncargo();
 $cEncargos = $GesEncargos->getEncargos(array('id_enc'));
+*/
 
-$sql_h="SELECT t.desc_enc,h.id_item
-		FROM t_encargos t LEFT JOIN t_horario_sacd h USING(id_enc)
-		WHERE t.id_enc=${_POST['id_enc']} AND h.id_nom=${_POST['id_nom']}";
-$oDBSt_q_h=$oDB->query($sql_h);
+$sql_h="SELECT t.desc_enc,hs.id_item
+		FROM encargos t LEFT JOIN encargo_sacd_horario hs USING(id_enc)
+		WHERE t.id_enc=$Qid_enc AND hs.id_nom=$Qid_nom";
+$oDBSt_q_h=$oDbl->query($sql_h);
 $h=0;
 foreach ($oDBSt_q_h->fetchAll() as $row_h) {
 	$h++;
@@ -57,10 +64,10 @@ if (!empty($id_item)) { //significa que no es nuevo
     }
     */
     $query="SELECT hs.f_ini, hs.f_fin, hs.dia_ref, hs.dia_num, hs.mas_menos, hs.dia_inc, hs.h_ini, hs.h_fin, t.desc_enc
-	    FROM t_horario_sacd hs , t_encargos t , d_tareas_sacd d
+	    FROM encargo_sacd_horario hs, encargos t , encargos_sacd d
 	    WHERE hs.id_item=$id_item AND hs.id_enc=t.id_enc AND d.id_enc=hs.id_enc AND d.id_nom=hs.id_nom";
     //echo "query: $query<br>";
-    $oDBSt_q=$oDB->query($query);
+    $oDBSt_q=$oDbl->query($query);
     $row=$oDBSt_q->fetch(PDO::FETCH_ASSOC);
 
     extract($row);
@@ -68,16 +75,15 @@ if (!empty($id_item)) { //significa que no es nuevo
     $titulo=_("nuevo")." "; 
     // cojo los valores por defecto de f_ini, f_fin del dossier de tareas
     $query="SELECT f_ini, f_fin
-	    FROM d_tareas_sacd d
-	    WHERE d.id_enc=${_POST['id_enc']} AND d.id_nom=${_POST['id_nom']}";
+	    FROM encargos_sacd d
+	    WHERE d.id_enc=$Qid_enc AND d.id_nom=$Qid_nom";
     //echo "query: $query<br>";
-    $oDBSt_q=$oDB->query($query);
+    $oDBSt_q=$oDbl->query($query);
     $row=$oDBSt_q->fetch(PDO::FETCH_ASSOC);
 
     extract($row);
 }
 $titulo=_("horario de").": ".$desc_enc; 
-?>
 ?>                           
 <script>
 $(function() { $( "#f_ini" ).datepicker(); });
@@ -136,12 +142,12 @@ fnjs_guardar_horario=function(tipo){
 }
 </script>
 <form id="modifica" name="modifica" action="">
-<input type="hidden" name="filtro_sacd" value="<?php echo $_POST['filtro_sacd']; ?>">
-<input type="hidden" name="id_nom" value="<?php echo $_POST['id_nom']; ?>">
-<input type="hidden" name="id_enc" value="<?php echo $_POST['id_enc']; ?>">
-<input type="hidden" name="id_item" value="<?php echo $id_item; ?>">
-<input type="hidden" name="desc_enc" value="<?php echo $desc_enc; ?>">
-<input type="hidden" name="mod" value="<?php echo $_POST['mod']; ?>">
+<input type="hidden" name="filtro_sacd" value="<?= $Qfiltro_sacd ?>">
+<input type="hidden" name="id_nom" value="<?= $Qid_nom ?>">
+<input type="hidden" name="id_enc" value="<?= $Qid_enc ?>">
+<input type="hidden" name="id_item" value="<?= $Qid_item ?>">
+<input type="hidden" name="desc_enc" value="<?= $Qdesc_enc ?>">
+<input type="hidden" name="mod" value="<?= $Qmod ?>">
 <table>
 <tr><th class="titulo_inv"><?php echo ucfirst($ap_nom); ?></th></tr>
 <tr><th class="titulo_inv"><?php echo ucfirst($titulo); ?></th></tr>
@@ -220,12 +226,8 @@ if ( $id_item) {
 } else {
 	echo "<input TYPE=\"button\" VALUE=\"".ucfirst(_("crear horario"))."\" onclick=\"javascript:guardar_horario(1)\"> ";
 }
-?>
-<?php 
-// si es para uno nuevo, nada más.
-if (empty($id_item)) {
-    echo "</form>";
-} else { // miro si tinen excepciones:
+// si NO es para uno nuevo, miro si tinen excepciones:
+if (!empty($id_item)) {
    $sql_ex="SELECT * FROM t_horario_sacd_excepcion WHERE id_item_h=$id_item"; 
    //echo "query: $sql_ex<br>";
    $oDBSt_q=$oDB->query($sql_ex);
@@ -234,6 +236,7 @@ if (empty($id_item)) {
 	include("horario_sacd_ex_select.php");
     } else {
 	echo "<input TYPE=\"button\" VALUE=\"".ucfirst(_("generar excepciones"))."\" onclick=\"javascript:guardar_horario(5)\"> ";
-	echo "</form>";
     }
 }
+?>
+</form>

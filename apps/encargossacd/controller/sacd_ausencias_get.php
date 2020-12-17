@@ -117,7 +117,13 @@ foreach ($cEncargosSacd as $oEncargoSacd) {
 }
 $enc_num=$i;
 
-$go_to="des/tareas/sacd_ausencias_get.php?id_nom=".$Qid_nom."&filtro_sacd=$Qfiltro_sacd&historial=1";
+$a_cosas = [
+    'id_nom' => $Qid_nom,
+    'filtro_sacd' => $Qfiltro_sacd,
+    'historial' => 1,
+];
+$go_to = Hash::link('des/tareas/sacd_ausencias_get.php?'.http_build_query($a_cosas));
+//$go_to="des/tareas/sacd_ausencias_get.php?id_nom=".$Qid_nom."&filtro_sacd=$Qfiltro_sacd&historial=1";
 $lnk_historia="<span class='link' onclick=\"fnjs_update_div('#ficha','$go_to');\">"._("ver anteriores")."</span>";
 
 

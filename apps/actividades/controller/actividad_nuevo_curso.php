@@ -30,18 +30,20 @@ require_once ("apps/core/global_object.inc");
 $Qok = (integer)  \filter_input(INPUT_POST, 'ok');
 
 if ($Qok == 1) {
+    $Qyear_ref = (integer)  \filter_input(INPUT_POST, 'year_ref');
     $Qyear = (integer)  \filter_input(INPUT_POST, 'year');
     $oNuevoCurso = new ActividadNuevoCurso();
     $oNuevoCurso->setQuiet(TRUE);
+    $oNuevoCurso->setYear($Qyear);
+    $oNuevoCurso->setYear_ref($Qyear_ref);
 	// eliminar las que hay.
 	$inicio_iso = $Qyear.'-1-1';
 	$fin_iso = $Qyear.'-12-31';
 	
 	$txt_borrar = $oNuevoCurso->borrar_actividades_periodo($inicio_iso,$fin_iso);
 	
-	$year_org = $Qyear-1;
-	$inicio_org = $year_org.'-1-1';
-	$fin_org = $year_org.'-12-31';
+	$inicio_org = $Qyear_ref.'-1-1';
+	$fin_org = $Qyear_ref.'-12-31';
 	$GesActividades = new GestorActividadDl();
 	$aWhere = [];
 	$aOperador = [];
@@ -86,13 +88,16 @@ if ($Qok == 1) {
     $a_camposHidden = array(
         'ok' => 1,
     );
-    $camposForm = 'year';
+    $camposForm = 'year_ref!year';
     $oHash->setcamposForm($camposForm);
     $oHash->setArraycamposHidden($a_camposHidden);
     
-	$any=date("Y");
-	$year1=$any+1;
-	$year2=$any+2;
+	$any0=date("Y");
+	$any1=$any0-1;
+	$any2=$any0-2;
+	$year1=$any0+1;
+	$year2=$any0+2;
+	$year3=$any0+3;
 	
 	$txt_borrar = sprintf(_("Este progama eliminará todas las actividades para el nuevo curso (%s) en estado proyecto"),$year1); 
 	$txt_crear = sprintf(_("Este progama creará las actividades para el nuevo curso (%s) tomando como base las de este curso"),$year1); 
@@ -116,10 +121,17 @@ if ($Qok == 1) {
 	<br>
 	<form id="frm_sin_nombre" name="frm_sin_nombre" action="apps/actividades/controller/actividad_nuevo_curso.php">
     <?= $oHash->getCamposHtml(); ?>
-	<?= _("año:") ?> 
-	<select name=year>
+	<?= _("año origen:") ?> 
+	<select name="year_ref">
+	<option value=<?= $any2 ?>><?= $any2 ?></option>
+	<option value=<?= $any1 ?>><?= $any1 ?></option>
+	<option value=<?= $any0 ?> selected><?= $any0 ?></option>
+	</select>
+	<?= _("año destino:") ?> 
+	<select name="year">
 	<option value=<?= $year1 ?> selected><?= $year1 ?></option>
 	<option value=<?= $year2 ?>><?= $year2 ?></option>
+	<option value=<?= $year3 ?>><?= $year3 ?></option>
 	</select>
 	<input type=button onclick="fnjs_enviar_formulario('#frm_sin_nombre');" value="<?= _("generar nuevo curso") ?>">
 	</form>

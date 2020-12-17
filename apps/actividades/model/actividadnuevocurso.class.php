@@ -23,6 +23,16 @@ class ActividadNuevoCurso {
     private $bQuiet = FALSE;
    /**
     * 
+    * @var integer
+    */ 
+    private $iyear_ref;
+   /**
+    * 
+    * @var integer
+    */ 
+    private $iyear;
+   /**
+    * 
     * @var array
     */ 
     private $aRepeticion;
@@ -135,19 +145,23 @@ class ActividadNuevoCurso {
             case 1: // por dia de la semana
                 // miro si es bisiesto o si el anterior es bisiesto
                 /* Con la última versión del php, el mktime ya se aclara con los bisiestos */
-                $oFini->add(new \DateInterval('P364D'));
-                $oFfin->add(new \DateInterval('P364D'));
+                $inc_year = $this->iyear - $this->iyear_ref;
+                $num_dias = $inc_year*364;
+                $periodo = "P".$num_dias."D";
+                $oFini->add(new \DateInterval($periodo));
+                $oFfin->add(new \DateInterval($periodo));
                 break;
             case 2: // por dia del año
+                $inc_year = $this->iyear - $this->iyear_ref;
+                $periodo = "P".$inc_year."Y";
                 $oFini->add(new \DateInterval('P1Y'));
                 $oFfin->add(new \DateInterval('P1Y'));
                 break;
             case 3: // por dia de domingo de pascua
-                $year = date('Y');
                 $oDomingo_pascua = new web\DateTimeLocal();
                 $oDomingo_pascua_new = new web\DateTimeLocal();
-                $oDomingo_pascua->setTimestamp(easter_date($year));
-                $oDomingo_pascua_new->setTimestamp(easter_date($year+1));
+                $oDomingo_pascua->setTimestamp(easter_date($this->iyear_ref));
+                $oDomingo_pascua_new->setTimestamp(easter_date($this->iyear));
                 $dif_pascua = $oDomingo_pascua->diff($oDomingo_pascua_new);
                 $oFini->add($dif_pascua);
                 $oFfin->add($dif_pascua);
@@ -242,4 +256,39 @@ class ActividadNuevoCurso {
 		return $this;
 	}
 
+	/**
+	 * iyear
+	 * @return integer
+	 */
+	public function getYear(){
+		return $this->iyear;
+	}
+
+	/**
+	 * iyear
+	 * @param bool $iyear
+	 * @return ActividadNuevoCurso
+	 */
+	public function setYear($iyear){
+		$this->iyear = $iyear;
+		return $this;
+	}
+
+	/**
+	 * iyear_ref
+	 * @return integer
+	 */
+	public function getYear_ref(){
+		return $this->iyear_ref;
+	}
+
+	/**
+	 * iyear_ref
+	 * @param bool $iyear_ref
+	 * @return ActividadNuevoCurso
+	 */
+	public function setYear_ref($iyear_ref){
+		$this->iyear_ref = $iyear_ref;
+		return $this;
+	}
 }
