@@ -117,7 +117,7 @@ if ($Qok == 1) {
 	$txt_estado = _("Las actividades nuevas creadas, quedarán en el estado: proyecto");
 	$txt_ctr = _("Se copiarán los centros encargados de las actividades");
 	$txt_fases = _("Se crean las fases de cada actividad");
-	$txt_lento = _("Tarda un rato. Tómate un café...");
+	$txt_lento = _("Según el número de actividades, puede tardar un rato (3 minutos). Tómate un café...");
 	
 	$txt = "<h1>"._("atención").":</h1>";
 	$txt .= "<p>$txt_borrar.";
