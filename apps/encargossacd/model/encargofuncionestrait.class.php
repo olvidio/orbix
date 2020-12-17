@@ -34,7 +34,12 @@ Trait EncargoFuncionesTrait {
                 $this->a_txt[$idioma_x][$clave] = $texto;
             }
         }
-        return $this->a_txt[$idioma];
+        if (empty($this->a_txt[$idioma])) {
+            $rta = sprintf(_("No existe text para el idioma: %s"),$idioma);
+        } else {
+            $rta = $this->a_txt[$idioma];
+        }
+        return $rta;
     }
         
     function getTraduccion($clave,$idioma) {
