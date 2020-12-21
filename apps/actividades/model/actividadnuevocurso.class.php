@@ -124,7 +124,7 @@ class ActividadNuevoCurso {
         // se podría con la de la dl, pero quedarían todos los procesos de las otras actividades.
         $sql = "DELETE FROM a_actividad_proceso_sv WHERE id_activ IN (
                     SELECT DISTINCT d.id_activ 
-                    FROM a_actividad_proceso_sf d LEFT JOIN a_actividades_all a USING (id_activ)
+                    FROM a_actividad_proceso_sf d LEFT JOIN public.a_actividades_all a USING (id_activ)
                     WHERE a.id_activ IS NULL
                  )";
         $GesActividades = new GestorActividadDl();
@@ -133,7 +133,7 @@ class ActividadNuevoCurso {
         }
         $sql = "DELETE FROM a_actividad_proceso_sf WHERE id_activ IN (
                     SELECT DISTINCT d.id_activ 
-                    FROM a_actividad_proceso_sf d LEFT JOIN a_actividades_all a USING (id_activ)
+                    FROM a_actividad_proceso_sf d LEFT JOIN public.a_actividades_all a USING (id_activ)
                     WHERE a.id_activ IS NULL
                  )";
         $GesActividades = new GestorActividadDl();
