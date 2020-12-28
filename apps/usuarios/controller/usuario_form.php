@@ -348,7 +348,7 @@ if ($miRole < 4) {
 	$url_usuario_update = ConfigGlobal::getWeb().'/apps/usuarios/controller/usuario_update.php';
 	$oHash2 = new web\Hash();
 	$oHash2->setUrl($url_usuario_update);
-	$oHash2->setCamposForm('que!id_usuario!password'); 
+	$oHash2->setCamposForm('que!id_usuario!usuario!password'); 
 	$h2 = $oHash2->linkSinVal();
 	
 	$txt_eliminar = _("¿Está seguro que desea quitar este permiso?");
