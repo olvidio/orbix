@@ -191,7 +191,7 @@ switch($Qque) {
 		$Qpassword = (string) \filter_input(INPUT_POST, 'password');
 		
 		if (!empty($Qusuario)) { // si es nuevo no tiene id
-		    
+            $usuario = $Qusuario;
 		} elseif (!empty($Qid_usuario)) {
             $oUsuario = new Usuario(array('id_usuario' => $Qid_usuario));
             $oUsuario->DBCarregar();

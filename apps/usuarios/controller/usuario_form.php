@@ -364,7 +364,6 @@ if ($miRole < 4) {
 				'quien' => $Qquien,
 				'pau' => $pau,
 				'oSelects' => $oSelects,
-				'usuario' => $usuario,
 				'oHash' => $oHash,
 				'pass' => $pass,
 				'usuario' => $usuario,

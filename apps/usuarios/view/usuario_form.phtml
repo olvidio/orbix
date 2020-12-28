@@ -157,7 +157,7 @@ if ($pau == 'cdc' && $quien == 'usuario') { //casa
 <input type=hidden id=pass  name=pass value='<?= $pass ?>'>
 <input type=hidden id=que_user  name=que value=''>
 <br>
-<?= ucfirst(_("login")) ?>:<input type=text name=usuario value="<?= $usuario ?>" size=60>
+<?= ucfirst(_("login")) ?>:<input type=text id=usuario name=usuario value="<?= $usuario ?>" size=60>
 <?php if ($quien == 'usuario') { ?>
 <br>
 <?= ucfirst(_("nombre a mostrar")) ?>:<input type=text name=nom_usuario value="<?= $nom_usuario ?>">
