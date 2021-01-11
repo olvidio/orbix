@@ -138,7 +138,7 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 					break;
                 */
 				default:
-					$aWhere['id_nivel'] = "(12|24)3.";
+					$aWhere['id_nivel'] = "^(12|24)3.";
 					$aOperador['id_nivel'] = '~';
 					$op_min=0;
 					$op_max=7;
@@ -160,9 +160,15 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 					break;
 				}
 				// compruebo que corresponde a 'superada'
-				$nota_num = $oPersonaNota1->getNota_num();
-				$nota_max = $oPersonaNota1->getNota_max();
-				if ($nota_num/$nota_max >= 0.6)  $aOpSuperadas[$j] = $id_op;
+                $id_situacion1 = $oPersonaNota1->getId_sdituacion();
+                if ($id_situacion1 == 3 OR $id_situacion1 == 4) {   // magna y summa antiguas
+                    $aOpSuperadas[$j] = $id_op;
+                }
+                if ($id_situacion1 == 10) { // nota numérica
+                    $nota_num = $oPersonaNota1->getNota_num();
+                    $nota_max = $oPersonaNota1->getNota_max();
+                    if ($nota_num/$nota_max >= 0.6)  $aOpSuperadas[$j] = $id_op;
+                }
 			}
 			if (empty($id_nivel)) {
 				for ($op=$op_min;$op<=$op_max;$op++) {
