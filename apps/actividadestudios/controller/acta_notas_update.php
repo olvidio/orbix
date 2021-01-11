@@ -160,7 +160,7 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 					break;
 				}
 				// compruebo que corresponde a 'superada'
-                $id_situacion1 = $oPersonaNota1->getId_sdituacion();
+                $id_situacion1 = $oPersonaNota1->getId_situacion();
                 if ($id_situacion1 == 3 OR $id_situacion1 == 4) {   // magna y summa antiguas
                     $aOpSuperadas[$j] = $id_op;
                 }
