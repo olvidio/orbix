@@ -194,6 +194,7 @@ class Tesera {
 				$tabla[$i]['asignatura'] = $oAsignatura->getNombre_corto();
 				$tabla[$i]['nota'] = -1;
 				$tabla[$i]['fecha'] = -1;
+				$tabla[$i]['bAprobada'] = -1;
 				$oAsignatura=$cAsignaturas[$a++];
 				$num_creditos_total += $oAsignatura->getCreditos();
 			}
