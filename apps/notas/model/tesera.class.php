@@ -8,10 +8,11 @@
 
 namespace notas\model;
 
-use personas\model\entity as personas;
 use asignaturas\model\entity as asignaturas;
+use function core\is_true;
 use core;
 use web;
+use personas\model\entity as personas;
 
 /**
  * Description of tessera
