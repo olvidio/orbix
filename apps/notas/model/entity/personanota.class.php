@@ -412,8 +412,11 @@ class PersonaNota Extends core\ClasePropiedades {
         if ($this->iid_situacion == Nota::NUMERICA ) {
             $nota_num = $this->getNota_num();
             $nota_max = $this->getNota_max();
-            if ($nota_num/$nota_max >= 0.6) {
-                $this->baprobada = 't';
+            // deben ser números.
+            if (is_numeric($nota_num) && is_numeric($nota_max)) {
+                if ($nota_num/$nota_max >= 0.6) {
+                    $this->baprobada = 't';
+                }
             }
         } else {
             $gesNotas = new GestorNota();
