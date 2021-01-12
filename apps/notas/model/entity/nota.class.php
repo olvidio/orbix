@@ -20,16 +20,61 @@ use core;
  * @created 07/04/2014
  */
 class Nota Extends core\ClasePropiedades {
+    // Al final de hecho deberían ser todo constantes, porque en demasiados sitios se tiene en 
+    // Cuenta que es.
+    /*
+    comun=# select * from e_notas_situacion order by id_situacion;;
+    id_situacion |   descripcion   | superada | breve
+    --------------+-----------------+----------+-------
+    0 | desconocido     | f        | ?
+    1 | superada        | t        | s
+    2 | cursada         | f        | c
+    3 | Magna cum laude | t        | M
+    4 | Summa cum laude | t        | S
+    5 | convalidada     | t        | x
+    6 | prevista ca     | f        | p
+    7 | prevista inv    | f        | p
+    8 | no hecha ca     | f        | n
+    9 | no hecha inv    | f        | n
+    10 | nota numérica   | t        | nm
+    11 | Exento          | t        | e
+    12 | examinado       | f        | ex
+    */
+    
     // tipo constantes.
-    // 2:cursada
-    const CURSADA       = 2; // Cursada
+    const DESCONOCIDO   = 0;
+    const SUPERADA      = 1;
+    const CURSADA       = 2;
+    const MAGNA         = 3;
+    const SUMMA         = 4;
+    const CONVALIDADA   = 5;
+    const PREVISTA_CA   = 6;
+    const PREVISTA_INV  = 7;
+    const NO_HECHA_CA   = 8;
+    const NO_HECHA_INV  = 9;
+    const NUMERICA      = 10;
+    const EXENTO        = 11;
+    const EXAMINADO     = 12;
+	//
     // Para que la variable stgr_posibles coja las traducciones, hay
     // que ejecutar la funcion 'traduccion_init()'. Cosa que se hace justo
     // al final de la definicion de la clase: Nota::traduccion_init();
     static $array_status_txt;
     static function traduccion_init () {
         self::$array_status_txt = [
-                self::CURSADA => _("cursada"),
+				self::DESCONOCIDO   => _("desconocido"),
+				self::SUPERADA      => _("superada"),
+				self::CURSADA       => _("cursada"),
+				self::MAGNA         => _("Magna cum laude"),
+				self::SUMMA         => _("Summa cum laude"),
+				self::CONVALIDADA   => _("convalidada"),
+				self::PREVISTA_CA   => _("prevista ca"),
+				self::PREVISTA_INV  => _("prevista inv"),
+				self::NO_HECHA_CA   => _("no hecha ca"),
+				self::NO_HECHA_INV  => _("no hecha inv"),
+				self::NUMERICA      => _("nota numérica"),
+				self::EXENTO        => _("Exento"),
+				self::EXAMINADO     => _("examinado"),
             ];
     }
     

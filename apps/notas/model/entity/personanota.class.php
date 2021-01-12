@@ -2,6 +2,7 @@
 namespace notas\model\entity;
 use core;
 use web;
+use function core\is_true;
 /**
  * Fitxer amb la Classe que accedeix a la taula e_notas
  *
@@ -163,7 +164,14 @@ class PersonaNota Extends core\ClasePropiedades {
 	 * @var string
 	 */
 	 protected $sNota_txt;
- 	 /* CONSTRUCTOR -------------------------------------------------------------- */
+	/**
+	 * Aprobada de Nota
+	 *
+	 * @var boolean
+	 */
+	 protected $baprobada;
+
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
 	/**
 	 * Constructor de la classe.
@@ -395,6 +403,28 @@ class PersonaNota Extends core\ClasePropiedades {
 
 
 	/* METODES GET i SET --------------------------------------------------------*/
+
+ 	 /**
+     * @return boolean
+     */
+    public function isAprobada() {
+        $this->baprobada = 'f';
+        if ($this->iid_situacion == Nota::NUMERICA ) {
+            $nota_num = $this->getNota_num();
+            $nota_max = $this->getNota_max();
+            if ($nota_num/$nota_max >= 0.6) {
+                $this->baprobada = 't';
+            }
+        } else {
+            $gesNotas = new GestorNota();
+            $cNotas = $gesNotas->getNomTabla(['id_situacion' => $this->iid_situacion]);
+            if (is_array($cNotas) && !empty($cNotas)) {
+                $oNota = $cNotas[0];
+                $this->baprobada = $oNota->getSuperadada();
+            }
+        }
+        return $this->baprobada;
+    }
 
 	/**
 	 * Recupera tots els atributs de PersonaNota en un array

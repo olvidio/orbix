@@ -12,6 +12,7 @@ use notas\model\entity\Nota;
 use notas\model\entity\PersonaNota;
 use personas\model\entity\Persona;
 use web\TiposActividades;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -160,14 +161,9 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 					break;
 				}
 				// compruebo que corresponde a 'superada'
-                $id_situacion1 = $oPersonaNota1->getId_situacion();
-                if ($id_situacion1 == 3 OR $id_situacion1 == 4) {   // magna y summa antiguas
+				$bAprobada = $oPersonaNota1->isAprobada();
+				if (is_true($bAprobada) ) {
                     $aOpSuperadas[$j] = $id_op;
-                }
-                if ($id_situacion1 == 10) { // nota numérica
-                    $nota_num = $oPersonaNota1->getNota_num();
-                    $nota_max = $oPersonaNota1->getNota_max();
-                    if ($nota_num/$nota_max >= 0.6)  $aOpSuperadas[$j] = $id_op;
                 }
 			}
 			if (empty($id_nivel)) {
