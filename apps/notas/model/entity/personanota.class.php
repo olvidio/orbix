@@ -791,7 +791,7 @@ class PersonaNota Extends core\ClasePropiedades {
                         }
                     }
                 } else {
-                    $nota_txt = sprintf(_("Error: algún número está má en la base de datos. nota: %s , max: %s"),$num,$max);
+                    $nota_txt = sprintf(_("Error: algún número está mal en la base de datos. nota: %s , max: %s"),$num,$max);
                 }
 				break;
 			default:

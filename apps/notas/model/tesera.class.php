@@ -213,8 +213,8 @@ class Tesera {
 					$tabla[$i]['nota'] = $row['nota'];
 					$tabla[$i]['fecha'] = $row['fecha']->getFromLocal();
 				}
+                $tabla[$i]['bAprobada'] = $row['bAprobada'];
 				if (is_true($row['bAprobada'])) {
-					$tabla[$i]['bAprobada'] = $row['bAprobada'];
 					$numasig ++;
 					$numcred += $oAsignatura->getCreditos(); 
 					$oFActa = $row['fecha'];
