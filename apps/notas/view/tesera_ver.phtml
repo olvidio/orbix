@@ -26,6 +26,10 @@ fnjs_left_side_hide();
 				echo $row['titulo'];
 			}
 			echo "<tr><td>{$row['asignatura']}</td>";
+			
+			if ( !is_true($row['bAprobada']) ) {
+				$class = "alert";
+			}
 			if ($row['nota'] < 0) {
 				$class = "alert";
 				$nota = _("pendiente");

@@ -132,6 +132,7 @@ class Tesera {
 			$id_nivel = $oPersonaNota->getId_nivel(); 
 			$oF_acta = $oPersonaNota->getF_acta(); 
 			$id_situacion = $oPersonaNota->getId_situacion(); 
+			$bAprobada = $oPersonaNota->isAprobada();
 			$oAsig = new asignaturas\Asignatura($id_asignatura);
 			if ($id_asignatura > 3000) {
 				$id_nivel_asig = $id_nivel;
@@ -146,6 +147,7 @@ class Tesera {
 			$aAprobadas[$n]['nombre_corto']= $oAsig->getNombre_corto();
 			$aAprobadas[$n]['fecha']= $oF_acta;
 			$aAprobadas[$n]['id_situacion']= $id_situacion;
+			$aAprobadas[$n]['bAprobada']= $bAprobada;
 			//$aAprobadas[$n]['nota']= $oNota->getDescripcion();
 			$nota = $oPersonaNota->getNota_txt();
 			$aAprobadas[$n]['nota']= $nota;
@@ -169,7 +171,7 @@ class Tesera {
 
 		// array con los id_situacion correspondientes a notas 'superadas'
 		$GesNotas  = new entity\GestorNota();
-		$aIdSuperadas = $GesNotas->getArrayNotasSuperadas();
+		$aIdSuperadas = $GesNotas->getArrayNotasSuperadas(); // Ojo la numéricas
 		
 		$a=0;
 		$i=0;
@@ -209,6 +211,18 @@ class Tesera {
 					$tabla[$i]['nota'] = $row['nota'];
 					$tabla[$i]['fecha'] = $row['fecha']->getFromLocal();
 				}
+				if (is_true($row['bAprobada'])) {
+					$numasig ++;
+					$numcred += $oAsignatura->getCreditos(); 
+					$oFActa = $row['fecha'];
+						
+					if($this->oInicio <= $oFActa && $oFActa <= $this->oFin) {
+						$numasig_year ++;
+						$numcred_year += $oAsignatura->getCreditos(); 
+					}
+				}
+				
+				/*
 				if (in_array($row['id_situacion'],$aIdSuperadas)) {
 					$numasig ++;
 					$numcred += $oAsignatura->getCreditos(); 
@@ -219,6 +233,7 @@ class Tesera {
 						$numcred_year += $oAsignatura->getCreditos(); 
 					}
 				}
+				*/
 			}
 
 			if (!$row["id_nivel"]){
