@@ -766,28 +766,33 @@ class PersonaNota Extends core\ClasePropiedades {
 				break;
 			case '10': // Nota numérica
 				$num = $this->getNota_num();
-				//$a = new \NumberFormatter("es_ES.UTF-8", \NumberFormatter::DECIMAL);
-				// SI dejo el locale en blanco coje el que se ha definido por defecto en el usuario.
-				$a = new \NumberFormatter("", \NumberFormatter::DECIMAL);
-				$num_local = $a->format($num);
                 $max = $this->getNota_max();
-                $nota_txt = $num_local.'/'.$max;
-				if ($max >= 1) {
-				    $nota_x_uno = $num/$max;
-					if ($nota_x_uno > 0.95) {
-						$nota_txt = _("Summa cum laude") . ' (' .$nota_txt .')'; 
-					} elseif ($nota_x_uno > 0.85) {
-						$nota_txt = _("Magna cum laude") . ' (' .$nota_txt .')'; 
-					} elseif ($nota_x_uno > 0.75) {
-						$nota_txt = _("Cum laude") . ' (' .$nota_txt .')'; 
-					} elseif ($nota_x_uno > 0.65) {
-						$nota_txt = _("Bene probatus") . ' (' .$nota_txt .')'; 
-					} elseif ($nota_x_uno >= 0.6) {
-						$nota_txt = _("Probatus") . ' (' .$nota_txt .')'; 
-					} else {
-						$nota_txt = _("Non probatus") . ' (' .$nota_txt .')'; 
-					}
-				}
+                // deben ser números.
+                if (is_numeric($num) && is_numeric($max)) {
+                    //$a = new \NumberFormatter("es_ES.UTF-8", \NumberFormatter::DECIMAL);
+                    // SI dejo el locale en blanco coje el que se ha definido por defecto en el usuario.
+                    $a = new \NumberFormatter("", \NumberFormatter::DECIMAL);
+                    $num_local = $a->format($num);
+                    $nota_txt = $num_local.'/'.$max;
+                    if ($max >= 1) {
+                        $nota_x_uno = $num/$max;
+                        if ($nota_x_uno > 0.95) {
+                            $nota_txt = _("Summa cum laude") . ' (' .$nota_txt .')'; 
+                        } elseif ($nota_x_uno > 0.85) {
+                            $nota_txt = _("Magna cum laude") . ' (' .$nota_txt .')'; 
+                        } elseif ($nota_x_uno > 0.75) {
+                            $nota_txt = _("Cum laude") . ' (' .$nota_txt .')'; 
+                        } elseif ($nota_x_uno > 0.65) {
+                            $nota_txt = _("Bene probatus") . ' (' .$nota_txt .')'; 
+                        } elseif ($nota_x_uno >= 0.6) {
+                            $nota_txt = _("Probatus") . ' (' .$nota_txt .')'; 
+                        } else {
+                            $nota_txt = _("Non probatus") . ' (' .$nota_txt .')'; 
+                        }
+                    }
+                } else {
+                    $nota_txt = sprintf(_("Error: algún número está má en la base de datos. nota: %s , max: %s"),$num,$max);
+                }
 				break;
 			default:
 				$oNota = new Nota($id_situacion);
