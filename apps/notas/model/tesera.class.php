@@ -194,7 +194,7 @@ class Tesera {
 				$tabla[$i]['asignatura'] = $oAsignatura->getNombre_corto();
 				$tabla[$i]['nota'] = -1;
 				$tabla[$i]['fecha'] = -1;
-				$tabla[$i]['bAprobada'] = -1;
+				$tabla[$i]['bAprobada'] = 'f';
 				$oAsignatura=$cAsignaturas[$a++];
 				$num_creditos_total += $oAsignatura->getCreditos();
 			}
@@ -214,6 +214,7 @@ class Tesera {
 					$tabla[$i]['fecha'] = $row['fecha']->getFromLocal();
 				}
 				if (is_true($row['bAprobada'])) {
+					$tabla[$i]['bAprobada'] = $row['bAprobada'];
 					$numasig ++;
 					$numcred += $oAsignatura->getCreditos(); 
 					$oFActa = $row['fecha'];
@@ -244,6 +245,7 @@ class Tesera {
 				$tabla[$i]['asignatura'] = $oAsignatura->getNombre_corto();
 				$tabla[$i]['nota'] = -1;
 				$tabla[$i]['fecha'] = -1;
+				$tabla[$i]['bAprobada'] = 'f';
 			}
 		}
 
