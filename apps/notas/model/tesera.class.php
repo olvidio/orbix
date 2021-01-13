@@ -224,6 +224,7 @@ class Tesera {
 					$tabla[$i]['fecha'] = $row['fecha']->getFromLocal();
 				}
                 $tabla[$i]['bAprobada'] = $row['bAprobada'];
+				
 				if (is_true($row['bAprobada'])) {
 					$numasig ++;
 					$numcred += $oAsignatura->getCreditos(); 
@@ -249,7 +250,8 @@ class Tesera {
 				*/
 			}
 
-			if ($siguiente === FALSE && $row !== FALSE) { // YA no hay más aprobadas:
+			/*
+			if ($siguiente === FALSE) { // YA no hay más aprobadas:
 				$i++;
 				$tabla[$i]['titulo'] = $this->getTitulo($oAsignatura->getId_nivel());
 				$tabla[$i]['asignatura'] = $oAsignatura->getNombre_corto();
@@ -258,7 +260,7 @@ class Tesera {
 				$tabla[$i]['bAprobada'] = 'f';
 				continue;
 			}
-			    
+			  */  
 			/*
 			if (!$row["id_nivel"]){
 				$i++;
