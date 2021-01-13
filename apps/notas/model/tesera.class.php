@@ -249,7 +249,7 @@ class Tesera {
 				*/
 			}
 
-			if ($siguiente === FALSE ) { // YA no hay más aprobadas:
+			if ($siguiente === FALSE && $row !== FALSE) { // YA no hay más aprobadas:
 				$i++;
 				$tabla[$i]['titulo'] = $this->getTitulo($oAsignatura->getId_nivel());
 				$tabla[$i]['asignatura'] = $oAsignatura->getNombre_corto();
