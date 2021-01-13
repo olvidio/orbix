@@ -420,10 +420,10 @@ class PersonaNota Extends core\ClasePropiedades {
             }
         } else {
             $gesNotas = new GestorNota();
-            $cNotas = $gesNotas->getNomTabla(['id_situacion' => $this->iid_situacion]);
+            $cNotas = $gesNotas->getNotas(['id_situacion' => $this->iid_situacion]);
             if (is_array($cNotas) && !empty($cNotas)) {
                 $oNota = $cNotas[0];
-                $this->baprobada = $oNota->getSuperadada();
+                $this->baprobada = $oNota->getSuperada();
             }
         }
         return $this->baprobada;

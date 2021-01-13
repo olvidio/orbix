@@ -187,7 +187,17 @@ class Tesera {
 			$oAsignatura=$cAsignaturas[$a++];
 			$num_creditos_total += $oAsignatura->getCreditos();
 			$row= current($aAprobadas);
-			next($aAprobadas);
+			$siguiente = next($aAprobadas);
+			if ($row === FALSE  OR $siguiente === FALSE ) { // YA no hay más aprobadas:
+				$i++;
+				$tabla[$i]['titulo'] = $this->getTitulo($oAsignatura->getId_nivel());
+				$tabla[$i]['asignatura'] = $oAsignatura->getNombre_corto();
+				$tabla[$i]['nota'] = -1;
+				$tabla[$i]['fecha'] = -1;
+				$tabla[$i]['bAprobada'] = 'f';
+				continue;
+			}
+			    
 			while ( ($oAsignatura->getId_nivel() < $row["id_nivel_asig"]) && ($row["id_nivel"] < 2434) ){
 				$i++;
 				$tabla[$i]['titulo'] = $this->getTitulo($oAsignatura->getId_nivel());
@@ -239,6 +249,7 @@ class Tesera {
 				*/
 			}
 
+			/*
 			if (!$row["id_nivel"]){
 				$i++;
 				$tabla[$i]['titulo'] = $this->getTitulo($oAsignatura->getId_nivel());
@@ -247,6 +258,7 @@ class Tesera {
 				$tabla[$i]['fecha'] = -1;
 				$tabla[$i]['bAprobada'] = 'f';
 			}
+			*/
 		}
 
 		$oPosicion = new \web\Posicion();
