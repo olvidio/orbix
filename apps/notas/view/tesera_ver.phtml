@@ -30,15 +30,17 @@ include_once(core\ConfigGlobal::$dir_estilos.'/tessera.css.php'); ?>
 			}
 			echo "<tr><td>{$row['asignatura']}</td>";
 			
+            $class = '';
+            if ( is_true($row['bAprobada']) ) {
+                $class = "";
+            } else {
+                $class = 'alert';
+            }
 			if ($row['nota'] < 0) {
 				$class = "alert";
 				$nota = _("pendiente");
 				$fecha = '';
 			} else {
-				$class = '';
-                if ( !is_true($row['bAprobada']) ) {
-                    $class = "alert";
-                }
 				if ($row['nota'] == 'cursada' OR $row['nota'] == 'examinado') {
 					$class="alert";
 				}
