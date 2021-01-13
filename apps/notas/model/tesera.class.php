@@ -188,7 +188,7 @@ class Tesera {
 			$num_creditos_total += $oAsignatura->getCreditos();
 			$row= current($aAprobadas);
 			$siguiente = next($aAprobadas);
-			if ($row === FALSE  OR $siguiente === FALSE ) { // YA no hay más aprobadas:
+			if ($row === FALSE ) {
 				$i++;
 				$tabla[$i]['titulo'] = $this->getTitulo($oAsignatura->getId_nivel());
 				$tabla[$i]['asignatura'] = $oAsignatura->getNombre_corto();
@@ -249,6 +249,16 @@ class Tesera {
 				*/
 			}
 
+			if ($siguiente === FALSE ) { // YA no hay más aprobadas:
+				$i++;
+				$tabla[$i]['titulo'] = $this->getTitulo($oAsignatura->getId_nivel());
+				$tabla[$i]['asignatura'] = $oAsignatura->getNombre_corto();
+				$tabla[$i]['nota'] = -1;
+				$tabla[$i]['fecha'] = -1;
+				$tabla[$i]['bAprobada'] = 'f';
+				continue;
+			}
+			    
 			/*
 			if (!$row["id_nivel"]){
 				$i++;
