@@ -26,6 +26,8 @@ $Qque = (string) \filter_input(INPUT_POST, 'que');
 $Qid_asignatura = (integer) \filter_input(INPUT_POST, 'id_asignatura');
 $Qid_activ = (integer) \filter_input(INPUT_POST, 'id_activ');
 
+$nota_corte = $_SESSION['oConfig']->getNota_corte();
+	
 if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 	$aNivelOpcionales = array(1230,1231,1232,2430,2431,2432,2433,2434);
 	$error = '';
@@ -67,7 +69,7 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 		// Si es con precptor no se acepta cursado o examinado.
 		if ($preceptor)	{
 			// Acepto nota_num=0 para borrar.
-			if (!empty($nota_num) && $nota_num/$nota_max < 0.6) {
+			if (!empty($nota_num) && $nota_num/$nota_max < $nota_corte) {
 				$nn = $nota_num/$nota_max * 10;
 				// Ahora si la guardo como examinado
                 $oPersona = Persona::NewPersona($id_nom);
@@ -108,7 +110,7 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 				}
 			}
 			// Acepto nota_num=0 para borrar.
-			if (!empty($nota_num) && $nota_num/$nota_max < 0.6) {
+			if (!empty($nota_num) && $nota_num/$nota_max < $nota_corte) {
 				$nn = $nota_num/$nota_max * 10;
 				$id_situacion = 12; // examinado
 			}
@@ -209,7 +211,7 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 		        default:
                     if (empty($id_situacion)) {
                         if (!empty($nota_num)) {
-                            if ($nota_num/$nota_max < 0.6) {
+                            if ($nota_num/$nota_max < $nota_corte) {
                                $id_situacion = 12;
                             } else {
                                 $id_situacion = 10;
@@ -281,7 +283,7 @@ if ($Qque==1) { // Grabar las notas en la matricula
 				// examinada
 				if ($Qnota_num[$n] > 1) $oMatricula->setId_situacion(12);
 			} elseif ($Qnota_num[$n] > 1) {
-				if (!empty($Qnota_num[$n]) && $Qnota_num[$n]/$Qnota_max[$n] < 0.6) {
+				if (!empty($Qnota_num[$n]) && $Qnota_num[$n]/$Qnota_max[$n] < $nota_corte) {
 					// examinado
 					$oMatricula->setId_situacion(12);
 				} else {

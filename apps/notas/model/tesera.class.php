@@ -187,7 +187,7 @@ class Tesera {
 			$oAsignatura=$cAsignaturas[$a++];
 			$num_creditos_total += $oAsignatura->getCreditos();
 			$row= current($aAprobadas);
-			$siguiente = next($aAprobadas);
+			next($aAprobadas);
 			if ($row === FALSE ) {
 				$i++;
 				$tabla[$i]['titulo'] = $this->getTitulo($oAsignatura->getId_nivel());

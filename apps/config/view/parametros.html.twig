@@ -24,13 +24,13 @@ fnjs_guardar=function(formulario){
 <form id="frm_stgr" name="frm_stgr" action="">
 {{ oHashStgr.getCamposHtml|raw }}
 
-inicio: 
-dia:<input size="3" type="text" name="ini_dia" value="{{ aCursoStgr['ini_dia'] }}" >
-mes:<input size="3" type="text" name="ini_mes" value="{{ aCursoStgr['ini_mes'] }}" >
+{{ "inicio"|trans }}: 
+{{ "día"|trans }}:<input size="3" type="text" name="ini_dia" value="{{ aCursoStgr['ini_dia'] }}" >
+{{ "mes"|trans }}:<input size="3" type="text" name="ini_mes" value="{{ aCursoStgr['ini_mes'] }}" >
 
-fin: 
-dia:<input size="3" type="text" name="fin_dia" value="{{ aCursoStgr['fin_dia'] }}" >
-mes:<input size="3" type="text" name="fin_mes" value="{{ aCursoStgr['fin_mes'] }}" >
+{{ "fin"|trans }}: 
+{{ "día"|trans }}:<input size="3" type="text" name="fin_dia" value="{{ aCursoStgr['fin_dia'] }}" >
+{{ "mes"|trans }}:<input size="3" type="text" name="fin_mes" value="{{ aCursoStgr['fin_mes'] }}" >
 
 <input type="button" value="{{ "Guardar"|trans }}" onClick="fnjs_guardar(this.form);" >
 </form>
@@ -40,20 +40,20 @@ mes:<input size="3" type="text" name="fin_mes" value="{{ aCursoStgr['fin_mes'] }
 <form id="frm_crt" name="frm_crt" action="">
 {{ oHashCrt.getCamposHtml|raw }}
 
-inicio: 
-dia:<input size="3" type="text" name="ini_dia" value="{{ aCursoCrt['ini_dia'] }}" >
-mes:<input size="3" type="text" name="ini_mes" value="{{ aCursoCrt['ini_mes'] }}" >
+{{ "inicio"|trans }}: 
+{{ "día"|trans }}:<input size="3" type="text" name="ini_dia" value="{{ aCursoCrt['ini_dia'] }}" >
+{{ "mes"|trans }}:<input size="3" type="text" name="ini_mes" value="{{ aCursoCrt['ini_mes'] }}" >
 
-fin: 
-dia:<input size="3" type="text" name="fin_dia" value="{{ aCursoCrt['fin_dia'] }}" >
-mes:<input size="3" type="text" name="fin_mes" value="{{ aCursoCrt['fin_mes'] }}" >
+{{ "fin"|trans }}: 
+{{ "día"|trans }}:<input size="3" type="text" name="fin_dia" value="{{ aCursoCrt['fin_dia'] }}" >
+{{ "mes"|trans }}:<input size="3" type="text" name="fin_mes" value="{{ aCursoCrt['fin_mes'] }}" >
 
 <input type="button" value="{{ "Guardar"|trans }}" onClick="fnjs_guardar(this.form);" >
 </form>
 <hr>
 
 
-<h3>{{ "jefe calendario"|trans }}:</h3>
+<h3>{{ "jefe calendario (login). Si son varios, separarlos por coma"|trans }}:</h3>
 <form id="frm_jefecalendario" name="frm_jefecalendario" action="">
 {{ oHashJC.getCamposHtml|raw }}
 <input type="text" name="valor" value="{{ jefe_calendario }}" >
@@ -61,15 +61,15 @@ mes:<input size="3" type="text" name="fin_mes" value="{{ aCursoCrt['fin_mes'] }}
 </form>
 <hr>
 
-<h3>{{ "nombre región en latín (html)"|trans }}:</h3>
+<h3>{{ "nombre región en latín (se aceptan caracteres html)"|trans }}:</h3>
 <form id="frm_regionlatin" name="frm_regionlatin" action="">
 {{ oHashRL.getCamposHtml|raw }}
-<input type="text" name="valor" value="{{ region_latin }}" >
+<input type="text" name="valor" value="{{ region_latin }}" size="70">
 <input type="button" value="{{ "guardar"|trans }}" onclick="fnjs_guardar(this.form);" >
 </form>
 <hr>
 
-<h3>{{ "nombre del secreatrio del stgr (y cargo)"|trans }}:</h3>
+<h3>{{ "stgr: nombre del secreatrio del stgr (y cargo)"|trans }}: <span class="comentario">[{{ "Para los certificados"|trans }}]</span></h3>
 <form id="frm_vstgr" name="frm_vstgr" action="">
 {{ oHashVE.getCamposHtml|raw }}
 <input type="text" name="valor" value="{{ vstgr }}" size="70">
@@ -77,7 +77,7 @@ mes:<input size="3" type="text" name="fin_mes" value="{{ aCursoCrt['fin_mes'] }}
 </form>
 <hr>
 
-<h3>{{ "lugar firma stgr"|trans }}:</h3>
+<h3>{{ "stgr: lugar firma"|trans }}: <span class="comentario">[{{ "Para los certificados"|trans }}]</span></h3>
 <form id="frm_firmastgr" name="frm_firmastgr" action="">
 {{ oHashLF.getCamposHtml|raw }}
 <input type="text" name="valor" value="{{ lugar_firma }}" size="70">
@@ -85,7 +85,7 @@ mes:<input size="3" type="text" name="fin_mes" value="{{ aCursoCrt['fin_mes'] }}
 </form>
 <hr>
 
-<h3>{{ "direccion sede stgr"|trans }}:</h3>
+<h3>{{ "stgr: direccion sede"|trans }}: <span class="comentario">[{{ "Para los certificados"|trans }}]</span></h3>
 <form id="frm_dirstgr" name="frm_dirstgr" action="">
 {{ oHashDir.getCamposHtml|raw }}
 <input type="text" name="valor" value="{{ dir_stgr }}" size="70">
@@ -93,7 +93,15 @@ mes:<input size="3" type="text" name="fin_mes" value="{{ aCursoCrt['fin_mes'] }}
 </form>
 <hr>
 
-<h3>{{ "nota máxima stgr"|trans }}:</h3>
+<h3>{{ "stgr: nota de corte (>= aprobada) (sobre 1)"|trans }}:</h3>
+<form id="frm_nota_corte" name="frm_nota_corte" action="">
+{{ oHashNC.getCamposHtml|raw }}
+<input type="text" name="valor" value="{{ nota_corte }}" >
+<input type="button" value="{{ "guardar"|trans }}" onclick="fnjs_guardar(this.form);" >
+</form>
+<hr>
+
+<h3>{{ "stgr: nota máxima"|trans }}:</h3>
 <form id="frm_nota_max" name="frm_nota_max" action="">
 {{ oHashN.getCamposHtml|raw }}
 <input type="text" name="valor" value="{{ nota_max }}" >
@@ -101,7 +109,7 @@ mes:<input size="3" type="text" name="fin_mes" value="{{ aCursoCrt['fin_mes'] }}
 </form>
 <hr>
 
-<h3>{{ "años que se conserva si se ha cursado una asignatura"|trans }}:</h3>
+<h3>{{ "stgr: años que se conserva si se ha cursado una asignatura"|trans }}:</h3>
 <form id="frm_caduca_cursada" name="frm_caduca_cursada" action="">
 {{ oHashC.getCamposHtml|raw }}
 <input type="text" name="valor" value="{{ caduca_cursada }}" >

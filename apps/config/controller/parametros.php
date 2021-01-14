@@ -158,6 +158,25 @@ $oHashDir->setArrayCamposHidden(['parametro' => $parametro]);
 $a_campos['oHashDir'] = $oHashDir;
 $a_campos['dir_stgr'] = $valor;
 
+// ----------- Nota de corte (sibre 1) -------------------
+$parametro = 'nota_corte';
+$oConfigSchema = new ConfigSchema($parametro);
+$valor = $oConfigSchema->getValor();
+
+if (empty($valor)) {
+    $valor = "0.6";
+}
+$val_nota_corte = $valor;
+
+$oHashNC = new Hash();
+$oHashNC->setUrl($url);
+$oHashNC->setcamposForm('valor');
+$oHashNC->setArrayCamposHidden(['parametro' => $parametro]);
+
+$a_campos['oHashNC'] = $oHashNC;
+$a_campos['nota_corte'] = $val_nota_corte;
+
+
 // ----------- Nota máxima evaluación -------------------
 $parametro = 'nota_max';
 $oConfigSchema = new ConfigSchema($parametro);

@@ -74,6 +74,12 @@ class Config {
         return $oConfigSchema->getValor();
     }
     
+    public function getNota_corte() {
+        $parametro = 'nota_corte';
+        $oConfigSchema = new ConfigSchema($parametro);
+        return $oConfigSchema->getValor();
+    }
+    
     public function getNota_max() {
         $parametro = 'nota_max';
         $oConfigSchema = new ConfigSchema($parametro);

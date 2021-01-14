@@ -99,7 +99,6 @@ foreach ($aPersonasMatriculadas as $nom=>$oMatricula) {
 	$nota_num_txt = empty($nota_num)? '?' : $nota_num;
 	$nota_max=$oMatricula->getNota_max();
 	$nota_max_txt = empty($nota_max)? '?' : $nota_max;
-	$id_situacion=$oMatricula->getId_situacion();
 	$preceptor=$oMatricula->getPreceptor();
 	if ($preceptor == "t") { 
 		$chk_tipo = "selected";
