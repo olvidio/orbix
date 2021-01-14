@@ -1,5 +1,6 @@
 <?php
 use asignaturas\model\entity\Asignatura;
+use notas\model\entity\Nota;
 use web\DateTimeLocal;
 /**
 * Esta página sirve para comprobar las notas de la tabla e_notas.
@@ -36,7 +37,7 @@ if ($Qid_tabla == 'a') {
 
 $oDB = $GLOBALS['oDB'];
 
-$superada = "(n.id_situacion = 10 OR n.id_situacion::text ~ '[1345]')";
+$superada = "(n.id_situacion = ".Nota::NUMERICA." OR n.id_situacion::text ~ '[1345]')";
 
 if ($Qactualizar == 'c1') {
 	$ssql="SELECT p.id_nom
@@ -105,7 +106,7 @@ if ($Qactualizar == 'borrar_cursada') {
     $Qid_asignatura = (string) \filter_input(INPUT_POST, 'id_asignatura');
 
 	$ssql="DELETE FROM e_notas_dl n 
-		WHERE n.id_situacion = 2
+		WHERE n.id_situacion = ".Nota::CURSADA."
             AND id_nom = $Qid_nom
             AND id_asignatura = $Qid_asignatura
 		"; 
@@ -121,7 +122,7 @@ if ($Qactualizar == 'caduca_cursada') {
 	
 	$ssql="SELECT p.id_nom, n.id_asignatura
 		FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
-		WHERE n.id_situacion = 2
+		WHERE n.id_situacion = ".Nota::CURSADA."
             AND f_acta < '$f_caduca_iso'
 		"; 
 	
@@ -331,7 +332,7 @@ if (!empty($nf)) {
 
 $sqlF="SELECT  p.id_nom,p.nom, p.apellido1, p.apellido2, n.f_acta, n.id_asignatura
 FROM $tabla p,e_notas_dl n
-WHERE p.id_nom=n.id_nom AND (n.f_acta) IS NULL AND (n.id_situacion = 10 OR n.id_situacion::text ~ '[34]')
+WHERE p.id_nom=n.id_nom AND (n.f_acta) IS NULL AND (n.id_situacion = ".Nota::NUMERICA." OR n.id_situacion::text ~ '[34]')
 ORDER BY p.apellido1,p.apellido2 ";
 
 $oDBSt_sql=$oDB->query($sqlF);
@@ -450,7 +451,7 @@ if (!empty($nf)) {
 /*8. Gente con asignaturas cursadas sin aprobar*/
 $sqlF="SELECT  p.id_nom,p.nom, p.apellido1, p.apellido2, n.f_acta, n.id_asignatura
 FROM $tabla p,e_notas_dl n
-WHERE p.situacion != 'B' AND p.id_nom = n.id_nom AND n.id_situacion = 2
+WHERE p.situacion != 'B' AND p.id_nom = n.id_nom AND n.id_situacion = ".Nota::CURSADA."
 ORDER BY p.apellido1,p.apellido2 ";
 
 $oDBSt_sql=$oDB->query($sqlF);

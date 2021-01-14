@@ -2,6 +2,7 @@
 use asignaturas\model\entity as asignaturas;
 use notas\model\entity as notas;
 use personas\model\entity as personas;
+use notas\model\entity\Nota;
 
 /**
 * Esta página sirve para generar un cuadro con las asignaturas pendientes de todos los alumnos.
@@ -114,7 +115,7 @@ foreach ($cPersonas as $oPersona) {
 		}
 		
 		// En el caso de las cursadas (id_situacion = 2) pongo 2.
-		if ($id_situacion == 2) {
+		if ($id_situacion == Nota::CURSADA) {
 			$aAprobadas[$id_nivel_asig]['nota'] = 2;
 		} elseif ( in_array($id_situacion, $a_notas_superada)) {
 			$aAprobadas[$id_nivel_asig]['nota'] = '';

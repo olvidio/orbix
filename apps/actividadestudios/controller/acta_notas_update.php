@@ -27,6 +27,7 @@ $Qid_asignatura = (integer) \filter_input(INPUT_POST, 'id_asignatura');
 $Qid_activ = (integer) \filter_input(INPUT_POST, 'id_activ');
 
 $nota_corte = $_SESSION['oConfig']->getNota_corte();
+$nota_max_default = $_SESSION['oConfig']->getNota_max();
 	
 if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 	$aNivelOpcionales = array(1230,1231,1232,2430,2431,2432,2433,2434);
@@ -64,7 +65,7 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 		$acta=$oMatricula->getActa();
 
 		if (empty($nota_max)) {
-			$nota_max = 10;
+			$nota_max = $nota_max_default;
 		}
 		// Si es con precptor no se acepta cursado o examinado.
 		if ($preceptor)	{
@@ -83,18 +84,17 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 			if ($acta == Nota::CURSADA ) {
 				$error .= sprintf(_("no se puede definir cursada con preceptor")."\n");
 				exit($error);
-			}
-			if (!empty($nota_num)) { // Si esta vacio, es para borrar, no tiene acta.
+			} else {
                 $oActa =new Acta($acta);
                 $f_acta=$oActa->getF_acta()->getFromLocal();
-                if (!$acta || !$f_acta) {
+                if (empty($acta) || empty($f_acta)) {
                     $error .= sprintf(_("debe introducir los datos del acta. No se ha guardado nada.")."\n");
                     exit($error);
                 }
 			}
 		} else {
 			// para las cursadas o examinadas no aprobadas
-			if ($id_situacion == 2 OR $id_situacion == 12 OR empty($id_situacion)) {
+			if ($id_situacion == NOTA::CURSADA OR $id_situacion == NOTA::EXAMINADO OR empty($id_situacion)) {
 				//conseguir una fecha para poner como fecha acta. las cursadas se guardan durante 2 años
 				$f_acta = $cActas[0]->getF_acta()->getFromLocal();
 			} else {
@@ -109,12 +109,12 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 					exit($error);
 				}
 			}
-			// Acepto nota_num=0 para borrar.
-			if (!empty($nota_num) && $nota_num/$nota_max < $nota_corte) {
-				$nn = $nota_num/$nota_max * 10;
-				$id_situacion = 12; // examinado
-			}
 		}
+        // Acepto nota_num=0 para borrar.
+        if (!empty($nota_num) && $nota_num/$nota_max < $nota_corte) {
+            $nn = $nota_num/$nota_max * 10;
+            $id_situacion = NOTA::EXAMINADO; // examinado
+        }
 				
 		if (!empty($preceptor)) { //miro cuál
 			$oActividadAsignatura = new ActividadAsignaturaDl(array('id_activ'=>$Qid_activ,'id_asignatura'=>$Qid_asignatura)); 
@@ -206,15 +206,15 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
                     continue 2;
 		            break;
 		        case Nota::CURSADA:
-					$id_situacion = 2;
+					$id_situacion = NOTA::CURSADA;
 		            break;
 		        default:
                     if (empty($id_situacion)) {
                         if (!empty($nota_num)) {
                             if ($nota_num/$nota_max < $nota_corte) {
-                               $id_situacion = 12;
+                               $id_situacion = NOTA::EXAMINADO;
                             } else {
-                                $id_situacion = 10;
+                                $id_situacion = NOTA::NUMERICA;
                             }
                         } else {
                             if (isset($oPersonaNotaAnterior)) {

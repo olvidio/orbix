@@ -27,6 +27,7 @@ use asignaturas\model\entity as asignaturas;
 use notas\model\entity as notas;
 use personas\model\entity as personas;
 use profesores\model\entity as profesores;
+use notas\model\entity\Nota;
 use web\Hash;
 use actividades\model\entity\Actividad;
 
@@ -218,7 +219,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
 // Valores por defecto
 $nota_max_default = $_SESSION['oConfig']->getNota_max();
 $nota_max = empty($nota_max)? $nota_max_default : $nota_max;
-$id_situacion = empty($id_situacion)? 10 : $id_situacion;
+$id_situacion = empty($id_situacion)? Nota::NUMERICA : $id_situacion;
 
 if (!empty($preceptor)) {
 	$chk_preceptor = "checked";
