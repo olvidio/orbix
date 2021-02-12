@@ -124,7 +124,7 @@ class Select3005 {
 					$this->msg_err .= "<br>$oPersona con id_nom: $id_profesor (profesor) en  ".__FILE__.": line ". __LINE__;
 					$nom='';
 				} else {
-					$nom = $oPersona->getApellidosNombre();
+					$nom = $oPersona->getPrefApellidosNombre();
 				}
 			} else {
 				$nom='';

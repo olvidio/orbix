@@ -99,7 +99,7 @@ class GestorProfesor Extends core\ClaseGestor {
 			// comprobar situación
 			$situacion = $oPersonaDl->getSituacion();
 			if ($situacion != 'A') { continue; }
-			$ap_nom = $oPersonaDl->getApellidosNombre();
+			$ap_nom = $oPersonaDl->getPrefApellidosNombre();
 			$aProfesores[] = array('id_nom'=>$id_nom,'ap_nom'=>$ap_nom);
 			$aAp1[] = $oPersonaDl->getApellido1();
 			$aAp2[] = $oPersonaDl->getApellido2();
@@ -144,7 +144,7 @@ class GestorProfesor Extends core\ClaseGestor {
 			// comprobar situación
 			$situacion = $oPersona->getSituacion();
 			if ($situacion != 'A') { continue; }
-			$ap_nom = $oPersona->getApellidosNombre();
+			$ap_nom = $oPersona->getPrefApellidosNombre();
 			$aProfesores[] = array('id_nom'=>$id_nom,'ap_nom'=>$ap_nom);
 			$aAp1[] = $oPersona->getApellido1();
 			$aAp2[] = $oPersona->getApellido2();
@@ -189,7 +189,7 @@ class GestorProfesor Extends core\ClaseGestor {
 			// comprobar situación
 			$situacion = $oPersonaDl->getSituacion();
 			if ($situacion != 'A') { continue; }
-			$ap_nom = $oPersonaDl->getApellidosNombre();
+			$ap_nom = $oPersonaDl->getPrefApellidosNombre();
 			$aProfesores[] = array('id_nom'=>$id_nom,'ap_nom'=>$ap_nom);
 			$aAp1[] = $oPersonaDl->getApellido1();
 			$aAp2[] = $oPersonaDl->getApellido2();
@@ -231,7 +231,7 @@ class GestorProfesor Extends core\ClaseGestor {
 			// comprobar situación
 			$situacion = $oPersonaDl->getSituacion();
 			if ($situacion != 'A') { continue; }
-			$ap_nom = $oPersonaDl->getApellidosNombre();
+			$ap_nom = $oPersonaDl->getPrefApellidosNombre();
 			$aProfesores[$id_nom] = $ap_nom;
 		}
 		uasort($aProfesores,'core\strsinacentocmp');

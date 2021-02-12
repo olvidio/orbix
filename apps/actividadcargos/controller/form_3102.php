@@ -90,7 +90,7 @@ if (!empty($Qid_item)) { //caso de modificar
 		$msg_err = "<br>$oPersona con id_nom: $Qid_nom en  ".__FILE__.": line ". __LINE__;
 		exit ($msg_err);
 	}
-	$ape_nom=$oPersona->getApellidosNombre();
+	$ape_nom=$oPersona->getPrefApellidosNombre();
 	$id_tabla=$oPersona->getId_tabla();
 	$id_nom_real=$Qid_nom;
 } else { //caso de nuevo cargo
@@ -102,7 +102,7 @@ if (!empty($Qid_item)) { //caso de modificar
 			$msg_err = "<br>$oPersona con id_nom: $Qid_nom en  ".__FILE__.": line ". __LINE__;
 			exit ($msg_err);
 		}
-		$ape_nom=$oPersona->getApellidosNombre();
+		$ape_nom=$oPersona->getPrefApellidosNombre();
 		$id_tabla=$oPersona->getId_tabla();
 		$id_nom_real=$Qid_nom;
 	} elseif (!empty($Qobj_pau)) {

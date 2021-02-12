@@ -76,7 +76,7 @@ foreach ($cMatriculasPendientes as $oMatricula) {
 		$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 		continue;
 	}
-	$apellidos_nombre=$oPersona->getApellidosNombre();
+	$apellidos_nombre=$oPersona->getPrefApellidosNombre();
 	$oAsignatura = new asignaturas\Asignatura($id_asignatura);
 	$nombre_corto=$oAsignatura->getNombre_corto();
 	

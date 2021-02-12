@@ -116,7 +116,7 @@ foreach ($cMatriculas as $oMatricula) {
 			if (!is_object($oPersona)) {
 				$msg_err .= "<br>preceptor: $oPersona con id_nom: $id_preceptor en  ".__FILE__.": line ". __LINE__;
 			} else {
-				$preceptor = $oPersona->getApellidosNombre();
+				$preceptor = $oPersona->getPrefApellidosNombre();
 			}
 		}
 	} else {
@@ -135,7 +135,7 @@ foreach ($cMatriculas as $oMatricula) {
 		$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 		continue;
 	}
-	$apellidos_nombre = $oPersona->getApellidosNombre();
+	$apellidos_nombre = $oPersona->getPrefApellidosNombre();
 	$ctr = $oPersona->getCentro_o_dl();
 	$dl = $oPersona->getDl();
 			

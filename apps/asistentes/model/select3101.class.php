@@ -258,7 +258,7 @@ class Select3101 {
 			}
 			$oCargo=new actividadcargos\Cargo($id_cargo);
 
-			$nom=$oPersona->getApellidosNombre();
+			$nom=$oPersona->getPrefApellidosNombre();
 			$sacd= ($oPersona->getSacd())? _("sí") : '';
 			// Añado los telf:
 			$telfs = '';
@@ -421,7 +421,7 @@ class Select3101 {
 				$this->msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 				continue;
 			}
-			$nom=$oPersona->getApellidosNombre();
+			$nom=$oPersona->getPrefApellidosNombre();
 			$sacd= ($oPersona->getSacd())? _("sí") : '';
 			$dl_asistente=$oPersona->getDl();
 			$ctr_dl=$oPersona->getCentro_o_dl();

@@ -102,7 +102,7 @@ if (!empty($Qid_nom)) { //caso de modificar
 	}
 	//$obj_pau = str_replace("personas\\model\\entity\\",'',get_class($oPersona));
 	
-	$ape_nom = $oPersona->getApellidosNombre();
+	$ape_nom = $oPersona->getPrefApellidosNombre();
 	$id_nom_real = $Qid_nom;
 
 	$aWhere = array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom);

@@ -46,10 +46,6 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$nom_activ = $oActividad->getNom_activ();
 }
 
-$id_usuario= core\ConfigGlobal::mi_id_usuario();
-$oPref = new usuarios\Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>'ordenApellidos'));
-$Pref_ordenApellidos=$oPref->getPreferencia();
-
 $queSel = (string) \filter_input(INPUT_POST, 'queSel');
 $gesAsistentes = new asistentes\GestorAsistente();
 
@@ -142,11 +138,7 @@ if (core\configGlobal::is_app_installed('actividadcargos')) {
 			continue;
 		}
 		$oCargo=new actividadcargos\Cargo($id_cargo);
-		if ($Pref_ordenApellidos== 'nom_ap') {
-			$nom = $oPersona->getNombreApellidos();
-		} else {
-			$nom = $oPersona->getApellidosNombre();
-		}
+        $nom = $oPersona->getPrefApellidosNombre();
 
 		$cargo=$oCargo->getCargo();
 		$puede_agd=$oActividadCargo->getPuede_agd();
@@ -213,7 +205,7 @@ foreach($gesAsistentes->getAsistentes(array('id_activ'=>$id_pau)) as $oAsistente
 		$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 		continue;
 	}
-	$nom=$oPersona->getApellidosNombre();
+	$nom=$oPersona->getPrefApellidosNombre();
 	$ctr_dl=$oPersona->getCentro_o_dl();
 
 	$propio=$oAsistente->getPropio();

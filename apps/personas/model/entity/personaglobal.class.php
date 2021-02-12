@@ -786,6 +786,16 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 
+	public function getPrefApellidosNombre() {
+	    $Pref_ordenApellidos = ConfigGlobal::mi_ordenApellidos();
+	    
+	    if ($Pref_ordenApellidos == 'nom_ap') {
+	        return $this->getNombreApellidos();
+	    } else {
+	        return $this->getApellidosNombre();
+	    }
+	}
+	
 	/**
 	 * Recupera l'atribut sApellidos de Persona
 	 *

@@ -130,7 +130,7 @@ $aFaltan = array();
 foreach ($cPersonas as $oPersona) {
 	$id_nomP = $oPersona->getId_nom();
 	if (in_array($id_nomP, $aAsistentes)) continue;
-	$ap_nom = $oPersona->getApellidosNombre();
+	$ap_nom = $oPersona->getPrefApellidosNombre();
 	$id_ubi = $oPersona->getId_ctr();
 	$nivel_stgr = $oPersona->getStgr();
 	if (!empty($ap_nom)) {
@@ -194,7 +194,7 @@ $aFaltanOtras = array();
 foreach ($cPersonasOtras as $oPersona) {
 	$id_nomP = $oPersona->getId_nom();
 	if (in_array($id_nomP, $aAsistentes)) continue;
-	$ap_nom = $oPersona->getApellidosNombre();
+	$ap_nom = $oPersona->getPrefApellidosNombre();
 	$id_ubi = $oPersona->getId_ctr();
 	$nivel_stgr = $oPersona->getStgr();
 	$aFaltanOtras[$ap_nom] = ['id_nom'=>$id_nomP,'id_ubi'=>$id_ubi, 'nivel_stgr'=>$nivel_stgr];

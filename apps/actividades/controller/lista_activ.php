@@ -375,7 +375,7 @@ foreach ($cActividades as $oActividad) {
 		$oCargosActividad=new GestorActividadCargo();
 		$sacds='';
 		foreach($oCargosActividad->getActividadSacds($id_activ) as $oPersona) {;
-			$sacds.=$oPersona->getApellidosNombre()."# "; // la coma la utilizo como separador de apellidos, nombre.
+			$sacds.=$oPersona->getPrefApellidosNombre()."# "; // la coma la utilizo como separador de apellidos, nombre.
 		}
 		$sacds=substr($sacds,0,-2);
 		$a_valores[$i][13]=$sacds;

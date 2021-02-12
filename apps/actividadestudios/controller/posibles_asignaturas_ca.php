@@ -62,7 +62,7 @@ foreach($gesAsistentes->getAsistentes(array('id_activ'=>$id_activ)) as $oAsisten
     $stgr = $oPersona->getStgr();
     // sólo los que hacen estudios:
     if (!array_key_exists($stgr, $aTipos_stgr)) { continue; }
-    $ap_nom = $oPersona->getApellidosNombre();
+    $ap_nom = $oPersona->getPrefApellidosNombre();
     // miro si son de los qeu sólo les faltan 4 para terminar el cuadrienio.
     $curso = 'cuadrienio';
     $Pendientes = new AsignaturasPendientes();
@@ -115,7 +115,7 @@ foreach($cAsignaturas as $oAsignatura) {
         $aprobadas = $datos['aprobadas'];
         if (!array_key_exists($id_asignatura, $aprobadas)) {
             $posibles_alumnos++;
-            $aNombresAlumnos[] = $datos['oPersona']->getApellidosNombre();
+            $aNombresAlumnos[] = $datos['oPersona']->getPrefApellidosNombre();
         }
     }
     if ($posibles_alumnos == 0) { continue; }

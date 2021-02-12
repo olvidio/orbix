@@ -530,7 +530,7 @@ switch ($Qque) {
 				    {
 				        $gesCargosActividad=new actividadcargos\model\entity\GestorActividadCargo();
 				        foreach($gesCargosActividad->getActividadSacds($id_activ) as $oPersona) {
-				            $nom_sacd = $oPersona->getApellidosNombre();
+				            $nom_sacd = $oPersona->getPrefApellidosNombre();
 				            //separar con #. la coma la utilizo como separador de apellidos, nombre.
 				            $txt_sacds .= empty($txt_sacds)? $nom_sacd : "# $nom_sacd";
 				        }

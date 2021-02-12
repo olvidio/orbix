@@ -172,7 +172,7 @@ class Select1011 {
 			// preceptor
 			if ($id_preceptor && $preceptor=="t") {
 				$oPersonaDl = new personas\PersonaDl($id_preceptor);
-				$nom_precptor=$oPeronaDl->getApellidosNombre();
+				$nom_precptor=$oPeronaDl->getPrefApellidosNombre();
 				if (empty($nom_precptor)) {
 					$nom_precptor=_("no lo encuentro");
 				}

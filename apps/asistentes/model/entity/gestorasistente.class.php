@@ -292,7 +292,7 @@ class GestorAsistente Extends core\ClaseGestor {
 				$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 				continue;
 			}
-			$apellidos = $oPersona->getApellidosNombre();
+			$apellidos = $oPersona->getPrefApellidosNombre();
 			$cAsistentesOk[$apellidos] = $oAsistente;
 		}
 		uksort($cAsistentesOk,"core\strsinacentocmp");

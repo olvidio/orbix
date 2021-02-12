@@ -401,7 +401,7 @@ foreach ($cPersonas as $oPersona) {
 	$a_val = [];
 	$id_tabla=$oPersona->getId_tabla();
 	$id_nom=$oPersona->getId_nom();
-	$nom=$oPersona->getApellidosNombre();
+	$nom=$oPersona->getPrefApellidosNombre();
 
 	if ($obj_pau != 'PersonaEx') {
 		$id_ctr=$oPersona->getId_ctr();

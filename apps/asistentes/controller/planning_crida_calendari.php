@@ -333,7 +333,7 @@ if ($Qtipo=='planning_cdc' || $Qtipo=='casa') {
     foreach ($cPersonas as $oPersona) {
         $aActivPersona=array();
         $id_nom=$oPersona->getId_nom();
-        $nombre=$oPersona->getApellidosNombre();
+        $nombre=$oPersona->getPrefApellidosNombre();
         
         if (!empty($buscar_ctr)) {
             $id_ubi=$oPersona->getId_ctr();

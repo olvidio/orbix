@@ -78,6 +78,7 @@ switch ($Qque) {
 			echo _("hay un error, no se ha guardado");
 			echo "\n".$oPref->getErrorTxt();
 		}
+		$_SESSION['session_auth']['ordenApellidos'] = $QordenApellidos;
 
 		// Guardar idioma:
 		$Qidioma_nou = (string) \filter_input(INPUT_POST, 'idioma_nou');

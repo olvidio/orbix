@@ -161,7 +161,7 @@ class Tesera {
 	public function verTesera($id_nom) {
 		
 		$oPersona = personas\Persona::NewPersona($id_nom);
-		$ap_nom = $oPersona->getApellidosNombre();
+		$ap_nom = $oPersona->getPrefApellidosNombre();
 		$centro = $oPersona->getCentro_o_dl();
 
 		$cAsignaturas = $this->getAsignaturasPosibles();

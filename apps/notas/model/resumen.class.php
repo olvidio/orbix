@@ -1358,7 +1358,7 @@ class Resumen Extends core\ClasePropiedades {
                 $oDepartamento = new asignaturas\Departamento($id_departamento);
                 $nom_dep = $oDepartamento->getDepartamento();
                 $oPersonaDl = new personas\PersonaDl($id_nom);
-                $nom_persona = $oPersonaDl->getApellidosNombre();
+                $nom_persona = $oPersonaDl->getPrefApellidosNombre();
                 $html .= "<tr><td>$nom_dep</td><td>$nom_persona</td></tr>";
             }
             $html .= '</table>';

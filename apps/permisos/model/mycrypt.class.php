@@ -98,7 +98,7 @@ Class MyCrypt {
 	    if ($numCriteria < 3) {
 	        $txt_err .= empty($txt_err)? '' : "\n";
 	        $txt_err .= "$user: password($password) ";
-	        $txt_err .= _("Debe incluir como mínimo una letra mayúscula, un número y un carcater especial");
+	        $txt_err .= _("Debe incluir como mínimo una letra mayúscula, un número y un caracter especial");
 	    }
 	    if (empty($txt_err)) {
 	        $jsondata['success'] = true;

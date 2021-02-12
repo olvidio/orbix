@@ -94,7 +94,7 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
 			foreach ($cPersonas as $oPersonaNAgd) {
 				$id_nom = $oPersonaNAgd->getId_nom();
 				$nom_ap = $oPersonaNAgd->getNombreApellidosCrSin();
-				$nom_orden = $oPersonaNAgd->getApellidosNombre();
+				$nom_orden = $oPersonaNAgd->getPrefApellidosNombre();
 				$sv_txt="";
 				$sf_txt="";
 				$sssc_txt="";

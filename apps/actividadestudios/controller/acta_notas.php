@@ -71,7 +71,7 @@ if ($matriculados > 0) {
 			$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 			continue;
 		}
-		$nom=$oPersona->getApellidosNombre();
+		$nom=$oPersona->getPrefApellidosNombre();
 		$aPersonasMatriculadas[$nom] = $oMatricula;
 	}
 	uksort($aPersonasMatriculadas, "core\strsinacentocmp"); // compara sin contar los acentos i insensitive.

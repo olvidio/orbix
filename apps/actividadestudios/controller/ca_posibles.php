@@ -318,7 +318,7 @@ foreach ($cOrdPersonas as $ctr=>$ctrPersonas) {
 		$oPersonaDl = $row['oPersonaDl'];
 		$id_nom=$oPersonaDl->getId_nom();
 		$id_tabla_persona=$oPersonaDl->getId_tabla();
-		$nom_persona=$oPersonaDl->getApellidosNombre();
+		$nom_persona=$oPersonaDl->getPrefApellidosNombre();
 		/*
 		$id_ubi=$oPersonaDl->getId_ctr();
 		$oUbi = new CentroDl($id_ubi);

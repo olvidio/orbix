@@ -130,7 +130,7 @@ foreach ($aId_nom as $id_nom=>$aAsignaturas) {
 	$oPersona = new $obj($id_nom);
 	$id_tabla=$oPersona->getId_tabla();
 	$stgr=$oPersona->getStgr();
-	$nom=$oPersona->getApellidosNombre();
+	$nom=$oPersona->getPrefApellidosNombre();
 	// El ctr
 	$id_ctr=$oPersona->getId_ctr();
 	$oCentroDl = new ubis\CentroDl($id_ctr);

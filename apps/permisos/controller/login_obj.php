@@ -271,6 +271,12 @@ if ( !isset($_SESSION['session_auth'])) {
 						$row = $oDBStI->fetch(\PDO::FETCH_ASSOC);
 						$idioma = $row['preferencia'];
 						
+						// ordenApellidos
+						$query_ordenApellidos = sprintf( "select * from web_preferencias where id_usuario = '%s' and tipo = '%s' ",$id_usuario,"ordenApellidos");
+						$oDBStoA=$oDB->query($query_ordenApellidos);
+						$row = $oDBStoA->fetch(\PDO::FETCH_ASSOC);
+						$ordenApellidos = $row['preferencia'];
+						
 						// Id_schema
                         $oDBPropiedades = new DBPropiedades();
                         $id_schema = $oDBPropiedades->getIdSchema($esquema);
@@ -291,6 +297,7 @@ if ( !isset($_SESSION['session_auth'])) {
 								'expire'=>$expire,
 								'mail'=>$mail,
 								'idioma'=>$idioma,
+								'ordenApellidos'=>$ordenApellidos,
 								'mi_id_schema'=>$id_schema,
 								 );
 							$_SESSION['session_auth']=$session_auth;

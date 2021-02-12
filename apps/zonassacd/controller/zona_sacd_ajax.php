@@ -58,7 +58,7 @@ switch($Qque) {
 			$a_valores = [];
 			foreach ($cSacds as $oPersona) {
 				$id_nom = $oPersona->getId_nom();
-				$ap_nom = $oPersona->getApellidosNombre();
+				$ap_nom = $oPersona->getPrefApellidosNombre();
 				$GesZonasSacd = new GestorZonaSacd();
 				$cZonaSacd = $GesZonasSacd->getZonasSacds(array('id_nom'=>$id_nom));
 				$a_zonas=array();
@@ -85,7 +85,7 @@ switch($Qque) {
 				$oPersona = new PersonaDl($id_nom);
 				if ($oPersona->getSituacion() != 'A') continue;
 				if ($oPersona->getDl() != ConfigGlobal::mi_delef()) continue;
-				$ap_nom = $oPersona->getApellidosNombre();
+				$ap_nom = $oPersona->getPrefApellidosNombre();
 
 				$a_sacds[$ap_nom]=$id_nom;
 			}
@@ -129,7 +129,7 @@ switch($Qque) {
 		$i=0;
 		foreach ($cSacds as $oPersona) {
 			$id_nom = $oPersona->getId_nom();
-			$ap_nom = $oPersona->getApellidosNombre();
+			$ap_nom = $oPersona->getPrefApellidosNombre();
 			$GesZonasSacd = new GestorZonaSacd();
 			$cZonaSacd = $GesZonasSacd->getZonasSacds(array('id_nom'=>$id_nom));
 			$a_zonas=array();

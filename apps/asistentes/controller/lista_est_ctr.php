@@ -136,7 +136,7 @@ foreach ($cCentros as $oCentroDl) {
 	foreach ($cPersonas as $oPersonaDl) {
 		$i++;
 		$id_nom = $oPersonaDl->getId_nom();
-		$nom = $oPersonaDl->getApellidosNombre();
+		$nom = $oPersonaDl->getPrefApellidosNombre();
 		$stgr = $oPersonaDl->getStgr();
 		$a_valores[$id_ubi][$i][1]=$i;
 		$a_valores[$id_ubi][$i][2]=$nom;
@@ -189,7 +189,7 @@ foreach ($cCentros as $oCentroDl) {
 									} else {
 										$p = '';
 									}
-									$preceptor = '(p: '. $oPersona->getApellidosNombre().")$p";
+									$preceptor = '(p: '. $oPersona->getPrefApellidosNombre().")$p";
 								} else {
 									$preceptor = '(p)';
 								}

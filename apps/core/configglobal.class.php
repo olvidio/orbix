@@ -179,4 +179,8 @@ Class ConfigGlobal extends ServerConf {
 	public static function mi_Idioma_short() {
 		return substr($_SESSION['session_auth']['idioma'],0,2);
 	}
+	// ----------- ordenApellidos -------------------
+	public static function mi_ordenApellidos() {
+		return $_SESSION['session_auth']['ordenApellidos'];
+	}
 }

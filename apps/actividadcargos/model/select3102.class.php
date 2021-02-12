@@ -119,7 +119,7 @@ class Select3102 {
 			}
 			$oCargo=new actividadcargos\Cargo($id_cargo);
 
-			$nom=$oPersona->getApellidosNombre();
+			$nom=$oPersona->getPrefApellidosNombre();
 
 			$cargo=$oCargo->getCargo();
 			$puede_agd=$oActividadCargo->getPuede_agd();

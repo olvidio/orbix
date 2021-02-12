@@ -405,12 +405,12 @@ class Cambio Extends core\ClasePropiedades {
 	        if (!empty($sValor_old)) {
 	            //$oPersona = Persona::NewPersona($sValor_old);
 	            $oPersona = new PersonaSacd($sValor_old);
-	            $sValor_old = $oPersona->getApellidosNombre();
+	            $sValor_old = $oPersona->getPrefApellidosNombre();
 	        }
 	        if (!empty($sValor_new)) {
 	            //$oPersona = Persona::NewPersona($sValor_new);
 	            $oPersona = new PersonaSacd($sValor_new);
-	            $sValor_new = $oPersona->getApellidosNombre();
+	            $sValor_new = $oPersona->getPrefApellidosNombre();
 	        }
 	    }
 	    if ($sPropiedad == 'id_ubi') {

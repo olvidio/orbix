@@ -102,7 +102,7 @@ foreach($cAlumnos as $oPersonaDl) {
 	// si no cursa ningún ca, me salto todo
 	switch (count($cAsistencias)) {
 		case 0:
-			$msg .= addslashes(sprintf(_("no se ha hecho nada con %s no tiene asignado ca"),$oPersonaDl->getApellidosNombre()));
+			$msg .= addslashes(sprintf(_("no se ha hecho nada con %s no tiene asignado ca"),$oPersonaDl->getPrefApellidosNombre()));
 			$msg .= '\n';
 			$msg .= '<br>';
 		   	continue;
@@ -198,15 +198,15 @@ foreach($cAlumnos as $oPersonaDl) {
 					}
 					$m++;
 				}
-				$msg .= addslashes(sprintf(_("%s se ha matriculado de %s asignaturas"),$oPersonaDl->getApellidosNombre(),$m));
+				$msg .= addslashes(sprintf(_("%s se ha matriculado de %s asignaturas"),$oPersonaDl->getPrefApellidosNombre(),$m));
 				$msg .= "\n";
 			} else {
-				$msg .= addslashes(sprintf(_("no se ha hecho nada com %s. ya tiene el plan de estudios confirmado"),$oPersonaDl->getApellidosNombre()));
+				$msg .= addslashes(sprintf(_("no se ha hecho nada com %s. ya tiene el plan de estudios confirmado"),$oPersonaDl->getPrefApellidosNombre()));
 				$msg .= "\n";
 			}
 			break;
 		default:
-			$msg .= addslashes(sprintf(_("no se ha hecho nada con %s, tiene asignado más de un ca"),$oPersonaDl->getApellidosNombre()));
+			$msg .= addslashes(sprintf(_("no se ha hecho nada con %s, tiene asignado más de un ca"),$oPersonaDl->getPrefApellidosNombre()));
 			$msg .= "\n";
 	}
 

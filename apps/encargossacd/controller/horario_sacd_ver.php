@@ -37,7 +37,7 @@ $Qdesc_enc = (string) \filter_input(INPUT_POST, 'desc_enc');
 
 
 $oPersona = new PersonaDl($Qid_nom);
-$ap_nom = $oPersona->getApellidosNombre();
+$ap_nom = $oPersona->getPrefApellidosNombre();
 /*
 $GesEncargosSacdHorario = new GestorEncargoSacdHorario();
 $cTareasHorario = $GesEncargosSacdHorario->getTareaHorariosSacd(array('id_nom'=>$Qid_nom));

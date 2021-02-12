@@ -49,7 +49,7 @@ if (($Qna == 'a' || $Qna == 'agd') && $Qsactividad == 'ca') {
 }
 
 $oPersona = new personas\PersonaDl($Qid_nom);
-$ap_nom = $oPersona->getApellidosNombre();
+$ap_nom = $oPersona->getPrefApellidosNombre();
 
 // Posibles:
 if (!empty($Qtodos) && $Qtodos != 1) {

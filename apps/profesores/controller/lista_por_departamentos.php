@@ -48,7 +48,7 @@ foreach ($cDepartamentos as $oDepartamento) {
 		$oPersonaDl = new personas\model\entity\PersonaDl($id_nom);
 		if ($oPersonaDl->getSituacion() != 'A') { continue; }
 		$ap_orden = $oPersonaDl->getApellido1().$oPersonaDl->getApellido2().$oPersonaDl->getNom();
-		$ap_nom = $oPersonaDl->getApellidosNombre() ." (". $oPersonaDl->getCentro_o_dl() .")";
+		$ap_nom = $oPersonaDl->getPrefApellidosNombre() ." (". $oPersonaDl->getCentro_o_dl() .")";
 		$aDirs[$ap_orden] = $ap_nom;
 	}
 	ksort($aDirs);
@@ -64,7 +64,7 @@ foreach ($cDepartamentos as $oDepartamento) {
 			$oPersonaDl = new personas\model\entity\PersonaDl($id_nom);
 			if ($oPersonaDl->getSituacion() != 'A') { continue; }
 			$ap_orden = $oPersonaDl->getApellido1().$oPersonaDl->getApellido2().$oPersonaDl->getNom();
-			$ap_nom = $oPersonaDl->getApellidosNombre() ." (". $oPersonaDl->getCentro_o_dl() .")";
+			$ap_nom = $oPersonaDl->getPrefApellidosNombre() ." (". $oPersonaDl->getCentro_o_dl() .")";
 			$aProfes[$ap_orden] = $ap_nom;
 		}
 		ksort($aProfes); 

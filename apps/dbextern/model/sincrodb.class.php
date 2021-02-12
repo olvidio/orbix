@@ -260,7 +260,7 @@ class sincroDB {
 			if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
 				continue;
 			}
-			$ape_nom = $oPersonaDl->getApellidosNombre();
+			$ape_nom = $oPersonaDl->getPrefApellidosNombre();
 			$nombre = $oPersonaDl->getNom();
 			$dl_persona = $oPersonaDl->getDl();
 			$apellido1 = $oPersonaDl->getApellido1();

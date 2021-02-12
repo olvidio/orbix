@@ -130,7 +130,7 @@ class Select1303 {
 						$msg_err .= "<br>$oPersona con id_nom: $id_preceptor (profesor) en  ".__FILE__.": line ". __LINE__;
 						$preceptor='x';
 					} else {
-						$preceptor = $oPersona->getApellidosNombre();
+						$preceptor = $oPersona->getPrefApellidosNombre();
 					}
 				} else {
 					$preceptor = _("por determinar"); 

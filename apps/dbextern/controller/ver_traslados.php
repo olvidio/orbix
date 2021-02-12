@@ -61,7 +61,7 @@ foreach ($a_ids_traslados as $id_nom_orbix) {
 	$oPersonaOrbix->setoDbl($oDB);
 
 	$a_persona_orbix[$i]['id_nom_orbix'] = $id_nom_orbix;
-	$a_persona_orbix[$i]['ape_nom'] = $oPersonaOrbix->getApellidosNombre();
+	$a_persona_orbix[$i]['ape_nom'] = $oPersonaOrbix->getPrefApellidosNombre();
 	$a_persona_orbix[$i]['dl'] = $oPersonaOrbix->getDl();
 
 	$oSincroDB->restaurarConexion($oDB);

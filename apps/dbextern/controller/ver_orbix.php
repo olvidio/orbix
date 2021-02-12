@@ -79,7 +79,7 @@ if (empty($id)) {
 			continue;
 		}
 		$a_persona_listas['id_nom_orbix'] = $id_nom_orbix;
-		$a_persona_listas['ape_nom'] = $oPersonaListas->getApellidosNombre();
+		$a_persona_listas['ape_nom'] = $oPersonaListas->getPrefApellidosNombre();
 		$a_persona_listas['nombre'] = $oPersonaListas->getNom();
 		$a_persona_listas['apellido1'] = $oPersonaListas->getApellido1();
 		$a_persona_listas['nx1'] = $oPersonaListas->getNx1();

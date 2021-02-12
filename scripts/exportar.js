@@ -122,6 +122,11 @@ function fnjs_convert(node){
 			//rta=$(node).html();
 			return " ";
 			break;
+		case "textarea":
+			value=$(node).val();
+			myText=value.replaceAll('\n','\r'); 
+			rta+=myText;
+			break;
 		case "p":
 			$(node).children().filter(":visible").each(function(i){
 				//alert("i: "+i+"\n"+$(node).html());

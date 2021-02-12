@@ -191,7 +191,7 @@ foreach ($cPersonas as $oPersona) {
 	$i++;
 	$id_nom=$oPersona->getId_nom();
 	$id_tabla=$oPersona->getId_tabla();
-	$nom=$oPersona->getApellidosNombre();
+	$nom=$oPersona->getPrefApellidosNombre();
 	$ctr_o_dl=$oPersona->getCentro_o_dl();
 	$condicion_2="Where id_nom='".$id_nom."'";
 	$condicion_2=urlencode($condicion_2);

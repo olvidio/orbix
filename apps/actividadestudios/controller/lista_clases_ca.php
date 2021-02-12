@@ -51,7 +51,7 @@ if (empty($id_nom_dtor_est)) {
 		$msg_err .= "<br>$oPersona con id_nom: $id_nom_dtor_est en  ".__FILE__.": line ". __LINE__;
 		$nom_director_est='';
 	} else {
-		$nom_director_est=$oPersona->getApellidosNombre();
+		$nom_director_est=$oPersona->getPrefApellidosNombre();
 	}
 }
 
@@ -78,7 +78,7 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
 			$msg_err .= "<br>$oPersona con id_nom: $id_profesor (profesor) en  ".__FILE__.": line ". __LINE__;
 			$nom_profesor = '';
 		} else {
-			$nom_profesor=$oPersona->getApellidosNombre();
+			$nom_profesor=$oPersona->getPrefApellidosNombre();
 		}
 	} else {
 		$nom_profesor = '';
@@ -108,7 +108,7 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
 			}
 			continue;
 		}
-		$nom_persona=$oPersona->getApellidosNombre();
+		$nom_persona=$oPersona->getPrefApellidosNombre();
 		$ctr=$oPersona->getCentro_o_dl();
 		$aMatriculados[$nom_persona] = $ctr;
 	}

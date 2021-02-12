@@ -70,7 +70,7 @@ class ComunicarActividadesSacd {
         foreach ($this->cPersonas as $oPersona) {
             $s++;
             $id_nom=$oPersona->getId_nom();
-            $nom_ap=$oPersona->getApellidosNombre();
+            $nom_ap=$oPersona->getPrefApellidosNombre();
             $idioma = $oPersona->getLengua();
 
             $array_actividades[$id_nom]['txt']['com_sacd'] = $oActividadesSacdFunciones->getTraduccion('com_sacd', $idioma);

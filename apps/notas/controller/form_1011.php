@@ -124,7 +124,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
 			$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 			continue;
 		}
-		$ap_nom=$oPersona->getApellidosNombre();
+		$ap_nom=$oPersona->getPrefApellidosNombre();
 		$aProfesores[$id_nom]=$ap_nom;
 	}
 	uasort($aProfesores,'core\strsinacentocmp');

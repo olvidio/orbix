@@ -50,7 +50,7 @@ class GestorProfesorAmpliacion Extends core\ClaseGestor {
 		foreach ($gesProfesores as $oProfesor) {
 			$id_nom = $oProfesor->getId_nom();
 			$oPersonaDl = new personas\PersonaDl($id_nom);
-			$ap_nom = $oPersonaDl->getApellidosNombre();
+			$ap_nom = $oPersonaDl->getPrefApellidosNombre();
 			$aProfesores[] = array('id_nom'=>$id_nom,'ap_nom'=>$ap_nom);
 			$aAp1[] = $oPersonaDl->getApellido1();
 			$aAp2[] = $oPersonaDl->getApellido2();

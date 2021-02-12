@@ -4,10 +4,11 @@ if (!empty($msg_txt)) {
 	echo "<div class='no_print'>$msg_txt</div>"; 
 } 
 ?>
-<div class='salta_pag'><table><tr><th align='LEFT'><?= $ctr ?></th><th align='RIGHT'><?= $ref ?></th></tr></table>
+<div class='salta_pag'>
+<table><tr><th align='LEFT'><?= $ctr ?></th><th align='RIGHT'><?= $ref ?></th></tr></table>
 <table class='ca_posibles' rules='groups' CELLSPACING=0>
 	<colgroup span=1 width=200></colgruoup>
-<!--	<colgroup span=$num_cols width=$gruix></colgruoup>
+    <!--  <colgroup span=$num_cols width=$gruix></colgruoup>
 	<colgroup span=$num_cols width=$gruix></colgruoup>  -->
 	<tbody>
 	<tr>
@@ -80,11 +81,14 @@ if (!empty($msg_txt)) {
 		echo "</tr>";
 	}
 	?>
-	</tbody></table>
-	<br>
-	<table CELLSPACING=5>
-		<tr><td valign=top class=observ><?= _("observaciones").":"; ?></td>
-		<td class=observ><textarea class=observ name="observ" cols="110" rows="5"></textarea></td>
-		</tr>
-	</table>
-	</div>
+	</tbody>
+</table>
+<br>
+<table>
+<tr><td></td></tr>
+  <tr>
+    <td valign=top class=observ><?= _("observaciones").":"; ?></td>
+    <td class=observ><textarea class=observ name="observ" cols="110" rows="5">gg</textarea></td>
+  </tr>
+</table>
+</div>

@@ -174,7 +174,7 @@ class listaPlazas {
 						$cl++;
 						$num++;
 						$id_tabla = $oPersona->getId_tabla();
-						$ap_nom = $oPersona->getApellidosNombre();
+						$ap_nom = $oPersona->getPrefApellidosNombre();
 						$ctr_dl = $oPersona->getCentro_o_dl();
 
 						// ahora miro si también asiste:
@@ -208,7 +208,7 @@ class listaPlazas {
                     if ($this->bsacd && $sacd != 't') continue;
 
 					$id_tabla = $oPersona->getId_tabla();
-					$ap_nom = $oPersona->getApellidosNombre();
+					$ap_nom = $oPersona->getPrefApellidosNombre();
 					$ctr_dl = $oPersona->getCentro_o_dl();
 					$dl = $oPersona->getDl();
 

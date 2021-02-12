@@ -23,7 +23,7 @@ foreach ($a_ids_desaparecidos_de_listas as $id_nom_orbix) {
 	$oPersonaDl = new personas\model\entity\PersonaDl($id_nom_orbix);
 
 	$a_persona_orbix[$i]['id_nom_orbix'] = $id_nom_orbix;
-	$a_persona_orbix[$i]['ape_nom'] = $oPersonaDl->getApellidosNombre();
+	$a_persona_orbix[$i]['ape_nom'] = $oPersonaDl->getPrefApellidosNombre();
 	$a_persona_orbix[$i]['dl'] = $oPersonaDl->getDl();
 }
 

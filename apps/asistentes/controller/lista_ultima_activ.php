@@ -173,7 +173,7 @@ $gesCentros = new GestorCentroDl();
 foreach ($cPersonas as $oPersona) {
     $i++;
     $id_nom = $oPersona->getId_nom();
-    $ape_nom = $oPersona->getApellidosNombre();
+    $ape_nom = $oPersona->getPrefApellidosNombre();
     
     //Buscar el ctr (si no está en la seleccion)
     if ($Qid_ubi == 999 OR empty($Qid_ubi)){

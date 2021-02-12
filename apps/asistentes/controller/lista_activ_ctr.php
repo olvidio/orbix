@@ -166,7 +166,7 @@ foreach ($cCentros as $oCentro) {
 	foreach ($cPersonas as $oPersona) {
 		$i++;
 		$id_nom=$oPersona->getId_nom();
-		$ap_nom=$oPersona->getApellidosNombre();
+		$ap_nom=$oPersona->getPrefApellidosNombre();
 		$aWhereNom['id_nom'] = $id_nom;
 		$aWhereNom['propio'] = 't';
 		$aOperadorNom = [];

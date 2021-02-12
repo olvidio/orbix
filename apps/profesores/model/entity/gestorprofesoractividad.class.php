@@ -60,7 +60,7 @@ class GestorProfesorActividad Extends core\ClaseGestor {
 			$profesor_stgr = $oPersona->getProfesor_stgr();
 			if ($profesor_stgr == false) continue;
 
-			$ap_nom=$oPersona->getApellidosNombre();
+			$ap_nom=$oPersona->getPrefApellidosNombre();
 			//$ctr_dl=$oPersona->getCentro_o_dl();
 
 			$aProfesoresEx[] = array('id_nom'=>$id_nom,'ap_nom'=>$ap_nom);

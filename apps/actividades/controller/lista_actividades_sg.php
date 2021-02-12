@@ -292,7 +292,7 @@ foreach($cActividades as $oActividad) {
             if ($oPermSacd->have_perm_action('ver') === true) { // sólo si tiene permiso
                 $gesCargosActividad=new GestorActividadCargo();
                 foreach($gesCargosActividad->getActividadSacds($id_activ) as $oPersona) {;
-                    $sacds.=$oPersona->getApellidosNombre()."# "; // la coma la utilizo como separador de apellidos, nombre.
+                    $sacds.=$oPersona->getPrefApellidosNombre()."# "; // la coma la utilizo como separador de apellidos, nombre.
                 }
                 $sacds=substr($sacds,0,-2);
             }

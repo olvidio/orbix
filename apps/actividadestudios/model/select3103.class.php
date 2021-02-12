@@ -124,7 +124,7 @@ class Select3103 {
 					$msg_err .= "<br>$oPersona con id_nom: $id_profesor (profesor) en  ".__FILE__.": line ". __LINE__;
 					$nom_profesor = '';
 				} else {
-					$nom_profesor=$oPersona->getApellidosNombre();
+					$nom_profesor=$oPersona->getPrefApellidosNombre();
 				}
 			} else {
 				$nom_profesor = '';
@@ -146,7 +146,7 @@ class Select3103 {
 					$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 					continue;
 				}
-				$nom_persona=$oPersona->getApellidosNombre();
+				$nom_persona=$oPersona->getPrefApellidosNombre();
 				$ctr=$oPersona->getCentro_o_dl();
 
 				$a_valores[$id_asignatura][$m]['sel']="$id_nom#$id_asignatura";

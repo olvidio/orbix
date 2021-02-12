@@ -207,7 +207,7 @@ foreach ($aa_zonas as $a_zonas) {
 		$oSacd = new PersonaSacd($id_nom);
 		if ($oSacd->getSituacion() != 'A') continue;
 
-		$ap_nom = $oSacd->getApellidosNombre();
+		$ap_nom = $oSacd->getPrefApellidosNombre();
 		$persona[$p]="p#$id_nom#$ap_nom";
 			
 		if ($Qactividad == 'si') {

@@ -162,7 +162,7 @@ switch ($Qque) {
 				$id_cargo=$oActividadCargo->getId_cargo();
 				// OJO puede ser de la dl o de_paso
 				$oPersona = Persona::NewPersona($id_nom);
-				$ap_nom=$oPersona->getApellidosNombre();
+				$ap_nom=$oPersona->getPrefApellidosNombre();
 				$id_txt_nom=$Qid_activ."_".$id_nom;
 
 				if ($oPermSacd->have_perm_activ('modificar') === true) { // sólo si tiene permiso para modificar
@@ -202,7 +202,7 @@ switch ($Qque) {
                     $id_nom = $cEncargosSacd[0]->getId_nom();
                     // OJO puede ser de la dl o de_paso
                     $oPersona = Persona::NewPersona($id_nom);
-                    $ap_nom=$oPersona->getApellidosNombre();
+                    $ap_nom=$oPersona->getPrefApellidosNombre();
                     $sacd_posibles.="<tr><td><span class=link id=$id_nom onclick=fnjs_asignar_sacd('".$Qid_activ."','$id_nom') >$num_orden * $ap_nom</span></td></tr>";
                 }
             }
@@ -233,7 +233,7 @@ switch ($Qque) {
 		$cPersonas = $GesPersonas->getPersonas($aWhere,$aOperador);
 		foreach ($cPersonas as $oPersona) {
 			$id_nom=$oPersona->getId_nom();
-			$ap_nom=$oPersona->getApellidosNombre();
+			$ap_nom=$oPersona->getPrefApellidosNombre();
 			$sacd_posibles.="<tr><td><span class=link id=$id_nom onclick=fnjs_asignar_sacd('".$Qid_activ."','$id_nom')> $ap_nom</span></td></tr>";
 		}
 		$txt="<table><tr><td class=cabecera>"._("sacd")."</td></tr>$sacd_posibles</table>";
@@ -420,7 +420,7 @@ switch ($Qque) {
                         $oPersona = Persona::NewPersona($id_nom);
 						$sacds[] = array ('id_nom'=>$id_nom,
 									'id_cargo'=>$oActividadCargo->getId_cargo(),
-									'ap_nom'=>$oPersona->getApellidosNombre()
+									'ap_nom'=>$oPersona->getPrefApellidosNombre()
 									);
 					}
 				}

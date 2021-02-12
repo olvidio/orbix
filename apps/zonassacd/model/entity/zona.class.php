@@ -473,7 +473,7 @@ class Zona Extends core\ClasePropiedades {
 		$oDatosCampo->setEtiqueta(_("jefe zona"));
 		$oDatosCampo->setTipo('opciones');
 		$oDatosCampo->setArgument('personas\model\entity\PersonaDl'); // nombre del objeto relacionado
-		$oDatosCampo->setArgument2('getApellidosNombre'); // método para obtener el valor a mostrar del objeto relacionado.
+		$oDatosCampo->setArgument2('getPrefApellidosNombre'); // método para obtener el valor a mostrar del objeto relacionado.
 		$oDatosCampo->setArgument3('getListaSacd'); // método con que crear la lista de opciones del Gestor objeto relacionado.
 		return $oDatosCampo;
 	}
