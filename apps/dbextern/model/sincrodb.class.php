@@ -225,9 +225,11 @@ class sincroDB {
 //			$esquema_slash = '"'.$esquema.'"';
 //			$oDBR->exec("SET search_path TO public,$esquema_slash");
 			// buscar en cada esquema
-			$e++;
 			$a_lista_orbix = $this->posiblesOrbix($id_nom_listas, $esquema);
-			$a_posibles[$e] = $a_lista_orbix;
+			if (!empty($a_lista_orbix)) {
+                $e++;
+                $a_posibles[$e] = $a_lista_orbix;
+			}
 		}
 		return $a_posibles;
 	}
@@ -263,6 +265,9 @@ class sincroDB {
 			if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
 				continue;
 			}
+			echo "<pre>";
+			print_r($oPersonaDl);
+			echo "</pre>;
 			$ape_nom = $oPersonaDl->getPrefApellidosNombre();
 			$nombre = $oPersonaDl->getNom();
 			$dl_persona = $oPersonaDl->getDl();
