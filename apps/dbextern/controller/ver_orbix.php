@@ -189,14 +189,17 @@ if ($max === 0) {
     <?php if (!empty($a_lista_bdu)) { ?>
         <h3><?= _("posibles coincidencias con personas de la BDU en otras dl/r") ?>:</h3>
         <table>
-            <tr><th><?= _("esquema") ?></th><th><?= _("id aquinate") ?></th><th><?= _("ape_nom-calculado") ?></th><th><?= _("nombre") ?></th>
-                <th><?= _("apellido1") ?></th><th><?= _("apellido2") ?></th><th><?= _("fecha nacimiento") ?></th></tr>
+            <tr><th><?= _("id aquinate") ?></th><th><?= _("región") ?></th><th><?= _("compartida") ?></th><th><?= _("dl") ?></th>
+            <th><?= _("ape_nom-calculado") ?></th><th><?= _("nombre") ?></th>
+            <th><?= _("apellido1") ?></th><th><?= _("apellido2") ?></th><th><?= _("fecha nacimiento") ?></th></tr>
         <?php
             foreach ($a_lista_bdu as $persona_bdu) {
                 $id_bdu = $persona_bdu['id_nom'];
                 echo "<tr>";
-                echo "<td>".$persona_bdu['esquema'].'</td>';
                 echo "<td>".$persona_bdu['id_nom'].'</td>';
+                echo "<td>".$persona_bdu['pertenece_r'].'</td>';
+                echo "<td>".$persona_bdu['compartida_con_r'].'</td>';
+                echo "<td>".$persona_bdu['dl_persona'].'</td>';
                 echo "<td class='contenido'>".$persona_bdu['ape_nom'].'</td>';
                 echo "<td>".$persona_bdu['nombre'].'</td>';
                 echo "<td>".$persona_bdu['apellido1'].'</td>';
