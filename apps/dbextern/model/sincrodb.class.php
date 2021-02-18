@@ -262,7 +262,7 @@ class sincroDB {
 		$oGesListas = new GestorPersonaListas();
 		$cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
 		$i = 0;
-		$a_lista_dbu = array();
+		$a_lista_bdu = [];
 		foreach ($cPersonasListas as $oPersonaListas) {
 		    $id_nom_listas = $oPersonaListas->getIdentif();
 			$oGesMatch = new GestorIdMatchPersona();
@@ -285,17 +285,17 @@ class sincroDB {
 			$f_nacimiento = empty($f_nacimiento)? '??' : $f_nacimiento;
 			$pertenece_r = $oPersonaListas->getPertenece_r();
 			$compartida_con_r = $oPersonaListas->getCompartida_con_r();
-			$a_lista_bdu[$i] = array (
-			                            'id_nom'=>$id_nom_listas,
-										'ape_nom'=>$ape_nom,
-										'nombre'=>$nombre,
-										'dl_persona'=>$dl_persona,
-										'apellido1'=>$apellido1,
-										'apellido2'=>$apellido2,
-										'f_nacimiento'=>$f_nacimiento,
-                                        '$pertenece_r' => $pertenece_r,
-                                        'compartida_con_r' => $compartida_con_r,
-			);
+			$a_lista_bdu[$i] = [
+                            'id_nom'=>$id_nom_listas,
+                            'ape_nom'=>$ape_nom,
+                            'nombre'=>$nombre,
+                            'dl_persona'=>$dl_persona,
+                            'apellido1'=>$apellido1,
+                            'apellido2'=>$apellido2,
+                            'f_nacimiento'=>$f_nacimiento,
+                            'pertenece_r' => $pertenece_r,
+                            'compartida_con_r' => $compartida_con_r,
+                        ];
 			$i++;
 		}
 		return $a_lista_bdu;
