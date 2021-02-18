@@ -267,7 +267,7 @@ class sincroDB {
 			}
 			echo "<pre>";
 			print_r($oPersonaDl);
-			echo "</pre>;
+			echo "</pre>";
 			$ape_nom = $oPersonaDl->getPrefApellidosNombre();
 			$nombre = $oPersonaDl->getNom();
 			$dl_persona = $oPersonaDl->getDl();
