@@ -9,7 +9,8 @@
 
 $mov = '';
 
-//$dl = (string)  filter_input(INPUT_POST, 'dl');
+$region = (string)  filter_input(INPUT_POST, 'region');
+$dl = (string)  filter_input(INPUT_POST, 'dl');
 $tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
 
 $id = (string)  filter_input(INPUT_POST, 'id');
@@ -62,7 +63,12 @@ function otro($id,$mov,$max) {
 	}
 }
 
+$oSincroDB = new dbextern\model\sincroDB();
+$oSincroDB->setTipo_persona($tipo_persona);
+$oSincroDB->setRegion($region);
+$oSincroDB->setDlListas($dl);
 
+$id_nom_orbix = '';
 if (empty($id)) {
 	$id=1;
 	$obj = 'personas\\model\\entity\\'.$obj_pau;
@@ -98,12 +104,19 @@ if (empty($id)) {
 
 $max = count($_SESSION['DBOrbix']);
 
+$a_lista_bdu = [];
+$a_lista_bdu_otradl = [];
+$persona_orbix = [];
 if ($max === 0) {
     $html_reg = _("No hay registros");
 } else {
     $new_id = otro($id,$mov,$max);
     $persona_orbix = $_SESSION['DBOrbix'][$new_id];
 
+    $id_nom_orbix = $persona_orbix['id_nom_orbix'];
+    
+    $a_lista_bdu = $oSincroDB->posiblesBDU($id_nom_orbix);
+    
     $url_sincro_ver = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/ver_orbix.php';
     $oHash = new web\Hash();
     $oHash->setUrl($url_sincro_ver);
@@ -172,6 +185,28 @@ if ($max === 0) {
     <input type="button" value="<?= _("trasladar") ?>" onclick="">
     <input type="button" value="<?= _("baja") ?>" onclick="">
     </form>
-<?php 
+    <br>
+    <?php if (!empty($a_lista_bdu)) { ?>
+        <h3><?= _("posibles coincidencias con personas de la BDU en otras dl/r") ?>:</h3>
+        <table>
+            <tr><th><?= _("esquema") ?></th><th><?= _("id aquinate") ?></th><th><?= _("ape_nom-calculado") ?></th><th><?= _("nombre") ?></th>
+                <th><?= _("apellido1") ?></th><th><?= _("apellido2") ?></th><th><?= _("fecha nacimiento") ?></th></tr>
+        <?php
+            foreach ($a_lista_bdu as $persona_bdu) {
+                $id_bdu = $persona_bdu['id_nom'];
+                echo "<tr>";
+                echo "<td>".$persona_bdu['esquema'].'</td>';
+                echo "<td>".$persona_bdu['id_nom'].'</td>';
+                echo "<td class='contenido'>".$persona_bdu['ape_nom'].'</td>';
+                echo "<td>".$persona_bdu['nombre'].'</td>';
+                echo "<td>".$persona_bdu['apellido1'].'</td>';
+                echo "<td>".$persona_bdu['apellido2'].'</td>';
+                echo "<td class='contenido'>".$persona_bdu['f_nacimiento'].'</td>';
+                echo "<td class='titulo'><span class=link onClick='fnjs_unir($id_bdu)'>" . _("unir") . '</span></td>';
+                echo '</tr>';
+            }
+        }
+        ?>
+        </table>
+    <?php }
 }
-?>

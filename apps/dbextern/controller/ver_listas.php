@@ -201,7 +201,7 @@ if (empty($mov)) {
 <?php } ?>
 
 <?php if (!empty($a_lista_orbix)) { ?>
-<h3><?= _("posibles coincidencias") ?>:</h3>
+<h3><?= _("posibles coincidencias con personas de Aquinate de la propia dl/r") ?>:</h3>
 <table>
 	<tr><th><?= _("id aquinate") ?></th><th><?= _("ape_nom-calculado") ?></th><th><?= _("nombre") ?></th>
 		<th><?= _("apellido1") ?></th><th><?= _("apellido2") ?></th><th><?= _("fecha nacimiento") ?></th></tr>
@@ -222,7 +222,7 @@ foreach ($a_lista_orbix as $persona_orbix) {
 </table>
 <?php } ?>
 <?php if (!empty($a_lista_orbix_otradl)) { ?>
-<h3><?= _("posibles coincidencias en otras dl") ?>:</h3>
+<h3><?= _("posibles coincidencias con personas de Aquinate en otras dl/r") ?>:</h3>
 <table>
 	<tr><th><?= _("esquema") ?></th><th><?= _("id aquinate") ?></th><th><?= _("ape_nom-calculado") ?></th><th><?= _("nombre") ?></th>
 		<th><?= _("apellido1") ?></th><th><?= _("apellido2") ?></th><th><?= _("fecha nacimiento") ?></th></tr>

@@ -13,6 +13,7 @@ use personas\model\entity\TelecoPersonaDl;
 use personas\model\entity\TrasladoDl;
 use web\DateTimeLocal;
 use dbextern\model\entity\GestorDlListas;
+use personas\model\entity\PersonaDl;
 
 /**
  * Description of sincroDB
@@ -191,7 +192,110 @@ class sincroDB {
 		}
 		return false;
 	}
+
+	public function posiblesBDUOtrasDl($id_nom_orbix) {
+		// posibles esquemas
+		/*
+		 * @todo: filtrar por regiones?
+		 */
+	    $Query = "SELECT * FROM dbo.q_dl_Estudios_b 
+                        WHERE Identif LIKE '$this->id_tipo%' AND  Dl='$this->dl_listas' 
+                            AND (pertenece_r='$this->region' OR compartida_con_r='$this->region') ";
+        // todos los de listas
+        $oGesListas = new GestorPersonaListas();	
+        $cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
+        
+		$oDBR = $GLOBALS['oDBR'];
+		$qRs = $oDBR->query("SELECT DISTINCT schemaname FROM pg_stat_user_tables");
+		$aResultSql = $qRs->fetchAll(\PDO::FETCH_ASSOC);
+		$aEsquemas = $aResultSql;
+		//Utilizo la conexión oDBR para cambiar momentáneamente el search_path.
+		$oDBR = $GLOBALS['oDBR'];
+		$qRs = $oDBR->query('SHOW search_path');
+		$aPath = $qRs->fetch(\PDO::FETCH_ASSOC);
+		$path_org = addslashes($aPath['search_path']);
+		$a_posibles = [];
+		$e = 0;
+		foreach ($aEsquemas as $esquemaName) {
+			$esquema = $esquemaName['schemaname'];
+			//elimino el de H-H
+			if (strpos($esquema, '-')) {
+				$a_reg = explode('-',$esquema);
+				$reg = $a_reg[0]; 
+				$dl = substr($a_reg[1],0,-1); // quito la v o la f.
+				if ($reg == $dl) { continue; }
+			}
+			//elimino public, publicv, global
+			if ($esquema == 'global') { continue; }
+			if ($esquema == 'public') { continue; }
+			if ($esquema == 'publicv') { continue; }
+			if ($esquema == 'restov') { continue; }
+//			$esquema_slash = '"'.$esquema.'"';
+//			$oDBR->exec("SET search_path TO public,$esquema_slash");
+			// buscar en cada esquema
+			$a_lista_orbix = $this->posiblesOrbix($id_nom_listas, $esquema);
+			if (!empty($a_lista_orbix)) {
+                $e++;
+                $a_posibles[$e] = $a_lista_orbix;
+			}
+		}
+		return $a_posibles;
+	}
 	
+	/**
+	 * Posibles coincidencias en la BDU
+	 * 
+	 * @param integer $id_nom_orbix
+	 * @return unknown[][]|string[][]
+	 */
+	public function posiblesBDU($id_nom_orbix) {
+		$oPersonaDl = new PersonaDl($id_nom_orbix);	
+		$oPersonaDl = new PersonaDl($id_nom_orbix);	
+		$oPersonaDl->DBCarregar();
+		
+		$apellido1 = $oPersonaDl->getApellido1();
+		
+		$Query = "SELECT * FROM dbo.q_dl_Estudios_b
+                        WHERE Identif LIKE '$this->id_tipo%' AND  ape_nom LIKE '%".$apellido1."%'
+                            AND (pertenece_r='$this->region' OR compartida_con_r='$this->region') ";
+		// todos los de listas
+		$oGesListas = new GestorPersonaListas();
+		$cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
+		$i = 0;
+		$a_lista_dbu = array();
+		foreach ($cPersonasListas as $oPersonaListas) {
+		    $id_nom_listas = $oPersonaListas->getIdentif();
+			$oGesMatch = new GestorIdMatchPersona();
+			$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas'=>$id_nom_listas));
+			if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
+				continue;
+			}
+			$id_nom_listas = $oPersonaListas->getIdentif();
+			$ape_nom = $oPersonaListas->getApeNom();
+			$nombre = $oPersonaListas->getNombre();
+			$apellido1 = $oPersonaListas->getApellido1();
+			$nx1 = $oPersonaListas->getNx1();
+			$apellido1_sinprep = $oPersonaListas->getApellido1_sinprep();
+			$nx2 = $oPersonaListas->getNx2();
+			$apellido2 = $oPersonaListas->getApellido2();
+			$apellido2_sinprep = $oPersonaListas->getApellido2_sinprep();
+			$f_nacimiento = $oPersonaListas->getFecha_Naci();
+			$dl_persona = $oPersonaListas->getDl();
+			$lugar_nacimiento = $oPersonaListas->getLugar_Naci();
+			$f_nacimiento = empty($f_nacimiento)? '??' : $f_nacimiento;
+			$a_lista_bdu[$i] = array (
+			                            'id_nom'=>$id_nom_listas,
+										'ape_nom'=>$ape_nom,
+										'nombre'=>$nombre,
+										'dl_persona'=>$dl_persona,
+										'apellido1'=>$apellido1,
+										'apellido2'=>$apellido2,
+										'f_nacimiento'=>$f_nacimiento);
+			$i++;
+		}
+		return $a_lista_bdu;
+	}
+
 	public function posiblesOrbixOtrasDl($id_nom_listas) {
 		// posibles esquemas
 		/*
@@ -259,7 +363,9 @@ class sincroDB {
 		$i = 0;
 		$a_lista_orbix = array();
 		foreach ($cPersonasDl as $oPersonaDl) {
-			$oPersonaDl->setoDbl($oDB);
+            if (!empty($esquema)) {
+                $oPersonaDl->setoDbl($oDB);
+            }
 			$id_nom = $oPersonaDl->getId_nom();
 			$oGesMatch = new GestorIdMatchPersona();
 			$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_orbix'=>$id_nom));
