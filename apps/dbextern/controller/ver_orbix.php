@@ -205,7 +205,6 @@ if ($max === 0) {
                 echo "<td class='titulo'><span class=link onClick='fnjs_unir($id_bdu)'>" . _("unir") . '</span></td>';
                 echo '</tr>';
             }
-        }
         ?>
         </table>
     <?php }
