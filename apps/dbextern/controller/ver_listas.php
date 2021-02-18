@@ -189,7 +189,7 @@ if (empty($mov)) {
 		<th><?= _("apellido1-calculado") ?></th><th><?= _("apellido2-calculado") ?></th><th><?= _("fecha nacimiento") ?></th></tr>
 <?php
 	echo "<tr>";
-	echo "<td>".$persona_listas['id_nom_listas'].'<td>';
+	echo "<td>".$persona_listas['id_nom_listas'].'</td>';
 	echo "<td class='titulo'>".$persona_listas['ape_nom'].'</td>';
 	echo "<td>".$persona_listas['nombre'].'</td>';
 	echo "<td>".$persona_listas['apellido1'].'</td>';
@@ -224,20 +224,23 @@ foreach ($a_lista_orbix as $persona_orbix) {
 <?php if (!empty($a_lista_orbix_otradl)) { ?>
 <h3><?= _("posibles coincidencias en otras dl") ?>:</h3>
 <table>
-	<tr><th><?= _("id aquinate") ?></th><th><?= _("ape_nom-calculado") ?></th><th><?= _("nombre") ?></th>
+	<tr><th><?= _("esquema") ?></th><th><?= _("id aquinate") ?></th><th><?= _("ape_nom-calculado") ?></th><th><?= _("nombre") ?></th>
 		<th><?= _("apellido1") ?></th><th><?= _("apellido2") ?></th><th><?= _("fecha nacimiento") ?></th></tr>
 <?php
-foreach ($a_lista_orbix_otradl as $persona_orbix) {
-	$id_orbix = $persona_orbix['id_nom'];
-	echo "<tr>";
-	echo "<td>".$persona_orbix['id_nom'].'</td>';
-	echo "<td class='contenido'>".$persona_orbix['ape_nom'].'</td>';
-	echo "<td>".$persona_orbix['nombre'].'</td>';
-	echo "<td>".$persona_orbix['apellido1'].'</td>';
-	echo "<td>".$persona_orbix['apellido2'].'</td>';
-	echo "<td class='contenido'>".$persona_orbix['f_nacimiento'].'</td>';
-	echo "<td class='titulo'><span class=link onClick='fnjs_unir($id_orbix)'>" . _("unir") . '</span></td>';
-	echo '</tr>';
+foreach ($a_lista_orbix_otradl as $e => $a_persona_orbix) {
+    foreach ($a_persona_orbix as $persona_orbix) {
+        $id_orbix = $persona_orbix['id_nom'];
+        echo "<tr>";
+        echo "<td>".$persona_orbix['esquema'].'</td>';
+        echo "<td>".$persona_orbix['id_nom'].'</td>';
+        echo "<td class='contenido'>".$persona_orbix['ape_nom'].'</td>';
+        echo "<td>".$persona_orbix['nombre'].'</td>';
+        echo "<td>".$persona_orbix['apellido1'].'</td>';
+        echo "<td>".$persona_orbix['apellido2'].'</td>';
+        echo "<td class='contenido'>".$persona_orbix['f_nacimiento'].'</td>';
+        echo "<td class='titulo'><span class=link onClick='fnjs_unir($id_orbix)'>" . _("unir") . '</span></td>';
+        echo '</tr>';
+    }
 }
 ?>
 </table>

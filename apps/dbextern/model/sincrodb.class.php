@@ -207,6 +207,7 @@ class sincroDB {
 		$aPath = $qRs->fetch(\PDO::FETCH_ASSOC);
 		$path_org = addslashes($aPath['search_path']);
 		$a_posibles = [];
+		$e = 0;
 		foreach ($aEsquemas as $esquemaName) {
 			$esquema = $esquemaName['schemaname'];
 			//elimino el de H-H
@@ -224,8 +225,9 @@ class sincroDB {
 //			$esquema_slash = '"'.$esquema.'"';
 //			$oDBR->exec("SET search_path TO public,$esquema_slash");
 			// buscar en cada esquema
+			$e++;
 			$a_lista_orbix = $this->posiblesOrbix($id_nom_listas, $esquema);
-			$a_posibles = array_merge($a_posibles, $a_lista_orbix);
+			$a_posibles[$e] = $a_lista_orbix;
 		}
 		return $a_posibles;
 	}
@@ -267,7 +269,8 @@ class sincroDB {
 			$apellido1 = $oPersonaDl->getApellido1();
 			$apellido2 = $oPersonaDl->getApellido2();
 			$f_nacimiento = empty($oPersonaDl->getF_nacimiento()->getFromLocal())? '??' : $oPersonaDl->getF_nacimiento()->getFromLocal();
-			$a_lista_orbix[$i] = array('id_nom'=>$id_nom,
+			$a_lista_orbix[$i] = array ('esquema'=>$esquema,
+			                            'id_nom'=>$id_nom,
 										'ape_nom'=>$ape_nom,
 										'nombre'=>$nombre,
 										'dl_persona'=>$dl_persona,
