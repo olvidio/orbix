@@ -53,7 +53,7 @@ $GesPersonas = new $obj();
 
 //listas
 $Query = "SELECT * FROM dbo.q_dl_Estudios_b
-          WHERE Identif LIKE '$this->id_tipo%' AND  Dl='$dl_listas'
+          WHERE Identif LIKE '$id_tipo%' AND  Dl='$dl_listas'
                AND (pertenece_r='$region' OR compartida_con_r='$region') ";
 // todos los de listas
 $oGesListas = new GestorPersonaListas();	
