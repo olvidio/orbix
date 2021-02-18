@@ -190,11 +190,11 @@ if (empty($mov)) {
 <?php
 	echo "<tr>";
 	echo "<td>".$persona_listas['id_nom_listas'].'<td>';
-	echo "<td class='titulo'>".$persona_listas['ape_nom'].'<td>';
-	echo "<td>".$persona_listas['nombre'].'<td>';
-	echo "<td>".$persona_listas['apellido1'].'<td>';
-	echo "<td>".$persona_listas['apellido2'].'<td>';
-	echo "<td class='titulo'>".$persona_listas['f_nacimiento'].'<td>';
+	echo "<td class='titulo'>".$persona_listas['ape_nom'].'</td>';
+	echo "<td>".$persona_listas['nombre'].'</td>';
+	echo "<td>".$persona_listas['apellido1'].'</td>';
+	echo "<td>".$persona_listas['apellido2'].'</td>';
+	echo "<td class='titulo'>".$persona_listas['f_nacimiento'].'</td>';
 	echo '</tr>';
 ?>
 </table>
@@ -209,13 +209,13 @@ if (empty($mov)) {
 foreach ($a_lista_orbix as $persona_orbix) {
 	$id_orbix = $persona_orbix['id_nom'];
 	echo "<tr>";
-	echo "<td>".$persona_orbix['id_nom'].'<td>';
-	echo "<td class='contenido'>".$persona_orbix['ape_nom'].'<td>';
-	echo "<td>".$persona_orbix['nombre'].'<td>';
-	echo "<td>".$persona_orbix['apellido1'].'<td>';
-	echo "<td>".$persona_orbix['apellido2'].'<td>';
-	echo "<td class='contenido'>".$persona_orbix['f_nacimiento'].'<td>';
-	echo "<td class='titulo'><span class=link onClick='fnjs_unir($id_orbix)'>" . _("unir") . '</span><td>';
+	echo "<td>".$persona_orbix['id_nom'].'</td>';
+	echo "<td class='contenido'>".$persona_orbix['ape_nom'].'</td>';
+	echo "<td>".$persona_orbix['nombre'].'</td>';
+	echo "<td>".$persona_orbix['apellido1'].'</td>';
+	echo "<td>".$persona_orbix['apellido2'].'</td>';
+	echo "<td class='contenido'>".$persona_orbix['f_nacimiento'].'</td>';
+	echo "<td class='titulo'><span class=link onClick='fnjs_unir($id_orbix)'>" . _("unir") . '</span></td>';
 	echo '</tr>';
 }
 ?>
@@ -230,13 +230,13 @@ foreach ($a_lista_orbix as $persona_orbix) {
 foreach ($a_lista_orbix_otradl as $persona_orbix) {
 	$id_orbix = $persona_orbix['id_nom'];
 	echo "<tr>";
-	echo "<td>".$persona_orbix['id_nom'].'<td>';
-	echo "<td class='contenido'>".$persona_orbix['ape_nom'].'<td>';
-	echo "<td>".$persona_orbix['nombre'].'<td>';
-	echo "<td>".$persona_orbix['apellido1'].'<td>';
-	echo "<td>".$persona_orbix['apellido2'].'<td>';
-	echo "<td class='contenido'>".$persona_orbix['f_nacimiento'].'<td>';
-	echo "<td class='titulo'><span class=link onClick='fnjs_unir($id_orbix)'>" . _("unir") . '</span><td>';
+	echo "<td>".$persona_orbix['id_nom'].'</td>';
+	echo "<td class='contenido'>".$persona_orbix['ape_nom'].'</td>';
+	echo "<td>".$persona_orbix['nombre'].'</td>';
+	echo "<td>".$persona_orbix['apellido1'].'</td>';
+	echo "<td>".$persona_orbix['apellido2'].'</td>';
+	echo "<td class='contenido'>".$persona_orbix['f_nacimiento'].'</td>';
+	echo "<td class='titulo'><span class=link onClick='fnjs_unir($id_orbix)'>" . _("unir") . '</span></td>';
 	echo '</tr>';
 }
 ?>
