@@ -3,6 +3,12 @@ namespace dbextern\model\entity;
 use core;
 use web;
 
+/**
+ * Para las dl que están en la DBU
+ * 
+ * @author dani
+ *
+ */
 class DlListas Extends core\ClasePropiedades {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 

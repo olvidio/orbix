@@ -16,7 +16,6 @@ class PersonaListas Extends core\ClasePropiedades {
 	Email varchar (50)
 	Tfno_Movil varchar(17)
 	Ce varchar (40)
-	>>ID_TABLA int 10 NOT NULL -- Ya no  está ?¿
 	Edad int (10)
 	Prof_Carg varchar(350)
 	Titu_Estu varchar(110)
@@ -26,7 +25,8 @@ class PersonaListas Extends core\ClasePropiedades {
 	---
 	camb_fic varchar(1)
 	fecha_c_fic date
-	 * 
+	---
+    compartida_con_r
 	 */
 	
 	/**
@@ -105,12 +105,6 @@ class PersonaListas Extends core\ClasePropiedades {
 	 */
 	 private $sCe;
 	/**
-	 * ID_TABLA de Listas
-	 *
-	 * @var integer
-	 */
-	 private $iID_TABLA;
-	/**
 	 * Prof_Carg de Listas
 	 *
 	 * @var string
@@ -153,6 +147,12 @@ class PersonaListas Extends core\ClasePropiedades {
 	 * @var web\DateTimeLocal
 	 */
 	private $dfecha_c_fic;
+	/**
+	 * compartida_con_r de Listas
+	 *
+	 * @var string
+	 */
+	private $scompartida_con_r;
 
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
@@ -280,6 +280,7 @@ class PersonaListas Extends core\ClasePropiedades {
         $aDades['pertenece_r'] = $this->spertenece_r;
         $aDades['camb_fic'] = $this->scamb_fic;
         $aDades['fecha_c_fic'] = $this->dfecha_c_fic;
+        $aDades['compartida_con_r'] = $this->scompartida_con_r;
 		array_walk($aDades, 'core\poner_null');
 
 		if ($bInsert === false) {
@@ -299,7 +300,8 @@ class PersonaListas Extends core\ClasePropiedades {
                     INCORP                  = :INCORP,
                     pertenece_r             = :pertenece_r,
                     camb_fic                 = :camb_fic,
-                    fecha_c_fic             = :fecha_c_fic";
+                    fecha_c_fic             = :fecha_c_fic,
+                    compartida_con_r        = :compartida_con_r";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE Identif='$this->iIdentif'")) === false) {
 				$sClauError = 'Listas.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -318,8 +320,8 @@ class PersonaListas Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			$campos="(ApeNom,Dl,Ctr,Lugar_Naci,Fecha_Naci,Email,Tfno_Movil,Ce,Prof_Carg,Titu_Estu,Encargos,INCORP,pertenece_r,camb_fic,fecha_c_fic)";
-			$valores="(:ApeNom,:Dl,:Ctr,:Lugar_Naci,:Fecha_Naci,:Email,:Tfno_Movil,:Ce,:Prof_Carg,:Titu_Estu,:Encargos,:INCORP:pertenece_r,:camb_fic,:fecha_c_fic)";
+			$campos="(ApeNom,Dl,Ctr,Lugar_Naci,Fecha_Naci,Email,Tfno_Movil,Ce,Prof_Carg,Titu_Estu,Encargos,INCORP,pertenece_r,camb_fic,fecha_c_fic,compartida_con_r)";
+			$valores="(:ApeNom,:Dl,:Ctr,:Lugar_Naci,:Fecha_Naci,:Email,:Tfno_Movil,:Ce,:Prof_Carg,:Titu_Estu,:Encargos,:INCORP:pertenece_r,:camb_fic,:fecha_c_fic,:compartida_con_r)";
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Listas.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -571,6 +573,7 @@ class PersonaListas Extends core\ClasePropiedades {
         if (array_key_exists('pertenece_r',$aDades)) $this->setPertenece_r($aDades['pertenece_r']);
         if (array_key_exists('camb_fic',$aDades)) $this->setCamb_fic($aDades['camb_fic']);
         if (array_key_exists('fecha_c_fic',$aDades)) $this->setFecha_c_fic($aDades['fecha_c_fic']);
+        if (array_key_exists('compartida_con_r',$aDades)) $this->setCompartida_con_r($aDades['compartida_con_r']);
 	}
 
 	/**
@@ -596,6 +599,7 @@ class PersonaListas Extends core\ClasePropiedades {
 		$this->setPertenece_r('');
 		$this->setCamb_fic('');
 		$this->setFecha_c_fic('');
+		$this->setCompartida_con_r('');
 		$this->setPrimary_key($aPK);
 	}
 
@@ -944,6 +948,22 @@ class PersonaListas Extends core\ClasePropiedades {
     public function setFecha_c_fic($dfecha_c_fic)
     {
         $this->dfecha_c_fic = $dfecha_c_fic;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCompartida_con_r()
+    {
+        return $this->scompartida_con_r;
+    }
+
+    /**
+     * @param string $spertenece_r
+     */
+    public function setCompartida_con_r($scompartida_con_r)
+    {
+        $this->scompartida_con_r = $scompartida_con_r;
     }
 
 	

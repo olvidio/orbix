@@ -81,7 +81,7 @@ fnjs_trasladar=function(id_orbix,dl,fila){
 
 <h3><?= _("personas en otras dl en la BDU") ?></h3>
 <table>
-	<tr><th><?= _("nombre") ?></th><th><?= _("dl actual") ?></th><th></th></tr>
+	<tr><th><?= _("ape_nom") ?></th><th><?= _("dl actual") ?></th><th></th></tr>
 <?php
 	$i = 0;
 	foreach($a_persona_listas as $persona_listas) {

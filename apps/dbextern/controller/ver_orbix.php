@@ -70,26 +70,27 @@ if (empty($id)) {
 	$cPersonasOrbix = $GesPersonas->getPersonasDl(array('situacion'=>'A','_ordre'=>'apellido1,apellido2,nom'));
 	$i = 0;
 	$a_lista = array();
-	foreach ($cPersonasOrbix as $oPersonaListas) {
-		$id_nom_orbix = $oPersonaListas->getId_nom();
+	foreach ($cPersonasOrbix as $oPersonaOrbix) {
+        $a_persona_orbix = [];
+		$id_nom_orbix = $oPersonaOrbix->getId_nom();
 
 		$oGesMatch = new dbextern\model\entity\GestorIdMatchPersona();
 		$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_orbix'=>$id_nom_orbix));
 		if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
 			continue;
 		}
-		$a_persona_listas['id_nom_orbix'] = $id_nom_orbix;
-		$a_persona_listas['ape_nom'] = $oPersonaListas->getPrefApellidosNombre();
-		$a_persona_listas['nombre'] = $oPersonaListas->getNom();
-		$a_persona_listas['apellido1'] = $oPersonaListas->getApellido1();
-		$a_persona_listas['nx1'] = $oPersonaListas->getNx1();
-		$a_persona_listas['apellido2'] = $oPersonaListas->getApellido2();
-		$a_persona_listas['nx2'] = $oPersonaListas->getNx2();
-		$a_persona_listas['f_nacimiento'] = $oPersonaListas->getF_nacimiento()->getFromLocal();
+		$a_persona_orbix['id_nom_orbix'] = $id_nom_orbix;
+		$a_persona_orbix['ape_nom'] = $oPersonaOrbix->getPrefApellidosNombre();
+		$a_persona_orbix['nombre'] = $oPersonaOrbix->getNom();
+		$a_persona_orbix['apellido1'] = $oPersonaOrbix->getApellido1();
+		$a_persona_orbix['nx1'] = $oPersonaOrbix->getNx1();
+		$a_persona_orbix['apellido2'] = $oPersonaOrbix->getApellido2();
+		$a_persona_orbix['nx2'] = $oPersonaOrbix->getNx2();
+		$a_persona_orbix['f_nacimiento'] = $oPersonaOrbix->getF_nacimiento()->getFromLocal();
 
 		// incremento antes para empezar en 1 y no en 0.
 		$i++;
-		$a_lista[$i] = $a_persona_listas;
+		$a_lista[$i] = $a_persona_orbix;
 	}
 	$_SESSION['DBOrbix'] = $a_lista;
 }
@@ -101,7 +102,7 @@ if ($max === 0) {
     $html_reg = _("No hay registros");
 } else {
     $new_id = otro($id,$mov,$max);
-    $persona_listas = $_SESSION['DBOrbix'][$new_id];
+    $persona_orbix = $_SESSION['DBOrbix'][$new_id];
 
     $url_sincro_ver = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/ver_orbix.php';
     $oHash = new web\Hash();
@@ -152,14 +153,16 @@ if ($max === 0) {
         <br>
         
     <table>
+    	<tr><th><?= _("id aquinate") ?></th><th><?= _("ape_nom-calculado") ?></th><th><?= _("nombre") ?></th>
+		<th><?= _("apellido1") ?></th><th><?= _("apellido2") ?></th><th><?= _("fecha nacimiento") ?></th></tr>
     <?php
         echo "<tr>";
-        echo "<td>".$persona_listas['id_nom_orbix'].'</td>';
-        echo "<td class='titulo'>".$persona_listas['ape_nom'].'</td>';
-        echo "<td>".$persona_listas['nombre'].'</td>';
-        echo "<td>".$persona_listas['apellido1'].'</td>';
-        echo "<td>".$persona_listas['apellido2'].'</td>';
-        echo "<td class='titulo'>".$persona_listas['f_nacimiento'].'</td>';
+        echo "<td>".$persona_orbix['id_nom_orbix'].'</td>';
+        echo "<td class='titulo'>".$persona_orbix['ape_nom'].'</td>';
+        echo "<td>".$persona_orbix['nombre'].'</td>';
+        echo "<td>".$persona_orbix['apellido1'].'</td>';
+        echo "<td>".$persona_orbix['apellido2'].'</td>';
+        echo "<td class='titulo'>".$persona_orbix['f_nacimiento'].'</td>';
         echo '</tr>';
     ?>
     </table>

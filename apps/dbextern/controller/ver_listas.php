@@ -185,6 +185,8 @@ if (empty($mov)) {
 	<br>
 	
 <table>
+	<tr><th><?= _("id BDU") ?></th><th><?= _("ape_nom") ?></th><th><?= _("nombre-calculado") ?></th>
+		<th><?= _("apellido1-calculado") ?></th><th><?= _("apellido2-calculado") ?></th><th><?= _("fecha nacimiento") ?></th></tr>
 <?php
 	echo "<tr>";
 	echo "<td>".$persona_listas['id_nom_listas'].'<td>';
@@ -201,6 +203,8 @@ if (empty($mov)) {
 <?php if (!empty($a_lista_orbix)) { ?>
 <h3><?= _("posibles coincidencias") ?>:</h3>
 <table>
+	<tr><th><?= _("id aquinate") ?></th><th><?= _("ape_nom-calculado") ?></th><th><?= _("nombre") ?></th>
+		<th><?= _("apellido1") ?></th><th><?= _("apellido2") ?></th><th><?= _("fecha nacimiento") ?></th></tr>
 <?php
 foreach ($a_lista_orbix as $persona_orbix) {
 	$id_orbix = $persona_orbix['id_nom'];
@@ -220,6 +224,8 @@ foreach ($a_lista_orbix as $persona_orbix) {
 <?php if (!empty($a_lista_orbix_otradl)) { ?>
 <h3><?= _("posibles coincidencias en otras dl") ?>:</h3>
 <table>
+	<tr><th><?= _("id aquinate") ?></th><th><?= _("ape_nom-calculado") ?></th><th><?= _("nombre") ?></th>
+		<th><?= _("apellido1") ?></th><th><?= _("apellido2") ?></th><th><?= _("fecha nacimiento") ?></th></tr>
 <?php
 foreach ($a_lista_orbix_otradl as $persona_orbix) {
 	$id_orbix = $persona_orbix['id_nom'];
