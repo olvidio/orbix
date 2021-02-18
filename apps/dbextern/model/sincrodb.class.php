@@ -259,15 +259,13 @@ class sincroDB {
 		$i = 0;
 		$a_lista_orbix = array();
 		foreach ($cPersonasDl as $oPersonaDl) {
+			$oPersonaDl->setoDbl($oDB);
 			$id_nom = $oPersonaDl->getId_nom();
 			$oGesMatch = new GestorIdMatchPersona();
 			$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_orbix'=>$id_nom));
 			if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
 				continue;
 			}
-			echo "<pre>";
-			print_r($oPersonaDl);
-			echo "</pre>";
 			$ape_nom = $oPersonaDl->getPrefApellidosNombre();
 			$nombre = $oPersonaDl->getNom();
 			$dl_persona = $oPersonaDl->getDl();
