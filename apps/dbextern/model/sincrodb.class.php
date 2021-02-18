@@ -256,7 +256,7 @@ class sincroDB {
 		$apellido1 = $oPersonaDl->getApellido1();
 		
 		$Query = "SELECT * FROM dbo.q_dl_Estudios_b
-                        WHERE Identif LIKE '$this->id_tipo%' AND  ape_nom LIKE '%".$apellido1."%'
+                        WHERE Identif LIKE '$this->id_tipo%' AND  ApeNom LIKE '%".$apellido1."%'
                             AND (pertenece_r='$this->region' OR compartida_con_r='$this->region') ";
 		// todos los de listas
 		$oGesListas = new GestorPersonaListas();
