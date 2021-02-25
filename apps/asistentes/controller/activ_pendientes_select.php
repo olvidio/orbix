@@ -82,7 +82,8 @@ switch ($Qsactividad) {
 		// 22.1.09 quito a los que han hecho el crt con sr
 		if ($Qtipo_personas=='n') $id_tipo_activ='1[137]1...';
 		if ($Qtipo_personas=='agd') $id_tipo_activ='131...';
-		if ($Qtipo_personas=='sacd') $id_tipo_activ='1[13]1...';
+		// 25.2.21 quito a los que han hecho el crt con sss+
+		if ($Qtipo_personas=='sacd') $id_tipo_activ='1[136]1...';
 		$chk_crt='selected';
 		$inicurs=core\curso_est('inicio',$any,'crt')->format('Y-m-d');
 		$fincurs=core\curso_est('fin',$any,'crt')->format('Y-m-d');
