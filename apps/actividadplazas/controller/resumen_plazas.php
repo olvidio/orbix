@@ -1,5 +1,7 @@
 <?php
 use actividades\model\entity as actividades;
+use core\DBPropiedades;
+use web\Desplegable;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -29,9 +31,12 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$oPosicion2->olvidar($stack);
 }
 
-$gesDelegacion = new ubis\model\entity\GestorDelegacion();
-$oDesplDelegaciones = $gesDelegacion->getListaDelegaciones(array('H'));
-$oDesplDelegaciones->setNombre('dl');
+$oDesplDelegaciones = new Desplegable();
+$oDesplDelegaciones->setNombre('region_dl');
+//$gesDelegacion = new ubis\model\entity\GestorDelegacion();
+$oDBPropiedades = new DBPropiedades();
+$aOpcionesDl = $oDBPropiedades->array_posibles_esquemas();
+$oDesplDelegaciones->setOpciones($aOpcionesDl);
 
 // comprobar que la actividad está publicada, sino avisar!
 $publicado = '';
@@ -54,7 +59,7 @@ $tot_disponibles = empty($a_plazas['total']['disponibles'])? 0 : $a_plazas['tota
 $tot_ocupadas = empty($a_plazas['total']['ocupadas'])? 0 : $a_plazas['total']['ocupadas'];
 
 $oHash = new web\Hash();
-$camposForm = 'num_plazas!dl';
+$camposForm = 'num_plazas!region_dl';
 $a_camposHidden = array(
 		'id_activ' => $id_activ,
 		'que' => 'ceder'

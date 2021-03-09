@@ -15,8 +15,10 @@ switch ($que) {
 	case "ceder":
 		$id_activ = (integer)  filter_input(INPUT_POST, 'id_activ');
 		$num_plazas = (integer)  filter_input(INPUT_POST, 'num_plazas');
-		$dl = (string)  filter_input(INPUT_POST, 'dl');
-
+		$reg_dl = (string)  filter_input(INPUT_POST, 'region_dl');
+		
+		$dl = substr($reg_dl, strpos($reg_dl, '-')+1);
+		
 		$mi_dele = core\ConfigGlobal::mi_delef();
 		// OJO, para sf todavia hay que quitar la f:
 		if (ConfigGlobal::mi_sfsv() == 2) {
