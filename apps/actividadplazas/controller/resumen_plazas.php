@@ -35,7 +35,7 @@ $oDesplDelegaciones = new Desplegable();
 $oDesplDelegaciones->setNombre('region_dl');
 //$gesDelegacion = new ubis\model\entity\GestorDelegacion();
 $oDBPropiedades = new DBPropiedades();
-$aOpcionesDl = $oDBPropiedades->array_posibles_esquemas();
+$aOpcionesDl = $oDBPropiedades->array_posibles_esquemas(TRUE);
 $oDesplDelegaciones->setOpciones($aOpcionesDl);
 
 // comprobar que la actividad está publicada, sino avisar!

@@ -12,17 +12,18 @@ class DBPropiedades {
             $this->bBlanco = FALSE;
         }
     }
-    public function posibles_esquemas($default='') {
+
+    public function posibles_esquemas($default='',$comun=FALSE) {
         $txt = "<select id=\"esquema\" name=\"esquema\" >";
         if ($this->bBlanco) {
             $txt .= "<option></option>";
         }
-        $txt .= $this->opciones_posibles_esquemas($default);
+        $txt .= $this->opciones_posibles_esquemas($default,$comun);
         $txt .= '</select>';
         return $txt;
     }
 
-    public function opciones_posibles_esquemas($default='') {
+    public function opciones_posibles_esquemas($default='',$comun=FALSE) {
         /* Para el caso de sf, entrando como en el directorio orbixsf, al redirigir
          * a orbix, la ubicación acaba siendo sv.
          * solo me sirve getenv('UBICACION'); para la entrada.
@@ -58,23 +59,29 @@ class DBPropiedades {
                 if ($row[0] == 'resto') continue;
                 if ($row[0] == 'global') continue;
                 if ($row[0] == 'bucardo') continue;
-                if ($ubicacion == 'sv') {
-                    $sv = $row[0].'v';
+                if ($comun) {
+                    $sv = $row[0];
                     if (!empty($default) && $sv == $default) { $sel_sv = 'selected'; } else { $sel_sv = ''; }
                     $txt .= "<option value=\"$sv\" $sel_sv>$sv</option>";
-                }
-                // 7.3.2019 Parece que sf va por su lado.
-                if ($ubicacion == 'sf') {
-                    $sf = $row[0].'f';
-                    if (!empty($default) && $sf == $default) { $sel_sf = 'selected'; } else { $sel_sf = ''; }
-                    $txt .= "<option value=\"$sf\" $sel_sf>$sf</option>";
+                } else {
+                    if ($ubicacion == 'sv') {
+                        $sv = $row[0].'v';
+                        if (!empty($default) && $sv == $default) { $sel_sv = 'selected'; } else { $sel_sv = ''; }
+                        $txt .= "<option value=\"$sv\" $sel_sv>$sv</option>";
+                    }
+                    // 7.3.2019 Parece que sf va por su lado.
+                    if ($ubicacion == 'sf') {
+                        $sf = $row[0].'f';
+                        if (!empty($default) && $sf == $default) { $sel_sf = 'selected'; } else { $sel_sf = ''; }
+                        $txt .= "<option value=\"$sf\" $sel_sf>$sf</option>";
+                    }
                 }
             }
         }
         return $txt;
     }
 
-    public function array_posibles_esquemas() {
+    public function array_posibles_esquemas($comun=FALSE) {
         /* Para el caso de sf, entrando como en el directorio orbixsf, al redirigir
          * a orbix, la ubicación acaba siendo sv.
          * solo me sirve   getenv('UBICACION'); para la entrada.
@@ -109,14 +116,19 @@ class DBPropiedades {
                 if ($row[0] == 'resto') continue;
                 if ($row[0] == 'global') continue;
                 if ($row[0] == 'bucardo') continue;
-                if ($ubicacion == 'sv') {
-                    $sv = $row[0].'v';
+                if ($comun) {
+                    $sv = $row[0];
                     $a_esquemas[$sv] = $sv;
-                }
-                // 7.3.2019 Parece que sf va por su lado.
-                if ($ubicacion == 'sf') {
-                    $sf = $row[0].'f';
-                    $a_esquemas[$sf] = $sf;
+                } else {
+                    if ($ubicacion == 'sv') {
+                        $sv = $row[0].'v';
+                        $a_esquemas[$sv] = $sv;
+                    }
+                    // 7.3.2019 Parece que sf va por su lado.
+                    if ($ubicacion == 'sf') {
+                        $sf = $row[0].'f';
+                        $a_esquemas[$sf] = $sf;
+                    }
                 }
             }
         }
