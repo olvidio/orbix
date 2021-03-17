@@ -138,13 +138,7 @@ class Select3005 {
 			$f_ini=$oActividadAsignatura->getF_ini()->getFromLocal();
 			$f_fin=$oActividadAsignatura->getF_fin()->getFromLocal();
 			
-//			if ($this->permiso == 3) {
-//				$a_valores[$c]['sel']="$id_activ#$id_asignatura";
-//			} else {
-//				$a_valores[$c]['sel']="";
-//			}
 			$a_valores[$c]['sel']="$id_activ#$id_asignatura";
-					
 			$a_valores[$c][1]="$nombre_corto";
 			$a_valores[$c][2]=$creditos;
 			$a_valores[$c][3]=$tipo;
