@@ -29,6 +29,7 @@ use actividadestudios\model\entity as actividadestudios;
 use dossiers\model\entity as dossiers;
 use asistentes\model\entity as asistentes;
 use personas\model\entity as personas;
+use core\ConfigGlobal;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -146,7 +147,6 @@ function editar($id_activ,$id_nom){
 	$oAsistente->DBCarregar();
 	
 	$Qencargo = (string) \filter_input(INPUT_POST, 'encargo');
-	$Qcama = (string) \filter_input(INPUT_POST, 'cama');
 	$Qobserv = (string) \filter_input(INPUT_POST, 'observ');
 	$Qobserv_est = (string) \filter_input(INPUT_POST, 'observ_est');
 	$Qplaza = (integer) \filter_input(INPUT_POST, 'plaza');
@@ -159,7 +159,6 @@ function editar($id_activ,$id_nom){
 	if ($Qpropietario === 'xxx') { $Qpropietario = ''; }
 
 	isset($Qencargo)? $oAsistente->setEncargo($Qencargo) : $oAsistente->setEncargo();
-	isset($Qcama)? $oAsistente->setCama($Qcama) : $oAsistente->setCama();
 	isset($Qobserv)? $oAsistente->setObserv($Qobserv) : $oAsistente->setObserv();
 	isset($Qobserv_est)? $oAsistente->setObserv_est($Qobserv_est) : $oAsistente->setObserv_est();
 	isset($Qplaza)? $oAsistente->setPlaza($Qplaza) : $oAsistente->setPlaza();
@@ -168,6 +167,8 @@ function editar($id_activ,$id_nom){
 	empty($Qcfi)? $oAsistente->setCfi('f') : $oAsistente->setCfi('t');
 	empty($Qfalta)? $oAsistente->setFalta('f') : $oAsistente->setFalta('t');
 	isset($Qcfi_con)? $oAsistente->setCfi_con($Qcfi_con) : $oAsistente->setCfi_con();
+	// siempre soy la dl
+	$oAsistente->setDl_responsable(ConfigGlobal::mi_delef());
 	// Si no es epecificado, al poner la plaza ya se pone al propietario
 	!empty($Qpropietario)? $oAsistente->setPropietario($Qpropietario) : FALSE;
 	if ($oAsistente->DBGuardar() === false) {

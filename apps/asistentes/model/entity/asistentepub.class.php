@@ -100,11 +100,11 @@ class AsistentePub Extends core\ClasePropiedades {
 	 */
 	 protected $sencargo;
 	/**
-	 * Cama de AsistentePub
+	 * dl_responsable de AsistentePub
 	 *
 	 * @var string
 	 */
-	 protected $scama;
+	 protected $sdl_responsable;
 	/**
 	 * Observ de AsistentePub
 	 *
@@ -221,7 +221,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$aDades['cfi_con'] = $this->icfi_con;
 		$aDades['falta'] = $this->bfalta;
 		$aDades['encargo'] = $this->sencargo;
-		$aDades['cama'] = $this->scama;
+		$aDades['dl_responsable'] = $this->sdl_responsable;
 		$aDades['observ'] = $this->sobserv;
 		$aDades['observ_est'] = $this->sobserv_est;
 		$aDades['plaza'] = $this->iplaza;
@@ -243,7 +243,7 @@ class AsistentePub Extends core\ClasePropiedades {
 					cfi_con                  = :cfi_con,
 					falta                    = :falta,
 					encargo                  = :encargo,
-					cama                     = :cama,
+					dl_responsable                     = :dl_responsable,
 					observ                   = :observ,
 					observ_est               = :observ_est,
 					plaza                    = :plaza,
@@ -276,8 +276,8 @@ class AsistentePub Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_activ, $this->iid_nom);
-			$campos="(id_activ,id_nom,propio,est_ok,cfi,cfi_con,falta,encargo,cama,observ,observ_est,plaza,propietario)";
-			$valores="(:id_activ,:id_nom,:propio,:est_ok,:cfi,:cfi_con,:falta,:encargo,:cama,:observ,:observ_est,:plaza,:propietario)";		
+			$campos="(id_activ,id_nom,propio,est_ok,cfi,cfi_con,falta,encargo,dl_responsable,observ,observ_est,plaza,propietario)";
+			$valores="(:id_activ,:id_nom,:propio,:est_ok,:cfi,:cfi_con,:falta,:encargo,:dl_responsable,:observ,:observ_est,:plaza,:propietario)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = get_class($this).'.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -395,7 +395,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		if (array_key_exists('cfi_con',$aDades)) $this->setCfi_con($aDades['cfi_con']);
 		if (array_key_exists('falta',$aDades)) $this->setFalta($aDades['falta']);
 		if (array_key_exists('encargo',$aDades)) $this->setEncargo($aDades['encargo']);
-		if (array_key_exists('cama',$aDades)) $this->setCama($aDades['cama']);
+		if (array_key_exists('dl_responsable',$aDades)) $this->setDl_responsable($aDades['dl_responsable']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
 		if (array_key_exists('observ_est',$aDades)) $this->setObserv_est($aDades['observ_est']);
 		if (array_key_exists('plaza',$aDades)) $this->setPlazaSinComprobar($aDades['plaza']);
@@ -418,7 +418,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$this->setCfi_con('');
 		$this->setFalta('');
 		$this->setEncargo('');
-		$this->setCama('');
+		$this->setDl_responsable('');
 		$this->setObserv('');
 		$this->setObserv_est('');
 		$this->setPlazaSinComprobar('');
@@ -442,7 +442,7 @@ class AsistentePub Extends core\ClasePropiedades {
         $aDades['cfi_con'] = $this->icfi_con;
         $aDades['falta'] = $this->bfalta;
         $aDades['encargo'] = $this->sencargo;
-        $aDades['cama'] = $this->scama;
+        $aDades['dl_responsable'] = $this->sdl_responsable;
         $aDades['observ'] = $this->sobserv;
         $aDades['observ_est'] = $this->sobserv_est;
         $aDades['plaza'] = $this->iplaza;
@@ -644,23 +644,23 @@ class AsistentePub Extends core\ClasePropiedades {
 		$this->sencargo = $sencargo;
 	}
 	/**
-	 * Recupera l'atribut scama de AsistentePub
+	 * Recupera l'atribut sdl_responsable de AsistentePub
 	 *
-	 * @return string scama
+	 * @return string sdl_responsable
 	 */
-	function getCama() {
-		if (!isset($this->scama) && !$this->bLoaded) {
+	function getDl_responsable() {
+		if (!isset($this->sdl_responsable) && !$this->bLoaded) {
 			$this->DBCarregar();
 		}
-		return $this->scama;
+		return $this->sdl_responsable;
 	}
 	/**
-	 * estableix el valor de l'atribut scama de AsistentePub
+	 * estableix el valor de l'atribut sdl_responsable de AsistentePub
 	 *
-	 * @param string scama='' optional
+	 * @param string sdl_responsable='' optional
 	 */
-	function setCama($scama='') {
-		$this->scama = $scama;
+	function setDl_responsable($sdl_responsable='') {
+		$this->sdl_responsable = $sdl_responsable;
 	}
 	/**
 	 * Recupera l'atribut sobserv de AsistentePub
@@ -814,7 +814,7 @@ class AsistentePub Extends core\ClasePropiedades {
 		$oAsistentePubSet->add($this->getDatosCfi_con());
 		$oAsistentePubSet->add($this->getDatosFalta());
 		$oAsistentePubSet->add($this->getDatosEncargo());
-		$oAsistentePubSet->add($this->getDatosCama());
+		$oAsistentePubSet->add($this->getDatosdl_responsable());
 		$oAsistentePubSet->add($this->getDatosObserv());
 		$oAsistentePubSet->add($this->getDatosObserv_est());
 		return $oAsistentePubSet->getTot();
@@ -925,15 +925,15 @@ class AsistentePub Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut scama de AsistentePub
+	 * Recupera les propietats de l'atribut sdl_responsable de AsistentePub
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
 	 */
-	function getDatosCama() {
+	function getDatosdl_responsable() {
 		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'cama'));
-		$oDatosCampo->setEtiqueta(_("cama"));
+		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'dl_responsable'));
+		$oDatosCampo->setEtiqueta(_("dl_responsable"));
 		$oDatosCampo->setAviso(FALSE);
 		return $oDatosCampo;
 	}

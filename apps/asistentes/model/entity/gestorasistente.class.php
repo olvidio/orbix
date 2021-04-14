@@ -119,7 +119,7 @@ class GestorAsistente Extends core\ClaseGestor {
 		$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
 		 *  El In es suma de Ex(de paso) + Out(de todas las dl menos de mi propia dl).
 		*/
-		$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
+		//$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
 		$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
 		$a_Clases[] = array('clase'=>'AsistenteEx','get'=>'getAsistentesEx');
 
@@ -323,6 +323,9 @@ class GestorAsistente Extends core\ClaseGestor {
 		} else {
 			if ($id_tabla == 'dl') {
 				$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
+				// 14.4.2021 añado a la lista a los de paso.
+				// Despues hay que filtrar y poner sólo los que se han asignado desde la dl 
+				$a_Clases[] = array('clase'=>'AsistenteEx','get'=>'getAsistentesEx');
 			} else {
 			    /*
 				$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');

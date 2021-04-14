@@ -421,6 +421,7 @@ class Select3101 {
 				$this->msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 				continue;
 			}
+			$obj_pau = $oPersona->getClassName();
 			$nom=$oPersona->getPrefApellidosNombre();
 			$sacd= ($oPersona->getSacd())? _("sí") : '';
 			$dl_asistente=$oPersona->getDl();
@@ -458,6 +459,12 @@ class Select3101 {
 				$padre = strtok($propietario,'>');
 				$child = strtok('>');
 				$dl = $child;
+				// 14.4.2021 para personas de paso, si no soy la dl organizadora, sólo muestro los que les he dado Yo la plaza.
+				if ($obj_pau === 'PersonaEx' && $this->mi_dele != $this->dl_org) {
+					if ($oAsistente->getDl_responsable() != $this->mi_dele) {
+					    continue;
+					}
+				}
 				//si es de otra dl no distingo cedidas.
 				// no muestro ni cuento las que esten en estado distinto al asignado o confirmado (>3)
 				if ($padre != $this->mi_dele) {

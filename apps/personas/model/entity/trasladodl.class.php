@@ -849,7 +849,7 @@ class TrasladoDl {
             $oDestino->setCfi_con($oOrigen->getCfi_con()); 
             $oDestino->setFalta($oOrigen->getFalta()); 
             $oDestino->setEncargo($oOrigen->getEncargo()); 
-            $oDestino->setCama($oOrigen->getCama()); 
+            $oDestino->setDl_responsable($oOrigen->getDl_responsable()); 
             $oDestino->setObserv($oOrigen->getObserv()); 
             return $oDestino;
 	    }

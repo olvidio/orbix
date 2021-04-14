@@ -785,7 +785,12 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 		$this->slugar_nacimiento = $slugar_nacimiento;
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
-
+	
+	public function getClassName() {
+	   $shortClassName = (new \ReflectionClass($this))->getShortName();
+	   return $shortClassName;
+	}
+	
 	public function getPrefApellidosNombre() {
 	    $Pref_ordenApellidos = ConfigGlobal::mi_ordenApellidos();
 	    

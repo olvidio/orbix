@@ -48,4 +48,3 @@ class AsistenteIn Extends AsistentePub {
 	/* METODES ALTRES  ----------------------------------------------------------*/
 	/* METODES PRIVATS ----------------------------------------------------------*/
 }
-?>
