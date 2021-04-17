@@ -131,7 +131,7 @@ if ($max === 0) {
     $url_sincro_ajax = core\ConfigGlobal::getWeb().'/apps/dbextern/controller/sincro_ajax.php';
     $oHash1 = new web\Hash();
     $oHash1->setUrl($url_sincro_ajax);
-    $oHash1->setCamposForm('que!id_nom_listas!id!id_orbix'); 
+    $oHash1->setCamposForm('que!region!dl!id_nom_listas!id!id_orbix!tipo_persona'); 
     $h1 = $oHash1->linkSinVal();
 
     $html_reg = sprintf(_("registro %s de %s"),$new_id,$max);
