@@ -144,6 +144,20 @@ if ($max === 0) {
 } else {
 ?>
     <script>
+    fnjs_unir_bdu=function(id_bdu){
+    	var url='<?= $url_sincro_ajax ?>';
+        var id_orbix=<?= $persona_orbix['id_nom_orbix'] ?>;
+    	var parametros='que=unir&region=<?= $region ?>&dl=<?= $dl ?>&id_orbix='+id_orbix+'&id=<?= $new_id?>&id_nom_listas='+$id_bdu+'&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>';
+    			 
+    	$.ajax({
+    		url: url,
+    		type: 'post',
+    		data: parametros
+    	})
+    	.done(function (rta_txt) {
+    		fnjs_submit('#movimiento','-');
+    	});
+    }
 
     fnjs_submit=function(formulario,mov){
 
@@ -205,7 +219,7 @@ if ($max === 0) {
                 echo "<td>".$persona_bdu['apellido1'].'</td>';
                 echo "<td>".$persona_bdu['apellido2'].'</td>';
                 echo "<td class='contenido'>".$persona_bdu['f_nacimiento'].'</td>';
-                echo "<td class='titulo'><span class=link onClick='fnjs_unir($id_bdu)'>" . _("unir") . '</span></td>';
+                echo "<td class='titulo'><span class=link onClick='fnjs_unir_bdu($id_bdu)'>" . _("unir") . '</span></td>';
                 echo '</tr>';
             }
         ?>
