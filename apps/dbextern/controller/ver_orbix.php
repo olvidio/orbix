@@ -147,7 +147,7 @@ if ($max === 0) {
     fnjs_unir_bdu=function(id_bdu){
     	var url='<?= $url_sincro_ajax ?>';
         var id_orbix=<?= $persona_orbix['id_nom_orbix'] ?>;
-    	var parametros='que=unir&region=<?= $region ?>&dl=<?= $dl ?>&id_orbix='+id_orbix+'&id=<?= $new_id?>&id_nom_listas='+$id_bdu+'&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>';
+    	var parametros='que=unir&region=<?= $region ?>&dl=<?= $dl ?>&id_orbix='+id_orbix+'&id=<?= $new_id?>&id_nom_listas='+id_bdu+'&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>';
     			 
     	$.ajax({
     		url: url,
