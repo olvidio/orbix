@@ -27,7 +27,7 @@ switch ($Qsalida) {
 		asort($aOpcionesDl);
 		// poner el valor del desplegable igual al texto, no id.
 		$aOpciones = [];
-		foreach ($aOpcionesDl as $key => $value) {
+		foreach ($aOpcionesDl as $value) {
 		   $aOpciones[$value] = $value; 
 		}
 		// Añadir cr y gestión

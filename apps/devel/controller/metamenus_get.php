@@ -1,7 +1,6 @@
 <?php
 namespace menus\controller;
 use menus\model\entity as menus;
-use core;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -72,8 +71,6 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
 		$oMetamenus=$oLista->getMetamenus();
 	}
 	$txt="";
-	$indice=1;
-	$indice_old=1;
 	$m=0;
 	echo"<ul>";
 	foreach ($oMetamenus as $oMetamenu) {

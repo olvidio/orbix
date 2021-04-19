@@ -31,6 +31,8 @@ $esquemaReff = $esquemaRef.'f';
 if (!empty($Qcomun)) {
     $oConfigDB = new core\ConfigDB('importar'); //de la database comun
     $config = $oConfigDB->getEsquema('public'); //de la database comun
+    
+    
     /**
      * lista de tablas de las que hay que copiar los valores.
      * Posteriormente hay que cambiar el id_schema (si tiene)

@@ -1,6 +1,5 @@
 <?php
 use devel\model\entity\GestorDbSchema;
-use devel\model\entity\DbSchema;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");

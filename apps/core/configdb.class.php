@@ -54,7 +54,7 @@ class ConfigDB {
 		
         $this->data[$esquema] = ['user' => $esquema, 'password' => $esquema_pwd ];
         
-		$filename_pruebas = ConfigGlobal::DIR_PWD.'/pruebas-'.$database.'.inc';
+		$filename_pruebas = ConfigGlobal::DIR_PWD.'/'.$database.'.inc';
 	    file_put_contents($filename_pruebas, '<?php return ' . var_export($this->data, true) . ' ;');
 	}
 }
