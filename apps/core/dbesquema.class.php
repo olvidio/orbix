@@ -122,13 +122,18 @@ class DBEsquema {
 		$this->sNew = $this->getRegionNew().'-'.$this->getDlNew();
 		switch($this->getDb()) {
 			case 'comun':
+			case 'pruebas-comun':
 				break;
 			case 'sv':
 			case 'sv-e':
+			case 'pruebas-sv':
+			case 'pruebas-sv-e':
 				$this->sNew .= 'v';
 				break;
 			case 'sf':
 			case 'sf-e':
+			case 'pruebas-sf':
+			case 'pruebas-sf-e':
 				$this->sNew .= 'f';
 				break;
 		}
@@ -141,13 +146,18 @@ class DBEsquema {
 		$this->sRef = $this->getRegionRef().'-'.$this->getDlRef();
 		switch($this->getDb()) {
 			case 'comun':
+			case 'pruebas-comun':
 				break;
 			case 'sv':
 			case 'sv-e':
+			case 'pruebas-sv':
+			case 'pruebas-sv-e':
 				$this->sRef .= 'v';
 				break;
 			case 'sf':
 			case 'sf-e':
+			case 'pruebas-sf':
+			case 'pruebas-sf-e':
 				$this->sRef .= 'f';
 				break;
 		}
