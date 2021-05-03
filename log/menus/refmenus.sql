@@ -422,9 +422,10 @@
 1420	{90,140}	cambiar de fase	sasistentes=agd&sactividad=cve	130	2	3	t
 1419	{80,140}	cambiar de fase	sasistentes=agd&sactividad=ca	130	2	3	t
 1421	{38,130}	cambiar de fase	sasistentes=agd&sactividad=ca	130	16	12	t
-1422	{120,110}	Gestión de plazas	sasistentes=s&sactividad=crt	169	64	10	t
 1423	{120,120}	Balance de plazas	sasistentes=s&sactividad=crt	170	64	10	t
 1424	{120,140}	cambiar de fase	sasistentes=s&sactividad=crt	130	64	10	t
 1425	{110,110}	Gestión de plazas	sasistentes=s&sactividad=cv	169	64	10	t
-1426	{110,120}	Balace de plazas	sasistentes=s&sactividad=cv	170	64	10	t
 1427	{110,140}	cambiar de fase	sasistentes=s&sactividad=cv	130	64	10	t
+1422	{120,110}	Gestión de plazas	sasistentes=s,sg&sactividad=crt	169	64	10	t
+1426	{110,120}	Balance de plazas	sasistentes=s&sactividad=cv	170	64	10	t
+1200	{70,10}	propuestas	\N	87	8	8	t

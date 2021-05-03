@@ -28,58 +28,58 @@ class EncargoSacd Extends core\ClasePropiedades {
 	 *
 	 * @var array
 	 */
-	 private $aPrimary_key;
+	 protected $aPrimary_key;
 
 	/**
 	 * aDades de EncargoSacd
 	 *
 	 * @var array
 	 */
-	 private $aDades;
+	 protected $aDades;
 
 	/**
 	 * bLoaded
 	 *
 	 * @var boolean
 	 */
-	 private $bLoaded = FALSE;
+	 protected $bLoaded = FALSE;
 
 	/**
 	 * Id_item de EncargoSacd
 	 *
 	 * @var integer
 	 */
-	 private $iid_item;
+	 protected $iid_item;
 	/**
 	 * Id_enc de EncargoSacd
 	 *
 	 * @var integer
 	 */
-	 private $iid_enc;
+	 protected $iid_enc;
 	/**
 	 * Id_nom de EncargoSacd
 	 *
 	 * @var integer
 	 */
-	 private $iid_nom;
+	 protected $iid_nom;
 	/**
 	 * Modo de EncargoSacd
 	 *
 	 * @var integer
 	 */
-	 private $imodo;
+	 protected $imodo;
 	/**
 	 * F_ini de EncargoSacd
 	 *
 	 * @var web\DateTimeLocal
 	 */
-	 private $df_ini;
+	 protected $df_ini;
 	/**
 	 * F_fin de EncargoSacd
 	 *
 	 * @var web\DateTimeLocal
 	 */
-	 private $df_fin;
+	 protected $df_fin;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
 	 * oDbl de EncargoSacd

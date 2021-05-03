@@ -28,94 +28,94 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 	 *
 	 * @var array
 	 */
-	 private $aPrimary_key;
+	 protected $aPrimary_key;
 
 	/**
 	 * aDades de EncargoSacdHorario
 	 *
 	 * @var array
 	 */
-	 private $aDades;
+	 protected $aDades;
 
 	/**
 	 * bLoaded
 	 *
 	 * @var boolean
 	 */
-	 private $bLoaded = FALSE;
+	 protected $bLoaded = FALSE;
 
 	/**
 	 * Id_item de EncargoSacdHorario
 	 *
 	 * @var integer
 	 */
-	 private $iid_item;
+	 protected $iid_item;
 	/**
 	 * Id_enc de EncargoSacdHorario
 	 *
 	 * @var integer
 	 */
-	 private $iid_enc;
+	 protected $iid_enc;
 	/**
 	 * Id_nom de EncargoSacdHorario
 	 *
 	 * @var integer
 	 */
-	 private $iid_nom;
+	 protected $iid_nom;
 	/**
 	 * F_ini de EncargoSacdHorario
 	 *
 	 * @var web\DateTimeLocal
 	 */
-	 private $df_ini;
+	 protected $df_ini;
 	/**
 	 * F_fin de EncargoSacdHorario
 	 *
 	 * @var web\DateTimeLocal
 	 */
-	 private $df_fin;
+	 protected $df_fin;
 	/**
 	 * Dia_ref de EncargoSacdHorario
 	 *
 	 * @var string
 	 */
-	 private $sdia_ref;
+	 protected $sdia_ref;
 	/**
 	 * Dia_num de EncargoSacdHorario
 	 *
 	 * @var integer
 	 */
-	 private $idia_num;
+	 protected $idia_num;
 	/**
 	 * Mas_menos de EncargoSacdHorario
 	 *
 	 * @var string
 	 */
-	 private $smas_menos;
+	 protected $smas_menos;
 	/**
 	 * Dia_inc de EncargoSacdHorario
 	 *
 	 * @var integer
 	 */
-	 private $idia_inc;
+	 protected $idia_inc;
 	/**
 	 * H_ini de EncargoSacdHorario
 	 *
 	 * @var string time
 	 */
-	 private $th_ini;
+	 protected $th_ini;
 	/**
 	 * H_fin de EncargoSacdHorario
 	 *
 	 * @var string time
 	 */
-	 private $th_fin;
+	 protected $th_fin;
 	/**
 	 * Id_item_tarea_sacd de EncargoSacdHorario
 	 *
 	 * @var integer
 	 */
-	 private $iid_item_tarea_sacd;
+	 protected $iid_item_tarea_sacd;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
 	 * oDbl de EncargoSacdHorario
@@ -229,7 +229,12 @@ class EncargoSacdHorario Extends core\ClasePropiedades {
 					return FALSE;
 				}
 			}
-			$this->id_item = $oDbl->lastInsertId('encargo_sacd_horario_id_item_seq');
+			if ($nom_tabla == 'encargo_sacd_horario') {
+                $this->id_item = $oDbl->lastInsertId('encargo_sacd_horario_id_item_seq');
+			} 
+			if ($nom_tabla == 'propuesta_encargo_sacd_horario') {
+                $this->id_item = $oDbl->lastInsertId('propuesta_encargo_sacd_horario_id_item_seq');
+			} 
 		}
 		$this->setAllAtributes($aDades);
 		return TRUE;

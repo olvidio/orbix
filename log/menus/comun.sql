@@ -42,7 +42,6 @@
 83	\N	scdl/registro/can_que_imprimir.php	\N	\N
 84	\N	programas/sm-agd/periodo.php	\N	\N
 86	\N	vcsd/scheduler/sortides.php	\N	\N
-87	\N	des/periodo.php	\N	\N
 93	\N	scdl/registro/pen_buscar.php	\N	\N
 94	\N	des/tareas/collatio_sacd.php	\N	\N
 95	\N	programas/sm-agd/lista_celebra_40.php	\N	\N
@@ -187,3 +186,4 @@
 100	5	apps/actividadtarifas/controller/tarifa.php	\N	Tarifa definir
 165	1	public/ayuda/index.php	\N	Ayuda
 137	26	apps/cambios/controller/avisos_generar.php	\N	lista avisos
+87	21	apps/encargossacd/controller/propuestas_menu.php	\N	propuestas encargos sacd
