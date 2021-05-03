@@ -326,6 +326,9 @@ class GestorPropuestas {
 	}
 	
 	public function getHorarioActualTxt($id_enc,$id_sacd) {
+	    if (empty($id_enc) || empty($id_sacd)) {
+	        return '';
+	    }
 	    $a_dedicacion = $this->getHorarioActual($id_enc,$id_sacd);
 	    return $this->getHorarioTxt($a_dedicacion);
 	}
