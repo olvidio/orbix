@@ -282,7 +282,7 @@ class GestorPropuestas {
 	        $id_item = 1;
 	        $nom_col = '';
             $nom_sacd_new = _("nuevo");
-            if ($s < 2) {
+            if ($s < 1) {
                 $html .= "<tr id=\"tr_$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
                 $html .= _("colaboradores");
             } else {
