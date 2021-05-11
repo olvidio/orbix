@@ -43,15 +43,13 @@ require_once ("apps/core/global_object.inc");
 // CREATE TABLE bucardo_test ( id_item SERIAL, time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, status TEXT);
 $oDbl = $GLOBALS['oDBPC'];
 
-if (($oDblSt = $oDbl->query("SELECT * FROM bucardo_test ORDER BY time DESC LIMIT 5")) === FALSE) {
+if (($oDblSt = $oDbl->query("SELECT * FROM bucardo_test ORDER BY time DESC LIMIT 1")) === FALSE) {
     return FALSE;
 }
 $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 
-$fila = $aDades[0];
-
-$time_db = $fila['time'];
-$status_txt = $fila['status'];
+$time_db = $aDades['time'];
+$status_txt = $aDades['status'];
 // ej: 2021-05-11 11:29:14.293397
 $oUltimaSync = new DateTime($time_db);
 $oHoy = new DateTime();
