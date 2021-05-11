@@ -70,7 +70,7 @@ if ($pos1 !== false) {
     $error_txt .= $status_txt;
 }
 
-$email = "dserrabou@moneders.net";
+$email = "dserrabou@gmail.com, salvagual@gmail.com";
 
 if (!empty($error_txt)) enviar_mail($email,$error_txt);
 
