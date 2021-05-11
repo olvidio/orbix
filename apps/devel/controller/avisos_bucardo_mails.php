@@ -91,7 +91,7 @@ function enviar_mail($email,$error_txt){
     $headers .= "Content-type: text/html; charset=utf-8\r\n";
     
     //Dirección del remitente
-    $headers .= "From: Aquinate <no-Reply@moneders.net>\r\n";
+    $headers .= "From: Bucardo <no-Reply@moneders.net>\r\n";
     //Dirección de respuesta
     $headers .= "Reply-To: no-Reply@moneders.net\r\n";
     //Ruta del mensaje desde origen a destino
