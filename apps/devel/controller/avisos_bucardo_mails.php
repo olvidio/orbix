@@ -43,10 +43,28 @@ require_once ("apps/core/global_object.inc");
 // CREATE TABLE bucardo_test ( id_item SERIAL, time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, status TEXT);
 $oDbl = $GLOBALS['oDBPC'];
 
+// Borar las filas para tener sólo 30.
+$sql = "DELETE FROM bucardo_test
+WHERE id_item NOT IN (
+    SELECT id_item
+    FROM (
+        SELECT id_item
+        FROM bucardo_test
+        ORDER BY id_item DESC
+        LIMIT 30
+        ) AS foo
+    );
+";
+if (($oDblSt = $oDbl->query($sql)) === FALSE) {
+    return FALSE;
+}
+
+// mirar la última fila
 if (($oDblSt = $oDbl->query("SELECT * FROM bucardo_test ORDER BY time DESC LIMIT 1")) === FALSE) {
     return FALSE;
 }
 $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+
 
 $time_db = $aDades['time'];
 $status_txt = $aDades['status'];
