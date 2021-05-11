@@ -62,10 +62,11 @@ if ($minutos > 30) {
     $error_txt = "Ultima sicronización: ".$oUltimaSync->format("Y-m-d h:i:s");
 }
 
-$pos1 = stripos($status_txt, 'bad');
+$pos1 = strpos($status_txt, 'Bad');
 if ($pos1 !== false) {
-    //echo "Se encontró 'bad' en 'status_txt' en la posición $pos1";
-    $error_txt .= $status_txt;
+    $error_txt .= "Se encontró 'Bad' en 'status_txt' en la posición $pos1";
+    $error_txt .= "<br>";
+    $error_txt .= makear($status_txt);
 }
 
 $email = "dserrabou@gmail.com, salvagual@gmail.com";
@@ -98,4 +99,11 @@ function enviar_mail($email,$error_txt){
     
     //echo "($email<br>$asunto<br>$cuerpo<br>$headers)<br>";
     mail($email,$asunto,$cuerpo,$headers);
+}
+
+function makear($status_txt) {
+    $html = str_replace('<td>|</td>', '', $status_txt);
+    $html2 = preg_replace('<tr><td>[\=\+]*<\/td><\/tr>', '', $html);
+    
+    return $html2;
 }
