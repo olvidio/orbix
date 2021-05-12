@@ -33,7 +33,6 @@ class DBEsquema extends DBAbstract {
     }
     
     public function llenarAll() {
-        $this->llenar_a_fases();
     }
     
     private function infoTable($tabla) {

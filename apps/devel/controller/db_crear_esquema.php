@@ -155,6 +155,7 @@ if (!empty($Qsf)) {
     $oGesDbSchema = new GestorDbSchema();
     $oGesDbSchema->llenarNuevo($schema,'sf');
 
+    /*
 	// CREAR Esquema sf-e 
     $config = $oConfigDB->getEsquema('publicf-e');
     $oConexion = new core\dbConnection($config);
@@ -181,6 +182,7 @@ if (!empty($Qsf)) {
     $schema = $RegionNew.'-'.$DlNew;
     $oGesDbSchema = new GestorDbSchema();
     $oGesDbSchema->llenarNuevo($schema,'sf-e');
+    */
 }
 
 echo "<br>";

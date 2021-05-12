@@ -76,8 +76,8 @@ foreach ($cUsuarioPerm as $oUsuarioPerm) {
     $a_valores[$i][3]=$oCuadrosAfecta->lista_tiene_txt($afecta_a);
     
     $a_valores[$i][4]= $fase_ref_txt;
-    $a_valores[$i][5]= $aOpcionesAction[$perm_off];
-    $a_valores[$i][6]= $aOpcionesAction[$perm_on];
+    $a_valores[$i][5]= empty($aOpcionesAction[$perm_off])? '?' : $aOpcionesAction[$perm_off];
+    $a_valores[$i][6]= empty($aOpcionesAction[$perm_on])? '?' : $aOpcionesAction[$perm_on];
     
     $id_tipo_activ_anterior = $id_tipo_activ;
     $dl_propia_anterior = $dl_propia;
