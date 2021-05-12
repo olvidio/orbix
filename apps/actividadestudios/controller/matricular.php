@@ -105,7 +105,6 @@ foreach($cAlumnos as $oPersonaDl) {
 			$msg .= addslashes(sprintf(_("no se ha hecho nada con %s no tiene asignado ca"),$oPersonaDl->getPrefApellidosNombre()));
 			$msg .= '\n';
 			$msg .= '<br>';
-		   	continue;
 			break;
 		case 1:
 			$oAsistente = current($cAsistencias); // En el caso de varias, el indice es la f_ini (para poder ordenar en otros casos).
@@ -154,8 +153,6 @@ foreach($cAlumnos as $oPersonaDl) {
 									if ($oMatricula->DBGuardar() === false) {
 										echo _("error al guardar la matrícula");
 									}
-								} else {
-									continue;
 								}
 								break;
 							case 2: //opcional sólo de cuadrienio
@@ -169,8 +166,6 @@ foreach($cAlumnos as $oPersonaDl) {
 									if ($oMatricula->DBGuardar() === false) {
 										echo _("error al guardar la matrícula");
 									}
-								} else {
-									continue;
 								}
 								break;
 							case 3: //opcional de bienio o cuadrienio
@@ -184,8 +179,6 @@ foreach($cAlumnos as $oPersonaDl) {
 									if ($oMatricula->DBGuardar() === false) {
 										echo _("error al guardar la matrícula");
 									}
-								} else {
-									continue;
 								}
 							break;				
 						}

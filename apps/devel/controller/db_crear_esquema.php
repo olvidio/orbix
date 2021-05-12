@@ -138,15 +138,14 @@ if (!empty($Qsf)) {
     $oDBRol->addGrupo('orbixf');
 	$oDBRol->crearSchema();
 	// Copiar esquema
-	if (!empty($Qsf)) {
-		$oDBEsquema = new core\DBEsquema();
-		$oDBEsquema->setConfig($config);
-		$oDBEsquema->setRegionRef($RegionRef);
-		$oDBEsquema->setDlRef($DlRef);
-		$oDBEsquema->setRegionNew($RegionNew);
-		$oDBEsquema->setDlNew($DlNew);
-		$oDBEsquema->crear();
-	}
+    $oDBEsquema = new core\DBEsquema();
+    $oDBEsquema->setConfig($config);
+    $oDBEsquema->setRegionRef($RegionRef);
+    $oDBEsquema->setDlRef($DlRef);
+    $oDBEsquema->setRegionNew($RegionNew);
+    $oDBEsquema->setDlNew($DlNew);
+    $oDBEsquema->crear();
+
     // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
 	$oDBRol->delGrupo('orbixf');
 
