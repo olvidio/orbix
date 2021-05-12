@@ -92,9 +92,8 @@ fnjs_matricular=function(formulario,n){
 		.done(function (rta_txt) {
 			if (rta_txt != '' && rta_txt != '\\n') {
 				alert ('<?= _("respuesta") ?>: '+rta_txt);
-			} else {
-				fnjs_actualizar(formulario);
 		   	}
+            fnjs_actualizar(formulario);
 		});
 		return false;
 	});

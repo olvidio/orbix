@@ -90,15 +90,12 @@ switch ($QqueSel){
 		$Qpermiso=3;
 		break;
 	case "matriculas": // actividades de un asistente
+        $Qid_activ = (integer)  \filter_input(INPUT_POST, 'id_activ');
 		$pau="p";
 		$Qpermiso=3;
-		// En asistentes de un ca, ver plan estudios, Machaco el id_pau que tenga (que es id_activ)
-		$Qid_activ = $Qid_pau;
-//		if (!empty($a_sel)) { //vengo de un checkbox
-//			$id_pau= strtok($a_sel[0],"#");
-//		} else {
-//			$id_pau = $Qid_pau;
-//		}
+		if ($Qmod == "sel_es_asistente") {
+            $id_pau= (integer) strtok($a_sel[0],"#");
+		}
 		break;
 	case "asis": // asistentes a una actividad
 		$pau="a";
@@ -150,19 +147,6 @@ switch ($pau) {
 		
 		$sQuery = http_build_query(array('id_ubi'=>$id_pau,'obj_pau'=>$Qobj_pau));
 		$goHome = Hash::link(ConfigGlobal::getWeb()."/apps/ubis/controller/home_ubis.php?$sQuery");
-//		
-//		if (!empty($id_direccion)) {
-//			$goHome.='&id_direccion='.$id_direccion;
-//			$godossiers.='&id_direccion='.$id_direccion;
-//		}	
-//		if (!empty($tipo)) {
-//			$goHome.='&tipo='.$tipo;
-//			$godossiers.='&tipo='.$tipo;
-//		}	
-//		if (!empty($sin_dir)) {
-//			$goHome.='&sin_dir='.$sin_dir;
-//			$godossiers.='&sin_dir='.$sin_dir;
-//		}	
 		break;
 	case 'a':
 		$oActividad  = new actividades\Actividad($id_pau);

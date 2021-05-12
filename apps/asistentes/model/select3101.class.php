@@ -783,16 +783,6 @@ class Select3101 {
 		$oHash = new web\Hash();
 		$oHash->setcamposForm('');
 		$oHash->setCamposNo('sel!scroll_id!mod!que!refresh');
-		/*
-		$a_camposHidden = array(
-				'pau' => $this->pau,
-				'id_pau' => $this->id_pau,
-				'obj_pau' => $this->obj_pau,
-				'id_dossier' => $this->id_dossier,
-				'queSel' => $this->queSel,
-				'permiso' => 3,
-				);
-		 * */
 		$a_camposHidden = array(
 				'pau' => $this->pau,
 				'id_pau' => $this->id_pau,
@@ -811,7 +801,6 @@ class Select3101 {
 		$a_camposHidden = array(
 				'queSel' => 'matriculas',
 				'pau' => 'p',
-				'id_pau' => $this->id_pau,
 				'obj_pau' => 'Persona',
 				'id_dossier' => 1303,
 				'permiso' => 3,

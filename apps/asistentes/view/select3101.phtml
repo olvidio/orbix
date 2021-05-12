@@ -102,6 +102,7 @@ fnjs_matriculas=function(frm_sel,frm_enviar){
 		var sel=$('#'+form+' input.sel:checked');
 		var id = sel.val();
 		$('#sel2').val(id);
+        $('#mod2').val("sel_es_asistente");
   		$(frm_enviar).attr('action',"apps/dossiers/controller/dossiers_ver.php");
   		fnjs_enviar_formulario(frm_enviar,'#main');
   	}
@@ -212,7 +213,7 @@ fnjs_transferir=function(formulario){
 <!-- formulario extra para enviar datos para el plan de estudios -->
 <form id="frm_matriculas" name="frm_matriculas" action="" method="post">
 <?= $oHash1->getCamposHtml(); ?>
-<input type='hidden' id='mod' name='mod' value=''>
+<input type='hidden' id='mod2' name='mod' value=''>
 <input type='hidden' id='sel2' name='sel[]' value=''>
 </form>
 <?php
