@@ -1,16 +1,17 @@
 <?php
 namespace encargossacd\model;
 
+use encargossacd\model\entity\EncargoSacd;
 use encargossacd\model\entity\EncargoTipo;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoSacdHorario;
 use encargossacd\model\entity\GestorPropuestaEncargoSacdHorario;
 use encargossacd\model\entity\GestorPropuestaEncargosSacd;
-use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\PersonaSacd;
 use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorCentroEllas;
-use personas\model\entity\GestorPersonaSacd;
+use encargossacd\model\entity\EncargoHorario;
+use encargossacd\model\entity\EncargoSacdHorario;
 /**
  * GestorEncargoSacd
  *
@@ -40,6 +41,103 @@ class GestorPropuestas {
 
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
+	public function comprobarHorario($id_item,$f_iso) {
+	    $gesActualEncargoSacdHorario = new GestorEncargoSacdHorario();
+	    $gesPropuestaEncargoSacdHorario = new GestorPropuestaEncargoSacdHorario();
+	    $aWhere = ['id_item_tarea_sacd' => $id_item, 'id_nom' => 'x'];
+	    $aOperador = ['id_nom' => 'IS NOT NULL'];
+	    $cPropuestaEncargoSacdHorarios = $gesPropuestaEncargoSacdHorario->getEncargoSacdHorarios($aWhere,$aOperador);
+	    foreach($cPropuestaEncargoSacdHorarios as $oPropuestaEncargoSacdHorario) {
+	        $dia_ref = $oPropuestaEncargoSacdHorario->getDia_ref();
+	        $dia_inc = $oPropuestaEncargoSacdHorario->getDia_inc();
+	        $aWhereActual['id_item_tarea_sacd'] = $id_item;
+	        $aWhereActual['dia_ref'] = $dia_ref;
+	        $aWhereActual['id_nom'] = 'x';
+	        $aWhereActual['f_fin'] = 'x';
+            $aOperadorActual['id_nom'] = 'IS NOT NULL';
+            $aOperadorActual['f_fin'] = 'IS NULL';
+            $cActualHorario = $gesActualEncargoSacdHorario->getEncargoSacdHorarios($aWhereActual,$aOperadorActual);
+            if (count($cActualHorario) > 0 ) {
+                $oEncargoSacdHorario = $cActualHorario[0];
+                $dia_inc_actual = $oEncargoSacdHorario->getDia_inc();
+                if ($dia_inc != $dia_inc_actual) {
+                    // update
+                    $oEncargoSacdHorario->setDia_inc($dia_inc);
+                    $oEncargoSacdHorario->DBGuardar();
+                }
+            } else { // nuevo
+                $id_enc = $oPropuestaEncargoSacdHorario->getId_enc();
+                $id_nom = $oPropuestaEncargoSacdHorario->getId_nom();
+                $oNewHorario = new EncargoSacdHorario();
+                $oNewHorario->setId_enc($id_enc);
+                $oNewHorario->setId_nom($id_nom);
+                $oNewHorario->setF_ini($f_iso,FALSE);
+                $oNewHorario->setDia_ref($dia_ref);
+                $oNewHorario->setDia_inc($dia_inc);
+                $oNewHorario->setId_item_tarea_sacd($id_item);
+                $oNewHorario->DBGuardar();
+            }
+	    }
+	}
+
+	public function newEncargo($oPropuestaEncargoSacd,$f_iso) {
+	    $id_nom_new = $oPropuestaEncargoSacd->getId_nom_new();
+	    $id_item = $oPropuestaEncargoSacd->getId_item();
+	    $id_enc = $oPropuestaEncargoSacd->getId_enc();
+	    $modo = $oPropuestaEncargoSacd->getModo();
+	    
+	    // Puede ya existir: si se hace más de una vez el 'aprobar'.
+	    
+	    $oEncargoSacd = new EncargoSacd();
+	    $oEncargoSacd->setId_enc($id_enc);
+	    $oEncargoSacd->setId_nom($id_nom_new);
+	    $oEncargoSacd->setModo($modo);
+	    $oEncargoSacd->setF_ini($f_iso, FALSE);
+	    $oEncargoSacd->DBGuardar();
+	    $id_item_new = $oEncargoSacd->getId_item();
+	    // horario
+        $this->newHorario($id_item,$id_enc,$id_nom_new,$f_iso,$id_item_new);
+	}
+	
+	private function newHorario($id_item,$id_enc,$id_nom_new,$f_iso,$id_item_new) {
+	    $gesPropuestaEncargoSacdHorario = new GestorPropuestaEncargoSacdHorario();
+	    $aWhere = ['id_item_tarea_sacd' => $id_item, 'id_nom' => 'x'];
+	    $aOperador = ['id_nom' => 'IS NOT NULL']; 
+	    $cPropuestaEncargoHorarios = $gesPropuestaEncargoSacdHorario->getEncargoSacdHorarios($aWhere,$aOperador);
+	    foreach($cPropuestaEncargoHorarios as $oPropuestaEncargoHorario) {
+	        $dia_ref = $oPropuestaEncargoHorario->getDia_ref();
+	        $dia_inc = $oPropuestaEncargoHorario->getDia_inc();
+	        $oNewHorario = new EncargoSacdHorario();
+	        $oNewHorario->setId_enc($id_enc);
+	        $oNewHorario->setId_nom($id_nom_new);
+	        $oNewHorario->setF_ini($f_iso,FALSE);
+	        $oNewHorario->setDia_ref($dia_ref);
+	        $oNewHorario->setDia_inc($dia_inc);
+	        $oNewHorario->setId_item_tarea_sacd($id_item_new);
+	        $oNewHorario->DBGuardar();
+	    }
+	}
+	
+	public function finEncargo($id_item,$f_iso) {
+	    $oEncargoSacd = new EncargoSacd($id_item);
+        $oEncargoSacd->DBCarregar();
+        $oEncargoSacd->setF_fin($f_iso, FALSE);
+        $oEncargoSacd->DBGuardar();
+        // horario:
+        $this->finHorario($id_item,$f_iso);
+        
+	}
+	private function finHorario($id_item,$f_iso) {
+	    $gesPropuestaEncargoSacdHorario = new GestorPropuestaEncargoSacdHorario();
+	    $aWhere = ['id_item_tarea_sacd' => $id_item, 'id_nom' => 'x'];
+	    $aOperador = ['id_nom' => 'IS NOT NULL']; 
+	    $cPropuestaEncargoHorarios = $gesPropuestaEncargoSacdHorario->getEncargoSacdHorarios($aWhere,$aOperador);
+	    foreach($cPropuestaEncargoHorarios as $oPropuestaEncargoHorario) {
+	        $oPropuestaEncargoHorario->setF_fin($f_iso,FALSE);
+	        $oPropuestaEncargoHorario->DBGuardar();
+	    }
+	}
+	
 	
 	public function getLista($filtro_ctr) {
 	    
@@ -175,8 +273,6 @@ class GestorPropuestas {
 	    }
 	    
 	    /* lista sacd posibles */
-	    $GesPersonas = new GestorPersonaSacd();
-	    $oDesplSacd = $GesPersonas->getListaSacd("AND id_tabla ~ '^(a|n|sss)$'");
         $html = '';
 	    $e=0;
 	    foreach ($cEncargos as $oEncargo) {
@@ -441,5 +537,15 @@ class GestorPropuestas {
         return TRUE;
     }
 
-
+	public function BorrarTablasPropuestas() {
+        // crear tabla encargos_sacd
+        $gesPropuestaEncargosSacd = new GestorPropuestaEncargosSacd();
+        $gesPropuestaEncargosSacd->borrarTabla();
+        // horarios
+        $gesPropuestaEncargosSacdHorario = new GestorPropuestaEncargoSacdHorario();
+        $gesPropuestaEncargosSacdHorario->borrarTabla();
+        
+        return TRUE;
+	    
+	}
 }

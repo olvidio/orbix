@@ -48,10 +48,11 @@ class GestorPropuestaEncargoSacdHorario Extends ClaseGestor {
 	    }
 	    
 	}
+
 	/**
 	 * Crea la nueva tabla de propuestas
 	 */
-	public function crearTabla() {
+	public function borrarTabla() {
 	    $oDbl = $this->getoDbl();
 	    $nom_tabla = $this->getNomTabla();
 	    
@@ -62,7 +63,18 @@ class GestorPropuestaEncargoSacdHorario Extends ClaseGestor {
 	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 	        return FALSE;
 	    }
+	}
+
+	/**
+	 * Crea la nueva tabla de propuestas
+	 */
+	public function crearTabla() {
+	    $oDbl = $this->getoDbl();
+	    $nom_tabla = $this->getNomTabla();
 	    
+	    // Borrar lo que exista:
+	   $this->borrarTabla();
+	   
 	    $sQuery="CREATE TABLE $nom_tabla AS (
             SELECT h.* 
             FROM encargo_sacd_horario h JOIN propuesta_encargos_sacd e ON (h.id_item_tarea_sacd = e.id_item)

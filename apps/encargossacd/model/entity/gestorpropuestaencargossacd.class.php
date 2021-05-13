@@ -41,7 +41,7 @@ class GestorPropuestaEncargosSacd Extends ClaseGestor {
     /**
      * Crea la nueva tabla de propuestas
      */
-    public function crearTabla() {
+    public function borrarTabla() {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         
@@ -52,7 +52,18 @@ class GestorPropuestaEncargosSacd Extends ClaseGestor {
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return FALSE;
         }
+    }
 
+    /**
+     * Crea la nueva tabla de propuestas
+     */
+    public function crearTabla() {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        
+        // Borrar lo que exista:
+        $this->borrarTabla();
+        
         $sQuery="CREATE TABLE $nom_tabla AS 
                 SELECT id_schema, id_item, id_enc, id_nom, modo, f_ini, f_fin, id_nom AS id_nom_new
                 FROM encargos_sacd WHERE f_fin IS NULL ";

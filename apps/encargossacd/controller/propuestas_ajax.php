@@ -10,6 +10,7 @@ use personas\model\entity\GestorPersonaSacd;
 use web\DateTimeLocal;
 use web\Hash;
 use personas\model\entity\PersonaSacd;
+use encargossacd\model\entity\GestorEncargoSacd;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -65,6 +66,19 @@ switch ($Qque) {
         $Qdedic_t = (integer) \filter_input(INPUT_POST, 'dedic_t');
         $Qdedic_v = (integer) \filter_input(INPUT_POST, 'dedic_v');
         
+        // si id_item=1 es nuevo: Hay que buscar su id:
+        if ($Qid_item == 1) {
+            $gesPropuestaEncargoSacd = new GestorPropuestaEncargosSacd();
+            $aWhere = [ 'id_nom_new' => $Qid_sacd, 'id_enc' => $Qid_enc, 'f_fin' => 'x'];
+            $aOperador['f_fin'] = 'IS NULL';
+            $cEncargosSacd = $gesPropuestaEncargoSacd->getEncargosSacd($aWhere,$aOperador);
+            if (count($cEncargosSacd) == 1) {
+                $oEncargoSacd = $cEncargosSacd[0];
+                $Qid_item = $oEncargoSacd->getId_item();
+            } else {
+                exit(_("No se puede guardar. Vuelva a cargar la vista"));
+            }
+        }
         $oHoy = new DateTimeLocal();
         $f_ini = $oHoy->getFromLocal();
         foreach (['m','t','v'] as $modulo ) {
@@ -77,6 +91,7 @@ switch ($Qque) {
             $cEncargosSacdHorario = $gesPropuestaEncargoSacdHorario->getEncargoSacdHorarios($aWhere);
             if (is_array($cEncargosSacdHorario) && count($cEncargosSacdHorario) > 0 ) {
                 $oEncargoSacdHorario = $cEncargosSacdHorario[0];
+                $oEncargoSacdHorario->setF_fin(NULL);
             } else { // nuevo
                 $oEncargoSacdHorario = new PropuestaEncargoSacdHorario();
                 $oEncargoSacdHorario->setId_enc($Qid_enc);
@@ -112,7 +127,9 @@ switch ($Qque) {
         $gesPropuestaEncargoSacdHorario = new GestorPropuestaEncargoSacdHorario();
         $aWhere['id_nom'] = $Qid_sacd;
         $aWhere['id_item_tarea_sacd'] = $Qid_item;
-        $cEncargosSacdHorario = $gesPropuestaEncargoSacdHorario->getEncargoSacdHorarios($aWhere);
+        $aWhere['f_fin'] = 'x';
+        $aOperador['f_fin'] = 'IS NULL';
+        $cEncargosSacdHorario = $gesPropuestaEncargoSacdHorario->getEncargoSacdHorarios($aWhere,$aOperador);
         $html = '';
         $dedic_m = '';
         $dedic_t = '';
