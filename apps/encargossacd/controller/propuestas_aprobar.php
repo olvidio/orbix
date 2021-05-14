@@ -56,6 +56,4 @@ foreach($cPropuestas as $oPropuestaEncargoSacd) {
 $gesPropuestas->BorrarTablasPropuestas();
 
 
-
-
-echo "FET";
+echo _("Hecho!");

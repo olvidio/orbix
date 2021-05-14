@@ -279,11 +279,14 @@ switch ($Qque) {
         exit();
         break;
     case "get_lista":
-        $gesPropuestas = new GestorPropuestas();
-        $rta = $gesPropuestas->getLista($Qfiltro_ctr);
+        $gesPropuestaEncargoSacdHorario = new GestorPropuestaEncargoSacdHorario();
+        $existe = $gesPropuestaEncargoSacdHorario->existenLasTablas();
         
-        if (empty($rta)) {
-            $error_txt = _("No hay ningún valor. Quizá debe crear la tabla de propuestas");
+        if (!$existe) {
+            $error_txt = _("Debe crear la tabla de propuestas");
+        } else {
+            $gesPropuestas = new GestorPropuestas();
+            $rta = $gesPropuestas->getLista($Qfiltro_ctr);
         }
         
         if (!empty($error_txt)) {

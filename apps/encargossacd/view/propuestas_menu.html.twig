@@ -10,9 +10,9 @@
 </ol>
 <script>
 fnjs_aprobar_propuestas=function(){
-	var opcion = confirm("{{ "Pasa los cambios a real y elimina la tabla de propuestas actual"|trans|raw }}");
+	var opcion = confirm("{{ "Pasa los cambios a real y elimina la tabla de propuestas actual. Tarda un poco (30 seg.)"|trans|raw }}");
     if (opcion == true) {
-    	fnjs_update_div('#main','{{ url_new_aprobar|raw }}');
+    	fnjs_update_div('#main','{{ url_aprobar|raw }}');
 	}
 }
 fnjs_new_tabla=function(){
@@ -20,7 +20,6 @@ fnjs_new_tabla=function(){
     if (opcion == true) {
     	protocol = location.protocol;
     	const url = new URL(protocol+'{{ url_new_tabla|raw }}');
-    	debugger;
     	var url_ajax=url.origin+url.pathname;
     	var data=url.search;
     	request=$.ajax({

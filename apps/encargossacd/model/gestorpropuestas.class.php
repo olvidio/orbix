@@ -37,6 +37,7 @@ class GestorPropuestas {
 	 *
 	 */
 	function __construct() {
+	  
 	}
 
 

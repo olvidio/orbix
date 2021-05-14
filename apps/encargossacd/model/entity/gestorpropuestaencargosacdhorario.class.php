@@ -37,6 +37,33 @@ class GestorPropuestaEncargoSacdHorario Extends ClaseGestor {
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
 	
+	public function existenLasTablas() {
+	    $oDbl = $this->getoDbl();
+	    $nom_tabla = $this->getNomTabla();
+	    
+	    $schema_name = ConfigGlobal::mi_region_dl();
+	    // comprobar que existen las tablas
+	    //How to check whether a table (or view) exists, and the current user has access to it?
+	    $sql = "SELECT EXISTS (
+	        SELECT FROM information_schema.tables
+	        WHERE  table_schema = '\"$schema_name\"'
+	        AND    table_name   = '$nom_tabla'
+	        );";
+	    
+	    if (($oDblSt = $oDbl->query($sql)) === FALSE) {
+	        $sClauError = 'GestorProuestaEncargoSacdHorario.dropTabla';
+	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+	        return FALSE;
+	    }
+	    
+	    foreach ($oDblSt as $aDades) {
+	        $a_pkey = array('id_item' => $aDades['id_item']);
+	        $oEncargoSacdHorario= new PropuestaEncargoSacdHorario($a_pkey);
+	        $oEncargoSacdHorario->setAllAtributes($aDades);
+	        $oEncargoSacdHorarioSet->add($oEncargoSacdHorario);
+	    }
+	    
+	}
 	public function cambiarSacd($id_enc, $id_sacd_old, $id_sacd_new) {
 	    $oDbl = $this->getoDbl();
 	    $nom_tabla = $this->getNomTabla();
