@@ -125,6 +125,9 @@ switch ($Qque) {
         $Qid_item = (integer) \filter_input(INPUT_POST, 'id_item');
         $Qid_enc = (integer) \filter_input(INPUT_POST, 'id_enc');
         
+        $oPersonaSacd = new PersonaSacd($Qid_sacd);
+        $apellidos_nombre = $oPersonaSacd->getApellidosNombre();
+        
         $gesPropuestaEncargoSacdHorario = new GestorPropuestaEncargoSacdHorario();
         $aWhere['id_nom'] = $Qid_sacd;
         $aWhere['id_item_tarea_sacd'] = $Qid_item;
@@ -163,6 +166,7 @@ switch ($Qque) {
         $oHash->setArrayCamposHidden($aCamposHidden);
         $oHash->setCamposForm('dedic_m!dedic_t!dedic_v');
         
+        $html .= $apellidos_nombre;
         $html .= '<span class="x" onClick=$("#div_sacd").remove(); title='._("cerrar").'>[x]</span>';
         $html .= '<br>';
         $html .= "<form method='post' id='modulos' action=''>";
@@ -192,10 +196,14 @@ switch ($Qque) {
     case "info":
         $Qid_sacd = (integer) \filter_input(INPUT_POST, 'id_sacd');
         
+        $oPersonaSacd = new PersonaSacd($Qid_sacd);
+        $apellidos_nombre = $oPersonaSacd->getApellidosNombre();
+        
         $gesPropuestaEncargoSacd = new GestorPropuestaEncargosSacd();
         $aWhere['id_nom_new'] = $Qid_sacd;
         $cEncargosSacd = $gesPropuestaEncargoSacd->getEncargosSacd($aWhere);
         $html = '';
+        $html .= "<span class=\"nom\">$apellidos_nombre</span>";
         $html .= '<span class="x" onClick=$("#div_sacd").remove(); title='._("cerrar").'>[x]</span>';
         foreach ($cEncargosSacd as $oEncargoSacd) {
             $id_enc = $oEncargoSacd->getId_enc();
