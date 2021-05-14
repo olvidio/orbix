@@ -282,6 +282,10 @@ switch ($Qque) {
         $gesPropuestas = new GestorPropuestas();
         $rta = $gesPropuestas->getLista($Qfiltro_ctr);
         
+        if (empty($rta)) {
+            $error_txt = _("No hay ningún valor. Quizá debe crear la tabla de propuestas");
+        }
+        
         if (!empty($error_txt)) {
             $jsondata['success'] = FALSE;
             $jsondata['mensaje'] = $error_txt;
@@ -296,6 +300,20 @@ switch ($Qque) {
         break;
     case "crear_tabla":
         $gesPropuestas = new GestorPropuestas();
-        $gesPropuestas->crearTabla();
+        if ($gesPropuestas->crearTabla() === FALSE) {
+            $error_txt = _("No se puede crear la tabla");
+        }
+
+        if (!empty($error_txt)) {
+            $jsondata['success'] = FALSE;
+            $jsondata['mensaje'] = $error_txt;
+        } else {
+            $jsondata['success'] = TRUE;
+            $jsondata['html'] = $html;
+        }
+        //Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
+        header('Content-type: application/json; charset=utf-8');
+        echo json_encode($jsondata);
+        exit();
         break;
 }

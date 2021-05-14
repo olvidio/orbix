@@ -1,10 +1,39 @@
 
 <p>{{ "Acciones para propuestas"|trans }}</p>
 <ol>
-<li><span class=link onclick="fnjs_update_div('#main','{{ url_new_tabla|raw }}')">{{ "generar nueva tabla propuestas"|trans }}</span></li>
-<li><span class=link onclick="fnjs_update_div('#main','{{ url_aprobar|raw }}')">{{ "aprobar las propuestas"|trans }}</span></li>
+<li><span class=link onclick="fnjs_new_tabla()">{{ "generar nueva tabla propuestas"|trans }}</span></li>
+<li><span class=link onclick="fnjs_aprobar_propuestas()">{{ "aprobar las propuestas"|trans }}</span></li>
 </ol>
 <p>{{ "Propuestas encargos para nuevo curso"|trans }}</p>
 <ol>
 <li><span class=link onclick="fnjs_update_div('#main','{{ url_propuestas|raw }}')">{{ "modificar propuestas"|trans }}</span></li>
 </ol>
+<script>
+fnjs_aprobar_propuestas=function(){
+	var opcion = confirm("{{ "Pasa los cambios a real y elimina la tabla de propuestas actual"|trans|raw }}");
+    if (opcion == true) {
+    	fnjs_update_div('#main','{{ url_new_aprobar|raw }}');
+	}
+}
+fnjs_new_tabla=function(){
+	var opcion = confirm("{{ "Elimina la tabla de propuestas actual y crea una nueva"|trans|raw }}");
+    if (opcion == true) {
+    	protocol = location.protocol;
+    	const url = new URL(protocol+'{{ url_new_tabla|raw }}');
+    	debugger;
+    	var url_ajax=url.origin+url.pathname;
+    	var data=url.search;
+    	request=$.ajax({
+            data: parametros,
+            url: url_ajax,
+            type: 'post',
+            dataType: 'json'
+        });
+        request.done( function (json) {
+            if (json.success != true) {
+                alert (json.mensaje);
+            }
+        });
+	}
+}
+</script>

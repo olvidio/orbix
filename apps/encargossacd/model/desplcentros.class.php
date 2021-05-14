@@ -49,6 +49,7 @@ class DesplCentros {
                     $aa_op[$a_vector['id_ubi']] = $a_vector['nombre_ubi'];
                 }
                 $oDesplCtr = new Desplegable();
+                $oDesplCtr->setBlanco(TRUE);
                 $oDesplCtr->setOpciones($aa_op);
                 break;
             default:

@@ -60,30 +60,34 @@ fnjs_dedicacion=function(tipo,id_item,id_enc){
 	var id='#'+tipo+'_'+id_item;
 	var id_sacd=$(id).attr("title");
 	var id_td='#td_'+id_item;
-	
-	var url_ajax = 'apps/encargossacd/controller/propuestas_ajax.php';
-    var parametros='que=dedicacion&id_sacd='+id_sacd+'&id_item='+id_item+'&id_enc='+id_enc+'{{ h_dedicacion|raw }}';
-    request=$.ajax({
-        data: parametros,
-        url: url_ajax,
-        type: 'post',
-        dataType: 'json'
-    });
-    request.done( function (json) {
-        if (json.success != true) {
-            alert (json.mensaje);
-        } else {
-            $('#div_sacd').remove(); // Eliminar si existe alguno
-            html = json.html;
-            //$('#info').html(html);
-            
-            var txt="<div id=div_sacd class='tono2 child'>";
-			txt+=html;
-			txt+="</div>";
-			
-            $(id_td).append(txt);
-        }
-    });
+
+	if (id_sacd == 1) {
+		alert ("{{ "Primero debe introducir un sacd"|trans|raw }}");
+	} else {
+        var url_ajax = 'apps/encargossacd/controller/propuestas_ajax.php';
+        var parametros='que=dedicacion&id_sacd='+id_sacd+'&id_item='+id_item+'&id_enc='+id_enc+'{{ h_dedicacion|raw }}';
+        request=$.ajax({
+            data: parametros,
+            url: url_ajax,
+            type: 'post',
+            dataType: 'json'
+        });
+        request.done( function (json) {
+            if (json.success != true) {
+                alert (json.mensaje);
+            } else {
+                $('#div_sacd').remove(); // Eliminar si existe alguno
+                html = json.html;
+                //$('#info').html(html);
+                
+                var txt="<div id=div_sacd class='tono2 child'>";
+                txt+=html;
+                txt+="</div>";
+                
+                $(id_td).append(txt);
+            }
+        });
+	}
 	
 }
 
@@ -92,29 +96,33 @@ fnjs_info=function(tipo,id_item){
 	var id_sacd=$(id).attr("title");
 	var id_td='#td_'+id_item;
 
-	var url_ajax = 'apps/encargossacd/controller/propuestas_ajax.php';
-    var parametros='que=info&id_sacd='+id_sacd+'{{ h_info|raw }}';
-    request=$.ajax({
-        data: parametros,
-        url: url_ajax,
-        type: 'post',
-        dataType: 'json'
-    });
-    request.done( function (json) {
-        if (json.success != true) {
-            alert (json.mensaje);
-        } else {
-            $('#div_sacd').remove(); // Eliminar si existe alguno
-            html = json.html;
-            //$('#info').html(html);
-            
-            var txt="<div id=div_sacd class='tono2 child'>";
-			txt+=html;
-			txt+="</div>";
-			
-            $(id_td).append(txt);
-        }
-    });
+	if (id_sacd == 1) {
+		alert ("{{ "Primero debe introducir un sacd"|trans|raw }}");
+	} else {
+        var url_ajax = 'apps/encargossacd/controller/propuestas_ajax.php';
+        var parametros='que=info&id_sacd='+id_sacd+'{{ h_info|raw }}';
+        request=$.ajax({
+            data: parametros,
+            url: url_ajax,
+            type: 'post',
+            dataType: 'json'
+        });
+        request.done( function (json) {
+            if (json.success != true) {
+                alert (json.mensaje);
+            } else {
+                $('#div_sacd').remove(); // Eliminar si existe alguno
+                html = json.html;
+                //$('#info').html(html);
+                
+                var txt="<div id=div_sacd class='tono2 child'>";
+                txt+=html;
+                txt+="</div>";
+                
+                $(id_td).append(txt);
+            }
+        });
+	}
 	
 }
 
