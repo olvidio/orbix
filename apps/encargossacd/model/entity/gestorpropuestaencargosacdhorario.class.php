@@ -46,7 +46,7 @@ class GestorPropuestaEncargoSacdHorario Extends ClaseGestor {
 	    //How to check whether a table (or view) exists, and the current user has access to it?
 	    $sql = "SELECT EXISTS (
 	        SELECT FROM information_schema.tables
-	        WHERE  table_schema = '\"$schema_name\"'
+	        WHERE  table_schema = '$schema_name'
 	        AND    table_name   = '$nom_tabla'
 	        );";
 	    
@@ -56,13 +56,9 @@ class GestorPropuestaEncargoSacdHorario Extends ClaseGestor {
 	        return FALSE;
 	    }
 	    
-	    foreach ($oDblSt as $aDades) {
-	        $a_pkey = array('id_item' => $aDades['id_item']);
-	        $oEncargoSacdHorario= new PropuestaEncargoSacdHorario($a_pkey);
-	        $oEncargoSacdHorario->setAllAtributes($aDades);
-	        $oEncargoSacdHorarioSet->add($oEncargoSacdHorario);
-	    }
+	    $a_rta = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 	    
+	    return $a_rta['exists'];
 	}
 	public function cambiarSacd($id_enc, $id_sacd_old, $id_sacd_new) {
 	    $oDbl = $this->getoDbl();

@@ -21,9 +21,12 @@ fnjs_new_tabla=function(){
     	protocol = location.protocol;
     	const url = new URL(protocol+'{{ url_new_tabla|raw }}');
     	var url_ajax=url.origin+url.pathname;
-    	var data=url.search;
+    	var parametros=url.search;
+    	debugger;
+    	// Quitar el ? al inicio.
+    	param=parametros.substring(1)
     	request=$.ajax({
-            data: parametros,
+            data: param,
             url: url_ajax,
             type: 'post',
             dataType: 'json'

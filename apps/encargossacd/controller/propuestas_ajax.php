@@ -11,6 +11,7 @@ use web\DateTimeLocal;
 use web\Hash;
 use personas\model\entity\PersonaSacd;
 use encargossacd\model\entity\GestorEncargoSacd;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -282,11 +283,11 @@ switch ($Qque) {
         $gesPropuestaEncargoSacdHorario = new GestorPropuestaEncargoSacdHorario();
         $existe = $gesPropuestaEncargoSacdHorario->existenLasTablas();
         
-        if (!$existe) {
-            $error_txt = _("Debe crear la tabla de propuestas");
-        } else {
+        if (is_true($existe)) {
             $gesPropuestas = new GestorPropuestas();
             $rta = $gesPropuestas->getLista($Qfiltro_ctr);
+        } else {
+            $error_txt = _("Debe crear la tabla de propuestas");
         }
         
         if (!empty($error_txt)) {
