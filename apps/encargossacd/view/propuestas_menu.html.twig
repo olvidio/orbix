@@ -7,6 +7,8 @@
 <p>{{ "Propuestas encargos para nuevo curso"|trans }}</p>
 <ol>
 <li><span class=link onclick="fnjs_update_div('#main','{{ url_propuestas|raw }}')">{{ "modificar propuestas"|trans }}</span></li>
+<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_sacd|raw }}')">{{ "listado propuestas por sacd"|trans }}</span></li>
+<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_enc|raw }}')">{{ "listado propuestas por encargos"|trans }}</span></li>
 </ol>
 <script>
 fnjs_aprobar_propuestas=function(){

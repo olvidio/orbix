@@ -140,6 +140,237 @@ class GestorPropuestas {
 	}
 	
 	
+	public function getListaSimple($filtro_ctr) {
+	    
+	    switch ($filtro_ctr) {
+	        case 1:
+	            $GesCentros = new GestorCentroDl();
+	            // añado el ctr de oficiales de la dl (14.VIII.07).
+	            $aWhere['tipo_ctr'] = 'a.|n.|s[j|m]|of';
+                $aOperador['tipo_ctr'] = '~';
+	            $aWhere['status'] = 't';
+	            $aWhere['_ordre'] = 'nombre_ubi';
+	            $cCentros = $GesCentros->getCentros($aWhere,$aOperador);
+	            break;
+	        case 2:
+	            $aWhere['status'] = 't';
+	            $aWhere['_ordre'] = 'nombre_ubi';
+	            $GesCentros = new GestorCentroEllas();
+	            $cCentros = $GesCentros->getCentros($aWhere);
+	            break;
+	        case 3:
+	            $GesCentros = new GestorCentroDl();
+	            $aWhere['tipo_ctr'] = 'ss';
+                $aOperador['tipo_ctr'] = '~';
+	            $aWhere['status'] = 't';
+	            $aWhere['_ordre'] = 'nombre_ubi';
+	            $cCentros = $GesCentros->getCentros($aWhere,$aOperador);
+	            break;
+	        case 4:
+	            $GesCentros = new GestorCentroDl();
+	            $aWhere['tipo_ctr'] = 'igl';
+                $aOperador['tipo_ctr'] = '~';
+	            $aWhere['status'] = 't';
+	            $aWhere['_ordre'] = 'nombre_ubi';
+	            $cCentros = $GesCentros->getCentros($aWhere,$aOperador);
+	            break;
+	        case 5:
+	            $GesCentros = new GestorCentroDl();
+	            $aWhere['tipo_ctr'] = 'cgioc|oc|cgi';
+                $aOperador['tipo_ctr'] = '~';
+	            $aWhere['status'] = 't';
+	            $aWhere['_ordre'] = 'nombre_ubi';
+	            $cCentros_sv = $GesCentros->getCentros($aWhere,$aOperador);
+	            $GesCentros = new GestorCentroEllas();
+	            $aWhere['tipo_ctr'] = 'cgioc|oc|cgi';
+                $aOperador['tipo_ctr'] = '~';
+	            $aWhere['status'] = 't';
+	            $aWhere['_ordre'] = 'nombre_ubi';
+	            $cCentros_sf = $GesCentros->getCentros($aWhere,$aOperador);
+
+	            $cCentros = array_merge($cCentros_sv,$cCentros_sf);
+	            break;
+	        default:
+	            $cCentros = [];
+	            $GesCentros = new GestorCentroDl();
+	            $aWhere['status'] = 't';
+	            $aWhere['_ordre'] = 'tipo_ctr, nombre_ubi';
+	            $cCentros_sv = $GesCentros->getCentros($aWhere);
+	            $GesCentros = new GestorCentroEllas();
+	            $aWhere['status'] = 't';
+	            $aWhere['_ordre'] = 'tipo_ctr, nombre_ubi';
+	            $cCentros_sf = $GesCentros->getCentros($aWhere);
+
+	            $cCentros = array_merge($cCentros_sv,$cCentros_sf);
+	    }
+	    
+	    $html = '';
+	    foreach ($cCentros as $oCentro) {
+            $id_ubi = $oCentro->getId_ubi();
+            
+            $html .= $this->getEncargosUbiSimple($id_ubi);
+	    }
+	    
+	    return $html;
+	}
+
+	public function getEncargosUbiSimple($id_ubi) {
+	    /* busco los datos del encargo que se tengan, para los tipos de encargo de atención de centros: 100,1100,1200,1300,2100,2200,3000. */
+	    $aWhere = [];
+	    $aOperador = [];
+	    $GesEncargos = new GestorEncargo();
+	    $aWhere['id_ubi'] = $id_ubi;
+	    $aWhere['id_tipo_enc'] = '(1|2|3).0';
+	    $aOperador['id_tipo_enc'] = '~';
+	    $cEncargos = $GesEncargos->getEncargos($aWhere,$aOperador);
+	    $e=0;
+	    foreach ($cEncargos as $oEncargo) {
+	        $e++;
+	        $id_enc = $oEncargo->getId_enc();
+	        $a_id_enc[$e] = $id_enc;
+	        $id_tipo_enc[$e] = $oEncargo->getId_tipo_enc();
+	        
+	        $oEncargoTipo  = new EncargoTipo();
+	        $oEncargoTipo->setId_tipo_enc($id_tipo_enc[$e]);
+	        $oEncargoTipo->DBCarregar();
+	        
+            // sacd
+            $GesEncargoSacd = new GestorPropuestaEncargosSacd();
+            $aWhere = array();
+            $aOperador = array();
+            $aWhere['id_enc'] = $a_id_enc[$e];
+            $aWhere['f_fin'] = 'x';
+            $aOperador['f_fin'] = 'IS NULL';
+            $aWhere['_ordre'] = 'modo,f_ini DESC';
+            $cEncargosSacd = $GesEncargoSacd->getEncargosSacd($aWhere,$aOperador);
+            $actual_id_sacd_titular[$e] = '';
+            $new_id_sacd_titular[$e] = '';
+            $id_item_titular[$e] = '';
+            $actual_id_sacd_suplente[$e] = '';
+            $new_id_sacd_suplente[$e] = '';
+            $id_item_suplente[$e] = '';
+            $actual_id_sacd_colaborador[$e] = [];
+            $new_id_sacd_colaborador[$e] = [];
+            $id_item_colaborador[$e] = [];
+            $s=0;
+            foreach ($cEncargosSacd as $oEncargoSacd) {
+                $modo = $oEncargoSacd->getModo();
+                $id_sacd = $oEncargoSacd->getId_nom();
+                $id_sacd_new = $oEncargoSacd->getId_nom_new();
+                $id_item = $oEncargoSacd->getId_item();
+                switch($modo){
+                    case 2: // titular del cl
+                    case 3: // titular no del cl
+                        $actual_id_sacd_titular[$e] = $id_sacd;
+                        $new_id_sacd_titular[$e] = $id_sacd_new;
+                        $id_item_titular[$e] = $id_item;
+                        break;
+                    case 4: // suplente
+                        $actual_id_sacd_suplente[$e] = $id_sacd;
+                        $new_id_sacd_suplente[$e] = $id_sacd_new;
+                        $id_item_suplente[$e] = $id_item;
+                        break;
+                    case 5: // colaborador
+                        $s++;
+                        $actual_id_sacd_colaborador[$e][$s] = $id_sacd;
+                        $new_id_sacd_colaborador[$e][$s] = $id_sacd_new;
+                        $id_item_colaborador[$e][$s] = $id_item;
+                        break;
+                }
+            }
+	    }
+	    
+	    /* lista sacd posibles */
+        $html = '';
+	    $e=0;
+	    foreach ($cEncargos as $oEncargo) {
+	        $e++;
+	        $desc_encargo = $oEncargo->getDesc_enc();
+	        $id_enc = $oEncargo->getId_enc();
+                        
+	        $html .= '<table><tr><td colspan=5>';
+	        $html .= "<b>$desc_encargo</b>";
+	        $html .= '</td></tr>';
+	        // titular:
+	        $id_sacd = $actual_id_sacd_titular[$e];
+	        $id_sacd_new = $new_id_sacd_titular[$e];
+	        $id_item = $id_item_titular[$e];
+	        $oPersonaSacd = new PersonaSacd($id_sacd);
+	        $nom_titular = $oPersonaSacd->getApellidosNombre();
+	        $oPersonaSacdNew = new PersonaSacd($id_sacd_new);
+	        $nom_titular_new = $oPersonaSacdNew->getApellidosNombre();
+	        $nom_titular_new = empty($nom_titular_new)? '-' : $nom_titular_new;
+	        
+	        $class = ($id_sacd != $id_sacd_new)? 'sf' : '';
+	        $html .= "<tr id=\"tr_$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
+	        $html .= _("titular");
+	        $html .= '</td><td>';
+	        $html .= $nom_titular;
+	        $html .= '  ('. $this->getHorarioActualTxt($id_enc,$id_sacd) .')';
+	        $html .= "</td><td>";
+            $html .= $nom_titular_new;
+            $html .= '  ('. $this->getHorarioPropuestaTxt($id_enc,$id_sacd_new) .')';
+	        $html .= "</td>";
+	        $html .= '</td></tr>';
+	        
+	        // suplente:
+	        $id_sacd = $actual_id_sacd_suplente[$e];
+	        $id_sacd_new = $new_id_sacd_suplente[$e];
+	        $id_item = $id_item_suplente[$e];
+	        $id_item = empty($id_item)? '1' : $id_item; // caso de generar uno nuevo.
+	        $oPersonaSacd = new PersonaSacd($id_sacd);
+	        $nom_suplente = $oPersonaSacd->getApellidosNombre();
+	        $oPersonaSacdNew = new PersonaSacd($id_sacd_new);
+	        $nom_suplente_new = $oPersonaSacdNew->getApellidosNombre();
+	        $nom_suplente_new = empty($nom_suplente_new)? '-' : $nom_suplente_new;
+
+	        $class = ($id_sacd != $id_sacd_new)? 'sf' : '';
+	        $html .= "<tr id=\"tr_$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
+	        $html .= _("suplente");
+	        $html .= '</td><td>';
+	        $html .= $nom_suplente;
+	        $html .= "</td><td>";
+            $html .= $nom_suplente_new;
+	        $html .= '</td></tr>';
+	        
+	        // colaboradores:
+	        $s = 0;
+	        foreach ($actual_id_sacd_colaborador[$e] as $id_sacd) {
+	            $s++;
+	            $id_sacd_new = $new_id_sacd_colaborador[$e][$s];
+                $id_item = $id_item_colaborador[$e][$s];
+                $oPersonaSacd = new PersonaSacd($id_sacd);
+                $nom_col = $oPersonaSacd->getApellidosNombre();
+                
+                $oPersonaSacdNew = new PersonaSacd($id_sacd_new);
+                $nom_sacd_new = $oPersonaSacdNew->getApellidosNombre();
+                $nom_sacd_new = empty($nom_sacd_new)? '-' : $nom_sacd_new;
+                
+                $class = ($id_sacd != $id_sacd_new)? 'sf' : '';
+                if ($s < 2) {
+                    $html .= "<tr id=\"tr_$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
+                    $html .= _("colaboradores");
+                } else {
+                    $html .= "<tr id=\"tr_$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
+                }
+                $html .= '</td><td>';
+                $html .= $nom_col;
+                if (!empty($nom_col)) {
+                    $html .= '  ('. $this->getHorarioActualTxt($id_enc,$id_sacd) .')';
+                }
+                $html .= "</td><td>";
+                $html .= $nom_sacd_new;
+                $html .= '  ('. $this->getHorarioPropuestaTxt($id_enc,$id_sacd_new) .')';
+                $html .= '</td></tr>';
+	        }
+	        
+            $html .= '</table>';
+	    }
+            
+        return $html;
+	    
+	}
+
 	public function getLista($filtro_ctr) {
 	    
 	    switch ($filtro_ctr) {

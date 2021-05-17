@@ -49,14 +49,10 @@ $Qsel = (string) \filter_input(INPUT_POST, 'sel');
 
 // para ordenar los modos: 'modo'=>orden
 $hoy_iso = date('Y-m-d');
-$oDateLocal = new DateTimeLocal();
-$hoy_local = $oDateLocal->getFromLocal('.'); 
 
 $array_orden=array( '1'=>1, '2'=>2, '3'=>2, '4'=>4, '5'=>3, '6'=>5 );
 // ciudad de la dl
 $oEncargoFunciones = new EncargoFunciones();
-$poblacion = $oEncargoFunciones->getLugar_dl();
-$lugar_fecha= "$poblacion, $hoy_local";
 
 // los sacd
 $GesPersonas = new GestorPersonaDl();
@@ -90,7 +86,6 @@ foreach ($cPersonas as $oPersona) {
 	$array_modo[$s]['nom_ap']=$oPersona->getNombreApellidos();
 	$idioma=$oPersona->getLengua();
 	
-	$array_modo[$s]['txt']['com_sacd'] = $oEncargoFunciones->getTraduccion('com_sacd', $idioma);
 	$array_modo[$s]['txt']['t_secc'] = $oEncargoFunciones->getTraduccion('t_secc', $idioma);
 	$array_modo[$s]['txt']['t_mañanas'] = $oEncargoFunciones->getTraduccion('t_mañanas', $idioma);
 	$array_modo[$s]['txt']['t_tardes1'] = $oEncargoFunciones->getTraduccion('t_tardes1', $idioma);
@@ -109,12 +104,12 @@ foreach ($cPersonas as $oPersona) {
 		$observ = '';
 	}
 	/* busco los datos del encargo que se tengan */
-    $GesEncargoSad = new GestorEncargoSacd();
-    $aWhere= ['id_nom' => $id_nom, 'f_fin'=>'x', '_ordre' => 'modo'];
+    $GesEncargoSad = new GestorPropuestaEncargosSacd();
+    $aWhere= ['id_nom_new' => $id_nom, 'f_fin'=>'x', '_ordre' => 'modo'];
 	$aOperador = ['f_fin' => 'IS NULL'];
 	$cEncargosSacd1 = $GesEncargoSad->getEncargosSacd($aWhere, $aOperador);
 	
-    $aWhere= ['id_nom' => $id_nom, 'f_fin' => $hoy_iso, '_ordre' => 'modo'];
+    $aWhere= ['id_nom_new' => $id_nom, 'f_fin' => $hoy_iso, '_ordre' => 'modo'];
     $aOperador = ['f_fin' => '>'];
 	$cEncargosSacd2 = $GesEncargoSad->getEncargosSacd($aWhere,$aOperador);
 	
@@ -179,7 +174,7 @@ foreach ($cPersonas as $oPersona) {
 		// horario
 		$aWhere = array();
 		$aOperador = array();
-        $GesHorario = new GestorEncargoSacdHorario();
+        $GesHorario = new GestorPropuestaEncargoSacdHorario();
 		$aWhere['id_enc']=$id_enc;
 		$aWhere['id_nom']=$id_nom;
 		$aWhere['f_fin']="'$hoy_iso'";
@@ -238,8 +233,7 @@ foreach ($cPersonas as $oPersona) {
 $a_campos = ['oPosicion' => $oPosicion,
     'array_modo' => $array_modo,
     'Qsel' => $Qsel,
-    'lugar_fecha' => $lugar_fecha,
 ];
 
 $oView = new core\View('encargossacd/controller');
-echo $oView->render('listas_com_sacd.phtml',$a_campos);
+echo $oView->render('propuestas_lista_sacd.phtml',$a_campos);
