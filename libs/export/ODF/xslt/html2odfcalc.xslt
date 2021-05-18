@@ -44,6 +44,7 @@ You should have received a copy of the GNU General Public License along with thi
 			<style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
 		</style:style>
 		<style:style style:name="ce2" style:family="table-cell" style:parent-style-name="Default"><style:table-cell-properties fo:background-color="#fff200"/></style:style>
+		<style:style style:name="Warning" style:family="table-cell" style:parent-style-name="Status"><style:text-properties fo:color="#cc0000" fo:font-style="normal" fo:font-weight="normal"/></style:style>
 	</office:automatic-styles>
 
 	<xsl:apply-templates select="body"/>
@@ -156,6 +157,13 @@ You should have received a copy of the GNU General Public License along with thi
 				<xsl:call-template name="subtable"/>
 			</xsl:for-each>
 		</xsl:when>
+		<xsl:when test="@class='warning'">
+			<table:table-cell table:style-name="Warning" office:value-type="string" >
+				<text:p>
+					<xsl:value-of select="current()"/>
+				</text:p>
+			</table:table-cell>
+		</xsl:when>
 		<xsl:when test="@class='alert'">
 		 	<table:table-cell table:style-name="ce2" office:value-type="string" table:number-columns-spanned="1" table:number-rows-spanned="1">
 				<text:p>
@@ -198,7 +206,12 @@ You should have received a copy of the GNU General Public License along with thi
 				<!-- </text:p> -->
 			</table:table-cell>
 		</xsl:when>
-		<xsl:when test="child::span[@class='alert']">
+		<xsl:when test="child::span[@class='warning']">
+		 	<table:table-cell table:style-name="Warning" office:value-type="string" >
+				<xsl:call-template name="text_applyer"/>
+			</table:table-cell>
+		</xsl:when>
+		<xsl:when test="child::span">
 		   <table:table-cell table:style-name="ce2" office:value-type="string" table:number-columns-spanned="1" table:number-rows-spanned="1">
 				<xsl:call-template name="text_applyer"/>
 		   </table:table-cell>

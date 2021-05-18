@@ -29,5 +29,12 @@ if (is_true($existe)) {
 if (!empty($error_txt)) {
     echo $error_txt;
 } else {
+    echo "<style>
+td.warning{
+	text-color: red;
+	color: red;
+}
+</style>
+";
     echo $rta;
 }

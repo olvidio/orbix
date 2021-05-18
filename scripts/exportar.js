@@ -220,14 +220,19 @@ function fnjs_convert(node){
 				//alert ("WW"+this);
 					rta1+=fnjs_convert(this);
 				});
+			if ($(node).attr("class")) {
+				clas=" class='"+$(node).attr('class')+"'";
+			} else {
+				clas="";
+			}
 			if (rta1) {
 				rr='';
 				//rr=$(node).contents().not($(node).children()).text();
 				//if (rec<30) alert(tag+" con hijos\n"+rta1);
-				rta="<"+tag+">"+rr+rta1+"</"+tag+">"; 
+				rta="<"+tag+" "+clas+">"+rr+rta1+"</"+tag+">"; 
 			} else {
 				//if (rec<30) alert(tag+" sin hijos");
-				rta="<"+tag+">"+$(node).html()+"</"+tag+">"; 
+				rta="<"+tag+" "+clas+">"+$(node).html()+"</"+tag+">"; 
 			}
 			break;
 		case "tbody":

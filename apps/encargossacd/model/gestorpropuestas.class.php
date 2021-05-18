@@ -288,7 +288,14 @@ class GestorPropuestas {
 	        $desc_encargo = $oEncargo->getDesc_enc();
 	        $id_enc = $oEncargo->getId_enc();
                         
-	        $html .= '<table><tr><td colspan=5>';
+	        $html .= '<table>';
+	        // para el ancho de las columnas
+	        $html .= '<tr>';
+	        $html .= "<th web-width=\"70\" >";
+	        $html .= "<th web-width=\"250\" >";
+	        $html .= "<th web-width=\"250\" >";
+	        $html .= '</tr>';
+	        $html .= '<tr><td colspan=5>';
 	        $html .= "<b>$desc_encargo</b>";
 	        $html .= '</td></tr>';
 	        // titular:
@@ -301,13 +308,14 @@ class GestorPropuestas {
 	        $nom_titular_new = $oPersonaSacdNew->getApellidosNombre();
 	        $nom_titular_new = empty($nom_titular_new)? '-' : $nom_titular_new;
 	        
-	        $class = ($id_sacd != $id_sacd_new)? 'sf' : '';
-	        $html .= "<tr id=\"tr_$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
+	        $class = ($id_sacd != $id_sacd_new)? 'warning' : '';
+	        $html .= "<tr id=\"tr_$id_item\" class=\"$class\" title=\"$id_sacd\">";
+	        $html .= "<td>";
 	        $html .= _("titular");
-	        $html .= '</td><td>';
+	        $html .= "</td><td class=\"$class\" >";
 	        $html .= $nom_titular;
 	        $html .= '  ('. $this->getHorarioActualTxt($id_enc,$id_sacd) .')';
-	        $html .= "</td><td>";
+	        $html .= "</td><td class=\"$class\" >";
             $html .= $nom_titular_new;
             $html .= '  ('. $this->getHorarioPropuestaTxt($id_enc,$id_sacd_new) .')';
 	        $html .= "</td>";
