@@ -77,7 +77,7 @@ $minutos = $interval->format("%i");
 
 $error_txt = '';
 if ($minutos > 30) {
-    $error_txt = "Ultima sicronización: ".$oUltimaSync->format("Y-m-d h:i:s");
+    $error_txt .= "Ultima sicronización: ".$oUltimaSync->format("Y-m-d h:i:s");
 }
 
 $pos1 = strpos($status_txt, 'Bad');
@@ -120,8 +120,8 @@ function enviar_mail($email,$error_txt){
 }
 
 function makear($status_txt) {
-    $html = str_replace('<td>|</td>', '', $status_txt);
-    $html2 = preg_replace('<tr><td>[\=\+]*<\/td><\/tr>', '', $html);
+    $html = str_replace('\s*<td>\|<\/td>\s*', '', $status_txt);
+    $html2 = preg_replace('<tr>\s*<td>[\=\+]*<\/td>\s*<\/tr>', '', $html);
     
     return $html2;
 }
