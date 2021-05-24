@@ -583,7 +583,7 @@ class DBEsquema extends DBAbstract {
         $oDbl = $this->oDbl;
         
         $a_sql = [];
-        $a_sql[0] = "TRUNCATE $nom_tabla CASCADE RESTART IDENTITY;" ;
+        $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY CASCADE;" ;
         $this->executeSql($a_sql);
         
         $delimiter = "\t";
