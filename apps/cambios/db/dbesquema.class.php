@@ -583,7 +583,7 @@ class DBEsquema extends DBAbstract {
         $oDbl = $this->oDbl;
         
         $a_sql = [];
-        $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY;" ;
+        $a_sql[0] = "TRUNCATE $nom_tabla CASCADE RESTART IDENTITY;" ;
         $this->executeSql($a_sql);
         
         $delimiter = "\t";
@@ -601,6 +601,9 @@ class DBEsquema extends DBAbstract {
         // Fix sequences
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);
+        
+        // Quitar los usuarios inexistentes:
+        
         
         $this->delPermisoGlobal('sfsv');
         // Devolver los valores al estado original
@@ -627,9 +630,11 @@ class DBEsquema extends DBAbstract {
         $filename = $datosTabla['filename'];
         $oDbl = $this->oDbl;
         
+        /* Se borra con la primera.
         $a_sql = [];
-        $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY;" ;
+        $a_sql[0] = "TRUNCATE $nom_tabla CASCADE RESTART IDENTITY;" ;
         $this->executeSql($a_sql);
+        */
         
         $delimiter = "\t";
         $null_as = "\\\\N";
