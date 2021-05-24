@@ -104,6 +104,15 @@ class DBEsquema extends DBAbstract {
             return  TRUE;
         }
         
+        /*
+         * Para el servidor exterior a la hora de sincronizar 'av_cambios_dl'
+         * ('av_cambios' no hace falta porque sólo se modifica desde dentro) hay un problema de simultaniedad:
+         * si se inserta una fila a la vez en el servidor1 y en el 2, cojen el mismo valor de la sequencia
+         * (que es la clave primaria), y al sincronizar sólo queda una fila. Para evitarlo se genera un id_item
+         * distinto en cada servidor, de manera que no sea posible conflicto:
+         * los 'id_item_cambio' del servidor1 empiezan por 1, los del servidor2 por 2.
+         */
+        
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                 ) 
@@ -111,17 +120,16 @@ class DBEsquema extends DBAbstract {
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
         
-        //secuencia solo los impares (en el servidor exterior hay que poner los pares)
         $a_sql[] = "CREATE SEQUENCE IF NOT EXISTS $id_seq;";
         $a_sql[] = "ALTER SEQUENCE $id_seq
-                    INCREMENT BY 2
+                    INCREMENT BY 1
                     MINVALUE 1
                     MAXVALUE 9223372036854775807
                     START WITH 1
                     NO CYCLE;";
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
         
-        $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER COLUMN $campo_seq SET DEFAULT (((1)::text || (nextval('$id_seq'::regclass))::text))::integer ; "; 
         
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
         

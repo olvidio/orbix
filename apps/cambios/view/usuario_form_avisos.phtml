@@ -2,7 +2,7 @@
 fnjs_mod_cambio=function(formulario){
 	rta=fnjs_solo_uno(formulario);
 	if (rta==1) {
-		$('#salida').val('modificar');
+		$('#av_salida').val('modificar');
         $(formulario).attr('action','apps/cambios/controller/usuario_avisos_pref.php');
 		fnjs_enviar_formulario(formulario);
 	}
@@ -11,7 +11,7 @@ fnjs_del_cambio=function(formulario,que_val){
 	rta=fnjs_solo_uno(formulario);
 	if (rta==1) {
         if (confirm("<?= _("¿Está seguro que desea borrar este aviso?");?>") ) {
-            $('#salida').val('eliminar');
+            $('#av_salida').val('eliminar');
 	        $(formulario).attr('action','apps/cambios/controller/usuario_avisos_pref_ajax.php');
             $(formulario).one("submit", function() {
                 $.ajax({

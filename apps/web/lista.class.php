@@ -307,7 +307,8 @@ class Lista {
                 $b="x";
             } else {
                 foreach ($a_botones as $a_boton) {
-                    $btn="btn".$b++;
+                    $prefix = empty($a_boton['prefix'])? '' : $a_boton['prefix'].'_';
+                    $btn=$prefix."btn".$b++;
                     $botones .= "<INPUT id='$btn' name='$btn' type=button value=\"".$a_boton['txt']."\" onClick='".$a_boton['click']."'>";
                 }
             }
@@ -894,7 +895,8 @@ class Lista {
             } else {
                 $b=0;
                 foreach ($a_botones as $a_boton) {
-                    $btn="btn".$b++;
+                    $prefix = empty($a_boton['prefix'])? '' : $a_boton['prefix'].'_';
+                    $btn=$prefix."btn".$b++;
                     $botones .= "<INPUT id='$btn' name='$btn' type=button value=\"".$a_boton['txt']."\" onClick='".$a_boton['click']."'>";
                 }
                 $botones.="</td></tr>";
@@ -1065,7 +1067,8 @@ class Lista {
             } else {
                 $b=0;
                 foreach ($a_botones as $a_boton) {
-                    $btn="btn".$b++;
+                    $prefix = empty($a_boton['prefix'])? '' : $a_boton['prefix'].'_';
+                    $btn=$prefix."btn".$b++;
                     $botones .= "<INPUT id='$btn' name='$btn' type=button value=\"".$a_boton['txt']."\" onClick='".$a_boton['click']."'>";
                 }
                 $botones.="</td></tr>";

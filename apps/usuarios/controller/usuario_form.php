@@ -111,8 +111,8 @@ if( (ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
 	                   _("valor"),
 	               ];
 	$a_botones_avisos = [
-				        array( 'txt' => _("modificar"), 'click' =>"fnjs_mod_cambio(\"#avisos\")" ),
-				        array( 'txt' => _("eliminar"), 'click' =>"fnjs_del_cambio(\"#avisos\")" ) 
+				        array('prefix' => 'av', 'txt' => _("modificar"), 'click' =>"fnjs_mod_cambio(\"#avisos\")" ),
+				        array('prefix' => 'av', 'txt' => _("eliminar"), 'click' =>"fnjs_del_cambio(\"#avisos\")" ) 
 			        ];
 	$a_valores_avisos = [];
 	$oFase = new ActividadFase();
@@ -461,6 +461,7 @@ if( (ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
 	        'salida' => '',
 			);
 	$oHashAvisos->setArraycamposHidden($a_camposHidden);
+	$oHashAvisos->setPrefix('av'); // prefijo par el id.
 	$h1 = $oHashAvisos->linkSinVal();
 	
 	$a_camposAvisos = [

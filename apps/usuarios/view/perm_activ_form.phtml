@@ -22,8 +22,8 @@ $a_cabeceras = [ ['name' => _("dl propia"), 'width' => '5%'],
                ];
                 
 $a_botones = [];
-$a_botones[] = array( 'txt' => _("modificar"), 'click' =>"fnjs_mod_perm_activ(\"#permisos_activ\")" );
-$a_botones[] = array( 'txt' => _("eliminar"), 'click' =>"fnjs_del_perm_activ(\"#permisos_activ\")" ); 
+$a_botones[] = array('prefix' => 'perm', 'txt' => _("modificar"), 'click' =>"fnjs_mod_perm_activ(\"#permisos_activ\")" );
+$a_botones[] = array('prefix' => 'perm', 'txt' => _("eliminar"), 'click' =>"fnjs_del_perm_activ(\"#permisos_activ\")" ); 
 
 $oAcciones = new PermAccion();
 $aOpcionesAction = $oAcciones->lista_array();
@@ -90,6 +90,7 @@ $a_camposHidden = array(
         'quien' => $quien
         );
 $oHash3->setArraycamposHidden($a_camposHidden);
+$oHash3->setPrefix('perm'); // prefijo par el id.
 ?>
 <script>
 fnjs_add_perm_activ=function(){
@@ -110,7 +111,7 @@ fnjs_del_perm_activ=function(formulario,que_val){
     if (rta==1) {
         if (confirm("<?php echo _("¿Esta seguro que desea borrar este permiso?");?>") ) {
             $('#perm_activ_que').val('perm_eliminar');
-            id_usuario=$('#id_usuario').val();
+            id_usuario=$('#perm_id_usuario').val();
             $(formulario).attr('action','apps/usuarios/controller/usuario_update.php');
             $(formulario).one("submit", function() {
                 $.ajax({
@@ -134,7 +135,7 @@ fnjs_del_perm_activ=function(formulario,que_val){
 }
 fnjs_actualizar3=function(formulario){
     var campo = '<input type="hidden" name="refresh" value=1>';
-    quien = $("#quien").val();
+    quien = $("#perm_quien").val();
     if (quien == 'grupo') {
         $(formulario).attr('action',"apps/usuarios/controller/grupo_form.php");
     } else {

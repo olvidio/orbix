@@ -71,7 +71,6 @@ $oDesplObjetos->setBlanco('true');
 $oDesplObjetos->setOpciones($aObjetos);
 $oDesplObjetos->setAction('fnjs_actualizar_fases(); fnjs_actualizar_propiedades()');
 
-
 if ($Qsalida == 'modificar' && !empty($Qid_item_usuario_objeto)) {
 	$oCambioUsuarioObjetoPref = new CambioUsuarioObjetoPref(array('id_item_usuario_objeto'=>$Qid_item_usuario_objeto));
 	$id_tipo_activ=$oCambioUsuarioObjetoPref->getId_tipo_activ_txt();
