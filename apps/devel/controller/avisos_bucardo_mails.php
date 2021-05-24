@@ -38,6 +38,8 @@ require_once ("apps/core/global_object.inc");
 /* se ejecuta desde un cron (de momento) en el servidor exterior, que es el que tiene conexión al servidor de correo.
  Hay que hacerlo para todos los usuarios.
  Comprobar que tengan e-mail
+ 
+ >>> Se crea la tabla también en el servidor interno, para cuando se rehace la DB por fallos de sincronización.
  */
 
 // CREATE TABLE bucardo_test ( id_item SERIAL, time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, status TEXT);

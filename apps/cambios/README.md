@@ -96,9 +96,9 @@ Ver avisos
 ----------
 El último paso del proceso es que el usuario vea los cambios. Esto se puede hacer mediante una lista o por mail. En ambos casos se cojen las filas de GestorCambioUsuario con avisado=FALSE.
 
-- Para ver por lista, se ejecuta 'avisos_generar.php'. Una vez enviados se eliminan.
+- Para ver por lista, se ejecuta 'avisos_generar.php'. Ni se eliminan ni se marcan como avisados. Se pueden eliminar desde el listado, seleccionándolos, o por fecha.
 
-- Para enviar mails se ejecuta 'avisos_generar_mails.php'. Ni se eliminan ni se marcan como avisados. Se pueden eliminar desde el listado, seleccionándolos, o por fecha.
+- Para enviar mails se ejecuta 'avisos_generar_mails.php'. Una vez enviados se eliminan.
 
 ==>> Parece que el campo de 'avisado' no se utiliza. ?????
 

@@ -25,18 +25,16 @@ class DBEsquema extends DBAbstract {
         $this->eliminar_av_cambios_usuario_objeto_pref();
         $this->eliminar_av_cambios_usuario();
         $this->eliminar_av_cambios_anotados();
-        if (ConfigGlobal::mi_sfsv() == 2) {
-            $this->eliminar_av_cambios_anotados_sf();
-        }
+        // la creo en cualquier caso, para que al sincronizar no tenga problemas
+        $this->eliminar_av_cambios_anotados_sf();
         $this->eliminar_av_cambios_dl();
     }
     
     public function createAll() {
         $this->create_av_cambios_dl();
         $this->create_av_cambios_anotados();
-        if (ConfigGlobal::mi_sfsv() == 2) {
-            $this->create_av_cambios_anotados_sf();
-        }
+        // la creo en cualquier caso, para que al sincronizar no tenga problemas
+        $this->create_av_cambios_anotados_sf();
         $this->create_av_cambios_usuario();
         $this->create_av_cambios_usuario_objeto_pref();
         $this->create_av_cambios_usuario_propiedades_pref();
@@ -113,10 +111,10 @@ class DBEsquema extends DBAbstract {
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
         
-        //secuencia
+        //secuencia solo los impares (en el servidor exterior hay que poner los pares)
         $a_sql[] = "CREATE SEQUENCE IF NOT EXISTS $id_seq;";
         $a_sql[] = "ALTER SEQUENCE $id_seq
-                    INCREMENT BY 1
+                    INCREMENT BY 2
                     MINVALUE 1
                     MAXVALUE 9223372036854775807
                     START WITH 1

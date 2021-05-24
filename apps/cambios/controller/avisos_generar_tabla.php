@@ -237,7 +237,7 @@ while ($num_cambios) {
                         $gesTareaProceso = new GestorTareaProceso();
                         $cTareasProceso = $gesTareaProceso->getTareasProceso(['id_tipo_proceso' => $id_tipo_proceso, 'id_fase' => $id_fase_ref]);
                         if (!empty($cTareasProceso)) {
-                            $status_de_fase = $cTareasProceso[0]->getId_status();
+                            $status_de_fase = $cTareasProceso[0]->getStatus();
                         }
 			        }
                     if ($id_status_cmb == $status_de_fase) {
