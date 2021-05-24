@@ -41,7 +41,8 @@ class DBEsquema extends DBAbstract {
     }
     
     public function llenarAll() {
-        //$this->llenar_a_tipos_actividad();
+        $this->llenar_av_cambios_usuario_objeto_pref();
+        $this->llenar_av_cambios_usuario_propiedades_pref();
     }
     
     private function infoTable($tabla) {
@@ -563,4 +564,93 @@ class DBEsquema extends DBAbstract {
         $this->delPermisoGlobal('sfsv-e');
     }
     
+    public function llenar_av_cambios_usuario_objeto_pref() {
+        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
+        $esquema_org = $this->esquema;
+        $role_org = $this->role;
+        $this->esquema = ConfigGlobal::mi_region_dl();
+        $this->role = '"'. $this->esquema .'"';
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('sfsv-e');
+        $this->setConexion('sfsv-e');
+        
+        $datosTabla = $this->infoTable("av_cambios_usuario_objeto_pref");
+        
+        $nom_tabla = $datosTabla['nom_tabla'];
+        $campo_seq = $datosTabla['campo_seq'];
+        $id_seq = $datosTabla['id_seq'];
+        $filename = $datosTabla['filename'];
+        $oDbl = $this->oDbl;
+        
+        $a_sql = [];
+        $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY;" ;
+        $this->executeSql($a_sql);
+        
+        $delimiter = "\t";
+        $null_as = "\\\\N";
+        $fields = "id_item_usuario_objeto,id_usuario,dl_org,id_tipo_activ_txt,id_fase_ref,aviso_off,aviso_on,aviso_outdate,objeto,aviso_tipo,id_pau";
+        
+        // Comprobar que existe el fichero (la ruta esta bien...
+        if (!file_exists($filename)) {
+            $msg = sprintf(_("no existe el fichero: %s"),$filename);
+            exit ($msg);
+        }
+        
+        $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
+        
+        // Fix sequences
+        $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
+        $this->executeSql($a_sql);
+        
+        $this->delPermisoGlobal('sfsv');
+        // Devolver los valores al estado original
+        $this->esquema = $esquema_org;
+        $this->role = $role_org;
+    }
+
+    public function llenar_av_cambios_usuario_propiedades_pref() {
+        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
+        $esquema_org = $this->esquema;
+        $role_org = $this->role;
+        $this->esquema = ConfigGlobal::mi_region_dl();
+        $this->role = '"'. $this->esquema .'"';
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('sfsv-e');
+        $this->setConexion('sfsv-e');
+        
+        $datosTabla = $this->infoTable("av_cambios_usuario_propiedades_pref");
+        
+        
+        $nom_tabla = $datosTabla['nom_tabla'];
+        $campo_seq = $datosTabla['campo_seq'];
+        $id_seq = $datosTabla['id_seq'];
+        $filename = $datosTabla['filename'];
+        $oDbl = $this->oDbl;
+        
+        $a_sql = [];
+        $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY;" ;
+        $this->executeSql($a_sql);
+        
+        $delimiter = "\t";
+        $null_as = "\\\\N";
+        $fields = "id_item,id_item_usuario_objeto,propiedad,operador,valor,valor_old,valor_new ";
+        
+        // Comprobar que existe el fichero (la ruta esta bien...
+        if (!file_exists($filename)) {
+            $msg = sprintf(_("no existe el fichero: %s"),$filename);
+            exit ($msg);
+        }
+        
+        $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
+        
+        // Fix sequences
+        $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
+        $this->executeSql($a_sql);
+        
+        $this->delPermisoGlobal('sfsv');
+        // Devolver los valores al estado original
+        $this->esquema = $esquema_org;
+        $this->role = $role_org;
+        
+    }
 }
