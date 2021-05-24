@@ -438,6 +438,7 @@ switch($Qsalida) {
 		if ($oCambioUsuarioObjeto->DBGuardar() === false) {
 			echo _("Hay un error, no se ha guardado");
 			echo "\n".$oCambioUsuarioObjeto->getErrorTxt();
+			exit();
 		}
 		$id_item_usuario_objeto = $oCambioUsuarioObjeto->getId_item_usuario_objeto();
 		echo $id_item_usuario_objeto;

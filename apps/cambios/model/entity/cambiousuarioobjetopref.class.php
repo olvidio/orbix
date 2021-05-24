@@ -209,7 +209,7 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			$campos="(id_usuario,dl_org,id_tipo_activ_txt,id_fase_ref,aviso_off,aviso_on,aviso_outdate,objeto,aviso_tipo,id_pau)";
-			$valores="(:id_usuario,:dl_org,:id_tipo_activ_txt,:id_fase_ref,:aviso_off,:aviso_on,:aviso_outdate,:objeto,aviso_tipo,:id_pau)";		
+			$valores="(:id_usuario,:dl_org,:id_tipo_activ_txt,:id_fase_ref,:aviso_off,:aviso_on,:aviso_outdate,:objeto,:aviso_tipo,:id_pau)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClauError = 'CambioUsuarioObjetoPref.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
