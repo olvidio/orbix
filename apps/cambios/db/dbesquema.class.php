@@ -228,7 +228,7 @@ class DBEsquema extends DBAbstract {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
 
-        $datosTabla = $this->infoTable("av_cambios_anotados");
+        $datosTabla = $this->infoTable("av_cambios_anotados_dl");
         
         $nom_tabla = $datosTabla['nom_tabla'];
         $id_seq = $datosTabla['id_seq'];
