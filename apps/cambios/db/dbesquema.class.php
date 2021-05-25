@@ -43,6 +43,7 @@ class DBEsquema extends DBAbstract {
     public function llenarAll() {
         $this->llenar_av_cambios_usuario_objeto_pref();
         $this->llenar_av_cambios_usuario_propiedades_pref();
+        $this->borrar_usuarios_inexistentes();
     }
     
     private function infoTable($tabla) {
@@ -657,5 +658,31 @@ class DBEsquema extends DBAbstract {
         $this->esquema = $esquema_org;
         $this->role = $role_org;
         
+    }
+    
+    public function borrar_usuarios_inexistentes() {
+        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
+        $esquema_org = $this->esquema;
+        $role_org = $this->role;
+        $this->esquema = ConfigGlobal::mi_region_dl();
+        $this->role = '"'. $this->esquema .'"';
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('sfsv-e');
+        $this->setConexion('sfsv-e');
+        
+        $datosTabla = $this->infoTable("av_cambios_usuario_objeto_pref");
+        
+        $nom_tabla = $datosTabla['nom_tabla'];
+        $nom_tabla_usuarios = '"'.$this->esquema.'".aux_usuarios';
+        
+        // Quitar los usuarios inexistentes:
+        $a_sql = [];
+        $a_sql[0] = "DELETE FROM $nom_tabla WHERE id_usuario IN ( SELECT DISTINCT p.id_usuario FROM $nom_tabla p LEFT JOIN $nom_tabla_usuarios u USING (id_usuario) WHERE u.id_usuario IS NULL ORDER BY p.id_usuario);" ;
+        $this->executeSql($a_sql);
+        
+        $this->delPermisoGlobal('sfsv');
+        // Devolver los valores al estado original
+        $this->esquema = $esquema_org;
+        $this->role = $role_org;
     }
 }
