@@ -149,8 +149,8 @@ if ($Qloc !== 'ex') {
                         //$condicion_u="WHERE u.tipo_casa!='cgi' AND u.tipo_casa !='cdc' AND u.tipo_casa !='cdr'";
                     } else {
                         $aWhere['sv'] = 't';
-                        break;
                     }
+                    break;
                 case 2:
                     $aWhere['sf'] = 't';
                     break;
