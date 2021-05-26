@@ -312,6 +312,10 @@ switch ($Qque) {
 		$aOperador['status']="<";
 
 		switch ($Qtipo) {
+			case "sv":
+				$aWhere['id_tipo_activ']='^1';
+				$aOperador['id_tipo_activ']='~';
+				break;
 			case "na":
 				$aWhere['id_tipo_activ']='^1[13]';
 				$aOperador['id_tipo_activ']='~';
@@ -326,6 +330,10 @@ switch ($Qque) {
 				break;
 			case "sssc":
 				$aWhere['id_tipo_activ']='^1[6]';
+				$aOperador['id_tipo_activ']='~';
+				break;
+			case "sf":
+				$aWhere['id_tipo_activ']='^2';
 				$aOperador['id_tipo_activ']='~';
 				break;
 			case "sf_na":
