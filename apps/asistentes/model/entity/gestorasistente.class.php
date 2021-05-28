@@ -198,7 +198,7 @@ class GestorAsistente Extends core\ClaseGestor {
 				$cAsistentes = array();
 			} else {
 				if ($dl_org == $mi_dele) {
-					$a_Clases[] = array('clase'=>'AsistenteEx','get'=>'getAsistentesEx');
+					//parece que ya estan en IN. $a_Clases[] = array('clase'=>'AsistenteEx','get'=>'getAsistentesEx');
 					$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
 					$cAsistentes = $this->getConjunt($a_Clases,$namespace,$aWhere, $aOperators);
 					//$gesAsistenteIn = new GestorAsistenteIn();
