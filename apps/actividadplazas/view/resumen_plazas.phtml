@@ -37,6 +37,9 @@ fnjs_actualizar=function(formulario){
 <form id="frm_resumen" name="frm_resumen" action="" method="POST">
 <?= $oHash->getCamposHtml(); ?>
 <?= $nom_activ ?>
+<?php if (is_true($otra_dl)) { ?>
+	<span class="alert"><?= _("Sólo se ven las ocupadas por la propia dl") ?></span>
+<?php } ?>
 <?php if (!is_true($publicado)) { ?>
 	<span class="alert"><?= _("OJO! Esta actividad no está publicada") ?></span>
 <?php } ?>

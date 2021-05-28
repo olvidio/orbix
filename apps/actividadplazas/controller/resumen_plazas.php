@@ -3,6 +3,7 @@ use actividades\model\entity as actividades;
 use core\DBPropiedades;
 use web\Desplegable;
 use function core\is_true;
+use core\ConfigGlobal;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -39,13 +40,18 @@ $oDBPropiedades = new DBPropiedades();
 $aOpcionesDl = $oDBPropiedades->array_posibles_esquemas(TRUE);
 $oDesplDelegaciones->setOpciones($aOpcionesDl);
 
-// comprobar que la actividad está publicada, sino avisar!
+// comprobar que la actividad está publicada, sino: avisar!
 $publicado = '';
 $oActividad = new actividades\Actividad($id_activ);
 $publicado = $oActividad->getPublicado();
 // Si no es una actividad de la dl, publicado da NULL (igual que todos los campos)
 if (!is_true($publicado) OR $publicado === null) {
 	$publicado = FALSE;
+}
+// avisar si es de otra dl:
+$otra_dl = FALSE;
+if ($oActividad->getDl_org() != ConfigGlobal::mi_delef()) {
+    $otra_dl = TRUE;
 }
 
 $gesActividadPlazas = new \actividadplazas\model\GestorResumenPlazas();
@@ -81,6 +87,7 @@ $a_campos = [
 			'oHashActualizar' => $oHashActualizar,
 			'oHash' => $oHash,
 			'publicado' => $publicado,
+            'otra_dl' => $otra_dl,
 			'nom_activ' => $nom_activ,
 			'a_plazas' => $a_plazas,
 			'tot_calendario' => $tot_calendario,
