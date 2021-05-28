@@ -2,6 +2,7 @@
 use actividades\model\entity as actividades;
 use core\DBPropiedades;
 use web\Desplegable;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -40,11 +41,11 @@ $oDesplDelegaciones->setOpciones($aOpcionesDl);
 
 // comprobar que la actividad está publicada, sino avisar!
 $publicado = '';
-$oActividad = new actividades\ActividadDl($id_activ);
+$oActividad = new actividades\Actividad($id_activ);
 $publicado = $oActividad->getPublicado();
 // Si no es una actividad de la dl, publicado da NULL (igual que todos los campos)
-if ($publicado === null) {
-	$publicado = true;
+if (!is_true($publicado) OR $publicado === null) {
+	$publicado = FALSE;
 }
 
 $gesActividadPlazas = new \actividadplazas\model\GestorResumenPlazas();

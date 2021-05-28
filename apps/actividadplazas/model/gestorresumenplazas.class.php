@@ -2,6 +2,7 @@
 namespace actividadplazas\model;
 use core;
 use core\ConfigGlobal;
+use function core\is_true;
 /**
  * GestorActividadPlazas
  *
@@ -434,7 +435,7 @@ class GestorResumenPlazas {
 		$publicado = $oActividad->getPublicado();
 		// Si no está publicada no tiene plazas de calendario.
 		// Se toman todas la de la actividad como propias.
-		if ($publicado === false) {
+		if (!is_true($publicado)) {
 			$pl_propias = $this->getPlazasTotales();
 		} else {
 			// las que me correponden por calendario - las cedidas

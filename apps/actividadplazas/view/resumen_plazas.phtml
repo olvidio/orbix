@@ -1,3 +1,6 @@
+<?php
+use function core\is_true;
+?>
 <script>
 fnjs_guardar=function(formulario){
 	$('#que').value = 'ceder';
@@ -34,7 +37,7 @@ fnjs_actualizar=function(formulario){
 <form id="frm_resumen" name="frm_resumen" action="" method="POST">
 <?= $oHash->getCamposHtml(); ?>
 <?= $nom_activ ?>
-<?php if (empty($publicado)) { ?>
+<?php if (!is_true($publicado)) { ?>
 	<span class="alert"><?= _("OJO! Esta actividad no está publicada") ?></span>
 <?php } ?>
 <table border="1">
