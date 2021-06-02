@@ -105,11 +105,14 @@ if (!empty($Qid_usuario)) {
 		} else {
             $quien = $aSecciones[$sfsv_quien_cambia] ;
 		}
-		$a_valores[$i]['sel']="$id_item_cmb#$Qid_usuario#$mi_sfsv#$Qaviso_tipo";
-		$a_valores[$i][1]=$timestamp_cambio;
-		$a_valores[$i][2]=$quien;
-		$a_valores[$i][3]=$aviso_txt;
+		$num_orden = $timestamp_cambio.'$i'; // añado $i por que si hay dos iguales, se sobreescribe.
+		
+		$a_valores[$num_orden]['sel']="$id_item_cmb#$Qid_usuario#$mi_sfsv#$Qaviso_tipo";
+		$a_valores[$num_orden][1]=$timestamp_cambio;
+		$a_valores[$num_orden][2]=$quien;
+		$a_valores[$num_orden][3]=$aviso_txt;
 	}
+	ksort($a_valores);
 
 	$a_cabeceras = [ [ 'name'=>ucfirst(_("fecha cambio")),'class'=>'fecha_hora' ],
 					 ucfirst(_("quien")),
