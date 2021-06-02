@@ -94,7 +94,7 @@ if (!empty($Qid_usuario)) {
 		$quien_cambia = $oCambio->getQuien_cambia();
 		$sfsv_quien_cambia = $oCambio->getSfsv_quien_cambia();
 		$timestamp_cambio = $oCambio->getTimestamp_cambio()->getFromLocalHora();
-		$timestamp_iso = $oCambio->getTimestamp_cambio()->getIsoTime();
+		$timestamp_orden = $oCambio->getTimestamp_cambio()->format('YmdHis');
 		
 		$aviso_txt = $oCambio->getAvisoTxt();
 		
@@ -106,7 +106,7 @@ if (!empty($Qid_usuario)) {
 		} else {
             $quien = $aSecciones[$sfsv_quien_cambia] ;
 		}
-		$num_orden = $timestamp_iso.$i; // añado $i por que si hay dos iguales, se sobreescribe.
+		$num_orden = $timestamp_orden.$i; // añado $i por que si hay dos iguales, se sobreescribe.
 		
 		$a_valores[$num_orden]['sel']="$id_item_cmb#$Qid_usuario#$mi_sfsv#$Qaviso_tipo";
 		$a_valores[$num_orden][1]=$timestamp_cambio;
