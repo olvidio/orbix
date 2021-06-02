@@ -626,6 +626,32 @@ class Lista {
 			}
 			
 			";
+        
+        // Formato de fecha:
+        $idioma = $_SESSION['session_auth']['idioma'];
+        # Si no hemos encontrado ningún idioma que nos convenga, mostramos la web en el idioma por defecto
+        if (!isset($idioma)){ $idioma = $_SESSION['oConfig']->getIdioma_default(); }
+        $a_idioma = explode('.',$idioma);
+        $code_lng = $a_idioma[0];
+        //$code_char = $a_idioma[1];
+        switch ($code_lng) {
+            case 'en_US':
+                // formato = mes/dia/año;
+                $fecha_local= "
+                    // OJO moth is 0 index => restar 1.
+					var date_a = new Date(fecha_a[2], fecha_a[0]-1, fecha_a[1], hora_a[0], hora_a[1], hora_a[2]);
+					var date_b = new Date(fecha_b[2], fecha_b[0]-1, fecha_b[1], hora_b[0], hora_b[1], hora_b[2]);
+                    ";
+                break;
+            default:
+                // formato = dia/mes/año;
+                $fecha_local= "
+                    // OJO moth is 0 index => restar 1.
+					var date_a = new Date(fecha_a[2], fecha_a[1]-1, fecha_a[0], hora_a[0], hora_a[1], hora_a[2]);
+					var date_b = new Date(fecha_b[2], fecha_b[1]-1, fecha_b[0], hora_b[0], hora_b[1], hora_b[2]);
+                    ";
+        }
+        
         $tt .= "
 			// Define search filter
 			function myFilter_$id_tabla(item,args) {
@@ -657,16 +683,18 @@ class Lista {
 					var hora_a = dateTime_a[1].split(':');
 					var fecha_b = dateTime_b[0].split('/');
 					var hora_b = dateTime_b[1].split(':');
-					var date_a = new Date(fecha_a[2], fecha_a[1], fecha_a[0], hora_a[0], hora_a[1], hora_a[2]);
-					var date_b = new Date(fecha_b[2], fecha_b[1], fecha_b[0], hora_b[0], hora_b[1], hora_b[2]);
+                ";
+        $tt .= $fecha_local;
+        $tt .= "
 					var diff = date_a.getTime()-date_b.getTime();
 					return (diff==0?diff:diff/Math.abs(diff));
 				}
 				if ( dateformat.test(a[sortcol]) && dateformat.test(b[sortcol]) ) {
-					var tableau_a = a[sortcol].split('/');
-					var tableau_b = b[sortcol].split('/');
-					var date_a = new Date(tableau_a[2], tableau_a[1], tableau_a[0]);
-					var date_b = new Date(tableau_b[2], tableau_b[1], tableau_b[0]);
+					var fecha_a = a[sortcol].split('/');
+					var fecha_b = b[sortcol].split('/');
+                ";
+        $tt .= $fecha_local;
+        $tt .= "
 					var diff = date_a.getTime()-date_b.getTime();
 					return (diff==0?diff:diff/Math.abs(diff));
 				} else {

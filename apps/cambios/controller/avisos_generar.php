@@ -106,7 +106,7 @@ if (!empty($Qid_usuario)) {
 		} else {
             $quien = $aSecciones[$sfsv_quien_cambia] ;
 		}
-		$num_orden = $timestamp_orden.$i; // añado $i por que si hay dos iguales, se sobreescribe.
+		$num_orden = $timestamp_orden.(1000+$i); // añado $i por que si hay dos iguales, se sobreescribe.
 		
 		$a_valores[$num_orden]['sel']="$id_item_cmb#$Qid_usuario#$mi_sfsv#$Qaviso_tipo";
 		$a_valores[$num_orden][1]=$timestamp_cambio;
@@ -130,7 +130,7 @@ if (!empty($Qid_usuario)) {
     $oTabla = new Lista();
     $oTabla->setId_tabla('avisos_tabla');
     $oTabla->setCabeceras($a_cabeceras);
-    $oTabla->setSortCol(ucfirst(_("fecha cambio"))); // Tiene que ser el nombre de la cabecera (mayusculas).
+    //$oTabla->setSortCol(ucfirst(_("fecha cambio"))); // Tiene que ser el nombre de la cabecera (mayusculas).
     $oTabla->setBotones($a_botones);
     $oTabla->setDatos($a_valores);
 
