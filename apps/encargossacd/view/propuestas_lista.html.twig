@@ -183,16 +183,26 @@ fnjs_cmb_sacd=function(tipo,id_item,id_enc){
             alert (json.mensaje);
         } else {
             nombre_new=json.nombre;
+            //debugger;
             id_sacd_new=json.id_sacd;
-            if (id_sacd != id_sacd_old) {
-            	$(id_tr).removeClass( "sf" ).addClass( "sf" );
-            	$(id_nom).html(nombre_new);
-				$(id_nom).attr("title",id_sacd_new);
-                $('#div_sacd').remove(); // Eliminar si existe alguno
-        	} else {
-            	$(id_tr).removeClass( "sf" );
+            html=json.html;
+            if (html) {
+                if (html == 'borrar') {
+                    $(id_tr).remove();
+                } else {
+                    $(id_tr).before(html);
+                }
+            } else {
+                if (id_sacd != id_sacd_old) {
+                    $(id_tr).removeClass( "sf" ).addClass( "sf" );
+                    $(id_nom).html(nombre_new);
+                    $(id_nom).attr("title",id_sacd_new);
+                } else {
+                    $(id_tr).removeClass( "sf" );
+                }
             }
         }
+        $('#div_sacd').remove(); // Eliminar si existe alguno
     });
 	
 }

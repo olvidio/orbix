@@ -241,7 +241,7 @@ class GestorPropuestas {
             $aWhere['id_enc'] = $a_id_enc[$e];
             $aWhere['f_fin'] = 'x';
             $aOperador['f_fin'] = 'IS NULL';
-            $aWhere['_ordre'] = 'modo,f_ini DESC';
+            $aWhere['_ordre'] = 'id_nom,f_ini';
             $cEncargosSacd = $GesEncargoSacd->getEncargosSacd($aWhere,$aOperador);
             $actual_id_sacd_titular[$e] = '';
             $new_id_sacd_titular[$e] = '';
@@ -473,7 +473,7 @@ class GestorPropuestas {
             $aWhere['id_enc'] = $a_id_enc[$e];
             $aWhere['f_fin'] = 'x';
             $aOperador['f_fin'] = 'IS NULL';
-            $aWhere['_ordre'] = 'modo,f_ini DESC';
+            $aWhere['_ordre'] = 'modo,id_nom,f_ini';
             $cEncargosSacd = $GesEncargoSacd->getEncargosSacd($aWhere,$aOperador);
             $actual_id_sacd_titular[$e] = '';
             $new_id_sacd_titular[$e] = '';
@@ -615,7 +615,7 @@ class GestorPropuestas {
 	        //Fila de nuevo colaborador:
 	        $id_sacd = 1;
 	        $id_sacd_new = 1;
-	        $id_item = 1;
+	        $id_item = $id_enc;
 	        $nom_col = '';
             $nom_sacd_new = _("nuevo");
             if ($s < 1) {

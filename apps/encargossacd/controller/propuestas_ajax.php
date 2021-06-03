@@ -233,8 +233,9 @@ switch ($Qque) {
         $Qid_item = (integer) \filter_input(INPUT_POST, 'id_item');
         $Qid_enc = (integer) \filter_input(INPUT_POST, 'id_enc');
         $Qid_sacd = (integer) \filter_input(INPUT_POST, 'id_sacd');
-        
-        if ($Qid_item == 1) { // generar una fila nueva
+
+        $html = '';
+        if ($Qid_item == $Qid_enc) { // generar una fila nueva
             $id_sacd_old = 0;
             $modo = 0;
             switch ($Qtipo) {
@@ -254,15 +255,31 @@ switch ($Qque) {
             $oPropuestaEncargoSacd->setId_enc($Qid_enc);
             $oPropuestaEncargoSacd->setModo($modo);
             $oPropuestaEncargoSacd->setF_ini($f_ini);
+            $oPropuestaEncargoSacd->setId_nom_new($Qid_sacd);
+            if ($oPropuestaEncargoSacd->DBGuardar() === FALSE ) {
+                $error_txt .= $oPropuestaEncargoSacd->getErrorTxt();
+            }
+            $id_item_new = $oPropuestaEncargoSacd->getId_item();
         } else {
             $oPropuestaEncargoSacd = new PropuestaEncargoSacd($Qid_item);
             $oPropuestaEncargoSacd->DBCarregar();
             $id_sacd_old = $oPropuestaEncargoSacd->getId_nom();
             $id_sacd_prop = $oPropuestaEncargoSacd->getId_nom_new();
-        }
-        $oPropuestaEncargoSacd->setId_nom_new($Qid_sacd);
-        if ($oPropuestaEncargoSacd->DBGuardar() === FALSE ) {
-            $error_txt .= $oPropuestaEncargoSacd->getErrorTxt();
+            // si es 0: borar la fila si era uno nuevo:
+            if (empty($id_sacd_old) && empty($Qid_sacd)) {
+                $html = 'borrar';
+                $oPropuestaEncargoSacd->DBEliminar();
+            } else {
+                if (empty($Qid_sacd)) {
+                    $oPropuestaEncargoSacd->setId_nom_new(null);
+                } else {
+                    $oPropuestaEncargoSacd->setId_nom_new($Qid_sacd);
+                }
+                if ($oPropuestaEncargoSacd->DBGuardar() === FALSE ) {
+                    $error_txt .= $oPropuestaEncargoSacd->getErrorTxt();
+                }
+                $id_item_new = $oPropuestaEncargoSacd->getId_item();
+            }
         }
         // cambiar también el horario
         if (!empty($id_sacd_old) || !empty($id_sacd_prop)) {
@@ -273,6 +290,23 @@ switch ($Qque) {
         
         $oPersonaSacd = new PersonaSacd($Qid_sacd);
         $nombre = $oPersonaSacd->getApellidosNombre();
+        $nombre = empty($nombre)? _("nuevo") : $nombre;
+        if (empty($html) && $Qid_item == $Qid_enc) { // generar una fila nueva
+            // si es nuevo deuelvo todo el html
+            $html = "<tr id=\"tr_$id_item_new\" class=\"sf\" title=\"$Qid_sacd\"><td>";
+            $html .= '</td><td>';
+            $html .= '-';
+            $html .= "</td><td>";
+            $html .= "<span class=\"link\" id=\"colaborador_$id_item_new\" title=\"$Qid_sacd\" onClick=\"fnjs_ver_sacd_posibles('colaborador',$id_item_new,$Qid_enc)\">";
+            $html .= "$nombre</span>";
+            $html .= '</td><td>';
+            $html .= "<span class=\"link\" onClick=\"fnjs_info('colaborador',$id_item_new)\">"._("+ info")."</span>";
+            $html .= '</td><td>';
+            $html .= "<span class=\"link\" onClick=\"fnjs_dedicacion('colaborador',$id_item_new,$Qid_enc)\">";
+            $html .= '?';
+            $html .= "</td><td id=\"td_$id_item_new\">";
+            $html .= '</td></tr>';
+        }
         
         if (!empty($error_txt)) {
             $jsondata['success'] = FALSE;
@@ -281,6 +315,7 @@ switch ($Qque) {
             $jsondata['success'] = TRUE;
             $jsondata['nombre'] = $nombre;
             $jsondata['id_sacd'] = $Qid_sacd;
+            $jsondata['html'] = $html;
         }
         //Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
         header('Content-type: application/json; charset=utf-8');
