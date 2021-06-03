@@ -120,6 +120,7 @@ foreach ($cPersonas as $oPersona) {
 		$oEncargo = new Encargo($id_enc);
 		$id_tipo_enc = $oEncargo->getId_tipo_enc();
 		// paso a texto para poder coger el segundo caracter.
+		if (empty($id_tipo_enc)) continue;
 		$id_tipo_enc_txt = (string)$id_tipo_enc;
 		if ($id_tipo_enc_txt[0] == 4 || $id_tipo_enc_txt[0] == 7 || $id_tipo_enc_txt[0] == 8 ) continue;
 		$sup_tit="";

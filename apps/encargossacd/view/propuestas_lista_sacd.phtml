@@ -103,7 +103,7 @@ foreach($array_modo as $array_modo_sacd) {
 					break;
 				case 6:
 					?>
-					<otros><?= $array_modo[$s]['txt']["t_otros"] ?></otros>
+					<table><tr><td><b><?= $array_modo[$s]['txt']["t_otros"] ?></b></td></tr>
 					<?php
 					break;
 			}
@@ -111,7 +111,7 @@ foreach($array_modo as $array_modo_sacd) {
 				foreach ($vector as $enc) {
 					switch ($grupo) {
 						case 6:
-						echo "<p>${enc['desc_enc']}: ${enc['dedic_m']}.</p>";
+						echo "<tr><td>${enc['desc_enc']}: </td><td>${enc['dedic_m']}.</td></tr>";
 							break;
 						case 7:
 							if ($observ=$enc['desc_enc']) {
