@@ -302,6 +302,7 @@ class GestorPropuestas {
 	        $id_sacd = $actual_id_sacd_titular[$e];
 	        $id_sacd_new = $new_id_sacd_titular[$e];
 	        $id_item = $id_item_titular[$e];
+	        $id_item = empty($id_item)? $id_enc : $id_item; // caso de generar uno nuevo.
 	        $oPersonaSacd = new PersonaSacd($id_sacd);
 	        $nom_titular = $oPersonaSacd->getApellidosNombre();
 	        $oPersonaSacdNew = new PersonaSacd($id_sacd_new);
@@ -325,7 +326,7 @@ class GestorPropuestas {
 	        $id_sacd = $actual_id_sacd_suplente[$e];
 	        $id_sacd_new = $new_id_sacd_suplente[$e];
 	        $id_item = $id_item_suplente[$e];
-	        $id_item = empty($id_item)? '1' : $id_item; // caso de generar uno nuevo.
+	        $id_item = empty($id_item)? $id_enc : $id_item; // caso de generar uno nuevo.
 	        $oPersonaSacd = new PersonaSacd($id_sacd);
 	        $nom_suplente = $oPersonaSacd->getApellidosNombre();
 	        $oPersonaSacdNew = new PersonaSacd($id_sacd_new);

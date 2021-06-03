@@ -67,8 +67,8 @@ switch ($Qque) {
         $Qdedic_t = (integer) \filter_input(INPUT_POST, 'dedic_t');
         $Qdedic_v = (integer) \filter_input(INPUT_POST, 'dedic_v');
         
-        // si id_item=1 es nuevo: Hay que buscar su id:
-        if ($Qid_item == 1) {
+        // si id_item=$id_enc es nuevo: Hay que buscar su id:
+        if ($Qid_item == $Qid_enc) {
             $gesPropuestaEncargoSacd = new GestorPropuestaEncargosSacd();
             $aWhere = [ 'id_nom_new' => $Qid_sacd, 'id_enc' => $Qid_enc, 'f_fin' => 'x'];
             $aOperador['f_fin'] = 'IS NULL';
@@ -157,10 +157,10 @@ switch ($Qque) {
         
         $url_ajax = "apps/encargossacd/controller/propuestas_ajax.php";
         $aCamposHidden = ['que' => 'dedicacion_update',
-                        'id_sacd' =>$Qid_sacd,
-                        'id_item' =>$Qid_item,
-                        'id_enc' =>$Qid_enc,
-                    ];
+            'id_sacd' =>$Qid_sacd,
+            'id_item' =>$Qid_item,
+            'id_enc' =>$Qid_enc,
+        ];
         $oHash = new Hash();
         $oHash->setUrl($url_ajax);
         $oHash->setArrayCamposHidden($aCamposHidden);
@@ -233,7 +233,7 @@ switch ($Qque) {
         $Qid_item = (integer) \filter_input(INPUT_POST, 'id_item');
         $Qid_enc = (integer) \filter_input(INPUT_POST, 'id_enc');
         $Qid_sacd = (integer) \filter_input(INPUT_POST, 'id_sacd');
-
+        
         $html = '';
         if ($Qid_item == $Qid_enc) { // generar una fila nueva
             $id_sacd_old = 0;
@@ -267,8 +267,41 @@ switch ($Qque) {
             $id_sacd_prop = $oPropuestaEncargoSacd->getId_nom_new();
             // si es 0: borar la fila si era uno nuevo:
             if (empty($id_sacd_old) && empty($Qid_sacd)) {
-                $html = 'borrar';
-                $oPropuestaEncargoSacd->DBEliminar();
+                $nombre = _("nuevo");
+                switch ($Qtipo) {
+                    case 'titular':
+                    case 'suplente':
+                        if ($Qtipo == 'titular') {
+                            $nom_tipo = _("titular");
+                        } else {
+                            $nom_tipo = _("suplente");
+                        }
+                        // si es nuevo deuelvo todo el html
+                        $html = "<td>";
+                        $html .= $nom_tipo;
+                        $html .= '</td><td>';
+                        $html .= '-';
+                        $html .= "</td><td>";
+                        $html .= "<span class=\"link\" id=\"${Qtipo}_$Qid_item\" title=\"$Qid_sacd\" onClick=\"fnjs_ver_sacd_posibles('$Qtipo',$Qid_item,$Qid_enc)\">";
+                        $html .= "$nombre</span>";
+                        $html .= '</td><td>';
+                        $html .= "<span class=\"link\" onClick=\"fnjs_info('$Qtipo',$Qid_item)\">"._("+ info")."</span>";
+                        $html .= '</td><td>';
+                        $html .= "<span class=\"link\" onClick=\"fnjs_dedicacion('$Qtipo',$Qid_item,$Qid_enc)\">";
+                        $html .= '?';
+                        $html .= "</td><td id=\"td_$Qid_item\">";
+                        $html .= '</td>';
+                        
+                        $oPropuestaEncargoSacd->setId_nom_new(null);
+                        if ($oPropuestaEncargoSacd->DBGuardar() === FALSE ) {
+                            $error_txt .= $oPropuestaEncargoSacd->getErrorTxt();
+                        }
+                        break;
+                    case 'colaborador':
+                        $html = 'borrar';
+                        $oPropuestaEncargoSacd->DBEliminar();
+                        break;
+                }
             } else {
                 if (empty($Qid_sacd)) {
                     $oPropuestaEncargoSacd->setId_nom_new(null);
@@ -294,6 +327,7 @@ switch ($Qque) {
         if (empty($html) && $Qid_item == $Qid_enc) { // generar una fila nueva
             // si es nuevo deuelvo todo el html
             $html = "<tr id=\"tr_$id_item_new\" class=\"sf\" title=\"$Qid_sacd\"><td>";
+            $html .= _("colaborador");
             $html .= '</td><td>';
             $html .= '-';
             $html .= "</td><td>";
@@ -350,7 +384,7 @@ switch ($Qque) {
         if ($gesPropuestas->crearTabla() === FALSE) {
             $error_txt = _("No se puede crear la tabla");
         }
-
+        
         if (!empty($error_txt)) {
             $jsondata['success'] = FALSE;
             $jsondata['mensaje'] = $error_txt;

@@ -188,7 +188,11 @@ fnjs_cmb_sacd=function(tipo,id_item,id_enc){
                 if (html == 'borrar') {
                     $(id_tr).remove();
                 } else {
-                    $(id_tr).before(html);
+                    if (tipo=='colaborador') {
+                    	$(id_tr).before(html);
+                    } else {
+                    	$(id_tr).html(html);
+                    }
                 }
             } else {
                 if (id_sacd != id_sacd_old) {
