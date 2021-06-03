@@ -156,7 +156,6 @@ fnjs_ver_sacd_posibles=function(tipo,id_item,id_enc){
             var txt="<div id=div_sacd class='tono2 child'>";
 			txt+=html;
 			txt+="</div>";
-			
             $(id_td).append(txt);
         }
     });
@@ -183,7 +182,6 @@ fnjs_cmb_sacd=function(tipo,id_item,id_enc){
             alert (json.mensaje);
         } else {
             nombre_new=json.nombre;
-            //debugger;
             id_sacd_new=json.id_sacd;
             html=json.html;
             if (html) {

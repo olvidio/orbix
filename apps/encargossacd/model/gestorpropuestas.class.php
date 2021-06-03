@@ -527,8 +527,10 @@ class GestorPropuestas {
 	        $id_sacd = $actual_id_sacd_titular[$e];
 	        $id_sacd_new = $new_id_sacd_titular[$e];
 	        $id_item = $id_item_titular[$e];
+	        $id_item = empty($id_item)? $id_enc : $id_item; // caso de generar uno nuevo.
 	        $oPersonaSacd = new PersonaSacd($id_sacd);
 	        $nom_titular = $oPersonaSacd->getApellidosNombre();
+	        $nom_titular = empty($nom_titular) ? '-' : $nom_titular;
 	        $oPersonaSacdNew = new PersonaSacd($id_sacd_new);
 	        $nom_titular_new = $oPersonaSacdNew->getApellidosNombre();
 	        $nom_titular_new = empty($nom_titular_new)? _("nuevo") : $nom_titular_new;
@@ -538,7 +540,7 @@ class GestorPropuestas {
 	        $html .= _("titular");
 	        $html .= '</td><td>';
 	        $html .= $nom_titular;
-	        $html .= '  ('. $this->getHorarioActualTxt($id_enc,$id_sacd) .')';
+	        $html .= '  '. $this->getHorarioActualTxt($id_enc,$id_sacd) .'';
 	        $html .= "</td><td>";
 	        $html .= "<span class=\"link\" id=\"titular_$id_item\" title=\"$id_sacd_new\" onClick=\"fnjs_ver_sacd_posibles('titular',$id_item,$id_enc)\">";
             $html .= "$nom_titular_new</span>";
@@ -555,9 +557,10 @@ class GestorPropuestas {
 	        $id_sacd = $actual_id_sacd_suplente[$e];
 	        $id_sacd_new = $new_id_sacd_suplente[$e];
 	        $id_item = $id_item_suplente[$e];
-	        $id_item = empty($id_item)? '1' : $id_item; // caso de generar uno nuevo.
+	        $id_item = empty($id_item)? $id_enc : $id_item; // caso de generar uno nuevo.
 	        $oPersonaSacd = new PersonaSacd($id_sacd);
 	        $nom_suplente = $oPersonaSacd->getApellidosNombre();
+	        $nom_suplente = empty($nom_suplente) ? '-' : $nom_suplente;
 	        $oPersonaSacdNew = new PersonaSacd($id_sacd_new);
 	        $nom_suplente_new = $oPersonaSacdNew->getApellidosNombre();
 	        $nom_suplente_new = empty($nom_suplente_new)? _("nuevo") : $nom_suplente_new;
@@ -599,7 +602,7 @@ class GestorPropuestas {
                 $html .= '</td><td>';
                 $html .= $nom_col;
                 if (!empty($nom_col)) {
-                    $html .= '  ('. $this->getHorarioActualTxt($id_enc,$id_sacd) .')';
+                    $html .= '  '. $this->getHorarioActualTxt($id_enc,$id_sacd) .'';
                 }
                 $html .= "</td><td>";
                 $html .= "<span class=\"link\" id=\"colaborador_$id_item\" title=\"$id_sacd_new\" onClick=\"fnjs_ver_sacd_posibles('colaborador',$id_item,$id_enc)\">";
