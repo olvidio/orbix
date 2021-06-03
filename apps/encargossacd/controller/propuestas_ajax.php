@@ -326,7 +326,7 @@ switch ($Qque) {
         $nombre = empty($nombre)? _("nuevo") : $nombre;
         if (empty($html) && $Qid_item == $Qid_enc) { // generar una fila nueva
             // si es nuevo deuelvo todo el html
-            $html = "<tr id=\"tr_$id_item_new\" class=\"sf\" title=\"$Qid_sacd\"><td>";
+            $html = "<tr id=\"tr_${Qtipo}$id_item_new\" class=\"sf\" title=\"$Qid_sacd\"><td>";
             $html .= _("colaborador");
             $html .= '</td><td>';
             $html .= '-';

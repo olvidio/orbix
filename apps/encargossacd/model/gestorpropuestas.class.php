@@ -310,7 +310,7 @@ class GestorPropuestas {
 	        $nom_titular_new = empty($nom_titular_new)? '-' : $nom_titular_new;
 	        
 	        $class = ($id_sacd != $id_sacd_new)? 'warning' : '';
-	        $html .= "<tr id=\"tr_$id_item\" class=\"$class\" title=\"$id_sacd\">";
+	        $html .= "<tr id=\"tr_titular$id_item\" class=\"$class\" title=\"$id_sacd\">";
 	        $html .= "<td>";
 	        $html .= _("titular");
 	        $html .= "</td><td class=\"$class\" >";
@@ -334,7 +334,7 @@ class GestorPropuestas {
 	        $nom_suplente_new = empty($nom_suplente_new)? '-' : $nom_suplente_new;
 
 	        $class = ($id_sacd != $id_sacd_new)? 'sf' : '';
-	        $html .= "<tr id=\"tr_$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
+	        $html .= "<tr id=\"tr_suplente$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
 	        $html .= _("suplente");
 	        $html .= '</td><td>';
 	        $html .= $nom_suplente;
@@ -357,10 +357,10 @@ class GestorPropuestas {
                 
                 $class = ($id_sacd != $id_sacd_new)? 'sf' : '';
                 if ($s < 2) {
-                    $html .= "<tr id=\"tr_$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
+                    $html .= "<tr id=\"tr_colaborador$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
                     $html .= _("colaboradores");
                 } else {
-                    $html .= "<tr id=\"tr_$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
+                    $html .= "<tr id=\"tr_colaborador$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
                 }
                 $html .= '</td><td>';
                 $html .= $nom_col;
@@ -537,7 +537,7 @@ class GestorPropuestas {
 	        $nom_titular_new = empty($nom_titular_new)? _("nuevo") : $nom_titular_new;
 	        
 	        $class = ($id_sacd != $id_sacd_new)? 'sf' : '';
-	        $html .= "<tr id=\"tr_$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
+	        $html .= "<tr id=\"tr_titular$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
 	        $html .= _("titular");
 	        $html .= '</td><td>';
 	        $html .= $nom_titular;
@@ -567,7 +567,7 @@ class GestorPropuestas {
 	        $nom_suplente_new = empty($nom_suplente_new)? _("nuevo") : $nom_suplente_new;
 
 	        $class = ($id_sacd != $id_sacd_new)? 'sf' : '';
-	        $html .= "<tr id=\"tr_$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
+	        $html .= "<tr id=\"tr_suplente$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
 	        $html .= _("suplente");
 	        $html .= '</td><td>';
 	        $html .= $nom_suplente;
@@ -595,10 +595,10 @@ class GestorPropuestas {
                 
                 $class = ($id_sacd != $id_sacd_new)? 'sf' : '';
                 if ($s < 2) {
-                    $html .= "<tr id=\"tr_$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
+                    $html .= "<tr id=\"tr_colaborador$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
                     $html .= _("colaboradores");
                 } else {
-                    $html .= "<tr id=\"tr_$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
+                    $html .= "<tr id=\"tr_colaborador$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
                 }
                 $html .= '</td><td>';
                 $html .= $nom_col;
@@ -623,10 +623,10 @@ class GestorPropuestas {
 	        $nom_col = '';
             $nom_sacd_new = _("nuevo");
             if ($s < 1) {
-                $html .= "<tr id=\"tr_$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
+                $html .= "<tr id=\"tr_colaborador$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
                 $html .= _("colaboradores");
             } else {
-                $html .= "<tr id=\"tr_$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
+                $html .= "<tr id=\"tr_colaborador$id_item\" class=\"$class\" title=\"$id_sacd\"><td>";
             }
             $html .= '</td><td>';
             $html .= $nom_col;

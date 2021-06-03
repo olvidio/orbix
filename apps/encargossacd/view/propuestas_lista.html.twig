@@ -134,7 +134,7 @@ fnjs_info=function(tipo,id_item){
 fnjs_ver_sacd_posibles=function(tipo,id_item,id_enc){
 	var id='#'+tipo+'_'+id_item;
 	var id_sacd=$(id).attr("title");
-	var id_tr='#tr_'+id_item;
+	var id_tr='#tr_'+tipo+id_item;
 	var id_td='#td_'+id_item;
 	
 	var url_ajax = 'apps/encargossacd/controller/propuestas_ajax.php';
@@ -164,7 +164,7 @@ fnjs_ver_sacd_posibles=function(tipo,id_item,id_enc){
 
 fnjs_cmb_sacd=function(tipo,id_item,id_enc){
 	var id_old='#old_'+tipo+'_'+id_item;
-	var id_tr='#tr_'+id_item;
+	var id_tr='#tr_'+tipo+id_item;
 	var id_nom='#'+tipo+'_'+id_item;
 	var id_sacd=$('#prop_sacd').val();
 	var id_sacd_old=$(id_tr).attr("title");
