@@ -150,7 +150,7 @@ foreach ($cPersonas as $oPersona) {
 				$cEncargosSacd1 = $GesEncargoSad->getEncargosSacd(array('id_enc'=>$id_enc,'f_fin'=>$hoy_iso,'modo'=>4),array('f_fin'=>'>'));
 			}
 			if (is_array($cEncargosSacd1) && count($cEncargosSacd1) == 1 ) {
-				$id_nom_sup = $cEncargosSacd1[0]->getId_nom();
+				$id_nom_sup = $cEncargosSacd1[0]->getId_nom_new();
 				$oSacd  = new PersonaDl($id_nom_sup);
 				$sup_tit=$oSacd->getNombreApellidos();
 			} else {
@@ -164,7 +164,7 @@ foreach ($cPersonas as $oPersona) {
 				$cEncargosSacd1 = $GesEncargoSad->getEncargosSacd(array('id_enc'=>$id_enc,'f_fin'=>$hoy_iso,'modo'=>'[23]'),array('modo'=>'~','f_fin'=>'>'));
 			}
 			if (is_array($cEncargosSacd1) && count($cEncargosSacd1) == 1 ) {
-				$id_nom_tit = $cEncargosSacd1[0]->getId_nom();
+				$id_nom_tit = $cEncargosSacd1[0]->getId_nom_new();
 				$oSacd  = new PersonaDl($id_nom_tit);
 				$sup_tit=$oSacd->getNombreApellidos();
 			} else {
