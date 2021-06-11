@@ -111,6 +111,11 @@ case 'importar':
 				echo _("hay un error, no se ha importado");
                 echo "\n".$oActividad->getErrorTxt();
 			}
+			// generar proceso.
+			if (core\configGlobal::is_app_installed('procesos') ) {
+			    $oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
+			    $oGestorActividadProcesoTarea->generarProceso($id_activ,ConfigGlobal::mi_sfsv(),TRUE);
+			}
 		}
 	}
 	break;
