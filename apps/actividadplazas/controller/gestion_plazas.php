@@ -10,7 +10,8 @@
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
-	use web\Periodo;
+	use ubis\model\entity\GestorDelegacion;
+use web\Periodo;
 
 require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -82,9 +83,10 @@ $status = \actividades\model\entity\ActividadAll::STATUS_ACTUAL; //actual
 // Seleccionar los id_dl del mismo grupo de estudios
 $a_reg = core\ConfigGlobal::mi_region();
 $mi_dl = core\ConfigGlobal::mi_delef();
-
 $aWhere =array('region'=>$a_reg[0],'dl'=>$mi_dl);
-$oMiDelegacion = new ubis\model\entity\Delegacion($aWhere);
+$gesDelegacion = new GestorDelegacion();
+$cDelegaciones = $gesDelegacion->getDelegaciones($aWhere);
+$oMiDelegacion = $cDelegaciones[0];
 $grupo_estudios = $oMiDelegacion->getGrupo_estudios();
 
 $cDelegaciones = [];

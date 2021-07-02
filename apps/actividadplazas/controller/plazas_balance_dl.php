@@ -1,4 +1,6 @@
 <?php
+use ubis\model\entity\GestorDelegacion;
+
 /**
  * Muestra un cuadro (grid editable) con las actividades de la propia dl y 
  * de la dl con la que se compara, mostrando las plazas en cada caso.
@@ -52,7 +54,9 @@ $esquema = core\ConfigGlobal::mi_region_dl();
 $a_reg = explode('-',$esquema);
 $mi_dl = substr($a_reg[1],0,-1); // quito la v o la f.
 $aWhere =array('region'=>$a_reg[0],'dl'=>$mi_dl);
-$oMiDelegacion = new ubis\model\entity\Delegacion($aWhere);
+$gesDelegacion = new GestorDelegacion();
+$cDelegaciones = $gesDelegacion->getDelegaciones($aWhere);
+$oMiDelegacion = $cDelegaciones[0];
 $grupo_estudios = $oMiDelegacion->getGrupo_estudios();
 
 $gesDelegacion = new ubis\model\entity\GestorDelegacion();

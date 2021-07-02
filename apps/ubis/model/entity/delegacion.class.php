@@ -84,7 +84,7 @@ class Delegacion Extends core\ClasePropiedades {
 	 * Si només necessita un valor, se li pot passar un integer.
 	 * En general se li passa un array amb les claus primàries.
 	 *
-	 * @param integer|array sdl,sregion
+	 * @param integer|array id_dl
 	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
 	 */
 	function __construct($a_id='') {
@@ -92,8 +92,7 @@ class Delegacion Extends core\ClasePropiedades {
 		if (is_array($a_id)) { 
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
-				if (($nom_id === 'dl') && $val_id !== '') $this->sdl = (string)$val_id; // evitem SQL injection fent cast a string
-				if (($nom_id === 'region') && $val_id !== '') $this->sregion = (string)$val_id; // evitem SQL injection fent cast a string
+				if (($nom_id === 'id_dl') && $val_id !== '') $this->iid_dl = (integer)$val_id; // evitem SQL injection fent cast a string
 			}
 		}
 		$this->setoDbl($oDbl);
@@ -133,7 +132,7 @@ class Delegacion Extends core\ClasePropiedades {
 					grupo_estudios           = :grupo_estudios,
 					region_stgr              = :region_stgr,
 					status                   = :status";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE dl='$this->sdl' AND region='$this->sregion'")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_dl=$this->iid_dl ")) === false) {
 				$sClauError = 'Delegacion.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -151,7 +150,7 @@ class Delegacion Extends core\ClasePropiedades {
 			}
 		} else {
 			// INSERT
-			array_unshift($aDades, $this->sdl, $this->sregion);
+			array_unshift($aDades, $this->iid_dl);
 			$campos="(id_dl,dl,region,nombre_dl,status,grupo_estudios,region_stgr)";
 			$valores="(:id_dl,:dl,:region,:nombre_dl,:status,:grupo_estudios,:region_stgr)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
@@ -182,8 +181,8 @@ class Delegacion Extends core\ClasePropiedades {
 	public function DBCarregar($que=null) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (isset($this->sdl) && isset($this->sregion)) {
-			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE dl='$this->sdl' AND region='$this->sregion'")) === false) {
+		if (isset($this->iid_dl)) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_dl='$this->iid_dl' ")) === false) {
 				$sClauError = 'Delegacion.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -219,7 +218,7 @@ class Delegacion Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE dl='$this->sdl' AND region='$this->sregion'")) === false) {
+		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE dl='$this->iid_dl' ")) === false) {
 			$sClauError = 'Delegacion.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -283,7 +282,7 @@ class Delegacion Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('dl' => $this->sdl,'region' => $this->sregion);
+			$this->aPrimary_key = array('id_dl' => $this->iid_dl);
 		}
 		return $this->aPrimary_key;
 	}
@@ -297,8 +296,7 @@ class Delegacion Extends core\ClasePropiedades {
 	    if (is_array($a_id)) {
 	        $this->aPrimary_key = $a_id;
 	        foreach($a_id as $nom_id=>$val_id) {
-	            if (($nom_id == 'dl') && $val_id !== '') $this->sdl = $val_id;
-	            if (($nom_id == 'region') && $val_id !== '') $this->sregion = $val_id;
+	            if (($nom_id == 'id_dl') && $val_id !== '') $this->iid_dl = $val_id;
 	        }
 	    }
 	}
@@ -555,4 +553,3 @@ class Delegacion Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 }
-?>

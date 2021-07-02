@@ -269,13 +269,13 @@ if ( !isset($_SESSION['session_auth'])) {
 						$query_idioma = sprintf( "select * from web_preferencias where id_usuario = '%s' and tipo = '%s' ",$id_usuario,"idioma");
 						$oDBStI=$oDB->query($query_idioma);
 						$row = $oDBStI->fetch(\PDO::FETCH_ASSOC);
-						$idioma = $row['preferencia'];
+						$idioma = ($row === FALSE)? '' : $row['preferencia'];
 						
 						// ordenApellidos
 						$query_ordenApellidos = sprintf( "select * from web_preferencias where id_usuario = '%s' and tipo = '%s' ",$id_usuario,"ordenApellidos");
 						$oDBStoA=$oDB->query($query_ordenApellidos);
 						$row = $oDBStoA->fetch(\PDO::FETCH_ASSOC);
-						$ordenApellidos = $row['preferencia'];
+						$ordenApellidos = ($row === FALSE)? '' : $row['preferencia'];
 						
 						// Id_schema
                         $oDBPropiedades = new DBPropiedades();

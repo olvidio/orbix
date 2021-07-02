@@ -345,9 +345,7 @@ class GestorDelegacion Extends ClaseGestor {
 			return false;
 		}
 		foreach ($oDblSt as $aDades) {
-			$a_pkey = array('dl' => $aDades['dl'],
-							'region' => $aDades['region']);
-			$oDelegacion= new Delegacion($a_pkey);
+			$oDelegacion= new Delegacion($aDades['id_dl']);
 			$oDelegacion->setAllAtributes($aDades);
 			$oDelegacionSet->add($oDelegacion);
 		}
