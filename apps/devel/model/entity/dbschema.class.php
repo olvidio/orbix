@@ -98,6 +98,30 @@ class DbSchema Extends core\ClasePropiedades {
 	/* METODES PUBLICS ----------------------------------------------------------*/
 
 	/**
+	 * Cambiar nombre: al reves que lo normal, uso de clave el id
+	 *
+	 */
+	public function DBCambiarNombre($old,$new) {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+        //UPDATE
+        $update="UPDATE $nom_tabla SET schema='$new' WHERE schema='$old'";
+        
+        try {
+            $oDbl->query($update);
+        }
+        catch ( \PDOException $e) {
+            $err_txt=$e->errorInfo[2];
+            $this->setErrorTxt($err_txt);
+            $sClauError = 'DbSchema.update.execute';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        
+		return true;
+	}
+
+	/**
 	 * Desa els atributs de l'objecte a la base de dades.
 	 * Si no hi ha el registre, fa el insert, si hi es fa el update.
 	 *

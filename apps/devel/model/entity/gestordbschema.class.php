@@ -68,6 +68,24 @@ class GestorDbSchema Extends core\ClaseGestor {
 	    }
         return $oDB;
 	}
+
+	/**
+	 * camir el nombre de un esquema existente: mantener el número.
+	 *     las tablas de las tres bases de datos (comun, sv, sf)
+	 */
+	function cambiarNombre($old,$new,$database) {
+
+	        $oDbl = $this->connectar($database);
+            $oDbSchema = new DbSchema();
+            $oDbSchema->setoDbl($oDbl);
+            $oDbSchema->DBCambiarNombre($old, $new);
+            $oDbSchema = new DbSchema();
+            $oDbSchema->setoDbl($oDbl);
+            $oDbSchema->DBCambiarNombre($old.'f', $new.'f');
+            $oDbSchema = new DbSchema();
+            $oDbSchema->setoDbl($oDbl);
+            $oDbSchema->DBCambiarNombre($old.'v', $new.'v');
+	}
 	/**
 	 * llenar con los nuevos id, las tablas de las tres bases de datos (comun, sv, sf)
 	 */

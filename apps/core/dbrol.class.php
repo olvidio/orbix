@@ -119,6 +119,22 @@ class DBRol {
 			}
 		}
 	}
+	public function renombrarSchema($esquema_old) {
+		$oDbl = $this->getoDbl();
+		$sql = "ALTER SCHEMA \"$esquema_old\" RENAME TO \"$this->sUser\";";
+		
+		if (($oDblSt = $oDbl->prepare($sql)) === false) {
+			$sClauError = 'DBRol.crearSchema.prepare';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		} else {
+			if ($oDblSt->execute() === false) {
+				$sClauError = 'DBRol.crearSchema.execute';
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				return false;
+			}
+		}
+	}
 	public function crearUsuario() {
 		$oDbl = $this->getoDbl();
 		$this->sOptions = empty($this->sOptions)? 'NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN': $this->sOptions;
@@ -143,6 +159,29 @@ class DBRol {
                     $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
                     return false;
 				}
+			}
+		}
+	}
+	public function renombrarUsuario($usuario_old) {
+		$oDbl = $this->getoDbl();
+		$this->sOptions = empty($this->sOptions)? 'NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN': $this->sOptions;
+
+		$sql = "ALTER ROLE \"$usuario_old\" RENAME TO \"$this->sUser\" ";
+
+		if (($oDblSt = $oDbl->prepare($sql)) === false) {
+			$sClauError = 'DBRol.crear.prepare';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		} else {
+		    try {
+			     $oDblSt->execute();
+		    } 
+		    catch (\PDOException $e) {
+				$sClauError = 'DBRol.crear.execute';
+				$err=$e->errorInfo[2];
+				
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                return false;
 			}
 		}
 	}

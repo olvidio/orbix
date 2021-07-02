@@ -57,4 +57,35 @@ class ConfigDB {
 		$filename_pruebas = ConfigGlobal::DIR_PWD.'/'.$database.'.inc';
 	    file_put_contents($filename_pruebas, '<?php return ' . var_export($this->data, true) . ' ;');
 	}
+	
+	public function renombrarListaEsquema($database,$esquema_old,$esquema_new){
+        // Las bases de datos de pruebas y producción están en el mismo cluster, y 
+        // por tanto los usuarios son los mismos. Hay que ponerlo en los dos ficheros:
+        // Pero OJO: la parte de definicion de host y dbname son diferentes!!
+        
+        $this->renombrarListaEsquemaProduccion($database,$esquema_old,$esquema_new);
+        $this->renombrarListaEsquemaPruebas($database,$esquema_old,$esquema_new);
+	}
+	
+	public function renombrarListaEsquemaProduccion($database,$esquema_old,$esquema_new){
+		$this->data = include ConfigGlobal::DIR_PWD.'/'.$database.'.inc';
+		
+        $esquema_pwd = $this->data[$esquema_old]['password'];
+        unset($this->data[$esquema_old]);
+        $this->data[$esquema_new] = ['user' => $esquema_new, 'password' => $esquema_pwd ];
+        
+		$filename = ConfigGlobal::DIR_PWD.'/'.$database.'.inc';
+	    file_put_contents($filename, '<?php return ' . var_export($this->data, true) . ' ;');
+	}
+	public function renombrarListaEsquemaPruebas($database,$esquema_old,$esquema_new){
+		$database = 'pruebas-'.$database;
+		$this->data = include ConfigGlobal::DIR_PWD.'/'.$database.'.inc';
+		
+        $esquema_pwd = $this->data[$esquema_old]['password'];
+        unset($this->data[$esquema_old]);
+        $this->data[$esquema_new] = ['user' => $esquema_new, 'password' => $esquema_pwd ];
+        
+		$filename_pruebas = ConfigGlobal::DIR_PWD.'/'.$database.'.inc';
+	    file_put_contents($filename_pruebas, '<?php return ' . var_export($this->data, true) . ' ;');
+	}
 }
