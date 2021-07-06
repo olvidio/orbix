@@ -543,7 +543,7 @@ class TrasladoDl {
 			$oPersonaNew->setDl($this->sdl_dst);
 			$oPersonaNew->setSituacion('A');
 			$oPersonaNew->setF_situacion($this->df_dl,FALSE);
-			$oPersonaNew->setId_ctr('');
+			//$oPersonaNew->setId_ctr(''); // Por si también se traslada el ctr (Torreciudad de dlz a dlb)
 			if ($oPersonaNew->DBGuardar() === false) {
 				$error .= '<br>'._("hay un error, no se ha guardado");
 			}

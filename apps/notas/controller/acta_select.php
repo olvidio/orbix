@@ -60,8 +60,42 @@ $oPosicion->setParametros($aGoBack,1);
 $aWhere = array();
 $aOperador = array();
 if (!empty($Qacta)) {
-	$dl_acta = strtok($Qacta,' ');
+	/* se cambia la lógica, por el cambio de nombre de la dl, no de las actas */
+	$aWhere['_ordre'] = 'f_acta DESC';
+	$aWhere['acta'] = $Qacta;
+	$aOperador['acta'] = '~';
+	
+    // si es número busca en la dl.
+    $matches = [];
+    preg_match ("/^(\d*)(\/)?(\d*)/", $Qacta, $matches);
+    if (!empty($matches[1])) {
+        // Si es cr, se mira en todas (las suyas):
+        if (ConfigGlobal::soy_region()) {
+            $oGesDelegaciones = new GestorDelegacion();
+            $aDl = $oGesDelegaciones->getArrayDlRegionStgr([$mi_dele]);
+            $Qacta_dl = '';
+            foreach ($aDl as $dl) {
+                $Qacta_dl .= empty($Qacta_dl)? '' : "|";
+                $Qacta_dl .= empty($matches[3])? "$dl ".$matches[1].'/'.date("y") : "$dl $Qacta";
+            }
+            $Qacta = $Qacta_dl;
+            $GesActas = new notas\GestorActa();
+        } else {
+            $Qacta = empty($matches[3])? "$mi_dele ".$matches[1].'/'.date("y") : "$mi_dele $Qacta";
+            $GesActas = new notas\GestorActaDl();
+        }
+        $cActas = $GesActas->getActas($aWhere,$aOperador);
+    } else {
+        // busca en la tabla de la dl, sin mirar el nombre:
+        $GesActas = new notas\GestorActaDl();
+        $cActas = $GesActas->getActas($aWhere,$aOperador);
+        if (empty($cActas)) {
+            $GesActas = new notas\GestorActaEx();
+            $cActas = $GesActas->getActas($aWhere,$aOperador);
+        }
+    }
 
+    /** Anterior 
 	if ($dl_acta == $mi_dele || $dl_acta == "?") {
 		if ($dl_acta == "?") $Qacta = "\?";
 		$GesActas = new notas\GestorActaDl();
@@ -100,10 +134,8 @@ if (!empty($Qacta)) {
             }
         }
 	}
+	*/
 
-	$aWhere['_ordre'] = 'f_acta DESC';
-	$aWhere['acta'] = $Qacta;
-	$aOperador['acta'] = '~';
 	$titulo = $Qtitulo;
 } else {
 	$mes=date('m');
@@ -128,8 +160,8 @@ if (!empty($Qacta)) {
 	} else {
 		$GesActas = new notas\GestorActaDl();
 	}
+    $cActas = $GesActas->getActas($aWhere,$aOperador);
 }
-$cActas = $GesActas->getActas($aWhere,$aOperador);
 
 $botones = 0; // para 'añadir acta'
 $a_botones = [];

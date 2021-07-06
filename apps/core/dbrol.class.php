@@ -178,11 +178,34 @@ class DBRol {
 		    } 
 		    catch (\PDOException $e) {
 				$sClauError = 'DBRol.crear.execute';
-				$err=$e->errorInfo[2];
+				$sClauError .= ' '.$e->errorInfo[2];
 				
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
                 return false;
 			}
+            /* Because MD5-encrypted passwords use the role name as cryptographic salt, 
+             * renaming a role clears its password if the password is MD5-encrypted.
+             */
+            $this->cambiarPassword();
+
+            $sql = "ALTER ROLE \"$this->sUser\" SET search_path TO '$this->sUser', 'public'; ";
+
+            if (($oDblSt = $oDbl->prepare($sql)) === false) {
+                $sClauError = 'DBRol.crear.prepare';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                return false;
+            } else {
+                try {
+                     $oDblSt->execute();
+                } 
+                catch (\PDOException $e) {
+                    $sClauError = 'DBRol.crear.execute';
+                    $sClauError .= ' '.$e->errorInfo[2];
+                    
+                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                    return false;
+                }
+            }
 		}
 	}
 	public function eliminarSchema() {
@@ -236,4 +259,3 @@ class DBRol {
 		}
 	}
 }
-?>

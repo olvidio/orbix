@@ -39,60 +39,68 @@ $oConfigDB = new core\ConfigDB('importar');
 $oDBRol = new core\DBRol();
 
 // comun
-$configComun = $oConfigDB->getEsquema('public');
-$oConexion = new core\dbConnection($configComun);
+$configComunP = $oConfigDB->getEsquema('public');
+$oConexion = new core\dbConnection($configComunP);
 $oConComun = $oConexion->getPDO();
 $oDBRol->setDbConexion($oConComun);
 // mantener el password:
+$oConfigDBComun = new core\ConfigDB('comun');
+$configComun = $oConfigDBComun->getEsquema($esquema_old);
 $esquema_pwd = $configComun['password'];
 
 $oDBRol->setUser($esquema);
 $oDBRol->setPwd($esquema_pwd);
 $oDBRol->renombrarSchema($esquema_old); // Cambia el nombre del esquema
 $oDBRol->renombrarUsuario($esquema_old); // reescribe el password que ya tenia.
-$oConfigDB->renombrarListaEsquema('comun', $esquema_old, $esquema);
+$oConfigDBComun->renombrarListaEsquema('comun', $esquema_old, $esquema);
 
 // Cambiar la tabla db_idschema. (pone el nombre de los tres esquemas, pero sólo en una base de datos)
 $oGesDbSchema = new GestorDbSchema();
 $oGesDbSchema->cambiarNombre($esquema_old,$esquema,'comun');
 
 // sv
-$configSv = $oConfigDB->getEsquema('publicv');
-$oConexion = new core\dbConnection($configSv);
+$configSvP = $oConfigDB->getEsquema('publicv');
+$oConexion = new core\dbConnection($configSvP);
 $oConSv = $oConexion->getPDO();
 $oDBRol->setDbConexion($oConSv);
 // mantener el password:
+$oConfigDBSv = new core\ConfigDB('sv');
+$configSv = $oConfigDBSv->getEsquema($esquema_oldv);
 $esquema_pwdv = $configSv['password'];
 
 $oDBRol->setUser($esquemav);
 $oDBRol->setPwd($esquema_pwdv);
 $oDBRol->renombrarSchema($esquema_oldv); // Cambia el nombre del esquema 
 $oDBRol->renombrarUsuario($esquema_oldv); // reescribe el password que ya tenia.
-$oConfigDB->renombrarListaEsquema('sv', $esquema_oldv, $esquemav);
+$oConfigDBSv->renombrarListaEsquema('sv', $esquema_oldv, $esquemav);
 
 // Cambiar la tabla db_idschema. (pone el nombre de los tres esquemas, pero sólo en una base de datos)
 $oGesDbSchema = new GestorDbSchema();
 $oGesDbSchema->cambiarNombre($esquema_old,$esquema,'sv');
 
 //sv-e
-$configSve = $oConfigDB->getEsquema('publicv-e');
-$oConexion = new core\dbConnection($configSve);
+$configSveP = $oConfigDB->getEsquema('publicv-e');
+$oConexion = new core\dbConnection($configSveP);
 $oConSve = $oConexion->getPDO();
 $oDBRol->setDbConexion($oConSve);
 // mantener el password:
+$oConfigDBSve = new core\ConfigDB('sv-e');
+$configSve = $oConfigDBSve->getEsquema($esquema_oldv);
 $esquema_pwdve = $configSve['password'];
 
 $oDBRol->setUser($esquemav);
 $oDBRol->setPwd($esquema_pwdve);
 $oDBRol->renombrarSchema($esquema_oldv); // Cambia el nombre del esquema
-$oDBRol->renombrarUsuario($esquema_oldv); // reescribe el password que ya tenia.
-$oConfigDB->renombrarListaEsquema('sv-e', $esquema_oldv, $esquemav);
+// Ya se ha cambiado el usuario para sv.
+//$oDBRol->renombrarUsuario($esquema_oldv); // reescribe el password que ya tenia.
+$oConfigDBSve->renombrarListaEsquema('sv-e', $esquema_oldv, $esquemav);
 
 // Cambiar la tabla db_idschema. (pone el nombre de los tres esquemas, pero sólo en una base de datos)
 $oGesDbSchema = new GestorDbSchema();
 $oGesDbSchema->cambiarNombre($esquema_old,$esquema,'sv-e');
 
 // sf
+/*
 $configSf = $oConfigDB->getEsquema('publicf');
 $oConexion = new core\dbConnection($configSf);
 $oConSf = $oConexion->getPDO();
@@ -104,11 +112,13 @@ $oDBRol->setUser($esquemaf);
 $oDBRol->setPwd($esquema_pwdf);
 $oDBRol->renombrarSchema($esquema_oldf); // Cambia el nombre del esquema
 $oDBRol->renombrarUsuario($esquema_oldf); // reescribe el password que ya tenia.
-$oConfigDB->renombrarListaEsquema('sf', $esquema_oldf, $esquemaf);
+$oConfigDBSf = new core\ConfigDB('sf');
+$oConfigDBSf->renombrarListaEsquema('sf', $esquema_oldf, $esquemaf);
 
 // Cambiar la tabla db_idschema. (pone el nombre de los tres esquemas, pero sólo en una base de datos)
 $oGesDbSchema = new GestorDbSchema();
 $oGesDbSchema->cambiarNombre($esquema_old,$esquema,'sf');
+*/
 
 // ESQUEMAS: CAMBIOS EN TABLAS ////////////////////////////////////////
 
@@ -173,16 +183,16 @@ if (!empty($Qcomun)) {
     $dl_old = strtok('-');
     
     $aDatos = [
-        ['tabla' => 'a_actividades_dl', 'campo' => 'dl_org', 'pattern' => "$dl_old(.*)", 'replacement' => "$DlNew\\1"],
-        ['tabla' => 'av_cambios_dl', 'campo' => 'dl_org', 'pattern' => "$dl_old(.*)", 'replacement' => "$DlNew\\1"],
-        ['tabla' => 'cp_sacd', 'campo' => 'dl', 'pattern' => "$dl_old", 'replacement' => "$DlNew"],
-        ['tabla' => 'cu_centros_dl', 'campo' => 'dl', 'pattern' => "$dl_old", 'replacement' => "$DlNew"],
-        ['tabla' => 'cu_centros_dl', 'campo' => 'region', 'pattern' => "$region_old", 'replacement' => "$RegionNew"],
-        ['tabla' => 'cu_centros_dlf', 'campo' => 'dl', 'pattern' => "$dl_old(.*)", 'replacement' => "$DlNew\\1"],
-        ['tabla' => 'cu_centros_dlf', 'campo' => 'region', 'pattern' => "$region_old", 'replacement' => "$RegionNew"],
+        ['tabla' => 'a_actividades_dl', 'campo' => 'dl_org', 'pattern' => "\m$dl_old(f?)\M", 'replacement' => "$DlNew\\1"],
+        ['tabla' => 'av_cambios_dl', 'campo' => 'dl_org', 'pattern' => "\m$dl_old(f?)\M", 'replacement' => "$DlNew\\1"],
+        ['tabla' => 'cp_sacd', 'campo' => 'dl', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
+        ['tabla' => 'cu_centros_dl', 'campo' => 'dl', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
+        ['tabla' => 'cu_centros_dl', 'campo' => 'region', 'pattern' => "\m$region_old\M", 'replacement' => "$RegionNew"],
+        ['tabla' => 'cu_centros_dlf', 'campo' => 'dl', 'pattern' => "\m$dl_old(f?)\M", 'replacement' => "$DlNew\\1"],
+        ['tabla' => 'cu_centros_dlf', 'campo' => 'region', 'pattern' => "\m$region_old\M", 'replacement' => "$RegionNew"],
     ];
     
-    $oAlterSchema->updateDatos($aDatos);
+    $oAlterSchema->updateDatosRegexp($aDatos);
     
 }
 
@@ -196,56 +206,56 @@ if (!empty($Qsv)) {
 
     $oAlterSchema = new DBAlterSchema();
     $oAlterSchema->setDbConexion($oDevelPC);
-    $oAlterSchema->setSchema($esquema);
+    $oAlterSchema->setSchema($esquemav);
     
     // Valores Default:
     $aDefaults = [
-        ['tabla' => 'd_asignaturas_activ_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'd_congresos', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'd_docencia_stgr', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'd_dossiers_abiertos', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'd_matriculas_activ_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'd_profesor_ampliacion', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'd_profesor_director', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
+        ['tabla' => 'd_asignaturas_activ_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'd_congresos', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'd_docencia_stgr', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'd_dossiers_abiertos', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'd_matriculas_activ_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'd_profesor_ampliacion', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'd_profesor_director', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
         
-        ['tabla' => 'd_profesor_juramento', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'd_profesor_latin', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'd_profesor_stgr', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
+        ['tabla' => 'd_profesor_juramento', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'd_profesor_latin', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'd_profesor_stgr', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
         
-        ['tabla' => 'd_publicaciones', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'd_teleco_ctr_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'd_teleco_personas_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'd_titulo_est', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'd_traslados', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'd_ultima_asistencia', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'da_plazas_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'dap_plazas_peticion_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'du_presentacion_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'e_actas_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'e_actas_tribunal_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'e_notas_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'p_agregados', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'p_agregados', 'campo' => 'id_nom', 'valor' => "idglobal('$esquemav'::text, 'p_agregados'::text)"],
+        ['tabla' => 'd_publicaciones', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'd_teleco_ctr_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'd_teleco_personas_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'd_titulo_est', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'd_traslados', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'd_ultima_asistencia', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'da_plazas_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'dap_plazas_peticion_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'du_presentacion_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'e_actas_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'e_actas_tribunal_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'e_notas_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'p_agregados', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'p_agregados', 'campo' => 'id_nom', 'valor' => "public.idglobal('$esquemav'::text, 'p_agregados'::text)"],
         ['tabla' => 'p_agregados', 'campo' => 'dl', 'valor' => "'$DlNew'::character varying"],
-        ['tabla' => 'p_de_paso_out', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
+        ['tabla' => 'p_de_paso_out', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
         ['tabla' => 'p_de_paso_out', 'campo' => 'dl', 'valor' => "'$DlNew'::character varying"],
-        ['tabla' => 'p_numerarios', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'p_numerarios', 'campo' => 'id_nom', 'valor' => "idglobal('$esquemav'::text, 'p_numerarios'::text)"],
+        ['tabla' => 'p_numerarios', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'p_numerarios', 'campo' => 'id_nom', 'valor' => "public.idglobal('$esquemav'::text, 'p_numerarios'::text)"],
         ['tabla' => 'p_numerarios', 'campo' => 'dl', 'valor' => "'$DlNew'::character varying"],
-        ['tabla' => 'p_sssc', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'p_sssc', 'campo' => 'id_nom', 'valor' => "idglobal('$esquemav'::text, 'p_sssc'::text)"],
+        ['tabla' => 'p_sssc', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'p_sssc', 'campo' => 'id_nom', 'valor' => "public.idglobal('$esquemav'::text, 'p_sssc'::text)"],
         ['tabla' => 'p_sssc', 'campo' => 'dl', 'valor' => "'$DlNew'::character varying"],
-        ['tabla' => 'p_supernumerarios', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'p_supernumerarios', 'campo' => 'id_nom', 'valor' => "idglobal('$esquemav'::text, 'p_supernumerarios'::text)"],
+        ['tabla' => 'p_supernumerarios', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'p_supernumerarios', 'campo' => 'id_nom', 'valor' => "public.idglobal('$esquemav'::text, 'p_supernumerarios'::text)"],
         ['tabla' => 'p_supernumerarios', 'campo' => 'dl', 'valor' => "'$DlNew'::character varying"],
-        ['tabla' => 'personas_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
+        ['tabla' => 'personas_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
         
-        ['tabla' => 'u_centros_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'u_centros_dl', 'campo' => 'id_ubi', 'valor' => "idglobal('$esquemav'::text, 'u_centros_dl'::text)"],
+        ['tabla' => 'u_centros_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'u_centros_dl', 'campo' => 'id_ubi', 'valor' => "public.idglobal('$esquemav'::text, 'u_centros_dl'::text)"],
         ['tabla' => 'u_centros_dl', 'campo' => 'dl', 'valor' => "'$DlNew'::character varying"],
-        ['tabla' => 'u_cross_ctr_dl_dir', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'u_dir_ctr_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'u_dir_ctr_dl', 'campo' => 'id_direccion', 'valor' => "idglobal('$esquemav'::text, 'u_dir_ctr_dl'::text)"],
+        ['tabla' => 'u_cross_ctr_dl_dir', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'u_dir_ctr_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'u_dir_ctr_dl', 'campo' => 'id_direccion', 'valor' => "public.idglobal('$esquemav'::text, 'u_dir_ctr_dl'::text)"],
     ];
     $oAlterSchema->setDefaults($aDefaults);
     
@@ -268,19 +278,16 @@ if (!empty($Qsv)) {
     $dl_old = strtok('-');
     
     $aDatos = [
-        
-        ['tabla' => 'p_agregados', 'campo' => 'dl', 'pattern' => "$dl_old", 'replacement' => "$DlNew"],
-        ['tabla' => 'p_de_paso_out', 'campo' => 'dl', 'pattern' => "$dl_old", 'replacement' => "$DlNew"],
-        ['tabla' => 'p_numerarios', 'campo' => 'dl', 'pattern' => "$dl_old", 'replacement' => "$DlNew"],
-        ['tabla' => 'p_sssc', 'campo' => 'dl', 'pattern' => "$dl_old", 'replacement' => "$DlNew"],
-        ['tabla' => 'p_supernumerarios', 'campo' => 'dl', 'pattern' => "$dl_old", 'replacement' => "$DlNew"],
-        ['tabla' => 'u_centros_dl', 'campo' => 'dl', 'pattern' => "$dl_old", 'replacement' => "$DlNew"],
-        ['tabla' => 'u_centros_dl', 'campo' => 'region', 'pattern' => "$region_old", 'replacement' => "$RegionNew"],
-        ['tabla' => 'u_centros_dl', 'campo' => 'id_zona', 'pattern' => ".*", 'replacement' => "null"],
-        
-        ['tabla' => 'd_traslados', 'campo' => 'ctr_origen', 'pattern' => "$dl_old", 'replacement' => "$DlNew"],
-        ['tabla' => 'd_traslados', 'campo' => 'ctr_destino', 'pattern' => "$dl_old", 'replacement' => "$DlNew"],
-        ['tabla' => 'da_plazas_dl', 'campo' => 'dl_tabla', 'pattern' => "$dl_old(.*)", 'replacement' => "$DlNew\\1"],
+        ['tabla' => 'p_agregados', 'campo' => 'dl', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
+        ['tabla' => 'p_de_paso_out', 'campo' => 'dl', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
+        ['tabla' => 'p_numerarios', 'campo' => 'dl', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
+        ['tabla' => 'p_sssc', 'campo' => 'dl', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
+        ['tabla' => 'p_supernumerarios', 'campo' => 'dl', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
+        ['tabla' => 'u_centros_dl', 'campo' => 'dl', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
+        ['tabla' => 'u_centros_dl', 'campo' => 'region', 'pattern' => "\m$region_old\M", 'replacement' => "$RegionNew"],
+        ['tabla' => 'd_traslados', 'campo' => 'ctr_origen', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
+        ['tabla' => 'd_traslados', 'campo' => 'ctr_destino', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
+        ['tabla' => 'da_plazas_dl', 'campo' => 'dl_tabla', 'pattern' => "\m$dl_old(f?)\M", 'replacement' => "$DlNew\\1"],
     ];
     /* campos que no se modifican:
     p_agregados -> ce_lugar
@@ -288,14 +295,20 @@ if (!empty($Qsv)) {
     p_supernumerarios -> ce_lugar
     */
     
-    $oAlterSchema->updateDatos($aDatos);
+    $oAlterSchema->updateDatosRegexp($aDatos);
+    
+    // borrar
+    $aDatos = [
+        ['tabla' => 'u_centros_dl', 'campo' => 'id_zona'],
+    ];
+    $oAlterSchema->setNullDatos($aDatos);
     
     // Todos los esquemas:
     $aDatos = [
-        ['tabla' => 'global.d_traslados', 'campo' => 'ctr_origen', 'pattern' => "$dl_old", 'replacement' => "$DlNew"],
-        ['tabla' => 'global.d_traslados', 'campo' => 'ctr_destino', 'pattern' => "$dl_old", 'replacement' => "$DlNew"],
+        ['tabla' => 'global.d_traslados', 'campo' => 'ctr_origen', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
+        ['tabla' => 'global.d_traslados', 'campo' => 'ctr_destino', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
     ];
-    $oAlterSchema->updateDatosTodos($aDatos);
+    $oAlterSchema->updateDatosRegexpTodos($aDatos);
 
     /*
     * da_plazas_dl       
@@ -312,52 +325,52 @@ if (!empty($Qsv)) {
 
     $oAlterSchema = new DBAlterSchema();
     $oAlterSchema->setDbConexion($oDevelPC);
-    $oAlterSchema->setSchema($esquema);
+    $oAlterSchema->setSchema($esquemav);
     
     // Valores Default:
     $aDefaults = [
-        ['tabla' => 'a_sacd_textos', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'aux_cross_usuarios_grupos', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'aux_grupmenu', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'aux_grupo_permmenu', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'aux_grupos_y_usuarios', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'aux_menus', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'aux_usuarios', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'aux_usuarios_ctr_perm', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'aux_usuarios_perm', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'av_cambios_usuario_objeto_pref', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
+        ['tabla' => 'a_sacd_textos', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'aux_cross_usuarios_grupos', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'aux_grupmenu', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'aux_grupo_permmenu', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'aux_grupos_y_usuarios', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'aux_menus', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'aux_usuarios', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'aux_usuarios_ctr_perm', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'aux_usuarios_perm', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'av_cambios_usuario_objeto_pref', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
         ['tabla' => 'av_cambios_usuario_objeto_pref', 'campo' => 'dl_org', 'valor' => "'$DlNew'::character varying"],
-        ['tabla' => 'av_cambios_usuario_propiedades_pref', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'd_asistentes_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'd_asistentes_out', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'd_cargos_activ_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'encargo_datos_cgi', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'encargo_horario', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'encargo_horario_excepcion', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'encargo_sacd_horario', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'encargo_sacd_horario_excepcion', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'encargo_sacd_observ', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'encargo_textos', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'encargo_tipo', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'encargos', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'encargos_sacd', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'm0_mods_installed_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'propuesta_encargo_sacd_horario', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'propuesta_encargos_sacd', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'web_preferencias', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'zonas', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'zonas_grupos', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
-        ['tabla' => 'zonas_sacd', 'campo' => 'id_schema', 'valor' => "idschema('$esquemav'::text)"],
+        ['tabla' => 'av_cambios_usuario_propiedades_pref', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'd_asistentes_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'd_asistentes_out', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'd_cargos_activ_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'encargo_datos_cgi', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'encargo_horario', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'encargo_horario_excepcion', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'encargo_sacd_horario', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'encargo_sacd_horario_excepcion', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'encargo_sacd_observ', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'encargo_textos', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'encargo_tipo', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'encargos', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'encargos_sacd', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'm0_mods_installed_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'propuesta_encargo_sacd_horario', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'propuesta_encargos_sacd', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'web_preferencias', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'zonas', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'zonas_grupos', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+        ['tabla' => 'zonas_sacd', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
     ];
     $oAlterSchema->setDefaults($aDefaults);
     
     // datos
     // Todos los esquemas:
     $aDatos = [
-        ['tabla' => 'global.d_asistentes_dl', 'campo' => 'dl_responsable', 'pattern' => "$dl_old", 'replacement' => "$DlNew"],
-        ['tabla' => 'publicv.d_asistentes_de_paso', 'campo' => 'dl_responsable', 'pattern' => "$dl_old", 'replacement' => "$DlNew"],
+        ['tabla' => 'global.d_asistentes_dl', 'campo' => 'dl_responsable', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
+        ['tabla' => 'publicv.d_asistentes_de_paso', 'campo' => 'dl_responsable', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
     ];
-    $oAlterSchema->updateDatosTodos($aDatos);
+    $oAlterSchema->updateDatosRegexpTodos($aDatos);
     
     $oAlterSchema->updatePropietarioAll($dl_old, $DlNew);
 }

@@ -57,12 +57,12 @@ fnjs_left_side_hide();
 <?= $oHash->getCamposHtml(); ?>
 <table>
 <th class=titulo_inv colspan=4><?= ucfirst(_("buscar un acta")); ?>
-&nbsp;&nbsp;&nbsp;<input class=contenido id="acta" name="acta" size="25">
+&nbsp;&nbsp;&nbsp;<input class=contenido id="acta" name="acta" size="30">
 <div class="help-tip">
 	<p><?= _("ejemplos") ?>:<br>
 		 - <?= _("23/15 (sólo número) => busca en las actas de la r/dl.") ?><br>
 		 - <?= _("crX .* | dlx .* => todas las actas de crX o dlx. Hay que dejar espacio") ?><br>
-		 - <?= _("crX .* | dlx .*/15 => todas las actas de crX o dlx del año 15") ?><br>
+		 - <?= _("crX .*/15 | dlx .*/15 => todas las actas de crX o dlx del año 15") ?><br>
 	</p>
 </div>
 </th>

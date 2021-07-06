@@ -45,7 +45,7 @@ class DBPropiedades {
         $oConexion = new dbConnection($config);
         $oDBP = $oConexion->getPDO();
 
-        $sQuery = "select nspname from pg_namespace where nspowner > 1000 ORDER BY nspname";
+        $sQuery = "select nspname from pg_namespace where nspowner > 1000 AND nspname !~ '^zz' ORDER BY nspname";
         if (($oDblSt = $oDBP->query($sQuery)) === false) {
             $sClauError = 'Schemas.lista';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
@@ -103,7 +103,7 @@ class DBPropiedades {
         $oConexion = new dbConnection($config);
         $oDBP = $oConexion->getPDO();
 
-        $sQuery = "select nspname from pg_namespace where nspowner > 1000 ORDER BY nspname";
+        $sQuery = "select nspname from pg_namespace where nspowner > 1000 AND nspname !~ '^zz' ORDER BY nspname";
         if (($oDblSt = $oDBP->query($sQuery)) === false) {
             $sClauError = 'Schemas.lista';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);

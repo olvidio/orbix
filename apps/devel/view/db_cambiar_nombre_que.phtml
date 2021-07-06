@@ -32,23 +32,23 @@ fnjs_db_renombrar_esquema=function(){
         fnjs_enviar_formulario('#frm','#main');
 	}
 }
-fnjs_db_cambio_dl=function(){
+fnjs_absorber_dl=function(){
 	err='';
-	dl=$('#dl').val();
-	esquema=$('#esquema').val();
+	esquema_m=$('#esquema_matriz').val();
+	esquema_d=$('#esquema_del').val();
 	
-	if (!dl) { 
-		alert("<?= $msg_falta_dl ?>");
+	if (!esquema_m) { 
+		alert("<?= $msg_falta_esquema ?>");
 		err=1;
 	}
-	if (!esquema) { 
+	if (!esquema_d) { 
 		alert("<?= $msg_falta_esquema ?>");
 		err=1;
 	}
 	
 	if (!err) {
-        $('#frm').attr('action','apps/devel/controller/db_copiar.php');
-        fnjs_enviar_formulario('#frm','#main');
+        $('#frm_absorber').attr('action','apps/devel/controller/db_absorber_esquema.php');
+        fnjs_enviar_formulario('#frm_absorber','#main');
 	}
 }
 </script>
@@ -77,8 +77,6 @@ Si no sale en la lista, hay que ir a "Global > Ubis > delegaciones" y añadir la
  </tr>
  </table>
  <br>
- 
-  
   
   <table>
   <tr><td colspan=3>
@@ -103,14 +101,27 @@ Si no sale en la lista, hay que ir a "Global > Ubis > delegaciones" y añadir la
   Cambia el nombre del esquema, y todos los valores por defecto.
   </td>
   </tr>
-  <!-- 
-  <tr>
-  <td>
-  <input type="button" name="bimportar" onclick="fnjs_db_cambio_dl()" value="<?= ("cambiar campos dl en el Esquema") ?>"></td>
-  <td colspan=4>
-  Cambia la dl de las personas, ubis, 
-  </td>
- </tr>
- -->
 </table>
 </form>
+
+<h1><?= _("Absorber un esquema (region-dl)") ?></h1>
+<h3><?= _("pasar los datos al Esquema matriz") ?></h3>
+<form id="frm_absorber" action="" method=post>
+<?= $oHashAbsorber->getCamposHtml(); ?>
+<table>
+ <tr valign=top align=left>
+  <td><?= _("esquema matriz") ?>:  <?= $oDesplMatriz->desplegable() ?> </td>
+  <td><?= _("esquema a disolver") ?>:  <?= $oDesplDel->desplegable() ?> </td>
+ </tr>
+ </table>
+ <br>
+ <br>
+ <table>
+  <tr>
+  <td>
+  <input type="button" name="bimportar" onclick="fnjs_absorber_dl()" value="<?= ("trasladar los datos al esquema matriz") ?>"></td>
+  <td colspan=4>
+  Todas las referencias a la dl importada desaparecen, y se cambia por la nueva dl.
+  </td>
+ </tr>
+ </table>

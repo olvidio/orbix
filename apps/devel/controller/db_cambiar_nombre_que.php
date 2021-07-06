@@ -31,6 +31,22 @@ $h = $oHash1->linkSinVal();
 $msg_falta_dl = _("debe poner la delegación");
 $msg_falta_esquema = _("debe poner la delegación de referencia");
 
+// absorber
+$a_posibles_esquemas = $oDBPropiedades->array_posibles_esquemas(TRUE);
+
+$oDesplMatriz = new \web\Desplegable();
+$oDesplMatriz->setNombre('esquema_matriz');
+$oDesplMatriz->setBlanco(TRUE);
+$oDesplMatriz->setOpciones($a_posibles_esquemas);
+
+$oDesplDel = new \web\Desplegable();
+$oDesplDel->setNombre('esquema_del');
+$oDesplDel->setBlanco(TRUE);
+$oDesplDel->setOpciones($a_posibles_esquemas);
+
+$oHashAbsorber = new web\Hash();
+$oHashAbsorber->setcamposForm('esquema_matriz!esquema_del');
+
 $a_campos = [
 			'oHash' => $oHash,
 			'h' => $h,
@@ -38,6 +54,10 @@ $a_campos = [
 			'oEsquemaRef' => $oEsquemaRef,
             'msg_falta_dl' => $msg_falta_dl,
             'msg_falta_esquema' => $msg_falta_esquema,
+            // absorber
+            'oDesplMatriz' => $oDesplMatriz,
+            'oDesplDel' => $oDesplDel,
+			'oHashAbsorber' => $oHashAbsorber,
 			];
 
 $oView = new core\View('devel/controller');

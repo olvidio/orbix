@@ -1,4 +1,8 @@
 <script>
+fnjs_trasladar=function(formulario){
+    $(formulario).attr('action',"apps/ubis/controller/trasladar_ubis.php");
+    fnjs_enviar_formulario(formulario);
+}
 fnjs_modificar=function(formulario){
 	rta=fnjs_solo_uno(formulario);
 	if (rta==1) {

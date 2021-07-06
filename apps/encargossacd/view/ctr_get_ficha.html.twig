@@ -1,8 +1,10 @@
 <script>
 fnjs_cerrar=function(){
 	$('#div_modificar').html('');
+	$('#div_modificar').width('0');
+	$('#div_modificar').height('0');
 	$('#div_modificar').removeClass('ventana');
-	$('#resto').removeClass('sombra');
+	document.getElementById("overlay").style.display = "none";
 }
 
 fnjs_crear_horario=function(enc){
@@ -35,8 +37,6 @@ fnjs_añadir_sacd=function(enc){
 	$('#sacd_num_'+enc).val(++n);
 }
 </script>
-<div id='div_modificar'></div>
-<div id='resto'>
 {% for e in 1..num_enc %}
 	<form id="datos_ctr_{{ e }}" action="" method="post">
 	<input type="hidden"  id="sacd_num_{{ e }}" name="sacd_num" value="{{ sacd_num[e] }}">
@@ -105,4 +105,5 @@ fnjs_añadir_sacd=function(enc){
 	</table>
 	</form>
 {% endfor %}
-</div>
+<div id='div_modificar'></div>
+<div id='overlay'></div>

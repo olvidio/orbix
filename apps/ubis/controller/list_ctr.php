@@ -241,7 +241,10 @@ $aGoBack = array (
 $oPosicion->setParametros($aGoBack);
 $oPosicion->recordar();
 
-$a_botones=array( array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(this.form)" ) );
+$a_botones=[ ['txt' => _("modificar"), 'click' =>"fnjs_modificar(this.form)"]];
+if ($_SESSION['oPerm']->have_perm_oficina('admin_sv')) { 
+    $a_botones[] = ['txt' => _("trasladar"), 'click' =>"fnjs_ver_dl()"];
+}
 
 $a_cabeceras = [];
 $a_cabeceras[]= array('name'=>ucfirst(_("centro")),'formatter'=>'clickFormatter');
@@ -372,11 +375,18 @@ $oHash->setcamposForm('loc!que_lista');
 
 $oHash1 = new Hash();
 $oHash1->setcamposForm('sel');
-$oHash1->setcamposNo('scroll_id');
+$oHash1->setcamposNo('scroll_id!dl_dst');
 $a_camposHidden1 = array(
-		'que_lista'=>$Qque_lista
+		'que_lista'=>$Qque_lista,
+        'dl_dst' => '', // solo útil en el caso de traslado de dl 
 		);
 $oHash1->setArraycamposHidden($a_camposHidden1);
+
+
+$oHash2 = new web\Hash();
+$oHash2->setUrl(core\ConfigGlobal::getWeb().'/apps/ubis/controller/delegacion_que.php');
+$oHash2->setCamposForm('');
+$h2 = $oHash2->linkSinVal();
 
 
 $a_campos = ['oPosicion' => $oPosicion,
@@ -385,6 +395,7 @@ $a_campos = ['oPosicion' => $oPosicion,
 			'oDesplLista' => $oDesplLista,
 			'oHash1' => $oHash1,
 			'oTabla' => $oTabla,
+            'h2' => $h2,
 			];
 
 $oView = new core\View('ubis/controller');
