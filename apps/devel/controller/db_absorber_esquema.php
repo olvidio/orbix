@@ -15,10 +15,10 @@ $QEsquemaMatriz = (string) \filter_input(INPUT_POST, 'esquema_matriz');
 $QEsquemaDel = (string) \filter_input(INPUT_POST, 'esquema_del');
 
 $esquemaMatrizv = $QEsquemaMatriz.'v';
-$esquemaMatrizf = $QEsquemaMatriz.'f';
+//$esquemaMatrizf = $QEsquemaMatriz.'f';
 
 $esquemaDelv = $QEsquemaDel.'v';
-$esquemaDelf = $QEsquemaDel.'f';
+//$esquemaDelf = $QEsquemaDel.'f';
 
 
 // ESQUEMAS: CAMBIOS EN TABLAS ////////////////////////////////////////

@@ -15,16 +15,16 @@ $Qregion = (string) \filter_input(INPUT_POST, 'region');
 $Qdl = (string) \filter_input(INPUT_POST, 'dl');
 $Qcomun = (integer) \filter_input(INPUT_POST, 'comun');
 $Qsv = (integer) \filter_input(INPUT_POST, 'sv');
-$Qsf = (integer) \filter_input(INPUT_POST, 'sf');
+//$Qsf = (integer) \filter_input(INPUT_POST, 'sf');
 
 $esquema_old = substr($QEsquemaRef,0,-1); // quito la v o la f.
 
 $esquema_oldv = $esquema_old.'v';
-$esquema_oldf = $esquema_old.'f';
+//$esquema_oldf = $esquema_old.'f';
 
 $esquema = "$Qregion-$Qdl";
 $esquemav = $esquema.'v';
-$esquemaf = $esquema.'f';
+//$esquemaf = $esquema.'f';
 
 $oDBRol = new core\DBRol();
 
@@ -259,18 +259,6 @@ if (!empty($Qsv)) {
     ];
     $oAlterSchema->setDefaults($aDefaults);
     
-    /* ESTO ES PARA ABSORCIONES
-     * d_profesor_director    
-	id_departamento >> ???
-
-     *  d_profesor_stgr        
-	id_departamento >> ???
-	id_tipo_profesor >>> ???
-
-    * da_plazas_dl       
- 	id_dl		>>> ?¿¿?¿
-
-     */
     // datos
     // REGEXP_REPLACE(source, pattern, replacement_string,[, flags])
     
@@ -289,11 +277,6 @@ if (!empty($Qsv)) {
         ['tabla' => 'd_traslados', 'campo' => 'ctr_destino', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
         ['tabla' => 'da_plazas_dl', 'campo' => 'dl_tabla', 'pattern' => "\m$dl_old(f?)\M", 'replacement' => "$DlNew\\1"],
     ];
-    /* campos que no se modifican:
-    p_agregados -> ce_lugar
-    p_numerarios -> ce_lugar
-    p_supernumerarios -> ce_lugar
-    */
     
     $oAlterSchema->updateDatosRegexp($aDatos);
     
