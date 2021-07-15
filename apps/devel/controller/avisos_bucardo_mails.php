@@ -61,8 +61,8 @@ if (($oDblSt = $oDbl->query($sql)) === FALSE) {
     return FALSE;
 }
 
-// mirar la última fila
-if (($oDblSt = $oDbl->query("SELECT * FROM bucardo_test ORDER BY time DESC LIMIT 1")) === FALSE) {
+// mirar la última fila de status
+if (($oDblSt = $oDbl->query("SELECT * FROM bucardo_test WHERE tipo='status' ORDER BY time DESC LIMIT 1")) === FALSE) {
     return FALSE;
 }
 $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
@@ -88,6 +88,26 @@ if ($pos1 !== false) {
     $error_txt .= "<br>";
     $error_txt .= makear($status_txt);
 }
+
+// mirar la última fila de restart
+if (($oDblSt = $oDbl->query("SELECT * FROM bucardo_test WHERE tipo='restart' ORDER BY time DESC LIMIT 1")) === FALSE) {
+    return FALSE;
+}
+$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+
+
+$time_db = $aDades['time'];
+$restart_txt = $aDades['status'];
+
+$pos1 = strpos($restart_txt, 'fail');
+if ($pos1 !== false) {
+    $error_txt .= "Se encontró 'fail' en 'restart.log' ";
+    $error_txt .= "<br>";
+    $error_txt .= makear($status_txt);
+}
+
+
+
 
 $email = "dserrabou@gmail.com, salvagual@gmail.com";
 
