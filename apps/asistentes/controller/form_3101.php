@@ -137,10 +137,9 @@ if (!empty($Qid_nom)) { //caso de modificar
 	$plaza=  asistentes\Asistente::PLAZA_PEDIDA; //valor por defecto
 	$propietario=''; //valor por defecto
 	$Qobj_pau = !empty($Qobj_pau)? urldecode($Qobj_pau) : '';
-	$obj_pau = strtok($Qobj_pau,'&');
-	$na = strtok('&');
-	$na_txt = strtok($na,'=');
-	$na_val = 'p'.strtok('=');
+	$obj_pau = $Qobj_pau;
+    $Qna = (string)  \filter_input(INPUT_POST, 'na');
+	$na_val = 'p'.$Qna;
 	switch ($obj_pau) {
 		case 'PersonaN':
 			$oPersonas=new personas\GestorPersonaN();
