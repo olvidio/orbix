@@ -160,6 +160,9 @@ class Select3101 {
 							array('name'=>_("sacd."),'width'=>10),
 							array('name'=>_("telf."),'width'=>80),
 							array('name'=>_("mails"),'width'=>100),
+							array('name'=>_("nombre"),'width'=>30),
+							array('name'=>_("apellidos"),'width'=>30),
+							array('name'=>_("ctr"),'width'=>30),
 						);
 		return $a_cabeceras;
 	}
@@ -259,6 +262,8 @@ class Select3101 {
 			$oCargo=new actividadcargos\Cargo($id_cargo);
 
 			$nom=$oPersona->getPrefApellidosNombre();
+			$nombre=$oPersona->getNom();
+			$apellidos=$oPersona->getApellidos();
 			$sacd= ($oPersona->getSacd())? _("sí") : '';
 			// Añado los telf:
 			$telfs = '';
@@ -392,6 +397,9 @@ class Select3101 {
 			$a_valores[$c][8]="$sacd";
 			$a_valores[$c][9]="$telfs";
 			$a_valores[$c][10]="$mails";
+			$a_valores[$c][11]="$nombre";
+			$a_valores[$c][12]="$apellidos";
+			$a_valores[$c][13]="$ctr_dl";
 		}
 		
 		$this->num = $num;
@@ -423,6 +431,8 @@ class Select3101 {
 			}
 			$obj_pau = $oPersona->getClassName();
 			$nom=$oPersona->getPrefApellidosNombre();
+			$nombre=$oPersona->getNom();
+			$apellidos=$oPersona->getApellidos();
 			$sacd= ($oPersona->getSacd())? _("sí") : '';
 			$dl_asistente=$oPersona->getDl();
 			$ctr_dl=$oPersona->getCentro_o_dl();
@@ -523,6 +533,9 @@ class Select3101 {
 			$a_val[8]=$sacd;
 			$a_val[9]="$telfs";
 			$a_val[10]="$mails";
+			$a_val[11]="$nombre";
+			$a_val[12]="$apellidos";
+			$a_val[13]="$ctr_dl";
 			
 			$this->a_asistentes[$nom] = $a_val;
 		}
