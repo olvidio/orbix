@@ -1,3 +1,33 @@
+<?php
+/**
+/* Para incluir dos funciones de javascript, que añaden desplegables, o inputs 
+/* segun se vayan necesitando.
+/* Función:
+/*   	fnjs_mas_inputs(evt,nom,ir_a_camp);
+/*   	fnjs_mas_selects(evt,nom,ir_a_camp)  Además hay que tener una variable $var_options donde estén todas las opciones del desplegable
+*/
+
+// Formato de fecha:
+$idioma = $_SESSION['session_auth']['idioma'];
+# Si no hemos encontrado ningún idioma que nos convenga, mostramos la web en el idioma por defecto
+if (!isset($idioma)){ $idioma = $_SESSION['oConfig']->getIdioma_default(); }
+$a_idioma = explode('.',$idioma);
+$code_lng = $a_idioma[0];
+//$code_char = $a_idioma[1];
+switch ($code_lng) {
+	case 'en_US':
+		// formato = mes/dia/año;
+		$fecha_local= '      fecha_iso=any+"-"+a_val[0]+"-"+a_val[1];';
+		$fecha_hora_local = '    fecha_iso=any+"-"+a_fecha[0]+"-"+a_fecha[1]+"T"+a_hora[0]+":"+a_hora[1]+":"+a_hora[2];';
+		break;
+	default:
+		// formato = dia/mes/año;
+		$fecha_local= '      fecha_iso=any+"-"+a_val[1]+"-"+a_val[0];';
+		$fecha_hora_local = '    fecha_iso=any+"-"+a_fecha[1]+"-"+a_fecha[0]+"T"+a_hora[0]+":"+a_hora[1]+":"+a_hora[2];';
+}
+
+?>
+<script>
 function convertToIso(fecha) {
 	var dateformat = /^\d{1,2}(\-|\/|\.)\d{1,2}(\-|\/|\.)\d{2,4}$/;
 	var dateTimeFormat = /^\d{1,2}(\-|\/|\.)\d{1,2}(\-|\/|\.)\d{2,4} \d{2}:\d{2}:\d{2}$/;
@@ -8,14 +38,20 @@ function convertToIso(fecha) {
 		var a_hora = dateTime[1].split(':');
 		any=a_fecha[2];
 		if (any < 100) any="20"+any;
-		fecha_iso=any+"-"+a_fecha[1]+"-"+a_fecha[0]+"T"+a_hora[0]+":"+a_hora[1]+":"+a_hora[2];
+		if (a_val[0] < 10) a_val[0]="0"+a_val[0];
+		if (a_val[1] < 10) a_val[1]="0"+a_val[1];
+		//fecha_iso=any+"-"+a_fecha[1]+"-"+a_fecha[0]+"T"+a_hora[0]+":"+a_hora[1]+":"+a_hora[2];
+		<?= $fecha_hora_local ?>
 		return fecha_iso;
 	}
 	if (dateformat.test(fecha)) {
 		a_val=fecha.split('/');
 		any=a_val[2];
 		if (any < 100) any="20"+any;
-		fecha_iso=any+"-"+a_val[1]+"-"+a_val[0];
+		if (a_val[0] < 10) a_val[0]="0"+a_val[0];
+		if (a_val[1] < 10) a_val[1]="0"+a_val[1];
+		//fecha_iso=any+"-"+a_val[1]+"-"+a_val[0];
+		<?= $fecha_local ?>
 		return fecha_iso;
 	} else {
 		return false;
@@ -232,7 +268,21 @@ function fnjs_convert(node){
 				rta="<"+tag+" "+clas+">"+rr+rta1+"</"+tag+">"; 
 			} else {
 				//if (rec<30) alert(tag+" sin hijos");
-				rta="<"+tag+" "+clas+">"+$(node).html()+"</"+tag+">"; 
+				//rta="<"+tag+" "+clas+">"+$(node).html()+"</"+tag+">"; 
+				colSpan=$(node).attr("colspan");
+				if (colSpan== undefined) { Span="";} else {Span=" colspan='"+colSpan+"'"}
+				fecha_iso=convertToIso($(node).html()); //compruebo si tiene forma de fecha.
+				if (fecha_iso) {
+					rta="<td class='fecha' fecha_iso='"+fecha_iso+"'>"+$(node).html()+"</td>";
+				} else {
+					num_iso=$(node).html();
+					if ($.isNumeric(num_iso)) { // si es número y tiene separador decimal lo cambio a coma.
+						num=num_iso.replace(".",",");
+						rta="<td"+Span+" class='numero' num_iso='"+num_iso+"'>"+num+"</td>";
+					} else {
+						rta="<"+tag+Span+">"+num_iso+"</"+tag+">"; 
+					}
+				}
 			}
 			break;
 		case "tbody":
@@ -349,10 +399,6 @@ function fnjs_exportar(formato){
 			var o = oldObject.clone(true);
 			//quitar los div class=no_print 
 			var selector="no_print";
-//			o.getElementsByClassName(selector).each(function(i,elemento) {
-//					elemento.remove();
-//				}
-//			 );
 			var myText=o.html();
 			if (formato!='html') {
 				//quitar los div
@@ -410,11 +456,6 @@ function fnjs_exportar(formato){
 				myText=myText.replace(re,val_n); 
 			} );
 		
-			//Quito los links (a href)
-//			re_str=/<a href.*?>(.*?)<\/a>/mi;
-//			re = new RegExp(re_str);
-//			myText=myText.replace(re,'#{1}'); 
-
 			myText='<body>'+myText+'</body>';
 			console.log(myText);
 			var Text=$(bloque).html();
@@ -430,6 +471,7 @@ function fnjs_exportar(formato){
 			}
 			break;
 	}
+	txt="<div>"+txt+"</div>";
 	//alert ("rta:\n"+txt);
 
 	//var parametros='formato='+formato+'&ex=operario';
@@ -441,4 +483,4 @@ function fnjs_exportar(formato){
 	$('#frm_export_ex').val(myText);
 	$('#frm_export').trigger("submit");
 }
-
+</script>

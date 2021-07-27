@@ -47,6 +47,7 @@ use usuarios\model\entity as usuarios;
 use menus\model as menus;
 use menus\model\entity as menusEntity;
 use usuarios\model\entity\Role;
+use SebastianBergmann\CodeCoverage\Report\PHP;
 
 $oGesPref = new usuarios\GestorPreferencia();
 
@@ -366,7 +367,9 @@ img.calendar:hover { cursor: pointer; }
 
 <script type="text/javascript" src="<?= ConfigGlobal::getWeb_scripts().'/formatos.js.php?'.rand(); ?>"></script>
 <script type="text/javascript" src="<?= ConfigGlobal::getWeb_scripts().'/selects.js.php?'.rand(); ?>"></script>
-<script type="text/javascript" src="<?= ConfigGlobal::getWeb_scripts().'/exportar.js?'.rand(); ?>"></script>
+<?php
+include_once(ConfigGlobal::$dir_scripts.'/exportar.js.php');
+?>
 </head>
 <body class="otro">
 <script type="text/javascript">

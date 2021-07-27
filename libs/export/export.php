@@ -637,6 +637,7 @@ switch ($_POST['frm_export_tipo']) {
 		$rtf->getDocument();
 	break;
 	case "odfc":
+	    $return_var = 0;
 		if ($_POST['frm_export_titulo']) {
 			$nom=$_POST['frm_export_titulo'];
 		} else {
@@ -654,7 +655,7 @@ switch ($_POST['frm_export_tipo']) {
 		//quitar los forms 
 		$documento=preg_replace('/<form.*>/', '', $documento); 
 		$documento=preg_replace('/<\/form>/', '', $documento); 
-
+		
 		$file_txt = "/tmp/$nom.txt";
 		$file_xml = "/tmp/$nom.xml";
 		
