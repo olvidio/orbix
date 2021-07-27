@@ -118,7 +118,7 @@ if ($Qcdc_sel < 10) { //Para buscar por casas.
 			$aWhere['sf']='t';
 			// también los centros que son como cdc
 			$GesCentrosSf = new GestorCentroEllas();
-			$cCentrosSf = $GesCentrosSf->getCentrosSf(array('cdc'=>'t','_ordre'=>'nombre_ubi')); 
+			$cCentrosSf = $GesCentrosSf->getCentros(array('cdc'=>'t','_ordre'=>'nombre_ubi')); 
 			break;
 		case 9:
 			// posible selección múltiple de casas
