@@ -133,6 +133,7 @@
 907	{80,15}	importar cv	sasistentes=agd&sactividad=cv&que=ver&modo=importar	119	2	3	t
 908	{70,15}	importar crt	sasistentes=n&sactividad=crt&que=ver&modo=importar	119	128	2	t
 911	{82,15}	importar cve	sasistentes=n&sactividad=cve&que=ver&modo=importar	119	128	2	t
+1007	{20,30,30}	listado por oficinas	que=o_todas&ver_ctr=si	21	37748735	7	t
 912	{90,15}	importar cve	sasistentes=agd&sactividad=cve&que=ver&modo=importar	119	2	3	t
 913	{20,40}	Matr. Pendientes	\N	168	16	12	t
 915	{10,60}	importar desde ficheros	accion=importar	64	33554432	13	t
@@ -198,7 +199,7 @@
 1004	{20,30}	listados	\N	0	37748735	7	t
 1005	{20,30,10}	Cases comunes	que=c_comunes&ver_ctr=si	21	37748735	7	t
 951	{10,10}	Planing Casas	tipo=planning_cdc	61	1	7	t
-1007	{20,30,30}	listado por oficinas	que=o_todas&ver_ctr=si	21	37748735	7	t
+1385	{20}	actas	\N	0	16	21	t
 1006	{20,30,20}	listados de todas las casas	que=c_todas&ver_ctr=si	21	1	7	t
 941	{5,80}	lista varias activ	ssfsv=sv&sasistentes=n&que=list_cjto_sacd	119	8	8	t
 1029	{30}	historicos	\N	\N	\N	\N	t
@@ -231,8 +232,6 @@
 1074	{40,30}	lista por casas	periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si	45	65536	9	t
 1028	{30}	Tarifas	\N	0	2049	7	t
 1033	{30,10}	definir tarifa	\N	100	2049	7	t
-1037	{30,20}	tarifa <-> tipus dactivitat	\N	108	2049	7	t
-1039	{30,30}	tarifes per casa i any	\N	73	2049	7	t
 1040	{30,40}	activ -> tarifa	\N	128	2049	7	t
 1035	{30,20}	buscar crt	sasistentes=sr&sactividad=crt	71	2560	15	t
 1042	{35}	listas actividades	\N	0	2560	15	t
@@ -268,6 +267,8 @@
 1134	{60,90,10}	activ sv sg	tipo=sg&periodo=desdeHoy	39	8	8	t
 1136	{60,90,20}	activ sv sr	tipo=sr	39	8	8	t
 1138	{60,90,30}	activ sv n y agd	tipo=na	39	8	8	t
+1222	{70,20}	definir módulos		27	33554432	13	t
+1039	{30,30}	tarifas por casa y año	\N	73	2049	7	t
 1139	{60,90,50}	activ sf sg	tipo=sf_sg	39	8	8	t
 1140	{60,90,60}	activ sf sr	tipo=sf_sr	39	8	8	t
 1141	{60,90,70}	activ sf n,nax y agd	tipo=sf_na	39	8	8	t
@@ -318,15 +319,12 @@
 1225	{110,40}	de cada ctr	tipo_ctr=sg&tipo_lista=cv	12	64	10	t
 1228	{110,50}	s que no han ido a la cv	\N	0	64	10	t
 1229	{110,50,10}	este curso	que=cv_s&curso=actual	79	64	10	t
-1295	{90,90,30}	tarifes per casa i any	\N	73	32768	20	t
 1299	{90,120}	Previsión económica	\N	63	32768	20	t
-1301	{90,130}	previsión asistentes	\N	5	32768	20	t
 1266	{90,40}	listados	\N	0	33947647	8	t
 1273	{90,40,12}	casas comunes sv	que=c_comunes_sv&ver_ctr=si	21	33947647	8	t
 1280	{90,40,22}	todas casas sv	que=c_todas_sv&ver_ctr=si	21	33947647	8	t
 1282	{90,40,30}	listado por oficinas	que=o_todas&ver_ctr=si	21	33947647	8	t
 1283	{90,40,40}	listado oficina propia	que=o_actual&ver_ctr=si	21	33947647	8	t
-1294	{90,90,20}	tarifa <-> tipus dactivitat	\N	108	32768	20	t
 1250	{85,10}	persona r/dl	obj_pau=PersonaN&tipo=planning	61	2176	2	t
 1230	{110,50,20}	el curso pasado	que=cv_s&curso=anterior	79	64	10	t
 1231	{110,60}	corresponde ir a cv ad	que=cv_s_ad	79	64	10	t
@@ -338,8 +336,8 @@
 1375	{20,20}	tabla alumnos-asignaturas	\N	88	16	21	t
 1378	{10,40}	profesor para asignatura	\N	171	16	21	t
 1384	{10}	personas	\N	0	16	21	t
-1385	{20}	actas	\N	0	16	21	t
-1222	{70,20}	definir módulos		27	33554432	13	t
+1295	{90,90,30}	tarifas por casa y año	\N	73	32768	20	t
+1301	{90,130}	Previsión asistentes	\N	5	32768	20	t
 1206	{70,10}	aplicaciones	clase_info=devel\\model\\infoapps	160	33554432	13	t
 1392	{20,45}	Matrículas	\N	66	16	12	t
 1393	{80}	actividades	\N	0	8	19	t
@@ -389,6 +387,7 @@
 529	{90}	Nuevo calendario	\N	183	37748735	8	t
 1400	{20,90}	previsión asistentes	\N	5	37748735	7	t
 1405	{10,80}	grupos	\N	91	1	7	t
+1415	{20,30}	borrar passwords	\N	145	33554432	13	t
 1036	{30,20}	planning por casas	tipo=planning_cdc	61	1048576	9	t
 1401	{30,30}	listado gerentes	periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si	45	1048576	9	t
 1402	{30,40}	lista actividades	periodo=tot_any&tipo_lista=lista_activ	45	1048576	9	t
@@ -398,9 +397,7 @@
 1403	{30,60}	Gestión económica	\N	45	1048576	9	t
 1409	{35}	Tarifas	\N	0	1048576	9	t
 1410	{35,10}	definir tarifa	\N	100	1048576	9	t
-1411	{35,20}	tarifa <-> tipus dactivitat	\N	108	1048576	9	t
 1413	{35,40}	activ -> tarifa	\N	100	1048576	9	t
-1412	{35,30}	tarifes per casa i any	\N	73	1048576	9	t
 503	{40}	actividades	\N	0	65536	9	t
 863	{50,10,80}	sf s y sg	id_tipo_activ=2[45]....&status=2&periodo=desdeHoy	71	32768	20	t
 1145	{50,100}	asignar centros	\N	43	32768	20	t
@@ -408,6 +405,7 @@
 1291	{90,90,10}	definir tarifa	\N	128	32768	20	t
 1233	{70,30}	instalar módulos	clase_info=permisos\\model\\infomodsinstalled	160	35651584	13	t
 1398	{70,50}	config esquema	\N	90	35651584	13	t
+1412	{35,30}	tarifas por casa y año	\N	73	1048576	9	t
 252	{10,10}	seleccionar	\N	148	35651584	13	t
 1414	{1,30}	lista de cambios	\N	137	37617663	1	t
 957	{10,20}	listado gerentes	periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si	45	2049	7	t
@@ -415,6 +413,7 @@
 1399	{10,70}	estadística por años	\N	51	1	7	t
 376	{50,10,40}	sv sr	id_tipo_activ=17&status=2&periodo=desdeHoy	71	1032	8	t
 1085	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	512	15	t
+1034	{20,10}	mover tabla a otra DB	\N	54	33554432	13	t
 1417	{80,140}	cambiar de fase	sasistentes=n&sactividad=ca	130	128	2	t
 1418	{82,140}	cambiar de fase	sasistentes=n&sactividad=cve	130	128	2	t
 1420	{90,140}	cambiar de fase	sasistentes=agd&sactividad=cve	130	2	3	t
@@ -427,6 +426,8 @@
 1422	{120,110}	Gestión de plazas	sasistentes=s,sg&sactividad=crt	169	64	10	t
 1426	{110,120}	Balance de plazas	sasistentes=s&sactividad=cv	170	64	10	t
 1200	{70,10}	propuestas	\N	87	8	8	t
-1034	{20,20}	mover tabla a otra DB	\N	54	33554432	13	t
-1415	{20,100}	borrar passwords	\N	145	33554432	13	t
-1428	{20,30}	mover y cambiar nombre dl	\N	192	33554432	13	t
+1037	{30,20}	tarifa <-> tipo de actividad	\N	108	2049	7	t
+1294	{90,90,20}	tarifa <-> tipo de actividad	\N	108	32768	20	t
+34	{10,40}	exportar	\N	92	33554432	13	t
+35	{10,50}	exportar a ficheros	accion=exportar	64	33554432	13	t
+1411	{35,20}	tarifa <-> tipo de actividad	\N	108	1048576	9	t
