@@ -316,7 +316,7 @@ class GrupMenu Extends core\ClasePropiedades {
 			$this->DBCarregar();
 		}
 		$sgrupmenu = $this->sgrup_menu;
-		if ($dl_r == 'r') {
+		if ($dl_r == 'r' || $dl_r == 'rstgr') {
 		    if(!empty($this->aEquivalencias[$this->sgrup_menu])) {
 		      $sgrupmenu = $this->aEquivalencias[$this->sgrup_menu];
 		    }

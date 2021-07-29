@@ -70,7 +70,7 @@ if (!empty($Qacta)) {
     preg_match ("/^(\d*)(\/)?(\d*)/", $Qacta, $matches);
     if (!empty($matches[1])) {
         // Si es cr, se mira en todas (las suyas):
-        if (ConfigGlobal::soy_region()) {
+        if (ConfigGlobal::mi_ambito() == 'r' OR ConfigGlobal::mi_ambito() == 'rstgr') {
             $oGesDelegaciones = new GestorDelegacion();
             $aDl = $oGesDelegaciones->getArrayDlRegionStgr([$mi_dele]);
             $Qacta_dl = '';
@@ -94,48 +94,6 @@ if (!empty($Qacta)) {
             $cActas = $GesActas->getActas($aWhere,$aOperador);
         }
     }
-
-    /** Anterior 
-	if ($dl_acta == $mi_dele || $dl_acta == "?") {
-		if ($dl_acta == "?") $Qacta = "\?";
-		$GesActas = new notas\GestorActaDl();
-	} else {
-        // Si es cr, se mira en todas (las suyas):
-        if (ConfigGlobal::soy_region()) {
-            $oGesDelegaciones = new GestorDelegacion();
-            $aDl = $oGesDelegaciones->getArrayDlRegionStgr([$mi_dele]);
-            
-            // si es número busca en la dl.
-            $Qacta_dl = '';
-            $matches = [];
-            preg_match ("/^(\d*)(\/)?(\d*)/", $Qacta, $matches);
-            if (!empty($matches[1])) {
-                foreach ($aDl as $dl) {
-                    $Qacta_dl .= empty($Qacta_dl)? '' : "|";
-                    $Qacta_dl .= empty($matches[3])? "$dl ".$matches[1].'/'.date("y") : "$dl $Qacta";
-                }
-                $Qacta = $Qacta_dl;
-            } else { 
-                // otra busqueda que no empieza por número
-                // Si soy región stgr no puedo busacr en 'Ex', sólo en mis dl.
-            }
-            $GesActas = new notas\GestorActa();
-        } else {
-            // Soy dl normal.
-            // si es número busca en la dl.
-            $matches = [];
-            preg_match ("/^(\d*)(\/)?(\d*)/", $Qacta, $matches);
-            if (!empty($matches[1])) {
-                $Qacta = empty($matches[3])? "$mi_dele ".$matches[1].'/'.date("y") : "$mi_dele $Qacta";
-                $GesActas = new notas\GestorActaDl();
-            } else {
-                // Miro en resto: Puede ser un acta de una dl "NO Orbix" que haya  creado yo. 
-                $GesActas = new notas\GestorActaEx();
-            }
-        }
-	}
-	*/
-
 	$titulo = $Qtitulo;
 } else {
 	$mes=date('m');
@@ -151,7 +109,7 @@ if (!empty($Qacta)) {
 	
 	$titulo=ucfirst(sprintf(_("lista de actas del curso %s"),$txt_curso));
 	// Si es cr, se mira en todas:
-	if (ConfigGlobal::soy_region()) {
+    if (ConfigGlobal::mi_ambito() == 'r' OR ConfigGlobal::mi_ambito() == 'rstgr') {
             $oGesDelegaciones = new GestorDelegacion();
             $aDl = $oGesDelegaciones->getArrayDlRegionStgr([$mi_dele]);
             $sReg = implode("|",$aDl);
@@ -166,7 +124,7 @@ if (!empty($Qacta)) {
 $botones = 0; // para 'añadir acta'
 $a_botones = [];
 // Si soy region del stgr, no puedo modificar actas: que lo hagan las dl.
-if (ConfigGlobal::soy_region()) {
+if (ConfigGlobal::mi_ambito() == 'rstgr') {
     $a_botones[] = array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(\"#seleccionados\")");
     $botones = 0;
 } else {

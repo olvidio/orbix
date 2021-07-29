@@ -38,7 +38,7 @@ $notas = empty($notas)? '': $notas;
 $permiso = empty($permiso)? 3: $permiso;
 
 // Si soy region del stgr, no puedo modificar actas (que lo hagan las dl).
-if (ConfigGlobal::soy_region()) {
+if (ConfigGlobal::mi_ambito() == 'rstgr')  {
     $permiso = 0;
 }
 

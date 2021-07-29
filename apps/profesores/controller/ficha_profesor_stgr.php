@@ -75,7 +75,7 @@ if ($_SESSION['oPerm']->have_perm_oficina('est')) {
 
 
 // Para cr stgr
-if (ConfigGlobal::soy_region()) {
+if (ConfigGlobal::mi_ambito() == 'rstgr') {
 	$Qprint = 1;
 }
 
@@ -148,7 +148,7 @@ $nom_ap = $oPersona->getNombreApellidosCrSin();
 $sacd = $oPersona->getSacd();
 $id_ctr = $oPersona->getid_ctr();
 
-if (ConfigGlobal::soy_region()) {
+if (ConfigGlobal::mi_ambito() == 'rstgr') {
 	$oCentroDl = new ubis\Centro($id_ctr);
 } else {
 	$oCentroDl = new ubis\CentroDl($id_ctr);

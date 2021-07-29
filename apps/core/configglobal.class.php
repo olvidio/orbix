@@ -150,12 +150,8 @@ Class ConfigGlobal extends ServerConf {
 	 * 
 	 * @return boolean
 	 */
-	public static function soy_region() {
-	    $soy_region = FALSE;
-        if ( self::mi_region() === self::mi_delef() ) {
-            $soy_region = TRUE;
-        }
-        return $soy_region;
+	public static function mi_ambito() {
+	    return $_SESSION['oConfig']->getAmbito(); 
 	}
 	
 	public static function permisos() {

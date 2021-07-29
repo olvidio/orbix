@@ -21,7 +21,7 @@ foreach ($cTipoDossier as $oTipoDossier) {
 	// Miro si la app está instalada
 	if(!core\ConfigGlobal::is_app_installed($app)) continue;
 	$aWhere = array('tabla'=>$tabla_from,'id_pau'=>$id_pau,'id_tipo_dossier'=>$id_tipo_dossier,'_ordre'=>'id_tipo_dossier');
-	if (ConfigGlobal::soy_region()) { // las regiones no saben si está abierto o cerrado, lo ven todo:
+	if (ConfigGlobal::mi_ambito() == 'rstgr') { // las regiones no saben si está abierto o cerrado, lo ven todo:
         $status_dossier = 'f';
 	} else {
         $oDossier = new dossiersEntity\Dossier($aWhere);

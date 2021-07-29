@@ -344,8 +344,15 @@ if ($_SESSION['oPerm']->have_perm_oficina('est')){
 	}
 }
 
+// Añadir certificados
+if (ConfigGlobal::mi_ambito() == 'r') {
+	$a_botones[]=array( 'txt' => _("imprimir certificado"),
+						'click' =>"fnjs_imp_certificado(\"#seleccionados\")" );
+	$script['fnjs_imp_certificado'] = 1;
+}
+
 // Solo ver e imprimir tessera + certificados
-if (ConfigGlobal::soy_region()) {
+if (ConfigGlobal::mi_ambito() == 'rstgr') {
 	$a_botones = [];
 	$a_botones[]= array( 'txt' => _("ver tessera"),
 						'click' =>"fnjs_tessera(\"#seleccionados\")" ) ;
@@ -360,6 +367,7 @@ if (ConfigGlobal::soy_region()) {
 						'click' =>"fnjs_ficha_profe(\"#seleccionados\")" );
 	$script['fnjs_ficha_profe'] = 1;
 }
+
 // en el caso de los de dre añado la posibilidad de listar la atencion a las actividades
 if (core\configGlobal::is_app_installed('actividadessacd')) {
 	if ($_SESSION['oPerm']->have_perm_oficina('des')){
@@ -406,7 +414,7 @@ foreach ($cPersonas as $oPersona) {
 	if ($obj_pau != 'PersonaEx') {
 		$id_ctr=$oPersona->getId_ctr();
 
-		if (ConfigGlobal::soy_region()) {
+		if (ConfigGlobal::mi_ambito() == 'rstgr') {
 			$oCentroDl = new ubis\Centro($id_ctr);
 		} else {
 			$oCentroDl = new ubis\CentroDl($id_ctr);

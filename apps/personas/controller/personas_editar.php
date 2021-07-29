@@ -100,7 +100,7 @@ if (!empty($Qnuevo)) {
 //	}
 	// para el ctr hay que buscar el nombre
 	if (!empty($id_ctr)) {
-		if (ConfigGlobal::soy_region()) {
+		if (ConfigGlobal::mi_ambito() == 'rstgr') {
 			$oCentroDl = new ubis\Centro($id_ctr);
 		} else {
 			$oCentroDl = new ubis\CentroDl($id_ctr);

@@ -129,8 +129,11 @@ fnjs_guardar=function(formulario){
 <form id="frm_dl_r" name="frm_dl_r" action="">
 {{ oHashDLR.getCamposHtml|raw }}
 <input type="radio" name="valor" value="dl" {{ chk_dl }} >{{ "delegación"|trans }}
-<input type="radio" name="valor" value="r" {{ chk_r }} >{{ "región (tiene personas y actividades)"|trans }}
-<input type="radio" name="valor" value="rstgr" {{ chk_rstgr }} >{{ "región del Stgr (gestiona un conjunto de dl,r)"|trans }}
+<br>
+<input type="radio" name="valor" value="r" {{ chk_r }} >{{ "región: como una dl (tiene personas y actividades) + región del stgr"|trans }}
+<br>
+<input type="radio" name="valor" value="rstgr" {{ chk_rstgr }} >{{ "región del Stgr (gestiona un conjunto de dl,r)(no tiene personas)"|trans }}
+<br>
 <input type="button" value="{{ "guardar"|trans }}" onclick="fnjs_guardar(this.form);" >
 </form>
 <hr>
