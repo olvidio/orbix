@@ -1,7 +1,7 @@
 <?php
 use core\ConfigGlobal;
 use personas\model\entity\GestorPersona;
-use personas\model\entity\PersonaDl;
+use personas\model\entity\Persona;
 use web\Lista;
 use zonassacd\model\entity\GestorZonaSacd;
 use zonassacd\model\entity\Zona;
@@ -82,7 +82,7 @@ switch($Qque) {
 			$a_sacds=array();
 			foreach ($cZonaSacd as $oZonaSacd) {
 				$id_nom = $oZonaSacd->getId_nom();
-				$oPersona = new PersonaDl($id_nom);
+				$oPersona = Persona::NewPersona($id_nom);
 				if ($oPersona->getSituacion() != 'A') continue;
 				if ($oPersona->getDl() != ConfigGlobal::mi_delef()) continue;
 				$ap_nom = $oPersona->getPrefApellidosNombre();
