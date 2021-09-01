@@ -189,7 +189,7 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
 		$num = $num_curso - $num_asignaturas;
 	
 		$ssql = "SELECT p.id_nom, Count(*) as asignaturas
-			FROM $personas p JOIN e_notas_dl n USING (id_nom)
+			FROM $personas p LEFT JOIN e_notas_dl n USING (id_nom)
 			WHERE p.situacion='A'
 			 $condicion $condicion_stgr
 			GROUP BY  p.id_nom 
