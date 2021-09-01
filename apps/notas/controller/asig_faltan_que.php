@@ -46,7 +46,7 @@ $chk_c1 = empty($Qc1)? '' : 'checked';
 $Qc2 = (string) \filter_input(INPUT_POST, 'c2');
 $chk_c2 = empty($Qc2)? '' : 'checked';
 $Qpersonas_n = (string) \filter_input(INPUT_POST, 'personas_n');
-$chk_n = empty($Qpersonas_agd)? '' : 'checked';
+$chk_n = empty($Qpersonas_n)? '' : 'checked';
 $Qpersonas_agd = (string) \filter_input(INPUT_POST, 'personas_agd');
 $chk_agd = empty($Qpersonas_agd)? '' : 'checked';
 

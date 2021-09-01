@@ -188,16 +188,30 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
 		//echo "num = $num_curso<br>";
 		$num = $num_curso - $num_asignaturas;
 	
-		$ssql = "SELECT p.id_nom, Count(*) as asignaturas
+		$ssql = "SELECT p.id_nom, Count(*) as asignaturas, p.apellido1, p.apellido2, p.nom
 			FROM $personas p LEFT JOIN e_notas_dl n USING (id_nom)
 			WHERE p.situacion='A'
 			 $condicion $condicion_stgr
 			GROUP BY  p.id_nom 
 			HAVING Count(*) >= $num AND Count(*) < $num_curso
-			ORDER BY p.apellido1 ";
+			";
 
+        // Si $num =< 0, hay que sumar los que no tienen ninguna asignatura:
+        if ($num < 1 ) {
+            $sql_0 = "SELECT p.id_nom, 0 as asignaturas, p.apellido1, p.apellido2, p.nom
+			FROM $personas p LEFT JOIN e_notas_dl n USING (id_nom)
+			WHERE p.situacion='A'
+			     $condicion_stgr AND n.id_nom IS NULL
+			GROUP BY  p.id_nom 
+			";
+            
+			$sql = "($ssql) UNION ($sql_0) ORDER BY 3,4,5";
+        } else {
+			$sql = "$ssql ORDER BY 3,4,5";
+        }
+			 
 		$aId_nom = array();
-		foreach ( $oDbl->query($ssql) as $row) {
+		foreach ( $oDbl->query($sql) as $row) {
 			$id_nom = $row['id_nom'];
 			if ($lista == false) { // El numero de asignaturas que faltan
 				$aId_nom[$id_nom] = $num_curso - $row['asignaturas'];
