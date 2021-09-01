@@ -4,6 +4,7 @@ use actividades\model\entity\Actividad;
 use actividades\model\entity\GestorActividad;
 use actividadestudios\model\entity\GestorMatriculaDl;
 use asignaturas\model\entity\Asignatura;
+use function core\telecos_persona;
 use personas\model\entity\Persona;
 use web\DateTimeLocal;
 use web\Hash;
@@ -99,24 +100,30 @@ $a_cabeceras=array(
 $i=0;
 $a_valores=array();
 $msg_err = '';
+$id_nom_anterior = '';
 foreach ($cMatriculas as $oMatricula) {
 	$i++;
-	$id_nom=$oMatricula->getId_nom();
-	$id_activ=$oMatricula->getId_activ();
-	$id_asignatura=$oMatricula->getId_asignatura();
+	$id_nom = $oMatricula->getId_nom();
+	$id_activ = $oMatricula->getId_activ();
+	$id_asignatura = $oMatricula->getId_asignatura();
 	$nota_num = $oMatricula->getNota_num();
 	$nota_max = $oMatricula->getNota_max();
 	$nota_txt = empty($nota_num)? '' : "$nota_num/$nota_max";
-	$preceptor=$oMatricula->getPreceptor();
-	if ($preceptor == "t") { 
-		$preceptor="x"; 
-		$id_preceptor=$oMatricula->getId_preceptor();
+	$preceptor = $oMatricula->getPreceptor();
+	if ($preceptor == 't') { 
+		$preceptor = 'x'; 
+		$id_preceptor = $oMatricula->getId_preceptor();
+        $mails_preceptor = '';
 		if (!empty($id_preceptor)) {
 			$oPersona = Persona::newPersona($id_preceptor);
 			if (!is_object($oPersona)) {
 				$msg_err .= "<br>preceptor: $oPersona con id_nom: $id_preceptor en  ".__FILE__.": line ". __LINE__;
 			} else {
 				$preceptor = $oPersona->getPrefApellidosNombre();
+                $mails_preceptor = telecos_persona($id_preceptor,'e-mail','',' / ') ;
+                if (!empty($mails_preceptor)) {
+                    $preceptor .= ' ['.$mails_preceptor.']'; 
+                }
 			}
 		}
 	} else {
@@ -128,17 +135,23 @@ foreach ($cMatriculas as $oMatricula) {
 
 	$oActividad = new Actividad($id_activ);
 	$nom_activ = $oActividad->getNom_activ();
-	$f_ini = $oActividad->getF_ini()->getFromLocal();
 	
-	$oPersona = Persona::newPersona($id_nom);
-	if (!is_object($oPersona)) {
-		$msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
-		continue;
+	if($id_nom != $id_nom_anterior) {
+        $mails_alumno = '';
+        $oPersona = Persona::newPersona($id_nom);
+        if (!is_object($oPersona)) {
+            $msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
+            continue;
+        }
+        $apellidos_nombre = $oPersona->getPrefApellidosNombre();
+        $ctr = $oPersona->getCentro_o_dl();
+        $dl = $oPersona->getDl();
+        $mails_alumno = telecos_persona($id_nom,'e-mail','',' / ') ;
+        if (!empty($mails_alumno)) {
+            $apellidos_nombre .= ' ['.$mails_alumno.']'; 
+        }
 	}
-	$apellidos_nombre = $oPersona->getPrefApellidosNombre();
-	$ctr = $oPersona->getCentro_o_dl();
-	$dl = $oPersona->getDl();
-			
+	
 	$oAsignatura = new Asignatura($id_asignatura);
 	$nombre_corto = $oAsignatura->getNombre_corto();
 	
@@ -152,8 +165,9 @@ foreach ($cMatriculas as $oMatricula) {
 	$a_valores[$i][7]=$nota_txt;
 
 	$a_Nombre[$i] = $apellidos_nombre;
-	$a_Fecha[$i] = $f_ini;
 	$a_Asignatura[$i] = $nombre_corto;
+	
+	$id_nom_anterior = $id_nom;
 }
 
 // ordenar por alumno, asignatura:
