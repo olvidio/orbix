@@ -376,11 +376,33 @@ case "editar": // editar la actividad.
 	$Qh_fin = (string) \filter_input(INPUT_POST, 'h_fin');
 	$Qpublicado = (string) \filter_input(INPUT_POST, 'publicado');
 	
+	// Mirar si puedo cambiar el tipo de actividad:
+	// permiso
+	$_SESSION['oPermActividades']->setActividad($Qid_activ,$Qid_tipo_activ,$Qdl_org);
+	$oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
+	if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('crear') === TRUE) {
+        $Qisfsv_val = (integer) \filter_input(INPUT_POST, 'isfsv_val');
+        $Qiasistentes_val = (integer) \filter_input(INPUT_POST, 'iasistentes_val');
+        $Qiactividad_val = (integer) \filter_input(INPUT_POST, 'iactividad_val');
+        // Puede ser '000' > sin especificar
+        $Qinom_tipo_val = (string) \filter_input(INPUT_POST, 'inom_tipo_val');
+		$condta=$Qisfsv_val.$Qiasistentes_val.$Qiactividad_val.$Qinom_tipo_val;
+		if (!strstr ($condta, '.')) {
+			$valor_id_tipo_activ = $condta;
+		} else {
+			echo _("debe seleccionar un tipo de actividad")."<br>";
+			die();
+		}
+	} else {
+	    $valor_id_tipo_activ=$Qid_tipo_activ;
+	}
+	
+	
 	$oActividad = new actividades\Actividad($Qid_activ);
 	$oActividad->DBCarregar();
 	$plazas_old = $oActividad->getPlazas();
 
-	$oActividad->setId_tipo_activ($Qid_tipo_activ);
+	$oActividad->setId_tipo_activ($valor_id_tipo_activ);
 	if (isset($Qdl_org)) {
 		$dl_orig=$oActividad->getDl_org();
 		$dl_org = strtok($Qdl_org,'#');
