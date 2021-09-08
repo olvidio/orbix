@@ -561,6 +561,15 @@ class Matricula Extends core\ClasePropiedades {
 		$this->inota_max = $inota_max;
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
+	
+	function getNotaSobre() {
+	    $nota_num = $this->getNota_num();
+	    $nota_max = $this->getNota_max();
+	    $nota_escala = empty($nota_num)? '' : "$nota_num [$nota_max]";
+	    //$nota_escala = empty($nota_num)? '' : "$nota_num "._("sobre")." $nota_max";
+	    
+	    return $nota_escala;
+	}
 	/**
 	 * Recupera la nota en forma de text
 	 *

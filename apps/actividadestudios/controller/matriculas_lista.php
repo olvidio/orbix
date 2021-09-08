@@ -106,9 +106,7 @@ foreach ($cMatriculas as $oMatricula) {
 	$id_nom = $oMatricula->getId_nom();
 	$id_activ = $oMatricula->getId_activ();
 	$id_asignatura = $oMatricula->getId_asignatura();
-	$nota_num = $oMatricula->getNota_num();
-	$nota_max = $oMatricula->getNota_max();
-	$nota_txt = empty($nota_num)? '' : "$nota_num/$nota_max";
+	$nota_txt = $oMatricula->getNotaSobre();
 	$preceptor = $oMatricula->getPreceptor();
 	if ($preceptor == 't') { 
 		$preceptor = 'x'; 
