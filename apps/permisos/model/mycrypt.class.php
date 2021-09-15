@@ -136,7 +136,7 @@ Class MyCrypt {
                         // OK
                     } else {
                         //$txt_err = 'probably OK, but may be too short, or a palindrome';
-                        $txt_err = _("Bien, pero poco fuerte: quzá demasiado corto o un palíndromo");
+                        $txt_err = _("Bien, pero poco fuerte: quizá demasiado corto o un palíndromo");
                     }
 	                break;
 	            default:
@@ -157,4 +157,3 @@ Class MyCrypt {
 	}
 	
 }
-?>

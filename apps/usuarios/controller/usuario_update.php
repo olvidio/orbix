@@ -190,6 +190,11 @@ switch($Qque) {
 		$Qusuario = (string) \filter_input(INPUT_POST, 'usuario');
 		$Qpassword = (string) \filter_input(INPUT_POST, 'password');
 		
+		/*
+		$Qusuario = rawUrlDecode($Qusuario_encoded);
+		$Qpassword = rawUrlDecode($Qpassword_encoded);
+		*/
+		
 		if (!empty($Qusuario)) { // si es nuevo no tiene id
             $usuario = $Qusuario;
 		} elseif (!empty($Qid_usuario)) {

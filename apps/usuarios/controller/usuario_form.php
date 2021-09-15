@@ -350,6 +350,7 @@ if ($miRole < 4) {
 	$oHash2->setUrl($url_usuario_update);
 	$oHash2->setCamposForm('que!id_usuario!usuario!password'); 
 	$h2 = $oHash2->linkSinVal();
+	//$h2 = $oHash2->getParamAjaxEnArray();
 	
 	$txt_eliminar = _("¿Está seguro que desea quitar este permiso?");
 	

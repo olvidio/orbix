@@ -68,9 +68,10 @@ fnjs_actualizar=function(formulario){
 }
 
 fnjs_chk_passwd=function(formulario){
-	var password=$('#password').val();
-	var usuario=$('#usuario').val();
+	var password=encodeURIComponent($('#password').val());
+	var usuario=encodeURIComponent($('#usuario').val());
 	var url = 'apps/usuarios/controller/usuario_update.php';
+	debugger;
 	var parametros='que=check_pwd&id_usuario=<?= $id_usuario ?>&usuario='+usuario+'&password='+password+'<?= $h2 ?>';
 	
 	var request=$.ajax({

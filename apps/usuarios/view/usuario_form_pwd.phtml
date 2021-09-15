@@ -1,6 +1,6 @@
 <script>
 fnjs_chk_passwd=function(formulario){
-	var password=$('#password').val();
+	var password=encodeURIComponent($('#password').val());
 	var url = 'apps/usuarios/controller/usuario_update.php';
 	var parametros='que=check_pwd&id_usuario=<?= $id_usuario ?>&password='+password+'<?= $h2 ?>';
 	
@@ -22,8 +22,8 @@ fnjs_chk_passwd=function(formulario){
 
 fnjs_guardar=function(formulario){
 	// si es 0, no se cambia el password.
-	var pwd=$("#password").val();
-	var pwd1=$("#password1").val();
+	var pwd=encodeURIComponent($("#password").val());
+	var pwd1=encodeURIComponent($("#password1").val());
 	
 	if (!pwd) {
 		alert ("<?= _("error: password no válido") ?>");
