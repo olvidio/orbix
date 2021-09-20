@@ -11,13 +11,12 @@
 		}
 	table {
 		border:1px solid #000;
-		border-collapse:collapse;
+        border-collapse:collapse;
 		margin:0;
 		margin-bottom: 1em;
 		padding:6px;
 	}
 	td { 
-		border:1px solid #000;
 		border-collapse:collapse;
 	}
 	td.cabecera { text-align: center;
@@ -71,8 +70,9 @@ foreach($array_modo as $array_modo_sacd) {
 					$modo_txt=_("coordinador");
 					break;
 				case 2:
+				    // Html: se pone el estilo inLine, por que al copiar y pegar no pilla el css.
 					?>
-					<table class=titular border=1>
+					<table class=titular border=1 style="border-collapse:collapse;" >
 					<tr><td class=cabecera_izq><?= $array_modo[$s]['txt']["t_titular"] ?></td>
 						<td class=cabecera><?= $array_modo[$s]['txt']["t_secc"] ?></td>
 						<td class=cabecera><?= $array_modo[$s]['txt']["t_mañanas"] ?></td>
@@ -91,7 +91,7 @@ foreach($array_modo as $array_modo_sacd) {
 					</tr>
 					*/
 					?>
-					<table class=colaborador>
+					<table class=colaborador border=1 style="border-collapse:collapse;">
 					<tr><td class=cabecera_izq><?= $array_modo[$s]['txt']["t_colaborador"] ?></td>
 						<td class=cabecera><?= $array_modo[$s]['txt']["t_secc"] ?></td>
 						<td class=cabecera><?= $array_modo[$s]['txt']["t_mañanas"] ?></td>
@@ -102,7 +102,7 @@ foreach($array_modo as $array_modo_sacd) {
 					break;
 				case 4:
 					?>
-					<table class=suplente>
+					<table class=suplente border=1 style="border-collapse:collapse;">
 					<tr><td class=cabecera_izq><?= $array_modo[$s]['txt']["t_suplente"] ?></td>
 						<td class=cabecera><?= $array_modo[$s]['txt']["t_secc"] ?></td>
 						<td class=cabecera_izq><?= $array_modo[$s]['txt']["t_titular"] ?></td>
