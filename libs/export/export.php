@@ -741,11 +741,11 @@ switch ($_POST['frm_export_tipo']) {
 					$xslt="html2ootext_list_com_ctr.xslt";
 					$conv_style="3";
 					break;
-				case "des/tareas/list_com_sacd.php":
+				case "encargossacd/view/lista_com_sacd.phtml":
 					$xslt="html2ootext_list_com_sacd.xslt";
 					$conv_style="3";
 					break;
-				case "des/com_sacd_activ.php":
+				case "actividadessacd/view/com_sacd_activ_print.phtml":
 					$xslt="html2ootext_com_sacd.xslt";
 					$conv_style="2";
 					break;

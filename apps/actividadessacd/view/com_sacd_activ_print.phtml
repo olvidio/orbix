@@ -8,13 +8,13 @@ fnjs_left_side_hide();
 </script>
 <style type="text/css">
 	body {size:landscape; }
-	div.salta_pag { clear: both;
+	div.salta_pag { 
+	    clear: both;
 		display: block;
 		width: 25cm; 
 		page-break-after:always;
 		font-family: 'Arial';
 		font-size: 12pt; 
-
 		}
 	table { width: 25cm; 
 		}
@@ -35,16 +35,18 @@ fnjs_left_side_hide();
 	    font-weight : bold;
 	 }
 	td.centro { text-align: center; }
-	 p { margin-left: 0;
+	p { margin-left: 0;
 	    font-weight : bold;
-		}
-	 comunicacion {display: block;  padding-left : 15mm;
+	 }
+	comunicacion {display: block;  padding-left : 15mm;
 	 	padding-right : 10mm; 
 	 	padding-top : 10mm; 
 	 	padding-bottom : 10mm; 
-		}
+	 }
 	izquierda { display: block; float: left; text-align: left; }
 	derecha { display: block; float: right; text-align: right; }
+	cabecera { display: block; }
+	pie { display: block; }
 </style>
 <body>
 <?php if ($Qque == "un_sacd") {
@@ -117,10 +119,10 @@ foreach ($array_actividades as $id_nom => $vector) {
 	?>
 	</table>
 	<?php if ($propuesta != "true") { ?>
-        <cabecera>
+        <pie>
         <izquierda>*) <?= $propio ?></izquierda>
         <derecha><?= $lugar_fecha ?></derecha>
-        </cabecera>
+        </pie>
 	<?php } // fin propuesta?>
 	</div>
 <?php

@@ -7,11 +7,13 @@
 		font-family: 'Arial';
 		font-size: 12pt; 
 	}
-	
 	table { width: 17cm; 
-		margin-bottom: 10mm;
+		}
+	table {
 		border:1px solid #000;
 		border-collapse:collapse;
+		margin:0;
+		margin-bottom: 1em;
 		padding:6px;
 	}
 	td { 
@@ -25,29 +27,29 @@
 	    font-weight : bold;
 	 }
 	td.centro { text-align: center; }
-	 p { margin: 0;
-		}
-	 otros { font-weight : bold;
+	p { margin: 0; }
+	otros { font-weight : bold;
 		 margin-left: 0;
-		}
-	 comunicacion { display: block; padding-left : 15mm;
+	 }
+	comunicacion { display: block; padding-left : 15mm;
 	 	padding-right : 10mm; 
 	 	padding-top : 10mm; 
 	 	padding-bottom : 10mm; 
-		}
+	 }
 	izquierda { display: block; float: left; text-align: left; }
 	derecha { display: block; float: right; text-align: right; }
 	cabecera { display: block; }
 	pie { display: block; }
 
 </style>
+<div id='exportar' refe='encargossacd/view/lista_com_sacd.phtml'>
 <?php
 // sacd 
 $s=0;
 foreach($array_modo as $array_modo_sacd) {
 	$s++;
 	?>
-	<div class="salta_pag">
+	<div class="salta_pag" id="<?= $s ?>" >
 	<br />
 	<cabecera>
 		<izquierda><?= $array_modo[$s]['nom_ap'] ?></izquierda>
@@ -70,7 +72,7 @@ foreach($array_modo as $array_modo_sacd) {
 					break;
 				case 2:
 					?>
-					<table class=titular>
+					<table class=titular border=1>
 					<tr><td class=cabecera_izq><?= $array_modo[$s]['txt']["t_titular"] ?></td>
 						<td class=cabecera><?= $array_modo[$s]['txt']["t_secc"] ?></td>
 						<td class=cabecera><?= $array_modo[$s]['txt']["t_mañanas"] ?></td>
@@ -154,3 +156,4 @@ foreach($array_modo as $array_modo_sacd) {
 <?php
 } 
 ?>
+</div>

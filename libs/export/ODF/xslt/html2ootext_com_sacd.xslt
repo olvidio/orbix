@@ -14,7 +14,7 @@ You should have received a copy of the GNU General Public License along with thi
 <office:document-content office:version="1.0"> <office:scripts/>
 	<office:automatic-styles>
 	<style:style style:name="Taula1" style:family="table">
-		<style:table-properties style:width="25.698cm" table:align="margins"/>
+		<style:table-properties style:width="25.698cm" table:align="margins" fo:margin-bottom="1cm"/>
 	</style:style>
 	<style:style style:name="Taula1.A" style:family="table-column">
 		<style:table-column-properties style:column-width="2.4cm" style:rel-column-width="1366*"/>
@@ -254,7 +254,7 @@ You should have received a copy of the GNU General Public License along with thi
  <text:p text:style-name="P7" />
 </xsl:template>
 
-<xsl:template match="cabecera">
+<xsl:template match="cabecera|pie">
  <text:p text:style-name="P1">
  	<xsl:value-of select="./izquierda"/>
   <text:tab />
