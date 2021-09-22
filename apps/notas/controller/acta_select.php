@@ -70,7 +70,7 @@ if (!empty($Qacta)) {
     preg_match ("/^(\d*)(\/)?(\d*)/", $Qacta, $matches);
     if (!empty($matches[1])) {
         // Si es cr, se mira en todas (las suyas):
-        if (ConfigGlobal::mi_ambito() == 'r' OR ConfigGlobal::mi_ambito() == 'rstgr') {
+        if (ConfigGlobal::mi_ambito() == 'rstgr') {
             $oGesDelegaciones = new GestorDelegacion();
             $aDl = $oGesDelegaciones->getArrayDlRegionStgr([$mi_dele]);
             $Qacta_dl = '';
@@ -109,7 +109,7 @@ if (!empty($Qacta)) {
 	
 	$titulo=ucfirst(sprintf(_("lista de actas del curso %s"),$txt_curso));
 	// Si es cr, se mira en todas:
-    if (ConfigGlobal::mi_ambito() == 'r' OR ConfigGlobal::mi_ambito() == 'rstgr') {
+    if (ConfigGlobal::mi_ambito() == 'rstgr') {
             $oGesDelegaciones = new GestorDelegacion();
             $aDl = $oGesDelegaciones->getArrayDlRegionStgr([$mi_dele]);
             $sReg = implode("|",$aDl);
