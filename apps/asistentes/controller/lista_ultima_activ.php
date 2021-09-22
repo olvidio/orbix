@@ -44,7 +44,7 @@ $any=date("Y");
 // Centros
 $aWhereP = [];
 $aOperadorP = [];
-if (!empty($Qid_ubi) AND ($Qid_ubi != 999)){
+if (!empty($Qid_ubi) && ($Qid_ubi != 999)){
     $oCentro = new CentroDl($Qid_ubi);
     $nombre_ubi = $oCentro->getNombre_ubi();
     $aWhereP['id_ctr'] = $Qid_ubi;
@@ -54,24 +54,42 @@ if (!empty($Qid_ubi) AND ($Qid_ubi != 999)){
 }
 
 //// FECHAS
+/* 22.09.21 se cambia (antes era por curso estudios)
+ * 
+ * - vsg/crt/s que han de fer l'intern: haurien de sortir els s (no cel) que fa més de 3 anys que no fan un intern.
+ * - vsg/crt/s que han de fer el crt de cel: haurien de sortir els s cel que fa més de tres anys que no han fet un intern (no cal que sigui el crt de cel).
+ * - vsg/cv s/s que no han anat a la cv/aquest curs: hauria de ser després del 1 de gener de l'any actual.
+ * - vsg/cv s/s que no han anat a la cv/el curs passat:hauria de ser entre 1 de gener de l'any passat i el 31 de desembre de l'any passat
+ * 
+ */
 $aWhereA = [];
 $aOperadorA = [];
 switch ($Qcurso) {
     case 'anterior':
-        $any = $_SESSION['oConfig']->any_final_curs('crt') - 2 ;
-        $QempiezaminIso = core\curso_est("inicio",$any,"crt")->format('Y-m-d');
-        $fecha_ini = core\curso_est("inicio",$any,"crt")->getFromLocal('-');
-        $fecha_fin = core\curso_est("fin",$any,"crt")->getFromLocal('-');
-        $titulo_fecha = sprintf(_("entre %s y %s"),$fecha_ini,$fecha_fin);
+        $any_ini = date('Y') - 1;
+        $any_fin = $any_ini;
         break;
     case 'actual':
-    default:
-        $any = $_SESSION['oConfig']->any_final_curs('crt') - 1 ;
-        $QempiezaminIso = core\curso_est("inicio",$any,"crt")->format('Y-m-d');
-        $fecha = core\curso_est("fin",$any,"crt")->getFromLocal('-');
-        $titulo_fecha = sprintf(_("tras la fecha %s"),$fecha);
+        $any_ini = date('Y');
+        $any_fin = $any_ini;
         break;
+    default:
+        // para los cel (3 años):
+        if ($Qque == "crt_cel" || $Qque == "crt_s") {
+            $any_ini = date('Y') - 3;
+            $any_fin = date('Y');
+        } else {
+            $any_ini = date('Y');
+            $any_fin = $any_ini;
+        }
 }
+$oDateIni = new DateTimeLocal("$any_ini/1/1");
+$oDateFin = new DateTimeLocal("$any_fin/12/31");
+$QempiezaminIso = $oDateIni->getIso();
+$QfinIso = $oDateFin->getIso();
+$fecha_ini = $oDateIni->getFromLocal('-');
+$fecha_fin = $oDateFin->getFromLocal('-');
+$titulo_fecha = sprintf(_("entre %s y %s"),$fecha_ini,$fecha_fin);
 
 //// Tipo Actvividad
 $alert = '';
@@ -88,7 +106,7 @@ switch ($Qque) {
     case "crt_s":
 	    $aWhereA['id_tipo_activ'] = '^141';
 	    $aOperadorA['id_tipo_activ'] = '~';
-		$titulo_actividad = sprintf(_("s no celadores que han asistido por última vez a crt interno"));
+		$titulo_actividad = sprintf(_("s no celadores que NO han asistido al crt interno"));
 		$alert = '*' .sprintf(_("para indicar si es celador, el campo Eap debe contener algo tipo: 'C12'"));
         $aWhereP['eap'] = "COALESCE(eap,'x') !~* 'C\d\d'";
         $aOperadorP['eap'] = 'TXT';
@@ -96,7 +114,7 @@ switch ($Qque) {
     case "crt_cel":
 	    $aWhereA['id_tipo_activ'] = '^141';
 	    $aOperadorA['id_tipo_activ'] = '~';
-		$titulo_actividad = sprintf(_("s celadores que han asistido por última vez a crt interno"));
+		$titulo_actividad = sprintf(_("s celadores que NO han asistido a un crt interno"));
 		$alert = '*' .sprintf(_("para indicar si es celador, el campo Eap debe contener algo tipo: 'C12'"));
         $aWhereP['eap'] = "COALESCE(eap,'x') ~* 'C\d\d'";
         $aOperadorP['eap'] = 'TXT';
@@ -128,7 +146,7 @@ switch ($Qque) {
         $aOperadorUltima = ['f_ini' => '<'];
         $gesActividades = new GestorActividadDl();
         $cActividades = $gesActividades->getActividades($aWhereUltima,$aOperadorUltima);
-        if (is_array($cActividades) && count($cActividades) > 0) {
+        if (is_array($cActividades) && !empty($cActividades)) {
             $oActividadU = $cActividades[0];
             $oFini = $oActividadU->getF_fin();
             $nom_activ = $oActividadU->getNom_activ();
@@ -159,6 +177,8 @@ switch ($Qque) {
         $aOperadorP['ce_fin'] = 'IS NULL';
 		break;
 	break;
+	default:
+	    exit (_("No sé en que tipo de actividad hay que mirar las asistencias"));
 }
 
 $titulo = $titulo_actividad.' '.$titulo_fecha;
@@ -176,11 +196,11 @@ foreach ($cPersonas as $oPersona) {
     $ape_nom = $oPersona->getPrefApellidosNombre();
     
     //Buscar el ctr (si no está en la seleccion)
-    if ($Qid_ubi == 999 OR empty($Qid_ubi)){
+    if ($Qid_ubi == 999 || empty($Qid_ubi)){
         $nombre_ubi = '';
         $id_ctr = $oPersona->getId_ctr();
         $cCentros = $gesCentros->getCentros(['id_ubi' => $id_ctr]);
-        if (is_array($cCentros) && count($cCentros) > 0) {
+        if (is_array($cCentros) && !empty($cCentros)) {
             $nombre_ubi = $cCentros[0]->getNombre_ubi();
         }
     }
@@ -197,7 +217,8 @@ foreach ($cPersonas as $oPersona) {
         $id_tipo_activ = $oActividad->getId_tipo_activ();
         $oFini = $oActividad->getF_ini();
         $f_ini_iso = $oFini->getIso();
-        if ($f_ini_iso > $QempiezaminIso) {
+
+        if ($f_ini_iso >= $QempiezaminIso && $f_ini_iso <= $QfinIso) {
             continue;
         }
         $f_ini = $oFini->getFromLocal();
