@@ -113,12 +113,14 @@ if (empty($Qque)) $Qque = "nagd";
 $aWhereP = [];
 switch ($Qque) {
     case "nagd":
+        $aWhereP['id_tabla'] = '^n|^a';
         $aWhereP['situacion']='A';
         $aWhereP['sacd']='t';
         $aWhereP['dl']=$mi_dele;
         $aWhereP['_ordre']='apellido1,apellido2,nom';
+        $aOperadorP['id_tabla'] = '~';
         $GesPersonas = new GestorPersonaSacd();
-        $cPersonas = $GesPersonas->getPersonas($aWhereP);
+        $cPersonas = $GesPersonas->getPersonas($aWhereP,$aOperadorP);
         break;
     case "sssc":
         $aWhereP['situacion']='A';
@@ -152,8 +154,8 @@ $a_campos = ['oPosicion' => $oPosicion,
 
 $oView = new core\View('actividadessacd/controller');
 echo $oView->render('com_sacd_activ_print.phtml',$a_campos);
-// Añado la lista de los sacd de paso:
 
+// Añado la lista de los sacd de paso:
 if ($Qque != "un_sacd") {
     $aWhereP = [];
     $aWhereP['situacion']='A';

@@ -7,17 +7,13 @@ use web\Desplegable;
 
 class DesplCentros {
     
-    public function _construct() {
-        
-    }
-    
     public function getDesplPorFiltro($filtro_ctr) {
         switch ($filtro_ctr) {
             case 1:
                 $GesCentros = new GestorCentroDl();
                 // añado el ctr de oficiales de la dl (14.VIII.07).
                 //$sql_ctr="SELECT id_ubi,nombre_ubi FROM u_centros_dl WHERE tipo_ctr ~ 'a.|n.|s[j|m]|of' AND status='t' ORDER BY nombre_ubi";
-                $query="WHERE tipo_ctr ~ 'a.|n.|s[j|m]|of' AND status='t'";
+                $query="WHERE tipo_ctr ~ '^a|n|s[jm]|of' AND status='t'";
                 $oDesplCtr = $GesCentros->getListaCentros($query);
                 break;
             case 2:
@@ -26,12 +22,12 @@ class DesplCentros {
                 break;
             case 3:
                 $GesCentros = new GestorCentroDl();
-                $query="WHERE tipo_ctr ~ 'ss' AND status='t'";
+                $query="WHERE tipo_ctr ~ '^ss' AND status='t'";
                 $oDesplCtr = $GesCentros->getListaCentros($query);
                 break;
             case 4:
                 $GesCentros = new GestorCentroDl();
-                $query="WHERE tipo_ctr ~ 'igl' AND status='t'";
+                $query="WHERE tipo_ctr ~ '^igl' AND status='t'";
                 $oDesplCtr = $GesCentros->getListaCentros($query);
                 break;
             case 5:
