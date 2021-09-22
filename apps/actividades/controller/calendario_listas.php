@@ -69,6 +69,11 @@ $aGrupos=array();
 $ver_ctr=empty($Qver_ctr)? 'no' : $Qver_ctr;
 $aWhereCasa = [];
 $aOperadorCasa = [];
+/*
+ * 22.09.2021 Se quita el filtro de tipo_casa = cdc|cdr, para que salgan todas.
+ *		$aWhereCasa['tipo_casa'] = 'cdc|cdr';
+ *		$aOperadorCasa['tipo_casa'] = '~';
+ */
 switch ($Qque) {
 	case "lista_cdc":
 	    // Esta viene de apps/casas/controller/casa_que.php
@@ -80,47 +85,30 @@ switch ($Qque) {
 	        $aWhereCasa['id_ubi'] = $v;
 	        $aOperadorCasa['id_ubi'] = 'ANY';
 	    }
-		//$condicion_perm = "id_ubi = " .implode(' OR id_ubi =',$Qid_cdc);
-		//$aWhere['id_ubi'] = 3;
 		break;
 	case "c_comunes":
 	case "c_comunes_sf":
 	case "c_comunes_sv":
 		// casas comunes: cdr + dlb + sf +sv
 		$tipo="casa";
-		//$condicion_perm ="tipo_ubi='cdcdl' AND sv='t' AND sf='t' AND tipo_casa ~ 'cdc|cdr'";
 		$aWhereCasa['tipo_ubi'] = 'cdcdl';
-		$aWhereCasa['tipo_casa'] = 'cdc|cdr';
-		$aOperadorCasa['tipo_casa'] = '~';
 		$aWhereCasa['sv'] = 't';
 		$aWhereCasa['sf'] = 't';
 		break;
 	case "c_todas":
-		// casas de sv
 		$tipo="casa";
-		//$condicion_perm ="tipo_ubi='cdcdl' AND sv='t' AND tipo_casa ~ 'cdc|cdr'";
 		$aWhereCasa['tipo_ubi'] = 'cdcdl';
-		$aWhereCasa['tipo_casa'] = 'cdc|cdr';
-		$aOperadorCasa['tipo_casa'] = '~';
-		$aWhereCasa['sv'] = 't';
-		$aWhereCasa['sf'] = 't';
 		break;
 	case "c_todas_sf":
-		// casas de sv
+		// casas de sf
 		$tipo="casa";
-		//$condicion_perm ="tipo_ubi='cdcdl' AND sf='t' AND tipo_casa ~ 'cdc|cdr'";
 		$aWhereCasa['tipo_ubi'] = 'cdcdl';
-		$aWhereCasa['tipo_casa'] = 'cdc|cdr';
-		$aOperadorCasa['tipo_casa'] = '~';
 		$aWhereCasa['sf'] = 't';
 		break;
 	case "c_todas_sv":
-		// casas de scalendariov
+		// casas de calendario sv
 		$tipo="casa";
-		//$condicion_perm ="tipo_ubi='cdcdl' AND sv='t' AND tipo_casa ~ 'cdc|cdr'";
 		$aWhereCasa['tipo_ubi'] = 'cdcdl';
-		$aWhereCasa['tipo_casa'] = 'cdc|cdr';
-		$aOperadorCasa['tipo_casa'] = '~';
 		$aWhereCasa['sv'] = 't';
 		break;
 	case "o_actual":
