@@ -585,6 +585,12 @@ if (!empty($Qid_tipo_activ) && ($Qid_tipo_activ[1] != '.')) {
     $oTipoActivCrear = new web\TiposActividades($Qid_tipo_activ);
     $aTiposActiv = $oTipoActivCrear->getArrayAsistentesIndividual();
 }
+// En el caso particular de tener permiso para un tipo más concreto.
+// El $Qid_tipo_activ puede tener puntos (132...) hay que quitarlos
+$txt_tipo_actual = _("del mismo tipo");
+$aTiposActual[$txt_tipo_actual] = str_replace('.', '', $Qid_tipo_activ);
+// para que lo ponga al inicio.
+$aTiposActiv = $aTiposActual + $aTiposActiv;
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,
