@@ -143,7 +143,7 @@ class AsistentePub Extends core\ClasePropiedades {
 
 	 public function buscarAsistencia($id_nom,$id_activ) {
 	    // Comprobar si ya existe la asistencia.
-	    $flag = FLASE;
+	    $flag = FALSE;
 
         // *AsistenteDl
         if ($flag === FALSE) {
