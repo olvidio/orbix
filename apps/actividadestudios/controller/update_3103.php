@@ -1,7 +1,8 @@
 <?php
 use actividades\model\entity as actividades;
-use asistentes\model\entity as asistentes;
 use actividadestudios\model\entity as actividadestudios;
+use asistentes\model\entity as asistentes;
+use asistentes\model\entity\AsistentePub;
 use dossiers\model\entity as dossiers;
 use personas\model\entity as personas;
 // INICIO Cabecera global de URL de controlador *********************************
@@ -45,40 +46,16 @@ if (!empty($a_sel)) { //vengo de un checkbox
 
 switch ($Qmod) {
 	case 'observ_est':  //------------ observaciones estudios --------
-		// hay que averiguar si la persona es de la dl o de fuera.
-		$oPersona = personas\Persona::NewPersona($Qid_nom);
-		if (!is_object($oPersona)) {
-			$msg_err = "<br>$oPersona con id_nom: $Qid_nom en  ".__FILE__.": line ". __LINE__;
-			exit($msg_err);
-		}
-		$obj_persona = get_class($oPersona);
-		$obj_persona = str_replace("personas\\model\\entity\\",'',$obj_persona);
-		// hay que averiguar si la actividad es de la dl o de fuera.
-		$oActividad  = new actividades\Actividad($Qid_activ);
-		// si es de la sf quito la 'f'
-		$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
-		$id_tabla = $oActividad->getId_tabla();
-		$oAsistente = asistentes\Asistente::getClaseAsistente($obj_persona,$dl,$id_tabla);
+	    $oAsistentePub = new AsistentePub();
+	    $oAsistente = $oAsistentePub->getClaseAsistente($Qid_nom,$Qid_activ);
 		$oAsistente->setPrimary_key(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom));
 		$oAsistente->DBCarregar();
 		$oAsistente->setObserv_est($Qobserv_est);
 		$oAsistente->DBGuardar();
 		break;
 	case 'observ':  //------------ observaciones --------
-		// hay que averiguar si la persona es de la dl o de fuera.
-		$oPersona = personas\Persona::NewPersona($Qid_nom);
-		if (!is_object($oPersona)) {
-			$msg_err = "<br>$oPersona con id_nom: $Qid_nom en  ".__FILE__.": line ". __LINE__;
-			exit($msg_err);
-		}
-		$obj_persona = get_class($oPersona);
-		$obj_persona = str_replace("personas\\model\\entity\\",'',$obj_persona);
-		// hay que averiguar si la actividad es de la dl o de fuera.
-		$oActividad  = new actividades\Actividad($Qid_activ);
-		// si es de la sf quito la 'f'
-		$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
-		$id_tabla = $oActividad->getId_tabla();
-		$oAsistente = asistentes\Asistente::getClaseAsistente($obj_persona,$dl,$id_tabla);
+	    $oAsistentePub = new AsistentePub();
+	    $oAsistente = $oAsistentePub->getClaseAsistente($Qid_nom,$Qid_activ);
 		$oAsistente->setPrimary_key(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom));
 		$oAsistente->DBCarregar();
 		$oAsistente->setObserv($Qobserv);
@@ -86,20 +63,8 @@ switch ($Qmod) {
 		break;
 	case 'plan':  //------------ confirmar estudios --------
 		$est_ok = (isset($Qest_ok) && $Qest_ok=='t') ? 't': 'f';
-		// hay que averiguar si la persona es de la dl o de fuera.
-		$oPersona = personas\Persona::NewPersona($Qid_nom);
-		if (!is_object($oPersona)) {
-			$msg_err = "<br>$oPersona con id_nom: $Qid_nom en  ".__FILE__.": line ". __LINE__;
-			exit($msg_err);
-		}
-		$obj_persona = get_class($oPersona);
-		$obj_persona = str_replace("personas\\model\\entity\\",'',$obj_persona);
-		// hay que averiguar si la actividad es de la dl o de fuera.
-		$oActividad  = new actividades\Actividad($Qid_activ);
-		// si es de la sf quito la 'f'
-		$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
-		$id_tabla = $oActividad->getId_tabla();
-		$oAsistente = asistentes\Asistente::getClaseAsistente($obj_persona,$dl,$id_tabla);
+	    $oAsistentePub = new AsistentePub();
+	    $oAsistente = $oAsistentePub->getClaseAsistente($Qid_nom,$Qid_activ);
 		$oAsistente->setPrimary_key(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom));
 		$oAsistente->DBCarregar();
 		$oAsistente->setEst_ok($est_ok);

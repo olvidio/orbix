@@ -1,7 +1,8 @@
 ﻿<?php
-use actividades\model\entity as actividades;
 use actividadcargos\model\entity as actividadcargos;
+use actividades\model\entity as actividades;
 use asistentes\model\entity as asistentes;
+use asistentes\model\entity\AsistentePub;
 use dossiers\model\entity as dossiers;
 use personas\model\entity as personas;
 
@@ -120,8 +121,9 @@ switch ($Qmod) {
 					}
 					break;
 			}
-			$oAsistente=new asistentes\Asistente(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom));
-			$oAsistente->setId_tabla($id_tabla);
+			$oAsistentePub = new AsistentePub();
+			$oAsistente = $oAsistentePub->getClaseAsistente($Qid_nom,$Qid_activ);
+			$oAsistente->setPrimary_key(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom));
 			if ($oAsistente->DBEliminar() === false) {
 				$msg_err = _("hay un error, no se ha eliminado");
 			}

@@ -1,4 +1,7 @@
 <?php
+/*
+ *  Está como include en 'home_persona.phtml' y 'home_ubis.phtml'
+ */
 use core\ConfigGlobal;
 use dossiers\model\entity as dossiersEntity;
 

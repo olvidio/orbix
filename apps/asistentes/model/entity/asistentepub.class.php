@@ -1,7 +1,9 @@
 <?php
 namespace asistentes\model\entity;
+use actividades\model\entity\Actividad;
 use cambios\model\gestorAvisoCambios;
 use core;
+use personas\model\entity\Persona;
 /**
  * Fitxer amb la Classe que accedeix a la taula d_asistentes_de_paso
  *
@@ -138,45 +140,89 @@ class AsistentePub Extends core\ClasePropiedades {
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/* Metode estatic -------------------------------------------------------------- */
 
+
+	 public function buscarAsistencia($id_nom,$id_activ) {
+	    // Comprobar si ya existe la asistencia.
+
+        // AsistenteDl;
+        $gesAsistente = new GestorAsistenteDl();
+        $cAsistentes = $gesAsistente->getAsistentes(['id_nom' => $id_nom, 'id_activ' => $id_activ]);
+        if (is_array($cAsistentes) && !empty($cAsistentes)) {
+            return $cAsistentes[0];
+        }
+        // AsistenteEx';
+        $gesAsistente = new GestorAsistenteEx();
+        $cAsistentes = $gesAsistente->getAsistentes(['id_nom' => $id_nom, 'id_activ' => $id_activ]);
+        if (is_array($cAsistentes) && !empty($cAsistentes)) {
+            return $cAsistentes[0];
+        }
+        // AsistenteOut';
+        $gesAsistente = new GestorAsistenteOut();
+        $cAsistentes = $gesAsistente->getAsistentes(['id_nom' => $id_nom, 'id_activ' => $id_activ]);
+        if (is_array($cAsistentes) && !empty($cAsistentes)) {
+            return $cAsistentes[0];
+        }
+	    return FALSE;    
+	 }
+	 
 	/**
 	 * para saber el nombre de la clase que toca según mi dl, y la dl de la 
 	 * actividad a la que asisto
 	 * 
-	 * @param string $obj_persona
+	 * @param string $id_nom
 	 * @param string $dl dl que organiza la actividad
 	 * @param integer $id_tabla de la actividad
+	 * @param integer optional $id_activ de la actividad
 	 */
-	static function getClaseAsistente($obj_persona,$dl,$id_tabla) {
-		if ($dl == core\ConfigGlobal::mi_delef()) {
-			Switch($obj_persona) {
-				case 'PersonaN':
-				case 'PersonaNax':
-				case 'PersonaAgd':
-				case 'PersonaS':
-				case 'PersonaSSSC':				
-				case 'PersonaDl':
-					$clase = 'asistentes\\model\\entity\\AsistenteDl';
-					break;
-				case 'PersonaIn':
-					// Supongo que sólo debería modificar la dl origen.
-					//$clase = 'asistentes\\model\\entity\\AsistenteIn';
-					// $oAsistente=new asistentes\AsistenteIn(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
-					exit (_("los datos de asistencia los modifica la dl del asistente"));
-					break;
-				case 'PersonaEx':
-					$clase = 'asistentes\\model\\entity\\AsistenteEx';
-					break;
-			}
-		} else {
-		    // Creo que en cualquier caso debe ser un asistente Out.
-		    // El Ex es solo para una persona Ex ?¿
-		    if ($obj_persona == 'PersonaEx') {
-				$clase = 'asistentes\\model\\entity\\AsistenteEx';
-		    } else {
+	public function getClaseAsistente($id_nom,$id_activ) {
+	    $msg_err = '';
+	    // Comprobar si ya existe la asistencia.
+        if ( ($oAsistente = $this->buscarAsistencia($id_nom, $id_activ)) !== FALSE) {
+            return $oAsistente;
+        }
+	    // hay que averiguar si la persona es de la dl o de fuera.
+	    $oPersona = Persona::NewPersona($id_nom);
+	    if (!is_object($oPersona)) {
+	        $msg_err = "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
+	        exit($msg_err);
+	    }
+	    $obj_persona = get_class($oPersona);
+	    $obj_persona = str_replace("personas\\model\\entity\\",'',$obj_persona);
+	    // hay que averiguar si la actividad es de la dl o de fuera.
+	    $oActividad  = new Actividad($id_activ);
+	    // si es de la sf quito la 'f'
+	    $dl = preg_replace('/f$/', '', $oActividad->getDl_org());
+	    
+        if ($dl == core\ConfigGlobal::mi_delef()) {
+            Switch($obj_persona) {
+                case 'PersonaN':
+                case 'PersonaNax':
+                case 'PersonaAgd':
+                case 'PersonaS':
+                case 'PersonaSSSC':				
+                case 'PersonaDl':
+                    $clase = 'asistentes\\model\\entity\\AsistenteDl';
+                    break;
+                case 'PersonaIn':
+                    // Supongo que sólo debería modificar la dl origen.
+                    //$clase = 'asistentes\\model\\entity\\AsistenteIn';
+                    // $oAsistente=new asistentes\AsistenteIn(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+                    exit (_("los datos de asistencia los modifica la dl del asistente"));
+                    break;
+                case 'PersonaEx':
+                    $clase = 'asistentes\\model\\entity\\AsistenteEx';
+                    break;
+            }
+        } else {
+            // Creo que en cualquier caso debe ser un asistente Out.
+            // El Ex es solo para una persona Ex ?¿
+            if ($obj_persona == 'PersonaEx') {
+                $clase = 'asistentes\\model\\entity\\AsistenteEx';
+            } else {
                 $clase = 'asistentes\\model\\entity\\AsistenteOut';
-		    }
-		}
-		return new $clase;
+            }
+        }
+        return new $clase;
 	}
 	 
 	/* CONSTRUCTOR -------------------------------------------------------------- */

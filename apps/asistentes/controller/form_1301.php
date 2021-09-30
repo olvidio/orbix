@@ -29,7 +29,10 @@
 
 use actividades\model\entity as actividades;
 use asistentes\model\entity as asistentes;
+use asistentes\model\entity\AsistentePub;
+use core\ConfigGlobal;
 use personas\model\entity\PersonaEx;
+
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -60,14 +63,8 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $oDesplActividades = array();
 if (!empty($id_activ)) { //caso de modificar
 	$mod="editar";
-	/* Mirar si la actividad es mia o no */
-	$oActividad = new actividades\Actividad(array('id_activ'=>$id_activ));
-	$nom_activ=$oActividad->getNom_activ();
-	// si es de la sf quito la 'f'
-	$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
-	$id_tabla_dl = $oActividad->getId_tabla();
-
-	$oAsistente= asistentes\Asistente::getClaseAsistente($obj_pau, $dl, $id_tabla_dl);
+	$oAsistentePub = new AsistentePub();
+	$oAsistente = $oAsistentePub->getClaseAsistente($Qid_nom,$id_activ);
 	$oAsistente->setPrimary_key(array('id_activ'=>$id_activ,'id_nom'=>$Qid_nom));
 	$obj = get_class($oAsistente);
 	
@@ -79,11 +76,11 @@ if (!empty($id_activ)) { //caso de modificar
 	$plaza=$oAsistente->getPlaza();
 	$propietario=$oAsistente->getPropietario();
 	
-	if (core\configGlobal::is_app_installed('actividadplazas')) {
+	if (ConfigGlobal::is_app_installed('actividadplazas')) {
 		if (!empty($propietario)) {
 			$padre = strtok($propietario,'>');
 			$child = strtok('>');
-			if ( $obj_pau != 'PersonaEx' && $child != core\ConfigGlobal::mi_delef() ) {
+			if ( $obj_pau != 'PersonaEx' && $child != ConfigGlobal::mi_delef() ) {
 				exit (sprintf(_("los datos de asistencia los modifica el propietario de la plaza: %s"),$child));
 			}
 		}
@@ -93,7 +90,7 @@ if (!empty($id_activ)) { //caso de modificar
 	$id_activ_real = '';
 	$nom_activ = '';
 	if (empty($id_tipo)) {
-		$mi_sfsv = core\ConfigGlobal::mi_sfsv();
+		$mi_sfsv = ConfigGlobal::mi_sfsv();
 		$id_tipo='^'.$mi_sfsv;  //caso genérico para todas las actividades
 	} else {
 		$id_tipo = '^'.$id_tipo;
@@ -103,14 +100,14 @@ if (!empty($id_activ)) { //caso de modificar
 	if (!empty($que_dl)) { 
 		$condicion .= " AND dl_org = '$que_dl'";
 	} else {
-		$condicion .= " AND dl_org != '".core\ConfigGlobal::mi_delef()."'";
+		$condicion .= " AND dl_org != '".ConfigGlobal::mi_delef()."'";
 	}
 	
 	$oGesActividades = new actividades\GestorActividad();
 	$oDesplActividades = $oGesActividades->getListaActividadesDeTipo($id_tipo,$condicion);
 	$oDesplActividades->setNombre('id_activ');
 	
-	if (core\configGlobal::is_app_installed('actividadplazas')) {
+	if (ConfigGlobal::is_app_installed('actividadplazas')) {
 		$oDesplActividades->setAction('fnjs_cmb_propietario()');
 	}
 
@@ -129,7 +126,7 @@ $propio_chk = (!empty($propio) && $propio=='t') ? 'checked' : '' ;
 $falta_chk = (!empty($falta) && $falta=='t') ? 'checked' : '' ;
 $est_chk = (!empty($est_ok) && $est_ok=='t') ? 'checked' : '' ;
 
-if (core\configGlobal::is_app_installed('actividadplazas')) {
+if (ConfigGlobal::is_app_installed('actividadplazas')) {
 	$gesAsistentes = new asistentes\GestorAsistente();
 	$oDesplegablePlaza = $gesAsistentes->getPosiblesPlaza();
 	$oDesplegablePlaza->setNombre('plaza');
@@ -154,7 +151,7 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 		$oDesplPosiblesPropietarios = new web\Desplegable('propietario',array(),'');
 	}
 
-	$url_ajax = core\ConfigGlobal::getWeb().'/apps/actividadplazas/controller/gestion_plazas_ajax.php';
+	$url_ajax = ConfigGlobal::getWeb().'/apps/actividadplazas/controller/gestion_plazas_ajax.php';
 	$oHash1 = new web\Hash();
 	$oHash1->setUrl($url_ajax);
 	$oHash1->setCamposForm('que!id_activ!id_nom'); 
@@ -164,7 +161,7 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 
 $oHash = new web\Hash();
 $camposForm = 'observ';
-if (core\configGlobal::is_app_installed('actividadplazas')) {
+if (ConfigGlobal::is_app_installed('actividadplazas')) {
 	$camposForm .= '!plaza!propietario';
 }
 $oHash->setCamposNo('propio!falta!est_ok');

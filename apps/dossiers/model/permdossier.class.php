@@ -20,28 +20,6 @@ class PermDossier {
 		return $rta;
 	}
 
-	function numero_dossiers($pau,$id_pau,$id_tipo_dossier,$oDB) {
-		$sql="SELECT tabla_to FROM d_tipos_dossiers dt WHERE dt.id_tipo_dossier=$id_tipo_dossier";
-		$oDBSt_nom=$oDB->query($sql);
-		$tabla_dossier=$oDBSt_id->fetchColumn();
-		// según sean personas, ubis o actividades:
-		switch ($pau) {
-			case 'p':
-				$condicion="da.id_nom=$id_pau";
-				break;
-			case 'u':
-				$condicion="da.id_ubi=$id_pau";
-				break;
-			case 'a':
-				$condicion="da.id_activ=$id_pau";
-				break;
-		}
-		$q_doss_a="SELECT * FROM $tabla_dossier da WHERE $condicion";
-		$oDBSt_da=$oDB->query($q_doss_a);
-		$n_da=$oDBSt_da->rowCount();
-		return $n_da;
-	}
-
 	function permiso($r,$rw,$depende,$pau,$id_pau){
 		/*	$r = número referente al bit de lectura en decimal
 			$rw = número referente al bit de lectura y escritura en decimal
@@ -127,10 +105,10 @@ class PermDossier {
 								$sv."31" => array ( 'nom'=>"crt agd", 	'perm'=> 0),
 								$sv."41" => array ( 'nom'=>"crt s", 	'perm'=> 1),
 								$sv."71" => array ( 'nom'=>"crt sr", 	'perm'=> 0),
-								$sv."12" => array ( 'nom'=>"ca n", 	'perm'=> 0),
+								$sv."12" => array ( 'nom'=>"ca n", 	    'perm'=> 0),
 								$sv."22" => array ( 'nom'=>"ca nax", 	'perm'=> 0),
 								$sv."33" => array ( 'nom'=>"cv agd", 	'perm'=> 0),
-								$sv."43" => array ( 'nom'=>"cv s", 	'perm'=> 1),
+								$sv."43" => array ( 'nom'=>"cv s", 	    'perm'=> 1),
 								$sv."73" => array ( 'nom'=>"cv sr", 	'perm'=> 0),
 								$sv."14" => array ( 'nom'=>"cve n", 	'perm'=> 0),
 								$sv."23" => array ( 'nom'=>"cv nax", 	'perm'=> 0),
@@ -148,10 +126,10 @@ class PermDossier {
 								$sv."31" => array ( 'nom'=>"crt agd", 	'perm'=> 0),
 								$sv."41" => array ( 'nom'=>"crt s", 	'perm'=> 0),
 								$sv."71" => array ( 'nom'=>"crt sr", 	'perm'=> 1),
-								$sv."12" => array ( 'nom'=>"ca n", 	'perm'=> 0),
+								$sv."12" => array ( 'nom'=>"ca n", 	    'perm'=> 0),
 								$sv."22" => array ( 'nom'=>"ca nax", 	'perm'=> 0),
 								$sv."32" => array ( 'nom'=>"cv agd", 	'perm'=> 0),
-								$sv."43" => array ( 'nom'=>"cv s", 	'perm'=> 0),
+								$sv."43" => array ( 'nom'=>"cv s", 	    'perm'=> 0),
 								$sv."73" => array ( 'nom'=>"cv sr", 	'perm'=> 1),
 								$sv."14" => array ( 'nom'=>"cve n", 	'perm'=> 0),
 								$sv."23" => array ( 'nom'=>"cv nax", 	'perm'=> 0),
@@ -169,10 +147,10 @@ class PermDossier {
 								$sv."31" => array ( 'nom'=>"crt agd", 	'perm'=> 1),
 								$sv."41" => array ( 'nom'=>"crt s", 	'perm'=> 1),
 								$sv."71" => array ( 'nom'=>"crt sr", 	'perm'=> 1),
-								$sv."12" => array ( 'nom'=>"ca n", 	'perm'=> 1),
+								$sv."12" => array ( 'nom'=>"ca n", 	    'perm'=> 1),
 								$sv."22" => array ( 'nom'=>"ca nax", 	'perm'=> 1),
 								$sv."33" => array ( 'nom'=>"cv agd", 	'perm'=> 1),
-								$sv."43" => array ( 'nom'=>"cv s", 	'perm'=> 1),
+								$sv."43" => array ( 'nom'=>"cv s", 	    'perm'=> 1),
 								$sv."73" => array ( 'nom'=>"cv sr", 	'perm'=> 1),
 								$sv."14" => array ( 'nom'=>"cve n", 	'perm'=> 1),
 								$sv."23" => array ( 'nom'=>"cv nax", 	'perm'=> 1),
@@ -183,7 +161,7 @@ class PermDossier {
 								$sv."61" => array ( 'nom'=>"crt sss+",	'perm'=> 1),
 								$sv."63" => array ( 'nom'=>"cv sss+", 	'perm'=> 1),
 								$sv."64" => array ( 'nom'=>"cve sss+",	'perm'=> 1),
-								$sf.".." => array ( 'nom'=>"sf",	'perm'=> 1)
+								$sf.".." => array ( 'nom'=>"sf",	    'perm'=> 1)
 							);
 		$ref_perm = array();
 		switch ($id_tabla) {
@@ -196,11 +174,11 @@ class PermDossier {
 								$sv."31" => array ( 'nom'=>"crt agd", 	'perm'=> 1),
 								$sv."41" => array ( 'nom'=>"crt s", 	'perm'=> 1),
 								$sv."71" => array ( 'nom'=>"crt sr", 	'perm'=> 1),
-								$sv."12" => array ( 'nom'=>"ca n", 	'perm'=> 1),
+								$sv."12" => array ( 'nom'=>"ca n", 	    'perm'=> 1),
 								$sv."22" => array ( 'nom'=>"ca nax", 	'perm'=> 1),
 								$sv."32" => array ( 'nom'=>"sem inv", 	'perm'=> 1),
 								$sv."33" => array ( 'nom'=>"cv agd", 	'perm'=> 1),
-								$sv."43" => array ( 'nom'=>"cv s", 	'perm'=> 1),
+								$sv."43" => array ( 'nom'=>"cv s", 	    'perm'=> 1),
 								$sv."73" => array ( 'nom'=>"cv sr", 	'perm'=> 1),
 								$sv."14" => array ( 'nom'=>"cve n", 	'perm'=> 1),
 								$sv."23" => array ( 'nom'=>"cv nax", 	'perm'=> 1),
@@ -222,11 +200,11 @@ class PermDossier {
 								$sv."31" => array ( 'nom'=>"crt agd", 	'perm'=> 1),
 								$sv."41" => array ( 'nom'=>"crt s", 	'perm'=> 0),
 								$sv."71" => array ( 'nom'=>"crt sr", 	'perm'=> 0),
-								$sv."12" => array ( 'nom'=>"ca n", 	'perm'=> 0),
+								$sv."12" => array ( 'nom'=>"ca n", 	    'perm'=> 0),
 								$sv."22" => array ( 'nom'=>"ca nax", 	'perm'=> 0),
 								$sv."32" => array ( 'nom'=>"sem inv", 	'perm'=> 1),
 								$sv."33" => array ( 'nom'=>"cv agd", 	'perm'=> 1),
-								$sv."43" => array ( 'nom'=>"cv s", 	'perm'=> 0),
+								$sv."43" => array ( 'nom'=>"cv s", 	    'perm'=> 0),
 								$sv."73" => array ( 'nom'=>"cv sr", 	'perm'=> 0),
 								$sv."14" => array ( 'nom'=>"cve n", 	'perm'=> 0),
 								$sv."23" => array ( 'nom'=>"cv nax", 	'perm'=> 0),
@@ -252,11 +230,11 @@ class PermDossier {
 								$sv."31" => array ( 'nom'=>"crt agd", 	'perm'=> 0),
 								$sv."41" => array ( 'nom'=>"crt s", 	'perm'=> 0),
 								$sv."71" => array ( 'nom'=>"crt sr", 	'perm'=> 0),
-								$sv."12" => array ( 'nom'=>"ca n", 	'perm'=> 1),
+								$sv."12" => array ( 'nom'=>"ca n", 	    'perm'=> 1),
 								$sv."22" => array ( 'nom'=>"ca nax", 	'perm'=> 1),
 								$sv."32" => array ( 'nom'=>"sem inv", 	'perm'=> 1),
 								$sv."33" => array ( 'nom'=>"cv agd", 	'perm'=> 1),
-								$sv."43" => array ( 'nom'=>"cv s", 	'perm'=> 0),
+								$sv."43" => array ( 'nom'=>"cv s", 	    'perm'=> 0),
 								$sv."73" => array ( 'nom'=>"cv sr", 	'perm'=> 0),
 								$sv."14" => array ( 'nom'=>"cve n", 	'perm'=> 0),
 								$sv."23" => array ( 'nom'=>"cv nax", 	'perm'=> 0),
@@ -282,11 +260,11 @@ class PermDossier {
 								$sv."31" => array ( 'nom'=>"crt agd", 	'perm'=> 0),
 								$sv."41" => array ( 'nom'=>"crt s", 	'perm'=> 0),
 								$sv."71" => array ( 'nom'=>"crt sr", 	'perm'=> 0),
-								$sv."12" => array ( 'nom'=>"ca n", 	'perm'=> 0),
+								$sv."12" => array ( 'nom'=>"ca n", 	    'perm'=> 0),
 								$sv."22" => array ( 'nom'=>"ca nax", 	'perm'=> 0),
 								$sv."32" => array ( 'nom'=>"sem inv", 	'perm'=> 0),
 								$sv."33" => array ( 'nom'=>"cv agd", 	'perm'=> 0),
-								$sv."43" => array ( 'nom'=>"cv s", 	'perm'=> 0),
+								$sv."43" => array ( 'nom'=>"cv s", 	    'perm'=> 0),
 								$sv."73" => array ( 'nom'=>"cv sr", 	'perm'=> 0),
 								$sv."14" => array ( 'nom'=>"cve n", 	'perm'=> 1),
 								$sv."23" => array ( 'nom'=>"cv nax", 	'perm'=> 0),
@@ -306,11 +284,11 @@ class PermDossier {
 								$sv."31" => array ( 'nom'=>"crt agd", 	'perm'=> 1),
 								$sv."41" => array ( 'nom'=>"crt s", 	'perm'=> 1),
 								$sv."71" => array ( 'nom'=>"crt sr", 	'perm'=> 1),
-								$sv."12" => array ( 'nom'=>"ca n", 	'perm'=> 0),
+								$sv."12" => array ( 'nom'=>"ca n", 	    'perm'=> 0),
 								$sv."22" => array ( 'nom'=>"ca nax", 	'perm'=> 0),
 								$sv."32" => array ( 'nom'=>"sem inv", 	'perm'=> 1),
 								$sv."33" => array ( 'nom'=>"cv agd", 	'perm'=> 1),
-								$sv."43" => array ( 'nom'=>"cv s", 	'perm'=> 1),
+								$sv."43" => array ( 'nom'=>"cv s", 	    'perm'=> 1),
 								$sv."73" => array ( 'nom'=>"cv sr", 	'perm'=> 1),
 								$sv."14" => array ( 'nom'=>"cve n", 	'perm'=> 1),
 								$sv."23" => array ( 'nom'=>"cv nax", 	'perm'=> 0),
@@ -336,11 +314,11 @@ class PermDossier {
 								$sv."31" => array ( 'nom'=>"crt agd", 	'perm'=> 0),
 								$sv."41" => array ( 'nom'=>"crt s", 	'perm'=> 0),
 								$sv."71" => array ( 'nom'=>"crt sr", 	'perm'=> 0),
-								$sv."12" => array ( 'nom'=>"ca n", 	'perm'=> 0),
+								$sv."12" => array ( 'nom'=>"ca n", 	    'perm'=> 0),
 								$sv."22" => array ( 'nom'=>"ca nax", 	'perm'=> 0),
 								$sv."32" => array ( 'nom'=>"sem inv", 	'perm'=> 1),
 								$sv."33" => array ( 'nom'=>"cv agd", 	'perm'=> 1),
-								$sv."43" => array ( 'nom'=>"cv s", 	'perm'=> 0),
+								$sv."43" => array ( 'nom'=>"cv s", 	    'perm'=> 0),
 								$sv."73" => array ( 'nom'=>"cv sr", 	'perm'=> 0),
 								$sv."14" => array ( 'nom'=>"cve n", 	'perm'=> 0),
 								$sv."23" => array ( 'nom'=>"cv nax", 	'perm'=> 0),
@@ -366,10 +344,10 @@ class PermDossier {
 								$sv."31" => array ( 'nom'=>"crt agd", 	'perm'=> 0),
 								$sv."41" => array ( 'nom'=>"crt s", 	'perm'=> 0),
 								$sv."71" => array ( 'nom'=>"crt sr", 	'perm'=> 0),
-								$sv."12" => array ( 'nom'=>"ca n", 	'perm'=> 0),
+								$sv."12" => array ( 'nom'=>"ca n", 	    'perm'=> 0),
 								$sv."22" => array ( 'nom'=>"ca nax", 	'perm'=> 0),
 								$sv."33" => array ( 'nom'=>"cv agd", 	'perm'=> 0),
-								$sv."43" => array ( 'nom'=>"cv s", 	'perm'=> 0),
+								$sv."43" => array ( 'nom'=>"cv s", 	    'perm'=> 0),
 								$sv."73" => array ( 'nom'=>"cv sr", 	'perm'=> 0),
 								$sv."14" => array ( 'nom'=>"cve n", 	'perm'=> 0),
 								$sv."23" => array ( 'nom'=>"cv nax", 	'perm'=> 0),
@@ -389,10 +367,10 @@ class PermDossier {
 								$sv."31" => array ( 'nom'=>"crt agd", 	'perm'=> 0),
 								$sv."41" => array ( 'nom'=>"crt s", 	'perm'=> 0),
 								$sv."71" => array ( 'nom'=>"crt sr", 	'perm'=> 0),
-								$sv."12" => array ( 'nom'=>"ca n", 	'perm'=> 0),
+								$sv."12" => array ( 'nom'=>"ca n", 	    'perm'=> 0),
 								$sv."22" => array ( 'nom'=>"ca nax", 	'perm'=> 0),
 								$sv."33" => array ( 'nom'=>"cv agd", 	'perm'=> 0),
-								$sv."43" => array ( 'nom'=>"cv s", 	'perm'=> 0),
+								$sv."43" => array ( 'nom'=>"cv s", 	    'perm'=> 0),
 								$sv."73" => array ( 'nom'=>"cv sr", 	'perm'=> 0),
 								$sv."14" => array ( 'nom'=>"cve n", 	'perm'=> 0),
 								$sv."23" => array ( 'nom'=>"cv nax", 	'perm'=> 0),
@@ -412,10 +390,10 @@ class PermDossier {
 								$sv."31" => array ( 'nom'=>"crt agd", 	'perm'=> 0),
 								$sv."41" => array ( 'nom'=>"crt s", 	'perm'=> 0),
 								$sv."71" => array ( 'nom'=>"crt sr", 	'perm'=> 1),
-								$sv."12" => array ( 'nom'=>"ca n", 	'perm'=> 0),
+								$sv."12" => array ( 'nom'=>"ca n", 	    'perm'=> 0),
 								$sv."22" => array ( 'nom'=>"ca nax", 	'perm'=> 1),
 								$sv."33" => array ( 'nom'=>"cv agd", 	'perm'=> 0),
-								$sv."43" => array ( 'nom'=>"cv s", 	'perm'=> 0),
+								$sv."43" => array ( 'nom'=>"cv s", 	    'perm'=> 0),
 								$sv."73" => array ( 'nom'=>"cv sr", 	'perm'=> 1),
 								$sv."14" => array ( 'nom'=>"cve n", 	'perm'=> 0),
 								$sv."23" => array ( 'nom'=>"cv nax", 	'perm'=> 1),
@@ -441,10 +419,10 @@ class PermDossier {
 								$sv."31" => array ( 'nom'=>"crt agd", 	'perm'=> 0),
 								$sv."41" => array ( 'nom'=>"crt s", 	'perm'=> 0),
 								$sv."71" => array ( 'nom'=>"crt sr", 	'perm'=> 0),
-								$sv."12" => array ( 'nom'=>"ca n", 	'perm'=> 0),
+								$sv."12" => array ( 'nom'=>"ca n", 	    'perm'=> 0),
 								$sv."22" => array ( 'nom'=>"ca nax", 	'perm'=> 0),
 								$sv."33" => array ( 'nom'=>"cv agd", 	'perm'=> 0),
-								$sv."43" => array ( 'nom'=>"cv s", 	'perm'=> 0),
+								$sv."43" => array ( 'nom'=>"cv s", 	    'perm'=> 0),
 								$sv."73" => array ( 'nom'=>"cv sr", 	'perm'=> 0),
 								$sv."14" => array ( 'nom'=>"cve n", 	'perm'=> 0),
 								$sv."23" => array ( 'nom'=>"cv nax", 	'perm'=> 0),
@@ -510,16 +488,6 @@ class PermDossier {
                                 "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0),
                                 "sssc" => array ( 'nom'=> "sss+", 'obj'=>"PersonaSSSC", 	'perm'=> 0),
                                 "psssc" => array ( 'nom'=> "sss+ de paso", 'obj'=>"PersonaEx&na=sssc", 	'perm'=> 0),
-                            );
-        //para no repetir los permisos comunes a sr,sg est
-        $ref_perm_sg = array (
-                                "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 1),
-                                "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),
-                                "s" => array ( 'nom'=> "s", 'obj'=>"PersonaS", 	'perm'=> 1),
-                                "x" => array ( 'nom'=> "nax", 'obj'=>"PersonaNax",   'perm'=> 0),
-                                "pn" => array ( 'nom'=> "n de paso", 'obj'=>"PersonaEx&na=n", 	'perm'=> 1),
-                                "pa" => array ( 'nom'=> "agd de paso", 'obj'=>"PersonaEx&na=a", 	'perm'=> 0),
-                                "px" => array ( 'nom'=> "nax de paso", 'obj'=>"PersonaEx&na=x", 	'perm'=> 0)
                             );
                             
         $oTipoActiv= new web\TiposActividades($id_tipo_activ);

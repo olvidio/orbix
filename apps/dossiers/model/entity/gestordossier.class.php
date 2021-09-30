@@ -96,7 +96,7 @@ class GestorDossier Extends core\ClaseGestor {
 	function getDossiersQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
 		$oDossierSet = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorDossier.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;

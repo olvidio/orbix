@@ -43,7 +43,7 @@ class GestorTipoDossier Extends core\ClaseGestor {
 	function getTiposDossiersQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
 		$oTipoDossierSet = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorTipoDossier.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;

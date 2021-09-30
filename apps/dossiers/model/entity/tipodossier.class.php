@@ -288,7 +288,7 @@ class TipoDossier Extends core\ClasePropiedades {
 	public function DBEliminar() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_tipo_dossier='$this->iid_tipo_dossier'")) === false) {
+		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_tipo_dossier='$this->iid_tipo_dossier'")) === false) {
 			$sClauError = 'TipoDossier.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;

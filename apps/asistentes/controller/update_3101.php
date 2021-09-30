@@ -30,6 +30,7 @@ use dossiers\model\entity as dossiers;
 use asistentes\model\entity as asistentes;
 use personas\model\entity as personas;
 use core\ConfigGlobal;
+use asistentes\model\entity\AsistentePub;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -65,21 +66,9 @@ if (!empty($a_sel)) { //vengo de un checkbox
 // -------------- funciones -----------------------
 
 function eliminar ($id_activ,$id_nom) {
-	$msg_err = '';
-	// hay que averiguar si la persona es de la dl o de fuera.
-	$oPersona = personas\Persona::NewPersona($id_nom);
-	if (!is_object($oPersona)) {
-		$msg_err = "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
-		exit($msg_err);
-	}
-	$obj_persona = get_class($oPersona);
-	$obj_persona = str_replace("personas\\model\\entity\\",'',$obj_persona);
-	// hay que averiguar si la actividad es de la dl o de fuera.
-	$oActividad  = new actividades\Actividad($id_activ);
-	// si es de la sf quito la 'f'
-	$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
-	$id_tabla = $oActividad->getId_tabla();
-	$oAsistente = asistentes\Asistente::getClaseAsistente($obj_persona,$dl,$id_tabla);
+    $msg_err = '';
+    $oAsistentePub = new AsistentePub();
+	$oAsistente = $oAsistentePub->getClaseAsistente($id_nom,$id_activ);
 	$oAsistente->setPrimary_key(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
 	$oAsistente->DBCarregar();
 	if ($oAsistente->DBEliminar() === false) {
@@ -104,21 +93,10 @@ function plaza($id_nom){
 	$msg_err = '';
 	$id_activ = (string)  filter_input(INPUT_POST, 'id_activ');
 	$plaza = (string)  filter_input(INPUT_POST, 'plaza');
-	// hay que averiguar si la persona es de la dl o de fuera.
-	$oPersona = personas\Persona::NewPersona($id_nom);
-	if (!is_object($oPersona)) {
-		$msg_err = "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
-		exit($msg_err);
-	}
-	$obj_persona = get_class($oPersona);
-	$obj_persona = str_replace("personas\\model\\entity\\",'',$obj_persona);
-	// hay que averiguar si la actividad es de la dl o de fuera.
-	$oActividad  = new actividades\Actividad($id_activ);
-	// si es de la sf quito la 'f'
-	$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
-	$id_tabla = $oActividad->getId_tabla();
-	$oAsistente = asistentes\Asistente::getClaseAsistente($obj_persona,$dl,$id_tabla);
-	$oAsistente->setPrimary_key(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
+
+    $oAsistentePub = new AsistentePub();
+	$oAsistente = $oAsistentePub->getClaseAsistente($id_nom,$id_activ);
+    $oAsistente->setPrimary_key(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
 	$oAsistente->DBCarregar();
 	isset($plaza)? $oAsistente->setPlaza($plaza) : $oAsistente->setPlaza();
 	if ($oAsistente->DBGuardar() === false) {
@@ -129,20 +107,8 @@ function plaza($id_nom){
 
 function editar($id_activ,$id_nom){
 	$msg_err = '';
-	// hay que averiguar si la persona es de la dl o de fuera.
-	$oPersona = personas\Persona::NewPersona($id_nom);
-	if (!is_object($oPersona)) {
-		$msg_err = "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
-		exit($msg_err);
-	}
-	$obj_persona = get_class($oPersona);
-	$obj_persona = str_replace("personas\\model\\entity\\",'',$obj_persona);
-	// hay que averiguar si la actividad es de la dl o de fuera.
-	$oActividad  = new actividades\Actividad($id_activ);
-	// si es de la sf quito la 'f'
-	$dl = preg_replace('/f$/', '', $oActividad->getDl_org());
-	$id_tabla = $oActividad->getId_tabla();
-	$oAsistente = asistentes\Asistente::getClaseAsistente($obj_persona,$dl,$id_tabla);
+    $oAsistentePub = new AsistentePub();
+	$oAsistente = $oAsistentePub->getClaseAsistente($id_nom,$id_activ);
 	$oAsistente->setPrimary_key(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
 	$oAsistente->DBCarregar();
 	

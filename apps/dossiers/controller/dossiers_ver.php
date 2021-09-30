@@ -155,6 +155,7 @@ switch ($pau) {
 		$sQuery = http_build_query(array('id_activ'=>$id_pau,'obj_pau'=>$Qobj_pau));
 		$goHome = Hash::link(ConfigGlobal::getWeb()."/apps/actividades/controller/actividad_ver.php?$sQuery");
 
+		/*
 		// según de donde venga, debo volver al mismo sitio...
 		if (!empty($_SESSION['session_go_to']['sel']['pag'])) {
 			$pag = $_SESSION['session_go_to']['sel']['pag']; //=>"lista_actividades_sg.php",
@@ -164,6 +165,7 @@ switch ($pau) {
 		} else {
 			$form_action=Hash::link(ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_select.php');
 		}
+		*/
 		break;
 }
 		
@@ -178,16 +180,11 @@ echo $oPosicion->mostrar_left_slide(1);
 ?>
 <div id="top">
 <table><tr>
-<td><span class="link" onclick="fnjs_update_div('#main','<?= $godossiers ?>')" ><img src=<?= ConfigGlobal::getWeb_icons() ?>/dossiers.gif border=0 width=40 height=40 alt='<?= $alt ?>'>(<?= $dos ?>)</span></td>
+<td><span class="link" onclick="fnjs_update_div('#main','<?= $godossiers ?>')" ><img src="<?= ConfigGlobal::getWeb_icons() ?>/dossiers.gif" border=0 width=40 height=40 alt='<?= $alt ?>'>(<?= $dos ?>)</span></td>
 <td class="titulo"><?= $titulo ?></td>
 </table>
 </div>
 <?php
-//if (!empty($accion)) {
-//	cerrar_dossier($pau,$id_pau,$id_tipo_dossier,$oDB);
-//	$go_to="dossiers_lista.php?pau=$pau&id_pau=$id_pau&obj_pau=".$Qobj_pau."";
-//	ir_a($go_to);
-//}
 
 // ------------------------- cuerpo -----------------------------
 if (empty($Qid_dossier)) { // enseña la lista de dossiers.
@@ -203,12 +200,8 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
 		$bloque = '#ficha'.$id_dossier;
 		echo "<div id=\"$nom_bloque\">";
 		$oTipoDossier = new dossiers\TipoDossier($id_dossier);
-		$tabla_dossier=$oTipoDossier->getTabla_to();
 		$app=$oTipoDossier->getApp();
 
-		// para el botón editar en la presentación general...
-		if ($Qpermiso==3) { $edit=1; }
-		
 		// Para presentaciones particulares
 		$nameFile = "../../$app/model/select".$id_dossier.".class.php";
 		if (realpath($nameFile)){ //como file_exists
