@@ -143,26 +143,38 @@ class AsistentePub Extends core\ClasePropiedades {
 
 	 public function buscarAsistencia($id_nom,$id_activ) {
 	    // Comprobar si ya existe la asistencia.
+	    $flag = FLASE;
 
-        // AsistenteDl;
-        $gesAsistente = new GestorAsistenteDl();
-        $cAsistentes = $gesAsistente->getAsistentes(['id_nom' => $id_nom, 'id_activ' => $id_activ]);
-        if (is_array($cAsistentes) && !empty($cAsistentes)) {
+        // *AsistenteDl
+        if ($flag === FALSE) {
+            $gesAsistente = new GestorAsistenteDl();
+            $cAsistentes = $gesAsistente->getAsistentes(['id_nom' => $id_nom, 'id_activ' => $id_activ]);
+            if (is_array($cAsistentes) && !empty($cAsistentes)) {
+                $flag = TRUE;
+            }
+	    }
+        // *AsistenteEx
+        if ($flag === FALSE) {
+            $gesAsistente = new GestorAsistenteEx();
+            $cAsistentes = $gesAsistente->getAsistentesEx(['id_nom' => $id_nom, 'id_activ' => $id_activ]);
+            if (is_array($cAsistentes) && !empty($cAsistentes)) {
+                $flag = TRUE;
+            }
+	    }
+        // *AsistenteOut
+        if ($flag === FALSE) {
+            $gesAsistente = new GestorAsistenteOut();
+            $cAsistentes = $gesAsistente->getAsistentesOut(['id_nom' => $id_nom, 'id_activ' => $id_activ]);
+            if (is_array($cAsistentes) && !empty($cAsistentes)) {
+                $flag = TRUE;
+            }
+	    }
+        
+        if ($flag) {
             return $cAsistentes[0];
+        } else {
+            return FALSE;
         }
-        // AsistenteEx';
-        $gesAsistente = new GestorAsistenteEx();
-        $cAsistentes = $gesAsistente->getAsistentes(['id_nom' => $id_nom, 'id_activ' => $id_activ]);
-        if (is_array($cAsistentes) && !empty($cAsistentes)) {
-            return $cAsistentes[0];
-        }
-        // AsistenteOut';
-        $gesAsistente = new GestorAsistenteOut();
-        $cAsistentes = $gesAsistente->getAsistentes(['id_nom' => $id_nom, 'id_activ' => $id_activ]);
-        if (is_array($cAsistentes) && !empty($cAsistentes)) {
-            return $cAsistentes[0];
-        }
-	    return FALSE;    
 	 }
 	 
 	/**
