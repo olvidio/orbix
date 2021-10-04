@@ -190,7 +190,10 @@ switch ($Qque) {
                 $GesEncargos = new GestorEncargo();
                 // Tipos de encargo que son atención centro. No los rt.
                 // 1000,1100,1200,1300
-                $cEncargos = $GesEncargos->getEncargos(array('id_ubi'=>$id_ctr,'id_tipo_enc'=>'1[0123]00'),array('id_tipo_enc'=>'~'));
+                // Todos los 100 (es generico) "sacd del cl"...: 1001
+                $aWhere = ['id_ubi' => $id_ctr, 'id_tipo_enc' => '^1(00|100|200|300)'];
+                $aOperador = ['id_tipo_enc' => '~'];
+                $cEncargos = $GesEncargos->getEncargos($aWhere, $aOperador);
                 if (is_array($cEncargos) && count($cEncargos) > 0) { // puede ser que no haya sacd encargado (dlb, dlbf).
                     // només n'hi hauria d'haver un.
                     $id_enc = $cEncargos[0]->getId_enc();
