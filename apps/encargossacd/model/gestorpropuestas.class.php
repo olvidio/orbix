@@ -521,8 +521,10 @@ class GestorPropuestas {
 	        $desc_encargo = $oEncargo->getDesc_enc();
 	        $id_enc = $oEncargo->getId_enc();
                         
-	        $html .= '<table><tr><td colspan=5>';
-	        $html .= "nom encarrec: $desc_encargo";
+	        $html .= '<table><tr><td>';
+	        $html .= _("nombre del encargo");
+	        $html .= '</td><td colspan=4>';
+	        $html .= $desc_encargo;
 	        $html .= '</td></tr>';
 	        // titular:
 	        $id_sacd = $actual_id_sacd_titular[$e];

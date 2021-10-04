@@ -87,7 +87,7 @@ $a_botones=array( array( 'txt' => _("horario"), 'click' =>"fnjs_horario(\"#selec
 				array( 'txt' => _("eliminar"), 'click' =>"fnjs_borrar(\"#seleccionados\")" ) 
 				);
 
-$a_cabeceras=array( _("sección"),array('name'=>_("descripción"),'formatter'=>'clickFormatter'), _("lugar"), _("descripción lugar"), _("idioma"), _("zona") );
+$a_cabeceras=array( _("sección"),array('name'=>_("descripción"),'formatter'=>'clickFormatter'), _("lugar"), _("descripción lugar"), _("idioma") );
 
 $i=0;
 $a_valores = array();
@@ -101,7 +101,6 @@ foreach ($cEncargos as $oEncargo) {
 	$id_ubi=$oEncargo->getId_ubi();
 	$desc_enc=$oEncargo->getDesc_enc();
 	$desc_lugar=$oEncargo->getDesc_lugar();
-	$id_zona=$oEncargo->getId_zona();
 	
 	$idioma_enc=empty($idioma_enc)? 'ca_ES' : $idioma_enc;
 	
@@ -140,7 +139,6 @@ foreach ($cEncargos as $oEncargo) {
 	$a_valores[$i][3]=$nombre_ubi;
 	$a_valores[$i][4]=$desc_lugar;
 	$a_valores[$i][5]=$idioma;
-	$a_valores[$i][6]=$id_zona;
 }
 
 $aQuery = [ 'que'       =>'nuevo',
