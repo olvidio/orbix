@@ -13,7 +13,7 @@ class DesplCentros {
                 $GesCentros = new GestorCentroDl();
                 // añado el ctr de oficiales de la dl (14.VIII.07).
                 //$sql_ctr="SELECT id_ubi,nombre_ubi FROM u_centros_dl WHERE tipo_ctr ~ 'a.|n.|s[j|m]|of' AND status='t' ORDER BY nombre_ubi";
-                $query="WHERE tipo_ctr ~ '^a|n|s[jm]|of' AND status='t'";
+                $query="WHERE tipo_ctr ~ '^a|n|s[^s]|of' AND status='t'";
                 $oDesplCtr = $GesCentros->getListaCentros($query);
                 break;
             case 2:

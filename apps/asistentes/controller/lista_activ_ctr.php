@@ -107,27 +107,27 @@ $aOperador = [];
 switch ($Qn_agd) {
 	case "a":
 		$tabla="p_agregados";
-		$aWhere['tipo_ctr']='a.*';
+		$aWhere['tipo_ctr']='^a';
 		$aOperador['tipo_ctr']='~';
 		break;
 	case "n":
 		$tabla="p_numerarios";
-		$aWhere['tipo_ctr']='n.*';
+		$aWhere['tipo_ctr']='^n';
 		$aOperador['tipo_ctr']='~';
 		break;
 	case "nm":
 		$tabla="p_n_agd";
-		$aWhere['tipo_ctr']='nm';
+		$aWhere['tipo_ctr']='^nm';
 		$aOperador['tipo_ctr']='~';
 		break;
 	case "nj":
 		$tabla="p_n_agd";
-		$aWhere['tipo_ctr']='nj(ce)*';
+		$aWhere['tipo_ctr']='^nj(ce)*';
 		$aOperador['tipo_ctr']='~';
 		break;
 	case "sssc":
 		$tabla="p_sssc";
-		$aWhere['tipo_ctr']='ss';
+		$aWhere['tipo_ctr']='^ss';
 		$aOperador['tipo_ctr']='~';
 		break;
 	case "c": //otro

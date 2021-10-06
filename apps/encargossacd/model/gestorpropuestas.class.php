@@ -146,7 +146,7 @@ class GestorPropuestas {
 	        case 1:
 	            $GesCentros = new GestorCentroDl();
 	            // añado el ctr de oficiales de la dl (14.VIII.07).
-	            $aWhere['tipo_ctr'] = 'a.|n.|s[j|m]|of';
+	            $aWhere['tipo_ctr'] = '^a|n|s[^s]|of';
                 $aOperador['tipo_ctr'] = '~';
 	            $aWhere['status'] = 't';
 	            $aWhere['_ordre'] = 'nombre_ubi';
@@ -160,7 +160,7 @@ class GestorPropuestas {
 	            break;
 	        case 3:
 	            $GesCentros = new GestorCentroDl();
-	            $aWhere['tipo_ctr'] = 'ss';
+	            $aWhere['tipo_ctr'] = '^ss';
                 $aOperador['tipo_ctr'] = '~';
 	            $aWhere['status'] = 't';
 	            $aWhere['_ordre'] = 'nombre_ubi';
@@ -386,7 +386,7 @@ class GestorPropuestas {
 	        case 1:
 	            $GesCentros = new GestorCentroDl();
 	            // añado el ctr de oficiales de la dl (14.VIII.07).
-	            $aWhere['tipo_ctr'] = 'a.|n.|s[j|m]|of';
+	            $aWhere['tipo_ctr'] = '^a|n|s[^s]|of';
                 $aOperador['tipo_ctr'] = '~';
 	            $aWhere['status'] = 't';
 	            $aWhere['_ordre'] = 'nombre_ubi';
@@ -400,7 +400,7 @@ class GestorPropuestas {
 	            break;
 	        case 3:
 	            $GesCentros = new GestorCentroDl();
-	            $aWhere['tipo_ctr'] = 'ss';
+	            $aWhere['tipo_ctr'] = '^ss';
                 $aOperador['tipo_ctr'] = '~';
 	            $aWhere['status'] = 't';
 	            $aWhere['_ordre'] = 'nombre_ubi';

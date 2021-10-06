@@ -58,7 +58,7 @@ if (!empty($Qperiodo) && $Qperiodo == 'desdeHoy') {
 $GesCentros = new GestorCentroDl();
 if (empty($Qid_ctr_num)) {
 	// Todos los ctr de sg
-	$aWhere = ['tipo_ctr' => '^(s[mj]*)(ce)*$', '_ordre' => 'nombre_ubi'];
+	$aWhere = ['tipo_ctr' => '^s[^s]', '_ordre' => 'nombre_ubi'];
 	$aOperador = ['tipo_ctr' => '~'];
 	$cCentros = $GesCentros->getCentros($aWhere,$aOperador);
 } else {
@@ -69,7 +69,7 @@ if (empty($Qid_ctr_num)) {
 	// puede ser que este todo vacio.
 	if (empty($Qa_id_ctr)) {
         // Todos los ctr de sg
-        $aWhere = ['tipo_ctr' => '^(s[mj]*)(ce)*$', '_ordre' => 'nombre_ubi'];
+        $aWhere = ['tipo_ctr' => '^s[^s]', '_ordre' => 'nombre_ubi'];
         $aOperador = ['tipo_ctr' => '~'];
         $cCentros = $GesCentros->getCentros($aWhere,$aOperador);
 	} else {

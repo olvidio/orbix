@@ -87,17 +87,17 @@ switch ($Qn_agd) {
 		break;
 	case "nm":
 		$tabla="p_n_agd";
-		$aWhereCtr['tipo_ctr'] = 'nm';
+		$aWhereCtr['tipo_ctr'] = '^nm';
 		$aOperadorCtr['tipo_ctr'] = '~';
 		break;
 	case "nj":
 		$tabla="p_n_agd";
-		$aWhereCtr['tipo_ctr'] = 'nj(ce)*';
+		$aWhereCtr['tipo_ctr'] = '^nj(ce)*';
 		$aOperadorCtr['tipo_ctr'] = '~';
 		break;
 	case "sssc":
 		$tabla="p_n_agd";
-		$aWhereCtr['tipo_ctr'] = 'ss';
+		$aWhereCtr['tipo_ctr'] = '^ss';
 		$aOperadorCtr['tipo_ctr'] = '=';
 		break;
 	case "c":

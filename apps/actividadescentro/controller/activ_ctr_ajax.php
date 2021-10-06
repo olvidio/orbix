@@ -121,8 +121,12 @@ switch ($Qque) {
 		$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
 		$Qfin = (string) \filter_input(INPUT_POST, 'fin');
 		$Qf_ini_act = (string) \filter_input(INPUT_POST, 'f_ini_act');
+		
+		$oDateIniAct = DateTimeLocal::createFromLocal($Qf_ini_act);
+		$f_ini_act_iso = $oDateIniAct->getIso(); 
+		
 		$aWhere['status'] = 't';
-		$aWhere['tipo_ctr'] = '^(s[mj]*)(ce)*$';
+		$aWhere['tipo_ctr'] = '^s[^s]';
 		$aWhere['_ordre'] = 'nombre_ubi';
 		$aOperador['tipo_ctr'] = '~';
 		$GesCentros = new GestorCentroDl();
@@ -138,7 +142,7 @@ switch ($Qque) {
 			$num_activ=count($cCtrsEncargados);
 			
 			//próxima actividad
-			$txt_dif = $oGesCtrEncargado->getProximasActividadesDeCentro($id_ubi,$Qf_ini_act);
+			$txt_dif = $oGesCtrEncargado->getProximasActividadesDeCentro($id_ubi,$f_ini_act_iso);
 			$txt_ctr.="<tr><td class=link id=$id_ubi onclick=fnjs_asignar_ctr('$Qid_activ','$id_ubi')> $nombre_ubi</td>";
 			$txt_ctr.="<td>$num_activ</td><td>$txt_dif</td></tr>";
 		}
@@ -156,7 +160,6 @@ switch ($Qque) {
 		foreach ($cCentros as $oCentro) {
 			$id_ubi = $oCentro->getId_ubi();
 			$nombre_ubi = $oCentro->getNombre_ubi();
-			//$txt_ctr.="<tr><td><span class=link id=$id_ubi onclick=fnjs_asignar_ctr('$Qid_activ','$id_ubi')> $nombre_ubi</span></td></tr>";
 			$txt_ctr.="<tr><td class=link id=$id_ubi onclick=fnjs_asignar_ctr('$Qid_activ','$id_ubi')> $nombre_ubi</td></tr>";
 		}
 		$txt="<table><tr><td class=cabecera>"._("centro")."</td></tr>$txt_ctr</table>";
@@ -173,7 +176,6 @@ switch ($Qque) {
 		foreach ($cCentros as $oCentro) {
 			$id_ubi = $oCentro->getId_ubi();
 			$nombre_ubi = $oCentro->getNombre_ubi();
-			//$txt_ctr.="<tr><td><span class=link id=$id_ubi onclick=fnjs_asignar_ctr('$Qid_activ','$id_ubi')> $nombre_ubi</span></td></tr>";
 			$txt_ctr.="<tr><td class=link id=$id_ubi onclick=fnjs_asignar_ctr('$Qid_activ','$id_ubi')> $nombre_ubi</td></tr>";
 		}
 		$txt="<table><tr><td class=cabecera>"._("centro")."</td></tr>$txt_ctr</table>";
@@ -190,7 +192,6 @@ switch ($Qque) {
 		foreach ($cCentros as $oCentro) {
 			$id_ubi = $oCentro->getId_ubi();
 			$nombre_ubi = $oCentro->getNombre_ubi();
-			//$txt_ctr.="<tr><td><span class=link id=$id_ubi onclick=fnjs_asignar_ctr('$Qid_activ','$id_ubi')> $nombre_ubi</span></td></tr>";
 			$txt_ctr.="<tr><td class=link id=$id_ubi onclick=fnjs_asignar_ctr('$Qid_activ','$id_ubi')> $nombre_ubi</td></tr>";
 		}
 		$txt="<table><tr><td class=cabecera>"._("centro")."</td></tr>$txt_ctr</table>";
@@ -201,17 +202,12 @@ switch ($Qque) {
 		$aWhere['status'] = 't';
 		$aWhere['tipo_labor'] = '64'; //sg -> 64
 		$aOperador['tipo_labor'] = '&';
-		/*
-		$aWhere['tipo_ctr'] = '^s';
-		$aOperador['tipo_ctr'] = '~';
-		*/
 		$GesCentros = new GestorCentroEllas();
 		$cCentros = $GesCentros->getCentros($aWhere,$aOperador);
 		$txt_ctr='';
 		foreach ($cCentros as $oCentro) {
 			$id_ubi = $oCentro->getId_ubi();
 			$nombre_ubi = $oCentro->getNombre_ubi();
-			//$txt_ctr.="<tr><td><span class=link id=$id_ubi onclick=fnjs_asignar_ctr('$Qid_activ','$id_ubi')> $nombre_ubi</span></td></tr>";
 			$txt_ctr.="<tr><td class=link id=$id_ubi onclick=fnjs_asignar_ctr('$Qid_activ','$id_ubi')> $nombre_ubi</td></tr>";
 		}
 		$txt="<table><tr><td class=cabecera>"._("centro")."</td></tr>$txt_ctr</table>";
@@ -228,7 +224,6 @@ switch ($Qque) {
 		foreach ($cCentros as $oCentro) {
 			$id_ubi = $oCentro->getId_ubi();
 			$nombre_ubi = $oCentro->getNombre_ubi();
-			//$txt_ctr.="<tr><td><span class=link id=$id_ubi onclick=fnjs_asignar_ctr('$Qid_activ','$id_ubi')> $nombre_ubi</span></td></tr>";
 			$txt_ctr.="<tr><td class=link id=$id_ubi onclick=fnjs_asignar_ctr('$Qid_activ','$id_ubi')> $nombre_ubi</td></tr>";
 		}
 		$txt="<table><tr><td class=cabecera>"._("centro")."</td></tr>$txt_ctr</table>";
