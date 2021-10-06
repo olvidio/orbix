@@ -444,7 +444,7 @@ foreach($cActividades as $oActividad) {
                 $aprobado = $gesActividadProcesoTarea->getSacdAprobado($id_activ);
             }
             if (!core\ConfigGlobal::is_app_installed('procesos')
-                OR ($oPermSacd->have_perm_activ('ver') === true && $aprobado) )
+                || ($oPermSacd->have_perm_activ('ver') === true && $aprobado) )
             {
                 $gesCargosActividad=new actividadcargos\model\entity\GestorActividadCargo();
                 foreach($gesCargosActividad->getActividadSacds($id_activ) as $oPersona) {

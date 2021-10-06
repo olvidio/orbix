@@ -102,15 +102,20 @@ class GestorActividadCargo Extends core\ClaseGestor {
 	        $oPersona = new PersonaSacd($id_nom);
 	        $oPersona->DBCarregar();
 	        if (empty($oPersona->getApellido1())) {
-	            $msg = sprintf(_("se necesita sincronizar (no está en DB-comun) sacd: %s"),$id_nom);
+	            $msg = sprintf(_("se necesita sincronizar (el sacd no está en DB-comun) id_nom: %s"),$id_nom);
 	            $msg .= '<br>';
 	            echo $msg;
                 // si estoy dentro y soy sv, puedo mirar la tabla correcta:
 	            if (ConfigGlobal::is_dmz() === FALSE && ConfigGlobal::mi_sfsv() === 1) {
         	        $oPersona = Persona::NewPersona($id_nom);
+        	        // puede contestar: "no encuentro a nadie"
+        	        if (is_object($oPersona)) {
+                        $oPersonaSet->add($oPersona);
+        	        }
 	            }
+	        } else {
+	           $oPersonaSet->add($oPersona);
 	        }
-	        $oPersonaSet->add($oPersona);
 	    }
 	    return $oPersonaSet->getTot();
 	}
