@@ -49,6 +49,8 @@ if (!empty($a_sel)) { //vengo de un checkbox
     }
 }
 
+echo "<button class='no_print' onclick=\"fnjs_exportar('html');\" >Descargar html</button>";
+echo "<div id=\"exportar\">";
 $Qmodelo = (integer) \filter_input(INPUT_POST, 'modelo');
 switch($Qmodelo) {
     case 2:
@@ -486,6 +488,8 @@ $oPlanning->setMod($mod);
 $oPlanning->setNueva($nueva);
 $oPlanning->setDoble($doble);
 
+// ---------------- html ---------------------------------------------
+echo "<span id=\"span_exportar\"  title=\"$cabecera\">";
 // Listo varios centros.
 if (!empty($buscar_ctr)) {
     $act=0;
@@ -506,3 +510,4 @@ if (!empty($buscar_ctr)) {
 } else {
     echo $oPlanning->dibujar();
 }
+echo "</div>"; //exportar
