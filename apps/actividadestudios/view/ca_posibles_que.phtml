@@ -38,6 +38,12 @@ fnjs_left_side_hide();
 	<tr>
 		<th colspan=2><?= ucfirst(_("ver cuadro de posibles ca")); ?></th>
 	</tr>
+    <tr><td>
+        <input type="checkbox" name="ca_estudios" <?= $chk_estudios ?> ><?= _("ca de estudios") ?>
+        <input type="checkbox" name="ca_repaso" <?= $chk_repaso ?>><?= _("ca de repaso") ?>
+        <input type="checkbox" name="ca_todos" <?= $chk_ca_todos ?>><?= _("todos los ca") ?>
+        </td>
+    </tr>
 	<tr>
 		<td colspan=2><?= _("nota: Para que salgan los ca en el cuadro deben tener introducidas las asignaturas y el campo de nivel de stgr"); ?></td>
 	</tr>

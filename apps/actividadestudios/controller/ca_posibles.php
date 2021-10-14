@@ -4,6 +4,8 @@ use actividadestudios\model\entity as actividadestudios;
 use personas\model\entity as personas;
 use ubis\model\entity as ubis;
 use web\Periodo;
+use function core\is_true;
+
 /**
 * Esta página sirve para calcular los créditos cursables para cada alumno en cada ca.
 *
@@ -44,6 +46,9 @@ $Qgrupo_estudios = (string) \filter_input(INPUT_POST, 'grupo_estudios');
 $Qtexto = (string) \filter_input(INPUT_POST, 'texto');
 $Qref = (string) \filter_input(INPUT_POST, 'ref');
 $Qidca = (string) \filter_input(INPUT_POST, 'idca');
+$Qca_estudios = (string) \filter_input(INPUT_POST, 'ca_estudios');
+$Qca_repaso = (string) \filter_input(INPUT_POST, 'ca_repaso');
+$Qca_todos = (string) \filter_input(INPUT_POST, 'ca_todos');
 
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 // vengo directamente con un id:
@@ -107,6 +112,9 @@ if (!empty($a_sel)) { //vengo de un checkbox
 					'empiezamax'=>$Qempiezamax,
 					'grupo_estudios' => $Qgrupo_estudios,
 					'ref' => $Qref,
+                    'ca_estudios' => $Qca_estudios,
+	                'ca_repaso' => $Qca_repaso,
+	                'ca_todos' => $Qca_todos,
 				);
 	$oPosicion->setParametros($aGoBack,1);
 }
@@ -117,18 +125,44 @@ switch ($Qna) {
 		//caso de agd
 		$id_ctr = ($Qid_ctr_agd==1)? '' : $Qid_ctr_agd; //si es 1 es todos los ctr.
 		$id_tabla_persona='a'; //el id_tabla entra en conflicto con el de actividad
-		$tabla_pau='p_agregados';
 
-		$aWhereActividad['id_tipo_activ'] = '^133';
+		if (is_true($Qca_todos)) {
+            $id_tipo_activ = '^133';
+		} else {
+            $iid_tipo_activ = '';
+            if (is_true($Qca_estudios)) {
+                $iid_tipo_activ .= '01';
+            }
+            if (is_true($Qca_repaso)) {
+                $iid_tipo_activ .= '3';
+            }
+            if (!empty($iid_tipo_activ)) {
+                $id_tipo_activ = '13302['.$iid_tipo_activ.']';
+            }
+		}
+        $aWhereActividad['id_tipo_activ'] = $id_tipo_activ;
 		$aOperadorActividad['id_tipo_activ'] = '~';
 		break;
 	case "n":
 		// caso de n
 		$id_ctr = ($Qid_ctr_n==1)? '' : $Qid_ctr_n; //si es 1 es todos los ctr.
 		$id_tabla_persona='n';
-		$tabla_pau='p_numerarios';
 	
-		$aWhereActividad['id_tipo_activ'] = '^112';
+		if (is_true($Qca_todos)) {
+            $id_tipo_activ = '^112';
+		} else {
+            $iid_tipo_activ = '';
+            if (is_true($Qca_estudios)) {
+                $iid_tipo_activ .= '01';
+            }
+            if (is_true($Qca_repaso)) {
+                $iid_tipo_activ .= '3';
+            }
+            if (!empty($iid_tipo_activ)) {
+                $id_tipo_activ = '11202['.$iid_tipo_activ.']';
+            }
+		}
+        $aWhereActividad['id_tipo_activ'] = $id_tipo_activ;
 		$aOperadorActividad['id_tipo_activ'] = '~';
 	break;
 }

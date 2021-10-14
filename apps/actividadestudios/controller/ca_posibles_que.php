@@ -1,4 +1,5 @@
 <?php
+use function core\is_true;
 use personas\model\entity as personas;
 use ubis\model\entity as ubis;
 // INICIO Cabecera global de URL de controlador *********************************
@@ -23,6 +24,8 @@ if (isset($_POST['stack'])) {
 			$oPosicion2->olvidar($stack);
 		}
 	}
+} else {
+    $stack = '';
 }
 
 $Qna = (string) \filter_input(INPUT_POST, 'na');
@@ -36,6 +39,9 @@ $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
 $Qref = (string) \filter_input(INPUT_POST, 'ref');
 $Qgrupo_estudios = (string) \filter_input(INPUT_POST, 'grupo_estudios');
+$Qca_estudios = (string) \filter_input(INPUT_POST, 'ca_estudios');
+$Qca_repaso = (string) \filter_input(INPUT_POST, 'ca_repaso');
+$Qca_todos = (string) \filter_input(INPUT_POST, 'ca_todos');
 
 
 // Grupo de estudios
@@ -135,7 +141,7 @@ $oFormP->setEmpiezaMax($Qempiezamax);
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('id_ctr_agd!id_ctr_n!texto!empiezamax!empiezamin!periodo!ref!iactividad_val!iasistentes_val!year');
-$oHash->setCamposNo('na!grupo_estudios');
+$oHash->setCamposNo('na!grupo_estudios!ca_estudios!ca_repaso!ca_todos');
 $a_camposHidden = array(
 		'asistentes_val' => 1,
 		'actividades_val' => 2
@@ -150,6 +156,15 @@ if ($Qgrupo_estudios == 'todos') {
 	$chk_grupo = 'checked';
 }
 
+// valor por defecto (si no vengo de vuelts: stack='')
+//if (empty($stack) && empty($Qca_estudios)) { $Qca_estudios = TRUE; }
+//if (empty($stack) && empty($Qca_repaso)) { $Qca_repaso = TRUE; }
+if (empty($stack) && empty($Qca_todos)) { $Qca_todos = TRUE; }
+
+$chk_estudios = is_true($Qca_estudios)? 'checked' : '';
+$chk_repaso = is_true($Qca_repaso)? 'checked' : '';
+$chk_ca_todos = is_true($Qca_todos)? 'checked' : '';
+
 $a_campos = [
 			'oPosicion' => $oPosicion,
 			'oHash' => $oHash,
@@ -162,6 +177,9 @@ $a_campos = [
 			'ref' => $Qref,
 			'chk_todos' => $chk_todos,
 			'chk_grupo' => $chk_grupo,
+			'chk_estudios' => $chk_estudios,
+			'chk_repaso' => $chk_repaso,
+			'chk_ca_todos' => $chk_ca_todos,
 			];
 
 $oView = new core\View('actividadestudios/controller');
