@@ -75,7 +75,7 @@ $res[23] = $Resumen->bienioSinAcabar();
 $a_textos['23'] = ucfirst(_("nº de agd en cuadrienio con bienio pendiente"));
 //23.1 Nº de n en bienio que han superado asignaturas con preceptor
 $res['23.1'] = $Resumen->conPreceptorBienio();
-$a_textos['23.1'] = ucfirst(_("nº de n en bienio que han superado asignaturas con preceptor"));
+$a_textos['23.1'] = ucfirst(_("nº de agd en bienio que han superado asignaturas con preceptor"));
 // 
 // CUADRIENIO
 //24. Agregados en Cuadrienio

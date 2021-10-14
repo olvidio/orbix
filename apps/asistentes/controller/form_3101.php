@@ -39,7 +39,10 @@ use personas\model\entity as personas;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$oPosicion->recordar();
+$Qactualizar = (integer)  \filter_input(INPUT_POST, 'actualizar');
+if (empty($Qactualizar)) {
+    $oPosicion->recordar();
+}
 
 $Qpermiso = (string) \filter_input(INPUT_POST,'permiso');
 
@@ -100,7 +103,6 @@ if (!empty($Qid_nom)) { //caso de modificar
 		    $obj_pau = 'PersonaEx';
 		    break;
 	}
-	//$obj_pau = str_replace("personas\\model\\entity\\",'',get_class($oPersona));
 	
 	$ape_nom = $oPersona->getPrefApellidosNombre();
 	$id_nom_real = $Qid_nom;
@@ -190,8 +192,6 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 	if ($obj_pau === 'PersonaEx') {
 		if (!empty($id_nom)) { //caso de modificar
 			$dl_de_paso = $oPersona->getDl();
-		} else {
-		
 		}
 	}
 	$gesActividadPlazas = new \actividadplazas\model\GestorResumenPlazas();
@@ -204,7 +204,6 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 	$oHash1 = new web\Hash();
 	$oHash1->setUrl($url_ajax);
 	$oHash1->setCamposForm('que!id_activ!id_nom'); 
-	//$oHash1->setCamposNo('id_nom'); 
 	$h1 = $oHash1->linkSinVal();
 }
 
@@ -217,6 +216,7 @@ $a_camposHidden = array(
 		'id_activ' => $Qid_activ,
 		'obj_pau'=> $obj_pau,
 		'mod' => $mod,
+		'actualizar' => 0,
 		);
 if (!empty($id_nom_real)) {
 	$a_camposHidden['id_nom'] = $id_nom_real;
@@ -226,7 +226,7 @@ if (!empty($id_nom_real)) {
 $oHash->setcamposForm($camposForm);
 $oHash->setArraycamposHidden($a_camposHidden);
 // EN el caso de guradar y añadir uno nuevo, se pone id_nom=0.
-$oHash->setCamposNo('id_nom!propio!falta!est_ok');
+$oHash->setCamposNo('actualizar!id_nom!propio!falta!est_ok');
 
 
 //$oPosicion->addParametro('mod',$mod,0);

@@ -42,6 +42,7 @@ fnjs_guardar=function(formulario,repetir){
 				} else {
 					if (repetir == 1) {
 						$('#id_nom').val(0);
+						$('#actualizar').val(1);
 						fnjs_nuevo(formulario);
 					} else {
 						<?= $oPosicion->js_atras(1); ?>
