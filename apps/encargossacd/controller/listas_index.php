@@ -32,7 +32,13 @@ if (is_array($aQuery)) { array_walk($aQuery, 'core\poner_empty_on_null'); }
 $url_lista_bf = web\Hash::link('apps/encargossacd/controller/listas_b.php?'.http_build_query($aQuery));
 
 $url_lista_c = web\Hash::link('apps/encargossacd/controller/listas_c.php');
-$url_lista_d = web\Hash::link('apps/encargossacd/controller/listas_d.php');
+
+$aQuery = ['sf' => 0];
+// el hppt_build_query no pasa los valores null
+if (is_array($aQuery)) { array_walk($aQuery, 'core\poner_empty_on_null'); }
+$url_lista_d = web\Hash::link('apps/encargossacd/controller/listas_d.php?'.http_build_query($aQuery));
+$aQuery = ['sf' => 1];
+$url_lista_df = web\Hash::link('apps/encargossacd/controller/listas_d.php?'.http_build_query($aQuery));
 
 
 $aQuery = ['ctr_igl' => 'ctr'];
@@ -72,6 +78,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_lista_bf' => $url_lista_bf,
     'url_lista_c' => $url_lista_c,
     'url_lista_d' => $url_lista_d,
+    'url_lista_df' => $url_lista_df,
     'url_lista_ctr' => $url_lista_ctr,
     'url_lista_ctrf' => $url_lista_ctrf,
     'url_lista_igl' => $url_lista_igl,

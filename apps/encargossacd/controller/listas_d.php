@@ -12,7 +12,7 @@ use web\DateTimeLocal;
 use zonassacd\model\entity\GestorZona;
 use zonassacd\model\entity\GestorZonaGrupo;
 
-/* Listado de ateción sacd. según cr 9/05, Anexo2,9.4 c) 
+/* Listado de ateción sacd. según cr 9/20, 10 
 *
 *@package	delegacion
 *@subpackage	des
@@ -31,13 +31,15 @@ require_once ("apps/core/global_object.inc");
 
 $oEncargoFunciones = new EncargoFunciones();
 
+$Qsf = (integer) \filter_input(INPUT_POST, 'sf');
+
 $any=  $_SESSION['oConfig']->any_final_curs('crt');
 $inicurs=core\curso_est("inicio",$any,"crt")->getFromLocal();
 $fincurs=core\curso_est("fin",$any,"crt")->getFromLocal();
 
 $cabecera_left  = sprintf(_("Curso:  %s - %s"),$inicurs,$fincurs);
 $cabecera_right = ConfigGlobal::mi_delef();
-$cabecera_right_2=_("ref. cr 1/14, 10, d)");
+$cabecera_right_2=_("ref. cr 9/20, 10)");
 
 // ciudad de la dl
 $oEncargoFunciones = new EncargoFunciones();
@@ -60,7 +62,8 @@ function oficial_dl($id_nom) {
 }
 */
 
-if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+$permiso_sf='';
+if ($Qsf == 1 && ( ($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des')) )) {
 	$permiso_sf="si";
 }
 
@@ -88,6 +91,7 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
 		$cCentrosDl = $GesCentrosDl->getCentros(array('id_zona'=>$id_zona));
 		foreach ($cCentrosDl as $oCentroDl) {
 			$id_ubi = $oCentroDl->getId_ubi();
+		                
 			$GesPersonas = new GestorPersonaDl();
 			$cPersonas = $GesPersonas->getPersonas(array('id_ctr'=>$id_ubi,'situacion'=>'A','sacd'=>'t','_ordre'=>'apellido1,apellido2,nom')); 
 			// Bucle por cada sacd
@@ -149,77 +153,86 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
 							$modo_txt="colaborador de";
 							break;
 					}
-					switch ($id_tipo_enc) {
-						case 1100:
-							//$sv_txt.=trim(", $modo_txt: $nombre_ubi $dedicacion_txt");
-							$sv_txt.=  "<td>".trim("$nombre_ubi") ."</td><td>".trim("$dedicacion_txt")."</td>";
-							$a_dedicacion[3][$id_enc] = ['labor' => $nombre_ubi, 'horas' => $dedicacion_txt];
-							break;
-						case 1200:
-							if ($permiso_sf=="si") {
-								$sf_txt.=trim(", $modo_txt: $nombre_ubi $dedicacion_txt");
-								$a_dedicacion[4][$id_enc] = ['labor' => $nombre_ubi, 'horas' => $dedicacion_txt];
-							} else {
-								switch($modo) {
-									case 3:
-										$sf_ctr[3]++;
-										break;
-									case 4:
-									case 5:
-										$sf_ctr[4]++;
-										break;
-								}
-							}
-							break;
-						case 1300:
-							//$sssc_txt.=trim(", $modo_txt: $nombre_ubi $dedicacion_txt");
-							$sssc_txt.=  "<td>".trim("$nombre_ubi") ."</td><td>".trim("$dedicacion_txt")."</td>";
-							$a_dedicacion[5][$id_enc] = ['labor' => $nombre_ubi, 'horas' => $dedicacion_txt];
-							break;
-						case 2100:
-							//$sv_txt.=trim(", $modo_txt: $nombre_ubi $dedicacion_txt");
-							$sv_txt.=  "<td>".trim("$nombre_ubi") ."</td><td>".trim("$dedicacion_txt")."</td>";
-							$a_dedicacion[6][$id_enc] = ['labor' => $nombre_ubi, 'horas' => $dedicacion_txt];
-							break;
-						case 2200:
-							if ($permiso_sf=="si") {
-								$sf_txt.=trim(", $modo_txt: $nombre_ubi $dedicacion_txt");
-								$a_dedicacion[7][$id_enc] = ['labor' => $nombre_ubi, 'horas' => $dedicacion_txt];
-							} else {
-								switch($modo) {
-									case 3:
-										$sf_cgi[3]++;
-										break;
-									case 4:
-									case 5:
-										$sf_cgi[4]++;
-										break;
-								}
-							}
-							break;
-						case 3000:
-							$sv_txt.=trim(", $modo_txt: $nombre_ubi $dedicacion_txt");
-							$a_dedicacion[8][$id_enc] = ['labor' => $nombre_ubi, 'horas' => $dedicacion_txt];
-							break;
-						case 5020:
-							//$sv_txt.=trim(", estudio: $nombre_ubi $dedicacion_txt");
-							$sv_txt.=  "<td>"._("estudio") ."</td><td>".trim("$dedicacion_txt")."</td>";
-							$a_dedicacion[1][$id_enc] = ['labor' => 'estudio', 'horas' => $dedicacion_txt];
-							break;
-						case 5030:
-							//$sv_txt.=trim(", descanso: $nombre_ubi $dedicacion_txt");
-							$sv_txt.=  "<td>"._("descanso") ."</td><td>".trim("$dedicacion_txt")."</td>";
-							$a_dedicacion[2][$id_enc] = ['labor' => 'descanso', 'horas' => $dedicacion_txt];
-							break;
-						case 6000:
-							$a_dedicacion[9][$id_enc] = ['labor' => 'otros', 'horas' => $dedicacion_txt];
-							break;
+					// 2021-10-15 Agrupar por sv / sf
+					
+					if (empty($Qsf)) {
+                        switch ($id_tipo_enc) {
+                            case 1100:
+                                //$sv_txt.=trim(", $modo_txt: $nombre_ubi $dedicacion_txt");
+                                $sv_txt.=  "<td>".trim("$nombre_ubi") ."</td><td>".trim("$dedicacion_txt")."</td>";
+                                $a_dedicacion[3][$id_enc] = ['labor' => $nombre_ubi, 'horas' => $dedicacion_txt];
+                                break;
+                            case 1300:
+                                //$sssc_txt.=trim(", $modo_txt: $nombre_ubi $dedicacion_txt");
+                                $sssc_txt.=  "<td>".trim("$nombre_ubi") ."</td><td>".trim("$dedicacion_txt")."</td>";
+                                $a_dedicacion[5][$id_enc] = ['labor' => $nombre_ubi, 'horas' => $dedicacion_txt];
+                                break;
+                            case 3000:
+                                $sv_txt.=trim(", $modo_txt: $nombre_ubi $dedicacion_txt");
+                                $a_dedicacion[8][$id_enc] = ['labor' => $nombre_ubi, 'horas' => $dedicacion_txt];
+                                break;
+                            case 5020:
+                                //$sv_txt.=trim(", estudio: $nombre_ubi $dedicacion_txt");
+                                $sv_txt.=  "<td>"._("estudio") ."</td><td>".trim("$dedicacion_txt")."</td>";
+                                $a_dedicacion[1][$id_enc] = ['labor' => 'estudio', 'horas' => $dedicacion_txt];
+                                break;
+                            case 5030:
+                                //$sv_txt.=trim(", descanso: $nombre_ubi $dedicacion_txt");
+                                $sv_txt.=  "<td>"._("descanso") ."</td><td>".trim("$dedicacion_txt")."</td>";
+                                $a_dedicacion[2][$id_enc] = ['labor' => 'descanso', 'horas' => $dedicacion_txt];
+                                break;
+                            case 6000:
+                                $a_dedicacion[9][$id_enc] = ['labor' => 'otros', 'horas' => $dedicacion_txt];
+                                break;
+                            case 2100:
+                                //$sv_txt.=trim(", $modo_txt: $nombre_ubi $dedicacion_txt");
+                                $sv_txt.=  "<td>".trim("$nombre_ubi") ."</td><td>".trim("$dedicacion_txt")."</td>";
+                                $a_dedicacion[6][$id_enc] = ['labor' => $nombre_ubi, 'horas' => $dedicacion_txt];
+                                break;
+                        }
+					} else {
+                        switch ($id_tipo_enc) {
+                            case 1200:
+                                if ($permiso_sf=="si") {
+                                    $sf_txt.=trim(", $modo_txt: $nombre_ubi $dedicacion_txt");
+                                    $a_dedicacion[4][$id_enc] = ['labor' => $nombre_ubi, 'horas' => $dedicacion_txt];
+                                } else {
+                                    switch($modo) {
+                                        case 3:
+                                            //$sf_ctr[3]++;
+                                            break;
+                                        case 4:
+                                        case 5:
+                                            //$sf_ctr[4]++;
+                                            break;
+                                    }
+                                }
+                                break;
+                            case 2200:
+                                if ($permiso_sf=="si") {
+                                    $sf_txt.=trim(", $modo_txt: $nombre_ubi $dedicacion_txt");
+                                    $a_dedicacion[7][$id_enc] = ['labor' => $nombre_ubi, 'horas' => $dedicacion_txt];
+                                } else {
+                                    switch($modo) {
+                                        case 3:
+                                            //$sf_cgi[3]++;
+                                            break;
+                                        case 4:
+                                        case 5:
+                                            //$sf_cgi[4]++;
+                                            break;
+                                    }
+                                }
+                            break;
+                        }
 					}
 				}
                 /* DESACTIVADO CARGOS
 				// oficiales de dl.
 				if ($of=oficial_dl($id_nom)) $sv_txt.="<br>".ConfigGlobal::$dele.": $of";
                 */
+				
+				/*
 				// sf
 				if ($permiso_sf=="si") {
 					$sf_txt=substr($sf_txt,2);
@@ -247,10 +260,19 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
 
 					$sf_txt=substr($sf_txt,2);
 				}
+				*/
+				
 				ksort($a_dedicacion);
 				// para ordenar por apellidos, pero en toda la zona (no sólo el ctr), lo pongo en un array.
 				//$a_sacd[$nom_orden] = "<tr><td class=centro>$nom_ap</td>$sv_txt $sssc_txt<td class=sf>$sf_txt</td></tr>";
-				$a_sacd[$nom_orden] = ['nom' => $nom_ap, 'poblacion' => $poblacion, 'dedicacion' => $a_dedicacion];
+				if ($Qsf == 1) {
+				    if (!empty($a_dedicacion)) {
+                        $a_sacd[$nom_orden] = ['nom' => $nom_ap, 'poblacion' => $poblacion, 'dedicacion' => $a_dedicacion];
+                    }
+				} else {
+                    $a_sacd[$nom_orden] = ['nom' => $nom_ap, 'poblacion' => $poblacion, 'dedicacion' => $a_dedicacion];
+				}
+				
 
 			}
 		}

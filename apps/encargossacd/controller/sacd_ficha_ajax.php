@@ -462,6 +462,8 @@ switch ($Qque) {
 				$aOperador['f_fin'] = 'IS NULL';
 				$aOperador['modo'] = '~';
 				$cEncargosSacd = $GesEncargoSacd->getEncargosSacd($aWhere,$aOperador);
+				if (empty($cEncargosSacd)) { continue; }
+				
 				if (count($cEncargosSacd)>1) { echo _("Error con las tareas \n"); print_r($cEncargosSacd); }
 				foreach ($cEncargosSacd as $oEncargoSacd) { // se supone que sólo hay uno.
 					$id_item_t_sacd=$oEncargoSacd->getId_item();
