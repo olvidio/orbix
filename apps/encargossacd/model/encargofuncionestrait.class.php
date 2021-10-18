@@ -66,7 +66,7 @@ Trait EncargoFuncionesTrait {
             case 0:
                 // Puede ser el nombre de la región
                 $cCentros = $oGesCentrosDl->getCentros(['tipo_ctr' => 'cr']);
-                if (count($cCentros) > 0) {
+                if (!empty($cCentros) ) {
                     $oCentro = $cCentros[0];
                 } else {
                     // No existe el nombre de la delegacion ni región.
@@ -105,63 +105,12 @@ Trait EncargoFuncionesTrait {
      */
     
     function getF_ini() {
-        $oDate = new DateTimeLocal(date('Y-m-d')); // sólo el dia, sin la hora
-        return $oDate;
+        return new DateTimeLocal(date('Y-m-d')); // sólo el dia, sin la hora
     }
     
     function getF_fin() {
-        $oDate = new DateTimeLocal(date('Y-m-d')); // sólo el dia, sin la hora
-        return $oDate;
+        return new DateTimeLocal(date('Y-m-d')); // sólo el dia, sin la hora
     }
-    
-	/*
-				// create new ConfigMagik-Object
-				$Config = new ConfigMagik( "encargos.ini", true, true);
-				$Config->SYNCHRONIZE      = false;
-
-				$f_ini_proves=$Config->get("f_ini_proves","encargos");
-				$f_fin_proves=$Config->get("f_fin_proves","encargos");
-
-				if (!empty($f_ini_proves)) {
-					$oFiniProves = DateTime::createFromFormat('j/m/Y', $f_ini_proves);
-					$ts_f_ini_proves=$oFiniProves->getTimestamp();
-				}
-				if (!empty($f_fin_proves)) {
-					$oFfinProves = DateTime::createFromFormat('j/m/Y', $f_fin_proves);
-					$ts_f_fin_proves=$oFfinProves->getTimestamp();
-				}
-				$ts_hoy=time();
-				$hoy=date('d/m/Y');
-
-				$pruebas=0;
-				$fase= _("En fase real");
-				if (empty($f_ini_proves) && empty($f_fin_proves)) {
-					$pruebas=0;
-					$fase= _("En fase real");
-				} elseif ($ts_hoy>=$ts_f_ini_proves && $ts_hoy<$ts_f_fin_proves) {
-					$pruebas=1;
-					$fase= _("En fase de pruebas");
-				}
-
-				// Durante el periodo de propuestas:
-				if ($pruebas==1) {
-					$f_ini=$f_fin_proves;
-				} else {
-					$f_ini=$hoy;
-				}
-
-				$f_fin=$hoy;
-
-				// para la variable del curso actual
-				if (date("m")>6) { 
-					$any1=date("Y");
-					$any2=$any1+1;
-				} else {
-					$any2=date("Y");
-					$any1=$any2-1;
-				}
-				$curso="$any1-$any2";
-	 */
 
 	// permiso para sf:
 	function getArraySeccion() {
@@ -312,7 +261,7 @@ Trait EncargoFuncionesTrait {
     }
 
     function insert_horario_ctr($id_enc,$modulo,$dedicacion,$n_sacd) {
-        if (empty($n_sacd)) $n_sacd=1;
+        if (empty($n_sacd)) { $n_sacd=1; }
         $oEncargoHorario = new EncargoHorario();
         $oEncargoHorario->setid_enc($id_enc);
         $oEncargoHorario->setF_ini($this->getF_ini());
@@ -326,7 +275,7 @@ Trait EncargoFuncionesTrait {
         }
     }
     function modificar_horario_ctr($id_enc,$modulo,$dedicacion,$n_sacd) {
-        if (empty($n_sacd)) $n_sacd=1;
+        if (empty($n_sacd)) { $n_sacd=1; }
 
         $GesEncargoHorario = new GestorEncargoHorario();
         $aWhere['id_enc'] = $id_enc;
@@ -335,7 +284,7 @@ Trait EncargoFuncionesTrait {
         $aOperador['f_fin'] = 'IS NULL';
         $cEncargoHorarios = $GesEncargoHorario->getEncargoHorarios($aWhere,$aOperador);
         if (is_array($cEncargoHorarios ) && count($cEncargoHorarios ) == 0) {
-            if (!empty($dedicacion)) $this->insert_horario_ctr($id_enc,$modulo,$dedicacion,$n_sacd);
+            if (!empty($dedicacion)) { $this->insert_horario_ctr($id_enc,$modulo,$dedicacion,$n_sacd); }
         } else {
             $cEncargoHorarios[0]->DBCarregar(); 
             $dia_inc = $cEncargoHorarios[0]->getDia_inc();
@@ -381,6 +330,7 @@ Trait EncargoFuncionesTrait {
             }
         }
     }
+    
     function modificar_horario_sacd($id_item_t_sacd,$id_enc,$id_nom,$modulo,$dedicacion) {
         $GesEncargoSacdHorario = new GestorEncargoSacdHorario();
         $aWhere['id_enc'] = $id_enc;
@@ -389,18 +339,27 @@ Trait EncargoFuncionesTrait {
         $aWhere['f_fin'] = 'x';
         $aOperador['f_fin'] = 'IS NULL';
         $cEncargoSacdHorario = $GesEncargoSacdHorario->getEncargoSacdHorarios($aWhere,$aOperador);
-        if (is_array($cEncargoSacdHorario ) && count($cEncargoSacdHorario ) == 0) {
-            if (!empty($dedicacion)) $this->insert_horario_sacd($id_item_t_sacd,$id_enc,$id_nom,$modulo,$dedicacion);
+        if (is_array($cEncargoSacdHorario ) && empty($cEncargoSacdHorario) ) {
+            if (!empty($dedicacion)) { $this->insert_horario_sacd($id_item_t_sacd,$id_enc,$id_nom,$modulo,$dedicacion); }
         } else {
             $id_item = $cEncargoSacdHorario[0]->getId_item(); 
             $dia_inc = $cEncargoSacdHorario[0]->getDia_inc();
             if (!empty($dedicacion)) {
-                if ($dia_inc!=$dedicacion) {
-                    $cEncargoSacdHorario[0]->setF_fin($this->getF_fin());
-                    if ($cEncargoSacdHorario[0]->DBGuardar() === false) {
-                        echo _("hay un error, no se ha guardado");
+                if ($dia_inc != $dedicacion) {
+                    if ($cEncargoSacdHorario[0]->getF_ini() == $this->getF_ini() ) {
+                        // modificar
+                        $cEncargoSacdHorario[0]->setDia_inc($dedicacion);
+                        if ($cEncargoSacdHorario[0]->DBGuardar() === false) {
+                            echo _("hay un error, no se ha guardado");
+                        }
+                    } else {
+                        // nuevo
+                        $cEncargoSacdHorario[0]->setF_fin($this->getF_fin());
+                        if ($cEncargoSacdHorario[0]->DBGuardar() === false) {
+                            echo _("hay un error, no se ha guardado");
+                        }
+                        $this->insert_horario_sacd($id_item_t_sacd,$id_enc,$id_nom,$modulo,$dedicacion);
                     }
-                    $this->insert_horario_sacd($id_item_t_sacd,$id_enc,$id_nom,$modulo,$dedicacion);
                 } else {
                     $oFactual_f_fin = $cEncargoSacdHorario[0]->getF_fin();
                     if ($oFactual_f_fin == $this->getF_fin()) {

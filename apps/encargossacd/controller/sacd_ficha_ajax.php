@@ -60,7 +60,7 @@ switch ($Qque) {
 		break;
 	case 'ficha':
 		// permiso para sf:
-		if (($_SESSION['oPerm']->have_perm_oficina('des')) or ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
+		if (($_SESSION['oPerm']->have_perm_oficina('des')) || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
 			$permiso=1;
 		} else {
 			$permiso=0;
@@ -102,19 +102,13 @@ switch ($Qque) {
         
         
         $a_dedic_sacd = [];
-        $a_dedic_ctr_m = [];
-        $a_dedic_ctr_t = [];
-        $a_dedic_ctr_v = [];
         $a_dedic_m = [];
         $a_dedic_t= [];
         $a_dedic_v = [];
 		foreach ($cEncargosSacd as $oEncargoSacd) {
 			$i++;
 			$id_enc = $oEncargoSacd->getId_enc();
-			$id_nom = $oEncargoSacd->getId_nom();
 			$modo = $oEncargoSacd->getModo();
-			$f_ini = $oEncargoSacd->getF_ini();
-			$f_fin = $oEncargoSacd->getF_fin();
 			$a_modo[$i]=$modo;
 
 			$oEncargo = new Encargo(array('id_enc'=>$id_enc));
@@ -128,11 +122,7 @@ switch ($Qque) {
 			
 			$sf_sv = $oEncargo->getSf_sv();
 			$id_ubi = $oEncargo->getId_ubi();
-			$id_zona = $oEncargo->getId_zona();
 			$desc_enc = $oEncargo->getDesc_enc();
-			$idioma_enc = $oEncargo->getIdioma_enc();
-			$desc_lugar = $oEncargo->getDesc_lugar();
-			$observ = $oEncargo->getObserv();
 			$a_id_tipo_enc[$i]=$id_tipo_enc;
 
 			$oEncargoTipo->setId_tipo_enc($a_id_tipo_enc[$i]);
@@ -195,13 +185,13 @@ switch ($Qque) {
                         $modulo=$oEncargoHorario->getDia_ref();
                         switch ($modulo) {
                             case 'm':
-                                $a_dedic_ctr_m[$i]=$oEncargoHorario->getDia_inc();
+                                $a_dedic_ctr_m[$i] = $oEncargoHorario->getDia_inc();
                                 break;
                             case 't':
-                                $a_dedic_ctr_t[$i]=$oEncargoHorario->getDia_inc();
+                                $a_dedic_ctr_t[$i] = $oEncargoHorario->getDia_inc();
                                 break;
                             case 'v':
-                                $a_dedic_ctr_v[$i]=$oEncargoHorario->getDia_inc();
+                                $a_dedic_ctr_v[$i] = $oEncargoHorario->getDia_inc();
                                 break;
                         }
                     }
@@ -429,15 +419,15 @@ switch ($Qque) {
 
 		for($i=1;$i<=$Qenc_num;$i++) {
 			// caso especial para estudio/descanso/otros. Es para todos el mismo id_enc.
-			if ($QAid_tipo_enc[$i]==5020 OR $QAid_tipo_enc[$i]==5030 OR $QAid_tipo_enc[$i]==6000) {
+			if ($QAid_tipo_enc[$i]==5020 || $QAid_tipo_enc[$i]==5030 || $QAid_tipo_enc[$i]==6000) {
 				if (empty($QAid_enc[$i])) {
 					// primero se debe crear el encargo. busco si ya existe uno antes de crearlo.
 					$GesEncargo = new GestorEncargo();
 					$cEncargos = $GesEncargo->getEncargos(array('id_tipo_enc'=>$QAid_tipo_enc[$i]));
-					if (is_array($cEncargos) && count($cEncargos)==0) {
-						if  ($QAid_tipo_enc[$i]==5020) $desc_enc="estudio";
-						if  ($QAid_tipo_enc[$i]==5030) $desc_enc="descanso";
-						if  ($QAid_tipo_enc[$i]==6000) $desc_enc="otros";
+					if (is_array($cEncargos) && empty($cEncargos)) {
+					    if  ($QAid_tipo_enc[$i]==5020) { $desc_enc="estudio"; }
+					    if  ($QAid_tipo_enc[$i]==5030) { $desc_enc="descanso"; }
+					    if  ($QAid_tipo_enc[$i]==6000) { $desc_enc="otros"; }
 						$QAid_enc[$i]=$GesEncargoTipo->crear_encargo($QAid_tipo_enc[$i],1,"","",$desc_enc,"","","");
 					} else {
 						$QAid_enc[$i]=$cEncargos[0]->getId_enc();
