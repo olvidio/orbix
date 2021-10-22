@@ -41,7 +41,7 @@ include_once(core\ConfigGlobal::$dir_estilos.'/tessera.css.php'); ?>
 				$nota = _("pendiente");
 				$fecha = '';
 			} else {
-				if ($row['nota'] == 'cursada' OR $row['nota'] == 'examinado') {
+				if ($row['nota'] == 'cursada' || $row['nota'] == 'examinado') {
 					$class="alert";
 				}
 				$nota = $row['nota'];

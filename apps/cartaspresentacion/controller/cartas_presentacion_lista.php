@@ -188,7 +188,7 @@ function mega_array($oPresentacion,$oCentro,$ordenar_dl) {
 		$telf .= ' fax:'.$fax;
 	}
 	// si es una dl o r fuera de España, pongo el e-mail del centro.
-	if ($region != 'H' && (strpos($tipo_ctr,'cr') !== false OR strpos($tipo_ctr,'dl') !== false)) {
+	if ($region != 'H' && (strpos($tipo_ctr,'cr') !== false || strpos($tipo_ctr,'dl') !== false)) {
 		// 15 es el id para otros asuntos ( 20 es para asuntos de gobierno).
 		$mail = $oCentro->getTeleco("e-mail","15"," / ");
 		if (!empty($mail)) {
@@ -250,7 +250,7 @@ function mega_array($oPresentacion,$oCentro,$ordenar_dl) {
         if (($tipo_labor & 256) == 256) $aTipo[] = $aTiposLabor[256];  //'numerarios';
         if (($tipo_labor & 64) == 64) $aTipo[] = $aTiposLabor[64];  //'s';
         if (($tipo_labor & 32) == 32) $aTipo[] = $aTiposLabor[32];  //'sss+';
-        if ($tipo_ctr == 'dl' OR $tipo_ctr == 'cr') $aTipo[] = 'otras r';
+        if ($tipo_ctr == 'dl' || $tipo_ctr == 'cr') $aTipo[] = 'otras r';
         if (($tipo_labor & 2) == 2) { $edad .= $aTiposLabor[2]; }  //'jóvenes'
         if (($tipo_labor & 1) == 1) { $edad .= !empty($edad)? ', ' : ''; $edad .= $aTiposLabor[1]; }  //'mayores';
         if (($tipo_labor & 4) == 4) { $edad .= !empty($edad)? ', ' : ''; $edad .= $aTiposLabor[4]; }  //'universitarios';
@@ -335,7 +335,7 @@ function lista_cartas($a_mega,$ordenar_dl){
 				$html .= '<table>';
 				foreach ($a_pob_edad as $poblacion => $a_edad) {
 					krsort($a_edad); // primero m, después j
-					if ($poblacion != $poblacion_anterior OR empty($poblacion)) {
+					if ($poblacion != $poblacion_anterior || empty($poblacion)) {
 						$html .= "<tr><td $class>".strtoupper_dlb($poblacion)."</td>";
 					}
 					$f=0;

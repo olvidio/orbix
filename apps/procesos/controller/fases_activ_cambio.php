@@ -53,8 +53,8 @@ $permiso_des = FALSE;
 // mejor que novenga por menú. Así solo veo las de mi sección.
 // añado la opción sv para calendario...
 if ( $_SESSION['oPerm']->have_perm_oficina('vcsd')
-     OR $_SESSION['oPerm']->have_perm_oficina('des')
-     OR $_SESSION['oPerm']->have_perm_oficina('calendario')
+    || $_SESSION['oPerm']->have_perm_oficina('des')
+    || $_SESSION['oPerm']->have_perm_oficina('calendario')
    ) {
     $permiso_des = TRUE;
     $Qssfsv = '';

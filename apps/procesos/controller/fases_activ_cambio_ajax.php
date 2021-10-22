@@ -278,7 +278,7 @@ switch($Qque) {
                 exit($msg_err);
             }
             $of_responsable_txt = $oTareaProceso->getOf_responsable_txt();
-            if (empty($of_responsable_txt) OR $_SESSION['oPerm']->have_perm_oficina($of_responsable_txt) ) {
+            if (empty($of_responsable_txt) || $_SESSION['oPerm']->have_perm_oficina($of_responsable_txt) ) {
                 if ($Qaccion == 'desmarcar') {
                     $oActividadProcesoTarea->setCompletado('f');
                 } else {

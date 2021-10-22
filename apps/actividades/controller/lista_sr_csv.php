@@ -212,8 +212,9 @@ foreach ($cActividades as $oActividad) {
 	$snom_tipo=$oTipoActiv->getNom_tipoText();
 
 	if ((($_SESSION['oPerm']->have_perm_oficina('sg')) 
-	    or ($_SESSION['oPerm']->have_perm_oficina('vcsd')) 
-	    or ($_SESSION['oPerm']->have_perm_oficina('des'))) AND !($_SESSION['oPerm']->have_perm_oficina('admin'))) {
+	   || ($_SESSION['oPerm']->have_perm_oficina('vcsd')) 
+	   || ($_SESSION['oPerm']->have_perm_oficina('des'))) AND !($_SESSION['oPerm']->have_perm_oficina('admin'))
+	  ) {
 		if ($snom_tipo=="(sin especificar)") {	
 			$snom_tipo="";
 		}

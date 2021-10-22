@@ -67,7 +67,7 @@ switch($Qque) {
 			$i % 2  ? 0: $clase = "tono3";
 			$i++;
 			$txt.="<tr  class='$clase'>";
-			if (empty($of_responsable_txt) OR ($_SESSION['oPerm']->have_perm_oficina($of_responsable_txt))) {
+			if (empty($of_responsable_txt) || ($_SESSION['oPerm']->have_perm_oficina($of_responsable_txt))) {
 				$txt.="<td style='text-align: center;' ><input type='checkbox' id='comp$id_item' name='completado' $chk></td>";
 				$obs = "<td><input type='text' id='observ$id_item' name='observ' value='$observ' ></td>";
 			} else {
@@ -84,7 +84,7 @@ switch($Qque) {
 			$txt.="<td style='text-align: left;' >$fase $txt_fase</td>";
 			$txt.="<td>$of_responsable_txt</td>";
 			$txt.= $obs;
-			if (empty($of_responsable_txt) OR ($_SESSION['oPerm']->have_perm_oficina($of_responsable_txt))) {
+			if (empty($of_responsable_txt) || ($_SESSION['oPerm']->have_perm_oficina($of_responsable_txt))) {
 				$txt.="<td><input type='button' name='b_guardar' value='"._("guardar")."' onclick='fnjs_guardar($id_item);'></td>";
 			} else {
 			    $txt .= '<td></td>';

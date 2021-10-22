@@ -196,7 +196,7 @@ class PermisosActividades {
         
 		$this->iid_tipo_activ = $id_tipo_activ;
 
-        if ($dl_org == ConfigGlobal::mi_delef() OR $dl_org_no_f == ConfigGlobal::mi_dele()) {
+        if ($dl_org == ConfigGlobal::mi_delef() || $dl_org_no_f == ConfigGlobal::mi_dele()) {
 			$this->bpropia=true;
 		} else {
 			$this->bpropia=false;

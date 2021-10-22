@@ -254,10 +254,10 @@ switch ($tabla) {
 		$GesPersona = new personas\GestorPersonaEx();
 		$cPersonas = $GesPersona->getPersonas($aWhere,$aOperador);
 		if ($_SESSION['oPerm']->have_perm_oficina('sm')
-             OR $_SESSION['oPerm']->have_perm_oficina('agd')
-             OR $_SESSION['oPerm']->have_perm_oficina('des')
-             OR $_SESSION['oPerm']->have_perm_oficina('sg')
-             OR $_SESSION['oPerm']->have_perm_oficina('est'))
+            || $_SESSION['oPerm']->have_perm_oficina('agd')
+            || $_SESSION['oPerm']->have_perm_oficina('des')
+            || $_SESSION['oPerm']->have_perm_oficina('sg')
+            || $_SESSION['oPerm']->have_perm_oficina('est'))
 		{
 			$permiso = 3;
 		}
@@ -295,7 +295,7 @@ if (core\configGlobal::is_app_installed('asistentes')) {
 }
 
 if (core\configGlobal::is_app_installed('notas')) {
-	if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso_ex")) {   
+	if (($tabla=="p_numerarios") || ($tabla=="p_agregados") || ($tabla=="p_de_paso_ex")) {   
 		$a_botones[]= array( 'txt' => _("ver tessera"),
 							'click' =>"fnjs_tessera(\"#seleccionados\")" ) ;
 		$script['fnjs_tessera'] = 1;
@@ -312,7 +312,7 @@ if (core\configGlobal::is_app_installed('notas')) {
 }
 if (core\configGlobal::is_app_installed('actividadestudios')) {
 	if ($_SESSION['oPerm']->have_perm_oficina('sm') || $_SESSION['oPerm']->have_perm_oficina('est')){
-        if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso_ex")) {   
+        if (($tabla=="p_numerarios") || ($tabla=="p_agregados") || ($tabla=="p_de_paso_ex")) {   
             $a_botones[]= array( 'txt' => _("posibles ca"),
                                 'click' =>"fnjs_posibles_ca(\"#seleccionados\")" ) ;
             $script['fnjs_posibles_ca'] = 1;
@@ -320,7 +320,7 @@ if (core\configGlobal::is_app_installed('actividadestudios')) {
 	}
 }
 if (core\configGlobal::is_app_installed('actividadplazas')) {
-	if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso_ex")) {   
+	if (($tabla=="p_numerarios") || ($tabla=="p_agregados") || ($tabla=="p_de_paso_ex")) {   
 		$sactividad = 'ca'; //ca
 		$a_botones[]= array( 'txt' => _("petición ca"),
 							'click' =>"fnjs_peticion_activ(\"#seleccionados\",\"$sactividad\")" ) ;
@@ -387,7 +387,7 @@ if ($tabla=="p_sssc") {
 
 $a_cabeceras[]=ucfirst(_("centro"));
 
-if (($tabla=="p_numerarios") or ($tabla=="p_agregados") or ($tabla=="p_de_paso_ex")) {   
+if (($tabla=="p_numerarios") || ($tabla=="p_agregados") || ($tabla=="p_de_paso_ex")) {   
 	$a_cabeceras[]=ucfirst(_("stgr"));
 }   
 if (!empty($Qcmb)) { 
@@ -443,7 +443,7 @@ foreach ($cPersonas as $oPersona) {
 	/*la siguiente instrucción es para que el campo stgr sólo se visualice
 	para los n y agd siempre que no estemos ante una selección para ver
 	un planning*/
-	if ((($tabla=='p_numerarios') or ($tabla=='p_agregados'))and ($tipo!='planning')) {
+	if ((($tabla=='p_numerarios') || ($tabla=='p_agregados'))and ($tipo!='planning')) {
 		$a_val[5]=$oPersona->getStgr();
 	} 
 	if (!empty($Qcmb)) { 

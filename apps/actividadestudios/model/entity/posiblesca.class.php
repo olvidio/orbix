@@ -56,7 +56,7 @@ class PosiblesCa Extends core\ClasePropiedades {
 			if (array_key_exists($id_situacion,$aSuperadas)) {
 				$todas_asig_p[]=$id_asignatura;
 				// Apunto las opcionales a parte.
-				if (substr($id_nivel,0,3) == '243' OR substr($id_nivel,0,3) == '123') {
+				if (substr($id_nivel,0,3) == '243' || substr($id_nivel,0,3) == '123') {
 				    $num_opcionales++;
 				}
 			}

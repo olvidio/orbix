@@ -546,7 +546,7 @@ class ActividadAll Extends core\ClasePropiedades {
             return;
 	    }
 		// comprovo que té 6 digits
-		if ( empty($iid_tipo_activ) OR (($iid_tipo_activ/100000) < 1) ) {
+		if ( empty($iid_tipo_activ) || (($iid_tipo_activ/100000) < 1) ) {
 			$serr = "id_tipo_activ incorrecto: $iid_tipo_activ";
 			$sClauError = "ActividadAll.setId_tipo_activ";
 			$_SESSION['oGestorErrores']->addError($serr, $sClauError, __LINE__, __FILE__);

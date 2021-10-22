@@ -41,7 +41,7 @@ $oHash->setcamposForm('id_zona_new');
 $oHash->setCamposNo('scroll_id!sel');
 
 $perm_des = FALSE; 
-if (($_SESSION['oPerm']->have_perm_oficina('des')) or ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) { 
+if (($_SESSION['oPerm']->have_perm_oficina('des')) || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) { 
     $perm_des = TRUE; 
 }
 

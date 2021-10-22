@@ -49,7 +49,7 @@ if (is_array($aQuery)) { array_walk($aQuery, 'core\poner_empty_on_null'); }
 $godossiers = web\Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_build_query($aQuery));
 
 $permiso_des = FALSE;
-if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
     $permiso_des = TRUE;
 }
 

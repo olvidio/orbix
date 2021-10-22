@@ -43,7 +43,7 @@ $oDesplUsuarios->setNombre('id_usuario');
 $oDesplUsuarios->setBlanco('false');
 $oDesplUsuarios->setOpciones($ListaUsuarios);
 
-if ($_SESSION['oPerm']->only_perm('admin_sf') OR $_SESSION['oPerm']->only_perm('admin_sv')) {
+if ($_SESSION['oPerm']->only_perm('admin_sf') || $_SESSION['oPerm']->only_perm('admin_sv')) {
     // sino en $Posicion. Le paso la referecia del stack donde está la información.
     if (!empty($Qrefresh) && ($QGstack != '')) {
         $oPosicion->goStack($QGstack);

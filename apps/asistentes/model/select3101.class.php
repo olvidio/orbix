@@ -356,7 +356,7 @@ class Select3101 {
 				if ($propio=='t') {
 					$chk_propio=_("sí");
 					// Para los de des, elimino el cargo y la asistencia. Para el resto, sólo el cargo (no la asistencia).
-					if (($_SESSION['oPerm']->have_perm_oficina('des')) or ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
+					if (($_SESSION['oPerm']->have_perm_oficina('des')) || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
 						$eliminar = 2;
 					} else {
 						$eliminar = 1;
@@ -462,7 +462,7 @@ class Select3101 {
 				// las cuento todas y a la hora de enseñar miro si soy la dl org o no.
 				// propiedad de la plaza:
 				$propietario = $oAsistente->getPropietario();
-				if ($propietario === NULL OR $propietario === 'xxx') {
+				if ($propietario === NULL || $propietario === 'xxx') {
 					$this->msg_err .= "ALERTA: asistente sin propiedad en la plaza:<br>";
 					$this->msg_err .= "$nom(".$oPersona->getId_tabla().")<br>";
 				}
@@ -866,7 +866,7 @@ class Select3101 {
 	public function setLinksInsert() {
 		$this->aLinks_dl = array();
 		$ref_perm = $this->a_ref_perm;
-		if (empty($ref_perm) OR $this->permiso < 2) { // si es nulo, no tengo permisos de ningún tipo
+		if (empty($ref_perm) || $this->permiso < 2) { // si es nulo, no tengo permisos de ningún tipo
 			return '';
 		}
 		$mi_dele = ConfigGlobal::mi_delef();

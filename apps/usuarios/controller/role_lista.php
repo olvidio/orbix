@@ -80,7 +80,7 @@ foreach ($cRoles as $oRole) {
 	$pau=$oRole->getPau();
 	$dmz=$oRole->getDmz();
 
-	if (($permiso != 1) && (($miSfsv == 2 && !$sf) OR ($miSfsv == 1 && !$sv)) ) {
+	if (($permiso != 1) && (($miSfsv == 2 && !$sf) || ($miSfsv == 1 && !$sv)) ) {
         continue;	    
 	}
 	$i++;

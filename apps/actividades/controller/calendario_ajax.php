@@ -71,7 +71,7 @@ switch ($Qque) {
         $Qid_activ = (integer)  \filter_input(INPUT_POST, 'id_activ');
         
         $permiso_des = FALSE;
-        if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+        if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
             $permiso_des = TRUE;
         }
         
@@ -222,7 +222,7 @@ switch ($Qque) {
         $Qid_ubi = (integer)  \filter_input(INPUT_POST, 'id_ubi');
         
         $permiso_des = FALSE;
-        if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+        if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
             $permiso_des = TRUE;
         }
         

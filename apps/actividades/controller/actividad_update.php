@@ -148,7 +148,7 @@ case "nuevo":
 	// Puede ser '000' > sin especificar
 	$Qinom_tipo_val = (string) \filter_input(INPUT_POST, 'inom_tipo_val');
 	//Compruebo que estén todos los campos necesasrios
-	if (empty($Qnom_activ) or empty($Qf_ini) or empty($Qf_fin) or empty($Qstatus) or empty($Qdl_org) ) {
+	if (empty($Qnom_activ) || empty($Qf_ini) || empty($Qf_fin) || empty($Qstatus) || empty($Qdl_org) ) {
 		echo _("debe llenar todos los campos que tengan un (*)")."<br>";
 		die();
 	}

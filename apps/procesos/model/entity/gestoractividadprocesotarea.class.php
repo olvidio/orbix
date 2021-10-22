@@ -196,7 +196,7 @@ class GestorActividadProcesoTarea Extends ClaseGestor {
 	    $oTipo = new TipoDeActividad(array('id_tipo_activ'=>$iid_tipo_activ));
 	   
 	    // Creo que cuando pasa es que no existe la actividad (pero se tiene el id_activ)
-	    if (empty($oActividad) OR empty($iid_tipo_activ)) {
+	    if (empty($oActividad) || empty($iid_tipo_activ)) {
             echo sprintf(_("La actividad: %s ya no existe"),$iid_activ);
             return TRUE;
 	    }

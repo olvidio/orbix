@@ -237,8 +237,8 @@ if (!empty($Qmodo) && $Qmodo != 'buscar') {
     } else {
         $a_botones[] = array( 'txt' => _("datos"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"datos\")" );
         if (($_SESSION['oPerm']->have_perm_oficina('vcsd'))
-            OR ($_SESSION['oPerm']->have_perm_oficina('des'))
-            OR ($_SESSION['oPerm']->have_perm_oficina('calendario'))) {
+            || ($_SESSION['oPerm']->have_perm_oficina('des'))
+            || ($_SESSION['oPerm']->have_perm_oficina('calendario'))) {
             $duplicar=1; //condición de duplicar
             $a_botones[]=array( 'txt'=> _("duplicar"), 'click' =>"jsForm.update(\"#seleccionados\",\"duplicar\")");
             // Ahora lo generalizo para todas. (no sólo proyecto). 17.X.2011
@@ -267,8 +267,8 @@ if (!empty($Qmodo) && $Qmodo != 'buscar') {
                 $a_botones[]=array( 'txt'=> _("asignaturas"), 'click'=>"jsForm.mandar(\"#seleccionados\",\"asig\")");
             }
             if (($_SESSION['oPerm']->have_perm_oficina('est'))
-                or ($_SESSION['oPerm']->have_perm_oficina('agd'))
-                or ($_SESSION['oPerm']->have_perm_oficina('sm'))) {
+               || ($_SESSION['oPerm']->have_perm_oficina('agd'))
+               || ($_SESSION['oPerm']->have_perm_oficina('sm'))) {
                     $a_botones[]=array( 'txt'=>_("plan estudios"), 'click'=>"jsForm.mandar(\"#seleccionados\",\"plan_estudios\")");
                 }
                 if ($_SESSION['oPerm']->have_perm_oficina('est')) {
@@ -286,7 +286,7 @@ $a_cabeceras=array(
     array('name'=>_("hora ini"),'width'=>40,'class'=>'fecha'),
     array('name'=>_("hora fin"),'width'=>40,'class'=>'fecha')
 );
-if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
     $a_cabeceras[]= array('name'=>_("sf/sv"),'width'=>40);
 }
 $a_cabeceras[]= array('name'=>_("tar."),'width'=>40);
@@ -359,7 +359,7 @@ foreach($cActividades as $oActividad) {
         // mirar permisos.
         if(core\ConfigGlobal::is_app_installed('procesos')) {
             //mirar por la seleccion
-            if (!empty($Qfases_on) OR !empty($Qfases_off)) {
+            if (!empty($Qfases_on) || !empty($Qfases_off)) {
                 $gesActividadProcesoTarea = new GestorActividadProcesoTarea();
                 $aFasesCompletadas = $gesActividadProcesoTarea->getFasesCompletadas($id_activ);
                 if (!empty($Qfases_on)) {
@@ -414,7 +414,7 @@ foreach($cActividades as $oActividad) {
         //$a_valores[$i][1]= array( 'ira'=>'x', 'valor'=>'ocupado');
         $a_valores[$i][4]='';
         $a_valores[$i][5]='';
-        if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+        if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
             $a_valores[$i][6]=$ssfsv;
         }
         $a_valores[$i][7]='';
@@ -503,7 +503,7 @@ foreach($cActividades as $oActividad) {
         }
         $a_valores[$i][4]=$h_ini;
         $a_valores[$i][5]=$h_fin;
-        if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+        if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
             $a_valores[$i][6]=$ssfsv;
         }
         $a_valores[$i][7]=$tarifa_letra;

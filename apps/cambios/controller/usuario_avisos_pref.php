@@ -179,10 +179,10 @@ $oActividadTipo->setQue('buscar');
 // y los sacd
 $perm_jefe = FALSE;
 if ($_SESSION['oConfig']->is_jefeCalendario()
-    OR (($_SESSION['oPerm']->have_perm_oficina('des') or $_SESSION['oPerm']->have_perm_oficina('vcsd')) && $mi_sfsv == 1) 
-    OR ($grupo === FALSE && $oUsuario->isRolePau(Role::PAU_CDC))
-    OR ($grupo === FALSE && $oUsuario->isRolePau(Role::PAU_SACD))
-    OR ($_SESSION['oPerm']->have_perm_oficina('calendario'))
+    || (($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) && $mi_sfsv == 1) 
+    || ($grupo === FALSE && $oUsuario->isRolePau(Role::PAU_CDC))
+    || ($grupo === FALSE && $oUsuario->isRolePau(Role::PAU_SACD))
+    || ($_SESSION['oPerm']->have_perm_oficina('calendario'))
     )
 {
     $perm_jefe = TRUE;

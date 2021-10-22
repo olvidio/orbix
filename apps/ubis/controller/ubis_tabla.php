@@ -145,7 +145,7 @@ if (empty($sWhere)) {
 					$titulo=ucfirst(_("tabla de centros de fuera de la delegación"));
 					break;
 				case "sf":
-					if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) OR ($_SESSION['oPerm']->have_perm_oficina('des'))) { 
+					if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) { 
 						$Gestor= "ubis\\model\\entity\\GestorCentroDl";
 						$Gestor->setoDbl( $GLOBALS['oDBE']);
 						$metodo = 'getCentros';
@@ -188,7 +188,7 @@ if (empty($sWhere)) {
 					$GestorDir = "ubis\\model\\entity\\GestorDireccionCdcEx";
 					break;
 				case "sf":
-					if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) OR ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+					if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
 						$Gestor= "ubis\\model\\entity\\GestorCasaDl";
 						$metodo = 'getCasas';
 						$GestorDir = "ubis\\model\\entity\\GestorDireccionCdcDl";
@@ -220,7 +220,7 @@ if (empty($sWhere)) {
 					/*
 					switch ($miSfsv) {
 						case 1: // sv
-							if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) OR ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+							if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
 								///// FALTA ARREGLAR ESTO /////
 								//$cond="(u.dl!='".core\ConfigGlobal::$dele."' OR dl is null)";
 								$aWhere['dl']=core\ConfigGlobal::$dele;
@@ -250,7 +250,7 @@ if (empty($sWhere)) {
 					$titulo=ucfirst(_("tabla de toda las casas y centros"));
 					switch ($miSfsv) {
 						case 1: // sv
-							if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) OR ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+							if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
 								$aWhere['tipo_ubi']='ctrsf|cdcdl|cdcex';
 								$aOperador['tipo_ubi']='~';
 								$aWhere['sf']='t';

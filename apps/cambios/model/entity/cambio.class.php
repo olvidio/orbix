@@ -434,7 +434,7 @@ class Cambio Extends core\ClasePropiedades {
                 $sValor_new = $aStatus[$sValor_new];
             }
             // Caso especial si el campo es fecha.
-            if ($sPropiedad == 'f_ini' OR $sPropiedad == 'f_fin') {
+            if ($sPropiedad == 'f_ini' || $sPropiedad == 'f_fin') {
                 $oFOld = new DateTimeLocal($sValor_old);
                 $sValor_old = $oFOld->getFromLocal();
                 $oFNew = new DateTimeLocal($sValor_new);
@@ -533,7 +533,7 @@ class Cambio Extends core\ClasePropiedades {
 	                       $sValor_new = $aStatus[$sValor_new]; 
 	                    }
 	                    // Caso especial si el campo es fecha.
-	                    if ($sPropiedad == 'f_ini' OR $sPropiedad == 'f_fin') {
+	                    if ($sPropiedad == 'f_ini' || $sPropiedad == 'f_fin') {
 	                        $oFOld = new DateTimeLocal($sValor_old);
 	                        $sValor_old = $oFOld->getFromLocal();
 	                        $oFNew = new DateTimeLocal($sValor_new);
@@ -855,7 +855,7 @@ class Cambio Extends core\ClasePropiedades {
 	        $this->DBCarregar();
 	    }
 	    $oFases = json_decode(json_decode($this->json_fases_sv),$bArray);
-	    if (empty($oFases) OR $oFases == '[]') {
+	    if (empty($oFases) || $oFases == '[]') {
 	        if ($bArray) {
 	            $oFases = [];
 	        } else {
@@ -885,7 +885,7 @@ class Cambio Extends core\ClasePropiedades {
 	        $this->DBCarregar();
 	    }
 	    $oFases = json_decode(json_decode($this->json_fases_sf),$bArray);
-	    if (empty($oFases) OR $oFases == '[]') {
+	    if (empty($oFases) || $oFases == '[]') {
 	        if ($bArray) {
 	            $oFases = [];
 	        } else {

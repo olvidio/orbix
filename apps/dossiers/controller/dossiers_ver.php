@@ -25,7 +25,7 @@ $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIR
 // Si vengo de eliminar, hay que borrar el 'sel' que ha identificado el registro,
 //  pues ya no existe
 $Qmod = (string)  \filter_input(INPUT_POST, 'mod');
-if (isset($a_sel) && ($Qmod == 'eliminar' OR $Qmod == 'nuevo')) {
+if (isset($a_sel) && ($Qmod == 'eliminar' || $Qmod == 'nuevo')) {
 	unset($a_sel);
 }
 
@@ -122,7 +122,7 @@ $godossiers = Hash::link(ConfigGlobal::getWeb()."/apps/dossiers/controller/dossi
 switch ($pau) {
 	case 'p':
 		//Hay que aclararse si la persona es de la dl o no
-		if (empty($Qobj_pau) OR $Qobj_pau == 'Persona') {
+		if (empty($Qobj_pau) || $Qobj_pau == 'Persona') {
 			$oPersona = personas\Persona::NewPersona($id_pau);
 			if (!is_object($oPersona)) {
 				$msg_err = "<br>$oPersona con id_nom: $id_pau en  ".__FILE__.": line ". __LINE__;

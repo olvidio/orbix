@@ -173,7 +173,7 @@ class TrasladoUbi {
         $full_name_org = "\"$this->esquema_org$sv\".$tabla";
         $full_name_dst = "\"$this->esquema_dst$sv\".$tabla";
         
-        if (!$this->existeTabla($full_name_org) OR !$this->existeTabla($full_name_dst)) {
+        if (!$this->existeTabla($full_name_org) || !$this->existeTabla($full_name_dst)) {
             return FALSE; 
         }
         

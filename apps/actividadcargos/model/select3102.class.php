@@ -136,7 +136,7 @@ class Select3102 {
 
 			// Para los de des, elimino el cargo y la asistencia. Para el resto, sólo el cargo (no la asistencia).
 			$this->txt_eliminar = _("¿Está seguro que desea quitar este cargo a esta persona?");
-			if (($_SESSION['oPerm']->have_perm_oficina('des')) or ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
+			if (($_SESSION['oPerm']->have_perm_oficina('des')) || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
 				$this->txt_eliminar .= "\\n";
 				$this->txt_eliminar .= _("esto también borrará a esta persona de la lista de asistentes");
 				$eliminar=2;

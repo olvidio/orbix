@@ -103,7 +103,7 @@ $inicioIso = $oPeriodo->getF_ini_iso();
 $finIso = $oPeriodo->getF_fin_iso();
 
 // llista d'activitats posibles en el periode.
-if (empty($inicioIso) OR empty($finIso)) {
+if (empty($inicioIso) || empty($finIso)) {
     exit ("<br>"._("falta determinar un periodo"));
 }
 

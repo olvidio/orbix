@@ -201,7 +201,7 @@ switch ($Qque) {
                     $aWhere=array('id_enc'=>$id_enc,'modo'=>'2|3','f_fin'=>'');
                     $aOperador=array('modo'=>'~','f_fin'=>'IS NULL');
                     $cEncargosSacd = $GesEncargoSacd->getEncargosSacd($aWhere,$aOperador);
-                    if (!is_array($cEncargosSacd) OR count($cEncargosSacd) < 1) { continue; }
+                    if (!is_array($cEncargosSacd) || count($cEncargosSacd) < 1) { continue; }
                     $id_nom = $cEncargosSacd[0]->getId_nom();
                     // OJO puede ser de la dl o de_paso
                     $oPersona = Persona::NewPersona($id_nom);

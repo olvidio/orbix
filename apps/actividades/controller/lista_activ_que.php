@@ -31,7 +31,7 @@ que=list_activ_inv_sg
 */
 
 $permiso_des = FALSE;
-if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
     $permiso_des = TRUE;
 }
 

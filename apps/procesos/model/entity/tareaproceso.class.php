@@ -479,7 +479,7 @@ class TareaProceso Extends core\ClasePropiedades {
 			$this->DBCarregar();
 		}
         $oFases = json_decode(json_decode($this->json_fases_previas),$bArray);
-        if (empty($oFases) OR $oFases == '[]') {
+        if (empty($oFases) || $oFases == '[]') {
             if ($bArray) {
                 $oFases = []; 
             } else {

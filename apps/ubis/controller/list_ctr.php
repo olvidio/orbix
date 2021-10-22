@@ -129,7 +129,7 @@ if ($Qloc !== 'ex') {
             $aOperador['tipo_casa'] = '~';
             switch ($miSfsv) {
                 case 1:
-                    if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+                    if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
                     } else {
                         $aWhere['sv'] = 't';
                     }
@@ -145,7 +145,7 @@ if ($Qloc !== 'ex') {
             $aOperador['tipo_casa'] = '!~';
             switch ($miSfsv) {
                 case 1:
-                    if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+                    if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
                         //$condicion_u="WHERE u.tipo_casa!='cgi' AND u.tipo_casa !='cdc' AND u.tipo_casa !='cdr'";
                     } else {
                         $aWhere['sv'] = 't';

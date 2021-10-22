@@ -115,7 +115,7 @@ switch ($Qque) {
 			$id_enc = $oEncargo->getId_enc();
 			$id_tipo_enc = $oEncargo->getId_tipo_enc();
 			// Si es un encargo personal (7 o 4) me lo salto
-			if (substr($id_tipo_enc, 0,1) == 7 OR substr($id_tipo_enc, 0,1) == 4 )  {
+			if (substr($id_tipo_enc, 0,1) == 7 || substr($id_tipo_enc, 0,1) == 4 )  {
 			    $i--;
 			    continue;
 			}
@@ -397,7 +397,7 @@ switch ($Qque) {
 		<tr>
 		<td colspan=4><?= _("observaciones") ?>: <textarea rows=3 cols=50 name=observ ><?= $observ_sacd ?></textarea></td></tr>
 		<?php
-		if (($_SESSION['oPerm']->have_perm_oficina('des')) OR ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
+		if (($_SESSION['oPerm']->have_perm_oficina('des')) || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
 		?>
 		<th colspan=4><input type="button" name="ok" onclick="fnjs_guardar('#datos_sacd');" value="<?php echo ucfirst(_("guardar")); ?>"></th>
 		<?php

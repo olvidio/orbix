@@ -68,7 +68,7 @@ function datos($oPersona) {
 			$profesion=$oPersona->getProfesion();
 			$f_nacimiento=$oPersona->getF_nacimiento()->getFromLocal();
 			$inc=$oPersona->getInc();
-			if (empty($inc) OR $inc=="?") {
+			if (empty($inc) || $inc=="?") {
 				$f_inc="?";
 			} else {
 				//$get = "getF_$inc()";

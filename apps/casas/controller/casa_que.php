@@ -52,7 +52,7 @@ if ($miRolePau == Role::PAU_CDC) { //casa
 	// Sólo quiero ver las casas comunes.
 	//$donde="WHERE status='t' AND sf='t' AND sv='t'";
 	// o (ara) no:
-	if ($_SESSION['oPerm']->have_perm_oficina('des') or $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
+	if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
 		$oForm->setCasas('all');
 		$donde="WHERE status='t'";
 	} else {

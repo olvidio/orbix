@@ -100,7 +100,7 @@ echo dibujar_campo("fichero",2,1,1);
 echo "</tr><tr>";
 echo dibujar_campo("estudios",35,1,3);
 echo "</tr><tr>";
-if ($tabla[0]=="p_agregados" or $tabla[0]=="p_numerarios"){ 
+if ($tabla[0]=="p_agregados" || $tabla[0]=="p_numerarios"){ 
 	/* datos personales comunes a n y agd*/
 	echo dibujar_campo("stgr",2,1,1);
 	echo dibujar_campo("cgi_pa",35,1,3);

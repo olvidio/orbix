@@ -15,7 +15,7 @@ require_once ("apps/core/global_object.inc");
 $Qparametro = (string)  \filter_input(INPUT_POST, 'parametro');
 $Qvalor = (string)  \filter_input(INPUT_POST, 'valor');
 
-if ($Qparametro == 'curso_stgr' OR $Qparametro == 'curso_crt') {
+if ($Qparametro == 'curso_stgr' || $Qparametro == 'curso_crt') {
     $Qini_dia = (integer)  \filter_input(INPUT_POST, 'ini_dia');
     $Qini_mes = (integer)  \filter_input(INPUT_POST, 'ini_mes');
     $Qfin_dia = (integer)  \filter_input(INPUT_POST, 'fin_dia');

@@ -130,7 +130,7 @@ class Planning {
             $any=(string)date("Y",mktime(0,0,0,$mini_0,$dini_0+$c-1,$aini_0));
             if ($c==0) { $m_anterior=$m; }
             if ($c>=($total_dias_0-1)) { $c=$c+1;}
-            if ($m!=$m_anterior or $c>=$total_dias_0) {
+            if ($m!=$m_anterior || $c>=$total_dias_0) {
                 $inc_c=$this->idd*($c-$c_anterior);
                 $lletra_mes=$mes[$m_anterior];
                 $txt_head.="<th colspan=$inc_c widht=\"$ample%\" class=\"mes\" >$lletra_mes - $any</th>";

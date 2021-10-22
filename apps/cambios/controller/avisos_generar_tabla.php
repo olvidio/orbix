@@ -133,7 +133,7 @@ while ($num_cambios) {
 		// Para las actividades, en el cambio se anota: 'ActividadDl' 'ActividadEx'
 		// pero en las preferencias, solo 'Actividad'.
 		// OJO strpos no sirve, porque me anula ActividadCargo
-		if ($sObjeto == 'Actividad' OR $sObjeto == 'ActividadDl' OR  $sObjeto == 'ActividadEx') {
+		if ($sObjeto == 'Actividad' || $sObjeto == 'ActividadDl' ||  $sObjeto == 'ActividadEx') {
 		    $sObjeto = 'Actividad';
 		}
         // Para los asistentes, en el cambio se anota: 'Asistente' 'AsistenteDl' 'AsistenteEx' 'AsistenteIn' 'AsistenteOut'
@@ -186,7 +186,7 @@ while ($num_cambios) {
 		$aWhere['_ordre'] = 'aviso_tipo,id_usuario,id_tipo_activ_txt DESC'; // intento que el primero sea el más definido.
 		$GesCambioUsuarioObjeto = new GestorCambioUsuarioObjetoPref();
 		$cCambiosUsuarioObjeto = $GesCambioUsuarioObjeto->getCambioUsuarioObjetosPrefs($aWhere,$aOperador);
-		if (($cCambiosUsuarioObjeto === false) OR empty($cCambiosUsuarioObjeto)) { 
+		if (($cCambiosUsuarioObjeto === false) || empty($cCambiosUsuarioObjeto)) { 
 		    $oAvisos->anotado();
 		    continue; 
 		}

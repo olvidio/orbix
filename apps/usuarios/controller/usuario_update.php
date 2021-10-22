@@ -300,7 +300,7 @@ switch($Qque) {
 				$oRole = new Role($Qid_role);
 				$pau = $oRole->getPau();
 				// sacd
-				if (($pau == 'sacd' OR $pau == 'nom') && !empty($Qid_nom)) {
+				if (($pau == 'sacd' || $pau == 'nom') && !empty($Qid_nom)) {
 					$oUsuario->setId_pau($Qid_nom);
 				}
 				// centros (sv o sf)

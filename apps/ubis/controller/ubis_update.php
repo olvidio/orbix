@@ -112,7 +112,7 @@ function guardarObjeto($oObjeto,$campos_chk) {
             // Si es un centro los valores sf/sv no se pueden cambiar
             $classname = get_class($oObjeto);
             $obj_pau = substr($classname, strrpos($classname, '\\') + 1);
-            if ($obj_pau == 'CentroDl' OR $obj_pau == 'CentroEx') {
+            if ($obj_pau == 'CentroDl' || $obj_pau == 'CentroEx') {
                 switch (core\Configglobal::mi_sfsv()) {
                     case 1: // sv
                         $a_values_o['sv'] = 't';
@@ -133,7 +133,7 @@ function guardarObjeto($oObjeto,$campos_chk) {
                 $valor=$byte;
             }
             //pongo el valor nulo, sobretodo para las fechas.
-            if (!is_array($_POST[$camp]) && (empty($_POST[$camp]) or trim($_POST[$camp])=="")) {
+            if (!is_array($_POST[$camp]) && (empty($_POST[$camp]) || trim($_POST[$camp])=="")) {
                 //si es un campo not null (y es null), pongo el valor por defecto
                 if ( is_true($oDatosCampo->datos_campo($oDbl,'nulo')) ) {
                     $valor_predeterminado=$oDatosCampo->datos_campo($oDbl,'valor');

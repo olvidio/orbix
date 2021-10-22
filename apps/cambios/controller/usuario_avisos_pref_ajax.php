@@ -135,7 +135,7 @@ switch($Qsalida) {
 				//formulario para casas cuyo calendario de actividades interesa 
 				$donde="WHERE status='t' AND (id_ubi=$sDonde)";
 			} else {
-				if ($_SESSION['oPerm']->have_perm_oficina('des') or $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
+				if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
 					$donde="WHERE status='t'";
 				} else {
 					if ($miSfsv == 1) {

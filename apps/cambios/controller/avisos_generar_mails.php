@@ -127,7 +127,7 @@ if (!empty($email)) enviar_mail($email,$a_datos,$a_id);
 
 function enviar_mail($email,$a_datos,$a_id){
     //Evitar mails vacios o sin dirección.
-    if (empty($a_datos) OR empty($email)) {
+    if (empty($a_datos) || empty($email)) {
         eliminar_enviado($a_id);
         return;    
     }

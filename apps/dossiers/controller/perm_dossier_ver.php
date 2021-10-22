@@ -41,7 +41,7 @@ $botones = 0;
 2: eliminar
 */
 $perm_admin = FALSE;
-if ($_SESSION['oPerm']->have_perm_oficina('admin_sv') OR $_SESSION['oPerm']->have_perm_oficina('admin_sf')) { 
+if ($_SESSION['oPerm']->have_perm_oficina('admin_sv') || $_SESSION['oPerm']->have_perm_oficina('admin_sf')) { 
 	$botones="1,2";
 	$perm_admin = TRUE;
 }

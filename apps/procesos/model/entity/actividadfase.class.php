@@ -235,7 +235,7 @@ class ActividadFase Extends core\ClasePropiedades {
 		} else {
 		    // Sólo puedo eliminar si la otra sección no tiene nada.
 		    if (   (ConfigGlobal::mi_sfsv() == 1 && $this->getSf())
-		        OR (ConfigGlobal::mi_sfsv() == 2 && $this->getSv()) ) {
+		       || (ConfigGlobal::mi_sfsv() == 2 && $this->getSv()) ) {
                 $msg = _("no se puede eliminar, lo usa la otra sección")."\n";
                 echo $msg;
                 return FALSE;

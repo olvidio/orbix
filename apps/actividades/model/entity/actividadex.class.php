@@ -126,7 +126,7 @@ class ActividadEx Extends ActividadAll {
 			}
 			// Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
 			// Anoto el cambio si la actividad está publicada
-			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') OR $aDades['publicado'] == TRUE)) {
+			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') || $aDades['publicado'] == TRUE)) {
 			    $oGestorCanvis = new gestorAvisoCambios();
 			    $shortClassName = (new \ReflectionClass($this))->getShortName();
 			    $oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
@@ -173,7 +173,7 @@ class ActividadEx Extends ActividadAll {
 			// anotar cambio.
 			// Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
 			// Anoto el cambio si la actividad está publicada
-			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') OR $aDades['publicado'] == TRUE)) {
+			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') || $aDades['publicado'] == TRUE)) {
 			    $oGestorCanvis = new gestorAvisoCambios();
 			    $shortClassName = (new \ReflectionClass($this))->getShortName();
 			    $oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $aDadesLast, array());
@@ -233,7 +233,7 @@ class ActividadEx Extends ActividadAll {
 		   	// Si no existeix no cal eliminar-el.
 			return false;
 		} else {
-			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') OR $this->bpublicado === TRUE)) {
+			if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') || $this->bpublicado === TRUE)) {
 			    // per carregar les dades a $this->aDadesActuals i poder posar-les als canvis.
 			    $this->DBCarregar('guardar');
 				// ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.

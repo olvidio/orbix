@@ -58,7 +58,7 @@ if ($oMiUsuario->isRolePau('cdc')) {
 	$donde="WHERE status='t' AND (id_ubi=$sDonde)";
 	$oForm->setCasas('casa');
 } else {
-	if ($_SESSION['oPerm']->have_perm_oficina('des') or $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
+	if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
 		$oForm->setCasas('all');
 		$donde="WHERE status='t'";
 	} else {

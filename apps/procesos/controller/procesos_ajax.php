@@ -115,7 +115,7 @@ switch($Qque) {
 			$sf=($oFase->getSf())? 2 : 0;
 			$sv=($oFase->getSv())? 1 : 0;
 			//ojo, que puede ser las dos a la vez
-			if (!(($soy & $sf) OR ($soy & $sv))) {
+			if (!(($soy & $sf) || ($soy & $sv))) {
 			    $i--;
 			    continue; 
 			}
@@ -207,7 +207,7 @@ switch($Qque) {
 			$sf=($oFase->getSf())? 2 : 0;
 			$sv=($oFase->getSv())? 1 : 0;
 			//ojo, que puede ser las dos a la vez
-			if (!(($soy & $sf) OR ($soy & $sv))) {
+			if (!(($soy & $sf) || ($soy & $sv))) {
 			    $i--;
 			    continue; 
 			}

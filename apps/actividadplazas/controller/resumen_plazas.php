@@ -45,7 +45,7 @@ $publicado = '';
 $oActividad = new actividades\Actividad($id_activ);
 $publicado = $oActividad->getPublicado();
 // Si no es una actividad de la dl, publicado da NULL (igual que todos los campos)
-if (!is_true($publicado) OR $publicado === null) {
+if (!is_true($publicado) || $publicado === null) {
 	$publicado = FALSE;
 }
 // avisar si es de otra dl:

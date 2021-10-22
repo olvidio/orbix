@@ -151,11 +151,11 @@ switch ($estilo_color) {
 // Exterior
 if (ConfigGlobal::SERVIDOR == 'orbix.moneders.net') {
     $fondo_claro="aliceblue";
-    if (ConfigGlobal::$web_path == '/pruebas' OR ConfigGlobal::$web_path == '/pruebassf') {
+    if (ConfigGlobal::$web_path == '/pruebas' || ConfigGlobal::$web_path == '/pruebassf') {
             $fondo_claro="#fadfd5;";
     }
 } else { // Tunel
-    if (ConfigGlobal::$web_path == '/pruebas' OR ConfigGlobal::$web_path == '/pruebassf') {
+    if (ConfigGlobal::$web_path == '/pruebas' || ConfigGlobal::$web_path == '/pruebassf') {
             $fondo_claro="aquamarine";
     }
 }

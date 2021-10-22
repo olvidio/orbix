@@ -3,8 +3,6 @@ namespace core;
 
 Class ConfigGlobal extends ServerConf {
     
-    
-
 	public static function getWebPort() {
         $private = getenv('PRIVATE');
 	    if (!empty($private) && $private == 'sf') {
@@ -59,22 +57,26 @@ Class ConfigGlobal extends ServerConf {
         return self::$debug;
 	}
 
+	/**
+	 * devuelve true/false si está o no instalado el módulo.
+	 * 
+	 * @param integer $id_mod
+	 * @return boolean
+	 */
 	public static function is_mod_installed($id_mod) {
-		if (array_key_exists($id_mod,$_SESSION['config']['mod_installed'])) {
-			return true;
-		} else {
-			return false;
-		}
+		return array_key_exists($id_mod,$_SESSION['config']['mod_installed']);
 	}
 	
+	/**
+	 * devuelve true/false si está o no instalada la app.
+	 * 
+	 * @param integer $id_mod
+	 * @return boolean
+	 */
 	public static function is_app_installed($nom_app) {
 		if (!empty($_SESSION['config']['a_apps'][$nom_app])) {
 			$id_app = $_SESSION['config']['a_apps'][$nom_app];
-			if (in_array($id_app,$_SESSION['config']['app_installed'])) {
-				return true;
-			} else {
-				return false;
-			}
+			return in_array($id_app,$_SESSION['config']['app_installed']);
 		} else {
 			return false;
 		}
@@ -110,8 +112,7 @@ Class ConfigGlobal extends ServerConf {
 	}
 	public static function mi_region() {
 		$a_reg = explode('-',$_SESSION['session_auth']['esquema']);
-		$reg = $a_reg[0]; 
-		return $reg;
+		return $a_reg[0]; 
 	}
 	public static function mi_dele() {
 		$a_reg = explode('-',$_SESSION['session_auth']['esquema']);

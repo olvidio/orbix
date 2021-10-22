@@ -51,7 +51,7 @@ switch ($Qque) {
                 // Ctr sv
                 $oCentroDl = new CentroDl($id_ubi);
                 $status = $oCentroDl->getStatus();
-                if ($status === FALSE OR empty($status)) {
+                if ($status === FALSE || empty($status)) {
                     $ctrsv++;
                     $oEncargo->DBEliminar();
                 }
@@ -59,7 +59,7 @@ switch ($Qque) {
                 // Ctr sf
                 $oCentroDl = new CentroEllas($id_ubi);
                 $status = $oCentroDl->getStatus();
-                if ($status === FALSE OR empty($status)) {
+                if ($status === FALSE || empty($status)) {
                     $ctrsf++;
                     $oEncargo->DBEliminar();
                 }

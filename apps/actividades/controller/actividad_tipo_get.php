@@ -29,7 +29,8 @@ switch ($Qsalida) {
 		$a_asistentes_posibles =$oTipoActiv->getAsistentesPosibles();
 		// la opción en blanco sólo es válida para des o calendario
         if (($_SESSION['oPerm']->have_perm_oficina('des'))
-		    OR ($_SESSION['oPerm']->have_perm_oficina('calendario'))) {
+		   || ($_SESSION['oPerm']->have_perm_oficina('calendario'))
+          ) {
 		        $blanco = TRUE;
 		    } else {
 		        $blanco = FALSE;

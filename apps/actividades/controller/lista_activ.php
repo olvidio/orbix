@@ -159,7 +159,7 @@ if (is_array($Qstatus)) {
 }
 // Id tipo actividad
 if (empty($Qid_tipo_activ)) {
-	if (($Qque == 'list_activ_inv_sg') OR ($Qque == 'list_activ_sr')){
+	if (($Qque == 'list_activ_inv_sg') || ($Qque == 'list_activ_sr')){
 		$codi_activ_v = [];
 		foreach ($Qseccion as $seccion_temp) {
 			foreach ($Qasist as $asist_temp) {
@@ -239,7 +239,7 @@ $GesActividades=new GestorActividad();
 $cActividades = $GesActividades->getActividades($aWhere,$aOperador);
 
 // Titulo	
-if (($Qque == 'list_activ_inv_sg') OR ($Qque == 'list_activ_sr')) {
+if (($Qque == 'list_activ_inv_sg') || ($Qque == 'list_activ_sr')) {
 	/*dicho paràmetro le viene del formulario que_lista_activ_sg.php
 	o del que_lista_activ_sr*/
 	$titulo = (string) \filter_input(INPUT_POST, 'titulo');
@@ -251,10 +251,11 @@ if (($Qque == 'list_activ_inv_sg') OR ($Qque == 'list_activ_sr')) {
 
 // Ver hora si...
 if (($Qque=="list_activ_compl")
-    OR ($Qque=="list_activ_inv_sg")
-    OR ($Qque=="list_activ_sr")
-    OR ($_SESSION['oPerm']->have_perm_oficina('vcsd'))
-    OR ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+    || ($Qque=="list_activ_inv_sg")
+    || ($Qque=="list_activ_sr")
+    || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))
+    || ($_SESSION['oPerm']->have_perm_oficina('des'))
+  ) {
 	   $ver_hora = 1;
 } else {
 	$ver_hora = 0;
@@ -282,7 +283,7 @@ $a_cabeceras[]= array('name'=>ucfirst(_("termina")),'class'=>'fecha');
 if ($ver_hora == 1) {
 	$a_cabeceras[]=ucfirst(_("hora fin"));
 }
-if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) { 
+if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) { 
 	$a_cabeceras[]="sf/sv";
 }
 $a_cabeceras[]=ucfirst(_("activ."));
@@ -334,8 +335,8 @@ foreach ($cActividades as $oActividad) {
 	$snom_tipo=$oTipoActiv->getNom_tipoText();
 
 	if ((($_SESSION['oPerm']->have_perm_oficina('sg')) 
-	    or ($_SESSION['oPerm']->have_perm_oficina('vcsd')) 
-	    or ($_SESSION['oPerm']->have_perm_oficina('des'))) AND !($_SESSION['oPerm']->have_perm_oficina('admin'))) {
+	   || ($_SESSION['oPerm']->have_perm_oficina('vcsd')) 
+	   || ($_SESSION['oPerm']->have_perm_oficina('des'))) AND !($_SESSION['oPerm']->have_perm_oficina('admin'))) {
 		if ($snom_tipo=="(sin especificar)") {	
 			$snom_tipo="&nbsp;";
 		}
@@ -352,7 +353,7 @@ foreach ($cActividades as $oActividad) {
 		$a_valores[$i][3]=$h_ini;
 		$a_valores[$i][5]=$h_fin;
 	}
-	if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) or ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+	if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
 		$a_valores[$i][6]=$ssfsv;
     }
 	$a_valores[$i][7]=$sactividad;

@@ -60,7 +60,7 @@ $algo = $oDesplZonas->options();
 if (strlen($algo) < 1) exit(_("No tiene permiso para ver esta página"));
 
 $perm_des = FALSE;
-if (($_SESSION['oPerm']->have_perm_oficina('des')) or ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
+if (($_SESSION['oPerm']->have_perm_oficina('des')) || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
     $perm_des = TRUE;
 }
 

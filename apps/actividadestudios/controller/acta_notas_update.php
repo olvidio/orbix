@@ -94,7 +94,7 @@ if ($Qque==3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 			}
 		} else {
 			// para las cursadas o examinadas no aprobadas
-			if ($id_situacion == NOTA::CURSADA OR $id_situacion == NOTA::EXAMINADO OR empty($id_situacion)) {
+			if ($id_situacion == NOTA::CURSADA || $id_situacion == NOTA::EXAMINADO || empty($id_situacion)) {
 				//conseguir una fecha para poner como fecha acta. las cursadas se guardan durante 2 años
 				$f_acta = $cActas[0]->getF_acta()->getFromLocal();
 			} else {

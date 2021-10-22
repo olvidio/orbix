@@ -126,7 +126,7 @@ class listaPlazas {
 			$id_pau=$id_activ;
 			$txt_ctr='';
 			if (configGlobal::is_app_installed('actividadcentros')) {
-				if ((($sasistentes=="s") OR ($sasistentes=="sss+")) AND ($sactividad=="cv")) {
+				if ((($sasistentes=="s") || ($sasistentes=="sss+")) AND ($sactividad=="cv")) {
 					// para las cv de s y de sss+ consulto los ctr que organizan 
 					$oGesEncargados = new GestorCentroEncargado();
 					$cCtrsEncargados = $oGesEncargados->getCentrosEncargados(array('id_activ'=>$id_activ,'_ordre'=>'num_orden'));
