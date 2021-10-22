@@ -81,53 +81,42 @@ $oFormP->setTitulo(core\strtoupper_dlb(_("periodo del planning actividades")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplAnysOpcion_sel(date('Y'));
 
-switch ($Qtipo) {
-	case 'planning':
-	case 'p_de_paso':
-        $personas_txt = '';
-	    switch ($Qobj_pau) {
-	        case 'PersonaN':
-	            $personas_txt = _("numerarios");
-	            break;
-	        case 'PersonaNax':
-	            $personas_txt = _("nax");
-	            break;
-	        case 'PersonaAgd':
-	            $personas_txt = _("agregados");
-	            break;
-	        case 'PersonaS':
-	            $personas_txt = _("supernumerarios");
-	            break;
-	        case 'PersonaSSSC':
-	            $personas_txt = _("de la sss+");
-	            break;
-            default:
-                $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
-                exit ($err_switch);
-	    }
-	//cuando queramos visualizar el calendario de actividades de
-	//1 persona de dlb o de paso
-		$a_campos = ['oPosicion' => $oPosicion,
-					'oHash' => $oHash,
-					'oFormP' => $oFormP,
-		            'personas_txt' => $personas_txt,
-					];
+if ($Qtipo == 'planning_cdc') {
+    $oForm = new web\CasasQue();
+    $oForm->setTitulo(core\strtoupper_dlb(_("búsqueda de casas cuyo planning interesa")));
+    // miro que rol tengo. Si soy casa, sólo veo la mía
+    if ($oMiUsuario->isRolePau('cdc')) {
+        $id_pau=$oMiUsuario->getId_pau();
+        $sDonde=str_replace(",", " OR id_ubi=", $id_pau);
+        //formulario para casas cuyo calendario de actividades interesa 
+        $donde="WHERE status='t' AND (id_ubi=$sDonde)";
+        $oForm->setCasas('casa');
+    } else {
+        if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
+            $oForm->setCasas('all');
+            $donde="WHERE status='t'";
+        } else {
+            if ($miSfsv == 1) {
+                $oForm->setCasas('sv');
+                $donde="WHERE status='t' AND sv='t'";
+            }
+            if ($miSfsv == 2) {
+                $oForm->setCasas('sf');
+                $donde="WHERE status='t' AND sf='t'";
+            }
+        }
+    }
+    $oForm->setPosiblesCasas($donde);
+    
+    $a_campos = ['oPosicion' => $oPosicion,
+                'oHash2' => $oHash2,
+                'oFormP' => $oFormP,
+                'oForm' => $oForm,
+                ];
 
-		$oView = new core\View('asistentes/controller');
-		echo $oView->render('planning_persona_que.phtml',$a_campos);
-	break;
-	case 'planning_ctr':
-	//cuando queramos visualizar el calendario de actividades de
-	//todas las personas de 1 ctr
-		$a_campos = ['oPosicion' => $oPosicion,
-					'oHash1' => $oHash1,
-					'oFormP' => $oFormP,
-					];
-
-		$oView = new core\View('asistentes/controller');
-		echo $oView->render('planning_ctr_que.phtml',$a_campos);
-	break;
-	default:
-	    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
-	    exit ($err_switch);
+    $oView = new core\View('actividades/controller');
+    echo $oView->render('planning_casa_que.phtml',$a_campos);
+} else {
+    $err_switch = sprintf(_("opción no definida en %s, linea %s"), __FILE__, __LINE__);
+    exit ($err_switch);
 }
