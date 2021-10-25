@@ -324,7 +324,7 @@ switch ($Qque) {
 				$aOperador['id_tipo_activ']='~';
 				break;
 		}
-		$aWhere['_ordre']='f_ini';
+		$aWhere['_ordre']='f_ini,nom_activ';
 
 		$GesActividades = new GestorActividadDl();
 		$cActividades = $GesActividades->getActividades($aWhere,$aOperador);
