@@ -7,6 +7,8 @@ use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorCentroEllas;
 use web\DateTimeLocal;
 use web\Periodo;
+use ubis\model\entity\Casa;
+use ubis\model\entity\GestorCasa;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
@@ -335,9 +337,14 @@ switch ($Qque) {
 		$a_cabeceras[]=ucfirst(_("actividad"));
 		$a_cabeceras[]=ucfirst(_("ctr encargados"));
 
+		$gesCasas = new GestorCasa();
+		$a_casas = $gesCasas->getArrayPosiblesCasas();
+		
 		$i=0;
 		$sin=0;
 		$a_valores = array();
+        $a_NombreCasa = [];
+        $a_FechaIni = [];
 		foreach ($cActividades as $oActividad) {
 			$i++;
 			$id_activ = $oActividad->getId_activ();
@@ -346,6 +353,7 @@ switch ($Qque) {
 			$nom_activ = $oActividad->getNom_activ();
 			$f_ini = $oActividad->getF_ini()->getFromLocal();
 			$f_fin = $oActividad->getF_fin()->getFromLocal();
+			$id_ubi_actividad = $oActividad->getId_ubi();
 			// mirar permisos.
 			if(core\ConfigGlobal::is_app_installed('procesos')) {
 			    $_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
@@ -378,8 +386,24 @@ switch ($Qque) {
 				$a_valores[$i][2]=$a_centros;
 				$a_valores[$i][3]=$f_ini;
 				$a_valores[$i][4]=$f_fin;
+				
+				if (empty($id_ubi_actividad) || $id_ubi_actividad == 1) {
+				    $nombre_ubi_actividad = 'z';
+				} else {
+				    $nombre_ubi_actividad = $a_casas[$id_ubi_actividad];
+				}
+				$a_NombreCasa[$i] = $nombre_ubi_actividad;
+				$a_FechaIni[$i] = $oActividad->getF_ini()->getIso();
 			}
 		}
+		// ordenar
+		if (!empty($a_valores)) {
+		    array_multisort(
+		        $a_FechaIni, SORT_STRING,
+		        $a_NombreCasa, SORT_STRING,
+		        $a_valores);
+		}
+		
 		?>
 
 		<p><h3><?= $titulo ?></h3></p>	
@@ -393,7 +417,6 @@ switch ($Qque) {
 		</tr>
 		<?php
 		foreach ($a_valores as $valores) {
-			//print_r($valores[2]);
 			$oPermCtr=$valores[10];
 			$id_activ=$valores[0];
 			$f_ini=$valores[3];

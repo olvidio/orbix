@@ -35,6 +35,7 @@ use procesos\model\entity\GestorActividadProcesoTarea;
 use usuarios\model\entity as usuarios;
 use web\DateTimeLocal;
 use web\Periodo;
+use ubis\model\entity\GestorCasa;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
@@ -326,9 +327,14 @@ if ($num_activ > $num_max_actividades && empty($Qcontinuar)) {
     die();
 }
 
+$gesCasas = new GestorCasa();
+$a_casas = $gesCasas->getArrayPosiblesCasas();
+
 $i=0;
 $sin=0;
 $a_valores=array();
+$a_NombreCasa = [];
+$a_FechaIni = [];
 $sPrefs = '';
 $id_usuario= core\ConfigGlobal::mi_id_usuario();
 $tipo = 'tabla_presentacion';
@@ -338,6 +344,7 @@ foreach($cActividades as $oActividad) {
     $id_activ = $oActividad->getId_activ();
     $id_tipo_activ = $oActividad->getId_tipo_activ();
     $nom_activ = $oActividad->getNom_activ();
+    $id_ubi_actividad = $oActividad->getId_ubi();
     $dl_org = $oActividad->getDl_org();
     $oF_ini = $oActividad->getF_ini();
     $f_ini = $oActividad->getF_ini()->getFromLocal();
@@ -517,7 +524,22 @@ foreach($cActividades as $oActividad) {
             $a_valores[$i][9]=$observ;
         }
     }
+    // para poder ordenar por fecha y casa
+    if (empty($id_ubi_actividad) || $id_ubi_actividad == 1) {
+        $nombre_ubi_actividad = 'z';
+    } else {
+        $nombre_ubi_actividad = $a_casas[$id_ubi_actividad];
+    }
+    $a_NombreCasa[$i] = $nombre_ubi_actividad;
+    $a_FechaIni[$i] = $oActividad->getF_ini()->getIso();
 }
+if (!empty($a_valores)) {
+    array_multisort(
+        $a_FechaIni, SORT_STRING,
+        $a_NombreCasa, SORT_STRING,
+        $a_valores);
+}
+
 $num=$i;
 if (!empty($a_valores)) {
     if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
