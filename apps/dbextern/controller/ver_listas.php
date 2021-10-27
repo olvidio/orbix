@@ -61,7 +61,7 @@ if (empty($id)) {
 
 		$oGesMatch = new dbextern\model\entity\GestorIdMatchPersona();
 		$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas'=>$id_nom_listas));
-		if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
+		if (!empty($cIdMatch[0]) && count($cIdMatch) > 0) {
 			continue;
 		}
 		// Sólo la primera vez (mov = ''):

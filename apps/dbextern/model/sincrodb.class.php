@@ -425,7 +425,7 @@ class sincroDB {
 		} else {
 			$id_ubi = 0;
 			if (empty($Ctr)) {
-				$msg = sprintf(_("parece que %s no tiene puesto el ctr en \"listas\""),$ape_nom);
+				$msg = sprintf(_("parece que %s no tiene puesto el ctr en la BDU"),$ape_nom);
 			} else {
 				$msg = sprintf(_("no se encuentra el ctr %s en la lista de ctr"),$Ctr);
 			}
