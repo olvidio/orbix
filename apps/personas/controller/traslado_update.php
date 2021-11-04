@@ -24,7 +24,7 @@ $oPersonaDl->DBCarregar();
 $Qnew_ctr = (string) \filter_input(INPUT_POST, 'new_ctr');
 $Qf_ctr = (string) \filter_input(INPUT_POST, 'f_ctr');
 
-if (!empty($Qnew_ctr) AND !empty($Qf_ctr)){
+if (!empty($Qnew_ctr) && !empty($Qf_ctr)){
 	$Qid_ctr_o = (string) \filter_input(INPUT_POST, 'id_ctr_o');
 	$Qctr_o = (string) \filter_input(INPUT_POST, 'ctr_o');
 
@@ -61,7 +61,7 @@ $Qdl = (string) \filter_input(INPUT_POST, 'dl');
 $reg_dl_org  = empty($Qdl)? '' : ConfigGlobal::mi_region().'-'.$Qdl;
 $sfsv_txt = (configGlobal::mi_sfsv() == 1)? 'v' :'f';
 
-if (!empty($Qnew_dl) AND !empty($Qf_dl)){
+if (!empty($Qnew_dl) && !empty($Qf_dl)){
 	$reg_dl_org  .= $sfsv_txt;
 	$Qnew_dl  .= $sfsv_txt;
 	$oTrasladoDl = new personas\trasladoDl();

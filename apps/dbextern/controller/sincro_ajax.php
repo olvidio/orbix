@@ -63,11 +63,10 @@ switch ($que) {
 			// a) si ya está unida; b) si está sin unir.
 			$oGesMatch = new GestorIdMatchPersona();
 			$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas'=>$id_nom_listas));
-			if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) { // (a) unida
+			if (!empty($cIdMatch[0]) && !empty($cIdMatch) ) { // (a) unida
 				$id_orbix = $cIdMatch[0]->getId_orbix();
 				$oTrasladoDl = new personas\model\entity\trasladoDl();
-				$aaa = $oTrasladoDl->getEsquemas($id_orbix,$tipo_persona);
-				
+				$oTrasladoDl->getEsquemas($id_orbix,$tipo_persona);
 			} else { //(b) mala suerte!
 				
 			}
@@ -162,7 +161,7 @@ switch ($que) {
 
 			$oGesMatch = new GestorIdMatchPersona();
 			$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas'=>$id_nom_listas));
-			if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
+			if (!empty($cIdMatch[0]) && !empty($cIdMatch)) {
 				$i++;
 				$id_orbix = $cIdMatch[0]->getId_orbix();
 				$rta = $oSincroDB->syncro($oPersonaListas,$id_orbix);
@@ -170,8 +169,6 @@ switch ($que) {
 					$msg .= !empty($msg)? "\n" : '';
 					$msg .= $rta;
 				}
-			} else {
-				continue;
 			}
 		}
 		if (!empty($msg)) {

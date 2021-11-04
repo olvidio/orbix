@@ -693,7 +693,7 @@ class TrasladoDl {
 			$oTipoDossier = new TipoDossier($id_tipo_dossier);
 			$app = $oTipoDossier->getApp();
 			$class = $oTipoDossier->getClass();
-			if (empty($class)) continue;
+			if (empty($class)) { continue; }
 			$colection = array();
 			switch ($class) {
 				case 'TelecoPersonaDl':
@@ -783,10 +783,9 @@ class TrasladoDl {
 				foreach ($colection as $Objeto) {
 					$Objeto->setoDbl($oDBorg);
 					$Objeto->DBCarregar();
-					//print_r($Objeto);
 					$NuevoObj = clone $Objeto;
 					$NuevoObj->setoDbl($oDBdst);
-					if (method_exists($NuevoObj,'setId_item') === true) $NuevoObj->setId_item(null);
+					if (method_exists($NuevoObj,'setId_item') === true) { $NuevoObj->setId_item(null); }
                     if ($NuevoObj->DBGuardar() === false) {
                         $error .= '<br>'.sprintf(_("No se ha guardado el dossier: %s"),$class);
                     } else { // Borrar excepto traslado

@@ -28,13 +28,20 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$id_pau = (integer)  \filter_input(INPUT_POST, 'id_pau');
 }
 
-$oPersona = personas\Persona::newPersona($id_pau);
+if (empty($Qobj_pau)) {
+    $oPersona = personas\Persona::newPersona($id_pau);
+} else {
+    $obj = 'personas\\model\\entity\\'.$Qobj_pau;
+    $oPersona = new $obj($id_pau);
+}
+
 if (!is_object($oPersona)) {
 	$msg_err = "<br>$oPersona con id_nom: $id_pau en  ".__FILE__.": line ". __LINE__;
 	exit($msg_err);
 }
 
-if (get_class($oPersona) == 'personas\model\entity\PersonaEx') {
+if (get_class($oPersona) == 'personas\model\entity\PersonaEx'
+    || get_class($oPersona) == 'personas\model\entity\PersonaIn') {
 	exit(_("con las personas de paso no tiene sentido."));
 }
 
