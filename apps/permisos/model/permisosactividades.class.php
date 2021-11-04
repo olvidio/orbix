@@ -230,32 +230,6 @@ class PermisosActividades {
 	}
 	
 	/**
-	 * Para saber si puedo crear algún tipode actividad
-	 * para poder hacer click en la casa para crear nueva
-	 * para dl, ex
-	 * 
-	 * @param bool $dl_propia dl organizadora
-	 * @return array [$of_respnsable, $status]
-	 */
-	public function getPermisoCrearAlguna($dl_propia) {
-	    $this->bpropia = $dl_propia;
-		$id_tipo_activ = $this->iid_tipo_activ;
-		
-		// buscar para el caso de afecat a datos (1) :
-		
-		foreach ($this->aPermDl as $afecta => $aProceso) {
-		    if ($afecta == 1 ) {
-		        foreach ($aProceso as $proceso => $aFases) {
-		            foreach ($aFases as $fase => $permiso ) {
-		                
-		            }
-		        }
-		    }
-		}
-		
-	}
-
-	/**
 	 * Para saber si puedo crear una actividad del tipo
 	 * para dl, ex
 	 * 
