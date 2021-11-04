@@ -148,7 +148,8 @@ fnjs_actualizar3=function(formulario){
 <br>
 <h3><?= ucfirst(_("permisos en actividades")) ?>:</h3>
 <b><?= _("propios") ?>:</b>
-<p class="comentario"><?= _("los permisos propios sobresecriben a los de los grupos") ?></p>
+<p class="comentario"><?= _("manda el nivel más concreto: 'sv n crt' manda sobre 'sv n'") ?>.</p>
+<p class="comentario"><?= _("para un mismo nivel, los permisos propios sobreescriben a los de los grupos") ?>.</p>
 <br>
 <form id="permisos_activ" name="permisos_activ" action=''>
 <?= $oHash3->getCamposHtml(); ?>

@@ -74,16 +74,23 @@ $oFinPlanning = $oPeriodo->getF_fin();
 $a_id_cdc = [];
 // valores por defecto.
 //divisiones por día
-if (empty($Qdd) || (($Qdd<>1) AND ($Qdd<>3))) {
+if (empty($Qdd) || ( ($Qdd<>1) && ($Qdd<>3) ) ) {
     $Qdd=3;
 }
+
 $mod=1; // 0 u otro valor (1 ver, 2 modificar, 3 eliminar..) el valor se pasa a la página link. 
+
+/* En este caso casi todos los usuarios que entran en esta pagina de calendario es
+ * para poder crear actividades. Por tanto nueva=1. Según el tipo de actividad no podrá 
+ * ser, pero esto hay que mirarlo a la horta de guardar.
+ */
 $nueva=1; // 0 o 1 para asignar una nueva actividad.
+
 // mostrar encabezados arriba y abajo; derecha e izquierda.
 if (!empty($print)) { $doble=0;$mod=0;$nueva=0; } else { $doble=1; }
 // si es sólo un mes tampoco pongo doble (cabecera y pie)
 $interval = $oFinPlanning->diff($oIniPlanning)->format('%m');
-if ($interval < 2) $doble=0;
+if ($interval < 2) { $doble=0; }
 
 $cabecera=ucfirst(_("calendario de casas"));
 

@@ -43,7 +43,7 @@ class PermisosActividades {
 	 *
 	 * @var array
 	 */
-	const  Afecta = ['datos'	        =>1,
+	const  AFECTA = ['datos'	        =>1,
                         'economic'	    =>2,
                         'sacd'		    =>4,
                         'ctr'		    =>8,
@@ -228,6 +228,32 @@ class PermisosActividades {
 	public function setFasesCompletadas($aFases=[]) {
 		$this->aFasesCompletadas = $aFases;
 	}
+	
+	/**
+	 * Para saber si puedo crear algún tipode actividad
+	 * para poder hacer click en la casa para crear nueva
+	 * para dl, ex
+	 * 
+	 * @param bool $dl_propia dl organizadora
+	 * @return array [$of_respnsable, $status]
+	 */
+	public function getPermisoCrearAlguna($dl_propia) {
+	    $this->bpropia = $dl_propia;
+		$id_tipo_activ = $this->iid_tipo_activ;
+		
+		// buscar para el caso de afecat a datos (1) :
+		
+		foreach ($this->aPermDl as $afecta => $aProceso) {
+		    if ($afecta == 1 ) {
+		        foreach ($aProceso as $proceso => $aFases) {
+		            foreach ($aFases as $fase => $permiso ) {
+		                
+		            }
+		        }
+		    }
+		}
+		
+	}
 
 	/**
 	 * Para saber si puedo crear una actividad del tipo
@@ -297,7 +323,7 @@ class PermisosActividades {
 	       $this->setActividad($this->iid_activ);
 	    }
 		// para poder pasar el valor de afecta con texto:
-		if (is_string($iAfecta)) $iAfecta = self::Afecta[$iAfecta];
+	    if (is_string($iAfecta)) { $iAfecta = self::AFECTA[$iAfecta]; }
 		
 		// buscar fase_ref para iAfecta
 		$id_fase_ref = $this->getFaseRef($iAfecta);
@@ -340,7 +366,7 @@ class PermisosActividades {
 	       $this->setActividad($this->iid_activ);
 	    }
 		// para poder pasar el valor de afecta con texto:
-		if (is_string($iAfecta)) $iAfecta = self::Afecta[$iAfecta];
+		if (is_string($iAfecta)) $iAfecta = self::AFECTA[$iAfecta];
 		
 		// buscar fase_ref para iAfecta
 		$id_fase_ref = $this->getFaseRef($iAfecta);
@@ -479,7 +505,7 @@ class PermisosActividades {
 	}
 
 	public function getAfecta() {
-	    return self::Afecta;
+	    return self::AFECTA;
 	}
 	
 	public function setId_tipo_activ($id_tipo_activ) {

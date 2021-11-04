@@ -395,13 +395,13 @@ if ($miRole < 4) {
         }
         ?>
         <br>
-        <h3><?= _("grupos") ?>: </h3>
+        <b><?= _("grupos") ?>: </b>
         <?php
         //////////// Aclaración permisos ////////////
         if (ConfigGlobal::is_app_installed('procesos')) {
             ?>
-            <p class="comentario"><?= _("OJO: los permisos en los grupos no tienen una preferencia definida.") ?>
-            <?= _("Si hay más de uno, deberían ser independiente, sino no se sabe cual sobreescribirá a cual.") ?></p>
+            <p class="comentario"><?= _("OJO: los permisos en los grupos no tienen una preferencia definida.") ?></p>
+            <p class="comentario"><?= _("Si hay más de uno, deberían ser independientes, sino no se sabe cual sobreescribirá a cual.") ?></p>
             <?php
         } ?>
         <br>

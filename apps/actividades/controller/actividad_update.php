@@ -147,6 +147,15 @@ case "nuevo":
 	
 	// Puede ser '000' > sin especificar
 	$Qinom_tipo_val = (string) \filter_input(INPUT_POST, 'inom_tipo_val');
+	
+	// permiso
+	$_SESSION['oPermActividades']->setActividad($Qid_activ,$Qid_tipo_activ,$Qdl_org);
+	$oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
+	if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('crear') === FALSE) {
+        echo _("No tiene permiso para crear una actividad de este tipo")."<br>";
+        die();
+	}
+	
 	//Compruebo que estén todos los campos necesasrios
 	if (empty($Qnom_activ) || empty($Qf_ini) || empty($Qf_fin) || empty($Qstatus) || empty($Qdl_org) ) {
 		echo _("debe llenar todos los campos que tengan un (*)")."<br>";
@@ -478,7 +487,6 @@ case "editar": // editar la actividad.
                     $oActividadPlazasDl->DBCarregar();
                     $oActividadPlazasDl->setPlazas($Qplazas);
                     
-                    //print_r($oActividadPlazasDl);
                     if ($oActividadPlazasDl->DBGuardar() === false) {
                         echo _("hay un error, no se ha guardado");
                         echo "\n".$oActividadPlazasDl->getErrorTxt();

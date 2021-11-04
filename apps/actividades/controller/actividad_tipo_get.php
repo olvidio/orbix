@@ -89,11 +89,6 @@ switch ($Qsalida) {
 		$cActiTipoTarifa = $GesActiTipoTarifa->getTipoActivTarifas($aWhere);
 		if (!empty($cActiTipoTarifa) && $cActiTipoTarifa > 0) {
 		    $tarifa = $cActiTipoTarifa[0]->getId_tarifa();
-		    /*
-		    $aDades['id_tarifa'] = $this->iid_tarifa;
-		    $aDades['id_tipo_activ'] = $this->iid_tipo_activ;
-		    $aDades['temporada'] = $this->itemporada;
-		    */
 		    return $tarifa;
 		}
         break;

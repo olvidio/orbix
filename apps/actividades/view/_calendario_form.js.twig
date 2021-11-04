@@ -1,5 +1,11 @@
 {% block scripts %}
 <script>
+//Para que no de error al crear una nueva. Al cambiar tipo sv/sf, cambia la dl_org y dispara 
+//esta función y no la encuentra.
+fnjs_actualizar_fases=function(){
+	
+}
+
 $(function() {
 	$( "#f_ini" ).datepicker( {
 		numberOfMonths: 3,

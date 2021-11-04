@@ -46,7 +46,7 @@ $Qque = (string) \filter_input(INPUT_POST, 'que');
 $oUsuario = new GrupoOUsuario(array('id_usuario'=>$Qid_usuario)); // La tabla y su heredada
 $nombre=$oUsuario->getUsuario();
 
-$aAfecta_a = PermisosActividades::Afecta;
+$aAfecta_a = PermisosActividades::AFECTA;
 $oAcciones = new PermAccion();
 $aOpcionesAction = $oAcciones->lista_array();
 

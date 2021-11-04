@@ -55,6 +55,10 @@ switch ($Qque) {
         $QoIniPlanning = unserialize(base64_decode($QsIniPlanning));
         $QoFinPlanning = unserialize(base64_decode($QsFinPlanning));
         
+        /* TODO: comprobar que tiene permiso para crear algo. Sino: $Qmod = 0;
+         * 
+         */
+        
         $oPlanning->setDd($Qdd);
         $oPlanning->setCabecera($Qcabecera);
         $oPlanning->setInicio($QoIniPlanning);
@@ -74,7 +78,6 @@ switch ($Qque) {
         if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
             $permiso_des = TRUE;
         }
-        
         
         $oActividad = new actividades\model\entity\Actividad($Qid_activ);
         $a_status = $oActividad->getArrayStatus();
@@ -107,7 +110,13 @@ switch ($Qque) {
         $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
         
         if ($oPermActiv->only_perm('ocupado')) { die(); }
-        //}
+        
+        if ($oPermActiv->have_perm_activ('ver') === TRUE) {
+            $mod = "ver";
+            if ($oPermActiv->have_perm_activ('modificar') === TRUE) {
+                $mod = "editar";
+            }
+        }
         
         $oTipoActiv= new web\TiposActividades($id_tipo_activ);
         $ssfsv=$oTipoActiv->getSfsvText();
@@ -183,6 +192,7 @@ switch ($Qque) {
             'h' => $h,
             'obj' => $obj,
             'oPermActiv' => $oPermActiv,
+            'mod' => $mod,
             'permiso_des'=> $permiso_des,
             'accion' => $accion,
             'sasistentes' => $sasistentes,
@@ -273,8 +283,8 @@ switch ($Qque) {
             $sv=$oCasa->getSv();
             $sf=$oCasa->getSf();
         } else {
-            if ($id_ubi==1 && $lugar_esp) $nombre_ubi=$lugar_esp;
-            if (!$id_ubi && !$lugar_esp) $nombre_ubi=_("sin determinar");
+            if ($id_ubi==1 && $lugar_esp) { $nombre_ubi=$lugar_esp; }
+            if (!$id_ubi && !$lugar_esp) { $nombre_ubi=_("sin determinar"); }
         }
         
         $oGesDl = new GestorDelegacion();
