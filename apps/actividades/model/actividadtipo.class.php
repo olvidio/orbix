@@ -36,7 +36,7 @@ class ActividadTipo {
 		$aSfsv=array(1=>'sv',2=>'sf');
 
 		if (empty($this->ssfsv)) { $this->ssfsv=$aSfsv[$isfsv]; }
-		if (empty($this->status)) $this->status = entity\ActividadAll::STATUS_ACTUAL;
+		if (empty($this->status)) { $this->status = entity\ActividadAll::STATUS_ACTUAL; }
 
 		if (!empty($this->id_tipo_activ))  {
 			$oTipoActiv= new web\TiposActividades($this->id_tipo_activ);

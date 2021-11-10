@@ -10,11 +10,11 @@ use ubis\model\entity\Tarifa;
 use ubis\model\entity\Ubi;
 use web\Desplegable;
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("apps/core/global_header.inc");
+require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
 
 // Crea los objectos de uso global **********************************************
-	require_once ("apps/core/global_object.inc");
+require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qque = (string)  \filter_input(INPUT_POST, 'que');
@@ -41,7 +41,7 @@ $oPlanning->setColorColumnaDos($colorColumnaDos);
 $oPlanning->setTable_border($table_border);
 
 switch ($Qque) {
-	case "get":
+    case "get":
         $Qdd = (integer) \filter_input(INPUT_POST, 'dd');
         $Qcabecera = (string) \filter_input(INPUT_POST, 'cabecera');
         $QsIniPlanning = (string) \filter_input(INPUT_POST, 'sIniPlanning');
@@ -56,7 +56,7 @@ switch ($Qque) {
         $QoFinPlanning = unserialize(base64_decode($QsFinPlanning));
         
         /* TODO: comprobar que tiene permiso para crear algo. Sino: $Qmod = 0;
-         * 
+         *
          */
         
         $oPlanning->setDd($Qdd);
@@ -69,8 +69,8 @@ switch ($Qque) {
         $oPlanning->setDoble($Qdoble);
         
         echo $oPlanning->dibujar();
-		break;
-	case 'modificar':
+        break;
+    case 'modificar':
         $obj = 'actividades\\\\model\\\\entity\\\\ActividadDl';
         $Qid_activ = (integer)  \filter_input(INPUT_POST, 'id_activ');
         
@@ -172,15 +172,15 @@ switch ($Qque) {
         
         $oHash1 = new web\Hash();
         $oHash1->setUrl(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_select_ubi.php');
-        $oHash1->setCamposForm('dl_org!ssfsv'); 
+        $oHash1->setCamposForm('dl_org!ssfsv');
         $h = $oHash1->linkSinVal();
-
+        
         $oActividadTipo = new actividades\model\ActividadTipo();
         $oActividadTipo->setId_tipo_activ($id_tipo_activ);
         $oActividadTipo->setAsistentes($sasistentes);
         $oActividadTipo->setActividad($sactividad);
         $oActividadTipo->setNom_tipo($snom_tipo);
-
+        
         $procesos_installed = core\ConfigGlobal::is_app_installed('procesos');
         
         $status_txt = $a_status[$status];
@@ -227,7 +227,7 @@ switch ($Qque) {
         $oView = new core\ViewTwig('actividades/controller');
         echo $oView->render('calendario_form_actividad.html.twig',$a_campos);
         break;
-	case 'nueva':
+    case 'nueva':
         $obj = 'actividades\\\\model\\\\entity\\\\ActividadDl';
         $Qid_ubi = (integer)  \filter_input(INPUT_POST, 'id_ubi');
         
@@ -238,7 +238,7 @@ switch ($Qque) {
         
         $oActividad = new Actividad();
         $a_status = $oActividad->getArrayStatus();
-
+        
         $id_tipo_activ = $oActividad->getId_tipo_activ();
         $dl_org = $oActividad->getDl_org();
         $nom_activ = $oActividad->getNom_activ();
@@ -321,19 +321,19 @@ switch ($Qque) {
         
         $oHash1 = new web\Hash();
         $oHash1->setUrl(core\ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_select_ubi.php');
-        $oHash1->setCamposForm('dl_org!ssfsv!isfsv'); 
+        $oHash1->setCamposForm('dl_org!ssfsv!isfsv');
         $h = $oHash1->linkSinVal();
-
+        
         $oActividadTipo = new actividades\model\ActividadTipo();
         $oActividadTipo->setId_tipo_activ($id_tipo_activ);
         $oActividadTipo->setAsistentes($sasistentes);
         $oActividadTipo->setActividad($sactividad);
         $oActividadTipo->setNom_tipo($snom_tipo);
-
+        
         $procesos_installed = core\ConfigGlobal::is_app_installed('procesos');
         
         $status_txt = $a_status[$status];
-
+        
         $accion = '';
         $a_campos = [
             'oPosicion' => $oPosicion,
@@ -374,130 +374,130 @@ switch ($Qque) {
         $oView = new core\ViewTwig('actividades/controller');
         echo $oView->render('calendario_form_actividad.html.twig',$a_campos);
         break;
-	case "update":
+    case "update":
         $Qid_item = (integer)  \filter_input(INPUT_POST, 'id_item');
         $Qid_ubi = (integer)  \filter_input(INPUT_POST, 'id_ubi');
         $Qyear = (integer)  \filter_input(INPUT_POST, 'year');
         $Qid_tarifa = (integer)  \filter_input(INPUT_POST, 'id_tarifa');
         $Qcantidad = (string)  \filter_input(INPUT_POST, 'cantidad');
         $Qobserv = (string)  \filter_input(INPUT_POST, 'observ');
-
-		if (!empty($Qid_item)) {
-			$oTarifa = new Tarifa();
-			$oTarifa->setId_item($Qid_item);
-			$oTarifa->DBCarregar(); //perque agafi els valors que ja té.
-		} else {
-			$oTarifa = new Tarifa();
-		}
-		if (!empty($Qid_ubi)) $oTarifa->setId_ubi($Qid_ubi);
-		if (!empty($Qyear)) $oTarifa->setYear($Qyear);
-		if (!empty($Qid_tarifa)) $oTarifa->setId_tarifa($Qid_tarifa);
-		if (!empty($Qcantidad)) $oTarifa->setCantidad($Qcantidad);
-		if (!empty($Qobserv)) $oTarifa->setObserv($Qobserv);
-		if ($oTarifa->DBGuardar() === false) {
-			echo _("hay un error, no se ha guardado");
-			echo "\n".$oTarifa->getErrorTxt();
-		}
-		break;
-	case "borrar":
+        
+        if (!empty($Qid_item)) {
+            $oTarifa = new Tarifa();
+            $oTarifa->setId_item($Qid_item);
+            $oTarifa->DBCarregar(); //perque agafi els valors que ja té.
+        } else {
+            $oTarifa = new Tarifa();
+        }
+        if (!empty($Qid_ubi)) $oTarifa->setId_ubi($Qid_ubi);
+        if (!empty($Qyear)) $oTarifa->setYear($Qyear);
+        if (!empty($Qid_tarifa)) $oTarifa->setId_tarifa($Qid_tarifa);
+        if (!empty($Qcantidad)) $oTarifa->setCantidad($Qcantidad);
+        if (!empty($Qobserv)) $oTarifa->setObserv($Qobserv);
+        if ($oTarifa->DBGuardar() === false) {
+            echo _("hay un error, no se ha guardado");
+            echo "\n".$oTarifa->getErrorTxt();
+        }
+        break;
+    case "borrar":
         $Qid_item = (integer)  \filter_input(INPUT_POST, 'id_item');
-		if (!empty($Qid_item)) {
-			$oTarifa = new Tarifa();
-			$oTarifa->setId_item($Qid_item);
-			if ($oTarifa->DBEliminar() === false) {
-				echo _("hay un error, no se ha eliminado");
-				echo "\n".$oTarifa->getErrorTxt();
-			}
-		} else {
+        if (!empty($Qid_item)) {
+            $oTarifa = new Tarifa();
+            $oTarifa->setId_item($Qid_item);
+            if ($oTarifa->DBEliminar() === false) {
+                echo _("hay un error, no se ha eliminado");
+                echo "\n".$oTarifa->getErrorTxt();
+            }
+        } else {
             $Qque = (string)  \filter_input(INPUT_POST, 'que');
-			$error_txt=_("no sé cuál he de borar");
-			echo "{ que: '".$Qque."', error: '$error_txt' }";
-		}
-		break;
-	case "update_inc":
+            $error_txt=_("no sé cuál he de borar");
+            echo "{ que: '".$Qque."', error: '$error_txt' }";
+        }
+        break;
+    case "update_inc":
         $Qid_ubi = (integer)  \filter_input(INPUT_POST, 'id_ubi');
         $Qyear = (integer)  \filter_input(INPUT_POST, 'year');
-		foreach($_POST['inc_cantidad'] as $key => $cantidad) {
-			$tarifa=strtok($key,'#');
-			$id_item= (integer) strtok('#');
-			$cantidad=round($cantidad);
-			if (empty($id_item) && empty($cantidad)) continue; // no hay ni habia nada.
-			$oTarifa = new Tarifa(array('id_tarifa'=>$id_tarifa,'id_ubi'=>$Qid_ubi,'year'=>$Qyear));
-			$oTarifa->DBCarregar();
-			if (isset($cantidad)) $oTarifa->setCantidad($cantidad);
-			if ($oTarifa->DBGuardar() === false) {
-				echo _("hay un error, no se ha guardado");
-				echo "\n".$oTarifa->getErrorTxt();
-			}
-		}
-		break;
-	case 'tar_form':
-	    $Qid_tarifa = (string) \filter_input(INPUT_POST, 'id_tarifa');
-		if ($Qid_tarifa == 'nuevo') {
-			$letra = '';
-			$modo = 0;
-			$observ = '';
-		} else {
-			$oTipoTarifa = new TipoTarifa($Qid_tarifa);
-			$oTipoTarifa->DBCarregar();
-			$letra = $oTipoTarifa->getLetra();
-			$modo = $oTipoTarifa->getModo();
-			$observ = $oTipoTarifa->getObserv();
-		}
-		$a_opciones=array(0=>_("por dia"),1=>_("total"));
-		$oDespl = new Desplegable('modo',$a_opciones,$modo,0);
-		
-		$oHash = new web\Hash();
-		$camposForm = 'letra!modo!observ';
-		$oHash->setCamposNo('que');
-		$a_camposHidden = array(
-		    'que' => 'tar_update',
-		    'id_tarifa' => $Qid_tarifa,
-		);
-		$oHash->setcamposForm($camposForm);
-		$oHash->setArraycamposHidden($a_camposHidden);
-
-		$txt="<form id='frm_tarifa'>";
-		$txt.= $oHash->getCamposHtml();
-		$txt.='<h3>'._("tarifa").'</h3>';
-		$txt.=_("letra")." <input type=text size=3 name=letra value=\"$letra\">";
-		$txt.='&nbsp;&nbsp;';
-		$txt.=_("modo"). $oDespl->desplegable();
-		$txt.='<br>';
-		$txt.=_("observaciones")." <input type=text size=25 name=observ value=\"$observ\">";
-		$txt.='<br><br>';
-		$txt.="<input type='button' value='". _("guardar") ."' onclick=\"fnjs_guardar('#frm_tarifa','tar_update');\" >";
-		$txt.="<input type='button' value='". _("eliminar") ."' onclick=\"fnjs_guardar('#frm_tarifa','tar_eliminar');\" >";
-		$txt.="<input type='button' value='". _("cancel") ."' onclick=\"fnjs_cerrar();\" >";
-		$txt.="</form> ";
-		echo $txt;
-		break;
-	case "tar_update":
-	    $Qid_tarifa = (string) \filter_input(INPUT_POST, 'id_tarifa');
-	    $Qletra = (string) \filter_input(INPUT_POST, 'letra');
-	    $Qmodo = (string) \filter_input(INPUT_POST, 'modo');
-	    $Qobserv = (string) \filter_input(INPUT_POST, 'observ');
-		if ($Qid_tarifa == 'nuevo') {
-			$oTipoTarifa = new TipoTarifa();
-			// miro si soy sf/sv.
-			$oTipoTarifa->setSfsv(ConfigGlobal::mi_sfsv());
-		} else {
-			$oTipoTarifa = new TipoTarifa($Qid_tarifa);
-			$oTipoTarifa->DBCarregar();
-		}
-		if (isset($Qletra)) $oTipoTarifa->setLetra($Qletra);
-		if (isset($Qmodo)) $oTipoTarifa->setModo($Qmodo);
-		if (isset($Qobserv)) $oTipoTarifa->setObserv($Qobserv);
-		if ($oTipoTarifa->DBGuardar() === false) {
-			echo _("hay un error, no se ha guardado");
-			echo "\n".$oTipoTarifa->getErrorTxt();
-		}
-		break;
-	case "tar_eliminar":
-		$oTipoTarifa = new TipoTarifa($_POST['id_tarifa']);
-		$oTipoTarifa->DBCarregar();
-		if ($oTipoTarifa->DBEliminar() === false) {
-			echo _("hay un error, no se ha borrado");
-		}
-		break;
+        foreach($_POST['inc_cantidad'] as $key => $cantidad) {
+            $tarifa=strtok($key,'#');
+            $id_item= (integer) strtok('#');
+            $cantidad=round($cantidad);
+            if (empty($id_item) && empty($cantidad)) continue; // no hay ni habia nada.
+            $oTarifa = new Tarifa(array('id_tarifa'=>$id_tarifa,'id_ubi'=>$Qid_ubi,'year'=>$Qyear));
+            $oTarifa->DBCarregar();
+            if (isset($cantidad)) $oTarifa->setCantidad($cantidad);
+            if ($oTarifa->DBGuardar() === false) {
+                echo _("hay un error, no se ha guardado");
+                echo "\n".$oTarifa->getErrorTxt();
+            }
+        }
+        break;
+    case 'tar_form':
+        $Qid_tarifa = (string) \filter_input(INPUT_POST, 'id_tarifa');
+        if ($Qid_tarifa == 'nuevo') {
+            $letra = '';
+            $modo = 0;
+            $observ = '';
+        } else {
+            $oTipoTarifa = new TipoTarifa($Qid_tarifa);
+            $oTipoTarifa->DBCarregar();
+            $letra = $oTipoTarifa->getLetra();
+            $modo = $oTipoTarifa->getModo();
+            $observ = $oTipoTarifa->getObserv();
+        }
+        $a_opciones=array(0=>_("por dia"),1=>_("total"));
+        $oDespl = new Desplegable('modo',$a_opciones,$modo,0);
+        
+        $oHash = new web\Hash();
+        $camposForm = 'letra!modo!observ';
+        $oHash->setCamposNo('que');
+        $a_camposHidden = array(
+            'que' => 'tar_update',
+            'id_tarifa' => $Qid_tarifa,
+        );
+        $oHash->setcamposForm($camposForm);
+        $oHash->setArraycamposHidden($a_camposHidden);
+        
+        $txt="<form id='frm_tarifa'>";
+        $txt.= $oHash->getCamposHtml();
+        $txt.='<h3>'._("tarifa").'</h3>';
+        $txt.=_("letra")." <input type=text size=3 name=letra value=\"$letra\">";
+        $txt.='&nbsp;&nbsp;';
+        $txt.=_("modo"). $oDespl->desplegable();
+        $txt.='<br>';
+        $txt.=_("observaciones")." <input type=text size=25 name=observ value=\"$observ\">";
+        $txt.='<br><br>';
+        $txt.="<input type='button' value='". _("guardar") ."' onclick=\"fnjs_guardar('#frm_tarifa','tar_update');\" >";
+        $txt.="<input type='button' value='". _("eliminar") ."' onclick=\"fnjs_guardar('#frm_tarifa','tar_eliminar');\" >";
+        $txt.="<input type='button' value='". _("cancel") ."' onclick=\"fnjs_cerrar();\" >";
+        $txt.="</form> ";
+        echo $txt;
+        break;
+    case "tar_update":
+        $Qid_tarifa = (string) \filter_input(INPUT_POST, 'id_tarifa');
+        $Qletra = (string) \filter_input(INPUT_POST, 'letra');
+        $Qmodo = (string) \filter_input(INPUT_POST, 'modo');
+        $Qobserv = (string) \filter_input(INPUT_POST, 'observ');
+        if ($Qid_tarifa == 'nuevo') {
+            $oTipoTarifa = new TipoTarifa();
+            // miro si soy sf/sv.
+            $oTipoTarifa->setSfsv(ConfigGlobal::mi_sfsv());
+        } else {
+            $oTipoTarifa = new TipoTarifa($Qid_tarifa);
+            $oTipoTarifa->DBCarregar();
+        }
+        if (isset($Qletra)) $oTipoTarifa->setLetra($Qletra);
+        if (isset($Qmodo)) $oTipoTarifa->setModo($Qmodo);
+        if (isset($Qobserv)) $oTipoTarifa->setObserv($Qobserv);
+        if ($oTipoTarifa->DBGuardar() === false) {
+            echo _("hay un error, no se ha guardado");
+            echo "\n".$oTipoTarifa->getErrorTxt();
+        }
+        break;
+    case "tar_eliminar":
+        $oTipoTarifa = new TipoTarifa($_POST['id_tarifa']);
+        $oTipoTarifa->DBCarregar();
+        if ($oTipoTarifa->DBEliminar() === false) {
+            echo _("hay un error, no se ha borrado");
+        }
+        break;
 }
