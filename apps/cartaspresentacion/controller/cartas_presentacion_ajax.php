@@ -5,6 +5,7 @@ use cartaspresentacion\model\entity\CartaPresentacionEx;
 use cartaspresentacion\model\entity\GestorCartaPresentacion;
 use cartaspresentacion\model\entity\GestorCartaPresentacionDl;
 use core\ConfigGlobal;
+use function core\is_true;
 use ubis\model\entity\Centro;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\DireccionCtr;
@@ -16,6 +17,7 @@ use ubis\model\entity\GestorCtrDlxDireccion;
 use ubis\model\entity\GestorCtrExxDireccion;
 use ubis\model\entity\GestorDireccionCtr;
 use ubis\model\entity\GestorDireccionCtrDl;
+use ubis\model\entity\Ubi;
 use web\Desplegable;
 use web\Hash;
 use web\Lista;
@@ -90,7 +92,8 @@ switch ($Qque_mod) {
 				break;
 			case 'get_dl':
 			    $oGesCentrosDl = new GestorCentroDl();
-			    $cCentrosDl = $oGesCentrosDl->getCentros(['status'=>'t']);
+			    //$cCentrosDl = $oGesCentrosDl->getCentros(['status'=>'t']);
+			    $cCentrosDl = $oGesCentrosDl->getCentros();
 			    $aPoblaciones = [];
 			    foreach ($cCentrosDl as $oCentroDl) {
 			        $id_ubi = $oCentroDl->getId_ubi();
@@ -260,6 +263,7 @@ switch ($Qque_mod) {
                 echo _("Hay un error, no se ha guardado.");
             }
 		}
+		sanear();
 		break;
 	case "actualizar":
 		// se trata de poner el nombre del director (tf i mail) en el dossier.
@@ -301,9 +305,7 @@ switch ($Qque_mod) {
 				$cCentros = [];
 				foreach ($cId_ubis as $oUbi) {
 				    $oCentro = new CentroDl($oUbi->getId_ubi());
-				    if ($oCentro->getStatus()) {
-				        $cCentros[] = $oCentro;
-				    }
+                    $cCentros[] = $oCentro;
 				}
                 $cDirCentros[$d] = [ 'dir'=>$txt_direccion,
                                     'colCentros'=>$cCentros ,
@@ -327,6 +329,9 @@ switch ($Qque_mod) {
 				$c++;
 				$id_ubi = $oCentro->getId_ubi();
 				$nombre_ubi = $oCentro->getNombre_ubi();
+				if (!is_true($oCentro->getStatus())) {
+				    $nombre_ubi = _("ANULADO").' '.$nombre_ubi;
+				}
 				$nombre_ubi .= empty($nom_sede)? '' : " ($nom_sede)";
 				$tipo_ctr = $oCentro->getTipo_ctr();
 				$tipo_labor = $oCentro->getTipo_labor();
@@ -471,4 +476,31 @@ switch ($Qque_mod) {
 		echo "<br><input type=button name=\"actualizar\" value=\"". _("actualizar director") ."\" onclick=\"fnjs_actualizar_dtor();\">";
 		*/
 		break;
+	default:
+	    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+	    exit ($err_switch);
+}
+
+/**
+ * Al hacer algunos cambios, puede quedar que una carta de presentacion tenga una dirección que
+ * ya no pertenece al centro, y entonces aparece en sitios raros y no se puede localizar.
+ * Esta función comprueba que las direcciones pertenezcan a los centros.
+ */
+function sanear() {
+    $GesCartasPresentacion = new GestorCartaPresentacionDl();
+    $cCartasPresentacion = $GesCartasPresentacion->getCartasPresentacion();
+    foreach ($cCartasPresentacion as $oCartaPresentacion) {
+        $id_ubi = $oCartaPresentacion->getId_ubi();
+        $id_direccion = $oCartaPresentacion->getId_direccion();
+        
+        $oUbi = Ubi::NewUbi($id_ubi);
+        $a_direcciones_ctr = [];
+        $cDirecciones = $oUbi->getDirecciones();
+        foreach ($cDirecciones as $oDireccion) {
+            $a_direcciones_ctr[] = $oDireccion->getId_direccion();
+        }
+        if (!in_array($id_direccion, $a_direcciones_ctr)) {
+            $oCartaPresentacion->DBEliminar();
+        }
+    }
 }

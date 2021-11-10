@@ -11,6 +11,7 @@ use ubis\model\CuadrosLabor;
 use ubis\model\entity\DireccionCtr;
 use ubis\model\entity\GestorCtrxDireccion;
 use function core\strtoupper_dlb;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -76,7 +77,7 @@ switch ($Qque) {
 			    $cCentros = [];
 			    foreach ($cId_ubis as $oUbi) {
 			        $oCentro = new Centro($oUbi->getId_ubi());
-			        if ($oCentro->getStatus()) {
+			        if (is_true($oCentro->getStatus())) {
 			            $cCentros[] = $oCentro;
 			        }
 			    }
