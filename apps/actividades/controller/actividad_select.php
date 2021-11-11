@@ -530,6 +530,10 @@ foreach($cActividades as $oActividad) {
     if (empty($id_ubi_actividad) || $id_ubi_actividad == 1) {
         $nombre_ubi_actividad = 'z';
     } else {
+        if (array_key_exists($id_ubi_actividad, $a_casas)) {
+            echo sprintf(_("no se encuentra el ubi para la actividad %s"),$nom_activ);
+            $nombre_ubi_actividad = 'z';
+        }
         $nombre_ubi_actividad = $a_casas[$id_ubi_actividad];
     }
     $a_NombreCasa[$i] = $nombre_ubi_actividad;
