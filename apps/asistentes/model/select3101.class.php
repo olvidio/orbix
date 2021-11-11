@@ -6,7 +6,6 @@ use actividades\model\entity as actividades;
 use asistentes\model\entity as asistentes;
 use core\ConfigGlobal;
 use core\View;
-use function core\telecos_persona;
 use dossiers\model as dossiers;
 use ubis;
 use web;
@@ -267,8 +266,8 @@ class Select3101 {
 			$sacd= ($oPersona->getSacd())? _("sí") : '';
 			// Añado los telf:
 			$telfs = '';
-			$telfs_fijo = telecos_persona($id_nom,"telf","*"," / ",FALSE) ;
-			$telfs_movil = telecos_persona($id_nom,"móvil","*"," / ",FALSE) ;
+			$telfs_fijo = $oPersona->telecos_persona($id_nom,"telf"," / ","*",FALSE) ;
+			$telfs_movil = $oPersona->telecos_persona($id_nom,"móvil"," / ","*",FALSE) ;
 			if (!empty($telfs_fijo) && !empty($telfs_movil)) {
 			    $telfs = $telfs_fijo ." / ". $telfs_movil;
 			} else {
@@ -276,7 +275,7 @@ class Select3101 {
 			    $telfs .= $telfs_movil??'';
 			}
 			$mails = '';
-			$mails = telecos_persona($id_nom,"e-mail","*"," / ",FALSE) ;
+			$mails = $oPersona->telecos_persona($id_nom,"e-mail"," / ","*",FALSE) ;
 
 			$cargo=$oCargo->getCargo();
 			$puede_agd=$oActividadCargo->getPuede_agd();
@@ -438,8 +437,8 @@ class Select3101 {
 			$ctr_dl=$oPersona->getCentro_o_dl();
 			// Añado los telf:
 			$telfs = '';
-			$telfs_fijo = telecos_persona($id_nom,"telf","*"," / ",FALSE) ;
-			$telfs_movil = telecos_persona($id_nom,"móvil","*"," / ",FALSE) ;
+			$telfs_fijo = $oPersona->telecos_persona($id_nom,"telf"," / ","*",FALSE) ;
+			$telfs_movil = $oPersona->telecos_persona($id_nom,"móvil"," / ","*",FALSE) ;
 			if (!empty($telfs_fijo) && !empty($telfs_movil)) {
 			    $telfs = $telfs_fijo ." / ". $telfs_movil;
 			} else {
@@ -447,7 +446,7 @@ class Select3101 {
 			    $telfs .= $telfs_movil??'';
 			}
 			$mails = '';
-			$mails = telecos_persona($id_nom,"e-mail","*"," / ",FALSE) ;
+			$mails = $oPersona->telecos_persona($id_nom,"e-mail"," / ","*",FALSE) ;
 
 			$propio=$oAsistente->getPropio();
 			$falta=$oAsistente->getFalta();

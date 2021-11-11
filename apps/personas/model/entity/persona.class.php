@@ -1,6 +1,7 @@
 <?php
 namespace personas\model\entity;
 use core;
+use ubis\model\entity\DescTeleco;
 /**
  * Fitxer amb la Classe que accedeix a la taula pv_personas
  *
@@ -75,8 +76,6 @@ class Persona {
 		}
 		return $oPersona;
 	}
-
-
 
 	/* METODES ALTRES  ----------------------------------------------------------*/
 	/* METODES PRIVATS ----------------------------------------------------------*/

@@ -216,19 +216,19 @@ class Config {
     public function any_final_curs($que='est') {
         switch ($que) {
             case 'est':
-                if ($this->mes_actual() > 9) {
-                    return date("Y")+1;
-                } else {
-                    return date("Y");
-                }
+                $fin_m = $_SESSION['oConfig']->getMesFinStgr();
                 break;
             case 'crt':
-                if ($this->mes_actual() > 8) {
-                    return date("Y")+1;
-                } else {
-                    return date("Y");
-                }
+                $fin_m = $_SESSION['oConfig']->getMesFinCrt();
                 break;
+            default:
+                $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+                exit ($err_switch);
+        }
+        if ($this->mes_actual() > $fin_m) {
+            return date("Y")+1;
+        } else {
+            return date("Y");
         }
     }
     

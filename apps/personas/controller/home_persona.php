@@ -1,5 +1,4 @@
 <?php
-use function core\telecos_persona;
 use ubis\model\entity as ubis;
 /**
 * Esta página pone el titulo en el frame superior.
@@ -117,8 +116,8 @@ $godossiers=web\Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_bui
 $titulo=$nom;
 
 $telfs = '';
-$telfs_fijo = telecos_persona($id_nom,"telf","*"," / ") ;
-$telfs_movil = telecos_persona($id_nom,"móvil","*"," / ") ;
+$telfs_fijo = $oPersona->telecos_persona($id_nom,"telf"," / ","*") ;
+$telfs_movil = $oPersona->telecos_persona($id_nom,"móvil"," / ","*") ;
 if (!empty($telfs_fijo) && !empty($telfs_movil)) { 
     $telfs = $telfs_fijo ." / ". $telfs_movil;
 } else {
@@ -126,7 +125,7 @@ if (!empty($telfs_fijo) && !empty($telfs_movil)) {
     $telfs .= $telfs_movil??'';
 }
 $mails = '';
-$mails = telecos_persona($id_nom,"e-mail","*"," / ") ;
+$mails = $oPersona->telecos_persona($id_nom,"e-mail"," / ","*") ;
 
 
 $a_campos = [

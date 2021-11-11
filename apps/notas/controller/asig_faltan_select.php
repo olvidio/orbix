@@ -1,5 +1,4 @@
 <?php
-use function core\telecos_persona;
 use notas\model as notas;
 use ubis\model\entity as ubis;
 /**
@@ -138,8 +137,8 @@ foreach ($aId_nom as $id_nom=>$aAsignaturas) {
 	
 	// Añado los telf:
 	$telfs = '';
-	$telfs_fijo = telecos_persona($id_nom,"telf","*"," / ",FALSE) ;
-	$telfs_movil = telecos_persona($id_nom,"móvil","*"," / ",FALSE) ;
+	$telfs_fijo = $oPersona->telecos_persona($id_nom,"telf"," / ","*",FALSE) ;
+	$telfs_movil = $oPersona->telecos_persona($id_nom,"móvil"," / ","*",FALSE) ;
 	if (!empty($telfs_fijo) && !empty($telfs_movil)) {
 	    $telfs = $telfs_fijo ." / ". $telfs_movil;
 	} else {
@@ -147,7 +146,7 @@ foreach ($aId_nom as $id_nom=>$aAsignaturas) {
 	    $telfs .= $telfs_movil??'';
 	}
 	$mails = '';
-	$mails = telecos_persona($id_nom,"e-mail","*"," / ",FALSE);
+	$mails = $oPersona->telecos_persona($id_nom,"e-mail","*"," / ","*",FALSE);
 	
 	$condicion_2="Where id_nom='".$id_nom."'";
 	$condicion_2=urlencode($condicion_2);

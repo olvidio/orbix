@@ -5,6 +5,7 @@ use function core\strtoupper_dlb;
 use core;
 use web;
 use ubis\model\entity as ubis;
+use ubis\model\entity\DescTeleco;
 /**
  * Fitxer amb la Classe que accedeix a la taula personas_dl
  *
@@ -267,6 +268,41 @@ abstract class PersonaGlobal Extends core\ClasePropiedades {
 	 */
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
+	 
+	 /**
+	  * Devuelve los teleco de una persona especificados por
+	  *
+	  *	 parámetros $id_nom,$tipo_teleco,$desc_teleco,$separador
+	  *
+	  *	Si $desc_teleco es '*', entonces se añade la descripción entre paréntesis
+	  *      al final del número...
+	  */
+	 public function telecos_persona($id_nom,$tipo_teleco,$separador,$desc_teleco='',$bDescripcion=TRUE) {
+	     
+	     $aWhere = [];
+	     $aWhere['id_nom'] = $id_nom;
+	     $aWhere['tipo_teleco'] = $tipo_teleco;
+	     if ($desc_teleco != '*' && !empty($desc_teleco)) {
+	         $aWhere['desc_teleco'] = $desc_teleco;
+	     }
+	     $GesTelecoPersonas = new GestorTelecoPersonaDl();
+	     $cTelecos = $GesTelecoPersonas->getTelecos($aWhere);
+	     $tels='';
+	     $separador=empty($separador)? ".-<br>": $separador;
+	     foreach ($cTelecos as $oTelecoPersona) {
+	         $iDescTel = $oTelecoPersona->getDesc_teleco();
+	         $num_teleco = $oTelecoPersona->getNum_teleco();
+	         if ($desc_teleco=="*" && !empty($iDescTel) && $bDescripcion) {
+	             $oDescTel = new DescTeleco($iDescTel);
+	             $tels.=$num_teleco."(".$oDescTel->getDesc_teleco().")".$separador;
+	         } else {
+	             $tels.=$num_teleco.$separador;
+	         }
+	     }
+	     $tels=substr($tels,0,-(strlen($separador)));
+	     return $tels;
+	 }
+	 
 	/* METODES ALTRES  ----------------------------------------------------------*/
 	/* METODES PRIVATS ----------------------------------------------------------*/
 

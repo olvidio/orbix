@@ -4,7 +4,6 @@ use actividades\model\entity\Actividad;
 use actividades\model\entity\GestorActividad;
 use actividadestudios\model\entity\GestorMatriculaDl;
 use asignaturas\model\entity\Asignatura;
-use function core\telecos_persona;
 use personas\model\entity\Persona;
 use web\DateTimeLocal;
 use web\Hash;
@@ -118,7 +117,7 @@ foreach ($cMatriculas as $oMatricula) {
 				$msg_err .= "<br>preceptor: $oPersona con id_nom: $id_preceptor en  ".__FILE__.": line ". __LINE__;
 			} else {
 				$preceptor = $oPersona->getPrefApellidosNombre();
-                $mails_preceptor = telecos_persona($id_preceptor,'e-mail','',' / ') ;
+                $mails_preceptor = $oPersona->telecos_persona($id_preceptor,'e-mail',' / ') ;
                 if (!empty($mails_preceptor)) {
                     $preceptor .= ' ['.$mails_preceptor.']'; 
                 }
@@ -144,7 +143,7 @@ foreach ($cMatriculas as $oMatricula) {
         $apellidos_nombre = $oPersona->getPrefApellidosNombre();
         $ctr = $oPersona->getCentro_o_dl();
         $dl = $oPersona->getDl();
-        $mails_alumno = telecos_persona($id_nom,'e-mail','',' / ') ;
+        $mails_alumno = $oPersona->telecos_persona($id_nom,'e-mail',' / ') ;
         if (!empty($mails_alumno)) {
             $apellidos_nombre .= ' ['.$mails_alumno.']'; 
         }
