@@ -61,30 +61,53 @@ if (!empty($Qid_ubi) && ($Qid_ubi != 999)){
  * - vsg/cv s/s que no han anat a la cv/aquest curs: hauria de ser després del 1 de gener de l'any actual.
  * - vsg/cv s/s que no han anat a la cv/el curs passat:hauria de ser entre 1 de gener de l'any passat i el 31 de desembre de l'any passat
  * 
+ * 11.11.21 volver a cambiar fechas:
+ * -  s no celadores que NO han asistido al crt interno entre 1-07-2018 i 30-06-2021 (búsqueda en julio 2021)
+ * -  s celadores que NO han asistido a un crt interno entre  1-07-2018 i 30-06-2021 (búsqueda en julio 2021)
+ * -  s que no han fet el crt:
+ *          Aquest any: hauria de mirar del 1-07-2021 fins a dia d'avui (o fins 30-06-2022)
+ *          El curs passat: hauria de mirar del 1-07-2020 al 30-06-2021
+ * 
  */
 $aWhereA = [];
 $aOperadorA = [];
+
+// ctr:
+if (strstr($Qque,'crt')) {
+    $mes_ini = $_SESSION['oConfig']->getMesIniCrt();
+    $dia_ini = $_SESSION['oConfig']->getDiaIniCrt();
+    $mes_fin = $_SESSION['oConfig']->getMesFinCrt();
+    $dia_fin = $_SESSION['oConfig']->getDiaFinCrt();
+    $any = $_SESSION['oConfig']->any_final_curs('crt');
+} else {
+    $mes_ini = $_SESSION['oConfig']->getMesIniStgr();
+    $dia_ini = $_SESSION['oConfig']->getDiaIniStgr();
+    $mes_fin = $_SESSION['oConfig']->getMesFinStgr();
+    $dia_fin = $_SESSION['oConfig']->getDiaFinStgr();
+    $any = $_SESSION['oConfig']->any_final_curs('est');
+}
 switch ($Qcurso) {
     case 'anterior':
-        $any_ini = date('Y') - 1;
-        $any_fin = $any_ini;
+        $any_ini = $any - 2;
+        $any_fin = $any - 1;
         break;
     case 'actual':
-        $any_ini = date('Y');
-        $any_fin = $any_ini;
+        $any_ini = $any - 1;
+        $any_fin = $any;
         break;
     default:
         // para los cel (3 años):
         if ($Qque == "crt_cel" || $Qque == "crt_s") {
-            $any_ini = date('Y') - 3;
-            $any_fin = date('Y');
+            $any_ini = $any - 4;
+            $any_fin = $any - 1;
         } else {
-            $any_ini = date('Y');
-            $any_fin = $any_ini;
+            $any_ini = $any - 1;
+            $any_fin = $any;
         }
 }
-$oDateIni = new DateTimeLocal("$any_ini/1/1");
-$oDateFin = new DateTimeLocal("$any_fin/12/31");
+$oDateIni = new DateTimeLocal("$any_ini/$mes_ini/$dia_ini");
+$oDateFin = new DateTimeLocal("$any_fin/$mes_fin/$dia_fin");
+
 $QempiezaminIso = $oDateIni->getIso();
 $QfinIso = $oDateFin->getIso();
 $fecha_ini = $oDateIni->getFromLocal('-');
