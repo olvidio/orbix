@@ -46,7 +46,7 @@ class Ubi {
 	        }
 	    }
 		$cCentros = $gesCentro->getCentros(array('id_ubi'=>$id_ubi));
-		if (count($cCentros) > 0) {
+		if (!empty($cCentros)) {
 			$oUbi = $cCentros[0];
 		} else {
 			$oUbi = new Casa($id_ubi);
@@ -54,4 +54,3 @@ class Ubi {
 		return $oUbi;
 	}
 }
-?>

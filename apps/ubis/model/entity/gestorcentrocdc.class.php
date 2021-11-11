@@ -27,7 +27,7 @@ class GestorCentroCdc Extends  core\ClaseGestor {
 	 *
 	 */
 	function __construct() {
-        $oDbl = $GLOBALS['oDBEP'];
+        $oDbl = $GLOBALS['oDBP'];
         $this->setoDbl($oDbl);
         $this->setNomTabla('u_centros');
 	}
@@ -44,15 +44,15 @@ class GestorCentroCdc Extends  core\ClaseGestor {
 	function getOpcionesCentrosCdc($sCondicion='') {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		$orden = 'nombre_ubi';
+		//$orden = 'nombre_ubi';
 
 		$sWhere="WHERE status = 't' AND cdc='t' ";
-		if (!empty($sCondicion)) $sWhere .= 'AND '.$sCondicion;
+		if (!empty($sCondicion)) { $sWhere .= 'AND '.$sCondicion; }
 		$sQuery="SELECT id_ubi, nombre_ubi
 				FROM $nom_tabla
 				$sWhere
 				";
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorCentroCdc.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;

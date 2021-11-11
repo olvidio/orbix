@@ -10,6 +10,7 @@ use actividadtarifas\model\entity\GestorTipoActivTarifa;
 use actividadtarifas\model\entity\GestorTipoTarifa;
 use ubis\model\entity\GestorDelegacion;
 use ubis\model\entity\Ubi;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -86,12 +87,10 @@ if (!empty($Qid_activ)) { // caso de modificar
 	$plazas = $oActividad->getPlazas();
 			
 	// mirar permisos.
-	//if(core\ConfigGlobal::is_app_installed('procesos')) {
-		$_SESSION['oPermActividades']->setActividad($Qid_activ,$id_tipo_activ,$dl_org);
-		$oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
+    $_SESSION['oPermActividades']->setActividad($Qid_activ,$id_tipo_activ,$dl_org);
+    $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
 
-		if ($oPermActiv->only_perm('ocupado')) { die(); }
-	//}
+    if ($oPermActiv->only_perm('ocupado')) { die(); }
 
 	$oTipoActiv= new web\TiposActividades($id_tipo_activ);
 	$ssfsv=$oTipoActiv->getSfsvText();
@@ -142,7 +141,7 @@ if (!empty($Qid_activ)) { // caso de modificar
 	        $tarifa = $cActiTipoTarifa[0]->getId_tarifa();
 	    }
 	}
-	if ( $permiso_des == TRUE ) {
+	if ( is_true($permiso_des) ) {
 	    if (empty($id_tipo_activ)) {
             //valor por defecto. Si está vacio dira que no tiene permiso.
             $id_tipo_activ = '1';
@@ -158,8 +157,8 @@ if (!empty($Qid_activ)) { // caso de modificar
         	$dl_org = core\ConfigGlobal::mi_dele().'f'; 
         }
 	} else {
-        if ($isfsv == 1) $ssfsv = 'sv';
-        if ($isfsv == 2) $ssfsv = 'sf';
+	    if ($isfsv == 1) { $ssfsv = 'sv'; }
+	    if ($isfsv == 2) { $ssfsv = 'sf'; }
 	}
 	
 	
@@ -232,8 +231,8 @@ if (!empty($id_ubi) && $id_ubi != 1) {
         $sf=$oCasa->getSf();
 	}
 } else {
-	if ($id_ubi==1 && $lugar_esp) $nombre_ubi=$lugar_esp;
-	if (!$id_ubi && !$lugar_esp) $nombre_ubi=_("sin determinar");
+    if ($id_ubi==1 && $lugar_esp) { $nombre_ubi=$lugar_esp; }
+    if (!$id_ubi && !$lugar_esp) { $nombre_ubi=_("sin determinar"); }
 }
 
 $oGesDl = new GestorDelegacion();

@@ -43,7 +43,10 @@ switch ($miSfsv) {
 		break;
 	case 2:
 		$aWhereCasa['sf'] = 't';
-	break;
+        break;
+	default:
+	    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+	    exit ($err_switch);
 }
 
 $aWhereCasa['status'] = 't';
@@ -65,17 +68,6 @@ foreach ($cCtr as $oCentro) {
 	$nombre_ubi = $oCentro->getNombre_ubi();
 	$a_ubis[$nombre_ubi] = $oCentro;
 }
-/*
-if (!($_SESSION['oPerm']->have_perm_oficina('vcsd') || $_SESSION['oPerm']->have_perm_oficina('des'))) {
-	//Ctrs sf
-	$GesCtrSf = new ubis\GestorCentrosEllas();
-	$cCtrSf = $GesCtrSf->getCentros($aWhereCtrSf,$aOperadorCtrSf);
-	foreach ($cCtrSf as $oCentro) {
-		$nombre_ubi = $oCentro->getNombre_ubi();
-		$a_ubis[$nombre_ubi] = $oCentro;
-	}
-}
-*/
 
 // oredenar los ubis
 uksort($a_ubis, "strnatcasecmp"); // case insensitive

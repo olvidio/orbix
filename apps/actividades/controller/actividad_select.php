@@ -32,10 +32,11 @@ use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
 use permisos\model\PermisosActividadesTrue;
 use procesos\model\entity\GestorActividadProcesoTarea;
+use ubis\model\entity\GestorCasa;
+use ubis\model\entity\GestorCentroCdc;
 use usuarios\model\entity as usuarios;
 use web\DateTimeLocal;
 use web\Periodo;
-use ubis\model\entity\GestorCasa;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
@@ -154,15 +155,13 @@ if (empty($Qid_tipo_activ)) {
     $Qssfsv = (string) \filter_input(INPUT_POST, 'ssfsv');
     $Qsasistentes = (string) \filter_input(INPUT_POST, 'sasistentes');
     $Qsactividad = (string) \filter_input(INPUT_POST, 'sactividad');
-    //$Qsnom_tipo = (string) \filter_input(INPUT_POST, 'snom_tipo');
     
     if (empty($Qssfsv)) {
-        if ($mi_sfsv == 1) $Qssfsv = 'sv';
-        if ($mi_sfsv == 2) $Qssfsv = 'sf';
+        if ($mi_sfsv == 1) { $Qssfsv = 'sv'; }
+        if ($mi_sfsv == 2) { $Qssfsv = 'sf'; }
     }
     $sasistentes = empty($Qsasistentes)? '.' : $Qsasistentes;
     $sactividad = empty($Qsactividad)? '.' : $Qsactividad;
-    //$snom_tipo = empty($Qsnom_tipo)? '...' : $Qsnom_tipo;
     $oTipoActiv= new web\TiposActividades();
     $oTipoActiv->setSfsvText($Qssfsv);
     $oTipoActiv->setAsistentesText($sasistentes);
@@ -173,7 +172,6 @@ if (empty($Qid_tipo_activ)) {
     $ssfsv=$oTipoActiv->getSfsvText();
     $sasistentes=$oTipoActiv->getAsistentesText();
     $sactividad=$oTipoActiv->getActividadText();
-    //$nom_tipo=$oTipoActiv->getNom_tipoText();
 }
 if ($Qid_tipo_activ!='......') {
     $aWhere['id_tipo_activ'] = "^$Qid_tipo_activ";
@@ -227,10 +225,8 @@ if (!empty($Qmodo) && $Qmodo != 'buscar') {
         $a_botones[] = array( 'txt' => _("publicar"),
             'click' =>"jsForm.update(\"#seleccionados\",\"publicar\")" );
     }
-    if (core\configGlobal::is_app_installed('asignaturas')) {
-        if ($_SESSION['oPerm']->have_perm_oficina('est')) {
-            $a_botones[]=array( 'txt'=> _("asignaturas"), 'click'=>"jsForm.mandar(\"#seleccionados\",\"asig\")");
-        }
+    if (core\configGlobal::is_app_installed('asignaturas') && $_SESSION['oPerm']->have_perm_oficina('est') ) {
+        $a_botones[]=array( 'txt'=> _("asignaturas"), 'click'=>"jsForm.mandar(\"#seleccionados\",\"asig\")");
     }
 } else {
     if ($oMiUsuario->isRolePau('cdc') || $oMiUsuario->isRole('CentroSf')) {
@@ -327,8 +323,15 @@ if ($num_activ > $num_max_actividades && empty($Qcontinuar)) {
     die();
 }
 
+// casas de cv
 $gesCasas = new GestorCasa();
-$a_casas = $gesCasas->getArrayPosiblesCasas();
+$a_OpcionesCasas = $gesCasas->getArrayPosiblesCasas();
+// más los centros cdc
+$oGesCentros = new GestorCentroCdc();
+$a_OpcionesCentros = $oGesCentros->getOpcionesCentrosCdc();
+
+$a_casas = $a_OpcionesCasas + $a_OpcionesCentros;
+
 
 $i=0;
 $sin=0;
@@ -358,7 +361,7 @@ foreach($cActividades as $oActividad) {
     //echo "nom: $nom_activ<br>";
     if (!empty($Qmodo) && $Qmodo == 'importar') {
         $cImportadas = $GesImportada->getImportadas(array('id_activ'=>$id_activ));
-        if ($cImportadas != false && count($cImportadas) > 0) continue;
+        if ($cImportadas !== FALSE && !empty($cImportadas)) { continue; }
         $oPermActividades = new PermisosActividadesTrue(core\ConfigGlobal::mi_id_usuario());
         $oPermActiv = $oPermActividades->getPermisoActual('datos');
         $oPermSacd =  $oPermActividades->getPermisoActual('sacd');
@@ -418,7 +421,6 @@ foreach($cActividades as $oActividad) {
         $a_valores[$i][1]=$f_ini;
         $a_valores[$i][2]=$f_fin;
         $a_valores[$i][3]=sprintf(_( 'ocupado %s (%s-%s)'),$ssfsv,$f_ini,$f_fin);
-        //$a_valores[$i][1]= array( 'ira'=>'x', 'valor'=>'ocupado');
         $a_valores[$i][4]='';
         $a_valores[$i][5]='';
         if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
