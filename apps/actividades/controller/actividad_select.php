@@ -531,7 +531,7 @@ foreach($cActividades as $oActividad) {
         $nombre_ubi_actividad = 'z';
     } else {
         if (empty($a_casas[$id_ubi_actividad])) {
-            echo sprintf(_("no se encuentra el ubi para la actividad %s"),$nom_activ);
+            echo sprintf(_("no se encuentra el ubi para la actividad: %s"),$nom_activ);
             echo "<br>";
             $nombre_ubi_actividad = 'z';
         } else {

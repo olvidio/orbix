@@ -102,7 +102,12 @@ class GestorActividadCargo Extends core\ClaseGestor {
 	        $oPersona = new PersonaSacd($id_nom);
 	        $oPersona->DBCarregar();
 	        if (empty($oPersona->getApellido1())) {
+	            // nom actividad:
+	            $oActividad = new Actividad($iid_activ);
+	            $nom_activ = $oActividad->getNom_activ();
 	            $msg = sprintf(_("se necesita sincronizar (el sacd no está en DB-comun) id_nom: %s"),$id_nom);
+	            $msg .= '<br>';
+	            $msg .= sprintf(_("afecta a la actividad: %s"),$nom_activ);
 	            $msg .= '<br>';
 	            echo $msg;
                 // si estoy dentro y soy sv, puedo mirar la tabla correcta:
