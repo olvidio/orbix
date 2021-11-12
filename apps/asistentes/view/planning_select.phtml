@@ -24,7 +24,7 @@ fnjs_actividades=function(formulario){
   	}
 }
 </script>
-<h3><?= sprintf( _("%s personas encontradas"),$num_personas); ?></h3>
+<h3><?= sprintf(_("%s personas encontradas"),$num_personas); ?></h3>
 <form id='seleccionados' name='seleccionados' action='' method='post'>
 <?= $oHash->getCamposHtml(); ?>
 <input type="hidden" id="modelo" name="modelo" value="">

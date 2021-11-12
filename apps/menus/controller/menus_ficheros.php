@@ -89,7 +89,7 @@ if ($Qaccion == 'importar') {
     $error = file_get_contents($filelog);
     if(trim($error) != '') {
         if (ConfigGlobal::is_debug_mode()) {
-            echo sprintf("PSQL ERROR IN COMMAND: %s<br> mirar en: %s<br>",$command,$filelog);
+            echo sprintf(_("PSQL ERROR IN COMMAND: %s<br> mirar en: %s<br>"),$command,$filelog);
         }
     }
 }

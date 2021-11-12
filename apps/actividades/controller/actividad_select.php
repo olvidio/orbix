@@ -420,7 +420,7 @@ foreach($cActividades as $oActividad) {
         $a_valores[$i]['select']='';
         $a_valores[$i][1]=$f_ini;
         $a_valores[$i][2]=$f_fin;
-        $a_valores[$i][3]=sprintf(_( 'ocupado %s (%s-%s)'),$ssfsv,$f_ini,$f_fin);
+        $a_valores[$i][3]=sprintf(_("ocupado %s (%s-%s)"),$ssfsv,$f_ini,$f_fin);
         $a_valores[$i][4]='';
         $a_valores[$i][5]='';
         if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
@@ -555,9 +555,9 @@ if (!empty($a_valores)) {
 }
 
 if (core\ConfigGlobal::is_app_installed('procesos')) {
-    $resultado = sprintf( _("%s actividades encontradas (%s sin permiso)"),$num,$sin);
+    $resultado = sprintf(_("%s actividades encontradas (%s sin permiso)"),$num,$sin);
 } else {
-    $resultado = sprintf( _("%s actividades encontradas"),$num);
+    $resultado = sprintf(_("%s actividades encontradas"),$num);
 }
 // Convertir las fechas inicio y fin a formato local:
 $oF_qini = new DateTimeLocal($inicioIso);

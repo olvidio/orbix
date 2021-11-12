@@ -286,7 +286,7 @@ class DBTabla extends DBAbstract {
 		$error = file_get_contents($this->getFileLogR());
 		if(trim($error) != '') {
 			if (ConfigGlobal::is_debug_mode()) {
-			    echo sprintf("PG_DUMP ERROR IN COMMAND: %s<br> mirar: %s<br>",$command,$this->getFileLogR());
+			    echo sprintf(_("PG_DUMP ERROR IN COMMAND: %s<br> mirar: %s<br>"),$command,$this->getFileLogR());
 			}
 		}
 	}
@@ -332,7 +332,7 @@ class DBTabla extends DBAbstract {
 		$error = file_get_contents($this->getFileLogW());
 		if(trim($error) != '') {
 			if (ConfigGlobal::is_debug_mode()) {
-			    echo sprintf("PSQL ERROR IN COMMAND: %s<br><br> mirar en: %s",$command,$this->getFileLogW());
+			    echo sprintf(_("PSQL ERROR IN COMMAND: %s<br><br> mirar en: %s"),$command,$this->getFileLogW());
 			    echo "<br>"._("Si sólo salen números, son las filas que se ha insertado: Está bien.");
 			    echo "<pre>$error</pre>";
 			    return FALSE;
@@ -354,7 +354,7 @@ class DBTabla extends DBAbstract {
 		$error = file_get_contents($this->getFileLogW());
 		if(trim($error) != '') {
 			if (ConfigGlobal::is_debug_mode()) {
-			    echo sprintf("PSQL ERROR IN COMMAND: %s<br><br> mirar en: %s",$command,$this->getFileLogW());
+			    echo sprintf(_("PSQL ERROR IN COMMAND: %s<br><br> mirar en: %s"),$command,$this->getFileLogW());
 			    echo "<br>"._("Si sólo salen números, son las filas que se ha insertado: Está bien.");
 			    echo "<pre>$error</pre>";
 			}

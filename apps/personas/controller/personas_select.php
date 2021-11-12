@@ -470,7 +470,7 @@ $oTabla->setDatos($a_valores);
 
 $pagina=web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/personas_editar.php?'.http_build_query(array('obj_pau'=>$obj_pau,'id_tabla'=>$id_tabla,'nuevo'=>1,'apellido1'=>$Qapellido1)));
 	
-$resultado=sprintf( _("%s personas encontradas"),$i);
+$resultado=sprintf(_("%s personas encontradas"),$i);
 
 $oHash = new web\Hash();
 $oHash->setcamposForm('sel!que!id_dossier');

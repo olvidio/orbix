@@ -79,7 +79,7 @@ $oF_qini = new DateTimeLocal($inicioIso);
 $QinicioLocal = $oF_qini->getFromLocal();
 $oF_qfin = new DateTimeLocal($finIso);
 $QfinLocal = $oF_qfin->getFromLocal();
-$titulo = _(sprintf("Lista de matrículas en el periodo: %s - %s.",$QinicioLocal,$QfinLocal)); 
+$titulo = _(sprintf(_("Lista de matrículas en el periodo: %s - %s."),$QinicioLocal,$QfinLocal)); 
 $a_botones=array(
 			array( 'txt' => _("ver asignaturas ca"), 'click' =>"fnjs_ver_ca(this.form)" ) ,
 			array( 'txt' => _("borrar matrícula"), 'click' =>"fnjs_borrar(this.form)" ) 

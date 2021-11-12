@@ -391,7 +391,7 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$result_busqueda = sprintf( _("%s actividades encontradas (%s sin permiso)"),$num,$sin);
+$result_busqueda = sprintf(_("%s actividades encontradas (%s sin permiso)"),$num,$sin);
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oFormP' => $oFormP,

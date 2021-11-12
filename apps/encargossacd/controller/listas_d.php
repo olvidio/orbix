@@ -238,24 +238,24 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
 					$sf_txt=substr($sf_txt,2);
 				} else {
 					if ($sf_ctr[3]==1) {
-						$sf_txt.=", ".sprintf("%s centro sf",$sf_ctr[3]);
+						$sf_txt.=", ".sprintf(_("%s centro sf"),$sf_ctr[3]);
 					} elseif ($sf_ctr[3]>1) {
-						$sf_txt.=", ".sprintf("%s centros sf",$sf_ctr[3]);
+						$sf_txt.=", ".sprintf(_("%s centros sf"),$sf_ctr[3]);
 					}
 					if ($sf_ctr[4]==1) {
-						$sf_txt.=", ".sprintf("suplente de %s centro sf",$sf_ctr[4]);
+						$sf_txt.=", ".sprintf(_("suplente de %s centro sf"),$sf_ctr[4]);
 					} elseif ($sf_ctr[4]>1) {
-						$sf_txt.=", ".sprintf("suplente de %s centros sf",$sf_ctr[4]);
+						$sf_txt.=", ".sprintf(_("suplente de %s centros sf"),$sf_ctr[4]);
 					}
 					if ($sf_cgi[3]==1) {
-						$sf_txt.=", ".sprintf("atiende %s colegio sf",$sf_cgi[3]);
+						$sf_txt.=", ".sprintf(_("atiende %s colegio sf"),$sf_cgi[3]);
 					} elseif ($sf_cgi[3]>1) {
-						$sf_txt.=", ".sprintf("atiende %s colegios sf",$sf_cgi[3]);
+						$sf_txt.=", ".sprintf(_("atiende %s colegios sf"),$sf_cgi[3]);
 					}
 					if ($sf_cgi[4]==1) {
-						$sf_txt.=", ".sprintf("colabora con %s colegio sf",$sf_cgi[4]);
+						$sf_txt.=", ".sprintf(_("colabora con %s colegio sf"),$sf_cgi[4]);
 					} elseif ($sf_cgi[4]>1) {
-						$sf_txt.=", ".sprintf("colabora con %s colegios sf",$sf_cgi[4]);
+						$sf_txt.=", ".sprintf(_("colabora con %s colegios sf"),$sf_cgi[4]);
 					}
 
 					$sf_txt=substr($sf_txt,2);

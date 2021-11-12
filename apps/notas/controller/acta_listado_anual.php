@@ -121,7 +121,7 @@ $oF_qini = new DateTimeLocal($inicioIso);
 $QinicioLocal = $oF_qini->getFromLocal();
 $oF_qfin = new DateTimeLocal($finIso);
 $QfinLocal = $oF_qfin->getFromLocal();
-$titulo = _(sprintf("Lista de actas en el periodo: %s - %s.",$QinicioLocal,$QfinLocal)); 
+$titulo = _(sprintf(_("Lista de actas en el periodo: %s - %s."),$QinicioLocal,$QfinLocal)); 
 
 $a_campos = ['aActas' => $aActas,
 			'titulo' => $titulo,

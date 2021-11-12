@@ -257,7 +257,7 @@ class Select1303 {
 							);
 				$oHashA->setArraycamposHidden($a_camposHiddenA);
 				
-				$aviso .= _(sprintf("No tiene asignado ningún ca como propio este curso: %s - %s.",$inicurs_ca,$fincurs_ca)); 
+				$aviso .= _(sprintf(_("No tiene asignado ningún ca como propio este curso: %s - %s."),$inicurs_ca,$fincurs_ca)); 
 				$aviso .= "<form action='apps/dossiers/controller/dossiers_ver.php' method='post'>";
 				$aviso .= $oHashA->getCamposHtml();
 				$aviso .= "<input type=\"button\" onclick=\"fnjs_enviar_formulario(this.form,'#main')\" value=\""._("ver anteriores")."\">";
@@ -277,7 +277,7 @@ class Select1303 {
 					if ($id_tipo_activ != $id_sem_inv) $nn++;
 				}
 				if ( $nn > 1) { 
-					$aviso .= _(sprintf("¡¡ojo!! tiene %s actividades de estudios asignadas como propias.",$n));
+					$aviso .= _(sprintf(_("¡¡ojo!! tiene %s actividades de estudios asignadas como propias."),$n));
 				}
 			}
 		}

@@ -374,7 +374,6 @@ class Cambio Extends core\ClasePropiedades {
 	    $sPropiedad = '';
 	    $sValor_old = '';
 	    $sValor_new = '';
-	    //$sformat = 'la actividad "%1$s" ha cambiado el campo "%2$s" de "%3$s" a "%4$s" (por %5$s)';
 	    $iTipo_cambio = $this->getId_tipo_cambio();
 	    $sObjeto = $this->getObjeto();
 	    $iId = $this->getId_activ();
@@ -501,23 +500,23 @@ class Cambio Extends core\ClasePropiedades {
 	                case 'Actividad':
 	                case 'ActividadDl':
 	                case 'ActividadEx':
-	                    $sformat = 'Actividad: se ha creado la actividad "%1$s"';
+	                    $sformat = _("Actividad: se ha creado la actividad \"%1\$s\"");
 	                    break;
 	                case 'ActividadCargo':
-	                    $sformat = 'Cl: se ha asignado un cargo a "%4$s" a la actividad "%1$s"';
+	                    $sformat = _("Cl: se ha asignado un cargo a \"%4\$s\" a la actividad \"%1\$s\"");
 	                    break;
 	                case 'ActividadCargoSacd':
-	                    $sformat = 'Sacd: se ha asignado el sacd "%4$s" a la actividad "%1$s"';
+	                    $sformat = _("Sacd: se ha asignado el sacd \"%4\$s\" a la actividad \"%1\$s\"");
 	                    break;
 	                case 'Asistente':
 	                case 'AsistenteDl':
 	                case 'AsistenteOut':
 	                case 'AsistenteEx':
 	                case 'AsistenteIn':
-	                    $sformat = 'Asistencia: "%4$s" se ha incorporado a la actividad "%1$s"';
+	                    $sformat = _("Asistencia: \"%4\$s\" se ha incorporado a la actividad \"%1\$s\"");
 	                    break;
 	                case 'CentroEncargado':
-	                    $sformat = 'Ctr: se ha asignado el ctr "%4$s" a la actividad "%1$s"';
+	                    $sformat = _("Ctr: se ha asignado el ctr \"%4\$s\" a la actividad \"%1\$s\"");
 	                    break;
 	            }
 	            break;
@@ -526,37 +525,23 @@ class Cambio Extends core\ClasePropiedades {
 	                case 'Actividad':
 	                case 'ActividadDl':
 	                case 'ActividadEx':
-	                    /*
-	                    // Caso especial si el campo es: 'status'
-	                    if ($sPropiedad == 'status') {
-	                       $sValor_old = $aStatus[$sValor_old]; 
-	                       $sValor_new = $aStatus[$sValor_new]; 
-	                    }
-	                    // Caso especial si el campo es fecha.
-	                    if ($sPropiedad == 'f_ini' || $sPropiedad == 'f_fin') {
-	                        $oFOld = new DateTimeLocal($sValor_old);
-	                        $sValor_old = $oFOld->getFromLocal();
-	                        $oFNew = new DateTimeLocal($sValor_new);
-	                        $sValor_new = $oFNew->getFromLocal();
-	                    }
-	                    */
-                       $sformat = 'Actividad: la actividad "%1$s" ha cambiado el campo "%2$s" de "%3$s" a "%4$s"';
+                       $sformat = _("Actividad: la actividad \"%1\$s\" ha cambiado el campo \"%2\$s\" de \"%3\$s\" a \"%4\$s\"");
 	                    break;
 	                case 'ActividadCargo':
-	                    $sformat = 'Cl: ha cambiado el cargo en la actividad "%1$s" el campo "%2$s" de "%3$s" a "%4$s"';
+	                    $sformat = _("Cl: ha cambiado el cargo en la actividad \"%1\$s\" el campo \"%2\$s\" de \"%3\$s\" a \"%4\$s\"");
 	                    break;
 	                case 'ActividadCargoSacd':
-	                    $sformat = 'Sacd: ha cambiado el cargo en la actividad "%1$s" el campo "%2$s" de "%3$s" a "%4$s"';
+	                    $sformat = _("Sacd: ha cambiado el cargo en la actividad \"%1\$s\" el campo \"%2\$s\" de \"%3\$s\" a \"%4\$s\"");
 	                    break;
 	                case 'Asistente':
 	                case 'AsistenteDl':
 	                case 'AsistenteOut':
 	                case 'AsistenteEx':
 	                case 'AsistenteIn':
-	                    $sformat = 'Asistente: ha cambiado la asistencia en la actividad "%1$s" el campo "%2$s" de "%3$s" a "%4$s"';
+	                    $sformat = _("Asistente: ha cambiado la asistencia en la actividad \"%1\$s\" el campo \"%2\$s\" de \"%3\$s\" a \"%4\$s\"");
 	                    break;
 	                case 'CentroEncargado':
-	                    $sformat = 'Ctr: ctr "%2$s" Ha cambiado a la actividad "%1$s"';
+	                    $sformat = _("Ctr: ctr \"%2\$s\" Ha cambiado a la actividad \"%1\$s\"");
 	                    break;
 	            }
 	            break;
@@ -565,24 +550,23 @@ class Cambio Extends core\ClasePropiedades {
 	                case 'Actividad':
 	                case 'ActividadDl':
 	                case 'ActividadEx':
-	                    //$sformat = 'Actividad: Eliminado la actividad "%1$s":"%2$s" de "%3$s" a "%4$s"';
-	                    $sformat = 'Actividad: se ha eliminado la actividad "%3$s"';
+	                    $sformat = _("Actividad: se ha eliminado la actividad \"%3\$s\"");
 	                    break;
 	                case 'ActividadCargo':
-	                    $sformat = 'Cl: se ha quitado el cargo a "%3$s" de la actividad "%1$s"';
+	                    $sformat = _("Cl: se ha quitado el cargo a \"%3\$s\" de la actividad \"%1\$s\"");
 	                    break;
 	                case 'ActividadCargoSacd':
-	                    $sformat = 'Sacd: se ha quitado al sacd "%3$s" de la actividad "%1$s"';
+	                    $sformat = _("Sacd: se ha quitado al sacd \"%3\$s\" de la actividad \"%1\$s\"");
 	                    break;
 	                case 'Asistente':
 	                case 'AsistenteDl':
 	                case 'AsistenteOut':
 	                case 'AsistenteEx':
 	                case 'AsistenteIn':
-	                    $sformat = 'Asistencia: "%3$s" se ha borrado de la actividad "%1$s"';
+	                    $sformat = _("Asistencia: \"%3\$s\" se ha borrado de la actividad \"%1\$s\"");
 	                    break;
 	                case 'CentroEncargado':
-	                    $sformat = 'Ctr: se ha quitado al ctr "%3$s" de la actividad "%1$s"';
+	                    $sformat = _("Ctr: se ha quitado al ctr \"%3\$s\" de la actividad \"%1\$s\"");
 	                    break;
 	            }
 	            break;
@@ -604,24 +588,24 @@ class Cambio Extends core\ClasePropiedades {
                         $sFase = $cFases[0]->getDesc_fase();
                         
                         if (is_true($sValor_new)) {
-                            $sformat = 'Fase "%2$s" marcada en la actividad "%1$s"';
+                            $sformat = _("Fase \"%2\$s\" marcada en la actividad \"%1\$s\"");
                         } else {
-                            $sformat = 'Fase "%2$s" desmarcada en la actividad "%1$s"';
+                            $sformat = _("Fase \"%2\$s\" desmarcada en la actividad \"%1\$s\"");
                         }
 	                } else if (!empty($idStatus)) {
                         $sFase =  $aStatus[$idStatus];
                         
-                        $sformat = 'Fase cambiada en la actividad "%1$s". Status "%3$s"' ;
+                        $sformat = _("Fase cambiada en la actividad \"%1\$s\". Status \"%3\$s\"");
                         if ($sValor_old == '-' && $sValor_new == 1) {
-                            $sformat = 'Status "%2$s" completado en la actividad "%1$s". Status actual "%3$s"';
+                            $sformat = _("Status \"%2\$s\" completado en la actividad \"%1\$s\". Status actual \"%3\$s\"");
                         }
                         if ($sValor_old == 1 && $sValor_new == '-') {
-                            $sformat = 'Status "%2$s" eliminada en la actividad "%1$s". Status actual "%3$s"';
+                            $sformat = _("Status \"%2\$s\" eliminada en la actividad \"%1\$s\". Status actual \"%3\$s\"");
                         }
 	                }
 	            } else {
 	                $sFase = '';
-	                $sformat = 'Fase cambiada en la actividad "%1$s".';
+	                $sformat = _("'Fase cambiada en la actividad \"%1\$s\".");
 	            }
 	            return sprintf($sformat,$sNomActiv,$sFase);
 	            break;
