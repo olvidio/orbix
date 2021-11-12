@@ -16,11 +16,11 @@ use dbextern\model\entity\GestorDlListas;
 use personas\model\entity\PersonaDl;
 
 /**
- * Description of sincroDB
+ * Description of SincroDB
  *
  * @author Daniel Serrabou <dani@moneders.net>
  */
-class sincroDB {
+class SincroDB {
 
 	private $tipo_persona; 	//'n', 'a', 's'.
 	private $id_tipo; 		//1  ,  2,   3.
@@ -62,6 +62,9 @@ class sincroDB {
 					$id_tipo = 3;
 				}
 				break;
+			default:
+			    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+			    exit ($err_switch);
 		}
 		$this->id_tipo = $id_tipo;
 	}
@@ -104,7 +107,7 @@ class sincroDB {
             preg_match('/(cr) (\w*)$/', $nombre_dl, $matches);
             if (!empty($matches[1])) {
                 $reg = $matches[2];
-                $dl_orbix = 'cr'.$reg; // 'crAcse';
+                $dl_orbix = 'cr'.$reg; // 'crAcse'
             } else {
                 $dl_orbix = 'dl'.$dl_listas;
             }

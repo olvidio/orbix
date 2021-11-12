@@ -15,7 +15,6 @@ $tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
 
 $id = (string)  filter_input(INPUT_POST, 'id');
 $mov = (string)  filter_input(INPUT_POST, 'mov');
-//$tipo_persona = 'a';
 
 switch ($tipo_persona) {
 	case 'n':
@@ -33,6 +32,9 @@ switch ($tipo_persona) {
 			$obj_pau = 'GestorPersonaS';
 		}
 		break;
+	default:
+	    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+	    exit ($err_switch);
 }
 
 function otro($id,$mov,$max) {
@@ -63,7 +65,7 @@ function otro($id,$mov,$max) {
 	}
 }
 
-$oSincroDB = new dbextern\model\sincroDB();
+$oSincroDB = new dbextern\model\SincroDB();
 $oSincroDB->setTipo_persona($tipo_persona);
 $oSincroDB->setRegion($region);
 $oSincroDB->setDlListas($dl);
@@ -82,7 +84,7 @@ if (empty($id)) {
 
 		$oGesMatch = new dbextern\model\entity\GestorIdMatchPersona();
 		$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_orbix'=>$id_nom_orbix));
-		if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
+		if (!empty($cIdMatch[0]) && !empty($cIdMatch)) {
 			continue;
 		}
 		$a_persona_orbix['id_nom_orbix'] = $id_nom_orbix;
@@ -105,7 +107,6 @@ if (empty($id)) {
 $max = count($_SESSION['DBOrbix']);
 
 $a_lista_bdu = [];
-$a_lista_bdu_otradl = [];
 $persona_orbix = [];
 if ($max === 0) {
     $html_reg = _("No hay registros");
@@ -194,7 +195,7 @@ if ($max === 0) {
     ?>
     </table>
     <br>
-    Por el momento estos botones no hacen nada.
+    <?= _("Por el momento estos botones no hacen nada") ?>.
     <input type="button" value="<?= _("borrar") ?>" onclick="">
     <input type="button" value="<?= _("trasladar") ?>" onclick="">
     <input type="button" value="<?= _("baja") ?>" onclick="">

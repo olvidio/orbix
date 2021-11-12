@@ -48,16 +48,19 @@ switch ($que) {
 			switch ($id_tipo_persona){
 				case '3': // supernumerarios
 					$obj_pau = 'PersonaS';
-				break;
+                    break;
 				case '1': // numerarios
 					$obj_pau = 'PersonaN';
-				break;
+                    break;
 				case '2': // agregados
 					$obj_pau = 'PersonaAgd';
-				break;
+                    break;
 				case "p_nax":
 					$obj_pau = 'PersonaNax';
-				break;
+                    break;
+				default:
+				    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+				    exit ($err_switch);
 			}
 			// Buscar si está en orbix (otras dl)
 			// a) si ya está unida; b) si está sin unir.
@@ -146,7 +149,7 @@ switch ($que) {
 			$a_centros[$ctr] = $id_ubi;
 		}
 		
-		$oSincroDB = new dbextern\model\sincroDB();
+		$oSincroDB = new dbextern\model\SincroDB();
 		$oSincroDB->setTipo_persona($tipo_persona);
 		$oSincroDB->setRegion($region);
 		$oSincroDB->setDlListas($dl_listas);
@@ -258,6 +261,8 @@ switch ($que) {
 		} else {
 			echo true;
 		}
-		
 		break;
+	default:
+	    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+	    exit ($err_switch);
 }

@@ -52,7 +52,6 @@ if (empty($Qperiodo)) {
 
 // periodo.
 $oPeriodo = new Periodo();
-$oPeriodo->setDefaultAny('next');
 $oPeriodo->setAny($Qyear);
 $oPeriodo->setEmpiezaMin($Qempiezamin);
 $oPeriodo->setEmpiezaMax($Qempiezamax);

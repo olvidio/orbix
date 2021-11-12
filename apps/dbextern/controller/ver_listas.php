@@ -42,7 +42,7 @@ function otro($id,$mov,$max) {
 	}
 }
 
-$oSincroDB = new dbextern\model\sincroDB();
+$oSincroDB = new dbextern\model\SincroDB();
 $oSincroDB->setTipo_persona($tipo_persona);
 $oSincroDB->setRegion($region);
 $oSincroDB->setDlListas($dl);

@@ -18,7 +18,7 @@ $tipo_persona = (string)  filter_input(INPUT_POST, 'tipo');
 $mi_dl = ConfigGlobal::mi_delef();
 $region = ConfigGlobal::mi_region();
 
-$oSincroDB = new \dbextern\model\sincroDB();
+$oSincroDB = new \dbextern\model\SincroDB();
 $dl_listas = $oSincroDB->dlOrbix2Listas($mi_dl);
 
 $id_tipo = 0;
