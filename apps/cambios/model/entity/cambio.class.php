@@ -605,7 +605,7 @@ class Cambio Extends core\ClasePropiedades {
 	                }
 	            } else {
 	                $sFase = '';
-	                $sformat = _("'Fase cambiada en la actividad \"%1\$s\".");
+	                $sformat = _("Fase cambiada en la actividad \"%1\$s\"");
 	            }
 	            return sprintf($sformat,$sNomActiv,$sFase);
 	            break;
