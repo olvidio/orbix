@@ -41,6 +41,9 @@ switch ($tipo_persona) {
 			$obj_pau = 'GestorPersonaS';
 		}
 		break;
+	default:
+	    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+	    exit ($err_switch);
 }
 
 if (empty($id_tipo)) {
@@ -74,7 +77,7 @@ foreach ($cPersonasListas as $oPersonaListas) {
 	$oGesMatch = new GestorIdMatchPersona();
 	$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas'=>$id_nom_listas));
 	// unidas (1,2,3)
-	if (!empty($cIdMatch[0]) AND count($cIdMatch) > 0) {
+	if (!empty($cIdMatch[0]) && count($cIdMatch) > 0) {
 		//comprobar situación = 'A'
 		$id_orbix = $cIdMatch[0]->getId_orbix();
 		$cPersonas = $GesPersonas->getPersonasDl(array('id_nom' => $id_orbix));
@@ -102,7 +105,6 @@ foreach ($cPersonasListas as $oPersonaListas) {
 				$a_ids_desaparecidos_de_orbix[] = $id_nom_listas;
 			}
 		}
-		continue;
 	} else { // no unidas (4,5,6)
 		// Buscar por apellidos, nombre 
 		//SUMA	

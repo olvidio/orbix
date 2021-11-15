@@ -67,8 +67,6 @@ switch($Qque) {
 					$a_valores[$i][1]=$ap_nom;
 					$a_valores[$i][2]=$oPersona->getId_tabla();
 					$i++;
-				} else {
-					continue;
 				}
 			}
 		} else {
@@ -83,8 +81,8 @@ switch($Qque) {
 			foreach ($cZonaSacd as $oZonaSacd) {
 				$id_nom = $oZonaSacd->getId_nom();
 				$oPersona = Persona::NewPersona($id_nom);
-				if ($oPersona->getSituacion() != 'A') continue;
-				if ($oPersona->getDl() != ConfigGlobal::mi_delef()) continue;
+				// if ($oPersona->getSituacion() != 'A') { continue; } // Ahora todos, para poder borrar a los que se han ido.
+				if ($oPersona->getDl() != ConfigGlobal::mi_delef()) { continue; }
 				$ap_nom = $oPersona->getPrefApellidosNombre();
 
 				$a_sacds[$ap_nom]=$id_nom;
@@ -246,4 +244,7 @@ switch($Qque) {
 			}
 		}
 		break;
+	default:
+	    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+	    exit ($err_switch);
 }
