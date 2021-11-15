@@ -311,11 +311,7 @@ class GestorActividadProcesoTarea Extends ClaseGestor {
 	    if ($oDblSt->rowCount() == 1 ) {
             // aunque realmente solo debería existir un fila
             foreach ($oDblSt as $aDades) {
-                if (is_true($aDades['completado'])) {
-                    return TRUE;
-                } else {
-                    return FALSE;
-                }
+                return is_true($aDades['completado']);
             }
 	    } else {
             // no existe el proceso:

@@ -234,7 +234,7 @@ class PermisosActividades {
 	 * para dl, ex
 	 * 
 	 * @param bool $dl_propia dl organizadora
-	 * @return array [$of_respnsable, $status]
+	 * @return array [$of_responsable, $status]
 	 */
 	public function getPermisoCrear($dl_propia) {
 	    $this->bpropia = $dl_propia;

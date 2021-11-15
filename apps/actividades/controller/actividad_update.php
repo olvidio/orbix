@@ -150,8 +150,10 @@ case "nuevo":
 	
 	// permiso
 	$_SESSION['oPermActividades']->setActividad($Qid_activ,$Qid_tipo_activ,$Qdl_org);
-	$oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
-	if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('crear') === FALSE) {
+	// para dl y dlf:
+	$dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $Qdl_org);
+	$dl_propia = (ConfigGlobal::mi_dele() == $dl_org_no_f)? TRUE : FALSE;
+	if (core\ConfigGlobal::is_app_installed('procesos') &&  $_SESSION['oPermActividades']->getPermisoCrear($dl_propia) === FALSE) {
         echo _("No tiene permiso para crear una actividad de este tipo")."<br>";
         die();
 	}
@@ -255,7 +257,10 @@ case "duplicar": // duplicar la actividad.
 	    $id_activ = (integer) strtok($a_sel[0],'#');
 		$oActividadAll = new actividades\Actividad($id_activ);
 		$dl = $oActividadAll->getDl_org();
-		if ($dl == core\ConfigGlobal::mi_delef()) {
+		// des si puede duplicar sf.
+		if ($dl == core\ConfigGlobal::mi_delef() ||
+		    ( $_SESSION['oPerm']->have_perm_oficina('des') && $dl == core\ConfigGlobal::mi_dele().'f' ) 
+		    ) {
 			$oActividad = new actividades\ActividadDl($id_activ);
 		} else {
 			exit(_("no se puede duplicar actividades que no sean de la propia dl"));
@@ -496,5 +501,7 @@ case "editar": // editar la actividad.
         }
 	}
 	break;
-	
+    default:
+        $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+        exit ($err_switch);
 } // fin del switch de mod.
