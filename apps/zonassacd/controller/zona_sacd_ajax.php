@@ -81,8 +81,9 @@ switch($Qque) {
 			foreach ($cZonaSacd as $oZonaSacd) {
 				$id_nom = $oZonaSacd->getId_nom();
 				$oPersona = Persona::NewPersona($id_nom);
-				// if ($oPersona->getSituacion() != 'A') { continue; } // Ahora todos, para poder borrar a los que se han ido.
-				if ($oPersona->getDl() != ConfigGlobal::mi_delef()) { continue; }
+                 // Ahora todos, para poder borrar a los que se han ido.
+				// if ($oPersona->getSituacion() != 'A') { continue; }
+				// if ($oPersona->getDl() != ConfigGlobal::mi_delef()) { continue; }
 				$ap_nom = $oPersona->getPrefApellidosNombre();
 
 				$a_sacds[$ap_nom]=$id_nom;
