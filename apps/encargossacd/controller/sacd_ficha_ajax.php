@@ -13,6 +13,7 @@ use personas\model\entity\GestorPersonaDl;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
+use encargossacd\model\entity\EncargoSacd;
 
 /**
 * Esta página muestra los encargos de un sacd. 
@@ -76,7 +77,7 @@ switch ($Qque) {
 
 		/* busco los datos del encargo que se tengan */
 		$GesEncargosSacd = new GestorEncargoSacd();
-		// No los personasles:
+		// No los personales:
 		$aWhereES = [];
 		$aOperadorES = [];
         $aWhereES['id_nom'] = $Qid_nom;
@@ -172,7 +173,7 @@ switch ($Qque) {
 
                         $texto_horario=$GesEncargoTipo->texto_horario($mas_menos,$dia_ref,$dia_inc,$dia_num,$h_ini,$h_fin,$n_sacd);
 						
-						if ($h >1) $a_dedic_ctr[$i] .= " y ";
+                        if ($h >1) { $a_dedic_ctr[$i] .= " y "; }
                         $a_dedic_ctr[$i] .= $texto_horario;
                     }
                     break;
@@ -193,6 +194,9 @@ switch ($Qque) {
                             case 'v':
                                 $a_dedic_ctr_v[$i] = $oEncargoHorario->getDia_inc();
                                 break;
+                            default:
+                                $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+                                exit ($err_switch);
                         }
                     }
 			}
@@ -230,7 +234,7 @@ switch ($Qque) {
 							$h_fin = $oEncargoSacdHorario->getH_fin();
 
 							$texto_horario=$GesEncargoTipo->texto_horario($mas_menos,$dia_ref,$dia_inc,$dia_num,$h_ini,$h_fin);
-							if ($h >1) $a_dedic_sacd[$i] .= " y ";
+							if ($h >1) { $a_dedic_sacd[$i] .= " y "; }
 							$a_dedic_sacd[$i] .= $texto_horario;
 						}
 						// si no tiene horario pongo el requerido por el centro
@@ -250,13 +254,16 @@ switch ($Qque) {
 								case 'v':
 									$a_dedic_v[$i]=$oEncargoSacdHorario->getDia_inc();
 									break;
+								default:
+                    	   		    $id_enc = $a_id_enc[$i];
+                                    $oEncargo = new Encargo(array('id_enc'=>$id_enc));
+                    	   		    $desc_enc = $oEncargo->getDesc_enc();
+								    // debería borrarlo, porque no tiene dia_ref:
+								    $oEncargoSacdHorario->DBEliminar();
+								    $txt_alert = sprintf(_("Se ha borrado el encargo \"%s\" porque no tenía definido el dia de ref."),$desc_enc);
+								    echo $txt_alert."<br>";
 							}
 						}
-						/*
-						$dedicacion1.="<td><input type=text size=1 name=dedic_m value=$a_dedic_m[$i]>"._("mañanas");
-						$dedicacion1.="</td><td><input type=text size=1 name=dedic_t value=$a_dedic_t[$i]>"._("tarde 1ª hora");
-						$dedicacion1.="</td><td><input type=text size=1 name=dedic_v value=$a_dedic_v[$i]>"._("tarde 2ª hora")."</td></tr><tr>";
-						*/
 				}
 			}
 		$enc_num=$i;
@@ -274,7 +281,6 @@ switch ($Qque) {
 		      'que'       => 'update',
               'id_nom'    => $Qid_nom,
 		];
-		//$oHash->setUrl($url_actualizar);
 		$campos_form = 'enc_num!mas!observ!dedic_m!dedic_t!dedic_v!id_tipo_enc';
 		$oHash->setcamposForm($campos_form);
 		$oHash->setcamposNo('id_enc!mas!refresh');
@@ -343,6 +349,9 @@ switch ($Qque) {
 						case 5:
 							$cabecera=_("colaborador");
 							break;
+						default:
+						    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+						    exit ($err_switch);
 					}
 					echo "<tr><th colspan=4>$cabecera</th></tr>";
 					$cabecera="";
@@ -350,17 +359,13 @@ switch ($Qque) {
 				$modo_ant=$a_modo[$j];
 				?>
 				<tr>
-				<td class=etiqueta><input type=hidden name=id_tipo_enc[<?= $j ?>] value=<?= $a_id_tipo_enc[$j] ?>><input type=hidden name=id_enc[<?= $j ?>] value=<?= $a_id_enc[$j] ?>>
+				<td class=etiqueta><input type=hidden name=id_tipo_enc[<?= $j ?>] value=<?= $a_id_tipo_enc[$j] ?>>
+				  <input type=hidden name=id_enc[<?= $j ?>] value=<?= $a_id_enc[$j] ?>>
 				<?php
                 $aQuery = [ 'id_ubi' => $a_id_ubi[$j], ];
                 if (is_array($aQuery)) { array_walk($aQuery, 'core\poner_empty_on_null'); }
                 $pagina = Hash::link('apps/encargossacd/controller/ctr_ficha.php?'.http_build_query($aQuery));
-				if ($permiso==1) {
-					?>
-					<span class="link" onclick="fnjs_update_div('#main','<?= $pagina ?>');">
-						<?= $a_desc_enc[$j] ?></span></td>
-					<?php
-				} elseif ($a_sf_sv[$j]==2 ) {
+                if ($permiso != 1 && $a_sf_sv[$j] == 2) {
 					echo "$a_desc_enc[$j]</td>";
 				} else {
 					?>
@@ -391,9 +396,11 @@ switch ($Qque) {
 			echo "$otros_enc"; 
 		}
 		?>
-		<tr id=pie><td><?= _("añadir encargo") ?>
-		<?= $oDesplEncs->desplegable(); ?>
-		</td></tr>
+		<tr id=pie>
+            <td><?= _("añadir encargo") ?>
+            <?= $oDesplEncs->desplegable(); ?>
+            </td>
+		</tr>
 		<tr>
 		<td colspan=4><?= _("observaciones") ?>: <textarea rows=3 cols=50 name=observ ><?= $observ_sacd ?></textarea></td></tr>
 		<?php
@@ -450,7 +457,7 @@ switch ($Qque) {
 				$aWhere['modo'] =  '(2|3|5)';
 				$aWhere['f_fin'] = 'x';
 				$aOperador['f_fin'] = 'IS NULL';
-				$aOperador['modo'] = '~';
+			    $aOperador['modo'] = '~';
 				$cEncargosSacd = $GesEncargoSacd->getEncargosSacd($aWhere,$aOperador);
 				if (empty($cEncargosSacd)) { continue; }
 				
@@ -469,7 +476,6 @@ switch ($Qque) {
 		}
 
 		// miro si tiene observaciones, y o actualizo, o creo una nueva.
-
 		$GesEncargoSacdObserv = new GestorEncargoSacdObserv();
 		$cEncargoSacdObserv = $GesEncargoSacdObserv->getEncargoSacdObservs(array('id_nom'=>$Qid_nom));
 		if(!empty($cEncargoSacdObserv[0])) {
@@ -493,4 +499,7 @@ switch ($Qque) {
 			}
 		}
 		break;
+	default:
+	    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+	    exit ($err_switch);
 }
