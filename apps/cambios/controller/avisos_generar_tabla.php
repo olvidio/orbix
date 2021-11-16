@@ -144,7 +144,7 @@ while ($num_cambios) {
 		    if ($propiedad_cmb == 'id_nom') {
 		        $id_nom = empty($valor_new_cmb)? $valor_old_cmb : $valor_new_cmb;
 		        $oPersonaSacd = new PersonaSacd($id_nom);
-		        if (!empty($oPersonaSacd)) {
+		        if (is_true($oPersonaSacd->getSacd())) {
 		           $afecta = 'asistentesSacd'; 
 		        }
 		    }
