@@ -175,8 +175,8 @@ class Avisos {
                     return $rta;
                 } else {
                     // ojo con los boolean.
-                    if (($valor_cmb == 't') || ($valor == 't') || ($valor_cmb === true) || ($valor === true)) return ((bool)$valor_cmb === (bool)$valor);
-                    if (($valor_cmb == 'f') || ($valor == 'f') || ($valor_cmb === false) || ($valor === false)) return ((bool)$valor_cmb === (bool)$valor);
+                    if (($valor_cmb == 't') || ($valor == 't') || ($valor_cmb === true) || ($valor === true)) { return ((bool)$valor_cmb === (bool)$valor); }
+                    if (($valor_cmb == 'f') || ($valor == 'f') || ($valor_cmb === false) || ($valor === false)) { return ((bool)$valor_cmb === (bool)$valor); }
                     return ($valor_cmb == $valor);
                 }
                 break;
@@ -209,11 +209,7 @@ class Avisos {
 
                 // si lo que cambia es el id_ubi, compruebo que el valor old o new sean de la casa.
                 if ($propiedad == 'id_ubi') {
-                    if (in_array($valor_old_cmb,$a_mis_id_ubis) || in_array($id_ubi,$a_mis_id_ubis)) {
-                        return TRUE;
-                    } else {
-                        return FALSE;
-                    }
+                    return (in_array($valor_old_cmb,$a_mis_id_ubis) || in_array($id_ubi,$a_mis_id_ubis));
                 } else {
                     // si cambia qualquier otra cosa en mi id_ubi.
                     if (in_array($id_ubi,$a_mis_id_ubis)) {
@@ -234,11 +230,10 @@ class Avisos {
         }
         // si soy un sacd.
         if ($oMiUsuario->isRolePau(Role::PAU_SACD)) {
-            $oMiUsuario = new Usuario($this->id_usuario);
             $id_nom_usuario = $oMiUsuario->getId_pau();
             // soy jefe zona?
             // si soy jefe de zona me afectan todos los sacd de la zona.
-            $rta = 0;
+            $rta = FALSE;
             $GesZonas = new GestorZona();
             $cZonas = $GesZonas->getZonas(array('id_nom' => $id_nom_usuario));
             if (is_array($cZonas) && count($cZonas)>0) {
@@ -258,11 +253,7 @@ class Avisos {
             } else { // No soy jefe de zona
                 $rta = $this->tengoPermiso($propiedad,$id_activ,$id_nom_usuario,$valor_old_cmb,$valor_new_cmb); 
             }
-            if ($rta) {
-                return TRUE;
-            } else {
-                return FALSE;
-            }
+            return $rta;
         }
         // En el caso de no ser casa ni sacd 
         // comparar si el aviso corresponde a la casa (id_pau)
@@ -273,11 +264,7 @@ class Avisos {
             $id_ubi = $oActividad->getId_ubi(); // id ubi actual.
             // si lo que cambia es el id_ubi, compruebo que el valor old o new sean de la casa.
             if ($propiedad == 'id_ubi') {
-                if (in_array($valor_old_cmb,$a_id_pau) || in_array($id_ubi,$a_id_pau)) {
-                    return TRUE;
-                } else {
-                    return FALSE;
-                }
+                return (in_array($valor_old_cmb,$a_id_pau) || in_array($id_ubi,$a_id_pau) );
             } else {
                 // si cambia qualquier otra cosa en mi id_ubi.
                 if (in_array($id_ubi,$a_id_pau)) {
@@ -352,14 +339,10 @@ class Avisos {
                 break;
             case 'Asistente':
                 // si lo que cambia es el id_nom, compruebo que el valor old o new sean de algun sacd de la zona.
-                if ($propiedad == 'id_nom') {
-                    if ($this->asiste($id_nom, $id_activ)) {
-                        return TRUE;
-                    } else {
-                        if (($valor_old_cmb == $id_nom) || ($valor_new_cmb == $id_nom)) {
-                            return TRUE;
-                        }
-                    }
+                if ( $propiedad == 'id_nom' 
+                    && ( ($valor_old_cmb == $id_nom) || ($valor_new_cmb == $id_nom) )
+                   ) {
+                       return TRUE;
                 }
                 return FALSE;
             break;
@@ -418,62 +401,6 @@ class Avisos {
         }
         return FALSE; 
     }
-    
-    /*
-    private function tengoPermiso($propiedad,$id_activ,$id_nom,$valor_old_cmb,$valor_new_cmb) {
-        $rta = 0;
-        switch ($this->sObjeto) {
-            case 'Actividad':
-                // compruebo si el sacd tienen cargo.
-                // y la fase okSacd está on:
-                $aWhere = ['id_nom' => $id_nom, 'id_activ' => $id_activ];
-                $GesActividadCargo = new GestorActividadCargo();
-                $a_Asistentes = $GesActividadCargo->getActividadCargos($aWhere);
-                if (count($a_Asistentes)>0) {
-                    $oPermActividades = new PermisosActividades($this->id_usuario);
-                    $oPermActividades->setActividad($id_activ);
-                    $oPermSacd = $oPermActividades->getPermisoOn('sacd');
-                    if ( !$oPermSacd->have_perm_activ('ver') ) { continue; }
-                    $rta += 1;
-                }
-                // sino, compruebo si el sacd asiste.
-                // y la fase es ok.
-                if (empty($rta)) {
-                    $aWhere = ['id_nom' => $id_nom, 'id_activ' => $id_activ];
-                    $GesAsistentes = new GestorAsistenteDl();
-                    $a_Asistentes = $GesAsistentes->getAsistentes($aWhere);
-                    if (count($a_Asistentes)>0) {
-                        $oPermActividades = new PermisosActividades($this->id_usuario);
-                        $oPermActividades->setActividad($id_activ);
-                        $oPermAsisSacd = $oPermActividades->getPermisoOn('asistentesSacd');
-                        if ( !$oPermAsisSacd->have_perm_activ('ver') ) { continue; }
-                        $rta += 1;
-                    }
-                }
-            break;
-            case 'ActividadCargoNoSacd':
-            case 'ActividadCargoSacd':
-                // compruebo si el sacd tiene cargo
-                $a_sacd_con_cargo = array_intersect($cSacds, $a_Sacds);
-                if (count($a_sacd_con_cargo)>0) $rta += 1;
-                // si lo que cambia es el id_nom, compruebo que el valor old o new sean de algun sacd de la zona.
-                if ($propiedad == 'id_nom') {
-                    if (in_array($valor_old_cmb,$cSacds) || in_array($valor_new_cmb,$cSacds)) {
-                        $rta += 1;
-                    }
-                }
-            break;
-            case 'Asistente':
-                // si lo que cambia es el id_nom, compruebo que el valor old o new sean de algun sacd de la zona.
-                if ($propiedad == 'id_nom') {
-                    if (in_array($valor_old_cmb,$cSacds) || in_array($valor_new_cmb,$cSacds)) {
-                        $rta += 1;
-                    }
-                }
-            break;
-        }
-    }
-    */
     
     public function setId_schema_cmb($id_schema_cmb) {
         $this->id_schema_cmb = $id_schema_cmb;

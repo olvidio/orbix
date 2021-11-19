@@ -240,10 +240,8 @@ while ($num_cambios) {
                             $status_de_fase = $cTareasProceso[0]->getStatus();
                         }
 			        }
-                    if ($id_status_cmb == $status_de_fase) {
-                        if (is_true($aviso_on)) {
-                            $fase_correcta = 1;
-                        }
+                    if ($id_status_cmb == $status_de_fase && is_true($aviso_on)) {
+                        $fase_correcta = 1;
                     }
 			    } else {
     			    // Si yo no tengo procesos:
