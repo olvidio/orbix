@@ -107,7 +107,8 @@ $continuar = (integer)  filter_input(INPUT_POST, 'continuar');
 		} else {
 			$ini_a = $any;
 		}
-		$GesAsignaturasCa = new actividadestudios\GestorActividadAsignaturaDl();
+		//$GesAsignaturasCa = new actividadestudios\GestorActividadAsignaturaDl();
+		$GesAsignaturasCa = new actividadestudios\GestorActividadAsignatura();
 		$cActivAsignaturas = $GesAsignaturasCa->getActividadAsignaturas(array('id_activ'=>$id_activ),array('id_profesor'=>'IS NOT NULL'));
 		
 		foreach ($cActivAsignaturas as $oActividadAsignatura) {
