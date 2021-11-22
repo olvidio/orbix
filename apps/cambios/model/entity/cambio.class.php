@@ -365,7 +365,11 @@ class Cambio Extends core\ClasePropiedades {
 	        return false;
 	    }
 	    $aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
-	    $nomActiv = $aDades['valor_old']."("._('Eliminado').")";
+	    if ($aDades === FALSE) {
+            $nomActiv = _('Actividad Eliminada');
+	    } else {
+            $nomActiv = $aDades['valor_old']."("._('Eliminado').")";
+	    }
 	    return $nomActiv;
 	}
 	

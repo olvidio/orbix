@@ -38,8 +38,8 @@ function convertToIso(fecha) {
 		var a_hora = dateTime[1].split(':');
 		any=a_fecha[2];
 		if (any < 100) any="20"+any;
-		if (a_val[0] < 10) a_val[0]="0"+a_val[0];
-		if (a_val[1] < 10) a_val[1]="0"+a_val[1];
+		if (a_fecha[0] < 10) a_fecha[0]="0"+a_fecha[0];
+		if (a_fecha[1] < 10) a_fecha[1]="0"+a_fecha[1];
 		//fecha_iso=any+"-"+a_fecha[1]+"-"+a_fecha[0]+"T"+a_hora[0]+":"+a_hora[1]+":"+a_hora[2];
 		<?= $fecha_hora_local ?>
 		return fecha_iso;

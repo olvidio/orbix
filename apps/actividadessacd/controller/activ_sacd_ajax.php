@@ -14,6 +14,7 @@ use personas\model\entity\GestorPersona;
 use personas\model\entity\Persona;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use web\Periodo;
+use function core\is_true;
 
 /**
 * Esta página sirve para ejecutar las operaciones de guardar, eliminar, listar...
@@ -351,6 +352,11 @@ switch ($Qque) {
 				$aWhere['id_tipo_activ']='^2[789]';
 				$aOperador['id_tipo_activ']='~';
 				break;
+			case 'falta_sacd':
+			    // todos los tipos de actividad,
+				unset($aWhere['id_tipo_activ']);
+				unset($aOperador['id_tipo_activ']);
+			    break;
 		}
 		$aWhere['_ordre']='f_ini';
 
@@ -387,7 +393,7 @@ switch ($Qque) {
 			if ($oPermActiv->have_perm_activ('ver') === false) { // sólo puede ver que està ocupado
 			} else {
 				$a_valores[$i][0]=$id_activ;
-				$a_valores[$i][10]=$oPermSacd; // para no tener que recalcularlo despues.
+				$a_valores[$i][10]=$oPermSacd; // para no tener que recalcularlo después.
 				$a_valores[$i][1]=$nom_activ;
 				// Fase en la que se en cuentra
 				$GesActividadProceso=new GestorActividadProcesoTarea();
@@ -433,6 +439,16 @@ switch ($Qque) {
 									'id_cargo'=>$oActividadCargo->getId_cargo(),
 									'ap_nom'=>$oPersona->getPrefApellidosNombre()
 									);
+					}
+					// Para el listado de falta_sacd, sólo hay que mantener llas que no tienen sacd,
+					// o si lo tienen, que no tengan la fase ok_sacd.
+					if ($Qtipo == 'falta_sacd'
+                        && ( (is_true($sacd_aprobado) && !empty($sacds) )
+                             || (!is_true($sacd_aprobado) && empty($sacds) )
+                           )
+                       ) {
+                               unset ($a_valores[$i]);
+                               continue;
 					}
 				}
 				$a_valores[$i][2]=$sacds;
