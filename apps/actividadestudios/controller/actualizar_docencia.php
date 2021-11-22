@@ -4,6 +4,7 @@ use actividadestudios\model\entity as actividadestudios;
 use notas\model\entity as notas;
 use profesores\model\entity as profesores;
 use web\Periodo;
+use actividades\model\entity\ActividadAll;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -80,12 +81,12 @@ $continuar = (integer)  filter_input(INPUT_POST, 'continuar');
 	$aOperador = [];
     $aWhere['f_ini'] = "'$inicioIso','$finIso'";
 	$aOperador['f_ini'] = 'BETWEEN';
-	$aWhere['status'] = 3;
+	$aWhere['status'] = ActividadAll::STATUS_TERMINADA;
 	
 	$mi_sfsv = core\ConfigGlobal::mi_sfsv();
 	//$id_tipo='^'.$mi_sfsv.'[123][23]';   // OJO AÑADO sem inv.
-	$id_tipo='^'.$mi_sfsv.'[123][23]5*';
-	$id_tipo_inv='^'.$mi_sfsv.'[123][23]5';
+	$id_tipo='^'.$mi_sfsv.'[123][23]';
+	$id_tipo_inv='^'.$mi_sfsv.'325';
 	$aWhere['id_tipo_activ'] = $id_tipo;
 	$aOperador['id_tipo_activ'] = '~';
 	//$GesActividades = new actividades\GestorActividadDl();
