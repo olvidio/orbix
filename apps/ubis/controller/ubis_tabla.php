@@ -350,8 +350,8 @@ $a_region = [];
 $a_nom = [];
 foreach ($cUbis as $key => $oUbi) {
 	$id_ubi = $oUbi->getId_ubi();
-	if (!empty($aUbisIntersec) && !in_array($id_ubi,$aUbisIntersec)) continue;
-	if (in_array($id_ubi,$aUbis)) continue;
+	if (!empty($aUbisIntersec) && !in_array($id_ubi,$aUbisIntersec)) { continue; }
+	if (in_array($id_ubi,$aUbis)) { continue; }
 	$aUbis[] = $id_ubi;
 	$cUbisTot[$key] = $oUbi;
 	$a_region[$key]  = strtolower($oUbi->getRegion());

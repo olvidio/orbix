@@ -123,7 +123,7 @@ function guardarObjeto($oObjeto,$campos_chk) {
                 }
             }
         } else {
-            if (!isset($_POST[$camp])) continue;
+            if (!isset($_POST[$camp])) { continue; }
             //cuando el campo es tipo_labor, se pasa un array que hay que convertirlo en número.
             if ($camp=="tipo_labor"){
                 $byte=0;
