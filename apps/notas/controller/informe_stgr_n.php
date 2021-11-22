@@ -28,10 +28,8 @@ $a_ce = array('dlb'=>'Barcelona',
 				'dlmO' => 'Madrid (O)',
 				'dlp' => 'Pamplona (cep)',
 				'dls' => 'Sevilla',
-				'dlst' => 'Santiago',
-				'dlv' => 'Valladolid',
-				'dlva' => 'Valencia',
-				'dlz' => 'Zaragoza',
+				'dln' => 'Valladolid',
+				'dlal' => 'Valencia',
                 'H' => 'región stgr H',
 	);
 $mi_dl = core\ConfigGlobal::mi_delef();
