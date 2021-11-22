@@ -68,7 +68,6 @@ $continuar = (integer)  filter_input(INPUT_POST, 'continuar');
      
     // periodo.
     $oPeriodo = new Periodo();
-    $oPeriodo->setDefaultAny('next');
     $oPeriodo->setAny($Qyear);
     $oPeriodo->setEmpiezaMin($Qempiezamin);
     $oPeriodo->setEmpiezaMax($Qempiezamax);
@@ -76,6 +75,9 @@ $continuar = (integer)  filter_input(INPUT_POST, 'continuar');
      
     $inicioIso = $oPeriodo->getF_ini_iso();
     $finIso = $oPeriodo->getF_fin_iso();
+    $txt_curso = $oPeriodo->getTxt_cusro();
+    
+    $txt_rta =  sprintf(_("Se ha actualizado la docencia para el periodo: %s"),$txt_curso);
     
     $aWhere = [];
 	$aOperador = [];
@@ -162,6 +164,7 @@ $continuar = (integer)  filter_input(INPUT_POST, 'continuar');
 	}
 
 	$a_campos = array('mod'=>'fin',
+                   'txt_rta' => $txt_rta,
 				);
 }
 

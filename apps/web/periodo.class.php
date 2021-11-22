@@ -1,6 +1,6 @@
 <?php
 namespace web;
-use core\ConfigGlobal;
+use function core\curso_est;
 /**
  * Classe que passa el periode amb texte a data inici i data fi.
  *
@@ -13,12 +13,6 @@ use core\ConfigGlobal;
 class Periodo {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
-	/**
-	 * sPeriodo de Periodo
-	 *
-	 * @var string
-	 */
-	 private $sPeriodo;
 	/**
 	 * iAny de Periodo
 	 *
@@ -38,9 +32,18 @@ class Periodo {
 	 */
 	 private $df_fin;
 	 
-	 private $sempiezamax;
-	 private $sempiezamin;
-
+	 /**
+	  * 
+	  * @var string
+	  */
+     private $sempiezaminiso;
+	 /**
+	  * 
+	  * @var string
+	  */
+	 private $sempiezamaxiso;
+	 
+	 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
 	/**
@@ -117,6 +120,16 @@ class Periodo {
 	function getF_fin() {
         return new DateTimeLocal($this->df_fin);
 	}
+	
+	function getTxt_cusro() {
+	    $oInicio = $this->getF_ini();
+	    $oFin = $this->getF_fin();
+	    
+	    $ini_local = $oInicio->getFromLocal();
+	    $fin_local = $oFin->getFromLocal();
+	    
+	    return "$ini_local - $fin_local";
+	}
 
 	/**
 	 * Establece una fecha inicio y una fecha fin de un periodo. Debe ser el último de todos los set.
@@ -173,36 +186,22 @@ class Periodo {
 				}
 				break;
 			case "curso_crt":
-			    $ini_d = $_SESSION['oConfig']->getDiaIniCrt();
-			    $ini_m = $_SESSION['oConfig']->getMesIniCrt();
-			    $fin_d = $_SESSION['oConfig']->getDiaFinCrt();
 			    $fin_m = $_SESSION['oConfig']->getMesFinCrt();
+			    if ($mes > $fin_m) { $any2=date('Y')+1; } else { $any2 = date('Y'); }
+			    $oInicio = curso_est("inicio",$any2,'crt');
+			    $oFin = curso_est("fin",$any2,'crt');
 			    
-				if ($mes > $fin_m) {
-				    $any2=$any+1;
-				    $inicio = "$any-$ini_m-$ini_d";
-				    $fin = "$any2-$fin_m-$fin_d";
-				} else {
-				    $any2=$any-1;
-				    $inicio = "$any2-$ini_m-$ini_d";
-				    $fin = "$any-$fin_m-$fin_d";
-				}
+			    $inicio = $oInicio->getIso();
+			    $fin = $oFin->getIso();
 				break;
 			case "curso_ca":
-			    $ini_d = $_SESSION['oConfig']->getDiaIniStgr();
-			    $ini_m = $_SESSION['oConfig']->getMesIniStgr();
-			    $fin_d = $_SESSION['oConfig']->getDiaFinStgr();
 			    $fin_m = $_SESSION['oConfig']->getMesFinStgr();
+			    if ($mes > $fin_m) { $any2=date('Y')+1; } else { $any2 = date('Y'); }
+			    $oInicio = curso_est("inicio",$any2,'est');
+			    $oFin = curso_est("fin",$any2,'est');
 			    
-				if ($mes > $fin_m) {
-				    $any2=$any+1;
-				    $inicio = "$any-$ini_m-$ini_d";
-				    $fin = "$any2-$fin_m-$fin_d";
-				} else {
-                    $any2=$any-1;
-                    $inicio = "$any2-$ini_m-$ini_d";
-                    $fin = "$any-$fin_m-$fin_d";
-				}
+			    $inicio = $oInicio->getIso();
+			    $fin = $oFin->getIso();
 				break;
 			case "trimestre":
 				$inicio = $any."/$mes/1";	
@@ -241,8 +240,8 @@ class Periodo {
 				$fin = ($any+1)."/12/31";
 				break;
 			default:
-				if (empty($inicio)) $inicio = $any."/1/1";	
-				if (empty($fin)) $fin = $any."/12/31";
+			    if (empty($inicio)) { $inicio = $any."/1/1"; }
+			    if (empty($fin)) { $fin = $any."/12/31"; }
 		}
 		$this->df_ini = $inicio;
 		$this->df_fin = $fin;
