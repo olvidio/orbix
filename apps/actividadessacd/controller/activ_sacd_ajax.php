@@ -435,10 +435,18 @@ switch ($Qque) {
 						$id_nom=$oActividadCargo->getId_nom();
                         // OJO puede ser de la dl o de_paso
                         $oPersona = Persona::NewPersona($id_nom);
-						$sacds[] = array ('id_nom'=>$id_nom,
+                        if (is_object($oPersona)) {
+                            $sacds[] = array ('id_nom'=>$id_nom,
 									'id_cargo'=>$oActividadCargo->getId_cargo(),
 									'ap_nom'=>$oPersona->getPrefApellidosNombre()
 									);
+                        } else {
+                            // la función Persona::NewPersona puede devolver: "no encuentro a nadie"
+                            $sacds[] = array ('id_nom'=>$id_nom,
+									'id_cargo'=>$oActividadCargo->getId_cargo(),
+									'ap_nom'=>$oPersona,
+									);
+                        }
 					}
 					// Para el listado de falta_sacd, sólo hay que mantener llas que no tienen sacd,
 					// o si lo tienen, que no tengan la fase ok_sacd.
