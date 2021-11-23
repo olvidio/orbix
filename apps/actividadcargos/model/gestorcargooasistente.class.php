@@ -164,13 +164,14 @@ class GestorCargoOAsistente {
 	    // More details can be found in the manual:
 	    // http://www.postgresql.org/docs/current/static/rangetypes.html#RANGETYPES-INCLUSIVITY
 	    $sQuery = "
-                select f1.*
-                from $tabla_p_tmp f1
-                where exists (select 1
+                SELECT f1.*
+                FROM $tabla_p_tmp f1
+                WHERE exists (select 1
                     from $tabla_p_tmp f2
                     where tsrange(f2.f_ini, f2.f_fin, '[]') && tsrange(f1.f_ini, f1.f_fin, '[]')
                     and f2.id_nom = f1.id_nom
-                    and f2.id <> f1.id);
+                    and f2.id <> f1.id)
+                ORDER BY f1.f_ini;
         ";
         if (($solapes = $oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorCargoOAsistente.query';

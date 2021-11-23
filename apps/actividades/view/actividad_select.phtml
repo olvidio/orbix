@@ -5,28 +5,30 @@ fnjs_borrar=function(formulario,que_val){
 	if (rta==1) {
 		if (confirm("<?= _("¿Está seguro que desea borrar esta actividad?");?>") ) {
 			$('#mod').val(que_val);
-			$(formulario).attr('action',"apps/actividades/controller/actividad_update.php");
-			$(formulario).one("submit", function() {
-				$.ajax({
-					url: $(this).attr('action'),
-					type: 'post',
-					data: $(this).serialize()
-				})
-				.done(function (rta_txt) {
-					if (rta_txt != '' && rta_txt != '\n') {
-						alert (rta_txt);
-					}
+			url="apps/actividades/controller/actividad_update.php";
+            datos = $(formulario).serialize();
+            
+            request=$.ajax({
+                data: datos,
+                url: url,
+                method: 'POST',
+                dataType: 'json'
+            });
+					
+			request.done( function (json) {
+                if (json.success != true) {
+                    rta_txt = json.mensaje;
+                    alert ('error: '+rta_txt);
+                } else {
 					$(formulario+' input.sel').each(function(i){
 						if($(this).prop('checked') === true){
 							$(this).parent().siblings().addClass('tachado');
 							$(this).prop('checked',false);
 						}
 					});
-				});
+				}
 				return false;
 			});
-			$(formulario).trigger("submit");
-			$(formulario).off();
 		}
 	}
 };

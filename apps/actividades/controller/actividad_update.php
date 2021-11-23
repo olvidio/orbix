@@ -18,6 +18,7 @@ use actividadplazas\model\entity\ActividadPlazasDl;
 use core\ConfigGlobal;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use actividadplazas\model\entity\GestorActividadPlazas;
+use actividades\model\entity\Actividad;
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
 */
@@ -278,17 +279,49 @@ case "duplicar": // duplicar la actividad.
 	}
 	break;
 case "eliminar": // Eliminar la actividad.
+    $error_txt = '';
 	$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 	if (!empty($a_sel)) { // puedo seleccionar más de uno.
 		foreach ($a_sel as $id) {
 		    $id_activ = (integer) strtok($id,'#');
-			borrar_actividad($id_activ);
+			$oActividad = new actividades\Actividad($id_activ);
+			$id_tipo_activ = $oActividad->getId_tipo_activ();
+			$dl_org = $oActividad->getDl_org();
+		    
+            $_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
+            $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
+            if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('borrar') === TRUE) {
+                borrar_actividad($id_activ);
+            } else {
+                $error_txt .= _("No tiene permiso para borrar esta actividad");
+            }
 		}
 	}
 	// si vengo desde la presentacion del planning, ya tengo el id_activ.
 	if (!empty($Qid_activ)) {
-		borrar_actividad($Qid_activ);
+        $oActividad = new actividades\Actividad($Qid_activ);
+        $id_tipo_activ = $oActividad->getId_tipo_activ();
+        $dl_org = $oActividad->getDl_org();
+        
+        $_SESSION['oPermActividades']->setActividad($Qid_activ,$id_tipo_activ,$dl_org);
+        $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
+        if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('borrar') === TRUE) {
+            borrar_actividad($Qid_activ);
+        } else {
+            $error_txt .= _("No tiene permiso para borrar esta actividad");
+        }
 	}
+	
+	if (!empty($error_txt)) {
+	    $jsondata['success'] = FALSE;
+	    $jsondata['mensaje'] = $error_txt;
+	} else {
+	    $jsondata['success'] = TRUE;
+	}
+	//Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
+	header('Content-type: application/json; charset=utf-8');
+	echo json_encode($jsondata);
+	exit();
 	break;
 case "cmb_tipo": // sólo cambio el tipo a una actividad existente //____________________________
 	$Qid_tipo_activ = (integer) \filter_input(INPUT_POST, 'id_tipo_activ');
