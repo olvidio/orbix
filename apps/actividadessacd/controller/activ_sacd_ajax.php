@@ -15,6 +15,7 @@ use personas\model\entity\Persona;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use web\Periodo;
 use function core\is_true;
+use procesos\model\entity\ActividadFase;
 
 /**
 * Esta página sirve para ejecutar las operaciones de guardar, eliminar, listar...
@@ -315,6 +316,7 @@ switch ($Qque) {
 		$aWhere['status']=3;
 		$aOperador['status']="<";
 
+        $txt_fase_ok_sacd = '';
 		switch ($Qtipo) {
 			case "sv":
 				$aWhere['id_tipo_activ']='^1';
@@ -356,6 +358,9 @@ switch ($Qque) {
 			    // todos los tipos de actividad,
 				unset($aWhere['id_tipo_activ']);
 				unset($aOperador['id_tipo_activ']);
+				
+				$oActividadFase = new ActividadFase(ActividadFase::FASE_OK_SACD);
+				$txt_fase_ok_sacd = $oActividadFase->getDesc_fase();
 			    break;
 		}
 		$aWhere['_ordre']='f_ini';
@@ -448,11 +453,11 @@ switch ($Qque) {
 									);
                         }
 					}
-					// Para el listado de falta_sacd, sólo hay que mantener llas que no tienen sacd,
+					// Para el listado de falta_sacd, sólo hay que mantener las que no tienen sacd,
 					// o si lo tienen, que no tengan la fase ok_sacd.
 					if ($Qtipo == 'falta_sacd'
-                        && ( (is_true($sacd_aprobado) && !empty($sacds) )
-                             || (!is_true($sacd_aprobado) && empty($sacds) )
+                        && !( !(is_true($sacd_aprobado) && !empty($sacds))
+                             || empty($sacds)
                            )
                        ) {
                                unset ($a_valores[$i]);
@@ -470,6 +475,12 @@ switch ($Qque) {
 		<h3><?= $titulo ?></h3>
 		<span class="comentario">
 		<?= _("NOTA: en sv, al asignar un sacd, se añade la asistencia a la actividad."); ?>
+		<?php if ($Qtipo == 'falta_sacd') {
+			echo "<br>";
+			echo sprintf(_("Actividades aprobadas y no aprobadas sin sacds (independiente de la fase \"%s\")"),$txt_fase_ok_sacd);
+			echo "<br>";
+			echo sprintf(_("+ Actividades con sacds sin la fase \"%s\""),$txt_fase_ok_sacd);
+        } ?>
 		</span>
 		<br>
 		<table><tr>
@@ -513,6 +524,16 @@ switch ($Qque) {
 		}
 		?>
 		</table>
+		<hr>
+		<table>
+			<tr><th>Leyenda</th></tr>
+			<tr class='wrong-soft'><td><?= _("Actividad en proyecto") ?></td></tr>
+			<tr class='plaza4'><td><?= sprintf(_("Actividad con fase %s"),$txt_fase_ok_sacd) ?></td></tr>
+			<tr class=''><td><?= _("Actividad aprobada") ?></td></tr>
+        </table>
+			
+		
 		<?php
+		
 		break;
 }
