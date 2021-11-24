@@ -145,6 +145,7 @@ class Periodo {
 	 *                 'trimestre' -> mes actual + 3.
 	 *                 'mes' -> del 1 al 31 del mes actual.
 	 *                 'verano' -> 1-junio al 30-setiembre.
+	 *                 'navidad' -> 1--diciembre al 31-enero del año proximo.
 	 *                 'trimestre_1' -> 1-enero al 31-marzo.
 	 *                 'trimestre_2' -> 1-abril al 30-junio.
 	 *                 'trimestre_3' -> 1-julio al 30-septiembre.
@@ -202,6 +203,10 @@ class Periodo {
 			    
 			    $inicio = $oInicio->getIso();
 			    $fin = $oFin->getIso();
+				break;
+			case "navidad":
+				$inicio = $any."/12/1";	
+				$fin = date('Y/m/d',mktime(0, 0, 0, $mes+1, 0, $any));
 				break;
 			case "trimestre":
 				$inicio = $any."/$mes/1";	

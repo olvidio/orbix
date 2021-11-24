@@ -94,6 +94,10 @@ switch ($Qtrimestre) {
 		$ini_trim = "10/1";	
 		$fin_trim = "12/31";
 	break;
+	case 5:
+		$ini_trim = "12/1";	
+		$fin_trim = "1/31";
+	break;
 	case 101:
 		$ini_trim = "1/1";	
 		$fin_trim = "1/31";
@@ -145,7 +149,11 @@ switch ($Qtrimestre) {
 }
 
 $inicio_iso = $year."/".$ini_trim;
-$fin_iso = $year."/".$fin_trim;
+if ($Qtrimestre == 5) {
+    $fin_iso = ($year+1)."/".$fin_trim;
+} else {
+    $fin_iso = $year."/".$fin_trim;
+}
 
 $oIniPlanning = web\DateTimeLocal::createFromFormat('Y/m/d',$inicio_iso);
 $oFinPlanning = web\DateTimeLocal::createFromFormat('Y/m/d',$fin_iso);

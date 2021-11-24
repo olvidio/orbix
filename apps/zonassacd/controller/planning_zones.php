@@ -30,10 +30,11 @@ $chk_trim1='';
 $chk_trim2='';
 $chk_trim3='';
 $chk_trim4='';
-if ($mes < 4) $chk_trim1='checked';
-if ($mes > 3 && $mes < 7) $chk_trim2='checked';
-if ($mes > 8 && $mes < 10) $chk_trim3='checked';
-if ($mes > 9 && $mes < 13) $chk_trim4='checked';
+$chk_trim5='';
+if ($mes < 4) { $chk_trim1='checked' ;}
+if ($mes > 3 && $mes < 7) { $chk_trim2='checked' ;}
+if ($mes > 8 && $mes < 10) { $chk_trim3='checked' ;}
+if ($mes > 9 && $mes < 13) { $chk_trim4='checked' ;}
 
 $id_nom_jefe = '';
 $id_usuario = ConfigGlobal::mi_id_usuario();
@@ -88,6 +89,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'chk_trim2' => $chk_trim2,
     'chk_trim3' => $chk_trim3,
     'chk_trim4' => $chk_trim4,
+    'chk_trim5' => $chk_trim5,
 ];
 
 $oView = new core\ViewTwig('zonassacd/controller');
