@@ -548,6 +548,9 @@ switch ($Qque) {
         $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
         $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
         
+        $oActividadFase = new ActividadFase(ActividadFase::FASE_OK_SACD);
+        $txt_fase_ok_sacd = $oActividadFase->getDesc_fase();
+
         // periodo.
         $oPeriodo = new Periodo();
         $oPeriodo->setDefaultAny('next');
