@@ -95,7 +95,6 @@
 90	1	apps/config/controller/parametros.php	\N	Configuracion esquema
 152	1	apps/ubis/controller/lista_ctrs.php	\N	lista ctr sg
 12	5	apps/actividades/controller/actividades_centro_que.php	\N	Centro que activ
-21	6	apps/actividades/controller/calendario_listas.php	\N	calendario listas
 51	27	apps/casas/controller/casa_ec_que.php	\N	Casa ec que
 45	27	apps/casas/controller/casa_que.php	\N	Casa que
 63	27	apps/casas/controller/calendario_ubi_resumen.php	\N	Ubi resumen ec
@@ -105,6 +104,7 @@
 58	6	apps/actividades/controller/lista_sr_csv_que.php	\N	Activ Sr Que (csv)
 42	24	apps/zonassacd/controller/zona_sacd.php	\N	Zona sacd
 139	24	apps/zonassacd/controller/planning_zones.php	\N	Planning por zonas
+21	5	apps/actividades/controller/calendario_listas.php	\N	calendario listas
 114	25	apps/cartaspresentacion/controller/cartas_presentacion_que.php	\N	Cartas Presentacion
 3	25	apps/cartaspresentacion/controller/cartas_presentacion_buscar.php	\N	Buscar Cartas presentacion
 19	2	apps/devel/controller/factory_form.php	\N	generador de clases
@@ -114,7 +114,6 @@
 164	1	apps/usuarios/controller/personal.php	\N	preferencias usuario
 76	1	apps/personas/controller/personas_que.php	\N	búsqueda de personas
 176	9	apps/dbextern/controller/sincro_index.php	\N	Sincronizar con los datos de Listas
-61	5	apps/asistentes/controller/planning_que.php	\N	planning
 147	5	apps/asistentes/controller/que_ctr_lista.php	\N	Buscar por centro
 140	5	apps/asistentes/controller/activ_pendientes_select.php	\N	actividades pendientes
 60	4	apps/notas/controller/acta_select.php	\N	actas
@@ -188,3 +187,6 @@
 137	26	apps/cambios/controller/avisos_generar.php	\N	lista avisos
 87	21	apps/encargossacd/controller/propuestas_menu.php	\N	propuestas encargos sacd
 192	2	apps/devel/controller/db_cambiar_nombre_que.php	\N	cambiar nombre dl
+1	7	\N	\N	Raiz stgr 2
+61	6	apps/asistentes/controller/planning_que.php	\N	planning
+194	5	apps/actividades/controller/planning_casa_que.php	\N	Planing Casa

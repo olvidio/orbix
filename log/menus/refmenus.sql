@@ -9,8 +9,6 @@
 33	{80,20}	buscar cv	sasistentes=agd&sactividad=cv&que=ver	71	2050	3	t
 193	{91}	buscar	\N	\N	2112	10	t
 310	{70,20}	buscar crt	sasistentes=n&sactividad=crt&que=ver	71	2208	2	t
-147	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	2064	12	t
-329	{85,40}	por casas	tipo=planning_cdc&ssfsv=sv	61	2176	2	t
 159	{10,10}	buscar	simple=1	133	33554465	4	t
 311	{70,70}	list por ctr	lista=list_activ&n_agd=n&sasistentes=n&sactividad=crt	147	2208	2	t
 24	{70,30}	lista por ctr	lista=list_activ&n_agd=a&sasistentes=agd&sactividad=crt	147	2082	3	t
@@ -71,6 +69,7 @@
 242	{140,20}	n de paso	tabla=p_de_paso&na=n&tipo=persona	76	64	10	t
 921	{20,50}	resumen pendientes	\N	174	16	12	t
 188	{100,30}	tipo de casa	clase_info=ubis\\model\\infotipocasa	160	32	19	t
+38	{60,110}	solapes	tipo=solape	39	8	8	t
 800	{10,30}	meta menus	clase_info=menus\\model\\infometamenus	160	33554432	13	t
 142	{35,75}	estudios x ctr	lista=list_est&n_agd=n&sasistentes=n&sactividad=ca	147	2064	12	t
 831	{1,95}	Informar de un bug	\N	167	33816575	1	t
@@ -96,7 +95,6 @@
 28	{80}	cv	\N	183	2050	3	t
 117	{10}	buscar persona	\N	181	2064	12	t
 123	{20}	actas...	\N	189	2066	12	t
-125	{30}	posibles ca	\N	183	2194	12	t
 828	{90}	mantenimiento	\N	181	16	12	t
 88	{55}	sssc	\N	183	8	8	t
 253	{20}	DB	\N	182	33554432	13	t
@@ -198,7 +196,6 @@
 998	{20,20}	nuevo planing	\N	141	37748735	7	t
 1004	{20,30}	listados	\N	0	37748735	7	t
 1005	{20,30,10}	Cases comunes	que=c_comunes&ver_ctr=si	21	37748735	7	t
-951	{10,10}	Planing Casas	tipo=planning_cdc	61	1	7	t
 1385	{20}	actas	\N	0	16	21	t
 1006	{20,30,20}	listados de todas las casas	que=c_todas&ver_ctr=si	21	1	7	t
 941	{5,80}	lista varias activ	ssfsv=sv&sasistentes=n&que=list_cjto_sacd	119	8	8	t
@@ -226,7 +223,6 @@
 1065	{40,20}	num de paso	tabla=p_de_paso&na=n&tipo=p_de_paso	61	32	4	t
 1019	{20,80}	Previsión económica	\N	63	1	7	t
 1013	{20,60}	Estadística por años	periodo=no&tipo_lista=datosEc	51	1	7	t
-1087	{40,50}	por casas	tipo=planning_cdc&ssfsv=sf	61	32768	20	t
 1058	{40,10}	buscar	que=ver	119	65536	9	t
 1080	{40,40}	por centro	tipo=planning_ctr	61	32768	20	t
 1074	{40,30}	lista por casas	periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si	45	65536	9	t
@@ -242,13 +238,11 @@
 1052	{37,100}	cambiar de fase	id_tipo_activ=112	130	16	12	t
 1046	{35,10}	listado csv	\N	58	2560	15	t
 1083	{40,40}	por centro	tipo=planning_ctr	61	8	8	t
-1086	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	8	8	t
 1146	{50,100,10}	activ sg	tipo=sg	43	8	8	t
 1144	{50,100}	asignar centros	\N	43	8	8	t
 1091	{40,60}	por zonas	\N	139	2056	8	t
 1079	{40,30}	agd de paso	tabla=p_de_paso&na=a&tipo=p_de_paso	61	32	4	t
 1082	{40,40}	por ctr	tipo=planning_ctr	61	32	4	t
-1089	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	32	4	t
 1159	{50,100,50}	sf sr	tipo=sfsr	43	32768	20	t
 1160	{50,100,60}	sf n, nax y agd	tipo=sfnagd	43	32768	20	t
 1156	{50,100,40}	sf s y sg	tipo=sfsg	43	32768	20	t
@@ -269,6 +263,8 @@
 1138	{60,90,30}	activ sv n y agd	tipo=na	39	8	8	t
 1222	{70,20}	definir módulos		27	33554432	13	t
 1039	{30,30}	tarifas por casa y año	\N	73	2049	7	t
+1087	{40,50}	por casas	tipo=planning_cdc&ssfsv=sf	194	32768	20	t
+1089	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	194	32	4	t
 1139	{60,90,50}	activ sf sg	tipo=sf_sg	39	8	8	t
 1140	{60,90,60}	activ sf sr	tipo=sf_sr	39	8	8	t
 1141	{60,90,70}	activ sf n,nax y agd	tipo=sf_na	39	8	8	t
@@ -331,7 +327,6 @@
 1232	{110,70}	corresponde ir a cv joves	que=cv_jovenes	79	64	10	t
 1321	{100}	planning 	\N	183	2	3	t
 1326	{100,30}	por centro	tipo=planning_ctr	61	2	3	t
-1329	{100,40}	por casas	tipo=planning_cdc&ssfsv=sv	61	2	3	t
 1374	{20,10}	actas	\N	60	16	21	t
 1375	{20,20}	tabla alumnos-asignaturas	\N	88	16	21	t
 1378	{10,40}	profesor para asignatura	\N	171	16	21	t
@@ -375,7 +370,6 @@
 1362	{150}	planning	\N	0	64	10	t
 1363	{150,10}	persona r/dl	tabla=p_de_casa&tipo=planning	61	64	10	t
 1366	{150,40}	por centro	tipo=planning_ctr	61	64	10	t
-1367	{150,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	64	10	t
 942	{5,85}	ca pendientes	sactividad=ca&tipo_personas=sacd	140	8	8	t
 1296	{90,90,30}	tarifas por casa y año	\N	73	8	8	t
 926	{70,110}	Gestión de plazas	sasistentes=n&sactividad=crt	169	128	2	t
@@ -387,11 +381,8 @@
 529	{90}	Nuevo calendario	\N	183	37748735	8	t
 1400	{20,90}	previsión asistentes	\N	5	37748735	7	t
 1405	{10,80}	grupos	\N	91	1	7	t
-1415	{20,30}	borrar passwords	\N	145	33554432	13	t
-1036	{30,20}	planning por casas	tipo=planning_cdc	61	1048576	9	t
 1401	{30,30}	listado gerentes	periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si	45	1048576	9	t
 1402	{30,40}	lista actividades	periodo=tot_any&tipo_lista=lista_activ	45	1048576	9	t
-502	{30}	casas	\N	184	1048576	9	t
 1270	{90,40,10}	casas comunes	que=c_comunes&ver_ctr=si	21	131080	20	t
 1404	{30,50}	gastos casa	tipo_lista=datosEcGastos	45	1048576	9	t
 1403	{30,60}	Gestión económica	\N	45	1048576	9	t
@@ -406,14 +397,16 @@
 1233	{70,30}	instalar módulos	clase_info=permisos\\model\\infomodsinstalled	160	35651584	13	t
 1398	{70,50}	config esquema	\N	90	35651584	13	t
 1412	{35,30}	tarifas por casa y año	\N	73	1048576	9	t
+1415	{20,100}	borrar passwords	\N	145	33554432	13	t
+1036	{30,20}	planning por casas	tipo=planning_cdc	194	1048576	9	t
+502	{30}	casas	\N	183	1048576	9	t
+1367	{150,50}	por casas	tipo=planning_cdc&ssfsv=sv	194	64	10	t
 252	{10,10}	seleccionar	\N	148	35651584	13	t
 1414	{1,30}	lista de cambios	\N	137	37617663	1	t
 957	{10,20}	listado gerentes	periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si	45	2049	7	t
 1416	{40,60}	por zonas	\N	139	512	15	t
 1399	{10,70}	estadística por años	\N	51	1	7	t
 376	{50,10,40}	sv sr	id_tipo_activ=17&status=2&periodo=desdeHoy	71	1032	8	t
-1085	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	61	512	15	t
-1034	{20,10}	mover tabla a otra DB	\N	54	33554432	13	t
 1417	{80,140}	cambiar de fase	sasistentes=n&sactividad=ca	130	128	2	t
 1418	{82,140}	cambiar de fase	sasistentes=n&sactividad=cve	130	128	2	t
 1420	{90,140}	cambiar de fase	sasistentes=agd&sactividad=cve	130	2	3	t
@@ -431,3 +424,13 @@
 34	{10,40}	exportar	\N	92	33554432	13	t
 35	{10,50}	exportar a ficheros	accion=exportar	64	33554432	13	t
 1411	{35,20}	tarifa <-> tipo de actividad	\N	108	1048576	9	t
+1034	{20,20}	mover tabla a otra DB	\N	54	33554432	13	t
+1428	{20,30}	mover y cambiar nombre dl		192	33554432	13	t
+125	{30}	posibles ca	\N	1	2194	12	t
+1086	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	194	8	8	t
+1085	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	194	512	15	t
+147	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	194	2064	12	t
+329	{85,40}	por casas	tipo=planning_cdc&ssfsv=sv	194	2176	2	t
+951	{10,10}	Planing Casas	tipo=planning_cdc	194	1	7	t
+1329	{100,40}	por casas	tipo=planning_cdc&ssfsv=sv	194	2	3	t
+37	{60,100}	falta sacd	tipo=falta_sacd	39	8	8	t
