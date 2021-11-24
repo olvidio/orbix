@@ -301,7 +301,7 @@ div.ventana z-index: 160;
 	input[type=checkbox]:disabled + span {
   		color:#8c8c8c;
 	}
-	
+
 	/* tonos de color */
 	.tono1 {
 		background-color : <?= $tono1; ?> !important;

@@ -604,15 +604,21 @@ switch ($Qque) {
             $i++;
             
             $oPersona = Persona::NewPersona($id_nom);
-            $ap_nom = $oPersona->getApellidosNombre();
+            if (is_object($oPersona)) {
+                $ap_nom = $oPersona->getApellidosNombre();
+            } else {
+                $ap_nom = $oPersona; // puede ser un texto
+            }
             
             $a_valores[$i][0]=$id_nom;
             $a_valores[$i][1]=$ap_nom;
             
             $a_nom_activ = [];
+            $id_ubi_anterior = '';
             foreach($aId_activ as $id_activ) {
                 $oActividad = new Actividad($id_activ);
                 $nom_activ = $oActividad->getNom_activ();
+                $id_ubi = $oActividad->getId_ubi();
                 $status = $oActividad->getStatus();
                 // Fase en la que se en cuentra
                 $GesActividadProceso=new GestorActividadProcesoTarea();
@@ -625,11 +631,15 @@ switch ($Qque) {
                 if ($status == ActividadAll::STATUS_PROYECTO) {
                     $clase = 'wrong-soft';
                 }
-                $a_nom_activ[] = $nom_activ;
+                // si es el mismo dia y el mismo ubi, no lo pongo, y borro el anterior:
+                if ($id_ubi_anterior == $id_ubi) {
+                    $clase .= ' tachado';
+                }
+                $id_ubi_anterior = $id_ubi;
+                $a_nom_activ[$clase] = $nom_activ;
             }
             
             $a_valores[$i][2]=$a_nom_activ;
-            $a_valores[$i][5]=$clase;
         }
         ?>
         <h3><?= $titulo ?></h3>
@@ -645,15 +655,17 @@ switch ($Qque) {
         foreach ($a_valores as $valores) {
             $id_nom=$valores[0];
             $nom_sacd=$valores[1];
-            $clase=$valores[5];
-            $txt_activ="";
             if (is_array($valores[2])) {
-                foreach ($valores[2] as $nom_activ){
-                    $txt_activ.="<span> ${nom_activ};</span><br>";
+                $a = 0;
+                foreach ($valores[2] as $clase => $nom_activ){
+                    $a++;
+                    if ($a == 1) {
+                        echo "<tr class=\"$clase\" ><td>$nom_sacd</td><td>$nom_activ</td></tr>";
+                    } else {
+                        echo "<tr class=\"$clase\" ><td>xx $nom_sacd</td><td>$nom_activ</td></tr>";
+                    }
                 }
             }
-            $txt_id=$id_activ."_sacds";
-            echo "<tr class=$clase id=$id_nom ><td>$valores[1]</td><td id=$txt_id>$txt_activ</td></tr>";
         }
         ?>
         </table>
@@ -663,6 +675,7 @@ switch ($Qque) {
 			<tr class='wrong-soft'><td><?= _("Actividad en proyecto") ?></td></tr>
 			<tr class='plaza4'><td><?= sprintf(_("Actividad con fase %s"),$txt_fase_ok_sacd) ?></td></tr>
 			<tr class=''><td><?= _("Actividad aprobada") ?></td></tr>
+			<tr class='tachado'><td><?= _("En el mismo lugar") ?></td></tr>
         </table>
         <?php
         break;
