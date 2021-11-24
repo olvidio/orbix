@@ -1,21 +1,23 @@
 <?php
+use actividadcargos\model\GestorCargoOAsistente;
 use actividadcargos\model\entity\ActividadCargo;
 use actividadcargos\model\entity\GestorActividadCargo;
 use actividadcargos\model\entity\GestorCargo;
+use actividades\model\entity\Actividad;
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\ActividadDl;
 use actividades\model\entity\GestorActividadDl;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use asistentes\model\entity\AsistenteDl;
 use core\ConfigGlobal;
+use function core\is_true;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoSacd;
 use personas\model\entity\GestorPersona;
 use personas\model\entity\Persona;
+use procesos\model\entity\ActividadFase;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use web\Periodo;
-use function core\is_true;
-use procesos\model\entity\ActividadFase;
 
 /**
 * Esta página sirve para ejecutar las operaciones de guardar, eliminar, listar...
@@ -110,6 +112,13 @@ function ordena($id_activ,$id_nom,$num_orden) {
 
 $Qque = (string) \filter_input(INPUT_POST, 'que');
 $Qid_activ = (integer) \filter_input(INPUT_POST, 'id_activ');
+
+if ($Qque == 'lista_activ'){
+    $Qtipo = (string) \filter_input(INPUT_POST, 'tipo');
+    if ($Qtipo == 'solape') {
+        $Qque = $Qtipo;
+    }
+}
 
 $aWhere = [];
 $aOperador = [];
@@ -293,7 +302,7 @@ switch ($Qque) {
 		}
 		break;
 	case 'lista_activ':
-		$Qtipo = (string) \filter_input(INPUT_POST, 'tipo');
+        $Qtipo = (string) \filter_input(INPUT_POST, 'tipo');
 		$Qyear = (integer) \filter_input(INPUT_POST, 'year');
 	    $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 	    $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
@@ -313,8 +322,8 @@ switch ($Qque) {
 	    $aWhere['f_ini'] = "'$inicioIso','$finIso'";
 	    $aOperador['f_ini'] = 'BETWEEN';
 		
-		$aWhere['status']=3;
-		$aOperador['status']="<";
+		$aWhere['status'] = Actividad::STATUS_TERMINADA;
+		$aOperador['status'] = "<";
 
         $txt_fase_ok_sacd = '';
 		switch ($Qtipo) {
@@ -520,7 +529,6 @@ switch ($Qque) {
 
 			}
 			echo "<tr class=$clase id=$id_activ ><td>$valores[1]</td><td id=$txt_id>$txt_sacd</td><td>$nuevo_txt</td></tr>";
-
 		}
 		?>
 		</table>
@@ -531,9 +539,128 @@ switch ($Qque) {
 			<tr class='plaza4'><td><?= sprintf(_("Actividad con fase %s"),$txt_fase_ok_sacd) ?></td></tr>
 			<tr class=''><td><?= _("Actividad aprobada") ?></td></tr>
         </table>
-			
-		
 		<?php
-		
 		break;
+    case 'solape':
+        $Qtipo = (string) \filter_input(INPUT_POST, 'tipo');
+        $Qyear = (integer) \filter_input(INPUT_POST, 'year');
+        $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
+        $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
+        $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
+        
+        // periodo.
+        $oPeriodo = new Periodo();
+        $oPeriodo->setDefaultAny('next');
+        $oPeriodo->setAny($Qyear);
+        $oPeriodo->setEmpiezaMin($Qempiezamin);
+        $oPeriodo->setEmpiezaMax($Qempiezamax);
+        $oPeriodo->setPeriodo($Qperiodo);
+        
+        
+        $inicioIso = $oPeriodo->getF_ini_iso();
+        $finIso = $oPeriodo->getF_fin_iso();
+        $aWhere['f_ini'] = "'$inicioIso','$finIso'";
+        $aOperador['f_ini'] = 'BETWEEN';
+        
+        $aWhere['status'] = Actividad::STATUS_TERMINADA;
+        $aOperador['status'] = "<";
+        
+        $aWhere['_ordre']='f_ini';
+        
+        $GesActividades = new GestorActividadDl();
+        $cActividades = $GesActividades->getActividades($aWhere,$aOperador);
+        
+        $GesSacd = new GestorPersona();
+        // Para los de la dl y de_paso:
+        $aClases = [];
+        $aClases[] = array('clase'=>'PersonaDl','get'=>'getPersonasDl');
+        $aClases[] = array('clase'=>'PersonaEx','get'=>'getPersonasEx');
+        $GesSacd->setClases($aClases);
+        
+        $mi_dl = ConfigGlobal::mi_delef();
+        $aWhere = [];
+        $aWhere['sacd'] = 't';
+        $aWhere['dl'] = $mi_dl;
+        $aWhere['_ordre'] = 'apellido1,apellido2,nom';
+        $cSacds = $GesSacd->getPersonas($aWhere);
+        
+        
+        $gesCargoOAsistente = new GestorCargoOAsistente();
+        $a_solapes = $gesCargoOAsistente->getSolapes($cSacds, $cActividades);
+        
+        $titulo=ucfirst(_("listado de sacd con actividades incompatibles"));
+        
+        $a_cabeceras = [];
+        $a_cabeceras[]=ucfirst(_("sacd"));
+        $a_cabeceras[]=ucfirst(_("actividades"));
+        
+        $i=0;
+        $sin=0;
+        $a_valores = [];
+        foreach ($a_solapes as $id_nom => $aId_activ) {
+            $i++;
+            
+            $oPersona = Persona::NewPersona($id_nom);
+            $ap_nom = $oPersona->getApellidosNombre();
+            
+            $a_valores[$i][0]=$id_nom;
+            $a_valores[$i][1]=$ap_nom;
+            
+            $a_nom_activ = [];
+            foreach($aId_activ as $id_activ) {
+                $oActividad = new Actividad($id_activ);
+                $nom_activ = $oActividad->getNom_activ();
+                $status = $oActividad->getStatus();
+                // Fase en la que se en cuentra
+                $GesActividadProceso=new GestorActividadProcesoTarea();
+                $sacd_aprobado = $GesActividadProceso->getSacdAprobado($id_activ);
+                if ($sacd_aprobado === TRUE) {
+                    $clase = 'plaza4'; // color de plaza asignada.
+                } else {
+                    $clase = '';
+                }
+                if ($status == ActividadAll::STATUS_PROYECTO) {
+                    $clase = 'wrong-soft';
+                }
+                $a_nom_activ[] = $nom_activ;
+            }
+            
+            $a_valores[$i][2]=$a_nom_activ;
+            $a_valores[$i][5]=$clase;
+        }
+        ?>
+        <h3><?= $titulo ?></h3>
+        <span class="comentario">
+        <?= _("NOTA: Si termina y empieza el mismo día en el mismo lugar no se pone."); ?>
+        </span>
+        <br>
+        <table><tr>
+        <?php
+        foreach ($a_cabeceras as $cabecera) {
+            echo "<td>$cabecera</td>";
+        }
+        foreach ($a_valores as $valores) {
+            $id_nom=$valores[0];
+            $nom_sacd=$valores[1];
+            $clase=$valores[5];
+            $txt_activ="";
+            if (is_array($valores[2])) {
+                foreach ($valores[2] as $nom_activ){
+                    $txt_activ.="<span> ${nom_activ};</span><br>";
+                }
+            }
+            $txt_id=$id_activ."_sacds";
+            echo "<tr class=$clase id=$id_nom ><td>$valores[1]</td><td id=$txt_id>$txt_activ</td></tr>";
+        }
+        ?>
+        </table>
+		<hr>
+		<table>
+			<tr><th>Leyenda</th></tr>
+			<tr class='wrong-soft'><td><?= _("Actividad en proyecto") ?></td></tr>
+			<tr class='plaza4'><td><?= sprintf(_("Actividad con fase %s"),$txt_fase_ok_sacd) ?></td></tr>
+			<tr class=''><td><?= _("Actividad aprobada") ?></td></tr>
+        </table>
+        <?php
+        break;
 }
