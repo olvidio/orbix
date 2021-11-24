@@ -182,31 +182,14 @@ class GestorCargoOAsistente {
         }
         
         $a_solapes = [];
-        $a_FechaIni = [];
         $id_nom_anterior = '';
-        $id_ubi_anterior = '';
-        $f_fin_anterior = '';
-        $id_activ_anterior = '';
         $a_actividades = [];
-        $i = 0;
         foreach ($solapes as $aDades) {
-            $i++;
             $id_nom =  $aDades['id_nom'];
             $id_activ = $aDades['id_activ'];
-            $f_ini =  $aDades['f_ini'];
-            $f_fin =  $aDades['f_fin'];
-            $id_ubi =  $aDades['id_ubi'];
         
             if ($id_nom == $id_nom_anterior) {
-                // si es el mismo dia y el mismo ubi, no lo pongo, y borro el anterior:
-                // OJO, si tiene otra que también coincide en otro lugar, al borrar se pierde
-                if (($f_fin_anterior == $f_ini) && ($id_ubi_anterior == $id_ubi)) {
-                    //$a_solapes[$id_nom] = \array_diff($a_solapes[$id_nom], [$id_activ_anterior]);
-                    $a_actividades[] = $id_activ;
-                } else {
-                    $a_actividades[] = $id_activ;
-                }
-                
+                $a_actividades[] = $id_activ;
             } else {
                 if (!empty($id_nom_anterior)) {
                     $a_solapes[$id_nom_anterior] = $a_actividades;
@@ -216,9 +199,6 @@ class GestorCargoOAsistente {
                 $a_actividades[] = $id_activ;
             }
             $id_nom_anterior = $id_nom;
-            $id_ubi_anterior = $id_ubi;
-            $f_fin_anterior = $f_fin;
-            $id_activ_anterior = $id_activ;
         }
         // el último:
         $a_solapes[$id_nom] = $a_actividades;

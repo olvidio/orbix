@@ -636,7 +636,7 @@ switch ($Qque) {
                     $clase .= ' tachado';
                 }
                 $id_ubi_anterior = $id_ubi;
-                $a_nom_activ[$clase] = $nom_activ;
+                $a_nom_activ[] = ['clase' => $clase, 'nom_activ' => $nom_activ];
             }
             
             $a_valores[$i][2]=$a_nom_activ;
@@ -644,7 +644,7 @@ switch ($Qque) {
         ?>
         <h3><?= $titulo ?></h3>
         <span class="comentario">
-        <?= _("NOTA: Si termina y empieza el mismo día en el mismo lugar no se pone."); ?>
+        <!-- <?= _("NOTA: Si termina y empieza el mismo día en el mismo lugar no se pone."); ?> -->
         </span>
         <br>
         <table><tr>
@@ -657,12 +657,14 @@ switch ($Qque) {
             $nom_sacd=$valores[1];
             if (is_array($valores[2])) {
                 $a = 0;
-                foreach ($valores[2] as $clase => $nom_activ){
+                foreach ($valores[2] as $a_nom_activ){
+                    $clase = $a_nom_activ['clase'];
+                    $nom_activ = $a_nom_activ['nom_activ'];
                     $a++;
                     if ($a == 1) {
                         echo "<tr class=\"$clase\" ><td>$nom_sacd</td><td>$nom_activ</td></tr>";
                     } else {
-                        echo "<tr class=\"$clase\" ><td>xx $nom_sacd</td><td>$nom_activ</td></tr>";
+                        echo "<tr class=\"$clase\" ><td></td><td>$nom_activ</td></tr>";
                     }
                 }
             }
