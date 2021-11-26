@@ -1,4 +1,4 @@
-# Procesos-variación para comprobar GitHub-3º intento 
+# Procesos- intento desde app GitHub
 
 Este módulo sirve para describir las acciones que hay que realizar sobre una actividad con el fin de facilitar el trabajo de las oficinas al poder hacer consultas tipo: actividades que falta poner sacd, o: actividades que falta matricular a los alumnos etc.
 
