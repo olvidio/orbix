@@ -106,3 +106,6 @@ En la instalacion (apache) se añade la variable de entorno: DB_SERVER que puede
 
 	1 -> para la instalacion de sv (interna)
 	2 -> para la instalación exterior (conexión con mail).
+	
+	
+bla bla
