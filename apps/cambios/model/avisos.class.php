@@ -246,7 +246,7 @@ class Avisos {
                         $rta = $this->tengoPermiso($propiedad,$id_activ,$id_nom_sacd,$valor_old_cmb,$valor_new_cmb); 
                         if ($rta === TRUE) {
                             return TRUE;
-                            // no hace falta seguir mirando todos.
+                            // no hace falta seguir mirando todos, con uno basta para avisar.
                         }
                     }
                 }
@@ -287,6 +287,17 @@ class Avisos {
         }
     }
     
+    /**
+     * Mira si el cambio, afecta a uno de los sacd de la zona y si tengo permiso para ver.
+     * El id_nom puede ser cualquiera de la zona, no el que origina el cambio.
+     *  
+     * @param string $propiedad
+     * @param integer $id_activ
+     * @param integer $id_nom
+     * @param integer $valor_old_cmb
+     * @param integer $valor_new_cmb
+     * @return boolean
+     */
     private function tengoPermiso($propiedad,$id_activ,$id_nom,$valor_old_cmb,$valor_new_cmb) {
         switch ($this->sObjeto) {
             case 'Actividad':
@@ -298,11 +309,10 @@ class Avisos {
                 
                 $permiso_ver = FALSE;
                 $oGesActividadCargo = new GestorActividadCargo();
-                $cAsistentes = $oGesActividadCargo ->getAsistenteCargoDeActividad($aWhere,$aOperador,$aWhereAct,$aOperadorAct);
-                if (is_array($cAsistentes) && count($cAsistentes) > 0) {
+                $cAsistentes = $oGesActividadCargo->getAsistenteCargoDeActividad($aWhere,$aOperador,$aWhereAct,$aOperadorAct);
+                if (is_array($cAsistentes) && !empty($cAsistentes)) {
                     $aAsistente = $cAsistentes[$id_activ];
                     $propio = $aAsistente['propio'];
-                    //$plaza = $aAsistente['plaza'];
                     $id_cargo = empty($aAsistente['id_cargo'])? '' : $aAsistente['id_cargo'];
                     
                     $oPermActividades = new PermisosActividades($this->id_usuario);
@@ -312,94 +322,67 @@ class Avisos {
                 return $permiso_ver;
                 break;
             case 'ActividadCargoNoSacd':
-                if ($this->cargo($id_nom, $id_activ)) {
+                // si lo que cambia es el id_nom, compruebo que el valor old o new sean de algun sacd de la zona.
+                // y tenga permiso.
+                if ($propiedad == 'id_nom'
+                    && ( ($valor_old_cmb == $id_nom) || ($valor_new_cmb == $id_nom) )
+                    && $this->permCargo($id_activ) 
+                   )
+                {
                     return TRUE;
-                } else {
-                    // si lo que cambia es el id_nom, compruebo que el valor old o new sean del sacd.
-                    if ($propiedad == 'id_nom') {
-                        if (($valor_old_cmb == $id_nom) || ($valor_new_cmb == $id_nom)) {
-                            return TRUE;
-                        }
-                    }
                 }
                 return FALSE;
                 break;
             case 'ActividadCargoSacd':
-                if ($this->cargoSacd($id_nom, $id_activ)) {
+                // si lo que cambia es el id_nom, compruebo que el valor old o new sean de algun sacd de la zona.
+                // y tenga permiso.
+                if ($propiedad == 'id_nom'
+                    && ( ($valor_old_cmb == $id_nom) || ($valor_new_cmb == $id_nom) )
+                    && $this->permCargoSacd($id_activ) 
+                   )
+                {
                     return TRUE;
-                } else {
-                    // si lo que cambia es el id_nom, compruebo que el valor old o new sean del sacd.
-                    if ($propiedad == 'id_nom') {
-                        if (($valor_old_cmb == $id_nom) || ($valor_new_cmb == $id_nom)) {
-                            return TRUE;
-                        }
-                    }
                 }
                 return FALSE;
                 break;
             case 'Asistente':
                 // si lo que cambia es el id_nom, compruebo que el valor old o new sean de algun sacd de la zona.
+                // y tenga permiso.
                 if ( $propiedad == 'id_nom' 
                     && ( ($valor_old_cmb == $id_nom) || ($valor_new_cmb == $id_nom) )
-                   ) {
-                       return TRUE;
+                    && $this->permAsiste($id_activ)
+                   )
+                {
+                    return TRUE;
                 }
                 return FALSE;
             break;
         }
     }
 
-    private function cargo($id_nom,$id_activ) {
-        // compruebo si el sacd tiene cargo.
-        // y la fase okSacd está on:
-        $aWhere = ['id_nom' => $id_nom, 'id_activ' => $id_activ];
-        $GesActividadCargo = new GestorActividadCargo();
-        $a_Asistentes = $GesActividadCargo->getActividadCargos($aWhere);
-        if (count($a_Asistentes)>0) {
-            $oPermActividades = new PermisosActividades($this->id_usuario);
-            $oPermActividades->setActividad($id_activ);
-            $oPermActividades->setFasesCompletadas($this->aFases_cmb);
-            $oPermSacd = $oPermActividades->getPermisoOn('cargos');
-            if ( $oPermSacd->have_perm_activ('ver') ) {
-                return TRUE;
-            }
-        }
-        return FALSE; 
+    private function permCargo($id_activ) {
+        $oPermActividades = new PermisosActividades($this->id_usuario);
+        $oPermActividades->setActividad($id_activ);
+        $oPermActividades->setFasesCompletadas($this->aFases_cmb);
+        $oPermSacd = $oPermActividades->getPermisoOn('cargos');
+        return $oPermSacd->have_perm_activ('ver');
     }
 
-    private function cargoSacd($id_nom,$id_activ) {
-        // compruebo si el sacd tiene cargo.
-        // y la fase okSacd está on:
-        $aWhere = ['id_nom' => $id_nom, 'id_activ' => $id_activ];
-        $GesActividadCargo = new GestorActividadCargo();
-        $a_Asistentes = $GesActividadCargo->getActividadCargos($aWhere);
-        if (count($a_Asistentes)>0) {
-            $oPermActividades = new PermisosActividades($this->id_usuario);
-            $oPermActividades->setActividad($id_activ);
-            $oPermActividades->setFasesCompletadas($this->aFases_cmb);
-            $oPermSacd = $oPermActividades->getPermisoOn('sacd');
-            if ( $oPermSacd->have_perm_activ('ver') ) {
-                return TRUE;
-            }
-        }
-        return FALSE; 
+    private function permCargoSacd($id_activ) {
+        // compruebo si tengo permiso para sacd:
+        $oPermActividades = new PermisosActividades($this->id_usuario);
+        $oPermActividades->setActividad($id_activ);
+        $oPermActividades->setFasesCompletadas($this->aFases_cmb);
+        $oPermSacd = $oPermActividades->getPermisoOn('sacd');
+        return $oPermSacd->have_perm_activ('ver');
     }
-    private function asiste($id_nom,$id_activ) {
-        // compruebo si el sacd asiste.
-        // y la fase asistente sacd es ok.
-        $aWhere = ['id_nom' => $id_nom, 'id_activ' => $id_activ];
-        $GesAsistentes = new GestorAsistenteDl();
-        $a_Asistentes = $GesAsistentes->getAsistentes($aWhere);
-        if (count($a_Asistentes)>0) {
-            $oPermActividades = new PermisosActividades($this->id_usuario);
-            $oPermActividades->setActividad($id_activ);
-            $oPermActividades->setFasesCompletadas($this->aFases_cmb);
-            $oPermAsisSacd = $oPermActividades->getPermisoOn('asistentesSacd');
-            if ( $oPermAsisSacd->have_perm_activ('ver') ) {
-                return TRUE;
-            }
-        }
-        return FALSE; 
+    
+    private function permAsiste($id_activ) {
+        $oPermActividades = new PermisosActividades($this->id_usuario);
+        $oPermActividades->setActividad($id_activ);
+        $oPermActividades->setFasesCompletadas($this->aFases_cmb);
+        $oPermAsisSacd = $oPermActividades->getPermisoOn('asistentesSacd');
+        return $oPermAsisSacd->have_perm_activ('ver');
     }
     
     public function setId_schema_cmb($id_schema_cmb) {
