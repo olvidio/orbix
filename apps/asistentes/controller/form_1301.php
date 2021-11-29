@@ -88,7 +88,6 @@ if (!empty($id_activ)) { //caso de modificar
 } else { //caso de nuevo asistente
 	$mod="nuevo";
 	$id_activ_real = '';
-	$nom_activ = '';
 	if (empty($id_tipo)) {
 		$mi_sfsv = ConfigGlobal::mi_sfsv();
 		$id_tipo='^'.$mi_sfsv;  //caso genérico para todas las actividades
@@ -188,7 +187,6 @@ $a_campos = [
 			'url_ajax' => $url_ajax,
 			'id_nom' => $Qid_nom,
 			'id_activ_real' => $id_activ_real,
-			'nom_activ' => $nom_activ,
 			'oDesplActividades' => $oDesplActividades,
 			'propio_chk' => $propio_chk,
 			'falta_chk' => $falta_chk,
