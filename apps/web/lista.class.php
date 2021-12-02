@@ -433,7 +433,7 @@ class Lista {
                 if ($col=="order") { continue; }
                 if ($col=="select") { continue; }
                 if ($col=="sel") {
-                    if (empty($b)) continue; // si no hay botones (por permisos...) no tiene sentido el checkbox
+                    if (empty($b)) { continue; } // si no hay botones (por permisos...) no tiene sentido el checkbox
                     //$col="";
                     if(is_array($valor)) {
                         if (!empty($valor['select'])) { $chk=$valor['select']; } else { $chk=""; }
@@ -479,9 +479,17 @@ class Lista {
                             $aFilas[$num_fila]['script3'] = addslashes($ira);
                         }
                         if (!empty($valor['span'])) {
-                            $span="$val";
+                            $span=$valor['span'];
+                            $aFilas[$num_fila][$aFields[$icol]] = addslashes($val);
+                            $icol++;
+                            for ($s=1;$s<$span;$s++) {
+                                $aFilas[$num_fila][$aFields[$icol]] = '';
+                                $icol++;
+                            }
+                            $icol--;
+                        } else {
+                            $aFilas[$num_fila][$aFields[$icol]] = addslashes($val);
                         }
-                        $aFilas[$num_fila][$aFields[$icol]] = addslashes($val);
                     } else {
                         $aFilas[$num_fila][$aFields[$icol]] = addslashes($valor);
                     }

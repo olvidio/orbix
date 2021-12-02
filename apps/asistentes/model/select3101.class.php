@@ -99,9 +99,6 @@ class Select3101 {
 	private $Qid_sel;
 	private $Qscroll_id;
 	
-	public function __construct() {
-	}
-
 	private function incrementa (&$var){
 		if (empty($var)) {
 			$var = 1;
