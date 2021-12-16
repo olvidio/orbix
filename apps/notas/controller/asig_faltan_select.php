@@ -146,7 +146,7 @@ foreach ($aId_nom as $id_nom=>$aAsignaturas) {
 	    $telfs .= $telfs_movil??'';
 	}
 	$mails = '';
-	$mails = $oPersona->telecos_persona($id_nom,"e-mail","*"," / ","*",FALSE);
+	$mails = $oPersona->telecos_persona($id_nom,"e-mail"," / ","*",FALSE);
 	
 	$condicion_2="Where id_nom='".$id_nom."'";
 	$condicion_2=urlencode($condicion_2);
