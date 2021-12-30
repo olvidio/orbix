@@ -249,6 +249,7 @@ if (!empty($Qmodo) && $Qmodo != 'buscar') {
         }
         if (core\configGlobal::is_app_installed('asistentes')) {
             $a_botones[] = array( 'txt' => _("asistentes"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"asis\")");
+            $a_botones[] = array( 'txt' => _("otras peticiones"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"asis_peticiones\")");
             $a_botones[] = array( 'txt' => _("lista"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"list\")");
             //$a_botones[] = array( 'txt' => _("transferir sasistentes a históricos"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"historicos\")");
         }
