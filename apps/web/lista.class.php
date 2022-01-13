@@ -1081,6 +1081,7 @@ class Lista {
      *@return string Html
      *
      */
+    /*
     function mostrar_tabla_html2() {
         $aGrupos=$this->aGrupos;
         $a_botones = $this->aBotones;
@@ -1215,6 +1216,7 @@ class Lista {
         
         return $tt;
     }
+    */
     
     public function getCsv($filename) {
         $a_cabeceras = $this->aCabeceras;
