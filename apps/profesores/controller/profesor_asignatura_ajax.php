@@ -2,6 +2,7 @@
 use profesores\model\entity as profesores;
 use personas\model\entity as personas;
 use profesores\model\entity\GestorProfesorDocenciaStgr;
+use core\ConfigGlobal;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -37,7 +38,12 @@ $a_valores = array();
 foreach ($cProfesores['departamento'] as $id_nom => $ap_nom) {
 	$i++;
 	$oPersonaDl = new personas\PersonaDl($id_nom);
-	$centro = $oPersonaDl->getCentro_o_dl();
+	// Para el caso de ser region del stgr, poner la dl
+	if (ConfigGlobal::mi_ambito() == 'rstgr') {
+	   $centro = $oPersonaDl->getDl() ." - ". $oPersonaDl->getCentro_o_dl();
+	} else {
+	   $centro = $oPersonaDl->getCentro_o_dl();
+	}
 	// Actividad docente
     $oGesDocencia = new GestorProfesorDocenciaStgr();
     $aWhere = [];
@@ -65,10 +71,14 @@ foreach ($cProfesores['departamento'] as $id_nom => $ap_nom) {
 			case 'e-mail':
 				$mails .= $oTelecoPersona->getNum_teleco();
 				break;
+			case 'móvil':
 			case 'movil':
 			case 'telf':
 				$telfs .= $oTelecoPersona->getNum_teleco();
 				break;
+			default:
+			    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+			    exit ($err_switch);
 		}
 	}
 	
@@ -113,10 +123,14 @@ foreach ($cProfesores['ampliacion'] as $id_nom => $ap_nom) {
 			case 'e-mail':
 				$mails .= $oTelecoPersona->getNum_teleco();
 				break;
+			case 'móvil':
 			case 'movil':
 			case 'telf':
 				$telfs .= $oTelecoPersona->getNum_teleco();
 				break;
+			default:
+			    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+			    exit ($err_switch);
 		}
 	}
 	

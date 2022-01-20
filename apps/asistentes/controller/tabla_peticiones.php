@@ -1,9 +1,12 @@
 <?php 
 
 use actividades\model\entity\Actividad;
+use actividadplazas\model\entity\GestorPlazaPeticion;
 use asistentes\model\entity\GestorAsistente;
 use personas\model\entity\PersonaDl;
 use web\Lista;
+use actividades\model\entity\TipoDeActividad;
+use web\TiposActividades;
 
 /**
 * Funciones más comunes de la aplicación
@@ -43,11 +46,44 @@ $a_botones = [];
 $gesAsistentes = new GestorAsistente();
 $cAsistentes = $gesAsistentes->getAsistentesDeActividad($id_pau);
 
+$oActividad = new Actividad($id_pau);
+$id_tipo_activ = $oActividad->getId_tipo_activ();
+
+$oTipoActividad = new TiposActividades($id_tipo_activ);
+$sactividad = $oTipoActividad->getActividadText();
+
 $a_valores = [];
 $i = 0;
 foreach ($cAsistentes as $oAsistente) {
     $i++;
     $id_nom = $oAsistente->getId_nom();
+    // buscar otras opciones de ca
+    $gesPlazasPeticion = new GestorPlazaPeticion();
+    $aWhere = ['id_nom'=>$id_nom, 'tipo'=>$sactividad, '_ordre'=>'orden'];
+    $aOperador ['tipo'] = '~';
+    $cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion($aWhere,$aOperador);
+    $posibles_activ = '';
+    foreach ($cPlazasPeticion as $key => $oPlazaPeticion) {
+        $id_activ = $oPlazaPeticion->getId_activ();
+        $nom_activ_i = '';
+        if (!empty($id_activ)) {
+            $oActividadPosible = new Actividad($id_activ);
+            $nom_activ_i = $oActividadPosible->getNom_activ();
+            // añadir plazas libres sobre totales
+            
+            // link
+            if ($id_activ !== $id_pau) {
+                $link = 'fnjs_cambiar_actividad';
+                $nom_activ_i = "<span onClick=\"fnjs_cambiar_actividad($id_nom,$id_pau,$id_activ)\">" . $nom_activ_i ."</span>";
+            }
+            
+            
+            $posibles_activ .= empty($posibles_activ)? '' : ', ';
+            $posibles_activ .= $nom_activ_i;
+        }
+    }
+    
+    
     $observaciones = $oAsistente->getObserv();
     
     $oPersona = new PersonaDl($id_nom);
@@ -55,7 +91,7 @@ foreach ($cAsistentes as $oAsistente) {
     $nom_ap = $oPersona->getApellidosNombre();
     
     $a_valores[$i][1] = $nom_ap;
-    $a_valores[$i][2] = $observaciones;
+    $a_valores[$i][2] = $posibles_activ;
    
 }
 
