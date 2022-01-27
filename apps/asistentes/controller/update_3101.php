@@ -178,6 +178,6 @@ switch ($Qmod) {
 }
 
 
-if (empty($msg_err)) { 
+if (!empty($msg_err)) { 
 	echo $msg_err;
 }	

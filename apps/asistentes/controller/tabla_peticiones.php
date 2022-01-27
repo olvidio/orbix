@@ -4,8 +4,8 @@ use actividades\model\entity\Actividad;
 use actividadplazas\model\entity\GestorPlazaPeticion;
 use asistentes\model\entity\GestorAsistente;
 use personas\model\entity\PersonaDl;
+use web\Hash;
 use web\Lista;
-use actividades\model\entity\TipoDeActividad;
 use web\TiposActividades;
 
 /**
@@ -23,17 +23,39 @@ $oPosicion->recordar();
 
 $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-    $id_pau = (integer) strtok($a_sel[0],"#");
+    $id_activ_old = (integer) strtok($a_sel[0],"#");
     $nom_activ=strtok("#");
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel',$a_sel,1);
     $scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else {
-    $id_pau = (integer) \filter_input(INPUT_POST, 'id_pau');
-    $oActividad = new Actividad($id_pau);
+    $id_activ_old = (integer) \filter_input(INPUT_POST, 'id_activ_old');
+    $oActividad = new Actividad($id_activ_old);
     $nom_activ = $oActividad->getNom_activ();
 }
+
+//Si vengo por medio de Posicion, borro la última
+if (isset($_POST['stack'])) {
+    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    if ($stack != '') {
+        $oPosicion2 = new web\Posicion();
+        if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+            $Qid_sel=$oPosicion2->getParametro('id_sel');
+            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
+            $oPosicion2->olvidar($stack);
+        }
+    }
+}
+
+/*
+ * Defino un array con los datos actuales, para saber volver después de navegar un rato
+ */
+$aGoBack = array (
+    'id_activ_old'=>$id_activ_old,
+     );
+$oPosicion->setParametros($aGoBack,1);
+
 
 $queSel = (string) \filter_input(INPUT_POST, 'queSel');
 
@@ -44,9 +66,9 @@ $a_cabeceras = [ _("nombre"),
 $a_botones = [];
 
 $gesAsistentes = new GestorAsistente();
-$cAsistentes = $gesAsistentes->getAsistentesDeActividad($id_pau);
+$cAsistentes = $gesAsistentes->getAsistentesDeActividad($id_activ_old);
 
-$oActividad = new Actividad($id_pau);
+$oActividad = new Actividad($id_activ_old);
 $id_tipo_activ = $oActividad->getId_tipo_activ();
 
 $oTipoActividad = new TiposActividades($id_tipo_activ);
@@ -72,29 +94,37 @@ foreach ($cAsistentes as $oAsistente) {
             // añadir plazas libres sobre totales
             
             // link
-            if ($id_activ !== $id_pau) {
-                $link = 'fnjs_cambiar_actividad';
-                $nom_activ_i = "<span onClick=\"fnjs_cambiar_actividad($id_nom,$id_pau,$id_activ)\">" . $nom_activ_i ."</span>";
+            if ($id_activ !== $id_activ_old) {
+                
+                $aCamposHidden = ['mod' => 'mover',
+                                  'id_nom' => $id_nom,
+                                  'id_activ_old' => $id_activ_old,
+                                  'id_activ' => $id_activ,
+                                ];
+
+                $oHash = new Hash();
+                $oHash->setUrl(core\ConfigGlobal::getWeb().'/apps/asistentes/controller/update_3101.php');
+                $oHash->setArrayCamposHidden($aCamposHidden);
+                $param_mover = $oHash->getParamAjax();
+
+                $nom_activ_i = "<span class=\"link\" onClick=\"fnjs_cambiar_actividad('$param_mover')\">" . $nom_activ_i ."</span>";
             }
-            
             
             $posibles_activ .= empty($posibles_activ)? '' : ', ';
             $posibles_activ .= $nom_activ_i;
         }
     }
-    
-    
-    $observaciones = $oAsistente->getObserv();
-    
     $oPersona = new PersonaDl($id_nom);
-    
     $nom_ap = $oPersona->getApellidosNombre();
     
     $a_valores[$i][1] = $nom_ap;
     $a_valores[$i][2] = $posibles_activ;
-   
 }
 
+if (!empty($a_valores)) {
+    if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
+    if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
+}
 
 
 

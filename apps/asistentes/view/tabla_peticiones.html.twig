@@ -3,7 +3,27 @@
 <h3> {{ nom_activ }}</h3>
 {{ oTabla.mostrar_tabla_html()|raw }}
 <script>
-fnjs_cambiar_actividad=function(id_nom,id_pau,id_activ){
-	alert("HOLAAAQ: "+id_nom+" "+id_pau+" "+id_activ);
+
+fnjs_cambiar_actividad=function(param){
+    var url_ajax = 'apps/asistentes/controller/update_3101.php';
+	
+    request=$.ajax({
+        data: param,
+        url: url_ajax,
+        method: 'POST'
+    });
+    request.done( function (rta) {
+        rta_txt=rta;
+        if (rta_txt==undefined) {
+            rta_txt='';
+        }
+        if (rta_txt) {
+			alert(rta_txt);
+        } else {
+            // actualizar
+            {{ oPosicion.js_atras()|raw }}
+        }
+    });
 }
+
 </script>

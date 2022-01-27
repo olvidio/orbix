@@ -974,6 +974,7 @@ class Lista {
             $a_valores_chk = array();
         }
         
+        unset($a_valores['scroll_id']);
         foreach($a_valores as $num_fila=>$fila) {
             $clase = "imp";
             $f % 2  ? 0: $clase = "par";
