@@ -20,22 +20,25 @@ switch ($tipo_persona) {
 	case 'n':
 		if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
 			$id_tipo = 1;
-//			$obj_pau = 'GestorPersonaN';
 			$obj_pau = 'PersonaN';
 		}
 		break;
 	case 'a':
 		if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
 			$id_tipo = 2;
-//			$obj_pau = 'GestorPersonaAgd';
 			$obj_pau = 'PersonaAgd';
 		}
 		break;
 	case 's':
 		if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
 			$id_tipo = 3;
-//			$obj_pau = 'GestorPersonaS';
 			$obj_pau = 'PersonaS';
+		}
+		break;
+	case 'sssc':
+		if ($_SESSION['oPerm']->have_perm_oficina('des')) {
+			$id_tipo = 4;
+			$obj_pau = 'PersonaSSSC';
 		}
 		break;
 }

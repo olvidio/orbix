@@ -46,6 +46,9 @@ switch ($que) {
 
 			$id_tipo_persona = substr($id_nom_listas, 0, 1);
 			switch ($id_tipo_persona){
+				case '4': // sssc
+					$obj_pau = 'PersonaSSSC';
+                    break;
 				case '3': // supernumerarios
 					$obj_pau = 'PersonaS';
                     break;

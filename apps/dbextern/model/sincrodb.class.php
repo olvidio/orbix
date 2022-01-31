@@ -22,8 +22,8 @@ use personas\model\entity\PersonaDl;
  */
 class SincroDB {
 
-	private $tipo_persona; 	//'n', 'a', 's'.
-	private $id_tipo; 		//1  ,  2,   3.
+	private $tipo_persona; 	//'n', 'a', 's', 'sssc'.
+	private $id_tipo; 		//1  ,  2,   3,    4.
 	
 	private $cPersonasListas;
 	
@@ -59,6 +59,11 @@ class SincroDB {
 				break;
 			case 's':
 				if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
+					$id_tipo = 3;
+				}
+				break;
+			case 'sssc':
+				if ($_SESSION['oPerm']->have_perm_oficina('des')) {
 					$id_tipo = 3;
 				}
 				break;
@@ -451,6 +456,9 @@ class SincroDB {
 			
 		$id_tipo_persona = substr($id_nom_listas, 0, 1);
 		switch ($id_tipo_persona){
+			case '4': // sssc
+				$obj_pau = 'PersonaSSSC';
+			break;
 			case '3': // supernumerarios
 				$obj_pau = 'PersonaS';
 			break;

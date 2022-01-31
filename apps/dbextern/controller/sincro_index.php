@@ -41,6 +41,12 @@ switch ($tipo_persona) {
 			$obj_pau = 'GestorPersonaS';
 		}
 		break;
+	case 'sssc':
+		if ($_SESSION['oPerm']->have_perm_oficina('des')) {
+			$id_tipo = 4;
+			$obj_pau = 'GestorPersonaSSSC';
+		}
+		break;
 	default:
 	    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
 	    exit ($err_switch);
