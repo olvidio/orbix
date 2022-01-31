@@ -8,6 +8,8 @@ use web\Hash;
 use web\Lista;
 use web\TiposActividades;
 
+//probar github
+
 /**
 * Funciones más comunes de la aplicación
 */
