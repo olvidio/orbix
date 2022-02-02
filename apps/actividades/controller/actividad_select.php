@@ -32,11 +32,11 @@ use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
 use permisos\model\PermisosActividadesTrue;
 use procesos\model\entity\GestorActividadProcesoTarea;
-use ubis\model\entity\GestorCasa;
 use ubis\model\entity\GestorCentroCdc;
 use usuarios\model\entity as usuarios;
 use web\DateTimeLocal;
 use web\Periodo;
+use ubis\model\entity\GestorCasa;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
