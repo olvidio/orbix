@@ -64,7 +64,7 @@ class SincroDB {
 				break;
 			case 'sssc':
 				if ($_SESSION['oPerm']->have_perm_oficina('des')) {
-					$id_tipo = 3;
+					$id_tipo = 4;
 				}
 				break;
 			default:
@@ -254,7 +254,7 @@ class SincroDB {
 	 * Posibles coincidencias en la BDU
 	 * 
 	 * @param integer $id_nom_orbix
-	 * @return unknown[][]|string[][]
+	 * @return string[][]
 	 */
 	public function posiblesBDU($id_nom_orbix) {
 		$oPersonaDl = new PersonaDl($id_nom_orbix);	
