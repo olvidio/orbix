@@ -488,10 +488,12 @@ class SincroDB {
 		$oPersona->setApellido2($apellido2_sinprep);
 		$oPersona->setF_nacimiento($f_nacimiento);
 		$oPersona->setLugar_nacimiento($lugar_nacimiento);
-		$oPersona->setCe($ce_num);
-		$oPersona->setCe_lugar($ce_lugar);
-		$oPersona->setCe_ini($ce_ini);
-		$oPersona->setCe_fin($ce_fin);
+		if ($id_tipo_persona != 4) {
+            $oPersona->setCe($ce_num);
+            $oPersona->setCe_lugar($ce_lugar);
+            $oPersona->setCe_ini($ce_ini);
+            $oPersona->setCe_fin($ce_fin);
+		}
 		$oPersona->setInc($inc);
 		$oPersona->setF_inc($f_inc,FALSE);
 		$oPersona->setProfesion($profesion);
