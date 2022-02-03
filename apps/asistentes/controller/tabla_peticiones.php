@@ -1,12 +1,16 @@
 <?php 
 
 use actividades\model\entity\Actividad;
+use actividadplazas\model\entity\GestorActividadPlazas;
 use actividadplazas\model\entity\GestorPlazaPeticion;
+use asistentes\model\entity\Asistente;
 use asistentes\model\entity\GestorAsistente;
+use core\ConfigGlobal;
 use personas\model\entity\PersonaDl;
 use web\Hash;
 use web\Lista;
 use web\TiposActividades;
+use ubis\model\entity\GestorDelegacion;
 
 //probar github
 
@@ -62,7 +66,7 @@ $oPosicion->setParametros($aGoBack,1);
 $queSel = (string) \filter_input(INPUT_POST, 'queSel');
 
 $a_cabeceras = [ _("nombre"),
-                _("observaciones"),
+                _("peticiones (libres/concedidas)"),
     ];
 
 $a_botones = [];
@@ -76,6 +80,12 @@ $id_tipo_activ = $oActividad->getId_tipo_activ();
 $oTipoActividad = new TiposActividades($id_tipo_activ);
 $sactividad = $oTipoActividad->getActividadText();
 
+$mi_dele = core\ConfigGlobal::mi_delef();
+$gesDelegacion = new GestorDelegacion();
+$cDelegaciones = $gesDelegacion->getDelegaciones(array('dl'=> $mi_dele));
+$oDelegacion = $cDelegaciones[0];
+$id_dl = $oDelegacion->getId_dl();
+
 $a_valores = [];
 $i = 0;
 foreach ($cAsistentes as $oAsistente) {
@@ -87,14 +97,37 @@ foreach ($cAsistentes as $oAsistente) {
     $aOperador ['tipo'] = '~';
     $cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion($aWhere,$aOperador);
     $posibles_activ = '';
+    $gesActividadPlazas = new GestorActividadPlazas();
     foreach ($cPlazasPeticion as $key => $oPlazaPeticion) {
         $id_activ = $oPlazaPeticion->getId_activ();
         $nom_activ_i = '';
         if (!empty($id_activ)) {
             $oActividadPosible = new Actividad($id_activ);
             $nom_activ_i = $oActividadPosible->getNom_activ();
+            $dl_org = $oActividad->getDl_org();
             // añadir plazas libres sobre totales
             
+            $txt_plazas = '';
+            if (configGlobal::is_app_installed('actividadplazas')) {
+                $concedidas = 0;
+                $cActividadPlazas = $gesActividadPlazas->getActividadesPlazas(array('id_dl'=>$id_dl,'id_activ'=>$id_activ));
+                foreach ($cActividadPlazas as $oActividadPlazas) {
+                    $dl_tabla = $oActividadPlazas->getDl_tabla();
+                    if ($dl_org == $dl_tabla) {
+                        $concedidas = $oActividadPlazas->getPlazas();
+                    }
+                }
+                $ocupadas = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$mi_dele);
+                if ($ocupadas < 0) { // No se sabe
+                    $libres = '-';
+                } else {
+                    $libres = $concedidas - $ocupadas;
+                }
+                if (!empty($concedidas)) {
+                    $txt_plazas = " ($libres/$concedidas)";
+                }
+                $nom_activ_i .= $txt_plazas;
+            }
             // link
             if ($id_activ !== $id_activ_old) {
                 
@@ -102,10 +135,11 @@ foreach ($cAsistentes as $oAsistente) {
                                   'id_nom' => $id_nom,
                                   'id_activ_old' => $id_activ_old,
                                   'id_activ' => $id_activ,
+                                   'plaza' => Asistente::PLAZA_ASIGNADA,
                                 ];
 
                 $oHash = new Hash();
-                $oHash->setUrl(core\ConfigGlobal::getWeb().'/apps/asistentes/controller/update_3101.php');
+                $oHash->setUrl(ConfigGlobal::getWeb().'/apps/asistentes/controller/update_3101.php');
                 $oHash->setArrayCamposHidden($aCamposHidden);
                 $param_mover = $oHash->getParamAjax();
 
