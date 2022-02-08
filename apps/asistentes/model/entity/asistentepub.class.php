@@ -802,12 +802,18 @@ class AsistentePub Extends core\ClasePropiedades {
 			if ($gesActividadPlazasR->getLibres() > 0) {
 				$this->iplaza = $iplaza;
 				//debe asignarse un propietario. Sólo si es asignada o confirmada
-				$propiedad = $gesActividadPlazasR->getPropiedadPlazaLibre();
-				if (empty($propiedad)) {
-					exit (_("no debería pasar. No puede haber una plaza libre sin propietario"));
+				$rta = $gesActividadPlazasR->getPropiedadPlazaLibre();
+				if ($rta['success']) {
+				    $propiedad = $rta['propiedad'];
+                    if (empty($propiedad)) {
+                        exit (_("no debería pasar. No puede haber una plaza libre sin propietario"));
+                    } else {
+                        $prop = key($propiedad);
+                        $this->setPropietario($prop);
+                    }
 				} else {
-					$prop = key($propiedad);
-					$this->setPropietario($prop);
+                    $err_txt = $rta['mensaje'];
+                    exit ($err_txt);
 				}
 			} else {
 				$this->iplaza = Asistente::PLAZA_PEDIDA;
