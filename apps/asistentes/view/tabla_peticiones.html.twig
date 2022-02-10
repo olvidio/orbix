@@ -1,0 +1,29 @@
+
+{{ oPosicion.mostrar_left_slide(1)|raw }}
+<h3> {{ nom_activ }}</h3>
+{{ oTabla.mostrar_tabla_html()|raw }}
+<script>
+
+fnjs_cambiar_actividad=function(param){
+    var url_ajax = 'apps/asistentes/controller/update_3101.php';
+	
+    request=$.ajax({
+        data: param,
+        url: url_ajax,
+        method: 'POST'
+    });
+    request.done( function (rta) {
+        rta_txt=rta;
+        if (rta_txt==undefined) {
+            rta_txt='';
+        }
+        if (rta_txt) {
+			alert(rta_txt);
+        } else {
+            // actualizar
+            {{ oPosicion.js_atras()|raw }}
+        }
+    });
+}
+
+</script>

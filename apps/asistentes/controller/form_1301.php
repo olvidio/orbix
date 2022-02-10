@@ -32,6 +32,7 @@ use asistentes\model\entity as asistentes;
 use asistentes\model\entity\AsistentePub;
 use core\ConfigGlobal;
 use personas\model\entity\PersonaEx;
+use actividades\model\entity\Actividad;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -63,6 +64,9 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $oDesplActividades = array();
 if (!empty($id_activ)) { //caso de modificar
 	$mod="editar";
+	$oActividad = new Actividad($id_activ);
+	$nom_activ = $oActividad->getNom_activ();
+	
 	$oAsistentePub = new AsistentePub();
 	$oAsistente = $oAsistentePub->getClaseAsistente($Qid_nom,$id_activ);
 	$oAsistente->setPrimary_key(array('id_activ'=>$id_activ,'id_nom'=>$Qid_nom));
@@ -88,6 +92,7 @@ if (!empty($id_activ)) { //caso de modificar
 } else { //caso de nuevo asistente
 	$mod="nuevo";
 	$id_activ_real = '';
+	$nom_activ = '';
 	if (empty($id_tipo)) {
 		$mi_sfsv = ConfigGlobal::mi_sfsv();
 		$id_tipo='^'.$mi_sfsv;  //caso genérico para todas las actividades
@@ -187,6 +192,7 @@ $a_campos = [
 			'url_ajax' => $url_ajax,
 			'id_nom' => $Qid_nom,
 			'id_activ_real' => $id_activ_real,
+			'nom_activ' => $nom_activ,
 			'oDesplActividades' => $oDesplActividades,
 			'propio_chk' => $propio_chk,
 			'falta_chk' => $falta_chk,

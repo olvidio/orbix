@@ -974,6 +974,7 @@ class Lista {
             $a_valores_chk = array();
         }
         
+        unset($a_valores['scroll_id']);
         foreach($a_valores as $num_fila=>$fila) {
             $clase = "imp";
             $f % 2  ? 0: $clase = "par";
@@ -1081,6 +1082,7 @@ class Lista {
      *@return string Html
      *
      */
+    /*
     function mostrar_tabla_html2() {
         $aGrupos=$this->aGrupos;
         $a_botones = $this->aBotones;
@@ -1215,6 +1217,7 @@ class Lista {
         
         return $tt;
     }
+    */
     
     public function getCsv($filename) {
         $a_cabeceras = $this->aCabeceras;
