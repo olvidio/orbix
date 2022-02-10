@@ -4,7 +4,7 @@ use core;
 use asignaturas\model\entity as asignaturas;
 
 /**
- * Classe que implementa l'entitat e_notas_situacion
+ * Classe que 
  *
  * @package delegación
  * @subpackage model
