@@ -1,9 +1,11 @@
 <?php
+
+
 /**
  * Funció per eliminar els & que no són html
  * 
- * @param type $html
- * @param type $offset
+ * @param string $html
+ * @param integer $offset
  */
 function fixAmps(&$html, $offset) {
     $positionAmp = strpos($html, '&', $offset);
@@ -517,6 +519,7 @@ switch ($_POST['frm_export_tipo']) {
 		unlink("/tmp/$nom.zip");
 	break;
 	case "pdf":
+		/*
 		if ($_POST['frm_export_titulo']) {
 			$nom=$_POST['frm_export_titulo'];
 		} else {
@@ -531,13 +534,13 @@ switch ($_POST['frm_export_tipo']) {
 			$orientation='L';
 		}
 			$orientation='';
-		/**
+		**
 		 * Creates an example PDF TEST document using TCPDF   example_061
 		 * @package com.tecnick.tcpdf
 		 * @abstract TCPDF - Example: XHTML + CSS
 		 * @author Nicola Asuni
 		 * @since 2010-05-25
-		 */
+		 *
 		//require_once('tcpdf/config/lang/cat.php');
 		//require_once('tcpdf/tcpdf.php');
 
@@ -594,8 +597,10 @@ switch ($_POST['frm_export_tipo']) {
 
 		//Close and output PDF document
 		$pdf->Output("$nom.pdf", 'I');
+		*/
 	break;
 	case "excel":
+		/*
 		if ($_POST['frm_export_titulo']) {
 			$nom=$_POST['frm_export_titulo'];
 		} else {
@@ -610,6 +615,7 @@ switch ($_POST['frm_export_tipo']) {
 		$documento=stripslashes($documento);		
 		$htmltodoc= new HTML_TO_DOC();
 		$htmltodoc->createDoc("$documento","$nom.xls",'true');
+		*/
 	break;
 	case "rtf":
 		if ($_POST['frm_export_titulo']) {
@@ -654,7 +660,7 @@ switch ($_POST['frm_export_tipo']) {
 		$documento= '<meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>'. $documento;
 		//quitar los forms 
 		$documento=preg_replace('/<form.*>/', '', $documento); 
-		$documento=preg_replace('/<\/form>/', '', $documento); 
+		$documento=str_replace('/<\/form>/', '', $documento); 
 		
 		$file_txt = "/tmp/$nom.txt";
 		$file_xml = "/tmp/$nom.xml";
@@ -708,7 +714,6 @@ switch ($_POST['frm_export_tipo']) {
 			$nom="export".uniqid(); // per evitar emoblics si accedeixen varies persones a l'hora.
 		}
 		$documento=$_POST['frm_export_ex'];
-		//echo "$documento";
 		fixAmps($documento, 0);
 		$doc_type="text";
 		require_once("odf.php");
@@ -718,7 +723,7 @@ switch ($_POST['frm_export_tipo']) {
 		$documento= '<meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>'. $documento;
 		//quitar los forms 
 		$documento=preg_replace('/<form.*>/', '', $documento); 
-		$documento=preg_replace('/<\/form>/', '', $documento); 
+		$documento=str_replace('/<\/form>/', '', $documento); 
 
 		$file_txt = "/tmp/$nom.txt";
 		$file_xml = "/tmp/$nom.xml";
@@ -737,7 +742,7 @@ switch ($_POST['frm_export_tipo']) {
 		if ($_POST['frm_export_ref']) {
 			$conv_ref=$_POST['frm_export_ref'];
 			switch ($conv_ref) {
-				case "des/tareas/list_com_ctr.php":
+				case "encargossacd/view/lista_com_ctr.phtml":
 					$xslt="html2ootext_list_com_ctr.xslt";
 					$conv_style="3";
 					break;

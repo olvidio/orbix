@@ -30,14 +30,18 @@
 	pie { display: block; }
 
 </style>
-<body>
+<div id='exportar' refe='encargossacd/view/lista_com_ctr.phtml'>
+<span id="span_exportar"  title="comunicacion_ctr"></span>
 <?php
+$s=0;
 foreach ($array_atn_sacd as $nombre_ubi => $vector) {
+	$s++;
 	?>
-	<div class=salta_pag>
+	<div class="salta_pag" id="<?= $s ?>" >
 	<br />
 	<cabecera>
-		<izquierda><?= $nombre_ubi ?></izquierda><derecha><?= $origen_txt ?></derecha>
+		<izquierda><?= $nombre_ubi ?></izquierda>
+		<derecha><?= $origen_txt ?></derecha>
 	</cabecera>
 	<comunicacion><?= $array_atn_sacd[$nombre_ubi]['txt']['com_ctr'] ?></comunicacion>
 	<!-- sacd -->
@@ -47,7 +51,7 @@ foreach ($array_atn_sacd as $nombre_ubi => $vector) {
 	$sacd_suplente = empty($array_atn_sacd[$nombre_ubi]['suplente'])? '': $array_atn_sacd[$nombre_ubi]['suplente'];
 	$sacd_colaborador = $array_atn_sacd[$nombre_ubi]['colaborador'];
 	?>
-	<table>
+	<table class=titular border=1 style="border-collapse:collapse;" > 
 	<tr><td class=cabecera><?= _("titular") ?>:</td><td><?= $sacd_titular ?></td><td><?= $titular_dedicacion ?></td></tr>
 	<?php
 	if (!empty($sacd_suplente)) {
@@ -79,4 +83,4 @@ foreach ($array_atn_sacd as $nombre_ubi => $vector) {
 <?php
 }
 ?>
-
+</div>

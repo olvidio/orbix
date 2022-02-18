@@ -42,6 +42,7 @@
 
 </style>
 <div id='exportar' refe='encargossacd/view/lista_com_sacd.phtml'>
+<span id="span_exportar"  title="comunicacion_encargos_sacd"></span>
 <?php
 // sacd 
 $s=0;
@@ -70,7 +71,7 @@ foreach($array_modo as $array_modo_sacd) {
 					$modo_txt=_("coordinador");
 					break;
 				case 2:
-				    // Html: se pone el estilo inLine, por que al copiar y pegar no pilla el css.
+				    // Html: se pone el estilo inLine, porque al copiar y pegar no pilla el css.
 					?>
 					<table class=titular border=1 style="border-collapse:collapse;" >
 					<tr><td class=cabecera_izq><?= $array_modo[$s]['txt']["t_titular"] ?></td>

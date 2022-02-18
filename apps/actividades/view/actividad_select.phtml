@@ -49,6 +49,8 @@ fnjs_buscar=function(){
 	</form>
 </div>
 <div id="resultados" >
+<div id="exportar">
+<span id="span_exportar"  title="actividades"></span>
 <h3><?= $resultado ?></h3>
 <form id='seleccionados' name='seleccionados' action='' method='post'>
 	<?= $oHashSel->getCamposHtml(); ?>
@@ -57,6 +59,7 @@ fnjs_buscar=function(){
 	<input type='hidden' id='mod' name='mod' value="<?= $mod ?>">
 <?= $oTabla->mostrar_tabla(); ?>
 </form>
+</div>
 <div class="no_print">
 <br>
 <?php

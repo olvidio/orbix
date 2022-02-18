@@ -955,7 +955,7 @@ if ($gm > 1) {
 	<?= $li_submenus; ?>
 </ul>
 </div>
-<div id="iframe_export" name="iframe_export" style="display:none;">
+<div id="iframe_export" style="display:none;">
 	<form id="frm_export" method="POST" action="libs/export/export.php">
 	<input type="hidden" id="frm_export_orientation" name="frm_export_orientation" />
 	<input type="hidden" id="frm_export_ref" name="frm_export_ref" />
