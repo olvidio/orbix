@@ -217,8 +217,7 @@ echo '<div class="A4" >';
 
 if ($cara=="B" && $alum_cara_B > 0 ) {
 	?>
-	<tbody><tr height="<?= $alum_cara_B ?>" ><td colspan="3" >
-	<table class="alumni">
+	<table class="alumni" height="<?= $alum_cara_B ?>" >
 	<tr><td width="55%" class="alumni"></td><td  width="10%"></td><td width="35%"></td></tr>
 	<tr><td colspan="3">(.../...)<hr></td></tr>
 	<?php
