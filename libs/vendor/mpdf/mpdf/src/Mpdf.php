@@ -24,8 +24,6 @@ use Mpdf\Utils\UtfString;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
-error_reporting(0);
-
 /**
  * mPDF, PHP library generating PDF files from UTF-8 encoded HTML
  *

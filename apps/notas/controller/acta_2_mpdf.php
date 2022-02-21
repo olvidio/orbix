@@ -9,6 +9,21 @@ ob_start();
 include(dirname(__FILE__).'/acta_imprimir_mpdf.php');
 $content = ob_get_clean();
 
+// Al crear el pdf con alumnos en las dos caras da errpres tipo: 
+/*
+<b>Notice</b>:  Undefined offset: 0 in <b>/var/www/orbix/libs/vendor/mpdf/mpdf/src/Tag/Tr.php</b> on line <b>16</b><br />
+<br />
+<b>Notice</b>:  Undefined offset: 0 in <b>/var/www/orbix/libs/vendor/mpdf/mpdf/src/Tag/Tr.php</b> on line <b>16</b><br />
+<br />
+<b>Notice</b>:  Undefined index:  in <b>/var/www/orbix/libs/vendor/mpdf/mpdf/src/Tag/Tr.php</b> on line <b>16</b><br />
+<br />
+<b>Notice</b>:  Undefined index: nr in <b>/var/www/orbix/libs/vendor/mpdf/mpdf/src/Tag/Tr.php</b> on line <b>16</b><br />
+<br />
+<b>Notice</b>:  Undefined offset: 0 in <b>/var/www/orbix/libs/vendor/mpdf/mpdf/src/Tag/Tr.php</b> on line <b>20</b><br />
+ */
+// Para que el servidor no haga el "Notice:" pongo error_reporting(0).
+error_reporting(0);
+
 // convert to PDF
 require_once(core\ConfigGlobal::$dir_libs.'/vendor/autoload.php');
 
