@@ -163,18 +163,18 @@ $tribunal_html .= "<div class=\"sello\">L.S.<br>Studii Generalis</div>";
 <div class="curso">DISCIPLINA: &nbsp;&nbsp;&nbsp;&nbsp;<?= $nombre_asignatura ?></div>
 <div class="intro">Hisce litteris, quas propria uniuscuiusque subsignatione firmamus, fidem facimus hodierna die, coram infrascriptis Iudicibus, periculum de hac disciplina sequentes alumnos rite superasse:</div>
 <table class="alumni" height="<?= $alum_cara_A ?>">
-<tr><td width=55% class=alumni>ALUMNI</td><td  width=10%>&nbsp;</td><td width=35% class=alumni>CUM NOTA</td></tr>
+<tr><td width="55%" class="alumni">ALUMNI</td><td  width="10%">&nbsp;</td><td width="35%" class="alumni">CUM NOTA</td></tr>
 <?php
 	$i=0;
 	foreach ($aPersonasNotas as $nom => $nota) {
 		$i++;
 		if ($i > $alum_cara_A) { continue;}
 		?>
-		<tr class=alumno>
-		<td class=alumno><?= $nom; ?>
+		<tr class="alumno">
+		<td class="alumno"><?= $nom; ?>
 		</td>
 		<td>&nbsp;</td>
-		<td class=nota><?= $nota; ?></td>
+		<td class="nota"><?= $nota; ?></td>
 		</tr>
 		<?php
 	}
@@ -188,8 +188,8 @@ $tribunal_html .= "<div class=\"sello\">L.S.<br>Studii Generalis</div>";
 
 }
 
-if ($cara=="A" && $num_alumnos+$lin_tribunal<$lin_max_cara_A) $tribunal=1;
-if ($cara=="A" && $num_alumnos+$lin_tribunal>$lin_max_cara_A) $tribunal=0;
+if ($cara=="A" && $num_alumnos+$lin_tribunal<$lin_max_cara_A) { $tribunal=1; }
+if ($cara=="A" && $num_alumnos+$lin_tribunal>$lin_max_cara_A) { $tribunal=0; }
 
 if (!empty($tribunal)){
 	echo $tribunal_html; 
@@ -216,32 +216,33 @@ $cara='B';
 echo '<div class="A4" >';
 
 if ($cara=="B" && $alum_cara_B > 0 ) {
-	echo "<tbody><tr height=$alum_cara_B ><td colspan=3 >";
-	echo "<table class=alumni>";
-	echo "<tr><td width=55% class=alumni></td><td  width=10%></td><td width=35%></td></tr>";
-	echo "<tr><td colspan=3>(.../...)<hr></td></tr>";
+	?>
+	<tbody><tr height="<?= $alum_cara_B ?>" ><td colspan="3" >
+	<table class="alumni">
+	<tr><td width="55%" class="alumni"></td><td  width="10%"></td><td width="35%"></td></tr>
+	<tr><td colspan="3">(.../...)<hr></td></tr>
+	<?php
 	$i = 0;
 	foreach ($aPersonasNotas as $nom => $nota) {
 		$i++;
-		if ($i <= $lin_max_cara_A) continue;
+		if ($i <= $lin_max_cara_A) { continue; }
 		?>
-		<tr class=alumno>
-		<td class=alumno><?= $nom; ?>
+		<tr class="alumno">
+		<td class="alumno"><?= $nom; ?>
 		</td>
 		<td>&nbsp;</td>
-		<td class=nota><?= $nota; ?></td>
+		<td class="nota"><?= $nota; ?></td>
 		</tr>
 		<?php
 	}
 	// linea final y linea de salto
-	echo "<tr><td colspan=3 class=linea ><hr></td></tr>";
+	echo "<tr><td colspan='3' class='linea' ><hr></td></tr>";
 	echo "</tbody></table>";
 }
 
 // tribunal -----------------
-if ($cara=="B" && $num_alumnos+$lin_tribunal>=$lin_max_cara_A) $tribunal=1;
+if ($cara=="B" && $num_alumnos+$lin_tribunal>=$lin_max_cara_A) { $tribunal=1; }
 if (!empty($tribunal)){
 	echo $tribunal_html;
 }
 echo "</div>";
-?>
