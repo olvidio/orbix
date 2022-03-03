@@ -49,7 +49,6 @@ if ( ConfigGlobal::mi_ambito() === 'rstgr') {
     $camposNo = 'dl';
     $oHash->setcamposNo($camposNo);
     
-    
     if (!empty($Qdl)) {
         $oTablaAlumnosAsignaturas = new TablaAlumnosAsignaturas();
         $oTablaAlumnosAsignaturas->setA_delegacionesStgr($a_delegacionesStgr);
@@ -72,6 +71,7 @@ if (ConfigGlobal::mi_ambito() === 'rstgr') {
     $a_campos = [
                 'oHash' => $oHash,
                 'url' => $url,
+    			'boton_txt' => _("Buscar"),
                 'oCuadros' => $oCuadros,
         ];
     

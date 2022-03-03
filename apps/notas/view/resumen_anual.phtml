@@ -26,3 +26,7 @@ if (($_SESSION['oPerm']->have_perm_oficina('est')) || ($_SESSION['oPerm']->have_
 	<li><span class="link" onclick="fnjs_update_div('#main','<?= $go['asig_faltan'] ?>');"><?= _("listar por asignaturas que faltan (no se incluyen las cursadas sin examinar)") ?></span></li>
 <?php } ?>
 </ul>
+<?php if ($rstgr) { ?>
+	<input type="button" onclick="fnjs_update_div('#main','<?= $go['filtro'] ?>');" value="<?= _("filtrar por delegaciones") ?>" >
+	
+<?php } ?>
