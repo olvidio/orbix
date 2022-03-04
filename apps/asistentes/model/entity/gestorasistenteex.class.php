@@ -52,7 +52,6 @@ class GestorAsistenteEx Extends core\ClaseGestor {
 			$a_pkey = array('id_activ' => $aDades['id_activ'],
 							'id_nom' => $aDades['id_nom']);
 			$oAsistenteEx= new AsistenteEx($a_pkey);
-			$oAsistenteEx->setAllAtributes($aDades);
 			$oAsistenteExSet->add($oAsistenteEx);
 		}
 		return $oAsistenteExSet->getTot();
@@ -106,7 +105,6 @@ class GestorAsistenteEx Extends core\ClaseGestor {
 			$a_pkey = array('id_activ' => $aDades['id_activ'],
 							'id_nom' => $aDades['id_nom']);
 			$oAsistenteEx= new AsistenteEx($a_pkey);
-			$oAsistenteEx->setAllAtributes($aDades);
 			$oAsistenteExSet->add($oAsistenteEx);
 		}
 		return $oAsistenteExSet->getTot();

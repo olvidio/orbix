@@ -73,7 +73,6 @@ class GestorRegion Extends  core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('region' => $aDades['region']);
 			$oRegion= new Region($a_pkey);
-			$oRegion->setAllAtributes($aDades);
 			$oRegionSet->add($oRegion);
 		}
 		return $oRegionSet->getTot();
@@ -126,7 +125,6 @@ class GestorRegion Extends  core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_region' => $aDades['id_region']);
 			$oRegion= new Region($a_pkey);
-			$oRegion->setAllAtributes($aDades);
 			$oRegionSet->add($oRegion);
 		}
 		return $oRegionSet->getTot();

@@ -213,7 +213,6 @@ class GestorTipoDeActividad Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_tipo_activ' => $aDades['id_tipo_activ']);
 			$oTipoDeActividad= new TipoDeActividad($a_pkey);
-			$oTipoDeActividad->setAllAtributes($aDades);
 			$oTipoDeActividadSet->add($oTipoDeActividad);
 		}
 		return $oTipoDeActividadSet->getTot();
@@ -266,7 +265,6 @@ class GestorTipoDeActividad Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_tipo_activ' => $aDades['id_tipo_activ']);
 			$oTipoDeActividad= new TipoDeActividad($a_pkey);
-			$oTipoDeActividad->setAllAtributes($aDades);
 			$oTipoDeActividadSet->add($oTipoDeActividad);
 		}
 		return $oTipoDeActividadSet->getTot();

@@ -52,7 +52,6 @@ class GestorMapId Extends core\ClaseGestor {
 			$a_pkey = array('objeto' => $aDades['objeto'],
 							'id_resto' => $aDades['id_resto']);
 			$oMapId= new MapId($a_pkey);
-			$oMapId->setAllAtributes($aDades);
 			$oMapIdSet->add($oMapId);
 		}
 		return $oMapIdSet->getTot();
@@ -106,7 +105,6 @@ class GestorMapId Extends core\ClaseGestor {
 			$a_pkey = array('objeto' => $aDades['objeto'],
 							'id_resto' => $aDades['id_resto']);
 			$oMapId= new MapId($a_pkey);
-			$oMapId->setAllAtributes($aDades);
 			$oMapIdSet->add($oMapId);
 		}
 		return $oMapIdSet->getTot();

@@ -52,7 +52,6 @@ class GestorGrupMenuRole Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oGrupMenuRole= new GrupMenuRole($a_pkey);
-			$oGrupMenuRole->setAllAtributes($aDades);
 			$oGrupMenuRoleSet->add($oGrupMenuRole);
 		}
 		return $oGrupMenuRoleSet->getTot();
@@ -105,7 +104,6 @@ class GestorGrupMenuRole Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oGrupMenuRole= new GrupMenuRole($a_pkey);
-			$oGrupMenuRole->setAllAtributes($aDades);
 			$oGrupMenuRoleSet->add($oGrupMenuRole);
 		}
 		return $oGrupMenuRoleSet->getTot();

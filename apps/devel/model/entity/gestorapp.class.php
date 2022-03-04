@@ -51,7 +51,6 @@ class GestorApp Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_app' => $aDades['id_app']);
 			$oApp= new App($a_pkey);
-			$oApp->setAllAtributes($aDades);
 			$oAppSet->add($oApp);
 		}
 		return $oAppSet->getTot();
@@ -104,7 +103,6 @@ class GestorApp Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_app' => $aDades['id_app']);
 			$oApp= new App($a_pkey);
-			$oApp->setAllAtributes($aDades);
 			$oAppSet->add($oApp);
 		}
 		return $oAppSet->getTot();

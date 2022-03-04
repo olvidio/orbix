@@ -52,7 +52,6 @@ class GestorTraslado Extends core\ClaseGestor {
 			$a_pkey = array('id_item' => $aDades['id_item'],
 							'id_nom' => $aDades['id_nom']);
 			$oTraslado= new Traslado($a_pkey);
-			$oTraslado->setAllAtributes($aDades);
 			$oTrasladoSet->add($oTraslado);
 		}
 		return $oTrasladoSet->getTot();
@@ -106,7 +105,6 @@ class GestorTraslado Extends core\ClaseGestor {
 			$a_pkey = array('id_item' => $aDades['id_item'],
 							'id_nom' => $aDades['id_nom']);
 			$oTraslado= new Traslado($a_pkey);
-			$oTraslado->setAllAtributes($aDades);
 			$oTrasladoSet->add($oTraslado);
 		}
 		return $oTrasladoSet->getTot();

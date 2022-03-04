@@ -51,7 +51,6 @@ class GestorUltimaAsistencia Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oUltimaAsistencia= new UltimaAsistencia($a_pkey);
-			$oUltimaAsistencia->setAllAtributes($aDades);
 			$oUltimaAsistenciaSet->add($oUltimaAsistencia);
 		}
 		return $oUltimaAsistenciaSet->getTot();
@@ -104,7 +103,6 @@ class GestorUltimaAsistencia Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oUltimaAsistencia= new UltimaAsistencia($a_pkey);
-			$oUltimaAsistencia->setAllAtributes($aDades);
 			$oUltimaAsistenciaSet->add($oUltimaAsistencia);
 		}
 		return $oUltimaAsistenciaSet->getTot();

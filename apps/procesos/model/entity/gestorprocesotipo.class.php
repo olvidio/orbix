@@ -81,7 +81,6 @@ class GestorProcesoTipo Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_tipo_proceso' => $aDades['id_tipo_proceso']);
 			$oProcesoTipo= new ProcesoTipo($a_pkey);
-			$oProcesoTipo->setAllAtributes($aDades);
 			$oProcesoTipoSet->add($oProcesoTipo);
 		}
 		return $oProcesoTipoSet->getTot();
@@ -134,7 +133,6 @@ class GestorProcesoTipo Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_tipo_proceso' => $aDades['id_tipo_proceso']);
 			$oProcesoTipo= new ProcesoTipo($a_pkey);
-			$oProcesoTipo->setAllAtributes($aDades);
 			$oProcesoTipoSet->add($oProcesoTipo);
 		}
 		return $oProcesoTipoSet->getTot();

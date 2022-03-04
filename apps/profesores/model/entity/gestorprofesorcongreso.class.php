@@ -52,7 +52,6 @@ class GestorProfesorCongreso Extends core\ClaseGestor {
 			$a_pkey = array('id_item' => $aDades['id_item'],
 							'id_nom' => $aDades['id_nom']);
 			$oProfesorCongreso= new ProfesorCongreso($a_pkey);
-			$oProfesorCongreso->setAllAtributes($aDades);
 			$oProfesorCongresoSet->add($oProfesorCongreso);
 		}
 		return $oProfesorCongresoSet->getTot();
@@ -106,7 +105,6 @@ class GestorProfesorCongreso Extends core\ClaseGestor {
 			$a_pkey = array('id_item' => $aDades['id_item'],
 							'id_nom' => $aDades['id_nom']);
 			$oProfesorCongreso= new ProfesorCongreso($a_pkey);
-			$oProfesorCongreso->setAllAtributes($aDades);
 			$oProfesorCongresoSet->add($oProfesorCongreso);
 		}
 		return $oProfesorCongresoSet->getTot();

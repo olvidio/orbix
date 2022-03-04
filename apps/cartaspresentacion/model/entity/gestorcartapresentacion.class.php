@@ -64,7 +64,6 @@ class GestorCartaPresentacion Extends core\ClaseGestor {
 		        default:
                     $oCartaPresentacion= new CartaPresentacion($a_pkey);
 		    }
-			$oCartaPresentacion->setAllAtributes($aDades);
 			$oCartaPresentacionSet->add($oCartaPresentacion);
 		}
 		return $oCartaPresentacionSet->getTot();
@@ -131,7 +130,6 @@ class GestorCartaPresentacion Extends core\ClaseGestor {
 		        default:
                     $oCartaPresentacion= new CartaPresentacion($a_pkey);
 		    }
-			$oCartaPresentacion->setAllAtributes($aDades);
 			$oCartaPresentacionSet->add($oCartaPresentacion);
 		}
 		return $oCartaPresentacionSet->getTot();

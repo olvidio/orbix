@@ -51,7 +51,6 @@ class GestorIngreso Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_activ' => $aDades['id_activ']);
 			$oIngreso= new Ingreso($a_pkey);
-			$oIngreso->setAllAtributes($aDades);
 			$oIngresoSet->add($oIngreso);
 		}
 		return $oIngresoSet->getTot();
@@ -104,7 +103,6 @@ class GestorIngreso Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_activ' => $aDades['id_activ']);
 			$oIngreso= new Ingreso($a_pkey);
-			$oIngreso->setAllAtributes($aDades);
 			$oIngresoSet->add($oIngreso);
 		}
 		return $oIngresoSet->getTot();

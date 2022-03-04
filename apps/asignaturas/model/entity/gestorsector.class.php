@@ -100,7 +100,6 @@ class GestorSector Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_sector' => $aDades['id_sector']);
 			$oSector= new Sector($a_pkey);
-			$oSector->setAllAtributes($aDades);
 			$oSectorSet->add($oSector);
 		}
 		return $oSectorSet->getTot();
@@ -153,7 +152,6 @@ class GestorSector Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_sector' => $aDades['id_sector']);
 			$oSector= new Sector($a_pkey);
-			$oSector->setAllAtributes($aDades);
 			$oSectorSet->add($oSector);
 		}
 		return $oSectorSet->getTot();

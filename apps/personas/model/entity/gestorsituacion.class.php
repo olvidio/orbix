@@ -79,7 +79,6 @@ class GestorSituacion Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('situacion' => $aDades['situacion']);
 			$oSituacion= new Situacion($a_pkey);
-			$oSituacion->setAllAtributes($aDades);
 			$oSituacionSet->add($oSituacion);
 		}
 		return $oSituacionSet->getTot();
@@ -132,7 +131,6 @@ class GestorSituacion Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('situacion' => $aDades['situacion']);
 			$oSituacion= new Situacion($a_pkey);
-			$oSituacion->setAllAtributes($aDades);
 			$oSituacionSet->add($oSituacion);
 		}
 		return $oSituacionSet->getTot();

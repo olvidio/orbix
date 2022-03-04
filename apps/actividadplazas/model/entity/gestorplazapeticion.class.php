@@ -52,7 +52,6 @@ class GestorPlazaPeticion Extends core\ClaseGestor {
 			$a_pkey = array('id_nom' => $aDades['id_nom'],
 							'id_activ' => $aDades['id_activ']);
 			$oPlazaPeticion= new PlazaPeticion($a_pkey);
-			$oPlazaPeticion->setAllAtributes($aDades);
 			$oPlazaPeticionSet->add($oPlazaPeticion);
 		}
 		return $oPlazaPeticionSet->getTot();
@@ -106,7 +105,6 @@ class GestorPlazaPeticion Extends core\ClaseGestor {
 			$a_pkey = array('id_nom' => $aDades['id_nom'],
 							'id_activ' => $aDades['id_activ']);
 			$oPlazaPeticion= new PlazaPeticion($a_pkey);
-			$oPlazaPeticion->setAllAtributes($aDades);
 			$oPlazaPeticionSet->add($oPlazaPeticion);
 		}
 		return $oPlazaPeticionSet->getTot();

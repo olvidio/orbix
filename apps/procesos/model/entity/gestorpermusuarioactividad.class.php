@@ -51,7 +51,6 @@ class GestorPermUsuarioActividad Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oPermUsuarioActividad= new PermUsuarioActividad($a_pkey);
-			$oPermUsuarioActividad->setAllAtributes($aDades);
 			$oPermUsuarioActividadSet->add($oPermUsuarioActividad);
 		}
 		return $oPermUsuarioActividadSet->getTot();
@@ -104,7 +103,6 @@ class GestorPermUsuarioActividad Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oPermUsuarioActividad= new PermUsuarioActividad($a_pkey);
-			$oPermUsuarioActividad->setAllAtributes($aDades);
 			$oPermUsuarioActividadSet->add($oPermUsuarioActividad);
 		}
 		return $oPermUsuarioActividadSet->getTot();

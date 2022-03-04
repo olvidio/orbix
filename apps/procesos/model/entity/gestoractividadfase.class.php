@@ -333,7 +333,6 @@ class GestorActividadFase Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_fase' => $aDades['id_fase']);
 			$oActividadFase= new ActividadFase($a_pkey);
-			$oActividadFase->setAllAtributes($aDades);
 			$oActividadFaseSet->add($oActividadFase);
 		}
 		return $oActividadFaseSet->getTot();
@@ -386,7 +385,6 @@ class GestorActividadFase Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_fase' => $aDades['id_fase']);
 			$oActividadFase= new ActividadFase($a_pkey);
-			$oActividadFase->setAllAtributes($aDades);
 			$oActividadFaseSet->add($oActividadFase);
 		}
 		return $oActividadFaseSet->getTot();

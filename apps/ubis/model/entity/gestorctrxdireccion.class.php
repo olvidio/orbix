@@ -81,7 +81,6 @@ class GestorCtrxDireccion Extends GestorUbixDireccion {
 			$a_pkey = array('id_ubi' => $aDades['id_ubi'],
 							'id_direccion' => $aDades['id_direccion']);
 			$oCtrxDireccion= new CtrxDireccion($a_pkey);
-			$oCtrxDireccion->setAllAtributes($aDades);
 			$oCtrxDireccionSet->add($oCtrxDireccion);
 		}
 		return $oCtrxDireccionSet->getTot();

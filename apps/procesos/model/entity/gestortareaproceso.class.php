@@ -281,7 +281,6 @@ class GestorTareaProceso Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oTareaProceso= new TareaProceso($a_pkey);
-			$oTareaProceso->setAllAtributes($aDades);
 			$oTareaProcesoSet->add($oTareaProceso);
 		}
 		return $oTareaProcesoSet->getTot();
@@ -334,7 +333,6 @@ class GestorTareaProceso Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oTareaProceso= new TareaProceso($a_pkey);
-			$oTareaProceso->setAllAtributes($aDades);
 			$oTareaProcesoSet->add($oTareaProceso);
 		}
 		return $oTareaProcesoSet->getTot();

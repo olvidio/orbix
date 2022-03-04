@@ -106,7 +106,6 @@ class GestorDossier Extends core\ClaseGestor {
 							'id_pau' => $aDades['id_pau'],
 							'id_tipo_dossier' => $aDades['id_tipo_dossier']);
 			$oDossier= new Dossier($a_pkey);
-			$oDossier->setAllAtributes($aDades);
 			$oDossierSet->add($oDossier);
 		}
 		return $oDossierSet->getTot();
@@ -161,7 +160,6 @@ class GestorDossier Extends core\ClaseGestor {
 							'id_pau' => $aDades['id_pau'],
 							'id_tipo_dossier' => $aDades['id_tipo_dossier']);
 			$oDossier= new Dossier($a_pkey);
-			$oDossier->setAllAtributes($aDades);
 			$oDossierSet->add($oDossier);
 		}
 		return $oDossierSet->getTot();

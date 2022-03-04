@@ -108,7 +108,6 @@ class GestorNivelStgr Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('nivel_stgr' => $aDades['nivel_stgr']);
 			$oNivelStgr= new NivelStgr($a_pkey);
-			$oNivelStgr->setAllAtributes($aDades);
 			$oNivelStgrSet->add($oNivelStgr);
 		}
 		return $oNivelStgrSet->getTot();
@@ -161,7 +160,6 @@ class GestorNivelStgr Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('nivel_stgr' => $aDades['nivel_stgr']);
 			$oNivelStgr= new NivelStgr($a_pkey);
-			$oNivelStgr->setAllAtributes($aDades);
 			$oNivelStgrSet->add($oNivelStgr);
 		}
 		return $oNivelStgrSet->getTot();

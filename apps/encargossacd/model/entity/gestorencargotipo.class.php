@@ -146,7 +146,6 @@ class GestorEncargoTipo Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_tipo_enc' => $aDades['id_tipo_enc']);
 			$oEncargoTipo= new EncargoTipo($a_pkey);
-			$oEncargoTipo->setAllAtributes($aDades);
 			$oEncargoTipoSet->add($oEncargoTipo);
 		}
 		return $oEncargoTipoSet->getTot();
@@ -199,7 +198,6 @@ class GestorEncargoTipo Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_tipo_enc' => $aDades['id_tipo_enc']);
 			$oEncargoTipo= new EncargoTipo($a_pkey);
-			$oEncargoTipo->setAllAtributes($aDades);
 			$oEncargoTipoSet->add($oEncargoTipo);
 		}
 		return $oEncargoTipoSet->getTot();

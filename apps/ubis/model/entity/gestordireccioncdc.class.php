@@ -80,7 +80,6 @@ class GestorDireccionCdc Extends GestorDireccion {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_direccion' => $aDades['id_direccion']);
 			$oRegion= new DireccionCdc($a_pkey);
-			$oRegion->setAllAtributes($aDades);
 			$oRegionSet->add($oRegion);
 		}
 		return $oRegionSet->getTot();

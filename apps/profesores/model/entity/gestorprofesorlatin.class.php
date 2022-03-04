@@ -51,7 +51,6 @@ class GestorProfesorLatin Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_nom' => $aDades['id_nom']);
 			$oProfesorLatin= new ProfesorLatin($a_pkey);
-			$oProfesorLatin->setAllAtributes($aDades);
 			$oProfesorLatinSet->add($oProfesorLatin);
 		}
 		return $oProfesorLatinSet->getTot();
@@ -104,7 +103,6 @@ class GestorProfesorLatin Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_nom' => $aDades['id_nom']);
 			$oProfesorLatin= new ProfesorLatin($a_pkey);
-			$oProfesorLatin->setAllAtributes($aDades);
 			$oProfesorLatinSet->add($oProfesorLatin);
 		}
 		return $oProfesorLatinSet->getTot();

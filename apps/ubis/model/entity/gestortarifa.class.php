@@ -53,7 +53,6 @@ class GestorTarifa Extends core\ClaseGestor {
 							'id_tarifa' => $aDades['id_tarifa'],
 							'year' => $aDades['year']);
 			$oTarifa= new Tarifa($a_pkey);
-			$oTarifa->setAllAtributes($aDades);
 			$oTarifaSet->add($oTarifa);
 		}
 		return $oTarifaSet->getTot();
@@ -108,7 +107,6 @@ class GestorTarifa Extends core\ClaseGestor {
 							'id_tarifa' => $aDades['id_tarifa'],
 							'year' => $aDades['year']);
 			$oTarifa= new Tarifa($a_pkey);
-			$oTarifa->setAllAtributes($aDades);
 			$oTarifaSet->add($oTarifa);
 		}
 		return $oTarifaSet->getTot();

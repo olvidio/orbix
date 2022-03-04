@@ -76,7 +76,6 @@ class GestorProfesorTipo Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_tipo_profesor' => $aDades['id_tipo_profesor']);
 			$oProfesorTipo= new ProfesorTipo($a_pkey);
-			$oProfesorTipo->setAllAtributes($aDades);
 			$oProfesorTipoSet->add($oProfesorTipo);
 		}
 		return $oProfesorTipoSet->getTot();
@@ -129,7 +128,6 @@ class GestorProfesorTipo Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_tipo_profesor' => $aDades['id_tipo_profesor']);
 			$oProfesorTipo= new ProfesorTipo($a_pkey);
-			$oProfesorTipo->setAllAtributes($aDades);
 			$oProfesorTipoSet->add($oProfesorTipo);
 		}
 		return $oProfesorTipoSet->getTot();

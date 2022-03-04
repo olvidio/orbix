@@ -51,7 +51,6 @@ class GestorIdMatchPersona Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_listas' => $aDades['id_listas']);
 			$oIdMatchPersona= new IdMatchPersona($a_pkey);
-			$oIdMatchPersona->setAllAtributes($aDades);
 			$oIdMatchPersonaSet->add($oIdMatchPersona);
 		}
 		return $oIdMatchPersonaSet->getTot();
@@ -104,7 +103,6 @@ class GestorIdMatchPersona Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_listas' => $aDades['id_listas']);
 			$oIdMatchPersona= new IdMatchPersona($a_pkey);
-			$oIdMatchPersona->setAllAtributes($aDades);
 			$oIdMatchPersonaSet->add($oIdMatchPersona);
 		}
 		return $oIdMatchPersonaSet->getTot();

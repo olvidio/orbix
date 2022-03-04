@@ -53,7 +53,6 @@ class GestorActividadPlazas Extends core\ClaseGestor {
 							'id_dl' => $aDades['id_dl'],
 							'dl_tabla' => $aDades['dl_tabla']);
 			$oactividadPlazas= new actividadPlazas($a_pkey);
-			$oactividadPlazas->setAllAtributes($aDades);
 			$oactividadPlazasSet->add($oactividadPlazas);
 		}
 		return $oactividadPlazasSet->getTot();
@@ -108,7 +107,6 @@ class GestorActividadPlazas Extends core\ClaseGestor {
 							'id_dl' => $aDades['id_dl'],
 							'dl_tabla' => $aDades['dl_tabla']);
 			$oactividadPlazas= new actividadPlazas($a_pkey);
-			$oactividadPlazas->setAllAtributes($aDades);
 			$oactividadPlazasSet->add($oactividadPlazas);
 		}
 		return $oactividadPlazasSet->getTot();

@@ -72,7 +72,6 @@ class GestorMetamenu Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_metamenu' => $aDades['id_metamenu']);
 			$oMetamenu= new Metamenu($a_pkey);
-			$oMetamenu->setAllAtributes($aDades);
 			$oMetamenuSet->add($oMetamenu);
 		}
 		return $oMetamenuSet->getTot();
@@ -125,7 +124,6 @@ class GestorMetamenu Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_metamenu' => $aDades['id_metamenu']);
 			$oMetamenu= new Metamenu($a_pkey);
-			$oMetamenu->setAllAtributes($aDades);
 			$oMetamenuSet->add($oMetamenu);
 		}
 		return $oMetamenuSet->getTot();

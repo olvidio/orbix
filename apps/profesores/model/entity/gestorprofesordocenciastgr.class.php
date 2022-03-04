@@ -52,7 +52,6 @@ class GestorProfesorDocenciaStgr Extends core\ClaseGestor {
 			$a_pkey = array('id_item' => $aDades['id_item'],
 							'id_nom' => $aDades['id_nom']);
 			$oProfesorDocenciaStgr= new ProfesorDocenciaStgr($a_pkey);
-			$oProfesorDocenciaStgr->setAllAtributes($aDades);
 			$oProfesorDocenciaStgrSet->add($oProfesorDocenciaStgr);
 		}
 		return $oProfesorDocenciaStgrSet->getTot();
@@ -106,7 +105,6 @@ class GestorProfesorDocenciaStgr Extends core\ClaseGestor {
 			$a_pkey = array('id_item' => $aDades['id_item'],
 							'id_nom' => $aDades['id_nom']);
 			$oProfesorDocenciaStgr= new ProfesorDocenciaStgr($a_pkey);
-			$oProfesorDocenciaStgr->setAllAtributes($aDades);
 			$oProfesorDocenciaStgrSet->add($oProfesorDocenciaStgr);
 		}
 		return $oProfesorDocenciaStgrSet->getTot();

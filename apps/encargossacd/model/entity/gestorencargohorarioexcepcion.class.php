@@ -52,7 +52,6 @@ class GestorEncargoHorarioExcepcion Extends core\ClaseGestor {
 			$a_pkey = array('id_enc' => $aDades['id_enc'],
 							'id_item_ex' => $aDades['id_item_ex']);
 			$oEncargoHorarioExcepcion= new EncargoHorarioExcepcion($a_pkey);
-			$oEncargoHorarioExcepcion->setAllAtributes($aDades);
 			$oEncargoHorarioExcepcionSet->add($oEncargoHorarioExcepcion);
 		}
 		return $oEncargoHorarioExcepcionSet->getTot();
@@ -106,7 +105,6 @@ class GestorEncargoHorarioExcepcion Extends core\ClaseGestor {
 			$a_pkey = array('id_enc' => $aDades['id_enc'],
 							'id_item_ex' => $aDades['id_item_ex']);
 			$oEncargoHorarioExcepcion= new EncargoHorarioExcepcion($a_pkey);
-			$oEncargoHorarioExcepcion->setAllAtributes($aDades);
 			$oEncargoHorarioExcepcionSet->add($oEncargoHorarioExcepcion);
 		}
 		return $oEncargoHorarioExcepcionSet->getTot();

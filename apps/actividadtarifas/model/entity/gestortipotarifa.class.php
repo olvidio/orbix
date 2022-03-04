@@ -97,7 +97,6 @@ class GestorTipoTarifa Extends  core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_tarifa' => $aDades['id_tarifa']);
 			$oTipoTarifa= new TipoTarifa($a_pkey);
-			$oTipoTarifa->setAllAtributes($aDades);
 			$oTipoTarifaSet->add($oTipoTarifa);
 		}
 		return $oTipoTarifaSet->getTot();
@@ -150,7 +149,6 @@ class GestorTipoTarifa Extends  core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_tarifa' => $aDades['id_tarifa']);
 			$oTipoTarifa= new TipoTarifa($a_pkey);
-			$oTipoTarifa->setAllAtributes($aDades);
 			$oTipoTarifaSet->add($oTipoTarifa);
 		}
 		return $oTipoTarifaSet->getTot();

@@ -67,7 +67,6 @@ class GestorEncargoSacd Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oEncargoSacd= new EncargoSacd($a_pkey);
-			$oEncargoSacd->setAllAtributes($aDades);
 			$oEncargoSacdSet->add($oEncargoSacd);
 		}
 		return $oEncargoSacdSet->getTot();
@@ -120,7 +119,6 @@ class GestorEncargoSacd Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oEncargoSacd= new EncargoSacd($a_pkey);
-			$oEncargoSacd->setAllAtributes($aDades);
 			$oEncargoSacdSet->add($oEncargoSacd);
 		}
 		return $oEncargoSacdSet->getTot();

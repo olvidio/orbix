@@ -75,7 +75,6 @@ class GestorUbiGasto Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oUbiGasto= new UbiGasto($a_pkey);
-			$oUbiGasto->setAllAtributes($aDades);
 			$oUbiGastoSet->add($oUbiGasto);
 		}
 		return $oUbiGastoSet->getTot();
@@ -128,7 +127,6 @@ class GestorUbiGasto Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oUbiGasto= new UbiGasto($a_pkey);
-			$oUbiGasto->setAllAtributes($aDades);
 			$oUbiGastoSet->add($oUbiGasto);
 		}
 		return $oUbiGastoSet->getTot();

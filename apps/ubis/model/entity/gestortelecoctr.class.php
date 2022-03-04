@@ -79,7 +79,6 @@ class GestorTelecoCtr Extends GestorTelecoUbi {
 			$a_pkey = array('id_item' => $aDades['id_item'],
 							'id_ubi' => $aDades['id_ubi']);
 			$oTelecoCtr= new TelecoCtr($a_pkey);
-			$oTelecoCtr->setAllAtributes($aDades);
 			$oTelecoCtrSet->add($oTelecoCtr);
 		}
 		return $oTelecoCtrSet->getTot();

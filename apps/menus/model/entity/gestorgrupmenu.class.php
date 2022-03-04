@@ -68,7 +68,6 @@ class GestorGrupMenu Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_grupmenu' => $aDades['id_grupmenu']);
 			$oGrupMenu= new GrupMenu($a_pkey);
-			$oGrupMenu->setAllAtributes($aDades);
 			$oGrupMenuSet->add($oGrupMenu);
 		}
 		return $oGrupMenuSet->getTot();
@@ -121,7 +120,6 @@ class GestorGrupMenu Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_grupmenu' => $aDades['id_grupmenu']);
 			$oGrupMenu= new GrupMenu($a_pkey);
-			$oGrupMenu->setAllAtributes($aDades);
 			$oGrupMenuSet->add($oGrupMenu);
 		}
 		return $oGrupMenuSet->getTot();

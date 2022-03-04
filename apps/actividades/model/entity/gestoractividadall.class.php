@@ -381,7 +381,6 @@ class GestorActividadAll Extends core\ClaseGestor {
 					$oActividad = new ActividadEx($a_pkey);
 				}
 			}
-			$oActividad->setAllAtributes($aDades);
 			$oActividadSet->add($oActividad);
 		}
 		*/

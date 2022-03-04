@@ -86,7 +86,6 @@ class GestorActividadAsignatura Extends core\ClaseGestor {
 			$a_pkey = array('id_activ' => $aDades['id_activ'],
 							'id_asignatura' => $aDades['id_asignatura']);
 			$oActividadAsignatura= new ActividadAsignatura($a_pkey);
-			$oActividadAsignatura->setAllAtributes($aDades);
 			$oActividadAsignaturaSet->add($oActividadAsignatura);
 		}
 		return $oActividadAsignaturaSet->getTot();
@@ -138,7 +137,6 @@ class GestorActividadAsignatura Extends core\ClaseGestor {
 			$a_pkey = array('id_activ' => $aDades['id_activ'],
 							'id_asignatura' => $aDades['id_asignatura']);
 			$oActividadAsignatura= new ActividadAsignatura($a_pkey);
-			$oActividadAsignatura->setAllAtributes($aDades);
 			$oActividadAsignaturaSet->add($oActividadAsignatura);
 		}
 		return $oActividadAsignaturaSet->getTot();

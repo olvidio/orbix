@@ -51,7 +51,6 @@ class GestorPermMenu Extends  core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oPermMenu= new PermMenu($a_pkey);
-			$oPermMenu->setAllAtributes($aDades);
 			$oPermMenuSet->add($oPermMenu);
 		}
 		return $oPermMenuSet->getTot();
@@ -104,7 +103,6 @@ class GestorPermMenu Extends  core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oPermMenu= new PermMenu($a_pkey);
-			$oPermMenu->setAllAtributes($aDades);
 			$oPermMenuSet->add($oPermMenu);
 		}
 		return $oPermMenuSet->getTot();

@@ -90,7 +90,6 @@ class GestorDescTeleco Extends  core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oDescTeleco= new DescTeleco($a_pkey);
-			$oDescTeleco->setAllAtributes($aDades);
 			$oDescTelecoSet->add($oDescTeleco);
 		}
 		return $oDescTelecoSet->getTot();
@@ -143,7 +142,6 @@ class GestorDescTeleco Extends  core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oDescTeleco= new DescTeleco($a_pkey);
-			$oDescTeleco->setAllAtributes($aDades);
 			$oDescTelecoSet->add($oDescTeleco);
 		}
 		return $oDescTelecoSet->getTot();

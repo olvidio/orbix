@@ -52,7 +52,6 @@ class GestorPublicacion Extends core\ClaseGestor {
 			$a_pkey = array('id_item' => $aDades['id_item'],
 							'id_nom' => $aDades['id_nom']);
 			$oPublicacion= new Publicacion($a_pkey);
-			$oPublicacion->setAllAtributes($aDades);
 			$oPublicacionSet->add($oPublicacion);
 		}
 		return $oPublicacionSet->getTot();
@@ -106,7 +105,6 @@ class GestorPublicacion Extends core\ClaseGestor {
 			$a_pkey = array('id_item' => $aDades['id_item'],
 							'id_nom' => $aDades['id_nom']);
 			$oPublicacion= new Publicacion($a_pkey);
-			$oPublicacion->setAllAtributes($aDades);
 			$oPublicacionSet->add($oPublicacion);
 		}
 		return $oPublicacionSet->getTot();

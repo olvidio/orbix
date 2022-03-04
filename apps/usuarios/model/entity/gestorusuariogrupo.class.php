@@ -52,7 +52,6 @@ class GestorUsuarioGrupo Extends core\ClaseGestor {
 			$a_pkey = array('id_usuario' => $aDades['id_usuario'],
 							'id_grupo' => $aDades['id_grupo']);
 			$oUsuarioGrupo= new UsuarioGrupo($a_pkey);
-			$oUsuarioGrupo->setAllAtributes($aDades);
 			$oUsuarioGrupoSet->add($oUsuarioGrupo);
 		}
 		return $oUsuarioGrupoSet->getTot();
@@ -106,7 +105,6 @@ class GestorUsuarioGrupo Extends core\ClaseGestor {
 			$a_pkey = array('id_usuario' => $aDades['id_usuario'],
 							'id_grupo' => $aDades['id_grupo']);
 			$oUsuarioGrupo= new UsuarioGrupo($a_pkey);
-			$oUsuarioGrupo->setAllAtributes($aDades);
 			$oUsuarioGrupoSet->add($oUsuarioGrupo);
 		}
 		return $oUsuarioGrupoSet->getTot();

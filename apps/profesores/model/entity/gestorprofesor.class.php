@@ -257,7 +257,6 @@ class GestorProfesor Extends core\ClaseGestor {
 							'id_nom' => $aDades['id_nom'],
 							'id_departamento' => $aDades['id_departamento']);
 			$oProfesor= new Profesor($a_pkey);
-			$oProfesor->setAllAtributes($aDades);
 			$oProfesorSet->add($oProfesor);
 		}
 		return $oProfesorSet->getTot();
@@ -312,7 +311,6 @@ class GestorProfesor Extends core\ClaseGestor {
 							'id_nom' => $aDades['id_nom'],
 							'id_departamento' => $aDades['id_departamento']);
 			$oProfesor= new Profesor($a_pkey);
-			$oProfesor->setAllAtributes($aDades);
 			$oProfesorSet->add($oProfesor);
 		}
 		return $oProfesorSet->getTot();

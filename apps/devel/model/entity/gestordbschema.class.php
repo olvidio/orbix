@@ -168,7 +168,6 @@ class GestorDbSchema Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('schema' => $aDades['schema']);
 			$oDbSchema= new DbSchema($a_pkey);
-			$oDbSchema->setAllAtributes($aDades);
 			$oDbSchemaSet->add($oDbSchema);
 		}
 		return $oDbSchemaSet->getTot();
@@ -221,7 +220,6 @@ class GestorDbSchema Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('schema' => $aDades['schema']);
 			$oDbSchema= new DbSchema($a_pkey);
-			$oDbSchema->setAllAtributes($aDades);
 			$oDbSchemaSet->add($oDbSchema);
 		}
 		return $oDbSchemaSet->getTot();

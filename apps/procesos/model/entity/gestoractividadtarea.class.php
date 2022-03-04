@@ -85,7 +85,6 @@ class GestorActividadTarea Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_tarea' => $aDades['id_tarea']);
 			$oActividadTarea= new ActividadTarea($a_pkey);
-			$oActividadTarea->setAllAtributes($aDades);
 			$oActividadTareaSet->add($oActividadTarea);
 		}
 		return $oActividadTareaSet->getTot();
@@ -138,7 +137,6 @@ class GestorActividadTarea Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_tarea' => $aDades['id_tarea']);
 			$oActividadTarea= new ActividadTarea($a_pkey);
-			$oActividadTarea->setAllAtributes($aDades);
 			$oActividadTareaSet->add($oActividadTarea);
 		}
 		return $oActividadTareaSet->getTot();
