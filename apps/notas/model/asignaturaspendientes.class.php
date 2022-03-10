@@ -1,7 +1,8 @@
 <?php
 namespace notas\model;
+use core\ConfigGlobal;
 use core;
-use asignaturas\model\entity as asignaturas;
+use asignaturas\model\entity\GestorAsignatura;
 
 /**
  * Classe que 
@@ -27,6 +28,8 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
 	 */
 	 protected $sNomPersonas;
 	 protected $sNomAsignaturas;
+	 
+	 protected $tablaNotas;
 
 	/**
 	 * Lista. para indicar si devuelve la lista de nombres o sólo el número
@@ -61,6 +64,13 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
 			$this->setNomPersonas($personas); 
 		}
 		$this->setNomAsignaturas('tmp_xa_asignaturas'); 
+		
+		// En el caso cr-stgr, se consulta la tabla de notas
+		if ( ConfigGlobal::mi_ambito() === 'rstgr') {
+			$this->tablaNotas = 'publicv.e_notas';
+		} else {
+			$this->tablaNotas = 'e_notas_dl';
+		}
 	}
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
@@ -85,7 +95,7 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
 	}
 	public function getAsignaturasB() {
 		if (empty($this->iasignaturasB)) {
-			$gesAsignaturas = new asignaturas\gestorAsignatura();
+			$gesAsignaturas = new GestorAsignatura();
 			$cAsignaturasB = $gesAsignaturas->getAsignaturas(array('status'=>'t','id_nivel'=>'1100,1300'),array('id_nivel'=>'BETWEEN'));
 
 			$this->iasignaturasB = count($cAsignaturasB);
@@ -102,7 +112,7 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
 	}
 	public function getAsignaturasC() {
 		if (empty($this->iasignaturasC)) {
-			$gesAsignaturas = new asignaturas\gestorAsignatura();
+			$gesAsignaturas = new GestorAsignatura();
 			$cAsignaturasC = $gesAsignaturas->getAsignaturas(array('status'=>'t','id_nivel'=>'2100,2500'),array('id_nivel'=>'BETWEEN'));
 
 			$this->iasignaturasC = count($cAsignaturasC);
@@ -119,7 +129,7 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
 	}
 	public function getAsignaturasC1() {
 		if (empty($this->iasignaturasC1)) {
-			$gesAsignaturas = new asignaturas\gestorAsignatura();
+			$gesAsignaturas = new GestorAsignatura();
 			$cAsignaturasC1 = $gesAsignaturas->getAsignaturas(array('status'=>'t','id_nivel'=>'2100,2113'),array('id_nivel'=>'BETWEEN'));
 			$this->iasignaturasC1 = count($cAsignaturasC1);
 			$aIdNivel = array();
@@ -135,7 +145,7 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
 	}
 	public function getAsignaturasC2() {
 		if (empty($this->iasignaturasC2)) {
-			$gesAsignaturas = new asignaturas\gestorAsignatura();
+			$gesAsignaturas = new GestorAsignatura();
 			$cAsignaturasC2 = $gesAsignaturas->getAsignaturas(array('status'=>'t','id_nivel'=>'2200,2500'),array('id_nivel'=>'BETWEEN'));
 			$this->iasignaturasC2 = count($cAsignaturasC2);
 			$aIdNivel = array();
@@ -188,21 +198,21 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
 		//echo "num = $num_curso<br>";
 		$num = $num_curso - $num_asignaturas;
 	
-		$ssql = "SELECT p.id_nom, Count(*) as asignaturas, p.apellido1, p.apellido2, p.nom
-			FROM $personas p LEFT JOIN e_notas_dl n USING (id_nom)
+		$ssql = "SELECT DISTINCT p.id_nom, Count(*) as asignaturas, p.apellido1, p.apellido2, p.nom
+			FROM $personas p LEFT JOIN $this->tablaNotas n USING (id_nom)
 			WHERE p.situacion='A'
 			 $condicion $condicion_stgr
-			GROUP BY  p.id_nom 
+			GROUP BY  p.id_nom, p.apellido1, p.apellido2, p.nom
 			HAVING Count(*) >= $num AND Count(*) < $num_curso
 			";
 
         // Si $num =< 0, hay que sumar los que no tienen ninguna asignatura:
         if ($num < 1 ) {
             $sql_0 = "SELECT p.id_nom, 0 as asignaturas, p.apellido1, p.apellido2, p.nom
-			FROM $personas p LEFT JOIN e_notas_dl n USING (id_nom)
+			FROM $personas p LEFT JOIN $this->tablaNotas n USING (id_nom)
 			WHERE p.situacion='A'
 			     $condicion_stgr AND n.id_nom IS NULL
-			GROUP BY  p.id_nom 
+			GROUP BY  p.id_nom, p.apellido1, p.apellido2, p.nom
 			";
             
 			$sql = "($ssql) UNION ($sql_0) ORDER BY 3,4,5";
@@ -238,11 +248,11 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
 					";
 			if ($id_tipo_asignatura == 8) { // opcional
 				$query_op="SELECT n.id_nom
-					FROM e_notas_dl n
+					FROM $this->tablaNotas n
 					WHERE n.id_nivel = $id_asignatura";
 			} else {
 				$query_op="SELECT n.id_nom
-					FROM e_notas_dl n
+					FROM $this->tablaNotas n
 					WHERE n.id_asignatura = $id_asignatura";
 			}
 			$query_tot="$query EXCEPT $query_op";
@@ -270,12 +280,12 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
 		$condicion = $aCondicion['condicion'];
 
 		$query="SELECT a.nombre_corto, Notas.id_asignatura
-				FROM $asignaturas a LEFT JOIN (SELECT id_asignatura from e_notas_dl where id_nom=$id_nom and id_asignatura < 3000) AS Notas USING (id_asignatura)
+				FROM $asignaturas a LEFT JOIN (SELECT id_asignatura from $this->tablaNotas where id_nom=$id_nom and id_asignatura < 3000) AS Notas USING (id_asignatura)
 				WHERE a.id_tipo != 8 AND Notas.id_asignatura is null
 				$condicion
 				";
 		$query_op="SELECT a.nombre_corto, Notas.id_nivel
-				FROM $asignaturas a LEFT JOIN (SELECT id_nivel from e_notas_dl where id_nom=$id_nom and id_asignatura > 3000) AS Notas USING (id_nivel)
+				FROM $asignaturas a LEFT JOIN (SELECT id_nivel from $this->tablaNotas where id_nom=$id_nom and id_asignatura > 3000) AS Notas USING (id_nivel)
 				WHERE a.id_tipo = 8 AND Notas.id_nivel is null
 				$condicion
 				";
@@ -314,7 +324,7 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
         $oDbl->query("CREATE INDEX $asignaturas"."_nivel"." ON $asignaturas (id_nivel)");
         $oDbl->query("CREATE INDEX $asignaturas"."_id_asignatura"." ON $asignaturas (id_asignatura)");
 
-		$gesAsignaturas = new asignaturas\gestorAsignatura();
+		$gesAsignaturas = new GestorAsignatura();
 		$cAsignaturas = $gesAsignaturas->getAsignaturas(array('status'=>'true'));
 
 		$prep = $oDbl->prepare("INSERT INTO $asignaturas VALUES(:id_asignatura, :id_nivel, :nombre_asignatura, :nombre_corto, :creditos, :year, :id_sector, :status, :id_tipo)");
