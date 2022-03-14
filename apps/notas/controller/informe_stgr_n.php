@@ -35,6 +35,14 @@ $a_ce = array('dlb'=>'Barcelona',
                 'H' => 'región stgr H',
 	);
 $mi_dl = core\ConfigGlobal::mi_delef();
+
+if (empty($a_ce[$mi_dl])) {
+	echo _("No está definido el ce para esta dl/r");
+	echo "<br>";
+	echo _("Hay definirla en el código.");
+	echo "<br>";
+	echo  "__FILE__, __LINE__";
+}
 $ce_lugar = $a_ce[$mi_dl];
 	
 /* Cálculo del informe cr 1/18. 
