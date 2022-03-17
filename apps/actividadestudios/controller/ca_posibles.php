@@ -138,6 +138,9 @@ switch ($Qna) {
             }
             if (!empty($iid_tipo_activ)) {
                 $id_tipo_activ = '13302['.$iid_tipo_activ.']';
+            } else {
+            	// tadas las cv
+				$id_tipo_activ = '^133';
             }
 		}
         $aWhereActividad['id_tipo_activ'] = $id_tipo_activ;
@@ -160,6 +163,9 @@ switch ($Qna) {
             }
             if (!empty($iid_tipo_activ)) {
                 $id_tipo_activ = '11202['.$iid_tipo_activ.']';
+            } else {
+            	// todos los ca
+				$id_tipo_activ = '^112';
             }
 		}
         $aWhereActividad['id_tipo_activ'] = $id_tipo_activ;
