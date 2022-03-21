@@ -166,12 +166,12 @@ class AsignaturasPendientes Extends core\ClasePropiedades {
 			case 'c1':
 				$num_curso = $this->getAsignaturasC1();
 				$condicion="AND id_nivel IN (".implode(',', $this->aIdNivel).")";
-		 		$condicion_stgr = "AND p.stgr ~ '^c'";
+		 		$condicion_stgr = "AND p.stgr = 'c1'";
 				break;
 			case 'c2':
 				$num_curso = $this->getAsignaturasC2();
 				$condicion="AND id_nivel IN (".implode(',', $this->aIdNivel).")";
-		 		$condicion_stgr = "AND p.stgr ~ '^c'";
+		 		$condicion_stgr = "AND p.stgr = 'c2'";
 				break;
 		}
 		return array('num'=>$num_curso,'condicion'=>$condicion,'condicion_stgr'=>$condicion_stgr);
