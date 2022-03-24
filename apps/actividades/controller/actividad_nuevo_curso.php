@@ -48,7 +48,7 @@ if ($Qok == 1) {
 	$inicio_iso = $Qyear.'-1-1';
 	$fin_iso = $Qyear.'-12-31';
 	
-	$txt_borrar = $oNuevoCurso->borrar_actividades_periodo($inicio_iso,$fin_iso);
+	//$txt_borrar = $oNuevoCurso->borrar_actividades_periodo($inicio_iso,$fin_iso);
 	
 	$inicio_org = $Qyear_ref.'-1-1';
 	$fin_org = $Qyear_ref.'-12-31';
@@ -64,6 +64,9 @@ if ($Qok == 1) {
 	$aWhere['f_ini'] =  "'$inicio_org','$fin_org'";
 	$aOperador['f_ini'] =  'BETWEEN';
 	$aWhere['_ordre'] =  'f_ini';
+	// solo las de sv
+	$aWhere['id_tipo_activ'] = '^1';
+	$aOperador['id_tipo_activ'] = '~';
 	$cActividades = $GesActividades->getActividades($aWhere,$aOperador);
 
 	$txt_crear = '';
