@@ -141,7 +141,7 @@ class CambioUsuarioObjetoPref Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->iid_item_usuario_objeto = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->iid_item_usuario_objeto = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('id_item_usuario_objeto' => $this->iid_item_usuario_objeto);
 			}
 		}

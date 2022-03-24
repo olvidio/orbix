@@ -105,7 +105,7 @@ class Zona Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->iid_zona = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->iid_zona = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('id_zona' => $this->iid_zona);
 			}
 		}

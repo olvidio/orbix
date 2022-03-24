@@ -244,7 +244,7 @@ class PersonaListas Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->iIdentif = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->iIdentif = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('iIdentif' => $this->iIdentif);
 			}
 		}

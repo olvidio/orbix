@@ -561,4 +561,3 @@ class GestorResumenPlazas {
 	}
 	/* METODES GET i SET --------------------------------------------------------*/
 }
-?>

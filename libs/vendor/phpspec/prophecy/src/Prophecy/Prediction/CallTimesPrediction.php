@@ -38,7 +38,7 @@ class CallTimesPrediction implements PredictionInterface
      */
     public function __construct($times, StringUtil $util = null)
     {
-        $this->times = intval($times);
+        $this->times = (integer) $times;
         $this->util  = $util ?: new StringUtil;
     }
 

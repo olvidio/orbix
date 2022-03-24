@@ -95,7 +95,7 @@ class GrupMenu Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->iid_grupmenu = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->iid_grupmenu = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('id_grupmenu' => $this->iid_grupmenu);
 			}
 		}

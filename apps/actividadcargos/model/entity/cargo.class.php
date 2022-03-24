@@ -111,7 +111,7 @@ class Cargo Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->iid_cargo = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->iid_cargo = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('id_cargo' => $this->iid_cargo);
 			}
 		}

@@ -157,7 +157,7 @@ class Nota Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->iid_situacion = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->iid_situacion = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('id_situacion' => $this->iid_situacion);
 			}
 		}

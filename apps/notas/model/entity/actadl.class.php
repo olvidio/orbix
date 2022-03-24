@@ -42,7 +42,7 @@ class ActaDl Extends Acta {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->sacta = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->sacta = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('acta' => $this->sacta);
 			}
 		}

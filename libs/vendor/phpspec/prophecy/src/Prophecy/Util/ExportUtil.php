@@ -124,7 +124,7 @@ class ExportUtil
             return 'false';
         }
 
-        if (is_float($value) && floatval(intval($value)) === $value) {
+        if (is_float($value) && floatval((integer) $value) === $value) {
             return "$value.0";
         }
 

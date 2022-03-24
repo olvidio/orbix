@@ -107,7 +107,7 @@ class ActividadFase Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->iid_fase = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->iid_fase = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('id_fase' => $this->iid_fase);
 			}
 		}

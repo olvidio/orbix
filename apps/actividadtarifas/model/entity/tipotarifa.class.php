@@ -85,7 +85,7 @@ class TipoTarifa Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->iid_tarifa = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->iid_tarifa = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('id_tarifa' => $this->iid_tarifa);
 			}
 		}

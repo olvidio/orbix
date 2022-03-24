@@ -84,7 +84,7 @@ class AsignaturaTipo Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->iid_tipo = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->iid_tipo = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('id_tipo' => $this->iid_tipo);
 			}
 		}

@@ -93,7 +93,7 @@ class ActividadTarea Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->iid_tarea = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->iid_tarea = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('id_tarea' => $this->iid_tarea);
 			}
 		}

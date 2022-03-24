@@ -59,7 +59,7 @@ class ColorTable
 
 	function colorIndex($rgb)
 	{
-		$rgb = intval($rgb) & 0xFFFFFF;
+		$rgb = (integer) $rgb & 0xFFFFFF;
 		$r1 = ($rgb & 0x0000FF);
 		$g1 = ($rgb & 0x00FF00) >> 8;
 		$b1 = ($rgb & 0xFF0000) >> 16;

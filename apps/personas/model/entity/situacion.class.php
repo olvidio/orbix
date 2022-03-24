@@ -75,7 +75,7 @@ class Situacion Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->ssituacion = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->ssituacion = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('situacion' => $this->ssituacion);
 			}
 		}

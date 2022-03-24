@@ -134,7 +134,7 @@ class EncargoTipo Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->iid_tipo_enc = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->iid_tipo_enc = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('id_tipo_enc' => $this->iid_tipo_enc);
 			}
 		}

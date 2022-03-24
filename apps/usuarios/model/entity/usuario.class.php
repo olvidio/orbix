@@ -119,7 +119,7 @@ class Usuario Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->iid_usuario = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->iid_usuario = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('id_usuario' => $this->iid_usuario);
 			}
 		}

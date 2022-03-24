@@ -50,7 +50,7 @@ class Call
 
         if ($file) {
             $this->file = $file;
-            $this->line = intval($line);
+            $this->line = (integer) $line;
         }
     }
 

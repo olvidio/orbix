@@ -149,7 +149,7 @@ class EncargoHorario Extends core\ClasePropiedades {
 			}	
 		} else {
             if (isset($a_id) && $a_id !== '') {
-                $this->iid_item_h = intval($a_id); // evitem SQL injection fent cast a integer
+                $this->iid_item_h = (integer) $a_id; // evitem SQL injection fent cast a integer
                 $this->aPrimary_key = array('id_item_h' => $this->iid_item_h);
             }
 		}

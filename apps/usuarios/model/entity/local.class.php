@@ -105,7 +105,7 @@ class Local Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->sid_locale = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->sid_locale = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('id_locale' => $this->sid_locale);
 			}
 		}

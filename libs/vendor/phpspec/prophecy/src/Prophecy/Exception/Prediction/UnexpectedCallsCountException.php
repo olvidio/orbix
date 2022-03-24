@@ -21,7 +21,7 @@ class UnexpectedCallsCountException extends UnexpectedCallsException
     {
         parent::__construct($message, $methodProphecy, $calls);
 
-        $this->expectedCount = intval($count);
+        $this->expectedCount = (integer) $count;
     }
 
     public function getExpectedCount()

@@ -3296,10 +3296,10 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 		}
 		foreach ($colors as $sc) {
 			list($name, $c, $m, $y, $k) = preg_split("/\t/", $sc);
-			$c = intval($c);
-			$m = intval($m);
-			$y = intval($y);
-			$k = intval($k);
+			$c = (integer) $c;
+			$m = (integer) $m;
+			$y = (integer) $y;
+			$k = (integer) $k;
 			$this->AddSpotColor($name, $c, $m, $y, $k);
 		}
 	}
@@ -11758,7 +11758,7 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 					}
 
 					// Vertical align
-					if ($R && intval($R) > 0 && isset($va) && $va != 'B') {
+					if ($R && (integer) $R > 0 && isset($va) && $va != 'B') {
 						$va = 'B';
 					}
 
@@ -11895,7 +11895,7 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 							$cellFontHeight = ($cellPtSize / Mpdf::SCALE);
 							$opx = $this->x;
 							$opy = $this->y;
-							$angle = intval($R);
+							$angle = (integer) $R;
 
 							// Only allow 45 - 90 degrees (when bottom-aligned) or -90
 							if ($angle > 90) {
@@ -21093,18 +21093,18 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 
 	function setBorder(&$var, $flag, $set = true)
 	{
-		$flag = intval($flag);
+		$flag = (integer) $flag;
 		if ($set) {
 			$set = true;
 		}
-		$var = intval($var);
+		$var = (integer) $var;
 		$var = $set ? ($var | $flag) : ($var & ~$flag);
 	}
 
 	function issetBorder($var, $flag)
 	{
-		$flag = intval($flag);
-		$var = intval($var);
+		$flag = (integer) $flag;
+		$var = (integer) $var;
 		return (($var & $flag) == $flag);
 	}
 

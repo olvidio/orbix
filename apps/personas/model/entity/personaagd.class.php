@@ -65,7 +65,7 @@ class PersonaAgd Extends PersonaDl {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->iid_nom = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->iid_nom = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('id_nom' => $this->iid_nom);
 			}
 		}

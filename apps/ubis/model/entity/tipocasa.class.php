@@ -67,7 +67,7 @@ class TipoCasa Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->stipo_casa = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->stipo_casa = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('tipo_casa' => $this->stipo_casa);
 			}
 		}

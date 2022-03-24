@@ -37,11 +37,11 @@ class CentroEllos Extends Centro {
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
 				$nom_id='i'.$nom_id; //imagino que es un integer
-				if ($val_id !== '') $this->$nom_id = intval($val_id); // evitem SQL injection fent cast a integer
+				if ($val_id !== '') $this->$nom_id = (integer) $val_id; // evitem SQL injection fent cast a integer
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->iid_ubi = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->iid_ubi = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('id_ubi' => $this->iid_ubi);
 			}
 		}

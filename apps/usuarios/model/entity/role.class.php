@@ -115,7 +115,7 @@ class Role Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->iid_role = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->iid_role = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('id_role' => $this->iid_role);
 			}
 		}

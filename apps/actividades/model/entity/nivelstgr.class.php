@@ -79,7 +79,7 @@ class NivelStgr Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->inivel_stgr = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->inivel_stgr = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('inivel_stgr' => $this->inivel_stgr);
 			}
 		}

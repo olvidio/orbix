@@ -544,7 +544,7 @@ if (count($aClaus2) > 1) { // per el cas de només una clau.
 } else {
 	$sForPrimaryK .="\n\t\t".'} else {
 			if (isset($a_id) && $a_id !== \'\') {
-				$this->'.$claus_txt.' = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->'.$claus_txt.' = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array(\''.$claus_txt.'\' => $this->'.$claus_txt.');
 			}
 		}';

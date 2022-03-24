@@ -94,6 +94,11 @@ class Delegacion Extends core\ClasePropiedades {
 			foreach($a_id as $nom_id=>$val_id) {
 				if (($nom_id === 'id_dl') && $val_id !== '') $this->iid_dl = (integer)$val_id; // evitem SQL injection fent cast a string
 			}
+		} else {
+			if (isset($a_id) && $a_id !== '') {
+				$this->iid_dl = (integer) $a_id; // evitem SQL injection fent cast a integer
+				$this->aPrimary_key = array('id_dl' => $this->iid_dl);
+			}
 		}
 		$this->setoDbl($oDbl);
 		$this->setNomTabla('xu_dl');

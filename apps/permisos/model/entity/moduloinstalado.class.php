@@ -101,7 +101,7 @@ class ModuloInstalado Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->iid_mod = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->iid_mod = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('id_mod' => $this->iid_mod);
 			}
 		}

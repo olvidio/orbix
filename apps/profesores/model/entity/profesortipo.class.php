@@ -87,7 +87,7 @@ class ProfesorTipo Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->iid_tipo_profesor = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->iid_tipo_profesor = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('id_tipo_profesor' => $this->iid_tipo_profesor);
 			}
 		}

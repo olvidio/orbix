@@ -117,7 +117,7 @@ class Asignatura Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->iid_asignatura = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->iid_asignatura = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('id_asignatura' => $this->iid_asignatura);
 			}
 		}

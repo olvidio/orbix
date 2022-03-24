@@ -120,7 +120,7 @@ class UltimaAsistencia Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->iid_item = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->iid_item = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('iid_item' => $this->iid_item);
 			}
 		}
@@ -321,7 +321,7 @@ class UltimaAsistencia Extends core\ClasePropiedades {
 			}
 		} else {
 			if (isset($a_id) && $a_id !== '') {
-				$this->iid_item = intval($a_id); // evitem SQL injection fent cast a integer
+				$this->iid_item = (integer) $a_id; // evitem SQL injection fent cast a integer
 				$this->aPrimary_key = array('iid_item' => $this->iid_item);
 			}
 		}
