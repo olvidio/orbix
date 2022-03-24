@@ -74,7 +74,6 @@ class GestorCambioAnotado Extends core\ClaseGestor {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oCambioAnotado= new CambioAnotado($a_pkey);
 			$oCambioAnotado->setTabla($this->ubicacion);
-			$oCambioAnotado->setAllAtributes($aDades);
 			$oCambioAnotadoSet->add($oCambioAnotado);
 		}
 		return $oCambioAnotadoSet->getTot();
@@ -128,7 +127,6 @@ class GestorCambioAnotado Extends core\ClaseGestor {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oCambioAnotado= new CambioAnotado($a_pkey);
 			$oCambioAnotado->setTabla($this->ubicacion);
-			$oCambioAnotado->setAllAtributes($aDades);
 			$oCambioAnotadoSet->add($oCambioAnotado);
 		}
 		return $oCambioAnotadoSet->getTot();

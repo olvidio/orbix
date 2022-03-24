@@ -137,7 +137,6 @@ class GestorCasa Extends  core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_ubi' => $aDades['id_ubi']);
 			$oCasa= new Casa($a_pkey);
-			$oCasa->setAllAtributes($aDades);
 			$oCasaSet->add($oCasa);
 		}
 		return $oCasaSet->getTot();

@@ -79,7 +79,6 @@ class GestorTelecoCdc Extends GestorTelecoUbi {
 			$a_pkey = array('id_item' => $aDades['id_item'],
 							'id_ubi' => $aDades['id_ubi']);
 			$oTelecoCdc= new TelecoCdc($a_pkey);
-			$oTelecoCdc->setAllAtributes($aDades);
 			$oTelecoCdcSet->add($oTelecoCdc);
 		}
 		return $oTelecoCdcSet->getTot();

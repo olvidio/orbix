@@ -51,7 +51,6 @@ class GestorCambioUsuarioObjetoPref Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_item_usuario_objeto' => $aDades['id_item_usuario_objeto']);
 			$oCambioUsuarioObjetoPref= new CambioUsuarioObjetoPref($a_pkey);
-			$oCambioUsuarioObjetoPref->setAllAtributes($aDades);
 			$oCambioUsuarioObjetoPrefSet->add($oCambioUsuarioObjetoPref);
 		}
 		return $oCambioUsuarioObjetoPrefSet->getTot();
@@ -104,7 +103,6 @@ class GestorCambioUsuarioObjetoPref Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item_usuario_objeto' => $aDades['id_item_usuario_objeto']);
 			$oCambioUsuarioObjetoPref= new CambioUsuarioObjetoPref($a_pkey);
-			$oCambioUsuarioObjetoPref->setAllAtributes($aDades);
 			$oCambioUsuarioObjetoPrefSet->add($oCambioUsuarioObjetoPref);
 		}
 		return $oCambioUsuarioObjetoPrefSet->getTot();

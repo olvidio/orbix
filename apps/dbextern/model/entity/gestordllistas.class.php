@@ -50,7 +50,6 @@ class GestorDlListas Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('dl' => $aDades['dl']);
 			$oDlListas= new DlListas($a_pkey);
-			$oDlListas->setAllAtributes($aDades);
 			$oDlListasSet->add($oDlListas);
 		}
 		return $oDlListasSet->getTot();
@@ -104,7 +103,6 @@ class GestorDlListas Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('dl' => $aDades['dl']);
 			$oDlListas= new DlListas($a_pkey);
-			$oDlListas->setAllAtributes($aDades);
 			$oDlListasSet->add($oDlListas);
 		}
 		return $oDlListasSet->getTot();

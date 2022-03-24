@@ -58,7 +58,6 @@ class GestorPersonaListas Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('Identif' => $aDades['Identif']);
 			$oPersonaListas= new PersonaListas($a_pkey);
-			$oPersonaListas->setAllAtributes($aDades);
 			$oPersonaListasSet->add($oPersonaListas);
 		}
 		return $oPersonaListasSet->getTot();
@@ -112,7 +111,6 @@ class GestorPersonaListas Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('Identif' => $aDades['Identif']);
 			$oPersonaListas= new PersonaListas($a_pkey);
-			$oPersonaListas->setAllAtributes($aDades);
 			$oPersonaListasSet->add($oPersonaListas);
 		}
 		return $oPersonaListasSet->getTot();

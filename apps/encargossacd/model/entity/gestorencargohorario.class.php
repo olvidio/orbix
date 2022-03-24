@@ -52,7 +52,6 @@ class GestorEncargoHorario Extends core\ClaseGestor {
 			$a_pkey = array('id_enc' => $aDades['id_enc'],
 							'id_item_h' => $aDades['id_item_h']);
 			$oEncargoHorario= new EncargoHorario($a_pkey);
-			$oEncargoHorario->setAllAtributes($aDades);
 			$oEncargoHorarioSet->add($oEncargoHorario);
 		}
 		return $oEncargoHorarioSet->getTot();
@@ -106,7 +105,6 @@ class GestorEncargoHorario Extends core\ClaseGestor {
 			$a_pkey = array('id_enc' => $aDades['id_enc'],
 							'id_item_h' => $aDades['id_item_h']);
 			$oEncargoHorario= new EncargoHorario($a_pkey);
-			$oEncargoHorario->setAllAtributes($aDades);
 			$oEncargoHorarioSet->add($oEncargoHorario);
 		}
 		return $oEncargoHorarioSet->getTot();

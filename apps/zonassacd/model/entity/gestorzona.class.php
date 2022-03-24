@@ -76,7 +76,6 @@ class GestorZona Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_zona' => $aDades['id_zona']);
 			$oZona= new Zona($a_pkey);
-			$oZona->setAllAtributes($aDades);
 			$oZonaSet->add($oZona);
 		}
 		return $oZonaSet->getTot();
@@ -129,7 +128,6 @@ class GestorZona Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_zona' => $aDades['id_zona']);
 			$oZona= new Zona($a_pkey);
-			$oZona->setAllAtributes($aDades);
 			$oZonaSet->add($oZona);
 		}
 		return $oZonaSet->getTot();

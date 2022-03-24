@@ -92,7 +92,6 @@ class GestorActaTribunal Extends core\ClaseGestor {
 			} else {
 				//$oActaTribunal= new ActaTribunalEx($a_pkey);
 			}
-			$oActaTribunal->setAllAtributes($aDades);
 			$oActaTribunalSet->add($oActaTribunal);
 		}
 		return $oActaTribunalSet->getTot();
@@ -152,7 +151,6 @@ class GestorActaTribunal Extends core\ClaseGestor {
 				// De momento no tiene sentido, En cambio lo uso para cr stgr
 				$oActaTribunal= new ActaTribunalDl($a_pkey);
 			}
-			$oActaTribunal->setAllAtributes($aDades);
 			$oActaTribunalSet->add($oActaTribunal);
 		}
 		return $oActaTribunalSet->getTot();

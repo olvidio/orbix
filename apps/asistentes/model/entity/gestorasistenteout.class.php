@@ -52,7 +52,6 @@ class GestorAsistenteOut Extends GestorAsistentePub {
 			$a_pkey = array('id_activ' => $aDades['id_activ'],
 							'id_nom' => $aDades['id_nom']);
 			$oAsistenteOut= new AsistenteOut($a_pkey);
-			$oAsistenteOut->setAllAtributes($aDades);
 			$oAsistenteOutSet->add($oAsistenteOut);
 		}
 		return $oAsistenteOutSet->getTot();
@@ -107,7 +106,6 @@ class GestorAsistenteOut Extends GestorAsistentePub {
 			$a_pkey = array('id_activ' => $aDades['id_activ'],
 							'id_nom' => $aDades['id_nom']);
 			$oAsistenteOut= new AsistenteOut($a_pkey);
-			$oAsistenteOut->setAllAtributes($aDades);
 			$oAsistenteOutSet->add($oAsistenteOut);
 		}
 		return $oAsistenteOutSet->getTot();

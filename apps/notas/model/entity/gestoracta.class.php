@@ -134,7 +134,6 @@ class GestorActa Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('acta' => $aDades['acta']);
 			$oActa= new Acta($a_pkey);
-			$oActa->setAllAtributes($aDades);
 			$oActaSet->add($oActa);
 		}
 		return $oActaSet->getTot();
@@ -189,7 +188,6 @@ class GestorActa Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('acta' => $aDades['acta']);
 			$oActa= new Acta($a_pkey);
-			$oActa->setAllAtributes($aDades);
 			$oActaSet->add($oActa);
 		}
 		return $oActaSet->getTot();

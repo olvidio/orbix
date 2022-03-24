@@ -51,7 +51,6 @@ class GestorAtnActivSacdTexto Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oAtnActivSacdTexto= new AtnActivSacdTexto($a_pkey);
-			$oAtnActivSacdTexto->setAllAtributes($aDades);
 			$oAtnActivSacdTextoSet->add($oAtnActivSacdTexto);
 		}
 		return $oAtnActivSacdTextoSet->getTot();
@@ -104,7 +103,6 @@ class GestorAtnActivSacdTexto Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oAtnActivSacdTexto= new AtnActivSacdTexto($a_pkey);
-			$oAtnActivSacdTexto->setAllAtributes($aDades);
 			$oAtnActivSacdTextoSet->add($oAtnActivSacdTexto);
 		}
 		return $oAtnActivSacdTextoSet->getTot();

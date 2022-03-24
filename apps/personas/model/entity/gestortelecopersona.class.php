@@ -90,7 +90,6 @@ class GestorTelecoPersona Extends core\ClaseGestor {
 					$oTelecoPersona= new TelecoPersonaEx($a_pkey);
 					break;
 			}
-			$oTelecoPersona->setAllAtributes($aDades);
 			$oTelecoPersonaSet->add($oTelecoPersona);
 		}
 		return $oTelecoPersonaSet->getTot();

@@ -195,7 +195,7 @@ class DBView {
 	    $sql_def_view = '';
 	    foreach ($a_schemas as $id_dl => $schema) {
 	        $sql_def_view .= empty($sql_def_view)? '' : " UNION ALL "; 
-	        $sql_def_view .= "SELECT $columns FROM \"$schema\".$view " ;
+	        $sql_def_view .= "SELECT $columns, $id_dl AS id_dl FROM \"$schema\".$view " ;
 	    }
 	    return $sql_def_view;
 	}

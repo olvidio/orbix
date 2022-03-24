@@ -288,7 +288,6 @@ class GestorActividadCargo Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oActividadCargo= new ActividadCargo($a_pkey);
-			$oActividadCargo->setAllAtributes($aDades);
 			$oActividadCargoSet->add($oActividadCargo);
 		}
 		return $oActividadCargoSet->getTot();
@@ -367,7 +366,6 @@ class GestorActividadCargo Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oActividadCargo= new ActividadCargo($a_pkey);
-			$oActividadCargo->setAllAtributes($aDades);
 			$oActividadCargoSet->add($oActividadCargo);
 		}
 		return $oActividadCargoSet->getTot();

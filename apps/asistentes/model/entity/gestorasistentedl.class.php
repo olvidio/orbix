@@ -51,7 +51,6 @@ class GestorAsistenteDl Extends GestorAsistente {
 			$a_pkey = array('id_activ' => $aDades['id_activ'],
 							'id_nom' => $aDades['id_nom']);
 			$oAsistenteDl= new AsistenteDl($a_pkey);
-			$oAsistenteDl->setAllAtributes($aDades);
 			$oAsistenteDlSet->add($oAsistenteDl);
 		}
 		return $oAsistenteDlSet->getTot();
@@ -105,7 +104,6 @@ class GestorAsistenteDl Extends GestorAsistente {
 			$a_pkey = array('id_activ' => $aDades['id_activ'],
 							'id_nom' => $aDades['id_nom']);
 			$oAsistenteDl= new AsistenteDl($a_pkey);
-			$oAsistenteDl->setAllAtributes($aDades);
 			$oAsistenteDlSet->add($oAsistenteDl);
 		}
 		return $oAsistenteDlSet->getTot();

@@ -14,6 +14,7 @@ class Desplegable {
 	protected $bMultiple;
 	protected $iTabIndex;
 	protected $sClase;
+	protected $aChecked;
 
 	/* CONSTRUCTOR ------------------------------ */
 	function __construct($sNombre='',$oOpciones='',$sOpcion_sel='',$bBlanco='') {
@@ -45,6 +46,43 @@ class Desplegable {
 		return $sHtml;
 	}
 
+	/**
+	 * dibuja una lista de checkbox
+	 *
+	 */
+	public function cuadros_check(){
+	    
+	    $txt = '';
+	    
+        $camp=$this->sNombre."[]";
+	        
+        if (is_object($this->oOpciones)) {
+            $this->oOpciones->execute();
+            foreach($this->oOpciones as $row) {
+                if (!isset($row[1])) { $a = 0; } else { $a = 1; } // para el caso de sólo tener un valor.
+                if (in_array($row[0], $this->aChecked)) { $chk = 'checked'; } else { $chk = ''; }
+                
+                if (!empty($this->aOpcion_no) && is_array($this->aOpcion_no) && in_array($row[0], $this->aOpcion_no)) continue;
+                $txt.="   <input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"$row[0]\" $chk>$row[$a]";
+            }
+        } else if (is_array($this->oOpciones)) {
+            reset($this->oOpciones);
+            foreach($this->oOpciones as $key=>$val) {
+                if (in_array($key, $this->aChecked)) { $chk = 'checked'; } else { $chk = ''; }
+                
+                if (!empty($this->aOpcion_no) && is_array($this->aOpcion_no) && in_array($row[0], $this->aOpcion_no)) continue;
+                $txt.="   <input type=\"Checkbox\" id=\"$camp\" name=\"$camp\" value=\"$key\" $chk>$val";
+            }
+        } else {
+            $msg_err = _("tiene que ser un array") .": ".__FILE__.": line ". __LINE__;
+            exit ($msg_err);
+        }
+
+	    return $txt;
+	}
+	
+	
+	
 	public function options() {
 		$txt = '';
 		if (!empty($this->bBlanco)) {
@@ -87,6 +125,9 @@ class Desplegable {
 	}
 	public function setOpcion_sel($sOpcion_sel) {
 		$this->sOpcion_sel = $sOpcion_sel;
+	}
+	public function setChecked($aChecked) {
+		$this->aChecked = $aChecked;
 	}
 	public function setOpcion_no($aOpcion_no) {
 		$this->aOpcion_no = $aOpcion_no;

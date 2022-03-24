@@ -51,7 +51,6 @@ class GestorMenuDb Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_menu' => $aDades['id_menu']);
 			$oMenuDb= new MenuDb($a_pkey);
-			$oMenuDb->setAllAtributes($aDades);
 			$oMenuDbSet->add($oMenuDb);
 		}
 		return $oMenuDbSet->getTot();
@@ -104,7 +103,6 @@ class GestorMenuDb Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_menu' => $aDades['id_menu']);
 			$oMenuDb= new MenuDb($a_pkey);
-			$oMenuDb->setAllAtributes($aDades);
 			$oMenuDbSet->add($oMenuDb);
 		}
 		return $oMenuDbSet->getTot();

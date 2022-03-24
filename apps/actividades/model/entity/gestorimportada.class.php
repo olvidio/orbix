@@ -82,7 +82,6 @@ class GestorImportada Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_activ' => $aDades['id_activ']);
 			$oImportada= new Importada($a_pkey);
-			$oImportada->setAllAtributes($aDades);
 			$oImportadaSet->add($oImportada);
 		}
 		return $oImportadaSet->getTot();

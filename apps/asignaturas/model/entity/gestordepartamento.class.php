@@ -76,7 +76,6 @@ class GestorDepartamento Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_departamento' => $aDades['id_departamento']);
 			$oDepartamento= new Departamento($a_pkey);
-			$oDepartamento->setAllAtributes($aDades);
 			$oDepartamentoSet->add($oDepartamento);
 		}
 		return $oDepartamentoSet->getTot();
@@ -129,7 +128,6 @@ class GestorDepartamento Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_departamento' => $aDades['id_departamento']);
 			$oDepartamento= new Departamento($a_pkey);
-			$oDepartamento->setAllAtributes($aDades);
 			$oDepartamentoSet->add($oDepartamento);
 		}
 		return $oDepartamentoSet->getTot();

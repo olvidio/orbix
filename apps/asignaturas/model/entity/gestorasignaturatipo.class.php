@@ -76,7 +76,6 @@ class GestorAsignaturaTipo Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_tipo' => $aDades['id_tipo']);
 			$oAsignaturaTipo= new AsignaturaTipo($a_pkey);
-			$oAsignaturaTipo->setAllAtributes($aDades);
 			$oAsignaturaTipoSet->add($oAsignaturaTipo);
 		}
 		return $oAsignaturaTipoSet->getTot();
@@ -129,7 +128,6 @@ class GestorAsignaturaTipo Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_tipo' => $aDades['id_tipo']);
 			$oAsignaturaTipo= new AsignaturaTipo($a_pkey);
-			$oAsignaturaTipo->setAllAtributes($aDades);
 			$oAsignaturaTipoSet->add($oAsignaturaTipo);
 		}
 		return $oAsignaturaTipoSet->getTot();

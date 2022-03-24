@@ -69,7 +69,6 @@ class GestorTipoCentro Extends  core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('tipo_ctr' => $aDades['tipo_ctr']);
 			$oTipoCentro= new TipoCentro($a_pkey);
-			$oTipoCentro->setAllAtributes($aDades);
 			$oTipoCentroSet->add($oTipoCentro);
 		}
 		return $oTipoCentroSet->getTot();
@@ -122,7 +121,6 @@ class GestorTipoCentro Extends  core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('tipo_ctr' => $aDades['tipo_ctr']);
 			$oTipoCentro= new TipoCentro($a_pkey);
-			$oTipoCentro->setAllAtributes($aDades);
 			$oTipoCentroSet->add($oTipoCentro);
 		}
 		return $oTipoCentroSet->getTot();

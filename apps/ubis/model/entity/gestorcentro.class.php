@@ -116,7 +116,6 @@ class GestorCentro Extends  core\ClaseGestor {
                 default:
                     $oCentro= new Centro($a_pkey);
 			}
-			$oCentro->setAllAtributes($aDades);
 			$oCentroSet->add($oCentro);
 		}
 		return $oCentroSet->getTot();
@@ -181,7 +180,6 @@ class GestorCentro Extends  core\ClaseGestor {
                 default:
                     $oCentro= new Centro($a_pkey);
 			}
-			$oCentro->setAllAtributes($aDades);
 			$oCentroSet->add($oCentro);
 		}
 		return $oCentroSet->getTot();

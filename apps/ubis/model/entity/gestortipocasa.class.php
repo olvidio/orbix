@@ -71,7 +71,6 @@ class GestorTipoCasa Extends  core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('tipo_casa' => $aDades['tipo_casa']);
 			$oTipoCasa= new TipoCasa($a_pkey);
-			$oTipoCasa->setAllAtributes($aDades);
 			$oTipoCasaSet->add($oTipoCasa);
 		}
 		return $oTipoCasaSet->getTot();
@@ -124,7 +123,6 @@ class GestorTipoCasa Extends  core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('tipo_casa' => $aDades['tipo_casa']);
 			$oTipoCasa= new TipoCasa($a_pkey);
-			$oTipoCasa->setAllAtributes($aDades);
 			$oTipoCasaSet->add($oTipoCasa);
 		}
 		return $oTipoCasaSet->getTot();

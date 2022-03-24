@@ -126,7 +126,6 @@ class GestorRole Extends  core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_role' => $aDades['id_role']);
 			$oRole= new Role($a_pkey);
-			$oRole->setAllAtributes($aDades);
 			$oRoleSet->add($oRole);
 		}
 		return $oRoleSet->getTot();
@@ -179,7 +178,6 @@ class GestorRole Extends  core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_role' => $aDades['id_role']);
 			$oRole= new Role($a_pkey);
-			$oRole->setAllAtributes($aDades);
 			$oRoleSet->add($oRole);
 		}
 		return $oRoleSet->getTot();

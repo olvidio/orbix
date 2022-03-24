@@ -51,7 +51,6 @@ class GestorTipoDossier Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_tipo_dossier' => $aDades['id_tipo_dossier']);
 			$oTipoDossier= new TipoDossier($a_pkey);
-			$oTipoDossier->setAllAtributes($aDades);
 			$oTipoDossierSet->add($oTipoDossier);
 		}
 		return $oTipoDossierSet->getTot();
@@ -104,7 +103,6 @@ class GestorTipoDossier Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_tipo_dossier' => $aDades['id_tipo_dossier']);
 			$oTipoDossier= new TipoDossier($a_pkey);
-			$oTipoDossier->setAllAtributes($aDades);
 			$oTipoDossierSet->add($oTipoDossier);
 		}
 		return $oTipoDossierSet->getTot();

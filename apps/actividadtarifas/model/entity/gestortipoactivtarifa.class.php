@@ -51,7 +51,6 @@ class GestorTipoActivTarifa Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oTipoActivTarifa= new TipoActivTarifa($a_pkey);
-			$oTipoActivTarifa->setAllAtributes($aDades);
 			$oTipoActivTarifaSet->add($oTipoActivTarifa);
 		}
 		return $oTipoActivTarifaSet->getTot();
@@ -104,7 +103,6 @@ class GestorTipoActivTarifa Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oTipoActivTarifa= new TipoActivTarifa($a_pkey);
-			$oTipoActivTarifa->setAllAtributes($aDades);
 			$oTipoActivTarifaSet->add($oTipoActivTarifa);
 		}
 		return $oTipoActivTarifaSet->getTot();

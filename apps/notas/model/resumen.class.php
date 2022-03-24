@@ -1,10 +1,14 @@
 <?php
 namespace notas\model;
-use core;
 use actividades\model\entity as actividades;
-use asignaturas\model\entity as asignaturas;
+use asignaturas\model\entity\Departamento;
+use asignaturas\model\entity\GestorSector;
+use core\ConfigGlobal;
+use core;
 use personas\model\entity as personas;
 use profesores\model\entity as profesores;
+use notas\model\entity\GestorNota;
+use asignaturas\model\entity\GestorAsignatura;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula e_notas_situacion
@@ -33,6 +37,11 @@ class Resumen Extends core\ClasePropiedades {
      * @var boolean
      */
     protected $blista;
+    /**
+     * 
+     * @var array
+     */
+    protected $a_dl;
     
     protected $dinicurso;
     protected $dfincurso;
@@ -91,6 +100,9 @@ class Resumen Extends core\ClasePropiedades {
             case 'profesores':
                 $personas="personas_dl";
                 break;
+            default:
+            	$err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+            	exit ($err_switch);
         }
         
         $this->setoDbl($oDbl);
@@ -100,7 +112,7 @@ class Resumen Extends core\ClasePropiedades {
         $this->setNomPersonas($personas);
         
         // En el caso cr-stgr, se consulta la tabla de notas
-        if (\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) {
+        if ( ConfigGlobal::mi_ambito() === 'rstgr') {
             $this->tablaNotas = 'publicv.e_notas';
         } else {
             $this->tablaNotas = 'e_notas_dl';
@@ -224,7 +236,7 @@ class Resumen Extends core\ClasePropiedades {
 										ctr text )";
         
         // En el caso cr-stgr, Hay que permitir duplicados (PRIMARY KEY)
-        if (\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) {
+        if ( ConfigGlobal::mi_ambito() === 'rstgr') {
             $sqlCreate="CREATE TABLE IF NOT EXISTS $tabla(
 										id_nom int4 NOT NULL,
 										id_tabla char(6),
@@ -263,7 +275,6 @@ class Resumen Extends core\ClasePropiedades {
          WHERE ((p.situacion='A' AND (p.f_situacion < '$fincurs' OR p.f_situacion IS NULL)) OR (p.situacion='D' AND (p.f_situacion $curs)) OR (p.situacion='L' AND (p.f_orden $curs)))
          ";
          */
-        
         $sqlLlenar="INSERT INTO $tabla
 				SELECT p.id_nom,p.id_tabla,p.nom,p.apellido1,p.apellido2,p.stgr,
 				p.situacion,p.f_situacion,
@@ -275,8 +286,14 @@ class Resumen Extends core\ClasePropiedades {
 					 OR (p.situacion='D' AND p.f_situacion $curs)
 					 OR (p.situacion!='A' AND p.f_situacion > '$fincurs')
 				";
-        // En el caso cr-stgr, Especifico la dl.
-        if (\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) {
+        // En el caso cr-stgr, añado la dl al nombre ubi.
+        if ( ConfigGlobal::mi_ambito() === 'rstgr') {
+			// Si tengo dl filtro por dl.
+			$where_dl = '';
+        	if (!empty($this->getArrayDl())) {
+        		$dl_csv = implode("','", $this->getArrayDl());
+        		$where_dl = "u.dl IN ('$dl_csv') AND";
+        	}
             $sqlLlenar="INSERT INTO $tabla
 				SELECT p.id_nom,p.id_tabla,p.nom,p.apellido1,p.apellido2,p.stgr,
 				p.situacion,p.f_situacion,
@@ -284,9 +301,9 @@ class Resumen Extends core\ClasePropiedades {
 				p.ce_lugar,p.ce_ini,p.ce_fin,
 				p.sacd,u.nombre_ubi || ' (' || u.dl || ')'
 				FROM $personas p LEFT JOIN u_centros_dl u ON (p.id_ctr = u.id_ubi)
-				WHERE (p.situacion='A' AND (p.f_situacion < '$fincurs' OR p.f_situacion IS NULL))
+				WHERE $where_dl ( (p.situacion='A' AND (p.f_situacion < '$fincurs' OR p.f_situacion IS NULL))
 					 OR (p.situacion='D' AND p.f_situacion $curs)
-					 OR (p.situacion!='A' AND p.f_situacion > '$fincurs')
+					 OR (p.situacion!='A' AND p.f_situacion > '$fincurs') )
 				";
             
         }
@@ -360,14 +377,14 @@ class Resumen Extends core\ClasePropiedades {
         $oDbl->query("CREATE INDEX IF NOT EXISTS $notas"."_nivel"." ON $notas (id_nivel)");
         $oDbl->query($sqlDelete);
         
-        $gesNotas = new entity\gestorNota();
+        $gesNotas = new gestorNota();
         $a_superadas = $gesNotas->getArrayNotasSuperadas();
         $Where_superada = "AND id_situacion IN (".implode(',', $a_superadas).")";
         // Tengo que acceder a publicv, porque con los traslados las notas se cambian de esquema.
         if (core\ConfigGlobal::mi_sfsv() == 1) { $notas_vf = 'publicv.e_notas'; }
         if (core\ConfigGlobal::mi_sfsv() == 2) { $notas_vf = 'publicf.e_notas'; }
         $sqlLlenar="INSERT INTO $notas
-					SELECT n.id_nom,n.id_asignatura,n.id_nivel,
+					SELECT DISTINCT n.id_nom,n.id_asignatura,n.id_nivel,
 						   n.epoca,n.f_acta,n.acta,n.preceptor
 					FROM $tabla p, $notas_vf n
 					WHERE p.id_nom=n.id_nom AND n.f_acta $curs
@@ -396,7 +413,7 @@ class Resumen Extends core\ClasePropiedades {
        $oDbl->query("CREATE INDEX $asignaturas"."_nivel"." ON $asignaturas (id_nivel)");
        $oDbl->query("CREATE INDEX $asignaturas"."_id_asignatura"." ON $asignaturas (id_asignatura)");
        
-       $gesAsignaturas = new asignaturas\gestorAsignatura();
+       $gesAsignaturas = new GestorAsignatura();
        $cAsignaturas = $gesAsignaturas->getAsignaturas(array('status'=>'true'));
        
        $prep = $oDbl->prepare("INSERT INTO $asignaturas VALUES(:id_asignatura, :id_nivel, :nombre_asignatura, :nombre_corto, :creditos, :year, :id_sector, :status, :id_tipo)");
@@ -630,9 +647,19 @@ class Resumen Extends core\ClasePropiedades {
          AND (p.situacion = 'A' OR p.situacion = 'D')
          ORDER BY p.apellido1,p.apellido2,p.nom  ";
          */
+        
+        // En el caso cr-stgr, añado la dl al nombre ubi.
+        if ( ConfigGlobal::mi_ambito() === 'rstgr') {
+			// Si tengo dl filtro por dl.
+			$where_dl = '';
+        	if (!empty($this->getArrayDl())) {
+        		$dl_csv = implode("','", $this->getArrayDl());
+        		$where_dl = "p.dl IN ('$dl_csv') AND";
+        	}
+        }
         $ssql="SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.ce_lugar
             FROM $tabla p
-            WHERE p.ce_lugar IS NOT NULL
+            WHERE $where_dl p.ce_lugar IS NOT NULL
                AND p.ce_ini IS NOT NULL AND (p.ce_fin IS NULL OR p.ce_fin = '$any')
                AND (p.situacion = 'A' OR p.situacion = 'D' OR p.situacion = 'L')
             ORDER BY p.apellido1,p.apellido2,p.nom  ";
@@ -686,7 +713,7 @@ class Resumen Extends core\ClasePropiedades {
         $any = $this->getAnyFiCurs();
         $curs = $this->getCurso();
         
-        $gesNotas = new entity\gestorNota();
+        $gesNotas = new GestorNota();
         $a_superadas = $gesNotas->getArrayNotasSuperadas();
         $Where_superada = "AND id_situacion IN (".implode(',', $a_superadas).")";
         /*
@@ -1195,7 +1222,7 @@ class Resumen Extends core\ClasePropiedades {
         $oDbl = $this->getoDbl();
         $any = $this->getAnyFiCurs();
         $curso_inicio = $any-1;
-        $oGesSectores = new asignaturas\GestorSector();
+        $oGesSectores = new GestorSector();
         $a_sectores = $oGesSectores->getArraySectores();
         $asignaturas = $this->getNomAsignaturas();
         $a_profe_dept = $this->arrayProfesorDepartamento();
@@ -1355,7 +1382,7 @@ class Resumen Extends core\ClasePropiedades {
             foreach ($cDirectores as $oDirector) {
                 $id_departamento = $oDirector->getId_departamento();
                 $id_nom = $oDirector->getId_nom();
-                $oDepartamento = new asignaturas\Departamento($id_departamento);
+                $oDepartamento = new Departamento($id_departamento);
                 $nom_dep = $oDepartamento->getDepartamento();
                 $oPersonaDl = new personas\PersonaDl($id_nom);
                 $nom_persona = $oPersonaDl->getPrefApellidosNombre();
@@ -1368,4 +1395,18 @@ class Resumen Extends core\ClasePropiedades {
         }
         return $rta;
     }
+	/**
+	 * @return mixed
+	 */
+	public function getArrayDl() {
+		return $this->a_dl;
+	}
+
+	/**
+	 * @param mixed $sdl
+	 */
+	public function setArrayDl($dl) {
+		$this->a_dl = $dl;
+	}
+
 }

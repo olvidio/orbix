@@ -52,7 +52,6 @@ class GestorTituloEst Extends core\ClaseGestor {
 			$a_pkey = array('id_item' => $aDades['id_item'],
 							'id_nom' => $aDades['id_nom']);
 			$oTituloEst= new TituloEst($a_pkey);
-			$oTituloEst->setAllAtributes($aDades);
 			$oTituloEstSet->add($oTituloEst);
 		}
 		return $oTituloEstSet->getTot();
@@ -106,7 +105,6 @@ class GestorTituloEst Extends core\ClaseGestor {
 			$a_pkey = array('id_item' => $aDades['id_item'],
 							'id_nom' => $aDades['id_nom']);
 			$oTituloEst= new TituloEst($a_pkey);
-			$oTituloEst->setAllAtributes($aDades);
 			$oTituloEstSet->add($oTituloEst);
 		}
 		return $oTituloEstSet->getTot();

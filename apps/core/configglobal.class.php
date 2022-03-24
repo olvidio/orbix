@@ -149,7 +149,7 @@ Class ConfigGlobal extends ServerConf {
 	 * Para los esquemas tipo 'H-H' o 'H-Hf', se tiene permiso 
 	 * para consultar a todas las dl.
 	 * 
-	 * @return boolean
+	 * @return string 'dl'|'r'|'rstgr'
 	 */
 	public static function mi_ambito() {
 	    return $_SESSION['oConfig']->getAmbito(); 

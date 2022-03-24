@@ -61,7 +61,6 @@ class GestorMatricula Extends core\ClaseGestor {
 							'id_asignatura' => $aDades['id_asignatura'],
 							'id_nom' => $aDades['id_nom']);
 			$oMatricula= new Matricula($a_pkey);
-			$oMatricula->setAllAtributes($aDades);
 			$oMatriculaSet->add($oMatricula);
 		}
 		return $oMatriculaSet->getTot();
@@ -95,7 +94,6 @@ class GestorMatricula Extends core\ClaseGestor {
                     $oMatricula= new MatriculaDl($a_pkey);
 			        break;
 			}
-			$oMatricula->setAllAtributes($aDades);
 			$oMatriculaSet->add($oMatricula);
 		}
 		return $oMatriculaSet->getTot();
@@ -160,7 +158,6 @@ class GestorMatricula Extends core\ClaseGestor {
                     $oMatricula= new MatriculaDl($a_pkey);
 			        break;
 			}
-			$oMatricula->setAllAtributes($aDades);
 			$oMatriculaSet->add($oMatricula);
 		}
 		return $oMatriculaSet->getTot();

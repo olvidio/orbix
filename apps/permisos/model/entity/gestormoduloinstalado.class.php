@@ -73,7 +73,6 @@ class GestorModuloInstalado Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_mod' => $aDades['id_mod']);
 			$oModuloInstalado= new ModuloInstalado($a_pkey);
-			$oModuloInstalado->setAllAtributes($aDades);
 			$oModuloInstaladoSet->add($oModuloInstalado);
 		}
 		return $oModuloInstaladoSet->getTot();
@@ -126,7 +125,6 @@ class GestorModuloInstalado Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_mod' => $aDades['id_mod']);
 			$oModuloInstalado= new ModuloInstalado($a_pkey);
-			$oModuloInstalado->setAllAtributes($aDades);
 			$oModuloInstaladoSet->add($oModuloInstalado);
 		}
 		return $oModuloInstaladoSet->getTot();

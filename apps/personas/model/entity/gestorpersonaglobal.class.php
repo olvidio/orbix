@@ -143,7 +143,6 @@ abstract class GestorPersonaGlobal Extends core\ClaseGestor {
         			$oPersonaDl= new PersonaDl($a_pkey);
 			}
 			$oPersonaDl= new PersonaDl($a_pkey);
-			$oPersonaDl->setAllAtributes($aDades);
 			$oPersonaDlSet->add($oPersonaDl);
 		}
 		return $oPersonaDlSet->getTot();
@@ -222,7 +221,6 @@ abstract class GestorPersonaGlobal Extends core\ClaseGestor {
 			    default:
         			$oPersonaDl= new PersonaDl($a_pkey);
 			}
-			$oPersonaDl->setAllAtributes($aDades);
 			$oPersonaDlSet->add($oPersonaDl);
 		}
 		return $oPersonaDlSet->getTot();
@@ -277,7 +275,6 @@ abstract class GestorPersonaGlobal Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_nom' => $aDades['id_nom']);
 			$oPersona= new $Obj($a_pkey);
-			$oPersona->setAllAtributes($aDades);
 			$oPersonaSet->add($oPersona);
 		}
 		return $oPersonaSet->getTot();

@@ -98,7 +98,6 @@ class GestorNota Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_situacion' => $aDades['id_situacion']);
 			$oNota= new Nota($a_pkey);
-			$oNota->setAllAtributes($aDades);
 			$oNotaSet->add($oNota);
 		}
 		return $oNotaSet->getTot();
@@ -151,7 +150,6 @@ class GestorNota Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_situacion' => $aDades['id_situacion']);
 			$oNota= new Nota($a_pkey);
-			$oNota->setAllAtributes($aDades);
 			$oNotaSet->add($oNota);
 		}
 		return $oNotaSet->getTot();

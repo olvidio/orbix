@@ -79,7 +79,6 @@ class GestorAsistentePub Extends core\ClaseGestor {
 			$a_pkey = array('id_activ' => $aDades['id_activ'],
 							'id_nom' => $aDades['id_nom']);
 			$oAsistentePub= new AsistentePub($a_pkey);
-			$oAsistentePub->setAllAtributes($aDades);
 			$oAsistentePubSet->add($oAsistentePub);
 		}
 		return $oAsistentePubSet->getTot();
@@ -134,7 +133,6 @@ class GestorAsistentePub Extends core\ClaseGestor {
 							'id_nom' => $aDades['id_nom']);
 			// Puede ser AsistenteEx, AsistenteOut o AsistenteIn.
 			$oAsistentePub= new AsistentePub($a_pkey);
-			$oAsistentePub->setAllAtributes($aDades);
 			$oAsistentePubSet->add($oAsistentePub);
 		}
 		return $oAsistentePubSet->getTot();

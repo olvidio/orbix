@@ -51,7 +51,6 @@ class GestorDatosCgi Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oDatosCgi= new DatosCgi($a_pkey);
-			$oDatosCgi->setAllAtributes($aDades);
 			$oDatosCgiSet->add($oDatosCgi);
 		}
 		return $oDatosCgiSet->getTot();
@@ -104,7 +103,6 @@ class GestorDatosCgi Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oDatosCgi= new DatosCgi($a_pkey);
-			$oDatosCgi->setAllAtributes($aDades);
 			$oDatosCgiSet->add($oDatosCgi);
 		}
 		return $oDatosCgiSet->getTot();

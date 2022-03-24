@@ -98,7 +98,6 @@ class GestorRepeticion Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_repeticion' => $aDades['id_repeticion']);
 			$oRepeticion= new Repeticion($a_pkey);
-			$oRepeticion->setAllAtributes($aDades);
 			$oRepeticionSet->add($oRepeticion);
 		}
 		return $oRepeticionSet->getTot();
@@ -151,7 +150,6 @@ class GestorRepeticion Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_repeticion' => $aDades['id_repeticion']);
 			$oRepeticion= new Repeticion($a_pkey);
-			$oRepeticion->setAllAtributes($aDades);
 			$oRepeticionSet->add($oRepeticion);
 		}
 		return $oRepeticionSet->getTot();

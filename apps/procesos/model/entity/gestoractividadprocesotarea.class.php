@@ -529,7 +529,6 @@ class GestorActividadProcesoTarea Extends ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oActividadProcesoTarea= new ActividadProcesoTarea($a_pkey);
-			$oActividadProcesoTarea->setAllAtributes($aDades);
 			$oActividadProcesoTareaSet->add($oActividadProcesoTarea);
 		}
 		return $oActividadProcesoTareaSet->getTot();
@@ -585,7 +584,6 @@ class GestorActividadProcesoTarea Extends ClaseGestor {
 			// OJO hay que cambiar la tabla si estoy modificando la sf
             $oActividadProcesoTarea->setNomTabla($this->sNomTabla);
 			
-			$oActividadProcesoTarea->setAllAtributes($aDades);
 			$oActividadProcesoTareaSet->add($oActividadProcesoTarea);
 		}
 		return $oActividadProcesoTareaSet->getTot();

@@ -51,7 +51,6 @@ class GestorGrupoCasa Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oGrupoCasa= new GrupoCasa($a_pkey);
-			$oGrupoCasa->setAllAtributes($aDades);
 			$oGrupoCasaSet->add($oGrupoCasa);
 		}
 		return $oGrupoCasaSet->getTot();
@@ -104,7 +103,6 @@ class GestorGrupoCasa Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oGrupoCasa= new GrupoCasa($a_pkey);
-			$oGrupoCasa->setAllAtributes($aDades);
 			$oGrupoCasaSet->add($oGrupoCasa);
 		}
 		return $oGrupoCasaSet->getTot();

@@ -105,7 +105,6 @@ class GestorNombreLatin Extends core\ClaseGestor {
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oNombreLatin= new NombreLatin($a_pkey);
-			$oNombreLatin->setAllAtributes($aDades);
 			$oNombreLatinSet->add($oNombreLatin);
 		}
 		return $oNombreLatinSet->getTot();

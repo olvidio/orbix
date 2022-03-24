@@ -145,7 +145,6 @@ class GestorCentroEncargado Extends core\ClaseGestor {
 			$a_pkey = array('id_activ' => $aDades['id_activ'],
 							'id_ubi' => $aDades['id_ubi']);
 			$oCentroEncargado= new CentroEncargado($a_pkey);
-			$oCentroEncargado->setAllAtributes($aDades);
 			$oCentroEncargadoSet->add($oCentroEncargado);
 		}
 		return $oCentroEncargadoSet->getTot();
@@ -199,7 +198,6 @@ class GestorCentroEncargado Extends core\ClaseGestor {
 			$a_pkey = array('id_activ' => $aDades['id_activ'],
 							'id_ubi' => $aDades['id_ubi']);
 			$oCentroEncargado= new CentroEncargado($a_pkey);
-			$oCentroEncargado->setAllAtributes($aDades);
 			$oCentroEncargadoSet->add($oCentroEncargado);
 		}
 		return $oCentroEncargadoSet->getTot();

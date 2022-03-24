@@ -12,12 +12,19 @@ foreach ($aClaustro as $aDepartamento){
 	<?php
 	foreach ($aProfesores as $tipo => $aNoms) {
 		?>
-		<tr><td><?= $tipo ?></td><td></td></tr>
+		<tr><td class='titulo'><?= $tipo ?></td><td></td></tr>
 		<?php
-		foreach($aNoms as $id => $ap_nom) {
+		$dl_anterior = '';
+		foreach($aNoms as $id => $a_ap_nom) {
+			foreach($a_ap_nom as $dl => $ap_nom) {
+				if ($rstgr && $dl_anterior != $dl) {
+					echo "<tr><td></td><td class='subtitulo'>$dl</td></tr>";
+				}
+				$dl_anterior = $dl;
 		?>
 			<tr><td></td><td><?= $ap_nom ?></td></tr>
 		<?php
+			}
 		}
 	}
 	?>

@@ -1,5 +1,7 @@
 ﻿<?php
+use core\ConfigGlobal;
 use notas\model as notas;
+use ubis\model\entity\GestorDelegacion;
 
 /**
 * Esta página sirve para comprobar las notas de la tabla e_notas.
@@ -45,11 +47,23 @@ if ($mes>3) {
 	$curso_txt="$any1-$any";
 	$any_ini_curs = $any1;
 }
+
+$Qdl = (array)  \filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 //crear la tabla temporal de agregados y notas
 $Qlista = (string) \filter_input(INPUT_POST, 'lista');
 $lista = empty($Qlista)? false : true;
 
 $Resumen = new notas\Resumen('agregados');
+if (!empty($Qdl)) {
+	$region_stgr = ConfigGlobal::mi_dele();
+	$gesDelegacion = new GestorDelegacion();
+	$a_delegacionesStgr = $gesDelegacion->getArrayDlRegionStgr([$region_stgr]);
+	$a_dl = [];
+	foreach ($Qdl as $id_dl) {
+		$a_dl[] = $a_delegacionesStgr[$id_dl];
+	}
+	$Resumen->setArrayDl($a_dl);
+}
 $Resumen->setAnyIniCurs($any_ini_curs);
 $Resumen->setLista($lista);
 $Resumen->nuevaTabla();

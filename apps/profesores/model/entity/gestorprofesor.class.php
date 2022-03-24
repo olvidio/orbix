@@ -170,13 +170,14 @@ class GestorProfesor Extends core\ClaseGestor {
 		}
 		return $aOpciones;
 	}
+
 	/**
 	 * retorna un objecte del tipus array
 	 * Els posibles professors de la dl
 	 *
 	 * @return array Una Llista
 	 */
-	function getListaProfesoresDl() {
+	function getListaProfesoresConDl() {
 
 		$gesProfesores = $this->getProfesores(array('f_cese'=>''),array('f_cese'=>'IS NULL'));
 		$aProfesores = array();
@@ -190,7 +191,8 @@ class GestorProfesor Extends core\ClaseGestor {
 			$situacion = $oPersonaDl->getSituacion();
 			if ($situacion != 'A') { continue; }
 			$ap_nom = $oPersonaDl->getPrefApellidosNombre();
-			$aProfesores[] = array('id_nom'=>$id_nom,'ap_nom'=>$ap_nom);
+			$dl = $oPersonaDl->getDl();
+			$aProfesores[] = array('id_nom'=>$id_nom,'ap_nom'=>$ap_nom, 'dl'=>$dl);
 			$aAp1[] = $oPersonaDl->getApellido1();
 			$aAp2[] = $oPersonaDl->getApellido2();
 			$aNom[] = $oPersonaDl->getNom();
@@ -210,8 +212,9 @@ class GestorProfesor Extends core\ClaseGestor {
 		$aOpciones=array();
 		foreach ($aProfesores as $aClave) {
 			$clave=$aClave['id_nom'];
-			$val=$aClave['ap_nom'];
-			$aOpciones[$clave]=$val;
+			//$val=$aClave['ap_nom'];
+			//$dl=$aClave['dl'];
+			$aOpciones[$clave]=$aClave;
 		}
 		return $aOpciones;
 	}
@@ -222,7 +225,10 @@ class GestorProfesor Extends core\ClaseGestor {
 	 * @return array Una Llista
 	 */
 	function getListaProfesores() {
+		return new web\Desplegable('',$this->getListaProfesoresDl(),'',true);
+	}
 
+	public function getListaProfesoresDl() {
 		$gesProfesores = $this->getProfesores(array('f_cese'=>''),array('f_cese'=>'IS NULL'));
 		$aProfesores = array();
 		foreach ($gesProfesores as $oProfesor) {
@@ -235,7 +241,8 @@ class GestorProfesor Extends core\ClaseGestor {
 			$aProfesores[$id_nom] = $ap_nom;
 		}
 		uasort($aProfesores,'core\strsinacentocmp');
-		return new web\Desplegable('',$aProfesores,'',true);
+		
+		return $aProfesores;
 	}
 
 	/**
@@ -257,7 +264,6 @@ class GestorProfesor Extends core\ClaseGestor {
 							'id_nom' => $aDades['id_nom'],
 							'id_departamento' => $aDades['id_departamento']);
 			$oProfesor= new Profesor($a_pkey);
-			$oProfesor->setAllAtributes($aDades);
 			$oProfesorSet->add($oProfesor);
 		}
 		return $oProfesorSet->getTot();
@@ -312,7 +318,6 @@ class GestorProfesor Extends core\ClaseGestor {
 							'id_nom' => $aDades['id_nom'],
 							'id_departamento' => $aDades['id_departamento']);
 			$oProfesor= new Profesor($a_pkey);
-			$oProfesor->setAllAtributes($aDades);
 			$oProfesorSet->add($oProfesor);
 		}
 		return $oProfesorSet->getTot();

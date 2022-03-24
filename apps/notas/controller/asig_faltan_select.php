@@ -1,6 +1,7 @@
 <?php
-use notas\model as notas;
-use ubis\model\entity as ubis;
+use core\ConfigGlobal;
+use notas\model\AsignaturasPendientes;
+use ubis\model\entity\CentroDl;
 /**
 * Esta página muestra una tabla con las personas que cumplen con la condicion.
 *
@@ -89,7 +90,7 @@ if (!empty($Qpersonas_n) && !empty($Qpersonas_agd)) {
 	$obj_pau = 'PersonaDl';
 }
 
-$Pendientes = new notas\AsignaturasPendientes($personas);
+$Pendientes = new AsignaturasPendientes($personas);
 $Pendientes->setLista($Qlista);
 $aId_nom = $Pendientes->personasQueLesFalta($Qnumero,$curso);
 
@@ -131,9 +132,14 @@ foreach ($aId_nom as $id_nom=>$aAsignaturas) {
 	$stgr=$oPersona->getStgr();
 	$nom=$oPersona->getPrefApellidosNombre();
 	// El ctr
-	$id_ctr=$oPersona->getId_ctr();
-	$oCentroDl = new ubis\CentroDl($id_ctr);
-	$nombre_ubi = $oCentroDl->getNombre_ubi();
+	// En el caso cr-stgr, interesa la dl
+	if ( ConfigGlobal::mi_ambito() === 'rstgr') {
+		$nombre_ubi = $oPersona->getDl();
+	} else {
+		$id_ctr=$oPersona->getId_ctr();
+		$oCentroDl = new CentroDl($id_ctr);
+		$nombre_ubi = $oCentroDl->getNombre_ubi();
+	}
 	
 	// Añado los telf:
 	$telfs = '';

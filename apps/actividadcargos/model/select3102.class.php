@@ -7,6 +7,7 @@ use dossiers\model as dossiers;
 use personas\model\entity as personas;
 use core;
 use web;
+use web\Hash;
 
 /**
  * Gestiona el dossier 3102: Cargos de una actividad
@@ -167,7 +168,7 @@ class Select3102 {
 	}
 
 	public function getHtml() {
-		$oHashSelect = new web\Hash();
+		$oHashSelect = new Hash();
 		$oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
 		$a_camposHidden = array(
 				'pau' => $this->pau,

@@ -52,7 +52,6 @@ class GestorPreferencia Extends  core\ClaseGestor {
 			$a_pkey = array('id_usuario' => $aDades['id_usuario'],
 							'tipo' => $aDades['tipo']);
 			$oPreferencia= new Preferencia($a_pkey);
-			$oPreferencia->setAllAtributes($aDades);
 			$oPreferenciaSet->add($oPreferencia);
 		}
 		return $oPreferenciaSet->getTot();
@@ -106,7 +105,6 @@ class GestorPreferencia Extends  core\ClaseGestor {
 			$a_pkey = array('id_usuario' => $aDades['id_usuario'],
 							'tipo' => $aDades['tipo']);
 			$oPreferencia= new Preferencia($a_pkey);
-			$oPreferencia->setAllAtributes($aDades);
 			$oPreferenciaSet->add($oPreferencia);
 		}
 		return $oPreferenciaSet->getTot();

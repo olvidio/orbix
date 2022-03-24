@@ -172,7 +172,6 @@ class GestorCambio Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQry) as $aDades) {
 			$a_pkey = array('id_item_cambio' => $aDades['id_item_cambio']);
             $oCambio= new CambioDl($a_pkey);
-			$oCambio->setAllAtributes($aDades);
 			$oCambioSet->add($oCambio);
 		}
 		// Cambios NO dl (sólo public.av_cambios)
@@ -192,7 +191,6 @@ class GestorCambio Extends core\ClaseGestor {
 		foreach ($oDbl->query($sQry) as $aDades) {
 			$a_pkey = array('id_item_cambio' => $aDades['id_item_cambio']);
             $oCambio= new Cambio($a_pkey);
-			$oCambio->setAllAtributes($aDades);
 			$oCambioSet->add($oCambio);
 		}
 		
@@ -220,7 +218,6 @@ class GestorCambio Extends core\ClaseGestor {
 			} else {
                 $oCambio= new Cambio($a_pkey);
 			}
-			$oCambio->setAllAtributes($aDades);
 			$oCambioSet->add($oCambio);
 		}
 		return $oCambioSet->getTot();
@@ -277,7 +274,6 @@ class GestorCambio Extends core\ClaseGestor {
 			} else {
                 $oCambio= new Cambio($a_pkey);
 			}
-			$oCambio->setAllAtributes($aDades);
 			$oCambioSet->add($oCambio);
 		}
 		return $oCambioSet->getTot();

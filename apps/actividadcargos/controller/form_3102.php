@@ -31,6 +31,7 @@ use personas\model\entity\GestorPersonaN;
 use personas\model\entity\GestorPersonaNax;
 use personas\model\entity\GestorPersonaS;
 use personas\model\entity\Persona;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -151,7 +152,7 @@ $oDesplegableCargos->setOpcion_sel($Qid_cargo);
 $chk = (!empty($puede_agd) && $puede_agd=='t')? 'checked' : '' ;
 
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $camposForm = 'id_cargo!observ';
 $camposNo = 'puede_agd';
 $a_camposHidden = array(
