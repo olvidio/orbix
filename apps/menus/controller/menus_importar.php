@@ -60,7 +60,7 @@ if ($Qseguro == 1) {
     foreach ($aEsquemas as $esquema) {
         if ($esquema == "H-Hv") { continue; }
 		echo ">>>>actualizando menus para $esquema<br>";
-		$sec = substr($esquema,-1); // la v o la f.
+		$sec = substr($esquema,-1); // la 'v' o la 'f'.
 		echo ">>>$sec>>actualizando menus para $esquema<br>";
 		if ($sec == 'v') { 
 			$oConfigDB = new core\ConfigDB('sv-e'); 
@@ -79,7 +79,7 @@ if ($Qseguro == 1) {
         $sql_del = 'TRUNCATE TABLE aux_grupmenu RESTART IDENTITY CASCADE';
         if ($oDblSt = $oDB->query($sql_del) === false) {
             $sClauError = 'ExportarMenu.VaciarTabla';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+            $_SESSION['oGestorErrores']->addError('truncate', $sClauError, __LINE__, __FILE__);
             return false;
         }
 
@@ -90,7 +90,7 @@ if ($Qseguro == 1) {
             $valores="(:id_grupmenu,:grup_menu,:orden)";
             if (($oDblSt = $oDB->prepare("INSERT INTO aux_grupmenu $campos VALUES $valores")) === false) {
                 $sClauError = 'Importar.insertar.prepare';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                $_SESSION['oGestorErrores']->addError('prepare', $sClauError, __LINE__, __FILE__);
                 return false;
             } else {
                 try {
@@ -98,9 +98,8 @@ if ($Qseguro == 1) {
                 }
                 catch ( \PDOException $e) {
                     $err_txt=$e->errorInfo[2];
-                    $this->setErrorTxt($err_txt);
                     $sClauError = 'Importar.insertar.execute';
-                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                    $_SESSION['oGestorErrores']->addError($err_txt, $sClauError, __LINE__, __FILE__);
                     return false;
                 }
             }
@@ -112,7 +111,7 @@ if ($Qseguro == 1) {
             $sql_del = 'TRUNCATE TABLE aux_grupmenu_rol RESTART IDENTITY CASCADE';
             if ($oDblSt = $oDB->query($sql_del) === false) {
                 $sClauError = 'ExportarMenu.VaciarTabla';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                $_SESSION['oGestorErrores']->addError('truncate', $sClauError, __LINE__, __FILE__);
                 return false;
             }
 
@@ -123,7 +122,7 @@ if ($Qseguro == 1) {
                 $valores="(:id_item,:id_grupmenu,:id_role)";
                 if (($oDblSt = $oDB->prepare("INSERT INTO aux_grupmenu_rol $campos VALUES $valores")) === false) {
                     $sClauError = 'Importar.insertar.prepare';
-                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                    $_SESSION['oGestorErrores']->addError('prepare', $sClauError, __LINE__, __FILE__);
                     return false;
                 } else {
                     try {
@@ -131,9 +130,8 @@ if ($Qseguro == 1) {
                     }
                     catch ( \PDOException $e) {
                         $err_txt=$e->errorInfo[2];
-                        $this->setErrorTxt($err_txt);
                         $sClauError = 'Importar.insertar.execute';
-                        $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                        $_SESSION['oGestorErrores']->addError($err_txt, $sClauError, __LINE__, __FILE__);
                         return false;
                     }
                 }
@@ -143,7 +141,7 @@ if ($Qseguro == 1) {
 		$sql_del = 'TRUNCATE TABLE aux_menus RESTART IDENTITY CASCADE';
 		if ($oDblSt = $oDB->query($sql_del) === false) {
 			$sClauError = 'ExportarMenu.VaciarTabla';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addError('truncate', $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 
@@ -154,7 +152,7 @@ if ($Qseguro == 1) {
 			$valores="(:id_menu,:orden,:menu,:parametros,:id_metamenu,:menu_perm,:id_grupmenu,:ok)";
 			if (($oDblSt = $oDB->prepare("INSERT INTO aux_menus $campos VALUES $valores")) === false) {
 				$sClauError = 'Importar.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+				$_SESSION['oGestorErrores']->addError('prepare', $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
 				try {
@@ -162,9 +160,8 @@ if ($Qseguro == 1) {
 				}
 				catch ( \PDOException $e) {
 					$err_txt=$e->errorInfo[2];
-					$this->setErrorTxt($err_txt);
 					$sClauError = 'Importar.insertar.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+					$_SESSION['oGestorErrores']->addError($err_txt, $sClauError, __LINE__, __FILE__);
 					return false;
 				}
 			}

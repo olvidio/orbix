@@ -724,7 +724,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         
         $cActividadProcesoTareas = $gesActividadProcesoTareas->getActividadProcesoTareas(['id_activ' => $this->iid_activ]);
         
-        // Puede ser queel proceso no exista (para sfsv=2):
+        // Puede ser que el proceso no exista (para sfsv=2):
         if (empty($cActividadProcesoTareas)) {
             $gesActividadProcesoTareas->generarProceso($this->iid_activ, 2);
         }
@@ -738,6 +738,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
             $cActividadProcesoTareas = $gesActividadProcesoTareas->getActividadProcesoTareas($aWhere);
             if (!empty($cActividadProcesoTareas)) {
                 $oActividadPorcesoTarea = $cActividadProcesoTareas[0];
+                $oActividadPorcesoTarea->DBCarregar();
                 $oActividadPorcesoTarea->setCompletado('t');
                 $oActividadPorcesoTarea->DBGuardar();
             }
@@ -748,6 +749,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
             $cActividadProcesoTareas = $gesActividadProcesoTareas->getActividadProcesoTareas($aWhere);
             if (!empty($cActividadProcesoTareas)) {
                 $oActividadPorcesoTarea = $cActividadProcesoTareas[0];
+                $oActividadPorcesoTarea->DBCarregar();
                 $oActividadPorcesoTarea->setCompletado('f');
                 $oActividadPorcesoTarea->DBGuardar();
             }

@@ -31,7 +31,9 @@ $Qdl_propia = (string) \filter_input(INPUT_POST, 'dl_propia');
 switch($Qque) {
 	case 'lista':
         $Qid_fase_nueva = (string) \filter_input(INPUT_POST, 'id_fase_nueva');
-		if (empty($Qid_fase_nueva)) exit('<h2>'._("Debe poner la fase nueva").'</h2>');
+        if (empty($Qid_fase_nueva)) {
+        	exit('<h2>'._("Debe poner la fase nueva").'</h2>');
+        }
 
 		$Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 		$Qyear = (string) \filter_input(INPUT_POST, 'year');
