@@ -169,7 +169,7 @@ class GestorCentro Extends  core\ClaseGestor {
         $clasename = get_class($this);
 		$nomClase = join('', array_slice(explode('\\', $clasename), -1));
 		foreach ($oDblSt as $aDades) {
-			$a_pkey = array('iid_ubi' => $aDades['id_ubi']);
+			$a_pkey = array('id_ubi' => $aDades['id_ubi']);
 			switch ($nomClase) {
 			    case 'GestorCentroDl':
                     $oCentro= new CentroDl($a_pkey);
