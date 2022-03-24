@@ -18,6 +18,7 @@
 
 use actividades\model\entity\GestorActividadDl;
 use actividades\model\ActividadNuevoCurso;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
@@ -96,7 +97,7 @@ if ($Qok == 1) {
 	}
 	
 } else {
-    $oHash = new web\Hash();
+    $oHash = new Hash();
     $a_camposHidden = array(
         'ok' => 1,
     );
@@ -123,7 +124,7 @@ if ($Qok == 1) {
 	$txt .= "<p>$txt_borrar.";
 	$txt .= "<p>$txt_crear.";
 	$txt .= "<p>$txt_estado.";
-	if(core\ConfigGlobal::is_app_installed('ctrEncargados')) {
+	if(core\ConfigGlobal::is_app_installed('actividadescentro')) {
 		$txt .= "<p>$txt_ctr.";
 	}
 	if(core\ConfigGlobal::is_app_installed('procesos')) {

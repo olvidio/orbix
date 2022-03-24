@@ -17,7 +17,6 @@ use core\ConfigGlobal;
 use procesos\model\entity\GestorActividadFase;
 use ubis\model\entity as ubis;
 use usuarios\model\entity\Usuario;
-use config\model\Config;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************

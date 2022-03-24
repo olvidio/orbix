@@ -29,6 +29,7 @@
 
 use actividadcargos\model\entity as actividadcargos;
 use actividades\model\entity as actividades;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -114,7 +115,7 @@ $oDesplegableCargos->setBlanco(false);
 $oDesplegableCargos->setOpcion_sel($id_cargo);
 $chk = (!empty($puede_agd) && $puede_agd=='t')? 'checked' : '' ;
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $camposForm = 'id_cargo!observ';
 $camposNo = 'puede_agd';
 $a_camposHidden = array(
