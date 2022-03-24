@@ -8,6 +8,7 @@ use core;
 use dossiers\model as dossiers;
 use personas\model\entity as personas;
 use web;
+use web\Hash;
 
 /**
  * Gestiona el dossier 1302: Cargos de una persona en actividades
@@ -178,7 +179,9 @@ class Select1302 {
 	}
 
 	public function getHtml() {
-		$oHashSelect = new web\Hash();
+		$oHashSelect = new Hash();
+		
+		
 		$oHashSelect->setcamposForm('modo_curso');
 		$oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
 		$a_camposHidden = array(

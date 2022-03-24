@@ -49,11 +49,11 @@ function cambiar_idioma($idioma='') {
 	$domain="orbix";
 //	echo "dir: ".core\ConfigGlobal::$dir_languages."<br>";
 //	echo "domain: $domain, id: $idioma<br>";
-	setlocale(LC_MESSAGES, "");
+	setlocale(LC_ALL, "");
 	putenv("LC_ALL=''");
 	putenv("LANGUAGE=");
 	
-	setlocale(LC_MESSAGES,$idioma);
+	setlocale(LC_ALL,$idioma);
 	putenv("LC_ALL={$idioma}");
 	putenv("LANG={$idioma}");
 	

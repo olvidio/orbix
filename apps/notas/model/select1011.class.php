@@ -2,15 +2,16 @@
 namespace notas\model;
 
 use actividades\model\entity as actividades;
+use actividadestudios\model\entity\GestorMatricula as actividadestudios;
 use asignaturas\model\entity as asignaturas;
-use actividadestudios\model\entity as actividadestudios;
 use core\ConfigGlobal;
 use core\View;
 use notas\model\entity as notas;
+use notas\model\entity\Nota;
 use personas\model\entity as personas;
 use web\Hash;
 use web\Lista;
-use notas\model\entity\Nota;
+use actividadestudios\model\entity\GestorMatricula;
 
 class Select1011 {
 
@@ -80,7 +81,7 @@ class Select1011 {
 	private function getTabla() {
 
 		// Aviso si le faltan notas por poner
-		$gesMatriculas = new actividadestudios\gestorMatricula();
+		$gesMatriculas = new GestorMatricula();
 		$cMatriculasPendientes = $gesMatriculas->getMatriculasPendientes($this->id_pau);
 		if (count($cMatriculasPendientes) > 0) {
 			$msg = '';
