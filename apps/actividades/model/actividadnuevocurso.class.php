@@ -242,7 +242,7 @@ class ActividadNuevoCurso {
         // cojo el valor del último insert 
         $id_actividad_new = $oActividad->getId_activ();
 
-        if(core\ConfigGlobal::is_app_installed('ctrEncargados')) {
+        if(core\ConfigGlobal::is_app_installed('actividadescentro')) {
             // También copio los centros encargados.
             $GesEncargados = new actividadescentro\model\entity\GestorCentroEncargado();
             $cEncargados = $GesEncargados->getCentrosEncargados(array('id_activ'=>$oActividadOrigen->getId_activ()));
