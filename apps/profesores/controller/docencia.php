@@ -28,14 +28,14 @@ foreach ($cAsignaturas as $oAsignatura) {
 }
 
 if (ConfigGlobal::mi_ambito() === 'rstgr') {
-	$a_cabeceras[] = _("dl");
+	$a_cabeceras[1] = _("dl");
 }
 
-$a_cabeceras[] = _("Apellidos, nombre");
-$a_cabeceras[] = _("incio curso");
-$a_cabeceras[] = _("asignatura");
-$a_cabeceras[] = _("modo");
-$a_cabeceras[] = _("acta");
+$a_cabeceras[2] = _("Apellidos, nombre");
+$a_cabeceras[3] = _("incio curso");
+$a_cabeceras[4] = _("asignatura");
+$a_cabeceras[5] = _("modo");
+$a_cabeceras[6] = _("acta");
 
 $a_valores = [];
 
@@ -51,7 +51,7 @@ foreach ($a_nomProfesor as $id_nom => $aClave) {
 	foreach ($cProfesorDocenciaStgr as $oProfesorDocenciaStgr) {
 		$p++;
 		$id_asignatura = $oProfesorDocenciaStgr->getId_asignatura();
-		$nom_asignatura = $a_asignaturas[$id_asignatura];
+		$nom_asignatura = empty($a_asignaturas[$id_asignatura])? '?' : $a_asignaturas[$id_asignatura];
 		
 		$array_tipo = $oProfesorDocenciaStgr->getDatosTipo()->getLista();
 		$tipo = $oProfesorDocenciaStgr->getTipo();
@@ -61,13 +61,13 @@ foreach ($a_nomProfesor as $id_nom => $aClave) {
 		$acta = $oProfesorDocenciaStgr->getActa();
 	
 		if (ConfigGlobal::mi_ambito() === 'rstgr') {
-			$a_valores[$p][0]=$dl;
+			$a_valores[$p][1]=$dl;
 		}
-		$a_valores[$p][1]=$ap_nom;
-		$a_valores[$p][2]=$curso_inicio;
-		$a_valores[$p][3]=$nom_asignatura;
-		$a_valores[$p][4]=$modo;
-		$a_valores[$p][5]=$acta;
+		$a_valores[$p][2]=$ap_nom;
+		$a_valores[$p][3]=$curso_inicio;
+		$a_valores[$p][4]=$nom_asignatura;
+		$a_valores[$p][5]=$modo;
+		$a_valores[$p][6]=$acta;
 	}
 }
 
