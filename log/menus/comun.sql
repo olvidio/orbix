@@ -5,7 +5,6 @@
 10	\N	sg/historics_sg_activ.php	\N	\N
 11	\N	vcsd/escritos_cr/docs.php	\N	\N
 13	\N	programas/sm-agd/list_ultima_activ.php	\N	\N
-15	\N	des/list_sssc_cr9_05.php	\N	\N
 16	\N	scdl/documentos/centros_que.php	\N	\N
 20	\N	scdl/registro/pen_of_form.php	\N	\N
 22	\N	scdl/registro/control.php	\N	\N
@@ -105,6 +104,7 @@
 42	24	apps/zonassacd/controller/zona_sacd.php	\N	Zona sacd
 139	24	apps/zonassacd/controller/planning_zones.php	\N	Planning por zonas
 21	5	apps/actividades/controller/calendario_listas.php	\N	calendario listas
+194	5	apps/actividades/controller/planning_casa_que.php	\N	Planing Casa
 114	25	apps/cartaspresentacion/controller/cartas_presentacion_que.php	\N	Cartas Presentacion
 3	25	apps/cartaspresentacion/controller/cartas_presentacion_buscar.php	\N	Buscar Cartas presentacion
 19	2	apps/devel/controller/factory_form.php	\N	generador de clases
@@ -189,4 +189,5 @@
 192	2	apps/devel/controller/db_cambiar_nombre_que.php	\N	cambiar nombre dl
 1	7	\N	\N	Raiz stgr 2
 61	6	apps/asistentes/controller/planning_que.php	\N	planning
-194	5	apps/actividades/controller/planning_casa_que.php	\N	Planing Casa
+15	7	apps/profesores/controller/docencia.php	\N	Docencia
+196	7	apps/profesores/controller/congresos.php	\N	congresos

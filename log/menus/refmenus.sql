@@ -434,3 +434,6 @@
 951	{10,10}	Planing Casas	tipo=planning_cdc	194	1	7	t
 1329	{100,40}	por casas	tipo=planning_cdc&ssfsv=sv	194	2	3	t
 37	{60,100}	falta sacd	tipo=falta_sacd	39	8	8	t
+39	{5,90}	Actualizar datos desde BDU	tipo=sssc	176	8	8	t
+40	{20,80}	ver docencia	\N	15	16	12	t
+41	{20,90}	asitencia a congresos	\N	196	16	12	t
