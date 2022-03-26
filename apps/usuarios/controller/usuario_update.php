@@ -150,9 +150,10 @@ switch($Qque) {
                     $cPermUsuarioActividad = $gesPermUsuarioActividad->getPermUsuarioActividades($aWhere);
                     // Solo deberia haber uno???
                     if (count($cPermUsuarioActividad) == 1) {
-                            $oUsuarioPerm = $cPermUsuarioActividad[0]; 
+						$oUsuarioPerm = $cPermUsuarioActividad[0]; 
+						$oUsuarioPerm->DBCarregar();
                     } else {
-                            $oUsuarioPerm = new PermUsuarioActividad(); 
+						$oUsuarioPerm = new PermUsuarioActividad(); 
                     }
                     $oUsuarioPerm->setId_usuario($Qid_usuario);
                     $oUsuarioPerm->setId_tipo_activ_txt($id_tipo_activ_txt);

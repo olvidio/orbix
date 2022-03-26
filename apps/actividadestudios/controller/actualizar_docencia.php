@@ -146,6 +146,7 @@ $continuar = (integer)  filter_input(INPUT_POST, 'continuar');
 			$cProfesorDocencia = $GesProfesorDocencia->getProfesorDocenciasStgr($aWhereDocencia);
 			if (is_array($cProfesorDocencia) && count($cProfesorDocencia) > 0) {
 				$oProfesorDocencia = $cProfesorDocencia[0];
+				$oProfesorDocencia->DBCarregar();
 				$oProfesorDocencia->setCurso_inicio($ini_a);
 				$oProfesorDocencia->setTipo($tipo);
 				$oProfesorDocencia->setActa($acta);

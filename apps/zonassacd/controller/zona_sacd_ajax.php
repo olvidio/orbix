@@ -189,6 +189,7 @@ switch($Qque) {
 					    $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere);
 					    if (!empty($cZonaSacd)) {
                             $oZonaSacd = $cZonaSacd[0];
+                            $oZonaSacd->DBCarregar();
                             $oZonaSacd->setPropia('f');
                             if ($oZonaSacd->DBGuardar() === false) {
                                 echo _("hay un error, no se ha guardado");
@@ -233,6 +234,7 @@ switch($Qque) {
 					    $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere);
 					    if (!empty($cZonaSacd)) {
                             $oZonaSacd = $cZonaSacd[0];
+                            $oZonaSacd->DBCarregar();
                             $oZonaSacd->setId_zona($id_zona_new);
                             $oZonaSacd->setPropia('t');
                             if ($oZonaSacd->DBGuardar() === false) {

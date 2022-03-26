@@ -484,6 +484,7 @@ switch ($Qque) {
 					echo _("hay un error, no se ha eliminado");
 				}
 			} else {
+				$cEncargoSacdObserv[0]->DBCarregar();
 				$cEncargoSacdObserv[0]->setObserv($Qobserv);
 				if ($cEncargoSacdObserv[0]->DBGuardar() === false) {
 					echo _("hay un error, no se ha guardado");

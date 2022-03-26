@@ -92,6 +92,7 @@ switch ($Qque) {
             $cEncargosSacdHorario = $gesPropuestaEncargoSacdHorario->getEncargoSacdHorarios($aWhere);
             if (is_array($cEncargosSacdHorario) && count($cEncargosSacdHorario) > 0 ) {
                 $oEncargoSacdHorario = $cEncargosSacdHorario[0];
+                $oEncargoSacdHorario->DBCarregar();
                 $oEncargoSacdHorario->setF_fin(NULL);
             } else { // nuevo
                 $oEncargoSacdHorario = new PropuestaEncargoSacdHorario();

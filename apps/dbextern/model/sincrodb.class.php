@@ -516,6 +516,7 @@ class SincroDB {
 			$cTelecos = $GesTeleco->getTelecos(array('id_nom'=>$id_orbix,'tipo_teleco'=>'móvil','desc_teleco'=>5));
 			if (!empty($cTelecos) && count($cTelecos) > 0) {
 				$oTeleco = $cTelecos[0];
+				$oTeleco->DBCarregar();
 				$oTeleco->setNum_teleco($Tfno_Movil);
 				$oTeleco->setObserv('de listas');
 			} else {
@@ -535,6 +536,7 @@ class SincroDB {
 			$cTelecos = $GesTeleco->getTelecos(array('id_nom'=>$id_orbix,'tipo_teleco'=>'e-mail','desc_teleco'=>13));
 			if (!empty($cTelecos) && count($cTelecos) > 0) {
 				$oTeleco = $cTelecos[0];
+				$oTeleco->DBCarregar();
 				$oTeleco->setNum_teleco($Email);
 				$oTeleco->setObserv('de listas');
 			} else {

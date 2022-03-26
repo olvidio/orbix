@@ -520,7 +520,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
         $oActividadProcesoTarea = $cActividadProcesoTarea[0];
         
         $oActividadProcesoTarea->DBCarregar();
-        $oActividadProcesoTarea->SetCompletado('f');
+        $oActividadProcesoTarea->setCompletado('f');
         $oActividadProcesoTarea->DBMarcar();
         // Hay que cambiarlo en el array, porque sino no se actualiza:
         $this->aFasesEstado[$fase_tarea] = FALSE;
@@ -564,7 +564,7 @@ class ActividadProcesoTarea Extends core\ClasePropiedades {
             $oActividadProcesoTarea = $cActividadProcesoTarea[0];
             
             $oActividadProcesoTarea->DBCarregar();
-            $oActividadProcesoTarea->SetCompletado('t');
+            $oActividadProcesoTarea->setCompletado('t');
             $oActividadProcesoTarea->DBMarcar();
             // Hay que cambiarlo en el array, porque sino no se actualiza:
             $this->aFasesEstado[$fase_tarea] = TRUE;
