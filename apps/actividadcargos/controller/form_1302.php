@@ -27,7 +27,7 @@
  * 
  */
 
-//Comentario para comprobar subidas desde Eclipse
+//Comentario para comprobar subidas desde Eclipse (2)
 
 use actividadcargos\model\entity as actividadcargos;
 use actividades\model\entity as actividades;
