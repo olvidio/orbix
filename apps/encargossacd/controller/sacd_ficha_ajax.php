@@ -259,8 +259,8 @@ switch ($Qque) {
                                     $oEncargo = new Encargo(array('id_enc'=>$id_enc));
                     	   		    $desc_enc = $oEncargo->getDesc_enc();
 								    // debería borrarlo, porque no tiene dia_ref:
-								    $oEncargoSacdHorario->DBEliminar();
-								    $txt_alert = sprintf(_("Se ha borrado el encargo \"%s\" porque no tenía definido el dia de ref."),$desc_enc);
+								    //$oEncargoSacdHorario->DBEliminar();
+								    $txt_alert = sprintf(_("Se debería ha borrado el encargo \"%s\" porque no tenía definido el dia de ref."),$desc_enc);
 								    echo $txt_alert."<br>";
 							}
 						}

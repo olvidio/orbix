@@ -213,7 +213,7 @@ class ProfesorCongreso Extends core\ClasePropiedades {
 	public function DBCarregar($que=null) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (isset($this->iid_item) && isset($this->iid_nom)) {
+		if (isset($this->iid_item)) {
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE  id_item=$this->iid_item")) === false) {
 				$sClauError = 'ProfesorCongreso.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
