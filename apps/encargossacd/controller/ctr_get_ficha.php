@@ -1,11 +1,10 @@
 <?php
-use encargossacd\model\entity\DatosCgi;
 use encargossacd\model\entity\EncargoTipo;
-use encargossacd\model\entity\GestorEncargoTipo;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoHorario;
 use encargossacd\model\entity\GestorEncargoSacd;
 use encargossacd\model\entity\GestorEncargoSacdHorario;
+use encargossacd\model\entity\GestorEncargoTipo;
 use personas\model\entity\GestorPersonaDl;
 use ubis\model\entity\CentroDl;
 use web\Hash;
@@ -94,13 +93,9 @@ if (is_array($cEncargos) && count($cEncargos) == 0) { // nuevo encargo
     $dedic_ctr_v = [];
 	foreach ($cEncargos as $oEncargo) {
 		$e++;
-		/*
-		$id_enc = $cEncargos[0]->getId_enc();
-		$observ = $cEncargos[0]->getObserv();
-		*/
 		$id_tipo_enc[$e] = $oEncargo->getId_tipo_enc();
-		$oEncargoTipo->setId_tipo_enc($id_tipo_enc[$e]);
 		$oEncargoTipo->DBCarregar();
+		$oEncargoTipo->setId_tipo_enc($id_tipo_enc[$e]);
 		$mod_horario[$e] = $oEncargoTipo->getMod_horario();
 		$a_id_enc[$e] = $oEncargo->getId_enc();
 		$a_observ[$e] = $oEncargo->getObserv();
@@ -123,7 +118,6 @@ if (is_array($cEncargos) && count($cEncargos) == 0) { // nuevo encargo
 		$cEncargoHorarios = array_merge($cEncargoHorarios0,$cEncargoHorarios1);
 		switch ($mod_horario[$e]) {
 			case 3: //por horario.
-				$dedic_ctr[$e] = '';
 				$h=0;
 				foreach ($cEncargoHorarios as $oEncargoHorario) {
 					$h++;
@@ -136,8 +130,6 @@ if (is_array($cEncargos) && count($cEncargos) == 0) { // nuevo encargo
 					$n_sacd = $oEncargoHorario->getN_sacd();
 
 					$texto_horario=$GesEncargoTipo->texto_horario($mas_menos,$dia_ref,$dia_inc,$dia_num,$h_ini,$h_fin,$n_sacd);
-					if ($h >1) $dedic_ctr[$e] .= " y ";
-					$dedic_ctr[$e] .= $texto_horario;
 				}
 				break;
 			case 2: // por módulos.

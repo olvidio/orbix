@@ -101,7 +101,7 @@ class GestorEncargo Extends core\ClaseGestor {
 			return FALSE;
 		}
 		foreach ($oDblSt as $aDades) {
-			$a_pkey = array('id_tipo_enc' => $aDades['id_tipo_enc']);
+			$a_pkey = array('id_enc' => $aDades['id_enc']);
 			$oEncargo= new Encargo($a_pkey);
 			$oEncargoSet->add($oEncargo);
 		}
