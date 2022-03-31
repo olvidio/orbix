@@ -94,8 +94,8 @@ if (is_array($cEncargos) && count($cEncargos) == 0) { // nuevo encargo
 	foreach ($cEncargos as $oEncargo) {
 		$e++;
 		$id_tipo_enc[$e] = $oEncargo->getId_tipo_enc();
-		$oEncargoTipo->DBCarregar();
 		$oEncargoTipo->setId_tipo_enc($id_tipo_enc[$e]);
+		$oEncargoTipo->DBCarregar();
 		$mod_horario[$e] = $oEncargoTipo->getMod_horario();
 		$a_id_enc[$e] = $oEncargo->getId_enc();
 		$a_observ[$e] = $oEncargo->getObserv();

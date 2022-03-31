@@ -78,21 +78,26 @@ if (!empty($Qacta)) {
                 $Qacta_dl .= empty($Qacta_dl)? '' : "|";
                 $Qacta_dl .= empty($matches[3])? "$dl ".$matches[1].'/'.date("y") : "$dl $Qacta";
             }
-            $Qacta = $Qacta_dl;
+			$aWhere['acta'] = $Qacta_dl;
             $GesActas = new notas\GestorActa();
         } else {
-            $Qacta = empty($matches[3])? "$mi_dele ".$matches[1].'/'.date("y") : "$mi_dele $Qacta";
+            $aWhere['acta'] = empty($matches[3])? "$mi_dele ".$matches[1].'/'.date("y") : "$mi_dele $Qacta";
             $GesActas = new notas\GestorActaDl();
         }
         $cActas = $GesActas->getActas($aWhere,$aOperador);
     } else {
         // busca en la tabla de la dl, sin mirar el nombre:
-        $GesActas = new notas\GestorActaDl();
-        $cActas = $GesActas->getActas($aWhere,$aOperador);
-        if (empty($cActas)) {
-            $GesActas = new notas\GestorActaEx();
-            $cActas = $GesActas->getActas($aWhere,$aOperador);
-        }
+    	if (ConfigGlobal::mi_ambito() == 'rstgr') {
+            $GesActas = new notas\GestorActa();
+			$cActas = $GesActas->getActas($aWhere,$aOperador);
+    	} else {
+			$GesActas = new notas\GestorActaDl();
+			$cActas = $GesActas->getActas($aWhere,$aOperador);
+			if (empty($cActas)) {
+				$GesActas = new notas\GestorActaEx();
+				$cActas = $GesActas->getActas($aWhere,$aOperador);
+			}
+    	}
     }
 	$titulo = $Qtitulo;
 } else {
