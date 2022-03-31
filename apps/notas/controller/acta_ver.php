@@ -183,7 +183,12 @@ if (!empty($ult_lin)) { $ult_lin=sprintf(_("(última= %s)"),$ult_lin); }
 if (!empty($ult_acta)) { $ult_acta=sprintf(_("(última= %s)"),$ult_acta); }
 
 if (!empty($acta_actual)) {
-	$GesTribunal = new notas\GestorActaTribunalDl();
+	// Si es cr, se mira en todas:
+	if (ConfigGlobal::mi_ambito() == 'rstgr') {
+		$GesTribunal = new notas\GestorActaTribunal();
+	} else {
+		$GesTribunal = new notas\GestorActaTribunalDl();
+	}
 	$cTribunal = $GesTribunal->getActasTribunales(array('acta'=>$acta_actual,'_ordre'=>'orden')); 
 } else {
 	$cTribunal = array();

@@ -100,6 +100,12 @@ class Acta Extends core\ClasePropiedades {
 	 * @var string
 	 */
 	 protected $sobserv;
+	/**
+	 * pdf de Acta
+	 *
+	 * @var string bytea
+	 */
+	 protected $pdf;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
 	 * oDbl de Acta
@@ -160,6 +166,7 @@ class Acta Extends core\ClasePropiedades {
 		$aDades['linea'] = $this->ilinea;
 		$aDades['lugar'] = $this->slugar;
 		$aDades['observ'] = $this->sobserv;
+		$aDades['pdf'] = $this->pdf;
 		array_walk($aDades, 'core\poner_null');
 
 		if ($bInsert === false) {
@@ -172,12 +179,32 @@ class Acta Extends core\ClasePropiedades {
 					pagina                   = :pagina,
 					linea                    = :linea,
 					lugar                    = :lugar,
-					observ                   = :observ";
+					observ                   = :observ,
+					pdf                    	 = :pdf";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE acta='$this->sacta'")) === false) {
 				$sClauError = 'Acta.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
+				$id_asignatura = $aDades['id_asignatura'];
+				$id_activ = $aDades['id_activ'];
+				$f_acta = $aDades['f_acta'];
+				$libro = $aDades['libro'];
+				$pagina = $aDades['pagina'];
+				$linea = $aDades['linea'];
+				$lugar = $aDades['lugar'];
+				$observ = $aDades['observ'];
+				$pdf = $aDades['pdf'];
+				
+				$oDblSt->bindParam(1, $id_asignatura, \PDO::PARAM_INT);
+				$oDblSt->bindParam(2, $id_activ, \PDO::PARAM_INT);
+				$oDblSt->bindParam(3, $f_acta, \PDO::PARAM_STR);
+				$oDblSt->bindParam(4, $libro, \PDO::PARAM_INT);
+				$oDblSt->bindParam(5, $pagina, \PDO::PARAM_INT);
+				$oDblSt->bindParam(6, $linea, \PDO::PARAM_INT);
+				$oDblSt->bindParam(7, $lugar, \PDO::PARAM_STR);
+				$oDblSt->bindParam(8, $observ, \PDO::PARAM_STR);
+				$oDblSt->bindParam(9, $pdf, \PDO::PARAM_STR);
 				try {
 					$oDblSt->execute($aDades);
 				}
@@ -192,13 +219,34 @@ class Acta Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->sacta);
-			$campos="(acta,id_asignatura,id_activ,f_acta,libro,pagina,linea,lugar,observ)";
-			$valores="(:acta,:id_asignatura,:id_activ,:f_acta,:libro,:pagina,:linea,:lugar,:observ)";		
+			$campos="(acta,id_asignatura,id_activ,f_acta,libro,pagina,linea,lugar,observ,pdf)";
+			$valores="(:acta,:id_asignatura,:id_activ,:f_acta,:libro,:pagina,:linea,:lugar,:observ,:pdf)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'Acta.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			} else {
+				$acta = $aDades['acta'];
+				$id_asignatura = $aDades['id_asignatura'];
+				$id_activ = $aDades['id_activ'];
+				$f_acta = $aDades['f_acta'];
+				$libro = $aDades['libro'];
+				$pagina = $aDades['pagina'];
+				$linea = $aDades['linea'];
+				$lugar = $aDades['lugar'];
+				$observ = $aDades['observ'];
+				$pdf = $aDades['pdf'];
+				
+				$oDblSt->bindParam(1, $acta, \PDO::PARAM_STR);
+				$oDblSt->bindParam(2, $id_asignatura, \PDO::PARAM_INT);
+				$oDblSt->bindParam(3, $id_activ, \PDO::PARAM_INT);
+				$oDblSt->bindParam(4, $f_acta, \PDO::PARAM_STR);
+				$oDblSt->bindParam(5, $libro, \PDO::PARAM_INT);
+				$oDblSt->bindParam(6, $pagina, \PDO::PARAM_INT);
+				$oDblSt->bindParam(7, $linea, \PDO::PARAM_INT);
+				$oDblSt->bindParam(8, $lugar, \PDO::PARAM_STR);
+				$oDblSt->bindParam(9, $observ, \PDO::PARAM_STR);
+				$oDblSt->bindParam(10, $pdf, \PDO::PARAM_STR);
 				try {
 					$oDblSt->execute($aDades);
 				}
@@ -222,13 +270,47 @@ class Acta Extends core\ClasePropiedades {
 	public function DBCarregar($que=null) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
+		$id_asignatura = '';
+		$id_activ = '';
+		$f_acta = '';
+		$libro = '';
+		$pagina = '';
+		$linea = '';
+		$lugar = '';
+		$observ = '';
+		$pdf = '';
+		
 		if (isset($this->sacta)) {
-			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE acta='$this->sacta'")) === false) {
+			if (($oDblSt = $oDbl->query("SELECT id_asignatura, id_activ, f_acta, libro, pagina, linea, lugar, observ, pdf
+							 FROM $nom_tabla WHERE acta='$this->sacta'")) === false) {
 				$sClauError = 'Acta.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
 			}
-			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			$oDblSt->execute();
+			$oDblSt->bindColumn(1, $id_asignatura, \PDO::PARAM_INT);
+			$oDblSt->bindColumn(2, $id_activ, \PDO::PARAM_INT);
+			$oDblSt->bindColumn(3, $f_acta, \PDO::PARAM_STR);
+			$oDblSt->bindColumn(4, $libro, \PDO::PARAM_INT);
+			$oDblSt->bindColumn(5, $pagina, \PDO::PARAM_INT);
+			$oDblSt->bindColumn(6, $linea, \PDO::PARAM_INT);
+			$oDblSt->bindColumn(7, $lugar, \PDO::PARAM_STR);
+			$oDblSt->bindColumn(8, $observ, \PDO::PARAM_STR);
+			$oDblSt->bindColumn(9, $pdf, \PDO::PARAM_STR);
+			$oDblSt->fetch(\PDO::FETCH_BOUND);
+			
+			$aDades = [
+					'id_asignatura' => $id_asignatura,
+					'id_activ' => $id_activ,
+					'f_acta' => $f_acta,
+					'libro' => $libro,
+					'pagina' => $pagina,
+					'linea' => $linea,
+					'lugar' => $lugar,
+					'observ' => $observ,
+					'pdf' => $pdf,
+					];
+			
 			// Para evitar posteriores cargas
 			$this->bLoaded = TRUE;
 			switch ($que) {
@@ -288,6 +370,7 @@ class Acta Extends core\ClasePropiedades {
 		if (array_key_exists('linea',$aDades)) $this->setLinea($aDades['linea']);
 		if (array_key_exists('lugar',$aDades)) $this->setLugar($aDades['lugar']);
 		if (array_key_exists('observ',$aDades)) $this->setObserv($aDades['observ']);
+		if (array_key_exists('pdf',$aDades)) $this->setPdfEscaped($aDades['pdf']);
 	}
 
 	/**
@@ -306,6 +389,7 @@ class Acta Extends core\ClasePropiedades {
 		$this->setLinea('');
 		$this->setLugar('');
 		$this->setObserv('');
+		$this->setPdfEscaped('');
 		$this->setPrimary_key($aPK);
 	}
 
@@ -564,6 +648,30 @@ class Acta Extends core\ClasePropiedades {
 	 */
 	function setObserv($sobserv='') {
 		$this->sobserv = $sobserv;
+	}
+	/**
+	 * estableix el valor de l'atribut pdf de Acta
+	 *
+	 * @param string pdf='' optional
+	 */
+	function setPdf($pdf='') {
+		// Escape the binary data
+		$escaped = bin2hex( $pdf );
+		$this->pdf = $escaped;
+	}
+	
+	/**
+	 * estableix el valor de l'atribut pdf de Acta
+	 * per usar amb els valors directes de la DB.
+	 *
+	 * @param string pdf='' optional (ja convertit a hexadecimal)
+	 */
+	private function setPdfEscaped($pdf='') {
+		$this->pdf = $pdf;
+	}
+	
+	public function getpdf() {
+		return hex2bin($this->pdf);
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
 

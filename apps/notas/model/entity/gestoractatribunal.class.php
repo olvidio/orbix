@@ -88,7 +88,7 @@ class GestorActaTribunal Extends core\ClaseGestor {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$dl = strtok($aDades['acta'],' ');
 			if ($dl == core\ConfigGlobal::mi_delef()) {
-				$oActaTribunal= new ActaTribunalDl($a_pkey);
+				$oActaTribunal= new ActaTribunal($a_pkey);
 			} else {
 				//$oActaTribunal= new ActaTribunalEx($a_pkey);
 			}
@@ -145,11 +145,11 @@ class GestorActaTribunal Extends core\ClaseGestor {
 			$a_pkey = array('id_item' => $aDades['id_item']);
 			$dl = strtok($aDades['acta'],' ');
 			if ($dl == core\ConfigGlobal::mi_delef()) {
-				$oActaTribunal= new ActaTribunalDl($a_pkey);
+				$oActaTribunal= new ActaTribunal($a_pkey);
 			} else {
 				//$oActaTribunal= new ActaTribunalEx($a_pkey);
 				// De momento no tiene sentido, En cambio lo uso para cr stgr
-				$oActaTribunal= new ActaTribunalDl($a_pkey);
+				$oActaTribunal= new ActaTribunal($a_pkey);
 			}
 			$oActaTribunalSet->add($oActaTribunal);
 		}
