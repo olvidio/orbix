@@ -91,28 +91,28 @@ fnjs_guardar_acta=function(formulario){
 	</td>
 </tr>
 <tr>
-	<td class=etiqueta><?= ucfirst(_("fecha acta")); ?>: </td>
-	<td><input class="fecha" size="11" id="f_acta" name="f_acta" value="<?= $f_acta; ?>"></td>
+	<td class=etiqueta><?= ucfirst(_("fecha acta")); ?>:</td>
+	<td><input <?= $readonly ?> class="fecha" size="11" id="f_acta" name="f_acta" value="<?= $f_acta; ?>"></td>
 </tr>
 <tr></tr>
 <tr>
 	<td class=etiqueta><?= ucfirst(_("libro")); ?>:</td>
-	<td colspan=2><input class=contenido size="10" id="libro" name="libro" value="<?= $libro ?>">&nbsp;&nbsp;<?= $ult_lib; ?></td>
+	<td colspan=2><input <?= $readonly ?> class=contenido size="10" id="libro" name="libro" value="<?= $libro ?>">&nbsp;&nbsp;<?= $ult_lib; ?></td>
 </tr><tr>
 	<td class=etiqueta><?= ucfirst(_("página")); ?>:</td>
-	<td colspan=2><input class=contenido size="10" id="pagina" name="pagina" value="<?= $pagina ?>">&nbsp;&nbsp;<?= $ult_pag; ?></td>
+	<td colspan=2><input <?= $readonly ?> class=contenido size="10" id="pagina" name="pagina" value="<?= $pagina ?>">&nbsp;&nbsp;<?= $ult_pag; ?></td>
 </tr><tr>
 	<td class=etiqueta><?= ucfirst(_("línea")); ?>:</td>
-	<td colspan=2><input class=contenido size="10" id="linea" name="linea" value="<?= $linea ?>">&nbsp;&nbsp;<?= $ult_lin; ?></td>
+	<td colspan=2><input <?= $readonly ?> class=contenido size="10" id="linea" name="linea" value="<?= $linea ?>">&nbsp;&nbsp;<?= $ult_lin; ?></td>
 </tr><tr>
 	<td class=etiqueta><?= ucfirst(_("lugar")); ?>:</td>
-	<td colspan=2><input class=contenido size="30" id="lugar" name="lugar" value="<?= htmlspecialchars($lugar) ?>"></td> 
+	<td colspan=2><input <?= $readonly ?> class=contenido size="30" id="lugar" name="lugar" value="<?= htmlspecialchars($lugar) ?>"></td> 
 </tr><tr>
 	<td class=etiqueta><?= ucfirst(_("observaciones")); ?>:</td>
-	<td colspan=2><input class=contenido size="60" id="observ" name="observ" value="<?= htmlspecialchars($observ) ?>"></td>
+	<td colspan=2><input <?= $readonly ?> class=contenido size="60" id="observ" name="observ" value="<?= htmlspecialchars($observ) ?>"></td>
 </tr>
 <tr><td class=etiqueta><?= ucfirst(_("asignatura")) ?>:</td>
-	<td><input class=contenido type='text'  size='60' id='name_asignatura' name='name_asignatura' value='<?= $nombre_asignatura ?>' >
+	<td><input <?= $readonly ?> class=contenido type='text'  size='60' id='name_asignatura' name='name_asignatura' value='<?= $nombre_asignatura ?>' >
 	<input type='hidden' id='id_asignatura' name='id_asignatura' value='<?= $id_asignatura ?>' ></td></tr>
 </table>
 <br>
@@ -126,18 +126,20 @@ fnjs_guardar_acta=function(formulario){
 		foreach ($examinadores as $examinador) {
 		    $i++;
 		    ?>
-			<input class="examinador" type='text'  size='60' name='examinadores[]' value='<?= $examinador ?>' >
+			<input <?= $readonly ?> class="examinador" type='text'  size='60' name='examinadores[]' value='<?= $examinador ?>' >
             <?php
 		}
         ?>
-			<input class="examinador" type='text'  size='60' name='examinadores[]' value='' >
+			<input <?= $readonly ?> class="examinador" type='text'  size='60' name='examinadores[]' value='' >
 		</span>
 
-	<input id="g3" TYPE="button" VALUE="<?= ucfirst(_("más")); ?>"  onclick="fnjs_add_examinador()">
+		<?php if (empty($readonly)) { ?>
+			<input id="g3" TYPE="button" VALUE="<?= ucfirst(_("más")); ?>"  onclick="fnjs_add_examinador()">
+		<?php } ?>
 		</td></tr>
 </table>
 <br>
-<?php if ($permiso == 3) { ?>
+<?php if (empty($readonly) && $permiso == 3) { ?>
 	<input id="g1" TYPE="button" VALUE="<?= ucfirst(_("guardar cambios acta")); ?>"  onclick="fnjs_guardar_acta(this.form)">
 	<?php
 	if (!empty($notas)) {
@@ -148,7 +150,71 @@ fnjs_guardar_acta=function(formulario){
 	?>
 <?php } ?>
 </form>
+<br>
+<?php if (empty($readonly)) { ?>
+<form id='frm_upload' action="" method="post" enctype="multipart/form-data">
+<?= $oHashActaPdf->getCamposHtml(); ?>
+	<?= ucfirst(_("buscar el acta firmada")); ?>:
+	<br>
+	<input type="file" name="acta_pdf" id="fileToUpload">
+	<br>
+    <input type="button" onclick="fnjs_upload_pdf();" value="<?= ucfirst(_("subir pdf")); ?>">
+</form>
+<?php } else { ?>
+    <input type="button" onclick="window.open('<?= $url_download ?>');" value="<?= ucfirst(_("descargar pdf")); ?>">
+<?php } ?>
+    
+<?php if (!empty($readonly) && $soy_rstgr) { ?>
+    <input type="button" onclick="fnjs_eliminar_pdf();" value="<?= ucfirst(_("eliminar pdf")); ?>">
+<?php } ?>
+
 <script type="text/javascript">
+
+fnjs_upload_pdf=function(){
+    if (typeof event !== 'undefined') {
+    	event.preventDefault();
+	}
+	//datos = $('#frm_upload').serialize();
+	var datos = new FormData(document.getElementById("frm_upload"));
+           
+	request=$.ajax({
+		data: datos,
+		url: 'apps/notas/controller/acta_pdf_upload.php',
+		method: 'POST',
+		dataType: 'json',
+		cache: false,
+        contentType: false,
+     	processData: false
+	});
+	request.done( function (json) {
+		if (json.success != true) {
+			alert ("<?= _("respuesta") ?>: "+json.mensaje);
+		} else {
+			<?= $oPosicion->js_atras(1); ?>
+		}
+	});
+}
+
+fnjs_eliminar_pdf=function(){
+    if (typeof event !== 'undefined') {
+    	event.preventDefault();
+	}
+	if (confirm("<?= _("¿Está seguro que desea borrar esta acta firmada?") ?>") ) {
+		request=$.ajax({
+			data: '<?= $h_delete ?>',
+			url: '<?= $url_delete ?>',
+			method: 'POST',
+			dataType: 'json'
+		});
+		request.done( function (json) {
+			if (json.success != true) {
+				alert ("<?= _("respuesta") ?>: "+json.mensaje);
+			} else {
+				<?= $oPosicion->js_atras(1); ?>
+			}
+		});
+	}
+}
 
 fnjs_autocomplete_exam=function () {
 	$('.examinador').autocomplete({

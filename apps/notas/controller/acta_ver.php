@@ -80,6 +80,7 @@ $ult_pag = $GesActas->getUltimaPagina($ult_lib);
 $ult_lin = $GesActas->getUltimaLinea($ult_lib);
 $ult_acta = $GesActas->getUltimaActa($dl,$any);
 $acta_new = '';
+$pdf = '';
 	
 $obj = 'notas\\model\\entity\\ActaDl';
 
@@ -133,6 +134,7 @@ if ($notas != 'nuevo' && $Qmod != 'nueva' && !empty($acta_actual))  { //signific
 		$lugar = $oActa->getLugar();
 		$observ =$oActa->getObserv();
 		$id_asignatura_actual=$id_asignatura;
+		$pdf =$oActa->getpdf();
 	}
 } else {
 	//busco la última acta (para ayudar)
@@ -233,6 +235,12 @@ if ($Qmod == 'nueva' || $notas=="nuevo") {
 }
 $oHashActa->setArraycamposHidden($a_camposHidden);
 
+$oHashActaPdf = new Hash();
+$oHashActaPdf->setcamposForm('acta_pdf');
+$oHashActaPdf->setCamposNo('acta_pdf');
+//cambio el nombre, porque tiene el mismo id en el otro formnulario
+$oHashActaPdf->setArrayCamposHidden(['acta_num' => $acta_actual]);
+
 $titulo=strtoupper(_("datos del acta"));
 
 $examinadores = [];
@@ -250,11 +258,33 @@ $oHashLink->setUrl($url_ajax);
 $oHashLink->setCamposForm('que!search'); 
 $h_ajax = $oHashLink->getParamAjaxEnArray();
 
+if (empty($pdf)) {
+	$readonly = '';
+	$url_download = '';
+	$url_delete = '';
+} else {
+	$readonly = 'readonly';
+	$url_download = Hash::link('apps/notas/controller/acta_pdf_download.php?'.http_build_query(['key' => $Qacta]));
+	$url_delete =  'apps/notas/controller/acta_pdf_delete.php';
+}
+$oHashActaDelete = new Hash();
+//cambio el nombre, porque tiene el mismo id en el otro formnulario
+$oHashActaDelete->setArrayCamposHidden(['acta_num' => $acta_actual]);
+$h_delete = $oHashActaDelete->getParamAjax();
+
+// Solo cr, puede eliminar un acta firmada:
+if (ConfigGlobal::mi_ambito() == 'rstgr') {
+	$soy_rstgr = TRUE;
+} else {
+	$soy_rstgr = FALSE;
+}
+
 $a_campos = ['obj' => $obj,
 			'oPosicion' => $oPosicion,
 			'notas' => $notas,
 			'mod' => $Qmod,
 			'oHashActa' => $oHashActa,
+			'oHashActaPdf' => $oHashActaPdf,
 			'titulo' => $titulo,
 			'acta_actual' => $acta_actual,
 			'acta_new' => $acta_new,
@@ -275,6 +305,11 @@ $a_campos = ['obj' => $obj,
 			'examinadores' => $examinadores,
 			'a_actas' => $a_actas,
 			'permiso' => $permiso,
+			'readonly' => $readonly,
+			'url_download' => $url_download,
+			'url_delete' => $url_delete,
+			'h_delete' => $h_delete,
+			'soy_rstgr' => $soy_rstgr,
 			];
 
 $oView = new core\View('notas/controller');

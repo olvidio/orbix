@@ -197,6 +197,10 @@ div.ventana z-index: 160;
 		font-size : 14pt;
 	}
 	
+	input:read-only {
+	  background-color: #ddd !important;
+	}
+	
 	/* Flex box */
 	
 	.flex-container {

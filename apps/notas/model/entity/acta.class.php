@@ -671,6 +671,9 @@ class Acta Extends core\ClasePropiedades {
 	}
 	
 	public function getpdf() {
+		if (!isset($this->pdf) && !$this->bLoaded) {
+			$this->DBCarregar();
+		}
 		return hex2bin($this->pdf);
 	}
 	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
