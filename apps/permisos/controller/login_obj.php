@@ -162,7 +162,7 @@ $_SESSION['sfsv'] = $ubicacion;
 
 if (!empty($esquema_web)) {
     $oDBPropiedades = new DBPropiedades();
-    $a_posibles_esquemas = $oDBPropiedades->array_posibles_esquemas();
+    $a_posibles_esquemas = $oDBPropiedades->array_posibles_esquemas(FALSE,TRUE);
     if (!in_array($esquema_web, $a_posibles_esquemas)) {
         $msg = sprintf(_("No existe este equema: %s"),$esquema_web);
         die ($msg);

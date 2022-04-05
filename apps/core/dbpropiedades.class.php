@@ -81,7 +81,7 @@ class DBPropiedades {
         return $txt;
     }
 
-    public function array_posibles_esquemas($comun=FALSE) {
+    public function array_posibles_esquemas($comun=FALSE,$rstgr=FALSE) {
         /* Para el caso de sf, entrando como en el directorio orbixsf, al redirigir
          * a orbix, la ubicación acaba siendo sv.
          * solo me sirve   getenv('UBICACION'); para la entrada.
@@ -112,10 +112,17 @@ class DBPropiedades {
         if (is_object($oDblSt)) {
             $oDblSt->execute();
             foreach($oDblSt as $row) {
-                if ($row[0] == 'public') continue;
-                if ($row[0] == 'resto') continue;
-                if ($row[0] == 'global') continue;
-                if ($row[0] == 'bucardo') continue;
+            	if ($row[0] == 'public') { continue; }
+                if ($row[0] == 'resto') { continue; }
+                if ($row[0] == 'global') { continue; }
+                if ($row[0] == 'bucardo') { continue; }
+				// Para los esquemas tipo 'H-H' o 'H-Hf', 
+            	if (!$rstgr) {
+            		$a_reg = explode('-',$row[0]);
+            		if ($a_reg[0] == $a_reg[1]) {
+						continue;
+            		}
+            	}
                 if ($comun) {
                     $sv = $row[0];
                     $a_esquemas[$sv] = $sv;
