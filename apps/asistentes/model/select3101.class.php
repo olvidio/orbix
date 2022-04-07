@@ -159,6 +159,7 @@ class Select3101 {
 							array('name'=>_("nombre"),'width'=>30),
 							array('name'=>_("apellidos"),'width'=>30),
 							array('name'=>_("ctr"),'width'=>30),
+							array('name'=>_("observaciones persona"),'width'=>150),
 						);
 		return $a_cabeceras;
 	}
@@ -421,6 +422,7 @@ class Select3101 {
 			if(in_array($id_nom,  $this->aListaCargos)) { $this->num--; continue; }
 
 			$oPersona = personas\Persona::NewPersona($id_nom);
+			
 			if (!is_object($oPersona)) {
 				$this->msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
 				continue;
@@ -432,6 +434,7 @@ class Select3101 {
 			$sacd= ($oPersona->getSacd())? _("sí") : '';
 			$dl_asistente=$oPersona->getDl();
 			$ctr_dl=$oPersona->getCentro_o_dl();
+			$observ_persona =$oPersona->getObserv();
 			// Añado los telf:
 			$telfs = '';
 			$telfs_fijo = $oPersona->telecos_persona($id_nom,"telf"," / ","*",FALSE) ;
@@ -532,7 +535,7 @@ class Select3101 {
 			$a_val[11]="$nombre";
 			$a_val[12]="$apellidos";
 			$a_val[13]="$ctr_dl";
-			
+			$a_val[14]="$observ_persona";
 			$this->a_asistentes[$nom] = $a_val;
 		}
 		uksort($this->a_asistentes,"core\strsinacentocmp");

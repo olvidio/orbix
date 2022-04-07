@@ -84,6 +84,8 @@ if (!empty($id_nom_real)) {
 <td><input type="Checkbox" id="falta" name="falta" value="true" <?= $falta_chk ?>></td></tr>
 <tr><td class=etiqueta><?= _("estudios confirmados") ?></td>
 <td><input type="Checkbox" id="est_ok" name="est_ok" value="true" <?= $est_chk ?>></td></tr>
+<tr><td class=etiqueta><?= ucfirst(_("observaciones persona")); ?></td><td class=contenido colspan="3">
+<textarea id="observ" name="observ_pers" cols="40" rows="3"><?= htmlspecialchars($observ_pers) ?></textarea></td></tr>
 <tr><td class=etiqueta><?= ucfirst(_("observaciones actividad")); ?></td><td class=contenido colspan="3">
 <textarea id="observ" name="observ" cols="40" rows="3"><?= htmlspecialchars($observ) ?></textarea></td></tr>
 <tr><td class=etiqueta><?= ucfirst(_("observaciones estudios")); ?></td><td class=contenido colspan="3">

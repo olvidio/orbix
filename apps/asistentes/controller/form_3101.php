@@ -105,6 +105,7 @@ if (!empty($Qid_nom)) { //caso de modificar
 	}
 	
 	$ape_nom = $oPersona->getPrefApellidosNombre();
+	$observ_pers =$oPersona->getObserv();
 	$id_nom_real = $Qid_nom;
 
 	$aWhere = array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom);
@@ -245,6 +246,7 @@ $a_campos = ['obj' => $obj,
 			'est_chk' => $est_chk,
 			'observ' => $observ,
 			'observ_est' => $observ_est,
+		'observ_pers'=>$observ_pers,
 			'oDesplegablePlaza' => $oDesplegablePlaza,
 			'oDesplPosiblesPropietarios' => $oDesplPosiblesPropietarios,
 			];
