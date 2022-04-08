@@ -13,12 +13,15 @@
 *@param string $origen 'calendario' sirve para volver (si no es calendario).
 */
 
-use actividades\model\entity as actividades;
+use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
+use actividades\model\entity\ActividadDl;
+use actividades\model\entity\ActividadEx;
+use actividades\model\entity\Importada;
 use actividadplazas\model\entity\ActividadPlazasDl;
+use actividadplazas\model\entity\GestorActividadPlazas;
 use core\ConfigGlobal;
 use procesos\model\entity\GestorActividadProcesoTarea;
-use actividadplazas\model\entity\GestorActividadPlazas;
-use actividades\model\entity\Actividad;
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
 */
@@ -45,7 +48,7 @@ function quitar_asistencia($id_activ,$sacd) {
 }
 
 function borrar_actividad($id_activ) {
-	$oActividad = new actividades\Actividad($id_activ);
+	$oActividad = new Actividad($id_activ);
 	$oActividad->DBCarregar();
 	$dl_org = $oActividad->getDl_org();
 	$id_tabla = $oActividad->getId_tabla();
@@ -70,7 +73,7 @@ function borrar_actividad($id_activ) {
 	} else {
 		if ($id_tabla == 'dl') {
 			// No se puede eliminar una actividad de otra dl. Hay que borrarla como importada
-			$oImportada = new actividades\Importada($id_activ);
+			$oImportada = new Importada($id_activ);
 			$oImportada->DBEliminar();
 		} else { // de otras dl en resto
 			$oActividad->setStatus(4); // la pongo en estado borrable
@@ -91,7 +94,7 @@ case 'publicar':
 	if (!empty($a_sel)) { // puedo seleccionar más de uno.
 		foreach ($a_sel as $id) {
 		    $id_activ = (integer) strtok($id,'#');
-			$oActividad = new actividades\Actividad($id_activ);
+			$oActividad = new Actividad($id_activ);
 			$oActividad->DBCarregar();
 			$oActividad->setPublicado('t');
 			if ($oActividad->DBGuardar() === false) { 
@@ -107,13 +110,13 @@ case 'importar':
 	if (!empty($a_sel)) { // puedo seleccionar más de uno.
 		foreach ($a_sel as $id) {
 		    $id_activ = (integer) strtok($id,'#');
-			$oImportada = new actividades\Importada($id_activ);
+			$oImportada = new Importada($id_activ);
 			if ($oImportada->DBGuardar() === false) {
 				echo _("hay un error, no se ha importado");
                 echo "\n".$oActividad->getErrorTxt();
 			}
 			// generar proceso.
-			if (core\configGlobal::is_app_installed('procesos') ) {
+			if (configGlobal::is_app_installed('procesos') ) {
 			    $oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
 			    $oGestorActividadProcesoTarea->generarProceso($id_activ,ConfigGlobal::mi_sfsv(),TRUE);
 			}
@@ -154,7 +157,7 @@ case "nuevo":
 	// para dl y dlf:
 	$dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $Qdl_org);
 	$dl_propia = (ConfigGlobal::mi_dele() == $dl_org_no_f)? TRUE : FALSE;
-	if (core\ConfigGlobal::is_app_installed('procesos') &&  $_SESSION['oPermActividades']->getPermisoCrear($dl_propia) === FALSE) {
+	if (ConfigGlobal::is_app_installed('procesos') &&  $_SESSION['oPermActividades']->getPermisoCrear($dl_propia) === FALSE) {
         echo _("No tiene permiso para crear una actividad de este tipo")."<br>";
         die();
 	}
@@ -172,12 +175,12 @@ case "nuevo":
 	$isfsv = substr($Qid_tipo_activ, 0, 1);
     $mi_dele = ConfigGlobal::mi_delef($isfsv);
 	if ($Qdl_org == $mi_dele) {
-		$oActividad= new actividades\ActividadDl();
+		$oActividad= new ActividadDl();
 	} else {
-		$oActividad= new actividades\ActividadEx();
+		$oActividad= new ActividadEx();
 		$oActividad->setPublicado('t');
 		$oActividad->setId_tabla('ex');
-		$Qstatus = actividades\ActividadAll::STATUS_ACTUAL; // Que sea estado actual.
+		$Qstatus = ActividadAll::STATUS_ACTUAL; // Que sea estado actual.
 	}
 	$oActividad->setDl_org($Qdl_org);
 	if (isset($Qid_tipo_activ)) {
@@ -223,14 +226,14 @@ case "nuevo":
 	// si estoy creando una actividad de otra dl es porque la quiero importar.
 	if ($Qdl_org != $mi_dele) {
 		$id_activ = $oActividad->getId_activ();
-		$oImportada = new actividades\Importada($id_activ);
+		$oImportada = new Importada($id_activ);
 		if ($oImportada->DBGuardar() === false) {
 			echo _("hay un error, no se ha importado");
             echo "\n".$oActividad->getErrorTxt();
 		}
 	}
 	// Por defecto pongo todas las plazas en mi dl
-	if (core\configGlobal::is_app_installed('actividadplazas')) {
+	if (configGlobal::is_app_installed('actividadplazas')) {
 	    if (!empty($Qplazas) && $Qdl_org == $mi_dele) {
     		$id_activ = $oActividad->getId_activ();
 	        $id_dl = 0;
@@ -256,13 +259,13 @@ case "duplicar": // duplicar la actividad.
 	$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 	if (!empty($a_sel)) { 
 	    $id_activ = (integer) strtok($a_sel[0],'#');
-		$oActividadAll = new actividades\Actividad($id_activ);
+		$oActividadAll = new Actividad($id_activ);
 		$dl = $oActividadAll->getDl_org();
 		// des si puede duplicar sf.
-		if ($dl == core\ConfigGlobal::mi_delef() ||
-		    ( $_SESSION['oPerm']->have_perm_oficina('des') && $dl == core\ConfigGlobal::mi_dele().'f' ) 
+		if ($dl == ConfigGlobal::mi_delef() ||
+		    ( $_SESSION['oPerm']->have_perm_oficina('des') && $dl == ConfigGlobal::mi_dele().'f' ) 
 		    ) {
-			$oActividad = new actividades\ActividadDl($id_activ);
+			$oActividad = new ActividadDl($id_activ);
 		} else {
 			exit(_("no se puede duplicar actividades que no sean de la propia dl"));
 		}
@@ -284,32 +287,40 @@ case "eliminar": // Eliminar la actividad.
 	if (!empty($a_sel)) { // puedo seleccionar más de uno.
 		foreach ($a_sel as $id) {
 		    $id_activ = (integer) strtok($id,'#');
-			$oActividad = new actividades\Actividad($id_activ);
+			$oActividad = new Actividad($id_activ);
 			$id_tipo_activ = $oActividad->getId_tipo_activ();
 			$dl_org = $oActividad->getDl_org();
 		    
-            $_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
-            $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
-            if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('borrar') === TRUE) {
-                borrar_actividad($id_activ);
+            if (ConfigGlobal::is_app_installed('procesos')) {
+				$_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
+				$oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
+            	if ($oPermActiv->have_perm_activ('borrar') === TRUE) {
+					borrar_actividad($id_activ);
+				} else {
+					$error_txt .= _("No tiene permiso para borrar esta actividad");
+				}
             } else {
-                $error_txt .= _("No tiene permiso para borrar esta actividad");
+				borrar_actividad($id_activ);
             }
 		}
 	}
 	// si vengo desde la presentacion del planning, ya tengo el id_activ.
 	if (!empty($Qid_activ)) {
-        $oActividad = new actividades\Actividad($Qid_activ);
+        $oActividad = new Actividad($Qid_activ);
         $id_tipo_activ = $oActividad->getId_tipo_activ();
         $dl_org = $oActividad->getDl_org();
         
-        $_SESSION['oPermActividades']->setActividad($Qid_activ,$id_tipo_activ,$dl_org);
-        $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
-        if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('borrar') === TRUE) {
-            borrar_actividad($Qid_activ);
-        } else {
-            $error_txt .= _("No tiene permiso para borrar esta actividad");
-        }
+		if (ConfigGlobal::is_app_installed('procesos')) {
+			$_SESSION['oPermActividades']->setActividad($Qid_activ,$id_tipo_activ,$dl_org);
+			$oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
+			if ($oPermActiv->have_perm_activ('borrar') === TRUE) {
+				borrar_actividad($id_activ);
+			} else {
+				$error_txt .= _("No tiene permiso para borrar esta actividad");
+			}
+		} else {
+			borrar_actividad($id_activ);
+		}
 	}
 	
 	if (!empty($error_txt)) {
@@ -367,7 +378,7 @@ case "cmb_tipo": // sólo cambio el tipo a una actividad existente //___________
 			die();
 		}
 	}
-	$oActividad = new actividades\Actividad($id_activ);
+	$oActividad = new Actividad($id_activ);
 	$oActividad->DBCarregar();
 	$oActividad->setId_tipo_activ($valor_id_tipo_activ);
 	if(isset($Qdl_org)) {
@@ -427,7 +438,7 @@ case "editar": // editar la actividad.
 	// permiso
 	$_SESSION['oPermActividades']->setActividad($Qid_activ,$Qid_tipo_activ,$Qdl_org);
 	$oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
-	if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('crear') === TRUE) {
+	if (ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('crear') === TRUE) {
         $Qisfsv_val = (integer) \filter_input(INPUT_POST, 'isfsv_val');
         $Qiasistentes_val = (integer) \filter_input(INPUT_POST, 'iasistentes_val');
         $Qiactividad_val = (integer) \filter_input(INPUT_POST, 'iactividad_val');
@@ -445,7 +456,7 @@ case "editar": // editar la actividad.
 	}
 	
 	
-	$oActividad = new actividades\Actividad($Qid_activ);
+	$oActividad = new Actividad($Qid_activ);
 	$oActividad->DBCarregar();
 	$plazas_old = $oActividad->getPlazas();
 
@@ -488,14 +499,14 @@ case "editar": // editar la actividad.
 		echo "\n".$oActividad->getErrorTxt();
 	} else {
         // Si cambio de dl_propia a otra (o al revés), hay que cambiar el proceso. Se hace al final para que la actividad ya tenga puesta la nueva dl
-        if(core\ConfigGlobal::is_app_installed('procesos')){
-            if (($dl_orig != $dl_org) && ($dl_org==core\ConfigGlobal::mi_delef() || $dl_orig==core\ConfigGlobal::mi_delef())) {
+        if(ConfigGlobal::is_app_installed('procesos')){
+            if (($dl_orig != $dl_org) && ($dl_org==ConfigGlobal::mi_delef() || $dl_orig==ConfigGlobal::mi_delef())) {
                 $oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
                 $oGestorActividadProcesoTarea->generarProceso($oActividad->getId_activ());
             }
         }
         // Por defecto pongo todas las plazas en mi dl
-        if (core\configGlobal::is_app_installed('actividadplazas')) {
+        if (configGlobal::is_app_installed('actividadplazas')) {
             $mi_dele = ConfigGlobal::mi_delef();
             if (!empty($Qplazas) && ($plazas_old != $Qplazas) && $Qdl_org == $mi_dele) {
                 $id_dl = 0;
