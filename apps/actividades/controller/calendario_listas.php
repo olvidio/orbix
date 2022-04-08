@@ -5,13 +5,12 @@ use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
 use dossiers\model\PermisoDossier;
 use permisos\model\PermisosActividadesTrue;
+use ubis\model\entity\Casa;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\GestorCasaDl;
-use web\DateTimeLocal;
 use web\Lista;
 use web\Periodo;
 use web\TiposActividades;
-use ubis\model\entity\Casa;
 
 /**
 * Esta página muestra 
@@ -32,14 +31,12 @@ require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 function nomUbi($id_ubi) {
-    
     $oCasa = new Casa($id_ubi);
     if (empty($oCasa)) {
         // probar con los ctr.
         $oCasa =  new CentroDl($id_ubi);
     }
-    $nombre_ubi = $oCasa->getNombre_ubi();
-    return $nombre_ubi;
+    return $oCasa->getNombre_ubi();
 }
 
 $oPosicion->recordar();
@@ -122,24 +119,17 @@ switch ($Qque) {
 		// todas las oficinas.
 		$mi_of='all';
 		break;
+	default:
+		$err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+		exit ($err_switch);
 }
 // valores por defecto
-if (empty($Qperiodo)) {
-    //$Qperiodo = 'actual'; // desde 40 dias antes de hoy hasta dentro de 9 meses desde hoy.
-    $Qperiodo = ''; // del 1-ene al 31-dic
-}
+$Qyeardefault = empty($Qyeardefault)? 'next' : $Qyeardefault;
 
 // periodo.
 $oPeriodo = new Periodo();
-if (empty($Qyeardefault)){
-$oPeriodo->setDefaultAny('next');
-}
-else{
 $oPeriodo->setDefaultAny($Qyeardefault);
-}
 $oPeriodo->setAny($Qyear);
-
-
 $oPeriodo->setEmpiezaMin($Qempiezamin);
 $oPeriodo->setEmpiezaMax($Qempiezamax);
 $oPeriodo->setPeriodo($Qperiodo);
@@ -159,27 +149,28 @@ switch ($tipo) {
 	case "oficina": // tipo asistentes
 		$oTiposActividades = new TiposActividades();
 		$oTiposActividades->setSfSvId($miSfsv);
-        switch ($mi_of) {
-            case 'all':
-                $aGrupos = 	$oTiposActividades->getAsistentesPosibles();
-                break;
-            default:
-                $oPermisoOficinas = new PermisoDossier();
-                $aGrupos = 	$oTiposActividades->getAsistentesPosibles();
-                foreach ($aGrupos as $sasistentes) {
-                    $oficina = $equivalencias_gm_oficina[$sasistentes]; 
-                    if (!$oPermisoOficinas->have_perm_oficina($oficina)) {
-                        if (($key = array_search($sasistentes, $aGrupos)) !== false) {
-                            unset($aGrupos[$key]);
-                        }
-                    }
-                }
+		if ($mi_of == 'all') {
+			$aGrupos = 	$oTiposActividades->getAsistentesPosibles();
+		} else {
+			$oPermisoOficinas = new PermisoDossier();
+			$aGrupos = 	$oTiposActividades->getAsistentesPosibles();
+			foreach ($aGrupos as $sasistentes) {
+				$oficina = $equivalencias_gm_oficina[$sasistentes]; 
+				if (!$oPermisoOficinas->have_perm_oficina($oficina) &&
+					($key = array_search($sasistentes, $aGrupos)) !== false)
+				{
+					unset($aGrupos[$key]);
+				}
+			}
         }
 		break;
+	default:
+		$err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+		exit ($err_switch);
 }
 
 $a_ubi_activ = array();
-foreach ($aGrupos as $key => $Titulo) {
+foreach (array_keys($aGrupos) as $key) {
     $aWhere = [];
     $aOperador = [];
     $aWhere['f_ini'] = "'$inicioIso','$finIso'";
@@ -218,20 +209,15 @@ foreach ($aGrupos as $key => $Titulo) {
 			   
 			} else {
 				$oTiposActividades->setAsistentesId($key);
-				//$cond_id_tipo_activ= "a.id_tipo_activ::text ~ '".$oTiposActividades->getNom_tipoRegexp()."'";
 				$aWhere['id_tipo_activ'] = $oTiposActividades->getNom_tipoRegexp();
                 $aOperador['id_tipo_activ'] = '~';
                 $oGesActiv = new GestorActividad();
                 $cActividades = $oGesActiv->getActividades($aWhere,$aOperador);
 			}
-			/*
-			$sql_act="SELECT a.id_activ, nom_activ, h_ini, h_fin, tarifa, id_tipo_activ
-					 FROM a_actividades a
-					 WHERE $periodo_sql AND $cond_id_tipo_activ AND status < 4 ORDER BY f_ini"; 
-			//echo "sql: $sql_act<br>";
-			 * 
-			 */
 		break;
+		default:
+			$err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+			exit ($err_switch);
 	}
 
 	if (is_array($cActividades) && count($cActividades) > 0) {
@@ -351,6 +337,9 @@ switch ($tipo) {
                      _("centros encargados"),
                     ];
         break;
+	default:
+		$err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+		exit ($err_switch);
 }
 
 $oTabla = new Lista();
