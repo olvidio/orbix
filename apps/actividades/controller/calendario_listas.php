@@ -49,6 +49,7 @@ $Qver_ctr = (string) \filter_input(INPUT_POST, 'ver_ctr');
 
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
 $Qyear = (string) \filter_input(INPUT_POST, 'year');
+$Qyeardefault= (string) \filter_input(INPUT_POST, 'yeardefault');
 $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 
@@ -130,8 +131,15 @@ if (empty($Qperiodo)) {
 
 // periodo.
 $oPeriodo = new Periodo();
+if (empty($Qyeardefault)){
 $oPeriodo->setDefaultAny('next');
+}
+else{
+$oPeriodo->setDefaultAny($Qyeardefault);
+}
 $oPeriodo->setAny($Qyear);
+
+
 $oPeriodo->setEmpiezaMin($Qempiezamin);
 $oPeriodo->setEmpiezaMax($Qempiezamax);
 $oPeriodo->setPeriodo($Qperiodo);
