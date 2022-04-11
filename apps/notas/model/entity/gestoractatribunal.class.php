@@ -86,11 +86,9 @@ class GestorActaTribunal Extends core\ClaseGestor {
 		}
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
-			if (core\ConfigGlobal::mi_ambito() == 'rstgr') {
-				$oActaTribunal= new ActaTribunal($a_pkey);
-			} else {
-				$oActaTribunal= new ActaTribunalDl($a_pkey);
-			}
+			$oActaTribunal= new ActaTribunal($a_pkey);
+			$oActaTribunal->cambiarDB($this->getoDbl());
+			$oActaTribunal->cambiarTabla($this->getNomTabla());
 			$oActaTribunalSet->add($oActaTribunal);
 		}
 		return $oActaTribunalSet->getTot();
@@ -142,11 +140,9 @@ class GestorActaTribunal Extends core\ClaseGestor {
 		}
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
-			if (core\ConfigGlobal::mi_ambito() == 'rstgr') {
-				$oActaTribunal= new ActaTribunal($a_pkey);
-			} else {
-				$oActaTribunal= new ActaTribunalDl($a_pkey);
-			}
+			$oActaTribunal= new ActaTribunal($a_pkey);
+			$oActaTribunal->cambiarDB($this->getoDbl());
+			$oActaTribunal->cambiarTabla($this->getNomTabla());
 			$oActaTribunalSet->add($oActaTribunal);
 		}
 		return $oActaTribunalSet->getTot();

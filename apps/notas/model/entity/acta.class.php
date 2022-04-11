@@ -219,6 +219,7 @@ class Acta Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->sacta);
+			$aDades['acta'] = $this->sacta;
 			$campos="(acta,id_asignatura,id_activ,f_acta,libro,pagina,linea,lugar,observ,pdf)";
 			$valores="(:acta,:id_asignatura,:id_activ,:f_acta,:libro,:pagina,:linea,:lugar,:observ,:pdf)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {

@@ -224,6 +224,24 @@ class ActaTribunal Extends core\ClasePropiedades {
 		return true;
 	}
 	
+	/**
+	 * Para hacer publico el método setNombre_tabla
+	 * 
+	 * @param string $nom_tabla
+	 */
+	public function cambiarTabla($nom_tabla) {
+		$this->setNomTabla($nom_tabla);
+	}
+	
+	/**
+	 * Para hacer publico el método setO
+	 * 
+	 * @param string $nom_tabla
+	 */
+	public function cambiarDB($oDbl) {
+		$this->setoDbl($oDbl);
+	}
+	
 	/* METODES ALTRES  ----------------------------------------------------------*/
 	/* METODES PRIVATS ----------------------------------------------------------*/
 
