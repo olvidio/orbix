@@ -246,7 +246,6 @@ $titulo=strtoupper(_("datos del acta"));
 $examinadores = [];
 if (!empty($cTribunal)) { 
 	foreach ($cTribunal as $oActaTribunal) {
-		$id_item=$oActaTribunal->getId_item();
 		$examinador=$oActaTribunal->getExaminador();
 		$examinadores[] = $examinador;
 	}

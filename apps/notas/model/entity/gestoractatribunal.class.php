@@ -86,11 +86,10 @@ class GestorActaTribunal Extends core\ClaseGestor {
 		}
 		foreach ($oDbl->query($sQuery) as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
-			$dl = strtok($aDades['acta'],' ');
-			if ($dl == core\ConfigGlobal::mi_delef()) {
+			if (core\ConfigGlobal::mi_ambito() == 'rstgr') {
 				$oActaTribunal= new ActaTribunal($a_pkey);
 			} else {
-				//$oActaTribunal= new ActaTribunalEx($a_pkey);
+				$oActaTribunal= new ActaTribunalDl($a_pkey);
 			}
 			$oActaTribunalSet->add($oActaTribunal);
 		}
@@ -143,13 +142,10 @@ class GestorActaTribunal Extends core\ClaseGestor {
 		}
 		foreach ($oDblSt as $aDades) {
 			$a_pkey = array('id_item' => $aDades['id_item']);
-			$dl = strtok($aDades['acta'],' ');
-			if ($dl == core\ConfigGlobal::mi_delef()) {
+			if (core\ConfigGlobal::mi_ambito() == 'rstgr') {
 				$oActaTribunal= new ActaTribunal($a_pkey);
 			} else {
-				//$oActaTribunal= new ActaTribunalEx($a_pkey);
-				// De momento no tiene sentido, En cambio lo uso para cr stgr
-				$oActaTribunal= new ActaTribunal($a_pkey);
+				$oActaTribunal= new ActaTribunalDl($a_pkey);
 			}
 			$oActaTribunalSet->add($oActaTribunal);
 		}
