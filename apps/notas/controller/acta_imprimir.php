@@ -139,8 +139,12 @@ uksort($aPersonasNotas, "core\strsinacentocmp"); // compara sin contar los acent
 $num_alumnos=count($aPersonasNotas);
 
 // tribunal:
-//$GesTribunal = new notas\GestorActaTribunalDl();
-$GesTribunal = new notas\GestorActaTribunal();
+// Si es cr, se mira en todas:
+if (ConfigGlobal::mi_ambito() == 'rstgr') {
+	$GesTribunal = new notas\GestorActaTribunal();
+} else {
+	$GesTribunal = new notas\GestorActaTribunalDl();
+}
 $cTribunal = $GesTribunal->getActasTribunales(array('acta'=>$acta,'_ordre'=>'orden')); 
 $num_examinadores=count($cTribunal);
 
