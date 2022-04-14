@@ -62,9 +62,9 @@ $aWhere = array();
 $aOperador = array();
 if (!empty($Qacta)) {
 	/* se cambia la lógica, por el cambio de nombre de la dl, no de las actas */
-	$aWhere['_ordre'] = 'f_acta DESC';
 	$aWhere['acta'] = $Qacta;
 	$aOperador['acta'] = '~';
+	$aWhere['_ordre'] = 'f_acta DESC, acta DESC';
 	
     // si es número busca en la dl.
     $matches = [];
@@ -111,7 +111,7 @@ if (!empty($Qacta)) {
 	
 	$aWhere['f_acta'] = "'$inicurs_ca','$fincurs_ca'";
 	$aOperador['f_acta'] = 'BETWEEN';
-	$aWhere['_ordre'] = 'f_acta DESC';
+	$aWhere['_ordre'] = 'f_acta DESC, acta DESC';
 	
 	$titulo=ucfirst(sprintf(_("lista de actas del curso %s"),$txt_curso));
 	// Si es cr, se mira en todas:
