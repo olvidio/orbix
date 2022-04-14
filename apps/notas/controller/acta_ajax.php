@@ -1,6 +1,6 @@
 <?php
-use asignaturas\model\entity as asignaturas;
-use notas\model\entity as notas;
+use asignaturas\model\entity\GestorAsignatura;
+use notas\model\entity\GestorActaTribunal;
 /**
 * Esta página sirve para dar una lista de examinadores para los inputs autocomplete
 *
@@ -26,11 +26,11 @@ $sQuery = (string) \filter_input(INPUT_POST, 'search');
 
 switch($Qque) {
 	case 'examinadores':
-		$GesActaTribunalDl = new notas\GestorActaTribunalDl();
+		$GesActaTribunalDl = new GestorActaTribunal();
 		$json = $GesActaTribunalDl->getJsonExaminadores($sQuery);
 		break;
 	case 'asignaturas':
-		$GesAsignatura = new asignaturas\GestorAsignatura();
+		$GesAsignatura = new GestorAsignatura();
 		$json = $GesAsignatura->getJsonAsignaturas(array('nombre_asignatura'=>$sQuery));
 	break;
 }

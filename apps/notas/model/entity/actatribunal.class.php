@@ -30,6 +30,13 @@ class ActaTribunal Extends core\ClasePropiedades {
 	 protected $aPrimary_key;
 
 	/**
+	 * Id_schema de ActaTribunalDl
+	 *
+	 * @var integer
+	 */
+	 protected $iid_schema;
+
+	/**
 	 * aDades de ActaTribunalDl
 	 *
 	 * @var array
@@ -87,7 +94,8 @@ class ActaTribunal Extends core\ClasePropiedades {
 	 * Si només necessita un valor, se li pot passar un integer.
 	 * En general se li passa un array amb les claus primàries.
 	 *
-	 * @param integer|array iid_item
+	 * @param integer|array iid_schema -> importamte para los esquemas region del stgr.
+	 * 						iid_item
 	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
 	 */
 	function __construct($a_id='') {
@@ -95,13 +103,11 @@ class ActaTribunal Extends core\ClasePropiedades {
 		if (is_array($a_id)) { 
 			$this->aPrimary_key = $a_id;
 			foreach($a_id as $nom_id=>$val_id) {
-				if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; // evitem SQL injection fent cast a integer
+				if (($nom_id == 'id_schema') && $val_id !== '') { $this->iid_schema = (int)$val_id; } // evitem SQL injection fent cast a integer
+				if (($nom_id == 'id_item') && $val_id !== '') { $this->iid_item = (int)$val_id; } // evitem SQL injection fent cast a integer
 			}
 		} else {
-			if (isset($a_id) && $a_id !== '') {
-				$this->iid_item = (integer) $a_id; // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('id_item' => $this->iid_item);
-			}
+			return FALSE;
 		}
 		$this->setoDbl($oDbl);
 		$this->setNomTabla('e_actas_tribunal');
@@ -130,7 +136,7 @@ class ActaTribunal Extends core\ClasePropiedades {
 					acta                     = :acta,
 					examinador               = :examinador,
 					orden                    = :orden";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item=$this->iid_item")) === false) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_schema = $this->iid_schema AND id_item=$this->iid_item")) === false) {
 				$sClauError = 'ActaTribunalDl.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -177,36 +183,36 @@ class ActaTribunal Extends core\ClasePropiedades {
 	 *
 	 */
 	public function DBCarregar($que=null) {
-		$oDbl = $this->getoDbl();
+		$rta = FALSE;
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iid_item)) {
-			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item=$this->iid_item")) === false) {
+			if (($oDblSt = $this->oDbl->query("SELECT * FROM $nom_tabla WHERE id_schema = $this->iid_schema AND id_item=$this->iid_item")) === false) {
 				$sClauError = 'ActaTribunalDl.carregar';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-				return false;
+				$_SESSION['oGestorErrores']->addErrorAppLastError($this->oDbl, $sClauError, __LINE__, __FILE__);
+				$rta = FALSE;
 			}
-			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+			$aDades_local = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 			// Para evitar posteriores cargas
 			$this->bLoaded = TRUE;
 			switch ($que) {
 				case 'tot':
-					$this->aDades=$aDades;
+					$this->aDades=$aDades_local;
 					break;
 				case 'guardar':
-					if (!$oDblSt->rowCount()) return false;
+					if (!$oDblSt->rowCount()) { $rta = FALSE; }
 					break;
 				default:
 					// En el caso de no existir esta fila, $aDades = FALSE:
-					if ($aDades === FALSE) {
+					if ($aDades_local === FALSE) {
 						$this->setNullAllAtributes();
 					} else {
-						$this->setAllAtributes($aDades);
+						$this->setAllAtributes($aDades_local);
 					}
 			}
-			return true;
-		} else {
-		   	return false;
+			$rta = TRUE;
 		}
+		
+		return $rta;
 	}
 
 	/**
@@ -214,11 +220,10 @@ class ActaTribunal Extends core\ClasePropiedades {
 	 *
 	 */
 	public function DBEliminar() {
-		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_item=$this->iid_item")) === false) {
+		if (($this->oDbl->exec("DELETE FROM $nom_tabla WHERE  id_schema = $this->iid_schema AND id_item=$this->iid_item")) === false) {
 			$sClauError = 'ActaTribunalDl.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			$_SESSION['oGestorErrores']->addErrorAppLastError($this->oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
 		}
 		return true;
@@ -251,12 +256,12 @@ class ActaTribunal Extends core\ClasePropiedades {
 	 * @param array $aDades
 	 */
 	function setAllAtributes($aDades) {
-		if (!is_array($aDades)) return;
-		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
-		if (array_key_exists('acta',$aDades)) $this->setActa($aDades['acta']);
-		if (array_key_exists('examinador',$aDades)) $this->setExaminador($aDades['examinador']);
-		if (array_key_exists('orden',$aDades)) $this->setOrden($aDades['orden']);
-		if (array_key_exists('id_item',$aDades)) $this->setId_item($aDades['id_item']);
+		if (!is_array($aDades)) { return; }
+		if (array_key_exists('id_schema',$aDades)) { $this->setId_schema($aDades['id_schema']); }
+		if (array_key_exists('acta',$aDades)) { $this->setActa($aDades['acta']); }
+		if (array_key_exists('examinador',$aDades)) { $this->setExaminador($aDades['examinador']); }
+		if (array_key_exists('orden',$aDades)) { $this->setOrden($aDades['orden']); }
+		if (array_key_exists('id_item',$aDades)) { $this->setId_item($aDades['id_item']); }
 	}
 
 	/**
@@ -295,7 +300,9 @@ class ActaTribunal Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('id_item' => $this->iid_item);
+			$this->aPrimary_key = ['id_schema' => $this->iid_schema,
+									'id_item' => $this->iid_item,
+								];
 		}
 		return $this->aPrimary_key;
 	}
@@ -309,7 +316,8 @@ class ActaTribunal Extends core\ClasePropiedades {
 	    if (is_array($a_id)) {
 	        $this->aPrimary_key = $a_id;
 	        foreach($a_id as $nom_id=>$val_id) {
-	            if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; // evitem SQL injection fent cast a integer
+	        	if (($nom_id == 'id_schema') && $val_id !== '') { $this->iid_schema = (int)$val_id; } // evitem SQL injection fent cast a integer
+	        	if (($nom_id == 'id_item') && $val_id !== '') { $this->iid_item = (int)$val_id; } // evitem SQL injection fent cast a integer
 	        }
 	    }
 	}

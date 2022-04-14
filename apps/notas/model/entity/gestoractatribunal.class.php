@@ -1,6 +1,9 @@
 <?php
 namespace notas\model\entity;
-use core;
+use core\ClaseGestor;
+use core\Condicion;
+use core\ConfigGlobal;
+use core\Set;
 /**
  * GestorActaTribunal
  *
@@ -13,7 +16,7 @@ use core;
  * @created 07/04/2014
  */
 
-class GestorActaTribunal Extends core\ClaseGestor {
+class GestorActaTribunal Extends ClaseGestor {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
@@ -26,20 +29,29 @@ class GestorActaTribunal Extends core\ClaseGestor {
 	 *
 	 */
 	function __construct() {
-		$oDbl = $GLOBALS['oDBP'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('e_actas_tribunal');
+		// Si es cr, se mira en todas:
+		if (ConfigGlobal::mi_ambito() == 'rstgr') {
+			$oDbl = $GLOBALS['oDBP'];
+			$this->setoDbl($oDbl);
+			$this->setNomTabla('e_actas_tribunal');
+		} else {
+			$oDbl = $GLOBALS['oDB'];
+			$this->setoDbl($oDbl);
+			$this->setNomTabla('e_actas_tribunal_dl');
+		}
+		
 	}
 
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
+	
 	/**
 	 * retorna JSON llista d'examinadors
 	 * des del 2020 (perque els d'abans són amb llatí)
 	 *
 	 * @param string sQuery la query a executar.
-	 * @return object Json 
+	 * @return object Json
 	 */
 	function getJsonExaminadores($sQuery='') {
 		$oDbl = $this->getoDbl();
@@ -54,7 +66,7 @@ class GestorActaTribunal Extends core\ClaseGestor {
 		$sLimit = " LIMIT 25";
 		$sQry = "SELECT DISTINCT examinador FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
 		//echo "qry: $sQry<br>";
-		if (($oDblSt = $oDbl->query($sQry)) === false) {
+		if (($oDbl->query($sQry)) === false) {
 			$sClauError = 'GestorActaTribunalDl.examinador';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -63,36 +75,13 @@ class GestorActaTribunal Extends core\ClaseGestor {
 		$i = 0;
 		foreach ($oDbl->query($sQry) as $aDades) {
 			$i++;
-			$json .= ($i > 1)? ',' : ''; 
+			$json .= ($i > 1)? ',' : '';
 			$json .= "{\"label\":\"".$aDades['examinador']."\"}";
 		}
 		$json .= ']';
 		return $json;
 	}
-
-	/**
-	 * retorna l'array d'objectes de tipus ActaTribunal
-	 *
-	 * @param string sQuery la query a executar.
-	 * @return array Una col·lecció d'objectes de tipus ActaTribunal
-	 */
-	function getActasTribunalesQuery($sQuery='') {
-		$oDbl = $this->getoDbl();
-		$oActaTribunalSet = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorActaTribunal.query';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return false;
-		}
-		foreach ($oDbl->query($sQuery) as $aDades) {
-			$a_pkey = array('id_item' => $aDades['id_item']);
-			$oActaTribunal= new ActaTribunal($a_pkey);
-			$oActaTribunal->cambiarDB($this->getoDbl());
-			$oActaTribunal->cambiarTabla($this->getNomTabla());
-			$oActaTribunalSet->add($oActaTribunal);
-		}
-		return $oActaTribunalSet->getTot();
-	}
+	
 
 	/**
 	 * retorna l'array d'objectes de tipus ActaTribunal
@@ -104,45 +93,50 @@ class GestorActaTribunal Extends core\ClaseGestor {
 	function getActasTribunales($aWhere=array(),$aOperators=array()) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		$oActaTribunalSet = new core\Set();
-		$oCondicion = new core\Condicion();
+		$oActaTribunalSet = new Set();
+		$oCondicion = new Condicion();
 		$aCondi = array();
 		foreach ($aWhere as $camp => $val) {
-			if ($camp == '_ordre') continue;
+			if ($camp == '_ordre') { continue; }
 			$sOperador = isset($aOperators[$camp])? $aOperators[$camp] : '';
-			if ($a = $oCondicion->getCondicion($camp,$sOperador,$val)) $aCondi[]=$a;
+			if ($a = $oCondicion->getCondicion($camp,$sOperador,$val)) { $aCondi[]=$a; }
 			// operadores que no requieren valores
-			if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-			if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-			if ($sOperador == 'TXT') unset($aWhere[$camp]);
+			if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') { unset($aWhere[$camp]); }
+			if ($sOperador == 'IN' || $sOperador == 'NOT IN') { unset($aWhere[$camp]); }
+			if ($sOperador == 'TXT') { unset($aWhere[$camp]); }
 		}
 		$sCondi = implode(' AND ',$aCondi);
-		if ($sCondi!='') $sCondi = " WHERE ".$sCondi;
+		if ($sCondi!='') { $sCondi = " WHERE ".$sCondi; }
 		if (isset($GLOBALS['oGestorSessioDelegación'])) {
 		   	$sLimit = $GLOBALS['oGestorSessioDelegación']->getLimitPaginador('a_actividades',$sCondi,$aWhere);
 		} else {
 			$sLimit='';
 		}
-		if ($sLimit===false) return;
+		if ($sLimit === FALSE) { return FALSE; }
 		$sOrdre = '';
-		if (isset($aWhere['_ordre']) && $aWhere['_ordre']!='') $sOrdre = ' ORDER BY '.$aWhere['_ordre'];
-		if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
+		if (isset($aWhere['_ordre']) && $aWhere['_ordre']!='') { $sOrdre = ' ORDER BY '.$aWhere['_ordre']; }
+		if (isset($aWhere['_ordre'])) { unset($aWhere['_ordre']); }
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondi.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
+		if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
 			$sClauError = 'GestorActaTribunal.llistar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return false;
+			return FALSE;
 		}
-		if (($oDblSt->execute($aWhere)) === false) {
+		if (($oDblSt->execute($aWhere)) === FALSE) {
 			$sClauError = 'GestorActaTribunal.llistar.execute';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-			return false;
+			return FALSE;
 		}
 		foreach ($oDblSt as $aDades) {
-			$a_pkey = array('id_item' => $aDades['id_item']);
-			$oActaTribunal= new ActaTribunal($a_pkey);
-			$oActaTribunal->cambiarDB($this->getoDbl());
-			$oActaTribunal->cambiarTabla($this->getNomTabla());
+			$a_pkey = ['id_schema' => $aDades['id_schema'],
+						'id_item' => $aDades['id_item'],
+					];
+			// Si es cr, se mira en todas:
+			if (ConfigGlobal::mi_ambito() == 'rstgr') {
+				$oActaTribunal= new ActaTribunal($a_pkey);
+			} else {
+				$oActaTribunal= new ActaTribunalDl($a_pkey);
+			}
 			$oActaTribunalSet->add($oActaTribunal);
 		}
 		return $oActaTribunalSet->getTot();

@@ -4,7 +4,7 @@ use notas\model\entity as notas;
 use personas\model\entity as personas;
 use core\ConfigGlobal;
 /**
-* Esta página sirve para las actas.
+* Esta página está como include de acta_2_mpdf.php
 *
 *
 *@package	delegacion
@@ -125,12 +125,7 @@ uksort($aPersonasNotas, "core\strsinacentocmp"); // compara sin contar los acent
 $num_alumnos=count($aPersonasNotas);
 
 // tribunal:
-// Si es cr, se mira en todas:
-if (ConfigGlobal::mi_ambito() == 'rstgr') {
-	$GesTribunal = new notas\GestorActaTribunal();
-} else {
-	$GesTribunal = new notas\GestorActaTribunalDl();
-}
+$GesTribunal = new notas\GestorActaTribunal();
 $cTribunal = $GesTribunal->getActasTribunales(array('acta'=>$acta,'_ordre'=>'orden')); 
 $num_examinadores=count($cTribunal);
 

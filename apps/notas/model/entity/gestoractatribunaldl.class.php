@@ -29,4 +29,5 @@ class GestorActaTribunalDl Extends GestorActaTribunal {
 		$this->setoDbl($oDbl);
 		$this->setNomTabla('e_actas_tribunal_dl');
 	}
+	
 }
