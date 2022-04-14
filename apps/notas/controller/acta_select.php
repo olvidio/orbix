@@ -17,6 +17,7 @@ use web\Hash;
 use web\Lista;
 use function core\curso_est;
 use ubis\model\entity\GestorDelegacion;
+use asignaturas\model\entity\GestorAsignatura;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -119,6 +120,8 @@ if (!empty($Qacta)) {
             $aDl = $oGesDelegaciones->getArrayDlRegionStgr([$mi_dele]);
             $sReg = implode("|",$aDl);
             $Qacta = "^($sReg)";
+            $aWhere['acta'] = $Qacta;
+            $aOperador['acta'] = '~';
             $GesActas = new notas\GestorActa();
 	} else {
 		$GesActas = new notas\GestorActaDl();
@@ -146,6 +149,11 @@ $a_cabeceras = array( array('name'=>ucfirst(_("acta")),'formatter'=>'clickFormat
 		array('name'=>ucfirst(_("fecha")),'class'=>'fecha'),
 		_("asignatura"));
 
+
+$gesAsignatura = new GestorAsignatura();
+$a_asignaturas = $gesAsignatura->getArrayAsignaturas();
+
+
 $i=0;
 $a_valores = array();
 foreach ($cActas as $oActa) {
@@ -154,11 +162,8 @@ foreach ($cActas as $oActa) {
 	$f_acta=$oActa->getF_acta()->getFromLocal();
 	$id_asignatura=$oActa->getId_asignatura();
 
-	$oAsignatura = new asignaturas\Asignatura($id_asignatura);
-	$nombre_corto = $oAsignatura->getNombre_corto();
-
+	$nombre_corto = $a_asignaturas[$id_asignatura];
 	$acta_2=urlencode($acta);
-	//$pagina="apps/notas/controller/acta_ver.php?acta=$acta_2";
 	$pagina=Hash::link('apps/notas/controller/acta_ver.php?'.http_build_query(array('acta'=>$acta)));
 	$a_valores[$i]['sel']=$acta_2;
 	if ($_SESSION['oPerm']->have_perm_oficina('est')) {

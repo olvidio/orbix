@@ -33,7 +33,31 @@ class GestorAsignatura Extends core\ClaseGestor {
 
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
-
+	
+	/**
+	 * retorna un array
+	 * Les posibles assignatures.
+	 *
+	 * @return array
+	 */
+	function getArrayAsignaturas() {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$sQuery="SELECT id_asignatura,nombre_corto FROM $nom_tabla ORDER BY id_asignatura";
+		if (($oDbl->query($sQuery)) === false) {
+			$sClauError = 'GestorAsignatura.array';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		$aOpciones = [];
+		foreach ($oDbl->query($sQuery) as $aClave) {
+			$id_asignatura=$aClave[0];
+			$nombre_corto=$aClave[1];
+			$aOpciones[$id_asignatura] = $nombre_corto;
+		}
+		return $aOpciones;
+	}
+	
 	/**
 	 * Devuelve una lista con los id_nivel de las opcionales.
 	 * 
@@ -105,9 +129,8 @@ class GestorAsignatura Extends core\ClaseGestor {
 	function getArrayAsignaturasCreditos() {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		$oTipoCentroSet = new core\Set();
 		$sQuery="SELECT id_asignatura, nombre_asignatura, creditos FROM $nom_tabla ORDER BY id_nivel";
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorAsignatura.lista';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -168,9 +191,8 @@ class GestorAsignatura Extends core\ClaseGestor {
 	 */
 	function getAsignaturasQuery($sQuery='') {
 		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
 		$oAsignaturaSet = new core\Set();
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+		if (($oDbl->query($sQuery)) === false) {
 			$sClauError = 'GestorAsignatura.query';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return false;
@@ -238,6 +260,4 @@ class GestorAsignatura Extends core\ClaseGestor {
 	/* METODES PROTECTED --------------------------------------------------------*/
 
 	/* METODES GET i SET --------------------------------------------------------*/
-
 }
-?>
