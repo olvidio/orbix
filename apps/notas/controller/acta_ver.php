@@ -263,7 +263,7 @@ if (empty($pdf)) {
 	$url_delete = '';
 } else {
 	$readonly = 'readonly';
-	$url_download = Hash::link('apps/notas/controller/acta_pdf_download.php?'.http_build_query(['key' => $Qacta]));
+	$url_download = Hash::link('apps/notas/controller/acta_pdf_download.php?'.http_build_query(['key' => $acta_actual]));
 	$url_delete =  'apps/notas/controller/acta_pdf_delete.php';
 }
 $oHashActaDelete = new Hash();
