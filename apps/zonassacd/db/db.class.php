@@ -4,7 +4,7 @@ use core\ConfigGlobal;
 use devel\model\DBAbstract;
 
 /**
- * Crear las tablas necesaria a nivel de aplicación (global).
+ * Crear las tablas necesarias a nivel de aplicación (global).
  * Cada esquema deberá crear las suyas, heredadas de estas.
  */
 class DB extends DBAbstract {
