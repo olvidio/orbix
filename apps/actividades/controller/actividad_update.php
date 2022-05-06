@@ -147,7 +147,9 @@ case "nuevo":
 	$Qh_fin = (string) \filter_input(INPUT_POST, 'h_fin');
 	$Qpublicado = (string) \filter_input(INPUT_POST, 'publicado');
 	// si estoy creando una actividad de otra dl es porque la quiero importar y por tanto debe estar publicada.
-	$Qpublicado = 't';
+	if ($Qdl_org != ConfigGlobal::mi_delef()) {
+		$Qpublicado = 't';
+	}
 	
 	// Puede ser '000' > sin especificar
 	$Qinom_tipo_val = (string) \filter_input(INPUT_POST, 'inom_tipo_val');
