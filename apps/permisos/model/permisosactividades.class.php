@@ -348,11 +348,8 @@ class PermisosActividades {
 			return  new PermAccion(0);
 		}
 		// buscar estado de la fase ref
-		$on_off = 'off';
 		$completada = $this->isCompletada($id_fase_ref);
-		if (is_true($completada)) {
-		    $on_off = 'on';
-		} else {
+		if (!is_true($completada)) {
 			return  new PermAccion(0);
 		}
 		
@@ -361,7 +358,10 @@ class PermisosActividades {
 		} else {
             $oPerm = $this->aPermOtras[$this->iid_tipo_activ];
 		}
+		
+		$on_off = 'on';
 		$perm = $oPerm->getPerm($iAfecta,$id_fase_ref,$on_off);
+		
 		if ($perm === FALSE) {
 			return  new PermAccion(0);
 		} else {
