@@ -195,7 +195,6 @@ switch ($Qid_zona) {
 		$aa_zonas[0]=array('id_zona'=>$Qid_zona,'nombre_zona'=>$nombre_zona);
 }
 
-$GesActividadProceso = new GestorActividadProcesoTarea();
 $z=0;
 $GesZonasSacd = new GestorZonaSacd();
 $aWhereZ = [];
@@ -288,20 +287,10 @@ foreach ($aa_zonas as $a_zonas) {
                     $nom_llarg=$nom_activ;
 				} else {
                     if(core\ConfigGlobal::is_app_installed('procesos')) {
-                        $permiso_ver = FALSE;
-                        if (!empty($id_cargo)) {
-							// Si tiene cargo sacd (se supone que planing_zonas sólo es para los sacd), que la fase 'ok_sacd' esté completada
-							$sacd_aprobado = $GesActividadProceso->getSacdAprobado($id_activ);
-                    		if ($sacd_aprobado === TRUE) {
-								$_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
-								$permiso_ver = $_SESSION['oPermActividades']->havePermisoSacd($id_cargo, $propio);
-							}
-                    	} else {
-                    		// Si es asistente, que la fase ok_asistente esté completada.
-								$_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
-								$permiso_ver = $_SESSION['oPermActividades']->havePermisoSacd($id_cargo, $propio);
-                    		
-                    	}
+						// Si tiene cargo sacd (se supone que planing_zonas sólo es para los sacd), que la fase 'ok_sacd' esté completada
+						// Si es asistente, que la fase ok_asistente esté completada.
+						$_SESSION['oPermActividades']->setActividad($id_activ,$id_tipo_activ,$dl_org);
+						$permiso_ver = $_SESSION['oPermActividades']->havePermisoSacd($id_cargo, $propio);
                     } else {
                         $permiso_ver = TRUE;
                     }

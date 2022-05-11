@@ -7,7 +7,6 @@ use actividades\model\entity\Actividad;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use core\ConfigGlobal;
 use function core\is_true;
-use procesos\model\entity\GestorActividadProcesoTarea;
 use ubis\model\entity\Ubi;
 use web\TiposActividades;
 
@@ -57,7 +56,6 @@ class ComunicarActividadesSacd {
         $gesCargos = new GestorCargo();
         $aIdCargos_sacd = $gesCargos->getArrayCargosDeTipo('sacd');
 
-        $GesActividadProceso = new GestorActividadProcesoTarea();
         $oActividadesSacdFunciones = new ActividadesSacdFunciones();
         $s=0;
         $array_actividades = [];
@@ -110,17 +108,9 @@ class ComunicarActividadesSacd {
                 $_SESSION['oPermActividades']->setId_activ($id_activ);
                     
                 if( !is_true($this->propuesta) && ConfigGlobal::is_app_installed('procesos')) {
-                	$permiso_ver = FALSE;
-                	if (!empty($id_cargo)) {
-                		// Si tiene cargo sacd (se supone que comunicaractidvidadessacd sólo es para los sacd), que la fase 'ok_sacd' esté completada
-                		$sacd_aprobado = $GesActividadProceso->getSacdAprobado($id_activ);
-                		if ($sacd_aprobado === TRUE) {
-                			$permiso_ver = $_SESSION['oPermActividades']->havePermisoSacd($id_cargo, $propio);
-                		}
-                	} else {
-                		// Si es asistente, que la fase ok_asistente esté completada.
-						$permiso_ver = $_SESSION['oPermActividades']->havePermisoSacd($id_cargo, $propio);
-                	}
+					// Si tiene cargo sacd (se supone que comunicaractidvidadessacd sólo es para los sacd), que la fase 'ok_sacd' esté completada
+					// Si es asistente, que la fase ok_asistente esté completada.
+					$permiso_ver = $_SESSION['oPermActividades']->havePermisoSacd($id_cargo, $propio);
                 } else {
                     $permiso_ver = TRUE;
                 }

@@ -340,7 +340,7 @@ class PermisosActividades {
 	       $this->setActividad($this->iid_activ);
 	    }
 		// para poder pasar el valor de afecta con texto:
-		if (is_string($iAfecta)) $iAfecta = self::AFECTA[$iAfecta];
+	    if (is_string($iAfecta)) { $iAfecta = self::AFECTA[$iAfecta]; }
 		
 		// buscar fase_ref para iAfecta
 		$id_fase_ref = $this->getFaseRef($iAfecta);
@@ -348,6 +348,7 @@ class PermisosActividades {
 			return  new PermAccion(0);
 		}
 		// buscar estado de la fase ref
+		$on_off = 'off';
 		$completada = $this->isCompletada($id_fase_ref);
 		if (is_true($completada)) {
 		    $on_off = 'on';
