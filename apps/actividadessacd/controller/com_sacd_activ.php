@@ -109,7 +109,7 @@ if (empty($inicioIso) || empty($finIso)) {
 
 // los sacd
 $mi_dele = ConfigGlobal::mi_delef();
-if (empty($Qque)) $Qque = "nagd";
+if (empty($Qque)) { $Qque = "nagd"; }
 $aWhereP = [];
 switch ($Qque) {
     case "nagd":
