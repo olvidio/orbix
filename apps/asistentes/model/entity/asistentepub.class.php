@@ -142,6 +142,7 @@ class AsistentePub Extends core\ClasePropiedades {
 
 
 	 public function buscarAsistencia($id_nom,$id_activ) {
+	 	/*
 	    // Comprobar si ya existe la asistencia.
 	    $flag = FALSE;
 
@@ -169,8 +170,10 @@ class AsistentePub Extends core\ClasePropiedades {
                 $flag = TRUE;
             }
 	    }
-        
-        if ($flag) {
+        */
+		$gesAsistente = new GestorAsistente();
+		$cAsistentes = $gesAsistente->getAsistentes(['id_nom' => $id_nom, 'id_activ' => $id_activ]);
+		if (is_array($cAsistentes) && !empty($cAsistentes)) {
             return $cAsistentes[0];
         } else {
             return FALSE;
