@@ -24,13 +24,10 @@
  *
  */
 
-use actividades\model\entity as actividades;
 use actividadestudios\model\entity as actividadestudios;
-use dossiers\model\entity as dossiers;
-use asistentes\model\entity as asistentes;
-use personas\model\entity as personas;
-use core\ConfigGlobal;
 use asistentes\model\entity\AsistentePub;
+use core\ConfigGlobal;
+use dossiers\model\entity as dossiers;
 
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
@@ -49,12 +46,10 @@ $a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIR
 if (!empty($a_sel)) { //vengo de un checkbox
 	if ($Qpau=="p") {
 		$Qid_activ = (integer) strtok($a_sel[0],"#");
-		$Qid_asignatura = (integer) strtok("#");
 		$Qid_nom = (integer) \filter_input(INPUT_POST,'id_pau');
 	}
 	if ($Qpau=="a") {
 		$Qid_nom = (integer) strtok($a_sel[0],"#");
-		$Qid_asignatura = (integer) strtok("#");
 		$Qid_activ = (integer) \filter_input(INPUT_POST,'id_pau');
 	}
 } else { // desde el formulario
@@ -175,6 +170,9 @@ switch ($Qmod) {
 	case "editar":
 		$msg_err = editar($Qid_activ,$Qid_nom);
 		break;
+	default:
+		$err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+		exit ($err_switch);
 }
 
 
