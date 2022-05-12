@@ -68,6 +68,7 @@ class gestorAvisoCambios {
             case 'AsistenteOut':
             case 'AsistenteEx':
             case 'AsistenteIn':
+            case 'AsistentePub':
 	            $spath = 'asistentes\\model\\entity\\Asistente';
 	            break;
 	        case 'ActividadProcesoTarea':
