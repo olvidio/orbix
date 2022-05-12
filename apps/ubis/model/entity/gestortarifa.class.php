@@ -103,9 +103,7 @@ class GestorTarifa Extends core\ClaseGestor {
 			return FALSE;
 		}
 		foreach ($oDblSt as $aDades) {
-			$a_pkey = array('id_ubi' => $aDades['id_ubi'],
-							'id_tarifa' => $aDades['id_tarifa'],
-							'year' => $aDades['year']);
+			$a_pkey = array('id_item' => $aDades['id_item']);
 			$oTarifa= new Tarifa($a_pkey);
 			$oTarifaSet->add($oTarifa);
 		}

@@ -111,7 +111,7 @@ switch ($Qque) {
 				$id_tipo_activ = $oTipoActivTarifa->getId_tipo_activ();
 				$temporada = $oTipoActivTarifa->getTemporada();
 				$oTipoActividad = new TiposActividades($id_tipo_activ);
-				if ($t > 1) $txt.=', ';
+				if ($t > 1) { $txt.=', '; }
 				$txt.=$oTipoActividad->getNomGral();
 				if ($temporada == 'B') {
 					$aTipoTemporada = $oTipoActivTarifa->getDatosTemporada()->getArgument();
