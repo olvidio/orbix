@@ -66,48 +66,14 @@ class GestorAsistente Extends core\ClaseGestor {
 		return new web\Desplegable('',$aOpciones,'',true);
 	}
 	
-	/**
-	 * Idem a getActividadesDeAsistente pero incluyo los out de otras dl
-	 * (para los planes de estudio de ca, con asistentesde otras dl)
-	 * 
-	 * retorna l'array d'objectes de tipus Asistente
-	 *
-	 * @param integer id_nom. de la persona
-	 * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
-	 * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-	 * @param boolean reverse: ordenar por fecha de nuevo a viejo.  
-	 * @return array Una col·lecció d'objectes de tipus Asistente
-	 */
-	function getActividadesDeAsistente2($aWhereNom,$aOperadorNom,$aWhere=array(),$aOperators=array(),$reverse=FALSE) {
-		// todas las actividades de la persona
-
-		//Importa el orden, se queda con la primera.
-		$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');
-		/*
-		$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
-		 *  El In es suma de Ex(de paso) + Out(de todas las dl menos de mi propia dl).
-		*/
-		$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
-		//$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
-		//$a_Clases[] = array('clase'=>'AsistenteEx','get'=>'getAsistentesEx');
-
-		$namespace = __NAMESPACE__;
-		$cAsistencias = $this->getConjunt($a_Clases,$namespace,$aWhereNom, $aOperadorNom);
-		//$cAsistencias = $this->getConjunt($a_Clases,$namespace,array('id_nom'=>$id_nom), array());
-		// seleccionar las actividades segun los criterios de búsqueda.
-		$GesActividades = new actividades\GestorActividad();
-		$aListaIds = $GesActividades->getArrayIds($aWhere,$aOperators);
-		
-		return $this->arreglarAsistencias($cAsistencias,$aListaIds,$reverse);
-	}
-	
 	/*
 	 * retorna l'array d'objectes de tipus Asistente
 	 *
-	 * @param integer id_nom. de la persona
+	 * @param array aWhereNom associatiu amb els valors de les variables amb les quals farem la query
+	 * @param array aOperadorNom associatiu amb els valors dels operadors que cal aplicar a cada variable
 	 * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
 	 * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-	 * @param boolean reverse: ordenar por fecha de nuevo a viejo.  
+	 * @param boolean reverse: TRUE->ordenar por fecha de nuevo a viejo.  
 	 * @return array Una col·lecció d'objectes de tipus Asistente
 	 */
 	function getActividadesDeAsistente($aWhereNom,$aOperadorNom,$aWhere=array(),$aOperators=array(),$reverse=FALSE) {
@@ -125,7 +91,6 @@ class GestorAsistente Extends core\ClaseGestor {
 
 		$namespace = __NAMESPACE__;
 		$cAsistencias = $this->getConjunt($a_Clases,$namespace,$aWhereNom, $aOperadorNom);
-		//$cAsistencias = $this->getConjunt($a_Clases,$namespace,array('id_nom'=>$id_nom), array());
 		// seleccionar las actividades segun los criterios de búsqueda.
 		$GesActividades = new actividades\GestorActividad();
 		$aListaIds = $GesActividades->getArrayIds($aWhere,$aOperators);

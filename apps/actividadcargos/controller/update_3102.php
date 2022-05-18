@@ -5,6 +5,7 @@ use asistentes\model\entity as asistentes;
 use asistentes\model\entity\AsistentePub;
 use dossiers\model\entity as dossiers;
 use personas\model\entity as personas;
+use function core\is_true;
 
 /**
  * Actualiza los datos de un objeto ActividadCargo.
@@ -96,36 +97,15 @@ switch ($Qmod) {
 		$sactividad=$oTipoActiv->getActividadText();
 		$snom_tipo=$oTipoActiv->getNom_tipoText();
 
-		if ($Qelim_asis == 2 || $sasistentes == 's' || $sasistentes == 'sg') {
-			$oPersona = personas\Persona::NewPersona($Qid_nom);
-			if (!is_object($oPersona)) {
-				$msg_err = "<br>$oPersona con id_nom: $Qid_nom en  ".__FILE__.": line ". __LINE__;
-				exit ($msg_err);
-			}
-			$id_tabla_p = $oPersona->getId_Tabla();
-			$id_schema = $oPersona->getId_schema();
-			switch ($id_tabla_p) {
-				case 'n':
-				case 'nax':
-				case 'a':
-				case 's':
-				case 'sssc':
-					$id_tabla = 'dl';
-					break;
-				case 'pn':
-				case 'pa':
-					if ($id_schema == -1001 || $id_schema == -2001) {
-						$id_tabla = 'ex';
-					} else {
-						$id_tabla = 'out';
-					}
-					break;
-			}
+		if ($Qelim_asis == 2 && ($sasistentes == 's' || $sasistentes == 'sg') ) {
 			$oAsistentePub = new AsistentePub();
 			$oAsistente = $oAsistentePub->getClaseAsistente($Qid_nom,$Qid_activ);
 			$oAsistente->setPrimary_key(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom));
-			if ($oAsistente->DBEliminar() === false) {
-				$msg_err = _("hay un error, no se ha eliminado");
+			// Si es depende de otra dl ya no lo intento:
+			if ( is_true($oAsistente->perm_modificar())) { 
+				if ($oAsistente->DBEliminar() === false) {
+					$msg_err = _("hay un error, no se ha eliminado");
+				}
 			}
 			$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$Qid_nom,'id_tipo_dossier'=>1301));
 			$oDossier->cerrar();
@@ -169,27 +149,10 @@ switch ($Qmod) {
 				$msg_err = "<br>$oPersona con id_nom: $Qid_nom en  ".__FILE__.": line ". __LINE__;
 				exit ($msg_err);
 			}
-			$id_tabla_p = $oPersona->getId_Tabla();
-			$id_schema = $oPersona->getId_schema();
-			switch ($id_tabla_p) {
-				case 'n':
-				case 'nax':
-				case 'a':
-				case 's':
-				case 'sssc':
-					$id_tabla = 'dl';
-					break;
-				case 'pn':
-				case 'pa':
-					if ($id_schema == -1001 || $id_schema == -2001) {
-						$id_tabla = 'ex';
-					} else {
-						$id_tabla = 'out';
-					}
-					break;
-			}
-			$oAsistente=new asistentes\Asistente(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom));
-			$oAsistente->setId_tabla($id_tabla);
+			$oAsistentePub = new AsistentePub();
+			$oAsistente = $oAsistentePub->getClaseAsistente($Qid_nom,$Qid_activ);
+			$oAsistente->setPrimary_key(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom));
+			$oAsistente->DBCarregar();
 			$oAsistente->setPropio('t'); // por defecto lo pongo como propio
 			$oAsistente->setFalta('f');
 			if ($oAsistente->DBGuardar() === false) {
@@ -225,7 +188,9 @@ switch ($Qmod) {
 			}
 		}
 		// Modifico la asistencia:
-		$oAsistente=new asistentes\AsistenteDl(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom));
+		$oAsistentePub = new AsistentePub();
+		$oAsistente = $oAsistentePub->getClaseAsistente($Qid_nom,$Qid_activ);
+		$oAsistente->setPrimary_key(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom));
 		if ($oAsistente->DBCarregar('guardar') === false) { //no existe
 			if (!empty($Qasis)) { // lo añado
 				$oAsistente->setPropio('t'); // por defecto lo pongo como propio

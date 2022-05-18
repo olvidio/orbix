@@ -190,7 +190,7 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 	
 	$dl_de_paso = FALSE;
 	if ($obj_pau === 'PersonaEx') {
-		if (!empty($id_nom)) { //caso de modificar
+		if (!empty($Qid_nom)) { //caso de modificar
 			$dl_de_paso = $oPersona->getDl();
 		}
 	}

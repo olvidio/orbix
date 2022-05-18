@@ -66,20 +66,25 @@ function eliminar ($id_activ,$id_nom) {
 	$oAsistente = $oAsistentePub->getClaseAsistente($id_nom,$id_activ);
 	$oAsistente->setPrimary_key(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
 	$oAsistente->DBCarregar();
-	if ($oAsistente->DBEliminar() === false) {
-		$msg_err = _("hay un error, no se ha eliminado");
-	}
-
-	// hay que cerrar el dossier para esta persona/actividad/ubi, si no tiene más:
-	$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$id_nom,'id_tipo_dossier'=>1301));
-	$oDossier->cerrar();
-	$oDossier->DBGuardar();
-
-	// también borro las matriculas que pueda tener
-	$oGestorMatricula=new actividadestudios\GestorMatricula();
-	foreach ($oGestorMatricula->getMatriculas(array('id_activ'=>$id_activ,'id_nom'=>$id_nom)) as $oMatricula) {
-		if ($oMatricula->DBEliminar() === false) {
+	// comprobar si puedo:
+	if ($oAsistente->perm_modificar() === FALSE) {
+		$msg_err = _("los datos de asistencia los modifica la dl del asistente");
+	} else {
+		if ($oAsistente->DBEliminar() === false) {
 			$msg_err = _("hay un error, no se ha eliminado");
+		}
+
+		// hay que cerrar el dossier para esta persona/actividad/ubi, si no tiene más:
+		$oDossier = new dossiers\Dossier(array('tabla'=>'p','id_pau'=>$id_nom,'id_tipo_dossier'=>1301));
+		$oDossier->cerrar();
+		$oDossier->DBGuardar();
+
+		// también borro las matriculas que pueda tener
+		$oGestorMatricula=new actividadestudios\GestorMatricula();
+		foreach ($oGestorMatricula->getMatriculas(array('id_activ'=>$id_activ,'id_nom'=>$id_nom)) as $oMatricula) {
+			if ($oMatricula->DBEliminar() === false) {
+				$msg_err = _("hay un error, no se ha eliminado");
+			}
 		}
 	}
 	return $msg_err;
@@ -93,47 +98,57 @@ function plaza($id_nom){
 	$oAsistente = $oAsistentePub->getClaseAsistente($id_nom,$id_activ);
     $oAsistente->setPrimary_key(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
 	$oAsistente->DBCarregar();
-	isset($plaza)? $oAsistente->setPlaza($plaza) : $oAsistente->setPlaza();
-	if ($oAsistente->DBGuardar() === false) {
-		$msg_err = _("hay un error, no se ha guardado");
+	// comprobar si puedo:
+	if ($oAsistente->perm_modificar() === FALSE) {
+		$msg_err = _("los datos de asistencia los modifica la dl del asistente");
+	} else {
+		isset($plaza)? $oAsistente->setPlaza($plaza) : $oAsistente->setPlaza();
+		if ($oAsistente->DBGuardar() === false) {
+			$msg_err = _("hay un error, no se ha guardado");
+		}
 	}
 	return $msg_err;
 }
 
-function editar($id_activ,$id_nom){
+function editar($id_activ,$id_nom,$mod){
 	$msg_err = '';
     $oAsistentePub = new AsistentePub();
 	$oAsistente = $oAsistentePub->getClaseAsistente($id_nom,$id_activ);
 	$oAsistente->setPrimary_key(array('id_activ'=>$id_activ,'id_nom'=>$id_nom));
 	$oAsistente->DBCarregar();
 	
-	$Qencargo = (string) \filter_input(INPUT_POST, 'encargo');
-	$Qobserv = (string) \filter_input(INPUT_POST, 'observ');
-	$Qobserv_est = (string) \filter_input(INPUT_POST, 'observ_est');
-	$Qplaza = (integer) \filter_input(INPUT_POST, 'plaza');
-	$Qpropio = (string) \filter_input(INPUT_POST, 'propio');
-	$Qest_ok = (string) \filter_input(INPUT_POST, 'est_ok');
-	$Qcfi = (string) \filter_input(INPUT_POST, 'cfi');
-	$Qfalta = (string) \filter_input(INPUT_POST, 'falta');
-	$Qcfi_con = (string) \filter_input(INPUT_POST, 'cfi_con');
-	$Qpropietario = (string) \filter_input(INPUT_POST, 'propietario');
-	if ($Qpropietario === 'xxx') { $Qpropietario = ''; }
+	// comprobar si puedo (si es nuevo, SI):
+	if ($mod != 'nuevo' && $oAsistente->perm_modificar() === FALSE) {
+		$msg_err = _("los datos de asistencia los modifica la dl del asistente");
+	} else {
+		$Qencargo = (string) \filter_input(INPUT_POST, 'encargo');
+		$Qobserv = (string) \filter_input(INPUT_POST, 'observ');
+		$Qobserv_est = (string) \filter_input(INPUT_POST, 'observ_est');
+		$Qplaza = (integer) \filter_input(INPUT_POST, 'plaza');
+		$Qpropio = (string) \filter_input(INPUT_POST, 'propio');
+		$Qest_ok = (string) \filter_input(INPUT_POST, 'est_ok');
+		$Qcfi = (string) \filter_input(INPUT_POST, 'cfi');
+		$Qfalta = (string) \filter_input(INPUT_POST, 'falta');
+		$Qcfi_con = (string) \filter_input(INPUT_POST, 'cfi_con');
+		$Qpropietario = (string) \filter_input(INPUT_POST, 'propietario');
+		if ($Qpropietario === 'xxx') { $Qpropietario = ''; }
 
-	isset($Qencargo)? $oAsistente->setEncargo($Qencargo) : $oAsistente->setEncargo();
-	isset($Qobserv)? $oAsistente->setObserv($Qobserv) : $oAsistente->setObserv();
-	isset($Qobserv_est)? $oAsistente->setObserv_est($Qobserv_est) : $oAsistente->setObserv_est();
-	isset($Qplaza)? $oAsistente->setPlaza($Qplaza) : $oAsistente->setPlaza();
-	empty($Qpropio)? $oAsistente->setPropio('f') : $oAsistente->setPropio('t');
-	empty($Qest_ok)? $oAsistente->setEst_ok('f') : $oAsistente->setEst_ok('t');
-	empty($Qcfi)? $oAsistente->setCfi('f') : $oAsistente->setCfi('t');
-	empty($Qfalta)? $oAsistente->setFalta('f') : $oAsistente->setFalta('t');
-	isset($Qcfi_con)? $oAsistente->setCfi_con($Qcfi_con) : $oAsistente->setCfi_con();
-	// siempre soy la dl
-	$oAsistente->setDl_responsable(ConfigGlobal::mi_delef());
-	// Si no es epecificado, al poner la plaza ya se pone al propietario
-	!empty($Qpropietario)? $oAsistente->setPropietario($Qpropietario) : FALSE;
-	if ($oAsistente->DBGuardar() === false) {
-		$msg_err = _("hay un error, no se ha guardado");
+		isset($Qencargo)? $oAsistente->setEncargo($Qencargo) : $oAsistente->setEncargo();
+		isset($Qobserv)? $oAsistente->setObserv($Qobserv) : $oAsistente->setObserv();
+		isset($Qobserv_est)? $oAsistente->setObserv_est($Qobserv_est) : $oAsistente->setObserv_est();
+		isset($Qplaza)? $oAsistente->setPlaza($Qplaza) : $oAsistente->setPlaza();
+		empty($Qpropio)? $oAsistente->setPropio('f') : $oAsistente->setPropio('t');
+		empty($Qest_ok)? $oAsistente->setEst_ok('f') : $oAsistente->setEst_ok('t');
+		empty($Qcfi)? $oAsistente->setCfi('f') : $oAsistente->setCfi('t');
+		empty($Qfalta)? $oAsistente->setFalta('f') : $oAsistente->setFalta('t');
+		isset($Qcfi_con)? $oAsistente->setCfi_con($Qcfi_con) : $oAsistente->setCfi_con();
+		// siempre soy la dl
+		$oAsistente->setDl_responsable(ConfigGlobal::mi_delef());
+		// Si no es epecificado, al poner la plaza ya se pone al propietario
+		!empty($Qpropietario)? $oAsistente->setPropietario($Qpropietario) : FALSE;
+		if ($oAsistente->DBGuardar() === false) {
+			$msg_err = _("hay un error, no se ha guardado");
+		}
 	}
 	return $msg_err;
 
@@ -154,7 +169,7 @@ switch ($Qmod) {
 	//------------ MOVER --------
 	case "mover":
 		$msg_err = eliminar($Qid_activ_old,$Qid_nom);
-		$msg_err .= editar($Qid_activ,$Qid_nom);
+		$msg_err .= editar($Qid_activ,$Qid_nom,$Qmod);
 		break;
 	//------------ BORRAR --------
 	case "eliminar":
@@ -168,7 +183,7 @@ switch ($Qmod) {
 		$oDossier->abrir();
 		$oDossier->DBGuardar();
 	case "editar":
-		$msg_err = editar($Qid_activ,$Qid_nom);
+		$msg_err = editar($Qid_activ,$Qid_nom,$Qmod);
 		break;
 	default:
 		$err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);

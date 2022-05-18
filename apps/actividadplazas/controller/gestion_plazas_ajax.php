@@ -68,18 +68,18 @@ switch ($que) {
 		}  
 		break;
 	case 'lst_propietarios':
-		$id_nom = (integer)  filter_input(INPUT_POST, 'id_nom');
+		$Qid_nom = (integer)  filter_input(INPUT_POST, 'id_nom');
 		$id_activ = (integer)  filter_input(INPUT_POST, 'id_activ');
 		
-		$oPersona = \personas\model\entity\Persona::NewPersona($id_nom);
+		$oPersona = \personas\model\entity\Persona::NewPersona($Qid_nom);
 		if (!is_object($oPersona)) {
-			$msg_err = "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
+			$msg_err = "<br>$oPersona con id_nom: $Qid_nom en  ".__FILE__.": line ". __LINE__;
 			exit($msg_err);
 		}
 		$obj_pau = str_replace("personas\\model\\entity\\",'',get_class($oPersona));
 		$dl_de_paso = FALSE;
 		if ($obj_pau === 'PersonaEx') {
-			if (!empty($id_nom)) { //caso de modificar
+			if (!empty($Qid_nom)) { //caso de modificar
 				$dl_de_paso = $oPersona->getDl();
 			} else {
 			

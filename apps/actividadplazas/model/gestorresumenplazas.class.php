@@ -96,13 +96,13 @@ class GestorResumenPlazas {
 					if ($dl_de_paso !== FALSE){
 						if ($dl_de_paso == $dl_2 && $id_dl_otra == $id_mi_dl) {
 							$ocu = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$dl_2,$mi_dl);
-							$a_dl["$mi_dl>$dl_2"] = "$dl_2 ($ocu de $num_plazas)";
+							$a_dl["$mi_dl>$dl_de_paso"] = "$dl_de_paso ($ocu de $num_plazas)";
 						}
 					}
 				}
 			}
 		}
-		// las que me correponden por calendario - las cedidas
+		// las que me corresponden por calendario - las cedidas
 		$pl_propias = $this->getPlazasPropias();
 		if ($pl_propias > 0) {
 			$ocu = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$mi_dl,$mi_dl);

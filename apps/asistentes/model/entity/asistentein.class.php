@@ -1,6 +1,8 @@
 <?php
 namespace asistentes\model\entity;
 use core;
+use core\ConfigGlobal;
+use function core\is_true;
 /**
  * Fitxer amb la Classe que accedeix a la vista av_asistentes_in
  *
@@ -47,8 +49,13 @@ class AsistenteIn Extends AsistentePub {
 	/* METODES PUBLICS ----------------------------------------------------------*/
 	
 	public function DBGuardar($quiet=0) {
-		exit (_("los datos de asistencia los modifica la dl del asistente"));
-		return FALSE;
+		// Para los de paso si se puede guardar. Para el reso NO
+		if (is_true($this->perm_modificar())) { 
+			parent::DBGuardar($quiet);
+		} else {
+			exit (_("los datos de asistencia los modifica la dl del asistente"));
+			return FALSE;
+		}
 	}
 	
 	/**
@@ -56,26 +63,13 @@ class AsistenteIn Extends AsistentePub {
 	 *
 	 */
 	public function DBEliminar() {
-		echo _("el asistente es de otra dl. Se debe modificar en la dl origen.");
-		/*
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
-		// que tenga el módulo de 'cambios'
-		if (core\ConfigGlobal::is_app_installed('cambios')) {
-			// per carregar les dades a $this->aDadesActuals i poder posar-les als canvis.
-			$this->DBCarregar('guardar');
-			// ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.
-			$oGestorCanvis = new gestorAvisoCambios();
-			$shortClassName = (new \ReflectionClass($this))->getShortName();
-			$oGestorCanvis->addCanvi($shortClassName, 'DELETE', $this->iid_activ, array(), $this->aDadesActuals);
+		// Para los de paso si se puede guardar. Para el reso NO
+		if (is_true($this->perm_modificar())) {
+			parent::DBEliminar();
+		} else {
+			exit (_("el asistente es de otra dl. Se debe modificar en la dl origen."));
+			return FALSE;
 		}
-		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_nom=$this->iid_nom")) === false) {
-			$sClauError = get_class($this).'.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return false;
-		}
-		*/
-		return false;
 	}
 	/* METODES ALTRES  ----------------------------------------------------------*/
 	/* METODES PRIVATS ----------------------------------------------------------*/

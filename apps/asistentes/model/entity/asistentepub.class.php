@@ -2,6 +2,7 @@
 namespace asistentes\model\entity;
 use actividades\model\entity\Actividad;
 use cambios\model\gestorAvisoCambios;
+use core\ConfigGlobal;
 use core;
 use personas\model\entity\Persona;
 /**
@@ -138,39 +139,23 @@ class AsistentePub Extends core\ClasePropiedades {
 	 */
 	 protected $sid_tabla;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
-	/* Metode estatic -------------------------------------------------------------- */
+	 
+	 
+	/* Metodes -------------------------------------------------------------- */
 
 
+	 /**
+	  * Saber si puedo modificar.
+	  * - true para asistentes de mi dl, y para los de paso que he puesto yo 
+	  * - false para asistentes de otra dl, y para los de paso que NO he puesto yo 
+	  * 
+	  * @return boolean
+	  */
+	 public function perm_modificar() {
+	 	return $this->getDl_responsable() == ConfigGlobal::mi_delef(); 
+	 }
+	 
 	 public function buscarAsistencia($id_nom,$id_activ) {
-	 	/*
-	    // Comprobar si ya existe la asistencia.
-	    $flag = FALSE;
-
-        // *AsistenteDl
-        if ($flag === FALSE) {
-            $gesAsistente = new GestorAsistenteDl();
-            $cAsistentes = $gesAsistente->getAsistentes(['id_nom' => $id_nom, 'id_activ' => $id_activ]);
-            if (is_array($cAsistentes) && !empty($cAsistentes)) {
-                $flag = TRUE;
-            }
-	    }
-        // *AsistenteEx
-        if ($flag === FALSE) {
-            $gesAsistente = new GestorAsistenteEx();
-            $cAsistentes = $gesAsistente->getAsistentesEx(['id_nom' => $id_nom, 'id_activ' => $id_activ]);
-            if (is_array($cAsistentes) && !empty($cAsistentes)) {
-                $flag = TRUE;
-            }
-	    }
-        // *AsistenteOut
-        if ($flag === FALSE) {
-            $gesAsistente = new GestorAsistenteOut();
-            $cAsistentes = $gesAsistente->getAsistentesOut(['id_nom' => $id_nom, 'id_activ' => $id_activ]);
-            if (is_array($cAsistentes) && !empty($cAsistentes)) {
-                $flag = TRUE;
-            }
-	    }
-        */
 		$gesAsistente = new GestorAsistente();
 		$cAsistentes = $gesAsistente->getAsistentes(['id_nom' => $id_nom, 'id_activ' => $id_activ]);
 		if (is_array($cAsistentes) && !empty($cAsistentes)) {

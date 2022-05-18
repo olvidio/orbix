@@ -252,7 +252,8 @@ class Select3101 {
 
 			$oPersona = personas\Persona::NewPersona($id_nom);
 			if (!is_object($oPersona)) {
-				$this->msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
+				$this->msg_err .= "<br>";
+				$this->msg_err .= sprintf(_("%s con id_nom: %s. En %s linea %s"), $oPersona, $id_nom, __FILE__, __LINE__);
 				continue;
 			}
 			$oCargo=new actividadcargos\Cargo($id_cargo);
@@ -298,8 +299,9 @@ class Select3101 {
 					foreach ($cAsistente as $Asistente) {
 						$tabla .= "<li>".$Asistente->getNomTabla()."</li>";
 					}
-					$msg_err = "ERROR: más de un asistente con el mismo id_nom<br>";
-					$msg_err .= "<br>$nom(".$oPersona->getId_tabla().")<br><br>En las tablas:<ul>$tabla</ul>";
+					$msg_err = _("ERROR: más de un asistente con el mismo id_nom")."<br>";
+					$msg_err .= "<br>$nom(".$oPersona->getId_tabla().")<br><br>";
+					$msg_err .= _("En las tablas").":<ul>$tabla</ul>";
 					exit ("$msg_err");
 				}
 				$oAsistente = $cAsistente[0];
@@ -347,8 +349,6 @@ class Select3101 {
 					}
 				}
 
-				$puede_agd=='t' ? $chk_puede_agd="si" : $chk_puede_agd="no" ;
-
 				if ($propio=='t') {
 					$chk_propio=_("sí");
 					// Para los de des, elimino el cargo y la asistencia. Para el resto, sólo el cargo (no la asistencia).
@@ -386,16 +386,16 @@ class Select3101 {
 				$a_valores[$c]['clase']='plaza1';
 			}
 				
-			$a_valores[$c][1]=$cargo;
-			$a_valores[$c][2]="$nom  ($ctr_dl)";
-			$a_valores[$c][3]=$dl_asistente;
-			$a_valores[$c][7]="$observ_cargo $observ";
-			$a_valores[$c][8]="$sacd";
-			$a_valores[$c][9]="$telfs";
-			$a_valores[$c][10]="$mails";
-			$a_valores[$c][11]="$nombre";
-			$a_valores[$c][12]="$apellidos";
-			$a_valores[$c][13]="$ctr_dl";
+			$a_valores[$c][1] = $cargo;
+			$a_valores[$c][2] = "$nom  ($ctr_dl)";
+			$a_valores[$c][3] = $dl_asistente;
+			$a_valores[$c][7] = "$observ_cargo $observ";
+			$a_valores[$c][8] = "$sacd";
+			$a_valores[$c][9] = "$telfs";
+			$a_valores[$c][10] = "$mails";
+			$a_valores[$c][11] = "$nombre";
+			$a_valores[$c][12] = "$apellidos";
+			$a_valores[$c][13] = "$ctr_dl";
 		}
 		
 		$this->num = $num;
@@ -422,7 +422,8 @@ class Select3101 {
 
 			$oPersona = personas\Persona::NewPersona($id_nom);
 			if (!is_object($oPersona)) {
-				$this->msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
+				$this->msg_err .= "<br>";
+				$this->msg_err .= sprintf(_("%s con id_nom: %s. En %s linea %s"), $oPersona, $id_nom, __FILE__, __LINE__);
 				continue;
 			}
 			$obj_pau = $oPersona->getClassName();
@@ -459,7 +460,7 @@ class Select3101 {
 				// propiedad de la plaza:
 				$propietario = $oAsistente->getPropietario();
 				if ($propietario === NULL || $propietario === 'xxx') {
-					$this->msg_err .= "ALERTA: asistente sin propiedad en la plaza:<br>";
+					$this->msg_err .= _("ALERTA: asistente sin propiedad en la plaza").":<br>";
 					$this->msg_err .= "$nom(".$oPersona->getId_tabla().")<br>";
 				}
 				$padre = strtok($propietario,'>');
@@ -520,18 +521,18 @@ class Select3101 {
 				$a_val['clase']='plaza'.$plaza;
 			}
 					
-			$a_val[2]="$nom  ($ctr_dl)";
-			$a_val[3]=$dl_asistente;
-			$a_val[4]=$chk_propio;
-			$a_val[5]=$chk_est_ok;
-			$a_val[6]=$chk_falta;
-			$a_val[7]=$observ;
-			$a_val[8]=$sacd;
-			$a_val[9]="$telfs";
-			$a_val[10]="$mails";
-			$a_val[11]="$nombre";
-			$a_val[12]="$apellidos";
-			$a_val[13]="$ctr_dl";
+			$a_val[2]	= "$nom  ($ctr_dl)";
+			$a_val[3]	= $dl_asistente;
+			$a_val[4]	= $chk_propio;
+			$a_val[5]	= $chk_est_ok;
+			$a_val[6]	= $chk_falta;
+			$a_val[7]	= $observ;
+			$a_val[8]	= $sacd;
+			$a_val[9]	= "$telfs";
+			$a_val[10]	= "$mails";
+			$a_val[11]	= "$nombre";
+			$a_val[12]	= "$apellidos";
+			$a_val[13]	= "$ctr_dl";
 			
 			$this->a_asistentes[$nom] = $a_val;
 		}
@@ -620,7 +621,6 @@ class Select3101 {
 						$i = 0;
 						$ocupadas_dl = 0;
 						foreach ($a_cedidas as $dl2 => $numCedidas) {
-							$plazas = empty($aa['ocupadas'][$dl2])? array() : $aa['ocupadas'][$dl2];
 							$i++;
 							if (!empty($ocupadas_dl)) {
 								$resumen_plazas .= ($continuacion)? ' + ' : '';;
@@ -643,21 +643,18 @@ class Select3101 {
 										
 										$this->a_asistentes[$nom] = $a_val;
 									}
-									//$pl_relleno[$dl2] = $i-1;
 								}
 								$pl_relleno[$dl2] = $pl-$ocupadas_dl;
 							}
 						}
 						$ocupadas += $ocupadas_dl;
 						// Conseguidas	
-						//if (array_key_exists($padre, $this->a_plazas_conseguidas)) {
 						if (!empty($a_conseguidas)) {
 							$ocupadas_otra = 0;
 							// ocupadas por la dl padre
 							foreach ($a_conseguidas as $dl => $pl) {
 								$pl_ocu = $a_ocupadas[$dl];
-								$resumen_plazas .= ($continuacion)? ' + ' : '';;
-//								if (!empty($pl)) { $resumen_plazas .= " + "; }
+								$resumen_plazas .= ($continuacion)? ' + ' : '';
 								$txt = sprintf(_("(de las %s cedidas por %s)"),$pl,$dl);
 								$resumen_plazas .= $pl_ocu." ".$txt;
 								$ocupadas_otra += $pl_ocu;
@@ -669,7 +666,7 @@ class Select3101 {
 						if (!empty($json_cedidas)) { $resumen_plazas .= " ["._("cedidas")."=$total_cedidas $json_cedidas ]"; }
 						$resumen_plazas .= 	"  => "._("ocupadas")."=$ocupadas/($total_disponibles)";
 						$libres = $total_disponibles - $ocupadas;
-						if (($libres < 0)) {
+						if ($libres < 0) {
 							$resumen_plazas .= 	"<span style='background-color: red'> libres= $libres</span>";
 						} else {
 							$resumen_plazas .= 	" libres=$libres";
@@ -748,7 +745,7 @@ class Select3101 {
 		$this->getLeyenda();
 
 		$n = $c;
-		foreach ($this->a_asistentes as $nom => $val) {
+		foreach ($this->a_asistentes as $val) {
 			$c++;
 			$val[1] = "-";
 			// sólo numero los asignados y confirmados
@@ -821,7 +818,6 @@ class Select3101 {
 		$oHash2->setUrl($url);
 		$oHash2->setCamposForm('depende!pau!obj_pau!id_pau!id_dossier!permiso'); 
 		$h = $oHash2->linkSinVal();
-		$pagina = "depende=1&pau=a&obj_pau=Actividad&id_pau=$this->id_pau&id_dossier=3101&permiso=3$h";
 
 		$oHash3 = new web\Hash();
 		$oHash3->setUrl(ConfigGlobal::getWeb()."/apps/asistentes/controller/form_mover.php");
@@ -867,7 +863,7 @@ class Select3101 {
 		}
 		$mi_dele = ConfigGlobal::mi_delef();
 		reset($ref_perm);
-		foreach ($ref_perm as $clave =>$val) {
+		foreach ($ref_perm as $val) {
 			$permis=$val["perm"];
 			$obj_pau=$val["obj"];
 			$nom=$val["nom"];

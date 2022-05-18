@@ -33,12 +33,15 @@ class Asistente Extends AsistentePub {
 
 	/* METODES PUBLICS ----------------------------------------------------------*/
 
-	/**
-	 * Desa els atributs de l'objecte a la base de dades.
-	 * Si no hi ha el registre, fa el insert, si hi es fa el update.
-	 *
-	 *@param bool optional $quiet : true per que no apunti els canvis. 0 (per defecte) apunta els canvis.
-	 */
+    /* Ahora lo hago con:
+     * 		$oAsistentePub = new AsistentePub();
+	 *		$oAsistente = $oAsistentePub->getClaseAsistente($Qid_nom,$Qid_activ);
+	 *		$oAsistente->setPrimary_key(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom));
+	 *		$oAsistente->DBCarregar();
+     * 
+     */
+    
+    /*
 	public function DBGuardar($quiet=0) {
 		$aDades = $this->getAllAtributes();
 		$id_tabla = $this->getId_tabla();
@@ -67,11 +70,13 @@ class Asistente Extends AsistentePub {
 				break;
 		}
 	}
+	*/
 	
 	/**
 	 * Elimina el registre de la base de dades corresponent a l'objecte.
 	 *
 	 */
+    /*
 	public function DBEliminar() {
 		$id_tabla = $this->getId_tabla();
 		switch ($id_tabla) {
@@ -92,6 +97,7 @@ class Asistente Extends AsistentePub {
 				break;
 		}
 	}
+	*/
 
 	/* METODES ALTRES  ----------------------------------------------------------*/
 	/* METODES PRIVATS ----------------------------------------------------------*/

@@ -95,9 +95,9 @@ foreach($cAlumnos as $oPersonaDl) {
 		$aOperadorNom = [];
 		$cAsistencias  = $GesAsistentes->getActividadesDeAsistente($aWhereNom,$aOperadorNom,$aWhere,$aOperadores);
 	} else { // puede ser que ya le pase la actividad
-		$oAsistente = new asistentes\AsistenteDl(array('id_activ'=>$Qid_activ,'id_nom'=>$id_nom));
-		$oAsistente->DBCarregar();
-		$cAsistencias[0] = $oAsistente;
+		$oAsistenteDl = new asistentes\AsistenteDl(array('id_activ'=>$Qid_activ,'id_nom'=>$id_nom));
+		$oAsistenteDl->DBCarregar();
+		$cAsistencias[0] = $oAsistenteDl;
 	}
 	// si no cursa ningún ca, me salto todo
 	switch (count($cAsistencias)) {
@@ -107,9 +107,9 @@ foreach($cAlumnos as $oPersonaDl) {
 			$msg .= '<br>';
 			break;
 		case 1:
-			$oAsistente = current($cAsistencias); // En el caso de varias, el indice es la f_ini (para poder ordenar en otros casos).
-			$id_activ_1=$oAsistente->getId_activ();
-			$est_ok=$oAsistente->getEst_ok();
+			$oAsistenteDl = current($cAsistencias); // En el caso de varias, el indice es la f_ini (para poder ordenar en otros casos).
+			$id_activ_1=$oAsistenteDl->getId_activ();
+			$est_ok=$oAsistenteDl->getEst_ok();
 			if ($est_ok != 1 ) {
 				//borro el plan de estudios de esta persona.
 				$GesMatriculas = new actividadestudios\GestorMatriculaDl();
