@@ -19,64 +19,64 @@ use core;
  * @version 1.0
  * @created 28/4/2022
  */
-class Ubi Extends core\ClasePropiedades {
+class UbiDoc Extends core\ClasePropiedades {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
 	/**
-	 * aPrimary_key de Ubi
+	 * aPrimary_key de UbiDoc
 	 *
 	 * @var array
 	 */
 	 private $aPrimary_key;
 
 	/**
-	 * aDades de Ubi
+	 * aDades de UbiDoc
 	 *
 	 * @var array
 	 */
 	 private $aDades;
 
 	/**
-	 * bLoaded de Ubi
+	 * bLoaded de UbiDoc
 	 *
 	 * @var boolean
 	 */
 	 private $bLoaded = FALSE;
 
 	/**
-	 * Id_schema de Ubi
+	 * Id_schema de UbiDoc
 	 *
 	 * @var integer
 	 */
 	 private $iid_schema;
 
 	/**
-	 * Id_ubi de Ubi
+	 * Id_ubi de UbiDoc
 	 *
 	 * @var integer
 	 */
 	 private $iid_ubi;
 	/**
-	 * Nom_ubi de Ubi
+	 * Nom_ubi de UbiDoc
 	 *
 	 * @var string
 	 */
 	 private $snom_ubi;
 	/**
-	 * Id_ubi_activ de Ubi
+	 * Id_ubi_activ de UbiDoc
 	 *
 	 * @var integer
 	 */
 	 private $iid_ubi_activ;
 	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
 	/**
-	 * oDbl de Ubi
+	 * oDbl de UbiDoc
 	 *
 	 * @var object
 	 */
 	 protected $oDbl;
 	/**
-	 * NomTabla de Ubi
+	 * NomTabla de UbiDoc
 	 *
 	 * @var string
 	 */
@@ -130,7 +130,7 @@ class Ubi Extends core\ClasePropiedades {
 					nom_ubi                  = :nom_ubi,
 					id_ubi_activ             = :id_ubi_activ";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_ubi='$this->iid_ubi'")) === FALSE) {
-				$sClauError = 'Ubi.update.prepare';
+				$sClauError = 'UbiDoc.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return FALSE;
 			} else {
@@ -140,7 +140,7 @@ class Ubi Extends core\ClasePropiedades {
 				catch ( \PDOException $e) {
 					$err_txt=$e->errorInfo[2];
 					$this->setErrorTxt($err_txt);
-					$sClauError = 'Ubi.update.execute';
+					$sClauError = 'UbiDoc.update.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return FALSE;
 				}
@@ -150,7 +150,7 @@ class Ubi Extends core\ClasePropiedades {
 			$campos="(nom_ubi,id_ubi_activ)";
 			$valores="(:nom_ubi,:id_ubi_activ)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
-				$sClauError = 'Ubi.insertar.prepare';
+				$sClauError = 'UbiDoc.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return FALSE;
 			} else {
@@ -160,7 +160,7 @@ class Ubi Extends core\ClasePropiedades {
 				catch ( \PDOException $e) {
 					$err_txt=$e->errorInfo[2];
 					$this->setErrorTxt($err_txt);
-					$sClauError = 'Ubi.insertar.execute';
+					$sClauError = 'UbiDoc.insertar.execute';
 					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
 					return FALSE;
 				}
@@ -180,7 +180,7 @@ class Ubi Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iid_ubi)) {
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_ubi='$this->iid_ubi'")) === FALSE) {
-				$sClauError = 'Ubi.carregar';
+				$sClauError = 'UbiDoc.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return FALSE;
 			}
@@ -216,7 +216,7 @@ class Ubi Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_ubi='$this->iid_ubi'")) === FALSE) {
-			$sClauError = 'Ubi.eliminar';
+			$sClauError = 'UbiDoc.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 			return FALSE;
 		}
@@ -254,7 +254,7 @@ class Ubi Extends core\ClasePropiedades {
 	/* METODES GET i SET --------------------------------------------------------*/
 
 	/**
-	 * Recupera tots els atributs de Ubi en un array
+	 * Recupera tots els atributs de UbiDoc en un array
 	 *
 	 * @return array aDades
 	 */
@@ -266,7 +266,7 @@ class Ubi Extends core\ClasePropiedades {
 	}
 
 	/**
-	 * Recupera las claus primàries de Ubi en un array
+	 * Recupera las claus primàries de UbiDoc en un array
 	 *
 	 * @return array aPrimary_key
 	 */
@@ -277,7 +277,7 @@ class Ubi Extends core\ClasePropiedades {
 		return $this->aPrimary_key;
 	}
 	/**
-	 * Estableix las claus primàries de Ubi en un array
+	 * Estableix las claus primàries de UbiDoc en un array
 	 *
 	 */
 	public function setPrimary_key($a_id='') {
@@ -296,7 +296,7 @@ class Ubi Extends core\ClasePropiedades {
 	
 
 	/**
-	 * Recupera l'atribut iid_ubi de Ubi
+	 * Recupera l'atribut iid_ubi de UbiDoc
 	 *
 	 * @return integer iid_ubi
 	 */
@@ -307,7 +307,7 @@ class Ubi Extends core\ClasePropiedades {
 		return $this->iid_ubi;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_ubi de Ubi
+	 * estableix el valor de l'atribut iid_ubi de UbiDoc
 	 *
 	 * @param integer iid_ubi
 	 */
@@ -315,7 +315,7 @@ class Ubi Extends core\ClasePropiedades {
 		$this->iid_ubi = $iid_ubi;
 	}
 	/**
-	 * Recupera l'atribut snom_ubi de Ubi
+	 * Recupera l'atribut snom_ubi de UbiDoc
 	 *
 	 * @return string snom_ubi
 	 */
@@ -326,7 +326,7 @@ class Ubi Extends core\ClasePropiedades {
 		return $this->snom_ubi;
 	}
 	/**
-	 * estableix el valor de l'atribut snom_ubi de Ubi
+	 * estableix el valor de l'atribut snom_ubi de UbiDoc
 	 *
 	 * @param string snom_ubi='' optional
 	 */
@@ -334,7 +334,7 @@ class Ubi Extends core\ClasePropiedades {
 		$this->snom_ubi = $snom_ubi;
 	}
 	/**
-	 * Recupera l'atribut iid_ubi_activ de Ubi
+	 * Recupera l'atribut iid_ubi_activ de UbiDoc
 	 *
 	 * @return integer iid_ubi_activ
 	 */
@@ -345,7 +345,7 @@ class Ubi Extends core\ClasePropiedades {
 		return $this->iid_ubi_activ;
 	}
 	/**
-	 * estableix el valor de l'atribut iid_ubi_activ de Ubi
+	 * estableix el valor de l'atribut iid_ubi_activ de UbiDoc
 	 *
 	 * @param integer iid_ubi_activ='' optional
 	 */
@@ -359,17 +359,17 @@ class Ubi Extends core\ClasePropiedades {
 	 *
 	 */
 	function getDatosCampos() {
-		$oUbiSet = new core\Set();
+		$oUbiDocSet = new core\Set();
 
-		$oUbiSet->add($this->getDatosNom_ubi());
-		$oUbiSet->add($this->getDatosId_ubi_activ());
-		return $oUbiSet->getTot();
+		$oUbiDocSet->add($this->getDatosNom_ubi());
+		//$oUbiDocSet->add($this->getDatosId_ubi_activ());
+		return $oUbiDocSet->getTot();
 	}
 
 
 
 	/**
-	 * Recupera les propietats de l'atribut snom_ubi de Ubi
+	 * Recupera les propietats de l'atribut snom_ubi de UbiDoc
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo
@@ -377,11 +377,13 @@ class Ubi Extends core\ClasePropiedades {
 	function getDatosNom_ubi() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nom_ubi'));
-		$oDatosCampo->setEtiqueta(_("nom_ubi"));
+		$oDatosCampo->setEtiqueta(_("nombre del centro/casa"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument('50');
 		return $oDatosCampo;
 	}
 	/**
-	 * Recupera les propietats de l'atribut iid_ubi_activ de Ubi
+	 * Recupera les propietats de l'atribut iid_ubi_activ de UbiDoc
 	 * en una clase del tipus DatosCampo
 	 *
 	 * @return core\DatosCampo

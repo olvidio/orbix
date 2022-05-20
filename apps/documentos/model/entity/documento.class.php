@@ -881,44 +881,6 @@ class Documento Extends core\ClasePropiedades {
 		return $oDocumentoSet->getTot();
 	}
 
-
-
-	/**
-	 * Recupera les propietats de l'atribut iid_tipo_doc de Documento
-	 * en una clase del tipus DatosCampo
-	 *
-	 * @return core\DatosCampo
-	 */
-	function getDatosId_tipo_doc() {
-		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_tipo_doc'));
-		$oDatosCampo->setEtiqueta(_("id_tipo_doc"));
-		return $oDatosCampo;
-	}
-	/**
-	 * Recupera les propietats de l'atribut iid_ubi de Documento
-	 * en una clase del tipus DatosCampo
-	 *
-	 * @return core\DatosCampo
-	 */
-	function getDatosId_ubi() {
-		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_ubi'));
-		$oDatosCampo->setEtiqueta(_("id_ubi"));
-		return $oDatosCampo;
-	}
-	/**
-	 * Recupera les propietats de l'atribut iid_lugar de Documento
-	 * en una clase del tipus DatosCampo
-	 *
-	 * @return core\DatosCampo
-	 */
-	function getDatosId_lugar() {
-		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_lugar'));
-		$oDatosCampo->setEtiqueta(_("id_lugar"));
-		return $oDatosCampo;
-	}
 	/**
 	 * Recupera les propietats de l'atribut df_recibido de Documento
 	 * en una clase del tipus DatosCampo
@@ -928,7 +890,8 @@ class Documento Extends core\ClasePropiedades {
 	function getDatosF_recibido() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_recibido'));
-		$oDatosCampo->setEtiqueta(_("f_recibido"));
+		$oDatosCampo->setEtiqueta(_("fecha recibido"));
+		$oDatosCampo->setTipo('fecha');
 		return $oDatosCampo;
 	}
 	/**
@@ -940,7 +903,8 @@ class Documento Extends core\ClasePropiedades {
 	function getDatosF_asignado() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_asignado'));
-		$oDatosCampo->setEtiqueta(_("f_asignado"));
+		$oDatosCampo->setEtiqueta(_("fecha asignado"));
+		$oDatosCampo->setTipo('fecha');
 		return $oDatosCampo;
 	}
 	/**
@@ -952,7 +916,9 @@ class Documento Extends core\ClasePropiedades {
 	function getDatosObserv() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'observ'));
-		$oDatosCampo->setEtiqueta(_("observ"));
+		$oDatosCampo->setEtiqueta(_("observaciones"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument(50);
 		return $oDatosCampo;
 	}
 	/**
@@ -964,7 +930,8 @@ class Documento Extends core\ClasePropiedades {
 	function getDatosF_ult_comprobacion() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_ult_comprobacion'));
-		$oDatosCampo->setEtiqueta(_("f_ult_comprobacion"));
+		$oDatosCampo->setEtiqueta(_("fecha última comprobación"));
+		$oDatosCampo->setTipo('fecha');
 		return $oDatosCampo;
 	}
 	/**
@@ -976,7 +943,8 @@ class Documento Extends core\ClasePropiedades {
 	function getDatosEn_busqueda() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'en_busqueda'));
-		$oDatosCampo->setEtiqueta(_("en_busqueda"));
+		$oDatosCampo->setEtiqueta(_("en búsqueda"));
+		$oDatosCampo->setTipo('check');
 		return $oDatosCampo;
 	}
 	/**
@@ -989,6 +957,7 @@ class Documento Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'perdido'));
 		$oDatosCampo->setEtiqueta(_("perdido"));
+		$oDatosCampo->setTipo('check');
 		return $oDatosCampo;
 	}
 	/**
@@ -1000,7 +969,8 @@ class Documento Extends core\ClasePropiedades {
 	function getDatosF_perdido() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_perdido'));
-		$oDatosCampo->setEtiqueta(_("f_perdido"));
+		$oDatosCampo->setEtiqueta(_("fecha perdido"));
+		$oDatosCampo->setTipo('fecha');
 		return $oDatosCampo;
 	}
 	/**
@@ -1013,6 +983,7 @@ class Documento Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'eliminado'));
 		$oDatosCampo->setEtiqueta(_("eliminado"));
+		$oDatosCampo->setTipo('check');
 		return $oDatosCampo;
 	}
 	/**
@@ -1024,7 +995,9 @@ class Documento Extends core\ClasePropiedades {
 	function getDatosF_eliminado() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'f_eliminado'));
-		$oDatosCampo->setEtiqueta(_("f_eliminado"));
+		$oDatosCampo->setEtiqueta(_("fecha eliminado"));
+		$oDatosCampo->setTipo('fecha');
+		$oDatosCampo->setTipo('fecha');
 		return $oDatosCampo;
 	}
 	/**
@@ -1036,7 +1009,9 @@ class Documento Extends core\ClasePropiedades {
 	function getDatosNum_reg() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'num_reg'));
-		$oDatosCampo->setEtiqueta(_("num_reg"));
+		$oDatosCampo->setEtiqueta(_("número de registro"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument(10);
 		return $oDatosCampo;
 	}
 	/**
@@ -1048,7 +1023,9 @@ class Documento Extends core\ClasePropiedades {
 	function getDatosNum_ini() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'num_ini'));
-		$oDatosCampo->setEtiqueta(_("num_ini"));
+		$oDatosCampo->setEtiqueta(_("número inicial de la colección"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument(10);
 		return $oDatosCampo;
 	}
 	/**
@@ -1060,7 +1037,9 @@ class Documento Extends core\ClasePropiedades {
 	function getDatosNum_fin() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'num_fin'));
-		$oDatosCampo->setEtiqueta(_("num_fin"));
+		$oDatosCampo->setEtiqueta(_("número final de la colección"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument(10);
 		return $oDatosCampo;
 	}
 	/**
@@ -1073,6 +1052,8 @@ class Documento Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'identificador'));
 		$oDatosCampo->setEtiqueta(_("identificador"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument(25);
 		return $oDatosCampo;
 	}
 	/**
@@ -1084,7 +1065,9 @@ class Documento Extends core\ClasePropiedades {
 	function getDatosNum_ejemplares() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'num_ejemplares'));
-		$oDatosCampo->setEtiqueta(_("num_ejemplares"));
+		$oDatosCampo->setEtiqueta(_("número de ejemplares"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument(10);
 		return $oDatosCampo;
 	}
 }

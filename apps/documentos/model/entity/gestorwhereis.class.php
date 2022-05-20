@@ -33,7 +33,33 @@ class GestorWhereis Extends core\ClaseGestor {
 
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
-
+	
+	/**
+	 * retorna un array
+	 * Els id_doc que estan a la llista
+	 *
+	 * @param array[id_egm]
+	 * @return array Una Llista
+	 */
+	function getArrayIdFromIdEgms($aEgms) {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		
+		$sQuery="SELECT id_doc,id_item_egm FROM $nom_tabla ORDER BY id_item_egm";
+		if ($oDbl->query($sQuery) === false) {
+			$sClauError = 'GestorTipoDoc.lista';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		$aOpciones=array();
+		foreach ($oDbl->query($sQuery) as $aClave) {
+			if (in_array($aClave[1],$aEgms)) {
+				$aOpciones[]=$aClave[0];
+			}
+		}
+		return $aOpciones;
+	}
+	
 	/**
 	 * retorna l'array d'objectes de tipus Whereis
 	 *

@@ -22,8 +22,8 @@ class InfoColeccion extends core\datosInfo {
 			$aWhere=array('_ordre'=>'nom_coleccion');
 			$aOperador='';
 		} else {
-			$aWhere=array('nom'=> $this->k_buscar);
-			$aOperador=array('nom'=>'sin_acentos');
+			$aWhere=array('nom_coleccion'=> $this->k_buscar);
+			$aOperador=array('nom_coleccion'=>'sin_acentos');
 		}
 		$oLista=new entity\GestorColeccion();
 		

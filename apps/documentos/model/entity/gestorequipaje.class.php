@@ -1,6 +1,7 @@
 <?php
 namespace documentos\model\entity;
 use core;
+use web\Desplegable;
 /**
  * GestorEquipaje
  *
@@ -33,6 +34,63 @@ class GestorEquipaje Extends core\ClaseGestor {
 
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
+
+	/**
+	 * retorna un array
+	 * Els equipatges coincidents
+	 *
+	 * @param id_equipaje
+	 * @return array Una Llista
+	 */
+	function getEquipajesCoincidentes($id_equipaje) {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$oEquipaje = new Equipaje($id_equipaje);
+		$f_ini = $oEquipaje->getF_ini();
+		$f_fin = $oEquipaje->getF_fin();
+		$sQuery="SELECT id_equipaje,nom_equipaje FROM $nom_tabla
+							WHERE (f_ini BETWEEN '$f_ini' AND '$f_fin')
+									OR (f_fin BETWEEN '$f_ini' AND '$f_fin')
+							ORDER BY nom_equipaje";
+		if ($oDbl->query($sQuery) === false) {
+			$sClauError = 'GestorTipoDoc.lista';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		$aOpciones=array();
+		foreach ($oDbl->query($sQuery) as $aClave) {
+			$aOpciones[]=$aClave[0];
+		}
+		return $aOpciones;
+	}
+	/**
+	 * retorna un objecte del tipus Desplegable
+	 * Els posibles equipatges
+	 *
+	 * @param f_ini date una data a partir de la qual
+	 * @return array Una Llista
+	 */
+	function getListaEquipajes($f_ini='') {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$where = '';
+		if (!empty($f_ini)) $where = "WHERE f_ini > '$f_ini'";
+		$sQuery="SELECT id_equipaje,nom_equipaje FROM $nom_tabla
+							$where
+							ORDER BY f_ini,nom_equipaje";
+		if (($oDbl->query($sQuery)) === false) {
+			$sClauError = 'GestorTipoDoc.lista';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		$aOpciones=array();
+		foreach ($oDbl->query($sQuery) as $aClave) {
+			$clave=$aClave[0];
+			$val=$aClave[1];
+			$aOpciones[$clave]=$val;
+		}
+		return new Desplegable('',$aOpciones,'',true);
+	}
 
 	/**
 	 * retorna l'array d'objectes de tipus Equipaje

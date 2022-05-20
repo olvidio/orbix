@@ -377,7 +377,11 @@ class Lugar Extends core\ClasePropiedades {
 	function getDatosId_ubi() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_ubi'));
-		$oDatosCampo->setEtiqueta(_("id_ubi"));
+		$oDatosCampo->setEtiqueta(_("centro/casa"));
+		$oDatosCampo->setTipo('opciones');
+		$oDatosCampo->setArgument('documentos\model\entity\UbiDoc');
+		$oDatosCampo->setArgument2('nom_ubi');
+		$oDatosCampo->setArgument3('getListaUbisDoc');
 		return $oDatosCampo;
 	}
 	/**
@@ -389,7 +393,9 @@ class Lugar Extends core\ClasePropiedades {
 	function getDatosNom_lugar() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nom_lugar'));
-		$oDatosCampo->setEtiqueta(_("nom_lugar"));
+		$oDatosCampo->setEtiqueta(_("lugar"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument(30);
 		return $oDatosCampo;
 	}
 }

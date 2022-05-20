@@ -1,6 +1,7 @@
 <?php
 namespace documentos\model\entity;
 use core;
+use web\Desplegable;
 /**
  * GestorTipoDoc
  *
@@ -33,7 +34,37 @@ class GestorTipoDoc Extends core\ClaseGestor {
 
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
-
+	
+	/**
+	 * retorna un objecte del tipus Desplegable
+	 * Els posibles tipus de documents per nom (detall).
+	 *
+	 * @return array Una Llista
+	 */
+	function getListaTipoDoc() {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$sQuery="SELECT id_tipo_doc,
+				 CASE WHEN nom_doc IS NOT NULL THEN sigla ||' ('||nom_doc||')'
+					ELSE sigla
+				 END
+				FROM $nom_tabla
+				WHERE vigente = 't'
+				ORDER BY sigla,nom_doc ";
+		if ($oDbl->query($sQuery) === false) {
+			$sClauError = 'GestorTipoDoc.lista';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		$aOpciones=array();
+		foreach ($oDbl->query($sQuery) as $aClave) {
+			$clave=$aClave[0];
+			$val=$aClave[1];
+			$aOpciones[$clave]=$val;
+		}
+		return new Desplegable('',$aOpciones,'',true);
+	}
+	
 	/**
 	 * retorna l'array d'objectes de tipus TipoDoc
 	 *

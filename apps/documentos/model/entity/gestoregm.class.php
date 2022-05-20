@@ -34,6 +34,38 @@ class GestorEgm Extends core\ClaseGestor {
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
+	/* METODES PUBLICS -----------------------------------------------------------*/
+	
+	/**
+	 * retorna un array
+	 * Els egm que estan a la llista
+	 *
+	 * @param array[id_equipaje]
+	 * @return array Una Llista
+	 */
+	function getArrayIdFromIdEquipajes($aEquipajes,$lugar='') {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		
+		$sQuery="SELECT id_item,id_equipaje,id_lugar FROM $nom_tabla ORDER BY id_equipaje";
+		if ( $oDbl->query($sQuery) === false) {
+			$sClauError = 'GestorTipoDoc.lista';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		$aOpciones=array();
+		foreach ($oDbl->query($sQuery) as $aClave) {
+			if (in_array($aClave[1],$aEquipajes)) {
+				if (!empty($lugar)){
+					$aOpciones[]=$aClave[2];
+				} else {
+					$aOpciones[]=$aClave[0];
+				}
+			}
+		}
+		return $aOpciones;
+	}
+	
 	/**
 	 * retorna l'array d'objectes de tipus Egm
 	 *

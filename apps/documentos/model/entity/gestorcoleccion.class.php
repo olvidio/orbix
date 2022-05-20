@@ -1,6 +1,7 @@
 <?php
 namespace documentos\model\entity;
 use core;
+use web\Desplegable;
 /**
  * GestorColeccion
  *
@@ -33,6 +34,30 @@ class GestorColeccion Extends core\ClaseGestor {
 
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
+
+	/**
+	 * retorna un objecte del tipus Desplegable
+	 * Les posibles coleccions.
+	 *
+	 * @return array Una Llista
+	 */
+	function getListaColecciones() {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$sQuery="SELECT id_coleccion,nom_coleccion FROM $nom_tabla ORDER BY nom_coleccion";
+		if ($oDbl->query($sQuery) === false) {
+			$sClauError = 'GestorColeccion.lista';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		$aOpciones=array();
+		foreach ($oDbl->query($sQuery) as $aClave) {
+			$clave=$aClave[0];
+			$val=$aClave[1];
+			$aOpciones[$clave]=$val;
+		}
+		return new Desplegable('',$aOpciones,'',true);
+	}
 
 	/**
 	 * retorna l'array d'objectes de tipus Coleccion

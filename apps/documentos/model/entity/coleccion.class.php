@@ -379,7 +379,9 @@ class Coleccion Extends core\ClasePropiedades {
 	function getDatosNom_coleccion() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nom_coleccion'));
-		$oDatosCampo->setEtiqueta(_("nom_coleccion"));
+		$oDatosCampo->setEtiqueta(_("nombre de la colección"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument('30');
 		return $oDatosCampo;
 	}
 	/**
@@ -392,6 +394,7 @@ class Coleccion Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'agrupar'));
 		$oDatosCampo->setEtiqueta(_("agrupar"));
+		$oDatosCampo->setTipo('check');
 		return $oDatosCampo;
 	}
 }

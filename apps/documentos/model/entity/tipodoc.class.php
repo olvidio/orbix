@@ -531,7 +531,9 @@ class TipoDoc Extends core\ClasePropiedades {
 	function getDatosNom_doc() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nom_doc'));
-		$oDatosCampo->setEtiqueta(_("nom_doc"));
+		$oDatosCampo->setEtiqueta(_("detalle"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument('30');
 		return $oDatosCampo;
 	}
 	/**
@@ -543,7 +545,9 @@ class TipoDoc Extends core\ClasePropiedades {
 	function getDatosSigla() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'sigla'));
-		$oDatosCampo->setEtiqueta(_("sigla"));
+		$oDatosCampo->setEtiqueta(_("sigla/nombre"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument('30');
 		return $oDatosCampo;
 	}
 	/**
@@ -556,6 +560,8 @@ class TipoDoc Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'observ'));
 		$oDatosCampo->setEtiqueta(_("observ"));
+		$oDatosCampo->setTipo('texto');
+		$oDatosCampo->setArgument('90');
 		return $oDatosCampo;
 	}
 	/**
@@ -567,7 +573,12 @@ class TipoDoc Extends core\ClasePropiedades {
 	function getDatosId_coleccion() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'id_coleccion'));
-		$oDatosCampo->setEtiqueta(_("id_coleccion"));
+		$oDatosCampo->setEtiqueta(_("colección"));
+		$oDatosCampo->setTipo('opciones');
+		$oDatosCampo->setArgument('documentos\model\entity\Coleccion');
+		$oDatosCampo->setArgument2('nom_coleccion');
+		$oDatosCampo->setArgument3('getListaColecciones');
+		
 		return $oDatosCampo;
 	}
 	/**
@@ -579,7 +590,8 @@ class TipoDoc Extends core\ClasePropiedades {
 	function getDatosBajo_llave() {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'bajo_llave'));
-		$oDatosCampo->setEtiqueta(_("bajo_llave"));
+		$oDatosCampo->setEtiqueta(_("bajo llave"));
+		$oDatosCampo->setTipo('check');
 		return $oDatosCampo;
 	}
 	/**
@@ -592,6 +604,7 @@ class TipoDoc Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'vigente'));
 		$oDatosCampo->setEtiqueta(_("vigente"));
+		$oDatosCampo->setTipo('check');
 		return $oDatosCampo;
 	}
 	/**
@@ -604,6 +617,7 @@ class TipoDoc Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'numerado'));
 		$oDatosCampo->setEtiqueta(_("numerado"));
+		$oDatosCampo->setTipo('check');
 		return $oDatosCampo;
 	}
 }

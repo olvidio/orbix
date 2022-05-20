@@ -1,6 +1,7 @@
 <?php
 namespace documentos\model\entity;
 use core;
+use web\Desplegable;
 /**
  * GestorLugar
  *
@@ -33,7 +34,29 @@ class GestorLugar Extends core\ClaseGestor {
 
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
-
+	
+	/**
+	 * retorna un objecte del tipus Desplegable
+	 * Els posibles llocs segons l'ubi
+	 *
+	 * @param integer iid_ubi.
+	 * @return array Una Llista
+	 */
+	function getListaLugares($iid_ubi) {
+		$oDbl = $this->getoDbl();
+		$nom_tabla = $this->getNomTabla();
+		$sQuery="SELECT id_lugar, nom_lugar
+                                FROM $nom_tabla
+                                WHERE id_ubi='$iid_ubi'
+                                ORDER BY id_ubi,nom_lugar";
+		if (($oDblSt = $oDbl->query($sQuery)) === false) {
+			$sClauError = 'GestorLugar.lista';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+			return false;
+		}
+		return new Desplegable('',$oDblSt,'',true);
+	}
+		
 	/**
 	 * retorna l'array d'objectes de tipus Lugar
 	 *
