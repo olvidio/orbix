@@ -47,15 +47,23 @@ $Qsactividad = (string)  filter_input(INPUT_POST, 'sactividad');
 $Qsasistentes = (string)  filter_input(INPUT_POST, 'sasistentes');
 
 $mi_sfsv = core\ConfigGlobal::mi_sfsv();
-if ($mi_sfsv == 1) $ssfsv = 'sv';
-if ($mi_sfsv == 2) $ssfsv = 'sf';
-$snom_tipo = '...';
+if ($mi_sfsv == 1) { $ssfsv = 'sv'; }
+if ($mi_sfsv == 2) { $ssfsv = 'sf'; }
+
 $oTipoActiv= new web\TiposActividades();
 $oTipoActiv->setSfsvText($ssfsv);
 $oTipoActiv->setAsistentesText($Qsasistentes);
 $oTipoActiv->setActividadText($Qsactividad);
 $Qid_tipo_activ=$oTipoActiv->getId_tipo_activ();
-$Qid_tipo_activ =  '^'.$Qid_tipo_activ;
+$Qid_tipo_activ = '^'.$Qid_tipo_activ;
+// En caso de n que atienden una cv/crt de agd y les cuenta como propio
+if ($Qsasistentes == 'n') {
+	$oTipoActiv->setAsistentesText('agd');
+	$Qid_tipo_activ_sup = $oTipoActiv->getId_tipo_activ();
+	$Qid_tipo_activ_sup = '^'.$Qid_tipo_activ_sup;
+} else {
+	$Qid_tipo_activ_sup = '';
+}
 
 /* Pongo en la variable $curso el periodo del curso */
 switch ($Qsactividad) {
@@ -82,7 +90,6 @@ switch ($Qsasistentes) {
 	case "agd":
 	case "a":
 		//caso de agd
-		$id_tabla_persona='a'; //el id_tabla entra en conflicto con el de actividad
 		$aWhereA['id_tipo_activ'] = $Qid_tipo_activ;
 		$aOperadorA['id_tipo_activ'] = '~';
 
@@ -103,21 +110,20 @@ switch ($Qsasistentes) {
 		// caso de n
 		$aWhereA['id_tipo_activ'] = $Qid_tipo_activ;
 		$aOperadorA['id_tipo_activ'] = '~';
-		/*
-		//inicialmente estaba sólo con las activiades publicadas. 
-		//Ahora añado las no publicadas de midl.
-		$GesActividadesDl = new actividades\GestorActividadDl();
-		$cActividadesDl = $GesActividadesDl->getActividades($aWhereA,$aOperadorA);
-		// Añado la condición para que no duplique las de midele:
-		$aWhereA['dl_org'] = $mi_dele;
-		$aOperadorA['dl_org'] = '!=';
-		$GesActividadesPub = new actividades\GestorActividadPub();
-		$cActividadesPub = $GesActividadesPub->getActividades($aWhereA,$aOperadorA);
-		$cActividades = array_merge($cActividadesDl,$cActividadesPub);
-		*/
 		// las de la dl + las importadas
 		$GesActividades = new actividades\GestorActividad();
-		$cActividades = $GesActividades->getActividades($aWhereA,$aOperadorA);
+		$cActividades1 = $GesActividades->getActividades($aWhereA,$aOperadorA);
+		// Añadir las actividades de agd (puede hacer el propio al atender una actividad de agd).
+		if (!empty($Qid_tipo_activ_sup)) {
+			$aWhereA['id_tipo_activ'] = $Qid_tipo_activ_sup;
+			$aOperadorA['id_tipo_activ'] = '~';
+			// las de la dl + las importadas
+			$cActividades_sup = $GesActividades->getActividades($aWhereA,$aOperadorA);
+			$cActividades = array_merge($cActividades1,$cActividades_sup);
+		} else {
+			$cActividades = $cActividades1;
+		}
+
 		$filtro_id_nom = 1;
 	break;
 }
