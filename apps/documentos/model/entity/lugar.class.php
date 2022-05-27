@@ -380,7 +380,7 @@ class Lugar Extends core\ClasePropiedades {
 		$oDatosCampo->setEtiqueta(_("centro/casa"));
 		$oDatosCampo->setTipo('opciones');
 		$oDatosCampo->setArgument('documentos\model\entity\UbiDoc');
-		$oDatosCampo->setArgument2('nom_ubi');
+		$oDatosCampo->setArgument2('getNom_ubi');
 		$oDatosCampo->setArgument3('getListaUbisDoc');
 		return $oDatosCampo;
 	}

@@ -576,7 +576,7 @@ class TipoDoc Extends core\ClasePropiedades {
 		$oDatosCampo->setEtiqueta(_("colección"));
 		$oDatosCampo->setTipo('opciones');
 		$oDatosCampo->setArgument('documentos\model\entity\Coleccion');
-		$oDatosCampo->setArgument2('nom_coleccion');
+		$oDatosCampo->setArgument2('getNom_coleccion');
 		$oDatosCampo->setArgument3('getListaColecciones');
 		
 		return $oDatosCampo;
