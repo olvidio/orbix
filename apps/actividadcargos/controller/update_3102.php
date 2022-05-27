@@ -6,6 +6,7 @@ use asistentes\model\entity\AsistentePub;
 use dossiers\model\entity as dossiers;
 use personas\model\entity as personas;
 use function core\is_true;
+use core\ConfigGlobal;
 
 /**
  * Actualiza los datos de un objeto ActividadCargo.
@@ -155,6 +156,7 @@ switch ($Qmod) {
 			$oAsistente->DBCarregar();
 			$oAsistente->setPropio('t'); // por defecto lo pongo como propio
 			$oAsistente->setFalta('f');
+			$oAsistente->setDl_responsable(ConfigGlobal::mi_delef());
 			if ($oAsistente->DBGuardar() === false) {
 				$msg_err = _("hay un error, no se ha guardado");
 			}
@@ -195,6 +197,7 @@ switch ($Qmod) {
 			if (!empty($Qasis)) { // lo añado
 				$oAsistente->setPropio('t'); // por defecto lo pongo como propio
 				$oAsistente->setFalta('f');
+				$oAsistente->setDl_responsable(ConfigGlobal::mi_delef());
 				if ($oAsistente->DBGuardar() === false) {
 					$msg_err = _("hay un error, no se ha guardado");
 				}

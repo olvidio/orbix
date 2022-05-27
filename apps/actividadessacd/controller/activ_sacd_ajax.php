@@ -296,6 +296,7 @@ switch ($Qque) {
 		$id_tipo_activ = (string)$oActividad->getId_tipo_activ();
 		if ($id_tipo_activ[0] == 1) {
 			$oAsisActiv = new AsistenteDl(array('id_activ'=>$Qid_activ,'id_nom'=>$Qid_nom,'propio'=>'f','falta'=>'f'));
+			$oAsisActiv->setDl_responsable(ConfigGlobal::mi_delef());
 			if ($oAsisActiv->DBGuardar() === false) {
 				echo _("hay un error, no se ha guardado la asistencia");
 			}
