@@ -170,6 +170,7 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
     $oAsistenteNew->setPlaza(asistentes\Asistente::PLAZA_ASIGNADA);
     // IMPORTANT: Propietario del a plaza
     $oAsistenteNew->setPropietario("$dl>$mi_dele");
+    $oAsistenteNew->setDl_responsable($mi_dele);
     if ($oAsistenteNew->DBGuardar() === false) {
         $msg_err = _("hay un error, no se ha guardado");
         echo $msg_err;
