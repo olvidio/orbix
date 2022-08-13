@@ -114,8 +114,8 @@ class DlListas Extends core\ClasePropiedades {
 	 *
 	 */
 	public function DBGuardar() {
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
+		//$oDbl = $this->getoDbl();
+		//$nom_tabla = $this->getNomTabla();
 		return false;
 	}
 
@@ -161,8 +161,8 @@ class DlListas Extends core\ClasePropiedades {
 	 *
 	 */
 	public function DBEliminar() {
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
+		//$oDbl = $this->getoDbl();
+		//$nom_tabla = $this->getNomTabla();
 		return FALSE;
 	}
 	
