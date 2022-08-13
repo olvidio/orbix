@@ -114,8 +114,8 @@ class DlListas Extends core\ClasePropiedades {
 	 *
 	 */
 	public function DBGuardar() {
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
+		//$oDbl = $this->getoDbl();
+		//$nom_tabla = $this->getNomTabla();
 		return false;
 	}
 
@@ -126,8 +126,8 @@ class DlListas Extends core\ClasePropiedades {
 	public function DBCarregar($que=null) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		if (isset($this->iIdentif)) {
-			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE Identif='$this->iIdentif'")) === false) {
+		if (isset($this->sDl)) {
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE dl='$this->sDl'")) === false) {
 				$sClauError = 'Listas.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
@@ -161,8 +161,8 @@ class DlListas Extends core\ClasePropiedades {
 	 *
 	 */
 	public function DBEliminar() {
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
+		//$oDbl = $this->getoDbl();
+		//$nom_tabla = $this->getNomTabla();
 		return FALSE;
 	}
 	
@@ -219,7 +219,7 @@ class DlListas Extends core\ClasePropiedades {
 	 */
 	function getPrimary_key() {
 		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('Identif' => $this->iIdentif);
+			$this->aPrimary_key = array('dl' => $this->sDl);
 		}
 		return $this->aPrimary_key;
 	}
@@ -233,7 +233,7 @@ class DlListas Extends core\ClasePropiedades {
 	    if (is_array($a_id)) {
 	        $this->aPrimary_key = $a_id;
 	        foreach($a_id as $nom_id=>$val_id) {
-	            if (($nom_id == 'Identif') && $val_id !== '') $this->iIdentif = (int)$val_id; // evitem SQL injection fent cast a integer
+	            if (($nom_id == 'dl') && $val_id !== '') $this->sDl = (string)$val_id;
 	        }
 	    }
 	}
@@ -412,4 +412,3 @@ class DlListas Extends core\ClasePropiedades {
 		return $oDatosCampo;
 	}
 }
-
