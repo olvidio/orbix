@@ -106,10 +106,12 @@ function strsinacentocmp($str1,$str2) {
 
 /**
 * Función para corregir la del php strtoupper. No pone en mayúsculas las vocales acentuadas
+* 18-8-2022 corregido con la función mb_strtoupper. Ignoro porque no estaba así?¿
 *  
 */
 function strtoupper_dlb($texto) {
-	$texto=strtoupper($texto);
+	//$texto=strtoupper($texto);
+	$texto = mb_strtoupper($texto, 'UTF-8');
 	$minusculas = array("á","é","í","ó","ú","à","è","ò","ñ");
 	$mayusculas = array("Á","É","Í","Ó","Ú","À","È","Ò","Ñ");
 
