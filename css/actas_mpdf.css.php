@@ -27,7 +27,8 @@ div.cabecera {
 	font-size: 22pt; 
 	text-align : left;
 	letter-spacing: -0.1em;
-	word-spacing: +0.4em;
+	/* por alguna razón no va bien con 0.3em pongo 10pt */
+	word-spacing: 10pt;
 	font-weight: bold;
 	}
 div.region { 
