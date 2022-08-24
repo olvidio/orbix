@@ -205,7 +205,7 @@ if ($cara=="A") {
 <b>pág.</b>  <?= $pagina; ?>
 <b> n.</b> <?= $linea; ?>
 </div>
-<div class="acta">(N <?= $acta; ?>)</div>
+<div class="acta">(N. <?= $acta; ?>)</div>
 </div>
 <div class="f7">F7</div>
 <?php

@@ -296,7 +296,6 @@ while ( $a < count($cAsignaturas)) {
 <div class="ects">(1) ECTS (anglice: European Credit Transfer System): 1 ECTS stat pro viginti quinque horis quas alumnus studio dedicaverit.</div>
 <?php
 $footer = "<table class=\"piepagina\"><tr><td class=\"f7\">F10</td><td class=\"dir\">$dir_stgr</td></tr></table>";
-//$footer = "<div class=\"piepagina\"><div class=\"f7\">F10</div><div class=\"dir\">$dir_stgr</div></div>";
 
 ?>
 </body>

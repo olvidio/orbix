@@ -27,7 +27,7 @@ div.cabecera {
 	font-size: 22pt; 
 	text-align : left;
 	letter-spacing: -0.1em;
-	word-spacing: +0.2em;
+	word-spacing: +0.4em;
 	font-weight: bold;
 	}
 div.region { 
