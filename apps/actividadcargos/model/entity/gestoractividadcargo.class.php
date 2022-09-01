@@ -102,14 +102,6 @@ class GestorActividadCargo Extends core\ClaseGestor {
 	        $oPersona = new PersonaSacd($id_nom);
 	        $oPersona->DBCarregar();
 	        if (empty($oPersona->getApellido1())) {
-	            // nom actividad:
-	            $oActividad = new Actividad($iid_activ);
-	            $nom_activ = $oActividad->getNom_activ();
-	            $msg = sprintf(_("se necesita sincronizar (el sacd no está en DB-comun) id_nom: %s"),$id_nom);
-	            $msg .= '<br>';
-	            $msg .= sprintf(_("afecta a la actividad: %s"),$nom_activ);
-	            $msg .= '<br>';
-	            echo $msg;
                 // si estoy dentro y soy sv, puedo mirar la tabla correcta:
 	            if (ConfigGlobal::is_dmz() === FALSE && ConfigGlobal::mi_sfsv() === 1) {
         	        $oPersona = Persona::NewPersona($id_nom);
@@ -117,6 +109,17 @@ class GestorActividadCargo Extends core\ClaseGestor {
         	        if (is_object($oPersona)) {
                         $oPersonaSet->add($oPersona);
         	        }
+	            } else {
+	            	// Si es de otra dl, ya es lo que toca: No tengo acceso a la tablas de cp_sacd.
+	            	// Desde dentro accedo a PersonaIn, pero desde fuera NO.
+					// nom actividad:
+					$oActividad = new Actividad($iid_activ);
+					$nom_activ = $oActividad->getNom_activ();
+	            	$msg = sprintf(_("No se tiene acceso al nombre de (es de otra dl o el sacd no está en DB-comun) id_nom: %s"),$id_nom);
+	            	$msg .= '<br>';
+	            	$msg .= sprintf(_("afecta a la actividad: %s"),$nom_activ);
+	            	$msg .= '<br>';
+	            	echo $msg;
 	            }
 	        } else {
 	           $oPersonaSet->add($oPersona);
