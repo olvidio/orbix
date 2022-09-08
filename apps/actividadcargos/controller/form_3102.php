@@ -56,10 +56,11 @@ if (!empty($a_sel)) { //vengo de un checkbox
 		$Qid_item = (integer) strtok("#"); // si no hay devuelve false
 		$Qid_item = empty($Qid_item)? '' : $Qid_item; // cambiar el false a ''.
 		$eliminar = (integer) strtok("#");
-		
+		$Qid_schema = (integer) strtok("#");
 	} else {
 		$Qid_item = (integer) strtok($a_sel[0],"#");
 		$eliminar = (integer) strtok("#");
+		$Qid_schema = (integer) strtok("#");
 	}
 	// el scroll id es de la página anterior, hay que guardarlo allí
 	$oPosicion->addParametro('id_sel',$a_sel,1);
@@ -67,6 +68,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$oPosicion->addParametro('scroll_id',$scroll_id,1);
 } else {
 	$Qid_nom = (integer)  \filter_input(INPUT_POST, 'id_nom');
+	$Qid_schema = '';
 }
 $Qmod = (string)  \filter_input(INPUT_POST, 'mod');
 $pau = (string)  \filter_input(INPUT_POST, 'pau');
@@ -79,7 +81,7 @@ $id_nom_real = '';
 $ape_nom = '';
 $oDesplegablePersonas = array();
 if (!empty($Qid_item)) { //caso de modificar
-	$oActividadCargo = new actividadcargos\ActividadCargo(array('id_item'=>$Qid_item));
+	$oActividadCargo = new actividadcargos\ActividadCargo(array('id_item'=>$Qid_item, 'id_schema'=>$Qid_schema));
 	$Qid_activ=$oActividadCargo->getId_activ();
 	$Qid_cargo=$oActividadCargo->getId_cargo();
 	$Qid_nom=$oActividadCargo->getId_nom();

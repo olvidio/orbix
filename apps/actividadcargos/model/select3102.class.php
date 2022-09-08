@@ -104,6 +104,7 @@ class Select3102 {
 		$mi_sfsv = core\ConfigGlobal::mi_sfsv();
 		foreach($cCargosEnActividad as $oActividadCargo) {
 			$c++;
+			$id_schema=$oActividadCargo->getId_schema();
 			$id_item=$oActividadCargo->getId_item();
 			$id_nom=$oActividadCargo->getId_nom();
 			$id_cargo=$oActividadCargo->getId_cargo();
@@ -146,7 +147,7 @@ class Select3102 {
 			}
 			
 			if ($permiso==3) {
-				$a_valores[$c]['sel']="$id_item#$eliminar";
+				$a_valores[$c]['sel']="$id_item#$eliminar#$id_schema";
 			} else {
 				$a_valores[$c]['sel']="";
 			}
