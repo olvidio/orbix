@@ -1,6 +1,8 @@
 <?php
 namespace actividadcargos\model\entity;
 use cambios\model\gestorAvisoCambios;
+use core\ConfigGlobal;
+use function core\is_true;
 use core;
 /**
  * Fitxer amb la Classe que accedeix a la taula d_cargos_activ_dl
@@ -184,11 +186,11 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 			}
 			// Anoto el cambio
 			if (empty($quiet) && core\ConfigGlobal::is_app_installed('cambios')) {
-			    $oGestorCanvis = new gestorAvisoCambios();
-			    $shortClassName = (new \ReflectionClass($this))->getShortName();
-			    $oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
+				$oGestorCanvis = new gestorAvisoCambios();
+				$shortClassName = (new \ReflectionClass($this))->getShortName();
+				$oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
 			}
-            $this->setAllAtributes($aDades);
+			$this->setAllAtributes($aDades);
 		} else {
 			// INSERT
 			$campos="(id_activ,id_cargo,id_nom,puede_agd,observ)";
@@ -211,18 +213,18 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 			}
 			$id_item = $oDbl->lastInsertId('d_cargos_activ_dl_id_item_seq');
 			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item=$id_item")) === false) {
-			    $sClauError = 'ActividadCargo.carregar.Last';
-			    $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			    return false;
+				$sClauError = 'ActividadCargo.carregar.Last';
+				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+				return false;
 			}
 			$aDadesLast = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 			$this->aDades=$aDadesLast;
 			$this->setAllAtributes($aDadesLast);
 			// Anoto el cambio
 			if (empty($quiet) && core\ConfigGlobal::is_app_installed('cambios')) {
-			    $oGestorCanvis = new gestorAvisoCambios();
-			    $shortClassName = (new \ReflectionClass($this))->getShortName();
-			    $oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $this->aDades, array());
+				$oGestorCanvis = new gestorAvisoCambios();
+				$shortClassName = (new \ReflectionClass($this))->getShortName();
+				$oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $this->aDades, array());
 			}
 		}
 		return true;
@@ -300,17 +302,17 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 	 *
 	 */
 	public function DBEliminar() {
-	    $this->DBCarregar();
+		$this->DBCarregar();
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		// que tenga el módulo de 'cambios'
 		if (core\ConfigGlobal::is_app_installed('cambios')) {
-		    // per carregar les dades a $this->aDadesActuals i poder posar-les als canvis.
-		    $this->DBCarregar('guardar');
-		    // ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.
-		    $oGestorCanvis = new gestorAvisoCambios();
-		    $shortClassName = (new \ReflectionClass($this))->getShortName();
-		    $oGestorCanvis->addCanvi($shortClassName, 'DELETE', $this->iid_activ, array(), $this->aDadesActuals);
+			// per carregar les dades a $this->aDadesActuals i poder posar-les als canvis.
+			$this->DBCarregar('guardar');
+			// ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.
+			$oGestorCanvis = new gestorAvisoCambios();
+			$shortClassName = (new \ReflectionClass($this))->getShortName();
+			$oGestorCanvis->addCanvi($shortClassName, 'DELETE', $this->iid_activ, array(), $this->aDadesActuals);
 		}
 		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item=$this->iid_item")) === false) {
 			$sClauError = 'ActividadCargo.eliminar';

@@ -8,6 +8,7 @@ use personas\model\entity as personas;
 use core;
 use web;
 use web\Hash;
+use core\ConfigGlobal;
 
 /**
  * Gestiona el dossier 3102: Cargos de una actividad
@@ -65,10 +66,14 @@ class Select3102 {
 
 		
 	private function getBotones() {
-		$a_botones=array(
-					array( 'txt' => _("modificar cargo"), 'click' =>"fnjs_mod_cargo(this.form)" ) ,
-					array( 'txt' => _("quitar cargo"), 'click' =>"fnjs_borrar_cargo(this.form)" ) 
-		);
+		if (ConfigGlobal::mi_ambito() === 'rstgr') {
+			$a_botones = [];
+		} else {
+			$a_botones=array(
+						array( 'txt' => _("modificar cargo"), 'click' =>"fnjs_mod_cargo(this.form)" ) ,
+						array( 'txt' => _("quitar cargo"), 'click' =>"fnjs_borrar_cargo(this.form)" ) 
+			);
+		}
 		return $a_botones;
 	}
 
@@ -205,7 +210,7 @@ class Select3102 {
 	private function setLinksInsert() {
 		$this->aLinks_dl = array();
 		$a_ref_perm = $this->a_ref_perm;
-		if (empty($a_ref_perm)) { // si es nulo, no tengo permisos de ningún tipo
+		if (empty($a_ref_perm) || ConfigGlobal::mi_ambito() === 'rstgr') { // si es nulo, no tengo permisos de ningún tipo
 			return '';
 		}
 		reset($a_ref_perm);

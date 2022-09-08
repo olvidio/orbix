@@ -108,7 +108,7 @@ class Select3101 {
 	}
 
 	private function getBotones() {
-		if (ConfigGlobal::is_app_installed('asistentes')) {
+		if (ConfigGlobal::is_app_installed('asistentes') &&  ConfigGlobal::mi_ambito() !== 'rstgr') {
 			$a_botones[] = array( 'txt' => _("modificar asistencia"),
 								'click' =>"fnjs_modificar(this.form)"
 							);
@@ -122,7 +122,7 @@ class Select3101 {
 								'click'=>"fnjs_transferir(this.form)"
 							);
 		}
-		if (ConfigGlobal::is_app_installed('actividadcargos')) {
+		if (ConfigGlobal::is_app_installed('actividadcargos') &&  ConfigGlobal::mi_ambito() !== 'rstgr') {
 			$a_botones[] = array( 'txt' => _("añadir cargo"),
 									'click' =>"fnjs_add_cargo(this.form)" 
 							);
@@ -858,7 +858,7 @@ class Select3101 {
 	public function setLinksInsert() {
 		$this->aLinks_dl = array();
 		$ref_perm = $this->a_ref_perm;
-		if (empty($ref_perm) || $this->permiso < 2) { // si es nulo, no tengo permisos de ningún tipo
+		if (empty($ref_perm) || $this->permiso < 2 ||  ConfigGlobal::mi_ambito() === 'rstgr') { // si es nulo, no tengo permisos de ningún tipo
 			return '';
 		}
 		$mi_dele = ConfigGlobal::mi_delef();
