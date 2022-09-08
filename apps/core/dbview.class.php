@@ -157,11 +157,12 @@ class DBView {
 	}
 	
 	public function Drop() {
-	    // Sólo puede el propietario. Por eso hay que emplear la conexión oDB
-	    $oDbl = $GLOBALS['oDB'];
+	    $oDbl = $this->getoDbl();
 	    $nameView = " \"$this->sSchema\".$this->sView";
 	    
-	    $sql = "DROP MATERIALIZED VIEW IF EXISTS $nameView CASCADE ";
+	    // Sólo puede el propietario. Por eso hay que emplear la conexión oDB
+		$this->setOwnerToSuperuser($nameView);
+		$sql = "DROP MATERIALIZED VIEW IF EXISTS $nameView CASCADE ";
         
 	    if (($oDbl->exec($sql)) === false) {
 	        $sClauError = 'Drop';
@@ -332,7 +333,7 @@ class DBView {
 	    
 	    foreach ($oDbl->query($sQuery) as $row) {
 	        $column_name = $row['column_name'];
-	        if ($column_name == 'id_schema') { continue; }
+	        //if ($column_name == 'id_schema') { continue; }
 	        $definicion .= "$view.$column_name, ";
 	    }
 	    // borrar la última coma

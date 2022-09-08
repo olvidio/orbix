@@ -129,7 +129,7 @@ switch ($Qmod) {
 			if (strstr($error, 'duplicate key')) {
 				$msg_err = _("ya existe este cargo para esta actividad");
 			} else {
-				$msg_err = _("hay un error, no se ha guardado");
+				$msg_err = $error;
 			}
 			exit ($msg_err);
 		}

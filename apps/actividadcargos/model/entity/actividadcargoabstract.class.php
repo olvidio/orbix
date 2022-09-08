@@ -236,7 +236,9 @@ abstract class ActividadCargoAbstract Extends core\ClasePropiedades {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if (isset($this->iid_item)) {
-			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item=$this->iid_item")) === false) {
+			// necesario mirar el esquema en el caso de consultar las vistas de union para regiones stgr
+			$cond_schema = !empty($this->iid_schema)? " AND id_schema=$this->id_schema" : '' ;
+			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item=$this->iid_item $cond_schema")) === false) {
 				$sClauError = 'ActividadCargo.carregar';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 				return false;
