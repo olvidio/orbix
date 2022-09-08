@@ -38,16 +38,39 @@ class GestorDelegacion Extends ClaseGestor {
 
 	/* METODES PUBLICS -----------------------------------------------------------*/
 
+	public function getArrayIdSchemaRegionStgr($sRegionStgr, $mi_sfsv) {
+		$oDbl = $this->getoDbl();
+		$a_schemas = $this->getArraySchemasRegionStgr($sRegionStgr, $mi_sfsv);
+		
+		$list_dl = '';
+		foreach ($a_schemas as $schema) {
+			$list_dl .= empty($list_dl)? '' : ", ";
+			$list_dl .= "'$schema'::character varying" ;
+		}
+		$where = "(db_idschema.schema)::text = any ((array[$list_dl])::text[])";
+		
+		$sQuery="SELECT schema, id FROM db_idschema 
+                 WHERE $where
+                ";
+		//echo "query: $sQuery";
+		$a_idschema = [];
+		foreach ($oDbl->query($sQuery) as $row) {
+			$schema = $row['schema'];
+			$id = $row['id'];
+			$a_idschema[$schema] = $id;
+		}
+		return $a_idschema;
+	}
+	
 	/**
 	 * retorna un objecte del tipus Array, els esquemes d'una regió del stgr
 	 *
-	 * @param string regio.
+	 * @param string region.
 	 * @return array Una Llista d'esquemes.
 	 */
 	function getArraySchemasRegionStgr($sRegionStgr, $mi_sfsv) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		$mi_sfsv = ConfigGlobal::mi_sfsv();
 		
         $sQuery="SELECT u.id_dl, u.region, u.dl FROM $nom_tabla u 
                  WHERE status = 't' AND region_stgr = '$sRegionStgr'

@@ -124,7 +124,7 @@ switch ($Qna) {
 	case "a":
 		//caso de agd
 		$id_ctr = ($Qid_ctr_agd==1)? '' : $Qid_ctr_agd; //si es 1 es todos los ctr.
-		$id_tabla_persona='a'; //el id_tabla entra en conflicto con el de actividad
+		$id_tabla_persona='a'; //el id_tabla (persona) entra en conflicto con el id_tabla de actividad
 
 		if (is_true($Qca_todos)) {
             $id_tipo_activ = '^133';

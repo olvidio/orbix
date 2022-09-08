@@ -34,16 +34,30 @@ class DBView {
 	 /**
 	 * Constructor de la classe.
 	 */
-	function __construct($schema) {
+	function __construct($schema,$mi_sfsv,$db) {
         // Necesito permisos de superusuario para poder acceder a los distintos esquemas
         // que pertenecen a la region del stgr.
+        
         $oConfigDB = new ConfigDB('importar');
-	    $mi_sfsv = ConfigGlobal::mi_sfsv();
-	    if ($mi_sfsv === 1) {
-            $config = $oConfigDB->getEsquema('publicv');
-	    } elseif ($mi_sfsv === 1) {
-            $config = $oConfigDB->getEsquema('publicf');
-	    }
+        switch ($db) {
+        	case 'interior':
+				if ($mi_sfsv === 1) {
+					$config = $oConfigDB->getEsquema('publicv');
+				} elseif ($mi_sfsv === 2) {
+					$config = $oConfigDB->getEsquema('publicf');
+				}
+        		break;
+        	case 'exterior':
+				if ($mi_sfsv === 1) {
+					$config = $oConfigDB->getEsquema('publicv-e');
+				} elseif ($mi_sfsv === 2) {
+					$config = $oConfigDB->getEsquema('publicf');
+				}
+        		break;
+        	case 'comun':
+				$config = $oConfigDB->getEsquema('public');
+        		break;
+        }
         $oConexion = new dbConnection($config);
         $oDbl = $oConexion->getPDO();
         
@@ -103,9 +117,9 @@ class DBView {
 	   
 	   return $string;
 	}
-	public function Existe() {
+	public function Existe($comun=FALSE) {
 	    // definicion teórica
-	    $defNew = $this->getDefView($this->sView);
+	    $defNew = $this->getDefView($this->sView, $comun);
 	    // quitar espacios, tabuladores, returns...
 	    $defNew = $this->normalizarTexto($defNew);
 	    // definicion real
@@ -119,7 +133,7 @@ class DBView {
 	    }
 	}
 	
-	public function Create() {
+	public function Create($comun=FALSE) {
 	    /*
 	     * OJO, hay que dar permisos...
 	     */
@@ -129,25 +143,21 @@ class DBView {
 	    $this->Drop();
 	    
 	    $sql = "CREATE MATERIALIZED VIEW $nameView AS ";
-        $sql .= $this->getDefView($this->sView);
+        $sql .= $this->getDefView($this->sView, $comun);
         
 	    if (($oDbl->exec($sql)) === false) {
 	        $sClauError = 'Refresh';
 	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 	        return FALSE;
 	    } else {
-	        $sql = "ALTER MATERIALIZED VIEW $nameView OWNER TO \"$this->sSchema\"";
-    	    if (($oDbl->exec($sql)) === false) {
-                $sClauError = 'Refresh';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            }
+	    	$this->setOwnerToSchema($nameView);
 	        return TRUE;
 	    }
         
 	}
 	
 	public function Drop() {
-	    // Sólo puede el propietario. Por eso hay que emplera la conexión oDB
+	    // Sólo puede el propietario. Por eso hay que emplear la conexión oDB
 	    $oDbl = $GLOBALS['oDB'];
 	    $nameView = " \"$this->sSchema\".$this->sView";
 	    
@@ -164,8 +174,11 @@ class DBView {
 	}
 	
 	public function Refresh() {
-	    $oDbl = $this->getoDbl(); 
+	    $oDbl = $this->getoDbl();
 	    $nameView = " \"$this->sSchema\".$this->sView";
+	    
+		// Sólo puede el propietario. 
+		$this->setOwnerToSuperuser($nameView);
 	    
 	    $sql = "REFRESH MATERIALIZED VIEW $nameView";
 	    if (($oDbl->exec($sql)) === false) {
@@ -173,8 +186,34 @@ class DBView {
 	        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
 	        return FALSE;
 	    } else {
+	    	$this->setOwnerToSchema($nameView);
 	        return TRUE;
 	    }
+	}
+	
+	private function setOwnerToSuperuser($nameView) {
+		$oDbl = $this->getoDbl();
+		$sql = "ALTER MATERIALIZED VIEW $nameView OWNER TO \"orbix_admindb\"";
+		if (($oDbl->exec($sql)) === false) {
+			$sClauError = 'Refresh';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+		}
+	}
+	private function setOwnerToSchema($nameView) {
+		$oDbl = $this->getoDbl();
+		$sql = "ALTER MATERIALIZED VIEW $nameView OWNER TO \"$this->sSchema\"";
+		if (($oDbl->exec($sql)) === false) {
+			$sClauError = 'Refresh';
+			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+		}
+	}
+	
+	private function getIdSchemasGrupStgr() {
+	    $RegionStgr = $this->sRegionStgr;
+	    $gesDl = new GestorDelegacion();
+	    $mi_sfsv = ConfigGlobal::mi_sfsv();
+	    
+	    return $gesDl->getArrayIdSchemaRegionStgr($RegionStgr, $mi_sfsv);
 	}
 	
 	private function getSchemasGrupStgr() {
@@ -182,22 +221,102 @@ class DBView {
 	    $gesDl = new GestorDelegacion();
 	    $mi_sfsv = ConfigGlobal::mi_sfsv();
 	    
-	    $a_schemas = $gesDl->getArraySchemasRegionStgr($RegionStgr,$mi_sfsv);
-	   return $a_schemas; 
+	    return $gesDl->getArraySchemasRegionStgr($RegionStgr,$mi_sfsv);
 	}
 	
-	private function getDefView($view) {
-	    $a_schemas = $this->getSchemasGrupStgr();
-	   
-	    $schema1 = current($a_schemas);
-	    $columns = $this->getNameColumns($schema1, $view);
+	private function getSchemasComunGrupStgr() {
+	    $RegionStgr = $this->sRegionStgr;
+	    $gesDl = new GestorDelegacion();
 	    
-	    $sql_def_view = '';
-	    foreach ($a_schemas as $id_dl => $schema) {
-	        $sql_def_view .= empty($sql_def_view)? '' : " UNION ALL "; 
-	        $sql_def_view .= "SELECT $columns, $id_dl AS id_dl FROM \"$schema\".$view " ;
-	    }
+	    return $gesDl->getArraySchemasRegionStgr($RegionStgr,NULL);
+	}
+	
+	private function getDefView($view, $comun=FALSE) {
+		// Excepciones
+		switch ($view) {
+			case 'av_actividades':
+				$sql_def_view = $this->getDefViewActividades();
+				break;
+			case 'd_asistentes_out':
+				$sql_def_view = $this->getDefViewAsistentesOut();
+				break;
+			case 'd_asistentes_dl':
+				$sql_def_view = $this->getDefViewAsistentesDl();
+				break;
+			case 'd_cargos_activ_dl':
+				$sql_def_view = $this->getDefViewCargosActivDl();
+				break;
+			
+			default:
+				if ($comun) {
+					$a_schemas = $this->getSchemasComunGrupStgr();
+				} else {
+					$a_schemas = $this->getSchemasGrupStgr();
+				}
+			   
+				$schema1 = current($a_schemas);
+				$columns = $this->getNameColumns($schema1, $view);
+				
+				$sql_def_view = '';
+				foreach ($a_schemas as $id_dl => $schema) {
+					$sql_def_view .= empty($sql_def_view)? '' : " UNION ALL "; 
+					$sql_def_view .= "SELECT $columns, $id_dl AS id_dl FROM \"$schema\".$view " ;
+				}
+		}
 	    return $sql_def_view;
+	}
+	
+	private function getDefViewActividades() {
+		$a_schemas = $this->getSchemasComunGrupStgr();
+	    $columns = $this->getNameColumns('public', "av_actividades_pub");
+	    
+		$list_dl = '';
+	    foreach ($a_schemas as $schema) {
+	    	$a_reg = explode('-',$schema);
+	        $list_dl .= empty($list_dl)? '' : ", "; 
+	        $list_dl .= "'$a_reg[1]'::character varying" ;
+	    }
+	    $where = "(av_actividades_pub.dl_org)::text = any ((array[$list_dl])::text[])";
+	    return "SELECT $columns FROM av_actividades_pub WHERE ($where)";
+	}
+	
+	private function getDefViewAsistentesOut() {
+		$a_schemas = $this->getIdSchemasGrupStgr();
+	    $columns = $this->getNameColumns('publicv', "d_asistentes_de_paso");
+	    
+		$list_dl = '';
+	    foreach ($a_schemas as $id) {
+	        $list_dl .= empty($list_dl)? '' : ", "; 
+	        $list_dl .= "$id" ;
+	    }
+	    $where = "d_asistentes_de_paso.id_schema = any (array[$list_dl])";
+	    return "SELECT $columns FROM publicv.d_asistentes_de_paso WHERE ($where)";
+	}
+	
+	private function getDefViewAsistentesDl() {
+		$a_schemas = $this->getIdSchemasGrupStgr();
+	    $columns = $this->getNameColumns('global', "d_asistentes_dl");
+	    
+		$list_dl = '';
+	    foreach ($a_schemas as $id) {
+	        $list_dl .= empty($list_dl)? '' : ", "; 
+	        $list_dl .= "$id" ;
+	    }
+	    $where = "d_asistentes_dl.id_schema = any (array[$list_dl])";
+	    return "SELECT $columns FROM global.d_asistentes_dl WHERE ($where)";
+	}
+	
+	private function getDefViewCargosActivDl() {
+		$a_schemas = $this->getIdSchemasGrupStgr();
+	    $columns = $this->getNameColumns('global', "d_cargos_activ");
+	    
+		$list_dl = '';
+	    foreach ($a_schemas as $id) {
+	        $list_dl .= empty($list_dl)? '' : ", "; 
+	        $list_dl .= "$id" ;
+	    }
+	    $where = "d_cargos_activ.id_schema = any (array[$list_dl])";
+	    return "SELECT $columns FROM global.d_cargos_activ WHERE ($where)";
 	}
 	
 	private function getNameColumns($schema1, $view) {

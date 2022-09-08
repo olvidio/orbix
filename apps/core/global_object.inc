@@ -158,9 +158,10 @@ if (configGlobal::is_app_installed('dbextern') && !ConfigGlobal::is_dmz()) {
 	}
 }
 
-// En el caso cr-stgr, refrescar las vistas
+/********* En el caso cr-stgr, refrescar las vistas **********************/
 if ((\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) && !isset($_SESSION['Refresh'])){
 	try {
+		// para el esquema sv
 		$views = [
 				'd_profesor_latin',
 				'd_profesor_ampliacion',
@@ -179,12 +180,12 @@ if ((\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) && !iss
 			];
 	    		
         if ($user_sfsv == 1) {
-		    $schema = $esquemav;
+		    $schema_vf = $esquemav;
 		} elseif ($user_sfsv == 2) {
-		    $schema = $esquemaf;
+		    $schema_vf = $esquemaf;
 		}
 
-		$oMatView = new DBView($schema);
+		$oMatView = new DBView($schema_vf, $user_sfsv, 'interior');
 		foreach ($views as $view) {
 		    $oMatView->setView($view);
 		    if ($oMatView->Existe()) {
@@ -192,6 +193,49 @@ if ((\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) && !iss
 		        $oMatView->Refresh();
 		    } else {
 		        $oMatView->create();
+		    }
+		}
+		
+		// para el esquema sv-e
+		$views = [
+				'd_asistentes_out',
+				'd_asistentes_dl',
+				'd_cargos_activ_dl',
+			];
+	    		
+        if ($user_sfsv == 1) {
+		    $schema_vf = $esquemav;
+		} elseif ($user_sfsv == 2) {
+		    $schema_vf = $esquemaf;
+		}
+		
+		$oMatView = new DBView($schema_vf, $user_sfsv, 'exterior');
+		foreach ($views as $view) {
+		    $oMatView->setView($view);
+		    if ($oMatView->Existe()) {
+		        //true
+		        $oMatView->Refresh();
+		    } else {
+		        $oMatView->create();
+		    }
+		}
+		
+		// para el esquema comun
+		$views = [
+				'av_actividades',
+				'xa_tipo_tarifa',
+			];
+	    		
+		$schema = $esquema;
+		
+		$oMatView = new DBView($schema, NULL, 'comun');
+		foreach ($views as $view) {
+		    $oMatView->setView($view);
+		    if ($oMatView->Existe(TRUE)) {
+		        //true
+		        $oMatView->Refresh();
+		    } else {
+		        $oMatView->create(TRUE);
 		    }
 		}
 		$_SESSION['Refresh'] = 'ok';

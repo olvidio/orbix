@@ -172,8 +172,6 @@ class GestorAsistente Extends core\ClaseGestor {
 				} else {
 					$a_Clases[] = array('clase'=>'AsistenteOut','get'=>'getAsistentesOut');
 					$cAsistentes = $this->getConjunt($a_Clases,$namespace,$aWhere, $aOperators);
-					//$cAsistentes = array();
-
 				}
 			}
 		}
