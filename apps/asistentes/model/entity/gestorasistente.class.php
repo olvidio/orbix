@@ -290,6 +290,10 @@ class GestorAsistente Extends core\ClaseGestor {
 				// 14.4.2021 añado a la lista a los de paso.
 				// Despues hay que filtrar y poner sólo los que se han asignado desde la dl 
 				$a_Clases[] = array('clase'=>'AsistenteEx','get'=>'getAsistentesEx');
+				// 8.9.2022 para el caso de cr, para ver todos, tabien los de la dl propia
+				if (ConfigGlobal::mi_ambito() === 'rstgr') {
+					$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');
+				}
 			} else {
 			    /*
 				$a_Clases[] = array('clase'=>'AsistenteDl','get'=>'getAsistentesDl');
