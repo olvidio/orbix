@@ -145,9 +145,11 @@ if (ConfigGlobal::mi_ambito() == 'rstgr') {
 
 $a_botones[] = array( 'txt' => _("imprimir"), 'click' =>"fnjs_imprimir(\"#seleccionados\")" );
 
-$a_cabeceras = array( array('name'=>ucfirst(_("acta")),'formatter'=>'clickFormatter'), 
-		array('name'=>ucfirst(_("fecha")),'class'=>'fecha'),
-		_("asignatura"));
+$a_cabeceras = [ ['name'=>ucfirst(_("acta")),'formatter'=>'clickFormatter'], 
+		['name'=>ucfirst(_("fecha")),'class'=>'fecha'],
+		_("asignatura"),
+		_("firmada"),
+];
 
 
 $gesAsignatura = new GestorAsignatura();
@@ -161,6 +163,7 @@ foreach ($cActas as $oActa) {
 	$acta=$oActa->getActa();
 	$f_acta=$oActa->getF_acta()->getFromLocal();
 	$id_asignatura=$oActa->getId_asignatura();
+	$pdf = $oActa->getpdf();
 
 	$nombre_corto = $a_asignaturas[$id_asignatura];
 	$acta_2=urlencode($acta);
@@ -173,6 +176,7 @@ foreach ($cActas as $oActa) {
 	}
 	$a_valores[$i][2]=$f_acta;
 	$a_valores[$i][3]=$nombre_corto;
+	$a_valores[$i][4]= empty($pdf)? '' : _("Sí");
 }
 if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
 if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
