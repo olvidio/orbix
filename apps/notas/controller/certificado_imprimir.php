@@ -100,28 +100,28 @@ function titulo($id_asignatura){
 		case 1101:
 			$html = " 
 				<tr><td class=\"space_doble\"></td></tr>
-				<tr><td></td><td colspan=\"7\" class=\"curso\">CURSUS INSTITUTIONALES FILOSOFI&#198;</td></tr>
+				<tr><td></td><td colspan=\"7\" class=\"curso\">CURSUS INSTITUTIONALES PHILOSOPHI&#198;</td></tr>
 				$cabecera
 				<tr><td class=\"space\"></td></tr>
 				<tr><td></td><td class=\"any\">ANNUS I</td>
-                    <td class=\"cabecera\">ETCS<sup>1</sup></td><td class=\"cabecera\">Iudicium</td></tr>
+                    <td class=\"cabecera\">ECTS<sup>1</sup></td><td class=\"cabecera\">Iudicium</td></tr>
 				";
 			break;
 		case 1201:
 			$html = " 
 				<tr><td class=\"space_doble\"></td></tr>
 				<tr><td></td><td class=\"any\">ANNUS II</td>
-                    <td class=\"cabecera\">ETCS<sup>1</sup></td><td class=\"cabecera\">Iudicium</td></tr>
+                    <td class=\"cabecera\">ECTS<sup>1</sup></td><td class=\"cabecera\">Iudicium</td></tr>
 				";
 			break;
 		case 2101:
 			$html = " 
 				<tr><td class=\"space_doble\"></td></tr>
-				<tr><td></td><td colspan=\"7\" class=\"curso\">CURSUS INSTITUTIONALES S THEOLOGI&#198;</td></tr>
+				<tr><td></td><td colspan=\"7\" class=\"curso\">CURSUS INSTITUTIONALES S. THEOLOGI&#198;</td></tr>
 				$cabecera
 				<tr><td class=\"space\"></td></tr>
 				<tr><td></td><td class=\"any\">ANNUS I</td>
-                    <td class=\"cabecera\">ETCS<sup>1</sup></td><td class=\"cabecera\">Iudicium</td></tr>
+                    <td class=\"cabecera\">ECTS<sup>1</sup></td><td class=\"cabecera\">Iudicium</td></tr>
 				";
 			break;
 		case 2201:
@@ -135,21 +135,21 @@ function titulo($id_asignatura){
 				<col style=\"width: 7%\">
 				$cabecera
 				<tr><td></td><td class=\"any\">ANNUS II</td>
-                    <td class=\"cabecera\">ETCS<sup>1</sup></td><td class=\"cabecera\">Iudicium</td></tr>
+                    <td class=\"cabecera\">ECTS<sup>1</sup></td><td class=\"cabecera\">Iudicium</td></tr>
 			";
 			break;
 		case 2301:
 			$html = "
 				<tr><td class=\"space_doble\"></td></tr>
 				<tr><td></td><td class=\"any\">ANNUS III</td>
-                    <td class=\"cabecera\">ETCS<sup>1</sup></td><td class=\"cabecera\">Iudicium</td></tr>
+                    <td class=\"cabecera\">ECTS<sup>1</sup></td><td class=\"cabecera\">Iudicium</td></tr>
 			";
 			break;
 		case 2401:
 			$html = "
 				<tr><td class=\"space_doble\"></td></tr>
 				<tr><td></td><td class=\"any\">ANNUS IV</td>
-                    <td class=\"cabecera\">ETCS<sup>1</sup></td><td class=\"cabecera\">Iudicium</td></tr>
+                    <td class=\"cabecera\">ECTS<sup>1</sup></td><td class=\"cabecera\">Iudicium</td></tr>
 			";
 		break;
 	}
@@ -188,8 +188,8 @@ if ($Qcara=="A") {
 <col style="width: 7%">
 <tr><td class="space"></td></tr>
 <tr><td class="titulo1" colspan="5">PRÆLATURA SANCTÆ CRUCIS ET OPERIS DEI</td></tr>
-<tr><td class="titulo2" colspan="5">STUDIUM GENERALE REGIONIS: <?= $region_latin ?></td></tr>
-<tr><td class="subtitulo1" colspan="5">CURRICULORUM STUDIORUM</td></tr>
+<tr><td class="titulo2" colspan="5">STUDIUM GENERALE REGIONIS <?= $region_latin ?></td></tr>
+<tr><td class="subtitulo1" colspan="5">CURRICULUM STUDIORUM</td></tr>
 <tr><td class="subtitulo2" colspan="5">
 Infrascriptus huius Studii Generalis Secretarius testatur ac fidem facit alumnum
  <b><?= $nom ?></b>, natum <?= $lugar_nacimiento ?>, <?= $f_nacimiento ?>, 
@@ -273,12 +273,12 @@ while ( $a < count($cAsignaturas)) {
 		echo titulo($oAsignatura->getId_nivel());
 		$nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
         $creditos = $oAsignatura->getCreditos();
-        $etcs = number_format(($creditos * 2),0);
+        $ects = number_format(($creditos * 2),0);
 		?>
 		<tr>
 		<td></td>    
 		<td><?= $nombre_asignatura;?>&nbsp;</td>
-        <td class="dato"><?= $etcs;?>&nbsp;</td>
+        <td class="dato"><?= $ects;?>&nbsp;</td>
 		<td class="dato">-----------</td>
 		<td></td>
 		</tr>
@@ -317,12 +317,12 @@ while ( $a < count($cAsignaturas)) {
 			echo titulo($oAsignatura->getId_asignatura());
 			$nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
 			$creditos = $oAsignatura->getCreditos();
-            $etcs = number_format(($creditos * 2),0);
+            $ects = number_format(($creditos * 2),0);
 			?>
 			<tr>
 				<td></td>
 				<td><?= $nombre_asignatura; ?>&nbsp;</td>
-				<td class="dato"><?= $etcs;?>&nbsp;</td>
+				<td class="dato"><?= $ects;?>&nbsp;</td>
 				<td class="dato">----------</td><td></td></tr>
 			<?php
 		}
