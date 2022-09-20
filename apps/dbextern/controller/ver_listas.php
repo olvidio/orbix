@@ -124,7 +124,7 @@ $oHash1->setUrl($url_sincro_ajax);
 $oHash1->setCamposForm('que!id_nom_listas!id_orbix!region!dl!id!tipo_persona'); 
 $h1 = $oHash1->linkSinVal();
 
-$oHash1->setCamposForm('que!region!dl!id!tipo_persona'); 
+$oHash1->setCamposForm('que!region!dl!tipo_persona'); 
 $h2 = $oHash1->linkSinVal();
 
 
