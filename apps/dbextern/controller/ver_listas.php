@@ -142,7 +142,7 @@ fnjs_crear_todos=function(){
 		data: parametros
 	})
 	.done(function (rta_txt) {
-		fnjs_submit('#movimiento','-');
+		alert("Ja está");
 	});
 }
 
@@ -156,7 +156,7 @@ fnjs_crear=function(){
 		data: parametros
 	})
 	.done(function (rta_txt) {
-		alert("Ja está");
+		fnjs_submit('#movimiento','-');
 	});
 }
 
