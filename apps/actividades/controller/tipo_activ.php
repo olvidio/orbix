@@ -1,0 +1,40 @@
+﻿<?php 
+use web\Hash;
+
+// INICIO Cabecera global de URL de controlador *********************************
+require_once ("apps/core/global_header.inc");
+// Arxivos requeridos por esta url **********************************************
+
+// Crea los objectos de uso global **********************************************
+require_once ("apps/core/global_object.inc");
+// FIN de  Cabecera global de URL de controlador ********************************
+
+$url_ajax = "apps/actividades/controller/tipo_activ_ajax.php";
+
+$oHashMod = new Hash();
+$oHashMod->setUrl($url_ajax);
+$oHashMod->setcamposForm('que!id_tipo_activ');
+$h_modificar = $oHashMod->linkSinVal();
+
+$oHashNew = new Hash();
+$oHashNew->setUrl($url_ajax);
+$oHashNew->setcamposForm('que');
+$h_nuevo = $oHashNew->linkSinVal();
+
+$oHashLista = new Hash();
+$oHashLista->setUrl($url_ajax);
+$oHashLista->setcamposForm('que');
+$h_lista = $oHashLista->linkSinVal();
+
+$txt_eliminar = _("¿Está seguro que quiere eliminar este tipo de actividad?");
+
+$a_campos = ['oPosicion' => $oPosicion,
+    'h_modificar' => $h_modificar,
+    'h_nuevo' => $h_nuevo,
+    'h_lista' => $h_lista,
+    'url_ajax' => $url_ajax,
+	'txt_eliminar' => $txt_eliminar,
+];
+
+$oView = new core\ViewTwig('actividades/controller');
+echo $oView->render('tipo_activ.html.twig',$a_campos);

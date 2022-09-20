@@ -29,8 +29,9 @@ class ActividadTipo {
 	private $para;
 	private $bperm_jefe = FALSE;
 	private $bAll = FALSE;
+	private $evitar_procesos;
 			
-	public function getHtml() {
+	public function getHtml($extendida=FALSE) {
 		$isfsv=ConfigGlobal::mi_sfsv();
 
 		$aSfsv=array(1=>'sv',2=>'sf');
@@ -55,8 +56,13 @@ class ActividadTipo {
 		}
 
 		$a_sfsv_posibles=$oTipoActiv->getSfsvPosibles();
-		$a_actividades_posibles=$oTipoActiv->getActividadesPosibles();
-		$a_nom_tipo_posibles=$oTipoActiv->getNom_tipoPosibles();
+		if ($extendida) {
+			$a_actividades_posibles=$oTipoActiv->getActividadesPosibles2digitos();
+			$a_nom_tipo_posibles=$oTipoActiv->getNom_tipoPosibles2Digitos();
+		} else {
+			$a_actividades_posibles=$oTipoActiv->getActividadesPosibles1Digito();
+			$a_nom_tipo_posibles=$oTipoActiv->getNom_tipoPosibles3Digitos();
+		}
 
 
 		$array2=array();
@@ -172,7 +178,11 @@ class ActividadTipo {
 		$h_act = $oHashAct->linkSinVal();
 
 		
-		$procesos_installed = ConfigGlobal::is_app_installed('procesos');
+		if ($this->getEvitarProcesos() !== TRUE ) {
+			$procesos_installed = ConfigGlobal::is_app_installed('procesos');
+		} else {
+			$procesos_installed = FALSE;
+		}
 		
 		$a_campos = [
 		            'url' => $url,
@@ -208,6 +218,11 @@ class ActividadTipo {
                 $aditionalPaths = ['actividades' => 'actividades/view'];
                 $oView = new ViewTwig('cambios/controller',$aditionalPaths);
                 return $oView->render('actividad_tipo_que_perm.html.twig',$a_campos);
+		        break;
+		    case 'gestion':
+                $aditionalPaths = ['actividades' => 'actividades/view'];
+                $oView = new ViewTwig('actividades/controller',$aditionalPaths);
+                return $oView->render('actividad_tipo_que_gestion.html.twig',$a_campos);
 		        break;
 		    case 'actividades':
 		    default:
@@ -256,5 +271,21 @@ class ActividadTipo {
 	public function setPara($para='actividades') {
 	    $this->para = $para;
 	}
+	/**
+	 * @return mixed
+	 */
+	public function getEvitarProcesos() {
+		return $this->evitar_procesos;
+	}
+
+	/**
+	 * Para indicar que no tenga en cuenta los procesos en caso de tener instalado el módulo.
+	 * 
+	 * @param boolean $procesos
+	 */
+	public function setEvitarProcesos($evitar_procesos) {
+		$this->evitar_procesos = $evitar_procesos;
+	}
+
 
 }

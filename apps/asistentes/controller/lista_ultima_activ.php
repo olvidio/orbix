@@ -152,7 +152,7 @@ switch ($Qque) {
 	    }
         break;
     case "cv_s_ad":
-	    $aWhereA['id_tipo_activ'] = '143002';
+	    $aWhereA['id_tipo_activ'] = '1431';
         $titulo_actividad = sprintf(_("s con ad reciente -entre 6 y 18 meses antes de la fecha última cv admisión del año- que todavía no han asistido a cv de ad"));
         // fecha última actividad:
         // final de curso:
@@ -161,7 +161,7 @@ switch ($Qque) {
         $fin_m = $_SESSION['oConfig']->getMesFinCrt();
         $f_iso_final = "$any-$fin_m-$fin_d";
         
-        $aWhereUltima = ['id_tipo_activ' => '143002',
+        $aWhereUltima = ['id_tipo_activ' => '1431',
                            'status' => 2,
                             'f_ini' => $f_iso_final,
                             '_ordre' => 'f_ini DESC',

@@ -1,10 +1,11 @@
 <?php
 use actividades\model\entity as actividades;
 use actividadestudios\model\entity as actividadestudios;
+use core\ConfigGlobal;
+use function core\is_true;
 use personas\model\entity as personas;
 use ubis\model\entity as ubis;
 use web\Periodo;
-use function core\is_true;
 
 /**
 * Esta página sirve para calcular los créditos cursables para cada alumno en cada ca.
@@ -119,6 +120,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 	$oPosicion->setParametros($aGoBack,1);
 }
 
+$mi_sfsv = ConfigGlobal::mi_sfsv();
 switch ($Qna) {
 	case "agd":
 	case "a":
@@ -127,20 +129,15 @@ switch ($Qna) {
 		$id_tabla_persona='a'; //el id_tabla (persona) entra en conflicto con el id_tabla de actividad
 
 		if (is_true($Qca_todos)) {
-            $id_tipo_activ = '^133';
+            $id_tipo_activ = '^'.$mi_sfsv.'33';
 		} else {
-            $iid_tipo_activ = '';
+			// por defecto, todos los ca. Sobreescribo.
+			$id_tipo_activ = '^'.$mi_sfsv.'33';
             if (is_true($Qca_estudios)) {
-                $iid_tipo_activ .= '01';
+				$id_tipo_activ = '^'.$mi_sfsv.'332';
             }
             if (is_true($Qca_repaso)) {
-                $iid_tipo_activ .= '3';
-            }
-            if (!empty($iid_tipo_activ)) {
-                $id_tipo_activ = '13302['.$iid_tipo_activ.']';
-            } else {
-            	// tadas las cv
-				$id_tipo_activ = '^133';
+				$id_tipo_activ = '^1'.$mi_sfsv.'334';
             }
 		}
         $aWhereActividad['id_tipo_activ'] = $id_tipo_activ;
@@ -152,20 +149,15 @@ switch ($Qna) {
 		$id_tabla_persona='n';
 	
 		if (is_true($Qca_todos)) {
-            $id_tipo_activ = '^112';
+            $id_tipo_activ = '^'.$mi_sfsv.'12';
 		} else {
-            $iid_tipo_activ = '';
+			// por defecto, todos los ca. Sobreescribo.
+			$id_tipo_activ = '^'.$mi_sfsv.'12';
             if (is_true($Qca_estudios)) {
-                $iid_tipo_activ .= '01';
+				$id_tipo_activ = '^'.$mi_sfsv.'122';
             }
             if (is_true($Qca_repaso)) {
-                $iid_tipo_activ .= '3';
-            }
-            if (!empty($iid_tipo_activ)) {
-                $id_tipo_activ = '11202['.$iid_tipo_activ.']';
-            } else {
-            	// todos los ca
-				$id_tipo_activ = '^112';
+				$id_tipo_activ = '^'.$mi_sfsv.'124';
             }
 		}
         $aWhereActividad['id_tipo_activ'] = $id_tipo_activ;

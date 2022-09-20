@@ -2,6 +2,7 @@
 use actividadtarifas\model\entity\GestorTipoActivTarifa;
 use core\ConfigGlobal;
 use ubis\model\entity\GestorDelegacion;
+use web\Lista;
 
 /**
  * Devuelvo un desplegable con los valores posibles del tipo de actividad
@@ -44,7 +45,17 @@ switch ($Qsalida) {
 	case "actividad":
 		$aux=$Qentrada.'....';
 		$oTipoActiv= new web\TiposActividades($aux);
-		$a_actividades_posibles=$oTipoActiv->getActividadesPosibles();
+		$a_actividades_posibles=$oTipoActiv->getActividadesPosibles1Digito();
+		$oDespl = new web\Desplegable('iactividad_val',$a_actividades_posibles,'',true);
+	   	$oDespl->setAction('fnjs_nom_tipo()');
+	   	$oDespl->setValBlanco('.');
+	   	$oDespl->setOpcion_sel('.');
+		echo $oDespl->desplegable();
+	break;
+	case "actividad_extendida":
+		$aux=$Qentrada.'....';
+		$oTipoActiv= new web\TiposActividades($aux);
+		$a_actividades_posibles=$oTipoActiv->getActividadesPosibles2Digitos();
 		$oDespl = new web\Desplegable('iactividad_val',$a_actividades_posibles,'',true);
 	   	$oDespl->setAction('fnjs_nom_tipo()');
 	   	$oDespl->setValBlanco('.');
@@ -54,7 +65,7 @@ switch ($Qsalida) {
 	case "nom_tipo":
 		$aux=$Qentrada.'...';
 		$oTipoActiv= new web\TiposActividades($aux);
-		$a_nom_tipo_posibles=$oTipoActiv->getNom_tipoPosibles();
+		$a_nom_tipo_posibles=$oTipoActiv->getNom_tipoPosibles3Digitos();
 		$oDespl = new web\Desplegable('inom_tipo_val',$a_nom_tipo_posibles,'',true);
 	   	$oDespl->setValBlanco('...');
 	   	$oDespl->setOpcion_sel('...');
@@ -64,6 +75,25 @@ switch ($Qsalida) {
            $oDespl->setAction('fnjs_act_id_activ()');
 	   	}
 		echo $oDespl->desplegable();
+	 break;
+	case "nom_tipo_tabla":
+		$aux=$Qentrada.'..';
+		$oTipoActiv= new web\TiposActividades($aux,TRUE);
+		$a_nom_tipo_posibles=$oTipoActiv->getNom_tipoPosibles2Digitos();
+		$a_cabeceras = [_("id"), _("nombre")];
+		$a_valores = [];
+		$i = 0;
+		foreach ($a_nom_tipo_posibles as $id => $nom) {
+			$i++;
+			$a_valores[$i][1] = $id;
+			$a_valores[$i][2] = $nom;
+		}
+		$oTabla = new Lista();
+		$oTabla->setBotones('');
+		$oTabla->setCabeceras($a_cabeceras);
+		$oTabla->setDatos($a_valores);
+		
+		echo $oTabla->mostrar_tabla();
 	 break;
 	 case "lugar":
 		$Qisfsv = (integer) \filter_input(INPUT_POST, 'isfsv');

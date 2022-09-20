@@ -12,6 +12,38 @@ use actividades\model\entity\GestorTipoDeActividad;
  * @created 18/10/2010
  */
 
+/*
+Inicialmete e pensó un tipo de actividad de 6 dígitos con la siguiente estructura:
+
+(1 dígito para sv/sf, 1 dígito para el tipo de asistentes, 1 dígito para actividad, 3 dígitos para nombre)
+
+  1  1  4  0  2  6
+  |  |  |  |  |  |
+  |  |  |  ----------> nom_tipo
+  |  |  |____________  actividad
+  |  |_______________  asistentes
+  |__________________  sv/sf
+
+Pero en la práctica, habia que distinguir entre actividades (ca-cv) de estudios y no de estudios,
+ , actividades(cve-sacd) propias para los sacd y actividades (cv-sr-bach/univ) de sr para bachilleres
+ o universitarios. Así que se toman 2 dígitos para actividad y 2 para nom_tipo.
+    
+  1  1  4  0  2  6
+  |  |  |  |  |  |
+  |  |  |  |  -------> nom_tipo
+  |  |  |  |
+  |  |  -------------> actividad
+  |  |_______________  asistentes
+  |__________________  sv/sf
+
+De todas formas, en la mayoría de los casos se quiere hacer una selección por la actividad teniendo
+ en cuenta sólo el primer dígito (sin tener en cuenta si es de estudios, o para sacd etc). En este caso 
+ el nom_tipo toma 3 dígitos.
+Si es importante a la hora de crear tipos, que se creen dentro de un tipo de actividad de 2 dígitos
+ y por tanto creando un tipo de 2 dígitos. 
+
+*/
+
 class TiposActividades {
 	/* ATRIBUTS ----------------------------------------------------------------- */
 
@@ -97,23 +129,53 @@ class TiposActividades {
 			);
 
 	/**
-	 * aActividad de TiposActividades
+	 * aActividad1Digito de TiposActividades
 	 *
 	 * @var array
 	 */
-	private $aActividad = array (
-				"crt"=>1,
-				"ca"=>2,
-				"cv"=>3,
-				"cve"=>4,
-				"cv-crt"=>5,
-				"all"=>'.'
-			);
+	private $aActividad1Digito = array (
+			"crt"=>'1',
+			"ca"=>'2',
+			"cv"=>'3',
+			"cve"=>'4',
+			"cv-crt"=>'5',
+			"all"=>'.'
+		);
+	/**
+	 * aActividad2Digitos de TiposActividades
+	 *
+	 * @var array
+	 */
+	private $aActividad2Digitos = array (
+			"crt"=>10,
+			"crt-recientes"=>11,
+			"crt-bach"=>15,
+			"crt-univ"=>16,
+			"ca"=>20,
+			"ca-recientes"=>21,
+			"ca-est"=>22,
+			"semestre-inv"=>23,
+			"ca-repaso"=>24,
+			"ca-sacd"=>25,
+			"cv"=>30,
+			"cv-recientes"=>31,
+			"cv-est"=>32,
+			"cv-repaso"=>34,
+			"cv-bach"=>35,
+			"cv-univ"=>36,
+			"cve"=>40,
+			"cve-sacd"=>41,
+			"cv-crt"=>50,
+			"all"=>'..'
+		);
 
 	//transpongo los vectores para buscar por números y no por el texto
 	private $afSfsv = array();
 	private $afAsistentes = array();
-	private $afActividad = array();
+	private $afActividad1Digito = array();
+	private $afActividad2Digitos = array();
+	
+	private $extendida=FALSE;
 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
 
@@ -122,7 +184,8 @@ class TiposActividades {
 	 *
 	 * @param integer|string sid_tipo_proceso
 	 */
-	function __construct($id='') {
+	function __construct($id='',$extendida=FALSE) {
+		$this->setExtendida($extendida);
 		if (isset($id) && $id !== '') {
 			if (is_numeric($id)) $this->iid_tipo_activ = $id;
 			$this->separarId($id);
@@ -139,9 +202,14 @@ class TiposActividades {
 		if (empty($this->afAsistentes)) $this->afAsistentes = array_flip($this->aAsistentes);
 		return $this->afAsistentes;
 	}
-	private function getFlipActividad(){
-		if (empty($this->afActividad)) $this->afActividad = array_flip($this->aActividad);
-		return $this->afActividad;
+	private function getFlipActividad1Digito(){
+		if (empty($this->afActividad1Digito)) $this->afActividad1Digito = array_flip($this->aActividad1Digito);
+		return $this->afActividad1Digito;
+	}
+
+	private function getFlipActividad2Digitos(){
+		if (empty($this->afActividad2Digitos)) $this->afActividad2Digitos = array_flip($this->aActividad2Digitos);
+		return $this->afActividad2Digitos;
 	}
 
 	private function separarId($sregexp_id_tipo_activ) {
@@ -156,7 +224,11 @@ class TiposActividades {
 				$sregexp_id_tipo_activ.='.';
 			}
 			$matches = [];
-			preg_match('/(\[\d+\]|\d|\.)(\[\d+\]|\d|\.)(\[\d+\]|\d|\.)(\d{3}|\.*)/', $sregexp_id_tipo_activ,$matches);
+			if ($this->extendida) {
+				preg_match('/(\[\d+\]|\d|\.)(\[\d+\]|\d|\.)(\[\d+\]|\d{2}|\d\.|\.\.)(\d{2}|\.*)/', $sregexp_id_tipo_activ,$matches);
+			} else {
+				preg_match('/(\[\d+\]|\d|\.)(\[\d+\]|\d|\.)(\[\d+\]|\d|\.)(\d{3}|\.*)/', $sregexp_id_tipo_activ,$matches);
+			}
 			if (!empty($matches)) {
 				$this->sregexp_id_tipo_activ=$matches[0];
 				$this->ssfsv=$matches[1];
@@ -378,7 +450,7 @@ class TiposActividades {
 	 * @return string
 	 */
 	public function getActividadText() {
-		$aText=$this->getFlipActividad();
+		$aText=$this->getFlipActividad1Digito();
 		if (is_numeric($this->sactividad)) {
 			return $aText[$this->sactividad];
 		} else {
@@ -393,7 +465,7 @@ class TiposActividades {
 	public function setActividadText($sActividad) {
 		if (is_string($sActividad)) {
 		    if (empty($sActividad)) { $sActividad = 'all'; }
-			$this->sactividad=$this->aActividad[$sActividad];
+			$this->sactividad=$this->aActividad1Digito[$sActividad];
 		} else {
 			return false;
 		}
@@ -406,6 +478,14 @@ class TiposActividades {
 	public function getActividadId() {
 		return $this->sactividad;
 
+	}
+	/**
+	 * Estableix l'atribut asistentes en format de integer
+	 *
+	 * @return 'false' si falla
+	 */
+	public function setActividadId($id) {
+		$this->sactividad=$id;
 	}
 	/**
 	 * Recupera l'atribut actividad en format de regexp
@@ -421,10 +501,16 @@ class TiposActividades {
 	 *
 	 * @return array
 	 */
-	public function getActividadesPosibles() {
-		$aText=$this->getFlipActividad();
+	public function getActividadesPosibles1Digito() {
+		$aText=$this->getFlipActividad1Digito();
 		$GesTipoDeActividades = new GestorTipoDeActividad();
-		return $GesTipoDeActividades->getActividadesPosibles($aText,$this->getAsistentesRegexp());
+		return $GesTipoDeActividades->getActividadesPosibles(1,$aText,$this->getAsistentesRegexp());
+	}
+
+	public function getActividadesPosibles2Digitos() {
+		$aText=$this->getFlipActividad2Digitos();
+		$GesTipoDeActividades = new GestorTipoDeActividad();
+		return $GesTipoDeActividades->getActividadesPosibles(2,$aText,$this->getAsistentesRegexp());
 	}
 
 	/**
@@ -437,7 +523,7 @@ class TiposActividades {
 			if (isset($this->afNom_tipo)){
 				return $this->afNom_tipo[$this->snom_tipo];
 			} else {
-				$this->getNom_tipoPosibles();
+				$this->getNom_tipoPosibles3Digitos();
 				return $this->afNom_tipo[$this->snom_tipo];
 			}
 		} else {
@@ -479,9 +565,16 @@ class TiposActividades {
 	 *
 	 * @return array
 	 */
-	public function getNom_tipoPosibles() {
+	public function getNom_tipoPosibles3Digitos() {
 		$GesTipoDeActividades = new GestorTipoDeActividad();
-		$rta = $GesTipoDeActividades->getNom_tipoPosibles($this->getActividadRegexp());
+		$rta = $GesTipoDeActividades->getNom_tipoPosibles(3,$this->getActividadRegexp());
+		$this->afNom_tipo = $rta['tipo_nom'];
+		$this->aNom_tipo = $rta['nom_tipo'];
+		return $rta['tipo_nom'];
+	}
+	public function getNom_tipoPosibles2Digitos() {
+		$GesTipoDeActividades = new GestorTipoDeActividad();
+		$rta = $GesTipoDeActividades->getNom_tipoPosibles(2,$this->getActividadRegexp());
 		$this->afNom_tipo = $rta['tipo_nom'];
 		$this->aNom_tipo = $rta['nom_tipo'];
 		return $rta['tipo_nom'];
@@ -496,5 +589,19 @@ class TiposActividades {
 		$GesTipoDeActividades = new GestorTipoDeActividad();
 		return $GesTipoDeActividades->getId_tipoPosibles($regexp,$this->getActividadRegexp());
 	}
+	/**
+	 * @return boolean
+	 */
+	public function getExtendida() {
+		return $this->extendida;
+	}
+
+	/**
+	 * @param boolean $extendida
+	 */
+	public function setExtendida($extendida) {
+		$this->extendida = $extendida;
+	}
+
 
 }

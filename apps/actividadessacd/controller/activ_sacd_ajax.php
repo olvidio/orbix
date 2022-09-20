@@ -341,11 +341,11 @@ switch ($Qque) {
 				$aOperador['id_tipo_activ']='~';
 				break;
 			case "sr":
-				$aWhere['id_tipo_activ']='^1[7]';
+				$aWhere['id_tipo_activ']='^17';
 				$aOperador['id_tipo_activ']='~';
 				break;
 			case "sssc":
-				$aWhere['id_tipo_activ']='^1[6]';
+				$aWhere['id_tipo_activ']='^16';
 				$aOperador['id_tipo_activ']='~';
 				break;
 			case "sf":
@@ -361,7 +361,7 @@ switch ($Qque) {
 				$aOperador['id_tipo_activ']='~';
 				break;
 			case "sf_sr":
-				$aWhere['id_tipo_activ']='^2[789]';
+				$aWhere['id_tipo_activ']='^27';
 				$aOperador['id_tipo_activ']='~';
 				break;
 			case 'falta_sacd':

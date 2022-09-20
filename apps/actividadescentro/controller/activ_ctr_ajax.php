@@ -314,7 +314,7 @@ switch ($Qque) {
 				$aOperador['id_tipo_activ']='~';
 				break;
 			case "sfsr":
-				$aWhere['id_tipo_activ']='^2[789]';
+				$aWhere['id_tipo_activ']='^27';
 				$aOperador['id_tipo_activ']='~';
 				break;
 			case "sfnagd":

@@ -83,7 +83,7 @@ $aOperadores = array();
 $aWhere['status'] = \actividades\model\entity\ActividadAll::STATUS_ACTUAL;
 $aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
 $aOperadores['f_ini'] = 'BETWEEN';
-$aWhere['id_tipo_activ'] = '^'.core\ConfigGlobal::mi_sfsv().'(12)|(22)|(33)'; // el 325 correponde al semestre de invierno
+$aWhere['id_tipo_activ'] = '^'.core\ConfigGlobal::mi_sfsv().'(122)|(222)|(332)';
 $aOperadores['id_tipo_activ'] = '~';
 foreach($cAlumnos as $oPersonaDl) {
 	$id_nom=$oPersonaDl->getId_nom();

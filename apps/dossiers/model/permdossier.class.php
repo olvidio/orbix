@@ -518,7 +518,13 @@ class PermDossier {
                                 );
                     $ref_perm = self::daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if ($_SESSION['oPerm']->have_perm_oficina('agd') AND ($id_tipo_activ=="114025" || $id_tipo_activ=="114026")) {
+                // cv de cl + sem inv
+                if ($_SESSION['oPerm']->have_perm_oficina('agd') 
+                		AND ( substr($id_tipo_activ, 0, 4) == "1123"
+                			|| $id_tipo_activ=="114025"
+                			|| $id_tipo_activ=="114026")
+                		)
+                {
                     $ref_perm_of = array (
                                     "n" => array ( 'nom'=> "n", 'obj'=>"PersonaN", 	'perm'=> 0),
                                     "a" => array ( 'nom'=> "agd", 'obj'=>"PersonaAgd", 	'perm'=> 0),

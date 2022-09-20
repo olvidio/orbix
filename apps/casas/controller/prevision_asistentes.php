@@ -81,7 +81,7 @@ switch ($mi_of) {
         $aWhere['id_tipo_activ'] = '^'.$mi_sfsv.'[45]';
         break;
     case "des":
-        $condicion="(a.id_tipo_activ::text ~ '^16' OR a.id_tipo_activ =114031 OR a.id_tipo_activ =112030 OR a.id_tipo_activ::text ~ '^13403[012]' )";
+        $condicion="(a.id_tipo_activ::text ~ '^16' OR a.id_tipo_activ::text ~ '^1141' OR a.id_tipo_activ::text ~ '^1125' OR a.id_tipo_activ::text ~ '^1341' )";
         break;
     case "sr":
         $aWhere['id_tipo_activ'] = '^'.$mi_sfsv.'7';

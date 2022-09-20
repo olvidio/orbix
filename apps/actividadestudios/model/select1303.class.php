@@ -232,7 +232,7 @@ class Select1303 {
 				$aOperadores['f_ini'] = 'BETWEEN';
 			}
 			// todas las actividades de estudios (no crt)
-			$aWhere['id_tipo_activ'] = '^'.core\ConfigGlobal::mi_sfsv().'(12)|(22)|(33)|(325)'; // el 325 correponde al semestre de invierno.
+			$aWhere['id_tipo_activ'] = '^'.core\ConfigGlobal::mi_sfsv().'(122)|(222)|(332)|(123)'; // el 123 correponde al semestre de invierno.
 			$aOperadores['id_tipo_activ'] = '~';
 
 			$aWhereNom = ['id_nom'=>  $this->id_pau,'propio'=> 't'];

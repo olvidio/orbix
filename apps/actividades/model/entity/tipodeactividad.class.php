@@ -139,7 +139,6 @@ class TipoDeActividad Extends core\ClasePropiedades {
 		$nom_tabla = $this->getNomTabla();
 		if ($this->DBCarregar('guardar') === false) { $bInsert=true; } else { $bInsert=false; }
 		$aDades=array();
-		$aDades['id_schema'] = $this->iid_schema;
 		$aDades['nombre'] = $this->snombre;
 		$aDades['id_tipo_proceso_sv'] = $this->iid_tipo_proceso_sv;
 		$aDades['id_tipo_proceso_ex_sv'] = $this->iid_tipo_proceso_ex_sv;
@@ -150,7 +149,6 @@ class TipoDeActividad Extends core\ClasePropiedades {
 		if ($bInsert === false) {
 			//UPDATE
 			$update="
-					id_schema                = :id_schema,
 					nombre                   = :nombre,
 					id_tipo_proceso_sv       = :id_tipo_proceso_sv,
 					id_tipo_proceso_ex_sv    = :id_tipo_proceso_ex_sv,
@@ -175,8 +173,8 @@ class TipoDeActividad Extends core\ClasePropiedades {
 		} else {
 			// INSERT
 			array_unshift($aDades, $this->iid_tipo_activ);
-			$campos="(id_schema,id_tipo_activ,nombre,id_tipo_proceso_sv,id_tipo_proceso_ex_sv,id_tipo_proceso_sf,id_tipo_proceso_ex_sf)";
-			$valores="(:id_schema,:id_tipo_activ,:nombre,:id_tipo_proceso_sv,:id_tipo_proceso_ex_sv,:id_tipo_proceso_sf,:id_tipo_proceso_ex_sf)";		
+			$campos="(id_tipo_activ,nombre,id_tipo_proceso_sv,id_tipo_proceso_ex_sv,id_tipo_proceso_sf,id_tipo_proceso_ex_sf)";
+			$valores="(:id_tipo_activ,:nombre,:id_tipo_proceso_sv,:id_tipo_proceso_ex_sv,:id_tipo_proceso_sf,:id_tipo_proceso_ex_sf)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClauError = 'TipoDeActividad.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -343,7 +341,6 @@ class TipoDeActividad Extends core\ClasePropiedades {
 	 */
 	function setAllAtributes($aDades) {
 		if (!is_array($aDades)) return;
-		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
 		if (array_key_exists('id_tipo_activ',$aDades)) $this->setId_tipo_activ($aDades['id_tipo_activ']);
 		if (array_key_exists('nombre',$aDades)) $this->setNombre($aDades['nombre']);
 		if (array_key_exists('id_tipo_proceso_sv',$aDades)) $this->setId_tipo_proceso_sv($aDades['id_tipo_proceso_sv']);

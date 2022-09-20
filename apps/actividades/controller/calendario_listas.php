@@ -194,15 +194,11 @@ foreach (array_keys($aGrupos) as $key) {
 				$aWhere['id_tipo_activ'] = '^16';
                 $aOperador['id_tipo_activ'] = '~';
                 $cActividadesSSSC = $oGesActiv->getActividades($aWhere,$aOperador);
-			    /* otras cv sacd de n, agd:
-                112030  sv n ca ordenandos
-                114031  sv n cve sacd n
-                134030	sv agd cve ordenandos
-                134031	sv agd cve sacd n
-                134032	sv agd cve sacd agd y n
-                */
-				$aWhere['id_tipo_activ'] = '112030,114031,134030,134031,134032';
-                $aOperador['id_tipo_activ'] = 'ANY';
+			    /* otras 
+			     * ca ordenandos, cve sacd de n, agd:
+                 */
+                $aWhere['id_tipo_activ'] = '^1(124)|^1(.41)';
+				$aOperador['id_tipo_activ'] = '~';
                 $cActividadesOtros = $oGesActiv->getActividades($aWhere,$aOperador);
 			    
                 $cActividades = array_merge($cActividadesOtros,$cActividadesSSSC);

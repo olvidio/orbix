@@ -140,7 +140,7 @@ class GestorTipoDeActividad Extends core\ClaseGestor {
 	    return $a_id_tipos;
 	}
 	
-	public function getNom_tipoPosibles($expr_txt) {
+	public function getNom_tipoPosibles($num_digitos,$expr_txt) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		$tipo_nom = [];
@@ -149,10 +149,11 @@ class GestorTipoDeActividad Extends core\ClaseGestor {
 	    //echo $query;
 	    $oDBPCASt_id=$oDbl->query($query);
 	    $i=0;
+	    $char_ini = 6 - $num_digitos;
 	    foreach ($oDBPCASt_id->fetchAll() as $row) {
 	        $i++;
 	        $nom_tipo[$i] = $row['nombre'].'#'.$row['id_tipo_activ'];
-	        $num=substr($row['id_tipo_activ'],3,3);
+	        $num=substr($row['id_tipo_activ'],$char_ini,$num_digitos);
 	        $tipo_nom[$num] = $row['nombre'];
 	    }
 	    return ['tipo_nom' => $tipo_nom,
@@ -171,11 +172,18 @@ class GestorTipoDeActividad Extends core\ClaseGestor {
 	    }
 	    return $asistentes;
 	}
-	public function getActividadesPosibles($aText,$expr_txt) {
+	/**
+	 * 
+	 * @param integer $num_digitos Número de digitos que se toman (1 o 2)
+	 * @param string $aText
+	 * @param string $expr_txt
+	 * @return string[]
+	 */
+	public function getActividadesPosibles($num_digitos,$aText,$expr_txt) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		$actividades = [];
-	    $query_ta="select substr(id_tipo_activ::text,3,1) as ta3
+	    $query_ta="select substr(id_tipo_activ::text,3,$num_digitos) as ta3
 			from $nom_tabla where id_tipo_activ::text ~'$expr_txt' group by ta3 order by ta3";
 	    $oDBPCASt_q_ta=$oDbl->query($query_ta);
 	    foreach ($oDBPCASt_q_ta->fetchAll() as $row) {
