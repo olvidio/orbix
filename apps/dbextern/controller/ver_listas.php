@@ -124,11 +124,28 @@ $oHash1->setUrl($url_sincro_ajax);
 $oHash1->setCamposForm('que!id_nom_listas!id_orbix!region!dl!id!tipo_persona'); 
 $h1 = $oHash1->linkSinVal();
 
+$oHash1->setCamposForm('que!region!dl!id!tipo_persona'); 
+$h2 = $oHash1->linkSinVal();
+
 
 $html_reg = sprintf(_("registro %s de %s"),$new_id,$max);
 // ------------------ html ----------------------------------
 ?>
 <script>
+fnjs_crear_todos=function(){
+	var url='<?= $url_sincro_ajax ?>';
+	var parametros='que=crear_todos&region=<?= $region ?>&dl=<?= $dl ?>&tipo_persona=<?= $tipo_persona ?><?= $h2 ?>';
+			 
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		fnjs_submit('#movimiento','-');
+	});
+}
+
 fnjs_crear=function(){
 	var url='<?= $url_sincro_ajax ?>';
 	var parametros='que=crear&region=<?= $region ?>&dl=<?= $dl ?>&id=<?= $new_id?>&id_nom_listas=<?= $id_nom_listas ?>&id_orbix=&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>';
@@ -139,7 +156,7 @@ fnjs_crear=function(){
 		data: parametros
 	})
 	.done(function (rta_txt) {
-		fnjs_submit('#movimiento','-');
+		alert("Ja está");
 	});
 }
 
@@ -248,5 +265,6 @@ foreach ($a_lista_orbix_otradl as $e => $a_persona_orbix) {
 <?php if (!empty($persona_listas)) { ?>
 <br>
 <input type="button" value="<?= _("crear nuevo") ?>" onclick="fnjs_crear()">
+<input type="button" value="<?= _("crear todos") ?>" onclick="fnjs_crear_todos()">
 </form>
 <?php } ?>

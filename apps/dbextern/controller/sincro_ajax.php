@@ -265,6 +265,132 @@ switch ($que) {
 			echo true;
 		}
 		break;
+	case 'crear_todos':
+		$region = (string)  filter_input(INPUT_POST, 'region');
+		$dl = (string)  filter_input(INPUT_POST, 'dl');
+		$tipo_persona = (string)  filter_input(INPUT_POST, 'tipo_persona');
+		
+		$oSincroDB = new dbextern\model\SincroDB();
+		$oSincroDB->setTipo_persona($tipo_persona);
+		$oSincroDB->setRegion($region);
+		$oSincroDB->setDlListas($dl);
+		
+		// todos los de listas
+		$cPersonasListas = $oSincroDB->getPersonasListas();
+		
+		$i = 0;
+		$cont_sync = 0;
+		$a_lista = [];
+		foreach ($cPersonasListas as $oPersonaListas) {
+			$id_nom_listas = $oPersonaListas->getIdentif();
+			
+			$oGesMatch = new dbextern\model\entity\GestorIdMatchPersona();
+			$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas'=>$id_nom_listas));
+			if (!empty($cIdMatch[0]) && count($cIdMatch) > 0) {
+				continue;
+			}
+			// Sólo la primera vez (mov = ''):
+			if (empty($mov) && $oSincroDB->union_automatico($oPersonaListas)) {
+				$cont_sync++;
+				continue;
+			}
+			
+			$a_persona_lista['id_nom_listas'] = $id_nom_listas;
+			$a_persona_lista['ape_nom'] = $oPersonaListas->getApeNom();
+			$a_persona_lista['nombre'] = $oPersonaListas->getNombre();
+			$a_persona_lista['apellido1'] = $oPersonaListas->getApellido1();
+			$a_persona_lista['apellido1_sinprep'] = $oPersonaListas->getApellido1_sinprep();
+			$a_persona_lista['apellido2'] = $oPersonaListas->getApellido2();
+			$a_persona_lista['apellido2_sinprep'] = $oPersonaListas->getApellido2_sinprep();
+			$a_persona_lista['f_nacimiento'] = $oPersonaListas->getFecha_Naci();
+			// incremento antes para empezar en 1 y no en 0.
+			$i++;
+			$a_lista[$i] = $a_persona_lista;
+			
+			// Copiado de crear y unir:
+			$Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE Identif = $id_nom_listas ";
+			//AND camb_fic IS NULL";
+			$oGesListas = new GestorPersonaListas();
+			$cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
+			if ($cPersonasListas !== FALSE && count($cPersonasListas) == 1)  {
+				$oPersonaListas = $cPersonasListas[0];
+				$id_nom_listas = $oPersonaListas->getIdentif();
+				$ape_nom = $oPersonaListas->getApeNom();
+				$nombre = $oPersonaListas->getNombre();
+				$apellido1 = $oPersonaListas->getApellido1();
+				$nx1 = $oPersonaListas->getNx1();
+				$apellido1_sinprep = $oPersonaListas->getApellido1_sinprep();
+				$nx2 = $oPersonaListas->getNx2();
+				$apellido2 = $oPersonaListas->getApellido2();
+				$apellido2_sinprep = $oPersonaListas->getApellido2_sinprep();
+				$f_nacimiento = $oPersonaListas->getFecha_Naci();
+				$lugar_nacimiento = $oPersonaListas->getLugar_Naci();
+				
+				$id_tipo_persona = substr($id_nom_listas, 0, 1);
+				switch ($id_tipo_persona){
+					case '4': // sssc
+						$obj_pau = 'PersonaSSSC';
+						break;
+					case '3': // supernumerarios
+						$obj_pau = 'PersonaS';
+						break;
+					case '1': // numerarios
+						$obj_pau = 'PersonaN';
+						break;
+					case '2': // agregados
+						$obj_pau = 'PersonaAgd';
+						break;
+					case "p_nax":
+						$obj_pau = 'PersonaNax';
+						break;
+					default:
+						$err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+						exit ($err_switch);
+				}
+				// Buscar si está en orbix (otras dl)
+				// a) si ya está unida; b) si está sin unir.
+				$oGesMatch = new GestorIdMatchPersona();
+				$cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas'=>$id_nom_listas));
+				if (!empty($cIdMatch[0]) && !empty($cIdMatch) ) { // (a) unida
+					$id_orbix = $cIdMatch[0]->getId_orbix();
+					$oTrasladoDl = new personas\model\entity\trasladoDl();
+					$oTrasladoDl->getEsquemas($id_orbix,$tipo_persona);
+				} else { //(b) mala suerte!
+					
+				}
+				
+				$oHoy = new web\DateTimeLocal();
+				$obj = 'personas\\model\\entity\\'.$obj_pau;
+				$oPersona = new $obj();
+				
+				$oPersona->setSituacion('A');
+				$oPersona->setF_situacion($oHoy);
+				$oPersona->setNom($nombre);
+				$oPersona->setNx1($nx1);
+				$oPersona->setApellido1($apellido1_sinprep);
+				$oPersona->setNx2($nx2);
+				$oPersona->setApellido2($apellido2_sinprep);
+				$oPersona->setF_nacimiento($f_nacimiento);
+				$oPersona->setLugar_nacimiento($lugar_nacimiento);
+				
+				if ($oPersona->DBGuardar() === false) {
+					exit(_("hay un error, no se ha guardado"));
+				}
+				$id_orbix = $oPersona->getId_nom();
+			} else {
+				echo "Error";
+			}
+			// Empalmo con lo de unir:
+			$oIdMatch = new IdMatchPersona($id_nom_listas);
+			$oIdMatch->setId_orbix($id_orbix);
+			$oIdMatch->setId_tabla($tipo_persona);
+			
+			if ($oIdMatch->DBGuardar() === false) {
+				echo _("hay un error, no se ha guardado");
+				echo "\n".$oIdMatch->getErrorTxt();
+			}
+		}
+		break;
 	default:
 	    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
 	    exit ($err_switch);
