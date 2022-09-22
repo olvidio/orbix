@@ -289,6 +289,11 @@ $oActividadTipo->setSfsv($ssfsv);
 $oActividadTipo->setAsistentes($sasistentes);
 $oActividadTipo->setActividad($sactividad);
 $oActividadTipo->setNom_tipo($snom_tipo);
+if (strlen($id_tipo_activ) > 3) {
+	$extendida = TRUE;
+} else {
+	$extendida = FALSE;
+}
 
 $procesos_installed = core\ConfigGlobal::is_app_installed('procesos');
 
@@ -328,6 +333,7 @@ $a_campos = ['oPosicion' => $oPosicion,
 			'publicado' => $publicado,
 			'mod' => $Qmod,
 			'oActividadTipo' => $oActividadTipo,
+			'extendida' => $extendida,
 			'id_tipo_activ' => $id_tipo_activ,
             'web' => core\ConfigGlobal::getWeb(),
             'web_icons' => core\ConfigGlobal::getWeb_icons(),

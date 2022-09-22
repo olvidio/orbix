@@ -49,6 +49,12 @@ $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 $Qyear = (string) \filter_input(INPUT_POST, 'year');
 
+$Qsactividad2 = (string) \filter_input(INPUT_POST, 'sactividad2');
+
+if (!empty($Qsactividad2)) {
+	$extendida = TRUE;
+}
+
 $permiso_des = FALSE;
 // mejor que novenga por menú. Así solo veo las de mi sección.
 // añado la opción sv para calendario...
@@ -69,7 +75,11 @@ $oActividadTipo->setPerm_jefe($permiso_des);
 $oActividadTipo->setSfsv($Qssfsv);
 $oActividadTipo->setId_tipo_activ($Qid_tipo_activ);
 $oActividadTipo->setAsistentes($Qsasistentes);
-$oActividadTipo->setActividad($Qsactividad);
+if ($extendida) {
+	$oActividadTipo->setActividad2Digitos($Qsactividad2);
+} else {
+	$oActividadTipo->setActividad($Qsactividad);
+}
 $oActividadTipo->setPara('procesos');
 
 $aOpciones =  array(
@@ -122,6 +132,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'h_actualizar' => $h_actualizar,
     'h_tipo' => $h_tipo,
     'oActividadTipo' => $oActividadTipo,
+	'extendida' => $extendida,
     'oFormP' => $oFormP,
     'url_ajax' => $url_ajax,
     'url_tipo' => $url_tipo,

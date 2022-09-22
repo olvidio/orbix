@@ -188,7 +188,7 @@ class Periodo {
 				break;
 			case "curso_crt":
 			    $fin_m = $_SESSION['oConfig']->getMesFinCrt();
-			    if ($mes > $fin_m) { $any2=date('Y')+1; } else { $any2 = date('Y'); }
+			    if ($mes > $fin_m) { $any2=$any+1; } else { $any2 = $any; }
 			    $oInicio = curso_est("inicio",$any2,'crt');
 			    $oFin = curso_est("fin",$any2,'crt');
 			    
@@ -197,7 +197,7 @@ class Periodo {
 				break;
 			case "curso_ca":
 			    $fin_m = $_SESSION['oConfig']->getMesFinStgr();
-			    if ($mes > $fin_m) { $any2=date('Y')+1; } else { $any2 = date('Y'); }
+			    if ($mes > $fin_m) { $any2=$any+1; } else { $any2 = $any; }
 			    $oInicio = curso_est("inicio",$any2,'est');
 			    $oFin = curso_est("fin",$any2,'est');
 			    

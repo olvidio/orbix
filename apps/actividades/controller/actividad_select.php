@@ -151,10 +151,16 @@ if ($Qstatus != 9) {
     $aWhere['status'] = $Qstatus;
 }
 // Id tipo actividad
+$extendida = FALSE;
 if (empty($Qid_tipo_activ)) {
     $Qssfsv = (string) \filter_input(INPUT_POST, 'ssfsv');
     $Qsasistentes = (string) \filter_input(INPUT_POST, 'sasistentes');
     $Qsactividad = (string) \filter_input(INPUT_POST, 'sactividad');
+    $Qsactividad2 = (string) \filter_input(INPUT_POST, 'sactividad2');
+    
+    if (!empty($Qsactividad2)) {
+    	$extendida = TRUE;
+    }
     
     if (empty($Qssfsv)) {
         if ($mi_sfsv == 1) { $Qssfsv = 'sv'; }
@@ -165,7 +171,11 @@ if (empty($Qid_tipo_activ)) {
     $oTipoActiv= new web\TiposActividades();
     $oTipoActiv->setSfsvText($Qssfsv);
     $oTipoActiv->setAsistentesText($sasistentes);
-    $oTipoActiv->setActividadText($sactividad);
+    if (!empty($Qsactividad2)) {
+		$oTipoActiv->setActividad2DigitosText($Qsactividad2);
+    } else {
+		$oTipoActiv->setActividadText($sactividad);
+    }
     $Qid_tipo_activ=$oTipoActiv->getId_tipo_activ();
 } else {
     $oTipoActiv= new web\TiposActividades($Qid_tipo_activ);
@@ -572,6 +582,7 @@ $oHash->setUrl('apps/actividades/controller/actividad_que.php');
 $a_camposHidden = array(
     'modo' => $Qmodo,
     'id_tipo_activ' => $Qid_tipo_activ,
+	'extendida' => $extendida,
     'id_ubi' => $Qid_ubi,
     'nom_activ' => $Qnom_activ,
     'periodo' => $Qperiodo,
@@ -585,7 +596,7 @@ $a_camposHidden = array(
     'fases_off' => $Qfases_off,
 );
 $oHash->setArraycamposHidden($a_camposHidden);
-$oHash->setCamposNo('!modo!id_tipo_activ!id_ubi!nom_activ!periodo!year!dl_org!status!empiezamin!empiezamax!filtro_lugar!fases_on!fases_off');
+$oHash->setCamposNo('extendida!modo!id_tipo_activ!id_ubi!nom_activ!periodo!year!dl_org!status!empiezamin!empiezamax!filtro_lugar!fases_on!fases_off');
 
 $oHashSel = new web\Hash();
 $oHashSel->setcamposForm('!mod!queSel!id_dossier');

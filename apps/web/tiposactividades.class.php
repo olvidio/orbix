@@ -471,6 +471,32 @@ class TiposActividades {
 		}
 	}
 	/**
+	 * Recupera l'atribut acividades (2 digits) en format de text
+	 *
+	 * @return string
+	 */
+	public function getActividad2DigitosText() {
+		$aText=$this->getFlipActividad2Digitos();
+		if (is_numeric($this->sactividad)) {
+			return $aText[$this->sactividad];
+		} else {
+			return 'all';
+		}
+	}
+	/**
+	 * Estableix l'atribut actividades (2 digits) en format de text
+	 *
+	 * @return false si falla
+	 */
+	public function setActividad2DigitosText($sActividad) {
+		if (is_string($sActividad)) {
+		    if (empty($sActividad)) { $sActividad = 'all'; }
+			$this->sactividad=$this->aActividad2Digitos[$sActividad];
+		} else {
+			return false;
+		}
+	}
+	/**
 	 * Recupera l'atribut acividades en format de integer
 	 *
 	 * @return integer

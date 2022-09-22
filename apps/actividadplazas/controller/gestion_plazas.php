@@ -30,6 +30,7 @@ $Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
 	
 // Id tipo actividad
+$extendida = FALSE;
 if (empty($Qid_tipo_activ)) {
     // mejor que novenga por menú. Así solo veo las de mi sección.
 	//$Qssfsv = (string)  filter_input(INPUT_POST, 'ssfsv');
@@ -41,10 +42,19 @@ if (empty($Qid_tipo_activ)) {
 	}
 	$Qsasistentes = (string) \filter_input(INPUT_POST, 'sasistentes');
 	$Qsactividad = (string) \filter_input(INPUT_POST, 'sactividad');
+	$Qsactividad2 = (string) \filter_input(INPUT_POST, 'sactividad2');
+	
+	if (!empty($Qsactividad2)) {
+		$extendida = TRUE;
+	}
 	$oTipoActiv= new web\TiposActividades();
 	$oTipoActiv->setSfsvText($Qssfsv);
 	$oTipoActiv->setAsistentesText($Qsasistentes);
-	$oTipoActiv->setActividadText($Qsactividad);
+	if (!empty($Qsactividad2)) {
+		$oTipoActiv->setActividad2DigitosText($Qsactividad2);
+	} else {
+		$oTipoActiv->setActividadText($Qsactividad);
+	}
 	$Qid_tipo_activ=$oTipoActiv->getId_tipo_activ();
 } else {
 	$oTipoActiv= new web\TiposActividades($Qid_tipo_activ);
@@ -69,7 +79,6 @@ if (empty($Qperiodo)) {
 	}
 }
 $oPeriodo = new Periodo();
-$oPeriodo->setDefaultAny('next');
 $oPeriodo->setAny($Qyear);
 $oPeriodo->setEmpiezaMin($Qempiezamin);
 $oPeriodo->setEmpiezaMax($Qempiezamax);

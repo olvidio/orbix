@@ -40,17 +40,26 @@ class ActividadTipo {
 		if (empty($this->status)) { $this->status = entity\ActividadAll::STATUS_ACTUAL; }
 
 		if (!empty($this->id_tipo_activ))  {
-			$oTipoActiv= new web\TiposActividades($this->id_tipo_activ);
+			$oTipoActiv= new web\TiposActividades($this->id_tipo_activ,$extendida);
 			$this->ssfsv=$oTipoActiv->getSfsvText();
 			$this->sasistentes=$oTipoActiv->getAsistentesText();
-			$this->sactividad=$oTipoActiv->getActividadText();
-			$this->snom_tipo=$oTipoActiv->getNom_tipoText();
+			if ($extendida) {
+				$this->sactividad=$oTipoActiv->getActividad2DigitosText();
+				$this->snom_tipo=$oTipoActiv->getNom_tipoText();
+			} else {
+				$this->sactividad=$oTipoActiv->getActividadText();
+				$this->snom_tipo=$oTipoActiv->getNom_tipoText();
+			}
 		} else {
 			$oTipoActiv= new web\TiposActividades();
 			// puede ser que tenga parte del id_tipo_activ.
 			if (!empty($this->ssfsv)) $oTipoActiv->setSfsvText($this->ssfsv);
 			if (!empty($this->sasistentes)) $oTipoActiv->setAsistentesText($this->sasistentes);
-			if (!empty($this->sactividad)) $oTipoActiv->setActividadText($this->sactividad);
+			if ($extendida) {
+				if (!empty($this->sactividad)) $oTipoActiv->setActividad2DigitosText($this->sactividad);
+			} else {
+				if (!empty($this->sactividad)) $oTipoActiv->setActividadText($this->sactividad);
+			}
 			// limitar el uso de all (sv,sf, resevado):
             $oTipoActiv->setPosiblesAll($this->bAll); 
 		}
@@ -59,9 +68,13 @@ class ActividadTipo {
 		if ($extendida) {
 			$a_actividades_posibles=$oTipoActiv->getActividadesPosibles2digitos();
 			$a_nom_tipo_posibles=$oTipoActiv->getNom_tipoPosibles2Digitos();
+			$val_blanco_activ = '..';
+			$val_blanco_nom = '..';
 		} else {
 			$a_actividades_posibles=$oTipoActiv->getActividadesPosibles1Digito();
 			$a_nom_tipo_posibles=$oTipoActiv->getNom_tipoPosibles3Digitos();
+			$val_blanco_activ = '.';
+			$val_blanco_nom = '...';
 		}
 
 
@@ -120,8 +133,8 @@ class ActividadTipo {
 		}
 		// pasar texto a numero
 		$isfsv = $oTipoActiv->getSfsvId();
-		$iactividad = $oTipoActiv->getActividadId();
 		$iasistentes = $oTipoActiv->getAsistentesId();
+		$iactividad = $oTipoActiv->getActividadId();
 		$inom_tipo = $oTipoActiv->getnom_tipoId();
 		
 
@@ -148,7 +161,7 @@ class ActividadTipo {
 		$oDesplActividad->setOpciones($a_actividades_posibles);
 		$oDesplActividad->setOpcion_sel($iactividad);
 		$oDesplActividad->setBlanco('t');
-		$oDesplActividad->setValBlanco('.');
+		$oDesplActividad->setValBlanco($val_blanco_activ);
 		$oDesplActividad->setAction('fnjs_nom_tipo()');
 
 		$oDesplNomTipo = new web\Desplegable();
@@ -156,7 +169,7 @@ class ActividadTipo {
 		$oDesplNomTipo->setOpciones($a_nom_tipo_posibles);
 		$oDesplNomTipo->setOpcion_sel($inom_tipo);
 		$oDesplNomTipo->setBlanco('t');
-		$oDesplNomTipo->setValBlanco('...');
+		$oDesplNomTipo->setValBlanco($val_blanco_nom);
 		if (isset($this->que)) {
 		    if ( $this->que == 'buscar') {
                 $oDesplNomTipo->setAction('fnjs_id_activ()');
@@ -249,6 +262,10 @@ class ActividadTipo {
 	}
 
 	public function setActividad($sactividad) {
+		$this->sactividad = $sactividad;
+	}
+
+	public function setActividad2Digitos($sactividad) {
 		$this->sactividad = $sactividad;
 	}
 

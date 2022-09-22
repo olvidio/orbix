@@ -17,6 +17,7 @@ use core\ConfigGlobal;
 use procesos\model\entity\GestorActividadFase;
 use ubis\model\entity as ubis;
 use usuarios\model\entity\Usuario;
+use function core\is_true;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Arxivos requeridos por esta url **********************************************
@@ -50,8 +51,6 @@ $Qfiltro_lugar = (string) \filter_input(INPUT_POST, 'filtro_lugar');
 $Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
 $Qnom_activ = (string) \filter_input(INPUT_POST, 'nom_activ');
 $Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
-//$Qinicio = (string) \filter_input(INPUT_POST, 'inicio');
-//$Qfin = (string) \filter_input(INPUT_POST, 'fin');
 $Qyear = (string) \filter_input(INPUT_POST, 'year');
 $Qdl_org = (string) \filter_input(INPUT_POST, 'dl_org');
 $Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
@@ -73,14 +72,26 @@ if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have
 $Qsasistentes = (string) \filter_input(INPUT_POST, 'sasistentes');
 $Qsactividad = (string) \filter_input(INPUT_POST, 'sactividad');
 $Qsnom_tipo = (string) \filter_input(INPUT_POST, 'snom_tipo');
+$Qextendida = (string) \filter_input(INPUT_POST, 'extendida');
+
+$Qsactividad2 = (string) \filter_input(INPUT_POST, 'sactividad2');
+if (!empty($Qsactividad2)) {
+	$Qextendida = TRUE;
+}
+$extendida = is_true($Qextendida)? TRUE : FALSE;
 
 $oActividadTipo = new actividades\model\ActividadTipo();
 $oActividadTipo->setPerm_jefe($permiso_des);
 $oActividadTipo->setId_tipo_activ($Qid_tipo_activ);
 $oActividadTipo->setSfsv($ssfsv);
 $oActividadTipo->setAsistentes($Qsasistentes);
-$oActividadTipo->setActividad($Qsactividad);
+if ($extendida) {
+	$oActividadTipo->setActividad2Digitos($Qsactividad2);
+} else {
+	$oActividadTipo->setActividad($Qsactividad);
+}
 $oActividadTipo->setNom_tipo($Qsnom_tipo);
+
 
 if (empty($Qstatus)) { $Qstatus = actividades\model\entity\ActividadAll::STATUS_ACTUAL; }
 
@@ -271,6 +282,7 @@ $a_campos = ['oPosicion' => $oPosicion,
 			'oDesplDelegacionesOrg' => $oDesplDelegacionesOrg,
 			'oFormP' => $oFormP,
 			'oActividadTipo' => $oActividadTipo,
+			'extendida' => $extendida,
 			'Link_borrar' => $Link_borrar,
             'perm_ctr' => $perm_ctr,
 			'val_status_1' => $val_status_1,

@@ -69,6 +69,7 @@ if ($Qid_item != 'nuevo') {
 	    'oHash' => $oHash,
 	    'h' => $h,
 	    'oTipoActiv' => $oTipoActiv,
+		'extendida' => FALSE,
 	    'txt_temporada' => $aTipoTemporada[$temporada],
 	    'oDesplPosiblesTipoTarifas' => $oDesplPosiblesTipoTarifas,
 	    'txt_eliminar' => $txt_eliminar,
