@@ -156,8 +156,8 @@ if ($miRolePau == Role::PAU_NOM) { //persona
                 $Qcentro=addslashes(strtr($Qcentro,"+","."));
                 $aWhereCtr['nombre_ubi'] = $Qcentro;
             } else {
-                $nom_ubi = str_replace("+", "\+", $Qcentro); // para los centros de la sss+
-                $nom_ubi = addslashes($nom_ubi);
+                $nom_ubi = addslashes($Qcentro);
+                $nom_ubi = str_replace("+", "\+", $nom_ubi); // para los centros de la sss+
                 $aWhereCtr['nombre_ubi'] = '^'.$nom_ubi;
                 $aOperadorCtr['nombre_ubi'] = 'sin_acentos';
             }
