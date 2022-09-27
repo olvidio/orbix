@@ -21,6 +21,7 @@ use actividades\model\entity\Importada;
 use actividadplazas\model\entity\ActividadPlazasDl;
 use actividadplazas\model\entity\GestorActividadPlazas;
 use core\ConfigGlobal;
+use core\DBPropiedades;
 use procesos\model\entity\GestorActividadProcesoTarea;
 /**
 * Para asegurar que inicia la sesion, y poder acceder a los permisos
@@ -149,6 +150,22 @@ case "nuevo":
 	// si estoy creando una actividad de otra dl es porque la quiero importar y por tanto debe estar publicada.
 	if ($Qdl_org != ConfigGlobal::mi_delef()) {
 		$Qpublicado = 't';
+		// comprobar que no es una dl que ya tiene su esquema
+		$oDBPropiedades = new DBPropiedades();
+		$a_posibles_esquemas = $oDBPropiedades->array_posibles_esquemas(TRUE,TRUE);
+		$is_dl_in_orbix = FALSE;
+		foreach ($a_posibles_esquemas as $esquema) {
+			$row = explode('-', $esquema);
+			if ($row[1] === $Qdl_org) {
+				$is_dl_in_orbix = TRUE;
+				break;
+			}
+		}
+		if ($is_dl_in_orbix) {
+			echo _("No puede crear una actividad que organiza una dl/r que ya usa aquinate");
+			die();
+		}
+		
 	}
 	
 	// Puede ser '000' > sin especificar
