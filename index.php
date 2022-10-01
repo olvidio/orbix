@@ -1,6 +1,4 @@
 <?php
-namespace core;
-use web;
 /**
  * llama a la plantilla de inicio con el nombre de la oficina
  *
@@ -16,7 +14,7 @@ if (isset($_REQUEST['logout']) && $_REQUEST['logout'] == 'si') {
     session_start();
     // Destruir todas las variables de sesión.
     $_SESSION = array();
-    $GLOBALS = array();
+    //$GLOBALS = array();
     // Si se desea destruir la sesión completamente, borre también la cookie de sesión.
     // Nota: ¡Esto destruirá la sesión, y no la información de la sesión!
     if (ini_get("session.use_cookies")) {
@@ -43,21 +41,25 @@ require_once ("apps/core/global_object.inc");
 
 //$oUsuario = new Usuario(array('id_usuario'=>113));
 
-use usuarios\model\entity as usuarios;
-use menus\model as menus;
-use menus\model\entity as menusEntity;
+use core\ConfigGlobal;
+use menus\model\PermisoMenu;
+use menus\model\entity\GestorGrupMenuRole;
+use menus\model\entity\GestorMenuDb;
+use menus\model\entity\GrupMenu;
+use menus\model\entity\Metamenu;
+use usuarios\model\entity\GestorPreferencia;
 use usuarios\model\entity\Role;
-use SebastianBergmann\CodeCoverage\Report\PHP;
+use usuarios\model\entity\Usuario;
 
-$oGesPref = new usuarios\GestorPreferencia();
+$oGesPref = new GestorPreferencia();
 
 $id_usuario = ConfigGlobal::mi_id_usuario();
-$oUsuario = new usuarios\Usuario(array('id_usuario'=>$id_usuario));
+$oUsuario = new Usuario(array('id_usuario'=>$id_usuario));
 $id_role = $oUsuario->getId_role();
 //$oRole = new usuarios\Role($id_role);
 //$mi_oficina_menu=ConfigGlobal::mi_oficina_menu();
 
-$oPermisoMenu = new menus\PermisoMenu();
+$oPermisoMenu = new PermisoMenu();
 
 // ----------- Preferencias -------------------
 //Busco la página inicial en las preferencias:
@@ -70,7 +72,7 @@ if (is_array($aPref) && count($aPref) > 0) {
     list($inicio,$mi_id_grupmenu) = preg_split('/#/',$preferencia);
 } else {
     $inicio='';
-    $GesGMR = new menusEntity\GestorGrupMenuRole();
+    $GesGMR = new GestorGrupMenuRole();
     $cGMR = $GesGMR->getGrupMenuRoles(array('id_role'=>$id_role));
     if (empty($cGMR)) {
         $oRole = new Role($id_role);
@@ -131,7 +133,7 @@ if (is_array(($aPref)) && count($aPref) > 0) {
 }
 
 $aWhere = array('id_role'=>$oUsuario->getId_role());
-$gesGMR=new menusEntity\GestorGrupMenuRole();
+$gesGMR=new GestorGrupMenuRole();
 $cGrupMenuRoles=$gesGMR->getGrupMenuRoles($aWhere);
 $html_barra = "<ul id=\"menu\" class=\"menu\">";
 $gm = 0;
@@ -140,10 +142,10 @@ foreach ($cGrupMenuRoles as $oGrupMenuRole) {
     $gm++;
     $id_gm = $oGrupMenuRole->getId_grupmenu();
     // comprobar que tiene algún submenú.
-    $gesMenuDb = new menusEntity\GestorMenuDb();
+    $gesMenuDb = new GestorMenuDb();
     $cMenuDbs=$gesMenuDb ->getMenuDbs(array('id_grupmenu'=>$id_gm));
     if (is_array($cMenuDbs) && count($cMenuDbs) < 1) continue;
-    $oGrupMenu = new menusEntity\GrupMenu($id_gm);
+    $oGrupMenu = new GrupMenu($id_gm);
     $grup_menu = $oGrupMenu->getGrup_menu($_SESSION['oConfig']->getAmbito());
     $iorden = $oGrupMenu->getOrden();
     if ($iorden < 1) continue;
@@ -169,7 +171,7 @@ $aOperador = array();
 $aWhere['id_grupmenu'] = "^1$|^$id_grupmenu$";
 $aOperador['id_grupmenu'] = "~";
 $aWhere['_ordre'] = 'orden';
-$oLista=new menusEntity\GestorMenuDb();
+$oLista=new GestorMenuDb();
 $oMenuDbs=$oLista->getMenuDbs($aWhere,$aOperador);
 $li_submenus="";
 $indice=1;
@@ -187,7 +189,7 @@ foreach ($oMenuDbs as $oMenuDb) {
     $id_grupmenu = $oMenuDb->getId_grupmenu();
     //$ok = $oMenuDb->getOk ();
     
-    $oMetamenu = new menusEntity\Metamenu($id_metamenu);
+    $oMetamenu = new Metamenu($id_metamenu);
     $url = $oMetamenu ->getUrl();
     //echo "m: $perm_menu,l: $perm_login, ".visible($perm_menu,$perm_login) ;
     // primero si el módulo està instalado:

@@ -457,7 +457,7 @@ case "editar": // editar la actividad.
 	// permiso
 	$_SESSION['oPermActividades']->setActividad($Qid_activ,$Qid_tipo_activ,$Qdl_org);
 	$oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
-	if (ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('crear') === TRUE) {
+	if (empty($Qid_tipo_activ) && ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('crear') === TRUE) {
         $Qisfsv_val = (integer) \filter_input(INPUT_POST, 'isfsv_val');
         $Qiasistentes_val = (integer) \filter_input(INPUT_POST, 'iasistentes_val');
         $Qiactividad_val = (integer) \filter_input(INPUT_POST, 'iactividad_val');
