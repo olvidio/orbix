@@ -9,34 +9,58 @@
     fnjs_modificar = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta == 1) {
-            $('#mod').val("editar");
-            $(formulario).attr('action', "apps/actividadestudios/controller/form_3005.php");
-            fnjs_enviar_formulario(formulario, '<?= $bloque ?>');
+            /* selecciono los elementos con class="sel" de las tablas del id=formulario */
+            $('#seleccionados' + ' input.sel').each(function (i) {
+                if ($(this).prop('checked') == true) {
+                    // como ya he comprobado que sólo está uno seleccionado, es este.
+                    var array_dir = $(this).val().split('#');
+                    permiso = array_dir[2];
+                }
+            });
+            if (permiso === 'false') {
+                alert("<?= $txt_no_permiso ?>");
+            } else {
+                $('#mod').val("editar");
+                $(formulario).attr('action', "apps/actividadestudios/controller/form_3005.php");
+                fnjs_enviar_formulario(formulario, '<?= $bloque ?>');
+            }
         }
     }
     fnjs_borrar_asignatura = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta == 1) {
-            if (confirm("<?= $txt_eliminar ?>")) {
-                $('#mod').val("eliminar");
-                $(formulario).attr('action', "apps/actividadestudios/controller/update_3005.php");
-                $(formulario).one("submit", function () {
-                    $.ajax({
-                        url: $(this).attr('action'),
-                        type: 'post',
-                        data: $(this).serialize()
-                    })
-                        .done(function (rta_txt) {
-                            if (rta_txt != '' && rta_txt != '\\n') {
-                                alert('<?= _("respuesta") ?>: ' + rta_txt);
-                            } else {
-                                fnjs_actualizar(formulario);
-                            }
-                        });
-                    return false;
-                });
-                $(formulario).trigger("submit");
-                $(formulario).off();
+            /* selecciono los elementos con class="sel" de las tablas del id=formulario */
+            $('#seleccionados' + ' input.sel').each(function (i) {
+                if ($(this).prop('checked') == true) {
+                    // como ya he comprobado que sólo está uno seleccionado, es este.
+                    var array_dir = $(this).val().split('#');
+                    permiso = array_dir[2];
+                }
+            });
+            if (permiso === 'false') {
+                alert("<?= $txt_no_permiso ?>");
+            } else {
+                if (confirm("<?= $txt_eliminar ?>")) {
+                    $('#mod').val("eliminar");
+                    $(formulario).attr('action', "apps/actividadestudios/controller/update_3005.php");
+                    $(formulario).one("submit", function () {
+                        $.ajax({
+                            url: $(this).attr('action'),
+                            type: 'post',
+                            data: $(this).serialize()
+                        })
+                            .done(function (rta_txt) {
+                                if (rta_txt != '' && rta_txt != '\\n') {
+                                    alert('<?= _("respuesta") ?>: ' + rta_txt);
+                                } else {
+                                    fnjs_actualizar(formulario);
+                                }
+                            });
+                        return false;
+                    });
+                    $(formulario).trigger("submit");
+                    $(formulario).off();
+                }
             }
         }
     }

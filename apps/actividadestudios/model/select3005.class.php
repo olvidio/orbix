@@ -32,6 +32,7 @@ class Select3005
      * @var string $txt_eliminar
      */
     private $txt_eliminar;
+    private $txt_no_permiso;
     /* @var $bloque string  necesario para el script */
     private $bloque;
 
@@ -98,10 +99,12 @@ class Select3005
     private function getTabla()
     {
         $this->txt_eliminar = _("¿Está seguro que desea quitar esta asignatura?");
+        $this->txt_no_permiso = _("No puede modificar una asignatura que depende de otra dl");
 
         $GesActivAsignaturas = new entity\GestorActividadAsignatura();
         $cActivAsignaturas = $GesActivAsignaturas->getActividadAsignaturas(array('id_activ' => $this->id_pau, '_ordre' => 'id_asignatura'));
 
+        $mi_dele = core\ConfigGlobal::mi_delef();
         $gesDbSchemas = new GestorDbSchema();
         $c = 0;
         $a_valores = array();
@@ -116,11 +119,13 @@ class Select3005
             $cDbSchemas = $gesDbSchemas->getDbSchemas(['id' => $id_schema]);
             $a_reg = explode('-', $cDbSchemas[0]->getSchema());
             $dl_matricula = substr($a_reg[1], 0, -1); // quito la v o la f.
-            if ($dl_matricula == 'cr') {
-                $dl_matricula .= ConfigGlobal::mi_region();
-            }
             if ($dl_matricula != $this->dl_org) {
                 $nombre_corto = "($dl_matricula) $nombre_corto";
+            }
+            if ($dl_matricula != $mi_dele) {
+                $permiso = 'false';
+            } else {
+                $permiso = 'true';
             }
 
             $id_profesor = $oActividadAsignatura->getId_profesor();
@@ -149,7 +154,7 @@ class Select3005
             $f_ini = $oActividadAsignatura->getF_ini()->getFromLocal();
             $f_fin = $oActividadAsignatura->getF_fin()->getFromLocal();
 
-            $a_valores[$c]['sel'] = "$id_activ#$id_asignatura";
+            $a_valores[$c]['sel'] = "$id_activ#$id_asignatura#$permiso";
             $a_valores[$c][1] = "$nombre_corto";
             $a_valores[$c][2] = $creditos;
             $a_valores[$c][3] = $tipo;
@@ -176,12 +181,8 @@ class Select3005
     {
         $oActividad = new actividades\ActividadAll($this->id_pau);
         $this->dl_org = $oActividad->getDl_org();
-        $mi_dele = core\ConfigGlobal::mi_delef();
-        if ($mi_dele == $this->dl_org) {
-            $this->permiso = 3;
-        } else {
-            $this->permiso = 1;
-        }
+        // Finalmente hay que dar permiso a todos, porque pueden crear asignaturas para su dl
+        $this->permiso = 3;
 
         $oHashSelect = new web\Hash();
         $oHashSelect->setcamposForm('');
@@ -210,6 +211,7 @@ class Select3005
             'oHashSelect' => $oHashSelect,
             'link_insert' => $this->LinkInsert,
             'txt_eliminar' => $this->txt_eliminar,
+            'txt_no_permiso' => $this->txt_no_permiso,
             'bloque' => $this->bloque,
         ];
 

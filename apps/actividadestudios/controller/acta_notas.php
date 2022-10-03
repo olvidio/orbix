@@ -2,6 +2,9 @@
 
 use actividades\model\entity as actividades;
 use actividadestudios\model\entity as actividadestudios;
+use actividadestudios\model\entity\GestorActividadAsignatura;
+use core\ConfigGlobal;
+use devel\model\entity\GestorDbSchema;
 use notas\model\entity as notas;
 use personas\model\entity as personas;
 use web\Posicion;
@@ -51,6 +54,23 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $id_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
 }
 
+// los permisos depende de cada asignatura
+$mi_dele = ConfigGlobal::mi_delef();
+$permiso = (integer)\filter_input(INPUT_POST, 'permiso');
+$GesActivAsignaturas = new GestorActividadAsignatura();
+$cActivAsignaturas = $GesActivAsignaturas->getActividadAsignaturas(array('id_activ' => $id_activ, 'id_asignatura' => $id_asignatura));
+$oActividadAsignatura = $cActivAsignaturas[0];
+$id_schema = $oActividadAsignatura->getId_schema();
+$gesDbSchemas = new GestorDbSchema();
+$cDbSchemas = $gesDbSchemas->getDbSchemas(['id' => $id_schema]);
+$a_reg = explode('-', $cDbSchemas[0]->getSchema());
+$dl_matricula = substr($a_reg[1], 0, -1); // quito la v o la f.
+if ($mi_dele === $dl_matricula) {
+    $permiso = 3;
+} else {
+    $permiso = 1;
+}
+
 $GesNotas = new notas\GestorNota();
 $oDesplNotas = $GesNotas->getListaNotas();
 $oDesplNotas->setNombre('id_situacion[]');
@@ -81,7 +101,6 @@ if ($matriculados > 0) {
 }
 
 $Qque = (string)\filter_input(INPUT_POST, 'que');
-$permiso = (integer)\filter_input(INPUT_POST, 'permiso');
 $Qid_pau = (integer)\filter_input(INPUT_POST, 'id_pau');
 $Qopcional = (string)\filter_input(INPUT_POST, 'opcional');
 $Qprimary_key_s = (string)\filter_input(INPUT_POST, 'primary_key_s');

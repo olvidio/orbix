@@ -307,7 +307,8 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
             // Poner o no el botón de inserta. En algunos casos ya está en la presentación particular.
             if ($Qpermiso == 3) {
                 $html .= "<br><table cellspacing=3  class=botones><tr class=botones>
-					<td class=botones><input name=\"btn_new\" type=\"button\" value=\"";
+					<td class=botones><input name=\"btn_new\" type=\"button\" value=\"\"
+					";
                 $html .= _("nuevo");
                 // caso especial para traslados:
                 if ($id_dossier == 1004) {
