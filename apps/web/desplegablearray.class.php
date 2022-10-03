@@ -59,7 +59,7 @@ class DesplegableArray extends Desplegable
     /**
      *
      *
-     * @retrun html <select>...</select>
+     * @return string html <select>...</select>
      */
     public function ListaSelects()
     {

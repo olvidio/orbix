@@ -44,11 +44,11 @@ $Qpau = (string)\filter_input(INPUT_POST, 'pau');
 //En el caso de eliminar desde la lista de cargos
 $a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-    if ($Qpau == "p") {
+    if ($Qpau === "p") {
         $Qid_activ = (integer)strtok($a_sel[0], "#");
         $Qid_nom = (integer)\filter_input(INPUT_POST, 'id_pau');
     }
-    if ($Qpau == "a") {
+    if ($Qpau === "a") {
         $Qid_nom = (integer)strtok($a_sel[0], "#");
         $Qid_activ = (integer)\filter_input(INPUT_POST, 'id_pau');
     }
@@ -175,7 +175,7 @@ switch ($Qmod) {
     //------------ MOVER --------
     case "mover":
         $msg_err = eliminar($Qid_activ_old, $Qid_nom);
-        $msg_err .= editar($Qid_activ, $Qid_nom, $Qmod);
+        $msg_err .= editar($Qid_activ, $Qid_nom, "nuevo");
         break;
     //------------ BORRAR --------
     case "eliminar":
